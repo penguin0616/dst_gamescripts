@@ -215,7 +215,8 @@ return{
 		},
 		COMPARE_WEIGHABLE =
 		{
-			TOO_SMALL = "This minnow won't win, no!",
+            FISH_TOO_SMALL = "This minnow won't win, no!",
+            OVERSIZEDVEGGIES_TOO_SMALL = "I'll have to produce some bigger produce, hyuyuyu!",
 		},
         BEGIN_QUEST =
         {
@@ -230,6 +231,23 @@ return{
         SING_FAIL =
         {
 --fallback to speech_wilson.lua             SAMESONG = "only_used_by_wathgrithr",
+        },
+        PLANTREGISTRY_RESEARCH_FAIL =
+        {
+            GENERIC = "I already know all its tricks, hyuyu!",
+            FERTILIZER = "That's all I need to know to make my garden grow.",
+        },
+        FILL_OCEAN =
+        {
+            UNSUITABLE_FOR_PLANTS = "I'd better abscond to a freshwater pond.",
+        },
+        POUR_WATER =
+        {
+            OUT_OF_WATER = "Oh my, the water's run dry!",
+        },
+        POUR_WATER_GROUNDTILE =
+        {
+            OUT_OF_WATER = "Goodness me, it's dry as can be!",
         },
 	},
 	ACTIONFAIL_GENERIC = "No, no, no.",
@@ -322,6 +340,7 @@ return{
 	},
     ANNOUNCE_RUINS_RESET = "Oh good. The monsters have returned.",
     ANNOUNCE_SNARED = "I've been bound!",
+    ANNOUNCE_SNARED_IVY = "Oh ho! You think you can contain me?",
     ANNOUNCE_REPELLED = "What trickery is this!",
 	ANNOUNCE_ENTER_DARK = "I've been banished to the darkness plane!",
 	ANNOUNCE_ENTER_LIGHT = "I return to this plane of existence!",
@@ -549,6 +568,8 @@ return{
 --fallback to speech_wilson.lua         BOOK_TENTACLES =  "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BRIMSTONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Time has nearly run out for this would-be racer.",
 
@@ -591,6 +612,31 @@ return{
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "Oooh, now there's an interesting idea!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "Oh drat, I already knew that.",
     ANNOUNCE_ARCHIVE_NO_POWER = "What great power could wake it from its slumber?",
+
+    ANNOUNCE_PLANT_RESEARCHED =
+    {
+        "I'm learning a lot about this plant I've got!",
+    },
+
+    ANNOUNCE_PLANT_RANDOMSEED = "What will grow from this seed is a mystery, indeed!",
+
+    ANNOUNCE_FERTILIZER_RESEARCHED = "I'm getting the scoop on this gardening goop.",
+
+	ANNOUNCE_FIRENETTLE_TOXIN = 
+	{
+		"Such nasty nettles!",
+		"Ouch! There wasn't any silver in those nettles, was there?",
+	},
+	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "It seems I've beat the heat!",
+
+	ANNOUNCE_TALK_TO_PLANTS = 
+	{
+        "A pleasant day to you, my good greenery!",
+        "I'm so sorry, I'm afraid I'm not quite fluent in plant.",
+		"How dull to spend your life stuck in the ground! Luckily I'm here to make it more exciting!",
+        "You like hearing the sound of my voice almost as much as I do, hyuyu!",
+        "Let's pull a prank! What do you think the mortals would do if you sprouted into a sheep?",
+	},
 
 	BATTLECRY =
 	{
@@ -658,6 +704,8 @@ return{
         BOOK_BIRDS = "Humans share their knowledge so freely.",
         BOOK_TENTACLES = "Imps don't disseminate precious knowledge so carelessly.",
         BOOK_GARDENING = "Secret knowledge of vegetables.",
+		BOOK_SILVICULTURE = "Why not read it to the reeds? Hyuyuyu!",
+		BOOK_HORTICULTURE = "Secret knowledge of vegetables.",
         BOOK_SLEEP = "Knowledge is power. Literally.",
         BOOK_BRIMSTONE = "Who would leave such precious knowledge lying here?",
 
@@ -3622,11 +3670,117 @@ return{
         TURFCRAFTINGSTATION = "Mortals just love to change the world to suit them.",
 
         MOON_ALTAR_LINK = "Oh, this is going to be fun! Hyuyuyu!",
+
+        -- FARMING
+        COMPOSTINGBIN =
+        {
+            -- WIP, might not end up with these states so don't fill in for now
+            GENERIC = "Not exactly a barrel of laughs.",
+            WET = "I tried and yet, it's far too wet.",
+            DRY = "Nice try, but it's too dry.",
+            BALANCED = "What a delight, it turned out just right!",
+            BURNT = "How silly!",
+        },
+        COMPOST = "Oh, I could pull some fun pranks with this.",
+        SOIL_AMENDER = 
+		{ 
+			GENERIC = "This kelp should help our garden grow, hyuyu!",
+			STALE = "This planty drink is starting to stink.",
+			SPOILED = "This bubbling brew will make the plants good as new.",
+		},
+
+		SOIL_AMENDER_FERMENTED = "A most potent plant potion indeed!",
+
+        WATERINGCAN = 
+        {
+            GENERIC = "A watering can, what an excellent plan!",
+            EMPTY = "The water was spilled, it must be refilled!",
+        },
+        PREMIUMWATERINGCAN =
+        {
+            GENERIC = "This reminds me of a certain bird we ran afowl of.",
+            EMPTY = "The water was spilled, it must be refilled!",
+        },
+
+		FARM_PLOW = "Plowing a plot for picky plants.",
+		FARM_PLOW_ITEM = "All work and no play makes for one unhappy imp.",
+		FARM_HOE = "I've about had my fill of tilling and toiling.",
+		GOLDEN_FARM_HOE = "How splendidly excessive! Hyuyu!",
+		NUTRIENTSGOGGLESHAT = "The gardener's crown to set upon my furry brow.",
+		PLANTREGISTRYHAT = "I beg your pardon, is that a hat for the garden?",
+
+        FARM_SOIL_DEBRIS = "I'm afraid I'll have to banish it from the garden.",
+
+		FIRENETTLES = "Oh ho! Fiery indeed!",
+		FORGETMELOTS = "They seems to have a tinge of magic about them.",
+		SWEETTEA = "A little sip will do the trick.",
+		TILLWEED = "Till what, weed?",
+		TILLWEEDSALVE = "A welcome break from pains and aches.",
+
+		TROPHYSCALE_OVERSIZEDVEGGIES =
+		{
+			GENERIC = "Hoohoo, a game!",
+			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nBut is it worth the weight? Hyuyu!",
+            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI say, what a nice display!",
+            HAS_ITEM_LIGHT = "It's not enough to tip the scale, hyuyu!",
+			BURNING = "What fun!",
+			BURNT = "Let's do it again, hyuyu!",
+        },
+        
+        CARROT_OVERSIZED = "I suppose the mortals might enjoy something like that.",
+        CORN_OVERSIZED = "Lend me your ear, hyuyu!",
+        PUMPKIN_OVERSIZED = "Quite the plump pumpkin.",
+        EGGPLANT_OVERSIZED = "How strange!",
+        DURIAN_OVERSIZED = "It gives off such a stink, it's hard to think!",
+        POMEGRANATE_OVERSIZED = "How in the underworld did you grow so big?",
+        DRAGONFRUIT_OVERSIZED = "A giant fruit, and a dragon's to boot!",
+        WATERMELON_OVERSIZED = "If only it had a soul!",
+        TOMATO_OVERSIZED = "Hyuyu, I'll have to find something very big to throw it at!",
+        POTATO_OVERSIZED = "Oh, the mortals will be thrilled!",
+        ASPARAGUS_OVERSIZED = "None for me, thank you.",
+        ONION_OVERSIZED = "An ourageously large onion!",
+        GARLIC_OVERSIZED = "Hissssss!",
+        PEPPER_OVERSIZED = "That will put some pep in someone's step, hyuyuyu!",
+        
+        VEGGIE_OVERSIZED_ROTTEN = "This one's spoiled rotten!",
+
+		FARM_PLANT =
+		{
+			GENERIC = "A plant!",
+			SEED = "Come out and join us, little one!",
+			GROWING = "Grow big and tall, or not at all.",
+			FULL = "Oh what a sight, the crops are ripe!",
+			ROTTEN = "Even the mortals won't eat this one.",
+			FULL_OVERSIZED = "If only I cared to eat mortal food!",
+			ROTTEN_OVERSIZED = "This one's spoiled rotten!",
+			FULL_WEED = "It's a weed indeed! Hyuyuyu!",
+
+			BURNING = "Hyuyuyu, whoopsie!",
+        },
+        
+        FRUITFLY = "Pulling pranks on the plants, I see!",
+        LORDFRUITFLY = "Hyuyu! I would expect more civility from the nobility!",
+        FRIENDLYFRUITFLY = "This fly has a much more tempered temper.",
+        FRUITFLYFRUIT = "I'll just put that in my pocket and see what happens!",
+
+        SEEDPOUCH = "For my gardening needs, a place to store seeds!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",
     DESCRIBE_TOODARK = "I can't see the physical plane!",
     DESCRIBE_SMOLDERING = "Some fiery fun is about to begin!",
+
+    DESCRIBE_PLANTHAPPY = "Well well, this plant looks swell!",
+    DESCRIBE_PLANTVERYSTRESSED = "With much regret, I'd say this plant is upset.",
+    DESCRIBE_PLANTSTRESSED = "Something's bothering our budding buddy.",
+    DESCRIBE_PLANTSTRESSORKILLJOYS = "Something around needs to be pulled from the ground.",
+    DESCRIBE_PLANTSTRESSORFAMILY = "It's feeling quite down with no plants like it around.",
+    DESCRIBE_PLANTSTRESSOROVERCROWDING = "From the looks of this place, I'd say it needs more space.",
+    DESCRIBE_PLANTSTRESSORSEASON = "This plant could be better, it doesn't like the weather.",
+    DESCRIBE_PLANTSTRESSORMOISTURE = "It needs a drink, I think.",
+    DESCRIBE_PLANTSTRESSORNUTRIENTS = "It needs better soil or our hard work will be spoiled!",
+    DESCRIBE_PLANTSTRESSORHAPPINESS = "What's that? You'd like to chat?",
+
     EAT_FOOD =
     {
         TALLBIRDEGG_CRACKED = "Doing that hurt my feelings.",

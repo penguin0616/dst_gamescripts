@@ -49,13 +49,14 @@ local speed_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEVERYFAST, data = "veryfast" },
 }
 
+--[[
 local disease_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.QTYNONE, data = "none" },
 	{ text = STRINGS.UI.SANDBOXMENU.RANDOM, data = "random" },
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDESLOW, data = "long" },
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEDEFAULT, data = "default" },
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEFAST, data = "short" },
-}
+}]]
 
 local day_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEDEFAULT, data = "default" },
@@ -280,7 +281,7 @@ local GROUP = {
 							["boons"] = {value = "default", enable = false, image = "skeletons.tex", desc = frequency_descriptions, order = 18, world={"forest", "cave"}},
 							["regrowth"] = {value = "default", enable = false, image = "regrowth.tex", desc = speed_descriptions, order = 17, world={"forest", "cave"}},
 							["cavelight"] = {value = "default", enable = false, image = "cavelight.tex", desc = speed_descriptions, order = 18, world={"cave"}},
-                            ["disease_delay"] = {value = "default", enable = false, image = "berrybush_diseased.tex", desc = disease_descriptions, order = 19, world={"forest", "cave"}},
+                            --["disease_delay"] = {value = "default", enable = false, image = "berrybush_diseased.tex", desc = disease_descriptions, order = 19, world={"forest", "cave"}},
 							["prefabswaps_start"] = {value = "default", enable = false, image = "starting_variety.tex", desc = starting_swaps_descriptions, order = 20, world={"forest", "cave"}},
                             ["petrification"] = {value = "default", enable = false, image = "petrified_tree.tex", desc = petrification_descriptions, order = 21, world={"forest"}},
 						}

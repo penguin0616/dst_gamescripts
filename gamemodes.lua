@@ -126,6 +126,7 @@ GAME_MODES =
         icons_use_cc = true,
 		hud_atlas = "images/quagmire_hud.xml",
 		eventannouncer_offset = -40,
+		override_farm_till_spacing = 1,
     },
 }
 
@@ -301,6 +302,10 @@ end
 
 function GetMaxItemSlots(game_mode)
     return GetGameMode(game_mode).override_item_slots or MAXITEMSLOTS
+end
+
+function GetFarmTillSpacing(game_mode)
+    return GetGameMode(game_mode or TheNet:GetServerGameMode()).override_farm_till_spacing or TUNING.FARM_TILL_SPACING
 end
 
 function GetGameModeMaxPlayers(game_mode)

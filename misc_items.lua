@@ -392,7 +392,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "LOADING", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	loading_charlie =
 	{
@@ -432,7 +432,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "LOADING", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	loading_dragonfly_yule =
 	{
@@ -440,7 +440,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "LOADING", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	loading_feast =
 	{
@@ -448,7 +448,7 @@ MISC_ITEMS =
 		skin_tags = { "YULE", "LOADING", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	loading_gingersnow =
 	{
@@ -456,7 +456,7 @@ MISC_ITEMS =
 		skin_tags = { "YULE", "LOADING", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	loading_gnarwail =
 	{
@@ -480,7 +480,15 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "LOADING", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
+	},
+	loading_grotto =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 110,
 	},
 	loading_lunacy =
 	{
@@ -554,6 +562,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 32,
 	},
+	loading_walter_trailer =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 110,
+	},
 	loading_warly2_trailer =
 	{
 		type = "loading",
@@ -584,7 +600,7 @@ MISC_ITEMS =
 		skin_tags = { "ICE", "LOADING", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	loading_wendy =
 	{
@@ -666,6 +682,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 32,
 	},
+	loading_wigfrid_trailer =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 110,
+	},
 	loading_willow2_trailer =
 	{
 		type = "loading",
@@ -712,7 +736,7 @@ MISC_ITEMS =
 		skin_tags = { "ICE", "LOADING", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	loading_wilson_madscience =
 	{
@@ -760,7 +784,7 @@ MISC_ITEMS =
 		skin_tags = { "ICE", "LOADING", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	loading_woodie2_trailer =
 	{
@@ -890,7 +914,7 @@ MISC_ITEMS =
 		box_build = "box_mystery_ice",
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 83,
+		release_group = 109,
 	},
 	mysterybox_lava_4 =
 	{
@@ -909,6 +933,16 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 58,
+	},
+	mysterybox_ugly_3 =
+	{
+		type = "mysterybox",
+		skin_tags = { "MYSTERYBOX", },
+		build_name_override = "mysterybox_ice_4",
+		box_build = "box_mystery_ice",
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 110,
 	},
 	mysterybox_victorian_4 =
 	{
@@ -972,7 +1006,7 @@ MISC_ITEMS =
 		display_tex = "costume_all.tex",
 		box_build = "box_shop_hallowed",
 		display_items = {  "wathgrithr_deerclops_p", "waxwell_krampus_p", "webber_bat_p", "wendy_lureplant_p", "wes_mandrake_p", "wickerbottom_lightninggoat_p", "willow_dragonfly_p", "wilson_pigguard_p", "winona_grassgecko_p", "wolfgang_walrus_p", "woodie_treeguard_p", "wx78_rhinorook_p", },
-		output_items = {  "wathgrithr_deerclops_p", "body_wathgrithr_deerclopsp", "waxwell_krampus_p", "body_waxwell_krampusp", "webber_bat_p", "body_webber_batp", "wendy_lureplant_p", "body_wendy_lureplantp", "wes_mandrake_p", "body_wes_mandrakep", "wickerbottom_lightninggoat_p", "body_wickerbottom_lightninggoatp", "willow_dragonfly_p", "body_willow_dragonflyp", "wilson_pigguard_p", "body_wilson_pigguardp", "winona_grassgecko_p", "body_winona_grassgeckop", "wolfgang_walrus_p", "body_wolfgang_walrusp", "woodie_treeguard_p", "body_woodie_treeguardp", "wx78_rhinorook_p", "body_wx78_rhinorookp", },
+		output_items = {  "wathgrithr_deerclops_p", "body_wathgrithr_deerclopsp", "waxwell_krampus_p", "body_waxwell_krampusp", "webber_bat_p", "webber_beard_bat", "body_webber_batp", "wendy_lureplant_p", "body_wendy_lureplantp", "wes_mandrake_p", "body_wes_mandrakep", "wickerbottom_lightninggoat_p", "body_wickerbottom_lightninggoatp", "willow_dragonfly_p", "body_willow_dragonflyp", "wilson_pigguard_p", "wilson_beard_pigguard", "body_wilson_pigguardp", "winona_grassgecko_p", "body_winona_grassgeckop", "wolfgang_walrus_p", "body_wolfgang_walrusp", "woodie_treeguard_p", "body_woodie_treeguardp", "wx78_rhinorook_p", "body_wx78_rhinorookp", },
 		release_group = 105,
 	},
 	pack_costume_bundle =
@@ -986,7 +1020,7 @@ MISC_ITEMS =
 		display_tex = "costume_bundle.tex",
 		box_build = "box_shop_hallowed",
 		display_items = {  "wathgrithr_deerclops_p", "waxwell_krampus_p", "webber_bat_p", "wendy_lureplant_p", "wes_mandrake_p", "wickerbottom_lightninggoat_p", "willow_dragonfly_p", "wilson_pigguard_p", "winona_grassgecko_p", "wolfgang_walrus_p", "woodie_treeguard_p", "wx78_rhinorook_p", "torch_spookyp", "birdcage_gothicp", "cookpot_cauldronp", "dragonling_batp", "hat_catcoon_costumep", "body_catcoon_costumep", "hat_chester_costumep", "body_chester_costumep", "hat_glommer_costumep", "body_glommer_costumep", "hat_hutch_costumep", "body_hutch_costumep", },
-		output_items = {  "wathgrithr_deerclops_p", "body_wathgrithr_deerclopsp", "waxwell_krampus_p", "body_waxwell_krampusp", "webber_bat_p", "body_webber_batp", "wendy_lureplant_p", "body_wendy_lureplantp", "wes_mandrake_p", "body_wes_mandrakep", "wickerbottom_lightninggoat_p", "body_wickerbottom_lightninggoatp", "willow_dragonfly_p", "body_willow_dragonflyp", "wilson_pigguard_p", "body_wilson_pigguardp", "winona_grassgecko_p", "body_winona_grassgeckop", "wolfgang_walrus_p", "body_wolfgang_walrusp", "woodie_treeguard_p", "body_woodie_treeguardp", "wx78_rhinorook_p", "body_wx78_rhinorookp", "torch_spookyp", "birdcage_gothicp", "cookpot_cauldronp", "dragonling_batp", "hat_catcoon_costumep", "body_catcoon_costumep", "hat_chester_costumep", "body_chester_costumep", "hat_glommer_costumep", "body_glommer_costumep", "hat_hutch_costumep", "body_hutch_costumep", },
+		output_items = {  "wathgrithr_deerclops_p", "body_wathgrithr_deerclopsp", "waxwell_krampus_p", "body_waxwell_krampusp", "webber_bat_p", "webber_beard_bat", "body_webber_batp", "wendy_lureplant_p", "body_wendy_lureplantp", "wes_mandrake_p", "body_wes_mandrakep", "wickerbottom_lightninggoat_p", "body_wickerbottom_lightninggoatp", "willow_dragonfly_p", "body_willow_dragonflyp", "wilson_pigguard_p", "wilson_beard_pigguard", "body_wilson_pigguardp", "winona_grassgecko_p", "body_winona_grassgeckop", "wolfgang_walrus_p", "body_wolfgang_walrusp", "woodie_treeguard_p", "body_woodie_treeguardp", "wx78_rhinorook_p", "body_wx78_rhinorookp", "torch_spookyp", "birdcage_gothicp", "cookpot_cauldronp", "dragonling_batp", "hat_catcoon_costumep", "body_catcoon_costumep", "hat_chester_costumep", "body_chester_costumep", "hat_glommer_costumep", "body_glommer_costumep", "hat_hutch_costumep", "body_hutch_costumep", },
 		release_group = 105,
 	},
 	pack_costume_clothes =
@@ -1052,8 +1086,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/webber_bat_d.xml",
 		display_tex = "webber_bat_d_oval.tex",
 		box_build = "box_shop_hallowed",
-		display_items = {  "webber_bat_p", "body_webber_batp", },
-		output_items = {  "webber_bat_p", "body_webber_batp", },
+		display_items = {  "webber_bat_p", "webber_beard_bat", "body_webber_batp", },
+		output_items = {  "webber_bat_p", "webber_beard_bat", "body_webber_batp", },
 		release_group = 105,
 	},
 	pack_costume_wendy =
@@ -1117,8 +1151,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_pigguard_d.xml",
 		display_tex = "wilson_pigguard_d_oval.tex",
 		box_build = "box_shop_hallowed",
-		display_items = {  "wilson_pigguard_p", "body_wilson_pigguardp", },
-		output_items = {  "wilson_pigguard_p", "body_wilson_pigguardp", },
+		display_items = {  "wilson_pigguard_p", "wilson_beard_pigguard", "body_wilson_pigguardp", },
+		output_items = {  "wilson_pigguard_p", "wilson_beard_pigguard", "body_wilson_pigguardp", },
 		release_group = 105,
 	},
 	pack_costume_winona =
@@ -1226,7 +1260,7 @@ MISC_ITEMS =
 		display_tex = "gladiator.tex",
 		box_build = "box_shop_forge_all",
 		display_items = {  "wilson_gladiator", "willow_gladiator", "wolfgang_gladiator", "wendy_gladiator", "wx78_gladiator", "wickerbottom_gladiator", "woodie_gladiator", "wes_gladiator", "waxwell_gladiator", "wathgrithr_gladiator", "webber_gladiator", "winona_gladiator", },
-		output_items = {  "wilson_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", "willow_gladiator", "body_willow_gladiator", "feet_willow_gladiator", "hand_willow_gladiator", "legs_willow_gladiator", "wolfgang_gladiator", "body_wolfgang_gladiator", "feet_wolfgang_gladiator", "hand_wolfgang_gladiator", "legs_wolfgang_gladiator", "wendy_gladiator", "body_wendy_gladiator", "feet_wendy_gladiator", "hand_wendy_gladiator", "wx78_gladiator", "body_wx78_gladiator", "feet_wx78_gladiator", "hand_wx78_gladiator", "legs_wx78_gladiator", "wickerbottom_gladiator", "body_wickerbottom_gladiator", "feet_wickerbottom_gladiator", "hand_wickerbottom_gladiator", "woodie_gladiator", "body_woodie_gladiator", "feet_woodie_gladiator", "hand_woodie_gladiator", "legs_woodie_gladiator", "wes_gladiator", "body_wes_gladiator", "feet_wes_gladiator", "hand_wes_gladiator", "waxwell_gladiator", "body_waxwell_gladiator", "feet_waxwell_gladiator", "hand_waxwell_gladiator", "legs_waxwell_gladiator", "wathgrithr_gladiator", "body_wathgrithr_gladiator", "feet_wathgrithr_gladiator", "hand_wathgrithr_gladiator", "legs_wathgrithr_gladiator", "webber_gladiator", "body_webber_gladiator", "feet_webber_gladiator", "hand_webber_gladiator", "winona_gladiator", "body_winona_gladiator", "feet_winona_gladiator", "hand_winona_gladiator", "legs_winona_gladiator", },
+		output_items = {  "wilson_gladiator", "wilson_beard_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", "willow_gladiator", "body_willow_gladiator", "feet_willow_gladiator", "hand_willow_gladiator", "legs_willow_gladiator", "wolfgang_gladiator", "body_wolfgang_gladiator", "feet_wolfgang_gladiator", "hand_wolfgang_gladiator", "legs_wolfgang_gladiator", "wendy_gladiator", "body_wendy_gladiator", "feet_wendy_gladiator", "hand_wendy_gladiator", "wx78_gladiator", "body_wx78_gladiator", "feet_wx78_gladiator", "hand_wx78_gladiator", "legs_wx78_gladiator", "wickerbottom_gladiator", "body_wickerbottom_gladiator", "feet_wickerbottom_gladiator", "hand_wickerbottom_gladiator", "woodie_gladiator", "body_woodie_gladiator", "feet_woodie_gladiator", "hand_woodie_gladiator", "legs_woodie_gladiator", "wes_gladiator", "body_wes_gladiator", "feet_wes_gladiator", "hand_wes_gladiator", "waxwell_gladiator", "body_waxwell_gladiator", "feet_waxwell_gladiator", "hand_waxwell_gladiator", "legs_waxwell_gladiator", "wathgrithr_gladiator", "body_wathgrithr_gladiator", "feet_wathgrithr_gladiator", "hand_wathgrithr_gladiator", "legs_wathgrithr_gladiator", "webber_gladiator", "webber_beard_gladiator", "body_webber_gladiator", "feet_webber_gladiator", "hand_webber_gladiator", "winona_gladiator", "body_winona_gladiator", "feet_winona_gladiator", "hand_winona_gladiator", "legs_winona_gladiator", },
 		release_group = 34,
 	},
 	pack_gladiator_wathgrithr =
@@ -1264,8 +1298,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/webber_gladiator.xml",
 		display_tex = "webber_gladiator_oval.tex",
 		box_build = "box_shop_forge",
-		display_items = {  "webber_gladiator", "body_webber_gladiator", "feet_webber_gladiator", "hand_webber_gladiator", },
-		output_items = {  "webber_gladiator", "body_webber_gladiator", "feet_webber_gladiator", "hand_webber_gladiator", },
+		display_items = {  "webber_gladiator", "webber_beard_gladiator", "body_webber_gladiator", "feet_webber_gladiator", "hand_webber_gladiator", },
+		output_items = {  "webber_gladiator", "webber_beard_gladiator", "body_webber_gladiator", "feet_webber_gladiator", "hand_webber_gladiator", },
 		release_group = 34,
 	},
 	pack_gladiator_wendy =
@@ -1329,8 +1363,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_gladiator.xml",
 		display_tex = "wilson_gladiator_oval.tex",
 		box_build = "box_shop_forge",
-		display_items = {  "wilson_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", },
-		output_items = {  "wilson_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", },
+		display_items = {  "wilson_gladiator", "wilson_beard_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", },
+		output_items = {  "wilson_gladiator", "wilson_beard_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", },
 		release_group = 34,
 	},
 	pack_gladiator_winona =
@@ -1397,7 +1431,7 @@ MISC_ITEMS =
 		display_tex = "hallowed.tex",
 		box_build = "box_shop_hallowed",
 		display_items = {  "wilson_madscience", "willow_dowdy", "webber_punk", "wendy_creepy", "wes_clown", "wx78_wip", },
-		output_items = {  "webber_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", },
+		output_items = {  "webber_punk", "webber_beard_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "wilson_beard_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", },
 		release_group = 106,
 	},
 	pack_hallowed_all2 =
@@ -1443,7 +1477,7 @@ MISC_ITEMS =
 		display_tex = "hallowed_bundle.tex",
 		box_build = "box_shop_hallowed",
 		display_items = {  "wilson_madscience", "willow_dowdy", "webber_punk", "wendy_creepy", "wes_clown", "wx78_wip", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
-		output_items = {  "webber_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
+		output_items = {  "webber_punk", "webber_beard_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "wilson_beard_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
 		release_group = 106,
 	},
 	pack_hallowed_bundle2 =
@@ -1458,7 +1492,7 @@ MISC_ITEMS =
 		display_tex = "hallowed_bundle2.tex",
 		box_build = "box_shop_hallowed",
 		display_items = {  "wilson_madscience", "willow_dowdy", "webber_punk", "wendy_creepy", "wes_clown", "wx78_wip", "warly_candyman", "wathgrithr_scarecrow", "waxwell_vampire", "wickerbottom_spiderwitch", "winona_frankenstein", "wortox_dragon", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
-		output_items = {  "webber_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", "warly_candyman", "body_warly_candyman", "feet_warly_candyman", "legs_warly_candyman", "hand_warly_candyman", "wathgrithr_scarecrow", "body_wathgrithr_scarecrow", "feet_wathgrithr_scarecrow", "hand_wathgrithr_scarecrow", "waxwell_vampire", "body_waxwell_vampire", "legs_waxwell_vampire", "hand_waxwell_vampire", "wickerbottom_spiderwitch", "body_wickerbottom_spiderwitch", "hand_wickerbottom_spiderwitch", "legs_wickerbottom_spiderwitch", "winona_frankenstein", "body_winona_frankenstein", "legs_winona_frankenstein", "feet_winona_frankenstein", "wortox_dragon", "body_wortox_dragon", "legs_wortox_dragon", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
+		output_items = {  "webber_punk", "webber_beard_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "wilson_beard_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", "warly_candyman", "body_warly_candyman", "feet_warly_candyman", "legs_warly_candyman", "hand_warly_candyman", "wathgrithr_scarecrow", "body_wathgrithr_scarecrow", "feet_wathgrithr_scarecrow", "hand_wathgrithr_scarecrow", "waxwell_vampire", "body_waxwell_vampire", "legs_waxwell_vampire", "hand_waxwell_vampire", "wickerbottom_spiderwitch", "body_wickerbottom_spiderwitch", "hand_wickerbottom_spiderwitch", "legs_wickerbottom_spiderwitch", "winona_frankenstein", "body_winona_frankenstein", "legs_winona_frankenstein", "feet_winona_frankenstein", "wortox_dragon", "body_wortox_dragon", "legs_wortox_dragon", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
 		release_group = 106,
 	},
 	pack_hallowed_bundle3 =
@@ -1473,7 +1507,7 @@ MISC_ITEMS =
 		display_tex = "hallowed_bundle3.tex",
 		box_build = "box_shop_hallowed",
 		display_items = {  "wilson_madscience", "willow_dowdy", "webber_punk", "wendy_creepy", "wes_clown", "wx78_wip", "warly_candyman", "wathgrithr_scarecrow", "waxwell_vampire", "wickerbottom_spiderwitch", "winona_frankenstein", "wortox_dragon", "wormwood_pumpkin", "wolfgang_wolfman", "wurt_squid", "woodie_hippie", "walter_ventriloquist", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
-		output_items = {  "webber_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", "warly_candyman", "body_warly_candyman", "feet_warly_candyman", "legs_warly_candyman", "hand_warly_candyman", "wathgrithr_scarecrow", "body_wathgrithr_scarecrow", "feet_wathgrithr_scarecrow", "hand_wathgrithr_scarecrow", "waxwell_vampire", "body_waxwell_vampire", "legs_waxwell_vampire", "hand_waxwell_vampire", "wickerbottom_spiderwitch", "body_wickerbottom_spiderwitch", "hand_wickerbottom_spiderwitch", "legs_wickerbottom_spiderwitch", "winona_frankenstein", "body_winona_frankenstein", "legs_winona_frankenstein", "feet_winona_frankenstein", "wortox_dragon", "body_wortox_dragon", "legs_wortox_dragon", "wormwood_pumpkin", "body_wormwood_pumpkin", "hand_wormwood_pumpkin", "legs_wormwood_pumpkin", "wolfgang_wolfman", "body_wolfgang_wolfman", "hand_wolfgang_wolfman", "legs_wolfgang_wolfman", "wurt_squid", "body_wurt_squid", "hand_wurt_squid", "woodie_hippie", "body_woodie_hippie", "feet_woodie_hippie", "hand_woodie_hippie", "legs_woodie_hippie", "walter_ventriloquist", "body_walter_ventriloquist", "feet_walter_ventriloquist", "legs_walter_ventriloquist", "walterhat_ventriloquist", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
+		output_items = {  "webber_punk", "webber_beard_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", "wendy_creepy", "body_wendy_creepy", "feet_wendy_creepy", "wes_clown", "body_wes_clown", "feet_wes_clown", "wilson_madscience", "wilson_beard_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", "willow_dowdy", "body_willow_dowdy", "feet_willow_dowdy", "wx78_wip", "body_wx78_wip", "hand_wx78_wip", "feet_wx78_wip", "warly_candyman", "body_warly_candyman", "feet_warly_candyman", "legs_warly_candyman", "hand_warly_candyman", "wathgrithr_scarecrow", "body_wathgrithr_scarecrow", "feet_wathgrithr_scarecrow", "hand_wathgrithr_scarecrow", "waxwell_vampire", "body_waxwell_vampire", "legs_waxwell_vampire", "hand_waxwell_vampire", "wickerbottom_spiderwitch", "body_wickerbottom_spiderwitch", "hand_wickerbottom_spiderwitch", "legs_wickerbottom_spiderwitch", "winona_frankenstein", "body_winona_frankenstein", "legs_winona_frankenstein", "feet_winona_frankenstein", "wortox_dragon", "body_wortox_dragon", "legs_wortox_dragon", "wormwood_pumpkin", "body_wormwood_pumpkin", "hand_wormwood_pumpkin", "legs_wormwood_pumpkin", "wolfgang_wolfman", "body_wolfgang_wolfman", "hand_wolfgang_wolfman", "legs_wolfgang_wolfman", "wurt_squid", "body_wurt_squid", "hand_wurt_squid", "woodie_hippie", "body_woodie_hippie", "feet_woodie_hippie", "hand_woodie_hippie", "legs_woodie_hippie", "walter_ventriloquist", "body_walter_ventriloquist", "feet_walter_ventriloquist", "legs_walter_ventriloquist", "walterhat_ventriloquist", "batbat_scythe", "kitten_black", "treasurechest_monster", "icebox_coffin", "watermelonhat_pumpkin", },
 		release_group = 106,
 	},
 	pack_hallowed_items =
@@ -1552,8 +1586,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/webber_punk.xml",
 		display_tex = "webber_punk_oval.tex",
 		box_build = "box_shop_hallowed",
-		display_items = {  "webber_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", },
-		output_items = {  "webber_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", },
+		display_items = {  "webber_punk", "webber_beard_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", },
+		output_items = {  "webber_punk", "webber_beard_punk", "body_webber_punk", "hand_webber_punk", "feet_webber_punk", },
 		release_group = 106,
 	},
 	pack_hallowed_wendy =
@@ -1617,8 +1651,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_madscience.xml",
 		display_tex = "wilson_madscience_oval.tex",
 		box_build = "box_shop_hallowed",
-		display_items = {  "wilson_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", },
-		output_items = {  "wilson_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", },
+		display_items = {  "wilson_madscience", "wilson_beard_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", },
+		output_items = {  "wilson_madscience", "wilson_beard_madscience", "body_wilson_madscientist", "hand_wilson_madscientist", },
 		release_group = 106,
 	},
 	pack_hallowed_winona =
@@ -1802,8 +1836,63 @@ MISC_ITEMS =
 		display_tex = "ice.tex",
 		box_build = "box_shop_ice",
 		display_items = {  "wilson_ice", "willow_ice", "wickerbottom_ice", "wendy_ice", "webber_ice", "wolfgang_ice", },
-		output_items = {  "webber_ice", "wendy_ice", "wickerbottom_ice", "willow_ice", "wilson_ice", "wolfgang_ice", "body_webber_ice", "body_wendy_ice", "body_wickerbottom_ice", "body_willow_ice", "body_wilson_ice", "body_wolfgang_ice", "feet_webber_ice", "feet_wendy_ice", "feet_wickerbottom_ice1", "feet_willow_ice", "feet_wilson_ice", "feet_wolfgang_ice", "hand_wendy_ice", "hand_wickerbottom_ice", "hand_willow_ice", "hand_wilson_ice", "hand_wolfgang_ice", "legs_webber_ice", "legs_wilson_ice", "legs_wolfgang_ice", },
-		release_group = 37,
+		output_items = {  "webber_ice", "webber_beard_ice", "wendy_ice", "wickerbottom_ice", "willow_ice", "wilson_ice", "wilson_beard_ice", "wolfgang_ice", "body_webber_ice", "body_wendy_ice", "body_wickerbottom_ice", "body_willow_ice", "body_wilson_ice", "body_wolfgang_ice", "feet_webber_ice", "feet_wendy_ice", "feet_wickerbottom_ice1", "feet_willow_ice", "feet_wilson_ice", "feet_wolfgang_ice", "hand_wendy_ice", "hand_wickerbottom_ice", "hand_willow_ice", "hand_wilson_ice", "hand_wolfgang_ice", "legs_webber_ice", "legs_wilson_ice", "legs_wolfgang_ice", },
+		release_group = 109,
+	},
+	pack_ice_all2 =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1485060,
+		display_order = 2,
+		build_name_override = "pack_ice_all",
+		display_atlas = "images/iap_images_ice2.xml",
+		display_tex = "ice2.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "walter_ice", "warly_ice", "wortox_ice", "wx78_ice", "winona_ice", },
+		output_items = {  "walter_ice", "body_walter_ice", "hand_walter_ice", "legs_walter_ice", "walterhat_ice", "warly_ice", "body_warly_ice", "feet_warly_ice", "legs_warly_ice", "wortox_ice", "body_wortox_ice", "legs_wortox_ice", "wx78_ice", "body_wx78_ice", "feet_wx78_ice", "hand_wx78_ice", "legs_wx78_ice", "winona_ice", "body_winona_ice", "hand_winona_ice", },
+		release_group = 109,
+	},
+	pack_ice_bundle =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 3,
+		build_name_override = "pack_ice_all",
+		display_atlas = "images/iap_images_ice_bundle.xml",
+		display_tex = "ice_bundle.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "wilson_ice", "willow_ice", "wickerbottom_ice", "wendy_ice", "webber_ice", "wolfgang_ice", "walter_ice", "warly_ice", "wortox_ice", "wx78_ice", "winona_ice", },
+		output_items = {  "webber_ice", "webber_beard_ice", "wendy_ice", "wickerbottom_ice", "willow_ice", "wilson_ice", "wilson_beard_ice", "wolfgang_ice", "body_webber_ice", "body_wendy_ice", "body_wickerbottom_ice", "body_willow_ice", "body_wilson_ice", "body_wolfgang_ice", "feet_webber_ice", "feet_wendy_ice", "feet_wickerbottom_ice1", "feet_willow_ice", "feet_wilson_ice", "feet_wolfgang_ice", "hand_wendy_ice", "hand_wickerbottom_ice", "hand_willow_ice", "hand_wilson_ice", "hand_wolfgang_ice", "legs_webber_ice", "legs_wilson_ice", "legs_wolfgang_ice", "walter_ice", "body_walter_ice", "hand_walter_ice", "legs_walter_ice", "walterhat_ice", "warly_ice", "body_warly_ice", "feet_warly_ice", "legs_warly_ice", "wortox_ice", "body_wortox_ice", "legs_wortox_ice", "wx78_ice", "body_wx78_ice", "feet_wx78_ice", "hand_wx78_ice", "legs_wx78_ice", "winona_ice", "body_winona_ice", "hand_winona_ice", },
+		release_group = 109,
+	},
+	pack_ice_walter =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 117,
+		build_name_override = "walter_ice",
+		display_atlas = "bigportraits/walter_ice.xml",
+		display_tex = "walter_ice_oval.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "walter_ice", "body_walter_ice", "hand_walter_ice", "legs_walter_ice", "walterhat_ice", },
+		output_items = {  "walter_ice", "body_walter_ice", "hand_walter_ice", "legs_walter_ice", "walterhat_ice", },
+		release_group = 109,
+	},
+	pack_ice_warly =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 115,
+		build_name_override = "warly_ice",
+		display_atlas = "bigportraits/warly_ice.xml",
+		display_tex = "warly_ice_oval.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "warly_ice", "body_warly_ice", "feet_warly_ice", "legs_warly_ice", },
+		output_items = {  "warly_ice", "body_warly_ice", "feet_warly_ice", "legs_warly_ice", },
+		release_group = 109,
 	},
 	pack_ice_webber =
 	{
@@ -1814,9 +1903,9 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/webber_ice.xml",
 		display_tex = "webber_ice_oval.tex",
 		box_build = "box_shop_ice",
-		display_items = {  "webber_ice", "body_webber_ice", "feet_webber_ice", "legs_webber_ice", },
-		output_items = {  "webber_ice", "body_webber_ice", "feet_webber_ice", "legs_webber_ice", },
-		release_group = 37,
+		display_items = {  "webber_ice", "webber_beard_ice", "body_webber_ice", "feet_webber_ice", "legs_webber_ice", },
+		output_items = {  "webber_ice", "webber_beard_ice", "body_webber_ice", "feet_webber_ice", "legs_webber_ice", },
+		release_group = 109,
 	},
 	pack_ice_wendy =
 	{
@@ -1829,7 +1918,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wendy_ice", "body_wendy_ice", "feet_wendy_ice", "hand_wendy_ice", },
 		output_items = {  "wendy_ice", "body_wendy_ice", "feet_wendy_ice", "hand_wendy_ice", },
-		release_group = 37,
+		release_group = 109,
 	},
 	pack_ice_wickerbottom =
 	{
@@ -1842,7 +1931,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wickerbottom_ice", "body_wickerbottom_ice", "feet_wickerbottom_ice1", "hand_wickerbottom_ice", },
 		output_items = {  "wickerbottom_ice", "body_wickerbottom_ice", "feet_wickerbottom_ice1", "hand_wickerbottom_ice", },
-		release_group = 37,
+		release_group = 109,
 	},
 	pack_ice_willow =
 	{
@@ -1855,7 +1944,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "willow_ice", "body_willow_ice", "feet_willow_ice", "hand_willow_ice", },
 		output_items = {  "willow_ice", "body_willow_ice", "feet_willow_ice", "hand_willow_ice", },
-		release_group = 37,
+		release_group = 109,
 	},
 	pack_ice_wilson =
 	{
@@ -1866,9 +1955,22 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_ice.xml",
 		display_tex = "wilson_ice_oval.tex",
 		box_build = "box_shop_ice",
-		display_items = {  "wilson_ice", "body_wilson_ice", "feet_wilson_ice", "hand_wilson_ice", "legs_wilson_ice", },
-		output_items = {  "wilson_ice", "body_wilson_ice", "feet_wilson_ice", "hand_wilson_ice", "legs_wilson_ice", },
-		release_group = 37,
+		display_items = {  "wilson_ice", "wilson_beard_ice", "body_wilson_ice", "feet_wilson_ice", "hand_wilson_ice", "legs_wilson_ice", },
+		output_items = {  "wilson_ice", "wilson_beard_ice", "body_wilson_ice", "feet_wilson_ice", "hand_wilson_ice", "legs_wilson_ice", },
+		release_group = 109,
+	},
+	pack_ice_winona =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 112,
+		build_name_override = "winona_ice",
+		display_atlas = "bigportraits/winona_ice.xml",
+		display_tex = "winona_ice_oval.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "winona_ice", "body_winona_ice", "hand_winona_ice", },
+		output_items = {  "winona_ice", "body_winona_ice", "hand_winona_ice", },
+		release_group = 109,
 	},
 	pack_ice_wolfgang =
 	{
@@ -1881,7 +1983,33 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wolfgang_ice", "body_wolfgang_ice", "feet_wolfgang_ice", "hand_wolfgang_ice", "legs_wolfgang_ice", },
 		output_items = {  "wolfgang_ice", "body_wolfgang_ice", "feet_wolfgang_ice", "hand_wolfgang_ice", "legs_wolfgang_ice", },
-		release_group = 37,
+		release_group = 109,
+	},
+	pack_ice_wortox =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 113,
+		build_name_override = "wortox_ice",
+		display_atlas = "bigportraits/wortox_ice.xml",
+		display_tex = "wortox_ice_oval.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "wortox_ice", "body_wortox_ice", "legs_wortox_ice", },
+		output_items = {  "wortox_ice", "body_wortox_ice", "legs_wortox_ice", },
+		release_group = 109,
+	},
+	pack_ice_wx78 =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 105,
+		build_name_override = "wx78_ice",
+		display_atlas = "bigportraits/wx78_ice.xml",
+		display_tex = "wx78_ice_oval.tex",
+		box_build = "box_shop_ice",
+		display_items = {  "wx78_ice", "body_wx78_ice", "feet_wx78_ice", "hand_wx78_ice", "legs_wx78_ice", },
+		output_items = {  "wx78_ice", "body_wx78_ice", "feet_wx78_ice", "hand_wx78_ice", "legs_wx78_ice", },
+		release_group = 109,
 	},
 	pack_lost_1 =
 	{
@@ -1895,7 +2023,7 @@ MISC_ITEMS =
 		display_tex = "lost_1.tex",
 		box_build = "box_shop_plain",
 		display_items = {  "wilson_nature", "wolfgang_nature", "wurt_rose", "wormwood_shadow", "warly_chef", "tophat_chef", },
-		output_items = {  "wilson_nature", "body_wilson_nature", "legs_wilson_nature", "wolfgang_nature", "body_wolfgang_nature", "feet_wolfgang_nature", "wurt_rose", "body_wurt_rose", "hand_wurt_rose", "legs_wurt_rose", "wormwood_shadow", "body_wormwood_shadow", "hand_wormwood_shadow", "legs_wormwood_shadow", "tophat_chef", "warly_chef", "body_warly_chef", "feet_warly_chef", },
+		output_items = {  "wilson_nature", "wilson_beard_nature", "body_wilson_nature", "legs_wilson_nature", "wolfgang_nature", "body_wolfgang_nature", "feet_wolfgang_nature", "wurt_rose", "body_wurt_rose", "hand_wurt_rose", "legs_wurt_rose", "wormwood_shadow", "body_wormwood_shadow", "hand_wormwood_shadow", "legs_wormwood_shadow", "tophat_chef", "warly_chef", "body_warly_chef", "feet_warly_chef", },
 		release_group = 101,
 	},
 	pack_magma_all =
@@ -1909,7 +2037,7 @@ MISC_ITEMS =
 		display_tex = "magma.tex",
 		box_build = "box_shop_forge_all",
 		display_items = {  "wilson_magma", "willow_magma", "wolfgang_magma", "wendy_magma", "wx78_magma", "wickerbottom_magma", "woodie_magma", "wes_magma", "waxwell_magma", "wathgrithr_magma", "webber_magma", "winona_magma", },
-		output_items = {  "wathgrithr_magma", "waxwell_magma", "webber_magma", "wendy_magma", "wes_magma", "wickerbottom_magma", "willow_magma", "wilson_magma", "winona_magma", "wolfgang_magma", "woodie_magma", "wx78_magma", "body_wathgrithr_magma", "body_waxwell_magma", "body_webber_magma", "body_wendy_magma", "body_wes_magma", "body_wickerbottom_magma", "body_willow_magma", "body_wilson_magma", "body_winona_magma", "body_wolfgang_magma", "body_woodie_magma", "body_wx78_magma", "hand_wathgrithr_magma", "hand_waxwell_magma", "hand_webber_magma", "hand_wendy_magma", "hand_wes_magma", "hand_wickerbottom_magma", "hand_willow_magma", "hand_wilson_magma", "hand_winona_magma", "hand_wolfgang_magma", "hand_woodie_magma", "hand_wx78_magma", "legs_wathgrithr_magma", "legs_waxwell_magma", "legs_willow_magma", "legs_wilson_magma", "legs_winona_magma", "legs_wolfgang_magma", "legs_woodie_magma", "feet_webber_magma", "feet_wendy_magma", "feet_wes_magma", "feet_wickerbottom_magma", "feet_wx78_magma", },
+		output_items = {  "wathgrithr_magma", "waxwell_magma", "webber_magma", "webber_beard_magma", "wendy_magma", "wes_magma", "wickerbottom_magma", "willow_magma", "wilson_magma", "wilson_beard_magma", "winona_magma", "wolfgang_magma", "woodie_magma", "wx78_magma", "body_wathgrithr_magma", "body_waxwell_magma", "body_webber_magma", "body_wendy_magma", "body_wes_magma", "body_wickerbottom_magma", "body_willow_magma", "body_wilson_magma", "body_winona_magma", "body_wolfgang_magma", "body_woodie_magma", "body_wx78_magma", "hand_wathgrithr_magma", "hand_waxwell_magma", "hand_webber_magma", "hand_wendy_magma", "hand_wes_magma", "hand_wickerbottom_magma", "hand_willow_magma", "hand_wilson_magma", "hand_winona_magma", "hand_wolfgang_magma", "hand_woodie_magma", "hand_wx78_magma", "legs_wathgrithr_magma", "legs_waxwell_magma", "legs_willow_magma", "legs_wilson_magma", "legs_winona_magma", "legs_wolfgang_magma", "legs_woodie_magma", "feet_webber_magma", "feet_wendy_magma", "feet_wes_magma", "feet_wickerbottom_magma", "feet_wx78_magma", },
 		release_group = 53,
 	},
 	pack_magma_bundle =
@@ -1922,7 +2050,7 @@ MISC_ITEMS =
 		display_tex = "magma_bundle.tex",
 		box_build = "box_shop_forge_all",
 		display_items = {  "wilson_magma", "willow_magma", "wolfgang_magma", "wendy_magma", "wx78_magma", "wickerbottom_magma", "woodie_magma", "wes_magma", "waxwell_magma", "wathgrithr_magma", "webber_magma", "winona_magma", "armor_ruins_arcane", "armor_ruins_bulky", "armor_ruins_leaf", "armor_ruins_tusk", "armor_grass_cloak", "armor_grass_woven", "armor_marble_chainmail", "armor_marble_rockabs", "armor_wood_fangedcollar", "armor_wood_haramaki", "armor_wood_lamellar", "flowerhat_healing", "flowerhat_crown", "footballhat_combathelm", "footballhat_combathelm2", "amulet_red_occulteye", "firestaff_meteor", "hammer_forge", "ruins_bat_heavy", "spear_forge_gungnir", "spear_forge_lance", "hambat_spiralcut", "book_brimstone_gilded", },
-		output_items = {  "wathgrithr_magma", "waxwell_magma", "webber_magma", "wendy_magma", "wes_magma", "wickerbottom_magma", "willow_magma", "wilson_magma", "winona_magma", "wolfgang_magma", "woodie_magma", "wx78_magma", "body_wathgrithr_magma", "body_waxwell_magma", "body_webber_magma", "body_wendy_magma", "body_wes_magma", "body_wickerbottom_magma", "body_willow_magma", "body_wilson_magma", "body_winona_magma", "body_wolfgang_magma", "body_woodie_magma", "body_wx78_magma", "hand_wathgrithr_magma", "hand_waxwell_magma", "hand_webber_magma", "hand_wendy_magma", "hand_wes_magma", "hand_wickerbottom_magma", "hand_willow_magma", "hand_wilson_magma", "hand_winona_magma", "hand_wolfgang_magma", "hand_woodie_magma", "hand_wx78_magma", "legs_wathgrithr_magma", "legs_waxwell_magma", "legs_willow_magma", "legs_wilson_magma", "legs_winona_magma", "legs_wolfgang_magma", "legs_woodie_magma", "feet_webber_magma", "feet_wendy_magma", "feet_wes_magma", "feet_wickerbottom_magma", "feet_wx78_magma", "armor_ruins_arcane", "armor_ruins_bulky", "armor_ruins_leaf", "armor_ruins_tusk", "armor_grass_cloak", "armor_grass_woven", "armor_marble_chainmail", "armor_marble_rockabs", "armor_wood_fangedcollar", "armor_wood_haramaki", "armor_wood_lamellar", "flowerhat_healing", "flowerhat_crown", "footballhat_combathelm", "footballhat_combathelm2", "amulet_red_occulteye", "firestaff_meteor", "hammer_forge", "ruins_bat_heavy", "spear_forge_gungnir", "spear_forge_lance", "hambat_spiralcut", "book_brimstone_gilded", },
+		output_items = {  "wathgrithr_magma", "waxwell_magma", "webber_magma", "webber_beard_magma", "wendy_magma", "wes_magma", "wickerbottom_magma", "willow_magma", "wilson_magma", "wilson_beard_magma", "winona_magma", "wolfgang_magma", "woodie_magma", "wx78_magma", "body_wathgrithr_magma", "body_waxwell_magma", "body_webber_magma", "body_wendy_magma", "body_wes_magma", "body_wickerbottom_magma", "body_willow_magma", "body_wilson_magma", "body_winona_magma", "body_wolfgang_magma", "body_woodie_magma", "body_wx78_magma", "hand_wathgrithr_magma", "hand_waxwell_magma", "hand_webber_magma", "hand_wendy_magma", "hand_wes_magma", "hand_wickerbottom_magma", "hand_willow_magma", "hand_wilson_magma", "hand_winona_magma", "hand_wolfgang_magma", "hand_woodie_magma", "hand_wx78_magma", "legs_wathgrithr_magma", "legs_waxwell_magma", "legs_willow_magma", "legs_wilson_magma", "legs_winona_magma", "legs_wolfgang_magma", "legs_woodie_magma", "feet_webber_magma", "feet_wendy_magma", "feet_wes_magma", "feet_wickerbottom_magma", "feet_wx78_magma", "armor_ruins_arcane", "armor_ruins_bulky", "armor_ruins_leaf", "armor_ruins_tusk", "armor_grass_cloak", "armor_grass_woven", "armor_marble_chainmail", "armor_marble_rockabs", "armor_wood_fangedcollar", "armor_wood_haramaki", "armor_wood_lamellar", "flowerhat_healing", "flowerhat_crown", "footballhat_combathelm", "footballhat_combathelm2", "amulet_red_occulteye", "firestaff_meteor", "hammer_forge", "ruins_bat_heavy", "spear_forge_gungnir", "spear_forge_lance", "hambat_spiralcut", "book_brimstone_gilded", },
 		release_group = 53,
 	},
 	pack_magma_wathgrithr =
@@ -1960,8 +2088,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/webber_magma.xml",
 		display_tex = "webber_magma_oval.tex",
 		box_build = "box_shop_forge",
-		display_items = {  "webber_magma", "body_webber_magma", "feet_webber_magma", "hand_webber_magma", },
-		output_items = {  "webber_magma", "body_webber_magma", "feet_webber_magma", "hand_webber_magma", },
+		display_items = {  "webber_magma", "webber_beard_magma", "body_webber_magma", "feet_webber_magma", "hand_webber_magma", },
+		output_items = {  "webber_magma", "webber_beard_magma", "body_webber_magma", "feet_webber_magma", "hand_webber_magma", },
 		release_group = 53,
 	},
 	pack_magma_wendy =
@@ -2025,8 +2153,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_magma.xml",
 		display_tex = "wilson_magma_oval.tex",
 		box_build = "box_shop_forge",
-		display_items = {  "wilson_magma", "body_wilson_magma", "hand_wilson_magma", "legs_wilson_magma", },
-		output_items = {  "wilson_magma", "body_wilson_magma", "hand_wilson_magma", "legs_wilson_magma", },
+		display_items = {  "wilson_magma", "wilson_beard_magma", "body_wilson_magma", "hand_wilson_magma", "legs_wilson_magma", },
+		output_items = {  "wilson_magma", "wilson_beard_magma", "body_wilson_magma", "hand_wilson_magma", "legs_wilson_magma", },
 		release_group = 53,
 	},
 	pack_magma_winona =
@@ -2251,7 +2379,7 @@ MISC_ITEMS =
 		display_tex = "starter_2019.tex",
 		box_build = "box_shop_plain",
 		display_items = {  "wurt_none", "wilson_gladiator", "willow_ice", "wendy_victorian", "wx78_nature", "spear_simple", "backpack_hound", "body_pj_green_hunters", "legs_pj_green_hunters", "bedroll_furry_quilt_green_hunters", },
-		output_items = {  "wurt_none", "wilson_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", "willow_ice", "body_willow_ice", "feet_willow_ice", "hand_willow_ice", "wendy_victorian", "body_wendy_victorian", "hand_wendy_victorian", "feet_wendy_victorian", "wx78_nature", "body_wx78_nature", "feet_wx78_nature", "hand_wx78_nature", "spear_simple", "backpack_hound", "body_pj_green_hunters", "legs_pj_green_hunters", "bedroll_furry_quilt_green_hunters", },
+		output_items = {  "wurt_none", "wilson_gladiator", "wilson_beard_gladiator", "body_wilson_gladiator", "feet_wilson_gladiator", "hand_wilson_gladiator", "legs_wilson_gladiator", "willow_ice", "body_willow_ice", "feet_willow_ice", "hand_willow_ice", "wendy_victorian", "body_wendy_victorian", "hand_wendy_victorian", "feet_wendy_victorian", "wx78_nature", "body_wx78_nature", "feet_wx78_nature", "hand_wx78_nature", "spear_simple", "backpack_hound", "body_pj_green_hunters", "legs_pj_green_hunters", "bedroll_furry_quilt_green_hunters", },
 		release_group = 78,
 	},
 	pack_starter_2020 =
@@ -2267,7 +2395,7 @@ MISC_ITEMS =
 		display_tex = "starter_2020.tex",
 		box_build = "box_shop_plain",
 		display_items = {  "wortox_none", "wilson_victorian", "willow_formalp", "wathgrithr_nature", "webber_wrestler", "spear_ragged", "backpack_babybeef", "body_pj_red_redbird", "legs_pj_red_redbird", "bedroll_furry_quilt_red_redbird", },
-		output_items = {  "wortox_none", "wilson_victorian", "body_wilson_victorian", "feet_wilson_victorian", "hand_wilson_victorian", "willow_formalp", "body_willow_formalp", "feet_formal_stilettop_black_scribble", "wathgrithr_nature", "body_wathgrithr_nature", "hand_wathgrithr_nature", "legs_wathgrithr_nature", "feet_wathgrithr_nature", "webber_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "spear_ragged", "backpack_babybeef", "body_pj_red_redbird", "legs_pj_red_redbird", "bedroll_furry_quilt_red_redbird", },
+		output_items = {  "wortox_none", "wilson_victorian", "wilson_beard_victorian", "body_wilson_victorian", "feet_wilson_victorian", "hand_wilson_victorian", "willow_formalp", "body_willow_formalp", "feet_formal_stilettop_black_scribble", "wathgrithr_nature", "body_wathgrithr_nature", "hand_wathgrithr_nature", "legs_wathgrithr_nature", "feet_wathgrithr_nature", "webber_wrestler", "webber_beard_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "spear_ragged", "backpack_babybeef", "body_pj_red_redbird", "legs_pj_red_redbird", "bedroll_furry_quilt_red_redbird", },
 		release_group = 103,
 	},
 	pack_sw_gift =
@@ -2306,7 +2434,7 @@ MISC_ITEMS =
 		display_tex = "victorian.tex",
 		box_build = "box_shop_victorian",
 		display_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", },
-		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", },
+		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "webber_beard_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wilson_beard_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", },
 		release_group = 46,
 	},
 	pack_victorian_bundle =
@@ -2319,7 +2447,7 @@ MISC_ITEMS =
 		display_tex = "victorian_bundle.tex",
 		box_build = "box_shop_victorian",
 		display_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
-		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
+		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "webber_beard_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wilson_beard_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
 		release_group = 46,
 	},
 	pack_victorian_items =
@@ -2371,8 +2499,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/webber_victorian.xml",
 		display_tex = "webber_victorian_oval.tex",
 		box_build = "box_shop_victorian",
-		display_items = {  "webber_victorian", "body_webber_victorian", "hand_webber_victorian", "feet_webber_victorian", },
-		output_items = {  "webber_victorian", "body_webber_victorian", "hand_webber_victorian", "feet_webber_victorian", },
+		display_items = {  "webber_victorian", "webber_beard_victorian", "body_webber_victorian", "hand_webber_victorian", "feet_webber_victorian", },
+		output_items = {  "webber_victorian", "webber_beard_victorian", "body_webber_victorian", "hand_webber_victorian", "feet_webber_victorian", },
 		release_group = 46,
 	},
 	pack_victorian_wendy =
@@ -2436,8 +2564,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_victorian.xml",
 		display_tex = "wilson_victorian_oval.tex",
 		box_build = "box_shop_victorian",
-		display_items = {  "wilson_victorian", "body_wilson_victorian", "hand_wilson_victorian", "feet_wilson_victorian", },
-		output_items = {  "wilson_victorian", "body_wilson_victorian", "hand_wilson_victorian", "feet_wilson_victorian", },
+		display_items = {  "wilson_victorian", "wilson_beard_victorian", "body_wilson_victorian", "hand_wilson_victorian", "feet_wilson_victorian", },
+		output_items = {  "wilson_victorian", "wilson_beard_victorian", "body_wilson_victorian", "hand_wilson_victorian", "feet_wilson_victorian", },
 		release_group = 46,
 	},
 	pack_victorian_winona =
@@ -2950,8 +3078,8 @@ MISC_ITEMS =
 		display_atlas = "bigportraits/wilson_nature.xml",
 		display_tex = "wilson_nature_oval.tex",
 		box_build = "box_shop_nature",
-		display_items = {  "wilson_nature", "body_wilson_nature", "legs_wilson_nature", },
-		output_items = {  "wilson_nature", "body_wilson_nature", "legs_wilson_nature", },
+		display_items = {  "wilson_nature", "wilson_beard_nature", "body_wilson_nature", "legs_wilson_nature", },
+		output_items = {  "wilson_nature", "wilson_beard_nature", "body_wilson_nature", "legs_wilson_nature", },
 		release_group = 101,
 	},
 	pack_winona_deluxe =
@@ -3271,7 +3399,7 @@ MISC_ITEMS =
 		display_tex = "wrestler_promo2.tex",
 		box_build = "box_shop_wrestler",
 		display_items = {  "webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", "winona_wrestler", "trap_metal", "beemine_jamjar", "wx78_wrestler", "lightning_rod_robot", "firesuppressor_robot", },
-		output_items = {  "webber_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", "winona_wrestler", "body_winona_wrestler", "hand_winona_wrestler", "legs_winona_wrestler", "trap_metal", "beemine_jamjar", "wx78_wrestler", "body_wx78_wrestler", "hand_wx78_wrestler", "feet_wx78_wrestler", "lightning_rod_robot", "firesuppressor_robot", },
+		output_items = {  "webber_wrestler", "webber_beard_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", "winona_wrestler", "body_winona_wrestler", "hand_winona_wrestler", "legs_winona_wrestler", "trap_metal", "beemine_jamjar", "wx78_wrestler", "body_wx78_wrestler", "hand_wx78_wrestler", "feet_wx78_wrestler", "lightning_rod_robot", "firesuppressor_robot", },
 		release_group = 81,
 	},
 	pack_wrestler_wathgrithr =
@@ -3298,8 +3426,8 @@ MISC_ITEMS =
 		display_atlas = "images/iap_images_wrestler_webber.xml",
 		display_tex = "wrestler_webber.tex",
 		box_build = "box_shop_wrestler",
-		display_items = {  "webber_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", },
-		output_items = {  "webber_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", },
+		display_items = {  "webber_wrestler", "webber_beard_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", },
+		output_items = {  "webber_wrestler", "webber_beard_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "boomerang_tiger", "trap_teeth_tiger", },
 		release_group = 81,
 	},
 	pack_wrestler_wes =
@@ -3509,7 +3637,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", },
 		output_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", "body_wathgrithr_yule", "body_waxwell_yule", "body_wes_yule", "body_winona_yule", "body_woodie_yule", "body_wx78_yule", "feet_wathgrithr_yule", "feet_wes_yule", "feet_wx78_yule", "hand_wathgrithr_yule", "hand_waxwell_yule", "hand_wes_yule", "hand_winona_yule", "hand_woodie_yule", "hand_wx78_yule", "legs_waxwell_yule", "legs_wes_yule", "legs_winona_yule", "legs_woodie_yule", "legs_wx78_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_bundle =
 	{
@@ -3523,7 +3651,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
 		output_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", "body_wathgrithr_yule", "body_waxwell_yule", "body_wes_yule", "body_winona_yule", "body_woodie_yule", "body_wx78_yule", "feet_wathgrithr_yule", "feet_wes_yule", "feet_wx78_yule", "hand_wathgrithr_yule", "hand_waxwell_yule", "hand_wes_yule", "hand_winona_yule", "hand_woodie_yule", "hand_wx78_yule", "legs_waxwell_yule", "legs_wes_yule", "legs_winona_yule", "legs_woodie_yule", "legs_wx78_yule", "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_items =
 	{
@@ -3538,7 +3666,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
 		output_items = {  "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_wathgrithr =
 	{
@@ -3551,7 +3679,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wathgrithr_yule", "body_wathgrithr_yule", "feet_wathgrithr_yule", "hand_wathgrithr_yule", },
 		output_items = {  "wathgrithr_yule", "body_wathgrithr_yule", "feet_wathgrithr_yule", "hand_wathgrithr_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_waxwell =
 	{
@@ -3564,7 +3692,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "waxwell_yule", "body_waxwell_yule", "hand_waxwell_yule", "legs_waxwell_yule", },
 		output_items = {  "waxwell_yule", "body_waxwell_yule", "hand_waxwell_yule", "legs_waxwell_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_wes =
 	{
@@ -3577,7 +3705,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wes_yule", "body_wes_yule", "feet_wes_yule", "hand_wes_yule", "legs_wes_yule", },
 		output_items = {  "wes_yule", "body_wes_yule", "feet_wes_yule", "hand_wes_yule", "legs_wes_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_winona =
 	{
@@ -3590,7 +3718,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "winona_yule", "body_winona_yule", "hand_winona_yule", "legs_winona_yule", },
 		output_items = {  "winona_yule", "body_winona_yule", "hand_winona_yule", "legs_winona_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_woodie =
 	{
@@ -3603,7 +3731,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "woodie_yule", "body_woodie_yule", "hand_woodie_yule", "legs_woodie_yule", },
 		output_items = {  "woodie_yule", "body_woodie_yule", "hand_woodie_yule", "legs_woodie_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	pack_yule_wx78 =
 	{
@@ -3616,7 +3744,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wx78_yule", "body_wx78_yule", "feet_wx78_yule", "hand_wx78_yule", "legs_wx78_yule", },
 		output_items = {  "wx78_yule", "body_wx78_yule", "feet_wx78_yule", "hand_wx78_yule", "legs_wx78_yule", },
-		release_group = 83,
+		release_group = 108,
 	},
 	playerportrait_bg_altarstatue =
 	{
@@ -3653,7 +3781,7 @@ MISC_ITEMS =
 		type = "playerportrait",
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Loyal",
-		release_group = 82,
+		release_group = 108,
 	},
 	playerportrait_bg_birchnut =
 	{
@@ -4111,6 +4239,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 48,
 	},
+	playerportrait_bg_researchlab2crystal =
+	{
+		type = "playerportrait",
+		skin_tags = { "CRYSTAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 107,
+	},
 	playerportrait_bg_researchlab3crystal =
 	{
 		type = "playerportrait",
@@ -4246,13 +4381,20 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 92,
 	},
+	playerportrait_bg_wardrobeyule =
+	{
+		type = "playerportrait",
+		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 110,
+	},
 	playerportrait_bg_winter =
 	{
 		type = "playerportrait",
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	playerportrait_bg_winterfire =
 	{
@@ -4260,7 +4402,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	playerportrait_bg_winterometercircus =
 	{
@@ -4275,7 +4417,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	playerportrait_bg_yotp1 =
 	{
@@ -4331,7 +4473,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	playerportrait_bg_yule2 =
 	{
@@ -4339,7 +4481,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	playerportrait_bg_yule3 =
 	{
@@ -4347,7 +4489,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	playerportrait_bg_yule4 =
 	{
@@ -4355,7 +4497,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	playerportrait_bg_yule5 =
 	{
@@ -4363,7 +4505,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	playerportrait_bg_yule6 =
 	{
@@ -4371,7 +4513,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	playerportrait_bg_yule7 =
 	{
@@ -4379,7 +4521,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_abigail_flower =
 	{
@@ -4440,7 +4582,7 @@ MISC_ITEMS =
 		type = "profileflair",
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Loyal",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_bernie =
 	{
@@ -4776,7 +4918,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_gift_2 =
 	{
@@ -4784,7 +4926,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_gift_3 =
 	{
@@ -4792,7 +4934,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_goosemoose =
 	{
@@ -4948,7 +5090,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_10 =
 	{
@@ -4956,7 +5098,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_11 =
 	{
@@ -4964,7 +5106,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_12 =
 	{
@@ -4972,7 +5114,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_13 =
 	{
@@ -4980,7 +5122,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_14 =
 	{
@@ -4988,7 +5130,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_ornaments_15 =
 	{
@@ -4996,7 +5138,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_ornaments_16 =
 	{
@@ -5004,7 +5146,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_ornaments_17 =
 	{
@@ -5012,7 +5154,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_ornaments_2 =
 	{
@@ -5020,7 +5162,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_3 =
 	{
@@ -5028,7 +5170,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_4 =
 	{
@@ -5036,7 +5178,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_5 =
 	{
@@ -5044,7 +5186,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_6 =
 	{
@@ -5052,7 +5194,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_7 =
 	{
@@ -5060,7 +5202,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_8 =
 	{
@@ -5068,7 +5210,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_ornaments_9 =
 	{
@@ -5076,7 +5218,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_pengull =
 	{
@@ -5216,6 +5358,13 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 56,
 	},
+	profileflair_researchlab2_crystal =
+	{
+		type = "profileflair",
+		skin_tags = { "CRYSTAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 107,
+	},
 	profileflair_researchlab3_crystal =
 	{
 		type = "profileflair",
@@ -5289,7 +5438,7 @@ MISC_ITEMS =
 		type = "profileflair",
 		skin_tags = { "PROFILEFLAIR", },
 		rarity = "Loyal",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_spider =
 	{
@@ -5708,6 +5857,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 92,
 	},
+	profileflair_wardrobe_yule =
+	{
+		type = "profileflair",
+		skin_tags = { "WINTER", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 110,
+	},
 	profileflair_watermelonhat_pumpkin =
 	{
 		type = "profileflair",
@@ -5745,7 +5901,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_candycane =
 	{
@@ -5753,7 +5909,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_chocolatelog =
 	{
@@ -5761,7 +5917,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_claus =
 	{
@@ -5769,7 +5925,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_deer =
 	{
@@ -5777,7 +5933,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_deerclops =
 	{
@@ -5785,7 +5941,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_doorgategingerbread =
 	{
@@ -5793,7 +5949,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_dragonfly =
 	{
@@ -5801,7 +5957,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_dragonflyfire =
 	{
@@ -5809,7 +5965,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_eggnog =
 	{
@@ -5817,7 +5973,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_fruitcake =
 	{
@@ -5825,7 +5981,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_gingerbreadman =
 	{
@@ -5833,7 +5989,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_gingerpig =
 	{
@@ -5841,7 +5997,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_gingervarg =
 	{
@@ -5849,7 +6005,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_glommer =
 	{
@@ -5857,7 +6013,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_goosemoose =
 	{
@@ -5865,7 +6021,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
-		release_group = 36,
+		release_group = 109,
 	},
 	profileflair_yule_hotchocolate =
 	{
@@ -5873,7 +6029,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_mulledwine =
 	{
@@ -5881,7 +6037,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_mushroomlightfestive =
 	{
@@ -5889,7 +6045,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_pumpkinpie =
 	{
@@ -5897,7 +6053,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_puppington =
 	{
@@ -5905,7 +6061,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	profileflair_yule_roastturkey =
 	{
@@ -5913,7 +6069,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 82,
+		release_group = 108,
 	},
 	profileflair_yule_sugarcookie =
 	{
@@ -5921,7 +6077,7 @@ MISC_ITEMS =
 		skin_tags = { "WINTER", "PROFILEFLAIR", },
 		rarity = "Common",
 		rarity_modifier = "Woven",
-		release_group = 54,
+		release_group = 108,
 	},
 	webber_beard_bat =
 	{
@@ -5994,6 +6150,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 102,
+	},
+	webber_beard_victorian =
+	{
+		type = "beard",
+		skin_tags = { "VICTORIAN", "WEBBER_BEARD", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 110,
 	},
 	webber_beard_wrestler =
 	{

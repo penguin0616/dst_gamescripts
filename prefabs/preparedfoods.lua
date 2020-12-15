@@ -1,9 +1,3 @@
-local assets =
-{
-    Asset("ANIM", "anim/cook_pot_food.zip"),
-	Asset("ANIM", "anim/cook_pot_food2.zip"),
-	Asset("ANIM", "anim/cook_pot_food3.zip"),
-}
 
 local prefabs =
 {
@@ -11,10 +5,18 @@ local prefabs =
 }
 
 local function MakePreparedFood(data)
-    local foodassets = assets
-    local spicename = data.spice ~= nil and string.lower(data.spice) or nil
+	local foodassets = 
+	{
+		Asset("ANIM", "anim/cook_pot_food.zip"),
+		Asset("INV_IMAGE", data.name),
+	}
+
+	if data.overridebuild then
+        table.insert(foodassets, Asset("ANIM", "anim/"..data.overridebuild..".zip"))
+	end
+
+	local spicename = data.spice ~= nil and string.lower(data.spice) or nil
     if spicename ~= nil then
-        foodassets = shallowcopy(assets)
         table.insert(foodassets, Asset("ANIM", "anim/spices.zip"))
         table.insert(foodassets, Asset("ANIM", "anim/plate_food.zip"))
         table.insert(foodassets, Asset("INV_IMAGE", spicename.."_over"))

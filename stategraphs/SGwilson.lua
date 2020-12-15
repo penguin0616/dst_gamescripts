@@ -478,7 +478,7 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.FERTILIZE,
         function(inst, action)
-            return (action.target ~= nil and action.target ~= inst and "doshortaction")
+            return (((action.target ~= nil and action.target ~= inst) or action:GetActionPoint() ~= nil) and "doshortaction")
                 or (action.invobject ~= nil and action.invobject:HasTag("slowfertilize") and "fertilize")
                 or "fertilize_short"
         end),
@@ -510,6 +510,7 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.MAKEBALLOON, "makeballoon"),
     ActionHandler(ACTIONS.DEPLOY, "doshortaction"),
+    ActionHandler(ACTIONS.DEPLOY_TILEARRIVE, "doshortaction"),
     ActionHandler(ACTIONS.STORE, "doshortaction"),
     ActionHandler(ACTIONS.DROP,
         function(inst)
@@ -579,6 +580,7 @@ local actionhandlers =
             return inst:HasTag("expertchef") and "domediumaction" or "dolongaction"
         end),
     ActionHandler(ACTIONS.FILL, "dolongaction"),
+    ActionHandler(ACTIONS.FILL_OCEAN, "dolongaction"),
     ActionHandler(ACTIONS.PICKUP,
         function(inst, action)
             return action.target ~= nil
@@ -826,6 +828,19 @@ local actionhandlers =
     ActionHandler(ACTIONS.ABANDON_QUEST, "dolongaction"),
 
     ActionHandler(ACTIONS.TELLSTORY, "dostorytelling"),
+    
+    ActionHandler(ACTIONS.POUR_WATER, "pour"),
+    ActionHandler(ACTIONS.POUR_WATER_GROUNDTILE, "pour"),
+
+    ActionHandler(ACTIONS.INTERACT_WITH,
+        function(inst, action)
+            return inst:HasTag("plantkin") and "domediumaction" or "dolongaction"
+        end),
+    ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH_FAIL, "dolongaction"),
+    ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH, "dolongaction"),
+    ActionHandler(ACTIONS.ASSESSPLANTHAPPINESS, "dolongaction"),
+    ActionHandler(ACTIONS.ADDCOMPOSTABLE, "give"),
+    ActionHandler(ACTIONS.WAX, "dolongaction"),
 }
 
 local events =
@@ -4668,6 +4683,54 @@ local states =
                 end
             end),
         },
+    },
+
+    State{
+        name = "plantregistry_open",
+        tags = { "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:StopMoving()
+            inst.AnimState:PlayAnimation("idle_loop", true)
+        end,
+
+        timeline =
+        {
+            TimeEvent(8 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+		onupdate = function(inst)
+			if not CanEntitySeeTarget(inst, inst) then
+                inst.sg:GoToState("plantregistry_close")
+			end
+		end,
+
+        events =
+        {
+            EventHandler("ms_closeplantregistryscreen", function(inst)
+				inst.sg.statemem.closing = true
+                inst.sg:GoToState("plantregistry_close")
+            end),
+        },
+
+        onexit = function(inst)
+		    inst:ShowPlantRegistryPopUp(false)
+			if not inst.sg.statemem.closing then
+                inst:PushEvent("ms_closeplantregistryscreen")
+			end
+        end,
+    },
+
+    State{
+        name = "plantregistry_close",
+        tags = { "idle", "nodangle" },
+
+        onenter = function(inst)
+            inst.components.locomotor:StopMoving()
+            inst.sg:GoToState(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil and "item_out" or "idle")
+        end,
     },
 
     State{
@@ -12679,6 +12742,65 @@ local states =
     },
 
     State{
+        name = "pour",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+
+            inst.AnimState:PlayAnimation("water_pre")
+            inst.AnimState:PushAnimation("water", false)
+
+            inst.AnimState:Show("water")
+
+            inst.sg.statemem.action = inst:GetBufferedAction()
+            
+            if inst.sg.statemem.action ~= nil then
+                local pt = inst.sg.statemem.action:GetActionPoint()
+                if pt ~= nil then
+                    local tx, ty, tz = TheWorld.Map:GetTileCenterPoint(pt.x, 0, pt.z)
+                    inst.Transform:SetRotation(inst:GetAngleToPoint(tx, ty, tz))
+                end
+
+                local invobject = inst.sg.statemem.action.invobject
+                if invobject.components.wateringcan ~= nil then
+                    if not invobject.components.wateringcan:CanUse() then
+                        inst.AnimState:Hide("water")
+                        inst.sg.statemem.nosound = true
+                    end
+                end
+            end
+            
+            inst.sg:SetTimeout(26 * FRAMES)
+        end,
+
+        timeline =
+        {
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(5 * FRAMES, function(inst)
+                if not inst.sg.statemem.nosound then
+                    inst.SoundEmitter:PlaySound("farming/common/watering_can/use")
+				end
+            end),
+            TimeEvent(24 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle", true)
+        end,
+
+        onexit = function(inst)
+            if inst.bufferedaction == inst.sg.statemem.action then
+                inst:ClearBufferedAction()
+            end
+        end,
+    },
+
+    State{
         name = "portal_jumpin_pre",
         tags = { "busy" },
 
@@ -12830,7 +12952,7 @@ local states =
 
     State{
         name = "form_log",
-        tags = { "doing", "busy", "nocraftinginterrupt" },
+        tags = { "doing", "busy", "nocraftinginterrupt", "nomorph" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -12868,7 +12990,7 @@ local states =
 
     State{
         name = "fertilize",
-        tags = { "doing", "busy" },
+        tags = { "doing", "busy", "nomorph", "self_fertilizing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -12909,7 +13031,7 @@ local states =
 
     State{
         name = "fertilize_short",
-        tags = { "doing", "busy" },
+        tags = { "doing", "busy", "nomorph", "self_fertilizing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()

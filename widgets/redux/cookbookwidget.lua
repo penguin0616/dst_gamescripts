@@ -81,7 +81,7 @@ local CookbookWidget = Class(Widget, function(self, parent)
 		table.insert(self.tabs, tab_root:AddChild(MakeTab(button_data[i], i)))
 		self.tabs[#self.tabs]:MoveToBack()
 	end
-	self:_PositionTabs(self.tabs, 240, 285)
+	self:_PositionTabs(self.tabs, 200, 285)
 
 	-----
 	local starting_tab = TheCookbook:GetFilter("tab")

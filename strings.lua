@@ -389,7 +389,11 @@ STRINGS =
             PLACELANTERN = "Place",
             YOTC_ENTERRACE = "Enter Race",
         },
-        PICK = "Pick",
+        PICK =
+		{
+			 GENERIC = "Pick",
+			 HARVEST = "Harvest",
+		},
         REPAIR = 
         {
             GENERIC = "Repair",
@@ -417,6 +421,11 @@ STRINGS =
         EXTINGUISH = "Extinguish",
         LOOKAT = "Examine",
         TALKTO = "Talk to",
+		INTERACT_WITH =
+		{
+            GENERIC = "Interact With",
+			FARM_PLANT = "Talk To",
+		},
         MINE = "Mine",
         ATTACK =
         {
@@ -483,6 +492,8 @@ STRINGS =
             TURRET = "Place",
             WATER = "Launch",
             PORTABLE = "Place",
+            DEPLOY = "Deploy",
+            FERTILIZE_GROUND = "Fertilize Plot",
         },
         DEPLOY =
         {
@@ -495,6 +506,7 @@ STRINGS =
             WATER = "Launch",
             PORTABLE = "Place",
             DEPLOY = "Deploy",
+            FERTILIZE_GROUND = "Fertilize Plot",
         },
 
         PLAY = "Play",
@@ -520,6 +532,7 @@ STRINGS =
             TOUCH = "Touch",
             OPEN = "Open",
             CLOSE = "Close",
+            TURN = "Turn",
         },
         JUMPIN =
         {
@@ -543,7 +556,11 @@ STRINGS =
             LOCK = "Lock",
         },
         USEKLAUSSACKKEY = "Unlock",
-        TEACH = "Learn",
+        TEACH = 
+        {
+            GENERIC = "Learn",
+            READ = "Read",
+        },
         TURNON = "Turn On",
         TURNOFF =
         {
@@ -735,7 +752,24 @@ STRINGS =
 
 		TELLSTORY = "Tell Story",
 
-		USE_WINCH = "Drop",
+        USE_WINCH = "Drop",
+        
+        POUR_WATER =
+        {
+            GENERIC = "Water",
+            EXTINGUISH = "Extinguish",
+        },
+
+        PLANTREGISTRY_RESEARCH_FAIL = "Research",
+        PLANTREGISTRY_RESEARCH = "Research",
+        ASSESSPLANTHAPPINESS = {
+            GENERIC = "Assess Happiness",
+            GENERIC_FMT = "Assess {plant}'s Happiness",
+        },
+
+        ADDCOMPOSTABLE = "Give",
+
+        WAX = "Wax",
 
 		-- Winter's Feast 2019
 		WINTERSFEAST_FEAST = "Feast",
@@ -791,6 +825,8 @@ STRINGS =
         BOOK_BIRDS = "Birds of the World",
         BOOK_TENTACLES = "On Tentacles",
         BOOK_GARDENING = "Applied Horticulture",
+        BOOK_SILVICULTURE = "Applied Silviculture",
+		BOOK_HORTICULTURE = "Horticulture, Abridged",
         BOOK_SLEEP = "Sleepytime Stories",
         BOOK_BRIMSTONE = "The End is Nigh!",
 
@@ -841,23 +877,102 @@ STRINGS =
         ASPARAGUS = "Asparagus",
         PEPPER = "Pepper",
 
+        CARROT_OVERSIZED = "Giant Carrots",
+        PUMPKIN_OVERSIZED = "Giant Pumpkin",
+        DRAGONFRUIT_OVERSIZED = "Giant Dragon Fruit",
+        POMEGRANATE_OVERSIZED = "Giant Pomegranate",
+        CORN_OVERSIZED = "Giant Corn",
+        DURIAN_OVERSIZED = "Giant Durian",
+        EGGPLANT_OVERSIZED = "Giant Eggplant",
+        TOMATO_OVERSIZED = "Giant Toma Root",
+        POTATO_OVERSIZED = "Giant Potato",
+        ONION_OVERSIZED  = "Giant Onion",
+        GARLIC_OVERSIZED = "Giant Garlic",
+        ASPARAGUS_OVERSIZED = "Giant Asparagus",
+        PEPPER_OVERSIZED = "Giant Pepper",
+        WATERMELON_OVERSIZED = "Giant Watermelon",
+
+        CARROT_OVERSIZED_ROTTEN = "Giant Rotting Carrots",
+        PUMPKIN_OVERSIZED_ROTTEN = "Giant Rotting Pumpkin",
+        DRAGONFRUIT_OVERSIZED_ROTTEN = "Giant Rotting Dragon Fruit",
+        POMEGRANATE_OVERSIZED_ROTTEN = "Giant Rotting Pomegranate",
+        CORN_OVERSIZED_ROTTEN = "Giant Rotting Corn",
+        DURIAN_OVERSIZED_ROTTEN = "Giant Rotting Durian",
+        EGGPLANT_OVERSIZED_ROTTEN = "Giant Rotting Eggplant",
+        TOMATO_OVERSIZED_ROTTEN = "Giant Rotting Toma Root",
+        POTATO_OVERSIZED_ROTTEN = "Giant Rotting Potato",
+        ONION_OVERSIZED_ROTTEN  = "Giant Rotting Onion",
+        GARLIC_OVERSIZED_ROTTEN = "Giant Rotting Garlic",
+        ASPARAGUS_OVERSIZED_ROTTEN = "Giant Rotting Asparagus",
+        PEPPER_OVERSIZED_ROTTEN = "Giant Rotting Pepper",
+        WATERMELON_OVERSIZED_ROTTEN = "Giant Rotting Watermelon",
+
+		FARM_PLANT_SEED = "Planted {seed}",
+		FARM_PLANT_RANDOMSEED = "Planted Seed",
+		FARM_PLANT_ROTTEN = "Rotting Plant",
+        FARM_PLANT_UNKNOWN = "Plant",
+        FARM_PLANT_CARROT = "Carrot Plant",
+        FARM_PLANT_PUMPKIN = "Pumpkin Plant",
+        FARM_PLANT_DRAGONFRUIT = "Dragon Fruit Vine",
+        FARM_PLANT_POMEGRANATE = "Pomegranate Branch",
+        FARM_PLANT_CORN = "Corn Stalk",
+        FARM_PLANT_DURIAN = "Durian Vine",
+        FARM_PLANT_EGGPLANT = "Eggplant Stalk",
+        FARM_PLANT_TOMATO = "Toma Root Plant",
+        FARM_PLANT_POTATO = "Potato Plant",
+        FARM_PLANT_WATERMELON = "Watermelon Plant",
+        FARM_PLANT_ONION  = "Onion Plant",
+        FARM_PLANT_GARLIC = "Garlic Plant",
+        FARM_PLANT_ASPARAGUS = "Asparagus Fern",
+        FARM_PLANT_PEPPER = "Pepper Plant",
+
+        FARM_SOIL_DEBRIS = "Garden Detritus",
+
+		WEED_FORGETMELOTS = "Forget-Me-Lots",
+		WEED_TILLWEED = "Tillweed",
+		WEED_FIRENETTLE = "Fire Nettles",
+		WEED_IVY = "Spiny Bindweed",
+		IVY_SNARE = "Binding Roots",
+
+		FIRENETTLES = "Fire Nettle Fronds",
+		FORGETMELOTS = "Forget-Me-Lots",
+		SWEETTEA = "Soothing Tea",
+		TILLWEED = "Tillweeds",
+		TILLWEEDSALVE = "Tillweed Salve",
+
         ICEBOX = "Ice Box",
-        CARROT_SEEDS = "Carrot Seeds",
         
-        PUMPKIN_SEEDS = "Pumpkin Seeds",
-        DRAGONFRUIT_SEEDS = "Dragon Fruit Seeds",
-        POMEGRANATE_SEEDS = "Pomegranate Seeds",
-        CORN_SEEDS = "Corn Seeds",
-        DURIAN_SEEDS = "Durian Seeds",
-        EGGPLANT_SEEDS = "Eggplant Seeds",
-        WATERMELON_SEEDS = "Watermelon Seeds",
-        TOMATO_SEEDS = "Toma Root Seeds",
-        POTATO_SEEDS = "Potato Seeds",
-        TURNIP_SEEDS = "Turnip Seeds",
-        ONION_SEEDS  = "Onion Seeds",
-        GARLIC_SEEDS = "Garlic Seeds",
-        ASPARAGUS_SEEDS = "Asparagus Seeds",
-        PEPPER_SEEDS = "Pepper Seeds",
+        KNOWN_PUMPKIN_SEEDS = "Pumpkin Seeds",
+        KNOWN_DRAGONFRUIT_SEEDS = "Dragon Fruit Seeds",
+        KNOWN_POMEGRANATE_SEEDS = "Pomegranate Seeds",
+        KNOWN_CORN_SEEDS = "Corn Seeds",
+        KNOWN_DURIAN_SEEDS = "Durian Seeds",
+        KNOWN_EGGPLANT_SEEDS = "Eggplant Seeds",
+        KNOWN_WATERMELON_SEEDS = "Watermelon Seeds",
+        KNOWN_TOMATO_SEEDS = "Toma Root Seeds",
+        KNOWN_POTATO_SEEDS = "Potato Seeds",
+        KNOWN_TURNIP_SEEDS = "Turnip Seeds",
+        KNOWN_ONION_SEEDS  = "Onion Seeds",
+        KNOWN_GARLIC_SEEDS = "Garlic Seeds",
+        KNOWN_ASPARAGUS_SEEDS = "Asparagus Seeds",
+        KNOWN_PEPPER_SEEDS = "Pepper Seeds",
+        KNOWN_CARROT_SEEDS = "Carrot Seeds",
+
+        PUMPKIN_SEEDS = "Sharp Seeds",
+        DRAGONFRUIT_SEEDS = "Bulbous Seeds",
+        POMEGRANATE_SEEDS = "Windblown Seeds",
+        CORN_SEEDS = "Clustered Seeds",
+        DURIAN_SEEDS = "Brittle Seed Pods",
+        EGGPLANT_SEEDS = "Swirly Seeds",
+        WATERMELON_SEEDS = "Square Seeds",
+        TOMATO_SEEDS = "Spiky Seeds",
+        POTATO_SEEDS = "Fluffy Seeds",
+        TURNIP_SEEDS = "Round Seeds",
+        ONION_SEEDS  = "Pointy Seeds",
+        GARLIC_SEEDS = "Seed Pods",
+        ASPARAGUS_SEEDS = "Tubular Seeds",
+        PEPPER_SEEDS = "Lumpy Seeds",
+        CARROT_SEEDS = "Oblong Seeds",
 
         MANRABBIT_TAIL = "Bunny Puff",
         BUNNYMAN = "Bunnyman",
@@ -1943,6 +2058,10 @@ STRINGS =
         WINTER_ORNAMENTBOSS = "Magnificent Adornment",
 		WINTER_ORNAMENTFORGE = "Champion Adornment",
 		WINTER_ORNAMENTGORGE = "Appeasing Adornment",
+		WINTER_ORNAMENTPEARL = "Sentimental Adornment",
+
+		WINTER_ORNAMENT_BOSS_HERMITHOUSE = "Sentimental Adornment",
+		WINTER_ORNAMENT_BOSS_PEARL = "Sentimental Adornment",
 
         WINTER_FOOD1 = "Gingerbread Cookie",
         WINTER_FOOD2 = "Sugar Cookie",
@@ -2789,6 +2908,37 @@ STRINGS =
         TURFCRAFTINGSTATION = "Terra Firma Tamper",
 
         MOON_ALTAR_LINK = "Mysterious Energy",
+
+        -- FARMING
+		FARM_PLOW = "Garden Rigamajig",
+		FARM_PLOW_ITEM = "Garden Rigamajig",
+		FARM_HOE = "Garden Hoe",
+		GOLDEN_FARM_HOE = "Splendid Garden Hoe",
+        NUTRIENTSGOGGLESHAT = "Premier Gardeneer Hat",
+		PLANTREGISTRYHAT = "Gardeneer Hat",
+        
+        COMPOSTINGBIN = "Composting Bin",
+        COMPOST = "Compost",
+
+		SOIL_AMENDER = "Growth Formula Starter",
+        SOIL_AMENDER_FRESH = "Growth Formula Starter",
+        SOIL_AMENDER_STALE = "Fermenting Growth Formula",
+        SOIL_AMENDER_SPOILED = "Fermented Growth Formula",
+		SOIL_AMENDER_FERMENTED = "Super Growth Formula",
+
+		WATERINGCAN = "Watering Can",
+        WATERINGCAN_EMPTY = "Empty Watering Can",
+        PREMIUMWATERINGCAN = "Waterfowl Can",
+        PREMIUMWATERINGCAN_EMPTY = "Empty Waterfowl Can",
+
+        TROPHYSCALE_OVERSIZEDVEGGIES = "Produce Scale",
+        
+        LORDFRUITFLY = "Lord of the Fruit Flies",
+        FRUITFLY = "Fruit Fly",
+        FRIENDLYFRUITFLY = "Friendly Fruit Fly",
+        FRUITFLYFRUIT = "Friendly Fruit Fly Fruit",
+
+        SEEDPOUCH = "Seed Pack-It",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -2836,6 +2986,8 @@ STRINGS =
         BOOK_BIRDS = "1000 species: habits, habitats, and calls.",
         BOOK_TENTACLES = "Let's learn about our subterranean friends!",
         BOOK_GARDENING = "On the care and feeding of plants.",
+        BOOK_SILVICULTURE = "A guide to branch management.",
+		BOOK_HORTICULTURE = "On the care and feeding of crops.",
         BOOK_SLEEP = "Soothing tales to send you off to dreamland.",
         BOOK_BRIMSTONE = "The world will end in fire and tribulation!",
 
@@ -3003,6 +3155,7 @@ STRINGS =
         MEATRACK = "The jerkiest of racks.",
         BANDAGE = "Heal your minor wounds.",
         HEALINGSALVE = "Disinfectant for cuts and abrasions.",
+		TILLWEEDSALVE = "Slowly weed out aches and pains.",
         WATERBALLOON = "Spheroid fire suppression.",
         BALLOONS_EMPTY = "If only there was an easier way.",
         LIFEINJECTOR = "Boosts your declining max health.",
@@ -3114,6 +3267,9 @@ STRINGS =
 
         MULTIPLAYER_PORTAL_MOONROCK_CONSTR_PLANS = "The best laid plans.",
         MOONROCKIDOL = "A key figure.",
+
+		WINTER_ORNAMENT_BOSS_HERMITHOUSE = "A keepsake for your Winter's Feast Tree.",
+		WINTER_ORNAMENT_BOSS_PEARL = "A keepsake for your Winter's Feast Tree.",
 
 		--MOON_ALTAR--
         BATHBOMB = "Flowers, for springs? Groundbreaking.",
@@ -3393,6 +3549,23 @@ STRINGS =
         TURF_UNDERROCK = "The craggy stone floor of a cave.",
         TURF_SINKHOLE = "A chunk of wet, muddy grass.",
         TURF_MUD = "A patch of muddy ground.",
+
+		-- FARMING
+		FARM_PLOW_ITEM = "Plow a plot for your plants.",
+		FARM_HOE = "Till soil for crop seeds.",
+		GOLDEN_FARM_HOE = "Elegantly till soil for crop seeds.",
+        NUTRIENTSGOGGLESHAT = "Visualize your garden's success.",
+		PLANTREGISTRYHAT = "Allow your gardening expertise to grow.",
+
+        COMPOSTINGBIN = "Make stinky rich soil.",
+        SOIL_AMENDER = "Bottled nutrients from the sea.",
+        
+        WATERINGCAN = "Keep plants happy and hydrated.",
+        PREMIUMWATERINGCAN = "An innovation in irrigation!",
+
+        TROPHYSCALE_OVERSIZEDVEGGIES = "Weigh your prized fruits and veggies.",
+
+        SEEDPOUCH = "Stow your seeds for safekeeping.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -5397,6 +5570,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Return of Them Beta\nTroubled Waters",
+		MAINBANNER_BETA_TITLE = "Reap What You Sow\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -5501,6 +5675,84 @@ STRINGS.UI =
 		PLAYER_2_PRESS_START_POSTFIX = "TO JOIN",
     },
 
+    PLANTREGISTRY = {
+        TAB_TITLE_PLANTS = "Plants",
+        TAB_TITLE_MOD_PLANTS = "Mod Plants",
+        TAB_TITLE_FERTILIZERS = "Fertilizers",
+        TAB_TITLE_MOD_FERTILIZERS = "Mod Fertilizers",
+
+        MYSTERY_PLANT = "Unknown Plant",
+        NEEDSMORERESEARCH = "Unknown",
+        NEEDSPLANTRESEARCH = "Research this plant with the Gardeneer Hat to learn more about it.",
+
+        MYSTERY_FERTILIZER = "Unknown Fertilizer",
+        
+        EFFECTS = {
+            NONE = "None",
+            WEED_FORGETMELOTS = "Has a tendency to come back when dug up.",
+			WEED_TILLWEED = "Its roots make a real mess of things, but its flowers are said to have healing properties.",
+            WEED_FIRENETTLE = "These nettles can cause quite the burning sensation.",
+			WEED_IVY = "Attacks survivors when they disturb a nearby plant",
+        },
+
+        DESCRIPTIONS = {
+            MISSING = "Unknown",
+            ONION = "A ripe onion plant is enough to bring tears of delight to any gardener. -W",
+            ASPARAGUS = "Green spears of vegetabley goodness. -W",
+            GARLIC = "Cloves of garlic pair well with a nice stake. -W",
+            PUMPKIN = "Compared to other gourds, the pumpkin plant squashes the competition. -W",
+            CORN = "An a-maize-ingly versatile crop. -W",
+            POTATO = "Sturdy, dependable, and loved by moustachioed strongmen. -W",
+            DRAGONFRUIT = "Produces a delectable fruit with a striking appearance. -W",
+            POMEGRANATE = "Never take the juicy sweetness of a pom for granate. -W",
+            EGGPLANT = "Zero percent egg, ninety-nine percent plant. Science has yet to explain the rest. -W",
+            TOMATO = "Tomatoes are an excellent source of vitamins, and make for a convenient projectile. -W",
+            WATERMELON = "Fifty percent water, fifty percent melon. -W",
+            PEPPER = "A hot pepper plant is the perfect thing to spice up your garden. -W",
+            DURIAN = "A foul smelling fruit, favored by a certain green swamp dweller. -W",
+            CARROT = "The perennial favorite of Bunnymen. -W",
+        },
+
+        NUTRIENTS = {
+            NUTRIENT_1 = "Growth Formula",
+            NUTRIENT_2 = "Compost",
+            NUTRIENT_3 = "Manure",
+            RESTORE = "Restores ",
+            CONSUME = "Consumes ",
+            NEUTRAL = "Doesn't affect "
+        },
+
+        FARMPLANTS = {
+            SEASONS = "Seasons",
+            WATER = "Water Consumption",
+            NUTRIENTS = "Nutrient Cycling",
+            DESCRIPTION = "Field Notes",
+            SEED = "Seed",
+            PRODUCT = "Product",
+        },
+
+        WEEDPLANTS = {
+            WATER = "Water Consumption",
+            NUTRIENTS = "Nutrient Cycling",
+            EFFECTS = "Effects",
+            DESCRIPTION = "Description",
+            PRODUCT = "Product",
+        },
+        
+        PLANT_GROWTH_STAGES = {
+            SEED = "Seed",
+            SPROUT = "Sprout",
+            SMALL = "Small",
+            MEDIUM = "Medium",
+            GROWN = "Grown",
+            OVERSIZED = "Giant",
+            ROTTING = "Rotting",
+            OVERSIZED_ROTTING = "Rotting",
+            BOLTING = "Bolting",
+            PICKED = "Picked",
+            SUMMARY = "Summary",
+        },
+    },
 
 	COOKBOOK = {
 		TAB_TITLE_COOKPOT = "Crock Pot Recipes",
@@ -5539,6 +5791,8 @@ STRINGS.UI =
         FOOD_EFFECTS_SLEEP_RESISTANCE = "Wards off sleep",
         FOOD_EFFECTS_HUNGER_REGEN = "Restores hunger over time",
         FOOD_EFFECTS_DUST_MOTH_FOOD = "Thulecite's secret ingredient",
+		FOOD_EFFECTS_SANITY_REGEN = "Restores sanity over time",
+		FOOD_EFFECTS_HOT_SANITY_REGEN = "Warms the body and mind",
 
 		FOOD_TYPE_TITLE = "Type",
 		FOOD_TYPE_UNKNOWN = "?",
@@ -5723,6 +5977,7 @@ STRINGS.UI =
         STALE_FROZEN = "Melting",
         SPOILED = "Spoiled",
         SPOILED_FROZEN = "Melted",
+        WAXED = "Waxed",
         ROTLEFT = "Rotate Left\n",
         ROTRIGHT = "Rotate Right\n",
         PAUSE = "Pause\n",
@@ -5974,7 +6229,8 @@ STRINGS.UI =
 	{
 		HISTORYOFTRAVELS = "History of Travels",
 		CHARACTERDETAILS = "Survivors",
-		COOKBOOKPANEL = "Cookbook",
+        COOKBOOKPANEL = "Cookbook",
+        PLANTREGISTRYPANEL = "Plant Registry",
         OBITUARIES = "Obituaries",
         ENCOUNTERS = "Encounters",
 		CINEMATICS = "Cinematics",
@@ -5982,6 +6238,7 @@ STRINGS.UI =
 		TOOLTIP_HISTORYOFTRAVELS = "A summary of your adventures",
 		TOOLTIP_CHARACTERDETAILS = "The survivors of the Constant",
 		TOOLTIP_COOKBOOKPANEL = "The Constant's guide to cookery",
+        TOOLTIP_PLANTREGISTRY = "The Constant gardener's almanac",
         TOOLTIP_OBITUARIES = "Reminisce over past mistakes",
         TOOLTIP_ENCOUNTERS = "A history of those you've crossed paths with",
 		TOOLTIP_CINEMATICS = "Pretty movies!",

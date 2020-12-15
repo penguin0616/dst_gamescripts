@@ -215,7 +215,8 @@ return{
 		},
 		COMPARE_WEIGHABLE =
 		{
-			TOO_SMALL = "Ah non, this fish is far too small.",
+            FISH_TOO_SMALL = "Ah non, this fish is far too small.",
+            OVERSIZEDVEGGIES_TOO_SMALL = "I'm afraid it's a bit too small.",
 		},
         BEGIN_QUEST =
         {
@@ -230,6 +231,23 @@ return{
         SING_FAIL =
         {
 --fallback to speech_wilson.lua             SAMESONG = "only_used_by_wathgrithr",
+        },
+        PLANTREGISTRY_RESEARCH_FAIL =
+        {
+            GENERIC = "I already know all there is to know about that one.",
+            FERTILIZER = "I think I know everything I need to, non?",
+        },
+        FILL_OCEAN =
+        {
+            UNSUITABLE_FOR_PLANTS = "Mais non, this salt water will not do!",
+        },
+        POUR_WATER =
+        {
+            OUT_OF_WATER = "I've poured every last drop.",
+        },
+        POUR_WATER_GROUNDTILE =
+        {
+            OUT_OF_WATER = "Not a drop left!",
         },
 	},
 	ACTIONFAIL_GENERIC = "I cannot do that.",
@@ -322,6 +340,7 @@ return{
 	},
     ANNOUNCE_RUINS_RESET = "The terrible monsters are back!",
     ANNOUNCE_SNARED = "Ouch! How rude!",
+    ANNOUNCE_SNARED_IVY = "You think you can come between me and my fresh ingredients, mon ami?",
     ANNOUNCE_REPELLED = "I can't get through!",
 	ANNOUNCE_ENTER_DARK = "Darkness, darkness.",
 	ANNOUNCE_ENTER_LIGHT = "A new day comes with the dawning light.",
@@ -544,6 +563,8 @@ return{
 --fallback to speech_wilson.lua         BOOK_TENTACLES =  "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BRIMSTONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Quel dommage, I think it's gone off.",
 
@@ -586,6 +607,31 @@ return{
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "Oh! It's teaching me a new recipe for a machine!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "I believe I already knew that one.",
     ANNOUNCE_ARCHIVE_NO_POWER = "If only there was a way to get it working again...",
+
+    ANNOUNCE_PLANT_RESEARCHED =
+    {
+        "I've learned a little something about this plant.",
+    },
+
+    ANNOUNCE_PLANT_RANDOMSEED = "I wonder what it will turn out to be.",
+
+    ANNOUNCE_FERTILIZER_RESEARCHED = "If it goes into the food we eat, I suppose I should know everything about it.",
+
+	ANNOUNCE_FIRENETTLE_TOXIN = 
+	{
+		"Mon dieu, I feel as though my insides are boiling!",
+		"This strange heat... I wonder if this is how crabs feel when they're boiled.",
+	},
+	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "Whew, I'm very glad that's over.",
+
+	ANNOUNCE_TALK_TO_PLANTS = 
+	{
+        "Bonjour! Parlez-vous francais?",
+        "May you grow big, ripe and delicious.",
+		"My, you look fresh as a daisy today mon ami!",
+        "What a good little plant you are.",
+        "How are you today, mon ami? Everything growing well?",
+	},
 
 	BATTLECRY =
 	{
@@ -653,6 +699,8 @@ return{
         BOOK_BIRDS = "I had hoped it was a poultry cookbook.",
         BOOK_TENTACLES = "I don't see any recipes in this at all.",
         BOOK_GARDENING = "Maybe Mme. Wickerbottom would be interested in starting a herb garden.",
+		BOOK_SILVICULTURE = "Perhaps it will tell me the best places to find mushrooms.",
+		BOOK_HORTICULTURE = "Maybe Mme. Wickerbottom would be interested in starting a herb garden.",
         BOOK_SLEEP = "It's tradition to nap after a good meal.",
         BOOK_BRIMSTONE = "I don't think that's my forte.",
 
@@ -1369,14 +1417,14 @@ return{
 		CARROT = "Fresh picked produce!",
 		CARROT_COOKED = "Could use a dash of olive oil and cilantro...",
 		CARROT_PLANTED = "Ah, a fresh carrot!",
-		CARROT_SEEDS = "Future carrots!",
+		CARROT_SEEDS = "Future ingredients, just waiting to be grown!",
 		CARTOGRAPHYDESK =
 		{
 			GENERIC = "I hope my penmanship is legible.",
 			BURNING = "Oh dear!",
 			BURNT = "Well, that won't help our explorations much.",
 		},
-		WATERMELON_SEEDS = "More watermelon, anyone?",
+		WATERMELON_SEEDS = "Future ingredients, just waiting to be grown!",
 		CAVE_FERN = "How does anything grow down here?",
 		CHARCOAL = "This, a grill and some meat and I'd have dinner.",
         CHESSPIECE_PAWN = "It looks a bit like a pawn.",
@@ -1441,7 +1489,7 @@ return{
 		},
 		CORN = "Corn! Sweet, sweet corn!",
 		CORN_COOKED = "Could use miso and lardons...",
-		CORN_SEEDS = "The promise of so many more corn dishes!",
+		CORN_SEEDS = "Future ingredients, just waiting to be grown!",
         CANARY =
 		{
 			GENERIC = "Sing me your sweet song, mon amie.",
@@ -1547,7 +1595,7 @@ return{
 
 		DRAGONFRUIT = "So exotic!",
 		DRAGONFRUIT_COOKED = "Could use a spread of pudding and chia seeds...",
-		DRAGONFRUIT_SEEDS = "They hatch dragonfruits.",
+		DRAGONFRUIT_SEEDS = "Future ingredients, just waiting to be grown!",
 		DRAGONPIE = "Flaky crust, tart filling... heavenly!",
 		DRUMSTICK = "Dark meat!",
 		DRUMSTICK_COOKED = "Could use a light honey garlic glaze...",
@@ -1558,11 +1606,11 @@ return{
 		DUG_SAPLING = "Should I bring it back to life?",
 		DURIAN = "That odor...",
 		DURIAN_COOKED = "Could use onions and chili...",
-		DURIAN_SEEDS = "Even these smell...",
+		DURIAN_SEEDS = "Future ingredients, just waiting to be grown!",
 		EARMUFFSHAT = "Ahh, fuzzy!",
 		EGGPLANT = "Aubergine!",
 		EGGPLANT_COOKED = "Could use tomato sauce and Parmesan...",
-		EGGPLANT_SEEDS = "Hatches more eggplants!",
+		EGGPLANT_SEEDS = "Future ingredients, just waiting to be grown!",
 		
 		ENDTABLE = 
 		{
@@ -1972,7 +2020,7 @@ return{
         },
         POMEGRANATE = "Wonderful!",
         POMEGRANATE_COOKED = "Could use tahini and mint...",
-        POMEGRANATE_SEEDS = "Seedy seeds!",
+        POMEGRANATE_SEEDS = "Future ingredients, just waiting to be grown!",
         POND = "I can't see the bottom...",
         POOP = "The end result of a fine meal.",
         FERTILIZER = "Sauce for my garden!",
@@ -1980,7 +2028,7 @@ return{
         PUMPKINCOOKIE = "I've outdone myself this time.",
         PUMPKIN_COOKED = "Could use some pie crust and nutmeg...",
         PUMPKIN_LANTERN = "Trick 'r' neat!",
-        PUMPKIN_SEEDS = "Seed saver!",
+        PUMPKIN_SEEDS = "Future ingredients, just waiting to be grown!",
         PURPLEAMULET = "I must be crazy to fool around with this.",
         PURPLEGEM = "It holds deep secrets.",
         RABBIT =
@@ -3616,11 +3664,117 @@ return{
         TURFCRAFTINGSTATION = "This recipe calls for some ground ingredients, non?",
 
         MOON_ALTAR_LINK = "It needs just a bit more time in the oven.",
+
+        -- FARMING
+        COMPOSTINGBIN =
+        {
+            -- WIP, might not end up with these states so don't fill in for now
+            GENERIC = "A good place for food scraps.",
+            WET = "Too runny, it needs less moisture.",
+            DRY = "Non, far too dry!",
+            BALANCED = "Tres bon!",
+            BURNT = "Burnt to a crisp.",
+        },
+        COMPOST = "The garden needs to be fed too, and proper plating is important!",
+        SOIL_AMENDER = 
+		{ 
+			GENERIC = "Now to let the ingredients marinade.",
+			STALE = "It needs a bit more time to stew.",
+			SPOILED = "It's not my idea of a fine meal, but the plants will love it.",
+		},
+
+		SOIL_AMENDER_FERMENTED = "Ah, c'est fini!",
+
+        WATERINGCAN = 
+        {
+            GENERIC = "Perhaps the garden might like a little drink, non?",
+            EMPTY = "Perhaps there's a lake nearby...",
+        },
+        PREMIUMWATERINGCAN =
+        {
+            GENERIC = "To make the finest ingredients, our plants need the finest care.",
+            EMPTY = "It's completely empty, I'm afraid.",
+        },
+
+		FARM_PLOW = "What a handy machine!",
+		FARM_PLOW_ITEM = "Now, where to start the garden...",
+		FARM_HOE = "I'd better get planting if I want some fresh ingredients.",
+		GOLDEN_FARM_HOE = "Good tools do make a difference.",
+		NUTRIENTSGOGGLESHAT = "I'd best ensure our plants are well fed with the proper nutrients!",
+		PLANTREGISTRYHAT = "It never hurts to learn more about what goes into your food.",
+
+        FARM_SOIL_DEBRIS = "There's a bit of unwanted garnish in my garden.",
+
+		FIRENETTLES = "What a bother.",
+		FORGETMELOTS = "Hm, I don't recall ever seeing a flower like that before.",
+		SWEETTEA = "Ah... je me sens relaxé.",
+		TILLWEED = "I'm afraid you're bothering the other plants, mon ami.",
+		TILLWEEDSALVE = "Those weeds turned out to be a useful ingredient after all.",
+
+		TROPHYSCALE_OVERSIZEDVEGGIES =
+		{
+			GENERIC = "Ah, a handy kitchen scale!",
+			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nTres bien!",
+            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nIncroyable!",
+            HAS_ITEM_LIGHT = "It may not be substantial in size, but I'm sure it's still substantial in flavor!",
+			BURNING = "That is not the way to cook en flambé!",
+			BURNT = "Far too charred to eat.",
+        },
+        
+        CARROT_OVERSIZED = "How many different ways could I prepare carrots of this size...",
+        CORN_OVERSIZED = "Let's see, what shall I make with you? Corn gratin? Maque choux?",
+        PUMPKIN_OVERSIZED = "You would make for a lovely pie.",
+        EGGPLANT_OVERSIZED = "Now the question is, do I bake you or fry you?",
+        DURIAN_OVERSIZED = "Oh, that's... quite a lot of durian.",
+        POMEGRANATE_OVERSIZED = "I could make a fine dessert with you!",
+        DRAGONFRUIT_OVERSIZED = "Delicious fresh fruit! What shall I make with you?",
+        WATERMELON_OVERSIZED = "I'm sure I can find a use for all this watermelon.",
+        TOMATO_OVERSIZED = "What a formidable tomato!",
+        POTATO_OVERSIZED = "Ah, you can never go wrong with a potato!",
+        ASPARAGUS_OVERSIZED = "Tres bon! You will make a lovely dish!",
+        ONION_OVERSIZED = "You can never have enough onion.",
+        GARLIC_OVERSIZED = "So much garlic! My chef's heart weeps with joy!",
+        PEPPER_OVERSIZED = "What an impressive pepper!",
+        
+        VEGGIE_OVERSIZED_ROTTEN = "Non! What a terrible waste!",
+
+		FARM_PLANT =
+		{
+			GENERIC = "My garden.",
+			SEED = "All good things come with time.",
+			GROWING = "The garden is coming along nicely.",
+			FULL = "Ready for cooking!",
+			ROTTEN = "How very sad.",
+			FULL_OVERSIZED = "Mon dieu, it's enormous!",
+			ROTTEN_OVERSIZED = "Non! What a terrible waste!",
+			FULL_WEED = "It seems my garden is full of weeds!",
+
+			BURNING = "It's too soon to start cooking!",
+        },
+        
+        FRUITFLY = "Non! Out of my garden!",
+        LORDFRUITFLY = "Mon dieu! It's killing the plants!",
+        FRIENDLYFRUITFLY = "This one seems to be friendly.",
+        FRUITFLYFRUIT = "They seem quite taken with whoever holds this.",
+
+        SEEDPOUCH = "A little organization never hurts.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",
     DESCRIBE_TOODARK = "I cannot see a thing!",
     DESCRIBE_SMOLDERING = "I fear that that is about to cook itself.",
+
+    DESCRIBE_PLANTHAPPY = "The picture of health.",
+    DESCRIBE_PLANTVERYSTRESSED = "This is a very troubled plant.",
+    DESCRIBE_PLANTSTRESSED = "Something's troubling it.",
+    DESCRIBE_PLANTSTRESSORKILLJOYS = "Perhaps it's time I did some weeding.",
+    DESCRIBE_PLANTSTRESSORFAMILY = "I think it needs some company.",
+    DESCRIBE_PLANTSTRESSOROVERCROWDING = "The garden's a bit crowded, non?",
+    DESCRIBE_PLANTSTRESSORSEASON = "Hm... this one might not be in season.",
+    DESCRIBE_PLANTSTRESSORMOISTURE = "Would you care for a drink of water?",
+    DESCRIBE_PLANTSTRESSORNUTRIENTS = "Some fresh nutrients might be just the thing to perk it up.",
+    DESCRIBE_PLANTSTRESSORHAPPINESS = "It's hungry for some good conversation.",
+
     EAT_FOOD =
     {
         TALLBIRDEGG_CRACKED = "Fresh! Err... perhaps too fresh.",

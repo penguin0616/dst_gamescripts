@@ -26,7 +26,7 @@ EMOTE_ITEMS =
 			soundlooped = true,
 			soundoverride = "carol",
 		},
-		release_group = 36,
+		release_group = 109,
 	},
 	emote_dance_chicken =
 	{

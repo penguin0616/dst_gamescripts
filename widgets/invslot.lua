@@ -236,17 +236,8 @@ function InvSlot:TradeItem(stack_mod)
             if backpack ~= nil then
                 exclude_containers[backpack] = true
             end
-            dest_inst = FindBestContainer(self, container_item, opencontainers, exclude_containers)
-            if dest_inst == nil then
-                local playercontainers = {}
-                if inventory:IsOpenedBy(character) then
-                    playercontainers[character] = true
-                end
-                if backpack ~= nil then
-                    playercontainers[backpack] = true
-                end
-                dest_inst = FindBestContainer(self, container_item, playercontainers)
-            end
+            dest_inst = FindBestContainer(self, container_item, opencontainers, exclude_containers) or
+                (inventory:IsOpenedBy(character) and character or backpack)
         end
 
         --if a destination container/inv is found...

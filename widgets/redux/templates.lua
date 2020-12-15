@@ -1788,7 +1788,7 @@ function TEMPLATES.ScrollingGrid(items, opts)
         -- percent of a row height. 1 ensures that scrolling to the bottom puts
         -- a fully-displayed widget at the top. 0.75 prevents the next (empty)
         -- row from being visible.
-        local end_offset = 0.75
+        local end_offset = opts.end_offset or 0.75
         if opts.allow_bottom_empty_row then
             end_offset = 1
         end

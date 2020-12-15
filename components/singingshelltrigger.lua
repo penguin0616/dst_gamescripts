@@ -83,7 +83,7 @@ function SingingShellTrigger:OnUpdate()
 	for i, v in ipairs(TheSim:FindEntities(x, y, z, self.trigger_range, SHELL_MUST_TAGS, SHELL_CANT_TAGS)) do
 		if self.overlapping[v] == nil then
 			self.overlapping[v] = true
-			v:_activatefn()
+			v._activatefn(v, self.inst)
 		elseif self.overlapping[v] == false then
 			self.overlapping[v] = true
 		end

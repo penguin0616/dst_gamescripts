@@ -24,7 +24,7 @@ function Friendlevels:SetDefaultRewards(fn)
     self.defaultrewards = fn
 end
 
-function Friendlevels:SetLeveltRewards(data)
+function Friendlevels:SetLevelRewards(data)
     self.levelrewards = data
 end
 
@@ -33,18 +33,17 @@ function Friendlevels:SetFriendlyTasks(data)
 end
 
 function Friendlevels:DoRewards(target)
-
     local gifts = {}
-    for i,reward in ipairs(self.queuedrewards)do
-        if reward.task == "default" then            
-            gifts = JoinArrays(gifts,self.defaultrewards(self.inst,target))
+    for i, reward in ipairs(self.queuedrewards) do
+        if reward.default_rewards then
+            gifts = ConcatArrays(gifts, self.defaultrewards(self.inst, target, reward.task))
         else           
-            gifts = JoinArrays(gifts,self.levelrewards[reward.level](self.inst,target))
+            gifts = ConcatArrays(gifts, self.levelrewards[reward.level](self.inst, target, reward.task))
         end
     end
+
     self.queuedrewards = {}
     return gifts
-
 end
 
 function Friendlevels:CompleteTask(task,doer)
@@ -56,7 +55,7 @@ function Friendlevels:CompleteTask(task,doer)
     elseif not self.friendlytasks[task] or not self.friendlytasks[task].complete or not self.friendlytasks[task].onetime then
         defaulttask = true
         if self.defaultrewards then
-            table.insert(self.queuedrewards,{level = nil, task = "default"})
+            table.insert(self.queuedrewards,{level = nil, task = task, default_rewards = true })
         end
     end
 

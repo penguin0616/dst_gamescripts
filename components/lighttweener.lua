@@ -7,13 +7,13 @@ local LightTweener = Class(function(self, inst)
 	self.i_falloff = nil
 	self.i_intensity = nil
 	self.i_radius = nil
-	self.I_colour_r, self.i_colour_g, self.i_colour_b = nil
+	self.I_colour_r, self.i_colour_g, self.i_colour_b = nil, nil, nil
 
 	--target values
 	self.t_falloff = nil
 	self.t_intensity = nil
 	self.t_radius = nil
-	self.t_colour_r, self.t_colour_g, self.t_colour_b = nil
+	self.t_colour_r, self.t_colour_g, self.t_colour_b = nil, nil, nil
 
 	--function
 	self.callback = nil --call @ end of tween

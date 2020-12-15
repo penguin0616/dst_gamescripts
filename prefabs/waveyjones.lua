@@ -238,6 +238,8 @@ local function handfn()
     inst.components.playerprox:SetOnPlayerNear(playernear)
     inst.components.playerprox:SetOnPlayerFar(playerfar)
 
+    inst:AddComponent("timer")
+
     inst:SetBrain(handbrain)
 
     inst.ClearWaveyJonesTarget = ClearWaveyJonesTarget
@@ -249,7 +251,7 @@ local function handfn()
     inst:ListenForEvent("onscared", function() 
         inst:Remove()
     end)
-    
+
     inst.rotatearthand = rotatearthand
     inst.resetposition = resetposition
 
@@ -266,8 +268,7 @@ local function handfn()
 
         inst:AddComponent("updatelooper")
         inst.components.updatelooper:AddOnWallUpdateFn(rotatearthand)
-
-        inst:AddComponent("timer")
+        
         inst.components.timer:StartTimer("reactiondelay", 2)
     end)
 

@@ -395,25 +395,21 @@ local RPC_HANDLERS =
         end
     end,
 
+    --"action" and "mod_name" are deprecated, but keep them for mod compatibility
     DoWidgetButtonAction = function(player, action, target, mod_name)
-        if not (checknumber(action) and
-                optentity(target) and
-                optstring(mod_name)) then
+        if not optentity(target) then
             printinvalid("DoWidgetButtonAction", player)
             return
         end
         local playercontroller = player.components.playercontroller
         if playercontroller ~= nil and playercontroller:IsEnabled() and not player.sg:HasStateTag("busy") then
-            if mod_name ~= nil then
-                action = ACTION_MOD_IDS[mod_name] ~= nil and ACTION_MOD_IDS[mod_name][action] ~= nil and ACTIONS[ACTION_MOD_IDS[mod_name][action]] or nil
-            else
-                action = ACTION_IDS[action] ~= nil and ACTIONS[ACTION_IDS[action]] or nil
-            end
-            if action ~= nil then
-                local container = target ~= nil and target.components.container or nil
-                if container ~= nil and container.opener == player then
-                    BufferedAction(player, target, action):Do()
-                end
+            local container = target ~= nil and target.components.container or nil
+            if container ~= nil and container:IsOpenedBy(player) then
+                local widget = container:GetWidget()
+                local buttoninfo = widget ~= nil and widget.buttoninfo or nil
+                if buttoninfo ~= nil and (buttoninfo.validfn == nil or buttoninfo.validfn(target)) and buttoninfo.fn ~= nil then
+                    buttoninfo.fn(target, player)
+                end            
             end
         end
     end,
@@ -902,6 +898,10 @@ local RPC_HANDLERS =
 
     CloseCookbookScreen = function(player)
         player:PushEvent("ms_closecookbookscreen")
+    end,
+
+    ClosePlantRegistryScreen = function(player)
+        player:PushEvent("ms_closeplantregistryscreen")
     end,
 }
 

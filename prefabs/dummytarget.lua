@@ -21,7 +21,7 @@ local function fn()
     inst.entity:AddNetwork()
     inst.entity:AddLabel()
 
-    inst.Label:SetSize(50)
+    inst.Label:SetFontSize(50)
     inst.Label:SetFont(DEFAULTFONT)
     inst.Label:SetWorldOffset(0, 3, 0)
     inst.Label:SetUIOffset(0, 0, 0)

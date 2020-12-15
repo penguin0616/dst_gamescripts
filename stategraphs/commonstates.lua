@@ -243,7 +243,7 @@ CommonStates.AddShortAction = function(states, name, anim, timeout, finishstate)
                 inst.components.locomotor:StopMoving()
             end
             inst.AnimState:PlayAnimation(anim)
-            inst.sg:SetTimeout(timeout or 6 * FRAMES)
+            inst.sg:SetTimeout(timeout or (6 * FRAMES))
         end,
 
         ontimeout = performbufferedaction,

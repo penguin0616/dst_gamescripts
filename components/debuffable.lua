@@ -69,7 +69,7 @@ function Debuffable:GetDebuff(name)
     return debuff ~= nil and debuff.inst or nil
 end
 
-local function RegisterDebuff(self, name, ent)
+local function RegisterDebuff(self, name, ent, data)
     if ent.components.debuff ~= nil then
         self.debuffs[name] =
         {
@@ -83,25 +83,25 @@ local function RegisterDebuff(self, name, ent)
         }
         self.inst:ListenForEvent("onremove", self.debuffs[name].onremove, ent)
         ent.persists = false
-        ent.components.debuff:AttachTo(name, self.inst, self.followsymbol, self.followoffset)
+        ent.components.debuff:AttachTo(name, self.inst, self.followsymbol, self.followoffset, data)
 		if self.ondebuffadded ~= nil then
-			self.ondebuffadded(self.inst, name, ent)
+			self.ondebuffadded(self.inst, name, ent, data)
 		end
     else
         ent:Remove()
     end
 end
 
-function Debuffable:AddDebuff(name, prefab)
+function Debuffable:AddDebuff(name, prefab, data)
     if self.enable then
 		if self.debuffs[name] == nil then
 			local ent = SpawnPrefab(prefab)
 			if ent ~= nil then
-				RegisterDebuff(self, name, ent)
+				RegisterDebuff(self, name, ent, data)
 			end
 			return ent
 		else
-			self.debuffs[name].inst.components.debuff:Extend(self.followsymbol, self.followoffset)
+			self.debuffs[name].inst.components.debuff:Extend(self.followsymbol, self.followoffset, data)
 			return self.debuffs[name].inst
 		end
     end

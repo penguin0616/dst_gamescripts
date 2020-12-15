@@ -209,7 +209,21 @@ local prefabs =
     "groundshadow",
 
     "puffin",
+
+
+	-- Farming
+	"slow_farmplot", -- deprecated but still used in old worlds and mods
+    "fast_farmplot", -- deprecated but still used in old worlds and mods
+    "nutrients_overlay",
+    "lordfruitfly",
 }
+
+for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do
+	table.insert(prefabs, v.prefab)
+end
+for k, v in pairs(require("prefabs/weed_defs").WEED_DEFS) do
+	table.insert(prefabs, v.prefab)
+end
 
 --------------------------------------------------------------------------
 
@@ -412,7 +426,8 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
 
         if not TheNet:IsDedicated() then
             inst:AddComponent("ocean")
-	        inst:AddComponent("oceancolor")
+            inst:AddComponent("oceancolor")
+            inst:AddComponent("nutrients_visual_manager")
         end
 
         --
@@ -425,6 +440,7 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
             return inst
         end
 
+        inst:AddComponent("farming_manager")
 
         inst:AddComponent("playerspawner")
 

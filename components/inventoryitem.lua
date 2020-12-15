@@ -328,6 +328,8 @@ function InventoryItem:SetLanded(is_landed, should_poll_for_landing)
     if not is_landed then
         if should_poll_for_landing then
             self.inst:StartUpdatingComponent(self)
+        else
+            self.inst:StopUpdatingComponent(self)
         end
 
         -- If we're going from landed to not landed

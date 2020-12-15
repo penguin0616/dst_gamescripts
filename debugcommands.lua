@@ -1,3 +1,27 @@
+local function _spawn_list(list, spacing, fn)
+	spacing = spacing or 2
+	local num_wide = math.ceil(math.sqrt(#list))
+
+	local pt = ConsoleWorldPosition()
+	pt.x = pt.x - num_wide * 0.5 * spacing
+	pt.z = pt.z - num_wide * 0.5 * spacing
+
+	for y = 0, num_wide-1 do
+		for x = 0, num_wide-1 do
+			if list[(y*num_wide + x + 1)] then
+				local inst = SpawnPrefab(list[(y*num_wide + x + 1)])
+				if inst ~= nil then
+					inst.Transform:SetPosition((pt + Vector3(x*spacing, 0, y*spacing)):Get())
+					if fn ~= nil then
+						fn(inst)
+					end
+				end
+			end
+		end
+	end
+
+end
+
 function d_decodedata(path)
     print("DECODING",path)
     TheSim:GetPersistentString(path, function(load_success, str)
@@ -493,7 +517,7 @@ function d_ground(ground, pt)
 			type(ground) == "string" and GROUND[string.upper(ground)] 
 			or ground
 
-	pt = pt or TheInput:GetWorldPosition()
+	pt = pt or ConsoleWorldPosition()
 	
     local x, y = TheWorld.Map:GetTileCoordsAtPoint(pt:Get())
 
@@ -821,4 +845,73 @@ function d_fish(swim, r,g,b)
 	fish:RemoveTag("NOCLICK")
 	fish.AnimState:SetAddColour((r or 0)/255, (g or 5)/255, (b or 5)/255, 0)
 
+end
+
+function d_farmplants(grow_stage, spacing)
+	local items = {}
+	for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do
+		if v.product_oversized ~= nil then
+			table.insert(items, v.prefab)
+		end
+	end
+
+	_spawn_list(items, 2.5, 
+		function(inst)
+			if grow_stage ~= nil then
+				for i = 1, grow_stage do
+					inst:DoTaskInTime((i-1) * 1 + math.random() * 0.5, function()
+							inst.components.growable:DoGrowth()
+					end)
+				end
+			end
+		end)
+end
+
+function d_plant(plant, num_wide, grow_stage, spacing)
+	spacing = spacing or 1.25
+
+	local pt = ConsoleWorldPosition()
+	pt.x = pt.x - num_wide * 0.5 * spacing
+	pt.z = pt.z - num_wide * 0.5 * spacing
+
+	for y = 0, num_wide-1 do
+		for x = 0, num_wide-1 do
+			local inst = SpawnPrefab(plant)
+			if inst ~= nil then
+				inst.Transform:SetPosition((pt + Vector3(x*spacing, 0, y*spacing)):Get())
+				if grow_stage ~= nil then
+					for k = 1, grow_stage do
+						inst:DoTaskInTime(0.1 * k, function()
+							inst.components.growable:DoGrowth()
+						end)
+					end
+				end
+			end
+		end
+	end
+
+end
+
+function d_seeds()
+	local items = {}
+	for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do
+		if v.product_oversized ~= nil then
+			table.insert(items, v.seed)
+		end
+	end
+	_spawn_list(items, 2)
+end
+
+function d_fertilizers()
+	_spawn_list(require("prefabs/fertilizer_nutrient_defs").SORTED_FERTILIZERS, 2)
+end
+
+function d_oversized()
+	local items = {}
+	for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do
+		if v.product_oversized ~= nil then
+			table.insert(items, v.product_oversized)
+		end
+	end
+	_spawn_list(items, 3)
 end

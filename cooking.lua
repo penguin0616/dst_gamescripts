@@ -77,7 +77,7 @@ function IsModCookingProduct(cooker, name)
     return false
 end
 
-
+-- All Tags: fruit, monster, sweetener, veggie, meat, fish, egg, decoration, fat, dairy, inedible, seed, magic
 local fruits = {"pomegranate", "dragonfruit", "cave_banana"}
 AddIngredientValues(fruits, {fruit=1}, true)
 
@@ -139,7 +139,6 @@ AddIngredientValues({"goatmilk"}, {dairy=1})
 -- AddIngredientValues({"seeds"}, {seed=1}, true)
 
 AddIngredientValues({"nightmarefuel"}, {inedible=1, magic=1})
-AddIngredientValues({"voltgoathorn"}, {inedible=1})
 AddIngredientValues({"boneshard"}, {inedible=1})
 
 AddIngredientValues({"wobster_sheller_land"}, {meat=1.0, fish=1.0})
@@ -150,6 +149,7 @@ AddIngredientValues({"plantmeat","plantmeat_cooked"}, {meat=1})
 
 AddIngredientValues({"refined_dust"}, {decoration=2})
 
+AddIngredientValues({"forgetmelots"}, {decoration=1})
 
 --our naming conventions aren't completely consistent, sadly
 local aliases =

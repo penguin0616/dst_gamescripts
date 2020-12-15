@@ -20,8 +20,13 @@ local prefabs =
     "ash",
     "portablecookpot_item",
 }
-for k, v in pairs(cooking.recipes.cookpot) do
+
+for k, v in pairs(cooking.recipes.portablecookpot) do
     table.insert(prefabs, v.name)
+
+	if v.overridebuild then
+        table.insert(assets, Asset("ANIM", "anim/"..v.overridebuild..".zip"))
+	end
 end
 
 local prefabs_item =

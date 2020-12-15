@@ -19,6 +19,12 @@ local function OnSalvage(inst)
     return inst.components.inventory:GetItemInSlot(1)
 end
 
+local function onitemlose(inst)
+    -- itemlose is pushed before the item is actually removed from
+    -- the inventory, hence wait a frame before removing this prefab.
+    inst:DoTaskInTime(0, inst.Remove)
+end
+
 local function fn(data)
    local inst = CreateEntity()
 
@@ -61,7 +67,9 @@ local function fn(data)
 
 	inst:AddComponent("inventory")
 	inst.components.inventory.ignorescangoincontainer = true
-	inst.components.inventory.maxslots = 1
+    inst.components.inventory.maxslots = 1
+
+    inst:ListenForEvent("itemlose", onitemlose)
 
     return inst
 end

@@ -25,7 +25,9 @@ local function OnBurnt(inst)
 end
 
 local function OnIgnite(inst)
-    inst.components.trader:Disable()
+    if inst.components.trader then
+        inst.components.trader:Disable()
+    end
     DefaultBurnFn(inst)
     if inst.components.gym and inst.components.gym.trainee then
         ejectitem(inst,inst.components.gym.trainee)

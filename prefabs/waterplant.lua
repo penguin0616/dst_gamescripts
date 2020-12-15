@@ -241,6 +241,8 @@ local function on_ignited(inst, data)
     -- Would be nice to use data.doer, but very few places seem to pass it!
     -- So just set the closest player as a target and assume they lit us up.
     find_and_attack_nearby_player(inst)
+
+    inst.components.harvestable:Disable()
 end
 
 local function on_burnt(inst)
@@ -256,7 +258,17 @@ local function on_burnt(inst)
     rock.Transform:SetPosition(pos:Get())
 end
 
+local function on_extinguish(inst)
+    inst.components.harvestable:Enable()
+end
+
+local function on_frozen(inst)
+    inst.components.harvestable:Disable()
+end
+
 local function on_unfrozen(inst)
+    inst.components.harvestable:Enable()
+
     -- If we are frozen with a target, we'll drop it.
     -- Since our ally plants continue to attack, it looks silly when we wake up and
     -- have stopped attacking (since we don't actively acquire targets).
@@ -341,6 +353,7 @@ end
 
 local function on_load(inst, data)
     set_flower_type(inst, data ~= nil and data.colour or nil)
+    update_barnacle_layers(inst, inst.components.harvestable.produce / inst.components.harvestable.maxproduce)
 end
 
 local PRIZE_PREFAB = "barnacle"
@@ -452,13 +465,17 @@ local function fn()
     inst:AddComponent("timer")
 
     MakeMediumBurnable(inst)
+    inst.components.burnable.nocharring = true
+
     MakeMediumPropagator(inst)
     MakeLargeFreezableCharacter(inst)
 
     inst:ListenForEvent("attacked", on_attacked)
     inst:ListenForEvent("onignite", on_ignited)
     inst:ListenForEvent("onburnt", on_burnt)
-    inst:ListenForEvent("unfreese", on_unfrozen)
+    inst:ListenForEvent("onextinguish", on_extinguish)
+    inst:ListenForEvent("freeze", on_frozen)
+    inst:ListenForEvent("unfreeze", on_unfrozen)
     inst:ListenForEvent("droppedtarget", on_dropped_target)
     inst:ListenForEvent("on_collide", on_collide)
     inst:ListenForEvent("newcombattarget", on_new_combat_target)

@@ -159,4 +159,17 @@ function Beard:GetDebugString()
     return string.format("Bits: %d Daysgrowth: %d Next Event: %d", self.bits, self.daysgrowth, nextevent)
 end
 
+--used for networking beard skins to client for oversized veggie pictures.
+function Beard:GetBeardSkinAndLength()
+    local length = 0
+    for k = 0, self.daysgrowth do
+        --assume that every callback equals 1 length, this works out nicely for webber and wilson, if this doesn't hold true, adjust this logic.
+        if self.callbacks[k] then
+            length = length + 1
+        end
+    end
+    if length == 0 then return end --don't bother networking data that wont do anything
+    return self.skinname, length
+end
+
 return Beard

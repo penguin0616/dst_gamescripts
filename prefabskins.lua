@@ -528,12 +528,18 @@ PREFAB_SKINS = {
 	{
 		"rainometer_circus",
 	},
+	razor = 
+	{
+		"razor_scissors",
+		"razor_straight",
+	},
 	researchlab = 
 	{
 		"researchlab_green",
 	},
 	researchlab2 = 
 	{
+		"researchlab2_crystal",
 		"researchlab2_pod",
 	},
 	researchlab3 = 
@@ -696,6 +702,7 @@ PREFAB_SKINS = {
 	{
 		"walter_detective",
 		"walter_formal",
+		"walter_ice",
 		"walter_none",
 		"walter_survivor",
 		"walter_ventriloquist",
@@ -704,6 +711,7 @@ PREFAB_SKINS = {
 	{
 		"walterhat_detective",
 		"walterhat_formal",
+		"walterhat_ice",
 		"walterhat_survivor",
 		"walterhat_ventriloquist",
 	},
@@ -712,12 +720,14 @@ PREFAB_SKINS = {
 		"wardrobe_armoire",
 		"wardrobe_crystal",
 		"wardrobe_heart",
+		"wardrobe_yule",
 	},
 	warly = 
 	{
 		"warly_candyman",
 		"warly_chef",
 		"warly_fisherman",
+		"warly_ice",
 		"warly_none",
 		"warly_rose",
 		"warly_victorian",
@@ -805,6 +815,7 @@ PREFAB_SKINS = {
 		"webber_beard_rose",
 		"webber_beard_shadow",
 		"webber_beard_survivor",
+		"webber_beard_victorian",
 		"webber_beard_wrestler",
 	},
 	wendy = 
@@ -936,6 +947,7 @@ PREFAB_SKINS = {
 		"winona_grassgecko",
 		"winona_grassgecko_d",
 		"winona_grassgecko_p",
+		"winona_ice",
 		"winona_magma",
 		"winona_nature",
 		"winona_none",
@@ -1018,6 +1030,7 @@ PREFAB_SKINS = {
 	wortox = 
 	{
 		"wortox_dragon",
+		"wortox_ice",
 		"wortox_minotaur",
 		"wortox_none",
 		"wortox_original",
@@ -1038,6 +1051,7 @@ PREFAB_SKINS = {
 		"wx78_cook",
 		"wx78_formal",
 		"wx78_gladiator",
+		"wx78_ice",
 		"wx78_magma",
 		"wx78_nature",
 		"wx78_none",

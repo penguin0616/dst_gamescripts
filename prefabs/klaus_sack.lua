@@ -246,7 +246,6 @@ end
 
 --Also called from klaussackspawner
 local function OnDropKey(inst, key, klaus)
-    
     local oldkey = inst.components.entitytracker:GetEntity("key")
     if oldkey ~= nil then
         if klaus == nil then

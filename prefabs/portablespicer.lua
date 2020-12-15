@@ -6,8 +6,6 @@ local assets =
 {
     Asset("ANIM", "anim/portable_spicer.zip"),
     Asset("ANIM", "anim/cook_pot_food.zip"),
-    Asset("ANIM", "anim/cook_pot_food2.zip"),
-    Asset("ANIM", "anim/cook_pot_food3.zip"),
     Asset("ANIM", "anim/plate_food.zip"),
     Asset("ANIM", "anim/spices.zip"),
     Asset("ANIM", "anim/ui_cookpot_1x2.zip"),
@@ -26,6 +24,10 @@ local prefabs =
 }
 for k, v in pairs(cooking.recipes.portablespicer) do
     table.insert(prefabs, v.name)
+
+	if v.overridebuild then
+        table.insert(assets, Asset("ANIM", "anim/"..v.overridebuild..".zip"))
+	end
 end
 
 local prefabs_item =

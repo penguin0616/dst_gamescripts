@@ -1121,6 +1121,21 @@ function c_goadventuring(player)
     end
 end
 
+function c_startinggear(player)
+    player = ListingOrConsolePlayer(player)
+    if player ~= nil then
+        c_select(player)
+        player.components.inventory:Equip( c_spawn("flowerhat", nil, true) )
+        c_give("berries", 10, true)
+        c_give("smallmeat", 5, true)
+        c_give("cutgrass", 40, true)
+        c_give("twigs", 40, true)
+        c_give("log", 40, true)
+        c_give("rocks", 40, true)
+        c_give("flint", 20, true)
+        c_give("goldnugget", 10, true)
+    end
+end
 function c_sounddebug()
     if not package.loaded["debugsounds"] then
         require "debugsounds"

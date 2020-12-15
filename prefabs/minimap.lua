@@ -50,6 +50,7 @@ local MINIMAP_GROUND_PROPERTIES =
     { GROUND.QUAGMIRE_CITYSTONE,   { name = "map_edge",      noise_texture = "levels/textures/quagmire_citystone_mini.tex" } },
     { GROUND.QUAGMIRE_GATEWAY,     { name = "map_edge",      noise_texture = "levels/textures/quagmire_gateway_mini.tex" } },
     { GROUND.QUAGMIRE_SOIL,        { name = "map_edge",      noise_texture = "levels/textures/quagmire_soil_mini.tex" } },
+    { GROUND.FARMING_SOIL,        { name = "map_edge",      noise_texture = "levels/textures/quagmire_soil_mini.tex" } },
 
     { GROUND.OCEAN_COASTAL,    { name = "map_edge",      noise_texture = "levels/textures/ocean_noise.tex" } },
     { GROUND.OCEAN_BRINEPOOL,  { name = "map_edge",      noise_texture = "levels/textures/ocean_noise.tex" } },

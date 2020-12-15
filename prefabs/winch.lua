@@ -142,9 +142,7 @@ local function OnFullyLowered(inst)
 					turn_on_boat_drag(inst, boat, TUNING.BOAT_WINCH.BOAT_DRAG_DURATION)
 				end
 
-				if salvageable.components.winchtarget.destroy_on_salvage then
-					salvageable:Remove()
-				end
+				salvageable:Remove()
 			end
 		end
 		
@@ -180,10 +178,8 @@ local function OnLoweringUpdate(inst)
 				inst.components.inventory:GiveItem(salvaged_item)
 				salvaged_item:PushEvent("on_salvaged")
 			end
-
-			if salvageable.components.winchtarget.destroy_on_salvage then
-				salvageable:Remove()
-			end
+			
+			salvageable:Remove()
 
 			local boat = TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition())
 			if boat ~= nil then
@@ -233,7 +229,7 @@ local function GetCurrentWinchDepth(inst)
 	return 0
 end
 
-local function OnTakeItem(inst, taker, item)
+local function MakeEmpty(inst)
 	inst.components.shelf.cantakeitem = false
 
 	if inst.components.winch ~= nil then
@@ -265,13 +261,18 @@ local function CanActivate(inst, doer)
 end
 
 local function onitemget(inst, data)
-	inst.components.shelf:PutItemOnShelf(data.item)
+	local item = data.item
+	inst.components.shelf:PutItemOnShelf(item)
 
-	if data.item.components.symbolswapdata ~= nil then
-		inst.AnimState:OverrideSymbol("swap_body", data.item.components.symbolswapdata.build, data.item.components.symbolswapdata.symbol)
+	if item.components.symbolswapdata ~= nil then
+		inst.AnimState:OverrideSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
 	end
 
 	TheWorld:PushEvent("CHEVO_heavyobject_winched",{target=inst,doer=nil})
+end
+
+local function onitemlose(inst, data)
+	MakeEmpty(inst)
 end
 
 local function onburnt(inst)
@@ -425,7 +426,6 @@ local function fn()
 	inst.components.inventory.maxslots = 1
 	
 	inst:AddComponent("shelf")
-	inst.components.shelf:SetOnTakeItem(OnTakeItem)
 	inst.components.shelf.cantakeitem = false
 
 	inst:AddComponent("hauntable")
@@ -440,6 +440,7 @@ local function fn()
 	inst:ListenForEvent("ondeconstructstructure", dropitems)
 	inst:ListenForEvent("onremove", dropitems)
 	inst:ListenForEvent("itemget", onitemget)
+	inst:ListenForEvent("itemlose", onitemlose)
 
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad

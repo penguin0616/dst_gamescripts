@@ -91,11 +91,13 @@ end
 --NOTE: Stacksize is now set in the actual recipe for the item.
 local walldata = 
 {
-    { name = MATERIALS.STONE,    material = "stone", tags = { "stone" },             loot = "rocks",            maxloots = 2, maxhealth = TUNING.STONEWALL_HEALTH    },
-    { name = MATERIALS.WOOD,     material = "wood",  tags = { "wood" },              loot = "log",              maxloots = 2, maxhealth = TUNING.WOODWALL_HEALTH     },
-    { name = MATERIALS.HAY,      material = "straw", tags = { "grass" },             loot = "cutgrass",         maxloots = 2, maxhealth = TUNING.HAYWALL_HEALTH      },
-    { name = "ruins",            material = "stone", tags = { "stone", "ruins" },                               maxloots = 2, maxhealth = TUNING.RUINSWALL_HEALTH    },
-    { name = MATERIALS.MOONROCK, material = "stone", tags = { "stone", "moonrock" },                            maxloots = 2, maxhealth = TUNING.MOONROCKWALL_HEALTH },
+    { name = MATERIALS.STONE,       material = "stone", tags = { "stone" },         loot = "rocks",            maxloots = 2, maxhealth = TUNING.STONEWALL_HEALTH    },
+    { name = MATERIALS.STONE.."_2", material = "stone", tags = { "stone" },         loot = "rocks",            maxloots = 2, maxhealth = TUNING.STONEWALL_HEALTH    },
+    { name = MATERIALS.WOOD,     material = "wood",  tags = { "wood" },             loot = "log",              maxloots = 2, maxhealth = TUNING.WOODWALL_HEALTH     },
+    { name = MATERIALS.HAY,      material = "straw", tags = { "grass" },            loot = "cutgrass",         maxloots = 2, maxhealth = TUNING.HAYWALL_HEALTH      },
+    { name = "ruins",            material = "stone", tags = { "stone", "ruins" },                              maxloots = 2, maxhealth = TUNING.RUINSWALL_HEALTH    },
+    { name = "ruins_2",          material = "stone", tags = { "stone", "ruins" },                              maxloots = 2, maxhealth = TUNING.RUINSWALL_HEALTH    },    
+    { name = MATERIALS.MOONROCK, material = "stone", tags = { "stone", "moonrock" },                           maxloots = 2, maxhealth = TUNING.MOONROCKWALL_HEALTH },
 }
 
 local wallprefabs = {}

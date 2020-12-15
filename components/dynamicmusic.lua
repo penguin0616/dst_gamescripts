@@ -111,6 +111,7 @@ local BUSYTHEMES = {
     RACE = 7,
     TRAINING = 8,
     HERMIT = 9,
+    FARMING = 10,
 }
 
 --------------------------------------------------------------------------
@@ -303,6 +304,28 @@ local function StartTraining(player)
     end
 end
 
+local function StartBusyTheme(player, theme, sound, duration, extendtime)
+    if _dangertask == nil and (_busytheme ~= theme or _extendtime == 0 or GetTime() >= _extendtime) and _isenabled then
+        if _busytask then
+            _busytask:Cancel()
+            _busytask = nil
+        end
+        if _busytheme ~= theme then
+            _soundemitter:KillSound("busy")
+            _soundemitter:PlaySound(sound, "busy")
+	        _busytheme = theme
+        end
+
+        _soundemitter:SetParameter("busy", "intensity", 1)
+        _busytask = inst:DoTaskInTime(duration, StopBusy, true)
+        _extendtime = extendtime or 0
+    end
+end
+
+local function StartFarming(player)
+	StartBusyTheme(player, BUSYTHEMES.FARMING, "farming/music/farming", 15)
+end
+
 local function ExtendBusy()
     if _busytask ~= nil then
         _extendtime = math.max(_extendtime, GetTime() + 10)
@@ -473,6 +496,7 @@ local function StartPlayerListeners(player)
     inst:ListenForEvent("playracemusic", StartRacing, player)   
     inst:ListenForEvent("playhermitmusic", StartHermit, player)   
     inst:ListenForEvent("playtrainingmusic", StartTraining, player)
+    inst:ListenForEvent("playfarmingmusic", StartFarming, player)
     inst:ListenForEvent("hasinspirationbuff", OnHasInspirationBuff, player)
 end
 
@@ -489,6 +513,7 @@ local function StopPlayerListeners(player)
     inst:RemoveEventCallback("playracemusic", StartRacing, player)
     inst:RemoveEventCallback("playhermitmusic", StartHermit, player)
     inst:RemoveEventCallback("playtrainingmusic", StartTraining, player)
+    inst:RemoveEventCallback("playfarmingmusic", StartFarming, player)
     inst:RemoveEventCallback("hasinspirationbuff", OnHasInspirationBuff, player)
 end
 

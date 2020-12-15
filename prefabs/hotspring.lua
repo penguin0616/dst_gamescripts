@@ -74,7 +74,7 @@ local function Refill(inst, snap)
 
     inst._glassed = false
     inst:RemoveTag("moonglass")
-    inst:AddTag("watersource")
+    inst.components.watersource.available = true
     inst.components.bathbombable:Reset()
 
 	if not snap then
@@ -96,7 +96,7 @@ end
 local function RemoveGlass(inst)
     inst._glassed = false
     inst:RemoveTag("moonglass")
-    inst:RemoveTag("watersource")
+    inst.components.watersource.available = false
     inst.components.bathbombable:DisableBathBombing()
 	inst.AnimState:PlayAnimation("empty")
 	StopFx(inst)
@@ -120,7 +120,7 @@ end
 local function TurnToGlassed(inst, is_loading)
     inst._glassed = true
     inst:AddTag("moonglass")
-    inst:RemoveTag("watersource")
+    inst.components.watersource.available = false
 	inst.components.bathbombable:DisableBathBombing()
 
     inst.Light:Enable(false)
@@ -249,6 +249,7 @@ local function hotspring()
 
     inst.MiniMapEntity:SetIcon("hotspring.png")
 
+    -- From watersource component
     inst:AddTag("watersource")
     inst:AddTag("antlion_sinkhole_blocker")
     inst:AddTag("birdblocker")
@@ -291,6 +292,8 @@ local function hotspring()
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetLoot(MINED_GLASS_LOOT_TABLE)
+
+    inst:AddComponent("watersource")
 
     inst._bathbombed = false
     inst._glassed = false

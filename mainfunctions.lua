@@ -1312,7 +1312,7 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
     end
 
     local accounts_link = nil
-    if IsRail() or TheNet:IsNetOverlayEnabled() then
+    if (IsRail() or TheNet:IsNetOverlayEnabled()) and (message == "E_BANNED") then
         accounts_link = {text=STRINGS.UI.NETWORKDISCONNECT.ACCOUNTS, cb = function() TheFrontEnd:GetAccountManager():VisitAccountPage() end}
     end
 

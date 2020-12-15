@@ -833,7 +833,7 @@ function ItemExplorer:_CreateWidgetDataListForItems(item_table, item_type, activ
             item_latest[key] = inv_item.modified_time
         end
         
-        if inv_item.item_id == TEMP_ITEM_ID and GetRarityForItem(key) ~= "Event" and GetRarityForItem(key) ~= "Reward" then
+        if inv_item.item_id == TEMP_ITEM_ID and GetRarityForItem(key) ~= "Event" and GetRarityForItem(key) ~= "Reward" and GetRarityForItem(key) ~= "ProofOfPurchase" then
             item_dlc_owned[key] = true
         end
 	end

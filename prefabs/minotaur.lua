@@ -19,6 +19,7 @@ local prefabs =
     "collapse_small",
     "minotaur_ruinsrespawner_inst",
     "chesspiece_minotaur_sketch",
+    "winter_ornament_boss_minotaur",
 }
 
 local prefabs_chest =

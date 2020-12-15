@@ -34,7 +34,7 @@ local STOP_RUN_AWAY_DIST = 8
 
 local AVOID_EXPLOSIVE_DIST = 5
 
-local DIG_TAGS = { "stump", "grave" }
+local DIG_TAGS = { "stump", "grave", "farm_debris" }
 
 local function GetLeader(inst)
     return inst.components.follower.leader

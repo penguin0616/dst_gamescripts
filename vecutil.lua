@@ -20,6 +20,14 @@ function VecUtil_Length(p1_x, p1_z)
     return sqrt(p1_x * p1_x + p1_z * p1_z)
 end
 
+function VecUtil_DistSq(p1_x, p1_z, p2_x, p2_z)
+    return (p1_x - p2_x) * (p1_x - p2_x) + (p1_z - p2_z) * (p1_z - p2_z)
+end
+
+function VecUtil_Dist(p1_x, p1_z, p2_x, p2_z)
+    return sqrt((p1_x - p2_x) * (p1_x - p2_x) + (p1_z - p2_z) * (p1_z - p2_z))
+end
+
 function VecUtil_Dot(p1_x, p1_z, p2_x, p2_z)
 	return p1_x * p2_x + p1_z * p2_z
 end

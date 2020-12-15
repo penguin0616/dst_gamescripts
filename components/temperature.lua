@@ -168,7 +168,8 @@ function Temperature:SetTemperature(value)
 end
 
 function Temperature:GetDebugString()
-    return string.format("%2.2fC at %2.2f (delta: %2.2f) (modifiers: %2.2f)", self.current, self.rate, self.delta, self.totalmodifiers)
+	local winter, summer = self:GetInsulation()
+    return string.format("%2.2fC at %2.2f (delta: %2.2f) (modifiers: %2.2f) (insulation: %d, %d)", self.current, self.rate, self.delta, self.totalmodifiers, winter, summer)
 end
 
 function Temperature:IsFreezing()

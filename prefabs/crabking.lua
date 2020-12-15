@@ -38,6 +38,8 @@ local prefabs =
     "singingshell_octave4",
     "singingshell_octave3",
     "barnacle",
+	"winter_ornament_boss_crabking",
+	"winter_ornament_boss_crabkingpearl",
 }
 
 local geyserprefabs =
@@ -573,6 +575,7 @@ local function countgems(inst)
         yellow = 0,
         green = 0,
         pearl = 0,
+		opal = 0,
     }
 
     if inst.socketed then
@@ -596,6 +599,7 @@ local function countgems(inst)
                 gems.red =    gems.red + 1
                 gems.blue =   gems.blue + 1
                 gems.purple = gems.purple + 1
+                gems.opal =   gems.opal + 1
             elseif data.itemprefab == "hermit_pearl" then
                 gems.green =  gems.green + 3
                 gems.yellow = gems.yellow + 3
@@ -740,6 +744,17 @@ SetSharedLootTable( 'crabking',
     {"barnacle",                            0.25},
 })
 
+local function GetWintersFeastOrnaments(inst)
+	local gems = inst:countgems()
+	local is_pearled = gems.pearl > 0
+	if not is_pearled and gems.opal >= 3 then
+		local hermit = TheWorld.components.messagebottlemanager ~= nil and TheWorld.components.messagebottlemanager:GetHermitCrab()
+		is_pearled = hermit and hermit.pearlgiven
+	end
+
+	return is_pearled and {basic = 2, special = "winter_ornament_boss_crabkingpearl"} or {basic = 1, special = "winter_ornament_boss_crabking"}
+end
+
 local function PushMusic(inst)
     if ThePlayer == nil or (inst.sg and inst.sg:HasStateTag("inert")) then
         inst._playingmusic = false
@@ -831,6 +846,7 @@ local function fn()
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('crabking')
+	inst.components.lootdropper.GetWintersFeastOrnaments = GetWintersFeastOrnaments
 
     ------------------------------------------
 

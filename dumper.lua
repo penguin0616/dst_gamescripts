@@ -75,7 +75,7 @@ end
 
 
 function DataDumper(value, varname, fastmode, ident)
-  local defined, dumplua = {}
+  local defined, dumplua = {}, nil
   -- Local variables for speed optimization
   local string_format, type, string_dump, string_rep = 
         string.format, type, string.dump, string.rep

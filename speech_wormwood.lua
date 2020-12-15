@@ -215,7 +215,8 @@ return{
 		},
 		COMPARE_WEIGHABLE =
 		{
-			TOO_SMALL = "Too tiny",
+            FISH_TOO_SMALL = "Too small",
+            OVERSIZEDVEGGIES_TOO_SMALL = "Not big enough",
 		},
         BEGIN_QUEST =
         {
@@ -230,6 +231,23 @@ return{
         SING_FAIL =
         {
 --fallback to speech_wilson.lua             SAMESONG = "only_used_by_wathgrithr",
+        },
+        PLANTREGISTRY_RESEARCH_FAIL =
+        {
+            GENERIC = "Know already",
+            FERTILIZER = "Know all about it",
+        },
+        FILL_OCEAN =
+        {
+            UNSUITABLE_FOR_PLANTS = "Bad water for friends",
+        },
+        POUR_WATER =
+        {
+            OUT_OF_WATER = "All gone",
+        },
+        POUR_WATER_GROUNDTILE =
+        {
+            OUT_OF_WATER = "No water",
         },
 	},
 	ACTIONFAIL_GENERIC = "Nope",
@@ -322,6 +340,7 @@ return{
 	},
     ANNOUNCE_RUINS_RESET = "Oh. Everything back",
     ANNOUNCE_SNARED = "Oh! Caught!",
+    ANNOUNCE_SNARED_IVY = "Ha ha! Silly",
     ANNOUNCE_REPELLED = "Didn't hurt?",
 	ANNOUNCE_ENTER_DARK = "Too dark",
 	ANNOUNCE_ENTER_LIGHT = "It's light again",
@@ -548,6 +567,8 @@ return{
 --fallback to speech_wilson.lua         BOOK_TENTACLES =  "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BRIMSTONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Tired",
 
@@ -590,6 +611,31 @@ return{
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "Oooooh, pictures!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "Know it",
     ANNOUNCE_ARCHIVE_NO_POWER = "Nope",
+
+    ANNOUNCE_PLANT_RESEARCHED =
+    {
+        "Learning lots about friend",
+    },
+
+    ANNOUNCE_PLANT_RANDOMSEED = "Who it going to be?",
+
+    ANNOUNCE_FERTILIZER_RESEARCHED = "Learning about bellystuff",
+
+	ANNOUNCE_FIRENETTLE_TOXIN = 
+	{
+		"not_used_by_wormwood",
+		"not_used_by_wormwood",
+	},
+	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "Feel better",
+
+	ANNOUNCE_TALK_TO_PLANTS = 
+	{
+        "Hello friend!",
+        "Is friend happy? Yay!",
+		"Hehe, friend has best jokes",
+        "Yes? Oh. Hmm... yes",
+        "Nice to talk to other plants",
+	},
 
 	BATTLECRY =
 	{
@@ -657,6 +703,8 @@ return{
         BOOK_BIRDS = "Pretty pictures",
         BOOK_TENTACLES = "About Scary Arms",
         BOOK_GARDENING = "This one's nice",
+		BOOK_SILVICULTURE = "About friends!",
+		BOOK_HORTICULTURE = "This one's nice",
         BOOK_SLEEP = "(yawn)",
         BOOK_BRIMSTONE = "Fire!",
 
@@ -3620,11 +3668,117 @@ return{
         TURFCRAFTINGSTATION = "Make dirt!",
 
         MOON_ALTAR_LINK = "Seed",
+
+        -- FARMING
+        COMPOSTINGBIN =
+        {
+            -- WIP, might not end up with these states so don't fill in for now
+            GENERIC = "Yum!",
+            WET = "Too wet",
+            DRY = "Too dry",
+            BALANCED = "Is good",
+            BURNT = "Nooooo!",
+        },
+        COMPOST = "Mmmm...",
+        SOIL_AMENDER = 
+		{ 
+			GENERIC = "Drink stuff, good for friends",
+			STALE = "Getting better",
+			SPOILED = "Really good!",
+		},
+
+		SOIL_AMENDER_FERMENTED = "Really-really good!",
+
+        WATERINGCAN = 
+        {
+            GENERIC = "Drink can",
+            EMPTY = "Oh. Empty",
+        },
+        PREMIUMWATERINGCAN =
+        {
+            GENERIC = "Fancy drink can",
+            EMPTY = "Oh. Empty",
+        },
+
+		FARM_PLOW = "Make ground soft and nice",
+		FARM_PLOW_ITEM = "Where will friends live?",
+		FARM_HOE = "Tuck in babies",
+		GOLDEN_FARM_HOE = "Pretty dirt mover",
+		NUTRIENTSGOGGLESHAT = "Friend looks cozy there",
+		PLANTREGISTRYHAT = "Wear friend on head!",
+
+        FARM_SOIL_DEBRIS = "Friends don't like it",
+
+		FIRENETTLES = "Hot hot friends",
+		FORGETMELOTS = "Pretty friends",
+		SWEETTEA = "Mmmm... ahhh",
+		TILLWEED = "Stubborn friends",
+		TILLWEEDSALVE = "Thank you friends!",
+
+		TROPHYSCALE_OVERSIZEDVEGGIES =
+		{
+			GENERIC = "Friend holder",
+			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nGood job!",
+            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nProud of you!",
+            HAS_ITEM_LIGHT = "Did their best",
+			BURNING = "No! Oh no!",
+			BURNT = "Gone...",
+        },
+        
+        CARROT_OVERSIZED = "Good job!",
+        CORN_OVERSIZED = "Biiiig belly stuff!",
+        PUMPKIN_OVERSIZED = "So big!",
+        EGGPLANT_OVERSIZED = "Big tasty!",
+        DURIAN_OVERSIZED = "Big smell",
+        POMEGRANATE_OVERSIZED = "Big seedy fruit",
+        DRAGONFRUIT_OVERSIZED = "Pretty! Big!",
+        WATERMELON_OVERSIZED = "Big watery fruit",
+        TOMATO_OVERSIZED = "Big squishy ball",
+        POTATO_OVERSIZED = "Big!",
+        ASPARAGUS_OVERSIZED = "Big pointy",
+        ONION_OVERSIZED = "Crunchy",
+        GARLIC_OVERSIZED = "Mmmm!",
+        PEPPER_OVERSIZED = "Hot hot belly stuff",
+        
+        VEGGIE_OVERSIZED_ROTTEN = "So sorry",
+
+		FARM_PLANT =
+		{
+			GENERIC = "Friend",
+			SEED = "Baby",
+			GROWING = "Doing so good!",
+			FULL = "Good job!",
+			ROTTEN = "Oh",
+			FULL_OVERSIZED = "Biiiig!",
+			ROTTEN_OVERSIZED = "So sorry",
+			FULL_WEED = "Don't bully other friends!",
+
+			BURNING = "Oh no oh no!",
+        },
+        
+        FRUITFLY = "Mean!",
+        LORDFRUITFLY = "No! Leave friends alone!",
+        FRIENDLYFRUITFLY = "Nice to friends",
+        FRUITFLYFRUIT = "Fruit bug friend maker",
+
+        SEEDPOUCH = "Seed carry-arounder",
     },
 
     DESCRIBE_GENERIC = "Friend?",
     DESCRIBE_TOODARK = "Where is light?",
     DESCRIBE_SMOLDERING = "Uh oh...",
+
+    DESCRIBE_PLANTHAPPY = "Happy",
+    DESCRIBE_PLANTVERYSTRESSED = "No no no, not happy!",
+    DESCRIBE_PLANTSTRESSED = "Something wrong",
+    DESCRIBE_PLANTSTRESSORKILLJOYS = "Too many bothers around",
+    DESCRIBE_PLANTSTRESSORFAMILY = "Misses family",
+    DESCRIBE_PLANTSTRESSOROVERCROWDING = "Need room",
+    DESCRIBE_PLANTSTRESSORSEASON = "Doesn't like weather now",
+    DESCRIBE_PLANTSTRESSORMOISTURE = "Thirsty",
+    DESCRIBE_PLANTSTRESSORNUTRIENTS = "Needs food!",
+    DESCRIBE_PLANTSTRESSORHAPPINESS = "Wants to talk",
+
     EAT_FOOD =
     {
         TALLBIRDEGG_CRACKED = "Don't feel good",

@@ -43,6 +43,10 @@ function WateryProtection:SpreadProtectionAtPoint(x, y, z, dist, noextinguish)
             v.components.moisture:DoDelta(self.addwetness * (1 - waterproofness))
         end
     end
+
+	if self.addwetness and TheWorld.components.farming_manager ~= nil then
+		TheWorld.components.farming_manager:AddSoilMoistureAtPoint(x, y, z, self.addwetness)
+	end
 end
 
 function WateryProtection:SpreadProtection(inst, dist, noextinguish)

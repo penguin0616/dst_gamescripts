@@ -1,3 +1,6 @@
+
+-- these functions have moved into map.lua
+
 function Map:IsFarmableSoilAtPoint(x, y, z)
     return self:GetTileAtPoint(x, y, z) == GROUND.QUAGMIRE_SOIL
 end

@@ -285,14 +285,16 @@ local function DoneBurning(inst, self)
         self.onburnt(inst)
     end
 
-    if inst.components.explosive ~= nil then
-        --explosive explode
-        inst.components.explosive:OnBurnt()
-    end
+	if self.inst:IsValid() then
+		if inst.components.explosive ~= nil then
+			--explosive explode
+			inst.components.explosive:OnBurnt()
+		end
 
-    if self.extinguishimmediately then
-        self:Extinguish()
-    end
+		if self.extinguishimmediately then
+			self:Extinguish()
+		end
+	end
 
     if isplant then
         TheWorld:PushEvent("plantkilled", { pos = pos }) --this event is pushed in other places too
@@ -316,7 +318,7 @@ function Burnable:Ignite(immediate, source, doer)
 
         self.inst:PushEvent("onignite", {doer = doer})
         if self.onignite ~= nil then
-            self.onignite(self.inst)
+            self.onignite(self.inst, source, doer)
         end
 
         if self.inst.components.fueled ~= nil and not self.ignorefuel then

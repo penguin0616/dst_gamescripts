@@ -150,6 +150,14 @@ local function OnHoundWarning(parent, houndwarningtype)
     SetDirty(parent.player_classified.houndwarningevent, houndwarningtype)
 end
 
+fns.OnPlayThemeMusic = function(parent, data)
+	if data ~= nil then
+		if data.theme == "farming" then
+			parent.player_classified.start_farming_music:push()
+		end
+	end
+end
+
 local function OnMakeFriend(parent)
     parent.player_classified.makefriendevent:push()
 end
@@ -721,6 +729,61 @@ fns.OnIsCookbookLearnStatsDirty = function(inst)
 	end
 end
 
+fns.OnIsPlantRegistryPopUpVisibleDirty = function(inst)
+    if inst._parent ~= nil and inst._parent.HUD ~= nil then
+        if not inst.isplantregistrypopupvisible:value() then
+            inst._parent.HUD:ClosePlantRegistryScreen()
+        elseif not inst._parent.HUD:OpenPlantRegistryScreen() then
+            if not TheWorld.ismastersim then
+				SendRPCToServer(RPC.ClosePlantRegistryScreen)
+            else
+                inst._parent:PushEvent("ms_closeplantregistryscreen")
+            end
+        end
+    end
+end
+
+fns.OnPlantRegistryLearnPlantStageDirty = function(inst)
+	local plantregistryupdater = inst._parent.components.plantregistryupdater
+	if plantregistryupdater then
+        local data = string.split(inst.plantregistry_learnplantstage:value(), ":")
+		local plant = data[1]
+        local stage = tonumber(data[2]) or nil
+        if plant and stage then
+            plantregistryupdater:LearnPlantStage(plant, stage)
+        end
+	end
+end
+
+fns.OnPlantRegistryLearnFertilizerDirty = function(inst)
+	local plantregistryupdater = inst._parent.components.plantregistryupdater
+	if plantregistryupdater then
+        local fertilizer = inst.plantregistry_learnfertilizer:value()
+        if fertilizer then
+            plantregistryupdater:LearnFertilizer(fertilizer)
+        end
+	end
+end
+
+fns.OnPlantRegistryTakePlantPictureDirty = function(inst)
+    local plantregistryupdater = inst._parent.components.plantregistryupdater
+    if plantregistryupdater then
+        local data = string.split(inst.plantregistry_takeplantpicture:value(), ":")
+        local plant = data[1]
+        local weight = data[2]
+        local beardskin = data[3]
+        local beardlength = data[4]
+        if not beardlength then --if only 3 args, 3rd arg is length not skin.
+            beardlength = beardskin
+            beardskin = nil
+        end
+        if plant and weight then
+            plantregistryupdater:TakeOversizedPicture(plant, weight, beardskin, tonumber(beardlength))
+        end
+    end
+end
+
+
 local function OnGiftsDirty(inst)
     if inst._parent ~= nil and inst._parent.HUD ~= nil then
         inst._parent:PushEvent("giftreceiverupdate", {
@@ -805,6 +868,10 @@ local function OnHoundWarningDirty(inst)
     end
 end
 
+fns.StartFarmingMusicEvent = function(inst)
+	inst._parent:PushEvent("playfarmingmusic")
+end
+
 local function OnMakeFriendEvent(inst)
     if inst._parent ~= nil and TheFocalPoint.entity:GetParent() == inst._parent then
         TheFocalPoint.SoundEmitter:PlaySound("dontstarve/common/makeFriend")
@@ -872,6 +939,11 @@ fns.ShowCookbookPopUp = function(inst, show)
     fns.OnIsCookbookPopUpVisibleDirty(inst)
 end
 
+fns.ShowPlantRegistryPopUp = function(inst, show)
+    inst.isplantregistrypopupvisible:set(show)
+    fns.OnIsPlantRegistryPopUpVisibleDirty(inst)
+end
+
 --------------------------------------------------------------------------
 
 local function RegisterNetListeners(inst)
@@ -895,6 +967,7 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("makefriend", OnMakeFriend, inst._parent)
         inst:ListenForEvent("feedincontainer", OnFeedInContainer, inst._parent)
         inst:ListenForEvent("houndwarning", OnHoundWarning, inst._parent)       
+        inst:ListenForEvent("play_theme_music", fns.OnPlayThemeMusic, inst._parent)       
     else
         inst.ishealthpulseup:set_local(false)
         inst.ishealthpulsedown:set_local(false)
@@ -935,6 +1008,10 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("iscookbookpopupvisibledirty", fns.OnIsCookbookPopUpVisibleDirty)
 		inst:ListenForEvent("iscookbookproductdirty", fns.OnIsCookbookProductDirty)
 		inst:ListenForEvent("iscookbooklearnstatsdirty", fns.OnIsCookbookLearnStatsDirty)
+        inst:ListenForEvent("isplantregistrypopupvisibledirty", fns.OnIsPlantRegistryPopUpVisibleDirty)
+        inst:ListenForEvent("onplantregistrylearnplantstagedirty", fns.OnPlantRegistryLearnPlantStageDirty)
+        inst:ListenForEvent("onplantregistrylearnfertilizerdirty", fns.OnPlantRegistryLearnFertilizerDirty)
+        inst:ListenForEvent("onplantregistrytakeplantpicturedirty", fns.OnPlantRegistryTakePlantPictureDirty)
 		
 
         OnIsTakingFireDamageDirty(inst)
@@ -969,7 +1046,8 @@ local function RegisterNetListeners(inst)
     inst:ListenForEvent("leader.makefriend", OnMakeFriendEvent)
     inst:ListenForEvent("eater.feedincontainer", OnFeedInContainerEvent)
     inst:ListenForEvent("morguedirty", OnMorgueDirty)
-    inst:ListenForEvent("houndwarningdirty", OnHoundWarningDirty)   
+    inst:ListenForEvent("houndwarningdirty", OnHoundWarningDirty)
+	inst:ListenForEvent("startfarmingmusicevent", fns.StartFarmingMusicEvent)
     OnSandstormLevelDirty(inst)
     OnGiftsDirty(inst)
     OnMountHurtDirty(inst)
@@ -979,6 +1057,7 @@ local function RegisterNetListeners(inst)
     OnIsWardrobePopUpVisibleDirty(inst)
     OnIsGiftItemPopUpVisibleDirty(inst)
     fns.OnIsCookbookPopUpVisibleDirty(inst)
+    fns.OnIsPlantRegistryPopUpVisibleDirty(inst)
 
     --Fade is initialized by OnPlayerActivated in gamelogic.lua
 end
@@ -1103,6 +1182,10 @@ local function fn()
     inst.screenflash = net_tinybyte(inst.GUID, "frontend.screenflash", "playerscreenflashdirty")
     inst.wormholetravelevent = net_tinybyte(inst.GUID, "frontend.wormholetravel", "wormholetraveldirty")
     inst.houndwarningevent = net_tinybyte(inst.GUID, "frontend.houndwarning", "houndwarningdirty")        
+
+	-- busy theme music
+    inst.start_farming_music = net_event(inst.GUID, "startfarmingmusicevent")
+
     inst.isfadein:set(true)
 
     --Builder variables
@@ -1151,10 +1234,16 @@ local function fn()
     inst.hasgiftmachine = net_bool(inst.GUID, "giftreceiver.hasgiftmachine", "giftsdirty")
     inst.isgiftitempopupvisible = net_bool(inst.GUID, "giftreceiver.isgiftitempopupvisible", "isgiftitempopupvisibledirty")
 
-    --Coobook variables
+    --Cookbook variables
     inst.iscookbookpopupvisible = net_bool(inst.GUID, "cookbook.iscookbookpopupvisible", "iscookbookpopupvisibledirty")
     inst.cookbook_product = net_string(inst.GUID, "cookbook.product", "iscookbookproductdirty")
     inst.cookbook_learnstats = net_string(inst.GUID, "cookbook.learnstats", "iscookbooklearnstatsdirty")
+
+    --PlantRegistry variables
+    inst.isplantregistrypopupvisible = net_bool(inst.GUID, "plantregistry.isplantregistrypopupvisible", "isplantregistrypopupvisibledirty")
+    inst.plantregistry_learnplantstage = net_string(inst.GUID, "plantregistry.learnplantstage", "onplantregistrylearnplantstagedirty")
+    inst.plantregistry_learnfertilizer = net_string(inst.GUID, "plantregistry.learnfertilizer", "onplantregistrylearnfertilizerdirty")
+    inst.plantregistry_takeplantpicture = net_string(inst.GUID, "plantregistry.takeplantpicture", "onplantregistrytakeplantpicturedirty")
 
     --Combat variables
     inst.lastcombattarget = net_entity(inst.GUID, "combat.lasttarget")
@@ -1231,6 +1320,7 @@ local function fn()
     inst.ShowWardrobePopUp = fns.ShowWardrobePopUp
     inst.ShowGiftItemPopUp = fns.ShowGiftItemPopUp
     inst.ShowCookbookPopUp = fns.ShowCookbookPopUp
+    inst.ShowPlantRegistryPopUp = fns.ShowPlantRegistryPopUp
 
     inst.persists = false
 

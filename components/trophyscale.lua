@@ -63,12 +63,14 @@ end
 function TrophyScale:Compare(inst_compare, doer)
 	local new_weight = inst_compare.components.weighable:GetWeight()
 
-	if self.item_data == nil or new_weight > self.item_data.weight then
+	if self.item_data == nil or (self.item_data.weight == nil or self.item_data.weight <= 0) or (new_weight ~= nil and new_weight > self.item_data.weight) then
 		local item_data_old = deepcopy(self.item_data)
 
 		self.item_data = {}
-		self.item_data.weight = new_weight
-		self.item_data.is_heavy = inst_compare.components.weighable.weight_percent >= TUNING.WEIGHABLE_HEAVY_WEIGHT_PERCENT
+		self.item_data.weight = new_weight or 0
+		self.item_data.is_heavy = inst_compare.components.weighable.weight_percent ~= nil
+			and inst_compare.components.weighable.weight_percent >= TUNING.WEIGHABLE_HEAVY_WEIGHT_PERCENT
+			or false
 		self.item_data.prefab = inst_compare.prefab
 		self.item_data.build = inst_compare.AnimState:GetBuild()
 		self.item_data.owner_userid = inst_compare.components.weighable.owner_userid
@@ -79,13 +81,17 @@ function TrophyScale:Compare(inst_compare, doer)
 			self.compare_postfn(self.item_data, inst_compare)
 		end
 
-		inst_compare:Remove()
+		if inst_compare.components.stackable and inst_compare.components.stackable:IsStack() then
+			inst_compare.components.stackable:Get():Remove()
+		else
+			inst_compare:Remove()
+		end
 
-		self.inst:PushEvent("onnewtrophy", { old = item_data_old, new = self.item_data })
+		self.inst:PushEvent("onnewtrophy", { old = item_data_old, new = self.item_data, doer = doer })
 
 		return true
 	else
-		return false, "TOO_SMALL"
+		return false, self.type.."_TOO_SMALL"
 	end
 end
 

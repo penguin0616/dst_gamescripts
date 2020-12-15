@@ -22,6 +22,9 @@ local assets =
     Asset("SOUNDPACKAGE", "sound/yotc_2020.fev"),
     Asset("FILE", "sound/yotc_2020.fsb"),
 
+    Asset("SOUNDPACKAGE", "sound/farming.fev"),
+    Asset("FILE", "sound/farming.fsb"),
+
     Asset("SOUNDPACKAGE", "sound/wintersfeast2019.fev"),
     Asset("FILE", "sound/wintersfeast2019.fsb"),
 
@@ -63,8 +66,6 @@ local assets =
     Asset("PKGREF", "anim/wolfgang_skinny.zip"),
     Asset("PKGREF", "anim/woodie.zip"),
     Asset("PKGREF", "anim/wx78.zip"),
-
-
 
     Asset("ATLAS", "images/global.xml"),
     Asset("IMAGE", "images/global.tex"),
@@ -130,6 +131,9 @@ local assets =
 
     Asset("ATLAS", "images/quagmire_recipebook.xml"),
     Asset("IMAGE", "images/quagmire_recipebook.tex"),
+
+    Asset("ATLAS", "images/plantregistry.xml"),
+    Asset("IMAGE", "images/plantregistry.tex"),
 
     Asset("DYNAMIC_ATLAS", "images/options.xml"),
     Asset("PKGREF", "images/options.tex"),
@@ -357,6 +361,17 @@ end
 --Skin assets
 for _, skin_asset in pairs(require("skin_assets")) do
     table.insert(assets, skin_asset)
+end
+
+-- cookbook HD images
+local cooking = require("cooking")
+for _, recipe_cat in pairs(cooking.cookbook_recipes) do
+	for _, data in pairs(recipe_cat) do
+        if not cooking.IsModCookerFood(data.name) then
+            table.insert(assets, Asset("DYNAMIC_ATLAS", "images/cookbook_"..data.name..".xml"))
+            table.insert(assets, Asset("PKGREF", "images/cookbook_"..data.name..".tex"))
+        end
+	end
 end
 
 if QUAGMIRE_USE_KLUMP then

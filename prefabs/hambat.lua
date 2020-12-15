@@ -78,6 +78,9 @@ local function fn()
     inst.components.weapon:SetDamage(TUNING.HAMBAT_DAMAGE)
     inst.components.weapon:SetOnAttack(UpdateDamage)
 
+    inst:AddComponent("forcecompostable")
+    inst.components.forcecompostable.green = true
+
     inst.OnLoad = OnLoad
 
     -------

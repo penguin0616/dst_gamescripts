@@ -205,6 +205,7 @@ local function Refresh(inst)
     inst._itemspreview = nil
     if inst._parent ~= nil then
         inst._parent:PushEvent("refresh")
+        ThePlayer:PushEvent("refresh_integrated_container")
         RefreshCrafting(inst)
     end
 end
@@ -358,6 +359,7 @@ local function PushStackSize(inst, inventory, item, stacksize, animatestacksize,
             end
         end
         local oldstacksize = item.replica.stackable:StackSize()
+        item.replica.stackable:SetPreviewStackSize(stacksize)
         item:PushEvent("stacksizepreview",
         {
             stacksize = stacksize,
@@ -544,6 +546,11 @@ local function MoveItemFromAllOfSlot(inst, slot, container)
         if container_classified ~= nil and not container_classified:IsBusy() then
             local item = inst:GetItemInSlot(slot)
             if item ~= nil then
+
+                if container_classified.ignoreoverflow ~= nil and container_classified:GetOverflowContainer() == (inst._parent and inst._parent.replica.container) then
+                    container_classified.ignoreoverflow = true
+                end
+
                 local remainder = nil
                 local player = ThePlayer
                 if player ~= nil and player.components.constructionbuilderuidata ~= nil and player.components.constructionbuilderuidata:GetContainer() == container then
@@ -554,6 +561,11 @@ local function MoveItemFromAllOfSlot(inst, slot, container)
                 else
                     remainder = container_classified:ReceiveItem(item)
                 end
+                
+                if container_classified.ignoreoverflow then
+                    container_classified.ignoreoverflow = false
+                end
+
                 if remainder ~= nil then
                     if remainder > 0 then
                         PushStackSize(inst, nil, item, nil, nil, remainder, false, true)
@@ -574,6 +586,11 @@ local function MoveItemFromHalfOfSlot(inst, slot, container)
         if container_classified ~= nil and not container_classified:IsBusy() then
             local item = inst:GetItemInSlot(slot)
             if item ~= nil then
+
+                if container_classified.ignoreoverflow ~= nil and container_classified:GetOverflowContainer() == (inst._parent and inst._parent.replica.container) then
+                    container_classified.ignoreoverflow = true
+                end
+
                 local remainder = nil
                 local player = ThePlayer
                 if player ~= nil and player.components.constructionbuilderuidata ~= nil and player.components.constructionbuilderuidata:GetContainer() == container then
@@ -584,6 +601,11 @@ local function MoveItemFromHalfOfSlot(inst, slot, container)
                 else
                     remainder = container_classified:ReceiveItem(item, math.floor(item.replica.stackable:StackSize() / 2))
                 end
+                
+                if container_classified.ignoreoverflow then
+                    container_classified.ignoreoverflow = false
+                end
+
                 if remainder ~= nil then
                     if remainder > 0 then
                         PushStackSize(inst, nil, item, nil, nil, remainder, true, true)

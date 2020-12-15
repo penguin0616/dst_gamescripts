@@ -58,6 +58,8 @@ local function fn()
 
     inst:AddComponent("inspectable")
 
+    inst:AddComponent("wax")
+
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem:SetSinks(true)
 

@@ -33,6 +33,8 @@ local function onunequipped(inst, equipper)
     equipper.AnimState:Show("ARM_normal")
 end
 
+local PLANT_TAGS = {"tendable_farmplant"}
+
 local function create_waves(inst, target, position)
     local owner = inst.components.inventoryitem:GetGrandOwner()
     if owner == nil then
@@ -63,6 +65,14 @@ local function create_waves(inst, target, position)
     if s1 or s2 then
         inst.components.finiteuses:Use(1)
     end
+
+    local x, y, z = owner.Transform:GetWorldPosition()
+    for _, v in pairs(TheSim:FindEntities(x, y, z, TUNING.GNARWAIL_HORN_FARM_PLANT_INTERACT_RANGE, PLANT_TAGS)) do
+		if v.components.farmplanttendable ~= nil then
+			v.components.farmplanttendable:TendTo(owner)
+		end
+	end
+
 end
 
 local function fn()

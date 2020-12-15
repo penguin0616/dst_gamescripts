@@ -805,6 +805,34 @@ for y = 1, 0, -1 do
 end
 
 --------------------------------------------------------------------------
+--[[ seedpouch ]]
+--------------------------------------------------------------------------
+
+params.seedpouch =
+{
+    widget =
+    {
+        slotpos = {},
+        animbank = "ui_krampusbag_2x8",
+        animbuild = "ui_krampusbag_2x8",
+        pos = Vector3(-5, -120, 0),
+    },
+    issidewidget = true,
+    type = "pack",
+}
+
+for y = 0, 6 do
+    table.insert(params.seedpouch.widget.slotpos, Vector3(-162, -75 * y + 240, 0))
+    table.insert(params.seedpouch.widget.slotpos, Vector3(-162 + 75, -75 * y + 240, 0))
+end
+
+function params.seedpouch.itemtestfn(container, item, slot)
+    return item.prefab == "seeds" or string.match(item.prefab, "_seeds") or item:HasTag("treeseed")
+end
+
+params.seedpouch.priorityfn = params.seedpouch.itemtestfn
+
+--------------------------------------------------------------------------
 --[[ candybag ]]
 --------------------------------------------------------------------------
 
@@ -829,6 +857,8 @@ end
 function params.candybag.itemtestfn(container, item, slot)
     return item:HasTag("halloweencandy") or item:HasTag("halloween_ornament") or string.sub(item.prefab, 1, 8) == "trinket_"
 end
+
+params.candybag.priorityfn = params.candybag.itemtestfn
 
 --------------------------------------------------------------------------
 --[[ quagmire_pot ]]

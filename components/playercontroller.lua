@@ -667,7 +667,9 @@ function PlayerController:OnRemoteControllerActionButton(actioncode, target, isr
 
         self.remote_controls[CONTROL_CONTROLLER_ACTION] = 0
         self:ClearControlMods()
+        SetClientRequestedAction(actioncode, mod_name)
         local lmb, rmb = self:GetSceneItemControllerAction(target)
+        ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_CONTROLLER_ACTION] = nil
         end
@@ -703,7 +705,9 @@ function PlayerController:OnRemoteControllerActionButtonPoint(actioncode, positi
 
         self.remote_controls[CONTROL_CONTROLLER_ACTION] = 0
         self:ClearControlMods()
+        SetClientRequestedAction(actioncode, mod_name)
         local lmb, rmb = self:GetGroundUseAction(position)
+        ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_CONTROLLER_ACTION] = nil
         end
@@ -825,7 +829,9 @@ function PlayerController:OnRemoteControllerAltActionButton(actioncode, target, 
 
         self.remote_controls[CONTROL_CONTROLLER_ALTACTION] = 0
         self:ClearControlMods()
+        SetClientRequestedAction(actioncode, mod_name)
         local lmb, rmb = self:GetSceneItemControllerAction(target)
+        ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_CONTROLLER_ALTACTION] = nil
         end
@@ -863,11 +869,13 @@ function PlayerController:OnRemoteControllerAltActionButtonPoint(actioncode, pos
         self.remote_controls[CONTROL_CONTROLLER_ALTACTION] = 0
         self:ClearControlMods()
         local lmb, rmb
+        SetClientRequestedAction(actioncode, mod_name)
         if isspecial then
             rmb = self:GetGroundUseSpecialAction(position, true)
         else
             lmb, rmb = self:GetGroundUseAction(position)
         end
+        ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_CONTROLLER_ALTACTION] = nil
         end
@@ -1412,7 +1420,9 @@ local function GetPickupAction(self, target, tool)
         (target:HasTag("notreadyforharvest") and target:HasTag("withered")) then
         return ACTIONS.HARVEST
     elseif target:HasTag("tapped_harvestable") and not target:HasTag("fire") then
-		return ACTIONS.HARVEST
+        return ACTIONS.HARVEST
+    elseif target:HasTag("tendable_farmplant") and not target:HasTag("fire") then
+        return ACTIONS.INTERACT_WITH
     elseif target:HasTag("dried") and not target:HasTag("burnt") then
         return ACTIONS.HARVEST
     elseif target:HasTag("donecooking") and not target:HasTag("burnt") then
@@ -1566,7 +1576,8 @@ function PlayerController:GetActionButtonAction(force_target)
                 "smolder",
                 "saddled",
                 "brushable",
-				"tapped_harvestable",
+                "tapped_harvestable",
+                "tendable_farmplant",
             }
             if tool ~= nil then
                 for k, v in pairs(TOOLACTIONS) do
@@ -1638,7 +1649,9 @@ function PlayerController:OnRemoteActionButton(actioncode, target, isreleased, n
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         self.remote_controls[CONTROL_ACTION] = 0
         if actioncode ~= nil then
+            SetClientRequestedAction(actioncode, mod_name)
             local buffaction = self:GetActionButtonAction(target)
+            ClearClientRequestedAction()
             if buffaction ~= nil and buffaction.action.code == actioncode and buffaction.action.mod_name == mod_name then
                 if buffaction.action.canforce and not noforce then
                     buffaction:SetActionPoint(self:GetRemotePredictPosition() or self.inst:GetPosition())
@@ -2000,10 +2013,12 @@ function PlayerController:OnUpdate(dt)
 
         local terraform = false
         local hidespecialactionreticule = false
+        local terraform_action = nil
         if controller_mode then
             local lmb, rmb = self:GetGroundUseAction()
             if rmb ~= nil then
-                terraform = rmb.action == ACTIONS.TERRAFORM
+                terraform = rmb.action.tile_placer ~= nil
+                terraform_action = rmb.action
                 hidespecialactionreticule = self.reticule ~= nil and self.reticule.inst == self.inst
             else
                 if self.controller_target ~= nil then
@@ -2017,16 +2032,19 @@ function PlayerController:OnUpdate(dt)
                 end
             end
         else
-            local rmb = self:GetRightMouseAction() 
-            terraform = rmb ~= nil and rmb.action == ACTIONS.TERRAFORM
+            local rmb = self:GetRightMouseAction()
+            if rmb ~= nil then
+                terraform = rmb.action.tile_placer ~= nil and (rmb.action.show_tile_placer_fn == nil or rmb.action.show_tile_placer_fn(self:GetRightMouseAction()))
+                terraform_action = rmb.action
+            end
         end
 
         --show right action reticule
         if self.placer == nil and self.deployplacer == nil then
             if terraform then
                 if self.terraformer == nil then
-                    self.terraformer = SpawnPrefab("gridplacer")
-                    if self.terraformer ~= nil then
+                    self.terraformer = SpawnPrefab(terraform_action.tile_placer)
+                    if self.terraformer ~= nil and self.terraformer.components.placer ~= nil then
                         self.terraformer.components.placer:SetBuilder(self.inst)
                         self.terraformer.components.placer:OnUpdate(0)
                     end
@@ -3142,7 +3160,8 @@ function PlayerController:DoActionAutoEquip(buffaction)
         buffaction.action ~= ACTIONS.ADDFUEL and
         buffaction.action ~= ACTIONS.ADDWETFUEL and
         buffaction.action ~= ACTIONS.DEPLOY and
-        buffaction.action ~= ACTIONS.CONSTRUCT then
+        buffaction.action ~= ACTIONS.CONSTRUCT and
+        buffaction.action ~= ACTIONS.ADDCOMPOSTABLE then
         self.inst.replica.inventory:EquipActionItem(buffaction.invobject)
         buffaction.autoequipped = true
     end
@@ -3258,7 +3277,9 @@ function PlayerController:OnRemoteLeftClick(actioncode, position, target, isrele
 
         self.remote_controls[CONTROL_PRIMARY] = 0
         self:DecodeControlMods(controlmodscode)
+        SetClientRequestedAction(actioncode, mod_name)
         local lmb, rmb = self.inst.components.playeractionpicker:DoGetMouseActions(position, target)
+        ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_PRIMARY] = nil
         end
@@ -3359,16 +3380,13 @@ function PlayerController:OnRightClick(down)
     end
 end
 
---TODO(YOG): Make a better way of forcing the server to play the expected client action
-FORCE_ROW_FAIL_HACK = false
-
 function PlayerController:OnRemoteRightClick(actioncode, position, target, rotation, isreleased, controlmodscode, noforce, mod_name)
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         self.remote_controls[CONTROL_SECONDARY] = 0
         self:DecodeControlMods(controlmodscode)
-        FORCE_ROW_FAIL_HACK = actioncode == ACTIONS.ROW_FAIL.code
+        SetClientRequestedAction(actioncode, mod_name)
         local lmb, rmb = self.inst.components.playeractionpicker:DoGetMouseActions(position, target)
-        FORCE_ROW_FAIL_HACK = false
+        ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_SECONDARY] = nil
         end

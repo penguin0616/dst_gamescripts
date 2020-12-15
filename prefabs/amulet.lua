@@ -123,12 +123,14 @@ local function pickup(inst, owner)
     end
     local x, y, z = owner.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, TUNING.ORANGEAMULET_RANGE, ORANGE_PICKUP_MUST_TAGS, ORANGE_PICKUP_CANT_TAGS)
+    local ba = owner:GetBufferedAction()
     for i, v in ipairs(ents) do
         if v.components.inventoryitem ~= nil and
             v.components.inventoryitem.canbepickedup and
             v.components.inventoryitem.cangoincontainer and
             not v.components.inventoryitem:IsHeld() and
-            owner.components.inventory:CanAcceptCount(v, 1) > 0 then
+            owner.components.inventory:CanAcceptCount(v, 1) > 0 and
+            (ba == nil or ba.action ~= ACTIONS.PICKUP or ba.target ~= v) then
 
             if owner.components.minigame_participator ~= nil then
                 local minigame = owner.components.minigame_participator:GetMinigame()

@@ -215,7 +215,8 @@ return{
 		},
 		COMPARE_WEIGHABLE =
 		{
-			TOO_SMALL = "This specimen is far too insubstantial.",
+            FISH_TOO_SMALL = "This specimen is far too insubstantial.",
+            OVERSIZEDVEGGIES_TOO_SMALL = "I'm afraid this specimen simply doesn't have enough mass to compete.",
 		},
         BEGIN_QUEST =
         {
@@ -230,6 +231,23 @@ return{
         SING_FAIL =
         {
 --fallback to speech_wilson.lua             SAMESONG = "only_used_by_wathgrithr",
+        },
+        PLANTREGISTRY_RESEARCH_FAIL =
+        {
+            GENERIC = "I'm already quite knowledgeable about this particular species.",
+            FERTILIZER = "I've gleaned as much information as I can.",
+        },
+        FILL_OCEAN =
+        {
+            UNSUITABLE_FOR_PLANTS = "I'm afraid only freshwater will do.",
+        },
+        POUR_WATER =
+        {
+            OUT_OF_WATER = "Oh dear, I'll have to replenish my water supply.",
+        },
+        POUR_WATER_GROUNDTILE =
+        {
+            OUT_OF_WATER = "I'll have to replenish my water supply at the earliest opportunity.",
         },
 	},
 	ACTIONFAIL_GENERIC = "It seems I can't do that.",
@@ -322,6 +340,7 @@ return{
 	},
     ANNOUNCE_RUINS_RESET = "Careful, the monsters are back.",
     ANNOUNCE_SNARED = "You can't hold me for long, dear.",
+    ANNOUNCE_SNARED_IVY = "Goodness, my garden seems to have quite an aggressive weed problem.",
     ANNOUNCE_REPELLED = "There's magic at work here.",
 	ANNOUNCE_ENTER_DARK = "I am in the dark.",
 	ANNOUNCE_ENTER_LIGHT = "It is bright enough to see.",
@@ -544,6 +563,8 @@ return{
 --fallback to speech_wilson.lua         BOOK_TENTACLES =  "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BRIMSTONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "I'm afraid it's in no condition to race.",
 
@@ -586,6 +607,31 @@ return{
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "What a peculiar sensation, it's transmitting a blueprint telepathically!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "I'm already familiar with this particular piece of knowledge.",
     ANNOUNCE_ARCHIVE_NO_POWER = "How very disappointing, I was curious to see what it would do.",
+
+    ANNOUNCE_PLANT_RESEARCHED =
+    {
+        "I've gained a bit more insight into the workings of this species.",
+    },
+
+    ANNOUNCE_PLANT_RANDOMSEED = "Once it grows I'll be able to identify the species.",
+
+    ANNOUNCE_FERTILIZER_RESEARCHED = "Even with my considerable gardening experience, there's always something new to learn.",
+
+	ANNOUNCE_FIRENETTLE_TOXIN = 
+	{
+		"Oh dear... I seem to be afflicted by the plant's toxin.",
+		"The toxin from those nettles carries a rather unpleasant burning sensation.",
+	},
+	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "Thankfully, the toxin's effects seem to be temporary.",
+
+	ANNOUNCE_TALK_TO_PLANTS = 
+	{
+        "Talking to my little garden always seemed to help it grow.",
+        "My, those leaves are coming in quite nicely dear!",
+		"All one needs to thrive is a bit of love and care, isn't that right?",
+        "No need to rush dear, you just take your time.",
+        "How are you doing today? Do you have enough water?",
+	},
 
 	BATTLECRY =
 	{
@@ -653,6 +699,8 @@ return{
         BOOK_BIRDS = "The expurgated version, but it has my favorite: Megascops kennicottii.",
         BOOK_TENTACLES = "Hard to put this one down. It's gripping, frankly.",
         BOOK_GARDENING = "Dead plants tied together to help me aid living plants.",
+		BOOK_SILVICULTURE = "Dead plants tied together to help me aid living plants.",
+		BOOK_HORTICULTURE = "Only my best tricks for bringing a garden to fruition.",
         BOOK_SLEEP = "Warm milk in book form.",
         BOOK_BRIMSTONE = "What could possibly go wrong?",
 
@@ -1369,14 +1417,14 @@ return{
 		CARROT = "Daucus carota. Edible, and delicious.",
 		CARROT_COOKED = "Daucus carota, roasted to perfection.",
 		CARROT_PLANTED = "Daucus carota is a root vegetable.",
-		CARROT_SEEDS = "Seed of Daucus carota.",
+		CARROT_SEEDS = "It can't begin growing until it's been planted, dear.",
 		CARTOGRAPHYDESK =
 		{
 			GENERIC = "Ah! A proper desk! Just look at the finish on that wood!",
 			BURNING = "Can we have nothing decent?",
 			BURNT = "The destruction of knowledge is such a difficult thing to stomach.",
 		},
-		WATERMELON_SEEDS = "Plant them to grow a lanatus.",
+		WATERMELON_SEEDS = "It can't begin growing until it's been planted, dear.",
 		CAVE_FERN = "A lovely ornamental plant.",
 		CHARCOAL = "It's mostly carbon and ash.",
         CHESSPIECE_PAWN = "Pawns that journey to the seat of power can be quite dangerous.",
@@ -1441,7 +1489,7 @@ return{
 		},
 		CORN = "Zea mays, a great staple food.",
 		CORN_COOKED = "Popped corn!",
-		CORN_SEEDS = "These maize seeds will grow in many climates.",
+		CORN_SEEDS = "It can't begin growing until it's been planted, dear.",
         CANARY =
 		{
 			GENERIC = "Serinus canaria. A historically useful sentinel species.",
@@ -1547,7 +1595,7 @@ return{
 
 		DRAGONFRUIT = "Hylocereus undatus, or pitahaya blanca.",
 		DRAGONFRUIT_COOKED = "Pleasantly prepared pitahaya blanca.",
-		DRAGONFRUIT_SEEDS = "A seed for the magnificently mild Hylocereus undatus.",
+		DRAGONFRUIT_SEEDS = "It can't begin growing until it's been planted, dear.",
 		DRAGONPIE = "I do love a nice fruit pie.",
 		DRUMSTICK = "A leg of poultry.",
 		DRUMSTICK_COOKED = "Not terribly healthy, but my is it delicious!",
@@ -1558,11 +1606,11 @@ return{
 		DUG_SAPLING = "It requires soil to grow.",
 		DURIAN = "Aha, the Durio zibethinus. It really does reek.",
 		DURIAN_COOKED = "Cooking this certainly did not improve its odor.",
-		DURIAN_SEEDS = "Even the seeds of the Durio zibethinus smell a bit.",
+		DURIAN_SEEDS = "It can't begin growing until it's been planted, dear.",
 		EARMUFFSHAT = "Poor Leporidae. At least it's warm.",
 		EGGPLANT = "A nightshade. Solanum melongena, specifically.",
 		EGGPLANT_COOKED = "For your enjoyment: Braised Solanum melongena.",
-		EGGPLANT_SEEDS = "Seed of aubergine.",
+		EGGPLANT_SEEDS = "It can't begin growing until it's been planted, dear.",
 		
 		ENDTABLE = 
 		{
@@ -1972,7 +2020,7 @@ return{
         },
         POMEGRANATE = "Punica granatum. Watery, sweet and a bit sour.",
         POMEGRANATE_COOKED = "Punica granatum is so nice when it's warmed up.",
-        POMEGRANATE_SEEDS = "Seeds of Punica granatum, separated from their arils.",
+        POMEGRANATE_SEEDS = "It can't begin growing until it's been planted, dear.",
         POND = "A small but deep freshwater pond.",
         POOP = "A quantity of animal feces. How fragrant.",
         FERTILIZER = "A bucket of animal feces. Pungent.",
@@ -1980,7 +2028,7 @@ return{
         PUMPKINCOOKIE = "Pumpkin biscuits, goody!",
         PUMPKIN_COOKED = "Cooked Cucurbita pepo. Gooey and delicious.",
         PUMPKIN_LANTERN = "Carving the Cucurbita pepo is such a nice pastime.",
-        PUMPKIN_SEEDS = "Pepitas.",
+        PUMPKIN_SEEDS = "It can't begin growing until it's been planted, dear.",
         PURPLEAMULET = "I can almost sense it beckoning to something.",
         PURPLEGEM = "It gives off a strange aura.",
         RABBIT =
@@ -3404,31 +3452,31 @@ return{
 
         TURNIP = "Edible root of Brassica rapa.",
         TURNIP_COOKED = "Roast Brassica rapa.",
-        TURNIP_SEEDS = "Mutated seed of Brassica rapa.",
+        TURNIP_SEEDS = "It can't begin growing until it's been planted, dear.",
         
         GARLIC = "Edible bulb of Allium cepa.",
         GARLIC_COOKED = "Roast Allium cepa.",
-        GARLIC_SEEDS = "Mutated seed of Allium cepa.",
+        GARLIC_SEEDS = "It can't begin growing until it's been planted, dear.",
         
         ONION = "Allium sativum, a close relative of Allium cepa.",
         ONION_COOKED = "Roast Allium sativum.",
-        ONION_SEEDS = "Mutated seed of Allium sativum.",
+        ONION_SEEDS = "It can't begin growing until it's been planted, dear.",
         
         POTATO = "Solanum tuberosum, a staple in some cultures.",
         POTATO_COOKED = "Roasted Solanum tuberosum.",
-        POTATO_SEEDS = "Mutated seed of Solanum tuberosum.",
+        POTATO_SEEDS = "It can't begin growing until it's been planted, dear.",
         
         TOMATO = "Fruit of Solanum lycopersicum.",
         TOMATO_COOKED = "Roasted Solanum lycopersicum.",
-        TOMATO_SEEDS = "Mutated seed of Solanum lycopersicum.",
+        TOMATO_SEEDS = "It can't begin growing until it's been planted, dear.",
 
         ASPARAGUS = "A great source of dietary fiber.", 
         ASPARAGUS_COOKED = "It releases sulfur compounds when it's digested.",
-        ASPARAGUS_SEEDS = "Ah. This will grow some fresh vegetables.",
+        ASPARAGUS_SEEDS = "It can't begin growing until it's been planted, dear.",
 
         PEPPER = "Of the genus Capsicum, if I'm not mistaken.",
         PEPPER_COOKED = "I must be careful not to rub my eyes.",
-        PEPPER_SEEDS = "A Capsicum seed.",
+        PEPPER_SEEDS = "It can't begin growing until it's been planted, dear.",
 
         WEREITEM_BEAVER = "It appears to induce a Castorthropic state.",
         WEREITEM_GOOSE = "An... artistic representation of the Branta canadensis.",
@@ -3616,11 +3664,117 @@ return{
         TURFCRAFTINGSTATION = "I surmise this was a crucial part of ancient farming methods.",
 
         MOON_ALTAR_LINK = "I'm afraid its purpose eludes me, for now.",
+
+        -- FARMING
+        COMPOSTINGBIN =
+        {
+            -- WIP, might not end up with these states so don't fill in for now
+            GENERIC = "Composting is an essential component to gardening.",
+            WET = "The moisture level of this mixture is too high.",
+            DRY = "It requires a bit more moisture.",
+            BALANCED = "A well balanced mix.",
+            BURNT = "Well... I suppose plants need carbon too.",
+        },
+        COMPOST = "The secret to any garden's success is nutrient-rich soil.",
+        SOIL_AMENDER = 
+		{ 
+			GENERIC = "Kelp makes for an excellent fertilizer if prepared correctly.",
+			STALE = "It should sit for a while longer yet, to reach full potency.",
+			SPOILED = "Quite acceptable, though it would be even better if I left it for just a bit longer.",
+		},
+
+		SOIL_AMENDER_FERMENTED = "Oh, the garden will enjoy this immensely!",
+
+        WATERINGCAN = 
+        {
+            GENERIC = "A standard watering can.",
+            EMPTY = "Perhaps there's a freshwater source nearby.",
+        },
+        PREMIUMWATERINGCAN =
+        {
+            GENERIC = "A bit unconventional, but an effective irrigation tool nevertheless.",
+            EMPTY = "I'll have to fill it with water before it's usable.",
+        },
+
+		FARM_PLOW = "How very efficient!",
+		FARM_PLOW_ITEM = "I'd best find a suitable spot for my garden.",
+		FARM_HOE = "Humans have cultivated crops since Neolithic times.",
+		GOLDEN_FARM_HOE = "The most malleable of metals, but let's see how it does in the garden.",
+		NUTRIENTSGOGGLESHAT = "The prudent gardener ensures they are able to discern every detail about their crops.",
+		PLANTREGISTRYHAT = "It seems to be a wearable directory of sorts, detailing various plant strains.",
+
+        FARM_SOIL_DEBRIS = "Oh no you don't! Out of my garden!",
+
+		FIRENETTLES = "Dastardly things.",
+		FORGETMELOTS = "This strain can be used to brew a rather pleasant herbal tea.",
+		SWEETTEA = "It's as if all my worries and cares are fading away.",
+		TILLWEED = "What a nuisance!",
+		TILLWEEDSALVE = "The Tillweed's roots appear to have limited healing capabilities.",
+
+		TROPHYSCALE_OVERSIZEDVEGGIES =
+		{
+			GENERIC = "I suppose I must put my gardening prowess to the test!",
+			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nA very respectable harvest.",
+            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nMy, quite the accomplishment!",
+            HAS_ITEM_LIGHT = "I'm afraid the weight of this bit of produce is too small to tabulate.",
+			BURNING = "Oh dear...",
+			BURNT = "I'm afraid that's that.",
+        },
+        
+        CARROT_OVERSIZED = "The result of proper research, planning and care.",
+        CORN_OVERSIZED = "Quite an impressive harvest.",
+        PUMPKIN_OVERSIZED = "A wonderfully plump squash.",
+        EGGPLANT_OVERSIZED = "A particularly respendent Solanum melongena.",
+        DURIAN_OVERSIZED = "Oh, our diminutive green friend will be thrilled!",
+        POMEGRANATE_OVERSIZED = "A rather large Punica granatum specimen.",
+        DRAGONFRUIT_OVERSIZED = "The result of proper research, planning and care.",
+        WATERMELON_OVERSIZED = "The result of proper research, planning and care.",
+        TOMATO_OVERSIZED = "I always was quite good at growing tomatoes.",
+        POTATO_OVERSIZED = "A rather impressive tuber!",
+        ASPARAGUS_OVERSIZED = "It's quite the source of fiber!",
+        ONION_OVERSIZED = "A rather large Allium sativum specimen.",
+        GARLIC_OVERSIZED = "How fascinating, it seems to have grown into a braided configuration all on its own!",
+        PEPPER_OVERSIZED = "The result of proper research, planning and care.",
+        
+        VEGGIE_OVERSIZED_ROTTEN = "How terrible to see it all go to waste!",
+
+		FARM_PLANT =
+		{
+			GENERIC = "Of the kingdom Plantae.",
+			SEED = "It takes patience to grow crops from seed.",
+			GROWING = "It's coming along.",
+			FULL = "I daresay that's ready to harvest.",
+			ROTTEN = "I detest the sight of spoiled food!",
+			FULL_OVERSIZED = "How splendid!",
+			ROTTEN_OVERSIZED = "How terrible to see it all go to waste!",
+			FULL_WEED = "Weeds have no place in the garden.",
+
+			BURNING = "What an unfortunate turn of events!",
+        },
+        
+        FRUITFLY = "Those pests are making quite the nuisance of themselves.",
+        LORDFRUITFLY = "I have no patience for garden pests!",
+        FRIENDLYFRUITFLY = "This one appears to be of a different, more agreeable subspecies.",
+        FRUITFLYFRUIT = "It seems that I can exert some level of control over these insects with this.",
+
+        SEEDPOUCH = "For the practical storage and transport of seeds.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",
     DESCRIBE_TOODARK = "I can't see in the dark.",
     DESCRIBE_SMOLDERING = "Seems it's about to ignite from the heat.",
+
+    DESCRIBE_PLANTHAPPY = "This crop appears to be in good health.",
+    DESCRIBE_PLANTVERYSTRESSED = "It appears to be suffering from quite a variety of stressors.",
+    DESCRIBE_PLANTSTRESSED = "It seems to be suffering from two different stressors at once.",
+    DESCRIBE_PLANTSTRESSORKILLJOYS = "I'll have to remove some of those troublesome weeds.",
+    DESCRIBE_PLANTSTRESSORFAMILY = "These grow best when surrounded by others of its particular species.",
+    DESCRIBE_PLANTSTRESSOROVERCROWDING = "The density of plants should be reduced to avoid competition for nutrients.",
+    DESCRIBE_PLANTSTRESSORSEASON = "I'm afraid this plant might not be in season.",
+    DESCRIBE_PLANTSTRESSORMOISTURE = "It could use a little hydration.",
+    DESCRIBE_PLANTSTRESSORNUTRIENTS = "It requires more nutrient-rich soil.",
+    DESCRIBE_PLANTSTRESSORHAPPINESS = "I should stimulate its growth with some conversation.",
+
     EAT_FOOD =
     {
         TALLBIRDEGG_CRACKED = "Al dente.",

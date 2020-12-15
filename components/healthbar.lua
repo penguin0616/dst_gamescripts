@@ -34,7 +34,7 @@ local function CreateBar(self)
     inst.Image:SetWorldOffset(self.bar_world_offset:Get())
     inst.Image:Enable(false)
 
-    inst.Label:SetSize(16)
+    inst.Label:SetFontSize(16)
     inst.Label:SetFont(SMALLNUMBERFONT)
     inst.Label:SetWorldOffset(self.bar_world_offset:Get())
     inst.Label:SetUIOffset(self.label_ui_offset:Get())

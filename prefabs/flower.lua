@@ -11,8 +11,6 @@ local prefabs =
     "planted_flower",
 }
 
-local DAYLIGHT_SEARCH_RANGE = 30
-
 local names = {"f1","f2","f3","f4","f5","f6","f7","f8","f9","f10"}
 local ROSE_NAME = "rose"
 local ROSE_CHANCE = 0.01
@@ -76,7 +74,7 @@ end
 local FINDLIGHT_MUST_TAGS = { "daylight", "lightsource" }
 local function DieInDarkness(inst)
     local x,y,z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x,0,z, DAYLIGHT_SEARCH_RANGE, FINDLIGHT_MUST_TAGS)
+    local ents = TheSim:FindEntities(x,0,z, TUNING.DAYLIGHT_SEARCH_RANGE, FINDLIGHT_MUST_TAGS)
     for i,v in ipairs(ents) do
         local lightrad = v.Light:GetCalculatedRadius() * .7
         if v:GetDistanceSqToPoint(x,y,z) < lightrad * lightrad then

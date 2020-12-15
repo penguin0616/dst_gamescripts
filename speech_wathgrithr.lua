@@ -215,7 +215,8 @@ return{
 		},
 		COMPARE_WEIGHABLE =
 		{
-			TOO_SMALL = "This wee beastie will not bring me glory.",
+            FISH_TOO_SMALL = "This wee beastie will not bring me glory.",
+            OVERSIZEDVEGGIES_TOO_SMALL = "This non-meat isn't even worthy of competing!",
 		},
         BEGIN_QUEST =
         {
@@ -230,6 +231,23 @@ return{
         SING_FAIL =
         {
             SAMESONG = "Again, from the top? Nay! The show must go on!",
+        },
+        PLANTREGISTRY_RESEARCH_FAIL =
+        {
+            GENERIC = "Its ways are already known to me.",
+            FERTILIZER = "I need not know more.",
+        },
+        FILL_OCEAN =
+        {
+            UNSUITABLE_FOR_PLANTS = "The plants will like this about as much as I like them.",
+        },
+        POUR_WATER =
+        {
+            OUT_OF_WATER = "Empty.",
+        },
+        POUR_WATER_GROUNDTILE =
+        {
+            OUT_OF_WATER = "Nary a drop left.",
         },
 	},
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
@@ -322,6 +340,7 @@ return{
 	},
     ANNOUNCE_RUINS_RESET = "I will fight my way out!",
     ANNOUNCE_SNARED = "No cage can hold me!",
+    ANNOUNCE_SNARED_IVY = "You would defend your vegetable kin against me? Have at thee!",
     ANNOUNCE_REPELLED = "Foul magics block mine blows!",
 	ANNOUNCE_ENTER_DARK = "And the curtain falls.",
 	ANNOUNCE_ENTER_LIGHT = "I step into the light!",
@@ -544,6 +563,8 @@ return{
 --fallback to speech_wilson.lua         BOOK_TENTACLES =  "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BRIMSTONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "The wee beast is on death's door.",
 
@@ -586,6 +607,31 @@ return{
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "The gods have given me a vision... some kind of machine?",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "I've already seen this vision.",
     ANNOUNCE_ARCHIVE_NO_POWER = "It hath not the energy to perform its task.",
+
+    ANNOUNCE_PLANT_RESEARCHED =
+    {
+        "My head hath been filled with useless knowledge about non-meat!",
+    },
+
+    ANNOUNCE_PLANT_RANDOMSEED = "I care not what shall emerge.",
+
+    ANNOUNCE_FERTILIZER_RESEARCHED = "What need hath a warrior of this knowledge?",
+
+	ANNOUNCE_FIRENETTLE_TOXIN = 
+	{
+		"I feel as though my body's aflame!",
+		"Accursed plant with your fiery barbs! Fight me properly!",
+	},
+	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "The fiery curse has passed.",
+
+	ANNOUNCE_TALK_TO_PLANTS = 
+	{
+        "I care naught for these plants or the veggies they produce.",
+        "Grow, or do not.",
+		"Perhaps someone more weak and feeble might talk to the plants, while I hunt.",
+        "No fearsome warrior should be caught talking to plants.",
+        "I should be hunting, not gardening!",
+	},
 
 	BATTLECRY =
 	{
@@ -653,6 +699,8 @@ return{
         BOOK_BIRDS = "To rule the skies!",
         BOOK_TENTACLES = "Knowledge grants great power!",
         BOOK_GARDENING = "But can it tend the garden of mine soul?",
+		BOOK_SILVICULTURE = "A tome of the ways of the forest!",
+		BOOK_HORTICULTURE = "But can it tend the garden of mine soul?",
         BOOK_SLEEP = "Where's the drama? The suspense?",
         BOOK_BRIMSTONE = "This tome is brimming with Hel's fire!",
 
@@ -3616,11 +3664,117 @@ return{
         TURFCRAFTINGSTATION = "The very ground shall heed my will!",
 
         MOON_ALTAR_LINK = "What have we summoned forth?",
+
+        -- FARMING
+        COMPOSTINGBIN =
+        {
+            -- WIP, might not end up with these states so don't fill in for now
+            GENERIC = "A barrel of stink.",
+            WET = "Soggy muck.",
+            DRY = "It's so dry it's nearly dust.",
+            BALANCED = "That shall do.",
+            BURNT = "Reduced to ash.",
+        },
+        COMPOST = "'Tis naught but food for worms.",
+        SOIL_AMENDER = 
+		{ 
+			GENERIC = "A weak brew for the non-meats.",
+			STALE = "It's beginning to take on a powerful odor.",
+			SPOILED = "By the gods, the stench!",
+		},
+
+		SOIL_AMENDER_FERMENTED = "Perhaps the non-meats are stronger that I thought, to consume such a thing...",
+
+        WATERINGCAN = 
+        {
+            GENERIC = "Watering the garden is not a task befitting a warrior.",
+            EMPTY = "The plants expect me to fetch water for them as well?",
+        },
+        PREMIUMWATERINGCAN =
+        {
+            GENERIC = "Why must we coddle the plants thus?",
+            EMPTY = "There is no water to be found within.",
+        },
+
+		FARM_PLOW = "I claim this soil for the garden!",
+		FARM_PLOW_ITEM = "A ferocious weapon against untamed soil.",
+		FARM_HOE = "To bury those useless seeds deep in the ground.",
+		GOLDEN_FARM_HOE = "A tool far too magnificent for those worthless seeds.",
+		NUTRIENTSGOGGLESHAT = "I care not for learning about that which sprouts from the dirt.",
+		PLANTREGISTRYHAT = "This is no helm for a warrior!",
+
+        FARM_SOIL_DEBRIS = "You dare tresspass upon my garden?",
+
+		FIRENETTLES = "They fight like cowards.",
+		FORGETMELOTS = "I do not trust them.",
+		SWEETTEA = "A warrior does not partake in \"tea time\".",
+		TILLWEED = "Remove yourself from my sight, cowardly weed!",
+		TILLWEEDSALVE = "Hmm, it doth appear that foul weed has a use after all.",
+
+		TROPHYSCALE_OVERSIZEDVEGGIES =
+		{
+			GENERIC = "Vile veggies! Bring out the best among you to be judged!",
+			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nI care not.",
+            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\n'Tis vile, but robust.",
+            HAS_ITEM_LIGHT = "Ha! The machine does not even deem it worthy enough to reveal its weight!",
+			BURNING = "It hath been set ablaze!",
+			BURNT = "T'was of little use anyway.",
+        },
+        
+        CARROT_OVERSIZED = "If only you were meat...",
+        CORN_OVERSIZED = "Sadly, it is not meat.",
+        PUMPKIN_OVERSIZED = "Quite formidable, for a vegetable.",
+        EGGPLANT_OVERSIZED = "I've no use for vegetables, big or small.",
+        DURIAN_OVERSIZED = "It gives off a powerful stink.",
+        POMEGRANATE_OVERSIZED = "Its great size impresses me naught.",
+        DRAGONFRUIT_OVERSIZED = "Alas, you are fruit, not meat.",
+        WATERMELON_OVERSIZED = "Was this grown by a jotunn?",
+        TOMATO_OVERSIZED = "It's only good for throwing.",
+        POTATO_OVERSIZED = "An embarrassment of non-meat.",
+        ASPARAGUS_OVERSIZED = "This spear will never match up to mine.",
+        ONION_OVERSIZED = "You will draw no tears from my eyes on this day!",
+        GARLIC_OVERSIZED = "Its enlarged form offends my eyes.",
+        PEPPER_OVERSIZED = "You are the champion of the peppers, then?",
+        
+        VEGGIE_OVERSIZED_ROTTEN = "Good! Let it rot!",
+
+		FARM_PLANT =
+		{
+			GENERIC = "A plant.",
+			SEED = "I've no use for you.",
+			GROWING = "I care not.",
+			FULL = "Begone, non-meat!",
+			ROTTEN = "It is even more foul than usual.",
+			FULL_OVERSIZED = "It's about time I cut you back down to size.",
+			ROTTEN_OVERSIZED = "Good! Let it rot!",
+			FULL_WEED = "Weed, vegetable or fruit, all are the same to me.",
+
+			BURNING = "Good riddance.",
+        },
+        
+        FRUITFLY = "Intruder! Taste my blade!",
+        LORDFRUITFLY = "Thou art no lord!",
+        FRIENDLYFRUITFLY = "It seems this one is not an enemy.",
+        FRUITFLYFRUIT = "Now I am chieftain of the wee winged garden beasts!",
+
+        SEEDPOUCH = "For carrying worthless seeds.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",
     DESCRIBE_TOODARK = "Too dark, even for battle.",
     DESCRIBE_SMOLDERING = "Flames will soon consume it.",
+
+    DESCRIBE_PLANTHAPPY = "The foul plant thrives.",
+    DESCRIBE_PLANTVERYSTRESSED = "It is beset by multiple afflictions.",
+    DESCRIBE_PLANTSTRESSED = "Something hinders its growth.",
+    DESCRIBE_PLANTSTRESSORKILLJOYS = "It seems to harbor resentment for its weed brethren.",
+    DESCRIBE_PLANTSTRESSORFAMILY = "Perhaps it needs the company of its kin.",
+    DESCRIBE_PLANTSTRESSOROVERCROWDING = "This small patch of dirt cannot sustain all these non-meats.",
+    DESCRIBE_PLANTSTRESSORSEASON = "It doesn't have what it takes to brave the seasonal elements.",
+    DESCRIBE_PLANTSTRESSORMOISTURE = "It thirsts for water.",
+    DESCRIBE_PLANTSTRESSORNUTRIENTS = "You are unhappy with the dirt you have? Do not look to me to help you!",
+    DESCRIBE_PLANTSTRESSORHAPPINESS = "The feeble thing needs conversation to grow? Vikings thrive in stoic silence!",
+
     EAT_FOOD =
     {
         TALLBIRDEGG_CRACKED = "Bones and all.",

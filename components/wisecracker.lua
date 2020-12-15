@@ -81,8 +81,8 @@ local Wisecracker = Class(function(self, inst)
         end
     end)
 
-    inst:ListenForEvent("snared", function(inst)
-        inst.components.talker:Say(GetString(inst, "ANNOUNCE_SNARED"))
+    inst:ListenForEvent("snared", function(inst, data)
+        inst.components.talker:Say(GetString(inst, data ~= nil and data.announce or "ANNOUNCE_SNARED"))
     end)
 
     inst:ListenForEvent("repelled", function(inst, data)

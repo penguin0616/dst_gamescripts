@@ -225,6 +225,13 @@ local fx =
         end,
     },
     {
+        name = "dirt_puff",
+        bank = "small_puff",
+        build = "smoke_puff_small",
+        anim = "puff",
+        --sound = "dontstarve/common/deathpoof",
+    },
+    {
         name = "splash_ocean", -- this is for the old ocean
         bank = "splash",
         build = "splash_ocean",
@@ -1851,6 +1858,21 @@ local fx =
             end
         end
     },
+    {
+        name = "farm_plant_happy",
+        bank = "farm_plant_happiness",
+        build = "farm_plant_happiness",
+        anim = "happy",
+        fn = FinalOffset1,
+    },
+    {
+        name = "farm_plant_unhappy",
+        bank = "farm_plant_happiness",
+        build = "farm_plant_happiness",
+        anim = "unhappy",
+        fn = FinalOffset1,
+    },
+
 }
 
 for cratersteamindex = 1, 4 do

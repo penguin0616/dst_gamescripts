@@ -43,6 +43,10 @@ function math.clamp(num, min, max)
     return num <= min and min or (num >= max and max or num)
 end
 
+function Clamp(num, min, max)
+    return num <= min and min or (num >= max and max or num)
+end
+
 function IsNumberEven(num)
     return (num % 2) == 0
 end

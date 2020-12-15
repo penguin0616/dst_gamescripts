@@ -1321,3 +1321,37 @@ function MakeInventoryFloatable(inst, size, offset, scale, swap_bank, float_inde
 end
 
 --------------------------------------------------------------------------
+
+local FERTILIZER_DEFS = require("prefabs/fertilizer_nutrient_defs").FERTILIZER_DEFS
+
+local function fertilizer_ondeploy(inst, pt, deployer)
+    local tile_x, tile_z = TheWorld.Map:GetTileCoordsAtPoint(pt:Get())
+    local nutrients = inst.components.fertilizer.nutrients
+    TheWorld.components.farming_manager:AddTileNutrients(tile_x, tile_z, nutrients[1], nutrients[2], nutrients[3])
+
+    inst.components.fertilizer:OnApplied(deployer)
+    if deployer ~= nil and deployer.SoundEmitter ~= nil and inst.components.fertilizer.fertilize_sound ~= nil then
+        deployer.SoundEmitter:PlaySound(inst.components.fertilizer.fertilize_sound)
+    end
+end
+
+local function fertilizer_candeploy(inst, pt, mouseover, deployer)
+    return TheWorld.Map:IsFarmableSoilAtPoint(pt:Get())
+end
+
+function MakeDeployableFertilizerPristine(inst)
+    inst._custom_candeploy_fn = fertilizer_candeploy
+    inst.overridedeployplacername = "gridplacer_farmablesoil"
+    inst:AddTag("deployable")
+    inst:AddTag("tile_deploy")
+end
+
+function MakeDeployableFertilizer(inst)
+    inst:AddComponent("deployable")
+    inst.components.deployable:SetDeployMode(DEPLOYMODE.CUSTOM)
+    inst.components.deployable.ondeploy = fertilizer_ondeploy
+    inst.components.deployable:SetUseGridPlacer(false)
+    inst.components.deployable.keep_in_inventory_on_deploy = true
+end
+
+--------------------------------------------------------------------------

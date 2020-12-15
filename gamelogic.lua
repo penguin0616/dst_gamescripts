@@ -430,7 +430,7 @@ local function PopulateWorld(savedata, profile)
 
         --this was spawned by the level file. kinda lame - we should just do everything from in here.
         map:SetSize(savedata.map.width, savedata.map.height)
-        map:SetFromString(savedata.map.tiles)
+		map:SetFromString(savedata.map.tiles)
 		map:SetNodeIdTileMapFromString(savedata.map.nodeidtilemap)
         map:ResetVisited()
 
@@ -882,7 +882,7 @@ local function DoInitGame(savedata, profile)
 	if TheNet:GetIsServer() then
 	    NotifyLoadingState( LoadingStates.DoneLoading )
 	end
-    
+    ShardGameIndex:WriteTimeFile()
 end
 
 local function UpgradeSaveFile(savedata)

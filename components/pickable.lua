@@ -115,7 +115,9 @@ function Pickable:FinishGrowing()
         self.task:Cancel()
         self.task = nil
         self:Regen()
+		return true
     end
+	return false
 end
 
 function Pickable:Resume()
@@ -228,12 +230,6 @@ function Pickable:Fertilize(fertilizer, doer)
         fertilize_cycles = fertilizer.components.fertilizer.withered_cycles
     end
 
-    if fertilizer.components.finiteuses ~= nil then
-        fertilizer.components.finiteuses:Use()
-    else
-        fertilizer.components.stackable:Get():Remove()
-    end
-
     self.cycles_left = self.max_cycles
 
     if self.inst.components.witherable ~= nil then
@@ -251,6 +247,8 @@ function Pickable:Fertilize(fertilizer, doer)
     else
         self:MakeEmpty()
     end
+
+	return true
 end
 
 function Pickable:OnSave()
@@ -417,26 +415,53 @@ function Pickable:Pick(picker)
         end
 
         local loot = nil
-        if picker ~= nil and picker.components.inventory ~= nil and self.product ~= nil then
+        if picker ~= nil and picker.components.inventory ~= nil and (self.product ~= nil or self.use_lootdropper_for_product ~= nil) then
             if self.droppicked and self.inst.components.lootdropper ~= nil then
-                local num = self.numtoharvest or 1
-                local pt = self.inst:GetPosition()
-                pt.y = pt.y + (self.dropheight or 0)
-                for i = 1, num do
-                    self.inst.components.lootdropper:SpawnLootPrefab(self.product, pt)
-                end
+				local pt = self.inst:GetPosition()
+				pt.y = pt.y + (self.dropheight or 0)
+				if self.use_lootdropper_for_product then
+					self.inst.components.lootdropper:DropLoot(pt)
+				else
+					local num = self.numtoharvest or 1
+					for i = 1, num do
+						self.inst.components.lootdropper:SpawnLootPrefab(self.product, pt)
+					end
+				end
             else
-                loot = SpawnPrefab(self.product)
-                if loot ~= nil then
-                    if loot.components.inventoryitem ~= nil then
-                        loot.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
+				if self.use_lootdropper_for_product then
+					loot = {}
+					for _, prefab in ipairs(self.inst.components.lootdropper:GenerateLoot()) do
+						local item = SpawnPrefab(prefab)
+						table.insert(loot, item)
+						if item ~= nil then
+							if item.components.inventoryitem ~= nil then
+								item.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
+							end
+						end
+					end
+					if next(loot) ~= nil then
+						picker:PushEvent("picksomething", { object = self.inst, loot = loot })
                     end
-                    if self.numtoharvest > 1 and loot.components.stackable ~= nil then
-                        loot.components.stackable:SetStackSize(self.numtoharvest)
+                    for i, item in ipairs(loot) do
+						if item.components.inventoryitem ~= nil then
+	                        picker.components.inventory:GiveItem(item, nil, self.inst:GetPosition())
+						else
+							self.inst.components.lootdropper:FlingItem(item, self.inst:GetPosition())
+						end
                     end
-                    picker:PushEvent("picksomething", { object = self.inst, loot = loot })
-                    picker.components.inventory:GiveItem(loot, nil, self.inst:GetPosition())
-                end
+				else
+					loot = SpawnPrefab(self.product)
+					if loot ~= nil then
+						if loot.components.inventoryitem ~= nil then
+							loot.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
+						end
+						if self.numtoharvest > 1 and loot.components.stackable ~= nil then
+							loot.components.stackable:SetStackSize(self.numtoharvest)
+						end
+						picker:PushEvent("picksomething", { object = self.inst, loot = loot })
+						picker.components.inventory:GiveItem(loot, nil, self.inst:GetPosition())
+					end
+				end
             end
         end
 
@@ -459,6 +484,18 @@ function Pickable:Pick(picker)
         end
 
         self.inst:PushEvent("picked", { picker = picker, loot = loot, plant = self.inst })
+
+		return true
+    end
+end
+
+function Pickable:ConsumeCycles(cycles)
+    if self.transplanted and self.cycles_left ~= nil then
+        self.cycles_left = math.max(0, self.cycles_left - cycles)
+    end
+
+    if self.protected_cycles ~= nil then
+        self.protected_cycles = math.max(0, self.protected_cycles - cycles)
     end
 end
 

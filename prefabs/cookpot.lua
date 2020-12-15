@@ -6,11 +6,6 @@ local assets =
 {
     Asset("ANIM", "anim/cook_pot.zip"),
     Asset("ANIM", "anim/cook_pot_food.zip"),
-    Asset("ANIM", "anim/cook_pot_food2.zip"),
-	Asset("ANIM", "anim/cook_pot_food3.zip"),
-    Asset("ANIM", "anim/cook_pot_food4.zip"),
-    Asset("ANIM", "anim/cook_pot_food5.zip"),
-    Asset("ANIM", "anim/cook_pot_food6.zip"),
     Asset("ANIM", "anim/ui_cookpot_1x4.zip"),
 }
 
@@ -25,17 +20,17 @@ local assets_archive =
     Asset("ANIM", "anim/cook_pot.zip"),
     Asset("ANIM", "anim/cookpot_archive.zip"),
     Asset("ANIM", "anim/cook_pot_food.zip"),
-    Asset("ANIM", "anim/cook_pot_food2.zip"),
-    Asset("ANIM", "anim/cook_pot_food3.zip"),
-    Asset("ANIM", "anim/cook_pot_food4.zip"),
-    Asset("ANIM", "anim/cook_pot_food5.zip"),
-    Asset("ANIM", "anim/cook_pot_food6.zip"),
     Asset("ANIM", "anim/ui_cookpot_1x4.zip"),
     Asset("MINIMAP_IMAGE", "cookpot_archive"),
 }
 
 for k, v in pairs(cooking.recipes.cookpot) do
     table.insert(prefabs, v.name)
+
+	if v.overridebuild then
+        table.insert(assets, Asset("ANIM", "anim/"..v.overridebuild..".zip"))
+        table.insert(assets_archive, Asset("ANIM", "anim/"..v.overridebuild..".zip"))
+	end
 end
 
 local function onhammered(inst, worker)

@@ -470,7 +470,7 @@ local function fn()
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("blocked", OnBlocked)
     inst:ListenForEvent("death", OnDeath)
-    inst:ListenForEvent("onremoved", OnRemoved)
+    inst:ListenForEvent("onremove", OnRemoved)
 	inst:ListenForEvent("exitlimbo", OnExitLimbo)
 
     inst.BecomeDefensive = BecomeDefensive

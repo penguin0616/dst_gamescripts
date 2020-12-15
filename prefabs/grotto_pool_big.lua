@@ -151,6 +151,7 @@ local function poolfn()
 
     inst:AddTag("antlion_sinkhole_blocker")
     inst:AddTag("birdblocker")
+    -- From watersource component
     inst:AddTag("watersource")
 
     inst.no_wet_prefix = true
@@ -168,6 +169,8 @@ local function poolfn()
     end
 
     inst:AddComponent("inspectable")
+
+    inst:AddComponent("watersource")
 
     inst:ListenForEvent("onremove", on_removed)
 

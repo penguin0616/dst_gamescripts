@@ -19,6 +19,7 @@ local MovieDialog = require "screens/moviedialog"
 local HistoryOfTravelsPanel = require "screens/redux/panels/historyoftravelspanel"
 local CharacterDetailsPanel = require "screens/redux/panels/characterdetailspanel"
 local CookbookPanel = require "screens/redux/panels/cookbookpanel"
+local PlantRegistryPanel = require "screens/redux/panels/plantregistrypanel"
 local ObituariesPanel = require "screens/redux/panels/obituariespanel"
 local EncountersPanel = require "screens/redux/panels/encounterspanel"
 local CinematicsPanel = require "screens/redux/panels/cinematicspanel"
@@ -49,7 +50,8 @@ local CompendiumScreen = Class(Screen, function(self, prev_screen)
     local menu_items = {
 			historyoftravels = self.panel_root:AddChild(HistoryOfTravelsPanel(self)),
 			characterdetails = self.panel_root:AddChild(CharacterDetailsPanel(self)),
-			cookbookpanel = self.panel_root:AddChild(CookbookPanel(self)),
+            cookbookpanel = self.panel_root:AddChild(CookbookPanel(self)),
+            plantregistrypanel = self.panel_root:AddChild(PlantRegistryPanel(self)),
             obituaries = self.panel_root:AddChild(ObituariesPanel(self)),
             encounters = self.panel_root:AddChild(EncountersPanel()),
 			cinematics = self.panel_root:AddChild(CinematicsPanel(self)),
@@ -78,6 +80,7 @@ function CompendiumScreen:_BuildMenu(subscreener)
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.OBITUARIES, "obituaries", STRINGS.UI.COMPENDIUM.TOOLTIP_OBITUARIES, self.tooltip)},
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.ENCOUNTERS, "encounters", STRINGS.UI.COMPENDIUM.TOOLTIP_ENCOUNTERS, self.tooltip)},
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.COOKBOOKPANEL, "cookbookpanel", STRINGS.UI.COMPENDIUM.TOOLTIP_COOKBOOKPANEL, self.tooltip)},
+        {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.PLANTREGISTRYPANEL, "plantregistrypanel", STRINGS.UI.COMPENDIUM.TOOLTIP_PLANTREGISTRY, self.tooltip)},
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.CHARACTERDETAILS, "characterdetails", STRINGS.UI.COMPENDIUM.TOOLTIP_CHARACTERDETAILS, self.tooltip)},
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.HISTORYOFTRAVELS, "historyoftravels", STRINGS.UI.COMPENDIUM.TOOLTIP_HISTORYOFTRAVELS, self.tooltip)},
     }

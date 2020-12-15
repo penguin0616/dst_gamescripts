@@ -398,7 +398,7 @@ function Sanity:Recalc(dt)
 		dapper_delta = total_dapperness * TUNING.SANITY_DAPPERNESS
 	end
 
-    local moisture_delta = easing.inSine(self.inst.components.moisture:GetMoisture(), 0, TUNING.MOISTURE_SANITY_PENALTY_MAX, self.inst.components.moisture:GetMaxMoisture())
+    local moisture_delta = self.no_moisture_penalty and 0 or easing.inSine(self.inst.components.moisture:GetMoisture(), 0, TUNING.MOISTURE_SANITY_PENALTY_MAX, self.inst.components.moisture:GetMaxMoisture())
 
     local light_sanity_drain = LIGHT_SANITY_DRAINS[self.mode]
 	local light_delta = 0

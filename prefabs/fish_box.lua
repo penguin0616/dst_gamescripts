@@ -18,7 +18,6 @@ local function splash(inst)
 	if inst.AnimState:IsCurrentAnimation("opened") then
 		inst.AnimState:PlayAnimation("splash")
 		inst.AnimState:PushAnimation("opened", false)
-		print("splash")
 	end
 	inst.splash_task = inst:DoTaskInTime(3 + math.random() * 3, splash)
 end

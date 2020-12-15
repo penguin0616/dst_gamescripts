@@ -164,6 +164,14 @@ end
 local function peruse_gardening(inst)
     inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
 end
+local function peruse_horticulture(inst)
+    inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
+end
+local function peruse_silviculture(inst)
+    inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
+end
+
+
 
 local function OnSave(inst, data)
     data.health_percent = inst.health_percent or inst.components.health:GetPercent()
@@ -226,6 +234,8 @@ local function master_postinit(inst)
 
     inst:AddComponent("reader")
 
+	inst.components.sanity.no_moisture_penalty = true
+
     inst.components.foodaffinity:AddFoodtypeAffinity(FOODTYPE.VEGGIE, 1.33)
     inst.components.foodaffinity:AddPrefabAffinity  ("kelp",          1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
     inst.components.foodaffinity:AddPrefabAffinity  ("kelp_cooked",   1.33) -- prevents the negative stats, otherwise foodtypeaffinity would have suffice
@@ -257,6 +267,8 @@ local function master_postinit(inst)
     inst.peruse_tentacles = peruse_tentacles
     inst.peruse_sleep = peruse_sleep
     inst.peruse_gardening = peruse_gardening
+	inst.peruse_horticulture = peruse_horticulture
+	inst.peruse_silviculture = peruse_silviculture
 
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad

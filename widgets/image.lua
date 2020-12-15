@@ -124,6 +124,14 @@ function Image:ScaleToSize(w, h)
 	self:SetScale(scalex, scaley, 1)
 end
 
+function Image:ScaleToSizeIgnoreParent(w, h)
+    local w0, h0 = self.inst.ImageWidget:GetSize()
+    local w1, h1 = self:GetParent():GetLooseScale()
+	local scalex = w / w0
+    local scaley = h / h0
+    self:SetScale(scalex/w1, scaley/h1, 1)
+end
+
 function Image:SetTint(r,g,b,a)
     self.inst.ImageWidget:SetTint(r,g,b,a)
     self.tint = {r, g, b, a}

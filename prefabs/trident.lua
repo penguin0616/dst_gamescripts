@@ -115,6 +115,7 @@ local function do_water_explosion_effect(inst, affected_entity, owner, position)
     end
 end
 
+local PLANT_TAGS = {"tendable_farmplant"}
 local MUST_HAVE_SPELL_TAGS = nil
 local CANT_HAVE_SPELL_TAGS = {"INLIMBO", "outofreach", "DECOR"}
 local MUST_HAVE_ONE_OF_SPELL_TAGS = nil
@@ -168,6 +169,14 @@ local function create_water_explosion(inst, target, position)
             end
         end
     end
+
+	local x, y, z = owner.Transform:GetWorldPosition()
+    for _, v in pairs(TheSim:FindEntities(x, y, z, TUNING.TRIDENT_FARM_PLANT_INTERACT_RANGE, PLANT_TAGS)) do
+		if v.components.farmplanttendable ~= nil then
+			v.components.farmplanttendable:TendTo(owner)
+		end
+	end
+
 
     inst.components.finiteuses:Use(COST_PER_EXPLOSION)
 end

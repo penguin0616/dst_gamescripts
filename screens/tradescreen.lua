@@ -566,13 +566,14 @@ function TradeScreen:DisableMachineTiles()
 end
 
 function TradeScreen:OnBecomeActive()
+    TradeScreen._base.OnBecomeActive(self)
+
 	if self.do_nothing_on_activate then
 		self.do_nothing_on_activate = false
 		return
 	end
 
 	--print("**** Activate TradeScreen ****", self.specials_mode)
-	Screen.OnBecomeActive(self)
 
     if not IS_OPEN_FOR_BUSINESS then
         -- Don't get stuck in a popup showing loop.

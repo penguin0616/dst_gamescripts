@@ -74,6 +74,7 @@ local function fn()
     inst:AddTag("icebox_valid")
     inst:AddTag("cattoy")
     inst:AddTag("show_spoilage")
+    inst:AddTag("treeseed")
 
     --cookable (from cookable component) added to pristine state for optimization
     inst:AddTag("cookable")
@@ -117,6 +118,9 @@ local function fn()
 
     inst:AddComponent("winter_treeseed")
     inst.components.winter_treeseed:SetTree("winter_deciduoustree")
+
+    inst:AddComponent("forcecompostable")
+    inst.components.forcecompostable.brown = true
 
     MakeHauntableLaunchAndIgnite(inst)
 
@@ -168,6 +172,9 @@ local function cooked()
     MakeSmallPropagator(inst)
 
     inst:AddComponent("inventoryitem")
+
+    inst:AddComponent("forcecompostable")
+    inst.components.forcecompostable.brown = true
 
     MakeHauntableLaunch(inst)
 

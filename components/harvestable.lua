@@ -1,5 +1,13 @@
 local function onproduce(self, produce)
-    if produce > 0 then
+    if self.enabled and produce > 0 then
+        self.inst:AddTag("harvestable")
+    else
+        self.inst:RemoveTag("harvestable")
+    end
+end
+
+local function onenabled(self, enabled)
+    if enabled and self.produce > 0 then
         self.inst:AddTag("harvestable")
     else
         self.inst:RemoveTag("harvestable")
@@ -13,10 +21,13 @@ local Harvestable = Class(function(self, inst)
     self.product = nil
     self.ongrowfn = nil
     self.maxproduce = 1
+
+    self.enabled = true
 end,
 nil,
 {
     produce = onproduce,
+    enabled = onenabled,
 })
 
 function Harvestable:OnRemoveFromEntity()
@@ -50,7 +61,17 @@ function Harvestable:SetGrowTime(time)
 end
 
 function Harvestable:CanBeHarvested()
-    return self.produce > 0
+    return self.enabled and self.produce > 0
+end
+
+function Harvestable:Disable()
+    self:PauseGrowing()
+    self.enabled = false
+end
+
+function Harvestable:Enable()
+    self:StartGrowing()
+    self.enabled = true
 end
 
 function Harvestable:OnSave()
@@ -95,7 +116,11 @@ function Harvestable:Grow()
         else
             self:StopGrowing()
         end
+
+		return true
     end
+
+	return false
 end
 
 function Harvestable:StartGrowing(time)

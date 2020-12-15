@@ -677,7 +677,13 @@ local function barnacle_cooked()
 end
 
 local BATNOSE_TAGS = { "catfood" }
-local BATNOSE_DRYABLE_DATA = { product = "smallmeat_dried", time = TUNING.DRY_MED }
+local BATNOSE_DRYABLE_DATA =
+{
+    product = "smallmeat_dried",
+    time = TUNING.DRY_MED,
+    build = "meat_rack_food_tot",
+    dried_build = "meat_rack_food",
+}
 local BATNOSE_COOKABLE_DATA = { product = "batnose_cooked" }
 local function batnose()
     local inst = common("batnose", "batnose", "raw", BATNOSE_TAGS, BATNOSE_DRYABLE_DATA, BATNOSE_COOKABLE_DATA)

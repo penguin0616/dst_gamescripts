@@ -12,6 +12,7 @@ local Container = Class(function(self, inst)
     self.type = nil
     self.widget = nil
     self.itemtestfn = nil
+    self.priorityfn = nil
     self.opentask = nil
 
     if TheWorld.ismastersim then
@@ -204,6 +205,18 @@ function Container:GetSpecificSlotForItem(item)
             end
         end
     end
+end
+
+function Container:ShouldPrioritizeContainer(item)
+    if not self.priorityfn then
+        return false
+    end
+    return item ~= nil
+        and item.replica.inventoryitem ~= nil
+        and item.replica.inventoryitem:CanGoInContainer()
+        and not item.replica.inventoryitem:CanOnlyGoInPocket()
+        and not (GetGameModeProperty("non_item_equips") and item.replica.equippable ~= nil)
+        and (self:priorityfn(item))
 end
 
 function Container:AcceptsStacks()

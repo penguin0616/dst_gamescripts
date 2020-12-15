@@ -262,7 +262,7 @@ function Dryer:DropItem()
 		LaunchAt(loot, self.inst, nil, .25, 1)
         if loot.components.perishable ~= nil then
 			if self.ingredient ~= nil then
-				print (self.ingredientperish, self:GetTimeToDry(), loot.components.dryable:GetDryTime(), (self:GetTimeToDry() / loot.components.dryable:GetDryTime()), self.ingredientperish * (self:GetTimeToDry() / loot.components.dryable:GetDryTime()))
+				--print (self.ingredientperish, self:GetTimeToDry(), loot.components.dryable:GetDryTime(), (self:GetTimeToDry() / loot.components.dryable:GetDryTime()), self.ingredientperish * (self:GetTimeToDry() / loot.components.dryable:GetDryTime()))
 				loot.components.perishable:SetPercent(self.ingredientperish * (self:GetTimeToDry() / loot.components.dryable:GetDryTime()))
 	        else
 	            loot.components.perishable:SetPercent(self:GetTimeToSpoil() / TUNING.PERISH_PRESERVED)

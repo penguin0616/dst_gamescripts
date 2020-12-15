@@ -14,7 +14,9 @@ local function HearPanFlute(inst, musician, instrument)
         if mount ~= nil then
             mount:PushEvent("ridersleep", { sleepiness = 10, sleeptime = TUNING.PANFLUTE_SLEEPTIME })
         end
-        if inst.components.sleeper ~= nil then
+		if inst.components.farmplanttendable ~= nil then
+			inst.components.farmplanttendable:TendTo(musician)
+        elseif inst.components.sleeper ~= nil then
             inst.components.sleeper:AddSleepiness(10, TUNING.PANFLUTE_SLEEPTIME)
         elseif inst.components.grogginess ~= nil then
             inst.components.grogginess:AddGrogginess(10, TUNING.PANFLUTE_SLEEPTIME)

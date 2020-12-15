@@ -53,6 +53,12 @@ function GetAllWinterOrnamentPrefabs()
         "winter_ornament_boss_noeyeblue",
         "winter_ornament_boss_noeyered",
         "winter_ornament_boss_toadstool",
+		"winter_ornament_boss_toadstool_misery",
+        "winter_ornament_boss_minotaur",
+		"winter_ornament_boss_crabking",
+		"winter_ornament_boss_crabkingpearl",
+		"winter_ornament_boss_hermithouse",
+		"winter_ornament_boss_pearl",
     }
     for i = 1, NUM_BASIC_ORNAMENT do
         table.insert(decor, "winter_ornament_plain" .. tostring(i))
@@ -303,5 +309,13 @@ table.insert(ornament, MakeOrnament("boss_noeyered", "winter_ornamentboss", nil,
 table.insert(ornament, MakeOrnament("boss_toadstool", "winter_ornamentboss"))
 
 table.insert(ornament, MakeOrnament("boss_malbatross", "winter_ornamentboss", nil, "winter_ornaments2019", 0.95))
+
+table.insert(ornament, MakeOrnament("boss_crabking", "winter_ornamentboss", nil, "winter_ornaments2020", 0.9))
+table.insert(ornament, MakeOrnament("boss_crabkingpearl", "winter_ornamentboss", nil, "winter_ornaments2020", 0.9))
+table.insert(ornament, MakeOrnament("boss_minotaur", "winter_ornamentboss", nil, "winter_ornaments2020", 0.9))
+table.insert(ornament, MakeOrnament("boss_toadstool_misery", "winter_ornamentboss", nil, "winter_ornaments2020"))
+
+table.insert(ornament, MakeOrnament("boss_hermithouse", "winter_ornamentpearl", nil, "winter_ornaments2020", 0.8))
+table.insert(ornament, MakeOrnament("boss_pearl", "winter_ornamentpearl", nil, "winter_ornaments2020", 0.6))
 
 return unpack(ornament)

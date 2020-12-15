@@ -2,7 +2,7 @@ local foods =
 {
 	butterflymuffin =
 	{
-		test = function(cooker, names, tags) return (names.butterflywings or names.moonbutterflywings) and not tags.meat and tags.veggie end,
+		test = function(cooker, names, tags) return (names.butterflywings or names.moonbutterflywings) and not tags.meat and tags.veggie and tags.veggie >= 0.5 end,
 		priority = 1,
 		weight = 1,
 		foodtype = FOODTYPE.VEGGIE,
@@ -16,7 +16,7 @@ local foods =
 	
 	frogglebunwich =
 	{
-		test = function(cooker, names, tags) return (names.froglegs or names.froglegs_cooked) and tags.veggie end,
+		test = function(cooker, names, tags) return (names.froglegs or names.froglegs_cooked) and tags.veggie and tags.veggie >= 0.5 end,
 		priority = 1,
 		foodtype = FOODTYPE.MEAT,
 		health = TUNING.HEALING_MED,
@@ -200,7 +200,7 @@ local foods =
 	},
 	perogies =
 	{
-		test = function(cooker, names, tags) return tags.egg and tags.meat and tags.veggie and not tags.inedible end,
+		test = function(cooker, names, tags) return tags.egg and tags.meat and tags.veggie and tags.veggie >= 0.5 and not tags.inedible end,
 		priority = 5,
 		foodtype = FOODTYPE.MEAT,
 		health = TUNING.HEALING_LARGE,
@@ -213,7 +213,7 @@ local foods =
 	},
 	turkeydinner =
 	{
-		test = function(cooker, names, tags) return names.drumstick and names.drumstick > 1 and tags.meat and tags.meat > 1 and (tags.veggie or tags.fruit) end,
+		test = function(cooker, names, tags) return names.drumstick and names.drumstick > 1 and tags.meat and tags.meat > 1 and ((tags.veggie and tags.veggie >= 0.5) or tags.fruit) end,
 		priority = 10,
 		foodtype = FOODTYPE.MEAT,
 		health = TUNING.HEALING_MED,
@@ -228,7 +228,7 @@ local foods =
 	},
 	ratatouille =
 	{
-		test = function(cooker, names, tags) return not tags.meat and tags.veggie and not tags.inedible end,
+		test = function(cooker, names, tags) return not tags.meat and tags.veggie and tags.veggie >= 0.5 and not tags.inedible end,
 		priority = 0,
 		foodtype = FOODTYPE.VEGGIE,
 		health = TUNING.HEALING_SMALL,
@@ -799,7 +799,7 @@ local foods =
         test = function(cooker, names, tags)
             return names.moon_cap and names.red_cap and names.blue_cap and names.green_cap
         end,
-        priority = 55,
+        priority = 30,
         foodtype = FOODTYPE.GOODIES,
         health = 0,
         hunger = TUNING.CALORIES_MED,
@@ -827,6 +827,33 @@ local foods =
             end
         end,
     },
+
+	sweettea =
+	{
+		test = function(cooker, names, tags) return names.forgetmelots and tags.sweetener and tags.frozen and not tags.monster and not tags.veggie and not tags.meat and not tags.fish and not tags.egg and not tags.fat and not tags.dairy and not tags.inedible end,
+		priority = 1,
+		overridebuild = "cook_pot_food7",
+		--foodtype = FOODTYPE.GOODIES,
+		health = TUNING.HEALING_SMALL,
+		hunger = 0,
+		sanity = TUNING.SANITY_MED,
+		perishtime = TUNING.PERISH_SUPERFAST,
+		temperature = TUNING.HOT_FOOD_BONUS_TEMP,
+		temperatureduration = TUNING.FOOD_TEMP_BRIEF,
+		cooktime = 1,
+        potlevel = "low",
+        floater = {"med", 0.05, 0.65},
+        prefabs = { "sweettea_buff" },
+		tags = {"honeyed"},
+        oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_HOT_SANITY_REGEN,
+        oneatenfn = function(inst, eater)
+            if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() then
+                eater.components.debuffable:AddDebuff("sweettea_buff", "sweettea_buff")
+            end
+        end,
+	},	
+
+
 }
 
 for k, v in pairs(foods) do

@@ -215,7 +215,8 @@ return{
 		},
 		COMPARE_WEIGHABLE =
 		{
-			TOO_SMALL = "Tiny fish not mighty enough!",
+            FISH_TOO_SMALL = "Tiny fish not mighty enough!",
+            OVERSIZEDVEGGIES_TOO_SMALL = "Wolfgang is able to lift it too easily, is not heavy enough!",
 		},
         BEGIN_QUEST =
         {
@@ -230,6 +231,23 @@ return{
         SING_FAIL =
         {
 --fallback to speech_wilson.lua             SAMESONG = "only_used_by_wathgrithr",
+        },
+        PLANTREGISTRY_RESEARCH_FAIL =
+        {
+            GENERIC = "This plant is known to Wolfgang.",
+            FERTILIZER = "This is known to Wolfgang.",
+        },
+        FILL_OCEAN =
+        {
+            UNSUITABLE_FOR_PLANTS = "Salt water not good for plants.",
+        },
+        POUR_WATER =
+        {
+            OUT_OF_WATER = "Water is run out.",
+        },
+        POUR_WATER_GROUNDTILE =
+        {
+            OUT_OF_WATER = "Water is run out.",
         },
 	},
 	ACTIONFAIL_GENERIC = "I am not mighty enough to do that.",
@@ -323,6 +341,7 @@ return{
 	},
     ANNOUNCE_RUINS_RESET = "Monsters is back!",
     ANNOUNCE_SNARED = "Wolfgang does not like bones!",
+    ANNOUNCE_SNARED_IVY = "Wolfgang will pull you out of the ground!",
     ANNOUNCE_REPELLED = "Strong bubble protects beast!",
 	ANNOUNCE_ENTER_DARK = "I cannot see! I am scared!",
 	ANNOUNCE_ENTER_LIGHT = "I can see again!",
@@ -545,6 +564,8 @@ return{
 --fallback to speech_wilson.lua         BOOK_TENTACLES =  "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BRIMSTONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Is too weak for race.",
 
@@ -587,6 +608,31 @@ return{
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "Wolfgang's brain full of strange pictures!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "Wolfgang has seen these brain pictures already.",
     ANNOUNCE_ARCHIVE_NO_POWER = "Not sure what Wolfgang was expecting.",
+
+    ANNOUNCE_PLANT_RESEARCHED =
+    {
+        "Plant learning is easy! Just need right hat!",
+    },
+
+    ANNOUNCE_PLANT_RANDOMSEED = "Will see what tiny seed grows into.",
+
+    ANNOUNCE_FERTILIZER_RESEARCHED = "Wolfgang is learning much about stinky plant food.",
+
+	ANNOUNCE_FIRENETTLE_TOXIN = 
+	{
+		"Burny! Wolfgang not like!",
+		"Puny plant has poisoned Wolfgang!",
+	},
+	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "Ha! Puny plant poison could not last long in Wolfgang's mighty body!",
+
+	ANNOUNCE_TALK_TO_PLANTS = 
+	{
+        "Hello! Wolfgang will talk to you now.",
+        "You are doing well, yes?",
+		"You will grow big and strong like Wolfgang!",
+        "You are very good plant. You make food for Wolfgang!",
+        "Who is mightiest plant of all? You are!",
+	},
 
 	BATTLECRY =
 	{
@@ -654,6 +700,8 @@ return{
         BOOK_BIRDS = "Book is for the birds!",
         BOOK_TENTACLES = "Wolfgang wants many foes to fight!",
         BOOK_GARDENING = "Wolfgang rather grow muscle than flowers.",
+		BOOK_SILVICULTURE = "Wolfgang rather grow muscle than flowers.",
+		BOOK_HORTICULTURE = "Little book makes food grow for Wolfgang.",
         BOOK_SLEEP = "Wolfgang's eyes feel heavy like dumbbells.",
         BOOK_BRIMSTONE = "Tiny book scares Wolfgang!",
 
@@ -1442,7 +1490,7 @@ return{
 		},
 		CORN = "Is corn. What expect?",
 		CORN_COOKED = "Pop pop pop! Ha ha, funny corn.",
-		CORN_SEEDS = "Is seeds for grow corn.",
+		CORN_SEEDS = "Is seeds for growing.",
         CANARY =
 		{
 			GENERIC = "Is small yellow bird!",
@@ -1548,7 +1596,7 @@ return{
 
 		DRAGONFRUIT = "Is funny-looking fruit.",
 		DRAGONFRUIT_COOKED = "Is cooked but still look funny.",
-		DRAGONFRUIT_SEEDS = "Could use to grow funny fruit, maybe.",
+		DRAGONFRUIT_SEEDS = "Is seeds for growing.",
 		DRAGONPIE = "Pie made of funny red fruit.",
 		DRUMSTICK = "Leg meat for make legs more strong.",
 		DRUMSTICK_COOKED = "Eat off bone is good.",
@@ -1559,11 +1607,11 @@ return{
 		DUG_SAPLING = "He is cold and lonely.",
 		DURIAN = "Is spiky smelly fruit.",
 		DURIAN_COOKED = "Now is hot spiky smelly fruit.",
-		DURIAN_SEEDS = "Tiny baby spiky fruit plant.",
+		DURIAN_SEEDS = "Is seeds for growing.",
 		EARMUFFSHAT = "Is could make me look like little bunny!",
 		EGGPLANT = "Is not egg!",
 		EGGPLANT_COOKED = "Has no yolk! Yolk is strongest part!",
-		EGGPLANT_SEEDS = "Teensy fake egg plant.",
+		EGGPLANT_SEEDS = "Is seeds for growing.",
 		
 		ENDTABLE = 
 		{
@@ -1973,7 +2021,7 @@ return{
         },
         POMEGRANATE = "Look like smartypants brain.",
         POMEGRANATE_COOKED = "Ha ha ha! Brain is cooked! Not so smart now.",
-        POMEGRANATE_SEEDS = "Is piece of brain?",
+        POMEGRANATE_SEEDS = "Is seeds for growing.",
         POND = "Is all wet.",
         POOP = "Smelly!",
         FERTILIZER = "Bucket full of smelly.",
@@ -1981,7 +2029,7 @@ return{
         PUMPKINCOOKIE = "Is tasty cookie.",
         PUMPKIN_COOKED = "Very gourd!",
         PUMPKIN_LANTERN = "Now is actual head! Wolfgang afraid!",
-        PUMPKIN_SEEDS = "This grow food size of wimpy head.",
+        PUMPKIN_SEEDS = "Is seeds for growing.",
         PURPLEAMULET = "This amulet... it frightens Wolfgang.",
         PURPLEGEM = "Prettier rock.",
         RABBIT =
@@ -3617,11 +3665,117 @@ return{
         TURFCRAFTINGSTATION = "Wolfgang will crush up dirt and turn into new dirt!",
 
         MOON_ALTAR_LINK = "Maybe little light ball needs time to get mightier?",
+
+        -- FARMING
+        COMPOSTINGBIN =
+        {
+            -- WIP, might not end up with these states so don't fill in for now
+            GENERIC = "Is barrel of stink dirt.",
+            WET = "Squishy soggy.",
+            DRY = "Too dry.",
+            BALANCED = "Is good! Dirt is ready!",
+            BURNT = "Can't use anymore.",
+        },
+        COMPOST = "Is food for plants.",
+        SOIL_AMENDER = 
+		{ 
+			GENERIC = "Will be good drink for plants, make them strong!",
+			STALE = "Stink getting stronger... will make plants stronger too!",
+			SPOILED = "Is powerful plant drink with powerful smell!",
+		},
+
+		SOIL_AMENDER_FERMENTED = "Is ready to make plants mighty!",
+
+        WATERINGCAN = 
+        {
+            GENERIC = "Wolfgang will give garden a drink!",
+            EMPTY = "Is empty.",
+        },
+        PREMIUMWATERINGCAN =
+        {
+            GENERIC = "Wolfgang can carry much water in that.",
+            EMPTY = "Need water.",
+        },
+
+		FARM_PLOW = "It is doing a mighty job!",
+		FARM_PLOW_ITEM = "Will make garden full of fruits and veggies for Wolfgang!",
+		FARM_HOE = "Is to till soil for tiny seeds.",
+		GOLDEN_FARM_HOE = "Fancy garden hoe good for planting seeds!",
+		NUTRIENTSGOGGLESHAT = "Fills Wolfgang's head with the plant know-hows!",
+		PLANTREGISTRYHAT = "Is helmet for gardening?",
+
+        FARM_SOIL_DEBRIS = "You are in the way!",
+
+		FIRENETTLES = "Bad and stingy.",
+		FORGETMELOTS = "Pretty little flowers.",
+		SWEETTEA = "Ahhh... is nice.",
+		TILLWEED = "Took Wolfgang ages to get out of garden!",
+		TILLWEEDSALVE = "Feels nice on the boo-boos.",
+
+		TROPHYSCALE_OVERSIZEDVEGGIES =
+		{
+			GENERIC = "Whose fruit or veggie will be mightiest?",
+			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nWolfgang could lift with only one finger.",
+            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nHa! Very mighty indeed!",
+            HAS_ITEM_LIGHT = "Is too puny for scale to work.",
+			BURNING = "Not good!",
+			BURNT = "Cooked.",
+        },
+        
+        CARROT_OVERSIZED = "At least is big. Wolfgang can use for weights.",
+        CORN_OVERSIZED = "Wolfgang's muscles will get even more mighty lifting giant corn!",
+        PUMPKIN_OVERSIZED = "Is even better than weakling science man's head!",
+        EGGPLANT_OVERSIZED = "Wolfgang is getting tired of being fooled by non-egg plant...",
+        DURIAN_OVERSIZED = "Is big and spiky fruit.",
+        POMEGRANATE_OVERSIZED = "Is big and good for lifting!",
+        DRAGONFRUIT_OVERSIZED = "Do not worry small weak friends, Wolfgang can carry giant fruit!",
+        WATERMELON_OVERSIZED = "Is extra big to hold more melon inside.",
+        TOMATO_OVERSIZED = "Is almost big enough to fill Wolfgang's mighty belly!",
+        POTATO_OVERSIZED = "Is... is most beautiful thing Wolfgang has ever seen...",
+        ASPARAGUS_OVERSIZED = "Big vegetables for growing even bigger and stronger!",
+        ONION_OVERSIZED = "Onion is good for you! Big ones even better!",
+        GARLIC_OVERSIZED = "Is never enough garlic!",
+        PEPPER_OVERSIZED = "Is filled with powerful spice.",
+        
+        VEGGIE_OVERSIZED_ROTTEN = "Wolfgang was going to eat that...",
+
+		FARM_PLANT =
+		{
+			GENERIC = "Plant.",
+			SEED = "Is just tiny seed.",
+			GROWING = "Is growing up strong.",
+			FULL = "Good to eat!",
+			ROTTEN = "Is so sad!",
+			FULL_OVERSIZED = "Plant has reached full mightiness!",
+			ROTTEN_OVERSIZED = "Wolfgang was going to eat that...",
+			FULL_WEED = "Sneaky weed thinks it can muscle in on Wolfgang's garden?!",
+
+			BURNING = "No! Is burning!",
+        },
+        
+        FRUITFLY = "Wolfgang not like bugs!",
+        LORDFRUITFLY = "Ack! Is big and creepy!",
+        FRIENDLYFRUITFLY = "Is helpful bug, but still creepy.",
+        FRUITFLYFRUIT = "Weird thing attracts helpful, creepy flies.",
+
+        SEEDPOUCH = "Is small pack for seeds.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",
     DESCRIBE_TOODARK = "Help friends! Save Wolfgang from dark!",
     DESCRIBE_SMOLDERING = "Is almost fire.",
+
+    DESCRIBE_PLANTHAPPY = "Is happy, yes?",
+    DESCRIBE_PLANTVERYSTRESSED = "Is very unhappy, many problems in its life.",
+    DESCRIBE_PLANTSTRESSED = "Is bothered by something...",
+    DESCRIBE_PLANTSTRESSORKILLJOYS = "Wolfgang should tidy up garden.",
+    DESCRIBE_PLANTSTRESSORFAMILY = "Is lonely, needs family!",
+    DESCRIBE_PLANTSTRESSOROVERCROWDING = "Is not enough space for so many plants!",
+    DESCRIBE_PLANTSTRESSORSEASON = "Is not good season for this one.",
+    DESCRIBE_PLANTSTRESSORMOISTURE = "Plant needs a drink!",
+    DESCRIBE_PLANTSTRESSORNUTRIENTS = "Is hungry! What do plants like to eat...",
+    DESCRIBE_PLANTSTRESSORHAPPINESS = "Wolfgang will have a little chat with plant.",
+
     EAT_FOOD =
     {
         TALLBIRDEGG_CRACKED = "This egg too crunchy.",

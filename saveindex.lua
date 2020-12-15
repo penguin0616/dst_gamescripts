@@ -89,11 +89,14 @@ local function SanityCheckWorldGenOverride(wgo)
         end
     end
 
+    --depreciated values(don't warn in the log files)
+    optionlookup.disease_delay = true
+
     if wgo.overrides ~= nil then
         for k,v in pairs(wgo.overrides) do
             if optionlookup[k] == nil then
                 print(string.format("    WARNING! Found override '%s', but this doesn't match any known option. Did you make a typo?", k))
-            else
+            elseif optionlookup[k] ~= true then
                 if not table.contains(optionlookup[k], v) then
                     print(string.format("    WARNING! Found value '%s' for setting '%s', but this is not a valid value. Use one of {%s}.", v, k, table.concat(optionlookup[k], ", ")))
                 end

@@ -34,6 +34,8 @@ local Deployable = Class(function(self, inst)
 
     self.ondeploy = nil
 
+    -- keep_in_inventory_on_deploy = nil
+
     self.inst:AddTag("deployable")
 end,
 nil,

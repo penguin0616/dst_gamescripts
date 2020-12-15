@@ -30,6 +30,8 @@ local prefabs =
     "hermit_pearl",
     "hermit_bundle_shells",
     "moon_fissure_plugged",
+	"winter_ornament_boss_hermithouse",
+	"winter_ornament_boss_pearl",
 }
 
 local SHOP_LEVELS =
@@ -210,7 +212,7 @@ local function EnableShop(inst, shop_level)
         inst.components.prototyper.onactivate = OnActivatePrototyper
     end
 
-    inst._shop_level = shop_level or inst._shop_level or 1
+    inst._shop_level = math.min(shop_level or inst._shop_level or 1, 5)
     inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES[SHOP_LEVELS[inst._shop_level]]
 end
 
@@ -260,9 +262,18 @@ local function OnLoad(inst, data)
 end
 
 local function OnLoadPostPass(inst, new_ents, data)
+	-- This is only done for retrofitting, it is not normally needed, do not copy/paste this
+
 	if inst._shop_level ~= nil and inst._shop_level >= 5 then
-		-- This is only done for retrofitting, it is not normally needed, do not copy/paste this
 		inst.components.craftingstation:LearnItem("supertacklecontainer", "hermitshop_supertacklecontainer")
+	end
+
+	if inst.pearlgiven then
+		inst.components.craftingstation:LearnItem("winter_ornament_boss_pearl", "hermitshop_winter_ornament_boss_pearl")
+	end
+	
+    if inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_3].complete then
+		inst.components.craftingstation:LearnItem("winter_ornament_boss_hermithouse", "hermitshop_winter_ornament_boss_hermithouse")
 	end
 end
 
@@ -501,101 +512,125 @@ local seasonal_lure =
     oceanfishinglure_hermit_heavy = 1,
 }
 
-local function honeycheck(inst,gifts)
+local function addhoneyrewards(inst,gifts)
     if inst.components.friendlevels.friendlytasks[TASKS.PLANT_FLOWERS].complete then
         table.insert(gifts,"honey")        
     end
-    return gifts
 end
 
-local function defaultfriendrewards(inst,winner)
-    local gifts = {}
-    for i=1,3 do
-        table.insert(gifts, weighted_random_choice(hermit_bundle_shell_loots))
-    end
-    gifts = honeycheck(inst,gifts)
-    return createbundle(inst,gifts)
+local function addtaskrewards(inst, gifts, task_id)
+	if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+		if task_id == TASKS.FIX_HOUSE_3 then
+			table.insert(gifts, "winter_ornament_boss_hermithouse")        
+		end
+	end
 end
 
-local function friendlevel_1_reward(inst,winner)
+local function defaultfriendrewards(inst, target, task_id)
+	local gifts = {}
+	for i=1,3 do
+		table.insert(gifts, weighted_random_choice(hermit_bundle_shell_loots))
+	end
+	addhoneyrewards(inst, gifts)
+	return createbundle(inst, gifts)
+end
+
+local function friendlevel_1_reward(inst, target, task_id)
     EnableShop(inst, 1)
     storelevelunlocked(inst)
-    return createbundle(inst,{})
-end
 
-local function friendlevel_2_reward(inst,winner)
     local gifts = {}
-
-    table.insert(gifts, weighted_random_choice(seasonal_lure))
-
-    gifts = honeycheck(inst,gifts)
-    return createbundle(inst,gifts)
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_3_reward(inst,winner)
+local function friendlevel_2_reward(inst, target, task_id)
+    local gifts = {}
+    table.insert(gifts, weighted_random_choice(seasonal_lure))
+    addhoneyrewards(inst, gifts)
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
+end
+
+local function friendlevel_3_reward(inst, target, task_id)
     EnableShop(inst, 2)
     storelevelunlocked(inst)
-    return createbundle(inst,{})
+
+    local gifts = {}
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_4_reward(inst,winner)
+local function friendlevel_4_reward(inst, target, task_id)
     local gifts = {}
     for i=1,3 do
         table.insert(gifts, weighted_random_choice(hermit_bundle_shell_loots))
     end   
     table.insert(gifts, weighted_random_choice(seasonal_lure))
-
-    gifts = honeycheck(inst,gifts)
-
-    return createbundle(inst,gifts)
+    addhoneyrewards(inst, gifts)
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_5_reward(inst,winner)
+local function friendlevel_5_reward(inst, target, task_id)
     local gifts = {}
     for i=1,3 do
         table.insert(gifts, weighted_random_choice(hermit_bundle_shell_loots))
     end   
     table.insert(gifts, weighted_random_choice(seasonal_lure))
-
-    gifts = honeycheck(inst,gifts)
-    return createbundle(inst,gifts)
+    addhoneyrewards(inst, gifts)
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_6_reward(inst,winner)
+local function friendlevel_6_reward(inst, target, task_id)
     EnableShop(inst,3)
     storelevelunlocked(inst)
-    return createbundle(inst,{})
+
+    local gifts = {}
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_7_reward(inst,winner)
+local function friendlevel_7_reward(inst, target, task_id)
     local gifts = {}
     for i=1,3 do
         table.insert(gifts, weighted_random_choice(hermit_bundle_shell_loots))
     end   
     table.insert(gifts, weighted_random_choice(seasonal_lure))
-
-    gifts = honeycheck(inst,gifts)
-    return createbundle(inst,gifts)
+    addhoneyrewards(inst, gifts)
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_8_reward(inst,winner)
+local function friendlevel_8_reward(inst, target, task_id)
     EnableShop(inst,4)
     storelevelunlocked(inst)
-    return createbundle(inst,{})
+
+    local gifts = {}
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_9_reward(inst,winner)
+local function friendlevel_9_reward(inst, target, task_id)
 	inst.components.craftingstation:LearnItem("supertacklecontainer", "hermitshop_supertacklecontainer")
     inst._shop_level = 5
     storelevelunlocked(inst)
-    return createbundle(inst,{})
+
+    local gifts = {}
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
-local function friendlevel_10_reward(inst,winner)
-    local gifts = {}
-    gifts = createbundle(inst,gifts)
+local function friendlevel_10_reward(inst, target, task_id)
+	inst.components.craftingstation:LearnItem("winter_ornament_boss_pearl", "hermitshop_winter_ornament_boss_pearl")
 
-    return gifts
+    local gifts = {}
+	if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+		table.insert(gifts, "winter_ornament_boss_pearl")        
+	end
+	addtaskrewards(inst, gifts, task_id)
+    return createbundle(inst, gifts)
 end
 
 local ISLAND_RADIUS = 32
@@ -744,6 +779,7 @@ local function initfriendlevellisteners(inst)
             inst.components.friendlevels:CompleteTask(TASKS.FIX_HOUSE_2, data.doer) 
         else
             inst.components.friendlevels:CompleteTask(TASKS.FIX_HOUSE_3, data.doer) 
+			inst.components.craftingstation:LearnItem("winter_ornament_boss_hermithouse", "hermitshop_winter_ornament_boss_hermithouse")
         end
     end)
 
@@ -1141,6 +1177,7 @@ local function retrofitconstuctiontasks(inst, house_prefab)
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_1].complete = true
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_2].complete = true
         inst.components.friendlevels.friendlytasks[TASKS.FIX_HOUSE_3].complete = true
+
 		print("Retrofitting for Return Of Them: Turn of Tides - completed hermit house 1, 2, 3 friendship tasks.")
     end
 end
@@ -1267,7 +1304,7 @@ local function fn()
 
     inst:AddComponent("friendlevels")
     inst.components.friendlevels:SetDefaultRewards(defaultfriendrewards)
-    inst.components.friendlevels:SetLeveltRewards(friendlevelrewards)
+    inst.components.friendlevels:SetLevelRewards(friendlevelrewards)
     inst.components.friendlevels:SetFriendlyTasks(friendlytasks)
     initfriendlevellisteners(inst)
     inst.complain = complain
@@ -1367,7 +1404,7 @@ local function fn()
         inst.segs = data
     end, TheWorld)
     
-    inst:DoTaskInTime(0, RegisterToBottleManager) 
+	RegisterToBottleManager(inst)
 
 	inst.retrofitconstuctiontasks = retrofitconstuctiontasks
 

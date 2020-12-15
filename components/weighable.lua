@@ -8,7 +8,7 @@ local function ontype(self, type, old_type)
 end
 
 local function onweight(self)
-	self.weight_percent = (self.min_weight ~= nil and self.max_weight ~= nil) and math.clamp(Remap(self.weight, self.min_weight, self.max_weight, 0, 1), 0, 1) or .5
+	self.weight_percent = (self.min_weight ~= nil and self.max_weight ~= nil) and math.clamp(Remap(self.weight or 0, self.min_weight, self.max_weight, 0, 1), 0, 1) or .5
 end
 
 local Weighable = Class(function(self, inst)
@@ -90,7 +90,7 @@ function Weighable:OnLoad(data)
 end
 
 function Weighable:GetDebugString()
-    return string.format("weight %.5f (%.02f%%), owner_userid %s, override owner: %s", self.weight, self.weight_percent*100, tostring(self.owner_userid), tostring(self.prefab_override_owner))
+    return string.format("weight %.5f (%.02f%%), owner_userid %s, override owner: %s", self.weight or 0, (self.weight_percent or 0)*100, tostring(self.owner_userid), tostring(self.prefab_override_owner))
 end
 
 return Weighable

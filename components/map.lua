@@ -1,5 +1,12 @@
 require "map/terrain"
 
+local _SetTile = Map.SetTile
+function Map:SetTile(x, y, tile, ...)
+    local original_tile = self:GetTile(x, y)
+    _SetTile(self, x, y, tile, ...)
+	TheWorld:PushEvent("onterraform", {x = x, y = y, original_tile = original_tile, tile = tile})
+end
+
 --NOTE: Call Map:IsVisualGroundAtPoint(x, y, z) if you want to include the overhang
 
 --NOTE: this is the max of all entities that have custom deploy_extra_spacing
@@ -100,6 +107,21 @@ function Map:CanTerraformAtPoint(x, y, z)
     return true
 end
 
+function Map:CanPlowAtPoint(x, y, z)
+    local tile = self:GetTileAtPoint(x, y, z)
+    if not self:CanPlantAtPoint(x, y, z) then
+        return false
+    elseif TERRAFORM_EXTRA_SPACING > 0 then
+        for i, v in ipairs(TheSim:FindEntities(x, 0, z, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
+            if v.entity:IsVisible() and
+                v:GetDistanceSqToPoint(x, 0, z) < v.terraform_extra_spacing * v.terraform_extra_spacing then
+                return false
+            end
+        end
+    end
+    return true
+end
+
 function Map:CanPlaceTurfAtPoint(x, y, z)
     return self:GetTileAtPoint(x, y, z) == GROUND.DIRT
 end
@@ -115,10 +137,30 @@ function Map:CanPlantAtPoint(x, y, z)
         not GROUND_FLOORING[tile]
 end
 
+local FIND_SOIL_MUST_TAGS = { "soil" }
+function Map:CollapseSoilAtPoint(x, y, z)
+	local till_spacing = GetFarmTillSpacing()
+    for i, v in ipairs(TheSim:FindEntities(x, y, z, till_spacing, FIND_SOIL_MUST_TAGS)) do
+        v:PushEvent(v:GetDistanceSqToPoint(x, y, z) < till_spacing * 0.5 and "collapsesoil" or "breaksoil")
+    end
+end
+
+
+function Map:IsFarmableSoilAtPoint(x, y, z)
+    return self:GetTileAtPoint(x, y, z) == GROUND.FARMING_SOIL
+end
+
 local DEPLOY_IGNORE_TAGS = { "NOBLOCK", "player", "FX", "INLIMBO", "DECOR", "WALKABLEPLATFORM" }
 local DEPLOY_IGNORE_TAGS_NOPLAYER = { "NOBLOCK", "FX", "INLIMBO", "DECOR", "WALKABLEPLATFORM" }
+local TILLSOIL_IGNORE_TAGS = { "NOBLOCK", "player", "FX", "INLIMBO", "DECOR", "WALKABLEPLATFORM", "soil" }
 local HOLE_TAGS = { "groundhole" }
 local BLOCKED_ONEOF_TAGS = { "groundtargetblocker", "groundhole" }
+
+function Map:CanTillSoilAtPoint(x, y, z, ignore_tile_type)
+	return (ignore_tile_type and self:CanPlantAtPoint(x, y, z) or self:IsFarmableSoilAtPoint(x, y, z))
+			and self:IsDeployPointClear(Vector3(x, y, z), nil, GetFarmTillSpacing(), nil, nil, nil, TILLSOIL_IGNORE_TAGS)
+end
+
 function Map:IsPointNearHole(pt, range)
     range = range or .5
     for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, DEPLOY_EXTRA_SPACING + range, HOLE_TAGS)) do
@@ -146,10 +188,10 @@ local function IsNearOther(other, pt, min_spacing_sq)
     return other:GetDistanceSqToPoint(pt.x, 0, pt.z) < (other.deploy_extra_spacing ~= nil and math.max(other.deploy_extra_spacing * other.deploy_extra_spacing, min_spacing_sq) or min_spacing_sq)
 end
 
-function Map:IsDeployPointClear(pt, inst, min_spacing, min_spacing_sq_fn, near_other_fn, check_player)
+function Map:IsDeployPointClear(pt, inst, min_spacing, min_spacing_sq_fn, near_other_fn, check_player, custom_ignore_tags)
     local min_spacing_sq = min_spacing ~= nil and min_spacing * min_spacing or nil
     near_other_fn = near_other_fn or IsNearOther
-    for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, math.max(DEPLOY_EXTRA_SPACING, min_spacing), nil, check_player and DEPLOY_IGNORE_TAGS_NOPLAYER or DEPLOY_IGNORE_TAGS)) do
+    for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, math.max(DEPLOY_EXTRA_SPACING, min_spacing), nil, custom_ignore_tags ~= nil and custom_ignore_tags or check_player and DEPLOY_IGNORE_TAGS_NOPLAYER or DEPLOY_IGNORE_TAGS)) do
         if v ~= inst and
             v.entity:IsVisible() and
             v.components.placer == nil and

@@ -121,6 +121,11 @@ end
 local function onharvest(inst, picker, produce)
     --print(inst, "onharvest")
     if not inst:HasTag("burnt") then
+        if inst.components.harvestable then
+            inst.components.harvestable:SetGrowTime(nil)
+            inst.components.harvestable.pausetime = nil
+            inst.components.harvestable:StopGrowing()
+        end
 		if produce == levels[1].amount then
 			AwardPlayerAchievement("honey_harvester", picker)
 		end

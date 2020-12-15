@@ -201,6 +201,14 @@ local function ReticuleTargetFn()
     return pos
 end
 
+local function onuseaswatersource(inst)
+    if inst.components.stackable:IsStack() then
+        inst.components.stackable:Get():Remove()
+    else
+        inst:Remove()
+    end
+end
+
 local function waterballoon_fn()
     --weapon (from weapon component) added to pristine state for optimization
     local inst = common_fn("waterballoon", "waterballoon", "idle", "weapon", true)
@@ -210,6 +218,9 @@ local function waterballoon_fn()
     inst.components.reticule.ease = true
 
     MakeInventoryFloatable(inst, "med", 0.05, 0.65)
+    
+    -- From watersource component
+    inst:AddTag("watersource")
 
     if not TheWorld.ismastersim then
         return inst
@@ -240,6 +251,10 @@ local function waterballoon_fn()
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
     inst.components.equippable.equipstack = true
+
+    inst:AddComponent("watersource")
+    inst.components.watersource.onusefn = onuseaswatersource
+    inst.components.watersource.override_fill_uses = 1
 
     MakeHauntableLaunch(inst)
 

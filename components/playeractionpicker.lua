@@ -245,7 +245,7 @@ function PlayerActionPicker:GetLeftClickActions(position, target)
             (self.inst.sg == nil or self.inst.sg:HasStateTag("moving") or self.inst.sg:HasStateTag("idle") or self.inst.sg:HasStateTag("channeling")) and
             (self.inst:HasTag("moving") or self.inst:HasTag("idle") or self.inst:HasTag("channeling")) then
             actions = self:SortActionList({ ACTIONS.LOOKAT }, target, nil)
-        elseif self.inst.components.playercontroller:IsControlPressed(CONTROL_FORCE_ATTACK) and target.replica.combat ~= nil and self.inst.replica.combat:CanTarget(target) then
+        elseif (self.inst.components.playercontroller:IsControlPressed(CONTROL_FORCE_ATTACK) or target:HasTag("hostile")) and target.replica.combat ~= nil and self.inst.replica.combat:CanTarget(target) then
             actions = self:SortActionList({ ACTIONS.ATTACK }, target, nil)
         elseif equipitem ~= nil and equipitem:IsValid() then
             actions = self:GetEquippedItemActions(target, equipitem)
