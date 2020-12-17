@@ -431,22 +431,14 @@ function Pickable:Pick(picker)
 				if self.use_lootdropper_for_product then
 					loot = {}
 					for _, prefab in ipairs(self.inst.components.lootdropper:GenerateLoot()) do
-						local item = SpawnPrefab(prefab)
-						table.insert(loot, item)
-						if item ~= nil then
-							if item.components.inventoryitem ~= nil then
-								item.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
-							end
-						end
+						table.insert(loot, self.inst.components.lootdropper:SpawnLootPrefab(prefab))
 					end
-					if next(loot) ~= nil then
+					if not IsTableEmpty(loot) then
 						picker:PushEvent("picksomething", { object = self.inst, loot = loot })
                     end
                     for i, item in ipairs(loot) do
 						if item.components.inventoryitem ~= nil then
 	                        picker.components.inventory:GiveItem(item, nil, self.inst:GetPosition())
-						else
-							self.inst.components.lootdropper:FlingItem(item, self.inst:GetPosition())
 						end
                     end
 				else

@@ -80,11 +80,13 @@ local function SetDigits(inst, weight)
 end
 
 local function onspawnitemfromdata(item, data)
-	if item ~= nil and data ~= nil then
-		if item.components.perishable ~= nil and data.perish_percent then
-			item.components.perishable:SetPercent(data.perish_percent or 1)
+	if item then
+		item.from_plant = (data and data.from_plant) ~= false
+		if data then
+			if item.components.perishable ~= nil and data.perish_percent then
+				item.components.perishable:SetPercent(data.perish_percent or 1)
+			end
 		end
-		item.from_plant = data.from_plant
 	end
 end
 
@@ -138,13 +140,13 @@ local function onnewtrophy(inst, data_old_and_new)
 	if data_new ~= nil then
 		if data_new.weight == nil or data_new.weight <= 0 then
 			inst.AnimState:PlayAnimation("placeveg_light")
-			
+
 			inst.AnimState:ClearOverrideSymbol("swap_body")
 			inst.AnimState:OverrideSymbol("swap_normal", data_new.build, data_new.build.."01")
-			
+
 			inst.AnimState:PushAnimation("veg_light_idle", false)
 		else
-			if data_old == nil or data_old.weighht == nil or data_old.weight <= 0 then
+			if data_old == nil or data_old.weight == nil or data_old.weight <= 0 then
 				inst.AnimState:PlayAnimation("placeveg")
 			else
 				inst.AnimState:PlayAnimation("replaceveg")

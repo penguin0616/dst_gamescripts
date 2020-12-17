@@ -60,16 +60,18 @@ local function onburnt(inst)
     end
 end
 
-local function isempty(inst)
-    return inst:HasTag(fueltype.."_fuel")
+local function onuse(inst)
+	if inst.components.finiteuses ~= nil then
+		inst.components.finiteuses:Use()
+	end
 end
 
 local function displaynamefn(inst)
-    return isempty(inst) and STRINGS.NAMES[string.upper(inst.prefab).."_EMPTY"] or STRINGS.NAMES[string.upper(inst.prefab)]
+    return not inst:HasTag("usesdepleted") and STRINGS.NAMES[string.upper(inst.prefab).."_NOT_EMPTY"] or nil
 end
 
 local function getdesc(inst, viewer)
-	return GetDescription(viewer, inst, isempty(inst) and "EMPTY" or nil)
+	return GetDescription(viewer, inst, inst:HasTag("usesdepleted") and "EMPTY" or nil)
 end
 
 local function OnSave(inst, data)
@@ -114,6 +116,8 @@ local function MakeWateringCan(name, uses, water_amount)
 
         MakeInventoryFloatable(inst, "small", 0.1, 1)
 
+		inst:AddTag("wateringcan")
+
         inst.displaynamefn = displaynamefn
 
         inst.entity:SetPristine()
@@ -127,14 +131,18 @@ local function MakeWateringCan(name, uses, water_amount)
 
         inst:AddComponent("inventoryitem")
 
-        inst:AddComponent("wateringcan")
-        inst.components.wateringcan.water_amount = water_amount
-        inst.components.wateringcan.ondepletefn = OnDeplete
-        
+	    inst:AddComponent("wateryprotection")
+		inst.components.wateryprotection.extinguishheatpercent = TUNING.WATERINGCAN_EXTINGUISH_HEAT_PERCENT
+		inst.components.wateryprotection.temperaturereduction = TUNING.WATERINGCAN_TEMP_REDUCTION
+		inst.components.wateryprotection.witherprotectiontime = TUNING.WATERINGCAN_PROTECTION_TIME
+		inst.components.wateryprotection.addwetness = water_amount
+		inst.components.wateryprotection:AddIgnoreTag("player")
+		inst.components.wateryprotection.onspreadprotectionfn = onuse
+
         inst:AddComponent("fillable")
         inst.components.fillable.overrideonfillfn = OnFill
-        inst.components.fillable.acceptsoceanwater = false
         inst.components.fillable.showoceanaction = true
+        inst.components.fillable.acceptsoceanwater = false
         inst.components.fillable.oceanwatererrorreason = "UNSUITABLE_FOR_PLANTS"
 
         inst:AddComponent("finiteuses")

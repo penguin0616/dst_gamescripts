@@ -1531,6 +1531,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddTag(UPGRADETYPES.MAST.."_upgradeuser")
         inst:AddTag("usesvegetarianequipment")
 
+        --pristine add tags from components
+        inst:AddTag("singingshelltrigger")
+        inst:AddTag("lordfruitflytrigger")
+
 		SetInstanceFunctions(inst)
 
         inst.foleysound = nil --Characters may override this in common_postinit
@@ -1808,6 +1812,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		
 		inst:AddComponent("singingshelltrigger")
         inst.components.singingshelltrigger.trigger_range = TUNING.SINGINGSHELL_TRIGGER_RANGE
+        
+		inst:AddComponent("lordfruitflytrigger")
+        inst.components.lordfruitflytrigger.trigger_range = TUNING.LORDFRUITFLY_TRIGGER_RANGE
 
         inst:AddInherentAction(ACTIONS.PICK)
         inst:AddInherentAction(ACTIONS.SLEEPIN)

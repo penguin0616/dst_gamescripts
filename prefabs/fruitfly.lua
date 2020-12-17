@@ -216,6 +216,9 @@ local function fn()
         return inst
     end
 
+    inst:SetStateGraph("SGfruitfly")
+    inst:SetBrain(brain)
+
     common_server(inst)
 
     inst:AddComponent("leader")
@@ -247,9 +250,6 @@ local function fn()
 
     --divide by scale for accurate walkspeed
     inst.components.locomotor.walkspeed = TUNING.LORDFRUITFLY_WALKSPEED/2
-
-    inst:SetBrain(brain)
-    inst:SetStateGraph("SGfruitfly")
 
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("death", OnDead)

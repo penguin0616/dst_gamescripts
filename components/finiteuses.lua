@@ -5,6 +5,10 @@ local FiniteUses = Class(function(self, inst)
     self.consumption = {}
 end)
 
+function FiniteUses:OnRemoveFromEntity()
+	self.inst:RemoveTag("usesdepleted")
+end
+
 function FiniteUses:SetConsumption(action, uses)
     self.consumption[action] = uses
 end
@@ -35,9 +39,14 @@ function FiniteUses:SetUses(val)
     self.inst:PushEvent("percentusedchange", {percent = self:GetPercent()})
     if self.current <= 0 then
         self.current = 0
-        if was_positive and self.onfinished ~= nil then
-            self.onfinished(self.inst)
+        if was_positive then
+			self.inst:AddTag("usesdepleted")
+			if self.onfinished ~= nil then
+			    self.onfinished(self.inst)
+			end
         end
+	elseif not was_positive then
+		self.inst:RemoveTag("usesdepleted")
     end
 end
 

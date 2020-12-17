@@ -34,6 +34,7 @@ local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
 local IS_BETA = BRANCH == "staging"
+local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
     if self.bannersoundsenabled then
@@ -803,15 +804,17 @@ function MultiplayerMainScreen:OnBecomeActive()
 	end
 
     --delay for a frame to allow the screen to finish building, then check the entity count for leaks
-    self.inst:DoTaskInTime(0, function()
-        if self.cached_entity_count ~= nil and self.cached_entity_count ~= TheSim:GetNumberOfEntities() then
-            print("### Error: Leaked entities in the frontend.", self.cached_entity_count)
-            for k, v in pairs(Ents) do if v.widget and (not v:IsValid() or v.widget.parent == nil) then
-                print(k, v.widget.name, v:IsValid(), v.widget.parent ~= nil, v) end
-            end
-        end
-        self.cached_entity_count = TheSim:GetNumberOfEntities()
-    end)
+	if IS_DEV_BUILD then
+		self.inst:DoTaskInTime(0, function()
+			if self.cached_entity_count ~= nil and self.cached_entity_count ~= TheSim:GetNumberOfEntities() then
+				print("### Error: Leaked entities in the frontend.", self.cached_entity_count, TheSim:GetNumberOfEntities())
+				for k, v in pairs(Ents) do if v.widget and (not v:IsValid() or v.widget.parent == nil) then
+					print(k, v.widget.name, v:IsValid(), v.widget.parent ~= nil, v) end
+				end
+			end
+			self.cached_entity_count = TheSim:GetNumberOfEntities()
+		end)
+	end
 end
 
 function MultiplayerMainScreen:FinishedFadeIn()

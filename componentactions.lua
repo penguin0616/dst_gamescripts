@@ -72,7 +72,7 @@ local function PlantRegistryResearch(inst, doer, actions)
                     act = ACTIONS.PLANTREGISTRY_RESEARCH_FAIL
                 end
             end
-            if act then
+            if act == ACTIONS.PLANTREGISTRY_RESEARCH or act == ACTIONS.PLANTREGISTRY_RESEARCH_FAIL then
                 table.insert(actions, act)
             end
         end
@@ -1347,7 +1347,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        wateringcan = function(inst, doer, pos, actions, right)
+        wateryprotection = function(inst, doer, pos, actions, right)
             if right and TheWorld.Map:GetTileAtPoint(pos:Get()) == GROUND.FARMING_SOIL then
                 table.insert(actions, ACTIONS.POUR_WATER_GROUNDTILE)
             end
@@ -1524,8 +1524,8 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        wateringcan = function(inst, doer, target, actions, right)
-            if target:HasTag("fire") or target:HasTag("smolder") then
+        wateryprotection = function(inst, doer, target, actions, right)
+            if right and (target:HasTag("withered") or target:HasTag("fire") or target:HasTag("smolder")) then
                 table.insert(actions, ACTIONS.POUR_WATER)
             end
         end,

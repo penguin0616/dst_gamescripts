@@ -230,24 +230,14 @@ local function Seed_GetDisplayName(inst)
 			or nil
 end
 
-local function OnSave(inst, data)
-	data.from_plant = inst.from_plant
-end
-
-local function OnPreLoad(inst, data)
-	if data ~= nil then
-		inst.from_plant = data.from_plant
-	end
-end
-
 local function Oversized_OnSave(inst, data)
-    data.from_plant = inst.from_plant
+	data.from_plant = inst.from_plant or false
     data.harvested_on_day = inst.harvested_on_day
 end
 
 local function Oversized_OnPreLoad(inst, data)
+	inst.from_plant = (data and data.from_plant) ~= false
 	if data ~= nil then
-        inst.from_plant = data.from_plant
         inst.harvested_on_day = data.harvested_on_day
 	end
 end
@@ -548,11 +538,6 @@ local function MakeVeggie(name, has_seeds)
 
         MakeHauntableLaunchAndPerish(inst)
 
-        if has_seeds then
-            inst.OnSave = OnSave
-            inst.OnPreLoad = OnPreLoad
-        end
-
         return inst
     end
 
@@ -749,6 +734,8 @@ local function MakeVeggie(name, has_seeds)
         MakeMediumPropagator(inst)
 
         MakeHauntableWork(inst)
+
+        inst.from_plant = false
 
 		inst.OnSave = Oversized_OnSave
 		inst.OnPreLoad = Oversized_OnPreLoad

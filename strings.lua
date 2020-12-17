@@ -2926,10 +2926,10 @@ STRINGS =
         SOIL_AMENDER_SPOILED = "Fermented Growth Formula",
 		SOIL_AMENDER_FERMENTED = "Super Growth Formula",
 
-		WATERINGCAN = "Watering Can",
-        WATERINGCAN_EMPTY = "Empty Watering Can",
-        PREMIUMWATERINGCAN = "Waterfowl Can",
-        PREMIUMWATERINGCAN_EMPTY = "Empty Waterfowl Can",
+		WATERINGCAN_NOT_EMPTY = "Watering Can",
+        WATERINGCAN = "Empty Watering Can",
+        PREMIUMWATERINGCAN_NOT_EMPTY = "Waterfowl Can",
+        PREMIUMWATERINGCAN = "Empty Waterfowl Can",
 
         TROPHYSCALE_OVERSIZEDVEGGIES = "Produce Scale",
         

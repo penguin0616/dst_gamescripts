@@ -743,7 +743,9 @@ local function MakePlant(plant_def)
 
         if not TheWorld.ismastersim then
             return inst
-        end
+		end
+		
+		inst._activatefn = PushFruitFlySpawnerEvent
 
 		inst.UpdateResearchStage = UpdateResearchStage
 
@@ -805,10 +807,7 @@ local function MakePlant(plant_def)
 		inst:WatchWorldState("isnight", OnIsDark)
 		inst:DoTaskInTime(0, OnIsDark)
 
-		inst:ListenForEvent("ms_fruitflytimerfinished", function() PushFruitFlySpawnerEvent(inst) end, TheWorld)
-		inst:ListenForEvent("entitywake", PushFruitFlySpawnerEvent)
 		inst:ListenForEvent("loot_prefab_spawned", OnLootPrefabSpawned)
-
 		inst:ListenForEvent("on_planted", on_planted)
 
 		inst.OnSave = OnSave

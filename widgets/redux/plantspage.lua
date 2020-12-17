@@ -280,6 +280,7 @@ function PlantsPage:OpenPageWidget(plantregistrywidgetpath, data, currentwidget)
 	self.currentwidget = currentwidget
 	local plantregistrywidget = require(plantregistrywidgetpath)
 	self.plantregistrywidget = self.root:AddChild(plantregistrywidget(self, data))
+	self.plantregistrywidget:SetFocus(true)
 	self.parent_default_focus = self.plantregistrywidget
 	self.plant_grid:Hide()
 	self.plantregistrywidget:SetFocus()

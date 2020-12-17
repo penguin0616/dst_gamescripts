@@ -308,7 +308,7 @@ ACTIONS =
 	COMMUNEWITHSUMMONED = Action({ rmb=true, mount_valid=true }),
     TELLSTORY = Action({ rmb=true, distance=3 }),
 
-    TOSS = Action({ rmb=true, distance=8, mount_valid=true }),
+    TOSS = Action({priority=1, rmb=true, distance=8, mount_valid=true }),
     NUZZLE = Action(),
     WRITE = Action(),
     ATTUNE = Action(),
@@ -377,8 +377,8 @@ ACTIONS =
     BOARDPLATFORM = Action({ customarrivecheck=CheckIsOnPlatform }),
     OCEAN_TOSS = Action({priority=3, rmb=true, customarrivecheck=CheckOceanFishingCastRange, is_relative_to_platform=true, disable_platform_hopping=true}),
     UNPATCH = Action({ distance=0.5 }),
-    POUR_WATER = Action({ tile_placer="gridplacer", show_tile_placer_fn=ShowPourWaterTilePlacer, extra_arrive_dist=ExtraPourWaterDist }),
-    POUR_WATER_GROUNDTILE = Action({ rmb=true, customarrivecheck=CheckTileWithinRange, tile_placer="gridplacer", theme_music = "farming" }),
+    POUR_WATER = Action({rmb=true, tile_placer="gridplacer", show_tile_placer_fn=ShowPourWaterTilePlacer, extra_arrive_dist=ExtraPourWaterDist }),
+    POUR_WATER_GROUNDTILE = Action({rmb=true, customarrivecheck=CheckTileWithinRange, tile_placer="gridplacer", theme_music = "farming" }),
     PLANTREGISTRY_RESEARCH_FAIL = Action({ priority = -1 }),
     PLANTREGISTRY_RESEARCH = Action({ priority = HIGH_ACTION_PRIORITY }),
     ASSESSPLANTHAPPINESS = Action({ priority = 1 }),
@@ -3274,18 +3274,14 @@ end
 
 ACTIONS.POUR_WATER.fn = function(act)
     if act.invobject ~= nil and act.invobject:IsValid() then
-        if act.invobject.components.wateringcan ~= nil then
-            local canuse, reason = act.invobject.components.wateringcan:CanUse()
-            if not canuse then
-                return false, reason
-            end
+        if act.invobject.components.finiteuses ~= nil and act.invobject.components.finiteuses:GetUses() <= 0 then
+			return false, (act.invobject:HasTag("wateringcan") and "OUT_OF_WATER" or nil)
         end
         
         if act.target ~= nil and act.target:IsValid() then
-            act.invobject.components.wateringcan:WaterTarget(act.target)
+			act.invobject.components.wateryprotection:SpreadProtection(act.target)
         else
-            local groundpos = act:GetActionPoint()
-            act.invobject.components.wateringcan:WaterGround(groundpos.x, 0, groundpos.z)
+			act.invobject.components.wateryprotection:SpreadProtectionAtPoint(act:GetActionPoint():Get())
         end
 
         return true

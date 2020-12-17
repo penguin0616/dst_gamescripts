@@ -752,7 +752,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.ROW_CONTROLLER, "row"),    
     ActionHandler(ACTIONS.EXTEND_PLANK, "doshortaction"),
     ActionHandler(ACTIONS.RETRACT_PLANK, "doshortaction"),
-    ActionHandler(ACTIONS.ABANDON_SHIP, "abandon_ship"),
+    ActionHandler(ACTIONS.ABANDON_SHIP, "abandon_ship_pre"),
     ActionHandler(ACTIONS.MOUNT_PLANK, "mount_plank"),
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),    
     ActionHandler(ACTIONS.CAST_NET, "cast_net"),
@@ -829,9 +829,18 @@ local actionhandlers =
 
     ActionHandler(ACTIONS.TELLSTORY, "dostorytelling"),
     
-    ActionHandler(ACTIONS.POUR_WATER, "pour"),
-    ActionHandler(ACTIONS.POUR_WATER_GROUNDTILE, "pour"),
-
+    ActionHandler(ACTIONS.POUR_WATER, 
+        function(inst, action)
+            return action.invobject ~= nil
+                and (action.invobject:HasTag("wateringcan") and "pour")
+                or "dolongaction"
+        end),
+    ActionHandler(ACTIONS.POUR_WATER_GROUNDTILE,
+        function(inst, action)
+            return action.invobject ~= nil
+                and (action.invobject:HasTag("wateringcan") and "pour")
+                or "dolongaction"
+        end),
     ActionHandler(ACTIONS.INTERACT_WITH,
         function(inst, action)
             return inst:HasTag("plantkin") and "domediumaction" or "dolongaction"
@@ -7875,7 +7884,9 @@ local states =
         end,
 
         onexit = function(inst)
-            inst.components.walkingplankuser:Dismount()
+            if inst.bufferedaction == nil or inst.bufferedaction.action ~= ACTIONS.ABANDON_SHIP then
+                inst.components.walkingplankuser:Dismount()
+            end
             inst:RemoveTag("on_walkable_plank")
         end,
 
@@ -12763,11 +12774,9 @@ local states =
                 end
 
                 local invobject = inst.sg.statemem.action.invobject
-                if invobject.components.wateringcan ~= nil then
-                    if not invobject.components.wateringcan:CanUse() then
-                        inst.AnimState:Hide("water")
-                        inst.sg.statemem.nosound = true
-                    end
+				if invobject.components.finiteuses ~= nil and invobject.components.finiteuses:GetUses() <= 0 then
+                    inst.AnimState:Hide("water")
+                    inst.sg.statemem.nosound = true
                 end
             end
             

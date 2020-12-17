@@ -442,6 +442,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 109,
 	},
+	loading_farming =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 111,
+	},
 	loading_feast =
 	{
 		type = "loading",
@@ -634,6 +642,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 92,
 	},
+	loading_wendy_trailer2 =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 111,
+	},
 	loading_wendy_victorian =
 	{
 		type = "loading",
@@ -649,6 +665,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 94,
+	},
+	loading_wes_trailer2 =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 111,
 	},
 	loading_wes_victorian =
 	{
@@ -849,6 +873,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 85,
+	},
+	loading_wurt_trailer2 =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 111,
 	},
 	loading_wx_magma =
 	{

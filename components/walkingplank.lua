@@ -42,8 +42,7 @@ function WalkingPlank:AbandonShip(doer)
         return false
     end
 
-	self.doer.components.walkingplankuser:SetCurrentPlank(nil)
-    self.doer = nil
+    self.doer.components.walkingplankuser:Dismount()
 	self.inst:PushEvent("start_abandoning")
 
     return true

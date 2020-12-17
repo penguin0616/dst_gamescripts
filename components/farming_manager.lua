@@ -189,14 +189,14 @@ end
 local FRUITFLYSPAWNER_MUST_TAGS = { "fruitflyspawner" }
 local function OnFruitFlySpawnerActive(data)
     local plant = data.plant
-    if plant:IsAsleep() or lordfruitfly_spawntime ~= nil or TheSim:FindFirstEntityWithTag("lordfruitfly") then
+    if plant:IsAsleep() or lordfruitfly_spawntime ~= nil or TheSim:FindFirstEntityWithTag("lordfruitfly") or (data.check_others == true and not plant:IsNearPlayer(15, true)) then
         return
     end
     local x, y, z = plant.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, TUNING.LORDFRUITFLY_SPAWNERRADIUS, FRUITFLYSPAWNER_MUST_TAGS)
     if #ents >= TUNING.LORDFRUITFLY_SPAWNERCOUNT then
-        local lordfruitfly = SpawnPrefab("lordfruitfly")
-        lordfruitfly.Transform:SetPosition(x, 40, z)
+		local lordfruitfly = SpawnPrefab("lordfruitfly")
+        lordfruitfly.Transform:SetPosition(x, 20, z)
         lordfruitfly.sg:GoToState("land")
         return
     end
@@ -371,7 +371,7 @@ end
 function self:CycleNutrientsAtPoint(_x, _y, _z, consume, restore, test_only)
 	local data = GetTileDataAtPoint(false, _x, _y, _z)
 	if data == nil or data.nutrients_overlay == nil then
-		return false
+		return true --soil is depleted
 	end
 
     local x, y = TheWorld.Map:GetTileCoordsAtPoint(_x, _y, _z)
@@ -529,17 +529,22 @@ function self:GetDebugString()
 	if target ~= nil and target.Transform ~= nil then
 	    local x, y = _map:GetTileCoordsAtPoint(target.Transform:GetWorldPosition())
 		local data = tile_data[x] ~= nil and tile_data[x][y] or nil
-		if data ~= nil and data.soilmoisture ~= nil then
+		if data ~= nil then
+			if data.soilmoisture ~= nil then
+				s = s .. "M: ".. string.format("%.3f", data.soilmoisture) .. " (# " .. tostring(data.soil_drinkers ~= nil and GetTableSize(data.soil_drinkers) or 0) .. ")"
+			end
 		    local _n1, _n2, _n3 = self:GetTileNutrients(x, y)
-			s = s .. "M: ".. string.format("%.3f", data.soilmoisture) .. " (# " .. tostring(data.soil_drinkers ~= nil and GetTableSize(data.soil_drinkers) or 0) .. "), N: " .. tostring(_n1) .. ", " .. tostring(_n2) .. ", " .. tostring(_n3)
+			s = s .. ", N: " .. tostring(_n1) .. ", " .. tostring(_n2) .. ", " .. tostring(_n3)
+		else
+			s = s .. "No data"
 		end
     end
     if lordfruitfly_spawntime then
-        s = s .. " lordfruitfly spawntime: "..(lordfruitfly_spawntime.end_time - GetTime())
+        s = s .. ", LotFF spawntime: "..string.format("%0.2f", lordfruitfly_spawntime.end_time - GetTime())
 	elseif TheSim:FindFirstEntityWithTag("lordfruitfly") then
-		s = s .. " lordfruitfly spawned!"
+		s = s .. ", LotFF spawned!"
 	else
-        s = s .. " lordfruitfly spawntime: spawn pending!"
+        s = s .. ", LotFF spawntime: spawn pending!"
     end
 	return s
 end
