@@ -35,7 +35,7 @@ end
 function Friendlevels:DoRewards(target)
     local gifts = {}
     for i, reward in ipairs(self.queuedrewards) do
-        if reward.default_rewards then
+        if reward.level == nil then
             gifts = ConcatArrays(gifts, self.defaultrewards(self.inst, target, reward.task))
         else           
             gifts = ConcatArrays(gifts, self.levelrewards[reward.level](self.inst, target, reward.task))
@@ -51,11 +51,11 @@ function Friendlevels:CompleteTask(task,doer)
 
     if not self.friendlytasks[task].complete and self.level < #self.levelrewards then
         self.level = self.level + 1
-        table.insert(self.queuedrewards,{level = self.level,task = task})        
+        table.insert(self.queuedrewards, {level = self.level, task = task})        
     elseif not self.friendlytasks[task] or not self.friendlytasks[task].complete or not self.friendlytasks[task].onetime then
         defaulttask = true
         if self.defaultrewards then
-            table.insert(self.queuedrewards,{level = nil, task = task, default_rewards = true })
+            table.insert(self.queuedrewards,{level = nil, task = task })
         end
     end
 

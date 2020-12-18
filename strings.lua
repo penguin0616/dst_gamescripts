@@ -5680,6 +5680,9 @@ STRINGS.UI =
         TAB_TITLE_MOD_PLANTS = "Mod Plants",
         TAB_TITLE_FERTILIZERS = "Fertilizers",
         TAB_TITLE_MOD_FERTILIZERS = "Mod Fertilizers",
+        
+		ONLINE_DATA_USER_OFFLINE = "Login to retrieve online plant registry data.",
+		ONLINE_DATA_DOWNLOAD_FAILED = "Failed to sync online plant registry data.",
 
         MYSTERY_PLANT = "Unknown Plant",
         NEEDSMORERESEARCH = "Unknown",

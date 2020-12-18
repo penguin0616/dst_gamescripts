@@ -330,19 +330,34 @@ function WeedPlantPage:_DoFocusHookups()
         end
     end
 
-    for i, plant_widget in ipairs(self.plant_grid) do
-        if i / #self.plant_grid <= 0.5 then
-            plant_widget:SetFocusChangeDir(MOVE_DOWN, nutrients_icon_first or self.product_icon)
-        else
-            plant_widget:SetFocusChangeDir(MOVE_DOWN, self.product_icon or nutrients_icon_first)
-        end
+    local previous_plant_widget = nil
+    for i, info in ipairs(self.data.info) do
+        local plant_widget = self.plant_grid[i]
+        if plant_widget then
+            if i / #self.data.info <= 0.5 then
+                plant_widget:SetFocusChangeDir(MOVE_DOWN, nutrients_icon_first or self.product_icon)
+            else
+                plant_widget:SetFocusChangeDir(MOVE_DOWN, self.product_icon or nutrients_icon_first)
+            end
 
-        if self.plant_grid[i - 1] then
-            plant_widget:SetFocusChangeDir(MOVE_LEFT, self.plant_grid[i - 1])
-        end
+            if previous_plant_widget then
+                plant_widget:SetFocusChangeDir(MOVE_LEFT, previous_plant_widget)
+            end
+            
+            local next_plant_widget
+            for k = i + 1, #self.data.info do
+                local _plant_widget = self.plant_grid[k]
+                if _plant_widget then
+                    next_plant_widget = _plant_widget
+                    break
+                end
+            end
 
-        if self.plant_grid[i + 1] then
-            plant_widget:SetFocusChangeDir(MOVE_RIGHT, self.plant_grid[i + 1])
+            if next_plant_widget then
+                plant_widget:SetFocusChangeDir(MOVE_RIGHT, next_plant_widget)
+            end
+
+            previous_plant_widget = plant_widget
         end
     end
 end

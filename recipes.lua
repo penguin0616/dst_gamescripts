@@ -94,7 +94,7 @@ Recipe("archive_resonator_item", {Ingredient("moonrocknugget", 1), Ingredient("t
 
 --FOOD (FARM)
 Recipe("cookpot", {Ingredient("cutstone", 3), Ingredient("charcoal", 6), Ingredient("twigs", 6)}, RECIPETABS.FARM, TECH.SCIENCE_ONE, "cookpot_placer")
-Recipe("cookbook", {Ingredient("silk", 2), Ingredient("papyrus", 1), Ingredient("featherpencil", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
+Recipe("cookbook", {Ingredient("papyrus", 1), Ingredient("carrot", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
 Recipe("icebox", {Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1)}, RECIPETABS.FARM,  TECH.SCIENCE_TWO, "icebox_placer", 1.5)
 Recipe("saltbox", {Ingredient("saltrock", 10), Ingredient("bluegem", 1), Ingredient("cutstone", 1)}, RECIPETABS.FARM,  TECH.SCIENCE_TWO, "saltbox_placer", 1.5)
 

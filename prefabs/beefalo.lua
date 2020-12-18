@@ -645,6 +645,10 @@ local function OnLoad(inst, data)
 	end
 end
 
+local function CanSpawnPoop(inst)
+	return inst.components.rideable == nil or not inst.components.rideable:IsBeingRidden()
+end
+
 local function GetDebugString(inst)
     return string.format("tendency %s nextbuck %.2f", inst.tendency, GetTaskRemaining(inst._bucktask))
 end
@@ -759,6 +763,7 @@ local function beefalo()
     inst.components.periodicspawner:SetRandomTimes(40, 60)
     inst.components.periodicspawner:SetDensityInRange(20, 2)
     inst.components.periodicspawner:SetMinimumSpacing(8)
+	inst.components.periodicspawner:SetSpawnTestFn(CanSpawnPoop)
     inst.components.periodicspawner:Start()
 
     inst:AddComponent("rideable")

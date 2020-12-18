@@ -53,7 +53,7 @@ local function onpercentusedchanged(inst, data)
 end
 
 local function onburnt(inst)
-    local amount = math.ceil(inst.components.finiteuses:GetUses() * inst.components.wateringcan.water_amount * MOISTURE_ON_BURNT_MULTIPLIER)
+    local amount = math.ceil(inst.components.finiteuses:GetUses() * inst.components.wateryprotection.addwetness * MOISTURE_ON_BURNT_MULTIPLIER)
     if amount > 0 then
         local x, y, z = inst.Transform:GetWorldPosition()
         TheWorld.components.farming_manager:AddSoilMoistureAtPoint(x, 0, z, amount)
@@ -136,6 +136,7 @@ local function MakeWateringCan(name, uses, water_amount)
 		inst.components.wateryprotection.temperaturereduction = TUNING.WATERINGCAN_TEMP_REDUCTION
 		inst.components.wateryprotection.witherprotectiontime = TUNING.WATERINGCAN_PROTECTION_TIME
 		inst.components.wateryprotection.addwetness = water_amount
+		inst.components.wateryprotection.protection_dist = TUNING.WATERINGCAN_PROTECTION_DIST
 		inst.components.wateryprotection:AddIgnoreTag("player")
 		inst.components.wateryprotection.onspreadprotectionfn = onuse
 

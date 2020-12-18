@@ -1,6 +1,7 @@
 local Image = require "widgets/image"
 local ImageButton = require "widgets/imagebutton"
 local Widget = require "widgets/widget"
+local Text = require "widgets/text"
 
 local PlantsPage = require "widgets/redux/plantspage"
 local FertilizersPage = require "widgets/redux/fertilizerspage"
@@ -36,6 +37,12 @@ local PlantRegistryWidget = Class(Widget, function(self, parent)
 	self.tab_root = self.root:AddChild(Widget("tab_root"))
 
 	self.backdrop = self.root:AddChild(Image("images/plantregistry.xml", "backdrop.tex"))
+
+	if not ThePlantRegistry:ApplyOnlineProfileData() then
+		local msg = (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) and STRINGS.UI.PLANTREGISTRY.ONLINE_DATA_USER_OFFLINE or STRINGS.UI.PLANTREGISTRY.ONLINE_DATA_DOWNLOAD_FAILED
+		self.sync_status = self.root:AddChild(Text(HEADERFONT, 18, msg, UICOLOURS.GREY))
+		self.sync_status:SetPosition(0, -285)
+	end
 
 	local base_size = .7
 

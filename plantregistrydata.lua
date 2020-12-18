@@ -154,7 +154,7 @@ function PlantRegistryData:ApplyOnlineProfileData()
 			elseif string.sub(k, 1, 10) == "oversized_" then
 				local success, savedata
 				if v and type(v) == "string" then
-					success, savedata = RunInSandbox(TheSim:DecodeAndUnzipString(data.str))
+					success, savedata = RunInSandbox(TheSim:DecodeAndUnzipString(v))
 				end
 				self.pictures[string.sub(k, 11)] = success and savedata or nil
 			end
