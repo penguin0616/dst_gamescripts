@@ -1,5 +1,23 @@
 local function OnCollide(inst, other, world_position_on_a_x, world_position_on_a_y, world_position_on_a_z, world_position_on_b_x, world_position_on_b_y, world_position_on_b_z, world_normal_on_b_x, world_normal_on_b_y, world_normal_on_b_z, lifetime_in_frames)
     if other ~= nil and other:IsValid() and (other == TheWorld or other:HasTag("BLOCKER") or other.components.boatphysics) and lifetime_in_frames <= 1 then
+
+        if inst.invalid_collision_remove then
+            return
+        end
+
+        --vertical collision, destroy the boat and early out to prevent NaN save corruption.
+        if world_normal_on_b_x == 0 and world_normal_on_b_z == 0 then
+            if world_normal_on_b_y ~= 0 then
+                inst.invalid_collision_remove = true
+                if inst.components.health then
+                    inst.components.health:Kill()
+                else
+                    inst:Remove()
+                end
+            end
+            return
+        end
+
         local boat_physics = inst.components.boatphysics
         
         -- Prevent multiple collisions with the same object in very short time periods ---------

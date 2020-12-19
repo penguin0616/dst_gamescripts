@@ -790,6 +790,21 @@ function SaveGame(isshutdown, cb)
     local PRETTY_PRINT = BRANCH == "dev"
     local data = DataDumper(save, nil, not PRETTY_PRINT)
 
+    local patterns
+    if BRANCH == "dev" then
+        patterns = {"=nan", "=-nan", "=inf", "=-inf"}
+    else
+        patterns = {"=-1#.IND", "=1.#QNAN", "=1.#INF", "=-1.#INF"}
+    end
+    for i, corrupt_pattern in ipairs(patterns) do
+        local found = string.find(data, corrupt_pattern, 1, true)
+        if found ~= nil then
+            print(string.sub(data, found - 100, found + 50))
+            error("Error saving game, corruption detected.")
+        end
+    end
+
+
     local function callback()
         if isshutdown or #AllPlayers <= 0 then
             TheNet:TruncateSnapshots(save.meta.session_identifier)

@@ -74,10 +74,9 @@ end
 
 local function _OnHeavyLiftingDirty(inst, classified)
     if inst ~= nil and inst.components.playeractionpicker ~= nil then
+        inst.components.playeractionpicker:PopActionFilter(HeavyLiftingActionFilter)
         if classified.heavylifting:value() then
             inst.components.playeractionpicker:PushActionFilter(HeavyLiftingActionFilter, 10)
-        else
-            inst.components.playeractionpicker:PopActionFilter(HeavyLiftingActionFilter)
         end
     end
 end

@@ -1065,8 +1065,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1076,8 +1075,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1087,8 +1085,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1098,8 +1095,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1109,8 +1105,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1120,8 +1115,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1131,8 +1125,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -1142,8 +1135,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", "BLACK", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "ProofOfPurchase",
 		release_group = 110,
@@ -1152,8 +1144,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "CLOTHING_BODY", "CLOTHING", "PINK", },
-		symbol_overrides = { "torso", "arm_upper", "arm_lower", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "torso", "arm_upper", "arm_upper_skin", "arm_lower", },
 		torso_tuck = "untucked",
 		rarity = "ProofOfPurchase",
 		release_group = 110,

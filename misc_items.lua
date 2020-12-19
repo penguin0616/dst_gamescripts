@@ -4416,7 +4416,7 @@ MISC_ITEMS =
 	playerportrait_bg_wardrobeyule =
 	{
 		type = "playerportrait",
-		skin_tags = { "WINTER", "PLAYERPORTRAIT", },
+		skin_tags = { "YULE", "PLAYERPORTRAIT", },
 		rarity = "Loyal",
 		release_group = 110,
 	},
@@ -5892,7 +5892,7 @@ MISC_ITEMS =
 	profileflair_wardrobe_yule =
 	{
 		type = "profileflair",
-		skin_tags = { "WINTER", "PROFILEFLAIR", },
+		skin_tags = { "YULE", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 110,
 	},
