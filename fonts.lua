@@ -24,14 +24,9 @@ local CONTROLLERS = "controllers"
 local EMOJIFONT = "emoji"
 
 FALLBACK_FONT = "fallback_font"
-FALLBACK_FONT2 = "fallback_font2"
-FALLBACK_FONT3 = "fallback_font3"
-FALLBACK_FONT4 = "fallback_font4"
+FALLBACK_FONT_FULL = "fallback_font_full"
 FALLBACK_FONT_OUTLINE = "fallback_font_outline"
-FALLBACK_FONT_OUTLINE2 = "fallback_font_outline2"
-FALLBACK_FONT_OUTLINE3 = "fallback_font_outline3"
-FALLBACK_FONT_OUTLINE4 = "fallback_font_outline4"
-
+FALLBACK_FONT_FULL_OUTLINE = "fallback_font_full_outline"
 
 require "translator"
 
@@ -54,18 +49,14 @@ DEFAULT_FALLBACK_TABLE = {
 	EMOJIFONT,
 	CONTROLLERS,
 	FALLBACK_FONT,
-	FALLBACK_FONT2,
-	FALLBACK_FONT3,
-	FALLBACK_FONT4,
+	FALLBACK_FONT_FULL,
 }
 
 DEFAULT_FALLBACK_TABLE_OUTLINE = {
 	EMOJIFONT,
 	CONTROLLERS,
 	FALLBACK_FONT_OUTLINE,
-	FALLBACK_FONT_OUTLINE2,
-	FALLBACK_FONT_OUTLINE3,
-	FALLBACK_FONT_OUTLINE4,
+	FALLBACK_FONT_FULL_OUTLINE,
 }
 
 FONTS = {
@@ -90,16 +81,8 @@ FONTS = {
 	{ filename = "fonts/controllers"..font_posfix..".zip", alias = CONTROLLERS, disable_color = true},
 	{ filename = "fonts/emoji"..font_posfix..".zip", alias = EMOJIFONT, disable_color = true},
 
-	{ filename = "fonts/fallback_1"..font_posfix..".zip", alias = FALLBACK_FONT},
-	{ filename = "fonts/fallback_2"..font_posfix..".zip", alias = FALLBACK_FONT2},
-	{ filename = "fonts/fallback_3"..font_posfix..".zip", alias = FALLBACK_FONT3},
-	{ filename = "fonts/fallback_4"..font_posfix..".zip", alias = FALLBACK_FONT4},
-
-	{ filename = "fonts/fallback_outline_1"..font_posfix..".zip", alias = FALLBACK_FONT_OUTLINE},
-	{ filename = "fonts/fallback_outline_2"..font_posfix..".zip", alias = FALLBACK_FONT_OUTLINE2},
-	{ filename = "fonts/fallback_outline_3"..font_posfix..".zip", alias = FALLBACK_FONT_OUTLINE3},
-	{ filename = "fonts/fallback_outline_4"..font_posfix..".zip", alias = FALLBACK_FONT_OUTLINE4},
-
---	{ filename = "fonts/fallback_full_packed"..font_posfix..".zip", alias = FALLBACK_FONT},
---	{ filename = "fonts/fallback_full_outline_packed"..font_posfix..".zip", alias = FALLBACK_FONT_OUTLINE},
+	{ filename = "fonts/fallback"..font_posfix..".zip", alias = FALLBACK_FONT},
+	{ filename = "fonts/fallback_full_packed"..font_posfix..".zip", alias = FALLBACK_FONT_FULL},
+	{ filename = "fonts/fallback_outline"..font_posfix..".zip", alias = FALLBACK_FONT_OUTLINE},
+	{ filename = "fonts/fallback_full_outline_packed"..font_posfix..".zip", alias = FALLBACK_FONT_FULL_OUTLINE},
 }

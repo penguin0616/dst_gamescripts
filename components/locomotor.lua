@@ -262,7 +262,7 @@ function LocoMotor:OnRemoveFromEntity()
         self.inst:RemoveTag("locomotor")
 
 		for ground_tile, _ in pairs(self.faster_on_tiles) do
-			inst:RemoveTag("turfrunner_"..tostring(ground_tile))
+			self.inst:RemoveTag("turfrunner_"..tostring(ground_tile))
 		end
     end
 end

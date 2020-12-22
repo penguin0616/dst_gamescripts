@@ -45,7 +45,7 @@ function Armor:AddWeakness(tag, bonus_damage)
     if bonus_damage <= 0 then
         self:RemoveWeakness(tag)
     elseif self.weakness == nil then
-        self.weakness = { tag = bonus_damage }
+        self.weakness = { [tag] = bonus_damage }
     else
         self.weakness[tag] = bonus_damage
     end

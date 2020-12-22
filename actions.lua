@@ -1757,7 +1757,7 @@ ACTIONS.EXTINGUISH.fn = function(act)
             act.target.components.burnable:Extinguish()
         end
         return true
-    elseif act.target.components.fueled.canbespecialextinguished and act.target.components.fueled ~= nil and not act.target.components.fueled:IsEmpty() then
+    elseif act.target.components.fueled ~= nil and act.target.components.fueled.canbespecialextinguished and not act.target.components.fueled:IsEmpty() then
         act.target.components.fueled:ChangeSection(-1)
     end
 end
