@@ -46,7 +46,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
 
     MakeObstaclePhysics(inst, 2.5)
-    inst.Physics:SetCylinder(2.35, 6)
+    inst.Physics:SetCylinder(1.8, 6)
 
     inst.MiniMapEntity:SetIcon("pillar_archive.png")
 

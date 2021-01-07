@@ -197,6 +197,7 @@ PREFABFILES = {
   "deerclops_laser",
   "deerspawningground",
   "dirtpile",
+  "diseaseflies",
   "diviningrod",
   "diviningrodbase",
   "dragon_scales",
