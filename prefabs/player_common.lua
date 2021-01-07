@@ -1467,7 +1467,12 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:SetBank("wilson")
         --We don't need to set the build because we'll rely on the skinner component to set the appropriate build/skin
         --V2C: turns out we do need to set the build for debug spawn
-        inst.AnimState:SetBuild(name)
+        if IsRestrictedCharacter(name) then
+            --Peter: We can't set the standard build on a restricted character until after full spawning occurs and then the spinner will handle it, but we still want to give it a default build for cases vito's debug c_spawn cases
+            inst.AnimState:SetBuild("wilson")
+        else
+            inst.AnimState:SetBuild(name)
+        end
         inst.AnimState:PlayAnimation("idle")
 
         inst.AnimState:Hide("ARM_carry")
@@ -1499,7 +1504,6 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_boat_net")        
         inst.AnimState:AddOverrideBuild("player_boat_sink")
         inst.AnimState:AddOverrideBuild("player_oar")
-        inst.AnimState:AddOverrideBuild("player_actions_reading")
 
         inst.AnimState:AddOverrideBuild("player_actions_fishing_ocean_new")
         inst.AnimState:AddOverrideBuild("player_actions_farming")

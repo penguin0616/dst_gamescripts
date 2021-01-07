@@ -250,11 +250,14 @@ local function PlantTick(inst)
 					or 1
 					
 	if chance < 1 and math.random() > chance then
-	print("skipped chance", chance)
 		return
 	end
 
     local x, y, z = inst.Transform:GetWorldPosition()
+	if TheWorld.Map:GetPlatformAtPoint(x, z) ~= nil then
+		return
+	end
+
     if #TheSim:FindEntities(x, y, z, PLANTS_RANGE, PLANTFX_TAGS) < MAX_PLANTS then
         local map = TheWorld.Map
         local pt = Vector3(0, 0, 0)
@@ -265,13 +268,7 @@ local function PlantTick(inst)
             function(offset)
                 pt.x = x + offset.x
                 pt.z = z + offset.z
-                local tile = map:GetTileAtPoint(pt:Get())
-                return tile ~= GROUND.ROCKY
-                    and tile ~= GROUND.ROAD
-                    and tile ~= GROUND.WOODFLOOR
-                    and tile ~= GROUND.CARPET
-                    and tile ~= GROUND.IMPASSABLE
-                    and tile ~= GROUND.INVALID
+                return map:CanPlantAtPoint(pt.x, 0, pt.z)
                     and #TheSim:FindEntities(pt.x, 0, pt.z, .5, PLANTFX_TAGS) < 3
                     and map:IsDeployPointClear(pt, nil, .5)
                     and not map:IsPointNearHole(pt, .4)

@@ -16,6 +16,8 @@ local prefabs =
 {
     "cutgrass",
     "dug_grass",
+    "disease_puff",
+    "diseaseflies",
     "spoiled_food",
     "grassgekko",
     "grasspartfx",

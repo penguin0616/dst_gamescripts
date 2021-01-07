@@ -230,7 +230,6 @@ local function check_piece(inst, piece)
 end
 
 local function check_pieceastral(inst, piece)
-    print("CHECK PIECE",inst._stage , piece.prefab)
     if (inst._stage == 1 and piece.prefab == "moon_altar_ward") then
         return true
     else

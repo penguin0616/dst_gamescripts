@@ -563,10 +563,10 @@ local function MoonFissures()
 		for i, ent in ipairs(options) do
 			local pos = Vector3(ent.Transform:GetWorldPosition())
 			local startangle = math.random()*PI*2
-			local offset_a = FindWalkableOffset(pos, startangle, 12, 12, true, true)
+			local offset_a = FindWalkableOffset(pos, startangle, 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true) 
 			local offset_b = nil
-			if offset_a.x and offset_a.z then
-				offset_b = FindWalkableOffset(pos, startangle+(PI/3), 12, 12, true, true)
+			if offset_a then
+				offset_b = FindWalkableOffset(pos, startangle+(PI/3), 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true) 
 			end
 			if offset_b then
 				local fissure_1 = SpawnPrefab("moon_fissure")

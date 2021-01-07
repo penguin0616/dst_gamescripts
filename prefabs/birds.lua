@@ -78,11 +78,20 @@ local function SpawnPrefabChooser(inst)
     for i, player in ipairs(players) do
         if player.components.age ~= nil then
             local playerage = player.components.age:GetAgeInDays()
-            if playerage >= 3 then
-                return ChooseSeeds()
-            elseif playerage > oldestplayer then
+            if playerage > oldestplayer then
                 oldestplayer = playerage
             end
+        end
+    end
+
+    if oldestplayer >= 3 then
+        local year = TheWorld.state.autumnlength + TheWorld.state.winterlength + TheWorld.state.springlength + TheWorld.state.summerlength
+        if oldestplayer <= TheWorld.state.autumnlength then
+            return ChooseSeeds()
+        elseif oldestplayer <= year then
+            return math.random() <= 0.8 and ChooseSeeds() or nil
+        else
+            return math.random() <= 0.6 and ChooseSeeds() or nil
         end
     end
 

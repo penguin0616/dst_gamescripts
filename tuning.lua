@@ -1504,7 +1504,8 @@ function Tune(overrides)
 
         REEDS_REGROW_TIME = total_day_time*3,
 
-        CROW_LEAVINGS_CHANCE = .3333,
+        BIRD_LEAVINGS_CHANCE = 0.2,
+        CROW_LEAVINGS_CHANCE = 0.3333,
         BIRD_TRAP_CHANCE = 0.025,
         BIRD_HEALTH = 25*multiplayer_attack_modifier,
         BIRD_PERISH_TIME = total_day_time * 5,

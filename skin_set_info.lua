@@ -84,6 +84,44 @@ return
 			"body_winona_ice",
 			"hand_winona_ice",
 		},
+		{
+			"wathgrithr_yule",
+			"body_wathgrithr_yule",
+			"feet_wathgrithr_yule",
+			"hand_wathgrithr_yule",
+		},
+		{
+			"waxwell_yule",
+			"body_waxwell_yule",
+			"hand_waxwell_yule",
+			"legs_waxwell_yule",
+		},
+		{
+			"wes_yule",
+			"body_wes_yule",
+			"feet_wes_yule",
+			"hand_wes_yule",
+			"legs_wes_yule",
+		},
+		{
+			"winona_yule",
+			"body_winona_yule",
+			"hand_winona_yule",
+			"legs_winona_yule",
+		},
+		{
+			"woodie_yule",
+			"body_woodie_yule",
+			"hand_woodie_yule",
+			"legs_woodie_yule",
+		},
+		{
+			"wx78_yule",
+			"body_wx78_yule",
+			"feet_wx78_yule",
+			"hand_wx78_yule",
+			"legs_wx78_yule",
+		},
 	},
 	emote_fistshake =
 	{

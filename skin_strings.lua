@@ -4183,7 +4183,7 @@ STRINGS.SET_NAMES =
 {
 	body_ugly_winterhat_black_davys = "Black Winter Hat Ensemble",
 	body_ugly_winterhat_pink_hibiscus = "Pink Winter Hat Ensemble",
-	emote_carol = "Snowfallen Ensemble",
+	emote_carol = "Caroler's Ensemble",
 	emote_fistshake = "Forge Set Ensemble",
 	emote_sleepy = "Sleepytime Ensemble",
 	emote_yawn = "Yawny Jammies Ensemble",

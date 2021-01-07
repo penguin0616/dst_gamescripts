@@ -237,7 +237,7 @@ local states =
             inst.DynamicShadow:Enable(false)
             inst.SoundEmitter:PlaySound(inst.sounds.takeoff)
 
-            if inst.components.periodicspawner ~= nil and math.random() <= TUNING.CROW_LEAVINGS_CHANCE then
+            if inst.components.periodicspawner ~= nil and math.random() <= TUNING.BIRD_LEAVINGS_CHANCE then
                 inst.components.periodicspawner:TrySpawn()
             end
 

@@ -1961,7 +1961,8 @@ function EntityScript:CollectActions(actiontype, ...)
     end
     if self.modactioncomponents ~= nil then
         for modname, cmplist in pairs(self.modactioncomponents) do
-            t = CheckModComponentActions(self, modname)[actiontype]
+            t = CheckModComponentActions(self, modname)
+            t = t and t[actiontype] or nil
             if t ~= nil then
                 local namemap = CheckModComponentNames(self, modname)
                 for i, v in ipairs(cmplist) do
@@ -1988,7 +1989,8 @@ function EntityScript:IsActionValid(action, right)
     end
     if self.modactioncomponents ~= nil then
         for modname, cmplist in pairs(self.modactioncomponents) do
-            t = CheckModComponentActions(self, modname).ISVALID
+            t = CheckModComponentActions(self, modname)
+            t = t and t.ISVALID or nil
             if t ~= nil then
                 local namemap = CheckModComponentNames(self, modname)
                 for i, v in ipairs(cmplist) do
