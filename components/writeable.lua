@@ -14,12 +14,14 @@ end
 --V2C: NOTE: do not add "writeable" tag to pristine state because it is more
 --           likely for players to encounter signs that are already written.
 local function ontextchange(self, text)
-    if text ~= nil then
-        self.inst:RemoveTag("writeable")
-        self.inst.AnimState:Show("WRITING")
-    else
-        self.inst:AddTag("writeable")
-        self.inst.AnimState:Hide("WRITING")
+    if self.writeable_by_default then
+        if text ~= nil then
+            self.inst:RemoveTag("writeable")
+            self.inst.AnimState:Show("WRITING")
+        else
+            self.inst:AddTag("writeable")
+            self.inst.AnimState:Hide("WRITING")
+        end
     end
 end
 
@@ -27,8 +29,18 @@ local function onwriter(self, writer)
     self.inst.replica.writeable:SetWriter(writer)
 end
 
+local function onautodescribechanged(self, new_ad, old_ad)
+    if new_ad then
+        self.inst.components.inspectable.getspecialdescription = gettext
+    else
+        self.inst.components.inspectable.getspecialdescription = nil
+    end
+end
+
 local Writeable = Class(function(self, inst)
     self.inst = inst
+
+    self.writeable_by_default = true
     self.text = nil
 
     self.writer = nil
@@ -42,14 +54,20 @@ local Writeable = Class(function(self, inst)
 
     self.generatorfn = nil
 
-    inst.components.inspectable.getspecialdescription = gettext
+    self.automatic_description = true
+
+    self.writeable_distance = 3
 
     self.inst:ListenForEvent("onbuilt", onbuilt)
+
+    --self.onwritten = nil
+    --self.onwritingended = nil
 end,
 nil,
 {
     text = ontextchange,
     writer = onwriter,
+    automatic_description = onautodescribechanged,
 })
 
 
@@ -76,6 +94,14 @@ function Writeable:OnLoad(data)
 	end
 end
 
+function Writeable:SetOnWrittenFn(fn)
+    self.onwritten = fn
+end
+
+function Writeable:SetOnWritingEndedFn(fn)
+    self.onwritingended = fn
+end
+
 function Writeable:GetText(viewer)
 	if IsXB1() then
 		if self.text and self.netid then
@@ -87,6 +113,30 @@ end
 
 function Writeable:SetText(text)
     self.text = text
+end
+
+function Writeable:SetAutomaticDescriptionEnabled(ad_enabled)
+    self.automatic_description = ad_enabled
+end
+
+function Writeable:SetDefaultWriteable(writeable_by_default)
+    if writeable_by_default and not self.writeable_by_default then
+        if self.text ~= nil then
+            self.inst:RemoveTag("writeable")
+            self.inst.AnimState:Show("WRITING")
+        else
+            self.inst:AddTag("writeable")
+            self.inst.AnimState:Hide("WRITING")
+        end
+    elseif not writeable_by_default and self.writeable_by_default then
+        self.inst:RemoveTag("writeable")
+        self.inst.AnimState:Hide("WRITING")
+    end
+    self.writeable_by_default = writeable_by_default
+end
+
+function Writeable:SetWriteableDistance(dist)
+    self.writeable_distance = dist
 end
 
 function Writeable:BeginWriting(doer)
@@ -120,6 +170,11 @@ function Writeable:Write(doer, text)
 			text = TheSim:ApplyWordFilter(text)
 		end
         self:SetText(text)
+
+        if self.onwritten ~= nil then
+            self.onwritten(self.inst, text, doer)
+        end
+
         self:EndWriting()
     end
 end
@@ -150,6 +205,10 @@ function Writeable:EndWriting()
 			end
 		end
 
+        if self.onwritingended ~= nil then
+            self.onwritingended(self.inst)
+        end
+
         self.writer = nil
     elseif self.screen ~= nil then
         --Should not have screen and no writer, but just in case...
@@ -157,6 +216,10 @@ function Writeable:EndWriting()
             self.screen:Kill()
         end
         self.screen = nil
+
+        if self.onwritingended ~= nil then
+            self.onwritingended(self.inst)
+        end
     end
 end
 
@@ -169,7 +232,7 @@ function Writeable:OnUpdate(dt)
         self.inst:StopUpdatingComponent(self)
     elseif (self.writer.components.rider ~= nil and
             self.writer.components.rider:IsRiding())
-        or not (self.writer:IsNear(self.inst, 3) and
+        or not (self.writer:IsNear(self.inst, self.writeable_distance) and
                 CanEntitySeeTarget(self.writer, self.inst)) then
         self:EndWriting()
     end

@@ -17,6 +17,7 @@ return{
 			GENERIC = "Unshaveworthy.",
 			NOBITS = "But there's nothing to trim!",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "This beast doth not belong to me.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "That's where I keep all my favorite furs and pelts.",
             BURNING = "Gasp! My furs!",
             INUSE = "I shall let them select their garments first.",
+            NOTENOUGHHAIR = "First the beast must grow back its mane.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "Nary a drop left.",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "I cannot.",
+            BEEF_BELL_ALREADY_USED = "That beast belongs to another.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "I've already chosen my beast.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "I have a hitching post, but no beast.",
+            NEEDBEEF_CLOSER = "I shall have to coax the beast closer.",
+            BEEF_HITCHED = "The beast hath already been secured to its post.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "I must stand by my choice, even in the heat of competition!",
+            NOT_PARTICIPANT = "I cannot join in the competition without a beastie of my own.",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Where is he hiding?",
+            ALREADYACTIVE = "Mayhaps there is another competition elsewhere.",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "This is known to me.",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
 	ANNOUNCE_BOAT_LEAK = "Our vessel hath sprung a leak!",
@@ -632,6 +664,11 @@ return{
         "No fearsome warrior should be caught talking to plants.",
         "I should be hunting, not gardening!",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "To me, beastie!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "'Tis too far from the festivities!",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Aha! A new plan has revealed itself before mine eyes!",
 
 	BATTLECRY =
 	{
@@ -1292,6 +1329,7 @@ return{
             ORNERY = "The noble steed of a mighty warrior!",
             RIDER = "With the stalwart beast at my side, we ride tonight!",
             PUDGY = "My mouth's watering just looking at it...",
+            MYPARTNER = "A proud an noble beast, bonded to a proud and noble warrior.",
 		},
 
 		BEEFALOHAT = "That would suit me.",
@@ -1478,7 +1516,7 @@ return{
 		COOKEDMANDRAKE = "She's definitely dead.",
 		COOKEDMEAT = "Meeeat!",
 		COOKEDMONSTERMEAT = "Monster beast steak.",
-		COOKEDSMALLMEAT = "Yum, yum, meat snacks.",        
+		COOKEDSMALLMEAT = "Yum, yum, meat snacks.",
 		COOKPOT =
 		{
 			COOKING_LONG = "Might as well do something whilst I wait.",
@@ -2540,6 +2578,21 @@ return{
             CARRAT_GOOD = "This beast will serve me well in the coming battle.",
             BURNT = "Naught but ash.",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "My offering seems to have pleased the gods.",
+            EMPTY = "It requires a sacrifice.",
+            BURNT = "I hope the gods did not see that...",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "Preparing for the stage is nearly as exhilarating as preparing for battle!",
+            OCCUPIED = "This beastie is ready for its dress rehearsal.",
+            BURNT = "The show must go on!",
+        },
+        BEEFALO_GROOMER_ITEM = "I must prepare!",
 
 		BISHOP_CHARGE_HIT = "Rrraugh!",
 		TRUNKVEST_SUMMER = "It will not suffice in the frozen wastes.",
@@ -3668,7 +3721,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "A barrel of stink.",
             WET = "Soggy muck.",
             DRY = "It's so dry it's nearly dust.",
@@ -3715,7 +3767,7 @@ return{
 		{
 			GENERIC = "Vile veggies! Bring out the best among you to be judged!",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nI care not.",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\n'Tis vile, but robust.",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\n'Tis vile, but robust.",
             HAS_ITEM_LIGHT = "Ha! The machine does not even deem it worthy enough to reveal its weight!",
 			BURNING = "It hath been set ablaze!",
 			BURNT = "T'was of little use anyway.",
@@ -3750,14 +3802,77 @@ return{
 			FULL_WEED = "Weed, vegetable or fruit, all are the same to me.",
 
 			BURNING = "Good riddance.",
-        },
-        
+		},
+
         FRUITFLY = "Intruder! Taste my blade!",
         LORDFRUITFLY = "Thou art no lord!",
         FRIENDLYFRUITFLY = "It seems this one is not an enemy.",
         FRUITFLYFRUIT = "Now I am chieftain of the wee winged garden beasts!",
 
         SEEDPOUCH = "For carrying worthless seeds.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "The competition will be fierce, thus my beast's outfits must be fiercer!",
+        YOTB_SEWINGMACHINE_ITEM = "Quickly, the competition awaits!",
+        YOTB_STAGE = "The lair of our judge.",
+        YOTB_POST =  "Now to present my beast for all to see!",
+        YOTB_STAGE_ITEM = "Where to set the battleground of competition...",
+        YOTB_POST_ITEM =  "It shall be raised forthwith!",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Tis but a fragment of a complete pattern.",
+        YOTB_PATTERN_FRAGMENT_2 = "Tis but a fragment of a complete pattern.",
+        YOTB_PATTERN_FRAGMENT_3 = "Tis but a fragment of a complete pattern.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "A stuffed effigy of a valiant steed!",
+            YOTB = "Mayhaps the judge would like to look upon it.",
+        },
+
+
+        WAR_BLUEPRINT = "Garb befitting a warrior's steed!",
+        DOLL_BLUEPRINT = "Who would wear this into battle?",
+        FESTIVE_BLUEPRINT = "The bright colors could be useful for distracting enemies.",
+        ROBOT_BLUEPRINT = "Armor of iron for my steed!",
+        NATURE_BLUEPRINT = "Flowers won't protect you in battle!",
+        FORMAL_BLUEPRINT = "My fearsome steed has no use for such a thing!",
+        VICTORIAN_BLUEPRINT = "Odd looking armor for a beast...",
+        ICE_BLUEPRINT = "My beast will not fear the cold.",
+        BEAST_BLUEPRINT = "No luck is needed for one who's skilled in battle.",
+
+        BEEF_BELL = "This bell commands loyalty from the woolen beasts.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

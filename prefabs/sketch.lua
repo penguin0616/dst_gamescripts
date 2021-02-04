@@ -23,6 +23,7 @@ local SKETCHES =
     { item = "chesspiece_anchor",       recipe = "chesspiece_anchor_builder",       image = "chesspiece_anchor_sketch" },
     { item = "chesspiece_moon",         recipe = "chesspiece_moon_builder",         image = "chesspiece_moon_sketch" },
     { item = "chesspiece_carrat",       recipe = "chesspiece_carrat_builder",       image = "chesspiece_carrat_sketch" },
+    { item = "chesspiece_beefalo",      recipe = "chesspiece_beefalo_builder",      image = "chesspiece_beefalo_sketch" },
     { item = "chesspiece_malbatross",   recipe = "chesspiece_malbatross_builder" },
     { item = "chesspiece_crabking",     recipe = "chesspiece_crabking_builder" },
 -- Note: The index is saved, always add to the end of the list! and never reorder!

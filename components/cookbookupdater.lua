@@ -20,11 +20,9 @@ function CookbookUpdater:LearnRecipe(product, ingredients)
 
 		-- Servers will only tell the clients if this is a new recipe in this world
 		-- Since the servers do not know the client's actual cookbook data, this is the best we can do for reducing the amount of data sent
-		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) then
-			if self.inst.player_classified ~= nil then
-				self.inst.player_classified.cookbook_product:set(product..":"..table.concat(ingredients, ","))
-				-- TODO: Handle ingredients
-			end
+		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) and self.inst.userid then
+			--can't send tables via rpc, so unpack the table before sending.
+			SendRPCToClient(CLIENT_RPC.LearnRecipe, self.inst.userid, product, unpack(ingredients))
 		end
 	end
 end
@@ -35,10 +33,8 @@ function CookbookUpdater:LearnFoodStats(product)
 
 	-- Servers will only tell the clients if this is a new recipe in this world
 	-- Since the servers do not know the client's actual cookbook data, this is the best we can do for reducing the amount of data sent
-	if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) then
-		if self.inst.player_classified ~= nil then
-			self.inst.player_classified.cookbook_learnstats:set(product)
-		end
+	if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) and self.inst.userid then
+		SendRPCToClient(CLIENT_RPC.LearnFoodStats, self.inst.userid, product)
 	end
 end
 

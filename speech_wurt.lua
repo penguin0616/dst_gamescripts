@@ -17,6 +17,7 @@ return{
 			GENERIC = "Nope.",
 			NOBITS = "No fluffs left to take.",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "Would probably get in trouble...",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "Don't wanna, florp.",
             BURNING = "Nope!",
             INUSE = "Gotta wait...",
+            NOTENOUGHHAIR = "Big fuzzy not fuzzy enough!",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "No water left!",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "Won't work!",
+            BEEF_BELL_ALREADY_USED = "Huh? Maybe belong to someone else...",
+            BEEF_BELL_HAS_BEEF_ALREADY = "Have big fuzzy already, florpt!",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "Don't have any big fuzzy...",
+            NEEDBEEF_CLOSER = "Big fuzzy too far away.",
+            BEEF_HITCHED = "Stay there, florp!",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "Yeah! This the one!",
+            NOT_PARTICIPANT = "When is next contest?! Want turn!!",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Huh? Where is contest??",
+            ALREADYACTIVE = "Maybe he doing secret contest somewhere else...",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Glurgh, know it already!",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "Grrr... can't do it, florpt.",
 	ANNOUNCE_BOAT_LEAK = "Yay! Boat getting wetter!",
@@ -394,10 +426,10 @@ return{
 	ANNOUNCE_TOADESCAPED = "Come back toad!!",
 
 
-	ANNOUNCE_DAMP = "Bit soggy...",
-	ANNOUNCE_WET = "Feel too soggy now...",
-	ANNOUNCE_WETTER = "Too wet... even for Mermfolk, florp.",
-	ANNOUNCE_SOAKED = "Is too much water! Too much!",
+	ANNOUNCE_DAMP = "Ahh... wetter feel better, florp!",
+	ANNOUNCE_WET = "Mermfolk love water, florp!",
+	ANNOUNCE_WETTER = "Feels good on scales!",
+	ANNOUNCE_SOAKED = "Aaah, splish-splash!",
 
 	ANNOUNCE_WASHED_ASHORE = "Had good swim!",
 
@@ -632,6 +664,11 @@ return{
         "You gonna grow up big and tasty!",
         "Hey, you listening?",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "HEY! Come here!!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Too far away, flort.",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Yay! New dress-up thing!",
 
 	BATTLECRY =
 	{
@@ -1292,6 +1329,7 @@ return{
             ORNERY = "Don't be mad!!",
             RIDER = "Wanna ride!",
             PUDGY = "Big fuzzy look extra big.",
+            MYPARTNER = "Is my friend! MINE!",
 		},
 
 		BEEFALOHAT = "Bigger horns!!",
@@ -1478,7 +1516,7 @@ return{
 		COOKEDMANDRAKE = "Feel bit weird eating veggie with face, florp.",
 		COOKEDMEAT = "Don't want it, florp.",
 		COOKEDMONSTERMEAT = "Gluuurrrgh.",
-		COOKEDSMALLMEAT = "Won't eat it, flurp.",        
+		COOKEDSMALLMEAT = "Won't eat it, flurp.",
 		COOKPOT =
 		{
 			COOKING_LONG = "This take foreverrr...",
@@ -2540,6 +2578,21 @@ return{
             CARRAT_GOOD = "Gonna be good racer, florp!",
             BURNT = "Didn't do it!",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Gimme stuff!",
+            EMPTY = "Hmm... what it need?",
+            BURNT = "Glurgh... now gotta build another one...",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "Oooooooh!!",
+            OCCUPIED = "Gonna make you soooo pretty!",
+            BURNT = "Aww...",
+        },
+        BEEFALO_GROOMER_ITEM = "Buildy pieces.",
 
 		BISHOP_CHARGE_HIT = "GLOP!",
 		TRUNKVEST_SUMMER = "Wearing a nose!",
@@ -3668,7 +3721,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Look like nice warm place to nap.",
             WET = "Gooshy.",
             DRY = "Glurgh, is too dry.",
@@ -3715,7 +3767,7 @@ return{
 		{
 			GENERIC = "Mine gonna win!",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nMaybe take teeny little bite...",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nWanna eat it... anyone looking, florp?",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nWanna eat it... anyone looking, florp?",
             HAS_ITEM_LIGHT = "Hey! Why it not working, florp?",
 			BURNING = "Aaah! Who did it?!",
 			BURNT = "Aww...",
@@ -3750,14 +3802,77 @@ return{
 			FULL_WEED = "It a weed!",
 
 			BURNING = "Glurp! Fire!",
-        },
-        
+		},
+
         FRUITFLY = "Nasty bug! Go away!",
         LORDFRUITFLY = "Grrr, go away! Those plants mine!",
         FRIENDLYFRUITFLY = "It seem ok. Will keep eye on it though, florpt.",
         FRUITFLYFRUIT = "Come with me fruit bug!",
 
         SEEDPOUCH = "Stuff seeds inside.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "Make fancy dress-up things!",
+        YOTB_SEWINGMACHINE_ITEM = "Bits of things.",
+        YOTB_STAGE = "Has weird scale-less hiding inside.",
+        YOTB_POST =  "Big fancy stick.",
+        YOTB_STAGE_ITEM = "Someone left stuff on ground.",
+        YOTB_POST_ITEM =  "Mermfolk great at building.",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Hey, where the rest?",
+        YOTB_PATTERN_FRAGMENT_2 = "Hey, where the rest?",
+        YOTB_PATTERN_FRAGMENT_3 = "Hey, where the rest?",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "Too soft, florp. Rips on claws too easy.",
+            YOTB = "Should show to weird scale-less hiding in tent!",
+        },
+
+
+        WAR_BLUEPRINT = "Hee-hee good and scary!",
+        DOLL_BLUEPRINT = "Look kind of creepy...",
+        FESTIVE_BLUEPRINT = "Big fuzzy gonna look so good in this!",
+        ROBOT_BLUEPRINT = "Make big fuzzy look like Ironfolk?",
+        NATURE_BLUEPRINT = "Glurgh... this one ugly...",
+        FORMAL_BLUEPRINT = "Ooooh, all fancy.",
+        VICTORIAN_BLUEPRINT = "Scale-less sure dress weird, florp.",
+        ICE_BLUEPRINT = "Don't want big fuzzy to get cold.",
+        BEAST_BLUEPRINT = "Awww, big fuzzy wanna have scales too?",
+
+        BEEF_BELL = "Big fuzzies really like bell.",
     },
 
     DESCRIBE_GENERIC = "What that?",

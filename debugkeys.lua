@@ -86,13 +86,15 @@ AddGlobalDebugKey(KEY_F1, function()
         if c_sel() ~= nil then
             if c_sel().prefab == "beefalo" then
                 c_sel():DoPeriodicTask(1, function(inst) 
+                    --[[]
 					if inst.components.domesticatable ~= nil then
 						print("Tendencies:",
 							"default", inst.components.domesticatable.tendencies.DEFAULT or 'nil',
 							"ornery", inst.components.domesticatable.tendencies.ORNERY or 'nil',
 							"rider", inst.components.domesticatable.tendencies.RIDER or 'nil',
-							"pudgy", inst.components.domesticatable.tendencies.PUDGY or 'nil')
+							"pudgy", inst.components.domesticatable.tendencies.PUDGY or 'nil')                     
 					end 
+                    ]]
 				end)
             elseif c_sel():HasTag("player") then
                 c_sel():ListenForEvent("onattackother", function(inst)

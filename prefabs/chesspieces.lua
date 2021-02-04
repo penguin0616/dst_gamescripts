@@ -34,6 +34,7 @@ local PIECES =
     {name="anchor",     moonevent=false},
     {name="moon",       moonevent=false},
     {name="carrat",     moonevent=false},
+    {name="beefalo",    moonevent=false},    
     {name="crabking",   moonevent=false},
     {name="malbatross", moonevent=false},
     {name="toadstool",	moonevent=false},

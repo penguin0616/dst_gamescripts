@@ -3838,7 +3838,7 @@ CLOTHING =
 		type = "feet",
 		skin_tags = { "LUNAR", "CLOTHING_FEET", "CLOTHING", "WHITE", },
 		symbol_overrides = { "foot", },
-		rarity = "Event",
+		rarity = "Loyal",
 		feet_cuff_size = 3,
 		release_group = 23,
 	},

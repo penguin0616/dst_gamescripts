@@ -6,6 +6,7 @@ local assets =
     Asset("ANIM", "anim/merm_actions.zip"),
     Asset("ANIM", "anim/merm_guard_transformation.zip"),    
     Asset("ANIM", "anim/ds_pig_boat_jump.zip"),
+    Asset("ANIM", "anim/pigman_yotb.zip"),    
     Asset("ANIM", "anim/ds_pig_basic.zip"),
     Asset("ANIM", "anim/ds_pig_actions.zip"),
     Asset("ANIM", "anim/ds_pig_attacks.zip"),
@@ -58,6 +59,9 @@ local MAX_TARGET_SHARES = 5
 local SHARE_TARGET_DIST = 40
 
 local function FindInvaderFn(guy, inst)
+    if guy:HasTag("NPC_contestant") then
+        return nil
+    end
 
     local function test_disguise(test_guy)
         return test_guy.components.inventory and test_guy.components.inventory:EquipHasTag("merm")
@@ -78,6 +82,10 @@ local function FindInvaderFn(guy, inst)
 end
 
 local function RetargetFn(inst)
+
+    if inst:HasTag("NPC_contestant") then
+        return nil
+    end
 
     local defend_dist = inst:HasTag("mermguard") and TUNING.MERM_GUARD_DEFEND_DIST or TUNING.MERM_DEFEND_DIST
     local defenseTarget = inst
@@ -337,6 +345,10 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit)
 
         inst.AnimState:SetBank("pigman")
         inst.AnimState:Hide("hat")
+
+        if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
+            inst.AnimState:AddOverrideBuild("pigman_yotb")
+        end
 
         inst:AddTag("character")
         inst:AddTag("merm")

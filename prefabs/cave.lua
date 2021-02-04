@@ -233,6 +233,7 @@ local function master_postinit(inst)
     inst:AddComponent("feasts")
 
     inst:AddComponent("yotc_raceprizemanager")
+    inst:AddComponent("yotb_stagemanager")
 
     if METRICS_ENABLED then
         inst:AddComponent("worldoverseer")

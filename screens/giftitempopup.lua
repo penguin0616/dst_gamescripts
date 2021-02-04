@@ -93,11 +93,7 @@ function GiftItemPopUp:ApplySkin()
     self.owner.HUD:SetRecentGifts(self.item_types, self.item_ids)
 
     TheFrontEnd:PopScreen(self)
-    if not TheWorld.ismastersim then
-        SendRPCToServer(RPC.DoneOpenGift, true)
-    elseif self.owner.components.giftreceiver ~= nil then
-        self.owner.components.giftreceiver:OnStopOpenGift(true)
-    end
+    POPUPS.GIFTITEM:Close(self.owner, true)
 end
 
 function GiftItemPopUp:ShowMenu()
@@ -155,11 +151,7 @@ function GiftItemPopUp:OnUpdate(dt)
         end
     elseif self.spawn_portal:GetAnimState():IsCurrentAnimation("skin_out") and self.spawn_portal:GetAnimState():AnimDone() then
         TheFrontEnd:PopScreen(self)
-        if not TheWorld.ismastersim then
-            SendRPCToServer(RPC.DoneOpenGift)
-        elseif self.owner.components.giftreceiver ~= nil then
-            self.owner.components.giftreceiver:OnStopOpenGift()
-        end
+        POPUPS.GIFTITEM:Close(self.owner)
     end
 end
 

@@ -17,6 +17,7 @@ return{
 			GENERIC = "Not a shaveable beast.",
 			NOBITS = "Nothing to shave.",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "That would be someone else's animal.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "I guess it never occurred to me I'd need to change.",
             BURNING = "It, oh, it appears to be on fire.",
             INUSE = "I should give them their privacy.",
+            NOTENOUGHHAIR = "There's not really much to work with at the moment.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "Not a drop left!",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "That will not work.",
+            BEEF_BELL_ALREADY_USED = "It seems quite attached to someone else.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "I've already found my perfect cut of beef.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "I don't have anything to hitch to it.",
+            NEEDBEEF_CLOSER = "I will need my delicious friend to come a bit closer.",
+            BEEF_HITCHED = "Already done, mon ami.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "I've made my selection.",
+            NOT_PARTICIPANT = "I'm staying out of the competition for the moment.",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Nobody there? C'est la vie.",
+            ALREADYACTIVE = "Perhaps there's another contest somewhere else.",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Quel dommage, I already knew that one.",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "I cannot do that.",
 	ANNOUNCE_BOAT_LEAK = "Mon dieu! She is sinking!",
@@ -632,6 +664,11 @@ return{
         "What a good little plant you are.",
         "How are you today, mon ami? Everything growing well?",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Over here, my mignon filet!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "I should build this within the judge's view, non?",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Ah, bon! A new flavor of beefalo costume!",
 
 	BATTLECRY =
 	{
@@ -1292,6 +1329,7 @@ return{
             ORNERY = "It's boiling up!",
             RIDER = "I think I could actually handle this one.",
             PUDGY = "You enjoy food as much as me.",
+            MYPARTNER = "We go together like steak and a lovely garlic herb butter.",
 		},
 
 		BEEFALOHAT = "Fits perfectly.",
@@ -1478,7 +1516,7 @@ return{
 		COOKEDMANDRAKE = "Could use horseradish...",
 		COOKEDMEAT = "Could use a chimichurri sauce...",
 		COOKEDMONSTERMEAT = "Could use... uh... I don't even...",
-		COOKEDSMALLMEAT = "Could use sea salt...",        
+		COOKEDSMALLMEAT = "Could use sea salt...",
 		COOKPOT =
 		{
 			COOKING_LONG = "A masterpiece takes time.",
@@ -2540,6 +2578,21 @@ return{
             CARRAT_GOOD = "I can taste victory already!",
             BURNT = "It's been overcooked.",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "I wonder what I can cook up with this?",
+            EMPTY = "It needs a special ingredient.",
+            BURNT = "Far too well done.",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "Presentation is important!",
+            OCCUPIED = "And now, to dress the steak!",
+            BURNT = "En flambé.",
+        },
+        BEEFALO_GROOMER_ITEM = "I'd better build it, non?",
 
 		BISHOP_CHARGE_HIT = "Mon dieu!",
 		TRUNKVEST_SUMMER = "Fashionably refreshing.",
@@ -3668,7 +3721,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "A good place for food scraps.",
             WET = "Too runny, it needs less moisture.",
             DRY = "Non, far too dry!",
@@ -3715,7 +3767,7 @@ return{
 		{
 			GENERIC = "Ah, a handy kitchen scale!",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nTres bien!",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nIncroyable!",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nIncroyable!",
             HAS_ITEM_LIGHT = "It may not be substantial in size, but I'm sure it's still substantial in flavor!",
 			BURNING = "That is not the way to cook en flambé!",
 			BURNT = "Far too charred to eat.",
@@ -3750,14 +3802,77 @@ return{
 			FULL_WEED = "It seems my garden is full of weeds!",
 
 			BURNING = "It's too soon to start cooking!",
-        },
-        
+		},
+
         FRUITFLY = "Non! Out of my garden!",
         LORDFRUITFLY = "Mon dieu! It's killing the plants!",
         FRIENDLYFRUITFLY = "This one seems to be friendly.",
         FRUITFLYFRUIT = "They seem quite taken with whoever holds this.",
 
         SEEDPOUCH = "A little organization never hurts.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "Now to find the recipe for a tasteful outfit.",
+        YOTB_SEWINGMACHINE_ITEM = "I'd better put it together.",
+        YOTB_STAGE = "Ah mes amis, I've been judged by top chefs - this is nothing!",
+        YOTB_POST =  "A stake to display my prized steak, non?",
+        YOTB_STAGE_ITEM = "I should be able to put that together.",
+        YOTB_POST_ITEM =  "This looks like a good spot, non?",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "One part of a recipe for a beefalo costume.",
+        YOTB_PATTERN_FRAGMENT_2 = "One part of a recipe for a beefalo costume.",
+        YOTB_PATTERN_FRAGMENT_3 = "One part of a recipe for a beefalo costume.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "Tres mignon!",
+            YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
+        },
+
+
+        WAR_BLUEPRINT = "Dressing for some rather tough beef!",
+        DOLL_BLUEPRINT = "Tres mignon!",
+        FESTIVE_BLUEPRINT = "Just the right thing for a celebration.",
+        ROBOT_BLUEPRINT = "This does not look like any sewing pattern I've ever seen.",
+        NATURE_BLUEPRINT = "Made from natural ingredients.",
+        FORMAL_BLUEPRINT = "The beast will look as if it's going out to a fancy dinner party.",
+        VICTORIAN_BLUEPRINT = "It's hard not to think about seafood with all these scalloped edges.",
+        ICE_BLUEPRINT = "Frozen beef? I suppose I'll have to make do.",
+        BEAST_BLUEPRINT = "The beefalo who will wear this is lucky indeed!",
+
+        BEEF_BELL = "It is not a dinner bell?",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

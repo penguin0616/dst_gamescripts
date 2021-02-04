@@ -76,7 +76,8 @@ local function fn()
     ------------------
     inst:AddComponent("deployable")
     inst.components.deployable.ondeploy = ondeploy
-    inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
+    --inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
+    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.LESS)
 
     inst:AddComponent("repairer")
     inst.components.repairer.repairmaterial = MATERIALS.FOSSIL

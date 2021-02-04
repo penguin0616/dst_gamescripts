@@ -4,7 +4,7 @@ local assets =
 }
 
 local function OnReadBook(inst, doer)
-	doer:ShowCookbookPopUp(true)
+	doer:ShowPopUp(POPUPS.COOKBOOK, true)
 end
 
 local function fn()

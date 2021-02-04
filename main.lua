@@ -207,6 +207,7 @@ require("gamemodes")
 require("skinsutils")
 require("wxputils")
 require("klump")
+require("popupmanager")
 
 if TheConfig:IsEnabled("force_netbookmode") then
 	TheSim:SetNetbookMode(true)

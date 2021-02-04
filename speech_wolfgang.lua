@@ -17,6 +17,7 @@ return{
 			GENERIC = "That cannot be shaved.",
 			NOBITS = "I cannot shave when there are no hairs.",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "Is not Wolfgang's for shaving.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "Clothes only good for ripping with strong muscles!",
             BURNING = "Wolfgang's weekday undergarments burning? Wolfgang is sad.",
             INUSE = "Wolfgang will wait til they leave to change. He is shy.",
+            NOTENOUGHHAIR = "Will wait for hairs to grow back.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "Water is run out.",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "Silly! Is not going to work!",
+            BEEF_BELL_ALREADY_USED = "This hair-cow already has friend.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "Wolfgang already picked best hair-cow to befriend!",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "Wolfgang needs hair-cow!",
+            NEEDBEEF_CLOSER = "Hair-cow is too far away.",
+            BEEF_HITCHED = "Is staying put.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "Wolfgang has chosen this one!",
+            NOT_PARTICIPANT = "Wolfgang will wait for next time.",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Where do you hide, strange little man?",
+            ALREADYACTIVE = "Maybe contest is somewhere else.",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Ha! Was already there in Wolfgang's big brain!",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "I am not mighty enough to do that.",
 	ANNOUNCE_BOAT_LEAK = "Drippy drops is come through boat!",
@@ -633,6 +665,11 @@ return{
         "You are very good plant. You make food for Wolfgang!",
         "Who is mightiest plant of all? You are!",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Come, hair-cow!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "How will judge see Wolfgang's beautiful hair-cow from so far away?",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Is new hair-cow costume! Wolfgang will make.",
 
 	BATTLECRY =
 	{
@@ -1293,6 +1330,7 @@ return{
             ORNERY = "You are feisty!",
             RIDER = "Like I'm back in cavalry!",
             PUDGY = "A critter after own heart!",
+            MYPARTNER = "Is good hair-cow, very good.",
 		},
 
 		BEEFALOHAT = "Is good hat!",
@@ -1479,7 +1517,7 @@ return{
 		COOKEDMANDRAKE = "Little plant man is food?",
 		COOKEDMEAT = "I made meat good with fire!",
 		COOKEDMONSTERMEAT = "I still do not want to eat this.",
-		COOKEDSMALLMEAT = "It is even smaller cooked!",        
+		COOKEDSMALLMEAT = "It is even smaller cooked!",
 		COOKPOT =
 		{
 			COOKING_LONG = "This take long time.",
@@ -2541,6 +2579,21 @@ return{
             CARRAT_GOOD = "You will be good racer!",
             BURNT = "Will probably not work anymore.",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Is fuzzy and happy now.",
+            EMPTY = "Is hair-cow with no hair? Wolfgang must fix.",
+            BURNT = "Nothing Wolfgang can do now.",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "For brushing and pampering of hair-cows.",
+            OCCUPIED = "Do not worry hair-cow, you are in good hands with Wolfgang!",
+            BURNT = "Hmm... not good.",
+        },
+        BEEFALO_GROOMER_ITEM = "Do not worry, Wolfgang will build it!",
 
 		BISHOP_CHARGE_HIT = "Rrrraa!",
 		TRUNKVEST_SUMMER = "Is warm fuzzy nose.",
@@ -3669,7 +3722,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Is barrel of stink dirt.",
             WET = "Squishy soggy.",
             DRY = "Too dry.",
@@ -3716,7 +3768,7 @@ return{
 		{
 			GENERIC = "Whose fruit or veggie will be mightiest?",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nWolfgang could lift with only one finger.",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nHa! Very mighty indeed!",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nHa! Very mighty indeed!",
             HAS_ITEM_LIGHT = "Is too puny for scale to work.",
 			BURNING = "Not good!",
 			BURNT = "Cooked.",
@@ -3751,14 +3803,77 @@ return{
 			FULL_WEED = "Sneaky weed thinks it can muscle in on Wolfgang's garden?!",
 
 			BURNING = "No! Is burning!",
-        },
-        
+		},
+
         FRUITFLY = "Wolfgang not like bugs!",
         LORDFRUITFLY = "Ack! Is big and creepy!",
         FRIENDLYFRUITFLY = "Is helpful bug, but still creepy.",
         FRUITFLYFRUIT = "Weird thing attracts helpful, creepy flies.",
 
         SEEDPOUCH = "Is small pack for seeds.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "Will sew loveliest of costumes for hairy cow.",
+        YOTB_SEWINGMACHINE_ITEM = "So many fiddly pieces for Wolfgang to put together...",
+        YOTB_STAGE = "Is reminding Wolfgang of circus.",
+        YOTB_POST =  "Is good stage for hairy cows!",
+        YOTB_STAGE_ITEM = "Is easy - like setting up small circus tent.",
+        YOTB_POST_ITEM =  "Ha! Wolfgang will have it built in quickest of snaps!",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Is bit of pattern. Wolfgang should find more.",
+        YOTB_PATTERN_FRAGMENT_2 = "Is bit of pattern. Wolfgang should find more.",
+        YOTB_PATTERN_FRAGMENT_3 = "Is bit of pattern. Wolfgang should find more.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "Ha! Is huggable friend!",
+            YOTB = "Wolfgang should show to judge.",
+        },
+
+
+        WAR_BLUEPRINT = "Yes, will make hairy cow fearsome!",
+        DOLL_BLUEPRINT = "Will make hairy cow so cute!",
+        FESTIVE_BLUEPRINT = "Is made from brightest of colors!",
+        ROBOT_BLUEPRINT = "Will make hairy cow tough like iron!",
+        NATURE_BLUEPRINT = "Flowers would be good against cow smell.",
+        FORMAL_BLUEPRINT = "Who makes fancy suit for cow?",
+        VICTORIAN_BLUEPRINT = "Looks very complicated to Wolfgang.",
+        ICE_BLUEPRINT = "Wolfgang's hair cow will face the cold mightily!",
+        BEAST_BLUEPRINT = "Hope beast gives Wolfgang luck in contest!",
+
+        BEEF_BELL = "Ringy ding!",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

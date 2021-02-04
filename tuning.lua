@@ -769,6 +769,7 @@ function Tune(overrides)
             PUDGY = 6.5,
         },
         BEEFALO_HAIR_GROWTH_DAYS = 3,
+        BEEFALO_BEARD_BITS = 3,
         BEEFALO_SADDLEABLE_OBEDIENCE = 0.1,
         BEEFALO_KEEP_SADDLE_OBEDIENCE = 0.4,
         BEEFALO_MIN_BUCK_OBEDIENCE = 0.5,
@@ -1165,6 +1166,11 @@ function Tune(overrides)
             
             CARRATSHRINE = TechTree.Create({
                 CARRATOFFERING = 3,
+                PERDOFFERING = 1,
+            }),            
+
+            BEEFSHRINE = TechTree.Create({
+                BEEFOFFERING = 3,
                 PERDOFFERING = 1,
             }),            
 
@@ -1610,6 +1616,7 @@ function Tune(overrides)
             ANTLION = 1,
             MEAT = 1,
             RAREMEAT = 5,
+            YOTB_BEEFALO_DOLL = 3,
             TRINKETS =
             {
                 4, --[1] Melty Marbles
@@ -4742,6 +4749,13 @@ function Tune(overrides)
         FRUITFLY_ATTACK_PERIOD = 2,
         FRUITFLY_TARGETRANGE = 15,
         FRUITFLY_WALKSPEED = 8,
+        -- YOTB: Year of the Beefalo
+        BASE_SEWING_TIME = night_time*.3333,
+        REJECTION_SEWING_TIME = night_time*.3333,
+        YOTB_STAGERANGE = 12,
+        YOTB_POSTDISTANCE = 5,
+
+        BEEFALO_NAMING_DIST = 12,
     }
 end
 

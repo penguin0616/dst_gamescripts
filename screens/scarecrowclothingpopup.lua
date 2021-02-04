@@ -124,11 +124,7 @@ function ScarecrowClothingPopupScreen:Close(apply_skins)
 		data = skins
     end
 
-    if not TheWorld.ismastersim then
-        SendRPCToServer(RPC.CloseWardrobe, data.base, data.body, data.hand, data.legs, data.feet)
-    else
-        self.doer:PushEvent("ms_closewardrobe", data)
-    end
+    POPUPS.WARDROBE:Close(self.doer, data.base, data.body, data.hand, data.legs, data.feet)
 
     self.dressup:OnClose()
     TheFrontEnd:PopScreen(self)

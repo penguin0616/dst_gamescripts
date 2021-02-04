@@ -142,11 +142,7 @@ function WardrobePopupScreen:Close()
 		data = skins
     end
 
-    if not TheWorld.ismastersim then
-        SendRPCToServer(RPC.CloseWardrobe, data.base, data.body, data.hand, data.legs, data.feet)
-    elseif self.owner_player ~= nil then
-        self.owner_player:PushEvent("ms_closewardrobe", data)
-    end
+    POPUPS.WARDROBE:Close(self.owner_player, data.base, data.body, data.hand, data.legs, data.feet)
 
     self.dressup:OnClose()
     TheFrontEnd:PopScreen(self)

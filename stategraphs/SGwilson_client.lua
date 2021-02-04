@@ -188,6 +188,8 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.TURNOFF, "give"),
     ActionHandler(ACTIONS.TURNON, "give"),
+    ActionHandler(ACTIONS.YOTB_UNLOCKSKIN, "dolongaction"),
+    ActionHandler(ACTIONS.YOTB_SEW, "dolongaction"),
     ActionHandler(ACTIONS.ADDFUEL, "doshortaction"),
     ActionHandler(ACTIONS.ADDWETFUEL, "doshortaction"),
     ActionHandler(ACTIONS.REPAIR, "dolongaction"),
@@ -221,7 +223,8 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
-            return (action.target:HasTag("jostlepick") and "dojostleaction")
+            return (inst.replica.rider ~= nil and inst.replica.rider:IsRiding() and "dolongaction")
+                or (action.target:HasTag("jostlepick") and "dojostleaction")
                 or (action.target:HasTag("quickpick") and "doshortaction")
                 or (inst:HasTag("fastpicker") and "doshortaction")
                 or (inst:HasTag("quagmire_fasthands") and "domediumaction")
@@ -254,7 +257,14 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.FILL, "dolongaction"),
     ActionHandler(ACTIONS.FILL_OCEAN, "dolongaction"),
-    ActionHandler(ACTIONS.PICKUP, "doshortaction"),
+
+    ActionHandler(ACTIONS.PICKUP, function(inst, action)
+            return (inst.replica.rider ~= nil and inst.replica.rider:IsRiding()
+                    and (action.target ~= nil and action.target:HasTag("heavy") and "dodismountaction"
+                        or "domediumaction")
+                    )
+                or "doshortaction"
+        end),
     ActionHandler(ACTIONS.CHECKTRAP, "doshortaction"),
     ActionHandler(ACTIONS.RUMMAGE, "doshortaction"),
     ActionHandler(ACTIONS.BAIT, "doshortaction"),
@@ -289,6 +299,7 @@ local actionhandlers =
                     )
                 or "give"
         end),
+    ActionHandler(ACTIONS.APPRAISE, "give"),
     ActionHandler(ACTIONS.GIVETOPLAYER, "give"),
     ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),
     ActionHandler(ACTIONS.FEEDPLAYER, "give"),
@@ -369,6 +380,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.UNPIN, "doshortaction"),
     ActionHandler(ACTIONS.CATCH, "catch_pre"),
     ActionHandler(ACTIONS.CHANGEIN, "usewardrobe"),
+    ActionHandler(ACTIONS.HITCHUP, "usewardrobe"),
+    ActionHandler(ACTIONS.UNHITCH, "usewardrobe"),
+    ActionHandler(ACTIONS.MARK, "doshortaction"),
     ActionHandler(ACTIONS.WRITE, "doshortaction"),
     ActionHandler(ACTIONS.ATTUNE, "dolongaction"),
     ActionHandler(ACTIONS.MIGRATE, "migrate"),
@@ -475,13 +489,28 @@ local actionhandlers =
 
     ActionHandler(ACTIONS.INTERACT_WITH,
         function(inst, action)
-            return inst:HasTag("plantkin") and "domediumaction" or "dolongaction"
+            return inst:HasTag("plantkin") and "domediumaction" or
+                   action.target:HasTag("yotb_stage") and "doshortaction" or
+                   "dolongaction"
         end),
     ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH_FAIL, "dolongaction"),
     ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH, "dolongaction"),
     ActionHandler(ACTIONS.ASSESSPLANTHAPPINESS, "dolongaction"),
     ActionHandler(ACTIONS.ADDCOMPOSTABLE, "give"),
     ActionHandler(ACTIONS.WAX, "dolongaction"),
+
+    ActionHandler(ACTIONS.USEITEMON, function(inst, action)
+        if action.invobject == nil then
+            return "dolongaction"
+        elseif action.invobject:HasTag("bell") then
+            return "play"
+        else
+            return "dolongaction"
+        end
+    end),
+    ActionHandler(ACTIONS.STOPUSINGITEM, "dolongaction"),
+
+    ActionHandler(ACTIONS.YOTB_STARTCONTEST, "doshortaction"),
 }
 
 local events =
@@ -1951,6 +1980,48 @@ local states =
         ontimeout = function(inst)
             inst:ClearBufferedAction()
             inst.AnimState:PlayAnimation("channel_pst")
+            inst.sg:GoToState("idle", true)
+        end,
+    },
+
+    State
+    {
+        name = "dodismountaction",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("dismount")
+            inst.AnimState:PushAnimation("dismount_lag", false)
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        timeline =
+        {
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(15*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+            end),
+        },
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.AnimState:PlayAnimation("heavy_mount")
+                inst.sg:GoToState("idle", true)
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.AnimState:PlayAnimation("heavy_mount")
             inst.sg:GoToState("idle", true)
         end,
     },

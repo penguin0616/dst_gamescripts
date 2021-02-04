@@ -33,7 +33,7 @@ local PurchasePackScreen = require "screens/redux/purchasepackscreen"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging"
+local IS_BETA = BRANCH == "staging" -- or BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -139,9 +139,22 @@ function MakeBanner(self)
         if color then
             anim:GetAnimState():OverrideSymbol("ear1", "dst_menu_carrat_swaps", color.."_ear1")
             anim:GetAnimState():OverrideSymbol("ear2", "dst_menu_carrat_swaps", color.."_ear2")
-            anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")        
+            anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")
         end
 
+    elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
+        anim:GetAnimState():SetBuild("dst_menu_beefalo")
+        anim:GetAnimState():SetBank ("dst_menu_beefalo")
+        anim:GetAnimState():PlayAnimation("loop", true)
+        anim:SetScale(.667)
+    
+
+        local anim_bg = baner_root:AddChild(UIAnim())
+        anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
+        anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
+        anim:SetScale(.667)
+        anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:MoveToBack()
 --[[
         local function onanimover(inst)
             inst.AnimState:PlayAnimation("loop")

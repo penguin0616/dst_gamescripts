@@ -364,6 +364,7 @@ CHARACTER_VIDEOS =
 
 require("prefabskins")
 require("clothing")
+require("beefalo_clothing")
 require("misc_items")
 require("emote_items")
 require("item_blacklist")
@@ -399,6 +400,44 @@ CLOTHING.feet_default1 =
 MISC_ITEMS.beard_default1 =
 {
     type = "beard",
+    skin_tags = {},
+    is_default = true,
+    release_group = 999,
+}
+
+
+
+BEEFALO_CLOTHING.beef_body_default1 =
+{
+    type = "beef_body",
+    skin_tags = {},
+    is_default = true,
+    release_group = 999,
+}
+BEEFALO_CLOTHING.beef_horn_default1 =
+{
+    type = "beef_horn",
+    skin_tags = {},
+    is_default = true,
+    release_group = 999,
+}
+BEEFALO_CLOTHING.beef_head_default1 =
+{
+    type = "beef_head",
+    skin_tags = {},
+    is_default = true,
+    release_group = 999,
+}
+BEEFALO_CLOTHING.beef_feet_default1 =
+{
+    type = "beef_feet",
+    skin_tags = {},
+    is_default = true,
+    release_group = 999,
+}
+BEEFALO_CLOTHING.beef_tail_default1 =
+{
+    type = "beef_tail",
     skin_tags = {},
     is_default = true,
     release_group = 999,
@@ -625,8 +664,12 @@ SPECIAL_EVENTS =
     YOTV = "year_of_the_varg",
     YOTP = "year_of_the_pig",
     YOTC = "year_of_the_carrat",
+    YOTB = "year_of_the_beefalo",
 }
 WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
+
+--WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.YOTB
 
 FESTIVAL_EVENTS =
 {
@@ -696,6 +739,13 @@ SPECIAL_EVENT_MUSIC =
         bank = "music_frontend_yotc.fsb",
         sound = "dontstarve/music/music_FE_yotc",
     },
+
+    --year of the beefalo
+    [SPECIAL_EVENTS.YOTB] =
+    {
+        bank = "music_frontend_yotb.fsb",
+        sound = "yotb_2021/music/FE",
+    },   
 }
 
 FESTIVAL_EVENT_MUSIC =
@@ -755,19 +805,19 @@ function IsSpecialEventActive(event)
 end
 
 function IsAnySpecialEventActive()
-    return WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.NONE
+    --return WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.NONE
+    return WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.YOTB
 end
 
 ---------------------------------------------------------
 -- Checks if any of the "Year of the <creature>" events are active
 function IsAny_YearOfThe_EventActive()
-	return WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTG or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTV or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTP or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTC
+	return WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTG or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTV or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTP or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTC or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTB
 end
 
 function GetSpecialEventSkinTag()
     return SPECIAL_EVENT_SKIN_TAGS[WORLD_SPECIAL_EVENT]
 end
-
 
 ---------------------------------------------------------
 -- Refers to intermittent scheduled events.
@@ -897,6 +947,7 @@ TECH =
     WARGOFFERING_THREE = { WARGOFFERING = 3 },
     PIGOFFERING_THREE = { PIGOFFERING = 3 },
     CARRATOFFERING_THREE = { CARRATOFFERING = 3 },
+    BEEFOFFERING_THREE = { BEEFOFFERING = 3 },    
     MADSCIENCE_ONE = { MADSCIENCE = 1 },
     FOODPROCESSING_ONE = { FOODPROCESSING = 1 },
 	FISHING_ONE = { FISHING = 1 },
@@ -916,6 +967,7 @@ TECH =
     YOTV = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
     YOTP = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
     YOTC = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
+    YOTB = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
 
     LOST = { MAGIC = 10, SCIENCE = 10, ANCIENT = 10 },
 }
@@ -2071,3 +2123,37 @@ TEMP_ITEM_ID = "0"
 --matches enum eIAPType
 IAP_TYPE_REAL = 0
 IAP_TYPE_VIRTUAL = 1
+
+CHARACTER_BUTTON_OFFSET =
+{
+    wilson = -51,
+    wendy = -45,
+    waxwell = -45,
+    wortox = -53,
+    wormwood = -53,
+    winona = -49,
+    wurt = -45,
+    webber = -45,
+    
+    default = -47,
+}
+
+CHARACTER_BUTTON_SCALE =
+{
+    wurt = 0.24,
+
+    default = 0.23,
+}
+
+YOTB_COSTUMES =
+{
+    WAR         = 1,
+    DOLL        = 2,
+    ROBOT       = 4,
+    NATURE      = 8,
+    FORMAL      = 16,
+    VICTORIAN   = 32,
+    ICE         = 64,
+    FESTIVE     = 128,
+    BEAST       = 256,
+}

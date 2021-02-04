@@ -26,6 +26,7 @@ local ChatQueue = require "widgets/chatqueue"
 local Desync = require "widgets/desync"
 local WorldResetTimer = require "widgets/worldresettimer"
 local GiftItemToast = require "widgets/giftitemtoast"
+local YotbToast = require "widgets/yotbtoast"
 local VoteDialog = require "widgets/votedialog"
 local TEMPLATES = require "widgets/templates"
 local easing = require("easing")
@@ -75,6 +76,9 @@ local Controls = Class(Widget, function(self, owner)
 
     self.item_notification = self.topleft_root:AddChild(GiftItemToast(self.owner))
     self.item_notification:SetPosition(115, 150, 0)
+
+    self.yotb_notification = self.topleft_root:AddChild(YotbToast(self.owner))
+    self.yotb_notification:SetPosition(215, 150, 0)
 
     self.worldresettimer = self.bottom_root:AddChild(WorldResetTimer(self.owner))
     self.inv = self.bottom_root:AddChild(Inv(self.owner))
@@ -655,6 +659,7 @@ function Controls:ShowCraftingAndInventory()
         self.inv:Show()
         self.containerroot_side:Show()
         self.item_notification:ToggleCrafting(false)
+        self.yotb_notification:ToggleCrafting(false)
         if self.status.ToggleCrafting ~= nil then
             self.status:ToggleCrafting(false)
         end
@@ -676,6 +681,7 @@ function Controls:HideCraftingAndInventory()
         self.inv:Hide()
         self.containerroot_side:Hide()
         self.item_notification:ToggleCrafting(true)
+        self.yotb_notification:ToggleCrafting(true)
         if self.status.ToggleCrafting ~= nil then
             self.status:ToggleCrafting(true)
         end

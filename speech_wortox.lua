@@ -17,6 +17,7 @@ return{
 			GENERIC = "I can't, I won't, I shan't.",
 			NOBITS = "Instead of hair, there's nothing there!",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "I think you will find that creature's not mine.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "I prefer my current form.",
             BURNING = "I'm not big on clothes, anyway.",
             INUSE = "Another soul has use of it right now.",
+            NOTENOUGHHAIR = "I could give it some flair... once it has enough hair.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "Goodness me, it's dry as can be!",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "Nope, hyuyuyu!",
+            BEEF_BELL_ALREADY_USED = "Turns out in the end, it already had a friend.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "Having more than one wouldn't be much fun.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "First I must find a beefalo to be mine.",
+            NEEDBEEF_CLOSER = "Now now my friend, I can't hitch you up while you're way over there!",
+            BEEF_HITCHED = "Surely secured!",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "Will a change of fate be in order?",
+            NOT_PARTICIPANT = "Why was I not invited to the festivities?",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Oh ho! Something's gone awry!",
+            ALREADYACTIVE = "Perhaps he too likes to travel between planes? Hyuyuyu!",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Oh what a bore, I've seen it before.",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "No, no, no.",
 	ANNOUNCE_BOAT_LEAK = "Now this ride's getting fun!",
@@ -637,6 +669,11 @@ return{
         "You like hearing the sound of my voice almost as much as I do, hyuyu!",
         "Let's pull a prank! What do you think the mortals would do if you sprouted into a sheep?",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Over here, beefalo dear!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Alas, I fear I can't build that here.",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Hyuyu! A new plan has taken shape!",
 
 	BATTLECRY =
 	{
@@ -1297,6 +1334,7 @@ return{
             ORNERY = "Don't you feel just hopping mad?",
             RIDER = "Don't you want to carry me?",
             PUDGY = "It's soul is chubby too, hyuyu!",
+            MYPARTNER = "We're kindred souls, wouldn't you say?",
 		},
 
 		BEEFALOHAT = "Horn replacements.",
@@ -1484,7 +1522,7 @@ return{
 		COOKEDMANDRAKE = "It's at peace now.",
 		COOKEDMEAT = "I don't really like having food in my stomach.",
 		COOKEDMONSTERMEAT = "I'd still rather not eat it.",
-		COOKEDSMALLMEAT = "At least it smells better now.",        
+		COOKEDSMALLMEAT = "At least it smells better now.",
 		COOKPOT =
 		{
 			COOKING_LONG = "It will take quite some time.",
@@ -2546,6 +2584,21 @@ return{
             CARRAT_GOOD = "A veritable virtuoso of a vegetable!",
             BURNT = "Hyuyu, what fun!",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Let us celebrate!",
+            EMPTY = "This beefalo looks a little bare.",
+            BURNT = "Oh my, was that supposed to happen?",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "I'll groom beefalo hair with my signature flair.",
+            OCCUPIED = "Fancy some fancying up? Hyuyu!",
+            BURNT = "Hyuyuyu how silly!",
+        },
+        BEEFALO_GROOMER_ITEM = "Let's prepare to style beefalo hair!",
 
 		BISHOP_CHARGE_HIT = "Hyuyu! Owie!",
 		TRUNKVEST_SUMMER = "It's my very best vest!",
@@ -3674,7 +3727,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Not exactly a barrel of laughs.",
             WET = "I tried and yet, it's far too wet.",
             DRY = "Nice try, but it's too dry.",
@@ -3721,7 +3773,7 @@ return{
 		{
 			GENERIC = "Hoohoo, a game!",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nBut is it worth the weight? Hyuyu!",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI say, what a nice display!",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI say, what a nice display!",
             HAS_ITEM_LIGHT = "It's not enough to tip the scale, hyuyu!",
 			BURNING = "What fun!",
 			BURNT = "Let's do it again, hyuyu!",
@@ -3756,14 +3808,77 @@ return{
 			FULL_WEED = "It's a weed indeed! Hyuyuyu!",
 
 			BURNING = "Hyuyuyu, whoopsie!",
-        },
-        
+		},
+
         FRUITFLY = "Pulling pranks on the plants, I see!",
         LORDFRUITFLY = "Hyuyu! I would expect more civility from the nobility!",
         FRIENDLYFRUITFLY = "This fly has a much more tempered temper.",
         FRUITFLYFRUIT = "I'll just put that in my pocket and see what happens!",
 
         SEEDPOUCH = "For my gardening needs, a place to store seeds!",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "It's all connected by a common thread, hyuyu!",
+        YOTB_SEWINGMACHINE_ITEM = "I do believe there's a needle in that haystack.",
+        YOTB_STAGE = "Hyuyu! How interesting!",
+        YOTB_POST =  "A stage to show my beefalo.",
+        YOTB_STAGE_ITEM = "The excitement is building, hyuyuyu!",
+        YOTB_POST_ITEM =  "Let's get it done so we can have fun!",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "A puzzling piece of a pattern.",
+        YOTB_PATTERN_FRAGMENT_2 = "A puzzling piece of a pattern.",
+        YOTB_PATTERN_FRAGMENT_3 = "A puzzling piece of a pattern.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "Enjoying the plush life? Hyuyuyu!",
+            YOTB = "Our judge just may have something to say.",
+        },
+
+
+        WAR_BLUEPRINT = "Fit for a fearsome fellow.",
+        DOLL_BLUEPRINT = "Oh what a dollight! Hyuyu!",
+        FESTIVE_BLUEPRINT = "My friend can frolic in this festive frock!",
+        ROBOT_BLUEPRINT = "This outfit might require a lot of ironing, hyuyu!",
+        NATURE_BLUEPRINT = "I suppose I'll reap what I sew, hyuyu!",
+        FORMAL_BLUEPRINT = "But will it really suit my beefalo? Hyuyu!",
+        VICTORIAN_BLUEPRINT = "Fancy, that!",
+        ICE_BLUEPRINT = "I just got chills! Hyuyuyu!",
+        BEAST_BLUEPRINT = "Lucky, hm? Perhaps it's made with fairy gold.",
+
+        BEEF_BELL = "What a strange enchantment!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -867,41 +867,18 @@ local RPC_HANDLERS =
         end
     end,
 
-    DoneOpenGift = function(player, usewardrobe)
-        if not optbool(usewardrobe) then
-            printinvalid("DoneOpenGift", player)
+    ClosePopup = function(player, popupcode, mod_name, ...)
+        if not (checkuint(popupcode) and
+                optstring(mod_name) and
+                GetPopupFromPopupCode(popupcode, mod_name)) then
+            printinvalid("ClosePopup", player)
             return
         end
-        local giftreceiver = player.components.giftreceiver
-        if giftreceiver ~= nil then
-            giftreceiver:OnStopOpenGift(usewardrobe)
+        local popup = GetPopupFromPopupCode(popupcode, mod_name)
+        if not popup.validaterpcfn(...) then
+            printinvalid("ClosePopup"..tostring(popup.id), player)
         end
-    end,
-
-    CloseWardrobe = function(player, base_skin, body_skin, hand_skin, legs_skin, feet_skin)
-        if not (optstring(base_skin) and
-                optstring(body_skin) and
-                optstring(hand_skin) and
-                optstring(legs_skin) and
-                optstring(feet_skin)) then
-            printinvalid("CloseWardrobe", player)
-            return
-        end
-        player:PushEvent("ms_closewardrobe", {
-            base = base_skin,
-            body = body_skin,
-            hand = hand_skin,
-            legs = legs_skin,
-            feet = feet_skin,
-        })
-    end,
-
-    CloseCookbookScreen = function(player)
-        player:PushEvent("ms_closecookbookscreen")
-    end,
-
-    ClosePlantRegistryScreen = function(player)
-        player:PushEvent("ms_closeplantregistryscreen")
+        popup:Close(player, ...)
     end,
 }
 
@@ -923,6 +900,49 @@ end
 
 local CLIENT_RPC_HANDLERS =
 {
+    ShowPopup = function(popupcode, mod_name, show, ...)
+        local popup = GetPopupFromPopupCode(popupcode, mod_name)
+
+        if popup then
+            popup.fn(ThePlayer, show, ...)
+        end
+    end,
+
+    LearnRecipe = function(product, ...)
+        local cookbookupdater = ThePlayer.components.cookbookupdater
+        local ingredients = {...}
+        if cookbookupdater and product and not IsTableEmpty(ingredients) then
+            cookbookupdater:LearnRecipe(product, ingredients)
+        end
+    end,
+
+    LearnFoodStats = function(product)
+        local cookbookupdater = ThePlayer.components.cookbookupdater
+        if cookbookupdater and product then
+            cookbookupdater:LearnFoodStats(product)
+        end
+    end,
+
+    LearnPlantStage = function(plant, stage)
+        local plantregistryupdater = ThePlayer.components.plantregistryupdater
+        if plantregistryupdater and plant and stage then
+            plantregistryupdater:LearnPlantStage(plant, stage)
+        end
+    end,
+
+    LearnFertilizerStage = function(fertilizer)
+        local plantregistryupdater = ThePlayer.components.plantregistryupdater
+        if plantregistryupdater and fertilizer then
+            plantregistryupdater:LearnFertilizer(fertilizer)
+        end
+    end,
+
+    TakeOversizedPicture = function(plant, weight, beardskin, beardlength)
+        local plantregistryupdater = ThePlayer.components.plantregistryupdater
+        if plantregistryupdater and plant and weight then
+            plantregistryupdater:TakeOversizedPicture(plant, weight, beardskin, beardlength)
+        end
+    end,
 }
 
 CLIENT_RPC = {}

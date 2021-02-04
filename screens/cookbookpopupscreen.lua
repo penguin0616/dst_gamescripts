@@ -31,14 +31,7 @@ local CookbookPopupScreen = Class(Screen, function(self, owner)
 end)
 
 function CookbookPopupScreen:OnDestroy()
-    if not TheWorld.ismastersim then
-		if self.owner ~= nil and self.owner.player_classified.iscookbookpopupvisible:value() then
-			self.owner.player_classified.iscookbookpopupvisible:set_local(false)
-			SendRPCToServer(RPC.CloseCookbookScreen)
-		end
-    else
-        self.owner:PushEvent("ms_closecookbookscreen")
-    end
+    POPUPS.COOKBOOK:Close(self.owner)
 
 	TheCookbook:ClearNewFlags()
 	TheCookbook:Save() -- for saving filter settings

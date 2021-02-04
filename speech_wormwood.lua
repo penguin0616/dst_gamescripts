@@ -17,6 +17,7 @@ return{
 			GENERIC = "Hmmm... Can't do",
 			NOBITS = "Nothing there",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "Nope. Not mine",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "Not now",
             BURNING = "Fire! Don't like fire!",
             INUSE = "Someone else's",
+            NOTENOUGHHAIR = "Not fuzzy enough",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "No water",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "Not working",
+            BEEF_BELL_ALREADY_USED = "Not mine",
+            BEEF_BELL_HAS_BEEF_ALREADY = "Have Buddy already",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "Need Shaggy Buddy",
+            NEEDBEEF_CLOSER = "Too far",
+            BEEF_HITCHED = "Stay",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "Picked this one",
+            NOT_PARTICIPANT = "Have to wait",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Hm...",
+            ALREADYACTIVE = "Not here",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Know it",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "Nope",
 	ANNOUNCE_BOAT_LEAK = "Water! Water coming!",
@@ -395,9 +427,9 @@ return{
 
 
 	ANNOUNCE_DAMP = "Rain!",
-	ANNOUNCE_WET = "Little wet",
-	ANNOUNCE_WETTER = "Really wet",
-	ANNOUNCE_SOAKED = "Too wet!",
+	ANNOUNCE_WET = "Drip drop",
+	ANNOUNCE_WETTER = "Water water all around",
+	ANNOUNCE_SOAKED = "Big drink!",
 
 	ANNOUNCE_WASHED_ASHORE = "Very wet!",
 
@@ -636,6 +668,11 @@ return{
         "Yes? Oh. Hmm... yes",
         "Nice to talk to other plants",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Here Shaggy Buddy!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Too far for contest",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Ooooh! Make new thing",
 
 	BATTLECRY =
 	{
@@ -1296,6 +1333,7 @@ return{
             ORNERY = "Cranky",
             RIDER = "Can ride now",
             PUDGY = "Full belly",
+            MYPARTNER = "Shaggy Buddy is friend",
 		},
 
 		BEEFALOHAT = "Warm",
@@ -1482,7 +1520,7 @@ return{
 		COOKEDMANDRAKE = "Smells sleepy",
 		COOKEDMEAT = "Yummm",
 		COOKEDMONSTERMEAT = "Smells bad",
-		COOKEDSMALLMEAT = "Little belly stuff",        
+		COOKEDSMALLMEAT = "Little belly stuff",
 		COOKPOT =
 		{
 			COOKING_LONG = "Waiting...",
@@ -2544,6 +2582,21 @@ return{
             CARRAT_GOOD = "Good!",
             BURNT = "Oh",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Fluffy now",
+            EMPTY = "Shaggy Buddy... has no fluff",
+            BURNT = "(sigh)",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "Shaggy Buddy brusher",
+            OCCUPIED = "Hmm hmm, make you pretty!",
+            BURNT = "Oh",
+        },
+        BEEFALO_GROOMER_ITEM = "Make Shaggy Buddy brusher",
 
 		BISHOP_CHARGE_HIT = "Aggh!",
 		TRUNKVEST_SUMMER = "Cool",
@@ -3672,7 +3725,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Yum!",
             WET = "Too wet",
             DRY = "Too dry",
@@ -3719,7 +3771,7 @@ return{
 		{
 			GENERIC = "Friend holder",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nGood job!",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nProud of you!",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nProud of you!",
             HAS_ITEM_LIGHT = "Did their best",
 			BURNING = "No! Oh no!",
 			BURNT = "Gone...",
@@ -3754,14 +3806,77 @@ return{
 			FULL_WEED = "Don't bully other friends!",
 
 			BURNING = "Oh no oh no!",
-        },
-        
+		},
+
         FRUITFLY = "Mean!",
         LORDFRUITFLY = "No! Leave friends alone!",
         FRIENDLYFRUITFLY = "Nice to friends",
         FRUITFLYFRUIT = "Fruit bug friend maker",
 
         SEEDPOUCH = "Seed carry-arounder",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "Clothes maker",
+        YOTB_SEWINGMACHINE_ITEM = "Clothes maker bits",
+        YOTB_STAGE = "Hello!",
+        YOTB_POST =  "Friend watch Shaggy Buddy please",
+        YOTB_STAGE_ITEM = "Where to plant?",
+        YOTB_POST_ITEM =  "Put on ground",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Huh? Not finished",
+        YOTB_PATTERN_FRAGMENT_2 = "Huh? Not finished",
+        YOTB_PATTERN_FRAGMENT_3 = "Huh? Not finished",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "Squishy!",
+            YOTB = "Show to shaggy hidey man",
+        },
+
+
+        WAR_BLUEPRINT = "Scary!",
+        DOLL_BLUEPRINT = "Aww",
+        FESTIVE_BLUEPRINT = "Pretty",
+        ROBOT_BLUEPRINT = "Machine?",
+        NATURE_BLUEPRINT = "Covered in friends",
+        FORMAL_BLUEPRINT = "Fancy",
+        VICTORIAN_BLUEPRINT = "Lots of work...",
+        ICE_BLUEPRINT = "Brrr!",
+        BEAST_BLUEPRINT = "Lucky!",
+
+        BEEF_BELL = "Ding dong",
     },
 
     DESCRIBE_GENERIC = "Friend?",

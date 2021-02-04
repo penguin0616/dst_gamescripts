@@ -173,8 +173,6 @@ local CharacterSelectPanel = Class(LobbyPanel, function(self, owner)
 
 	local CharacterButtonCtor = Class(CharacterButton, function(self, character, cbPortraitFocused, cbPortraitClicked)
 		CharacterButton._ctor(self, character, cbPortraitFocused, cbPortraitClicked)
-		self:SetScale(0.95)
-		self.face:SetScale(1.1)
 	end)
 
 	local function BuildCharacterDetailsWidget(char)

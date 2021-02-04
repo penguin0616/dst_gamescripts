@@ -866,7 +866,6 @@ function d_farmplants(grow_stage, spacing)
 			end
 		end)
 end
-
 function d_plant(plant, num_wide, grow_stage, spacing)
 	spacing = spacing or 1.25
 
@@ -911,7 +910,7 @@ function d_oversized()
 	for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do
 		if v.product_oversized ~= nil then
 			table.insert(items, v.product_oversized)
+			end
 		end
-	end
 	_spawn_list(items, 3)
 end

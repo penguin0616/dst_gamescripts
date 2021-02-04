@@ -95,6 +95,7 @@ local SKIN_GIFT_TYPES =
 	reviver_cupid_2 = "CUPID",
 	reviver_cupid_3 = "CUPID",
 	reviver_cupid_4 = "CUPID",
+	saddle_basic_yotb = "YOTB",
 	saltbox_shaker = "TWITCH_DROP",
 	starstaff_crystal = "TWITCH_DROP",
 	telebase_crystal = "TWITCH_DROP",
@@ -103,6 +104,7 @@ local SKIN_GIFT_TYPES =
 	tophat_circus = "TWITCH_DROP",
 	torch_shadow = "ARG",
 	torch_shadow_alt = "ARG",
+	treasurechest_cupid = "CUPID",
 	treasurechest_sacred = "ANRARG",
 	umbrella_circus = "TWITCH_DROP",
 	wardrobe_crystal = "TWITCH_DROP",
@@ -247,6 +249,12 @@ local SKIN_GIFT_POPUPDATA =
 		atlas = "images/thankyou_winter.xml",
 		image = "winter.tex",
 		titleoffset = {0, -30, 0},
+	},
+	YOTB =
+	{
+		atlas = "images/thankyou_yotb.xml",
+		image = "yotb.tex",
+		titleoffset = {0, -20, 0},
 	},
 	YOTP =
 	{

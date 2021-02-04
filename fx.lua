@@ -1205,7 +1205,13 @@ local fx =
         bank = "redpouch",
         build = "redpouch",
         anim = "unwrap",
-    },    
+    },  
+    {
+        name = "redpouch_yotb_unwrap",
+        bank = "redpouch",
+        build = "redpouch",
+        anim = "unwrap",
+    },        
     {
         name = "yotc_seedpacket_unwrap",
         bank = "bundle",
@@ -1872,7 +1878,12 @@ local fx =
         anim = "unhappy",
         fn = FinalOffset1,
     },
-
+    {
+        name = "yotb_confetti",
+        bank = "beefalo_fx",
+        build = "beefalo_fx",
+        anim = "transform",
+    },
 }
 
 for cratersteamindex = 1, 4 do

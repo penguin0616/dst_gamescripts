@@ -7,6 +7,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.CHOP, "chop"),
     ActionHandler(ACTIONS.MINE, "mine"),
     ActionHandler(ACTIONS.HAMMER, "hammer"),
+    ActionHandler(ACTIONS.MARK, "chop"),
+    ActionHandler(ACTIONS.PICKUP, "pickup"),
 }
 
 
@@ -58,6 +60,16 @@ local events=
     EventHandler("onmermkingdestroyed", function(inst) 
         inst.sg:GoToState("debuff")
     end),   
+    EventHandler("cheer", function(inst, data)
+        if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
+            inst.sg:GoToState("cheer")
+        end
+    end),
+    EventHandler("win_yotb", function(inst, data)
+        if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
+            inst.sg:GoToState("win_yotb")
+        end
+    end),       
 }
 
 local states=
@@ -314,6 +326,40 @@ local states=
             end),
         },
     },
+
+    State{
+        name = "cheer",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("buff")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
+     
+    State{
+        name = "win_yotb",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("win")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
 }
 
 CommonStates.AddWalkStates(states,
@@ -363,6 +409,6 @@ CommonStates.AddSimpleState(states, "refuse", "pig_reject", { "busy" })
 CommonStates.AddFrozenStates(states)
 CommonStates.AddHopStates(states, true, { pre = "boat_jump_pre", loop = "boat_jump_loop", pst = "boat_jump_pst"})
 CommonStates.AddSinkAndWashAsoreStates(states)
-
+CommonStates.AddSimpleActionState(states, "pickup", "pig_pickup", 10 * FRAMES, { "busy" })
     
 return StateGraph("merm", states, events, "idle", actionhandlers)

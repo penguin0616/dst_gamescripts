@@ -535,13 +535,14 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
-            return action.target ~= nil
+            return (inst.components.rider ~= nil and inst.components.rider:IsRiding() and "dolongaction")
+                or (action.target ~= nil
                 and action.target.components.pickable ~= nil
                 and (   (action.target.components.pickable.jostlepick and "dojostleaction") or
                         (action.target.components.pickable.quickpick and "doshortaction") or
                         (inst:HasTag("fastpicker") and "doshortaction") or
                         (inst:HasTag("quagmire_fasthands") and "domediumaction") or
-                        "dolongaction"  )
+                        "dolongaction"  ))
                 or nil
         end),
 
@@ -583,9 +584,11 @@ local actionhandlers =
     ActionHandler(ACTIONS.FILL_OCEAN, "dolongaction"),
     ActionHandler(ACTIONS.PICKUP,
         function(inst, action)
-            return action.target ~= nil
-                and action.target:HasTag("minigameitem")
-                and "dosilentshortaction"
+            return (action.target ~= nil and action.target:HasTag("minigameitem") and "dosilentshortaction")
+                or (inst.components.rider ~= nil and inst.components.rider:IsRiding()
+                    and (action.target ~= nil and action.target:HasTag("heavy") and "dodismountaction"
+                        or "domediumaction")
+                    )
                 or "doshortaction"
         end),
     ActionHandler(ACTIONS.CHECKTRAP, "doshortaction"),
@@ -630,6 +633,7 @@ local actionhandlers =
                     )
                 or "give"
         end),
+    ActionHandler(ACTIONS.APPRAISE, "give"),
     ActionHandler(ACTIONS.GIVETOPLAYER, "give"),
     ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),
     ActionHandler(ACTIONS.FEEDPLAYER, "give"),
@@ -719,6 +723,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.CATCH, "catch_pre"),
 
     ActionHandler(ACTIONS.CHANGEIN, "usewardrobe"),
+    ActionHandler(ACTIONS.HITCHUP, "usewardrobe"),
+    ActionHandler(ACTIONS.UNHITCH, "usewardrobe"),
+    ActionHandler(ACTIONS.MARK, "doshortaction"),
     ActionHandler(ACTIONS.WRITE, "doshortaction"),
     ActionHandler(ACTIONS.ATTUNE, "dolongaction"),
     ActionHandler(ACTIONS.MIGRATE, "migrate"),
@@ -843,13 +850,29 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.INTERACT_WITH,
         function(inst, action)
-            return inst:HasTag("plantkin") and "domediumaction" or "dolongaction"
+            return inst:HasTag("plantkin") and "domediumaction" or 
+                   action.target:HasTag("yotb_stage") and "doshortaction" or
+                   "dolongaction"
         end),
     ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH_FAIL, "dolongaction"),
     ActionHandler(ACTIONS.PLANTREGISTRY_RESEARCH, "dolongaction"),
     ActionHandler(ACTIONS.ASSESSPLANTHAPPINESS, "dolongaction"),
     ActionHandler(ACTIONS.ADDCOMPOSTABLE, "give"),
     ActionHandler(ACTIONS.WAX, "dolongaction"),
+
+    ActionHandler(ACTIONS.USEITEMON, function(inst, action)
+        if action.invobject == nil then
+            return "dolongaction"
+        elseif action.invobject:HasTag("bell") then
+            return "use_beef_bell"
+        else
+            return "dolongaction"
+        end
+    end),
+    ActionHandler(ACTIONS.STOPUSINGITEM, "dolongaction"),
+    ActionHandler(ACTIONS.YOTB_STARTCONTEST, "doshortaction"),
+    ActionHandler(ACTIONS.YOTB_UNLOCKSKIN, "dolongaction"),
+    ActionHandler(ACTIONS.YOTB_SEW, "dolongaction"),
 }
 
 local events =
@@ -1198,6 +1221,7 @@ local events =
                     inst.sg:HasStateTag("sleeping"))
                 and not inst.components.inventory:IsHeavyLifting()
                 and (data.mounted or not inst.components.rider:IsRiding())
+                and (not data.mountonly or inst.components.rider:IsRiding())
                 and (data.beaver or not inst:HasTag("beaver"))
                 and (data.moose or not inst:HasTag("weremoose"))
                 and (data.goose or not inst:HasTag("weregoose"))
@@ -1279,6 +1303,12 @@ local events =
     EventHandler("singsong", function(inst, data)
         if (inst.components.health == nil or not inst.components.health:IsDead()) and not inst.sg:HasStateTag("busy") then
             inst.sg:GoToState("singsong", data)
+        end
+    end),
+
+    EventHandler("yotb_learnblueprint", function(inst, data)
+        if (inst.components.health == nil or not inst.components.health:IsDead()) then
+            inst.sg:GoToState("research", data)
         end
     end),
 
@@ -4319,7 +4349,7 @@ local states =
             inst.components.inventory:Hide()
             inst:PushEvent("ms_closepopups")
             inst:ShowActions(false)
-            inst:ShowGiftItemPopUp(true)
+            inst:ShowPopUp(POPUPS.GIFTITEM, true)
 
             if inst.components.giftreceiver ~= nil then
                 inst.components.giftreceiver:OnStartOpenGift()
@@ -4367,7 +4397,7 @@ local states =
                 inst.components.inventory:Show()
                 inst:ShowActions(true)
             end
-            inst:ShowGiftItemPopUp(false)
+            inst:ShowPopUp(POPUPS.GIFTITEM, false)
         end,
     },
 
@@ -4422,8 +4452,13 @@ local states =
                 inst:ShowActions(false)
             elseif inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
+            end            
+            if data.target and data.target.components.groomer then
+                assert(data.target.components.groomer.occupant,"Grooming station had not occupant")
+                inst:ShowPopUp(POPUPS.GROOMER, true, data.target.components.groomer.occupant, inst)
+            else
+                inst:ShowPopUp(POPUPS.WARDROBE, true, data.target)
             end
-            inst:ShowWardrobePopUp(true, data.target)
         end,
 
         events =
@@ -4442,7 +4477,8 @@ local states =
         },
 
         onexit = function(inst)
-            inst:ShowWardrobePopUp(false)
+            inst:ShowPopUp(POPUPS.GROOMER, false)
+            inst:ShowPopUp(POPUPS.WARDROBE, false)
             if not inst.sg.statemem.ischanging then
                 if inst.components.playercontroller ~= nil then
                     inst.components.playercontroller:EnableMapControls(true)
@@ -4452,7 +4488,7 @@ local states =
                 inst:ShowActions(true)
                 if not inst.sg.statemem.isclosingwardrobe then
                     inst.sg.statemem.isclosingwardrobe = true
-                    inst:PushEvent("ms_closewardrobe")
+                    POPUPS.WARDROBE:Close(inst)
                 end
             end
         end,
@@ -4510,7 +4546,7 @@ local states =
             inst:ShowActions(true)
             if not inst.sg.statemem.isclosingwardrobe then
                 inst.sg.statemem.isclosingwardrobe = true
-                inst:PushEvent("ms_closewardrobe")
+                POPUPS.WARDROBE:Close(inst)
             end
         end,
     },
@@ -4575,7 +4611,7 @@ local states =
             inst:ShowActions(true)
             if not inst.sg.statemem.isclosingwardrobe then
                 inst.sg.statemem.isclosingwardrobe = true
-                inst:PushEvent("ms_closewardrobe")
+                POPUPS.WARDROBE:Close(inst)
             end
         end,
     },
@@ -4629,7 +4665,7 @@ local states =
             inst:ShowActions(true)
             if not inst.sg.statemem.isclosingwardrobe then
                 inst.sg.statemem.isclosingwardrobe = true
-                inst:PushEvent("ms_closewardrobe")
+                POPUPS.WARDROBE:Close(inst)
             end
         end,
     },
@@ -4661,17 +4697,15 @@ local states =
 
         events =
         {
-            EventHandler("ms_closecookbookscreen", function(inst)
-				inst.sg.statemem.closing = true
-                inst.sg:GoToState("cookbook_close")
+            EventHandler("ms_closepopup", function(inst, data)
+                if data.popup == POPUPS.COOKBOOK then
+                    inst.sg:GoToState("cookbook_close")
+                end
             end),
         },
 
         onexit = function(inst)
-		    inst:ShowCookbookPopUp(false)
-			if not inst.sg.statemem.closing then
-                inst:PushEvent("ms_closecookbookscreen")
-			end
+		    inst:ShowPopUp(POPUPS.COOKBOOK, false)
         end,
     },
 
@@ -4718,17 +4752,15 @@ local states =
 
         events =
         {
-            EventHandler("ms_closeplantregistryscreen", function(inst)
-				inst.sg.statemem.closing = true
-                inst.sg:GoToState("plantregistry_close")
+            EventHandler("ms_closepopup", function(inst, data)
+                if data.popup == POPUPS.PLANTREGISTRY then
+                    inst.sg:GoToState("plantregistry_close")
+                end
             end),
         },
 
         onexit = function(inst)
-		    inst:ShowPlantRegistryPopUp(false)
-			if not inst.sg.statemem.closing then
-                inst:PushEvent("ms_closeplantregistryscreen")
-			end
+		    inst:ShowPopUp(POPUPS.PLANTREGISTRY, false)
         end,
     },
 
@@ -4883,7 +4915,8 @@ local states =
             inst.components.locomotor:Stop()
             inst:ClearBufferedAction()
 
-            inst.AnimState:PlayAnimation("heavy_pickup_pst")
+            local mount = inst.components.rider:GetMount()
+            inst.AnimState:PlayAnimation(mount ~= nil and "heavy_mount" or "heavy_pickup_pst")
 
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
@@ -5373,6 +5406,58 @@ local states =
         end,
     },
 
+    State
+    {
+        name = "dodismountaction",
+        tags = { "doing", "busy", "nodangle" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+
+            inst.AnimState:PlayAnimation("dismount")
+            if inst.bufferedaction ~= nil then
+                inst.sg.statemem.action = inst.bufferedaction
+                if inst.bufferedaction.action.actionmeter then
+                    inst.sg.statemem.actionmeter = true
+                    StartActionMeter(inst, 43*FRAMES)
+                end
+                if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
+                    inst.bufferedaction.target:PushEvent("startlongaction")
+                end
+            end
+        end,
+
+        timeline =
+        {
+            TimeEvent(4*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(15*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.sg.statemem.actionmeter then
+                    inst.sg.statemem.actionmeter = nil
+                    StopActionMeter(inst, true)
+                end
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.sg.statemem.actionmeter then
+                StopActionMeter(inst, false)
+            end
+            if inst.bufferedaction == inst.sg.statemem.action then
+                inst:ClearBufferedAction()
+            end
+        end,
+    },
+
     State{
         name = "makeballoon",
         tags = { "doing", "busy", "nodangle" },
@@ -5856,6 +5941,58 @@ local states =
                 end
             end),
         },
+    },
+
+    State
+    {
+        name = "use_beef_bell",
+        tags = { "doing", "playing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("action_uniqueitem_pre")
+            inst.AnimState:PushAnimation("cowbell", false)
+            inst.AnimState:OverrideSymbol("cbell", "cowbell", "cbell")
+            inst.AnimState:Show("ARM_normal")
+
+            local invitem = (inst.bufferedaction ~= nil and inst.bufferedaction.invobject) or nil
+            inst.components.inventory:ReturnActiveActionItem(invitem)
+        end,
+
+        timeline =
+        {
+            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            TimeEvent(10*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+
+            TimeEvent(15 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+
+            TimeEvent(15*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            TimeEvent(25*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            TimeEvent(35*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            TimeEvent(56*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+            TimeEvent(67*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
+
+            
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil then
+                inst.AnimState:Show("ARM_carry")
+                inst.AnimState:Hide("ARM_normal")
+            end
+        end,
     },
 
     State{
@@ -13732,6 +13869,46 @@ local states =
                 TheWorld:PushEvent("feasterfinished",{player=inst, target=target, is_in_dark=inst.sg.statemem.is_in_dark})                
             end
         end,
+    },
+
+    State{
+        name = "research",
+        tags = { "busy", "pausepredict", "nomorph" },
+
+        onenter = function(inst)
+            ForceStopHeavyLifting(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("research")
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:RemotePausePrediction()
+            end
+        end,
+
+        timeline =
+        {
+            TimeEvent(14 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("yotb_2021/common/heel_click")
+            end),
+
+            TimeEvent(23 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("yotb_2021/common/heel_click")
+            end),
+
+            TimeEvent(33 * FRAMES, function(inst)
+                --Lava Arena adds nointerrupt state tag to prevent hit interruption
+                inst.sg:RemoveStateTag("nointerrupt")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
     },
 
 }

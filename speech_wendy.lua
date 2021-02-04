@@ -17,6 +17,7 @@ return{
 			GENERIC = "I'm not taking a razor to that.",
 			NOBITS = "She's already lost everything.",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "I really shouldn't.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "What's the point.",
             BURNING = "I guess I won't be changing again anytime soon.",
             INUSE = "I'd like to use that after you. If you don't mind, I mean.",
+            NOTENOUGHHAIR = "Perhaps once its fur grows in.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "I have no water left to give.",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "It cannot be so.",
+            BEEF_BELL_ALREADY_USED = "It shares a bond with someone else.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "I will not replace my dear beefalo.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "Oh where could a beefalo be?",
+            NEEDBEEF_CLOSER = "Come closer, dear beefalo. I won't hurt you.",
+            BEEF_HITCHED = "My beefalo can only leave when I choose it so.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "I made my choice.",
+            NOT_PARTICIPANT = "Maybe next time I can enter a beefalo of my own...",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Hello sir? He seems to be out.",
+            ALREADYACTIVE = "He must be busy somewhere else.",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Ah. I've seen it before.",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "I can't do anything right.",
 	ANNOUNCE_BOAT_LEAK = "Our boat weeps salty tears.",
@@ -636,6 +668,11 @@ return{
         "It must be so lonely, being stuck in the ground...",
         "Shall I stay and talk with you for a while?",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Come now dear creature, don't be afraid.",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Closer to the judge would be best.",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Oh. Maybe I could try making this new costume...",
 
 	BATTLECRY =
 	{
@@ -1296,6 +1333,7 @@ return{
             ORNERY = "The world has wronged you.",
             RIDER = "Together we can venture far.",
             PUDGY = "More of the world is within the beast than without.",
+            MYPARTNER = "At least we have each other for company.",
 		},
 
 		BEEFALOHAT = "To cover one's head.",
@@ -1482,7 +1520,7 @@ return{
 		COOKEDMANDRAKE = "It was a good death. You will be delicious.",
 		COOKEDMEAT = "The remaining blood has been cooked away.",
 		COOKEDMONSTERMEAT = "Cooked evil is still evil.",
-		COOKEDSMALLMEAT = "Fire has purified it.",        
+		COOKEDSMALLMEAT = "Fire has purified it.",
 		COOKPOT =
 		{
 			COOKING_LONG = "Whatever's in there isn't dead yet.",
@@ -2544,6 +2582,21 @@ return{
             CARRAT_GOOD = "Oh... that's actually pretty good.",
             BURNT = "\"Ashes, ashes, we all fall down.\"",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "The highest honor this beast of burden will likely ever recieve.",
+            EMPTY = "It demands an offering.",
+            BURNT = "There's nothing left of it.",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "Beauty, like all things, will fade and be forgotten.",
+            OCCUPIED = "I can change its appearance, but it will always just be a beefalo.",
+            BURNT = "Burned to ashes.",
+        },
+        BEEFALO_GROOMER_ITEM = "Sigh. Endless toil.",
 
 		BISHOP_CHARGE_HIT = "Ouch...",
 		TRUNKVEST_SUMMER = "Skin to wear over your skin.",
@@ -3672,7 +3725,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Food for worms.",
             WET = "It's far too watery, the poor plants might drown.",
             DRY = "Dry and brittle.",
@@ -3719,7 +3771,7 @@ return{
 		{
 			GENERIC = "A fleeting distraction from our pitiable lives.",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nI suppose that's good.",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI'd certainly be crushed under its weight.",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI'd certainly be crushed under its weight.",
             HAS_ITEM_LIGHT = "I could weigh it against a feather.",
 			BURNING = "Nothing can ever last.",
 			BURNT = "Ashes to ashes.",
@@ -3754,14 +3806,77 @@ return{
 			FULL_WEED = "It is the tragic fate of all weeds to be spurned from the garden.",
 
 			BURNING = "All that work, destroyed...",
-        },
-        
+		},
+
         FRUITFLY = "They have no respect for living things.",
         LORDFRUITFLY = "I would curtsy, but I've decided that I don't like you at all.",
         FRIENDLYFRUITFLY = "Oh. It seems to be friendly.",
         FRUITFLYFRUIT = "Now you may trade your lord for a queen.",
 
         SEEDPOUCH = "Another burden for me to shoulder.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "Mother liked to sew matching outfits for Abigail and I.",
+        YOTB_SEWINGMACHINE_ITEM = "It needs to be put together before it can be of any use.",
+        YOTB_STAGE = "What a strange little booth.",
+        YOTB_POST =  "Where my beefalo will await judgment.",
+        YOTB_STAGE_ITEM = "I suppose putting that together will distract me from my misery for a while.",
+        YOTB_POST_ITEM =  "Where should I lay it to rest, I wonder?",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Merely a lonely part of a completed whole.",
+        YOTB_PATTERN_FRAGMENT_2 = "Merely a lonely part of a completed whole.",
+        YOTB_PATTERN_FRAGMENT_3 = "Merely a lonely part of a completed whole.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "What a sweet little doll.",
+            YOTB = "Mr. Judge might like to see it.",
+        },
+
+
+        WAR_BLUEPRINT = "Even seemingly gentle creatures have a dark side.",
+        DOLL_BLUEPRINT = "It's pretty.",
+        FESTIVE_BLUEPRINT = "It's so colorful, it hurts my eyes.",
+        ROBOT_BLUEPRINT = "Oh to be encased within a hard and unfeeling exterior...",
+        NATURE_BLUEPRINT = "Do you like this one, Abigail?",
+        FORMAL_BLUEPRINT = "It looks very dignified.",
+        VICTORIAN_BLUEPRINT = "Playing dress-up with a beefalo is... quite fun...",
+        ICE_BLUEPRINT = "It reflects the coldness I feel inside.",
+        BEAST_BLUEPRINT = "May it give my beefalo more luck than I've had.",
+
+        BEEF_BELL = "Alas, not a death knell.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

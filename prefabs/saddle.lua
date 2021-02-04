@@ -30,8 +30,13 @@ local function MakeSaddle(name, data)
 
         MakeInventoryFloatable(inst, data.floater[1], data.floater[2], data.floater[3])
 
-        inst.entity:SetPristine()
+        if data.extra_tags ~= nil then
+            for _, tag in ipairs(data.extra_tags) do
+                inst:AddTag(tag)
+            end
+        end
 
+        inst.entity:SetPristine()
         if not TheWorld.ismastersim then
             return inst
         end
@@ -72,6 +77,7 @@ local data = {
         uses = TUNING.SADDLE_WAR_USES,
         speedmult = TUNING.SADDLE_WAR_SPEEDMULT,
         floater = {"small", 0.1, 0.7},
+        extra_tags = {"combatmount"},
     },
     race = {
         bonusdamage = TUNING.SADDLE_RACE_BONUS_DAMAGE,

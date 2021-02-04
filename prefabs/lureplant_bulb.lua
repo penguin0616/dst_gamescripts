@@ -55,7 +55,7 @@ local function fn()
 
     inst:AddComponent("deployable")
     --inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
-    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.NONE)
+    --inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.DEFAULT)
     inst.components.deployable.ondeploy = ondeploy
 
     return inst

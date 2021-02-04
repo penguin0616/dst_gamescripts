@@ -50,6 +50,24 @@ end
 --------------------------------------------------------------------------
 local TARGET_MUST_TAGS = { "catchable" }
 local TARGET_EXCLUDE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
+local PICKUP_TAGS =
+{
+    "_inventoryitem",
+    "pickable",
+    "donecooking",
+    "readyforharvest",
+    "notreadyforharvest",
+    "harvestable",
+    "trapsprung",
+    "minesprung",
+    "dried",
+    "inactive",
+    "smolder",
+    "saddled",
+    "brushable",
+    "tapped_harvestable",
+}
+local PICKUP_TARGET_EXCLUDE_TAGS = { "catchable", "mineactive", "intense" }
 local function ActionButtonOverride(inst, force_target)
     --catching
     if inst:HasTag("cancatch") and not inst.components.playercontroller:IsDoingOrWorking() then
@@ -61,6 +79,34 @@ local function ActionButtonOverride(inst, force_target)
         elseif inst:GetDistanceSqToInst(force_target) <= 100 and
             force_target:HasTag("catchable") then
             return BufferedAction(inst, force_target, ACTIONS.CATCH)
+        end
+    end
+
+    --miscellaneous actions
+    if force_target == nil then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local ents = TheSim:FindEntities(
+            x, y, z,
+            inst.components.playercontroller.directwalking and 3 or 6,
+            nil,
+            PICKUP_TARGET_EXCLUDE_TAGS,
+            PICKUP_TAGS
+        )
+        for _, v in ipairs(ents) do
+            if v ~= inst and v.entity:IsVisible() and CanEntitySeeTarget(inst, v) then
+                local action = nil
+
+                if v.replica.inventoryitem ~= nil and v.replica.inventoryitem:CanBePickedUp() and
+                        not (v:HasTag("heavy") or v:HasTag("fire") or v:HasTag("catchable")) then
+                    action = (inst.components.playercontroller:HasItemSlots() or v.replica.equippable ~= nil) and ACTIONS.PICKUP or nil
+                elseif v:HasTag("pickable") and not v:HasTag("fire") then
+                    action = ACTIONS.PICK
+                end
+
+                if action ~= nil then
+                    return BufferedAction(inst, v, action)
+                end
+            end
         end
     end
 end

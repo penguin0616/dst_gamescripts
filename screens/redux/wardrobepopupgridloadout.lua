@@ -181,11 +181,7 @@ function GridWardrobePopupScreen:Close()
 	if not IsValidClothing( data.legs ) or not TheInventory:CheckOwnership(data["legs"]) then data.legs = "" end
 	if not IsValidClothing( data.feet ) or not TheInventory:CheckOwnership(data["feet"]) then data.feet = "" end
 
-    if not TheWorld.ismastersim then
-        SendRPCToServer(RPC.CloseWardrobe, data.base, data.body, data.hand, data.legs, data.feet)
-    elseif self.owner_player ~= nil then
-        self.owner_player:PushEvent("ms_closewardrobe", data)
-    end
+    POPUPS.WARDROBE:Close(self.owner_player, data.base, data.body, data.hand, data.legs, data.feet)
 
 	self.timestamp = self:GetTimestamp()
 	self.profile:SetCollectionTimestamp(self.timestamp)

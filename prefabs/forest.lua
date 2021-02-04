@@ -516,7 +516,10 @@ local function master_postinit(inst)
     end
     
     inst:AddComponent("feasts")
+    
     inst:AddComponent("yotc_raceprizemanager")
+    inst:AddComponent("yotb_stagemanager")
+
     inst:AddComponent("sharklistener")
 
     if METRICS_ENABLED then

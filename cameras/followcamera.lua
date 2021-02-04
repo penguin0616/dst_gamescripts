@@ -81,6 +81,15 @@ function FollowCamera:GetDownVec()
     return Vector3(math.cos(heading), 0, math.sin(heading))
 end
 
+function FollowCamera:GetPitchDownVec()
+    local pitch = self.pitch * DEGREES
+    local heading = self.heading * DEGREES
+    local cos_pitch = -math.cos(pitch)
+    local cos_heading = math.cos(heading)
+    local sin_heading = math.sin(heading)
+    return Vector3(cos_pitch * cos_heading, -math.sin(pitch), cos_pitch * sin_heading)
+end
+
 function FollowCamera:SetPaused(val)
 	self.paused = val
 end

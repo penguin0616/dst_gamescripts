@@ -287,14 +287,14 @@ local function KeepFaceTargetFn(inst, target)
         and inst:IsNear(target, KEEP_FACE_DIST)
 end
 
-function DoCommentAction(inst)
+local function DoCommentAction(inst)
     if inst.comment_data then
         return BufferedAction(inst, nil, ACTIONS.COMMENT, nil, inst.comment_data.pos)
     end
 end
 
 local HARVEST_TAGS = {"dried"}
-function DoHarvestMeat(inst)
+local function DoHarvestMeat(inst)
     local source = inst.CHEVO_marker
     if source then
         local x,y,z = source.Transform:GetWorldPosition()
@@ -312,7 +312,7 @@ function DoHarvestMeat(inst)
 end
 
 local PICKABLE_TAGS = {"pickable","bush"}
-function DoHarvestBerries(inst)
+local function DoHarvestBerries(inst)
     local source = inst.CHEVO_marker
     if source then 
         local x,y,z = source.Transform:GetWorldPosition()
@@ -332,7 +332,7 @@ end
 
 local FISHING_MARKER_TAGS = {"hermitcrab_marker_fishing"}
 local FISH_TAGS = {"oceanfish"}
-function DoFishingAction(inst)
+local function DoFishingAction(inst)
     if not using_umbrella(inst) then
         local source = inst.CHEVO_marker
         if source then
@@ -359,13 +359,13 @@ function DoFishingAction(inst)
     end
 end
 
-function DoReel(inst)
+local function DoReel(inst)
     if inst.hookfish and inst:HasTag("fishing_idle") then
         return BufferedAction(inst, nil, ACTIONS.OCEAN_FISHING_REEL)
     end
 end
 
-function runawaytest(inst)
+local function runawaytest(inst)
     if inst.components.friendlevels.level <= TUNING.HERMITCRAB.UNFRIENDLY_LEVEL then
         local player = FindClosestPlayerToInst(inst, STOP_RUN_DIST, true)
         if not player then
@@ -380,7 +380,7 @@ function runawaytest(inst)
     end
 end
 
-function DoBottleToss(inst)
+local function DoBottleToss(inst)
     if not inst.components.timer:TimerExists("bottledelay") and not using_umbrella(inst) then
         local source = inst.CHEVO_marker
         if source then

@@ -7,11 +7,13 @@ local assets =
     Asset("ANIM", "anim/pig_build.zip"),
     Asset("ANIM", "anim/pigspotted_build.zip"),
     Asset("ANIM", "anim/pig_guard_build.zip"),
+    Asset("ANIM", "anim/pigman_yotb.zip"),
     Asset("ANIM", "anim/werepig_build.zip"),
     Asset("ANIM", "anim/werepig_basic.zip"),
     Asset("ANIM", "anim/werepig_actions.zip"),
     Asset("ANIM", "anim/pig_token.zip"),
     Asset("SOUND", "sound/pig.fsb"),
+    Asset("ANIM", "anim/merm_actions.zip"),    
 }
 
 local PIG_TOKEN_PREFAB = "pig_token"
@@ -200,7 +202,11 @@ local guardbuilds = { "pig_guard_build" }
 local RETARGET_MUST_TAGS = { "_combat" }
 
 local function NormalRetargetFn(inst)
-	local exclude_tags = { "playerghost", "INLIMBO" }
+    if inst:HasTag("NPC_contestant") then
+        return nil
+    end    
+
+	local exclude_tags = { "playerghost", "INLIMBO" , "NPC_contestant" }
 	if inst.components.follower.leader ~= nil then
 		table.insert(exclude_tags, "abigail")
 	end
@@ -574,6 +580,10 @@ local function common(moonbeast)
     inst.AnimState:SetBank("pigman")
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:Hide("hat")
+
+    if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
+        inst.AnimState:AddOverrideBuild("pigman_yotb")
+    end
 
     --Sneak these into pristine state for optimization
     inst:AddTag("_named")

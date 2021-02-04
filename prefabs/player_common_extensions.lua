@@ -686,7 +686,7 @@ return
     OnSpooked                   = OnSpooked,
 	OnLearnCookbookRecipe		= OnLearnCookbookRecipe,
 	OnLearnCookbookStats		= OnLearnCookbookStats,
-    OnEat						= OnEat,
+	OnEat						= OnEat,
     OnLearnPlantStage           = OnLearnPlantStage,
     OnLearnFertilizer           = OnLearnFertilizer,
     OnTakeOversizedPicture      = OnTakeOversizedPicture,

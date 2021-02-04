@@ -138,6 +138,63 @@ end
 params.wobybig = params.wobysmall
 
 --------------------------------------------------------------------------
+--[[ sewingmachine ]]
+--------------------------------------------------------------------------
+
+params.yotb_sewingmachine =
+{
+
+    widget =
+    {
+        slotpos =
+        {
+            Vector3(-(64 + 12), 0, 0), 
+            Vector3(0, 0, 0),
+            Vector3(64 + 12, 0, 0), 
+        },
+
+        slotbg =
+        {
+            { image = "yotb_sewing_slot.tex", atlas = "images/hud2.xml" },
+            { image = "yotb_sewing_slot.tex", atlas = "images/hud2.xml" },
+            { image = "yotb_sewing_slot.tex", atlas = "images/hud2.xml" },
+        },
+
+        animbank = "ui_chest_3x1",
+        animbuild = "ui_chest_3x1",
+        pos = Vector3(0, 200, 0),
+        side_align_tip = 100,
+
+        buttoninfo =
+        {
+            text = STRINGS.ACTIONS.YOTB_SEW,
+            position = Vector3(0, -65, 0),
+        }
+    },
+    acceptsstacks = false,
+    type = "cooker",
+}
+
+function params.yotb_sewingmachine.itemtestfn(container, item, slot)
+    --TODO: check if we actually accept the item
+    return item:HasTag("yotb_pattern_fragment")
+end
+
+function params.yotb_sewingmachine.widget.buttoninfo.fn(inst)
+    if inst.components.container ~= nil then
+        BufferedAction(inst.components.container.opener, inst, ACTIONS.YOTB_SEW):Do()
+    elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+        SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.YOTB_SEW.code, inst, ACTIONS.YOTB_SEW.mod_name)
+    end
+end
+
+function params.yotb_sewingmachine.widget.buttoninfo.validfn(inst)
+    return inst.replica.container ~= nil and inst.replica.container:IsFull()
+end
+
+
+
+--------------------------------------------------------------------------
 --[[ cookpot ]]
 --------------------------------------------------------------------------
 

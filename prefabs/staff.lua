@@ -346,6 +346,7 @@ local function teleport_func(inst, target)
 
 	local loctarget = target.components.minigame_participator ~= nil and target.components.minigame_participator:GetMinigame()
 						or target.components.teleportedoverride ~= nil and target.components.teleportedoverride:GetDestTarget()
+                        or target.components.hitchable ~= nil and target:HasTag("hitched") and target.components.hitchable.hitched
 						or nil
 
 	if loctarget == nil and not target_in_ocean then

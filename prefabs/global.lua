@@ -25,6 +25,9 @@ local assets =
     Asset("SOUNDPACKAGE", "sound/farming.fev"),
     Asset("FILE", "sound/farming.fsb"),
 
+    Asset("SOUNDPACKAGE", "sound/yotb_2021.fev"),
+    Asset("FILE", "sound/yotb_2021.fsb"),
+
     Asset("SOUNDPACKAGE", "sound/wintersfeast2019.fev"),
     Asset("FILE", "sound/wintersfeast2019.fsb"),
 
@@ -311,6 +314,7 @@ local assets =
     Asset("ANIM", "anim/weregoose_basic.zip"),
     Asset("ANIM", "anim/player_idles.zip"),
     Asset("ANIM", "anim/player_idles_walter.zip"),
+    Asset("ANIM", "anim/player_idles_ui.zip"),
 
     Asset("DYNAMIC_ANIM", "anim/dynamic/body_default1.zip"),
     Asset("DYNAMIC_ANIM", "anim/dynamic/hand_default1.zip"),
@@ -320,6 +324,18 @@ local assets =
     Asset("PKGREF", "anim/dynamic/hand_default1.dyn"),
     Asset("PKGREF", "anim/dynamic/legs_default1.dyn"),
     Asset("PKGREF", "anim/dynamic/feet_default1.dyn"),
+
+    Asset("DYNAMIC_ANIM", "anim/dynamic/beef_body_default1.zip"),
+    Asset("DYNAMIC_ANIM", "anim/dynamic/beef_horn_default1.zip"),
+    Asset("DYNAMIC_ANIM", "anim/dynamic/beef_head_default1.zip"),
+    Asset("DYNAMIC_ANIM", "anim/dynamic/beef_tail_default1.zip"),
+    Asset("DYNAMIC_ANIM", "anim/dynamic/beef_feet_default1.zip"),
+    Asset("PKGREF", "anim/dynamic/beef_body_default1.dyn"),
+    Asset("PKGREF", "anim/dynamic/beef_horn_default1.dyn"),
+    Asset("PKGREF", "anim/dynamic/beef_head_default1.dyn"),
+    Asset("PKGREF", "anim/dynamic/beef_tail_default1.dyn"),
+    Asset("PKGREF", "anim/dynamic/beef_feet_default1.dyn"),
+
 
     Asset("ANIM", "anim/beard.zip"),
     Asset("ANIM", "anim/beard_silk.zip"),
@@ -362,6 +378,10 @@ end
 for _, skin_asset in pairs(require("skin_assets")) do
     table.insert(assets, skin_asset)
 end
+
+--random player face for new anim character button
+table.insert(assets, Asset("DYNAMIC_ANIM", "anim/dynamic/random.zip"))
+table.insert(assets, Asset("PKGREF", "anim/dynamic/random.dyn"))
 
 -- cookbook HD images
 local cooking = require("cooking")

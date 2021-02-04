@@ -34,6 +34,7 @@ local TargetIndicator = require "widgets/targetindicator"
 local EventAnnouncer = require "widgets/eventannouncer"
 local GiftItemPopUp = require "screens/giftitempopup"
 local GridWardrobePopupScreen = require "screens/redux/wardrobepopupgridloadout"
+local GridGroomerPopupScreen = require "screens/redux/groomerpopupgridloadout"
 local ScarecrowClothingPopupScreen = require "screens/scarecrowclothingpopup"
 local PlayerAvatarPopup = require "widgets/playeravatarpopup"
 local DressupAvatarPopup = require "widgets/dressupavatarpopup"
@@ -51,6 +52,7 @@ local PlayerHud = Class(Screen, function(self)
     self.playerstatusscreen = nil
     self.giftitempopup = nil
     self.wardrobepopup = nil
+    self.groomerpopup = nil
     self.playeravatarpopup = nil
     self.recentgifts = nil
     self.recentgiftstask = nil
@@ -396,13 +398,13 @@ function PlayerHud:OpenWardrobeScreen(target)
         TheFrontEnd:PopScreen(self.wardrobepopup)
     end
 
-    if target ~= nil then
+    if target ~= nil then        
         self.wardrobepopup =
             ScarecrowClothingPopupScreen(
                 target,
                 self.owner,
                 Profile
-            )
+            )        
     else
         self.wardrobepopup =
             GridWardrobePopupScreen(
@@ -448,7 +450,64 @@ function PlayerHud:CloseWardrobeScreen()
     end
 end
 
+
+function PlayerHud:OpenGroomerScreen(target,filter)
+    --Hack for holding offset when transitioning from giftitempopup to groomerpopup
+    TheCamera:PopScreenHOffset(self)
+
+    if self.groomerpopup ~= nil and self.groomerpopup.inst:IsValid() then
+        TheFrontEnd:PopScreen(self.groomerpopup)
+    end
+
+    assert(target, "No Target for skinning")
+   -- assert(target.components.skinner_beefalo, "TARGET IS NOT SKINABLE BEEFALO")
+    self.groomerpopup =
+        GridGroomerPopupScreen(
+            target,
+            self.owner,
+            Profile,
+            nil,
+            nil,
+            filter
+        )
+
+    if not TheWorld.ismastersim then
+        local map = TheFrontEnd:GetOpenScreenOfType("MapScreen")
+        if map ~= nil and self.controls ~= nil then
+            self.controls:HideMap()
+        end
+    end
+
+    self:ClearRecentGifts()
+    self:OpenScreenUnderPause(self.groomerpopup)
+    return true
+end
+
+function PlayerHud:CloseGroomerScreen()
+    local activescreen = TheFrontEnd:GetActiveScreen()
+
+    if activescreen == nil then return end
+    
+    if activescreen.name ~= "ItemServerContactPopup" then
+        --Hack for holding offset when transitioning from giftitempopup to groomerpopup
+        TheCamera:PopScreenHOffset(self)
+        self:ClearRecentGifts()
+
+        if self.groomerpopup ~= nil then
+            if self.groomerpopup.inst:IsValid() then
+                TheFrontEnd:PopScreen(self.groomerpopup)
+            end
+            self.groomerpopup = nil
+        end
+    else
+        self.inst:DoTaskInTime(.2, function()
+            self:CloseGroomerScreen()
+        end)
+    end
+end
+
 function PlayerHud:OpenCookbookScreen()
+    self:CloseCookbookScreen()
     self.cookbookscreen = CookbookPopupScreen(self.owner)
     self:OpenScreenUnderPause(self.cookbookscreen)
     return true
@@ -464,6 +523,7 @@ function PlayerHud:CloseCookbookScreen()
 end
 
 function PlayerHud:OpenPlantRegistryScreen()
+    self:ClosePlantRegistryScreen()
     self.plantregistryscreen = PlantRegistryPopupScreen(self.owner)
     self:OpenScreenUnderPause(self.plantregistryscreen)
     return true
@@ -629,6 +689,7 @@ function PlayerHud:OpenControllerInventory()
     self:HideControllerCrafting()
     self.controls.inv:OpenControllerInventory()
     self.controls.item_notification:ToggleController(true)
+    self.controls.yotb_notification:ToggleController(true)
     self.controls:ShowStatusNumbers()
 
     self.owner.components.playercontroller:OnUpdate(0)
@@ -642,6 +703,7 @@ function PlayerHud:CloseControllerInventory()
     self:ShowControllerCrafting()
     self.controls.inv:CloseControllerInventory()
     self.controls.item_notification:ToggleController(false)
+    self.controls.yotb_notification:ToggleController(false)
 end
 
 function PlayerHud:HasInputFocus()
@@ -729,6 +791,11 @@ function PlayerHud:IsWardrobeScreenOpen()
     return active_screen ~= nil and (active_screen.name == "WardrobePopupScreen" or active_screen.name == "ScarecrowClothingPopupScreen")
 end
 
+function PlayerHud:IsGroomerScreenOpen()
+    local active_screen = TheFrontEnd:GetActiveScreen()
+    return active_screen ~= nil and (active_screen.name == "GroomerPopupScreen")
+end
+
 function PlayerHud:IsPlayerAvatarPopUpOpen()
     return self.playeravatarpopup ~= nil
         and self.playeravatarpopup.started
@@ -743,6 +810,7 @@ function PlayerHud:OpenControllerCrafting()
         self.controls.inv:Disable()
         self.controls.crafttabs:OpenControllerCrafting()
         self.controls.item_notification:ToggleController(true)
+        self.controls.yotb_notification:ToggleController(true)
     end
 end
 
@@ -753,6 +821,7 @@ function PlayerHud:CloseControllerCrafting()
     self.controls.crafttabs:CloseControllerCrafting()
     self.controls.inv:Enable()
     self.controls.item_notification:ToggleController(false)
+    self.controls.yotb_notification:ToggleController(false)
 end
 
 function PlayerHud:ShowPlayerStatusScreen()

@@ -58,7 +58,7 @@ function Beard:ShouldTryToShave(who, whithwhat)
     if self.bits == 0 then
         return false, "NOBITS"
     elseif self.canshavetest ~= nil then
-        local pass, reason = self.canshavetest(self.inst)
+        local pass, reason = self.canshavetest(self.inst, who)
         if not pass then
             return false, reason
         end
@@ -70,7 +70,7 @@ function Beard:Shave(who, withwhat)
     if self.bits == 0 then
         return false, "NOBITS"
     elseif self.canshavetest ~= nil then
-        local pass, reason = self.canshavetest(self.inst)
+        local pass, reason = self.canshavetest(self.inst, who)
         if not pass then
             return false, reason
         end

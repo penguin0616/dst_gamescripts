@@ -115,10 +115,10 @@ end
 function Leader:RemoveFollowersByTag(tag, validateremovefn)
     for k,v in pairs(self.followers) do
         if k:HasTag(tag) and (validateremovefn == nil or validateremovefn(k)) then
-                    self:RemoveFollower(k)
-                end
-            end
+            self:RemoveFollower(k)
         end
+    end
+end
 
 function Leader:RemoveAllFollowers()
     for k,v in pairs(self.followers) do

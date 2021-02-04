@@ -22,6 +22,10 @@ function Vector3:__div( rhs )
     return Vector3( self.x / rhs, self.y / rhs, self.z / rhs)
 end
 
+function Vector3:__unm()
+    return Vector3(-self.x, -self.y, -self.z)
+end
+
 function Vector3:Dot( rhs )
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
 end

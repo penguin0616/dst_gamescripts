@@ -17,6 +17,7 @@ return{
 			GENERIC = "I would really rather not.",
 			NOBITS = "It's already smooth, dear.",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "It's not my place to shave someone else's beefalo.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "I think I look pretty smart already.",
             BURNING = "No more changes for me. It's gone up in flames.",
             INUSE = "If I could use that after you, dear.",
+            NOTENOUGHHAIR = "Perhaps once the hair has regrown.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "I'll have to replenish my water supply at the earliest opportunity.",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "That won't do.",
+            BEEF_BELL_ALREADY_USED = "It's already formed a bond with someone else, dear.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "I don't require any more beefalo.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "I will require a beefalo first.",
+            NEEDBEEF_CLOSER = "My beefalo needs to be in closer proximity to the post.",
+            BEEF_HITCHED = "Already done, dear.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "I'm fairly confident in my selection.",
+            NOT_PARTICIPANT = "I'll have to observe for now.",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "The contest will have to wait for the time being.",
+            ALREADYACTIVE = "I imagine there must be a competition going on elsewhere.",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "I've already familiarized myself with this particular pattern.",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "It seems I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat has fallen into dangerous disrepair.",
@@ -632,6 +664,11 @@ return{
         "No need to rush dear, you just take your time.",
         "How are you doing today? Do you have enough water?",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Come along now.",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "It would be much more practical to build this closer to the competition.",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "I do believe I can fabricate a new bovine costume now.",
 
 	BATTLECRY =
 	{
@@ -1292,6 +1329,7 @@ return{
             ORNERY = "The creature has developed a nasty disposition.",
             RIDER = "This one seems lean and athletic.",
             PUDGY = "Abundant nourishment has led to an amicable personality.",
+            MYPARTNER = "It has become rather attached to me.",
 		},
 
 		BEEFALOHAT = "This hat is hideous.",
@@ -1478,7 +1516,7 @@ return{
 		COOKEDMANDRAKE = "Mandragora officinarum, cooked in the name of discovery.",
 		COOKEDMEAT = "It is slightly more appetizing when cooked.",
 		COOKEDMONSTERMEAT = "It's still a little bit poisonous.",
-		COOKEDSMALLMEAT = "It is slightly more appetizing when cooked.",        
+		COOKEDSMALLMEAT = "It is slightly more appetizing when cooked.",
 		COOKPOT =
 		{
 			COOKING_LONG = "It's got a bit to go before it's ready.",
@@ -2540,6 +2578,21 @@ return{
             CARRAT_GOOD = "The specimen seems to have responded well to the training!",
             BURNT = "Oh my, that won't do at all.",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Let's get to it then, shall we?",
+            EMPTY = "I will require an offering.",
+            BURNT = "How unfortunate.",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "These creatures require regular grooming.",
+            OCCUPIED = "Let's get you looking a bit more presentable, shall we?",
+            BURNT = "What an unfortunate turn of events.",
+        },
+        BEEFALO_GROOMER_ITEM = "I'd best get it set up.",
 
 		BISHOP_CHARGE_HIT = "Augh!",
 		TRUNKVEST_SUMMER = "Durable outerwear.",
@@ -3668,7 +3721,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Composting is an essential component to gardening.",
             WET = "The moisture level of this mixture is too high.",
             DRY = "It requires a bit more moisture.",
@@ -3715,7 +3767,7 @@ return{
 		{
 			GENERIC = "I suppose I must put my gardening prowess to the test!",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nA very respectable harvest.",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nMy, quite the accomplishment!",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nMy, quite the accomplishment!",
             HAS_ITEM_LIGHT = "I'm afraid the weight of this bit of produce is too small to tabulate.",
 			BURNING = "Oh dear...",
 			BURNT = "I'm afraid that's that.",
@@ -3750,14 +3802,77 @@ return{
 			FULL_WEED = "Weeds have no place in the garden.",
 
 			BURNING = "What an unfortunate turn of events!",
-        },
-        
+		},
+
         FRUITFLY = "Those pests are making quite the nuisance of themselves.",
         LORDFRUITFLY = "I have no patience for garden pests!",
         FRIENDLYFRUITFLY = "This one appears to be of a different, more agreeable subspecies.",
         FRUITFLYFRUIT = "It seems that I can exert some level of control over these insects with this.",
 
         SEEDPOUCH = "For the practical storage and transport of seeds.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "I tend to prefer crochet.",
+        YOTB_SEWINGMACHINE_ITEM = "Well, I'd better get that set up.",
+        YOTB_STAGE = "How intriguing!",
+        YOTB_POST =  "This is where the beefalo are to be displayed for judging.",
+        YOTB_STAGE_ITEM = "I suppose it's not going to construct itself.",
+        YOTB_POST_ITEM =  "It should be simple enough to erect.",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Merely a single piece of a larger costuming pattern.",
+        YOTB_PATTERN_FRAGMENT_2 = "Merely a single piece of a larger costuming pattern.",
+        YOTB_PATTERN_FRAGMENT_3 = "Merely a single piece of a larger costuming pattern.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "How very charming!",
+            YOTB = "The judge might be able to give me some insight regarding its sense of style.",
+        },
+
+
+        WAR_BLUEPRINT = "It's rather aggressive looking.",
+        DOLL_BLUEPRINT = "A bit childish for my tastes.",
+        FESTIVE_BLUEPRINT = "It features quite an eclectic combination of colors.",
+        ROBOT_BLUEPRINT = "I'm not certain just how much sewing is actually involved.",
+        NATURE_BLUEPRINT = "How delightful!",
+        FORMAL_BLUEPRINT = "It seems rather senseless to attempt to make a beefalo appear dignified.",
+        VICTORIAN_BLUEPRINT = "Ah, this style does take me back...",
+        ICE_BLUEPRINT = "It's always prudent to have a set of winter garments.",
+        BEAST_BLUEPRINT = "I'm not one to rely on luck, but a bit won't hurt in a competition.",
+
+        BEEF_BELL = "Something about its tone triggers an affectionate response in beefalo.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

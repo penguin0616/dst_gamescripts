@@ -269,7 +269,46 @@ local function GetNoLeaderHomePos(inst)
     return inst.components.knownlocations:GetLocation("home")
 end
 
+local function CurrentContestTarget(inst)
+    local stage = inst.npc_stage 
+    if stage.current_contest_target then
+        return stage.current_contest_target
+    else
+        return stage
+    end
+end
+
+local function MarkPost(inst)
+    if inst.yotb_post_to_mark ~= nil then
+        return BufferedAction(inst, inst.yotb_post_to_mark, ACTIONS.MARK)
+    end
+end
+
+
+local function CollctPrize(inst)
+    if inst.yotb_prize_to_collect ~= nil then
+        local x,y,z = inst.yotb_prize_to_collect.Transform:GetWorldPosition()
+        if y < 0.1 and y > -0.1 and not inst.yotb_prize_to_collect:HasTag("INLIMBO") then
+            return BufferedAction(inst, inst.yotb_prize_to_collect, ACTIONS.PICKUP)
+        end
+    end
+end
+
 function MermBrain:OnStart()
+
+    local in_contest = WhileNode( function() return self.inst:HasTag("NPC_contestant") end, "In contest",
+        PriorityNode({
+--            IfNode(function() return self.inst.yotb_post_to_mark end, "mark post",
+                DoAction(self.inst, CollctPrize, "collect prize", true ),
+                DoAction(self.inst, MarkPost, "mark post", true ),   --)
+            WhileNode( function() return self.inst.components.timer and self.inst.components.timer:TimerExists("contest_panic") end, "Panic Contest",
+                ChattyNode(self.inst, "MERM_TALK_CONTEST_PANIC",
+                    Panic(self.inst))),            
+            ChattyNode(self.inst, "MERM_TALK_CONTEST_OOOH",
+                FaceEntity(self.inst, CurrentContestTarget, CurrentContestTarget ), 5, 15),
+        }, 0.1))
+
+
     local root = PriorityNode(
     {
         IfNode(function() return TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager.king end,"panic with king",
@@ -282,6 +321,8 @@ function MermBrain:OnStart()
             ChaseAndAttack(self.inst, SpringCombatMod(MAX_CHASE_TIME), SpringCombatMod(MAX_CHASE_DIST))),
         WhileNode(function() return self.inst.components.combat.target ~= nil and self.inst.components.combat:InCooldown() end, "Dodge",
             RunAway(self.inst, function() return self.inst.components.combat.target end, RUN_AWAY_DIST, STOP_RUN_AWAY_DIST)),
+
+        in_contest,
 
         ChattyNode(self.inst, "MERM_TALK_FIND_FOOD",
             DoAction(self.inst, EatFoodAction, "Eat Food")),

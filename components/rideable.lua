@@ -55,6 +55,8 @@ local Rideable = Class(function(self, inst)
 
     self.allowed_riders = {}
 
+    --self.custom_rider_test = nil
+
     --V2C: Recommended to explicitly add tag to prefab pristine state
     inst:AddTag("saddleable")
 
@@ -84,10 +86,19 @@ function Rideable:SetRequiredObedience(required)
     self.requiredobedience = required
 end
 
+function Rideable:SetCustomRiderTest(fn)
+    self.custom_rider_test = fn
+end
+
 function Rideable:TestObedience()
     return self.requiredobedience == nil
         or self.inst.components.domesticatable == nil
         or self.inst.components.domesticatable:GetObedience() >= self.requiredobedience
+end
+
+function Rideable:TestRider(potential_rider)
+    return (self.custom_rider_test == nil and true)
+            or self.custom_rider_test(self.inst, potential_rider)
 end
 
 function Rideable:SetSaddle(doer, newsaddle)
@@ -119,7 +130,13 @@ function Rideable:SetSaddle(doer, newsaddle)
             self.saddle = newsaddle
             self.inst:PushEvent("saddlechanged", { saddle = newsaddle })
 
-            self.inst.AnimState:OverrideSymbol("swap_saddle", self.saddle.components.saddler.swapbuild, self.saddle.components.saddler.swapsymbol)
+            local skin_build = self.saddle:GetSkinBuild()
+            if skin_build ~= nil then
+                self.inst.AnimState:OverrideItemSkinSymbol("swap_saddle", skin_build, "swap_saddle", self.saddle.GUID, "saddle_basic" )
+            else
+                self.inst.AnimState:OverrideSymbol("swap_saddle", self.saddle.components.saddler.swapbuild, self.saddle.components.saddler.swapsymbol)
+            end
+
             self.canride = true
             if doer ~= nil then
                 self.inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")

@@ -17,6 +17,7 @@ return{
 			GENERIC = "To what end?",
 			NOBITS = "But it's already as smooth as a baby's rear end.",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "Let someone else do it.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "How could you improve on perfection?",
             BURNING = "Oh. There go all my good pocket squares.",
             INUSE = "They're in much more dire need of it.",
+            NOTENOUGHHAIR = "There's nothing for me to work with.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "There's no more water.",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "I think not.",
+            BEEF_BELL_ALREADY_USED = "This one's already been claimed.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "One smelly beast following me around is more than enough.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "Here's the hitch pal, I'm going to need a beefalo.",
+            NEEDBEEF_CLOSER = "Get over here, you hairy imbecile!",
+            BEEF_HITCHED = "The beast is ready to be judged.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "My choice has been made. No going back.",
+            NOT_PARTICIPANT = "I'll bide my time until the next competition.",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Where is that incompetent judge?",
+            ALREADYACTIVE = "There must be a competition going on elsewhere...",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "An old pattern. I've no use for it.",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "That didn't work.",
 	ANNOUNCE_BOAT_LEAK = "We've sprung a leak!",
@@ -632,6 +664,11 @@ return{
         "Say pal, do you like magic tricks? This is the one where I talk and you grow.",
         "Here I am, chatting it up with the vegetation.",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "And here comes my... er, \"beautiful\" assistant.",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "This seems a bit far from the festivities, don't you think?",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "At last, something new.",
 
 	BATTLECRY =
 	{
@@ -1292,6 +1329,7 @@ return{
             ORNERY = "Yes, you understand how this works.",
             RIDER = "I'd only ride you if I was desperate.",
             PUDGY = "I suppose some people might find that charming.",
+            MYPARTNER = "I suppose I'm saddled with this creature now.",
 		},
 
 		BEEFALOHAT = "How unfashionable.",
@@ -1478,7 +1516,7 @@ return{
 		COOKEDMANDRAKE = "It has lost a lot of its power.",
 		COOKEDMEAT = "It smells less like barnyard, now.",
 		COOKEDMONSTERMEAT = "It's still filthy.",
-		COOKEDSMALLMEAT = "Well, at least it's not moving anymore.",        
+		COOKEDSMALLMEAT = "Well, at least it's not moving anymore.",
 		COOKPOT =
 		{
 			COOKING_LONG = "Wait for it...",
@@ -2540,6 +2578,21 @@ return{
             CARRAT_GOOD = "Excellent. You've done well.",
             BURNT = "It's worthless now.",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Let's get on with it then.",
+            EMPTY = "It will require an offering.",
+            BURNT = "Pity.",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "How ridiculous.",
+            OCCUPIED = "I suppose I'll have to try to make this creature less homely.",
+            BURNT = "What a shame.",
+        },
+        BEEFALO_GROOMER_ITEM = "Do I look like a common construction worker? Oh very well...",
 
 		BISHOP_CHARGE_HIT = "How DARE you!",
 		TRUNKVEST_SUMMER = "It's more of a fall vest.",
@@ -3668,7 +3721,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Disgusting.",
             WET = "It's nothing but foul wet slop.",
             DRY = "Positively arid.",
@@ -3715,7 +3767,7 @@ return{
 		{
 			GENERIC = "Do we not have infinitely more pressing things to do?",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nA moderately impressive display",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI suppose it's an accomplishment.",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nI suppose it's an accomplishment.",
             HAS_ITEM_LIGHT = "The bar has been set low, I see.",
 			BURNING = "...And now it's on fire.",
 			BURNT = "Reduced to dust.",
@@ -3750,14 +3802,77 @@ return{
 			FULL_WEED = "Not another blasted weed!",
 
 			BURNING = "Not the garden!",
-        },
-        
+		},
+
         FRUITFLY = "Begone, pest!",
         LORDFRUITFLY = "Hmph, they let just anyone be a lord these days.",
         FRIENDLYFRUITFLY = "As long as it tends to the garden I'll leave it be.",
         FRUITFLYFRUIT = "So this is all it takes to lead.",
 
         SEEDPOUCH = "One more thing to lug from place to place.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "I'm more of an appreciator of fine clothes than a maker of them.",
+        YOTB_SEWINGMACHINE_ITEM = "Why must these things come unassembled?",
+        YOTB_STAGE = "Hmph. What makes him think he's qualified to pass judgement?",
+        YOTB_POST =  "Enjoy your time in the spotlight while you can.",
+        YOTB_STAGE_ITEM = "Oh good, something more to build.",
+        YOTB_POST_ITEM =  "This seems like a dreadful amount of effort.",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "I'll have to combine them before they'll reveal their secrets.",
+        YOTB_PATTERN_FRAGMENT_2 = "I'll have to combine them before they'll reveal their secrets.",
+        YOTB_PATTERN_FRAGMENT_3 = "I'll have to combine them before they'll reveal their secrets.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "I've no need for such things. Perhaps one of the children might take it.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "I've no need for such things.",
+            YOTB = "This might be of interest to the judge.",
+        },
+
+
+        WAR_BLUEPRINT = "This could be useful.",
+        DOLL_BLUEPRINT = "I can only imagine how grotesque this will look...",
+        FESTIVE_BLUEPRINT = "Positively garish.",
+        ROBOT_BLUEPRINT = "Is this the robot's doing?",
+        NATURE_BLUEPRINT = "Florals. How saccharine.",
+        FORMAL_BLUEPRINT = "These garments are absolutely wasted on such base creatures.",
+        VICTORIAN_BLUEPRINT = "Hmph. Rather outdated.",
+        ICE_BLUEPRINT = "Chilling.",
+        BEAST_BLUEPRINT = "I'd say luck is in rather short supply around here.",
+
+        BEEF_BELL = "It appears to have some kind of hypnotic effect on beefalo.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

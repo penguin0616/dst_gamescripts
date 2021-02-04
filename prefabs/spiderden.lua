@@ -413,8 +413,17 @@ local function OnHaunt(inst)
 end
 
 local function OnLoadPostPass(inst)
-    if inst.components.growable ~= nil and inst:GetCurrentPlatform() ~= nil then
-		inst.components.growable:StopGrowing()
+    if inst:GetCurrentPlatform() then
+        if inst.components.growable then
+            inst.components.growable:StopGrowing()
+        end
+        if inst.components.childspawner then
+            inst.components.childspawner:StopRegen()
+        end
+    else
+        if inst.components.childspawner then
+            inst.components.childspawner:StartRegen()
+        end
     end
 end
 

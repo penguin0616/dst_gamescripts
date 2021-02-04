@@ -58,3 +58,13 @@ end
 function DistXZSq(p1, p2)
 	return (p1.x-p2.x)*(p1.x-p2.x) + (p1.z-p2.z)*(p1.z-p2.z)
 end
+
+function math.range(start, stop, step)
+    step = step or 1
+
+    local out = {}
+    for i = start, stop, step do
+        table.insert(out, i)
+    end
+    return out
+end

@@ -312,7 +312,6 @@ local redpouch_yotc =
         inst:SetPrefabNameOverride("redpouch")
     end,
 }
-
 local yotc_seedpacket_loots =
 {
 	set1 =
@@ -332,6 +331,16 @@ local yotc_seedpacket_loots =
 		durian_seeds = 1,
 		dragonfruit_seeds = 1,
 	},
+}
+
+local redpouch_yotb =
+{
+    master_postinit = function(inst, setupdata)
+        inst.wet_prefix = STRINGS.WET_PREFIX.POUCH
+    end,
+    common_postinit = function(inst, setupdata)
+        inst:SetPrefabNameOverride("redpouch")
+    end,
 }
 
 local hermit_bundle_shell_loots =
@@ -494,6 +503,7 @@ return MakeContainer("bundle_container", "ui_bundle_2x2"),
     MakeBundle("redpouch", true, nil, { "lucky_goldnugget" }, true, redpouch),
     MakeBundle("redpouch_yotp", false, nil, nil, true, redpouch_yotp),
     MakeBundle("redpouch_yotc", false, nil, nil, true, redpouch_yotc),
+    MakeBundle("redpouch_yotb", false, nil, nil, true, redpouch_yotb),
 	MakeBundle("yotc_seedpacket", true, nil, nil, true, yotc_seedpacket),
 	MakeBundle("yotc_seedpacket_rare", true, nil, nil, true, yotc_seedpacket_rare),
     MakeBundle("hermit_bundle", true, nil, nil, true, hermit_bundle),

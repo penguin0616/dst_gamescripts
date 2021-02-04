@@ -174,7 +174,7 @@ function PlayerStatusScreen:OnUpdate(dt)
                             local w, h = playerListing.name:GetRegionSize()
                             playerListing.name:SetPosition(playerListing.name._align.x + w * .5, 0, 0)
 
-                            playerListing.characterBadge:Set(client.prefab or "", client.colour or DEFAULT_PLAYER_COLOUR, playerListing.ishost, client.userflags or 0)
+                            playerListing.characterBadge:Set(client.prefab or "", client.colour or DEFAULT_PLAYER_COLOUR, playerListing.ishost, client.userflags or 0, client.base_skin)
 
                             if playerListing.characterBadge:IsAFK() then
                                 playerListing.age:SetString(STRINGS.UI.PLAYERSTATUSSCREEN.AFK)
@@ -614,7 +614,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
             end
         end
 
-        playerListing.characterBadge:Set(client.prefab or "", client.colour or DEFAULT_PLAYER_COLOUR, client.performance ~= nil, client.userflags or 0)
+        playerListing.characterBadge:Set(client.prefab or "", client.colour or DEFAULT_PLAYER_COLOUR, client.performance ~= nil, client.userflags or 0, client.base_skin)
         playerListing.characterBadge:Show()
 
         if client.admin then

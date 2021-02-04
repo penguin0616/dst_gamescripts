@@ -1,3 +1,5 @@
+local fns = {} -- a table to store local functions in so that we don't hit the 60 upvalues limit
+
 local assets =
 {
     Asset("ANIM", "anim/beefalo_basic.zip"),
@@ -13,6 +15,8 @@ local assets =
     Asset("ANIM", "anim/beefalo_personality_ornery.zip"),
     Asset("ANIM", "anim/beefalo_personality_pudgy.zip"),
 
+    Asset("ANIM", "anim/beefalo_skin_change.zip"),
+
     Asset("ANIM", "anim/beefalo_carrat_idles.zip"),
     Asset("ANIM", "anim/yotc_carrat_colour_swaps.zip"),
 
@@ -20,6 +24,8 @@ local assets =
     Asset("ANIM", "anim/poop_cloud.zip"),
 
     Asset("SOUND", "sound/beefalo.fsb"),
+
+    Asset("MINIMAP_IMAGE", "beefalo_domesticated"),
 }
 
 local prefabs =
@@ -29,6 +35,7 @@ local prefabs =
     "beefalowool",
     "horn",
     "carrat",
+    "explode_reskin",
 }
 
 local brain = require("brains/beefalobrain")
@@ -91,6 +98,12 @@ local function removecarrat(inst, carrat)
     carrat._setcolorfn(carrat, carrat._color)
 end
 
+local function canalterbuild(inst, group)
+    if inst.components.beard.canshavetest(inst) then
+        return true
+    end
+end
+
 local function setcarratart(inst)
     --[[
     if not inst._carratcolor then
@@ -136,10 +149,51 @@ local function testforcarratexit(inst)
         end
     end
     if foundfood then
-        removecarrat(inst,carrat)           
-        carrat.Transform:SetPosition(x,y,z)        
+        removecarrat(inst,carrat)
+        carrat.Transform:SetPosition(x,y,z)
     else
         carrat:Remove()
+    end
+end
+
+fns.ClearBellOwner = function(inst)
+    fns.RemoveName(inst)
+
+    local bell_leader = inst.components.follower:GetLeader()
+    inst:RemoveEventCallback("onremove", inst._BellRemoveCallback, bell_leader)
+
+    inst.components.follower:SetLeader(nil)
+
+    inst.persists = true
+    inst.components.herdmember:Enable(true)
+end
+
+fns.GetBeefBellOwner = function(inst)
+    local leader = inst.components.follower:GetLeader()
+    return (leader ~= nil
+        and leader.components.inventoryitem ~= nil
+        and leader.components.inventoryitem:GetGrandOwner())
+        or nil
+end
+
+fns.SetBeefBellOwner = function(inst, bell, bell_user)
+    if inst.components.follower:GetLeader() == nil
+            and bell ~= nil and bell.components.leader ~= nil then
+        bell.components.leader:AddFollower(inst)
+
+        inst:ListenForEvent("onremove", inst._BellRemoveCallback, bell)
+
+        inst.persists = false
+        inst.components.herdmember:Enable(false)
+        inst.components.knownlocations:ForgetLocation("herd")
+
+        if bell_user ~= nil then
+            inst.components.writeable:BeginWriting(bell_user)
+        end
+
+        return true
+    else
+        return false, "ALREADY_USED"
     end
 end
 
@@ -151,13 +205,17 @@ local function ClearBuildOverrides(inst, animstate)
     animstate:ClearOverrideBuild("beefalo_personality_docile")
 end
 
+local function getbasebuild(inst)
+    return (inst:HasTag("baby") and "beefalo_baby_build")
+            or (not inst:HasTag("has_beard") and "beefalo_shaved_build")
+            or (inst:HasTag("domesticated") and "beefalo_domesticated")
+            or "beefalo_build"
+end
+
 -- This takes an anim state so that it can apply to itself, or to its rider
 local function ApplyBuildOverrides(inst, animstate)
     local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
-    local basebuild = (inst:HasTag("baby") and "beefalo_baby_build")
-            or (inst.components.beard.bits == 0 and "beefalo_shaved_build")
-            or (inst.components.domesticatable:IsDomesticated() and "beefalo_domesticated")
-            or "beefalo_build"
+    local basebuild = getbasebuild(inst)
     if animstate ~= nil and animstate ~= inst.AnimState then
         animstate:AddOverrideBuild(basebuild)
     else
@@ -258,32 +316,86 @@ local function OnAttacked(inst, data)
         inst.components.combat:SetTarget(data.attacker)
         inst.components.combat:ShareTarget(data.attacker, 30, CanShareTarget, 5)
     end
+    if inst.components.hitchable and not inst.components.hitchable.canbehitched then
+        inst.components.hitchable:Unhitch()
+    end
 end
 
-local function GetStatus(inst)
-    return (inst.components.follower.leader ~= nil and "FOLLOWER")
-        or (inst.components.beard ~= nil and inst.components.beard.bits == 0 and "NAKED")
-        or (inst.components.domesticatable ~= nil and
-            inst.components.domesticatable:IsDomesticated() and
-            (inst.tendency == TENDENCY.DEFAULT and "DOMESTICATED" or inst.tendency))
-        or nil
+local function GetStatus(inst, viewer)
+    local leader = inst.components.follower:GetLeader()
+    if leader ~= nil then
+        return (leader.components.inventoryitem ~= nil
+                and leader.components.inventoryitem:GetGrandOwner() == viewer
+                and "MYPARTNER")
+                or "FOLLOWER"
+    else
+        return (inst.components.beard ~= nil and inst.components.beard.bits == 0 and "NAKED")
+            or (inst.components.domesticatable ~= nil and
+                inst.components.domesticatable:IsDomesticated() and
+                (inst.tendency == TENDENCY.DEFAULT and "DOMESTICATED" or inst.tendency))
+            or nil
+    end
+end
+
+fns.testforskins = function(inst)
+    if inst.components.skinner_beefalo and inst.components.skinner_beefalo.clothing then
+        if inst.components.skinner_beefalo.clothing.beef_body ~= "" or
+            inst.components.skinner_beefalo.clothing.beef_head ~= "" or
+            inst.components.skinner_beefalo.clothing.beef_tail ~= "" or
+            inst.components.skinner_beefalo.clothing.beef_horn ~= "" or
+            inst.components.skinner_beefalo.clothing.beef_feet ~= "" then
+            return true
+        end
+    end
+    return false
+end
+
+fns.UnSkin = function(inst)
+    if inst.components.skinner_beefalo then
+        if inst.components.sleeper:IsAsleep() then
+            
+            if fns.testforskins(inst) then
+                local fx = SpawnPrefab("explode_reskin")
+                fx.Transform:SetScale(2,2,2)
+                fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+            end
+
+            inst.components.skinner_beefalo:ClearAllClothing()
+        else
+            if fns.testforskins(inst) then
+                inst.sg:GoToState("skin_change", function()
+                    inst.components.skinner_beefalo:ClearAllClothing()
+                end)
+            end
+        end
+    end
 end
 
 local function OnResetBeard(inst)
+
+    inst:RemoveTag("has_beard")
     inst.sg:GoToState("shaved")
     inst.components.brushable:SetBrushable(false)
     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_SHAVED_OBEDIENCE)
+    
+    inst:UnSkin()
 end
 
-local function CanShaveTest(inst)
+local function CanShaveTest(inst, shaver)
     if inst.components.sleeper:IsAsleep() then
-        return true
+        local partner = fns.GetBeefBellOwner(inst)
+        if partner == nil or partner == shaver then
+            return true
+        else
+            return false, "SOMEONEELSESBEEFALO"
+        end
     else
         return false, "AWAKEBEEFALO"
     end
 end
 
 local function OnShaved(inst)
+
     inst:ApplyBuildOverrides(inst.AnimState)
 end
 
@@ -294,6 +406,12 @@ local function OnHairGrowth(inst)
             inst.components.rideable:Buck()
         end
     end
+end
+
+fns.RemoveName = function(inst)
+    inst.components.writeable:SetText(nil)
+
+    inst.components.named:SetName(nil)
 end
 
 local function OnBrushed(inst, doer, numprizes)
@@ -332,6 +450,8 @@ local function DoDomestication(inst)
     inst.components.mood:ValidateMood()
 
     inst:SetTendency("domestication")
+
+    inst.MiniMapEntity:SetEnabled(true)
 end
 
 local function OnFeral(inst, data)
@@ -347,6 +467,8 @@ local function DoFeral(inst)
     inst.components.mood:ValidateMood()
 
     inst:SetTendency("feral")
+
+    inst.MiniMapEntity:SetEnabled(false)
 end
 
 local function UpdateDomestication(inst)
@@ -403,6 +525,10 @@ local function SetTendency(inst, changedomestication)
             inst:ApplyBuildOverrides(inst.components.rideable:GetRider().AnimState)
         end
     end
+end
+
+local function GetBaseSkin(inst)
+    return inst.tendency and tendencies[inst.tendency].build or getbasebuild(inst)
 end
 
 local function ShouldBeg(inst)
@@ -473,8 +599,8 @@ local function OnDeath(inst, data)
         
         if inst._carratcolor then
             carrat._setcolorfn(carrat, inst._carratcolor)
-        end        
-        carrat.Transform:SetPosition(x,y,z)        
+        end
+        carrat.Transform:SetPosition(x,y,z)
     end
 end
 
@@ -572,6 +698,16 @@ local function OnRiderChanged(inst, data)
     end
 end
 
+local function PotentialRiderTest(inst, potential_rider)
+    local leader = inst.components.follower:GetLeader()
+    if leader == nil or leader.components.inventoryitem == nil then
+        return true
+    end
+
+    local leader_owner = leader.components.inventoryitem:GetGrandOwner()
+    return (leader_owner == nil or leader_owner == potential_rider)
+end
+
 local function OnSaddleChanged(inst, data)
     if data.saddle ~= nil then
         inst:AddTag("companion")
@@ -599,8 +735,44 @@ local function OnRiderSleep(inst, data)
     } or nil
 end
 
+local function dobeefalounhitch(inst)
+    if inst.components.hitchable and not inst.components.hitchable.canbehitched then
+        inst.components.hitchable:Unhitch()
+    end    
+end
+
+local function OnHitchTo(inst, data)
+    inst.hitchingspot = data.target
+    inst:ListenForEvent("death", dobeefalounhitch)
+    inst:ListenForEvent("gotosleep", dobeefalounhitch)
+    inst:ListenForEvent("onignite", dobeefalounhitch)
+    inst:ListenForEvent("onremove", dobeefalounhitch)
+end
+
+local function OnUnhitch(inst, data)
+    inst:RemoveEventCallback("death", dobeefalounhitch)
+    inst:RemoveEventCallback("gotosleep", dobeefalounhitch)
+    inst:RemoveEventCallback("onignite", dobeefalounhitch)
+    inst:RemoveEventCallback("onremove", dobeefalounhitch)
+end
+
+fns.OnNamedByWriteable = function(inst, new_name)
+    if inst.components.named ~= nil then
+        inst.components.named:SetName(new_name)
+    end
+end
+
+fns.OnWritingEnded = function(inst)
+    if not inst.components.writeable:IsWritten() then
+        local leader = inst.components.follower:GetLeader()
+        if leader ~= nil and leader.components.inventoryitem ~= nil then
+            inst.components.follower:SetLeader(nil)
+        end
+    end
+end
+
 local function MountSleepTest(inst)
-    return not inst.components.rideable:IsBeingRidden() and DefaultSleepTest(inst)
+    return not inst.components.rideable:IsBeingRidden() and DefaultSleepTest(inst) and not inst:HasTag("hitched")
 end
 
 local function ToggleDomesticationDecay(inst)
@@ -624,13 +796,13 @@ local function CustomOnHaunt(inst)
     return true
 end
 
-local function OnSave(inst, data)
+fns.OnSave = function(inst, data)
     data.tendency = inst.tendency
     data.hascarrat = inst:HasTag("HasCarrat")
     data.carratcolor = inst._carratcolor
 end
 
-local function OnLoad(inst, data)
+fns.OnLoad = function(inst, data)
     if data ~= nil and data.tendency ~= nil then
         inst.tendency = data.tendency
     end
@@ -642,15 +814,32 @@ local function OnLoad(inst, data)
 		if data ~= nil and data.carratcolor then
 			inst._carratcolor = data.carratcolor
 		end
-	end
+	end 
+end
+
+fns.OnLoadPostPass = function(inst,data)
+
+    if inst.components.beard and inst.components.beard.bits == 0 then
+        inst:RemoveTag("has_beard")
+        inst:ApplyBuildOverrides(inst.AnimState)
+    end
 end
 
 local function CanSpawnPoop(inst)
+   
+    if inst.components.hitchable and not inst.components.hitchable.canbehitched then return false end     
+    
 	return inst.components.rideable == nil or not inst.components.rideable:IsBeingRidden()
 end
 
 local function GetDebugString(inst)
     return string.format("tendency %s nextbuck %.2f", inst.tendency, GetTaskRemaining(inst._bucktask))
+end
+
+local function onclothingchanged(inst,data)
+    if data and data.type then
+        inst.skins[data.type]:set(data.name)
+    end
 end
 
 local function beefalo()
@@ -660,6 +849,7 @@ local function beefalo()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
+    inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
     MakeCharacterPhysics(inst, 100, .5)
@@ -673,6 +863,9 @@ local function beefalo()
     inst.AnimState:AddOverrideBuild("beefalo_carrat_idles")
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:Hide("HEAT")
+
+    inst.MiniMapEntity:SetIcon("beefalo_domesticated.png")
+    inst.MiniMapEntity:SetEnabled(false)
 
     inst:AddTag("beefalo")
     inst:AddTag("animal")
@@ -696,7 +889,22 @@ local function beefalo()
     --saltlicker (from saltlicker component) added to pristine state for optimization
     inst:AddTag("saltlicker")
 
+    -- used for the function that gets the skin of the beefalo. used by client. 
+    inst:AddTag("has_beard")
+
     inst.sounds = sounds
+
+    inst.skins ={}
+    inst.skins.base_skin = net_string(inst.GUID, "beefalo._base_skin")
+    inst.skins.beef_body = net_string(inst.GUID, "beefalo._beef_body")
+    inst.skins.beef_head = net_string(inst.GUID, "beefalo._beef_head")
+    inst.skins.beef_horn = net_string(inst.GUID, "beefalo._beef_horn")
+    inst.skins.beef_feet = net_string(inst.GUID, "beefalo._beef_feet")
+    inst.skins.beef_tail = net_string(inst.GUID, "beefalo._beef_tail")
+    inst.GetBaseSkin = GetBaseSkin
+
+
+
 
     inst.entity:SetPristine()
 
@@ -708,7 +916,7 @@ local function beefalo()
 
     inst:AddComponent("beard")
     -- assume the beefalo has already grown its hair
-    inst.components.beard.bits = 3
+    inst.components.beard.bits = TUNING.BEEFALO_BEARD_BITS
     inst.components.beard.daysgrowth = TUNING.BEEFALO_HAIR_GROWTH_DAYS + 1
     inst.components.beard.onreset = OnResetBeard
     inst.components.beard.canshavetest = CanShaveTest
@@ -766,8 +974,10 @@ local function beefalo()
 	inst.components.periodicspawner:SetSpawnTestFn(CanSpawnPoop)
     inst.components.periodicspawner:Start()
 
+
     inst:AddComponent("rideable")
     inst.components.rideable:SetRequiredObedience(TUNING.BEEFALO_MIN_BUCK_OBEDIENCE)
+    inst.components.rideable:SetCustomRiderTest(PotentialRiderTest)
     inst:ListenForEvent("saddlechanged", OnSaddleChanged)
     inst:ListenForEvent("refusedrider", OnRefuseRider)
 
@@ -835,10 +1045,31 @@ local function beefalo()
     inst:ListenForEvent("riderdoattackother", OnRiderDoAttack)
     inst:ListenForEvent("hungerdelta", OnHungerDelta)
     inst:ListenForEvent("ridersleep", OnRiderSleep)
+    inst:ListenForEvent("hitchto", OnHitchTo)
+    inst:ListenForEvent("unhitch", OnUnhitch)
+    inst:ListenForEvent("stopfollowing", fns.ClearBellOwner)
 
     inst:AddComponent("uniqueid")
     inst:AddComponent("beefalometrics")
     inst:AddComponent("drownable")
+
+    inst:AddComponent("skinner_beefalo")
+    inst:ListenForEvent("onclothingchanged", onclothingchanged)
+
+    inst:AddComponent("named")
+
+    inst:AddComponent("writeable")
+    inst.components.writeable:SetDefaultWriteable(false)
+    inst.components.writeable:SetAutomaticDescriptionEnabled(false)
+    inst.components.writeable:SetWriteableDistance(TUNING.BEEFALO_NAMING_DIST)
+    inst.components.writeable:SetOnWrittenFn(fns.OnNamedByWriteable)
+    inst.components.writeable:SetOnWritingEndedFn(fns.OnWritingEnded)
+
+    inst:AddComponent("hitchable")
+
+    inst:AddComponent("colourtweener")
+
+    inst:AddComponent("markable_proxy")
 
     MakeHauntablePanic(inst)
     AddHauntableCustomReaction(inst, CustomOnHaunt, true, false, true)
@@ -848,6 +1079,14 @@ local function beefalo()
 
     inst.ShouldBeg = ShouldBeg
     inst.testforcarratexit = testforcarratexit
+    inst.SetBeefBellOwner = fns.SetBeefBellOwner
+    inst.GetBeefBellOwner = fns.GetBeefBellOwner
+    inst.ClearBeefBellOwner = fns.ClearBellOwner
+    inst.UnSkin = fns.UnSkin
+
+    inst._BellRemoveCallback = function(bell)
+        fns.ClearBellOwner(inst)
+    end
 
     inst:SetBrain(brain)
     inst:SetStateGraph("SGBeefalo")
@@ -855,8 +1094,9 @@ local function beefalo()
     inst:DoTaskInTime(0, OnInit)
 
     inst.debugstringfn = GetDebugString
-    inst.OnSave = OnSave
-    inst.OnLoad = OnLoad
+    inst.OnSave = fns.OnSave
+    inst.OnLoad = fns.OnLoad
+    inst.OnLoadPostPass = fns.OnLoadPostPass
 
     return inst
 end

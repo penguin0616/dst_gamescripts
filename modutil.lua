@@ -355,6 +355,34 @@ local function InsertPostInitFunctions(env, isworldgen)
 		AddComponentAction(actiontype, component, fn, env.modname)
 	end
 
+	env.AddPopup = function(id)
+		local popup
+		if type(id) == "table" and id.is_a and id:is_a(PopupManagerWidget) then
+			popup = id
+		else
+			popup = PopupManagerWidget()
+			popup.id = id
+		end
+		popup.mod_name = env.modname
+
+		initprint("AddPopup", popup.id)
+		POPUPS[popup.id] = popup
+
+		--put it's mapping into a different IDS table, one for each mod
+		if MOD_POPUP_IDS[popup.mod_name] == nil then
+			MOD_POPUP_IDS[popup.mod_name] = {}
+		end
+		table.insert(MOD_POPUP_IDS[popup.mod_name], popup.id)
+		popup.code = #MOD_POPUP_IDS[popup.mod_name]
+
+		if MOD_POPUPS_BY_POPUP_CODE[popup.mod_name] == nil then
+			MOD_POPUPS_BY_POPUP_CODE[popup.mod_name] = {}
+		end
+		MOD_POPUPS_BY_POPUP_CODE[popup.mod_name][popup.code] = popup
+
+		return POPUPS[popup.id]
+	end
+
 	env.postinitdata.MinimapAtlases = {}
 	env.AddMinimapAtlas = function( atlaspath )
 		initprint("AddMinimapAtlas", atlaspath)

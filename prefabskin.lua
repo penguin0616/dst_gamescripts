@@ -250,6 +250,17 @@ saltbox_clear_fn = function(inst) basic_clear_fn(inst, "saltbox" ) end
 
 
 
+--------------------------------------------------------------------------
+--[[ Saddle basic skin functions ]]
+--------------------------------------------------------------------------
+saddle_basic_init_fn = function(inst, build_name)
+    basic_init_fn(inst, build_name, "saddle_basic" )
+    inst.components.saddler:SetSwaps( build_name, "swap_saddle", inst.GUID )
+end
+saddle_basic_clear_fn = function(inst)
+    basic_clear_fn(inst, "saddle_basic" )
+    inst.components.saddler:SetSwaps("saddle_basic", "swap_saddle")
+end
 
 
 --------------------------------------------------------------------------
@@ -661,11 +672,35 @@ end
 
 
 --------------------------------------------------------------------------
+--[[ wall_moonrock skin functions ]]
+--------------------------------------------------------------------------
+function wall_moonrock_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "wall_moonrock") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function wall_moonrock_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("wall_moonrock")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function wall_moonrock_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "wall_moonrock")
+end
+function wall_moonrock_clear_fn(inst)
+    inst.AnimState:SetBuild("wall_moonrock")
+end
+
+
+--------------------------------------------------------------------------
 --[[ wall_ruins skin functions ]]
 --------------------------------------------------------------------------
 function wall_ruins_item_init_fn(inst, build_name)
     inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
-    inst.AnimState:SetSkin(build_name, "wall_ruins_build") --same hack is used here by the deployable code in player controller
+    inst.AnimState:SetSkin(build_name, "wall_ruins") --same hack is used here by the deployable code in player controller
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 end
 function wall_ruins_item_clear_fn(inst)
@@ -688,7 +723,7 @@ end
 --------------------------------------------------------------------------
 function wall_stone_item_init_fn(inst, build_name)
     inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
-    inst.AnimState:SetSkin(build_name, "wall_stone_build") --same hack is used here by the deployable code in player controller
+    inst.AnimState:SetSkin(build_name, "wall_stone") --same hack is used here by the deployable code in player controller
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 end
 function wall_stone_item_clear_fn(inst)

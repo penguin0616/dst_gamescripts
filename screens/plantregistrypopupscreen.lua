@@ -30,14 +30,7 @@ local PlantRegistryPopupScreen = Class(Screen, function(self, owner)
 end)
 
 function PlantRegistryPopupScreen:OnDestroy()
-    if not TheWorld.ismastersim then
-		if self.owner ~= nil and self.owner.player_classified.isplantregistrypopupvisible:value() then
-			self.owner.player_classified.isplantregistrypopupvisible:set_local(false)
-			SendRPCToServer(RPC.ClosePlantRegistryScreen)
-		end
-    else
-        self.owner:PushEvent("ms_closeplantregistryscreen")
-    end
+    POPUPS.PLANTREGISTRY:Close(self.owner)
 
 	PlantRegistryPopupScreen._base.OnDestroy(self)
 end

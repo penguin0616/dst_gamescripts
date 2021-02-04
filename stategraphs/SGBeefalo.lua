@@ -6,6 +6,11 @@ local actionhandlers =
     --ActionHandler(ACTIONS.EAT, "eat"),
     --ActionHandler(ACTIONS.CHOP, "chop"),
     --ActionHandler(ACTIONS.PICKUP, "pickup"),
+    ActionHandler(ACTIONS.HITCH, function(inst)
+         if not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
+            return "hitch"
+        end
+    end),
 }
 
 
@@ -58,6 +63,21 @@ local events=
             inst.sg:GoToState("idle_carrat")
         end
     end),
+    EventHandler("unhitch", function(inst, data)
+        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
+            inst.sg:GoToState("unhitch")
+        end
+    end),
+    EventHandler("hitch", function(inst, data)
+        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
+            inst.sg:GoToState("hitch")
+        end
+    end),
+    EventHandler("despawn", function(inst, data)
+        if not inst.sg:HasStateTag("busy") then
+            inst.sg:GoToState("despawn")
+        end
+    end),
 }
 
 local states=
@@ -80,8 +100,11 @@ local states=
                 else
                     inst.AnimState:PlayAnimation("idle_loop", true)
                 end
-                
-                inst.sg:SetTimeout(1 + 1*math.random())
+                local time = 1 + 1*math.random()
+                if TheWorld.components.yotb_stagemanager and TheWorld.components.yotb_stagemanager:IsContestActive() then
+                    time = 3 + 3*math.random()
+                end
+                inst.sg:SetTimeout(time)
             end
         end,
 
@@ -98,25 +121,35 @@ local states=
             elseif not inst:HasTag("baby") 
                 and ((herd and herd.components.mood and herd.components.mood:IsInMood())
                      or (inst.components.mood and inst.components.mood:IsInMood())) then
-                if math.random() < .5 then
+                if math.random() < 0.5 then
                     inst.sg:GoToState("matingcall")
                 else
                     inst.sg:GoToState("tailswish")
                 end
             else
                 local rand = math.random()
-                if inst.components.hunger and inst.components.hunger:GetPercent() > 0 then
-                    if rand < .75 then
+
+                if inst:HasTag("hitched") then
+                    if rand < 0.75 then
+                        inst.sg:GoToState("shake")
+                    elseif rand < 0.25 and (not TheWorld.components.yotb_stagemanager or not TheWorld.components.yotb_stagemanager:IsContestActive()) then
+                        inst.sg:GoToState("bellow")
+                    else
+                        inst.sg:GoToState("idle")
+                    end
+
+                elseif inst.components.hunger and inst.components.hunger:GetPercent() > 0 then
+                    if rand < 0.75 then
                         inst.sg:GoToState("graze")
-                    elseif rand < .90 then
+                    elseif rand < 0.90 then
                         inst.sg:GoToState("shake")
                     else
                         inst.sg:GoToState("bellow")
                     end
                 else
-                    if rand < .5 then
+                    if rand < 0.5 then
                         inst.sg:GoToState("graze_empty")
-                    elseif rand < .75 then
+                    elseif rand < 0.75 then
                         inst.sg:GoToState("shake")
                     else
                         inst.sg:GoToState("bellow")
@@ -177,6 +210,48 @@ local states=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
+    },
+
+    State{
+        name = "skin_change",
+        tags = {"busy"},
+
+        onenter = function(inst, cb)
+            inst.sg.statemem.cb = cb
+
+            inst.AnimState:OverrideSymbol("shadow_hands", "shadow_skinchangefx", "shadow_hands")
+            inst.AnimState:OverrideSymbol("shadow_ball", "shadow_skinchangefx", "shadow_ball")
+            inst.AnimState:OverrideSymbol("splode", "shadow_skinchangefx", "splode")
+
+            inst.components.locomotor:StopMoving()
+            inst.AnimState:PlayAnimation("skin_change")
+
+            inst.SoundEmitter:PlaySound("dontstarve/common/together/skin_change")
+        end,
+
+        timeline=
+        {
+            TimeEvent(42*FRAMES, function(inst)
+                if inst.sg.statemem.cb ~= nil then
+                    inst.sg.statemem.cb()
+                    inst.sg.statemem.cb = nil
+                end
+            end),
+        },
+
+        events=
+        {
+            EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
+        },
+
+        onexit = function(inst)
+            if inst.sg.statemem.cb ~= nil then
+                -- in case of interruption
+                inst.sg.statemem.cb()
+                inst.sg.statemem.cb = nil
+            end
+            inst.AnimState:OverrideSymbol("shadow_hands", "shadow_hands", "shadow_hands")
+        end,
     },
 
     State{
@@ -629,8 +704,9 @@ local states=
             inst.AnimState:PlayAnimation("hair_growth")
             inst.SoundEmitter:PlaySound("dontstarve/beefalo/hairgrow_pop")
             if inst.components.beard then
-                    inst.AnimState:SetBuild("beefalo_build")
-                inst.components.beard.bits = 3
+                inst.AnimState:SetBuild("beefalo_build")
+                inst.components.beard.bits = TUNING.BEEFALO_BEARD_BITS
+                inst:AddTag("has_beard")
             end
             if inst.components.brushable then
                 inst.components.brushable:SetBrushable(true, true)
@@ -740,6 +816,55 @@ local states=
                 inst.sg:GoToState("idle")
             end),
         },
+    },
+    
+    State{
+        name = "hitch",
+        tags = {"idle", "canrotate","busy"},
+        
+        onenter = function(inst)
+            inst.components.locomotor:StopMoving()
+            inst.AnimState:PlayAnimation("shake")
+        end,
+       
+        events=
+        {
+            EventHandler("animover", function(inst)
+                inst:PerformBufferedAction()
+                inst.sg:GoToState("idle") 
+            end),
+        },
+    },
+    State{
+        name = "unhitch",
+        tags = {"idle", "canrotate","busy"},
+        
+        onenter = function(inst)
+            inst.components.locomotor:StopMoving()
+            inst.AnimState:PlayAnimation("shake")
+        end,
+       
+        events=
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle") 
+            end),
+        },
+    },
+
+    State
+    {
+        name = "despawn",
+        tags = {"busy", "notinterupt"},
+        
+        onenter = function(inst, pushanim)
+            inst.components.locomotor:StopMoving()
+            inst.AnimState:PlayAnimation("idle_loop", true)
+        end,
+
+        onexit = function(inst)
+            inst:DoTaskInTime(0, inst.Remove)
+        end,
     },
 }
 

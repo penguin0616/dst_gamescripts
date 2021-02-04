@@ -74,6 +74,7 @@ local assets =
     Asset("PKGREF", "anim/boat_meter_leak.zip"),
 
     Asset("ANIM", "anim/tab_gift.zip"),
+    Asset("ANIM", "anim/tab_yotb.zip"),
 
     Asset("INV_IMAGE", "unknown_head"),
     Asset("INV_IMAGE", "unknown_hand"),

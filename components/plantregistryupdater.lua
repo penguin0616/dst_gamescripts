@@ -24,10 +24,8 @@ function PlantRegistryUpdater:LearnPlantStage(plant, stage)
 
 		-- Servers will only tell the clients if this is a new plant stage in this world
 		-- Since the servers do not know the client's actual plantregistry data, this is the best we can do for reducing the amount of data sent
-		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) then
-			if self.inst.player_classified ~= nil then
-				self.inst.player_classified.plantregistry_learnplantstage:set(plant..":"..stage)
-			end
+		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) and self.inst.userid then
+			SendRPCToClient(CLIENT_RPC.LearnPlantStage, self.inst.userid, plant, stage)
 		end
 	end
 end
@@ -43,10 +41,8 @@ function PlantRegistryUpdater:LearnFertilizer(fertilizer)
 
 		-- Servers will only tell the clients if this is a new fertilizer in this world
 		-- Since the servers do not know the client's actual plantregistry data, this is the best we can do for reducing the amount of data sent
-		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) then
-			if self.inst.player_classified ~= nil then
-				self.inst.player_classified.plantregistry_learnfertilizer:set(fertilizer)
-			end
+		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) and self.inst.userid then
+			SendRPCToClient(CLIENT_RPC.LearnFertilizer, self.inst.userid, fertilizer)
 		end
 	end
 end
@@ -58,17 +54,8 @@ function PlantRegistryUpdater:TakeOversizedPicture(plant, weight, beardskin, bea
 
 		-- Servers will only tell the clients if this is a new picture in this world
 		-- Since the servers do not know the client's actual plantregistry data, this is the best we can do for reducing the amount of data sent
-		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) then
-			if self.inst.player_classified ~= nil then
-				local str = plant..":"..weight
-				if beardskin then
-					--illegal to have a beardskin without a beard length.
-					str = str..":"..beardskin..":"..beardlength
-				elseif beardlength then
-					str = str..":"..beardlength
-				end
-				self.inst.player_classified.plantregistry_takeplantpicture:set(str)
-			end
+		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) and self.inst.userid then
+			SendRPCToClient(CLIENT_RPC.TakeOversizedPicture, self.inst.userid, plant, weight, beardskin, beardlength)
 		end
 	end
 end

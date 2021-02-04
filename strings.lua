@@ -349,6 +349,7 @@ STRINGS =
     --ACTION MOUSEOVER TEXT
     ACTIONS =
     {
+        APPRAISE = "Appraise",
         TRAVEL = "Travel",
         GNAW = "Gnaw",
         READ = "Read",
@@ -454,6 +455,8 @@ STRINGS =
             GENERIC = "Use",
             DRESSUP = "Dress Up",
         },
+        HITCHUP = "Hitch to",
+        UNHITCH = "Unhitch from",
         EQUIP = "Equip",
         TERRAFORM = "Dig",
         UNEQUIP =
@@ -568,6 +571,16 @@ STRINGS =
             EMERGENCY = "Emergency Mode",
         },
         USEITEM = "Use",
+        USEITEMON =
+        {
+            GENERIC = "Use On",
+            BEEF_BELL = "Bond",
+        },
+        STOPUSINGITEM =
+        {
+            GENERIC = "Stop",
+            BEEF_BELL = "Break Bond",
+        },
         USEDOOR =
         {
             OPEN = "Open",
@@ -752,8 +765,8 @@ STRINGS =
 
 		TELLSTORY = "Tell Story",
 
-        USE_WINCH = "Drop",
-        
+		USE_WINCH = "Drop",
+
         POUR_WATER =
         {
             GENERIC = "Water",
@@ -785,6 +798,15 @@ STRINGS =
         -- Wigfrid
         SING = "Sing",
         QUOTE = "Recite",
+
+        -- YOTB
+        YOTB_SEW = "Sew",
+        YOTB_STARTCONTEST = "Start the Contest",
+        YOTB_UNLOCKSKIN = "Learn Costume",
+        MARK = {
+            GENERIC = "Choose This Beefalo",
+            UNMARK = "Take Back",
+        },
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -1968,6 +1990,7 @@ STRINGS =
         CHESSPIECE_ANCHOR = "Anchor Figure",
         CHESSPIECE_MOON = "\"Moon\" Figure",
         CHESSPIECE_CARRAT = "Carrat Figure",
+        CHESSPIECE_BEEFALO = "Beefalo Figure",        
         CHESSPIECE_MALBATROSS = "Malbatross Figure",
         CHESSPIECE_CRABKING = "Crab King Figure",        
         CHESSPIECE_TOADSTOOL = "Toadstool Figure",
@@ -1995,6 +2018,7 @@ STRINGS =
         CHESSPIECE_ANCHOR_BUILDER = "Anchor Figure",
         CHESSPIECE_MOON_BUILDER = "\"Moon\" Figure",
         CHESSPIECE_CARRAT_BUILDER = "Carrat Figure",
+        CHESSPIECE_BEEFALO_BUILDER = "Beefalo Figure",        
         CHESSPIECE_MALBATROSS_BUILDER = "Malbatross Figure",
         CHESSPIECE_CRABKING_BUILDER = "Crab King Figure",
         CHESSPIECE_TOADSTOOL_BUILDER = "Toadstool Figure",
@@ -2008,6 +2032,7 @@ STRINGS =
         CHESSPIECE_ANCHOR_SKETCH = "Anchor Figure Sketch",
         CHESSPIECE_MOON_SKETCH = "\"Moon\" Figure Sketch",
         CHESSPIECE_CARRAT_SKETCH = "Carrat Figure Sketch",
+        CHESSPIECE_BEEFALO_SKETCH = "Beefalo Figure Sketch",        
         CHESSPIECE_MALBATROSS_SKETCH = "Malbatross Figure Sketch",
         CHESSPIECE_CRABKING_SKETCH = "Crab King Figure Sketch",
 
@@ -2939,6 +2964,48 @@ STRINGS =
         FRUITFLYFRUIT = "Friendly Fruit Fly Fruit",
 
         SEEDPOUCH = "Seed Pack-It",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "Sewing Machine",
+        YOTB_SEWINGMACHINE_ITEM = "Sewing Machine Kit",
+        
+        YOTB_STAGE_ITEM = "Judge's Booth",
+        YOTB_STAGE = "Judge's Booth",
+
+        YOTB_POST_ITEM = "Beefalo Stage",
+        YOTB_POST = "Beefalo Stage",
+
+        YOTB_BEEFALOSHRINE = "Beefalo Shrine",
+        
+        YOTB_PATTERN_FRAGMENT_1 = "Fearsome Pattern Scrap",
+        YOTB_PATTERN_FRAGMENT_2 = "Formal Pattern Scrap",
+        YOTB_PATTERN_FRAGMENT_3 = "Festive Pattern Scrap",
+
+        YOTB_BEEFALO_DOLL_WAR = "Warrior Beefalo Doll",
+        YOTB_BEEFALO_DOLL_DOLL = "Dolled-Up Beefalo Doll",
+        YOTB_BEEFALO_DOLL_FESTIVE = "Festive Beefalo Doll",
+        YOTB_BEEFALO_DOLL_NATURE = "Flowery Beefalo Doll",
+        YOTB_BEEFALO_DOLL_ROBOT = "Ironclad Beefalo Doll",
+        YOTB_BEEFALO_DOLL_ICE = "Frostbitten Beefalo Doll",
+        YOTB_BEEFALO_DOLL_FORMAL = "Formal Beefalo Doll",
+        YOTB_BEEFALO_DOLL_VICTORIAN = "Victorian Beefalo Doll",
+        YOTB_BEEFALO_DOLL_BEAST = "Lucky Beast Beefalo Doll",
+
+        BEEFALO_GROOMER = "Beefalo Grooming Station",
+        BEEFALO_GROOMER_ITEM = "Grooming Station Kit",
+
+        BEEF_BELL = "Beefalo Bell",
+        BEEFALO_BUDDY_NAME = "{buddy}'s Beefalo",
+
+        WAR_BLUEPRINT = "Warrior Costume Pattern",
+        DOLL_BLUEPRINT = "Dolled-Up Costume Pattern",
+        FESTIVE_BLUEPRINT = "Festive Costume Pattern",
+        ROBOT_BLUEPRINT = "Ironclad Costume Pattern",
+        NATURE_BLUEPRINT = "Flowery Costume Pattern",
+        FORMAL_BLUEPRINT = "Formal Costume Pattern",
+        VICTORIAN_BLUEPRINT = "Victorian Costume Pattern",
+        BEAST_BLUEPRINT = "Lucky Beast Costume Pattern",
+        ICE_BLUEPRINT = "Frostbitten Costume Pattern",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3306,6 +3373,7 @@ STRINGS =
         CHESSPIECE_ANCHOR_BUILDER = "Ground your base with a stone anchor.",
         CHESSPIECE_MOON_BUILDER = "It's a selene figurine!",
         CHESSPIECE_CARRAT_BUILDER = "A winsome sculpture of a champion.",
+        CHESSPIECE_BEEFALO_BUILDER = "A beauteous beefalo bust.",
         CHESSPIECE_MALBATROSS_BUILDER = "A sculpted scourge of the seas.",
         CHESSPIECE_CRABKING_BUILDER = "It looks even crabbier than you remember it.",
 		CHESSPIECE_TOADSTOOL_BUILDER = "A toad-ally authentic reproduction of the original.",
@@ -3318,6 +3386,7 @@ STRINGS =
         CHESSPIECE_ANCHOR_SKETCH = "A sculpture sketch of an anchor.",
         CHESSPIECE_MOON_SKETCH = "A sculpture sketch of the moon itself.",
         CHESSPIECE_CARRAT_SKETCH = "A sculpture sketch of a victorious Carrat.",
+        CHESSPIECE_BEEFALO_SKETCH = "A sculpture sketch of a charming beefalo.",
         CHESSPIECE_MALBATROSS_SKETCH = "A sculpture sketch of the mighty Malbatross.",
         CHESSPIECE_CRABKING_SKETCH = "A sculpture sketch of the Crab King",
 
@@ -3514,6 +3583,10 @@ STRINGS =
 
 		MINIBOATLANTERN = "It flickers with a warm glow.",
 
+        YOTB_BEEFALOSHRINE = "Make offerings to the steadfast beefalo.",
+
+        BEEFALO_GROOMER_ITEM = "The original Beefdazzler.",
+
         TRIDENT = "Rock out in rocky waters.",
 
         HERMIT_BUNDLE_SHELLS = "The shells she sells.",
@@ -3566,6 +3639,16 @@ STRINGS =
         TROPHYSCALE_OVERSIZEDVEGGIES = "Weigh your prized fruits and veggies.",
 
         SEEDPOUCH = "Stow your seeds for safekeeping.",
+
+        BEEF_BELL = "Befriend a beef friend.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE_ITEM = "Prototype the perfect beefalo outfit.",
+        YOTB_STAGE_ITEM = "Bring in an expert.",
+        YOTB_POST_ITEM = "Put your beefalo on center stage.",
+        YOTB_PATTERN_FRAGMENT_1 = "Get some fearsome inspiration.",
+        YOTB_PATTERN_FRAGMENT_2 = "Get some formal inspiration.",
+        YOTB_PATTERN_FRAGMENT_3 = "Get some festive inspiration.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -4107,6 +4190,8 @@ STRINGS =
         "I GO NOW!",
         "SEE YA!",
     },
+    PIG_TALK_CONTEST_OOOH = {"OOOH","WOW","IS BEAUTY"},
+    PIG_TALK_CONTEST_PANIC = {"MUST CHOOSE!","CHOICE HARD!"},    
 
     --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
     RABBIT_BATTLECRY = { "HOP!", "KILL!", "DIE!" },
@@ -4381,6 +4466,9 @@ STRINGS =
         "Don't keep the lady waiting.",
         "Speak with Mumsy. Hurry on, then.",
     },
+
+    MERM_TALK_CONTEST_OOOH = {"Such taste.","Nicely done.","such a beauty"},
+    MERM_TALK_CONTEST_PANIC = {"I must choose!","How can I decide!"},  
 
     -- Lines that the small ghosts deliver when a player approaches them.
     SMALLGHOST_TALK =
@@ -4728,10 +4816,319 @@ STRINGS =
 		FISHING = "Fishing",
 		WINTERSFEASTCOOKING = "Feast",
         HERMITCRABSHOP = "Bottle Exchange",
-        SLINGSHOTAMMO = "Slingshot Ammo",
+		SLINGSHOTAMMO = "Slingshot Ammo",
         TURFCRAFTING = "Landscaping",
     },
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
+
+    -- YOTB Judge
+
+    YOTB_HEY = {"Hiya!","Hey!","Howdy!","Greetings!"},
+    YOTB_CONTEST_START = "Well well well, lemme get a look at the menagerie.",
+    YOTB_CONTEST_BEGIN = "OK, lets get this show going...",
+    YOTB_CONTEST_END = "Very nice, I think we're done.",
+    YOTB_CONTEST_FIGHT_END = "Alright, contest over for now folks!",
+    YOTB_EXTRA_BEEF = "Let's round up some locals to make things interesting.",
+    YOTB_NO_EXTRA_BEEF = "What an eclectic looking bunch.",
+    YOTB_GUESS_WHO_1 = "Alright, which of these beauties do you think is today's winner!?",
+    YOTB_GUESS_WHO_2 = "Take your time, choose wisely.",
+    YOTB_GUESS_WHO_3 = "OK, now hurry up...",
+    YOTB_GUESS_WHO_4 = "Time's up!",
+    YOTB_GUESS_WHO_5 = "Alright, my pick for today's contest is...",
+
+    YOTB_NO_PRIZE = "No one guessed right today! There's always tomorrow.",
+    YOTB_PRIZE = "Only one winner! Don't spend it all in one place!",
+    YOTB_PRIZES = "Here's your prizes, winners!",
+    YOTB_CONSOLE_PRIZES = "Everyone gets to take something home.",    
+    YOTB_PATTERNS = "Everyone, enjoy some complimentary fashion scraps!",
+
+    YOTB_GIVE_PRIZE_BIG = "Congrats! Don't spend it all in once place.",
+    YOTB_GIVE_PRIZE_SMALL = "Here you go, well done you.",
+    YOTB_NOTHING_FOR_YOU = "Sorry, you didn't win anything this time.",
+    YOTB_ALREADY_GOT_YOURS = "You already got yours. No double dipping.",
+    
+    YOTB_CONTEST_TARGET_PARAMS = "My perfect beefalo changes from day to day...",
+    YOTB_CONTEST_THIRD_PLACE = "Alright, my pick for third place is...",
+    YOTB_CONTEST_SECOND_PLACE = "And In second place...",
+    YOTB_CONTEST_FIRST_PLACE = "Finally, my first place pick is...",    
+    YOTB_CONGRATS_WINNER = "Congrats little guy! you win!",
+    YOTB_CONGRATS_WINNER_SECOND = "Congratulations!",
+    YOTB_CONGRATS_WINNER_THIRD = "Take a bow!",
+
+    YOTB_START_FAIL_DANGER = "Sorry, it's not safe enough around here!",
+    YOTB_START_FAIL_LATE = "Sorry, it's too late to start today.",
+    YOTB_START_FAIL_NOT_ENOUGH_POSTS = "I don't see enough Stages out yet.",
+    YOTB_START_FAIL_NO_CONTESTANTS = "I don't see any contestants to judge, do you?",    
+
+    YOTB_HURRY_PRIZE = "Come get your prize, I won't wait all day.",
+    YOTB_TOO_LATE_PRIZE = "Sorry, can't wait any longer. Bye now.",
+
+    YOTB_COLLECT_PRIZE_QUICK = "Things are getting out of hand, hurry up and collect your prizes!",
+
+    -- FEARSOME (After Contest lines)
+    YOTB_CONTEST_FEARSOME_EXTREMEHIGH = {
+       "This one is much too fearsome.",
+       "This beefalo's fierceness is well beyond my taste today.",
+    },
+    YOTB_CONTEST_FEARSOME_VERYHIGH = {
+       "This specimen is more fierce than I want.",
+       "I respect how fearsome this beefalo is, but it's more than I like.",
+--       "This beefalo could do with being quite a bit more friendly.",
+    }, 
+    YOTB_CONTEST_FEARSOME_HIGH = {
+       "This beefalo is just a little fiercer than I want.",
+       "Being a little too fierce can be good, but not today.",
+--      "I like my beefalo friendlier than this",
+    }, 
+    YOTB_CONTEST_FEARSOME_PERFECT = {
+       "I like this one's ferocity.",
+       "This beefalo fills me with just the right amount of fear." 
+--      "This is just the level of friendlyness I like",
+    }, 
+    YOTB_CONTEST_FEARSOME_LOW = {
+       "Maybe this beefalo could be a little more fierce.",
+       "This beefalo is not as fierce as I'd like, but it's close.",
+--      "This beefalo is a tad too friendly",
+    },  
+    YOTB_CONTEST_FEARSOME_VERYLOW = {
+        "I'd like my beefalo to be a fair bit more fearsome than this.",
+        "This one is not quite fierce enough, by a good margin.",
+--      "This beefalo is much too friedly",
+    },
+    YOTB_CONTEST_FEARSOME_EXTREMELOW = {
+        "Today's beefalo needs to be a lot more fierce than this teddy bear.",
+        "I'm looking for something way more fearsome today.",
+    },
+
+    -- FESTIVE
+    YOTB_CONTEST_FESTIVE_EXTREMEHIGH = {
+       "This one is much too festive.",
+       "This beefalo's festiveness is well beyond my taste today.",
+    },
+    YOTB_CONTEST_FESTIVE_VERYHIGH = {
+       "This fella is more festive than I want.",
+       "I respect how festive this beefalo is, but it's more than I like.",
+--       "This beefalo could do with being quite a bit more gloomy.",
+    }, 
+    YOTB_CONTEST_FESTIVE_HIGH = {
+       "This beefalo is just a little more festive than I want.",
+       "Being a little too festive can be good, but not today.",
+--      "I like my beefalo more somber than this",
+    }, 
+    YOTB_CONTEST_FESTIVE_PERFECT = {
+       "I like this one's festivity.",
+       "This beefalo is just festive enough." 
+--      "This is just the level of gloom I like",
+    }, 
+    YOTB_CONTEST_FESTIVE_LOW = {
+       "Maybe this beefalo could be a little more festive.",
+       "This beefalo is not as festive as I'd like, but it's close.",
+--      "This beefalo is a tad too gloomy",
+    },  
+    YOTB_CONTEST_FESTIVE_VERYLOW = {
+        "I'd like my beefalo to be a fair bit more festive than this.",
+        "This one is not quite festive enough, by a good margin.",
+--      "This beefalo is much too somber",
+    },
+    YOTB_CONTEST_FESTIVE_EXTREMELOW = {
+        "Today's beefalo needs to be a lot more festive than this curmudgeon.",
+        "I'm looking for something way more festive today.",
+    },
+
+
+    -- FORMAL
+    YOTB_CONTEST_FORMAL_EXTREMEHIGH = {
+       "This one is much too formal.",
+       "This beefalo's formalness is well beyond my taste today.",
+    },
+    YOTB_CONTEST_FORMAL_VERYHIGH = {
+       "This specimen is more formal than I want.",
+       "I respect how formal this beefalo is, but it's more than I like.",
+--       "This beefalo could do with being quite a bit more unconventional.",
+    }, 
+    YOTB_CONTEST_FORMAL_HIGH = {
+       "This beefalo is just a little more formal than I want.",
+       "Being a little too formal can be good, but not today.",
+--      "I like my beefalo more relaxed than this",
+    }, 
+    YOTB_CONTEST_FORMAL_PERFECT = {
+       "I like this one's formalness.",
+       "This beefalo is just formal enough." 
+--      "This is just the level of disorder I like",
+    }, 
+    YOTB_CONTEST_FORMAL_LOW = {
+       "Maybe this beefalo could be a little more formal.",
+       "This beefalo is not as formal as I'd like, but it's close.",
+--      "This beefalo is a tad too relaxed",
+    },  
+    YOTB_CONTEST_FORMAL_VERYLOW = {
+        "I'd like my beefalo to be a fair bit more formal than this.",
+        "This one is not quite formal enough, by a good margin.",
+--      "This beefalo is much too unconventional",
+    },
+    YOTB_CONTEST_FORMAL_EXTREMELOW = {
+        "Today's beefalo needs to be a lot more formal than this ragamuffin.",
+        "I'm looking for something way more formal today.",
+    },
+
+
+    -- FEARSOM (Telling what he wants)
+    YOTB_CONTEST_FEARSOME_TARGET_EXTREMEHIGH = {
+       "Finally, I'm in the mood for a good scare. Let's see your most fearsome beefalo!",       
+    },
+    YOTB_CONTEST_FEARSOME_TARGET_VERYHIGH = {
+       "Finally, I'm looking for something quite fierce.",
+       "Finally, I want something quite fearsome looking.",
+    }, 
+    YOTB_CONTEST_FEARSOME_TARGET_HIGH = {
+       "Finally, today's winner will be only mildly more fearsome than friendly.",              
+    }, 
+    YOTB_CONTEST_FEARSOME_TARGET_PERFECT = {
+       "Finally, I can't quite decide. Show me a good balance of fearsome and friendly.",       
+    }, 
+    YOTB_CONTEST_FEARSOME_TARGET_LOW = {
+         "Finally, I'd like to see a beefalo that's just a bit more friendly than scary.",
+    },  
+    YOTB_CONTEST_FEARSOME_TARGET_VERYLOW = {
+        "Finally, I'm looking for only the tiniest hint of ferocity.",
+        "Finally, today I want to see a little ferocity, but just a touch.",
+    },
+    YOTB_CONTEST_FEARSOME_TARGET_EXTREMELOW = {
+        "Finally, today's winner needs to be a teddy bear. My heart can't take a scare.",        
+    },
+
+    -- FESTIVE
+    YOTB_CONTEST_FESTIVE_TARGET_EXTREMEHIGH = {
+       "Also, the winner should be the most festive of beasts.",       
+    },
+    YOTB_CONTEST_FESTIVE_TARGET_VERYHIGH = {
+       "Also, I'm looking for quite a lot of festivity today.",       
+--       "This beefalo could do with being quite a bit more gloomy.",
+    }, 
+    YOTB_CONTEST_FESTIVE_TARGET_HIGH = {
+       "Also, there should be a lot of festivity, with just a dash of somberness.",       
+--      "I like my beefalo more somber than this",
+    }, 
+    YOTB_CONTEST_FESTIVE_TARGET_PERFECT = {
+       "Also, I'm looking for a tasteful mix of festivity and somberness.",
+       "Also, today's champion will be a perfect balance of somber and festive.",
+--      "This is just the level of gloom I like",
+    }, 
+    YOTB_CONTEST_FESTIVE_TARGET_LOW = {
+       "Also, today's winner will be a bit more somber than festive.",       
+    },  
+    YOTB_CONTEST_FESTIVE_TARGET_VERYLOW = {
+        "Also, I only want to see the tiniest hint of festivity.",        
+    },
+    YOTB_CONTEST_FESTIVE_TARGET_EXTREMELOW = {
+        "Also, I don't want to see even a hint of festivity in today's Champion.",
+        "Also, I'm in no mood for festivity today. I'd better not see a trace of it!",
+    },
+
+
+    -- FORMAL
+    YOTB_CONTEST_FORMAL_TARGET_EXTREMEHIGH = {
+       "Everything about today's winner should scream \"formality.\"",       
+    },
+    YOTB_CONTEST_FORMAL_TARGET_VERYHIGH = {
+       "I'd like to see the high end of formality today, with just a dash of disorder.",
+    }, 
+    YOTB_CONTEST_FORMAL_TARGET_HIGH = {
+       "Today's beefalo should have a slight edge of formality.",       
+    }, 
+    YOTB_CONTEST_FORMAL_TARGET_PERFECT = {
+       "I want to see a perfect blend of unconventional and formal.",    
+    }, 
+    YOTB_CONTEST_FORMAL_TARGET_LOW = {
+       "My pick for today will be a bit more unconventional than formal.",       
+    },  
+    YOTB_CONTEST_FORMAL_TARGET_VERYLOW = {
+        "I want to see something mostly unconventional, with just a whiff of formality.",
+--      "This beefalo is much too unconventional",
+    },
+    YOTB_CONTEST_FORMAL_TARGET_EXTREMELOW = {
+        "My taste today is for a complete lack of formality.",
+    },    
+
+    ------ APPRAISE STRINGS
+
+    YOTB_APPRAISE_START = "Let's see what you have there.",
+    YOTB_APPRAISE_END = "Wonderful item you've got there.",
+
+    -- FEARSOME 
+    YOTB_DOLL_FEARSOME_TARGET_EXTREMEHIGH = {
+       "Finally, this is the most fearsome of dolls!",       
+    },
+    YOTB_DOLL_FEARSOME_TARGET_VERYHIGH = {
+       "Finally, it's quite fierce.",
+       "Finally, this is quite fearsome looking.",
+    }, 
+    YOTB_DOLL_FEARSOME_TARGET_HIGH = {
+       "Finally, it's only mildly more fearsome than friendly.",              
+    }, 
+    YOTB_DOLL_FEARSOME_TARGET_PERFECT = {
+       "Finally, it has a good balance of fearsome and friendly.",       
+    }, 
+    YOTB_DOLL_FEARSOME_TARGET_LOW = {
+         "Finally, this is just a bit more friendly than scary.",
+    },  
+    YOTB_DOLL_FEARSOME_TARGET_VERYLOW = {
+        "Finally, it has the tiniest hint of ferocity.",
+        "Finally, I can see a little ferocity, but just a touch.",
+    },
+    YOTB_DOLL_FEARSOME_TARGET_EXTREMELOW = {
+        "Finally, this is like a teddy bear. My heart is at ease.",
+    },
+
+    -- FESTIVE
+    YOTB_DOLL_FESTIVE_TARGET_EXTREMEHIGH = {
+       "Also, it's the most festive of dolls.",       
+    },
+    YOTB_DOLL_FESTIVE_TARGET_VERYHIGH = {
+       "Also, it has quite a lot of festivity.",       
+    }, 
+    YOTB_DOLL_FESTIVE_TARGET_HIGH = {
+       "Also, it has a lot of festivity, with just a dash of somberness.",       
+    }, 
+    YOTB_DOLL_FESTIVE_TARGET_PERFECT = {
+       "Also, this is tasteful mix of festivity and somberness.",
+       "Also, it's a perfect balance of somber and festive.",
+    }, 
+    YOTB_DOLL_FESTIVE_TARGET_LOW = {
+       "Also, this is a bit more somber than festive.",       
+    },  
+    YOTB_DOLL_FESTIVE_TARGET_VERYLOW = {
+        "Also, it has only the tiniest hint of festivity.",        
+    },
+    YOTB_DOLL_FESTIVE_TARGET_EXTREMELOW = {
+        "Also, I don't see even a hint of festivity in this.",        
+    },
+
+
+    -- FORMAL
+    YOTB_DOLL_FORMAL_TARGET_EXTREMEHIGH = {
+       "Everything about this screams \"formality.\"",       
+    },
+    YOTB_DOLL_FORMAL_TARGET_VERYHIGH = {
+       "This is the high end of formality, with just a dash of disorder.",
+    }, 
+    YOTB_DOLL_FORMAL_TARGET_HIGH = {
+       "This has a slight edge of formality.",       
+    }, 
+    YOTB_DOLL_FORMAL_TARGET_PERFECT = {
+       "It's a perfect blend of unconventional and formal.",    
+    }, 
+    YOTB_DOLL_FORMAL_TARGET_LOW = {
+       "This a bit more unconventional than formal.",       
+    },  
+    YOTB_DOLL_FORMAL_TARGET_VERYLOW = {
+        "This is mostly unconventional, with just a whiff of formality.",
+    },
+    YOTB_DOLL_FORMAL_TARGET_EXTREMELOW = {
+        "It has a complete lack of formality.",
+    },    
+
+    --  end beefalo contest
 }
 
 STRINGS.BUNNYMANNAMES =
@@ -6134,7 +6531,7 @@ STRINGS.UI =
         RESET = "Reset Outfit",
         SET = "Confirm Outfit",
         CANCEL = "Cancel",
-    },
+    },    
 
     OPTIONS =
     {
@@ -6232,7 +6629,7 @@ STRINGS.UI =
 	{
 		HISTORYOFTRAVELS = "History of Travels",
 		CHARACTERDETAILS = "Survivors",
-        COOKBOOKPANEL = "Cookbook",
+		COOKBOOKPANEL = "Cookbook",
         PLANTREGISTRYPANEL = "Plant Registry",
         OBITUARIES = "Obituaries",
         ENCOUNTERS = "Encounters",
@@ -6305,6 +6702,7 @@ STRINGS.UI =
         RECEIVED = "You Received",
         ENABLED_TOAST_TOOLTIP = "Open",
         DISABLED_TOAST_TOOLTIP = "This requires more science!",
+        DISABLED_YOTB_TOOLTIP = "New beefalo grooming option!",
     },
 
     STATSPANEL =
@@ -8832,6 +9230,7 @@ STRINGS.UI =
     -- Rarity and colour tables are to allow translation of item properties. Keys are the names as returned by the item server.
     RARITY =
     {
+        Complimentary   = "Complimentary",
         Common          = "Common",
         Classy          = "Classy",
         Spiffy          = "Spiffy",
@@ -10035,6 +10434,7 @@ STRINGS.UI =
             YOTV = "Year of the Varg",
             YOTP = "Year of the Pig King",
             YOTC = "Year of the Carrat",
+            YOTB = "Year of the Beefalo",
         },
     },
 
@@ -10118,6 +10518,8 @@ STRINGS.UI =
         SLOWCLAP = "Slow Clap",
         STEP = "Step Dance",
 		TOAST = "Toast",
+		PET = "Pet",
+		BIGPET = "Pet",
     },
 
     PRESENCE = 
@@ -10630,6 +11032,39 @@ STRINGS.SIGNS =
         "of Dreariness",
         "of Death",
         "full of Bees",
+    },
+}
+
+STRINGS.BEEFALONAMING =
+{
+    BEEFNAMES =
+    {
+        "Annabeef",
+        "Beefy",
+        "Beefssie",
+        "Betsbeef",
+        "Beefa",
+        "Daisbeef",
+        "Dixbeef",
+        "Gertbeef",
+        "Beefgus",
+        "Beefinand",
+        "Wellington",
+        "Bradbeef",
+        "Beefany",
+        "Harry",
+        "Hoofrey",
+        "Beeftholomew",
+        "Guineveal",
+        "Patty O'Beef",
+        "Beeferella",
+    },
+
+    MENU =
+    {
+        CANCEL = "Cancel",
+        RANDOM = "Random",
+        ACCEPT = "Done",
     },
 }
 

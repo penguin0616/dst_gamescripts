@@ -158,6 +158,19 @@ local SPECIAL_EVENT_DEPS =
         },
     },
 
+    [SPECIAL_EVENTS.YOTB] =
+    {
+        frontend =
+        {
+            assets =
+            {
+                Asset("ANIM", "anim/dst_menu_beefalo.zip"),
+                Asset("ANIM", "anim/dst_menu_beefalo_bg.zip"),
+                Asset("SOUND", "sound/music_frontend_yotb.fsb"),
+            },
+        },
+    },    
+
     [SPECIAL_EVENTS.NONE] =
     {
         frontend =

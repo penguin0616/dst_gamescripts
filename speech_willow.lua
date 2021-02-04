@@ -17,6 +17,7 @@ return{
 			GENERIC = "Nu-uh.",
 			NOBITS = "It's already shaved!",
 --fallback to speech_wilson.lua             REFUSE = "only_used_by_woodie",
+            SOMEONEELSESBEEFALO = "Pfft, let someone else do it.",
 		},
 		STORE =
 		{
@@ -139,6 +140,7 @@ return{
             GENERIC = "Nah, too much effort.",
             BURNING = "That's way better than some dumb dresses!",
             INUSE = "Stop hogging it, I wanna dress up too!",
+            NOTENOUGHHAIR = "It might help if my beefalo had more hair.",
         },
         ATTUNE =
         {
@@ -249,6 +251,36 @@ return{
         {
             OUT_OF_WATER = "Welp, I'm out of water. Can I go back to burning stuff now?",
         },
+        USEITEMON =
+        {
+            --GENERIC = "I can't use this on that!",
+
+            --construction is PREFABNAME_REASON
+            BEEF_BELL_INVALID_TARGET = "Yeah... that's not going to work.",
+            BEEF_BELL_ALREADY_USED = "Someone already got to it first.",
+            BEEF_BELL_HAS_BEEF_ALREADY = "One beefalo is enough to deal with.",
+        },
+        HITCHUP =
+        {
+            NEEDBEEF = "Might help if I had a beefalo...",
+            NEEDBEEF_CLOSER = "I need to get that beefalo over here.",
+            BEEF_HITCHED = "Already done.",
+        },
+        MARK = 
+        {
+            ALREADY_MARKED = "No take backs!",
+            NOT_PARTICIPANT = "I bet this would be a lot more exciting if I set something on fire.",
+        },
+        YOTB_STARTCONTEST = 
+        {
+            DOESNTWORK = "Hey weird guy! Helloooo?",
+            ALREADYACTIVE = "Guess he's somewhere else.",
+        },
+        YOTB_UNLOCKSKIN = 
+        {
+            ALREADYKNOWN = "Ugh, I already know this one!",
+        }
+
 	},
 	ACTIONFAIL_GENERIC = "I can'tttttt.",
 	ANNOUNCE_BOAT_LEAK = "Gross, I hate water.",
@@ -639,6 +671,11 @@ return{
         "Anything interesting going on lately? Right, nope. Because you're a plant.",
         "Hey, rustle twice if you want to take a closer look at my lighter!",
 	},
+
+    -- YOTB
+    ANNOUNCE_CALL_BEEF = "Hey beefalo! Get over here!",
+    ANNOUNCE_CANTBUILDHERE_YOTB_POST = "How would the judge even see my beefalo this far away?",
+    ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "I think I could make a new beefalo costume now.",
 
 	BATTLECRY =
 	{
@@ -1299,6 +1336,7 @@ return{
             ORNERY = "I can see fire in its eyes.",
             RIDER = "Let's go!",
             PUDGY = "You need to burn some calories.",
+            MYPARTNER = "It may be a dumb stinky beast, but it's my dumb stinky beast!",
 		},
 
 		BEEFALOHAT = "Beast hair to go over people hair!",
@@ -1485,7 +1523,7 @@ return{
 		COOKEDMANDRAKE = "The fire didn't get rid of its face. Gives me the willies.",
 		COOKEDMEAT = "Unseasoned meat... great.",
 		COOKEDMONSTERMEAT = "It's still gross.",
-		COOKEDSMALLMEAT = "Gonna need a lot of appetizers to survive out here!",        
+		COOKEDSMALLMEAT = "Gonna need a lot of appetizers to survive out here!",
 		COOKPOT =
 		{
 			COOKING_LONG = "The fire still has quite a bit of work to do.",
@@ -2547,6 +2585,21 @@ return{
             CARRAT_GOOD = "Now we're talking!",
             BURNT = "Ha! Nice.",
         },                
+
+        YOTB_BEEFALOSHRINE =
+        {
+            GENERIC = "Got any firecrackers?",
+            EMPTY = "Guess I should give it something.",
+            BURNT = "It was a celebratory burning!",
+        },
+
+        BEEFALO_GROOMER =
+        {
+            GENERIC = "Come on beefalo, it's dress-up time!",
+            OCCUPIED = "Honestly, anything I do will be an improvement.",
+            BURNT = "Heh, well that was fun.",
+        },
+        BEEFALO_GROOMER_ITEM = "Uuuugh, why is everything so much work?",
 
 		BISHOP_CHARGE_HIT = "Owwww!",
 		TRUNKVEST_SUMMER = "Now my friend will never leave.",
@@ -3675,7 +3728,6 @@ return{
         -- FARMING
         COMPOSTINGBIN =
         {
-            -- WIP, might not end up with these states so don't fill in for now
             GENERIC = "Ew, why do we have this?",
             WET = "It's all wet and gross.",
             DRY = "Is it supposed to be that dry?",
@@ -3722,7 +3774,7 @@ return{
 		{
 			GENERIC = "Oooh, that basket looks flammable!",
 			HAS_ITEM = "Weight: {weight}\nHarvested on day: {day}\nWow. Exciting.",
-            HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nMore to burn.",
+			HAS_ITEM_HEAVY = "Weight: {weight}\nHarvested on day: {day}\nMore to burn.",
             HAS_ITEM_LIGHT = "Hey is this thing broken? It's not even showing the weight!",
 			BURNING = "Yeah, now we're talking!",
 			BURNT = "Aw, over already?",
@@ -3757,14 +3809,77 @@ return{
 			FULL_WEED = "Wait, what kind of vegetable is that supposed to be?",
 
 			BURNING = "Heh heh.",
-        },
-        
+		},
+
         FRUITFLY = "Get lost, you dumb bugs!",
         LORDFRUITFLY = "You think you can barge in here and mess up the garden? That's my job!",
         FRIENDLYFRUITFLY = "Hey, this one's actually helping!",
         FRUITFLYFRUIT = "Now I'm the the one giving the orders! To Fruit Flies, but still.",
 
         SEEDPOUCH = "It would be even easier to just set all the seeds on fire.",
+
+        -- YOTB
+        YOTB_SEWINGMACHINE = "I never liked sewing.",
+        YOTB_SEWINGMACHINE_ITEM = "What a nice pile of kindling!",
+        YOTB_STAGE = "You think you can judge me?!",
+        YOTB_POST =  "Setting one of these on fire would make the contest way more exciting.",
+        YOTB_STAGE_ITEM = "Ughhh, so much wooorrkk...",
+        YOTB_POST_ITEM =  "Here's an idea - instead of building it I just set it on fire!",
+
+
+        YOTB_PATTERN_FRAGMENT_1 = "Looks like I'll have to put a few of these together to make anything worthwhile.",
+        YOTB_PATTERN_FRAGMENT_2 = "Looks like I'll have to put a few of these together to make anything worthwhile.",
+        YOTB_PATTERN_FRAGMENT_3 = "Looks like I'll have to put a few of these together to make anything worthwhile.",
+
+        YOTB_BEEFALO_DOLL_WAR = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_DOLL = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_FESTIVE = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_NATURE = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_ROBOT = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_ICE = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_FORMAL = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_VICTORIAN = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+        YOTB_BEEFALO_DOLL_BEAST = {
+            GENERIC = "You and Bernie will get along great!",
+            YOTB = "Hey judge! Get a load of this!",
+        },
+
+
+        WAR_BLUEPRINT = "Ooooh, looks dangerous!",
+        DOLL_BLUEPRINT = "Awww, my beefalo's gonna be so hideous and adorable!",
+        FESTIVE_BLUEPRINT = "It needs more firecrackers before I'd call it \"festive\".",
+        ROBOT_BLUEPRINT = "Uh, is this really a sewing pattern?",
+        NATURE_BLUEPRINT = "Once the flowers dry out they'll make nice kindling.",
+        FORMAL_BLUEPRINT = "Ugh, it looks so stuffy and proper.",
+        VICTORIAN_BLUEPRINT = "Ha! This is gonna look hilarious!",
+        ICE_BLUEPRINT = "Don't beefalo already have hairy winter coats?",
+        BEAST_BLUEPRINT = "My beefalo's already a lucky beast. He gets to be my friend!",
+
+        BEEF_BELL = "Wow, making friends is easy!",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

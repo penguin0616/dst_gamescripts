@@ -15,14 +15,17 @@ local PopupDialogScreen = require "screens/redux/popupdialog"
 
 local TEMPLATES = require "widgets/redux/templates"
 
-require("skinsutils")
+local BEEFALO_COSTUMES = require("yotb_costumes")
 
+require("skinsutils")
 
 local COMMERCE_WIDTH = 130
 local COMMERCE_HEIGHT = 45
 
-local ItemExplorer = Class(Widget, function(self, title_text, primary_item_type, item_table_getter, list_options)
+local ItemExplorer = Class(Widget, function(self, title_text, primary_item_type, item_table_getter, list_options, yotb_filter)
     Widget._ctor(self, "ItemExplorer")
+
+    self.yotb_filter = yotb_filter
 
     assert(primary_item_type and primary_item_type ~= "")
     self.primary_item_type = primary_item_type
@@ -833,8 +836,7 @@ function ItemExplorer:_CreateWidgetDataListForItems(item_table, item_type, activ
             item_latest[key] = inv_item.modified_time
         end
         
-        if inv_item.item_id == TEMP_ITEM_ID and GetRarityForItem(key) ~= "Event" and GetRarityForItem(key) ~= "Reward" and GetRarityForItem(key) ~= "ProofOfPurchase" then
-            item_dlc_owned[key] = true
+        if inv_item.item_id == TEMP_ITEM_ID and GetRarityForItem(key) ~= "Event" and GetRarityForItem(key) ~= "Reward" and GetRarityForItem(key) ~= "ProofOfPurchase" and GetRarityForItem(key) ~= "Complimentary"  then            item_dlc_owned[key] = true
         end
 	end
 
@@ -848,6 +850,23 @@ function ItemExplorer:_CreateWidgetDataListForItems(item_table, item_type, activ
                 is_owned = true
                 timestamp = 0
             end
+
+            if self.yotb_filter and self.yotb_filter.yotb_skins_sets then
+                
+                local category = nil
+                for i,set in pairs(BEEFALO_COSTUMES.costumes)do
+                    for t,part in ipairs(set.skins)do
+                        if item_key == part then
+                            category = i
+                        end
+                    end
+                end 
+
+                if category and not checkbit(self.yotb_filter.yotb_skins_sets:value(), YOTB_COSTUMES[category]) then
+                    is_owned = false
+                end
+            end
+
             local data = {
                 item_key = item_key,
                 is_active = is_owned and activity_checker_fn(item_key) or false,

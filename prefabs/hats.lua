@@ -1786,8 +1786,9 @@ local function MakeHat(name)
     local function plantregistry_onuse(inst)
         local owner = inst.components.inventoryitem.owner
         if owner then
+            if not CanEntitySeeTarget(owner, inst) then return false end
             owner.sg:GoToState("plantregistry_open")
-            owner:ShowPlantRegistryPopUp(true)
+            owner:ShowPopUp(POPUPS.PLANTREGISTRY, true)
         end
     end
 

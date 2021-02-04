@@ -19,10 +19,11 @@ SKIN_RARITY_COLORS =
 	Lustrous		= { 1.000, 1.000, 0.298, 1 }, -- FFFF4C - rarity modifier
 	-- #40E0D0 reserved skin colour
 }
---Share Heirloom colour
-SKIN_RARITY_COLORS.HeirloomClassy  = SKIN_RARITY_COLORS.HeirloomElegant
-SKIN_RARITY_COLORS.HeirloomSpiffy  = SKIN_RARITY_COLORS.HeirloomElegant
-SKIN_RARITY_COLORS.HeirloomDistinguished  = SKIN_RARITY_COLORS.HeirloomElegant
+--Share colours
+SKIN_RARITY_COLORS.Complimentary = SKIN_RARITY_COLORS.Common
+SKIN_RARITY_COLORS.HeirloomClassy = SKIN_RARITY_COLORS.HeirloomElegant
+SKIN_RARITY_COLORS.HeirloomSpiffy = SKIN_RARITY_COLORS.HeirloomElegant
+SKIN_RARITY_COLORS.HeirloomDistinguished = SKIN_RARITY_COLORS.HeirloomElegant
 
 DEFAULT_SKIN_COLOR = SKIN_RARITY_COLORS["Common"]
 
@@ -49,6 +50,7 @@ local function GetSpecialItemCategories()
 		CLOTHING,
 		EMOTE_ITEMS,
 		EMOJI_ITEMS,
+		BEEFALO_CLOTHING,
 	}
 end
 local function GetAllItemCategories()
@@ -73,7 +75,8 @@ RARITY_ORDER =
 	Distinguished = 12,
 	Spiffy = 13,
 	Classy = 14,
-	Common = 15
+	Common = 15,
+	Complimentary = 16
 }
 
 function CompareReleaseGroup(item_key_a, item_key_b)
@@ -111,6 +114,9 @@ end
 function GetFrameSymbolForRarity( rarity )
 	if IsHeirloomRarity(rarity) then
 		return "heirloom"
+	end
+	if rarity == "Complimentary" then
+		return "common"
 	end
 	return string.lower( rarity )
 end
@@ -1343,11 +1349,11 @@ function IsDefaultSkinOwned( item_key )
         end
         return true
     end
-    return IsDefaultClothing( item_key ) or IsDefaultMisc( item_key ) --all default clothing is owned.
+    return IsDefaultClothing( item_key ) or IsDefaultBeefClothing( item_key ) or IsDefaultMisc( item_key ) --all default clothing is owned.
 end
 
 function IsDefaultSkin( item_key )
-    return IsDefaultClothing( item_key ) or IsDefaultCharacterSkin( item_key )
+    return IsDefaultClothing( item_key ) or IsDefaultBeefClothing( item_key ) or IsDefaultCharacterSkin( item_key )
 end
 
 function IsPrefabSkinned( prefab )
@@ -1362,12 +1368,17 @@ function IsDefaultClothing( item_key )
     return item_key ~= nil and item_key ~= "" and CLOTHING[item_key] ~= nil and CLOTHING[item_key].is_default
 end
 
+function IsDefaultBeefClothing( item_key )
+    return item_key ~= nil and item_key ~= "" and BEEFALO_CLOTHING[item_key] ~= nil and BEEFALO_CLOTHING[item_key].is_default
+end
+
 function IsDefaultMisc( item_key )
     return item_key ~= nil and item_key ~= "" and MISC_ITEMS[item_key] ~= nil and MISC_ITEMS[item_key].is_default
 end
 
 -- Returns a table similar to MISC_ITEMS, but with character heads (skin bases).
 function GetCharacterSkinBases(hero)
+	print("hero",hero)
     local matches = {}
     local skins = PREFAB_SKINS[hero]
     if skins ~= nil then
@@ -1399,10 +1410,13 @@ function IsValidClothing( name )
 	return name ~= nil and name ~= "" and CLOTHING[name] ~= nil and not CLOTHING[name].is_default
 end
 
+function IsValidBeefaloClothing( name )
+	return name ~= nil and name ~= "" and BEEFALO_CLOTHING[name] ~= nil and not BEEFALO_CLOTHING[name].is_default
+end
 
-function ValidatePreviewItems(currentcharacter, preview_skins)
-    for key,item_key in pairs(preview_skins) do
-        if key ~= "base" and not IsValidClothing(preview_skins[key]) then
+function ValidatePreviewItems(currentcharacter, preview_skins, filter)
+    for key,item_key in pairs(preview_skins) do    	
+        if key ~= "base" and not IsValidClothing(preview_skins[key]) and not IsValidBeefaloClothing(preview_skins[key]) then
             preview_skins[key] = nil
         end
     end
@@ -1411,7 +1425,7 @@ end
 function ValidateItemsLocal(currentcharacter, selected_skins)
     for key,item_key in pairs(selected_skins) do
         if not TheInventory:CheckOwnership(selected_skins[key])
-            or (key ~= "base" and not IsValidClothing(selected_skins[key]))
+            or (key ~= "base" and not IsValidClothing(selected_skins[key]))  and not IsValidBeefaloClothing(selected_skins[key])
             then
             selected_skins[key] = nil
         end
@@ -1735,6 +1749,52 @@ function GetSkinModes(character)
 		}
 	end
 	return skintypesbycharacter[character] or skintypesbycharacter.default
+end
+
+function GetPlayerBadgeData(character, ghost, state_1, state_2, state_3 )
+	if character == "wormwood" then
+		if ghost then
+			return "ghost", "idle", "ghost_skin", .15, -55
+		else
+			if state_1 then
+				return "wilson", "idle_loop_ui", "stage_2", .23, -50
+			elseif state_2 then
+				return "wilson", "idle_loop_ui", "stage_3", .23, -50
+			elseif state_3 then
+				return "wilson", "idle_loop_ui", "stage_4", .23, -50
+			else
+				return "wilson", "idle_loop_ui", "normal_skin", .23, -50
+			end
+		end
+	elseif character == "woodie" then		
+		if ghost then
+			if state_1 then
+				return "ghost", "idle", "ghost_werebeaver_skin", .15, -55
+			elseif state_2 then
+				return "ghost", "idle", "ghost_weremoose_skin", .15, -55
+			elseif state_3 then
+				return "ghost", "idle", "ghost_weregoose_skin", .15, -55
+			else
+				return "ghost", "idle", "ghost_skin", .15, -55
+			end
+		else
+			if state_1 then
+				return "werebeaver", "idle_loop", "werebeaver_skin", .15, -28
+			elseif state_2 then
+				return "weremoose", "idle_loop", "weremoose_skin", .11, -40
+			elseif state_3 then
+				return "weregoose", "idle_loop", "weregoose_skin", .17, -24
+			else
+				return "wilson", "idle_loop_ui", "normal_skin", .23, -50
+			end
+		end
+	else
+		if ghost then
+			return "ghost", "idle", "ghost_skin", .15, -55
+		else
+			return "wilson", "idle_loop_ui", "normal_skin", .23, -50
+		end
+	end
 end
 
 function GetSkinModeFromBuild(player)

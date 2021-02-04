@@ -32,6 +32,7 @@ typeList["item"] = true
 
 				
 local rarityList = {}
+rarityList["Complimentary"] = true
 rarityList["Common"] = true
 rarityList["Classy"] = true
 rarityList["Spiffy"] = true

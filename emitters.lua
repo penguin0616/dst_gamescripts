@@ -182,3 +182,23 @@ function CreateAreaEmitter(polygon, centroid)
 		return  v0.x*u + v2.x*v, v0.y*u + v2.y*v
 	end
 end
+
+function Create2DTriEmitter(tris, scale)
+	return function(camera_right, camera_up)
+		local tri = tris[math.random(1, #tris)]
+		-- u = random [0-1]
+		local u = math.random()
+		local u_sqrt = math.sqrt(u)
+		-- v = random [0-1]
+		local v =  math.random()
+
+		local inverted_u_sqrt = 1 - u_sqrt
+		local u_sqrt_x_inverted_v = u_sqrt * (1 - v)
+		local u_sqrt_x_v = u_sqrt * v
+
+		local x = inverted_u_sqrt * tri[1].x + u_sqrt_x_inverted_v * tri[2].x + u_sqrt_x_v * tri[3].x
+		local y = inverted_u_sqrt * tri[1].y + u_sqrt_x_inverted_v * tri[2].y + u_sqrt_x_v * tri[3].y
+
+		return (((camera_right * -x) + (camera_up * -y)) * scale):Get()
+	end
+end
