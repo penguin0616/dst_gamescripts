@@ -236,8 +236,7 @@ end
 
 function Groomer:ApplyTargetSkins(target, doer, skins)
 
-    dumptable(skins)
-    if target.components.skinner_beefalo ~= nil then
+    if target and target.components.skinner_beefalo ~= nil then
         target.AnimState:AssignItemSkins(doer.userid, skins.beef_body or "", skins.beef_horn or "", skins.beef_head or "", skins.beef_feet or "", skins.beef_tail or "")
         target.components.skinner_beefalo:ClearAllClothing()
         target.components.skinner_beefalo:SetClothing(skins.beef_body)

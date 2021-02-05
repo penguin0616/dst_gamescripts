@@ -92,9 +92,10 @@ function Rider:Mount(target, instant)
     self.inst.AnimState:SetBank("wilsonbeefalo")
     if target.ApplyBuildOverrides ~= nil then
         target:ApplyBuildOverrides(self.inst.AnimState)  
-        
-        local clothing_names = target.components.skinner_beefalo:GetClothing()
-        SetBeefaloSkinsOnAnim( self.inst.AnimState, clothing_names, target.GUID )
+        if target.components.skinner_beefalo then
+            local clothing_names = target.components.skinner_beefalo:GetClothing()
+            SetBeefaloSkinsOnAnim( self.inst.AnimState, clothing_names, target.GUID )
+        end
     end
     
     if saddler then

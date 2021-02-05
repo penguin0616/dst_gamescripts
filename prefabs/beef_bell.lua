@@ -67,9 +67,14 @@ local function on_put_in_inventory(inst)
     end
 end
 
-local function on_beef_disappeared(inst, beef)
+local function cleanup_bell(inst)
+    inst:RemoveTag("nobundling")
     inst.components.inventoryitem:ChangeImageName("beef_bell")
     inst.AnimState:PlayAnimation("idle1", true)
+end
+
+local function on_beef_disappeared(inst, beef)
+    cleanup_bell(inst)
 
     inst.components.useabletargeteditem:StopUsingItem()
 end
@@ -101,6 +106,7 @@ local function on_used_on_beefalo(inst, target, user)
         if beef_set_successful then
             inst.components.inventoryitem:ChangeImageName("beef_bell_linked")
             inst.AnimState:PlayAnimation("idle2", true)
+            inst:AddTag("nobundling")
         end
 
         if failreason == nil then
@@ -122,8 +128,7 @@ local function on_stop_use(inst)
 
     inst.components.leader:RemoveAllFollowers()
 
-    inst.components.inventoryitem:ChangeImageName("beef_bell")
-    inst.AnimState:PlayAnimation("idle1", true)
+    cleanup_bell(inst)
 end
 
 local function on_bell_save(inst, data)

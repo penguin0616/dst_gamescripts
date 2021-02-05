@@ -325,7 +325,7 @@ params.bundle_container =
 }
 
 function params.bundle_container.itemtestfn(container, item, slot)
-    return not (item:HasTag("irreplaceable") or item:HasTag("_container") or item:HasTag("bundle"))
+    return not (item:HasTag("irreplaceable") or item:HasTag("_container") or item:HasTag("bundle") or item:HasTag("nobundling"))
 end
 
 function params.bundle_container.widget.buttoninfo.fn(inst)

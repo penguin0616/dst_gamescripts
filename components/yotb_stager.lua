@@ -323,6 +323,7 @@ function YOTB_Stager:MakeRandomBeef(post, name)
 	end)
 
     trainer:ListenForEvent("attacked", onattacked)
+    trainer:ListenForEvent("death",  onattacked)
 
 	if not self.temp_trainers then
 		self.temp_trainers = {}
@@ -365,6 +366,7 @@ function YOTB_Stager:MakeRandomBeef(post, name)
 			self:RemoveTempBeef(beefalo)
 		end)
  		beefalo:ListenForEvent("attacked", onattacked)
+ 		beefalo:ListenForEvent("death", onattacked)
 
 		local fx = SpawnPrefab("spawn_fx_medium")
 		fx.Transform:SetPosition(beefalo.Transform:GetWorldPosition())
@@ -519,7 +521,9 @@ end
 
 local function onplayerbeefattacked(inst)
 	local stage = TheWorld.components.yotb_stagemanager and TheWorld.components.yotb_stagemanager:GetActiveStage()
-	stage.components.yotb_stager:AbortContest({reason="attack"})
+	if stage then
+		stage.components.yotb_stager:AbortContest({reason="attack"})
+	end
 end
 
 function YOTB_Stager:Start_phase2()
@@ -532,6 +536,7 @@ function YOTB_Stager:Start_phase2()
 		local beef = post.components.hitcher:GetHitched()
 		if beef then
 			self.inst:ListenForEvent("attacked",onplayerbeefattacked,beef)
+			self.inst:ListenForEvent("death",onplayerbeefattacked,beef)
 		end
 	end
 
@@ -653,7 +658,9 @@ end
 
 function YOTB_Stager:unhighlitepost(post)
 	self.inst.current_contest_target = nil
-	self.light.fadeout(self.light)
+	if self.light then 
+		self.light.fadeout(self.light)
+	end
 end
 
 function YOTB_Stager:highlitepost(post)
@@ -780,17 +787,18 @@ function YOTB_Stager:BuildSuspense()
 	end
 
 	self.inst.SoundEmitter:PlaySound("yotb_2021/music/contest_tune")
-
-	for i, trainer in ipairs(self.temp_trainers) do
-		trainer:DoTaskInTime(0.3+(math.random()*1), function()
-			trainer.components.timer:StartTimer("contest_panic",1 + (math.random()*7))
-			trainer:ListenForEvent("timerdone", function(inst,data) 
-				if data.name == "contest_panic" then 
-					local post = self.posts[math.random(1,#self.posts)]
-					trainer.yotb_post_to_mark = post
-				end
+	if self.temp_trainers and #self.temp_trainers > 0 then
+		for i, trainer in ipairs(self.temp_trainers) do
+			trainer:DoTaskInTime(0.3+(math.random()*1), function()
+				trainer.components.timer:StartTimer("contest_panic",1 + (math.random()*7))
+				trainer:ListenForEvent("timerdone", function(inst,data) 
+					if data.name == "contest_panic" then 
+						local post = self.posts[math.random(1,#self.posts)]
+						trainer.yotb_post_to_mark = post
+					end
+				end)
 			end)
-		end)
+		end
 	end
 
 	self.inst.components.talker:Say(STRINGS.YOTB_GUESS_WHO_1, 5.5)
@@ -1131,17 +1139,17 @@ function YOTB_Stager:EndContest(reason)
 
 	self:cleartimers()
 	self.inst:RemoveTag("has_prize")
-
-	if self.current_post and self.current_post > 0 then
-		self:unhighlitepost(self.posts[self.current_post])
-	end
-
+	
 	if self.posts and #self.posts > 0 then
+
+		self:unhighlitepost(self.posts[self.current_post])
+
 		for i,post in pairs(self.posts)do
 
 			local beef = post.components.hitcher:GetHitched()
 			if beef then
 				beef:RemoveEventCallback("onattacked",onplayerbeefattacked)
+				beef:RemoveEventCallback("death",onplayerbeefattacked)
 			end
 
 			post.components.markable:Unmarkall()

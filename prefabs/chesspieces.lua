@@ -34,7 +34,7 @@ local PIECES =
     {name="anchor",     moonevent=false},
     {name="moon",       moonevent=false},
     {name="carrat",     moonevent=false},
-    {name="beefalo",    moonevent=false},    
+    {name="beefalo",    moonevent=false},
     {name="crabking",   moonevent=false},
     {name="malbatross", moonevent=false},
     {name="toadstool",	moonevent=false},
@@ -185,12 +185,10 @@ end
 
 local function onsave(inst, data)
     data.materialid = inst.materialid
-    data.pieceid = inst.pieceid
 end
 
 local function onload(inst, data)
     if data ~= nil then
-        inst.pieceid = data.pieceid
         SetMaterial(inst, data.materialid or 1)
 
         -- The moonglass sculptures don't need any of the shadow creature stuff.
