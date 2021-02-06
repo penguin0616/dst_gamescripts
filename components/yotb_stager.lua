@@ -237,6 +237,16 @@ function YOTB_Stager:AbortContest(data)
 			end)
 		end
 	end
+
+	for i, post in ipairs(self.posts) do
+		local beef = post.components.hitcher:GetHitched()
+		if beef then
+			beef.components.markable_proxy:SetMarkable(false)
+			beef.components.markable_proxy.proxy = nil
+		end
+		post.components.markable:SetMarkable(false)
+	end	
+	self.inst.SoundEmitter:KillSound("gametune")
 end
 
 local function generatepart(itemcat)
@@ -337,6 +347,7 @@ function YOTB_Stager:MakeRandomBeef(post, name)
 		beefalo.yotb_tempcontestbeefalo = true
 		beefalo.Transform:SetPosition(post.Transform:GetWorldPosition())
 		beefalo.npc_stage = self.inst
+
         if beefalo.components.follower ~= nil then
             beefalo.components.follower:SetLeader(trainer)
         end
@@ -344,7 +355,7 @@ function YOTB_Stager:MakeRandomBeef(post, name)
 		post.components.hitcher:SetHitched(beefalo)
 
 		if not beefalo.components.named then
-			beefalo:AddComponnet("named")
+			beefalo:AddComponent("named")
 		end
 		beefalo.components.named:SetName(name or STRINGS.BEEFALONAMING.BEEFNAMES[math.random(1,#STRINGS.BEEFALONAMING.BEEFNAMES)])
 
@@ -659,7 +670,7 @@ end
 function YOTB_Stager:unhighlitepost(post)
 	self.inst.current_contest_target = nil
 	if self.light then 
-		self.light.fadeout(self.light)
+	self.light.fadeout(self.light)
 	end
 end
 
@@ -786,7 +797,7 @@ function YOTB_Stager:BuildSuspense()
 		end
 	end
 
-	self.inst.SoundEmitter:PlaySound("yotb_2021/music/contest_tune")
+	self.inst.SoundEmitter:PlaySound("yotb_2021/music/contest_tune","gametune")
 	if self.temp_trainers and #self.temp_trainers > 0 then
 		for i, trainer in ipairs(self.temp_trainers) do
 			trainer:DoTaskInTime(0.3+(math.random()*1), function()
@@ -1148,7 +1159,7 @@ function YOTB_Stager:EndContest(reason)
 
 			local beef = post.components.hitcher:GetHitched()
 			if beef then
-				beef:RemoveEventCallback("onattacked",onplayerbeefattacked)
+				beef:RemoveEventCallback("attacked",onplayerbeefattacked)
 				beef:RemoveEventCallback("death",onplayerbeefattacked)
 			end
 

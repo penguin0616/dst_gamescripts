@@ -48,6 +48,20 @@ function Rider:DetachClassified()
 end
 
 --------------------------------------------------------------------------
+local function GetPickupAction(inst, target)
+    local is_inventory = (target.replica.inventoryitem ~= nil and target.replica.inventoryitem:CanBePickedUp())
+            or (target.components.inventoryitem ~= nil and target.components.canbepickedup)
+
+    if is_inventory
+            and not (target:HasTag("heavy") or target:HasTag("fire") or target:HasTag("catchable")) then
+        return (inst.components.playercontroller:HasItemSlots() or target.replica.equippable ~= nil or target.components.equippable ~= nil) and ACTIONS.PICKUP or nil
+    elseif target:HasTag("pickable") and not target:HasTag("fire") then
+        return ACTIONS.PICK
+    else
+        return nil
+    end
+end
+
 local TARGET_MUST_TAGS = { "catchable" }
 local TARGET_EXCLUDE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
 local PICKUP_TAGS =
@@ -94,19 +108,18 @@ local function ActionButtonOverride(inst, force_target)
         )
         for _, v in ipairs(ents) do
             if v ~= inst and v.entity:IsVisible() and CanEntitySeeTarget(inst, v) then
-                local action = nil
-
-                if v.replica.inventoryitem ~= nil and v.replica.inventoryitem:CanBePickedUp() and
-                        not (v:HasTag("heavy") or v:HasTag("fire") or v:HasTag("catchable")) then
-                    action = (inst.components.playercontroller:HasItemSlots() or v.replica.equippable ~= nil) and ACTIONS.PICKUP or nil
-                elseif v:HasTag("pickable") and not v:HasTag("fire") then
-                    action = ACTIONS.PICK
-                end
+                local action = GetPickupAction(inst, v)
 
                 if action ~= nil then
                     return BufferedAction(inst, v, action)
                 end
             end
+        end
+    elseif inst:GetDistanceSqToInst(force_target) <= (inst.components.playercontroller.directwalking and 9 or 36) then
+        local action = GetPickupAction(inst, force_target)
+
+        if action ~= nil then
+            return BufferedAction(inst, force_target, action)
         end
     end
 end

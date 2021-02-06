@@ -120,6 +120,7 @@ PREFAB_SKINS = {
 	{
 		"beefalohat_klaus",
 		"beefalohat_pigking",
+		"beefalohat_pigking_alt",
 	},
 	beehat = 
 	{
@@ -586,8 +587,12 @@ PREFAB_SKINS = {
 	{
 		"reviver_cupid",
 		"reviver_cupid_2",
+		"reviver_cupid_2alt",
 		"reviver_cupid_3",
+		"reviver_cupid_3alt",
 		"reviver_cupid_4",
+		"reviver_cupid_4alt",
+		"reviver_cupid_alt",
 	},
 	ruins_bat = 
 	{
@@ -667,6 +672,7 @@ PREFAB_SKINS = {
 	torch = 
 	{
 		"torch_carrat",
+		"torch_carrat_alt",
 		"torch_rag",
 		"torch_shadow",
 		"torch_shadow_alt",
@@ -1001,9 +1007,11 @@ PREFAB_SKINS = {
 	{
 		"winterhat_black_davys",
 		"winterhat_fancy_puppy",
+		"winterhat_fancy_puppyalt",
 		"winterhat_pink_hibiscus",
 		"winterhat_plum_pudding",
 		"winterhat_rooster",
+		"winterhat_rooster_alt",
 		"winterhat_stocking_cap_green_forest",
 	},
 	winterometer = 

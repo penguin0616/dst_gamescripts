@@ -42,7 +42,7 @@ function PlantRegistryUpdater:LearnFertilizer(fertilizer)
 		-- Servers will only tell the clients if this is a new fertilizer in this world
 		-- Since the servers do not know the client's actual plantregistry data, this is the best we can do for reducing the amount of data sent
 		if updated and (TheNet:IsDedicated() or (TheWorld.ismastersim and self.inst ~= ThePlayer)) and self.inst.userid then
-			SendRPCToClient(CLIENT_RPC.LearnFertilizer, self.inst.userid, fertilizer)
+			SendRPCToClient(CLIENT_RPC.LearnFertilizerStage, self.inst.userid, fertilizer)
 		end
 	end
 end

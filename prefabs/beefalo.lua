@@ -222,7 +222,7 @@ local function ApplyBuildOverrides(inst, animstate)
         animstate:SetBuild(basebuild)
     end
 
-    if (herd and herd.components.mood and herd.components.mood:IsInMood())
+    if (herd and herd.components.mood and herd.components.mood:IsInMood())    
         or (inst.components.mood and inst.components.mood:IsInMood()) then
         animstate:Show("HEAT")
     else
@@ -238,6 +238,11 @@ local function ApplyBuildOverrides(inst, animstate)
 end
 
 local function OnEnterMood(inst)
+
+    if inst.yotb_tempcontestbeefalo then
+        return
+    end
+
     inst:AddTag("scarytoprey")
     inst:ApplyBuildOverrides(inst.AnimState)
     if inst.components.rideable and inst.components.rideable:GetRider() ~= nil then
@@ -260,7 +265,7 @@ local function Retarget(inst)
     local herd = inst.components.herdmember ~= nil and inst.components.herdmember:GetHerd() or nil
     return herd ~= nil
         and herd.components.mood ~= nil
-        and herd.components.mood:IsInMood()
+        and (herd.components.mood:IsInMood() and not inst.yotb_tempcontestbeefalo)
         and FindEntity(
                 inst,
                 TUNING.BEEFALO_TARGET_DIST,
