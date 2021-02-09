@@ -48,7 +48,7 @@ local Groomer = Class(function(self, inst)
         end
     end
     self.onclosegroomer = function(doer, data)
-        if not data.cancel then
+        if data and not data.cancel then
             self:ActivateChanging(doer, data)
         end
         self:EndChanging(doer)
@@ -133,6 +133,8 @@ function Groomer:CanBeginChanging(doer)
         return true
     elseif self.inst.burnable ~= nil and self.inst.burnable:IsBurning() then
         return false, "BURNING"
+    elseif not self.occupant then
+        return false, "NOOCCUPANT"
     elseif self.occupant and self.occupant.components.beard and self.occupant.components.beard.bits < TUNING.BEEFALO_BEARD_BITS then
         return false, "NOTENOUGHHAIR"
     end

@@ -29,7 +29,6 @@ local ClothingExplorerPanel = Class(Widget, function(self, owner, user_profile, 
     end
 
     if not filter_options or not filter_options.ignore_survivor then
-        print("ADDING SURVIVOR THING")
         self.picker.header:AddChild( self.filter_bar:AddFilter(STRINGS.UI.WARDROBESCREEN.SURVIVOR_FILTER_FMT, "survivor_filter_on.tex", "survivor_filter_off.tex", "heroFilter", hero_filter) )
     end
     self.picker.header:AddChild( self.filter_bar:AddFilter(STRINGS.UI.WARDROBESCREEN.OWNED_FILTER_FMT, "owned_filter_on.tex", "owned_filter_off.tex", "lockedFilter", GetLockedSkinFilter()) )

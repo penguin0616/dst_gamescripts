@@ -8,7 +8,7 @@ local ThankYouPopup = require "screens/thankyoupopup"
 
 local NUM_CODE_GROUPS = 5
 local DIGITS_PER_GROUP = 4
-local DIGIT_WIDTH = 19
+local DIGIT_WIDTH = 21
 local CODE_LENGTH = 24
 -- Codes are 5 groups of 4 characters (letters and numbers) separated by hyphens
 -- i and o are not allowed
@@ -97,10 +97,10 @@ function RedeemDialog:MakeTextEntryBox(parent)
     entrybox.textboxes = {}
 
     for i = 1, NUM_CODE_GROUPS do
-		entrybox.textboxes[i] = parent:AddChild(TextEditLinked( CODEFONT, 32, nil, UICOLOURS.BLACK ) )
+		entrybox.textboxes[i] = parent:AddChild(TextEditLinked( CODEFONT, 26, nil, UICOLOURS.BLACK ) )
 		entrybox.textboxes[i]:SetForceEdit(true)
 		entrybox.textboxes[i]:SetRegionSize( box_size, box_y )
-		entrybox.textboxes[i]:SetHAlign(ANCHOR_LEFT)
+		entrybox.textboxes[i]:SetHAlign(ANCHOR_MIDDLE)
 		entrybox.textboxes[i]:SetVAlign(ANCHOR_MIDDLE)
 		entrybox.textboxes[i]:SetTextLengthLimit(DIGITS_PER_GROUP)
 		entrybox.textboxes[i]:SetCharacterFilter( VALID_CHARS )
@@ -111,7 +111,7 @@ function RedeemDialog:MakeTextEntryBox(parent)
 		entrybox.textboxes[i]:EnableWordWrap(false)
 		entrybox.textboxes[i]:EnableScrollEditWindow(false)
 		entrybox.textboxes[i]:SetForceUpperCase(true)
-		entrybox.textboxes[i]:SetPosition(i*95 - (NUM_CODE_GROUPS/2+0.5)*95, 2, 0)
+		entrybox.textboxes[i]:SetPosition(i*102 - (NUM_CODE_GROUPS/2+0.5)*102, 2, 0)
 
 		if IsConsole() then
 			entrybox.textboxes[i].bg = entrybox.textboxes[i]:AddChild( Image("images/global_redux.xml", "textbox3_gold_normal.tex") )

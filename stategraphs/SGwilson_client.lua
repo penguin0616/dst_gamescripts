@@ -265,7 +265,11 @@ local actionhandlers =
                     )
                 or "doshortaction"
         end),
-    ActionHandler(ACTIONS.CHECKTRAP, "doshortaction"),
+    ActionHandler(ACTIONS.CHECKTRAP,
+        function(inst, action)
+            return (inst.replica.rider ~= nil and inst.replica.rider:IsRiding() and "domediumaction")
+                or "doshortaction"
+        end),
     ActionHandler(ACTIONS.RUMMAGE, "doshortaction"),
     ActionHandler(ACTIONS.BAIT, "doshortaction"),
     ActionHandler(ACTIONS.HEAL, "dolongaction"),

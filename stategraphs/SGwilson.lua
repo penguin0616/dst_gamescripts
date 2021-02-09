@@ -591,7 +591,11 @@ local actionhandlers =
                     )
                 or "doshortaction"
         end),
-    ActionHandler(ACTIONS.CHECKTRAP, "doshortaction"),
+    ActionHandler(ACTIONS.CHECKTRAP,
+        function(inst, action)
+            return (inst.components.rider ~= nil and inst.components.rider:IsRiding() and "domediumaction")
+                or "doshortaction"
+        end),
     ActionHandler(ACTIONS.RUMMAGE, "doshortaction"),
     ActionHandler(ACTIONS.BAIT, "doshortaction"),
     ActionHandler(ACTIONS.HEAL, "dolongaction"),

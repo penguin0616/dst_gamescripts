@@ -237,15 +237,16 @@ function YOTB_Stager:AbortContest(data)
 			end)
 		end
 	end
-
-	for i, post in ipairs(self.posts) do
-		local beef = post.components.hitcher:GetHitched()
-		if beef then
-			beef.components.markable_proxy:SetMarkable(false)
-			beef.components.markable_proxy.proxy = nil
-		end
-		post.components.markable:SetMarkable(false)
-	end	
+	if self.posts and #self.posts > 0 then
+		for i, post in ipairs(self.posts) do
+			local beef = post.components.hitcher:GetHitched()
+			if beef then
+				beef.components.markable_proxy:SetMarkable(false)
+				beef.components.markable_proxy.proxy = nil
+			end
+			post.components.markable:SetMarkable(false)
+		end	
+	end
 	self.inst.SoundEmitter:KillSound("gametune")
 end
 
@@ -1006,7 +1007,7 @@ function YOTB_Stager:Tossprize(target, pattern, other)
 	    	table.insert(prize_items, SpawnPrefab("lucky_goldnugget"))
 	    else
 			local race_prize = {}
-			local total = prizes[#self.posts][self.prizes]
+			local total = prizes[math.min(#self.posts,8)][math.min(self.prizes,8)]
 			for i=1,total do
 				table.insert(race_prize,"lucky_goldnugget")
 			end

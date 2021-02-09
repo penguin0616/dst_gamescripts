@@ -154,6 +154,7 @@ return {
             BURNING = "It's too dangerous right now!",
             INUSE = "It can only handle one style change at a time.",
             NOTENOUGHHAIR = "There isn't enough fur to style.",
+            NOOCCUPANT = "It needs something hitched up.",
         },
         ATTUNE =
         {
@@ -278,6 +279,7 @@ return {
             NEEDBEEF = "If I had a bell I could befriend a beefalo.",
             NEEDBEEF_CLOSER = "My beefalo buddy is too far away.",
             BEEF_HITCHED = "My beefalo is already hitched up.",
+            INMOOD = "My beefalo seems to be too lively.",
         },
         MARK = 
         {

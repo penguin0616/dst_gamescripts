@@ -49,6 +49,12 @@ end
 
 --------------------------------------------------------------------------
 local function GetPickupAction(inst, target)
+    if target:HasTag("smolder") then
+        return ACTIONS.SMOTHER
+    elseif target:HasTag("trapsprung") then
+        return ACTIONS.CHECKTRAP
+    end
+
     local is_inventory = (target.replica.inventoryitem ~= nil and target.replica.inventoryitem:CanBePickedUp())
             or (target.components.inventoryitem ~= nil and target.components.canbepickedup)
 

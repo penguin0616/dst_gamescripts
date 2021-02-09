@@ -61,6 +61,10 @@ local function OnEntitySleep(inst)
         self.porttask = nil
     end
 
+    if inst.components.hitchable and not inst.components.hitchable.canbehitched then
+        return
+    end
+
     if self.leader == nil or self.leader:IsAsleep() or not inst:IsAsleep() then
         return
     end

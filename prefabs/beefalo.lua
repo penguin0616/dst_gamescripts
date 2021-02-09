@@ -165,7 +165,8 @@ fns.ClearBellOwner = function(inst)
     inst.components.follower:SetLeader(nil)
 
     inst.persists = true
-    inst.components.herdmember:Enable(true)
+
+    inst:UpdateDomestication()
 end
 
 fns.GetBeefBellOwner = function(inst)
@@ -184,7 +185,7 @@ fns.SetBeefBellOwner = function(inst, bell, bell_user)
         inst:ListenForEvent("onremove", inst._BellRemoveCallback, bell)
 
         inst.persists = false
-        inst.components.herdmember:Enable(false)
+        inst:UpdateDomestication()
         inst.components.knownlocations:ForgetLocation("herd")
 
         if bell_user ~= nil then
@@ -235,6 +236,11 @@ local function ApplyBuildOverrides(inst, animstate)
         -- this presumes that all the face builds have the same symbols
         animstate:ClearOverrideBuild("beefalo_personality_docile")
     end
+
+    if inst.components.skinner_beefalo then
+        local clothing_names = inst.components.skinner_beefalo:GetClothing()
+        SetBeefaloSkinsOnAnim( animstate, clothing_names, inst.GUID )
+    end    
 end
 
 local function OnEnterMood(inst)
@@ -776,8 +782,20 @@ fns.OnWritingEnded = function(inst)
     end
 end
 
+local WAKE_TO_FOLLOW_DISTANCE = 15
+local function ShouldWakeUp(inst)
+    return DefaultWakeTest(inst)
+        or (inst.components.follower.leader ~= nil
+            and not inst.components.follower:IsNearLeader(WAKE_TO_FOLLOW_DISTANCE))
+end
+
+local SLEEP_NEAR_LEADER_DISTANCE = 10
 local function MountSleepTest(inst)
-    return not inst.components.rideable:IsBeingRidden() and DefaultSleepTest(inst) and not inst:HasTag("hitched")
+    return not inst.components.rideable:IsBeingRidden()
+        and DefaultSleepTest(inst)
+        and not inst:HasTag("hitched")
+        and (inst.components.follower.leader == nil
+            or inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE))
 end
 
 local function ToggleDomesticationDecay(inst)
@@ -1011,6 +1029,7 @@ local function beefalo()
     inst:AddComponent("sleeper")
     inst.components.sleeper:SetResistance(3)
     inst.components.sleeper.sleeptestfn = MountSleepTest
+    inst.components.sleeper.waketestfn = ShouldWakeUp
 
     inst:AddComponent("timer")
     inst:AddComponent("saltlicker")

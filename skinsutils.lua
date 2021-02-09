@@ -1378,7 +1378,6 @@ end
 
 -- Returns a table similar to MISC_ITEMS, but with character heads (skin bases).
 function GetCharacterSkinBases(hero)
-	print("hero",hero)
     local matches = {}
     local skins = PREFAB_SKINS[hero]
     if skins ~= nil then

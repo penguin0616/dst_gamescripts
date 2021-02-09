@@ -722,7 +722,7 @@ local function MakeVeggie(name, has_seeds)
         local weight_data = plant_def.weight_data
         inst:AddComponent("weighable")
         inst.components.weighable.type = TROPHYSCALE_TYPES.OVERSIZEDVEGGIES
-        inst.components.weighable:Initialize(weight_data.min, weight_data.max)
+        inst.components.weighable:Initialize(weight_data[1], weight_data[2])
         local coefficient = oversized_calcweightcoefficient(name)
         inst.components.weighable:SetWeight(Lerp(weight_data[1], weight_data[2], coefficient))
 

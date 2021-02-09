@@ -10,7 +10,7 @@ local Markable = Class(function(self, inst)
 	self.inst = inst
 	self.marks = {}	
 	self.markpool_reset = {1,2,3,4,5,6,7,8}
-	self.markpool = self.markpool_reset
+	self.markpool = deepcopy(self.markpool_reset)
 end,
 nil,
 {
@@ -38,7 +38,7 @@ function Markable:Mark(doer)
 			if self.unmarkfn then
 				self.unmarkfn(self.inst,doer,data.id)
 			end
-			
+
 			self:returnid(data.id)
 
 			table.remove(self.marks,i)
@@ -51,12 +51,10 @@ function Markable:Mark(doer)
 	if self.canmarkfn then
 		can, failreason = self.canmarkfn(self.inst,doer)
 	end
-	
-	print("AT MARK ACTION",can, failreason)
 
 	if can then
 		local id = self:getid()
-		
+
 		if self.markfn then
 			self.markfn(self.inst,doer,id)
 		end
@@ -73,7 +71,7 @@ function Markable:Unmarkall()
 	if self.unmarkallfn then
 		self.unmarkallfn(self.inst)
 	end		
-	self.markpool = self.markpool_reset
+	self.markpool = deepcopy(self.markpool_reset)
 	self.marks = {}
 end
 

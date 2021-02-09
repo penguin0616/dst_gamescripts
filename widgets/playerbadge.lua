@@ -11,25 +11,11 @@ local PlayerBadge = Class(Widget, function(self, prefab, colour, ishost, userfla
     self:SetClickable(false)
 
     self.root = self:AddChild(Widget("root"))
-    -- self.root:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
     self.icon = self.root:AddChild(Widget("target"))
     self.icon:SetScale(.8)
-
-    if table.contains(DST_CHARACTERLIST, prefab) then
-        self.prefabname = prefab
-        self.is_mod_character = false
-    elseif table.contains(MODCHARACTERLIST, prefab) then
-        self.prefabname = prefab
-        self.is_mod_character = true
-    else
-        self.prefabname = ""
-        self.is_mod_character = (prefab ~= nil and #prefab > 0)
-    end
-
-    self.ishost = ishost
-    self.userflags = userflags
-
+ 
+    self.userflags = 0 --we need a default for GetBG to not crash
     self.headbg = self.icon:AddChild(Image(DEFAULT_ATLAS, self:GetBG()))
     self:_SetupHeads()
 
@@ -37,7 +23,8 @@ local PlayerBadge = Class(Widget, function(self, prefab, colour, ishost, userfla
 	self.loading_icon:Hide()
 
     self.headframe = self.icon:AddChild(Image(DEFAULT_ATLAS, "avatar_frame_white.tex"))
-    self.headframe:SetTint(unpack(colour))
+
+    self:Set(prefab, colour, ishost, userflags)
 end)
 
 function PlayerBadge:_SetupHeads()

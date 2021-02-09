@@ -219,7 +219,7 @@ ACTIONS =
     WALKTO = Action({ priority=-4, ghost_valid=true, mount_valid=true, encumbered_valid=true }),
     INTERACT_WITH = Action({ distance=1.5, mount_valid=true }),
     BAIT = Action(),
-    CHECKTRAP = Action({ priority=2 }),
+    CHECKTRAP = Action({ priority=2, mount_valid=true }),
     BUILD = Action({ mount_valid=true }),
     PLANT = Action(),
     HARVEST = Action(),
@@ -254,7 +254,7 @@ ACTIONS =
     CHANGE_TACKLE = Action({priority=3, rmb=true, instant=true, mount_valid=true}), -- this is now a generic "put item into the container of the equipped hand item"
     POLLINATE = Action(),
     FERTILIZE = Action({priority=1, mount_valid=true }),
-    SMOTHER = Action({ priority=1 }),
+    SMOTHER = Action({ priority=1, mount_valid=true }),
     MANUALEXTINGUISH = Action({ priority=1 }),
     LAYEGG = Action(),
     HAMMER = Action({ priority=3 }),
@@ -1720,7 +1720,7 @@ ACTIONS.HITCHUP.fn = function(act)
     end
 
     local beefalo = bell and bell:GetBeefalo()
-
+    local herd = beefalo.components.herdmember and beefalo.components.herdmember:GetHerd()
     local range = beefalo and act.target:GetDistanceSqToInst(beefalo) < 20*20
 
     if not beefalo then
@@ -1729,6 +1729,9 @@ ACTIONS.HITCHUP.fn = function(act)
 --        return false, "BEEF_HITCHED"
     elseif not range then
         return false, "NEEDBEEF_CLOSER"
+    elseif (herd and herd.components.mood ~= nil and herd.components.mood:IsInMood() == true) or
+            (beefalo.components.mood ~= nil and beefalo.components.mood:IsInMood() == true) then
+        return false, "INMOOD"
     elseif act.doer ~= nil and
         act.target ~= nil and 
         beefalo then        

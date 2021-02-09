@@ -141,6 +141,7 @@ return{
             BURNING = "IT'S BURNING. OH WELL",
             INUSE = "OCCUPIED",
             NOTENOUGHHAIR = "TARGET REQUIRES MORE HAIR",
+            NOOCCUPANT = "NO TARGET ATTACHED",
         },
         ATTUNE =
         {
@@ -265,6 +266,7 @@ return{
             NEEDBEEF = "BEEFALO REQUIRED. RUN BELL.EXE TO TAME BEEFALO",
             NEEDBEEF_CLOSER = "THE FOOLISH BEAST IS TOO FAR AWAY",
             BEEF_HITCHED = "IT IS RESTRAINED",
+            INMOOD = "IT HAS TOO MANY FEELINGS TO RESTRAIN",
         },
         MARK = 
         {
