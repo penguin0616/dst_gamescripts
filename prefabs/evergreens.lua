@@ -684,7 +684,7 @@ local function OnTimerDone(inst, data)
             local leftone = false
             for i, v in ipairs(TheSim:FindEntities(x, y, z, 6, DECAYREMOVE_MUST_TAGS, DECAYREMOVE_CANT_TAGS)) do
                 if REMOVABLE[v.prefab] then
-                    if leftone then
+                    if not leftone then
                         v:Remove()
                     else
                         leftone = true

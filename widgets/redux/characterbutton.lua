@@ -48,7 +48,8 @@ end
 function CharacterButton:SetCharacter(hero)
     self.herocharacter = hero
     
-    if self.herocharacter == "random" then
+    if self.herocharacter == "random" or not Profile:GetAnimatedHeadsEnabled()  then
+        self.head_animstate:SetTime(0)
         self.head_animstate:Pause()
     else
         self.head_animstate:SetTime(math.random()*1.5)

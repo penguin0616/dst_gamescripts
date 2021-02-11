@@ -449,7 +449,7 @@ local function on_timer_done(inst, data)
         if entity.prefab == "log"
             --or entity.prefab == regrowth_product, i.e. pinecone for evergreens
             or entity.prefab == "charcoal" then
-            if leftone then
+            if not leftone then
                 entity:Remove()
             else
                 leftone = true

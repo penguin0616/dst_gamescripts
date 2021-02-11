@@ -1710,6 +1710,10 @@ ACTIONS.SLEEPIN.fn = function(act)
 end
 
 ACTIONS.HITCHUP.fn = function(act)
+    if act.doer == nil or act.target == nil then
+        return false
+    end
+
     local bell = nil
     if act.doer.components.inventory then
         bell = act.doer.components.inventory:FindItem(function(item)
@@ -1720,30 +1724,29 @@ ACTIONS.HITCHUP.fn = function(act)
     end
 
     local beefalo = bell and bell:GetBeefalo()
-    local herd = beefalo.components.herdmember and beefalo.components.herdmember:GetHerd()
-    local range = beefalo and act.target:GetDistanceSqToInst(beefalo) < 20*20
-
     if not beefalo then
         return false, "NEEDBEEF"
---    elseif beefalo.components.hitchable and not beefalo.components.hitchable.canbehitched then
---        return false, "BEEF_HITCHED"
-    elseif not range then
+    end
+
+    local inrange = act.target:GetDistanceSqToInst(beefalo) < 400
+    if not inrange then
         return false, "NEEDBEEF_CLOSER"
-    elseif (herd and herd.components.mood ~= nil and herd.components.mood:IsInMood() == true) or
+    end
+
+    local herd = beefalo.components.herdmember and beefalo.components.herdmember:GetHerd()
+    if (herd and herd.components.mood ~= nil and herd.components.mood:IsInMood() == true) or
             (beefalo.components.mood ~= nil and beefalo.components.mood:IsInMood() == true) then
         return false, "INMOOD"
-    elseif act.doer ~= nil and
-        act.target ~= nil and 
-        beefalo then        
-        beefalo:PushEvent("hitchto",{doer = act.doer, target = act.target})
-
-        if act.doer.components.talker ~= nil then
-            act.doer.components.talker:Say(GetString(act.doer, "ANNOUNCE_CALL_BEEF"))
-            act.doer.comment_data = nil
-        end
-
-        return true
     end
+
+    beefalo:PushEvent("hitchto", {doer = act.doer, target = act.target})
+
+    if act.doer.components.talker ~= nil then
+        act.doer.components.talker:Say(GetString(act.doer, "ANNOUNCE_CALL_BEEF"))
+        act.doer.comment_data = nil
+    end
+
+    return true
 end
 
 ACTIONS.UNHITCH.fn = function(act)

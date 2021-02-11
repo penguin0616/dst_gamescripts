@@ -163,6 +163,7 @@ fns.ClearBellOwner = function(inst)
     inst:RemoveEventCallback("onremove", inst._BellRemoveCallback, bell_leader)
 
     inst.components.follower:SetLeader(nil)
+    inst.components.rideable:SetShouldSave(true)
 
     inst.persists = true
 
@@ -181,6 +182,7 @@ fns.SetBeefBellOwner = function(inst, bell, bell_user)
     if inst.components.follower:GetLeader() == nil
             and bell ~= nil and bell.components.leader ~= nil then
         bell.components.leader:AddFollower(inst)
+        inst.components.rideable:SetShouldSave(false)
 
         inst:ListenForEvent("onremove", inst._BellRemoveCallback, bell)
 

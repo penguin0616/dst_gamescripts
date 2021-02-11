@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Patience is a virtue.",
+        },
         REPAIR =
         {
             WRONGPIECE = "That is clearly the incorrect piece.",
@@ -141,6 +145,7 @@ return{
             BURNING = "No more changes for me. It's gone up in flames.",
             INUSE = "If I could use that after you, dear.",
             NOTENOUGHHAIR = "Perhaps once the hair has regrown.",
+            NOOCCUPANT = "This station requires a beefalo to be securely hitched before I can proceed any further.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "I will require a beefalo first.",
             NEEDBEEF_CLOSER = "My beefalo needs to be in closer proximity to the post.",
             BEEF_HITCHED = "Already done, dear.",
+            INMOOD = "Nothing will be accomplished in the state they're in.",
         },
         MARK = 
         {

@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Finish thine business with haste! I have glory to attain!",
+        },
         REPAIR =
         {
             WRONGPIECE = "It will not stay in place!",
@@ -141,6 +145,7 @@ return{
             BURNING = "Gasp! My furs!",
             INUSE = "I shall let them select their garments first.",
             NOTENOUGHHAIR = "First the beast must grow back its mane.",
+            NOOCCUPANT = "I cannot groom without a beast.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "I have a hitching post, but no beast.",
             NEEDBEEF_CLOSER = "I shall have to coax the beast closer.",
             BEEF_HITCHED = "The beast hath already been secured to its post.",
+            INMOOD = "The beast is a foul temper.",
         },
         MARK = 
         {

@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Guess he ain't got the time right now.",
+        },
         REPAIR =
         {
             WRONGPIECE = "That'd clog the assembly line.",
@@ -141,6 +145,7 @@ return{
             BURNING = "Fire in textiles!",
             INUSE = "Should I put together another one?",
             NOTENOUGHHAIR = "I need more hair to work with.",
+            NOOCCUPANT = "It might work better if I had a beefalo hitched up.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "I'd better rustle up a beefalo.",
             NEEDBEEF_CLOSER = "I gotta coax my beefalo to come closer.",
             BEEF_HITCHED = "All hitched up.",
+            INMOOD = "It's too ornery to hitch up.",
         },
         MARK = 
         {

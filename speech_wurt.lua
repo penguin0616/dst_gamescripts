@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Glurph. He too busy.",
+        },
         REPAIR =
         {
             WRONGPIECE = "That look wrong, glorp.",
@@ -141,6 +145,7 @@ return{
             BURNING = "Nope!",
             INUSE = "Gotta wait...",
             NOTENOUGHHAIR = "Big fuzzy not fuzzy enough!",
+            NOOCCUPANT = "Need big fuzzy to hitch, florp.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Don't have any big fuzzy...",
             NEEDBEEF_CLOSER = "Big fuzzy too far away.",
             BEEF_HITCHED = "Stay there, florp!",
+            INMOOD = "Too mad, won't listen!",
         },
         MARK = 
         {

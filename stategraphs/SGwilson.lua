@@ -8231,8 +8231,7 @@ local states =
             inst.components.locomotor:Clear()
 
             inst.AnimState:PlayAnimation("sink")
-            inst.SoundEmitter:PlaySound("dontstarve/characters/"..(inst.soundsname or inst.prefab).."/sinking")
-            inst.SoundEmitter:PlaySound("dontstarve_DLC001/characters/"..(inst.soundsname or inst.prefab).."/sinking")
+            inst.SoundEmitter:PlaySound((inst.talker_path_override or "dontstarve/characters/")..(inst.soundsname or inst.prefab).."/sinking")
             if inst.components.rider:IsRiding() then
                 inst.sg:AddStateTag("dismounting")
             end
@@ -8251,7 +8250,7 @@ local states =
         {
             TimeEvent(75 * FRAMES, function(inst)
                 inst.components.drownable:DropInventory()
-                inst.SoundEmitter:PlaySound("turturnoftides/common/together/water/splash/medium")
+                inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/medium")
             end),
         },
 

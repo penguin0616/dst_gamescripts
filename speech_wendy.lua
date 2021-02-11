@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Oh. I suppose he's too busy...",
+        },
         REPAIR =
         {
             WRONGPIECE = "Will I never make the pieces fit in this pitiful life?",
@@ -141,6 +145,7 @@ return{
             BURNING = "I guess I won't be changing again anytime soon.",
             INUSE = "I'd like to use that after you. If you don't mind, I mean.",
             NOTENOUGHHAIR = "Perhaps once its fur grows in.",
+            NOOCCUPANT = "There's nothing here for me to groom...",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Oh where could a beefalo be?",
             NEEDBEEF_CLOSER = "Come closer, dear beefalo. I won't hurt you.",
             BEEF_HITCHED = "My beefalo can only leave when I choose it so.",
+            INMOOD = "I don't think I can manage it while they're like this.",
         },
         MARK = 
         {

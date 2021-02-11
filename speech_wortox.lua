@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "I tried, but they're occupied.",
+        },
         REPAIR =
         {
             WRONGPIECE = "That is incorrect!",
@@ -141,6 +145,7 @@ return{
             BURNING = "I'm not big on clothes, anyway.",
             INUSE = "Another soul has use of it right now.",
             NOTENOUGHHAIR = "I could give it some flair... once it has enough hair.",
+            NOOCCUPANT = "I can't begin without a beefalo hitched in.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "First I must find a beefalo to be mine.",
             NEEDBEEF_CLOSER = "Now now my friend, I can't hitch you up while you're way over there!",
             BEEF_HITCHED = "Surely secured!",
+            INMOOD = "My furry friend is too caught up in their furious frenzy.",
         },
         MARK = 
         {

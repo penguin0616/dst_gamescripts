@@ -23,15 +23,6 @@ local function on_player_despawned(inst)
     end
 end
 
-local function remove_despawn_listener(inst)
-    local grand_owner = (inst._grand_owner ~= nil and inst._grand_owner:IsValid() and inst._grand_owner)
-            or inst.components.inventoryitem:GetGrandOwner()
-    if grand_owner ~= nil then
-        inst._grand_owner = nil
-        inst:RemoveEventCallback("player_despawn", inst._PlayerDespawnedRedirectFn, grand_owner)
-    end
-end
-
 local function get_other_player_linked_bell(inst, other)
     if other.components.inventory ~= nil then
         return other.components.inventory:FindItem(function(item)
@@ -46,7 +37,7 @@ local function get_other_player_linked_bell(inst, other)
     end
 end
 
-local function on_put_in_inventory(inst)
+local function on_put_in_inventory(inst, owner)
     local grand_owner = inst.components.inventoryitem:GetGrandOwner()
     if grand_owner ~= nil then
         -- If the bell being picked up has a beefalo...
@@ -61,9 +52,6 @@ local function on_put_in_inventory(inst)
                 end
             end
         end
-
-        inst._grand_owner = grand_owner
-        inst:ListenForEvent("player_despawn", inst._PlayerDespawnedRedirectFn, grand_owner)
     end
 end
 
@@ -178,11 +166,7 @@ local function fn()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
-    inst._PlayerDespawnedRedirectFn = function(p)
-        on_player_despawned(inst)
-    end
     inst.components.inventoryitem:SetOnPutInInventoryFn(on_put_in_inventory)
-    inst.components.inventoryitem:SetOnDroppedFn(remove_despawn_listener)
 
     inst:AddComponent("useabletargeteditem")
     inst.components.useabletargeteditem:SetTargetPrefab("beefalo")
@@ -197,6 +181,8 @@ local function fn()
     inst.GetBeefalo = get_beefalo
     inst.OnSave = on_bell_save
     inst.OnLoad = on_bell_load
+
+    inst:ListenForEvent("player_despawn", on_player_despawned)
 
     return inst
 end

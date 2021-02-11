@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Let's come back later.",
+        },
         REPAIR =
         {
             WRONGPIECE = "No, see? That doesn't fit together at all!",
@@ -141,6 +145,7 @@ return{
             BURNING = "That goes against everything we learned about fire safety.",
             INUSE = "Did you get lost in there? Ha... ha... uh, that was a joke.",
             NOTENOUGHHAIR = "I'll have to wait till their hair grows back.",
+            NOOCCUPANT = "Uh, I think we're forgetting something...",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Sorry Woby, I need a real beefalo for this.",
             NEEDBEEF_CLOSER = "I should call my beefalo over here.",
             BEEF_HITCHED = "Don't worry, my beefalo isn't going anywhere.",
+            INMOOD = "Maybe we should wait for them to calm down...",
         },
         MARK = 
         {

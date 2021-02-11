@@ -1026,6 +1026,7 @@ function HandleRPC(sender, tick, code, data)
 end
 
 function HandleClientRPC(tick, code, data)
+    if not ThePlayer then return end --ThePlayer being nil means all rpc's are invalid.
     local fn = CLIENT_RPC_HANDLERS[code]
     if fn ~= nil then
         table.insert(RPC_Client_Queue, { fn, data, tick })

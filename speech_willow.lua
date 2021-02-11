@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Hey! Quit doing whatever you're doing and look at this!",
+        },
         REPAIR =
         {
             WRONGPIECE = "We carried it all this way and it's not even the right one!",
@@ -141,6 +145,7 @@ return{
             BURNING = "That's way better than some dumb dresses!",
             INUSE = "Stop hogging it, I wanna dress up too!",
             NOTENOUGHHAIR = "It might help if my beefalo had more hair.",
+            NOOCCUPANT = "Just a wild guess, but I might need to hitch up a beefalo first.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Might help if I had a beefalo...",
             NEEDBEEF_CLOSER = "I need to get that beefalo over here.",
             BEEF_HITCHED = "Already done.",
+            INMOOD = "Ugh, there's just no reasoning with them when they get like this.",
         },
         MARK = 
         {

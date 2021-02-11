@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "PRIORITIZE MY REQUEST, USELESS FLESHLING!",
+        },
         REPAIR =
         {
             WRONGPIECE = "PLUGIN INCOMPATIBLE",

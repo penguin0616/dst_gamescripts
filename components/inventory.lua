@@ -6,6 +6,20 @@ local function OnDeath(inst)
     end
 end
 
+local function OnOwnerDespawned(inst)
+    if inst.components.inventory ~= nil then
+        for slot, item in pairs(inst.components.inventory.itemslots) do
+            item:PushEvent("player_despawn")
+        end
+        for slot, equip in pairs(inst.components.inventory.equipslots) do
+            equip:PushEvent("player_despawn")
+        end
+        if inst.components.inventory.activeitem ~= nil then
+            inst.components.inventory.activeitem:PushEvent("player_despawn")
+        end
+    end
+end
+
 local function onheavylifting(self, heavylifting)
     self.inst.replica.inventory:SetHeavyLifting(heavylifting)
 end
@@ -35,6 +49,8 @@ local Inventory = Class(function(self, inst)
 
     self.dropondeath = true
     inst:ListenForEvent("death", OnDeath)
+
+    inst:ListenForEvent("player_despawn", OnOwnerDespawned)
 
     if inst.replica.inventory.classified ~= nil then
         makereadonly(self, "maxslots")

@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Aw, looks like he's busy.",
+        },
         REPAIR =
         {
             WRONGPIECE = "This two piece puzzle sure is hard!",
@@ -141,6 +145,7 @@ return{
             BURNING = "Woah! Hot fashions!",
             INUSE = "We'll give them some privacy while they change.",
             NOTENOUGHHAIR = "Maybe once the fur grows back.",
+            NOOCCUPANT = "Once we've got a beefalo hitched up, we can make them fancy!",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "We don't have a beefalo to hitch up.",
             NEEDBEEF_CLOSER = "Our beefalo is too far away!",
             BEEF_HITCHED = "Our beefalo isn't going anywhere.",
+            INMOOD = "I think they're a bit too cranky for that right now.",
         },
         MARK = 
         {

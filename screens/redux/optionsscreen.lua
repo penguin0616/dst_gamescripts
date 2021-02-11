@@ -233,6 +233,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
         movementprediction = Profile:GetMovementPredictionEnabled(),
 		automods = Profile:GetAutoSubscribeModsEnabled(),
 		autologin = Profile:GetAutoLoginEnabled(),
+		animatedheads = Profile:GetAnimatedHeadsEnabled(),
 		wathgrithrfont = Profile:IsWathgrithrFontEnabled(),
 		boatcamera = Profile:IsBoatCameraEnabled(),
 		integratedbackpack = Profile:GetIntegratedBackpack(),
@@ -250,7 +251,6 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 	end
 
 	if show_graphics then
-
 		self.options.display = graphicsOptions:GetFullscreenDisplayID()
 		self.options.refreshrate = graphicsOptions:GetFullscreenDisplayRefreshRate()
 		self.options.fullscreen = graphicsOptions:IsFullScreen()
@@ -288,6 +288,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 
     local menu_items = {
             -- Left menu items
+            graphics = self.panel_root:AddChild(self:_BuildGraphics()),
             settings = self.panel_root:AddChild(self:_BuildSettings()),
             controls = self.panel_root:AddChild(self:_BuildControls()),
         }
@@ -333,6 +334,7 @@ end)
 function OptionsScreen:_BuildMenu(subscreener)
     self.tooltip = self.root:AddChild(TEMPLATES.ScreenTooltip())
 	
+	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIP_GRAPHICS, self.tooltip)
 	local settings_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.SETTINGS, "settings", STRINGS.UI.OPTIONS.TOOLTIP_SETTINGS, self.tooltip)
 	local controls_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.CONTROLS, "controls", STRINGS.UI.OPTIONS.TOOLTIP_CONTROLS, self.tooltip)
 	local languages_button = nil
@@ -343,6 +345,7 @@ function OptionsScreen:_BuildMenu(subscreener)
     local menu_items = {
         {widget = controls_button},
         {widget = settings_button},
+        {widget = graphics_button},
     }
 
     if self.show_language_options then
@@ -517,6 +520,7 @@ function OptionsScreen:Save(cb)
     Profile:SetMovementPredictionEnabled(self.options.movementprediction)
 	Profile:SetAutoSubscribeModsEnabled( self.options.automods )
 	Profile:SetAutoLoginEnabled( self.options.autologin )
+	Profile:SetAnimatedHeadsEnabled( self.options.animatedheads )
 	Profile:SetTextureStreamingEnabled( self.options.texturestreaming )
 
 	if self.integratedbackpackSpinner:IsEnabled() then
@@ -838,13 +842,16 @@ end
 function OptionsScreen:_DoFocusHookups()
 	local function torightcol()
         if self.selected_tab == "settings" then
-		    return self.grid
+			return self.grid
+		elseif self.selected_tab == "graphics" then
+		    return self.grid_graphics
         else
             return self.active_list
         end
 	end
 
     self.grid:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
+    self.grid_graphics:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
     self.controller_controllist:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
     self.kb_controllist:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
 
@@ -944,6 +951,208 @@ local function EnabledOptionsIndex(enabled)
     return enabled and 2 or 1
 end
 
+
+
+--shared section for graphics and settings
+local label_width = 200
+local spinner_width = 220
+local spinner_height = 36 --nil -- use default
+local spinner_scale_x = .76
+local spinner_scale_y = .68
+local narrow_field_nudge = -50
+local space_between = 5
+
+local function AddListItemBackground(w)
+	local total_width = label_width + spinner_width + space_between
+	w.bg = w:AddChild(TEMPLATES.ListItemBackground(total_width + 15, spinner_height + 5))
+	w.bg:SetPosition(-40,0)
+	w.bg:MoveToBack()
+end
+
+local function CreateTextSpinner(labeltext, spinnerdata)
+	local w = TEMPLATES.LabelSpinner(labeltext, spinnerdata, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge)
+	AddListItemBackground(w)
+	return w.spinner
+end
+
+local function CreateNumericSpinner(labeltext, min, max)
+	local w = TEMPLATES.LabelNumericSpinner(labeltext, min, max, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge)
+	AddListItemBackground(w)
+	return w.spinner
+end
+
+local function CreateCheckBox(labeltext, onclicked, checked )
+	local w = TEMPLATES.OptionsLabelCheckbox(onclicked, labeltext, checked, label_width, spinner_width, spinner_height, spinner_height + 15, space_between, CHATFONT, nil, narrow_field_nudge)
+	AddListItemBackground(w)
+	return w.button
+end
+
+-- This is the "graphics" tab
+function OptionsScreen:_BuildGraphics()
+	local graphicssroot = Widget("ROOT")
+	
+	-- NOTE: if we add more options, they should be made scrollable. Look at customization screen for an example.
+    self.grid_graphics = graphicssroot:AddChild(Grid())
+    self.grid_graphics:SetPosition(-90, 184, 0)
+
+
+	--------------
+	--------------
+	-- GRAPHICS --
+	--------------
+	--------------
+
+	if show_graphics then
+		local gOpts = TheFrontEnd:GetGraphicsOptions()
+											
+		self.fullscreenSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.FULLSCREEN, enableDisableOptions)
+		self.fullscreenSpinner.OnChanged =
+			function( _, data )
+				self.working.fullscreen = data
+				self:UpdateResolutionsSpinner()
+				self:UpdateMenu()				
+			end
+		if gOpts:IsFullScreenEnabled() then
+			self.fullscreenSpinner:Enable()
+		else
+			self.fullscreenSpinner:Disable()
+		end
+
+		local valid_displays = GetDisplays()
+		self.displaySpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISPLAY, valid_displays)
+		self.displaySpinner.OnChanged =
+			function( _, data )
+				self.working.display = data
+				self:UpdateResolutionsSpinner()
+				self:UpdateRefreshRatesSpinner()
+				self:UpdateMenu()
+			end
+		
+		local refresh_rates = GetRefreshRates( self.working.display, self.working.mode_idx )
+		self.refreshRateSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.REFRESHRATE, refresh_rates) 
+		self.refreshRateSpinner.OnChanged =
+			function( _, data )
+				self.working.refreshrate = data
+				self:UpdateMenu()
+			end
+
+		local modes = GetDisplayModes( self.working.display )
+		self.resolutionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.RESOLUTION, modes)
+		self.resolutionSpinner.OnChanged =
+			function( _, data )
+				self.working.mode_idx = data.idx
+				self:UpdateRefreshRatesSpinner()
+				self:UpdateMenu()
+			end			
+			
+		self.netbookModeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NETBOOKMODE, enableDisableOptions)
+		self.netbookModeSpinner.OnChanged =
+			function( _, data )
+				self.working.netbookmode = data
+				--self:Apply()
+				self:UpdateMenu()
+			end
+
+		self.smallTexturesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SMALLTEXTURES, enableDisableOptions)
+		self.smallTexturesSpinner.OnChanged =
+			function( _, data )
+				self.working.smalltextures = data
+				--self:Apply()
+				self:UpdateMenu()
+			end
+						
+	end
+	
+	self.bloomSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BLOOM, enableDisableOptions)
+	self.bloomSpinner.OnChanged =
+		function( _, data )
+			self.working.bloom = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+		
+	self.distortionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISTORTION, enableDisableOptions)
+	self.distortionSpinner.OnChanged =
+		function( _, data )
+			self.working.distortion = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.screenshakeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREENSHAKE, enableDisableOptions)
+	self.screenshakeSpinner.OnChanged =
+		function( _, data )
+			self.working.screenshake = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.screenFlashSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREEN_FLASH_INTENSITY, enableScreenFlashOptions)
+	self.screenFlashSpinner.OnChanged =
+		function( _, data )
+			self.working.screenflash = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.texturestreamingSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.TEXTURESTREAMING, enableDisableOptions)
+	self.texturestreamingSpinner.OnChanged =
+		function( spinner, data )
+			--print(v,data)
+			if not self.shownTextureStreamingWarning then
+				TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_TITLE, STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_BODY, 
+				{
+					{text=STRINGS.UI.OPTIONS.OK,     cb = function() 
+																self.shownTextureStreamingWarning = true
+																self.working.texturestreaming = data
+																TheFrontEnd:PopScreen() 
+																self:UpdateMenu()
+															end },
+					{text=STRINGS.UI.OPTIONS.CANCEL, cb = function() 
+																spinner:SetSelectedIndex(EnabledOptionsIndex( self.working.texturestreaming ))
+																spinner:SetHasModification(false)
+																TheFrontEnd:PopScreen() 
+																self:UpdateMenu()	-- not needed but meh
+															end}
+				}))
+			else
+				self.working.texturestreaming = data
+				self:UpdateMenu()	-- not needed but meh
+			end
+		end
+
+	self.left_spinners_graphics = {}
+	self.right_spinners_graphics = {}
+		
+	table.insert( self.left_spinners_graphics, self.fullscreenSpinner )
+	table.insert( self.left_spinners_graphics, self.resolutionSpinner )
+	table.insert( self.left_spinners_graphics, self.displaySpinner )
+	table.insert( self.left_spinners_graphics, self.refreshRateSpinner )
+	table.insert( self.left_spinners_graphics, self.smallTexturesSpinner )
+	table.insert( self.left_spinners_graphics, self.netbookModeSpinner )
+	table.insert( self.left_spinners_graphics, self.texturestreamingSpinner )
+	
+    table.insert( self.right_spinners_graphics, self.screenshakeSpinner )
+    table.insert( self.right_spinners_graphics, self.distortionSpinner )
+    table.insert( self.right_spinners_graphics, self.bloomSpinner )
+    table.insert( self.right_spinners_graphics, self.screenFlashSpinner )
+	
+	self.grid_graphics:UseNaturalLayout()
+	self.grid_graphics:InitSize(2, math.max(#self.left_spinners_graphics, #self.right_spinners_graphics), 440, 40)
+
+    -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
+	for k,v in ipairs(self.left_spinners_graphics) do
+		self.grid_graphics:AddItem(v.parent, 1, k)
+	end
+
+	for k,v in ipairs(self.right_spinners_graphics) do
+		self.grid_graphics:AddItem(v.parent, 2, k)
+	end
+
+    graphicssroot.focus_forward = self.grid_graphics
+    return graphicssroot
+end
+
 -- This is the "settings" tab
 function OptionsScreen:_BuildSettings()
     local settingsroot = Widget("ROOT")
@@ -960,211 +1169,83 @@ function OptionsScreen:_BuildSettings()
 	--------------
 	--------------
 
-	local this = self
-
-	local label_width = 200
-	local spinner_width = 220
-	local spinner_height = 36 --nil -- use default
-	local spinner_scale_x = .76
-	local spinner_scale_y = .68
-    local narrow_field_nudge = -50
-    local space_between = 5
-	
-    local function AddListItemBackground(w)
-        local total_width = label_width + spinner_width + space_between
-        w.bg = w:AddChild(TEMPLATES.ListItemBackground(total_width + 15, spinner_height + 5))
-        w.bg:SetPosition(-40,0)
-        w.bg:MoveToBack()
-    end
-
-    local function CreateTextSpinner(labeltext, spinnerdata)
-        local w = TEMPLATES.LabelSpinner(labeltext, spinnerdata, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge)
-        AddListItemBackground(w)
-        return w.spinner
-    end
-
-    local function CreateNumericSpinner(labeltext, min, max)
-        local w = TEMPLATES.LabelNumericSpinner(labeltext, min, max, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge)
-        AddListItemBackground(w)
-        return w.spinner
-    end
-
-    local function CreateCheckBox(labeltext, onclicked, checked )
-        local w = TEMPLATES.OptionsLabelCheckbox(onclicked, labeltext, checked, label_width, spinner_width, spinner_height, spinner_height + 15, space_between, CHATFONT, nil, narrow_field_nudge)
-        AddListItemBackground(w)
-        return w.button
-    end
-
-	if show_graphics then
-		local gOpts = TheFrontEnd:GetGraphicsOptions()
-											
-		self.fullscreenSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.FULLSCREEN, enableDisableOptions)
-		self.fullscreenSpinner.OnChanged =
-			function( _, data )
-				this.working.fullscreen = data
-				this:UpdateResolutionsSpinner()
-				self:UpdateMenu()				
-			end
-		if gOpts:IsFullScreenEnabled() then
-			self.fullscreenSpinner:Enable()
-		else
-			self.fullscreenSpinner:Disable()
-		end
-
-		local valid_displays = GetDisplays()
-		self.displaySpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISPLAY, valid_displays)
-		self.displaySpinner.OnChanged =
-			function( _, data )
-				this.working.display = data
-				this:UpdateResolutionsSpinner()
-				this:UpdateRefreshRatesSpinner()
-				self:UpdateMenu()
-			end
-		
-		local refresh_rates = GetRefreshRates( self.working.display, self.working.mode_idx )
-		self.refreshRateSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.REFRESHRATE, refresh_rates) 
-		self.refreshRateSpinner.OnChanged =
-			function( _, data )
-				this.working.refreshrate = data
-				self:UpdateMenu()
-			end
-
-		local modes = GetDisplayModes( self.working.display )
-		self.resolutionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.RESOLUTION, modes)
-		self.resolutionSpinner.OnChanged =
-			function( _, data )
-				this.working.mode_idx = data.idx
-				this:UpdateRefreshRatesSpinner()
-				self:UpdateMenu()
-			end			
-			
-		self.netbookModeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NETBOOKMODE, enableDisableOptions)
-		self.netbookModeSpinner.OnChanged =
-			function( _, data )
-				this.working.netbookmode = data
-				--this:Apply()
-				self:UpdateMenu()
-			end
-
-		self.smallTexturesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SMALLTEXTURES, enableDisableOptions)
-		self.smallTexturesSpinner.OnChanged =
-			function( _, data )
-				this.working.smalltextures = data
-				--this:Apply()
-				self:UpdateMenu()
-			end
-						
-	end
-	
-	self.bloomSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BLOOM, enableDisableOptions)
-	self.bloomSpinner.OnChanged =
-		function( _, data )
-			this.working.bloom = data
-			--this:Apply()
-			self:UpdateMenu()
-		end
-		
-	self.distortionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISTORTION, enableDisableOptions)
-	self.distortionSpinner.OnChanged =
-		function( _, data )
-			this.working.distortion = data
-			--this:Apply()
-			self:UpdateMenu()
-		end
-
-	self.screenshakeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREENSHAKE, enableDisableOptions)
-	self.screenshakeSpinner.OnChanged =
-		function( _, data )
-			this.working.screenshake = data
-			--this:Apply()
-			self:UpdateMenu()
-		end
-
 	self.fxVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.FX, 0, 10)
 	self.fxVolume.OnChanged =
 		function( _, data )
-			this.working.fxvolume = data
-			this:ApplyVolume()
+			self.working.fxvolume = data
+			self:ApplyVolume()
 			self:UpdateMenu()
 		end
 
 	self.musicVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.MUSIC, 0, 10)
 	self.musicVolume.OnChanged =
 		function( _, data )
-			this.working.musicvolume = data
-			this:ApplyVolume()
+			self.working.musicvolume = data
+			self:ApplyVolume()
 			self:UpdateMenu()
 		end
 
 	self.ambientVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.AMBIENT, 0, 10)
 	self.ambientVolume.OnChanged =
 		function( _, data )
-			this.working.ambientvolume = data
-			this:ApplyVolume()
+			self.working.ambientvolume = data
+			self:ApplyVolume()
 			self:UpdateMenu()
 		end
 		
 	self.hudSize = CreateNumericSpinner(STRINGS.UI.OPTIONS.HUDSIZE, 0, 10)
 	self.hudSize.OnChanged =
 		function( _, data )
-			this.working.hudSize = data
-			--this:Apply()
-			self:UpdateMenu()
-		end
-
-	self.screenFlashSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREEN_FLASH_INTENSITY, enableScreenFlashOptions)
-	self.screenFlashSpinner.OnChanged =
-		function( _, data )
-			this.working.screenflash = data
-			--this:Apply()
+			self.working.hudSize = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 
 	self.vibrationSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.VIBRATION, enableDisableOptions)
 	self.vibrationSpinner.OnChanged =
 		function( _, data )
-			this.working.vibration = data
-			--this:Apply()
+			self.working.vibration = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 
 	self.passwordSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SHOWPASSWORD, enableDisableOptions)
 	self.passwordSpinner.OnChanged =
 		function( _, data )
-			this.working.showpassword = data
-			--this:Apply()
+			self.working.showpassword = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 
 	self.profanityfilterSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_FILTER, enableDisableOptions)
 	self.profanityfilterSpinner.OnChanged =
 		function( _, data )
-			this.working.profanityfilterservernames = data
-			--this:Apply()
+			self.working.profanityfilterservernames = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 
 	self.wathgrithrfontSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WATHGRITHRFONT, enableDisableOptions)
 	self.wathgrithrfontSpinner.OnChanged =
 		function( _, data )
-			this.working.wathgrithrfont = data
-			--this:Apply()
+			self.working.wathgrithrfont = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 
 	self.boatcameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BOATCAMERA, enableDisableOptions)
 	self.boatcameraSpinner.OnChanged =
 		function( _, data )
-			this.working.boatcamera = data
-			--this:Apply()
+			self.working.boatcamera = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 		
 	self.integratedbackpackSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BACKPACKMODE, integratedbackpackOptions)
 	self.integratedbackpackSpinner.OnChanged =
 		function( _, data )
-			this.working.integratedbackpack = data
-			--this:Apply()
+			self.working.integratedbackpack = data
+			--self:Apply()
 			self:UpdateMenu()
 		end
 		
@@ -1212,40 +1293,14 @@ function OptionsScreen:_BuildSettings()
         spinner_width, spinner_height, nil, nil, nil, nil, true, nil, nil, spinner_scale_x, spinner_scale_y)
     self.movementpredictionSpinner.OnChanged =
         function(_, data)
-            this.working.movementprediction = data
+            self.working.movementprediction = data
             self:UpdateMenu()
         end
-
-	self.texturestreamingSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.TEXTURESTREAMING, enableDisableOptions)
-	self.texturestreamingSpinner.OnChanged =
-		function( spinner, data )
-			--print(v,data)
-			if not self.shownTextureStreamingWarning then
-				TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_TITLE, STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_BODY, 
-				{
-					{text=STRINGS.UI.OPTIONS.OK,     cb = function() 
-																self.shownTextureStreamingWarning = true
-																self.working.texturestreaming = data
-																TheFrontEnd:PopScreen() 
-																self:UpdateMenu()
-															end },
-					{text=STRINGS.UI.OPTIONS.CANCEL, cb = function() 
-																spinner:SetSelectedIndex(EnabledOptionsIndex( self.working.texturestreaming ))
-																spinner:SetHasModification(false)
-																TheFrontEnd:PopScreen() 
-																self:UpdateMenu()	-- not needed but meh
-															end}
-				}))
-			else
-				self.working.texturestreaming = data
-				self:UpdateMenu()	-- not needed but meh
-			end
-		end
 
 	self.automodsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOMODS, enableDisableOptions)
 	self.automodsSpinner.OnChanged =
 		function( _, data )
-			this.working.automods = data
+			self.working.automods = data
 			self:UpdateMenu()
 		end
 
@@ -1280,9 +1335,16 @@ function OptionsScreen:_BuildSettings()
 	self.autologinSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOLOGIN, enableDisableOptions)
 	self.autologinSpinner.OnChanged =
 		function( _, data )
-			this.working.autologin = data
+			self.working.autologin = data
 			self:UpdateMenu()
 		end
+		
+	self.animatedHeadsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.ANIMATED_HEADS, enableDisableOptions)
+		self.animatedHeadsSpinner.OnChanged =
+			function( _, data )
+				self.working.animatedheads = data
+				self:UpdateMenu()
+			end
 
 	self.left_spinners = {}
 	self.right_spinners = {}
@@ -1299,22 +1361,10 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.left_spinners, self.hudSize)
     table.insert( self.left_spinners, self.boatcameraSpinner)
     table.insert( self.left_spinners, self.integratedbackpackSpinner)
-
-    table.insert( self.right_spinners, self.screenshakeSpinner )
-    table.insert( self.right_spinners, self.distortionSpinner )
-    table.insert( self.right_spinners, self.bloomSpinner )
-    table.insert( self.right_spinners, self.screenFlashSpinner )
-
-	table.insert( self.right_spinners, self.fullscreenSpinner )
-	table.insert( self.right_spinners, self.resolutionSpinner )
-	table.insert( self.right_spinners, self.displaySpinner )
-	table.insert( self.right_spinners, self.refreshRateSpinner )
-	table.insert( self.right_spinners, self.smallTexturesSpinner )
-	table.insert( self.right_spinners, self.netbookModeSpinner )
-
-	table.insert( self.right_spinners, self.texturestreamingSpinner )
+	
     table.insert( self.right_spinners, self.movementpredictionSpinner )
 	table.insert( self.right_spinners, self.autologinSpinner )
+	table.insert( self.right_spinners, self.animatedHeadsSpinner )
 
 	if self.show_datacollection then
 		table.insert( self.left_spinners, self.datacollectionCheckbox)
@@ -1323,8 +1373,7 @@ function OptionsScreen:_BuildSettings()
 	self.grid:UseNaturalLayout()
 	self.grid:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
 
-    -- Ugh. Using parent because the spinner lists contain a child of a
-    -- composite widget.
+    -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
 	for k,v in ipairs(self.left_spinners) do
 		self.grid:AddItem(v.parent, 1, k)
 	end
@@ -1564,7 +1613,8 @@ function OptionsScreen:InitializeSpinners(first)
 
 	self.automodsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.automods ) )
 	self.autologinSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autologin ) )
-
+	self.animatedHeadsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.animatedheads ) )
+	
 	if first then
 		-- Add the bg change when non-init value for all spinners
         local function SetupOnChange(i,spinner)
@@ -1584,6 +1634,14 @@ function OptionsScreen:InitializeSpinners(first)
 		end
 
 		for i,spinner in pairs(self.right_spinners) do
+            SetupOnChange(i,spinner)
+		end	
+		
+		for i,spinner in pairs(self.left_spinners_graphics) do
+            SetupOnChange(i,spinner)
+		end
+
+		for i,spinner in pairs(self.right_spinners_graphics) do
             SetupOnChange(i,spinner)
 		end
 	end

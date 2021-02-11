@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Judge man is busy.",
+        },
         REPAIR =
         {
             WRONGPIECE = "Is wrong piece for little statue!",
@@ -141,6 +145,7 @@ return{
             BURNING = "Wolfgang's weekday undergarments burning? Wolfgang is sad.",
             INUSE = "Wolfgang will wait til they leave to change. He is shy.",
             NOTENOUGHHAIR = "Will wait for hairs to grow back.",
+            NOOCCUPANT = "Wolfgang needs beefalo to hitch.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Wolfgang needs hair-cow!",
             NEEDBEEF_CLOSER = "Hair-cow is too far away.",
             BEEF_HITCHED = "Is staying put.",
+            INMOOD = "Is too feisty for hitching!",
         },
         MARK = 
         {

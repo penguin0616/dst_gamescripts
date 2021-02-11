@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Busy",
+        },
         REPAIR =
         {
             WRONGPIECE = "Wrong one",
@@ -141,6 +145,7 @@ return{
             BURNING = "Fire! Don't like fire!",
             INUSE = "Someone else's",
             NOTENOUGHHAIR = "Not fuzzy enough",
+            NOOCCUPANT = "Need Shaggy Buddy.",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Need Shaggy Buddy",
             NEEDBEEF_CLOSER = "Too far",
             BEEF_HITCHED = "Stay",
+            INMOOD = "Too cranky!",
         },
         MARK = 
         {

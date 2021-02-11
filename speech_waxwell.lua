@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "He's attending to some other business, presently.",
+        },
         REPAIR =
         {
             WRONGPIECE = "I could have told you that wouldn't fit.",
@@ -141,6 +145,7 @@ return{
             BURNING = "Oh. There go all my good pocket squares.",
             INUSE = "They're in much more dire need of it.",
             NOTENOUGHHAIR = "There's nothing for me to work with.",
+            NOOCCUPANT = "I think you're forgetting something, pal...",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "Here's the hitch pal, I'm going to need a beefalo.",
             NEEDBEEF_CLOSER = "Get over here, you hairy imbecile!",
             BEEF_HITCHED = "The beast is ready to be judged.",
+            INMOOD = "Perhaps once the beast has settled down and is willing to be reasonable.",
         },
         MARK = 
         {

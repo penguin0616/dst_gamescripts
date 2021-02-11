@@ -969,8 +969,6 @@ local function OnDespawn(inst)
     inst:OnWakeUp()
     --
 
-    inst:PushEvent("player_despawn")
-
     inst.components.debuffable:RemoveOnDespawn()
     inst.components.rider:ActualDismount()
     inst.components.bundler:StopBundling()
@@ -989,6 +987,9 @@ local function OnDespawn(inst)
     else
         inst.components.inventory:DropEverythingWithTag("irreplaceable")
     end
+
+    inst:PushEvent("player_despawn")
+
     inst.components.leader:RemoveAllFollowers()
 
     if inst.components.playercontroller ~= nil then

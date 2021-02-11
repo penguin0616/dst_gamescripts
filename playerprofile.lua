@@ -755,6 +755,27 @@ function PlayerProfile:GetAutoLoginEnabled()
 	end
 end
 
+function PlayerProfile:SetAnimatedHeadsEnabled(enabled)
+	if USE_SETTINGS_FILE then
+	   TheSim:SetSetting("misc", "animatedheads", tostring(enabled))
+   else
+	   self:SetValue("animatedheads", enabled)
+	   self.dirty = true
+   end
+end
+
+function PlayerProfile:GetAnimatedHeadsEnabled()
+	if USE_SETTINGS_FILE then
+		local animatedheads = TheSim:GetSetting("misc", "animatedheads")
+		if animatedheads == nil then
+			return true
+		end
+		return animatedheads == "true"
+	else
+		return GetValueOrDefault( self.persistdata.animatedheads, true )
+	end
+end
+
 function PlayerProfile:SetAutoCavesEnabled(enabled)
 	if USE_SETTINGS_FILE then
 	   TheSim:SetSetting("misc", "autocaves", tostring(enabled))

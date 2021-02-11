@@ -2,6 +2,10 @@
 return{
 	ACTIONFAIL =
 	{
+        APPRAISE = 
+        {
+            NOTNOW = "Un moment, the judge seems to be occupied.",
+        },
         REPAIR =
         {
             WRONGPIECE = "It needs something else.",
@@ -141,6 +145,7 @@ return{
             BURNING = "It, oh, it appears to be on fire.",
             INUSE = "I should give them their privacy.",
             NOTENOUGHHAIR = "There's not really much to work with at the moment.",
+            NOOCCUPANT = "I'll be needing something to groom, non?",
         },
         ATTUNE =
         {
@@ -265,6 +270,7 @@ return{
             NEEDBEEF = "I don't have anything to hitch to it.",
             NEEDBEEF_CLOSER = "I will need my delicious friend to come a bit closer.",
             BEEF_HITCHED = "Already done, mon ami.",
+            INMOOD = "Perhaps when it's not in such a foul mood.",
         },
         MARK = 
         {

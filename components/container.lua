@@ -8,6 +8,18 @@ local function onopener(self, opener)
     self.inst.replica.container:SetOpener(opener)
 end
 
+local function OnOwnerDespawned(inst)
+    local container = inst.components.container
+    if container ~= nil then
+        for i = 1, container.numslots do
+            local item = container.slots[i]
+            if item ~= nil then
+                item:PushEvent("player_despawn")
+            end
+        end
+    end
+end
+
 local Container = Class(function(self, inst)
     self.inst = inst
     self.slots = {}
@@ -23,6 +35,8 @@ local Container = Class(function(self, inst)
     self.opener = nil
 
 	--self.droponopen = false
+
+    inst:ListenForEvent("player_despawn", OnOwnerDespawned)
 
     --Hacky flags for altering behaviour when moving items between containers
     self.ignoresound = false

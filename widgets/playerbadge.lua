@@ -93,7 +93,12 @@ function PlayerBadge:Set(prefab, colour, ishost, userflags, base_skin)
 
             self.head_animstate:SetBank(bank)
             self.head_animstate:PlayAnimation(animation, true)
-            self.head_animstate:SetTime(math.random()*1.5)
+            if Profile:GetAnimatedHeadsEnabled() then
+                self.head_animstate:SetTime(math.random()*1.5)
+            else
+                self.head_animstate:SetTime(0)
+                self.head_animstate:Pause()
+            end
             self.head_anim:SetScale(scale)
             self.head_anim:SetPosition(0,y_offset, 0)
 
