@@ -288,8 +288,8 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 
     local menu_items = {
             -- Left menu items
-            graphics = self.panel_root:AddChild(self:_BuildGraphics()),
             settings = self.panel_root:AddChild(self:_BuildSettings()),
+            graphics = self.panel_root:AddChild(self:_BuildGraphics()),
             controls = self.panel_root:AddChild(self:_BuildControls()),
         }
     if self.show_language_options then
@@ -334,8 +334,8 @@ end)
 function OptionsScreen:_BuildMenu(subscreener)
     self.tooltip = self.root:AddChild(TEMPLATES.ScreenTooltip())
 	
-	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIP_GRAPHICS, self.tooltip)
 	local settings_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.SETTINGS, "settings", STRINGS.UI.OPTIONS.TOOLTIP_SETTINGS, self.tooltip)
+	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIP_GRAPHICS, self.tooltip)
 	local controls_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.CONTROLS, "controls", STRINGS.UI.OPTIONS.TOOLTIP_CONTROLS, self.tooltip)
 	local languages_button = nil
     if self.show_language_options then
@@ -344,8 +344,8 @@ function OptionsScreen:_BuildMenu(subscreener)
 
     local menu_items = {
         {widget = controls_button},
-        {widget = settings_button},
         {widget = graphics_button},
+        {widget = settings_button},
     }
 
     if self.show_language_options then

@@ -42,7 +42,7 @@ end
 
 local function GetSketchIDFromName(name)
     for i, v in ipairs(SKETCHES) do
-        if name == STRINGS.NAMES[string.upper(v.recipe)] then
+        if name == subfmt(STRINGS.NAMES.SKETCH, { item = STRINGS.NAMES[string.upper(SKETCHES[sketchid].recipe)] }) then
             return i
         end
     end
