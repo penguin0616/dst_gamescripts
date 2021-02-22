@@ -43,6 +43,8 @@ local _targetplayer = nil
 local _activehassler = nil
 local _storedhassler = nil
 
+local _timetoattack
+
 local _activeplayers = {}
 
 --------------------------------------------------------------------------
@@ -272,6 +274,10 @@ function self:OnPostInit()
     -- Then add one to _attacksperseason to shift the attacks so the last attack isn't right when the season changes to spring
     _attackdelay = (TheWorld.state.winterlength - 1) * TUNING.TOTAL_DAY_TIME / (_attacksperseason + 1)
     _worldsettingstimer:AddTimer(DEERCLOPS_TIMERNAME, _attackdelay, TUNING.SPAWN_DEERCLOPS, OnDeerclopsTimerDone)
+
+    if _timetoattack then
+        _worldsettingstimer:StartTimer(DEERCLOPS_TIMERNAME, math.min(_timetoattack, _attackdelay))
+    end
 end
 
 local function _DoWarningSpeech(player)
@@ -366,7 +372,7 @@ function self:OnLoad(data)
 
     --retrofit old timer to new system
     if data.timetoattack then
-        _worldsettingstimer:StartTimer(DEERCLOPS_TIMERNAME, math.min(data.timetoattack, _attackdelay))
+        _timetoattack = data.timetoattack
     end
 end
 

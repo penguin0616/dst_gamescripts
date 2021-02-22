@@ -376,12 +376,14 @@ function WorldSettingsTab:EditCombinedPreset(originalid, presetid, name, desc, u
         saved = saved and CustomPresetManager:SaveCustomPreset(self.worldgen_widget.levelcategory, presetid, self.worldgen_widget.settings.basepreset or self.worldgen_widget.settings.preset, {}, name, desc)
     end
 
-    if not saved then
+    if not saved and presetid ~= originalid then
         self:DeleteCombinedPreset(presetid)
     else
         self.settings_widget:OnPresetButton(presetid)
         self.worldgen_widget:OnPresetButton(presetid)
-        self:DeleteCombinedPreset(originalid)
+        if presetid ~= originalid then
+            self:DeleteCombinedPreset(originalid)
+        end
     end
     return saved
 end

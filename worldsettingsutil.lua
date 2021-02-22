@@ -155,7 +155,7 @@ local function On_Spawner_StartDelay_TimerFinished(inst)
 
     if spawner then
         spawner.externaltimerfinished = true
-        if not spawner.spawnoffscreen or spawner:IsAsleep() then
+        if not spawner.spawnoffscreen or inst:IsAsleep() then
             spawner:ReleaseChild()
         end
     end
@@ -220,7 +220,7 @@ local function Pickable_RegenTime_Timer_Exists(inst)
 end
 
 function WorldSettings_Pickable_PreLoad(inst, data, maxregentime)
-    if data and data.pickable and (data.pickable.paused or data.pickable.time ~= nil) and not data.worldsettingstimer then
+    if data and data.pickable and (data.pickable.pause_time ~= nil or data.pickable.time ~= nil) and not data.worldsettingstimer then
         data.worldsettingstimer = { timers = {} }
         data.worldsettingstimer.timers[PICKABLE_REGENTIME_TIMERNAME] = {
             timeleft = math.min(data.pickable.pause_time or data.pickable.time, maxregentime) / maxregentime,

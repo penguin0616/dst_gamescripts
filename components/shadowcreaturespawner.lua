@@ -10,8 +10,6 @@ assert(TheWorld.ismastersim, "Shadow creature spawner should not exist on client
 --[[ Constants ]]
 --------------------------------------------------------------------------
 
-local SPAWN_INTERVAL = 5
-local SPAWN_VARIANCE = 10
 local NON_INSANITY_MODE_DESPAWN_INTERVAL = 0.1
 local NON_INSANITY_MODE_DESPAWN_VARIANCE = 0.1
 
@@ -41,7 +39,7 @@ local function StopTracking(player, params, ent)
 
     if params.targetpop ~= #params.ents then
         if params.spawntask == nil then
-            params.spawntask = player:DoTaskInTime(SPAWN_INTERVAL + SPAWN_VARIANCE * math.random(), UpdateSpawn, params)
+            params.spawntask = player:DoTaskInTime(TUNING.SANITYMONSTERS_SPAWN_INTERVAL + TUNING.SANITYMONSTERS_SPAWN_VARIANCE * math.random(), UpdateSpawn, params)
         end
     elseif params.spawntask ~= nil then
         params.spawntask:Cancel()
@@ -86,7 +84,7 @@ end
 local function SpawnLandShadowCreature(player)
     return SpawnPrefab(
         player.components.sanity:GetPercent() < .1 and
-        math.random() < .5 and
+        math.random() < TUNING.TERRORBEAK_SPAWN_CHANCE and
         "terrorbeak" or
         "crawlinghorror"
     )
@@ -145,7 +143,7 @@ UpdateSpawn = function(player, params)
         --Reschedule spawning if we haven't reached our target population
         params.spawntask =
             params.targetpop ~= #params.ents
-            and player:DoTaskInTime(SPAWN_INTERVAL + SPAWN_VARIANCE * math.random(), UpdateSpawn, params)
+            and player:DoTaskInTime(TUNING.SANITYMONSTERS_SPAWN_INTERVAL + TUNING.SANITYMONSTERS_SPAWN_VARIANCE * math.random(), UpdateSpawn, params)
             or nil
     elseif params.targetpop < #params.ents then
         --Remove random monsters until we reach our target population

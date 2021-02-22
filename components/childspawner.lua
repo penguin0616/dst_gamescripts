@@ -216,7 +216,7 @@ local function _OnUpdate(inst, self, dt)
 end
 
 function ChildSpawner:ShouldUpdate()
-    return not (self.spawning and self.childreninside > 0) and not (self.regening and not (self:IsFull() and self:IsEmergencyFull()))
+    return (self.spawning and self.childreninside > 0) or (self.regening and not (self:IsFull() and self:IsEmergencyFull()))
 end
 
 function ChildSpawner:StartUpdate()

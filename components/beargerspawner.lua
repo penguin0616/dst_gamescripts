@@ -105,7 +105,7 @@ end
 local function SpawnBearger()
 	local spawndelay = .25 * TheWorld.state.remainingdaysinseason * TUNING.TOTAL_DAY_TIME / _numToSpawn
 	local spawnrandom = .25 * spawndelay
-	local timetospawn = TheWorld.components.worldsettingstimer:GetTimeLeft()
+	local timetospawn = TheWorld.components.worldsettingstimer:GetTimeLeft(BEARGER_TIMERNAME)
 	if timetospawn == nil then
 		
 	elseif timetospawn > spawndelay + spawnrandom then

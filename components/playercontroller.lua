@@ -1,5 +1,6 @@
 local START_DRAG_TIME = 8 * FRAMES
 local BUTTON_REPEAT_COOLDOWN = .5
+local ACTION_REPEAT_COOLDOWN = 0.2
 local INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN = 0.2
 local BUFFERED_CASTAOE_TIME = .5
 local CONTROLLER_TARGETING_LOCK_TIME = 1.0
@@ -2163,7 +2164,7 @@ function PlayerController:OnUpdate(dt)
         self:CooldownHeldAction(dt)
         if (self.lastheldaction and self.lastheldaction:IsValid()) then
             if self.heldactioncooldown == 0 then
-                self.heldactioncooldown = BUTTON_REPEAT_COOLDOWN
+                self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
                 self:DoAction(self.lastheldaction)
             end
         elseif self.actionrepeatfunction then

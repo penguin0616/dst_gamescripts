@@ -126,10 +126,10 @@ end
 
 function Growable:Resume()
     if self.pausedremaining ~= nil then
-        self.pausedremaining = nil
         local _usetimemultiplier = self.usetimemultiplier
         self:StartGrowing(math.max(0, self.pausedremaining))
         self.usetimemultiplier = _usetimemultiplier
+        self.pausedremaining = nil
 		return true
     end
 end

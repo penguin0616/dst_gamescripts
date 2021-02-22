@@ -184,9 +184,9 @@ function params.yotb_sewingmachine.itemtestfn(container, item, slot)
     return item:HasTag("yotb_pattern_fragment")
 end
 
-function params.yotb_sewingmachine.widget.buttoninfo.fn(inst)
+function params.yotb_sewingmachine.widget.buttoninfo.fn(inst, doer)
     if inst.components.container ~= nil then
-        BufferedAction(inst.components.container.opener, inst, ACTIONS.YOTB_SEW):Do()
+        BufferedAction(doer, inst, ACTIONS.YOTB_SEW):Do()
     elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
         SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.YOTB_SEW.code, inst, ACTIONS.YOTB_SEW.mod_name)
     end
