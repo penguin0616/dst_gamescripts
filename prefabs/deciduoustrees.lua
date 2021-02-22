@@ -226,6 +226,17 @@ local function Sway(inst, monster, monsterpost)
     end
 end
 
+local function UpdateIdleLeafFx(inst)
+	if inst.leaf_state == "colorful" and inst.entity:IsAwake() then
+		if inst.spawnleaffxtask == nil then
+			inst.spawnleaffxtask = inst:DoPeriodicTask(math.random(TUNING.MIN_SWAY_FX_FREQUENCY, TUNING.MAX_SWAY_FX_FREQUENCY), SpawnLeafFX)
+		end
+	elseif inst.spawnleaffxtask ~= nil then
+		inst.spawnleaffxtask:Cancel()
+		inst.spawnleaffxtask = nil 
+	end
+end
+
 local function GrowLeavesFn(inst, monster, monsterout)
     if (inst.components.burnable ~= nil and inst.components.burnable:IsBurning()) or
         inst:HasTag("stump") or
@@ -258,6 +269,7 @@ local function GrowLeavesFn(inst, monster, monsterout)
     end
 
     inst.leaf_state = inst.target_leaf_state
+	UpdateIdleLeafFx(inst)
     if inst.leaf_state == "barren" then
         inst.AnimState:ClearOverrideSymbol("mouseover")
     else
@@ -733,6 +745,7 @@ local function handler_growfromseed(inst)
     inst.SoundEmitter:PlaySound("dontstarve/forest/treeGrow")
     inst.anims = short_anims
 
+	UpdateIdleLeafFx(inst)
     PushSway(inst)
 end
 
@@ -871,6 +884,8 @@ local function OnEntitySleep(inst)
     inst:RemoveComponent("burnable")
     inst:RemoveComponent("propagator")
     inst:RemoveComponent("inspectable")
+
+	UpdateIdleLeafFx(inst)
 end
 
 local function OnEntityWake(inst)
@@ -933,6 +948,8 @@ local function OnEntityWake(inst)
     end
 
     inst._wasonfire = nil
+
+	UpdateIdleLeafFx(inst)
 end
 
 local REMOVABLE =
@@ -1115,36 +1132,37 @@ local function ChangeToSeason(inst, targetSeason)
         inst.leaveschangetask:Cancel()
     end
     if inst.target_leaf_state ~= inst.leaf_state then
-        local time = math.random(TUNING.MIN_LEAF_CHANGE_TIME, TUNING.MAX_LEAF_CHANGE_TIME)
-        inst.targetleaveschangetime = GetTime() + time
-        inst.leaveschangetask = inst:DoTaskInTime(time, OnChangeLeaves)
+		local time = math.random(TUNING.MIN_LEAF_CHANGE_TIME, TUNING.MAX_LEAF_CHANGE_TIME)
+		inst.targetleaveschangetime = GetTime() + time
+		inst.leaveschangetask = inst:DoTaskInTime(time, OnChangeLeaves)
     else
         inst.targetleaveschangetime = nil
         inst.leaveschangetask = nil
     end
 end
 
+local nextSeason =
+{
+    [SEASONS.AUTUMN] = SEASONS.WINTER,
+    [SEASONS.WINTER] = SEASONS.SPRING,
+    [SEASONS.SPRING] = SEASONS.SUMMER,
+    [SEASONS.SUMMER] = SEASONS.AUTUMN,
+}
+local seasonlengths =
+{
+    [SEASONS.AUTUMN] = "autumnlength",
+    [SEASONS.WINTER] = "winterlength",
+    [SEASONS.SPRING] = "springlength",
+    [SEASONS.SUMMER] = "summerlength"
+}
+
 local function OnCyclesChanged(inst, cycles)
     if inst.leaveschangetask ~= nil or TheWorld.state.remainingdaysinseason > 3 then
         return
     end
-    local nextSeason =
-    {
-        [SEASONS.AUTUMN] = SEASONS.WINTER,
-        [SEASONS.WINTER] = SEASONS.SPRING,
-        [SEASONS.SPRING] = SEASONS.SUMMER,
-        [SEASONS.SUMMER] = SEASONS.AUTUMN,
-    }
     local currentSeason = TheWorld.state.season
     local targetSeason = nextSeason[currentSeason]
     if targetSeason ~= nil then
-        local seasonlengths =
-        {
-            [SEASONS.AUTUMN] = "autumnlength",
-            [SEASONS.WINTER] = "winterlength",
-            [SEASONS.SPRING] = "springlength",
-            [SEASONS.SUMMER] = "summerlength"
-        }
         if TheWorld.state[seasonlengths[targetSeason]] > 0 then
             ChangeToSeason(inst, targetSeason)
         else
@@ -1288,18 +1306,7 @@ local function makefn(build, stage, data)
 
         inst:ListenForEvent("sway", onsway)
 
-        inst.lastleaffxtime = 0
-        inst.leaffxinterval = math.random(TUNING.MIN_SWAY_FX_FREQUENCY, TUNING.MAX_SWAY_FX_FREQUENCY)
         inst.SpawnLeafFX = SpawnLeafFX
-        inst:ListenForEvent("deciduousleaffx", function(world)
-            if inst.entity:IsAwake() then
-                if inst.leaf_state == "colorful" and GetTime() - inst.lastleaffxtime > inst.leaffxinterval then
-                    SpawnLeafFX(inst, math.random() * 2)
-                    inst.leaffxinterval = math.random(TUNING.MIN_SWAY_FX_FREQUENCY, TUNING.MAX_SWAY_FX_FREQUENCY)
-                    inst.lastleaffxtime = GetTime()
-                end
-            end
-        end, TheWorld)
 
         inst:AddComponent("growable")
         inst.components.growable.stages = growth_stages

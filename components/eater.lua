@@ -173,10 +173,7 @@ function Eater:Eat(food, feeder)
 
         if feeder ~= self.inst and self.inst.components.inventoryitem ~= nil then
             local owner = self.inst.components.inventoryitem:GetGrandOwner()
-            if owner ~= nil and
-                (   owner == feeder
-                    or (owner.components.container ~= nil and
-                        owner.components.container.opener == feeder)    ) then
+            if owner ~= nil and (owner == feeder or (owner.components.container ~= nil and owner.components.container:IsOpenedBy(feeder))) then
                 feeder:PushEvent("feedincontainer")
             end
         end

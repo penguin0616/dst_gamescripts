@@ -201,6 +201,7 @@ local prefabs =
     "inventoryitem_classified",
     "writeable_classified",
     "container_classified",
+    "container_opener",
     "constructionsite_classified",
 
     "dummytarget",
@@ -439,6 +440,9 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         if not inst.ismastersim then
             return inst
         end
+
+        inst:AddComponent("worldsettingstimer")
+        inst:AddComponent("timer")
 
         inst:AddComponent("farming_manager")
 

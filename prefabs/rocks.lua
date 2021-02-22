@@ -409,7 +409,7 @@ end
 
 local function set_moonglass_type(inst, new_type)
     inst.rock_type = new_type
-    local anim_name = (inst.rock_type == 1 and "moonglass_rock") or "moonglass_rock"..tostring(new_type)
+    local anim_name = (inst.rock_type == 1 and "moonglass_rock") or ("moonglass_rock"..tostring(new_type))
     inst.AnimState:SetBuild(anim_name)
     inst.AnimState:SetBank(anim_name)
 end

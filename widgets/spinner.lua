@@ -295,6 +295,31 @@ function Spinner:UpdateBG()
 			self.background:SetImages(self.atlas, self.textures.bg_end, self.textures.bg_middle)
 		end
 	end
+	if self.changing and self.changing_scale then
+		if self.lean then
+			self.background:ScaleToSize(unpack(self.changing_scale))
+		else
+			self.background:Flow(self.changing_scale[1], self.changing_scale[2], true)
+		end
+	elseif self.focus and self.focus_scale then
+		if self.lean then
+			self.background:ScaleToSize(unpack(self.focus_scale))
+		else
+			self.background:Flow(self.focus_scale[1], self.focus_scale[2], true)
+		end
+	elseif self.scale then
+		if self.lean then
+			self.background:ScaleToSize(unpack(self.scale))
+		else
+			self.background:Flow(self.scale[1], self.scale[2], true)
+		end
+	else
+		if self.lean then
+			self.background:ScaleToSize(self.width, self.height)
+		else
+			self.background:Flow(self.width, self.height, true)
+		end
+	end
 end
 
 function Spinner:SetTextColour(r,g,b,a)
@@ -448,11 +473,15 @@ function Spinner:SetSelectedIndex( idx )
 	self.updating = false
 end
 
-function Spinner:SetSelected( data )
+function Spinner:SetSelected(data, force)
 	
 	for k,v in pairs(self.options) do
 		if v.data == data then
-			self:SetSelectedIndex(k)			
+			local oldSelection = self.selectedIndex
+			self:SetSelectedIndex(k)
+			if self.selectedIndex ~= oldSelection then
+				self:Changed(oldSelection)
+			end
 			return
 		end
 	end

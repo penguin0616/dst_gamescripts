@@ -799,7 +799,7 @@ function TEMPLATES.ModListItem(onclick_btn, onclick_checkbox, onclick_setfavorit
             opt.status:SetString(STRINGS.UI.MODSSCREEN.STATUS.DISABLED_MANUAL)
         else
             -- We should probably never hit this line.
-            opt.status:SetString(modname)
+            --opt.status:SetString(modname)
         end
     end
 
@@ -1746,7 +1746,7 @@ function TEMPLATES.ControllerFunctionsFromButtons(buttons)
 end
 
 function TEMPLATES.ScrollingGrid(items, opts)
-    local peek_height = opts.widget_height * 0.25 -- how much of row to see at the bottom.
+    local peek_height = opts.peek_height or (opts.widget_height * 0.25) -- how much of row to see at the bottom.
     if opts.peek_percent then
         -- Caller can force a peek height if they will add items to the list or
         -- have hidden empty widgets.

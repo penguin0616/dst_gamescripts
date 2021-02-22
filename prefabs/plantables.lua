@@ -61,7 +61,7 @@ local function make_plantable(data)
         inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM
 
         inst:AddComponent("inspectable")
-        inst.components.inspectable.nameoverride = data.inspectoverride or "dug_"..data.name
+        inst.components.inspectable.nameoverride = data.inspectoverride or ("dug_"..data.name)
         inst:AddComponent("inventoryitem")
 
         inst:AddComponent("fuel")

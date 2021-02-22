@@ -341,6 +341,10 @@ end
 --[[ Abigail skin functions ]]
 --------------------------------------------------------------------------
 function abigail_flower_init_fn(inst, build_name)
+    inst:SetClientSideInventoryImageOverride("bondlevel0", inst:GetSkinName()..".tex", inst:GetSkinName().."_level0.tex")
+    inst:SetClientSideInventoryImageOverride("bondlevel2", inst:GetSkinName()..".tex", inst:GetSkinName().."_level2.tex")
+    inst:SetClientSideInventoryImageOverride("bondlevel3", inst:GetSkinName()..".tex", inst:GetSkinName().."_level3.tex")
+
     if not TheWorld.ismastersim then
         return
     end

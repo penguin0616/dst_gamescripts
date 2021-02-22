@@ -35,11 +35,18 @@ end
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
 local function OnBondLevelDirty(inst)
-    if inst.HUD ~= nil and not inst:HasTag("playerghost") then
+	if inst.HUD ~= nil then
 		local bond_level = inst._bondlevel:value()
-		if bond_level > 1 then
-			if inst.HUD.wendyflowerover ~= nil then
-				inst.HUD.wendyflowerover:Play( bond_level )
+		for i = 0, 3 do
+			if i ~= 1 then
+				inst:SetClientSideInventoryImageOverrideFlag("bondlevel"..i, i == bond_level)
+			end
+		end
+		if not inst:HasTag("playerghost") then
+			if bond_level > 1 then
+				if inst.HUD.wendyflowerover ~= nil then
+					inst.HUD.wendyflowerover:Play( bond_level )
+				end
 			end
 		end
     end
@@ -73,6 +80,12 @@ local function OnPlayerActivated(inst)
 	end
 end
 
+local function RefreshFlowerTooltip(inst)
+	if inst == ThePlayer then
+		inst:PushEvent("inventoryitem_updatespecifictooltip", {prefab = "abigail_flower"})
+	end
+end
+
 --------------------------------------------------------------------------
 
 local function common_postinit(inst)
@@ -90,10 +103,13 @@ local function common_postinit(inst)
     inst.AnimState:AddOverrideBuild("player_idles_wendy")
 
 	inst._bondlevel = net_tinybyte(inst.GUID, "wendy._bondlevel", "_bondleveldirty")
+	inst.refreshflowertooltip = net_event(inst.GUID, "refreshflowertooltip")
     inst:ListenForEvent("playeractivated", OnPlayerActivated)
 	inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
 	
-    inst:ListenForEvent("clientpetskindirty", OnClientPetSkinChanged)
+	inst:ListenForEvent("clientpetskindirty", OnClientPetSkinChanged)
+	
+	inst:ListenForEvent("refreshflowertooltip", RefreshFlowerTooltip)
 end
 
 local function OnDespawn(inst)
@@ -145,6 +161,10 @@ local function ghostlybond_onrecall(inst, ghost, was_killed)
 	inst.components.ghostlybond.ghost.sg:GoToState("dissipate")
 end
 
+local function ghostlybond_onsummoncomplete(inst, ghost)
+	inst.refreshflowertooltip:push()
+end
+
 local function ghostlybond_changebehaviour(inst, ghost)
 	-- todo: toggle abigail between defensive and offensive
     if ghost.is_defensive then
@@ -152,6 +172,7 @@ local function ghostlybond_changebehaviour(inst, ghost)
     else
         ghost:BecomeDefensive()
     end
+	inst.refreshflowertooltip:push()
     
 	return true
 end
@@ -222,6 +243,7 @@ local function master_postinit(inst)
 		inst.components.ghostlybond.onbondlevelchangefn = ghostlybond_onlevelchange
 		inst.components.ghostlybond.onsummonfn = ghostlybond_onsummon
 		inst.components.ghostlybond.onrecallfn = ghostlybond_onrecall
+		inst.components.ghostlybond.onsummoncompletefn = ghostlybond_onsummoncomplete
 		inst.components.ghostlybond.changebehaviourfn = ghostlybond_changebehaviour
 		
 		inst.components.ghostlybond:Init("abigail", TUNING.ABIGAIL_BOND_LEVELUP_TIME)

@@ -12,8 +12,7 @@ assert(TheWorld.ismastersim, "Malbatross spawner should not exist on the client"
 
 local MALBATROSS_SPAWN_DIST = 10
 local MALBATROSS_PLAYER_SPAWN_DISTSQ = TUNING.MALBATROSS_NOTICEPLAYER_DISTSQ
-local SHOAL_PERCENTAGE_TO_TEST = 0.25
-local MALBATROSS_SPAWNDELAY = { BASE = 10, RANDOM = 5 }
+local MALBATROSS_TIMERNAME = "malbatross_timetospawn"
 
 --------------------------------------------------------------------------
 --[[ Public Member Variables ]]
@@ -28,8 +27,9 @@ self.inst = inst
 local _fishshoals = {}
 local _firstspawn = true
 local _shuffled_shoals_for_spawning = nil
-local _time_until_spawn = nil
 local _activemalbatross = nil
+
+local _worldsettingstimer = TheWorld.components.worldsettingstimer
 
 --------------------------------------------------------------------------
 --[[ Private member functions ]]
@@ -63,12 +63,11 @@ end
 
 local function TryBeginningMalbatrossSpawns()
     if next(_fishshoals) ~= nil then
-        _time_until_spawn = _time_until_spawn or
-                (_firstspawn and 0) or
-                (TUNING.TOTAL_DAY_TIME * GetRandomWithVariance(MALBATROSS_SPAWNDELAY.BASE, MALBATROSS_SPAWNDELAY.RANDOM))
+        if not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
+            _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, (_firstspawn and 0) or GetRandomWithVariance(TUNING.MALBATROSS_SPAWNDELAY_BASE, TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
+        end
 
-        _shuffled_shoals_for_spawning = _shuffled_shoals_for_spawning or
-                shuffledKeys(_fishshoals)
+        _shuffled_shoals_for_spawning = _shuffled_shoals_for_spawning or shuffledKeys(_fishshoals)
 
         self.inst:StartUpdatingComponent(self)
     end
@@ -103,28 +102,32 @@ local function OnMalbatrossKilledOrRemoved(source, the_malbatross)
 end
 
 local function OnShoalFishHooked(source, fish_shoal)
-    if _activemalbatross == nil and fish_shoal ~= nil and (_time_until_spawn == nil or _time_until_spawn < 10)
+    if _activemalbatross == nil and fish_shoal ~= nil and (not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) or _worldsettingstimer:GetTimeLeft(MALBATROSS_TIMERNAME) < 10)
             and math.random() < TUNING.MALBATROSS_HOOKEDFISH_SUMMONCHANCE then
 
-        _time_until_spawn = _time_until_spawn or 0
+        if not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
+            _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, 0)
+        end
 
         _shuffled_shoals_for_spawning = {fish_shoal}
-
-        self.inst:StartUpdatingComponent(self)
     end
 end
+
+local function OnMalbatrossTimerDone(source)
+    inst:StartUpdatingComponent(self)
+end
+
+_worldsettingstimer:AddTimer(MALBATROSS_TIMERNAME, TUNING.MALBATROSS_SPAWNDELAY_BASE + TUNING.MALBATROSS_SPAWNDELAY_RANDOM, TUNING.SPAWN_MALBATROSS, OnMalbatrossTimerDone)
 
 --------------------------------------------------------------------------
 --[[ Public member functions ]]
 --------------------------------------------------------------------------
 
 function self:OnUpdate(dt)
-    if _time_until_spawn == nil then
+    if _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
         self.inst:StopUpdatingComponent(self)
-    elseif _time_until_spawn > 0 then
-        _time_until_spawn = _time_until_spawn - dt
     elseif _shuffled_shoals_for_spawning and #_shuffled_shoals_for_spawning > 0 then
-        local max_shoals_to_test = math.ceil(#_shuffled_shoals_for_spawning * SHOAL_PERCENTAGE_TO_TEST)
+        local max_shoals_to_test = math.ceil(#_shuffled_shoals_for_spawning * TUNING.MALBATROSS_SHOAL_PERCENTAGE_TO_TEST)
 
         for i, shoal in ipairs(_shuffled_shoals_for_spawning) do
             local sx, sy, sz = shoal.Transform:GetWorldPosition()
@@ -132,8 +135,9 @@ function self:OnUpdate(dt)
                 _activemalbatross = SummonMalbatross(shoal)
 
                 _shuffled_shoals_for_spawning = nil
-                _time_until_spawn = nil
+                _worldsettingstimer:StopTimer(MALBATROSS_TIMERNAME)
                 self.inst:StopUpdatingComponent(self)
+                return
             end
 
             if i == max_shoals_to_test then
@@ -146,7 +150,11 @@ end
 function self:Relocate(target_malbatross)
     if next(_fishshoals) ~= nil then
         _shuffled_shoals_for_spawning = shuffledKeys(_fishshoals)
-        _time_until_spawn = 0
+        if _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
+            _worldsettingstimer:SetTimeLeft(MALBATROSS_TIMERNAME, 0)
+        else
+            _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, 0)
+        end
 
         if target_malbatross then
             -- If a target was passed in, swap our current shoal to the end of the shuffled list,
@@ -174,7 +182,6 @@ end
 
 function self:OnSave()
     local data = { 
-        _time_until_spawn = _time_until_spawn,
         _firstspawn = _firstspawn,
     }
 
@@ -190,7 +197,9 @@ function self:OnSave()
 end
 
 function self:OnLoad(data)
-    _time_until_spawn = data._time_until_spawn
+    if data._time_until_spawn then
+        _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, math.min(data._time_until_spawn, TUNING.MALBATROSS_SPAWNDELAY_BASE + TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
+    end
     _firstspawn = data._firstspawn
 end
 
@@ -206,14 +215,15 @@ end
 
 function self:GetDebugString()
     local s = nil
-    if not _time_until_spawn then
+    local time_until_spawn = _worldsettingstimer:GetTimeLeft(MALBATROSS_TIMERNAME)
+    if not time_until_spawn then
         s = "DORMANT <no time>"
     elseif self.inst.updatecomponents[self] == nil then
-        s = "DORMANT ".._time_until_spawn
-    elseif _time_until_spawn > 0 then
-        s = string.format("Malbatross is coming in %2.2f", _time_until_spawn)
+        s = "DORMANT "..time_until_spawn
+    elseif time_until_spawn > 0 then
+        s = string.format("Malbatross is coming in %2.2f", time_until_spawn)
     else
-        s = string.format("Trying to spawn: %2.2f", _time_until_spawn)
+        s = string.format("Trying to spawn: %2.2f", time_until_spawn)
     end
 
     -- append any more debug info here.
@@ -242,7 +252,11 @@ function self:Summon(_slow_debug_target_entity)
             end)
         end
 
-        _time_until_spawn = 5
+        if _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
+            _worldsettingstimer:SetTimeLeft(MALBATROSS_TIMERNAME, 5)
+        else
+            _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, 5)
+        end
         self.inst:StartUpdatingComponent(self)
     end
 end

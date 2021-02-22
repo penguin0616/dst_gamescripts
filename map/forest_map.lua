@@ -1,5 +1,4 @@
 local startlocations = require"map/startlocations"
-local tuning_override = require "tuning_override"
 
 local SKIP_GEN_CHECKS = false
 
@@ -86,13 +85,55 @@ end
 local MULTIPLY = {
 	["never"] = 0,
 	["rare"] = 0.5,
+	["uncommon"] = 0.75,
 	["default"] = 1,
 	["often"] = 1.5,
 	["mostly"] = 2.2,
-	["always"] = 3,		
+	["always"] = 3,
+
+	["ocean_never"] = 0,
+	["ocean_rare"] = 0.65,
+	["ocean_uncommon"] = 0.85,
+	["ocean_default"] = 1,
+	["ocean_often"] = 1.3,
+	["ocean_mostly"] = 1.65,
+	["ocean_always"] = 2,
 }
 
-	
+local SPAWNER_MUL = 1.2
+local OCEAN_SPAWNER_MUL = 1.2
+local function prefab_spawner_multiply(density, mult)
+	if mult > 1 then
+		return math.max(mult / SPAWNER_MUL, 1)
+	elseif mult < 1 then
+		return math.min(mult * SPAWNER_MUL, 1)
+	end
+	return mult
+end
+local function prefab_spawner_ocean_multiply(density, mult)
+	if mult > 1 then
+		return math.max(mult / OCEAN_SPAWNER_MUL, 1)
+	elseif mult < 1 then
+		return math.min(mult * OCEAN_SPAWNER_MUL, 1)
+	end
+	return mult
+end
+
+--spawners get a lower density, since spawners spawn multiple things.
+local MULTIPLY_PREFABS = {
+	["tumbleweedspawner"] = 		prefab_spawner_multiply,
+	["buzzardspawner"] = 			prefab_spawner_multiply,
+    ["slurper_spawner"] =           prefab_spawner_multiply,
+    ["worm_spawner"] =             	prefab_spawner_multiply,
+	["monkeybarrel_spawner"] =      prefab_spawner_multiply,
+
+	["seastack_spawner_rough"] =	prefab_spawner_ocean_multiply,
+	["seastack_spawner_swell"] =	prefab_spawner_ocean_multiply,
+	["oceanfish_shoalspawner"] =	prefab_spawner_ocean_multiply,
+	["waterplant_spawner_rough"] =	prefab_spawner_ocean_multiply,
+	["wobster_den_spawner_shore"] =	prefab_spawner_ocean_multiply,
+}
+
 local TRANSLATE_TO_PREFABS = {
 	["spiders"] = 			{"spiderden"},
 	["cave_spiders"] = 		{"spiderden", "dropperweb", "spiderhole"},
@@ -108,7 +149,7 @@ local TRANSLATE_TO_PREFABS = {
 	["grass"] = 			{"grass","grassgekko"},
 	["rock"] = 				{"rocks", "rock1", "rock2", "rock_flintless","rock_petrified_tree"}, 
 	["sapling"] = 			{"sapling","twiggytree","ground_twigs"},
-	["reeds"] = 			{"reeds"},	
+	["reeds"] = 			{"reeds"},
 	["trees"] = 			{"evergreen", "evergreen_sparse", "deciduoustree", "marsh_tree"},	
 	["evergreen"] = 		{"evergreen"},	
 	["carrot"] = 			{"carrot_planted"},
@@ -146,7 +187,27 @@ local TRANSLATE_TO_PREFABS = {
     ["lichen"] =            {"lichen"},
     ["banana"] =            {"cave_banana_tree"},
     ["monkey"] =            {"monkeybarrel_spawner"}, 
-    ["mooncarrot"] =        {"mooncarrot_planted"},
+	["mooncarrot"] =        {"mooncarrot_planted"},
+	
+	--lunar island stuff, all prefixed with "moon_"
+	["moon_tree"] =			{"moon_tree"},
+	["moon_sapling"] =		{"sapling_moon"},
+	["moon_berrybush"] =	{"rock_avocado_bush"},
+	["moon_rock"] = 		{"moonglass_rock", "rock_moon", "moonglass", "lunar_island_rocks", "lunar_island_rock1", "lunar_island_rock2"},
+	["moon_spiders"] =		{"moonspiderden"},
+	["moon_carrot"] =		{"carrat_planted"},
+	["moon_fruitdragon"] =	{"fruitdragon"},
+	["moon_hotspring"] =	{"hotspring"},
+	["moon_fissure"] =		{"moon_fissure"},
+	["moon_starfish"] =		{"trap_starfish"},
+	["moon_bullkelp"] =		{"bullkelp_beachedroot"},
+
+	--Ocean stuff all prefixed with "ocean_"
+	["ocean_seastack"] =	{"seastack", "seastack_spawner_rough", "seastack_spawner_swell"},
+	["ocean_shoal"] =		{"oceanfish_shoalspawner"},
+	["ocean_waterplant"] =	{"waterplant_spawner_rough"},
+	["ocean_wobsterden"] =	{"wobster_den_spawner_shore"},
+	["ocean_bullkelp"] =	{"bullkelp_plant"},
 }
 
 local TRANSLATE_AND_OVERRIDE = { --These are entities that should be translated to prefabs for world gen but also have a postinit override to do
@@ -154,7 +215,6 @@ local TRANSLATE_AND_OVERRIDE = { --These are entities that should be translated 
 	["rock_ice"] = 			{"rock_ice"}, 
 }
 
-local customise = require("map/customise")
 local function TranslateWorldGenChoices(gen_params)
     if gen_params == nil or GetTableSize(gen_params) == 0 then
         return nil, nil
@@ -166,14 +226,22 @@ local function TranslateWorldGenChoices(gen_params)
     for tweak, v in pairs(gen_params) do
         if v ~= "default" then
             if TRANSLATE_AND_OVERRIDE[tweak] ~= nil then --Override and Translate
-                for i,prefab in ipairs(TRANSLATE_AND_OVERRIDE[tweak]) do --Translate
-                    translated_prefabs[prefab] = MULTIPLY[v]
+				for i,prefab in ipairs(TRANSLATE_AND_OVERRIDE[tweak]) do --Translate
+					local mult = MULTIPLY[v]
+					if MULTIPLY_PREFABS[prefab] then
+						mult = MULTIPLY_PREFABS[prefab](v, mult)
+					end
+                    translated_prefabs[prefab] = mult
                 end
 
                 runtime_overrides[tweak] = v --Override
             elseif TRANSLATE_TO_PREFABS[tweak] ~= nil then --Translate only
                 for i,prefab in ipairs(TRANSLATE_TO_PREFABS[tweak]) do
-                    translated_prefabs[prefab] = MULTIPLY[v]
+					local mult = MULTIPLY[v]
+					if MULTIPLY_PREFABS[prefab] then
+						mult = MULTIPLY_PREFABS[prefab](v, mult)
+					end
+                    translated_prefabs[prefab] = mult
                 end
             else --Override only
                 runtime_overrides[tweak] = v
@@ -191,7 +259,36 @@ local function TranslateWorldGenChoices(gen_params)
 
     return translated_prefabs, runtime_overrides
 end
-	
+local function seasonfn(friendly, winter)
+	return function(season)
+		local totaldaysinseason
+		local remainingdaysinseason
+		if friendly then
+			totaldaysinseason = TUNING.SEASON_LENGTH_FRIENDLY_DEFAULT*2
+			remainingdaysinseason = TUNING.SEASON_LENGTH_FRIENDLY_DEFAULT
+		else
+			totaldaysinseason = TUNING.SEASON_LENGTH_HARSH_DEFAULT
+			remainingdaysinseason = TUNING.SEASON_LENGTH_HARSH_DEFAULT
+		end
+		local seasons = {
+			season = season,
+			totaldaysinseason = totaldaysinseason,
+			elapseddaysinseason = 0,
+			remainingdaysinseason = remainingdaysinseason,
+		}
+		return {seasons = seasons, weather = winter and {snowlevel = 1} or nil}
+	end
+end
+
+local SEASONS = {
+	["autumn"] = seasonfn(true),
+	["winter"] = seasonfn(true, true),
+	["spring"] = seasonfn(true),
+	["summer"] = seasonfn(false),
+}
+
+local DEFAULT_SEASON = "autumn"
+
 local function UpdatePercentage(distributeprefabs, gen_params)
 	for selected, v in pairs(gen_params) do
 		if v ~= "default" then		
@@ -583,8 +680,8 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 						newz = newz + incz -- /10
 						table.insert(entities["rubble1"],{ x = newx, z = newz })
 						table.insert(entities["rubble2"],{ x = newx, z = newz })
-					--end				
-	]]				
+					--end
+	]]
 				elseif choices.special ~= nil then
 					local ends = {}
 					for _,d in ipairs(distances) do
@@ -603,7 +700,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 							obj_layout.Place({xs[idx], ys[idx]}, MAZE_CELL_EXITS_INV[-types[idx] ], add_fn, choices.bosses)
 						end
 					end
-					
+
 					local idx = ends[1]
 					obj_layout.Place({xs[idx], ys[idx]}, MAZE_CELL_EXITS_INV[math.abs(types[idx])], add_fn, choices.special.start)
 					idx = ends[#ends]
@@ -618,14 +715,14 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 						end
 					end
 				end
-				
+
                 -- The maze can cut itself off from land at the edge, so draw a little road to attempt to bring it together.
                 for i,node in ipairs(topology_save.GlobalTags["MazeEntrance"][task]) do 
                     local entrance_node = topology_save.root:GetNodeById(node)
                     for id, edge in pairs(entrance_node.edges) do
                         if edge.node1.data.type ~= NODE_TYPE.Blank and edge.node2.data.type ~= NODE_TYPE.Blank then
                             WorldSim:DrawCellLine( edge.node1.id, edge.node2.id, NODE_INTERNAL_CONNECTION_TYPE.EdgeSite, choices.bridge_ground or GROUND.BRICK, nil, true) 
-                            
+
                             -- If the maze is force disconnected then double make sure that the maze is connected with the fake ground
                             local othernode = edge.node1 == entrance_node and edge.node2 or edge.node1
                             if table.contains(othernode.data.tags, "ForceDisconnected") then
@@ -679,7 +776,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 --			end
 --		end
 		Ocean_ConvertImpassibleToWater(map_width, map_height, ocean_gen_config)
-		PopulateOcean(SpawnFunctions, entities, map_width, map_height, storygen.ocean_population, current_gen_params, ocean_gen_config.ocean_prefill_setpieces_min_land_dist, save.map.topology)
+		PopulateOcean(SpawnFunctions, entities, map_width, map_height, storygen.ocean_population, translated_prefabs, ocean_gen_config.ocean_prefill_setpieces_min_land_dist, save.map.topology)
 	end
     topology_save.root:GlobalPostPopulate(entities, map_width, map_height)
 
@@ -749,7 +846,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     for prefab,count in pairs(double_check) do
 		print ("Checking Required Prefab " .. prefab .. " has at least " .. count .. " instances (" .. (entities[prefab] ~= nil and #entities[prefab] or 0) .. " found).")
-		
+
         if entities[prefab] == nil or #entities[prefab] < count then
             print(string.format("PANIC: missing required prefab [%s]! Expected %d, got %d", prefab, count, entities[prefab] == nil and 0 or #entities[prefab]))
             if SKIP_GEN_CHECKS == false then
@@ -762,13 +859,31 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     save.map.tiles, save.map.nav, save.map.adj, save.map.nodeidtilemap = WorldSim:GetEncodedMap(join_islands)
 
-    save.map.topology.overrides = runtime_overrides
+    save.map.topology.overrides = deepcopy(current_gen_params)
     if save.map.topology.overrides == nil then
         save.map.topology.overrides = {}
-    end
-    save.map.topology.overrides.original = deepcopy(current_gen_params)
+	end
 
-    save.map.width, save.map.height = map_width, map_height
+	save.map.width, save.map.height = map_width, map_height
+
+	local start_season = current_gen_params.season_start
+	if string.find(start_season, "|", nil, true) then
+		start_season = GetRandomItem(string.split(start_season, "|"))
+	elseif start_season == "default" then
+		start_season = DEFAULT_SEASON
+	end
+
+	local componentdata = SEASONS[start_season](start_season)
+
+	if save.world_network == nil then
+		save.world_network = {persistdata = {}}
+	elseif save.world_network.persistdata == nil then
+		save.world_network.persistdata = {}
+	end
+
+	for k, v in pairs(componentdata) do
+		save.world_network.persistdata[k] = v
+	end
 
     save.playerinfo = {}
 	if (save.ents.spawnpoint_multiplayer == nil or #save.ents.spawnpoint_multiplayer == 0)
@@ -828,6 +943,9 @@ return {
 	TRANSLATE_TO_PREFABS = TRANSLATE_TO_PREFABS,
 	MULTIPLY = MULTIPLY,
 	TRANSLATE_AND_OVERRIDE = TRANSLATE_AND_OVERRIDE,
+	MULTIPLY_PREFABS = MULTIPLY_PREFABS,
+	SEASONS = SEASONS,
+	DEFAULT_SEASON = DEFAULT_SEASON,
 }
 
 

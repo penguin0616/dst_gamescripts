@@ -34,7 +34,7 @@ AddRoom("OceanCoastal", {
 AddRoom("OceanSwell", {
 					colour={r=.5,g=0.6,b=.080,a=.10},
 					value = GROUND.OCEAN_SWELL,
-				    required_prefabs = {"crabking"},
+				    required_prefabs = {"crabking_spawner"},
 					contents =  {
 						distributepercent = 0.005,
 						distributeprefabs =

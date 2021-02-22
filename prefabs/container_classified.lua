@@ -1,5 +1,5 @@
 local containers = require("containers")
-local TIMEOUT = 2
+local TIMEOUT = 0.5
 
 --------------------------------------------------------------------------
 --Common interface

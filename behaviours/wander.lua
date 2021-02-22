@@ -81,11 +81,7 @@ function Wander:DBString()
 end
 
 function Wander:GetHomePos()
-    if type(self.homepos) == "function" then 
-        return self.homepos(self.inst)
-    end
-
-    return self.homepos
+    return FunctionOrValue(self.homepos, self.inst)
 end
 
 function Wander:GetDistFromHomeSq()
@@ -99,12 +95,8 @@ function Wander:IsFarFromHome()
 end
 
 function Wander:GetMaxDistSq()
-    if type(self.maxdist) == "function" then
-        local dist = self.maxdist(self.inst)
-        return dist*dist
-    end
-
-    return self.maxdist*self.maxdist
+    local dist = FunctionOrValue(self.maxdist, self.inst)
+    return dist*dist
 end
 
 function Wander:Wait(t)
@@ -155,10 +147,7 @@ function Wander:PickNewDirection()
         end
         --print(self.inst, pt, string.format("wander to %s @ %2.2f %s", tostring(offset), angle/DEGREES, deflected and "(deflected)" or ""))
 
-		local run = self.should_run
-		if type(run) == "function" then
-			run = run(self.inst)
-		end
+		local run = FunctionOrValue(self.should_run, self.inst)
 
         if offset then
             self.inst.components.locomotor:GoToPoint(self.inst:GetPosition() + offset, nil, run)

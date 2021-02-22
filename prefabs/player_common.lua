@@ -952,9 +952,9 @@ end
 
 --Player cleanup usually called just before save/delete
 --just before the the player entity is actually removed
-local function OnDespawn(inst)
+local function OnDespawn(inst, migrationdata)
     if inst._OnDespawn ~= nil then
-        inst:_OnDespawn()
+        inst:_OnDespawn(migrationdata)
     end
 
     --V2C: Unfortunately the sleeping bag code is incredibly garbage
@@ -973,7 +973,8 @@ local function OnDespawn(inst)
     inst.components.rider:ActualDismount()
     inst.components.bundler:StopBundling()
     inst.components.constructionbuilder:StopConstruction()
-    if GetGameModeProperty("drop_everything_on_despawn") then
+
+    if (GetGameModeProperty("drop_everything_on_despawn") or TUNING.DROP_EVERYTHING_ON_DESPAWN) and migrationdata == nil then
         inst.components.inventory:DropEverything()
 
 		local followers = inst.components.leader.followers
@@ -1002,31 +1003,19 @@ end
 --Will be triggered from SpawnNewPlayerOnServerFromSim
 --only if it is a new spawn
 local function OnNewSpawn(inst)
-    if inst.starting_inventory ~= nil and #inst.starting_inventory > 0 and inst.components.inventory ~= nil then
-        inst.components.inventory.ignoresound = true
-        if inst.components.inventory:GetNumSlots() > 0 then
-            for i, v in ipairs(inst.starting_inventory) do
-                inst.components.inventory:GiveItem(SpawnPrefab(v))
-            end
-        else
-            local items = {}
-            for i, v in ipairs(inst.starting_inventory) do
-                local item = SpawnPrefab(v)
-                if item.components.equippable ~= nil then
-                    inst.components.inventory:Equip(item)
-                    table.insert(items, item)
-                else
-                    item:Remove()
-                end
-            end
-            for i, v in ipairs(items) do
-                if v.components.inventoryitem == nil or not v.components.inventoryitem:IsHeld() then
-                    v:Remove()
-                end
-            end
-        end
-        inst.components.inventory.ignoresound = false
-    end
+	ex_fns.GivePlayerStartingItems(inst, inst.starting_inventory)
+
+	if TheWorld.components.playerspawner ~= nil and TheWorld.components.playerspawner:IsPlayersInitialSpawn(inst) then -- only give the late-starting assist on the very first time a player spawns (ie, not every time they respawn in Wilderness mode)
+		local extra_starting_items = TUNING.EXTRA_STARTING_ITEMS[TheWorld.state.season]
+		if extra_starting_items ~= nil and TheWorld.state.cycles >= TUNING.EXTRA_STARTING_ITEMS_MIN_DAYS then
+			ex_fns.GivePlayerStartingItems(inst, extra_starting_items)
+		end
+		local seasonal_starting_items = TUNING.SEASONAL_STARTING_ITEMS[TheWorld.state.season]
+		if seasonal_starting_items ~= nil and TheWorld.state.cycles > TheWorld.state.elapseddaysinseason then -- only if the world is not in the starting season.
+			ex_fns.GivePlayerStartingItems(inst, seasonal_starting_items)
+		end
+	end
+
     if inst._OnNewSpawn ~= nil then
         inst:_OnNewSpawn()
         inst._OnNewSpawn = nil
@@ -1433,6 +1422,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         "lavaarena_player_revive_from_corpse_fx",
         "superjump_fx",
 		"washashore_puddle_fx",
+		"spawnprotectionbuff",
 
         -- Player specific classified prefabs
         "player_classified",

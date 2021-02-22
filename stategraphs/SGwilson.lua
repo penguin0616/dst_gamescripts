@@ -4905,7 +4905,8 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5014,7 +5015,8 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5049,7 +5051,8 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5096,7 +5099,8 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5223,7 +5227,8 @@ local states =
             if inst.sg.statemem.actionmeter then
                 StopActionMeter(inst, false)
             end
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5326,7 +5331,8 @@ local states =
         },
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5399,7 +5405,8 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
             if inst.sg.statemem.talktask ~= nil then
@@ -5410,8 +5417,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "dodismountaction",
         tags = { "doing", "busy", "nodangle" },
 
@@ -5500,7 +5506,8 @@ local states =
 
         onexit = function(inst)
             inst.SoundEmitter:KillSound("make")
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -5548,7 +5555,8 @@ local states =
         },
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
 			if not inst.sg.statemem.not_interupted then
@@ -5947,8 +5955,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "use_beef_bell",
         tags = { "doing", "playing" },
 
@@ -6078,7 +6085,8 @@ local states =
             if inst.sg.statemem.fx ~= nil then
                 inst.sg.statemem.fx:Remove()
             end
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -6155,7 +6163,8 @@ local states =
 
         onexit = function(inst)
             inst.AnimState:ClearOverrideSymbol("flower")
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -6208,7 +6217,8 @@ local states =
 
         onexit = function(inst)
             inst.AnimState:ClearOverrideSymbol("flower")
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -8074,7 +8084,8 @@ local states =
             if inst.sg.statemem.actionmeter then
                 StopActionMeter(inst, false)
             end
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
             inst.anchor.components.anchor:RemoveAnchorRaiser(inst)
@@ -8551,7 +8562,8 @@ local states =
 
         --[[
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -12251,7 +12263,8 @@ local states =
         },
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -12943,7 +12956,8 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,
@@ -13131,7 +13145,8 @@ local states =
         },
 
         onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action then
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
         end,

@@ -54,12 +54,25 @@ function MakeBanner(self)
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
 
-        --local anim = baner_root:AddChild(UIAnim())
-        anim:GetAnimState():SetBuild("dst_menu_farming")
-        anim:GetAnimState():SetBank ("dst_menu_farming")
+        anim:GetAnimState():SetBuild("dst_menu_beefalo")
+        anim:GetAnimState():SetBank ("dst_menu_beefalo")
         anim:GetAnimState():PlayAnimation("loop", true)
         anim:SetScale(.667)
-        anim:SetPosition(0, 0)
+    
+
+        local anim_bg = baner_root:AddChild(UIAnim())
+        anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
+        anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
+        anim:SetScale(.667)
+        anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:MoveToBack()
+
+        --local anim = baner_root:AddChild(UIAnim())
+        --anim:GetAnimState():SetBuild("dst_menu_farming")
+        --anim:GetAnimState():SetBank ("dst_menu_farming")
+        --anim:GetAnimState():PlayAnimation("loop", true)
+        --anim:SetScale(.667)
+        --anim:SetPosition(0, 0)
 
   --       title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_ROT_BETA_TITLE
   --       anim:GetAnimState():SetBuild("dst_menu_wathgrithr")

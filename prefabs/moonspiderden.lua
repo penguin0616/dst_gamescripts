@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/spider_mound_mutated.zip"),
@@ -36,13 +38,13 @@ local MEDIUM = 2
 local LARGE = 3
 
 local function set_stage(inst, workleft, play_grow_sound)
-    local new_stage = (workleft * 4 <= TUNING.MOONSPIDERDEN.WORK and SMALL)
-            or (workleft * 2 <= TUNING.MOONSPIDERDEN.WORK and MEDIUM)
+    local new_stage = (workleft * 4 <= TUNING.MOONSPIDERDEN_WORK and SMALL)
+            or (workleft * 2 <= TUNING.MOONSPIDERDEN_WORK and MEDIUM)
             or LARGE
 
-    inst.components.childspawner:SetMaxChildren(TUNING.MOONSPIDERDEN.SPIDERS[new_stage])
-    inst.components.childspawner:SetMaxEmergencyChildren(TUNING.MOONSPIDERDEN.EMERGENCY_WARRIORS[new_stage])
-    inst.components.childspawner:SetEmergencyRadius(TUNING.MOONSPIDERDEN.EMERGENCY_RADIUS[new_stage])
+    inst.components.childspawner:SetMaxChildren(TUNING.MOONSPIDERDEN_SPIDERS[new_stage])
+    inst.components.childspawner:SetMaxEmergencyChildren(TUNING.MOONSPIDERDEN_EMERGENCY_WARRIORS[new_stage])
+    inst.components.childspawner:SetEmergencyRadius(TUNING.MOONSPIDERDEN_EMERGENCY_RADIUS[new_stage])
 
     if inst._stage ~= nil and inst._stage == (new_stage - 1) then
         if inst._stage == SMALL and new_stage == MEDIUM then
@@ -60,8 +62,8 @@ local function set_stage(inst, workleft, play_grow_sound)
         inst.AnimState:PlayAnimation((new_stage == SMALL and "low") or (new_stage == MEDIUM and "med") or "full")
     end
 
-    inst.GroundCreepEntity:SetRadius(TUNING.MOONSPIDERDEN.CREEPRADIUS[new_stage])
-    inst._num_investigators = TUNING.MOONSPIDERDEN.MAX_INVESTIGATORS[new_stage]
+    inst.GroundCreepEntity:SetRadius(TUNING.MOONSPIDERDEN_CREEPRADIUS[new_stage])
+    inst._num_investigators = TUNING.MOONSPIDERDEN_MAX_INVESTIGATORS[new_stage]
 
     inst._stage = new_stage
 end
@@ -78,13 +80,13 @@ local function stop_regen_task(inst)
 end
 
 local function try_work_regen(inst)
-    if inst.components.workable ~= nil and inst.components.workable.workleft < TUNING.MOONSPIDERDEN.WORK then
+    if inst.components.workable ~= nil and inst.components.workable.workleft < TUNING.MOONSPIDERDEN_WORK then
         local new_work_amount = inst.components.workable.workleft + 1
         set_stage(inst, new_work_amount, true)
         inst.components.workable:SetWorkLeft(new_work_amount)
 
         -- If we've regenerated back to our max work amount, end the task. We'll start it up again the next time we get worked on.
-        if new_work_amount == TUNING.MOONSPIDERDEN.WORK then
+        if new_work_amount == TUNING.MOONSPIDERDEN_WORK then
             stop_regen_task(inst)
         end
     end
@@ -92,14 +94,14 @@ end
 
 local function start_regen_task(inst)
     if inst._regen_task == nil then
-        inst._regen_task = inst:DoPeriodicTask(TUNING.MOONSPIDERDEN.WORK_REGENTIME, try_work_regen)
+        inst._regen_task = inst:DoPeriodicTask(TUNING.MOONSPIDERDEN_WORK_REGENTIME, try_work_regen)
     end
 end
 
 ---------------------------------------------------------------------------
 
 local function push_twitch_idle(inst)
-    if inst.components.workable ~= nil and (inst.components.workable.workleft * 2) > TUNING.MOONSPIDERDEN.WORK then
+    if inst.components.workable ~= nil and (inst.components.workable.workleft * 2) > TUNING.MOONSPIDERDEN_WORK then
         inst.AnimState:PlayAnimation("twitch")
         inst.AnimState:PushAnimation("full")
     end
@@ -177,7 +179,7 @@ end
 local function on_workable_load(inst)
     set_stage(inst, inst.components.workable.workleft, false)
 
-    if inst.components.workable.workleft < TUNING.MOONSPIDERDEN.WORK then
+    if inst.components.workable.workleft < TUNING.MOONSPIDERDEN_WORK then
         start_regen_task(inst)
     end
 end
@@ -190,7 +192,7 @@ local function on_save(inst, data)
 
         -- Do 'proper' rounding, so that we're closer to the correct amount of work than we would be
         -- just from a floor or ceiling.
-        local work_regen_during_sleep = math.floor((time_since_sleep / TUNING.MOONSPIDERDEN.WORK_REGENTIME) + 0.5)
+        local work_regen_during_sleep = math.floor((time_since_sleep / TUNING.MOONSPIDERDEN_WORK_REGENTIME) + 0.5)
 
         if work_regen_during_sleep > 0 then
             data.sleeping_work_regen = work_regen_during_sleep
@@ -206,7 +208,7 @@ local function on_load(inst, data)
 
         -- If we've regenerated back to our max work amount, end the regeneration task (we may have started it in on_workable_load)
         -- We'll start it up again the next time we get worked on.
-        if new_work_amount == TUNING.MOONSPIDERDEN.WORK then
+        if new_work_amount == TUNING.MOONSPIDERDEN_WORK then
             stop_regen_task(inst)
         end
     end
@@ -227,7 +229,7 @@ local function on_wake(inst)
 
         -- Do 'proper' rounding, so that we're closer to the correct amount of work than we would be
         -- just from a floor or ceiling.
-        local work_regen_during_sleep = math.floor((time_since_sleep / TUNING.MOONSPIDERDEN.WORK_REGENTIME) + 0.5)
+        local work_regen_during_sleep = math.floor((time_since_sleep / TUNING.MOONSPIDERDEN_WORK_REGENTIME) + 0.5)
 
         if work_regen_during_sleep > 0 then
             local new_work_amount = math.min(inst.components.workable.maxwork, inst.components.workable.workleft + work_regen_during_sleep)
@@ -245,6 +247,10 @@ local function on_wake(inst)
     inst._sleep_start_time = nil
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MOONSPIDERDEN_RELEASE_TIME, TUNING.MOONSPIDERDEN_SPIDER_REGENTIME)
+end
+
 local function moonspiderden_fn()
     local inst = CreateEntity()
 
@@ -255,7 +261,7 @@ local function moonspiderden_fn()
     inst.entity:AddNetwork()
 
     inst.entity:AddGroundCreepEntity()
-    inst.GroundCreepEntity:SetRadius(TUNING.MOONSPIDERDEN.CREEPRADIUS[LARGE])
+    inst.GroundCreepEntity:SetRadius(TUNING.MOONSPIDERDEN_CREEPRADIUS[LARGE])
 
     MakeObstaclePhysics(inst, 2)
 
@@ -279,19 +285,22 @@ local function moonspiderden_fn()
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetMaxWork(TUNING.MOONSPIDERDEN.WORK)
-    inst.components.workable:SetWorkLeft(TUNING.MOONSPIDERDEN.WORK)
+    inst.components.workable:SetMaxWork(TUNING.MOONSPIDERDEN_WORK)
+    inst.components.workable:SetWorkLeft(TUNING.MOONSPIDERDEN_WORK)
     inst.components.workable:SetOnWorkCallback(spawner_onworked)
     inst.components.workable.savestate = true
     inst.components.workable:SetOnLoadFn(on_workable_load)
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(TUNING.MOONSPIDERDEN.SPIDER_REGENTIME)
-    inst.components.childspawner:SetSpawnPeriod(TUNING.MOONSPIDERDEN.RELEASE_TIME)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MOONSPIDERDEN_SPIDER_REGENTIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MOONSPIDERDEN_RELEASE_TIME)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MOONSPIDERDEN_RELEASE_TIME, TUNING.MOONSPIDERDEN_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MOONSPIDERDEN_SPIDER_REGENTIME, TUNING.MOONSPIDERDEN_ENABLED)
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_moon"
     inst.components.childspawner.emergencychildname = "spider_moon"
-    inst.components.childspawner.emergencychildrenperplayer = TUNING.MOONSPIDERDEN.EMERGENCY_WARRIORS[LARGE]
+    inst.components.childspawner.emergencychildrenperplayer = TUNING.MOONSPIDERDEN_EMERGENCY_WARRIORS[LARGE]
+    inst.components.childspawner.canemergencyspawn = TUNING.MOONSPIDERDEN_ENABLED
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('moon_spider_hole')
@@ -303,7 +312,7 @@ local function moonspiderden_fn()
 
     start_twitch_idle(inst)
 
-    set_stage(inst, TUNING.MOONSPIDERDEN.WORK, false)
+    set_stage(inst, TUNING.MOONSPIDERDEN_WORK, false)
 
     inst.components.childspawner:StartSpawning()
 
@@ -312,6 +321,7 @@ local function moonspiderden_fn()
 
     inst.OnSave = on_save
     inst.OnLoad = on_load
+    inst.OnPreLoad = OnPreLoad
 
     MakeSnowCovered(inst)
 

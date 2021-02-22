@@ -35,6 +35,8 @@ local _masterpt = nil
 local _openpts = {}
 local _usedpts = {}
 
+local _players_spawned = {} -- tracks if a player has spawned in before or not
+
 --------------------------------------------------------------------------
 --[[ Private member functions ]]
 --------------------------------------------------------------------------
@@ -78,7 +80,7 @@ end
 
 local function PlayerRemove(player, deletesession, migrationdata, readytoremove)
     if readytoremove then
-        player:OnDespawn()
+        player:OnDespawn(migrationdata)
         if deletesession then
             DeleteUserSession(player)
         else
@@ -96,6 +98,22 @@ local function PlayerRemove(player, deletesession, migrationdata, readytoremove)
     else
         player:DoTaskInTime(0, PlayerRemove, deletesession, migrationdata, true)
     end
+end
+
+local SPAWN_PROTECTION_DANGER_TAGS = {"hostile"}
+local SPAWN_PROTECTION_BLOCKED_TAGS = {"blocker", "structure"}
+
+function self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading)
+	if not isloading and (TheWorld.topology.overrides == nil or TheWorld.topology.overrides.spawnprotection ~= "never") then
+		return (TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.spawnprotection == "always")
+				or #TheSim:FindEntities(x, y, z, 16, nil, nil, SPAWN_PROTECTION_DANGER_TAGS) > 2
+				or #TheSim:FindEntities(x, y, z, 4, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 4
+				or #TheSim:FindEntities(x, y, z, 6, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 16
+				or #TheSim:FindEntities(x, y, z, 12, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 36
+				or #TheSim:FindEntities(x, y, z, 24, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 52
+	end
+
+	return false
 end
 
 --------------------------------------------------------------------------
@@ -261,6 +279,8 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading)
         player.migrationpets = nil
     end
 
+	_players_spawned[player.userid] = true
+
     print(string.format("Spawning player at: [%s] (%2.2f, %2.2f, %2.2f)", isloading and "Load" or MODES[_mode], x, y, z))
     player.Physics:Teleport(x, y, z)
     if player.components.areaaware ~= nil then
@@ -271,6 +291,13 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading)
     if not inst.state.isday and #TheSim:FindEntities(x, y, z, 4, SPAWNLIGHT_TAGS) <= 0 then
         SpawnPrefab("spawnlight_multiplayer").Transform:SetPosition(x, y, z)
     end
+
+	if self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading) then
+		print("Enabling Spawn Protection for ", self.inst)
+		if player.components.debuffable ~= nil then
+			player.components.debuffable:AddDebuff("spawnprotectionbuff", "spawnprotectionbuff")
+		end
+	end
 
     -- Portal FX, disable/give control to player if they're loading in
     if isloading or _mode ~= "fixed" then
@@ -293,6 +320,25 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading)
 end
 
 self.GetAnySpawnPoint = GetNextSpawnPosition
+
+function self:IsPlayersInitialSpawn(player)
+	return _players_spawned[player.userid] == nil
+end
+
+--------------------------------------------------------------------------
+
+--------------------------------------------------------------------------
+--[[ Save/Load functions ]]
+
+function self:OnSave()
+	return next(_players_spawned) ~= nil and {_players_spawned = _players_spawned} or nil
+end
+
+function self:OnLoad(data)
+	if data ~= nil and data._players_spawned ~= nil then
+		_players_spawned = data._players_spawned
+	end
+end
 
 --------------------------------------------------------------------------
 --[[ End ]]

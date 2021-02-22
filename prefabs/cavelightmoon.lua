@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/cave_exit_lightsource.zip"),
@@ -201,6 +203,10 @@ local function on_player_near(inst, player)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_Spawner_PreLoad(inst, data, TUNING.MOLEBAT_ALLY_COOLDOWN * 2)
+end
+
 local function common_fn(widthscale, is_spawner)
     local inst = CreateEntity()
 
@@ -248,13 +254,16 @@ local function common_fn(widthscale, is_spawner)
 
     if is_spawner then
         inst:AddComponent("spawner")
-        inst.components.spawner:Configure("molebat", TUNING.MOLEBAT.ALLY_COOLDOWN * 2)
+        WorldSettings_Spawner_SpawnDelay(inst, TUNING.MOLEBAT_ALLY_COOLDOWN * 2, TUNING.MOLEBAT_ENABLED)
+        inst.components.spawner:Configure("molebat", TUNING.MOLEBAT_ALLY_COOLDOWN * 2)
         inst.components.spawner.onvacate = onvacate
         inst.components.spawner:CancelSpawning()
 
         inst:AddComponent("playerprox")
         inst.components.playerprox:SetDist(5, 10)
         inst.components.playerprox:SetOnPlayerNear(on_player_near)
+
+        inst.OnPreLoad = OnPreLoad
     end
 
     return inst

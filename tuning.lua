@@ -1,6 +1,15 @@
 local TechTree = require("techtree")
 
 TUNING = {}
+TUNING_MODIFIERS = {}
+ORIGINAL_TUNING = {}
+
+function AddTuningModifier(tuning_var, fn, tuning_value)
+    if not TUNING_MODIFIERS[tuning_var] then
+        TUNING_MODIFIERS[tuning_var] = {fn, TUNING[tuning_var] or tuning_value}
+        TUNING[tuning_var] = nil
+    end
+end
 
 function Tune(overrides)
     if overrides == nil then
@@ -50,6 +59,16 @@ function Tune(overrides)
         DAY_SEGS_DEFAULT = day_segs,
         DUSK_SEGS_DEFAULT = dusk_segs, 
         NIGHT_SEGS_DEFAULT = night_segs,
+
+        DAY_TIME_DEFAULT = day_time,
+        DUSK_TIME_DEFAULT = dusk_time,
+        NIGHT_TIME_DEFAULT = night_time,
+
+        MULTIPLAYER_ATTACK_MODIFIER = multiplayer_attack_modifier,
+        MULTIPLAYER_GOLDENTOOL_MODIFIER = multiplayer_goldentool_modifier,
+        MULTIPLAYER_ARMOR_DURABILITY_MODIFIER = multiplayer_armor_durability_modifier,
+        MULTIPLAYER_ARMOR_ABSORPTION_MODIFIER = multiplayer_armor_absorption_modifier,
+        MULTIPLAYER_WILDLIFE_RESPAWN_MODIFIER = multiplayer_wildlife_respawn_modifier,
 
         TOAST_FALLBACK_TIME = 1440,
         ITEM_DROP_TIME = seg_time, -- time to wait after start of night before activating
@@ -621,8 +640,11 @@ function Tune(overrides)
         KLAUS_EPICSCARE_RANGE = 10,
 
         KLAUSSACK_EVENT_RESPAWN_TIME = total_day_time * 20, -- winters feast event respawn time
+        KLAUSSACK_RESPAWN_DELAY = total_day_time * 10,
         KLAUSSACK_SPAWN_DELAY = total_day_time * 1,
         KLAUSSACK_SPAWN_DELAY_VARIANCE = total_day_time * 2,
+        KLAUSSACK_MAX_SPAWNS = 1,
+        SPAWN_KLAUS = true,
 
         BUZZARD_DAMAGE = 15,
         BUZZARD_ATTACK_RANGE = 2,
@@ -753,6 +775,7 @@ function Tune(overrides)
         },
         BEEFALO_MATING_SEASON_LENGTH = 3,
         BEEFALO_MATING_SEASON_WAIT = 20,
+        BEEFALO_MATING_ENABLED = true,
         BEEFALO_MATING_SEASON_BABYDELAY = total_day_time*1.5,
         BEEFALO_MATING_SEASON_BABYDELAY_VARIANCE = 0.5*total_day_time,
         BEEFALO_TARGET_DIST = 5,
@@ -835,7 +858,7 @@ function Tune(overrides)
 
         HUNT_SPAWN_DIST = 40,
         HUNT_COOLDOWN = total_day_time*1.2,
-        HUNT_COOLDOWNDEVIATION = total_day_time*.3,
+        HUNT_COOLDOWNDEVIATION = total_day_time*0.3,
         HUNT_ALTERNATE_BEAST_CHANCE_MIN = 0.05,
         HUNT_ALTERNATE_BEAST_CHANCE_MAX = 0.33,
 
@@ -859,6 +882,12 @@ function Tune(overrides)
         BATCAVE_REGEN_PERIOD = seg_time * 4,
         BATCAVE_SPAWN_PERIOD = 20,
         BATCAVE_MAX_CHILDREN = 4,
+        BATCAVE_ENABLED = true,
+
+        CAVE_ENTRANCE_BATS_REGEN_PERIOD = seg_time * 2,
+        CAVE_ENTRANCE_BATS_SPAWN_PERIOD = 1,
+        CAVE_ENTRANCE_BATS_MAX_CHILDREN = 6,
+        CAVE_ENTRANCE_BATS_ENABLED = true,
 
         SPIDER_HEALTH = 100,
         SPIDER_DAMAGE = 20,
@@ -953,7 +982,7 @@ function Tune(overrides)
         FROG_RAIN_MAX_RADIUS = 50,
         FROG_RAIN_PRECIPITATION = 0.55, -- 0-1, 0.8 by default (old "often" setting for Adventure)
         FROG_RAIN_MOISTURE = 2500, -- 0-4000ish, 2500 by default (old "often" setting for Adventure)
-        FROG_RAIN_CHANCE = .16,
+        FROG_RAIN_CHANCE = 0.16,
 
         BEE_HEALTH = 100,
         BEE_DAMAGE = 10,
@@ -965,7 +994,10 @@ function Tune(overrides)
         BEEMINE_BEES = 4,
         BEEMINE_RADIUS = 3,
 
-        SPIDERDEN_GROW_TIME = {day_time*8, day_time*8, day_time*20},
+        SPIDERDEN_GROW_TIME = {day_time*8, day_time*8, day_time*20}, --[3] is now unused.
+        SPIDERDEN_GROW_TIME_QUEEN = day_time*20,
+        SPIDERDEN_QUEEN_CAP = 4,
+        SPIDERDEN_QUEEN_RANGE_CHECK = 60,
         SPIDERDEN_HEALTH = {50*5, 50*10, 50*20},
         SPIDERDEN_SPIDERS = {3, 6, 9},
         SPIDERDEN_WARRIORS = {0, 1, 3},  -- every hit, release up to this many warriors, and fill remainder with regular spiders
@@ -974,15 +1006,26 @@ function Tune(overrides)
         SPIDERDEN_SPIDER_TYPE = {"spider", "spider_warrior", "spider_warrior"},
         SPIDERDEN_REGEN_TIME = 3*seg_time,
         SPIDERDEN_RELEASE_TIME = 5,
+        SPIDERDEN_ENABLED = true,
+        SPAWN_SPIDER_WARRIORS = true,
 
         HOUNDMOUND_HOUNDS_MIN = 2,
         HOUNDMOUND_HOUNDS_MAX = 3,
         HOUNDMOUND_REGEN_TIME = seg_time * 6,
         HOUNDMOUND_RELEASE_TIME = seg_time,
+        HOUNDMOUND_ENABLED = true,
 
         POND_FROGS = 4,
         POND_REGEN_TIME = day_time/2,
         POND_SPAWN_TIME = day_time/4,
+        FROG_POND_REGEN_TIME = day_time/2,
+        FROG_POND_SPAWN_TIME = day_time/4,
+        FROG_POND_CHILDREN = {min = 3, max = 4},
+        FROG_POND_ENABLED = true,
+        MOSQUITO_POND_REGEN_TIME = day_time/2,
+        MOSQUITO_POND_SPAWN_TIME = day_time/4,
+        MOSQUITO_POND_CHILDREN = {min = 3, max = 4},
+        MOSQUITO_POND_ENABLED = true,
         POND_RETURN_TIME = day_time*3/4,
         FISH_RESPAWN_TIME = day_time/3,
 
@@ -991,13 +1034,18 @@ function Tune(overrides)
         BEEHIVE_EMERGENCY_RADIUS = 20,
         BEEHIVE_RELEASE_TIME = day_time/6,
         BEEHIVE_REGEN_TIME = seg_time,
+        BEEHIVE_ENABLED = true,
         BEEBOX_BEES = 4,
+        WASPHIVE_RELEASE_TIME = 20,
+        WASPHIVE_REGEN_TIME = 20,
         WASPHIVE_WASPS = 5,
         WASPHIVE_EMERGENCY_WASPS = 8,
         WASPHIVE_EMERGENCY_RADIUS = 25,
+        WASPHIVE_ENABLED = true,
         BEEBOX_RELEASE_TIME = (0.5*day_time)/4,
         BEEBOX_HONEY_TIME = day_time,
         BEEBOX_REGEN_TIME = seg_time*4,
+        BEEBOX_ENABLED = true,
 
         WORM_DAMAGE = 75,
         WORM_ATTACK_PERIOD = 4,
@@ -1530,8 +1578,10 @@ function Tune(overrides)
         MAX_FLOWERS_PER_AREA = 50,
 
         MOLE_RESPAWN_TIME = day_time*4*multiplayer_wildlife_respawn_modifier,
+        MOLE_ENABLED = true,
 
         RABBIT_RESPAWN_TIME = day_time*4*multiplayer_wildlife_respawn_modifier,
+        RABBIT_ENABLED = true,
         RABBIT_PERISH_TIME = total_day_time * 5,
 
         MIN_RABBIT_HOLE_TRANSITION_TIME = day_time*.5,
@@ -1673,6 +1723,8 @@ function Tune(overrides)
         SPIDERQUEEN_MINWANDERTIME = total_day_time * 1.5,
         SPIDERQUEEN_MINDENSPACING = 20,
         SPIDERQUEEN_NEARBYPLAYERSDIST = 20,
+
+        SPAWN_SPIDERQUEEN = true,
 
         TRAP_TEETH_USES = 10,
         TRAP_TEETH_DAMAGE = 60,
@@ -2062,6 +2114,8 @@ function Tune(overrides)
         TOADSTOOL_DEAGGRO_DIST = 25,
         TOADSTOOL_AGGRO_DIST = 15,
         TOADSTOOL_RESPAWN_TIME = total_day_time * 20,
+        TOADSTOOL_SPAWN_TIME = 10,
+        SPAWN_TOADSTOOL = true,
 
         --TOADSTOOL stats are scaled by level [0..3] and phase [1..3]
         TOADSTOOL_SPEED_LVL =
@@ -2194,6 +2248,8 @@ function Tune(overrides)
         BEEQUEEN_DEAGGRO_DIST = 60,
 
         BEEQUEEN_RESPAWN_TIME = total_day_time * 20,
+        BEEQUEEN_SPAWN_WORK_THRESHOLD = 12,
+        BEEQUEEN_SPAWN_MAX_WORK = 16,
 
         BEEQUEEN_EPICSCARE_RANGE = 10,
 
@@ -2220,6 +2276,7 @@ function Tune(overrides)
 
         DRAGONFLY_RESPAWN_TIME = total_day_time * 20,
         DRAGONFLY_SPAWN_TIME = 1,
+        SPAWN_DRAGONFLY = true,
 
         DRAGONFLY_HEALTH = 27500,
         DRAGONFLY_DAMAGE = 150,
@@ -2463,8 +2520,10 @@ function Tune(overrides)
         WATERPROOFNESS_HUGE = 0.9,
         WATERPROOFNESS_ABSOLUTE = 1,
 
+        CATCOONDEN_MAXCHILDREN = 1,
         CATCOONDEN_REGEN_TIME = seg_time * 4,
-        CATCOONDEN_RELEASE_TIME = seg_time, 
+        CATCOONDEN_RELEASE_TIME = seg_time,
+        CATCOONDEN_ENABLED = true,
 
         CATCOON_ATTACK_RANGE = 4,
         CATCOON_MELEE_RANGE = 3,
@@ -2500,6 +2559,7 @@ function Tune(overrides)
         GRASSGEKKO_MORPH_DELAY = total_day_time * 25,
         GRASSGEKKO_MORPH_DELAY_VARIANCE = total_day_time * 5,
         GRASSGEKKO_MORPH_CHANCE = 1 / 100,
+        GRASSGEKKO_MORPH_ENABLED = true,
         GRASSGEKKO_DENSITY_RANGE = 20,
         GRASSGEKKO_MAX_DENSITY = 6,
 
@@ -2659,6 +2719,7 @@ function Tune(overrides)
         AFK_TIME_GHOST = 0.5,
 
         CARROT_REGROWTH_TIME = day_time * 20,
+        CARROT_REGROWTH_TIME_MULT = 1,
         FLOWER_REGROWTH_TIME = 30,
         FLOWER_REGROWTH_TIME_MULT = 1,
         FLOWER_WITHER_IN_CAVE_LIGHT = 0.05,
@@ -2802,6 +2863,7 @@ function Tune(overrides)
         ANTLION_RAGE_TIME_UNHAPPY_PERCENT = 0.6,
         ANTLION_RAGE_TIME_HAPPY_PERCENT = 0.95,
         ANTLION_TRIBUTER_TALKER_TIME = 8,
+        ANTLION_TRIBUTE = true,
 
         SANDSTORM_OASIS_RADIUS = 1,
         SANDSTORM_FULLY_ENTERED_DEPTH = 20,
@@ -2985,6 +3047,25 @@ function Tune(overrides)
 			},
 		},
 
+		DROP_EVERYTHING_ON_DESPAWN = false,
+
+		EXTRA_STARTING_ITEMS_MIN_DAYS = 10,
+		EXTRA_STARTING_ITEMS =
+		{
+			autumn = { "cutgrass", "cutgrass", "cutgrass", "cutgrass", "cutgrass", "twigs", "twigs", "twigs", "twigs", "twigs", "flint" },
+			winter = { "cutgrass", "cutgrass", "cutgrass", "cutgrass", "cutgrass", "twigs", "twigs", "twigs", "twigs", "twigs", "flint" },
+			spring = { "cutgrass", "cutgrass", "cutgrass", "cutgrass", "cutgrass", "twigs", "twigs", "twigs", "twigs", "twigs", "flint" },
+			summer = { "cutgrass", "cutgrass", "cutgrass", "cutgrass", "cutgrass", "twigs", "twigs", "twigs", "twigs", "twigs", "flint" },
+		},
+
+		SEASONAL_STARTING_ITEMS =
+		{
+			autumn = { },
+			winter = { "earmuffshat" },
+			spring = { "strawhat" },
+			summer = { "grass_umbrella" },
+		},
+
 		STARTING_ITEM_IMAGE_OVERRIDE =
 		{
 			-- this was added for mod characters and items. example: balloons_empty = {atlas = "images/inventoryimages2.xml", image = "spidereggsack.tex" },
@@ -3014,6 +3095,10 @@ function Tune(overrides)
 	    LAVAARENA_BERNIE_SCALE = 1.2,
 
         REVIVE_CORPSE_ACTION_TIME = 6,
+
+		SPAWNPROTECTIONBUFF_IDLE_DURATION = 30,
+		SPAWNPROTECTIONBUFF_DURATION = 10,
+		SPAWNPROTECTIONBUFF_SPAWN_DIST_SQ = 4*4,
 
         VOTE_PASSED_SQUELCH_TIME = 0,
         VOTE_FAILED_SQUELCH_TIME = 30,
@@ -3222,6 +3307,18 @@ function Tune(overrides)
         MOON_TREE_CHOPS_TALL = 16,  -- 4 chops per log
         MOON_TREE_DEPLOY_SPACING = 4,
 
+        MOONSPIDERDEN_WORK = 8,
+        MOONSPIDERDEN_CREEPRADIUS = { 8, 12, 14 },
+        MOONSPIDERDEN_WORK_REGENTIME = 4*seg_time,
+        MOONSPIDERDEN_SPIDERS = {2, 3, 4},
+        MOONSPIDERDEN_SPIDER_REGENTIME = 4*seg_time,
+        MOONSPIDERDEN_RELEASE_TIME = 3*seg_time,
+        MOONSPIDERDEN_EMERGENCY_WARRIORS = {0, 0, 0},
+        MOONSPIDERDEN_EMERGENCY_RADIUS = {10, 15, 20},
+        MOONSPIDERDEN_MAX_INVESTIGATORS = {1, 2, 2},
+        MOONSPIDERDEN_ENABLED = true,
+
+        --UNUSED
         MOONSPIDERDEN =
         {
             WORK = 8,
@@ -3880,11 +3977,18 @@ function Tune(overrides)
         PUNY_MERM_HEALTH = 200,
         PUNY_MERM_DAMAGE = 20,
 
+        MERMHOUSE_REGEN_TIME = total_day_time * 4,
+        MERMHOUSE_RELEASE_TIME = 10,
         MERMHOUSE_MERMS = 3,
+        MERMHOUSE_ENABLED = true,
+
+        MERMWATCHTOWER_REGEN_TIME = total_day_time / 2,
+        MERMWATCHTOWER_RELEASE_TIME = 10,
+        MERMWATCHTOWER_MERMS = 1,
+        MERMWATCHTOWER_ENABLED = true,
+
         MERMHOUSE_EMERGENCY_MERMS = 3,
         MERMHOUSE_EMERGENCY_RADIUS = 15,
-
-        MERMWATCHTOWER_MERMS = 1,
 
         -- WENDY
         GHOST_HUNT =
@@ -4305,6 +4409,8 @@ function Tune(overrides)
         CRABKING_REGEN_BUFF = 100,
 
         CRABKING_RESPAWN_TIME = total_day_time * 20,
+        CRABKING_SPAWN_TIME = 1,
+        SPAWN_CRABKING = true,
 
         CRABKING_CLAW_THRESHOLD = 0.9,
         CRABKING_HEAL_THRESHOLD = 0.85,
@@ -4334,6 +4440,14 @@ function Tune(overrides)
 		TRIDENT_FARM_PLANT_INTERACT_RANGE = 20, -- castspell action distance
 
 
+        WOBSTER_DEN_REGEN_PERIOD = 3*seg_time,
+        WOBSTER_DEN_SPAWN_PERIOD = 4*seg_time,
+        WOBSTER_DEN_MAX_CHILDREN = 2,
+        WOBSTER_DEN_SPAWNRADIUS = 4,
+        WOBSTER_DEN_WORK = 9,
+        WOBSTER_DEN_ENABLED = true,
+
+        --UNUSED
         WOBSTER_DEN =
         {
             REGEN_PERIOD = 3*seg_time,
@@ -4492,6 +4606,19 @@ function Tune(overrides)
 
         MOON_MUSHROOM_SLEEPTIME = 3,
 
+        MOLEBAT_TARGET_DIST = 5,
+        MOLEBAT_WALK_SPEED = 5,
+        MOLEBAT_ATTACK_PERIOD = 2,
+        MOLEBAT_ATTACK_RANGE = 2,
+        MOLEBAT_HEALTH = 150,
+        MOLEBAT_DAMAGE = 30,
+        MOLEBAT_MAX_CHASE_DSQ = 225,
+        MOLEBAT_NAP_COOLDOWN = seg_time * 9,
+        MOLEBAT_NAP_LENGTH = seg_time * 4,
+        MOLEBAT_ALLY_COOLDOWN = total_day_time * 2,
+        MOLEBAT_ENABLED = true,
+
+        --UNUSED
         MOLEBAT =
         {
             TARGET_DIST = 5,
@@ -4518,6 +4645,19 @@ function Tune(overrides)
             ON_ATTACKED_ALERT_DURATION_VARIANCE = 1,
             STARVE_TIME = total_day_time*2,
         },
+
+        LIGHTFLIER_FLOWER_REGROW_TIME = total_day_time*12, -- this refers to regrow after picked, not duration for regrowthmanager
+        LIGHTFLIER_FLOWER_LIGHT_TIME = 140,
+        LIGHTFLIER_FLOWER_LIGHT_TIME_VARIANCE = 50,
+        LIGHTFLIER_FLOWER_RECHARGE_TIME = 110,
+        LIGHTFLIER_FLOWER_TARGET_NUM_CHILDREN_OUTSIDE = 1,
+        LIGHTFLIER_FLOWER_PICKABLE = true,
+
+        LIGHTFLIER_FLOWER_RECALL_DELAY = 60,
+        LIGHTFLIER_FLOWER_RECALL_DELAY_VARIANCE = 60,
+
+        LIGHTFLIER_FLOWER_REGROWTH_TIME = total_day_time*5,
+        LIGHTFLIER_FLOWER_REGROWTH_TIME_MULT = 1,
 
         LIGHTFLIER_FLOWER =
         {
@@ -4581,6 +4721,14 @@ function Tune(overrides)
             DUSTOFF_COOLDOWN_VARIANCE = 6,
             SEARCH_ANIM_COOLDOWN = 12,
         },
+        DUSTMOTHDEN_REPAIR_TIME = total_day_time * 0.75,
+        DUSTMOTHDEN_REGEN_TIME = total_day_time * 10,
+        DUSTMOTHDEN_RELEASE_TIME = seg_time,
+        DUSTMOTHDEN_MAX_CHILDREN = 1,
+        DUSTMOTHDEN_MAXWORK = 5,
+        DUSTMOTHDEN_ENABLED = true,
+
+        --UNUSED
         DUSTMOTHDEN =
         {
             REPAIR_TIME = total_day_time * 0.75,
@@ -4738,6 +4886,7 @@ function Tune(overrides)
         LORDFRUITFLY_CROP_ROTTED_ADVANCE_TIME = total_day_time * 0.5,
         LORDFRUITFLY_SPAWNERRADIUS = 4,
         LORDFRUITFLY_SPAWNERCOUNT = 15,
+        SPAWN_LORDFRUITFLY = true,
         LORDFRUITFLY_FRUITFLY_AMOUNT = 4,
         LORDFRUITFLY_WALKSPEED = 4,
         LORDFRUITFLY_TRIGGER_RANGE = 15,
@@ -4756,7 +4905,156 @@ function Tune(overrides)
         YOTB_POSTDISTANCE = 5,
 
         BEEFALO_NAMING_DIST = 12,
+
+        DEERCLOPS_ATTACKS_PER_SEASON = 4,
+        DEERCLOPS_ATTACKS_OFF_SEASON = false,
+        SPAWN_DEERCLOPS = true,
+
+        BEARGER_CHANCES = {1},
+        SPAWN_BEARGER = true,
+
+        MOOSE_DENSITY = 0.5,
+
+        MAX_BUTTERFLIES = 4,
+
+        LUREPLANT_SPAWNINTERVAL = total_day_time * 4,
+        LUREPLANT_SPAWNINTERVALVARIANCE = total_day_time * 1,
+
+        PENGUINS_FLOCK_SIZE = 9,
+        PENGUINS_MIN_DIST_FROM_STRUCTURES = 20,
+        PENGUINS_MAX_COLONIES = 5,
+        PENGUINS_MAX_COLONIES_BUFFER = 1,
+        PENGUINS_SPAWN_INTERVAL = 30,
+
+        PENGUINS_DEFAULT_NUM_BOULDERS = 7,
+
+        QUAKE_FREQUENCY_MULTIPLIER = 1,
+
+        SPAWN_MOON_PENGULLS = true,
+        SPAWN_MUTATED_HOUNDS = true,
+
+        RABBITHOLE_REGROWTH_TIME_MULT = 0,
+        RABBITHOLE_REGROWTH_TIME_SUMMER_MULT = 1,
+
+        PIGHOUSE_SPAWN_TIME = total_day_time * 4,
+        PIGHOUSE_ENABLED = true,
+        RABBITHOUSE_SPAWN_TIME = total_day_time,
+        RABBITHOUSE_ENABLED = true,
+
+        SLURTLEHOLE_REGEN_PERIOD = seg_time*4,
+        SLURTLEHOLE_SPAWN_PERIOD = 3,
+        SLURTLEHOLE_CHILDREN = {min = 1, max = 2},
+        SLURTLEHOLE_ENABLED = true,
+        SLURTLEHOLE_RARECHILD_CHANCE = 0.1,
+
+        MONKEYBARREL_REGEN_PERIOD = seg_time*4,
+        MONKEYBARREL_SPAWN_PERIOD = seg_time,
+        MONKEYBARREL_CHILDREN = {min = 3, max = 4},
+        MONKEYBARREL_ENABLED = true,
+
+        ROCKYHERD_SPAWNER_RANGE = 20,
+        ROCKYHERD_SPAWNER_DENSITY = 6,
+
+        MALBATROSS_SPAWNDELAY_BASE = total_day_time * 10,
+        MALBATROSS_SPAWNDELAY_RANDOM = total_day_time * 5,
+        MALBATROSS_SHOAL_PERCENTAGE_TO_TEST = 0.25,
+        SPAWN_MALBATROSS = true,
+
+        EVERGREEN_REGROWTH_TIME_MULT = 1,
+        TWIGGYTREE_REGROWTH_TIME_MULT = 1,
+        DECIDIOUS_REGROWTH_TIME_MULT = 1,
+        MUSHTREE_REGROWTH_TIME_MULT = 1,
+        MOONTREE_REGROWTH_TIME_MULT = 1,
+        MOONMUSHTREE_REGROWTH_TIME_MULT = 1,
+
+        MUSHGNOME_RELEASE_TIME = 20,
+        MUSHGNOME_REGEN_TIME = total_day_time,
+        MUSHGNOME_MAX_CHILDREN = 1,
+        MUSHGNOME_ENABLED = true,
+
+        NIGHTMARELIGHT_RELEASE_TIME = 5,
+        NIGHTMARELIGHT_REGEN_TIME = seg_time,
+        NIGHTMARELIGHT_MINCHILDREN = 1,
+        NIGHTMARELIGHT_MAXCHILDREN = 2,
+        NIGHTMARELIGHT_ENABLED = true,
+        NIGHTMAREFISSURE_RELEASE_TIME = 5,
+        NIGHTMAREFISSURE_REGEN_TIME = seg_time,
+        NIGHTMAREFISSURE_MAXCHILDREN = 1,
+        NIGHTMAREFISSURE_ENABLED = true,
+
+        SHARK_SPAWN_CHANCE = 0.075,
+        SHARK_TEST_RADIUS = 100,
+
+        SQUID_TEST_RADIUS = 80,
+        SQUID_MAX_FISH = 10,
+        SQUID_MAX_NUMBERS = {
+            ["new"] = 6,
+            ["quarter"] = 3,
+            ["half"] = 3,
+            ["threequarter"] = 2,
+            ["full"] = 0,
+        },
+        SQUID_CHANCE = {
+            ["new"] = 0.2,
+            ["quarter"] = 0.1,
+            ["half"] = 0.05,
+            ["threequarter"] = 0.025,
+            ["full"] = 0,
+        },
+
+        DROPPERWEB_RELEASE_TIME = total_day_time/2,
+        DROPPERWEB_REGEN_TIME = total_day_time/4,
+        DROPPERWEB_MIN_CHILDREN = 2,
+        DROPPERWEB_MAX_CHILDREN = 3,
+        DROPPERWEB_ENABLED = true,
+
+        SPIDERHOLE_RELEASE_TIME = total_day_time/2,
+        SPIDERHOLE_REGEN_TIME = total_day_time/4,
+        SPIDERHOLE_MIN_CHILDREN = 2,
+        SPIDERHOLE_MAX_CHILDREN = 3,
+        SPIDERHOLE_SPITTER_CHANCE = 0.33,
+        SPIDERHOLE_ENABLED = true,
+
+        SANITYMONSTERS_INDUCED_MAXPOP = 5,
+        SANITYMONSTERS_INDUCED_CHANCES = {
+            inc = 0.7,
+            dec = 0.4,
+        },
+        SANITYMONSTERS_MAXPOP = {1, 2},
+        SANITYMONSTERS_CHANCES = {
+            {
+                inc = 0.1,
+                dec = 0.3,
+            },
+            {
+                inc = 0.3,
+                dec = 0.2,
+            },
+        },
+        SANITYMONSTERS_POP_CHANGE_INTERVAL = 10,
+        SANITYMONSTERS_POP_CHANGE_VARIANCE = 10,
     }
+
+    TUNING_MODIFIERS = {}
+    ORIGINAL_TUNING = {}
+
+    setmetatable(TUNING,
+    {
+        --these only run when indexing a nil value in TUNING
+        __index = function(t, k)
+            if TUNING_MODIFIERS[k] then
+                local modifier = TUNING_MODIFIERS[k]
+                return modifier[1](modifier[2])
+            end
+        end,
+        __newindex = function(t, k, v)
+            if TUNING_MODIFIERS[k] then
+                TUNING_MODIFIERS[k][2] = v
+                return
+            end
+            rawset(t, k, v)
+        end
+    })
 end
 
 Tune()

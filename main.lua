@@ -202,6 +202,7 @@ require("reload")
 require("saveindex") -- Added by Altgames for Android focus lost handling
 require("shardsaveindex")
 require("shardindex")
+require("custompresets")
 require("worldtiledefs")
 require("gamemodes")
 require("skinsutils")
@@ -297,6 +298,8 @@ global("ShardGameIndex")
 ShardGameIndex = nil
 global("ShardSaveGameIndex")
 ShardSaveGameIndex = nil
+global("CustomPresetManager")
+CustomPresetManager = nil
 require("globalvariableoverrides")
 
 --world setup

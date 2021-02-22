@@ -396,6 +396,20 @@ local function CheckForWaterImunityAllPlayers()
 	end
 end
 
+local function SetDifficulty(src, difficulty)
+	if difficulty == "never" then
+		self:SpawnModeNever()
+	elseif difficulty == "rare" then
+		self:SpawnModeLight()
+	elseif difficulty == "default" then
+		self:SpawnModeNormal()
+	elseif difficulty == "often" then
+		self:SpawnModeMed()
+	elseif difficulty == "always" then
+		self:SpawnModeHeavy()
+	end
+end
+
 --------------------------------------------------------------------------
 --[[ Initialization ]]
 --------------------------------------------------------------------------
@@ -411,6 +425,8 @@ inst:ListenForEvent("ms_playerleft", OnPlayerLeft)
 
 inst:ListenForEvent("pausehounded", OnPauseHounded)
 inst:ListenForEvent("unpausehounded", OnUnpauseHounded)
+
+inst:ListenForEvent("hounded_setdifficulty", SetDifficulty)
 
 self.inst:StartUpdatingComponent(self)
 PlanNextAttack()
@@ -439,23 +455,25 @@ end
 --[[ Public member functions ]]
 --------------------------------------------------------------------------
 
-function self:SpawnModeEscalating()
-	_spawnmode = "escalating"
-	PlanNextAttack()
-end
-
 function self:SpawnModeNever()
 	_spawnmode = "never"
 	PlanNextAttack()
 end
 
-function self:SpawnModeHeavy()
+function self:SpawnModeLight()
 	_spawnmode = "constant"
-	_attackdelayfn = _spawndata.attack_delays.frequent
-	_attacksizefn = _spawndata.attack_levels.heavy.numspawns
-	_warndurationfn = _spawndata.attack_levels.heavy.warnduration
+	_attackdelayfn = _spawndata.attack_delays.rare
+	_attacksizefn = _spawndata.attack_levels.light.numspawns
+	_warndurationfn = _spawndata.attack_levels.light.warnduration
 	PlanNextAttack()
 end
+
+function self:SpawnModeNormal()
+	_spawnmode = "escalating"
+	PlanNextAttack()
+end
+
+self.SpawnModeEscalating = self.SpawnModeNormal
 
 function self:SpawnModeMed()
 	_spawnmode = "constant"
@@ -465,11 +483,11 @@ function self:SpawnModeMed()
 	PlanNextAttack()
 end
 
-function self:SpawnModeLight()
+function self:SpawnModeHeavy()
 	_spawnmode = "constant"
-	_attackdelayfn = _spawndata.attack_delays.rare
-	_attacksizefn = _spawndata.attack_levels.light.numspawns
-	_warndurationfn = _spawndata.attack_levels.light.warnduration
+	_attackdelayfn = _spawndata.attack_delays.frequent
+	_attacksizefn = _spawndata.attack_levels.heavy.numspawns
+	_warndurationfn = _spawndata.attack_levels.heavy.warnduration
 	PlanNextAttack()
 end
 

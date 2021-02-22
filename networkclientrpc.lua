@@ -434,7 +434,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:PutOneOfActiveItemInSlot(slot)
+                    container:PutOneOfActiveItemInSlot(slot, player)
                 end
             end
         end
@@ -453,7 +453,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:PutAllOfActiveItemInSlot(slot)
+                    container:PutAllOfActiveItemInSlot(slot, player)
                 end
             end
         end
@@ -472,7 +472,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:TakeActiveItemFromHalfOfSlot(slot)
+                    container:TakeActiveItemFromHalfOfSlot(slot, player, player)
                 end
             end
         end
@@ -491,7 +491,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:TakeActiveItemFromAllOfSlot(slot)
+                    container:TakeActiveItemFromAllOfSlot(slot, player)
                 end
             end
         end
@@ -510,7 +510,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:AddOneOfActiveItemToSlot(slot)
+                    container:AddOneOfActiveItemToSlot(slot, player)
                 end
             end
         end
@@ -529,7 +529,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:AddAllOfActiveItemToSlot(slot)
+                    container:AddAllOfActiveItemToSlot(slot, player)
                 end
             end
         end
@@ -548,7 +548,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:SwapActiveItemWithSlot(slot)
+                    container:SwapActiveItemWithSlot(slot, player)
                 end
             end
         end
@@ -567,7 +567,7 @@ local RPC_HANDLERS =
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then
-                    container:SwapOneOfActiveItemWithSlot(slot)
+                    container:SwapOneOfActiveItemWithSlot(slot, player)
                 end
             end
         end
@@ -729,7 +729,7 @@ local RPC_HANDLERS =
         end
         local container = srccontainer.components.container
         if container ~= nil and container:IsOpenedBy(player) then
-            container:MoveItemFromAllOfSlot(slot, destcontainer or player)
+            container:MoveItemFromAllOfSlot(slot, destcontainer or player, player)
         end
     end,
 
@@ -742,7 +742,7 @@ local RPC_HANDLERS =
         end
         local container = srccontainer.components.container
         if container ~= nil and container:IsOpenedBy(player) then
-            container:MoveItemFromHalfOfSlot(slot, destcontainer or player)
+            container:MoveItemFromHalfOfSlot(slot, destcontainer or player, player)
         end
     end,
 

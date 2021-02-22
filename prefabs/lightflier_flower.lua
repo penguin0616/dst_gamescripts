@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/bulb_plant_single.zip"),
@@ -132,7 +134,7 @@ end
 local function TurnOff(inst)
     --Light turns off and starts to charge.
     local tween_time = math.random(LIGHT_MIN_TIME, LIGHT_MAX_TIME)
-    inst.components.timer:StartTimer("recharge", TUNING.LIGHTFLIER_FLOWER.RECHARGE_TIME + tween_time)
+    inst.components.timer:StartTimer("recharge", TUNING.LIGHTFLIER_FLOWER_RECHARGE_TIME + tween_time)
     inst:SetLightState(LIGHT_STATES.RECHARGING)
     inst._islighton:set(false)
     inst._lightframe:set(0)
@@ -157,7 +159,7 @@ local function TurnOn(inst)
     OnLightDirty(inst)
 
     if not inst.components.timer:TimerExists("turnoff") then
-        inst.components.timer:StartTimer("turnoff", TUNING.LIGHTFLIER_FLOWER.LIGHT_TIME + tween_time + (math.random() * TUNING.LIGHTFLIER_FLOWER.LIGHT_TIME_VARIANCE))
+        inst.components.timer:StartTimer("turnoff", TUNING.LIGHTFLIER_FLOWER_LIGHT_TIME + tween_time + (math.random() * TUNING.LIGHTFLIER_FLOWER_LIGHT_TIME_VARIANCE))
     end
 end
 
@@ -186,11 +188,11 @@ local function makefullfn(inst)
     inst.components.timer:StopTimer("recharge")
     inst.components.timer:StopTimer("turnoff")
     local tween_time = math.random(LIGHT_MIN_TIME, LIGHT_MAX_TIME)
-    inst.components.timer:StartTimer("turnoff", TUNING.LIGHTFLIER_FLOWER.RECHARGE_TIME + tween_time)
+    inst.components.timer:StartTimer("turnoff", TUNING.LIGHTFLIER_FLOWER_RECHARGE_TIME + tween_time)
 end
 
 local function CallForLightflier(inst)
-    if inst.components.pickable:CanBePicked() or inst.components.childspawner.numchildrenoutside < TUNING.LIGHTFLIER_FLOWER.TARGET_NUM_CHILDREN_OUTSIDE then
+    if inst.components.pickable:CanBePicked() or inst.components.childspawner.numchildrenoutside < TUNING.LIGHTFLIER_FLOWER_TARGET_NUM_CHILDREN_OUTSIDE then
         CancelCallForLightflierTask(inst)
         return
     end
@@ -211,7 +213,7 @@ end
 
 local function StartCallForLightflierTask(inst)
     CancelCallForLightflierTask(inst)
-    inst._call_for_lightflier_task = inst:DoPeriodicTask(RECALL_FREQUENCY, CallForLightflier, TUNING.LIGHTFLIER_FLOWER.RECALL_DELAY + math.random() * TUNING.LIGHTFLIER_FLOWER.RECALL_DELAY_VARIANCE)
+    inst._call_for_lightflier_task = inst:DoPeriodicTask(RECALL_FREQUENCY, CallForLightflier, TUNING.LIGHTFLIER_FLOWER_RECALL_DELAY + math.random() * TUNING.LIGHTFLIER_FLOWER_RECALL_DELAY_VARIANCE)
 end
 
 local function ontimerdone(inst, data)
@@ -319,7 +321,7 @@ end
 
 local function OnLoadPostPass(inst, ents, data)
     if not inst.components.pickable:CanBePicked()
-        and inst.components.childspawner.numchildrenoutside >= TUNING.LIGHTFLIER_FLOWER.TARGET_NUM_CHILDREN_OUTSIDE then
+        and inst.components.childspawner.numchildrenoutside >= TUNING.LIGHTFLIER_FLOWER_TARGET_NUM_CHILDREN_OUTSIDE then
 
         StartCallForLightflierTask(inst)
     end
@@ -466,6 +468,10 @@ local lightparams_single =
     radius = 3,
 }
 
+local function OnPreLoad(inst, data)
+    WorldSettings_Pickable_PreLoad(inst, data, TUNING.LIGHTFLIER_FLOWER_REGROW_TIME)
+end
+
 local function single()
     local inst = commonfn("bulb_plant_single", "bulb_plant_single", lightparams_single)
 
@@ -476,11 +482,14 @@ local function single()
     inst.plantname = plantnames[math.random(1, #plantnames)]
     inst.AnimState:SetBank("bulb_plant"..inst.plantname)
     inst.AnimState:SetBuild("bulb_plant"..inst.plantname)
-    
-    inst.components.pickable:SetUp(nil, TUNING.LIGHTFLIER_FLOWER.REGROW_TIME)
+    WorldSettings_Pickable_RegenTime(inst, TUNING.LIGHTFLIER_FLOWER_REGROW_TIME, TUNING.LIGHTFLIER_FLOWER_PICKABLE)
+    inst.components.pickable:SetUp(nil, TUNING.LIGHTFLIER_FLOWER_REGROW_TIME)
+    inst.components.pickable.canbepicked = TUNING.LIGHTFLIER_FLOWER_PICKABLE
 
     inst.OnSave = onsave_single
     inst.OnLoad = onload_single
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

@@ -50,13 +50,11 @@ local function testforgnarwail(comp, spawnpoint)
     end
 end
 
-local SHARK_TEST_RADIUS = 100
-local SHARK_SPAWN_CHANCE = 0.075
 local SHARK_SPAWN_RADIUS = 20
 local SHARK_TIMING = {8, 10} -- min 8, max 10
 local function testforshark(comp, spawnpoint)
-    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, SHARK_TEST_RADIUS, { "gnarwail" })
-    if #ents < 2 and math.random() < SHARK_SPAWN_CHANCE then
+    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, TUNING.SHARK_TEST_RADIUS, { "gnarwail" })
+    if #ents < 2 and math.random() < TUNING.SHARK_SPAWN_CHANCE then
         local offset = FindSwimmableOffset(spawnpoint, math.random()*2*PI, SHARK_SPAWN_RADIUS)
         if offset then
             comp.inst:DoTaskInTime(GetRandomMinMax(SHARK_TIMING[1], SHARK_TIMING[2]), function()

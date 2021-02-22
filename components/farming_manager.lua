@@ -48,8 +48,9 @@ self.inst = inst
 
 local _world = TheWorld
 local _map = _world.Map
+local _worldsettingstimer = TheWorld.components.worldsettingstimer
 local tile_data = {}
-local lordfruitfly_spawntime
+local LORDFRUITFLY_TIMERNAME = "lordfruitfly_spawntime"
 
 local _remaining_weed_spawns = {}
 local _weed_spawning_task = nil
@@ -59,23 +60,22 @@ local _weed_spawning_task = nil
 --------------------------------------------------------------------------
 
 local function OnFruitFlyTimerFinished()
-    lordfruitfly_spawntime = nil
     TheWorld:PushEvent("ms_fruitflytimerfinished")
 end
 
-local function StartFruitFlyTimer(time)
-    if lordfruitfly_spawntime then
-        lordfruitfly_spawntime.timer:Cancel()
-    end
-    lordfruitfly_spawntime = {
-        timer = self.inst:DoTaskInTime(time, OnFruitFlyTimerFinished),
-        end_time = GetTime() + time,
-    }
+local function StopFruitFlyTimer()
+	_worldsettingstimer:StopTimer(LORDFRUITFLY_TIMERNAME)
 end
 
+local function StartFruitFlyTimer(time)
+	StopFruitFlyTimer()
+	_worldsettingstimer:StartTimer(LORDFRUITFLY_TIMERNAME, time)
+end
+_worldsettingstimer:AddTimer(LORDFRUITFLY_TIMERNAME, TUNING.LORDFRUITFLY_RESPAWN_TIME, TUNING.SPAWN_FRUITFLY, OnFruitFlyTimerFinished)
+
 local function AdvanceFruitFlyTimer(time)
-	if lordfruitfly_spawntime then
-		StartFruitFlyTimer(math.max(0, (lordfruitfly_spawntime.end_time - GetTime()) - time))
+	if _worldsettingstimer:ActiveTimerExists(LORDFRUITFLY_TIMERNAME) then
+		_worldsettingstimer:SetTimeLeft(LORDFRUITFLY_TIMERNAME, math.max(0, _worldsettingstimer:GetTimeLeft(LORDFRUITFLY_TIMERNAME) - time))
 	end
 end
 
@@ -189,7 +189,7 @@ end
 local FRUITFLYSPAWNER_MUST_TAGS = { "fruitflyspawner" }
 local function OnFruitFlySpawnerActive(data)
     local plant = data.plant
-    if plant:IsAsleep() or lordfruitfly_spawntime ~= nil or TheSim:FindFirstEntityWithTag("lordfruitfly") or (data.check_others == true and not plant:IsNearPlayer(15, true)) then
+    if plant:IsAsleep() or _worldsettingstimer:ActiveTimerExists(LORDFRUITFLY_TIMERNAME) or TheSim:FindFirstEntityWithTag("lordfruitfly") or (data.check_others == true and not plant:IsNearPlayer(15, true)) then
         return
     end
     local x, y, z = plant.Transform:GetWorldPosition()
@@ -328,9 +328,6 @@ end
 
 function self:LongUpdate(dt)
     self:_RefreshSoilMoisture(dt)
-	if lordfruitfly_spawntime then
-		AdvanceFruitFlyTimer(dt)
-	end
 	if _weed_spawning_task ~= nil then
 		self:_UpdateWeedSpawning()
 	end
@@ -470,9 +467,7 @@ function self:OnSave()
         end
     end
 
-    if lordfruitfly_spawntime then
-        data.lordfruitfly_spawntime = lordfruitfly_spawntime.end_time - GetTime()
-    end
+	data.lordfruitfly_queued_spawn = not _worldsettingstimer:ActiveTimerExists(LORDFRUITFLY_TIMERNAME)
 
 	return ZipAndEncodeSaveData(data)
 end
@@ -510,9 +505,8 @@ function self:OnLoad(data)
 		end
         if data.lordfruitfly_spawntime then
 			StartFruitFlyTimer(data.lordfruitfly_spawntime)
-		else
-			lordfruitfly_spawntime.timer:Cancel()
-			lordfruitfly_spawntime = nil
+		elseif data.lordfruitfly_queued_spawn ~= false then
+			StopFruitFlyTimer()
         end
     end
 end
@@ -539,8 +533,9 @@ function self:GetDebugString()
 			s = s .. "No data"
 		end
     end
-    if lordfruitfly_spawntime then
-        s = s .. ", LotFF spawntime: "..string.format("%0.2f", lordfruitfly_spawntime.end_time - GetTime())
+	local spawntime = _worldsettingstimer:GetTimeLeft(LORDFRUITFLY_TIMERNAME)
+    if spawntime then
+        s = s .. ", LotFF spawntime: "..string.format("%0.2f", spawntime)
 	elseif TheSim:FindFirstEntityWithTag("lordfruitfly") then
 		s = s .. ", LotFF spawned!"
 	else

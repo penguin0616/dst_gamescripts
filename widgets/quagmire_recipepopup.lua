@@ -63,11 +63,26 @@ function RecipePopup:BuildNoSpinner()
     self.button:SetScale(0.8)
     self.button.image:SetScale(.45, .7)
     self.button:SetPosition(40, -58)
+    self.button:SetWhileDown(function()
+        if self.recipe_held then
+            DoRecipeClick(self.owner, self.recipe)
+        end
+    end)
+    self.button:SetOnDown(function()
+        if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+            self.recipe_held = true
+            self.last_recipe_click = nil
+        end
+    end)
     self.button:SetOnClick(function()
-                            if not DoRecipeClick(self.owner, self.recipe) then
-                                    self.owner.HUD.controls.crafttabs:Close()
-                                end
-                            end)
+        self.last_recipe_click = GetTime()
+        if not self.recipe_held then
+            if not DoRecipeClick(self.owner, self.recipe) then
+                self.owner.HUD.controls.crafttabs:Close()
+            end
+        end
+        self.recipe_held = false
+    end)
 
     self.ingredient_backing = self.contents:AddChild(Image(self.hud_atlas, "inv_slot.tex"))
 	self.ingredient_backing:SetScale(.5)

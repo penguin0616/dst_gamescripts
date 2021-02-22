@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets = nil
 
 local prefabs =
@@ -84,6 +86,10 @@ local function on_entity_sleep(inst)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MUSHGNOME_RELEASE_TIME, TUNING.MUSHGNOME_REGEN_TIME)
+end
+
 local function spawner()
     local inst = CreateEntity()
 
@@ -97,8 +103,12 @@ local function spawner()
     end
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(TUNING.TOTAL_DAY_TIME)
-    inst.components.childspawner:SetMaxChildren(1)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MUSHGNOME_RELEASE_TIME)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MUSHGNOME_REGEN_TIME)
+    inst.components.childspawner:SetMaxChildren(TUNING.MUSHGNOME_MAX_CHILDREN)
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MUSHGNOME_RELEASE_TIME, TUNING.MUSHGNOME_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MUSHGNOME_REGEN_TIME, TUNING.MUSHGNOME_ENABLED)
 
     inst.components.childspawner:SetSpawnedFn(on_gnome_spawned)
     inst.components.childspawner:SetOccupiedFn(StartTesting)
@@ -110,6 +120,8 @@ local function spawner()
 
     inst.OnEntityWake = on_entity_wake
     inst.OnEntitySleep = on_entity_sleep
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

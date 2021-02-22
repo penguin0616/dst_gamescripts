@@ -77,7 +77,7 @@ local function ShouldGoHome(inst)
     -- homeseeker is guaranteed to be valid after FindHome()
     local home = inst.components.homeseeker.home
     if home ~= nil and home:IsValid() and (home._lightflier_returning_home == inst
-        or (inst:GetTimeAlive() > 60 and home.components.childspawner.numchildrenoutside > TUNING.LIGHTFLIER_FLOWER.TARGET_NUM_CHILDREN_OUTSIDE)) then
+        or (inst:GetTimeAlive() > 60 and home.components.childspawner.numchildrenoutside > TUNING.LIGHTFLIER_FLOWER_TARGET_NUM_CHILDREN_OUTSIDE)) then
 
         return true
     end

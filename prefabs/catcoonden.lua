@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/catcoon_den.zip"),
@@ -158,6 +160,10 @@ local function canspawn(inst)
     return not TheWorld.state.israining
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.CATCOONDEN_RELEASE_TIME, TUNING.CATCOONDEN_REGEN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -199,7 +205,11 @@ local function fn()
     inst.components.childspawner.childname = "catcoon"
     inst.components.childspawner:SetRegenPeriod(TUNING.CATCOONDEN_REGEN_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.CATCOONDEN_RELEASE_TIME)
-    inst.components.childspawner:SetMaxChildren(1)
+    inst.components.childspawner:SetMaxChildren(TUNING.CATCOONDEN_MAXCHILDREN)
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.CATCOONDEN_RELEASE_TIME, TUNING.CATCOONDEN_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.CATCOONDEN_REGEN_TIME, TUNING.CATCOONDEN_ENABLED)
+
     inst.components.childspawner.canspawnfn = canspawn
     inst.components.childspawner:StartSpawning()
 
@@ -231,6 +241,8 @@ local function fn()
     inst.OnLoad = onload
 
     MakeHauntableIgnite(inst)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

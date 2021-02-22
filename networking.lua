@@ -770,7 +770,7 @@ function UpdateServerWorldGenDataString()
         end
     end
 
-    local customise = require"map/customise"
+    local Customize = require"map/customize"
     for i,world in ipairs(clusteroptions) do
         if world.overrides == nil then
             -- gjans: I'm not sure how we got this far without crashing, but this isn't the right time to crash.
@@ -778,7 +778,7 @@ function UpdateServerWorldGenDataString()
         else
             for option,value in pairs(world.overrides) do
                 -- we can aggressively prune these for network purposes, as the only use after this is the server info screen.
-                if value == "default" or not customise.ValidateOption(option, value, world.location) then
+                if value == "default" or not Customize.ValidateOption(option, value, world.location) then
                     world.overrides[option] = nil
                 end
             end

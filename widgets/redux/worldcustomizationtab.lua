@@ -5,7 +5,7 @@ local PopupDialogScreen = require "screens/redux/popupdialog"
 local WorldCustomizationList = require "widgets/redux/worldcustomizationlist"
 local TEMPLATES = require "widgets/redux/templates"
 
-local Customise = require "map/customise"
+local Customize = require "map/customize"
 local Levels = require "map/levels"
 
 local WorldCustomizationTab = Class(Widget, function(self, tab_location_index, servercreationscreen)
@@ -309,7 +309,7 @@ function WorldCustomizationTab:UpdatePresetList()
     local location = self:GetLocationForLevel(self.currentmultilevel)
     assert(location ~= nil, "Can only load values for a preset with a location!")
 
-    local options = Customise.GetOptionsWithLocationDefaults(location, self.currentmultilevel == 1)
+    local options = Customize.GetOptionsWithLocationDefaults(location, self.currentmultilevel == 1)
 
     if self.customizationlist ~= nil then
         self.customizationlist:Kill()
@@ -344,7 +344,7 @@ function WorldCustomizationTab:GetValueForOption(level, option)
     end
     return self.current_option_settings[level].tweaks[option]
         or (presetdata ~= nil and presetdata.overrides[option])
-        or Customise.GetLocationDefaultForOption(presetdata.location, option)
+        or Customize.GetLocationDefaultForOption(presetdata.location, option)
 end
 
 function WorldCustomizationTab:AddMultiLevel(level)
@@ -469,7 +469,7 @@ function WorldCustomizationTab:SetTweak(level, option, value)
             self.current_option_settings[level].tweaks[option] = value
         end
     else
-        if value == Customise.GetLocationDefaultForOption(presetdata.location, option) then
+        if value == Customize.GetLocationDefaultForOption(presetdata.location, option) then
             self.current_option_settings[level].tweaks[option] = nil
         else
             self.current_option_settings[level].tweaks[option] = value
@@ -610,7 +610,7 @@ function WorldCustomizationTab:CollectOptions()
     if level then
 		local preset = level.preset
         ret = Levels.GetDataForLevelID(preset)
-        local options = Customise.GetOptionsWithLocationDefaults(Levels.GetLocationForLevelID(preset), level_index == 1)
+        local options = Customize.GetOptionsWithLocationDefaults(Levels.GetLocationForLevelID(preset), level_index == 1)
         for i,option in ipairs(options) do
             ret.overrides[option.name] = self:GetValueForOption(level_index, option.name)
         end

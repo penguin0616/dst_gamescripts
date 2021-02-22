@@ -1,4 +1,4 @@
-local WorldCustomizationTab = require "widgets/redux/worldcustomizationtab"
+local WorldSettingsTab = require "widgets/redux/worldsettings/worldsettingstab"
 local HeaderTabs = require "widgets/redux/headertabs"
 local LaunchingServerPopup = require "screens/redux/launchingserverpopup"
 local ModsTab = require "widgets/redux/modstab"
@@ -68,7 +68,7 @@ local ServerCreationScreen = Class(Screen, function(self, prev_screen, save_slot
     for i,location in ipairs(SERVER_LEVEL_LOCATIONS) do
         -- Avoid using location for worldgen so mods can modified
         -- SERVER_LEVEL_LOCATIONS (which should be handled inside
-        -- WorldCustomizationTab).
+        -- WorldSettingsTab).
         tabs[location] = self:MakeWorldTab(i)
     end
 	if self.mods_enabled then
@@ -101,8 +101,17 @@ local ServerCreationScreen = Class(Screen, function(self, prev_screen, save_slot
     
     self:MakeClean() --we're done setting the data, so make sure we're clean.
 
-    self.default_focus = self.tabscreener:GetActiveSubscreenFn()()
+    self.focus_handler = self:AddChild(Widget("FocusHandler"))
+    self.focus_handler.focus_forward = self.tabscreener:GetActiveSubscreenFn()
+
+    self.default_focus = self.focus_handler
 end)
+
+function ServerCreationScreen:UpdatePresetMode(mode)
+    for i, tab in ipairs(self.world_tabs) do
+        tab:SetPresetMode(mode)
+    end
+end
 
 function ServerCreationScreen:GetContentHeight()
     return dialog_size_y
@@ -220,24 +229,28 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
 
         local serverdata = self.server_settings_tab:GetServerData()
         local worldoptions = {}
-        local specialeventoverride = nil
+        local copyoptions = {}
+        local Customize = require("map/customize")
+        local masteroptions = Customize.GetMasterOptions()
         for i,tab in ipairs(self.world_tabs) do
             worldoptions[i] = tab:CollectOptions()
 
-            --V2C: copy special event override from master to secondary shards
             if worldoptions[i] ~= nil then
                 if i == 1 then
-                    if worldoptions[1].overrides ~= nil then
-                        specialeventoverride = worldoptions[1].overrides.specialevent
-                        if specialeventoverride == "default" then
-                            specialeventoverride = nil
+                    if worldoptions[1].overrides then
+                        for override, value in pairs(worldoptions[1].overrides) do
+                            if masteroptions[override] then
+                                copyoptions[override] = value
+                            end
                         end
                     end
-                elseif specialeventoverride ~= nil then
+                else
                     if worldoptions[i].overrides == nil then
                         worldoptions[i].overrides = {}
                     end
-                    worldoptions[i].overrides.specialevent = specialeventoverride
+                    for override, value in pairs(copyoptions) do
+                        worldoptions[i].overrides[override] = value
+                    end
                 end
             end
         end
@@ -755,7 +768,7 @@ end
 
 function ServerCreationScreen:MakeWorldTab(location_index)
     self.world_tabs = self.world_tabs or {}
-    self.world_tabs[location_index] = self.detail_panel:AddChild(WorldCustomizationTab(location_index, self))
+    self.world_tabs[location_index] = self.detail_panel:AddChild(WorldSettingsTab(location_index, self))
     self.world_tabs[location_index]:SetPosition(0,-40)
     return self.world_tabs[location_index]
 end
@@ -804,7 +817,7 @@ function ServerCreationScreen:_BuildTabMenu(subscreener)
     if self.mods_enabled then
         table.insert(tabs, { key = "mods", text = STRINGS.UI.MAINSCREEN.MODS, })
     end
-    table.insert(tabs, { key = "snapshot", text = STRINGS.UI.SERVERCREATIONSCREEN.SNAPSHOTS,      })
+    table.insert(tabs, { key = "snapshot", text = STRINGS.UI.SERVERCREATIONSCREEN.SNAPSHOTS, })
     self.world_config_tabs = self.detail_panel_frame:AddChild(subscreener:MenuContainer(HeaderTabs, tabs))
     self.world_config_tabs:SetPosition(0, dialog_size_y/2 + 27)
     self.world_config_tabs:MoveToBack()
@@ -829,14 +842,9 @@ end
 
 function ServerCreationScreen:_DoFocusHookups()
     -- This is for register focus change dir to return back to the current save slot
-    local getfocuscancelorsaveslot = function() return self.cancel_button ~= nil and self.cancel_button:IsVisible() and self.cancel_button or self.default_focus end
-
     self.detail_panel:SetFocusChangeDir(MOVE_DOWN, self.create_button)
 
-    local toactivetab = function()
-        local fn = self.tabscreener:GetActiveSubscreenFn()
-        return fn()
-    end
+    local toactivetab = self.tabscreener:GetActiveSubscreenFn()
 
     if self.cancel_button ~= nil then
         self.cancel_button:SetFocusChangeDir(MOVE_RIGHT, toactivetab)
@@ -845,8 +853,16 @@ function ServerCreationScreen:_DoFocusHookups()
 
     if self.create_button ~= nil then
         self.create_button:SetFocusChangeDir(MOVE_UP, function()
-            return (self.mods_tab:IsVisible() and self.mods_tab.modlinkbutton)
-                or toactivetab()
+            for i, tab in ipairs(self.world_tabs) do
+                if tab:IsVisible() then
+                    if not tab.settings_root:IsVisible() then
+                        return tab.focus_forward
+                    end
+                    return tab.activesettingswidget.last_focus
+                end
+            end
+            return (self.mods_tab:IsVisible() and self.mods_tab.modlinkbutton) or
+                toactivetab()
         end)
     end
 end

@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/dustmothden.zip"),
@@ -28,7 +30,7 @@ local function StartRepairing(inst, repairer)
             inst.components.timer:ResumeTimer("repair")
         end
     else
-        inst.components.timer:StartTimer("repair", TUNING.DUSTMOTHDEN.REPAIR_TIME)
+        inst.components.timer:StartTimer("repair", TUNING.DUSTMOTHDEN_REPAIR_TIME)
     end
     
     inst.components.entitytracker:TrackEntity("repairer", repairer)
@@ -92,6 +94,10 @@ local function OnLoadPostPass(inst, ents, data)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.DUSTMOTHDEN_RELEASE_TIME, TUNING.DUSTMOTHDEN_REGEN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -124,16 +130,18 @@ local function fn()
     
     inst:AddComponent("childspawner")
     inst.components.childspawner.childname = "dustmoth"
-    inst.components.childspawner:SetRegenPeriod(TUNING.DUSTMOTHDEN.REGEN_TIME)
-    inst.components.childspawner:SetSpawnPeriod(TUNING.DUSTMOTHDEN.RELEASE_TIME)
-    inst.components.childspawner:SetMaxChildren(1)
+    inst.components.childspawner:SetRegenPeriod(TUNING.DUSTMOTHDEN_REGEN_TIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.DUSTMOTHDEN_RELEASE_TIME)
+    inst.components.childspawner:SetMaxChildren(TUNING.DUSTMOTHDEN_MAX_CHILDREN)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.DUSTMOTHDEN_RELEASE_TIME, TUNING.DUSTMOTHDEN_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.DUSTMOTHDEN_REGEN_TIME, TUNING.DUSTMOTHDEN_ENABLED)
     inst.components.childspawner:StartRegen()
     inst.components.childspawner:StartSpawning()
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetMaxWork(TUNING.DUSTMOTHDEN.MAXWORK)
-    inst.components.workable:SetWorkLeft(TUNING.DUSTMOTHDEN.MAXWORK)
+    inst.components.workable:SetMaxWork(TUNING.DUSTMOTHDEN_MAXWORK)
+    inst.components.workable:SetWorkLeft(TUNING.DUSTMOTHDEN_MAXWORK)
     inst.components.workable:SetOnFinishCallback(OnFinishWork)
     inst.components.workable.savestate = true
 
@@ -155,6 +163,7 @@ local function fn()
     MakeHauntableWork(inst)
 
     inst.OnLoadPostPass = OnLoadPostPass
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

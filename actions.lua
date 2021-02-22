@@ -523,8 +523,8 @@ ACTIONS.PICKUP.fn = function(act)
 
         if act.doer.components.itemtyperestrictions ~= nil and not act.doer.components.itemtyperestrictions:IsAllowed(act.target) then
             return false, "restriction"
-        elseif act.target.components.container ~= nil and act.target.components.container:IsOpen() and not act.target.components.container:IsOpenedBy(act.doer) then
-            return false, "inuse"
+        elseif act.target.components.container ~= nil and act.target.components.container:IsOpenedByOthers(act.doer) then
+            return false, "INUSE"
         elseif (act.target.components.yotc_racecompetitor ~= nil and act.target.components.entitytracker ~= nil) then
             local trainer = act.target.components.entitytracker:GetEntity("yotc_trainer")
             if trainer ~= nil and trainer ~= act.doer then
@@ -607,14 +607,14 @@ ACTIONS.RUMMAGE.fn = function(act)
 
     if targ ~= nil and targ.components.container ~= nil then
         if targ.components.container:IsOpenedBy(act.doer) then
-            targ.components.container:Close()
+            targ.components.container:Close(act.doer)
             act.doer:PushEvent("closecontainer", { container = targ })
             return true
         elseif targ:HasTag("mastercookware") and not act.doer:HasTag("masterchef") then
             return false, "NOTMASTERCHEF"
         --elseif targ:HasTag("professionalcookware") and not act.doer:HasTag("professionalchef") then
             --return false, "NOTPROCHEF"
-        elseif targ.components.container:IsOpen() then
+        elseif act.target.components.container ~= nil and not act.target.components.container:CanOpen() then
             return false, "INUSE"
         elseif targ.components.container.canbeopened then
             local owner = targ.components.inventoryitem ~= nil and targ.components.inventoryitem:GetGrandOwner() or nil
@@ -1234,7 +1234,7 @@ ACTIONS.COOK.fn = function(act)
             return true
         end
         local container = act.target.components.container
-        if container ~= nil and container:IsOpen() and not container:IsOpenedBy(act.doer) then
+        if container ~= nil and container:IsOpenedByOthers(act.doer) then
             return false, "INUSE"
         elseif not act.target.components.stewer:CanCook() then
             return false
@@ -1544,7 +1544,7 @@ ACTIONS.STORE.fn = function(act)
             return false, "NOTMASTERCHEF"
         --elseif target:HasTag("professionalcookware") and not act.doer:HasTag("professionalchef") then
             --return false, "NOTPROCHEF"
-        elseif target.components.container:IsOpen() and not target.components.container:IsOpenedBy(act.doer) then
+        elseif not target.components.container:CanOpen() then
             return false, "INUSE"
         end
 
@@ -2008,10 +2008,10 @@ ACTIONS.MURDER.fn = function(act)
         murdered.Transform:SetPosition(x, y, z)
 
         if murdered.components.health ~= nil and murdered.components.health.murdersound ~= nil then
-            act.doer.SoundEmitter:PlaySound(murdered.components.health.murdersound)
+            act.doer.SoundEmitter:PlaySound(FunctionOrValue(murdered.components.health.murdersound, murdered, act.doer))
         elseif murdered.components.murderable ~= nil and murdered.components.murderable.murdersound ~= nil then
-			act.doer.SoundEmitter:PlaySound(murdered.components.murderable.murdersound)
-		end
+            act.doer.SoundEmitter:PlaySound(FunctionOrValue(murdered.components.murderable.murdersound, murdered, act.doer))
+        end
 
         local stacksize = murdered.components.stackable ~= nil and murdered.components.stackable:StackSize() or 1
         if murdered.components.lootdropper ~= nil then
@@ -2315,8 +2315,8 @@ ACTIONS.FEED.fn = function(act)
                 murdered.components.inventoryitem:RemoveFromOwner(true)
                 murdered.Transform:SetPosition(x, y, z)
 
-                if murdered.components.health.murdersound ~= nil and grandowner.SoundEmitter ~= nil then
-                    grandowner.SoundEmitter:PlaySound(murdered.components.health.murdersound)
+                if murdered.components.health.murdersound ~= nil and grandowner.SoundEmitter then
+                    grandowner.SoundEmitter:PlaySound(FunctionOrValue(murdered.components.health.murdersound, murdered, act.doer))
                 end
 
                 if murdered.components.lootdropper ~= nil then
@@ -2351,8 +2351,8 @@ ACTIONS.FEED.fn = function(act)
         murdered.components.inventoryitem:RemoveFromOwner(true)
         murdered.Transform:SetPosition(x, y, z)
 
-        if murdered.components.health.murdersound ~= nil then
-            act.doer.SoundEmitter:PlaySound(murdered.components.health.murdersound)
+        if murdered.components.health.murdersound ~= nil and grandowner.SoundEmitter then
+            grandowner.SoundEmitter:PlaySound(FunctionOrValue(murdered.components.health.murdersound, murdered, act.doer))
         end
 
         if murdered.components.lootdropper ~= nil then

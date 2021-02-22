@@ -8,7 +8,7 @@ function FarmPlantable:Plant(target, planter)
     if self.plant ~= nil and target:HasTag("soil") then
         local pt = target:GetPosition()
 
-		local plant_prefab = type(self.plant) == "function" and self.plant(self.inst) or self.plant
+		local plant_prefab = FunctionOrValue(self.plant, self.inst)
 		if plant_prefab ~= nil then
 			target:Remove()
 

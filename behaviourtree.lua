@@ -253,7 +253,7 @@ function WaitNode:Visit()
     local current_time = GetTime() 
     
     if self.status ~= RUNNING then
-        self.wake_time = current_time + (type(self.wait_time) == "function" and self.wait_time() or self.wait_time)
+        self.wake_time = current_time + FunctionOrValue(self.wait_time)
         self.status = RUNNING
     end
     
@@ -772,7 +772,7 @@ function LatchNode:Visit()
         if GetTime() > self.currentlatchduration + self.lastlatchtime then
             print("GONNA GO!", GetTime(), self.currentlatchduration, "----", GetTime()+self.currentlatchduration, ">", self.lastlatchtime)
             self.lastlatchtime = GetTime()
-            self.currentlatchduration = type(self.latchduration) == "function" and self.latchduration(self.inst) or self.latchduration
+            self.currentlatchduration = FunctionOrValue(self.latchduration, self.inst)
             print("New vals:", self.currentlatchduration , self.lastlatchtime)
 
             self.status = RUNNING

@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local upperLightColour = { 239/255, 194/255, 194/255 }
 local lowerLightColour = { 1, 1, 1 }
 local MAX_LIGHT_ON_FRAME = 15
@@ -190,6 +192,10 @@ local function OnEntityWake(inst)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.NIGHTMARELIGHT_RELEASE_TIME, TUNING.NIGHTMARELIGHT_REGEN_TIME)
+end
+
 local function Make(name, build, lightcolour, fxname, masterinit)
     local assets =
     {
@@ -246,9 +252,11 @@ local function Make(name, build, lightcolour, fxname, masterinit)
         inst.fx.entity:SetParent(inst.entity)
 
         inst:AddComponent("childspawner")
-        inst.components.childspawner:SetRegenPeriod(5)
-        inst.components.childspawner:SetSpawnPeriod(30)
-        inst.components.childspawner:SetMaxChildren(1)
+        inst.components.childspawner:SetRegenPeriod(TUNING.NIGHTMARELIGHT_RELEASE_TIME)
+        inst.components.childspawner:SetSpawnPeriod(TUNING.NIGHTMARELIGHT_REGEN_TIME)
+        inst.components.childspawner:SetMaxChildren(TUNING.NIGHTMAREFISSURE_MAXCHILDREN)
+        WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.NIGHTMARELIGHT_RELEASE_TIME, TUNING.NIGHTMARELIGHT_ENABLED)
+        WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.NIGHTMARELIGHT_REGEN_TIME, TUNING.NIGHTMARELIGHT_ENABLED)
         inst.components.childspawner.childname = "crawlingnightmare"
         inst.components.childspawner:SetRareChild("nightmarebeak", .35)
 
@@ -261,6 +269,8 @@ local function Make(name, build, lightcolour, fxname, masterinit)
 		if masterinit ~= nil then
 			masterinit(inst)
 		end
+
+        inst.OnPreLoad = OnPreLoad
 
         return inst
     end

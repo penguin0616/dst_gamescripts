@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/marsh_tile.zip"),
@@ -114,6 +116,14 @@ local function OnLoad(inst, data)
     end
 end
 
+local function OnPreLoadMosquito(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MOSQUITO_POND_SPAWN_TIME, TUNING.MOSQUITO_POND_REGEN_TIME)
+end
+
+local function OnPreLoadFrog(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.FROG_POND_SPAWN_TIME, TUNING.FROG_POND_REGEN_TIME)
+end
+
 local function commonfn(pondtype)
     local inst = CreateEntity()
 
@@ -152,10 +162,6 @@ local function commonfn(pondtype)
     inst.pondtype = pondtype
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(TUNING.POND_REGEN_TIME)
-    inst.components.childspawner:SetSpawnPeriod(TUNING.POND_SPAWN_TIME)
-    inst.components.childspawner:SetMaxChildren(math.random(3, 4))
-    inst.components.childspawner:StartRegen()
 
     inst.frozen = nil
     inst.plants = nil
@@ -211,12 +217,26 @@ local function pondmos()
         return inst
     end
 
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MOSQUITO_POND_SPAWN_TIME)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MOSQUITO_POND_REGEN_TIME)
+    if TUNING.MOSQUITO_POND_CHILDREN.max == 0 then
+        inst.components.childspawner:SetMaxChildren(0)
+    else
+        inst.components.childspawner:SetMaxChildren(math.random(TUNING.MOSQUITO_POND_CHILDREN.min, TUNING.MOSQUITO_POND_CHILDREN.max))
+    end
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MOSQUITO_POND_SPAWN_TIME, TUNING.MOSQUITO_POND_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MOSQUITO_POND_REGEN_TIME, TUNING.MOSQUITO_POND_ENABLED)
+
+    inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "mosquito"
     inst.components.fishable:AddFish("pondfish")
 
     inst.planttype = "marsh_plant"
     inst.dayspawn = false
     inst.task = inst:DoTaskInTime(0, OnInit)
+
+    inst.OnPreLoad = OnPreLoadMosquito
 
     return inst
 end 
@@ -228,12 +248,26 @@ local function pondfrog()
         return inst
     end
 
+    inst.components.childspawner:SetSpawnPeriod(TUNING.FROG_POND_SPAWN_TIME)
+    inst.components.childspawner:SetRegenPeriod(TUNING.FROG_POND_REGEN_TIME)
+    if TUNING.FROG_POND_CHILDREN.max == 0 then
+        inst.components.childspawner:SetMaxChildren(0)
+    else
+        inst.components.childspawner:SetMaxChildren(math.random(TUNING.FROG_POND_CHILDREN.min, TUNING.FROG_POND_CHILDREN.max))
+    end
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.FROG_POND_SPAWN_TIME, TUNING.FROG_POND_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.FROG_POND_REGEN_TIME, TUNING.FROG_POND_ENABLED)
+
+    inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "frog"
     inst.components.fishable:AddFish("pondfish")
 
     inst.planttype = "marsh_plant"
     inst.dayspawn = true
     inst.task = inst:DoTaskInTime(0, OnInit)
+
+    inst.OnPreLoad = OnPreLoadFrog
 
     return inst
 end

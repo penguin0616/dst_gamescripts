@@ -19,6 +19,7 @@ local prefabs =
     "inventoryitem_classified",
     "writeable_classified",
     "container_classified",
+    "container_opener",
 
     ----------------------------------------------------------------------------------
 

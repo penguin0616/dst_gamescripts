@@ -186,8 +186,7 @@ end
 function table.removearrayvalue(t, lookup_value)
     for i, v in ipairs(t) do
         if v == lookup_value then
-            table.remove(t, i)
-            return v
+            return table.remove(t, i)
         end
     end
 end
@@ -1528,4 +1527,11 @@ function DecodeAndUnzipSaveData(data)
             return {}
         end
     end
+end
+
+function FunctionOrValue(func_or_val, ...)
+    if type(func_or_val) == "function" then
+        return func_or_val(...)
+    end
+    return func_or_val
 end

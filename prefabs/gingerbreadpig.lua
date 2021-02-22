@@ -61,7 +61,7 @@ local function OnPlayerFar(inst)
     if inst.chased_by_player then
         inst.chased_by_player = false
         if TheWorld.components.gingerbreadhunter and TheWorld.components.gingerbreadhunter:GenerateCrumbPoints(inst:GetPosition(), 5) then
-            TheWorld.components.gingerbreadhunter:SpawnCrumbTrail(GetTaskRemaining(inst.killtask) or 1.5 * TUNING.TOTAL_DAY_TIME)
+            TheWorld.components.gingerbreadhunter:SpawnCrumbTrail(GetTaskRemaining(inst.killtask) or (1.5 * TUNING.TOTAL_DAY_TIME))
             ReplacePrefab(inst, "crumbs")
         end
     end

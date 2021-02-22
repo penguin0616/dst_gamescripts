@@ -661,10 +661,11 @@ function Inventory:GiveActiveItem(inst)
         self:ReturnActiveItem()
         assert(inst.components.inventoryitem ~= nil, inst.entity:GetPrefabName().." in inventory is lacking inventoryitem component")
         if not inst.components.inventoryitem:OnPickup(self.inst) then
+            local previous_owner = inst.components.inventoryitem.owner
             inst.components.inventoryitem:OnPutInInventory(self.inst)
 
             self:SetActiveItem(inst)
-            self.inst:PushEvent("itemget", { item = inst, slot = nil })
+            self.inst:PushEvent("itemget", { item = inst, slot = nil, prevowner = previous_owner })
 
             if inst.components.equippable ~= nil then
                 inst.components.equippable:ToPocket()
@@ -770,8 +771,9 @@ function Inventory:GiveItem(inst, slot, src_pos)
                 end
             else
                 self.itemslots[slot] = inst
+                local previous_owner = inst.components.inventoryitem.owner
                 inst.components.inventoryitem:OnPutInInventory(self.inst)
-                self.inst:PushEvent("itemget", { item = inst, slot = slot, src_pos = src_pos })
+                self.inst:PushEvent("itemget", { item = inst, slot = slot, src_pos = src_pos, prevowner = previous_owner })
             end
 
             if inst.components.equippable then
@@ -1483,10 +1485,9 @@ function Inventory:CanAccessItem(item)
         return false
     end
     local owner = item.components.inventoryitem.owner
-    return owner == self.inst
-        or (owner ~= nil and
+    return owner == self.inst or (owner ~= nil and
             owner.components.container ~= nil and
-            owner.components.container.opener == self.inst)
+            owner.components.container:IsOpenedBy(self.inst))
 end
 
 function Inventory:UseItemFromInvTile(item, actioncode, mod_name)
@@ -1692,6 +1693,9 @@ function Inventory:MoveItemFromAllOfSlot(slot, container)
     if item ~= nil and container ~= nil then
         container = container.components.container
         if container ~= nil and container:IsOpenedBy(self.inst) then
+
+            container.currentuser = self.inst
+
             local targetslot =
                 self.inst.components.constructionbuilderuidata ~= nil and
                 self.inst.components.constructionbuilderuidata:GetContainer() == container.inst and
@@ -1708,6 +1712,8 @@ function Inventory:MoveItemFromAllOfSlot(slot, container)
                     self.ignoresound = false
                 end
             end
+
+            container.currentuser = nil
         end
     end
 end
@@ -1720,6 +1726,8 @@ function Inventory:MoveItemFromHalfOfSlot(slot, container)
             container:IsOpenedBy(self.inst) and
             item.components.stackable ~= nil and
             item.components.stackable:IsStack() then
+
+            container.currentuser = self.inst
 
             local targetslot =
                 self.inst.components.constructionbuilderuidata ~= nil and
@@ -1737,6 +1745,8 @@ function Inventory:MoveItemFromHalfOfSlot(slot, container)
                     self.ignoresound = false
                 end
             end
+
+            container.currentuser = nil
         end
     end
 end

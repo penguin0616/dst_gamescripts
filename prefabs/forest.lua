@@ -325,7 +325,7 @@ local prefabs =
 	"bullkelp_plant",
 	"cookiecutter",
 	"cookiecutter_spawner",
-    "crabking",
+    "crabking_spawner",
     "driftwood_log",
     "driftwood_small1",
     "driftwood_small2",

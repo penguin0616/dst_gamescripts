@@ -204,7 +204,7 @@ local RETARGET_MUST_TAGS = { "_combat" }
 local function NormalRetargetFn(inst)
     if inst:HasTag("NPC_contestant") then
         return nil
-    end    
+    end
 
 	local exclude_tags = { "playerghost", "INLIMBO" , "NPC_contestant" }
 	if inst.components.follower.leader ~= nil then

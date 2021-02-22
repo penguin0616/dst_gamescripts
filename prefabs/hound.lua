@@ -377,6 +377,7 @@ local function OnStopFollowing(inst)
 end
 
 local function CanMutateFromCorpse(inst)
+    if not TUNING.SPAWN_MUTATED_HOUNDS then return false end
 	if (inst.components.amphibiouscreature == nil or not inst.components.amphibiouscreature.in_water)
 		and math.random() <= TUNING.MUTATEDHOUND_SPAWN_CHANCE 
 		and TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition()) then

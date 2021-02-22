@@ -53,7 +53,7 @@ local _state = nil
 local _debrispersecond = 1 -- how much junk falls
 local _mammalsremaining = 0
 local _task = nil
-local _frequencymultiplier = 1
+local _frequencymultiplier = TUNING.QUAKE_FREQUENCY_MULTIPLIER
 local _pausesources = SourceModifierList(inst, false, SourceModifierList.boolean)
 
 local _quakedata = nil -- populated through configuration
@@ -454,8 +454,8 @@ end or nil
 local StartQuake = _ismastersim and function(inst, data, overridetime)
     _quakesoundintensity:set(2)
 
-    _debrispersecond = type(data.debrispersecond) == "function" and data.debrispersecond() or data.debrispersecond
-    _mammalsremaining = type(data.mammals) == "function" and data.mammals() or data.mammals
+    _debrispersecond = FunctionOrValue(data.debrispersecond)
+    _mammalsremaining = FunctionOrValue(data.mammals)
 
 	_originalplayers = {}
     for i, v in ipairs(_activeplayers) do
@@ -466,7 +466,7 @@ local StartQuake = _ismastersim and function(inst, data, overridetime)
 
     inst:PushEvent("startquake")
 
-    local quaketime = overridetime or (type(data.quaketime) == "function" and data.quaketime()) or data.quaketime
+    local quaketime = overridetime or FunctionOrValue(data.quaketime)
     UpdateTask(quaketime, EndQuake, true)
     _state = QUAKESTATE.QUAKING
 end or nil
@@ -487,7 +487,7 @@ local WarnQuake = _ismastersim and function(inst, data, overridetime)
     inst:DoTaskInTime(1, DoWarnQuake)
     _quakesoundintensity:set(1)
 
-    local warntime = overridetime or (type(data.warningtime) == "function" and data.warningtime()) or data.warningtime
+    local warntime = overridetime or FunctionOrValue(data.warningtime)
     ShakeAllCameras(CAMERASHAKE.FULL, warntime + 3, .02, .2, nil, 40)
     UpdateTask(warntime, StartQuake, data)
     _state = QUAKESTATE.WARNING
@@ -501,7 +501,7 @@ SetNextQuake = _ismastersim and function(data, overridetime)
         return
     end
 
-    local nexttime = overridetime or (type(data.nextquake) == "function" and data.nextquake() or data.nextquake) / _frequencymultiplier
+    local nexttime = overridetime or FunctionOrValue(data.nextquake) / _frequencymultiplier
     UpdateTask(nexttime, WarnQuake, data)
     _state = QUAKESTATE.WAITING
 end or nil
@@ -602,15 +602,6 @@ local OnPlayerLeft = _ismastersim and function(src, player)
     end
 end or nil
 
-local OnFrequencyMultiplier = _ismastersim and function(src, multiplier)
-    _frequencymultiplier = multiplier
-    if _frequencymultiplier > 0 and _quakedata ~= nil then
-        SetNextQuake(_quakedata)
-    else
-        ClearTask()
-    end
-end or nil
-
 local OnPauseQuakes = _ismastersim and function(src, data)
     if data ~= nil and data.source ~= nil then
         _pausesources:SetModifier(data.source, true, data.reason)
@@ -667,8 +658,6 @@ if _ismastersim then
 
     inst:ListenForEvent("ms_miniquake", OnMiniQuake, _world)
     inst:ListenForEvent("ms_forcequake", OnForceQuake, _world)
-
-    inst:ListenForEvent("ms_quakefrequencymultiplier", OnFrequencyMultiplier, _world)
 
     inst:ListenForEvent("explosion", OnExplosion, _world)
 

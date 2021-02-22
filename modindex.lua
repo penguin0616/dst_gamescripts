@@ -676,11 +676,17 @@ function ModIndex:HasModConfigurationOptions(modname)
 	return false
 end
 
-function ModIndex:UpdateConfigurationOptions(config_options, savedata)
+function ModIndex:UpdateConfigurationOptions(config_options, savedata, client_config)
 	for i,v in pairs(savedata) do
 		for j,k in pairs(config_options) do
 			if v.name == k.name and v.saved ~= nil then
-				k.saved = v.saved
+				if client_config then
+					k.saved_client = v.saved
+				else
+					k.saved_server = v.saved
+				end
+
+				k.saved = v.saved -- don't know if this is still needed, but keeping it.
 			end
 		end
 	end
@@ -729,7 +735,7 @@ function ModIndex:LoadModConfigurationOptions(modname, client_config)
 				if success and string.len(str) > 0 then
 					-- Carry over saved data from old versions when possible
 					if self:HasModConfigurationOptions(modname) then
-						self:UpdateConfigurationOptions(known_mod.modinfo.configuration_options, savedata)
+						self:UpdateConfigurationOptions(known_mod.modinfo.configuration_options, savedata, client_config)
 					else
 						if known_mod.modinfo ~= nil then
 							known_mod.modinfo.configuration_options = savedata

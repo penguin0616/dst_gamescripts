@@ -149,7 +149,7 @@ inst:ListenForEvent("beginregrowth", OnBeginRegrowth, TheWorld)
 inst:DoPeriodicTask(UPDATE_PERIOD, function() self:LongUpdate(UPDATE_PERIOD) end)
 
 self:SetRegrowthForType("carrot_planted", TUNING.CARROT_REGROWTH_TIME, "carrot_planted", function()
-        return not (_worldstate.isnight or _worldstate.iswinter or _worldstate.snowlevel > 0) and 1 or 0
+        return not (_worldstate.isnight or _worldstate.iswinter or _worldstate.snowlevel > 0) and TUNING.CARROT_REGROWTH_TIME_MULT or 0
     end)
 self:SetRegrowthForType("flower", TUNING.FLOWER_REGROWTH_TIME, "flower", function()
         -- Flowers grow during the day, during not winter, while the ground is still wet after a rain.
@@ -158,7 +158,7 @@ self:SetRegrowthForType("flower", TUNING.FLOWER_REGROWTH_TIME, "flower", functio
             or TUNING.FLOWER_REGROWTH_TIME_MULT
     end)
 self:SetRegrowthForType("rabbithole", TUNING.RABBITHOLE_REGROWTH_TIME, "rabbithole", function()
-        return _worldstate.issummer and 1 or 0
+        return _worldstate.issummer and TUNING.RABBITHOLE_REGROWTH_TIME_SUMMER_MULT or TUNING.RABBITHOLE_REGROWTH_TIME_MULT
     end)
 self:SetRegrowthForType("flower_cave", TUNING.FLOWER_CAVE_REGROWTH_TIME, "flower_cave", function()
         return TUNING.FLOWER_CAVE_REGROWTH_TIME_MULT
@@ -169,8 +169,8 @@ self:SetRegrowthForType("flower_cave_double", TUNING.FLOWER_CAVE_REGROWTH_TIME, 
 self:SetRegrowthForType("flower_cave_triple", TUNING.FLOWER_CAVE_REGROWTH_TIME, "flower_cave_triple", function()
         return TUNING.FLOWER_CAVE_REGROWTH_TIME_MULT
     end)
-self:SetRegrowthForType("lightflier_flower", TUNING.LIGHTFLIER_FLOWER.REGROWTH.TIME, "lightflier_flower", function()
-        return TUNING.LIGHTFLIER_FLOWER.REGROWTH.TIME_MULT
+self:SetRegrowthForType("lightflier_flower", TUNING.LIGHTFLIER_FLOWER_REGROWTH_TIME, "lightflier_flower", function()
+        return TUNING.LIGHTFLIER_FLOWER_REGROWTH_TIME_MULT
     end)
 
 --------------------------------------------------------------------------

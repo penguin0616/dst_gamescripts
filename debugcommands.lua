@@ -672,6 +672,22 @@ function d_gofishing()
 	c_give("oceanfishinglure_spinner_green", 5)
 end
 
+function d_radius(radius, num, lifetime)
+	radius = radius or 4
+	num = num or math.max(5, radius*2)
+	lifetime = lifetime or 10
+	local delta_theta = PI2 / num
+
+	local pt = ConsoleWorldPosition()
+
+	for i = 1, num do
+	
+		local p = SpawnPrefab("flint")
+		p.Transform:SetPosition(pt.x + radius * math.cos( i*delta_theta ), 0, pt.z - radius * math.sin( i*delta_theta ))
+		p:DoTaskInTime(lifetime, p.Remove)
+	end
+end
+
 function d_ratracer(speed, stamina, direction, reaction)
 	local rat = DebugSpawn("carrat")
 	rat._spread_stats_task:Cancel() rat._spread_stats_task = nil

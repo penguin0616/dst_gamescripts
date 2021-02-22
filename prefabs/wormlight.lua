@@ -65,8 +65,8 @@ local function item_commonfn(bank, build, masterfn)
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
-    inst.AnimState:SetBank("worm_light")
-    inst.AnimState:SetBuild("worm_light")
+    inst.AnimState:SetBank(bank)
+    inst.AnimState:SetBuild(build)
     inst.AnimState:PlayAnimation("idle")
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 

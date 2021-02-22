@@ -77,7 +77,7 @@ function ChaseAndAttack:Visit()
                 local reverse_direction = me - target_position
                 local rd_normal_x, rd_normal_z = VecUtil_Normalize(reverse_direction.x, reverse_direction.z)
 
-                local ocean_distance = (type(self.distance_from_ocean_target) == "function" and self.distance_from_ocean_target(self.inst, combat.target)) or self.distance_from_ocean_target
+                local ocean_distance = FunctionOrValue(self.distance_from_ocean_target, self.inst, combat.target)
                 target_position = Point((rd_normal_x * ocean_distance) + target_position.x, target_position.y, (rd_normal_z * ocean_distance) + target_position.z)
                 dsq = distsq(target_position, me)
                 --angle = self.inst:GetAngleToPoint(target_position)

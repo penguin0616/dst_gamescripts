@@ -834,13 +834,7 @@ function GetSkinName(item)
 	if SKIN_DEBUGGING then
 		return item
 	else
-	    item = _ItemStringRedirect(item)
-		local nameStr = STRINGS.SKIN_NAMES[item] or STRINGS.SKIN_NAMES["missing"]
-		local alt = STRINGS.SKIN_NAMES[item.."_alt"]
-		if alt then
-			nameStr = GetRandomItem({nameStr, alt})
-		end
-		return nameStr
+		return STRINGS.SKIN_NAMES[_ItemStringRedirect(item)] or STRINGS.SKIN_NAMES["missing"]
 	end
 end
 

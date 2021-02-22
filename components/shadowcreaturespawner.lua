@@ -10,8 +10,6 @@ assert(TheWorld.ismastersim, "Shadow creature spawner should not exist on client
 --[[ Constants ]]
 --------------------------------------------------------------------------
 
-local POP_CHANGE_INTERVAL = 10
-local POP_CHANGE_VARIANCE = 10
 local SPAWN_INTERVAL = 5
 local SPAWN_VARIANCE = 10
 local NON_INSANITY_MODE_DESPAWN_INTERVAL = 0.1
@@ -185,12 +183,12 @@ local function StopSpawn(player, params)
 end
 
 local function UpdatePopulation(player, params)
-	local is_inasnity_mode = player.components.sanity:IsInsanityMode()
+	local is_insanity_mode = player.components.sanity:IsInsanityMode()
 
-    if is_inasnity_mode and player.components.sanity.inducedinsanity then
-        local maxpop = 5
-        local inc_chance = .7
-        local dec_chance = .4
+    if is_insanity_mode and player.components.sanity.inducedinsanity then
+        local maxpop = TUNING.SANITYMONSTERS_INDUCED_MAXPOP
+        local inc_chance = TUNING.SANITYMONSTERS_INDUCED_CHANCES.inc
+        local dec_chance = TUNING.SANITYMONSTERS_INDUCED_CHANCES.dec
         local targetpop = params.targetpop
 
         --Figure out our new target
@@ -217,29 +215,28 @@ local function UpdatePopulation(player, params)
         local inc_chance = 0
         local dec_chance = 0
         local targetpop = params.targetpop
-        local sanity = is_inasnity_mode and player.components.sanity:GetPercent() or 1
+        local sanity = is_insanity_mode and player.components.sanity:GetPercent() or 1
 
-        if sanity > .5 then
+        if sanity > 0.5 then
             --We're pretty sane. Clean up the monsters
             maxpop = 0
-        elseif sanity > .1 then
+        elseif sanity > 0.1 then
             --Have at most one monster, sometimes
-            maxpop = 1
+            maxpop = TUNING.SANITYMONSTERS_MAXPOP[1]
             if targetpop >= maxpop then
-                dec_chance = .1
+                dec_chance = TUNING.SANITYMONSTERS_CHANCES[1].dec
             else
-                inc_chance = .3
+                inc_chance = TUNING.SANITYMONSTERS_CHANCES[1].inc
             end
         else
-            --Have at most one or two monsters, usually 1
-            maxpop = 2
+            maxpop = TUNING.SANITYMONSTERS_MAXPOP[2]
             if targetpop >= maxpop then
-                dec_chance = .2
+                dec_chance = TUNING.SANITYMONSTERS_CHANCES[2].dec
             elseif targetpop <= 0 then
-                inc_chance = .3
+                inc_chance = TUNING.SANITYMONSTERS_CHANCES[2].inc
             else
-                inc_chance = .2
-                dec_chance = .2
+                inc_chance = TUNING.SANITYMONSTERS_CHANCES[2].inc
+                dec_chance = TUNING.SANITYMONSTERS_CHANCES[2].dec
             end
         end
 
@@ -261,7 +258,7 @@ local function UpdatePopulation(player, params)
         end
 
         --Reschedule population update
-        params.poptask = player:DoTaskInTime(is_inasnity_mode and (POP_CHANGE_INTERVAL + POP_CHANGE_VARIANCE * math.random()) 
+        params.poptask = player:DoTaskInTime(is_insanity_mode and (TUNING.SANITYMONSTERS_POP_CHANGE_INTERVAL + TUNING.SANITYMONSTERS_POP_CHANGE_VARIANCE * math.random()) 
 												or (NON_INSANITY_MODE_DESPAWN_INTERVAL + NON_INSANITY_MODE_DESPAWN_VARIANCE * math.random())
 											, UpdatePopulation, params)
     end

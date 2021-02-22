@@ -68,7 +68,7 @@ local function do_flare_minimap_swap(inst)
     end
     inst._small_minimap = flare_index
 
-    local flare_image = (flare_index == 1 and "flare.png") or "flare"..flare_index..".png"
+    local flare_image = (flare_index == 1 and "flare.png") or ("flare"..flare_index..".png")
 
     inst.MiniMapEntity:SetIcon(flare_image)
     inst.icon.MiniMapEntity:SetIcon(flare_image)

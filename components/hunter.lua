@@ -123,7 +123,7 @@ end
 
 local function StartCooldown(inst, hunt, cooldown)
     assert(hunt)
-    local cooldown = cooldown or TUNING.HUNT_COOLDOWN + TUNING.HUNT_COOLDOWNDEVIATION * (math.random() * 2 - 1)
+    cooldown = cooldown or TUNING.HUNT_COOLDOWN + TUNING.HUNT_COOLDOWNDEVIATION * (math.random() * 2 - 1)
     --print("Hunter:StartCooldown", cooldown)
 
     StopHunt(hunt)

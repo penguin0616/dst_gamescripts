@@ -2,7 +2,7 @@ require "util"
 local TechTree = require("techtree")
 
 PI = 3.14159
-PI2 = 3.14159
+PI2 = PI*2
 DEGREES = PI/180
 RADIANS = 180/PI
 FRAMES = 1/30
@@ -1233,6 +1233,13 @@ SEASONS =
 	CAVES = "caves",
 }
 
+LEVELCATEGORY = {
+    LEVEL = "LEVEL",
+    SETTINGS = "SETTINGS",
+    COMBINED = "COMBINED",
+    WORLDGEN = "WORLDGEN",
+}
+
 RENDER_QUALITY =
 {
 	LOW = 0,
@@ -1947,6 +1954,7 @@ LEVELTYPE = {
     TEST = "TEST",
     UNKNOWN = "UNKNOWN",
     CUSTOM = "CUSTOM",
+    CUSTOMPRESET = "CUSTOMPRESET",
 }
 
 if BRANCH == "dev" then
@@ -1968,6 +1976,14 @@ EVENTSERVER_LEVEL_LOCATIONS =
 {
 	[LEVELTYPE.LAVAARENA] = { "lavaarena" },
 	[LEVELTYPE.QUAGMIRE] = { "quagmire" },
+}
+
+DEFAULT_LOCATION = "forest"
+
+SERVER_LEVEL_SHARDS =
+{
+    "Master",
+    "Caves",
 }
 
 SERVER_LEVEL_CONFIGS =

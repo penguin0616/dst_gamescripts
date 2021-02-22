@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/spider_mound.zip"),
@@ -148,6 +150,10 @@ local function CustomOnHaunt(inst, haunter)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.SPIDERHOLE_RELEASE_TIME, TUNING.SPIDERHOLE_REGEN_TIME)
+end
+
 local function spawnerfn()
     local inst = commonfn("full", "cavespider_den.png", "spiderden", true)
 
@@ -163,14 +169,17 @@ local function spawnerfn()
     inst.components.workable:SetOnFinishCallback(GoToBrokenState)
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(120)
-    inst.components.childspawner:SetSpawnPeriod(240)
-    inst.components.childspawner:SetMaxChildren(math.random(2, 3))
+    inst.components.childspawner:SetRegenPeriod(TUNING.SPIDERHOLE_REGEN_TIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.SPIDERHOLE_RELEASE_TIME)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.SPIDERHOLE_RELEASE_TIME, TUNING.SPIDERHOLE_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.SPIDERHOLE_REGEN_TIME, TUNING.SPIDERHOLE_ENABLED)
+    inst.components.childspawner:SetMaxChildren(math.random(TUNING.SPIDERHOLE_MIN_CHILDREN, TUNING.SPIDERHOLE_MAX_CHILDREN))
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_hider"
-    inst.components.childspawner:SetRareChild("spider_spitter", 0.33)
-    inst.components.childspawner.emergencychildname = "spider_spitter"
+    inst.components.childspawner:SetRareChild("spider_spitter", TUNING.SPIDERHOLE_SPITTER_CHANCE)
+    inst.components.childspawner.emergencychildname = TUNING.SPIDERHOLE_SPITTER_CHANCE > 0 and "spider_spitter" or "spider_hider"
     inst.components.childspawner.emergencychildrenperplayer = 1
+    inst.components.childspawner.canemergencyspawn = TUNING.SPIDERHOLE_ENABLED
     inst.components.childspawner:StartSpawning()
 
     inst:ListenForEvent("creepactivate", SpawnInvestigators)
@@ -178,6 +187,8 @@ local function spawnerfn()
 
     MakeHauntableWork(inst)
     AddHauntableCustomReaction(inst, CustomOnHaunt, false)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

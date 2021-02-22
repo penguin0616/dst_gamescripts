@@ -131,7 +131,7 @@ local function UpdateSeasonDSP(season, duration)
 
     if lowdsp then
         for k, v in pairs(lowdsp) do
-            _defaultlowdsp[k] = type(v) == "function" and v() or v
+            _defaultlowdsp[k] = FunctionOrValue(v)
         end
 
         for k in pairs(_defaultlowdsp) do
@@ -149,7 +149,7 @@ local function UpdateSeasonDSP(season, duration)
 
     if highdsp then
         for k, v in pairs(highdsp) do
-            _defaulthighdsp[k] = type(v) == "function" and v() or v
+            _defaulthighdsp[k] = FunctionOrValue(v)
         end
 
         for k in pairs(_defaulthighdsp) do

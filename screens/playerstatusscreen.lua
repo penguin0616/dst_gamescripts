@@ -69,6 +69,10 @@ function PlayerStatusScreen:OnDestroy()
     self:ClearFocus()
     self:StopFollowMouse()
     self:Hide()
+
+    if self.onclosefn ~= nil then
+        self.onclosefn()
+    end
 end
 
 function PlayerStatusScreen:GetHelpText()
@@ -81,9 +85,7 @@ function PlayerStatusScreen:GetHelpText()
         table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.HELP.VIEWGROUP)
     end
 
-    if #UserCommands.GetServerActions(self.owner) > 0 then
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.HELP.SERVERACTIONS)
-    end
+    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SERVERLISTINGSCREEN.TOGGLE_SERVER_NAME)
 
     return table.concat(t, "  ")
 end
@@ -97,17 +99,18 @@ function PlayerStatusScreen:OnControl(control, down)
         --jcheng: don't allow debug menu stuff going on right now
         return true
     elseif not down then
-        if (control == CONTROL_SHOW_PLAYER_STATUS
-            or (control == CONTROL_TOGGLE_PLAYER_STATUS and
-                not TheInput:IsControlPressed(CONTROL_SHOW_PLAYER_STATUS))) then
+        if control == CONTROL_SHOW_PLAYER_STATUS
+			or (control == CONTROL_TOGGLE_PLAYER_STATUS and not TheInput:IsControlPressed(CONTROL_SHOW_PLAYER_STATUS))
+			or (self.click_to_close and (control == CONTROL_PAUSE or control == CONTROL_CANCEL))
+             then
             self:Close()
             return true
         elseif control == CONTROL_MENU_MISC_2 and self.server_group ~= "" then
             TheNet:ViewNetProfile(self.server_group)
             return true
         elseif control == CONTROL_MENU_MISC_1 then
-            TheFrontEnd:PopScreen()
-            self:OpenUserCommandPickerScreen(nil)
+			ServerPreferences:ToggleNameAndDescriptionFilter()
+			self:RefreshServerName()
             return true
         end
     end
@@ -220,6 +223,33 @@ function PlayerStatusScreen:GetDisplayName(clientrecord)
     return clientrecord.name or ""
 end
 
+function PlayerStatusScreen:RefreshServerName()
+    local serverNameStr = ServerPreferences:IsNameAndDescriptionHidden() and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or TheNet:GetServerName()
+    if serverNameStr == "" then
+        self.servertitle:SetString(serverNameStr)
+    elseif self.servermenunumbtns > 1 then
+        self.servertitle:SetTruncatedString(serverNameStr, 550, 100, true)
+    elseif self.servermenunumbtns > 0 then
+        self.servertitle:SetTruncatedString(serverNameStr, 600, 110, true)
+    else
+        self.servertitle:SetTruncatedString(serverNameStr, 800, 145, true)
+    end							
+
+    local serverDescStr = TheNet:GetServerDescription()
+    if serverDescStr == "" then
+        self.serverdesc:SetString(serverDescStr)
+    else
+		serverDescStr = ServerPreferences:IsNameAndDescriptionHidden() and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_DESCRIPTION or serverDescStr
+		if self.servermenunumbtns > 1 then
+			self.serverdesc:SetTruncatedString(serverDescStr, 550, 175, true)
+		elseif self.servermenunumbtns > 0 then
+			self.serverdesc:SetTruncatedString(serverDescStr, 600, 190, true)
+		else
+			self.serverdesc:SetTruncatedString(serverDescStr, 800, 250, true)
+		end
+	end
+end
+
 function PlayerStatusScreen:DoInit(ClientObjs)
 
     TheInput:EnableDebugToggle(false)
@@ -229,14 +259,17 @@ function PlayerStatusScreen:DoInit(ClientObjs)
         --bleed outside the screen a bit, otherwise it may not cover
         --the edge of the screen perfectly when scaled to some sizes
         local bleeding = 4
-        self.black = self:AddChild(Image("images/global.xml", "square.tex"))
-        self.black:SetSize(RESOLUTION_X + bleeding, RESOLUTION_Y + bleeding)
-        self.black:SetVRegPoint(ANCHOR_MIDDLE)
-        self.black:SetHRegPoint(ANCHOR_MIDDLE)
-        self.black:SetVAnchor(ANCHOR_MIDDLE)
-        self.black:SetHAnchor(ANCHOR_MIDDLE)
-        self.black:SetScaleMode(SCALEMODE_FIXEDPROPORTIONAL)
-        self.black:SetTint(0,0,0,0) -- invisible, but clickable!
+        self.black = self:AddChild(ImageButton("images/global.xml", "square.tex"))
+        self.black.image:SetVRegPoint(ANCHOR_MIDDLE)
+        self.black.image:SetHRegPoint(ANCHOR_MIDDLE)
+        self.black.image:SetVAnchor(ANCHOR_MIDDLE)
+        self.black.image:SetHAnchor(ANCHOR_MIDDLE)
+        self.black.image:SetScaleMode(SCALEMODE_FILLSCREEN)
+        self.black.image:SetTint(0,0,0,0) -- invisible, but clickable!
+
+	    self.black:SetHelpTextMessage("")
+	    self.black:SetOnClick(function() if self.click_to_close then TheFrontEnd:PopScreen(self) end end)
+		self.black:MoveToBack()
     end
 
     if not self.root then
@@ -269,34 +302,34 @@ function PlayerStatusScreen:DoInit(ClientObjs)
 		self.serverstate:SetString(modeStr.." "..STRINGS.UI.PLAYERSTATUSSCREEN.AGE_PREFIX..self.serverage)
 	end
 
-    local servermenunumbtns = 0
+    self.servermenunumbtns = 0
 
     self.server_group = TheNet:GetServerClanID()
     if self.server_group ~= "" and not TheInput:ControllerAttached() then
         if self.viewgroup_button == nil then
             self.viewgroup_button = self.root:AddChild(ImageButton("images/scoreboard.xml", "clan_normal.tex", "clan_hover.tex", "clan.tex", "clan.tex", nil, { .4, .4 }, { 0, 0 }))
             self.viewgroup_button:SetOnClick(function() TheNet:ViewNetProfile(self.server_group) end)
-            self.viewgroup_button:SetHoverText(STRINGS.UI.SERVERLISTINGSCREEN.VIEWGROUP, { font = NEWFONT_OUTLINE, offset_x = 0, offset_y = 48, colour = WHITE})
+            self.viewgroup_button:SetHoverText(STRINGS.UI.SERVERLISTINGSCREEN.VIEWGROUP, { font = NEWFONT_OUTLINE, offset_x = 0, offset_y = 38, colour = WHITE})
         end
-        servermenunumbtns = servermenunumbtns + 1
+        self.servermenunumbtns = self.servermenunumbtns + 1
     elseif self.viewgroup_button ~= nil then
         self.viewgroup_button:Kill()
         self.viewgroup_button = nil
     end
 
-    if not TheInput:ControllerAttached() and #UserCommands.GetServerActions(self.owner) > 0 then
-        if self.serveractions_button == nil then
-            self.serveractions_button = self.root:AddChild(ImageButton("images/scoreboard.xml", "more_actions_normal.tex", "more_actions_hover.tex", "more_actions.tex", "more_actions.tex", nil, { .4, .4 }, { 0, 0 }))
-            self.serveractions_button:SetOnClick(function()
-                TheFrontEnd:PopScreen()
-                self:OpenUserCommandPickerScreen(nil)
+    if not TheInput:ControllerAttached() then
+        if self.toggleservertext_button == nil then
+            self.toggleservertext_button = self.root:AddChild(ImageButton("images/scoreboard.xml", "toggle_server_name_normal.tex", "toggle_server_name_hover.tex", "toggle_server_name.tex", "toggle_server_name.tex", nil, { .4, .4 }, { 0, 0 }))
+            self.toggleservertext_button:SetHoverText(STRINGS.UI.SERVERLISTINGSCREEN.TOGGLE_SERVER_NAME, { font = NEWFONT_OUTLINE, offset_x = 0, offset_y = 38, colour = WHITE})
+            self.toggleservertext_button:SetOnClick(function()
+				ServerPreferences:ToggleNameAndDescriptionFilter()
+				self:RefreshServerName()
             end)
-            self.serveractions_button:SetHoverText(STRINGS.UI.SERVERLISTINGSCREEN.SERVERACTIONS, { font = NEWFONT_OUTLINE, offset_x = 0, offset_y = 48, colour = WHITE})
-        end
-        servermenunumbtns = servermenunumbtns + 1
-    elseif self.serveractions_button ~= nil then
-        self.serveractions_button:Kill()
-        self.serveractions_button = nil
+		end
+        self.servermenunumbtns = self.servermenunumbtns + 1
+    elseif self.toggleservertext_button ~= nil then
+        self.toggleservertext_button:Kill()
+        self.toggleservertext_button = nil
     end
 
     if ClientObjs == nil then
@@ -313,7 +346,6 @@ function PlayerStatusScreen:DoInit(ClientObjs)
     end
     self.players_number:SetString(tostring(not TheNet:GetServerIsClientHosted() and self.numPlayers - 1 or self.numPlayers).."/"..(TheNet:GetServerMaxPlayers() or "?"))
 
-    local serverDescStr = ServerPreferences:IsNameAndDescriptionHidden() and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_DESCRIPTION or TheNet:GetServerDescription()
     if not self.serverdesc then
         self.serverdesc = self.root:AddChild(Text(UIFONT,30))
         self.serverdesc:SetColour(1,1,1,1)
@@ -326,13 +358,14 @@ function PlayerStatusScreen:DoInit(ClientObjs)
     local servermenux = -329
     local servermenubtnoffs = 24
     if self.viewgroup_button ~= nil then
-        self.viewgroup_button:SetPosition(servermenux - (servermenunumbtns > 1 and servermenubtnoffs or 0), 200)
+        self.viewgroup_button:SetPosition(servermenux - (self.servermenunumbtns > 1 and servermenubtnoffs or 0), 200)
     end
-    if self.serveractions_button ~= nil then
-        self.serveractions_button:SetPosition(servermenux + (servermenunumbtns > 1 and servermenubtnoffs or 0), 200)
+	
+    if self.toggleservertext_button ~= nil then
+        self.toggleservertext_button:SetPosition(servermenux + (self.servermenunumbtns > 1 and servermenubtnoffs or 0), 200)
     end
 
-    if serverDescStr == "" then
+    if TheNet:GetServerDescription() == "" then
         self.servertitle:SetPosition(0,215)
         self.serverdesc:SetPosition(0,175)
         self.serverstate:SetPosition(0,175)
@@ -349,26 +382,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
         self.divider:SetPosition(0,149)
     end
 
-    local serverNameStr = ServerPreferences:IsNameAndDescriptionHidden() and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or TheNet:GetServerName()
-    if serverNameStr == "" then
-        self.servertitle:SetString(serverNameStr)
-    elseif servermenunumbtns > 1 then
-        self.servertitle:SetTruncatedString(serverNameStr, 550, 100, true)
-    elseif servermenunumbtns > 0 then
-        self.servertitle:SetTruncatedString(serverNameStr, 600, 110, true)
-    else
-        self.servertitle:SetTruncatedString(serverNameStr, 800, 145, true)
-    end
-
-    if serverDescStr == "" then
-        self.serverdesc:SetString(serverDescStr)
-    elseif servermenunumbtns > 1 then
-        self.serverdesc:SetTruncatedString(serverDescStr, 550, 175, true)
-    elseif servermenunumbtns > 0 then
-        self.serverdesc:SetTruncatedString(serverDescStr, 600, 190, true)
-    else
-        self.serverdesc:SetTruncatedString(serverDescStr, 800, 250, true)
-    end
+	self:RefreshServerName()
 
     if not self.servermods and TheNet:GetServerModsEnabled() then
         local modsStr = TheNet:GetServerModsDescription()

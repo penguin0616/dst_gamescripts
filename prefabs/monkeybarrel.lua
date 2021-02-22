@@ -1,3 +1,4 @@
+require("worldsettingsutil")
 require "prefabutil"
 local RuinsRespawner = require "prefabs/ruinsrespawner"
 
@@ -132,6 +133,10 @@ local function OnHaunt(inst)
     return false
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MONKEYBARREL_SPAWN_PERIOD, TUNING.MONKEYBARREL_REGEN_PERIOD)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -157,15 +162,23 @@ local function fn()
         return inst
     end
 
-    inst:AddComponent( "childspawner" )
-    inst.components.childspawner:SetRegenPeriod(120)
-    inst.components.childspawner:SetSpawnPeriod(30)
-    inst.components.childspawner:SetMaxChildren(math.random(3, 4))
+    inst:AddComponent("childspawner")
+    inst.components.childspawner:SetRegenPeriod(TUNING.MONKEYBARREL_REGEN_PERIOD)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MONKEYBARREL_SPAWN_PERIOD)
+    if TUNING.MONKEYBARREL_CHILDREN.max == 0 then
+        inst.components.childspawner:SetMaxChildren(0)
+    else
+        inst.components.childspawner:SetMaxChildren(math.random(TUNING.MONKEYBARREL_CHILDREN.min, TUNING.MONKEYBARREL_CHILDREN.max))
+    end
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MONKEYBARREL_SPAWN_PERIOD, TUNING.MONKEYBARREL_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MONKEYBARREL_REGEN_PERIOD, TUNING.MONKEYBARREL_ENABLED)
+
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "monkey"
     inst.components.childspawner:StartSpawning()
     inst.components.childspawner.ongohome = ongohome
-    inst.components.childspawner:SetSpawnedFn(shake)
+    inst.components.childspawner:SetSpawnedFn(shake)    
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('monkey_barrel')
@@ -200,6 +213,8 @@ local function fn()
     inst.components.hauntable:SetOnHauntFn(OnHaunt)
 
     enqueueShake(inst)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

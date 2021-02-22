@@ -13,31 +13,31 @@ local BASE_RADIUS = 8
 
 local TimeMultipliers = {
     ["evergreen"] = function()
-        return (TheWorld.state.issummer and 2) or (TheWorld.state.iswinter and 0) or 1
+        return (TheWorld.state.issummer and 2) or (TheWorld.state.iswinter and 0) or TUNING.EVERGREEN_REGROWTH_TIME_MULT
     end,
     ["evergreen_sparse"] = function()
-        return 1
+        return TUNING.EVERGREEN_REGROWTH_TIME_MULT
     end,
     ["twiggytree"] = function()
-        return 1
+        return TUNING.TWIGGYTREE_REGROWTH_TIME_MULT
     end,    
     ["deciduoustree"] = function()
-        return (not TheWorld.state.isspring and 0) or 1
+        return (not TheWorld.state.isspring and 0) or TUNING.DECIDIOUS_REGROWTH_TIME_MULT
     end,
     ["mushtree_tall"] = function()
-        return (not TheWorld.state.iswinter and 0) or 1
+        return (not TheWorld.state.iswinter and 0) or TUNING.MUSHTREE_REGROWTH_TIME_MULT
     end,
     ["mushtree_medium"] = function()
-        return (not TheWorld.state.issummer and 0) or 1
+        return (not TheWorld.state.issummer and 0) or TUNING.MUSHTREE_REGROWTH_TIME_MULT
     end,
     ["mushtree_small"] = function()
-        return (not TheWorld.state.isspring and 0) or 1
+        return (not TheWorld.state.isspring and 0) or TUNING.MUSHTREE_REGROWTH_TIME_MULT
     end,
     ["moon_tree"] = function()
-        return (not TheWorld.state.isspring and 0) or 1
+        return (not TheWorld.state.isspring and 0) or TUNING.MOONTREE_REGROWTH_TIME_MULT
     end,
     ["mushtree_moon"] = function()
-        return (not TheWorld.state.iswinter and 0) or 1
+        return (not TheWorld.state.iswinter and 0) or TUNING.MOONMUSHTREE_REGROWTH_TIME_MULT
     end,
 }
 

@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/merm_guard_tower.zip"),
@@ -129,6 +131,10 @@ local function onbuilt(inst)
     testforflag(inst)
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MERMWATCHTOWER_RELEASE_TIME, TUNING.MERMWATCHTOWER_REGEN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -170,9 +176,12 @@ local function fn()
     inst.components.childspawner.childname = "mermguard"
     inst.components.childspawner:SetSpawnedFn(OnSpawned)
     inst.components.childspawner:SetGoHomeFn(OnGoHome)
-    inst.components.childspawner:SetRegenPeriod(TUNING.TOTAL_DAY_TIME * 0.5)
-    inst.components.childspawner:SetSpawnPeriod(10)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MERMWATCHTOWER_REGEN_TIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MERMWATCHTOWER_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(TUNING.MERMWATCHTOWER_MERMS)
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MERMWATCHTOWER_RELEASE_TIME, TUNING.MERMWATCHTOWER_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MERMWATCHTOWER_REGEN_TIME, TUNING.MERMWATCHTOWER_ENABLED)
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.descriptionfn = DescriptionFn
@@ -204,6 +213,7 @@ local function fn()
 
     inst.OnSave = onsave
     inst.OnLoad = onload
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

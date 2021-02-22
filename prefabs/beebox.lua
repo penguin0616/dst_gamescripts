@@ -1,4 +1,5 @@
 require "prefabutil"
+require("worldsettingsutil")
 
 local assets =
 {
@@ -219,7 +220,9 @@ local function SeasonalSpawnChanges(inst, season)
     end
 end
 
-
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.BEEBOX_RELEASE_TIME, TUNING.BEEBOX_REGEN_TIME)
+end
 
 local function MakeBeebox(name, common_postinit, master_postinit)
 
@@ -269,6 +272,8 @@ local function MakeBeebox(name, common_postinit, master_postinit)
         inst.components.childspawner.allowwater = true
         SeasonalSpawnChanges(inst, TheWorld.state.season)
         inst:WatchWorldState("season", SeasonalSpawnChanges)
+        WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.BEEBOX_RELEASE_TIME, TUNING.BEEBOX_ENABLED)
+        WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.BEEBOX_REGEN_TIME, TUNING.BEEBOX_ENABLED)
 
         if TheWorld.state.isday and not TheWorld.state.iswinter then
             inst.components.childspawner:StartSpawning()
@@ -300,7 +305,9 @@ local function MakeBeebox(name, common_postinit, master_postinit)
 
         if master_postinit then
             master_postinit(inst)
-        end        
+        end
+
+        inst.OnPreLoad = OnPreLoad
 
         return inst
     end

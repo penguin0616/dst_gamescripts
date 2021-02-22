@@ -4,6 +4,7 @@ require "map/graphnode"
 require "map/extents"
 require "map/terrain"
 local Rooms = require "map/rooms"
+local PrefabSwaps = require("prefabswaps")
 
 Graph = Class(function(self, id, args)   
 	self.id = id
@@ -758,6 +759,7 @@ function Graph:GlobalPostPopulate(entities, width, height)
 	-- Spawn wormhole pairs (randomly, for now)
 	self:SwapOutWormholeMarkers(entities, width, height)
 
+	self:ResolveCustomizationPrefabs(entities, width, height)
 end
 
 function Graph:AddRequiredPrefab(prefab)
@@ -915,6 +917,26 @@ function Graph:SwapOutWormholeMarkers(entities, width, height)
 	end
 
 	entities["wormhole_MARKER"] = nil
+end
+
+function Graph:ResolveCustomizationPrefabs(entities, width, height)
+	local customization_swaps = {}
+	for prefab in pairs(entities) do
+		local real_prefab = PrefabSwaps.ResolveCustomizationPrefab(prefab)
+		if real_prefab then
+			customization_swaps[real_prefab] = customization_swaps[real_prefab] or {}
+			table.insert(customization_swaps[real_prefab], prefab)
+		end
+	end
+	for real_prefab, proxies in pairs(customization_swaps) do
+		entities[real_prefab] = entities[real_prefab] or {}
+		for _, proxy_prefab in ipairs(proxies) do
+			for _, entity in ipairs(entities[proxy_prefab]) do
+				table.insert(entities[real_prefab], entity)
+			end
+			entities[proxy_prefab] = nil
+		end
+	end
 end
 
 

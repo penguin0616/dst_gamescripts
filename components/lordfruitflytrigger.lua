@@ -13,7 +13,7 @@ local function onresurrect(inst)
 end
 
 local function ontimerfinished(self)
-    self.lordfruitflytrigger = {}
+    self.overlapping = {}
 end
 
 local LordFruitFlyTrigger = Class(function(self, inst)

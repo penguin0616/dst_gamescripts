@@ -13,7 +13,7 @@ end
 
 local function OnEntitySleep(inst)
     local self = inst.components.spawner
-    if self ~= nil and self.nextspawntime ~= nil and GetTime() > self.nextspawntime then
+    if self and (self.useexternaltimer and self.externaltimerfinished) or (self.nextspawntime and GetTime() > self.nextspawntime) then
         self:ReleaseChild()
     end
 end
@@ -34,6 +34,11 @@ local Spawner = Class(function(self, inst)
     self.retry_period = nil
 
     self._onchildkilled = function(child) self:OnChildKilled(child) end
+
+    self.useexternaltimer = false
+    --self.externaltimerfinished = false
+    --self.starttimerfn = nil
+    --self.stoptimerfn = nil
 end)
 
 function Spawner:OnRemoveFromEntity()
@@ -93,11 +98,15 @@ end
 
 function Spawner:SpawnWithDelay(delay)
     delay = math.max(0, delay)
-    self.nextspawntime = GetTime() + delay
-    if self.task ~= nil then
-        self.task:Cancel()
+    if self.useexternaltimer then
+        self.starttimerfn(self.inst, delay)
+    else
+        self.nextspawntime = GetTime() + delay
+        if self.task ~= nil then
+            self.task:Cancel()
+        end
+        self.task = self.inst:DoTaskInTime(delay, OnReleaseChild, self)
     end
-    self.task = self.inst:DoTaskInTime(delay, OnReleaseChild, self)
 end
 
 function Spawner:IsSpawnPending()
@@ -115,11 +124,15 @@ function Spawner:SetQueueSpawning(queued, retryperiod)
 end
 
 function Spawner:CancelSpawning()
-    if self.task ~= nil then
-        self.task:Cancel()
-        self.task = nil
+    if self.useexternaltimer then
+        self.stoptimerfn(self.inst)
+    else
+        if self.task ~= nil then
+            self.task:Cancel()
+            self.task = nil
+        end
+        self.nextspawntime = nil
     end
-    self.nextspawntime = nil
 end
 
 function Spawner:OnSave()
@@ -128,8 +141,10 @@ function Spawner:OnSave()
         data.child = self.child:GetSaveRecord()
     elseif self.child ~= nil and (self.child.components.health == nil or not self.child.components.health:IsDead()) then
         data.childid = self.child.GUID
-    elseif self.nextspawntime ~= nil then
+    elseif not self.useexternaltimer and self.nextspawntime ~= nil then
         data.startdelay = self.nextspawntime - GetTime()
+    elseif self.useexternaltimer and self.externaltimerfinished then
+        data.externaltimerfinished = true
     end
 
     local refs = data.childid ~= nil and { data.childid } or nil
@@ -146,8 +161,11 @@ function Spawner:OnLoad(data, newents)
             self:GoHome(child)
         end
     end
-    if data.startdelay ~= nil then
+    if not self.useexternaltimer and data.startdelay ~= nil then
         self:SpawnWithDelay(data.startdelay)
+    end
+    if self.useexternaltimer and data.externaltimerfinished then
+        self.externaltimerfinished = data.externaltimerfinished
     end
 end
 
@@ -202,8 +220,7 @@ function Spawner:ReleaseChild()
     if self:IsOccupied() then
         -- We want to release child, but are we set to queue the spawn right now?
         if self.queue_spawn and self.retryperiod ~= nil then
-            self.task = self.inst:DoTaskInTime(self.retryperiod, OnReleaseChild, self)
-            self.nextspawntime = GetTime() + self.retryperiod
+            self:SpawnWithDelay(self.retryperiod)
         -- If not, go for it!
         else
             self.inst:RemoveChild(self.child)

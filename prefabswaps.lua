@@ -99,6 +99,25 @@ PrefabSwaps.AddPrefabProxy("perma_sapling", "sapling")
 --twigs on the ground only when twiggy trees are selected
 PrefabSwaps.AddPrefabProxy("ground_twigs", "twigs")
 
+--some prefabs in world gen tables are prefabs with a prefix, so that they can get controlled by a different customization setting.
+--after all the entity spawning is done, replace the temp names with the actual prefabs
+
+local _customization_proxies = {}
+
+PrefabSwaps.AddCustomizationPrefab = function(proxy, prefab)
+    assert(_customization_proxies[prefab] == nil, "multi level customization prefab proxies are not allowed.")
+    _customization_proxies[proxy] = prefab
+end
+
+PrefabSwaps.ResolveCustomizationPrefab = function(proxy)
+    return _customization_proxies[proxy]
+end
+
+--so that the moon island rocks will get controlled by the moon island settings.
+PrefabSwaps.AddCustomizationPrefab("lunar_island_rock1", "rock1")
+PrefabSwaps.AddCustomizationPrefab("lunar_island_rock2", "rock2")
+PrefabSwaps.AddCustomizationPrefab("lunar_island_rocks", "rocks")
+
 --------------------------------------------------------------------------
 
 local _selected_sets = nil

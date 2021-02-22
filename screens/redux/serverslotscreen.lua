@@ -17,7 +17,7 @@ local ServerSlotScreen = Class(Screen, function(self, prev_screen)
     self.slot_cache = {}
 
 	self.root = self:AddChild(TEMPLATES.ScreenRoot())
-    self.bg = self.root:AddChild(TEMPLATES.PlainBackground())	
+    self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.SERVERCREATIONSCREEN.HOST_GAME))
     
 	self.onlinestatus = self.root:AddChild(OnlineStatus())

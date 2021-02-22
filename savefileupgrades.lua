@@ -125,7 +125,7 @@ t = {
             end
 
             local Levels = require"map/levels"
-            local Customise = require"map/customise"
+            local Customize = require"map/customize"
 
             local ret = Levels.GetDataForLevelID(basepreset)
             if ret == nil then
@@ -140,7 +140,7 @@ t = {
             end
             ret.location = location or ret.location or "forest"
 
-            local options = Customise.GetOptionsWithLocationDefaults(ret.location, master_world)
+            local options = Customize.GetOptionsWithLocationDefaults(ret.location, master_world)
             for i, option in ipairs(options) do
                 ret.overrides[option.name] = option.default
             end
@@ -247,10 +247,41 @@ t = {
             shardindex.version = 2
             shardindex:MarkDirty()
         end,
+        UpgradeShardIndexFromV2toV3 = function(shardindex)
+            if shardindex.version ~= 2 then
+                return
+            end
+
+            local level = shardindex:GetGenOptions()
+            if level == nil then
+                return
+            end
+
+            if string.sub(level.id, 1, 14) == "CUSTOM_PRESET_" then
+                print(string.format("Upgrading saved level data for '%s' from v2 to v3.", tostring(level.id)))
+
+                local customid = "CUSTOM_CUSTOM PRESET "..string.sub(level.id, 15)
+                level.id = (level.location == "forest" and "SURVIVAL_TOGETHER") or (level.location == "cave" and "DST_CAVE") or (nil)
+
+                level.custom_settings_id = customid
+                level.custom_worldgen_id = customid
+
+                level.custom_settings_name = level.name
+                level.custom_worldgen_name = level.name
+
+                level.custom_settings_desc = level.desc
+                level.custom_worldgen_desc = level.desc
+            end
+
+            shardindex.version = 3
+            shardindex:MarkDirty()
+        end,
         UpgradeWorldgenoverrideFromV1toV2 = function(wgo)
             local validfields = {
                 overrides = true,
                 preset = true,
+                worldgen_preset = true,
+                settings_preset = true,
                 override_enabled = true,
             }
             local needsupgrade = false
@@ -270,8 +301,10 @@ t = {
             local ret = {}
 
             ret.preset = wgo.actualpreset or wgo.preset
-            ret.overrides = deepcopy(wgo.overrides or {})
+            ret.worldgen_preset = wgo.worldgen_preset
+            ret.settings_preset = wgo.settings_preset
             ret.override_enabled = wgo.override_enabled
+            ret.overrides = deepcopy(wgo.overrides or {})
 
             if wgo.presetdata and wgo.presetdata.overrides then
                 for i,override in ipairs(wgo.presetdata.overrides) do
@@ -281,7 +314,7 @@ t = {
             wgo.presetdata = nil
 
             -- We'll just assume that all nested tables contain override data.
-            for _,t in pairs(wgo) do
+            for _, t in pairs(wgo) do
                 if type(t) == "table" then
                     for tweak,value in pairs(t) do
                         ret.overrides[tweak] = value
