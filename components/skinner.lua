@@ -26,12 +26,7 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 	end
 					
 	--if not ghost, then we need to apply the clothing
-	if skintype == "normal_skin"
-	or skintype == "wimpy_skin" or skintype == "mighty_skin"
-	or skintype == "stage_2" or skintype == "stage_3" or skintype == "stage_4"
-	or skintype == "powerup"
-	or skintype == "NO_BASE" then
-
+	if table.contains(SKIN_TYPES_THAT_RECEIVE_CLOTHING, skintype) then
 		local needs_legacy_fixup = not anim_state:BuildHasSymbol( "torso_pelvis" ) --support clothing on legacy mod characters
 		local torso_build = nil
 		local pelvis_build = nil

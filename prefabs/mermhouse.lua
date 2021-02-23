@@ -246,8 +246,8 @@ local function onbuilt(inst)
 end
 
 local function mermhouse_crafted_master(inst)
-    inst.components.childspawner:SetRegenPeriod(TUNING.TOTAL_DAY_TIME * 2)
-    inst.components.childspawner:SetSpawnPeriod(10)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MERMHOUSE_REGEN_TIME / 2)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MERMHOUSE_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(1)
 
     inst:ListenForEvent("onbuilt", onbuilt)

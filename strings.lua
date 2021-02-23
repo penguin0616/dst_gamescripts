@@ -346,6 +346,17 @@ STRINGS =
         default = "Unknown",
     },
 
+    ANTIADDICTION =
+    {
+        HOUR_1 = "You've played for one hour.",
+        HOUR_2 = "You've played for two hours.",
+        HOUR_3 = "You've played for three hours.",
+        HOUR_4 = "You've played for four hours.",
+        HOUR_5 = "You've played for five hours.",
+        HOUR_X = "You've played for several hours.",
+        EXIT_SOON = "Your time for today is up. Please exit."
+    },
+
     --ACTION MOUSEOVER TEXT
     ACTIONS =
     {

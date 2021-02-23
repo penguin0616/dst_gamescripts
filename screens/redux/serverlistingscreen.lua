@@ -2216,7 +2216,7 @@ function ServerListingScreen:CurrentCenterFocus()
 end
 
 function ServerListingScreen:CurrentRightFocus()
-    if self.filters_scroll_list:IsVisible() then
+    if self.filters_scroll_list and self.filters_scroll_list:IsVisible() then
         return self.filters_scroll_list
     elseif self.server_details_additional:IsVisible() then
         return self.view_additional_details_btns

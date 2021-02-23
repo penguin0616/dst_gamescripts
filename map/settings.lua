@@ -10,7 +10,8 @@ SettingsPreset = Class(function(self, data)
 	self.overrides = data.overrides or {}
     self.hideminimap = data.hideminimap or false
 
-    self.version = data.version or 1
+    self.version = data.version or 2
+	self.version = math.max(self.version, 2) --minimum version is 2 because serverlistingscreen.
 end)
 
 function SettingsPreset:SetID(id)

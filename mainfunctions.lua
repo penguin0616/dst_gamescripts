@@ -1797,4 +1797,24 @@ function IsInFrontEnd()
 	return Settings.reset_action == nil or Settings.reset_action == RESET_ACTION.LOAD_FRONTEND
 end
 
+local currently_displaying = nil
+function DisplayAntiAddictionNotification( notification )
+    if notification ~= currently_displaying then        
+        local Text = require "widgets/text"
+        local title = Text(CHATFONT_OUTLINE, 35)
+        title:SetString(STRINGS.ANTIADDICTION[notification])
+        title:SetPosition(0, -50, 0)
+        title:Show()
+        title:SetVAnchor(ANCHOR_TOP)
+        title:SetHAnchor(ANCHOR_MIDDLE)
+        currently_displaying = notification
+
+        CreateEntity():DoTaskInTime(4.5, function(inst)
+            title:Kill()
+            inst.entity:Retire()
+            currently_displaying = nil
+        end)
+    end
+end
+
 require("dlcsupport")
