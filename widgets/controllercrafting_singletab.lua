@@ -42,6 +42,7 @@ end
 
 function ControllerCrafting:Close(fn)
     ControllerCrafting._base.Close(self, fn)
+    self.recipe_held = false
     self:StopUpdating()
     --V2C: focus hacks because this is not a proper screen
     TheFrontEnd:LockFocus(false)

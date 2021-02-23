@@ -91,6 +91,8 @@ end
 
 function CraftSlot:OnLoseFocus()
     CraftSlot._base.OnLoseFocus(self)
+    self.recipe_held = false
+    self:StopUpdating()
     self:Close()
 end
 

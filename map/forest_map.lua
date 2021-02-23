@@ -100,6 +100,26 @@ local MULTIPLY = {
 	["ocean_always"] = 2,
 }
 
+local CLUMP = {
+	["often"] = 8,
+	["mostly"] = 15,
+	["always"] = 30,
+
+	["ocean_often"] = 15,
+	["ocean_mostly"] = 25,
+	["ocean_always"] = 40,
+}
+
+local CLUMPSIZE = {
+	["often"] = {1, 2},
+	["mostly"] = {2, 3},
+	["always"] = {3, 4},
+
+	["ocean_often"] = {1, 2},
+	["ocean_mostly"] = {2, 3},
+	["ocean_always"] = {3, 4},
+}
+
 local SPAWNER_MUL = 1.2
 local OCEAN_SPAWNER_MUL = 1.2
 local function prefab_spawner_multiply(density, mult)
@@ -127,16 +147,19 @@ local MULTIPLY_PREFABS = {
     ["worm_spawner"] =             	prefab_spawner_multiply,
 	["monkeybarrel_spawner"] =      prefab_spawner_multiply,
 
+	--while it is an ocean setting, its spawning requirements mean it needs to get treated like a land setting.
+	["wobster_den_spawner_shore"] =	prefab_spawner_multiply,
+	--feels more impactful as a land setting multiplier.
+	["oceanfish_shoalspawner"] =	prefab_spawner_multiply,
+
 	["seastack_spawner_rough"] =	prefab_spawner_ocean_multiply,
 	["seastack_spawner_swell"] =	prefab_spawner_ocean_multiply,
-	["oceanfish_shoalspawner"] =	prefab_spawner_ocean_multiply,
 	["waterplant_spawner_rough"] =	prefab_spawner_ocean_multiply,
-	["wobster_den_spawner_shore"] =	prefab_spawner_ocean_multiply,
 }
 
 local TRANSLATE_TO_PREFABS = {
 	["spiders"] = 			{"spiderden"},
-	["cave_spiders"] = 		{"spiderden", "dropperweb", "spiderhole"},
+	["cave_spiders"] = 		{"dropperweb", "spiderhole"},
 	["tentacles"] = 		{"tentacle"},
 	["tallbirds"] = 		{"tallbirdnest"},
 	["pigs"] = 				{"pighouse"},
@@ -170,7 +193,7 @@ local TRANSLATE_TO_PREFABS = {
 	["mandrake"] = 			{"mandrake"},
 	["angrybees"] = 		{"wasphive", "killerbee"},
 	["houndmound"] = 		{"houndmound"},
-	["chess"] = 			{"knight", "bishop", "rook"},
+	["chess"] = 			{"knight", "bishop", "rook"}, --here for lowering the quantities of chess pieces.
 	["walrus"] = 			{"walrus_camp"},
     ["mushtree"] =          {"mushtree_tall", "mushtree_medium", "mushtree_small"},
     ["bats"] =              {"batcave"},
@@ -210,6 +233,10 @@ local TRANSLATE_TO_PREFABS = {
 	["ocean_bullkelp"] =	{"bullkelp_plant"},
 }
 
+local TRANSLATE_TO_CLUMP = {
+	["chess"] = 			{"worldgen_chesspieces"}, --here for increasing the quantities of chess pieces
+}
+
 local TRANSLATE_AND_OVERRIDE = { --These are entities that should be translated to prefabs for world gen but also have a postinit override to do
 	["flowers"] =			{"flower", "flower_evil"},
 	["rock_ice"] = 			{"rock_ice"}, 
@@ -246,6 +273,15 @@ local function TranslateWorldGenChoices(gen_params)
             else --Override only
                 runtime_overrides[tweak] = v
             end
+
+			if TRANSLATE_TO_CLUMP[tweak] then
+                for i,prefab in ipairs(TRANSLATE_TO_CLUMP[tweak]) do
+					local clump = CLUMP[v]
+					if clump then
+						translated_prefabs[prefab] = {clumpcount = clump, clumpsize = CLUMPSIZE[v]}
+					end
+                end
+			end
         end
     end
 
@@ -796,7 +832,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
     if translated_prefabs ~= nil then
         -- Filter out any etities over our overrides
         for prefab,mult in pairs(translated_prefabs) do
-            if mult < 1 and entities[prefab] ~= nil and #entities[prefab] > 0 then
+            if type(mult) == "number" and mult < 1 and entities[prefab] ~= nil and #entities[prefab] > 0 then
                 local new_amt = math.floor(#entities[prefab]*mult)
                 if new_amt == 0 then
                     entities[prefab] = nil
@@ -944,6 +980,8 @@ return {
 	MULTIPLY = MULTIPLY,
 	TRANSLATE_AND_OVERRIDE = TRANSLATE_AND_OVERRIDE,
 	MULTIPLY_PREFABS = MULTIPLY_PREFABS,
+	CLUMP = CLUMP,
+	CLUMPSIZE = CLUMPSIZE,
 	SEASONS = SEASONS,
 	DEFAULT_SEASON = DEFAULT_SEASON,
 }

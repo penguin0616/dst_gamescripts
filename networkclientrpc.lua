@@ -880,6 +880,13 @@ local RPC_HANDLERS =
         end
         popup:Close(player, ...)
     end,
+
+    RepeatHeldAction = function(player)
+        local playercontroller = player.components.playercontroller
+        if playercontroller then
+            playercontroller:RepeatHeldAction()
+        end
+    end,
 }
 
 RPC = {}

@@ -1838,6 +1838,22 @@ local function IsAnyActionHoldButtonHeld()
     return false
 end
 
+function PlayerController:RepeatHeldAction()
+    if (self.lastheldaction and self.lastheldaction:IsValid()) then
+        if self.heldactioncooldown == 0 then
+            self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
+            self:DoAction(self.lastheldaction)
+        end
+    elseif self.actionrepeatfunction then
+        if self.heldactioncooldown == 0 then
+            self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
+            self:actionrepeatfunction()
+        end
+    else
+        self:ClearActionHold()
+    end
+end
+
 function PlayerController:OnUpdate(dt)
     self.predictionsent = false
 
@@ -2160,20 +2176,12 @@ function PlayerController:OnUpdate(dt)
         self.remote_vector.y = 0
     end
 
+    self:CooldownHeldAction(dt)
     if self.actionholding then
-        self:CooldownHeldAction(dt)
-        if (self.lastheldaction and self.lastheldaction:IsValid()) then
-            if self.heldactioncooldown == 0 then
-                self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
-                self:DoAction(self.lastheldaction)
-            end
-        elseif self.actionrepeatfunction then
-            if self.heldactioncooldown == 0 then
-                self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
-                self:actionrepeatfunction()
-            end
+        if self.ismastersim then
+            self:RepeatHeldAction()
         else
-            self:ClearActionHold()
+            SendRPCToServer(RPC.RepeatHeldAction)
         end
     end
 

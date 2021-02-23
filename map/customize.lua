@@ -218,8 +218,8 @@ local WORLDGEN_GROUP = {
 		desc = worldgen_frequency_descriptions,
 		atlas = "images/worldgen_customization.xml",
 		items={
-			["spiders"] = {value = "default", image = "spiderden.tex", world={"forest"}}, 
-			["cave_spiders"] = {value = "default", image = "spiderden.tex", world={"cave"}}, 
+			["spiders"] = {value = "default", image = "spiderden.tex", world={"forest", "cave"}},
+			["cave_spiders"] = {value = "default", image = "cave_spiderden.tex", world={"cave"}}, 
 			["houndmound"] = {value = "default", image = "houndmound.tex", world={"forest"}},
 			["merm"] = {value = "default", image = "mermhut.tex", world={"forest"}}, 
 			["tentacles"] = {value = "default", image = "tentacles.tex", world={"forest", "cave"}}, 
@@ -256,8 +256,8 @@ local WORLDGEN_GROUP = {
 			["monkey"] = {value = "default", image = "monkeybarrel.tex", world={"cave"}},
 			["moon_carrot"] = {value = "default", image = "moon_carrot.tex", world = {"forest"}},
 			["moon_fruitdragon"] = {value = "default", image = "moon_fruitdragon.tex", world = {"forest"}},
-			["ocean_shoal"] = {value = "ocean_default", image = "ocean_shoal.tex", desc = ocean_worldgen_frequency_descriptions, world = {"forest"}},
-			["ocean_wobsterden"] = {value = "ocean_default", image = "ocean_wobsterden.tex", desc = ocean_worldgen_frequency_descriptions, world = {"forest"}},
+			["ocean_shoal"] = {value = "default", image = "ocean_shoal.tex", world = {"forest"}},
+			["ocean_wobsterden"] = {value = "default", image = "ocean_wobsterden.tex", world = {"forest"}},
 		}
 	},
 	["resources"] = {

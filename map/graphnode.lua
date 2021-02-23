@@ -579,8 +579,15 @@ function Node:PopulateExtra(world_gen_choices, spawnFn, data)
 		local amount_to_generate = {}
 		for prefab,amt in pairs(world_gen_choices) do
 			if not PrefabSwaps.IsPrefabInactive(prefab) then
-				if data.prefab_list[prefab] then
-					amount_to_generate[prefab] = math.floor(data.prefab_list[prefab]*amt) - data.prefab_list[prefab]
+				if type(amt) == "number" then
+					if data.prefab_list[prefab] then
+						amount_to_generate[prefab] = math.floor(data.prefab_list[prefab]*amt) - data.prefab_list[prefab]
+					end
+				else
+					if amt.clumpcount > 0 and 0.25 > math.random() then
+						amt.clumpcount = amt.clumpcount - 1
+						amount_to_generate[prefab] = math.random(amt.clumpsize[1], amt.clumpsize[2])
+					end
 				end
 			end
 		end
@@ -592,8 +599,8 @@ function Node:PopulateExtra(world_gen_choices, spawnFn, data)
 
 			if prefab ~= nil then
 				local prefab_data = {}
-				prefab_data.data = (self.data.terrain_contents and self.data.terrain_contents.prefabdata and self.data.terrain_contents.prefabdata[prefab]) or nil	
-				self:AddEntity(prefab, data.points_x, data.points_y, data.idx_left[idx], data.entitiesOut, data.width, data.height, data.prefab_list, prefab_data)				
+				prefab_data.data = (self.data.terrain_contents and self.data.terrain_contents.prefabdata and self.data.terrain_contents.prefabdata[prefab]) or nil
+				self:AddEntity(prefab, data.points_x, data.points_y, data.idx_left[idx], data.entitiesOut, data.width, data.height, data.prefab_list, prefab_data)
 
 				amount_to_generate[prefab] = amount_to_generate[prefab] - 1
 

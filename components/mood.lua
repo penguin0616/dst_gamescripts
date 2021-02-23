@@ -146,7 +146,7 @@ end
 
 function Mood:OnSave()
     local multiplier = self.isinmood and self.worldsettingsmultiplier_inmood or self.worldsettingsmultiplier_outmood
-    return {inmood = self.isinmood, daysleft = self.daystomoodchange / multiplier, moodseasons = self.moodseasons, version = 2}
+    return {inmood = self.isinmood, daysleft = self.daystomoodchange ~= 0 and self.daystomoodchange / multiplier or 0, moodseasons = self.moodseasons, version = 2}
 end
 
 function Mood:OnLoad(data)

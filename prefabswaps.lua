@@ -118,6 +118,26 @@ PrefabSwaps.AddCustomizationPrefab("lunar_island_rock1", "rock1")
 PrefabSwaps.AddCustomizationPrefab("lunar_island_rock2", "rock2")
 PrefabSwaps.AddCustomizationPrefab("lunar_island_rocks", "rocks")
 
+--some prefabs in world gen tables are prefabs with a prefix, so that they can get controlled by a different customization setting.
+--after all the entity spawning is done, replace the temp names with the actual prefabs
+
+local _randomization_proxies = {}
+
+PrefabSwaps.AddRandomizationPrefab = function(proxy, prefabs)
+    _randomization_proxies[proxy] = prefabs
+end
+
+PrefabSwaps.IsRandomizationPrefab = function(proxy)
+    return _randomization_proxies[proxy] ~= nil
+end
+
+PrefabSwaps.ResolveRandomizationPrefab = function(proxy)
+    return _randomization_proxies[proxy][math.random(#_randomization_proxies[proxy])]
+end
+
+--so that the moon island rocks will get controlled by the moon island settings.
+PrefabSwaps.AddRandomizationPrefab("worldgen_chesspieces", {"knight", "bishop", "rook"})
+
 --------------------------------------------------------------------------
 
 local _selected_sets = nil

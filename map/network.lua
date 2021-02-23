@@ -760,6 +760,8 @@ function Graph:GlobalPostPopulate(entities, width, height)
 	self:SwapOutWormholeMarkers(entities, width, height)
 
 	self:ResolveCustomizationPrefabs(entities, width, height)
+
+	self:ResolveRandomizationPrefabs(entities, width, height)
 end
 
 function Graph:AddRequiredPrefab(prefab)
@@ -935,6 +937,21 @@ function Graph:ResolveCustomizationPrefabs(entities, width, height)
 				table.insert(entities[real_prefab], entity)
 			end
 			entities[proxy_prefab] = nil
+		end
+	end
+end
+
+function Graph:ResolveRandomizationPrefabs(entities, width, height)
+	for prefab in pairs(entities) do
+		if PrefabSwaps.IsRandomizationPrefab(prefab) then
+			for i, data in ipairs(entities[prefab]) do
+				local real_prefab = PrefabSwaps.ResolveRandomizationPrefab(prefab)
+				if entities[real_prefab] == nil then
+					entities[real_prefab] = {}
+				end
+				table.insert(entities[real_prefab], data)
+			end
+			entities[prefab] = nil
 		end
 	end
 end
