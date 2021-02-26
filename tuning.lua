@@ -484,6 +484,7 @@ function Tune(overrides)
         WALRUS_TARGET_DIST = 10,
         WALRUS_LOSETARGET_DIST = 30,
         WALRUS_REGEN_PERIOD = total_day_time*2.5,
+        WALRUS_REGEN_ENABLED = true,
 
         LITTLE_WALRUS_DAMAGE = 22,
         LITTLE_WALRUS_HEALTH = 100,
@@ -776,6 +777,7 @@ function Tune(overrides)
         BEEFALO_MATING_SEASON_LENGTH = 3,
         BEEFALO_MATING_SEASON_WAIT = 20,
         BEEFALO_MATING_ENABLED = true,
+        BEEFALO_MATING_ALWAYS = false,
         BEEFALO_MATING_SEASON_BABYDELAY = total_day_time*1.5,
         BEEFALO_MATING_SEASON_BABYDELAY_VARIANCE = 0.5*total_day_time,
         BEEFALO_TARGET_DIST = 5,
@@ -3373,6 +3375,49 @@ function Tune(overrides)
 			FIREATTACK_COOLDOWN = 6,
 		},
 
+        GESTALT_WALK_SPEED = 1.5,
+
+        GESTALT_SPAWN_DIST = 14,
+        GESTALT_SPAWN_DIST_VAR = 3,
+        GESTALT_SPAWN_MORPH_DIST = 8,
+
+        GESTALT_INITIAL_MORPH_TIMER = seg_time,
+        GESTALT_EMERGE_MORPH_DELAY = seg_time / 3,
+
+        GESTALT_MIN_SANITY_TO_SPAWN = 0.25,
+        GESTALT_POPULATION_DIST = 30,
+        GESTALT_RELOCATED_FAR_DIST = 18,
+
+        GESTALT_COMBAT_TRANSPERENCY = 0.85,
+
+        GESTALT_AGGRESSIVE_RANGE = 6,
+        GESTALT_ATTACK_RANGE = 2.5,
+        GESTALT_ATTACK_HIT_RANGE_SQ = 1.5,
+        GESTALT_ATTACK_COOLDOWN = 4,
+        GESTALT_ATTACK_DAMAGE_SANITY = 10,
+        GESTALT_ATTACK_DAMAGE_GROGGINESS = 2,
+        GESTALT_ATTACK_DAMAGE_KO_TIME = 6,
+
+        GESTALT_POPULATION_LEVEL =
+        {
+            {
+                MAX_SPAWNS = 2,
+                MAX_SANITY = 0.5,
+            },
+            {
+                MAX_SPAWNS = 3,
+                MAX_SANITY = 0.8,
+            },
+            {
+                MAX_SPAWNS = 4,
+                MAX_SANITY = math.huge,
+            },
+        },
+
+        GESTALT_POP_CHANGE_INTERVAL = 10,
+        GESTALT_POP_CHANGE_VARIANCE = 2,
+
+        --UNUSED
 		GESTALT =
 		{
 			WALK_SPEED = 1.5,
@@ -3488,6 +3533,12 @@ function Tune(overrides)
 			BOAT_DETECTION_SHARE_DIST = 5,
 		},
 
+		COOKIECUTTER_SPAWNER_REGEN_TIME = 3*seg_time,
+		COOKIECUTTER_SPAWNER_RELEASE_TIME = 5,
+		COOKIECUTTER_SPAWNER_MAX_CHILDREN = 7,
+        COOKIECUTTER_SPAWNER_ENABLED = true,
+
+        --unused
 		COOKIECUTTER_SPAWNER =
 		{
 			REGEN_TIME = 3*seg_time,
@@ -3497,6 +3548,12 @@ function Tune(overrides)
 
 		SALTROCK_PRESERVE_PERCENT_ADD = 0.5,
 
+        SALTSTACK_WORK_REQUIRED = 10,
+        SALTSTACK_GROWTH_FREQUENCY = total_day_time*9,
+        SALTSTACK_GROWTH_FREQUENCY_VARIANCE = total_day_time*2,
+        SALTSTACK_GROWTH_ENABLED = true,
+
+        --unused
 		SALTSTACK =
 		{
 			WORK_REQUIRED = 10,
@@ -4278,6 +4335,7 @@ function Tune(overrides)
 
         SCHOOL_SPAWN_DELAY = {min=0.5*seg_time, max=2*seg_time},
 		SCHOOL_SPAWNER_FISH_CHECK_RADIUS = 30,
+        SCHOOL_SPAWNER_FISH_OCEAN_PERCENT = 0.1,
 		SCHOOL_SPAWNER_MAX_FISH = 5,
 		SCHOOL_SPAWNER_BLOCKER_MOD = 1/3, -- 3 or more blockers will prevent spawning
 		SCHOOL_SPAWNER_BLOCKER_LIFETIME = total_day_time,
@@ -4984,6 +5042,9 @@ function Tune(overrides)
 
         SHARK_SPAWN_CHANCE = 0.075,
         SHARK_TEST_RADIUS = 100,
+        
+        GNARWAIL_SPAWN_CHANCE = 0.075,
+        GNARWAIL_TEST_RADIUS = 100,
 
         SQUID_TEST_RADIUS = 80,
         SQUID_MAX_FISH = 10,

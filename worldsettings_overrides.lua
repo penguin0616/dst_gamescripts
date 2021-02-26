@@ -287,7 +287,7 @@ local applyoverrides_pre = {
                 SPAWN_TOADSTOOL = false,
             },
             rare = {
-                TOADSTOOL_RESPAWN_TIME = TUNING.TOTAL_DAY_TIME * 20,
+                TOADSTOOL_RESPAWN_TIME = TUNING.TOTAL_DAY_TIME * 40,
             },
             --[[
             default = {
@@ -296,10 +296,10 @@ local applyoverrides_pre = {
             },
             --]]
             often = {
-                TOADSTOOL_RESPAWN_TIME = TUNING.TOTAL_DAY_TIME * 20,
+                TOADSTOOL_RESPAWN_TIME = TUNING.TOTAL_DAY_TIME * 10,
             },
             always = {
-                TOADSTOOL_RESPAWN_TIME = TUNING.TOTAL_DAY_TIME * 40,
+                TOADSTOOL_RESPAWN_TIME = TUNING.TOTAL_DAY_TIME * 5,
             },
         }
         OverrideTuningVariables(tuning_vars[difficulty])
@@ -495,7 +495,7 @@ local applyoverrides_pre = {
     hound_mounds = function(difficulty) -- child spawner
         local tuning_vars =
         {
-            none = {
+            never = {
                 HOUNDMOUND_ENABLED = false,
             },
             few = {
@@ -531,7 +531,7 @@ local applyoverrides_pre = {
     bats_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 BATCAVE_ENABLED = false,
                 CAVE_ENTRANCE_BATS_ENABLED = false,
             },
@@ -577,7 +577,7 @@ local applyoverrides_pre = {
     molebats = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MOLEBAT_ENABLED = false,
             },
             few = {
@@ -601,7 +601,7 @@ local applyoverrides_pre = {
     mushgnome = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MUSHGNOME_ENABLED = false,
             },
             few = {
@@ -633,7 +633,7 @@ local applyoverrides_pre = {
     nightmarecreatures = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 NIGHTMARELIGHT_ENABLED = false,
                 NIGHTMAREFISSURE_ENABLED = false,
             },
@@ -687,7 +687,7 @@ local applyoverrides_pre = {
     sharks = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SHARK_SPAWN_CHANCE = 0,
                 SHARK_TEST_RADIUS = 0,
             },
@@ -715,7 +715,7 @@ local applyoverrides_pre = {
     spiders_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SPIDERDEN_ENABLED = false,
             },
             few = {
@@ -769,7 +769,7 @@ local applyoverrides_pre = {
     spider_hider = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SPIDERHOLE_ENABLED = false,
             },
             few = {
@@ -805,7 +805,7 @@ local applyoverrides_pre = {
     spider_spitter = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SPIDERHOLE_SPITTER_CHANCE = 0,
             },
             few = {
@@ -828,7 +828,7 @@ local applyoverrides_pre = {
     moon_spider = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MOONSPIDERDEN_ENABLED = false,
             },
             few = {
@@ -871,7 +871,7 @@ local applyoverrides_pre = {
     spider_dropper = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 DROPPERWEB_ENABLED = false,
             },
             few = {
@@ -907,7 +907,7 @@ local applyoverrides_pre = {
     squid = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SQUID_TEST_RADIUS = 0,
                 SQUID_MAX_FISH = 0,
                 SQUID_MAX_NUMBERS = {
@@ -1005,7 +1005,7 @@ local applyoverrides_pre = {
     wasps = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 WASPHIVE_ENABLED = false,
             },
             few = {
@@ -1041,11 +1041,11 @@ local applyoverrides_pre = {
             },
         }
         OverrideTuningVariables(tuning_vars[difficulty])
-end,
+    end,
     merms = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MERMHOUSE_ENABLED = false,
                 MERMWATCHTOWER_ENABLED = false,
             },
@@ -1080,6 +1080,58 @@ end,
 
                 MERMWATCHTOWER_REGEN_TIME = TUNING.TOTAL_DAY_TIME / 8,
                 MERMWATCHTOWER_MERMS = 3,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    walrus_setting = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                WALRUS_REGEN_ENABLED = false,
+            },
+            few = {
+                WALRUS_REGEN_PERIOD = TUNING.TOTAL_DAY_TIME*5,
+            },
+            --[[
+            default = {
+                WALRUS_REGEN_PERIOD = TUNING.TOTAL_DAY_TIME*2.5,
+                WALRUS_REGEN_ENABLED = true,
+            },
+            --]]
+            many = {
+                WALRUS_REGEN_PERIOD = TUNING.TOTAL_DAY_TIME*1.5,
+            },
+            always = {
+                WALRUS_REGEN_PERIOD = TUNING.TOTAL_DAY_TIME*0.5,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    cookiecutters = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                COOKIECUTTER_SPAWNER_ENABLED = false,
+            },
+            few = {
+                COOKIECUTTER_SPAWNER_REGEN_TIME = 6*TUNING.SEG_TIME,
+                COOKIECUTTER_SPAWNER_MAX_CHILDREN = 3,
+            },
+            --[[
+            default = {
+                COOKIECUTTER_SPAWNER_REGEN_TIME = 3*TUNING.SEG_TIME,
+                COOKIECUTTER_SPAWNER_MAX_CHILDREN = 7,
+                COOKIECUTTER_SPAWNER_ENABLED = true,
+            },
+            --]]
+            many = {
+                COOKIECUTTER_SPAWNER_REGEN_TIME = 2*TUNING.SEG_TIME,
+                COOKIECUTTER_SPAWNER_MAX_CHILDREN = 12,
+            },
+            always = {
+                COOKIECUTTER_SPAWNER_REGEN_TIME = TUNING.SEG_TIME,
+                COOKIECUTTER_SPAWNER_MAX_CHILDREN = 16,
             },
         }
         OverrideTuningVariables(tuning_vars[difficulty])
@@ -1281,7 +1333,7 @@ end,
     bees_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 BEEHIVE_ENABLED = false,
                 BEEBOX_ENABLED = false,
             },
@@ -1331,7 +1383,7 @@ end,
     catcoons = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 CATCOONDEN_ENABLED = false,
             },
             few = {
@@ -1359,7 +1411,7 @@ end,
     frogs = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 FROG_POND_ENABLED = false,
             },
             few = {
@@ -1391,7 +1443,7 @@ end,
     grassgekkos = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 GRASSGEKKO_MORPH_CHANCE = 0,
                 GRASSGEKKO_MORPH_ENABLED = false,
             },
@@ -1424,7 +1476,7 @@ end,
     moles_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MOLE_ENABLED = false,
             },
             few = {
@@ -1448,7 +1500,7 @@ end,
     mosquitos = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MOSQUITO_POND_ENABLED = false,
             },
             few = {
@@ -1480,7 +1532,7 @@ end,
     rabbits_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 RABBIT_ENABLED = false,
             },
             few = {
@@ -1504,7 +1556,7 @@ end,
     wobsters = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 WOBSTER_DEN_ENABLED = false,
             },
             few = {
@@ -1535,7 +1587,7 @@ end,
     pigs_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 PIGHOUSE_ENABLED = false,
             },
             few = {
@@ -1559,7 +1611,7 @@ end,
     slurtles_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SLURTLEHOLE_ENABLED = false,
             },
             few = {
@@ -1587,7 +1639,7 @@ end,
     snurtles = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SLURTLEHOLE_RARECHILD_CHANCE = 0.0,
             },
             few = {
@@ -1608,7 +1660,7 @@ end,
     bunnymen_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 RABBITHOUSE_ENABLED = false,
             },
             few = {
@@ -1632,7 +1684,7 @@ end,
     rocky_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 ROCKYHERD_SPAWNER_DENSITY = 0,
             },
             few = {
@@ -1655,7 +1707,7 @@ end,
     monkey_setting = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 MONKEYBARREL_ENABLED = false,
             },
             few = {
@@ -1687,7 +1739,7 @@ end,
     dustmoths = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 DUSTMOTHDEN_ENABLED = false,
             },
             few = {
@@ -1719,7 +1771,7 @@ end,
     lightfliers = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 LIGHTFLIER_FLOWER_REGROW_TIME = NEVER_TIME,
                 LIGHTFLIER_FLOWER_PICKABLE = false,
             },
@@ -1733,10 +1785,81 @@ end,
             },
             --]]
             many = {
-                LIGHTFLIER_FLOWER_REGROW_TIME = TUNING.TOTAL_DAY_TIME * 9,
+                LIGHTFLIER_FLOWER_REGROW_TIME = TUNING.TOTAL_DAY_TIME * 8,
             },
             always = {
-                LIGHTFLIER_FLOWER_REGROW_TIME = TUNING.TOTAL_DAY_TIME * 6,
+                LIGHTFLIER_FLOWER_REGROW_TIME = TUNING.TOTAL_DAY_TIME * 4,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    gnarwail = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                GNARWAIL_SPAWN_CHANCE = 0,
+                GNARWAIL_TEST_RADIUS = 0,
+            },
+            few = {
+                GNARWAIL_SPAWN_CHANCE = 0.0375,
+                GNARWAIL_TEST_RADIUS = 150,
+            },
+            --[[
+            default = {
+                GNARWAIL_SPAWN_CHANCE = 0.075,
+                GNARWAIL_TEST_RADIUS = 100,
+            },
+            --]]
+            many = {
+                GNARWAIL_SPAWN_CHANCE = 0.15,
+                GNARWAIL_TEST_RADIUS = 75,
+            },
+            always = {
+                GNARWAIL_SPAWN_CHANCE = 0.3,
+                GNARWAIL_TEST_RADIUS = 50,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    fishschools = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                SCHOOL_SPAWNER_FISH_OCEAN_PERCENT = 1.1,
+            },
+            few = {
+                SCHOOL_SPAWN_DELAY = {min=1*TUNING.SEG_TIME, max=4*TUNING.SEG_TIME},
+                SCHOOL_SPAWNER_FISH_CHECK_RADIUS = 60,
+                SCHOOL_SPAWNER_FISH_OCEAN_PERCENT = 0.25,
+                SCHOOL_SPAWNER_MAX_FISH = 3,
+                SCHOOL_SPAWNER_BLOCKER_MOD = 1/6,
+                SCHOOL_SPAWNER_BLOCKER_LIFETIME = TUNING.TOTAL_DAY_TIME * 2,
+            },
+            --[[
+            default = {
+                SCHOOL_SPAWN_DELAY = {min=0.5*TUNING.SEG_TIME, max=2*TUNING.SEG_TIME},
+                SCHOOL_SPAWNER_FISH_CHECK_RADIUS = 30,
+                SCHOOL_SPAWNER_FISH_OCEAN_PERCENT = 0.1,
+                SCHOOL_SPAWNER_MAX_FISH = 5,
+                SCHOOL_SPAWNER_BLOCKER_MOD = 1/3, -- 3 or more blockers will prevent spawning
+                SCHOOL_SPAWNER_BLOCKER_LIFETIME = TUNING.TOTAL_DAY_TIME,
+            },
+            --]]
+            many = {
+                SCHOOL_SPAWN_DELAY = {min=0.25*TUNING.SEG_TIME, max=1*TUNING.SEG_TIME},
+                SCHOOL_SPAWNER_FISH_CHECK_RADIUS = 20,
+                SCHOOL_SPAWNER_FISH_OCEAN_PERCENT = 0.05,
+                SCHOOL_SPAWNER_MAX_FISH = 10,
+                SCHOOL_SPAWNER_BLOCKER_MOD = 1/2, -- 3 or more blockers will prevent spawning
+                SCHOOL_SPAWNER_BLOCKER_LIFETIME = TUNING.TOTAL_DAY_TIME / 2,
+            },
+            always = {
+                SCHOOL_SPAWN_DELAY = {min=0.125*TUNING.SEG_TIME, max=0.5*TUNING.SEG_TIME},
+                SCHOOL_SPAWNER_FISH_CHECK_RADIUS = 10,
+                SCHOOL_SPAWNER_FISH_OCEAN_PERCENT = 0.025,
+                SCHOOL_SPAWNER_MAX_FISH = 15,
+                SCHOOL_SPAWNER_BLOCKER_MOD = 1/1, -- 3 or more blockers will prevent spawning
+                SCHOOL_SPAWNER_BLOCKER_LIFETIME = TUNING.TOTAL_DAY_TIME / 4,
             },
         }
         OverrideTuningVariables(tuning_vars[difficulty])
@@ -2028,6 +2151,38 @@ end,
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    saltstack_regrowth = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                SALTSTACK_GROWTH_ENABLED = false,
+            },
+            veryslow = {
+                SALTSTACK_GROWTH_FREQUENCY = TUNING.TOTAL_DAY_TIME*27,
+                SALTSTACK_GROWTH_FREQUENCY_VARIANCE = TUNING.TOTAL_DAY_TIME*6,
+            },
+            slow = {
+                SALTSTACK_GROWTH_FREQUENCY = TUNING.TOTAL_DAY_TIME*18,
+                SALTSTACK_GROWTH_FREQUENCY_VARIANCE = TUNING.TOTAL_DAY_TIME*4,
+            },
+            --[[
+            default = {
+                SALTSTACK_GROWTH_FREQUENCY = TUNING.TOTAL_DAY_TIME*9,
+                SALTSTACK_GROWTH_FREQUENCY_VARIANCE = TUNING.TOTAL_DAY_TIME*2,
+                SALTSTACK_GROWTH_ENABLED = true,
+            },
+            --]]
+            fast = {
+                SALTSTACK_GROWTH_FREQUENCY = TUNING.TOTAL_DAY_TIME*5,
+                SALTSTACK_GROWTH_FREQUENCY_VARIANCE = TUNING.TOTAL_DAY_TIME*1,
+            },
+            veryfast = {
+                SALTSTACK_GROWTH_FREQUENCY = TUNING.TOTAL_DAY_TIME*2,
+                SALTSTACK_GROWTH_FREQUENCY_VARIANCE = TUNING.TOTAL_DAY_TIME*0.5,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 
     --misc
     frograin = function(difficulty)
@@ -2131,7 +2286,7 @@ end,
             many = {
                 PETRIFICATION_CYCLE = {MIN_YEARS = 0.4, MAX_YEARS = 0.6},
             },
-            always = {
+            max = {
                 PETRIFICATION_CYCLE = {MIN_YEARS = 0.2, MAX_YEARS = 0.4},
             },
         }
@@ -2362,6 +2517,29 @@ end,
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    atriumgate = function(difficulty)
+        local tuning_vars =
+        {
+            veryslow = {
+                ATRIUM_GATE_COOLDOWN = TUNING.TOTAL_DAY_TIME * 40,
+            },
+            slow = {
+                ATRIUM_GATE_COOLDOWN = TUNING.TOTAL_DAY_TIME * 30,
+            },
+            --[[
+            default = {
+                ATRIUM_GATE_COOLDOWN = TUNING.TOTAL_DAY_TIME * 20,
+            },
+            --]]
+            fast = {
+                ATRIUM_GATE_COOLDOWN = TUNING.TOTAL_DAY_TIME * 10,
+            },
+            veryfast = {
+                ATRIUM_GATE_COOLDOWN = TUNING.TOTAL_DAY_TIME * 5,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 
     --survivors
 	extrastartingitems = function(difficulty)
@@ -2410,11 +2588,10 @@ end,
         }
         OverrideTuningVariables(tuning_vars[difficulty])
 	end,
-	
     shadowcreatures = function(difficulty)
         local tuning_vars =
         {
-            none = {
+            never = {
                 SANITYMONSTERS_INDUCED_MAXPOP = 0,
                 SANITYMONSTERS_MAXPOP = {0, 0},
             },
@@ -2515,6 +2692,97 @@ end,
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    brightmarecreatures = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                GESTALT_MIN_SANITY_TO_SPAWN = math.huge,
+            },
+            few = {
+                GESTALT_MIN_SANITY_TO_SPAWN = 0.5,
+
+                GESTALT_POPULATION_LEVEL =
+                {
+                    {
+                        MAX_SPAWNS = 1,
+                        MAX_SANITY = 0.8,
+                    },
+                    {
+                        MAX_SPAWNS = 2,
+                        MAX_SANITY = math.huge,
+                    },
+                },
+
+                GESTALT_POP_CHANGE_INTERVAL = 20,
+                GESTALT_POP_CHANGE_VARIANCE = 4,
+            },
+            --[[
+            default = {
+                GESTALT_MIN_SANITY_TO_SPAWN = 0.25,
+
+                GESTALT_POPULATION_LEVEL =
+                {
+                    {
+                        MAX_SPAWNS = 2,
+                        MAX_SANITY = 0.5,
+                    },
+                    {
+                        MAX_SPAWNS = 3,
+                        MAX_SANITY = 0.8,
+                    },
+                    {
+                        MAX_SPAWNS = 4,
+                        MAX_SANITY = math.huge,
+                    },
+                },
+
+                GESTALT_POP_CHANGE_INTERVAL = 10,
+                GESTALT_POP_CHANGE_VARIANCE = 2,
+            },
+            --]]
+            many = {
+                GESTALT_POPULATION_LEVEL =
+                {
+                    {
+                        MAX_SPAWNS = 4,
+                        MAX_SANITY = 0.5,
+                    },
+                    {
+                        MAX_SPAWNS = 6,
+                        MAX_SANITY = 0.8,
+                    },
+                    {
+                        MAX_SPAWNS = 8,
+                        MAX_SANITY = math.huge,
+                    },
+                },
+
+                GESTALT_POP_CHANGE_INTERVAL = 5,
+                GESTALT_POP_CHANGE_VARIANCE = 1,
+            },
+            always = {
+                GESTALT_POPULATION_LEVEL =
+                {
+                    {
+                        MAX_SPAWNS = 6,
+                        MAX_SANITY = 0.5,
+                    },
+                    {
+                        MAX_SPAWNS = 9,
+                        MAX_SANITY = 0.8,
+                    },
+                    {
+                        MAX_SPAWNS = 12,
+                        MAX_SANITY = math.huge,
+                    },
+                },
+
+                GESTALT_POP_CHANGE_INTERVAL = 2,
+                GESTALT_POP_CHANGE_VARIANCE = 0,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 
     --global
     beefaloheat = function(difficulty)
@@ -2532,6 +2800,7 @@ end,
                 BEEFALO_MATING_SEASON_LENGTH = 3,
                 BEEFALO_MATING_SEASON_WAIT = 20,
                 BEEFALO_MATING_ENABLED = true,
+                BEEFALO_MATING_ALWAYS = false,
             },
             --]]
             often = {
@@ -2539,8 +2808,7 @@ end,
                 BEEFALO_MATING_SEASON_WAIT = 6,
             },
             always = {
-                BEEFALO_MATING_SEASON_LENGTH = -1,
-                BEEFALO_MATING_SEASON_WAIT = 0,
+                BEEFALO_MATING_ALWAYS = true,
             },
         }
         OverrideTuningVariables(tuning_vars[difficulty])

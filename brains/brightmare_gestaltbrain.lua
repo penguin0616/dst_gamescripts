@@ -30,7 +30,7 @@ local GestaltBrain = Class(Brain, function(self, inst)
 end)
 
 local function ShouldRelocate(inst)
-	return not inst.sg:HasStateTag("busy") and (inst.tracking_target == nil or not inst:IsNearPlayer(TUNING.GESTALT.RELOCATED_FAR_DIST, true))
+	return not inst.sg:HasStateTag("busy") and (inst.tracking_target == nil or not inst:IsNearPlayer(TUNING.GESTALT_RELOCATED_FAR_DIST, true))
 end
 
 local function Relocate(inst)

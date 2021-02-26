@@ -173,6 +173,14 @@ local extrastartingitems_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.DETECT_NEVER, data = "none" },
 }
 
+local atrium_descriptions = {
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEVERYSLOW, data = "veryslow" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDESLOW, data = "slow" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEDEFAULT, data = "default" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEFAST, data = "fast" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEVERYFAST, data = "veryfast" },
+}
+
 local autodetect = {
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDENEVER, data = "never" },
 	{ text = STRINGS.UI.SANDBOXMENU.DETECT_AUTO, data = "default" },
@@ -209,6 +217,7 @@ local descriptions = {
 	extrastartingitems_descriptions = extrastartingitems_descriptions,
 	autodetect = autodetect,
 	dropeverythingondespawn_descriptions = dropeverythingondespawn_descriptions,
+	atrium_descriptions = atrium_descriptions,
 }
 
 local WORLDGEN_GROUP = {
@@ -296,7 +305,7 @@ local WORLDGEN_GROUP = {
 			["moon_bullkelp"] = {value = "default", image = "moon_bullkelp.tex", world = {"forest"}},
 			["ponds"] = {value = "default", image = "ponds.tex", world={"forest"}},
 			["cave_ponds"] = {value = "default", image = "ponds.tex", world={"cave"}},
-			["ocean_bullkelp"] = {value = "ocean_default", image = "ocean_bullkelp.tex", desc = ocean_worldgen_frequency_descriptions, world = {"forest"}},
+			["ocean_bullkelp"] = {value = "ocean_default", image = "ocean_bullkelp.tex", world = {"forest"}},
 			["ocean_seastack"] = {value = "ocean_default", image = "ocean_seastack.tex", desc = ocean_worldgen_frequency_descriptions, world = {"forest"}},
 		}
 	},
@@ -383,6 +392,8 @@ local WORLDSETTINGS_GROUP = {
 			["frogs"] = {value = "default", image = "frogs.tex", world={"forest"}},
 			["penguins_moon"] = {value = "default", desc = yesno_descriptions, image = "moon_pengull.tex", world={"forest"}},
 			["moon_spider"] = {value = "default", image = "moon_spider.tex", world={"forest"}},
+			["walrus_setting"] = {value = "default", image = "mactusk.tex", world={"forest"}},
+			["cookiecutters"] = {value = "default", image = "cookiecutters.tex", world={"forest"}},
 
 			["merms"] = {value = "default", image = "merms.tex", world={"forest", "cave"}},
 			["spiders_setting"] = {value = "default", image = "spiders.tex", world={"forest", "cave"}},
@@ -410,6 +421,8 @@ local WORLDSETTINGS_GROUP = {
 			["catcoons"] = {value = "default", image = "catcoons.tex", world={"forest"}},
 			["rabbits_setting"] = {value = "default", image = "rabbits.tex", world={"forest"}},
 			["wobsters"] = {value = "default", image = "wobsters.tex", world={"forest"}},
+			["gnarwail"] = {value = "default", image = "gnarwail.tex", world={"forest"}},
+			["fishschools"] = {value = "default", image = "fishschool.tex", world={"forest"}},
 
 			["pigs_setting"] = {value ="default", image = "pigs.tex", world={"forest", "cave"}},
 			["bunnymen_setting"] = {value ="default", image = "bunnymen.tex", world={"forest", "cave"}},
@@ -439,6 +452,7 @@ local WORLDSETTINGS_GROUP = {
 			["moon_tree_regrowth"] = {value = "default", image = "moon_tree.tex", world={"forest"}},
 			["flowers_regrowth"] = {value = "default", image = "flowers.tex", world={"forest"}},
 			["carrots_regrowth"] = {value = "default", image = "carrots.tex", world={"forest"}},
+			["saltstack_regrowth"] = {value = "default", image = "saltstack.tex", world={"forest"}},
 
 			["flower_cave_regrowth"] = {value = "default", image = "flower_cave.tex", world={"cave"}},
 			["lightflier_flower_regrowth"] = {value = "default", image = "lightflier_flower.tex", world={"cave"}},
@@ -465,6 +479,7 @@ local WORLDSETTINGS_GROUP = {
 
 			["earthquakes"] = {value = "default", image = "earthquakes.tex", desc = frequency_descriptions, world={"cave"}},
 			["wormattacks"] = {value = "default", image = "wormattacks.tex", desc = frequency_descriptions, world={"cave"}},
+			["atriumgate"] = {value = "default", image = "atriumgate.tex", desc = atrium_descriptions, world={"cave"}},
 
 			--["disease_delay"] = {value = "default", image = "berrybush_diseased.tex", desc = disease_descriptions, world={"forest", "cave"}},
 		}
@@ -480,6 +495,7 @@ local WORLDSETTINGS_GROUP = {
 			["spawnprotection"] = {value = "default", image = "spawnprotection.tex", desc = autodetect, order = 3, masteroption = true, master_controlled = true},
 			["dropeverythingondespawn"] = {value = "default", image = "dropeverythingondespawn.tex", desc = dropeverythingondespawn_descriptions, order = 4, masteroption = true, master_controlled = true},
 			["shadowcreatures"] = {value = "default", image = "shadowcreatures.tex", desc = frequency_descriptions, order = 5, masteroption = true, master_controlled = true},
+			["brightmarecreatures"] = {value = "default", image = "brightmarecreatures.tex", desc = frequency_descriptions, order = 5, masteroption = true, master_controlled = true},
 		}
 	},
 	["global"] = {
@@ -1040,18 +1056,22 @@ local function ClearModData(modname)
 		--clear out all items inside any groups this mod has
 		--this can include items from other mods if they added them to this mods groups
 		if MOD_WORLDSETTINGS_GROUP[modname] then
-			for name, item in pairs(MOD_WORLDSETTINGS_GROUP[modname].items) do
-				MOD_WORLDSETTINGS_GROUP[modname].items[name] = nil
-				MOD_OPTIONS[item.modname][name] = nil
+			for name, group in pairs(MOD_WORLDSETTINGS_GROUP[modname]) do
+				for itemname, item in pairs(group.items) do
+					group.items[name] = nil
+					MOD_OPTIONS[item.modname][itemname] = nil
+				end
 			end
 			assert(IsTableEmpty(MOD_WORLDSETTINGS_GROUP[modname].items))
 			MOD_WORLDSETTINGS_GROUP[modname] = nil
 		end
 
 		if MOD_WORLDGEN_GROUP[modname] then
-			for name, item in pairs(MOD_WORLDGEN_GROUP[modname].items) do
-				MOD_WORLDGEN_GROUP[modname].items[name] = nil
-				MOD_OPTIONS[item.modname][name] = nil
+			for name, group in pairs(MOD_WORLDGEN_GROUP[modname]) do
+				for itemname, item in pairs(group.items) do
+					group.items[name] = nil
+					MOD_OPTIONS[item.modname][itemname] = nil
+				end
 			end
 			assert(IsTableEmpty(MOD_WORLDGEN_GROUP[modname].items))
 			MOD_WORLDGEN_GROUP[modname] = nil

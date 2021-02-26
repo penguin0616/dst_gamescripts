@@ -11,6 +11,7 @@ local Mood = Class(function(self, inst)
     self.enabled = true
 
     self.moodtimeindays = {length = nil, wait = nil}
+    self.forcemood = false
     self.isinmood = false
     self.daystomoodchange = nil
     self.onentermood = nil
@@ -34,10 +35,11 @@ function Mood:Enable(enabled)
     self:SetIsInMood(false, false)
 end
 
-function Mood:SetMoodTimeInDays(length, wait, worldsettingsmultiplier_inmood, worldsettingsmultiplier_outmood, worldsettingsenabled)
+function Mood:SetMoodTimeInDays(length, wait, forcemood, worldsettingsmultiplier_inmood, worldsettingsmultiplier_outmood, worldsettingsenabled)
     self.moodtimeindays.length = length
     self.moodtimeindays.wait = wait
     self.daystomoodchange = wait
+    self.forcemood = forcemood
 
     self.worldsettingsmultiplier_inmood = worldsettingsmultiplier_inmood or 1
     self.worldsettingsmultiplier_outmood = worldsettingsmultiplier_outmood or 1
@@ -82,7 +84,7 @@ end
 
 function Mood:CheckForMoodChange()
     if self.daystomoodchange <= 0 then
-        self:SetIsInMood(not self:IsInMood() )
+        self:SetIsInMood(not self:IsInMood() or self.forcemood)
     end
 end
 

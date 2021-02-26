@@ -61,7 +61,7 @@ function LeashAndAvoid:DBString()
 end
 
 function LeashAndAvoid:GetHomePos()
-    return FunctionOrValue(self.homepos, self.isnt)
+    return FunctionOrValue(self.homepos, self.inst)
 end
 
 function LeashAndAvoid:GetDistFromHomeSq()

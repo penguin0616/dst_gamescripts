@@ -121,12 +121,6 @@ function GiftItemPopUp:ShowMenu()
     end
 end
 
-function GiftItemPopUp:OnControl(control, down)
-    if GiftItemPopUp._base.OnControl(self,control, down) then
-        return true
-    end
-end
-
 function GiftItemPopUp:OnClose()
     TheFrontEnd:GetSound():KillSound("gift_idle")
     TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/player_receives_gift_animation_skinout")

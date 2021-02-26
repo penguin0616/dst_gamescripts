@@ -39,6 +39,8 @@ local _beargerchances = TUNING.BEARGER_CHANCES
 
 local _numSpawned = 0
 
+local _timetospawn
+
 local _targetplayer = nil
 local _activehasslers = {}
 local _activeplayers = {}
@@ -241,6 +243,10 @@ function self:OnPostInit()
 	end
 	_spawndelay = 0.25 * TheWorld.state.autumnlength * TUNING.TOTAL_DAY_TIME / totalbeargerchance
     _worldsettingstimer:AddTimer(BEARGER_TIMERNAME, _spawndelay, TUNING.SPAWN_BEARGER, OnBeargerTimerDone)
+
+	if _timetospawn then
+		_worldsettingstimer:StartTimer(BEARGER_TIMERNAME, math.min(_timetospawn, _spawndelay))
+	end
 end
 
 local function _DoWarningSpeech(player)
@@ -347,7 +353,7 @@ function self:OnLoad(data)
 
     --retrofit old timer to new system
     if data.timetospawn then
-        _worldsettingstimer:StartTimer(BEARGER_TIMERNAME, math.min(data.timetospawn, _spawndelay))
+        _timetospawn = data.timetospawn
     end
 end
 

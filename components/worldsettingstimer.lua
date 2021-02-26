@@ -23,10 +23,6 @@ function WorldSettingsTimer:AddTimer(name, maxtime, enabled, callback, externall
     end
 end
 
-function WorldSettingsTimer:TimerExists(name)
-    return self.timers[name] ~= nil
-end
-
 function WorldSettingsTimer:TimerEnabled(name)
     return self:TimerExists(name) and self.timers[name].enabled
 end

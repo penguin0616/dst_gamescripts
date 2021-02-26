@@ -3186,6 +3186,14 @@ function PlayerController:OnLeftUp()
     end
 end
 
+local INVALIDHOLDACTIONS = {
+    [ACTIONS.WALKTO] = true,
+    [ACTIONS.ROW] = true,
+    [ACTIONS.ROW_FAIL] = true,
+    [ACTIONS.ROW] = true,
+    [ACTIONS.ROW_CONTROLLER] = true,
+}
+
 function PlayerController:DoAction(buffaction)
     --Check if the action is actually valid.
     --Cached LMB/RMB actions can become invalid.
@@ -3229,7 +3237,7 @@ function PlayerController:DoAction(buffaction)
 
     self:DoActionAutoEquip(buffaction)
 
-    if not buffaction.action.instant and buffaction.action ~= ACTIONS.WALKTO and buffaction:IsValid() then
+    if not buffaction.action.instant and not INVALIDHOLDACTIONS[buffaction.action] and buffaction:IsValid() then
         self.lastheldaction = buffaction
     else
         self.actionholdtime = nil

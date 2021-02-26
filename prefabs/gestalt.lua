@@ -26,10 +26,10 @@ end
 
 local function Client_CalcSanityForTransparency(inst, observer)
 	if inst.components.inspectable ~= nil then
-		return TUNING.GESTALT.COMBAT_TRANSPERENCY
+		return TUNING.GESTALT_COMBAT_TRANSPERENCY
 	end
 
-	local x = (observer ~= nil and observer.replica.sanity ~= nil) and (observer.replica.sanity:GetPercentWithPenalty() - TUNING.GESTALT.MIN_SANITY_TO_SPAWN) / (1 - TUNING.GESTALT.MIN_SANITY_TO_SPAWN) or 0
+	local x = (observer ~= nil and observer.replica.sanity ~= nil) and (observer.replica.sanity:GetPercentWithPenalty() - TUNING.GESTALT_MIN_SANITY_TO_SPAWN) / (1 - TUNING.GESTALT_MIN_SANITY_TO_SPAWN) or 0
 	return math.min(0.5, 0.4*x*x*x + 0.3)
 end
 
@@ -63,7 +63,7 @@ end
 local function Retarget(inst)
 	return (inst.tracking_target ~= nil 
 				and not inst.components.combat:InCooldown() 
-				and inst:IsNear(inst.tracking_target, TUNING.GESTALT.AGGRESSIVE_RANGE)
+				and inst:IsNear(inst.tracking_target, TUNING.GESTALT_AGGRESSIVE_RANGE)
 				and not (inst.tracking_target.sg:HasStateTag("knockout") or inst.tracking_target.sg:HasStateTag("sleeping") or inst.tracking_target.sg:HasStateTag("bedroll") or inst.tracking_target.sg:HasStateTag("tent") or inst.tracking_target.sg:HasStateTag("waking"))
            ) and inst.tracking_target 
 			or nil
@@ -154,16 +154,16 @@ local function fn()
 	inst.components.sanityaura.aura = TUNING.SANITYAURA_MED
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
-    inst.components.locomotor.walkspeed = TUNING.GESTALT.WALK_SPEED
-    inst.components.locomotor.runspeed = TUNING.GESTALT.WALK_SPEED
+    inst.components.locomotor.walkspeed = TUNING.GESTALT_WALK_SPEED
+    inst.components.locomotor.runspeed = TUNING.GESTALT_WALK_SPEED
     inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { ignorecreep = true }
 
 	inst:AddComponent("combat")
 	inst.components.combat:SetDefaultDamage(0)
-	inst.components.combat:SetAttackPeriod(TUNING.GESTALT.ATTACK_COOLDOWN)
-	inst.components.combat:SetRange(TUNING.GESTALT.ATTACK_RANGE)
+	inst.components.combat:SetAttackPeriod(TUNING.GESTALT_ATTACK_COOLDOWN)
+	inst.components.combat:SetRange(TUNING.GESTALT_ATTACK_RANGE)
     inst.components.combat:SetRetargetFunction(1, Retarget)
 	inst:ListenForEvent("newcombattarget", OnNewCombatTarget)
 	inst:ListenForEvent("droppedtarget", OnNoCombatTarget)

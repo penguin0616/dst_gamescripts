@@ -42,9 +42,9 @@ local function triggernearbymorph(inst, quick, range)
         if v ~= inst and
             v.prefab == "grass" and
             v.components.worldsettingstimer ~= nil and
-            not (v.components.worldsettingstimer:TimerExists("morphdelay") or
-                v.components.worldsettingstimer:TimerExists("morphing") or
-                v.components.worldsettingstimer:TimerExists("morphrelay")) then
+            not (v.components.worldsettingstimer:ActiveTimerExists("morphdelay") or
+                v.components.worldsettingstimer:ActiveTimerExists("morphing") or
+                v.components.worldsettingstimer:ActiveTimerExists("morphrelay")) then
 
             count = count + 1
 

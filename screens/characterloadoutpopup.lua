@@ -70,16 +70,6 @@ function CharacterLoadoutPopupScreen:DoFocusHookups()
     self.dressup:SetFocusChangeDir(MOVE_DOWN, self.menu)
 end
 
-function CharacterLoadoutPopupScreen:OnControl(control, down)
-    if CharacterLoadoutPopupScreen._base.OnControl(self,control, down) then return true end
-    
-    if control == CONTROL_CANCEL and not down then    
-        self:Cancel()
-        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-        return true
-    end
-end
-
 function CharacterLoadoutPopupScreen:Cancel()
 	self:Reset()
 	self:Close()
@@ -124,6 +114,12 @@ end
 
 function CharacterLoadoutPopupScreen:OnControl(control, down)
 	if CharacterLoadoutPopupScreen._base.OnControl(self, control, down) then return true end
+
+    if control == CONTROL_CANCEL and not down then
+        self:Cancel()
+        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+        return true
+    end
 
    	if down then
 	 	if control == CONTROL_PREVVALUE then  -- r-stick left

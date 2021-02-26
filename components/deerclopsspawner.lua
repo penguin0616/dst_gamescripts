@@ -278,6 +278,7 @@ function self:OnPostInit()
     if _timetoattack then
         _worldsettingstimer:StartTimer(DEERCLOPS_TIMERNAME, math.min(_timetoattack, _attackdelay))
     end
+    TryStartAttacks()
 end
 
 local function _DoWarningSpeech(player)
@@ -426,9 +427,5 @@ self:WatchWorldState("season", OnSeasonChange)
 self.inst:ListenForEvent("hasslerremoved", OnHasslerRemoved, TheWorld)
 self.inst:ListenForEvent("hasslerkilled", OnHasslerKilled, TheWorld)
 self.inst:ListenForEvent("storehassler", OnStoreHassler, TheWorld)
-
-function self:OnPostInit()
-    TryStartAttacks()
-end
 
 end)

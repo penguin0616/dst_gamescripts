@@ -19,7 +19,7 @@ end
 local function ChooseAttack(inst)
     local target = inst.components.combat.target
     if target ~= nil and target:IsNear(inst, TUNING.ANTLION_CAST_RANGE) then
-        if inst.components.worldsettingstimer:TimerExists("wall_cd") then
+        if inst.components.worldsettingstimer:ActiveTimerExists("wall_cd") then
             inst.sg:GoToState("summonspikes", target)
         else
             inst.sg:GoToState("summonwall")

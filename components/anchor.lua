@@ -28,7 +28,6 @@ local Anchor = Class(function(self, inst)
     self.raisers = {}        
     self.numberofraisers = 0
     self.raiseunits = 0
-    self.bottomunits = 0.1 -- 4
     self.currentraiseunits = 0
     self.autolowerunits = 3    
 
@@ -61,14 +60,14 @@ function Anchor:OnSave()
 end
 
 function Anchor:GetCurrentDepth()
-    local depth = self.bottomunits            
-    local ground = TheWorld
+    local depth = 0.1
     if self.boat and self.boat:IsValid() then
-        local tile = ground.Map:GetTileAtPoint(self.boat.Transform:GetWorldPosition())
+        local tile = TheWorld.Map:GetTileAtPoint(self.inst.Transform:GetWorldPosition())
         if tile then
-            local depthcategory = GetTileInfo(tile).ocean_depth
-            depth = TUNING.ANCHOR_DEPTH_TIMES[depthcategory]
-            -- self.bottomunits = depth
+			local tile_info = GetTileInfo(tile)
+			if tile_info ~= nil and tile_info.ocean_depth ~= nil then
+				depth = TUNING.ANCHOR_DEPTH_TIMES[tile_info.ocean_depth]
+			end
         end
     end
     return depth

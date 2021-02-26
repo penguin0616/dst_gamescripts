@@ -1003,6 +1003,10 @@ local function DoToolWork(act, workaction)
     return false
 end
 
+local function ValidToolWork(act, workaction)
+    return act.target.components.workable ~= nil and act.target.components.workable:CanBeWorked() and act.target.components.workable:GetWorkAction() == workaction
+end
+
 ACTIONS.CHOP.fn = function(act)
     if DoToolWork(act, ACTIONS.CHOP) and
         act.doer ~= nil and
@@ -1013,9 +1017,17 @@ ACTIONS.CHOP.fn = function(act)
     return true
 end
 
+ACTIONS.CHOP.validfn = function(act)
+    return ValidToolWork(act, ACTIONS.CHOP)
+end
+
 ACTIONS.MINE.fn = function(act)
     DoToolWork(act, ACTIONS.MINE)
     return true
+end
+
+ACTIONS.MINE.validfn = function(act)
+    return ValidToolWork(act, ACTIONS.MINE)
 end
 
 ACTIONS.HAMMER.fn = function(act)
@@ -1023,9 +1035,17 @@ ACTIONS.HAMMER.fn = function(act)
     return true
 end
 
+ACTIONS.HAMMER.validfn = function(act)
+    return ValidToolWork(act, ACTIONS.HAMMER)
+end
+
 ACTIONS.DIG.fn = function(act)
     DoToolWork(act, ACTIONS.DIG)
     return true
+end
+
+ACTIONS.DIG.validfn = function(act)
+    return ValidToolWork(act, ACTIONS.DIG)
 end
 
 ACTIONS.DIG.theme_music_fn = function(act)
@@ -1145,6 +1165,10 @@ ACTIONS.PICK.fn = function(act)
         act.target.components.pickable:Pick(act.doer)
         return true
     end
+end
+
+ACTIONS.PICK.validfn = function(act)
+    return act.target and act.target.components.pickable and act.target.components.pickable:CanBePicked()
 end
 
 ACTIONS.PICK.theme_music_fn = function(act)

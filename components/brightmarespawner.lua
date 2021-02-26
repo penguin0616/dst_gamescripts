@@ -32,8 +32,8 @@ local _poptask = nil
 
 local function GetTuningLevelForPlayer(player)
     local sanity = player.components.sanity:IsLunacyMode() and player.components.sanity:GetPercentWithPenalty() or 0
-	if sanity >= TUNING.GESTALT.MIN_SANITY_TO_SPAWN then
-		for k, v in ipairs(TUNING.GESTALT.POPULATION_LEVEL) do
+	if sanity >= TUNING.GESTALT_MIN_SANITY_TO_SPAWN then
+		for k, v in ipairs(TUNING.GESTALT_POPULATION_LEVEL) do
 			if sanity <= v.MAX_SANITY then
 				return k, v
 			end
@@ -59,7 +59,7 @@ local function FindGestaltSpawnPtForPlayer(player, wantstomorph)
 		return #TheSim:FindEntities(x1, 0, z1, 6, nil, nil, SPAWN_ONEOF_TAGS) == 0 
 	end
     local offset = FindValidPositionByFan(math.random() * 2 * PI, 
-											(wantstomorph and TUNING.GESTALT.SPAWN_MORPH_DIST or TUNING.GESTALT.SPAWN_DIST) + math.random() * 2 * TUNING.GESTALT.SPAWN_DIST_VAR - TUNING.GESTALT.SPAWN_DIST_VAR,
+											(wantstomorph and TUNING.GESTALT_SPAWN_MORPH_DIST or TUNING.GESTALT_SPAWN_DIST) + math.random() * 2 * TUNING.GESTALT_SPAWN_DIST_VAR - TUNING.GESTALT_SPAWN_DIST_VAR,
 											8, 
 											IsValidGestaltSpawnPt)
 	if offset ~= nil then
@@ -91,7 +91,7 @@ local function UpdatePopulation()
 
 			if level > 0 then
 				local x, y, z = player.Transform:GetWorldPosition()
-				local gestalts = TheSim:FindEntities(x, y, z, TUNING.GESTALT.POPULATION_DIST, BRIGHTMARE_TAGS)
+				local gestalts = TheSim:FindEntities(x, y, z, TUNING.GESTALT_POPULATION_DIST, BRIGHTMARE_TAGS)
 				local maxpop = data.MAX_SPAWNS
 				local inc_chance = 0
 				if level == 1 then
@@ -116,7 +116,7 @@ local function UpdatePopulation()
 		end
 	end
 
-    _poptask = inst:DoTaskInTime(POP_CHANGE_INTERVAL - math.min(total_levels, POP_CHANGE_INTERVAL / 2) + POP_CHANGE_VARIANCE * math.random(), UpdatePopulation)
+    _poptask = inst:DoTaskInTime(TUNING.GESTALT_POP_CHANGE_INTERVAL - math.min(total_levels, TUNING.GESTALT_POP_CHANGE_INTERVAL / 2) + TUNING.GESTALT_POP_CHANGE_VARIANCE * math.random(), UpdatePopulation)
 end
 
 local function Start()
@@ -138,7 +138,7 @@ end
 
 function self:FindBestPlayer(gestalt)
 	local closest_player = nil
-	local closest_distsq = TUNING.GESTALT.POPULATION_DIST * TUNING.GESTALT.POPULATION_DIST
+	local closest_distsq = TUNING.GESTALT_POPULATION_DIST * TUNING.GESTALT_POPULATION_DIST
 	local closest_level = 0
 
 	for player, _ in pairs(_players) do
@@ -147,7 +147,7 @@ function self:FindBestPlayer(gestalt)
             local distsq = gestalt:GetDistanceSqToPoint(x, y, z)
             if distsq < closest_distsq then
 				local level, data = GetTuningLevelForPlayer(player)
-				if level > 0 and #TheSim:FindEntities(x, y, z, TUNING.GESTALT.POPULATION_DIST, BRIGHTMARE_TAGS) <= (data.MAX_SPAWNS + 1) then
+				if level > 0 and #TheSim:FindEntities(x, y, z, TUNING.GESTALT_POPULATION_DIST, BRIGHTMARE_TAGS) <= (data.MAX_SPAWNS + 1) then
 	                closest_distsq = distsq
 		            closest_player = player
 					closest_level = level

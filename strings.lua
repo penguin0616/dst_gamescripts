@@ -7526,6 +7526,12 @@ STRINGS.UI =
         SPIDER_DROPPER = "Dangling Depth Dwellers",
         SQUID = "Skittersquids",
         WASPS = "Wasps",
+        ATRIUMGATE = "Ancient Gateway",
+        BRIGHTMARECREATURES = "Lunacy Monsters",
+        GNARWAIL = "Gnarwails",
+        FISHSCHOOLS = "Schools of Fish",
+        WALRUS_SETTING = "MacTusk",
+        COOKIECUTTERS = "Cookie Cutters",
 
         EVERGREEN_REGROWTH = "Evergreens",
         TWIGGYTREES_REGROWTH = "Twiggy Trees",
@@ -7537,6 +7543,7 @@ STRINGS.UI =
         FLOWERS_REGROWTH = "Flowers",
         FLOWER_CAVE_REGROWTH = "Light Flower",
         LIGHTFLIER_FLOWER_REGROWTH = "Lightflier Flower",
+        SALTSTACK_REGROWTH = "Salt Formations",
 
         MOON_TREE = "Lune Trees",
         MOON_SAPLING = "Lunar Saplings",

@@ -65,6 +65,7 @@ local function OnWork(inst, worker, workleft)
         local openinst = SpawnPrefab("cave_entrance_open")
         openinst.Transform:SetPosition(pt:Get())
         openinst.components.worldmigrator.id = inst.components.worldmigrator.id
+        openinst.components.worldmigrator.auto = inst.components.worldmigrator.auto
         openinst.components.worldmigrator.linkedWorld = inst.components.worldmigrator.linkedWorld
         openinst.components.worldmigrator.receivedPortal = inst.components.worldmigrator.receivedPortal
         inst:Remove()

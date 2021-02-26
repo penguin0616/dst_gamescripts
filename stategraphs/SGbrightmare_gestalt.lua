@@ -23,7 +23,7 @@ local events =
 local function FindBestAttackTarget(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
     local closestPlayer = nil
-	local rangesq = TUNING.GESTALT.ATTACK_HIT_RANGE_SQ
+	local rangesq = TUNING.GESTALT_ATTACK_HIT_RANGE_SQ
     for i, v in ipairs(AllPlayers) do
         if (not(v.replica.health:IsDead() or v:HasTag("playerghost"))) and
 			not (v.sg:HasStateTag("knockout") or v.sg:HasStateTag("sleeping") or v.sg:HasStateTag("bedroll") or v.sg:HasStateTag("tent") or v.sg:HasStateTag("waking")) and
@@ -40,11 +40,11 @@ end
 
 local function DoSpecialAttack(inst, target)
 	if target.components.sanity ~= nil then 
-		target.components.sanity:DoDelta(TUNING.GESTALT.ATTACK_DAMAGE_SANITY)
+		target.components.sanity:DoDelta(TUNING.GESTALT_ATTACK_DAMAGE_SANITY)
 	end
 	local grogginess = target.components.grogginess
 	if grogginess ~= nil then 
-		grogginess:AddGrogginess(TUNING.GESTALT.ATTACK_DAMAGE_GROGGINESS, TUNING.GESTALT.ATTACK_DAMAGE_KO_TIME)
+		grogginess:AddGrogginess(TUNING.GESTALT_ATTACK_DAMAGE_GROGGINESS, TUNING.GESTALT_ATTACK_DAMAGE_KO_TIME)
 		if grogginess.knockoutduration == 0 then
 			target:PushEvent("attacked", {attacker = inst, damage = 0})
 		else
@@ -251,7 +251,7 @@ local states=
         onupdate = function(inst)
 			if inst.sg.statemem.enable_attack then
 				local target = inst.components.combat.target
-				if target ~= nil and target:IsValid() and inst:GetDistanceSqToInst(target) <= TUNING.GESTALT.ATTACK_HIT_RANGE_SQ then
+				if target ~= nil and target:IsValid() and inst:GetDistanceSqToInst(target) <= TUNING.GESTALT_ATTACK_HIT_RANGE_SQ then
                     if inst.components.combat:CanTarget(target) then
 						inst.components.combat:DoAttack(target)
 						inst.sg:GoToState("mutate_pre", 6)

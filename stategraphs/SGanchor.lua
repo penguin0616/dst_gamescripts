@@ -30,7 +30,7 @@ local states =
             EventHandler("lowering_anchor",
                 function(inst) 
                     local anchor_x, anchor_y, anchor_z = inst.Transform:GetWorldPosition()
-                    if TheWorld.Map:GetPlatformAtPoint(anchor_x, anchor_z) ~= nil then
+                    if inst.components.anchor ~= nil and inst.components.anchor.boat ~= nil then
                         inst.sg:GoToState("lowering")
                     else
                         inst.sg:GoToState("lowering_land")
@@ -163,7 +163,7 @@ local states =
         {
             EventHandler("lowering_anchor", function(inst)
                 local anchor_x, anchor_y, anchor_z = inst.Transform:GetWorldPosition()
-                if TheWorld.Map:GetPlatformAtPoint(anchor_x, anchor_z) ~= nil then
+                if inst.components.anchor ~= nil and inst.components.anchor.boat ~= nil then
                     inst.sg:GoToState("lowering")
                 else
                     inst.sg:GoToState("lowering_land")
@@ -192,7 +192,7 @@ local states =
         {
             EventHandler("lowering_anchor", function(inst) 
                 local anchor_x, anchor_y, anchor_z = inst.Transform:GetWorldPosition()
-                if TheWorld.Map:GetPlatformAtPoint(anchor_x, anchor_z) ~= nil then
+                if inst.components.anchor ~= nil and inst.components.anchor.boat ~= nil then
                     inst.sg:GoToState("lowering")
                 else
                     inst.sg:GoToState("lowering_land")

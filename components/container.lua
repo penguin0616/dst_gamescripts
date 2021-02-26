@@ -269,16 +269,14 @@ function Container:GiveItem(item, slot, src_pos, drop_on_fail)
             if not self.acceptsstacks and item.components.stackable and item.components.stackable:StackSize() > 1 then
                 item = item.components.stackable:Get()
                 self.slots[in_slot] = item
-                local previous_owner = item.components.inventoryitem.owner
                 item.components.inventoryitem:OnPutInInventory(self.inst)
-                self.inst:PushEvent("itemget", { slot = in_slot, item = item, src_pos = src_pos, prevowner = previous_owner })
+                self.inst:PushEvent("itemget", { slot = in_slot, item = item, src_pos = src_pos, })
                 return false
             end
 
             self.slots[in_slot] = item
-            local previous_owner = item.components.inventoryitem.owner
             item.components.inventoryitem:OnPutInInventory(self.inst)
-            self.inst:PushEvent("itemget", { slot = in_slot, item = item, src_pos = src_pos, prevowner = previous_owner })
+            self.inst:PushEvent("itemget", { slot = in_slot, item = item, src_pos = src_pos })
 
             if not self.ignoresound and self.inst.components.inventoryitem ~= nil and self.inst.components.inventoryitem.owner ~= nil then
                 self.inst.components.inventoryitem.owner:PushEvent("gotnewitem", { item = item, slot = in_slot })

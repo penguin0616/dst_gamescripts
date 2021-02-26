@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
 }
@@ -25,6 +27,10 @@ local function OnEntityWake(inst)
 	inst.releasechildrentask = inst:DoTaskInTime(0.1, DoReleaseAllChildren)
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.COOKIECUTTER_SPAWNER_RELEASE_TIME, TUNING.COOKIECUTTER_SPAWNER_REGEN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -40,9 +46,11 @@ local function fn()
     end
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(TUNING.COOKIECUTTER_SPAWNER.REGEN_TIME)
-    inst.components.childspawner:SetSpawnPeriod(TUNING.COOKIECUTTER_SPAWNER.RELEASE_TIME)
-    inst.components.childspawner:SetMaxChildren(TUNING.COOKIECUTTER_SPAWNER.MAX_CHILDREN)
+    inst.components.childspawner:SetRegenPeriod(TUNING.COOKIECUTTER_SPAWNER_REGEN_TIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.COOKIECUTTER_SPAWNER_RELEASE_TIME)
+    inst.components.childspawner:SetMaxChildren(TUNING.COOKIECUTTER_SPAWNER_MAX_CHILDREN)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.COOKIECUTTER_SPAWNER_RELEASE_TIME, TUNING.COOKIECUTTER_SPAWNER_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.COOKIECUTTER_SPAWNER_REGEN_TIME, TUNING.COOKIECUTTER_SPAWNER_ENABLED)
     inst.components.childspawner:StartRegen()
 	inst.components.childspawner.spawnradius = {min = 2, max = TUNING.COOKIECUTTER.WANDER_DIST}
 	inst.components.childspawner.childname = "cookiecutter"
@@ -51,6 +59,8 @@ local function fn()
 
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end
