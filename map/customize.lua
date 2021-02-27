@@ -305,7 +305,7 @@ local WORLDGEN_GROUP = {
 			["moon_bullkelp"] = {value = "default", image = "moon_bullkelp.tex", world = {"forest"}},
 			["ponds"] = {value = "default", image = "ponds.tex", world={"forest"}},
 			["cave_ponds"] = {value = "default", image = "ponds.tex", world={"cave"}},
-			["ocean_bullkelp"] = {value = "ocean_default", image = "ocean_bullkelp.tex", world = {"forest"}},
+			["ocean_bullkelp"] = {value = "default", image = "ocean_bullkelp.tex", world = {"forest"}},
 			["ocean_seastack"] = {value = "ocean_default", image = "ocean_seastack.tex", desc = ocean_worldgen_frequency_descriptions, world = {"forest"}},
 		}
 	},

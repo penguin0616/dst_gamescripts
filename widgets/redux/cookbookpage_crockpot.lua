@@ -39,28 +39,30 @@ local CookbookPageCrockPot = Class(Widget, function(self, parent_screen, categor
 end)
 
 function CookbookPageCrockPot:_DoFocusHookups()
-	for i, v in ipairs(self.spinners) do
-		v:ClearFocusDirs()
+	if self.spinners then
+		for i, v in ipairs(self.spinners) do
+			v:ClearFocusDirs()
 
-		if i > 1 then
-			v:SetFocusChangeDir(MOVE_UP, self.spinners[i-1])
+			if i > 1 then
+				v:SetFocusChangeDir(MOVE_UP, self.spinners[i-1])
+			end
+			if i < #self.spinners then
+				v:SetFocusChangeDir(MOVE_DOWN, self.spinners[i+1])
+			end
 		end
-		if i < #self.spinners then
-			v:SetFocusChangeDir(MOVE_DOWN, self.spinners[i+1])
-		end
-	end
-	
-    local reset_default_focus = self.parent_default_focus ~= nil and self.parent_screen ~= nil and self.parent_screen.default_focus == self.parent_default_focus
+		
+		local reset_default_focus = self.parent_default_focus ~= nil and self.parent_screen ~= nil and self.parent_screen.default_focus == self.parent_default_focus
 
-	if self.recipe_grid.items ~= nil and #self.recipe_grid.items > 0 then
-		self.spinners[#self.spinners]:SetFocusChangeDir(MOVE_DOWN, self.recipe_grid)
-		self.recipe_grid:SetFocusChangeDir(MOVE_UP, self.spinners[#self.spinners])
-	
-		self.parent_default_focus = self.recipe_grid
-	    self.focus_forward = self.recipe_grid
-	else
-		self.parent_default_focus = self.spinners[1]
-	    self.focus_forward = self.spinners[1]
+		if self.recipe_grid.items ~= nil and #self.recipe_grid.items > 0 then
+			self.spinners[#self.spinners]:SetFocusChangeDir(MOVE_DOWN, self.recipe_grid)
+			self.recipe_grid:SetFocusChangeDir(MOVE_UP, self.spinners[#self.spinners])
+		
+			self.parent_default_focus = self.recipe_grid
+			self.focus_forward = self.recipe_grid
+		else
+			self.parent_default_focus = self.spinners[1]
+			self.focus_forward = self.spinners[1]
+		end
 	end
 end
 
@@ -690,7 +692,7 @@ function CookbookPageCrockPot:BuildSpinners()
 	local items = {}
 	table.insert(items, MakeSpinner(STRINGS.UI.COOKBOOK.SORT_SPINNERLABEL, sort_options, on_sort_fn, TheCookbook:GetFilter("sort")))
 	table.insert(items, MakeSpinner(STRINGS.UI.COOKBOOK.FILTER_SPINNERLABEL, filter_options, on_filter_fn, TheCookbook:GetFilter("filter")))
-    
+
 	self.spinners = {}
 	for i, v in ipairs(items) do
 		local w = root:AddChild(v)

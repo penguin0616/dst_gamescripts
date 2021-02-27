@@ -153,6 +153,7 @@ UpdateSpawn = function(player, params)
                 table.insert(toremove, v)
             end
         end
+        
         for i = #toremove, params.targetpop + 1, -1 do
             local ent = table.remove(toremove, math.random(i))
             ent.persists = false
@@ -197,7 +198,9 @@ local function UpdatePopulation(player, params)
                 targetpop = targetpop + 1
             end
         elseif targetpop > 0 and math.random() < dec_chance then
-            targetpop = targetpop - 1
+            if targetpop < maxpop then
+                targetpop = targetpop - 1
+            end
         end
 
         --Start spawner if target population has changed
@@ -246,7 +249,9 @@ local function UpdatePopulation(player, params)
                 targetpop = targetpop + 1
             end
         elseif dec_chance > 0 and math.random() < dec_chance then
-            targetpop = targetpop - 1
+            if targetpop < maxpop then
+                targetpop = targetpop - 1
+            end
         end
 
         --Start spawner if target population has changed

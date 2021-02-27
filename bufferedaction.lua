@@ -41,7 +41,7 @@ function BufferedAction:IsValid()
            (self.pos == nil or self.pos.walkable_platform == nil or self.pos.walkable_platform:IsValid()) and
            (not self.doerownsobject or (self.doer ~= nil and self.invobject ~= nil and self.invobject.replica.inventoryitem ~= nil and self.invobject.replica.inventoryitem:IsHeldBy(self.doer))) and
            (self.validfn == nil or self.validfn(self)) and
-           (self.action.validfn == nil or self.action.validfn(self))
+           (not TheWorld.ismastersim or (self.action.validfn == nil or self.action.validfn(self)))
 end
 
 --V2C: TestForStart can return "reason" as a second return value (but we don't in DST)
