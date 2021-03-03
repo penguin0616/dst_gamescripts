@@ -885,6 +885,7 @@ local function GetItemFromName(name)
 end
 
 local function RefreshWorldTabs()
+	if not TheFrontEnd then return end
 	--HACK probably need a better way to update the world tabs when the customize data changes
 	local servercreationscreen
     for _, screen_in_stack in pairs(TheFrontEnd.screenstack) do
@@ -1061,8 +1062,8 @@ local function ClearModData(modname)
 					group.items[name] = nil
 					MOD_OPTIONS[item.modname][itemname] = nil
 				end
+				assert(IsTableEmpty(group.items))
 			end
-			assert(IsTableEmpty(MOD_WORLDSETTINGS_GROUP[modname].items))
 			MOD_WORLDSETTINGS_GROUP[modname] = nil
 		end
 
@@ -1072,8 +1073,8 @@ local function ClearModData(modname)
 					group.items[name] = nil
 					MOD_OPTIONS[item.modname][itemname] = nil
 				end
+				assert(IsTableEmpty(group.items))
 			end
-			assert(IsTableEmpty(MOD_WORLDGEN_GROUP[modname].items))
 			MOD_WORLDGEN_GROUP[modname] = nil
 		end
 

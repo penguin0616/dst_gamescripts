@@ -164,10 +164,18 @@ function Pickable:Resume()
             end
         end
     else
-        self.resumeregentimer(self.inst)
         self.paused = false
-        if TheWorld.state.isspring then
-            self.setregentimertime(self.inst, self.getregentimertime(self.inst) * TUNING.SPRING_GROWTH_MODIFIER)
+        if not (self.canbepicked or self:IsBarren()) then
+            local pause_time = self.getregentimertime(self.inst)
+            if pause_time ~= nil then
+                if TheWorld.state.isspring then
+                    pause_time = pause_time * TUNING.SPRING_GROWTH_MODIFIER
+                end
+                self.resumeregentimer(self.inst)
+                self.setregentimertime(self.inst, pause_time * TUNING.SPRING_GROWTH_MODIFIER)
+            else
+                self:MakeEmpty()
+            end
         end
     end
 end

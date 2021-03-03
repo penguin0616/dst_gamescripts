@@ -105,6 +105,7 @@ local function PauseAttacks()
 	_targetplayer = nil
     _warning = false
     self.inst:StopUpdatingComponent(self)
+    _worldsettingstimer:PauseTimer(DEERCLOPS_TIMERNAME)
 end
 
 local function ResetAttacks()

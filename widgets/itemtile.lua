@@ -26,7 +26,7 @@ local ItemTile = Class(Widget, function(self, invitem)
     end
 
     if self.item:HasTag("show_spoiled") or self:HasSpoilage() then
-        self.bg = self:AddChild(Image(HUD_ATLAS, "inv_slot_spoiled.tex"))
+            self.bg = self:AddChild(Image(HUD_ATLAS, "inv_slot_spoiled.tex"))
         self.bg:SetClickable(false)
     end
 
@@ -91,7 +91,9 @@ local ItemTile = Class(Widget, function(self, invitem)
     if invitem:HasClientSideInventoryImageOverrides() then
         self.inst:ListenForEvent("clientsideinventoryflagschanged",
             function(player)
-                self.image:SetTexture(invitem.replica.inventoryitem:GetAtlas(), invitem.replica.inventoryitem:GetImage())
+                if invitem and invitem.replica.inventoryitem then
+                    self.image:SetTexture(invitem.replica.inventoryitem:GetAtlas(), invitem.replica.inventoryitem:GetImage())
+                end
             end, ThePlayer)
     end
 	self.inst:ListenForEvent("inventoryitem_updatetooltip",

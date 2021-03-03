@@ -250,12 +250,17 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 		--deal with foot nubs
 		local has_nub = BASE_FEET_SIZE[base_skin] == -1
 		local nub_build = base_skin
-		if clothing_names["legs"] ~= nil and CLOTHING[clothing_names["legs"]] ~= nil and CLOTHING[clothing_names["legs"]].has_nub then
-			has_nub = CLOTHING[clothing_names["legs"]].has_nub
+		local nub_symbol_name = "nub"
+		local assigned_leg = clothing_names["legs"]
+		if assigned_leg ~= nil and CLOTHING[assigned_leg] ~= nil and CLOTHING[assigned_leg].has_nub then
+			has_nub = true
 			nub_build = clothing_names["legs"]
+			if skintype == "powerup" and CLOTHING[assigned_leg].symbol_overrides_powerup ~= nil then
+				nub_symbol_name = CLOTHING[assigned_leg].symbol_overrides_powerup["nub"] or "nub"
+			end
 		end
 		if has_nub and symbol_overridden["leg"] and not symbol_overridden["foot"] and leg_build ~= nub_build then
-			anim_state:OverrideSkinSymbol("foot", nub_build, "nub" )
+			anim_state:OverrideSkinSymbol("foot", nub_build, nub_symbol_name )
 			feet_cuff_size = 0
 		end
 		

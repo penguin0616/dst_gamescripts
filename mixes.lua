@@ -111,6 +111,20 @@ TheMixer:AddNewMix("lobby", 2, 8,
     [slurp] = 0,
 })
 
+TheMixer:AddNewMix("moonstorm", 2, 8,
+{ 
+    [amb] = 1,
+    [cloud] = 0,
+    [music] = .3,
+    [voice] = .3,
+    [movement] = .3,
+    [creature] = .3,
+    [player] = 1,
+    [HUD] = 1,
+    [sfx] = .3,
+    [slurp] = 0,
+})
+
 --------------------------------------------------------------------------
 
 --quagmire uses the same one as lavaarena

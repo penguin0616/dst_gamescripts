@@ -1,6 +1,6 @@
 
 local assets = 	{
-    Asset("ANIM", "anim/lavaarena_battlestandard.zip"),
+    Asset("ANIM", "anim/spawnprotectionbuff.zip"),
 }
 
 local prefabs = 
@@ -71,7 +71,7 @@ end
 
 local function buff_OnDetached(inst, target)
 	inst:OnEnableProtectionFn(target, false)
-	inst:Remove()
+	inst:DoTaskInTime(1, inst.Remove)
 end
 
 local function OnEnableProtectionFn(inst, target, enable)
@@ -87,6 +87,8 @@ local function OnEnableProtectionFn(inst, target, enable)
 		target.Physics:CollidesWith(COLLISION.OBSTACLES)
 		target.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
 		target.AnimState:SetHaunted(false)
+
+		inst.AnimState:PushAnimation("buff_pst", false)
 	end
 end
 
@@ -97,12 +99,13 @@ local function fn(songdata, dodelta_fn)
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-    inst.AnimState:SetBank("lavaarena_battlestandard")
-    inst.AnimState:SetBuild("lavaarena_battlestandard")
+    inst.AnimState:SetBank("spawnprotectionbuff")
+    inst.AnimState:SetBuild("spawnprotectionbuff")
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
-    inst.AnimState:PlayAnimation("defend_fx", true)
-	inst.AnimState:SetMultColour(0, 0, 0, 1)
+    inst.AnimState:PlayAnimation("buff_pre")
+    inst.AnimState:PushAnimation("buff_idle", true)
+	inst.AnimState:SetMultColour(0.25, 0.25, 0.25, 0.25)
 
     inst:AddTag("DECOR") --"FX" will catch mouseover
     inst:AddTag("NOCLICK")

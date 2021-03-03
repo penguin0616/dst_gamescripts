@@ -614,7 +614,7 @@ ACTIONS.RUMMAGE.fn = function(act)
             return false, "NOTMASTERCHEF"
         --elseif targ:HasTag("professionalcookware") and not act.doer:HasTag("professionalchef") then
             --return false, "NOTPROCHEF"
-        elseif act.target.components.container ~= nil and not act.target.components.container:CanOpen() then
+        elseif targ.components.container:CanOpen() then
             return false, "INUSE"
         elseif targ.components.container.canbeopened then
             local owner = targ.components.inventoryitem ~= nil and targ.components.inventoryitem:GetGrandOwner() or nil

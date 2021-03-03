@@ -191,7 +191,7 @@ inst:ListenForEvent("ms_restoreklaussackkey", RestoreKlausSackKey)
 function self:OnPostInit()
     local multiplier
     if not IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
-        multiplier = TUNING.KLAUSSACK_RESPAWN_DELAY + TUNING.KLAUSSACK_SPAWN_DELAY + TUNING.KLAUSSACK_SPAWN_DELAY_VARIANCE
+        _worldsettingstimer:AddTimer(KLAUSSACK_TIMERNAME, TUNING.KLAUSSACK_RESPAWN_DELAY + TUNING.KLAUSSACK_SPAWN_DELAY + TUNING.KLAUSSACK_SPAWN_DELAY_VARIANCE, TUNING.SPAWN_KLAUS, OnRespawnTimer)
         if TheWorld.state.iswinter then
             if _spawnedthiswinter then
                 _spawnsthiswinter = 1
@@ -206,15 +206,14 @@ function self:OnPostInit()
     else
         self:WatchWorldState("iswinter", OnIsWinterEvent)
         OnIsWinterEvent(self, TheWorld.state.iswinter)
+        _worldsettingstimer:AddTimer(KLAUSSACK_TIMERNAME, TUNING.KLAUSSACK_EVENT_RESPAWN_TIME, TUNING.SPAWN_KLAUS, OnRespawnTimer)
         if _sack == nil and not _worldsettingstimer:ActiveTimerExists(KLAUSSACK_TIMERNAME) then
-            multiplier = TUNING.KLAUSSACK_EVENT_RESPAWN_TIME
             OnRespawnTimer() -- spawns on day 1 for winters feast event
             if TheWorld.state.iswinter then
                 _spawnsthiswinter = _spawnsthiswinter + 1
             end
         end
     end
-    _worldsettingstimer:AddTimer(KLAUSSACK_TIMERNAME, multiplier, TUNING.SPAWN_KLAUS, OnRespawnTimer)
 end
 
 --------------------------------------------------------------------------
