@@ -885,7 +885,7 @@ local function GetItemFromName(name)
 end
 
 local function RefreshWorldTabs()
-	if not TheFrontEnd then return end
+	if not rawget(_G, "TheFrontEnd") then return end
 	--HACK probably need a better way to update the world tabs when the customize data changes
 	local servercreationscreen
     for _, screen_in_stack in pairs(TheFrontEnd.screenstack) do

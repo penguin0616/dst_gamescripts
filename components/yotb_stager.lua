@@ -874,9 +874,9 @@ function YOTB_Stager:DeclareWinner()
 	for index,v in ipairs(self.posts) do
 		local beefalo = v.components.hitcher:GetHitched()
 
-		beefalo.candidate_values = self:GetBeefScore(beefalo)
-		
 		if beefalo then
+			
+			beefalo.candidate_values = self:GetBeefScore(beefalo)
 			local score = 0
 			for i,cat in ipairs(categories) do
 				score = score + math.abs(beefalo.candidate_values[cat] - self.target_values[cat])

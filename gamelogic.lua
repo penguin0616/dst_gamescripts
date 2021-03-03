@@ -1149,6 +1149,7 @@ PlayerHistory = PlayerHistory()
 ServerPreferences = ServerPreferences()
 ProfanityFilter = ProfanityFilter()
 CustomPresetManager = CustomPresets()
+CustomPresetManager:Load()
 
 Print(VERBOSITY.DEBUG, "[Loading Morgue]")
 Morgue:Load( function(did_it_load) 

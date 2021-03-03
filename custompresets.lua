@@ -32,7 +32,9 @@ CustomPresets = Class(function(self)
         [LEVELCATEGORY.SETTINGS] = {},
         [LEVELCATEGORY.WORLDGEN] = {},
     }
+end)
 
+function CustomPresets:Load()
     self.presetIDs[LEVELCATEGORY.SETTINGS], self.presetIDs[LEVELCATEGORY.WORLDGEN] = TheSim:GetUserPresetFiles()
 
     global("Profile")
@@ -63,7 +65,7 @@ CustomPresets = Class(function(self)
             Profile:Save()
         end
     end
-end)
+end
 
 local function GetPathString(category, presetid)
     return WORLD_PRESETS_FOLDER..string.upper(presetid)..EXTENSIONS[category]
