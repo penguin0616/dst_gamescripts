@@ -66,6 +66,7 @@ end
 --retrofit old timers
 local function OnPreLoad(inst, data)
     WorldSettings_Timer_PreLoad(inst, data, DRAGONFLY_SPAWNTIMER, TUNING.DRAGONFLY_RESPAWN_TIME)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, DRAGONFLY_SPAWNTIMER, 1)
     if data and data.childspawner and data.childspawner.timetonextspawn then
         data.childspawner.timetonextspawn = math.min(data.childspawner.timetonextspawn, TUNING.DRAGONFLY_SPAWN_TIME)
     end

@@ -52,7 +52,7 @@ local _activeplayers = {}
 --------------------------------------------------------------------------
 
 local function AllowedToAttack()
-	--print("Deerclopsspawner allowed to attack?", TheWorld.state.cycles, _attackoffseason, TheWorld.state.season)
+	--print("Deerclopsspawner allowed to attack?", #_activeplayers, TheWorld.state.cycles, _attackoffseason, TheWorld.state.season)
     return  #_activeplayers > 0 and
             TheWorld.state.cycles > TUNING.NO_BOSS_TIME and  
                 (_attackoffseason or
@@ -105,7 +105,7 @@ local function PauseAttacks()
 	_targetplayer = nil
     _warning = false
     self.inst:StopUpdatingComponent(self)
-    _worldsettingstimer:PauseTimer(DEERCLOPS_TIMERNAME)
+    _worldsettingstimer:PauseTimer(DEERCLOPS_TIMERNAME, true)
 end
 
 local function ResetAttacks()
@@ -120,6 +120,7 @@ local function TryStartAttacks(killed)
             _worldsettingstimer:StartTimer(DEERCLOPS_TIMERNAME, attackdelay)
         end
 
+        _worldsettingstimer:ResumeTimer(DEERCLOPS_TIMERNAME)
         self.inst:StartUpdatingComponent(self)
         self:StopWatchingWorldState("cycles", TryStartAttacks)
         self.inst.watchingcycles = nil
@@ -409,6 +410,7 @@ end
 function self:SummonMonster(player)
     if _worldsettingstimer:ActiveTimerExists(DEERCLOPS_TIMERNAME) then
         _worldsettingstimer:SetTimeLeft(DEERCLOPS_TIMERNAME, 10)
+        _worldsettingstimer:ResumeTimer(DEERCLOPS_TIMERNAME)
     else
         _worldsettingstimer:StartTimer(DEERCLOPS_TIMERNAME, 10)
     end

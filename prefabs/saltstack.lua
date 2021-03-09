@@ -201,6 +201,7 @@ local function OnPreLoad(inst, data)
 		maxtime = maxtime / TUNING.REGROWTH_TIME_MULTIPLIER
 	end
 	WorldSettings_Timer_PreLoad(inst, data, "growth", maxtime)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "growth", 1)
 end
 
 local function fn()

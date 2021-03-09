@@ -178,8 +178,11 @@ end
 
 local function OnPreLoad(inst, data)
     WorldSettings_Timer_PreLoad(inst, data, "morphdelay", TUNING.GRASSGEKKO_MORPH_DELAY + TUNING.GRASSGEKKO_MORPH_DELAY_VARIANCE)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "morphdelay", 1)
     WorldSettings_Timer_PreLoad(inst, data, "morphing")
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "morphing", 1)
     WorldSettings_Timer_PreLoad(inst, data, "morphrelay")
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "morphrelay", 1)
     if data ~= nil then
         if data.pickable ~= nil and data.pickable.transplanted then
             makemorphable(inst)

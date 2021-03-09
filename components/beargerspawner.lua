@@ -109,9 +109,10 @@ local function SpawnBearger()
 	local spawnrandom = .25 * spawndelay
 	local timetospawn = TheWorld.components.worldsettingstimer:GetTimeLeft(BEARGER_TIMERNAME)
 	if timetospawn == nil then
-		
+		timetospawn = _worldsettingstimer:StartTimer(BEARGER_TIMERNAME, GetRandomWithVariance(spawndelay, spawnrandom))
 	elseif timetospawn > spawndelay + spawnrandom then
-		timetospawn = GetRandomWithVariance(spawndelay, spawnrandom)
+		timetospawn = _worldsettingstimer:SetTimeLeft(BEARGER_TIMERNAME, GetRandomWithVariance(spawndelay, spawnrandom))
+		timetospawn = _worldsettingstimer:ResumeTimer(BEARGER_TIMERNAME)
 	end
 
 	self.inst:StartUpdatingComponent(self)
@@ -137,6 +138,7 @@ local function ReleaseHassler(targetPlayer)
 			SpawnBearger()
 		else
 			self.inst:StopUpdatingComponent(self)
+			_worldsettingstimer:PauseTimer(BEARGER_TIMERNAME, true)
 		end
 
         return hassler
@@ -171,7 +173,7 @@ local function OnSeasonTick(src, data)
 		_numToSpawn = 0
 		_numSpawned = GetActiveHasslerCount()
 		self.inst:StopUpdatingComponent(self)
-
+		_worldsettingstimer:PauseTimer(BEARGER_TIMERNAME, true)
 	end
 end
 
@@ -204,6 +206,8 @@ end
 
 local function OnHasslerKilled(src, hassler)
 	_activehasslers[hassler] = nil
+
+	_worldsettingstimer:StopTimer(BEARGER_TIMERNAME)
 
 	--don't remove from numSpawned, as that could cause repeated cycles of bearger spawning, instead numSpawned will get clobbered the next time we re-roll bearger spawn chances.
 	--numSpawned = numSpawned - 1
@@ -276,6 +280,7 @@ function self:OnUpdate(dt)
     local timetospawn = _worldsettingstimer:GetTimeLeft(BEARGER_TIMERNAME)
 	if timetospawn then
 		if not _warning then
+			_timetonextwarningsound = 0
 			if timetospawn > 0 and timetospawn < _warnduration then
 				PickPlayer()
 				if not _targetplayer then
@@ -283,7 +288,6 @@ function self:OnUpdate(dt)
 				end
 
 				_warning = true
-				_timetonextwarningsound = 0
 			end
 		else
 			_timetonextwarningsound	= _timetonextwarningsound - dt
@@ -309,6 +313,7 @@ function self:OnUpdate(dt)
 		SpawnBearger()
 	else
 		self.inst:StopUpdatingComponent(self)
+		_worldsettingstimer:PauseTimer(BEARGER_TIMERNAME, true)
     end
 end
 
@@ -350,6 +355,7 @@ function self:OnLoad(data)
 	_numSpawned = data.numSpawned or 0
 
 	self.inst:StopUpdatingComponent(self)
+	_worldsettingstimer:PauseTimer(BEARGER_TIMERNAME, true)
 
     --retrofit old timer to new system
     if data.timetospawn then
@@ -367,6 +373,7 @@ function self:LoadPostPass(newents, savedata)
 	end
 
 	if CanSpawnBearger() then
+		_worldsettingstimer:ResumeTimer(BEARGER_TIMERNAME)
 		self.inst:StartUpdatingComponent(self)
 	end
 	
@@ -396,6 +403,7 @@ end
 function self:SummonMonster(player)
     if _worldsettingstimer:ActiveTimerExists(BEARGER_TIMERNAME) then
         _worldsettingstimer:SetTimeLeft(BEARGER_TIMERNAME, 10)
+		_worldsettingstimer:ResumeTimer(BEARGER_TIMERNAME)
     else
         _worldsettingstimer:StartTimer(BEARGER_TIMERNAME, 10)
     end

@@ -110,11 +110,11 @@ local function RemoveMember(inst, member)
 end
 
 local function OnMemberKilled(inst, member, data)
-    if inst.components.worldsettingstimer:ActiveTimerExists(member) then
-        inst.containers.worldsettingstimer:StopTimer(member)
+    if inst.components.worldsettingstimer:ActiveTimerExists(member.prefab) then
+        inst.components.worldsettingstimer:StopTimer(member.prefab)
     end
 
-    inst.components.worldsettingstimer:StartTimer(member, TUNING.WALRUS_REGEN_PERIOD)
+    inst.components.worldsettingstimer:StartTimer(member.prefab, TUNING.WALRUS_REGEN_PERIOD)
 
     RemoveMember(inst, member)
 end

@@ -374,6 +374,7 @@ local function OnPreLoad(inst, data)--, newents)
     end
 
     WorldSettings_Timer_PreLoad(inst, data, ANTLION_RAGE_TIMER, TUNING.ANTLION_RAGE_TIME_MAX)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, ANTLION_RAGE_TIMER, 1)
 end
 
 local function OnLoad(inst)

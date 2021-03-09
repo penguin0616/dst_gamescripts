@@ -167,6 +167,8 @@ local function PlanNextAttack()
 		_timetoattack = timetoattackbase + timetoattackvariance
 		_warnduration = _warndurationfn()
 		_attackplanned = true
+	else
+		_attackplanned = false
 	end
     _warning = false
 end
@@ -397,6 +399,7 @@ local function CheckForWaterImunityAllPlayers()
 end
 
 local function SetDifficulty(src, difficulty)
+	print(difficulty)
 	if difficulty == "never" then
 		self:SpawnModeNever()
 	elseif difficulty == "rare" then
@@ -674,14 +677,17 @@ function self:GetDebugString()
         return string.format("%s spawns are coming in %2.2f", (_warning and "WARNING") or (_pausesources:Get() and "BLOCKED") or "WAITING", _timetoattack)
     end
 
-    local s = "ATTACKING"
-    for i, spawninforec in ipairs(_spawninfo) do
-        s = s.."\n{"
-        for j, player in ipairs(spawninforec.players) do
-            s = s..(j > 1 and "," or "")..tostring(player)
-        end
-        s = s.."} - spawns left:"..tostring(spawninforec.spawnstorelease).." next spawn:"..tostring(spawninforec.timetonext)
-    end
+    local s = "DORMANT"
+	if _spawnmode ~= "never" then
+		s = "ATTACKING"
+		for i, spawninforec in ipairs(_spawninfo) do
+			s = s.."\n{"
+			for j, player in ipairs(spawninforec.players) do
+				s = s..(j > 1 and "," or "")..tostring(player)
+			end
+			s = s.."} - spawns left:"..tostring(spawninforec.spawnstorelease).." next spawn:"..tostring(spawninforec.timetonext)
+		end
+	end
     return s
 end
 

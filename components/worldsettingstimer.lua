@@ -18,7 +18,7 @@ function WorldSettingsTimer:AddTimer(name, maxtime, enabled, callback, externall
 
     if self.saved_timers[name] then
         local saved = self.saved_timers[name]
-        self:StartTimer(name, saved.timeleft * maxtime, saved.paused, saved.initial_time)
+        self:StartTimer(name, saved.timeleft * maxtime, saved.paused, saved.initial_time, saved.blocklongupdate)
         self.saved_timers[name] = nil
     end
 end
@@ -56,9 +56,9 @@ local function OnTimerDone(inst, self, name)
     end
 end
 
-function WorldSettingsTimer:StartTimer(name, time, paused, initialtime_override)
+function WorldSettingsTimer:StartTimer(name, time, paused, initialtime_override, blocklongupdate)
     if not self:TimerExists(name) then
-        print("You must first AddTimer before you can start a timer")
+        print("You must first AddTimer before you can start a timer", name)
         return
     elseif self:ActiveTimerExists(name) then
         print("A timer with the name ", name, " already exists on ", self.inst, "!")
@@ -69,6 +69,7 @@ function WorldSettingsTimer:StartTimer(name, time, paused, initialtime_override)
     self.timers[name].end_time = GetTime() + time
     self.timers[name].initial_time = initialtime_override or time
     self.timers[name].paused = paused
+    self.timers[name].blocklongupdate = blocklongupdate
 
     if not self:IsPaused(name) then
         self.timers[name].timer = self.inst:DoTaskInTime(time, OnTimerDone, self, name)
@@ -95,7 +96,7 @@ function WorldSettingsTimer:IsPaused(name)
     return self:TimerExists(name) and (not self:TimerEnabled(name) or self.timers[name].paused)
 end
 
-function WorldSettingsTimer:PauseTimer(name)
+function WorldSettingsTimer:PauseTimer(name, blocklongupdate)
     if not self:ActiveTimerExists(name) then
         return
     end
@@ -103,6 +104,7 @@ function WorldSettingsTimer:PauseTimer(name)
     self:GetTimeLeft(name)
 
     self.timers[name].paused = true
+    self.timers[name].blocklongupdate = blocklongupdate
     if self.timers[name].timer then
         self.timers[name].timer:Cancel()
         self.timers[name].timer = nil
@@ -114,6 +116,7 @@ function WorldSettingsTimer:ResumeTimer(name)
         return
     end
     self.timers[name].paused = false
+    self.timers[name].blocklongupdate = nil
 
     if self:TimerEnabled(name) then
         self.timers[name].timer = self.inst:DoTaskInTime(self.timers[name].timeleft, OnTimerDone, self, name)
@@ -158,6 +161,7 @@ function WorldSettingsTimer:OnSave()
             {
                 timeleft = self:GetTimeLeft(k) / v.maxtime,
                 paused = v.paused,
+                blocklongupdate = v.blocklongupdate,
                 initial_time = v.initial_time,
             }
         end
@@ -170,7 +174,7 @@ function WorldSettingsTimer:OnLoad(data)
         for name, v in pairs(data.timers) do
             if self:TimerExists(name) then
                 self:StopTimer(name)
-                self:StartTimer(name, v.timeleft * self:GetMaxTime(name), v.paused, v.initial_time)
+                self:StartTimer(name, v.timeleft * self:GetMaxTime(name), v.paused, v.initial_time, v.blocklongupdate)
             else
                 self.saved_timers[name] = v
             end
@@ -180,7 +184,7 @@ end
 
 function WorldSettingsTimer:LongUpdate(dt)
     for k, v in pairs(self.timers) do
-        if self:ActiveTimerExists(k) and not v.externallongupdate then
+        if self:ActiveTimerExists(k) and not v.externallongupdate and (not v.paused or not v.blocklongupdate) then
             self:SetTimeLeft(k, self:GetTimeLeft(k) - dt)
         end
     end
@@ -195,7 +199,7 @@ function WorldSettingsTimer:GetDebugString()
             self:GetMaxTime(k) or 0,
             tostring(self:TimerEnabled(k) == true)
         )
-        if v.timer then
+        if v.timeleft ~= nil then
             str = str..string.format(
                 " timeleft: %.2f paused: %s",
                 self:GetTimeLeft(k) or 0,

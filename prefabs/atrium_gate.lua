@@ -514,8 +514,11 @@ end
 
 local function OnPreLoad(inst, data)
     WorldSettings_Timer_PreLoad(inst, data, "destabilizing", TUNING.ATRIUM_GATE_DESTABILIZE_TIME)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "destabilizing", 1)
     WorldSettings_Timer_PreLoad(inst, data, "destabilizedelay", TUNING.ATRIUM_GATE_DESTABILIZE_DELAY)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "destabilizedelay", 1)
     WorldSettings_Timer_PreLoad(inst, data, "cooldown", TUNING.ATRIUM_GATE_COOLDOWN)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "cooldown", 1)
 end
 
 --------------------------------------------------------------------------

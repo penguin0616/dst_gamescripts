@@ -176,7 +176,7 @@ end
 
 function ServerSlotScreen:GetCharacterPortrait(slot)
     local cache_slot = self.slot_cache[slot]
-    if not cache_slot or not cache_slot.character then
+    if not cache_slot or not cache_slot.character_portrait then
         cache_slot = cache_slot or {}
         -- ShardSaveGameIndex:GetSlotCharacter is not cheap! Use it in FE only.
         -- V2C: This comment is here as a warning to future copy&pasters - __-"

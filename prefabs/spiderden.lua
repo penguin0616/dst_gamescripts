@@ -162,26 +162,21 @@ end
 
 local DENCHECK_ONEOF_TAGS = { "spiderden", "spiderqueen" }
 local function AttemptMakeQueen(inst)
-    print("hello")
     if inst.components.growable == nil then
         --failsafe in case we still got here after we are burning
         return
     end
 
-    print("hello")
     if inst.data.stage == nil or inst.data.stage ~= 3 or not TUNING.SPAWN_SPIDERQUEEN then
         -- we got here directly (probably by loading), so reconfigure to the level 3 state.
         SetLarge(inst)
     end
 
-    print("hello")
     if not inst:IsNearPlayer(30) then
-        print("hello1")
         inst.components.growable:StartGrowing(60 + math.random(60))
         return
     end
 
-    print("hello")
     local check_range = TUNING.SPIDERDEN_QUEEN_RANGE_CHECK
     local cap = TUNING.SPIDERDEN_QUEEN_CAP
     local x, y, z = inst.Transform:GetWorldPosition()

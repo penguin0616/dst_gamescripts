@@ -853,28 +853,34 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     local double_check = {}
     for i, prefab in ipairs(level.required_prefabs or {}) do
-        if double_check[prefab] == nil then
-            double_check[prefab] = 1
-        else
-            double_check[prefab] = double_check[prefab] + 1
-        end
+		if not translated_prefabs or translated_prefabs[prefab] ~= 0 then
+			if double_check[prefab] == nil then
+				double_check[prefab] = 1
+			else
+				double_check[prefab] = double_check[prefab] + 1
+			end
+		end
     end
     for prefab, count in pairs(topology_save.root:GetRequiredPrefabs()) do
-        if double_check[prefab] == nil then
-            double_check[prefab] = count
-        else
-            double_check[prefab] = double_check[prefab] + count
-        end
+		if not translated_prefabs or translated_prefabs[prefab] ~= 0 then
+			if double_check[prefab] == nil then
+				double_check[prefab] = count
+			else
+				double_check[prefab] = double_check[prefab] + count
+			end
+		end
     end
     if storygen.ocean_population ~= nil then
         for _, ocean_room in pairs(storygen.ocean_population) do
             if ocean_room.data ~= nil and ocean_room.data.required_prefabs ~= nil then
                 for _, prefab in ipairs(ocean_room.data.required_prefabs) do
-                    if double_check[prefab] == nil then
-                        double_check[prefab] = 1
-                    else
-                        double_check[prefab] = double_check[prefab] + 1
-                    end
+					if not translated_prefabs or translated_prefabs[prefab] ~= 0 then
+						if double_check[prefab] == nil then
+							double_check[prefab] = 1
+						else
+							double_check[prefab] = double_check[prefab] + 1
+						end
+					end
                 end
             end
         end

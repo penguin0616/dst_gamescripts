@@ -1825,6 +1825,7 @@ function PlayerController:ClearActionHold()
     self.actionholding = false
     self.actionholdtime = nil
     self.lastheldaction = nil
+    self.lastheldactiontime = nil
     self.actionrepeatfunction = nil
 end
 
@@ -1839,12 +1840,14 @@ local function IsAnyActionHoldButtonHeld()
 end
 
 function PlayerController:RepeatHeldAction()
-    if (self.lastheldaction and self.lastheldaction:IsValid()) then
+    if self.lastheldaction and self.lastheldaction:IsValid() and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+        self.lastheldactiontime = GetTime()
         if self.heldactioncooldown == 0 then
             self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
             self:DoAction(self.lastheldaction)
         end
-    elseif self.actionrepeatfunction then
+    elseif self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+        self.lastheldactiontime = GetTime()
         if self.heldactioncooldown == 0 then
             self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
             self:actionrepeatfunction()
