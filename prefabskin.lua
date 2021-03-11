@@ -249,6 +249,19 @@ saltbox_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "sa
 saltbox_clear_fn = function(inst) basic_clear_fn(inst, "saltbox" ) end
 
 
+--------------------------------------------------------------------------
+--[[ Wormhole skin functions ]]
+--------------------------------------------------------------------------
+wormhole_init_fn = function(inst, build_name)
+    basic_init_fn(inst, build_name, "teleporter_worm_build" )
+    inst.MiniMapEntity:SetIcon(build_name .. ".png")
+end
+wormhole_clear_fn = function(inst)
+    basic_clear_fn(inst, "teleporter_worm_build" )
+    inst.MiniMapEntity:SetIcon("wormhole.png")
+end
+
+
 
 --------------------------------------------------------------------------
 --[[ Saddle basic skin functions ]]
@@ -341,6 +354,10 @@ end
 --[[ Abigail skin functions ]]
 --------------------------------------------------------------------------
 function abigail_flower_init_fn(inst, build_name)
+    inst:SetClientSideInventoryImageOverride("bondlevel0", inst:GetSkinName()..".tex", inst:GetSkinName().."_level0.tex")
+    inst:SetClientSideInventoryImageOverride("bondlevel2", inst:GetSkinName()..".tex", inst:GetSkinName().."_level2.tex")
+    inst:SetClientSideInventoryImageOverride("bondlevel3", inst:GetSkinName()..".tex", inst:GetSkinName().."_level3.tex")
+
     if not TheWorld.ismastersim then
         return
     end

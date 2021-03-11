@@ -16,7 +16,6 @@ local NumericSpinner = require "widgets/numericspinner"
 local TextEdit = require "widgets/textedit"
 
 local Widget = require "widgets/widget"
-local Levels = require "map/levels"
 
 local ScrollableList = require "widgets/scrollablelist"
 
@@ -931,7 +930,7 @@ function ServerListingScreen:MakeServerListWidgets()
 
         local bgColor = "yellow"--"beige"
         row.CHAR = row.DETAILS:AddChild(Widget("char"))
-        row.CHAR_ICON_BG = row.CHAR:AddChild(Image("images/servericons.xml", "bg_"..bgColor..".tex" or "bg_burnt.tex"))
+        row.CHAR_ICON_BG = row.CHAR:AddChild(Image("images/servericons.xml", ("bg_"..bgColor..".tex") or "bg_burnt.tex"))
         row.CHAR_ICON_BG:SetScale(.09)
         row.CHAR_ICON = row.CHAR:AddChild(Image("images/saveslot_portraits.xml", "unknown.tex"))
         row.CHAR_ICON:SetScale(.21, .22, 1)

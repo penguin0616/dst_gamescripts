@@ -203,6 +203,7 @@ function AchievementsPanel:_BuildAchievementsExplorer(current_eventid, season)
                     widget.icon:SetTexture("images/"..current_eventid.."_achievements.xml", "achievement_locked.tex")
                 end
             end
+			widget:Show()
         else
             widget:Hide()
         end

@@ -62,6 +62,7 @@ Recipe("wall_stone_item", {Ingredient("cutstone", 2)}, RECIPETABS.TOWN, TECH.SCI
 Recipe("wall_moonrock_item", {Ingredient("moonrocknugget", 12)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO,nil,nil,nil,4)
 
 Recipe("wardrobe", {Ingredient("boards", 4), Ingredient("cutgrass", 3)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "wardrobe_placer")
+Recipe("beefalo_groomer", {Ingredient("boards", 4), Ingredient("beefalowool", 2)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "beefalo_groomer_item_placer")
 Recipe("pighouse", {Ingredient("boards", 4), Ingredient("cutstone", 3), Ingredient("pigskin", 4)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "pighouse_placer")
 Recipe("rabbithouse", {Ingredient("boards", 4), Ingredient("carrot", 10), Ingredient("manrabbit_tail", 4)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "rabbithouse_placer")
 Recipe("birdcage", {Ingredient("papyrus", 2), Ingredient("goldnugget", 6), Ingredient("seeds", 2)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "birdcage_placer")
@@ -169,6 +170,7 @@ Recipe("premiumwateringcan", {Ingredient("driftwood_log", 2), Ingredient("rope",
 Recipe("razor", {Ingredient("twigs", 2), Ingredient("flint", 2)}, RECIPETABS.TOOLS,  TECH.SCIENCE_ONE)
 Recipe("featherpencil", {Ingredient("twigs", 1), Ingredient("charcoal", 1), Ingredient("feather_crow", 1)}, RECIPETABS.TOOLS,  TECH.SCIENCE_ONE)
 Recipe("pocket_scale", {Ingredient("log", 1), Ingredient("cutstone", 1), Ingredient("goldnugget", 1)}, RECIPETABS.TOOLS,  TECH.SCIENCE_ONE)
+Recipe("beef_bell", {Ingredient("goldnugget", 3), Ingredient("flint", 1)}, RECIPETABS.TOOLS, TECH.SCIENCE_ONE, nil, nil, true)
 Recipe("saddlehorn", {Ingredient("twigs", 2), Ingredient("boneshard", 2), Ingredient("feather_crow", 1)}, RECIPETABS.TOOLS,  TECH.SCIENCE_TWO)
 Recipe("saddle_basic", {Ingredient("beefalowool", 4), Ingredient("pigskin", 4), Ingredient("goldnugget", 4)}, RECIPETABS.TOOLS,  TECH.SCIENCE_TWO)
 Recipe("saddle_war", {Ingredient("rabbit", 4), Ingredient("steelwool", 4), Ingredient("log", 10)}, RECIPETABS.TOOLS,  TECH.SCIENCE_TWO)
@@ -471,9 +473,6 @@ Recipe("critter_glomling_builder",   	{Ingredient("glommerfuel", 1),   Ingredien
 Recipe("critter_lunarmothling_builder", {Ingredient("moonbutterfly", 1), Ingredient("flowersalad", 1)},    RECIPETABS.ORPHANAGE, TECH.ORPHANAGE_ONE, nil, nil, true)
 
 ----PERDSHRINE-----
-
-Recipe("beef_bell",                 {Ingredient("goldnugget", 3), Ingredient("flint", 1)},                                  RECIPETABS.PERDOFFERING, TECH.BEEFOFFERING_THREE, nil, nil, true)
-Recipe("beefalo_groomer_item",      {Ingredient("goldnugget", 8), Ingredient("boards", 2)},                                 RECIPETABS.PERDOFFERING, TECH.BEEFOFFERING_THREE, nil, nil, true)
 Recipe("yotb_stage_item",           {Ingredient("boards", 4), Ingredient("beefalowool", 2), Ingredient("goldnugget", 2)},   RECIPETABS.PERDOFFERING, TECH.BEEFOFFERING_THREE, nil, nil, true)
 Recipe("yotb_post_item",            {Ingredient("boards", 2), Ingredient("goldnugget", 1)},                                 RECIPETABS.PERDOFFERING, TECH.BEEFOFFERING_THREE, nil, nil, true)
 Recipe("yotb_sewingmachine_item",   {Ingredient("stinger", 1), Ingredient("goldnugget", 1), Ingredient("silk", 2)},         RECIPETABS.PERDOFFERING, TECH.BEEFOFFERING_THREE, nil, nil, true)

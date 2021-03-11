@@ -793,6 +793,23 @@ function PlayerProfile:GetAutoCavesEnabled()
 	end
 end
 
+function PlayerProfile:SetPresetMode(mode)
+	if USE_SETTINGS_FILE then
+	   TheSim:SetSetting("misc", "presetmode", mode)
+   else
+	   self:SetValue("presetmode", mode)
+	   self.dirty = true
+   end
+end
+
+function PlayerProfile:GetPresetMode()
+	if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "presetmode") or "combined"
+	else
+		return GetValueOrDefault( self.persistdata.presetmode, "combined" )
+	end
+end
+
 function PlayerProfile:SetIntegratedBackpack(enabled)
  	if USE_SETTINGS_FILE then
 		TheSim:SetSetting("misc", "integratedbackpack", tostring(enabled))

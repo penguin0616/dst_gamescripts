@@ -62,6 +62,7 @@ function Stackable:Get(num)
     if self.stacksize > num_to_get then
         local instance = SpawnPrefab( self.inst.prefab, self.inst.skinname, self.inst.skin_id, nil )
 
+
         self:SetStackSize(self.stacksize - num_to_get)
         instance.components.stackable:SetStackSize(num_to_get)
 
@@ -74,6 +75,7 @@ function Stackable:Get(num)
         end
 
         if instance.components.inventoryitem ~= nil and self.inst.components.inventoryitem ~= nil then
+            instance.components.inventoryitem.owner = self.inst.components.inventoryitem.owner
             instance.components.inventoryitem:InheritMoisture(self.inst.components.inventoryitem:GetMoisture(), self.inst.components.inventoryitem:IsWet())
         end
 

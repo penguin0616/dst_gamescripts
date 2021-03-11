@@ -100,7 +100,7 @@ local function AddDecor(inst, data)
 	local is_full = IsFullOfFlowers(inst)
 	TheWorld:PushEvent("ms_updatesisturnstate", {inst = inst, is_active = is_full})
 
-	local doer = (is_full and inst.components.container ~= nil) and inst.components.container.opener or nil
+	local doer = is_full and inst.components.container ~= nil and inst.components.container.currentuser or nil
 	if doer ~= nil and doer.components.talker ~= nil and doer:HasTag("ghostlyfriend") then
 		doer.components.talker:Say(GetString(doer, "ANNOUNCE_SISTURN_FULL"), nil, nil, true)
 	end

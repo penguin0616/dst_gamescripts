@@ -19,7 +19,7 @@ end
 local function ChooseAttack(inst)
     local target = inst.components.combat.target
     if target ~= nil and target:IsNear(inst, TUNING.ANTLION_CAST_RANGE) then
-        if inst.components.timer:TimerExists("wall_cd") then
+        if inst.components.worldsettingstimer:ActiveTimerExists("wall_cd") then
             inst.sg:GoToState("summonspikes", target)
         else
             inst.sg:GoToState("summonwall")
@@ -414,7 +414,7 @@ local states =
             TimeEvent(14 * FRAMES, function(inst)
                 --NOTE: sandblock has 10 frames lead in time
                 SpawnBlocks(inst, inst:GetPosition(), 19)
-                inst.components.timer:StartTimer("wall_cd", TUNING.ANTLION_WALL_CD)
+                inst.components.worldsettingstimer:StartTimer("wall_cd", TUNING.ANTLION_WALL_CD)
             end),
             TimeEvent(25 * FRAMES, ShakeRaising),
             CommonHandlers.OnNoSleepTimeEvent(56 * FRAMES, function(inst)

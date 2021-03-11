@@ -77,7 +77,7 @@ end
 
 local function do_nap(inst)
     inst._wants_to_nap = false
-    inst.components.sleeper:AddSleepiness(4, TUNING.MOLEBAT.NAP_LENGTH * (1 + math.random() * 0.5))
+    inst.components.sleeper:AddSleepiness(4, TUNING.MOLEBAT_NAP_LENGTH * (1 + math.random() * 0.5))
     inst._kill_nap_task = inst:DoPeriodicTask(2.5, napping_distance_check)
 end
 
@@ -103,7 +103,7 @@ local function Retarget(inst)
 
     local entities_in_range = TheSim:FindEntities(
         mx, my, mz,
-        TUNING.MOLEBAT.TARGET_DIST,
+        TUNING.MOLEBAT_TARGET_DIST,
         RETARGET_MUST_TAGS,
         RETARGET_CANT_TAGS,
         RETARGET_ONEOF_TAGS
@@ -128,7 +128,7 @@ end
 
 local function KeepTarget(inst, target)
     local homePos = inst.components.knownlocations:GetLocation("home")
-    return (homePos ~= nil and target:GetDistanceSqToPoint(homePos:Get()) < TUNING.MOLEBAT.MAX_CHASE_DSQ)
+    return (homePos ~= nil and target:GetDistanceSqToPoint(homePos:Get()) < TUNING.MOLEBAT_MAX_CHASE_DSQ)
 end
 
 local function _ShareTargetFn(dude)
@@ -149,7 +149,7 @@ end
 local function OnWakeUp(inst)
     inst._wants_to_nap = false
     inst.components.timer:StopTimer("resetnap")
-    inst.components.timer:StartTimer("resetnap", TUNING.MOLEBAT.NAP_COOLDOWN * (1 + math.random() * 0.3))
+    inst.components.timer:StartTimer("resetnap", TUNING.MOLEBAT_NAP_COOLDOWN * (1 + math.random() * 0.3))
 
     if inst._kill_nap_task ~= nil then
         inst._kill_nap_task:Cancel()
@@ -170,14 +170,14 @@ end
 
 local function OnSummon(inst)
     inst._can_summon_allies = false
-    inst.components.timer:StartTimer("resetallysummon", TUNING.MOLEBAT.ALLY_COOLDOWN * (1 + math.random()))
+    inst.components.timer:StartTimer("resetallysummon", TUNING.MOLEBAT_ALLY_COOLDOWN * (1 + math.random()))
 end
 
 local function OnTimerDone(inst, data)
     if data.name == "rememberinitiallocation" then
         inst.components.knownlocations:RememberLocation("home", inst:GetPosition())
     elseif data.name == "resetallysummon" then
-        inst._can_summon_allies = true
+        inst._can_summon_allies = true and TUNING.MOLEBAT_ENABLED
     elseif data.name == "resetnap" then
         inst._wants_to_nap = true
     elseif data.name == "cleannest_timer" then
@@ -278,7 +278,7 @@ local function fn()
     end
 
     inst:AddComponent("locomotor")
-    inst.components.locomotor.walkspeed = TUNING.MOLEBAT.WALK_SPEED
+    inst.components.locomotor.walkspeed = TUNING.MOLEBAT_WALK_SPEED
 
     inst:SetStateGraph("SGmolebat")
     inst:SetBrain(brain)
@@ -289,15 +289,15 @@ local function fn()
     inst.components.sleeper.waketestfn = ShouldWake
 
     inst:AddComponent("health")
-    inst.components.health:SetMaxHealth(TUNING.MOLEBAT.HEALTH)
+    inst.components.health:SetMaxHealth(TUNING.MOLEBAT_HEALTH)
 
     inst:AddComponent("combat")
     inst.components.combat.hiteffectsymbol = "body"
     inst.components.combat:SetRetargetFunction(3, Retarget)
     inst.components.combat:SetKeepTargetFunction(KeepTarget)
-    inst.components.combat:SetDefaultDamage(TUNING.MOLEBAT.DAMAGE)
-    inst.components.combat:SetAttackPeriod(TUNING.MOLEBAT.ATTACK_PERIOD)
-    inst.components.combat:SetRange(TUNING.MOLEBAT.ATTACK_RANGE)
+    inst.components.combat:SetDefaultDamage(TUNING.MOLEBAT_DAMAGE)
+    inst.components.combat:SetAttackPeriod(TUNING.MOLEBAT_ATTACK_PERIOD)
+    inst.components.combat:SetRange(TUNING.MOLEBAT_ATTACK_RANGE)
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable("molebat")
@@ -323,7 +323,7 @@ local function fn()
     inst.components.timer:StartTimer("resetallysummon", TUNING.SEG_TIME * (1 + math.random()))
 
     inst._wants_to_nap = false
-    inst.components.timer:StartTimer("resetnap", TUNING.MOLEBAT.NAP_COOLDOWN * (0.2 + math.random() * 0.3))
+    inst.components.timer:StartTimer("resetnap", TUNING.MOLEBAT_NAP_COOLDOWN * (0.2 + math.random() * 0.3))
 
     inst._quaking = false
     inst._nest_needs_cleaning = false

@@ -44,29 +44,55 @@ end
 function CraftSlot:OnControl(control, down)
     if CraftSlot._base.OnControl(self, control, down) then return true end
 
-    if not down and control == CONTROL_ACCEPT then
-        if self.owner and self.recipe then
-            if self.recipepopup and not self.recipepopup.focus then 
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+    if control == CONTROL_ACCEPT then
+        if down then
+            if not self.down then
+                self.down = true
+                
+                if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+                    self.recipe_held = true
+                    self.last_recipe_click = nil
+                    self:StartUpdating()
+                end
+            end
+        else
+            if self.down then
+				self.down = false
+                if self.owner and self.recipe and self.recipepopup and not self.recipepopup.focus then 
+                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 
-                local skin = (self.recipepopup.skins_spinner and self.recipepopup.skins_spinner.GetItem()) or nil
-            
-				if skin ~= nil then
-               		Profile:SetLastUsedSkinForItem(self.recipe.name, skin)
-					Profile:SetRecipeTimestamp(self.recipe.name, self.recipepopup.timestamp)
-               	end
-                if not DoRecipeClick(self.owner, self.recipe, skin ) then 
-                	self:Close() 
-               	end
+                    local skin = (self.recipepopup.skins_spinner and self.recipepopup.skins_spinner.GetItem()) or nil
+                
+                    if skin ~= nil then
+                        Profile:SetLastUsedSkinForItem(self.recipe.name, skin)
+                        Profile:SetRecipeTimestamp(self.recipe.name, self.recipepopup.timestamp)
+                    end
+                    
+                    self:StartUpdating()
+                    self.last_recipe_click = GetTime()
+                    self.recipe_held = false
+                    if not DoRecipeClick(self.owner, self.recipe, skin ) then 
+                        self:Close() 
+                    end
 
-                return true
+                    return true
+                end
+                self:StopUpdating()
             end
         end
     end
 end
 
+function CraftSlot:OnUpdate(dt)
+    if self.down and self.recipe_held then
+        DoRecipeClick(self.owner, self.recipe, self.recipepopup.skins_spinner and self.recipepopup.skins_spinner.GetItem() or nil)
+    end
+end
+
 function CraftSlot:OnLoseFocus()
     CraftSlot._base.OnLoseFocus(self)
+    self.recipe_held = false
+    self:StopUpdating()
     self:Close()
 end
 

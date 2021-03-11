@@ -21,7 +21,7 @@ self.inst = inst
 --[[ Private Member Variables ]]
 --------------------------------------------------------------------------
 
-local _moosedensity = 0.5 --This number is what % of nests in the world the moose will occupy.
+local _moosedensity = TUNING.MOOSE_DENSITY --This number is what % of nests in the world the moose will occupy.
 local _seasonalnests = nil
 
 --------------------------------------------------------------------------
@@ -45,7 +45,7 @@ end
 --------------------------------------------------------------------------
 
 function self:OverrideAttackDensity(density)
-	_moosedensity = density
+	--depreciated
 end
 
 function self:DoSoftSpawn(nest)
@@ -103,6 +103,6 @@ local function OnSpringChange(inst, isSpring)
 	end
 end
 
-inst:WatchWorldState("isspring", OnSpringChange)
+self.inst:WatchWorldState("isspring", OnSpringChange)
 
 end)

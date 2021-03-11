@@ -202,6 +202,7 @@ require("reload")
 require("saveindex") -- Added by Altgames for Android focus lost handling
 require("shardsaveindex")
 require("shardindex")
+require("custompresets")
 require("worldtiledefs")
 require("gamemodes")
 require("skinsutils")
@@ -297,6 +298,8 @@ global("ShardGameIndex")
 ShardGameIndex = nil
 global("ShardSaveGameIndex")
 ShardSaveGameIndex = nil
+global("CustomPresetManager")
+CustomPresetManager = nil
 require("globalvariableoverrides")
 
 --world setup
@@ -395,7 +398,7 @@ if not MODS_ENABLED then
 	-- so they break because Main returns before ModSafeStartup has run.
 	ModSafeStartup()
 else
-	KnownModIndex:Load(function() 
+	KnownModIndex:Load(function()
 		KnownModIndex:BeginStartupSequence(function()
 			ModSafeStartup()
 		end)

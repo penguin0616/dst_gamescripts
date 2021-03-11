@@ -708,8 +708,7 @@ function ModsTab:OnConfirmEnable(restart, modname)
     --show the auto-download warning for non-workshop mods
     local modinfo = KnownModIndex:GetModInfo(modname)
     if KnownModIndex:IsModEnabled(modname) and modinfo.all_clients_require_mod then
-        local workshop_prefix = "workshop-"
-        if string.sub( modname, 0, string.len(workshop_prefix) ) ~= workshop_prefix then
+        if not IsWorkshopMod(modname) then
 			local warn_txt = STRINGS.UI.MODSSCREEN.MOD_WARNING
 			if IsRail() then
 				warn_txt = STRINGS.UI.MODSSCREEN.MOD_WARNING_RAIL
@@ -1130,12 +1129,8 @@ function ModsTab:DoFocusHookups()
         return (self.currentmodtype == "client" and self.options_scroll_list_client)
             or (self.currentmodtype == "server" and self.options_scroll_list_server)
             or nil
-    end
-
-    local tosaveslots = self.servercreationscreen ~= nil and self.servercreationscreen.getfocussaveslot or nil
-    local tocancelorsaveslots = self.servercreationscreen ~= nil and self.servercreationscreen.getfocuscancelorsaveslot or nil
-    local tocreate = self.servercreationscreen ~= nil and self.servercreationscreen.getfocuscreate or nil
-
+	end
+	
     self.servermodsbutton:SetFocusChangeDir(MOVE_RIGHT, tomiddlecol)
     self.clientmodsbutton:SetFocusChangeDir(MOVE_RIGHT, tomiddlecol)
     self.servermodsbutton:SetFocusChangeDir(MOVE_DOWN, self.clientmodsbutton)
@@ -1158,7 +1153,6 @@ function ModsTab:DoFocusHookups()
     self.cleanallbutton:SetFocusChangeDir(MOVE_RIGHT, self.updateallbutton)
     self.updateallbutton:SetFocusChangeDir(MOVE_RIGHT, tomiddlecol)
     self.updateallbutton:SetFocusChangeDir(MOVE_LEFT, self.cleanallbutton)
-    self.cleanallbutton:SetFocusChangeDir(MOVE_LEFT, tocancelorsaveslots)
 
     self.modlinkbutton:SetFocusChangeDir(MOVE_LEFT, self.modupdatebutton)
 
@@ -1167,12 +1161,6 @@ function ModsTab:DoFocusHookups()
 
     self.modconfigbutton:SetFocusChangeDir(MOVE_LEFT, tomiddlecol)
     self.modconfigbutton:SetFocusChangeDir(MOVE_RIGHT, self.modupdatebutton)
-
-    self.modconfigbutton:SetFocusChangeDir(MOVE_DOWN, tocreate)
-    self.modupdatebutton:SetFocusChangeDir(MOVE_DOWN, tocreate)
-    self.modlinkbutton:SetFocusChangeDir(MOVE_DOWN, tocreate)
-    self.servermodsbutton:SetFocusChangeDir(MOVE_LEFT, tosaveslots)
-    self.clientmodsbutton:SetFocusChangeDir(MOVE_LEFT, tosaveslots)
 
     if self.top_mods_panel ~= nil then
         self.top_mods_panel:SetFocusChangeDir(MOVE_LEFT, self.modlinkbutton)

@@ -1,4 +1,4 @@
-local SHARDINDEX_VERSION = 2
+local SHARDINDEX_VERSION = 3
 
 ShardIndex = Class(function(self)
     self.ismaster = false
@@ -74,6 +74,11 @@ local function UpgradeShardIndexData(self)
     
     if self.version == nil or self.version == 1 then
         savefileupgrades.utilities.UpgradeShardIndexFromV1toV2(self)
+        upgraded = true
+    end
+    
+    if self.version == 2 then
+        savefileupgrades.utilities.UpgradeShardIndexFromV2toV3(self)
         upgraded = true
     end
     
@@ -358,6 +363,8 @@ local function SanityCheckWorldGenOverride(wgo)
     local validfields = {
         overrides = true,
         preset = true,
+        settings_preset = true,
+        worldgen_preset = true,
         override_enabled = true,
     }
     for k,v in pairs(wgo) do
@@ -367,10 +374,10 @@ local function SanityCheckWorldGenOverride(wgo)
     end
 
     local optionlookup = {}
-    local Customise = require("map/customise")
-    for i,option in ipairs(Customise.GetOptions(nil, true)) do
+    local Customize = require("map/customize")
+    for i,option in ipairs(Customize.GetOptions(nil, true)) do
         optionlookup[option.name] = {}
-        for i,value in ipairs(option.options) do
+        for i, value in ipairs(option.options) do
             table.insert(optionlookup[option.name], value.data)
         end
     end
@@ -400,10 +407,8 @@ local function GetWorldgenOverride(slot, shard, cb)
             if success and string.len(str) > 0 then
                 print("Found a worldgen override file with these contents:")
                 dumptable(savedata)
-
                 if savedata ~= nil then
 
-                    -- gjans: Added upgrade path 28/03/2016. Because this is softer and user editable, will probably have to leave this one in longer than the other upgrades from this same change set.
                     local savefileupgrades = require("savefileupgrades")
                     savedata = savefileupgrades.utilities.UpgradeWorldgenoverrideFromV1toV2(savedata)
 
@@ -411,33 +416,53 @@ local function GetWorldgenOverride(slot, shard, cb)
 
                     if savedata.override_enabled then
                         print("Loaded and applied world gen overrides from "..filename)
-                        savedata.override_enabled = nil -- Only part of worldgenoverride, not standard level definition.
 
-                        local presetdata = nil
-                        local frompreset = false
-                        if savedata.preset ~= nil then
-                            print("  contained preset "..savedata.preset..", loading...")
+                        local presetdata = {overrides = {}}
+                        local fromworldgenpreset = false
+                        local fromsettingspreset = false
+
+                        local worldgen_preset = savedata.worldgen_preset or savedata.preset
+                        local worldgen_presetdata = nil
+
+                        local settings_preset = savedata.settings_preset or savedata.preset
+                        local settings_presetdata = nil
+
+                        savedata.preset = nil
+                        savedata.worldgen_preset = nil
+                        savedata.settings_preset = nil
+                        savedata.override_enabled = nil
+
+                        if worldgen_preset then
+                            print("  contained worldgen preset "..worldgen_preset..", loading...")
                             local Levels = require("map/levels")
-                            presetdata = Levels.GetDataForLevelID(savedata.preset)
-                            if presetdata ~= nil then
-                                if GetTableSize(savedata) > 0 then
-                                    print("  applying overrides to preset...")
-                                    presetdata = MergeMapsDeep(presetdata, savedata)
-                                end
-                                frompreset = true
+                            worldgen_presetdata = Levels.GetDataForWorldGenID(worldgen_preset)
+
+                            if worldgen_presetdata then
+                                presetdata = MergeMapsDeep(presetdata, worldgen_presetdata)
+                                fromworldgenpreset = true
                             else
-                                print("Worldgenoverride specified a nonexistent preset: "..savedata.preset..". If this is a custom preset, it may not exist in this save location. Ignoring it and applying overrides.")
-                                presetdata = savedata
+                                print("Worldgenoverride specified a nonexistent worldgen preset: "..worldgen_preset..". If this is a custom worldgen preset, it may not exist in this save location. Ignoring it and applying overrides.")
                             end
-                            savedata.preset = nil -- Only part of worldgenoverride, not standard level definition.
-                        else
-                            presetdata = savedata
                         end
 
-                        presetdata.override_enabled = nil
-                        presetdata.preset = nil
+                        if settings_preset then
+                            print("  contained settings preset "..settings_preset..", loading...")
+                            local Levels = require("map/levels")
+                            settings_presetdata  = Levels.GetDataForSettingsID(settings_preset)
 
-                        cb( presetdata, frompreset )
+                            if settings_presetdata then
+                                presetdata = MergeMapsDeep(presetdata, settings_presetdata)
+                                fromsettingspreset = true
+                            else
+                                print("Worldgenoverride specified a nonexistent settings preset: "..settings_preset..". If this is a custom settings preset, it may not exist in this save location. Ignoring it and applying overrides.")
+                            end
+                        end
+                        
+                        if savedata.overrides then
+                            presetdata.overrides = MergeMapsDeep(presetdata.overrides, savedata.overrides)
+                        end
+
+                        cb(presetdata, not (fromworldgenpreset and fromsettingspreset))
                         return
                     else
                         print("Found world gen overrides but not enabled.")
@@ -490,9 +515,9 @@ function ShardIndex:SetServerShardData(customoptions, serverdata, onsavedcb)
             end
         end
 
-        GetWorldgenOverride(slot, shard, function(overridedata, frompreset)
+        GetWorldgenOverride(slot, shard, function(overridedata, partial)
             if overridedata ~= nil then
-                if frompreset == true then
+                if not partial then
                     print("Overwriting savedata with override file.")
                     self.world.options = overridedata
                 else

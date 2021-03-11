@@ -57,7 +57,9 @@ local function OnHungerDelta(parent, data)
 end
 
 local function UpdateAnimOverrideSanity(parent)
-    parent.AnimState:SetClientSideBuildOverrideFlag("insane", parent.replica.sanity:IsInsanityMode() and (parent.replica.sanity:GetPercentNetworked() <= (parent:HasTag("dappereffects") and TUNING.DAPPER_BEARDLING_SANITY or TUNING.BEARDLING_SANITY)))
+    local isinsane = parent.replica.sanity:IsInsanityMode() and (parent.replica.sanity:GetPercentNetworked() <= (parent:HasTag("dappereffects") and TUNING.DAPPER_BEARDLING_SANITY or TUNING.BEARDLING_SANITY))
+    parent.AnimState:SetClientSideBuildOverrideFlag("insane", isinsane)
+    parent:SetClientSideInventoryImageOverrideFlag("insane", isinsane)
 end
 
 local function OnSanityDelta(parent, data)

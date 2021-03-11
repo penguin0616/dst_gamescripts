@@ -11,10 +11,7 @@ Follow = Class(BehaviourNode, function(self, inst, target, min_dist, target_dist
 end)
 
 function Follow:GetTarget()
-    local target = self.target
-    if type(target) == "function" then
-        target = target(self.inst)
-    end
+    local target = FunctionOrValue(self.target, self.inst)
     return target ~= nil and target:IsValid() and target or nil
 end
 

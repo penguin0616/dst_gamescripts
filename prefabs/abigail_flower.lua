@@ -13,47 +13,6 @@ local assets =
     Asset("INV_IMAGE", "abigail_flower_wilted"),	-- deprecated, left in for mods
 }
 
-local prefabs =
-{
-}
-
-local function UpdateInventoryActions(inst)
-	inst:PushEvent("inventoryitem_updatetooltip")
-end
-
-local function UpdateInventoryIcon(inst, player, level)
-	if inst._playerlink ~= player then
-		if inst._playerlink ~= nil then
-			inst:RemoveEventCallback("ghostlybond_level_change", inst._updateinventoryiconfn, inst._playerlink)
-		end
-
-		if player ~= nil and player.components.ghostlybond ~= nil then
-			inst._playerlink = player
-			inst:ListenForEvent("ghostlybond_level_change", inst._updateinventoryiconfn, inst._playerlink)
-
-			UpdateInventoryActions(inst)
-			if inst._inventoryactionstask == nil then
-				inst._inventoryactionstask = inst:DoPeriodicTask(0.1, UpdateInventoryActions)
-			end
-		else
-			inst._playerlink = nil
-
-			if inst._inventoryactionstask ~= nil then
-				inst._inventoryactionstask:Cancel()
-				inst._inventoryactionstask = nil
-			end
-		end
-	end
-
-	level = level or (player ~= nil and player.components.ghostlybond ~= nil) and player.components.ghostlybond.bondlevel or 0
-	if level == 1 then
-		inst.components.inventoryitem:ChangeImageName((inst:GetSkinName() or "abigail_flower"))
-	else
-		inst.components.inventoryitem:ChangeImageName((inst:GetSkinName() or "abigail_flower") .. "_level" .. tostring(level or 0))
-	end
-	inst._bond_level = level
-end
-
 local function UpdateGroundAnimation(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
     local players = {}
@@ -91,35 +50,7 @@ local function UpdateGroundAnimation(inst)
 	inst._bond_level = level
 end
 
-local function UnlinkFromPlayer(inst)
-	if inst._playerlink ~= nil then
-		inst:RemoveEventCallback("ghostlybond_level_change", inst._updateinventoryiconfn, inst._playerlink)
-		inst._playerlink = nil
-	end
-
-	if inst._inventoryactionstask ~= nil then
-		inst._inventoryactionstask:Cancel()
-		inst._inventoryactionstask = nil
-	end
-end
-
 local function topocket(inst, owner)
-	if inst._incontainer ~= nil then
-		inst:RemoveEventCallback("onopen", inst._oncontaineropenedfn, inst._incontainer)
-		inst:RemoveEventCallback("onclose", inst._oncontainerclosedfn, inst._incontainer)
-		inst._incontainer = nil
-	end
-
-	owner = owner or inst.components.inventoryitem:GetGrandOwner()
-	if owner.components.container ~= nil then
-		inst._incontainer = owner
-		inst:ListenForEvent("onopen", inst._oncontaineropenedfn, inst._incontainer)
-		inst:ListenForEvent("onclose", inst._oncontainerclosedfn, inst._incontainer)
-
-		owner = owner.components.container.opener
-	end
-	UpdateInventoryIcon(inst, owner)
-
 	if inst._ongroundupdatetask ~= nil then
 		inst._ongroundupdatetask:Cancel()
 		inst._ongroundupdatetask = nil
@@ -127,15 +58,7 @@ local function topocket(inst, owner)
 end
 
 local function toground(inst)
-	UnlinkFromPlayer(inst)
-
-	if inst._incontainer ~= nil then
-	    inst:RemoveEventCallback("onopen", inst._oncontaineropenedfn, inst._incontainer)
-	    inst:RemoveEventCallback("onclose", inst._oncontainerclosedfn, inst._incontainer)
-		inst._incontainer = nil
-	end
-
-	inst._bond_level = -1 -- to force the animation to update
+	inst._bond_level = -1 --to force the animation to update
 	UpdateGroundAnimation(inst)
 	if inst._ongroundupdatetask == nil then
 		inst._ongroundupdatetask = inst:DoPeriodicTask(0.5, UpdateGroundAnimation)
@@ -159,15 +82,28 @@ local function GetElixirTarget(inst, doer, elixir)
 	return (doer ~= nil and doer.components.ghostlybond ~= nil) and doer.components.ghostlybond.ghost or nil
 end
 
-local function getstatus(inst)
-	return inst._bond_level == 3 and "LEVEL3"
-		or inst._bond_level == 2 and "LEVEL2"
-		or inst._bond_level == 1 and "LEVEL1"
+local function getstatus(inst, viewer)
+	local _bondlevel = inst._bond_level
+	if inst.components.inventoryitem.owner then
+		_bondlevel = viewer ~= nil and viewer.components.ghostlybond ~= nil and viewer.components.ghostlybond.bondlevel
+	end
+	return _bondlevel == 3 and "LEVEL3"
+		or _bondlevel == 2 and "LEVEL2"
+		or _bondlevel == 1 and "LEVEL1"
 		or nil
 end
 
 local function OnSkinIDDirty(inst)
 	inst.skin_id = inst.flower_skin_id:value()
+end
+
+local function drawimageoverride(inst)
+	local level = inst._bond_level or 0
+	if level == 1 then
+		return inst:GetSkinName() or "abigail_flower"
+	else
+		return (inst:GetSkinName() or "abigail_flower").."_level" ..tostring(level)
+	end
 end
 
 local function fn()
@@ -196,6 +132,10 @@ local function fn()
 	
     inst.flower_skin_id = net_hash(inst.GUID, "abi_flower_skin_id", "abiflowerskiniddirty")
 	inst:ListenForEvent("abiflowerskiniddirty", OnSkinIDDirty)
+	
+    inst:SetClientSideInventoryImageOverride("bondlevel0", "abigail_flower.tex", "abigail_flower_level0.tex")
+    inst:SetClientSideInventoryImageOverride("bondlevel2", "abigail_flower.tex", "abigail_flower_level2.tex")
+    inst:SetClientSideInventoryImageOverride("bondlevel3", "abigail_flower.tex", "abigail_flower_level3.tex")
 
     if not TheWorld.ismastersim then
         return inst
@@ -215,14 +155,9 @@ local function fn()
     MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
 	inst.components.burnable.fxdata = {}
     inst.components.burnable:AddBurnFX("campfirefire", Vector3(0, 0, 0))
-	
 
     MakeSmallPropagator(inst)
     MakeHauntableLaunch(inst)
-
-	inst._updateinventoryiconfn = function(player, data) UpdateInventoryIcon(inst, player, data.level) end
-	inst._oncontaineropenedfn = function(container, data) UpdateInventoryIcon(inst, data.doer) end
-	inst._oncontainerclosedfn = function(container, data) UnlinkFromPlayer(inst) end
 
     inst:ListenForEvent("onputininventory", topocket)
     inst:ListenForEvent("ondropped", toground)
@@ -231,7 +166,9 @@ local function fn()
     inst.OnEntityWake = OnEntityWake
 
 	inst._ongroundupdatetask = inst:DoPeriodicTask(0.5, UpdateGroundAnimation, math.random()*0.5)
-	UpdateInventoryIcon(inst, nil, 0)
+	inst._bond_level = 0
+
+    inst.drawimageoverride = drawimageoverride
 
     return inst
 end
@@ -307,7 +244,7 @@ local function MakeSummonFX(anim, use_anim_for_build, is_mounted)
     end
 end
 
-return Prefab("abigail_flower", fn, assets, prefabs),
+return Prefab("abigail_flower", fn, assets),
 	Prefab("abigailsummonfx", MakeSummonFX("wendy_channel_flower", true, false), assets_summonfx),
     Prefab("abigailsummonfx_mount", MakeSummonFX("wendy_mount_channel_flower", true, true), assets_summonfx),
 	Prefab("abigailunsummonfx", MakeSummonFX("wendy_recall_flower", false, false), assets_unsummonfx),

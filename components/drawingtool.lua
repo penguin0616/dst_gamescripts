@@ -29,9 +29,9 @@ function DrawingTool:GetImageToDraw(target)
     end
 
     local atlas, bgimage, bgatlas
-    local image = ent.drawimageoverride or (#(ent.components.inventoryitem.imagename or "") > 0 and ent.components.inventoryitem.imagename) or ent.prefab or nil
+    local image = FunctionOrValue(ent.drawimageoverride, ent, target) or (#(ent.components.inventoryitem.imagename or "") > 0 and ent.components.inventoryitem.imagename) or ent.prefab or nil
     if image ~= nil then
-        atlas = ent.drawatlasoverride or (#(ent.components.inventoryitem.atlasname or "") > 0 and ent.components.inventoryitem.atlasname) or nil
+        atlas = FunctionOrValue(ent.drawatlasoverride, ent, target) or (#(ent.components.inventoryitem.atlasname or "") > 0 and ent.components.inventoryitem.atlasname) or nil
         if ent.inv_image_bg ~= nil and ent.inv_image_bg.image ~= nil and ent.inv_image_bg.image:len() > 4 and ent.inv_image_bg.image:sub(-4):lower() == ".tex" then
             bgimage = ent.inv_image_bg.image:sub(1, -5)
             bgatlas = ent.inv_image_bg.atlas ~= GetInventoryItemAtlas(ent.inv_image_bg.image) and ent.inv_image_bg.atlas or nil

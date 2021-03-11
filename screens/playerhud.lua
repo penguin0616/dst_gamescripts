@@ -824,10 +824,12 @@ function PlayerHud:CloseControllerCrafting()
     self.controls.yotb_notification:ToggleController(false)
 end
 
-function PlayerHud:ShowPlayerStatusScreen()
+function PlayerHud:ShowPlayerStatusScreen(click_to_close, onclosefn)
     if self.playerstatusscreen == nil then
         self.playerstatusscreen = PlayerStatusScreen(self.owner)
     end
+	self.playerstatusscreen.onclosefn = onclosefn
+	self.playerstatusscreen.click_to_close = click_to_close
     TheFrontEnd:PushScreen(self.playerstatusscreen)
     self.playerstatusscreen:MoveToFront()
     self.playerstatusscreen:Show()

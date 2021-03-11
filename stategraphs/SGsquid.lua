@@ -48,7 +48,7 @@ local events =
 }
 
 local function dimLight(inst,dim,instant,zero,time)
-    local frames = time or 5 * FRAMES
+    local frames = time or (5 * FRAMES)
     inst.eyeglow.components.fader:StopAll()
     if dim then
         if instant then

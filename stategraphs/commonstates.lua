@@ -502,7 +502,7 @@ CommonStates.AddHopStates = function(states, wait_for_pre, anims, timelines, lan
 				inst.sg.statemem.not_interrupted = true
                 inst.sg:GoToState("hop_loop", inst.sg.statemem.queued_post_land_state)
 			else
-	            inst.AnimState:PlayAnimation(type(anims.pre) == "function" and anims.pre(inst) or anims.pre or "jump_pre", false)
+	            inst.AnimState:PlayAnimation(FunctionOrValue(anims.pre, inst) or "jump_pre", false)
 				if data.start_embarking_pre_frame ~= nil then
 					inst.sg:SetTimeout(data.start_embarking_pre_frame)
 				end
@@ -550,7 +550,7 @@ CommonStates.AddHopStates = function(states, wait_for_pre, anims, timelines, lan
 
         onenter = function(inst, data)
 			inst.sg.statemem.queued_post_land_state = data ~= nil and data.queued_post_land_state or nil
-            inst.AnimState:PlayAnimation(type(anims.loop) == "function" and anims.loop(inst) or anims.loop or "jump_loop", true)
+            inst.AnimState:PlayAnimation(FunctionOrValue(anims.loop, inst) or "jump_loop", true)
 			inst.sg.statemem.collisionmask = data ~= nil and data.collisionmask or inst.Physics:GetCollisionMask()
 	        inst.Physics:SetCollisionMask(COLLISION.GROUND)
 			if not TheWorld.ismastersim then
@@ -593,7 +593,7 @@ CommonStates.AddHopStates = function(states, wait_for_pre, anims, timelines, lan
         tags = { "doing", "nointerrupt", "jumping", "autopredict", "nomorph", "nosleep" },
 
         onenter = function(inst, data)
-            inst.AnimState:PlayAnimation(type(anims.pst) == "function" and anims.pst(inst) or anims.pst or "jump_pst", false)
+            inst.AnimState:PlayAnimation(FunctionOrValue(anims.pst, inst) or "jump_pst", false)
 
             inst.components.embarker:Embark()
 			inst:RemoveTag("busy")

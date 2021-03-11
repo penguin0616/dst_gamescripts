@@ -455,14 +455,6 @@ local LavaarenaFestivalBookPannel = Class(LobbyPanel, function(self, owner)
 	
 	self.focus_forward = self.eventbook
 
-	function self:OnControl(control, down)
-		if self.eventbook:OnControlTabs(control, down) then
-			return true 
-		end
-
-		if Widget.OnControl(self, control, down) then return true end
-	end
-
 	function self:OnNextButton()
 		return true
 	end
@@ -472,6 +464,10 @@ local LavaarenaFestivalBookPannel = Class(LobbyPanel, function(self, owner)
 	end
 
 	function self:OnControl(control, down)
+		if self.eventbook:OnControlTabs(control, down) then
+			return true 
+		end
+
 		if Widget.OnControl(self, control, down) then return true end
 
         if TheInput:ControllerAttached() and (not down) and (control == CONTROL_PAUSE or control == CONTROL_ACCEPT) and owner.next_button:IsEnabled() then

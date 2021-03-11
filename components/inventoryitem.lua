@@ -187,7 +187,7 @@ end
 function InventoryItem:OnPutInInventory(owner)
 --    print(string.format("InventoryItem:OnPutInInventory[%s]", self.inst.prefab))
 --    print("   transform=", Point(self.inst.Transform:GetWorldPosition()))
-    self.inst.components.inventoryitem:SetOwner(owner)
+    self:SetOwner(owner)
     owner:AddChild(self.inst)
     self.inst:RemoveFromScene()
     self.inst.Transform:SetPosition(0,0,0) -- transform is now local?

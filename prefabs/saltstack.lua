@@ -100,7 +100,11 @@ local function UpdateState(inst, workleft, loading_in)
 end
 
 local function StartGrowthTimer(inst)
-	inst.components.timer:StartTimer("growth", TUNING.SALTSTACK.GROWTH_FREQUENCY + math.random() * TUNING.SALTSTACK.GROWTH_FREQUENCY_VARIANCE)
+	local time = TUNING.SALTSTACK_GROWTH_FREQUENCY + math.random() * TUNING.SALTSTACK_GROWTH_FREQUENCY_VARIANCE
+	if TUNING.REGROWTH_TIME_MULTIPLIER > 0 then
+		time = time / TUNING.REGROWTH_TIME_MULTIPLIER
+	end
+	inst.components.worldsettingstimer:StartTimer("growth", time)
 end
 
 local function Grow(inst)
@@ -113,12 +117,12 @@ local function Grow(inst)
 end
 
 local function ontimerdonefn(inst, data)
-	inst.components.timer:StopTimer("growth")
+	inst.components.worldsettingstimer:StopTimer("growth")
 	Grow(inst)
 end
 
 local function OnWork(inst, worker, workleft, numworks)
-	inst.components.timer:StopTimer("growth")
+	inst.components.worldsettingstimer:StopTimer("growth")
 	StartGrowthTimer(inst)
 	UpdateState(inst, workleft)
 end
@@ -129,7 +133,7 @@ local function OnCollide(inst, data)
         local damage_scale = 0.5
         local hit_velocity = math.floor(math.abs(boat_physics:GetVelocity() * data.hit_dot_velocity) * damage_scale / boat_physics.max_velocity + 0.5)
 		if hit_velocity > 0 then
-			inst.components.workable:WorkedBy(data.other, hit_velocity * TUNING.SALTSTACK.WORK_REQUIRED)
+			inst.components.workable:WorkedBy(data.other, hit_velocity * TUNING.SALTSTACK_WORK_REQUIRED)
 		end
     end
 end
@@ -182,13 +186,22 @@ local function onloadpostpass(inst, newents, data)
 				print("workleft == 0")
 			end
 
-			if data.workleft < 10 and not inst.components.timer:TimerExists("growth") then
+			if data.workleft < 10 and not inst.components.worldsettingstimer:ActiveTimerExists("growth") then
 				StartGrowthTimer(inst)
 			end
 		end
 	else
 		SetupStack(inst)
 	end
+end
+
+local function OnPreLoad(inst, data)
+	local maxtime = TUNING.SALTSTACK_GROWTH_FREQUENCY + TUNING.SALTSTACK_GROWTH_FREQUENCY_VARIANCE
+	if TUNING.REGROWTH_TIME_MULTIPLIER > 0 then
+		maxtime = maxtime / TUNING.REGROWTH_TIME_MULTIPLIER
+	end
+	WorldSettings_Timer_PreLoad(inst, data, "growth", maxtime)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, "growth", 1)
 end
 
 local function fn()
@@ -200,7 +213,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    inst.MiniMapEntity:SetIcon("saltstack.png")
+    inst.MiniMapEntity:SetIcon("SALTSTACK_png")
 
     inst:SetPhysicsRadiusOverride(2.35)
 
@@ -238,14 +251,19 @@ local function fn()
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(TUNING.SALTSTACK.WORK_REQUIRED)
+    inst.components.workable:SetWorkLeft(TUNING.SALTSTACK_WORK_REQUIRED)
     inst.components.workable:SetOnWorkCallback(OnWork)
 	inst.components.workable.savestate = true
 
 	inst.workstage = 4
 	inst.workstageprevious = inst.workstage
 
-	inst:AddComponent("timer")
+	inst:AddComponent("worldsettingstimer")
+	local maxtime = TUNING.SALTSTACK_GROWTH_FREQUENCY + TUNING.SALTSTACK_GROWTH_FREQUENCY_VARIANCE
+	if TUNING.REGROWTH_TIME_MULTIPLIER > 0 then
+		maxtime = maxtime / TUNING.REGROWTH_TIME_MULTIPLIER
+	end
+	inst.components.worldsettingstimer:AddTimer("growth", maxtime, TUNING.SALTSTACK_GROWTH_ENABLED and TUNING.REGROWTH_TIME_MULTIPLIER > 0)
 	inst:ListenForEvent("timerdone", ontimerdonefn)
 
 
@@ -263,6 +281,7 @@ local function fn()
     --------SaveLoad
     inst.OnSave = onsave
 	inst.OnLoadPostPass = onloadpostpass
+	inst.OnPreLoad = OnPreLoad
 
     return inst
 end

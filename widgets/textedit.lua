@@ -325,6 +325,7 @@ function TextEdit:SetPassControlToScreen(control, pass)
 end
 
 function TextEdit:OnControl(control, down)
+    if not self:IsEnabled() then return end
 	if self.editing and self.prediction_widget ~= nil and self.prediction_widget:OnControl(control, down) then
 		return true
 	end
@@ -390,6 +391,7 @@ function TextEdit:OnLoseFocus()
 end
 
 function TextEdit:DoHoverImage()
+    if not self:IsEnabled() then return end
     if self.focusedtex then
         self.focusimage:SetTexture(self.atlas, self.focusedtex)
         self.focusimage:SetTint(self.hover_tint[1],self.hover_tint[2],self.hover_tint[3],self.hover_tint[4])
@@ -576,6 +578,12 @@ function TextEdit:ApplyWordPrediction(prediction_index)
 	end
 	
 	return false
+end
+
+function TextEdit:Disable()
+    TextEdit._base.Disable(self)
+    self:SetEditing(false)
+    self:DoIdleImage()
 end
 
 -- Ghostly text in the text field that indicates what content goes in the text

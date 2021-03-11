@@ -120,7 +120,7 @@ end
 local function SetProductSymbol(inst, product, overridebuild)
     local recipe = cooking.GetRecipe(inst.prefab, product)
     local potlevel = recipe ~= nil and recipe.potlevel or nil
-    local build = overridebuild or (recipe ~= nil and recipe.overridebuild) or "cook_pot_food"
+    local build = (recipe ~= nil and recipe.overridebuild) or overridebuild or "cook_pot_food"
     local overridesymbol = (recipe ~= nil and recipe.overridesymbolname) or product
 
     if potlevel == "high" then

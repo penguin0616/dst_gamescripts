@@ -119,13 +119,12 @@ local function clearsocketart(inst)
     end    
 end
 
-local function socketitem(inst,item,slot)
-    -- find open slot.     
-    local socketnum = slot 
-    if slot then
-        for i=#inst.socketlist,1 do
-            if inst.socketlist[i] == slot then
-                table.remove(inst.socketlist,i)
+local function socketitem(inst,item,socketnum)
+    -- find open slot
+    if socketnum then
+        for i = #inst.socketlist, 1, -1 do
+            if inst.socketlist[i] == socketnum then
+                table.remove(inst.socketlist, i)
                 break
             end
         end
@@ -252,8 +251,6 @@ local function OnDead(inst)
             end
         end
     end
-    local x, y, z = inst.Transform:GetWorldPosition()   
-    TheWorld:PushEvent("crabkingkilled",{pt = Vector3(x, y, z)})
 end
 
 local function OnEntitySleep(inst)
@@ -349,7 +346,16 @@ local function OnLoadPostPass(inst, newents, data)
         end
         if data.healthpercent then
             inst.components.health:SetPercent(data.healthpercent)
-        end        
+        end
+    end
+
+    --retrofit crabking spawner
+    if not TheSim:FindFirstEntityWithTag("crabking_spawner") then
+        local spawner = SpawnPrefab("crabking_spawner")
+        local x, y, z = inst.Transform:GetWorldPosition()
+        spawner.Transform:SetPosition(x, y, z)
+        spawner.components.childspawner.childreninside = 0
+        spawner.components.childspawner:TakeOwnership(inst)
     end
 end
 

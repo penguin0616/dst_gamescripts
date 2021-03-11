@@ -168,6 +168,41 @@ function LoadPrefabFile( filename, async_batch_validation )
     return ret
 end
 
+
+local MOD_FRONTEND_PREFABS = {}
+function ModUnloadFrontEndAssets(modname)
+    if modname == nil then
+        TheSim:UnloadPrefabs(MOD_FRONTEND_PREFABS)
+        TheSim:UnregisterPrefabs(MOD_FRONTEND_PREFABS)
+        MOD_FRONTEND_PREFABS = {}
+    else
+        local prefab = {table.removearrayvalue(MOD_FRONTEND_PREFABS, "MODFRONTEND_"..modname)}
+        if not IsTableEmpty(prefab) then
+            TheSim:UnloadPrefabs(prefab)
+            TheSim:UnregisterPrefabs(prefab)
+        end
+    end
+end
+
+function ModReloadFrontEndAssets(assets, modname)
+    assert(KnownModIndex:DoesModExistAnyVersion(modname), "modname "..modname.." must refer to a valid mod!")
+    if assets then
+        ModUnloadFrontEndAssets(modname)
+
+        assets = shallowcopy(assets) --make a copy so that changes to the table in the mod code don't do anything funky
+
+        for i, v in ipairs(assets) do
+            if softresolvefilepath(v.file, nil, MODS_ROOT..modname.."/") ~= nil then
+                resolvefilepath(v.file, nil, MODS_ROOT..modname.."/")
+            end
+        end
+        local prefab = Prefab("MODFRONTEND_"..modname, nil, assets, nil)
+        table.insert(MOD_FRONTEND_PREFABS, prefab.name)
+        RegisterPrefabs(prefab)
+        TheSim:LoadPrefabs({prefab.name})
+    end
+end
+
 function RegisterAchievements(achievements)
     for i, achievement in ipairs(achievements) do
         --print ("Registering achievement:", achievement.name, achievement.id.steam, achievement.id.psn)
@@ -667,6 +702,104 @@ function SetPurchases(purchases)
     end
 end
 
+
+local function UpdateWorldGenOverride(overrides, cb, slot, shard)
+    local Levels = require("map/levels")
+    local filename = "../worldgenoverride.lua"
+
+    local function SetPersistentString(str)
+        if shard ~= nil then
+            TheSim:SetPersistentStringInClusterSlot(slot, shard, filename, str, false, cb)
+        else
+            TheSim:SetPersistentString(filename, str, false, cb)
+        end
+    end
+
+    local function GenerateWorldGenOverride(savedata)
+        local out = {}
+        table.insert(out, "return {")
+        table.insert(out, "\toverride_enabled = true,")
+
+        local worldgen_preset = savedata.worldgen_preset or savedata.preset
+        if worldgen_preset and Levels.GetDataForWorldGenID(worldgen_preset) then
+            table.insert(out, string.format("\tworldgen_preset = %q,", worldgen_preset))
+        end
+
+        local settings_preset = savedata.settings_preset or savedata.preset
+        if settings_preset and Levels.GetDataForWorldGenID(settings_preset) then
+            table.insert(out, string.format("\tsettings_preset = %q,", settings_preset))
+        end
+
+        table.insert(out, "\toverrides = {")
+        for name, value in orderedPairs(savedata.overrides) do
+            if not name:match('^[_%a][_%w]*$') then
+                name = string.format("[%q]", name)
+            end
+            if type(value) == "string" then
+                value = string.format("%q", value)
+            else
+                value = tostring(value)
+            end
+            table.insert(out, string.format("\t\t%s = %s,", name, value))
+        end
+        table.insert(out, "\t},")
+        table.insert(out, "}")
+
+        SetPersistentString(table.concat(out, "\n"))
+    end
+
+    local function onload(load_success, str)
+        if load_success == true then
+            local success, savedata = RunInSandboxSafe(str)
+            if success and savedata then
+                local savefileupgrades = require("savefileupgrades")
+                savedata = savefileupgrades.utilities.UpgradeWorldgenoverrideFromV1toV2(savedata)
+                if savedata.override_enabled then
+                    local worldgen_preset = savedata.worldgen_preset or savedata.preset
+                    local worldgen_presetdata = {overrides = {}}
+                    if worldgen_preset then
+                        worldgen_presetdata = Levels.GetDataForWorldGenID(worldgen_preset)
+                    end
+
+                    local settings_preset = savedata.settings_preset or savedata.preset
+                    local settings_presetdata = {overrides = {}}
+                    if settings_preset then
+                        settings_presetdata = Levels.GetDataForSettingsID(settings_preset)
+                    end
+
+                    local location = worldgen_presetdata.location or "forest"
+
+                    local Customize = require("map/customize")
+                    local defaultoptions = Customize.GetOptionsWithLocationDefaults(location, true)
+
+                    savedata.overrides = savedata.overrides or {}
+
+                    for override_name, override_option in pairs(overrides) do
+                        local current_option = (worldgen_presetdata.overrides[override_name] or settings_presetdata.overrides[override_name]) or defaultoptions[override_name] or Customize.GetDefaultForOption(override_name)
+                        if current_option and override_option ~= current_option and Customize.IsCustomizeOption(override_name) then
+                            savedata.overrides[override_name] = override_option
+                        else
+                            savedata.overrides[override_name] = nil
+                        end
+                    end
+
+                    return GenerateWorldGenOverride(savedata)
+                end
+            end
+        end
+
+        if cb then
+            cb()
+        end
+    end
+
+    if shard ~= nil then
+        TheSim:GetPersistentStringInClusterSlot(slot, shard, filename, onload)
+    else
+        TheSim:GetPersistentString(filename, onload)
+    end
+end
+
 --isshutdown means players have been cleaned up by OnDespawn()
 --and the sim will shutdown after saving
 function SaveGame(isshutdown, cb)
@@ -810,10 +943,17 @@ function SaveGame(isshutdown, cb)
             TheNet:TruncateSnapshots(save.meta.session_identifier)
         end
         TheNet:IncrementSnapshot()
-        local function onsaved()
-            ShardGameIndex:WriteTimeFile(cb)
+        local function onupdateoverrides()
+            local function onsaved()
+                ShardGameIndex:WriteTimeFile(cb)
+            end
+            ShardGameIndex:Save(onsaved)
         end
-        ShardGameIndex:Save(onsaved)
+        local options = ShardGameIndex:GetGenOptions()
+        --copy overrides from the world back to the shard index and worldgenoverrides.
+        local overrides = deepcopy(save.map.topology.overrides)
+        options.overrides = overrides
+        UpdateWorldGenOverride(overrides, onupdateoverrides, ShardGameIndex:GetSlot(), ShardGameIndex:GetShard())
     end
 
     --todo, if we add more values to this, turn this into a function thats called both here and gamelogic.lua@DoGenerateWorld
@@ -1655,6 +1795,26 @@ end
 
 function IsInFrontEnd()
 	return Settings.reset_action == nil or Settings.reset_action == RESET_ACTION.LOAD_FRONTEND
+end
+
+local currently_displaying = nil
+function DisplayAntiAddictionNotification( notification )
+    if notification ~= currently_displaying then        
+        local Text = require "widgets/text"
+        local title = Text(CHATFONT_OUTLINE, 35)
+        title:SetString(STRINGS.ANTIADDICTION[notification])
+        title:SetPosition(0, -50, 0)
+        title:Show()
+        title:SetVAnchor(ANCHOR_TOP)
+        title:SetHAnchor(ANCHOR_MIDDLE)
+        currently_displaying = notification
+
+        CreateEntity():DoTaskInTime(4.5, function(inst)
+            title:Kill()
+            inst.entity:Retire()
+            currently_displaying = nil
+        end)
+    end
 end
 
 require("dlcsupport")

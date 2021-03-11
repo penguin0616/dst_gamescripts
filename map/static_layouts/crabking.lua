@@ -266,7 +266,7 @@ return {
         },
         {
           name = "",
-          type = "crabking",
+          type = "crabking_spawner",
           shape = "rectangle",
           x = 321,
           y = 318,

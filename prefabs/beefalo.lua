@@ -1054,7 +1054,7 @@ local function beefalo()
 
     -- Mood component is ONLY used when domesticated, otherwise it's part of the herd
     inst:AddComponent("mood")
-    inst.components.mood:SetMoodTimeInDays(TUNING.BEEFALO_MATING_SEASON_LENGTH, TUNING.BEEFALO_MATING_SEASON_WAIT)
+    inst.components.mood:SetMoodTimeInDays(TUNING.BEEFALO_MATING_SEASON_LENGTH, TUNING.BEEFALO_MATING_SEASON_WAIT, TUNING.BEEFALO_MATING_ALWAYS, TUNING.BEEFALO_MATING_SEASON_LENGTH, TUNING.BEEFALO_MATING_SEASON_WAIT, TUNING.BEEFALO_MATING_ENABLED)
     inst.components.mood:SetInMoodFn(OnEnterMood)
     inst.components.mood:SetLeaveMoodFn(OnLeaveMood)
     inst.components.mood:CheckForMoodChange()

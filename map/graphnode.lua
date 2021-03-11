@@ -575,46 +575,41 @@ function Node:PopulateExtra(world_gen_choices, spawnFn, data)
 	-- add in % more
 	--print("world_gen_choices...", world_gen_choices, #idx_left)
 	if world_gen_choices ~= nil and #data.idx_left >0 then
-			
+
 		local amount_to_generate = {}
 		for prefab,amt in pairs(world_gen_choices) do
-
-			--test if prefab should be used..
 			if not PrefabSwaps.IsPrefabInactive(prefab) then
-				if data.prefab_list[prefab] == nil then
-					-- TODO: Need a better way to increse items in areas where they dont usually generate
-					data.prefab_list[prefab] = math.random(1,2)
+				if type(amt) == "number" then
+					if data.prefab_list[prefab] then
+						amount_to_generate[prefab] = math.floor(data.prefab_list[prefab]*amt) - data.prefab_list[prefab]
+					end
+				else
+					if amt.clumpcount > 0 and 0.25 > math.random() then
+						amt.clumpcount = amt.clumpcount - 1
+						amount_to_generate[prefab] = math.random(amt.clumpsize[1], amt.clumpsize[2])
+					end
 				end
-					
-				local new_amt = math.floor(data.prefab_list[prefab]*amt) - data.prefab_list[prefab]
-				if new_amt > 0 then
-					amount_to_generate[prefab] = new_amt
-				end
-				--print("Need ",prefab,new_amt)
 			end
-		end	
-					
-		local idx = 1 
-		while idx< #data.idx_left do
-				
+		end
+
+		for idx = 1, #data.idx_left do
+
 			-- Choose random prefab
 			local prefab = spawnFn.pickspawnprefab(amount_to_generate, data.points_type[data.idx_left[idx]])
-				
+
 			if prefab ~= nil then
 				local prefab_data = {}
-				prefab_data.data = (self.data.terrain_contents and self.data.terrain_contents.prefabdata and self.data.terrain_contents.prefabdata[prefab]) or nil	
-				self:AddEntity(prefab, data.points_x, data.points_y, data.idx_left[idx], data.entitiesOut, data.width, data.height, data.prefab_list, prefab_data)				
-					
+				prefab_data.data = (self.data.terrain_contents and self.data.terrain_contents.prefabdata and self.data.terrain_contents.prefabdata[prefab]) or nil
+				self:AddEntity(prefab, data.points_x, data.points_y, data.idx_left[idx], data.entitiesOut, data.width, data.height, data.prefab_list, prefab_data)
+
 				amount_to_generate[prefab] = amount_to_generate[prefab] - 1
-				
+
 				-- Remove any complete items from the list
 				if amount_to_generate[prefab] <= 0 then
 					--print("Generated enough",prefab)
 					amount_to_generate[prefab] = nil
 				end
 			end
-				
-			idx = idx + 1
 		end
 	end
 end

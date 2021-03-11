@@ -1001,6 +1001,16 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 45,
 	},
+	mysterybox_wormholes =
+	{
+		type = "mysterybox",
+		skin_tags = { "MYSTERYBOX", },
+		build_name_override = "mysterybox_classic_4",
+		box_build = "box_mystery_classic",
+		rarity = "Common",
+		rarity_modifier = "Woven",
+		release_group = 115,
+	},
 	pack_character_wormwood =
 	{
 		type = "purchase",
@@ -2477,13 +2487,28 @@ MISC_ITEMS =
 		skin_tags = { },
 		featured_pack = true,
 		steam_dlc_id = 840760,
-		display_order = 1,
+		display_order = 3,
 		display_atlas = "images/iap_images_victorian.xml",
 		display_tex = "victorian.tex",
 		box_build = "box_shop_victorian",
 		display_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", },
 		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "webber_beard_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wilson_beard_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", },
-		release_group = 46,
+		release_group = 115,
+	},
+	pack_victorian_all2 =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1558300,
+		display_order = 1,
+		build_name_override = "pack_victorian_all",
+		display_atlas = "images/iap_images_victorian2.xml",
+		display_tex = "victorian2.tex",
+		box_build = "box_shop_victorian",
+		display_items = {  "warly_victorian", "wormwood_victorian", "wortox_victorian", "wurt_victorian", "walter_victorian", "walterhat_victorian", },
+		output_items = {  "warly_victorian", "body_warly_victorian", "feet_warly_victorian", "legs_warly_victorian", "wormwood_victorian", "body_wormwood_victorian", "hand_wormwood_victorian", "legs_wormwood_victorian", "wortox_victorian", "body_wortox_victorian", "legs_wortox_victorian", "hand_wortox_victorian", "wurt_victorian", "body_wurt_victorian", "hand_wurt_victorian", "legs_wurt_victorian", "walter_victorian", "body_walter_victorian", "legs_walter_victorian", "walterhat_victorian", },
+		release_group = 115,
 	},
 	pack_victorian_bundle =
 	{
@@ -2496,7 +2521,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
 		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "webber_beard_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wilson_beard_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_bundle2 =
 	{
@@ -2510,7 +2535,21 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", "beebox_victorian", "mushroom_light2_victorian", "pickaxe_victorian", "saltbox_victorian", "featherhat_victorian", "eyebrellahat_victorian", "meatrack_victorian", "fence_victorianblack", "fence_victorianbrass", "fence_victorianbronze", "fence_gate_victorianblack", "fence_gate_victorianbrass", "fence_gate_victorianbronze", "wall_moonrock_victorian", "wall_ruins_victorian", "wall_stone_victorian", },
 		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "webber_beard_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wilson_beard_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", "beebox_victorian", "mushroom_light2_victorian", "pickaxe_victorian", "saltbox_victorian", "featherhat_victorian", "eyebrellahat_victorian", "meatrack_victorian", "fence_victorianblack", "fence_victorianbrass", "fence_victorianbronze", "fence_gate_victorianblack", "fence_gate_victorianbrass", "fence_gate_victorianbronze", "wall_moonrock_victorian", "wall_ruins_victorian", "wall_stone_victorian", },
-		release_group = 113,
+		release_group = 115,
+	},
+	pack_victorian_bundle3 =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 5,
+		build_name_override = "pack_victorian_bundle",
+		display_atlas = "images/iap_images_victorian_bundle3.xml",
+		display_tex = "victorian_bundle3.tex",
+		box_build = "box_shop_victorian",
+		display_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", "beebox_victorian", "mushroom_light2_victorian", "pickaxe_victorian", "saltbox_victorian", "featherhat_victorian", "eyebrellahat_victorian", "meatrack_victorian", "fence_victorianblack", "fence_victorianbrass", "fence_victorianbronze", "fence_gate_victorianblack", "fence_gate_victorianbrass", "fence_gate_victorianbronze", "wall_moonrock_victorian", "wall_ruins_victorian", "wall_stone_victorian", "warly_victorian", "wormwood_victorian", "wortox_victorian", "wurt_victorian", "walter_victorian", "walterhat_victorian", },
+		output_items = {  "wathgrithr_victorian", "waxwell_victorian", "webber_victorian", "webber_beard_victorian", "wendy_victorian", "wes_victorian", "wickerbottom_victorian", "willow_victorian", "wilson_victorian", "wilson_beard_victorian", "wolfgang_victorian", "woodie_victorian", "wx78_victorian", "winona_victorian", "body_wathgrithr_victorian", "body_waxwell_victorian", "body_webber_victorian", "body_wendy_victorian", "body_wes_victorian", "body_wickerbottom_victorian", "body_willow_victorian", "body_wilson_victorian", "body_wolfgang_victorian", "body_woodie_victorian", "body_wx78_victorian", "body_winona_victorian", "hand_wathgrithr_victorian", "hand_waxwell_victorian", "hand_webber_victorian", "hand_wendy_victorian", "hand_wes_victorian", "hand_wickerbottom_victorian", "hand_willow_victorian", "hand_wilson_victorian", "hand_winona_victorian", "hand_wolfgang_victorian", "hand_woodie_victorian", "hand_wx78_victorian", "legs_winona_victorian", "legs_wathgrithr_victorian", "legs_waxwell_victorian", "legs_wolfgang_victorian", "legs_woodie_victorian", "legs_wx78_victorian", "feet_webber_victorian", "feet_willow_victorian", "feet_wilson_victorian", "feet_wendy_victorian", "feet_wickerbottom_victorian", "feet_wes_victorian", "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", "beebox_victorian", "mushroom_light2_victorian", "pickaxe_victorian", "saltbox_victorian", "featherhat_victorian", "eyebrellahat_victorian", "meatrack_victorian", "fence_victorianblack", "fence_victorianbrass", "fence_victorianbronze", "fence_gate_victorianblack", "fence_gate_victorianbrass", "fence_gate_victorianbronze", "wall_moonrock_victorian", "wall_ruins_victorian", "wall_stone_victorian", "warly_victorian", "body_warly_victorian", "feet_warly_victorian", "legs_warly_victorian", "wormwood_victorian", "body_wormwood_victorian", "hand_wormwood_victorian", "legs_wormwood_victorian", "wortox_victorian", "body_wortox_victorian", "legs_wortox_victorian", "hand_wortox_victorian", "wurt_victorian", "body_wurt_victorian", "hand_wurt_victorian", "legs_wurt_victorian", "walter_victorian", "body_walter_victorian", "legs_walter_victorian", "walterhat_victorian", },
+		release_group = 115,
 	},
 	pack_victorian_items =
 	{
@@ -2518,13 +2557,13 @@ MISC_ITEMS =
 		skin_tags = { },
 		featured_pack = true,
 		steam_dlc_id = 840750,
-		display_order = 2,
+		display_order = 4,
 		display_atlas = "images/iap_images_victorian_items.xml",
 		display_tex = "victorian_items.tex",
 		box_build = "box_shop_victorian",
 		display_items = {  "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
 		output_items = {  "hambat_potroast", "cookpot_tureen", "icebox_victorian", "firepit_victorian", "cane_victorian", "axe_victorian", "shovel_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_items2 =
 	{
@@ -2532,14 +2571,27 @@ MISC_ITEMS =
 		skin_tags = { },
 		featured_pack = true,
 		steam_dlc_id = 1522880,
-		display_order = 1,
+		display_order = 2,
 		build_name_override = "pack_victorian_items",
 		display_atlas = "images/iap_images_victorian_items2.xml",
 		display_tex = "victorian_items2.tex",
 		box_build = "box_shop_victorian",
 		display_items = {  "beebox_victorian", "mushroom_light2_victorian", "pickaxe_victorian", "saltbox_victorian", "featherhat_victorian", "eyebrellahat_victorian", "meatrack_victorian", "fence_victorianblack", "fence_victorianbrass", "fence_victorianbronze", "fence_gate_victorianblack", "fence_gate_victorianbrass", "fence_gate_victorianbronze", "wall_moonrock_victorian", "wall_ruins_victorian", "wall_stone_victorian", },
 		output_items = {  "beebox_victorian", "mushroom_light2_victorian", "pickaxe_victorian", "saltbox_victorian", "featherhat_victorian", "eyebrellahat_victorian", "meatrack_victorian", "fence_victorianblack", "fence_victorianbrass", "fence_victorianbronze", "fence_gate_victorianblack", "fence_gate_victorianbrass", "fence_gate_victorianbronze", "wall_moonrock_victorian", "wall_ruins_victorian", "wall_stone_victorian", },
-		release_group = 113,
+		release_group = 115,
+	},
+	pack_victorian_walter =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 117,
+		build_name_override = "walter_victorian",
+		display_atlas = "bigportraits/walter_victorian.xml",
+		display_tex = "walter_victorian_oval.tex",
+		box_build = "box_shop_victorian",
+		display_items = {  "walter_victorian", "body_walter_victorian", "legs_walter_victorian", "walterhat_victorian", },
+		output_items = {  "walter_victorian", "body_walter_victorian", "legs_walter_victorian", "walterhat_victorian", },
+		release_group = 115,
 	},
 	pack_victorian_wathgrithr =
 	{
@@ -2552,7 +2604,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wathgrithr_victorian", "body_wathgrithr_victorian", "hand_wathgrithr_victorian", "legs_wathgrithr_victorian", },
 		output_items = {  "wathgrithr_victorian", "body_wathgrithr_victorian", "hand_wathgrithr_victorian", "legs_wathgrithr_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_waxwell =
 	{
@@ -2565,7 +2617,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "waxwell_victorian", "body_waxwell_victorian", "hand_waxwell_victorian", "legs_waxwell_victorian", },
 		output_items = {  "waxwell_victorian", "body_waxwell_victorian", "hand_waxwell_victorian", "legs_waxwell_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_webber =
 	{
@@ -2578,7 +2630,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "webber_victorian", "webber_beard_victorian", "body_webber_victorian", "hand_webber_victorian", "feet_webber_victorian", },
 		output_items = {  "webber_victorian", "webber_beard_victorian", "body_webber_victorian", "hand_webber_victorian", "feet_webber_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_wendy =
 	{
@@ -2591,7 +2643,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wendy_victorian", "body_wendy_victorian", "hand_wendy_victorian", "feet_wendy_victorian", },
 		output_items = {  "wendy_victorian", "body_wendy_victorian", "hand_wendy_victorian", "feet_wendy_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_wes =
 	{
@@ -2604,7 +2656,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wes_victorian", "body_wes_victorian", "hand_wes_victorian", "feet_wes_victorian", },
 		output_items = {  "wes_victorian", "body_wes_victorian", "hand_wes_victorian", "feet_wes_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_wickerbottom =
 	{
@@ -2617,7 +2669,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wickerbottom_victorian", "body_wickerbottom_victorian", "hand_wickerbottom_victorian", "feet_wickerbottom_victorian", },
 		output_items = {  "wickerbottom_victorian", "body_wickerbottom_victorian", "hand_wickerbottom_victorian", "feet_wickerbottom_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_willow =
 	{
@@ -2630,7 +2682,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "willow_victorian", "body_willow_victorian", "hand_willow_victorian", "feet_willow_victorian", },
 		output_items = {  "willow_victorian", "body_willow_victorian", "hand_willow_victorian", "feet_willow_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_wilson =
 	{
@@ -2643,7 +2695,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wilson_victorian", "wilson_beard_victorian", "body_wilson_victorian", "hand_wilson_victorian", "feet_wilson_victorian", },
 		output_items = {  "wilson_victorian", "wilson_beard_victorian", "body_wilson_victorian", "hand_wilson_victorian", "feet_wilson_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_winona =
 	{
@@ -2656,7 +2708,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "winona_victorian", "body_winona_victorian", "hand_winona_victorian", "legs_winona_victorian", },
 		output_items = {  "winona_victorian", "body_winona_victorian", "hand_winona_victorian", "legs_winona_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_wolfgang =
 	{
@@ -2669,7 +2721,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wolfgang_victorian", "body_wolfgang_victorian", "hand_wolfgang_victorian", "legs_wolfgang_victorian", },
 		output_items = {  "wolfgang_victorian", "body_wolfgang_victorian", "hand_wolfgang_victorian", "legs_wolfgang_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_victorian_woodie =
 	{
@@ -2682,7 +2734,46 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "woodie_victorian", "body_woodie_victorian", "hand_woodie_victorian", "legs_woodie_victorian", },
 		output_items = {  "woodie_victorian", "body_woodie_victorian", "hand_woodie_victorian", "legs_woodie_victorian", },
-		release_group = 46,
+		release_group = 115,
+	},
+	pack_victorian_wormwood =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 114,
+		build_name_override = "wormwood_victorian",
+		display_atlas = "bigportraits/wormwood_victorian.xml",
+		display_tex = "wormwood_victorian_oval.tex",
+		box_build = "box_shop_victorian",
+		display_items = {  "wormwood_victorian", "body_wormwood_victorian", "hand_wormwood_victorian", "legs_wormwood_victorian", },
+		output_items = {  "wormwood_victorian", "body_wormwood_victorian", "hand_wormwood_victorian", "legs_wormwood_victorian", },
+		release_group = 115,
+	},
+	pack_victorian_wortox =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 113,
+		build_name_override = "wortox_victorian",
+		display_atlas = "bigportraits/wortox_victorian.xml",
+		display_tex = "wortox_victorian_oval.tex",
+		box_build = "box_shop_victorian",
+		display_items = {  "wortox_victorian", "body_wortox_victorian", "hand_wortox_victorian", "legs_wortox_victorian", },
+		output_items = {  "wortox_victorian", "body_wortox_victorian", "hand_wortox_victorian", "legs_wortox_victorian", },
+		release_group = 115,
+	},
+	pack_victorian_wurt =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 116,
+		build_name_override = "wurt_victorian",
+		display_atlas = "bigportraits/wurt_victorian.xml",
+		display_tex = "wurt_victorian_oval.tex",
+		box_build = "box_shop_victorian",
+		display_items = {  "wurt_victorian", "body_wurt_victorian", "hand_wurt_victorian", "legs_wurt_victorian", },
+		output_items = {  "wurt_victorian", "body_wurt_victorian", "hand_wurt_victorian", "legs_wurt_victorian", },
+		release_group = 115,
 	},
 	pack_victorian_wx78 =
 	{
@@ -2695,7 +2786,7 @@ MISC_ITEMS =
 		box_build = "box_shop_victorian",
 		display_items = {  "wx78_victorian", "body_wx78_victorian", "hand_wx78_victorian", "legs_wx78_victorian", },
 		output_items = {  "wx78_victorian", "body_wx78_victorian", "hand_wx78_victorian", "legs_wx78_victorian", },
-		release_group = 46,
+		release_group = 115,
 	},
 	pack_walter_deluxe =
 	{
@@ -2815,7 +2906,7 @@ MISC_ITEMS =
 		box_build = "box_shop_plain",
 		display_items = {  "warly_victorian", "body_warly_victorian", "feet_warly_victorian", "legs_warly_victorian", },
 		output_items = {  "warly_victorian", "body_warly_victorian", "feet_warly_victorian", "legs_warly_victorian", },
-		release_group = 71,
+		release_group = 115,
 	},
 	pack_wathgrithr_deluxe =
 	{

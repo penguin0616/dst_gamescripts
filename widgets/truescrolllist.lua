@@ -21,16 +21,15 @@ local DEBUG_MODE = BRANCH == "dev"
 -- region.
 local TrueScrollList = Class(Widget, function(self, context, create_widgets_fn, update_fn, scissor_x, scissor_y, scissor_width, scissor_height, scrollbar_offset, scrollbar_height_offset, scroll_per_click)
     Widget._ctor(self, "TrueScrollList")
-	
+
 	assert(create_widgets_fn ~= nil and update_fn ~= nil, "TrueScrollList requires create widgets and update functions")
 
     -- Contextual data passed to input functions. Do not use this data inside
     -- TrueScrollList.
     self.context = context or {}
 
-	-- 
 	self.scroll_per_click = scroll_per_click or 1
-	
+
     -- Scroll-region-sized spanning image to ensure we don't lose focus
     -- due to gaps between widgets.
     self.bg = self:AddChild(Image("images/ui.xml", "blank.tex"))
@@ -47,16 +46,18 @@ local TrueScrollList = Class(Widget, function(self, context, create_widgets_fn, 
         }
     end
 	self.list_root = self.scissored_root:AddChild(Widget("list_root")) --this is the container that we'll be scrolling, and then it'll be scissored by the list itself.
-    
-	
+
+    self.scissor_width = scissor_width
+    self.scissor_height = scissor_height
+
     self.widgets_to_update, self.widgets_per_row, self.row_height, self.visible_rows, self.end_offset = create_widgets_fn( self.context, self.list_root, self )
 	self.update_fn = update_fn
-		
+
 	self.items_per_view = #self.widgets_to_update
 
    	--self.repeat_time = (TheInput:ControllerAttached() and SCROLL_REPEAT_TIME) or MOUSE_SCROLL_REPEAT_TIME
-   	
-	self.current_scroll_pos = 1
+
+    self.current_scroll_pos = 1
 	self.target_scroll_pos = 1
 	self.end_pos = 1
     -- The row of widgets, not the item row! (Never more than visible_rows.)
@@ -64,7 +65,7 @@ local TrueScrollList = Class(Widget, function(self, context, create_widgets_fn, 
 
     self.focused_widget_index = 1
     self.displayed_start_index = 0
-    
+
     -- Position scrollbar next to scissor region
 	self.scrollbar_offset = {
         scissor_x + scissor_width + (scrollbar_offset or 0),
@@ -72,7 +73,11 @@ local TrueScrollList = Class(Widget, function(self, context, create_widgets_fn, 
     }
 	self.scrollbar_height = scissor_height + (scrollbar_height_offset or 0)
 	self:BuildScrollBar()
-	
+
+    self.getnextitemindex = function(dir, focused_item_index)
+        return (dir == MOVE_UP and focused_item_index - self.widgets_per_row) or
+            (dir == MOVE_DOWN and focused_item_index + self.widgets_per_row) or nil
+    end
 
     self.focus_forward = self.list_root
 
@@ -267,9 +272,8 @@ function TrueScrollList:SetItemsData(items)
 end
 
 function TrueScrollList:OnUpdate(dt)
-	local blend_weight = 0.7
-	local last_scroll_pos = self.current_scroll_pos
-	self.current_scroll_pos = self.current_scroll_pos * blend_weight + self.target_scroll_pos * (1 - blend_weight)
+    local last_scroll_pos = self.current_scroll_pos
+	self.current_scroll_pos = math.abs(self.current_scroll_pos - self.target_scroll_pos) > 0.01 and Lerp(self.current_scroll_pos, self.target_scroll_pos, 0.25) or self.target_scroll_pos
 	
 	if self.current_scroll_pos < 1 then
 		--print("hit the start")
@@ -283,8 +287,10 @@ function TrueScrollList:OnUpdate(dt)
 	end
 	
 	--only bother refreshing if we've actually moved a bit
-	if math.abs(last_scroll_pos - self.current_scroll_pos) > 0.01 then
-		self:RefreshView()
+	if self.current_scroll_pos ~= last_scroll_pos then
+        self:RefreshView()
+    else
+        self.itemfocus = nil
 	end
 end
 
@@ -351,7 +357,7 @@ function TrueScrollList:GetSlideRange()
 end
 
 function TrueScrollList:_GetScrollAmountPerRow()
-	local scroll_amount = (self.end_pos-1) / self.total_rows * 2
+    local scroll_amount = self.end_pos / self.total_rows * 2
 
 	-- cap the scroll amount at 1 otherwise focus is going to be skipping rows
 	return (scroll_amount < 1) and scroll_amount or 1
@@ -359,9 +365,10 @@ end
 
 -- Get the index in GetListWidgets for the first visible widget.
 -- Also returns an offset for how much of the widget is displayed (no promises).
-function TrueScrollList:GetIndexOfFirstVisibleWidget()
-    local row_num = math.floor(self.current_scroll_pos)
-    local row_offset = self.current_scroll_pos - row_num
+function TrueScrollList:GetIndexOfFirstVisibleWidget(current_scroll_pos)
+    current_scroll_pos = current_scroll_pos or self.current_scroll_pos
+    local row_num = math.floor(current_scroll_pos)
+    local row_offset = current_scroll_pos - row_num
 	return ((row_num - 1) * self.widgets_per_row), row_offset
 end
 
@@ -373,8 +380,11 @@ function TrueScrollList:RefreshView()
 
 	-- call update_fn for each
 	for i = 1,self.items_per_view do 
-        self.update_fn(self.context, self.widgets_to_update[i], self.items[start_index + i], start_index + i )
-        self.widgets_to_update[i]:Show()
+        self.update_fn(self.context, self.widgets_to_update[i], self.items[start_index + i], start_index + i)
+        if self.itemfocus and self.itemfocus == start_index + i then
+            self.widgets_to_update[i]:SetFocus()
+        end
+        --self.widgets_to_update[i]:Show()
 	end
 	
 	--position the scroll bar marker
@@ -384,12 +394,63 @@ function TrueScrollList:RefreshView()
 	else
 		self.scroll_bar_container:Hide()
 	end
-    
+
 	--do root partial-offset
 	self.list_root:SetPosition( 0, row_offset * self.row_height, 0 )
-	
+
 	--reset the focus states
 	TheFrontEnd:DoHoverFocusUpdate(true)
+end
+
+function TrueScrollList:ForceItemFocus(itemindex)
+    local currentindex = itemindex - self.displayed_start_index
+    if self.widgets_to_update[currentindex] then
+        self.widgets_to_update[currentindex]:SetFocus()
+    else
+        self:SetFocus()
+    end
+    self.itemfocus = itemindex
+end
+
+function TrueScrollList:GetNextWidget(dir)
+    local displayed_start_index, row_offset = self:GetIndexOfFirstVisibleWidget(self.target_scroll_pos)
+    local used_row_height = row_offset > 0 and ((1 - row_offset) * self.row_height) or 0
+
+    local first_fully_visible_index = (math.ceil(self.target_scroll_pos) - 1) * self.widgets_per_row
+    local last_fully_visible_index = first_fully_visible_index + (math.floor((self.scissor_height - used_row_height) / self.row_height) * self.widgets_per_row)
+
+    local focused_item_index = self.itemfocus or (self.focused_widget_index + displayed_start_index)
+    local next_item_index, scroll_index = self.getnextitemindex(dir, focused_item_index)
+
+    scroll_index = scroll_index or next_item_index
+
+    if scroll_index and self.items[scroll_index] then
+        local did_scroll = false
+        --scroll if we are already not fully visible
+        local current_row = math.ceil(focused_item_index / self.widgets_per_row)
+        if focused_item_index <= first_fully_visible_index then
+            self:Scroll((current_row - math.ceil(first_fully_visible_index / self.widgets_per_row)) - 1)
+            did_scroll = true
+        elseif focused_item_index > last_fully_visible_index then
+            self:Scroll(current_row - math.ceil(last_fully_visible_index / self.widgets_per_row))
+            did_scroll = true
+        end
+        --scroll if the target isn't fully visible
+        if scroll_index <= first_fully_visible_index or scroll_index > last_fully_visible_index then
+            self:Scroll(math.ceil(scroll_index / self.widgets_per_row) - current_row)
+            did_scroll = true
+        end
+
+        --force focus onto the next widget (handled in RefreshView)
+        if next_item_index and self.items[next_item_index] then
+            self:ForceItemFocus(next_item_index)
+            did_scroll = true --reusing variable, for return value --meh
+        elseif did_scroll then
+            self:ForceItemFocus(focused_item_index)
+        end
+        return did_scroll
+    end
+    return false
 end
 
 function TrueScrollList:OnFocusMove(dir, down)
@@ -397,18 +458,8 @@ function TrueScrollList:OnFocusMove(dir, down)
 
     -- Instead of changing focus to the next widget (calling base), we are
     -- scrolling the widgets to move the above/below item into the current widget!
-    if dir == MOVE_UP then
-        local is_past_first_row = self.current_scroll_pos > 1.01
-        if is_past_first_row and self.focused_widget_row < 3 then
-            self:Scroll(-self:_GetScrollAmountPerRow())
-            return true
-        end
-    elseif dir == MOVE_DOWN then
-        local can_scroll_more = self.current_scroll_pos < self.end_pos - 0.01
-        if can_scroll_more and self.focused_widget_row > (self.visible_rows - 1) then
-            self:Scroll(self:_GetScrollAmountPerRow())
-            return true
-        end
+    if dir == MOVE_UP or dir == MOVE_DOWN then
+        return self:GetNextWidget(dir)
     end
 
     local prev_focus = self.widgets_to_update[self.focused_widget_index]

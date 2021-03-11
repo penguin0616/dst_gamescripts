@@ -61,8 +61,7 @@ function Widget:OnFocusMove(dir, down)
     end
 
     if down and self.focus_flow[dir] then
-        local dest = self.focus_flow[dir]
-        if dest and type(dest) == "function" then dest = dest() end
+        local dest = FunctionOrValue(self.focus_flow[dir])
 
         -- Can we pass the focus down the chain if we are disabled/hidden?
         if dest and dest:IsVisible() and dest.enabled then
@@ -628,16 +627,9 @@ end
 
 function Widget:SetFocus()
   --  print ("SET FOCUS ", self)
-    if self.focus_forward and type(self.focus_forward) == "function" then
-        local widg = self.focus_forward()
-		if widg ~= nil then
-	        widg:SetFocus()
-		    return
-		else
-			print ("Warning: Widget:SetFocus called on '"..tostring(self).. "' failled to find widget to focus_forward to.")
-		end
-    elseif self.focus_forward then
-        self.focus_forward:SetFocus()
+    local focus_forward = FunctionOrValue(self.focus_forward)
+    if focus_forward then
+        focus_forward:SetFocus()
         return
     end
 

@@ -177,8 +177,8 @@ local SPECIAL_EVENT_DEPS =
         {
             assets =
             {
-                Asset("PKGREF", "anim/dst_menu_v2.zip"),
-                Asset("PKGREF", "anim/dst_menu_v2_bg.zip"),
+                Asset("ANIM", "anim/dst_menu_v2.zip"),
+                Asset("ANIM", "anim/dst_menu_v2_bg.zip"),
 
                 Asset("PKGREF", "anim/dst_menu.zip"),
                 Asset("PKGREF", "anim/dst_menu_winona.zip"),
@@ -196,12 +196,8 @@ local SPECIAL_EVENT_DEPS =
                 Asset("PKGREF", "anim/dst_menu_walter.zip"),
                 Asset("PKGREF", "anim/dst_menu_wathgrithr.zip"),
                 Asset("PKGREF", "anim/dst_menu_dangerous_sea.zip"),
-                
                 Asset("PKGREF", "anim/dst_menu_grotto.zip"),
-
-                Asset("ANIM", "anim/dst_menu_farming.zip"),
-
-                
+                Asset("PKGREF", "anim/dst_menu_farming.zip"),
             },
         },
     },

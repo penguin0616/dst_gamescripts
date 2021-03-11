@@ -76,16 +76,16 @@ end
 
 local function Client_CalcTransparencyRating(inst, observer)
 	if inst.components.inspectable ~= nil then
-		return TUNING.GESTALT.COMBAT_TRANSPERENCY -- 0.85
+		return TUNING.GESTALT_COMBAT_TRANSPERENCY -- 0.85
 	end
 
 	local level, sanity = GetLevelForTarget(observer)
 	if level >= 3 then
-		return TUNING.GESTALT.COMBAT_TRANSPERENCY -- 0.85
+		return TUNING.GESTALT_COMBAT_TRANSPERENCY -- 0.85
 	end		
 	
 	local x = (.7*sanity - .7)
-	return math.min(x*x + .2, TUNING.GESTALT.COMBAT_TRANSPERENCY)
+	return math.min(x*x + .2, TUNING.GESTALT_COMBAT_TRANSPERENCY)
 end
 
 local function Retarget(inst)
@@ -233,7 +233,7 @@ local function fn()
 
 	inst:AddComponent("combat")
 	inst.components.combat:SetDefaultDamage(TUNING.GESTALTGUARD_DAMAGE)
-	--inst.components.combat:SetAttackPeriod(TUNING.GESTALT.ATTACK_COOLDOWN)
+	--inst.components.combat:SetAttackPeriod(TUNING.GESTALT_ATTACK_COOLDOWN)
 	inst.components.combat:SetRange(TUNING.GESTALTGUARD_ATTACK_RANGE)
 	inst.components.combat:SetAttackPeriod(0)
     inst.components.combat:SetRetargetFunction(1, Retarget)

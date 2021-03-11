@@ -1,3 +1,4 @@
+require("worldsettingsutil")
 require "prefabutil"
 
 local assets =
@@ -358,6 +359,10 @@ local function MakeWindowSnow()
     return inst
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_Spawner_PreLoad(inst, data, TUNING.PIGHOUSE_SPAWN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -411,7 +416,8 @@ local function fn()
     inst.components.workable:SetOnWorkCallback(onhit)
 
     inst:AddComponent("spawner")
-    inst.components.spawner:Configure("pigman", TUNING.TOTAL_DAY_TIME*4)
+    WorldSettings_Spawner_SpawnDelay(inst, TUNING.PIGHOUSE_SPAWN_TIME, TUNING.PIGHOUSE_ENABLED)
+    inst.components.spawner:Configure("pigman", TUNING.PIGHOUSE_SPAWN_TIME)
     inst.components.spawner.onoccupied = onoccupied
     inst.components.spawner.onvacate = onvacate
     inst.components.spawner:SetWaterSpawning(false, true)
@@ -440,6 +446,8 @@ local function fn()
 
     inst:ListenForEvent("onbuilt", onbuilt)
     inst.inittask = inst:DoTaskInTime(0, oninit)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

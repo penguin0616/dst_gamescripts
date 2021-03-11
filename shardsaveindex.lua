@@ -53,7 +53,7 @@ end
 local function UpgradeShardSaveIndexData(savedata)
     local savefileupgrades = require "savefileupgrades"
     local upgraded = false
-    
+
     --[[
     if savedata.version == nil or savedata.version == 1 then
         savefileupgrades.utilities.UpgradeShardSaveIndexFromV1toV2(savedata)
@@ -558,35 +558,10 @@ function ShardSaveIndex:GetSlotPresetText(slot)
 	local preset_str = ""
     if self:IsSlotEmpty(slot) then return preset_str end
 
-    local shardIndex = self:GetShardIndex(slot, "Master")
-    if shardIndex then
-        if self:IsSlotMultiLevel(slot) then
-            local forest_preset = nil
-            local caves_preset = nil
-
-            local server_gen = shardIndex:GetGenOptions()
-            if server_gen then
-                forest_preset = server_gen.name
-            end
-
-            local secondaryShardIndex = self:GetShardIndex(slot, "Caves")
-            server_gen = secondaryShardIndex and secondaryShardIndex:GetGenOptions() or nil
-            if secondaryShardIndex then
-                if server_gen then
-                    caves_preset = server_gen.name
-                end
-            end
-
-            if forest_preset ~= nil and caves_preset ~= nil then
-                preset_str = forest_preset.." / "..caves_preset
-            else
-                preset_str = forest_preset or caves_preset
-            end
-        else
-            local server_gen = shardIndex:GetGenOptions()
-            if server_gen then
-                preset_str = server_gen.name
-            end
+    if self:GetShardIndex(slot, "Master") then
+        preset_str = "Forest Only"
+        if self:IsSlotMultiLevel(slot) and self:GetShardIndex(slot, "Caves") then
+            preset_str = "Forest and Caves"
         end
     end
     return preset_str

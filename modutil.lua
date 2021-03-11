@@ -42,8 +42,15 @@ function GetModConfigData(optionname, modname, get_local_config)
 		else
 			for i,v in pairs(config) do
 				if v.name == optionname then
-					if v.saved ~= nil then
+					if v.saved_server ~= nil and not get_local_config then
+						return v.saved_server
+
+					elseif v.saved_client ~= nil and get_local_config then
+						return v.saved_client
+
+					elseif v.saved ~= nil then
 						return v.saved 
+
 					else 
 						return v.default
 					end
@@ -168,13 +175,48 @@ local function AddGlobalClassPostConstruct(package, classname, postfn)
 	DoAddClassPostConstruct(classdef, postfn)
 end
 
-local function InsertPostInitFunctions(env, isworldgen)
+local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 
     env.modassert = modassert
     env.moderror = moderror
 
 	env.postinitfns = {}
 	env.postinitdata = {}
+
+	if isfrontend then
+		env.ReloadFrontEndAssets = function()
+			initprint("ReloadFrontEndAssets")
+			if env.FrontEndAssets then
+				ModReloadFrontEndAssets(env.FrontEndAssets, env.modname)
+			end
+		end
+	end
+
+	local Customize = require("map/customize")
+	env.AddCustomizeGroup = function(category, name, text, desc, atlas, order)
+		initprint("AddCustomizeGroup", category, name)
+		Customize.AddCustomizeGroup(env.modname, category, name, text, desc, atlas, order)
+	end
+
+	env.RemoveCustomizeGroup = function(category, name)
+		initprint("RemoveCustomizeGroup", category, name)
+		Customize.RemoveCustomizeGroup(env.modname, category, name)
+	end
+
+	env.AddCustomizeItem = function(category, group, name, itemsettings)
+		initprint("AddCustomizeItem", category, group, name)
+		Customize.AddCustomizeItem(env.modname, category, group, name, itemsettings)
+	end
+
+	env.RemoveCustomizeItem = function(category, name)
+		initprint("RemoveCustomizeItem", category, name)
+		Customize.RemoveCustomizeItem(env.modname, category, name)
+	end
+
+	env.GetCustomizeDescription = function(description)
+		initprint("GetCustomizeDescription", description)
+		return Customize.GetDescription(description)
+	end
 
 	env.postinitfns.LevelPreInit = {}
 	env.AddLevelPreInit = function(levelid, fn)

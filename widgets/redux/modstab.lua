@@ -963,8 +963,7 @@ function ModsTab:OnConfirmEnable(restart, modname)
     local modinfo = KnownModIndex:GetModInfo(modname)
     if KnownModIndex:IsLocalModWarningEnabled() and self.settings.is_configuring_server and
         KnownModIndex:IsModEnabled(modname) and modinfo.all_clients_require_mod then
-        local workshop_prefix = "workshop-"
-        if string.sub( modname, 0, string.len(workshop_prefix) ) ~= workshop_prefix then
+        if not IsWorkshopMod(modname) then
             local warn_txt = STRINGS.UI.MODSSCREEN.MOD_WARNING
 			if IsRail() then
 				warn_txt = STRINGS.UI.MODSSCREEN.MOD_WARNING_RAIL

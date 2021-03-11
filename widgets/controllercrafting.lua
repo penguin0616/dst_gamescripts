@@ -74,6 +74,7 @@ end
 function ControllerCrafting:Close(fn)
     ControllerCrafting._base.Close(self, fn)
     self:GetTabs():ScaleTo(selected_scale, self:GetTabs().base_scale, .15)
+    self.recipe_held = false
     self:StopUpdating()
     --V2C: focus hacks because this is not a proper screen
     TheFrontEnd:LockFocus(false)
@@ -224,7 +225,15 @@ function ControllerCrafting:OnControl(control, down)
     	end
     end
 
-    if down or not self.open then
+    if not self.open then return end
+
+    if down then
+        if control == CONTROL_ACCEPT or control == CONTROL_ACTION then
+            if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+                self.recipe_held = true
+                self.last_recipe_click = nil
+            end
+        end
         return
     elseif control == CONTROL_ACCEPT or control == CONTROL_ACTION then
         if self.accept_down then
@@ -235,15 +244,21 @@ function ControllerCrafting:OnControl(control, down)
 				Profile:SetLastUsedSkinForItem(self.selected_recipe_by_tab_idx[self.tabidx].name, skin)
 				Profile:SetRecipeTimestamp(self.selected_recipe_by_tab_idx[self.tabidx].name, self.recipepopup.timestamp)
             end
-            if not DoRecipeClick(self.owner, self.selected_recipe_by_tab_idx[self.tabidx], skin) then
-                self.owner.HUD:CloseControllerCrafting()
+            self.last_recipe_click = GetTime()
+            if not self.recipe_held then
+                if not DoRecipeClick(self.owner, self.selected_recipe_by_tab_idx[self.tabidx], skin) then
+                    self.owner.HUD:CloseControllerCrafting()
+                end
+            else
+                self.control_held = TheInput:IsControlPressed(CONTROL_OPEN_CRAFTING)
             end
+            self.recipe_held = false
             if not self.control_held then
                 self.owner.HUD:CloseControllerCrafting()
             end
         end
         return true
-    elseif control == CONTROL_OPEN_CRAFTING and self.control_held and self.control_held_time > 1 then
+    elseif control == CONTROL_OPEN_CRAFTING and self.control_held and self.control_held_time > 1 and not self.recipe_held then
         self.owner.HUD:CloseControllerCrafting()
         return true
     end
@@ -252,6 +267,10 @@ end
 function ControllerCrafting:OnUpdate(dt)
     if not self.open or not self.owner.HUD.shown or TheFrontEnd:GetActiveScreen() ~= self.owner.HUD then
         return
+    end
+
+    if self.recipe_held then
+        DoRecipeClick(self.owner, self.selected_recipe_by_tab_idx[self.tabidx], self.recipepopup.skins_spinner and self.recipepopup.skins_spinner.GetItem() or nil)
     end
 
     if self.control_held then
@@ -264,21 +283,21 @@ function ControllerCrafting:OnUpdate(dt)
     else
         if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) then
             if self:SelectPrevRecipe() then
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             end
         elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) then
             if self:SelectNextRecipe() then
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             end
         elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) then
             local idx = self:GetTabs():GetPrevIdx()
             if self.tabidx ~= idx and self:OpenRecipeTab(idx) then
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_up")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_up")
             end
         elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) then
             local idx = self:GetTabs():GetNextIdx()
             if self.tabidx ~= idx and self:OpenRecipeTab(idx) then
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_down")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_down")
             end
         else
             self.repeat_time = 0

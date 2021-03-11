@@ -1988,8 +1988,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "dodismountaction",
         tags = { "doing", "busy" },
 

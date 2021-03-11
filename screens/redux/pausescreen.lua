@@ -10,6 +10,9 @@ local Widget = require "widgets/widget"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 local TEMPLATES = require "widgets/redux/templates"
 local OptionsScreen = require "screens/redux/optionsscreen"
+local UserCommandPickerScreen = require "screens/redux/usercommandpickerscreen"
+
+local UserCommands = require "usercommands"
 
 local PauseScreen = Class(Screen, function(self)
     Screen._ctor(self, "PauseScreen")
@@ -17,6 +20,8 @@ local PauseScreen = Class(Screen, function(self)
     TheInput:ClearCachedController()
 
     self.active = true
+	self.owner = ThePlayer
+
     SetPause(true,"pause")
 
     --darken everything behind the dialog
@@ -36,11 +41,6 @@ local PauseScreen = Class(Screen, function(self)
     self.proot:SetPosition(0,0,0)
     self.proot:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-    --throw up the background
-	local height = IsConsole() and 200 or 236	-- consoles are shorter since they don't have the '
-    self.bg = self.proot:AddChild(TEMPLATES.CurlyWindow(0, height, STRINGS.UI.PAUSEMENU.DST_TITLE, nil, nil, STRINGS.UI.PAUSEMENU.DST_SUBTITLE))
-    self.bg.body:SetVAlign(ANCHOR_TOP)
-    self.bg.body:SetSize(20)
     
     --create the menu itself
     local player = ThePlayer
@@ -50,7 +50,18 @@ local PauseScreen = Class(Screen, function(self)
 
 
     local buttons = {}
-    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.CONTINUE, cb=function() self:unpause() end })
+	table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.PLAYERSTATUSSCREEN, cb=function()
+		self:unpause()
+		self.owner.HUD:ShowPlayerStatusScreen(true)
+	end })
+
+	if #UserCommands.GetServerActions(self.owner) > 0 then
+		table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.SERVERACTIONS, cb=function()
+			self:Hide()
+			TheFrontEnd:PushScreen(UserCommandPickerScreen(self.owner, nil, function() self:Show() end))
+		end })
+	end
+
     table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.OPTIONS, cb=function() 
         TheFrontEnd:Fade(FADE_OUT, SCREEN_FADE_TIME, function()
             TheFrontEnd:PushScreen(OptionsScreen())
@@ -62,10 +73,9 @@ local PauseScreen = Class(Screen, function(self)
             self.last_focus = self.menu.items[2]
         end)
     end })
-    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.DISCONNECT, cb=function() self:doconfirmquit()	end})
+
     if IsRail() then
         table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("http://plat.tgp.qq.com/forum/index.html#/2000004?type=11") end })
-        
 	elseif IsNotConsole() then
 		if BRANCH == "staging" then
 		    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("https://forums.kleientertainment.com/klei-bug-tracker/dont-starve-together-return-of-them/") end })
@@ -74,8 +84,18 @@ local PauseScreen = Class(Screen, function(self)
 		end
 	end
 
+    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.DISCONNECT, cb=function() self:doconfirmquit()	end})
+    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.CLOSE, cb=function() self:unpause() end })
+
+    --throw up the background
+	local height = button_h * #buttons + 30	-- consoles are shorter since they don't have the '
+    self.bg = self.proot:AddChild(TEMPLATES.CurlyWindow(0, height, STRINGS.UI.PAUSEMENU.DST_TITLE, nil, nil, STRINGS.UI.PAUSEMENU.DST_SUBTITLE))
+    self.bg.body:SetVAlign(ANCHOR_TOP)
+    self.bg.body:SetSize(20)
+
+    --create the menu itself
     self.menu = self.proot:AddChild(Menu(buttons, -button_h, false, "carny_xlong", nil, 30))
-	local y_pos = IsConsole() and 50 or 68 -- consoles have fewer buttons and smaller dialog box so menu positioning needs adjusting
+	local y_pos = (button_h * (#buttons - 1) / 2)
     self.menu:SetPosition(0, y_pos, 0)
     for i,v in pairs(self.menu.items) do
         v:SetScale(.7)

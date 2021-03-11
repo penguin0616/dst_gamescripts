@@ -1,5 +1,7 @@
 local START_DRAG_TIME = 8 * FRAMES
 local BUTTON_REPEAT_COOLDOWN = .5
+local ACTION_REPEAT_COOLDOWN = 0.2
+local INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN = 0.2
 local BUFFERED_CASTAOE_TIME = .5
 local CONTROLLER_TARGETING_LOCK_TIME = 1.0
 local RUBBER_BAND_PING_TOLERANCE_IN_SECONDS = 0.7
@@ -114,6 +116,12 @@ local PlayerController = Class(function(self, inst)
 
     self.handler = nil
     self.actionbuttonoverride = nil
+
+    --self.actionholding = false
+    --self.actionholdtime = nil
+    --self.lastheldaction = nil
+    --self.actionrepeatfunction = nil
+    self.heldactioncooldown = 0
 
     if self.ismastersim then
         self.is_map_enabled = true
@@ -397,6 +405,11 @@ function PlayerController:CooldownRemoteController(dt)
     for k, v in pairs(self.remote_controls) do
         self.remote_controls[k] = dt ~= nil and math.max(v - dt, 0) or 0
     end
+    self:CooldownHeldAction(dt)
+end
+
+function PlayerController:CooldownHeldAction(dt)
+    self.heldactioncooldown = dt ~= nil and math.max(self.heldactioncooldown - dt, 0) or 0
 end
 
 function PlayerController:OnRemoteStopControl(control)
@@ -574,7 +587,7 @@ function PlayerController:GetCursorInventorySlotAndContainer()
     end
 end
 
-function PlayerController:DoControllerActionButton()
+function PlayerController:DoControllerActionButton()    
     if self.placer ~= nil and self.placer_recipe ~= nil then
         --do the placement
         if  self.placer.components.placer.can_build then
@@ -753,6 +766,8 @@ function PlayerController:OnRemoteControllerActionButtonDeploy(invobject, positi
 end
 
 function PlayerController:DoControllerAltActionButton()
+    self:ClearActionHold()
+
     if self.placer_recipe ~= nil then
         self:CancelPlacement()
         return
@@ -766,6 +781,8 @@ function PlayerController:DoControllerAltActionButton()
 		self:ControllerTargetLock(false)
 		return
     end
+
+    self.actionholdtime = GetTime()
 
     local lmb, act = self:GetGroundUseAction()
     local isspecial = nil
@@ -1018,6 +1035,14 @@ function PlayerController:DoControllerInspectItemFromInvTile(item)
 end
 
 function PlayerController:DoControllerUseItemOnSelfFromInvTile(item)
+    if item ~= nil then
+        self.actionholdtime = GetTime()
+        self.lastheldaction = nil
+        self.actionrepeatfunction = self.DoControllerUseItemOnSelfFromInvTile
+    else
+        item = self:GetCursorInventoryObject()
+        if item == nil then self.actionrepeatfunction = nil return end
+    end
     if not self.deploy_mode and
         item.replica.inventoryitem:IsDeployable(self.inst) and
         item.replica.inventoryitem:IsGrandOwner(self.inst) then
@@ -1028,6 +1053,14 @@ function PlayerController:DoControllerUseItemOnSelfFromInvTile(item)
 end
 
 function PlayerController:DoControllerUseItemOnSceneFromInvTile(item)
+    if item ~= nil then
+        self.actionholdtime = GetTime()
+        self.lastheldaction = nil
+        self.actionrepeatfunction = self.DoControllerUseItemOnSceneFromInvTile
+    else
+        item = self:GetCursorInventoryObject()
+        if item == nil then self.actionrepeatfunction = nil return end
+    end
     if item.replica.inventoryitem ~= nil and not item.replica.inventoryitem:IsGrandOwner(self.inst) then
         local slot, container = self:GetCursorInventorySlotAndContainer()
         if slot ~= nil and container ~= nil then
@@ -1786,6 +1819,45 @@ function PlayerController:UsingMouse()
     return not TheInput:ControllerAttached()
 end
 
+function PlayerController:ClearActionHold()
+    self.actionholding = false
+    self.actionholdtime = nil
+    self.lastheldaction = nil
+    self.lastheldactiontime = nil
+    self.actionrepeatfunction = nil
+    if not self.ismastersim then
+        SendRPCToServer(RPC.ClearActionHold)
+    end
+end
+
+local ACTIONHOLD_CONTROLS = {CONTROL_PRIMARY, CONTROL_SECONDARY, CONTROL_CONTROLLER_ALTACTION, CONTROL_INVENTORY_USEONSELF, CONTROL_INVENTORY_USEONSCENE}
+local function IsAnyActionHoldButtonHeld()
+    for i, v in ipairs(ACTIONHOLD_CONTROLS) do
+        if TheInput:IsControlPressed(v) then
+            return true
+        end
+    end
+    return false
+end
+
+function PlayerController:RepeatHeldAction()
+    if self.lastheldaction and self.lastheldaction:IsValid() and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+        self.lastheldactiontime = GetTime()
+        if self.heldactioncooldown == 0 then
+            self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
+            self:DoAction(self.lastheldaction)
+        end
+    elseif self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+        self.lastheldactiontime = GetTime()
+        if self.heldactioncooldown == 0 then
+            self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
+            self:actionrepeatfunction()
+        end
+    else
+        self:ClearActionHold()
+    end
+end
+
 function PlayerController:OnUpdate(dt)
     self.predictionsent = false
 
@@ -1804,7 +1876,11 @@ function PlayerController:OnUpdate(dt)
 			--]]
 			self.controller_targeting_lock_timer = nil
 		end
-	end
+    end
+    
+    if self.actionholding and not (self:IsEnabled() and IsAnyActionHoldButtonHeld()) then
+        self:ClearActionHold()
+    end
 
     if self.draggingonground and not (self:IsEnabled() and TheInput:IsControlPressed(CONTROL_PRIMARY)) then
         if self.locomotor ~= nil then
@@ -2072,6 +2148,12 @@ function PlayerController:OnUpdate(dt)
             end
         end
 
+        if not self.actionholding and self.actionholdtime and IsAnyActionHoldButtonHeld() then
+            if GetTime() - self.actionholdtime > START_DRAG_TIME then   
+                self.actionholding = true
+            end
+        end
+
         if not self.draggingonground and self.startdragtime ~= nil and TheInput:IsControlPressed(CONTROL_PRIMARY) then
             local now = GetTime()
             if now - self.startdragtime > START_DRAG_TIME then
@@ -2080,17 +2162,31 @@ function PlayerController:OnUpdate(dt)
             end
         end
 
-        if self.draggingonground and TheFrontEnd:GetFocusWidget() ~= self.inst.HUD then
-            self.draggingonground = false
-            self.startdragtime = nil
-            TheFrontEnd:LockFocus(false)
+        if TheFrontEnd:GetFocusWidget() ~= self.inst.HUD then
+            if self.draggingonground then
+                self.draggingonground = false
+                self.startdragtime = nil
 
-            if self:CanLocomote() then
-                self.locomotor:Stop()
+                TheFrontEnd:LockFocus(false)
+
+                if self:CanLocomote() then
+                    self.locomotor:Stop()
+                end
+            elseif self.actionholding then
+                self:ClearActionHold()
             end
         end
     elseif self.ismastersim and self.inst:HasTag("nopredict") and self.remote_vector.y >= 3 then
         self.remote_vector.y = 0
+    end
+
+    self:CooldownHeldAction(dt)
+    if self.actionholding then
+        if self.ismastersim then
+            self:RepeatHeldAction()
+        else
+            SendRPCToServer(RPC.RepeatHeldAction)
+        end
     end
 
     if self.controller_attack_override ~= nil and
@@ -2100,7 +2196,6 @@ function PlayerController:OnUpdate(dt)
     end
 
     self:DoPredictHopping(dt)
-
 
     --NOTE: isbusy is used further below as well
     local isbusy = self:IsBusy()
@@ -3095,6 +3190,14 @@ function PlayerController:OnLeftUp()
     end
 end
 
+local INVALIDHOLDACTIONS = {
+    [ACTIONS.WALKTO] = true,
+    [ACTIONS.ROW] = true,
+    [ACTIONS.ROW_FAIL] = true,
+    [ACTIONS.ROW] = true,
+    [ACTIONS.ROW_CONTROLLER] = true,
+}
+
 function PlayerController:DoAction(buffaction)
     --Check if the action is actually valid.
     --Cached LMB/RMB actions can become invalid.
@@ -3105,6 +3208,7 @@ function PlayerController:DoAction(buffaction)
         (buffaction.target ~= nil and not buffaction.target:IsValid()) or
         (buffaction.doer ~= nil and not buffaction.doer:IsValid()) or
         self:IsBusy() then
+        self.actionholdtime = nil
         return
     end
 
@@ -3136,6 +3240,12 @@ function PlayerController:DoAction(buffaction)
     self.attack_buffer = nil
 
     self:DoActionAutoEquip(buffaction)
+
+    if not buffaction.action.instant and not INVALIDHOLDACTIONS[buffaction.action] and buffaction:IsValid() then
+        self.lastheldaction = buffaction
+    else
+        self.actionholdtime = nil
+    end
 
     if self.ismastersim then
         self.locomotor:PushAction(buffaction, true)
@@ -3175,6 +3285,8 @@ function PlayerController:OnLeftClick(down)
         return
     end
 
+    self:ClearActionHold()
+
     self.startdragtime = nil
 
     if not self:IsEnabled() then
@@ -3198,6 +3310,8 @@ function PlayerController:OnLeftClick(down)
 
         return
     end
+
+    self.actionholdtime = GetTime()
 
     local act = nil
     if self:IsAOETargeting() then
@@ -3337,6 +3451,8 @@ function PlayerController:OnRightClick(down)
         return
     end
 
+    self:ClearActionHold()
+
     self.startdragtime = nil
 
     if self.placer_recipe ~= nil then
@@ -3348,6 +3464,8 @@ function PlayerController:OnRightClick(down)
     elseif not self:IsEnabled() or TheInput:GetHUDEntityUnderMouse() ~= nil then
         return
     end
+
+    self.actionholdtime = GetTime()
 
     local act = self:GetRightMouseAction()
     if act == nil then

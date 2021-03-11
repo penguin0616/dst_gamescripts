@@ -7,6 +7,8 @@ local EventServerFiles = {}
 
 StopUpdatingComponents = {}
 
+local ClientSideInventoryImageFlags = {}
+
 local function EntityWatchWorldState(self, var, fn)
     if self.worldstatewatching == nil then
         self.worldstatewatching = {}
@@ -306,9 +308,14 @@ function EntityScript:IsInLimbo()
     return self.inlimbo
 end
 
+function EntityScript:ForceOutOfLimbo(state)
+    self.forcedoutoflimbo = state or nil
+    self.entity:SetInLimbo(self:IsInLimbo() and not self.forcedoutoflimbo or false)
+end
+
 function EntityScript:RemoveFromScene()
     self.entity:AddTag("INLIMBO")
-    self.entity:SetInLimbo(true)
+    self.entity:SetInLimbo(not self.forcedoutoflimbo)
     self.inlimbo = true
     self.entity:Hide()
     
@@ -1646,5 +1653,34 @@ function EntityScript:LongUpdate(dt)
         if v.LongUpdate ~= nil then
             v:LongUpdate(dt)
         end
+    end
+end
+
+function EntityScript:SetClientSideInventoryImageOverride(flagname, srcinventoryimage, destinventoryimage, destatlas)
+    --destatlas is optional
+    self.inventoryimageremapping = self.inventoryimageremapping or {}
+    self.inventoryimageremapping[flagname] = self.inventoryimageremapping[flagname] or {}
+    self.inventoryimageremapping[flagname][hash(srcinventoryimage)] = {image = destinventoryimage, atlas = destatlas}
+end
+
+function EntityScript:HasClientSideInventoryImageOverrides()
+    return self.inventoryimageremapping ~= nil
+end
+
+--do not call this if you have no client side inventory image overrides
+function EntityScript:GetClientSideInventoryImageOverride(imagenamehash)
+    for flag, remaps in pairs(self.inventoryimageremapping) do
+        if ClientSideInventoryImageFlags[flag] and remaps[imagenamehash] then
+            return remaps[imagenamehash]
+        end
+    end
+end
+
+function EntityScript:SetClientSideInventoryImageOverrideFlag(name, value)
+    value = (not value) ~= true or nil
+    local updated = ClientSideInventoryImageFlags[name] ~= value
+    ClientSideInventoryImageFlags[name] = value
+    if updated and ThePlayer then
+        ThePlayer:PushEvent("clientsideinventoryflagschanged")
     end
 end

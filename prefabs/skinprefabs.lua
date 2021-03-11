@@ -4304,6 +4304,18 @@ table.insert(prefs, CreatePrefabSkin("walter_ventriloquist",
 	release_group = 106,
 }))
 
+table.insert(prefs, CreatePrefabSkin("walter_victorian",
+{
+	base_prefab = "walter",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "VICTORIAN", "BASE", "WALTER", },
+	bigportrait = { build = "bigportraits/walter_victorian.xml", symbol = "walter_victorian_oval.tex"},
+	skins = { ghost_skin = "ghost_walter", normal_skin = "walter_victorian", },
+	release_group = 115,
+}))
+
 table.insert(prefs, CreatePrefabSkin("walterhat_detective",
 {
 	base_prefab = "walterhat",
@@ -4357,6 +4369,17 @@ table.insert(prefs, CreatePrefabSkin("walterhat_ventriloquist",
 	init_fn = function(inst) walterhat_init_fn(inst, "walterhat_ventriloquist") end,
 	skin_tags = { "HALLOWED", "WALTERHAT", "CRAFTABLE", },
 	release_group = 106,
+}))
+
+table.insert(prefs, CreatePrefabSkin("walterhat_victorian",
+{
+	base_prefab = "walterhat",
+	type = "item",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) walterhat_init_fn(inst, "walterhat_victorian") end,
+	skin_tags = { "VICTORIAN", "WALTERHAT", "CRAFTABLE", },
+	release_group = 115,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wardrobe_armoire",
@@ -7144,6 +7167,50 @@ table.insert(prefs, CreatePrefabSkin("woodie_yule",
 	release_group = 108,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wormhole_claw",
+{
+	base_prefab = "wormhole",
+	type = "item",
+	rarity = "Spiffy",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wormhole_init_fn(inst, "wormhole_claw") end,
+	skin_tags = { "WORMHOLE", "CRAFTABLE", },
+	release_group = 115,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wormhole_lureplant",
+{
+	base_prefab = "wormhole",
+	type = "item",
+	rarity = "Spiffy",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wormhole_init_fn(inst, "wormhole_lureplant") end,
+	skin_tags = { "WORMHOLE", "CRAFTABLE", },
+	release_group = 115,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wormhole_spider",
+{
+	base_prefab = "wormhole",
+	type = "item",
+	rarity = "Spiffy",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wormhole_init_fn(inst, "wormhole_spider") end,
+	skin_tags = { "WORMHOLE", "CRAFTABLE", },
+	release_group = 115,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wormhole_worm",
+{
+	base_prefab = "wormhole",
+	type = "item",
+	rarity = "Spiffy",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wormhole_init_fn(inst, "wormhole_worm") end,
+	skin_tags = { "WORMHOLE", "CRAFTABLE", },
+	release_group = 115,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wormwood_cactus",
 {
 	base_prefab = "wormwood",
@@ -7222,6 +7289,19 @@ table.insert(prefs, CreatePrefabSkin("wormwood_shadow",
 	skins = { ghost_skin = "ghost_wormwood_shadow", normal_skin = "wormwood_shadow", stage_2 = "wormwood_shadow_stage2", stage_3 = "wormwood_shadow_stage3", stage_4 = "wormwood_shadow_stage4", },
 	has_alternate_for_body = { "wormwood_shadow", "wormwood_shadow_stage2", "wormwood_shadow_stage3", "wormwood_shadow_stage4", },
 	release_group = 100,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wormwood_victorian",
+{
+	base_prefab = "wormwood",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "BASE", "WORMWOOD", "VICTORIAN", },
+	bigportrait = { build = "bigportraits/wormwood_victorian.xml", symbol = "wormwood_victorian_oval.tex"},
+	skins = { ghost_skin = "ghost_wormwood_victorian", normal_skin = "wormwood_victorian", stage_2 = "wormwood_victorian_stage2", stage_3 = "wormwood_victorian_stage3", stage_4 = "wormwood_victorian_stage4", },
+	has_alternate_for_body = { "wormwood_victorian", "wormwood_victorian_stage4", },
+	release_group = 115,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wortox_dragon",
@@ -7316,6 +7396,19 @@ table.insert(prefs, CreatePrefabSkin("wortox_survivor",
 	release_group = 62,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wortox_victorian",
+{
+	base_prefab = "wortox",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "BASE", "WORTOX", "VICTORIAN", },
+	bigportrait = { build = "bigportraits/wortox_victorian.xml", symbol = "wortox_victorian_oval.tex"},
+	skins = { ghost_skin = "ghost_wortox_victorian", normal_skin = "wortox_victorian", },
+	has_alternate_for_body = { "wortox_victorian", },
+	release_group = 115,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wurt_cave",
 {
 	base_prefab = "wurt",
@@ -7400,6 +7493,20 @@ table.insert(prefs, CreatePrefabSkin("wurt_squid",
 	has_alternate_for_body = { "wurt_squid", },
 	feet_cuff_size = { wurt_squid = -1, wurt_squid_powerup = -1, },
 	release_group = 106,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wurt_victorian",
+{
+	base_prefab = "wurt",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "VICTORIAN", "BASE", "WURT", },
+	bigportrait = { build = "bigportraits/wurt_victorian.xml", symbol = "wurt_victorian_oval.tex"},
+	skins = { ghost_skin = "ghost_wurt_victorian", normal_skin = "wurt_victorian", powerup = "wurt_victorian_powerup", },
+	has_alternate_for_body = { "wurt_victorian", },
+	feet_cuff_size = { wurt_victorian_powerup = -1, wurt_victorian = -1, },
+	release_group = 115,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wx78_combatant",

@@ -26,7 +26,7 @@ local ItemTile = Class(Widget, function(self, invitem)
     end
 
     if self.item:HasTag("show_spoiled") or self:HasSpoilage() then
-        self.bg = self:AddChild(Image(HUD_ATLAS, "inv_slot_spoiled.tex"))
+            self.bg = self:AddChild(Image(HUD_ATLAS, "inv_slot_spoiled.tex"))
         self.bg:SetClickable(false)
     end
 
@@ -88,12 +88,26 @@ local ItemTile = Class(Widget, function(self, invitem)
             end
             self.image:SetTexture(invitem.replica.inventoryitem:GetAtlas(), invitem.replica.inventoryitem:GetImage())
         end, invitem)
+    if invitem:HasClientSideInventoryImageOverrides() then
+        self.inst:ListenForEvent("clientsideinventoryflagschanged",
+            function(player)
+                if invitem and invitem.replica.inventoryitem then
+                    self.image:SetTexture(invitem.replica.inventoryitem:GetAtlas(), invitem.replica.inventoryitem:GetImage())
+                end
+            end, ThePlayer)
+    end
 	self.inst:ListenForEvent("inventoryitem_updatetooltip",
 		function(invitem)
 			if self.focus and not TheInput:ControllerAttached() then
 				self:UpdateTooltip()
 			end
 		end, invitem)
+        self.inst:ListenForEvent("inventoryitem_updatespecifictooltip",
+            function(player, data)
+                if self.focus and not TheInput:ControllerAttached() and invitem.prefab == data.prefab then
+                    self:UpdateTooltip()
+                end
+            end, ThePlayer)
     self.inst:ListenForEvent("stacksizechange",
         function(invitem, data)
             if invitem.replica.stackable ~= nil then

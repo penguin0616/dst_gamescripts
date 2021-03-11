@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/antlion_build.zip"),
@@ -49,6 +51,8 @@ SetSharedLootTable('antlion',
     {'rocks',               0.50},
     {'rocks',               0.50},
 })
+
+local ANTLION_RAGE_TIMER = "rage"
 
 --------------------------------------------------------------------------
 
@@ -127,12 +131,12 @@ local function OnGivenItem(inst, giver, item)
     local rage_calming = item.components.tradable.rocktribute * TUNING.ANTLION_TRIBUTE_TO_RAGE_TIME
     inst.maxragetime = math.min(inst.maxragetime + rage_calming, TUNING.ANTLION_RAGE_TIME_MAX)
 
-    local timeleft = inst.components.timer:GetTimeLeft("rage")
+    local timeleft = inst.components.worldsettingstimer:GetTimeLeft(ANTLION_RAGE_TIMER)
     if timeleft ~= nil then
         timeleft = math.min(timeleft + rage_calming, TUNING.ANTLION_RAGE_TIME_MAX)
-        inst.components.timer:SetTimeLeft("rage", timeleft)
+        inst.components.worldsettingstimer:SetTimeLeft(ANTLION_RAGE_TIMER, timeleft)
     else
-        inst.components.timer:StartTimer("rage", inst.maxragetime)
+        inst.components.worldsettingstimer:StartTimer(ANTLION_RAGE_TIMER, inst.maxragetime)
     end
     inst.components.sinkholespawner:StopSinkholes()
 
@@ -149,11 +153,11 @@ local function OnRefuseItem(inst, giver, item)
 end
 
 local function ontimerdone(inst, data)
-    if data.name == "rage" then
+    if data.name == ANTLION_RAGE_TIMER then
         inst.components.sinkholespawner:StartSinkholes()
 
         inst.maxragetime = math.max(inst.maxragetime * TUNING.ANTLION_RAGE_TIME_FAILURE_SCALE, TUNING.ANTLION_RAGE_TIME_MIN)
-        inst.components.timer:StartTimer("rage", inst.maxragetime)
+        inst.components.worldsettingstimer:StartTimer(ANTLION_RAGE_TIMER, inst.maxragetime)
     end
 end
 
@@ -168,7 +172,7 @@ local function GiveReward(inst)
 end
 
 local function GetRageLevel(inst)
-    local ragetimepercent = (inst.components.timer:GetTimeLeft("rage") or 0) / TUNING.ANTLION_RAGE_TIME_MAX
+    local ragetimepercent = (inst.components.worldsettingstimer:GetTimeLeft(ANTLION_RAGE_TIMER) or 0) / TUNING.ANTLION_RAGE_TIME_MAX
     return (ragetimepercent <= TUNING.ANTLION_RAGE_TIME_UNHAPPY_PERCENT and 3) or
            (ragetimepercent <= TUNING.ANTLION_RAGE_TIME_HAPPY_PERCENT and 2) or
            1
@@ -298,7 +302,7 @@ local function StartCombat(inst, target, trigger)
         inst:AddTag("hostile")
 
         inst.components.trader:Disable()
-        inst.components.timer:PauseTimer("rage")
+        inst.components.worldsettingstimer:PauseTimer(ANTLION_RAGE_TIMER)
         inst.components.sinkholespawner:StopSinkholes()
 
         inst:ListenForEvent("attacked", OnAttacked)
@@ -335,12 +339,12 @@ local function StopCombat(inst)
 
         inst:RemoveEventCallback("attacked", OnAttacked)
 
-        inst.components.timer:StopTimer("wall_cd")
+        inst.components.worldsettingstimer:StopTimer("wall_cd")
 
-        local prevragetime = inst.components.timer:GetTimeLeft("rage")
+        local prevragetime = inst.components.worldsettingstimer:GetTimeLeft(ANTLION_RAGE_TIMER)
         inst.maxragetime = TUNING.ANTLION_RAGE_TIME_MIN
-        inst.components.timer:StopTimer("rage")
-        inst.components.timer:StartTimer("rage", math.min(prevragetime, inst.maxragetime))
+        inst.components.worldsettingstimer:StopTimer(ANTLION_RAGE_TIMER)
+        inst.components.worldsettingstimer:StartTimer(ANTLION_RAGE_TIMER, math.min(prevragetime, inst.maxragetime))
 
         inst.components.trader:Enable()
 
@@ -368,10 +372,13 @@ local function OnPreLoad(inst, data)--, newents)
     if data.health ~= nil then
         StartCombat(inst)
     end
+
+    WorldSettings_Timer_PreLoad(inst, data, ANTLION_RAGE_TIMER, TUNING.ANTLION_RAGE_TIME_MAX)
+    WorldSettings_Timer_PreLoad_Fix(inst, data, ANTLION_RAGE_TIMER, 1)
 end
 
 local function OnLoad(inst)
-    inst.components.timer:StopTimer("wall_cd")
+    inst.components.worldsettingstimer:StopTimer("wall_cd")
 end
 
 --------------------------------------------------------------------------
@@ -437,9 +444,11 @@ local function fn()
     inst.components.trader.onaccept = OnGivenItem
     inst.components.trader.onrefuse = OnRefuseItem
 
-    inst:AddComponent("timer")
+    inst:AddComponent("worldsettingstimer")
     inst:ListenForEvent("timerdone", ontimerdone)
-    inst.components.timer:StartTimer("rage", TUNING.ANTLION_RAGE_TIME_INITIAL)
+    inst.components.worldsettingstimer:AddTimer("wall_cd", TUNING.ANTLION_WALL_CD, true)
+    inst.components.worldsettingstimer:AddTimer(ANTLION_RAGE_TIMER, TUNING.ANTLION_RAGE_TIME_MAX, TUNING.ANTLION_TRIBUTE)
+    inst.components.worldsettingstimer:StartTimer(ANTLION_RAGE_TIMER, TUNING.ANTLION_RAGE_TIME_INITIAL)
 
     inst:AddComponent("sinkholespawner")
     inst:AddComponent("lootdropper")

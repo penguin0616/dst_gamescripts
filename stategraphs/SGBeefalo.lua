@@ -852,8 +852,7 @@ local states=
         },
     },
 
-    State
-    {
+    State{
         name = "despawn",
         tags = {"busy", "notinterupt"},
         

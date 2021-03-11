@@ -2,7 +2,7 @@ require "util"
 local TechTree = require("techtree")
 
 PI = 3.14159
-PI2 = 3.14159
+PI2 = PI*2
 DEGREES = PI/180
 RADIANS = 180/PI
 FRAMES = 1/30
@@ -668,9 +668,6 @@ SPECIAL_EVENTS =
 }
 WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
 
---WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.YOTB
-
 FESTIVAL_EVENTS =
 {
     NONE = "none",
@@ -805,8 +802,7 @@ function IsSpecialEventActive(event)
 end
 
 function IsAnySpecialEventActive()
-    --return WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.NONE
-    return WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.YOTB
+    return WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.NONE
 end
 
 ---------------------------------------------------------
@@ -1231,6 +1227,13 @@ SEASONS =
 	SPRING = "spring",
 	SUMMER = "summer",
 	CAVES = "caves",
+}
+
+LEVELCATEGORY = {
+    LEVEL = "LEVEL",
+    SETTINGS = "SETTINGS",
+    COMBINED = "COMBINED",
+    WORLDGEN = "WORLDGEN",
 }
 
 RENDER_QUALITY =
@@ -1947,6 +1950,7 @@ LEVELTYPE = {
     TEST = "TEST",
     UNKNOWN = "UNKNOWN",
     CUSTOM = "CUSTOM",
+    CUSTOMPRESET = "CUSTOMPRESET",
 }
 
 if BRANCH == "dev" then
@@ -1968,6 +1972,14 @@ EVENTSERVER_LEVEL_LOCATIONS =
 {
 	[LEVELTYPE.LAVAARENA] = { "lavaarena" },
 	[LEVELTYPE.QUAGMIRE] = { "quagmire" },
+}
+
+DEFAULT_LOCATION = "forest"
+
+SERVER_LEVEL_SHARDS =
+{
+    "Master",
+    "Caves",
 }
 
 SERVER_LEVEL_CONFIGS =
@@ -2124,6 +2136,13 @@ TEMP_ITEM_ID = "0"
 IAP_TYPE_REAL = 0
 IAP_TYPE_VIRTUAL = 1
 
+--matches enum ETextFilteringContext
+TEXT_FILTER_CTX_UNKNOWN = 0
+TEXT_FILTER_CTX_GAME = 1
+TEXT_FILTER_CTX_CHAT = 2
+TEXT_FILTER_CTX_NAME = 3
+
+
 CHARACTER_BUTTON_OFFSET =
 {
     wilson = -51,
@@ -2156,4 +2175,16 @@ YOTB_COSTUMES =
     ICE         = 64,
     FESTIVE     = 128,
     BEAST       = 256,
+}
+
+SKIN_TYPES_THAT_RECEIVE_CLOTHING =
+{
+    "normal_skin",
+	"wimpy_skin",
+    "mighty_skin",
+	"stage_2",
+    "stage_3",
+    "stage_4",
+	"powerup",
+	"NO_BASE",
 }

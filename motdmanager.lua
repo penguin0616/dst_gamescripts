@@ -143,7 +143,7 @@ function MotdManager:QueryForMotdInfo(remaining_retries)
 						box = motd_info[box_id][1]
 					end
 					if box.image ~= nil and type(box.image) == "string" and string.match(box.image, ".tex") then
-						box.requires_download = self.motd_info == nil or self.motd_info[box_id][1].download_failed or (self.motd_info[box_id][1].time ~= box.time) or (self.motd_info[box_id][1].image ~= box.image)
+						box.requires_download = self.motd_info == nil or self.motd_info[box_id] == nil or self.motd_info[box_id][1].download_failed or (self.motd_info[box_id][1].time ~= box.time) or (self.motd_info[box_id][1].image ~= box.image)
 					else
 						box.image = ""
 					end

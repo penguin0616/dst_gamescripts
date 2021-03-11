@@ -25,14 +25,12 @@ local _scheduledtasks = {}
 --[[ Private member functions ]]
 --------------------------------------------------------------------------
 
-local GNARWAIL_TEST_RADIUS = 100
-local GNARWAIL_SPAWN_CHANCE = 0.075
 local GNARWAIL_SPAWN_RADIUS = 10
 local GNARWAIL_TIMING = {8, 10} -- min 8, max 10
 local GNARWAIL_TAGS = { "gnarwail" }
 local function testforgnarwail(comp, spawnpoint)
-    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, GNARWAIL_TEST_RADIUS, GNARWAIL_TAGS)
-    if #ents < 2 and math.random() < GNARWAIL_SPAWN_CHANCE then
+    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, TUNING.GNARWAIL_TEST_RADIUS, GNARWAIL_TAGS)
+    if #ents < 2 and math.random() < TUNING.GNARWAIL_SPAWN_CHANCE then
         local offset = FindSwimmableOffset(spawnpoint, math.random()*2*PI, GNARWAIL_SPAWN_RADIUS)
         if offset then
             comp.inst:DoTaskInTime(GetRandomMinMax(GNARWAIL_TIMING[1], GNARWAIL_TIMING[2]), function()
@@ -50,13 +48,11 @@ local function testforgnarwail(comp, spawnpoint)
     end
 end
 
-local SHARK_TEST_RADIUS = 100
-local SHARK_SPAWN_CHANCE = 0.075
 local SHARK_SPAWN_RADIUS = 20
 local SHARK_TIMING = {8, 10} -- min 8, max 10
 local function testforshark(comp, spawnpoint)
-    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, SHARK_TEST_RADIUS, { "gnarwail" })
-    if #ents < 2 and math.random() < SHARK_SPAWN_CHANCE then
+    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, TUNING.SHARK_TEST_RADIUS, GNARWAIL_TAGS)
+    if #ents < 2 and math.random() < TUNING.SHARK_SPAWN_CHANCE then
         local offset = FindSwimmableOffset(spawnpoint, math.random()*2*PI, SHARK_SPAWN_RADIUS)
         if offset then
             comp.inst:DoTaskInTime(GetRandomMinMax(SHARK_TIMING[1], SHARK_TIMING[2]), function()
@@ -151,7 +147,7 @@ function self:ShouldSpawnANewSchoolForPlayer(player)
 	local pt = player:GetPosition()
 	local percent_ocean = TheWorld.Map:CalcPercentOceanTilesAtPoint(pt.x, pt.y, pt.z, 25)
 
-	if percent_ocean > 0.1 then
+	if percent_ocean > TUNING.SCHOOL_SPAWNER_FISH_OCEAN_PERCENT then
 		local num_school_spawn_blockers = #TheSim:FindEntities(pt.x, pt.y, pt.z, TUNING.SCHOOL_SPAWNER_FISH_CHECK_RADIUS, FISHSCHOOLSPAWNBLOCKER_TAGS)
 		if math.random() < 1 - num_school_spawn_blockers * TUNING.SCHOOL_SPAWNER_BLOCKER_MOD then
 			local num_fish = #TheSim:FindEntities(pt.x, pt.y, pt.z, TUNING.SCHOOL_SPAWNER_FISH_CHECK_RADIUS, FISHABLE_MUST_TAGS)

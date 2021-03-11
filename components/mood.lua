@@ -1,5 +1,5 @@
 local function OnDayComplete(self)
-    if self.daystomoodchange and self.daystomoodchange > 0 then
+    if self.worldsettingsenabled and self.daystomoodchange then
         self.daystomoodchange = self.daystomoodchange - 1
         self:CheckForMoodChange()
     end
@@ -11,12 +11,17 @@ local Mood = Class(function(self, inst)
     self.enabled = true
 
     self.moodtimeindays = {length = nil, wait = nil}
+    self.forcemood = false
     self.isinmood = false
     self.daystomoodchange = nil
     self.onentermood = nil
     self.onleavemood = nil
     self.moodseasons = {}
     self.firstseasonadded = false
+
+    self.worldsettingsmultiplier_inmood = 1
+    self.worldsettingsmultiplier_outmood = 1
+    self.worldsettingsenabled = true
 
     self:WatchWorldState("cycles", OnDayComplete)
 end)
@@ -30,10 +35,16 @@ function Mood:Enable(enabled)
     self:SetIsInMood(false, false)
 end
 
-function Mood:SetMoodTimeInDays(length, wait)
+function Mood:SetMoodTimeInDays(length, wait, forcemood, worldsettingsmultiplier_inmood, worldsettingsmultiplier_outmood, worldsettingsenabled)
     self.moodtimeindays.length = length
     self.moodtimeindays.wait = wait
     self.daystomoodchange = wait
+    self.forcemood = forcemood
+
+    self.worldsettingsmultiplier_inmood = worldsettingsmultiplier_inmood or 1
+    self.worldsettingsmultiplier_outmood = worldsettingsmultiplier_outmood or 1
+    self.worldsettingsenabled = worldsettingsenabled ~= false
+
     self.isinmood = false
 end
 
@@ -72,8 +83,8 @@ function Mood:SetMoodSeason(activeseason)
 end
 
 function Mood:CheckForMoodChange()
-    if self.daystomoodchange == 0 then
-        self:SetIsInMood(not self:IsInMood() )
+    if self.daystomoodchange <= 0 then
+        self:SetIsInMood(not self:IsInMood() or self.forcemood)
     end
 end
 
@@ -101,7 +112,7 @@ local function GetSeasonLength()
 end
 
 function Mood:SetIsInMood(inmood, entireseason)
-    if inmood and (not self.enabled or self.moodtimeindays.length == 0) then
+    if inmood and not (self.enabled and self.worldsettingsenabled) then
         return
     end
 
@@ -136,7 +147,8 @@ function Mood:IsInMood()
 end
 
 function Mood:OnSave()
-    return {inmood = self.isinmood, daysleft = self.daystomoodchange, moodseasons = self.moodseasons }
+    local multiplier = self.isinmood and self.worldsettingsmultiplier_inmood or self.worldsettingsmultiplier_outmood
+    return {inmood = self.isinmood, daysleft = self.daystomoodchange ~= 0 and self.daystomoodchange / multiplier or 0, moodseasons = self.moodseasons, version = 2}
 end
 
 function Mood:OnLoad(data)
@@ -153,7 +165,13 @@ function Mood:OnLoad(data)
 	    end
 	end
     self:SetIsInMood(data.inmood, active)
-    self.daystomoodchange = data.daysleft
+    if not data.version then
+        local max = self.isinmood and self.worldsettingsmultiplier_inmood or self.worldsettingsmultiplier_outmood
+        self.daystomoodchange = math.min(data.daysleft, max)
+    elseif data.version == 2 then
+        local multiplier = self.isinmood and self.worldsettingsmultiplier_inmood or self.worldsettingsmultiplier_outmood
+        self.daystomoodchange = RoundBiasedUp(data.daysleft * multiplier)
+    end
 end
 
 return Mood

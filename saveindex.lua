@@ -81,8 +81,8 @@ local function SanityCheckWorldGenOverride(wgo)
     end
 
     local optionlookup = {}
-    local Customise = require("map/customise")
-    for i,option in ipairs(Customise.GetOptions(nil, true)) do
+    local Customize = require("map/customize")
+    for i,option in ipairs(Customize.GetOptions(nil, true)) do
         optionlookup[option.name] = {}
         for i,value in ipairs(option.options) do
             table.insert(optionlookup[option.name], value.data)

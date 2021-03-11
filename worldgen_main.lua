@@ -323,28 +323,20 @@ local function AddSetPeices(level)
         AddSingleSetPeice(level, "map/protected_resources")
     end
 
-	local multiply = {
-		["rare"] = 0.5,
-		["default"] = 1,
-		["often"] = 1.5,
-		["mostly"] = 2.2,
-		["always"] = 3,		
-	}
-
 	if touchstone_override ~= "default" and level.set_pieces ~= nil and 
 								level.set_pieces["ResurrectionStone"] ~= nil then
 
 		if touchstone_override == "never" then
 			level.set_pieces["ResurrectionStone"] = nil
 		else
-			level.set_pieces["ResurrectionStone"].count = math.ceil(level.set_pieces["ResurrectionStone"].count*multiply[touchstone_override])
+			level.set_pieces["ResurrectionStone"].count = math.ceil(level.set_pieces["ResurrectionStone"].count*forest_map.MULTIPLY[touchstone_override])
 		end
 	end
 
 	if boons_override ~= "never" then
 
 		-- Quick hack to get the boons in
-		for idx=1, math.random(math.floor(3*multiply[boons_override]), math.ceil(8*multiply[boons_override])) do
+		for idx=1, math.random(math.floor(3*forest_map.MULTIPLY[boons_override]), math.ceil(8*forest_map.MULTIPLY[boons_override])) do
 			AddSingleSetPeice(level, "map/boons")
 		end
 	end

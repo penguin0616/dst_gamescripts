@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/hound_base.zip"),
@@ -118,6 +120,10 @@ local function OnEntitySleep(inst)
     inst.SoundEmitter:KillSound("loop")
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.HOUNDMOUND_RELEASE_TIME, TUNING.HOUNDMOUND_REGEN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -158,6 +164,9 @@ local function fn()
     inst.components.childspawner:SetRegenPeriod(TUNING.HOUNDMOUND_REGEN_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.HOUNDMOUND_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.HOUNDMOUND_HOUNDS_MIN, TUNING.HOUNDMOUND_HOUNDS_MAX))
+    
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.HOUNDMOUND_REGEN_TIME, TUNING.HOUNDMOUND_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.HOUNDMOUND_RELEASE_TIME, TUNING.HOUNDMOUND_ENABLED)
 
     inst:WatchWorldState("issummer", OnIsSummer)
     OnIsSummer(inst, TheWorld.state.issummer)
@@ -178,6 +187,8 @@ local function fn()
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
     MakeSnowCovered(inst)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

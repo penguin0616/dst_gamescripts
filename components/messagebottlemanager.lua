@@ -72,7 +72,7 @@ local function getoffsetfromtreasurespawnpoint(point_ind, radius, attempts, doer
 		return nil
 	end
 
-	local x, y, z = pt.x + offset.x + 0, pt.y + offset.y or 0, pt.z + offset.z or 0
+	local x, y, z = pt.x + offset.x, pt.y + offset.y, pt.z + offset.z
 
 	if doer ~= nil and doer:GetDistanceSqToPoint(x, y, z) <= DOER_CHECK_RADIUS_SQ then
 		return nil

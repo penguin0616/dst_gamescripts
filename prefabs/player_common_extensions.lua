@@ -613,6 +613,36 @@ local function OnMakePlayerCorpse(inst, data)
     end
 end
 
+
+local function GivePlayerStartingItems(inst, items)
+    if items ~= nil and #items > 0 and inst.components.inventory ~= nil then
+        inst.components.inventory.ignoresound = true
+        if inst.components.inventory:GetNumSlots() > 0 then
+            for i, v in ipairs(items) do
+                inst.components.inventory:GiveItem(SpawnPrefab(v))
+            end
+        else
+            local items = {}
+            for i, v in ipairs(items) do
+                local item = SpawnPrefab(v)
+                if item.components.equippable ~= nil then
+                    inst.components.inventory:Equip(item)
+                    table.insert(items, item)
+                else
+                    item:Remove()
+                end
+            end
+            for i, v in ipairs(items) do
+                if v.components.inventoryitem == nil or not v.components.inventoryitem:IsHeld() then
+                    v:Remove()
+                end
+            end
+        end
+        inst.components.inventory.ignoresound = false
+    end
+end
+
+
 --------------------------------------------------------------------------
 
 local function DoSpookedSanity(inst)
@@ -690,4 +720,5 @@ return
     OnLearnPlantStage           = OnLearnPlantStage,
     OnLearnFertilizer           = OnLearnFertilizer,
     OnTakeOversizedPicture      = OnTakeOversizedPicture,
+	GivePlayerStartingItems		= GivePlayerStartingItems,
 }

@@ -337,14 +337,14 @@ local function getsomecommands(user, targetid, predicate)
     for hash,command in pairs(usercommands) do
         if command.aliasfor == nil and predicate(command) then
             local exectype = user and getexectype(command, user, targetid) or COMMAND_RESULT.ALLOW
-            table.insert(ret, {commandname=command.name, prettyname=prettyname(command), exectype=exectype})
+            table.insert(ret, {commandname=command.name, prettyname=prettyname(command), desc=ResolveCommandStringProperty(command, "desc", ""), exectype=exectype, menusort=command.menusort or 100})
         end
     end
     for mod, modcommands in pairs(modusercommands) do
         for hash, command in pairs(modcommands) do
             if command.aliasfor == nil and predicate(command) then
                 local exectype = user and getexectype(command, user, targetid) or COMMAND_RESULT.ALLOW
-                table.insert(ret, {commandname=command.name, prettyname=prettyname(command), exectype=exectype, mod=mod})
+                table.insert(ret, {commandname=command.name, prettyname=prettyname(command), desc=ResolveCommandStringProperty(command, "desc", ""), exectype=exectype, menusort=command.menusort or 100, mod=mod})
             end
         end
     end

@@ -67,7 +67,7 @@ function FindClosest:Visit()
         if self.targ == nil or not self.targ:IsValid() then
             self.status = FAILED
         else
-            local actual_safe_dist = type(self.safe_dist) == "function" and self.safe_dist(self.inst, self.targ) or self.safe_dist or 5
+            local actual_safe_dist = FunctionOrValue(self.safe_dist, self.inst, self.targ) or 5
             if self.inst:IsNear(self.targ, actual_safe_dist) then
                 self.status = SUCCESS
                 self.inst.components.locomotor:Stop()

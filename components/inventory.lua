@@ -1483,10 +1483,9 @@ function Inventory:CanAccessItem(item)
         return false
     end
     local owner = item.components.inventoryitem.owner
-    return owner == self.inst
-        or (owner ~= nil and
+    return owner == self.inst or (owner ~= nil and
             owner.components.container ~= nil and
-            owner.components.container.opener == self.inst)
+            owner.components.container:IsOpenedBy(self.inst))
 end
 
 function Inventory:UseItemFromInvTile(item, actioncode, mod_name)
@@ -1692,6 +1691,9 @@ function Inventory:MoveItemFromAllOfSlot(slot, container)
     if item ~= nil and container ~= nil then
         container = container.components.container
         if container ~= nil and container:IsOpenedBy(self.inst) then
+
+            container.currentuser = self.inst
+
             local targetslot =
                 self.inst.components.constructionbuilderuidata ~= nil and
                 self.inst.components.constructionbuilderuidata:GetContainer() == container.inst and
@@ -1708,6 +1710,8 @@ function Inventory:MoveItemFromAllOfSlot(slot, container)
                     self.ignoresound = false
                 end
             end
+
+            container.currentuser = nil
         end
     end
 end
@@ -1720,6 +1724,8 @@ function Inventory:MoveItemFromHalfOfSlot(slot, container)
             container:IsOpenedBy(self.inst) and
             item.components.stackable ~= nil and
             item.components.stackable:IsStack() then
+
+            container.currentuser = self.inst
 
             local targetslot =
                 self.inst.components.constructionbuilderuidata ~= nil and
@@ -1737,6 +1743,8 @@ function Inventory:MoveItemFromHalfOfSlot(slot, container)
                     self.ignoresound = false
                 end
             end
+
+            container.currentuser = nil
         end
     end
 end

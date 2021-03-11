@@ -451,7 +451,7 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli)
         if damage > 0 and not self.inst.components.health:IsInvincible() then
             --Bonus damage only applies after unabsorbed damage gets through your armor
             if attacker ~= nil and attacker.components.combat ~= nil and attacker.components.combat.bonusdamagefn ~= nil then
-                damage = damage + attacker.components.combat.bonusdamagefn(attacker, self.inst, damage, weapon) or 0
+                damage = (damage + attacker.components.combat.bonusdamagefn(attacker, self.inst, damage, weapon)) or 0
             end
 
             local cause = attacker == self.inst and weapon or attacker

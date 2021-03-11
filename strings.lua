@@ -346,6 +346,17 @@ STRINGS =
         default = "Unknown",
     },
 
+    ANTIADDICTION =
+    {
+        HOUR_1 = "You've played for one hour.",
+        HOUR_2 = "You've played for two hours.",
+        HOUR_3 = "You've played for three hours.",
+        HOUR_4 = "You've played for four hours.",
+        HOUR_5 = "You've played for five hours.",
+        HOUR_X = "You've played for several hours.",
+        EXIT_SOON = "Your time for today is up. Please exit."
+    },
+
     --ACTION MOUSEOVER TEXT
     ACTIONS =
     {
@@ -3586,6 +3597,7 @@ STRINGS =
         YOTB_BEEFALOSHRINE = "Make offerings to the steadfast beefalo.",
 
         BEEFALO_GROOMER_ITEM = "The original Beefdazzler.",
+        BEEFALO_GROOMER = "The original Beefdazzler.",
 
         TRIDENT = "Rock out in rocky waters.",
 
@@ -5967,7 +5979,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Return of Them Beta\nTroubled Waters",
-		MAINBANNER_BETA_TITLE = "Reap What You Sow\nBeta Build",
+		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -6912,6 +6924,7 @@ STRINGS.UI =
         QUITYES = "I said quit!",
         QUITNO = "Never mind...",
         OPTIONS = "Settings",
+		PLAYERSTATUSSCREEN = "View Players",
         CONTROLS = "Controls",
         SAVEANDQUIT = "Save and Quit",
         QUIT = "Quit",
@@ -6926,6 +6939,8 @@ STRINGS.UI =
         AFK = "Go AFK",
         SERVER_ADMIN = "Server Admin",
         ISSUE = "Report an Issue",
+        SERVERACTIONS = "Server Commands",
+        CLOSE = "Close",
     },
 
 	WORDPREDICTIONWIDET = 
@@ -7076,7 +7091,7 @@ STRINGS.UI =
         RESCUE =
         {
             PRETTYNAME = "Rescue Me!",
-            DESC = "If you ever find yourself stuck in the ocean, /rescue will put you back on land.",
+            DESC = "If you ever find yourself stuck in the void, this will put you back on land.",
         },
         KICK =
         {
@@ -7099,7 +7114,7 @@ STRINGS.UI =
         ROLL =
         {
             PRETTYNAME = "Dice Roll",
-            DESC = "Random dice roll. 'dice' is 1D100 by default (a single roll of 1-100).",
+            DESC = "Random dice roll from 1 to 100.",
         },
         RESET =
         {
@@ -7227,8 +7242,33 @@ STRINGS.UI =
 
     CUSTOMIZATIONSCREEN =
     {
+        SETTINGSPRESET = "Settings Presets",
+        WORLDGENPRESET = "Generation Presets",
+        COMBINEDPRESET = "World Presets",
+        CONFIRM_PRESET = "Apply Preset",
+        LOADPRESET = "Choose Preset",
+        LOADPRESET_SETINGS = "Choose Settings Preset",
+        LOADPRESET_WORLDGEN = "Choose Generation Preset",
+        LOADPRESET_COMBINED = "Choose World Preset",
+        NAMEPRESET = "Name:",
+        NEWPRESET = "Name Your Preset",
+        DESCRIBEPRESET = "Description:",
+        MISSINGPRESETNAME_TITLE = "Missing Preset Name",
+        MISSINGPRESETNAME_BODY = "You forgot to enter a name for your preset.",
+        PRESETEXISTS_TITLE = "Preset Already Exists",
+        PRESETEXISTS_BODY = "A preset with the name \"%s\" already exists, please choose a different name.",
+        DELETEPRESET = "Delete Preset",
+        DELETEPRESET_TITLE = "Delete Preset \"%s\"",
+        DELETEPRESET_BODY = "Are you sure?",
+        SAVECHANGESFAILED_TITLE = "Failed To Save Preset",
+        SAVECHANGESFAILED_BODY = "An error occured while saving your preset, please try again.",
+        DELETE = "Delete",
+        EDITPRESET = "Update Current Preset",
+        UNLINKPRESETSTR = "Seperate World Presets into Settings and Worldgen Presets",
+        LINKPRESETSTR = "Link Settings and Worldgen Presets into World Presets",
         APPLY = "Apply",
-        SAVEPRESET = "Save As Preset",
+        SAVEPRESET = "Save As New Preset",
+        SAVEPRESETCHANGES = "Save Changes",
         CANCEL = "Cancel",
         BACK = "Back",
         DEFAULT_PRESET_DESC = "Lots of pigs and spiders and a Tallbird nest.",
@@ -7240,9 +7280,15 @@ STRINGS.UI =
         CUSTOM = "%s (Custom)",
         BACKTITLE = "Discard Changes",
         BACKBODY = "Do you want to discard the changes you made to your world generation options?",
+        BACKBODY_SETTINGS = "Do you want to discard the changes you made to your world settings?",
+        BACKBODY_WORLDGEN = "Do you want to discard the changes you made to your world generation?",
+        BACKBODY_COMBINED = "Do you want to discard the changes you made to your world?",
         INVALIDSEASONCOMBO_TITLE = "All Seasons Disabled",
         INVALIDSEASONCOMBO_BODY = "You have set all seasons to \"None\".\nPlease turn on at least one season to continue.",
         OKAY = "Okay",
+
+        TAB_TITLE_WORLDSETTINGS = "World Settings",
+        TAB_TITLE_WORLDGENERATION = "World Generation",
 
         PRESETLEVELS =
         {
@@ -7340,11 +7386,11 @@ STRINGS.UI =
         UNKNOWN_PRESET_DESC = "This game was started with some settings we don't quite recognize.",
         REVERTCHANGES = "Revert Changes",
 
-        TASK_SET = "World Gen: Biomes",
-        START_LOCATION = "World Gen: Spawn Area",
-        WORLD_SIZE = "World Gen: Size",
-        BRANCHING = "World Gen: Branches",
-        LOOP = "World Gen: Loops",
+        TASK_SET = "Biomes",
+        START_LOCATION = "Spawn Area",
+        WORLD_SIZE = "World Size",
+        BRANCHING = "Branches",
+        LOOP = "Loops",
         AUTUMN = "Autumn",
         WINTER = "Winter",
         SPRING = "Spring",
@@ -7363,8 +7409,12 @@ STRINGS.UI =
         PREFABSWAPS_START = "Starting Resource Variety",
         DISEASE_DELAY = "Disease",
         PETRIFICATION = "Forest Petrification",
+		EXTRASTARTINGITEMS = "Extra Starting Resources",
+		SEASONALSTARTINGITEMS = "Seasonal Starting Items",
+		SPAWNPROTECTION = "Griefer Spawn Protection",
+		DROPEVERYTHINGONDESPAWN = "Drop Items on Disconnect",
 
-        REGROWTH = "World Regrowth",
+        REGROWTH = "Regrowth Multiplier",
         BERRYBUSH = "Berry Bushes",
         CARROT = "Carrots",
         MUSHROOM = "Mushrooms",
@@ -7381,14 +7431,15 @@ STRINGS.UI =
         ROCK_ICE = "Mini Glaciers",
         METEORSPAWNER = "Meteor Fields",
         METEORSHOWERS = "Meteor Frequency",
-        RABBITS = "Rabbits",
-        MOLES = "Moles",
+        RABBITS = "Rabbit Holes",
+        MOLES = "Mole Burrows",
         BUTTERFLY = "Butterflies",
         BIRDS = "Birds",
         BUZZARD = "Buzzards",
-        CATCOON = "Catcoons",
+        CATCOON = "Hollow Stump",
         PERD = "Gobblers",
-        PIGS = "Pigs",
+        PIGS = "Pig Houses",
+        MERM = "Leaky Shack",
         LIGHTNINGGOAT = "Volt Goats",
         BEEFALO = "Beefalos",
         BEEFALOHEAT = "Beefalo Mating Frequency",
@@ -7397,14 +7448,14 @@ STRINGS.UI =
         PENGUINS = "Pengulls",
         PONDS = "Ponds",
         CAVE_PONDS = "Ponds",
-        BEES = "Bees",
-        ANGRYBEES = "Killer Bees",
+        BEES = "Bee Hives",
+        ANGRYBEES = "Killer Bee Hives",
         TALLBIRDS = "Tallbirds",
-        SPIDERS = "Spiders",
-        CAVE_SPIDERS = "Spiders",
+        SPIDERS = "Spider Dens",
+        CAVE_SPIDERS = "Spilagmites",
         HOUNDS = "Hound Attacks",
         HOUNDMOUND = "Hound Mounds",
-        MERM = "Merms",
+        MERMS = "Merms",
         TENTACLES = "Tentacles",
         CHESS = "Clockworks",
         LUREPLANTS = "Lureplants",
@@ -7423,10 +7474,10 @@ STRINGS.UI =
         WORMATTACKS = "Cave Worm Attacks",
         WORMS = "Cave Worms",
         SLURPER = "Slurpers",
-        BUNNYMEN = "Bunnymen",
-        SLURTLES = "Slurtles and Snurtles",
-        ROCKY = "Rocky",
-        MONKEY = "Monkeys",
+        BUNNYMEN = "Rabbit Hutches",
+        SLURTLES = "Slurtle Mounds",
+        ROCKY = "Rock Lobsters",
+        MONKEY = "Splumonkey Pods",
         MUSHTREE = "Mushroom Trees",
         FERN = "Cave Ferns",
         FLOWER_CAVE = "Light Flowers",
@@ -7435,6 +7486,83 @@ STRINGS.UI =
         LICHEN = "Lichen",
         EARTHQUAKES = "Earthquakes",
         CAVELIGHT = "Sinkhole Lights",
+
+        PENGUINS_MOON = "Moonrock Pengulls",
+        BEES_SETTING = "Bees",
+        CATCOONS = "Catcoons",
+        FROGS = "Frogs",
+        GRASSGEKKOS = "Grass Gekko Morphing",
+        MOLES_SETTING = "Moles",
+        MOSQUITOS = "Mosquitos",
+        RABBITS_SETTING = "Rabbits",
+        WOBSTERS = "Wobsters",
+        PIGS_SETTING = "Pigs",
+        SLURTLES_SETTING = "Slurtles",
+        SNURTLES = "Snurtles",
+        BUNNYMEN_SETTING = "Bunnymen",
+        ROCKY_SETTING = "Rock Lobsters",
+        MONKEY_SETTING = "Splumonkeys",
+        LIGHTFLIERS = "Bulbous Lightbugs",
+        CRABKING = "Crabking",
+        MUTATED_HOUNDS = "Horror Hounds",
+        HOUND_MOUNDS = "Hounds",
+        BEEQUEEN = "Bee Queen",
+        MALBATROSS = "Malbatross",
+        FRUITFLY = "Lord of the Fruit Flies",
+        KLAUS = "Klaus",
+        SPIDERQUEEN = "Spider Queen",
+        TOADSTOOL = "Toadstool",
+        DUSTMOTHS = "Dust Moths",
+        BATS_SETTING = "Bats",
+        MOLEBATS = "Naked Mole Bats",
+        MUSHGNOME = "Mush Gnomes",
+        SHADOWCREATURES = "Sanity Monsters",
+        NIGHTMARECREATURES = "Ruins Nightmares",
+        SHARKS = "Sharks",
+        SPIDERS_SETTING = "Spiders",
+        SPIDER_WARRIORS = "Spider Warriors",
+        SPIDER_HIDER = "Cave Spiders",
+        SPIDER_SPITTER = "Spitter Spiders",
+        MOON_SPIDER = "Shattered Spiders",
+        SPIDER_DROPPER = "Dangling Depth Dwellers",
+        SQUID = "Skittersquids",
+        WASPS = "Killer Bees",
+        ATRIUMGATE = "Ancient Gateway",
+        BRIGHTMARECREATURES = "Enlightenment Monsters",
+        GNARWAIL = "Gnarwails",
+        FISHSCHOOLS = "Schools of Fish",
+        WALRUS_SETTING = "MacTusk",
+        COOKIECUTTERS = "Cookie Cutters",
+
+        EVERGREEN_REGROWTH = "Evergreens",
+        TWIGGYTREES_REGROWTH = "Twiggy Trees",
+        DECIDUOUSTREE_REGROWTH = "Birchnut Trees",
+        MUSHTREE_REGROWTH = "Mushroom Trees",
+        MOON_TREE_REGROWTH = "Lune Trees",
+        MUSHTREE_MOON_REGROWTH = "Lunar Mushtrees",
+        CARROTS_REGROWTH = "Carrots",
+        FLOWERS_REGROWTH = "Flowers",
+        FLOWER_CAVE_REGROWTH = "Light Flower",
+        LIGHTFLIER_FLOWER_REGROWTH = "Lightflier Flower",
+        SALTSTACK_REGROWTH = "Salt Formations",
+
+        MOON_TREE = "Lune Trees",
+        MOON_SAPLING = "Lunar Saplings",
+        MOON_BERRYBUSH = "Stone Fruit Bushes",
+        MOON_ROCK = "Lunar Rocks",
+        MOON_SPIDERS = "Shattered Spider Holes",
+        MOON_CARROT = "Carrats",
+        MOON_FRUITDRAGON = "Saladmander",
+        MOON_HOTSPRING = "Hot Springs",
+        MOON_FISSURE = "Celestial Fissures",
+        MOON_STARFISH = "Anenemies",
+        MOON_BULLKELP = "Beached Bull Kelp",
+
+        OCEAN_SEASTACK = "Sea Stacks",
+        OCEAN_SHOAL = "Shoals",
+        OCEAN_WATERPLANT = "Sea Weeds",
+        OCEAN_WOBSTERDEN = "Wobster Mounds",
+        OCEAN_BULLKELP = "Bull Kelp",
     },
     
     QUICKJOINSCREEN =
@@ -10322,6 +10450,7 @@ STRINGS.UI =
             UNKNOWN = "Some",
         },
 
+        CHOICEOCEAN = "Ocean",
         CHOICEMONSTERS = "Monsters",
         CHOICEANIMALS = "Animals",
         CHOICERESOURCES = "Resources",
@@ -10329,6 +10458,16 @@ STRINGS.UI =
         CHOICECOOKED = "Prepared Food",
         CHOICEAMTDAY = "Amount of Day",
         CHOICEMISC = "World",
+        CHOICEGLOBAL = "Global",
+        CHOICESURVIVORS = "Survivors",
+        CHOICEGIANTS = "Giants",
+
+        WORLDSETTINGS_RESOURCEREGROWTH = "Resource Regrowth",
+        WORLDSETTINGS_ANIMALS = "Creatures",
+        WORLDSETTINGS_HOSTILE_CREATURES = "Hostile Creatures",
+
+        WORLDGENERATION_ANIMALS = "Creatures and Spawners",
+        WORLDGENERATION_HOSTILE_CREATURES = "Hostile Creatures and Spawners",
 
         DAY = "Day",
         NIGHT = "Night",
@@ -10343,14 +10482,23 @@ STRINGS.UI =
         SLIDEDEFAULT = "Default",
 
         SLIDENEVER = "None",
-        SLIDERARE = "Less",
+        SLIDERARE = "Little",
+        SLIDEUNCOMMON = "Less",
         SLIDEOFTEN = "More",
-        SLIDEALWAYS = "Lots",
+        SLIDEMOSTLY = "Lots",
+        SLIDEALWAYS = "Tons",
 
         SLIDEVERYSLOW = "Very Slow",
         SLIDESLOW = "Slow",
         SLIDEFAST = "Fast",
         SLIDEVERYFAST = "Very Fast",
+
+		DETECT_NEVER = "Never",
+ 		DETECT_AUTO = "Auto Detect",
+        DETECT_ALWAYS = "Always",
+
+        ALWAYS = "Always",
+        EVERYTHING = "Everything",
 
         DEFAULT = "Autumn",
         SUMMER = "Summer",
@@ -10385,6 +10533,11 @@ STRINGS.UI =
         QTYMAX = "Maximum",
         QTYNORMAL = "Normal",
         QTYMEDIUM = "Medium",
+
+		DAY_5 = "After Day 5",
+		DAY_10 = "After Day 10",
+		DAY_15 = "After Day 15",
+		DAY_20 = "After Day 20",
 
         BRANCHINGMOST = "Most",
         BRANCHINGANY = "Default",
@@ -10422,6 +10575,9 @@ STRINGS.UI =
 
         YES ="Yes",
         NO = "No",
+
+        ENABLED = "Enabled",
+        DISABLED = "Disabled",
 
         DEFAULTSTART = "Default",
         PLUSSTART = "Plus",

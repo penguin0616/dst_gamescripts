@@ -2017,7 +2017,7 @@ function ServerListingScreen:MakeDetailPanel(right_col, details_height)
 
     self.viewgroup_button = MakeImgButton(self.details_tab, 28, -46, STRINGS.UI.SERVERLISTINGSCREEN.GROUP_NONE, function() self:ViewServerGroup() end, "icon", "clan")
     self.viewgroup_button:Select()
-
+	
     self.toggleservertext_button = MakeImgButton(self.details_tab, 28, -46, STRINGS.UI.SERVERLISTINGSCREEN.TOGGLE_SERVER_NAME, function() self:OnToggleServerName() end, "icon", "toggle_server_name")
 
 	local button_scale = 0.8
@@ -2216,7 +2216,7 @@ function ServerListingScreen:CurrentCenterFocus()
 end
 
 function ServerListingScreen:CurrentRightFocus()
-    if self.filters_scroll_list:IsVisible() then
+    if self.filters_scroll_list and self.filters_scroll_list:IsVisible() then
         return self.filters_scroll_list
     elseif self.server_details_additional:IsVisible() then
         return self.view_additional_details_btns

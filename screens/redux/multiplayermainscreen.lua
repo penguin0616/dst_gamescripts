@@ -54,12 +54,25 @@ function MakeBanner(self)
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
 
-        --local anim = baner_root:AddChild(UIAnim())
-        anim:GetAnimState():SetBuild("dst_menu_farming")
-        anim:GetAnimState():SetBank ("dst_menu_farming")
+        anim:GetAnimState():SetBuild("dst_menu_beefalo")
+        anim:GetAnimState():SetBank ("dst_menu_beefalo")
         anim:GetAnimState():PlayAnimation("loop", true)
         anim:SetScale(.667)
-        anim:SetPosition(0, 0)
+    
+
+        local anim_bg = baner_root:AddChild(UIAnim())
+        anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
+        anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
+        anim:SetScale(.667)
+        anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:MoveToBack()
+
+        --local anim = baner_root:AddChild(UIAnim())
+        --anim:GetAnimState():SetBuild("dst_menu_farming")
+        --anim:GetAnimState():SetBank ("dst_menu_farming")
+        --anim:GetAnimState():PlayAnimation("loop", true)
+        --anim:SetScale(.667)
+        --anim:SetPosition(0, 0)
 
   --       title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_ROT_BETA_TITLE
   --       anim:GetAnimState():SetBuild("dst_menu_wathgrithr")
@@ -175,49 +188,48 @@ function MakeBanner(self)
     ]]
 	else
 		-- default banner
+        local anim_bg = baner_root:AddChild(UIAnim())
+    	anim_bg:GetAnimState():SetBuild("dst_menu_v2_bg")
+    	anim_bg:GetAnimState():SetBank("dst_menu_v2_bg")
+        anim:SetScale(.667)
+    	anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:MoveToBack()
         
-  --       local anim_bg = baner_root:AddChild(UIAnim())
-		-- anim_bg:GetAnimState():SetBuild("dst_menu_v2_bg")
-		-- anim_bg:GetAnimState():SetBank("dst_menu_v2_bg")
-  --       anim:SetScale(.667)
-		-- anim_bg:GetAnimState():PlayAnimation("loop", true)
-  --       anim_bg:MoveToBack()
-        
-  --       anim:GetAnimState():SetBuild("dst_menu_v2")
-  --       anim:GetAnimState():SetBank("dst_menu_v2")
-  --       anim:GetAnimState():PlayAnimation("loop", true)
-  --       anim:SetScale(.667)
-  --       anim:SetPosition(0, 0)
+         anim:GetAnimState():SetBuild("dst_menu_v2")
+         anim:GetAnimState():SetBank("dst_menu_v2")
+         anim:GetAnimState():PlayAnimation("loop", true)
+         anim:SetScale(.667)
+         anim:SetPosition(0, 0)
 	    
-  --       local creatures = 
-  --       {
-  --           "creature_cookie",
-  --           "creature_squid",
-  --           "creature_gnarwail",
-  --           "creature_puffin",
-  --           "creature_hound",
-  --           "creature_malbatross",
-  --       }
-  --       for _,v in pairs(creatures) do
-  --           anim:GetAnimState():Hide(v)
-  --       end
-      
-  --       local c1 = creatures[math.random(1,#creatures)]
-  --       local c2 = creatures[math.random(1,#creatures)]
-  --       local c3 = creatures[math.random(1,#creatures)]
-      
-  --       --could end up with dupes picked, that's okay, then we'll have only 1 or 2 chosen
-  --       anim:GetAnimState():Show(c1)
-  --       anim:GetAnimState():Show(c2)
-  --       anim:GetAnimState():Show(c3)
+        local creatures = 
+        {
+            "creature_cookie",
+            "creature_squid",
+            "creature_gnarwail",
+            "creature_puffin",
+            "creature_hound",
+            "creature_malbatross",
+        }
+        for _,v in pairs(creatures) do
+            anim:GetAnimState():Hide(v)
+        end
+   
+        local c1 = creatures[math.random(1,#creatures)]
+        local c2 = creatures[math.random(1,#creatures)]
+        local c3 = creatures[math.random(1,#creatures)]
+   
+        --could end up with dupes picked, that's okay, then we'll have only 1 or 2 chosen
+        anim:GetAnimState():Show(c1)
+        anim:GetAnimState():Show(c2)
+        anim:GetAnimState():Show(c3)
 
-		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_TITLE_REAPWHATYOUSOW
+--[[		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_TITLE_REAPWHATYOUSOW
         anim:GetAnimState():SetBuild("dst_menu_farming")
         anim:GetAnimState():SetBank ("dst_menu_farming")
         anim:GetAnimState():PlayAnimation("loop", true)
         anim:SetScale(.667)
         anim:SetPosition(0, 0)
-
+]]
 
 
 --[[ 

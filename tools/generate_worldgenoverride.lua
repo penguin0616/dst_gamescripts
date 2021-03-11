@@ -1,7 +1,7 @@
 --TO RUN THIS FROM THE GAME TYPE THIS INTO THE CONSOLE
 --require 'tools/generate_worldgenoverride'
 
-local Customise = require 'map/customise'
+local Customize = require 'map/customize'
 local Levels = require 'map/levels'
 
 local function makedescstring(desc)
@@ -39,7 +39,7 @@ table.insert(out, string.format('\tpreset = "%s", %s', Levels.GetLevelList(LEVEL
 
 table.insert(out, '\toverrides = {')
 local lastgroup = nil
-for i,item in ipairs(Customise.GetOptions(nil, true)) do
+for i,item in ipairs(Customize.GetOptions(nil, true)) do
     if lastgroup ~= item.group then
         if lastgroup ~= nil then
             table.insert(out, '')

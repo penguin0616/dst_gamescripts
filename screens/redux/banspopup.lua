@@ -12,7 +12,7 @@ end)
 
 function BansPopup:DoInit()
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
-    self.bg = self.root:AddChild(TEMPLATES.BackgroundTint(0.9))	
+    self.bg = self.root:AddChild(TEMPLATES.BackgroundTint(0.9))
 
     if not TheInput:ControllerAttached() then
         self.back_button = self.root:AddChild(TEMPLATES.BackButton(

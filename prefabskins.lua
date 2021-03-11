@@ -748,6 +748,7 @@ PREFAB_SKINS = {
 		"walter_none",
 		"walter_survivor",
 		"walter_ventriloquist",
+		"walter_victorian",
 	},
 	walterhat = 
 	{
@@ -756,6 +757,7 @@ PREFAB_SKINS = {
 		"walterhat_ice",
 		"walterhat_survivor",
 		"walterhat_ventriloquist",
+		"walterhat_victorian",
 	},
 	wardrobe = 
 	{
@@ -1062,6 +1064,13 @@ PREFAB_SKINS = {
 		"woodie_victorian",
 		"woodie_yule",
 	},
+	wormhole = 
+	{
+		"wormhole_claw",
+		"wormhole_lureplant",
+		"wormhole_spider",
+		"wormhole_worm",
+	},
 	wormwood = 
 	{
 		"wormwood_cactus",
@@ -1070,6 +1079,7 @@ PREFAB_SKINS = {
 		"wormwood_pumpkin",
 		"wormwood_rose",
 		"wormwood_shadow",
+		"wormwood_victorian",
 	},
 	wortox = 
 	{
@@ -1079,6 +1089,7 @@ PREFAB_SKINS = {
 		"wortox_none",
 		"wortox_original",
 		"wortox_survivor",
+		"wortox_victorian",
 	},
 	wurt = 
 	{
@@ -1088,6 +1099,7 @@ PREFAB_SKINS = {
 		"wurt_rose",
 		"wurt_shadow",
 		"wurt_squid",
+		"wurt_victorian",
 	},
 	wx78 = 
 	{

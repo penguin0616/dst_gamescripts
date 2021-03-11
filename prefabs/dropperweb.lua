@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
 	Asset("MINIMAP_IMAGE", "whitespider_den"),
@@ -7,9 +9,6 @@ local prefabs =
 {
     "spider_dropper",
 }
-
-
-
 
 local function SpawnInvestigators(inst, data)
     if inst.components.childspawner ~= nil then
@@ -53,6 +52,10 @@ local function OnEntityWake(inst)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.DROPPERWEB_RELEASE_TIME, TUNING.DROPPERWEB_REGEN_TIME)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -78,16 +81,20 @@ local function fn()
     inst.components.health.nofadeout = true
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(120)
-    inst.components.childspawner:SetSpawnPeriod(240)
-    inst.components.childspawner:SetMaxChildren(math.random(2, 3))
+    inst.components.childspawner:SetRegenPeriod(TUNING.DROPPERWEB_REGEN_TIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.DROPPERWEB_RELEASE_TIME)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.DROPPERWEB_RELEASE_TIME, TUNING.DROPPERWEB_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.DROPPERWEB_REGEN_TIME, TUNING.DROPPERWEB_ENABLED)
+    inst.components.childspawner:SetMaxChildren(math.random(TUNING.DROPPERWEB_MIN_CHILDREN, TUNING.DROPPERWEB_MAX_CHILDREN))
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_dropper"
     inst.components.childspawner.emergencychildname = "spider_dropper"
     inst.components.childspawner.emergencychildrenperplayer = 1
+    inst.components.childspawner.canemergencyspawn = TUNING.DROPPERWEB_ENABLED
 
     inst.lastwebtime = GetTime()
     inst.OnEntityWake = OnEntityWake
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

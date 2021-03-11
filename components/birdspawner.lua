@@ -196,7 +196,7 @@ end
 
 --Register events
 inst:WatchWorldState("israining", OnIsRaining)
-inst:WatchWorldState("isnight", ToggleUpdate)
+inst:WatchWorldState("isnight", function() ToggleUpdate() end)
 inst:ListenForEvent("ms_playerjoined", OnPlayerJoined, TheWorld)
 inst:ListenForEvent("ms_playerleft", OnPlayerLeft, TheWorld)
 
@@ -213,36 +213,32 @@ end
 --[[ Public member functions ]]
 --------------------------------------------------------------------------
 
-function self:SetSpawnTimes(delay)
-	print "DEPRECATED: SetSpawnTimes() in birdspawner.lua, use birdattractor.spawnmodifier instead"
-    _minspawndelay = delay.min
-    _maxspawndelay = delay.max
+function self:SetSpawnTimes()
+    --depreciated
 end
 
-function self:SetMaxBirds(max)
-	print "DEPRECATED: SetMaxBirds() in birdspawner.lua, use birdattractor.spawnmodifier instead"
-    _maxbirds = max
-    ToggleUpdate(true)
+function self:SetMaxBirds()
+    --depreciated
 end
 
 function self:ToggleUpdate()
-	ToggleUpdate(true)
+    ToggleUpdate(true)
 end
 
 function self:SpawnModeNever()
-    self:SetMaxBirds(0)
-end
-
-function self:SpawnModeHeavy()
-    self:SetMaxBirds(10)
-end
-
-function self:SpawnModeMed()
-    self:SetMaxBirds(7)
+    --depreciated
 end
 
 function self:SpawnModeLight()
-    self:SetMaxBirds(2)
+    --depreciated
+end
+
+function self:SpawnModeMed()
+    --depreciated
+end
+
+function self:SpawnModeHeavy()
+    --depreciated
 end
 
 local BIRDBLOCKER_TAGS = {"birdblocker"}
@@ -333,27 +329,6 @@ end
 
 function self:StopTracking(target)
     self.StopTrackingFn(target)
-end
-
---------------------------------------------------------------------------
---[[ Save/Load ]]
---------------------------------------------------------------------------
-
-function self:OnSave()
-    return
-    {
-        maxbirds = _maxbirds,
-        minspawndelay = _minspawndelay,
-        maxspawndelay = _maxspawndelay,
-    }
-end
-
-function self:OnLoad(data)
-    _maxbirds = data.maxbirds or TUNING.BIRD_SPAWN_MAX
-    _minspawndelay = data.minspawndelay or TUNING.BIRD_SPAWN_DELAY.min
-    _maxspawndelay = data.maxspawndelay or TUNING.BIRD_SPAWN_DELAY.max
-
-    ToggleUpdate(true)
 end
 
 --------------------------------------------------------------------------

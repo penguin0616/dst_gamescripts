@@ -26,6 +26,11 @@ local assets =
     Asset("IMAGE", "images/customisation.tex"),
     Asset("ATLAS", "images/customisation.xml"),
 
+    Asset("IMAGE", "images/worldgen_customization.tex"),
+    Asset("ATLAS", "images/worldgen_customization.xml"),
+    Asset("IMAGE", "images/worldsettings_customization.tex"),
+    Asset("ATLAS", "images/worldsettings_customization.xml"),
+
     --BETA
     Asset("DYNAMIC_ATLAS", "images/anr_silhouettes.xml"),
     Asset("PKGREF", "images/anr_silhouettes.tex"),

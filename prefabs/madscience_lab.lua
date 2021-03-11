@@ -83,7 +83,7 @@ end
 
 local function onturnon(inst)
     if inst.components.madsciencelab ~= nil and not inst:HasTag("burnt") and not inst.components.madsciencelab:IsMakingScience() then
-        if not (inst.AnimState:IsCurrentAnimation("hit") or inst.AnimState:IsCurrentAnimation("hit") or inst.AnimState:IsCurrentAnimation("place")) then
+        if not (inst.AnimState:IsCurrentAnimation("hit") or inst.AnimState:IsCurrentAnimation("place")) then
             PlayAnimation(inst, "proximity_loop", true)
         else
             PushAnimation(inst, "proximity_loop", true)

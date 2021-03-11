@@ -78,8 +78,6 @@ local function falls1()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-    inst:AddTag("moonglass")
-
     inst.AnimState:SetBuild("moonglass_bigwaterfall")
     inst.AnimState:SetBank("moonglass_bigwaterfall")
     inst.AnimState:PlayAnimation("water_small1", true)
@@ -90,6 +88,10 @@ local function falls1()
     inst:SetDeployExtraSpacing(2)
 
     inst:SetPhysicsRadiusOverride(2.5)
+
+    inst:AddTag("moonglass")
+
+    inst:SetPrefabNameOverride("moonglass_rock")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
@@ -122,8 +124,6 @@ local function falls2()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-    inst:AddTag("moonglass")
-
     inst.AnimState:SetBuild("moonglass_bigwaterfall")
     inst.AnimState:SetBank("moonglass_bigwaterfall")
     inst.AnimState:PlayAnimation("water_small2", true)
@@ -134,6 +134,10 @@ local function falls2()
     inst:SetDeployExtraSpacing(2)
 
     inst:SetPhysicsRadiusOverride(2.5)
+
+    inst:AddTag("moonglass")
+
+    inst:SetPrefabNameOverride("moonglass_rock")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

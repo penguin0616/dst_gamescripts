@@ -113,7 +113,8 @@ AddUserCommand("rescue", {
     permission = COMMAND_PERMISSION.USER,
     slash = true,
     usermenu = false,
-    servermenu = IsConsole(),
+    servermenu = true,
+	menusort = 1,
     params = {},
     vote = false,
     serverfn = function(params, caller)
@@ -207,6 +208,7 @@ AddUserCommand("roll", {
     slash = true,
     usermenu = false,
     servermenu = true,
+	menusort = 2,
     params = { "dice" },
     paramsoptional = { true },
     vote = false,

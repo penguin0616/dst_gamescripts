@@ -70,6 +70,8 @@ local function fn()
     -- From watersource component
     inst:AddTag("watersource")
 
+    MakeInventoryFloatable(inst, "med", 0.05, {0.65, 0.5, 0.65})
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -107,7 +109,6 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.imagename = "ice"
     inst.components.inventoryitem:SetOnPickupFn(onstopfiremelt)
-    inst.components.inventoryitem:SetSinks(true)
 
     inst:AddComponent("repairer")
     inst.components.repairer.repairmaterial = MATERIALS.ICE

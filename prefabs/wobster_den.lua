@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/lobster_den.zip"),
@@ -58,8 +60,8 @@ SetSharedLootTable( "moonglass_wobster_den",
     {"wobster_moonglass", 0.50},
 })
 
-local FIRST_WORK_LEVEL = math.ceil(2 * TUNING.WOBSTER_DEN.WORK / 3)
-local SECOND_WORK_LEVEL = math.ceil(TUNING.WOBSTER_DEN.WORK / 3)
+local FIRST_WORK_LEVEL = math.ceil(2 * TUNING.WOBSTER_DEN_WORK / 3)
+local SECOND_WORK_LEVEL = math.ceil(TUNING.WOBSTER_DEN_WORK / 3)
 local function get_idle_anim(inst, num_children)
     local workleft = inst.components.workable.workleft
     if workleft > FIRST_WORK_LEVEL then
@@ -182,6 +184,10 @@ local function OnCollide(inst, data)
     end
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.WOBSTER_DEN_SPAWN_PERIOD, TUNING.WOBSTER_DEN_REGEN_PERIOD)
+end
+
 local function basefn(build, loot_table_name, child_name)
     local inst = CreateEntity()
 
@@ -227,18 +233,22 @@ local function basefn(build, loot_table_name, child_name)
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(TUNING.WOBSTER_DEN.WORK)
+    inst.components.workable:SetWorkLeft(TUNING.WOBSTER_DEN_WORK)
     inst.components.workable:SetOnWorkCallback(OnWork)
     inst.components.workable.savestate = true
 
     inst:AddComponent("inspectable")
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(TUNING.WOBSTER_DEN.REGEN_PERIOD)
-    inst.components.childspawner:SetSpawnPeriod(TUNING.WOBSTER_DEN.SPAWN_PERIOD)
-    inst.components.childspawner:SetMaxChildren(TUNING.WOBSTER_DEN.MAX_CHILDREN)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.WOBSTER_DEN_SPAWN_PERIOD)
+    inst.components.childspawner:SetRegenPeriod(TUNING.WOBSTER_DEN_REGEN_PERIOD)
+    inst.components.childspawner:SetMaxChildren(TUNING.WOBSTER_DEN_MAX_CHILDREN)
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.WOBSTER_DEN_SPAWN_PERIOD, TUNING.WOBSTER_DEN_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.WOBSTER_DEN_REGEN_PERIOD, TUNING.WOBSTER_DEN_ENABLED)
+
     inst.components.childspawner:StartRegen()
-    inst.components.childspawner.spawnradius = TUNING.WOBSTER_DEN.SPAWNRADIUS
+    inst.components.childspawner.spawnradius = TUNING.WOBSTER_DEN_SPAWNRADIUS
     inst.components.childspawner.childname = child_name
     inst.components.childspawner.wateronly = true
     inst.components.childspawner:SetOccupiedFn(on_den_occupied)
@@ -248,6 +258,8 @@ local function basefn(build, loot_table_name, child_name)
     inst:ListenForEvent("on_collide", OnCollide)
 
     inst:DoTaskInTime(0, initialize)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

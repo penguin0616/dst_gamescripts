@@ -282,7 +282,7 @@ function ImageButton:SetNormalScale(scaleX, scaleY, scaleZ)
         self.normal_scale = scaleX
     end
 
-    if not self.focus and self.scale_on_focus then
+    if not self.scale_on_focus or not self.focus then
         self.image:SetScale(self.normal_scale[1], self.normal_scale[2], self.normal_scale[3])
     end
 end

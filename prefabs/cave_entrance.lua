@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/cave_entrance.zip"),
@@ -63,6 +65,7 @@ local function OnWork(inst, worker, workleft)
         local openinst = SpawnPrefab("cave_entrance_open")
         openinst.Transform:SetPosition(pt:Get())
         openinst.components.worldmigrator.id = inst.components.worldmigrator.id
+        openinst.components.worldmigrator.auto = inst.components.worldmigrator.auto
         openinst.components.worldmigrator.linkedWorld = inst.components.worldmigrator.linkedWorld
         openinst.components.worldmigrator.receivedPortal = inst.components.worldmigrator.receivedPortal
         inst:Remove()
@@ -176,6 +179,10 @@ local function ruins_fn()
     return inst
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.CAVE_ENTRANCE_BATS_SPAWN_PERIOD, TUNING.CAVE_ENTRANCE_BATS_REGEN_PERIOD)
+end
+
 local function open_fn()
     local inst = fn("cave_entrance", "cave_entrance", "no_access", "cave_open.png", true)
 
@@ -184,9 +191,11 @@ local function open_fn()
     end
 
     inst:AddComponent("childspawner")
-    inst.components.childspawner:SetRegenPeriod(60)
-    inst.components.childspawner:SetSpawnPeriod(.1)
-    inst.components.childspawner:SetMaxChildren(6)
+    inst.components.childspawner:SetRegenPeriod(TUNING.CAVE_ENTRANCE_BATS_REGEN_PERIOD)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.CAVE_ENTRANCE_BATS_SPAWN_PERIOD)
+    inst.components.childspawner:SetMaxChildren(TUNING.CAVE_ENTRANCE_BATS_MAX_CHILDREN)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.CAVE_ENTRANCE_BATS_SPAWN_PERIOD, TUNING.BATCAVE_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.CAVE_ENTRANCE_BATS_REGEN_PERIOD, TUNING.BATCAVE_ENABLED)
     inst.components.childspawner.canspawnfn = canspawn
     inst.components.childspawner.childname = "bat"
 
@@ -204,6 +213,8 @@ local function open_fn()
     --             -watch iscaveday world state
     OnIsDay(inst, TheWorld.state.isday)
     inst:WatchWorldState("isday", OnIsDay)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

@@ -251,7 +251,7 @@ function CustomizationList:MakeOptionSpinners()
 
         opt.spinner.label:SetString(STRINGS.UI.CUSTOMIZATIONSCREEN[string.upper(v.name)])
 
-        opt.spinner:SetEditable(self.allowEdit)
+        opt.spinner:SetEditable(self.allowEdit or FunctionOrValue(v.alwaysedit, self.location))
     end
 
     self.scroll_list = self:AddChild(TEMPLATES.ScrollingGrid(

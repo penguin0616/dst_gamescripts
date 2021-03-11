@@ -1,3 +1,5 @@
+require("worldsettingsutil")
+
 local assets =
 {
     Asset("ANIM", "anim/merm_house.zip"),
@@ -211,14 +213,23 @@ local function mermhouse_common(inst)
     inst.AnimState:PlayAnimation("idle")
 end
 
+local function OnPreLoad(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MERMHOUSE_RELEASE_TIME, TUNING.MERMHOUSE_REGEN_TIME)
+end
 
 local function mermhouse_master(inst)
     inst.components.lootdropper:SetLoot(loot)
 
-    inst.components.childspawner:SetRegenPeriod(TUNING.TOTAL_DAY_TIME * 4)
-    inst.components.childspawner:SetSpawnPeriod(10)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MERMHOUSE_REGEN_TIME)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MERMHOUSE_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(TUNING.MERMHOUSE_MERMS)
     inst.components.childspawner:SetMaxEmergencyChildren(TUNING.MERMHOUSE_EMERGENCY_MERMS)
+    inst.components.childspawner.canemergencyspawn = TUNING.MERMHOUSE_ENABLED
+
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MERMHOUSE_RELEASE_TIME, TUNING.MERMHOUSE_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MERMHOUSE_REGEN_TIME, TUNING.MERMHOUSE_ENABLED)
+
+    inst.OnPreLoad = OnPreLoad
 end
 
 local function mermhouse_crafted_common(inst)
@@ -235,8 +246,8 @@ local function onbuilt(inst)
 end
 
 local function mermhouse_crafted_master(inst)
-    inst.components.childspawner:SetRegenPeriod(TUNING.TOTAL_DAY_TIME * 2)
-    inst.components.childspawner:SetSpawnPeriod(10)
+    inst.components.childspawner:SetRegenPeriod(TUNING.MERMHOUSE_REGEN_TIME / 2)
+    inst.components.childspawner:SetSpawnPeriod(TUNING.MERMHOUSE_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(1)
 
     inst:ListenForEvent("onbuilt", onbuilt)
