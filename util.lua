@@ -576,6 +576,13 @@ function softresolvefilepath(filepath, force_path_search)
 	-- be added back on as one of the search paths.
 	local filepath = string.gsub(filepath, "^/", "")
 
+    local is_mod_path = string.sub(filepath, 1, MODS_ROOT:len()) == MODS_ROOT
+
+	--if it is a mod path, try it first, as its most likely already correct.
+	if is_mod_path and not kleifileexists or kleifileexists(filepath) then
+		return filepath
+	end
+
 	local searchpaths = package.path
     for path in string.gmatch(searchpaths, "([^;]+)") do
         local filename = string.gsub(path, "scripts\\%?%.lua", filepath) -- why is this not string.gsub(path, "%?", modulepath) like in worldgen_main.lua?!?
@@ -586,8 +593,9 @@ function softresolvefilepath(filepath, force_path_search)
             return filename
         end
     end
+
 	-- as a last resort see if the file is an already correct path (incase this asset has already been processed)
-	if not kleifileexists or kleifileexists(filepath) then
+	if not is_mod_path and not kleifileexists or kleifileexists(filepath) then
 		--print("found it in it's actual path! "..filepath)
 		return filepath
 	end

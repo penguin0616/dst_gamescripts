@@ -170,7 +170,7 @@ Recipe("premiumwateringcan", {Ingredient("driftwood_log", 2), Ingredient("rope",
 Recipe("razor", {Ingredient("twigs", 2), Ingredient("flint", 2)}, RECIPETABS.TOOLS,  TECH.SCIENCE_ONE)
 Recipe("featherpencil", {Ingredient("twigs", 1), Ingredient("charcoal", 1), Ingredient("feather_crow", 1)}, RECIPETABS.TOOLS,  TECH.SCIENCE_ONE)
 Recipe("pocket_scale", {Ingredient("log", 1), Ingredient("cutstone", 1), Ingredient("goldnugget", 1)}, RECIPETABS.TOOLS,  TECH.SCIENCE_ONE)
-Recipe("beef_bell", {Ingredient("goldnugget", 3), Ingredient("flint", 1)}, RECIPETABS.TOOLS, TECH.SCIENCE_ONE, nil, nil, true)
+Recipe("beef_bell", {Ingredient("goldnugget", 3), Ingredient("flint", 1)}, RECIPETABS.TOOLS, TECH.SCIENCE_ONE)
 Recipe("saddlehorn", {Ingredient("twigs", 2), Ingredient("boneshard", 2), Ingredient("feather_crow", 1)}, RECIPETABS.TOOLS,  TECH.SCIENCE_TWO)
 Recipe("saddle_basic", {Ingredient("beefalowool", 4), Ingredient("pigskin", 4), Ingredient("goldnugget", 4)}, RECIPETABS.TOOLS,  TECH.SCIENCE_TWO)
 Recipe("saddle_war", {Ingredient("rabbit", 4), Ingredient("steelwool", 4), Ingredient("log", 10)}, RECIPETABS.TOOLS,  TECH.SCIENCE_TWO)

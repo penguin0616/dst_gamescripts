@@ -163,6 +163,14 @@ local function CheckMigrationPets(inst, item)
                 table.insert(inst.migrationpets, v)
             end
         end
+
+        if item.components.migrationpetowner ~= nil then
+            local pet = item.components.migrationpetowner:GetPet()
+            if pet ~= nil then
+                table.insert(inst.migrationpets, pet)
+            end
+        end
+
         if item.components.container ~= nil then
             for k, v in pairs(item.components.container.slots) do
                 if v ~= nil then

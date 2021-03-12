@@ -459,7 +459,9 @@ function TrueScrollList:OnFocusMove(dir, down)
     -- Instead of changing focus to the next widget (calling base), we are
     -- scrolling the widgets to move the above/below item into the current widget!
     if dir == MOVE_UP or dir == MOVE_DOWN then
-        return self:GetNextWidget(dir)
+        if self:GetNextWidget(dir) then
+            return true
+        end
     end
 
     local prev_focus = self.widgets_to_update[self.focused_widget_index]

@@ -157,6 +157,12 @@ local function testforcarratexit(inst)
 end
 
 fns.ClearBellOwner = function(inst)
+    if inst._marked_for_despawn then
+        -- We're marked for despawning, so don't disconnect anything,
+        -- in case we get saved for real i.e. when despawning in caves.
+        return
+    end
+
     fns.RemoveName(inst)
 
     local bell_leader = inst.components.follower:GetLeader()
@@ -791,6 +797,13 @@ local function ShouldWakeUp(inst)
             and not inst.components.follower:IsNearLeader(WAKE_TO_FOLLOW_DISTANCE))
 end
 
+local TWEEN_TARGET = {0, 0, 0, 1}
+local TWEEN_TIME = 13 * FRAMES
+fns.OnDespawnRequest = function(inst)
+    inst._marked_for_despawn = true
+    inst.components.colourtweener:StartTween(TWEEN_TARGET, TWEEN_TIME, inst.Remove)
+end
+
 local SLEEP_NEAR_LEADER_DISTANCE = 10
 local function MountSleepTest(inst)
     return not inst.components.rideable:IsBeingRidden()
@@ -1073,6 +1086,7 @@ local function beefalo()
     inst:ListenForEvent("ridersleep", OnRiderSleep)
     inst:ListenForEvent("hitchto", OnHitchTo)
     inst:ListenForEvent("unhitch", OnUnhitch)
+    inst:ListenForEvent("despawn", fns.OnDespawnRequest)
     inst:ListenForEvent("stopfollowing", fns.ClearBellOwner)
 
     inst:AddComponent("uniqueid")
@@ -1102,6 +1116,8 @@ local function beefalo()
 
     inst.SetTendency = SetTendency
     inst:SetTendency()
+
+    --inst._marked_for_despawn = nil
 
     inst.ShouldBeg = ShouldBeg
     inst.testforcarratexit = testforcarratexit

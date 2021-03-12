@@ -37,6 +37,7 @@ local function fn()
 
     inst:AddComponent("childspawner")
     inst.components.childspawner.childname = "crabking"
+    inst.components.childspawner.spawnoffscreen = true
     inst.components.childspawner:SetMaxChildren(1)
     inst.components.childspawner:SetSpawnPeriod(TUNING.CRABKING_SPAWN_TIME, 0)
     inst.components.childspawner.onchildkilledfn = OnKilled

@@ -244,13 +244,15 @@ function SettingsList:MakeScrollList()
                 widget.focus_forward = opt
 
                 local icon_image = v.image
+                local atlas = v.atlas
                 local icon_txt = nil
                 if PLATFORM == "WIN32_RAIL" and v.options_remap then
+                    atlas = v.options_remap.atlas or atlas
                     icon_image = v.options_remap.img
                     icon_txt = STRINGS.UI.CUSTOMIZATIONSCREEN.ICON_TITLES[string.upper(v.name)]
                 end
 
-                opt.image:SetTexture(v.atlas or "images/customisation.xml", icon_image)
+                opt.image:SetTexture(atlas or "images/customisation.xml", icon_image)
                 opt.image:SetSize(image_size, image_size)
                 opt.icon_txt:SetString(icon_txt)
 

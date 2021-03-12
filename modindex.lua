@@ -278,13 +278,15 @@ function ModIndex:UpdateModInfo()
 	local modnames = TheSim:GetModDirectoryNames()
 
 	for modname,moddata in pairs(self.savedata.known_mods) do
-		if not self.forceddirs[modname] and not moddata.temp_enabled and not table.contains(modnames, modname) then
-			self.savedata.known_mods[modname] = nil
-		else
-			if not self.savedata.known_mods[modname] then
-				self.savedata.known_mods[modname] = {}
+		if not table.contains(modnames, modname) and not self.forceddirs[modname] then
+			if moddata.temp_enabled then
+				if not self.savedata.known_mods[modname] then
+					self.savedata.known_mods[modname] = {}
+				end
+				self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname, self.savedata.known_mods[modname].modinfo)
+			else
+				self.savedata.known_mods[modname] = nil
 			end
-			self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname)
 		end
 	end
 
@@ -292,16 +294,22 @@ function ModIndex:UpdateModInfo()
 		if not self.savedata.known_mods[modname] then
 			self.savedata.known_mods[modname] = {}
 		end
-		self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname)
+		self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname, self.savedata.known_mods[modname].modinfo)
 	end
 
+	for modname in pairs(self.forceddirs) do
+		if not self.savedata.known_mods[modname] then
+			self.savedata.known_mods[modname] = {}
+		end
+		self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname, self.savedata.known_mods[modname].modinfo)
+	end
 end
 
 function ModIndex:UpdateSingleModInfo(modname)
 	if not self.savedata.known_mods[modname] then
 		self.savedata.known_mods[modname] = {}
 	end
-	self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname)
+	self.savedata.known_mods[modname].modinfo = self:LoadModInfo(modname, self.savedata.known_mods[modname].modinfo)
 end
 
 function ModIndex:LoadModOverides(shardGameIndex)
@@ -475,7 +483,7 @@ local function BuildModPriorityList(self, v, is_workshop)
 end
 
 local print_atlas_warning = true
-function ModIndex:LoadModInfo(modname)
+function ModIndex:LoadModInfo(modname, prev_info)
 	modprint(string.format("Updating mod info for '%s'", modname))
 
 	local info = self:InitializeModInfo(modname)
@@ -498,6 +506,8 @@ function ModIndex:LoadModInfo(modname)
 	info.version_compatible = TrimString( info.version_compatible )
 	info.version_compatible = string.lower(info.version_compatible)
 	
+	if prev_info ~= nil and prev_info.version == info.version then return prev_info end
+
 	if info.icon_atlas ~= nil and info.icon ~= nil and info.icon_atlas ~= "" and info.icon ~= "" then
 		local atlaspath = MODS_ROOT..modname.."/"..info.icon_atlas
 		local iconpath = string.gsub(atlaspath, "/[^/]*$", "") .. "/"..info.icon
