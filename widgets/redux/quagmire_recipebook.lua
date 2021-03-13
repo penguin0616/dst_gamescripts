@@ -38,6 +38,7 @@ local QuagmireRecipeBook = Class(Widget, function(self, parent_screen, season)
 end)
 
 function QuagmireRecipeBook:_DoFocusHookups()
+	if not self.spinners then return end
 	for i, v in ipairs(self.spinners) do
 		v:ClearFocusDirs()
 

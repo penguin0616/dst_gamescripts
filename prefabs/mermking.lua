@@ -252,7 +252,7 @@ local function OnGuardDeath(inst)
         table.remove(inst.king.guards, remove_at)
     end
 
-    inst.king:RemoveEventCallback("death",  inst.king.OnGuardDeath,   inst)
+    inst.king:RemoveEventCallback("death",  inst.king.OnGuardDeath, inst)
     inst.king:RemoveEventCallback("onremove", inst.king.OnGuardRemoved, inst)
     inst.king:RemoveEventCallback("enterlimbo", inst.king.OnGuardEnterLimbo, inst)
 end

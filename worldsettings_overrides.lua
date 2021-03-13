@@ -2944,14 +2944,18 @@ local applyoverrides_post = {
         if difficulty == "never" then
             TheWorld:PushEvent("ms_setprecipitationmode", "never")
         elseif difficulty == "rare" then
+            TheWorld:PushEvent("ms_setprecipitationmode", "dynamic")
             TheWorld:PushEvent("ms_setmoisturescale", .5)
         elseif difficulty == "default" then
+            TheWorld:PushEvent("ms_setprecipitationmode", "dynamic")
             TheWorld:PushEvent("ms_setmoisturescale", 1)
         elseif difficulty == "often" then
+            TheWorld:PushEvent("ms_setprecipitationmode", "dynamic")
             TheWorld:PushEvent("ms_setmoisturescale", 2)
         elseif difficulty == "always" then
             TheWorld:PushEvent("ms_setprecipitationmode", "always")
         elseif difficulty == "squall" then
+            TheWorld:PushEvent("ms_setprecipitationmode", "dynamic")
             TheWorld:PushEvent("ms_setmoisturescale", 30)
         end
     end,

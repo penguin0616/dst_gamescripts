@@ -115,7 +115,7 @@ end
 
 local function RegisterPrefabsResolveAssets(prefab, asset)
 	--print(" - - RegisterPrefabsResolveAssets: " .. asset.file, debugstack())
-    local resolvedpath = resolvefilepath(asset.file, prefab.force_path_search)
+    local resolvedpath = resolvefilepath(asset.file, prefab.force_path_search, prefab.search_asset_first_path)
     assert(resolvedpath, "Could not find "..asset.file.." required by "..prefab.name)
     TheSim:OnAssetPathResolve(asset.file, resolvedpath)
     asset.file = resolvedpath
@@ -135,7 +135,10 @@ end
 
 PREFABDEFINITIONS = {}
 
-function LoadPrefabFile( filename, async_batch_validation )
+function LoadPrefabFile( filename, async_batch_validation, search_asset_first_path )
+    --not is used as cast to boolean
+    --this check ensures that both values are not defined, while still allowing both to be undefined.
+    assert(not async_batch_validation or not search_asset_first_path, "search_asset_first_path and async_batch_validation cannot both be defined")
     --print("Loading prefab file "..filename)
     local fn, r = loadfile(filename)
     assert(fn, "Could not load file ".. filename)
@@ -155,6 +158,7 @@ function LoadPrefabFile( filename, async_batch_validation )
     if ret then
         for i,val in ipairs(ret) do
             if type(val)=="table" and val.is_a and val:is_a(Prefab) then
+                val.search_asset_first_path = search_asset_first_path
 				if async_batch_validation then
 					RegisterPrefabsImpl(val, VerifyPrefabAssetExistsAsync)
 				else
@@ -192,9 +196,8 @@ function ModReloadFrontEndAssets(assets, modname)
         assets = shallowcopy(assets) --make a copy so that changes to the table in the mod code don't do anything funky
 
         for i, v in ipairs(assets) do
-            if softresolvefilepath(v.file, nil, MODS_ROOT..modname.."/") ~= nil then
-                resolvefilepath(v.file, nil, MODS_ROOT..modname.."/")
-            end
+            local modroot = MODS_ROOT..modname.."/"
+            resolvefilepath_soft(v.file, nil, modroot)
         end
         local prefab = Prefab("MODFRONTEND_"..modname, nil, assets, nil)
         table.insert(MOD_FRONTEND_PREFABS, prefab.name)
@@ -758,13 +761,13 @@ local function UpdateWorldGenOverride(overrides, cb, slot, shard)
                     local worldgen_preset = savedata.worldgen_preset or savedata.preset
                     local worldgen_presetdata = {overrides = {}}
                     if worldgen_preset then
-                        worldgen_presetdata = Levels.GetDataForWorldGenID(worldgen_preset)
+                        worldgen_presetdata = Levels.GetDataForWorldGenID(worldgen_preset) or worldgen_presetdata
                     end
 
                     local settings_preset = savedata.settings_preset or savedata.preset
                     local settings_presetdata = {overrides = {}}
                     if settings_preset then
-                        settings_presetdata = Levels.GetDataForSettingsID(settings_preset)
+                        settings_presetdata = Levels.GetDataForSettingsID(settings_preset) or settings_presetdata
                     end
 
                     local location = worldgen_presetdata.location or "forest"

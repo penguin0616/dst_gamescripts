@@ -619,17 +619,17 @@ function ModWrangler:RegisterPrefabs()
 		mod.RegisterPrefabs = RegisterPrefabs
 		mod.Prefabs = {}
 
-		print("Mod: "..ModInfoname(mod.modname), "Registering prefabs")
+		print("Mod: "..ModInfoname(modname), "Registering prefabs")
 
 		-- We initialize the prefabs in the sandbox and collect all the created prefabs back
 		-- into the main world.
 		if mod.PrefabFiles then
-			for i,prefab_path in ipairs(mod.PrefabFiles) do
-				print("Mod: "..ModInfoname(mod.modname), "  Registering prefab file: prefabs/"..prefab_path)
-				local ret = runmodfn( mod.LoadPrefabFile, mod, "LoadPrefabFile" )("prefabs/"..prefab_path)
+			for _, prefab_path in ipairs(mod.PrefabFiles) do
+				print("Mod: "..ModInfoname(modname), "  Registering prefab file: prefabs/"..prefab_path)
+				local ret = runmodfn( mod.LoadPrefabFile, mod, "LoadPrefabFile" )("prefabs/"..prefab_path, nil, MODS_ROOT..modname.."/")
 				if ret then
-					for i,prefab in ipairs(ret) do
-						print("Mod: "..ModInfoname(mod.modname), "    "..prefab.name)
+					for _, prefab in ipairs(ret) do
+						print("Mod: "..ModInfoname(modname), "    "..prefab.name)
 						mod.Prefabs[prefab.name] = prefab
 					end
 				end
@@ -642,16 +642,18 @@ function ModWrangler:RegisterPrefabs()
 			Prefabs[name] = prefab -- copy the prefabs back into the main environment
 		end
 
-		print("Mod: "..ModInfoname(mod.modname), "  Registering default mod prefab")
+		print("Mod: "..ModInfoname(modname), "  Registering default mod prefab")
 
         if PLATFORM == "PS4" then
-            package.path = MODS_ROOT..mod.modname..package.path
-        end            
-		RegisterPrefabs( Prefab("MOD_"..mod.modname, nil, mod.Assets, prefabnames, true) )
+            package.path = MODS_ROOT..modname..package.path
+		end
 
-		local modname = "MOD_"..mod.modname
-		TheSim:LoadPrefabs({modname})
-		table.insert(self.loadedprefabs, modname)
+		local pref = Prefab("MOD_"..modname, nil, mod.Assets, prefabnames, true)
+		pref.search_asset_first_path = MODS_ROOT..modname.."/"
+		RegisterPrefabs(pref)
+
+		TheSim:LoadPrefabs({pref.name})
+		table.insert(self.loadedprefabs, pref.name)
 	end
 end
 

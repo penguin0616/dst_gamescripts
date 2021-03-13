@@ -135,6 +135,7 @@ local function OnGivenItem(inst, giver, item)
     if timeleft ~= nil then
         timeleft = math.min(timeleft + rage_calming, TUNING.ANTLION_RAGE_TIME_MAX)
         inst.components.worldsettingstimer:SetTimeLeft(ANTLION_RAGE_TIMER, timeleft)
+        inst.components.worldsettingstimer:ResumeTimer(ANTLION_RAGE_TIMER)
     else
         inst.components.worldsettingstimer:StartTimer(ANTLION_RAGE_TIMER, inst.maxragetime)
     end

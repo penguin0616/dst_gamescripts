@@ -600,7 +600,9 @@ local function GetDefaultData(category, ...)
     end
 end
 local function GetDataForID(category, ...)
-    if category == LEVELCATEGORY.SETTINGS or category == LEVELCATEGORY.COMBINED then
+    if category == LEVELCATEGORY.COMBINED then
+        return GetDataForSettingsID(...) or GetDataForWorldGenID(...)
+    elseif category == LEVELCATEGORY.SETTINGS then
         return GetDataForSettingsID(...)
     elseif category == LEVELCATEGORY.WORLDGEN then
         return GetDataForWorldGenID(...)
@@ -618,7 +620,9 @@ local function GetTypeForID(category, ...)
     end
 end
 local function GetNameForID(category, ...)
-    if category == LEVELCATEGORY.SETTINGS or category == LEVELCATEGORY.COMBINED then
+    if category == LEVELCATEGORY.COMBINED then
+        return GetNameForSettingsID(...) or GetNameForSettingsID(...)
+    elseif category == LEVELCATEGORY.SETTINGS then
         return GetNameForSettingsID(...)
     elseif category == LEVELCATEGORY.WORLDGEN then
         return GetNameForWorldGenID(...)
@@ -627,7 +631,9 @@ local function GetNameForID(category, ...)
     end
 end
 local function GetDescForID(category, ...)
-    if category == LEVELCATEGORY.SETTINGS or category == LEVELCATEGORY.COMBINED then
+    if category == LEVELCATEGORY.COMBINED then
+        return GetDescForSettingsID(...) or GetDescForSettingsID(...)
+    elseif category == LEVELCATEGORY.SETTINGS then
         return GetDescForSettingsID(...)
     elseif category == LEVELCATEGORY.WORLDGEN then
         return GetDescForWorldGenID(...)

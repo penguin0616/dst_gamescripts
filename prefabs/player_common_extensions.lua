@@ -622,17 +622,17 @@ local function GivePlayerStartingItems(inst, items)
                 inst.components.inventory:GiveItem(SpawnPrefab(v))
             end
         else
-            local items = {}
+            local spawned_items = {}
             for i, v in ipairs(items) do
                 local item = SpawnPrefab(v)
                 if item.components.equippable ~= nil then
                     inst.components.inventory:Equip(item)
-                    table.insert(items, item)
+                    table.insert(spawned_items, item)
                 else
                     item:Remove()
                 end
             end
-            for i, v in ipairs(items) do
+            for i, v in ipairs(spawned_items) do
                 if v.components.inventoryitem == nil or not v.components.inventoryitem:IsHeld() then
                     v:Remove()
                 end

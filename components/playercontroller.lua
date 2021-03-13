@@ -1,7 +1,7 @@
 local START_DRAG_TIME = 8 * FRAMES
 local BUTTON_REPEAT_COOLDOWN = .5
 local ACTION_REPEAT_COOLDOWN = 0.2
-local INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN = 0.2
+local INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN = 0.8
 local BUFFERED_CASTAOE_TIME = .5
 local CONTROLLER_TARGETING_LOCK_TIME = 1.0
 local RUBBER_BAND_PING_TOLERANCE_IN_SECONDS = 0.7
@@ -1841,20 +1841,32 @@ local function IsAnyActionHoldButtonHeld()
 end
 
 function PlayerController:RepeatHeldAction()
-    if self.lastheldaction and self.lastheldaction:IsValid() and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
-        self.lastheldactiontime = GetTime()
-        if self.heldactioncooldown == 0 then
-            self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
-            self:DoAction(self.lastheldaction)
-        end
-    elseif self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
-        self.lastheldactiontime = GetTime()
-        if self.heldactioncooldown == 0 then
-            self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
-            self:actionrepeatfunction()
+    if not self.ismastersim then
+        if self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+            self.lastheldactiontime = GetTime()
+            if self.heldactioncooldown == 0 then
+                self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
+                self:actionrepeatfunction()
+            end
+        else
+            SendRPCToServer(RPC.RepeatHeldAction)
         end
     else
-        self:ClearActionHold()
+        if self.lastheldaction and self.lastheldaction:IsValid() and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+            self.lastheldactiontime = GetTime()
+            if self.heldactioncooldown == 0 then
+                self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
+                self:DoAction(self.lastheldaction)
+            end
+        elseif self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+            self.lastheldactiontime = GetTime()
+            if self.heldactioncooldown == 0 then
+                self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
+                self:actionrepeatfunction()
+            end
+        else
+            self:ClearActionHold()
+        end
     end
 end
 
@@ -2182,11 +2194,7 @@ function PlayerController:OnUpdate(dt)
 
     self:CooldownHeldAction(dt)
     if self.actionholding then
-        if self.ismastersim then
-            self:RepeatHeldAction()
-        else
-            SendRPCToServer(RPC.RepeatHeldAction)
-        end
+        self:RepeatHeldAction()
     end
 
     if self.controller_attack_override ~= nil and

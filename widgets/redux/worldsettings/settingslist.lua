@@ -304,7 +304,7 @@ function SettingsList:MakeScrollList()
             if not data or data.is_empty or data.heading_text then
                 return
             end
-            
+
             local v = data.option
             assert(v)
 
@@ -442,7 +442,9 @@ function SettingsList:RefreshOptionItems()
         end
     end
 
+    self.forceupdate = true
     self.scroll_list:SetItemsData(self.optionitems)
+    self.forceupdate = false
 
     self.scroll_list:SetPosition(self.scroll_list:CanScroll() and -15 or 0, 0)
 end

@@ -553,54 +553,85 @@ local memoizedFilePaths = {}
 
 -- look in package loaders to find the file from the root directories
 -- this will look first in the mods and then in the data directory
-function resolvefilepath( filepath, force_path_search )
-    if memoizedFilePaths[filepath] then
-        return memoizedFilePaths[filepath]
+local function try_path(path, filepath)
+    local filename = string.gsub(string.gsub(path, "scripts\\%?%.lua", filepath), "\\", "/")
+    if not kleifileexists or kleifileexists(filename) then
+        return filename
     end
-    local resolved = softresolvefilepath(filepath, force_path_search)
-    assert(resolved ~= nil, "Could not find an asset matching "..filepath.." in any of the search paths.")
-    memoizedFilePaths[filepath] = resolved
-   return resolved
 end
 
-function softresolvefilepath(filepath, force_path_search)
+local function softresolvefilepath_internal(filepath, force_path_search, search_first_path)
     force_path_search = force_path_search or false
 
 	if IsConsole() and not force_path_search then
 		return filepath -- it's already absolute, so just send it back
 	end
 
-	-- on PC platforms, search all the possible paths
+	--on PC platforms, search all the possible paths
 
-	-- mod folders don't have "data" in them, so we strip that off if necessary. It will
-	-- be added back on as one of the search paths.
-	local filepath = string.gsub(filepath, "^/", "")
+	--mod folders don't have "data" in them, so we strip that off if necessary. It will
+	--be added back on as one of the search paths.
+	filepath = string.gsub(filepath, "^/", "")
+
+    --sometimes from context we can know the most likely path for an asset, this can result in less time spent searching the tons of mod search paths.
+    if search_first_path then
+        local filename = try_path(search_first_path, filepath)
+		if filename then
+            return filename
+        end
+    end
 
     local is_mod_path = string.sub(filepath, 1, MODS_ROOT:len()) == MODS_ROOT
 
 	--if it is a mod path, try it first, as its most likely already correct.
-	if is_mod_path and not kleifileexists or kleifileexists(filepath) then
+	if is_mod_path and (not kleifileexists or kleifileexists(filepath)) then
 		return filepath
 	end
 
 	local searchpaths = package.path
     for path in string.gmatch(searchpaths, "([^;]+)") do
-        local filename = string.gsub(path, "scripts\\%?%.lua", filepath) -- why is this not string.gsub(path, "%?", modulepath) like in worldgen_main.lua?!?
-        filename = string.gsub(filename, "\\", "/")
-		--print("looking for: "..filename.." ("..filepath..")")
-		if not kleifileexists or kleifileexists(filename) then
-			--print("found it! "..filename)
+        local filename = try_path(path, filepath)
+		if filename then
             return filename
         end
     end
 
-	-- as a last resort see if the file is an already correct path (incase this asset has already been processed)
-	if not is_mod_path and not kleifileexists or kleifileexists(filepath) then
-		--print("found it in it's actual path! "..filepath)
+	--as a last resort see if the file is an already correct path (incase this asset has already been processed)
+	if not is_mod_path and (not kleifileexists or kleifileexists(filepath)) then
 		return filepath
 	end
 
 	return nil
+end
+
+local function resolvefilepath_internal(filepath, force_path_search, search_first_path)
+    local resolved = softresolvefilepath_internal(filepath, force_path_search, search_first_path)
+    memoizedFilePaths[filepath] = resolved
+    return resolved
+end
+
+--like resolvefilepath, but without the crash if it fails.
+function resolvefilepath_soft(filepath, force_path_search, search_first_path)
+    if memoizedFilePaths[filepath] then
+        return memoizedFilePaths[filepath]
+    end
+    return resolvefilepath_internal(filepath, force_path_search, search_first_path)
+end
+
+function resolvefilepath(filepath, force_path_search, search_first_path)
+    if memoizedFilePaths[filepath] then
+        return memoizedFilePaths[filepath]
+    end
+    local resolved = resolvefilepath_internal(filepath, force_path_search, search_first_path)
+    assert(resolved ~= nil, "Could not find an asset matching "..filepath.." in any of the search paths.")
+    return resolved
+end
+
+function softresolvefilepath(filepath, force_path_search, search_first_path)
+    if memoizedFilePaths[filepath] then
+        return memoizedFilePaths[filepath]
+    end
+    return softresolvefilepath_internal(filepath, force_path_search, search_first_path)
 end
 
 -------------------------MEMREPORT

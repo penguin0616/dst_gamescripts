@@ -99,7 +99,7 @@ end
 function WorldSettingsMenu:SetTweak(option, value)
     local refresh = self.settings.tweaks[option] ~= nil
     self.settings.tweaks[option] = value
-    if refresh then self:Refresh() end
+    if refresh and not self.refreshing then self:Refresh() end
 end
 
 function WorldSettingsMenu:UpdatePresetInfo()
@@ -125,6 +125,8 @@ function WorldSettingsMenu:UpdatePresetInfo()
 end
 
 function WorldSettingsMenu:Refresh(force)
+    if self.refreshing == true then return end
+    self.refreshing = true
     if not self:IsNewShard() then
         self.mode = "seperate"
     end
@@ -138,6 +140,7 @@ function WorldSettingsMenu:Refresh(force)
     self:UpdatePresetInfo()
     self.settingslist:Refresh(force)
     GetPresetBox(self):Refresh()
+    self.refreshing = false
 end
 
 function WorldSettingsMenu:SavePreset(presetid, name, desc, noload)

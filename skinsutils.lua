@@ -1641,24 +1641,6 @@ function DisplayCharacterUnownedPopup(character, skins_subscreener)
     TheFrontEnd:PushScreen(unowned_popup)
 end
 
-function DisplayCharacterUnownedPopupPurchase(character, purchase_screen)
-	local PopupDialogScreen = require "screens/redux/popupdialog"
-	local body_str = subfmt(STRINGS.UI.PURCHASEPACKSCREEN.UNOWNED_CHARACTER_BODY, {character = STRINGS.CHARACTER_NAMES[character] })
-	local button_txt = subfmt(STRINGS.UI.PURCHASEPACKSCREEN.VIEW_REQUIRED, {character = STRINGS.CHARACTER_NAMES[character] })
-	
-	local unowned_popup = PopupDialogScreen(STRINGS.UI.LOBBYSCREEN.UNOWNED_CHARACTER_TITLE, body_str,
-    {
-        {text=button_txt, cb = function()
-			purchase_screen:UpdateFilterToItem(character.."_none")
-			TheFrontEnd:PopScreen()
-        end},
-        {text=STRINGS.UI.POPUPDIALOG.OK, cb = function()
-            TheFrontEnd:PopScreen()
-        end},
-    })
-    TheFrontEnd:PushScreen(unowned_popup)
-end
-
 function DisplayInventoryFailedPopup( screen )
 	if not screen.leave_from_fail and not TheInventory:HasDownloadedInventory() then
 		local PopupDialogScreen = require "screens/redux/popupdialog"
