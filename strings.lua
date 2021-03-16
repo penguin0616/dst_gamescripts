@@ -6749,6 +6749,7 @@ STRINGS.UI =
     
     REDEEMDIALOG = 
     {
+        CURRENCY_FMT = "{currency_amt} {currency}!",
     	TITLE = "Enter Your Code",
     	SUBMIT = "Submit",
     	CANCEL = "Cancel",
@@ -6760,7 +6761,6 @@ STRINGS.UI =
 
 		MENU_BUTTON_TITLE = "Redeem Codes",
 		MENU_BUTTON_DESC = "Transmute some codes into something useful.",
-
 	},
 
     EULADIALOG = 
@@ -9110,6 +9110,7 @@ STRINGS.UI =
         FESTIVAL_HISTORY = "Through the Gateway",
         CURRENCY_LABEL = "Spools",
         CURRENCY_EXPLAIN = "Items can be unraveled into Spools to weave special items.",
+        POINTS_LABEL = "Klei Points",
         XP_LABEL = "XP Earned",
         NEW_STUFF = "Recent Discoveries",
         LOADING_STUFF = "Loading Discoveries...",

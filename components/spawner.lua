@@ -39,6 +39,7 @@ local Spawner = Class(function(self, inst)
     --self.externaltimerfinished = false
     --self.starttimerfn = nil
     --self.stoptimerfn = nil
+    --self.timertestfn = nil
 end)
 
 function Spawner:OnRemoveFromEntity()
@@ -110,7 +111,11 @@ function Spawner:SpawnWithDelay(delay)
 end
 
 function Spawner:IsSpawnPending()
-    return (not self.useexternaltimer and self.task ~= nil) or (self.useexternaltimer and not self.externaltimerfinished)
+    if not self.useexternaltimer then
+        return self.task ~= nil
+    else
+        return self.timertestfn(self.inst)
+    end
 end
 
 function Spawner:SetQueueSpawning(queued, retryperiod)

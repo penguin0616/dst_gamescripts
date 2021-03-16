@@ -446,6 +446,7 @@ PREFAB_SKINS = {
 	},
 	lightning_rod = 
 	{
+		"lightning_rod_nautical",
 		"lightning_rod_robot",
 	},
 	mast = 

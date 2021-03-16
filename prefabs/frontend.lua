@@ -166,6 +166,8 @@ local assets =
     Asset("ANIM", "anim/skin_collector.zip"),
     Asset("ANIM", "anim/textbox.zip"),
 
+    Asset("ANIM", "anim/kleipoints.zip"),
+
     Asset("ANIM", "anim/chest_bg.zip"),
 
     Asset("ANIM", "anim/puff_spawning.zip"),

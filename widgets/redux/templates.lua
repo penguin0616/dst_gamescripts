@@ -10,6 +10,7 @@ local Text = require "widgets/text"
 local TextEdit = require "widgets/textedit"
 local TrueScrollList = require "widgets/truescrolllist"
 local UIAnim = require "widgets/uianim"
+local Button = require "widgets/button"
 local Widget = require "widgets/widget"
 
 require("constants")
@@ -951,6 +952,38 @@ function TEMPLATES.DoodadCounter(number_of_doodads)
     doodad:SetCount(number_of_doodads)
 
     return doodad
+end
+
+function TEMPLATES.KleiPointsCounter(number_of_points)
+    local points = Button("KleiPointsCounter")
+    points.image = points:AddChild(UIAnim())
+    points.image:GetAnimState():SetBank("kleipoints")
+    points.image:GetAnimState():SetBuild("kleipoints")
+    points.image:GetAnimState():PlayAnimation("idle", true)
+
+	points.points_count = points:AddChild(Text(CHATFONT_OUTLINE, 35, nil, UICOLOURS.WHITE))
+    points.points_count:SetPosition(0, -60)
+    points.points_count:SetRegionSize(120, 43)
+    points.points_count:SetHAlign(ANCHOR_MIDDLE)
+
+    points.SetCount = function(self, new_count)
+        self.points_count:SetString("x"..new_count)
+        if new_count == 0 then
+            self:Hide()
+        else
+            self:Show()
+        end
+    end
+
+    points:SetCount(number_of_points)
+
+    points:SetOnClick(
+        function()
+            TheFrontEnd:GetAccountManager():VisitAccountPage("rewards")
+        end
+    )
+
+    return points
 end
 
 function TEMPLATES.BoltCounter(number_of_bolts)

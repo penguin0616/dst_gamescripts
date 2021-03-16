@@ -621,7 +621,7 @@ local function GetTypeForID(category, ...)
 end
 local function GetNameForID(category, ...)
     if category == LEVELCATEGORY.COMBINED then
-        return GetNameForSettingsID(...) or GetNameForSettingsID(...)
+        return GetNameForSettingsID(...) or GetNameForWorldGenID(...)
     elseif category == LEVELCATEGORY.SETTINGS then
         return GetNameForSettingsID(...)
     elseif category == LEVELCATEGORY.WORLDGEN then
@@ -632,7 +632,7 @@ local function GetNameForID(category, ...)
 end
 local function GetDescForID(category, ...)
     if category == LEVELCATEGORY.COMBINED then
-        return GetDescForSettingsID(...) or GetDescForSettingsID(...)
+        return GetDescForSettingsID(...) or GetDescForWorldGenID(...)
     elseif category == LEVELCATEGORY.SETTINGS then
         return GetDescForSettingsID(...)
     elseif category == LEVELCATEGORY.WORLDGEN then

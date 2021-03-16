@@ -15,6 +15,25 @@ require "skinsutils"
 TRANSITION_DURATION = 0.5
 DEFAULT_TITLE_SIZE = 55
 
+local ItemIsCurrency = function(item)
+    return item.item == ""
+end
+
+local GetThankYouBuild = function(item)
+    if ItemIsCurrency(item) then        
+        local currency = item.currency
+        if currency == "SPOOLS" then
+            return "spool"
+        elseif currency == "BOLTS" then
+            return "bolt_of_cloth"
+        elseif currency == "KLEI_POINTS" then
+            return "kleipoints"
+        end
+    else
+        return GetBuildForItem(item.item)
+    end
+end
+
 local ThankYouPopup = Class(Screen, function(self, items, callbackfn)
     Screen._ctor(self, "ThankYouPopup")
 
@@ -175,15 +194,28 @@ end
 
 -- Sets the name of the skin on the banner and enables the close button if needed
 function ThankYouPopup:SetSkinName()
-    
-    local skin_name = string.lower(self.items[self.current_item].item)
+    if ItemIsCurrency(self.items[self.current_item]) then
+        self.item_name:SetColour({ 1.000, 1.000, 1.000, 1 })
 
-    self.item_name:SetColour(GetColorForItem(skin_name))
-    self.item_name:SetString(GetSkinName(skin_name))
-    --self.banner:Show()
+        local currency = self.items[self.current_item].currency
+        if currency == "SPOOLS" then
+            currency = STRINGS.UI.PLAYERSUMMARYSCREEN.CURRENCY_LABEL
+        elseif currency == "BOLTS" then
+            currency = STRINGS.UI.PURCHASEPACKSCREEN.VIRTUAL_CURRENCY
+        elseif currency == "KLEI_POINTS" then
+            currency = STRINGS.UI.PLAYERSUMMARYSCREEN.POINTS_LABEL
+        end
+        self.item_name:SetString( subfmt( STRINGS.UI.REDEEMDIALOG.CURRENCY_FMT, { currency = currency, currency_amt = self.items[self.current_item].currency_amt }) )
+    else
+        local skin_name = string.lower(self.items[self.current_item].item)
+
+        self.item_name:SetColour(GetColorForItem(skin_name))
+        self.item_name:SetString(GetSkinName(skin_name))
+        --self.banner:Show()
+    end
+
     self.item_name:Show()
     self.upper_banner_text:Show()
-
 end
 
 -- Enables or disables arrows according to our current item
@@ -260,7 +292,7 @@ function ThankYouPopup:ChangeGift(offset)
 		self.can_close = false;
     
     else -- Already opened item
-        local build = GetBuildForItem(self.items[self.current_item].item)
+        local build = GetThankYouBuild(self.items[self.current_item])
         self.spawn_portal:GetAnimState():OverrideSkinSymbol("SWAP_ICON", build, "SWAP_ICON")
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/player_receives_gift_animation_spin", "ty_skin_in_sound")
         self.spawn_portal:GetAnimState():PlayAnimation("skin_in")
@@ -274,7 +306,6 @@ function ThankYouPopup:ChangeGift(offset)
 
     self.transitioning = true
     self:EvaluateButtons()
-
 end
 
 -- Plays the closing animation
@@ -299,9 +330,7 @@ function ThankYouPopup:OpenGift()
     self.right_btn:Hide()
     self.left_btn:Hide()
 
-    local skin_name = self.items[self.current_item].item
-    local build = GetBuildForItem(skin_name)
-
+    local build = GetThankYouBuild(self.items[self.current_item])
     self.spawn_portal:GetAnimState():OverrideSkinSymbol("SWAP_ICON", build, "SWAP_ICON")
 
     TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/player_receives_gift_animation", "ty_open_sound")

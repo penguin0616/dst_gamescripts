@@ -34,6 +34,12 @@ function CollectionScreen:DoInit()
 	self.doodad_count:SetPosition(-550, 215)
 	self.doodad_count:SetScale(0.4)
 
+    if IsSteam() or IsRail() then
+        self.points_count = self.root:AddChild(TEMPLATES.KleiPointsCounter(TheInventory:GetKleiPointsAmount()))
+        self.points_count:SetPosition(-480, 215)
+        self.points_count:SetScale(0.4)
+    end
+
     self.subscreener = Subscreener(self,
         self.MakeMenu,
         {
@@ -173,6 +179,9 @@ end
 
 function CollectionScreen:RefreshInventory(animateDoodads)
     self.doodad_count:SetCount(TheInventory:GetCurrencyAmount(), animateDoodads)
+    if IsSteam() or IsRail() then
+        self.points_count:SetCount(TheInventory:GetKleiPointsAmount())
+    end
     self.subscreener.sub_screens["skins"]:RefreshInventory()
 end
 

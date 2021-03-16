@@ -211,11 +211,54 @@ function ModIndex:Save(callback)
     local insz, outsz = SavePersistentString(self:GetModIndexName(), data, ENCODE_SAVES, callback)
 end
 
+local workshop_prefix = "workshop-"
+--This function only works if the modindex has been updated
+function ResolveModname(modname)
+	--try to convert from Workshop id to modname
+	if KnownModIndex:DoesModExistAnyVersion(modname) then
+		return modname
+	else
+		--modname wasn't found, try it as a workshop mod
+		local workshop_modname = workshop_prefix..modname
+		if KnownModIndex:DoesModExistAnyVersion(workshop_modname) then
+			return workshop_modname
+		end
+	end
+	return nil
+end
+
+function IsWorkshopMod(modname)
+	if modname == nil then
+		return false
+	end
+	return modname:sub( 1, workshop_prefix:len() ) == workshop_prefix
+end
+
+function GetWorkshopIdNumber(modname)
+	return string.sub(modname, workshop_prefix:len() + 1)
+end
+
 function ModIndex:GetTempEnabledMods()
 	local moddirs = {}
 	for name, data in pairs(self.savedata.known_mods) do
 		if data.temp_enabled then
 			table.insert(moddirs, name)
+		end
+	end
+	return moddirs
+end
+
+function ModIndex:GetForceEnabledMods()
+	local moddirs = {}
+	for name in pairs(self.modsettings.forceenable) do
+		if (IsWorkshopMod(name)) then
+			table.insert(moddirs, name)
+		else
+			if tonumber(name) then
+				table.insert(moddirs, "workshop-"..name)
+			else
+				table.insert(moddirs, name)
+			end
 		end
 	end
 	return moddirs
@@ -236,6 +279,11 @@ function ModIndex:GetModsToLoad(usecached)
 			end
 		end
 		for i, moddir in ipairs(self:GetTempEnabledMods()) do
+			if not table.contains(moddirs, moddir) then
+				self.forceddirs[moddir] = true
+			end
+		end
+		for i, moddir in ipairs(self:GetForceEnabledMods()) do
 			if not table.contains(moddirs, moddir) then
 				self.forceddirs[moddir] = true
 			end
@@ -357,32 +405,6 @@ function ModIndex:LoadModOverides(shardGameIndex)
     return overrides
 end
 
-local workshop_prefix = "workshop-"
---This function only works if the modindex has been updated
-function ResolveModname(modname)
-	--try to convert from Workshop id to modname
-	if KnownModIndex:DoesModExistAnyVersion(modname) then
-		return modname
-	else
-		--modname wasn't found, try it as a workshop mod
-		local workshop_modname = workshop_prefix..modname
-		if KnownModIndex:DoesModExistAnyVersion(workshop_modname) then
-			return workshop_modname
-		end
-	end
-	return nil
-end
-
-function IsWorkshopMod(modname)
-	if modname == nil then
-		return false
-	end
-	return modname:sub( 1, workshop_prefix:len() ) == workshop_prefix
-end
-
-function GetWorkshopIdNumber(modname)
-	return string.sub(modname, workshop_prefix:len() + 1)
-end
 
 function ModIndex:TryLoadMod(modname)
 	if self.savedata.known_mods[modname] then return true end

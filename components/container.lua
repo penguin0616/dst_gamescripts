@@ -32,8 +32,6 @@ local Container = Class(function(self, inst)
     self.openlist = {}
     self.opencount = 0
 
-    inst:DoTaskInTime(0, function() self.inst.replica.container:RemoveOpener(nil) end)
-
 	--self.droponopen = false
 
     inst:ListenForEvent("player_despawn", OnOwnerDespawned)

@@ -1102,17 +1102,17 @@ function ModsTab:ShowModDetails(widget_idx, client_mod)
     local align = self.detailtitle._align
     self.detailtitle:SetMultilineTruncatedString(modinfo.name or modname or "", align.maxlines, align.width, align.maxchars, true)
     local w,h = self.detailtitle:GetRegionSize()
-    self.detailtitle:SetPosition(w/2 - align.x, align.y)
+    self.detailtitle:SetPosition((w or 0)/2 - align.x, align.y)
 
     align = self.detailauthor._align
     self.detailauthor:SetTruncatedString(modname and string.format(STRINGS.UI.MODSSCREEN.AUTHORBY, modinfo.author or "unknown") or "", align.width, align.maxchars, true)
     w, h = self.detailauthor:GetRegionSize()
-    self.detailauthor:SetPosition(w/2 - align.x, align.y)
+    self.detailauthor:SetPosition((w or 0)/2 - align.x, align.y)
 
     align = self.detaildesc._align
     self.detaildesc:SetMultilineTruncatedString(modinfo.description or "", align.maxlines, align.width, align.maxchars, true)
     w, h = self.detaildesc:GetRegionSize()
-    self.detaildesc:SetPosition(w/2 - 190, 90 - .5 * h)
+    self.detaildesc:SetPosition((w or 0)/2 - 190, 90 - .5 * (h or 0))
 
     if modinfo.dst_compatible then
         if modinfo.dst_compatibility_specified == false then

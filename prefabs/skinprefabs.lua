@@ -2549,6 +2549,16 @@ table.insert(prefs, CreatePrefabSkin("lighter_haunteddoll",
 	release_group = 65,
 }))
 
+table.insert(prefs, CreatePrefabSkin("lightning_rod_nautical",
+{
+	base_prefab = "lightning_rod",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) lightning_rod_init_fn(inst, "lightning_rod_nautical") end,
+	skin_tags = { "LIGHTNING_ROD", "NAUTICAL", "CRAFTABLE", },
+	release_group = 115,
+}))
+
 table.insert(prefs, CreatePrefabSkin("lightning_rod_robot",
 {
 	base_prefab = "lightning_rod",

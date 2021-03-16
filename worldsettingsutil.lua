@@ -154,6 +154,9 @@ local function Stop_Spawner_StartDelay_Timer(inst)
     inst.components.spawner.externaltimerfinished = false
     inst.components.worldsettingstimer:StopTimer(SPAWNER_STARTDELAY_TIMERNAME)
 end
+local function Spawner_StartDelay_Timer_Exists(inst)
+    return inst.components.worldsettingstimer:ActiveTimerExists(SPAWNER_STARTDELAY_TIMERNAME)
+end
 
 local function On_Spawner_StartDelay_TimerFinished(inst)
     local spawner = inst.components.spawner
@@ -190,6 +193,7 @@ function WorldSettings_Spawner_SpawnDelay(inst, startdelay, enabled)
     spawner.useexternaltimer = true
     spawner.starttimerfn = Start_Spawner_StartDelay_Timer
     spawner.stoptimerfn = Stop_Spawner_StartDelay_Timer
+    spawner.timertestfn = Spawner_StartDelay_Timer_Exists
 
     worldsettingstimer:AddTimer(SPAWNER_STARTDELAY_TIMERNAME, startdelay, enabled, On_Spawner_StartDelay_TimerFinished)
 end
