@@ -553,13 +553,6 @@ local memoizedFilePaths = {}
 
 -- look in package loaders to find the file from the root directories
 -- this will look first in the mods and then in the data directory
-local function try_path(path, filepath)
-    local filename = string.gsub(string.gsub(path, "scripts\\%?%.lua", filepath), "\\", "/")
-    if not kleifileexists or kleifileexists(filename) then
-        return filename
-    end
-end
-
 local function softresolvefilepath_internal(filepath, force_path_search, search_first_path)
     force_path_search = force_path_search or false
 
@@ -575,8 +568,8 @@ local function softresolvefilepath_internal(filepath, force_path_search, search_
 
     --sometimes from context we can know the most likely path for an asset, this can result in less time spent searching the tons of mod search paths.
     if search_first_path then
-        local filename = try_path(search_first_path, filepath)
-		if filename then
+        local filename = search_first_path..filepath
+        if not kleifileexists or kleifileexists(filename) then
             return filename
         end
     end
@@ -590,8 +583,8 @@ local function softresolvefilepath_internal(filepath, force_path_search, search_
 
 	local searchpaths = package.path
     for path in string.gmatch(searchpaths, "([^;]+)") do
-        local filename = try_path(path, filepath)
-		if filename then
+        local filename = string.gsub(string.gsub(path, "scripts\\%?%.lua", filepath), "\\", "/")
+        if not kleifileexists or kleifileexists(filename) then
             return filename
         end
     end

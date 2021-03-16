@@ -227,9 +227,11 @@ function ModIndex:GetModsToLoad(usecached)
 	local ret = {}
 	if not cached then
 		local moddirs = TheSim:GetModDirectoryNames()
+		local mods_to_load = {}
 		for i,moddir in ipairs(moddirs) do
-			if (self:IsModEnabled(moddir) or self:IsModForceEnabled(moddir) or self:IsModTempEnabled(moddir) ) and not self:IsModTempDisabled(moddir) then
+			if ((self:IsModEnabled(moddir) or self:IsModForceEnabled(moddir) or self:IsModTempEnabled(moddir) ) and not self:IsModTempDisabled(moddir)) and not mods_to_load[moddir] then
 				print("ModIndex:GetModsToLoad inserting moddir, ", moddir)
+				mods_to_load[moddir] = true
 				table.insert(ret, moddir)
 			end
 		end
@@ -239,8 +241,9 @@ function ModIndex:GetModsToLoad(usecached)
 			end
 		end
 		for moddir in pairs(self.forceddirs) do
-			if (self:IsModEnabled(moddir) or self:IsModForceEnabled(moddir) or self:IsModTempEnabled(moddir) ) and not self:IsModTempDisabled(moddir) then
+			if ((self:IsModEnabled(moddir) or self:IsModForceEnabled(moddir) or self:IsModTempEnabled(moddir) ) and not self:IsModTempDisabled(moddir)) and not mods_to_load[moddir] then
 				print("ModIndex:GetModsToLoad inserting forcedmoddir, ", moddir)
+				mods_to_load[moddir] = true
 				table.insert(ret, moddir)
 			end
 		end

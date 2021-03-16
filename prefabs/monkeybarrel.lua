@@ -173,6 +173,9 @@ local function fn()
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MONKEYBARREL_SPAWN_PERIOD, TUNING.MONKEYBARREL_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MONKEYBARREL_REGEN_PERIOD, TUNING.MONKEYBARREL_ENABLED)
+    if not TUNING.MONKEYBARREL_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "monkey"

@@ -227,6 +227,9 @@ local function pondmos()
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MOSQUITO_POND_SPAWN_TIME, TUNING.MOSQUITO_POND_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MOSQUITO_POND_REGEN_TIME, TUNING.MOSQUITO_POND_ENABLED)
+    if not TUNING.MOSQUITO_POND_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "mosquito"
@@ -258,6 +261,9 @@ local function pondfrog()
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.FROG_POND_SPAWN_TIME, TUNING.FROG_POND_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.FROG_POND_REGEN_TIME, TUNING.FROG_POND_ENABLED)
+    if not TUNING.FROG_POND_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "frog"

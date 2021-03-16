@@ -274,6 +274,9 @@ local function MakeBeebox(name, common_postinit, master_postinit)
         inst:WatchWorldState("season", SeasonalSpawnChanges)
         WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.BEEBOX_RELEASE_TIME, TUNING.BEEBOX_ENABLED)
         WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.BEEBOX_REGEN_TIME, TUNING.BEEBOX_ENABLED)
+        if not TUNING.BEEBOX_ENABLED then
+            inst.components.childspawner.childreninside = 0
+        end
 
         if TheWorld.state.isday and not TheWorld.state.iswinter then
             inst.components.childspawner:StartSpawning()

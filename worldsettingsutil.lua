@@ -132,7 +132,7 @@ function WorldSettings_Timer_PreLoad(inst, data, timername, maxtimeleft)
 end
 function WorldSettings_Timer_PreLoad_Fix(inst, data, timername, maxmultiplier)
     if data and data.worldsettingstimer and data.worldsettingstimer.timers[timername] then
-        data.worldsettingstimer.timers[timername].timeleft = math.max(data.worldsettingstimer.timers[timername].timeleft, maxmultiplier)
+        data.worldsettingstimer.timers[timername].timeleft = math.min(data.worldsettingstimer.timers[timername].timeleft, maxmultiplier)
     end
 end
 

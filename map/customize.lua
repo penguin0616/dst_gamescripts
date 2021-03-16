@@ -370,7 +370,7 @@ local WORLDSETTINGS_GROUP = {
 			["beequeen"] = {value = "default", image = "beequeen.tex", world={"forest"}},
 			["toadstool"] = {value = "default", image = "toadstool.tex", world={"cave"}},
 			["malbatross"] = {value = "default", image = "malbatross.tex", world={"forest"}},
-			["fruitfly"] = {value = "default", image = "fruitfly.tex", world={"forest"}},
+			["fruitfly"] = {value = "default", image = "fruitfly.tex", world={"forest", "cave"}},
 			["klaus"] = {value = "default", image = "klaus.tex", world={"forest"}},
 			["spiderqueen"] = {value = "default", image = "spiderqueen.tex", world={"forest", "cave"}},
 			--NO_BOSS_TIME?

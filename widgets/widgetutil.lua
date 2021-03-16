@@ -20,11 +20,10 @@ function CanPrototypeRecipe(recipetree, buildertree)
 end
 
 function DoRecipeClick(owner, recipe, skin)
-    if skin == recipe.name then
-        skin = nil
-    end
-
     if recipe ~= nil and owner ~= nil and owner.replica.builder ~= nil then
+        if skin == recipe.name then
+            skin = nil
+        end
         if owner:HasTag("busy") or owner.replica.builder:IsBusy() then
             return true
         end

@@ -477,7 +477,6 @@ function ModWrangler:LoadMods(worldgen)
 				else
 					KnownModIndex:LoadModConfigurationOptions(modname, not TheNet:GetIsServer())
 				end
-				KnownModIndex:ApplyConfigOptionOverrides(mod_overrides)
 			end
 
 			local initenv = KnownModIndex:GetModInfo(modname)
@@ -492,6 +491,7 @@ function ModWrangler:LoadMods(worldgen)
 			print(loadmsg)
 		end
 	end
+	KnownModIndex:ApplyConfigOptionOverrides(mod_overrides)
 
 	-- Sort the mods by priority, so that "library" mods can load first
 	local function modPrioritySort(a,b)

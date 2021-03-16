@@ -228,6 +228,9 @@ local function mermhouse_master(inst)
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MERMHOUSE_RELEASE_TIME, TUNING.MERMHOUSE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MERMHOUSE_REGEN_TIME, TUNING.MERMHOUSE_ENABLED)
+    if not TUNING.MERMHOUSE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.OnPreLoad = OnPreLoad
 end

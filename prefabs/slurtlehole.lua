@@ -129,6 +129,9 @@ local function fn()
     end
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.SLURTLEHOLE_SPAWN_PERIOD, TUNING.SLURTLEHOLE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.SLURTLEHOLE_REGEN_PERIOD, TUNING.SLURTLEHOLE_ENABLED)
+    if not TUNING.SLURTLEHOLE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "slurtle"
     inst.components.childspawner:SetRareChild("snurtle", TUNING.SLURTLEHOLE_RARECHILD_CHANCE)

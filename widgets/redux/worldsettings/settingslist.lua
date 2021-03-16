@@ -184,6 +184,15 @@ local SettingsList = Class(Widget, function(self, parent_widget, levelcategory)
     self.focus_forward = function() return self.scroll_list end
 end)
 
+local function IsEntryInSpinOptions(spin_options, entry)
+    for i, n in ipairs(spin_options) do
+        if n.data == entry then
+            return true
+        end
+    end
+    return false
+end
+
 function SettingsList:MakeScrollList()
     if self.scroll_list then
         self.scroll_list:Kill()
@@ -291,7 +300,9 @@ function SettingsList:MakeScrollList()
 
                 opt.spinner:SetOptions(spin_options)
 
-                opt.spinner:SetSelected(self.parent_widget:GetValueForOption(v.name) or v.default)
+                local val = self.parent_widget:GetValueForOption(v.name) or v.default
+                if not IsEntryInSpinOptions(spin_options, val) then val = v.default end
+                opt.spinner:SetSelected(val)
                 self:SetBGForSpinner(opt.spinner, data.option)
 
                 opt.spinner.label:SetString(STRINGS.UI.CUSTOMIZATIONSCREEN[string.upper(v.name)])
@@ -312,7 +323,9 @@ function SettingsList:MakeScrollList()
                 widget.opt_textentry.textentry:SetSelected(self.parent_widget:GetValueForOption(v.name) or v.default)
                 self:SetBGForTextEntry(widget.opt_textentry.textentry, data.option)
             elseif v.widget_type == "optionsspinner" then
-                widget.opt_spinner.spinner:SetSelected(self.parent_widget:GetValueForOption(v.name) or v.default)
+                local val = self.parent_widget:GetValueForOption(v.name) or v.default
+                if not IsEntryInSpinOptions(v.options, val) then val = v.default end
+                widget.opt_spinner.spinner:SetSelected(val)
                 self:SetBGForSpinner(widget.opt_spinner.spinner, data.option)
             end
         end

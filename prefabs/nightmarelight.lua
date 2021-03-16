@@ -261,8 +261,11 @@ local function fn()
     inst.components.childspawner:SetRegenPeriod(TUNING.NIGHTMAREFISSURE_RELEASE_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.NIGHTMAREFISSURE_REGEN_TIME)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.NIGHTMARELIGHT_MINCHILDREN, TUNING.NIGHTMARELIGHT_MAXCHILDREN))
-    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.NIGHTMAREFISSURE_RELEASE_TIME, TUNING.NIGHTMAREFISSURE_ENABLED)
-    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.NIGHTMAREFISSURE_REGEN_TIME, TUNING.NIGHTMAREFISSURE_ENABLED)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.NIGHTMAREFISSURE_RELEASE_TIME, TUNING.NIGHTMARELIGHT_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.NIGHTMAREFISSURE_REGEN_TIME, TUNING.NIGHTMARELIGHT_ENABLED)
+    if not TUNING.NIGHTMARELIGHT_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner.childname = "crawlingnightmare"
     inst.components.childspawner:SetRareChild("nightmarebeak", .35)

@@ -196,6 +196,9 @@ local function open_fn()
     inst.components.childspawner:SetMaxChildren(TUNING.CAVE_ENTRANCE_BATS_MAX_CHILDREN)
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.CAVE_ENTRANCE_BATS_SPAWN_PERIOD, TUNING.BATCAVE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.CAVE_ENTRANCE_BATS_REGEN_PERIOD, TUNING.BATCAVE_ENABLED)
+    if not TUNING.BATCAVE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
     inst.components.childspawner.canspawnfn = canspawn
     inst.components.childspawner.childname = "bat"
 

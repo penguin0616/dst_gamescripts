@@ -97,6 +97,9 @@ local function fn()
 	inst.components.childspawner:SetMaxChildren(TUNING.BATCAVE_MAX_CHILDREN)
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.BATCAVE_SPAWN_PERIOD, TUNING.BATCAVE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.BATCAVE_REGEN_PERIOD, TUNING.BATCAVE_ENABLED)
+    if not TUNING.BATCAVE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 	inst.components.childspawner.childname = "bat"
     inst.components.childspawner:StartSpawning()
     inst.components.childspawner:StartRegen()

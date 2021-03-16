@@ -28,12 +28,14 @@ local Container = Class(function(self, inst)
     self.widget = nil
     self.itemtestfn = nil
     self.priorityfn = nil
-    
+
     self.openlist = {}
     self.opencount = 0
 
+    inst:DoTaskInTime(0, function() self.inst.replica.container:RemoveOpener(nil) end)
+
 	--self.droponopen = false
-	
+
     inst:ListenForEvent("player_despawn", OnOwnerDespawned)
 
     --the current opener that has performed an action, can be nil or incorrect, verify before using this!!!

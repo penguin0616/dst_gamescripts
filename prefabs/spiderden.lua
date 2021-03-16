@@ -482,6 +482,9 @@ local function MakeSpiderDenFn(den_level)
         inst.components.childspawner:SetSpawnPeriod(TUNING.SPIDERDEN_RELEASE_TIME)
         WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.SPIDERDEN_RELEASE_TIME, TUNING.SPIDERDEN_ENABLED)
         WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.SPIDERDEN_REGEN_TIME, TUNING.SPIDERDEN_ENABLED)
+        if not TUNING.SPIDERDEN_ENABLED then
+            inst.components.childspawner.childreninside = 0
+        end
 
         inst.components.childspawner.allowboats = true
 

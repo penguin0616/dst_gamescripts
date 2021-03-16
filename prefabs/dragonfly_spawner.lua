@@ -85,11 +85,10 @@ local function fn()
     inst.components.childspawner:SetMaxChildren(1)
     inst.components.childspawner:SetSpawnPeriod(TUNING.DRAGONFLY_SPAWN_TIME, 0)
     inst.components.childspawner.onchildkilledfn = OnKilled
-    if TUNING.SPAWN_DRAGONFLY then
-        inst.components.childspawner:StartSpawning()
-    else
-        inst.components.childspawner:StopSpawning()
+    if not TUNING.SPAWN_DRAGONFLY then
+        inst.components.childspawner.childreninside = 0
     end
+    inst.components.childspawner:StartSpawning()
     inst.components.childspawner:StopRegen()
     inst.components.childspawner:SetSpawnedFn(onspawned)
 

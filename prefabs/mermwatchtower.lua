@@ -182,6 +182,9 @@ local function fn()
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MERMWATCHTOWER_RELEASE_TIME, TUNING.MERMWATCHTOWER_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MERMWATCHTOWER_REGEN_TIME, TUNING.MERMWATCHTOWER_ENABLED)
+    if not TUNING.MERMWATCHTOWER_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst:AddComponent("inspectable")
     inst.components.inspectable.descriptionfn = DescriptionFn

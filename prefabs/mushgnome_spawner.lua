@@ -109,6 +109,9 @@ local function spawner()
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MUSHGNOME_RELEASE_TIME, TUNING.MUSHGNOME_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MUSHGNOME_REGEN_TIME, TUNING.MUSHGNOME_ENABLED)
+    if not TUNING.MUSHGNOME_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner:SetSpawnedFn(on_gnome_spawned)
     inst.components.childspawner:SetOccupiedFn(StartTesting)

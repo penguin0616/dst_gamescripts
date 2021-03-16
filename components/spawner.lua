@@ -110,7 +110,7 @@ function Spawner:SpawnWithDelay(delay)
 end
 
 function Spawner:IsSpawnPending()
-    return self.task ~= nil
+    return (not self.useexternaltimer and self.task ~= nil) or (self.useexternaltimer and not self.externaltimerfinished)
 end
 
 function Spawner:SetQueueSpawning(queued, retryperiod)
