@@ -75,7 +75,9 @@ function Stackable:Get(num)
         end
 
         if instance.components.inventoryitem ~= nil and self.inst.components.inventoryitem ~= nil then
-            instance.components.inventoryitem.owner = self.inst.components.inventoryitem.owner
+            if self.inst.components.inventoryitem.owner then
+                instance.components.inventoryitem:OnPutInInventory(self.inst.components.inventoryitem.owner)
+            end
             instance.components.inventoryitem:InheritMoisture(self.inst.components.inventoryitem:GetMoisture(), self.inst.components.inventoryitem:IsWet())
         end
 

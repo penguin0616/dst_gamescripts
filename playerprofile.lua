@@ -793,6 +793,23 @@ function PlayerProfile:GetAutoCavesEnabled()
 	end
 end
 
+function PlayerProfile:SetModsWarning(enabled)
+	if USE_SETTINGS_FILE then
+	   TheSim:SetSetting("misc", "modswarning", tostring(enabled))
+   else
+	   self:SetValue("modswarning", enabled)
+	   self.dirty = true
+   end
+end
+
+function PlayerProfile:GetModsWarning()
+	if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "modswarning") ~= "false"
+	else
+		return GetValueOrDefault( self.persistdata.modswarning, true )
+	end
+end
+
 function PlayerProfile:SetPresetMode(mode)
 	if USE_SETTINGS_FILE then
 	   TheSim:SetSetting("misc", "presetmode", mode)

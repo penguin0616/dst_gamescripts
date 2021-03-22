@@ -1207,7 +1207,7 @@ end)
 local invaliddebugspawnprefabs =
 {
     ["forest"] = true,
-    ["caves"] = true,
+    ["cave"] = true,
     ["quagmire"] = true,
     ["lavaarena"] = true,
     ["world"] = true,

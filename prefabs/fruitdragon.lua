@@ -419,7 +419,7 @@ local function fn()
     inst.components.combat.hiteffectsymbol = "gecko_torso_middle"
 	inst.components.combat:SetAttackPeriod(TUNING.FRUITDRAGON.ATTACK_PERIOD)
 	inst.components.combat:SetDefaultDamage(TUNING.FRUITDRAGON.UNRIPE_DAMAGE)
-	inst.components.combat:SetRange(TUNING.FRUITDRAGON.ATTACK_RANGE, TUNING.FRUITDRAGON.HIT_ATTACK_RANGE)
+	inst.components.combat:SetRange(TUNING.FRUITDRAGON.ATTACK_RANGE, TUNING.FRUITDRAGON.HIT_RANGE)
     inst.components.combat:SetKeepTargetFunction(KeepTarget)
 	inst.components.combat:SetRetargetFunction(1, RetargetFn)
 	inst:ListenForEvent("doattack", doattack)

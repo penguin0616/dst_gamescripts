@@ -261,6 +261,24 @@ local function LoadAssets(asset_set, savedata)
                 LoadPrefabFile("prefabs/audio_test_prefab")
             end
 
+            if Settings.last_world_specialevent ~= Settings.current_world_specialevent then
+				if Settings.current_world_specialevent then
+					TheSim:LoadPrefabs({ Settings.current_world_specialevent })
+				end
+				if Settings.last_world_specialevent then
+					TheSim:UnloadPrefabs({ Settings.last_world_specialevent })
+				end
+            end
+
+            if Settings.last_world_asset ~= Settings.current_world_asset then
+				if Settings.current_world_asset then
+					TheSim:LoadPrefabs({ Settings.current_world_asset })
+				end
+				if Settings.last_world_asset then
+					TheSim:UnloadPrefabs({ Settings.last_world_asset })
+				end
+            end
+
 			ModManager:RegisterPrefabs()
 		else
 			print("\tUnload FE")

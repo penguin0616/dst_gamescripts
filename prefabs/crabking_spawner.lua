@@ -26,6 +26,12 @@ local function ontimerdone(inst, data)
     end
 end
 
+local function OnPreLoad(inst, data)
+    if data and data.childspawner then
+        data.childspawner.spawning = true
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -44,12 +50,15 @@ local function fn()
     if not TUNING.SPAWN_CRABKING then
         inst.components.childspawner.childreninside = 0
     end
+    inst.components.childspawner:StartSpawning()
     inst.components.childspawner:StopRegen()
     inst.components.childspawner.overridespawnlocation = zero_spawn_offset
 
     inst:AddComponent("worldsettingstimer")
     inst.components.worldsettingstimer:AddTimer(CRABKING_SPAWNTIMER, TUNING.CRABKING_RESPAWN_TIME, TUNING.SPAWN_CRABKING)
     inst:ListenForEvent("timerdone", ontimerdone)
+
+    inst.OnPreLoad = OnPreLoad
 
     return inst
 end

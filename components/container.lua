@@ -636,6 +636,7 @@ function Container:RemoveItem(item, wholestack)
 
     if not wholestack and item.components.stackable ~= nil and item.components.stackable:IsStack() then
         local dec = item.components.stackable:Get()
+        dec.components.inventoryitem:OnRemoved()
         dec.prevslot = prevslot
         dec.prevcontainer = self
         return dec

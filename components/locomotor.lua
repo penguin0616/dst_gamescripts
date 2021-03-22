@@ -34,9 +34,6 @@ end
 
 function Dest:GetPoint()
     if self.inst ~= nil and self.inst.components.inventoryitem ~= nil and self.inst.components.inventoryitem.owner ~= nil then
-        if not self.inst.components.inventoryitem.owner:IsValid() then
-            print("Dest:GetPoint", self.inst.components.inventoryitem.owner)
-        end
         return self.inst.components.inventoryitem.owner.Transform:GetWorldPosition()
     elseif self.inst ~= nil then
         return self.inst.Transform:GetWorldPosition()

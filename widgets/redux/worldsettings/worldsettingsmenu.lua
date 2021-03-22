@@ -394,7 +394,7 @@ end
 --called by parent widget
 function WorldSettingsMenu:VerifyValidSeasonSettings()
     -- Only main world (index 1) has seasons.
-    if self.parent_widget:IsMasterLevel() and self.levelcategory == LEVELCATEGORY.WORLDGEN then
+    if self.parent_widget:IsMasterLevel() and self.levelcategory == LEVELCATEGORY.SETTINGS then
         for i, season in ipairs({"autumn", "winter", "spring", "summer"}) do
             if self:GetValueForOption(season) ~= "noseason" then
                 return true

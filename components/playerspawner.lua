@@ -100,20 +100,25 @@ local function PlayerRemove(player, deletesession, migrationdata, readytoremove)
     end
 end
 
-local SPAWN_PROTECTION_DANGER_TAGS = {"hostile"}
+local SPAWN_PROTECTION_DANGER_TAGS = {"hostile", "_combat", "trapdamage"}
 local SPAWN_PROTECTION_BLOCKED_TAGS = {"blocker", "structure"}
 
 function self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading)
-	if not isloading and (TheWorld.topology.overrides == nil or TheWorld.topology.overrides.spawnprotection ~= "never") then
-		return (TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.spawnprotection == "always")
-				or #TheSim:FindEntities(x, y, z, 16, nil, nil, SPAWN_PROTECTION_DANGER_TAGS) > 2
-				or #TheSim:FindEntities(x, y, z, 4, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 4
-				or #TheSim:FindEntities(x, y, z, 6, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 16
-				or #TheSim:FindEntities(x, y, z, 12, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 36
-				or #TheSim:FindEntities(x, y, z, 24, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 52
-	end
-
-	return false
+    if TheWorld.topology.overrides ~= nil and not isloading then
+        if TheWorld.topology.overrides.spawnprotection == "always" then
+            return true
+        elseif TheWorld.topology.overrides.spawnprotection == "never" then
+            return false
+        else
+            if TheWorld.state.cycles <= 1 then return false end
+            return #TheSim:FindEntities(x, y, z, 16, nil, nil, SPAWN_PROTECTION_DANGER_TAGS) > 2 or
+                #TheSim:FindEntities(x, y, z, 12, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 4 or
+                #TheSim:FindEntities(x, y, z, 18, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 10 or
+                #TheSim:FindEntities(x, y, z, 24, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 15 or
+                #TheSim:FindEntities(x, y, z, 32, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 20
+        end
+    end
+    return false
 end
 
 --------------------------------------------------------------------------

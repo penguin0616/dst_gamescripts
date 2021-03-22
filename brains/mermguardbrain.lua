@@ -221,17 +221,15 @@ function MermBrain:OnStart()
                 ),
             }, .25)),
 
-        IfNode(function() return StartChoppingCondition(self.inst) end, "chop", 
-                WhileNode(function() return KeepChoppingAction(self.inst) end, "keep chopping",
-                    LoopNode{
-                        ChattyNode(self.inst, "MERM_TALK_HELP_CHOP_WOOD",
-                            DoAction(self.inst, FindTreeToChopAction ))})),
+        IfThenDoWhileNode(function() return StartChoppingCondition(self.inst) end, function() return KeepChoppingAction(self.inst) end, "chop",
+	        LoopNode{
+	            ChattyNode(self.inst, "MERM_TALK_HELP_CHOP_WOOD",
+	                DoAction(self.inst, FindTreeToChopAction ))}),
 
-        IfNode(function() return StartMiningCondition(self.inst) end, "mine", 
-                WhileNode(function() return KeepMiningAction(self.inst) end, "keep mining", 
-                    LoopNode{
-                        ChattyNode(self.inst, "MERM_TALK_HELP_MINE_ROCK",
-                            DoAction(self.inst, FindRockToMineAction ))})),
+        IfThenDoWhileNode(function() return StartMiningCondition(self.inst) end, function() return KeepMiningAction(self.inst) end, "mine",
+            LoopNode{
+                ChattyNode(self.inst, "MERM_TALK_HELP_MINE_ROCK",
+                    DoAction(self.inst, FindRockToMineAction ))}),
 
         ChattyNode(self.inst, "MERM_TALK_FIND_FOOD",
             DoAction(self.inst, EatFoodAction, "Eat Food")),

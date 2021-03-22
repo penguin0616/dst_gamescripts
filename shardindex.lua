@@ -1,4 +1,4 @@
-local SHARDINDEX_VERSION = 3
+local SHARDINDEX_VERSION = 4
 
 ShardIndex = Class(function(self)
     self.ismaster = false
@@ -71,17 +71,22 @@ end
 local function UpgradeShardIndexData(self)
     local savefileupgrades = require "savefileupgrades"
     local upgraded = false
-    
+
     if self.version == nil or self.version == 1 then
         savefileupgrades.utilities.UpgradeShardIndexFromV1toV2(self)
         upgraded = true
     end
-    
+
     if self.version == 2 then
         savefileupgrades.utilities.UpgradeShardIndexFromV2toV3(self)
         upgraded = true
     end
-    
+
+    if self.version == 3 then
+        savefileupgrades.utilities.UpgradeShardIndexFromV3toV4(self)
+        upgraded = true
+    end
+
     return upgraded
 end
 

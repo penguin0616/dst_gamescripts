@@ -21,6 +21,7 @@ if IsNotConsole() then
 		{ text = STRINGS.UI.SANDBOXMENU.SLIDEOFTEN, data = "often" },
 		{ text = STRINGS.UI.SANDBOXMENU.SLIDEMOSTLY, data = "mostly" },
 		{ text = STRINGS.UI.SANDBOXMENU.SLIDEALWAYS, data = "always" },
+		{ text = STRINGS.UI.SANDBOXMENU.SLIDEINSANE, data = "insane" },
 	}
 else
 	frequency_descriptions = {
@@ -398,7 +399,7 @@ local WORLDSETTINGS_GROUP = {
 			["merms"] = {value = "default", image = "merms.tex", world={"forest", "cave"}},
 			["spiders_setting"] = {value = "default", image = "spiders.tex", world={"forest", "cave"}},
 			["spider_warriors"] = {value = "default", desc = yesno_descriptions, image = "spider_warriors.tex", world={"forest", "cave"}},
-			["bats_setting"] = {value = "default", image = "bats.tex", world={"forest", "caves"}},
+			["bats_setting"] = {value = "default", image = "bats.tex", world={"forest", "cave"}},
 
 			["nightmarecreatures"] = {value = "default", image = "nightmarecreatures.tex", world={"cave"}},
 			["spider_hider"] = {value = "default", image = "spider_hider.tex", world={"cave"}},

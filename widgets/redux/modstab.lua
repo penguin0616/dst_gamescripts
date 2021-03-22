@@ -1348,7 +1348,7 @@ function ModsTab:ReloadModInfoPrefabs()
             Asset("IMAGE", info.iconpath),
         }
         local prefab = Prefab("MODSCREEN_"..modname, nil, modinfoassets, nil)
-        RegisterPrefabs(prefab)
+        RegisterSinglePrefab(prefab)
         table.insert(prefabs_to_load, prefab.name)
         self.infoprefabs[modname] = info
     end

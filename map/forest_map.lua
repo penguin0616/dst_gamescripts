@@ -90,6 +90,7 @@ local MULTIPLY = {
 	["often"] = 1.5,
 	["mostly"] = 2.2,
 	["always"] = 3,
+	["insane"] = 6,
 
 	["ocean_never"] = 0,
 	["ocean_rare"] = 0.65,
@@ -98,26 +99,31 @@ local MULTIPLY = {
 	["ocean_often"] = 1.3,
 	["ocean_mostly"] = 1.65,
 	["ocean_always"] = 2,
+	["ocean_insane"] = 4,
 }
 
 local CLUMP = {
 	["often"] = 8,
 	["mostly"] = 15,
 	["always"] = 30,
+	["insane"] = 60,
 
 	["ocean_often"] = 15,
 	["ocean_mostly"] = 25,
 	["ocean_always"] = 40,
+	["ocean_insane"] = 60,
 }
 
 local CLUMPSIZE = {
 	["often"] = {1, 2},
 	["mostly"] = {2, 3},
 	["always"] = {3, 4},
+	["insane"] = {5, 6},
 
 	["ocean_often"] = {1, 2},
 	["ocean_mostly"] = {2, 3},
 	["ocean_always"] = {3, 4},
+	["ocean_insane"] = {5, 6},
 }
 
 local SPAWNER_MUL = 1.2
@@ -853,7 +859,6 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     local double_check = {}
     for i, prefab in ipairs(level.required_prefabs or {}) do
-		print(translated_prefabs and translated_prefabs[prefab])
 		if not translated_prefabs or translated_prefabs[prefab] ~= 0 then
 			if double_check[prefab] == nil then
 				double_check[prefab] = 1
@@ -863,7 +868,6 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 		end
     end
     for prefab, count in pairs(topology_save.root:GetRequiredPrefabs()) do
-		print(translated_prefabs and translated_prefabs[prefab])
 		if not translated_prefabs or translated_prefabs[prefab] ~= 0 then
 			if double_check[prefab] == nil then
 				double_check[prefab] = count
@@ -876,7 +880,6 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
         for _, ocean_room in pairs(storygen.ocean_population) do
             if ocean_room.data ~= nil and ocean_room.data.required_prefabs ~= nil then
                 for _, prefab in ipairs(ocean_room.data.required_prefabs) do
-					print(translated_prefabs and translated_prefabs[prefab])
 					if not translated_prefabs or translated_prefabs[prefab] ~= 0 then
 						if double_check[prefab] == nil then
 							double_check[prefab] = 1

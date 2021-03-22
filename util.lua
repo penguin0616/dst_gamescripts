@@ -551,6 +551,13 @@ end
 
 local memoizedFilePaths = {}
 
+function GetMemoizedFilePaths()
+    return ZipAndEncodeSaveData(memoizedFilePaths)
+end
+function SetMemoizedFilePaths(memoized_file_paths)
+    memoizedFilePaths = DecodeAndUnzipSaveData(memoized_file_paths)
+end
+
 -- look in package loaders to find the file from the root directories
 -- this will look first in the mods and then in the data directory
 local function softresolvefilepath_internal(filepath, force_path_search, search_first_path)
@@ -569,28 +576,21 @@ local function softresolvefilepath_internal(filepath, force_path_search, search_
     --sometimes from context we can know the most likely path for an asset, this can result in less time spent searching the tons of mod search paths.
     if search_first_path then
         local filename = search_first_path..filepath
-        if not kleifileexists or kleifileexists(filename) then
+        if kleifileexists(filename) then
             return filename
         end
     end
 
-    local is_mod_path = string.sub(filepath, 1, MODS_ROOT:len()) == MODS_ROOT
-
-	--if it is a mod path, try it first, as its most likely already correct.
-	if is_mod_path and (not kleifileexists or kleifileexists(filepath)) then
-		return filepath
-	end
-
-	local searchpaths = package.path
-    for path in string.gmatch(searchpaths, "([^;]+)") do
-        local filename = string.gsub(string.gsub(path, "scripts\\%?%.lua", filepath), "\\", "/")
-        if not kleifileexists or kleifileexists(filename) then
+	local searchpaths = package.assetpath
+    for i, pathdata in ipairs_reverse(searchpaths) do
+        local filename = string.gsub(pathdata.path..filepath, "\\", "/")
+        if kleifileexists(filename, pathdata.manifest, filepath) then
             return filename
         end
     end
 
 	--as a last resort see if the file is an already correct path (incase this asset has already been processed)
-	if not is_mod_path and (not kleifileexists or kleifileexists(filepath)) then
+	if kleifileexists(filepath) then
 		return filepath
 	end
 

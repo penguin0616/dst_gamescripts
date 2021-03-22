@@ -112,15 +112,12 @@ local states=
             TimeEvent(5*FRAMES, function(inst) inst.didalertnoise = nil end),
         },
 
-        ontimeout=function(inst)
-            local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
+        ontimeout = function(inst)
             if inst.components.rideable and inst.components.rideable:IsSaddled() and inst.components.domesticatable and inst.components.domesticatable:GetObedience() < TUNING.BEEFALO_KEEP_SADDLE_OBEDIENCE then
                 inst.sg:GoToState("shake_off_saddle")
             elseif inst:HasTag("HasCarrat") and math.random() < 0.3 and IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
                 inst.sg:GoToState("idle_carrat")
-            elseif not inst:HasTag("baby") 
-                and ((herd and herd.components.mood and herd.components.mood:IsInMood())
-                     or (inst.components.mood and inst.components.mood:IsInMood())) then
+            elseif not inst:HasTag("baby") and inst:GetIsInMood() then
                 if math.random() < 0.5 then
                     inst.sg:GoToState("matingcall")
                 else

@@ -2,8 +2,8 @@ local _StopSeeking --forward declare
 
 local SALTLICK_MUST_TAGS = { "saltlick" }
 local SALTLICK_CANT_TAGS = { "INLIMBO", "fire", "burnt" }
-local function _checkforsaltlick(inst, self, resalt)
-    local ent = FindEntity(inst, (resalt or inst:IsAsleep()) and TUNING.SALTLICK_CHECK_DIST * .75 or TUNING.SALTLICK_USE_DIST, nil, SALTLICK_MUST_TAGS, SALTLICK_CANT_TAGS)
+local function _checkforsaltlick(inst, self)
+    local ent = FindEntity(inst, TUNING.SALTLICK_CHECK_DIST, nil, SALTLICK_MUST_TAGS, SALTLICK_CANT_TAGS)
     if ent ~= nil then
         if ent.components.finiteuses ~= nil then
             ent.components.finiteuses:Use(self.uses_per_lick)
@@ -30,16 +30,16 @@ _StopSeeking = function(self)
     if self._task ~= nil then
         self._task:Cancel()
         self._task = nil
-        self.inst:RemoveEventCallback("saltlick_placed", _onsaltlickplaced)
     end
+    self.inst:RemoveEventCallback("saltlick_placed", _onsaltlickplaced)
 end
 
 local function _StartSeeking(self)
     if self._task ~= nil then
         self._task:Cancel()
-    else
-        self.inst:ListenForEvent("saltlick_placed", _onsaltlickplaced)
+        self._task = nil
     end
+    self.inst:ListenForEvent("saltlick_placed", _onsaltlickplaced)
     local period = self.saltedduration * .125 -- = duration / 8
     self._task = self.inst:DoPeriodicTask(period, _checkforsaltlick, math.random() * period, self)
 end
@@ -51,7 +51,7 @@ local function _ontimerdone(inst, data)
             (inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep()) or
             (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) then
             self:SetSalted(false)
-        elseif not _checkforsaltlick(inst, self, true) then
+        elseif not _checkforsaltlick(inst, self) then
             _StartSeeking(self)
             self:SetSalted(false)
         end

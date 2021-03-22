@@ -133,6 +133,10 @@ function RegisterPrefabs(...)
 	end
 end
 
+function RegisterSinglePrefab(prefab)
+	RegisterPrefabsImpl(prefab, RegisterPrefabsResolveAssets)
+end
+
 PREFABDEFINITIONS = {}
 
 function LoadPrefabFile( filename, async_batch_validation, search_asset_first_path )
@@ -162,7 +166,7 @@ function LoadPrefabFile( filename, async_batch_validation, search_asset_first_pa
 				if async_batch_validation then
 					RegisterPrefabsImpl(val, VerifyPrefabAssetExistsAsync)
 				else
-	                RegisterPrefabs(val)
+					RegisterSinglePrefab(val)
 	            end
                 PREFABDEFINITIONS[val.name] = val
             end
@@ -201,7 +205,7 @@ function ModReloadFrontEndAssets(assets, modname)
         end
         local prefab = Prefab("MODFRONTEND_"..modname, nil, assets, nil)
         table.insert(MOD_FRONTEND_PREFABS, prefab.name)
-        RegisterPrefabs(prefab)
+        RegisterSinglePrefab(prefab)
         TheSim:LoadPrefabs({prefab.name})
     end
 end
@@ -1221,6 +1225,9 @@ function SimReset(instanceparameters)
     instanceparameters.last_world_specialevent = Settings.current_world_specialevent
     instanceparameters.loaded_characters = Settings.loaded_characters
     instanceparameters.loaded_mods = ModManager:GetUnloadPrefabsData()
+    if Settings.current_asset_set == "BACKEND" then
+        instanceparameters.memoizedFilePaths = GetMemoizedFilePaths()
+    end
 
     local params = json.encode(instanceparameters)
     TheSim:SetInstanceParameters(params)

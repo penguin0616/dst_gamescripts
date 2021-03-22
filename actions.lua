@@ -1757,9 +1757,7 @@ ACTIONS.HITCHUP.fn = function(act)
         return false, "NEEDBEEF_CLOSER"
     end
 
-    local herd = beefalo.components.herdmember and beefalo.components.herdmember:GetHerd()
-    if (herd and herd.components.mood ~= nil and herd.components.mood:IsInMood() == true) or
-            (beefalo.components.mood ~= nil and beefalo.components.mood:IsInMood() == true) then
+    if beefalo:GetIsInMood() then
         return false, "INMOOD"
     end
 

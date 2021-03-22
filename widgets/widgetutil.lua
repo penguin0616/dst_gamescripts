@@ -19,6 +19,7 @@ function CanPrototypeRecipe(recipetree, buildertree)
     return true
 end
 
+local lastsoundtime = nil
 function DoRecipeClick(owner, recipe, skin)
     if recipe ~= nil and owner ~= nil and owner.replica.builder ~= nil then
         if skin == recipe.name then
@@ -92,7 +93,10 @@ function DoRecipeClick(owner, recipe, skin)
                     end
                 end
                 if not recipe.nounlock then
-                    TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/research_unlock")
+                    if lastsoundtime == nil or GetTime() - lastsoundtime >= 1 then
+                        lastsoundtime = GetTime()
+                        TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/research_unlock")
+                    end
                 end
             else
                 return true

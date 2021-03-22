@@ -341,6 +341,7 @@ function MermKingManager:LoadPostPass(newents, savedata)
 		self.king = newents[savedata.king].entity
 		self.inst:ListenForEvent("onremove", OnKingRemoval, self.king)
 		self.inst:ListenForEvent("death", OnKingDeath, self.king)
+		TheWorld:PushEvent("onmermkingcreated", {king = self.king, throne = self:GetMainThrone()})
 	end
 
 	if savedata.candidate_transforming then

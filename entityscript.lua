@@ -1661,6 +1661,9 @@ function EntityScript:SetClientSideInventoryImageOverride(flagname, srcinventory
     self.inventoryimageremapping = self.inventoryimageremapping or {}
     self.inventoryimageremapping[flagname] = self.inventoryimageremapping[flagname] or {}
     self.inventoryimageremapping[flagname][hash(srcinventoryimage)] = {image = destinventoryimage, atlas = destatlas}
+    if ClientSideInventoryImageFlags[flagname] and ThePlayer then
+        ThePlayer:PushEvent("clientsideinventoryflagschanged")
+    end
 end
 
 function EntityScript:HasClientSideInventoryImageOverrides()

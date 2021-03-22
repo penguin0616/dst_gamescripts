@@ -225,7 +225,6 @@ local function mermhouse_master(inst)
     inst.components.childspawner:SetMaxChildren(TUNING.MERMHOUSE_MERMS)
     inst.components.childspawner:SetMaxEmergencyChildren(TUNING.MERMHOUSE_EMERGENCY_MERMS)
     inst.components.childspawner.canemergencyspawn = TUNING.MERMHOUSE_ENABLED
-
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MERMHOUSE_RELEASE_TIME, TUNING.MERMHOUSE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MERMHOUSE_REGEN_TIME, TUNING.MERMHOUSE_ENABLED)
     if not TUNING.MERMHOUSE_ENABLED then
@@ -248,12 +247,23 @@ local function onbuilt(inst)
     inst.AnimState:PlayAnimation("place")
 end
 
+local function OnPreLoadCrafted(inst, data)
+    WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MERMHOUSE_RELEASE_TIME, TUNING.MERMHOUSE_REGEN_TIME / 2)
+end
+
 local function mermhouse_crafted_master(inst)
     inst.components.childspawner:SetRegenPeriod(TUNING.MERMHOUSE_REGEN_TIME / 2)
     inst.components.childspawner:SetSpawnPeriod(TUNING.MERMHOUSE_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(1)
+    WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MERMHOUSE_RELEASE_TIME, TUNING.MERMHOUSE_ENABLED)
+    WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MERMHOUSE_REGEN_TIME / 2, TUNING.MERMHOUSE_ENABLED)
+    if not TUNING.MERMHOUSE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst:ListenForEvent("onbuilt", onbuilt)
+
+    inst.OnPreLoad = OnPreLoadCrafted
 end
 
 local function invalid_placement_fn(player, placer)

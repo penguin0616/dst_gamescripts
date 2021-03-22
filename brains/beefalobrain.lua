@@ -102,9 +102,7 @@ local function GetLoiterAnchor(inst)
 end
 
 local function TryBeginLoiterState(inst)
-    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
-    if (herd and herd.components.mood and herd.components.mood:IsInMood())
-        or (inst.components.mood and inst.components.mood:IsInMood()) then
+    if inst:GetIsInMood() then
         return false
     end
 
@@ -116,9 +114,7 @@ local function TryBeginLoiterState(inst)
 end
 
 local function TryBeginGreetingState(inst)
-    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
-    if (herd and herd.components.mood and herd.components.mood:IsInMood())
-        or (inst.components.mood and inst.components.mood:IsInMood()) then
+    if inst:GetIsInMood() then
         return false
     end
 

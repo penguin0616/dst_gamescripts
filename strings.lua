@@ -5847,6 +5847,7 @@ STRINGS.UI =
         MODSBADLOAD = "The game did not start correctly last time. This was likely caused by a mod, so all client mods have been disabled.\n\nYou can try re-enabling mods from the mod settings screen.",
         MODFORUMS_NOT_AVAILABLE_YET = "Not available yet",
         MODS = "Mods",
+        ACKNOWLEDGEWARNING = "Don't Show This Again.",
         SCRIPTERRORQUIT = "Exit Game",
         SCRIPTERRORMODWARNING = "This error may have occurred due to a mod you have enabled!\nYou have the following mods enabled:\n",
         TESTING = "This is the testing branch!", 
@@ -10488,6 +10489,7 @@ STRINGS.UI =
         SLIDEOFTEN = "More",
         SLIDEMOSTLY = "Lots",
         SLIDEALWAYS = "Tons",
+        SLIDEINSANE = "Insane",
 
         SLIDEVERYSLOW = "Very Slow",
         SLIDESLOW = "Slow",

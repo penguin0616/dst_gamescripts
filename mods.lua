@@ -406,6 +406,9 @@ function ModWrangler:FrontendLoadMod(modname)
 
     local oldpath = package.path
 	package.path = MODS_ROOT..modname.."\\scripts\\?.lua;"..package.path
+	--intentionally no manifest file, we don't want to load the file up, when basicaly every file will work for the first asset search path optimization anyway.
+	table.insert(package.assetpath, {path = MODS_ROOT..modname.."\\"})
+	
 	self.currentlyloadingmod = modname
 	
     -- Only worldgenmain, to populate the presets panel etc.
@@ -414,6 +417,7 @@ function ModWrangler:FrontendLoadMod(modname)
 
     self.currentlyloadingmod = nil
     package.path = oldpath
+	table.remove(package.assetpath)
 end
 
 function ModWrangler:FrontendUnloadMod(modname)
@@ -508,6 +512,16 @@ function ModWrangler:LoadMods(worldgen)
 	for i,mod in ipairs(self.mods) do
 		table.insert(self.enabledmods, mod.modname)
 		package.path = MODS_ROOT..mod.modname.."\\scripts\\?.lua;"..package.path
+		local manifest
+		--manifests are on by default for workshop mods, off by default for local mods.
+		--manifests can be toggled on and off in modinfo with forcemanifest = false or forcemanifest = true
+		if((mod.modinfo.forcemanifest == nil and IsWorkshopMod(mod.modname)) or
+			(mod.modinfo.forcemanifest ~= nil and mod.modinfo.forcemanifest)) then
+			ManifestManager:LoadModManifest(mod.modname, mod.modinfo.version)
+			manifest = mod.modname
+		end
+		table.insert(package.assetpath, {path = MODS_ROOT..mod.modname.."\\", manifest = manifest})
+
         self.currentlyloadingmod = mod.modname
 		self:InitializeModMain(mod.modname, mod, "modworldgenmain.lua")
 		if not self.worldgen then 
@@ -644,13 +658,9 @@ function ModWrangler:RegisterPrefabs()
 
 		print("Mod: "..ModInfoname(modname), "  Registering default mod prefab")
 
-        if PLATFORM == "PS4" then
-            package.path = MODS_ROOT..modname..package.path
-		end
-
 		local pref = Prefab("MOD_"..modname, nil, mod.Assets, prefabnames, true)
 		pref.search_asset_first_path = MODS_ROOT..modname.."/"
-		RegisterPrefabs(pref)
+		RegisterSinglePrefab(pref)
 
 		TheSim:LoadPrefabs({pref.name})
 		table.insert(self.loadedprefabs, pref.name)
@@ -666,7 +676,7 @@ function ModWrangler:GetUnloadPrefabsData()
     local data = {}
     for i, modname in ipairs(self.loadedprefabs) do
         table.insert(data, {
-            infoname = ModInfoname(modname),
+            infoname = ModInfoname(string.sub(modname, 5)),
             name = modname,
         })
     end
@@ -677,6 +687,7 @@ function ModWrangler:UnloadPrefabsFromData(data)
     for i, v in ipairs(data) do
         print("unloading prefabs for mod "..v.infoname)
         TheSim:UnloadPrefabs({ v.name })
+		ManifestManager:UnloadModManifest(string.sub(v.name, 5))
     end
 end
 
@@ -746,7 +757,7 @@ function ModWrangler:SetPostEnv()
 		moddetail = moddetail.. STRINGS.UI.MAINSCREEN.FORCEMODDETAIL.." "..forcemodnames.."\n\n"
 	end
 
-	if (modnames ~= "" or newmodnames ~= "" or failedmodnames ~= "" or forcemodnames ~= "")  and TheSim:ShouldWarnModsLoaded() then
+	if (modnames ~= "" or newmodnames ~= "" or failedmodnames ~= "" or forcemodnames ~= "")  and TheSim:ShouldWarnModsLoaded() and Profile:GetModsWarning() then
 	--if (#self.enabledmods > 0)  and TheSim:ShouldWarnModsLoaded() then
 		if not DISABLE_MOD_WARNING and IsInFrontEnd() then
 			TheFrontEnd:PushScreen(
@@ -763,7 +774,7 @@ function ModWrangler:SetPostEnv()
 																		end)
 																	end},
 						{text=STRINGS.UI.MAINSCREEN.MODFORUMS, nopop=true, cb = VisitModForums }
-					}))
+					}, nil, nil, nil, true))
 		end
 	elseif KnownModIndex:WasLoadBad() then
 		TheFrontEnd:PushScreen(

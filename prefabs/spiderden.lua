@@ -167,7 +167,12 @@ local function AttemptMakeQueen(inst)
         return
     end
 
-    if inst.data.stage == nil or inst.data.stage ~= 3 or not TUNING.SPAWN_SPIDERQUEEN then
+    if not TUNING.SPAWN_SPIDERQUEEN then
+        SetLarge(inst)
+        return
+    end
+
+    if inst.data.stage == nil or inst.data.stage ~= 3 then
         -- we got here directly (probably by loading), so reconfigure to the level 3 state.
         SetLarge(inst)
     end

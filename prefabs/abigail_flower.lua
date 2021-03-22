@@ -95,6 +95,16 @@ end
 
 local function OnSkinIDDirty(inst)
 	inst.skin_id = inst.flower_skin_id:value()
+	
+	inst:DoTaskInTime(0, function()
+		local image_name = string.gsub(inst.AnimState:GetBuild(), "abigail_", "abigail_flower_")
+		if not inst.clientside_imageoverrides[image_name] then
+			inst:SetClientSideInventoryImageOverride("bondlevel0", image_name..".tex", image_name.."_level0.tex")
+			inst:SetClientSideInventoryImageOverride("bondlevel2", image_name..".tex", image_name.."_level2.tex")
+			inst:SetClientSideInventoryImageOverride("bondlevel3", image_name..".tex", image_name.."_level3.tex")
+			inst.clientside_imageoverrides[image_name] = true
+		end
+	end)
 end
 
 local function drawimageoverride(inst)
@@ -128,14 +138,19 @@ local function fn()
 	inst:AddTag("give_dolongaction")
 	inst:AddTag("ghostlyelixirable") -- for ghostlyelixirable component
 
-	inst.entity:SetPristine()
-	
-    inst.flower_skin_id = net_hash(inst.GUID, "abi_flower_skin_id", "abiflowerskiniddirty")
-	inst:ListenForEvent("abiflowerskiniddirty", OnSkinIDDirty)
-	
     inst:SetClientSideInventoryImageOverride("bondlevel0", "abigail_flower.tex", "abigail_flower_level0.tex")
     inst:SetClientSideInventoryImageOverride("bondlevel2", "abigail_flower.tex", "abigail_flower_level2.tex")
     inst:SetClientSideInventoryImageOverride("bondlevel3", "abigail_flower.tex", "abigail_flower_level3.tex")
+
+	inst.clientside_imageoverrides = {
+		abigail_flower_flower_rework = true
+	}
+
+    inst.flower_skin_id = net_hash(inst.GUID, "abi_flower_skin_id", "abiflowerskiniddirty")
+	inst:ListenForEvent("abiflowerskiniddirty", OnSkinIDDirty)
+	OnSkinIDDirty(inst)
+
+	inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
