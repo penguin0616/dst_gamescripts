@@ -38,6 +38,9 @@ local function check_dist_from_spawnpt(inst, target)
 
 		inst.expire_task:Cancel()
 		start_exipiring(inst)
+	elseif TheWorld.state.isnight then
+		inst.expire_task:Cancel()
+		inst.expire_task = inst:DoTaskInTime(TUNING.SPAWNPROTECTIONBUFF_IDLE_DURATION, start_exipiring)
 	end
 end
 

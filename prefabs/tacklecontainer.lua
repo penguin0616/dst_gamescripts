@@ -38,7 +38,7 @@ local function onburnt(inst)
 end
 
 local function onsave(inst, data)
-    if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
+    if (inst.components.burnable and inst.components.burnable:IsBurning()) or inst:HasTag("burnt") then
         data.burnt = true
     end
 end

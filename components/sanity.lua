@@ -335,6 +335,7 @@ end
 
 function Sanity:OnUpdate(dt)
     if not (self.inst.components.health:IsInvincible() or
+            self.inst:HasTag("spawnprotection") or
             self.inst.sg:HasStateTag("sleeping") or --need this now because you are no longer invincible during sleep
             self.inst.is_teleporting or
             (self.ignore and self.redirect == nil)) then

@@ -3098,8 +3098,8 @@ function Tune(overrides)
 
         REVIVE_CORPSE_ACTION_TIME = 6,
 
-		SPAWNPROTECTIONBUFF_IDLE_DURATION = 40,
-		SPAWNPROTECTIONBUFF_DURATION = 20,
+		SPAWNPROTECTIONBUFF_IDLE_DURATION = 60,
+		SPAWNPROTECTIONBUFF_DURATION = 30,
 		SPAWNPROTECTIONBUFF_SPAWN_DIST_SQ = 8*8,
 
         VOTE_PASSED_SQUELCH_TIME = 0,
@@ -3847,6 +3847,13 @@ function Tune(overrides)
             pomegranate_seeds = "seeds_cooked",
             dragonfruit_seeds = "seeds_cooked",
             watermelon_seeds = "seeds_cooked",
+            tomato_seeds = "seeds_cooked",
+            potato_seeds = "seeds_cooked",
+            asparagus_seeds = "seeds_cooked",
+            onion_seeds = "seeds_cooked",
+            garlic_seeds = "seeds_cooked",
+            pepper_seeds = "seeds_cooked",
+            pondfish = "fishmeat_small_cooked",
         },
 
         --wortox
