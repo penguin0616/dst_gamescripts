@@ -133,9 +133,6 @@ local function SetOrientation(inst, rotation)
     rotation = CalcFacingAngle(rotation)
 
     inst.Transform:SetRotation(rotation)
-    if inst.dooranim ~= nil then
-        inst.dooranim.Transform:SetRotation(rotation)
-    end
 
     if inst.anims.narrow then
         

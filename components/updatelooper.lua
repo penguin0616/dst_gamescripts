@@ -36,13 +36,13 @@ function UpdateLooper:RemoveLongUpdateFn(fn)
 end
 
 function UpdateLooper:OnUpdate(dt)
-	for i = 1, #self.onupdatefns do
+	for i = #self.onupdatefns, 1, -1 do
         self.onupdatefns[i](self.inst, dt)
     end
 end
 
 function UpdateLooper:LongUpdate(dt)
-	for i = 1, #self.longupdatefns do
+	for i = #self.longupdatefns, 1, -1 do
         self.longupdatefns[i](self.inst, dt)
     end
 end
