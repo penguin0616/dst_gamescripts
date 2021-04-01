@@ -10,48 +10,51 @@ local PopupDialogScreen = require "screens/redux/popupdialog"
 local ModConfigurationScreen = require "screens/redux/modconfigurationscreen"
 local ModsListPopup = require "screens/redux/modslistpopup"
 
-local function new_optionwidget()
-    return MetaClass({normal = {}, dl = {}}, nil, {
-        __index = function(t, k)
-            local meta_t = getmetatable(t)
-            local _ = meta_t._
-            --attempting to index this table with numbers will go index the normal and then dl tables
-            if type(k) == "number" then
-                if k <= #_.normal then
-                    return _.normal[k]
-                else
-                    return _.dl[k - #_.normal]
-                end
+require("metaclass")
+
+local OptionWidget = MetaClass(function(self, ...)
+    self.normal = {}
+    self.dl = {}
+end)
+
+function OptionWidget:__index(k)
+    --attempting to index this table with numbers will go index the normal and then dl tables
+    if type(k) == "number" then
+        if k <= #self.normal then
+            return self.normal[k]
+        else
+            return self.dl[k - #self.normal]
+        end
+    end
+    return metarawget(self, k)
+end
+
+function OptionWidget:__newindex(k, v)
+    --setting number values is ignored
+    if type(k) ~= "number" then
+        metarawset(self, k, v)
+    end
+end
+
+--length is the length of both normal and dl tables
+function OptionWidget:__len()
+    return #self.normal + #self.dl
+end
+
+function OptionWidget:__ipairs()
+    --see https://www.lua.org/pil/9.3.html
+    --using a coroutine to maintain a state inside the function
+    --this iterates over first t.normal, and then t.dl
+    local idx_add = 0
+    return coroutine.wrap(function()
+        for _, t in ipairs({self.normal, self.dl}) do
+            for i, v in ipairs(t) do
+                --this is equivalent to return i, v that the next like function for ipairs does.
+                coroutine.yield(i + idx_add, v)
             end
-            return _[k] or meta_t[k]
-        end,
-        --setting number values is ignored
-        __newindex = function(t, k, v)
-            local _ = getmetatable(t)._
-            if type(k) ~= "number" then
-                _[k] = v
-            end
-        end,
-        --length is the length of both normal and dl tables
-        __len = function(t)
-            return #t.normal + #t.dl
-        end,
-        __ipairs = function(t)
-            --see https://www.lua.org/pil/9.3.html
-            --using a coroutine to maintain a state inside the function
-            --this iterates over first t.normal, and then t.dl
-            local idx_add = 0
-            return coroutine.wrap(function()
-                for _, t in ipairs({t.normal, t.dl}) do
-                    for i, v in ipairs(t) do
-                        --this is equivalent to return i, v that the next like function for ipairs does.
-                        coroutine.yield(i + idx_add, v)
-                    end
-                    idx_add = idx_add + #t
-                end
-            end)
-        end,
-    })
+            idx_add = idx_add + #t
+        end
+    end)
 end
 
 local item_width,item_height = 340, 90 -- copied from TEMPLATES.ModListItem
@@ -211,8 +214,8 @@ local ModsTab = Class(Widget, function(self, servercreationscreen, settings)
         self.subscreener:OnMenuButtonSelected("client")
     end
 
-    self.optionwidgets_client = new_optionwidget()
-    self.optionwidgets_server = new_optionwidget()
+    self.optionwidgets_client = OptionWidget()
+    self.optionwidgets_server = OptionWidget()
     
     self:CreateModsScrollList()
 
@@ -685,17 +688,34 @@ local function CompareModDLTable( t1, t2 )
     return true
 end
 
+local alpasortcache = {}
 local function alphasort(moda, modb)
     if not moda then return false end
     if not modb then return true end
-    local moda_favorite = Profile:IsModFavorited(moda.modname)
-    local modb_favorite = Profile:IsModFavorited(modb.modname)
-    if moda_favorite ~= modb_favorite then
-        return moda_favorite
+
+    local moda_sort = alpasortcache[moda.modname]
+    local modb_sort = alpasortcache[modb.modname]
+    if not moda_sort then
+        local fancy = KnownModIndex:GetModFancyName(moda.modname)
+        moda_sort = {
+            fav = Profile:IsModFavorited(moda.modname),
+            name = string.lower(fancy):gsub('%W','')..fancy
+        }
+        alpasortcache[moda.modname] = moda_sort
     end
-    local moda_fancyname = KnownModIndex:GetModFancyName(moda.modname)
-    local modb_fancyname = KnownModIndex:GetModFancyName(modb.modname)
-    return string.lower(moda_fancyname):gsub('%W','')..moda_fancyname < string.lower(modb_fancyname):gsub('%W','')..modb_fancyname
+    if not modb_sort then
+        local fancy = KnownModIndex:GetModFancyName(modb.modname)
+        modb_sort = {
+            fav = Profile:IsModFavorited(modb.modname),
+            name = string.lower(fancy):gsub('%W','')..fancy
+        }
+        alpasortcache[modb.modname] = modb_sort
+    end
+
+    if moda_sort.fav ~= modb_sort.fav then
+        return moda_sort.fav
+    end
+    return moda_sort.name < modb_sort.name
 end
 
 function ModsTab:UpdateModsOrder(force_refresh)
@@ -704,6 +724,7 @@ function ModsTab:UpdateModsOrder(force_refresh)
     local curr_modnames_server = KnownModIndex:GetServerModNamesTable()
     table.sort(curr_modnames_client, alphasort)
     table.sort(curr_modnames_server, alphasort)
+    alpasortcache = {}
 
     --update workshop version data into the curr list
     local has_local_client = false
@@ -1488,45 +1509,34 @@ function ModsTab:CleanAllButton()
     TheFrontEnd:PushScreen( mod_warning )
 end
 
+local function DoUpdateAll(self)
+    if self.modnames_client ~= nil then
+        for _,name_version in pairs(self.modnames_client) do
+            if IsWorkshopMod(name_version.modname) and name_version.version ~= "" and name_version.version ~= KnownModIndex:GetModInfo(name_version.modname).version then
+                TheSim:UpdateWorkshopMod(name_version.modname)
+            end
+        end
+    end
+    if self.modnames_server ~= nil then
+        for _,name_version in pairs(self.modnames_server) do
+            if IsWorkshopMod(name_version.modname) and name_version.version ~= "" and name_version.version ~= KnownModIndex:GetModInfo(name_version.modname).version then
+                TheSim:UpdateWorkshopMod(name_version.modname)
+            end
+        end
+    end
+    self:UpdateForWorkshop()
+    self:UpdateModsOrder()
+end
+
 function ModsTab:UpdateAllButton(force)
     if force then
-        if self.modnames_client ~= nil then
-            for _,name_version in pairs(self.modnames_client) do
-                if IsWorkshopMod(name_version.modname) and name_version.version ~= "" and name_version.version ~= KnownModIndex:GetModInfo(name_version.modname).version then
-                    TheSim:UpdateWorkshopMod(name_version.modname)
-                end
-            end
-        end
-        if self.modnames_server ~= nil then
-            for _,name_version in pairs(self.modnames_server) do
-                if IsWorkshopMod(name_version.modname) and name_version.version ~= "" and name_version.version ~= KnownModIndex:GetModInfo(name_version.modname).version then
-                    TheSim:UpdateWorkshopMod(name_version.modname)
-                end
-            end
-        end
-        self:UpdateForWorkshop()
-        self:UpdateModsOrder()
+        DoUpdateAll(self)
     elseif self.updateallenabled then
         local mod_warning = PopupDialogScreen(STRINGS.UI.MODSSCREEN.UPDATEALL_TITLE, STRINGS.UI.MODSSCREEN.UPDATEALL_BODY,
             {
                 {text=STRINGS.UI.SERVERLISTINGSCREEN.OK,
                     cb = function()
-                        if self.modnames_client ~= nil then
-                            for _,name_version in pairs(self.modnames_client) do
-                                if IsWorkshopMod(name_version.modname) and name_version.version ~= "" and name_version.version ~= KnownModIndex:GetModInfo(name_version.modname).version then
-                                    TheSim:UpdateWorkshopMod(name_version.modname)
-                                end
-                            end
-                        end
-                        if self.modnames_server ~= nil then
-                            for _,name_version in pairs(self.modnames_server) do
-                                if IsWorkshopMod(name_version.modname) and name_version.version ~= "" and name_version.version ~= KnownModIndex:GetModInfo(name_version.modname).version then
-                                    TheSim:UpdateWorkshopMod(name_version.modname)
-                                end
-                            end
-                        end
-                        self:UpdateForWorkshop()
-                        self:UpdateModsOrder()
+                        DoUpdateAll(self)
 
                         TheFrontEnd:PopScreen()
                     end

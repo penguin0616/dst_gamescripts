@@ -39,6 +39,12 @@ LAYER_FRONTEND_DEBUG = 9
 
 LAYER_WIP_BELOW_OCEAN = 2 --1
 
+-- From SortKeyConsts in scenegraphnode.h
+FINALOFFSET_MIN = -7
+FINALOFFSET_MAX = 7
+
+SORTORDER_MIN = -3
+SORTORDER_MAX = 3
 
 ANCHOR_MIDDLE = 0
 ANCHOR_LEFT = 1
@@ -342,23 +348,23 @@ DST_CHARACTERLIST =
 
 CHARACTER_VIDEOS =
 {
-	wilson = {"https://www.youtube.com/watch?v=N0QhvmisGWU&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-	willow = {"https://www.youtube.com/watch?v=TKKXXKtFiQw&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-	wendy = {"https://www.youtube.com/watch?v=7ozRwX35fHE&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
+	wilson = {"https://bit.ly/3w9VYcN"},
+	willow = {"https://bit.ly/3rFOkU3"},
+	wendy = {"https://bit.ly/3fI3PbR"},
 --	wolfgang = {},
 --	wx78 = {},
 --	wickerbottom = {},
-	wes = {"https://www.youtube.com/watch?v=Nf2Stngxj0U&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-	waxwell = {"https://youtu.be/8BUcTVIV5y0"},
-	woodie = {"https://www.youtube.com/watch?v=d0r0WfV2y5s&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-	wathgrithr = {"https://www.youtube.com/watch?v=G16-w-hMKTU&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
+	wes = {"https://bit.ly/2QLFpn4"},
+	waxwell = {"https://bit.ly/3rF0UD0"},
+	woodie = {"https://bit.ly/3sHhUK1"},
+	wathgrithr = {"https://bit.ly/3rC8YV6"},
 --	webber = {},
-	winona = {"https://www.youtube.com/watch?v=G-Kn9tgO0mQ&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-    wortox = {"https://www.youtube.com/watch?v=tcYbA7ohJLM&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-    wormwood = {"https://www.youtube.com/watch?v=4hugrMLgDsQ&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-    warly = {"https://www.youtube.com/watch?v=SH1VebvIOSk&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-    wurt = {"https://www.youtube.com/watch?v=jG2euiPFkbg&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
-	walter = {"https://www.youtube.com/watch?v=14ou18F8bhw&list=PLXtRs5MEBxEiuAIG26uLmh3yR-ACXBfYW"},
+	winona = {"https://bit.ly/3fB6LHb"},
+    wortox = {"https://bit.ly/3cBQ10g"},
+    wormwood = {"https://bit.ly/3cBilQq"},
+    warly = {"https://bit.ly/39vp0tG"},
+    wurt = {"https://bit.ly/2QVJup1"},
+	walter = {"https://bit.ly/31Ajrpj"},
 }
 
 
@@ -1189,6 +1195,7 @@ CUSTOM_RECIPETABS =
     BATTLESONGS   = { str = "BATTLESONGS",      sort = 999, icon = "tab_battlesongs.tex",   owner_tag = "battlesinger", icon_atlas = "images/hud2.xml" },
     NATURE        = { str = "NATURE",			sort = 999, icon = "tab_nature.tex",        owner_tag = "plantkin"     },
 	SLINGSHOTAMMO =	{ str = "SLINGSHOTAMMO",	sort = 999, icon = "tab_slingshot.tex",	    owner_tag = "pebblemaker"  },
+	BALLOONOMANCY = { str = "BALLOONOMANCY",	sort = 999, icon = "tab_balloonomancy.tex",	owner_tag = "balloonomancer", icon_atlas = "images/hud2.xml" },
 }
 
 QUAGMIRE_RECIPETABS =

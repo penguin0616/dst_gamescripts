@@ -1419,10 +1419,10 @@ function EntityScript:CanInteractWith(inst)
     return true
 end
 
-function EntityScript:OnUsedAsItem(action)
+function EntityScript:OnUsedAsItem(action, doer, target)
     for k,v in pairs(self.components) do
         if v.OnUsedAsItem then
-            v:OnUsedAsItem(action)
+            v:OnUsedAsItem(action, doer, target)
         end
     end
 end

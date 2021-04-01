@@ -2408,13 +2408,18 @@ end
 ACTIONS.CATPLAYGROUND.fn = function(act)
     if act.doer and act.doer.prefab == "catcoon" then
         if act.target then
-            if math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
-            and act.target.components.combat and act.target.components.combat:CanBeAttacked(act.doer)
-            and not (act.doer.components.follower and act.doer.components.follower:IsLeaderSame(act.target))
-            and not act.target:HasTag("player") then
+			if act.target.components.poppable ~= nil then
+				act.target.components.poppable:Pop()
+            elseif math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
+				and act.target.components.combat and act.target.components.combat:CanBeAttacked(act.doer)
+				and not (act.doer.components.follower and act.doer.components.follower:IsLeaderSame(act.target))
+				and not act.target:HasTag("player") then
+
                 act.doer.components.combat:DoAttack(act.target, nil, nil, nil, 2) --2*25 dmg
-            elseif math.random() < TUNING.CATCOON_PICKUP_ITEM_CHANCE and act.target.components.inventoryitem and act.target.components.inventoryitem.canbepickedup then
-                act.target:Remove()
+            elseif math.random() < TUNING.CATCOON_PICKUP_ITEM_CHANCE then
+				if act.target.components.inventoryitem and act.target.components.inventoryitem.canbepickedup then
+					act.target:Remove()
+				end
             end
         end
         return true
@@ -2423,10 +2428,13 @@ end
 
 ACTIONS.CATPLAYAIR.fn = function(act)
     if act.doer and act.doer.prefab == "catcoon" then
-        if act.target and math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE
-        and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
-        and act.target.components.combat and act.target.components.combat:CanBeAttacked(act.doer)
-        and not (act.doer.components.follower and act.doer.components.follower:IsLeaderSame(act.target)) then
+		if act.target.components.poppable ~= nil then
+			act.target.components.poppable:Pop()
+        elseif act.target and math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE
+			and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
+			and act.target.components.combat and act.target.components.combat:CanBeAttacked(act.doer)
+			and not (act.doer.components.follower and act.doer.components.follower:IsLeaderSame(act.target)) then
+
             act.doer.components.combat:DoAttack(act.target, nil, nil, nil, 2) --2*25 dmg
         end
         act.doer.last_play_air_time = GetTime()

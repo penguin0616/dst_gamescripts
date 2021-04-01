@@ -5,9 +5,7 @@ local SALTLICK_CANT_TAGS = { "INLIMBO", "fire", "burnt" }
 local function _checkforsaltlick(inst, self)
     local ent = FindEntity(inst, TUNING.SALTLICK_CHECK_DIST, nil, SALTLICK_MUST_TAGS, SALTLICK_CANT_TAGS)
     if ent ~= nil then
-        if ent.components.finiteuses ~= nil then
-            ent.components.finiteuses:Use(self.uses_per_lick)
-        end
+        self.saltlick = ent
         inst.components.timer:StartTimer("salt", self.saltedduration)
         _StopSeeking(self)
         self:SetSalted(true)
@@ -18,8 +16,9 @@ end
 
 local function _onsaltlickplaced(inst, data)
     if not inst.components.timer:TimerExists("salt") and
-        inst:IsNear(data.inst, TUNING.SALTLICK_USE_DIST) then
+        inst:IsNear(data.inst, TUNING.SALTLICK_CHECK_DIST) then
         local self = inst.components.saltlicker
+        self.saltlick = data.inst
         inst.components.timer:StartTimer("salt", self.saltedduration)
         _StopSeeking(self)
         self:SetSalted(true)
@@ -47,6 +46,13 @@ end
 local function _ontimerdone(inst, data)
     if data.name == "salt" then
         local self = inst.components.saltlicker
+        if self.saltlick and self.saltlick:IsValid() then
+            if self.saltlick.components.finiteuses ~= nil then
+                self.saltlick.components.finiteuses:Use(self.uses_per_lick)
+            end
+        end
+        self.saltlick = nil
+        
         if inst:IsInLimbo() or
             (inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep()) or
             (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) then
@@ -73,6 +79,7 @@ local SaltLicker = Class(function(self, inst)
 end)
 
 local function OnPause(inst)
+    inst.components.timer:StopTimer("salt")
     _StopSeeking(inst.components.saltlicker)
 end
 
@@ -81,7 +88,10 @@ local function TryUnpause(inst)
             (inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep()) or
             (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) or
             inst.components.timer:TimerExists("salt")) then
-        _StartSeeking(inst.components.saltlicker)
+        local self = inst.components.saltlicker
+        if not _checkforsaltlick(inst, self) then
+            _StartSeeking(self)
+        end
     end
 end
 

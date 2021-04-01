@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "Someone left litter here!",
         BALLOON = "My keen tracking senses are telling me there's a clown nearby.",
+		BALLOONPARTY = "Is someone having a party?",
+		BALLOONSPEED =
+        {
+            DEFLATED = "It's pretty much just a regular balloon now.",
+            GENERIC = "Clowns have strange and mysterious ways...",
+        },
+		BALLOONVEST = "I guess it's better than not having a life jacket at all...",
+		BALLOONHAT = "I'm a bit too old for this kind of thing.",
 
         BERNIE_INACTIVE =
         {

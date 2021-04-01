@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "Look chewy, florp.",
         BALLOON = "Want one!!",
+		BALLOONPARTY = "Huh? There stuff inside!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Awww, got all small.",
+            GENERIC = "That a big one, flurp!",
+        },
+		BALLOONVEST = "Ooooh, water floaty!",
+		BALLOONHAT = "Squeaky hat.",
 
         BERNIE_INACTIVE =
         {

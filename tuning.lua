@@ -97,6 +97,9 @@ function Tune(overrides)
 
         DARK_CUTOFF = 0,
         DARK_SPAWNCUTOFF = 0.1,
+
+		DEFAULT_ATTACK_RANGE = 2,
+
         WILSON_HEALTH = wilson_health,
         WILSON_ATTACK_PERIOD = wilson_attack_period,
         WILSON_HUNGER = wilson_hunger, --stomach size
@@ -114,9 +117,6 @@ function Tune(overrides)
         WX78_HEALTH = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_HEALTH 
         WX78_HUNGER = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_HUNGER 
         WX78_SANITY = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_SANITY 
-
-        BALLOON_PILE_DECAY_TIME = total_day_time * 3,
-        BALLOON_MAX_COUNT = 100,
 
         HAMMER_LOOT_PERCENT = .5,
         BURNT_HAMMER_LOOT_PERCENT = .25,
@@ -565,6 +565,9 @@ function Tune(overrides)
         SLURPER_ATTACK_PERIOD = 5,
 
         LIGHTNING_DAMAGE = 10,
+		PLAYER_LIGHTNING_TARGET_CHANCE = 0.3,
+		WX78_LIGHTNING_TARGET_CHANCE = 1.0,
+		WES_LIGHTNING_TARGET_CHANCE = 0.6,
 
         ELECTRIC_WET_DAMAGE_MULT = 1,
         ELECTRIC_DAMAGE_MULT = 1.5,
@@ -2394,10 +2397,13 @@ function Tune(overrides)
         WENDY_DAMAGE_MULT = .75,
         WENDY_SANITY_MULT = .75,
 
-		WES_HEALTH = math.ceil(wilson_health * .75),
-		WES_HUNGER = math.ceil(wilson_hunger * .75),
-        WES_SANITY = math.ceil(wilson_sanity * .75),
+		WES_HEALTH = math.ceil(wilson_health * .5),
+		WES_HUNGER = math.ceil(wilson_hunger * .5),
+        WES_SANITY = math.ceil(wilson_sanity * .375),
         WES_DAMAGE_MULT = .75,
+		WES_GROGGINESS_DECAY_RATE = 0.01 * 0.75, --GROGGINESS_DECAY_RATE = .01,
+		WES_WORKEFFECTIVENESS_MODIFIER = 0.75,
+		WES_HOUND_TARGET_MULT = 2.0,
 
 		WAXWELL_HEALTH = math.ceil(wilson_health * .5),
 		WAXWELL_HUNGER = wilson_hunger,
@@ -4963,6 +4969,29 @@ function Tune(overrides)
         FRUITFLY_ATTACK_PERIOD = 2,
         FRUITFLY_TARGETRANGE = 15,
         FRUITFLY_WALKSPEED = 8,
+
+
+		-- WES rework
+		BALLOON_DAMAGE = 5,
+		BALLOON_ATTACK_RANGE = 2,
+
+		BALLOON_SPEEDS = {1, 1.1, 1.2, 1.3},
+		BALLOON_SPEED_DURATION = total_day_time * 0.25,
+
+        BALLOON_PILE_DECAY_TIME = total_day_time * 3,
+		BALLOON_MAP_ICON_DURATION = 10,
+
+		CONFFETI_PARTY_SANITY_TICKRATE = 2,
+		CONFFETI_PARTY_SANITY_DELTA =
+		{
+			0,
+			1,
+			2,
+			3,
+			3.5,
+			4,
+		},
+
         -- YOTB: Year of the Beefalo
         BASE_SEWING_TIME = night_time*.3333,
         REJECTION_SEWING_TIME = night_time*.3333,

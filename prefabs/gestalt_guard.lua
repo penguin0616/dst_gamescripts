@@ -190,7 +190,6 @@ local function fn()
 		inst.blobhead.Follower:FollowSymbol(inst.GUID, "brightmare_gestalt_head_evolved", 0, 0, 0)
 	
 		inst.blobhead.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-		inst.blobhead:DoPeriodicTask(0, function(head) head.Transform:SetRotation(inst.Transform:GetRotation()) end)
 		inst.blobhead.persists = false
 
 	    inst.highlightchildren = { inst.blobhead }

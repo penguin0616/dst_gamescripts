@@ -431,6 +431,9 @@ function Combat:SetHurtSound(sound)
 end
 
 function Combat:GetAttacked(attacker, damage, weapon, stimuli)
+    if self.inst.components.health and self.inst.components.health:IsDead() then
+        return true
+    end
     self.lastwasattackedtime = GetTime()
 
     --print ("ATTACKED", self.inst, attacker, damage)

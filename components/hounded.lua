@@ -40,6 +40,7 @@ local attack_delays =
 
 --Public
 self.inst = inst
+self.max_thieved_spawn_per_thief = 3
 
 --Private
 local _activeplayers = {}
@@ -209,43 +210,93 @@ local function GetWaveAmounts()
 
 	-- calculate the hound attack for each player
 	_spawninfo = {}
+	local thieves = {}
+	local groupmap = {}
 	for player, group in pairs(groupindex) do
-		local playerAge = player.components.age:GetAge()
 		local attackdelaybase, attackdelayvariance = _attackdelayfn()
+		local playerAge = player.components.age:GetAge()
 
 		-- amount of hounds relative to our age
 		-- if we never saw a warning or have lived shorter than the minimum wave delay then don't spawn hounds to us
         local playerInGame = GetTime() - player.components.age.spawntime
-		local spawnsToRelease = playerInGame > _warnduration and playerAge >= attackdelaybase and CalcPlayerAttackSize(player) or 0
+		local spawnsToRelease = (playerInGame > _warnduration and playerAge >= attackdelaybase) and CalcPlayerAttackSize(player) or 0
 
-		if _spawninfo[group] == nil then
-			_spawninfo[group] =
-            {
-                players = { player },
-                spawnstorelease = spawnsToRelease,
-                timetonext = 0,
-                totalplayerage = playerAge,
-            }
-		else
-			table.insert(_spawninfo[group].players, player)
-			_spawninfo[group].spawnstorelease = _spawninfo[group].spawnstorelease + spawnsToRelease
-			_spawninfo[group].totalplayerage = _spawninfo[group].totalplayerage + playerAge
+		if spawnsToRelease > 0 then
+			if groupmap[group] == nil then
+				groupmap[group] = #_spawninfo + 1
+
+				table.insert(_spawninfo,
+					{
+						players = {}, -- tracks the number of spawns for this player
+						timetonext = 0,
+
+						-- working data
+						target_weight = {},
+						spawnstorelease = 0,
+						totalplayerage = 0,
+					})
+			end
+			local g = groupmap[group]
+			_spawninfo[g].spawnstorelease = _spawninfo[g].spawnstorelease + spawnsToRelease
+			_spawninfo[g].totalplayerage = _spawninfo[g].totalplayerage + playerAge
+
+			_spawninfo[g].target_weight[player] = math.sqrt(spawnsToRelease) * (player.components.houndedtarget ~= nil and player.components.houndedtarget:GetTargetWeight() or 1)
+			_spawninfo[g].players[player] = 0
+
+			if player.components.houndedtarget ~= nil and player.components.houndedtarget:IsHoundThief() then
+				table.insert(thieves, {player = player, group = g})
+			end
 		end
 	end
 
-	-- some groups were created then destroyed in the first step, crunch the array so we can ipairs() over it
-	_spawninfo = GetFlattenedSparse(_spawninfo)
+	groupindex = nil -- this is now invalid, some groups were created then destroyed in the first step
 
 	-- we want fewer hounds for larger groups of players so they don't get overwhelmed
+	local thieved_spawns = 0
 	for i, info in ipairs(_spawninfo) do
+		local group_size = GetTableSize(info.players)
 
 		-- pow the number of hounds by a fractional exponent, to stave off huge groups
 		-- e.g. hounds ^ 1/1.1 for three players
-		local groupexp = 1 / (ZERO_EXP + (EXP_PER_PLAYER * #info.players))
-		info.spawnstorelease = RoundBiasedDown(math.pow(info.spawnstorelease, groupexp))
+		local groupexp = 1 / (ZERO_EXP + (EXP_PER_PLAYER * group_size))
+		local spawnstorelease = math.max(group_size, RoundBiasedDown(math.pow(info.spawnstorelease, groupexp)))
+		if #thieves > 0 and spawnstorelease > group_size then
+			spawnstorelease = spawnstorelease - group_size
+			thieved_spawns = thieved_spawns + group_size
+		end
 
-		info.averageplayerage = info.totalplayerage / #info.players
+		-- assign the hounds to each player
+		for p = 1, spawnstorelease do
+			local player = weighted_random_choice(info.target_weight)
+			info.players[player] = info.players[player] + 1
+		end
+
+		-- calculate average age to be used for spawn delay
+		info.averageplayerage = info.totalplayerage / group_size
+
+		-- remove working data
+		info.target_weight = nil
+		info.spawnstorelease = nil
 	end
+
+	-- distribute the thieved_spawns amoungst the thieves
+	if thieved_spawns > 0 then
+		thieved_spawns = math.min(thieved_spawns, (self.max_thieved_spawn_per_thief + 1) * #thieves)  -- +1 because we also removed one from the theif
+		if #thieves == 1 then
+			local player = thieves[1].player
+			local group = thieves[1].group
+			_spawninfo[group].players[player] = _spawninfo[group].players[player] + thieved_spawns
+		else
+			shuffleArray(thieves)
+			for i = 1, thieved_spawns do
+				local index = ((i-1) % #thieves) + 1
+				local player = thieves[index].player
+				local group = thieves[index].group
+				_spawninfo[group].players[player] = _spawninfo[group].players[player] + 1
+			end
+		end
+	end
+
 end
 
 local function NoHoles(pt)
@@ -326,19 +377,16 @@ end
 
 local function RemovePendingSpawns(player)
     if _spawninfo ~= nil then
-        for i, spawninforec in ipairs(_spawninfo) do
-            for j, v in ipairs(spawninforec.players) do
-                if v == player then
-                    if #spawninforec.players > 1 then
-                        table.remove(spawninforec.players, j)
-                    else
-                        table.remove(_spawninfo, i)
-                    end
-                    return
-                end
-            end
-        end
-    end
+        for i, info in ipairs(_spawninfo) do
+			if info.players[player] ~= nil then
+				info.players[player] = nil
+				if next(info.players) == nil then
+					 table.remove(_spawninfo, i)
+				end
+				return
+			end
+		end
+	end
 end
 
 --------------------------------------------------------------------------
@@ -572,12 +620,13 @@ function self:OnUpdate(dt)
 		for i, spawninforec in ipairs(_spawninfo) do
 			CheckForWaterImunityAllPlayers()
 			spawninforec.timetonext = spawninforec.timetonext - dt
-			if spawninforec.spawnstorelease > 0 and spawninforec.timetonext < 0 then
-				-- hounds can attack anyone in the group, even new players.
-				-- That's the risk you take!
-				local playeridx = math.random(#spawninforec.players)
-				ReleaseSpawn(spawninforec.players[playeridx])				
-				spawninforec.spawnstorelease = spawninforec.spawnstorelease - 1
+			if next(spawninforec.players) ~= nil and spawninforec.timetonext < 0 then
+				local target = weighted_random_choice(spawninforec.players)
+				ReleaseSpawn(target)
+				spawninforec.players[target] = spawninforec.players[target] - 1
+				if spawninforec.players[target] <= 0 then
+					spawninforec.players[target] = nil
+				end
 
 				local day = spawninforec.averageplayerage / TUNING.TOTAL_DAY_TIME
 				if day < 20 then
@@ -590,8 +639,8 @@ function self:OnUpdate(dt)
 					spawninforec.timetonext = .5 + math.random()*1
 				end
 
-			end			
-			if spawninforec.spawnstorelease <= 0 then
+			end
+			if next(spawninforec.players) == nil then
 				table.insert(groupsdone, 1, i)
 			end
 		end
@@ -681,8 +730,8 @@ function self:GetDebugString()
 		s = "ATTACKING"
 		for i, spawninforec in ipairs(_spawninfo) do
 			s = s.."\n{"
-			for j, player in ipairs(spawninforec.players) do
-				s = s..(j > 1 and "," or "")..tostring(player)
+			for player, _ in pairs(spawninforec.players) do
+				s = s..tostring(player)..","
 			end
 			s = s.."} - spawns left:"..tostring(spawninforec.spawnstorelease).." next spawn:"..tostring(spawninforec.timetonext)
 		end

@@ -170,7 +170,7 @@ local function fn()
     inst.AnimState:SetBank("moon_fissure")
     inst.AnimState:SetBuild("moon_fissure")
     inst.AnimState:PlayAnimation("crack_idle", true)
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
 
     inst._level = net_tinybyte(inst.GUID, "moonfissure.level", "leveldirty")
     inst._level:set(MOON_STATES[TheWorld.state.moonphase])

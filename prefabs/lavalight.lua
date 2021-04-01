@@ -42,7 +42,7 @@ local function fn()
     inst.AnimState:SetBuild("fire_large_character")
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
     inst.AnimState:SetRayTestOnBB(true)
-    --inst.AnimState:SetFinalOffset(-1)
+    --inst.AnimState:SetFinalOffset(3)
     --inst.AnimState:PlayAnimation("collapse_small")
 
     --inst:AddTag("FX")

@@ -16,7 +16,8 @@ local player_emotes_to_choose = {
 	woodie = "idle_woodie",
 	wormwood = "idle_wormwood",
 	wortox = "idle_wortox",
-	wurt = "idle_wurt"
+	wurt = "idle_wurt",
+	wes = "idle_wes",
 }
 
 local emote_min_time = 6
@@ -154,6 +155,9 @@ function SkinsPuppet:DoIdleEmote()
 				
 				self.animstate:PlayAnimation("item_out")
 				self.item_equip = true
+			elseif self.prefabname == "wes" then
+				self.override_build = "player_idles_wes"
+				self.animstate:AddOverrideBuild(self.override_build)
 			end
 			
 			if self.prefabname == "wormwood" and not self.animstate:CompareSymbolBuilds("hand", "hand_idle_wormwood") then

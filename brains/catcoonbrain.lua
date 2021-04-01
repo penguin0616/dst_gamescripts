@@ -21,7 +21,7 @@ local MAX_CHASE_DIST = 10
 local AVOID_DIST = 3
 local AVOID_STOP = 10
 
-local NO_TAGS = {"FX", "NOCLICK", "DECOR","INLIMBO", "stump", "burnt"}
+local NO_TAGS = {"FX", "NOCLICK", "DECOR","INLIMBO", "stump", "burnt", "notarget"}
 local PLAY_TAGS = {"cattoy", "cattoyairborne", "catfood"}
 
 local CatcoonBrain = Class(Brain, function(self, inst)

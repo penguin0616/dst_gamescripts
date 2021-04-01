@@ -242,6 +242,7 @@ local function master_postinit(inst)
     --cave specifics
     inst:AddComponent("hounded")
     inst.components.hounded:SetSpawnData(wormspawn)
+	inst.components.hounded.max_thieved_spawn_per_thief = 1
 
     --anr update retrofitting
     inst:AddComponent("retrofitcavemap_anr")

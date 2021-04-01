@@ -730,6 +730,14 @@ return{
 
         BALLOONS_EMPTY = "Are those balloons?",
         BALLOON = "It's squeaky. Just like a real woodland creature.",
+		BALLOONPARTY = "Uh oh, I didn't forget someone's birthday did I?",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Just a regular balloon now, eh?",
+            GENERIC = "Now how do you figure that works, Luce?",
+        },
+		BALLOONVEST = "It beats drowning, I guess...",
+		BALLOONHAT = "We can all appreciate nature in our own way.",
 
         BERNIE_INACTIVE =
         {

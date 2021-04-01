@@ -1610,11 +1610,11 @@ local COMPONENT_ACTIONS =
 
     INVENTORY = --args: inst, doer, actions, right
     {
-        balloonmaker = function(inst, doer, actions)
-            if doer:HasTag("balloonomancer") then
-                table.insert(actions, ACTIONS.MAKEBALLOON)
-            end
-        end,
+--     balloonmaker = function(inst, doer, actions)
+--         if doer:HasTag("balloonomancer") then
+--             table.insert(actions, ACTIONS.MAKEBALLOON)
+--         end
+--     end,
 
         book = function(inst, doer, actions)
             if doer:HasTag("reader") then

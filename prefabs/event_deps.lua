@@ -198,6 +198,8 @@ local SPECIAL_EVENT_DEPS =
                 Asset("PKGREF", "anim/dst_menu_dangerous_sea.zip"),
                 Asset("PKGREF", "anim/dst_menu_grotto.zip"),
                 Asset("PKGREF", "anim/dst_menu_farming.zip"),
+
+                Asset("ANIM", "anim/dst_menu_wes2.zip"),
             },
         },
     },

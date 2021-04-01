@@ -216,7 +216,7 @@ local function MakePlant(name, build, isground)
             inst.entity:AddMiniMapEntity()
             inst.MiniMapEntity:SetIcon("plant_normal_ground.png")
         else
-            inst.AnimState:SetFinalOffset(-1)
+            inst.AnimState:SetFinalOffset(3)
         end
         inst.AnimState:SetBank(build)
         inst.AnimState:SetBuild(build)

@@ -15,7 +15,13 @@ local prefabs =
 }
 
 local function onequip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_object", "swap_pitchfork", "swap_pitchfork")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_pitchfork", inst.GUID, "swap_pitchfork")
+    else
+        owner.AnimState:OverrideSymbol("swap_object", "swap_pitchfork", "swap_pitchfork")
+    end
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 end

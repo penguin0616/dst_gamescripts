@@ -735,6 +735,14 @@ return{
 
         BALLOONS_EMPTY = "No fun without Wes.",
         BALLOON = "Oh! A balloon.",
+		BALLOONPARTY = "We can celebrate once the work is done.",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Better not leave that unattended.",
+            GENERIC = "It's full of get up and go!",
+        },
+		BALLOONVEST = "I think he's trying to be helpful... in his own way.",
+		BALLOONHAT = "Cute, but it won't protect your noggin' from much.",
 
         BERNIE_INACTIVE =
         {

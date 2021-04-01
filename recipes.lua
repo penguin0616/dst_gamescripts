@@ -131,7 +131,6 @@ Recipe("miniflare", {Ingredient("twigs", 1), Ingredient("cutgrass", 1), Ingredie
 Recipe("grass_umbrella", {Ingredient("twigs", 4) ,Ingredient("cutgrass", 3), Ingredient("petals", 6)}, RECIPETABS.SURVIVAL, TECH.NONE)
 Recipe("umbrella", {Ingredient("twigs", 6) ,Ingredient("pigskin", 1), Ingredient("silk",2 )}, RECIPETABS.SURVIVAL, TECH.SCIENCE_ONE)
 Recipe("waterballoon", {Ingredient("mosquitosack", 2), Ingredient("ice", 1)}, RECIPETABS.SURVIVAL, TECH.SCIENCE_ONE, nil, nil, nil, 4)
-Recipe("balloons_empty", {Ingredient("waterballoon", 4)}, RECIPETABS.SURVIVAL, TECH.SCIENCE_ONE, nil, nil, nil, nil, "balloonomancer")
 Recipe("compass", {Ingredient("goldnugget", 1), Ingredient("flint", 1)}, RECIPETABS.SURVIVAL,  TECH.NONE)
 Recipe("heatrock", {Ingredient("rocks", 10),Ingredient("pickaxe", 1), Ingredient("flint", 3)}, RECIPETABS.SURVIVAL, TECH.SCIENCE_TWO)
 Recipe("giftwrap", {Ingredient("papyrus", 1), Ingredient("petals", 1)}, RECIPETABS.SURVIVAL, TECH.WINTERS_FEAST, nil, nil, nil, 4)
@@ -565,6 +564,14 @@ Recipe("oceanfishinglure_hermit_rain",		{Ingredient("cookiecuttershell", 1), Ing
 Recipe("oceanfishinglure_hermit_snow",		{Ingredient("cookiecuttershell", 1), Ingredient("ice", 1)}, RECIPETABS.FISHING, TECH.LOST, nil, nil, true)
 Recipe("oceanfishinglure_hermit_drowsy",	{Ingredient("cookiecuttershell", 1), Ingredient("stinger", 1)}, RECIPETABS.FISHING, TECH.LOST, nil, nil, true)
 Recipe("oceanfishinglure_hermit_heavy",		{Ingredient("cookiecuttershell", 1), Ingredient("beefalowool", 1)}, RECIPETABS.FISHING, TECH.LOST, nil, nil, true)
+
+-- Balloonomancy
+Recipe("balloons_empty",		{Ingredient("waterballoon", 4)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
+Recipe("balloon",				{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true})
+Recipe("balloonspeed",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
+Recipe("balloonparty",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true})
+Recipe("balloonvest",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
+Recipe("balloonhat",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
 
 ----HERMITCRABSHOP-----
 Recipe("hermitshop_hermit_bundle_shells", {Ingredient("messagebottleempty", 1)}, RECIPETABS.HERMITCRABSHOP, TECH.HERMITCRABSHOP_ONE, nil, nil, true, nil, nil, nil, "hermit_bundle.tex", nil, "hermit_bundle_shells")

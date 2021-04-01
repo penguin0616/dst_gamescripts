@@ -14,7 +14,7 @@ function FiniteUses:SetConsumption(action, uses)
 end
 
 function FiniteUses:GetDebugString()
-    return string.format("%d/%d", self.current, self.total)
+    return string.format("%.2f/%d", self.current, self.total)
 end
 
 function FiniteUses:OnSave()
@@ -58,9 +58,12 @@ function FiniteUses:Use(num)
     self:SetUses(self.current - (num or 1))
 end
 
-function FiniteUses:OnUsedAsItem(action)
+function FiniteUses:OnUsedAsItem(action, doer, target)
     local uses = self.consumption[action]
     if uses ~= nil then
+		if doer ~= nil and doer:IsValid() and doer.components.efficientuser ~= nil then
+			uses = uses * (doer.components.efficientuser:GetMultiplier(action) or 1)
+		end
         self:Use(uses)
     end
 end

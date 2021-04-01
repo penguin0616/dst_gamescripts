@@ -121,8 +121,10 @@ local function UpdateDomestication(inst, self)
     if self.domestication_triggerfn(inst) then
         self.lastdomesticationgain = GetTime()
         DoDeltaDomestication(self, TUNING.BEEFALO_DOMESTICATION_GAIN_DOMESTICATION * DECAY_TASK_PERIOD)
-    elseif not self.domesticationdecaypaused then
-        DoDeltaDomestication(self, CalculateLoss(GetTime(), self.lastdomesticationgain) * DECAY_TASK_PERIOD)
+    elseif self.domesticationdecaypaused then
+        self.lastdomesticationgain = self.lastdomesticationgain + DECAY_TASK_PERIOD
+    else
+        DoDeltaDomestication(self, CalculateLoss(GetTime(), self.lastdomesticationgain))
     end
 
     self:CheckForChanges()

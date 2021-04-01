@@ -36,7 +36,7 @@ local function fn()
     inst.AnimState:SetBank("fire")
     inst.AnimState:SetBuild("fire")
     inst.AnimState:SetRayTestOnBB(true)
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(FINALOFFSET_MAX)
 
     inst:AddTag("FX")
 

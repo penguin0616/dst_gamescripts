@@ -738,6 +738,14 @@ return {
 
         BALLOONS_EMPTY = "It looks like clown currency.",
         BALLOON = "How are they floating?",
+		BALLOONPARTY = "How did he get the smaller balloons inside?",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Now it's just another balloon.",
+            GENERIC = "The hole in the center makes it more aerodynamic, that's just physics!",
+        },
+		BALLOONVEST = "If the bright colors don't attract some horrible creature, the squeaking will.",
+		BALLOONHAT = "The static does terrible things to my hair.",
 
         BERNIE_INACTIVE =
         {

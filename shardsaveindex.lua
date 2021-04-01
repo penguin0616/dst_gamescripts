@@ -559,9 +559,9 @@ function ShardSaveIndex:GetSlotPresetText(slot)
     if self:IsSlotEmpty(slot) then return preset_str end
 
     if self:GetShardIndex(slot, "Master") then
-        preset_str = "Forest Only"
+        preset_str = STRINGS.UI.SERVERCREATIONSCREEN.FORESTONLY
         if self:IsSlotMultiLevel(slot) and self:GetShardIndex(slot, "Caves") then
-            preset_str = "Forest and Caves"
+            preset_str = STRINGS.UI.SERVERCREATIONSCREEN.FORESTANDCAVES
         end
     end
     return preset_str

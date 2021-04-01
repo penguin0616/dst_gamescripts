@@ -259,8 +259,10 @@ function Fueled:InitializeFuelLevel(fuel)
     self.currentfuel = fuel
 
     local newsection = self:GetCurrentSection()
-    if oldsection ~= newsection and self.sectionfn then
-        self.sectionfn(newsection, oldsection, self.inst)
+    if oldsection ~= newsection then
+        if self.sectionfn then
+	        self.sectionfn(newsection, oldsection, self.inst)
+		end
         self.inst:PushEvent("onfueldsectionchanged", { newsection = newsection, oldsection = oldsection })
     end
 end

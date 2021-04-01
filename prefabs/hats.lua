@@ -1,3 +1,5 @@
+local BALLOONS = require "prefabs/balloons_common"
+
 local SPIDER_TAGS = {"spider"}
 
 local function MakeHat(name)
@@ -11,7 +13,8 @@ local function MakeHat(name)
         inst:Remove()
     end]]
 
-    local function onequip(inst, owner, symbol_override)
+	-- do not pass this function to equippable:SetOnEquip as it has different a parameter listing
+    local function _onequip(inst, owner, symbol_override)
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil then
             owner:PushEvent("equipskinneditem", inst:GetSkinName())
@@ -34,7 +37,7 @@ local function MakeHat(name)
         end
     end
 
-    local function onunequip(inst, owner)
+    local function _onunequip(inst, owner)
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil then
             owner:PushEvent("unequipskinneditem", inst:GetSkinName())
@@ -56,6 +59,13 @@ local function MakeHat(name)
         end
     end
 
+	local function simple_onequip(inst, owner, from_ground)
+		_onequip(inst, owner)
+	end
+
+	local function simple_onunequip(inst, owner, from_ground)
+		_onunequip(inst, owner)
+	end
     local function opentop_onequip(inst, owner)
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil then
@@ -113,8 +123,8 @@ local function MakeHat(name)
 
         inst:AddComponent("equippable")
         inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
-        inst.components.equippable:SetOnEquip(onequip)
-        inst.components.equippable:SetOnUnequip(onunequip)
+        inst.components.equippable:SetOnEquip(simple_onequip)
+        inst.components.equippable:SetOnUnequip(simple_onunequip)
 
         MakeHauntableLaunch(inst)
 
@@ -313,7 +323,7 @@ local function MakeHat(name)
     end
 
     local function ruins_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         inst.ondetach()
     end
 
@@ -379,7 +389,7 @@ local function MakeHat(name)
     end
 
     local function feather_equip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         local attractor = owner.components.birdattractor
         if attractor then
             attractor.spawnmodifier:SetModifier(inst, TUNING.BIRD_SPAWN_MAXDELTA_FEATHERHAT, "maxbirds")
@@ -394,7 +404,7 @@ local function MakeHat(name)
     end
 
     local function feather_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
 
         local attractor = owner.components.birdattractor
         if attractor then
@@ -427,12 +437,12 @@ local function MakeHat(name)
     end
 
     local function beefalo_equip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         owner:AddTag("beefalo")
     end
 
     local function beefalo_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         owner:RemoveTag("beefalo")
     end
 
@@ -499,21 +509,21 @@ local function MakeHat(name)
                 inst._light = SpawnPrefab("minerhatlight")
             end
             if owner ~= nil then
-                onequip(inst, owner)
+                _onequip(inst, owner)
                 inst._light.entity:SetParent(owner.entity)
             end
             inst.components.fueled:StartConsuming()
             local soundemitter = owner ~= nil and owner.SoundEmitter or inst.SoundEmitter
             soundemitter:PlaySound("dontstarve/common/minerhatAddFuel")
         elseif owner ~= nil then
-            onequip(inst, owner, "swap_hat_off")
+            _onequip(inst, owner, "swap_hat_off")
         end
     end
 
     local function miner_turnoff(inst)
         local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
         if owner ~= nil and inst.components.equippable ~= nil and inst.components.equippable:IsEquipped() then
-            onequip(inst, owner, "swap_hat_off")
+            _onequip(inst, owner, "swap_hat_off")
         end
         inst.components.fueled:StopConsuming()
         if inst._light ~= nil then
@@ -527,7 +537,7 @@ local function MakeHat(name)
     end
 
     local function miner_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         miner_turnoff(inst)
     end
 
@@ -657,12 +667,12 @@ local function MakeHat(name)
     end
 
     local function spider_equip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         spider_enable(inst)
     end
 
     local function spider_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         spider_disable(inst)
     end
 
@@ -900,7 +910,7 @@ local function MakeHat(name)
     end
 
     local function slurtle_equip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
 
         -- check for the armor_snurtleshell pairing achievement
         if owner:HasTag("player") then
@@ -965,7 +975,7 @@ local function MakeHat(name)
     end
 
     local function eyebrella_onunequip(inst, owner) 
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
 
         owner.DynamicShadow:SetSize(1.3, 0.6)
     end
@@ -1027,6 +1037,61 @@ local function MakeHat(name)
         return inst
     end
 
+    local function balloon_onownerattackedfn(inst, data)
+        local balloon = inst.components.inventory ~= nil and inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+        if balloon ~= nil and balloon.components.poppable ~= nil then
+			balloon.components.poppable:Pop()
+        end
+    end
+
+    local function balloon_onequip(inst, owner) 
+        simple_onequip(inst, owner)
+		inst:ListenForEvent("attacked", balloon_onownerattackedfn, owner)
+    end
+
+    local function balloon_onunequip(inst, owner) 
+        _onunequip(inst, owner)
+		inst:RemoveEventCallback("attacked", balloon_onownerattackedfn, owner)
+    end
+
+    local function balloon_custom_init(inst)
+        --waterproofer (from waterproofer component) added to pristine state for optimization
+        inst:AddTag("waterproofer")
+
+		inst:AddTag("cattoy")
+	    inst:AddTag("balloon")
+		inst:AddTag("noepicmusic")
+    end
+
+    local function balloon()
+        local inst = simple(balloon_custom_init)
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.65)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+		BALLOONS.MakeBalloonMasterInit(inst, BALLOONS.DoPop)
+
+        inst.components.equippable.dapperness = TUNING.DAPPERNESS_TINY
+        inst.components.equippable:SetOnEquip(balloon_onequip)
+        inst.components.equippable:SetOnUnequip(balloon_onunequip)
+
+        inst:AddComponent("fueled")
+        inst.components.fueled.fueltype = FUELTYPE.MAGIC
+        inst.components.fueled:InitializeFuelLevel(TUNING.PERISH_ONE_DAY)
+		inst.components.fueled:SetDepletedFn(BALLOONS.FueledDepletedPop)
+
+        inst:AddComponent("waterproofer")
+        inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
+
+        inst.components.equippable.insulated = true
+
+        return inst
+    end
+
     local function wathgrithr_custom_init(inst)
         --waterproofer (from waterproofer component) added to pristine state for optimization
         inst:AddTag("waterproofer")
@@ -1058,7 +1123,7 @@ local function MakeHat(name)
     end
 
     local function walter_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
 		if owner._sanity_damage_protection ~= nil then
 			owner._sanity_damage_protection:RemoveModifier(inst)
 		end
@@ -1066,9 +1131,9 @@ local function MakeHat(name)
 
     local function walter_onequip(inst, owner)
         if owner.prefab == "walter" then
-            onequip(inst, owner )
+            _onequip(inst, owner )
         else
-            onequip(inst, owner, "swap_hat_large")
+            _onequip(inst, owner, "swap_hat_large")
         end
         
 		if owner._sanity_damage_protection ~= nil then
@@ -1238,12 +1303,12 @@ local function MakeHat(name)
     end
 
     local function mole_onequip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         mole_turnon(owner)
     end
 
     local function mole_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         mole_turnoff(owner)
     end
 
@@ -1282,7 +1347,7 @@ local function MakeHat(name)
     end
 
     local function mushroom_onequip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         owner:AddTag("spoiler")
 
         inst.components.periodicspawner:Start()
@@ -1294,7 +1359,7 @@ local function MakeHat(name)
     end
 
     local function mushroom_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         owner:RemoveTag("spoiler")
 
         inst.components.periodicspawner:Stop()
@@ -1390,7 +1455,7 @@ local function MakeHat(name)
     end
 
     local function hive_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
 
         if owner ~= nil and owner.components.sanity ~= nil then
             owner.components.sanity.neg_aura_absorb = 0
@@ -1398,7 +1463,7 @@ local function MakeHat(name)
     end
 
     local function hive_onequip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
 
         if owner ~= nil and owner.components.sanity ~= nil then
             owner.components.sanity.neg_aura_absorb = TUNING.ARMOR_HIVEHAT_SANITY_ABSORPTION
@@ -1504,12 +1569,12 @@ local function MakeHat(name)
     end
 
     local function dragon_equip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         dragon_stopdancing(inst, owner)
     end
 
     local function dragon_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         dragon_stopdancing(inst, owner)
         if owner.sg ~= nil and owner.sg:HasStateTag("dragondance") then
             owner.sg:GoToState("idle")
@@ -1598,14 +1663,14 @@ local function MakeHat(name)
     end
 
     local function skeleton_onequip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         if owner.components.sanity ~= nil then
             owner.components.sanity:SetInducedInsanity(inst, true)
         end
     end
 
     local function skeleton_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         if owner.components.sanity ~= nil then
             owner.components.sanity:SetInducedInsanity(inst, false)
         end
@@ -1684,7 +1749,7 @@ local function MakeHat(name)
     end
 
     local function merm_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         merm_disable(inst)
     end
 
@@ -1718,7 +1783,7 @@ local function MakeHat(name)
     end
 
     local function batnose_equip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
 
         inst.components.perishable:StartPerishing()
 
@@ -1729,7 +1794,7 @@ local function MakeHat(name)
     end
 
     local function batnose_unequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
 
         inst.components.perishable:StopPerishing()
 
@@ -1774,12 +1839,12 @@ local function MakeHat(name)
     end
 
     local function plantregistry_onequip(inst, owner)
-        onequip(inst, owner)
+        _onequip(inst, owner)
         inst:ListenForEvent("newstate", stopusingplantregistry, owner)
     end
 
     local function plantregistry_onunequip(inst, owner)
-        onunequip(inst, owner)
+        _onunequip(inst, owner)
         inst:RemoveEventCallback("newstate", stopusingplantregistry, owner)
     end
 
@@ -1941,6 +2006,10 @@ local function MakeHat(name)
         fn = nutrientsgoggles
     elseif name == "plantregistry" then
         fn = plantregistry
+	elseif name == "balloon" then
+		fn = balloon
+        prefabs = { "balloon_pop_head" }
+		table.insert(assets, Asset("SCRIPT", "scripts/prefabs/balloons_common.lua"))
     end
 
     return Prefab(prefabname, fn or default, assets, prefabs)
@@ -2007,7 +2076,9 @@ return  MakeHat("straw"),
         MakeHat("kelp"),
         MakeHat("merm"),
         MakeHat("cookiecutter"),
-        MakeHat("batnose"),        MakeHat("cookiecutter"),
+        MakeHat("batnose"),
+		MakeHat("cookiecutter"),
         MakeHat("nutrientsgoggles"), 
         MakeHat("plantregistry"), 
+        MakeHat("balloon"), 
         Prefab("minerhatlight", minerhatlightfn)

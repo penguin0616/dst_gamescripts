@@ -69,6 +69,10 @@ local assets =
     Asset("FILE", "images/motd_box4.xml"),
     Asset("FILE", "images/motd_box5.xml"),
     Asset("FILE", "images/motd_box6.xml"),
+    Asset("FILE", "images/motd_box7.xml"),
+    Asset("FILE", "images/motd_box8.xml"),
+    Asset("FILE", "images/motd_box9.xml"),
+    Asset("FILE", "images/motd_box10.xml"),
     Asset("DYNAMIC_ATLAS", "images/motd_fallbacks_box1.xml"),
     Asset("PKGREF", "images/motd_fallbacks_box1.tex"),
     Asset("DYNAMIC_ATLAS", "images/motd_fallbacks_box2.xml"),
@@ -88,6 +92,14 @@ local assets =
     Asset("IMAGE", "images/bg_redux_dark_bottom_solid.tex"),
 	Asset("ATLAS", "images/bg_redux_dark_bottom_vignette1.xml"),
 	Asset("IMAGE", "images/bg_redux_dark_bottom_vignette1.tex"),
+	Asset("ATLAS", "images/bg_redux_motd_frame_small_gold.xml"),
+	Asset("IMAGE", "images/bg_redux_motd_frame_small_gold.tex"),
+	Asset("ATLAS", "images/bg_redux_motd_frame_small_gold2.xml"),
+	Asset("IMAGE", "images/bg_redux_motd_frame_small_gold2.tex"),
+	Asset("ATLAS", "images/bg_redux_motd_frame_large_gold.xml"),
+	Asset("IMAGE", "images/bg_redux_motd_frame_large_gold.tex"),
+	Asset("ATLAS", "images/bg_redux_black_sidebar.xml"),
+	Asset("IMAGE", "images/bg_redux_black_sidebar.tex"),
 
     --character portraits
     Asset("ATLAS", "images/saveslot_portraits.xml"),
@@ -119,6 +131,7 @@ local assets =
     Asset("ANIM", "anim/player_idles_wortox.zip"),    
     Asset("ANIM", "anim/player_idles_wurt.zip"),
     Asset("ANIM", "anim/player_idles_wathgrithr.zip"),
+    Asset("ANIM", "anim/player_idles_wes.zip"),
     Asset("ANIM", "anim/bernie_build.zip"),
     Asset("ANIM", "anim/swap_lucy_axe.zip"),
     

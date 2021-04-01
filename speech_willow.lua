@@ -736,6 +736,14 @@ return{
 
         BALLOONS_EMPTY = "I could fill them with flammable gas.",
         BALLOON = "That's just asking to be popped.",
+		BALLOONPARTY = "Hey, when are you gonna make a hot air balloon? I could help!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "No flying away!",
+            GENERIC = "Thanks! I'll be able to set fires twice as fast with this thing!",
+        },
+		BALLOONVEST = "Squeak-squeak-squeak! Ha ha where's Maxwell, this'll drive him crazy!",
+		BALLOONHAT = "Hey, a rabbit! Not bad!",
 
         BERNIE_INACTIVE =
         {

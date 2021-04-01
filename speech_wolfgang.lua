@@ -730,6 +730,14 @@ return{
 
         BALLOONS_EMPTY = "Wolfgang will make balloon muscles.",
         BALLOON = "Is full of clown breath!",
+		BALLOONPARTY = "Come, friends! Is party!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Balloon has gotten scrawny and weak!",
+            GENERIC = "Clownman has mighty lungs to make balloon so big!",
+        },
+		BALLOONVEST = "Wolfgang will try not to pop little vest with his mighty muscles.",
+		BALLOONHAT = "Haha! Tiny clownman make funny rabbit hat!",
 
         BERNIE_INACTIVE =
         {

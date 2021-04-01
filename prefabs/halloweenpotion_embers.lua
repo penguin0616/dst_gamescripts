@@ -160,7 +160,7 @@ local function anim_buff_fn(potion_tunings)
     inst.AnimState:SetBuild(potion_tunings.BUILD)
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 	inst.AnimState:Hide("burst")
-	inst.AnimState:SetFinalOffset(-1)
+	inst.AnimState:SetFinalOffset(3)
 
     if not TheWorld.ismastersim then
         return inst

@@ -440,6 +440,8 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         if not inst.ismastersim then
             return inst
         end
+        
+        inst:AddComponent("klaussackloot")
 
         inst:AddComponent("worldsettingstimer")
         inst:AddComponent("timer")

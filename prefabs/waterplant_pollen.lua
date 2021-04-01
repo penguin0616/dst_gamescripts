@@ -155,7 +155,7 @@ local function ocean_fn()
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BELOW_GROUND)
     inst.AnimState:SetSortOrder(3)
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
 
     inst:AddTag("chum")
     inst:AddTag("FX")

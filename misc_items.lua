@@ -450,6 +450,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 111,
 	},
+	loading_farming2 =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 116,
+	},
 	loading_feast =
 	{
 		type = "loading",
@@ -522,6 +530,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 51,
 	},
+	loading_march_qol =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 116,
+	},
 	loading_maxwell =
 	{
 		type = "loading",
@@ -569,6 +585,22 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 32,
+	},
+	loading_roadmap =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 116,
+	},
+	loading_roadmap2 =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 116,
 	},
 	loading_walter_trailer =
 	{
@@ -963,6 +995,16 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 109,
+	},
+	mysterybox_invisible_5 =
+	{
+		type = "mysterybox",
+		skin_tags = { "MYSTERYBOX", },
+		build_name_override = "mysterybox_classic_4",
+		box_build = "box_mystery_classic",
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 117,
 	},
 	mysterybox_lava_4 =
 	{
@@ -1825,6 +1867,20 @@ MISC_ITEMS =
 		display_items = {  "parasol_spring", "wardrobe_armoire", "strawhat_bonnet", "abigail_handmedown", "abigail_formal", "abigail_rose", "abigail_shadow", "abigail_survivor", },
 		output_items = {  "parasol_spring", "wardrobe_armoire", "strawhat_bonnet", "abigail_handmedown", "abigail_formal", "abigail_rose", "abigail_shadow", "abigail_survivor", },
 		release_group = 93,
+	},
+	pack_harlequin_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 2,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_harlequin_items.xml",
+		display_tex = "harlequin_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "cane_harlequin", "tophat_harlequin", "panflute_harlequin", },
+		output_items = {  "cane_harlequin", "tophat_harlequin", "panflute_harlequin", },
+		release_group = 116,
 	},
 	pack_haunteddoll_items =
 	{
@@ -3153,6 +3209,85 @@ MISC_ITEMS =
 		output_items = {  "wendy_survivorp", "body_wendy_survivorp", },
 		release_group = 93,
 	},
+	pack_wes_deluxe =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_wes_deluxe.xml",
+		display_tex = "wes_deluxe.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wes_formalp", "wes_rosep", "wes_shadowp", "wes_survivorp", "wes_harlequin", },
+		output_items = {  "wes_harlequin", "body_wes_harlequin", "wes_formalp", "body_wes_formalp", "wes_survivorp", "body_wes_survivorp", "wes_shadowp", "body_wes_shadowp", "wes_rosep", "body_wes_rosep", },
+		release_group = 116,
+	},
+	pack_wes_formal =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 108,
+		build_name_override = "wes_formal",
+		display_atlas = "bigportraits/wes_formal.xml",
+		display_tex = "wes_formal_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wes_formalp", "body_wes_formalp", },
+		output_items = {  "wes_formalp", "body_wes_formalp", },
+		release_group = 116,
+	},
+	pack_wes_harlequin =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 108,
+		build_name_override = "wes_harlequin",
+		display_atlas = "bigportraits/wes_harlequin.xml",
+		display_tex = "wes_harlequin_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wes_harlequin", "body_wes_harlequin", },
+		output_items = {  "wes_harlequin", "body_wes_harlequin", },
+		release_group = 116,
+	},
+	pack_wes_rose =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 108,
+		build_name_override = "wes_rose",
+		display_atlas = "bigportraits/wes_rose.xml",
+		display_tex = "wes_rose_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wes_rosep", "body_wes_rosep", },
+		output_items = {  "wes_rosep", "body_wes_rosep", },
+		release_group = 116,
+	},
+	pack_wes_shadow =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 108,
+		build_name_override = "wes_shadow",
+		display_atlas = "bigportraits/wes_shadow.xml",
+		display_tex = "wes_shadow_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wes_shadowp", "body_wes_shadowp", },
+		output_items = {  "wes_shadowp", "body_wes_shadowp", },
+		release_group = 116,
+	},
+	pack_wes_survivor =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 108,
+		build_name_override = "wes_survivor",
+		display_atlas = "bigportraits/wes_survivor.xml",
+		display_tex = "wes_survivor_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wes_survivorp", "body_wes_survivorp", },
+		output_items = {  "wes_survivorp", "body_wes_survivorp", },
+		release_group = 116,
+	},
 	pack_willow_deluxe =
 	{
 		type = "purchase",
@@ -4446,6 +4581,13 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 32,
 	},
+	playerportrait_bg_saltboxnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 117,
+	},
 	playerportrait_bg_saltboxshaker =
 	{
 		type = "playerportrait",
@@ -5578,6 +5720,13 @@ MISC_ITEMS =
 		skin_tags = { "FOOLS", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 94,
+	},
+	profileflair_saltboxnautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 117,
 	},
 	profileflair_shadowhand =
 	{

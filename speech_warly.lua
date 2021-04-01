@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "It's been left completely breathless.",
         BALLOON = "How colorful!",
+		BALLOONPARTY = "Ah! A celebration!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Quite an odd design. Then again, it was made by an odd fellow.",
+            GENERIC = "What a kind gift!",
+        },
+		BALLOONVEST = "I'm not sure how safe that is.",
+		BALLOONHAT = "It's... not exactly my style.",
 
         BERNIE_INACTIVE =
         {

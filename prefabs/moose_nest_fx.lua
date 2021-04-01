@@ -19,7 +19,7 @@ local function PlayFX(proxy)
     inst.AnimState:SetBank("goosemoose_nest_fx")
     inst.AnimState:SetBuild("goosemoose_nest_fx")
     inst.AnimState:PlayAnimation(proxy.anim)
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
 
     inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/moose/egg_electric")
 

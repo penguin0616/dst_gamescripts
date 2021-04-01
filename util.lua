@@ -1500,55 +1500,14 @@ function metaipairs(t, ...)
     return i(t, ...)
 end
 
-function MetaClass(entries, ctor, classtable)
-    local classtable = classtable or {}
-    classtable._ = entries or {}
-    local defaulttableops = {
-        _ctor = function(self)
-            if ctor then
-                ctor(classtable._)
-            end
-        end,
-        --replaces index behavior obj[key] or obj.key
-        __index = function(t, k)
-            return classtable._[k] or classtable[k]
-        end,
-        --replaces setting behavior obj[key] = value
-        __newindex = function(t, k, v)
-            classtable._[k] = v
-        end,
-        --replaces #obj behavior (length of table)
-        __len = function(t)
-            return #classtable._
-        end,
-        --replaces next
-        __next = function(t, k)
-            return next(classtable._, k)
-        end,
-        --replaces pairs
-        __pairs = function(t)
-            return pairs(classtable._)
-        end,
-        --replaces ipairs
-        __ipairs = function(t)
-            return ipairs(classtable._)
-        end,
-        --called when garbage collecting this.
-        --__gc = function(t) end
-    }
-    --newproxy is the only way to use the __len and __gc(garbage collection) meta methods
-    local mtclass = newproxy(true)
-    local mt = getmetatable(mtclass)
-    for k, v in pairs(classtable) do
-        mt[k] = v
-    end
-    for k, v in pairs(defaulttableops) do
-        if not mt[k] then
-            mt[k] = v
-        end
-    end
-    mtclass:_ctor()
-    return mtclass
+function metarawset(t, k, v)
+    local mt = getmetatable(t)
+    mt._[k] = v
+end
+
+function metarawget(t, k)
+    local mt = getmetatable(t)
+    return mt._[k] or mt.c[k]
 end
 
 function ZipAndEncodeSaveData(data)

@@ -123,6 +123,8 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
     self.no_deconstruction = more_data.no_deconstruction
     self.require_special_event = more_data.require_special_event
 
+	self.dropitem      = more_data.dropitem
+
     num                = num + 1
     AllRecipes[name]   = self
 end)

@@ -19,7 +19,7 @@ local function PlayImpactAnim(proxy)
     inst.AnimState:SetBank("impact")
     inst.AnimState:SetBuild("impact")
     inst.AnimState:PlayAnimation("idle")
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
     
     inst:ListenForEvent("animover", inst.Remove)
 end

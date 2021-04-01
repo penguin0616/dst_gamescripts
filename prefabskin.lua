@@ -59,6 +59,9 @@ batbat_clear_fn = function(inst) basic_clear_fn(inst, "batbat" ) end
 boomerang_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "boomerang" ) end
 boomerang_clear_fn = function(inst) basic_clear_fn(inst, "boomerang" ) end
 
+panflute_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "pan_flute" ) end
+panflute_clear_fn = function(inst) basic_clear_fn(inst, "pan_flute" ) end
+
 hammer_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "swap_hammer" ) end
 hammer_clear_fn = function(inst) basic_clear_fn(inst, "swap_hammer" ) end
 
@@ -77,6 +80,12 @@ spear_wathgrithr_clear_fn = function(inst) basic_clear_fn(inst, "swap_spear_wath
 axe_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "axe" ) end
 axe_clear_fn = function(inst) basic_clear_fn(inst, "axe" ) end
 
+farm_hoe_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "quagmire_hoe" ) end
+farm_hoe_clear_fn = function(inst) basic_clear_fn(inst, "quagmire_hoe" ) end
+
+golden_farm_hoe_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "goldenhoe" ) end
+golden_farm_hoe_clear_fn = function(inst) basic_clear_fn(inst, "goldenhoe" ) end
+
 razor_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "swap_razor" ) end
 razor_clear_fn = function(inst) basic_clear_fn(inst, "swap_razor" ) end
 
@@ -85,6 +94,9 @@ goldenaxe_clear_fn = function(inst) basic_clear_fn(inst, "goldenaxe" ) end
 
 pickaxe_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "pickaxe" ) end
 pickaxe_clear_fn = function(inst) basic_clear_fn(inst, "pickaxe" ) end
+
+pitchfork_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "pitchfork" ) end
+pitchfork_clear_fn = function(inst) basic_clear_fn(inst, "pitchfork" ) end
 
 goldenpickaxe_init_fn = function(inst, build_name) basic_init_fn(inst, build_name, "goldenpickaxe" ) end
 goldenpickaxe_clear_fn = function(inst) basic_clear_fn(inst, "goldenpickaxe" ) end

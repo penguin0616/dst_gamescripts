@@ -935,7 +935,7 @@ function Inventory:Equip(item, old_to_active)
         end
 
         item.components.inventoryitem:OnPutInInventory(self.inst)
-        item.components.equippable:Equip(self.inst)
+        item.components.equippable:Equip(self.inst, not old_to_active and item.prevslot == nil)
         self.equipslots[eslot] = item
 
         if eslot == EQUIPSLOTS.BODY then

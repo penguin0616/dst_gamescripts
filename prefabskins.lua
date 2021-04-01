@@ -67,6 +67,7 @@ PREFAB_SKINS = {
 	axe = 
 	{
 		"axe_feathered",
+		"axe_invisible",
 		"axe_northern",
 		"axe_victorian",
 	},
@@ -175,6 +176,7 @@ PREFAB_SKINS = {
 	{
 		"cane_ancient",
 		"cane_candycane",
+		"cane_harlequin",
 		"cane_sharp",
 		"cane_victorian",
 	},
@@ -284,6 +286,10 @@ PREFAB_SKINS = {
 		"eyebrellahat_crystal",
 		"eyebrellahat_victorian",
 	},
+	farm_hoe = 
+	{
+		"farm_hoe_invisible",
+	},
 	featherfan = 
 	{
 		"featherfan_exotic",
@@ -379,16 +385,23 @@ PREFAB_SKINS = {
 	{
 		"gemsocket_crystal",
 	},
+	golden_farm_hoe = 
+	{
+		"golden_farmhoe_invisible",
+	},
 	goldenaxe = 
 	{
+		"goldenaxe_invisible",
 		"goldenaxe_northern",
 	},
 	goldenpickaxe = 
 	{
+		"goldenpickaxe_invisible",
 		"goldenpickaxe_northern",
 	},
 	goldenshovel = 
 	{
+		"goldenshovel_invisible",
 		"goldenshovel_northern",
 	},
 	grass_umbrella = 
@@ -408,6 +421,7 @@ PREFAB_SKINS = {
 	{
 		"hammer_crowbar",
 		"hammer_forge",
+		"hammer_invisible",
 	},
 	heatrock = 
 	{
@@ -515,12 +529,18 @@ PREFAB_SKINS = {
 	{
 		"orangestaff_ancient",
 		"orangestaff_candycane",
+		"orangestaff_harlequin",
 		"orangestaff_sharp",
 		"orangestaff_victorian",
+	},
+	panflute = 
+	{
+		"panflute_harlequin",
 	},
 	pickaxe = 
 	{
 		"pickaxe_feathered",
+		"pickaxe_invisible",
 		"pickaxe_northern",
 		"pickaxe_scythe",
 		"pickaxe_victorian",
@@ -533,6 +553,10 @@ PREFAB_SKINS = {
 	{
 		"pighouse_cabin",
 		"pighouse_logcabin",
+	},
+	pitchfork = 
+	{
+		"pitchfork_invisible",
 	},
 	rabbithouse = 
 	{
@@ -582,6 +606,7 @@ PREFAB_SKINS = {
 		"researchlab4_hutch_costume",
 		"researchlab4_hutch_costumep",
 		"researchlab4_tophat_circus",
+		"researchlab4_tophat_harlequin",
 		"researchlab4_witch_pyre",
 	},
 	reviver = 
@@ -609,12 +634,14 @@ PREFAB_SKINS = {
 	},
 	saltbox = 
 	{
+		"saltbox_nautical",
 		"saltbox_shaker",
 		"saltbox_victorian",
 	},
 	shovel = 
 	{
 		"shovel_feathered",
+		"shovel_invisible",
 		"shovel_northern",
 		"shovel_victorian",
 	},
@@ -668,6 +695,7 @@ PREFAB_SKINS = {
 		"tophat_circus",
 		"tophat_derby",
 		"tophat_festive_bell_red_firehound",
+		"tophat_harlequin",
 		"tophat_witch_pyre",
 	},
 	torch = 
@@ -892,7 +920,9 @@ PREFAB_SKINS = {
 		"wes_combatant",
 		"wes_cook",
 		"wes_formal",
+		"wes_formalp",
 		"wes_gladiator",
+		"wes_harlequin",
 		"wes_magma",
 		"wes_mandrake",
 		"wes_mandrake_d",
@@ -900,8 +930,11 @@ PREFAB_SKINS = {
 		"wes_nature",
 		"wes_none",
 		"wes_rose",
+		"wes_rosep",
 		"wes_shadow",
+		"wes_shadowp",
 		"wes_survivor",
+		"wes_survivorp",
 		"wes_victorian",
 		"wes_wrestler",
 		"wes_yule",

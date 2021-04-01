@@ -72,7 +72,7 @@ function Equippable:IsEquipped()
     return self.isequipped
 end
 
-function Equippable:Equip(owner)
+function Equippable:Equip(owner, from_ground)
     self.isequipped = true
 
     if self.inst.components.burnable ~= nil then
@@ -80,7 +80,7 @@ function Equippable:Equip(owner)
     end
 
     if self.onequipfn ~= nil then
-        self.onequipfn(self.inst, owner)
+        self.onequipfn(self.inst, owner, from_ground)
     end
     self.inst:PushEvent("equipped", { owner = owner })
 end

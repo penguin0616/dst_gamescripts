@@ -1105,22 +1105,30 @@ local events =
 
     EventHandler("powerup_wurt",
         function(inst)
-            inst.sg:GoToState("powerup_wurt")
+            if not inst.sg:HasStateTag("dead") then
+                inst.sg:GoToState("powerup_wurt")
+            end
         end),
 
     EventHandler("powerdown_wurt",
         function(inst)
-            inst.sg:GoToState("powerdown_wurt")
+            if not inst.sg:HasStateTag("dead") then
+                inst.sg:GoToState("powerdown_wurt")
+            end
         end),
 
     EventHandler("powerup",
         function(inst)
-            inst.sg:GoToState("powerup")
+            if not inst.sg:HasStateTag("dead") then
+                inst.sg:GoToState("powerup")
+            end
         end),
 
     EventHandler("powerdown",
         function(inst)
-            inst.sg:GoToState("powerdown")
+            if not inst.sg:HasStateTag("dead") then
+                inst.sg:GoToState("powerdown")
+            end
         end),
 
     EventHandler("onsink", function(inst, data)
@@ -2414,11 +2422,12 @@ local states =
                 inst.AnimState:PlayAnimation("idle_groggy01_pre")
                 inst.AnimState:PushAnimation("idle_groggy01_loop")
                 inst.AnimState:PushAnimation("idle_groggy01_pst", false)
-            elseif inst.customidleanim == nil then
+            elseif inst.customidleanim == nil and inst.customidlestate == nil then
                 inst.AnimState:PlayAnimation("idle_inaction")
-            else
-                local anim = type(inst.customidleanim) == "string" and inst.customidleanim or inst:customidleanim()
-                if anim ~= nil then
+			else
+                local anim = inst.customidleanim ~= nil and (type(inst.customidleanim) == "string" and inst.customidleanim or inst:customidleanim()) or nil
+				local state = anim == nil and (inst.customidlestate ~= nil and (type(inst.customidlestate) == "string" and inst.customidlestate or inst:customidlestate())) or nil
+                if anim ~= nil or state ~= nil then
                     if inst.sg.mem.idlerepeats == nil then
                         inst.sg.mem.usecustomidle = math.random() < .5
                         inst.sg.mem.idlerepeats = 0
@@ -2427,14 +2436,59 @@ local states =
                         inst.sg.mem.idlerepeats = inst.sg.mem.idlerepeats - 1
                     else
                         inst.sg.mem.usecustomidle = not inst.sg.mem.usecustomidle
-                        inst.sg.mem.idlerepeats = inst.sg.mem.usecustomidle and math.random(2) or math.ceil(math.random(5) * .5)
+                        inst.sg.mem.idlerepeats = inst.sg.mem.usecustomidle and 1 or math.ceil(math.random(2, 5) * .5)
                     end
-                    inst.AnimState:PlayAnimation(inst.sg.mem.usecustomidle and anim or "idle_inaction")
+					if inst.sg.mem.usecustomidle then
+						if anim ~= nil then
+		                    inst.AnimState:PlayAnimation(anim)
+						else
+							inst.sg:GoToState(state)
+						end
+					else
+	                    inst.AnimState:PlayAnimation("idle_inaction")
+					end
                 else
                     inst.AnimState:PlayAnimation("idle_inaction")
                 end
             end
         end,
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "wes_funnyidle",
+        tags = { "idle", "canrotate" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("idle_wes")
+        end,
+
+        timeline =
+        {
+            TimeEvent(9 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("wes/characters/wes/breath_idle")
+            end),
+            TimeEvent(26 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("wes/characters/wes/blow_idle")
+            end),
+            TimeEvent(42 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("wes/characters/wes/breath_idle")
+            end),
+            TimeEvent(58 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("wes/characters/wes/blow_idle")
+            end),
+            TimeEvent(73 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/common/balloon_pop")
+            end),
+        },
 
         events =
         {
@@ -4814,9 +4868,9 @@ local states =
         tags = { "idle", "talking" },
 
         onenter = function(inst)
-            inst.AnimState:PlayAnimation("mime"..tostring(math.random(8)))
+            inst.AnimState:PlayAnimation("mime"..tostring(math.random(13)))
             for k = 1, math.random(2) do
-                inst.AnimState:PushAnimation("mime"..tostring(math.random(8)), false)
+                inst.AnimState:PushAnimation("mime"..tostring(math.random(13)), false)
             end
             DoTalkSound(inst)
         end,
@@ -4827,10 +4881,6 @@ local states =
                 if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
                 end
-            end),
-
-            EventHandler("donetalking", function(inst)
-                inst.sg:GoToState("idle")
             end),
         },
 
@@ -5756,10 +5806,17 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
             inst.AnimState:PushAnimation("flute", false)
-            inst.AnimState:OverrideSymbol("pan_flute01", "pan_flute", "pan_flute01")
+            
+            local inv_obj = inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil
+            local skin_build = inv_obj:GetSkinBuild()
+            if skin_build ~= nil then
+                inst.AnimState:OverrideItemSkinSymbol("pan_flute01", skin_build, "pan_flute01", inst.GUID, "pan_flute" )
+            else
+                inst.AnimState:OverrideSymbol("pan_flute01", "pan_flute", "pan_flute01")
+            end
             inst.AnimState:Hide("ARM_carry")
             inst.AnimState:Show("ARM_normal")
-            inst.components.inventory:ReturnActiveActionItem(inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil)
+            inst.components.inventory:ReturnActiveActionItem(inv_obj)
         end,
 
         timeline =
@@ -8312,7 +8369,7 @@ local states =
 
     State{
         name = "sink_fast",
-        tags = { "busy", "nopredict", "nomorph", "drowning" },
+        tags = { "busy", "nopredict", "nomorph", "drowning", "nointerrupt" },
 
         onenter = function(inst, data)
             ForceStopHeavyLifting(inst)
@@ -8498,7 +8555,7 @@ local states =
 
     State{
         name = "washed_ashore",
-        tags = { "doing", "busy", "canrotate", "nopredict", "silentmorph" },
+        tags = { "busy", "canrotate", "nopredict", "nomorph", "drowning", "nointerrupt" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()

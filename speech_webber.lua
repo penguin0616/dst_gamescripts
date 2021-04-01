@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "Is there going to be a party?!",
         BALLOON = "Balloon animals! Balloon animals!!",
+		BALLOONPARTY = "Yay! It's a party!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "We have to hold on tight or it'll fly away!",
+            GENERIC = "Circles must be the speediest shape.",
+        },
+		BALLOONVEST = "We should take it on our boat trips.",
+		BALLOONHAT = "It looks like a bunny!",
 
         BERNIE_INACTIVE =
         {

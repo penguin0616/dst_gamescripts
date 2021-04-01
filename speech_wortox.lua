@@ -734,6 +734,14 @@ return{
 
         BALLOONS_EMPTY = "Stores one's breath for later spells.",
         BALLOON = "I often feel like I might float away. Hyuyu!",
+		BALLOONPARTY = "A party! Am I invited?",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Its magic is spent.",
+            GENERIC = "With this gift, I'll be more swift!",
+        },
+		BALLOONVEST = "A bright balloon vest to wear across my chest.",
+		BALLOONHAT = "I'm likely to get lightheaded from wearing it, hyuyuyu!",
 
         BERNIE_INACTIVE =
         {

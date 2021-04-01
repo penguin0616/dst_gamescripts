@@ -47,7 +47,8 @@ function MakeBanner(self)
 	local title_str = nil
 
 	local baner_root = Widget("banner_root")
-	baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 )
+	--baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
+	baner_root:SetPosition(0, 0)
 
 	local anim = baner_root:AddChild(UIAnim())
 
@@ -59,69 +60,12 @@ function MakeBanner(self)
         anim:GetAnimState():PlayAnimation("loop", true)
         anim:SetScale(.667)
     
-
         local anim_bg = baner_root:AddChild(UIAnim())
         anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
         anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
         anim:SetScale(.667)
         anim_bg:GetAnimState():PlayAnimation("loop", true)
         anim_bg:MoveToBack()
-
-        --local anim = baner_root:AddChild(UIAnim())
-        --anim:GetAnimState():SetBuild("dst_menu_farming")
-        --anim:GetAnimState():SetBank ("dst_menu_farming")
-        --anim:GetAnimState():PlayAnimation("loop", true)
-        --anim:SetScale(.667)
-        --anim:SetPosition(0, 0)
-
-  --       title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_ROT_BETA_TITLE
-  --       anim:GetAnimState():SetBuild("dst_menu_wathgrithr")
-  --       anim:GetAnimState():SetBank("dst_menu_wathgrithr")
-  --       anim:SetScale(.667)
-  --       anim:GetAnimState():PlayAnimation("loop", true)
-  --       anim:MoveToBack()
-	elseif IsFestivalEventActive(FESTIVAL_EVENTS.LAVAARENA) then
-		anim:GetAnimState():SetBuild("dst_menu_lavaarena_s2")
-		anim:GetAnimState():SetBank("dst_menu_lavaarena_s2")
-		anim:GetAnimState():PlayAnimation("idle", true)
-		anim:SetScale(0.48)
-		anim:SetPosition(0, -160)
-	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
-		--[[anim:GetAnimState():SetBuild("dst_menu_halloween")
-		anim:GetAnimState():SetBank("dst_menu_halloween")
-		anim:GetAnimState():PlayAnimation("anim", true)
-		anim:SetScale(0.67)
-		anim:SetPosition(183, 40)]]
-		anim:GetAnimState():SetBuild("dst_menu_grotto")
-		anim:GetAnimState():SetBank("dst_menu_grotto")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-	elseif IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
-        --anim:GetAnimState():SetBuild("dst_menu_inker_winter")
-        --anim:GetAnimState():SetBank("dst_menu_inker_winter")
-        --anim:GetAnimState():PlayAnimation("loop", true)
-        --anim:SetScale(.667)
-
-    	--[[local anim_bg = baner_root:AddChild(UIAnim())
-		anim_bg:GetAnimState():SetBuild("dst_menu_feast_bg")
-		anim_bg:GetAnimState():SetBank("dst_menu_bg")
-		anim_bg:SetScale(0.7)
-		anim_bg:GetAnimState():SetDeltaTimeMultiplier(1.6)
-		anim_bg:GetAnimState():PlayAnimation("loop", true)
-		anim_bg:MoveToBack()
-        
-		anim:GetAnimState():SetBuild("dst_menu_feast")
-		anim:GetAnimState():SetBank("dst_menu")
-		anim:SetScale(0.7)
-		anim:GetAnimState():PlayAnimation("loop", true)]]
-
-		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_TITLE_REAPWHATYOUSOW
-        anim:GetAnimState():SetBuild("dst_menu_farming_winter")
-        anim:GetAnimState():SetBank ("dst_menu_farming_winter")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-        anim:SetPosition(0, 0)
-
 
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
 		local anim_bg = baner_root:AddChild(UIAnim())
@@ -154,38 +98,11 @@ function MakeBanner(self)
             anim:GetAnimState():OverrideSymbol("ear2", "dst_menu_carrat_swaps", color.."_ear2")
             anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")
         end
-
-    elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
-        anim:GetAnimState():SetBuild("dst_menu_beefalo")
-        anim:GetAnimState():SetBank ("dst_menu_beefalo")
+	elseif true then
+        anim:GetAnimState():SetBuild("dst_menu_wes2")
+        anim:GetAnimState():SetBank ("dst_menu_wes2")
+        anim:SetScale(.667)
         anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-    
-
-        local anim_bg = baner_root:AddChild(UIAnim())
-        anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
-        anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
-        anim:SetScale(.667)
-        anim_bg:GetAnimState():PlayAnimation("loop", true)
-        anim_bg:MoveToBack()
---[[
-        local function onanimover(inst)
-            inst.AnimState:PlayAnimation("loop")
-
-            inst:DoTaskInTime(94 * FRAMES, PlayBannerSound, self, "dontstarve/pig/pig_king_laugh")
-            inst:DoTaskInTime(102 * FRAMES, PlayBannerSound, self, "dontstarve/pig/pig_king_laugh")
-            inst:DoTaskInTime(109 * FRAMES, PlayBannerSound, self, "dontstarve/pig/pig_king_laugh")
-            inst:DoTaskInTime(118 * FRAMES, PlayBannerSound, self, "dontstarve/pig/pig_king_laugh")
-
-            inst:DoTaskInTime(32 * FRAMES, PlayBannerSound, self, "dontstarve/pig/come_at_me")
-            inst:DoTaskInTime(40 * FRAMES, PlayBannerSound, self, "dontstarve/pig/come_at_me")
-            inst:DoTaskInTime(151 * FRAMES, PlayBannerSound, self, "dontstarve/pig/come_at_me")
-            inst:DoTaskInTime(161 * FRAMES, PlayBannerSound, self, "dontstarve/pig/come_at_me")
-        end
-
-        anim.inst:ListenForEvent("animover", onanimover)
-        onanimover(anim.inst)
-    ]]
 	else
 		-- default banner
         local anim_bg = baner_root:AddChild(UIAnim())
@@ -195,12 +112,11 @@ function MakeBanner(self)
     	anim_bg:GetAnimState():PlayAnimation("loop", true)
         anim_bg:MoveToBack()
         
-         anim:GetAnimState():SetBuild("dst_menu_v2")
-         anim:GetAnimState():SetBank("dst_menu_v2")
-         anim:GetAnimState():PlayAnimation("loop", true)
-         anim:SetScale(.667)
-         anim:SetPosition(0, 0)
-	    
+        anim:GetAnimState():SetBuild("dst_menu_v2")
+        anim:GetAnimState():SetBank("dst_menu_v2")
+        anim:GetAnimState():PlayAnimation("loop", true)
+        anim:SetScale(.667)
+        
         local creatures = 
         {
             "creature_cookie",
@@ -213,47 +129,15 @@ function MakeBanner(self)
         for _,v in pairs(creatures) do
             anim:GetAnimState():Hide(v)
         end
-   
+	    
         local c1 = creatures[math.random(1,#creatures)]
         local c2 = creatures[math.random(1,#creatures)]
         local c3 = creatures[math.random(1,#creatures)]
-   
+      
         --could end up with dupes picked, that's okay, then we'll have only 1 or 2 chosen
         anim:GetAnimState():Show(c1)
         anim:GetAnimState():Show(c2)
         anim:GetAnimState():Show(c3)
-
---[[		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_TITLE_REAPWHATYOUSOW
-        anim:GetAnimState():SetBuild("dst_menu_farming")
-        anim:GetAnimState():SetBank ("dst_menu_farming")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-        anim:SetPosition(0, 0)
-]]
-
-
---[[ 
-        local anim = baner_root:AddChild(UIAnim())
-        anim:GetAnimState():SetBuild("dst_menu_wathgrithr")
-        anim:GetAnimState():SetBank ("dst_menu_wathgrithr")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-        anim:SetPosition(0, 0)
-
-        local anim = baner_root:AddChild(UIAnim())
-        anim:GetAnimState():SetBuild("dst_menu_grotto")
-        anim:GetAnimState():SetBank ("dst_menu_grotto")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-        anim:SetPosition(0, 0)
-	
-        local anim = baner_root:AddChild(UIAnim())
-		anim:GetAnimState():SetBuild("dst_menu_walter")
-        anim:GetAnimState():SetBank("dst_menu_walter")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-        anim:SetPosition(0, 0)
-]]
         
         --[[
 		local cur_time = os.time() 
@@ -272,17 +156,6 @@ function MakeBanner(self)
         end]]
 	end
 
-	if IsFestivalEventActive(FESTIVAL_EVENTS.LAVAARENA) then
-		self.logo = baner_root:AddChild(Image("images/lavaarena_frontend.xml", "title.tex"))
-		self.logo:SetScale(.6)
-		self.logo:SetPosition( -RESOLUTION_X/2 + 180, 5)
-	else
-		self.logo = baner_root:AddChild(Image("images/frontscreen.xml", "title.tex"))
-		self.logo:SetScale(.36)
-		self.logo:SetPosition( -RESOLUTION_X/2 + 180, 5)
-		self.logo:SetTint(unpack(FRONTEND_TITLE_COLOUR))
-	end
-	
 	if title_str then
 		if title_str ~= nil then
 			local x = 165
@@ -364,39 +237,22 @@ function MultiplayerMainScreen:DoInit()
 
 	self.banner_root = self.fixed_root:AddChild(MakeBanner(self))
 
-	local bg = self.fixed_root:AddChild(Image("images/bg_redux_dark_bottom_solid.xml", "dark_bottom_solid.tex"))
-	bg:SetScale(.669)
-	bg:SetPosition(0, -160)
-	bg:SetClickable(false)
+	self.sidebar = self.fixed_root:AddChild(Image("images/bg_redux_black_sidebar.xml", "black_sidebar.tex"))
+	self.sidebar:SetPosition(-RESOLUTION_X/2 + 180, 0)
+	self.sidebar:SetScale(0.95, 1.01)
+	self.sidebar:SetTint(0, 0, 0, .85)
 
-	-- new MOTD
-	if TheFrontEnd.MotdManager:IsEnabled() then
-		local info_panel = MainMenuMotdPanel({font = self.info_font, bg = bg, 
-			error_cb = function() 
-				if self.info_panel ~= nil then
-					self.info_panel:Kill() 
-				end
-				self.info_panel = self.fixed_root:AddChild(self:getStatsPanel())
-			end,
-			on_to_skins_cb = function( filter_info ) self:GotoShop( filter_info ) end,
-			})
-		if self.info_panel == nil then
-			self.info_panel = self.fixed_root:AddChild(info_panel)
-		end
+	if IsFestivalEventActive(FESTIVAL_EVENTS.LAVAARENA) then
+		self.logo = self.fixed_root:AddChild(Image("images/lavaarena_frontend.xml", "title.tex"))
+		self.logo:SetScale(.6)
+		self.logo:SetPosition( -RESOLUTION_X/2 + 180, 5)
 	else
-		self.info_panel = self.fixed_root:AddChild(self:getStatsPanel())
+		self.logo = self.fixed_root:AddChild(Image("images/frontscreen.xml", "title.tex"))
+		self.logo:SetScale(.36)
+		self.logo:SetPosition( -RESOLUTION_X/2 + 180, RESOLUTION_Y / 2 - 170)
+		self.logo:SetTint(unpack(FRONTEND_TITLE_COLOUR))
 	end
 
-    if IsAnyFestivalEventActive() then        
-        if not TheFrontEnd:GetIsOfflineMode() then
-			self.userprogress = self.fixed_root:AddChild(TEMPLATES.UserProgress(function()
-				self:OnPlayerSummaryButton()
-			end))
-		end
-    end
-	
-	self.fixed_root:AddChild(Widget("left"))
-    
     self:MakeMainMenu()
 	self:MakeSubMenu()
 
@@ -413,6 +269,29 @@ function MultiplayerMainScreen:DoInit()
 		self.snowfall:SetHAnchor(ANCHOR_MIDDLE)
 		self.snowfall:SetScaleMode(SCALEMODE_PROPORTIONAL)
 	end
+
+    ----------------------------------------------------------
+	-- new MOTD
+	if TheFrontEnd.MotdManager:IsEnabled() then
+		local motd_panel = MainMenuMotdPanel({font = self.info_font, x = 100, y = -150,
+			on_no_focusforward = self.menu,
+			on_to_skins_cb = function( filter_info ) self:GotoShop( filter_info ) end,
+			})
+		if self.motd_panel == nil then
+			self.motd_panel = self.fixed_root:AddChild(motd_panel)
+		end
+	else
+		self.motd_panel = self.fixed_root:AddChild(self:getStatsPanel())
+	end
+
+    if IsAnyFestivalEventActive() then        
+        if not TheFrontEnd:GetIsOfflineMode() then
+			self.userprogress = self.fixed_root:AddChild(TEMPLATES.UserProgress(function()
+				self:OnPlayerSummaryButton()
+			end))
+		end
+    end
+	
 
     ----------------------------------------------------------
 
@@ -434,8 +313,14 @@ function MultiplayerMainScreen:DoFocusHookups()
         self.debug_menu:SetFocusChangeDir(MOVE_LEFT, self.menu)
     end
 
-	self.menu:SetFocusChangeDir(MOVE_RIGHT, self.info_panel)
-	self.info_panel:SetFocusChangeDir(MOVE_LEFT, self.menu)
+	self.menu:SetFocusChangeDir(MOVE_RIGHT, self.motd_panel)
+	self.motd_panel:SetFocusChangeDir(MOVE_LEFT, self.menu)
+end
+
+function MultiplayerMainScreen:OnControl(control, down)
+    if MultiplayerMainScreen._base.OnControl(self, control, down) then return true end
+
+    if self.motd_panel ~= nil and self.motd_panel:OnControl(control, down) then return true end
 end
 
 function MultiplayerMainScreen:EnableBannerSounds(enable)
@@ -824,8 +709,8 @@ function MultiplayerMainScreen:OnBecomeActive()
 		TheSim:StartWorkshopQuery()
 	end
 
-	if self.info_panel ~= nil and self.info_panel.OnBecomeActive ~= nil then
-		self.info_panel:OnBecomeActive()
+	if self.motd_panel ~= nil and self.motd_panel.OnBecomeActive ~= nil then
+		self.motd_panel:OnBecomeActive()
 	end
 
     --delay for a frame to allow the screen to finish building, then check the entity count for leaks
@@ -946,5 +831,10 @@ function MultiplayerMainScreen:CheckNewUser(onnofn, no_button_text)
     TheFrontEnd:PushScreen(popup)
     return true
 end
+
+function MultiplayerMainScreen:GetHelpText()
+    return (self.motd_panel ~= nil and self.motd_panel.GetHelpText ~= nil and not self.motd_panel.focus) and self.motd_panel:GetHelpText() or ""
+end
+
 
 return MultiplayerMainScreen

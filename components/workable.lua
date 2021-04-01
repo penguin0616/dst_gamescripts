@@ -111,7 +111,11 @@ end
 
 function Workable:WorkedBy(worker, numworks)
     numworks = numworks or 1
-    self.workleft = self.workleft - numworks
+	if self.workleft <= 1 then -- if there is less that one full work remaining, then just finish it. This is to handle the case where objects are set to only one work and not planned to handled something like 0.5 numworks
+		self.workleft = 0
+	else
+	    self.workleft = self.workleft - numworks
+	end
     self.lastworktime = GetTime()
 
     worker:PushEvent("working", { target = self.inst })

@@ -430,7 +430,7 @@ local function glow_fn()
     inst.AnimState:SetBuild("firefighter_glow")
     inst.AnimState:PlayAnimation("green", true)
     inst.AnimState:SetLightOverride(1)
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
     inst.AnimState:OverrideMultColour(0, 0, 0, 0)
 
     inst._ison = net_bool(inst.GUID, "firesuppressor_glow._ison", "onisondirty")

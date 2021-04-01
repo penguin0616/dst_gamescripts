@@ -58,7 +58,7 @@ local function CreateGroundFX(bomb)
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(3)
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
     inst:ListenForEvent("animover", inst.Remove)

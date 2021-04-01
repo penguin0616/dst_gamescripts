@@ -120,7 +120,7 @@ STRINGS =
         wolfgang = "*Grows mighty on a full belly \n*Becomes wimpy when hungry \n*Burns a lot of calories \n*Is afraid of monsters and the dark",
         wx78 = "*Not a picky eater \n*Is charged by lightning, but damaged by water \n*Can upgrade with gears",
         wickerbottom = "*Knows many things \n*Self-publishes books \n*Suffers from insomnia \n*Has a delicate stomach",
-        wes = "*Can't talk \n*Practices balloonomancy \n*Is not a skilled fighter \n*Has a high metabolism \n*Has trouble staying alive",
+        wes = "*Can't talk \n*Practices balloonomancy \n*Is not a skilled fighter or worker \n*Has trouble staying alive",
         waxwell = "*Is dapper, but frail \n*Can split his mind into pieces \n*Was once the king of the world",
         woodie = "*Has a lovely axe... \n*And is at war with the forest \n*Suffers from the curse of the Werebeaver! \n*And the Weremoose and the Weregoose... \n*Is thankful for bountiful harvests",
         woodie_us = "*Has a lovely axe... \n*And is at war with the forest \n*Suffers from the curse of the Werebeaver! \n*And the Weremoose and the Weregoose... \n*Celebrates Thanksgiving too early",
@@ -217,7 +217,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "May 7" },
             { title = "Favorite Food", desc = "Spicy Chili" },
-            { title = "From the Ashes", desc = "Willow always regarded being brought to The Constant as a new beginning. It allowed her to leave everything behind, after all. From a young age, Willow seemed to possess a knack for attracting bad luck. Orphaned at a young age and forced to live in a children's home with cruel caregivers, she soon found her nights plagued by shadowy visions of terrible creatures... creatures that could only be held at bay by her faithful teddy bear Bernie. But when Bernie was taken away as punishment for what her caregivers saw as unfit behavior, Willow was left to fend for herself when the shadows came for her. That's when she learned that nothing holds back the darkness like a roaring flame. Nothing is more comforting than watching your troubles light up and crumble to ash...\nIt wouldn't be the last time Willow burned it all down to start anew." },
+            { title = "From the Ashes", desc = "Willow always regarded being brought to The Constant as a new beginning. It allowed her to leave everything behind, after all. Even as a child, Willow seemed to possess a knack for attracting bad luck. Orphaned at a young age and forced to live in a children's home with cruel caregivers, she soon found her nights plagued by shadowy visions of terrible creatures... creatures that could only be held at bay by her faithful teddy bear Bernie. But when Bernie was taken away as punishment for what her caregivers saw as unfit behavior, Willow was left to fend for herself when the shadows came for her. That's when she learned that nothing holds back the darkness like a roaring flame. Nothing is more comforting than watching your troubles light up and crumble to ash...\nIt wouldn't be the last time Willow burned it all down to start anew." },
 		},
         wendy =
 		{
@@ -254,7 +254,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "April 16" },
             { title = "Favorite Food", desc = "Fresh Fruit Crepes" },
-			{ title = "His Past...", desc = "Is yet to be revealed." },
+			{ title = "C'est La Vie", desc = "Despite a life plagued by terrible luck, Wes has never been one to utter so much as a word of complaint. Rather than dwell on his own troubles, he has instead dedicated his life to making others smile... even if it's at his own expense.\nHis journey to the Constant itself was nothing if not a tragic comedy of errors. After a series of snowballing missteps, Wes found himself accidentally taking the place of a stranger caught in the grip of a shadowy portal bound for the Constant. His unexpected arrival infuriated the Nightmare King, who quickly exacted his vengeance on the poor mime for interfering with his plans. Wes was banished to his own private prison, far from sight, where he would remain until he was rescued by the Constant's other Survivors (being the kind soul that he is, Wes holds no grudge against Maxwell... though he does continue to give him the silent treatment.)\nHad Wes known what fate awaited him on his last day on Earth, he likely wouldn't have done anything differently. In truth, there is a part of him that is happy to be in the Constant with the other Survivors - for who could be in greater need of cheering up than those poor souls?" },
 		},
         waxwell =
 		{
@@ -871,7 +871,11 @@ STRINGS =
         CHESSJUNK3 = "Broken Clockworks",
         ABIGAIL_FLOWER = "Abigail's Flower",
         BALLOONS_EMPTY = "Pile o' Balloons",
-        BALLOON = "Balloon",    
+        BALLOON = "Balloon",
+		BALLOONPARTY = "Party Balloon",
+		BALLOONSPEED = "Speedy Balloon",
+		BALLOONVEST = "Inflatable Vest",
+		BALLOONHAT = "Balloon Hat",
         LIGHTER = "Willow's Lighter",
         COMPASS = "Compass",
         MUSHTREE_TALL = "Blue Mushtree",
@@ -3236,6 +3240,11 @@ STRINGS =
 		TILLWEEDSALVE = "Slowly weed out aches and pains.",
         WATERBALLOON = "Spheroid fire suppression.",
         BALLOONS_EMPTY = "If only there was an easier way.",
+        BALLOON = "Who doesn't like balloons?",
+		BALLOONPARTY = "Spread a little cheer.",
+		BALLOONSPEED = "Makes you light on your feet.",
+		BALLOONVEST = "Bouyant balloons for boating.",
+		BALLOONHAT = "A great conversation starter!",
         LIFEINJECTOR = "Boosts your declining max health.",
         LIGHTNING_ROD = "Protection from strikes.",
         CANE = "Trot on with speed and poise.",
@@ -4830,6 +4839,7 @@ STRINGS =
         HERMITCRABSHOP = "Bottle Exchange",
 		SLINGSHOTAMMO = "Slingshot Ammo",
         TURFCRAFTING = "Landscaping",
+		BALLOONOMANCY = "Balloonomancy",
     },
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
 
@@ -5460,6 +5470,7 @@ STRINGS.UI =
         VIEWGROUP = "View Group Page",
         SERVERACTIONS = "More Server Actions",
         CANCEL = "Cancel",
+		CHANGE_MESSAGE = "Change Message",
     },
 
     BOAT =
@@ -5955,8 +5966,10 @@ STRINGS.UI =
         MOTDBUTTON = "Klei Store",
 
 		MOTD_SYNCING = "Syncing Notifications",
+		MOTD_SYNCING_FAILED = "Unable to download notifications.",
+		MOTD_DOWNLOADING_IMAGE = "Downloading Image",
         MOTD_ALERT_DETAILS = "View Details",
-        MOTD_NEW_UPDATE = "New Update Available!",
+        MOTD_NEW_UPDATE = "A new update is available\nPlease update to the latest version",
 		MOTD_NEW_ANNOUNCEMENT = "New!",
 
         EXIT = "Exit",
@@ -7777,6 +7790,8 @@ STRINGS.UI =
 	
     SERVERCREATIONSCREEN =
     {
+        FORESTONLY = "Forest",
+        FORESTANDCAVES = "Forest And Caves",
         CREATE = "Generate World",
         RESUME = "Resume World",
         BACK  = "Back",
