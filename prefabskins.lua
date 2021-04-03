@@ -517,6 +517,14 @@ PREFAB_SKINS = {
 		"nightsword_curve",
 		"nightsword_sharp",
 	},
+	oar = 
+	{
+		"oar_invisible",
+	},
+	oar_driftwood = 
+	{
+		"oar_driftwood_invisible",
+	},
 	oceanfishingrod = 
 	{
 		"oceanfishingrod_ice",

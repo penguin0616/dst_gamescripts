@@ -23,8 +23,11 @@ local function SetColour(inst, colour_idx)
 end
 
 local AREAATTACK_EXCLUDETAGS = { "INLIMBO", "notarget", "noattack", "flight", "invisible", "playerghost" }
-local function doareaattack(inst)
+local function doareaattack(inst, remove)
     inst.components.combat:DoAreaAttack(inst, TUNING.BALLOON_ATTACK_RANGE, nil, nil, nil, AREAATTACK_EXCLUDETAGS)
+	if remove then
+		inst:Remove()
+	end
 end
 
 local function DeactiveBalloon(inst)
@@ -84,7 +87,6 @@ local function DoPop(inst)
 
 		local delay = math.random(0, 3) * FRAMES
 		inst:DoTaskInTime(delay, doareaattack, true)
-		inst:DoTaskInTime(delay + FRAMES, inst.Remove)
 	end
 end
 

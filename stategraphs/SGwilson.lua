@@ -569,7 +569,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.BUILD,
         function(inst, action)
             local rec = GetValidRecipe(action.recipe)
-            return (rec ~= nil and rec.tab.shop and "give")
+            return (rec ~= nil and rec.buildingstate)
+                or (rec ~= nil and rec.tab.shop and "give")
                 or (action.recipe == "livinglog" and inst:HasTag("plantkin") and "form_log")
                 or (inst:HasTag("hungrybuilder") and "dohungrybuild")
                 or (inst:HasTag("fastbuilder") and "domediumaction")
@@ -5810,7 +5811,7 @@ local states =
             local inv_obj = inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil
             local skin_build = inv_obj:GetSkinBuild()
             if skin_build ~= nil then
-                inst.AnimState:OverrideItemSkinSymbol("pan_flute01", skin_build, "pan_flute01", inst.GUID, "pan_flute" )
+                inst.AnimState:OverrideItemSkinSymbol("pan_flute01", skin_build, "pan_flute01", inv_obj.GUID, "pan_flute" )
             else
                 inst.AnimState:OverrideSymbol("pan_flute01", "pan_flute", "pan_flute01")
             end

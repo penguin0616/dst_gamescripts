@@ -2943,6 +2943,28 @@ table.insert(prefs, CreatePrefabSkin("nightsword_sharp",
 	release_group = 88,
 }))
 
+table.insert(prefs, CreatePrefabSkin("oar_driftwood_invisible",
+{
+	base_prefab = "oar_driftwood",
+	type = "item",
+	rarity = "Classy",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) oar_driftwood_init_fn(inst, "oar_driftwood_invisible") end,
+	skin_tags = { "INVISIBLE", "OARDRIFTWOOD", "CRAFTABLE", },
+	release_group = 117,
+}))
+
+table.insert(prefs, CreatePrefabSkin("oar_invisible",
+{
+	base_prefab = "oar",
+	type = "item",
+	rarity = "Classy",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) oar_init_fn(inst, "oar_invisible") end,
+	skin_tags = { "INVISIBLE", "OAR", "CRAFTABLE", },
+	release_group = 117,
+}))
+
 table.insert(prefs, CreatePrefabSkin("oceanfishingrod_ice",
 {
 	base_prefab = "oceanfishingrod",

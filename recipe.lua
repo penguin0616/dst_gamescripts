@@ -116,6 +116,7 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
     self.numtogive     = numtogive or 1
 
     self.builder_tag   = builder_tag or nil
+	self.buildingstate = more_data.buildingstate -- overrides the SG state to use when crafting the item
 
     self.build_mode    = build_mode or BUILDMODE.LAND
     self.build_distance= build_distance or 1

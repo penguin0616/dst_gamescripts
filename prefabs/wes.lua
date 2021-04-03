@@ -4,6 +4,7 @@ local assets =
 {
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("ANIM", "anim/player_mount_wes.zip"),
+    Asset("ANIM", "anim/player_mount_wes_2.zip"),
     Asset("ANIM", "anim/player_mime.zip"),
     Asset("ANIM", "anim/player_mime2.zip"),
     Asset("ANIM", "anim/player_idles_wes.zip"),
@@ -32,7 +33,9 @@ local function master_postinit(inst)
 
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
-	inst:AddComponent("houndedtarget")
+	if inst.components.houndedtarget == nil then
+		inst:AddComponent("houndedtarget")
+	end
 	inst.components.houndedtarget.target_weight_mult:SetModifier(inst, TUNING.WES_HOUND_TARGET_MULT, "misfortune") 
 	inst.components.houndedtarget.hound_thief = true
 
@@ -54,7 +57,7 @@ local function master_postinit(inst)
 	inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   TUNING.WES_WORKEFFECTIVENESS_MODIFIER, inst)
 	inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.WES_WORKEFFECTIVENESS_MODIFIER, inst)
 
-	if inst.efficientuser == nil then
+	if inst.components.efficientuser == nil then
 		inst:AddComponent("efficientuser")
 	end
 	inst.components.efficientuser:AddMultiplier(ACTIONS.CHOP,   TUNING.WES_WORKEFFECTIVENESS_MODIFIER, inst)

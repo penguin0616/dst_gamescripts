@@ -567,11 +567,11 @@ Recipe("oceanfishinglure_hermit_heavy",		{Ingredient("cookiecuttershell", 1), In
 
 -- Balloonomancy
 Recipe("balloons_empty",		{Ingredient("waterballoon", 4)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
-Recipe("balloon",				{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true})
-Recipe("balloonspeed",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
-Recipe("balloonparty",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true})
-Recipe("balloonvest",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
-Recipe("balloonhat",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
+Recipe("balloon",				{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true, buildingstate = "makeballoon"})
+Recipe("balloonspeed",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"})
+Recipe("balloonparty",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true, buildingstate = "makeballoon"})
+Recipe("balloonvest",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"})
+Recipe("balloonhat",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"})
 
 ----HERMITCRABSHOP-----
 Recipe("hermitshop_hermit_bundle_shells", {Ingredient("messagebottleempty", 1)}, RECIPETABS.HERMITCRABSHOP, TECH.HERMITCRABSHOP_ONE, nil, nil, true, nil, nil, nil, "hermit_bundle.tex", nil, "hermit_bundle_shells")

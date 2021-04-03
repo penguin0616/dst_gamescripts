@@ -53,13 +53,15 @@ local function fn()
     inst.AnimState:SetBuild("balloonvest")
     inst.AnimState:PlayAnimation("idle")
 
-    inst.entity:SetPristine()
+    MakeInventoryFloatable(inst, "small", 0.1, 0.80)
 
 	inst:AddTag("cattoy")
     inst:AddTag("balloon")
 	inst:AddTag("noepicmusic")
 
     inst.foleysound = "wes/common/foley/balloon_vest"
+
+    inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
