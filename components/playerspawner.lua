@@ -111,11 +111,11 @@ function self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading)
             return false
         else
             if TheWorld.state.cycles <= 1 then return false end
-            return #TheSim:FindEntities(x, y, z, 16, nil, nil, SPAWN_PROTECTION_DANGER_TAGS) > 1 or
-                #TheSim:FindEntities(x, y, z, 12, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 4 or
-                #TheSim:FindEntities(x, y, z, 18, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 10 or
-                #TheSim:FindEntities(x, y, z, 24, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 15 or
-                #TheSim:FindEntities(x, y, z, 32, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 20
+            return TheSim:CountEntities(x, y, z, 16, nil, nil, SPAWN_PROTECTION_DANGER_TAGS) > 1 or
+            TheSim:CountEntities(x, y, z, 12, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 4 or
+                TheSim:CountEntities(x, y, z, 18, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 10 or
+                TheSim:CountEntities(x, y, z, 24, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 15 or
+                TheSim:CountEntities(x, y, z, 32, nil, nil, SPAWN_PROTECTION_BLOCKED_TAGS) >= 20
         end
     end
     return false

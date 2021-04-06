@@ -39,7 +39,7 @@ local function On_ChildSpawner_SpawnPeriod_TimerFinished(inst)
         if dospawn then
             childspawner:SpawnChild()
         end
-        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), dospawn)
+        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not dospawn)
     end
 end
 
@@ -51,7 +51,7 @@ local function On_ChildSpawner_RegenPeriod_TimerFinished(inst)
         if doregen then
             childspawner:DoRegen()
         end
-        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), doregen)
+        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), not doregen)
     end
 end
 
@@ -96,7 +96,7 @@ function WorldSettings_ChildSpawner_SpawnPeriod(inst, spawnperiod, enabled)
     childspawner.spawntimerset = Set_ChildSpawner_SpawnPeriod_Timer_Time
 
     worldsettingstimer:AddTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, spawnperiod, enabled, On_ChildSpawner_SpawnPeriod_TimerFinished)
-    worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), childspawner.spawning and childspawner.childreninside > 0)
+    worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not (childspawner.spawning and childspawner.childreninside > 0))
 end
 
 function WorldSettings_ChildSpawner_RegenPeriod(inst, regenperiod, enabled)
@@ -114,7 +114,7 @@ function WorldSettings_ChildSpawner_RegenPeriod(inst, regenperiod, enabled)
     childspawner.regentimerstop = Stop_ChildSpawner_RegenPeriod_Timer
 
     worldsettingstimer:AddTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, regenperiod, enabled, On_ChildSpawner_RegenPeriod_TimerFinished)
-    worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull()))
+    worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), not (childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull())))
 end
 
 ----------------------------------------------------------------------

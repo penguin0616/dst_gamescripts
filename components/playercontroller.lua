@@ -1454,7 +1454,7 @@ local function GetPickupAction(self, target, tool)
         return ACTIONS.HARVEST
     elseif target:HasTag("tapped_harvestable") and not target:HasTag("fire") then
         return ACTIONS.HARVEST
-    elseif target:HasTag("tendable_farmplant") and not target:HasTag("fire") then
+    elseif target:HasTag("tendable_farmplant") and not self.inst:HasTag("mime") and not target:HasTag("fire") then
         return ACTIONS.INTERACT_WITH
     elseif target:HasTag("dried") and not target:HasTag("burnt") then
         return ACTIONS.HARVEST
