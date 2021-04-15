@@ -67,9 +67,6 @@ function Placer:OnUpdate(dt)
     if self.fixedcameraoffset ~= nil then
         local rot = self.fixedcameraoffset - TheCamera:GetHeading() -- rotate against the camera
         self.inst.Transform:SetRotation(rot)
-        for i, v in ipairs(self.linked) do
-            v.Transform:SetRotation(rot)
-        end
     end
 
     if self.onupdatetransform ~= nil then

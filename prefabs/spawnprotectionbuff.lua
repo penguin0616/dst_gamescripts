@@ -38,6 +38,9 @@ local function check_dist_from_spawnpt(inst, target)
 
 		inst.expire_task:Cancel()
 		start_exipiring(inst)
+	elseif TheWorld.state.isnight then
+		inst.expire_task:Cancel()
+		inst.expire_task = inst:DoTaskInTime(TUNING.SPAWNPROTECTIONBUFF_IDLE_DURATION, start_exipiring)
 	end
 end
 
@@ -77,15 +80,21 @@ end
 local function OnEnableProtectionFn(inst, target, enable)
 	if enable then
 		target:AddTag("notarget")
+		target:AddTag("spawnprotection")
 
 		target.Physics:ClearCollidesWith(COLLISION.OBSTACLES)
 		target.Physics:ClearCollidesWith(COLLISION.SMALLOBSTACLES)
+		target.Physics:ClearCollidesWith(COLLISION.CHARACTERS)
+		target.Physics:ClearCollidesWith(COLLISION.FLYERS)
 		target.AnimState:SetHaunted(true)
 	else
 		target:RemoveTag("notarget")
+		target:RemoveTag("spawnprotection")
 
 		target.Physics:CollidesWith(COLLISION.OBSTACLES)
 		target.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
+		target.Physics:CollidesWith(COLLISION.CHARACTERS)
+		target.Physics:CollidesWith(COLLISION.FLYERS)
 		target.AnimState:SetHaunted(false)
 
 		inst.AnimState:PushAnimation("buff_pst", false)

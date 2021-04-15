@@ -1,4 +1,4 @@
-local function sanitydelta(inst, data) --Changes sanity up or down
+local function sanitydelta(inst, scenariorunner, data) --Changes sanity up or down
 	local tar = data.doer or data.worker
 
 	if not tar then 
@@ -11,7 +11,7 @@ local function sanitydelta(inst, data) --Changes sanity up or down
 	end
 end
 
-local function hungerdelta(inst, data) --Changes hunger up or down
+local function hungerdelta(inst, scenariorunner, data) --Changes hunger up or down
 	local tar = data.doer or data.worker
 
 	if not tar then 
@@ -24,7 +24,7 @@ local function hungerdelta(inst, data) --Changes hunger up or down
 	end
 end
 
-local function healthdelta(inst, data) --Changes health (For the better! We don't want the player to die from this)
+local function healthdelta(inst, scenariorunner, data) --Changes health (For the better! We don't want the player to die from this)
 	local tar = data.doer or data.worker
 
 	if not tar then 
@@ -37,7 +37,7 @@ local function healthdelta(inst, data) --Changes health (For the better! We don'
 	end
 end
 
-local function inventorydelta(inst, data) --Does some sort of effect on an item in your inventory
+local function inventorydelta(inst, scenariorunner, data) --Does some sort of effect on an item in your inventory
 	local tar = data.doer or data.worker
 
 	if not tar then 
@@ -51,28 +51,28 @@ local function inventorydelta(inst, data) --Does some sort of effect on an item 
 			local items = inv:FindItems(function(item) return item.components.finiteuses end)
 			local item = GetRandomItem(items)
 			if not item then return end
-			item.components.finiteuses:SetPercent(GetRandomWithVariance(item.components.finiteuses:GetPercent(), 0.2))
+			item.components.finiteuses:SetPercent(math.min(GetRandomWithVariance(item.components.finiteuses:GetPercent(), 0.2), 1.0))
 		elseif rnd >= 0.25 and rnd < 0.5 then
 			local items = inv:FindItems(function(item) return item.components.perishable end)
 			local item = GetRandomItem(items)
 			if not item then return end
-			item.components.perishable:SetPercent(GetRandomWithVariance(item.components.perishable:GetPercent(), 0.2))
+			item.components.perishable:SetPercent(math.min(GetRandomWithVariance(item.components.perishable:GetPercent(), 0.2)))
 		elseif rnd >= 0.5 and rnd < 0.75 then
 			local items = inv:FindItems(function(item) return item.components.armor end)
 			local item = GetRandomItem(items)
 			if not item then return end
-			item.components.armor:SetPercent(GetRandomWithVariance(item.components.armor:GetPercent(), 0.2))
+			item.components.armor:SetPercent(math.min(GetRandomWithVariance(item.components.armor:GetPercent(), 0.2)))
 		else
 			local items = inv:FindItems(function(item) return item.components.fueled end)
 			local item = GetRandomItem(items)			
 			if not item then return end
-			item.components.fueled:SetPercent(GetRandomWithVariance(item.components.fueled:GetPercent(), 0.2))	
+			item.components.fueled:SetPercent(math.min(GetRandomWithVariance(item.components.fueled:GetPercent(), 0.2)))
 		end
 	end
 end
 
 
-local function summonmonsters(inst, data)
+local function summonmonsters(inst, scenariorunner, data)
 	local monsterlist =
 	{
 		spider_dropper = function(inst) inst.sg:GoToState("dropper_enter") end,

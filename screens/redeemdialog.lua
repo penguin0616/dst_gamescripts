@@ -170,8 +170,8 @@ function RedeemDialog:MakeTextEntryBox(parent)
 						self.submit_btn:Select()
 					end
 					self.redeem_in_progress = true
-					TheItems:RedeemCode(redeem_code, function(success, status, item_type, category, message)
-						self:DisplayResult(success, status, item_type, category, message)
+					TheItems:RedeemCode(redeem_code, function(success, status, item_type, currency, currency_amt, category, message)
+						self:DisplayResult(success, status, item_type, currency, currency_amt, category, message)
 					end)
 				end
 			end
@@ -211,7 +211,7 @@ function RedeemDialog:MakeTextEntryBox(parent)
     self.entrybox = entrybox
 end
 
-function RedeemDialog:DisplayResult(success, status, item_type, category, message) 
+function RedeemDialog:DisplayResult(success, status, item_type, currency, currency_amt, category, message) 
 	-- Possible responses when attempting to query server:
 	--success=true, status="ACCEPTED"
 	--success=false, status="INVALID_CODE"
@@ -224,10 +224,10 @@ function RedeemDialog:DisplayResult(success, status, item_type, category, messag
     self.redeem_in_progress = false
 
 	--DO WE DEAL WITH item_type = FROMNUM???
-	print( "RedeemDialog:DisplayResult", success, status, item_type, category, message )
+	print( "RedeemDialog:DisplayResult", success, status, item_type, currency, currency_amt, category, message )
 	if success then
 		local items = {} -- early access thank you gifts
-		table.insert(items, {item=item_type, item_id=0, gifttype=category, message=message})
+		table.insert(items, {item=item_type, item_id=0, currency=currency, currency_amt=currency_amt, gifttype=category, message=message})
 
 		for i = 1, NUM_CODE_GROUPS do
 			self.entrybox.textboxes[i]:SetString("")

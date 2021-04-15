@@ -99,7 +99,7 @@ end
 function WorldSettingsMenu:SetTweak(option, value)
     local refresh = self.settings.tweaks[option] ~= nil
     self.settings.tweaks[option] = value
-    if refresh then self:Refresh() end
+    if refresh and not self.refreshing then self:Refresh() end
 end
 
 function WorldSettingsMenu:UpdatePresetInfo()
@@ -125,6 +125,8 @@ function WorldSettingsMenu:UpdatePresetInfo()
 end
 
 function WorldSettingsMenu:Refresh(force)
+    if self.refreshing == true then return end
+    self.refreshing = true
     if not self:IsNewShard() then
         self.mode = "seperate"
     end
@@ -138,6 +140,7 @@ function WorldSettingsMenu:Refresh(force)
     self:UpdatePresetInfo()
     self.settingslist:Refresh(force)
     GetPresetBox(self):Refresh()
+    self.refreshing = false
 end
 
 function WorldSettingsMenu:SavePreset(presetid, name, desc, noload)
@@ -212,10 +215,7 @@ function WorldSettingsMenu:RevertChanges()
     if self.parent_widget:IsNewShard() then
         self:LoadPreset(self.settings.preset)
     else
-        local options = ShardSaveGameIndex:GetSlotGenOptions(self.parent_widget.slot, SERVER_LEVEL_SHARDS[self.parent_widget.location_index])
-        if not options or IsTableEmpty(options) then
-            options = nil
-        end
+        local options = self.parent_widget:GetSlotOptions()
         self:SetDataFromOptions(options)
     end
 
@@ -394,7 +394,7 @@ end
 --called by parent widget
 function WorldSettingsMenu:VerifyValidSeasonSettings()
     -- Only main world (index 1) has seasons.
-    if self.parent_widget:IsMasterLevel() and self.levelcategory == LEVELCATEGORY.WORLDGEN then
+    if self.parent_widget:IsMasterLevel() and self.levelcategory == LEVELCATEGORY.SETTINGS then
         for i, season in ipairs({"autumn", "winter", "spring", "summer"}) do
             if self:GetValueForOption(season) ~= "noseason" then
                 return true

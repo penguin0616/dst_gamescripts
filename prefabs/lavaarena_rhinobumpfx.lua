@@ -19,7 +19,7 @@ local function PlayImpactAnim(proxy)
     inst.AnimState:SetBank("rhino_impact")
     inst.AnimState:SetBuild("rhino_impact")
     inst.AnimState:PlayAnimation("anim")
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
 
     inst:ListenForEvent("animover", inst.Remove)
 end

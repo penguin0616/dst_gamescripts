@@ -167,7 +167,12 @@ local function AttemptMakeQueen(inst)
         return
     end
 
-    if inst.data.stage == nil or inst.data.stage ~= 3 or not TUNING.SPAWN_SPIDERQUEEN then
+    if not TUNING.SPAWN_SPIDERQUEEN then
+        SetLarge(inst)
+        return
+    end
+
+    if inst.data.stage == nil or inst.data.stage ~= 3 then
         -- we got here directly (probably by loading), so reconfigure to the level 3 state.
         SetLarge(inst)
     end
@@ -482,6 +487,9 @@ local function MakeSpiderDenFn(den_level)
         inst.components.childspawner:SetSpawnPeriod(TUNING.SPIDERDEN_RELEASE_TIME)
         WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.SPIDERDEN_RELEASE_TIME, TUNING.SPIDERDEN_ENABLED)
         WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.SPIDERDEN_REGEN_TIME, TUNING.SPIDERDEN_ENABLED)
+        if not TUNING.SPIDERDEN_ENABLED then
+            inst.components.childspawner.childreninside = 0
+        end
 
         inst.components.childspawner.allowboats = true
 

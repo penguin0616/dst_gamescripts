@@ -157,6 +157,12 @@ local function testforcarratexit(inst)
 end
 
 fns.ClearBellOwner = function(inst)
+    if inst._marked_for_despawn then
+        -- We're marked for despawning, so don't disconnect anything,
+        -- in case we get saved for real i.e. when despawning in caves.
+        return
+    end
+
     fns.RemoveName(inst)
 
     local bell_leader = inst.components.follower:GetLeader()
@@ -215,6 +221,18 @@ local function getbasebuild(inst)
             or "beefalo_build"
 end
 
+function fns.GetMoodComponent(inst)
+    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
+    if herd then
+        return herd.components.mood
+    end
+end
+
+function fns.GetIsInMood(inst)
+    local mood = fns.GetMoodComponent(inst)
+    return mood and mood:IsInMood() or false
+end
+
 -- This takes an anim state so that it can apply to itself, or to its rider
 local function ApplyBuildOverrides(inst, animstate)
     local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
@@ -225,8 +243,7 @@ local function ApplyBuildOverrides(inst, animstate)
         animstate:SetBuild(basebuild)
     end
 
-    if (herd and herd.components.mood and herd.components.mood:IsInMood())    
-        or (inst.components.mood and inst.components.mood:IsInMood()) then
+    if fns.GetIsInMood(inst) then
         animstate:Show("HEAT")
     else
         animstate:Hide("HEAT")
@@ -270,10 +287,7 @@ local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "beefalo", "wall", "INLIMBO" }
 
 local function Retarget(inst)
-    local herd = inst.components.herdmember ~= nil and inst.components.herdmember:GetHerd() or nil
-    return herd ~= nil
-        and herd.components.mood ~= nil
-        and (herd.components.mood:IsInMood() and not inst.yotb_tempcontestbeefalo)
+    return (fns.GetIsInMood(inst) and not inst.yotb_tempcontestbeefalo)
         and FindEntity(
                 inst,
                 TUNING.BEEFALO_TARGET_DIST,
@@ -290,11 +304,8 @@ local function Retarget(inst)
 end
 
 local function KeepTarget(inst, target)
-    local herd = inst.components.herdmember ~= nil and inst.components.herdmember:GetHerd() or nil
-    return herd == nil
-        or herd.components.mood == nil
-        or not herd.components.mood:IsInMood()
-        or inst:IsNear(herd, TUNING.BEEFALO_CHASE_DIST)
+    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd() or nil
+    return herd == nil or herd.components.mood == nil or not herd.components.mood:IsInMood() or inst:IsNear(herd, TUNING.BEEFALO_CHASE_DIST)
 end
 
 local function OnNewTarget(inst, data)
@@ -459,8 +470,6 @@ end
 
 local function DoDomestication(inst)
     inst.components.herdmember:Enable(false)
-    inst.components.mood:Enable(true)
-    inst.components.mood:ValidateMood()
 
     inst:SetTendency("domestication")
 
@@ -476,8 +485,6 @@ end
 
 local function DoFeral(inst)
     inst.components.herdmember:Enable(true)
-    inst.components.mood:Enable(false)
-    inst.components.mood:ValidateMood()
 
     inst:SetTendency("feral")
 
@@ -545,13 +552,11 @@ local function GetBaseSkin(inst)
 end
 
 local function ShouldBeg(inst)
-    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
     return inst.components.domesticatable ~= nil
         and inst.components.domesticatable:GetDomestication() > 0.0
         and inst.components.hunger ~= nil
         and inst.components.hunger:GetPercent() < TUNING.BEEFALO_BEG_HUNGER_PERCENT
-        and (herd and herd.components.mood ~= nil and herd.components.mood:IsInMood() == false)
-        and (inst.components.mood ~= nil and inst.components.mood:IsInMood() == false)
+        and (not fns.GetIsInMood(inst))
 end
 
 local function CalculateBuckDelay(inst)
@@ -560,11 +565,7 @@ local function CalculateBuckDelay(inst)
         and inst.components.domesticatable:GetDomestication()
         or 0
 
-    local moodmult =
-        (   (inst.components.herdmember ~= nil and inst.components.herdmember.herd ~= nil and inst.components.herdmember.herd.components.mood ~= nil and inst.components.herdmember.herd.components.mood:IsInMood()) or
-            (inst.components.mood ~= nil and inst.components.mood:IsInMood())   )
-        and TUNING.BEEFALO_BUCK_TIME_MOOD_MULT
-        or 1
+    local moodmult = fns.GetIsInMood(inst) and TUNING.BEEFALO_BUCK_TIME_MOOD_MULT or 1
 
     local beardmult =
         (inst.components.beard ~= nil and inst.components.beard.bits == 0)
@@ -791,6 +792,13 @@ local function ShouldWakeUp(inst)
             and not inst.components.follower:IsNearLeader(WAKE_TO_FOLLOW_DISTANCE))
 end
 
+local TWEEN_TARGET = {0, 0, 0, 1}
+local TWEEN_TIME = 13 * FRAMES
+fns.OnDespawnRequest = function(inst)
+    inst._marked_for_despawn = true
+    inst.components.colourtweener:StartTween(TWEEN_TARGET, TWEEN_TIME, inst.Remove)
+end
+
 local SLEEP_NEAR_LEADER_DISTANCE = 10
 local function MountSleepTest(inst)
     return not inst.components.rideable:IsBeingRidden()
@@ -812,7 +820,6 @@ local function onwenthome(inst,data)
 end
 
 local function OnInit(inst)
-    inst.components.mood:ValidateMood()
     inst:UpdateDomestication()
 end
 
@@ -1037,8 +1044,6 @@ local function beefalo()
     inst:AddComponent("saltlicker")
     inst.components.saltlicker:SetUp(TUNING.SALTLICK_BEEFALO_USES)
     inst:ListenForEvent("saltchange", ToggleDomesticationDecay)
-    inst:ListenForEvent("gotosleep", ToggleDomesticationDecay)
-    inst:ListenForEvent("onwakeup", ToggleDomesticationDecay)
     inst:ListenForEvent("onwenthome", onwenthome)
     inst.setcarratart = setcarratart
 
@@ -1048,17 +1053,9 @@ local function beefalo()
     inst.tendency = TENDENCY.DEFAULT
     inst._bucktask = nil
 
-    -- Herdmember component is ONLY used when feral
+    --Herdmember component is ONLY used when feral
     inst:AddComponent("herdmember")
     inst.components.herdmember:Enable(true)
-
-    -- Mood component is ONLY used when domesticated, otherwise it's part of the herd
-    inst:AddComponent("mood")
-    inst.components.mood:SetMoodTimeInDays(TUNING.BEEFALO_MATING_SEASON_LENGTH, TUNING.BEEFALO_MATING_SEASON_WAIT, TUNING.BEEFALO_MATING_ALWAYS, TUNING.BEEFALO_MATING_SEASON_LENGTH, TUNING.BEEFALO_MATING_SEASON_WAIT, TUNING.BEEFALO_MATING_ENABLED)
-    inst.components.mood:SetInMoodFn(OnEnterMood)
-    inst.components.mood:SetLeaveMoodFn(OnLeaveMood)
-    inst.components.mood:CheckForMoodChange()
-    inst.components.mood:Enable(false)
 
     inst.UpdateDomestication = UpdateDomestication
     inst:ListenForEvent("domesticated", OnDomesticated)
@@ -1073,6 +1070,7 @@ local function beefalo()
     inst:ListenForEvent("ridersleep", OnRiderSleep)
     inst:ListenForEvent("hitchto", OnHitchTo)
     inst:ListenForEvent("unhitch", OnUnhitch)
+    inst:ListenForEvent("despawn", fns.OnDespawnRequest)
     inst:ListenForEvent("stopfollowing", fns.ClearBellOwner)
 
     inst:AddComponent("uniqueid")
@@ -1103,11 +1101,15 @@ local function beefalo()
     inst.SetTendency = SetTendency
     inst:SetTendency()
 
+    --inst._marked_for_despawn = nil
+
     inst.ShouldBeg = ShouldBeg
     inst.testforcarratexit = testforcarratexit
     inst.SetBeefBellOwner = fns.SetBeefBellOwner
     inst.GetBeefBellOwner = fns.GetBeefBellOwner
     inst.ClearBeefBellOwner = fns.ClearBellOwner
+    inst.GetMoodComponent = fns.GetMoodComponent
+    inst.GetIsInMood = fns.GetIsInMood
     inst.UnSkin = fns.UnSkin
 
     inst._BellRemoveCallback = function(bell)

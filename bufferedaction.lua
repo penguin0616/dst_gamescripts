@@ -25,7 +25,7 @@ function BufferedAction:Do()
     local success, reason = self.action.fn(self)
     if success then
         if self.invobject ~= nil and self.invobject:IsValid() then
-            self.invobject:OnUsedAsItem(self.action)
+            self.invobject:OnUsedAsItem(self.action, self.doer, self.target)
         end
         self:Succeed()
     else

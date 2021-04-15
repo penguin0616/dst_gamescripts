@@ -375,9 +375,10 @@ local function CalculateLight()
     if _precipmode:value() == PRECIP_MODES.never then
         return 1
     end
+	local season = _season
     local snowlight = _preciptype:value() == PRECIP_TYPES.snow
     local dynrange = snowlight and (_daylight and SEASON_DYNRANGE_DAY["winter"] or SEASON_DYNRANGE_NIGHT["winter"])
-                                or (_daylight and SEASON_DYNRANGE_DAY[_season] or SEASON_DYNRANGE_NIGHT[_season])
+                                or (_daylight and SEASON_DYNRANGE_DAY[season] or SEASON_DYNRANGE_NIGHT[season])
 
     if _precipmode:value() == PRECIP_MODES.always then
         return 1 - dynrange

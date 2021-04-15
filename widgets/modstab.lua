@@ -708,8 +708,7 @@ function ModsTab:OnConfirmEnable(restart, modname)
     --show the auto-download warning for non-workshop mods
     local modinfo = KnownModIndex:GetModInfo(modname)
     if KnownModIndex:IsModEnabled(modname) and modinfo.all_clients_require_mod then
-        local workshop_prefix = "workshop-"
-        if string.sub( modname, 0, string.len(workshop_prefix) ) ~= workshop_prefix then
+        if not IsWorkshopMod(modname) then
 			local warn_txt = STRINGS.UI.MODSSCREEN.MOD_WARNING
 			if IsRail() then
 				warn_txt = STRINGS.UI.MODSSCREEN.MOD_WARNING_RAIL
@@ -934,7 +933,7 @@ function ModsTab:LoadModInfoPrefabs(prefabtable)
 				Asset("IMAGE", info.iconpath),
 			}
 			local prefab = Prefab("MODSCREEN_"..modname, nil, modinfoassets, nil)
-			RegisterPrefabs( prefab )
+			RegisterSinglePrefab( prefab )
 			table.insert(prefabtable, prefab.name)
 		end
 	end

@@ -141,7 +141,7 @@ local function OnRemoveSack(sack)
         if TheWorld.state.iswinter then
             _spawnsthiswinter = _spawnsthiswinter + 1
         end
-    elseif _spawnsthiswinter < TUNING.KLAUSSACK_MAX_SPAWNS then
+    elseif _spawnsthiswinter < TUNING.KLAUSSACK_MAX_SPAWNS and TheWorld.state.iswinter then
         StartKlausSpawnTimer(TUNING.KLAUSSACK_RESPAWN_DELAY)
     end
 end
@@ -165,6 +165,7 @@ local function OnIsWinter(self, iswinter)
             StartKlausSpawnTimer()
         end
     else
+        StopRespawnTimer()
         _spawnsthiswinter = 0
     end
 end

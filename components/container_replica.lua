@@ -20,6 +20,7 @@ local Container = Class(function(self, inst)
     if TheWorld.ismastersim then
         self.classified = SpawnPrefab("container_classified")
         self.classified.entity:SetParent(inst.entity)
+        self.classified.Network:SetClassifiedTarget(self.inst)
 
         --Server intercepts messages and forwards to clients via classified net vars
         self._onitemget = function(inst, data)
@@ -65,8 +66,8 @@ local function SetOpener(self, opener)
             v.replica.inventoryitem:SetOwner(self.inst)
         end
     else
-        --Should only reach here during container construction
-        assert(opener == nil)
+        --Shouldn't be reachable.
+        assert(false)
     end
 end
 

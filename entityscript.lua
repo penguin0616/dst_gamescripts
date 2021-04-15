@@ -1419,10 +1419,10 @@ function EntityScript:CanInteractWith(inst)
     return true
 end
 
-function EntityScript:OnUsedAsItem(action)
+function EntityScript:OnUsedAsItem(action, doer, target)
     for k,v in pairs(self.components) do
         if v.OnUsedAsItem then
-            v:OnUsedAsItem(action)
+            v:OnUsedAsItem(action, doer, target)
         end
     end
 end
@@ -1661,6 +1661,9 @@ function EntityScript:SetClientSideInventoryImageOverride(flagname, srcinventory
     self.inventoryimageremapping = self.inventoryimageremapping or {}
     self.inventoryimageremapping[flagname] = self.inventoryimageremapping[flagname] or {}
     self.inventoryimageremapping[flagname][hash(srcinventoryimage)] = {image = destinventoryimage, atlas = destatlas}
+    if ClientSideInventoryImageFlags[flagname] and ThePlayer then
+        ThePlayer:PushEvent("clientsideinventoryflagschanged")
+    end
 end
 
 function EntityScript:HasClientSideInventoryImageOverrides()

@@ -106,6 +106,7 @@ function GetEnabledModNamesDetailed() --just used for callstack reporting
 end
 
 function GetModVersion(mod_name, mod_info_use)
+	KnownModIndex:TryLoadMod(mod_name)
 	if mod_info_use == "update_mod_info" then
 		KnownModIndex:UpdateSingleModInfo(mod_name)
 	end
@@ -404,7 +405,10 @@ function ModWrangler:FrontendLoadMod(modname)
     print(loadmsg)
 
     local oldpath = package.path
-    package.path = MODS_ROOT..modname.."\\scripts\\?.lua;"..package.path
+	package.path = MODS_ROOT..modname.."\\scripts\\?.lua;"..package.path
+	--intentionally no manifest file, we don't want to load the file up, when basicaly every file will work for the first asset search path optimization anyway.
+	table.insert(package.assetpath, {path = MODS_ROOT..modname.."\\"})
+	
 	self.currentlyloadingmod = modname
 	
     -- Only worldgenmain, to populate the presets panel etc.
@@ -413,6 +417,7 @@ function ModWrangler:FrontendLoadMod(modname)
 
     self.currentlyloadingmod = nil
     package.path = oldpath
+	table.remove(package.assetpath)
 end
 
 function ModWrangler:FrontendUnloadMod(modname)
@@ -476,7 +481,6 @@ function ModWrangler:LoadMods(worldgen)
 				else
 					KnownModIndex:LoadModConfigurationOptions(modname, not TheNet:GetIsServer())
 				end
-				KnownModIndex:ApplyConfigOptionOverrides(mod_overrides)
 			end
 
 			local initenv = KnownModIndex:GetModInfo(modname)
@@ -491,6 +495,7 @@ function ModWrangler:LoadMods(worldgen)
 			print(loadmsg)
 		end
 	end
+	KnownModIndex:ApplyConfigOptionOverrides(mod_overrides)
 
 	-- Sort the mods by priority, so that "library" mods can load first
 	local function modPrioritySort(a,b)
@@ -507,6 +512,16 @@ function ModWrangler:LoadMods(worldgen)
 	for i,mod in ipairs(self.mods) do
 		table.insert(self.enabledmods, mod.modname)
 		package.path = MODS_ROOT..mod.modname.."\\scripts\\?.lua;"..package.path
+		local manifest
+		--manifests are on by default for workshop mods, off by default for local mods.
+		--manifests can be toggled on and off in modinfo with forcemanifest = false or forcemanifest = true
+		if((mod.modinfo.forcemanifest == nil and IsWorkshopMod(mod.modname)) or
+			(mod.modinfo.forcemanifest ~= nil and mod.modinfo.forcemanifest)) then
+			ManifestManager:LoadModManifest(mod.modname, mod.modinfo.version)
+			manifest = mod.modname
+		end
+		table.insert(package.assetpath, {path = MODS_ROOT..mod.modname.."\\", manifest = manifest})
+
         self.currentlyloadingmod = mod.modname
 		self:InitializeModMain(mod.modname, mod, "modworldgenmain.lua")
 		if not self.worldgen then 
@@ -618,17 +633,17 @@ function ModWrangler:RegisterPrefabs()
 		mod.RegisterPrefabs = RegisterPrefabs
 		mod.Prefabs = {}
 
-		print("Mod: "..ModInfoname(mod.modname), "Registering prefabs")
+		print("Mod: "..ModInfoname(modname), "Registering prefabs")
 
 		-- We initialize the prefabs in the sandbox and collect all the created prefabs back
 		-- into the main world.
 		if mod.PrefabFiles then
-			for i,prefab_path in ipairs(mod.PrefabFiles) do
-				print("Mod: "..ModInfoname(mod.modname), "  Registering prefab file: prefabs/"..prefab_path)
-				local ret = runmodfn( mod.LoadPrefabFile, mod, "LoadPrefabFile" )("prefabs/"..prefab_path)
+			for _, prefab_path in ipairs(mod.PrefabFiles) do
+				print("Mod: "..ModInfoname(modname), "  Registering prefab file: prefabs/"..prefab_path)
+				local ret = runmodfn( mod.LoadPrefabFile, mod, "LoadPrefabFile" )("prefabs/"..prefab_path, nil, MODS_ROOT..modname.."/")
 				if ret then
-					for i,prefab in ipairs(ret) do
-						print("Mod: "..ModInfoname(mod.modname), "    "..prefab.name)
+					for _, prefab in ipairs(ret) do
+						print("Mod: "..ModInfoname(modname), "    "..prefab.name)
 						mod.Prefabs[prefab.name] = prefab
 					end
 				end
@@ -641,16 +656,14 @@ function ModWrangler:RegisterPrefabs()
 			Prefabs[name] = prefab -- copy the prefabs back into the main environment
 		end
 
-		print("Mod: "..ModInfoname(mod.modname), "  Registering default mod prefab")
+		print("Mod: "..ModInfoname(modname), "  Registering default mod prefab")
 
-        if PLATFORM == "PS4" then
-            package.path = MODS_ROOT..mod.modname..package.path
-        end            
-		RegisterPrefabs( Prefab("MOD_"..mod.modname, nil, mod.Assets, prefabnames, true) )
+		local pref = Prefab("MOD_"..modname, nil, mod.Assets, prefabnames, true)
+		pref.search_asset_first_path = MODS_ROOT..modname.."/"
+		RegisterSinglePrefab(pref)
 
-		local modname = "MOD_"..mod.modname
-		TheSim:LoadPrefabs({modname})
-		table.insert(self.loadedprefabs, modname)
+		TheSim:LoadPrefabs({pref.name})
+		table.insert(self.loadedprefabs, pref.name)
 	end
 end
 
@@ -663,7 +676,7 @@ function ModWrangler:GetUnloadPrefabsData()
     local data = {}
     for i, modname in ipairs(self.loadedprefabs) do
         table.insert(data, {
-            infoname = ModInfoname(modname),
+            infoname = ModInfoname(string.sub(modname, 5)),
             name = modname,
         })
     end
@@ -674,6 +687,7 @@ function ModWrangler:UnloadPrefabsFromData(data)
     for i, v in ipairs(data) do
         print("unloading prefabs for mod "..v.infoname)
         TheSim:UnloadPrefabs({ v.name })
+		ManifestManager:UnloadModManifest(string.sub(v.name, 5))
     end
 end
 
@@ -743,7 +757,7 @@ function ModWrangler:SetPostEnv()
 		moddetail = moddetail.. STRINGS.UI.MAINSCREEN.FORCEMODDETAIL.." "..forcemodnames.."\n\n"
 	end
 
-	if (modnames ~= "" or newmodnames ~= "" or failedmodnames ~= "" or forcemodnames ~= "")  and TheSim:ShouldWarnModsLoaded() then
+	if (modnames ~= "" or newmodnames ~= "" or failedmodnames ~= "" or forcemodnames ~= "")  and TheSim:ShouldWarnModsLoaded() and Profile:GetModsWarning() then
 	--if (#self.enabledmods > 0)  and TheSim:ShouldWarnModsLoaded() then
 		if not DISABLE_MOD_WARNING and IsInFrontEnd() then
 			TheFrontEnd:PushScreen(
@@ -760,7 +774,7 @@ function ModWrangler:SetPostEnv()
 																		end)
 																	end},
 						{text=STRINGS.UI.MAINSCREEN.MODFORUMS, nopop=true, cb = VisitModForums }
-					}))
+					}, nil, nil, nil, true))
 		end
 	elseif KnownModIndex:WasLoadBad() then
 		TheFrontEnd:PushScreen(

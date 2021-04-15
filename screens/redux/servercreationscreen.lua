@@ -270,6 +270,8 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
         -- Apply the mod settings
 		if self.mods_enabled then
 			self.mods_tab:Apply()
+        else
+            ShardSaveGameIndex:Save()
 		end
 
         -- Fill serverInfo object

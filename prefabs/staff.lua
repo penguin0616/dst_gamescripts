@@ -527,7 +527,7 @@ local function destroystructure(staff, target)
         end
         if string.sub(v.type, -3) ~= "gem" or string.sub(v.type, -11, -4) == "precious" then
             --V2C: always at least one in case ingredient_percent is 0%
-            local amt = math.max(1, math.ceil(v.amount * ingredient_percent))
+            local amt = v.amount == 0 and 0 or math.max(1, math.ceil(v.amount * ingredient_percent))
             for n = 1, amt do
                 SpawnLootPrefab(target, v.type)
             end

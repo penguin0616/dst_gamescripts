@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "These seem frivolous.",
         BALLOON = "Could serve as a suitable diversion.",
+		BALLOONPARTY = "A reasonable amount of cheer every so often would do us good.",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Probably not enough air left to analyze its composition...",
+            GENERIC = "The chemical composition of the young man's breath must be fascinating.",
+        },
+		BALLOONVEST = "I applaud your attempt at practicality, dear.",
+		BALLOONHAT = "I believe it's meant to evoke the image of a Lagomorph.",
 
         BERNIE_INACTIVE =
         {
@@ -2866,13 +2874,13 @@ return{
         QUAGMIRE_TURNIP_COOKED = "Roast Brassica rapa.",
         QUAGMIRE_TURNIP_SEEDS = "Mutated seed of Brassica rapa.",
         
-        QUAGMIRE_GARLIC = "Edible bulb of Allium cepa.",
-        QUAGMIRE_GARLIC_COOKED = "Roast Allium cepa.",
-        QUAGMIRE_GARLIC_SEEDS = "Mutated seed of Allium cepa.",
+        QUAGMIRE_GARLIC = "Allium sativum, a close relative of Allium cepa.",
+        QUAGMIRE_GARLIC_COOKED = "Roast Allium sativum.",
+        QUAGMIRE_GARLIC_SEEDS = "Mutated seed of Allium sativum.",
         
-        QUAGMIRE_ONION = "Allium sativum, a close relative of Allium cepa.",
-        QUAGMIRE_ONION_COOKED = "Roast Allium sativum.",
-        QUAGMIRE_ONION_SEEDS = "Mutated seed of Allium sativum.",
+        QUAGMIRE_ONION = "Edible bulb of Allium cepa.",
+        QUAGMIRE_ONION_COOKED = "Roast Allium cepa.",
+        QUAGMIRE_ONION_SEEDS = "Mutated seed of Allium cepa.",
         
         QUAGMIRE_POTATO = "Solanum tuberosum, a staple in some cultures.",
         QUAGMIRE_POTATO_COOKED = "Roasted Solanum tuberosum.",
@@ -3513,12 +3521,12 @@ return{
         TURNIP_COOKED = "Roast Brassica rapa.",
         TURNIP_SEEDS = "It can't begin growing until it's been planted, dear.",
         
-        GARLIC = "Edible bulb of Allium cepa.",
-        GARLIC_COOKED = "Roast Allium cepa.",
+        GARLIC = "Allium sativum, a close relative of Allium cepa.",
+        GARLIC_COOKED = "Roast Allium sativum.",
         GARLIC_SEEDS = "It can't begin growing until it's been planted, dear.",
         
-        ONION = "Allium sativum, a close relative of Allium cepa.",
-        ONION_COOKED = "Roast Allium sativum.",
+        ONION = "Edible bulb of Allium cepa.",
+        ONION_COOKED = "Roast Allium cepa.",
         ONION_SEEDS = "It can't begin growing until it's been planted, dear.",
         
         POTATO = "Solanum tuberosum, a staple in some cultures.",

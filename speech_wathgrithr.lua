@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "Such colors! I could sing!",
         BALLOON = "Fie! Foul beast!",
+		BALLOONPARTY = "It hath swallowed the wee ones whole!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Its strange power hath faded.",
+            GENERIC = "Grant me the speed of Hermod!",
+        },
+		BALLOONVEST = "Tis only good for floating, not fighting.",
+		BALLOONHAT = "A rubbery mockery of life.",
 
         BERNIE_INACTIVE =
         {

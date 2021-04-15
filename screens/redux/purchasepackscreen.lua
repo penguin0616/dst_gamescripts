@@ -210,9 +210,7 @@ local onPurchaseClickFn =
 
         local restricted_pack, missing_character = IsPackRestrictedDueToOwnership(self.iap_def.item_type)
         
-        if restricted_pack == "error" then
-            DisplayCharacterUnownedPopupPurchase(missing_character, self.screen_self)
-        elseif restricted_pack == "warning" then
+        if restricted_pack == "error" or restricted_pack == "warning" then
             local body_str = subfmt(STRINGS.UI.PURCHASEPACKSCREEN.UNOWNED_CHARACTER_BODY, {character = STRINGS.CHARACTER_NAMES[missing_character] })
             local button_txt = subfmt(STRINGS.UI.PURCHASEPACKSCREEN.VIEW_REQUIRED, {character = STRINGS.CHARACTER_NAMES[missing_character] })
     
@@ -1035,7 +1033,6 @@ function PurchasePackScreen:_BuildPurchasePanel()
                 self.virutal_currency_count:SetPosition(0,170)
 
                 self.bolts = TheInventory:GetVirtualIAPCurrencyAmount()
-
 
                 self.view_modes = self.side_panel:AddChild( Widget("side_panel"))
                 self.view_modes:SetScale(0.75)

@@ -28,12 +28,12 @@ local Container = Class(function(self, inst)
     self.widget = nil
     self.itemtestfn = nil
     self.priorityfn = nil
-    
+
     self.openlist = {}
     self.opencount = 0
 
 	--self.droponopen = false
-	
+
     inst:ListenForEvent("player_despawn", OnOwnerDespawned)
 
     --the current opener that has performed an action, can be nil or incorrect, verify before using this!!!
@@ -636,6 +636,7 @@ function Container:RemoveItem(item, wholestack)
 
     if not wholestack and item.components.stackable ~= nil and item.components.stackable:IsStack() then
         local dec = item.components.stackable:Get()
+        dec.components.inventoryitem:OnRemoved()
         dec.prevslot = prevslot
         dec.prevcontainer = self
         return dec

@@ -887,6 +887,13 @@ local RPC_HANDLERS =
             playercontroller:RepeatHeldAction()
         end
     end,
+
+    ClearActionHold = function(player)
+        local playercontroller = player.components.playercontroller
+        if playercontroller then
+            playercontroller:ClearActionHold()
+        end
+    end,
 }
 
 RPC = {}

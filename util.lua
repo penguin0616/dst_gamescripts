@@ -551,48 +551,80 @@ end
 
 local memoizedFilePaths = {}
 
--- look in package loaders to find the file from the root directories
--- this will look first in the mods and then in the data directory
-function resolvefilepath( filepath, force_path_search )
-    if memoizedFilePaths[filepath] then
-        return memoizedFilePaths[filepath]
-    end
-    local resolved = softresolvefilepath(filepath, force_path_search)
-    assert(resolved ~= nil, "Could not find an asset matching "..filepath.." in any of the search paths.")
-    memoizedFilePaths[filepath] = resolved
-   return resolved
+function GetMemoizedFilePaths()
+    return ZipAndEncodeSaveData(memoizedFilePaths)
+end
+function SetMemoizedFilePaths(memoized_file_paths)
+    memoizedFilePaths = DecodeAndUnzipSaveData(memoized_file_paths)
 end
 
-function softresolvefilepath(filepath, force_path_search)
+-- look in package loaders to find the file from the root directories
+-- this will look first in the mods and then in the data directory
+local function softresolvefilepath_internal(filepath, force_path_search, search_first_path)
     force_path_search = force_path_search or false
 
 	if IsConsole() and not force_path_search then
 		return filepath -- it's already absolute, so just send it back
 	end
 
-	-- on PC platforms, search all the possible paths
+	--on PC platforms, search all the possible paths
 
-	-- mod folders don't have "data" in them, so we strip that off if necessary. It will
-	-- be added back on as one of the search paths.
-	local filepath = string.gsub(filepath, "^/", "")
+	--mod folders don't have "data" in them, so we strip that off if necessary. It will
+	--be added back on as one of the search paths.
+	filepath = string.gsub(filepath, "^/", "")
 
-	local searchpaths = package.path
-    for path in string.gmatch(searchpaths, "([^;]+)") do
-        local filename = string.gsub(path, "scripts\\%?%.lua", filepath) -- why is this not string.gsub(path, "%?", modulepath) like in worldgen_main.lua?!?
-        filename = string.gsub(filename, "\\", "/")
-		--print("looking for: "..filename.." ("..filepath..")")
-		if not kleifileexists or kleifileexists(filename) then
-			--print("found it! "..filename)
+    --sometimes from context we can know the most likely path for an asset, this can result in less time spent searching the tons of mod search paths.
+    if search_first_path then
+        local filename = search_first_path..filepath
+        if kleifileexists(filename) then
             return filename
         end
     end
-	-- as a last resort see if the file is an already correct path (incase this asset has already been processed)
-	if not kleifileexists or kleifileexists(filepath) then
-		--print("found it in it's actual path! "..filepath)
+
+	local searchpaths = package.assetpath
+    for i, pathdata in ipairs_reverse(searchpaths) do
+        local filename = string.gsub(pathdata.path..filepath, "\\", "/")
+        if kleifileexists(filename, pathdata.manifest, filepath) then
+            return filename
+        end
+    end
+
+	--as a last resort see if the file is an already correct path (incase this asset has already been processed)
+	if kleifileexists(filepath) then
 		return filepath
 	end
 
 	return nil
+end
+
+local function resolvefilepath_internal(filepath, force_path_search, search_first_path)
+    local resolved = softresolvefilepath_internal(filepath, force_path_search, search_first_path)
+    memoizedFilePaths[filepath] = resolved
+    return resolved
+end
+
+--like resolvefilepath, but without the crash if it fails.
+function resolvefilepath_soft(filepath, force_path_search, search_first_path)
+    if memoizedFilePaths[filepath] then
+        return memoizedFilePaths[filepath]
+    end
+    return resolvefilepath_internal(filepath, force_path_search, search_first_path)
+end
+
+function resolvefilepath(filepath, force_path_search, search_first_path)
+    if memoizedFilePaths[filepath] then
+        return memoizedFilePaths[filepath]
+    end
+    local resolved = resolvefilepath_internal(filepath, force_path_search, search_first_path)
+    assert(resolved ~= nil, "Could not find an asset matching "..filepath.." in any of the search paths.")
+    return resolved
+end
+
+function softresolvefilepath(filepath, force_path_search, search_first_path)
+    if memoizedFilePaths[filepath] then
+        return memoizedFilePaths[filepath]
+    end
+    return softresolvefilepath_internal(filepath, force_path_search, search_first_path)
 end
 
 -------------------------MEMREPORT
@@ -1468,50 +1500,14 @@ function metaipairs(t, ...)
     return i(t, ...)
 end
 
-function MetaClass(entries, ctor, classtable)
-    local classtable = classtable or {}
-    classtable._ = entries or {}
-    local defaulttableops = {
-        _ctor = function(self)
-            if ctor then
-                ctor(classtable._)
-            end
-        end,
-        --replaces index behavior obj[key] or obj.key
-        __index = function(t, k)
-            return classtable._[k] or classtable[k]
-        end,
-        --replaces setting behavior obj[key] = value
-        __newindex = function(t, k, v)
-            classtable._[k] = v
-        end,
-        --replaces #obj behavior (length of table)
-        __len = function(t)
-            return #classtable._
-        end,
-        --replaces next
-        __next = function(t, k)
-            return next(classtable._, k)
-        end,
-        --replaces pairs
-        __pairs = function(t)
-            return pairs(classtable._)
-        end,
-        --replaces ipairs
-        __ipairs = function(t)
-            return ipairs(classtable._)
-        end,
-    }
-    --newproxy is the only way to use the __len and __gc(garbage collection) meta methods
-    local mtclass = newproxy(true)
-    debug.setmetatable(mtclass, classtable)
-    for k, v in pairs(defaulttableops) do
-        if not classtable[k] then
-            classtable[k] = v
-        end
-    end
-    mtclass:_ctor()
-    return mtclass
+function metarawset(t, k, v)
+    local mt = getmetatable(t)
+    mt._[k] = v
+end
+
+function metarawget(t, k)
+    local mt = getmetatable(t)
+    return mt._[k] or mt.c[k]
 end
 
 function ZipAndEncodeSaveData(data)

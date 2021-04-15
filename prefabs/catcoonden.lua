@@ -209,6 +209,9 @@ local function fn()
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.CATCOONDEN_RELEASE_TIME, TUNING.CATCOONDEN_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.CATCOONDEN_REGEN_TIME, TUNING.CATCOONDEN_ENABLED)
+    if not TUNING.CATCOONDEN_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner.canspawnfn = canspawn
     inst.components.childspawner:StartSpawning()

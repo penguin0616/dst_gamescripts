@@ -72,22 +72,18 @@ local function FindDeciduousTreeMonster(inst)
 end
 
 local function KeepChoppingAction(inst)
-    local keep_chopping = inst.tree_target ~= nil
+    return inst.tree_target ~= nil
         or (inst.components.follower.leader ~= nil and
             inst:IsNear(inst.components.follower.leader, KEEP_CHOPPING_DIST))
         or FindDeciduousTreeMonster(inst) ~= nil
-    
-    return keep_chopping
 end
 
 local function StartChoppingCondition(inst)
-    local chop_condition = inst.tree_target ~= nil
+    return inst.tree_target ~= nil
         or (inst.components.follower.leader ~= nil and
             inst.components.follower.leader.sg ~= nil and
             inst.components.follower.leader.sg:HasStateTag("chopping"))
         or FindDeciduousTreeMonster(inst) ~= nil
-
-    return chop_condition
 end
 
 local function FindTreeToChopAction(inst)
@@ -335,17 +331,15 @@ function MermBrain:OnStart()
                 ),
             }, .25)),
 
-        IfNode(function() return StartChoppingCondition(self.inst) end, "chop", 
-                WhileNode(function() return KeepChoppingAction(self.inst) end, "keep chopping",
-                    LoopNode{
-                        ChattyNode(self.inst, "MERM_TALK_HELP_CHOP_WOOD",
-                            DoAction(self.inst, FindTreeToChopAction ))})),
+        IfThenDoWhileNode(function() return StartChoppingCondition(self.inst) end, function() return KeepChoppingAction(self.inst) end, "chop",
+	        LoopNode{
+	            ChattyNode(self.inst, "MERM_TALK_HELP_CHOP_WOOD",
+	                DoAction(self.inst, FindTreeToChopAction ))}),
 
-        IfNode(function() return StartMiningCondition(self.inst) end, "mine", 
-                WhileNode(function() return KeepMiningAction(self.inst) end, "keep mining", 
-                    LoopNode{
-                        ChattyNode(self.inst, "MERM_TALK_HELP_MINE_ROCK",
-                            DoAction(self.inst, FindRockToMineAction ))})),
+        IfThenDoWhileNode(function() return StartMiningCondition(self.inst) end, function() return KeepMiningAction(self.inst) end, "mine",
+            LoopNode{
+                ChattyNode(self.inst, "MERM_TALK_HELP_MINE_ROCK",
+                    DoAction(self.inst, FindRockToMineAction ))}),
 
         ChattyNode(self.inst, "MERM_TALK_FOLLOWWILSON",
 		  Follow(self.inst, function() return self.inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST)),

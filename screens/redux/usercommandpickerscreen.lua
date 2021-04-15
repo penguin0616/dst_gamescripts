@@ -208,11 +208,7 @@ function UserCommandPickerScreen:RefreshButtons()
                 --we know canstart is false, but we want the reason
                 local canstart, reason = UserCommands.CanUserStartCommand(action.commandname, self.owner, self.targetuserid)
                 button:SetHoverText(reason ~= nil and STRINGS.UI.PLAYERSTATUSSCREEN.COMMANDCANNOTSTART[reason] or "")
-                if TheInput:ControllerAttached() then
-                    button:Disable()
-                else
-                    button:Select()
-                end
+                button:Select()
             elseif action.exectype == COMMAND_RESULT.DENY then
                 if worldvoter == nil or playervoter == nil or not worldvoter:IsEnabled() then
                     --technically we should never get here (expected COMMAND_RESULT.INVALID)
@@ -225,15 +221,10 @@ function UserCommandPickerScreen:RefreshButtons()
                     local canstart, reason = UserCommands.CanUserStartVote(action.commandname, self.owner, self.targetuserid)
                     button:SetHoverText(reason ~= nil and STRINGS.UI.PLAYERSTATUSSCREEN.VOTECANNOTSTART[reason] or "")
                 end
-                if TheInput:ControllerAttached() then
-                    button:Disable()
-                else
-                    button:Select()
-                end
+                button:Select()
             else
                 button:ClearHoverText()
                 if TheInput:ControllerAttached() then                    
-                    button:Enable()
 					-- this is the first active widget we've come across so set it as focus
                     if nil == self.force_focus_button then
                         self.force_focus_button = button

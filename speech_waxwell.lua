@@ -729,6 +729,14 @@ return{
 
         BALLOONS_EMPTY = "Those look much too jovial for my liking.",
         BALLOON = "This seems out of place here. Too cheery.",
+		BALLOONPARTY = "Oh no... he's managed to make them even more cheerful.",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Its power is spent. Now it's just garishly cheery.",
+            GENERIC = "The mime's power unsettles me.",
+        },
+		BALLOONVEST = "I think I'd rather drown.",
+		BALLOONHAT = "Would I really stoop so low as to wear such a thing?",
 
         BERNIE_INACTIVE =
         {

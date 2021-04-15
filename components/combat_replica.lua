@@ -292,6 +292,7 @@ function Combat:IsValidTarget(target)
         or (target.replica.combat ~= nil and
             target.replica.health ~= nil and
             not target.replica.health:IsDead() and
+            not target:HasTag("spawnprotection") and
             not (target:HasTag("shadow") and self.inst.replica.sanity == nil and not self.inst:HasTag("crazy")) and
             not (target:HasTag("playerghost") and (self.inst.replica.sanity == nil or self.inst.replica.sanity:IsSane()) and not self.inst:HasTag("crazy")) and
             -- gjans: Some specific logic so the birchnutter doesn't attack it's spawn with it's AOE

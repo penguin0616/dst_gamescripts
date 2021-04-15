@@ -204,6 +204,29 @@ function ConditionNode:Visit()
     end
 end
 
+---------------------------------------------------------------------------------------
+
+
+MultiConditionNode = Class(BehaviourNode, function(self, start, continue, name)
+    BehaviourNode._ctor(self, name or "Condition")
+    self.start = start
+    self.continue = continue
+end)
+
+function MultiConditionNode:Visit()
+    if not self.running then
+        self.running = self.start()
+    else
+        self.running = self.continue()
+    end
+
+    if self.running then
+        self.status = SUCCESS
+    else
+        self.status = FAILED
+    end
+end
+
 
 ---------------------------------------------------------------------------------------
 
@@ -759,6 +782,15 @@ function IfNode(cond, name, node)
 end
 ---------------------------------------------------------------
 
+function IfThenDoWhileNode(ifcond, whilecond, name, node)
+    return ParallelNode
+        {
+            MultiConditionNode(ifcond, whilecond, name),
+            node
+        }
+end
+
+---------------------------------------------------------------
 LatchNode = Class(BehaviourNode, function(self, inst, latchduration, child)
     BehaviourNode._ctor(self, "Latch ("..tostring(latchduration)..")", {child})
     self.inst = inst

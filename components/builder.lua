@@ -293,9 +293,11 @@ function Builder:GetIngredients(recname)
     if recipe then
         local ingredients = {}
         for k,v in pairs(recipe.ingredients) do
-            local amt = math.max(1, RoundBiasedUp(v.amount * self.ingredientmod))
-            local items = self.inst.components.inventory:GetItemByName(v.type, amt)
-            ingredients[v.type] = items
+			if v.amount > 0 then
+				local amt = math.max(1, RoundBiasedUp(v.amount * self.ingredientmod))
+				local items = self.inst.components.inventory:GetItemByName(v.type, amt)
+				ingredients[v.type] = items
+			end
         end
         return ingredients
     end
@@ -388,6 +390,17 @@ function Builder:MakeRecipe(recipe, pt, rot, skin, onsuccess)
     return false
 end
 
+local function GiveOrDropItem(self, recipe, item, pt)
+	if recipe.dropitem then
+		local angle = (self.inst.Transform:GetRotation() + GetRandomMinMax(-65, 65)) * DEGREES
+		local r = item:GetPhysicsRadius(0.5) + self.inst:GetPhysicsRadius(0.5) + 0.1
+		item.Transform:SetPosition(pt.x + r * math.cos(angle), pt.y, pt.z - r * math.sin(angle))
+		item.components.inventoryitem:OnDropped()
+	else
+	    self.inst.components.inventory:GiveItem(item, nil, pt)
+	end
+end
+
 function Builder:DoBuild(recname, pt, rotation, skin)
     local recipe = GetValidRecipe(recname)
     if recipe ~= nil and (self:IsBuildBuffered(recname) or self:CanBuild(recname)) then
@@ -454,9 +467,10 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                     end
                     ProfileStatsAdd("build_"..prod.prefab)
 
-                    if prod.components.equippable ~= nil and
-                        self.inst.components.inventory:GetEquippedItem(prod.components.equippable.equipslot) == nil and
-                        not prod.components.equippable:IsRestricted(self.inst) then
+                    if prod.components.equippable ~= nil
+						and not recipe.dropitem
+                        and self.inst.components.inventory:GetEquippedItem(prod.components.equippable.equipslot) == nil
+                        and not prod.components.equippable:IsRestricted(self.inst) then
                         if recipe.numtogive <= 1 then
                             --The item is equippable. Equip it.
                             self.inst.components.inventory:Equip(prod)
@@ -475,18 +489,18 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                         end
                     elseif recipe.numtogive <= 1 then
                         --Only the original item is being received.
-                        self.inst.components.inventory:GiveItem(prod, nil, pt)
+						GiveOrDropItem(self, recipe, prod, pt)
                     elseif prod.components.stackable ~= nil then
                         --The item is stackable. Just increase the stack size of the original item.
                         prod.components.stackable:SetStackSize(recipe.numtogive)
-                        self.inst.components.inventory:GiveItem(prod, nil, pt)
+						GiveOrDropItem(self, recipe, prod, pt)
                     else
                         --We still need to give the player the original product that was spawned, so do that.
-                        self.inst.components.inventory:GiveItem(prod, nil, pt)
+						GiveOrDropItem(self, recipe, prod, pt)
                         --Now spawn in the rest of the items and give them to the player.
                         for i = 2, recipe.numtogive do
                             local addt_prod = SpawnPrefab(recipe.product)
-                            self.inst.components.inventory:GiveItem(addt_prod, nil, pt)
+							GiveOrDropItem(self, recipe, addt_prod, pt)
                         end
                     end
 

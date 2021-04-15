@@ -184,7 +184,7 @@ end
 
 function WorldSettingsTimer:LongUpdate(dt)
     for k, v in pairs(self.timers) do
-        if self:ActiveTimerExists(k) and not v.externallongupdate and (not v.paused or not v.blocklongupdate) then
+        if self:ActiveTimerExists(k) and not v.externallongupdate and not v.paused and not v.blocklongupdate then
             self:SetTimeLeft(k, self:GetTimeLeft(k) - dt)
         end
     end

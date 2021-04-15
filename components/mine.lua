@@ -9,7 +9,7 @@ local mine_must_tags = { "_combat" }
 
 local function MineTest(inst, self)
     if self.radius ~= nil then
-        local notags = { "notraptrigger", "flying", "ghost", "playerghost" }
+        local notags = { "notraptrigger", "flying", "ghost", "playerghost", "spawnprotection" }
         table.insert(notags, self.alignment)
 
         local target = FindEntity(inst, self.radius, mine_test_fn, mine_must_tags, notags, mine_test_tags)

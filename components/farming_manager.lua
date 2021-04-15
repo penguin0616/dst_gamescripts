@@ -71,7 +71,7 @@ local function StartFruitFlyTimer(time)
 	StopFruitFlyTimer()
 	_worldsettingstimer:StartTimer(LORDFRUITFLY_TIMERNAME, time)
 end
-_worldsettingstimer:AddTimer(LORDFRUITFLY_TIMERNAME, TUNING.LORDFRUITFLY_RESPAWN_TIME, TUNING.SPAWN_FRUITFLY, OnFruitFlyTimerFinished)
+_worldsettingstimer:AddTimer(LORDFRUITFLY_TIMERNAME, TUNING.LORDFRUITFLY_RESPAWN_TIME, TUNING.SPAWN_LORDFRUITFLY, OnFruitFlyTimerFinished)
 
 local function AdvanceFruitFlyTimer(time)
 	if _worldsettingstimer:ActiveTimerExists(LORDFRUITFLY_TIMERNAME) then

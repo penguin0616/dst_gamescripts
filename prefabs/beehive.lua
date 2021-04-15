@@ -193,6 +193,9 @@ local function fn()
     inst.components.childspawner:SetEmergencyRadius(TUNING.BEEHIVE_EMERGENCY_RADIUS)
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.BEEHIVE_RELEASE_TIME, TUNING.BEEHIVE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.BEEHIVE_REGEN_TIME, TUNING.BEEHIVE_ENABLED)
+    if not TUNING.BEEHIVE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst:DoTaskInTime(0, OnInit)
 

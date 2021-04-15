@@ -86,6 +86,9 @@ local function fn()
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.DROPPERWEB_RELEASE_TIME, TUNING.DROPPERWEB_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.DROPPERWEB_REGEN_TIME, TUNING.DROPPERWEB_ENABLED)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.DROPPERWEB_MIN_CHILDREN, TUNING.DROPPERWEB_MAX_CHILDREN))
+    if not TUNING.DROPPERWEB_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_dropper"
     inst.components.childspawner.emergencychildname = "spider_dropper"

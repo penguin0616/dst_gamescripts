@@ -314,7 +314,11 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
     local function fn()
         local inst = CreateEntity()
 
-        assert(TheWorld == nil)
+		if TheWorld ~= nil then
+			print("You cannot spawn multiple worlds!")
+			return nil
+		end
+
         TheWorld = inst
         inst.net = nil
         inst.shard = nil
@@ -440,6 +444,11 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         if not inst.ismastersim then
             return inst
         end
+        
+        inst:AddComponent("klaussackloot")
+
+        inst:AddComponent("worldsettingstimer")
+        inst:AddComponent("timer")
 
         inst:AddComponent("worldsettingstimer")
         inst:AddComponent("timer")

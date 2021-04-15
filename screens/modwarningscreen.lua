@@ -6,8 +6,9 @@ local Text = require "widgets/text"
 local Image = require "widgets/image"
 local UIAnim = require "widgets/uianim"
 local Widget = require "widgets/widget"
+local TEMPLATES = require "widgets/redux/templates"
 
-local ModWarningScreen = Class(Screen, function(self, title, text, buttons, texthalign, additionaltext, textsize)
+local ModWarningScreen = Class(Screen, function(self, title, text, buttons, texthalign, additionaltext, textsize, showdisable)
 	Screen._ctor(self, "ModWarningScreen")
 
     TheInputProxy:SetCursorVisible(true)
@@ -60,6 +61,7 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 	    self.additionaltext:EnableWordWrap(true)
 	    self.additionaltext:SetRegionSize(480*2, 100)
     end
+	
 
 	self.version = self:AddChild(Text(BODYTEXTFONT, 20))
 	--self.version:SetHRegPoint(ANCHOR_LEFT)
@@ -82,6 +84,23 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 	    self.menu:SetHRegPoint(ANCHOR_MIDDLE)
 	    self.menu:SetPosition(0, -250, 0)
 	    self.default_focus = self.menu
+
+		if showdisable then
+			self.disablemodwarning = self.root:AddChild(TEMPLATES.LabelCheckbox(
+					function(w) 
+						w.checked = not w.checked
+						Profile:SetModsWarning(not w.checked)
+						Profile:Save()
+						w:Refresh()
+					end,
+					not Profile:GetModsWarning(),
+					STRINGS.UI.MAINSCREEN.ACKNOWLEDGEWARNING))
+
+			local text_width = self.disablemodwarning.text:GetRegionSize()
+			self.disablemodwarning:SetPosition(-0.5 * text_width, -200)
+			self.disablemodwarning:SetFocusChangeDir(MOVE_DOWN, self.menu)
+			self.menu:SetFocusChangeDir(MOVE_UP, self.disablemodwarning)
+		end
 	end
 	
 	if PLATFORM == "WIN32_RAIL" then

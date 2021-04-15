@@ -90,6 +90,7 @@ local MULTIPLY = {
 	["often"] = 1.5,
 	["mostly"] = 2.2,
 	["always"] = 3,
+	["insane"] = 6,
 
 	["ocean_never"] = 0,
 	["ocean_rare"] = 0.65,
@@ -98,26 +99,31 @@ local MULTIPLY = {
 	["ocean_often"] = 1.3,
 	["ocean_mostly"] = 1.65,
 	["ocean_always"] = 2,
+	["ocean_insane"] = 4,
 }
 
 local CLUMP = {
 	["often"] = 8,
 	["mostly"] = 15,
 	["always"] = 30,
+	["insane"] = 60,
 
 	["ocean_often"] = 15,
 	["ocean_mostly"] = 25,
 	["ocean_always"] = 40,
+	["ocean_insane"] = 60,
 }
 
 local CLUMPSIZE = {
 	["often"] = {1, 2},
 	["mostly"] = {2, 3},
 	["always"] = {3, 4},
+	["insane"] = {5, 6},
 
 	["ocean_often"] = {1, 2},
 	["ocean_mostly"] = {2, 3},
 	["ocean_always"] = {3, 4},
+	["ocean_insane"] = {5, 6},
 }
 
 local SPAWNER_MUL = 1.2
@@ -228,7 +234,7 @@ local TRANSLATE_TO_PREFABS = {
 	--Ocean stuff all prefixed with "ocean_"
 	["ocean_seastack"] =	{"seastack", "seastack_spawner_rough", "seastack_spawner_swell"},
 	["ocean_shoal"] =		{"oceanfish_shoalspawner"},
-	["ocean_waterplant"] =	{"waterplant_spawner_rough"},
+	["ocean_waterplant"] =	{"waterplant_spawner_rough", "waterplant"},
 	["ocean_wobsterden"] =	{"wobster_den_spawner_shore"},
 	["ocean_bullkelp"] =	{"bullkelp_plant"},
 }
@@ -908,7 +914,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
 	save.map.width, save.map.height = map_width, map_height
 
-	local start_season = current_gen_params.season_start
+	local start_season = current_gen_params.season_start or "autumn"
 	if string.find(start_season, "|", nil, true) then
 		start_season = GetRandomItem(string.split(start_season, "|"))
 	elseif start_season == "default" then

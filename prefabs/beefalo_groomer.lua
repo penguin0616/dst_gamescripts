@@ -17,6 +17,7 @@ local item_assets =
 local prefabs =
 {
     "collapse_big",
+    "beefalo_groomer_item", -- deprecated but kept for existing worlds and mods
 }
 
 local numfaces =

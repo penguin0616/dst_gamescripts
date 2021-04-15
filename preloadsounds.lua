@@ -112,6 +112,9 @@ local MainSounds =
 	"wx78.fsb",
 	"wurt.fsb",
 	"walter.fsb",
+	
+	"wes.fev",
+    "wes.fsb",
 
 	"wintersfeast2019.fev",
 	"wintersfeast2019.fsb",

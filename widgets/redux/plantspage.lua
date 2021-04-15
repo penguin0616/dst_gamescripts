@@ -157,6 +157,7 @@ function PlantsPage:BuildPlantScrollGrid()
 		local _OnLoseFocus = w.cell_root.OnLoseFocus
 		function w.cell_root.OnLoseFocus()
 			_OnLoseFocus(w.cell_root)
+			if not w.data then return end
 			if ThePlantRegistry:IsAnyPlantStageKnown(w.data.plant) then
 				w.plant_seperator:SetTexture("images/plantregistry.xml", "plant_entry_seperator_active.tex")
 			else
@@ -177,6 +178,7 @@ function PlantsPage:BuildPlantScrollGrid()
 		end
 
 		w.cell_root:SetOnClick(function()
+			if not w.data then return end
 			local widgetpath
 			if ThePlantRegistry:IsAnyPlantStageKnown(w.data.plant) then
 				widgetpath = w.data and w.data.plant_def.plantregistrywidget or nil

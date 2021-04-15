@@ -348,11 +348,10 @@ function PigBrain:OnStart()
         PriorityNode{
             ChattyNode(self.inst, "PIG_TALK_FIND_MEAT",
                 DoAction(self.inst, FindFoodAction )),
-            IfNode(function() return StartChoppingCondition(self.inst) end, "chop", 
-                WhileNode(function() return KeepChoppingAction(self.inst) end, "keep chopping",
-                    LoopNode{ 
-                        ChattyNode(self.inst, "PIG_TALK_HELP_CHOP_WOOD",
-                            DoAction(self.inst, FindTreeToChopAction ))})),
+            IfThenDoWhileNode(function() return StartChoppingCondition(self.inst) end, function() return KeepChoppingAction(self.inst) end, "chop",
+                LoopNode{ 
+                    ChattyNode(self.inst, "PIG_TALK_HELP_CHOP_WOOD",
+                        DoAction(self.inst, FindTreeToChopAction ))}),
             ChattyNode(self.inst, "PIG_TALK_FOLLOWWILSON",
                 Follow(self.inst, GetLeader, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST)),
             IfNode(function() return GetLeader(self.inst) end, "has leader",

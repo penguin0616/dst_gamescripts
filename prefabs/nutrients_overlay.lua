@@ -108,6 +108,7 @@ local function fn()
     if not TheNet:IsDedicated() then
         inst.visual = inst:SpawnChild("nutrients_overlay_visual")
         inst:ListenForEvent("nutrientlevelsdirty", OnNutrientLevelsDirty)
+        OnNutrientLevelsDirty(inst)
         if TheWorld.ismastersim then
             inst:ListenForEvent("entitysleep", function()
                 if inst.visual then

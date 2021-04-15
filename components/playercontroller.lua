@@ -1,7 +1,7 @@
 local START_DRAG_TIME = 8 * FRAMES
 local BUTTON_REPEAT_COOLDOWN = .5
 local ACTION_REPEAT_COOLDOWN = 0.2
-local INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN = 0.2
+local INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN = 0.8
 local BUFFERED_CASTAOE_TIME = .5
 local CONTROLLER_TARGETING_LOCK_TIME = 1.0
 local RUBBER_BAND_PING_TOLERANCE_IN_SECONDS = 0.7
@@ -766,9 +766,7 @@ function PlayerController:OnRemoteControllerActionButtonDeploy(invobject, positi
 end
 
 function PlayerController:DoControllerAltActionButton()
-    self.actionholdtime = nil
-    self.lastheldaction = nil
-    self.actionrepeatfunction = nil
+    self:ClearActionHold()
 
     if self.placer_recipe ~= nil then
         self:CancelPlacement()
@@ -1456,7 +1454,7 @@ local function GetPickupAction(self, target, tool)
         return ACTIONS.HARVEST
     elseif target:HasTag("tapped_harvestable") and not target:HasTag("fire") then
         return ACTIONS.HARVEST
-    elseif target:HasTag("tendable_farmplant") and not target:HasTag("fire") then
+    elseif target:HasTag("tendable_farmplant") and not self.inst:HasTag("mime") and not target:HasTag("fire") then
         return ACTIONS.INTERACT_WITH
     elseif target:HasTag("dried") and not target:HasTag("burnt") then
         return ACTIONS.HARVEST
@@ -1827,6 +1825,9 @@ function PlayerController:ClearActionHold()
     self.lastheldaction = nil
     self.lastheldactiontime = nil
     self.actionrepeatfunction = nil
+    if not self.ismastersim then
+        SendRPCToServer(RPC.ClearActionHold)
+    end
 end
 
 local ACTIONHOLD_CONTROLS = {CONTROL_PRIMARY, CONTROL_SECONDARY, CONTROL_CONTROLLER_ALTACTION, CONTROL_INVENTORY_USEONSELF, CONTROL_INVENTORY_USEONSCENE}
@@ -1840,20 +1841,32 @@ local function IsAnyActionHoldButtonHeld()
 end
 
 function PlayerController:RepeatHeldAction()
-    if self.lastheldaction and self.lastheldaction:IsValid() and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
-        self.lastheldactiontime = GetTime()
-        if self.heldactioncooldown == 0 then
-            self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
-            self:DoAction(self.lastheldaction)
-        end
-    elseif self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
-        self.lastheldactiontime = GetTime()
-        if self.heldactioncooldown == 0 then
-            self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
-            self:actionrepeatfunction()
+    if not self.ismastersim then
+        if self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+            self.lastheldactiontime = GetTime()
+            if self.heldactioncooldown == 0 then
+                self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
+                self:actionrepeatfunction()
+            end
+        else
+            SendRPCToServer(RPC.RepeatHeldAction)
         end
     else
-        self:ClearActionHold()
+        if self.lastheldaction and self.lastheldaction:IsValid() and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+            self.lastheldactiontime = GetTime()
+            if self.heldactioncooldown == 0 then
+                self.heldactioncooldown = ACTION_REPEAT_COOLDOWN
+                self:DoAction(self.lastheldaction)
+            end
+        elseif self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
+            self.lastheldactiontime = GetTime()
+            if self.heldactioncooldown == 0 then
+                self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
+                self:actionrepeatfunction()
+            end
+        else
+            self:ClearActionHold()
+        end
     end
 end
 
@@ -2181,11 +2194,7 @@ function PlayerController:OnUpdate(dt)
 
     self:CooldownHeldAction(dt)
     if self.actionholding then
-        if self.ismastersim then
-            self:RepeatHeldAction()
-        else
-            SendRPCToServer(RPC.RepeatHeldAction)
-        end
+        self:RepeatHeldAction()
     end
 
     if self.controller_attack_override ~= nil and
@@ -3284,9 +3293,7 @@ function PlayerController:OnLeftClick(down)
         return
     end
 
-    self.actionholdtime = nil
-    self.lastheldaction = nil
-    self.actionrepeatfunction = nil
+    self:ClearActionHold()
 
     self.startdragtime = nil
 
@@ -3452,9 +3459,7 @@ function PlayerController:OnRightClick(down)
         return
     end
 
-    self.actionholdtime = nil
-    self.lastheldaction = nil
-    self.actionrepeatfunction = nil
+    self:ClearActionHold()
 
     self.startdragtime = nil
 

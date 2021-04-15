@@ -34,18 +34,24 @@ local CHILDSPAWNER_REGENPERIOD_TIMERNAME = "ChildSpawner_RegenPeriod"
 local function On_ChildSpawner_SpawnPeriod_TimerFinished(inst)
     local childspawner = inst.components.childspawner
 
-    if childspawner and childspawner.spawning and childspawner.childreninside > 0 then
-        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn())
-        childspawner:SpawnChild()
+    if childspawner then
+        local dospawn = childspawner.spawning and childspawner.childreninside > 0
+        if dospawn then
+            childspawner:SpawnChild()
+        end
+        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not dospawn)
     end
 end
 
 local function On_ChildSpawner_RegenPeriod_TimerFinished(inst)
     local childspawner = inst.components.childspawner
 
-    if childspawner and childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull()) then
-        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen())
-        childspawner:DoRegen()
+    if childspawner then
+        local doregen = childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull())
+        if doregen then
+            childspawner:DoRegen()
+        end
+        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), not doregen)
     end
 end
 
@@ -90,7 +96,7 @@ function WorldSettings_ChildSpawner_SpawnPeriod(inst, spawnperiod, enabled)
     childspawner.spawntimerset = Set_ChildSpawner_SpawnPeriod_Timer_Time
 
     worldsettingstimer:AddTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, spawnperiod, enabled, On_ChildSpawner_SpawnPeriod_TimerFinished)
-    worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), childspawner.spawning and childspawner.childreninside > 0)
+    worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not (childspawner.spawning and childspawner.childreninside > 0))
 end
 
 function WorldSettings_ChildSpawner_RegenPeriod(inst, regenperiod, enabled)
@@ -108,7 +114,7 @@ function WorldSettings_ChildSpawner_RegenPeriod(inst, regenperiod, enabled)
     childspawner.regentimerstop = Stop_ChildSpawner_RegenPeriod_Timer
 
     worldsettingstimer:AddTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, regenperiod, enabled, On_ChildSpawner_RegenPeriod_TimerFinished)
-    worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull()))
+    worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), not (childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull())))
 end
 
 ----------------------------------------------------------------------
@@ -132,7 +138,7 @@ function WorldSettings_Timer_PreLoad(inst, data, timername, maxtimeleft)
 end
 function WorldSettings_Timer_PreLoad_Fix(inst, data, timername, maxmultiplier)
     if data and data.worldsettingstimer and data.worldsettingstimer.timers[timername] then
-        data.worldsettingstimer.timers[timername].timeleft = math.max(data.worldsettingstimer.timers[timername].timeleft, maxmultiplier)
+        data.worldsettingstimer.timers[timername].timeleft = math.min(data.worldsettingstimer.timers[timername].timeleft, maxmultiplier)
     end
 end
 
@@ -153,6 +159,9 @@ end
 local function Stop_Spawner_StartDelay_Timer(inst)
     inst.components.spawner.externaltimerfinished = false
     inst.components.worldsettingstimer:StopTimer(SPAWNER_STARTDELAY_TIMERNAME)
+end
+local function Spawner_StartDelay_Timer_Exists(inst)
+    return inst.components.worldsettingstimer:ActiveTimerExists(SPAWNER_STARTDELAY_TIMERNAME)
 end
 
 local function On_Spawner_StartDelay_TimerFinished(inst)
@@ -190,6 +199,7 @@ function WorldSettings_Spawner_SpawnDelay(inst, startdelay, enabled)
     spawner.useexternaltimer = true
     spawner.starttimerfn = Start_Spawner_StartDelay_Timer
     spawner.stoptimerfn = Stop_Spawner_StartDelay_Timer
+    spawner.timertestfn = Spawner_StartDelay_Timer_Exists
 
     worldsettingstimer:AddTimer(SPAWNER_STARTDELAY_TIMERNAME, startdelay, enabled, On_Spawner_StartDelay_TimerFinished)
 end

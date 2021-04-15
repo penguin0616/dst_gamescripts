@@ -733,6 +733,14 @@ return{
 
         BALLOONS_EMPTY = "These look as deflated as I feel...",
         BALLOON = "A colorful reminder that my childhood is no more.",
+		BALLOONPARTY = "What is the point of celebrating in a place such as this?",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Sail far away from here, little balloon.",
+            GENERIC = "Will it make me swift enough to outrun my problems?",
+        },
+		BALLOONVEST = "Why try to prolong the inevitable?",
+		BALLOONHAT = "Can he make one for Abigail?",
 
         BERNIE_INACTIVE =
         {

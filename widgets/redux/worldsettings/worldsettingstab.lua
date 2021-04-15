@@ -279,6 +279,14 @@ function WorldSettingsTab:Refresh()
     self:UpdateSublevelControlsVisibility()
 end
 
+function WorldSettingsTab:GetSlotOptions()
+    local options = ShardSaveGameIndex:GetSlotGenOptions(self.slot, SERVER_LEVEL_SHARDS[self.location_index])
+    if not options or IsTableEmpty(options) then
+        options = nil
+    end
+    return options
+end
+
 function WorldSettingsTab:IsNewShard()
     return self.isnewshard
 end

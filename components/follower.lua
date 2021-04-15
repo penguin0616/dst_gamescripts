@@ -192,6 +192,9 @@ local function stopfollow(inst, self)
 end
 
 function Follower:AddLoyaltyTime(time)
+    if self.leader ~= nil and self.leader.components.leader ~= nil and self.leader.components.leader.loyaltyeffectiveness ~= nil then
+		time = time * self.leader.components.leader.loyaltyeffectiveness
+	end
     local currentTime = GetTime()
     local timeLeft = self.targettime or 0
     timeLeft = math.max(0, timeLeft - currentTime)

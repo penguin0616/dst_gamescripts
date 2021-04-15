@@ -163,6 +163,14 @@ local function CheckMigrationPets(inst, item)
                 table.insert(inst.migrationpets, v)
             end
         end
+
+        if item.components.migrationpetowner ~= nil then
+            local pet = item.components.migrationpetowner:GetPet()
+            if pet ~= nil then
+                table.insert(inst.migrationpets, pet)
+            end
+        end
+
         if item.components.container ~= nil then
             for k, v in pairs(item.components.container.slots) do
                 if v ~= nil then
@@ -927,7 +935,7 @@ function Inventory:Equip(item, old_to_active)
         end
 
         item.components.inventoryitem:OnPutInInventory(self.inst)
-        item.components.equippable:Equip(self.inst)
+        item.components.equippable:Equip(self.inst, not old_to_active and item.prevslot == nil)
         self.equipslots[eslot] = item
 
         if eslot == EQUIPSLOTS.BODY then
@@ -954,6 +962,7 @@ function Inventory:RemoveItem(item, wholestack)
 
     if not wholestack and item.components.stackable ~= nil and item.components.stackable:IsStack() then
         local dec = item.components.stackable:Get()
+        dec.components.inventoryitem:OnRemoved()
         dec.prevslot = prevslot
         dec.prevcontainer = nil
         return dec

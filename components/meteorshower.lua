@@ -273,7 +273,7 @@ function MeteorShower:OnSave()
     return
     {
         level = self.level,
-        remainingtime = self.tasktotime ~= nil and (self.tasktotime - GetTime()) / multiplier or nil,
+        remainingtime = multiplier ~= 0 and (self.tasktotime ~= nil and (self.tasktotime - GetTime()) / multiplier) or 0,
         interval = self.dt,
         mediumleft = self.medium_remaining,
         largeleft = self.large_remaining,

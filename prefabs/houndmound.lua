@@ -167,6 +167,9 @@ local function fn()
     
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.HOUNDMOUND_REGEN_TIME, TUNING.HOUNDMOUND_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.HOUNDMOUND_RELEASE_TIME, TUNING.HOUNDMOUND_ENABLED)
+    if not TUNING.HOUNDMOUND_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst:WatchWorldState("issummer", OnIsSummer)
     OnIsSummer(inst, TheWorld.state.issummer)

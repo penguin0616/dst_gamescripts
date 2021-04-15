@@ -1718,7 +1718,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.components.combat.hiteffectsymbol = "torso"
         inst.components.combat.pvp_damagemod = TUNING.PVP_DAMAGE_MOD -- players shouldn't hurt other players very much
         inst.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD)
-        inst.components.combat:SetRange(2)
+        inst.components.combat:SetRange(TUNING.DEFAULT_ATTACK_RANGE)
 
         local gamemode = TheNet:GetServerGameMode()
         if gamemode == "lavaarena" then

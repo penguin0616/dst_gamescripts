@@ -135,6 +135,9 @@ local function fn()
     inst.components.childspawner:SetEmergencyRadius(TUNING.WASPHIVE_EMERGENCY_RADIUS)
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.WASPHIVE_RELEASE_TIME, TUNING.WASPHIVE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.WASPHIVE_REGEN_TIME, TUNING.WASPHIVE_ENABLED)
+    if not TUNING.WASPHIVE_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     -------------------------
     inst:AddComponent("lootdropper")

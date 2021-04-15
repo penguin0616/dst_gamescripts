@@ -155,7 +155,7 @@ local function CreateLight(parent)
 
     inst.AnimState:SetBank("resurrection_stone_fx")
     inst.AnimState:SetBuild("resurrection_stone_fx")
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
     inst.AnimState:SetLightOverride(1)
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 

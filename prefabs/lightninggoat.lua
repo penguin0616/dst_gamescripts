@@ -126,7 +126,7 @@ local function OnAttacked(inst, data)
                 not (data.attacker.components.inventory ~= nil and data.attacker.components.inventory:IsInsulated()) then
 
                 data.attacker.components.health:DoDelta(-TUNING.LIGHTNING_GOAT_DAMAGE, nil, inst.prefab, nil, inst)
-                if data.attacker:HasTag("player") then
+                if data.attacker:HasTag("player") and not data.attacker.sg:HasStateTag("dead") then
                     data.attacker.sg:GoToState("electrocute")
                 end
             end

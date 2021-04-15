@@ -32,11 +32,10 @@ function FindFarmPlant:Visit()
 			self.status = FAILED
         end
     end
-    
     if self.status == RUNNING then
         local plant = self.inst.planttarget
         if not plant or not plant:IsValid() or not IsNearFollowPos(self, plant) or
-        not (self.validplantfn and self.validplantfn(self.inst, plant)) or not (plant.components.growable == nil or plant.components.growable:GetCurrentStageData().tendable) then
+        not (self.validplantfn == nil or self.validplantfn(self.inst, plant)) or not (plant.components.growable == nil or plant.components.growable:GetCurrentStageData().tendable) then
             self.inst.planttarget = nil
             self.status = FAILED
         --we don't need to test for the component, since we won't ever set clostest plant to anything that lacks that component

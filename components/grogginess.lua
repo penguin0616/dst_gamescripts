@@ -139,12 +139,13 @@ function Grogginess:HasGrogginess()
 end
 
 function Grogginess:GetDebugString()
-    return string.format("%s, KO time=%2.2f Groggy: %d/%d%s",
+    return string.format("%s, KO time=%2.2f Groggy: %d/%d%s (%.2f)",
             self:IsKnockedOut() and "KNOCKED OUT" or "AWAKE",
             self.knockouttime,
             self.grog_amount,
             self:GetResistance(),
-            self.enablespeedmod and "" or " (disable speed mod)")
+            self.enablespeedmod and "" or " (disable speed mod)",
+			self.grog_amount)
 end
 
 function Grogginess:AddGrogginess(grogginess, knockoutduration)

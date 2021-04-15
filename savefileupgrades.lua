@@ -276,6 +276,16 @@ t = {
             shardindex.version = 3
             shardindex:MarkDirty()
         end,
+        UpgradeShardIndexFromV3toV4 = function(shardindex)
+            if shardindex.version ~= 3 then
+                return
+            end
+
+            --console only upgrade, added to stay in sync on the shardindex version wise.
+
+            shardindex.version = 4
+            shardindex:MarkDirty()
+        end,
         UpgradeWorldgenoverrideFromV1toV2 = function(wgo)
             local validfields = {
                 overrides = true,

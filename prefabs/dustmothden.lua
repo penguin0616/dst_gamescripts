@@ -135,6 +135,9 @@ local function fn()
     inst.components.childspawner:SetMaxChildren(TUNING.DUSTMOTHDEN_MAX_CHILDREN)
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.DUSTMOTHDEN_RELEASE_TIME, TUNING.DUSTMOTHDEN_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.DUSTMOTHDEN_REGEN_TIME, TUNING.DUSTMOTHDEN_ENABLED)
+    if not TUNING.DUSTMOTHDEN_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
     inst.components.childspawner:StartRegen()
     inst.components.childspawner:StartSpawning()
 

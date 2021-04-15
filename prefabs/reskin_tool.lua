@@ -128,6 +128,14 @@ local function spellCB(tool, target, pos)
                 target.components.beard:SetSkin( tool._cached_reskinname[prefab_to_skin] )
             else
                 TheSim:ReskinEntity( target.GUID, target.skinname, tool._cached_reskinname[prefab_to_skin], nil, tool.parent.userid )
+
+				--Todo(Peter): make this better one day if we do more skins applied to multiple prefabs in the future
+                if target.prefab == "wormhole" then
+                    local other = target.components.teleporter.targetTeleporter
+                    if other ~= nil then
+                        TheSim:ReskinEntity( other.GUID, other.skinname, tool._cached_reskinname[prefab_to_skin], nil, tool.parent.userid )
+                    end 
+                end
             end
         end
     end )

@@ -126,9 +126,7 @@ end
 function ChildSpawner:StartRegen()
     self.regening = true
 
-    if self.numchildrenoutside + self.childreninside < self.maxchildren or
-        self.numemergencychildrenoutside + self.emergencychildreninside < self.maxemergencychildren then
-
+    if not (self:IsFull() and self:IsEmergencyFull()) then
         self.timetonextregen = self:GetTimeToNextRegen()
         self:StartUpdate()
     end
@@ -147,11 +145,13 @@ end
 function ChildSpawner:SetSpawnPeriod(period, variance)
     self.spawnperiod = period
     self.spawnvariance = variance or period * 0.1
+    self.timetonextspawn = self:GetTimeToNextSpawn()
 end
 
 function ChildSpawner:SetRegenPeriod(period, variance)
     self.regenperiod = period
     self.regenvariance = variance or period * 0.1
+    self.timetonextregen = self:GetTimeToNextRegen()
 end
 
 function ChildSpawner:SetEmergencyRadius(rad)

@@ -26,7 +26,7 @@ local function OnClickTab(self, level)
 end
 
 local ViewCustomizationModalScreen = Class(Screen, function(self, leveldata)
-    Widget._ctor(self, "ViewCustomizationModalScreen")
+    Screen._ctor(self, "ViewCustomizationModalScreen")
 
     self.currentmultilevel = 1
 

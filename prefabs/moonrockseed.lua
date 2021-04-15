@@ -187,7 +187,7 @@ local function OnFX(inst)
         fx.AnimState:SetBank("moonrock_seed")
         fx.AnimState:SetBuild("moonrock_seed")
         fx.AnimState:PlayAnimation("use")
-        fx.AnimState:SetFinalOffset(-1)
+        fx.AnimState:SetFinalOffset(3)
 
         fx:ListenForEvent("animover", fx.Remove)
     end

@@ -18,7 +18,6 @@ local function on_player_despawned(inst)
         local fx = SpawnPrefab("spawn_fx_medium")
         fx.Transform:SetPosition(beef.Transform:GetWorldPosition())
 
-        beef.components.colourtweener:StartTween(TWEEN_TARGET, TWEEN_TIME, beef.Remove)
         beef:PushEvent("despawn")
     end
 end
@@ -176,6 +175,9 @@ local function fn()
 
     inst:AddComponent("leader")
     inst.components.leader.onremovefollower = on_beef_disappeared
+
+    inst:AddComponent("migrationpetowner")
+    inst.components.migrationpetowner:SetPetFn(get_beefalo)
 
     inst._HasBeefalo = has_beefalo
     inst.GetBeefalo = get_beefalo

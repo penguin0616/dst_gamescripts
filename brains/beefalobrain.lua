@@ -27,9 +27,9 @@ local MIN_FOLLOW_DIST = 1
 local TARGET_FOLLOW_DIST = 5
 local MAX_FOLLOW_DIST = 5
 
-local MIN_BUDDY_DIST = 1
-local TARGET_BUDDY_DIST = 3
-local MAX_BUDDY_DIST = 15
+local MIN_BUDDY_DIST = 0
+local TARGET_BUDDY_DIST = 4
+local MAX_BUDDY_DIST = 18
 
 local GREET_SEARCH_RADIUS = 15
 local GREET_SEARCH_RSQ = GREET_SEARCH_RADIUS * GREET_SEARCH_RADIUS
@@ -102,9 +102,7 @@ local function GetLoiterAnchor(inst)
 end
 
 local function TryBeginLoiterState(inst)
-    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
-    if (herd and herd.components.mood and herd.components.mood:IsInMood())
-        or (inst.components.mood and inst.components.mood:IsInMood()) then
+    if inst:GetIsInMood() then
         return false
     end
 
@@ -116,9 +114,7 @@ local function TryBeginLoiterState(inst)
 end
 
 local function TryBeginGreetingState(inst)
-    local herd = inst.components.herdmember and inst.components.herdmember:GetHerd()
-    if (herd and herd.components.mood and herd.components.mood:IsInMood())
-        or (inst.components.mood and inst.components.mood:IsInMood()) then
+    if inst:GetIsInMood() then
         return false
     end
 

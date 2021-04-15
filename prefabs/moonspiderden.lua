@@ -296,6 +296,9 @@ local function moonspiderden_fn()
     inst.components.childspawner:SetSpawnPeriod(TUNING.MOONSPIDERDEN_RELEASE_TIME)
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MOONSPIDERDEN_RELEASE_TIME, TUNING.MOONSPIDERDEN_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MOONSPIDERDEN_SPIDER_REGENTIME, TUNING.MOONSPIDERDEN_ENABLED)
+    if not TUNING.MOONSPIDERDEN_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_moon"
     inst.components.childspawner.emergencychildname = "spider_moon"

@@ -733,6 +733,14 @@ return{
 
         BALLOONS_EMPTY = "Needs air",
         BALLOON = "Boop",
+		BALLOONPARTY = "Fun!",
+		BALLOONSPEED =
+        {
+            DEFLATED = "Boop",
+            GENERIC = "Run run run!",
+        },
+		BALLOONVEST = "Safe?",
+		BALLOONHAT = "Squee Hopper? Hm. No",
 
         BERNIE_INACTIVE =
         {

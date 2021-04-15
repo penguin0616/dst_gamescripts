@@ -51,8 +51,8 @@ local PauseScreen = Class(Screen, function(self)
 
     local buttons = {}
 	table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.PLAYERSTATUSSCREEN, cb=function()
-		self:Hide()
-		self.owner.HUD:ShowPlayerStatusScreen(true, function() self:Show() end)
+		self:unpause()
+		self.owner.HUD:ShowPlayerStatusScreen(true)
 	end })
 
 	if #UserCommands.GetServerActions(self.owner) > 0 then

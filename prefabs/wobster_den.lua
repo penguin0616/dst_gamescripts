@@ -246,6 +246,9 @@ local function basefn(build, loot_table_name, child_name)
 
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.WOBSTER_DEN_SPAWN_PERIOD, TUNING.WOBSTER_DEN_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.WOBSTER_DEN_REGEN_PERIOD, TUNING.WOBSTER_DEN_ENABLED)
+    if not TUNING.WOBSTER_DEN_ENABLED then
+        inst.components.childspawner.childreninside = 0
+    end
 
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.spawnradius = TUNING.WOBSTER_DEN_SPAWNRADIUS

@@ -17,7 +17,14 @@ local beak_assets =
 }
 
 local function onequip(inst, owner, swap_build)
-    owner.AnimState:OverrideSymbol("swap_object", swap_build, swap_build)
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, swap_build, inst.GUID, swap_build)
+    else
+        owner.AnimState:OverrideSymbol("swap_object", swap_build, swap_build)
+    end
+
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 end

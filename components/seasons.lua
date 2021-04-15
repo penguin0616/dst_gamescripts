@@ -385,7 +385,7 @@ local OnSetSeasonClockSegs = _ismastershard and function(src, segs)
 end or nil
 
 local OnSetSeasonLength = _ismastersim and function(src, data)
-	local season = data.season
+	local season = SEASONS[data.season]
     local length = data.length
     
     if data.random == true and _israndom[data.season] == true then
@@ -393,9 +393,9 @@ local OnSetSeasonLength = _ismastersim and function(src, data)
     end
     _israndom[data.season] = data.random == true
 
-    assert(SEASONS[season], "Tried setting the length of an invalid season.")
-    if _lengths[SEASONS[season]]:value() == length then return end --no change
-	_lengths[SEASONS[season]]:set(length or 0)
+    assert(season, "Tried setting the length of an invalid season.")
+    if _lengths[season]:value() == length then return end --no change
+	_lengths[season]:set(length or 0)
 
 	local p
     if _season:value() == season then

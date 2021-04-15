@@ -107,10 +107,6 @@ local function onlearnednewtacklesketch(inst)
     end
 end
 
-local function onburntup(inst)
-	DropTackleSketches(inst)
-end
-
 local function OnHaunt(inst, haunter)
     if not inst:HasTag("burnt") and inst.components.prototyper.on then
         onuse(inst, false)
@@ -119,6 +115,25 @@ local function OnHaunt(inst, haunter)
     end
     inst.components.hauntable.hauntvalue = TUNING.HAUNT_TINY
     return true
+end
+
+local function onburnt(inst)
+	DropTackleSketches(inst)
+    inst.components.craftingstation:ForgetAllItems()
+
+    DefaultBurntStructureFn(inst)
+end
+
+local function onsave(inst, data)
+    if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
+        data.burnt = true
+    end
+end
+
+local function onload(inst, data)
+    if data ~= nil and data.burnt and inst.components.burnable ~= nil then
+        inst.components.burnable.onburnt(inst)
+    end
 end
 
 local function fn()
@@ -172,7 +187,7 @@ local function fn()
     inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.FISHING
 
     MakeLargeBurnable(inst, nil, nil, true)
-
+    inst.components.burnable:SetOnBurntFn(onburnt)
     MakeLargePropagator(inst)
 
     inst:AddComponent("hauntable")
@@ -180,8 +195,10 @@ local function fn()
     inst.components.hauntable:SetOnHauntFn(OnHaunt)
 
 	inst:ListenForEvent("onlearnednewtacklesketch", onlearnednewtacklesketch)
-	inst:ListenForEvent("burntup", onburntup)
 	inst:ListenForEvent("onbuilt", onbuilt)
+		
+    inst.OnSave = onsave
+    inst.OnLoad = onload
 
     return inst
 end

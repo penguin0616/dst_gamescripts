@@ -11,7 +11,13 @@ local prefabs =
 }
 
 local function onequip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_object", "quagmire_hoe", "swap_quagmire_hoe")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_quagmire_hoe", inst.GUID, "quagmire_hoe")
+    else
+        owner.AnimState:OverrideSymbol("swap_object", "quagmire_hoe", "swap_quagmire_hoe")
+    end
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 end
@@ -22,7 +28,13 @@ local function onunequip(inst, owner)
 end
 
 local function onequipgold(inst, owner)local skin_build = inst:GetSkinBuild()
-    owner.AnimState:OverrideSymbol("swap_object", "swap_goldenhoe", "swap_goldenhoe")    
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_goldenhoe", inst.GUID, "swap_goldenhoe")
+    else
+        owner.AnimState:OverrideSymbol("swap_object", "swap_goldenhoe", "swap_goldenhoe")
+    end
     owner.SoundEmitter:PlaySound("dontstarve/wilson/equip_item_gold")
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")

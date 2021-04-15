@@ -174,6 +174,9 @@ local function spawnerfn()
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.SPIDERHOLE_RELEASE_TIME, TUNING.SPIDERHOLE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.SPIDERHOLE_REGEN_TIME, TUNING.SPIDERHOLE_ENABLED)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.SPIDERHOLE_MIN_CHILDREN, TUNING.SPIDERHOLE_MAX_CHILDREN))
+    if not TUNING.SPIDERHOLE_MAX_CHILDREN then
+        inst.components.childspawner.childreninside = 0
+    end
     inst.components.childspawner:StartRegen()
     inst.components.childspawner.childname = "spider_hider"
     inst.components.childspawner:SetRareChild("spider_spitter", TUNING.SPIDERHOLE_SPITTER_CHANCE)

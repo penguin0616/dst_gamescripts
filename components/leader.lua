@@ -15,6 +15,8 @@ local Leader = Class(function(self, inst)
     self.followers = {}
     self.numfollowers = 0
     
+	--self.loyaltyeffectiveness = nil
+
     inst:ListenForEvent("newcombattarget", OnNewCombatTarget)
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("death", OnDeath)

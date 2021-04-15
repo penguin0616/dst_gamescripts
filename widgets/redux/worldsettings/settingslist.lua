@@ -184,6 +184,15 @@ local SettingsList = Class(Widget, function(self, parent_widget, levelcategory)
     self.focus_forward = function() return self.scroll_list end
 end)
 
+local function IsEntryInSpinOptions(spin_options, entry)
+    for i, n in ipairs(spin_options) do
+        if n.data == entry then
+            return true
+        end
+    end
+    return false
+end
+
 function SettingsList:MakeScrollList()
     if self.scroll_list then
         self.scroll_list:Kill()
@@ -244,13 +253,15 @@ function SettingsList:MakeScrollList()
                 widget.focus_forward = opt
 
                 local icon_image = v.image
+                local atlas = v.atlas
                 local icon_txt = nil
                 if PLATFORM == "WIN32_RAIL" and v.options_remap then
+                    atlas = v.options_remap.atlas or atlas
                     icon_image = v.options_remap.img
                     icon_txt = STRINGS.UI.CUSTOMIZATIONSCREEN.ICON_TITLES[string.upper(v.name)]
                 end
 
-                opt.image:SetTexture(v.atlas or "images/customisation.xml", icon_image)
+                opt.image:SetTexture(atlas or "images/customisation.xml", icon_image)
                 opt.image:SetSize(image_size, image_size)
                 opt.icon_txt:SetString(icon_txt)
 
@@ -289,7 +300,9 @@ function SettingsList:MakeScrollList()
 
                 opt.spinner:SetOptions(spin_options)
 
-                opt.spinner:SetSelected(self.parent_widget:GetValueForOption(v.name) or v.default)
+                local val = self.parent_widget:GetValueForOption(v.name) or v.default
+                if not IsEntryInSpinOptions(spin_options, val) then val = v.default end
+                opt.spinner:SetSelected(val)
                 self:SetBGForSpinner(opt.spinner, data.option)
 
                 opt.spinner.label:SetString(STRINGS.UI.CUSTOMIZATIONSCREEN[string.upper(v.name)])
@@ -302,7 +315,7 @@ function SettingsList:MakeScrollList()
             if not data or data.is_empty or data.heading_text then
                 return
             end
-            
+
             local v = data.option
             assert(v)
 
@@ -310,7 +323,9 @@ function SettingsList:MakeScrollList()
                 widget.opt_textentry.textentry:SetSelected(self.parent_widget:GetValueForOption(v.name) or v.default)
                 self:SetBGForTextEntry(widget.opt_textentry.textentry, data.option)
             elseif v.widget_type == "optionsspinner" then
-                widget.opt_spinner.spinner:SetSelected(self.parent_widget:GetValueForOption(v.name) or v.default)
+                local val = self.parent_widget:GetValueForOption(v.name) or v.default
+                if not IsEntryInSpinOptions(v.options, val) then val = v.default end
+                widget.opt_spinner.spinner:SetSelected(val)
                 self:SetBGForSpinner(widget.opt_spinner.spinner, data.option)
             end
         end
@@ -440,7 +455,9 @@ function SettingsList:RefreshOptionItems()
         end
     end
 
+    self.forceupdate = true
     self.scroll_list:SetItemsData(self.optionitems)
+    self.forceupdate = false
 
     self.scroll_list:SetPosition(self.scroll_list:CanScroll() and -15 or 0, 0)
 end

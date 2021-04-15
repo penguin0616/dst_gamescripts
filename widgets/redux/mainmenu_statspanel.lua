@@ -11,6 +11,8 @@ local NUM_RECENT_ITEMS = 4
 local MainMenuStatsPanel = Class(Widget, function(self, config)
     Widget._ctor(self, "MainMenuStatsPanel")
 
+	self:SetPosition(50, 0)
+
 	self.config = config
 
 	local width = 300
@@ -21,6 +23,10 @@ local MainMenuStatsPanel = Class(Widget, function(self, config)
     local motd_w = width
 	local motd_cell_size = {width = motd_w, height = motd_w/16*9}
 	local text_padding = 13
+
+    self.frame = self:AddChild(TEMPLATES.RectangleWindow(630, 320))
+	self.frame:SetBackgroundTint(0,0,0,0.85)
+	self.frame:SetPosition(115, -145)
 
 	local item_root = self:AddChild(Widget("store_root"))
     item_root:SetPosition(-50, -90)
@@ -56,24 +62,24 @@ local MainMenuStatsPanel = Class(Widget, function(self, config)
 	
     item_root = self:AddChild(Widget("friend_root"))
     item_root:SetPosition(-50, -220)
-    local death_label = item_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.MOST_COMMON_FRIENDS, UICOLOURS.GOLD_SELECTED))
-    death_label:SetPosition(0,15)
-    death_label:SetRegionSize(width,30)
+    local friends_label = item_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.MOST_COMMON_FRIENDS, UICOLOURS.GOLD_SELECTED))
+    friends_label:SetPosition(0,15)
+    friends_label:SetRegionSize(width,30)
     local divider = item_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )
     divider:SetScale(0.5)
-    divider:SetPosition(0,0)
+    divider:SetPosition(0,5)
 
 
 	self.friend_widgets = {}
 	for i = 1, 3 do
-		local friend = item_root:AddChild(Text(UIFONT, 25, ""))
-		friend:SetPosition(0, -5 - i * 30)
+		local friend = item_root:AddChild(Text(UIFONT, 22, ""))
+		friend:SetPosition(0, 5 - i * 25)
 		table.insert(self.friend_widgets, friend)
 	end
 	self:RefreshFriends()
 
 	self.recent_items = self:AddChild(self:BuildItemsSummary(width))
-	self.recent_items:SetPosition(380, -30)
+	self.recent_items:SetPosition(300, -30)
 
 	self.focus_forward = self.image
 
@@ -126,7 +132,7 @@ end
 function MainMenuStatsPanel:BuildItemsSummary(width)
     local new_root = Widget("new items root")
     new_root.new_label = new_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.NEW_STUFF, UICOLOURS.GOLD_SELECTED))
-    new_root.new_label:SetPosition(0, 15)
+    new_root.new_label:SetPosition(0, 10)
     new_root.new_label:SetRegionSize(width, 30)
 
 	local divider_top = new_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )

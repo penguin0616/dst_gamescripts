@@ -91,6 +91,20 @@ local fx =
         sound = "dontstarve/creatures/pengull/splash",
     },
     {
+        name = "balloon_pop_body",
+        bank = "balloon_pop",
+        build = "balloon_pop",
+        anim = "pop_low",
+        fn = FinalOffset1,
+    },
+    {
+        name = "balloon_pop_head",
+        bank = "balloon_pop",
+        build = "balloon_pop",
+        anim = "pop_high",
+        fn = FinalOffset1,
+    },
+    {
         name = "spat_splat_fx",
         bank = "spat_splat",
         build = "spat_splat",

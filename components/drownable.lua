@@ -86,6 +86,14 @@ function Drownable:WashAshore()
     self.inst:DoTaskInTime(4, _onarrive)
 end
 
+function Drownable:ShouldDropItems()
+	if self.inst:HasTag("stronggrip") then
+		return false
+	end
+
+	return self.shoulddropitemsfn == nil and true or self.shoulddropitemsfn(self.inst)
+end
+
 function Drownable:OnFallInOcean(shore_x, shore_y, shore_z)
 	self.src_x, self.src_y, self.src_z = self.inst.Transform:GetWorldPosition()
 
@@ -102,9 +110,12 @@ function Drownable:OnFallInOcean(shore_x, shore_y, shore_z)
 	local inv = self.inst.components.inventory
 	if inv ~= nil then
 		Launch(inv:DropActiveItem(), self.inst, 3)
-		local handitem = inv:GetEquippedItem(EQUIPSLOTS.HANDS)
-        if handitem ~= nil then
-			Launch(inv:DropItem(handitem), self.inst, 3)
+
+		if self:ShouldDropItems() then
+			local handitem = inv:GetEquippedItem(EQUIPSLOTS.HANDS)
+			if handitem ~= nil then
+				Launch(inv:DropItem(handitem), self.inst, 3)
+			end
 		end
 	end
 end
@@ -113,6 +124,18 @@ function Drownable:TakeDrowningDamage()
 	local tunings = self.customtuningsfn ~= nil and self.customtuningsfn(self.inst)
 					or TUNING.DROWNING_DAMAGE[string.upper(self.inst.prefab)]
 					or TUNING.DROWNING_DAMAGE[self.inst:HasTag("player") and "DEFAULT" or "CREATURE"]
+
+	if self.inst.components.moisture ~= nil and tunings.WETNESS ~= nil then
+		self.inst.components.moisture:DoDelta(tunings.WETNESS, true)
+	end
+
+	if self.inst.components.inventory ~= nil then
+		local body_item = self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+		if body_item ~= nil and body_item.components.flotationdevice ~= nil and body_item.components.flotationdevice:IsEnabled() then
+			body_item.components.flotationdevice:OnPreventDrowningDamage()
+			return
+		end
+	end
 
 	if self.inst.components.hunger ~= nil and tunings.HUNGER ~= nil then
 		local delta = -math.min(tunings.HUNGER, self.inst.components.hunger.current - 30)
@@ -141,17 +164,13 @@ function Drownable:TakeDrowningDamage()
 		end
 	end
 
-	if self.inst.components.moisture ~= nil and tunings.WETNESS ~= nil then
-		self.inst.components.moisture:DoDelta(tunings.WETNESS, true)
-	end
-
 	if self.ontakedrowningdamage ~= nil then
 		self.ontakedrowningdamage(self.inst, tunings)
 	end
 end
 
 function Drownable:DropInventory()
-	if self.inst:HasTag("stronggrip") then
+	if not self:ShouldDropItems() then
 		return
 	end
 

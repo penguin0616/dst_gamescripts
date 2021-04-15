@@ -19,7 +19,7 @@ local function PlaySplashAnim(proxy)
     inst.AnimState:SetBank("splash_spiderweb")
     inst.AnimState:SetBuild("splash_spiderweb")
     inst.AnimState:PlayAnimation("idle")
-    inst.AnimState:SetFinalOffset(-1)
+    inst.AnimState:SetFinalOffset(3)
     
     inst:ListenForEvent("animover", inst.Remove)
 end

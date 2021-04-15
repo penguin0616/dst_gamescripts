@@ -323,7 +323,7 @@ function ShardSaveIndex:GetSlotCharacter(slot)
     local shardIndex = self:GetShardIndex(slot, "Master")
     if shardIndex then
         local session_id = shardIndex:GetSession()
-        local online_mode = shardIndex.online_mode ~= false
+        local online_mode = shardIndex.server.online_mode ~= false
         local encode_user_path = shardIndex:GetServerData().encode_user_path == true
 
         local character = nil
@@ -559,9 +559,9 @@ function ShardSaveIndex:GetSlotPresetText(slot)
     if self:IsSlotEmpty(slot) then return preset_str end
 
     if self:GetShardIndex(slot, "Master") then
-        preset_str = "Forest Only"
+        preset_str = STRINGS.UI.SERVERCREATIONSCREEN.FORESTONLY
         if self:IsSlotMultiLevel(slot) and self:GetShardIndex(slot, "Caves") then
-            preset_str = "Forest and Caves"
+            preset_str = STRINGS.UI.SERVERCREATIONSCREEN.FORESTANDCAVES
         end
     end
     return preset_str
