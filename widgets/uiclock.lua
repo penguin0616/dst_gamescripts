@@ -22,6 +22,7 @@ local DARKEN_PERCENT = .75
 --------------------------------------------------------------------------
 --[[ Constructor ]]
 --------------------------------------------------------------------------
+-- TheWorld:PushEvent("ms_startthemoonstorms")
 
 local UIClock = Class(Widget, function(self)
     Widget._ctor(self, "Clock")
@@ -44,6 +45,21 @@ local UIClock = Class(Widget, function(self)
     self._moonphase = nil
     self._mooniswaxing = nil
     self._time = nil
+
+	self._moon_builds = -- mapping of builds for MOON_PHASE_STYLE_NAMES in clock.lua
+	{
+		default = "moon_phases",
+		--alter_active = "moon_phases",
+		glassed_default =  "moonalter_phases",
+		glassed_alter_active = "moonalter_phases",
+	}
+	self._alteractive_states = -- mapping of builds for MOON_PHASE_STYLE_NAMES in clock.lua
+	{
+		alter_active = true,
+		glassed_alter_active = true,
+	}
+
+	self._moonphasebuild = self._moon_builds.default
 
     local basescale = 1
     self:SetScale(basescale, basescale, basescale)
@@ -106,6 +122,8 @@ local UIClock = Class(Widget, function(self)
     if not self._cave then
         self.inst:ListenForEvent("phasechanged", function(inst, data) self:OnPhaseChanged(data) end, TheWorld)
         self.inst:ListenForEvent("moonphasechanged2", function(inst, data) self:OnMoonPhaseChanged2(data) end, TheWorld)
+        self.inst:ListenForEvent("moonphasestylechanged", function(inst, data) self:OnMoonPhaseStyleChanged(data) end, TheWorld)
+		
     end
     self.inst:ListenForEvent("clocktick", function(inst, data) self:OnClockTick(data) end, TheWorld)
 end)
@@ -140,9 +158,9 @@ function UIClock:ShowMoon()
         half = self._mooniswaxing and "moon_half_wax" or "moon_half",
     }
 
-    self._moonanim:GetAnimState():OverrideSymbol("swap_moon", "moon_phases", moon_syms[self._moonphase] or "moon_full")
+    self._moonanim:GetAnimState():OverrideSymbol("swap_moon", self._moonphasebuild, moon_syms[self._moonphase] or "moon_full")
     if self._phase ~= nil then
-        self._moonanim:GetAnimState():PlayAnimation("trans_out")
+        self._moonanim:GetAnimState():PlayAnimation(self.trans_out_anim or "trans_out")
         self._moonanim:GetAnimState():PushAnimation("idle", true)
     else
         self._moonanim:GetAnimState():PlayAnimation("idle", true)
@@ -310,6 +328,31 @@ function UIClock:OnMoonPhaseChanged2(data)
 
     if self._phase == "night" then
         self:ShowMoon()
+    end
+end
+
+function UIClock:OnMoonPhaseStyleChanged(data)
+	self._moonphasebuild = data.style ~= nil and self._moon_builds[data.style] or self._moon_builds.default
+
+	if self._alteractive_states[data.style] then
+		self._face:SetTexture("images/hud2.xml", "clock_alter.tex")
+
+        self._moonanim:GetAnimState():SetBank("moon_phases_clock_alter")
+        self._moonanim:GetAnimState():SetBuild("moon_phases_clock_alter")
+
+		self.trans_out_anim = "alter_reveal"
+	else
+	    self._face:SetTexture("images/hud.xml", "clock_NIGHT.tex")
+
+        self._moonanim:GetAnimState():SetBank("moon_phases_clock")
+        self._moonanim:GetAnimState():SetBuild("moon_phases_clock")
+
+		self.trans_out_anim = nil
+	end
+
+    if self._phase == "night" then
+        self:ShowMoon()
+		self.trans_out_anim = nil
     end
 end
 

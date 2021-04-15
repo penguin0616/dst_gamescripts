@@ -30,11 +30,25 @@ function basic_init_fn( inst, build_name, def_build )
     if inst.components.inventoryitem ~= nil then
         inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
     end
+
+    if inst.components.floater ~= nil then
+        if inst.components.floater:IsFloating() then
+            inst.components.floater:SwitchToDefaultAnim(true)
+            inst.components.floater:SwitchToFloatAnim()
+        end
+    end
 end
 function basic_clear_fn(inst, def_build)
     inst.AnimState:SetBuild(def_build)
     if inst.components.inventoryitem ~= nil then
         inst.components.inventoryitem:ChangeImageName()
+    end
+    
+    if inst.components.floater ~= nil then
+        if inst.components.floater:IsFloating() then            
+            inst.components.floater:SwitchToDefaultAnim(true)
+            inst.components.floater:SwitchToFloatAnim()
+        end
     end
 end
 
@@ -63,14 +77,14 @@ panflute_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "
 panflute_clear_fn = function(inst) basic_clear_fn(inst, "pan_flute" ) end
 
 hammer_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "swap_hammer" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "swap_hammer" ) 
 end
 hammer_clear_fn = function(inst)
-    basic_clear_fn(inst, "swap_hammer" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "swap_hammer" )
 end
 
 torch_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "swap_torch" ) end
@@ -86,107 +100,106 @@ spear_wathgrithr_init_fn = function(inst, build_name) basic_init_fn( inst, build
 spear_wathgrithr_clear_fn = function(inst) basic_clear_fn(inst, "swap_spear_wathgrithr" ) end
 
 axe_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "axe" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
         --inst.components.floater:SetBankSwapOnFloat(true, -11, {sym_name = "axe01", sym_build = "swap_axe"})
     end
+    basic_init_fn( inst, build_name, "axe" )
 end
 axe_clear_fn = function(inst)
-    basic_clear_fn(inst, "axe" )
     inst.components.floater.do_bank_swap = true
-    --inst.components.floater:SetBankSwapOnFloat(true, -11, {sym_build = "swap_axe"})
+    basic_clear_fn(inst, "axe" )
 end
 
 farm_hoe_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "quagmire_hoe" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "quagmire_hoe" )
 end
 farm_hoe_clear_fn = function(inst)
-    basic_clear_fn(inst, "quagmire_hoe" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "quagmire_hoe" )
 end
 
 golden_farm_hoe_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "goldenhoe" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "goldenhoe" )
 end
 golden_farm_hoe_clear_fn = function(inst)
-    basic_clear_fn(inst, "goldenhoe" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "goldenhoe" )
 end
 
 razor_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "swap_razor" ) end
 razor_clear_fn = function(inst) basic_clear_fn(inst, "swap_razor" ) end
 
 goldenaxe_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "goldenaxe" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "goldenaxe" )
 end
 goldenaxe_clear_fn = function(inst)
-    basic_clear_fn(inst, "goldenaxe" ) 
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "goldenaxe" )
 end
 
 pickaxe_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "pickaxe" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "pickaxe" )
 end
 pickaxe_clear_fn = function(inst)
-    basic_clear_fn(inst, "pickaxe" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "pickaxe" )
 end
 
 pitchfork_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "pitchfork" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "pitchfork" )
 end
 pitchfork_clear_fn = function(inst)
-    basic_clear_fn(inst, "pitchfork" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "pitchfork" )
 end
 
 goldenpickaxe_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "goldenpickaxe" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "goldenpickaxe" )
 end
 goldenpickaxe_clear_fn = function(inst)
-    basic_clear_fn(inst, "goldenpickaxe" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "goldenpickaxe" )
 end
 
 shovel_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "shovel" ) 
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "shovel" )
 end
 shovel_clear_fn = function(inst)
-    basic_clear_fn(inst, "shovel" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "shovel" )
 end
 
 goldenshovel_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "goldenshovel" )
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
+    basic_init_fn( inst, build_name, "goldenshovel" )
 end
 goldenshovel_clear_fn = function(inst)
-    basic_clear_fn(inst, "goldenshovel" )
     inst.components.floater.do_bank_swap = true
+    basic_clear_fn(inst, "goldenshovel" )
 end
 
 umbrella_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "umbrella" ) end
@@ -348,6 +361,12 @@ oar_clear_fn = function(inst) basic_clear_fn(inst, "oar" ) end
 oar_driftwood_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "oar_driftwood" ) end
 oar_driftwood_clear_fn = function(inst) basic_clear_fn(inst, "oar_driftwood" ) end
 
+wateringcan_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "wateringcan" ) end
+wateringcan_clear_fn = function(inst) basic_clear_fn(inst, "wateringcan" ) end
+
+seedpouch_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "seedpouch" ) end
+seedpouch_clear_fn = function(inst) basic_clear_fn(inst, "seedpouch" ) end
+
 
 
 
@@ -456,10 +475,6 @@ end
 --[[ Abigail skin functions ]]
 --------------------------------------------------------------------------
 function abigail_flower_init_fn(inst, build_name)
-    inst:SetClientSideInventoryImageOverride("bondlevel0", inst:GetSkinName()..".tex", inst:GetSkinName().."_level0.tex")
-    inst:SetClientSideInventoryImageOverride("bondlevel2", inst:GetSkinName()..".tex", inst:GetSkinName().."_level2.tex")
-    inst:SetClientSideInventoryImageOverride("bondlevel3", inst:GetSkinName()..".tex", inst:GetSkinName().."_level3.tex")
-
     if not TheWorld.ismastersim then
         return
     end

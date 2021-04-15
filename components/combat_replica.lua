@@ -345,6 +345,30 @@ function Combat:IsAlly(guy)
             )
 end
 
+function Combat:TargetHasFriendlyLeader(target)
+    local leader = self.inst.replica.follower ~= nil and self.inst.replica.follower:GetLeader()
+    if leader ~= nil then
+        local target_leader = target.replica.follower ~= nil and target.replica.follower:GetLeader() or nil
+
+        if target_leader and target_leader.replica.inventoryitem then
+            target_leader = target_leader.entity:GetParent() --.replica.inventoryitem:GetGrandOwner()
+            -- Don't attack followers if their follow object has no owner
+            if target_leader == nil then
+                return true
+            end
+        end
+
+        local PVP_enabled = TheNet:GetPVPEnabled()
+
+        return leader == target 
+				or (target_leader ~= nil and (target_leader == leader or (target_leader:HasTag("player") and not PVP_enabled))) 
+				or (target:HasTag("domesticated") and not PVP_enabled) 
+    end
+
+    return false    
+end
+
+
 function Combat:CanBeAttacked(attacker)
     if self.inst:HasTag("playerghost") or
         self.inst:HasTag("noattack") or

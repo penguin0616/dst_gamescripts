@@ -247,10 +247,23 @@ function self:GetSpawnPoint(pt)
     local function TestSpawnPoint(offset)
         local spawnpoint_x, spawnpoint_y, spawnpoint_z = (pt + offset):Get()
         local allow_water = true
+        local moonstorm = false
+        if TheWorld.net.components.moonstorms and next(TheWorld.net.components.moonstorms:GetMoonstormNodes()) then
+            local node_index = TheWorld.Map:GetNodeIdAtPoint(spawnpoint_x, 0, spawnpoint_z)
+            local nodes = TheWorld.net.components.moonstorms._moonstorm_nodes:value()
+            for i, node in pairs(nodes) do
+                if node == node_index then
+                    moonstorm = true
+                    break
+                end
+            end
+        end
+
         return _map:IsPassableAtPoint(spawnpoint_x, spawnpoint_y, spawnpoint_z, allow_water) and
                _map:GetTileAtPoint(spawnpoint_x, spawnpoint_y, spawnpoint_z) ~= GROUND.OCEAN_COASTAL_SHORE and
                not _groundcreep:OnCreep(spawnpoint_x, spawnpoint_y, spawnpoint_z) and
-               #(TheSim:FindEntities(spawnpoint_x, 0, spawnpoint_z, 4, BIRDBLOCKER_TAGS)) == 0
+               #(TheSim:FindEntities(spawnpoint_x, 0, spawnpoint_z, 4, BIRDBLOCKER_TAGS)) == 0 and
+               not moonstorm
     end
 
     local theta = math.random() * 2 * PI

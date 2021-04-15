@@ -27,7 +27,6 @@ local projectile_prefabs =
 }
 
 local BOMB_MUSTHAVE_TAGS = { "_combat" }
-local MAX_LEAK_DSQ = (TUNING.MAX_WALKABLE_PLATFORM_RADIUS - 0.75) * (TUNING.MAX_WALKABLE_PLATFORM_RADIUS - 0.75)
 local function do_bomb(inst, thrower, target, no_hit_tags, damage, break_boats)
     local bx, by, bz = inst.Transform:GetWorldPosition()
 
@@ -67,7 +66,7 @@ local function do_bomb(inst, thrower, target, no_hit_tags, damage, break_boats)
         local platform = TheWorld.Map:GetPlatformAtPoint(bx, bz)
         if platform ~= nil then
             local dsq_to_boat = platform:GetDistanceSqToPoint(bx, by, bz)
-            if dsq_to_boat < MAX_LEAK_DSQ then
+            if dsq_to_boat < TUNING.GOOD_LEAKSPAWN_PLATFORM_RADIUS then
                 platform:PushEvent("spawnnewboatleak", {pt = Vector3(bx, by, bz), leak_size = "small_leak", playsoundfx = true})
             end
         end

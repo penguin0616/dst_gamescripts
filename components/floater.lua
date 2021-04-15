@@ -100,6 +100,29 @@ function Floater:IsFloating()
     return self.showing_effect
 end
 
+function Floater:SwitchToFloatAnim()
+    if self.do_bank_swap then
+        if self.float_index < 0 then
+            self.inst.AnimState:SetBankAndPlayAnimation("floating_item", "left")
+        else
+            self.inst.AnimState:SetBankAndPlayAnimation("floating_item", "right")
+        end
+        self.inst.AnimState:SetTime(math.abs(self.float_index) * FRAMES)
+        self.inst.AnimState:Pause()
+
+        if self.swap_data ~= nil then
+            local symbol = self.swap_data.sym_name or self.swap_data.sym_build
+            local skin_build = self.inst:GetSkinBuild()
+            if skin_build ~= nil then
+                self.inst.AnimState:OverrideItemSkinSymbol("swap_spear", skin_build, symbol, self.inst.GUID, self.swap_data.sym_build)
+            else
+                self.inst.AnimState:OverrideSymbol("swap_spear", self.swap_data.sym_build, symbol)
+            end
+        end
+    end
+end
+
+
 function Floater:OnLandedServer()
     if not self.showing_effect and self:ShouldShowEffect() then
         -- If something lands in a place where the water effect should be shown, and it has an inventory component,
@@ -118,26 +141,7 @@ function Floater:OnLandedServer()
         self._is_landed:set(true)
         self.showing_effect = true
 
-        if self.do_bank_swap then
-
-            if self.float_index < 0 then
-                self.inst.AnimState:SetBankAndPlayAnimation("floating_item", "left")
-            else
-                self.inst.AnimState:SetBankAndPlayAnimation("floating_item", "right")
-            end
-            self.inst.AnimState:SetTime(math.abs(self.float_index) * FRAMES)
-            self.inst.AnimState:Pause()
-
-            if self.swap_data ~= nil then
-                local symbol = self.swap_data.sym_name or self.swap_data.sym_build
-                local skin_build = self.inst:GetSkinBuild()
-                if skin_build ~= nil then
-                    self.inst.AnimState:OverrideItemSkinSymbol("swap_spear", skin_build, symbol, self.inst.GUID, self.swap_data.sym_build)
-                else
-                    self.inst.AnimState:OverrideSymbol("swap_spear", self.swap_data.sym_build, symbol)
-                end
-            end
-        end
+        self:SwitchToFloatAnim()
     end
 end
 
@@ -159,21 +163,25 @@ function Floater:OnLandedClient()
 
 end
 
+function Floater:SwitchToDefaultAnim(force_switch)
+    if self.do_bank_swap or force_switch then
+        local bank = self.swap_data ~= nil and self.swap_data.bank or self.inst.prefab
+        local anim = self.swap_data ~= nil and self.swap_data.anim or "idle"
+        self.inst.AnimState:SetBankAndPlayAnimation(bank, anim)
+
+        if self.swap_data ~= nil then
+            self.inst.AnimState:ClearOverrideSymbol("swap_spear")
+        end
+    end
+end
+
 function Floater:OnNoLongerLandedServer()
     if self.showing_effect then
         self.inst:PushEvent("floater_stopfloating")
         self._is_landed:set(false)
         self.showing_effect = false
-
-        if self.do_bank_swap then
-            local bank = self.swap_data ~= nil and self.swap_data.bank or self.inst.prefab
-            local anim = self.swap_data ~= nil and self.swap_data.anim or "idle"
-            self.inst.AnimState:SetBankAndPlayAnimation(bank, anim)
-
-            if self.swap_data ~= nil then
-                self.inst.AnimState:ClearOverrideSymbol("swap_spear")
-            end
-        end
+        
+        self:SwitchToDefaultAnim()
     end
 end
 

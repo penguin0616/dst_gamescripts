@@ -430,11 +430,10 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         inst:SetPrefabName("world") -- the actual prefab to load comes from gamelogic.lua, this is for postinitfns.
 
         if not TheNet:IsDedicated() then
-            inst:AddComponent("ocean")
             inst:AddComponent("oceancolor")
             inst:AddComponent("nutrients_visual_manager")
+            inst:AddComponent("hudindicatablemanager")
         end
-
         --
         inst:AddComponent("walkableplatformmanager")
 
@@ -446,9 +445,6 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         end
         
         inst:AddComponent("klaussackloot")
-
-        inst:AddComponent("worldsettingstimer")
-        inst:AddComponent("timer")
 
         inst:AddComponent("worldsettingstimer")
         inst:AddComponent("timer")

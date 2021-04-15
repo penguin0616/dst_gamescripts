@@ -1020,6 +1020,7 @@ return{
 			NIGHT_WANE = "The moon's waning. Time for some peace and quiet.",
 			CAVE = "We're free from the moon's reach down here.",
 			WEREBEAVER = "Just aboot time again, Lucy.", --woodie specific
+			GLASSED = "Wait a minute, I don't think that's ice...",
         },
 		THULECITE = "It's the wood of the caves!",
 		ARMORRUINS = "That'll stop the hurt.",
@@ -3153,6 +3154,7 @@ return{
 			EMPTY = "Let's wait an' see if it fills up again.",
         },
         MOONGLASS = "It's green, like a nice leaf.",
+        MOONGLASS_INFUSED = "These pieces still have a glow to 'em.",
         MOONGLASS_ROCK = "That's a big hunk of moon stuff.",
         BATHBOMB = "Smells nice, like wildflowers.",
         TRAP_STARFISH =
@@ -3876,7 +3878,6 @@ return{
             YOTB = "That judge might have something to say aboot it.",
         },
 
-
         WAR_BLUEPRINT = "Pretty intimidating, eh Lucy?",
         DOLL_BLUEPRINT = "I can doll it up all I want, it'll still be a beefalo.",
         FESTIVE_BLUEPRINT = "Looks pretty cheerful!",
@@ -3888,6 +3889,50 @@ return{
         BEAST_BLUEPRINT = "Our beast is lucky it ended up being our friend and not our dinner, eh?",
 
         BEEF_BELL = "Beefalo sure seem to like the sound it makes.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "Hey! Watch where you're rollin', eh?",
+            DEAD = "Looks like we got 'em!",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "I get the feelin' it doesn't like us one bit, Luce.",
+            DEAD = "And stay down, will ya?",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "It's trying to fence us in!",
+        ALTERGUARDIAN_PHASE3 = "Well, third time's the charm, eh?",
+        ALTERGUARDIAN_PHASE3TRAP = "Now's probably not the time to be taking a nap.",
+        ALTERGUARDIAN_PHASE3DEADORB = "Hey! You be careful there, bud!",
+        ALTERGUARDIAN_PHASE3DEAD = "Guess that takes care of that!",
+
+        ALTERGUARDIANHAT = "It's a pretty handy headpiece, could do without the whisperin' though.",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "Almost could've mistook it for ice.",
+            INFUSED = "It's got a little glow to it."
+        },
+
+        MOONSTORM_STATIC_ITEM = "Looks like bottled lightning.",
+        MOONSTORM_SPARK = "I can already feel the static in my beard.",
+
+        BIRD_MUTANT = "I always knew they were evil.",
+        BIRD_MUTANT_SPITTER = "See? You can never trust a bird!",
+
+        WAGSTAFF_NPC = "Looks like you're doing somthin' important. How aboot I lend you a hand, eh?",
+
+        WAGSTAFF_TOOL_1 = "I'd better run it back to that old-timer.",
+        WAGSTAFF_TOOL_2 = "Not really sure what it is, but maybe I'll bring it to that old-timer just in case.",
+        WAGSTAFF_TOOL_3 = "Hey Luce, does that look like a whatever-he-said to you?",
+        WAGSTAFF_TOOL_4 = "Wouldn't hurt to see if this is what that old-timer's been looking for.",
+        WAGSTAFF_TOOL_5 = "That might be just the thing I'm lookin' for!",
+
+        MOONSTORM_GOOGLESHAT = "If it works, I'm not gonna complain.",
+
+        MOON_DEVICE = {
+            GENERIC = "Huh. Whattaya figure it's for, Luce?",
+            CONSTRUCTION1 = "Might as well help the old guy out, eh?",
+            CONSTRUCTION2 = "Still a bit of building left to do.",
+        }
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

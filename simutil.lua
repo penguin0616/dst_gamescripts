@@ -324,11 +324,11 @@ function CanEntitySeeInStorm(inst)
     return inst ~= nil and inst:IsValid() and _CanEntitySeeInStorm(inst)
 end
 
-local function _GetEntitySandstormLevel(inst)
-    --NOTE: GetSandstormLevel is available on players on server
+local function _GetEntityStormLevel(inst)
+    --NOTE: GetStormLevel is available on players on server
     --      and clients, but only accurate for local players.
     --      stormwatcher is a server-side component.
-    return (inst.GetSandstormLevel ~= nil and inst:GetSandstormLevel())
+    return (inst.GetStormLevel ~= nil and inst:GetStormLevel())
         or (inst.components.stormwatcher ~= nil and inst.components.stormwatcher.sandstormlevel)
         or 0
 end
@@ -339,7 +339,7 @@ function CanEntitySeePoint(inst, x, y, z)
         and (not inst.components.inkable or not inst.components.inkable.inked) 
         and (TheSim:GetLightAtPoint(x, y, z) > TUNING.DARK_CUTOFF or
             _CanEntitySeeInDark(inst))
-        and (_GetEntitySandstormLevel(inst) < TUNING.SANDSTORM_FULL_LEVEL or
+        and (_GetEntityStormLevel(inst) < TUNING.SANDSTORM_FULL_LEVEL or
             _CanEntitySeeInStorm(inst) or
             inst:GetDistanceSqToPoint(x, y, z) < TUNING.SANDSTORM_VISION_RANGE_SQ)
 end

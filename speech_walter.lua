@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "It's a waning moon.",
 			CAVE = "I can't see through stone... or can I? ...Nope.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "Wait, this isn't ice... it's glass!",
         },
 		THULECITE = "Rocks from an ancient civilization!",
 		ARMORRUINS = "Woah! It's not even heavy!",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "It's a crater, I guess that's pretty common on the moon.",
         },
         MOONGLASS = "Wow... it's so light!",
+        MOONGLASS_INFUSED = "It's light and glowy.",
         MOONGLASS_ROCK = "I've never seen a rock like this before.",
         BATHBOMB = "It smells pretty good.",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "What do you think, Woby? Should I show it to the judge?",
         },
 
-
         WAR_BLUEPRINT = "I wonder if the beefalo actually like wearing these.",
         DOLL_BLUEPRINT = "Aww, it's cute!",
         FESTIVE_BLUEPRINT = "I wish I could make one for Woby, but her measurements keep changing...",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "I wonder what kind of animal this costume is based off of?",
 
         BEEF_BELL = "The beefalo seem to really like the sound it makes!",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "Woah, is that a space creature?!",
+            DEAD = "Aww, I wanted to ask them what it's like up in space...",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "I'm starting to think they might be mad at us, Woby.",
+            DEAD = "At least now I can get a better look at it!",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "I think they're trying to keep us from getting away!",
+        ALTERGUARDIAN_PHASE3 = "If I just get a bit closer... I'm sure I can convince them we just want to be friends!",
+        ALTERGUARDIAN_PHASE3TRAP = "We should probably stay away from those, Woby.",
+        ALTERGUARDIAN_PHASE3DEADORB = "Do you think they're going to get up again, Woby?",
+        ALTERGUARDIAN_PHASE3DEAD = "Well... I guess that's that.",
+
+        ALTERGUARDIANHAT = "It tells me all kinds of stories.",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "I've never seen glass made by lightning before!",
+            INFUSED = "Look at that, Woby! It's glowing!"
+        },
+
+        MOONSTORM_STATIC_ITEM = "You'll be shocked to see what's inside! Get it? Because there's static inside?",
+        MOONSTORM_SPARK = "It's literally spine-tingling!",
+
+        BIRD_MUTANT = "Woah! That doesn't look like any of the birds in my handbook!",
+        BIRD_MUTANT_SPITTER = "Maybe it's a cardinal? A... really sick cardinal?",
+
+        WAGSTAFF_NPC = "Hey Mister, are you okay? You're uh... flickering...?",
+
+        WAGSTAFF_TOOL_1 = "Maybe this is what he's looking for?",
+        WAGSTAFF_TOOL_2 = "Um... yeah, this one looks right!",
+        WAGSTAFF_TOOL_3 = "What do you think, Woby? Is this the tool we're looking for?",
+        WAGSTAFF_TOOL_4 = "It's definitely a tool of some kind... hope it's the right one!",
+        WAGSTAFF_TOOL_5 = "That one looks about right... I think?",
+
+        MOONSTORM_GOOGLESHAT = "It's important to have the proper equipment in a storm.",
+
+        MOON_DEVICE = {
+            GENERIC = "Wow! I wonder what it's for?",
+            CONSTRUCTION1 = "We've still got a ways to go.",
+            CONSTRUCTION2 = "It's almost set up!",
+        }
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

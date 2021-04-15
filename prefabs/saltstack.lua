@@ -213,7 +213,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    inst.MiniMapEntity:SetIcon("SALTSTACK_png")
+    inst.MiniMapEntity:SetIcon("saltstack.png")
 
     inst:SetPhysicsRadiusOverride(2.35)
 

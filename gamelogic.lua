@@ -75,6 +75,7 @@ local start_game_time = nil
 
 TheSim:SetRenderPassDefaultEffect( RENDERPASS.BLOOM, "shaders/anim_bloom.ksh" )
 TheSim:SetErosionTexture( "images/erosion.tex" )
+TheSim:SetHoloTexture( "images/erosion_holo.tex" )
 
 function RecordEventAchievementProgressForAllPlayers(achievement, data)
 	if TheWorld ~= nil and TheWorld.components.eventachievementtracker ~= nil then

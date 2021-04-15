@@ -85,7 +85,7 @@ local function ConfigureRunState(inst)
         else
             inst.sg.statemem.normal = true
         end
-    elseif inst:GetSandstormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+    elseif inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
         inst.sg.statemem.sandstorm = true
     elseif inst:HasTag("groggy") then
         inst.sg.statemem.groggy = true
@@ -592,7 +592,7 @@ local states =
             else
                 anim =
                     (inst.replica.inventory ~= nil and inst.replica.inventory:IsHeavyLifting() and "heavy_idle") or
-                    (   inst:GetSandstormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and
+                    (   inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and
                         not inst.components.playervision:HasGoggleVision() and
                         (   inst.AnimState:IsCurrentAnimation("sand_walk_pst") or
                             inst.AnimState:IsCurrentAnimation("sand_walk") or
@@ -888,7 +888,7 @@ local states =
                             inst.sg.statemem.heavy or
                             inst.sg.statemem.iswere or
                             inst.sg.statemem.sandstorm or
-                            inst:GetSandstormLevel() < TUNING.SANDSTORM_FULL_LEVEL) then
+                            inst:GetStormLevel() < TUNING.SANDSTORM_FULL_LEVEL) then
                     inst.sg:GoToState("run")
                 end
             end),

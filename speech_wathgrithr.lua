@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "Mani's power is on the wane.",
 			CAVE = "Mani cannot see us here.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "By the gods! The water hath turned to solid glass!",
         },
 		THULECITE = "This material possesses gargantuan strength!",
 		ARMORRUINS = "Armor fit for Odin himself!",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "Odd, I do not see the fire giant...",
         },
         MOONGLASS = "Tis a most divine substance.",
+        MOONGLASS_INFUSED = "Tis lit by a strange power.",
         MOONGLASS_ROCK = "Mani sent it down himself.",
         BATHBOMB = "I shall toss thee in the earth's cauldron!",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "Mayhaps the judge would like to look upon it.",
         },
 
-
         WAR_BLUEPRINT = "Garb befitting a warrior's steed!",
         DOLL_BLUEPRINT = "Who would wear this into battle?",
         FESTIVE_BLUEPRINT = "The bright colors could be useful for distracting enemies.",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "No luck is needed for one who's skilled in battle.",
 
         BEEF_BELL = "This bell commands loyalty from the woolen beasts.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "Mani hath sent forth his greatest warrior to challenge me!",
+            DEAD = "Surely the battle is not over already?",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "It seems you are a worthy foe indeed...",
+            DEAD = "Is that all you've got, Champion?",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "You think I'm trapped here with you? Ha! It is you who are trapped with me!",
+        ALTERGUARDIAN_PHASE3 = "Come, let us finish this!",
+        ALTERGUARDIAN_PHASE3TRAP = "Only a coward would strike a foe down while they sleep!",
+        ALTERGUARDIAN_PHASE3DEADORB = "Beware, stranger! The beast may yet rise again!",
+        ALTERGUARDIAN_PHASE3DEAD = "It seems I've bested it after all.",
+
+        ALTERGUARDIANHAT = "A boon from Mani's defeated Champion.",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "The power hath faded from it.",
+            INFUSED = "It hath been imbued with a strange power."
+        },
+
+        MOONSTORM_STATIC_ITEM = "A strange power rests inside.",
+        MOONSTORM_SPARK = "It sends a curious tickle through my bones.",
+
+        BIRD_MUTANT = "The beasts are changed by the storm!",
+        BIRD_MUTANT_SPITTER = "You think you can challenge me, winged fiend?",
+
+        WAGSTAFF_NPC = "Hail stranger! Are ye friend or foe?",
+
+        WAGSTAFF_TOOL_1 = "Mayhaps this is what I seek.",
+        WAGSTAFF_TOOL_2 = "The odd stranger requested a tool, mayhaps this is it.",
+        WAGSTAFF_TOOL_3 = "Is this what the odd stranger seeks?",
+        WAGSTAFF_TOOL_4 = "Mayhaps this is what the odd stranger lost.",
+        WAGSTAFF_TOOL_5 = "How strange. Perhaps it belongs to that odd stranger.",
+
+        MOONSTORM_GOOGLESHAT = "No mere storm can stop me!",
+
+        MOON_DEVICE = {
+            GENERIC = "Mere mortals were not meant to tamper so with the power of the gods...",
+            CONSTRUCTION1 = "I know not its purpose. A tribute to Mani, perhaps?",
+            CONSTRUCTION2 = "The more I build, the stranger it appears.",
+        }
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

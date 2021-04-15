@@ -19,7 +19,7 @@ function Gym:RemoveTrainee()
         if self.onLoseTraineeFn then
             self.onLoseTraineeFn(self.inst)
         end
-        self.inst:RemoveEventCallback("removed", self._removetrainee, self.trainee)
+        self.inst:RemoveEventCallback("onremove", self._removetrainee, self.trainee)
         self.inst:RemoveEventCallback("death", self._removetrainee, self.trainee)
         self._removetrainee = nil
         self.trainee = nil
@@ -33,7 +33,7 @@ function Gym:SetTrainee(inst)
     if inst ~= nil then
         self.trainee = inst
         self._removetrainee = function() self:RemoveTrainee() end
-        self.inst:ListenForEvent("removed", self._removetrainee, inst )
+        self.inst:ListenForEvent("onremove", self._removetrainee, inst )
         self.inst:ListenForEvent("death", self._removetrainee, inst )
     end
 end

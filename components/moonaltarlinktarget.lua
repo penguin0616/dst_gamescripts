@@ -42,17 +42,36 @@ function MoonAltarLinkTarget:TryEstablishLink()
     
     for i, v in ipairs(ents) do
         if looking_for_altars[v.prefab] and v.components.moonaltarlinktarget:CanBeLinked() then
-            table.insert(altars, v)
-            looking_for_altars[v.prefab] = nil
-            altars_found = altars_found + 1
+            local tx, _, tz = v.Transform:GetWorldPosition()
+            if VecUtil_LengthSq(tx - x, tz - z) >= TUNING.MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ then
+                table.insert(altars, v)
+                looking_for_altars[v.prefab] = nil
+                altars_found = altars_found + 1
 
-            if self.onfoundotheraltarfn ~= nil then
-                self.onfoundotheraltarfn(self.inst, v)
-            end
+                if self.onfoundotheraltarfn ~= nil then
+                    self.onfoundotheraltarfn(self.inst, v)
+                end
 
-            if altars_found == 3 then
-                SpawnPrefab("moon_altar_link").components.moonaltarlink:EstablishLink(altars)
-                return
+                if altars_found == 3 then
+                    local cx, cz = 0, 0, 0
+                    for _, altar in ipairs(altars) do
+                        local altar_x, _, altar_z = altar.Transform:GetWorldPosition()
+                        cx, cz = cx + altar_x, cz + altar_z
+                    end
+                    cx, cz = cx / 3, cz / 3
+
+                    if TheWorld.Map:IsPassableAtPoint(cx, 0, cz, false, true)
+                        and TheWorld.Map:IsAboveGroundAtPoint(cx, 0, cz, false) then
+                        
+                        local ents = TheSim:FindEntities(cx, 0, cz, TUNING.MOON_ALTAR_LINK_AREA_CLEAR_RADIUS, TUNING.MOON_ALTAR_LINK_BLOCK_TAGS)
+
+                        if ents == nil or #ents == 0 then
+                            SpawnPrefab("moon_altar_link").components.moonaltarlink:EstablishLink(altars)
+                        end
+                    end
+
+                    return
+                end
             end
         end
     end

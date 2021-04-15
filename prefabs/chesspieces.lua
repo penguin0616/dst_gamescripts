@@ -43,6 +43,7 @@ local PIECES =
     {name="beequeen",	moonevent=false},
     {name="antlion",	moonevent=false},
     {name="minotaur",	moonevent=false},
+    {name="guardianphase3", moonevent=false},
 } 
 
 local MOON_EVENT_RADIUS = 12

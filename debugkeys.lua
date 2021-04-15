@@ -1199,8 +1199,7 @@ AddGameDebugKey(KEY_9, function()
             TheWorld.speechdisabled = nil
             ThePlayer.shownothightlight = nil
         end
-        ThePlayer.HUD:Toggle()
-
+        ThePlayer.HUD:Toggle(true)
     end
 end)
 
@@ -1275,3 +1274,23 @@ end
 function DoReload()
     dofile("scripts/reload.lua")
 end
+
+---------------------------------------------------
+
+function d_addemotekeys()
+	local UserCommands = require("usercommands")
+
+	AddGameDebugKey(KEY_KP_0, function() UserCommands.RunUserCommand("sit", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_1, function() UserCommands.RunUserCommand("happy", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_2, function() UserCommands.RunUserCommand("joy", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_3, function() UserCommands.RunUserCommand("slowclap", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_4, function() UserCommands.RunUserCommand("no", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_5, function() UserCommands.RunUserCommand("angry", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_6, function() UserCommands.RunUserCommand("facepalm", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_7, function() UserCommands.RunUserCommand("impatient", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_8, function() UserCommands.RunUserCommand("shrug", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_9, function() UserCommands.RunUserCommand("sleepy", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_PERIOD, function() UserCommands.RunUserCommand("fistshake", {}, ThePlayer, false) end)
+
+end
+

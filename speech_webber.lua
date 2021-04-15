@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "The moon is shrinking!",
 			CAVE = "The moon can't fit in a cave! I think.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "It looks like ice, but we think it's actually glass!",
         },
 		THULECITE = "Fancy rocks!",
 		ARMORRUINS = "Nice and lightweight.",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "Aw, it's all dried up.",
         },
         MOONGLASS = "It came from the moon. Wow!",
+        MOONGLASS_INFUSED = "There's still lightning stuck in it!",
         MOONGLASS_ROCK = "Is the moon green, too?",
         BATHBOMB = "I miss bubble baths.",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "We should show it to the judge!",
         },
 
-
         WAR_BLUEPRINT = "Our beefalo might look scary in this, but we know they're really a big softy!",
         DOLL_BLUEPRINT = "So many ruffles...",
         FESTIVE_BLUEPRINT = "This is going to be so much fun!",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "Another costume for our lucky beefalo!",
 
         BEEF_BELL = "The beefalo really like this bell, and whoever rings it!",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "Aah! It looks mad!",
+            DEAD = "Whew, that was scary!",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "Uh oh... we think we just made it madder...",
+            DEAD = "Is it over now?",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "Yikes, those are sharp!",
+        ALTERGUARDIAN_PHASE3 = "We're sorry! We're sorry!",
+        ALTERGUARDIAN_PHASE3TRAP = "Now would be a really bad time to fall asleep.",
+        ALTERGUARDIAN_PHASE3DEADORB = "Watch out! It might get back up!",
+        ALTERGUARDIAN_PHASE3DEAD = "We're not sure what he did, but it doesn't look like it's getting up again!",
+
+        ALTERGUARDIANHAT = "We see things when we put it on...",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "Aw, it's not glowy anymore.",
+            INFUSED = "Oh! It's so pretty!"
+        },
+
+        MOONSTORM_STATIC_ITEM = "It's like a big lightning bug stuck in a jar.",
+        MOONSTORM_SPARK = "It makes all our spider hairs stand on end!",
+
+        BIRD_MUTANT = "We think there might be something wrong with that bird...",
+        BIRD_MUTANT_SPITTER = "Stop spitting at us!",
+
+        WAGSTAFF_NPC = "Should we help him? I don't mind, but he's not so sure...",
+
+        WAGSTAFF_TOOL_1 = "Is that the thing we're looking for?",
+        WAGSTAFF_TOOL_2 = "It looks like some kind of tool... maybe it's what he was looking for!",
+        WAGSTAFF_TOOL_3 = "We found it! He'll be so happy!",
+        WAGSTAFF_TOOL_4 = "We found a tool! Maybe it's the one he's looking for?",
+        WAGSTAFF_TOOL_5 = "Maybe this is what he was looking for?",
+
+        MOONSTORM_GOOGLESHAT = "Will these goggles be able to protect all of our eyes from the storm?",
+
+        MOON_DEVICE = {
+            GENERIC = "It looks pretty impressive... whatever it is!",
+            CONSTRUCTION1 = "There's so much building to do, can't we go play instead?",
+            CONSTRUCTION2 = "It's coming along!",
+        }
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

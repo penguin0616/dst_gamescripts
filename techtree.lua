@@ -6,7 +6,7 @@ local AVAILABLE_TECH =
     "MAGIC",
     "ANCIENT",
     "CELESTIAL",
-	"MOON_ALTAR",
+	"MOON_ALTAR", -- deprecated, all recipes have been moved into CELESTIAL
     "SHADOW",
     "CARTOGRAPHY",
 	"SEAFARING",

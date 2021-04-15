@@ -41,19 +41,11 @@ function AreaAware:_TestArea(pt_x, pt_z, on_land, r)
 	return best.tile_type ~= GROUND.INVALID and best or nil
 end
 
-
 function AreaAware:UpdatePosition(x, y, z)
-	local on_land = TheWorld.Map:IsVisualGroundAtPoint(x, 0, z)
-
-	local best = self:_TestArea(x, z, on_land, 0.95)
-				or self:_TestArea(x, z, on_land, 1.25) -- this is the handle some of the corner case when there the player is really standing quite far into the water tile, but logically on land
-				or self:_TestArea(x, z, on_land, 1.5) 
-
-	local node_index = (on_land and best ~= nil) and TheWorld.Map:GetNodeIdAtPoint(best.x, 0, best.z) or 0
+	local node, node_index = TheWorld.Map:FindVisualNodeAtPoint(x, y, z)
 	if node_index ~= self.current_area then
-		self.current_area = node_index
+		self.current_area = node_index or 0
 
-		local node = node_index ~= 0 and TheWorld.topology.nodes[node_index]
 		self.current_area_data = node and {
 			id = TheWorld.topology.ids[node_index],
 			type = node.type,

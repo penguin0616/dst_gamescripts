@@ -1167,8 +1167,8 @@ function PlayerProfile:Set(str, callback, minimal_load)
 				end
 			end
 			print("bloom_enabled",bloom_enabled)
-			TheFrontEnd:GetGraphicsOptions():SetBloomEnabled( bloom_enabled )
-			TheFrontEnd:GetGraphicsOptions():SetDistortionEnabled( distortion_enabled )
+			PostProcessor:SetBloomEnabled( bloom_enabled )
+			PostProcessor:SetDistortionEnabled( distortion_enabled )
 		end
 
 		-- old save data will not have the controls section so create it

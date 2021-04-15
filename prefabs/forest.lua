@@ -21,6 +21,7 @@ local assets =
     Asset("IMAGE", "images/colour_cubes/insane_night_cc.tex"),
 	Asset("IMAGE", "images/colour_cubes/lunacy_regular_cc.tex"),
     Asset("IMAGE", "images/colour_cubes/purple_moon_cc.tex"),
+    Asset("IMAGE", "images/colour_cubes/moonstorm_cc.tex"),
 
     Asset("ANIM", "anim/snow.zip"),
     Asset("ANIM", "anim/lightning.zip"),
@@ -386,6 +387,23 @@ local prefabs =
 
     "moon_altar_astral",
     "archive_resonator",
+
+    -- moon geyser
+    "wagstaff_npc",
+
+    "moon_device",
+    "moon_device_construction1",
+    "moon_device_construction2",
+
+    "alterguardian_phase1",
+
+    "moonstormmarker",
+    "moonstorm_ground_lightning_fx",
+    "moonstorm_lightning",
+    "moonstorm_glass",
+    "moonstorm_spark",
+    "bird_mutant",
+    "bird_mutant_spitter",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")
@@ -463,8 +481,9 @@ local function common_postinit(inst)
         inst:AddComponent("colourcube")
         inst:AddComponent("hallucinations")
         inst:AddComponent("wavemanager")
+        inst:AddComponent("moonstormlightningmanager")
         inst.Map:SetTransparentOcean(true)
-    end
+    end   
 end
 
 local function master_postinit(inst)
@@ -507,6 +526,7 @@ local function master_postinit(inst)
     inst:AddComponent("mermkingmanager")
     inst:AddComponent("malbatrossspawner")
     inst:AddComponent("crabkingspawner")
+    inst:AddComponent("timer")
 
 	inst:AddComponent("flotsamgenerator")
 	inst:AddComponent("messagebottlemanager")
@@ -519,6 +539,8 @@ local function master_postinit(inst)
     
     inst:AddComponent("yotc_raceprizemanager")
     inst:AddComponent("yotb_stagemanager")
+
+    inst:AddComponent("moonstormmanager")
 
     inst:AddComponent("sharklistener")
 

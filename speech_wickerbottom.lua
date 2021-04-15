@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "The moon is waning.",
 			CAVE = "It appears to lose functionality in subterranean conditions.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "How curious, the water reacts similarly to what I observed in the grotto.",
         },
 		THULECITE = "This seems to be an interesting, ectoplasmic residue-bearing variety of ziosite.",
 		ARMORRUINS = "A hardy Thulecite armor.",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "The spring will replenish itself in good time.",
         },
         MOONGLASS = "Perhaps I could keep a sample and study the composition.",
+        MOONGLASS_INFUSED = "The energy seems unstable, I'll have to be quick to put it to any use.",
         MOONGLASS_ROCK = "It appears to be mineral, but may actually be organic in nature.",
         BATHBOMB = "Ah, I do love a warm bath with a book.",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "The judge might be able to give me some insight regarding its sense of style.",
         },
 
-
         WAR_BLUEPRINT = "It's rather aggressive looking.",
         DOLL_BLUEPRINT = "A bit childish for my tastes.",
         FESTIVE_BLUEPRINT = "It features quite an eclectic combination of colors.",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "I'm not one to rely on luck, but a bit won't hurt in a competition.",
 
         BEEF_BELL = "Something about its tone triggers an affectionate response in beefalo.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "Our activities seem to have triggered a defense mechanism of sorts.",
+            DEAD = "Strange, I was expecting a bit more than that.",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "Interesting, it seems to utilize aspects of the altars for combat.",
+            DEAD = "I doubt it will stay inert for long.",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "I should endeavor to not become trapped by its barriers.",
+        ALTERGUARDIAN_PHASE3 = "If my assumptions are correct, this should be its final form.",
+        ALTERGUARDIAN_PHASE3TRAP = "They appear to have a sleep inducing effect. Best to stay away.",
+        ALTERGUARDIAN_PHASE3DEADORB = "Interesting, it seems to have retained the energy that powered it.",
+        ALTERGUARDIAN_PHASE3DEAD = "With the energy removed, I doubt it will be able to re-form.",
+
+        ALTERGUARDIANHAT = "The multitudes of knowledge it contains... if only I could write it all down...",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "The glass seems to have stabilized.",
+            INFUSED = "It's radiating a faintly glowing energy."
+        },
+
+        MOONSTORM_STATIC_ITEM = "This device appears to keep the energy contained, somehow.",
+        MOONSTORM_SPARK = "I assumed it was a form of electricity, but it seems to be something else entirely...",
+
+        BIRD_MUTANT = "Oh dear, that creature looks unwell.",
+        BIRD_MUTANT_SPITTER = "The poor thing appears to have been altered by its proximity to the storm.",
+
+        WAGSTAFF_NPC = "He seems to be conducting research on the storm, I should assist him.",
+
+        WAGSTAFF_TOOL_1 = "Oh dear, I wonder whether that is the tool he requested or not...",
+        WAGSTAFF_TOOL_2 = "Perhaps this is the tool he requires? I should suggest a cataloging system.",
+        WAGSTAFF_TOOL_3 = "His instructions weren't particularly clear, but this might be what I seek.",
+        WAGSTAFF_TOOL_4 = "His tools would be much easier to procure if there was some organization...",
+        WAGSTAFF_TOOL_5 = "Regrettably unlabeled... I'll just have to assume it's what he's looking for.",
+
+        MOONSTORM_GOOGLESHAT = "A rather eccentric design, yet surprisingly effective.",
+
+        MOON_DEVICE = {
+            GENERIC = "As I suspected, it's meant to function as a battery of sorts.",
+            CONSTRUCTION1 = "I'm afraid I can't yet ascertain its function.",
+            CONSTRUCTION2 = "The pieces are slowly falling into place.",
+        }
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

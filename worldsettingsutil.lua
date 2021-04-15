@@ -35,11 +35,15 @@ local function On_ChildSpawner_SpawnPeriod_TimerFinished(inst)
     local childspawner = inst.components.childspawner
 
     if childspawner then
-        local dospawn = childspawner.spawning and childspawner.childreninside > 0
-        if dospawn then
-            childspawner:SpawnChild()
-        end
+        local dospawn = childspawner.spawning and not childspawner.queued_spawn and childspawner.childreninside > 0
         inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not dospawn)
+        if dospawn then
+            if childspawner:CanSpawnOffscreenOrAwake() then
+                childspawner:SpawnChild()
+            else
+                childspawner:QueueSpawnChild()
+            end
+        end
     end
 end
 
@@ -48,10 +52,10 @@ local function On_ChildSpawner_RegenPeriod_TimerFinished(inst)
 
     if childspawner then
         local doregen = childspawner.regening and not (childspawner:IsFull() and childspawner:IsEmergencyFull())
+        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), not doregen)
         if doregen then
             childspawner:DoRegen()
         end
-        inst.components.worldsettingstimer:StartTimer(CHILDSPAWNER_REGENPERIOD_TIMERNAME, childspawner:GetTimeToNextRegen(), not doregen)
     end
 end
 
@@ -96,7 +100,7 @@ function WorldSettings_ChildSpawner_SpawnPeriod(inst, spawnperiod, enabled)
     childspawner.spawntimerset = Set_ChildSpawner_SpawnPeriod_Timer_Time
 
     worldsettingstimer:AddTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, spawnperiod, enabled, On_ChildSpawner_SpawnPeriod_TimerFinished)
-    worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not (childspawner.spawning and childspawner.childreninside > 0))
+    worldsettingstimer:StartTimer(CHILDSPAWNER_SPAWNPERIOD_TIMERNAME, childspawner:GetTimeToNextSpawn(), not (childspawner.spawning and not childspawner.queued_spawn and childspawner.childreninside > 0))
 end
 
 function WorldSettings_ChildSpawner_RegenPeriod(inst, regenperiod, enabled)

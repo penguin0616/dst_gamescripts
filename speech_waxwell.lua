@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "The \"moon\" is on the wane.",
 			CAVE = "The cave provides sanctuary from the \"moon's\" prying eyes.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "I can feel its eye upon me... watching...",
         },
 		THULECITE = "An exceedingly rare but useful material.",
 		ARMORRUINS = "Thulecite meshes so well with nightmare fuel.",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "It's of no use to me like this.",
         },
         MOONGLASS = "But does it look as sharp as me?",
+        MOONGLASS_INFUSED = "Nearly as sharp as I am, but with a garish glow.",
         MOONGLASS_ROCK = "\"Moon\" detritus.",
         BATHBOMB = "It smells quite nice, if I'm honest.",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "This might be of interest to the judge.",
         },
 
-
         WAR_BLUEPRINT = "This could be useful.",
         DOLL_BLUEPRINT = "I can only imagine how grotesque this will look...",
         FESTIVE_BLUEPRINT = "Positively garish.",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "I'd say luck is in rather short supply around here.",
 
         BEEF_BELL = "It appears to have some kind of hypnotic effect on beefalo.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "It seems our actions have been noticed.",
+            DEAD = "Something doesn't feel right...",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "It toys with us.",
+            DEAD = "Come on now. You're not fooling anyone.",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "It's trying to ensnare us.",
+        ALTERGUARDIAN_PHASE3 = "At last you reveal your true self.",
+        ALTERGUARDIAN_PHASE3TRAP = "I'd do well to avoid those.",
+        ALTERGUARDIAN_PHASE3DEADORB = "This power, it feels like... but it couldn't be...",
+        ALTERGUARDIAN_PHASE3DEAD = "I don't know what to believe. All this time, I thought that They were...",
+
+        ALTERGUARDIANHAT = "It makes me uneasy... but I can't deny its power.",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "It's been turned to glass.",
+            INFUSED = "Hm. This may be useful."
+        },
+
+        MOONSTORM_STATIC_ITEM = "There's power trapped inside.",
+        MOONSTORM_SPARK = "They give off a rather unsettling sensation.",
+
+        BIRD_MUTANT = "That creature has seen better days.",
+        BIRD_MUTANT_SPITTER = "You dare spit at me?!",
+
+        WAGSTAFF_NPC = "What is he up to now?",
+
+        WAGSTAFF_TOOL_1 = "Hmph. So I'm to fetch his tools for him now?",
+        WAGSTAFF_TOOL_2 = "I suppose that must be what he's looking for.",
+        WAGSTAFF_TOOL_3 = "Finally. That must be what he's looking for.",
+        WAGSTAFF_TOOL_4 = "Is this what he wants? Why couldn't that old fool have been more descriptive?!",
+        WAGSTAFF_TOOL_5 = "Could this be what he's looking for?",
+
+        MOONSTORM_GOOGLESHAT = "There are hardly enough inventors brave enough to harness the power of potatoes.",
+
+        MOON_DEVICE = {
+            GENERIC = "That old fool...",
+            CONSTRUCTION1 = "I don't see why I must be the one to do all the work.",
+            CONSTRUCTION2 = "How odd to be the one laboring on a machine for an unknown purpose...",
+        }
     },
 
     DESCRIBE_GENERIC = "You tell me.",

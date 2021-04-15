@@ -14,6 +14,9 @@ local Placer = Class(function(self, inst)
     self.onfailedplacement = nil
     self.linked = {}
     self.offset = 1
+
+    self.override_build_point_fn = nil
+    self.override_testfn = nil
 end)
 
 function Placer:SetBuilder(builder, recipe, invobject)
@@ -73,7 +76,9 @@ function Placer:OnUpdate(dt)
         self.onupdatetransform(self.inst)
     end
 
-    if self.testfn ~= nil then
+    if self.override_testfn ~= nil then
+        self.can_build, self.mouse_blocked = self.override_testfn(self.inst)
+    elseif self.testfn ~= nil then
         self.can_build, self.mouse_blocked = self.testfn(self.inst:GetPosition(), self.inst:GetRotation())
     else
         self.can_build = true

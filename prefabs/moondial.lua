@@ -5,12 +5,16 @@ local assets =
     Asset("ANIM", "anim/moondial.zip"),
     Asset("ANIM", "anim/moondial_build.zip"),
     Asset("ANIM", "anim/moondial_waning_build.zip"),
+
+    Asset("ANIM", "anim/moondial2.zip"),
+    Asset("ANIM", "anim/moondial2_build.zip"),
 }
 
 local prefabs =
 {
     "rock_break_fx",
     "globalmapicon",
+	"moonglass",
 }
 
 local lightstates =
@@ -23,6 +27,10 @@ local lightstates =
 }
 
 local function onmoonphasechagned(inst, phase)
+	if inst.is_glassed then
+		return
+	end
+
     if (TheWorld.state.iswaxingmoon and TheWorld.state.moonphase ~= "new") or TheWorld.state.moonphase == "full" then
         inst.AnimState:ClearOverrideSymbol("reflection_quarter")
         inst.AnimState:ClearOverrideSymbol("reflection_half")
@@ -43,6 +51,23 @@ local function onmoonphasechagned(inst, phase)
     end
 end
 
+local function onalterawake(inst, awake)
+	local was_glassed = inst.is_glassed
+
+	if not was_glassed and awake then
+		inst.is_glassed = true
+        inst.sg:GoToState((POPULATING or not inst.entity:IsAwake()) and "glassed_idle" or "glassed_pre")
+	elseif was_glassed and not awake then
+		if POPULATING or not inst.entity:IsAwake() then
+			inst.sg:GoToState("idle")
+			inst.components.lootdropper:FlingItem(SpawnPrefab("moonglass"))
+			inst.is_glassed = false
+		else
+			inst.sg:GoToState("glassed_pst")
+		end
+	end
+end
+
 local function onhammered(inst)
     inst.components.lootdropper:DropLoot()
     SpawnPrefab("rock_break_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -51,6 +76,7 @@ end
 
 local function getstatus(inst, viewer)
     return TheWorld:HasTag("cave") and "CAVE"
+			or inst.is_glassed and "GLASSED"
             or (TheWorld.state.moonphase == "full" and viewer:HasTag("wereness")) and "WEREBEAVER"
             or (not TheWorld.state.isnight) and "GENERIC"
             or TheWorld.state.isnewmoon and "NIGHT_NEW"
@@ -64,6 +90,23 @@ local function init(inst)
         inst.icon = SpawnPrefab("globalmapicon")
         inst.icon:TrackEntity(inst)
     end
+end
+
+local function glassed_loot_fn(lootdropper)
+	if lootdropper.inst.is_glassed then
+		lootdropper:SetLoot({"moonglass"})
+	end
+end
+
+local function OnSave(inst, data)
+	data.is_glassed = inst.is_glassed
+end
+
+local function OnLoad(inst, data)
+	inst.is_glassed = nil
+	if data ~= nil and data.is_glassed then
+		onalterawake(inst, true)
+	end
 end
 
 local function fn()
@@ -80,8 +123,8 @@ local function fn()
 
     inst:AddTag("structure")
 
-    inst.AnimState:SetBank("moondial")
-    inst.AnimState:SetBuild("moondial_build")
+    inst.AnimState:SetBank("moondial2")
+    inst.AnimState:SetBuild("moondial2_build")
     inst.AnimState:PlayAnimation("idle_new")
 
     inst.Light:Enable(false)
@@ -110,12 +153,19 @@ local function fn()
     inst.components.inspectable.getstatus = getstatus
 
     inst:AddComponent("lootdropper")
-
+	inst.components.lootdropper:SetLootSetupFn(glassed_loot_fn)
+	
     inst:WatchWorldState("moonphase", onmoonphasechagned)
-
-    onmoonphasechagned(inst)
+    inst:WatchWorldState("isalterawake", onalterawake)
 
     inst:SetStateGraph("SGmoondial")
+
+	inst.OnSave = OnSave
+	inst.OnLoad = OnLoad
+
+	inst.is_glassed = TheWorld.state.isalterawake
+
+    onmoonphasechagned(inst)
 
     inst:DoTaskInTime(0, init)
 

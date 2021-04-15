@@ -1023,6 +1023,7 @@ return{
 			NIGHT_WANE = "Night Ball getting smaller",
 			CAVE = "Oh. No Night Ball here",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "Hello!",
         },
 		THULECITE = "Rocks from old times",
 		ARMORRUINS = "Heavy clothes",
@@ -3156,6 +3157,7 @@ return{
 			EMPTY = "Muddy.",
         },
         MOONGLASS = "Ouch! Sharp!",
+        MOONGLASS_INFUSED = "Glowy sharp things",
         MOONGLASS_ROCK = "Clear Rock",
         BATHBOMB = "Friends made a ball!",
         TRAP_STARFISH =
@@ -3879,7 +3881,6 @@ return{
             YOTB = "Show to shaggy hidey man",
         },
 
-
         WAR_BLUEPRINT = "Scary!",
         DOLL_BLUEPRINT = "Aww",
         FESTIVE_BLUEPRINT = "Pretty",
@@ -3891,6 +3892,50 @@ return{
         BEAST_BLUEPRINT = "Lucky!",
 
         BEEF_BELL = "Ding dong",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "From Night Ball?",
+            DEAD = "Good night",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "Not happy!",
+            DEAD = "Sleeping again?",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "Spiky wall",
+        ALTERGUARDIAN_PHASE3 = "Very very mad!",
+        ALTERGUARDIAN_PHASE3TRAP = "Sleepy rocks",
+        ALTERGUARDIAN_PHASE3DEADORB = "Hello sometimes-there man",
+        ALTERGUARDIAN_PHASE3DEAD = "Just rocks",
+
+        ALTERGUARDIANHAT = "Helps hear them",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "Just sharp",
+            INFUSED = "Sharp glowy!"
+        },
+
+        MOONSTORM_STATIC_ITEM = "Safe inside",
+        MOONSTORM_SPARK = "Zzzt?",
+
+        BIRD_MUTANT = "Tweeter okay?",
+        BIRD_MUTANT_SPITTER = "Tweeter sick?",
+
+        WAGSTAFF_NPC = "Hello! Oh, goodbye... oh, hello!",
+
+        WAGSTAFF_TOOL_1 = "Thing?",
+        WAGSTAFF_TOOL_2 = "Here it is!",
+        WAGSTAFF_TOOL_3 = "Found it!",
+        WAGSTAFF_TOOL_4 = "Funny thing",
+        WAGSTAFF_TOOL_5 = "Flickery",
+
+        MOONSTORM_GOOGLESHAT = "Belly stuff... for head?",
+
+        MOON_DEVICE = {
+            GENERIC = "Oooooh!",
+            CONSTRUCTION1 = "Lots to do",
+            CONSTRUCTION2 = "Almost done",
+        }
     },
 
     DESCRIBE_GENERIC = "Friend?",

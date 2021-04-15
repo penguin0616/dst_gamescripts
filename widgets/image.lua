@@ -195,12 +195,24 @@ function Image:SetEffectParams(param1, param2, param3, param4)
 	self.inst.ImageWidget:SetEffectParams(param1, param2, param3, param4)
 end
 
+function Image:SetEffectParams2(param1, param2, param3, param4)
+    self.inst.ImageWidget:SetEffectParams2(param1, param2, param3, param4)
+end
+
 function Image:EnableEffectParams(enabled)
 	self.inst.ImageWidget:EnableEffectParams(enabled)
 end
 
+function Image:EnableEffectParams2(enabled)
+    self.inst.ImageWidget:EnableEffectParams2(enabled)
+end
+
 function Image:SetUVScale(xScale, yScale)
 	self.inst.ImageWidget:SetUVScale(xScale, yScale)
+end
+
+function Image:SetUVMode(uvmode)
+    self.inst.ImageWidget:SetUVMode(uvmode)
 end
 	
 function Image:SetBlendMode(mode)

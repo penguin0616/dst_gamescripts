@@ -19,6 +19,10 @@ local assets =
     Asset("FILE", "sound/grotto_sfx.fsb"),
     Asset("FILE", "sound/grotto_amb.fsb"),
 
+    Asset("SOUNDPACKAGE", "sound/moonstorm.fev"),
+    Asset("FILE", "sound/moonstorm.fsb"),
+    Asset("FILE", "sound/moonstorm.fsb"),
+
     Asset("SOUNDPACKAGE", "sound/dangerous_sea.fev"),
     Asset("FILE", "sound/dangerous_sea.fsb"),      
 
@@ -84,6 +88,7 @@ local assets =
 
     Asset("IMAGE", "images/shadow.tex"),
     Asset("IMAGE", "images/erosion.tex"),
+    Asset("IMAGE", "images/erosion_holo.tex"),
     Asset("IMAGE", "images/circle.tex"),
     Asset("IMAGE", "images/square.tex"),
     Asset("IMAGE", "images/trans.tex"),
@@ -198,13 +203,15 @@ local assets =
     --TODO(YOG): Why does this get unloaded a the wrong time if we load it as part of the forest prefab?
     Asset("IMAGE", "images/overlays_lunacy.tex"),
 
+    Asset("ATLAS", "images/overlays_moonstorm.xml"),
+    Asset("IMAGE", "images/overlays_moonstorm.tex"),
+
     Asset("IMAGE", "images/colour_cubes/identity_colourcube.tex"),
 
     Asset("SHADER", "shaders/anim.ksh"),
     Asset("SHADER", "shaders/anim_fade.ksh"),
     Asset("SHADER", "shaders/anim_bloom.ksh"),
-    Asset("SHADER", "shaders/blurh.ksh"),
-    Asset("SHADER", "shaders/blurv.ksh"),
+    Asset("SHADER", "shaders/anim_holo.ksh"),
     Asset("SHADER", "shaders/creep.ksh"),
     Asset("SHADER", "shaders/debug_line.ksh"),
     Asset("SHADER", "shaders/debug_tri.ksh"),
@@ -237,22 +244,25 @@ local assets =
     Asset("SHADER", "shaders/ui_yuv.ksh"),
     Asset("SHADER", "shaders/swipe_fade.ksh"),
     Asset("SHADER", "shaders/ui_anim.ksh"),
+
+    Asset("SHADER", "shaders/blurh.ksh"),
+    Asset("SHADER", "shaders/blurv.ksh"),
     Asset("SHADER", "shaders/combine_colour_cubes.ksh"),
-	Asset("SHADER", "shaders/zoomblur.ksh"),
     Asset("SHADER", "shaders/postprocess_none.ksh"),
-    Asset("SHADER", "shaders/postprocess.ksh"),    
-    Asset("SHADER", "shaders/postprocessbloom.ksh"),
-    Asset("SHADER", "shaders/postprocessdistort.ksh"),
-    Asset("SHADER", "shaders/postprocessbloomdistort.ksh"),
-    Asset("SHADER", "shaders/postprocesslunacy.ksh"),
-    Asset("SHADER", "shaders/postprocessbloomlunacy.ksh"),
-    Asset("SHADER", "shaders/postprocessdistortlunacy.ksh"),
-    Asset("SHADER", "shaders/postprocessbloomdistortlunacy.ksh"),    
-	Asset("SHADER", "shaders/blendoceantexture.ksh"),  
+    Asset("SHADER", "shaders/postprocess_bloom.ksh"),
+    Asset("SHADER", "shaders/postprocess_colourcube.ksh"),
+    Asset("SHADER", "shaders/postprocess_distort.ksh"),
+    Asset("SHADER", "shaders/postprocess_lunacy.ksh"),
+    Asset("SHADER", "shaders/postprocess_moonpulse.ksh"),
+    Asset("SHADER", "shaders/postprocess_zoomblur.ksh"),
+
+	Asset("SHADER", "shaders/blendoceantexture.ksh"),
     Asset("SHADER", "shaders/waterfall2.ksh"),
 
     Asset("SHADER", "shaders/waves.ksh"),
     Asset("SHADER", "shaders/overheat.ksh"),
+    Asset("SHADER", "shaders/moonstorm.ksh"),
+    Asset("SHADER", "shaders/moonstorm_goggles.ksh"),
 
     Asset("SHADER", "shaders/anim.ksh"),
     Asset("SHADER", "shaders/anim_bloom.ksh"),

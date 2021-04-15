@@ -202,9 +202,9 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		fxvolume = TheMixer:GetLevel( "set_sfx" ) * 10,
 		musicvolume = TheMixer:GetLevel( "set_music" ) * 10,
 		ambientvolume = TheMixer:GetLevel( "set_ambience" ) * 10,
-		bloom = graphicsOptions:IsBloomEnabled(),
+		bloom = PostProcessor:IsBloomEnabled(),
 		smalltextures = graphicsOptions:IsSmallTexturesMode(),
-		distortion = graphicsOptions:IsDistortionEnabled(),
+		distortion = PostProcessor:IsDistortionEnabled(),
 		screenshake = Profile:IsScreenShakeEnabled(),
 		hudSize = Profile:GetHUDSize(),
 		netbookmode = TheSim:IsNetbookMode(),
@@ -630,8 +630,8 @@ function OptionsScreen:Apply()
 	TheInputProxy:EnableVibration(self.working.vibration)
 
 	local gopts = TheFrontEnd:GetGraphicsOptions()
-	gopts:SetBloomEnabled( self.working.bloom )
-	gopts:SetDistortionEnabled( self.working.distortion )
+	PostProcessor:SetBloomEnabled( self.working.bloom )
+	PostProcessor:SetDistortionEnabled( self.working.distortion )
 	gopts:SetSmallTexturesMode( self.working.smalltextures )
 	Profile:SetScreenShakeEnabled( self.working.screenshake )
 	Profile:SetWathgrithrFontEnabled( self.working.wathgrithrfont )

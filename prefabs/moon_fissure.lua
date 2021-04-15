@@ -162,10 +162,9 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
-    MakeObstaclePhysics(inst, .4)
+    inst:SetPhysicsRadiusOverride(0.4)
 
     inst._lighttask = inst:DoPeriodicTask(0, OnUpdateLight)
-
 
     inst.AnimState:SetBank("moon_fissure")
     inst.AnimState:SetBuild("moon_fissure")
@@ -175,9 +174,9 @@ local function fn()
     inst._level = net_tinybyte(inst.GUID, "moonfissure.level", "leveldirty")
     inst._level:set(MOON_STATES[TheWorld.state.moonphase])
 
-	OnUpdateLight(inst)
+    OnUpdateLight(inst)
 
-	inst:AddTag("antlion_sinkhole_blocker")
+    inst:AddTag("antlion_sinkhole_blocker")
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -252,10 +251,9 @@ local function plugged_fn()
     inst.AnimState:SetBuild("plugged_fissure")
     inst.AnimState:PlayAnimation("idle", true)
 
-	inst:AddTag("antlion_sinkhole_blocker")
+    inst:AddTag("antlion_sinkhole_blocker")
 
     inst.entity:SetPristine()
-
     if not TheWorld.ismastersim then
         return inst
     end

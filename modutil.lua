@@ -458,6 +458,18 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		table.insert(env.postinitdata.StategraphEvent[stategraph], event)
 	end
 
+	env.postinitfns.ModShadersInit = {}
+	env.AddModShadersInit = function( fn )
+		initprint("AddModShadersInit")
+		table.insert(env.postinitfns.ModShadersInit, fn)
+	end
+
+	env.postinitfns.ModShadersSortAndEnable = {}
+	env.AddModShadersSortAndEnable = function( fn )
+		initprint("AddModShadersSortAndEnable")
+		table.insert(env.postinitfns.ModShadersSortAndEnable, fn)
+	end
+
 	env.postinitfns.StategraphPostInit = {}
 	env.AddStategraphPostInit = function(stategraph, fn)
 		initprint("AddStategraphPostInit", stategraph)

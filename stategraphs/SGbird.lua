@@ -167,7 +167,7 @@ local states =
             if y < 2 then
                 inst.Physics:SetMotorVel(0, 0, 0)
             end
-            if y <= .1 then
+            if y <= 0.1 then
                 inst.Physics:Stop()
                 inst.Physics:Teleport(x, 0, z)
                 inst.AnimState:PlayAnimation("land")

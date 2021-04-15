@@ -33,7 +33,7 @@ local PurchasePackScreen = require "screens/redux/purchasepackscreen"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging" -- or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" -- BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -52,21 +52,23 @@ function MakeBanner(self)
 
 	local anim = baner_root:AddChild(UIAnim())
 
-	if IS_BETA then
-		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
 
-        anim:GetAnimState():SetBuild("dst_menu_beefalo")
-        anim:GetAnimState():SetBank ("dst_menu_beefalo")
+
+	if IS_BETA then
+		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_ROT_BETA_TITLE
+
+        anim:GetAnimState():SetBuild("dst_menu_moonstorm")
+        anim:GetAnimState():SetBank ("dst_menu_moonstorm")
         anim:GetAnimState():PlayAnimation("loop", true)
         anim:SetScale(.667)
-    
+    --[[
         local anim_bg = baner_root:AddChild(UIAnim())
         anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
         anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
         anim:SetScale(.667)
         anim_bg:GetAnimState():PlayAnimation("loop", true)
         anim_bg:MoveToBack()
-
+]]
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
 		local anim_bg = baner_root:AddChild(UIAnim())
 		anim_bg:GetAnimState():SetBuild("dst_menu_carrat_bg")
@@ -158,19 +160,24 @@ function MakeBanner(self)
 
 	if title_str then
 		if title_str ~= nil then
-			local x = 165
-			local y = -140
+			local x =  165 
+			local y =  -140 + 470
 			local text_width = 880
 
 			local font_size = 22
 			local title = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.HIGHLIGHT_GOLD))
 			title:SetRegionSize(text_width, 2*(font_size + 2))
 			title:SetHAlign(ANCHOR_RIGHT)
+      --      title:SetVAlign(ANCHOR_TOP)
 			title:SetPosition(x, y + 4)
+
+
+    
 
 			local shadow = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.BLACK))
 			shadow:SetRegionSize(text_width, 2*(font_size + 2))
 			shadow:SetHAlign(ANCHOR_RIGHT)
+      --      shadow:SetVAlign(ANCHOR_TOP)
 			shadow:SetPosition(x + 1.5, y - 1.5)
 			shadow:MoveToBack()
 		end

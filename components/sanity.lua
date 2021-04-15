@@ -35,17 +35,13 @@ local function onghostdrainmult(self, ghostdrainmult)
     self.inst.replica.sanity:SetGhostDrainMult(ghostdrainmult)
 end
 
-local function OnChangeArea(inst, area)
-	local area_sanity_mode = area ~= nil and area.tags and table.contains(area.tags, "lunacyarea") and SANITY_MODE_LUNACY or SANITY_MODE_INSANITY
-	inst.components.sanity:SetSanityMode(area_sanity_mode)
-end
-
 local Sanity = Class(function(self, inst)
     self.inst = inst
     self.max = 100
     self.current = self.max
 
 	self.mode = SANITY_MODE_INSANITY
+	self._lunacy_sources = SourceModifierList(inst, false, SourceModifierList.boolean)
     
     self.rate = 0
     self.ratescale = RATE_SCALE.NEUTRAL
@@ -83,8 +79,6 @@ local Sanity = Class(function(self, inst)
 
     self.inst:StartUpdatingComponent(self)
     self:RecalcGhostDrain()
-
-	self.inst:ListenForEvent("changearea", OnChangeArea)
 end,
 nil,
 {
@@ -117,11 +111,7 @@ function Sanity:IsCrazy()
 end
 
 function Sanity:SetSanityMode(mode)
-	if self.mode ~= mode then
-		self.mode = mode
-        self.inst:PushEvent("sanitymodechanged", {mode = self.mode})
-		self:DoDelta(0)
-	end
+	-- Deprecated
 end
 
 function Sanity:IsInsanityMode()
@@ -136,6 +126,16 @@ function Sanity:GetSanityMode()
 	return self.mode
 end
 
+function Sanity:EnableLunacy(enable, sorce)
+	self._lunacy_sources:SetModifier(self.inst, enable, sorce)
+	
+	local mode = self._lunacy_sources:Get() and SANITY_MODE_LUNACY or SANITY_MODE_INSANITY
+	if self.mode ~= mode then
+		self.mode = mode
+        self.inst:PushEvent("sanitymodechanged", {mode = self.mode})
+		self:DoDelta(0)
+	end
+end
 
 function Sanity:AddSanityPenalty(key, mod)
     self.sanity_penalties[key] = mod

@@ -12,6 +12,8 @@ local HeatOver = require "widgets/heatover"
 local FumeOver = require "widgets/fumeover"
 local SandOver = require "widgets/sandover"
 local SandDustOver = require "widgets/sanddustover"
+local MoonstormOver = require "widgets/moonstormover"
+local MoonstormOver_Lightning = require "widgets/moonstormover_lightning"
 local MindControlOver = require "widgets/mindcontrolover"
 local InkOver = require "widgets/inkover"
 local GogglesOver = require "widgets/gogglesover"
@@ -124,12 +126,26 @@ function PlayerHud:CreateOverlays(owner)
     self.storm_overlays = self.storm_root:AddChild(Widget("storm_overlays"))
     self.sanddustover = self.storm_overlays:AddChild(SandDustOver(owner))
 
+    self.moonstormdust = self.storm_overlays:AddChild(Image("images/overlays_moonstorm.xml", "moonstorm.tex"))
+    self.moonstormdust:SetEffect( "shaders/moonstorm.ksh" )
+    self.moonstormdust:EnableEffectParams2(true)
+    self.moonstormdust:SetHAnchor(ANCHOR_MIDDLE)
+    self.moonstormdust:SetVAnchor(ANCHOR_MIDDLE)
+    self.moonstormdust:SetScaleMode(SCALEMODE_FILLSCREEN)
+    self.moonstormdust:SetBlendMode(1)
+    self.moonstormdust:SetUVMode(WRAP_MODE.WRAP)
+    self.moonstormdust:Hide()
+    self.moonstormdust:SetClickable(false)
+    self.moonstormover_lightning = self.storm_overlays:AddChild(MoonstormOver_Lightning(owner))
+
     self.mindcontrolover = self.over_root:AddChild(MindControlOver(owner))
 
     if IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
         self.batover = self.overlayroot:AddChild(BatOver(owner))
     end
     self.sandover = self.overlayroot:AddChild(SandOver(owner, self.sanddustover))
+    self.moonstormover = self.overlayroot:AddChild(MoonstormOver(owner, self.moonstormdust))
+    
     self.gogglesover = self.overlayroot:AddChild(GogglesOver(owner, self.storm_overlays))
     self.nutrientsover = self.overlayroot:AddChild(NutrientsOver(owner))
     self.bloodover = self.overlayroot:AddChild(BloodOver(owner))
@@ -229,11 +245,21 @@ function PlayerHud:OnGainFocus()
     end
 end
 
-function PlayerHud:Toggle()
+function PlayerHud:Toggle(targetindicators)
     if self.shown then
         self:Hide()
+        if targetindicators and self.targetindicators then
+            for i, target in pairs(self.targetindicators) do
+                target:Hide()
+            end
+        end        
     else
         self:Show()
+        if self.targetindicators then
+            for i, target in pairs(self.targetindicators) do
+                target:Show()
+            end
+        end
     end
 end
 

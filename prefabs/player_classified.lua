@@ -550,9 +550,9 @@ end
 --Common interface
 --------------------------------------------------------------------------
 
-local function OnSandstormLevelDirty(inst)
+local function OnStormLevelDirty(inst)
     if inst._parent ~= nil then
-        inst._parent:PushEvent("sandstormlevel", { level = inst.sandstormlevel:value() / 7 })
+        inst._parent:PushEvent("stormlevel", { level = inst.stormlevel:value() / 7, stormtype = inst.stormtype:value() }) -- 
     end
 end
 
@@ -896,7 +896,7 @@ local function RegisterNetListeners(inst)
         end
     end
 
-    inst:ListenForEvent("sandstormleveldirty", OnSandstormLevelDirty)
+    inst:ListenForEvent("stormleveldirty", OnStormLevelDirty)
     inst:ListenForEvent("hasinspirationbuffdirty", fns.OnHasInspirationBuffDirty)
     inst:ListenForEvent("builder.build", OnBuildEvent)
     inst:ListenForEvent("builder.damaged", OnBuilderDamagedEvent)
@@ -917,7 +917,7 @@ local function RegisterNetListeners(inst)
     inst:ListenForEvent("morguedirty", OnMorgueDirty)
     inst:ListenForEvent("houndwarningdirty", OnHoundWarningDirty)
 	inst:ListenForEvent("startfarmingmusicevent", fns.StartFarmingMusicEvent)
-    OnSandstormLevelDirty(inst)
+    OnStormLevelDirty(inst)
     OnGiftsDirty(inst)
     fns.OnYotbSkinDirty(inst)
     OnMountHurtDirty(inst)
@@ -1010,7 +1010,8 @@ local function fn()
     inst.maxmoisture:set(100)
 
     --StormWatcher variables
-    inst.sandstormlevel = net_tinybyte(inst.GUID, "stormwatcher.sandstormlevel", "sandstormleveldirty")
+    inst.stormlevel = net_tinybyte(inst.GUID, "stormwatcher.stormlevel", "stormleveldirty")
+    inst.stormtype = net_tinybyte(inst.GUID, "stormwatcher.stormtype")
 
     --Inked variables
     inst.inked = net_event(inst.GUID, "inked")

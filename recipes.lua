@@ -193,6 +193,7 @@ Recipe("gunpowder", {Ingredient("rottenegg", 1), Ingredient("charcoal", 1), Ingr
 Recipe("lightning_rod", {Ingredient("goldnugget", 4), Ingredient("cutstone", 1)}, RECIPETABS.SCIENCE,  TECH.SCIENCE_ONE, "lightning_rod_placer")
 Recipe("firesuppressor", {Ingredient("gears", 2),Ingredient("ice", 15),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE,  TECH.SCIENCE_TWO, "firesuppressor_placer")
 Recipe("turfcraftingstation", {Ingredient("thulecite", 1), Ingredient("cutstone", 3), Ingredient("wetgoop", 1)}, RECIPETABS.SCIENCE,  TECH.LOST, "turfcraftingstation_placer")
+Recipe("moon_device_construction1", {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE, TECH.LOST, "moon_device_construction1_placer")
 
 --MAGIC
 Recipe("abigail_flower", {Ingredient("ghostflower", 1), Ingredient("nightmarefuel", 1)}, RECIPETABS.MAGIC, TECH.NONE, nil, nil, nil, nil, "ghostlyfriend")
@@ -297,6 +298,7 @@ Recipe("catcoonhat", {Ingredient("coontail", 1), Ingredient("silk", 4)}, RECIPET
 Recipe("kelphat", {Ingredient("kelp", 12)}, RECIPETABS.DRESS, TECH.NONE)
 Recipe("goggleshat", {Ingredient("goldnugget", 1), Ingredient("pigskin", 1)}, RECIPETABS.DRESS, TECH.LOST)
 Recipe("deserthat", {Ingredient("goggleshat", 1), Ingredient("pigskin", 1)}, RECIPETABS.DRESS, TECH.LOST)
+Recipe("moonstorm_goggleshat", {Ingredient("moonglass", 2),Ingredient("potato", 1)}, RECIPETABS.DRESS, TECH.LOST)
 Recipe("watermelonhat", {Ingredient("watermelon", 1), Ingredient("twigs", 3)}, RECIPETABS.DRESS, TECH.SCIENCE_ONE)
 Recipe("icehat", {Ingredient("transistor", 2), Ingredient("rope", 4), Ingredient("ice", 10)}, RECIPETABS.DRESS,  TECH.SCIENCE_TWO)
 Recipe("beehat", {Ingredient("silk", 8), Ingredient("rope", 1)}, RECIPETABS.DRESS,  TECH.SCIENCE_TWO)
@@ -347,13 +349,13 @@ Recipe("multiplayer_portal_moonrock_constr_plans", {Ingredient("boards", 1), Ing
 
 
 ----MOON_ALTAR-----
-Recipe("moonglassaxe", {Ingredient("twigs", 2),  		    Ingredient("moonglass", 3)},  RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true)
-Recipe("glasscutter",  {Ingredient("boards", 1), 		    Ingredient("moonglass", 6) }, RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true)
-Recipe("turf_meteor",       {Ingredient("moonrocknugget", 1),    Ingredient("moonglass", 2)},  RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true, 6)
-Recipe("turf_fungus_moon",  {Ingredient("moonrocknugget", 1),    Ingredient("moon_cap", 3)},   RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true, 6)
-Recipe("bathbomb", 	   {Ingredient("moon_tree_blossom", 6), Ingredient("nitre", 1)}, 	  RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true)
-Recipe("chesspiece_butterfly_sketch", {Ingredient("papyrus", 1)}, RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true)
-Recipe("chesspiece_moon_sketch", 	  {Ingredient("papyrus", 1)}, RECIPETABS.MOON_ALTAR, TECH.MOON_ALTAR_TWO, nil, nil, true)
+Recipe("moonglassaxe",					{Ingredient("twigs", 2),  				Ingredient("moonglass", 3)},	RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
+Recipe("glasscutter",					{Ingredient("boards", 1), 				Ingredient("moonglass", 6) },	RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
+Recipe("turf_meteor",					{Ingredient("moonrocknugget", 1),		Ingredient("moonglass", 2)},	RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true, 6)
+Recipe("turf_fungus_moon",				{Ingredient("moonrocknugget", 1),		Ingredient("moon_cap", 3)},		RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true, 6)
+Recipe("bathbomb", 						{Ingredient("moon_tree_blossom", 6),	Ingredient("nitre", 1)}, 		RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
+Recipe("chesspiece_butterfly_sketch",	{Ingredient("papyrus", 1)},												RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
+Recipe("chesspiece_moon_sketch", 		{Ingredient("papyrus", 1)},												RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 
 ----BOOK----
 Recipe("book_birds", 		{Ingredient("papyrus", 2), Ingredient("bird_egg", 2)}, CUSTOM_RECIPETABS.BOOKS, TECH.NONE, nil, nil, nil, nil, "bookbuilder")
@@ -461,6 +463,7 @@ Recipe("chesspiece_clayhound_builder", 	{Ingredient(TECH_INGREDIENT.SCULPTING, 2
 Recipe("chesspiece_claywarg_builder", 	{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)}, RECIPETABS.SCULPTING, TECH.LOST, nil, nil, true, nil, nil, nil, "chesspiece_claywarg.tex")
 Recipe("chesspiece_carrat_builder",     {Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)}, RECIPETABS.SCULPTING, TECH.LOST, nil, nil, true, nil, nil, nil, "chesspiece_carrat.tex")
 Recipe("chesspiece_beefalo_builder",    {Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)}, RECIPETABS.SCULPTING, TECH.LOST, nil, nil, true, nil, nil, nil, "chesspiece_beefalo.tex")
+Recipe("chesspiece_guardianphase3_builder",    {Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)}, RECIPETABS.SCULPTING, TECH.LOST, nil, nil, true, nil, nil, nil, "chesspiece_guardianphase3.tex")
 
 ----CRITTERS----
 Recipe("critter_kitten_builder", 		{Ingredient("coontail", 1),      Ingredient("fishsticks", 1)}, 	   RECIPETABS.ORPHANAGE, TECH.ORPHANAGE_ONE, nil, nil, true)
@@ -672,8 +675,11 @@ CONSTRUCTION_PLANS =
 	["hermithouse_construction1"] = { Ingredient("cookiecuttershell", 10), Ingredient("boards", 10) },
 	["hermithouse_construction2"] = { Ingredient("marble", 10), Ingredient("rope", 10) },
 	["hermithouse_construction3"] = { Ingredient("moonrocknugget", 5),   Ingredient("cactus_flower", 10) },
+	
+	["moon_device_construction1"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonstorm_spark", 10), Ingredient("moonglass_charged", 10) },
+	["moon_device_construction2"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonglass_charged", 20), Ingredient("moonrockseed", 1) },
 }
-
+-- {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}
 mod_protect_Recipe = true
 
 

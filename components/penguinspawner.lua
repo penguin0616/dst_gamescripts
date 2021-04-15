@@ -253,19 +253,8 @@ local function EstablishColony(loc)
     end
     
     if newFlock.rookery then
-        for i, node in ipairs(TheWorld.topology.nodes) do
-            if TheSim:WorldPointInPoly(loc.x, loc.z, node.poly) then
-                if node.tags ~= nil and table.contains(node.tags, "moonhunt") then
-                    if not TUNING.SPAWN_MOON_PENGULLS then
-                        return false
-                    end
-                    newFlock.is_mutated = true
-                end
-                break
-            end
-        end
-
         newFlock.rookery = newFlock.rookery + loc
+		newFlock.is_mutated = TheWorld.Map:IsInLunacyArea(newFlock.rookery.x, 0, newFlock.rookery.z)
         newFlock.ice = SpawnPrefab("penguin_ice")
         newFlock.ice.Transform:SetPosition(newFlock.rookery:Get())
         newFlock.ice.spawner = self

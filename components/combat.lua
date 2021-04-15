@@ -983,6 +983,10 @@ function Combat:IsAlly(guy)
     return self.inst.replica.combat:IsAlly(guy)
 end
 
+function Combat:TargetHasFriendlyLeader(target)
+    return self.inst.replica.combat:TargetHasFriendlyLeader(target)
+end
+
 function Combat:CanBeAttacked(attacker)
     return self.inst.replica.combat:CanBeAttacked(attacker)
 end

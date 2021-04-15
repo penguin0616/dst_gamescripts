@@ -1028,6 +1028,7 @@ return {
 			NIGHT_WANE = "The moon is waning.",
 			CAVE = "There's no moon down here to measure.",
 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "I have the strangest feeling I'm being watched.",
         },
 		THULECITE = "I wonder where this is from?",
 		ARMORRUINS = "It's oddly light.",
@@ -3161,6 +3162,7 @@ return {
 			EMPTY = "I'll just have to wait for it to fill up again.",
         },
         MOONGLASS = "It's very sharp.",
+        MOONGLASS_INFUSED = "I should put this to scientific use before the energy fades!",
         MOONGLASS_ROCK = "I can practically see my reflection in it.",
         BATHBOMB = "It's just textbook chemistry.",
         TRAP_STARFISH =
@@ -3884,7 +3886,6 @@ return {
             YOTB = "I wonder what the Judge would say about this?",
         },
 
-
         WAR_BLUEPRINT = "How ferocious!",
         DOLL_BLUEPRINT = "My beefalo will look as cute as a button!",
         FESTIVE_BLUEPRINT = "This is just the occasion for some festivity!",
@@ -3896,6 +3897,50 @@ return {
         BEAST_BLUEPRINT = "I'm feeling lucky about this one!",
 
         BEEF_BELL = "It makes beefalo friendly. I'm sure there's a very scientific explanation.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "You'll pay for breaking all that science!",
+            DEAD = "Gotcha!",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "I think I just made it angry...",
+            DEAD = "This time I'm sure I got it.",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "You've made your point!",
+        ALTERGUARDIAN_PHASE3 = "It's definitely angry now!",
+        ALTERGUARDIAN_PHASE3TRAP = "After rigorous testing, I can confirm that they make me want to take a nap.",
+        ALTERGUARDIAN_PHASE3DEADORB = "Is it dead? That strange energy still seems to be lingering around it.",
+        ALTERGUARDIAN_PHASE3DEAD = "Maybe someone should go poke it... just to be sure.",
+
+        ALTERGUARDIANHAT = "It shows me infinite possibilities...",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "It's glassy.",
+            INFUSED = "It's glowing with unearthly energy."
+        },
+
+        MOONSTORM_STATIC_ITEM = "It makes my hair do crazy things.",
+        MOONSTORM_SPARK = "It makes my teeth feel weird.",
+
+        BIRD_MUTANT = "I think that used to be a crow.",
+        BIRD_MUTANT_SPITTER = "I don't like the way it's looking at me...",
+
+        WAGSTAFF_NPC = "As a fellow man of science, I'm compelled to help him!",
+
+        WAGSTAFF_TOOL_1 = "That has to be the tool I'm looking for!",
+        WAGSTAFF_TOOL_2 = "Of course I know what it is! It's just, er... too complicated to explain.",
+        WAGSTAFF_TOOL_3 = "Clearly a very scientific tool!",
+        WAGSTAFF_TOOL_4 = "My scientific instincts tell me that this is the tool I'm looking for!",
+        WAGSTAFF_TOOL_5 = "I know exactly what it does! Science!",
+
+        MOONSTORM_GOOGLESHAT = "Of course! Combining moon energy with potato energy, why didn't I think of that?",
+
+        MOON_DEVICE = {
+            GENERIC = "It's containing the energy! I knew what it was for all along, of course.",
+            CONSTRUCTION1 = "The science has only just started.",
+            CONSTRUCTION2 = "That's looking much more science-y already!",
+        }
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

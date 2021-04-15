@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "Moon look smaller tonight.",
 			CAVE = "This not good spot.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "Glurph... something watching.",
         },
 		THULECITE = "Look weird, florp...",
 		ARMORRUINS = "Strong!",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "Nothing here!",
         },
         MOONGLASS = "Glurp! Sharp!",
+        MOONGLASS_INFUSED = "Is sharp glowy things.",
         MOONGLASS_ROCK = "Good color, florp.",
         BATHBOMB = "Wanna throw it now!",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "Should show to weird scale-less hiding in tent!",
         },
 
-
         WAR_BLUEPRINT = "Hee-hee good and scary!",
         DOLL_BLUEPRINT = "Look kind of creepy...",
         FESTIVE_BLUEPRINT = "Big fuzzy gonna look so good in this!",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "Awww, big fuzzy wanna have scales too?",
 
         BEEF_BELL = "Big fuzzies really like bell.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "Glorp! Didn't do it! Didn't do it!",
+            DEAD = "W-wasn't even scared at all!",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "How it get back up?!",
+            DEAD = "Now is super dead!",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "Grrr, these things getting in way!",
+        ALTERGUARDIAN_PHASE3 = "Glurp... maybe it time to run?",
+        ALTERGUARDIAN_PHASE3TRAP = "Don't trust weird rocks, florp.",
+        ALTERGUARDIAN_PHASE3DEADORB = "Look out! Might come back!",
+        ALTERGUARDIAN_PHASE3DEAD = "I-is gone for good now right, florp?",
+
+        ALTERGUARDIANHAT = "Makes head full of funny whispers...",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "Is very sharp.",
+            INFUSED = "Oooooooh pretty!"
+        },
+
+        MOONSTORM_STATIC_ITEM = "Hee-hee! It can't get out!",
+        MOONSTORM_SPARK = "Glorp! It zaps!",
+
+        BIRD_MUTANT = "Ha ha! What happen to you?",
+        BIRD_MUTANT_SPITTER = "Pt-ooey back at you, florp!",
+
+        WAGSTAFF_NPC = "Is another scaleless? Can't smell him, florpt...",
+
+        WAGSTAFF_TOOL_1 = "Hmm... it have no smell, like weird scale-less.",
+        WAGSTAFF_TOOL_2 = "Maybe this what weird scale-less looking for.",
+        WAGSTAFF_TOOL_3 = "It all flickery, like weird scale-less.",
+        WAGSTAFF_TOOL_4 = "What that? Maybe it belong to weird scale-less...",
+        WAGSTAFF_TOOL_5 = "Look like someone drop this, florp.",
+
+        MOONSTORM_GOOGLESHAT = "Grrr, can't get the 'tato out!",
+
+        MOON_DEVICE = {
+            GENERIC = "Have weird feeling, florp...",
+            CONSTRUCTION1 = "Is throne? Not as good as Mermfolk throne.",
+            CONSTRUCTION2 = "Hmm... now it not look like throne at all...",
+        }
     },
 
     DESCRIBE_GENERIC = "What that?",

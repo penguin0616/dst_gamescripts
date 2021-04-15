@@ -1,6 +1,6 @@
 local assets =
 {
-    Asset("ANIM", "anim/seedpouch.zip"), --TOOD
+    Asset("ANIM", "anim/seedpouch.zip"),
     Asset("ANIM", "anim/ui_krampusbag_2x8.zip"),
 }
 
@@ -10,8 +10,15 @@ local prefabs =
 }
 
 local function onequip(inst, owner)
-    owner.AnimState:OverrideSymbol("backpack", "seedpouch", "backpack")
-    owner.AnimState:OverrideSymbol("swap_body", "seedpouch", "swap_body")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("backpack", skin_build, "backpack", inst.GUID, "seedpouch" )
+        owner.AnimState:OverrideItemSkinSymbol("swap_body", skin_build, "swap_body", inst.GUID, "seedpouch" )
+    else
+        owner.AnimState:OverrideSymbol("backpack", "seedpouch", "backpack")
+        owner.AnimState:OverrideSymbol("swap_body", "seedpouch", "swap_body")
+    end
     inst.components.container:Open(owner)
 end
 

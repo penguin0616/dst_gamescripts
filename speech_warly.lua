@@ -1019,6 +1019,7 @@ return{
 			NIGHT_WANE = "The moon is waning.",
 			CAVE = "It doesn't seem very useful down here.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "Mon dieu, the water has turned to glass!",
         },
 		THULECITE = "Thule-... thulec-... it rolls off the tongue, does it not?",
 		ARMORRUINS = "Ancient armor.",
@@ -3152,6 +3153,7 @@ return{
 			EMPTY = "An empty basin.",
         },
         MOONGLASS = "My, that's sharp!",
+        MOONGLASS_INFUSED = "It's still warm.",
         MOONGLASS_ROCK = "That's quite a bit of glass.",
         BATHBOMB = "A bath would be nice.",
         TRAP_STARFISH =
@@ -3875,7 +3877,6 @@ return{
             YOTB = "Perhaps I should show it to the judge, to get a measure of his taste.",
         },
 
-
         WAR_BLUEPRINT = "Dressing for some rather tough beef!",
         DOLL_BLUEPRINT = "Tres mignon!",
         FESTIVE_BLUEPRINT = "Just the right thing for a celebration.",
@@ -3887,6 +3888,50 @@ return{
         BEAST_BLUEPRINT = "The beefalo who will wear this is lucky indeed!",
 
         BEEF_BELL = "It is not a dinner bell?",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "It looks rather irritated...",
+            DEAD = "Au revoir.",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "Mon dieu, a second course!",
+            DEAD = "At last, it's finished. Or is it...",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "I will not be skewered by the likes of you!",
+        ALTERGUARDIAN_PHASE3 = "I'd rather not be fried by that fiery gaze!",
+        ALTERGUARDIAN_PHASE3TRAP = "Best to keep far away from those, non?",
+        ALTERGUARDIAN_PHASE3DEADORB = "Is there more yet in store for us?",
+        ALTERGUARDIAN_PHASE3DEAD = "Finalement, it's over.",
+
+        ALTERGUARDIANHAT = "It makes me hear such sweet whispers...",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "En glace.",
+            INFUSED = "Freshly made."
+        },
+
+        MOONSTORM_STATIC_ITEM = "What will we be cooking up with this, I wonder?",
+        MOONSTORM_SPARK = "It definitely has a kick to it.",
+
+        BIRD_MUTANT = "That bird is looking a bit odd.",
+        BIRD_MUTANT_SPITTER = "Something is definitely amiss here.",
+
+        WAGSTAFF_NPC = "Bonjour! Are you in need of assistance?",
+
+        WAGSTAFF_TOOL_1 = "This must be what I'm looking for!",
+        WAGSTAFF_TOOL_2 = "Surely this must be the tool he wants?",
+        WAGSTAFF_TOOL_3 = "That certainly looks like a scientific tool of some sort!",
+        WAGSTAFF_TOOL_4 = "Perhaps that is what he is looking for?",
+        WAGSTAFF_TOOL_5 = "It's a tool of some sort, hopefully the one I'm looking for.",
+
+        MOONSTORM_GOOGLESHAT = "Mon dieu, I can think of much better uses for a potato.",
+
+        MOON_DEVICE = {
+            GENERIC = "Ah, so that's what it's for.",
+            CONSTRUCTION1 = "Some kind of platter for the ground?",
+            CONSTRUCTION2 = "Only a few more ingredients left.",
+        }
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

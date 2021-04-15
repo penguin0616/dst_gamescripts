@@ -124,8 +124,6 @@ function WalkablePlatform:UpdatePositions()
     local world_position_x, world_position_y, world_position_z = self.inst.Transform:GetWorldPosition()
 	local delta_position_x, delta_position_z = VecUtil_Sub(world_position_x, world_position_z, self.previous_position_x, self.previous_position_z)
 
-    local should_update_pos = VecUtil_LengthSq(delta_position_x, delta_position_z) > 0
-
     self:CollectEntitiesOnPlatform(true)
 
     for k, v in pairs(self.new_objects_on_platform) do
@@ -162,9 +160,9 @@ function WalkablePlatform:CollectEntitiesOnPlatform(check_previous_objects)
 
     -- check for objects that were on the boat at the previous boat position and move them forward as well
     if check_previous_objects then
-        for entity, unused in pairs(self.previous_objects_on_platform) do
+        for entity in pairs(self.previous_objects_on_platform) do
             if entity:IsValid() then
-                if not entity.components.embarker and not self.new_objects_on_platform[entity] and not entity.entity:GetParent() == nil then
+                if not entity.components.embarker and not self.new_objects_on_platform[entity] then
                     local entity_x, entity_y, entity_z = entity.Transform:GetWorldPosition()
                     local delta_x, delta_z = entity_x - platform_x, entity_z - platform_z
                     local dist_sq = delta_x * delta_x + delta_z * delta_z

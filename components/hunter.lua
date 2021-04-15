@@ -377,7 +377,7 @@ local function SpawnHuntedBeast(hunt, pt)
             (self:IsWargShrineActive() and "claywarg") or
             (math.random() <= GetAlternateBeastChance() and GetRandomItem(_alternate_beasts)) or
             (TheWorld.state.iswinter and _beast_prefab_winter) or
-			(TheWorld.state.isspring and TheWorld.state.israining and TheWorld.Map:NodeAtPointHasTag(spawn_x, spawn_y, spawn_z, "sandstorm") and _beast_prefab_spring) or
+			(TheWorld.state.isspring and TheWorld.state.israining and TheWorld.Map:FindVisualNodeAtPoint(spawn_x, spawn_y, spawn_z, "sandstorm") and _beast_prefab_spring) or
             _beast_prefab_summer
         )
 

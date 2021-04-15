@@ -593,7 +593,9 @@ function PlayerController:DoControllerActionButton()
         if  self.placer.components.placer.can_build then
             if self.inst.replica.builder ~= nil and
                 not self.inst.replica.builder:IsBusy() then
-                self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe, self.placer:GetPosition(), self.placer:GetRotation(), self.placer_recipe_skin)
+                self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe,
+                    self.placer.components.placer.override_build_point_fn ~= nil and self.placer.components.placer.override_build_point_fn(self.placer) or self.placer:GetPosition(),
+                    self.placer:GetRotation(), self.placer_recipe_skin)
                 self:CancelPlacement()
             end
         elseif self.placer.components.placer.onfailedplacement ~= nil then
@@ -1667,7 +1669,9 @@ function PlayerController:DoActionButton()
         self.inst.replica.builder ~= nil and
         not self.inst.replica.builder:IsBusy() then
         --do the placement
-        self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe, self.placer:GetPosition(), self.placer:GetRotation(), self.placer_recipe_skin)
+        self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe,
+            self.placer.components.placer.override_build_point_fn ~= nil and self.placer.components.placer.override_build_point_fn(self.placer) or self.placer:GetPosition(),
+            self.placer:GetRotation(), self.placer_recipe_skin)
     elseif self.placer.components.placer.onfailedplacement ~= nil then
         self.placer.components.placer.onfailedplacement(self.inst, self.placer)
     end
@@ -3308,7 +3312,9 @@ function PlayerController:OnLeftClick(down)
         if self.placer.components.placer.can_build then
             
             if self.inst.replica.builder ~= nil and not self.inst.replica.builder:IsBusy() then
-                self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe, TheInput:GetWorldPosition(), self.placer:GetRotation(), self.placer_recipe_skin)
+                self.inst.replica.builder:MakeRecipeAtPoint(self.placer_recipe,
+                    self.placer.components.placer.override_build_point_fn ~= nil and self.placer.components.placer.override_build_point_fn(self.placer) or TheInput:GetWorldPosition(),
+                    self.placer:GetRotation(), self.placer_recipe_skin)
                 self:CancelPlacement()
             end
 

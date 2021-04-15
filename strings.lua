@@ -2013,6 +2013,7 @@ STRINGS =
         CHESSPIECE_KLAUS = "Klaus Figure",
         CHESSPIECE_BEEQUEEN = "Bee Queen Figure",
         CHESSPIECE_ANTLION = "Antlion Figure",
+        CHESSPIECE_GUARDIANPHASE3 = "Celestial Champion Figure",
 
         CHESSPIECE_PAWN_BUILDER = "Pawn Figure",
         CHESSPIECE_ROOK_BUILDER = "Rook Figure",
@@ -2041,6 +2042,7 @@ STRINGS =
         CHESSPIECE_KLAUS_BUILDER = "Klaus Figure",
         CHESSPIECE_BEEQUEEN_BUILDER = "Bee Queen Figure",
         CHESSPIECE_ANTLION_BUILDER = "Antlion Figure",
+        CHESSPIECE_GUARDIANPHASE3_BUILDER = "Celestial Champion Figure",
 
 
         CHESSPIECE_BUTTERFLY_SKETCH = "Moon Moth Figure Sketch",
@@ -2050,6 +2052,7 @@ STRINGS =
         CHESSPIECE_BEEFALO_SKETCH = "Beefalo Figure Sketch",        
         CHESSPIECE_MALBATROSS_SKETCH = "Malbatross Figure Sketch",
         CHESSPIECE_CRABKING_SKETCH = "Crab King Figure Sketch",
+        CHESSPIECE_GUARDIANPHASE3_SKETCH = "Celestial Champion Figure Sketch",
 
         SHADOW_ROOK = "Shadow Rook",
         SHADOW_KNIGHT = "Shadow Knight",
@@ -2577,6 +2580,7 @@ STRINGS =
         MOONBUTTERFLY_SAPLING = "Lune Tree Sapling",
         HOTSPRING = "Hot Spring",
         MOONGLASS = "Moon Shard",
+        MOONGLASS_CHARGED = "Infused Moon Shard",
         MOONGLASS_ROCK = "Moon Glass",
         BATHBOMB = "Bath Bomb",
         ROCK_AVOCADO_FRUIT = "Stone Fruit",
@@ -2636,6 +2640,10 @@ STRINGS =
 
 		GESTALT = "Gestalt",
 		GESTALT_GUARD = "Greater Gestalt",
+        GESTALT_ALTERGUARDIAN_PROJECTILE = "Gestalt",
+        SMALLGUARD_ALTERGUARDIAN_PROJECTILE = "Minor Gestalt",
+        ALTERGUARDIANHAT_PROJECTILE = "Minor Gestalt",
+        LARGEGUARD_ALTERGUARDIAN_PROJECTILE = "Greater Gestalt",
 
         CARRAT = "Carrat",
         CARRAT_PLANTED = "Carrot",
@@ -2840,7 +2848,7 @@ STRINGS =
         LOBSTERDINNER = "Lobster Dinner",
 
         WOBSTER_MOONGLASS = "Lunar Wobster",
-        MOONGLASS_WOBSTER_DEN = "Moonglass Mound",
+        MOONGLASS_WOBSTER_DEN = "Moon Glass Mound",
 
         TRIDENT = "Strident Trident",
 	
@@ -3021,6 +3029,49 @@ STRINGS =
         VICTORIAN_BLUEPRINT = "Victorian Costume Pattern",
         BEAST_BLUEPRINT = "Lucky Beast Costume Pattern",
         ICE_BLUEPRINT = "Frostbitten Costume Pattern",
+
+        -- Moon Storms
+        WAGSTAFF_NPC = "Grainy Transmission",
+        WAGSTAFF_NPC_PSTBOSS = "Grainy Transmission",
+
+        ALTERGUARDIAN_PHASE1 = "Celestial Champion",
+        ALTERGUARDIAN_PHASE2 = "Celestial Champion",
+        ALTERGUARDIAN_PHASE2SPIKE = "Moonglass Spike",
+        ALTERGUARDIAN_PHASE3 = "Celestial Champion",
+        ALTERGUARDIAN_PHASE3TRAP = "Enlightening Snare",
+        ALTERGUARDIAN_PHASE3DEADORB = "Celestial Champion",
+        ALTERGUARDIAN_PHASE3DEAD = "Defeated Celestial Champion",
+
+        BIRD_MUTANT = "Moonblind Crow",
+        BIRD_MUTANT_SPITTER = "Misshapen Bird",
+
+        WAGSTAFF_TOOL_1 = "Reticulating Buffer",
+        WAGSTAFF_TOOL_2 = "Widget Deflubber",
+        WAGSTAFF_TOOL_3 = "Grommet Scriber",
+        WAGSTAFF_TOOL_4 = "Conceptual Scrubber",
+        WAGSTAFF_TOOL_5 = "Calibrated Perceiver",
+
+        WAGSTAFF_TOOL_1_LAYMAN = "Odd Tool",
+        WAGSTAFF_TOOL_2_LAYMAN = "Weird Tool",
+        WAGSTAFF_TOOL_3_LAYMAN = "Strange Tool",
+        WAGSTAFF_TOOL_4_LAYMAN = "Funky Tool",
+        WAGSTAFF_TOOL_5_LAYMAN = "Bizarre Tool", 
+
+        MOONSTORM_GLASS = "Charged Glassy Rock",
+        MOONSTORM_GLASS_DEFUSED = "Glassy Rock",
+        MOONSTORM_SPARK = "Moongleam",
+        MOONSTORM_STATIC = "Energetic Static",
+        MOONSTORM_STATIC_ITEM = "Restrained Static",
+
+        ALTERGUARDIANHAT = "Enlightened Crown",
+
+        MOONSTORM_GOGGLESHAT = "Astroggles",
+
+        MOON_DEVICE_CONSTRUCTION1 = "Incomplete Experiment",
+        MOON_DEVICE_CONSTRUCTION2 = "Nearly Completed Experiment",
+        MOON_DEVICE_CONSTRUCTION3 = "Lunar Siphonator",
+        
+        MOON_DEVICE = "Lunar Siphonator",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3401,6 +3452,7 @@ STRINGS =
         CHESSPIECE_KLAUS_BUILDER = "Klaus to perfection.",
         CHESSPIECE_BEEQUEEN_BUILDER = "More regal than real.",
         CHESSPIECE_ANTLION_BUILDER = "Ain't this Antlion beautiful?",
+        CHESSPIECE_GUARDIANPHASE3_BUILDER = "Its design radiates an otherworldly strangeness.",
 
         CHESSPIECE_BUTTERFLY_SKETCH = "A sculpture sketch of a Moon Moth.",
         CHESSPIECE_ANCHOR_SKETCH = "A sculpture sketch of an anchor.",
@@ -3644,6 +3696,8 @@ STRINGS =
         TURF_SINKHOLE = "A chunk of wet, muddy grass.",
         TURF_MUD = "A patch of muddy ground.",
 
+        MOON_DEVICE_CONSTRUCTION1 = "Odd Contraption",
+
 		-- FARMING
 		FARM_PLOW_ITEM = "Plow a plot for your plants.",
 		FARM_HOE = "Till soil for crop seeds.",
@@ -3670,6 +3724,9 @@ STRINGS =
         YOTB_PATTERN_FRAGMENT_1 = "Get some fearsome inspiration.",
         YOTB_PATTERN_FRAGMENT_2 = "Get some formal inspiration.",
         YOTB_PATTERN_FRAGMENT_3 = "Get some festive inspiration.",
+
+        MOONSTORM_GOGGLESHAT = "Utilize potato eyes to see through storms.",
+        MOON_DEVICE_CONSTRUCTION1 = "Mad scientist approved, never tested.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -5151,6 +5208,42 @@ STRINGS =
     },    
 
     --  end beefalo contest
+
+
+    WAGSTAFF_NPC_START = {"This is it, it must be contained.","I'll need your assistance, we must contain it before it's gone!"},
+    WAGSTAFF_NPC_MUMBLE_1 = {"It's close by now...","If I can just find...","If my hypothesis is correct...","It's here... somewhere."},
+    WAGSTAFF_NPC_THIS_WAY = {"Ahh, this way!","My scans point toward this direction.","Aha, found it again!"},
+    WAGSTAFF_NPC_NO_WAY1 = {"Blast, I lost the signal."},
+    WAGSTAFF_NPC_NO_WAY2 = {"I must have miscalculated, come find me again once I've made some preparations."},
+
+    WAGSTAFF_NPC_NOT_THIS_TOOL = {"No no, that's not what I'm looking for!","This isn't the right one, the other one!"},
+
+    WAGSTAFF_NPC_YES_THIS_TOOL = {"Excellent, that's it!","At last! Now let's get this finished!"},
+
+    WAGSTAFF_NPC_EXPERIMENT_DONE_1 = "It's done!",
+    WAGSTAFF_NPC_EXPERIMENT_DONE_2 = "Take this, you'll need it for what we have to do.",
+
+    WAGSTAFF_NPC_EXPERIMENT_FAIL_1 = "Balderdash! The containment has failed!",
+    WAGSTAFF_NPC_EXPERIMENT_FAIL_2 = "Back to my notes again...",
+
+    WAGSTAFF_NPC_STORMPASS = "Balderdash, my connection is fading!",
+
+    WAGSTAFF_NPC_MEETING = "You! Of course!",
+    WAGSTAFF_NPC_MEETING_2 = "Quick, take these!",
+    WAGSTAFF_NPC_MEETING_3 = "I'll be needing some assistance shortly. Find me when you are sufficiently prepared.",
+    WAGSTAFF_NPC_MEETING_4 = "Now, to find the source of that reading...",
+
+    WAGSTAFF_NPC_WANT_TOOL_1 = "Quick, I need my Reticulating Buffer!",
+    WAGSTAFF_NPC_WANT_TOOL_2 = "Someone find me a Widget Deflubber!",
+    WAGSTAFF_NPC_WANT_TOOL_3 = "Has anyone seen my Grommet Scriber?",
+    WAGSTAFF_NPC_WANT_TOOL_4 = "Can someone hand me the Conceptual Scrubber?",
+    WAGSTAFF_NPC_WANT_TOOL_5 = "I'm certain I put the Calibrated Observer down here somewhere...",
+
+    WAGSTAFF_NPC_CAPTURESTART = "Excellent! My little experiment was a resounding success!",
+    WAGSTAFF_NPC_CAPTURESTOP = "Thank you for all your hard work. Now if you'll excuse me, I have much to do.",
+
+    WAGSTAFF_GOTTAGO1 = "Wait! It happened!",
+    WAGSTAFF_GOTTAGO2 = "Now is my chance!",
 }
 
 STRINGS.BUNNYMANNAMES =
@@ -5992,7 +6085,7 @@ STRINGS.UI =
         CANT_LOAD_TITLE = "Load Failed",
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
-		MAINBANNER_ROT_BETA_TITLE = "Return of Them Beta\nTroubled Waters",
+		MAINBANNER_ROT_BETA_TITLE = "Return of Them Beta\nEye of the Storm",
 		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
@@ -7790,7 +7883,7 @@ STRINGS.UI =
 	
     SERVERCREATIONSCREEN =
     {
-        FORESTONLY = "Forest",
+        FORESTONLY = "Forest Only",
         FORESTANDCAVES = "Forest And Caves",
         CREATE = "Generate World",
         RESUME = "Resume World",

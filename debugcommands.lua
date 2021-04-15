@@ -930,3 +930,31 @@ function d_oversized()
 		end
 	_spawn_list(items, 3)
 end
+
+function d_startmoonstorm()
+	local pt = ConsoleWorldPosition()
+	TheWorld.components.moonstormmanager:StartMoonstorm(TheWorld.Map:GetNodeIdAtPoint(pt.x, pt.y, pt.z))
+end
+
+function d_stopmoonstorm()
+	TheWorld.components.moonstormmanager:StopCurrentMoonstorm()
+end
+
+function d_moonaltars()
+	local offset = 7
+	local pos = TheInput:GetWorldPosition()
+	local altar
+
+	altar = SpawnPrefab("moon_altar")
+	altar.Transform:SetPosition(pos.x, 0, pos.z - offset)
+	altar:set_stage_fn(2)
+
+	SpawnPrefab("moon_altar_idol").Transform:SetPosition(pos.x, 0, pos.z - offset - 2)
+
+	altar = SpawnPrefab("moon_altar_astral")
+	altar.Transform:SetPosition(pos.x - offset, 0, pos.z + offset / 3)
+	altar:set_stage_fn(2)
+
+	altar = SpawnPrefab("moon_altar_cosmic")
+	altar.Transform:SetPosition(pos.x + offset, 0, pos.z + offset / 3)
+end

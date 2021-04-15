@@ -1023,6 +1023,7 @@ return{
 			NIGHT_WANE = "The moon is on the wane.",
 			CAVE = "Caves. The moon's one weakness.",
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
+			GLASSED = "It's staring at me.",
         },
 		THULECITE = "Its presence marks the edge of the unknown.",
 		ARMORRUINS = "A reprieve from death.",
@@ -3156,6 +3157,7 @@ return{
 			EMPTY = "Nothing left for me here...",
         },
         MOONGLASS = "Its sharp edge would end this quickly.",
+        MOONGLASS_INFUSED = "It feels almost alive, somehow.",
         MOONGLASS_ROCK = "What a sickly color.",
         BATHBOMB = "To mask the smell of sorrow and death.",
         TRAP_STARFISH =
@@ -3879,7 +3881,6 @@ return{
             YOTB = "Mr. Judge might like to see it.",
         },
 
-
         WAR_BLUEPRINT = "Even seemingly gentle creatures have a dark side.",
         DOLL_BLUEPRINT = "It's pretty.",
         FESTIVE_BLUEPRINT = "It's so colorful, it hurts my eyes.",
@@ -3891,6 +3892,50 @@ return{
         BEAST_BLUEPRINT = "May it give my beefalo more luck than I've had.",
 
         BEEF_BELL = "Alas, not a death knell.",
+
+        -- Moon Storm
+        ALTERGUARDIAN_PHASE1 = {
+            GENERIC = "We've brought on our own demise.",
+            DEAD = "Even the mighty must fall.",
+        },
+        ALTERGUARDIAN_PHASE2 = {
+            GENERIC = "It is not through yet.",
+            DEAD = "Will it rise again, I wonder?",
+        },
+        ALTERGUARDIAN_PHASE2SPIKE = "Oh... it missed.",
+        ALTERGUARDIAN_PHASE3 = "It's beautiful...",
+        ALTERGUARDIAN_PHASE3TRAP = "It beckons me with the promise of endless slumber...",
+        ALTERGUARDIAN_PHASE3DEADORB = "Perhaps now death has finally claimed it.",
+        ALTERGUARDIAN_PHASE3DEAD = "Nothing can escape death for long.",
+
+        ALTERGUARDIANHAT = "When I wear it, i-it's harder to see Abigail...",
+
+        MOONSTORM_GLASS = {
+            GENERIC = "Cold glass.",
+            INFUSED = "There's light trapped inside."
+        },
+
+        MOONSTORM_STATIC_ITEM = "I can see a little spark inside.",
+        MOONSTORM_SPARK = "It doesn't feel of this world.",
+
+        BIRD_MUTANT = "Mr. Crow, you don't look well.",
+        BIRD_MUTANT_SPITTER = "Something is terribly wrong with that bird.",
+
+        WAGSTAFF_NPC = "He flickers and fades... perhaps he's a spirit?",
+
+        WAGSTAFF_TOOL_1 = "Oh, I wish I knew if this is the tool he asked for...",
+        WAGSTAFF_TOOL_2 = "Abigail, do you think this looks like a... whatever he said?",
+        WAGSTAFF_TOOL_3 = "I wonder if this might be what that strange old man was looking for?",
+        WAGSTAFF_TOOL_4 = "Well, I've found something. I wonder if it's what he's looking for...",
+        WAGSTAFF_TOOL_5 = "This looks like something that strange old man might have a use for.",
+
+        MOONSTORM_GOOGLESHAT = "I shall be able to see with eyes unclouded.",
+
+        MOON_DEVICE = {
+            GENERIC = "How very peculiar.",
+            CONSTRUCTION1 = "There's so much left to be done...",
+            CONSTRUCTION2 = "It's quite odd looking, isn't it?",
+        }
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

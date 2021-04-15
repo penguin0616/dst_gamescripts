@@ -180,6 +180,16 @@ CONTROL_TARGET_CYCLE_BACK = CONTROL_ROTATE_LEFT
 CONTROL_TARGET_CYCLE_FORWARD = CONTROL_ROTATE_RIGHT
 
 KEY_TAB = 9
+KEY_KP_0			= 256
+KEY_KP_1			= 257
+KEY_KP_2			= 258
+KEY_KP_3			= 259
+KEY_KP_4			= 260
+KEY_KP_5			= 261
+KEY_KP_6			= 262
+KEY_KP_7			= 263
+KEY_KP_8			= 264
+KEY_KP_9			= 265
 KEY_KP_PERIOD		= 266
 KEY_KP_DIVIDE		= 267
 KEY_KP_MULTIPLY		= 268
@@ -647,7 +657,6 @@ GROUND =
 
 	OCEAN_END = 247, -- enum for checking if tile is ocean water
 
-
 --	STILL_WATER_SHALLOW = 130,
 --	STILL_WATER_DEEP = 131,
 --	MOVING_WATER_SHALLOW = 132,
@@ -930,8 +939,9 @@ TECH =
     ANCIENT_FOUR = { ANCIENT = 4 },
 
     CELESTIAL_ONE = { CELESTIAL = 1 },
+    CELESTIAL_THREE = { CELESTIAL = 3 },
 
-	MOON_ALTAR_TWO = { MOON_ALTAR = 2 },
+	MOON_ALTAR_TWO = { CELESTIAL = 3 }, -- deprecated, use CELESTIAL_THREE
 
     SHADOW_TWO = { SHADOW = 3 },
 
@@ -1173,7 +1183,7 @@ RECIPETABS =
     --Crafting stations
     ANCIENT =				{ str = "ANCIENT",				sort = 100, icon = "tab_crafting_table.tex",	crafting_station = true },
     CELESTIAL =				{ str = "CELESTIAL",			sort = 100, icon = "tab_celestial.tex",			crafting_station = true },
-    MOON_ALTAR =			{ str = "MOON_ALTAR",			sort = 100, icon = "tab_moonaltar.tex",			crafting_station = true },
+    MOON_ALTAR =			{ str = "MOON_ALTAR",			sort = 100, icon = "tab_moonaltar.tex",			crafting_station = true }, -- deprecated, all recipes have been moved into CELESTIAL
     CARTOGRAPHY =			{ str = "CARTOGRAPHY",			sort = 100, icon = "tab_cartography.tex",		crafting_station = true },
     SCULPTING =				{ str = "SCULPTING",			sort = 100, icon = "tab_sculpt.tex",			crafting_station = true },
     ORPHANAGE =				{ str = "ORPHANAGE",			sort = 100, icon = "tab_orphanage.tex",			crafting_station = true },
@@ -1461,6 +1471,45 @@ WRAP_MODE =
 	MIRROR = 2,
 	CLAMP_TO_EDGE = 3,
 }
+
+FILTER_MODE =
+{
+    POINT = 0,
+	LINEAR = 1,
+	ANISOTROPIC = 2,
+    NONE = 3,
+}
+
+MIP_FILTER_MODE =
+{
+    NONE = 0,
+    POINT = 1,
+    LINEAR = 2,
+}
+
+SamplerEffectBase = {
+    PostProcessSampler = 0,
+    BloomSampler = 1,
+    Shader = 2,
+    Texture = 3,
+    Smoke = 4,
+}
+
+SamplerSizes = {
+    Relative = 0,
+    Static = 1,
+}
+
+SamplerColourMode = {
+    RGBA = 0,
+    RGB = 1,
+}
+
+TexSamplers = {}
+UniformVariables = {
+}
+SamplerEffects = {}
+PostProcessorEffects = {}
 
 RESET_ACTION =
 {
@@ -2194,4 +2243,11 @@ SKIN_TYPES_THAT_RECEIVE_CLOTHING =
     "stage_4",
 	"powerup",
 	"NO_BASE",
+}
+
+STORM_TYPES =
+{
+    NONE = 0,
+    SANDSTORM = 1,
+    MOONSTORM = 2,
 }

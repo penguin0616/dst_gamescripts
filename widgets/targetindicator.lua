@@ -120,6 +120,10 @@ function TargetIndicator:OnUpdate()
         self.head:SetTexture(self:GetAvatarAtlas(), self:GetAvatar(), DEFAULT_AVATAR)
     end
 
+    if not self.target:IsValid() then
+        return
+    end
+
     local dist = self.owner:GetDistanceSqToInst(self.target)
     dist = math.sqrt(dist)
 

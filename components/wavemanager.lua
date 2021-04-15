@@ -128,8 +128,7 @@ function WaveManager:OnUpdate(dt)
 
 	local map = TheWorld.Map
 	if map == nil then return end
-
-	local ocean = TheWorld.components.ocean
+	
 	local px, py, pz = ThePlayer.Transform:GetWorldPosition()
 	local mult = calcPerSecMult()
 

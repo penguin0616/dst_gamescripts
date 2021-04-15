@@ -462,12 +462,19 @@ end
 
 --called from ServerCreationScreen
 function WorldSettingsTab:OnChangeLevelLocations(level_locations)
+    local old_location = self.locations[self.location_index]
     self.locations = level_locations or SERVER_LEVEL_LOCATIONS
+    local new_location = self.locations[self.location_index]
 
-    if self.locations[self.location_index] == nil then
+    if new_location == nil then
 		self:RemoveMultiLevel()
+    elseif new_location ~= old_location then
+        for i, v in ipairs(self.worldsettings_widgets) do
+            v:LoadPreset()
+        end
     end
 
+    self:RefreshOptionItems()
     self:Refresh()
 end
 

@@ -1,4 +1,4 @@
-UseShield = Class(BehaviourNode, function(self, inst, damageforshield, shieldtime, hidefromprojectiles, hidewhenscared)
+UseShield = Class(BehaviourNode, function(self, inst, damageforshield, shieldtime, hidefromprojectiles, hidewhenscared, data)
     BehaviourNode._ctor(self, "UseShield")
     self.inst = inst
     self.damageforshield = damageforshield or 100
@@ -8,6 +8,10 @@ UseShield = Class(BehaviourNode, function(self, inst, damageforshield, shieldtim
     self.timelastattacked = 1
     self.shieldtime = shieldtime or 2
     self.projectileincoming = false
+
+    if data then
+        self.dontupdatetimeonattack = data.dontupdatetimeonattack
+    end
 
     if hidewhenscared then
         self.onepicscarefn = function(inst, data) self.scareendtime = math.max(self.scareendtime, data.duration + GetTime() + math.random()) end
@@ -50,7 +54,9 @@ end
 
 function UseShield:OnAttacked(attacker, damage, projectile)
     if not self.inst.sg:HasStateTag("frozen") then
-        self.timelastattacked = GetTime()
+        if not self.dontupdatetimeonattack then
+            self.timelastattacked = GetTime()
+        end
 
         if self.inst.sg.currentstate.name == "shield" and not projectile then
             self.inst.AnimState:PlayAnimation("hit_shield")
@@ -77,8 +83,18 @@ function UseShield:Visit()
         if self:ShouldShield() or self.inst.sg:HasStateTag("shield") then
             self.damagetaken = 0
             self.projectileincoming = false
-            self.inst:PushEvent("entershield")
-            --self.inst.sg:GoToState("shield")
+
+            if self.dontupdatetimeonattack then
+                -- If we're not updating on attack, we have to update when we
+                -- start running the node instead.
+                self.timelastattacked = GetTime()
+                if not self.inst.sg:HasStateTag("shield") then
+                    self.inst:PushEvent("entershield")
+                end
+            else
+                self.inst:PushEvent("entershield")
+            end
+
             self.status = RUNNING
         else
             self.status = FAILED
@@ -90,7 +106,6 @@ function UseShield:Visit()
             self.status = RUNNING
         else
             self.inst:PushEvent("exitshield")
-            --self.inst.sg:GoToState("shield_end")
             self.status = SUCCESS
         end
     end

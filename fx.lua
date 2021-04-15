@@ -74,6 +74,14 @@ local fx =
         anim = "splash",
         sound = "turnoftides/common/together/water/splash/bird",
         fn = FinalOffset1,
+    },
+    {
+        name = "bile_splash",
+        bank = "bird_bileshoot",
+        build = "bird_bileshoot",
+        anim = "splash",
+        sound = "turnoftides/common/together/water/splash/bird",
+        fn = FinalOffset1,
     },    
     {
         name = "frogsplash",
@@ -1670,7 +1678,23 @@ local fx =
         build = "squid_puddle",
         anim = "puddle_wet",
         fn = GroundOrientation,
-    },        
+    },  
+
+    {
+        name = "bile_puddle_land",
+        bank = "squid_puddle",
+        build = "bird_puddle",
+        anim = "puddle_dry",
+        fn = GroundOrientation,
+    },
+    {
+        name = "bile_puddle_water",
+        bank = "squid_puddle",
+        build = "bird_puddle",
+        anim = "puddle_wet",
+        fn = GroundOrientation,
+    },  
+
     {
         name = "flotsam_puddle",
         bank = "flotsam",
@@ -1897,6 +1921,96 @@ local fx =
         bank = "beefalo_fx",
         build = "beefalo_fx",
         anim = "transform",
+    },
+    {
+        name = "alterguardian_spike_breakfx",
+        bank = "alterguardian_spike",
+        build = "alterguardian_spike",
+        anim = "spike_pst",
+    },
+    {
+        name = "alterguardian_spintrail_fx",
+        bank = "alterguardian_sinkhole",
+        build = "alterguardian_sinkhole",
+        anim = "pre",
+        animqueue = true,
+        fn = function(inst)
+            GroundOrientation(inst)
+            inst.Transform:SetEightFaced()
+
+            inst.AnimState:PushAnimation("idle", true)
+            inst:DoTaskInTime(60*FRAMES, function(i)
+                ErodeAway(i, 60*FRAMES)
+            end)
+        end,
+    },
+    {
+        name = "moon_device_break_stage2",
+        bank = "moon_device_break",
+        build = "moon_device_break",
+        anim = "stage2_break",
+        fn = function(inst)
+            inst.Transform:SetEightFaced()
+        end,
+    },
+    {
+        name = "moon_device_break_stage3",
+        bank = "moon_device_break",
+        build = "moon_device_break",
+        anim = "stage3_break",
+    },
+    {
+        name = "moonstorm_glass_ground_fx",
+        bank = "moonglass_charged",
+        build = "moonglass_charged_tile",
+        anim = "explosion",
+        fn = GroundOrientation,
+    },  
+    {
+        name = "moonstorm_glass_fx",
+        bank = "moonglass_charged",
+        build = "moonglass_charged_tile",
+        anim = "crack_fx",
+    },
+    {
+        name = "moonstorm_spark_shock_fx",
+        bank = "shock_fx",
+        build = "shock_fx",
+        anim = "weremoose_shock",
+        sound = "moonstorm/common/moonstorm/spark_attack",
+        eightfaced = true,
+        autorotate = true,
+        fn = FinalOffset1,
+    },
+    {
+        name = "alterguardian_phase1fallfx",
+        bank = "alterguardian_spawn_death",
+        build = "alterguardian_spawn_death",
+        anim = "fall_pre",
+    },
+    {
+        name = "moon_geyser_explode",
+        bank = "moon_altar_geyser",
+        build = "moon_geyser",
+        anim = "explode",
+    },
+    {
+        name = "moonpulse_fx",
+        bank = "moon_altar_geyser",
+        build = "moon_geyser",
+        anim = "moonpulse",
+        fn = function(inst)
+            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+        end,
+    },
+    {
+        name = "moonpulse2_fx",
+        bank = "moon_altar_geyser",
+        build = "moon_geyser",
+        anim = "moonpulse2",
+        fn = function(inst)
+            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+        end,
     },
 }
 

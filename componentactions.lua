@@ -1135,7 +1135,7 @@ local COMPONENT_ACTIONS =
         end,
 
         useabletargeteditem = function(inst, doer, target, actions)
-            if target ~= nil
+            if target ~= nil and target.prefab ~= nil
                     and inst:HasTag(target.prefab.."_targeter")
                     and not inst:HasTag("inuse_targeted") then
                 table.insert(actions, ACTIONS.USEITEMON)

@@ -30,6 +30,7 @@ local SKETCHES =
     { item = "chesspiece_antlion",      recipe = "chesspiece_antlion_builder" },
     { item = "chesspiece_minotaur",     recipe = "chesspiece_minotaur_builder" },
     { item = "chesspiece_beefalo",      recipe = "chesspiece_beefalo_builder",      image = "chesspiece_beefalo_sketch" },
+    { item = "chesspiece_guardianphase3", recipe = "chesspiece_guardianphase3_builder", image = "chesspiece_guardianphase3_sketch" },
 }
 
 local function GetSketchID(item)

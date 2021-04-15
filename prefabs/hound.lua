@@ -379,11 +379,10 @@ end
 local function CanMutateFromCorpse(inst)
     if not TUNING.SPAWN_MUTATED_HOUNDS then return false end
 	if (inst.components.amphibiouscreature == nil or not inst.components.amphibiouscreature.in_water)
-		and math.random() <= TUNING.MUTATEDHOUND_SPAWN_CHANCE 
-		and TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition()) then
+		and math.random() <= TUNING.MUTATEDHOUND_SPAWN_CHANCE then
 
-		local node = TheWorld.Map:FindNodeAtPoint(inst.Transform:GetWorldPosition())
-		return node ~= nil and node.tags ~= nil and table.contains(node.tags, "lunacyarea")
+		local x, y, z = inst.Transform:GetWorldPosition()
+		return TheWorld.Map:IsInLunacyArea(x, y, z)
 	end
 	return false
 end

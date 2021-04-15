@@ -331,7 +331,7 @@ local function ConfigureRunState(inst)
         else
             inst.sg.statemem.normal = true
         end
-    elseif inst:GetSandstormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+    elseif inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
         inst.sg.statemem.sandstorm = true
     elseif inst:HasTag("groggy") then
         inst.sg.statemem.groggy = true
@@ -2299,7 +2299,7 @@ local states =
                 dofunny = false
             else
                 inst.sg.statemem.ignoresandstorm = false
-                if inst:GetSandstormLevel() >= TUNING.SANDSTORM_FULL_LEVEL
+                if inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL
                     and not inst.components.playervision:HasGoggleVision() then
                     if not (inst.AnimState:IsCurrentAnimation("sand_walk_pst") or
                             inst.AnimState:IsCurrentAnimation("sand_walk") or
@@ -2487,7 +2487,7 @@ local states =
                 inst.SoundEmitter:PlaySound("wes/characters/wes/blow_idle")
             end),
             TimeEvent(73 * FRAMES, function(inst)
-                inst.SoundEmitter:PlaySound("dontstarve/common/balloon_pop")
+                inst.SoundEmitter:PlaySound("wes/characters/wes/pop_idle")
             end),
         },
 
@@ -2689,7 +2689,7 @@ local states =
                 return
             end
 
-            if inst:GetSandstormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+            if inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
                 if pushanim then
                     inst.AnimState:PushAnimation("sand_idle_pre")
                 else
@@ -7436,7 +7436,7 @@ local states =
                             inst.sg.statemem.heavy or
                             inst.sg.statemem.iswere or
                             inst.sg.statemem.sandstorm or
-                            inst:GetSandstormLevel() < TUNING.SANDSTORM_FULL_LEVEL) then
+                            inst:GetStormLevel() < TUNING.SANDSTORM_FULL_LEVEL) then
                     inst.sg:GoToState("run")
                 end
             end),

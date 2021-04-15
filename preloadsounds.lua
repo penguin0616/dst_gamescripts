@@ -94,6 +94,9 @@ local MainSounds =
     "grotto.fev",
     "grotto_sfx.fsb",
     "grotto_amb.fsb",
+    
+    "moonstorm.fev",
+    "moonstorm.fsb",
 
     "warly.fsb",
 	"wendy.fsb",

@@ -145,7 +145,6 @@ function Map:CollapseSoilAtPoint(x, y, z)
     end
 end
 
-
 function Map:IsFarmableSoilAtPoint(x, y, z)
     return self:GetTileAtPoint(x, y, z) == GROUND.FARMING_SOIL
 end
@@ -397,22 +396,58 @@ function Map:FindRandomPointInOcean(max_tries)
 end
 
 function Map:FindNodeAtPoint(x, y, z)
-    for i, node in ipairs(TheWorld.topology.nodes) do
-        if TheSim:WorldPointInPoly(x, z, node.poly) then
-			return node, i
-		end
-	end
-	return nil
+	-- Note: If you care about the tile overlap then use FindVisualNodeAtPoint
+	local node_index = TheWorld.Map:GetNodeIdAtPoint(x, y, z)
+	return TheWorld.topology.nodes[node_index], node_index
 end
 
 function Map:NodeAtPointHasTag(x, y, z, tag)
+	-- Note: If you care about the tile overlap then use FindVisualNodeAtPoint
+	local node_index = TheWorld.Map:GetNodeIdAtPoint(x, y, z)
+	local node = TheWorld.topology.nodes[node_index]
+	return node ~= nil and node.tags ~= nil and table.contains(node.tags, tag)
+end
 
--- THIS IS VERY EXPENSIVE TO RUN!
+local function FindVisualNodeAtPoint_TestArea(map, pt_x, pt_z, on_land, r)
+	local best = {tile_type = GROUND.INVALID, render_layer = -1}
+	for _z = -1, 1 do
+		for _x = -1, 1 do
+			local x, z = pt_x + _x*r, pt_z + _z*r
 
-    for i, node in ipairs(TheWorld.topology.nodes) do
-        if TheSim:WorldPointInPoly(x, z, node.poly) then
-			return node.tags ~= nil and table.contains(node.tags, tag)
+			local tile_type = map:GetTileAtPoint(x, 0, z)
+			if on_land == IsLandTile(tile_type) then
+				local tile_info = GetTileInfo(tile_type)
+				local render_layer = tile_info ~= nil and tile_info._render_layer or 0
+				if render_layer > best.render_layer then
+					best.tile_type = tile_type
+					best.render_layer = render_layer
+					best.x = x
+					best.z = z
+				end
+			end
 		end
 	end
-	return false
+
+	return best.tile_type ~= GROUND.INVALID and best or nil
+end
+
+-- !! NOTE: This function is fairly expensive!
+function Map:FindVisualNodeAtPoint(x, y, z, has_tag)
+	local on_land = self:IsVisualGroundAtPoint(x, 0, z)
+
+	local best = FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 0.95)
+				or FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 1.25) -- this is the handle some of the corner case when there the player is really standing quite far into the water tile, but logically on land
+				or FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 1.5) 
+
+	local node_index = (on_land and best ~= nil) and self:GetNodeIdAtPoint(best.x, 0, best.z) or 0
+	if has_tag == nil then
+		return TheWorld.topology.nodes[node_index], node_index
+	else
+		local node = TheWorld.topology.nodes[node_index]
+		return ((node ~= nil and table.contains(node.tags, has_tag)) and node or nil), node_index
+	end
+end
+
+function Map:IsInLunacyArea(x, y, z)
+	return (TheWorld.state.isalterawake and TheWorld.state.isnight) or self:FindVisualNodeAtPoint(x, y, z, "lunacyarea") ~= nil
 end

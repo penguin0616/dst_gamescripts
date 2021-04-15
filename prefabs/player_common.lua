@@ -204,8 +204,29 @@ local function GetMoistureRateScale(inst)
     end
 end
 
-local function GetSandstormLevel(inst)
-    return inst.player_classified ~= nil and inst.player_classified.sandstormlevel:value() / 7 or 0
+local function GetStormLevel(inst)
+    return inst.player_classified ~= nil and inst.player_classified.stormlevel:value() / 7 or 0
+end
+
+local function GetMoonstormLevel(inst)
+
+    pos = { x = pos.x, y = pos.z }
+
+    local depth = math.huge
+    local node_edges = TheWorld.topology.nodes[node_index].validedges
+    for _, edge_index in ipairs(node_edges) do
+        local edge_nodes = TheWorld.topology.edgeToNodes[edge_index]
+        local other_node_index = edge_nodes[1] ~= node_index and edge_nodes[1] or edge_nodes[2]
+        if not _active_moonstorm_nodes[other_node_index] then
+            local point_indices = TheWorld.topology.flattenedEdges[edge_index]
+            local node1 = { x = TheWorld.topology.flattenedPoints[point_indices[1]][1], y = TheWorld.topology.flattenedPoints[point_indices[1]][2] }
+            local node2 = { x = TheWorld.topology.flattenedPoints[point_indices[2]][1], y = TheWorld.topology.flattenedPoints[point_indices[2]][2] }
+
+            depth = math.min(depth, DistPointToSegmentXYSq(pos, node1, node2))
+        end
+    end
+
+    return depth
 end
 
 local function IsCarefulWalking(inst)
@@ -429,6 +450,24 @@ local function OnKilled(inst, data)
 end
 
 --------------------------------------------------------------------------
+--Enlightenment events
+--------------------------------------------------------------------------
+fns.OnChangeArea = function(inst, area)
+	local enable_lunacy = area ~= nil and area.tags and table.contains(area.tags, "lunacyarea")
+	inst.components.sanity:EnableLunacy(enable_lunacy, "lunacyarea")
+end
+
+fns.OnAlterNight = function(inst)
+	local enable_lunacy = TheWorld.state.isnight and TheWorld.state.isalterawake
+	inst.components.sanity:EnableLunacy(enable_lunacy, "alter_night")
+end
+
+fns.OnStormLevelChanged = function(inst, data)
+	local in_moonstorm = data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM
+	inst.components.sanity:EnableLunacy(in_moonstorm, "moon_storm")
+end
+
+--------------------------------------------------------------------------
 
 local function RegisterActivePlayerEventListeners(inst)
     --HUD Audio events
@@ -468,6 +507,12 @@ local function RegisterMasterEventListeners(inst)
     inst:ListenForEvent("learnplantstage", ex_fns.OnLearnPlantStage)
     inst:ListenForEvent("learnfertilizer", ex_fns.OnLearnFertilizer)
     inst:ListenForEvent("takeoversizedpicture", ex_fns.OnTakeOversizedPicture)
+
+	-- Enlightenment events
+	inst:ListenForEvent("changearea", fns.OnChangeArea)
+	inst:ListenForEvent("stormlevel", fns.OnStormLevelChanged)
+	inst:WatchWorldState("isnight", fns.OnAlterNight)
+	inst:WatchWorldState("isalterawake", fns.OnAlterNight)
 end
 
 --------------------------------------------------------------------------
@@ -475,12 +520,12 @@ end
 --------------------------------------------------------------------------
 
 local function AddActivePlayerComponents(inst)
-    inst:AddComponent("playertargetindicator")
+    inst:AddComponent("hudindicatorwatcher")
     inst:AddComponent("playerhearing")
 end
 
 local function RemoveActivePlayerComponents(inst)
-    inst:RemoveComponent("playertargetindicator")
+    inst:RemoveComponent("hudindicatorwatcher")
     inst:RemoveComponent("playerhearing")
 end
 
@@ -492,7 +537,7 @@ local function ActivateHUD(inst)
     end
     TheCamera:SetOnUpdateFn(not TheWorld:HasTag("cave") and function(camera)
         hud:UpdateClouds(camera)
-        hud:UpdateDrops(camera)        
+        hud:UpdateDrops(camera)
     end or nil)
     hud:SetMainCharacter(inst)
 end
@@ -1474,13 +1519,24 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.GetMoisture = GetMoisture -- Didn't want to make moisture a networked component
         inst.GetMaxMoisture = GetMaxMoisture -- Didn't want to make moisture a networked component
         inst.GetMoistureRateScale = GetMoistureRateScale -- Didn't want to make moisture a networked component
-        inst.GetSandstormLevel = GetSandstormLevel -- Didn't want to make stormwatcher a networked component
+        inst.GetStormLevel = GetStormLevel -- Didn't want to make stormwatcher a networked component
         inst.IsCarefulWalking = IsCarefulWalking -- Didn't want to make carefulwalking a networked component
         inst.EnableMovementPrediction = EnableMovementPrediction
         inst.ShakeCamera = ShakeCamera
         inst.SetGhostMode = SetGhostMode
         inst.IsActionsVisible = IsActionsVisible
 	end
+
+    local max_range = TUNING.MAX_INDICATOR_RANGE * 1.5
+
+    local function ShouldTrackfn(inst, viewer)
+        return  inst:IsValid() and
+                not inst:HasTag("noplayerindicator") and
+                not inst:HasTag("hiding") and
+                inst:IsNear(inst, max_range) and
+                not inst.entity:FrustumCheck() and
+                CanEntitySeeTarget(viewer, inst)
+    end
 
     local function fn()
         local inst = CreateEntity()
@@ -1648,13 +1704,16 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst._hermit_music = net_event(inst.GUID, "localplayer._hermit_music")
 
         if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
-            inst.yotb_skins_sets = net_shortint(inst.GUID, "player.yotb_skins_sets") 
+            inst.yotb_skins_sets = net_shortint(inst.GUID, "player.yotb_skins_sets")
             inst:DoTaskInTime(0,fns.YOTB_getrandomset)
         end
 
         if not TheNet:IsDedicated() then
             inst:ListenForEvent("localplayer._winters_feast_music", OnWintersFeastMusic)
             inst:ListenForEvent("localplayer._hermit_music", OnHermitMusic)
+
+            inst:AddComponent("hudindicatable")
+            inst.components.hudindicatable:SetShouldTrackFunction(ShouldTrackfn)
         end
 
         inst:ListenForEvent("sharksounddirty", OnSharkSound)
@@ -1759,6 +1818,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("moisture")
         inst:AddComponent("sheltered")
         inst:AddComponent("stormwatcher")
+        inst:AddComponent("sandstormwatcher")
+        inst:AddComponent("moonstormwatcher")
         inst:AddComponent("carefulwalker")
 
         if IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
@@ -1903,6 +1964,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.OnNewSpawn = OnNewSpawn
         inst.OnDespawn = OnDespawn
 
+		fns.OnAlterNight(inst)
+
         --V2C: used by multiplayer_portal_moon
         inst.SaveForReroll = SaveForReroll
         inst.LoadForReroll = LoadForReroll
@@ -1910,7 +1973,17 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:ListenForEvent("startfiredamage", OnStartFireDamage)
         inst:ListenForEvent("stopfiredamage", OnStopFireDamage)
         inst:ListenForEvent("burnt", OnBurntHands)
-
+--[[
+        inst:ListenForEvent("stormlevel", function(owner, data)
+            if data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0 then
+                print("5")
+                TheWorld.components.moonstormlightningmanager.sparks_per_sec_mod = 0.1
+            else
+                print("1")
+                TheWorld.components.moonstormlightningmanager.sparks_per_sec_mod = 1.0
+            end
+        end)
+]]
         TheWorld:PushEvent("ms_playerspawn", inst)
 
         return inst

@@ -7,7 +7,13 @@ local function OnDeplete(inst)
 end
 
 local function OnEquip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_object", "swap_"..inst.prefab, "swap_"..inst.prefab)
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_"..inst.prefab, inst.GUID, "swap_"..inst.prefab)
+    else
+        owner.AnimState:OverrideSymbol("swap_object", "swap_"..inst.prefab, "swap_"..inst.prefab)
+    end
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 end
