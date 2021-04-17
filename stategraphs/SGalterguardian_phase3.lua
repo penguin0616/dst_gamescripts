@@ -305,8 +305,6 @@ local states =
             inst.components.health:SetInvincible(false)
             inst.AnimState:SetBuild("alterguardian_phase3")
             inst.AnimState:SetBankAndPlayAnimation("alterguardian_phase3", "idle")
-
-            inst.components.combat:RestartCooldown()
         end,
     },
 
@@ -371,6 +369,9 @@ local states =
             inst.components.combat:StartAttack()
 
             start_summon_circle(inst)
+
+            inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_stab_short")
+            inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_stab_LP_pre","atk_stab_loop_pre")
         end,
 
         events =
@@ -404,6 +405,22 @@ local states =
             inst.components.combat:RestartCooldown()
 
             inst.sg.mem.summon_loops = inst.sg.mem.summon_loops or 0
+            inst.sg.mem.loop_anim_len = inst.sg.mem.loop_anim_len or inst.AnimState:GetCurrentAnimationLength()
+
+            inst.sg.statemem.previous_loop_time = (inst.sg.mem.summon_loops * inst.sg.mem.loop_anim_len)
+
+            inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/summon")
+        end,
+
+        onupdate = function(inst, dt)
+            local time_in_summon = inst.sg:GetTimeInState() + inst.sg.statemem.previous_loop_time
+            local summon_maxtime = inst.sg.mem.loop_anim_len * TUNING.ALTERGUARDIAN_PHASE3_SUMMONMAXLOOPS
+            local percent_in_summon = time_in_summon / summon_maxtime
+
+            if not inst.SoundEmitter:PlayingSound("summon_loop") then
+                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_stab_LP_pre", "summon_loop")
+            end
+            inst.SoundEmitter:SetParameter("summon_loop", "intensity", percent_in_summon)
         end,
 
         timeline =
@@ -464,6 +481,7 @@ local states =
             -- Whether we go to pst or loop, we're fine.
             -- This is to cover stuff like death and frozen.
             if not inst.sg.statemem.legit_exit then
+                inst.SoundEmitter:KillSound("summon_loop")
                 stop_summon_circle(inst)
             end
         end,
@@ -480,6 +498,9 @@ local states =
             inst.AnimState:PlayAnimation("attk_stab2_pst")
 
             inst.components.timer:StartTimer("summon_cd", TUNING.ALTERGUARDIAN_PHASE3_SUMMONCOOLDOWN)
+
+            inst.SoundEmitter:KillSound("atk_stab_loop_pre")
+            inst.SoundEmitter:KillSound("summon_loop")
         end,
 
         events =
@@ -501,7 +522,7 @@ local states =
             inst.components.locomotor:StopMoving()
 
             inst.AnimState:PlayAnimation("attk_skybeam")
-            inst.AnimState:PushAnimation("idle2", true)
+            inst.sg.statemem.skybeamanim_playing = true
 
             inst.components.combat:StartAttack()
 
@@ -517,7 +538,7 @@ local states =
             end),
             TimeEvent(44*FRAMES, function(inst)
                 inst:DoTraps()
-                inst.components.timer:StartTimer("traps_cd", 10)
+                inst.components.timer:StartTimer("traps_cd", TUNING.ALTERGUARDIAN_PHASE3_TRAP_CD)
             end),
 
             TimeEvent(1*FRAMES, function(inst) set_lightvalues(inst, 0.9) end),
@@ -551,6 +572,13 @@ local states =
         events =
         {
             EventHandler("endtraps", post_attack_idle),
+            EventHandler("animover", function(inst)
+                if inst.sg.statemem.skybeamanim_playing then
+                    inst.sg.statemem.skybeamanim_playing = false
+                    inst.AnimState:PushAnimation("idle2", true)
+                    inst.sg:RemoveStateTag("busy")
+                end
+            end),
         },
 
         ontimeout = post_attack_idle,
@@ -703,6 +731,8 @@ local states =
 
             -- TODO @stevenm maybe this can be timed better; i.e. when the light is up (imply it's heat?)
             inst.sg:AddStateTag("nofreeze")
+
+             inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_beam")
         end,
 
         onupdate = function(inst)

@@ -11,6 +11,8 @@ end)
 local use_shield_data =
 {
     dontupdatetimeonattack = true,
+    usecustomanims = true,
+    dontshieldforfire = true,
 }
 
 local function GetWanderHome(inst)

@@ -289,8 +289,12 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
+                inst:PushEvent("talk")
                 inst.components.talker:Say(STRINGS.WAGSTAFF_NPC_CAPTURESTOP)
-                inst.sg:GoToState("capture_emote")
+                inst:DoTaskInTime(3,function()                
+                    inst.components.talker:Say(STRINGS.WAGSTAFF_NPC_CAPTURESTOP2)
+                    inst.sg:GoToState("capture_emote")
+                end)
             end),
         },
     },

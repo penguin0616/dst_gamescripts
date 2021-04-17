@@ -43,7 +43,7 @@ local spawnpillars, spawntop -- Initialized as functions further down
 
 local PLACER_SNAP_DISTANCE = 6
 
-local BREAK_DELAY = 7.5
+local BREAK_DELAY = 9.5
 
 local existing_moon_device = nil
 
@@ -67,6 +67,7 @@ local function OnConstructed(inst, doer)
 	if concluded then
         existing_moon_device = nil
         local new_inst = ReplacePrefab(inst, inst._construction_product)
+        new_inst._has_replaced_moon_altar_link = true
         new_inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/house/stage"..new_inst.level.."_place")
         
         if new_inst.level == 2 then
@@ -86,14 +87,6 @@ local function base_onbuilt(inst)
     inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/house/stage".. inst.level.."_place")
 
     inst.AnimState:PlayAnimation("stage1_idle_pre")
-
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, PLACER_SNAP_DISTANCE, MOON_ALTAR_LINK_TAGS)
-    if #ents > 0 then
-        for _, v in ipairs(ents) do
-            v:Remove()
-        end
-    end
 end
 
 local function addpillar(inst, local_x, local_z, rotation)
@@ -342,6 +335,34 @@ local function getstatus(inst, viewer)
         or nil -- GENERIC = completed
 end
 
+local function validate_spawn(inst)
+    if not inst._has_replaced_moon_altar_link then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local ents = TheSim:FindEntities(x, y, z, PLACER_SNAP_DISTANCE, MOON_ALTAR_LINK_TAGS)
+        if #ents > 0 then
+            local link_x, _, link_z = ents[1].Transform:GetWorldPosition()
+            inst.Transform:SetPosition(link_x, 0, link_z)
+
+            ents[1]:Remove()
+
+            inst._has_replaced_moon_altar_link = true
+        else
+            print("moon_device must be instantiated on top of a moon_altar_link -- removing instance")
+            inst:Remove()
+        end
+    end
+end
+
+local function OnSave(inst, data)
+    data.has_replaced_moon_altar_link = inst._has_replaced_moon_altar_link
+end
+
+local function OnLoad(inst, data)
+    if data ~= nil and data.has_replaced_moon_altar_link then
+        inst._has_replaced_moon_altar_link = true
+    end
+end
+
 local function MakeDeviceStage(name, client_postinit, master_postinit, construction_data)
 	local function fn()
 
@@ -431,13 +452,15 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
             inst:ListenForEvent("onremove", function()
                 existing_moon_device = nil
             end)
+
+            inst:DoTaskInTime(0, validate_spawn)
         else
             print("Multiple instances of moon_device")
             inst:DoTaskInTime(0, inst.Remove)
         end
 
-		-- inst.OnSave = onsave
-		-- inst.OnLoad = onload
+		inst.OnSave = OnSave
+		inst.OnLoad = OnLoad
 
         if master_postinit then
            master_postinit(inst)
@@ -478,7 +501,19 @@ local function placer_override_testfn(inst)
         can_build, mouse_blocked = inst.components.placer.testfn(inst:GetPosition(), inst:GetRotation())
     end
 
-    can_build = can_build and inst.accept_placement
+    -- can_build = can_build and inst.accept_placement
+
+    -- testfn just checks Map:CanDeployRecipeAtPoint(). If there is a valid geyser but the build
+    -- position doesn't pass this check it's either because
+    --      1.  The area is blocked by an item that can exist on top of the device, so building under it is fine
+    --      2.  The area is blocked by a structure; it doesn't really matter if we allow building under it
+    --      3.  The area is invalid (over water or something); shouldn't really be hitting this since the
+    --          moon_altar_link wouldn't be valid at that point, but if something goes wrong it's better to
+    --          just allow building on it than locking all further progress
+
+    -- Better to just override can_build.
+    
+    can_build = inst.accept_placement
 
     return can_build, mouse_blocked
 end
@@ -548,13 +583,13 @@ local function meteor_spawner_fn()
 
     inst.persists = false
 
-    inst:DoTaskInTime(BREAK_DELAY * 0.22, spawnmeteor)
-    inst:DoTaskInTime(BREAK_DELAY * 0.54, spawnmeteor)
-    inst:DoTaskInTime(BREAK_DELAY * 0.59, spawnmeteor)
-    inst:DoTaskInTime(BREAK_DELAY * 0.68, spawnmeteor)
+    inst:DoTaskInTime(BREAK_DELAY * 0.49, spawnmeteor)
+    inst:DoTaskInTime(BREAK_DELAY * 0.58, spawnmeteor)
+    inst:DoTaskInTime(BREAK_DELAY * 0.65, spawnmeteor)
+    inst:DoTaskInTime(BREAK_DELAY * 0.72, spawnmeteor)
 
-    inst:DoTaskInTime(BREAK_DELAY * 1.08, spawnmeteor)
-    inst:DoTaskInTime(BREAK_DELAY * 1.14, spawnmeteorandremove)
+    inst:DoTaskInTime(BREAK_DELAY * 1.06, spawnmeteor)
+    inst:DoTaskInTime(BREAK_DELAY * 1.12, spawnmeteorandremove)
 
     return inst
 end

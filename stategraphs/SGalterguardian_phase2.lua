@@ -15,16 +15,21 @@ local events =
         if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy")) 
                 and (data.target ~= nil and data.target:IsValid()) then
             local dsq_to_target = inst:GetDistanceSqToInst(data.target)
+
             local can_spin = not inst.components.timer:TimerExists("spin_cd")
             local can_summon = not inst.components.timer:TimerExists("summon_cd")
+            local can_spike = not inst.components.timer:TimerExists("spike_cd")
 
             local attack_state = (not data.target:IsOnValidGround() and "antiboat_attack")
                 or (can_spin and dsq_to_target < SPIN_RANGE_DSQ and "spin_pre")
-                or (dsq_to_target < CHOP_RANGE_DSQ and "atk_chop")
                 or (can_summon and "atk_summon")
-                or "atk_spike"
+                or (can_spike and "atk_spike")
+                or (dsq_to_target < CHOP_RANGE_DSQ and "atk_chop")
+                or nil
 
-            inst.sg:GoToState(attack_state, data.target)
+            if attack_state ~= nil then
+                inst.sg:GoToState(attack_state, data.target)
+            end
         end
     end),
 }
@@ -168,8 +173,6 @@ local states =
             inst.components.health:SetInvincible(false)
             inst.AnimState:SetBuild("alterguardian_phase2")
             inst.AnimState:SetBankAndPlayAnimation("alterguardian_phase2", "idle")
-
-            inst.components.combat:RestartCooldown()
         end,
     },
 
@@ -199,7 +202,9 @@ local states =
         onenter = function(inst, target)
             inst.components.locomotor:StopMoving()
 
-            inst.components.combat:StartAttack()
+            if target ~= nil and target:IsValid() then
+                inst:ForceFacePoint(target:GetPosition())
+            end
 
             inst.AnimState:PlayAnimation("attk_chop")
         end,
@@ -237,6 +242,7 @@ local states =
             inst.components.locomotor:StopMoving()
 
             inst.components.combat:StartAttack()
+            inst.components.timer:StartTimer("spike_cd", TUNING.ALTERGUARDIAN_PHASE2_SPIKECOOLDOWN)
 
             inst.AnimState:PlayAnimation("attk_stab_pre")
             inst.AnimState:PushAnimation("attk_stab_loop", true)

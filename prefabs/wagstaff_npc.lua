@@ -45,7 +45,11 @@ local function OnGetItemFromPlayer(inst, giver, item)
 end
 
 local function OnRefuseItem(inst, item)
-    inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_NOT_THIS_TOOL))
+    if inst.tool_wanted then
+        inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_NOT_THIS_TOOL))
+    else
+        inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_TOO_BUSY))
+    end
 end
 
 local function OnAttacked(inst, data)
@@ -129,16 +133,21 @@ local function LaunchGameItem(inst, item, angle, minorspeedvariance, target)
 end
 
 local function giveblueprints(inst,player, recipe)
-    local blueprint = SpawnPrefab(recipe)
-    local x,y,z = inst.Transform:GetWorldPosition()
-    local angle
-    if player ~= nil and player:IsValid() then
-        angle = 180 - player:GetAngleToPoint(x, 0, z) + (math.random() *10)-5
-    else
-        local down = TheCamera:GetDownVec()
-        angle = math.atan2(down.z, down.x) / DEGREES
+    if player and player.components.timer:TimerExists("wagstaff_npc_blueprints") then
+        return
     end
-    LaunchGameItem(inst, blueprint, GetRandomWithVariance(angle, 5) * DEGREES, true, player)
+    if player and not player.components.builder:KnowsRecipe(recipe) then 
+        local blueprint = SpawnPrefab(recipe .. "_blueprint")
+        local x,y,z = inst.Transform:GetWorldPosition()
+        local angle
+        if player ~= nil and player:IsValid() then
+            angle = 180 - player:GetAngleToPoint(x, 0, z) + (math.random() *10)-5
+        else
+            local down = TheCamera:GetDownVec()
+            angle = math.atan2(down.z, down.x) / DEGREES
+        end
+        LaunchGameItem(inst, blueprint, GetRandomWithVariance(angle, 5) * DEGREES, true, player)
+    end
 end
 
 local function waypointadvance(inst, txt)
@@ -162,6 +171,18 @@ local function waypointadvance(inst, txt)
                 inst:erode(2,nil,true)
             end)
         end)
+    end
+end
+
+local function doblueprintcheck(inst)
+    for i, v in ipairs(AllPlayers) do
+        if inst:GetDistanceSqToInst(v) < 12*12 then
+            giveblueprints(inst,v,"moonstorm_goggleshat")
+            giveblueprints(inst,v,"moon_device_construction1")
+            if not v.components.timer:TimerExists("wagstaff_npc_blueprints") then
+                v.components.timer:StartTimer("wagstaff_npc_blueprints",120)            
+            end
+        end
     end
 end
 
@@ -191,29 +212,34 @@ local function onplayernear(inst,player)
         if not TheWorld.components.moonstormmanager.metplayers[player.userid] then
             
             TheWorld.components.moonstormmanager:AddMetplayer(player.userid)
+            
             inst:PushEvent("talk")
             inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_MEETING))
 
             inst:DoTaskInTime(3,function()
-                for i, v in ipairs(AllPlayers) do
-                    if inst:GetDistanceSqToInst(v) < 12*12 then
-                        giveblueprints(inst,v,"moonstorm_goggleshat_blueprint")
-                        giveblueprints(inst,v,"moon_device_construction1_blueprint")
-                    end
-                end
+                doblueprintcheck(inst)
 
                 inst:PushEvent("talk")
                 inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_MEETING_2))
 
                 inst:DoTaskInTime(3,function()
+
                     inst:PushEvent("talk")
                     inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_MEETING_3))
+
                     inst:DoTaskInTime(3,function()
-                        waypointadvance(inst,STRINGS.WAGSTAFF_NPC_MEETING_4)
+
+                        inst:PushEvent("talk")
+                        inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_MEETING_4))
+
+                        inst:DoTaskInTime(3,function()
+                            waypointadvance(inst,STRINGS.WAGSTAFF_NPC_MEETING_5)
+                        end)
                     end)
                 end)
             end)
         else
+            doblueprintcheck(inst)
             waypointadvance(inst)
         end
     end
@@ -433,6 +459,7 @@ local function fn()
     inst.getline = getline
     inst.erode = erode
     inst.cleartasks = cleartasks
+    inst.doblueprintcheck = doblueprintcheck
 
     inst:SetStateGraph("SGwagstaff_npc")
     inst:SetBrain(wagstaff_npcbrain)

@@ -118,7 +118,7 @@ function Wagstaff_NPCBrain:OnStart()
         PriorityNode(
         {
             in_hunt,
-            ChattyNode(self.inst, "PIG_TALK_ATTEMPT_TRADE",
+            ChattyNode(self.inst, "WAGSTAFF_NPC_ATTEMPT_TRADE",
                 FaceEntity(self.inst, GetTraderFn, KeepTraderFn)),
             StandStill(self.inst),
         }, .5)

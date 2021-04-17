@@ -1914,6 +1914,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst:AddComponent("singingshelltrigger")
         inst.components.singingshelltrigger.trigger_range = TUNING.SINGINGSHELL_TRIGGER_RANGE
 
+        inst:AddComponent("timer")
+
         inst:AddInherentAction(ACTIONS.PICK)
         inst:AddInherentAction(ACTIONS.SLEEPIN)
         inst:AddInherentAction(ACTIONS.CHANGEIN)

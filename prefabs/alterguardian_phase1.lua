@@ -280,6 +280,7 @@ local function on_timer_finished(inst, data)
     end
 end
 
+local BURN_OFFSET = Vector3(0, 1.5, 0)
 local function fn()
     local inst = CreateEntity()
 
@@ -359,9 +360,10 @@ local function fn()
     --inst.components.timer:StartTimer("gotospawn", N_A)
     inst:ListenForEvent("timerdone", on_timer_finished)
 
-    MakeMediumBurnableCharacter(inst)
+    MakeLargeBurnableCharacter(inst, nil, BURN_OFFSET)
+    inst.components.burnable:SetBurnTime(5)
 
-    MakeMediumFreezableCharacter(inst)
+    MakeLargeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)
 
     MakeHauntableGoToState(inst, "tantrum_pre", TUNING.HAUNT_CHANCE_OCCASIONAL, TUNING.ALTERGUARDIAN_PHASE1_ATTACK_PERIOD, TUNING.HAUNT_SMALL)

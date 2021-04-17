@@ -197,17 +197,29 @@ local function on_day_change()
 	if TheWorld.net.components.moonstorms and next(TheWorld.net.components.moonstorms:GetMoonstormNodes()) then
 		self.stormdays = self.stormdays + 1
 		if self.stormdays >= TUNING.MOONSTORM_MOVE_TIME then
-			if math.random() < Remap(self.stormdays, TUNING.MOONSTORM_MOVE_TIME, TUNING.MOONSTORM_MOVE_MAX,0.1,1) then							
+			if math.random() < Remap(self.stormdays, TUNING.MOONSTORM_MOVE_TIME, TUNING.MOONSTORM_MOVE_MAX,0.1,1) then
 				self:StopCurrentMoonstorm()
 
 				if self.wagstaff then
 			        self.wagstaff.busy = self.wagstaff.busy and self.wagstaff.busy + 1 or 1
-			        self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY1))
-			        self.wagstaff:DoTaskInTime(4,function() 
-			            self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY2))
-			            self.wagstaff:DoTaskInTime(2,function()
-			                self.wagstaff:erode(2,nil,true)
-			            end)
+
+			        self.wagstaff:PushEvent("talk")
+  					self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY1))
+			        
+			        self.wagstaff:DoTaskInTime(3,function() 
+
+			        	self.wagstaff:PushEvent("talk")
+  						self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY2))
+					
+						self.wagstaff:DoTaskInTime(3,function() 
+
+							self.wagstaff:PushEvent("talk")
+  							self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY3))
+				            
+				            self.wagstaff:DoTaskInTime(2,function()
+				                self.wagstaff:erode(2,nil,true)
+				            end)
+				        end)
 			        end)
 				end
 
@@ -279,7 +291,7 @@ function self:StartMoonstorm(set_first_node_index,nodes)
 		self.startstormtask:Cancel()
 		self.startstormtask = nil
 	end
-	
+
 	if not TheWorld.net or not TheWorld.net.components.moonstorms == nil then
 		print("NO COMPONENT  TheWorld.net.components.moonstorms")
 		return
@@ -513,8 +525,10 @@ end
 
 
 function self:startNeedTool()
-	self.inst.components.timer:PauseTimer("moonstorm_experiment_complete")
-	self.wagstaff:WaitForTool()
+	if self.wagstaff then
+		self.inst.components.timer:PauseTimer("moonstorm_experiment_complete")
+		self.wagstaff:WaitForTool()
+	end
 end
 
 function self:foundTool()

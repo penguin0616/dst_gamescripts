@@ -5214,11 +5214,17 @@ STRINGS =
     WAGSTAFF_NPC_MUMBLE_1 = {"It's close by now...","If I can just find...","If my hypothesis is correct...","It's here... somewhere."},
     WAGSTAFF_NPC_THIS_WAY = {"Ahh, this way!","My scans point toward this direction.","Aha, found it again!"},
     WAGSTAFF_NPC_NO_WAY1 = {"Blast, I lost the signal."},
-    WAGSTAFF_NPC_NO_WAY2 = {"I must have miscalculated, come find me again once I've made some preparations."},
+    WAGSTAFF_NPC_NO_WAY2 = {"I must have miscalculated."},
+    WAGSTAFF_NPC_NO_WAY3 = {"Come find me again once I've made some preparations."},
 
     WAGSTAFF_NPC_NOT_THIS_TOOL = {"No no, that's not what I'm looking for!","This isn't the right one, the other one!"},
 
     WAGSTAFF_NPC_YES_THIS_TOOL = {"Excellent, that's it!","At last! Now let's get this finished!"},
+
+    WAGSTAFF_NPC_TOO_BUSY = {"I'm a bit preoccupied at the moment.","Patience if you please, this requires my full concentration."},
+
+    WAGSTAFF_NPC_ATTEMPT_TRADE = {"Is it important?","Quickly now, timing is critical!"},
+
 
     WAGSTAFF_NPC_EXPERIMENT_DONE_1 = "It's done!",
     WAGSTAFF_NPC_EXPERIMENT_DONE_2 = "Take this, you'll need it for what we have to do.",
@@ -5230,19 +5236,21 @@ STRINGS =
 
     WAGSTAFF_NPC_MEETING = "You! Of course!",
     WAGSTAFF_NPC_MEETING_2 = "Quick, take these!",
-    WAGSTAFF_NPC_MEETING_3 = "I'll be needing some assistance shortly. Find me when you are sufficiently prepared.",
-    WAGSTAFF_NPC_MEETING_4 = "Now, to find the source of that reading...",
+    WAGSTAFF_NPC_MEETING_3 = "I'll be needing some assistance shortly.",
+    WAGSTAFF_NPC_MEETING_4 = "Find me when you are sufficiently prepared.",
+    WAGSTAFF_NPC_MEETING_5 = "Now, to find the source of that reading...",
 
     WAGSTAFF_NPC_WANT_TOOL_1 = "Quick, I need my Reticulating Buffer!",
     WAGSTAFF_NPC_WANT_TOOL_2 = "Someone find me a Widget Deflubber!",
     WAGSTAFF_NPC_WANT_TOOL_3 = "Has anyone seen my Grommet Scriber?",
     WAGSTAFF_NPC_WANT_TOOL_4 = "Can someone hand me the Conceptual Scrubber?",
-    WAGSTAFF_NPC_WANT_TOOL_5 = "I'm certain I put the Calibrated Observer down here somewhere...",
+    WAGSTAFF_NPC_WANT_TOOL_5 = "I'm certain I put the Calibrated Perceiver down here somewhere...",
 
     WAGSTAFF_NPC_CAPTURESTART = "Excellent! My little experiment was a resounding success!",
-    WAGSTAFF_NPC_CAPTURESTOP = "Thank you for all your hard work. Now if you'll excuse me, I have much to do.",
+    WAGSTAFF_NPC_CAPTURESTOP = "Thank you for all your hard work.",
+    WAGSTAFF_NPC_CAPTURESTOP2 = "Now if you'll excuse me, I have much to do.",
 
-    WAGSTAFF_GOTTAGO1 = "Wait! It happened!",
+    WAGSTAFF_GOTTAGO1 = "Aha! This selenological anomaly can only mean one thing!",
     WAGSTAFF_GOTTAGO2 = "Now is my chance!",
 }
 

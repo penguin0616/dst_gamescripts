@@ -254,7 +254,7 @@ local function EstablishColony(loc)
     
     if newFlock.rookery then
         newFlock.rookery = newFlock.rookery + loc
-		newFlock.is_mutated = TheWorld.Map:IsInLunacyArea(newFlock.rookery.x, 0, newFlock.rookery.z)
+		newFlock.is_mutated = TheWorld.Map:IsInLunacyArea(newFlock.rookery.x, 0, newFlock.rookery.z) and TUNING.SPAWN_MOON_PENGULLS
         newFlock.ice = SpawnPrefab("penguin_ice")
         newFlock.ice.Transform:SetPosition(newFlock.rookery:Get())
         newFlock.ice.spawner = self

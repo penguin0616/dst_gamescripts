@@ -93,6 +93,7 @@ local ChildSpawner = Class(function(self, inst)
     self.emergencychildrenoutside = {}
     self.numemergencychildrenoutside = 0
 
+    self._doqueuedspawn = function() self:DoQueuedSpawn() end
     self._onchildkilled = function(child) self:OnChildKilled(child) end
 
     self.useexternaltimer = false
@@ -525,10 +526,14 @@ end
 
 function ChildSpawner:OnEntityWake()
     if self.queued_spawn then
-        self.queued_spawn = false
-        self:SpawnChild()
-        self:StartUpdate()
+        self.inst:DoTaskInTime(0, self._doqueuedspawn)
     end
+end
+
+function ChildSpawner:DoQueuedSpawn()
+    self.queued_spawn = false
+    self:SpawnChild()
+    self:StartUpdate()
 end
 
 function ChildSpawner:SpawnChild(target, prefab, radius)

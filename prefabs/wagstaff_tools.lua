@@ -13,7 +13,7 @@ local function OnPickup(inst)
 end
 
 local function nameupdater(inst)
-    if ThePlayer.prefab ~= "winona" then
+    if ThePlayer and ThePlayer.prefab ~= "winona" then
         return STRINGS.NAMES[string.upper(inst.prefab.."_LAYMAN")]
     else
         return STRINGS.NAMES[string.upper(inst.prefab)]

@@ -11,6 +11,8 @@ UseShield = Class(BehaviourNode, function(self, inst, damageforshield, shieldtim
 
     if data then
         self.dontupdatetimeonattack = data.dontupdatetimeonattack
+        self.dontusecustomanims = not data.usecustomanims
+        self.dontshieldforfire = data.dontshieldforfire
     end
 
     if hidewhenscared then
@@ -47,7 +49,7 @@ end
 function UseShield:ShouldShield()
     return not self.inst.components.health:IsDead()
         and (self.damagetaken > self.damageforshield or
-            self.inst.components.health.takingfiredamage or
+            (not self.dontshieldforfire and self.inst.components.health.takingfiredamage) or
             self.projectileincoming or
             GetTime() < self.scareendtime)
 end
@@ -58,7 +60,8 @@ function UseShield:OnAttacked(attacker, damage, projectile)
             self.timelastattacked = GetTime()
         end
 
-        if self.inst.sg.currentstate.name == "shield" and not projectile then
+        if not self.dontusecustomanims and
+                self.inst.sg.currentstate.name == "shield" and not projectile then
             self.inst.AnimState:PlayAnimation("hit_shield")
             self.inst.AnimState:PushAnimation("hide_loop")
             return
@@ -102,7 +105,8 @@ function UseShield:Visit()
     end
 
     if self.status == RUNNING then
-        if not self:TimeToEmerge() or self.inst.components.health.takingfiredamage then 
+        if not self:TimeToEmerge() or
+                (not self.dontshieldforfire and self.inst.components.health.takingfiredamage) then
             self.status = RUNNING
         else
             self.inst:PushEvent("exitshield")

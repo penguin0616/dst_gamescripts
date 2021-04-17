@@ -150,8 +150,6 @@ local states =
             inst.components.health:SetInvincible(false)
             inst.AnimState:SetBuild("alterguardian_phase1")
             inst.AnimState:SetBankAndPlayAnimation("alterguardian_phase1", "idle")
-
-            inst.components.combat:RestartCooldown()
         end,
     },
 

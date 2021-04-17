@@ -66,12 +66,16 @@ local function do_spike_attack(inst)
     local spikes_to_spawn = GetRandomMinMax(MIN_SPIKE_COUNT, MAX_SPIKE_COUNT)
     local spikes_spawned = 0
 
+    local angles_chosen = {}
+
     -- Prioritize nearby players first.
     for _, p in ipairs(AllPlayers) do
         if not p:HasTag("playerghost") and p.entity:IsVisible()
                 and (p.components.health ~= nil and not p.components.health:IsDead())
                 and p:GetDistanceSqToPoint(ipos:Get()) < SPIKE_DSQ then
             local firing_angle = inst:GetAngleToPoint(p.Transform:GetWorldPosition())
+            table.insert(angles_chosen, firing_angle)
+
             local spawn_data =
             {
                 spawn_pos = ipos,
@@ -103,6 +107,8 @@ local function do_spike_attack(inst)
     for _, p in ipairs(targetable_entities) do
         if p.components.health ~= nil and not p.components.health:IsDead() then
             local firing_angle = inst:GetAngleToPoint(p.Transform:GetWorldPosition())
+            table.insert(angles_chosen, firing_angle)
+
             local spawn_data =
             {
                 spawn_pos = ipos,
@@ -113,6 +119,43 @@ local function do_spike_attack(inst)
             if spikes_spawned >= spikes_to_spawn then
                 break
             end
+        end
+    end
+
+    if spikes_spawned >= spikes_to_spawn then
+        return
+    end
+
+    -- We STILL have spikes remaining. So try to just pick random angles
+    -- that are some amount different than the ones we've already chosen.
+    local spikes_remaining = spikes_to_spawn - spikes_spawned
+    for i=1, spikes_remaining do
+        local start_angle = 360*math.random()
+        local firing_angle = nil
+        for ang = 0, 360, 60 do
+            local possible_angle = start_angle + ang
+            local angle_valid = true
+            for _, used_ang in ipairs(angles_chosen) do
+                if math.abs(possible_angle - used_ang) < 30 then
+                    angle_valid = false
+                    break
+                end
+            end
+
+            if angle_valid then
+                firing_angle = possible_angle
+                break
+            end
+        end
+
+        if firing_angle then
+            table.insert(angles_chosen, firing_angle)
+            local spawn_data =
+            {
+                spawn_pos = ipos,
+                angle = firing_angle,
+            }
+            inst:DoTaskInTime(SPIKE_SPAWN_DELAY*spikes_spawned, spawn_spike_with_target, spawn_data)
         end
     end
 end
@@ -303,7 +346,8 @@ local function fn()
     --inst.components.timer:StartTimer("spin_cd", 5)
     --inst.components.timer:StartTimer("summon_cd", 15)
 
-    MakeLargeBurnableCharacter(inst)
+    MakeLargeBurnableCharacter(inst, "fx_ball_centre")
+    inst.components.burnable:SetBurnTime(5)
 
     MakeLargeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)

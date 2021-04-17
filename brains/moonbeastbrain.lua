@@ -20,8 +20,12 @@ local MoonBeastBrain = Class(Brain, function(self, inst)
     self._petrifytime = nil
 end)
 
-local function GetInvadeTarget(inst)
-    return inst.components.entitytracker:GetEntity("invadeTarget")
+function MoonBeastBrain:ForcePetrify()
+    self._petrifytime = GetTime() + math.random()
+end
+
+local function GetMoonBase(inst)
+    return inst.components.entitytracker:GetEntity("moonbase")
 end
 
 local function LostMoonBase(self)

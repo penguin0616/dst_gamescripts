@@ -239,11 +239,6 @@ local function OnEntityWake(inst)
     end
 end
 
-local PHASE3_SOUNDS =
-{
-    hit = "moonstorm/creatures/boss/alterguardian1/onothercollide",
-}
-
 local function fn()
     local inst = CreateEntity()
 
@@ -281,8 +276,6 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
-
-    inst.sounds = PHASE3_SOUNDS
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.ALTERGUARDIAN_PHASE3_WALK_SPEED
@@ -326,9 +319,8 @@ local function fn()
     --inst.components.timer:StartTimer("traps_cd", n/a)
     inst.components.timer:StartTimer("summon_cd", math.floor(TUNING.ALTERGUARDIAN_PHASE3_SUMMONCOOLDOWN / 2))
 
-    --inst:ListenForEvent("timerdone", on_timer_finished)
-
-    MakeLargeBurnableCharacter(inst)
+    MakeLargeBurnableCharacter(inst, "p3_fx_ball_centre")
+    inst.components.burnable:SetBurnTime(5)
 
     MakeHugeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)
