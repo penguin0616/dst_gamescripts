@@ -148,7 +148,7 @@ end
 local function Recharge(inst)
     --Light is finished charging and can turn on again.
     inst:SetLightState(LIGHT_STATES.CHARGED)
-    if inst.LightWatcher:IsInLight() then
+    if inst:IsInLight() then
         TurnOn(inst)
     end
 end
@@ -226,7 +226,7 @@ local function OnLoad(inst, data)
 end
 
 local function TurnOnInLight(inst)
-    if inst.LightWatcher:IsInLight() then
+    if inst:IsInLight() then
         TurnOn(inst)
     end
 end

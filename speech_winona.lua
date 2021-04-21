@@ -1230,6 +1230,8 @@ return{
 		TURF_FUNGUS_RED = "That's a chunk of weird ground.",
 		TURF_DRAGONFLY = "That's a chunk of fancy ground.",
 
+        TURF_SHELLBEACH = "That's a chunk of sandy ground.",
+
 		POWCAKE = "Gotta eat what you can around here.",
         CAVE_ENTRANCE = "Into the depths!",
         CAVE_ENTRANCE_RUINS = "Is it wise to go deeper?",
@@ -1525,6 +1527,9 @@ return{
         CHESSPIECE_KLAUS = "Kinda makes me nostalgic.",
         CHESSPIECE_BEEQUEEN = "I wonder if I could sculpt a hat like that.",
         CHESSPIECE_ANTLION = "Looks so real, I can almost feel the earth rumblin'.",
+        CHESSPIECE_BEEFALO = "Aw, it looks just like my beefalo.",
+        CHESSPIECE_GUARDIANPHASE3 = "A little too lifelike for my comfort.",
+
         CHESSJUNK1 = "A heap of spare parts.",
         CHESSJUNK2 = "A heap of spare parts.",
         CHESSJUNK3 = "A heap of spare parts.",
@@ -3159,7 +3164,7 @@ return{
 			EMPTY = "Dry as a bone.",
         },
         MOONGLASS = "Can't wait to try this out.",
-        MOONGLASS_INFUSED = "I'd better hustle, the energy's not gonna last long.",
+        MOONGLASS_CHARGED = "I'd better hustle, the energy's not gonna last long.",
         MOONGLASS_ROCK = "Wonder if it's got any special properties.",
         BATHBOMB = "I'm not really the frou-frou type.",
         TRAP_STARFISH =
@@ -3917,6 +3922,7 @@ return{
             INFUSED = "It's been powered up."
         },
 
+        MOONSTORM_STATIC = "Looks like an electrical fire waiting to happen.",
         MOONSTORM_STATIC_ITEM = "The boss really does have a gadget for everything.",
         MOONSTORM_SPARK = "Not quite electricity, but it could still work...",
 
@@ -3924,6 +3930,7 @@ return{
         BIRD_MUTANT_SPITTER = "There's something... off about it.",
 
         WAGSTAFF_NPC = "Mr. Wagstaff! Is that really you?",
+        ALTERGUARDIAN_CONTAINED = "The machine's sucking up all the energy from that thing...",
 
         WAGSTAFF_TOOL_1 = "Found the Reticulating Buffer! Better get it back to the bossman.",
         WAGSTAFF_TOOL_2 = "There's the boss' Widget Deflubber!",
@@ -3931,7 +3938,7 @@ return{
         WAGSTAFF_TOOL_4 = "Ha! Found you, you sneaky old Conceptual Scrubber!",
         WAGSTAFF_TOOL_5 = "There's the Calibrated Perciever! Almost missed it.",
 
-        MOONSTORM_GOOGLESHAT = "You work with the materials you've got out here.",
+        MOONSTORM_GOGGLESHAT = "You work with the materials you've got out here.",
 
         MOON_DEVICE = {
             GENERIC = "Wonder what the boss is gonna use all this energy for?",

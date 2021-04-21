@@ -11,7 +11,7 @@ local prefabs =
 local brain = require "brains/sporebrain"
 
 
-local SPARK_CANT_TAGS = { "playerghost", "INLIMBO", "moonstorm_static"}
+local SPARK_CANT_TAGS = { "playerghost", "INLIMBO", "moonstorm_static","wall","structure"}
 local SPARK_MUST_TAGS = { "moonsparkchargeable" }
 
 local function dospark(inst)
@@ -27,6 +27,9 @@ local function dospark(inst)
             for i, ent in ipairs(ents)do
                 if ent.components.combat ~= nil then
                     ent.components.combat:GetAttacked(inst, TUNING.LIGHTNING_DAMAGE, nil, "electric")
+                    if ent.components.hauntable ~= nil and ent.components.hauntable.panicable then
+                        ent.components.hauntable:Panic(2)
+                    end
                 end
             end
         end

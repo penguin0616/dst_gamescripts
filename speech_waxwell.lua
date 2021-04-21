@@ -1224,6 +1224,8 @@ return{
 		TURF_FUNGUS_RED = "Turf.",
 		TURF_DRAGONFLY = "It's warm, but quells flame.",
 
+        TURF_SHELLBEACH = "Turf.",
+
 		POWCAKE = "What foul manifestation of evil is this?",
         CAVE_ENTRANCE = "I plugged it a long time ago.",
         CAVE_ENTRANCE_RUINS = "Probably shouldn't venture any deeper.",
@@ -1519,6 +1521,9 @@ return{
         CHESSPIECE_KLAUS = "Why bother?",
         CHESSPIECE_BEEQUEEN = "Does she really need a statue?",
         CHESSPIECE_ANTLION = "Is there a sinkhole I can bury this in?",
+        CHESSPIECE_BEEFALO = "At least this version doesn't shed all over my poor suit.",
+        CHESSPIECE_GUARDIANPHASE3 = "How could I not have seen...",
+
         CHESSJUNK1 = "There's a reason I never finished that.",
         CHESSJUNK2 = "That one was a jerk.",
         CHESSJUNK3 = "Didn't like that one's face.",
@@ -3153,7 +3158,7 @@ return{
 			EMPTY = "It's of no use to me like this.",
         },
         MOONGLASS = "But does it look as sharp as me?",
-        MOONGLASS_INFUSED = "Nearly as sharp as I am, but with a garish glow.",
+        MOONGLASS_CHARGED = "Nearly as sharp as I am, but with a garish glow.",
         MOONGLASS_ROCK = "\"Moon\" detritus.",
         BATHBOMB = "It smells quite nice, if I'm honest.",
         TRAP_STARFISH =
@@ -3911,6 +3916,7 @@ return{
             INFUSED = "Hm. This may be useful."
         },
 
+        MOONSTORM_STATIC = "What is he meddling with?",
         MOONSTORM_STATIC_ITEM = "There's power trapped inside.",
         MOONSTORM_SPARK = "They give off a rather unsettling sensation.",
 
@@ -3918,6 +3924,7 @@ return{
         BIRD_MUTANT_SPITTER = "You dare spit at me?!",
 
         WAGSTAFF_NPC = "What is he up to now?",
+        ALTERGUARDIAN_CONTAINED = "Ah, now I see...",
 
         WAGSTAFF_TOOL_1 = "Hmph. So I'm to fetch his tools for him now?",
         WAGSTAFF_TOOL_2 = "I suppose that must be what he's looking for.",
@@ -3925,7 +3932,7 @@ return{
         WAGSTAFF_TOOL_4 = "Is this what he wants? Why couldn't that old fool have been more descriptive?!",
         WAGSTAFF_TOOL_5 = "Could this be what he's looking for?",
 
-        MOONSTORM_GOOGLESHAT = "There are hardly enough inventors brave enough to harness the power of potatoes.",
+        MOONSTORM_GOGGLESHAT = "There are hardly enough inventors brave enough to harness the power of potatoes.",
 
         MOON_DEVICE = {
             GENERIC = "That old fool...",

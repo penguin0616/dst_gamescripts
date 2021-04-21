@@ -99,8 +99,7 @@ end
 
 local states =
 {
-    State
-    {
+    State{
         name = "prespawn_idle",
         tags = {"busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
@@ -130,8 +129,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "spawn",
         tags = {"busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
@@ -153,8 +151,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "idle",
         tags = {"canroll", "canrotate", "idle"},
 
@@ -174,8 +171,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "roll_start",
         tags = {"atk_pre", "busy", "canrotate", "charge", "moving", "running"},
 
@@ -226,8 +222,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "roll",
         tags = {"attack", "busy", "charge", "moving", "running"},
 
@@ -308,8 +303,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "roll_stop",
         tags = {"busy", "canrotate", "charge", "idle"},
 
@@ -385,8 +379,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "tantrum_pre",
         tags = {"attack", "busy", "canrotate"},
 
@@ -406,8 +399,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "tantrum",
         tags = {"attack", "busy", "canrotate"},
 
@@ -449,8 +441,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "tantrum_pst",
         tags = {"busy", "canrotate"},
 
@@ -491,8 +482,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "shield_pre",
         tags = {"busy"},
 
@@ -526,8 +516,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "shield",
         tags = {"busy", "shield"},
 
@@ -546,8 +535,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "shield_hit",
         tags = {"busy", "hit", "shield"},
 
@@ -573,8 +561,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "shield_end",
         tags = {"busy"},
 
@@ -601,8 +588,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "death",
         tags = {"busy", "dead"},
 

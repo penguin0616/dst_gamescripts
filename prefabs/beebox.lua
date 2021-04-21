@@ -58,7 +58,7 @@ local function OnIsCaveDay(inst, isday)
     if not isday then
         Stop(inst)
     elseif not (TheWorld.state.iswinter or inst:HasTag("burnt"))
-        and inst.LightWatcher:IsInLight() then
+        and inst:IsInLight() then
         Start(inst)
     end
 end

@@ -1228,6 +1228,8 @@ return{
 		TURF_FUNGUS_RED = "Some ground.",
 		TURF_DRAGONFLY = "Some ground.",
 
+        TURF_SHELLBEACH = "Some ground.",
+
 		POWCAKE = "I would have to be desperate.",
         CAVE_ENTRANCE = "Someone is trying to keep the underground at bay.",
         CAVE_ENTRANCE_RUINS = "Someone is trying to keep the underground at bay.",
@@ -1523,6 +1525,9 @@ return{
         CHESSPIECE_KLAUS = "No more life in this festive spirit.",
         CHESSPIECE_BEEQUEEN = "She once had a sweet life.",
         CHESSPIECE_ANTLION = "Still and lifeless.",
+        CHESSPIECE_BEEFALO = "Merely a cold, lifeless copy.",
+        CHESSPIECE_GUARDIANPHASE3 = "It won't be looking down on us anymore.",
+
         CHESSJUNK1 = "Cold, dead artificial life.",
         CHESSJUNK2 = "Cold, dead artificial life.",
         CHESSJUNK3 = "Cold, dead artificial life.",
@@ -3157,7 +3162,7 @@ return{
 			EMPTY = "Nothing left for me here...",
         },
         MOONGLASS = "Its sharp edge would end this quickly.",
-        MOONGLASS_INFUSED = "It feels almost alive, somehow.",
+        MOONGLASS_CHARGED = "It feels almost alive, somehow.",
         MOONGLASS_ROCK = "What a sickly color.",
         BATHBOMB = "To mask the smell of sorrow and death.",
         TRAP_STARFISH =
@@ -3915,6 +3920,7 @@ return{
             INFUSED = "There's light trapped inside."
         },
 
+        MOONSTORM_STATIC = "That looks rather dangerous... I wonder if he'd let me try.",
         MOONSTORM_STATIC_ITEM = "I can see a little spark inside.",
         MOONSTORM_SPARK = "It doesn't feel of this world.",
 
@@ -3922,6 +3928,7 @@ return{
         BIRD_MUTANT_SPITTER = "Something is terribly wrong with that bird.",
 
         WAGSTAFF_NPC = "He flickers and fades... perhaps he's a spirit?",
+        ALTERGUARDIAN_CONTAINED = "It's draining the life from that creature...",
 
         WAGSTAFF_TOOL_1 = "Oh, I wish I knew if this is the tool he asked for...",
         WAGSTAFF_TOOL_2 = "Abigail, do you think this looks like a... whatever he said?",
@@ -3929,7 +3936,7 @@ return{
         WAGSTAFF_TOOL_4 = "Well, I've found something. I wonder if it's what he's looking for...",
         WAGSTAFF_TOOL_5 = "This looks like something that strange old man might have a use for.",
 
-        MOONSTORM_GOOGLESHAT = "I shall be able to see with eyes unclouded.",
+        MOONSTORM_GOGGLESHAT = "I shall be able to see with eyes unclouded.",
 
         MOON_DEVICE = {
             GENERIC = "How very peculiar.",

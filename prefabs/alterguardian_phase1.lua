@@ -60,7 +60,7 @@ local function Retarget(inst)
     end
 
     if newtarget ~= nil and newtarget ~= inst.components.combat.target then
-        return newtarget
+        return newtarget, true
     else
         return nil
     end
@@ -70,6 +70,14 @@ local MAX_CHASEAWAY_DIST_SQ = 625 --25 * 25
 local function KeepTarget(inst, target)
     return inst.components.combat:CanTarget(target) and target:IsOnValidGround()
             and target:GetDistanceSqToPoint(inst.Transform:GetWorldPosition()) < MAX_CHASEAWAY_DIST_SQ
+end
+
+local function teleport_override_fn(inst)
+    local ipos = inst:GetPosition()
+    local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 10, 8, true, false)
+        or FindWalkableOffset(ipos, 2*PI*math.random(), 14, 8, true, false)
+
+    return (offset ~= nil and ipos + offset) or ipos
 end
 
 local function OnAttacked(inst, data)
@@ -359,6 +367,9 @@ local function fn()
     --inst.components.timer:StartTimer("summon_cooldown", TUNING.ALTERGUARDIAN_PHASE1_SUMMONCOOLDOWN)
     --inst.components.timer:StartTimer("gotospawn", N_A)
     inst:ListenForEvent("timerdone", on_timer_finished)
+
+    inst:AddComponent("teleportedoverride")
+    inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
     MakeLargeBurnableCharacter(inst, nil, BURN_OFFSET)
     inst.components.burnable:SetBurnTime(5)

@@ -1225,6 +1225,8 @@ return{
 		TURF_FUNGUS_RED = "Step stones.",
 		TURF_DRAGONFLY = "Hot step stones.",
 
+        TURF_SHELLBEACH = "Step stones.",
+
 		POWCAKE = "Is made of nothings!",
         CAVE_ENTRANCE = "Even I am not that mighty.",
         CAVE_ENTRANCE_RUINS = "Even I am not that mighty.",
@@ -1520,6 +1522,9 @@ return{
         CHESSPIECE_KLAUS = "Is that time of year already?",
         CHESSPIECE_BEEQUEEN = "Mighty statue stays mighty still.",
         CHESSPIECE_ANTLION = "Wolfgang will not battle it in staring contest.",
+        CHESSPIECE_BEEFALO = "Is look almost like real hair-cow.",
+        CHESSPIECE_GUARDIANPHASE3 = "Wolfgang glad is just statue.",
+
         CHESSJUNK1 = "Metal junk.",
         CHESSJUNK2 = "Metal junk.",
         CHESSJUNK3 = "Metal junk.",
@@ -3154,7 +3159,7 @@ return{
 			EMPTY = "Is just dirt hole now.",
         },
         MOONGLASS = "Is clear green sharp-stuff.",
-        MOONGLASS_INFUSED = "Sharp and glowy stuff.",
+        MOONGLASS_CHARGED = "Sharp and glowy stuff.",
         MOONGLASS_ROCK = "Sharp stuff that fell from sky cheese.",
         BATHBOMB = "Is for prettifying little hotbath.",
         TRAP_STARFISH =
@@ -3912,6 +3917,7 @@ return{
             INFUSED = "Is strange and glowy."
         },
 
+        MOONSTORM_STATIC = "Is tiny jumpy spark-thing.",
         MOONSTORM_STATIC_ITEM = "Ha! Tiny spark is too weak to break out!",
         MOONSTORM_SPARK = "Makes Wolfgang's moustache hairs bristle!",
 
@@ -3919,6 +3925,7 @@ return{
         BIRD_MUTANT_SPITTER = "Something wrong with that bird.",
 
         WAGSTAFF_NPC = "Do not worry, Wolfgang is here to help flickery science man.",
+        ALTERGUARDIAN_CONTAINED = "Old man brought big fancy thingamobob with him!",
 
         WAGSTAFF_TOOL_1 = "Wolfgang found thing for funny old man!",
         WAGSTAFF_TOOL_2 = "Funny old man is looking for this, maybe?",
@@ -3926,7 +3933,7 @@ return{
         WAGSTAFF_TOOL_4 = "Ha! Found you!",
         WAGSTAFF_TOOL_5 = "Old man will be so happy Wolfgang found it!",
 
-        MOONSTORM_GOOGLESHAT = "Is fueled by potato, like Wolfgang!",
+        MOONSTORM_GOGGLESHAT = "Is fueled by potato, like Wolfgang!",
 
         MOON_DEVICE = {
             GENERIC = "Wolfgang understand, is giant night light!",

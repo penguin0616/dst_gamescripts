@@ -404,7 +404,6 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
-    inst.entity:AddLightWatcher()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
@@ -473,6 +472,7 @@ local function fn()
     inst.components.eater:SetDiet({ FOODTYPE.VEGGIE }, { FOODTYPE.VEGGIE })
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper.sleeptestfn = SleepTest
 
     inst:AddComponent("combat")

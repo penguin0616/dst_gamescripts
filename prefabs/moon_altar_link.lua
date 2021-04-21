@@ -64,38 +64,70 @@ local function CheckPointValid(x, y, z)
     return false
 end
 
-local function ValidateArea(inst)
-    local x, y, z = inst.Transform:GetWorldPosition()
+local function moonstormexists(inst)
+    return TheWorld.net.components.moonstorms ~= nil
+        and (
+            next(TheWorld.net.components.moonstorms:GetMoonstormNodes()) ~= nil
+            or TheWorld.components.moonstormmanager.startmoonstormtask ~= nil
+        )
+end
 
-    if CheckPointValid(x, y, z) then
+local function startmoonstormsequence(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    SpawnPrefab("moonpulse_spawner").Transform:SetPosition(x, y, z)
+
+    -- Delay matches third (and biggest) pulse in moonpulse
+    inst._start_moonstorm_task = inst:DoTaskInTime(5.04, startmoonstorms)
+end
+
+local function ValidateArea(inst)
+    local do_check = true
+
+    if moonstormexists(inst) then
         if not inst._area_clear then
             inst.AnimState:PlayAnimation("stage0_low_to_high")
             inst.AnimState:PushAnimation("stage0_high_idle", true)
+        end
 
-            if not inst._has_started_storm and inst._start_moonstorm_task == nil then
-                SpawnPrefab("moonpulse_spawner").Transform:SetPosition(x, y, z)
+        inst._area_clear = true
+        inst._has_started_storm = true
+        do_check = false
+    end
 
-                -- Delay matches third (and biggest) pulse in moonpulse
-                inst._start_moonstorm_task = inst:DoTaskInTime(5.04, startmoonstorms)
+    local x, y, z = inst.Transform:GetWorldPosition()
+
+    if do_check then
+        if CheckPointValid(x, y, z) then
+            if not inst._area_clear then
+                inst.AnimState:PlayAnimation("stage0_low_to_high")
+                inst.AnimState:PushAnimation("stage0_high_idle", true)
+
+                if not inst._has_started_storm and inst._start_moonstorm_task == nil then
+                    if inst._spawned_from_load then
+                        inst:DoTaskInTime(7, startmoonstormsequence)
+                    else
+                        startmoonstormsequence(inst)
+                    end
+                end
+
+                inst.SoundEmitter:SetParameter("loop", "intensity", 1)
+            end
+            
+            inst._area_clear = true
+        else
+            if inst._first_validation then
+                inst.AnimState:PlayAnimation("stage0_low_idle", true)
+
+                inst.SoundEmitter:SetParameter("loop", "intensity", 0)
+            elseif inst._area_clear then
+                inst.AnimState:PlayAnimation("stage0_high_to_low")
+                inst.AnimState:PushAnimation("stage0_low_idle", true)
+
+                inst.SoundEmitter:SetParameter("loop", "intensity", 0)
             end
 
-            inst.SoundEmitter:SetParameter("loop", "intensity", 1)
+            inst._area_clear = false
         end
-        
-        inst._area_clear = true
-    else
-        if inst._first_validation then
-            inst.AnimState:PlayAnimation("stage0_low_idle", true)
-
-            inst.SoundEmitter:SetParameter("loop", "intensity", 0)
-        elseif inst._area_clear then
-            inst.AnimState:PlayAnimation("stage0_high_to_low")
-            inst.AnimState:PushAnimation("stage0_low_idle", true)
-
-            inst.SoundEmitter:SetParameter("loop", "intensity", 0)
-        end
-
-        inst._area_clear = false
     end
 
     if inst._area_clear and inst._has_started_storm then
@@ -187,29 +219,39 @@ local function OnLoad(inst, data)
     end
 end
 
+local function mindistancetest(altar1, altar2)
+    local x1, _, z1 = altar1.Transform:GetWorldPosition()
+    local x2, _, z2 = altar2.Transform:GetWorldPosition()
+
+    return VecUtil_LengthSq(x2 - x1, z2 - z1) >= TUNING.MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ
+end
+
 local function OnLoadPostPass(inst)
     local moon_altar = inst.components.entitytracker:GetEntity("moon_altar")
     local moon_altar_cosmic = inst.components.entitytracker:GetEntity("moon_altar_cosmic")
     local moon_altar_astral = inst.components.entitytracker:GetEntity("moon_altar_astral")
 
     if moon_altar ~= nil and moon_altar_cosmic ~= nil and moon_altar_astral ~= nil then
-        local x, _, z = inst.Transform:GetWorldPosition()
+        local min_distance_valid = mindistancetest(moon_altar, moon_altar_cosmic)
+            and mindistancetest(moon_altar, moon_altar_astral)
+            and mindistancetest(moon_altar_cosmic, moon_altar_astral)
 
-        local min_distance_valid = true
-        local altars = { moon_altar, moon_altar_cosmic, moon_altar_astral }
-        for i, v in ipairs(altars) do
-            local tx, _, tz = v.Transform:GetWorldPosition()
-            if VecUtil_LengthSq(tx - x, tz - z) < TUNING.MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ then
-                min_distance_valid = false
-            end
-        end
-    
+        local x, _, z = inst.Transform:GetWorldPosition()
+        
         if min_distance_valid and CheckPointValid(x, 0, z) then
             inst.components.moonaltarlink:EstablishLink({ moon_altar, moon_altar_cosmic, moon_altar_astral })
         else
+            moon_altar._force_on = false
+            moon_altar_cosmic._force_on = false
+            moon_altar_astral._force_on = false
+
             inst:Remove()
         end
     else
+        if moon_altar ~= nil then moon_altar._force_on = false end
+        if moon_altar_cosmic ~= nil then moon_altar_cosmic._force_on = false end
+        if moon_altar_astral ~= nil then moon_altar_astral._force_on = false end
+
         inst:Remove()
     end
 end
@@ -245,6 +287,8 @@ local function fn()
         return inst
     end
 
+    inst._spawned_from_load = POPULATING
+
     inst._area_clear = false
     inst._first_validation = true
     inst._has_been_in_entity_sleep = false
@@ -259,8 +303,13 @@ local function fn()
     inst.components.moonaltarlink.onlinkfn = OnLinkEstablished
     inst.components.moonaltarlink.onlinkbrokenfn = OnLinkBroken
 
+    inst:ListenForEvent("ms_moonstormwindowover", function() ValidateArea(inst) end, TheWorld)
+
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
+
+    inst.OnSave = OnSave
+    inst.OnLoad = OnLoad
     
     inst.OnLoadPostPass = OnLoadPostPass
 

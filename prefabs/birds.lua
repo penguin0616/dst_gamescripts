@@ -244,7 +244,6 @@ local function makebird(name, soundname, no_feather, bank, custom_loot_setup, wa
         inst.entity:AddDynamicShadow()
         inst.entity:AddSoundEmitter()
         inst.entity:AddNetwork()
-        inst.entity:AddLightWatcher()
 
         --Initialize physics
         inst.Physics:SetCollisionGroup(COLLISION.CHARACTERS)
@@ -322,6 +321,7 @@ local function makebird(name, soundname, no_feather, bank, custom_loot_setup, wa
         inst.components.eater:SetDiet({ FOODTYPE.SEEDS }, { FOODTYPE.SEEDS })
 
         inst:AddComponent("sleeper")
+        inst.components.sleeper.watchlight = true
         inst.components.sleeper:SetSleepTest(ShouldSleep)
 
         inst:AddComponent("inventoryitem")

@@ -98,8 +98,7 @@ local SPIN_ONEOF_TAGS = {"_health", "CHOP_workable", "HAMMER_workable", "MINE_wo
 local SPIN_FX_RATE = 10*FRAMES
 local states =
 {
-    State
-    {
+    State{
         name = "spawn",
         tags = {"busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
@@ -176,8 +175,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "idle",
         tags = {"idle", "canrotate", "canroll"},
 
@@ -194,8 +192,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "atk_chop",
         tags = {"attack", "busy"},
 
@@ -233,8 +230,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "atk_spike",
         tags = {"attack", "busy"},
 
@@ -270,8 +266,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_spike_pst",
         tags = {"attack", "busy"},
 
@@ -287,8 +282,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "spin_pre",
         tags = {"busy", "canrotate", "spin"},
 
@@ -344,8 +338,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "spin_loop",
         tags = {"busy", "canrotate", "spin"},
 
@@ -447,8 +440,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "spin_pst",
         tags = {"busy", "spin"},
 
@@ -520,8 +512,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_summon",
         tags = {"attack", "busy"},
 
@@ -591,8 +582,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "antiboat_attack",
         tags = {"attack", "busy"},
 
@@ -646,8 +636,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "death",
         tags = {"busy", "dead"},
 

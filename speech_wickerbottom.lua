@@ -1224,6 +1224,8 @@ return{
 		TURF_FUNGUS_RED = "The ground. You step on it.",
 		TURF_DRAGONFLY = "This substance is imbued with a sort of natural fire deterrent.",
 
+        TURF_SHELLBEACH = "The ground. You step on it.",
+
 		POWCAKE = "The crowning achievement of the agricultural-industrial complex.",
         CAVE_ENTRANCE = "The placement of that rock looks intentional.",
         CAVE_ENTRANCE_RUINS = "The passage has been obstructed.",
@@ -1519,6 +1521,9 @@ return{
         CHESSPIECE_KLAUS = "A wonderfully seasonal simulacrum.",
         CHESSPIECE_BEEQUEEN = "A queenly tribute to the Apis mellifera.",
         CHESSPIECE_ANTLION = "A stately statuary of the Panthera auropunctata.",
+        CHESSPIECE_BEEFALO = "It captures my beefalo's likeness quite well.",
+        CHESSPIECE_GUARDIANPHASE3 = "I must commend the artist for their attention to detail.",
+
         CHESSJUNK1 = "The magician's unfinished projects?",
         CHESSJUNK2 = "The magician's unfinished projects?",
         CHESSJUNK3 = "The magician's unfinished projects?",
@@ -3153,7 +3158,7 @@ return{
 			EMPTY = "The spring will replenish itself in good time.",
         },
         MOONGLASS = "Perhaps I could keep a sample and study the composition.",
-        MOONGLASS_INFUSED = "The energy seems unstable, I'll have to be quick to put it to any use.",
+        MOONGLASS_CHARGED = "The energy seems unstable, I'll have to be quick to put it to any use.",
         MOONGLASS_ROCK = "It appears to be mineral, but may actually be organic in nature.",
         BATHBOMB = "Ah, I do love a warm bath with a book.",
         TRAP_STARFISH =
@@ -3911,6 +3916,7 @@ return{
             INFUSED = "It's radiating a faintly glowing energy."
         },
 
+        MOONSTORM_STATIC = "That energy seems quite volatile.",
         MOONSTORM_STATIC_ITEM = "This device appears to keep the energy contained, somehow.",
         MOONSTORM_SPARK = "I assumed it was a form of electricity, but it seems to be something else entirely...",
 
@@ -3918,6 +3924,7 @@ return{
         BIRD_MUTANT_SPITTER = "The poor thing appears to have been altered by its proximity to the storm.",
 
         WAGSTAFF_NPC = "He seems to be conducting research on the storm, I should assist him.",
+        ALTERGUARDIAN_CONTAINED = "I wonder what he means to do with all that energy.",
 
         WAGSTAFF_TOOL_1 = "Oh dear, I wonder whether that is the tool he requested or not...",
         WAGSTAFF_TOOL_2 = "Perhaps this is the tool he requires? I should suggest a cataloging system.",
@@ -3925,7 +3932,7 @@ return{
         WAGSTAFF_TOOL_4 = "His tools would be much easier to procure if there was some organization...",
         WAGSTAFF_TOOL_5 = "Regrettably unlabeled... I'll just have to assume it's what he's looking for.",
 
-        MOONSTORM_GOOGLESHAT = "A rather eccentric design, yet surprisingly effective.",
+        MOONSTORM_GOGGLESHAT = "A rather eccentric design, yet surprisingly effective.",
 
         MOON_DEVICE = {
             GENERIC = "As I suspected, it's meant to function as a battery of sorts.",

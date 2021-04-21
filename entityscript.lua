@@ -1687,3 +1687,22 @@ function EntityScript:SetClientSideInventoryImageOverrideFlag(name, value)
         ThePlayer:PushEvent("clientsideinventoryflagschanged")
     end
 end
+
+function EntityScript:IsInLight()
+    if self.LightWatcher then
+        return self.LightWatcher:IsInLight()
+    else
+        local lightThresh = self.lightThresh or 1.0
+        local x, y, z = self.Transform:GetWorldPosition()
+        return TheSim:GetLightAtPoint(x, y, z, lightThresh) >= lightThresh
+    end
+end
+
+function EntityScript:IsLightGreaterThan(lightThresh)
+    if self.LightWatcher then
+        return self.LightWatcher:GetLightValue() >= lightThresh
+    else
+        local x, y, z = self.Transform:GetWorldPosition()
+        return TheSim:GetLightAtPoint(x, y, z, lightThresh) >= lightThresh
+    end
+end

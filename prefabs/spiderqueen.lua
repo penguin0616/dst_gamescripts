@@ -113,7 +113,6 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddLightWatcher()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
@@ -170,6 +169,7 @@ local function fn()
     ------------------
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper:SetResistance(4)
     ------------------
 

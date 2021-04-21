@@ -1229,6 +1229,8 @@ return{
 		TURF_FUNGUS_RED = "Floor or ceiling, depending on your perspective.",
 		TURF_DRAGONFLY = "Floor or ceiling, depending on your perspective.",
 
+        TURF_SHELLBEACH = "Floor or ceiling, depending on your perspective.",
+
 		POWCAKE = "Hyuyu! This cake packs a wallop!",
         CAVE_ENTRANCE = "Clear the way I say!",
         CAVE_ENTRANCE_RUINS = "Let me have a peek inside!",
@@ -1525,6 +1527,9 @@ return{
         CHESSPIECE_KLAUS = "A stagnant stag.",
         CHESSPIECE_BEEQUEEN = "Stationary majesty. Static insect.",
         CHESSPIECE_ANTLION = "An anti Ant Lion, formerly furry. Hyuyu!",
+        CHESSPIECE_BEEFALO = "This beefalo is even more hard-headed than most!",
+        CHESSPIECE_GUARDIANPHASE3 = "In all its selenic splendour!",
+
         CHESSJUNK1 = "It looks quite broke, and that's no joke!",
         CHESSJUNK2 = "It looks quite broke, and that's no joke!",
         CHESSJUNK3 = "It looks quite broke, and that's no joke!",
@@ -3159,7 +3164,7 @@ return{
 			EMPTY = "Oh me, oh my, the spring's run dry.",
         },
         MOONGLASS = "In its green sheen I see selene.",
-        MOONGLASS_INFUSED = "I should make haste before they go to waste.",
+        MOONGLASS_CHARGED = "I should make haste before they go to waste.",
         MOONGLASS_ROCK = "A handsome devil is reflected back at me! Hyuyu!",
         BATHBOMB = "Sweetly stinking, bombs for bathing.",
         TRAP_STARFISH =
@@ -3917,6 +3922,7 @@ return{
             INFUSED = "Ah, what a healthy glow!"
         },
 
+        MOONSTORM_STATIC = "Best stay back if I don't want to get zapped!",
         MOONSTORM_STATIC_ITEM = "It makes my fur stand on end.",
         MOONSTORM_SPARK = "Hyuyu, it tickles!",
 
@@ -3924,6 +3930,7 @@ return{
         BIRD_MUTANT_SPITTER = "This peculiar storm has changed its form.",
 
         WAGSTAFF_NPC = "Hyuyuyu! He's not all there!",
+        ALTERGUARDIAN_CONTAINED = "Oh ho! It seems he has some tricks up his sleeve.",
 
         WAGSTAFF_TOOL_1 = "Hoohoo! You're not from around this plane, are you?",
         WAGSTAFF_TOOL_2 = "You belong in the hand of that old man.",
@@ -3931,7 +3938,7 @@ return{
         WAGSTAFF_TOOL_4 = "Oooh how fun! I can't be sure if that's the right one!",
         WAGSTAFF_TOOL_5 = "What a fun game, finding tools from another plane!",
 
-        MOONSTORM_GOOGLESHAT = "What a loony invention, hyuyu!",
+        MOONSTORM_GOGGLESHAT = "What a lune-y invention, hyuyu!",
 
         MOON_DEVICE = {
             GENERIC = "Hyuyuyu, I don't think they'll like that...",

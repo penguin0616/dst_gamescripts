@@ -397,7 +397,7 @@ local prefabs =
 
     "alterguardian_phase1",
 
-    "moonstormmarker",
+    "moonstormmarker_big",
     "moonstorm_ground_lightning_fx",
     "moonstorm_lightning",
     "moonstorm_glass",
@@ -526,7 +526,6 @@ local function master_postinit(inst)
     inst:AddComponent("mermkingmanager")
     inst:AddComponent("malbatrossspawner")
     inst:AddComponent("crabkingspawner")
-    inst:AddComponent("timer")
 
 	inst:AddComponent("flotsamgenerator")
 	inst:AddComponent("messagebottlemanager")

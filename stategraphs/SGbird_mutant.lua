@@ -107,13 +107,14 @@ local states=
 		
         onenter = function(inst)
             inst.components.locomotor:Stop()
+            RemovePhysicsColliders(inst)
             inst.AnimState:PlayAnimation("death")
             inst.persists = false
         end,
 
         events =
         {
-            EventHandler("animover", function(inst) inst:Remove() end),
+      --      EventHandler("animover", function(inst) inst:Remove() end),
         },
 
         onexit = function(inst)

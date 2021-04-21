@@ -28,7 +28,7 @@ end
 
 local function CanStandUp(inst)
     -- if not in light or off screen (off screen is so it doesnt get stuck forever on things like firefly/pighouse light), then it can stand up and walk around
-    return (not inst.LightWatcher:IsInLight()) or (TheWorld.state.isnight and (not TheWorld.state.isfullmoon) and not inst:IsNearPlayer(30))
+    return (not inst:IsInLight()) or (TheWorld.state.isnight and (not TheWorld.state.isfullmoon) and not inst:IsNearPlayer(30))
 end
 
 local sounds =
@@ -65,7 +65,6 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddLightWatcher()
     inst.entity:AddPhysics()
     inst.entity:AddNetwork()
 

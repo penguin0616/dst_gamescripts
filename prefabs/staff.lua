@@ -184,6 +184,9 @@ end
 
 ---------PURPLE STAFF---------
 
+-- AddTag("nomagic") can be used to stop something being teleported
+-- the component teleportedoverride can be used to control the location of a teleported item
+
 require "prefabs/telebase"
 
 local function getrandomposition(caster, teleportee, target_in_ocean)

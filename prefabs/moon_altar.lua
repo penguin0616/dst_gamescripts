@@ -513,8 +513,18 @@ local function moon_altar_astral_master_postinit(inst)
     inst.OnLoad = moon_altar_astral_on_load
 end
 
+local link_device_oneof_tags = { "moon_altar_link", "moon_device" }
 local function OnLoadPostPass(inst)
     if inst._force_on then
+        local x, _, z = inst.Transform:GetWorldPosition()
+        local ents = TheSim:FindEntities(x, 0, z, 25, nil, nil, link_device_oneof_tags)
+        if ents == nil or #ents == 0 then
+            -- Broken state, so we make the altar hammerable so the altar
+            -- linking and device construction process can be restarted
+            inst._force_on = false
+            return
+        end
+
         onturnon(inst)
         inst.AnimState:PlayAnimation("proximity_loop", true)
     end

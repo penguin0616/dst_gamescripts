@@ -105,10 +105,12 @@ function Container:SetNumSlots(numslots)
     self.numslots = numslots
 end
 
-function Container:DropItemBySlot(slot)
+function Container:DropItemBySlot(slot, drop_pos)
     local item = self:RemoveItemBySlot(slot)
     if item ~= nil then
-        item.Transform:SetPosition(self.inst.Transform:GetWorldPosition())
+        drop_pos = drop_pos or self.inst:GetPosition()
+
+        item.Transform:SetPosition(drop_pos:Get())
         if item.components.inventoryitem ~= nil then
             item.components.inventoryitem:OnDropped(true)
         end
@@ -118,14 +120,14 @@ function Container:DropItemBySlot(slot)
     end
 end
 
-function Container:DropEverythingWithTag(tag)
+function Container:DropEverythingWithTag(tag, drop_pos)
     local containers = {}
 
     for i = 1, self.numslots do
         local item = self.slots[i]
         if item ~= nil then
             if item:HasTag(tag) then
-                self:DropItemBySlot(i)
+                self:DropItemBySlot(i, drop_pos)
             elseif item.components.container ~= nil then
                 table.insert(containers, item)
             end
@@ -133,13 +135,13 @@ function Container:DropEverythingWithTag(tag)
     end
 
     for i, v in ipairs(containers) do
-        v.components.container:DropEverythingWithTag(tag)
+        v.components.container:DropEverythingWithTag(tag, drop_pos)
     end
 end
 
-function Container:DropEverything()
+function Container:DropEverything(drop_pos)
     for i = 1, self.numslots do
-        self:DropItemBySlot(i)
+        self:DropItemBySlot(i, drop_pos)
     end
 end
 

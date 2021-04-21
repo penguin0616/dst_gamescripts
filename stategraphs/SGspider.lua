@@ -167,7 +167,7 @@ local states =
                 inst.sg:SetTimeout(math.random()*2 + 2)
             end
 
-            if inst.LightWatcher:GetLightValue() > 1 then
+            if inst:IsLightGreaterThan(1.0) then
                 inst.AnimState:PlayAnimation("cower" )
                 inst.AnimState:PushAnimation("cower_loop", true)
             elseif start_anim then

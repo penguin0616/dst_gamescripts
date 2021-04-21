@@ -426,7 +426,7 @@ end
 params.mushroom_light2 = deepcopy(params.mushroom_light)
 
 function params.mushroom_light2.itemtestfn(container, item, slot)
-    return (item:HasTag("lightbattery") or item:HasTag("spore")) and not container.inst:HasTag("burnt")
+    return (item:HasTag("lightbattery") or item:HasTag("spore") or item:HasTag("lightcontainer")) and not container.inst:HasTag("burnt")
 end
 
 --------------------------------------------------------------------------
@@ -924,6 +924,64 @@ function params.candybag.itemtestfn(container, item, slot)
 end
 
 params.candybag.priorityfn = params.candybag.itemtestfn
+
+--------------------------------------------------------------------------
+--[[ alterguardianhatshard ]]
+--------------------------------------------------------------------------
+
+params.alterguardianhatshard =
+{
+    widget =
+    {
+        slotpos = {
+            Vector3(-2, 18, 0),
+        },
+        slotbg =
+        {
+            { image = "spore_slot.tex", atlas = "images/hud2.xml" },
+        },
+        animbank = "ui_alterguardianhat_1x1",
+        animbuild = "ui_alterguardianhat_1x1",
+        pos = Vector3(0, 160, 0),
+    },
+    acceptsstacks = false,
+    type = "chest",
+}
+
+function params.alterguardianhatshard.itemtestfn(container, item, slot)
+    return item:HasTag("spore")
+end
+
+--------------------------------------------------------------------------
+--[[ alterguardianhat ]]
+--------------------------------------------------------------------------
+
+params.alterguardianhat =
+{
+    widget =
+    {
+        slotpos = {},
+        slotbg = {},
+        animbank = "ui_alterguardianhat_1x6",
+        animbuild = "ui_alterguardianhat_1x6",
+        pos = Vector3(106, 150, 0),
+    },
+    acceptsstacks = false,
+    type = "hand_inv",
+}
+
+local AGHAT_SLOTSTART = 95
+local AGHAT_SLOTDIFF = 72
+local SLOT_BG = { image = "spore_slot.tex", atlas = "images/hud2.xml" }
+for i = 0, 4 do
+    local sp = Vector3(0, AGHAT_SLOTSTART - (i*AGHAT_SLOTDIFF), 0)
+    table.insert(params.alterguardianhat.widget.slotpos, sp)
+    table.insert(params.alterguardianhat.widget.slotbg, SLOT_BG)
+end
+
+function params.alterguardianhat.itemtestfn(container, item, slot)
+    return item:HasTag("spore")
+end
 
 --------------------------------------------------------------------------
 --[[ quagmire_pot ]]

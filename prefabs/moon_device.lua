@@ -376,7 +376,10 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
 
 		inst.MiniMapEntity:SetIcon("moon_device_construction1.png")
 
+        inst:AddTag("moon_device")
         inst:AddTag("structure")
+        inst:AddTag("nomagic")
+
         if construction_data then
             inst.level = construction_data.level
         else

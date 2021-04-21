@@ -1224,6 +1224,8 @@ return{
 		TURF_FUNGUS_RED = "A piece of the battlefield.",
 		TURF_DRAGONFLY = "A warm piece of the battlefield.",
 
+        TURF_SHELLBEACH = "A piece of the battlefield.",
+
 		POWCAKE = "What in the name of the unicorn is this?",
         CAVE_ENTRANCE = "What treasures lie beneath?",
         CAVE_ENTRANCE_RUINS = "What treasures lie beneath?",
@@ -1519,6 +1521,9 @@ return{
         CHESSPIECE_KLAUS = "A tribute to the festive warrior spirit.",
         CHESSPIECE_BEEQUEEN = "I honor this warrior queen!",
         CHESSPIECE_ANTLION = "The artist hath captured her noble mane perfectly.",
+        CHESSPIECE_BEEFALO = "A stone tribute to my faithful steed.",
+        CHESSPIECE_GUARDIANPHASE3 = "You fought well, Champion of Mani.",
+
         CHESSJUNK1 = "It's only a pile of fallen warriors.",
         CHESSJUNK2 = "More fallen mechanical warriors.",
         CHESSJUNK3 = "Someone should really clean this place up.",
@@ -3153,7 +3158,7 @@ return{
 			EMPTY = "Odd, I do not see the fire giant...",
         },
         MOONGLASS = "Tis a most divine substance.",
-        MOONGLASS_INFUSED = "Tis lit by a strange power.",
+        MOONGLASS_CHARGED = "Tis lit by a strange power.",
         MOONGLASS_ROCK = "Mani sent it down himself.",
         BATHBOMB = "I shall toss thee in the earth's cauldron!",
         TRAP_STARFISH =
@@ -3911,6 +3916,7 @@ return{
             INFUSED = "It hath been imbued with a strange power."
         },
 
+        MOONSTORM_STATIC = "Tis a strange kind of power.",
         MOONSTORM_STATIC_ITEM = "A strange power rests inside.",
         MOONSTORM_SPARK = "It sends a curious tickle through my bones.",
 
@@ -3918,6 +3924,7 @@ return{
         BIRD_MUTANT_SPITTER = "You think you can challenge me, winged fiend?",
 
         WAGSTAFF_NPC = "Hail stranger! Are ye friend or foe?",
+        ALTERGUARDIAN_CONTAINED = "It's ferrying this warrior's soul to the next realm.",
 
         WAGSTAFF_TOOL_1 = "Mayhaps this is what I seek.",
         WAGSTAFF_TOOL_2 = "The odd stranger requested a tool, mayhaps this is it.",
@@ -3925,7 +3932,7 @@ return{
         WAGSTAFF_TOOL_4 = "Mayhaps this is what the odd stranger lost.",
         WAGSTAFF_TOOL_5 = "How strange. Perhaps it belongs to that odd stranger.",
 
-        MOONSTORM_GOOGLESHAT = "No mere storm can stop me!",
+        MOONSTORM_GOGGLESHAT = "No mere storm can stop me!",
 
         MOON_DEVICE = {
             GENERIC = "Mere mortals were not meant to tamper so with the power of the gods...",

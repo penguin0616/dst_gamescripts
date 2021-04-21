@@ -145,7 +145,6 @@ local function commonfn(build, tags)
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddLightWatcher()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
@@ -221,6 +220,7 @@ local function commonfn(build, tags)
     ------------------
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     ------------------
 
     inst:AddComponent("knownlocations")

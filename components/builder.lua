@@ -307,7 +307,15 @@ function Builder:RemoveIngredients(ingredients, recname)
     for item, ents in pairs(ingredients) do
         for k,v in pairs(ents) do
             for i = 1, v do
-                self.inst.components.inventory:RemoveItem(k, false):Remove()
+                local item = self.inst.components.inventory:RemoveItem(k, false)
+
+                -- If the item we're crafting with is a container,
+                -- drop the contained items onto the ground.
+                if item.components.container ~= nil then
+                    item.components.container:DropEverything(self.inst:GetPosition())
+                end
+
+                item:Remove()
             end
         end
     end

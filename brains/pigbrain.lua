@@ -375,9 +375,9 @@ function PigBrain:OnStart()
                 DoAction(self.inst, FindFoodAction )),
             RunAway(self.inst, "player", START_RUN_DIST, STOP_RUN_DIST, function(target) return ShouldRunAway(self.inst, target) end ),
             ChattyNode(self.inst, "PIG_TALK_GO_HOME",
-                WhileNode( function() return not TheWorld.state.iscaveday or not self.inst.LightWatcher:IsInLight() end, "Cave nightness",
+                WhileNode( function() return not TheWorld.state.iscaveday or not self.inst:IsInLight() end, "Cave nightness",
                     DoAction(self.inst, GoHomeAction, "go home", true ))),
-            WhileNode(function() return TheWorld.state.isnight and self.inst.LightWatcher:GetLightValue() > COMFORT_LIGHT_LEVEL end, "IsInLight", -- wants slightly brighter light for this
+            WhileNode(function() return TheWorld.state.isnight and self.inst:IsLightGreaterThan(COMFORT_LIGHT_LEVEL) end, "IsInLight", -- wants slightly brighter light for this
                 Wander(self.inst, GetNearestLightPos, GetNearestLightRadius, {
                     minwalktime = 0.6,
                     randwalktime = 0.2,

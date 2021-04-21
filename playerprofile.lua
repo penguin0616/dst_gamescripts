@@ -41,6 +41,9 @@ local PlayerProfile = Class(function(self)
         self.persistdata.controller_popup = false
         self.persistdata.warn_mods_enabled = true
         self.persistdata.texture_streaming = true
+		self.persistdata.threaded_renderer = true
+		self.persistdata.bloom = true
+		self.persistdata.distortion = true
     end
 
     self.dirty = true
@@ -73,6 +76,9 @@ function PlayerProfile:Reset()
         self.persistdata.controller_popup = false
         self.persistdata.warn_mods_enabled = true
         self.persistdata.texture_streaming = true
+		self.persistdata.threaded_renderer = true
+		self.persistdata.bloom = true
+		self.persistdata.distortion = true
     end
 
     --self.persistdata.starts = 0 -- save starts?
@@ -486,9 +492,9 @@ end
 
 function PlayerProfile:GetBloomEnabled()
  	if USE_SETTINGS_FILE then
-		return TheSim:GetSetting("graphics", "bloom") == "true"
+		return TheSim:GetSetting("graphics", "bloom") ~= "false"
 	else
-		return self:GetValue("bloom")
+		return self:GetValue("bloom") ~= false
 	end
 end
 
@@ -520,9 +526,9 @@ end
 
 function PlayerProfile:GetDistortionEnabled()
  	if USE_SETTINGS_FILE then
-		return TheSim:GetSetting("graphics", "distortion") == "true"
+		return TheSim:GetSetting("graphics", "distortion") ~= "false"
 	else
-		return self:GetValue("distortion")
+		return self:GetValue("distortion") ~= false
 	end
 end
 
@@ -689,6 +695,14 @@ function PlayerProfile:SetTextureStreamingEnabled(enabled)
     end
 end
 
+function PlayerProfile:SetThreadedRenderEnabled(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "use_threaded_renderer", tostring(enabled))
+    else
+        self:SetValue("threaded_renderer", enabled)
+        self.dirty = true
+    end
+end
 
 function PlayerProfile:GetMovementPredictionEnabled()
     -- an undefined movementprediction is considered to be enabled
@@ -851,6 +865,14 @@ function PlayerProfile:GetTextureStreamingEnabled()
 	else
 		return self:GetValue("texturestreaming")
 	end
+end
+
+function PlayerProfile:GetThreadedRenderEnabled()
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "use_threaded_renderer") == "true"
+    else
+		return self:GetValue("threaded_renderer")
+    end
 end
 
 -- "enter_tab", "disabled", "tab", "enter", "mouseonly"

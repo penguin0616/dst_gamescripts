@@ -664,7 +664,6 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     MakeCharacterPhysics(inst, 1, 0.5)
 
@@ -788,6 +787,7 @@ local function fn()
 
     inst:AddComponent("inspectable")
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst:AddComponent("tradable")   
 
     MakeHauntablePanic(inst)

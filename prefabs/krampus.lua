@@ -55,7 +55,6 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     MakeCharacterPhysics(inst, 10, .5)
 
@@ -96,6 +95,7 @@ local function fn()
     inst.components.eater.strongstomach = true -- can eat monster meat!--]]
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.KRAMPUS_HEALTH)
 

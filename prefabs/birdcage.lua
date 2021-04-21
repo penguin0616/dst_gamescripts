@@ -241,6 +241,7 @@ local function OnOccupied(inst, bird)
 
     --Add the sleeper component & initialize
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWake)
 
@@ -459,7 +460,6 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     MakeObstaclePhysics(inst, .5)
 

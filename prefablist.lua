@@ -17,6 +17,7 @@ PREFABFILES = {
   "alterguardian_phase3dead",
   "alterguardian_phase3trap",
   "alterguardian_summon_fx",
+  "alterguardianhatshard",
   "amulet",
   "anchor",
   "animal_track",

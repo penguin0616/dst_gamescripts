@@ -224,8 +224,7 @@ local function NormalRetargetFn(inst)
                 inst,
                 TUNING.PIG_TARGET_DIST,
                 function(guy)
-                    return (guy.LightWatcher == nil or guy.LightWatcher:IsInLight())
-                        and inst.components.combat:CanTarget(guy)
+                    return guy:IsInLight() and inst.components.combat:CanTarget(guy)
                 end,
                 RETARGET_MUST_TAGS, -- see entityreplica.lua
                 exclude_tags,
@@ -236,8 +235,7 @@ end
 
 local function NormalKeepTargetFn(inst, target)
     --give up on dead guys, or guys in the dark, or werepigs
-    return inst.components.combat:CanTarget(target)
-        and (target.LightWatcher == nil or target.LightWatcher:IsInLight())
+    return inst.components.combat:CanTarget(target) and target:IsInLight()
         and not (target.sg ~= nil and target.sg:HasStateTag("transform"))
 end
 
@@ -245,8 +243,7 @@ local CAMPFIRE_TAGS = { "campfire", "fire" }
 local function NormalShouldSleep(inst)
     return DefaultSleepTest(inst)
         and (inst.components.follower == nil or inst.components.follower.leader == nil
-            or (FindEntity(inst, 6, nil, CAMPFIRE_TAGS) ~= nil and
-                (inst.LightWatcher == nil or inst.LightWatcher:IsInLight())))
+            or (FindEntity(inst, 6, nil, CAMPFIRE_TAGS) ~= nil and inst:IsInLight()))
 end
 
 local normalbrain = require "brains/pigbrain"
@@ -354,7 +351,7 @@ local function GuardRetargetFn(inst)
                 home,
                 home.components.burnable:GetLargestLightRadius(),
                 function(guy)
-                    return guy.LightWatcher:IsInLight()
+                    return guy:IsInLight()
                         and not (defenseTarget.components.trader ~= nil and defenseTarget.components.trader:IsTryingToTradeWithMe(guy))
                         and not (inst.components.trader ~= nil and inst.components.trader:IsTryingToTradeWithMe(guy))
                 end,
@@ -566,7 +563,6 @@ local function common(moonbeast)
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
-    inst.entity:AddLightWatcher()
     inst.entity:AddNetwork()
 
     MakeCharacterPhysics(inst, 50, .5)
@@ -697,6 +693,7 @@ local function common(moonbeast)
     ------------------------------------------
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
 
     ------------------------------------------
     MakeMediumFreezableCharacter(inst, "pig_torso")

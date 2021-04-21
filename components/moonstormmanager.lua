@@ -29,6 +29,8 @@ local _activeplayers = {}
 local _currentbasenodeindex = nil
 local _currentnodes = nil
 
+local _moonstyle_altar = nil
+
 local _nummoonstormpropagationsteps = 3
 
 local _basenodemindistancefromprevious = 50
@@ -158,11 +160,18 @@ local function OnPlayerLeft(src, player)
     end    
 end
 
+local function setmoonphasestyle()
+	
+	TheWorld:PushEvent("ms_setmoonphasestyle", {style = _alterguardian_defeated_count == 0 and "alter_active" or "glassed_alter_active"}) 
+    TheWorld:PushEvent("ms_lockmoonphase", {lock = true})
+
+end
+
 local function StartTheMoonstorms()
     TheWorld:PushEvent("ms_setclocksegs", {day = 0, dusk = 0, night = 16}) 
     TheWorld:PushEvent("ms_setmoonphase", {moonphase = "full", iswaxing = false}) 
-    TheWorld:PushEvent("ms_setmoonphasestyle", {style = _alterguardian_defeated_count == 0 and "alter_active" or "glassed_alter_active"}) 
-    TheWorld:PushEvent("ms_lockmoonphase", {lock = true})
+	setmoonphasestyle()
+    _moonstyle_altar = true
     self:StartMoonstorm()
 end
 
@@ -173,6 +182,7 @@ local function StopTheMoonstorms()
 	TheWorld:PushEvent("ms_setmoonphase", {moonphase = "new", iswaxing = true}) 
 	TheWorld:PushEvent("ms_setmoonphasestyle", {style = "glassed_default"})
 	TheWorld:PushEvent("ms_lockmoonphase", {lock = false})
+	_moonstyle_altar = nil
 
     self:StopCurrentMoonstorm()
 	
@@ -244,6 +254,8 @@ inst:ListenForEvent("ms_startthemoonstorms", StartTheMoonstorms)
 inst:ListenForEvent("ms_stopthemoonstorms", StopTheMoonstorms)
 inst:WatchWorldState("cycles", on_day_change)
 
+
+inst.moonstormwindowovertask = inst:DoTaskInTime(0,function()  TheWorld:PushEvent("ms_moonstormwindowover") end)
 --------------------------------------------------------------------------
 --[[ Public getters and setters ]]
 --------------------------------------------------------------------------
@@ -728,6 +740,8 @@ function self:OnSave()
 	data.metplayers = self.metplayers
 	data.startstormtask = self.startstormtask and true or nil
 	data._alterguardian_defeated_count = _alterguardian_defeated_count
+	data.moonstyle_altar = _moonstyle_altar
+
 	return data
 end
 
@@ -735,19 +749,34 @@ function self:OnLoad(data)
 	if data ~= nil then
 		if data._alterguardian_defeated_count then
 			_alterguardian_defeated_count = data._alterguardian_defeated_count
+			if _alterguardian_defeated_count > 0 then
+				TheWorld:PushEvent("ms_setmoonphasestyle", {style = "glassed_default"})
+			end
 		end
 
-		if data.currentbasenodeindex ~= nil then
-			self.inst:DoTaskInTime(1,function() self:StartMoonstorm(data.currentbasenodeindex, data.currentnodes) end)
+		-- THIS MUST COME AFTER THE _alterguardian_defeated_count IS SET
+		if data.moonstyle_altar then
+			_moonstyle_altar = data.moonstyle_altar
+			self.inst:DoTaskInTime(0,setmoonphasestyle)    		
 		end
+
 		if data.metplayers then
 			self.metplayers = data.metplayers
 		end
 		if data.stormdays then
 			self.stormdays = data.stormdays
 		end
-		if data.startstormtask then
-			self.startstormtask = self.inst:DoTaskInTime(1,function() self:StartMoonstorm() end)
+
+		if data.startstormtask or data.currentbasenodeindex ~= nil then
+			if inst.moonstormwindowovertask then
+				inst.moonstormwindowovertask:Cancel()
+				inst.moonstormwindowovertask = nil
+			end
+			if data.currentbasenodeindex ~= nil then
+				self.inst:DoTaskInTime(1,function() self:StartMoonstorm(data.currentbasenodeindex, data.currentnodes) end)
+			else
+				self.startstormtask = self.inst:DoTaskInTime(1,function() self:StartMoonstorm() end)		
+			end
 		end
 	end
 end
@@ -765,3 +794,4 @@ function self:GetDebugString()
 end
 
 end)
+

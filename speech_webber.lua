@@ -1224,6 +1224,8 @@ return{
 		TURF_FUNGUS_RED = "Some ground that we dug up.",
 		TURF_DRAGONFLY = "Warm and cozy ground!",
 
+        TURF_SHELLBEACH = "Some ground that we dug up.",
+
 		POWCAKE = "Mum never let me have these.",
         CAVE_ENTRANCE = "It's plugged up.",
         CAVE_ENTRANCE_RUINS = "It's plugged up.",
@@ -1519,6 +1521,9 @@ return{
         CHESSPIECE_KLAUS = "Can we decorate it?",
         CHESSPIECE_BEEQUEEN = "Sweet!",
         CHESSPIECE_ANTLION = "It's so life-like the mane looks fluffy!",
+        CHESSPIECE_BEEFALO = "Now we want to go for a beefalo ride!",
+        CHESSPIECE_GUARDIANPHASE3 = "It can't still see us... right?",
+
         CHESSJUNK1 = "A mess of chess.",
         CHESSJUNK2 = "A mess of chess.",
         CHESSJUNK3 = "A mess of chess.",
@@ -3153,7 +3158,7 @@ return{
 			EMPTY = "Aw, it's all dried up.",
         },
         MOONGLASS = "It came from the moon. Wow!",
-        MOONGLASS_INFUSED = "There's still lightning stuck in it!",
+        MOONGLASS_CHARGED = "There's still lightning stuck in it!",
         MOONGLASS_ROCK = "Is the moon green, too?",
         BATHBOMB = "I miss bubble baths.",
         TRAP_STARFISH =
@@ -3911,6 +3916,7 @@ return{
             INFUSED = "Oh! It's so pretty!"
         },
 
+        MOONSTORM_STATIC = "That looks kinda dangerous...",
         MOONSTORM_STATIC_ITEM = "It's like a big lightning bug stuck in a jar.",
         MOONSTORM_SPARK = "It makes all our spider hairs stand on end!",
 
@@ -3918,6 +3924,7 @@ return{
         BIRD_MUTANT_SPITTER = "Stop spitting at us!",
 
         WAGSTAFF_NPC = "Should we help him? I don't mind, but he's not so sure...",
+        ALTERGUARDIAN_CONTAINED = "It's sucking up all the glowy stuff!",
 
         WAGSTAFF_TOOL_1 = "Is that the thing we're looking for?",
         WAGSTAFF_TOOL_2 = "It looks like some kind of tool... maybe it's what he was looking for!",
@@ -3925,7 +3932,7 @@ return{
         WAGSTAFF_TOOL_4 = "We found a tool! Maybe it's the one he's looking for?",
         WAGSTAFF_TOOL_5 = "Maybe this is what he was looking for?",
 
-        MOONSTORM_GOOGLESHAT = "Will these goggles be able to protect all of our eyes from the storm?",
+        MOONSTORM_GOGGLESHAT = "Will these goggles be able to protect all of our eyes from the storm?",
 
         MOON_DEVICE = {
             GENERIC = "It looks pretty impressive... whatever it is!",

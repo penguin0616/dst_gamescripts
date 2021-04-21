@@ -15,20 +15,26 @@ local item_assets =
 
 local function onattackedfn(inst)
     if inst.AnimState:IsCurrentAnimation("idle") then
+        inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/hit")
         inst.AnimState:PlayAnimation("hit", false)
         inst.AnimState:PushAnimation("idle", true)
     end
 end
 
 local function ondeath(inst)
+    inst.SoundEmitter:KillSound("loop")
     inst.AnimState:PlayAnimation("explode", false)
+    inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/explode")
+    
     inst:ListenForEvent("animover", function()    
         inst:Remove()
     end)     
 end
 
 local function finished(inst)
+    inst.SoundEmitter:KillSound("loop")
     inst.AnimState:PlayAnimation("finish", false)
+    inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/finish")
     inst.experimentcomplete = true
     inst:ListenForEvent("animover", function()
         local item = SpawnPrefab("moonstorm_static_item")
@@ -83,6 +89,9 @@ local function fn()
     inst:AddComponent("combat")
     inst:ListenForEvent("attacked", onattackedfn)
     inst:ListenForEvent("death", ondeath)
+    
+    inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/idle_LP","loop")
+
 
 --    inst.components.combat.hiteffectsymbol = "torso"
 
@@ -115,11 +124,19 @@ local function itemfn()
         return inst
     end
 
+    inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/finished_idle_LP","loop")
+
     inst:AddComponent("tradable")
 
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem:SetOnPickupFn(function()
+        inst.SoundEmitter:KillSound("loop")
+    end)
+    inst.components.inventoryitem:SetOnDroppedFn(function()
+        inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/finished_idle_LP","loop")  
+    end)
 
     return inst
 end

@@ -6,11 +6,16 @@ local assets =
     Asset("ANIM", "anim/wagstaff_face_swap.zip"),
     Asset("ANIM", "anim/hat_gogglesnormal.zip"),   
     Asset("ANIM", "anim/wagstaff.zip"),
+}
 
+local contained_assets =
+{
+    Asset("ANIM", "anim/alterguardian_contained.zip"),
 }
 
 local prefabs =
 {
+    "alterguardian_contained",
     "wagstaff_tool_1",
     "wagstaff_tool_2",
     "wagstaff_tool_3",
@@ -20,7 +25,6 @@ local prefabs =
 }
 
 local SHADER_CUTOFF_HEIGHT = -0.125
-
 
 local function getline(data)
     if type(data) == "table" then
@@ -269,9 +273,9 @@ local function OnSleep(inst)
 end
 ]]
 
-local function erode(inst,time, erodein,removewhendone)
+local function erode(inst,time, erodein, removewhendone)
 
-    local time_to_erode  = time or 1    
+    local time_to_erode  = time or 1
     local tick_time = TheSim:GetTickTime()
 
     inst:StartThread(function()
@@ -293,13 +297,17 @@ local function erode(inst,time, erodein,removewhendone)
 
             if inst.shadow == true then
                 if math.random() < truetest then
-                    inst.DynamicShadow:Enable(false)
+                    if inst.DynamicShadow then
+                        inst.DynamicShadow:Enable(false)
+                    end
                     inst.shadow = false
                     inst.Light:Enable(false)
                 end
             else
                 if math.random() < falsetest then
-                    inst.DynamicShadow:Enable(true)
+                    if inst.DynamicShadow then
+                        inst.DynamicShadow:Enable(true)
+                    end
                     inst.shadow = true
                     inst.Light:Enable(true)
                 end
@@ -307,11 +315,15 @@ local function erode(inst,time, erodein,removewhendone)
 
             if ticks * tick_time > time_to_erode then
                 if erodein then
-                    inst.DynamicShadow:Enable(true)
+                    if inst.DynamicShadow then
+                        inst.DynamicShadow:Enable(true)
+                    end
                     inst.shadow = true
                     inst.Light:Enable(true)
                 else
-                    inst.DynamicShadow:Enable(false)
+                    if inst.DynamicShadow then
+                        inst.DynamicShadow:Enable(false)
+                    end
                     inst.shadow = false
                     inst.Light:Enable(false)
                 end
@@ -322,7 +334,6 @@ local function erode(inst,time, erodein,removewhendone)
 
             Yield()
         end
-        -- inst:Remove()
     end)
 end
 
@@ -353,6 +364,33 @@ local function ShouldTrackfn(inst, viewer)
         not inst.entity:FrustumCheck() and
         CanEntitySeeTarget(viewer, inst)
 end
+
+local function teleport_override_fn(inst)
+
+    local pt = inst:GetPosition()
+    local offset = FindWalkableOffset(pt, math.random() * 2 * PI, 4, 8, true, false) or
+                    FindWalkableOffset(pt, math.random() * 2 * PI, 8, 8, true, false)
+    if offset ~= nil then
+        pt = pt + offset
+    end
+
+    return pt 
+end
+
+local function OnTeleported(inst)
+    if inst.static then
+        local pos = inst:GetPosition()
+        local radius = 1
+        local theta = (inst.Transform:GetRotation() + 90)*DEGREES
+        local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))                    
+        inst.static.Transform:SetPosition(pos.x+ offset.x, pos.y, pos.z+ offset.z)
+      --  inst:FacePoint(static:GetPosition())
+        inst:DoTaskInTime(0,function() 
+            inst:ForceFacePoint(pos.x, pos.y, pos.z)
+        end)
+    end
+end
+
 
 local function fn()
     local inst = CreateEntity()
@@ -464,6 +502,8 @@ local function fn()
     inst:SetStateGraph("SGwagstaff_npc")
     inst:SetBrain(wagstaff_npcbrain)
 
+    inst:AddComponent("teleportedoverride")
+    inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
     --inst:ListenForEvent("entitysleep", OnSleep)
     inst:ListenForEvent("moonboss_defeated", function()
@@ -505,10 +545,35 @@ local function fn()
             end)
         end
     end, TheWorld)
+    inst:ListenForEvent("teleported", OnTeleported)
+    
 
     inst.AnimState:SetErosionParams(0, SHADER_CUTOFF_HEIGHT, -1.0)
    
     return inst
+end
+
+local function donpcerode(inst, data)
+    inst:erode(data.time, data.erodein, data.remove)
+    if inst._device ~= nil and inst._device:IsValid() then
+        inst._device:erode(data.time, data.erodein, data.remove)
+    end
+end
+
+local function spawn_device(inst, erode_data)
+    inst._device = SpawnPrefab("alterguardian_contained")
+
+    local ipos = inst:GetPosition()
+    local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 2.0, nil, true)
+    if offset then
+        ipos = ipos + offset
+    end
+
+    inst._device.Transform:SetPosition(ipos:Get())
+
+    if erode_data then
+        inst._device:erode(erode_data.time, erode_data.erodein, erode_data.remove)
+    end
 end
 
 local function pstbossfn()
@@ -527,6 +592,7 @@ local function pstbossfn()
     inst.shadow = true
     inst.Transform:SetFourFaced()
 
+    inst:AddTag("nomagic")
     inst:AddTag("wagstaff_npc")
 
     inst.AnimState:SetBank("wilson")
@@ -542,7 +608,7 @@ local function pstbossfn()
     inst.Light:SetFalloff(0.5)
     inst.Light:SetIntensity(.8)
     inst.Light:SetRadius(1)
-    inst.Light:SetColour(255/255, 200/255, 200/255) --179/255, 107/255)
+    inst.Light:SetColour(255/255, 200/255, 200/255)
     inst.Light:Enable(true)
 
     inst:AddComponent("talker")
@@ -575,10 +641,56 @@ local function pstbossfn()
     inst.AnimState:SetErosionParams(0, SHADER_CUTOFF_HEIGHT, -1.0)
 
     inst:ListenForEvent("ontalk", ontalk)
+    inst:ListenForEvent("spawndevice", spawn_device)
+    inst:ListenForEvent("doerode", donpcerode)
+
+    return inst
+end
+
+local function docollect(inst)
+    inst.Light:Enable(true)
+
+    inst.AnimState:PlayAnimation("collect")
+    inst.AnimState:PushAnimation("close_idle", true)
+end
+
+local function alterguardian_containedfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddLight()
+    inst.entity:AddNetwork()
+
+    MakeInventoryPhysics(inst, 50, .5)
+
+    inst.AnimState:SetBank("alterguardian_contained")
+    inst.AnimState:SetBuild("alterguardian_contained")
+    inst.AnimState:PlayAnimation("idle")
+
+    inst.Light:SetFalloff(0.5)
+    inst.Light:SetIntensity(.8)
+    inst.Light:SetRadius(1)
+    inst.Light:SetColour(255/255, 179/255, 107/255)
+    inst.Light:Enable(false)
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.persists = false
+
+    inst:AddComponent("inspectable")
+
+    inst.erode = erode
+    inst.AnimState:SetErosionParams(0, SHADER_CUTOFF_HEIGHT, -1.0)
+
+    inst:ListenForEvent("docollect", docollect)
 
     return inst
 end
 
 return Prefab("wagstaff_npc", fn, assets, prefabs),
-        Prefab("wagstaff_npc_pstboss", pstbossfn, assets)
-    
+        Prefab("wagstaff_npc_pstboss", pstbossfn, assets),
+        Prefab("alterguardian_contained", alterguardian_containedfn, contained_assets)

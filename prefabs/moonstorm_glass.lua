@@ -10,14 +10,8 @@ local prefabs =
     "moonglass_charged",
     "moonstorm_glass_ground_fx",
     "moonstorm_glass_fx",
+    "moonstorm_glass_nub",
 }
-
-SetSharedLootTable( 'moonstorm_glass',
-{
-    {'moonglass',       1.00},
-    {'moonglass',       1.00},
-    {'moonglass',       0.25},
-})
 
 SetSharedLootTable( 'moonstorm_glass_infused',
 {
@@ -30,7 +24,6 @@ local function explode(inst)
     inst.AnimState:PlayAnimation("crack")
     inst:ListenForEvent("animover", function()
 
-        inst.components.lootdropper:SetChanceLootTable('moonstorm_glass')
         inst.AnimState:SetBloomEffectHandle("")
         inst.defused = true
         inst.components.named:SetName(STRINGS.NAMES.MOONSTORM_GLASS_DEFUSED)
@@ -62,14 +55,18 @@ local function explode(inst)
                     end
                 end
             end
-        end
-
-
+        end        
         inst:Remove()
     end)
 end
 
 local function OnWork(inst, worker, workleft)
+
+    if inst.nub then
+        inst.nub.components.workable:SetWorkLeft(workleft)
+        inst.nub.setanim(inst.nub, workleft)
+    end
+
     if workleft <= 0 then
         local pt = inst:GetPosition()
         SpawnPrefab("rock_break_fx").Transform:SetPosition(pt:Get())
@@ -79,7 +76,7 @@ local function OnWork(inst, worker, workleft)
             local fx = SpawnPrefab("collapse_small")
             fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
         end
-        inst:Remove()
+        inst:Remove()        
     end
 end
 
@@ -111,7 +108,7 @@ local function spawnin(inst)
     inst.AnimState:PushAnimation("idle1",true)
 end
 
-local function fn(pondtype)
+local function fn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -185,12 +182,79 @@ local function fn(pondtype)
         end
     end)
 
-
     inst.OnSave = on_save
     inst.OnLoad = on_load
     inst.spawnin = spawnin
 
+    inst:ListenForEvent("onremove", function() 
+        if inst.nub then
+            inst.nub:Remove()
+        end
+    end)
+
+    inst:DoTaskInTime(0,function()
+        local nub = SpawnPrefab("moonstorm_glass_nub")
+        nub.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        nub.glass = inst
+        inst.nub = nub
+    end)
+
     return inst
 end
 
-return Prefab("moonstorm_glass", fn, assets, prefabs)
+local function setanim(inst, workleft)
+    if workleft then
+        inst.AnimState:PlayAnimation(
+                (workleft < TUNING.ROCKS_MINE / 3 and "centre_idle3") or
+                (workleft < TUNING.ROCKS_MINE * 2 / 3 and "centre_idle2") or
+                "centre_idle1"
+            )
+    end
+end
+
+local function OnWorkNub(inst, worker, workleft)
+    if inst.glass then
+        inst.glass.components.workable:WorkedBy(worker)        
+        setanim(inst, workleft)   
+    end
+end
+
+local function nubfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+
+    inst.AnimState:SetBuild("moonglass_charged_tile")
+    inst.AnimState:SetBank("moonglass_charged")
+    inst.AnimState:PlayAnimation("centre_idle1", true)
+
+    inst:AddTag("moonglass")
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.persists = false
+
+    inst:AddComponent("inspectable")
+    inst.components.inspectable.getstatus = getstatus
+
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.MINE)
+    inst.components.workable:SetWorkLeft(TUNING.ROCKS_MINE)
+    inst.components.workable:SetOnWorkCallback(OnWorkNub)
+    
+    inst:SetPrefabNameOverride("moonstorm_glass")
+
+    inst.setanim = setanim
+
+    return inst
+end
+
+return Prefab("moonstorm_glass", fn, assets, prefabs),
+       Prefab("moonstorm_glass_nub", nubfn, assets)

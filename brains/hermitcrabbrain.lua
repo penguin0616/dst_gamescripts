@@ -455,7 +455,7 @@ function HermitBrain:OnStart()
         PriorityNode{
             RunAway(self.inst, "player", START_RUN_DIST, STOP_RUN_DIST, function(target) return ShouldRunAway(self.inst, target) end ),
             ChattyNode(self.inst, function(inst) return getstring(inst,STRINGS.HERMITCRAB_GO_HOME) end ,
-                WhileNode( function() return not TheWorld.state.iscaveday or not self.inst.LightWatcher:IsInLight() end, "Cave nightness",
+                WhileNode( function() return not TheWorld.state.iscaveday or not self.inst:IsInLight() end, "Cave nightness",
                     DoAction(self.inst, GoHomeAction, "go home", true ))),
             ChattyNode(self.inst, function(inst) return getstring(inst,STRINGS.HERMITCRAB_PANIC) end,
                 Panic(self.inst)),

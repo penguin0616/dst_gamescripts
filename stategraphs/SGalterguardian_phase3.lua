@@ -221,8 +221,7 @@ end
 
 local states =
 {
-    State
-    {
+    State{
         name = "spawn",
         tags = {"busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
@@ -308,8 +307,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "idle",
         tags = {"idle", "canrotate", "canroll"},
 
@@ -328,8 +326,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "atk_stab",
         tags = { "attack", "busy" },
 
@@ -356,8 +353,7 @@ local states =
         },
     },
 
-    State
-    {
+    State{
         name = "atk_summon_pre",
         tags = { "attack", "busy" },
 
@@ -391,8 +387,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_summon_loop",
         tags = { "attack", "busy" },
 
@@ -417,10 +412,7 @@ local states =
             local summon_maxtime = inst.sg.mem.loop_anim_len * TUNING.ALTERGUARDIAN_PHASE3_SUMMONMAXLOOPS
             local percent_in_summon = time_in_summon / summon_maxtime
 
-            if not inst.SoundEmitter:PlayingSound("summon_loop") then
-                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_stab_LP_pre", "summon_loop")
-            end
-            inst.SoundEmitter:SetParameter("summon_loop", "intensity", percent_in_summon)
+            inst.SoundEmitter:SetParameter("atk_stab_loop_pre", "intensity", percent_in_summon)
         end,
 
         timeline =
@@ -487,8 +479,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_summon_pst",
         tags = { "attack", "busy" },
 
@@ -513,8 +504,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_traps",
         tags = {"attacking", "busy", "canrotate"},
 
@@ -589,8 +579,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_beam",
         tags = {"attacking", "busy", "canrotate"},
 
@@ -710,8 +699,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "atk_sweep",
         tags = {"attacking", "busy", "canrotate"},
 
@@ -820,8 +808,7 @@ local states =
         end,
     },
 
-    State
-    {
+    State{
         name = "death",
         tags = {"busy"},
 

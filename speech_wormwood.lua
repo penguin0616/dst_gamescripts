@@ -1228,6 +1228,8 @@ return{
 		TURF_FUNGUS_RED = "Squashy",
 		TURF_DRAGONFLY = "Fire can't come here!",
 
+        TURF_SHELLBEACH = "Sand",
+
 		POWCAKE = "Ka-pow!",
         CAVE_ENTRANCE = "Goes somewhere",
         CAVE_ENTRANCE_RUINS = "Goes somewhere",
@@ -1523,6 +1525,9 @@ return{
         CHESSPIECE_KLAUS = "Not squishy",
         CHESSPIECE_BEEQUEEN = "No more buzz-buzz",
         CHESSPIECE_ANTLION = "Not moving",
+        CHESSPIECE_BEEFALO = "Not fluffy...",
+        CHESSPIECE_GUARDIANPHASE3 = "Big",
+
         CHESSJUNK1 = "Machine stuff",
         CHESSJUNK2 = "Lots of machine stuff",
         CHESSJUNK3 = "Full of machine stuff",
@@ -3157,7 +3162,7 @@ return{
 			EMPTY = "Muddy.",
         },
         MOONGLASS = "Ouch! Sharp!",
-        MOONGLASS_INFUSED = "Glowy sharp things",
+        MOONGLASS_CHARGED = "Glowy sharp things",
         MOONGLASS_ROCK = "Clear Rock",
         BATHBOMB = "Friends made a ball!",
         TRAP_STARFISH =
@@ -3915,6 +3920,7 @@ return{
             INFUSED = "Sharp glowy!"
         },
 
+        MOONSTORM_STATIC = "Little fire?",
         MOONSTORM_STATIC_ITEM = "Safe inside",
         MOONSTORM_SPARK = "Zzzt?",
 
@@ -3922,6 +3928,7 @@ return{
         BIRD_MUTANT_SPITTER = "Tweeter sick?",
 
         WAGSTAFF_NPC = "Hello! Oh, goodbye... oh, hello!",
+        ALTERGUARDIAN_CONTAINED = "Locked away",
 
         WAGSTAFF_TOOL_1 = "Thing?",
         WAGSTAFF_TOOL_2 = "Here it is!",
@@ -3929,7 +3936,7 @@ return{
         WAGSTAFF_TOOL_4 = "Funny thing",
         WAGSTAFF_TOOL_5 = "Flickery",
 
-        MOONSTORM_GOOGLESHAT = "Belly stuff... for head?",
+        MOONSTORM_GOGGLESHAT = "Belly stuff... for head?",
 
         MOON_DEVICE = {
             GENERIC = "Oooooh!",

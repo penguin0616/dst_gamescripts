@@ -235,7 +235,6 @@ local function create_common(bank, build, tag, common_init)
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddLightWatcher()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
@@ -316,6 +315,7 @@ local function create_common(bank, build, tag, common_init)
     ------------------
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper:SetResistance(2)
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWake)

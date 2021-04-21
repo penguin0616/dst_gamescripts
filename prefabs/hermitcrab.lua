@@ -168,37 +168,6 @@ local function OnRefuseItem(inst, giver, item)
     inst.sg:GoToState("refuse")
 end
 
-local RETARGET_MUST_TAGS = { "_combat" }
-local RETARGET_CANT_TAGS = { "playerghost", "INLIMBO" }
-local function NormalRetargetFn(inst)
-    return not inst:IsInLimbo()
-        and FindEntity(
-                inst,
-                TUNING.PIG_TARGET_DIST,
-                function(guy)
-                    return (guy.LightWatcher == nil or guy.LightWatcher:IsInLight())
-                        and inst.components.combat:CanTarget(guy)
-                end,
-                RETARGET_MUST_TAGS, -- see entityreplica.lua
-                RETARGET_CANT_TAGS                
-            )
-        or nil
-end
-
-local function NormalKeepTargetFn(inst, target)
-    --give up on dead guys, or guys in the dark, or werepigs
-    return inst.components.combat:CanTarget(target)
-        and (target.LightWatcher == nil or target.LightWatcher:IsInLight())
-end
-
-local FIRE_TAGS = { "campfire", "fire" }
-local function NormalShouldSleep(inst)
-    return DefaultSleepTest(inst)
-        and (inst.components.follower == nil or inst.components.follower.leader == nil
-            or (FindEntity(inst, 6, nil, FIRE_TAGS) ~= nil and
-                (inst.LightWatcher == nil or inst.LightWatcher:IsInLight())))
-end
-
 local normalbrain = require "brains/hermitcrabbrain"
 
 local function OnActivatePrototyper(inst, doer, recipe)
@@ -1206,7 +1175,6 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
-    inst.entity:AddLightWatcher()
     inst.entity:AddNetwork()
 
     MakeCharacterPhysics(inst, 50, .5)

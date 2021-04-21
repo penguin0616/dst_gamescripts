@@ -3153,7 +3153,7 @@ return{
 			EMPTY = "Nothing here!",
         },
         MOONGLASS = "Glurp! Sharp!",
-        MOONGLASS_INFUSED = "Is sharp glowy things.",
+        MOONGLASS_CHARGED = "Is sharp glowy things.",
         MOONGLASS_ROCK = "Good color, florp.",
         BATHBOMB = "Wanna throw it now!",
         TRAP_STARFISH =
@@ -3925,7 +3925,7 @@ return{
         WAGSTAFF_TOOL_4 = "What that? Maybe it belong to weird scale-less...",
         WAGSTAFF_TOOL_5 = "Look like someone drop this, florp.",
 
-        MOONSTORM_GOOGLESHAT = "Grrr, can't get the 'tato out!",
+        MOONSTORM_GOGGLESHAT = "Grrr, can't get the 'tato out!",
 
         MOON_DEVICE = {
             GENERIC = "Have weird feeling, florp...",

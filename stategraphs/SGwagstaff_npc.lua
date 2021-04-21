@@ -46,8 +46,17 @@ local events =
     end),
     EventHandler("talk_experiment", function(inst)
         inst.sg:GoToState("talk","wait_search")
-    end),    
+    end),
+    EventHandler("startwork", function(inst, target)
+        inst.sg:GoToState("capture_appearandwork", target)
+    end),
+}
 
+local ERODEOUT_DATA =
+{
+    time = 4.0,
+    erodein = false,
+    remove = true,
 }
 
 local states =
@@ -240,8 +249,7 @@ local states =
         },
     },   
 
-    State
-    {
+    State{
         name = "capture_appearandwork",
         tags = {"busy"},
 
@@ -265,12 +273,16 @@ local states =
             if inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() then
                 inst.sg.statemem.target:PushEvent("orbtaken")
             end
+
+            if inst._device ~= nil and inst._device:IsValid() then
+                inst._device:PushEvent("docollect")
+            end
+
             inst.sg:GoToState("capture_pst")
         end,
     },
 
-    State
-    {
+    State{
         name = "capture_pst",
         tags = {"busy"},
 
@@ -279,34 +291,48 @@ local states =
 
             inst.AnimState:PlayAnimation("build_pst")
 
-            inst.sg:SetTimeout(15)
-        end,
-
-        ontimeout = function(inst)
-            inst.sg:GoToState("capture_emote")
+            inst.sg:SetTimeout(3 + inst.AnimState:GetCurrentAnimationLength())
         end,
 
         events =
         {
             EventHandler("animover", function(inst)
-                inst:PushEvent("talk")
                 inst.components.talker:Say(STRINGS.WAGSTAFF_NPC_CAPTURESTOP)
-                inst:DoTaskInTime(3,function()                
-                    inst.components.talker:Say(STRINGS.WAGSTAFF_NPC_CAPTURESTOP2)
-                    inst.sg:GoToState("capture_emote")
-                end)
+                inst.sg:GoToState("talk", "capture_emotebuffer")
             end),
         },
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("capture_emotebuffer")
+        end,
     },
 
-    State
-    {
+    State{
+        name = "capture_emotebuffer",
+        tags = {"busy"},
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            
+            inst.AnimState:PlayAnimation("emote_impatient", true)
+
+            inst.sg:SetTimeout(1.5)
+        end,
+
+        ontimeout = function(inst)
+            inst.components.talker:Say(STRINGS.WAGSTAFF_NPC_CAPTURESTOP2)
+            inst.sg:GoToState("talk", "capture_emote")
+        end,
+    },
+
+    State{
         name = "capture_emote",
         tags = {"busy"},
 
         onenter = function(inst)
             inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("research", true)
+            inst.AnimState:PlayAnimation("dial_loop")
+            inst.AnimState:PushAnimation("research", true)
 
             inst.sg:SetTimeout(15)
         end,
@@ -318,7 +344,7 @@ local states =
         timeline =
         {
             TimeEvent(1.0, function(inst)
-                inst:erode(4, false, true)
+                inst:PushEvent("doerode", ERODEOUT_DATA)
             end),
         },
     },

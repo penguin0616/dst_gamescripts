@@ -1968,6 +1968,55 @@ local function MakeHat(name)
 
     local function alterguardian_custom_init(inst)
         inst:AddTag("open_top_hat")
+
+        inst:AddTag("gestaltprotection")
+    end
+
+    local function alterguardianhat_IsRed(inst) return inst.prefab == MUSHTREE_SPORE_RED end
+    local function alterguardianhat_IsGreen(inst) return inst.prefab == MUSHTREE_SPORE_GREEN end
+    local function alterguardianhat_IsBlue(inst) return inst.prefab == MUSHTREE_SPORE_BLUE end
+    local alterguardianhat_colourtint = { 0.4, 0.3, 0.25, 0.2, 0.15, 0.1 }
+    local alterguardianhat_multtint = { 0.7, 0.6, 0.55, 0.5, 0.45, 0.4 }
+
+    local function alterguardianhat_animstatemult(animstate, r, g, b)
+        animstate:SetMultColour(
+            alterguardianhat_multtint[1+g+b],
+            alterguardianhat_multtint[r+1+b],
+            alterguardianhat_multtint[r+g+1],
+            1
+        )
+    end
+    local function alterguardianhat_updatelight(inst)
+        local num_sources = #inst.components.container:FindItems(function(item)
+            return item:HasTag("spore")
+        end)
+
+        local r = #inst.components.container:FindItems(alterguardianhat_IsRed)
+        local g = #inst.components.container:FindItems(alterguardianhat_IsGreen)
+        local b = #inst.components.container:FindItems(alterguardianhat_IsBlue)
+
+        if inst._light ~= nil and inst._light:IsValid() then
+            if r > 0 or g > 0 or b > 0 then
+                inst._light.Light:SetColour(
+                    alterguardianhat_colourtint[1+g+b] + r/11,
+                    alterguardianhat_colourtint[r+1+b] + g/11,
+                    alterguardianhat_colourtint[r+g+1] + b/11
+                )
+            else
+                -- If no spores are inserted, match the colour of the miner hat light.
+                inst._light.Light:SetColour(180 / 255, 195 / 255, 150 / 255)
+            end
+        end
+
+        alterguardianhat_animstatemult(inst.AnimState, r, g, b)
+
+        if inst._front and inst._front:IsValid() then
+            alterguardianhat_animstatemult(inst._front.AnimState, r, g, b)
+        end
+
+        if inst._back and inst._back:IsValid() then
+            alterguardianhat_animstatemult(inst._back.AnimState, r, g, b)
+        end
     end
 
 	local function alterguardian_activate(inst, owner)
@@ -1996,6 +2045,7 @@ local function MakeHat(name)
             inst._light = SpawnPrefab("alterguardianhatlight")
 	        inst._light.entity:SetParent(owner.entity)
         end
+        alterguardianhat_updatelight(inst)
 	end
 
 	local function alterguardian_deactivate(inst, owner)
@@ -2012,7 +2062,10 @@ local function MakeHat(name)
 		if inst._front ~= nil then
 			inst._front:OnDeactivated()
 			inst._front = nil
-			inst._task = inst:DoTaskInTime(8*FRAMES, function() opentop_onequip(inst, owner) inst._task = nil end)
+			inst._task = inst:DoTaskInTime(8*FRAMES, function()
+                opentop_onequip(inst, owner)
+                inst._task = nil
+            end)
 		else
 			opentop_onequip(inst, owner)
 		end
@@ -2040,16 +2093,14 @@ local function MakeHat(name)
 		if owner ~= nil and (owner.components.health == nil or not owner.components.health:IsDead()) then
 		    local target = data.target
 			if target and target ~= owner and target:IsValid() and (target.components.health == nil or not target.components.health:IsDead() and not target:HasTag("structure") and not target:HasTag("wall")) then
-				if data.weapon ~= nil and data.projectile == nil then
-					--in combat, this is when we're just launching a projectile, so don't spawn a gestalt yet
-					if data.weapon.components.projectile ~= nil then
-						return
-					elseif data.weapon.components.complexprojectile ~= nil then
-						return
-					elseif data.weapon.components.weapon:CanRangedAttack() then
-						return
-					end
-				end
+
+                -- In combat, this is when we're just launching a projectile, so don't spawn a gestalt yet
+                if data.weapon ~= nil and data.projectile == nil 
+                        and (data.weapon.components.projectile ~= nil
+                            or data.weapon.components.complexprojectile ~= nil
+                            or data.weapon.components.weapon:CanRangedAttack()) then
+                    return
+                end
 
 				local x, y, z = target.Transform:GetWorldPosition()
 
@@ -2082,6 +2133,10 @@ local function MakeHat(name)
 		if sanity > TUNING.SANITY_BECOME_ENLIGHTENED_THRESH then
 			alterguardian_activate(inst, owner)
 		end
+
+        if inst.components.container ~= nil then
+            inst.components.container:Open(owner)
+        end
     end
 
     local function alterguardian_onunequip(inst, owner)
@@ -2104,6 +2159,19 @@ local function MakeHat(name)
 			inst._back:Remove()
 			inst._back = nil
 		end
+
+        if inst.components.container ~= nil then
+            inst.components.container:Close()
+        end
+    end
+
+    local function alterguardianhat_onremove(inst)
+        if inst._front ~= nil and inst._front:IsValid() then
+            inst._front:Remove()
+        end
+        if inst._back ~= nil and inst._back:IsValid() then
+            inst._back:Remove()
+        end
     end
 
     local function alterguardian()
@@ -2121,9 +2189,19 @@ local function MakeHat(name)
         inst.components.equippable:SetOnUnequip(alterguardian_onunequip)
 	    inst.components.equippable.is_magic_dapperness = true
 
+        inst:AddComponent("container")
+        inst.components.container:WidgetSetup("alterguardianhat")
+        inst.components.container.acceptsstacks = false
+        inst.components.container.canbeopened = false
+
+        inst:AddComponent("preserver")
+        inst.components.preserver:SetPerishRateMultiplier(0)
+
         MakeHauntableLaunchAndPerish(inst)
 
-		inst:ListenForEvent("onremove", function() if inst._front ~= nil then inst._front:Remove() end if inst._back ~= nil then inst._back:Remove() end end)
+        inst:ListenForEvent("itemget", alterguardianhat_updatelight)
+        inst:ListenForEvent("itemlose", alterguardianhat_updatelight)
+        inst:ListenForEvent("onremove", alterguardianhat_onremove)
 
         return inst
     end
@@ -2220,8 +2298,14 @@ local function MakeHat(name)
         prefabs = { "balloon_pop_head" }
 		table.insert(assets, Asset("SCRIPT", "scripts/prefabs/balloons_common.lua"))
 	elseif name == "alterguardian" then
-        prefabs = {"alterguardian_hat_equipped", "alterguardianhatlight", "alterguardianhat_projectile"}
-		fn = alterguardian
+        prefabs = {
+            "alterguardian_hat_equipped",
+            "alterguardianhatlight",
+            "alterguardianhat_projectile",
+            "alterguardianhatshard",
+        }
+        table.insert(assets, Asset("ANIM", "anim/ui_alterguardianhat_1x6.zip"))
+        fn = alterguardian
     end
 
     return Prefab(prefabname, fn or default, assets, prefabs)
@@ -2264,7 +2348,6 @@ local function alterguardianhatlightfn()
     inst.Light:SetFalloff(0.5)
     inst.Light:SetIntensity(.8)
     inst.Light:SetRadius(4)
-    inst.Light:SetColour(150 / 255, 180 / 255, 200 / 255)
 
     inst.entity:SetPristine()
 

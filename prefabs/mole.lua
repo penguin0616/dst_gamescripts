@@ -150,7 +150,6 @@ local function fn()
     inst.entity:AddSoundEmitter()
     --inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     --inst.DynamicShadow:SetSize(1, .75)
     inst.Transform:SetFourFaced()
@@ -238,6 +237,7 @@ local function fn()
     inst.components.inspectable.getstatus = getstatus
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper:SetNocturnal(true)
 
     inst.SetUnderPhysics = SetUnderPhysics

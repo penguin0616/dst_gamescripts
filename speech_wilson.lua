@@ -1233,6 +1233,8 @@ return {
 		TURF_FUNGUS_RED = "A chunk of ground.",
 		TURF_DRAGONFLY = "Do you want proof that it's fireproof?",
 
+        TURF_SHELLBEACH = "A chunk of beach.",
+
 		POWCAKE = "Science help us.",
         CAVE_ENTRANCE = "I wonder if that rock could be moved.",
         CAVE_ENTRANCE_RUINS = "It's probably hiding something.",
@@ -1528,6 +1530,9 @@ return {
         CHESSPIECE_KLAUS = "Can I invoke the \"no holiday decorations\" Klaus?",
         CHESSPIECE_BEEQUEEN = "Very statuesque.",
         CHESSPIECE_ANTLION = "A stagn-antlion.",
+        CHESSPIECE_BEEFALO = "This sculpture is pretty beefy.",
+        CHESSPIECE_GUARDIANPHASE3 = "I much prefer it this way.",
+
         CHESSJUNK1 = "A pile of broken chess pieces.",
         CHESSJUNK2 = "Another pile of broken chess pieces.",
         CHESSJUNK3 = "Even more broken chess pieces.",
@@ -3162,7 +3167,7 @@ return {
 			EMPTY = "I'll just have to wait for it to fill up again.",
         },
         MOONGLASS = "It's very sharp.",
-        MOONGLASS_INFUSED = "I should put this to scientific use before the energy fades!",
+        MOONGLASS_CHARGED = "I should put this to scientific use before the energy fades!",
         MOONGLASS_ROCK = "I can practically see my reflection in it.",
         BATHBOMB = "It's just textbook chemistry.",
         TRAP_STARFISH =
@@ -3914,19 +3919,22 @@ return {
         ALTERGUARDIAN_PHASE3DEAD = "Maybe someone should go poke it... just to be sure.",
 
         ALTERGUARDIANHAT = "It shows me infinite possibilities...",
+        ALTERGUARDIANHATSHARD = "[TODO] It shows me a fifth of infinite possibilities...",
 
         MOONSTORM_GLASS = {
             GENERIC = "It's glassy.",
             INFUSED = "It's glowing with unearthly energy."
         },
 
+        MOONSTORM_STATIC = "A new discovery, how electrifying!",
         MOONSTORM_STATIC_ITEM = "It makes my hair do crazy things.",
-        MOONSTORM_SPARK = "It makes my teeth feel weird.",
+        MOONSTORM_SPARK = "I think I'll call it the \"Higgsbury Particle.\"",
 
         BIRD_MUTANT = "I think that used to be a crow.",
         BIRD_MUTANT_SPITTER = "I don't like the way it's looking at me...",
 
         WAGSTAFF_NPC = "As a fellow man of science, I'm compelled to help him!",
+        ALTERGUARDIAN_CONTAINED = "It's draining the energy right out of that monster!",
 
         WAGSTAFF_TOOL_1 = "That has to be the tool I'm looking for!",
         WAGSTAFF_TOOL_2 = "Of course I know what it is! It's just, er... too complicated to explain.",
@@ -3934,7 +3942,7 @@ return {
         WAGSTAFF_TOOL_4 = "My scientific instincts tell me that this is the tool I'm looking for!",
         WAGSTAFF_TOOL_5 = "I know exactly what it does! Science!",
 
-        MOONSTORM_GOOGLESHAT = "Of course! Combining moon energy with potato energy, why didn't I think of that?",
+        MOONSTORM_GOGGLESHAT = "Of course! Combining moon energy with potato energy, why didn't I think of that?",
 
         MOON_DEVICE = {
             GENERIC = "It's containing the energy! I knew what it was for all along, of course.",

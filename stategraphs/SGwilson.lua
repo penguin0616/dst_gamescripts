@@ -13914,7 +13914,7 @@ local states =
         },
 
         onupdate = function(inst)
-            if not inst.LightWatcher:IsInLight() then
+            if not inst:IsInLight() then
                 inst.sg.statemem.is_in_dark = true
                 inst.sg:GoToState("idle")
             end

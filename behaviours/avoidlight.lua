@@ -44,7 +44,7 @@ function AvoidLight:Visit()
     end
     
     if self.status == RUNNING then
-        local in_light = self.inst.LightWatcher:IsInLight()
+        local in_light = self.inst:IsInLight()
         
         local t = GetTime()
         if t > self.phasechangetime or (self.waiting and in_light) then

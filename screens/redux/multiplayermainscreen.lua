@@ -160,24 +160,19 @@ function MakeBanner(self)
 
 	if title_str then
 		if title_str ~= nil then
-			local x =  165 
-			local y =  -140 + 470
+			local x = 170 
+			local y = 75
 			local text_width = 880
 
 			local font_size = 22
 			local title = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.HIGHLIGHT_GOLD))
 			title:SetRegionSize(text_width, 2*(font_size + 2))
 			title:SetHAlign(ANCHOR_RIGHT)
-      --      title:SetVAlign(ANCHOR_TOP)
-			title:SetPosition(x, y + 4)
-
-
-    
+			title:SetPosition(x, y + 4)    
 
 			local shadow = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.BLACK))
 			shadow:SetRegionSize(text_width, 2*(font_size + 2))
 			shadow:SetHAlign(ANCHOR_RIGHT)
-      --      shadow:SetVAlign(ANCHOR_TOP)
 			shadow:SetPosition(x + 1.5, y - 1.5)
 			shadow:MoveToBack()
 		end

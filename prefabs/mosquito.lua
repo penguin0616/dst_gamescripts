@@ -125,7 +125,6 @@ local function mosquito()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddLightWatcher()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
@@ -225,6 +224,7 @@ local function mosquito()
 
     ------------------
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
 
     ------------------
     inst:AddComponent("knownlocations")

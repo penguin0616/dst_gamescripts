@@ -114,6 +114,14 @@ local function SpawnTrapProjectile(inst, target_positions)
     end
 end
 
+local function teleport_override_fn(inst)
+    local ipos = inst:GetPosition()
+    local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 8, 8, true, false)
+        or FindWalkableOffset(ipos, 2*PI*math.random(), 12, 8, true, false)
+
+    return (offset ~= nil and ipos + offset) or ipos
+end
+
 local TRAP_PLAYERCOUNT_DSQ = TUNING.ALTERGUARDIAN_PHASE3_TARGET_DIST^2
 local function do_traps(inst)
     local position = inst:GetPosition()
@@ -318,6 +326,9 @@ local function fn()
     --inst.components.timer:StartTimer("runaway_blocker", n/a)
     --inst.components.timer:StartTimer("traps_cd", n/a)
     inst.components.timer:StartTimer("summon_cd", math.floor(TUNING.ALTERGUARDIAN_PHASE3_SUMMONCOOLDOWN / 2))
+
+    inst:AddComponent("teleportedoverride")
+    inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
     MakeLargeBurnableCharacter(inst, "p3_fx_ball_centre")
     inst.components.burnable:SetBurnTime(5)

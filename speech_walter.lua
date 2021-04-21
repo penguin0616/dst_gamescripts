@@ -1224,6 +1224,8 @@ return{
 		TURF_FUNGUS_RED = "A patch of ground.",
 		TURF_DRAGONFLY = "Finally something fireproof!",
 
+        TURF_SHELLBEACH = "A patch of beach.",
+
 		POWCAKE = "This could go badly.",
         CAVE_ENTRANCE = "That rock's blocking the entrance!",
         CAVE_ENTRANCE_RUINS = "There's probably tons of good stuff in there.",
@@ -1519,6 +1521,9 @@ return{
         CHESSPIECE_KLAUS = "Aw, it reminds me of the holidays.",
         CHESSPIECE_BEEQUEEN = "At least I'm not allergic to bees made out of stone.",
         CHESSPIECE_ANTLION = "She really shook you up, didn't she Woby?",
+        CHESSPIECE_BEEFALO = "Aw don't be jealous Woby, you deserve a statue too!",
+        CHESSPIECE_GUARDIANPHASE3 = "It's so lifelike, I feel like they're staring right at me!",
+
         CHESSJUNK1 = "I don't think they're going to get up anytime soon.",
         CHESSJUNK2 = "I don't think they're going to get up anytime soon.",
         CHESSJUNK3 = "I don't think they're going to get up anytime soon.",
@@ -3153,7 +3158,7 @@ return{
 			EMPTY = "It's a crater, I guess that's pretty common on the moon.",
         },
         MOONGLASS = "Wow... it's so light!",
-        MOONGLASS_INFUSED = "It's light and glowy.",
+        MOONGLASS_CHARGED = "It's light and glowy.",
         MOONGLASS_ROCK = "I've never seen a rock like this before.",
         BATHBOMB = "It smells pretty good.",
         TRAP_STARFISH =
@@ -3911,6 +3916,7 @@ return{
             INFUSED = "Look at that, Woby! It's glowing!"
         },
 
+        MOONSTORM_STATIC = "I wonder what he's working on?",
         MOONSTORM_STATIC_ITEM = "You'll be shocked to see what's inside! Get it? Because there's static inside?",
         MOONSTORM_SPARK = "It's literally spine-tingling!",
 
@@ -3918,6 +3924,7 @@ return{
         BIRD_MUTANT_SPITTER = "Maybe it's a cardinal? A... really sick cardinal?",
 
         WAGSTAFF_NPC = "Hey Mister, are you okay? You're uh... flickering...?",
+        ALTERGUARDIAN_CONTAINED = "Wow, we sure are lucky he happened to have that with him!",
 
         WAGSTAFF_TOOL_1 = "Maybe this is what he's looking for?",
         WAGSTAFF_TOOL_2 = "Um... yeah, this one looks right!",
@@ -3925,7 +3932,7 @@ return{
         WAGSTAFF_TOOL_4 = "It's definitely a tool of some kind... hope it's the right one!",
         WAGSTAFF_TOOL_5 = "That one looks about right... I think?",
 
-        MOONSTORM_GOOGLESHAT = "It's important to have the proper equipment in a storm.",
+        MOONSTORM_GOGGLESHAT = "It's important to have the proper equipment in a storm.",
 
         MOON_DEVICE = {
             GENERIC = "Wow! I wonder what it's for?",

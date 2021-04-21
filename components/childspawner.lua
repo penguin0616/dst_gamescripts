@@ -532,7 +532,9 @@ end
 
 function ChildSpawner:DoQueuedSpawn()
     self.queued_spawn = false
-    self:SpawnChild()
+    if self.spawning then
+        self:SpawnChild()
+    end
     self:StartUpdate()
 end
 

@@ -73,7 +73,7 @@ end
 --V2C: Leave CheckForStart() as a public member function for backward mod compatibility
 function Grue:CheckForStart()
     return not (self.inst.components.health:IsInvincible() or
-                self.inst.LightWatcher:IsInLight() or
+                self.inst:IsInLight() or
                 self.inst.components.health:IsDead() or
                 CanEntitySeeInDark(self.inst))
 end

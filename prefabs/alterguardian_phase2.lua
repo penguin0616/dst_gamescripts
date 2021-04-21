@@ -160,9 +160,6 @@ local function do_spike_attack(inst)
     end
 end
 
-local function do_boat_spike(inst, target)
-end
-
 local TARGET_DIST = TUNING.ALTERGUARDIAN_PHASE2_TARGET_DIST
 local function Retarget(inst)
     local gx, gy, gz = inst.Transform:GetWorldPosition()
@@ -171,20 +168,14 @@ local function Retarget(inst)
         RETARGET_MUST_TAGS, RETARGET_CANT_TAGS, RETARGET_ONEOF_TAGS
     )
 
-    local newtarget = nil
     for _, target in ipairs(potential_targets) do
         if target ~= inst and target.entity:IsVisible() 
                 and inst.components.combat:CanTarget(target) then
-            newtarget = target
-            break
+            return target, true
         end
     end
 
-    if newtarget ~= nil and newtarget ~= inst.components.combat.target then
-        return newtarget
-    else
-        return nil
-    end
+    return nil
 end
 
 local MAX_CHASEAWAY_DIST_SQ = 1600 --40 ^2
@@ -195,6 +186,14 @@ end
 
 local function OnAttacked(inst, data)
     inst.components.combat:SuggestTarget(data.attacker)
+end
+
+local function teleport_override_fn(inst)
+    local ipos = inst:GetPosition()
+    local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 10, 8, true, false)
+        or FindWalkableOffset(ipos, 2*PI*math.random(), 14, 8, true, false)
+
+    return (offset ~= nil and ipos + offset) or ipos
 end
 
 local function OnPhaseTransition(inst)
@@ -303,7 +302,6 @@ local function fn()
     end
 
     inst.DoSpikeAttack = do_spike_attack
-    inst.DoBoatSpike = do_boat_spike
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.ALTERGUARDIAN_PHASE2_WALK_SPEED
@@ -345,6 +343,9 @@ local function fn()
     inst:AddComponent("timer")
     --inst.components.timer:StartTimer("spin_cd", 5)
     --inst.components.timer:StartTimer("summon_cd", 15)
+
+    inst:AddComponent("teleportedoverride")
+    inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
     MakeLargeBurnableCharacter(inst, "fx_ball_centre")
     inst.components.burnable:SetBurnTime(5)

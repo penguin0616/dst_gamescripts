@@ -252,7 +252,7 @@ function Wisecracker:OnUpdate(dt)
     local nightvision = CanEntitySeeInDark(self.inst)
     local is_talker_busy = false
 
-    if nightvision or self.inst.LightWatcher:IsInLight() then
+    if nightvision or self.inst:IsInLight() then
         if not self.inlight and (nightvision or self.inst.LightWatcher:GetTimeInLight() >= 0.5) then
             self.inlight = true
             if self.inst.components.talker ~= nil and not self.inst:HasTag("playerghost") then

@@ -320,7 +320,6 @@ local function create_hutch()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
     inst.entity:AddMiniMapEntity()
-    inst.entity:AddLightWatcher()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
@@ -397,6 +396,7 @@ local function create_hutch()
 
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper:SetResistance(3)
     inst.components.sleeper.testperiod = GetRandomWithVariance(6, 2)
     inst.components.sleeper:SetSleepTest(ShouldSleep)

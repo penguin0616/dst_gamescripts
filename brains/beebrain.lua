@@ -60,7 +60,7 @@ function BeeBrain:OnStart()
 
         --ChaseAndAttack(self.inst, beecommon.MAX_CHASE_TIME),
         WhileNode( function() return IsHomeOnFire(self.inst) end, "HomeOnFire", Panic(self.inst)),
-        IfNode(function() return not TheWorld.state.iscaveday or not self.inst.LightWatcher:IsInLight() end, "IsNight",
+        IfNode(function() return not TheWorld.state.iscaveday or not self.inst:IsInLight() end, "IsNight",
             DoAction(self.inst, function() return beecommon.GoHomeAction(self.inst) end, "go home", true )),
         IfNode(function() return self.inst.components.pollinator:HasCollectedEnough() end, "IsFullOfPollen",
             DoAction(self.inst, function() return beecommon.GoHomeAction(self.inst) end, "go home", true )),

@@ -105,6 +105,29 @@ local function orb_onload(inst, data)
     end
 end
 
+local ERODEIN =
+{
+    time = 3.5,
+    erodein = true,
+    remove = false,
+}
+local function start_wag_sequence(inst)
+    local ipos = inst:GetPosition()
+
+    local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 2.5)
+    if offset then
+        ipos = ipos + offset
+    end
+
+    local wagstaff = SpawnPrefab("wagstaff_npc_pstboss")
+    wagstaff.Transform:SetPosition(ipos:Get())
+    wagstaff:PushEvent("doerode", ERODEIN)
+    wagstaff:PushEvent("spawndevice", ERODEIN)
+    wagstaff:DoTaskInTime(ERODEIN.time - 5*FRAMES, function(w)
+        w:PushEvent("startwork", inst)
+    end)
+end
+
 local function orbfn()
     local inst = CreateEntity()
 
@@ -131,20 +154,7 @@ local function orbfn()
 
     inst:ListenForEvent("orbtaken", orb_gotopst)
 
-    inst:DoTaskInTime(5, function(i)
-        local ipos = inst:GetPosition()
-        local offset = FindWalkableOffset(ipos, 2*PI*math.random(), 2.5)
-        if offset then
-            ipos = ipos + offset
-        end
-
-        local wagstaff = SpawnPrefab("wagstaff_npc_pstboss")
-        wagstaff.Transform:SetPosition(ipos:Get())
-        wagstaff:erode(3.5, true, false)
-        wagstaff:DoTaskInTime(3.5 - 5*FRAMES, function(w)
-            w.sg:GoToState("capture_appearandwork", inst)
-        end)
-    end)
+    inst:DoTaskInTime(5, start_wag_sequence)
 
     --inst._pststarted = nil
 

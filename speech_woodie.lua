@@ -1225,6 +1225,8 @@ return{
 		TURF_FUNGUS_RED = "Just some ground, eh?",
 		TURF_DRAGONFLY = "Fire doesn't quite take here, eh?",
 
+        TURF_SHELLBEACH = "Just some ground, eh?",
+
 		POWCAKE = "I like the ones made with real sugar better.",
         CAVE_ENTRANCE = "It's all bunged up.",
         CAVE_ENTRANCE_RUINS = "It's all bunged up.",
@@ -1520,6 +1522,9 @@ return{
         CHESSPIECE_KLAUS = "Can't complain aboot that worksmanship.",
         CHESSPIECE_BEEQUEEN = "Some nice detail on that.",
         CHESSPIECE_ANTLION = "Looks almost real, eh?",
+        CHESSPIECE_BEEFALO = "Some real fine detail on the fur there.",
+        CHESSPIECE_GUARDIANPHASE3 = "From ornery to ornament, eh?",
+
         CHESSJUNK1 = "Dead metal.",
         CHESSJUNK2 = "Dead metal.",
         CHESSJUNK3 = "Dead metal.",
@@ -3154,7 +3159,7 @@ return{
 			EMPTY = "Let's wait an' see if it fills up again.",
         },
         MOONGLASS = "It's green, like a nice leaf.",
-        MOONGLASS_INFUSED = "These pieces still have a glow to 'em.",
+        MOONGLASS_CHARGED = "These pieces still have a glow to 'em.",
         MOONGLASS_ROCK = "That's a big hunk of moon stuff.",
         BATHBOMB = "Smells nice, like wildflowers.",
         TRAP_STARFISH =
@@ -3912,6 +3917,7 @@ return{
             INFUSED = "It's got a little glow to it."
         },
 
+        MOONSTORM_STATIC = "Whatever he's doin' looks pretty complicated.",
         MOONSTORM_STATIC_ITEM = "Looks like bottled lightning.",
         MOONSTORM_SPARK = "I can already feel the static in my beard.",
 
@@ -3919,6 +3925,7 @@ return{
         BIRD_MUTANT_SPITTER = "See? You can never trust a bird!",
 
         WAGSTAFF_NPC = "Looks like you're doing somthin' important. How aboot I lend you a hand, eh?",
+        ALTERGUARDIAN_CONTAINED = "Guess he couldn't have brought that sooner, eh?",
 
         WAGSTAFF_TOOL_1 = "I'd better run it back to that old-timer.",
         WAGSTAFF_TOOL_2 = "Not really sure what it is, but maybe I'll bring it to that old-timer just in case.",
@@ -3926,7 +3933,7 @@ return{
         WAGSTAFF_TOOL_4 = "Wouldn't hurt to see if this is what that old-timer's been looking for.",
         WAGSTAFF_TOOL_5 = "That might be just the thing I'm lookin' for!",
 
-        MOONSTORM_GOOGLESHAT = "If it works, I'm not gonna complain.",
+        MOONSTORM_GOGGLESHAT = "If it works, I'm not gonna complain.",
 
         MOON_DEVICE = {
             GENERIC = "Huh. Whattaya figure it's for, Luce?",

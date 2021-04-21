@@ -296,7 +296,6 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     MakeObstaclePhysics(inst, .5)
 

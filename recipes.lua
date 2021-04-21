@@ -193,7 +193,7 @@ Recipe("gunpowder", {Ingredient("rottenegg", 1), Ingredient("charcoal", 1), Ingr
 Recipe("lightning_rod", {Ingredient("goldnugget", 4), Ingredient("cutstone", 1)}, RECIPETABS.SCIENCE,  TECH.SCIENCE_ONE, "lightning_rod_placer")
 Recipe("firesuppressor", {Ingredient("gears", 2),Ingredient("ice", 15),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE,  TECH.SCIENCE_TWO, "firesuppressor_placer")
 Recipe("turfcraftingstation", {Ingredient("thulecite", 1), Ingredient("cutstone", 3), Ingredient("wetgoop", 1)}, RECIPETABS.SCIENCE,  TECH.LOST, "turfcraftingstation_placer")
-Recipe("moon_device_construction1", {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE, TECH.LOST, "moon_device_construction1_placer")
+Recipe("moon_device_construction1", {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE, TECH.LOST, {placer = "moon_device_construction1_placer", no_deconstruction = true})
 
 --MAGIC
 Recipe("abigail_flower", {Ingredient("ghostflower", 1), Ingredient("nightmarefuel", 1)}, RECIPETABS.MAGIC, TECH.NONE, nil, nil, nil, nil, "ghostlyfriend")
@@ -356,6 +356,7 @@ Recipe("turf_fungus_moon",				{Ingredient("moonrocknugget", 1),		Ingredient("moo
 Recipe("bathbomb", 						{Ingredient("moon_tree_blossom", 6),	Ingredient("nitre", 1)}, 		RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 Recipe("chesspiece_butterfly_sketch",	{Ingredient("papyrus", 1)},												RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 Recipe("chesspiece_moon_sketch", 		{Ingredient("papyrus", 1)},												RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
+Recipe("alterguardianhat",              {Ingredient("alterguardianhatshard", 5)},                               RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 
 ----BOOK----
 Recipe("book_birds", 		{Ingredient("papyrus", 2), Ingredient("bird_egg", 2)}, CUSTOM_RECIPETABS.BOOKS, TECH.NONE, nil, nil, nil, nil, "bookbuilder")

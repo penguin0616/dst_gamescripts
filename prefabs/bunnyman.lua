@@ -207,7 +207,6 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
-    inst.entity:AddLightWatcher()
     inst.entity:AddNetwork()
 
     inst.AnimState:SetBuild("manrabbit_build")
@@ -320,6 +319,7 @@ local function fn()
     ------------------------------------------
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
 
     ------------------------------------------
     MakeMediumFreezableCharacter(inst, "pig_torso")

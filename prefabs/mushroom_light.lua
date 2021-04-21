@@ -76,9 +76,41 @@ local COLOURED_LIGHTS =
     },
 }
 
-local function IsRedSpore(item) return COLOURED_LIGHTS.red[item.prefab] end
-local function IsGreenSpore(item) return COLOURED_LIGHTS.green[item.prefab] end
-local function IsBlueSpore(item) return COLOURED_LIGHTS.blue[item.prefab] end
+local function IsRedSpore(item)
+    if COLOURED_LIGHTS.red[item.prefab] then
+        return true
+    elseif item.components.container ~= nil then
+        return item.components.container:FindItem(IsRedSpore) ~= nil
+    else
+        return false
+    end
+end
+
+local function IsGreenSpore(item)
+    if COLOURED_LIGHTS.green[item.prefab] then
+        return true
+    elseif item.components.container ~= nil then
+        return item.components.container:FindItem(IsGreenSpore) ~= nil
+    else
+        return false
+    end
+end
+
+local function IsBlueSpore(item)
+    if COLOURED_LIGHTS.blue[item.prefab] then
+        return true
+    elseif item.components.container ~= nil then
+        return item.components.container:FindItem(IsBlueSpore) ~= nil
+    else
+        return false
+    end
+end
+
+local function is_battery_type(item)
+    return item:HasTag("lightbattery")
+        or item:HasTag("spore")
+        or item:HasTag("lightcontainer")
+end
 
 local function UpdateLightState(inst)
     if inst:HasTag("burnt") then
@@ -88,7 +120,7 @@ local function UpdateLightState(inst)
     ClearSoundQueue(inst)
 
     local sound = inst.onlywhite and sounds_1 or sounds_2
-    local num_batteries = #inst.components.container:FindItems( function(item) return item:HasTag("lightbattery") or item:HasTag("spore") end )
+    local num_batteries = #inst.components.container:FindItems(is_battery_type)
     local was_on = IsLightOn(inst)
 
     if num_batteries > 0 then

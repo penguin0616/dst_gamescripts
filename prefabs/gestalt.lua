@@ -61,12 +61,30 @@ local function UpdateBestTrackingTarget(inst)
 end
 
 local function Retarget(inst)
-	return (inst.tracking_target ~= nil 
-				and not inst.components.combat:InCooldown() 
-				and inst:IsNear(inst.tracking_target, TUNING.GESTALT_AGGRESSIVE_RANGE)
-				and not (inst.tracking_target.sg:HasStateTag("knockout") or inst.tracking_target.sg:HasStateTag("sleeping") or inst.tracking_target.sg:HasStateTag("bedroll") or inst.tracking_target.sg:HasStateTag("tent") or inst.tracking_target.sg:HasStateTag("waking"))
-           ) and inst.tracking_target 
-			or nil
+    -- If we don't have a tracking target, are in combat cooldown, or are too far away, no target.
+    if inst.tracking_target == nil 
+            or inst.components.combat:InCooldown()
+            or not inst:IsNear(inst.tracking_target, TUNING.GESTALT_AGGRESSIVE_RANGE) then
+        return nil
+    end
+
+    -- If our potential target is sleeping, don't target them.
+    local sleeping = inst.tracking_target.sg:HasStateTag("knockout")
+        or inst.tracking_target.sg:HasStateTag("sleeping")
+        or inst.tracking_target.sg:HasStateTag("bedroll")
+        or inst.tracking_target.sg:HasStateTag("tent")
+        or inst.tracking_target.sg:HasStateTag("waking")
+    if sleeping then
+        return nil
+    end
+
+    -- If our potential target has a gestalt item, don't target them.
+    local target_inventory = inst.tracking_target.components.inventory
+    if target_inventory ~= nil and target_inventory:EquipHasTag("gestaltprotection") then
+        return nil
+    end
+
+    return inst.tracking_target
 end
 
 local function OnNewCombatTarget(inst, data)

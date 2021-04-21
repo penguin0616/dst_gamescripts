@@ -3033,6 +3033,7 @@ STRINGS =
         -- Moon Storms
         WAGSTAFF_NPC = "Grainy Transmission",
         WAGSTAFF_NPC_PSTBOSS = "Grainy Transmission",
+        ALTERGUARDIAN_CONTAINED = "Lunar Essence Extractor",
 
         ALTERGUARDIAN_PHASE1 = "Celestial Champion",
         ALTERGUARDIAN_PHASE2 = "Celestial Champion",
@@ -3064,13 +3065,14 @@ STRINGS =
         MOONSTORM_STATIC_ITEM = "Restrained Static",
 
         ALTERGUARDIANHAT = "Enlightened Crown",
+        ALTERGUARDIANHATSHARD = "Enlightened Crown Shard", -- [TODO]
 
         MOONSTORM_GOGGLESHAT = "Astroggles",
 
         MOON_DEVICE_CONSTRUCTION1 = "Incomplete Experiment",
         MOON_DEVICE_CONSTRUCTION2 = "Nearly Completed Experiment",
         MOON_DEVICE_CONSTRUCTION3 = "Lunar Siphonator",
-        
+
         MOON_DEVICE = "Lunar Siphonator",
 	},
 
@@ -3696,8 +3698,6 @@ STRINGS =
         TURF_SINKHOLE = "A chunk of wet, muddy grass.",
         TURF_MUD = "A patch of muddy ground.",
 
-        MOON_DEVICE_CONSTRUCTION1 = "Odd Contraption",
-
 		-- FARMING
 		FARM_PLOW_ITEM = "Plow a plot for your plants.",
 		FARM_HOE = "Till soil for crop seeds.",
@@ -3726,7 +3726,10 @@ STRINGS =
         YOTB_PATTERN_FRAGMENT_3 = "Get some festive inspiration.",
 
         MOONSTORM_GOGGLESHAT = "Utilize potato eyes to see through storms.",
-        MOON_DEVICE_CONSTRUCTION1 = "Mad scientist approved, never tested.",
+        MOON_DEVICE_CONSTRUCTION1 = "Mad science approved, never tested.",
+
+        -- Moon Storms
+        ALTERGUARDIANHAT = "Make an Enlightened Crown", -- [TODO]
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -6724,9 +6727,12 @@ STRINGS.UI =
         MOVEMENTPREDICTION_DISABLED = "None",
 		TARGETLOCKING = "Target Locking:",
         TEXTURESTREAMING = "Texture Streaming",
+        THREADEDRENDER = "Threaded Render:",
 		SCREEN_FLASH_INTENSITY = "Screen Flashes:",
         RESTART_TEXTURE_STREAMING_TITLE = "Restart Required",
-        RESTART_TEXTURE_STREAMING_BODY = "For Texture Streaming changes to take effect, you will have to exit and restart the game.", 
+        RESTART_TEXTURE_STREAMING_BODY = "For Texture Streaming changes to take effect, you will have to exit and restart the game.",
+        RESTART_THREADED_RENDER_TITLE = "Restart Required",
+        RESTART_THREADED_RENDER_BODY = "For Threaded Render changes to take effect, you will have to exit and restart the game.",
         OK = "Okay",
         DISPLAY_AREA_LABEL = "Display Area:",
         DISPLAY_AREA_BUTTON = "Adjust",

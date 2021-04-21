@@ -1231,6 +1231,8 @@ return{
 		TURF_FUNGUS_RED = "The ground is boring.",
 		TURF_DRAGONFLY = "My lighter doesn't work on it.",
 
+        TURF_SHELLBEACH = "The ground is boring.",
+
 		POWCAKE = "I wonder if it is flammable.",
         CAVE_ENTRANCE = "Who plugged that hole?",
         CAVE_ENTRANCE_RUINS = "Who plugged that hole?",
@@ -1526,6 +1528,9 @@ return{
         CHESSPIECE_KLAUS = "Haha, you can't get me now.",
         CHESSPIECE_BEEQUEEN = "Took the sting out of her stinger.",
         CHESSPIECE_ANTLION = "Can't shake anything up like that.",
+        CHESSPIECE_BEEFALO = "Hey, they got his good side!",
+        CHESSPIECE_GUARDIANPHASE3 = "Ugh, I'd be happy never seeing that thing again.",
+
         CHESSJUNK1 = "Dead windup horsey.",
         CHESSJUNK2 = "Dead windup priest.",
         CHESSJUNK3 = "Dead windup castle.",
@@ -3160,7 +3165,7 @@ return{
 			EMPTY = "What's better than a hotspring? A fire pit!",
         },
         MOONGLASS = "What do we need glass for anyway?",
-        MOONGLASS_INFUSED = "It's like there's a little fire inside.",
+        MOONGLASS_CHARGED = "It's like there's a little fire inside.",
         MOONGLASS_ROCK = "That's a big chunk of glass!",
         BATHBOMB = "I still don't want to take a bath.",
         TRAP_STARFISH =
@@ -3918,6 +3923,7 @@ return{
             INFUSED = "It's like there's a little fire inside."
         },
 
+        MOONSTORM_STATIC = "Don't get zapped, old man.",
         MOONSTORM_STATIC_ITEM = "It crackles, almost like a fire.",
         MOONSTORM_SPARK = "I'm gonna touch it.",
 
@@ -3925,6 +3931,7 @@ return{
         BIRD_MUTANT_SPITTER = "Oh yeah?! Two can play at that game... PTOOEY!",
 
         WAGSTAFF_NPC = "Uuuugh, old people always seem to need help with something or other.",
+        ALTERGUARDIAN_CONTAINED = "What's that weird machine?",
 
         WAGSTAFF_TOOL_1 = "I've got a feeling this belongs to that old guy.",
         WAGSTAFF_TOOL_2 = "Ugh, couldn't that old guy have just gotten it himself?",
@@ -3932,7 +3939,7 @@ return{
         WAGSTAFF_TOOL_4 = "Welp, it doesn't seem to be flammable. Might as well give it to that old guy.",
         WAGSTAFF_TOOL_5 = "Looks like some weird science junk. Maybe that's what the old guy's looking for?",
 
-        MOONSTORM_GOOGLESHAT = "At least I'll be wearing it in the storm where nobody can see me.",
+        MOONSTORM_GOGGLESHAT = "At least I'll be wearing it in the storm where nobody can see me.",
 
         MOON_DEVICE = {
             GENERIC = "Great! So what does it do?",

@@ -172,7 +172,7 @@ end
 local RETARGET_ONEOF_TAGS = {"player", "monster"}
 local function TeenRetarget(inst)
     return FindEntity(inst, SpringCombatMod(TUNING.TEENBIRD_TARGET_DIST), function(guy)
-        if inst.components.combat:CanTarget(guy)  and (not guy.LightWatcher or guy.LightWatcher:IsInLight()) then
+        if inst.components.combat:CanTarget(guy)  and (not guy:IsInLight()) then
             if inst.components.follower.leader ~= nil then
                 return (guy:HasTag("monster") or (guy == inst.components.follower.leader and inst.components.hunger and inst.components.hunger:IsStarving()))
             else
@@ -187,7 +187,7 @@ local function TeenRetarget(inst)
 end
 
 local function TeenKeepTarget(inst, target)
-    return inst.components.combat:CanTarget(target) and (target.LightWatcher == nil or target.LightWatcher:IsInLight())
+    return inst.components.combat:CanTarget(target) and (target:IsInLight())
 end
 
 local function OnAttacked(inst, data)
@@ -282,7 +282,6 @@ local function create_common(inst, physicscylinder)
 
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     MakeCharacterPhysics(inst, 10, .25)
 
@@ -340,6 +339,7 @@ local function create_common(inst, physicscylinder)
     inst.components.eater:SetOnEatFn(OnEat)
 
     inst:AddComponent("sleeper")
+    inst.components.sleeper.watchlight = true
     inst.components.sleeper:SetResistance(3)
     inst.components.sleeper.testperiod = GetRandomWithVariance(6, 2)
     inst.components.sleeper:SetSleepTest(ShouldSleep)

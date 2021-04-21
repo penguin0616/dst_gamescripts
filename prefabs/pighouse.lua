@@ -221,7 +221,7 @@ local function onstartdaydoortask(inst)
 end
 
 local function onstartdaylighttask(inst)
-    if inst.LightWatcher:GetLightValue() > 0.8 then -- they have their own light! make sure it's brighter than that out.
+    if inst:IsLightGreaterThan(0.8) then -- they have their own light! make sure it's brighter than that out.
         LightsOff(inst)
         inst.doortask = inst:DoTaskInTime(1 + math.random() * 2, onstartdaydoortask)
     elseif TheWorld.state.iscaveday then
@@ -372,7 +372,6 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
-    inst.entity:AddLightWatcher()
 
     MakeObstaclePhysics(inst, 1)
 

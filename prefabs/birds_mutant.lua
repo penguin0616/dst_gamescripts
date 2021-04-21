@@ -124,7 +124,6 @@ local function commonPreMain(inst)
     inst.Physics:SetMass(1)
     inst.Physics:SetSphere(1)
 
-	--inst:AddTag("brightmare")
 	inst:AddTag("bird_mutant")
 	inst:AddTag("NOBLOCK")
 	inst:AddTag("soulless") -- no wortox souls
@@ -141,17 +140,11 @@ local function commonPreMain(inst)
     inst.DynamicShadow:SetSize(1, .75)
     inst.DynamicShadow:Enable(false)
 
-	--inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-
---    inst._level = net_tinybyte(inst.GUID, "gestalt.level", "leveldirty")
---    inst._level:set(1)
-
 	return inst
 end
 
 
 local function commonPostMain(inst)
-	--inst.persists = false
 
     inst:AddComponent("sanityaura")
 	inst.components.sanityaura.aura = TUNING.SANITYAURA_MED
@@ -164,7 +157,6 @@ local function commonPostMain(inst)
 
 	inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.MUTANT_BIRD_HEALTH)
-    --inst.components.health.nofadeout = true
 
     inst:AddComponent("entitytracker")
 
