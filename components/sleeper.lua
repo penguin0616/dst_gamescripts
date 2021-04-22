@@ -97,16 +97,17 @@ function DefaultSleepTest(inst)
             -- sleep in the overworld at night
         and (not TheWorld:HasTag("cave") and TheWorld.state.isnight
             -- in caves, sleep at night if we have a lightwatcher and are in the dark
-            or (TheWorld:HasTag("cave") and watchlight and (not inst:IsInLight() or TheWorld.state.iscavenight)))
+            or (TheWorld:HasTag("cave") and ((watchlight and not inst:IsInLight()) or (not watchlight and TheWorld.state.iscavenight))))
 end
 
 function DefaultWakeTest(inst)
     local watchlight = inst.LightWatcher ~= nil or inst.components.sleeper.watchlight
+
     return StandardWakeChecks(inst)
-        -- in caves, wake if it's not night and we've got a light shining on us
-        or (TheWorld:HasTag("cave") and not TheWorld.state.iscavenight and watchlight and inst:GetTimeInLight() > TUNING.CAVE_LIGHT_WAKE_TIME)
         -- wake when it's not night
-        or not TheWorld.state.isnight
+        or (not TheWorld:HasTag("cave") and not TheWorld.state.isnight)
+        -- in caves, wake if it's not night and we've got a light shining on us
+        or (TheWorld:HasTag("cave") and ((watchlight and inst:IsInLight()) or (not watchlight and not TheWorld.state.iscavenight)))
 end
 
 function NocturnalSleepTest(inst)

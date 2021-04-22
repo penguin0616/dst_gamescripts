@@ -3065,7 +3065,7 @@ STRINGS =
         MOONSTORM_STATIC_ITEM = "Restrained Static",
 
         ALTERGUARDIANHAT = "Enlightened Crown",
-        ALTERGUARDIANHATSHARD = "Enlightened Crown Shard", -- [TODO]
+        ALTERGUARDIANHATSHARD = "Enlightened Crown Shard",
 
         MOONSTORM_GOGGLESHAT = "Astroggles",
 
@@ -3727,9 +3727,6 @@ STRINGS =
 
         MOONSTORM_GOGGLESHAT = "Utilize potato eyes to see through storms.",
         MOON_DEVICE_CONSTRUCTION1 = "Mad science approved, never tested.",
-
-        -- Moon Storms
-        ALTERGUARDIANHAT = "Make an Enlightened Crown", -- [TODO]
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},

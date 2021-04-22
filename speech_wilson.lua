@@ -3919,7 +3919,7 @@ return {
         ALTERGUARDIAN_PHASE3DEAD = "Maybe someone should go poke it... just to be sure.",
 
         ALTERGUARDIANHAT = "It shows me infinite possibilities...",
-        ALTERGUARDIANHATSHARD = "[TODO] It shows me a fifth of infinite possibilities...",
+        ALTERGUARDIANHATSHARD = "Even a single piece is pretty illuminating!",
 
         MOONSTORM_GLASS = {
             GENERIC = "It's glassy.",

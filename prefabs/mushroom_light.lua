@@ -17,6 +17,10 @@ local light_str =
     {radius = 4.25, falloff = .85, intensity = 0.75},
     {radius = 5.5, falloff = .85, intensity = 0.75},
 }
+local fulllight_light_str =
+{
+    radius = 5.5, falloff = 0.85, intensity = 0.75
+}
 
 local colour_tint = { 0.4, 0.3, 0.25, 0.2, 0.1 }
 local mult_tint = { 0.7, 0.6, 0.55, 0.5, 0.45 }
@@ -112,6 +116,10 @@ local function is_battery_type(item)
         or item:HasTag("lightcontainer")
 end
 
+local function is_fulllighter(item)
+    return item:HasTag("fulllighter")
+end
+
 local function UpdateLightState(inst)
     if inst:HasTag("burnt") then
         return
@@ -124,9 +132,20 @@ local function UpdateLightState(inst)
     local was_on = IsLightOn(inst)
 
     if num_batteries > 0 then
-        inst.Light:SetRadius(light_str[num_batteries].radius)
-        inst.Light:SetFalloff(light_str[num_batteries].falloff)
-        inst.Light:SetIntensity(light_str[num_batteries].intensity)
+        local num_fulllights = #inst.components.container:FindItems(is_fulllighter)
+
+        local new_perishrate = (num_fulllights > 0 and 0) or TUNING.PERISH_MUSHROOM_LIGHT_MULT
+        inst.components.preserver:SetPerishRateMultiplier(new_perishrate)
+
+        if num_fulllights > 0 then
+            inst.Light:SetRadius(fulllight_light_str.radius)
+            inst.Light:SetFalloff(fulllight_light_str.falloff)
+            inst.Light:SetIntensity(fulllight_light_str.intensity)
+        else
+            inst.Light:SetRadius(light_str[num_batteries].radius)
+            inst.Light:SetFalloff(light_str[num_batteries].falloff)
+            inst.Light:SetIntensity(light_str[num_batteries].intensity)
+        end
 
         if not inst.onlywhite then
             -- For the GlowCap, spores will tint the light colour to allow for a disco/rave in your base
@@ -156,6 +175,8 @@ local function UpdateLightState(inst)
             QueueSound(inst, 13 * FRAMES, sound.colour)
         end
     else
+        inst.components.preserver:SetPerishRateMultiplier(TUNING.PERISH_MUSHROOM_LIGHT_MULT)
+
         inst.Light:Enable(false)
         inst.AnimState:ClearBloomEffectHandle()
         inst.AnimState:SetMultColour(.7, .7, .7, 1)

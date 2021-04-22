@@ -3914,6 +3914,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Just rocks",
 
         ALTERGUARDIANHAT = "Helps hear them",
+        ALTERGUARDIANHATSHARD = "Hmm...",
 
         MOONSTORM_GLASS = {
             GENERIC = "Just sharp",

@@ -3916,6 +3916,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Shall we see what's left behind?",
 
         ALTERGUARDIANHAT = "It tells me the most delicious secrets, hyuyu!",
+        ALTERGUARDIANHATSHARD = "It won't be too hard to find a use for this shard.",
 
         MOONSTORM_GLASS = {
             GENERIC = "Shiny and sharp.",

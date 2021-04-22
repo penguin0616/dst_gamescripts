@@ -3910,6 +3910,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "I don't know what to believe. All this time, I thought that They were...",
 
         ALTERGUARDIANHAT = "It makes me uneasy... but I can't deny its power.",
+        ALTERGUARDIANHATSHARD = "Even shattered, it holds power.",
 
         MOONSTORM_GLASS = {
             GENERIC = "It's been turned to glass.",

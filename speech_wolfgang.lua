@@ -3911,6 +3911,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Hmm... Wolfgang will smash it, just to be sure.",
 
         ALTERGUARDIANHAT = "Is good hat, except for creepy whisperings...",
+        ALTERGUARDIANHATSHARD = "Hat broke apart into tiny bits.",
 
         MOONSTORM_GLASS = {
             GENERIC = "Can see reflection of Wolfgang's big muscles in it!",

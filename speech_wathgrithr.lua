@@ -3910,6 +3910,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "It seems I've bested it after all.",
 
         ALTERGUARDIANHAT = "A boon from Mani's defeated Champion.",
+        ALTERGUARDIANHATSHARD = "Even a single shard holds a measure of Mani's power.",
 
         MOONSTORM_GLASS = {
             GENERIC = "The power hath faded from it.",

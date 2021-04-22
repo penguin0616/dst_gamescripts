@@ -3911,6 +3911,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Guess that takes care of that!",
 
         ALTERGUARDIANHAT = "It's a pretty handy headpiece, could do without the whisperin' though.",
+        ALTERGUARDIANHATSHARD = "I'm sure it's still good for somethin'.",
 
         MOONSTORM_GLASS = {
             GENERIC = "Almost could've mistook it for ice.",

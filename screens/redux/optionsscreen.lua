@@ -523,7 +523,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetAutoLoginEnabled( self.options.autologin )
 	Profile:SetAnimatedHeadsEnabled( self.options.animatedheads )
 	Profile:SetTextureStreamingEnabled( self.options.texturestreaming )
-	Profile:SetThreadedRenderEnabled( self.options.threadedrenderer )
+	Profile:SetThreadedRenderEnabled( self.options.threadedrender )
 
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.options.integratedbackpack )

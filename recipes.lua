@@ -356,7 +356,6 @@ Recipe("turf_fungus_moon",				{Ingredient("moonrocknugget", 1),		Ingredient("moo
 Recipe("bathbomb", 						{Ingredient("moon_tree_blossom", 6),	Ingredient("nitre", 1)}, 		RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 Recipe("chesspiece_butterfly_sketch",	{Ingredient("papyrus", 1)},												RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 Recipe("chesspiece_moon_sketch", 		{Ingredient("papyrus", 1)},												RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
-Recipe("alterguardianhat",              {Ingredient("alterguardianhatshard", 5)},                               RECIPETABS.CELESTIAL, TECH.CELESTIAL_THREE, nil, nil, true)
 
 ----BOOK----
 Recipe("book_birds", 		{Ingredient("papyrus", 2), Ingredient("bird_egg", 2)}, CUSTOM_RECIPETABS.BOOKS, TECH.NONE, nil, nil, nil, nil, "bookbuilder")
@@ -661,7 +660,8 @@ Recipe("yotc_carrat_gym_stamina",		{Ingredient("lucky_goldnugget", 4)},nil, TECH
 Recipe("yotc_carrat_scale",			    {Ingredient("lucky_goldnugget", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("wall_ruins_2_item",             {Ingredient("thulecite", 1)},       nil, TECH.LOST, nil, nil, true)
 Recipe("wall_stone_2_item",             {Ingredient("cutstone", 2)},        nil, TECH.LOST, nil, nil, true)
-Recipe("archive_resonator",             {Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)},        nil, TECH.LOST, nil, nil, true)
+Recipe("archive_resonator",             {Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)},      nil, TECH.LOST, nil, nil, true)
+Recipe("alterguardianhat",              {Ingredient("alterguardianhatshard", 5)},                           nil, TECH.LOST, nil, nil, true)
 
 -- old deprecated structures
 Recipe("slow_farmplot",		{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)},	nil, TECH.LOST, nil, nil, true)

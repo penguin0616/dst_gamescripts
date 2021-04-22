@@ -92,6 +92,7 @@ local function fn()
     inst.Light:SetColour(.65, .65, .5)
     inst.Light:Enable(true)
 
+    inst:AddTag("fulllighter")
     inst:AddTag("lightcontainer")
 
     inst.entity:SetPristine()

@@ -3917,6 +3917,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Guess it's finally done.",
 
         ALTERGUARDIANHAT = "It makes the inside of my head so noisy...",
+        ALTERGUARDIANHATSHARD = "It was surprisingly hard to pull that thing apart.",
 
         MOONSTORM_GLASS = {
             GENERIC = "Hey, I can see my reflection!",

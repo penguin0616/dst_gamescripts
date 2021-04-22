@@ -3910,6 +3910,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Well... I guess that's that.",
 
         ALTERGUARDIANHAT = "It tells me all kinds of stories.",
+        ALTERGUARDIANHATSHARD = "I'm sure we can still find a use for it!",
 
         MOONSTORM_GLASS = {
             GENERIC = "I've never seen glass made by lightning before!",

@@ -416,7 +416,7 @@ params.mushroom_light =
 }
 
 function params.mushroom_light.itemtestfn(container, item, slot)
-    return item:HasTag("lightbattery") and not container.inst:HasTag("burnt")
+    return (item:HasTag("lightbattery") or item:HasTag("lightcontainer")) and not container.inst:HasTag("burnt")
 end
 
 --------------------------------------------------------------------------

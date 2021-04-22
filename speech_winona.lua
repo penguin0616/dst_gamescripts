@@ -3916,6 +3916,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Might as well salvage what we can from what's left.",
 
         ALTERGUARDIANHAT = "It's a pretty heady experience havin' that much power. Ha...",
+        ALTERGUARDIANHATSHARD = "There's still a heck of a lot of power left in this one little piece.",
 
         MOONSTORM_GLASS = {
             GENERIC = "That's some good, workable material there.",

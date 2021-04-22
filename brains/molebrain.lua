@@ -97,7 +97,7 @@ function MoleBrain:OnStart()
         EventNode(self.inst, "gohome", 
             DoAction(self.inst, GoHomeAction, "go home", false)),
         DoAction(self.inst, TakeBaitAction, "take bait", false),
-        WhileNode(function() return TheWorld.state.isday or (TheWorld.state.iscaveday and self:IsInLight()) end, "IsDay",
+        WhileNode(function() return TheWorld.state.isday or (TheWorld.state.iscaveday and self.inst:IsInLight()) end, "IsDay",
             DoAction(self.inst, GoHomeAction, "go home", false )),
         Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, MAX_WANDER_DIST),
     }, .25)

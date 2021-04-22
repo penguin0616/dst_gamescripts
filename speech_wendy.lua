@@ -3914,6 +3914,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Nothing can escape death for long.",
 
         ALTERGUARDIANHAT = "When I wear it, i-it's harder to see Abigail...",
+        ALTERGUARDIANHATSHARD = "It broke apart.",
 
         MOONSTORM_GLASS = {
             GENERIC = "Cold glass.",

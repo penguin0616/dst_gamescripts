@@ -98,7 +98,7 @@ local SPIN_ONEOF_TAGS = {"_health", "CHOP_workable", "HAMMER_workable", "MINE_wo
 local SPIN_FX_RATE = 10*FRAMES
 local states =
 {
-    State{
+    State {
         name = "spawn",
         tags = {"busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
@@ -175,7 +175,7 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "idle",
         tags = {"idle", "canrotate", "canroll"},
 
@@ -192,7 +192,7 @@ local states =
         },
     },
 
-    State{
+    State {
         name = "atk_chop",
         tags = {"attack", "busy"},
 
@@ -230,7 +230,7 @@ local states =
         },
     },
 
-    State{
+    State {
         name = "atk_spike",
         tags = {"attack", "busy"},
 
@@ -266,7 +266,7 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "atk_spike_pst",
         tags = {"attack", "busy"},
 
@@ -282,7 +282,7 @@ local states =
         },
     },
 
-    State{
+    State {
         name = "spin_pre",
         tags = {"busy", "canrotate", "spin"},
 
@@ -308,14 +308,20 @@ local states =
         end,
 
         timeline =
-        {   
-
+        {
             TimeEvent(30*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/atk_spin_pre")
             end),
             TimeEvent(32*FRAMES, function(inst)
                 inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-                inst.Physics:SetMotorVelOverride(TUNING.ALTERGUARDIAN_PHASE2_SPIN_SPEED, 0, 0)
+
+                local spin_speed = TUNING.ALTERGUARDIAN_PHASE2_SPIN_SPEED
+                local target = inst.sg.statemem.target
+                if target ~= nil and target:IsValid() and target.components.locomotor ~= nil then
+                    spin_speed = math.max(spin_speed, target.components.locomotor:GetRunSpeed())
+                end
+                inst.sg.statemem.spin_speed = spin_speed
+                inst.Physics:SetMotorVelOverride(spin_speed, 0, 0)
             end),
         },
 
@@ -326,6 +332,7 @@ local states =
                 {
                     spin_time_remaining = (inst.sg.timeinstate - 18*FRAMES) % SPIN_FX_RATE,
                     target = inst.sg.statemem.target,
+                    speed = inst.sg.statemem.spin_speed,
                 }
                 inst.sg:GoToState("spin_loop", loop_data)
             end),
@@ -338,7 +345,7 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "spin_loop",
         tags = {"busy", "canrotate", "spin"},
 
@@ -348,17 +355,18 @@ local states =
 
             inst.AnimState:PlayAnimation("attk_spin_loop", true)
 
-            inst.Physics:SetMotorVelOverride(TUNING.ALTERGUARDIAN_PHASE2_SPIN_SPEED, 0, 0)
-
             inst.sg.statemem.loop_len = inst.AnimState:GetCurrentAnimationLength()
             local num_loops = math.random(TUNING.ALTERGUARDIAN_PHASE2_SPINMIN, TUNING.ALTERGUARDIAN_PHASE2_SPINMAX)
             inst.sg:SetTimeout(inst.sg.statemem.loop_len * num_loops)
 
             inst.sg.statemem.attack_time = 0
             inst.sg.statemem.target = data.target
+            inst.sg.statemem.speed = data.speed
             inst.sg.statemem.initial_spin_fx_time = data.spin_time_remaining
 
             inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/atk_spin_LP","spin_loop")
+
+            inst.Physics:SetMotorVelOverride(data.speed, 0, 0)
         end,
 
         onupdate = function(inst, dt)
@@ -425,7 +433,7 @@ local states =
 
         ontimeout = function(inst)
             inst.sg.statemem.exit_by_timeout = true
-            inst.sg:GoToState("spin_pst")
+            inst.sg:GoToState("spin_pst", inst.sg.statemem.speed)
         end,
 
         onexit = function(inst)
@@ -440,14 +448,14 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "spin_pst",
         tags = {"busy", "spin"},
 
-        onenter = function(inst)
+        onenter = function(inst, speed)
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-            inst.Physics:SetMotorVelOverride(TUNING.ALTERGUARDIAN_PHASE2_SPIN_SPEED, 0, 0)
+            inst.Physics:SetMotorVelOverride(speed, 0, 0)
 
             inst.AnimState:PlayAnimation("attk_spin_pst")
 
@@ -512,7 +520,7 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "atk_summon",
         tags = {"attack", "busy"},
 
@@ -582,7 +590,7 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "antiboat_attack",
         tags = {"attack", "busy"},
 
@@ -636,7 +644,7 @@ local states =
         end,
     },
 
-    State{
+    State {
         name = "death",
         tags = {"busy", "dead"},
 

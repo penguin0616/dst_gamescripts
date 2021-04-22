@@ -1208,13 +1208,13 @@ return{
         TURF_SAVANNA = "It's like an ingredient for the ground.",
         TURF_WOODFLOOR = "It's like an ingredient for the ground.",
 
-		TURF_CAVE = "It's like an ingredient for the ground.",
-		TURF_FUNGUS = "It's like an ingredient for the ground.",
+		TURF_CAVE="It's like an ingredient for the ground.",
+		TURF_FUNGUS="It's like an ingredient for the ground.",
 		TURF_FUNGUS_MOON = "It's like an ingredient for the ground.",
 		TURF_ARCHIVE = "It's like an ingredient for the ground.",
-		TURF_SINKHOLE = "It's like an ingredient for the ground.",
-		TURF_UNDERROCK = "It's like an ingredient for the ground.",
-		TURF_MUD = "It's like an ingredient for the ground.",
+		TURF_SINKHOLE="It's like an ingredient for the ground.",
+		TURF_UNDERROCK="It's like an ingredient for the ground.",
+		TURF_MUD="It's like an ingredient for the ground.",
 
 		TURF_DECIDUOUS = "It's like an ingredient for the ground.",
 		TURF_SANDY = "It's like an ingredient for the ground.",
@@ -3910,6 +3910,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Finalement, it's over.",
 
         ALTERGUARDIANHAT = "It makes me hear such sweet whispers...",
+        ALTERGUARDIANHATSHARD = "It's been broken down to it's basic ingredients.",
 
         MOONSTORM_GLASS = {
             GENERIC = "En glace.",

@@ -1224,6 +1224,8 @@ return{
 		TURF_FUNGUS_RED = "Ground bit.",
 		TURF_DRAGONFLY = "Scaly ground!",
 
+        TURF_SHELLBEACH = "Ground bit.",
+
 		POWCAKE = "Gives tummy-ache, but... smell so good...",
         CAVE_ENTRANCE = "There rocks in the way.",
         CAVE_ENTRANCE_RUINS = "What down there?",
@@ -1519,6 +1521,9 @@ return{
         CHESSPIECE_KLAUS = "Can't chase me anymore!",
         CHESSPIECE_BEEQUEEN = "That's what you get, stingy lady!",
         CHESSPIECE_ANTLION = "How she stay so still?",
+        CHESSPIECE_BEEFALO = "It just rock, real thing better.",
+        CHESSPIECE_GUARDIANPHASE3 = "Glorp! Oh, it not real.",
+
         CHESSJUNK1 = "It all broken.",
         CHESSJUNK2 = "Didn't do it!!",
         CHESSJUNK3 = "It all messed up.",
@@ -3905,12 +3910,14 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "I-is gone for good now right, florp?",
 
         ALTERGUARDIANHAT = "Makes head full of funny whispers...",
+        ALTERGUARDIANHATSHARD = "Glurp! D-didn't break it!",
 
         MOONSTORM_GLASS = {
             GENERIC = "Is very sharp.",
             INFUSED = "Oooooooh pretty!"
         },
 
+        MOONSTORM_STATIC = "What that sparky stuff?",
         MOONSTORM_STATIC_ITEM = "Hee-hee! It can't get out!",
         MOONSTORM_SPARK = "Glorp! It zaps!",
 
@@ -3918,6 +3925,7 @@ return{
         BIRD_MUTANT_SPITTER = "Pt-ooey back at you, florp!",
 
         WAGSTAFF_NPC = "Is another scaleless? Can't smell him, florpt...",
+        ALTERGUARDIAN_CONTAINED = "What that thing for?",
 
         WAGSTAFF_TOOL_1 = "Hmm... it have no smell, like weird scale-less.",
         WAGSTAFF_TOOL_2 = "Maybe this what weird scale-less looking for.",

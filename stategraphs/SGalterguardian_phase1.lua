@@ -6,8 +6,9 @@ local CHOOSE_AOE_RANGE = TUNING.ALTERGUARDIAN_PHASE1_AOERANGE / 2
 local function ChooseAttack(inst, target)
     local ix, iy, iz = inst.Transform:GetWorldPosition()
 
-    if inst.components.timer:TimerExists("roll_cooldown") or
-            target:GetDistanceSqToPoint(ix, iy, iz) < CHOOSE_AOE_RANGE then
+    if inst.components.timer:TimerExists("roll_cooldown")
+            or target == nil or not target:IsValid()
+            or target:GetDistanceSqToPoint(ix, iy, iz) < CHOOSE_AOE_RANGE then
         inst.sg:GoToState("tantrum_pre")
     else
         inst.sg:GoToState("roll_start")
@@ -97,6 +98,12 @@ local function roll_screenshake(inst)
     ShakeAllCameras(CAMERASHAKE.VERTICAL, .5, ROLL_SS_SPEED, ROLL_SS_SCALE, inst, 40)
 end
 
+local function spawn_landfx(inst)
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+    SpawnPrefab("alterguardian_spintrail_fx").Transform:SetPosition(ix, iy, iz)
+    SpawnPrefab("mining_moonglass_fx").Transform:SetPosition(ix, iy, iz)
+end
+
 local states =
 {
     State{
@@ -105,7 +112,8 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:SetBuild("alterguardian_spawn_death")
-            inst.AnimState:SetBankAndPlayAnimation("alterguardian_spawn_death", "fall_idle", true)
+            inst.AnimState:SetBankAndPlayAnimation("alterguardian_spawn_death", "fall_bounce")
+            inst.AnimState:PushAnimation("fall_idle", true)
             inst.components.health:SetInvincible(true)
 
             -- The timer should exist already if we were save/loaded during this time.
@@ -238,10 +246,12 @@ local states =
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 
             if inst.sg.mem._num_rolls == nil then
-                inst.sg.mem._num_rolls = TUNING.ALTERGUARDIAN_PHASE1_MINROLLCOUNT + (math.random() * 4)
+                inst.sg.mem._num_rolls = TUNING.ALTERGUARDIAN_PHASE1_MINROLLCOUNT + (2*math.random())
             else
                 inst.sg.mem._num_rolls = inst.sg.mem._num_rolls - 1
             end
+
+            inst.components.combat:RestartCooldown()
         end,
 
         timeline =
@@ -250,6 +260,8 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/roll")
 
                 roll_screenshake(inst)
+
+                spawn_landfx(inst)
             end),
         },
 
@@ -327,13 +339,19 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/roll")
 
                 roll_screenshake(inst)
+
+                spawn_landfx(inst)
             end),
             TimeEvent(18*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/roll")
             end),
             TimeEvent(18*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/tantrum")
+
                 tantrum_screenshake(inst)
+
+                spawn_landfx(inst)
+
                 DoAOEAttack(inst, TUNING.ALTERGUARDIAN_PHASE1_AOERANGE)
             end),
             TimeEvent(22*FRAMES, function(inst)
@@ -422,6 +440,8 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/tantrum")
 
                 tantrum_screenshake(inst)
+
+                spawn_landfx(inst)
             end),
             
             TimeEvent(8*FRAMES, function(inst)
@@ -459,6 +479,8 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/tantrum")
 
                 tantrum_screenshake(inst)
+
+                spawn_landfx(inst)
             end),
             TimeEvent(8*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/tantrum")

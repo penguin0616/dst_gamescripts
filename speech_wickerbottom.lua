@@ -3910,6 +3910,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "With the energy removed, I doubt it will be able to re-form.",
 
         ALTERGUARDIANHAT = "The multitudes of knowledge it contains... if only I could write it all down...",
+        ALTERGUARDIANHATSHARD = "These shards hold a significant amount of energy on their own.",
 
         MOONSTORM_GLASS = {
             GENERIC = "The glass seems to have stabilized.",
