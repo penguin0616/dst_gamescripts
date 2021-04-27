@@ -2,18 +2,25 @@ require "prefabutil"
 
 local assets_robin =
 {
-    Asset("ANIM", "anim/mutated_robin.zip"),    
+    Asset("ANIM", "anim/mutated_robin.zip"),   
+    Asset("ANIM", "anim/bird_mutant_spitter_build.zip"),   
 }
 
 local assets_crow =
 {
     Asset("ANIM", "anim/mutated_crow.zip"),   
+    Asset("ANIM", "anim/bird_mutant_build.zip"),   
 }
 
 local prefabs =
 {
 	"bilesplat",
 }
+
+SetSharedLootTable( 'bird_mutant',
+{
+    {'spoiled_food',       1.00},
+})
 
 local brain = require "brains/bird_mutant_brain"
 local easing = require("easing")
@@ -102,6 +109,21 @@ local function OnNoCombatTarget(inst)
 	inst:RemoveTag("scarytoprey")
 end
 
+local function OnTrapped(inst, data)
+    if data and data.trapper and data.trapper.settrapsymbols then
+        data.trapper.settrapsymbols(inst.trappedbuild)
+    end
+end
+
+local function OnPutInInventory(inst)
+    --Otherwise sleeper won't work if we're in a busy state
+    inst.sg:GoToState("idle")
+end
+
+local function OnDropped(inst)
+    inst.sg:GoToState("stunned")
+end
+
 local function commonPreMain(inst)
    
     --Core components
@@ -130,6 +152,8 @@ local function commonPreMain(inst)
 	inst:AddTag("hostile")
     inst:AddTag("monster")
     inst:AddTag("scarytoprey")
+    inst:AddTag("canbetrapped")
+    inst:AddTag("bird")    
 
     inst.Transform:SetFourFaced()    
 
@@ -145,6 +169,10 @@ end
 
 
 local function commonPostMain(inst)
+    inst:AddComponent("occupier")
+
+    inst:AddComponent("eater")
+    inst.components.eater:SetDiet({ FOODTYPE.SEEDS }, { FOODTYPE.SEEDS })
 
     inst:AddComponent("sanityaura")
 	inst.components.sanityaura.aura = TUNING.SANITYAURA_MED
@@ -157,6 +185,7 @@ local function commonPostMain(inst)
 
 	inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.MUTANT_BIRD_HEALTH)
+    inst.components.health.murdersound = "dontstarve/wilson/hit_animal"
 
     inst:AddComponent("entitytracker")
 
@@ -171,7 +200,20 @@ local function commonPostMain(inst)
 	inst:ListenForEvent("droppedtarget", OnNoCombatTarget)
 	inst:ListenForEvent("losttarget", OnNoCombatTarget)
 	
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.nobounce = true
+    inst.components.inventoryitem.canbepickedup = false
+    inst.components.inventoryitem.canbepickedupalive = true
+    inst.components.inventoryitem:SetSinks(true)
+
+    inst:ListenForEvent("ontrapped", OnTrapped)
+
+    inst:AddComponent("lootdropper")
+    inst.components.lootdropper:SetChanceLootTable('bird_mutant')
+
 	inst:AddComponent("knownlocations")
+
+    MakeFeedableSmallLivestock(inst, TUNING.BIRD_PERISH_TIME, OnPutInInventory, OnDropped)
 
     inst:SetStateGraph("SGbird_mutant")
     inst:SetBrain(brain)
@@ -184,7 +226,7 @@ local function runnerfn()
 
 	inst = commonPreMain(inst)
 
-    inst.AnimState:SetBuild("mutated_crow")
+    inst.AnimState:SetBuild("bird_mutant_build")
     inst.AnimState:SetBank("mutated_crow")
     inst.AnimState:PlayAnimation("idle", true)
 
@@ -194,6 +236,8 @@ local function runnerfn()
         return inst
     end
 
+    inst.trappedbuild = "bird_mutant_build"
+
     inst = commonPostMain(inst)
 
 	return inst
@@ -202,7 +246,7 @@ end
 local function spitterfn()
 	local inst = CreateEntity()
 	inst = commonPreMain(inst)
-    inst.AnimState:SetBuild("mutated_robin")
+    inst.AnimState:SetBuild("bird_mutant_spitter_build")
     inst.AnimState:SetBank("mutated_robin")
 
 	inst:AddTag("bird_mutant_spitter")
@@ -213,6 +257,8 @@ local function spitterfn()
         return inst
     end
 	
+    inst.trappedbuild = "bird_mutant_spitter_build"
+
 	inst = commonPostMain(inst)
 	inst.LaunchProjectile = LaunchProjectile
 	

@@ -2012,6 +2012,13 @@ local fx =
             inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         end,
     },
+    {
+        name = "alterguardian_phase3trappst",
+        bank = "alterguardian_meteor",
+        build = "alterguardian_meteor",
+        anim = "meteor_pst",
+        sound = "turnoftides/common/together/moon_glass/mine",
+    }
 }
 
 for cratersteamindex = 1, 4 do

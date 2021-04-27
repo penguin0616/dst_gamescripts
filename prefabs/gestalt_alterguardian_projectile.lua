@@ -125,6 +125,7 @@ end
 local DEFAULT_FINDVICTIM_MUST = {"_health"}
 local DEFAULT_FINDVICTIM_CANT =
 {
+    "brightmareboss",
     "brightmare",
     "DECOR",
     "epic",

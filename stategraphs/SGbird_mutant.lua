@@ -7,7 +7,7 @@ local actionhandlers =
             if not inst.sg:HasStateTag('busy') then
                 inst.sg:GoToState("shoot", action.target) 
             end
-        end),    
+        end),
 }
 
 local events =
@@ -26,6 +26,10 @@ local events =
             inst.sg:GoToState("attack")
         end
     end), 
+
+    EventHandler("trapped", function(inst)
+        inst.sg:GoToState("trapped")
+    end),
 
     EventHandler("locomote", function(inst)
         local is_moving = inst.sg:HasStateTag("moving")
@@ -246,7 +250,6 @@ local states=
         tags = { "moving" },
 
         onenter = function(inst)
-                    print("TAUNT")
             inst.AnimState:PlayAnimation("caw")
         end,
         events =
@@ -308,6 +311,46 @@ local states=
                 inst.AnimState:PlayAnimation("idle")                
             end),
         },
+    },    
+
+
+    State{
+        name = "trapped",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("stunned_loop", true)
+            inst.sg:SetTimeout(1)
+        end,
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+    },
+
+    State{
+        name = "stunned",
+        tags = { "busy" },
+
+        onenter = function(inst) 
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("stunned_loop", true)
+            inst.sg:SetTimeout(GetRandomWithVariance(6, 2))
+            if inst.components.inventoryitem ~= nil then
+                inst.components.inventoryitem.canbepickedup = true
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            if inst.components.inventoryitem ~= nil then
+                inst.components.inventoryitem.canbepickedup = false
+            end
+        end,
     },    
 }
 

@@ -155,7 +155,7 @@ local function fn()
     inst.entity:AddNetwork()
 
 	--MakeCharacterPhysics(inst, 1, .5)
-    MakeInventoryPhysics(inst, 1, .5)
+    MakeFlyingCharacterPhysics(inst, 1, .5)
 
     inst.AnimState:SetBuild("charged_particle")
     inst.AnimState:SetBank("charged_particle")

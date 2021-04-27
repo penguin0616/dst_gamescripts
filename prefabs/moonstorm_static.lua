@@ -43,6 +43,14 @@ local function finished(inst)
     end)   
 end
 
+local function stormstopped(inst)        
+    inst:DoTaskInTime(1,function()
+        if TheWorld.net.components.moonstorms and not TheWorld.net.components.moonstorms:IsInMoonstorm(inst) then
+            inst.components.health:Kill()
+        end    
+    end)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -59,15 +67,14 @@ local function fn()
     inst.AnimState:SetBank("static_contained")
     inst.AnimState:PlayAnimation("idle", true)
 
-    --inst.DynamicShadow:Enable(true)
+    inst.DynamicShadow:Enable(true)
+    inst.DynamicShadow:SetSize(1, .5)
 
     inst.Light:SetColour(111/255, 111/255, 227/255)
     inst.Light:SetIntensity(0.75)
     inst.Light:SetFalloff(0.5)
     inst.Light:SetRadius(2)
     inst.Light:Enable(false)
-
-    --inst.DynamicShadow:SetSize(.8, .5)
 
     inst:AddTag("moonstorm_static")
 
@@ -92,8 +99,7 @@ local function fn()
     
     inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/idle_LP","loop")
 
-
---    inst.components.combat.hiteffectsymbol = "torso"
+    inst:ListenForEvent("ms_currentmoonstormstopped", function() stormstopped(inst) end, TheWorld)
 
     inst:AddComponent("inspectable")
 

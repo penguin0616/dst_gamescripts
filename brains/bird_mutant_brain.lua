@@ -49,7 +49,7 @@ local function GetSwarmTargetPos(inst)
 end
 
 local function CanBirdAttack(inst)
-    if inst.components.combat:InCooldown() then
+    if inst.components.combat:InCooldown() or inst.sg:HasStateTag("busy") then
         return nil
     end
     local target = GetSwarmTarget(inst)

@@ -32,9 +32,42 @@ SetSharedLootTable("alterguardian_phase2",
 
 local brain = require "brains/alterguardian_phase2brain"
 
+--MUSIC------------------------------------------------------------------------
+local function PushMusic(inst)
+    if ThePlayer == nil or inst:HasTag("nomusic") then
+        inst._playingmusic = false
+    elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+        inst._playingmusic = true
+        ThePlayer:PushEvent("triggeredevent", { name = "alterguardian_phase2", duration = 2 })
+    elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+        inst._playingmusic = false
+    end
+end
+
+local function OnMusicDirty(inst)
+    if not TheNet:IsDedicated() then
+        if inst._musictask ~= nil then
+            inst._musictask:Cancel()
+        end
+        inst._musictask = inst:DoPeriodicTask(1, PushMusic)
+        PushMusic(inst)
+    end
+end
+
+local function SetNoMusic(inst, val)
+    if val then
+        inst:AddTag("nomusic")
+    else
+        inst:RemoveTag("nomusic")
+    end
+    inst._musicdirty:push()
+    OnMusicDirty(inst)
+end
+--MUSIC------------------------------------------------------------------------
+
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "character", "monster" }
+local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
 
 local function spawn_spike_with_target(inst, data)
     if not data then
@@ -263,6 +296,15 @@ local function inspect_boss(inst)
     return (inst.sg:HasStateTag("dead") and "DEAD") or nil
 end
 
+local function hauntchancefn(inst)
+    local statename = inst.sg.currentstate.name
+    if statename == "spawn" or statename == "death" then
+        return 0
+    else
+        return TUNING.HAUNT_CHANCE_OCCASIONAL
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -288,6 +330,7 @@ local function fn()
 
     MakeGiantCharacterPhysics(inst, 500, 2)
 
+    inst:AddTag("brightmareboss")
     inst:AddTag("epic")
     inst:AddTag("hostile")
     inst:AddTag("largecreature")
@@ -296,12 +339,20 @@ local function fn()
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
 
+    inst._musicdirty = net_event(inst.GUID, "alterguardian_phase2._musicdirty", "musicdirty")
+    inst._playingmusic = false
+    --inst._musictask = nil
+    OnMusicDirty(inst)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
+        inst:ListenForEvent("musicdirty", OnMusicDirty)
+
         return inst
     end
 
     inst.DoSpikeAttack = do_spike_attack
+    inst.SetNoMusic = SetNoMusic
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.ALTERGUARDIAN_PHASE2_WALK_SPEED
@@ -347,13 +398,10 @@ local function fn()
     inst:AddComponent("teleportedoverride")
     inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
-    MakeLargeBurnableCharacter(inst, "fx_ball_centre")
-    inst.components.burnable:SetBurnTime(5)
-
     MakeLargeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)
 
-    MakeHauntableGoToState(inst, "atk_chop", TUNING.HAUNT_CHANCE_OCCASIONAL, TUNING.ALTERGUARDIAN_PHASE2_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
+    MakeHauntableGoToStateWithChanceFunction(inst, "atk_chop", hauntchancefn, TUNING.ALTERGUARDIAN_PHASE2_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
 
     inst:ListenForEvent("phasetransition", OnPhaseTransition)
     inst:ListenForEvent("attacked", OnAttacked)

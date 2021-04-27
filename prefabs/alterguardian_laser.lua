@@ -31,12 +31,12 @@ local function DisableLight(inst)
     inst.Light:Enable(false)
 end
 
-local DAMAGE_CANT_TAGS = { "playerghost", "INLIMBO", "DECOR" }
+local DAMAGE_CANT_TAGS = { "brightmareboss", "brightmare", "playerghost", "INLIMBO", "DECOR" }
 local DAMAGE_ONEOF_TAGS = { "_combat", "pickable", "NPC_workable", "CHOP_workable", "HAMMER_workable", "MINE_workable", "DIG_workable" }
 local LAUNCH_MUST_TAGS = { "_inventoryitem" }
 local LAUNCH_CANT_TAGS = { "locomotor", "INLIMBO" }
 
-local function DoDamage(inst, targets, skiptoss)
+local function DoDamage(inst, targets, skiptoss, skipscorch)
     inst.task = nil
 
     local x, y, z = inst.Transform:GetWorldPosition()
@@ -51,7 +51,7 @@ local function DoDamage(inst, targets, skiptoss)
         inst:DoTaskInTime(4 * FRAMES, SetLightRadius, .5)
         inst:DoTaskInTime(5 * FRAMES, DisableLight)
 
-        if TheWorld.Map:IsPassableAtPoint(x, 0, z, false) then
+        if not skipscorch and TheWorld.Map:IsPassableAtPoint(x, 0, z, false) then
             SpawnPrefab("alterguardian_laserscorch").Transform:SetPosition(x, 0, z)
         end
 
@@ -69,6 +69,8 @@ local function DoDamage(inst, targets, skiptoss)
             local range = RADIUS + v:GetPhysicsRadius(.5)
             local dsq_to_laser = v:GetDistanceSqToPoint(x, y, z)
             if dsq_to_laser < range * range then
+                v:PushEvent("onalterguardianlasered")
+
                 local isworkable = false
                 if v.components.workable ~= nil then
                     local work_action = v.components.workable:GetWorkAction()
@@ -113,7 +115,6 @@ local function DoDamage(inst, targets, skiptoss)
                     end
                 elseif v.components.combat == nil and v.components.health ~= nil then
                     targets[v] = true
-                    
                 elseif inst.components.combat:CanTarget(v) then
                     targets[v] = true
                     if inst.caster ~= nil and inst.caster:IsValid() then
@@ -140,6 +141,9 @@ local function DoDamage(inst, targets, skiptoss)
                             if maxtemp > curtemp then
                                 v.components.temperature:DoDelta(math.min(10, maxtemp - curtemp))
                             end
+                        end
+                        if v.components.sanity ~= nil then
+                            v.components.sanity:DoDelta(TUNING.GESTALT_ATTACK_DAMAGE_SANITY)
                         end
                     end
                 end
@@ -178,13 +182,13 @@ local function DoDamage(inst, targets, skiptoss)
     end
 end
 
-local function Trigger(inst, delay, targets, skiptoss)
+local function Trigger(inst, delay, targets, skiptoss, skipscorch)
     if inst.task ~= nil then
         inst.task:Cancel()
         if (delay or 0) > 0 then
-            inst.task = inst:DoTaskInTime(delay, DoDamage, targets or {}, skiptoss or {})
+            inst.task = inst:DoTaskInTime(delay, DoDamage, targets or {}, skiptoss or {}, skipscorch)
         else
-            DoDamage(inst, targets or {}, skiptoss or {})
+            DoDamage(inst, targets or {}, skiptoss or {}, skipscorch)
         end
     end
 end
@@ -247,8 +251,8 @@ local function emptyfn()
 end
 
 local SCORCH_BLUE_FRAMES = 20
-local SCORCH_DELAY_FRAMES = 40
-local SCORCH_FADE_FRAMES = 15
+local SCORCH_DELAY_FRAMES = 0
+local SCORCH_FADE_FRAMES = 5
 
 local function Scorch_OnFadeDirty(inst)
     --V2C: hack alert: using SetHightlightColour to achieve something like OverrideAddColour

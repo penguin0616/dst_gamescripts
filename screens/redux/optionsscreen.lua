@@ -239,8 +239,11 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		integratedbackpack = Profile:GetIntegratedBackpack(),
         lang_id = Profile:GetLanguageID(),
 		texturestreaming = Profile:GetTextureStreamingEnabled(),
-		threadedrender = Profile:GetThreadedRenderEnabled(),
 	}
+
+	if IsWin32() then
+		self.options.threadedrender = Profile:GetThreadedRenderEnabled()
+	end
 
 
 	--[[if PLATFORM == "WIN32_STEAM" and not self.in_game then
@@ -523,7 +526,9 @@ function OptionsScreen:Save(cb)
 	Profile:SetAutoLoginEnabled( self.options.autologin )
 	Profile:SetAnimatedHeadsEnabled( self.options.animatedheads )
 	Profile:SetTextureStreamingEnabled( self.options.texturestreaming )
-	Profile:SetThreadedRenderEnabled( self.options.threadedrender )
+	if IsWin32() then
+		Profile:SetThreadedRenderEnabled( self.options.threadedrender )
+	end
 
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.options.integratedbackpack )
@@ -1123,31 +1128,33 @@ function OptionsScreen:_BuildGraphics()
 			end
 		end
 
-	self.threadedrenderSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.THREADEDRENDER, enableDisableOptions)
-	self.threadedrenderSpinner.OnChanged =
-		function( spinner, data )
-			--print(v,data)
-			if not self.shownThreadedRenderWarning then
-				TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_TITLE, STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_BODY, 
-				{
-					{text=STRINGS.UI.OPTIONS.OK,     cb = function() 
-																self.shownThreadedRenderWarning = true
-																self.working.threadedrender = data
-																TheFrontEnd:PopScreen() 
-																self:UpdateMenu()
-															end },
-					{text=STRINGS.UI.OPTIONS.CANCEL, cb = function() 
-																spinner:SetSelectedIndex(EnabledOptionsIndex( self.working.threadedrender ))
-																spinner:SetHasModification(false)
-																TheFrontEnd:PopScreen() 
-																self:UpdateMenu()	-- not needed but meh
-															end}
-				}))
-			else
-				self.working.threadedrender = data
-				self:UpdateMenu()	-- not needed but meh
+	if IsWin32() then
+		self.threadedrenderSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.THREADEDRENDER, enableDisableOptions)
+		self.threadedrenderSpinner.OnChanged =
+			function( spinner, data )
+				--print(v,data)
+				if not self.shownThreadedRenderWarning then
+					TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_TITLE, STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_BODY, 
+					{
+						{text=STRINGS.UI.OPTIONS.OK,     cb = function() 
+																	self.shownThreadedRenderWarning = true
+																	self.working.threadedrender = data
+																	TheFrontEnd:PopScreen() 
+																	self:UpdateMenu()
+																end },
+						{text=STRINGS.UI.OPTIONS.CANCEL, cb = function() 
+																	spinner:SetSelectedIndex(EnabledOptionsIndex( self.working.threadedrender ))
+																	spinner:SetHasModification(false)
+																	TheFrontEnd:PopScreen() 
+																	self:UpdateMenu()	-- not needed but meh
+																end}
+					}))
+				else
+					self.working.threadedrender = data
+					self:UpdateMenu()	-- not needed but meh
+				end
 			end
-		end
+	end
 
 	self.left_spinners_graphics = {}
 	self.right_spinners_graphics = {}
@@ -1159,7 +1166,10 @@ function OptionsScreen:_BuildGraphics()
 	table.insert( self.left_spinners_graphics, self.smallTexturesSpinner )
 	table.insert( self.left_spinners_graphics, self.netbookModeSpinner )
 	table.insert( self.left_spinners_graphics, self.texturestreamingSpinner )
-	table.insert( self.left_spinners_graphics, self.threadedrenderSpinner )
+	
+	if IsWin32() then
+		table.insert( self.left_spinners_graphics, self.threadedrenderSpinner )
+	end
 	
     table.insert( self.right_spinners_graphics, self.screenshakeSpinner )
     table.insert( self.right_spinners_graphics, self.distortionSpinner )
@@ -1635,7 +1645,9 @@ function OptionsScreen:InitializeSpinners(first)
 	self.boatcameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.boatcamera ) )
 	self.integratedbackpackSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.integratedbackpack ) )
 	self.texturestreamingSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.texturestreaming ) )
-	self.threadedrenderSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.threadedrender ) )
+	if IsWin32() then
+		self.threadedrenderSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.threadedrender ) )
+	end
 
 	if self.show_datacollection then
 		--self.datacollectionCheckbox: -- the current behaviour does not reuqire this to be (re)initialized at any point after construction

@@ -3937,7 +3937,7 @@ return{
         WAGSTAFF_TOOL_2 = "There's the boss' Widget Deflubber!",
         WAGSTAFF_TOOL_3 = "Hey, that looks like a Grommet Scriber!",
         WAGSTAFF_TOOL_4 = "Ha! Found you, you sneaky old Conceptual Scrubber!",
-        WAGSTAFF_TOOL_5 = "There's the Calibrated Perciever! Almost missed it.",
+        WAGSTAFF_TOOL_5 = "There's the Calibrated Perceiver! Almost missed it.",
 
         MOONSTORM_GOGGLESHAT = "You work with the materials you've got out here.",
 

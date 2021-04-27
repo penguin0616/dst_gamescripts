@@ -11,6 +11,8 @@ local projectile_prefabs =
 local trap_prefabs =
 {
     "alterguardian_phase3trapgroundfx",
+    "alterguardian_phase3trappst",
+    "gestalt",
 }
 
 SetSharedLootTable("moonglass_trap",
@@ -25,7 +27,7 @@ local function set_guardian(inst, guardian)
 end
 
 local LANDEDAOE_CANT_TAGS = {
-    "brightmare", "FX", "ghost", "INLIMBO", "NOCLICK", "playerghost",
+    "brightmareboss", "brightmare", "FX", "ghost", "INLIMBO", "NOCLICK", "playerghost",
 }
 local LANDEDAOE_ONEOF_TAGS = { "_combat", "CHOP_workable", "DIG_workable", "HAMMER_workable", "MINE_workable" }
 local function do_landed(inst)
@@ -134,6 +136,7 @@ end
 local PULSE_MUST_TAGS = { "_health" }
 local PULSE_CANT_TAGS =
 {
+    "brightmareboss",
     "brightmare",
     "DECOR",
     "epic",
@@ -160,17 +163,24 @@ local function do_groggy_pulse(inst)
                 target.components.grogginess:AddGrogginess(TUNING.ALTERGUARDIAN_PHASE3_TRAP_GROGGINESS, TUNING.ALTERGUARDIAN_PHASE3_TRAP_KNOCKOUTTIME)
                 if target.components.grogginess.knockoutduration == 0 then
                     target:PushEvent("attacked", {attacker = inst, damage = 0})
+                    if target.components.sanity ~= nil then
+                        target.components.sanity:DoDelta(TUNING.GESTALT_ATTACK_DAMAGE_SANITY)
+                    end
                 end
             elseif target.components.sleeper ~= nil and not target.sg:HasStateTag("sleeping") then
                 target.components.sleeper:AddSleepiness(TUNING.ALTERGUARDIAN_PHASE3_TRAP_GROGGINESS, TUNING.ALTERGUARDIAN_PHASE3_TRAP_KNOCKOUTTIME)
                 if not target.components.sleeper:IsAsleep() then
                     target:PushEvent("attacked", {attacker = inst, damage = 0})
+                    if target.components.sanity ~= nil then
+                        target.components.sanity:DoDelta(TUNING.GESTALT_ATTACK_DAMAGE_SANITY)
+                    end
                 end
             end
         end
     end
 end
 
+local START_CHARGE_TIME = 3.0
 local function finish_pulse(inst)
     -- Play our ground fx object's post anim, and then queue up a hide for when that finishes.
     if inst._pulse_fx ~= nil and inst._pulse_fx:IsValid() then
@@ -181,7 +191,8 @@ local function finish_pulse(inst)
 
     -- Stop doing our pulse testing, and queue up our next charge.
     inst.components.timer:StopTimer("pulse")
-    inst.components.timer:StartTimer("start_charge", 4.5)
+    inst.components.timer:StartTimer("start_charge", START_CHARGE_TIME)
+    inst.SoundEmitter:KillSound("trap_LP")
 end
 
 local NUM_PULSE_LOOPS = 3
@@ -206,6 +217,7 @@ local function start_pulse(inst)
 
     -- After NUM_PULSE_LOOPS, shut down all of the stuff.
     inst.components.timer:StartTimer("finish_pulse", pulse_pre_len + (pulse_loop_len * NUM_PULSE_LOOPS))
+    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_trap_LP","trap_LP") 
 end
 
 local function start_charge(inst)
@@ -213,6 +225,19 @@ local function start_charge(inst)
     inst.AnimState:PushAnimation("meteor_idle", true)
 
     inst.components.timer:StartTimer("start_pulse", inst.AnimState:GetCurrentAnimationLength())
+end
+
+local function go_to_gestaltdeath(gestalt)
+    gestalt:PushEvent("death")
+end
+
+local function spawn_gestalt(inst)
+    local gestalt = SpawnPrefab("gestalt")
+    gestalt._ignorerelocating = true
+    gestalt.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    gestalt:SetTrackingTarget(nil, 3)
+
+    gestalt:DoTaskInTime(15, go_to_gestaltdeath)
 end
 
 local PULSE_TICK_TIME = 24*FRAMES
@@ -228,6 +253,8 @@ local function on_trap_timer(inst, data)
         inst.components.timer:StartTimer("pulse", PULSE_TICK_TIME)
     elseif data.name == "finish_pulse" then
         finish_pulse(inst)
+    elseif data.name == "trap_lifetime" then
+        inst:Remove()
     end
 end
 
@@ -236,16 +263,12 @@ local function on_trap_removed(inst)
         inst._pulse_fx:Remove()
         inst._pulse_fx = nil
     end
-end
 
-local function on_trap_mining_finished(inst, worker)
-    local pt = inst:GetPosition()
+    local ipos = inst:GetPosition()
 
-    SpawnPrefab("rock_break_fx").Transform:SetPosition(pt:Get())
+    inst.components.lootdropper:DropLoot(ipos)
 
-    inst.components.lootdropper:DropLoot(pt)
-
-    inst:Remove()
+    SpawnPrefab("alterguardian_phase3trappst").Transform:SetPosition(ipos:Get())
 end
 
 local function trap_fn()
@@ -279,8 +302,8 @@ local function trap_fn()
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(7)
-    inst.components.workable:SetOnFinishCallback(on_trap_mining_finished)
+    inst.components.workable:SetWorkLeft(TUNING.ALTERGUARDIAN_PHASE3_TRAP_WORKS)
+    inst.components.workable:SetOnFinishCallback(inst.Remove)
     inst.components.workable.savestate = true
 
     inst:AddComponent("lootdropper")
@@ -290,8 +313,10 @@ local function trap_fn()
 
     inst:ListenForEvent("timerdone", on_trap_timer)
     inst:ListenForEvent("onremove", on_trap_removed)
+    inst:ListenForEvent("onalterguardianlasered", spawn_gestalt)
 
-    inst.components.timer:StartTimer("start_charge", 3.5)
+    inst.components.timer:StartTimer("start_charge", START_CHARGE_TIME)
+    inst.components.timer:StartTimer("trap_lifetime", TUNING.SEG_TIME + math.random() * TUNING.SEG_TIME)
 
     return inst
 end

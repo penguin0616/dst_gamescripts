@@ -26,6 +26,39 @@ SetSharedLootTable("alterguardian_phase1",
 
 local brain = require "brains/alterguardian_phase1brain"
 
+--MUSIC------------------------------------------------------------------------
+local function PushMusic(inst)
+    if ThePlayer == nil or inst:HasTag("nomusic") then
+        inst._playingmusic = false
+    elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+        inst._playingmusic = true
+        ThePlayer:PushEvent("triggeredevent", { name = "alterguardian_phase1", duration = 2 })
+    elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+        inst._playingmusic = false
+    end
+end
+
+local function OnMusicDirty(inst)
+    if not TheNet:IsDedicated() then
+        if inst._musictask ~= nil then
+            inst._musictask:Cancel()
+        end
+        inst._musictask = inst:DoPeriodicTask(1, PushMusic)
+        PushMusic(inst)
+    end
+end
+
+local function SetNoMusic(inst, val)
+    if val then
+        inst:AddTag("nomusic")
+    else
+        inst:RemoveTag("nomusic")
+    end
+    inst._musicdirty:push()
+    OnMusicDirty(inst)
+end
+--MUSIC------------------------------------------------------------------------
+
 local function play_custom_hit(inst)
     if not inst.components.timer:TimerExists("hitsound_cd") then
         if inst._is_shielding then
@@ -41,7 +74,7 @@ end
 local TARGET_DIST = TUNING.ALTERGUARDIAN_PHASE1_TARGET_DIST
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "character", "monster" }
+local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
 local function Retarget(inst)
     local gx, gy, gz = inst.Transform:GetWorldPosition()
     local potential_targets = TheSim:FindEntities(
@@ -288,6 +321,17 @@ local function on_timer_finished(inst, data)
     end
 end
 
+local function hauntchancefn(inst)
+    local statename = inst.sg.currentstate.name
+    if statename == "prespawn_idle"
+            or statename == "spawn"
+            or statename == "death" then
+        return 0
+    else
+        return TUNING.HAUNT_CHANCE_OCCASIONAL
+    end
+end
+
 local BURN_OFFSET = Vector3(0, 1.5, 0)
 local function fn()
     local inst = CreateEntity()
@@ -307,6 +351,7 @@ local function fn()
 
     MakeGiantCharacterPhysics(inst, 500, 1.25)
 
+    inst:AddTag("brightmareboss")
     inst:AddTag("epic")
     inst:AddTag("hostile")
     inst:AddTag("largecreature")
@@ -315,8 +360,15 @@ local function fn()
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
 
+    inst._musicdirty = net_event(inst.GUID, "alterguardian_phase1._musicdirty", "musicdirty")
+    inst._playingmusic = false
+    --inst._musictask = nil
+    OnMusicDirty(inst)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
+        inst:ListenForEvent("musicdirty", OnMusicDirty)
+
         return inst
     end
 
@@ -325,6 +377,7 @@ local function fn()
     inst.EnableRollCollision = EnableRollCollision
     inst.EnterShield = EnterShield
     inst.ExitShield = ExitShield
+    inst.SetNoMusic = SetNoMusic
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.ALTERGUARDIAN_PHASE1_WALK_SPEED
@@ -371,13 +424,10 @@ local function fn()
     inst:AddComponent("teleportedoverride")
     inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
-    MakeLargeBurnableCharacter(inst, nil, BURN_OFFSET)
-    inst.components.burnable:SetBurnTime(5)
-
     MakeLargeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)
 
-    MakeHauntableGoToState(inst, "tantrum_pre", TUNING.HAUNT_CHANCE_OCCASIONAL, TUNING.ALTERGUARDIAN_PHASE1_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
+    MakeHauntableGoToStateWithChanceFunction(inst, "tantrum_pre", hauntchancefn, TUNING.ALTERGUARDIAN_PHASE1_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
 
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("phasetransition", OnPhaseTransition)

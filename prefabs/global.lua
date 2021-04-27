@@ -244,6 +244,7 @@ local assets =
     Asset("SHADER", "shaders/ui_yuv.ksh"),
     Asset("SHADER", "shaders/swipe_fade.ksh"),
     Asset("SHADER", "shaders/ui_anim.ksh"),
+    Asset("SHADER", "shaders/ui_anim_holo.ksh"),
 
     Asset("SHADER", "shaders/blurh.ksh"),
     Asset("SHADER", "shaders/blurv.ksh"),

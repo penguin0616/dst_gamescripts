@@ -173,7 +173,11 @@ end
 
 local function OnInit(inst)
     inst.task = nil
-    inst:ListenForEvent("ms_sandstormchanged", function(src, data) OnSandstormChanged(inst, data) end, TheWorld)
+    inst:ListenForEvent("ms_stormchanged", function(src, data) 
+            if data.stormtype == STORM_TYPES.SANDSTORM then 
+                OnSandstormChanged(inst, data.setting) 
+            end
+        end, TheWorld)
     OnSandstormChanged(inst, TheWorld.components.sandstorms ~= nil and TheWorld.components.sandstorms:IsSandstormActive(), true)
 end
 

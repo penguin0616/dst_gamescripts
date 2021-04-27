@@ -3910,7 +3910,7 @@ return{
         ALTERGUARDIAN_PHASE3DEAD = "Finalement, it's over.",
 
         ALTERGUARDIANHAT = "It makes me hear such sweet whispers...",
-        ALTERGUARDIANHATSHARD = "It's been broken down to it's basic ingredients.",
+        ALTERGUARDIANHATSHARD = "It's been broken down to its basic ingredients.",
 
         MOONSTORM_GLASS = {
             GENERIC = "En glace.",

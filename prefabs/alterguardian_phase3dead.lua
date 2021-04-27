@@ -80,6 +80,7 @@ local function orb_gotopst(inst)
     if not inst._pststarted then
         -- Start the pst, then replace ourselves when it finishes.
         inst.AnimState:PlayAnimation("phase3_death_pst")
+        inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/death_pst")
 
         inst._light_task = inst:DoPeriodicTask(0, pst_lightupdate)
 
@@ -134,6 +135,7 @@ local function orbfn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddLight()
+    inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
     set_lightvalues(inst, INITIAL_LIGHT_VALUE)
@@ -174,6 +176,12 @@ local ALTAR_PIECES =
     "moon_altar_ward",
 }
 
+local PIECEBLOCKER_CANT = {"INLIMBO", "FX", "DECOR", "NOCLICK", "flying", "ghost", "playerghost"}
+local function altarpiece_spawn_checkfn(v)
+    local ents = TheSim:FindEntities(v.x, v.y, v.z, 1.5, nil, PIECEBLOCKER_CANT)
+    return #ents == 0
+end
+
 local function dead_onwork(inst, worker, workleft)
     if workleft > 0 then
         inst.AnimState:PlayAnimation("phase3_death_hit")
@@ -189,7 +197,11 @@ local function dead_onwork(inst, worker, workleft)
         -- close enough to hide inside of the collapse_big fx.
         local angle_inc = 360 / #ALTAR_PIECES
         for i, piece_name in ipairs(ALTAR_PIECES) do
-            local offset = FindWalkableOffset(ipos, i * angle_inc, 2.5)
+            local piece = SpawnPrefab(piece_name)
+            local piece_radius = piece:GetPhysicsRadius(1.0)
+
+            local offset = FindWalkableOffset(ipos, i*angle_inc, 2.5, nil, true, false, altarpiece_spawn_checkfn)
+                or FindWalkableOffset(ipos, i*angle_inc, 5.0, nil, true, false, altarpiece_spawn_checkfn)
 
             local position = (offset ~= nil and ipos + offset) or ipos
             SpawnPrefab(piece_name).Transform:SetPosition(position:Get())

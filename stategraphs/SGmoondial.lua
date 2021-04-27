@@ -11,6 +11,7 @@ local events =
 }
 
 local function CalcPhaseAnimName(anim)
+
 	return anim.."_"..TheWorld.state.moonphase
 end
 

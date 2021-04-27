@@ -1692,9 +1692,19 @@ function EntityScript:IsInLight()
     if self.LightWatcher then
         return self.LightWatcher:IsInLight()
     else
-        local lightThresh = self.lightThresh or 1.0
+        local lightThresh = self.lightThresh or 0.1
+        local darkThresh = self.darkThresh or 0.05
+
         local x, y, z = self.Transform:GetWorldPosition()
-        return TheSim:GetLightAtPoint(x, y, z, lightThresh) >= lightThresh
+        local light = TheSim:GetLightAtPoint(x, y, z, lightThresh)
+        
+	    local move_to_light = self.inLight ~= false and light >= lightThresh
+
+        if move_to_light or (self.inLight == false and light <= darkThresh) then
+            self.inLight = move_to_light
+        end
+
+        return self.inLight ~= false
     end
 end
 

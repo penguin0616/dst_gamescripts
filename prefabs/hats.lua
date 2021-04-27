@@ -2192,7 +2192,6 @@ local function MakeHat(name)
         inst:AddComponent("container")
         inst.components.container:WidgetSetup("alterguardianhat")
         inst.components.container.acceptsstacks = false
-        inst.components.container.canbeopened = false
 
         inst:AddComponent("preserver")
         inst.components.preserver:SetPerishRateMultiplier(0)

@@ -64,8 +64,8 @@ local events =
 }
 
 local TARGET_MUSTHAVE_TAGS = { "_health", "_combat" }
-local TARGET_CANT_TAGS = { "brightmare", "INLIMBO" }
-local TARGET_ONEOF_TAGS = { "character", "monster" }
+local TARGET_CANT_TAGS = { "brightmareboss", "brightmare", "INLIMBO" }
+local TARGET_ONEOF_TAGS = { "animal", "character", "monster" }
 local function DoAOEAttack(inst, range)
     local x,y,z = inst.Transform:GetWorldPosition()
     local targets = TheSim:FindEntities(
@@ -108,7 +108,7 @@ local states =
 {
     State{
         name = "prespawn_idle",
-        tags = {"busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.AnimState:SetBuild("alterguardian_spawn_death")
@@ -121,6 +121,8 @@ local states =
             if not inst.components.timer:TimerExists("gotospawn") then
                 inst.components.timer:StartTimer("gotospawn", 6)
             end
+
+            inst:SetNoMusic(true)
         end,
 
         events =
@@ -134,6 +136,8 @@ local states =
             inst.components.health:SetInvincible(false)
             inst.AnimState:SetBuild("alterguardian_phase1")
             inst.AnimState:SetBankAndPlayAnimation("alterguardian_phase1", "idle")
+            
+            inst:SetNoMusic(false)
         end,
     },
 
@@ -624,10 +628,15 @@ local states =
             RemovePhysicsColliders(inst)
 
             inst.sg:SetTimeout(7)
+
+            inst:SetNoMusic(true)
         end,
 
         timeline =
         {
+            TimeEvent(0*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/death")
+            end),
             TimeEvent(5*FRAMES, function(inst)
                 inst.SoundEmitter:KillSound("idle_LP")
             end),

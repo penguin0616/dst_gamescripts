@@ -196,7 +196,11 @@ local function OnInit(inst)
             Despawn(inst)
         end
     end
-    inst:ListenForEvent("ms_sandstormchanged", inst.onsandstormchanged, TheWorld)
+    inst:ListenForEvent("ms_stormchanged", function(src,data) 
+            if data.stormtype == STORM_TYPES.SANDSTORM then  
+                inst.onsandstormchanged(data.setting) 
+            end
+        end, TheWorld)
     if not (TheWorld.components.sandstorms ~= nil and TheWorld.components.sandstorms:IsSandstormActive()) then
         Despawn(inst)
     end

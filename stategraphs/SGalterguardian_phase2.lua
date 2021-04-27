@@ -93,7 +93,7 @@ local function do_gestalt_summon(inst)
     end
 end
 
-local SPIN_CANT_TAGS = {"brightmare", "INLIMBO", "FX", "NOCLICK", "playerghost"}
+local SPIN_CANT_TAGS = {"brightmareboss", "brightmare", "INLIMBO", "FX", "NOCLICK", "playerghost"}
 local SPIN_ONEOF_TAGS = {"_health", "CHOP_workable", "HAMMER_workable", "MINE_workable"}
 local SPIN_FX_RATE = 10*FRAMES
 local states =
@@ -117,6 +117,9 @@ local states =
 
         timeline =
         {
+            TimeEvent(0*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/spawn")
+            end),
             TimeEvent(8*FRAMES, function(inst) set_lightvalues(inst, 0.4) end),
 
             TimeEvent(48*FRAMES, function(inst) set_lightvalues(inst, 0.425) end),
@@ -204,6 +207,8 @@ local states =
             end
 
             inst.AnimState:PlayAnimation("attk_chop")
+
+            inst.components.combat:StartAttack()
         end,
 
         timeline =
@@ -255,6 +260,8 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/atk_spike")
 
                 ShakeAllCameras(CAMERASHAKE.FULL, .75, 0.1, 0.1, inst, 50)
+
+                inst.components.combat:DoAttack()
             end),
             TimeEvent(32*FRAMES, function(inst)
                 inst:DoSpikeAttack()
@@ -318,7 +325,8 @@ local states =
                 local spin_speed = TUNING.ALTERGUARDIAN_PHASE2_SPIN_SPEED
                 local target = inst.sg.statemem.target
                 if target ~= nil and target:IsValid() and target.components.locomotor ~= nil then
-                    spin_speed = math.max(spin_speed, target.components.locomotor:GetRunSpeed())
+                    spin_speed = math.max(spin_speed, target.components.locomotor:GetRunSpeed()) - 0.25
+                    spin_speed = math.min(spin_speed, 35)
                 end
                 inst.sg.statemem.spin_speed = spin_speed
                 inst.Physics:SetMotorVelOverride(spin_speed, 0, 0)
@@ -459,7 +467,7 @@ local states =
 
             inst.AnimState:PlayAnimation("attk_spin_pst")
 
-            inst.components.timer:StartTimer("spin_cd", 5)
+            inst.components.timer:StartTimer("spin_cd", TUNING.ALTERGUARDIAN_PHASE2_SPINCD)
         end,
 
         timeline =
@@ -603,8 +611,19 @@ local states =
             inst.AnimState:PushAnimation("attk_stab_loop", true)
 
             inst.sg.statemem.target = target
+            inst.sg.statemem.stop_tracking = false
 
             inst.sg:SetTimeout(2.25 + math.random() * 0.5)
+        end,
+
+        onupdate = function(inst)
+            -- Track the target's position, so long as they exist and they are over a platform.
+            if not inst.sg.statemem.stop_tracking and inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() then
+                local tpos = inst.sg.statemem.target:GetPosition()
+                if TheWorld.Map:GetPlatformAtPoint(tpos.x, tpos.z) ~= nil then
+                    inst.sg.statemem.target_position = tpos
+                end
+            end
         end,
 
         timeline =
@@ -612,31 +631,35 @@ local states =
             TimeEvent(11*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/atk_spike_pre")
 
-                if inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() then
-                    inst.sg.statemem.target_position = inst.sg.statemem.target:GetPosition()
-                end
+                inst.sg.statemem.stop_tracking = true
             end),
             TimeEvent(28*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/atk_spike")
 
                 ShakeAllCameras(CAMERASHAKE.FULL, .75, 0.1, 0.1, inst, 50)
             end),
+            TimeEvent(43*FRAMES, function(inst)
+                -- If we didn't find a target position by about the time the stab ends, 
+                if inst.sg.statemem.target_position == nil then
+                    inst.sg:GoToState("atk_spike_pst")
+                end
+            end),
         },
 
         ontimeout = function(inst)
-            if inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid()
-                    and inst.sg.statemem.target_position ~= nil then
-                local target_platform = inst.sg.statemem.target:GetCurrentPlatform()
-                if target_platform ~= nil then
+            local tpos = inst.sg.statemem.target_position
+            if tpos ~= nil then
+                local target_platform = TheWorld.Map:GetPlatformAtPoint(tpos.x, tpos.z)
+                if target_platform ~= nil and target_platform.components.walkableplatform:CanBeWalkedOn() then
                     ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, .75, 0.1, 0.1, target_platform)
-                    inst.SoundEmitter:PlaySoundWithParams("moonstorm/creatures/boss/alterguardian2/spike",  { intensity = math.random() * 0.2 })
+                    inst.SoundEmitter:PlaySoundWithParams("moonstorm/creatures/boss/alterguardian2/spike", { intensity = 0.2*math.random() })
 
-                    local dsq = target_platform:GetDistanceSqToPoint(inst.sg.statemem.target_position:Get())
+                    local dsq = target_platform:GetDistanceSqToPoint(tpos:Get())
                     if dsq < TUNING.GOOD_LEAKSPAWN_PLATFORM_RADIUS then
-                        target_platform:PushEvent("spawnnewboatleak", {pt = inst.sg.statemem.target_position, leak_size = "med_leak", playsoundfx = true})
-                        SpawnPrefab("mining_moonglass_fx").Transform:SetPosition(inst.sg.statemem.target_position:Get())
+                        target_platform:PushEvent("spawnnewboatleak", {pt = tpos, leak_size = "med_leak", playsoundfx = true})
+                        SpawnPrefab("mining_moonglass_fx").Transform:SetPosition(tpos:Get())
                     end
-                    target_platform.components.health:DoDelta(-1 * TUNING.ALTERGUARDIAN_PHASE2_SPIKEDAMAGE)
+                    target_platform.components.health:DoDelta(-1*TUNING.ALTERGUARDIAN_PHASE2_SPIKEDAMAGE)
                 end
             end
 
@@ -658,10 +681,15 @@ local states =
             RemovePhysicsColliders(inst)
 
             inst.sg:SetTimeout(10)
+
+            inst:SetNoMusic(true)
         end,
 
         timeline =
         {
+            TimeEvent(0*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/death")
+            end),
             TimeEvent(5*FRAMES, function(inst)
                 inst.SoundEmitter:KillSound("idle_LP")
             end),

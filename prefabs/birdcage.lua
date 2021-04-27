@@ -8,6 +8,8 @@ local assets =
     Asset("ANIM", "anim/robin_build.zip"),
     Asset("ANIM", "anim/robin_winter_build.zip"),
     Asset("ANIM", "anim/canary_build.zip"),
+    Asset("ANIM", "anim/bird_mutant_build.zip"),
+    Asset("ANIM", "anim/bird_mutant_spitter_build.zip"),    
 }
 
 local prefabs =
@@ -18,6 +20,7 @@ local prefabs =
     "robin_winter",
     "canary",
     "guano",
+    "rottenegg",
 }
 
 local invalid_foods =
@@ -40,6 +43,9 @@ local CAGE_STATES =
 }
 
 local function SetBirdType(inst, bird)
+    if inst.bird_type then
+        inst.AnimState:ClearOverrideBuild(inst.bird_type.."_build")
+    end
     inst.bird_type = bird
     inst.AnimState:AddOverrideBuild(inst.bird_type.."_build")
 end
@@ -70,17 +76,26 @@ local function DigestFood(inst, food)
     if food.components.edible.foodtype == FOODTYPE.MEAT then
         --If the food is meat:
             --Spawn an egg.
-        inst.components.lootdropper:SpawnLootPrefab("bird_egg")
-    else
-        local seed_name = string.lower(food.prefab .. "_seeds")
-        if Prefabs[seed_name] ~= nil then
-			inst.components.lootdropper:SpawnLootPrefab(seed_name)
+        if inst.components.occupiable and inst.components.occupiable:GetOccupant() and inst.components.occupiable:GetOccupant():HasTag("bird_mutant") then
+            inst.components.lootdropper:SpawnLootPrefab("rottenegg")
         else
-            --Otherwise...
-                --Spawn a poop 1/3 times.
-            if math.random() < 0.33 then
-                local loot = inst.components.lootdropper:SpawnLootPrefab("guano")
-                loot.Transform:SetScale(.33, .33, .33)
+            inst.components.lootdropper:SpawnLootPrefab("bird_egg")
+        end
+    else
+        if inst.components.occupiable and inst.components.occupiable:GetOccupant() and inst.components.occupiable:GetOccupant():HasTag("bird_mutant") then
+            inst.components.lootdropper:SpawnLootPrefab("rottenegg")
+
+        else
+            local seed_name = string.lower(food.prefab .. "_seeds")
+            if Prefabs[seed_name] ~= nil then
+    			inst.components.lootdropper:SpawnLootPrefab(seed_name)
+            else
+                --Otherwise...
+                    --Spawn a poop 1/3 times.
+                if math.random() < 0.33 then
+                    local loot = inst.components.lootdropper:SpawnLootPrefab("guano")
+                    loot.Transform:SetScale(.33, .33, .33)
+                end
             end
         end
     end
@@ -211,7 +226,7 @@ end
 local function ShouldSleep(inst)
     --Sleep during night, but not if you're very hungry.
     local bird = GetBird(inst)
-    return DefaultSleepTest(bird) and GetHunger(bird) >= 0.33
+    return bird.components.sleeper and DefaultSleepTest(bird) and GetHunger(bird) >= 0.33
 end
 
 local function GoToSleep(inst)
@@ -261,6 +276,11 @@ local function OnOccupied(inst, bird)
 end
 
 local function OnEmptied(inst, bird)
+
+    if inst.bird_type then
+        inst.AnimState:ClearOverrideBuild(inst.bird_type.."_build")
+    end
+        
     SetCageState(inst, CAGE_STATES.EMPTY)
 
     --Remove sleeper component

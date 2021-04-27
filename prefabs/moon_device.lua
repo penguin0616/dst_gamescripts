@@ -319,6 +319,7 @@ local function break_device(inst)
     stage1_break(inst)
 
     inst:DoTaskInTime(1*FRAMES, do_boss_spawn)
+    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/spawn")
 end
 
 local function breaksequence(inst)
@@ -350,6 +351,20 @@ local function validate_spawn(inst)
             print("moon_device must be instantiated on top of a moon_altar_link -- removing instance")
             inst:Remove()
         end
+    end
+end
+
+
+local function OnEntitySleep(inst)
+    if inst.SoundEmitter:PlayingSound("loop") then
+        inst.SoundEmitter:KillSound("loop")
+    end
+end
+
+local function OnEntityWake(inst)
+    if not inst.SoundEmitter:PlayingSound("loop") then
+        inst.SoundEmitter:PlaySound("grotto/common/moon_alter/link/LP", "loop")
+        inst.SoundEmitter:SetParameter("loop", "intensity", 1)
     end
 end
 
@@ -461,6 +476,9 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
             print("Multiple instances of moon_device")
             inst:DoTaskInTime(0, inst.Remove)
         end
+
+        inst.OnEntitySleep = OnEntitySleep
+        inst.OnEntityWake = OnEntityWake
 
 		inst.OnSave = OnSave
 		inst.OnLoad = OnLoad

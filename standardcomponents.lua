@@ -1003,6 +1003,22 @@ function MakeHauntableGoToState(inst, state, chance, cooldown, haunt_value)
     end)
 end
 
+function MakeHauntableGoToStateWithChanceFunction(inst, state, chancefn, cooldown, haunt_value)
+    if not (inst and inst.sg) or not state then return end
+    if not inst.components.hauntable then inst:AddComponent("hauntable") end
+
+    inst.components.hauntable.cooldown = cooldown or TUNING.HAUNT_COOLDOWN_SMALL
+    inst.components.hauntable:SetOnHauntFn(function(inst, haunter)
+        local haunt_chance = (chancefn ~= nil and chancefn(inst)) or TUNING.HAUNT_CHANCE_ALWAYS
+        if math.random() <= haunt_chance then
+            inst.sg:GoToState(state)
+            inst.components.hauntable.hauntvalue = haunt_value or TUNING.HAUNT_TINY
+            return true
+        end
+        return false
+    end)
+end
+
 function MakeHauntableDropFirstItem(inst, chance, cooldown, haunt_value)
     if not inst.components.hauntable then inst:AddComponent("hauntable") end
     inst.components.hauntable:SetOnHauntFn(function(inst, haunter)

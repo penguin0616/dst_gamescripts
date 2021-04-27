@@ -51,8 +51,8 @@ local function getlightningtime()
 end
 
 local function onremovewagstaff()
+
 	if self.wagstaff then
-		self.wagstaff:RemoveEventCallback("onremove", onremovewagstaff)
 		self.wagstaff = nil
 	end
 end
@@ -128,10 +128,10 @@ local function OnPlayerChangeStorm(player, data)
 end
 ]]
 local function NodeCanHaveMoonstorm(node)
-	return (self.lastnodes and not table.contains(self.lastnodes, node.area))
-		or not (table.contains(node.tags, "lunacyarea")
-		or table.contains(node.tags, "sandstorm")
-		or TheWorld.Map:IsOceanAtPoint(node.cent[1], 0, node.cent[2]))
+	return (not self.lastnodes or not table.contains(self.lastnodes, node.area))
+		and not table.contains(node.tags, "lunacyarea")
+		and not table.contains(node.tags, "sandstorm")
+		and not TheWorld.Map:IsOceanAtPoint(node.cent[1], 0, node.cent[2])
 end
 
 --------------------------------------------------------------------------
@@ -298,6 +298,7 @@ function self:CalcNewMoonstormBaseNodeIndex()
 end
 
 function self:StartMoonstorm(set_first_node_index,nodes)
+	self:StopCurrentMoonstorm()
 
 	if self.startstormtask then
 		self.startstormtask:Cancel()
@@ -389,7 +390,7 @@ function self:StopCurrentMoonstorm()
 	if TheWorld.net.components.moonstorms ~= nil then
 		TheWorld.net.components.moonstorms:StopMoonstorm()
 	end
-	
+	TheWorld:PushEvent("ms_currentmoonstormstopped")
 	_currentbasenodeindex = nil
 	_currentnodes = nil
 	self.MoonStorm_Ending = true
@@ -421,7 +422,7 @@ function self:StopExperimentTasks()
 end
 
 -- WAGSTAFF HUNT FUNCTIONS
-function self:StopExperiment()
+function self:StopExperiment()	
 	self:StopExperimentTasks()
 	if self.wagstaff_tools then
 		for i=#self.wagstaff_tools,1,-1 do
@@ -441,6 +442,7 @@ end
 function self:FailExperiment()
 
     if self.wagstaff and not self.wagstaff.failtasks then
+    	self.wagstaff:StopMusic()
     	self.wagstaff.busy = self.wagstaff.busy and self.wagstaff.busy + 1 or 1
         self.wagstaff.failtasks = self.wagstaff:DoTaskInTime(1,function()
             self.wagstaff:PushEvent("talk")
@@ -459,6 +461,7 @@ end
 
 function self:EndExperiment()
 	if self.wagstaff then
+		self.wagstaff:StopMusic()
 		self.wagstaff.busy = self.wagstaff.busy and self.wagstaff.busy + 1 or 1
 		self.wagstaff.donexperiment = true
 		self.wagstaff:PushEvent("doneexperiment")
@@ -581,7 +584,7 @@ function self:beginWagstaffDefence()
 end
 
 function self:SpawnGestalt(angle, prefab)
-	if self.wagstaff then
+	if self.wagstaff and self.wagstaff:IsValid() then
 		local pos = Vector3(self.wagstaff.Transform:GetWorldPosition())
 		local gestalt = SpawnPrefab(prefab)
 
@@ -614,15 +617,14 @@ function self:spawnGestaltWave()
 			for i=1,math.random(1,3) do
 				inst:DoTaskInTime(math.random()*0.5,function() self:SpawnGestalt(angle, "bird_mutant_spitter") end)
 			end	
-
-			local timeleft = self.inst.components.timer:GetTimeLeft("moonstorm_experiment_complete") 
-			local time = Remap(timeleft,TUNING.WAGSTAFF_EXPERIMENT_TIME,0,15,7)			
-			if self.defence_task then
-				self.defence_task:Cancel()
-				self.defence_task = nil
-			end
-			self.defence_task = inst:DoTaskInTime(time,function() self:spawnGestaltWave() end)
 		end
+		local timeleft = self.inst.components.timer:GetTimeLeft("moonstorm_experiment_complete") 
+		local time = Remap(timeleft,TUNING.WAGSTAFF_EXPERIMENT_TIME,0,15,7)			
+		if self.defence_task then
+			self.defence_task:Cancel()
+			self.defence_task = nil
+		end			
+		self.defence_task = inst:DoTaskInTime(time,function() self:spawnGestaltWave() end)
 	end
 end
 

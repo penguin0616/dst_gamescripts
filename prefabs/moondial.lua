@@ -5,9 +5,6 @@ local assets =
     Asset("ANIM", "anim/moondial.zip"),
     Asset("ANIM", "anim/moondial_build.zip"),
     Asset("ANIM", "anim/moondial_waning_build.zip"),
-
-    Asset("ANIM", "anim/moondial2.zip"),
-    Asset("ANIM", "anim/moondial2_build.zip"),
 }
 
 local prefabs =
@@ -51,6 +48,7 @@ local function onmoonphasechagned(inst, phase)
     end
 end
 
+local FINDMOONGLASS_TAGS = {"moonglass_piece"}
 local function onalterawake(inst, awake)
 	local was_glassed = inst.is_glassed
 
@@ -60,7 +58,13 @@ local function onalterawake(inst, awake)
 	elseif was_glassed and not awake then
 		if POPULATING or not inst.entity:IsAwake() then
 			inst.sg:GoToState("idle")
-			inst.components.lootdropper:FlingItem(SpawnPrefab("moonglass"))
+			local x, y, z = inst.Transform:GetWorldPosition()
+			local moonglass = TheSim:FindEntities(x, y, z, 4, FINDMOONGLASS_TAGS)[1]
+			if moonglass ~= nil and not moonglass.components.stackable:IsFull() then
+				moonglass.components.stackable:SetStackSize(moonglass.components.stackable:StackSize() + 1)
+			else
+				inst.components.lootdropper:FlingItem(SpawnPrefab("moonglass"))
+			end
 			inst.is_glassed = false
 		else
 			inst.sg:GoToState("glassed_pst")
@@ -123,8 +127,8 @@ local function fn()
 
     inst:AddTag("structure")
 
-    inst.AnimState:SetBank("moondial2")
-    inst.AnimState:SetBuild("moondial2_build")
+    inst.AnimState:SetBank("moondial")
+    inst.AnimState:SetBuild("moondial_build")
     inst.AnimState:PlayAnimation("idle_new")
 
     inst.Light:Enable(false)

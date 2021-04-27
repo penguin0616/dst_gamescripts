@@ -1614,6 +1614,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.Light:Enable(false)
 
         inst.LightWatcher:SetLightThresh(.075)
+        inst.LightWatcher:SetMinLightThresh(0.61) --for sanity.
         inst.LightWatcher:SetDarkThresh(.05)
 
         MakeCharacterPhysics(inst, 75, .5)

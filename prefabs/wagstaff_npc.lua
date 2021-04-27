@@ -24,6 +24,42 @@ local prefabs =
     "moonstorm_static",
 }
 
+
+--------------------------------------------------------------------------
+
+local function PushMusic(inst)
+    if ThePlayer ~= nil and ThePlayer:IsNear(inst, 30) then
+        ThePlayer:PushEvent("triggeredevent", { name = "wagstaff_experiment" })
+    end
+end
+
+local function OnMusicDirty(inst)
+    --Dedicated server does not need to trigger music
+    if not TheNet:IsDedicated() then
+        if inst._musictask ~= nil then
+            inst._musictask:Cancel()
+        end
+        inst._musictask = inst._music:value() and inst:DoPeriodicTask(1, PushMusic, 0) or nil
+    end
+end
+
+local function StartMusic(inst)
+    if not inst._music:value() then
+        inst._music:set(true)
+        OnMusicDirty(inst)
+    end
+end
+
+local function StopMusic(inst)
+    if inst._music:value() then
+        inst._music:set(false)
+        OnMusicDirty(inst)
+    end
+end
+
+--------------------------------------------------------------------------
+
+
 local SHADER_CUTOFF_HEIGHT = -0.125
 
 local function getline(data)
@@ -180,6 +216,7 @@ end
 
 local function doblueprintcheck(inst)
     for i, v in ipairs(AllPlayers) do
+        print("FOUND PLAYER",v.prefab)
         if inst:GetDistanceSqToInst(v) < 12*12 then
             giveblueprints(inst,v,"moonstorm_goggleshat")
             giveblueprints(inst,v,"moon_device_construction1")
@@ -208,6 +245,7 @@ local function onplayernear(inst,player)
     inst.playerwasnear = true
     inst.busy = inst.busy and inst.busy + 1 or 1
     if inst.hunt_stage == "experiment" then
+        inst:StartMusic()
         if TheWorld.components.moonstormmanager and not TheWorld.components.moonstormmanager.tools_task then
             inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_START))
             TheWorld.components.moonstormmanager:beginWagstaffDefence(inst)
@@ -445,9 +483,15 @@ local function fn()
 
     inst.persists = false
 
+    inst._music = net_bool(inst.GUID, "wagstaff_npc._music", "musicdirty")
+
+    inst.StartMusic = StartMusic
+    inst.StopMusic = StopMusic
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+        inst:ListenForEvent("musicdirty", OnMusicDirty)
         return inst
     end
 

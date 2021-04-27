@@ -2,8 +2,8 @@ require("stategraphs/commonstates")
 
 local actionhandlers = nil
 
--- The number of traps at which the boss will spawn more
-local MIN_TRAP_COUNT = 2
+-- The number of traps above which the boss will not spawn more
+local MIN_TRAP_COUNT_FOR_RESPAWN = 4
 
 -- The distance past which a ranged attack should be used.
 local RANGED_ATTACK_DSQ = TUNING.ALTERGUARDIAN_PHASE3_STAB_RANGE^2
@@ -27,7 +27,7 @@ local events =
                 local attack_state = "atk_stab"
                 local geyser_pos = inst.components.knownlocations:GetLocation("geyser")
                 if not inst.components.timer:TimerExists("traps_cd")
-                        and GetTableSize(inst._traps) <= MIN_TRAP_COUNT
+                        and GetTableSize(inst._traps) <= MIN_TRAP_COUNT_FOR_RESPAWN
                         and (geyser_pos == nil
                             or inst:GetDistanceSqToPoint(geyser_pos:Get()) < (TUNING.ALTERGUARDIAN_PHASE3_GOHOMEDSQ / 2)) then
                     attack_state = "atk_traps"
@@ -46,6 +46,8 @@ local TRIBEAM_COS = math.cos(TRIBEAM_ANGLEOFF)
 local TRIBEAM_SIN = math.sin(TRIBEAM_ANGLEOFF)
 local TRIBEAM_COSNEG = math.cos(-TRIBEAM_ANGLEOFF)
 local TRIBEAM_SINNEG = math.sin(-TRIBEAM_ANGLEOFF)
+
+local SECOND_BLAST_TIME = 22*FRAMES
 
 local NUM_STEPS = 10
 local STEP = 1.0
@@ -81,40 +83,54 @@ local function SpawnBeam(inst, target_pos)
     end
 
     local targets, skiptoss = {}, {}
-
-    local fx = nil
-    local x1, z1 = nil, nil
+    local sbtargets, sbskiptoss = {}, {}
+    local x, z = nil, nil
+    local trigger_time = nil
 
     local i = -1
     while i < NUM_STEPS do
         i = i + 1
-        x1 = gx - i * x_step * math.cos(angle)
-        z1 = gz - i * STEP * math.sin(angle)
+        x = gx - i * x_step * math.cos(angle)
+        z = gz - i * STEP * math.sin(angle)
 
-        fx = SpawnPrefab(i > 0 and "alterguardian_laser" or "alterguardian_laserempty")
-        fx.caster = inst
-        fx.Transform:SetPosition(x1, 0, z1)
-        fx:Trigger(math.max(0, i - 1) * FRAMES, targets, skiptoss)
-        if i == 0 then
-            ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, .2, target_pos or fx, 30)
-        end
+        local first = (i == 0)
+        local prefab = (i > 0 and "alterguardian_laser") or "alterguardian_laserempty"
+        local x1, z1 = x, z
+
+        trigger_time = math.max(0, i - 1) * FRAMES
+
+        inst:DoTaskInTime(trigger_time, function(inst2)
+            local fx = SpawnPrefab(prefab)
+            fx.caster = inst2
+            fx.Transform:SetPosition(x1, 0, z1)
+            fx:Trigger(0, targets, skiptoss)
+            if first then
+                ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, .2, target_pos or fx, 30)
+            end
+        end)
+
+        inst:DoTaskInTime(trigger_time + SECOND_BLAST_TIME, function(inst2)
+            local fx = SpawnPrefab(prefab)
+            fx.caster = inst2
+            fx.Transform:SetPosition(x1, 0, z1)
+            fx:Trigger(0, sbtargets, sbskiptoss, true)
+            if first then
+                ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, .2, target_pos or fx, 30)
+            end
+        end)
     end
 
-    -- If we didn't get through our full step count,
-    -- when we spawn our final flurry, add a half step.
-    if i < NUM_STEPS then
-        i = i + 0.5
-        x1 = gx - i * x_step * math.cos(angle)
-        z1 = gz - i * STEP * math.sin(angle)
-    end
+    inst:DoTaskInTime(i*FRAMES, function(inst2)
+        local fx = SpawnPrefab("alterguardian_laser")
+        fx.Transform:SetPosition(x, 0, z)
+        fx:Trigger(0, targets, skiptoss)
+    end)
 
-    fx = SpawnPrefab("alterguardian_laser")
-    fx.Transform:SetPosition(x1, 0, z1)
-    fx:Trigger(math.max(1, i) * FRAMES, targets, skiptoss)
-
-    fx = SpawnPrefab("alterguardian_laser")
-    fx.Transform:SetPosition(x1, 0, z1)
-    fx:Trigger(math.max(2, i + 1) * FRAMES, targets, skiptoss)
+    inst:DoTaskInTime((i+1)*FRAMES, function(inst2)
+        local fx = SpawnPrefab("alterguardian_laser")
+        fx.Transform:SetPosition(x, 0, z)
+        fx:Trigger(0, targets, skiptoss)
+    end)
 end
 
 local BASE_NUM_ANGULAR_STEPS = 10
@@ -143,36 +159,58 @@ local function SpawnSweep(inst, target_pos)
     local angle_step = (SWEEP_ANGULAR_LENGTH / num_angle_steps) * DEGREES
 
     local targets, skiptoss = {}, {}
-
-    local fx = nil
+    local sbtargets, sbskiptoss = {}, {}
+    local x, z = nil, nil
     local delay = nil
-    local x1, z1 = nil, nil
 
     local i = -1
     while i < num_angle_steps do
         i = i + 1
-        delay = math.max(0, i - 1)
+        delay = math.max(0, i - 1)*FRAMES
 
-        x1 = gx - (x_dir * dist * math.cos(angle))
-        z1 = gz - dist * math.sin(angle)
+        x = gx - (x_dir * dist * math.cos(angle))
+        z = gz - dist * math.sin(angle)
         angle = angle + (angle_step_dir * angle_step)
 
-        fx = SpawnPrefab("alterguardian_laser")
-        fx.caster = inst
-        fx.Transform:SetPosition(x1, 0, z1)
-        fx:Trigger(delay * FRAMES, targets, skiptoss)
-        if i == 0 then
-            ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, .6, target_pos or fx, 30)
-        end
+        -- Assign loop-local values to be captured (we still need x and z for post-loop)
+        local first = (i == 0)
+        local x1, z1 = x, z
+        inst:DoTaskInTime(delay, function(inst2)
+            local fx = SpawnPrefab("alterguardian_laser")
+            fx.caster = inst2
+            fx.Transform:SetPosition(x1, 0, z1)
+            fx:Trigger(0, targets, skiptoss)
+            if first then
+                ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, .6, target_pos or fx, 30)
+            end
+        end)
+
+        inst:DoTaskInTime(delay + SECOND_BLAST_TIME, function(inst2)
+            local fx = SpawnPrefab("alterguardian_laser")
+            fx.caster = inst2
+            fx.Transform:SetPosition(x1, 0, z1)
+            fx:Trigger(0, sbtargets, sbskiptoss, true)
+            if first then
+                ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, .6, target_pos or fx, 30)
+            end
+        end)
     end
 
-    fx = SpawnPrefab("alterguardian_laser")
-    fx.Transform:SetPosition(x1, 0, z1)
-    fx:Trigger(math.max(1, i) * FRAMES, targets, skiptoss)
+    inst:DoTaskInTime(i*FRAMES, function(inst2)
+        local fx = SpawnPrefab("alterguardian_laser")
+        fx.Transform:SetPosition(x, 0, z)
+        fx:Trigger(0, targets, skiptoss)
+    end)
 
-    fx = SpawnPrefab("alterguardian_laser")
-    fx.Transform:SetPosition(x1, 0, z1)
-    fx:Trigger(math.max(2, i + 1) * FRAMES, targets, skiptoss)
+    inst:DoTaskInTime((i+1)*FRAMES, function(inst2)
+        local fx = SpawnPrefab("alterguardian_laser")
+        fx.Transform:SetPosition(x, 0, z)
+        fx:Trigger(0, targets, skiptoss)
+    end)
+end
+
+local function laser_sound(inst)
+    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_beam_laser")
 end
 
 local function start_summon_circle(inst)
@@ -198,6 +236,40 @@ local function stop_summon_circle(inst)
     if inst.sg.mem.summon_fx ~= nil and inst.sg.mem.summon_fx:IsValid() then
         inst.sg.mem.summon_fx:PushEvent("endloop")
         inst.sg.mem.summon_fx = nil
+    end
+end
+
+local function do_summon_spawn(inst)
+    local player_in_range = false
+    local ix, _, iz = inst.Transform:GetWorldPosition()
+    for i, p in ipairs(AllPlayers) do
+        local dsq_to_player = p:GetDistanceSqToPoint(ix, 0, iz)
+        if dsq_to_player < TUNING.ALTERGUARDIAN_PHASE3_SUMMONRSQ then
+            -- Don't count ghosts, and don't "sleep-camp" players that are knocked out.
+            if (p.components.grogginess ~= nil and not p.components.grogginess:IsKnockedOut()) 
+                    and not p:HasTag("playerghost") then
+                player_in_range = true
+
+                local spawn_prefab = (math.random() < 0.4 and "largeguard_alterguardian_projectile") or "gestalt_alterguardian_projectile"
+                local gestalt = SpawnPrefab(spawn_prefab)
+
+                local px, py, pz = p.Transform:GetWorldPosition()
+
+                local radius = GetRandomMinMax(3, 5)
+                local angle = (inst:GetAngleToPoint(px, py, pz) + GetRandomMinMax(-90, 90)) * DEGREES
+                gestalt.Transform:SetPosition(
+                    px + radius * math.cos(angle),
+                    py,
+                    pz + radius * -math.sin(angle)
+                )
+                gestalt:ForceFacePoint(px, py, pz)
+                gestalt:SetTargetPosition(Vector3(px, py, pz))
+            end
+        end
+    end
+
+    if not player_in_range then
+        inst.sg.statemem.ready_to_finish = true
     end
 end
 
@@ -243,6 +315,9 @@ local states =
 
         timeline =
         {
+            TimeEvent(0*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/spawn")
+            end),
             TimeEvent(12*FRAMES, function(inst) set_lightvalues(inst, 0.05) end),
             TimeEvent(13*FRAMES, function(inst) set_lightvalues(inst, 0.075) end),
             TimeEvent(14*FRAMES, function(inst) set_lightvalues(inst, 0.10) end),
@@ -418,39 +493,8 @@ local states =
         timeline =
         {
             TimeEvent(1*FRAMES, do_stab_attack),
-            TimeEvent(8*FRAMES, function(inst)
-                local player_in_range = false
-                local ix, _, iz = inst.Transform:GetWorldPosition()
-                for i, p in ipairs(AllPlayers) do
-                    local dsq_to_player = p:GetDistanceSqToPoint(ix, 0, iz)
-                    if dsq_to_player < TUNING.ALTERGUARDIAN_PHASE3_SUMMONRSQ then
-                        -- Don't count ghosts, and don't "sleep-camp" players that are knocked out.
-                        if (p.components.grogginess ~= nil and not p.components.grogginess:IsKnockedOut()) 
-                                and not p:HasTag("playerghost") then
-                            player_in_range = true
-
-                            local spawn_prefab = (math.random() < 0.4 and "largeguard_alterguardian_projectile") or "gestalt_alterguardian_projectile"
-                            local gestalt = SpawnPrefab(spawn_prefab)
-
-                            local px, py, pz = p.Transform:GetWorldPosition()
-
-                            local radius = GetRandomMinMax(3, 5)
-                            local angle = (inst:GetAngleToPoint(px, py, pz) + GetRandomMinMax(-90, 90)) * DEGREES
-                            gestalt.Transform:SetPosition(
-                                px + radius * math.cos(angle),
-                                py,
-                                pz + radius * -math.sin(angle)
-                            )
-                            gestalt:ForceFacePoint(px, py, pz)
-                            gestalt:SetTargetPosition(Vector3(px, py, pz))
-                        end
-                    end
-                end
-
-                if not player_in_range then
-                    inst.sg.statemem.ready_to_finish = true
-                end
-            end),
+            TimeEvent(8*FRAMES, do_summon_spawn),
+            TimeEvent(16*FRAMES, do_summon_spawn),
         },
 
         events =
@@ -527,8 +571,19 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_sky_beam")
             end),
             TimeEvent(44*FRAMES, function(inst)
-                inst:DoTraps()
+                inst:DoTraps(
+                    4,
+                    TUNING.ALTERGUARDIAN_PHASE3_TRAP_MINRANGE,
+                    TUNING.ALTERGUARDIAN_PHASE3_TRAP_MAXRANGE
+                )
                 inst.components.timer:StartTimer("traps_cd", TUNING.ALTERGUARDIAN_PHASE3_TRAP_CD)
+            end),
+            TimeEvent(54*FRAMES, function(inst)
+                inst:DoTraps(
+                    6,
+                    TUNING.ALTERGUARDIAN_PHASE3_TRAP_MINRANGE + 3.5,
+                    TUNING.ALTERGUARDIAN_PHASE3_TRAP_MAXRANGE + 3.5
+                )
             end),
 
             TimeEvent(1*FRAMES, function(inst) set_lightvalues(inst, 0.9) end),
@@ -622,6 +677,7 @@ local states =
                 end
                 inst.sg.statemem.target = nil
             end),
+
             TimeEvent(35*FRAMES, function(inst)
                 local ipos = inst:GetPosition()
 
@@ -651,6 +707,8 @@ local states =
                 )
                 SpawnBeam(inst, offpos2)
             end),
+            -- Play a second blast sound about when the second blast will occur, relative to the above TimeEvent.
+            TimeEvent(35*FRAMES + SECOND_BLAST_TIME, laser_sound),
 
             TimeEvent(1*FRAMES, function(inst) set_lightvalues(inst, 0.9) end),
             TimeEvent(2*FRAMES, function(inst) set_lightvalues(inst, 0.875) end),
@@ -717,10 +775,9 @@ local states =
             inst:ForceFacePoint(target.Transform:GetWorldPosition())
             inst.sg.statemem.target = target
 
-            -- TODO @stevenm maybe this can be timed better; i.e. when the light is up (imply it's heat?)
             inst.sg:AddStateTag("nofreeze")
 
-             inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_beam")
+            inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_beam")
         end,
 
         onupdate = function(inst)
@@ -742,6 +799,7 @@ local states =
                 end
                 inst.sg.statemem.target = nil
             end),
+
             TimeEvent(37*FRAMES, function(inst)
                 local target_pos = inst.sg.statemem.target_pos
 
@@ -758,6 +816,8 @@ local states =
                     end
                 end
             end),
+            -- Play a second blast sound about when the second blast will occur, relative to the above TimeEvent.
+            TimeEvent(37*FRAMES + SECOND_BLAST_TIME, laser_sound),
 
             TimeEvent(1*FRAMES, function(inst) set_lightvalues(inst, 0.9) end),
             TimeEvent(2*FRAMES, function(inst) set_lightvalues(inst, 0.875) end),
@@ -823,11 +883,16 @@ local states =
             set_lightvalues(inst, 0.9)
 
             TheWorld:PushEvent("moonboss_defeated")
+
+            inst:SetNoMusic(true)
         end,
 
         timeline =
         {
-            TimeEvent(30*FRAMES, function(inst)
+            TimeEvent(0*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/death")
+            end),
+            TimeEvent(65*FRAMES, function(inst)
                 if not inst._loot_dropped then
                     -- Use lootdropper for the nice spray of moon glass and rocks and such.
                     inst.components.lootdropper:DropLoot(inst:GetPosition())
@@ -838,7 +903,7 @@ local states =
                 ShakeAllCameras(CAMERASHAKE.FULL, 0.10, 0.05, 0.1, inst, 40)
             end),
 
-            TimeEvent(52*FRAMES, function(inst)
+            TimeEvent(87*FRAMES, function(inst)
                 ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.75, 0.05, 0.6, inst, 40)
             end),
 

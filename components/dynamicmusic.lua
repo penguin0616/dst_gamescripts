@@ -35,6 +35,11 @@ local SEASON_DANGER_MUSIC =
 local TRIGGERED_DANGER_MUSIC =
 {
 
+    wagstaff_experiment = 
+    {
+        "moonstorm/characters/wagstaff/music_wagstaff_experiment",
+    },
+
     crabking =
     {
         "dontstarve/music/music_epicfight_crabking",
@@ -93,6 +98,19 @@ local TRIGGERED_DANGER_MUSIC =
     pigking =
     {
         "dontstarve/music/music_pigking_minigame",
+    },
+
+    alterguardian_phase1 =
+    {
+        "moonstorm/creatures/boss/alterguardian1/music_epicfight",
+    },
+    alterguardian_phase2 =
+    {
+        "moonstorm/creatures/boss/alterguardian2/music_epicfight",
+    },
+    alterguardian_phase3 =
+    {
+        "moonstorm/creatures/boss/alterguardian3/music_epicfight",
     },
 
     default =

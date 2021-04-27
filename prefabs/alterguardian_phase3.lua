@@ -64,10 +64,43 @@ SetSharedLootTable("alterguardian_phase3",
 
 local brain = require "brains/alterguardian_phase3brain"
 
+--MUSIC------------------------------------------------------------------------
+local function PushMusic(inst)
+    if ThePlayer == nil or inst:HasTag("nomusic") then
+        inst._playingmusic = false
+    elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+        inst._playingmusic = true
+        ThePlayer:PushEvent("triggeredevent", { name = "alterguardian_phase3", duration = 2 })
+    elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+        inst._playingmusic = false
+    end
+end
+
+local function OnMusicDirty(inst)
+    if not TheNet:IsDedicated() then
+        if inst._musictask ~= nil then
+            inst._musictask:Cancel()
+        end
+        inst._musictask = inst:DoPeriodicTask(1, PushMusic)
+        PushMusic(inst)
+    end
+end
+
+local function SetNoMusic(inst, val)
+    if val then
+        inst:AddTag("nomusic")
+    else
+        inst:RemoveTag("nomusic")
+    end
+    inst._musicdirty:push()
+    OnMusicDirty(inst)
+end
+--MUSIC------------------------------------------------------------------------
+
 local TARGET_DSQ = (1.9*TUNING.ALTERGUARDIAN_PHASE3_TARGET_DIST)^2
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "character", "monster" }
+local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
 local function Retarget(inst)
     local spawnpoint_position = inst.components.knownlocations:GetLocation("spawnpoint")
 
@@ -123,32 +156,33 @@ local function teleport_override_fn(inst)
 end
 
 local TRAP_PLAYERCOUNT_DSQ = TUNING.ALTERGUARDIAN_PHASE3_TARGET_DIST^2
-local function do_traps(inst)
+local function do_traps(inst, basetrapcount, minrange, maxrange)
     local position = inst:GetPosition()
     local px, py, pz = position:Get()
 
     -- Add extra traps based on the number of nearby players.
-    local num_traps = 3
+    local num_traps = basetrapcount or 4
+    local num_players = 0
     for _, v in ipairs(AllPlayers) do
         if not v:HasTag("playerghost") and v.entity:IsVisible()
                 and v:GetDistanceSqToPoint(px, py, pz) < TRAP_PLAYERCOUNT_DSQ then
-            num_traps = num_traps + 2
+            num_players = num_players + 1
         end
     end
+    num_traps = num_traps + RoundBiasedDown(num_players/2)
 
-    -- Space out the traps mostly evenly, but a little randomly (leaves a little pocket of sorts sometimes)
-    local delta = (1.5 + math.random() * 0.5) * PI / num_traps
     local initial_offset = PI2 * math.random()
 
     local angles = {}
     for i = 1, num_traps do
+        local delta = (1.5 + 0.5*math.random()) * PI / num_traps
         table.insert(angles, i*delta + initial_offset)
     end
     shuffleArray(angles)
 
     local target_positions = {}
     for i = 1, #angles do
-        local range = TUNING.ALTERGUARDIAN_PHASE3_TRAP_MINRANGE + math.sqrt(math.random()) * TUNING.ALTERGUARDIAN_PHASE3_TRAP_MAXRANGE
+        local range = minrange + math.sqrt(math.random()) * maxrange
         local offset = FindWalkableOffset(position, angles[i], range, 12, true, true, NoHoles)
         if offset ~= nil then
             -- Turn the offset into a world position.
@@ -247,6 +281,24 @@ local function OnEntityWake(inst)
     end
 end
 
+local function hauntchancefn(inst)
+    local statename = inst.sg.currentstate.name
+    if statename == "spawn" or statename == "death" then
+        return 0
+    else
+        return TUNING.HAUNT_CHANCE_OCCASIONAL
+    end
+end
+
+local function hauntchancefn(inst)
+    local statename = inst.sg.currentstate.name
+    if statename == "spawn" or statename == "death" then
+        return 0
+    else
+        return TUNING.HAUNT_CHANCE_OCCASIONAL
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -272,7 +324,9 @@ local function fn()
 
     MakeTinyFlyingCharacterPhysics(inst, 500, 0)
 
+    inst:AddTag("brightmareboss")
     inst:AddTag("epic")
+    inst:AddTag("flying")
     inst:AddTag("hostile")
     inst:AddTag("largecreature")
     inst:AddTag("mech")
@@ -280,10 +334,19 @@ local function fn()
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
 
+    inst._musicdirty = net_event(inst.GUID, "alterguardian_phase3._musicdirty", "musicdirty")
+    inst._playingmusic = false
+    --inst._musictask = nil
+    OnMusicDirty(inst)
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
+        inst:ListenForEvent("musicdirty", OnMusicDirty)
+
         return inst
     end
+
+    inst.SetNoMusic = SetNoMusic
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.ALTERGUARDIAN_PHASE3_WALK_SPEED
@@ -330,13 +393,10 @@ local function fn()
     inst:AddComponent("teleportedoverride")
     inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
 
-    MakeLargeBurnableCharacter(inst, "p3_fx_ball_centre")
-    inst.components.burnable:SetBurnTime(5)
-
     MakeHugeFreezableCharacter(inst)
     inst.components.freezable:SetResistance(8)
 
-    MakeHauntableGoToState(inst, "atk_stab", TUNING.HAUNT_CHANCE_OCCASIONAL, TUNING.ALTERGUARDIAN_PHASE3_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
+    MakeHauntableGoToStateWithChanceFunction(inst, "atk_stab", hauntchancefn, TUNING.ALTERGUARDIAN_PHASE3_ATTACK_PERIOD, TUNING.HAUNT_SMALL)
 
     inst.DoTraps = do_traps
     inst.TrackTrap = track_trap
