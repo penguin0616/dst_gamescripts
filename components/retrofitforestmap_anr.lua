@@ -542,6 +542,35 @@ local function RepositionInaccessibleUnderwaterObjects()
 	print("Retrofitting for Return of Them: Forgotten Knowledge - Validated positions of", sunken_objects_count, "sunken heavy objects.")
 end
 
+local function EyeOfTheStorm_RemoveExtraAltarPieces()
+    local ALTAR_PIECES = {
+        ["moon_altar_glass"] = true,
+        ["moon_altar_seed"] = true,
+        ["moon_altar_idol"] = true,
+        ["moon_altar_icon"] = true,
+        ["moon_altar_ward"] = true,
+        ["moon_altar_crown"] = true,
+    }
+
+    local removed_pieces = 0
+    for _, ent in pairs(Ents) do
+        if ent:IsValid() and ent.prefab ~= nil then
+            local prefab_name = ent.prefab
+            if ALTAR_PIECES[prefab_name] ~= nil then
+                local lx, ly, lz = ent.Transform:GetWorldPosition()
+                if math.abs(lx) < 0.001 and math.abs(ly) < 0.001 and math.abs(lz) < 0.001 then
+                    print("Retrofitting for Return of Them: Eye of the Storm - Removing erroneously placed Moon Altar piece around 0,0,0")
+                    ent:Remove()
+
+                    removed_pieces = removed_pieces + 1
+                end
+            end
+        end
+    end
+
+    print("Retrofitting for Return of Them: Eye of the Storm - Removed", removed_pieces, "pieces around 0,0,0")
+end
+
 local HAS_WATERSOURCE = {"watersource"}
 local function MoonFissures()
 	local moonfissures = {}
@@ -1086,6 +1115,10 @@ function self:OnPostInit()
 		self.requiresreset = self.requiresreset or num_tiles_repaired > 0
 	end
 
+    if self.retrofit_removeextraaltarpieces then
+        print("Retrofitting for Return of Them: Eye of the Storm - Removing Erroneously Spawned Altar Pieces")
+        EyeOfTheStorm_RemoveExtraAltarPieces()
+    end
 
 	---------------------------------------------------------------------------
 	if self.requiresreset then
@@ -1134,6 +1167,7 @@ function self:OnLoad(data)
 		self.retrofit_astralmarkers = data.retrofit_astralmarkers or false
 		self.retrofit_nodeidtilemap_secondpass = data.retrofit_nodeidtilemap_secondpass or false
 		self.retrofit_nodeidtilemap_thirdpass = data.retrofit_nodeidtilemap_thirdpass or false
+        self.retrofit_removeextraaltarpieces = data.retrofit_removeextraaltarpieces or false
     end
 end
 

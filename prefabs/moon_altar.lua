@@ -11,6 +11,7 @@ local shared_prefabs =
     "collapse_small",
     "moon_altar_link",
     "moon_altar_link_fx_spawner",
+    "moonstorm_spark_shock_fx",
 }
 
 local moon_altar_prefabs =
@@ -289,9 +290,11 @@ local function onhit(inst, hitter, work_left, work_done)
         -- Undo work
         inst.components.workable.workleft = math.min(inst.components.workable.maxwork, inst.components.workable.workleft + math.ceil(work_done))
 
-        if hitter.components.combat ~= nil then
+        if hitter.components.combat ~= nil and (hitter.components.inventory == nil or not hitter.components.inventory:IsInsulated()) then
             hitter.components.combat:GetAttacked(inst, TUNING.LIGHTNING_DAMAGE, nil, "electric")
         end
+
+        inst:SpawnChild("moonstorm_spark_shock_fx")
     else
         -- If we have no work left, we're going to revert to crack_idle anyway, so don't play any anims.
         if work_left > 0 then

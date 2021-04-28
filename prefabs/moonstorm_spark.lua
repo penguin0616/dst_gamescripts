@@ -25,7 +25,7 @@ local function dospark(inst)
         local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, 4, nil, SPARK_CANT_TAGS)
         if #ents > 0 then
             for i, ent in ipairs(ents)do
-                if ent.components.combat ~= nil then
+                if ent.components.combat ~= nil and (ent.components.inventory == nil or not ent.components.inventory:IsInsulated()) then
                     ent.components.combat:GetAttacked(inst, TUNING.LIGHTNING_DAMAGE, nil, "electric")
                     if ent.components.hauntable ~= nil and ent.components.hauntable.panicable then
                         ent.components.hauntable:Panic(2)

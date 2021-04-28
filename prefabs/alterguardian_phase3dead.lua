@@ -197,9 +197,6 @@ local function dead_onwork(inst, worker, workleft)
         -- close enough to hide inside of the collapse_big fx.
         local angle_inc = 360 / #ALTAR_PIECES
         for i, piece_name in ipairs(ALTAR_PIECES) do
-            local piece = SpawnPrefab(piece_name)
-            local piece_radius = piece:GetPhysicsRadius(1.0)
-
             local offset = FindWalkableOffset(ipos, i*angle_inc, 2.5, nil, true, false, altarpiece_spawn_checkfn)
                 or FindWalkableOffset(ipos, i*angle_inc, 5.0, nil, true, false, altarpiece_spawn_checkfn)
 
