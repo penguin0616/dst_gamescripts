@@ -1082,7 +1082,23 @@ t = {
                 end
             end,
         },
-		
+
+        {
+            version = 5.065, -- RoT: Eye of the Storm - remove erroneously spawned altar pieces via boss drop bug during beta
+            fn = function(savedata)
+                if savedata ~= nil and savedata.map ~= nil then
+                    if savedata.map.prefab == "forest" then
+                        if savedata.map.persistdata == nil then
+                            savedata.map.persistdata = {}
+                        end
+                        if savedata.map.persistdata.retrofitforestmap_anr == nil then
+                            savedata.map.persistdata.retrofitforestmap_anr = {}
+                        end
+                        savedata.map.persistdata.retrofitforestmap_anr.retrofit_removeextraaltarpieces = true
+                    end
+                end
+            end,
+        },
     },
 }
 
