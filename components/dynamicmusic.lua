@@ -407,6 +407,9 @@ local function StartTriggeredDanger(player, data)
         music = music[level] or music[1]
         if #music > 0 then
             _soundemitter:PlaySound(music, "danger")
+            if _hasinspirationbuff then
+                _soundemitter:SetParameter("danger", "wathgrithr_intensity", _hasinspirationbuff)
+            end
         end
         _dangertask = inst:DoTaskInTime(data.duration or 10, StopDanger, true)
         _triggeredlevel = level

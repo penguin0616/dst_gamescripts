@@ -1697,8 +1697,8 @@ function EntityScript:IsInLight()
 
         local x, y, z = self.Transform:GetWorldPosition()
         local light = TheSim:GetLightAtPoint(x, y, z, lightThresh)
-        
-	    local move_to_light = self.inLight ~= false and light >= lightThresh
+
+        local move_to_light = self.inLight ~= false and light >= lightThresh
 
         if move_to_light or (self.inLight == false and light <= darkThresh) then
             self.inLight = move_to_light

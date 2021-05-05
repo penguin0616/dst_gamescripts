@@ -471,6 +471,59 @@ researchlab_clear_fn = function(inst)
 end
 
 
+
+--------------------------------------------------------------------------
+--[[ Chester skin functions ]]
+--------------------------------------------------------------------------
+function chester_eyebone_init_fn(inst, build_name)
+    if not TheWorld.ismastersim then
+        return
+    end
+    inst:RefreshEye()
+    inst:SetBuild()
+
+    inst.linked_skinname = build_name--string.gsub(build_name, "chester_eyebone_", "chester_")
+end
+function chester_eyebone_clear_fn(inst)
+    inst:RefreshEye()
+    inst:SetBuild()
+
+    inst.linked_skinname = nil
+end
+
+function chester_init_fn(inst, build_name)
+    if not TheWorld.ismastersim then
+        return
+    end
+    inst:SetBuild()
+end
+function chester_clear_fn(inst)
+    inst:SetBuild()
+end
+
+
+--------------------------------------------------------------------------
+--[[ Bundle skin functions ]]
+--------------------------------------------------------------------------
+function bundlewrap_init_fn(inst, build_name)
+    basic_init_fn( inst, build_name, "bundle" ) 
+    inst.components.bundlemaker:SetSkinData( build_name, inst.skin_id )
+end
+function bundlewrap_clear_fn(inst)
+    basic_clear_fn(inst, "bundle" )
+    inst.components.bundlemaker:SetSkinData()
+end
+
+function bundle_init_fn(inst, build_name)
+    basic_init_fn( inst, build_name, "bundle" ) 
+    inst:UpdateInventoryImage()
+end
+function bundle_clear_fn(inst)
+    basic_clear_fn(inst, "bundle" )
+    inst:UpdateInventoryImage()
+end
+
+
 --------------------------------------------------------------------------
 --[[ Abigail skin functions ]]
 --------------------------------------------------------------------------

@@ -74,7 +74,7 @@ end
 local TARGET_DIST = TUNING.ALTERGUARDIAN_PHASE1_TARGET_DIST
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
+local RETARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
 local function Retarget(inst)
     local gx, gy, gz = inst.Transform:GetWorldPosition()
     local potential_targets = TheSim:FindEntities(
@@ -357,6 +357,7 @@ local function fn()
     inst:AddTag("largecreature")
     inst:AddTag("mech")
     inst:AddTag("monster")
+    inst:AddTag("noepicmusic")
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
 
@@ -398,6 +399,8 @@ local function fn()
     inst.components.combat.playerdamagepercent = TUNING.ALTERGUARDIAN_PLAYERDAMAGEPERCENT
     inst.components.combat.noimpactsound = true
     inst:ListenForEvent("blocked", play_custom_hit)
+
+    inst:AddComponent("explosiveresist")
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aurafn = CalcSanityAura

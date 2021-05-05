@@ -235,6 +235,8 @@ local function nubfn()
 
     inst.entity:SetPristine()
 
+    inst:SetPrefabNameOverride("moonstorm_glass")
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -249,7 +251,6 @@ local function nubfn()
     inst.components.workable:SetWorkLeft(TUNING.ROCKS_MINE)
     inst.components.workable:SetOnWorkCallback(OnWorkNub)
     
-    inst:SetPrefabNameOverride("moonstorm_glass")
 
     inst.setanim = setanim
 

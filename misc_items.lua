@@ -1095,6 +1095,21 @@ MISC_ITEMS =
 		output_items = {  "wurt_none", "wurt_formal", "body_wurt_formal", "hand_wurt_formal", "legs_wurt_formal", },
 		release_group = 78,
 	},
+	pack_container_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1612410,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_container_items.xml",
+		display_tex = "container_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "bundle_vintage", "chester_lamb", "treasurechest_vintage", },
+		output_items = {  "bundle_vintage", "chester_lamb", "treasurechest_vintage", },
+		release_group = 118,
+	},
 	pack_costume_all =
 	{
 		type = "purchase",

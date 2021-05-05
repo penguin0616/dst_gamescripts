@@ -117,6 +117,7 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         Asset("ANIM", "anim/"..(inventoryimage or name)..".zip"),
     }
 
+    --Note(Peter): Looks like nothing users variations anymore. We might want to refactor to simplify this
     if variations ~= nil then
         for i = 1, variations do
             if onesize then
@@ -145,6 +146,32 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         end
     end
 
+    local function UpdateInventoryImage(inst)
+        local suffix = inst.suffix or "_small"
+        if variations ~= nil then
+            --Note(Peter): i believe this block is unused
+            if inst.variation == nil then
+                inst.variation = math.random(variations)
+            end
+            suffix = suffix..tostring(inst.variation)
+            
+            local skin_name = inst:GetSkinName()
+            if skin_name ~= nil then
+                inst.components.inventoryitem:ChangeImageName(skin_name..(onesize and tostring(inst.variation) or suffix))
+            else
+                inst.components.inventoryitem:ChangeImageName(name..(onesize and tostring(inst.variation) or suffix))
+            end
+        elseif not onesize then
+            local skin_name = inst:GetSkinName()
+            if skin_name ~= nil then
+                inst.components.inventoryitem:ChangeImageName(skin_name..suffix)
+            else
+                inst.components.inventoryitem:ChangeImageName(name..suffix)
+            end
+        end
+    end
+
+
     local function OnWrapped(inst, num, doer)
         local suffix =
             (onesize and "_onesize") or
@@ -152,15 +179,9 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
             (num > 1 and "_medium") or
             "_small"
 
-        if variations ~= nil then
-            if inst.variation == nil then
-                inst.variation = math.random(variations)
-            end
-            suffix = suffix..tostring(inst.variation)
-            inst.components.inventoryitem:ChangeImageName(name..(onesize and tostring(inst.variation) or suffix))
-        elseif not onesize then
-            inst.components.inventoryitem:ChangeImageName(name..suffix)
-        end
+        inst.suffix = suffix
+        
+        UpdateInventoryImage(inst)
 
         inst.AnimState:PlayAnimation("idle"..suffix)
 
@@ -263,6 +284,7 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         inst:AddComponent("unwrappable")
         inst.components.unwrappable:SetOnWrappedFn(OnWrapped)
         inst.components.unwrappable:SetOnUnwrappedFn(OnUnwrapped)
+        inst.UpdateInventoryImage = UpdateInventoryImage
 
         MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
         MakeSmallPropagator(inst)

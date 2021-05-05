@@ -32,6 +32,8 @@ function Bundler:StartBundling(item)
                     self.bundlinginst.persists = false
                     self.itemprefab = item.prefab
                     self.wrappedprefab = item.components.bundlemaker.bundledprefab
+                    self.wrappedskinname = item.components.bundlemaker.bundledskinname
+                    self.wrappedskin_id = item.components.bundlemaker.bundledskin_id
                     item.components.bundlemaker:OnStartBundling(self.inst)
                     self.inst.sg.statemem.bundling = true
                     self.inst.sg:GoToState("bundling")
@@ -85,6 +87,8 @@ function Bundler:StopBundling()
         end
         self.itemprefab = nil
         self.wrappedprefab = nil
+        self.wrappedskinname = nil
+        self.wrappedskin_id = nil
     end
 end
 
@@ -106,7 +110,7 @@ function Bundler:OnFinishBundling()
         self.bundlinginst.components.container ~= nil and
         not self.bundlinginst.components.container:IsEmpty() and
         self.wrappedprefab ~= nil then
-        local wrapped = SpawnPrefab(self.wrappedprefab)
+        local wrapped = SpawnPrefab(self.wrappedprefab, self.wrappedskinname, self.wrappedskin_id)
         if wrapped ~= nil then
             if wrapped.components.unwrappable ~= nil then
                 local items = {}
@@ -121,6 +125,8 @@ function Bundler:OnFinishBundling()
                 self.bundlinginst = nil
                 self.itemprefab = nil
                 self.wrappedprefab = nil
+                self.wrappedskinname = nil
+                self.wrappedskin_id = nil
                 if self.inst.components.inventory ~= nil then
                     self.inst.components.inventory:GiveItem(wrapped, nil, self.inst:GetPosition())
                 else
@@ -138,6 +144,8 @@ function Bundler:OnSave()
     {
         item = self.itemprefab,
         wrapped = self.wrappedprefab,
+        wrappedskinname = self.wrappedskinname,
+        wrappedskin_id = self.wrappedskin_id,
     }
     if self.bundlinginst ~= nil and
         self.bundlinginst.components.container ~= nil and
@@ -151,10 +159,14 @@ function Bundler:OnLoad(data)
     if data.item ~= nil or data.bundling ~= nil then
         local currentitem = self.itemprefab
         local currentwrapped = self.wrappedprefab
+        local currentskinname = self.wrappedskinname
+        local currentskin_id = self.wrappedskin_id
         local currentbundling = self.bundlinginst
 
         self.itemprefab = data.item
         self.wrappedprefab = data.wrapped
+        self.wrappedskinname = data.wrappedskinname
+        self.wrappedskin_id = data.wrappedskin_id
 
         if data.bundling ~= nil then
             self.bundlinginst = SpawnSaveRecord(data.bundling)
@@ -168,6 +180,8 @@ function Bundler:OnLoad(data)
             self:StopBundling()
             self.itemprefab = currentitem
             self.wrappedprefab = currentwrapped
+            self.wrappedskinname = currentskinname
+            self.wrappedskin_id = currentskin_id
             self.bundlinginst = currentbundling
         end
     end

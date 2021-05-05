@@ -92,7 +92,7 @@ function StandardWakeChecks(inst)
 end
 
 function DefaultSleepTest(inst)
-    local watchlight = inst.LightWatcher ~= nil or inst.components.sleeper.watchlight
+    local watchlight = inst.LightWatcher ~= nil or (inst.components.sleeper and inst.components.sleeper.watchlight)
     return StandardSleepChecks(inst)
             -- sleep in the overworld at night
         and (not TheWorld:HasTag("cave") and TheWorld.state.isnight
@@ -101,7 +101,7 @@ function DefaultSleepTest(inst)
 end
 
 function DefaultWakeTest(inst)
-    local watchlight = inst.LightWatcher ~= nil or inst.components.sleeper.watchlight
+    local watchlight = inst.LightWatcher ~= nil or (inst.components.sleeper and inst.components.sleeper.watchlight)
 
     return StandardWakeChecks(inst)
         -- wake when it's not night

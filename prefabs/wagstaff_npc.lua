@@ -688,14 +688,23 @@ local function pstbossfn()
     inst:ListenForEvent("spawndevice", spawn_device)
     inst:ListenForEvent("doerode", donpcerode)
 
+    inst.SoundEmitter:PlaySound("moonstorm/common/alterguardian_contained/static_LP", "wagstaffnpc_static_loop")
+
     return inst
+end
+
+local function contained_animover(inst)
+    inst.AnimState:PlayAnimation("close_idle")
+    inst.SoundEmitter:PlaySound("moonstorm/common/alterguardian_contained/close")
 end
 
 local function docollect(inst)
     inst.Light:Enable(true)
 
     inst.AnimState:PlayAnimation("collect")
-    inst.AnimState:PushAnimation("close_idle", true)
+    inst.SoundEmitter:PlaySound("moonstorm/common/alterguardian_contained/collect")
+
+    inst:ListenForEvent("animover", contained_animover)
 end
 
 local function alterguardian_containedfn()
@@ -703,6 +712,7 @@ local function alterguardian_containedfn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
+    inst.entity:AddSoundEmitter()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 

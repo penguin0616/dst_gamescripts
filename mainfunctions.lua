@@ -1819,7 +1819,7 @@ function DisplayAntiAddictionNotification( notification )
         title:SetHAnchor(ANCHOR_MIDDLE)
         currently_displaying = notification
 
-        CreateEntity():DoTaskInTime(4.5, function(inst)
+        CreateEntity():DoTaskInTime(10.5, function(inst)
             title:Kill()
             inst.entity:Retire()
             currently_displaying = nil

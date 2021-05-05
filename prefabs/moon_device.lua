@@ -68,23 +68,26 @@ local function OnConstructed(inst, doer)
         existing_moon_device = nil
         local new_inst = ReplacePrefab(inst, inst._construction_product)
         new_inst._has_replaced_moon_altar_link = true
-        new_inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/house/stage"..new_inst.level.."_place")
         
         if new_inst.level == 2 then
             for _, v in ipairs(new_inst._pillars) do
                 v.AnimState:PlayAnimation("stage2_idle_pre", false)
                 v.AnimState:PushAnimation("stage2_idle", false)
             end
+
+            new_inst.SoundEmitter:PlaySound("moonstorm/common/moon_device/2_craft")
         elseif new_inst.level >= 3 then
             new_inst._top.AnimState:PlayAnimation("stage3_idle_pre", false)
             new_inst._top.AnimState:PushAnimation("stage3_idle", true)
+
+            new_inst.SoundEmitter:PlaySound("moonstorm/common/moon_device/3_craft")
         end
     end
 end
 
 local MOON_ALTAR_LINK_TAGS = { "moon_altar_link" }
 local function base_onbuilt(inst)
-    inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/house/stage".. inst.level.."_place")
+    inst.SoundEmitter:PlaySound("moonstorm/common/moon_device/1_craft")
 
     inst.AnimState:PlayAnimation("stage1_idle_pre")
 end
@@ -319,7 +322,7 @@ local function break_device(inst)
     stage1_break(inst)
 
     inst:DoTaskInTime(1*FRAMES, do_boss_spawn)
-    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/spawn")
+    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/spawn_pre")
 end
 
 local function breaksequence(inst)

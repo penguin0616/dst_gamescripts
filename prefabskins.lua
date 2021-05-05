@@ -168,6 +168,14 @@ PREFAB_SKINS = {
 		"bugnet_spider",
 		"bugnet_spider_white",
 	},
+	bundle = 
+	{
+		"bundle_vintage",
+	},
+	bundlewrap = 
+	{
+		"bundlewrap_vintage",
+	},
 	campfire = 
 	{
 		"campfire_cabin",
@@ -185,6 +193,14 @@ PREFAB_SKINS = {
 		"catcoonhat_trapper_rooster",
 		"catcoonhat_trapperup_rooster",
 		"hat_puppy_cap",
+	},
+	chester = 
+	{
+		"chester_lamb",
+	},
+	chester_eyebone = 
+	{
+		"chester_eyebone_lamb",
 	},
 	coldfirepit = 
 	{
@@ -450,6 +466,7 @@ PREFAB_SKINS = {
 	lantern = 
 	{
 		"lantern_crystal",
+		"lantern_flower",
 		"lantern_mummy",
 		"lantern_tesla",
 		"lantern_winter",
@@ -737,6 +754,7 @@ PREFAB_SKINS = {
 		"treasurechest_steamertrunk",
 		"treasurechest_traincase",
 		"treasurechest_traveltrunk",
+		"treasurechest_vintage",
 	},
 	umbrella = 
 	{

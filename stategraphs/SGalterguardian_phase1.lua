@@ -65,7 +65,7 @@ local events =
 
 local TARGET_MUSTHAVE_TAGS = { "_health", "_combat" }
 local TARGET_CANT_TAGS = { "brightmareboss", "brightmare", "INLIMBO" }
-local TARGET_ONEOF_TAGS = { "animal", "character", "monster" }
+local TARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
 local function DoAOEAttack(inst, range)
     local x,y,z = inst.Transform:GetWorldPosition()
     local targets = TheSim:FindEntities(
@@ -149,6 +149,7 @@ local states =
             inst.AnimState:SetBuild("alterguardian_spawn_death")
             inst.AnimState:SetBankAndPlayAnimation("alterguardian_spawn_death", "phase1_spawn")
             inst.components.health:SetInvincible(true)
+            inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/spawn")
         end,
 
         events =

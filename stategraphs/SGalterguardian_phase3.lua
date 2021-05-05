@@ -210,7 +210,7 @@ local function SpawnSweep(inst, target_pos)
 end
 
 local function laser_sound(inst)
-    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_beam_laser")
+    -- inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_beam_laser")
 end
 
 local function start_summon_circle(inst)

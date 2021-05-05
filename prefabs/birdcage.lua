@@ -83,7 +83,7 @@ local function DigestFood(inst, food)
         end
     else
         if inst.components.occupiable and inst.components.occupiable:GetOccupant() and inst.components.occupiable:GetOccupant():HasTag("bird_mutant") then
-            inst.components.lootdropper:SpawnLootPrefab("rottenegg")
+            inst.components.lootdropper:SpawnLootPrefab("spoiled_food")
 
         else
             local seed_name = string.lower(food.prefab .. "_seeds")

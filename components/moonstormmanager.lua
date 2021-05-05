@@ -63,8 +63,9 @@ local SCREENDIST = 30
 local MIN_NODES = 4
 local MAX_NODES = 10
 
+local BIRDBLOCKER_TAGS = {"birdblocker"}
 local function customcheckfn(pt)
-	return TheWorld.net.components.moonstorms ~= nil and TheWorld.net.components.moonstorms:IsPointInMoonstorm(pt) or false	 
+	return #(TheSim:FindEntities(pt.x, 0, pt.z, 4, BIRDBLOCKER_TAGS)) == 0 and TheWorld.net.components.moonstorms ~= nil and TheWorld.net.components.moonstorms:IsPointInMoonstorm(pt) or false	 
 end
 
 local function screencheckfn(pt)
@@ -583,19 +584,23 @@ function self:beginWagstaffDefence()
 	end
 end
 
+
 function self:SpawnGestalt(angle, prefab)
 	if self.wagstaff and self.wagstaff:IsValid() then
 		local pos = Vector3(self.wagstaff.Transform:GetWorldPosition())
 		local gestalt = SpawnPrefab(prefab)
 
 		local newpos = FindWalkableOffset(pos, angle + (math.random()*PI/4), 16 + math.random()*8 , 16, nil, nil, customcheckfn, nil, nil)
-		pos = pos + newpos
-		pos.y = 15
-		gestalt.Transform:SetPosition(pos.x,pos.y,pos.z)
-		if self.wagstaff.static then
-			gestalt.components.entitytracker:TrackEntity("swarmTarget", self.wagstaff.static)
+
+		if newpos then
+			pos = pos + newpos
+			pos.y = 15
+			gestalt.Transform:SetPosition(pos.x,pos.y,pos.z)
+			if self.wagstaff.static then
+				gestalt.components.entitytracker:TrackEntity("swarmTarget", self.wagstaff.static)
+			end
+			gestalt:PushEvent("arrive")
 		end
-		gestalt:PushEvent("arrive")
 	end
 end
 
@@ -751,8 +756,10 @@ function self:OnLoad(data)
 	if data ~= nil then
 		if data._alterguardian_defeated_count then
 			_alterguardian_defeated_count = data._alterguardian_defeated_count
-			if _alterguardian_defeated_count > 0 then
-				TheWorld:PushEvent("ms_setmoonphasestyle", {style = "glassed_default"})
+			if _alterguardian_defeated_count > 0 then	
+				self.inst:DoTaskInTime(0,function()			
+					TheWorld:PushEvent("ms_setmoonphasestyle", {style = "glassed_default"})
+				end)
 			end
 		end
 

@@ -65,7 +65,7 @@ local function OnHitBile(inst, attacker, target)
     local pt = Vector3(inst.Transform:GetWorldPosition())
     local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, 2)
     for i,ent in ipairs(ents) do
-        if ent.components.combat then
+        if ent.components.combat and not ent:HasTag("INLIMBO") and not ent:HasTag("playerghost") then
             ent.components.combat:GetAttacked(inst, TUNING.MUTANT_BIRD_SPLASH_DAMAGE)
         end
     end

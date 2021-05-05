@@ -137,6 +137,7 @@ local states=
 				inst:ForceFacePoint(inst.components.combat.target.Transform:GetWorldPosition())
 			end
 	        inst.components.combat:StartAttack()
+            inst.SoundEmitter:PlaySound(inst.sounds.chirp)
 		end,
         
         timeline=
@@ -172,6 +173,7 @@ local states=
 
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("attack")
+            inst.SoundEmitter:PlaySound(inst.sounds.spit_pre)
         end,
 
         timeline =
@@ -180,6 +182,8 @@ local states=
                 if inst.sg.statemem.target and inst.sg.statemem.target:IsValid() then
                     inst.sg.statemem.spitpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())            
                     inst:LaunchProjectile(inst.sg.statemem.spitpos)
+
+                    inst.SoundEmitter:PlaySound(inst.sounds.chirp)
 
                     inst.components.timer:StopTimer("spit_cooldown")
                     inst.components.timer:StartTimer("spit_cooldown", 3 + math.random()*3)

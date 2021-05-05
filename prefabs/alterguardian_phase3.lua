@@ -100,7 +100,7 @@ end
 local TARGET_DSQ = (1.9*TUNING.ALTERGUARDIAN_PHASE3_TARGET_DIST)^2
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
+local RETARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
 local function Retarget(inst)
     local spawnpoint_position = inst.components.knownlocations:GetLocation("spawnpoint")
 
@@ -331,6 +331,7 @@ local function fn()
     inst:AddTag("largecreature")
     inst:AddTag("mech")
     inst:AddTag("monster")
+    inst:AddTag("noepicmusic")
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
 
@@ -369,6 +370,8 @@ local function fn()
     inst.components.combat.playerdamagepercent = TUNING.ALTERGUARDIAN_PLAYERDAMAGEPERCENT
     inst.components.combat.noimpactsound = true
     inst.components.combat:SetHurtSound("moonstorm/creatures/boss/alterguardian1/onothercollide")
+
+    inst:AddComponent("explosiveresist")
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aurafn = CalcSanityAura

@@ -193,7 +193,7 @@ Recipe("gunpowder", {Ingredient("rottenegg", 1), Ingredient("charcoal", 1), Ingr
 Recipe("lightning_rod", {Ingredient("goldnugget", 4), Ingredient("cutstone", 1)}, RECIPETABS.SCIENCE,  TECH.SCIENCE_ONE, "lightning_rod_placer")
 Recipe("firesuppressor", {Ingredient("gears", 2),Ingredient("ice", 15),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE,  TECH.SCIENCE_TWO, "firesuppressor_placer")
 Recipe("turfcraftingstation", {Ingredient("thulecite", 1), Ingredient("cutstone", 3), Ingredient("wetgoop", 1)}, RECIPETABS.SCIENCE,  TECH.LOST, "turfcraftingstation_placer")
-Recipe("moon_device_construction1", {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE, TECH.LOST, {placer = "moon_device_construction1_placer", no_deconstruction = true})
+Recipe("moon_device_construction1", {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}, RECIPETABS.SCIENCE, TECH.LOST, {placer = "moon_device_construction1_placer", no_deconstruction = true}, 0)
 
 --MAGIC
 Recipe("abigail_flower", {Ingredient("ghostflower", 1), Ingredient("nightmarefuel", 1)}, RECIPETABS.MAGIC, TECH.NONE, nil, nil, nil, nil, "ghostlyfriend")

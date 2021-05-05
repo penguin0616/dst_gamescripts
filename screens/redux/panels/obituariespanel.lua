@@ -237,7 +237,11 @@ local function obit_widget_update(context, widget, data, index)
     widget.CAUSE:SetTruncatedString(GetKilledByFromMorgueRow(data), widget.CAUSE._align.maxwidth, widget.CAUSE._align.maxchars, true)
     LeftAlignText(widget.CAUSE, "CAUSE")
 
-    widget.MODE:SetTruncatedString(ServerPreferences:IsNameAndDescriptionHidden(data.server) and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or data.server or "", widget.MODE._align.maxwidth, widget.MODE._align.maxchars, true)
+    local filtered_text = data.server
+    if TheSim:IsSteamChinaClient() then
+        filtered_text = TheSim:ApplyLocalWordFilter(filtered_text, TEXT_FILTER_CTX_UNKNOWN)
+    end
+    widget.MODE:SetTruncatedString(ServerPreferences:IsNameAndDescriptionHidden(data.server) and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or filtered_text or "", widget.MODE._align.maxwidth, widget.MODE._align.maxchars, true)
     LeftAlignText(widget.MODE, "MODE")
 end
 

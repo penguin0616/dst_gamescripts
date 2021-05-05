@@ -18,8 +18,6 @@ local trap_prefabs =
 SetSharedLootTable("moonglass_trap",
 {
     {"moonglass",   1.00},
-    {"moonglass",   1.00},
-    {"moonglass",   0.50},
 })
 
 local function set_guardian(inst, guardian)
@@ -316,7 +314,7 @@ local function trap_fn()
     inst:ListenForEvent("onalterguardianlasered", spawn_gestalt)
 
     inst.components.timer:StartTimer("start_charge", START_CHARGE_TIME)
-    inst.components.timer:StartTimer("trap_lifetime", TUNING.SEG_TIME + math.random() * TUNING.SEG_TIME)
+    inst.components.timer:StartTimer("trap_lifetime", TUNING.ALTERGUARDIAN_PHASE3_TRAP_LT + 10*math.random())
 
     return inst
 end

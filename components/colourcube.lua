@@ -255,7 +255,7 @@ local function OnSanityDelta(player, data)
         PostProcessor:SetLunacyEnabled(false)
     end
 
-	_fxspeed = easing.outQuad(1 - sanity_distortion, 0, .2, 1)
+	_fxspeed = easing.outQuad(1 - sanity_percent, 0, .2, 1)
 end
 
 local function OnOverrideCCTable(player, cctable)

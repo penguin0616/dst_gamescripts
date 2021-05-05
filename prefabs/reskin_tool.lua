@@ -103,9 +103,9 @@ local function spellCB(tool, target, pos)
 
         if target:IsValid() and tool:IsValid() then
             local curr_skin = is_beard and target.components.beard.skinname or target.skinname
-            if curr_skin == tool._cached_reskinname[prefab_to_skin] then
+            local search_for_skin = tool._cached_reskinname[prefab_to_skin] ~= nil --also check if it's owned
+            if curr_skin == tool._cached_reskinname[prefab_to_skin] or (search_for_skin and not TheInventory:CheckClientOwnership(tool.parent.userid, tool._cached_reskinname[prefab_to_skin])) then
                 local new_reskinname = nil
-                local search_for_skin = tool._cached_reskinname[prefab_to_skin] ~= nil
 
                 if PREFAB_SKINS[prefab_to_skin] ~= nil then
                     for _,item_type in pairs(PREFAB_SKINS[prefab_to_skin]) do

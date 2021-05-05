@@ -57,8 +57,18 @@ end
 
 local function CheckPointValid(x, y, z)
     if TheWorld.Map:IsPassableAtPoint(x, y, z, false, true) and TheWorld.Map:IsAboveGroundAtPoint(x, y, z, false) then
-        local ents = TheSim:FindEntities(x, y, z, TUNING.MOON_ALTAR_LINK_AREA_CLEAR_RADIUS, TUNING.MOON_ALTAR_LINK_BLOCK_TAGS)
-        return ents == nil or #ents == 0
+        local ents = TheSim:FindEntities(x, y, z, 10) -- 10: at least the size of the largest deploy_extra_spacing
+        for _, v in ipairs(ents) do
+            local pt = Point(x, 0, z)
+            
+            if (v:HasTag("antlion_sinkhole_blocker") and v:GetDistanceSqToPoint(pt) <= TUNING.MOON_ALTAR_LINK_POINT_VALID_RADIUS_SQ)
+                or (v.deploy_extra_spacing ~= nil and v:GetDistanceSqToPoint(pt) <= v.deploy_extra_spacing * v.deploy_extra_spacing) then
+                
+                return false
+            end
+        end
+
+        return true
     end
 
     return false
@@ -238,7 +248,12 @@ local function OnLoadPostPass(inst)
 
         local x, _, z = inst.Transform:GetWorldPosition()
         
-        if min_distance_valid and CheckPointValid(x, 0, z) then
+        local keep_link = min_distance_valid
+            and CheckPointValid(x, 0, z)
+            and moon_altar.components.moonaltarlinktarget:AngleTest(moon_altar_cosmic, moon_altar_astral)
+            and moon_altar_cosmic.components.moonaltarlinktarget:AngleTest(moon_altar_astral, moon_altar)
+
+        if keep_link then
             inst.components.moonaltarlink:EstablishLink({ moon_altar, moon_altar_cosmic, moon_altar_astral })
         else
             moon_altar._force_on = false

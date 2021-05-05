@@ -80,7 +80,7 @@ local fx =
         bank = "bird_bileshoot",
         build = "bird_bileshoot",
         anim = "splash",
-        sound = "turnoftides/common/together/water/splash/bird",
+        sound = "moonstorm/creatures/mutated_crow/bile_shoot_splash",
         fn = FinalOffset1,
     },    
     {

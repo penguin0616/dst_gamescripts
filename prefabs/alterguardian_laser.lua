@@ -31,7 +31,7 @@ local function DisableLight(inst)
     inst.Light:Enable(false)
 end
 
-local DAMAGE_CANT_TAGS = { "brightmareboss", "brightmare", "playerghost", "INLIMBO", "DECOR" }
+local DAMAGE_CANT_TAGS = { "brightmareboss", "brightmare", "playerghost", "INLIMBO", "DECOR", "FX" }
 local DAMAGE_ONEOF_TAGS = { "_combat", "pickable", "NPC_workable", "CHOP_workable", "HAMMER_workable", "MINE_workable", "DIG_workable" }
 local LAUNCH_MUST_TAGS = { "_inventoryitem" }
 local LAUNCH_CANT_TAGS = { "locomotor", "INLIMBO" }

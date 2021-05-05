@@ -67,7 +67,7 @@ end
 
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
+local RETARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
 
 local function spawn_spike_with_target(inst, data)
     if not data then
@@ -336,6 +336,7 @@ local function fn()
     inst:AddTag("largecreature")
     inst:AddTag("mech")
     inst:AddTag("monster")
+    inst:AddTag("noepicmusic")
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
 
@@ -374,6 +375,8 @@ local function fn()
     inst.components.combat.playerdamagepercent = TUNING.ALTERGUARDIAN_PLAYERDAMAGEPERCENT
     inst.components.combat.noimpactsound = true
     inst.components.combat:SetHurtSound("moonstorm/creatures/boss/alterguardian1/onothercollide")
+
+    inst:AddComponent("explosiveresist")
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aurafn = CalcSanityAura

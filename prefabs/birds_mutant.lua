@@ -137,6 +137,8 @@ local function commonPreMain(inst)
     inst.sounds =
     {
         flyin = "dontstarve/birds/flyin",
+        chirp = "moonstorm/creatures/mutated_crow/chirp",
+        takeoff = "moonstorm/creatures/mutated_crow/take_off"
     }
 
     --Initialize physics
@@ -175,7 +177,7 @@ local function commonPostMain(inst)
     inst.components.eater:SetDiet({ FOODTYPE.SEEDS }, { FOODTYPE.SEEDS })
 
     inst:AddComponent("sanityaura")
-	inst.components.sanityaura.aura = TUNING.SANITYAURA_MED
+	inst.components.sanityaura.aura = -TUNING.SANITYAURA_SMALL
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.walkspeed = TUNING.MUTANT_BIRD_WALK_SPEED
@@ -248,6 +250,14 @@ local function spitterfn()
 	inst = commonPreMain(inst)
     inst.AnimState:SetBuild("bird_mutant_spitter_build")
     inst.AnimState:SetBank("mutated_robin")
+
+    inst.sounds =
+    {
+        flyin = "dontstarve/birds/flyin",
+        chirp = "moonstorm/creatures/mutated_robin/chirp",
+        takeoff = "moonstorm/creatures/mutated_robin/take_off",
+        spit_pre = "moonstorm/creatures/mutated_crow/bile_shoot_spin_pre",
+    }
 
 	inst:AddTag("bird_mutant_spitter")
 

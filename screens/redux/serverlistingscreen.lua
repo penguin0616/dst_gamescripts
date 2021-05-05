@@ -624,16 +624,24 @@ function ServerListingScreen:UpdateServerData(selected_index_actual)
 
 		self.details_hidden_name = hide_name
 
+        local filtered_name = self.selected_server.name
+        if TheSim:IsSteamChinaClient() then
+            filtered_name = TheSim:ApplyLocalWordFilter(filtered_name, TEXT_FILTER_CTX_UNKNOWN)
+        end
         self.details_servername:SetMultilineTruncatedString(
-            hide_name and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or self.selected_server.name,
+            hide_name and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or filtered_name,
             self.details_servername._align.maxlines,
             self.details_servername._align.maxwidth,
             self.details_servername._align.maxchars,
             true
         )
 
+        local filtered_desc = self.selected_server.description
+        if TheSim:IsSteamChinaClient() then
+            filtered_desc = TheSim:ApplyLocalWordFilter(filtered_desc, TEXT_FILTER_CTX_UNKNOWN)
+        end
         self.details_serverdesc:SetMultilineTruncatedString(
-            hide_name and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_DESCRIPTION or self.selected_server.has_details and (self.selected_server.description ~= "" and self.selected_server.description or STRINGS.UI.SERVERLISTINGSCREEN.NO_DESC) or STRINGS.UI.SERVERLISTINGSCREEN.DESC_LOADING,
+            hide_name and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_DESCRIPTION or self.selected_server.has_details and (filtered_desc ~= "" and filtered_desc or STRINGS.UI.SERVERLISTINGSCREEN.NO_DESC) or STRINGS.UI.SERVERLISTINGSCREEN.DESC_LOADING,
             self.details_serverdesc._align.maxlines,
             self.details_serverdesc._align.maxwidth,
             self.details_serverdesc._align.maxchars,
@@ -1095,8 +1103,11 @@ function ServerListingScreen:MakeServerListWidgets()
             end
 
 			local hide_name = ServerPreferences:IsNameAndDescriptionHidden(serverdata)
-
-            widget.NAME:SetTruncatedString(hide_name and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME_LISTING or serverdata.name, widget.NAME._align.maxwidth, widget.NAME._align.maxchars, true)
+            local filtered_text = serverdata.name
+            if TheSim:IsSteamChinaClient() then
+                filtered_text = TheSim:ApplyLocalWordFilter(filtered_text, TEXT_FILTER_CTX_UNKNOWN)
+            end
+            widget.NAME:SetTruncatedString(hide_name and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME_LISTING or filtered_text, widget.NAME._align.maxwidth, widget.NAME._align.maxchars, true)
             local w, h = widget.NAME:GetRegionSize()
             widget.NAME:SetPosition(widget.NAME._align.x + w * .5, widget.NAME._align.y, 0)
 

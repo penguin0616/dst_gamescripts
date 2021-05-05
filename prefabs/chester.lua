@@ -76,8 +76,34 @@ local function OnStartFollowing(inst)
     inst:AddTag("companion")
 end
 
+local function SetBuild(inst)
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        local state = ""
+        if inst.ChesterState == "SHADOW" then
+            state = "_shadow"
+        elseif inst.ChesterState == "SNOW" then
+            state = "_snow"
+        end
+
+        inst.AnimState:OverrideItemSkinSymbol("chester_body", skin_build, "chester_body" .. state, inst.GUID, "chester_build")
+        inst.AnimState:OverrideItemSkinSymbol("chester_foot", skin_build, "chester_foot" .. state, inst.GUID, "chester_build")
+        inst.AnimState:OverrideItemSkinSymbol("chester_lid", skin_build, "chester_lid" .. state, inst.GUID, "chester_build")
+        inst.AnimState:OverrideItemSkinSymbol("chester_tongue", skin_build, "chester_tongue" .. state, inst.GUID, "chester_build")
+    else
+        inst.AnimState:ClearAllOverrideSymbols()
+
+        if inst.ChesterState == "SHADOW" then
+            inst.AnimState:SetBuild("chester_shadow_build")
+        elseif inst.ChesterState == "SNOW" then
+            inst.AnimState:SetBuild("chester_snow_build")
+        else
+            inst.AnimState:SetBuild("chester_build")        
+        end
+    end
+end
+
 local function MorphShadowChester(inst)
-    inst.AnimState:SetBuild("chester_shadow_build")
     inst:AddTag("spoiler")
     inst.MiniMapEntity:SetIcon("chestershadow.png")
     inst.components.maprevealable:SetIcon("chestershadow.png")
@@ -91,10 +117,10 @@ local function MorphShadowChester(inst)
 
     inst.ChesterState = "SHADOW"
     inst._isshadowchester:set(true)
+    SetBuild(inst)
 end
 
 local function MorphSnowChester(inst)
-    inst.AnimState:SetBuild("chester_snow_build")
     inst:AddTag("fridge")
     inst.MiniMapEntity:SetIcon("chestersnow.png")
     inst.components.maprevealable:SetIcon("chestersnow.png")
@@ -106,6 +132,7 @@ local function MorphSnowChester(inst)
 
     inst.ChesterState = "SNOW"
     inst._isshadowchester:set(false)
+    SetBuild(inst)
 end
 
 --[[
@@ -323,6 +350,7 @@ local function create_chester()
 
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad
+    inst.SetBuild = SetBuild
 
     return inst
 end

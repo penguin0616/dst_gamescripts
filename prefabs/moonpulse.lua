@@ -52,7 +52,7 @@ local function SmallWaveFX(inst)
     inst.num_spawn_wisps = 8
     SpawnWisp(inst)
 
-    -- TheFocalPoint.SoundEmitter:PlaySound("hookline_2/common/moon_alter/idol/place2")
+    TheFocalPoint.SoundEmitter:PlaySound("grotto/common/moon_alter/link/wave1")
 end
 
 local function BigWaveFX(inst)
@@ -72,7 +72,7 @@ local function BigWaveFX(inst)
     inst.num_spawn_wisps = 17
     SpawnWisp(inst)
 
-    -- TheFocalPoint.SoundEmitter:PlaySound("hookline_2/common/moon_alter/idol/place3")
+    TheFocalPoint.SoundEmitter:PlaySound("grotto/common/moon_alter/link/wave2")
 end
 
 local STAGES =
