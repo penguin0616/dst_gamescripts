@@ -62,7 +62,7 @@ end
 
 local function findfirstbox(category, motd_info)
 	for id, v in pairs(motd_info) do
-		if v.data.category == category and (v.data.group_order == nil or v.data.group_order == 1) then
+		if v.data.category == category and (v.data.group_order == nil or v.data.group_order == 1) and not v.data.hidden then
 			return id
 		end
 	end
@@ -127,7 +127,7 @@ function MotdManager:MakeSortedKeys(motd_info)
 
 	local sorted_keys = {}
 	for k, cell in pairs(motd_info) do
-		if k ~= box2 and k ~= box3 then
+		if k ~= box2 and k ~= box3 and not cell.data.hidden then
 			table.insert(sorted_keys, k)
 		end
 	end
@@ -208,6 +208,7 @@ local function makefakemotd()
 
 -- date - show date
 -- finish-time: this box will be hidden once it expires
+-- start-time: this box will be hidden until after this time, do not hide anything secret with this as the data will still be live
 -- title: the main title to show
 -- text: optional sub text at the bottom of the box, normally contains information about dates
 -- image: url for the image to download for this box
@@ -314,15 +315,16 @@ local function makefakemotd()
 						href = "https://forums.kleientertainment.com/forums/topic/115557-dont-starve-together-roadmap-2020/",
 					},
 					{
-						guid = "j4dda89e-5db1-4433-a343-74515503a2d6",
-						title = "Don't Starve Funko Pop",
+						guid = "j4dd289e-5db1-4433-a343-74515503a2d6",
+						title = "Don't Starve Funko Pop start-time" ,
+						['start-time'] = 1620318341,
 						text = "Click for retail locations near you.",
 						image = "https://s3.amazonaws.com/ds-motd/converted/pop-motd.tex",
 						href = "https://shop.klei.com/dont-starve-funko-pops/",
 					},
 					{
-						guid = "h4dda89e-5db1-4433-a343-74515503a2d1",
-						title = "This is about news",
+						guid = "h4dd289e-5db1-4433-a343-74515503a2d1",
+						title = "finish-time box!",
 						["finish-time"] = "1616781756",
 						text = "This is the description for some news",
 						image = "https://ds-motd.s3.amazonaws.com/converted/yotb/dst_yotb_victorian_bundle_motd.tex",
@@ -380,48 +382,49 @@ local function reformat_motd(src_motd)
 			cat = string.lower(cat)
 			for i, src_box in ipairs(cat_data) do
 				if src_box.guid ~= nil and src_box.guid ~= "" then
+					local box = {}
+					box.category = category_order[cat] ~= nil and cat or "none"
+
 					local expiry_time = tonumber(src_box["finish-time"]) or 0
-					if expiry_time == 0 or expiry_time > cur_time then
-						local box = {}
-						box.category = category_order[cat] ~= nil and cat or "none"
+					local start_time = tonumber(src_box["start-time"]) or 0
+					box.hidden = (start_time > 0 and cur_time <= start_time) or (expiry_time > 0 and cur_time > expiry_time)
 
-						box.title = src_box.title ~= nil and convert_epoch_time_str(src_box.title) or nil
-						box.text = src_box.text ~= nil and convert_epoch_time_str(src_box.text) or nil
-						box.details = src_box.details ~= nil and convert_epoch_time_str(src_box.details) or nil
+					box.title = src_box.title ~= nil and convert_epoch_time_str(src_box.title) or nil
+					box.text = src_box.text ~= nil and convert_epoch_time_str(src_box.text) or nil
+					box.details = src_box.details ~= nil and convert_epoch_time_str(src_box.details) or nil
 
-						box.image_url = (src_box.image ~= nil and type(src_box.image) == "string" and string.match(src_box.image, ".tex")) and src_box.image or nil
+					box.image_url = (src_box.image ~= nil and type(src_box.image) == "string" and string.match(src_box.image, ".tex")) and src_box.image or nil
 
-						box.link_url = src_box.href
-						if src_box.filter_discount or src_box.filter_menu ~= nil then
-							box.filter_info = { initial_item_key = src_box.filter_menu, filter_menu = src_box.filter_menu }
-						end
-
-						box.weight = tonumber(src_box.weight) or 1
-
-						local box_id = "ID_" .. tostring(src_box.guid)
-						if data[box_id] ~= nil then
-							print("[MOTD] duplicate box id " .. tostring(box_id))
-						end
-
-						if src_box.group ~= nil and src_box.group ~= "" then
-							local group_id = cat.."_"..src_box.group
-							if group_root[group_id] == nil then
-								group_root[group_id] = box_id
-
-								box.group_order = group_order
-
-								data[box_id] = {box}
-							else
-								box.group_order = data[ group_root[group_id] ][1].group_order
-								table.insert( data[ group_root[group_id] ], box)
-							end
-						else
-							box.group_order = group_order
-							data[box_id] = {box}
-						end
-
-						group_order = group_order + 1
+					box.link_url = src_box.href
+					if src_box.filter_discount or src_box.filter_menu ~= nil then
+						box.filter_info = { initial_item_key = src_box.filter_menu, filter_menu = src_box.filter_menu }
 					end
+
+					box.weight = tonumber(src_box.weight) or 1
+
+					local box_id = "ID_" .. tostring(src_box.guid)
+					if data[box_id] ~= nil then
+						print("[MOTD] duplicate box id " .. tostring(box_id))
+					end
+
+					if src_box.group ~= nil and src_box.group ~= "" then
+						local group_id = cat.."_"..src_box.group
+						if group_root[group_id] == nil then
+							group_root[group_id] = box_id
+
+							box.group_order = group_order
+
+							data[box_id] = {box}
+						else
+							box.group_order = data[ group_root[group_id] ][1].group_order
+							table.insert( data[ group_root[group_id] ], box)
+						end
+					else
+						box.group_order = group_order
+						data[box_id] = {box}
+					end
+
+					group_order = group_order + 1
 				else
 					print("[MOTD] error parsing message:", tostring(src_box.guid), tostring(src_box.title))
 				end
@@ -475,13 +478,14 @@ function MotdManager:DownloadMotdInfo(remaining_retries)
 					if self.motd_info[box_id] ~= nil and self.motd_info[box_id].meta ~= nil and not ALWAYS_NEW then
 						cell.meta = self.motd_info[box_id].meta
 						cell.meta.is_new = cell.meta.last_seen == nil
-						if cell.data.image_url ~= cell.meta.image_url or ALWAYS_DOWNLOAD_IMAGES then
+						if cell.data.image_url ~= cell.meta.image_url or cell.data.hidden or ALWAYS_DOWNLOAD_IMAGES then
 							cell.meta.image_file = nil -- the image has changed, download a new one
 						end
 					else
 						cell.meta = {}
 						cell.meta.is_new = true
 					end
+
 					motd_info[box_id] = cell
 				end
 

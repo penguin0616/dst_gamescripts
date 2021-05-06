@@ -117,7 +117,6 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         Asset("ANIM", "anim/"..(inventoryimage or name)..".zip"),
     }
 
-    --Note(Peter): Looks like nothing users variations anymore. We might want to refactor to simplify this
     if variations ~= nil then
         for i = 1, variations do
             if onesize then
@@ -149,7 +148,6 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
     local function UpdateInventoryImage(inst)
         local suffix = inst.suffix or "_small"
         if variations ~= nil then
-            --Note(Peter): i believe this block is unused
             if inst.variation == nil then
                 inst.variation = math.random(variations)
             end
@@ -182,7 +180,10 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         inst.suffix = suffix
         
         UpdateInventoryImage(inst)
-
+        
+        if inst.variation then
+            suffix = suffix..tostring(inst.variation)
+        end
         inst.AnimState:PlayAnimation("idle"..suffix)
 
         if doer ~= nil and doer.SoundEmitter ~= nil then

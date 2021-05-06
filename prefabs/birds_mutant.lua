@@ -43,7 +43,9 @@ local function LaunchProjectile(inst, targetpos)
     local speed = easing.linear(rangesq, 15, 1, maxrange * maxrange)
     projectile.components.complexprojectile:SetHorizontalSpeed(speed)
     projectile.components.complexprojectile:SetGravity(-35)
-    projectile.components.complexprojectile:Launch(targetpos, inst, inst)
+    projectile.components.complexprojectile:Launch(targetpos, inst, inst)   
+    
+    projectile.shooter = inst
 end
 
 local function IsNearInvadeTarget(inst, dist)
@@ -138,7 +140,8 @@ local function commonPreMain(inst)
     {
         flyin = "dontstarve/birds/flyin",
         chirp = "moonstorm/creatures/mutated_crow/chirp",
-        takeoff = "moonstorm/creatures/mutated_crow/take_off"
+        takeoff = "moonstorm/creatures/mutated_crow/take_off",
+        attack = "moonstorm/creatures/mutated_crow/attack",
     }
 
     --Initialize physics
@@ -256,7 +259,8 @@ local function spitterfn()
         flyin = "dontstarve/birds/flyin",
         chirp = "moonstorm/creatures/mutated_robin/chirp",
         takeoff = "moonstorm/creatures/mutated_robin/take_off",
-        spit_pre = "moonstorm/creatures/mutated_crow/bile_shoot_spin_pre",
+        attack = "moonstorm/creatures/mutated_robin/attack",
+        spit_pre = "moonstorm/creatures/mutated_robin/bile_shoot_spin_pre",
     }
 
 	inst:AddTag("bird_mutant_spitter")

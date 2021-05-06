@@ -31,6 +31,7 @@ function Bundler:StartBundling(item)
                     self.bundlinginst.entity:SetParent(self.inst.entity)
                     self.bundlinginst.persists = false
                     self.itemprefab = item.prefab
+                    self.itemskinname = item.skinname
                     self.wrappedprefab = item.components.bundlemaker.bundledprefab
                     self.wrappedskinname = item.components.bundlemaker.bundledskinname
                     self.wrappedskin_id = item.components.bundlemaker.bundledskin_id
@@ -77,7 +78,7 @@ function Bundler:StopBundling()
         self.bundlinginst = nil
     end
     if self.itemprefab ~= nil then
-        local item = SpawnPrefab(self.itemprefab)
+        local item = SpawnPrefab(self.itemprefab, self.itemskinname, self.wrappedskin_id )
         if item ~= nil then
             if self.inst.components.inventory ~= nil then
                 self.inst.components.inventory:GiveItem(item, nil, self.inst:GetPosition())

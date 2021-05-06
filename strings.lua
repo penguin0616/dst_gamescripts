@@ -5700,6 +5700,7 @@ STRINGS.UI =
             "Anne-Marie Cyr",
             "Matthew Barry",
             "Zachary Lockwood",
+            "Amanda Niles",
         },
 
         ALTGAMES =

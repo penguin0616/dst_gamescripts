@@ -77,6 +77,7 @@ local states=
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("caw")
+            inst.SoundEmitter:PlaySound(inst.sounds.chirp)
         end,
 
         events =
@@ -137,7 +138,7 @@ local states=
 				inst:ForceFacePoint(inst.components.combat.target.Transform:GetWorldPosition())
 			end
 	        inst.components.combat:StartAttack()
-            inst.SoundEmitter:PlaySound(inst.sounds.chirp)
+            inst.SoundEmitter:PlaySound(inst.sounds.attack)
 		end,
         
         timeline=
@@ -255,6 +256,7 @@ local states=
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("caw")
+            inst.SoundEmitter:PlaySound(inst.sounds.chirp)            
         end,
         events =
         {

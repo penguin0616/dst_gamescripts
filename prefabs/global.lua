@@ -262,8 +262,10 @@ local assets =
 
     Asset("SHADER", "shaders/waves.ksh"),
     Asset("SHADER", "shaders/overheat.ksh"),
-    Asset("SHADER", "shaders/moonstorm.ksh"),
-    Asset("SHADER", "shaders/moonstorm_goggles.ksh"),
+    Asset("SHADER", "shaders/moonstorm.ksh", 1), --1 to indicate do a fallback if needed
+    Asset("PKGREF", "shaders/moonstorm_fallback.ksh" ),
+    Asset("SHADER", "shaders/moonstorm_goggles.ksh", 1), --1 to indicate do a fallback if needed
+    Asset("PKGREF", "shaders/moonstorm_goggles_fallback.ksh" ),
 
     Asset("SHADER", "shaders/anim.ksh"),
     Asset("SHADER", "shaders/anim_bloom.ksh"),

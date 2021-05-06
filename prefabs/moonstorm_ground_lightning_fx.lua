@@ -19,6 +19,11 @@ local function convertnodelist(data)
 end
 
 local function checkspawn(inst)
+    
+    if not ThePlayer then
+        return
+    end
+
     local pos = Vector3(inst.Transform:GetWorldPosition())
 
     local radius = 8
@@ -55,6 +60,7 @@ local function checkspawn(inst)
         newfx.Transform:SetRotation(inst.Transform:GetRotation() + (anglemod/DEGREES))
         newfx.anglemod = anglemod
     end
+
 end
 
 local function fn(pondtype)
