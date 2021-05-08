@@ -208,21 +208,6 @@ local function fn()
 
     inst:AddComponent("stackable")
 
-    inst:AddComponent("burnable")
-    inst.components.burnable:SetFXLevel(1)
-    inst.components.burnable:SetBurnTime(1)
-    inst.components.burnable:AddBurnFX("fire", Vector3(0, 0, 0), "spore")
-    inst.components.burnable:SetOnIgniteFn(DefaultBurnFn)
-    inst.components.burnable:SetOnBurntFn(DefaultBurntFn)
-    inst.components.burnable:SetOnExtinguishFn(DefaultExtinguishFn)
-
-    inst:AddComponent("propagator")
-    inst.components.propagator.acceptsheat = true
-    inst.components.propagator:SetOnFlashPoint(DefaultIgniteFn)
-    inst.components.propagator.flashpoint = 1
-    inst.components.propagator.decayrate = 0.5
-    inst.components.propagator.damages = false
-
     MakeHauntablePerish(inst, .5)
 
     inst:ListenForEvent("onputininventory", onpickup)

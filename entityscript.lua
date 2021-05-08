@@ -1513,7 +1513,7 @@ end
 function EntityScript:PutBackOnGround()
 	local x, y, z = self.Transform:GetWorldPosition()
     if not TheWorld.Map:IsPassableAtPoint(x, y, z, true) then
-        local dest = FindNearbyLand(self:GetPosition(), 8)
+        local dest = FindNearbyLand(self:GetPosition(), 8) or FindNearbyOcean(self:GetPosition(), 8)
         if dest ~= nil then
             if self.Physics ~= nil then
                 self.Physics:Teleport(dest:Get())

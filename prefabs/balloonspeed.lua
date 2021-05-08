@@ -210,8 +210,6 @@ local function map_fn()
     inst:DoTaskInTime(0, show_global_map_icon)
     inst:DoTaskInTime(TUNING.BALLOON_MAP_ICON_DURATION, inst.Remove)
 
-    inst.icon = SpawnPrefab("globalmapicon")
-
     inst.persists = false
 
     return inst

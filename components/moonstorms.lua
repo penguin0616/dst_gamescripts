@@ -116,13 +116,13 @@ function self:AddMoonstormNodes(node_indices, firstnode)
     end
 
     self._moonstorm_nodes:set(convertlist(_active_moonstorm_nodes))
-    TheWorld:PushEvent("ms_stormchanged",{stormtype=STORM_TYPES.MOONSTORM,setting=true})
+    TheWorld:PushEvent("ms_stormchanged",{stormtype=STORM_TYPES.MOONSTORM, setting=true})
     TheWorld:PushEvent("ms_moonstormwindowover")
 end
 
-function self:StopMoonstorm()
+function self:StopMoonstorm(is_relocating)
     self:ClearMoonstormNodes()
-    TheWorld:PushEvent("ms_stormchanged",{stormtype=STORM_TYPES.MOONSTORM,setting=false})
+    TheWorld:PushEvent("ms_stormchanged",{stormtype=STORM_TYPES.MOONSTORM, setting=is_relocating == true})
 end
 
 function self:ClearMoonstormNodes()

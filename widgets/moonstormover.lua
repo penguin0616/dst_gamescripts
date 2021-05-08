@@ -198,6 +198,15 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
     self.scroll_speed = 0.03
 
     self.player_position = nil -- cached and updated like this to reference previous position on every frame
+
+    self.get_view_size_fn = IsConsole() and TheSim:GetIsSplitScreen() and
+        (function()
+            return TheSim:GetViewportSize()
+        end)
+        or
+        (function()
+            return TheSim:GetWindowSize()
+        end)
     
     self:Hide()
 
@@ -239,7 +248,8 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
 end)
 
 function MoonstormOver:UpdateAlphaRangeShaderUniforms()
-    local w, h = TheSim:GetWindowSize()
+    local w, h = self.get_view_size_fn()
+
     self.dust:SetAlphaRange(w, h) -- Has nothing to do with alpha, just using the uniforms
 end
 

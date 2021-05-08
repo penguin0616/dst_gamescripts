@@ -111,6 +111,10 @@ function PostProcessor__index:SetMoonPulseParams(p1, p2, p3, p4)
     self:SetUniformVariable(UniformVariables.MOONPULSE_PARAMS, p1, p2, p3, p4)
 end
 
+function PostProcessor__index:SetMoonPulseGradingParams(p1, p2, p3, p4)
+    self:SetUniformVariable(UniformVariables.MOONPULSE_GRADING_PARAMS, p1, p2, p3, p4)
+end
+
 --only used for sampler effects, give samplers access to this vec4 uniform containing {buffer_width, buffer_height, 1 / buffer_width, 1 / buffer_height}
 UniformVariables.SAMPLER_PARAMS = hash("SAMPLER_PARAMS")
 
@@ -229,6 +233,13 @@ function BuildMoonPulseShader()
     PostProcessor:SetEffectUniformVariables(PostProcessorEffects.MoonPulse, UniformVariables.MOONPULSE_PARAMS)
 end
 
+function BuildMoonPulseGradingShader()
+    UniformVariables.MOONPULSE_GRADING_PARAMS = PostProcessor:AddUniformVariable("MOONPULSE_GRADING_PARAMS", 4)
+
+    PostProcessorEffects.MoonPulseGrading = PostProcessor:AddPostProcessEffect("shaders/postprocess_moonpulsegrading.ksh")
+    PostProcessor:SetEffectUniformVariables(PostProcessorEffects.MoonPulseGrading, UniformVariables.MOONPULSE_GRADING_PARAMS)
+end
+
 function BuildModShaders()
     local postinitfns = ModManager:GetPostInitFns("ModShadersInit")
 
@@ -246,6 +257,7 @@ function SortAndEnableShaders()
     PostProcessor:SetPostProcessEffectBefore(PostProcessorEffects.ZoomBlur, PostProcessorEffects.Bloom)
     PostProcessor:SetPostProcessEffectAfter(PostProcessorEffects.Lunacy, PostProcessorEffects.ColourCube)
     PostProcessor:SetPostProcessEffectAfter(PostProcessorEffects.MoonPulse, PostProcessorEffects.Lunacy)
+    PostProcessor:SetPostProcessEffectAfter(PostProcessorEffects.MoonPulseGrading, PostProcessorEffects.MoonPulse)
 
     --bool PostProcessor:EnablePostProcessEffect(effect_id, enabled) returns true if it successfully enabled/disabled the shader.
     PostProcessor:EnablePostProcessEffect(PostProcessorEffects.ColourCube, true)
@@ -257,6 +269,7 @@ function SortAndEnableShaders()
     ColourCube --Base Effect
     Lunacy
     MoonPulse
+    MoonPulseGrading
     --]]
 
     local postinitfns = ModManager:GetPostInitFns("ModShadersSortAndEnable")

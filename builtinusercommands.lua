@@ -118,7 +118,9 @@ AddUserCommand("rescue", {
     params = {},
     vote = false,
     serverfn = function(params, caller)
-        caller:PutBackOnGround()
+		if caller.PutBackOnGround ~= nil then
+	        caller:PutBackOnGround()
+		end
     end,
 })
 

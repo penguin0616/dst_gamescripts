@@ -393,6 +393,7 @@ local function ModSafeStartup()
 		BuildDistortShader()
 		BuildLunacyShader()
 		BuildMoonPulseShader()
+		BuildMoonPulseGradingShader()
 		BuildModShaders()
 		SortAndEnableShaders()
 	end

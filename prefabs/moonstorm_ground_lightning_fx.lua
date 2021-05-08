@@ -69,7 +69,6 @@ local function fn(pondtype)
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddNetwork()
 
     inst.AnimState:SetBuild("moonstorm_groundlight")
     inst.AnimState:SetBank("moonstorm_groundlight")
@@ -92,14 +91,8 @@ local function fn(pondtype)
     inst:AddTag("fx")
     inst:AddTag("NOCLICK")
 
-    inst.entity:SetPristine()
-
     inst:DoTaskInTime(13*FRAMES,function() checkspawn(inst) end)
     inst:ListenForEvent("animover", function() inst:Remove() end)
-
-    if not TheWorld.ismastersim then
-        return inst
-    end
 
     inst.SoundEmitter:PlaySound("moonstorm/common/moonstorm/electricity")
 

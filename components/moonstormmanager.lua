@@ -186,19 +186,6 @@ local function StopTheMoonstorms()
 	_moonstyle_altar = nil
 
     self:StopCurrentMoonstorm()
-	
-	if self.spawn_wagstaff_test_task then
-		self.spawn_wagstaff_test_task:Cancel()
-		self.spawn_wagstaff_test_task = nil
-	end
-	if self.moonstorm_spark_task then
-		self.moonstorm_spark_task:Cancel()
-		self.moonstorm_spark_task = nil
-	end
-	if self.moonstorm_lightning_task then
-		self.moonstorm_lightning_task:Cancel()
-		self.moonstorm_lightning_task = nil
-	end
 end
 
 local function on_day_change()
@@ -386,12 +373,10 @@ function self:StopCurrentMoonstorm()
 		self.moonstorm_lightning_task = nil
 	end
 
-	-- self:FailExperiment()
-
 	if TheWorld.net.components.moonstorms ~= nil then
-		TheWorld.net.components.moonstorms:StopMoonstorm()
+		local is_relocating = _moonstyle_altar ~= nil
+		TheWorld.net.components.moonstorms:StopMoonstorm(is_relocating)
 	end
-	TheWorld:PushEvent("ms_currentmoonstormstopped")
 	_currentbasenodeindex = nil
 	_currentnodes = nil
 	self.MoonStorm_Ending = true
@@ -482,7 +467,6 @@ function self:EndExperiment()
 			self.wagstaff.static:finished()
 		end
 
-		self:StopCurrentMoonstorm()
 		self:StartMoonstorm()
 	end
 	

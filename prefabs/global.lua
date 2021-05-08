@@ -255,6 +255,7 @@ local assets =
     Asset("SHADER", "shaders/postprocess_distort.ksh"),
     Asset("SHADER", "shaders/postprocess_lunacy.ksh"),
     Asset("SHADER", "shaders/postprocess_moonpulse.ksh"),
+    Asset("SHADER", "shaders/postprocess_moonpulsegrading.ksh"),
     Asset("SHADER", "shaders/postprocess_zoomblur.ksh"),
 
 	Asset("SHADER", "shaders/blendoceantexture.ksh"),

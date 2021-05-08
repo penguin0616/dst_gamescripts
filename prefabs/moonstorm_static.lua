@@ -99,7 +99,7 @@ local function fn()
     
     inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/idle_LP","loop")
 
-    inst:ListenForEvent("ms_currentmoonstormstopped", function() stormstopped(inst) end, TheWorld)
+    inst:ListenForEvent("ms_stormchanged", function(w, data) print("static:",  data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM) if data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM then stormstopped(inst) end end, TheWorld)
 
     inst:AddComponent("inspectable")
 

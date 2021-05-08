@@ -217,7 +217,7 @@ local function commonPostMain(inst)
     inst.components.lootdropper:SetChanceLootTable('bird_mutant')
 
 	inst:AddComponent("knownlocations")
-
+    MakeHauntablePanic(inst)
     MakeFeedableSmallLivestock(inst, TUNING.BIRD_PERISH_TIME, OnPutInInventory, OnDropped)
 
     inst:SetStateGraph("SGbird_mutant")

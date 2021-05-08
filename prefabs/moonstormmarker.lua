@@ -54,10 +54,6 @@ local function fn()
         return inst
     end
 
-    inst.icon = SpawnPrefab("globalmapicon")
-    inst.icon:TrackEntity(inst)
-    inst.icon.MiniMapEntity:SetPriority(21)
-
     inst.persists = false
 
     inst.marker_index = 1

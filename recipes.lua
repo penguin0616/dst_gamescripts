@@ -569,12 +569,12 @@ Recipe("oceanfishinglure_hermit_drowsy",	{Ingredient("cookiecuttershell", 1), In
 Recipe("oceanfishinglure_hermit_heavy",		{Ingredient("cookiecuttershell", 1), Ingredient("beefalowool", 1)}, RECIPETABS.FISHING, TECH.LOST, nil, nil, true)
 
 -- Balloonomancy
-Recipe("balloons_empty",		{Ingredient("waterballoon", 4)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE)
-Recipe("balloon",				{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true, buildingstate = "makeballoon"})
-Recipe("balloonspeed",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"})
-Recipe("balloonparty",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true, buildingstate = "makeballoon"})
-Recipe("balloonvest",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"})
-Recipe("balloonhat",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"})
+Recipe("balloons_empty",		{Ingredient("waterballoon", 4)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, nil, nil, nil, nil, "balloonomancer")
+Recipe("balloon",				{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true, buildingstate = "makeballoon"}, nil, nil, nil, "balloonomancer")
+Recipe("balloonspeed",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"}, nil, nil, nil, "balloonomancer")
+Recipe("balloonparty",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {dropitem = true, buildingstate = "makeballoon"}, nil, nil, nil, "balloonomancer")
+Recipe("balloonvest",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"}, nil, nil, nil, "balloonomancer")
+Recipe("balloonhat",			{Ingredient("balloons_empty", 0), Ingredient(CHARACTER_INGREDIENT.SANITY, 5)}, CUSTOM_RECIPETABS.BALLOONOMANCY, TECH.NONE, {buildingstate = "makeballoon"}, nil, nil, nil, "balloonomancer")
 
 ----HERMITCRABSHOP-----
 Recipe("hermitshop_hermit_bundle_shells", {Ingredient("messagebottleempty", 1)}, RECIPETABS.HERMITCRABSHOP, TECH.HERMITCRABSHOP_ONE, nil, nil, true, nil, nil, nil, "hermit_bundle.tex", nil, "hermit_bundle_shells")

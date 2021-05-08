@@ -67,7 +67,7 @@ end
 
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
+local RETARGET_ONEOF_TAGS = { "character", "monster", "shadowminion" }
 
 local function spawn_spike_with_target(inst, data)
     if not data then

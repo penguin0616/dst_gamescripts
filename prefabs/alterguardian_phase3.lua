@@ -100,7 +100,7 @@ end
 local TARGET_DSQ = (1.9*TUNING.ALTERGUARDIAN_PHASE3_TARGET_DIST)^2
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "INLIMBO", "playerghost" }
-local RETARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
+local RETARGET_ONEOF_TAGS = { "character", "monster", "shadowminion" }
 local function Retarget(inst)
     local spawnpoint_position = inst.components.knownlocations:GetLocation("spawnpoint")
 
@@ -126,6 +126,10 @@ local MAX_KEEPTARGET_DSQ = 1.15 * TUNING.ALTERGUARDIAN_PHASE3_ATTACK_RANGE
 local function KeepTarget(inst, target)
     return inst.components.combat:CanTarget(target)
         and target:GetDistanceSqToPoint(inst.Transform:GetWorldPosition()) < MAX_KEEPTARGET_DSQ
+end
+
+local function OnAttacked(inst, data)
+    inst.components.combat:SuggestTarget(data.attacker)
 end
 
 local function NoHoles(pt)
@@ -404,6 +408,8 @@ local function fn()
     inst.DoTraps = do_traps
     inst.TrackTrap = track_trap
     inst._traps = {}
+
+    inst:ListenForEvent("attacked", OnAttacked)
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad

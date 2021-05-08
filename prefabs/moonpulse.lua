@@ -158,8 +158,9 @@ local function Update(inst)
         local dist = VecUtil_Length(dx, dz)
         
         local normalized_range_coefficient = math.clamp(dist / DIST_FOR_MAX_COVERAGE, 0, 1)
-        
-        PostProcessor:SetMoonPulseParams(theta - (PI / 4) - (((TheCamera.heading - 45) / 360) * 2 * PI), dist, inst.glow_intensity, inst.wave_progress)
+        local angle_to_player = theta - (PI / 4) - (((TheCamera.heading - 45) / 360) * 2 * PI)
+        PostProcessor:SetMoonPulseParams(angle_to_player, dist, inst.glow_intensity, inst.wave_progress)
+        PostProcessor:SetMoonPulseGradingParams(angle_to_player, dist, inst.glow_intensity, inst.wave_progress)
     end
 end
 
@@ -171,16 +172,19 @@ local function StartPostFX(inst)
     end
     
     PostProcessor:EnablePostProcessEffect(PostProcessorEffects.MoonPulse, true)
+    PostProcessor:EnablePostProcessEffect(PostProcessorEffects.MoonPulseGrading, true)
 
     -- Angle and distance to player params don't matter here since the effect is nullified; this is
     -- just to prevent the post process effect from flashing brightly the frame this object spawns
     PostProcessor:SetMoonPulseParams(0, 0, 0, 0)
+    PostProcessor:SetMoonPulseGradingParams(0, 0, 0, 0)
 
     inst:DoPeriodicTask(FRAMES, Update)
 end
 
 local function onremove(inst)
     PostProcessor:EnablePostProcessEffect(PostProcessorEffects.MoonPulse, false)
+    PostProcessor:EnablePostProcessEffect(PostProcessorEffects.MoonPulseGrading, false)
 end
 
 local function fn()
