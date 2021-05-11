@@ -620,7 +620,7 @@ local COMPONENT_ACTIONS =
         end,
 
         yotb_stager = function(inst, doer, actions, right)
-            if inst:HasTag("yotb_conteststartable") then
+            if inst:HasTag("yotb_conteststartable") and IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
                 table.insert(actions, ACTIONS.YOTB_STARTCONTEST)
             end
             if inst:HasTag("has_prize") then

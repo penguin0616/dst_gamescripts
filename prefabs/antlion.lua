@@ -275,7 +275,7 @@ local function StartCombat(inst, target, trigger)
             inst.inittask:Cancel()
             inst.inittask = nil
         else
-            inst:RemoveEventCallback("ms_sandstormchanged", inst.onsandstormchanged, TheWorld)
+            inst:RemoveEventCallback("ms_stormchanged", inst.onsandstormchanged, TheWorld)
             inst.onsandstormchanged = nil
         end
 

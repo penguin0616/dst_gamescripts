@@ -13,12 +13,12 @@ function SetBeefaloSkinsOnAnim( anim_state, clothing_names, linked_beef_guid )
 		
 		-- We need to clear these overrides on the beefalo, 
 		-- but we don't when we're applying to a player because a player will stomp all symbol overrides when they do ApplyBuildOverrides in beefalo.lua
-		for _,sym in pairs(BEEFALO_CLOTHING_SYMBOLS) do
+		for sym,_ in pairs(BEEFALO_CLOTHING_SYMBOLS) do
 			anim_state:ClearOverrideSymbol(sym)
 		end
 	end
 	
-	for _,sym in pairs(BEEFALO_HIDE_SYMBOLS) do
+	for sym,_ in pairs(BEEFALO_HIDE_SYMBOLS) do
 		anim_state:ShowSymbol(sym)
 	end
 

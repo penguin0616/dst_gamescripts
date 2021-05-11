@@ -12,6 +12,8 @@ local function MakeHat(name)
     --[[local function generic_perish(inst)
         inst:Remove()
     end]]
+    
+    local swap_data = { bank = symname, anim = "anim" }
 
 	-- do not pass this function to equippable:SetOnEquip as it has different a parameter listing
     local function _onequip(inst, owner, symbol_override)
@@ -110,6 +112,7 @@ local function MakeHat(name)
         end
 
         MakeInventoryFloatable(inst)
+        inst.components.floater:SetBankSwapOnFloat(false, nil, swap_data) --Hats default animation is not "idle", so even though we don't swap banks, we need to specify the swap_data for re-skinning to reset properly when floating
 
         inst.entity:SetPristine()
 

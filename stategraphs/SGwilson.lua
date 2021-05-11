@@ -4195,7 +4195,6 @@ local states =
 
             if feed ~= nil and feed.components.soul ~= nil then
                 inst.sg.statemem.soulfx = SpawnPrefab("wortox_eat_soul_fx")
-                inst.sg.statemem.soulfx.Transform:SetRotation(inst.Transform:GetRotation())
                 inst.sg.statemem.soulfx.entity:SetParent(inst.entity)
                 if inst.components.rider:IsRiding() then
                     inst.sg.statemem.soulfx:MakeMounted()
@@ -6102,7 +6101,6 @@ local states =
             TimeEvent(52 * FRAMES, function(inst) 
                 inst.sg.statemem.fx = SpawnPrefab(inst.components.rider:IsRiding() and "abigailsummonfx_mount" or "abigailsummonfx")
                 inst.sg.statemem.fx.entity:SetParent(inst.entity)
-                inst.sg.statemem.fx.Transform:SetRotation(inst.Transform:GetRotation())
                 inst.sg.statemem.fx.AnimState:SetTime(0) -- hack to force update the initial facing direction
                 
                 if inst.bufferedaction ~= nil then
@@ -6195,7 +6193,6 @@ local states =
                 if inst:PerformBufferedAction() then
                     local fx = SpawnPrefab(inst.components.rider:IsRiding() and "abigailunsummonfx_mount" or "abigailunsummonfx")
                     fx.entity:SetParent(inst.entity)
-                    fx.Transform:SetRotation(inst.Transform:GetRotation())
                     fx.AnimState:SetTime(0) -- hack to force update the initial facing direction
                     
                     if flower ~= nil then
@@ -6478,7 +6475,6 @@ local states =
                 inst.sg.statemem.book_fx = SpawnPrefab(inst.components.rider:IsRiding() and "book_fx_mount" or "book_fx")
                 inst.sg.statemem.book_fx.entity:SetParent(inst.entity)
                 inst.sg.statemem.book_fx.Transform:SetPosition(0, .2, 0)
-                inst.sg.statemem.book_fx.Transform:SetRotation(inst.Transform:GetRotation())
             end),
             TimeEvent(25 * FRAMES, function(inst)
                 if inst.sg.statemem.isaoe then
@@ -10326,7 +10322,6 @@ local states =
 
             inst.sg.statemem.stafffx = SpawnPrefab(inst.components.rider:IsRiding() and "staffcastfx_mount" or "staffcastfx")
             inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
-            inst.sg.statemem.stafffx.Transform:SetRotation(inst.Transform:GetRotation())
             inst.sg.statemem.stafffx:SetUp(colour)
 
             inst.sg.statemem.stafflight = SpawnPrefab("staff_castinglight")
@@ -10481,7 +10476,6 @@ local states =
             TimeEvent(7 * FRAMES, function(inst)
                 inst.sg.statemem.stafffx = SpawnPrefab((inst.components.rider ~= nil and inst.components.rider:IsRiding()) and "cointosscastfx_mount" or "cointosscastfx")
                 inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
-                inst.sg.statemem.stafffx.Transform:SetRotation(inst.Transform:GetRotation())
                 inst.sg.statemem.stafffx:SetUp(inst.sg.statemem.fxcolour)
             end),
             TimeEvent(15 * FRAMES, function(inst)

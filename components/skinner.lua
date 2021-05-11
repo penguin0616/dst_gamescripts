@@ -16,12 +16,12 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 	if skintype ~= "NO_BASE" then
 		anim_state:SetSkin(base_skin, default_build)
 	end
-	for _,sym in pairs(CLOTHING_SYMBOLS) do
+	for sym,_ in pairs(CLOTHING_SYMBOLS) do
 		anim_state:ClearOverrideSymbol(sym)
 	end
 	
 	anim_state:ClearSymbolExchanges()
-	for _,sym in pairs(HIDE_SYMBOLS) do
+	for sym,_ in pairs(HIDE_SYMBOLS) do
 		anim_state:ShowSymbol(sym)
 	end
 					

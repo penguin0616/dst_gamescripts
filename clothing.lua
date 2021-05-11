@@ -7250,11 +7250,11 @@ CLOTHING_SYMBOLS = {}
 HIDE_SYMBOLS = {}
 for _,v in pairs(CLOTHING) do
 	for _,sym in pairs(v.symbol_overrides) do
-		table.insert( CLOTHING_SYMBOLS, sym )
+		CLOTHING_SYMBOLS[sym] = true
 	end
 	if v.symbol_hides then
 		for _,sym in pairs(v.symbol_hides) do
-			table.insert( HIDE_SYMBOLS, sym )
+			HIDE_SYMBOLS[sym] = true
 		end
 	end
 end

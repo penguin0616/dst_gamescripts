@@ -370,11 +370,11 @@ BEEFALO_CLOTHING_SYMBOLS = {}
 BEEFALO_HIDE_SYMBOLS = {}
 for _,v in pairs(BEEFALO_CLOTHING) do
 	for _,sym in pairs(v.symbol_overrides) do
-		table.insert( BEEFALO_CLOTHING_SYMBOLS, sym )
+		BEEFALO_CLOTHING_SYMBOLS[sym] = true
 	end
 	if v.symbol_hides then
 		for _,sym in pairs(v.symbol_hides) do
-			table.insert( BEEFALO_HIDE_SYMBOLS, sym )
+			BEEFALO_HIDE_SYMBOLS[sym] = true
 		end
 	end
 end
