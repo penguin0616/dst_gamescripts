@@ -96,8 +96,7 @@ local function maketool(name, build, bank, state ,erodeparam)
         inst.Light:SetColour(255/255, 200/255, 200/255) --179/255, 107/255)
         inst.Light:Enable(true)
 
-        inst:AddTag("cattoy")
-        inst:AddTag("renewable")
+        inst:AddTag("irreplaceable")
 
         MakeInventoryFloatable(inst, "med", 0.05, 0.68)
     

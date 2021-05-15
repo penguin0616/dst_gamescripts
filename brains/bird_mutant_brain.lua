@@ -94,7 +94,7 @@ end
 
 local function shouldspit(inst)
 	if inst:HasTag("bird_mutant_spitter") then
-	    if inst.components.combat.target and inst:GetDistanceSqToInst(inst.components.combat.target) <= TUNING.MUTANT_BIRD_SPIT_RANGE * TUNING.MUTANT_BIRD_SPIT_RANGE and not inst.components.timer:TimerExists("spit_cooldown") then
+	    if inst.components.combat.target and inst.components.combat.target:IsValid() and inst:GetDistanceSqToInst(inst.components.combat.target) <= TUNING.MUTANT_BIRD_SPIT_RANGE * TUNING.MUTANT_BIRD_SPIT_RANGE and not inst.components.timer:TimerExists("spit_cooldown") then
 	    	return true
 	    end
 	end

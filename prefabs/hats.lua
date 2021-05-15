@@ -2137,7 +2137,7 @@ local function MakeHat(name)
 			alterguardian_activate(inst, owner)
 		end
 
-        if inst.components.container ~= nil then
+        if inst.components.container ~= nil and inst.keep_closed ~= owner.userid then
             inst.components.container:Open(owner)
         end
     end
@@ -2164,6 +2164,7 @@ local function MakeHat(name)
 		end
 
         if inst.components.container ~= nil then
+			inst.keep_closed = inst.components.container.opencount == 0 and owner.userid or nil
             inst.components.container:Close()
         end
     end

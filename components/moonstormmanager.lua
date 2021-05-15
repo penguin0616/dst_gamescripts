@@ -135,6 +135,20 @@ local function NodeCanHaveMoonstorm(node)
 		and not TheWorld.Map:IsOceanAtPoint(node.cent[1], 0, node.cent[2])
 end
 
+local function AltarAngleTest(altar, other_altar1, other_altar2)
+    local x, _, z = altar.Transform:GetWorldPosition()
+    local x1, _, z1 = other_altar1.Transform:GetWorldPosition()
+    local x2, _, z2 = other_altar2.Transform:GetWorldPosition()
+
+    local delta_normalized_this_to_other1_x, delta_normalized_this_to_other1_z = VecUtil_Normalize(x1 - x, z1 - z)
+    local delta_normalized_this_to_other2_x, delta_normalized_this_to_other2_z = VecUtil_Normalize(x2 - x, z2 - z)
+    local dot_this_to_other1_other2 = VecUtil_Dot(
+        delta_normalized_this_to_other1_x, delta_normalized_this_to_other1_z,
+        delta_normalized_this_to_other2_x, delta_normalized_this_to_other2_z)
+        
+    return math.abs(dot_this_to_other1_other2) <= TUNING.MOON_ALTAR_LINK_MAX_ABS_DOT
+end
+
 --------------------------------------------------------------------------
 --[[ Private event handlers ]]
 --------------------------------------------------------------------------
@@ -717,6 +731,63 @@ function self:DoTestForLightning()
 	self.moonstorm_lightning_task = self.inst:DoTaskInTime(getlightningtime(),function() self:DoTestForLightning() end)
 end
 
+function self:TestMoonAltarLinkPositionValid(pt)
+	local link_x, link_z = pt.x, pt.z
+
+	if not TheWorld.Map:IsPassableAtPoint(link_x, 0, link_z, false, true)
+		or not TheWorld.Map:IsAboveGroundAtPoint(link_x, 0, link_z, false) then
+
+		return false
+	end
+
+	local ents = TheSim:FindEntities(link_x, 0, link_z, 10) -- 10: at least the size of the largest deploy_extra_spacing
+	for _, v in ipairs(ents) do
+		if (v:HasTag("antlion_sinkhole_blocker") and v:GetDistanceSqToPoint(link_x, 0, link_z) <= TUNING.MOON_ALTAR_LINK_POINT_VALID_RADIUS_SQ)
+			or (v.deploy_extra_spacing ~= nil and v:GetDistanceSqToPoint(link_x, 0, link_z) <= v.deploy_extra_spacing * v.deploy_extra_spacing) then
+
+			return false
+		end
+	end
+
+	return true
+end
+
+function self:TestAltarTriangleValid(altar0, altar1, altar2, center_pt)
+	-- center_pt should be nil if testing whether a newly completed triangle of altars
+	-- should create a moon_altar_link instance, and a value if testing if an existing
+	-- moon_altar_link instance is in a valid position (e.g. on loading the world)
+
+	local altar0_x, _, altar0_z = altar0.Transform:GetWorldPosition()
+	local altar1_x, _, altar1_z = altar1.Transform:GetWorldPosition()
+	local altar2_x, _, altar2_z = altar2.Transform:GetWorldPosition()
+
+	if altar0:GetDistanceSqToPoint(altar1_x, 0, altar1_z) < TUNING.MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ
+		or altar0:GetDistanceSqToPoint(altar2_x, 0, altar2_z) < TUNING.MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ
+		or altar1:GetDistanceSqToPoint(altar2_x, 0, altar2_z) < TUNING.MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ then
+
+		return false
+	end
+
+	if not AltarAngleTest(altar0, altar1, altar2)
+		or not AltarAngleTest(altar1, altar2, altar0) then
+
+		return false
+	end
+
+	local center_x, center_z
+	if center_pt ~= nil then
+		center_x, center_z = center_pt.x, center_pt.z
+	else
+		center_x, center_z = (altar0_x + altar1_x + altar2_x) / 3, (altar0_z + altar1_z + altar2_z) / 3
+	end
+
+	if not self:TestMoonAltarLinkPositionValid(Point(center_x, 0, center_z)) then
+		return false
+	end
+
+	return true
+end
+
 self.LongUpdate = self.OnUpdate
 
 --------------------------------------------------------------------------
@@ -726,7 +797,7 @@ self.LongUpdate = self.OnUpdate
 function self:OnSave()
 	local data = {}
 	data.stormdays = self.stormdays
-	data.currentbasenodeindex = _currentbasenodeindex
+	data.currentbasenodeindex = self.currentbasenodeindextemp or _currentbasenodeindex
 	data.currentnodes = _currentnodes
 	data.metplayers = self.metplayers
 	data.startstormtask = self.startstormtask and true or nil
@@ -766,7 +837,11 @@ function self:OnLoad(data)
 				inst.moonstormwindowovertask = nil
 			end
 			if data.currentbasenodeindex ~= nil then
-				self.inst:DoTaskInTime(1,function() self:StartMoonstorm(data.currentbasenodeindex, data.currentnodes) end)
+				self.currentbasenodeindextemp = data.currentbasenodeindex
+				self.inst:DoTaskInTime(1,function() 
+						self:StartMoonstorm(data.currentbasenodeindex, data.currentnodes) 
+						self.currentbasenodeindextemp = nil
+					end)
 			else
 				self.startstormtask = self.inst:DoTaskInTime(1,function() self:StartMoonstorm() end)		
 			end
