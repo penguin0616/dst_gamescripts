@@ -226,6 +226,7 @@ self.data.issummer = false
 self.data.isautumn = true
 self.data.iswinter = false
 self.data.elapseddaysinseason = 0
+self.data.seasonprogress = 0
 self.data.remainingdaysinseason = math.ceil(TUNING.AUTUMN_LENGTH * .5)
 self.data.autumnlength = TUNING.AUTUMN_LENGTH
 self.data.winterlength = TUNING.WINTER_LENGTH

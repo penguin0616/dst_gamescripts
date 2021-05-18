@@ -352,6 +352,7 @@ function self:OnUpdate(dt)
                 --Advance to next cycle
                 _cycles:set(_cycles:value() + 1)
                 _world:PushEvent("ms_cyclecomplete", _cycles:value())
+				-- Note: It is the seasons component that handles adjusting the number of day/dusk/night segments
 
 				if not _moonphaselocked then
 					_mooomphasecycle = (_mooomphasecycle % #MOON_PHASE_CYCLES) + 1

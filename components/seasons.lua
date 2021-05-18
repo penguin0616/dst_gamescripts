@@ -297,8 +297,9 @@ local OnAdvanceSeason = _ismastersim and function()
             --Progress to peak of endless season
             _remainingdaysinseason:set(math.max(_remainingdaysinseason:value() - 1, ENDLESS_RAMP_DAYS))
         end
-    else
-        return
+    else 
+		-- we always need to refersh the clock incase something else changed the segs
+		--return
     end
 
     PushSeasonClockSegs()
