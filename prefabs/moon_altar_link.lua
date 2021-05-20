@@ -168,8 +168,12 @@ local function fn()
     inst.components.moonaltarlink.onlinkfn = OnLinkEstablished
 
     inst:ListenForEvent("ms_moonstormwindowover", function()
-        if inst._spawned_from_load and not moonstormexists(inst) then
-            startmoonstormsequence(inst)
+        if inst._spawned_from_load then
+            if not moonstormexists(inst) then
+                startmoonstormsequence(inst)
+            else
+                inst:AddTag("can_build_moon_device")
+            end
         end
     end, TheWorld)
 
