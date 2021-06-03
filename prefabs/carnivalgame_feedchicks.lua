@@ -104,11 +104,13 @@ local function DoActivateRandomNest(inst, delay)
 		nest:PushEvent("carnivalgame_feedchicks_hungry")--, {duration = TUNING.CARNIVALGAME_FEEDCHICKS_HUNGRY_DURATION + math.random() * TUNING.CARNIVALGAME_FEEDCHICKS_HUNGRY_DURATION_VAR})
 	end
 
-	local nest = GetRandomKey(inst._avaiablenests)
-	inst._avaiablenests[nest] = nil
-	inst._num_avaiablenests = inst._num_avaiablenests - 1
+	if next(inst._avaiablenests) ~= nil then
+		local nest = GetRandomKey(inst._avaiablenests)
+		inst._avaiablenests[nest] = nil
+		inst._num_avaiablenests = inst._num_avaiablenests - 1
 
-	nest:DoTaskInTime(delay, activate_nest)
+		nest:DoTaskInTime(delay, activate_nest)
+	end
 end
 
 local function nest_turnon(nest)

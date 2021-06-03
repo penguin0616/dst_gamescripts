@@ -7,7 +7,7 @@ BufferedAction = Class(function(self, doer, target, action, invobject, pos, reci
     self.invobject = invobject
     self.doerownsobject = doer ~= nil and invobject ~= nil and invobject.replica.inventoryitem ~= nil and invobject.replica.inventoryitem:IsHeldBy(doer)
     self.pos = pos ~= nil and DynamicPosition(pos) or nil
-    self.rotation = rotation
+    self.rotation = rotation or 0
     self.onsuccess = {}
     self.onfail = {}
     self.recipe = recipe
