@@ -376,7 +376,7 @@ end
 
 local function OnCircuitChanged(inst)
     --Notify other connected batteries
-    inst.components.circuitnode:ForEachNode(NotifyCircuitChanged)    
+    inst.components.circuitnode:ForEachNode(NotifyCircuitChanged)
 end
 
 local function OnConnectCircuit(inst)--, node)

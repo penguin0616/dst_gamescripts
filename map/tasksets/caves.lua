@@ -12,7 +12,7 @@ AddTaskSet("cave_default", {
         "RockyLand",
         "RedForest",
         "GreenForest",
-        "BlueForest",        
+        "BlueForest",
         "SpillagmiteCaverns",
 
         "MoonCaveForest",

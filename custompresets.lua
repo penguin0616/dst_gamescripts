@@ -18,7 +18,7 @@ local function UpgradeCustomPresets(custompreset)
         upgraded = true
     end
     ]]
-    
+
     return upgraded
 end
 
@@ -82,7 +82,7 @@ function CustomPresets:LoadCustomPreset(category, presetid)
     if self.presets[category][presetid] then
         return self.presets[category][presetid]
     end
-    
+
     local presetdata
     TheSim:GetPersistentString(GetPathString(category, presetid), function(load_success, data)
 		if load_success and data ~= nil then
@@ -193,7 +193,7 @@ function CustomPresets:MoveCustomPreset(category, oldid, presetid, name, desc)
     if preset == nil then
         return
     end
-    
+
     if self:SaveCustomPreset(category, presetid, preset.baseid, preset.overrides, name, desc) then
         if oldid ~= presetid then self:DeleteCustomPreset(category, oldid) end
     end

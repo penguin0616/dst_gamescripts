@@ -76,7 +76,7 @@ local LaunchingServerPopup = Class(Screen, function(self, serverinfo, successCal
 		self.buttons = buttons
 		self.default_focus = self.menu
 	end
-	
+
     self.time = 0
     self.progress = 0
 end)

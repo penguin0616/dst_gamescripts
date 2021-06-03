@@ -54,7 +54,7 @@ local function OnRemoveSisturn(sisturn)
 		inst:RemoveEventCallback("onremove", OnRemoveSisturn, sisturn)
 		inst:RemoveEventCallback("onburnt", OnRemoveSisturn, sisturn)
 	end
-    
+
     UpdateSisturnState()
 end
 

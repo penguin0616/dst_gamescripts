@@ -189,18 +189,18 @@ local function OnScreenFlash(src, intensity)
     _flashtime = 0
     _flashintensity = intensity
 
-    if _realcolour.remainingtimeinlerp > 0 then 
+    if _realcolour.remainingtimeinlerp > 0 then
 		_realcolour.remainingtimeinlerp = 0
 		SetColour(_realcolour.currentcolour, _realcolour.lerptocolour)
 	end
 
-    if _overridecolour.remainingtimeinlerp > 0 then 
+    if _overridecolour.remainingtimeinlerp > 0 then
 		_overridecolour.remainingtimeinlerp = 0
 		SetColour(_overridecolour.currentcolour, _overridecolour.lerptocolour)
 
 		_flashintensity = intensity * 0.9
 	end
-	
+
 	_flash_holdtime = 8 * FRAMES
 
 	local vr, vg, vb = _overridecolour.currentcolour.x * _overridecolour.lightpercent, _overridecolour.currentcolour.y * _overridecolour.lightpercent, _overridecolour.currentcolour.z * _overridecolour.lightpercent
@@ -303,7 +303,7 @@ local function DoUpdateFlash(dt)
 	if _flashstate == 1 then
 	    _flashtime = _flashtime + dt
 	    if _flashtime > _flash_holdtime then
-			-- Note: we have to compenstate for the light colour that will be applied in _flashstate 2 
+			-- Note: we have to compenstate for the light colour that will be applied in _flashstate 2
 			_realcolour.currentcolour.x, _realcolour.currentcolour.y, _realcolour.currentcolour.z = _flashcolour/_realcolour.lightpercent, _flashcolour/_realcolour.lightpercent, _flashcolour/_realcolour.lightpercent
 			_overridecolour.currentcolour.x, _overridecolour.currentcolour.y, _overridecolour.currentcolour.z = _flashcolour/_overridecolour.lightpercent, _flashcolour/_overridecolour.lightpercent, _flashcolour/_overridecolour.lightpercent
 			ComputeTargetColour(_realcolour, 0.5)

@@ -57,7 +57,7 @@ function DeployHelper:StartHelper(recipename, placerinst)
             self.onenablehelper(self.inst, true, recipename, placerinst)
         end
 	end
-	
+
 	if self.onstarthelper ~= nil then
 		self.onstarthelper(self.inst, recipename, placerinst)
 	end

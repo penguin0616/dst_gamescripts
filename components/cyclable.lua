@@ -19,7 +19,7 @@ local Cyclable = Class(function(self, inst, activcb)
 
 	--self.oncyclefn = nil
 	self.cancycle = true
-	
+
 	self.step = 1
 	self.num_steps = 3
 end,

@@ -23,7 +23,7 @@ local function retargetfn(inst)
     return FindEntity(
         inst,
         TUNING.EYEPLANT_ATTACK_DIST,
-        function(guy) 
+        function(guy)
             return not (guy.components.health:IsDead() or checkmaster(guy, inst))
         end,
         RETARGET_MUST_TAGS, -- see entityreplica.lua
@@ -35,7 +35,7 @@ end
 local function shouldKeepTarget(inst, target)
     if target and target:IsValid() and target.components.health and not target.components.health:IsDead() then
         local distsq = target:GetDistanceSqToInst(inst)
-        
+
         return distsq < TUNING.EYEPLANT_STOPATTACK_DIST*TUNING.EYEPLANT_STOPATTACK_DIST
     else
         return false

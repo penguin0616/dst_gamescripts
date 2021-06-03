@@ -104,23 +104,23 @@ function GingerbreadHunter:StartNewHunt()
 	-- We select a random player and try to find a valid point to spawn the gingerbread near them
 	-- If we fail all attempts we select a different player until we succeed or the list is empty
 	while #_availableplayers > 0 and not succeeded do
-		
+
 		selected_index = math.random(#_availableplayers)
 		local selected_player = table.remove(_availableplayers, selected_index)
-		
+
 		local origin_pt = selected_player:GetPosition()
 		local attempts = 0
-		
+
 		while attempts < MAX_SPAWN_ATTEMPTS do
 			local spawn_pt = GetSpawnPoint(origin_pt, PLAYER_CHECK_DISTANCE + 5)
 			if spawn_pt and not IsAnyPlayerInRange(spawn_pt.x, 0, spawn_pt.z, PLAYER_CHECK_DISTANCE) then
-				
+
 				local gingerbreadpig = SpawnPrefab("gingerbreadpig")
 				gingerbreadpig.Transform:SetPosition(spawn_pt:Get())
-				
+
 				gingerbreadpig.killtask = gingerbreadpig:DoTaskInTime(1.5 * TUNING.TOTAL_DAY_TIME, function() gingerbreadpig.components.health:Kill() end)
 				gingerbreadpig.leash_target = selected_player
-				
+
 				succeeded = true
 				break
 			else
@@ -147,7 +147,7 @@ function GingerbreadHunter:GenerateCrumbPoints(origin_pt, amount)
 	self.crumb_pts = {}
 
 	for i=1, amount do
-		
+
 		local attempts = 0
 		while attempts < MAX_SPAWN_ATTEMPTS do
 			local spawn_pt = GetSpawnPoint(origin_pt, CRUMB_DISTANCE)
@@ -172,7 +172,7 @@ end
 
 function GingerbreadHunter:SpawnCrumbTrail(killtime)
 
-	local house_positions = 
+	local house_positions =
     {
     	{ x =  0, 	z =  0 },
         { x =  1.5, z =  1.5 },

@@ -95,12 +95,12 @@ function Stackable:Put(item, source_pos)
     assert(item ~= self, "cant stack on self" )
     local ret
     if item.prefab == self.inst.prefab and item.skinname == self.inst.skinname then
-        
+
         local num_to_add = item.components.stackable.stacksize
         local newtotal = self.stacksize + num_to_add
-        
+
         local oldsize = self.stacksize
-        local newsize = math.min(self.maxsize, newtotal)        
+        local newsize = math.min(self.maxsize, newtotal)
         local numberadded = newsize - oldsize
 
         if self.inst.components.perishable ~= nil then

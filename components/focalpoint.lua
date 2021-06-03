@@ -29,7 +29,7 @@ function FocalPoint:StartFocusSource(source, id, target, minrange, maxrange, pri
         local params = sourcetbl[id]
         if params == nil then
             sourcetbl[id] = { target = target or source, source = source, id = id, minrange = minrange, maxrange = maxrange, priority = priority, updater = updater }
-        else            
+        else
             params.target = target or source
 			params.source = source
             params.id = id

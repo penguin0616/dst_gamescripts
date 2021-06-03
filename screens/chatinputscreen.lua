@@ -23,7 +23,7 @@ function ChatInputScreen:OnBecomeActive()
 
     self.chat_edit:SetFocus()
     self.chat_edit:SetEditing(true)
-	
+
 	if IsConsole() then
 		TheFrontEnd:LockFocus(true)
 	end
@@ -43,7 +43,7 @@ function ChatInputScreen:GetHelpText()
     local t = {}
 
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
-    
+
     if self.whisper then
         table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.CHATINPUTSCREEN.HELP_SAY)
         table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.CHATINPUTSCREEN.HELP_WHISPER)
@@ -63,7 +63,7 @@ function ChatInputScreen:OnControl(control, down)
         return true
     end
 
-	if not down and (control == CONTROL_CANCEL) then 
+	if not down and (control == CONTROL_CANCEL) then
 		self:Close()
 		return true
 	end
@@ -77,7 +77,7 @@ function ChatInputScreen:OnControl(control, down)
 				return true
 			end
 
-			if not down and (control == CONTROL_TOGGLE_SAY or control == CONTROL_TOGGLE_WHISPER) then 
+			if not down and (control == CONTROL_TOGGLE_SAY or control == CONTROL_TOGGLE_WHISPER) then
 				self:Close()
 				return true
 			end
@@ -92,7 +92,7 @@ function ChatInputScreen:OnControl(control, down)
 				self.whisper = false
 				self.chat_edit:SetEditing(true)
 				return true
-			elseif control == CONTROL_CANCEL then 
+			elseif control == CONTROL_CANCEL then
 		      self:Close()
 			  return true
 		end
@@ -103,7 +103,7 @@ end
 function ChatInputScreen:OnRawKey(key, down)
     if self.runtask ~= nil then return true end
     if ChatInputScreen._base.OnRawKey(self, key, down) then
-        return true 
+        return true
     end
 
     return false
@@ -198,11 +198,11 @@ function ChatInputScreen:DoInit()
 
 	self.chat_edit:SetForceEdit(true)
     self.chat_edit.OnStopForceEdit = function() self:Close() end
-    
+
     self.chat_edit:EnableWordPrediction({width = 800, mode=Profile:GetChatAutocompleteMode()})
     self.chat_edit:AddWordPredictionDictionary(Emoji.GetWordPredictionDictionary())
     self.chat_edit:AddWordPredictionDictionary(UserCommands.GetEmotesWordPredictionDictionary())
-	
+
     self.chat_edit:SetString("")
 end
 

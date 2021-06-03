@@ -164,7 +164,7 @@ local function fn()
     inst.components.childspawner:SetRegenPeriod(TUNING.HOUNDMOUND_REGEN_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.HOUNDMOUND_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.HOUNDMOUND_HOUNDS_MIN, TUNING.HOUNDMOUND_HOUNDS_MAX))
-    
+
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.HOUNDMOUND_REGEN_TIME, TUNING.HOUNDMOUND_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.HOUNDMOUND_RELEASE_TIME, TUNING.HOUNDMOUND_ENABLED)
     if not TUNING.HOUNDMOUND_ENABLED then

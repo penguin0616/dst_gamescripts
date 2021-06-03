@@ -68,7 +68,7 @@ local PauseScreen = Class(Screen, function(self)
 
     local buttons = {}
     table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.CONTINUE, cb=function() self:unpause() end })
-    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.OPTIONS, cb=function() 
+    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.OPTIONS, cb=function()
         TheFrontEnd:Fade(FADE_OUT, SCREEN_FADE_TIME, function()
             TheFrontEnd:PushScreen(OptionsScreen())
             TheFrontEnd:Fade(FADE_IN, SCREEN_FADE_TIME)
@@ -119,7 +119,7 @@ function PauseScreen:goafk()
 		--it's too dangerous to afk
 		player.components.talker:Say(GetString(player, "ANNOUNCE_NODANGERAFK"))
 		return
-	end	
+	end
 
 	player.replica.afk:PrepareForAFK()
 end

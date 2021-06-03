@@ -3,7 +3,7 @@ local brain = require "brains/malbatrossbrain"
 local assets =
 {
     Asset("ANIM", "anim/malbatross_basic.zip"),
-    Asset("ANIM", "anim/malbatross_actions.zip"),    
+    Asset("ANIM", "anim/malbatross_actions.zip"),
     Asset("ANIM", "anim/malbatross_build.zip"),
 }
 
@@ -15,7 +15,7 @@ local rippleassets =
 local prefabs =
 {
     "malbatross_ripple",
-    "wave_med",  
+    "wave_med",
     "splash_green_large",
     "splash_green",
     "malbatross_beak",
@@ -464,7 +464,7 @@ local function fn()
     ------------------------------------------
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
-    inst.components.locomotor.walkspeed = 3  
+    inst.components.locomotor.walkspeed = 3
     inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { allowocean = true }

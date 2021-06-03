@@ -133,7 +133,7 @@ local function TurnToGlassed(inst, is_loading)
         inst.AnimState:PlayAnimation("glassify")
         inst.AnimState:PushAnimation("glass_full", false)
 	    inst.SoundEmitter:PlaySound("turnoftides/common/together/water/hotspring/glassify")
-		
+
         inst.components.workable:SetWorkLeft(TUNING.HOTSPRING_WORK)
     end
 
@@ -143,7 +143,7 @@ end
 --------------------------------------------------------------------------
 
 local function GetHeat(inst)
-    return (inst.components.bathbombable.is_bathbombed and TUNING.HOTSPRING_HEAT.ACTIVE) 
+    return (inst.components.bathbombable.is_bathbombed and TUNING.HOTSPRING_HEAT.ACTIVE)
 			or (inst.components.bathbombable.can_be_bathbombed and TUNING.HOTSPRING_HEAT.PASSIVE)
 			or 0
 end
@@ -193,7 +193,7 @@ end
 
 local function GetStatus(inst)
 	return inst._glassed and "GLASS"
-			or inst._bathbombed and "BOMBED" 
+			or inst._bathbombed and "BOMBED"
 			or (not inst.components.bathbombable.is_bathbombed and not inst.components.bathbombable.can_be_bathbombed) and "EMPTY"
 			or nil
 end
@@ -281,7 +281,7 @@ local function hotspring()
 
     inst:AddComponent("bathbombable")
     inst.components.bathbombable:SetOnBathBombedFn(OnBathBombed)
-    
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
     inst.components.workable:SetOnFinishCallback(OnGlassedSpringMineFinished)

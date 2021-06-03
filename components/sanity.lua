@@ -42,7 +42,7 @@ local Sanity = Class(function(self, inst)
 
 	self.mode = SANITY_MODE_INSANITY
 	self._lunacy_sources = SourceModifierList(inst, false, SourceModifierList.boolean)
-    
+
     self.rate = 0
     self.ratescale = RATE_SCALE.NEUTRAL
     self.rate_modifier = 1
@@ -53,7 +53,7 @@ local Sanity = Class(function(self, inst)
     self.inducedinsanity = nil
     self.inducedinsanity_sources = nil
     self.night_drain_mult = 1
-    
+
     self.neg_aura_mult = 1 -- Deprecated, use the SourceModifier below
     self.neg_aura_modifiers = SourceModifierList(self.inst)
     self.neg_aura_absorb = 0
@@ -128,7 +128,7 @@ end
 
 function Sanity:EnableLunacy(enable, sorce)
 	self._lunacy_sources:SetModifier(self.inst, enable, sorce)
-	
+
 	local mode = self._lunacy_sources:Get() and SANITY_MODE_LUNACY or SANITY_MODE_INSANITY
 	if self.mode ~= mode then
 		self.mode = mode
@@ -149,7 +149,7 @@ end
 
 function Sanity:RecalculatePenalty()
     local penalty = 0
-    
+
     for k,v in pairs(self.sanity_penalties) do
         penalty = penalty + v
     end
@@ -386,7 +386,7 @@ local SANITYRECALC_MUST_TAGS = { "sanityaura" }
 local SANITYRECALC_CANT_TAGS = { "FX", "NOCLICK", "DECOR","INLIMBO" }
 function Sanity:Recalc(dt)
 	local dapper_delta = 0
-	if self.dapperness_mult ~= 0 then 
+	if self.dapperness_mult ~= 0 then
 		local total_dapperness = self.dapperness
 		for k, v in pairs(self.inst.components.inventory.equipslots) do
 			local equippable = v.components.equippable
@@ -421,7 +421,7 @@ function Sanity:Recalc(dt)
 	if not self.sanity_aura_immune then
 		local x, y, z = self.inst.Transform:GetWorldPosition()
 	    local ents = TheSim:FindEntities(x, y, z, TUNING.SANITY_AURA_SEACH_RANGE, SANITYRECALC_MUST_TAGS, SANITYRECALC_CANT_TAGS)
-	    for i, v in ipairs(ents) do 
+	    for i, v in ipairs(ents) do
 	        if v.components.sanityaura ~= nil and v ~= self.inst then
                 local is_aura_immune = false
 				if self.sanity_aura_immunities ~= nil then

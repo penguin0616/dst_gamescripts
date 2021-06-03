@@ -26,7 +26,7 @@ local Herd = Class(function(self, inst)
     self.onempty = nil
     self.onfull = nil
     self.addmember = nil
-    self.removemember = nil    
+    self.removemember = nil
 
     self.updatepos = true
     self.updateposincombat = false
@@ -156,7 +156,7 @@ function Herd:GatherNearbyMembers()
     local x, y, z = self.inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, self.gatherrange, self.membersearchtags)
 
-    for i, v in ipairs(ents) do 
+    for i, v in ipairs(ents) do
         if self.members[v] == nil and
             v.components.herdmember ~= nil and
             (v.components.knownlocations == nil or not v.components.knownlocations:GetLocation("herd")) and
@@ -220,11 +220,11 @@ function Herd:OnUpdate()
                 if updatedPos then
                     updatedPos = Vector3(updatedPos.x / validMembers, 0, updatedPos.z / validMembers)
                 end
-                pos = self.updateposfn(self.inst, updatedPos)                
+                pos = self.updateposfn(self.inst, updatedPos)
             else
                 if updatedPos ~= nil then
                     pos = Vector3(updatedPos.x / validMembers, 0, updatedPos.z / validMembers)
-                    
+
                 end
             end
             self.inst.Transform:SetPosition(pos.x,pos.y,pos.z)

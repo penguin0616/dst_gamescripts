@@ -124,7 +124,7 @@ function HullHealth:OnCollide(data)
     -- Helps give the 'grazing' effect.
 	if damage_alignment > THROAWAY_ALIGNMENT_VALUE then
 		local boat_physics = self.inst.components.boatphysics
-        
+
         local hit_adjacent_speed = boat_physics:GetVelocity() * absolute_hit_normal_overlap_percentage
 
 		if hit_adjacent_speed > 1.1 then

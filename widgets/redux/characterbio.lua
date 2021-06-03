@@ -16,7 +16,7 @@ local CharacterBio = Class(Widget, function(self, character)
 	self.portrait_root:SetPosition(-235, 70)
 
     self.text_root = self:AddChild(self:_BuildBioText(character))
-	self.text_root:SetPosition(-5, 10) 
+	self.text_root:SetPosition(-5, 10)
 
 	self.focus_forward = self.scroll_area
 end)

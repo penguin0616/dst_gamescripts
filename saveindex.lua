@@ -207,7 +207,7 @@ local function UpgradeSavedLevelData(worldoptions)
             ret[i] = savefileupgrades.utilities.UpgradeSavedLevelFromV1toV2(ret[i], i == 1)
 			upgraded = true
         end
-        
+
         if level.version == 2 then
             ret[i] = savefileupgrades.utilities.UpgradeSavedLevelFromV2toV3(ret[i], i == 1)
 			upgraded = true
@@ -217,7 +217,7 @@ local function UpgradeSavedLevelData(worldoptions)
             ret[i] = savefileupgrades.utilities.UpgradeSavedLevelFromV3toV4(ret[i], i == 1) -- RoT: Turn of Tids
 			upgraded = true
         end
-		
+
     end
     return ret, upgraded
 end
@@ -448,7 +448,7 @@ function SaveIndex:StartSurvivalMode(saveslot, customoptions, serverdata, onsave
 
     local slot = self.data.slots[saveslot]
     slot.session_id = TheNet:GetSessionIdentifier()
-    
+
     slot.world.options = customoptions or GetDefaultWorldOptions(GetLevelType(serverdata.game_mode or DEFAULT_GAME_MODE))
     slot.server = {}
 
@@ -529,7 +529,7 @@ end
 
 function SaveIndex:BuildSlotDayAndSeasonText(slotnum)
 	local slot_day_and_season_str = ""
-	
+
     if SaveGameIndex:IsSlotEmpty(slotnum) then
         slot_day_and_season_str = STRINGS.UI.SERVERCREATIONSCREEN.SERVERDAY_NEW
     else
@@ -682,8 +682,8 @@ function SaveIndex:SetServerEnabledMods(slot)
         if config and type(config) == "table" then
             for i,v in pairs(config) do
                 if v.saved ~= nil then
-                    mod_data.configuration_options[v.name] = v.saved 
-                else 
+                    mod_data.configuration_options[v.name] = v.saved
+                else
                     mod_data.configuration_options[v.name] = v.default
                 end
             end

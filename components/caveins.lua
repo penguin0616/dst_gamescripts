@@ -41,7 +41,7 @@ local function DoTargetDebris(inst, x, z, player, spread, remaining)
         else
             len = math.sqrt(len)
             x = x + dx * 4 / len
-            z = z + dz * 4 / len 
+            z = z + dz * 4 / len
             spread = math.max(0, spread - .4)
         end
     end

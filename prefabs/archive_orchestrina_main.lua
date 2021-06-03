@@ -37,7 +37,7 @@ local function mastermind(lock,key)
                 break
             end
         end
-    end   
+    end
     return result
 end
 
@@ -55,14 +55,14 @@ local function findlockbox(inst)
                 table.remove(lockboxents,i)
             end
         end
-    end     
+    end
     return lockboxents
 end
 
-local function testforlockbox(inst)    
+local function testforlockbox(inst)
     local lockboxes= findlockbox(inst)
     local x,y,z = inst.Transform:GetWorldPosition()
-    if #lockboxes == 1 and not inst.failed then   
+    if #lockboxes == 1 and not inst.failed then
         if inst.status == "off" then
             if not inst.AnimState:IsCurrentAnimation("big_activation") and not inst.AnimState:IsCurrentAnimation("big_on") then
                 inst.AnimState:PlayAnimation("big_on_pre")
@@ -72,13 +72,13 @@ local function testforlockbox(inst)
         end
         inst.status = "on"
     else
-        if inst.status == "on" then            
+        if inst.status == "on" then
             if not inst.AnimState:IsCurrentAnimation("big_activation") and not inst.AnimState:IsCurrentAnimation("big_idle") then
                 inst.AnimState:PlayAnimation("big_on_pst")
-                inst.AnimState:PushAnimation("big_idle",true)                    
+                inst.AnimState:PushAnimation("big_idle",true)
             end
         end
-        inst.status = "off" 
+        inst.status = "off"
 
         inst.SoundEmitter:KillSound("machine0")
 
@@ -93,8 +93,8 @@ local function testforlockbox(inst)
 
         if inst.numcount then
             inst.numcount = nil
-        end        
-    end    
+        end
+    end
 
     if inst.failed then
 
@@ -116,25 +116,25 @@ end
 
 local function testforcompletion(inst)
     local blank = true
-    local x,y,z = inst.Transform:GetWorldPosition()    
+    local x,y,z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x,y,z, 10, SOCKETTEST_MUST)
-    
+
     local sockets = {}
     for i=#ents,1,-1 do
         table.insert(sockets,ents[i])
     end
     table.sort(sockets, function(a,b) return a.GUID < b.GUID end)
-    
-    local lockboxents = findlockbox(inst)   
+
+    local lockboxents = findlockbox(inst)
     local archive = TheWorld.components.archivemanager
     if archive then
         archive.puzzlepaused = nil
     end
-    
+
     inst.busy = false
 
     local pass = true
-    if #lockboxents == 1 then        
+    if #lockboxents == 1 then
         local puzzle = lockboxents[1].puzzle
         if puzzle then
             blank = false
@@ -149,7 +149,7 @@ local function testforcompletion(inst)
                     key[i] = socket.order
                     table.insert(order,i)
                 end
-            end             
+            end
 
             for i,idx in ipairs(order) do
                 if key[idx] ~= lock[idx] then
@@ -164,15 +164,15 @@ local function testforcompletion(inst)
                 for i=1,7 do
                     inst.SoundEmitter:KillSound("machine"..i)
                 end
-                inst.SoundEmitter:PlaySound("grotto/common/archive_orchestrina/8")                
+                inst.SoundEmitter:PlaySound("grotto/common/archive_orchestrina/8")
                 inst.busy = true
 
                 inst.AnimState:PlayAnimation("big_activation")
                 inst.AnimState:PushAnimation("big_idle")
 
                 for i,socket in ipairs(sockets)do
-                    if socket.set == true then                       
-                        if socket.order == 1 then                            
+                    if socket.set == true then
+                        if socket.order == 1 then
                             socket.AnimState:PlayAnimation("one_activation")
                             socket.AnimState:PushAnimation("small_idle",true)
                         elseif socket.order == 2 then
@@ -196,35 +196,35 @@ local function testforcompletion(inst)
                         elseif socket.order == 8 then
                             socket.AnimState:PlayAnimation("eight_activation")
                             socket.AnimState:PushAnimation("small_idle",true)
-                        end 
-                    end                    
-                end 
+                        end
+                    end
+                end
 
                 inst:DoTaskInTime(5,function() inst.busy = nil end)
             end
 
-            if pass and #order == 8 then                
+            if pass and #order == 8 then
                 if lockboxents[1].product_orchestrina then
-                    inst:DoTaskInTime(1/3,function() 
+                    inst:DoTaskInTime(1/3,function()
                         lockboxents[1]:PushEvent("onteach")
                     end)
                 end
-                
+
                 pass = false
             end
         end
     end
 
-    if pass == false then       
+    if pass == false then
         for i=1,7 do
             inst.SoundEmitter:KillSound("machine"..i)
         end
         inst.SoundEmitter:PlaySound("grotto/common/archive_orchestrina/stop")
-        inst.failed = true        
+        inst.failed = true
     end
 end
 
-local function smallOff(inst,fail)    
+local function smallOff(inst,fail)
     if fail then
         inst.AnimState:PlayAnimation("small_error")
         inst.AnimState:PushAnimation("small_idle",true)
@@ -251,10 +251,10 @@ local function smallOff(inst,fail)
                     inst.AnimState:PushAnimation("small_idle",true)
                 end
             elseif inst.order == 5 then
-                if inst.AnimState:IsCurrentAnimation("five") then                    
+                if inst.AnimState:IsCurrentAnimation("five") then
                     inst.AnimState:PlayAnimation("five_pst")
                     inst.AnimState:PushAnimation("small_idle",true)
-                end                    
+                end
             elseif inst.order == 6 then
                 if inst.AnimState:IsCurrentAnimation("six") then
                     inst.AnimState:PlayAnimation("six_pst")
@@ -270,11 +270,11 @@ local function smallOff(inst,fail)
                     inst.AnimState:PlayAnimation("eight_pst")
                     inst.AnimState:PushAnimation("small_idle",true)
                 end
-            end 
-        end 
-    end       
+            end
+        end
+    end
     inst.set = false
-    inst.order = nil 
+    inst.order = nil
 end
 
 
@@ -285,10 +285,10 @@ local function testforplayers(inst)
 
     if main and not main.busy then
         local failed = main.failed
-        local lockboxents = findlockbox( main )    
+        local lockboxents = findlockbox( main )
         local dist = inst:GetDistanceSqToClosestPlayer(true)
         if dist < 1.7*1.7 then
-            inst.close = true   
+            inst.close = true
         end
 
         if #lockboxents == 1 and inst.close and not main.failed and not inst.set then
@@ -306,38 +306,38 @@ local function testforplayers(inst)
                 inst.order = 2
             elseif main.numcount == 3 then
                 inst.AnimState:PlayAnimation("three_pre")
-                inst.AnimState:PushAnimation("three",true)                    
+                inst.AnimState:PushAnimation("three",true)
                 inst.order = 3
             elseif main.numcount == 4 then
                 inst.AnimState:PlayAnimation("four_pre")
-                inst.AnimState:PushAnimation("four",true)                    
+                inst.AnimState:PushAnimation("four",true)
                 inst.order = 4
             elseif main.numcount == 5 then
                 inst.AnimState:PlayAnimation("five_pre")
-                inst.AnimState:PushAnimation("five",true)                    
+                inst.AnimState:PushAnimation("five",true)
                 inst.order = 5
             elseif main.numcount == 6 then
                 inst.AnimState:PlayAnimation("six_pre")
-                inst.AnimState:PushAnimation("six",true)                    
+                inst.AnimState:PushAnimation("six",true)
                 inst.order = 6
             elseif main.numcount == 7 then
                 inst.AnimState:PlayAnimation("seven_pre")
-                inst.AnimState:PushAnimation("Seven",true)                    
+                inst.AnimState:PushAnimation("Seven",true)
                 inst.order = 7
             elseif main.numcount == 8 then
                 inst.AnimState:PlayAnimation("eight_pre")
                 inst.AnimState:PushAnimation("eight",true)
                 inst.order = 8
             end
-            inst.set= true        
-            testforcompletion(main)            
+            inst.set= true
+            testforcompletion(main)
         end
         if main.failed and not main.busy then
             inst:smallOff(failed ~= main.failed )
         end
     end
 end
- 
+
 local function mainfn(pondtype)
     local inst = CreateEntity()
 
@@ -368,16 +368,16 @@ local function mainfn(pondtype)
         return inst
     end
 
-    inst:DoTaskInTime(0,function() 
+    inst:DoTaskInTime(0,function()
         local base = SpawnPrefab("archive_orchestrina_base")
         local x,y,z = inst.Transform:GetWorldPosition()
         base.Transform:SetPosition(x,y,z)
     end)
 
-    inst.task = inst:DoPeriodicTask(0.10, function()      
+    inst.task = inst:DoPeriodicTask(0.10, function()
         local archive = TheWorld.components.archivemanager
-        if not archive or archive:GetPowerSetting() then    
-            testforlockbox(inst) 
+        if not archive or archive:GetPowerSetting() then
+            testforlockbox(inst)
         end
     end)
     inst.testforlockbox = testforlockbox
@@ -433,7 +433,7 @@ local function smallfn(pondtype)
 
     inst:AddTag("NOCLICK")
 
-    inst:DoTaskInTime(0,function() 
+    inst:DoTaskInTime(0,function()
         local x,y,z = inst.Transform:GetWorldPosition()
         local main = TheSim:FindEntities(x,y,z, 10, OCHESTRINA_MAIN_MUST)[1]
         if main then
@@ -450,10 +450,10 @@ local function smallfn(pondtype)
         return inst
     end
 
-    inst.task = inst:DoPeriodicTask(0.10, function() 
+    inst.task = inst:DoPeriodicTask(0.10, function()
         local archive = TheWorld.components.archivemanager
-        if not archive or archive:GetPowerSetting() then 
-            testforplayers(inst) 
+        if not archive or archive:GetPowerSetting() then
+            testforplayers(inst)
         end
     end)
     inst.smallOff = smallOff

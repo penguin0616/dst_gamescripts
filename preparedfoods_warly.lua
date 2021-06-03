@@ -27,7 +27,7 @@ local foods =
     },
 
 	-- Lightning attack
-	voltgoatjelly = 
+	voltgoatjelly =
 	{
 		test = function(cooker, names, tags) return (names.lightninggoathorn) and (tags.sweetener and tags.sweetener >= 2) and not tags.meat end,
 		priority = 30,

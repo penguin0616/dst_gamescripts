@@ -34,7 +34,7 @@ require "translator"
 local font_posfix = ""
 
 if LanguageTranslator then	-- This gets called from the build pipeline too
-    local lang = LanguageTranslator.defaultlang 
+    local lang = LanguageTranslator.defaultlang
 
     -- Some languages need their own font
     local specialFontLangs = {"jp"}
@@ -73,9 +73,9 @@ FONTS = {
 	{ filename = "fonts/opensans50"..font_posfix..".zip", alias = DEFAULTFONT, fallback = DEFAULT_FALLBACK_TABLE_OUTLINE },							-- aka DIALOGFONT
 	{ filename = "fonts/belisaplumilla50"..font_posfix..".zip", alias = UIFONT, fallback = DEFAULT_FALLBACK_TABLE_OUTLINE, adjustadvance=-2 },
 	{ filename = "fonts/belisaplumilla100"..font_posfix..".zip", alias = TITLEFONT, fallback = DEFAULT_FALLBACK_TABLE_OUTLINE},	-- old header font
-	{ filename = "fonts/buttonfont"..font_posfix..".zip", alias = BUTTONFONT, fallback = DEFAULT_FALLBACK_TABLE },	
-	{ filename = "fonts/spirequal"..font_posfix..".zip", alias = NEWFONT, fallback = DEFAULT_FALLBACK_TABLE },	
-	{ filename = "fonts/spirequal_small"..font_posfix..".zip", alias = NEWFONT_SMALL, fallback = DEFAULT_FALLBACK_TABLE },							-- hardly used, could be replaced with NEWFONT, size difference is not noticable 
+	{ filename = "fonts/buttonfont"..font_posfix..".zip", alias = BUTTONFONT, fallback = DEFAULT_FALLBACK_TABLE },
+	{ filename = "fonts/spirequal"..font_posfix..".zip", alias = NEWFONT, fallback = DEFAULT_FALLBACK_TABLE },
+	{ filename = "fonts/spirequal_small"..font_posfix..".zip", alias = NEWFONT_SMALL, fallback = DEFAULT_FALLBACK_TABLE },							-- hardly used, could be replaced with NEWFONT, size difference is not noticable
 	{ filename = "fonts/spirequal_outline"..font_posfix..".zip", alias = NEWFONT_OUTLINE, fallback = DEFAULT_FALLBACK_TABLE_OUTLINE },
 	{ filename = "fonts/spirequal_outline_small"..font_posfix..".zip", alias = NEWFONT_OUTLINE_SMALL, fallback = DEFAULT_FALLBACK_TABLE_OUTLINE },	-- not in use
 	{ filename = "fonts/ptmono32"..font_posfix..".zip", alias = CODEFONT, fallback = DEFAULT_FALLBACK_TABLE },										-- not in use yet, will be used for promo-code verification text box

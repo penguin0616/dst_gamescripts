@@ -28,7 +28,7 @@ local function onhammered(inst, worker)
 	if boat ~= nil then
 		boat:PushEvent("spawnnewboatleak", { pt = inst:GetPosition(), leak_size = "med_leak", playsoundfx = true })
 	end
-    
+
     inst.components.lootdropper:DropLoot()
     local fx = SpawnPrefab("collapse_small")
     fx.Transform:SetPosition(x, y, z)
@@ -94,7 +94,7 @@ local function LaunchProjectile(inst)
 
         local projectile = SpawnPrefab("waterstreak_projectile")
         projectile.Transform:SetPosition(x, 5, z)
-        
+
         local dx = targetpos.x - x
         local dz = targetpos.z - z
         local rangesq = dx * dx + dz * dz
@@ -149,13 +149,13 @@ local function OnEnableHelper(inst, enabled)
             inst.helper.entity:AddTransform()
             inst.helper.entity:AddAnimState()
 
-            
+
             inst.helper:AddTag("CLASSIFIED")
             inst.helper:AddTag("NOCLICK")
             inst.helper:AddTag("placer")
 
             inst.helper.Transform:SetScale(PLACER_SCALE, PLACER_SCALE, PLACER_SCALE)
-            
+
             inst.helper.AnimState:SetBank("winona_battery_placement")
             inst.helper.AnimState:SetBuild("winona_battery_placement")
             inst.helper.AnimState:PlayAnimation("idle")
@@ -242,7 +242,7 @@ local function fn()
     MakeMediumPropagator(inst)
 
     inst:AddComponent("inspectable")
-    
+
     inst:AddComponent("channelable")
     inst.components.channelable:SetChannelingFn(OnStartChanneling, OnStopChanneling)
     inst.components.channelable.use_channel_longaction = true
@@ -260,7 +260,7 @@ local function fn()
     inst.components.workable:SetWorkLeft(3)
     inst.components.workable:SetOnFinishCallback(onhammered)
     inst.components.workable:SetOnWorkCallback(onhit)
-    
+
     MakeHauntableWork(inst)
 
     inst:ListenForEvent("onbuilt", onbuilt)

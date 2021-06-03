@@ -330,7 +330,7 @@ local function fn()
     inst.components.inspectable.getstatus = GetStatus
     ------------------------------------------
 
-    inst:ListenForEvent("attacked", OnAttacked)    
+    inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("newcombattarget", OnNewTarget)
 
     inst.components.sleeper:SetResistance(2)

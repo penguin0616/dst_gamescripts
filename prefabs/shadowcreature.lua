@@ -110,8 +110,8 @@ local function ExchangeWithOceanTerror(inst)
                 shadow.sg:GoToState("appear")
                 shadow.components.combat:SetTarget(target)
                 TheWorld:PushEvent("ms_exchangeshadowcreature", {ent = inst, exchangedent = shadow})
-                local fx = SpawnPrefab("shadow_teleport_in") 
-                fx.Transform:SetPosition(sx,sy,sz)                
+                local fx = SpawnPrefab("shadow_teleport_in")
+                fx.Transform:SetPosition(sx,sy,sz)
             end
         end
     end
@@ -241,7 +241,7 @@ local data =
         health = TUNING.TERRORBEAK_HEALTH,
         damage = TUNING.TERRORBEAK_DAMAGE,
         attackperiod = TUNING.TERRORBEAK_ATTACK_PERIOD,
-        sanityreward = TUNING.SANITY_LARGE,        
+        sanityreward = TUNING.SANITY_LARGE,
     },
 }
 local ret = {}

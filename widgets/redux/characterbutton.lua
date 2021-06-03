@@ -27,7 +27,7 @@ local CharacterButton = Class(ImageButton, function(self, character, cbPortraitF
         CHARACTER_SELECT_BG)  -- selected
 
     self:ForceImageSize(110,110)
-    
+
     self:_SetupHead()
 
     self.lock_img = self:AddChild(Image("images/frontend_redux.xml", "accountitem_frame_lock.tex"))
@@ -47,14 +47,14 @@ end
 
 function CharacterButton:SetCharacter(hero)
     self.herocharacter = hero
-    
+
     if self.herocharacter == "random" or not Profile:GetAnimatedHeadsEnabled()  then
         self.head_animstate:SetTime(0)
         self.head_animstate:Pause()
     else
         self.head_animstate:SetTime(math.random()*1.5)
     end
-    
+
     self.head_anim:SetScale(CHARACTER_BUTTON_SCALE[self.herocharacter] or CHARACTER_BUTTON_SCALE.default)
     self.head_anim:SetPosition(0, CHARACTER_BUTTON_OFFSET[self.herocharacter] or CHARACTER_BUTTON_OFFSET.default, 0)
 

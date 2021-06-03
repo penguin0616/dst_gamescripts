@@ -97,7 +97,7 @@ local function ResumeSleep(inst, seconds)
 
     inst.components.minionspawner.shouldspawn = false
     inst.components.minionspawner:KillAllMinions()
-    
+
     if inst.hibernatetask ~= nil then
         inst.hibernatetask:Cancel()
     end
@@ -144,7 +144,7 @@ end
 local function CollectItems(inst)
     if inst.components.minionspawner.minions ~= nil then
         for k, v in pairs(inst.components.minionspawner.minions) do
-            if v.components.inventory ~= nil then                
+            if v.components.inventory ~= nil then
                 for k = 1, v.components.inventory.maxslots do
                     local item = v.components.inventory.itemslots[k]
                     if item ~= nil and not inst.components.inventory:IsFull() then
@@ -167,7 +167,7 @@ local function CollectItems(inst)
     end
 end
 
-local function SelectLure(inst)    
+local function SelectLure(inst)
     if inst.components.inventory ~= nil then
         local lures = {}
         for k = 1, inst.components.inventory.maxslots do

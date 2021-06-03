@@ -142,7 +142,7 @@ local WorldSettingsTab = Class(Widget, function(self, location_index, servercrea
             end, remove_action, {remove_width, 89*0.6}))
         self.removelevelbutton:SetPosition(460, 285)
         self.removelevelbutton:SetScale(0.8)
-        
+
         local add_action = string.format(STRINGS.UI.SANDBOXMENU.ADDLEVEL, tabname)
         self.sublevel_adder_overlay = self.root:AddChild(TEMPLATES.CurlyWindow(550,170,
             add_action,
@@ -161,18 +161,18 @@ local WorldSettingsTab = Class(Widget, function(self, location_index, servercrea
                         if not ShardSaveGameIndex:IsSlotEmpty(self.slot) then
                             TheFrontEnd:PushScreen(
                                 PopupDialogScreen(add_action, STRINGS.UI.SANDBOXMENU.ADDLEVEL_EXISTINGWARNING,
-                                { 
-                                    { 
-                                        text = add_action, 
+                                {
+                                    {
+                                        text = add_action,
                                         cb = function()
                                             TheFrontEnd:PopScreen()
                                             addmultilevel()
                                         end
                                     },
-                                    { 
-                                        text = STRINGS.UI.SERVERCREATIONSCREEN.CANCEL, 
+                                    {
+                                        text = STRINGS.UI.SERVERCREATIONSCREEN.CANCEL,
                                         cb = function()
-                                            TheFrontEnd:PopScreen()                 
+                                            TheFrontEnd:PopScreen()
                                         end
                                     }
                                 }
@@ -200,7 +200,7 @@ local WorldSettingsTab = Class(Widget, function(self, location_index, servercrea
                     Profile:Save()
                     w:Refresh()
                 end,
-                Profile:GetAutoCavesEnabled(), 
+                Profile:GetAutoCavesEnabled(),
                 string.format(STRINGS.UI.SANDBOXMENU.AUTOADDLEVEL, tabname)))
 
         local text_width = self.autoaddcaves.text:GetRegionSize()
@@ -268,7 +268,7 @@ function WorldSettingsTab:UpdateSublevelControlsVisibility()
         end
         self:DoFocusHookups()
     end
-    
+
     self.settings_root:Show()
 end
 

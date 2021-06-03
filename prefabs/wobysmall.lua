@@ -52,7 +52,7 @@ local assets =
     Asset("ANIM", "anim/pupington_emotes.zip"),
     Asset("ANIM", "anim/pupington_traits.zip"),
     Asset("ANIM", "anim/pupington_jump.zip"),
-    
+
     Asset("ANIM", "anim/pupington_woby_build.zip"),
     Asset("ANIM", "anim/pupington_transform.zip"),
     Asset("ANIM", "anim/woby_big_build.zip"),
@@ -184,7 +184,7 @@ local function fn()
     inst.IsAffectionate = IsAffectionate
     inst.IsSuperCute = IsSuperCute
     inst.IsPlayful = IsPlayful
-    
+
 	inst.playmatetags = {"critter"}
 
     inst:AddComponent("inspectable")
@@ -222,7 +222,7 @@ local function fn()
     inst:AddComponent("embarker")
     inst.components.embarker.embark_speed = inst.components.locomotor.walkspeed
     inst:AddComponent("drownable")
-    
+
 	inst:AddComponent("colourtweener")
 
     inst:AddComponent("crittertraits")

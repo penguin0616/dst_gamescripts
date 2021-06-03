@@ -21,7 +21,7 @@ local loot =
     "kelp",
 }
 
-local trading_items = 
+local trading_items =
 {
     { prefabs = { "kelp"  },         min_count = 2, max_count = 4, reset = false, add_filler = false, },
     { prefabs = { "kelp"  },         min_count = 2, max_count = 3, reset = false, add_filler = false, },
@@ -29,13 +29,13 @@ local trading_items =
     { prefabs = { "spoiled_food"  }, min_count = 2, max_count = 4, reset = false, add_filler = false, },
     { prefabs = { "tentaclespots" }, min_count = 1, max_count = 1, reset = false, add_filler = true,  },
 
-    { 
-      prefabs = { "trinket_12", "trinket_3", "trinket_25", "trinket_17", "trinket_4" }, 
+    {
+      prefabs = { "trinket_12", "trinket_3", "trinket_25", "trinket_17", "trinket_4" },
       min_count = 1, max_count = 1, reset = false, add_filler = true,
     },
-    
-    { 
-        prefabs = { "durian_seeds", "pepper_seeds", "eggplant_seeds", "pumpkin_seeds", "onion_seeds", "garlic_seeds"  }, 
+
+    {
+        prefabs = { "durian_seeds", "pepper_seeds", "eggplant_seeds", "pumpkin_seeds", "onion_seeds", "garlic_seeds"  },
         min_count = 1, max_count = 2, reset = false, add_filler = true,
     },
 }
@@ -172,7 +172,7 @@ local function HungerDelta(inst, data)
                 inst.components.talker:Say(STRINGS.MERM_KING_TALK_HUNGER_FULL)
             end
 
-            local time = Remap(data.newpercent, 1,0, 30,8) 
+            local time = Remap(data.newpercent, 1,0, 30,8)
             if increase then
                 inst.components.timer:StopTimer("hungrytalk_increase_cooldown")
                 inst.components.timer:StartTimer("hungrytalk_increase_cooldown", 10)
@@ -180,7 +180,7 @@ local function HungerDelta(inst, data)
             inst.components.timer:StopTimer("hungrytalk_cooldown")
             inst.components.timer:StartTimer("hungrytalk_cooldown", time)
         end
-        
+
         if data.newpercent <= 0 then
             inst.components.health:StopRegen()
         end
@@ -202,9 +202,9 @@ local function HealthDelta(inst, data)
 
             if inst.guards_available > 0 and (inst.guards == nil or #inst.guards == 0) and not inst.sg:HasStateTag("calling_guards") and not inst.components.health:IsDead() then
                 inst.sg:PushEvent("call_guards")
-                
+
                 if not inst.call_guard_task then
-                    inst.call_guard_task = inst:DoTaskInTime(TUNING.TOTAL_DAY_TIME, function() 
+                    inst.call_guard_task = inst:DoTaskInTime(TUNING.TOTAL_DAY_TIME, function()
                         inst.guards_available = 4
                         inst.call_guard_task = nil
                     end)
@@ -269,7 +269,7 @@ local function OnGuardEnterLimbo(inst)
 end
 
 local function CallGuards(inst)
-    local merm_positions = 
+    local merm_positions =
     {
         { x =  2.5, z =  2.5 },
         { x = -2.5, z =  2.5 },
@@ -289,7 +289,7 @@ local function CallGuards(inst)
         new_merm.Transform:SetPosition(x + merm_positions[i].x, y, z + merm_positions[i].z)
         new_merm.components.combat:SetTarget(inst.components.combat.target)
         new_merm.king = inst
-        
+
         local fx = SpawnPrefab("merm_spawn_fx")
         fx.Transform:SetPosition(new_merm.Transform:GetWorldPosition())
         inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/throne/spawn")
@@ -367,8 +367,8 @@ local function OnLoadPostPass(inst, newents, savedata)
     end
 
     if savedata.task_remaining then
-        inst.call_guard_task = inst:DoTaskInTime(savedata.task_remaining, 
-            function() 
+        inst.call_guard_task = inst:DoTaskInTime(savedata.task_remaining,
+            function()
                 inst.guards_available = 4
                 inst.call_guard_task = nil
             end)
@@ -450,10 +450,10 @@ local function fn()
 
     inst.trading_items = deepcopy(trading_items)
     inst.TradeItem = TradeItem
-    
+
     inst.CallGuards = CallGuards
     inst.ReturnMerms = ReturnMerms
-    
+
     inst.OnGuardDeath = OnGuardDeath
     inst.OnGuardRemoved = OnGuardRemoved
     inst.OnGuardEnterLimbo = OnGuardEnterLimbo

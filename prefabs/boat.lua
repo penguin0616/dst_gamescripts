@@ -33,7 +33,7 @@ local item_prefabs =
     "boat",
 }
 
-local function OnRepaired(inst)    
+local function OnRepaired(inst)
     inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/repair_with_wood")
 end
 
@@ -59,7 +59,7 @@ local function BoatCam_UpdateFn(dt, params, parent, best_dist_sq)
     local velocity_x = dt == 0 and 0 or ((platform_x - state.last_platform_x) / dt)
 	local velocity_z = dt == 0 and 0 or ((platform_z - state.last_platform_z) / dt)
     local velocity_normalized_x, velocity_normalized_z = 0, 0
-    local velocity = 0        
+    local velocity = 0
     local min_velocity = 0.4
     local velocity_sq = velocity_x * velocity_x + velocity_z * velocity_z
 
@@ -77,7 +77,7 @@ local function BoatCam_UpdateFn(dt, params, parent, best_dist_sq)
 
     --Average target_camera_offset to get rid of some of the noise.
     state.target_camera_offset.x = (state.target_camera_offset.x + velocity_normalized_x * look_ahead_amount) / 2
-    state.target_camera_offset.z = (state.target_camera_offset.z + velocity_normalized_z * look_ahead_amount) / 2        
+    state.target_camera_offset.z = (state.target_camera_offset.z + velocity_normalized_z * look_ahead_amount) / 2
 
     state.last_platform_x, state.last_platform_z = platform_x, platform_z
 
@@ -88,9 +88,9 @@ local function BoatCam_UpdateFn(dt, params, parent, best_dist_sq)
 
     local pan_gain, heading_gain, distance_gain = TheCamera:GetGains()
     local pan_lerp_speed = 0.75
-    pan_gain = Lerp(pan_gain, state.target_pan_gain, dt * pan_lerp_speed)        
+    pan_gain = Lerp(pan_gain, state.target_pan_gain, dt * pan_lerp_speed)
 
-    TheCamera:SetGains(pan_gain, heading_gain, distance_gain)    
+    TheCamera:SetGains(pan_gain, heading_gain, distance_gain)
 end
 
 local function StartBoatCamera(inst)
@@ -134,13 +134,13 @@ local function OnSpawnNewBoatLeak(inst, data)
 	end
 end
 
-local function OnObjGotOnPlatform(inst, obj)    
+local function OnObjGotOnPlatform(inst, obj)
     if obj == ThePlayer and inst.StartBoatCamera ~= nil then
 		inst:StartBoatCamera()
 	end
 end
 
-local function OnObjGotOffPlatform(inst, obj) 
+local function OnObjGotOffPlatform(inst, obj)
     if obj == ThePlayer then
 		TheFocalPoint.components.focalpoint:StopFocusSource(inst)
 	end
@@ -166,48 +166,48 @@ end
 
 local function on_start_steering(inst)
     if ThePlayer and ThePlayer.components.playercontroller ~= nil and ThePlayer.components.playercontroller.isclientcontrollerattached then
-        inst.components.reticule:CreateReticule()    
+        inst.components.reticule:CreateReticule()
     end
 end
 
-local function on_stop_steering(inst)    
+local function on_stop_steering(inst)
     if ThePlayer and ThePlayer.components.playercontroller ~= nil and ThePlayer.components.playercontroller.isclientcontrollerattached then
         inst.lastreticuleangle = nil
-        inst.components.reticule:DestroyReticule()        
+        inst.components.reticule:DestroyReticule()
     end
 end
 
 local function ReticuleTargetFn(inst)
 
     local range = 7
-    local pos = Vector3(inst.Transform:GetWorldPosition())   
+    local pos = Vector3(inst.Transform:GetWorldPosition())
 
     local dir = Vector3()
     dir.x = TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)
     dir.y = 0
     dir.z = TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)
-    local deadzone = .3    
+    local deadzone = .3
 
-    if math.abs(dir.x) >= deadzone or math.abs(dir.z) >= deadzone then    
-        dir = dir:GetNormalized()             
+    if math.abs(dir.x) >= deadzone or math.abs(dir.z) >= deadzone then
+        dir = dir:GetNormalized()
 
         inst.lastreticuleangle = dir
     else
         if inst.lastreticuleangle then
             dir = inst.lastreticuleangle
-        else 
+        else
             return nil
         end
     end
 
-    local Camangle = TheCamera:GetHeading()/180        
+    local Camangle = TheCamera:GetHeading()/180
     local theta = -PI *(0.5 - Camangle)
 
     local newx = dir.x * math.cos(theta) - dir.z *math.sin(theta)
     local newz = dir.x * math.sin(theta) + dir.z *math.cos(theta)
 
-    pos.x = pos.x - (newx * range) 
-    pos.z = pos.z - (newz * range) 
+    pos.x = pos.x - (newx * range)
+    pos.z = pos.z - (newz * range)
 
     return pos
 end
@@ -233,15 +233,15 @@ local function fn()
     local phys = inst.entity:AddPhysics()
     phys:SetMass(TUNING.BOAT.MASS)
     phys:SetFriction(0)
-    phys:SetDamping(5)    
+    phys:SetDamping(5)
     phys:SetCollisionGroup(COLLISION.OBSTACLES)
     phys:ClearCollisionMask()
-    phys:CollidesWith(COLLISION.WORLD)    
-    phys:CollidesWith(COLLISION.OBSTACLES)   
-    phys:SetCylinder(radius, 3) 
+    phys:CollidesWith(COLLISION.WORLD)
+    phys:CollidesWith(COLLISION.OBSTACLES)
+    phys:SetCylinder(radius, 3)
     --Boats currently need to not go to sleep because
-    --constraints will cause a crash if either the target object or the source object is removed from the physics world    
-    phys:SetDontRemoveOnSleep(true)           
+    --constraints will cause a crash if either the target object or the source object is removed from the physics world
+    phys:SetDontRemoveOnSleep(true)
 
     inst.AnimState:SetBank("boat_01")
     inst.AnimState:SetBuild("boat_test")
@@ -253,14 +253,14 @@ local function fn()
     inst:AddComponent("walkableplatform")
     inst.components.walkableplatform.radius = radius
 
-    inst:AddComponent("healthsyncer")    
+    inst:AddComponent("healthsyncer")
 
     inst.components.healthsyncer.max_health = max_health
 
 	AddConstrainedPhysicsObj(inst, SpawnPrefab("boat_item_collision")) -- hack until physics constraints are networked
 
     inst:AddComponent("waterphysics")
-    inst.components.waterphysics.restitution = 1.75    
+    inst.components.waterphysics.restitution = 1.75
 
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = ReticuleTargetFn
@@ -296,7 +296,7 @@ local function fn()
                 inst.oldspeed = lengthsq
             end
             inst.oldpos = pos
-        end)      
+        end)
 
 	end
 
@@ -328,7 +328,7 @@ local function fn()
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(max_health)
     inst.components.health.nofadeout = true
-	
+
 	inst.activefires = 0
 
 	local burnable_locator = SpawnPrefab('burnable_locator_medium')
@@ -350,7 +350,7 @@ local function fn()
 	burnable_locator = SpawnPrefab('burnable_locator_medium')
 	burnable_locator.boat = inst
 	inst.components.hull:AttachEntityToBoat(burnable_locator, 0, -2.5, true)
-	
+
     inst:SetStateGraph("SGboat")
 
 	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak)
@@ -377,7 +377,7 @@ local function build_boat_collision_mesh(radius, height)
 
         local x1 = math.cos(angle1) * radius
         local z1 = math.sin(angle1) * radius
-        
+
         table.insert(triangles, x0)
         table.insert(triangles, y0)
         table.insert(triangles, z0)
@@ -423,7 +423,7 @@ local function boat_player_collision_fn()
     phys:ClearCollisionMask()
     phys:CollidesWith(COLLISION.CHARACTERS)
     phys:CollidesWith(COLLISION.WORLD)
-    phys:SetTriangleMesh(PLAYER_COLLISION_MESH)    
+    phys:SetTriangleMesh(PLAYER_COLLISION_MESH)
 
     inst:AddTag("NOBLOCK")
     inst:AddTag("NOCLICK")
@@ -483,7 +483,7 @@ local function ondeploy(inst, pt, deployer)
         boat.Physics:SetCollides(true)
 
         boat.sg:GoToState("place")
-		
+
 		boat.components.hull:OnDeployed()
 
         inst:Remove()

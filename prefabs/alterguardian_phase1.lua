@@ -84,7 +84,7 @@ local function Retarget(inst)
 
     local newtarget = nil
     for _, target in ipairs(potential_targets) do
-        if target ~= inst and target.entity:IsVisible() 
+        if target ~= inst and target.entity:IsVisible()
                 and inst.components.combat:CanTarget(target)
                 and target:IsOnValidGround() then
             newtarget = target

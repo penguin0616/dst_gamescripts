@@ -29,7 +29,7 @@ end
 
 local function OnWork(inst, worker, workleft)
     if workleft <= 0 then
-        TheWorld:PushEvent("CHEVO_seastack_mined", {target=inst,doer=worker}) 
+        TheWorld:PushEvent("CHEVO_seastack_mined", {target=inst,doer=worker})
         local pt = inst:GetPosition()
         SpawnPrefab("rock_break_fx").Transform:SetPosition(pt:Get())
 

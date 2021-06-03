@@ -288,7 +288,7 @@ local states =
                 inst.AnimState:PlayAnimation("death")
 				if inst.components.amphibiouscreature ~= nil and inst.components.amphibiouscreature.in_water then
 		            inst.AnimState:PushAnimation("death_idle", true)
-				end			
+				end
             end
             inst.Physics:Stop()
             RemovePhysicsColliders(inst)
@@ -324,7 +324,7 @@ local states =
 				end
             end),
         },
-		
+
 
         onexit = function(inst)
             if not inst:IsInLimbo() then
@@ -555,7 +555,7 @@ local states =
         end,
     },
 
-	
+
     State{
         name = "mutated_spawn",
         tags = { "busy" },
@@ -583,7 +583,7 @@ local states =
     },
 }
 
-CommonStates.AddAmphibiousCreatureHopStates(states, 
+CommonStates.AddAmphibiousCreatureHopStates(states,
 { -- config
 	swimming_clear_collision_frame = 9 * FRAMES,
 },
@@ -592,21 +592,21 @@ CommonStates.AddAmphibiousCreatureHopStates(states,
 { -- timeline
 	hop_pre =
 	{
-		TimeEvent(0, function(inst) 
-			if inst:HasTag("swimming") then 
-				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+		TimeEvent(0, function(inst)
+			if inst:HasTag("swimming") then
+				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
 			end
 		end),
 	},
 	hop_pst = {
-		TimeEvent(4 * FRAMES, function(inst) 
-			if inst:HasTag("swimming") then 
+		TimeEvent(4 * FRAMES, function(inst)
+			if inst:HasTag("swimming") then
 				inst.components.locomotor:Stop()
-				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
 			end
 		end),
-		TimeEvent(6 * FRAMES, function(inst) 
-			if not inst:HasTag("swimming") then 
+		TimeEvent(6 * FRAMES, function(inst)
+			if not inst:HasTag("swimming") then
                 inst.components.locomotor:StopMoving()
 			end
 		end),
@@ -640,7 +640,7 @@ CommonStates.AddRunStates(states,
         TimeEvent(4 * FRAMES, function(inst)
             if inst:HasTag("swimming") then
                 inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small",nil,.25)
-            else            
+            else
                 if inst:HasTag("clay") then
                     PlayClayFootstep(inst)
                 else

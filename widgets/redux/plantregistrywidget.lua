@@ -62,7 +62,7 @@ local PlantRegistryWidget = Class(Widget, function(self, parent)
 
 	local function MakeTab(data, index)
         local tab = ImageButton("images/plantregistry.xml", "plant_tab_inactive.tex", nil, nil, nil, "plant_tab_active.tex")
-        
+
 		tab:SetFocusScale(base_size, base_size)
 		tab:SetNormalScale(base_size, base_size)
 		tab:SetText(data.text)
@@ -78,7 +78,7 @@ local PlantRegistryWidget = Class(Widget, function(self, parent)
 	        self.last_selected = tab
 			tab:Select()
 			tab:MoveToFront()
-			if self.panel ~= nil then 
+			if self.panel ~= nil then
 				self.panel:Kill()
 			end
 			self.panel = self.root:AddChild(data.build_panel_fn())
@@ -93,7 +93,7 @@ local PlantRegistryWidget = Class(Widget, function(self, parent)
 
 		return tab
 	end
-	
+
 	self.tabs = {}
 	for i = 1, #button_data do
 		table.insert(self.tabs, self.tab_root:AddChild(MakeTab(button_data[i], i)))
@@ -107,7 +107,7 @@ local PlantRegistryWidget = Class(Widget, function(self, parent)
 		starting_tab = 1
 	end
 	self.last_selected = self.tabs[starting_tab]
-	self.last_selected:Select()	
+	self.last_selected:Select()
 	self.last_selected:MoveToFront()
 	self.panel = self.root:AddChild(button_data[starting_tab].build_panel_fn())
 

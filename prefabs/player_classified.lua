@@ -552,7 +552,7 @@ end
 
 local function OnStormLevelDirty(inst)
     if inst._parent ~= nil then
-        inst._parent:PushEvent("stormlevel", { level = inst.stormlevel:value() / 7, stormtype = inst.stormtype:value() }) -- 
+        inst._parent:PushEvent("stormlevel", { level = inst.stormlevel:value() / 7, stormtype = inst.stormtype:value() }) --
     end
 end
 
@@ -742,25 +742,25 @@ end
 
 local function OnHoundWarningDirty(inst)
     if inst._parent ~= nil and inst._parent.HUD ~= nil then
-        local soundprefab = nil        
-        if inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL1 then            
+        local soundprefab = nil
+        if inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL1 then
             soundprefab = "houndwarning_lvl1"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL2 then            
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL2 then
             soundprefab = "houndwarning_lvl2"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL3 then            
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL3 then
             soundprefab = "houndwarning_lvl3"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL4 then            
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL4 then
             soundprefab = "houndwarning_lvl4"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL1_WORM then            
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL1_WORM then
             soundprefab = "wormwarning_lvl1"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL2_WORM then            
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL2_WORM then
             soundprefab = "wormwarning_lvl2"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL3_WORM then            
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL3_WORM then
             soundprefab = "wormwarning_lvl3"
-        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL4_WORM then            
-            soundprefab = "wormwarning_lvl4"            
-        end        
-        if soundprefab then       
+        elseif inst._parent.player_classified.houndwarningevent:value() == HOUNDWARNINGTYPE.LVL4_WORM then
+            soundprefab = "wormwarning_lvl4"
+        end
+        if soundprefab then
             local sound = SpawnPrefab(soundprefab)
         end
     end
@@ -843,8 +843,8 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("wormholetravel", OnWormholeTravel, inst._parent)
         inst:ListenForEvent("makefriend", OnMakeFriend, inst._parent)
         inst:ListenForEvent("feedincontainer", OnFeedInContainer, inst._parent)
-        inst:ListenForEvent("houndwarning", OnHoundWarning, inst._parent)       
-        inst:ListenForEvent("play_theme_music", fns.OnPlayThemeMusic, inst._parent)       
+        inst:ListenForEvent("houndwarning", OnHoundWarning, inst._parent)
+        inst:ListenForEvent("play_theme_music", fns.OnPlayThemeMusic, inst._parent)
     else
         inst.ishealthpulseup:set_local(false)
         inst.ishealthpulsedown:set_local(false)
@@ -880,7 +880,7 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("playercamerashake", OnPlayerCameraShake)
         inst:ListenForEvent("playerscreenflashdirty", OnPlayerScreenFlashDirty)
         inst:ListenForEvent("attunedresurrectordirty", OnAttunedResurrectorDirty)
-		
+
 
         OnIsTakingFireDamageDirty(inst)
         OnTemperatureDirty(inst)
@@ -992,9 +992,9 @@ local function fn()
 		net_tinybyte(inst.GUID, "inspiration.song3", "inspirationsong3dirty"),
 	}
     inst.hasinspirationbuff = net_bool(inst.GUID, "inspiration.hasbuff", "hasinspirationbuffdirty")
-	
+
 	-- available_slots maybe?
-	
+
 
     --Temperature variables
     inst._oldtemperature = TUNING.STARTING_TEMP
@@ -1048,7 +1048,7 @@ local function fn()
     inst.fadetime = net_smallbyte(inst.GUID, "frontend.fadetime", "playerfadedirty")
     inst.screenflash = net_tinybyte(inst.GUID, "frontend.screenflash", "playerscreenflashdirty")
     inst.wormholetravelevent = net_tinybyte(inst.GUID, "frontend.wormholetravel", "wormholetraveldirty")
-    inst.houndwarningevent = net_tinybyte(inst.GUID, "frontend.houndwarning", "houndwarningdirty")        
+    inst.houndwarningevent = net_tinybyte(inst.GUID, "frontend.houndwarning", "houndwarningdirty")
 
 	-- busy theme music
     inst.start_farming_music = net_event(inst.GUID, "startfarmingmusicevent")

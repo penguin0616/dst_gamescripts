@@ -42,7 +42,7 @@ local function onload(inst, data)
     end
 end
 
-local function oncollide(inst, other)    
+local function oncollide(inst, other)
     if (inst:IsValid() and Vector3(inst.Physics:GetVelocity()):LengthSq() > .1) or
         (other ~= nil and other:IsValid() and other.Physics ~= nil and Vector3(other.Physics:GetVelocity()):LengthSq() > .1) then
         inst.AnimState:PlayAnimation("hit")
@@ -155,13 +155,13 @@ local function confetti_fn()
 			local r = 1.0
 			local mini_balloons = SpawnPrefab("balloonparty_confetti_balloon")
 			mini_balloons.Transform:SetPosition(x + math.random()*r, y, z + math.random()*r)
-			
+
 			mini_balloons = SpawnPrefab("balloonparty_confetti_balloon")
 			mini_balloons.Transform:SetPosition(x + math.random()*r, y, z + math.random()*r)
-			
+
 			mini_balloons = SpawnPrefab("balloonparty_confetti_balloon")
 			mini_balloons.Transform:SetPosition(x + math.random()*r, y, z + math.random()*r)
-			
+
 			mini_balloons = SpawnPrefab("balloonparty_confetti_balloon")
 			mini_balloons.Transform:SetPosition(x + math.random()*r, y, z + math.random()*r)
 		end)
@@ -192,7 +192,7 @@ local function buff_OnTick(inst, target)
     if target.components.health ~= nil
         and not target.components.health:IsDead()
 		and target.components.sanity ~= nil
-        and not target:HasTag("playerghost") 
+        and not target:HasTag("playerghost")
 		and #TheSim:FindEntities(x, y, z, CONFFETI_CLOUD_DIST, {"confetti_cloud"}) > 0
 		then
 			local partysize = TheSim:CountEntities(x, y, z, CONFFETI_PARTY_DIST, COUNT_PARTYGOERS_TAGS) + TheSim:CountEntities(x, y, z, CONFFETI_PARTY_DIST, COUNT_PARTYCONFETTI_TAGS)

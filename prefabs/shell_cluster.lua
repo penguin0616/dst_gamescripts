@@ -31,7 +31,7 @@ local PHYSICS_RADIUS = .75
 local function OnWorked(inst, worker)
     local pt = inst:GetPosition()
 	SpawnPrefab("rock_break_fx").Transform:SetPosition(pt:Get())
-	
+
 	inst.components.lootdropper:DropLoot(pt)
 
     inst:Remove()
@@ -60,7 +60,7 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle")
 
 	inst:AddTag("heavy")
-	
+
 	MakeHeavyObstaclePhysics(inst, PHYSICS_RADIUS)
 	inst:SetPhysicsRadiusOverride(PHYSICS_RADIUS)
 
@@ -71,13 +71,13 @@ local function fn()
     end
 
     inst:AddComponent("inspectable")
-	
+
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable("shell_cluster")
-	
+
 	inst:AddComponent("heavyobstaclephysics")
 	inst.components.heavyobstaclephysics:SetRadius(PHYSICS_RADIUS)
-	
+
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.cangoincontainer = false
     inst.components.inventoryitem:SetSinks(true)
@@ -92,7 +92,7 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
     inst.components.workable:SetWorkLeft(TUNING.SHELL_CLUSTER_MINE)
 	inst.components.workable:SetOnFinishCallback(OnWorked)
-	
+
 	inst:AddComponent("submersible")
 	inst:AddComponent("symbolswapdata")
 	inst.components.symbolswapdata:SetData("singingshell_cluster", "swap_body")

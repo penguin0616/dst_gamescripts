@@ -17,7 +17,7 @@ local function FindOpenArea(map, map_width, map_height, tiles_wide, tiles_high)
 	end
 
 	local padding = 2-- we don't want to start right on the edge of the world
-	local top, left = padding, padding	
+	local top, left = padding, padding
 
 	local step_size = 5
 	local num_steps = math.floor((map_width - 2*padding)/step_size)
@@ -30,7 +30,7 @@ local function FindOpenArea(map, map_width, map_height, tiles_wide, tiles_high)
 		end
 		top = padding
 		left = left + step_size
-	end			
+	end
 	return false
 end
 
@@ -53,9 +53,9 @@ local function AddTopologyData(topology, left, top, width, height, room_id, tags
 	node.type = NODE_TYPE.Default
 	node.x = node.cent[1]
 	node.y = node.cent[2]
-	
+
 	node.validedges = {}
-	
+
 	topology.nodes[index] = node
 
 	return index
@@ -69,7 +69,7 @@ local function AddTileNodeIdsForArea(world_map, node_index, left, top, width, he
 	end
 end
 
-local function add_fn_fn(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset) 
+local function add_fn_fn(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset)
 	local x = (points_x[current_pos_idx] - width/2.0)*TILE_SCALE
 	local y = (points_y[current_pos_idx] - height/2.0)*TILE_SCALE
 	x = math.floor(x*100)/100.0
@@ -80,7 +80,7 @@ local function add_fn_fn(prefab, points_x, points_y, current_pos_idx, entitiesOu
 	end
 	local save_data = {x=x, z=y}
 	if prefab_data then
-				
+
 		if prefab_data.data then
 			if type(prefab_data.data) == "function" then
 				save_data["data"] = prefab_data.data()
@@ -126,11 +126,11 @@ local function ReturnOfThemRetrofitting_AcientArchives(world_map, savedata)
 				end
 			end
 		end
-		 
+
 		obj_layout.Place({left + (3*8), top + (1*8)}, "SINGLE_SOUTH", add_fn, {"archive_keyroom"}, world_map)
 		obj_layout.Place({left + (1*8), top + (4*8)}, "SINGLE_SOUTH", add_fn, {"archive_start"}, world_map)
 		obj_layout.Place({left + (4*8), top + (3*8)}, "SINGLE_WEST", add_fn, {"archive_end"}, world_map)
-		
+
 		local topology_width = ((maze_width-2) * maze_tiles_size)
 		local topology_height = ((maze_height-1) * maze_tiles_size)
 
@@ -174,6 +174,6 @@ local function ReturnOfThemRetrofitting_AcientArchives(world_map, savedata)
 	end
 end
 
-return { 
+return {
 	ReturnOfThemRetrofitting_AcientArchives = ReturnOfThemRetrofitting_AcientArchives,
 }

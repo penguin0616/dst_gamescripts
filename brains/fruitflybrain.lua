@@ -75,7 +75,7 @@ local FruitFlyBrain = Class(Brain, function(self, inst)
 end)
 
 function FruitFlyBrain:OnStart()
-    local brain = 
+    local brain =
     {
         WhileNode( function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
         --LordFruitFly:
@@ -89,7 +89,7 @@ function FruitFlyBrain:OnStart()
         FindFarmPlant(self.inst, ACTIONS.ATTACKPLANT, false, GetFollowPos, ShouldTargetPlant),
         WhileNode(function() return ShouldSowWeeds(self.inst) end, "Should Sow Weeds",
             DoAction(self.inst, SowWeedsAction, "Sow Weeds", true )),
-        Wander(self.inst, GetFollowPos, MAX_WANDER_DIST),   
+        Wander(self.inst, GetFollowPos, MAX_WANDER_DIST),
     }
     if self.inst:HasTag("lordfruitfly") then
         table.insert(brain, 2, MinPeriod(self.inst, TUNING.LORDFRUITFLY_SUMMONPERIOD, false,

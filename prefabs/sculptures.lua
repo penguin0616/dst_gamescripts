@@ -275,7 +275,7 @@ local function makesculpture(name, physics_radius, scale, second_piece_name)
 
         inst:WatchWorldState("isfullmoon", CheckMorph)
         inst:WatchWorldState("isnewmoon", CheckMorph)
-        
+
         inst:ListenForEvent("shadowchessroar", onshadowchessroar)
 
         inst.Reanimate = Reanimate

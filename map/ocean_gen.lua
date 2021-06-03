@@ -356,8 +356,8 @@ function Ocean_ConvertImpassibleToWater(width, height, data)
 		end
 
 		local function add_boarder(x, y)
-			if world:GetTile(x, y) ~= GROUND.IMPASSABLE then 
-				world:SetTile(x, y, GROUND.OCEAN_ROUGH) 
+			if world:GetTile(x, y) ~= GROUND.IMPASSABLE then
+				world:SetTile(x, y, GROUND.OCEAN_ROUGH)
 			end
 
 		end
@@ -370,7 +370,7 @@ function Ocean_ConvertImpassibleToWater(width, height, data)
 			middle = {max = math.floor(OCEAN_WATERFALL_MAX_DIST * .7), deeper_chance = 0.25, shallower_chance = 0.25},
 			corner = {max = init_d, deeper_chance = 0.75, shallower_chance = 0.1},
 		}
-	
+
 		for i = 0, height, 1 do
 			local d = calc_next(state, (i <= offset or i >= height - offset - offset) and tunings.corner or tunings.middle)
 			for ii = 0, d do
@@ -388,7 +388,7 @@ function Ocean_ConvertImpassibleToWater(width, height, data)
 			add_boarder(width - d - 1, i)
 			add_boarder(width - d - 2, i)
 		end
-		
+
 		state = {init_d, init_d, init_d}
 		for i = 0, width, 1 do
 			local d = calc_next(state, (i <= offset or i >= width - offset - offset) and tunings.corner or tunings.middle)
@@ -612,16 +612,16 @@ local function AddSquareTopolopy(encoded_topology, left, top, size, add_topology
 	node.type = add_topology.node_type or NODE_TYPE.Default
 	node.x = node.cent[1]
 	node.y = node.cent[2]
-	
+
 	node.validedges = {}
-	
+
 	encoded_topology.nodes[index] = node
-	
+
 end
 
 function Ocean_PlaceSetPieces(set_pieces, add_entity, obj_layout, populating_tile, min_dist_from_land, encoded_topology, map_width, map_height)
 	print("[Ocean] Placing ocean set pieces.")
-    
+
 	local total = 0
 	local num_placed = 0
 
@@ -695,8 +695,8 @@ function PopulateWaterPrefabWorldGenCustomizations(populating_tile, spawnFn, ent
 
 		if prefab ~= nil then
 			local prefab_data = {}
-			prefab_data.data = water_contents.prefabdata and water_contents.prefabdata[prefab] or nil	
-			PopulateWorld_AddEntity(prefab, points_x[idx], points_y[idx], populating_tile, entitiesOut, width, height, prefab_list, prefab_data)	
+			prefab_data.data = water_contents.prefabdata and water_contents.prefabdata[prefab] or nil
+			PopulateWorld_AddEntity(prefab, points_x[idx], points_y[idx], populating_tile, entitiesOut, width, height, prefab_list, prefab_data)
 
 			amount_to_generate[prefab] = amount_to_generate[prefab] - 1
 
@@ -746,7 +746,7 @@ local function PopulateWaterType(populating_tile, spawnFn, entitiesOut, width, h
 		local points_x, points_y = GetRandomWaterPoints(populating_tile, width, height, edge_dist, 2 * pos_needed + 10)
 
 		local pos_cur = 1
-		for prefab, count in pairs(generate_these) do 
+		for prefab, count in pairs(generate_these) do
 			local added = 0
 			while added < count and pos_cur <= #points_x do
 				if terrain.filter[prefab] == nil or not table.contains(terrain.filter[prefab], populating_tile) then
@@ -780,7 +780,7 @@ local function PopulateWaterType(populating_tile, spawnFn, entitiesOut, width, h
 
 	PopulateWaterPrefabWorldGenCustomizations(populating_tile, spawnFn, entitiesOut, width, height, edge_dist, water_contents, world_gen_choices, prefab_list)
 
-	for prefab, num in pairs(setpiece_prefab_list) do	
+	for prefab, num in pairs(setpiece_prefab_list) do
 		if prefab_list[prefab] == nil then
 			prefab_list[prefab] = 0
 		end

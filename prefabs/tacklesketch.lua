@@ -4,7 +4,7 @@ local assets =
 }
 
 -- Note: The index is saved, always add to the end of the list! and never reorder!
-local SKETCHES = 
+local SKETCHES =
 {
 	{ item = "oceanfishingbobber_ball",				recipe = "oceanfishingbobber_ball" },
 	{ item = "oceanfishingbobber_oval",				recipe = "oceanfishingbobber_oval" },

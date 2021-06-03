@@ -74,9 +74,9 @@ local function RegisterDebuff(self, name, ent, data)
         self.debuffs[name] =
         {
             inst = ent,
-            onremove = function(debuff) 
-							self.debuffs[name] = nil 
-							if self.ondebuffremoved ~= nil then 
+            onremove = function(debuff)
+							self.debuffs[name] = nil
+							if self.ondebuffremoved ~= nil then
 								self.ondebuffremoved(self.inst, name, debuff)
 							end
 						end,
@@ -112,7 +112,7 @@ function Debuffable:RemoveDebuff(name)
     if debuff ~= nil then
         self.debuffs[name] = nil
         self.inst:RemoveEventCallback("onremove", debuff.onremove, debuff.inst)
-		if self.ondebuffremoved ~= nil then 
+		if self.ondebuffremoved ~= nil then
 			self.ondebuffremoved(self.inst, name, debuff.inst)
 		end
         if debuff.inst.components.debuff ~= nil then
@@ -151,11 +151,11 @@ end
 
 function Debuffable:GetDebugString()
 	local str = "Num Buffs: " .. tostring(GetTableSize(self.debuffs))
-	
+
     for k, v in pairs(self.debuffs) do
 		str = str .. "\n  " .. tostring(v.inst.prefab)
 	end
-		
+
 	return str
 end
 

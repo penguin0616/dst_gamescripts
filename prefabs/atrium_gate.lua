@@ -311,7 +311,7 @@ local function OnDestabilizeExplode(inst)
 end
 
 local function OnCooldown(inst)
-    if inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then 
+    if inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
         inst.AnimState:PlayAnimation("cooldown", true)
         inst.SoundEmitter:PlaySound("dontstarve/common/together/atrium_gate/cooldown_LP", "loop")
     end

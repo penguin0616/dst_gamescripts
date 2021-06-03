@@ -10,13 +10,13 @@ local brain = require "brains/crabkingbrain"
 local assets =
 {
     Asset("ANIM", "anim/crab_king_basic.zip"),
-    Asset("ANIM", "anim/crab_king_actions.zip"),    
+    Asset("ANIM", "anim/crab_king_actions.zip"),
     Asset("ANIM", "anim/crab_king_build.zip"),
 }
 
 local chipassets =
 {
-    Asset("ANIM", "anim/crabking_rockchip.zip"),    
+    Asset("ANIM", "anim/crabking_rockchip.zip"),
 }
 
 local prefabs =
@@ -79,7 +79,7 @@ local function removecrab(inst)
 end
 
 local function RemoveDecor(inst, data)
-    inst.AnimState:ClearOverrideSymbol("gems_blue")    
+    inst.AnimState:ClearOverrideSymbol("gems_blue")
 end
 
 local function AddDecor(inst, data)
@@ -102,7 +102,7 @@ local function AddDecor(inst, data)
     elseif data.itemprefab == "hermit_pearl" then
         symbol = "hermit_pearl"
     end
-    
+
     inst.AnimState:OverrideSymbol("gem"..data.slot, "crab_king_build", symbol)
     inst.SoundEmitter:PlaySound("hookline_2/creatures/boss/crabking/gem_place")
     inst.shinefx = SpawnPrefab("crab_king_shine")
@@ -116,7 +116,7 @@ local function clearsocketart(inst)
     inst.AnimState:ClearOverrideSymbol("gems_blue")
     for i=1,9 do
         inst.AnimState:ClearOverrideSymbol("gem"..i)
-    end    
+    end
 end
 
 local function socketitem(inst,item,socketnum)
@@ -139,7 +139,7 @@ local function socketitem(inst,item,socketnum)
     end
     local data = {slot = socketnum, itemprefab = item.prefab}
     table.insert(inst.socketed,data)
-    AddDecor(inst, data)    
+    AddDecor(inst, data)
     item:RemoveTag("irreplaceable")
     item:Remove()
 
@@ -152,16 +152,16 @@ local function socketitem(inst,item,socketnum)
 
         inst.components.freezable:SetResistance(3 + inst.countgems(inst).blue)
 
-        inst:AddTag("epic")    
+        inst:AddTag("epic")
         inst:AddTag("animal")
         inst:AddTag("scarytoprey")
-        inst:AddTag("hostile")   
+        inst:AddTag("hostile")
 
         inst:PushEvent("activate")
     end
 end
 
-local function doshine(inst,slot)    
+local function doshine(inst,slot)
     inst.shinefx = SpawnPrefab("crab_king_shine")
     inst.shinefx.entity:AddFollower()
     --inst.shinefx.entity:SetParent(inst)
@@ -172,7 +172,7 @@ local function gemshine(inst,color)
     if inst.socketed then
         local t = 0
         for i,data in ipairs(inst.socketed)do
-        
+
             if (data.itemprefab == "bluegem" and color == "blue") or
                (data.itemprefab == "redgem" and color == "red") or
                (data.itemprefab == "purplegem" and color == "purple") or
@@ -185,7 +185,7 @@ local function gemshine(inst,color)
                 end)
                 t = t+1
             end
-            
+
         end
     end
 end
@@ -217,7 +217,7 @@ local function OnNewTarget(inst, data)
 
 end
 
-local function ShouldAcceptItem(inst, item)        
+local function ShouldAcceptItem(inst, item)
     return item:HasTag("gem") and #inst.socketed < MAX_SOCKETS
 end
 
@@ -268,11 +268,11 @@ local function OnEntitySleep(inst)
                 end
             end
         end
-        inst.arms = nil      
-        inst:RemoveTag("epic")    
+        inst.arms = nil
+        inst:RemoveTag("epic")
         inst:RemoveTag("animal")
         inst:RemoveTag("scarytoprey")
-        inst:RemoveTag("hostile")           
+        inst:RemoveTag("hostile")
 
         inst:RemoveComponent("freezable")
         inst:RemoveComponent("burnable")
@@ -280,16 +280,16 @@ local function OnEntitySleep(inst)
 end
 
 local function OnEntityWake(inst)
-   
+
 end
 
 local function OnTimerDone(inst, data)
     if data.name == "claw_regen_timer" then
         inst.regenarm(inst)
-    end 
+    end
     if data.name == "fix_timer" then
         inst.wantstoheal = nil
-    end    
+    end
 end
 
 local function OnSave(inst, data)
@@ -364,7 +364,7 @@ local CRABKING_SPELLGENERATOR_TAGS = {"crabking_spellgenerator"}
 local SEASTACK_TAGS = {"seastack"}
 local REPAIRED_PATCH_TAGS = {"boat_repaired_patch"}
 
-local function startcastspell(inst, freeze) 
+local function startcastspell(inst, freeze)
     if freeze then
         local x,y,z = inst.Transform:GetWorldPosition()
         local fx = SpawnPrefab("crabking_feeze")
@@ -388,7 +388,7 @@ local function startcastspell(inst, freeze)
                 fx.fisher_prefab = inst.prefab
                 fx:ListenForEvent("onremove", function() removecrab(fx) end, inst)
                 fx.Transform:SetPosition(boatpt.x,boatpt.y,boatpt.z)
-                fx.dogeyserburbletask(fx)  
+                fx.dogeyserburbletask(fx)
             end
         end
     end
@@ -402,13 +402,13 @@ local function endcastspell(inst, lastwasfreeze)
 
     inst.dofreezecast = nil
     inst.wantstocast = nil
-    
+
     local range = getfreezerange(inst)
 
     if inst.components.health:GetPercent() < TUNING.CRABKING_FREEZE_THRESHOLD and inst:IsNearPlayer(range) then
         inst.dofreezecast = true
     end
-    
+
     local x,y,z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, 25, nil, nil, CRABKING_SPELLGENERATOR_TAGS)
     if #ents > 0 then
@@ -419,12 +419,12 @@ local function endcastspell(inst, lastwasfreeze)
                 ent:Remove()
             end
         end
-    end    
+    end
     if lastwasfreeze then
         inst.dofreezecast = nil
         local x,y,z = inst.Transform:GetWorldPosition()
         local boatents = TheSim:FindEntities(x,y,z, 25, BOAT_TAGS)
-        if #boatents > 0 then    
+        if #boatents > 0 then
             inst.wantstocast = true
         end
         inst.gemshine(inst,"blue")
@@ -440,7 +440,7 @@ local function oncrabfreeze(inst)
         for i,ent in pairs(ents)do
             ent:Remove()
         end
-    end 
+    end
 end
 
 local function spawnstacks(inst)
@@ -458,7 +458,7 @@ local function spawnstacks(inst)
                     stack.Transform:SetPosition(pos.x+offset.x,0,pos.z+offset.z)
                     stack.AnimState:PlayAnimation(stack.stackid.."_emerge")
                     stack.AnimState:PushAnimation(stack.stackid.."_full")
-                    SpawnPrefab("splash_green_large").Transform:SetPosition(pos.x+offset.x,0,pos.z+offset.z)   
+                    SpawnPrefab("splash_green_large").Transform:SetPosition(pos.x+offset.x,0,pos.z+offset.z)
                 end)
             end
         end
@@ -481,7 +481,7 @@ local function spawnarm(inst,armpos, fx)
     local boat =  TheWorld.Map:GetPlatformAtPoint(pos.x, pos.z)
     local tries = 0
     while boat and tries < 5 do
-           
+
         if boat then
             pos = Vector3(boat.Transform:GetWorldPosition())
             local theta = math.random()*2*PI
@@ -493,10 +493,10 @@ local function spawnarm(inst,armpos, fx)
         tries = tries + 1
     end
     if not boat then
-        local arm = SpawnPrefab("crabking_claw") 
+        local arm = SpawnPrefab("crabking_claw")
         arm.Transform:SetPosition(pos.x, 0, pos.z)
         arm.armpos = armpos
-        inst.arms[armpos] = arm    
+        inst.arms[armpos] = arm
         local health = TUNING.CRABKING_CLAW_HEALTH + (math.ceil(inst.countgems(inst).green/2)* TUNING.CRABKING_CLAW_HEALTH_BOOST )
         arm.components.health:SetMaxHealth(health)
         arm.components.health:SetCurrentHealth(health)
@@ -561,7 +561,7 @@ local function dropgems(inst)
 end
 
 local function removegem(inst,gemname)
-    for i=#inst.socketed,1, -1 do    
+    for i=#inst.socketed,1, -1 do
         if inst.socketed[i].itemprefab == gemname then
             table.remove(inst.socketed,i)
         end
@@ -653,7 +653,7 @@ local function setdamageart(inst)
     fx.entity:SetParent(inst.entity)
     fx.Follower:FollowSymbol(inst.GUID, "damage"..art, 0, 0, 0)
 
-    local pos = Vector3(inst.AnimState:GetSymbolPosition("damage"..art,0,0,0))  
+    local pos = Vector3(inst.AnimState:GetSymbolPosition("damage"..art,0,0,0))
     if art == 7 or art == 8 then
        inst.spawnchunk(inst,"crabking_chip_high",pos)
     elseif art == 1 or art == 3 or art == 5 or art == 6 or art == 9 or art == 10 then
@@ -674,15 +674,15 @@ local function setrepairedart(inst)
 end
 
 local function onHealthChange(inst,data)
-    local current = data.oldpercent 
+    local current = data.oldpercent
 
     local done = nil
     while data.newpercent and not done do
         if data.oldpercent > data.newpercent then
             current = math.max(current - 0.1,data.newpercent)
-        else 
+        else
             current = math.min(current + 0.1,data.newpercent)
-        end        
+        end
         if (current <= 0.9 and current > 0.8 and #inst.nondamagedsymbollist >= 10) or
            (current <= 0.8 and current > 0.7 and #inst.nondamagedsymbollist >= 9) or
            (current <= 0.7 and current > 0.6 and #inst.nondamagedsymbollist >= 8) or
@@ -696,7 +696,7 @@ local function onHealthChange(inst,data)
 
             setdamageart(inst)
         end
-      
+
         if (current >= 1.0                   and #inst.nondamagedsymbollist < 10) or
            (current >= 0.9 and current < 1.0 and #inst.nondamagedsymbollist < 9) or
            (current >= 0.8 and current < 0.9 and #inst.nondamagedsymbollist < 8) or
@@ -707,9 +707,9 @@ local function onHealthChange(inst,data)
            (current >= 0.3 and current < 0.4 and #inst.nondamagedsymbollist < 3) or
            (current >= 0.2 and current < 0.3 and #inst.nondamagedsymbollist < 2) or
            (current >= 0.1 and current < 0.2 and #inst.nondamagedsymbollist < 1) then
-           
+
             setrepairedart(inst)
-        end      
+        end
         if current == data.newpercent then
             done = true
         end
@@ -784,9 +784,9 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
-    
+
     inst:SetPhysicsRadiusOverride(3.4) --2.5
-    
+
     MakeWaterObstaclePhysics(inst, 1.7, 2, 0.1)
 
     inst.MiniMapEntity:SetIcon("crabking.png")
@@ -795,10 +795,10 @@ local function fn()
     inst.Transform:SetScale(s, s, s)
 
     inst.AnimState:SetBank("king_crab")
-    inst.AnimState:SetBuild("crab_king_build")    
+    inst.AnimState:SetBuild("crab_king_build")
 
     inst:AddTag("ignorewalkableplatforms") -- added so the crab king will not get attached to a moving boat when it is past entity-sleep range
-    inst:AddTag("crabking") 
+    inst:AddTag("crabking")
     inst:AddTag("largecreature")
     inst:AddTag("gemsocket")
     inst:AddTag("birdblocker")
@@ -812,7 +812,7 @@ local function fn()
     if not TheNet:IsDedicated() then
         inst._playingmusic = false
         inst:DoPeriodicTask(1, PushMusic, 0)
-    end    
+    end
 
     if not TheWorld.ismastersim then
         return inst
@@ -871,16 +871,16 @@ local function fn()
     ------------------------------------------
 
     inst:AddComponent("entitytracker")
-    
+
     ------------------------------------------
-    
+
     inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(ShouldAcceptItem)
     inst.components.trader.onaccept = OnGetItemFromPlayer
     inst.components.trader.onrefuse = OnRefuseItem
     inst.components.trader.deleteitemonaccept = false
 
-    ------------------------------------------    
+    ------------------------------------------
 
     inst:SetBrain(brain)
 
@@ -893,7 +893,7 @@ local function fn()
     inst:ListenForEvent("timerdone", OnTimerDone)
     inst:ListenForEvent("healthdelta", onHealthChange)
     inst:ListenForEvent("freeze", oncrabfreeze)
-  
+
     clearsocketart(inst)
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
@@ -937,12 +937,12 @@ local function burble(inst)
     local x,y,z = inst.Transform:GetWorldPosition()
     local theta = math.random()*2*PI
     local radius = math.pow(math.random(),0.8)* MAXRADIUS
-    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))   
+    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
     local prefab = "crab_king_bubble"..math.random(1,3)
 
     if TheWorld.Map:IsOceanAtPoint(x+offset.x, 0, z+offset.z) then
         local fx = SpawnPrefab(prefab)
-        fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)  
+        fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)
     elseif TheWorld.Map:GetPlatformAtPoint(x+offset.x, z+offset.z) then
         local boat = TheWorld.Map:GetPlatformAtPoint(x+offset.x, z+offset.z)
         if boat then
@@ -970,11 +970,11 @@ local function endgeyser(inst)
             local x,y,z = inst.Transform:GetWorldPosition()
             local theta = math.random()*2*PI
             local radius = math.pow(math.random(),0.8)* MAXRADIUS
-            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))   
+            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
             local prefab = "crab_king_waterspout"
             if TheWorld.Map:IsOceanAtPoint(x+offset.x, 0, z+offset.z) then
                 local fx = SpawnPrefab(prefab)
-                fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)                 
+                fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)
 
                 local INITIAL_LAUNCH_HEIGHT = 0.1
                 local SPEED = 8
@@ -987,7 +987,7 @@ local function endgeyser(inst)
                     local angle = (180 - inst:GetAngleToPoint(px, py, pz)) * DEGREES
                     local sina, cosa = math.sin(angle), math.cos(angle)
                     inst.Physics:SetVel(SPEED * cosa, 4 + SPEED, SPEED * sina)
-                end                
+                end
                 local affected_entities = TheSim:FindEntities(x+offset.x,y+offset.y,z+offset.z, 2, nil, CANT_HAVE_TAGS)
                 for _, v in ipairs(affected_entities) do
                     if v.components.oceanfishable ~= nil then
@@ -997,7 +997,7 @@ local function endgeyser(inst)
                         if projectile.components.weighable ~= nil then
                             projectile.components.weighable.prefab_override_owner = inst.fisher_prefab
                         end
-                        local position = Vector3(x+offset.x,y+offset.y,z+offset.z) 
+                        local position = Vector3(x+offset.x,y+offset.y,z+offset.z)
                         if projectile.components.complexprojectile then
                             projectile.components.complexprojectile:SetHorizontalSpeed(16)
                             projectile.components.complexprojectile:SetGravity(-30)
@@ -1028,9 +1028,9 @@ local function endgeyser(inst)
                         break
                     end
 
-                    boat:PushEvent("spawnnewboatleak", {pt = pt, leak_size = "small_leak", playsoundfx = true})        
+                    boat:PushEvent("spawnnewboatleak", {pt = pt, leak_size = "small_leak", playsoundfx = true})
                 end
-            end        
+            end
         end)
     end
 
@@ -1043,7 +1043,7 @@ local function geyserfn()
     inst.entity:AddTransform()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    
+
     inst:AddTag("NOCLICK")
     inst:AddTag("fx")
     inst:AddTag("crabking_spellgenerator")
@@ -1077,20 +1077,20 @@ local function geyserfn()
         if inst.burbleintensity then
             inst.burbleintensity:Cancel()
             inst.burbleintensity = nil
-        end        
+        end
         inst.SoundEmitter:KillSound("burble")
     end)
 
     inst:ListenForEvent("endspell", function()
         endgeyser(inst)
     end)
-    
+
     inst:DoTaskInTime(TUNING.CRABKING_CAST_TIME+2,function()
         endgeyser(inst)
     end)
 
-    
-    
+
+
     return inst
 end
 
@@ -1130,7 +1130,7 @@ local function dofreezefz(inst)
         inst.freezetask:Cancel()
         inst.freezetask = nil
     end
-    local time = 0.1 
+    local time = 0.1
     inst.freezetask = inst:DoTaskInTime(time,function() inst.freezefx(inst) end)
 end
 
@@ -1140,7 +1140,7 @@ local function freezefx(inst)
         local x,y,z = inst.Transform:GetWorldPosition()
         local theta = math.random()*2*PI
         local radius = 4+ math.pow(math.random(),0.8)* MAXRADIUS
-        local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))   
+        local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 
         local prefab = "crab_king_icefx"
         local fx = SpawnPrefab(prefab)
@@ -1174,16 +1174,16 @@ local function dofreeze(inst)
             if v.components.moisture then
                 rate = rate * Remap(v.components.moisture:GetMoisture(),0,v.components.moisture.maxmoisture,1,3)
             end
-            
+
             local mintemp = v.components.temperature.mintemp
             local curtemp = v.components.temperature:GetCurrent()
             if mintemp < curtemp then
                 v.components.temperature:DoDelta(math.max(-rate, mintemp - curtemp))
             end
         end
-    end     
-          
-    local time = 0.2 
+    end
+
+    local time = 0.2
     inst.lowertemptask = inst:DoTaskInTime(time,function() inst.dofreeze(inst) end)
 end
 
@@ -1198,12 +1198,12 @@ local function endfreeze(inst)
         inst.lowertemptask = nil
     end
 
-    local pos = Vector3(inst.Transform:GetWorldPosition())  
+    local pos = Vector3(inst.Transform:GetWorldPosition())
     local range = inst.crab and inst.crab:IsValid() and getfreezerange(inst.crab) or (TUNING.CRABKING_FREEZE_RANGE * 0.75)
     local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, range, nil, FREEZE_CANT_TAGS)
     for i,v in pairs(ents)do
         onfreeze(inst, v)
-    end    
+    end
     SpawnPrefab("crabking_ring_fx").Transform:SetPosition(pos.x,pos.y,pos.z)
     inst:DoTaskInTime(1,function() inst:Remove() end)
 end
@@ -1214,7 +1214,7 @@ local function freezefn()
     inst.entity:AddTransform()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    
+
     inst:AddTag("NOCLICK")
     inst:AddTag("fx")
     inst:AddTag("crabking_spellgenerator")
@@ -1251,7 +1251,7 @@ local function freezefn()
     inst:DoTaskInTime(TUNING.CRABKING_CAST_TIME+2,function()
         endfreeze(inst)
     end)
-    
+
     return inst
 end
 
@@ -1271,7 +1271,7 @@ local function chipfn(type)
     phys:ClearCollisionMask()
     phys:CollidesWith((TheWorld.has_ocean and COLLISION.GROUND) or COLLISION.WORLD)
     phys:SetCapsule(0.5, 1)
-    
+
     local s  = 0.7
     inst.Transform:SetScale(s, s, s)
 
@@ -1280,10 +1280,10 @@ local function chipfn(type)
     inst.AnimState:PlayAnimation("rockchip_"..type)
 
     inst:AddTag("NOCLICK")
-    inst:AddTag("fx")    
+    inst:AddTag("fx")
 
-    local down = TheCamera:GetDownVec() 
-    local offset = (math.random()*30 + 50)        
+    local down = TheCamera:GetDownVec()
+    local offset = (math.random()*30 + 50)
     if math.random() > 0.5 then
         offset = -offset
     end
@@ -1295,26 +1295,26 @@ local function chipfn(type)
         return inst
     end
 
-    inst:ListenForEvent("animover", function()        
+    inst:ListenForEvent("animover", function()
         if inst.AnimState:IsCurrentAnimation("hit_water") or inst.AnimState:IsCurrentAnimation("hit_land") then
             inst:Remove()
-        end        
+        end
         if not inst.landed then
             inst.Physics:Stop()
             inst.landed = true
-            local pos = Vector3(inst.Transform:GetWorldPosition())        
-            if not TheWorld.Map:IsVisualGroundAtPoint(pos.x,pos.y,pos.z) and not TheWorld.Map:GetPlatformAtPoint(pos.x,pos.z) then                
+            local pos = Vector3(inst.Transform:GetWorldPosition())
+            if not TheWorld.Map:IsVisualGroundAtPoint(pos.x,pos.y,pos.z) and not TheWorld.Map:GetPlatformAtPoint(pos.x,pos.z) then
                 inst.AnimState:PlayAnimation("hit_water")
             else
                 inst.AnimState:PlayAnimation("hit_land")
             end
         end
     end)
-    
+
     inst.Physics:SetMotorVel(math.random(8,12), 0, 0)
 
     inst.persist = false
-    
+
     return inst
 end
 

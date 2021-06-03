@@ -22,7 +22,7 @@ function FindFlower:Visit()
 			self.status = FAILED
         end
     end
-    
+
     if self.status == RUNNING then
         if not self.inst.components.pollinator.target
            or not self.inst.components.pollinator:CanPollinate(self.inst.components.pollinator.target)
@@ -37,7 +37,7 @@ function FindFlower:PickTarget()
     local closestFlower = GetClosestInstWithTag(FLOWER_TAGS, self.inst, SEE_DIST)
     if closestFlower
 	   and self.inst.components.pollinator
-	   and self.inst.components.pollinator:CanPollinate(closestFlower) 
+	   and self.inst.components.pollinator:CanPollinate(closestFlower)
 	   and not FindEntity(closestFlower, 2, function(guy) return guy.components.pollinator and guy.components.pollinator.target == closestFlower end, FINDFLOWER_MUST_TAGS) then
 		self.inst.components.pollinator.target = closestFlower
 	else

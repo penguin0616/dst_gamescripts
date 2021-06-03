@@ -37,7 +37,7 @@ local MainMenuStatsPanel = Class(Widget, function(self, config)
 	self.image_bg:SetOnClick( function() config.store_cb() end )
 
 	local featured_iap = GetRandomItem(GetFeaturedPacks())
-	if featured_iap ~= nil then	
+	if featured_iap ~= nil then
 		local iap_image = GetPurchaseDisplayForItem(featured_iap)
 
 		self.image = item_root:AddChild(ImageButton(unpack(iap_image)))
@@ -58,8 +58,8 @@ local MainMenuStatsPanel = Class(Widget, function(self, config)
 	body:SetHAlign(ANCHOR_MIDDLE)
 	body:SetVAlign(ANCHOR_MIDDLE)
 	body:SetPosition(1,-74)
-	
-	
+
+
     item_root = self:AddChild(Widget("friend_root"))
     item_root:SetPosition(-50, -220)
     local friends_label = item_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.MOST_COMMON_FRIENDS, UICOLOURS.GOLD_SELECTED))
@@ -138,7 +138,7 @@ function MainMenuStatsPanel:BuildItemsSummary(width)
 	local divider_top = new_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )
 	divider_top:SetScale(0.5)
     divider_top:SetPosition(0, 0)
-	
+
     local no_items = new_root:AddChild(Text(UIFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.NO_ITEMS))
     no_items:SetPosition(0, -35)
     no_items:SetRegionSize(width,30)

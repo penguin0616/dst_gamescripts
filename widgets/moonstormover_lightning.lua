@@ -23,18 +23,18 @@ local MoonstormOver_Lightning = Class(Widget, function(self, owner, dustlayer)
     self.lightning:GetAnimState():PlayAnimation("lightningstrike1",true)
     self.lightning:Hide()
     self.lightning.inst:ListenForEvent("animover", OnLightningDone)
-    self.lightning.inst.ref = self.lightning 
+    self.lightning.inst.ref = self.lightning
     self.lightning:SetHAnchor(ANCHOR_MIDDLE)
     self.lightning:SetVAnchor(ANCHOR_MIDDLE)
     self.lightning:GetAnimState():SetBloomEffectHandle("shaders/anim.ksh")
 
     self.lightning.inst.next_time = math.random()*20
 
-    if owner ~= nil then        
-        self.inst:ListenForEvent("stormlevel", function(owner, data) 
+    if owner ~= nil then
+        self.inst:ListenForEvent("stormlevel", function(owner, data)
             if data.stormtype == STORM_TYPES.MOONSTORM then
                 self:Activate(data.level)
-            else 
+            else
                 self:Activate(0)
             end
         end, owner)
@@ -45,7 +45,7 @@ function MoonstormOver_Lightning:Activate(level)
     if level > 0 and not self.active then
         self.active = true
         self.lightning.inst.next_time = math.random()*20
-        self:StartUpdating()        
+        self:StartUpdating()
     elseif level <= 0 and self.active then
         self.active = false
         self:StopUpdating()
@@ -63,12 +63,12 @@ function MoonstormOver_Lightning:OnUpdate(dt)
             local rot = math.random()*360
             self.lightning:SetRotation(rot)
             self.lightning.inst.next_time = nil
-            
+
             rot = rot - 90
             local radius = math.random()*200 + 100
             local offset = Vector3(radius * math.cos(rot*DEGREES), 0, -radius * math.sin(rot* DEGREES))
             self.lightning:SetPosition(offset.x, offset.z)
-            
+
             --self.lightning:SetPosition(0,0)
             --TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/get_gold")
             TheFocalPoint.SoundEmitter:PlaySound("moonstorm/common/moonstorm/lightning")

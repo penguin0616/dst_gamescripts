@@ -27,7 +27,7 @@ function FindClosest:Visit()
             self:PickTarget()
         else
 			local valid_target = self.targ ~= nil and self.targ:IsValid()
-			
+
 			-- Has all of the tags
 			if valid_target and self.tags ~= nil then
 				for i,k in ipairs(self.tags) do
@@ -47,7 +47,7 @@ function FindClosest:Visit()
 					end
 				end
 			end
-			
+
 			-- Has or or more of the tags
 			if valid_target and self.one_of_tags ~= nil then
 				valid_target = false

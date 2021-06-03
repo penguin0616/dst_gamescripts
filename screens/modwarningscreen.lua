@@ -21,14 +21,14 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
     self.black:SetHAnchor(ANCHOR_MIDDLE)
     self.black:SetScaleMode(SCALEMODE_FILLSCREEN)
 	self.black:SetTint(0,0,0,.8)
-	
+
 	self.root = self:AddChild(Widget("ROOT"))
     self.root:SetVAnchor(ANCHOR_MIDDLE)
     self.root:SetHAnchor(ANCHOR_MIDDLE)
     self.root:SetPosition(0,0,0)
     self.root:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-	--title	
+	--title
     self.title = self.root:AddChild(Text(TITLEFONT, 50))
     self.title:SetPosition(0, 170, 0)
     self.title:SetString(title)
@@ -39,7 +39,7 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 		defaulttextsize = textsize
 	end
 
-	
+
     self.text = self.root:AddChild(Text(BODYTEXTFONT, defaulttextsize))
 	self.text:SetVAlign(ANCHOR_TOP)
 
@@ -52,7 +52,7 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
     self.text:SetString(text)
     self.text:EnableWordWrap(true)
     self.text:SetRegionSize(480*2, 200)
-    
+
     if additionaltext then
 	    self.additionaltext = self.root:AddChild(Text(BODYTEXTFONT, 24))
 		self.additionaltext:SetVAlign(ANCHOR_TOP)
@@ -61,7 +61,7 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 	    self.additionaltext:EnableWordWrap(true)
 	    self.additionaltext:SetRegionSize(480*2, 100)
     end
-	
+
 
 	self.version = self:AddChild(Text(BODYTEXTFONT, 20))
 	--self.version:SetHRegPoint(ANCHOR_LEFT)
@@ -73,13 +73,13 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 	self.version:SetRegionSize(200, 40)
 	self.version:SetPosition(110, 30, 0)
 	self.version:SetString("Rev. "..APP_VERSION.." "..PLATFORM)
-	
+
 	if buttons then
 	    --create the menu itself
 	    local button_w = 200
 	    local space_between = 20
 	    local spacing = button_w + space_between
-	
+
 	    self.menu = self.root:AddChild(Menu(buttons, 250, true))
 	    self.menu:SetHRegPoint(ANCHOR_MIDDLE)
 	    self.menu:SetPosition(0, -250, 0)
@@ -87,7 +87,7 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 
 		if showdisable then
 			self.disablemodwarning = self.root:AddChild(TEMPLATES.LabelCheckbox(
-					function(w) 
+					function(w)
 						w.checked = not w.checked
 						Profile:SetModsWarning(not w.checked)
 						Profile:Save()
@@ -102,7 +102,7 @@ local ModWarningScreen = Class(Screen, function(self, title, text, buttons, text
 			self.menu:SetFocusChangeDir(MOVE_UP, self.disablemodwarning)
 		end
 	end
-	
+
 	if PLATFORM == "WIN32_RAIL" then
 		-- disable the mod forum button if it exists
 		if self.menu and self.menu.items then

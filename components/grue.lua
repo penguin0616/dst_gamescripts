@@ -81,7 +81,7 @@ end
 function Grue:Start()
     if self.level == nil and self:CheckForStart() then
         self.level = 0
-        self.inst:StartUpdatingComponent(self) 
+        self.inst:StartUpdatingComponent(self)
         self.nextHitTime = 5 + math.random() * 5
         self.nextSoundTime = self.nextHitTime * (.4 + math.random() * .4)
     end

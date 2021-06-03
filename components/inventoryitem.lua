@@ -36,7 +36,7 @@ end
 
 local function OnExitLimbo(inst, data)
     local self = inst.components.inventoryitem
-    self:SetLanded(false, true)    
+    self:SetLanded(false, true)
 end
 
 local InventoryItem = Class(function(self, inst)
@@ -56,6 +56,7 @@ local InventoryItem = Class(function(self, inst)
     self.onactiveitemfn = nil
     self.trappable = true
     self.sinks = false
+    self.droprandomdir = false
 
     self.pushlandedevents = true
     self:SetLanded(false, true)
@@ -135,7 +136,7 @@ function InventoryItem:SetOnDroppedFn(fn)
 end
 
 function InventoryItem:SetOnActiveItemFn(fn)
-    self.onactiveitemfn = fn 
+    self.onactiveitemfn = fn
 end
 
 function InventoryItem:SetOnPickupFn(fn)
@@ -229,7 +230,7 @@ function InventoryItem:OnDropped(randomdir, speedmult)
 end
 
 function InventoryItem:DoDropPhysics(x, y, z, randomdir, speedmult)
-    
+
     self:SetLanded(false, true)
 
     if self.inst.Physics ~= nil then
@@ -259,9 +260,9 @@ end
 
 -- If this function retrns true then it has destroyed itself and you shouldnt give it to the player
 function InventoryItem:OnPickup(pickupguy, src_pos)
--- not only the player can have inventory!   
+-- not only the player can have inventory!
 
-    self:SetLanded(false, false)    
+    self:SetLanded(false, false)
 
     if self.isnew and self.inst.prefab and pickupguy:HasTag("player") then
         ProfileStatsAdd("collect_"..self.inst.prefab)
@@ -320,7 +321,7 @@ function InventoryItem:GetGrandOwner()
 end
 
 function InventoryItem:IsSheltered()
-    return self:IsHeld() and 
+    return self:IsHeld() and
     ((self.owner.components.container) or (self.owner.components.inventory and self.owner.components.inventory:IsWaterproof()))
 end
 
@@ -365,9 +366,9 @@ end
 function InventoryItem:OnUpdate(dt)
     local x,y,z = self.inst.Transform:GetWorldPosition()
 
-    if x and y and z then 
-        local vely = 0 
-        if self.inst.Physics then 
+    if x and y and z then
+        local vely = 0
+        if self.inst.Physics then
             local vx, vy, vz = self.inst.Physics:GetVelocity()
             vely = vy or 0
 

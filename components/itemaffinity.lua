@@ -19,7 +19,7 @@ function ItemAffinity:AddAffinity(prefab, tag, sanity_bonus, priority)
 end
 
 function ItemAffinity:RemoveAffinity(prefab)
-    
+
     local remove_index = nil
     for i,v in ipairs(self.affinities) do
         if v.prefab == prefab then

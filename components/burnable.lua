@@ -367,9 +367,9 @@ end
 
 function Burnable:StopSmoldering(heatpct)
     if self.smoldering then
-        if self.smoke ~= nil then 
+        if self.smoke ~= nil then
             self.smoke.SoundEmitter:KillSound("smolder")
-            self.smoke:Remove() 
+            self.smoke:Remove()
         end
         self.smoldering = false
         if self.smolder_task ~= nil then

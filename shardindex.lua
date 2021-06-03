@@ -146,7 +146,7 @@ local function OnLoad(self, slot, shard, callback, str)
         self.shard = nil
         self.valid = false
         self.isdirty = false
-    
+
         self.world = {options = {}}
         self.server = {}
         self.session_id = nil
@@ -162,7 +162,7 @@ function ShardIndex:Load(callback)
     --dedicated servers are never invalid
     --non servers are always invalid
     --client hosted servers must define the Settings.save_slot to be valid
-    
+
     if TheNet:IsDedicated() then
         TheSim:GetPersistentString(self:GetShardIndexName(),
             function(load_success, str)
@@ -462,7 +462,7 @@ local function GetWorldgenOverride(slot, shard, cb)
                                 print("Worldgenoverride specified a nonexistent settings preset: "..settings_preset..". If this is a custom settings preset, it may not exist in this save location. Ignoring it and applying overrides.")
                             end
                         end
-                        
+
                         if savedata.overrides then
                             presetdata.overrides = MergeMapsDeep(presetdata.overrides, savedata.overrides)
                         end
@@ -575,7 +575,7 @@ end
 
 function ShardIndex:LoadEnabledServerMods()
     if not self.ismaster then return end
-    
+
     ModManager:DisableAllServerMods()
     for modname, mod_data in pairs(self.enabled_mods) do
         if mod_data.enabled then

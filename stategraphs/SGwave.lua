@@ -16,7 +16,7 @@ local states=
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("appear")
 		end,
-		
+
         timeline=
         {
             --[[TimeEvent(5*FRAMES, function(inst)
@@ -43,7 +43,7 @@ local states=
 			inst.AnimState:PlayAnimation("appear")
             inst.AnimState:SetTime(10*FRAMES)
 		end,
-		
+
         --[[timeline=
         {
             TimeEvent(5*FRAMES, function(inst)

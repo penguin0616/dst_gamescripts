@@ -122,7 +122,7 @@ local function fn()
         local per_tick = Lerp(low_per_tick, high_per_tick, move)
 
         inst.last_pos = inst:GetPosition()
-                
+
         num_to_emit = num_to_emit + per_tick * math.random() * 3
         while num_to_emit > 1 do
             emit_sparkle_fn(effect, sphere_emitter)

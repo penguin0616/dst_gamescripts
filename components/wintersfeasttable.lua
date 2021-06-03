@@ -75,7 +75,7 @@ function WintersFeastTable:DepleteFood(feasters)
 		else
 			if self.onfinishfoodfn ~= nil then
 				self.onfinishfoodfn(self.inst)
-			end		
+			end
 		end
 	end
 end

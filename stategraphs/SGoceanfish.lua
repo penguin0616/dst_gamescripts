@@ -1,9 +1,9 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
     ActionHandler(ACTIONS.GOHOME, "action"),
-    ActionHandler(ACTIONS.EAT, 
+    ActionHandler(ACTIONS.EAT,
 		function(inst, action)
 			return action.target.components.oceanfishable ~= nil and "bitehook_pre" or "eat"
 		end),
@@ -12,19 +12,19 @@ local actionhandlers =
 local events=
 {
     CommonHandlers.OnLocomote(true, true),
-    EventHandler("dobreach", function(inst, data) 
+    EventHandler("dobreach", function(inst, data)
 		if not inst.sg:HasStateTag("jumping") then
-            inst.sg:GoToState("breach") 
-        end 
-    end),  
-    EventHandler("doleave", function(inst, data) 
-        if not inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("jumping") then 
-            inst.sg:GoToState("leave") 
-        end 
+            inst.sg:GoToState("breach")
+        end
+    end),
+    EventHandler("doleave", function(inst, data)
+        if not inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("jumping") then
+            inst.sg:GoToState("leave")
+        end
     end),
     EventHandler("oceanfishing_stoppedfishing", function(inst, data)
 		if not inst.leaving and not inst.sg:HasStateTag("jumping") then
-            inst.sg:GoToState("breach") 
+            inst.sg:GoToState("breach")
 		end
 		inst.leaving = true
     end),
@@ -72,12 +72,12 @@ local states=
         tags = {"idle", "canrotate"},
         onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_loop", true)
-            if inst.timetoleave then 
+            if inst.timetoleave then
                 inst.sg:GoToState("leave")
             end
         end,
     },
-    
+
     State{
         name = "arrive",
         tags = {"busy", "canrotate"},
@@ -91,7 +91,7 @@ local states=
 	        EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
 		},
     },
-    
+
     State{
         name = "leave",
         tags = {"busy"},
@@ -109,7 +109,7 @@ local states=
     State{
         name = "eat",
         tags = {"busy", "jumping"},
-        
+
         onenter = function(inst)
 			if IsUnderBoat(inst) then
 				inst:PerformBufferedAction()
@@ -124,7 +124,7 @@ local states=
 
 			inst:PerformBufferedAction()
         end,
-        
+
         timeline =
         {
             TimeEvent(16*FRAMES, function(inst)
@@ -149,13 +149,13 @@ local states=
     State{
         name = "bitehook_pre",
         tags = {"busy"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("struggle_pre")
 			inst:PerformBufferedAction()
         end,
-        
+
         events =
 		{
 	        EventHandler("animover", function(inst)
@@ -168,24 +168,24 @@ local states=
 				end
 			end),
 		},
-    },    
+    },
 
     State{
         name = "bitehook_loop",
         tags = {"busy"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("struggle_loop", true)
             inst.sg:SetTimeout(inst.fish_def.set_hook_time.base + math.random() * inst.fish_def.set_hook_time.var)
         end,
-        
+
 		onupdate = function(inst)
 			if inst.components.oceanfishable ~= nil and inst.components.oceanfishable:GetRod() ~= nil then
 				if not inst:HasTag("partiallyhooked") then
 					inst.sg:GoToState("idle")
 				end
-			else 
+			else
 				inst.sg:GoToState("bitehook_escape")
 				inst.leaving = true
 				inst.components.oceanfishable:SetRod(nil)
@@ -204,12 +204,12 @@ local states=
 				end
 			end
         end,
-    },    
+    },
 
     State{
         name = "bitehook_escape",
         tags = {"busy", "jumping"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
 			inst.sg.statemem.underboat = IsUnderBoat(inst)
@@ -220,15 +220,15 @@ local states=
 				inst.AnimState:PushAnimation("breach", false)
 			end
         end,
-        
+
         timeline =
         {
-            TimeEvent(2*FRAMES, function(inst) 
-				SpawnSplashFx(inst) 
+            TimeEvent(2*FRAMES, function(inst)
+				SpawnSplashFx(inst)
 				SetBreaching(inst, true)
 			end),
-            TimeEvent(3*FRAMES, function(inst) 
-				if not inst.sg.statemem.underboat then 
+            TimeEvent(3*FRAMES, function(inst)
+				if not inst.sg.statemem.underboat then
 					inst.Physics:SetMotorVelOverride(-1, 0, 0)
 				end
 			end),
@@ -238,7 +238,7 @@ local states=
 				inst.components.locomotor:Stop()
             end),
         },
-		
+
 		events =
 		{
 	        EventHandler("animqueueover", function(inst)
@@ -256,12 +256,12 @@ local states=
 				inst.components.oceanfishable:SetRod(nil)
 			end
 		end,
-    },    
+    },
 
     State{
         name = "breach",
         tags = {"busy", "jumping"},
-        
+
         onenter = function(inst)
 			if IsUnderBoat(inst) then
 				inst.sg:GoToState("idle")
@@ -275,11 +275,11 @@ local states=
 
 		timeline =
 		{
-            TimeEvent(3*FRAMES, function(inst) 
+            TimeEvent(3*FRAMES, function(inst)
 				SpawnSplashFx(inst)
 				SetBreaching(inst, true)
 			end),
-            TimeEvent(5*FRAMES, function(inst) 
+            TimeEvent(5*FRAMES, function(inst)
 				inst.Physics:SetMotorVelOverride(1.5, 0, 0)
 			end),
             TimeEvent(24*FRAMES, function(inst)
@@ -301,18 +301,18 @@ local states=
 			SetBreaching(inst, false)
 		end,
 
-    },  
+    },
 
     State{
         name = "launched_out_of_water",
         tags = {"busy", "jumping"},
-        
+
         onenter = function(inst)
 			SpawnSplashFx(inst)
             inst.components.locomotor:Stop()
 		    inst.AnimState:PlayAnimation("catching_loop", true)
         end,
-    },  
+    },
 
     State{
         name = "shoot",

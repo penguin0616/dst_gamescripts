@@ -78,7 +78,7 @@ local function fn()
     inst.beattask = nil
     inst.skin_switched = ondropped
     ondropped(inst)
-    
+
     inst.DefaultPlayBeatAnimation = PlayBeatAnimation --for resetting after reskin
     inst.PlayBeatAnimation = PlayBeatAnimation
 

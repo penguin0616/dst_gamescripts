@@ -63,12 +63,12 @@ local function OnConstructed(inst, doer)
             break
         end
     end
-    
+
 	if concluded then
         existing_moon_device = nil
         local new_inst = ReplacePrefab(inst, inst._construction_product)
         new_inst._has_replaced_moon_altar_link = true
-        
+
         if new_inst.level == 2 then
             for _, v in ipairs(new_inst._pillars) do
                 v.AnimState:PlayAnimation("stage2_idle_pre", false)
@@ -181,13 +181,13 @@ local function playlinkanimation(inst, stage)
         inst._link = SpawnPrefab("moon_altar_link_contained")
         inst._link.entity:SetParent(inst.entity)
     end
-    
+
     inst._link:_set_stage_fn(stage)
 end
 
 local function stage3_break(inst)
     SpawnPrefab("moon_device_break_stage3").Transform:SetPosition(inst.Transform:GetWorldPosition())
-    
+
     inst._top:DoTaskInTime(FRAMES, inst._top.Remove)
 end
 
@@ -197,7 +197,7 @@ local function stage2_break(inst)
         local pillar = SpawnPrefab("moon_device_break_stage2")
         pillar.Transform:SetPosition(x, y, z)
         pillar.Transform:SetRotation(v.Transform:GetRotation())
-        
+
         v:DoTaskInTime(FRAMES, v.Remove)
     end
 end
@@ -249,7 +249,7 @@ local BREAK_CLEAR_AREA_DESTROY_TAGS_CANT = {
 local BREAK_CLEAR_AREA_DESTROY_TAGS_ONEOF = { "_combat", "_inventoryitem", "CHOP_workable", "DIG_workable", "HAMMER_workable", "MINE_workable" }
 local function ClearArea(inst)
     ShakeAllCameras(CAMERASHAKE.FULL, 0.91, 0.026, 0.75, inst, 50)
-    
+
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, BREAK_CLEAR_AREA_RADIUS, nil, BREAK_CLEAR_AREA_DESTROY_TAGS_CANT, BREAK_CLEAR_AREA_DESTROY_TAGS_ONEOF)
     for _, v in ipairs(ents) do
@@ -262,14 +262,14 @@ local function ClearArea(inst)
                 v:Remove()
             elseif v.components.health ~= nil and v:HasTag("smashable") then
                 v.components.health:Kill()
-            elseif v.components.workable ~= nil and v.components.workable:CanBeWorked() 
+            elseif v.components.workable ~= nil and v.components.workable:CanBeWorked()
                     and v.components.workable.action ~= ACTIONS.NET then
                 if not v:HasTag("moonglass") then
                     SpawnPrefab("collapse_small").Transform:SetPosition(v.Transform:GetWorldPosition())
                 end
                 v.components.workable:Destroy(inst)
             elseif v.components.health ~= nil and v.components.combat ~= nil
-                    and not v.components.health:IsDead() 
+                    and not v.components.health:IsDead()
                     and v:GetDistanceSqToPoint(x, y, z) < BREAK_CLEAR_DAMAGE_RSQ then
                 v.components.combat:GetAttacked(inst, TUNING.ALTERGUARDIAN_PHASE1_ROLLDAMAGE)
             elseif v.components.inventoryitem ~= nil then
@@ -294,7 +294,7 @@ local function stage1_break(inst)
     SpawnPrefab("moon_geyser_explode").Transform:SetPosition(ix, 0, iz)
 
     spawnscorchmark(ix, iz, 1.6)
-    
+
     local angle_offset = math.random() * PI
     for i = 1, 3 do
         local theta = ((2 * PI) / 3) * i + angle_offset
@@ -328,7 +328,7 @@ end
 local function breaksequence(inst)
     local fall_fx = SpawnPrefab("alterguardian_phase1fallfx")
     fall_fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
-    
+
     -- Should be timed up with the phase1fallfx anim/fx spawned above.
     inst:DoTaskInTime(9*FRAMES, break_device)
 end
@@ -403,7 +403,7 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
         else
             inst.level = 3
         end
-        
+
         inst.Transform:SetEightFaced()
 
 		inst.AnimState:SetBank("moon_device_stages")
@@ -421,7 +421,7 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
 
         -- inst._pillars = nil
         -- inst._top = nil
-        
+
         inst:SetPrefabNameOverride("moon_device")
 
         MakeSnowCoveredPristine(inst)
@@ -430,12 +430,12 @@ local function MakeDeviceStage(name, client_postinit, master_postinit, construct
 
         if client_postinit ~= nil then
             client_postinit(inst)
-        end		
+        end
 
 		if not TheWorld.ismastersim then
 			return inst
 		end
-        
+
         inst._construction_product = construction_data ~= nil and construction_data.construction_product or nil
 
         playlinkanimation(inst, inst.level)
@@ -504,7 +504,7 @@ local function placer_onupdatetransform(inst)
     if #ents > 0 then
         local targetpos = ents[1]:GetPosition()
         inst.Transform:SetPosition(targetpos.x, 0, targetpos.z)
-        
+
         inst.accept_placement = ents[1]:HasTag("can_build_moon_device")
     else
         inst.accept_placement = false
@@ -536,7 +536,7 @@ local function placer_override_testfn(inst)
     --          just allow building on it than locking all further progress
 
     -- Better to just override can_build.
-    
+
     can_build = inst.accept_placement
 
     return can_build, mouse_blocked

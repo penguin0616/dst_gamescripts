@@ -80,7 +80,7 @@ local states =
     State{
         name = "bitehook_escape",
         tags = { "busy", "jumping" },
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
 
@@ -94,7 +94,7 @@ local states =
                 inst.AnimState:PushAnimation("jump_pst", false)
             end
         end,
-        
+
         timeline =
         {
             TimeEvent(2*FRAMES, function(inst)
@@ -105,8 +105,8 @@ local states =
                 end
             end),
 
-            TimeEvent(3*FRAMES, function(inst) 
-                if not inst.sg.statemem.underboat then 
+            TimeEvent(3*FRAMES, function(inst)
+                if not inst.sg.statemem.underboat then
                     inst.Physics:SetMotorVelOverride(-1, 0, 0)
                 end
             end),

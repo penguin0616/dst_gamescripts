@@ -12,7 +12,7 @@ local events =
     CommonHandlers.OnAttacked(),
 
     EventHandler("doattack", function(inst, data)
-        if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy")) 
+        if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy"))
                 and (data.target ~= nil and data.target:IsValid()) then
             local dsq_to_target = inst:GetDistanceSqToInst(data.target)
 
@@ -212,7 +212,7 @@ local states =
         end,
 
         timeline =
-        {   
+        {
             TimeEvent(8*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/scream")
             end),
@@ -381,7 +381,7 @@ local states =
             -- If our original target is still alive, chase them down.
             -- Otherwise, we'll just go in the direction we were facing until we finish.
             if inst.sg.statemem.target ~= nil then
-                if inst.sg.statemem.target:IsValid() and 
+                if inst.sg.statemem.target:IsValid() and
                         (inst.sg.statemem.target.components.health ~= nil
                         and not inst.sg.statemem.target.components.health:IsDead()) then
                     inst:ForceFacePoint(inst.sg.statemem.target.Transform:GetWorldPosition())
@@ -552,7 +552,7 @@ local states =
         end,
 
         timeline =
-        {   
+        {
             TimeEvent(0*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/summon")
             end),
@@ -561,7 +561,7 @@ local states =
             end),
             TimeEvent(22*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/ground_hit")
-                
+
                 ShakeAllCameras(CAMERASHAKE.VERTICAL, .75, 0.1, 0.1, inst, 30)
             end),
             TimeEvent(22*FRAMES, function(inst)
@@ -639,7 +639,7 @@ local states =
                 ShakeAllCameras(CAMERASHAKE.FULL, .75, 0.1, 0.1, inst, 50)
             end),
             TimeEvent(43*FRAMES, function(inst)
-                -- If we didn't find a target position by about the time the stab ends, 
+                -- If we didn't find a target position by about the time the stab ends,
                 if inst.sg.statemem.target_position == nil then
                     inst.sg:GoToState("atk_spike_pst")
                 end
@@ -711,7 +711,7 @@ local states =
 
             TimeEvent(21*FRAMES, function(inst) set_lightvalues(inst, 0.75) end),
             TimeEvent(22*FRAMES, function(inst) set_lightvalues(inst, 0.6) end),
-            
+
             TimeEvent(23*FRAMES, function(inst) set_lightvalues(inst, 0.625) end),
             TimeEvent(24*FRAMES, function(inst) set_lightvalues(inst, 0.688) end),
             TimeEvent(25*FRAMES, function(inst) set_lightvalues(inst, 0.756) end),
@@ -750,25 +750,25 @@ end
 
 CommonStates.AddWalkStates(states,
 {
-    starttimeline = { 
+    starttimeline = {
         TimeEvent(3*FRAMES, play_foley ),
     },
-    
+
     walktimeline = {
         TimeEvent(0*FRAMES, play_step ),
         TimeEvent(0*FRAMES, PlayFootstep ),
 
         TimeEvent(3*FRAMES, play_foley ),
-        
+
         TimeEvent(22*FRAMES, play_foley ),
-        TimeEvent(24*FRAMES, play_step ),        
-        
+        TimeEvent(24*FRAMES, play_step ),
+
         TimeEvent(10*FRAMES, play_foley ),
 
         TimeEvent(36*FRAMES, play_step ),
         TimeEvent(36*FRAMES, PlayFootstep ),
-        
-        
+
+
         TimeEvent(48*FRAMES, play_step ),
         TimeEvent(48*FRAMES, PlayFootstep ),
     },
@@ -781,9 +781,9 @@ CommonStates.AddWalkStates(states,
 
         TimeEvent(12*FRAMES, play_step ),
         TimeEvent(12*FRAMES, PlayFootstep ),
-        
+
         TimeEvent(16*FRAMES, play_foley ),
-        
+
         TimeEvent(18*FRAMES, play_step ),
         TimeEvent(18*FRAMES, PlayFootstep ),
     },

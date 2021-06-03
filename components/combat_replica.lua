@@ -297,7 +297,7 @@ function Combat:IsValidTarget(target)
             not (target:HasTag("playerghost") and (self.inst.replica.sanity == nil or self.inst.replica.sanity:IsSane()) and not self.inst:HasTag("crazy")) and
             -- gjans: Some specific logic so the birchnutter doesn't attack it's spawn with it's AOE
             -- This could possibly be made more generic so that "things" don't attack other things in their "group" or something
-            (not self.inst:HasTag("birchnutroot") or not (target:HasTag("birchnutroot") or target:HasTag("birchnut") or target:HasTag("birchnutdrake"))) and 
+            (not self.inst:HasTag("birchnutroot") or not (target:HasTag("birchnutroot") or target:HasTag("birchnut") or target:HasTag("birchnutdrake"))) and
             (TheNet:GetPVPEnabled() or not (self.inst:HasTag("player") and target:HasTag("player")) or (weapon ~= nil and weapon:HasTag("propweapon"))) and
             target:GetPosition().y <= self._attackrange:value())
 end
@@ -360,12 +360,12 @@ function Combat:TargetHasFriendlyLeader(target)
 
         local PVP_enabled = TheNet:GetPVPEnabled()
 
-        return leader == target 
-				or (target_leader ~= nil and (target_leader == leader or (target_leader:HasTag("player") and not PVP_enabled))) 
-				or (target:HasTag("domesticated") and not PVP_enabled) 
+        return leader == target
+				or (target_leader ~= nil and (target_leader == leader or (target_leader:HasTag("player") and not PVP_enabled)))
+				or (target:HasTag("domesticated") and not PVP_enabled)
     end
 
-    return false    
+    return false
 end
 
 

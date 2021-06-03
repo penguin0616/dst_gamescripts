@@ -50,7 +50,7 @@ local function SpawnOasisBugs(inst)
         local bug = SpawnPrefab("fireflies")
         bug.Transform:SetPosition((pos + offset + Vector3(math.random()*BUG_RANDOM_RANGE, 0, math.random()*BUG_RANDOM_RANGE)):Get())
         table.insert(bug_pts, bug:GetPosition())
-    end 
+    end
 end
 
 local MAX_SUCCULENTS = 18
@@ -173,9 +173,9 @@ end
 
 local function OnInit(inst)
     inst.task = nil
-    inst:ListenForEvent("ms_stormchanged", function(src, data) 
-            if data.stormtype == STORM_TYPES.SANDSTORM then 
-                OnSandstormChanged(inst, data.setting) 
+    inst:ListenForEvent("ms_stormchanged", function(src, data)
+            if data.stormtype == STORM_TYPES.SANDSTORM then
+                OnSandstormChanged(inst, data.setting)
             end
         end, TheWorld)
     OnSandstormChanged(inst, TheWorld.components.sandstorms ~= nil and TheWorld.components.sandstorms:IsSandstormActive(), true)

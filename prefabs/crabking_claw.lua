@@ -3,7 +3,7 @@ local brain = require "brains/crabkingclawbrain"
 local assets =
 {
     Asset("ANIM", "anim/crab_king_claw.zip"),
-    Asset("ANIM", "anim/crab_king_claw_build.zip"),    
+    Asset("ANIM", "anim/crab_king_claw_build.zip"),
 }
 
 local prefabs =
@@ -11,10 +11,10 @@ local prefabs =
     "crabking_claw_shadow",
 }
 
-local shadow_assets = 
+local shadow_assets =
 {
     Asset("ANIM", "anim/crab_king_claw.zip"),
-    Asset("ANIM", "anim/crab_king_claw_shadow_build.zip"),  
+    Asset("ANIM", "anim/crab_king_claw_shadow_build.zip"),
 }
 
 local shadow_prefabs =
@@ -29,21 +29,21 @@ local function releaseclamp(inst, immediate)
 		end
 
         if inst._releaseclamp then
-            inst:RemoveEventCallback("onremove", inst._releaseclamp, inst.boat)  
+            inst:RemoveEventCallback("onremove", inst._releaseclamp, inst.boat)
             inst._releaseclamp = nil
         end
-    end  
+    end
     inst.boat = nil
     inst:PushEvent("releaseclamp", {immediate = immediate} )
-    
+
     if inst.clamptask then
         inst.clamptask:Cancel()
         inst.clamptask = nil
-    end    
+    end
 end
 
 local function crunchboat(inst,boat)
-    inst:PushEvent("clamp_attack",boat)    
+    inst:PushEvent("clamp_attack",boat)
     if inst.clamptask then
         inst.clamptask:Cancel()
         inst.clamptask = nil
@@ -54,8 +54,8 @@ end
 local CLAMPDAMAGE_CANT_TAGS = {"flying", "shadow", "ghost", "playerghost", "FX", "NOCLICK", "DECOR", "INLIMBO"}
 local function clamp(inst)
     if inst.boat and not inst.boat.components.health:IsDead() then
-        inst.boat.components.health:DoDelta(-TUNING.CRABKING_CLAW_BOATDAMAGE)   
-        ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.3, 0.03, 0.5, inst.boat, inst.boat:GetPhysicsRadius(4))         
+        inst.boat.components.health:DoDelta(-TUNING.CRABKING_CLAW_BOATDAMAGE)
+        ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.3, 0.03, 0.5, inst.boat, inst.boat:GetPhysicsRadius(4))
         local pos = Vector3(inst.Transform:GetWorldPosition())
         local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, 3, nil, CLAMPDAMAGE_CANT_TAGS)
 
@@ -64,25 +64,25 @@ local function clamp(inst)
                 if      v.components.workable ~= nil and
                         v.components.workable:CanBeWorked() and
                         v.components.workable.action ~= ACTIONS.NET then
-                    v.components.workable:Destroy(inst)   
+                    v.components.workable:Destroy(inst)
                 end
                 if      v.components.health ~= nil and
                         not v.components.health:IsDead() and
                         inst.components.combat:CanTarget(v) then
                     inst.components.combat:DoAttack(v)
                 end
-            end            
+            end
         end
-    
+
 		ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.3, 0.03, 0.5, inst.boat, inst.boat:GetPhysicsRadius(4))
-		
+
 		if inst.boat.components.boatphysics ~= nil then
 			inst.boat.components.boatphysics:AddBoatDrag(inst)
         end
         inst._releaseclamp = function() inst:releaseclamp() end
-        inst:ListenForEvent("onremove", inst._releaseclamp, inst.boat)    
+        inst:ListenForEvent("onremove", inst._releaseclamp, inst.boat)
         inst.clamptask = inst:DoTaskInTime(math.random()+3,function() inst.crunchboat(inst,inst.boat) end)
-    end   
+    end
 end
 
 local function teleport_override_fn(inst)
@@ -93,7 +93,7 @@ local function teleport_override_fn(inst)
 		pt = pt + offset
     end
 
-	return pt 
+	return pt
 end
 
 local function OnTeleported(inst)
@@ -107,7 +107,7 @@ local function OnRemove(inst)
     inst.releaseclamp(inst)
 end
 
-local function OnDead(inst) 
+local function OnDead(inst)
     if inst.shadow then
         inst.shadow:Remove()
     end
@@ -149,7 +149,7 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
 	end
-	
+
 	inst:AddComponent("boatdrag")
 	inst.components.boatdrag.drag = TUNING.CRABKING_ANCHOR_DRAG
 	inst.components.boatdrag.forcedampening = 1
@@ -175,7 +175,7 @@ local function fn()
     inst.components.combat:SetRange(0)
     inst.components.combat.hiteffectsymbol = "claw_parts_shoulder"
     inst.components.combat:SetAttackPeriod(0)
-  
+
     ------------------------------------------
 
     inst:AddComponent("lootdropper")
@@ -197,7 +197,7 @@ local function fn()
 
     inst:AddComponent("entitytracker")
 
-    ------------------------------------------    
+    ------------------------------------------
 
     inst:SetBrain(brain)
 
@@ -207,7 +207,7 @@ local function fn()
     inst:ListenForEvent("entitywake", OnEntityWake)
 
     inst.releaseclamp = releaseclamp
-    inst.clamp = clamp    
+    inst.clamp = clamp
     inst.crunchboat = crunchboat
 
     MakeLargeBurnableCharacter(inst, "claw_parts_forearm")
@@ -240,7 +240,7 @@ local function shadowfn()
      inst.persists = false
 
     inst.AnimState:SetSortOrder(ANIM_SORT_ORDER_BELOW_GROUND.UNDERWATER)
-    inst.AnimState:SetLayer(LAYER_BELOW_GROUND)    
+    inst.AnimState:SetLayer(LAYER_BELOW_GROUND)
 
     --local s  = 0.7
     --sinst.Transform:SetScale(s, s, s)

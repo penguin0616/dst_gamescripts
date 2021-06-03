@@ -41,7 +41,7 @@ local PauseScreen = Class(Screen, function(self)
     self.proot:SetPosition(0,0,0)
     self.proot:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-    
+
     --create the menu itself
     local player = ThePlayer
     local can_save = player and player:IsValid() and player.components.health and not player.components.health:IsDead() and IsGamePurchased()
@@ -62,7 +62,7 @@ local PauseScreen = Class(Screen, function(self)
 		end })
 	end
 
-    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.OPTIONS, cb=function() 
+    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.OPTIONS, cb=function()
         TheFrontEnd:Fade(FADE_OUT, SCREEN_FADE_TIME, function()
             TheFrontEnd:PushScreen(OptionsScreen())
             TheFrontEnd:Fade(FADE_IN, SCREEN_FADE_TIME)
@@ -122,7 +122,7 @@ function PauseScreen:goafk()
 		--it's too dangerous to afk
 		player.components.talker:Say(GetString(player, "ANNOUNCE_NODANGERAFK"))
 		return
-	end	
+	end
 
 	player.replica.afk:PrepareForAFK()
 end

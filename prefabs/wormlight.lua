@@ -208,7 +208,7 @@ local function OnOwnerChange(inst)
                 inst:ListenForEvent("ondropped", inst._onownerchange, owner)
             end
         end
-   
+
         local nextowner = rider or invowner
         if not nextowner then break end
         isrider = rider ~= nil
@@ -317,7 +317,7 @@ local function light_commonfn(duration, fxprefab)
     inst.persists = false --until we get a target
     inst.fx = SpawnPrefab(fxprefab)
     inst.OnRemoveEntity = light_onremove
-    
+
     inst._owners = {}
     inst._onownerchange = function() OnOwnerChange(inst) end
 

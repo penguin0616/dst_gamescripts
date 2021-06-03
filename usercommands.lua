@@ -519,17 +519,17 @@ if PLATFORM == "WIN32_RAIL" then
 
 		usercommands[hash].displayname = displayname
 		usercommands[hash].displayparams = displayparams
-		
+
 		if usercommands[hash].aliases == nil then usercommands[hash].aliases = {} end
 		table.insert( usercommands[hash].aliases, displayname )
 		if extra_alias ~= nil then
-			table.insert( usercommands[hash].aliases, extra_alias )	
+			table.insert( usercommands[hash].aliases, extra_alias )
 		end
         local alias_hash = smallhash(displayname)
         usercommands[alias_hash] = {aliasfor=name}
 	end
-	
-	
+
+
 	function RailUserCommandRemove( name )
 		local hash = smallhash(name)
 		local data = usercommands[hash]
@@ -596,7 +596,7 @@ function UserToClient(input)
     -- String matching priority (highest to lowest):
     --  3: userid
     --  2: case-sensitive name
-    --  1: case-insensitive name 
+    --  1: case-insensitive name
     local clientmatch = nil
     local lowerinput = string.lower(input)
     local priority = 0
@@ -667,9 +667,9 @@ function GetEmotesWordPredictionDictionary()
 			end
         end
     end
-        
+
    	local data = {
-		words = emotes, 
+		words = emotes,
 		delim = "/",
 	}
 	data.GetDisplayString = function(word) return data.delim .. word end

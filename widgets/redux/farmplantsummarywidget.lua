@@ -88,7 +88,7 @@ local FarmPlantSummaryWidget = Class(Widget, function(self, w, data)
     end
 
     y_start = y_start - (season_size / 2) - spacing_gap * 1.5
-    
+
     self.water_seperator = MakeDetailsLine(self.root, x_start, y_start, 0.4)
 
     y_start = y_start - details_line_size - (spacing_gap / 4)
@@ -122,7 +122,7 @@ local FarmPlantSummaryWidget = Class(Widget, function(self, w, data)
     end
 
     y_start = y_start - (water_size / 2) - spacing_gap * 1.5
-    
+
     self.nutrients_seperator = MakeDetailsLine(self.root, x_start, y_start, 0.4)
 
     y_start = y_start - details_line_size - (spacing_gap / 4)
@@ -131,7 +131,7 @@ local FarmPlantSummaryWidget = Class(Widget, function(self, w, data)
     local nutrients_gap = 4
 
     y_start = y_start - (nutrients_size / 2)
-    
+
     self.nutrients_icons = {}
 
     local restore_nutrients = self.data.plant_def.nutrient_restoration ~= nil
@@ -182,7 +182,7 @@ local FarmPlantSummaryWidget = Class(Widget, function(self, w, data)
         table.insert(self.nutrients_icons, nutrients_icon)
     end
 
-    local nutrients_count = #self.nutrients_icons 
+    local nutrients_count = #self.nutrients_icons
     local nutrients_x = x_start - (total_width + (nutrients_count - 1) * nutrients_gap) / 2
 
     for i, nutrients_icon in ipairs(self.nutrients_icons) do

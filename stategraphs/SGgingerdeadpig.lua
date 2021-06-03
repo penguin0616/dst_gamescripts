@@ -43,7 +43,7 @@ local states =
         end,
 
         timeline=
-        {   
+        {
             TimeEvent(2* FRAMES, function(inst) inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbreadpig/death1") end),
             TimeEvent(43* FRAMES, function(inst) inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbreadpig/death2") end),
             TimeEvent(47* FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/frog/splat",nil,.5) end),

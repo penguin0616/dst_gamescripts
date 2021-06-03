@@ -152,7 +152,7 @@ function RecipePopup:BuildWithSpinner(horizontal)
     self.button:SetPosition(320, -155, 0)
     self.button:SetScale(.7,.7,.7)
     self.button.image:SetScale(.45, .7)
-    
+
     self.skins_spinner = self.contents:AddChild(self:MakeSpinner())
     self.skins_spinner:SetPosition(307, -100)
 
@@ -289,8 +289,8 @@ function RecipePopup:Refresh()
         end
     end
 
-    self.name:SetTruncatedString(STRINGS.NAMES[string.upper(self.recipe.product)], TEXT_WIDTH+38, nil, false)
-    self.desc:SetMultilineTruncatedString(STRINGS.RECIPE_DESC[string.upper(self.recipe.product)], 2, TEXT_WIDTH, self.smallfonts and 40 or 33, true)
+    self.name:SetTruncatedString(STRINGS.NAMES[string.upper(self.recipe.name)] or STRINGS.NAMES[string.upper(self.recipe.product)], TEXT_WIDTH+38, nil, false)
+    self.desc:SetMultilineTruncatedString(STRINGS.RECIPE_DESC[string.upper(self.recipe.description or self.recipe.product)], 2, TEXT_WIDTH, self.smallfonts and 40 or 33, true)
 
     for i, v in ipairs(self.ing) do
         v:Kill()
@@ -369,7 +369,7 @@ function RecipePopup:Refresh()
 
         local str
         if should_hint then
-            local hint_text = 
+            local hint_text =
 			{
                 ["SCIENCEMACHINE"] = "NEEDSCIENCEMACHINE",
                 ["ALCHEMYMACHINE"] = "NEEDALCHEMYENGINE",
@@ -565,8 +565,8 @@ function RecipePopup:MakeSpinner()
 
     spinner_group.spinner:SetOnChangedFn(function()
                                                     local which = spinner_group.spinner:GetSelectedIndex()
-                                                    if which > 1 then 
-                                                      if self.skins_options[which].new_indicator or testNewTag then 
+                                                    if which > 1 then
+                                                      if self.skins_options[which].new_indicator or testNewTag then
                                                         spinner_group.new_tag:Show()
                                                       else
                                                         spinner_group.new_tag:Hide()
@@ -598,9 +598,9 @@ end
 function RecipePopup:OnControl(control, down)
     if RecipePopup._base.OnControl(self, control, down) then return true end
 
-    -- This function gets called by craftslot when left or right d-pad buttons are pushed. Pass those through to the 
+    -- This function gets called by craftslot when left or right d-pad buttons are pushed. Pass those through to the
     -- spinner.
-    if self.skins_spinner ~= nil and TheInput:ControllerAttached() then 
+    if self.skins_spinner ~= nil and TheInput:ControllerAttached() then
         self.skins_spinner:OnControl(control, down)
     end
 end

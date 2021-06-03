@@ -82,7 +82,7 @@ local function CreateOptionSpinner(spinnerCB)
     spinner.label:SetPosition(0, height_offset*2)
     spinner.label:SetRegionSize(spinner_width, spinner_height)
 
-    spinner.SetEditable = function(_, is_editable) 
+    spinner.SetEditable = function(_, is_editable)
         if is_editable then
             spinner:Enable()
         else
@@ -111,7 +111,7 @@ local function CreateTextExtry(textentryCB)
     local textentry = opt:AddChild(TEMPLATES.StandardSingleLineTextEntry(nil, textentry_width, textentry_height, NEWFONT, 18, ""))
     textentry.textbox:SetHAlign(ANCHOR_MIDDLE)
     textentry.textbox.prompt:SetHAlign(ANCHOR_MIDDLE)
-    
+
     textentry.changed_image = textentry:AddChild(Image("images/global_redux.xml", "option_highlight.tex"))
     textentry.changed_image:SetPosition(0, 0)
     textentry.changed_image:ScaleToSizeIgnoreParent(textentry_width + 28, button_height)
@@ -274,7 +274,7 @@ function SettingsList:MakeScrollList()
             else
                 widget.opt_textentry:Hide()
             end
-            
+
             if v.widget_type == "optionsspinner" then
                 local opt = widget.opt_spinner
                 opt:Show()
@@ -435,7 +435,7 @@ function SettingsList:RefreshOptionItems()
                 for col = wrapped_index + 1, num_columns do
                     table.insert(self.optionitems, {is_empty = true})
                 end
-            end 
+            end
 
             table.insert(self.optionitems, {heading_text = v.grouplabel})
 

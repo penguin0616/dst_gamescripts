@@ -60,7 +60,7 @@ end
 
 local CLEAR_SPAWN_POINT_ONEOF_TAGS = {"brightmare", "player", "playerghost", "shadow"}
 local function IsValidSpawnPt(pt)
-	return #TheSim:FindEntities(pt.x, 0, pt.z, 3, nil, nil, CLEAR_SPAWN_POINT_ONEOF_TAGS) == 0 
+	return #TheSim:FindEntities(pt.x, 0, pt.z, 3, nil, nil, CLEAR_SPAWN_POINT_ONEOF_TAGS) == 0
 			and not _map:IsPointNearHole(pt)
 end
 
@@ -102,7 +102,7 @@ local function UpdatePopulation()
 								or 0
 
 		-- TODO: optimize function calls above into the else statement below when this print is removed
-		--print("Count: " .. num_brightmares .. ", " .. num_nightmares, " Chance: " .. brightmare_chance ..", " .. nightmare_chance)  
+		--print("Count: " .. num_brightmares .. ", " .. num_nightmares, " Chance: " .. brightmare_chance ..", " .. nightmare_chance)
 
 		if nightmare_chance >= 1 or (nightmare_chance > 0 and math.random() < nightmare_chance) then
 			SpawnNightmareForPlayer(player, Vector3(x, 0, z))
@@ -173,7 +173,7 @@ end
 
 function self:SpawnFrontLines()
 	if self:RetrofittedSpawnFrontLines() then
-		return 
+		return
 	end
 
 	-- this is only public to allow modders access to it
@@ -187,7 +187,7 @@ function self:SpawnFrontLines()
 			break
 		end
 	end
-	
+
 	if node == nil then
 		print("Warning, could not find node with tag GrottoWarEntrance.")
 		return
@@ -238,7 +238,7 @@ function self:SpawnFrontLines()
 		local neighbour_index = edge_nodes[1] ~= node_index and edge_nodes[1] or edge_nodes[2]
 		if world_topology.story_depths[neighbour_index] ~= story_depth then
 			local edge = flattenedEdges[edge_index]
-			
+
 			local pt1 = Vector3(flattenedPoints[edge[1]][1], 0, flattenedPoints[edge[1]][2])
 			local pt2 = Vector3(flattenedPoints[edge[2]][1], 0, flattenedPoints[edge[2]][2])
 
@@ -261,7 +261,7 @@ function self:SpawnFrontLines()
 					dospawn(prefab, pt1, pt2, i/num_steps, dir)
 				end
 			end
-					
+
 			local pt3 = (pt1+pt2)/2
 			SpawnPrefab("grotto_war_sfx").Transform:SetPosition(pt3.x,pt3.y,pt3.z)
 
@@ -321,7 +321,7 @@ local function OnPlayerLeft(inst, player)
             table.remove(_activeplayers, i)
             return
         end
-    end	
+    end
 end
 
 local function OnNightmarePhaseChanged(inst, phase)

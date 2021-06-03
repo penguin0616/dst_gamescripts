@@ -83,7 +83,7 @@ local function OnTargetLeft(self)
     if self.initialtargetmode == LockAndKeepPlayer or
         self.initialtargetmode == LockOnPlayer then
         self:SetTargetMode(self.initialtargetmode)
-    end 
+    end
     if self.losttargetfn ~= nil then
         self.losttargetfn()
     end

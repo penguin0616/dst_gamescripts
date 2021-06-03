@@ -4,7 +4,7 @@ local events =
     EventHandler("trader_arrives", function(inst, data) inst.sg:GoToState("arrive") end),
     EventHandler("trader_leaves", function(inst, data) inst.sg:GoToState("leave") end),
 	EventHandler("contestdisabled", function(inst, data) inst.sg:GoToState("idle_closed_ready_pst") end),
-    EventHandler("contestenabled", function(inst, data) 
+    EventHandler("contestenabled", function(inst, data)
         if not inst.sg:HasStateTag("open") and not inst.sg:HasStateTag("busy") then
             if TheWorld.components.yotb_stagemanager and TheWorld.components.yotb_stagemanager:IsContestEnabled() then
                 if not inst.sg:HasStateTag("ready") then
@@ -23,7 +23,7 @@ local events =
 }
 
 local states =
-{ 
+{
     State{
         name="idle_closed",
         tags = {},
@@ -112,7 +112,7 @@ local states =
                 inst.sg:GoToState("idle_closed_ready")
             end),
         },
-    },    
+    },
 
 
     State{
@@ -126,7 +126,7 @@ local states =
 
         onexit = function(inst,data)
             inst:PushEvent("yotb_advance_queue")
-           
+
         end,
 
         events =
@@ -224,7 +224,7 @@ local states =
                 inst.sg:GoToState("idle_open")
             end),
         },
-    }, 
+    },
 
     State{
         name="flourish_end",
@@ -250,7 +250,7 @@ local states =
                 inst.sg:GoToState("talk")
             end),
         },
-    }, 
+    },
 
     State{
         name="idle_closed_ready_pst",
@@ -267,7 +267,7 @@ local states =
                 inst.sg:GoToState("idle_closed")
             end),
         },
-    }, 
+    },
 
     State{
         name="idle_closed_ready_reset",
@@ -283,7 +283,7 @@ local states =
                 inst.sg:GoToState("idle_closed_ready")
             end),
         },
-    },       
+    },
 
     State{
         name="throwprizes",
@@ -358,7 +358,7 @@ local states =
                 end
             end),
         },
-    },    
+    },
 }
 
 return StateGraph("SGyotb_stage", states, events, "idle_closed")

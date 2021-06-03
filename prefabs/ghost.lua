@@ -33,7 +33,7 @@ local function OnAttacked(inst, data)
     if data.attacker == nil then
         inst.components.combat:SetTarget(nil)
     elseif not data.attacker:HasTag("noauradamage") then
-       inst.components.combat:SetTarget(data.attacker) 
+       inst.components.combat:SetTarget(data.attacker)
     end
 end
 

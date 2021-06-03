@@ -44,7 +44,7 @@ function self:SwitchPowerOn(setting)
 	end
 end
 
-function self:GetPowerSetting()	
+function self:GetPowerSetting()
 	return _power_enabled
 end
 

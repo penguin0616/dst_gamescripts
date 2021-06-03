@@ -104,7 +104,7 @@ local function SetMedium(inst)
         inst.components.freezable:SetShatterFXLevel(4)
         inst.components.freezable:SetResistance(3)
     end
-    
+
     local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
     if TheWorld.Map:GetPlatformAtPoint(my_x, my_z) == nil then
         inst.GroundCreepEntity:SetRadius(9)

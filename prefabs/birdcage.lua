@@ -9,7 +9,7 @@ local assets =
     Asset("ANIM", "anim/robin_winter_build.zip"),
     Asset("ANIM", "anim/canary_build.zip"),
     Asset("ANIM", "anim/bird_mutant_build.zip"),
-    Asset("ANIM", "anim/bird_mutant_spitter_build.zip"),    
+    Asset("ANIM", "anim/bird_mutant_spitter_build.zip"),
 }
 
 local prefabs =
@@ -111,7 +111,7 @@ local function ShouldAcceptItem(inst, item)
     local seed_name = string.lower(item.prefab .. "_seeds")
 
     local can_accept = item.components.edible
-        and (Prefabs[seed_name] 
+        and (Prefabs[seed_name]
         or item.prefab == "seeds"
         or string.match(item.prefab, "_seeds")
         or item.components.edible.foodtype == FOODTYPE.MEAT)
@@ -280,7 +280,7 @@ local function OnEmptied(inst, bird)
     if inst.bird_type then
         inst.AnimState:ClearOverrideBuild(inst.bird_type.."_build")
     end
-        
+
     SetCageState(inst, CAGE_STATES.EMPTY)
 
     --Remove sleeper component

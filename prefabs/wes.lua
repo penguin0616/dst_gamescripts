@@ -36,7 +36,7 @@ local function master_postinit(inst)
 	if inst.components.houndedtarget == nil then
 		inst:AddComponent("houndedtarget")
 	end
-	inst.components.houndedtarget.target_weight_mult:SetModifier(inst, TUNING.WES_HOUND_TARGET_MULT, "misfortune") 
+	inst.components.houndedtarget.target_weight_mult:SetModifier(inst, TUNING.WES_HOUND_TARGET_MULT, "misfortune")
 	inst.components.houndedtarget.hound_thief = true
 
     inst.components.health:SetMaxHealth(TUNING.WES_HEALTH)

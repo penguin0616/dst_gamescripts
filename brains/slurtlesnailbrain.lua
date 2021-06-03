@@ -144,7 +144,7 @@ function SlurtleSnailBrain:OnStart()
             DoAction(self.inst, GoHomeAction, "Go Home", true )),
         Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, 40),
     }, .25)
-    
+
     self.bt = BT(self.inst, root)
 end
 

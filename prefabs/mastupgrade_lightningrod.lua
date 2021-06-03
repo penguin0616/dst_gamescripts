@@ -131,7 +131,7 @@ local function basefn()
     inst.Light:SetFalloff(1)
     inst.Light:SetIntensity(.5)
     inst.Light:SetColour(235/255,121/255,12/255)
-    
+
     inst:AddTag("lightningrod")
     inst:AddTag("DECOR")
     inst:AddTag("NOCLICK")
@@ -187,7 +187,7 @@ local function topfn()
     if not TheWorld.ismastersim then
         return inst
     end
-    
+
     inst.persists = false
 
     return inst

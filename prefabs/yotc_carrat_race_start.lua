@@ -65,7 +65,7 @@ local function SpawnGhostRacers(inst, race_data)
 	if race_data ~= nil and race_data.num_racers == 1 then
 		local racer = next(race_data.racers)
 		local num_stats = (racer ~= nil and racer.components.yotc_racestats ~= nil) and racer.components.yotc_racestats:GetNumStatPoints() or 0
-		
+
 		SpawnGhostRacer(inst, math.floor(num_stats * 0.75) + math.random(-3, 0))
 		SpawnGhostRacer(inst, math.random(math.floor(num_stats * 0.75), math.floor(num_stats * 0.9)) - 1)
 		SpawnGhostRacer(inst, math.random(math.floor(num_stats * 0.8) , math.floor(num_stats * 1.1)))

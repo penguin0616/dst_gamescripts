@@ -52,7 +52,7 @@ local function oncollidewave(inst, other)
 
         do_splash(inst)
     end
-end 
+end
 
 local function CheckGround(inst)
     --Check if I'm about to hit land
@@ -62,7 +62,7 @@ local function CheckGround(inst)
     if TheWorld.Map:IsVisualGroundAtPoint(x + vx, y, z + vz) then
         do_splash(inst)
     end
-end 
+end
 
 local function launch_in_direction(thing_to_launch, vx, vz)
     if thing_to_launch ~= nil and thing_to_launch.Physics ~= nil and thing_to_launch.Physics:IsActive() then
@@ -110,9 +110,9 @@ local function med_fn()
 
     inst.AnimState:SetBuild("wave")
     inst.AnimState:SetBank("wave_ripple")
-    
+
     TintByOceanTile(inst)
-    
+
     MakeCharacterPhysics(inst, 100, 1)
 
     inst:AddTag("scarytoprey")
@@ -189,7 +189,7 @@ local function wavesplash_fn()
 	inst:DoTaskInTime(inst.AnimState:GetCurrentAnimationLength() + 0.1, inst.Remove)
 
     return inst
-end 
+end
 
 return Prefab( "wave_med", med_fn, waveassets, prefabs ),
        Prefab( "wave_splash", wavesplash_fn, splashassets)

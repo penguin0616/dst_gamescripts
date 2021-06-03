@@ -21,7 +21,7 @@ function MiniBoatLanternBrain:OnStart()
 		WhileNode(function() return ShouldMove(self.inst) end, "ShouldMove",
             Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, TUNING.MINIBOATLANTERN_WANDER_DIST, WANDER_TIMES, getdirectionFn)),
     }, 0.25)
-    
+
     self.bt = BT(self.inst, root)
 end
 

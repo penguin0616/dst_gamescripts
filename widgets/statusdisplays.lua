@@ -78,7 +78,7 @@ local function OnSetPlayerMode(inst, self)
         inst:ListenForEvent("clientpethealthstatusdirty", self.onpethealthdirty, self.owner)
         self:RefreshPetHealth()
     end
-    
+
     if self.pethealthbadge ~= nil and self.onpetskindirty == nil then
         self.onpetskindirty = function() self:RefreshPetSkin() end
         inst:ListenForEvent("clientpetskindirty", self.onpetskindirty, self.owner)
@@ -112,12 +112,12 @@ local function OnSetGhostMode(inst, self)
     if self.ongotonplatform ~= nil then
 
         self.inst:RemoveEventCallback("got_on_platform", self.ongotonplatform, self.owner)
-        self.ongotonplatform = nil        
+        self.ongotonplatform = nil
 
         self.inst:RemoveEventCallback("got_off_platform", self.ongotoffplatform, self.owner)
         self.ongotoffplatform = nil
-        
-    end       
+
+    end
 
     if self.onwerenessdelta ~= nil then
         self.inst:RemoveEventCallback("werenessdelta", self.onwerenessdelta, self.owner)
@@ -137,7 +137,7 @@ local function OnSetGhostMode(inst, self)
         self.onpethealthdirty = nil
     end
 
-    if self.onpetskindirty ~= nil then        
+    if self.onpetskindirty ~= nil then
         self.inst:RemoveEventCallback("clientpetskindirty", self.onpetskindirty, self.owner)
         self.onpetskindirty = nil
     end

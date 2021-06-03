@@ -101,21 +101,21 @@ AddStartLocation("default", {
 AddStartLocation("plus", {
     name = STRINGS.UI.SANDBOXMENU.PLUSSTART,
     location = "forest",
-    start_setpeice = "DefaultPlusStart",	
+    start_setpeice = "DefaultPlusStart",
     start_node = {"DeepForest", "Forest", "SpiderForest", "Plain", "Rocky", "Marsh"},
 })
 
 AddStartLocation("darkness", {
     name = STRINGS.UI.SANDBOXMENU.DARKSTART,
     location = "forest",
-    start_setpeice = "DarknessStart",	
-    start_node = {"DeepForest", "Forest"},	
+    start_setpeice = "DarknessStart",
+    start_node = {"DeepForest", "Forest"},
 })
 
 AddStartLocation("caves", {
     name = STRINGS.UI.SANDBOXMENU.CAVESTART,
     location = "cave",
-    start_setpeice = "CaveStart",	
+    start_setpeice = "CaveStart",
     start_node = {
         "RabbitArea",
         "RabbitTown",

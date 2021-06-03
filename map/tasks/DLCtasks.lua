@@ -20,13 +20,13 @@ AddTask("Oasis", {
 			["Badlands"] = 3,
 			["PondyGrass"] = 1,
 			["BuzzardyBadlands"] = 2,
-		},  
+		},
 		room_bg=GROUND.DIRT,
 		background_room="BGBadlands",
 		colour={r=.05,g=.5,b=.05,a=1},
 	})
 
-AddTask("Lightning Bluff", { 
+AddTask("Lightning Bluff", {
 		locks={LOCKS.SPIDERS_DEFEATED},
 		keys_given={KEYS.PICKAXE, KEYS.TIER2},
 		room_choices={
@@ -34,7 +34,7 @@ AddTask("Lightning Bluff", {
 			["LightningBluffLightning"] = 1,
 			["LightningBluffOasis"] = 1,
 			["BGLightningBluff"] = 2,
-		},  
+		},
 		room_bg=GROUND.DIRT,
 		background_room="BGLightningBluff",
 		colour={r=.05,g=.5,b=.05,a=1},

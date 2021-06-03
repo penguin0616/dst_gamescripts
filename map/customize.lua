@@ -94,9 +94,9 @@ local day_descriptions = {
 }
 
 local season_length_descriptions = {
-	{ text = STRINGS.UI.SANDBOXMENU.SLIDENEVER, data = "noseason" },	
-	{ text = STRINGS.UI.SANDBOXMENU.SLIDEVERYSHORT, data = "veryshortseason" },	
-	{ text = STRINGS.UI.SANDBOXMENU.SLIDESHORT, data = "shortseason" },	
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDENEVER, data = "noseason" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEVERYSHORT, data = "veryshortseason" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDESHORT, data = "shortseason" },
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEDEFAULT, data = "default" },
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDELONG, data = "longseason" },
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEVERYLONG, data = "verylongseason" },
@@ -156,6 +156,7 @@ local complexity_descriptions = {
 local specialevent_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDENEVER, data = "none" },
 	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.DEFAULT, data = "default" },
+	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.CARNIVAL, data = SPECIAL_EVENTS.CARNIVAL },
 	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.HALLOWED_NIGHTS, data = SPECIAL_EVENTS.HALLOWED_NIGHTS },
 	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.WINTERS_FEAST, data = SPECIAL_EVENTS.WINTERS_FEAST },
 	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOTG, data = SPECIAL_EVENTS.YOTG },
@@ -229,11 +230,11 @@ local WORLDGEN_GROUP = {
 		atlas = "images/worldgen_customization.xml",
 		items={
 			["spiders"] = {value = "default", image = "spiderden.tex", world={"forest", "cave"}},
-			["cave_spiders"] = {value = "default", image = "cave_spiderden.tex", world={"cave"}}, 
+			["cave_spiders"] = {value = "default", image = "cave_spiderden.tex", world={"cave"}},
 			["houndmound"] = {value = "default", image = "houndmound.tex", world={"forest"}},
-			["merm"] = {value = "default", image = "mermhut.tex", world={"forest"}}, 
-			["tentacles"] = {value = "default", image = "tentacles.tex", world={"forest", "cave"}}, 
-			["chess"] = {value = "default", image = "chess_monsters.tex", world={"forest", "cave"}}, 
+			["merm"] = {value = "default", image = "mermhut.tex", world={"forest"}},
+			["tentacles"] = {value = "default", image = "tentacles.tex", world={"forest", "cave"}},
+			["chess"] = {value = "default", image = "chess_monsters.tex", world={"forest", "cave"}},
 			["walrus"] = {value = "default", image = "mactuskcamp.tex", world={"forest"}},
 			["bats"] = {value = "default", image = "batcave.tex", world={"cave"}},
 			["fissure"] = {value = "default", image = "fissure.tex", world={"cave"}},
@@ -291,10 +292,10 @@ local WORLDGEN_GROUP = {
 			["fern"] = {value = "default", image = "fern.tex", world={"cave"}},
 			["flower_cave"] = {value = "default", image = "flower_cave.tex", world={"cave"}},
 			["wormlights"] = {value = "default", image = "wormlights.tex", world={"cave"}},
-			["berrybush"] = {value = "default", image = "berrybush.tex", world={"forest", "cave"}}, 
-			["carrot"] = {value = "default", image = "carrot.tex", world={"forest"}}, 
-			["mushroom"] = {value = "default", image = "mushrooms.tex", world={"forest", "cave"}}, 
-			["cactus"] = {value = "default", image = "cactus.tex", world={"forest"}}, 
+			["berrybush"] = {value = "default", image = "berrybush.tex", world={"forest", "cave"}},
+			["carrot"] = {value = "default", image = "carrot.tex", world={"forest"}},
+			["mushroom"] = {value = "default", image = "mushrooms.tex", world={"forest", "cave"}},
+			["cactus"] = {value = "default", image = "cactus.tex", world={"forest"}},
 			["banana"] = {value = "default", image = "banana.tex", world={"cave"}},
 			["lichen"] = {value = "default", image = "lichen.tex", world={"cave"}},
 			["moon_tree"] = {value = "default", image = "moon_tree.tex", world = {"forest"}},
@@ -410,7 +411,7 @@ local WORLDSETTINGS_GROUP = {
 	},
 	["animals"] = {
 		order= 4,
-		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_ANIMALS, 
+		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_ANIMALS,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
 		items={
@@ -446,7 +447,7 @@ local WORLDSETTINGS_GROUP = {
 		atlas = "images/worldsettings_customization.xml",
 		items={
 			["regrowth"] = {value = "default", image = "regrowth.tex", order = 1, world={"forest", "cave"}},
-			
+
 			["evergreen_regrowth"] = {value = "default", image = "evergreen.tex", world={"forest"}},
 			["deciduoustree_regrowth"] = {value = "default", image = "deciduoustree.tex", world={"forest"}},
 			["twiggytrees_regrowth"] = {value = "default", image = "twiggytrees.tex", world={"forest"}},
@@ -510,7 +511,7 @@ local WORLDSETTINGS_GROUP = {
 			["winter"] = {value = "default", image = "winter.tex", options_remap = {img = "blank_season_yellow.tex", atlas = "images/customisation.xml"}, desc = season_length_descriptions, master_controlled = true, order = 3},
 			["spring"] = {value = "default", image = "spring.tex", options_remap = {img = "blank_season_yellow.tex", atlas = "images/customisation.xml"}, desc = season_length_descriptions, master_controlled = true, order = 4},
 			["summer"] = {value = "default", image = "summer.tex", options_remap = {img = "blank_season_yellow.tex", atlas = "images/customisation.xml"}, desc = season_length_descriptions, master_controlled = true, order = 5},
-			["day"] = {value = "default", image = "day.tex", desc = day_descriptions, master_controlled = true, order = 6},
+			["day"] = {value = "default", image = "day.tex", desc = day_descriptions, masteroption = true, master_controlled = true, order = 6},
 			["beefaloheat"] = {value = "default", image = "beefaloheat.tex", desc = frequency_descriptions, masteroption = true, master_controlled = true, order = 7},
 			["krampus"] = {value = "default", image = "krampus.tex", desc = frequency_descriptions, masteroption = true, master_controlled = true, order = 8},
 		}
@@ -526,7 +527,7 @@ local MOD_WORLDSETTINGS_MISC = {}
 --only add something to this list if it won't get processed via WorldSettings_Overrides
 local EXEMPT_OPTIONS = {
 	specialevent = true,
-	spawnprotection = true, 
+	spawnprotection = true,
 }
 local WorldSettings_Overrides = require("worldsettings_overrides")
 for _, group_data in pairs(WORLDSETTINGS_GROUP) do
@@ -693,7 +694,7 @@ local function GetOptionsFromGroup(GROUP, MOD_GROUP, location, is_master_world)
 							local export = {}
 							for name, exportfn in pairs(ITEM_EXPORTS) do
 								export[name] = exportfn(item, location)
-							end	
+							end
 							table.insert(options, export)
 						end
 					end
@@ -710,7 +711,7 @@ local function GetOptionsFromGroup(GROUP, MOD_GROUP, location, is_master_world)
 						local export = {}
 						for name, exportfn in pairs(ITEM_EXPORTS) do
 							export[name] = exportfn(item, location)
-						end	
+						end
 						table.insert(options, export)
 					end
 				end
@@ -718,7 +719,7 @@ local function GetOptionsFromGroup(GROUP, MOD_GROUP, location, is_master_world)
 		end
 	end
 
-	
+
 	table.sort(options, function(a, b)
 		local item_a = GetOption(a.name)
 		local item_b = GetOption(b.name)
@@ -732,7 +733,7 @@ local function GetOptionsFromGroup(GROUP, MOD_GROUP, location, is_master_world)
 
 		local item_a_order = item_a.order
 		local item_b_order = item_b.order
-		
+
 		if item_a_order == item_b_order then
 			return (STRINGS.UI.CUSTOMIZATIONSCREEN[string.upper(item_a.name)] or "") < (STRINGS.UI.CUSTOMIZATIONSCREEN[string.upper(item_b.name)]  or "")
 		elseif item_a_order == nil or item_b_order == nil then
@@ -1102,7 +1103,7 @@ return {
 
 	GetWorldSettingsOptions		   				= GetWorldSettingsOptions,
 	GetWorldSettingsOptionsWithLocationDefaults = GetWorldSettingsOptionsWithLocationDefaults,
-	
+
 	GetWorldGenOptions			   				= GetWorldGenOptions,
 	GetWorldGenOptionsWithLocationDefaults 		= GetWorldGenOptionsWithLocationDefaults,
 

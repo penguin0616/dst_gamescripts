@@ -6,7 +6,7 @@ local function onhitchable(self)
     end
 end
 
-local Hitchable = Class(function(self, inst) 
+local Hitchable = Class(function(self, inst)
 	self.inst = inst
 	self.hitched = nil
 	self.canbehitched = true
@@ -24,8 +24,8 @@ function Hitchable:SetHitched( target )
 	self.inst.SoundEmitter:PlaySound("yotb_2021/common/hitching_post/hitching")
 	self.inst:ListenForEvent("newcombattarget",onnewtarget)
 	self.canbehitched = false
-	self.hitched = target	
-	
+	self.hitched = target
+
 end
 
 function Hitchable:Unhitch()

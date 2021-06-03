@@ -4,7 +4,7 @@ local Placer = Class(function(self, inst)
     self.inst = inst
 
     self.can_build = false
-    self.mouse_blocked = false
+    self.mouse_blocked = nil
     self.testfn = nil
     self.radius = 1
     self.selected_pos = nil
@@ -63,8 +63,9 @@ function Placer:OnUpdate(dt)
         --V2C: switched to WallUpdate, so should be smooth now
         self.inst.Transform:SetPosition(ThePlayer.entity:LocalToWorldSpace(self.offset, 0, 0))
     elseif self.inst.parent == nil then
-        ThePlayer:AddChild(self.inst)
-        self.inst.Transform:SetPosition(self.offset, 0, 0)
+--        ThePlayer:AddChild(self.inst)
+--        self.inst.Transform:SetPosition(self.offset, 0, 0) -- this will cause the object to be rotated to face the same direction as the player, which is not what we want, rotate the camera if you want to rotate the object
+        self.inst.Transform:SetPosition(ThePlayer.entity:LocalToWorldSpace(self.offset, 0, 0))
     end
 
     if self.fixedcameraoffset ~= nil then
@@ -76,6 +77,8 @@ function Placer:OnUpdate(dt)
         self.onupdatetransform(self.inst)
     end
 
+	local was_mouse_blocked = self.mouse_blocked
+
     if self.override_testfn ~= nil then
         self.can_build, self.mouse_blocked = self.override_testfn(self.inst)
     elseif self.testfn ~= nil then
@@ -85,7 +88,11 @@ function Placer:OnUpdate(dt)
         self.mouse_blocked = false
     end
 
-    local x, y, z = self.inst.Transform:GetWorldPosition()
+    if self.builder ~= nil and was_mouse_blocked ~= self.mouse_blocked then
+		self.builder:PushEvent(self.mouse_blocked and "onplacerhidden" or "onplacershown")
+	end
+
+	local x, y, z = self.inst.Transform:GetWorldPosition()
     TriggerDeployHelpers(x, y, z, 64, self.recipe, self.inst)
 
     if self.can_build then

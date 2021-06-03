@@ -95,7 +95,7 @@ local function onequipgold(inst, owner)local skin_build = inst:GetSkinBuild()
         owner:PushEvent("equipskinneditem", inst:GetSkinName())
         owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_goldenshovel", inst.GUID, "swap_goldenshovel")
     else
-        owner.AnimState:OverrideSymbol("swap_object", "swap_goldenshovel", "swap_goldenshovel")    
+        owner.AnimState:OverrideSymbol("swap_object", "swap_goldenshovel", "swap_goldenshovel")
     end
     owner.SoundEmitter:PlaySound("dontstarve/wilson/equip_item_gold")
     owner.AnimState:Show("ARM_carry")

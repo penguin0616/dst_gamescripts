@@ -5,7 +5,7 @@ require("util")
 
 --tweakable parameters
 local maxRecentSounds = 30  --max number of recent sounds to list in the debug output
-local maxDistance = 30     --max distance to show 
+local maxDistance = 30     --max distance to show
 
 local playsound = SoundEmitter.PlaySound
 local killsound = SoundEmitter.KillSound
@@ -18,7 +18,7 @@ local nearbySounds = {}
 local loopingSounds = {}
 local soundCount = 0
 local listenerPos = nil
- 
+
 local uiSounds = {}
 local loopingUISounds = {}
 local uiSoundCount = 0
@@ -83,7 +83,7 @@ SoundEmitter.PlaySound = function(emitter, event, name, volume, ...)
             uiSounds[index] = soundInfo
         end
     end
-    
+
     playsound(emitter, event, name, volume, ...)
 end
 
@@ -119,7 +119,7 @@ SoundEmitter.KillAllSounds = function(emitter, ...)
     if ent == nil or ent.Transform == nil then
 		loopingUISounds = {}
 	end
-	
+
     killallsounds(emitter, ...)
 end
 

@@ -138,7 +138,7 @@ local function fn()
     inst.components.lootdropper:SetLoot(loot)
 
     inst:AddComponent("inspectable")
-    
+
     inst:AddComponent("sleeper")
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
@@ -150,7 +150,7 @@ local function fn()
     MakeHauntablePanic(inst)
 
     inst.StartDroppingCrumbs = StartDroppingCrumbs
-    inst:ListenForEvent("onremove", function() 
+    inst:ListenForEvent("onremove", function()
         if inst.crumb_task then
             inst.crumb_task:Cancel()
             inst.crumb_task = nil

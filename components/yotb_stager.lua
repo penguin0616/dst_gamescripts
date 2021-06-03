@@ -1,6 +1,6 @@
 local set_data = require("yotb_costumes")
 
-local thresholds = 
+local thresholds =
 {
 	{key = "EXTREMEHIGH", threshold = 12},
 	{key = "VERYHIGH",    threshold = 7},
@@ -10,7 +10,7 @@ local thresholds =
 	{key = "VERYLOW",     threshold = -13},
 }
 
-local target_thresholds = 
+local target_thresholds =
 {
 	{key = "EXTREMEHIGH", threshold = 14},
 	{key = "VERYHIGH",    threshold = 11},
@@ -22,9 +22,9 @@ local target_thresholds =
 }
 
 
-local lines = 
+local lines =
 {
-	FEARSOME = { 
+	FEARSOME = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_HIGH },
@@ -33,7 +33,7 @@ local lines =
 		VERYLOW =      { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_VERYLOW },
 		EXTREMELOW =   { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_EXTREMELOW },
 	},
-	FESTIVE = { 
+	FESTIVE = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_HIGH },
@@ -42,7 +42,7 @@ local lines =
 		VERYLOW =      { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_VERYLOW },
 		EXTREMELOW =   { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_EXTREMELOW },
 	},
-	FORMAL = { 
+	FORMAL = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_CONTEST_FORMAL_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_CONTEST_FORMAL_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_CONTEST_FORMAL_HIGH },
@@ -53,9 +53,9 @@ local lines =
 	},
 }
 
-local target_lines = 
+local target_lines =
 {
-	FEARSOME = { 
+	FEARSOME = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_TARGET_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_TARGET_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_TARGET_HIGH },
@@ -64,7 +64,7 @@ local target_lines =
 		VERYLOW =      { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_TARGET_VERYLOW },
 		EXTREMELOW =   { duration = 6, strs = STRINGS.YOTB_CONTEST_FEARSOME_TARGET_EXTREMELOW },
 	},
-	FESTIVE = { 
+	FESTIVE = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_TARGET_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_TARGET_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_TARGET_HIGH },
@@ -73,7 +73,7 @@ local target_lines =
 		VERYLOW =      { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_TARGET_VERYLOW },
 		EXTREMELOW =   { duration = 6, strs = STRINGS.YOTB_CONTEST_FESTIVE_TARGET_EXTREMELOW },
 	},
-	FORMAL = { 
+	FORMAL = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_CONTEST_FORMAL_TARGET_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_CONTEST_FORMAL_TARGET_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_CONTEST_FORMAL_TARGET_HIGH },
@@ -84,9 +84,9 @@ local target_lines =
 	},
 }
 
-local doll_lines = 
+local doll_lines =
 {
-	FEARSOME = { 
+	FEARSOME = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_DOLL_FEARSOME_TARGET_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_DOLL_FEARSOME_TARGET_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_DOLL_FEARSOME_TARGET_HIGH },
@@ -95,7 +95,7 @@ local doll_lines =
 		VERYLOW =      { duration = 6, strs = STRINGS.YOTB_DOLL_FEARSOME_TARGET_VERYLOW },
 		EXTREMELOW =   { duration = 6, strs = STRINGS.YOTB_DOLL_FEARSOME_TARGET_EXTREMELOW },
 	},
-	FESTIVE = { 
+	FESTIVE = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_DOLL_FESTIVE_TARGET_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_DOLL_FESTIVE_TARGET_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_DOLL_FESTIVE_TARGET_HIGH },
@@ -104,7 +104,7 @@ local doll_lines =
 		VERYLOW =      { duration = 6, strs = STRINGS.YOTB_DOLL_FESTIVE_TARGET_VERYLOW },
 		EXTREMELOW =   { duration = 6, strs = STRINGS.YOTB_DOLL_FESTIVE_TARGET_EXTREMELOW },
 	},
-	FORMAL = { 
+	FORMAL = {
 		EXTREMEHIGH =  { duration = 6, strs = STRINGS.YOTB_DOLL_FORMAL_TARGET_EXTREMEHIGH },
 		VERYHIGH =     { duration = 6, strs = STRINGS.YOTB_DOLL_FORMAL_TARGET_VERYHIGH },
 		HIGH =         { duration = 6, strs = STRINGS.YOTB_DOLL_FORMAL_TARGET_HIGH },
@@ -115,7 +115,7 @@ local doll_lines =
 	},
 }
 
-local categories = 
+local categories =
 {
 	"FEARSOME",
 	"FESTIVE",
@@ -159,14 +159,14 @@ local YOTB_Stager = Class(function(self, inst)
     self.choice = "far"
     self.queue = {}
 
-    self.inst:ListenForEvent("yotb_contest_abort", function(inst,data)    
+    self.inst:ListenForEvent("yotb_contest_abort", function(inst,data)
     	self:AbortContest(data)
     end)
     self.inst:ListenForEvent("yotb_advance_queue", function(inst,data)
     	self:AdvanceQueue(data)
-    end)    
+    end)
     self.inst:ListenForEvent("timerdone", function(inst,data)
-    
+
     	if data.name == "prizedeadline" then
 			self:EndContest("toolate")
     	elseif data.name == "warndeadline" then
@@ -217,7 +217,7 @@ function YOTB_Stager:AbortContest(data)
 		end
 	end
 
-	if not self.contest_ending then	
+	if not self.contest_ending then
 
 		if self.victors then
 			for i=#self.victors,1,-1 do
@@ -231,7 +231,7 @@ function YOTB_Stager:AbortContest(data)
 		if self.victors and #self.victors > 0 then
 			self.inst.components.talker:Say(STRINGS.YOTB_COLLECT_PRIZE_QUICK, 5.5)
 		else
-			self.contest_ending = true	
+			self.contest_ending = true
 			self.abort_task = self.inst:DoTaskInTime(0.5,function()
 				self:EndContest(data.reason)
 			end)
@@ -245,7 +245,7 @@ function YOTB_Stager:AbortContest(data)
 				beef.components.markable_proxy.proxy = nil
 			end
 			post.components.markable:SetMarkable(false)
-		end	
+		end
 	end
 	self.inst.SoundEmitter:KillSound("gametune")
 end
@@ -286,7 +286,7 @@ function YOTB_Stager:RemoveTrainer(trainer)
 	end
 end
 
-local function onattacked(inst, data) 
+local function onattacked(inst, data)
 	inst.npc_stage:PushEvent("yotb_contest_abort",{reason="attack"})
 
 	local fx = SpawnPrefab("spawn_fx_medium")
@@ -318,7 +318,7 @@ function YOTB_Stager:MakeRandomBeef(post, name)
 	local trainertype = (math.random() < 0.5 and "pigman") or "merm"
 	local trainer = SpawnPrefab(trainertype)
 	trainer.persists = false
-	
+
 	local pos = Vector3(post.Transform:GetWorldPosition())
 	local dir = self.inst:GetAngleToPoint(pos.x,pos.y,pos.z)*DEGREES
 	local offset = FindWalkableOffset(pos, dir, 3.5, 8)
@@ -382,7 +382,7 @@ function YOTB_Stager:MakeRandomBeef(post, name)
 
 		local fx = SpawnPrefab("spawn_fx_medium")
 		fx.Transform:SetPosition(beefalo.Transform:GetWorldPosition())
-	end)	
+	end)
 	table.insert(self.tasks,task)
 end
 
@@ -420,7 +420,7 @@ end
 
 local function angle_table(pt,t)
 
-	table.sort(t,function(a,b) 
+	table.sort(t,function(a,b)
 		return a:GetAngleToPoint(pt.x, pt.y, pt.z) > b:GetAngleToPoint(pt.x, pt.y, pt.z)
 	end)
 	return t
@@ -478,7 +478,7 @@ function YOTB_Stager:Start_fail(result)
 		self.inst.components.talker:Say(STRINGS.YOTB_START_FAIL_DANGER, 3.5)
 	elseif result == "notime" then
 		self.inst.components.talker:Say(STRINGS.YOTB_START_FAIL_LATE, 3.5)
-	elseif result == "notenoughposts" then	
+	elseif result == "notenoughposts" then
 		self.inst.components.talker:Say(STRINGS.YOTB_START_FAIL_NOT_ENOUGH_POSTS, 3.5)
 	elseif result == "nocontestants" then
 		self.inst.components.talker:Say(STRINGS.YOTB_START_FAIL_NO_CONTESTANTS, 3.5)
@@ -488,12 +488,12 @@ function YOTB_Stager:Start_fail(result)
 		--self.inst:resetworkable()
 		self.inst:PushEvent("trader_leaves")
 	end)
-	
+
 	table.insert(self.tasks,task)
 end
 
 function YOTB_Stager:StartContest(starter)
-	
+
 	self.inst.components.workable:SetWorkable(false)
 
 	local result = self:TestStartContest()
@@ -517,14 +517,14 @@ function YOTB_Stager:StartContest(starter)
 	    self.tasks = {}
 	    self.queue = {}
 		self.starter = starter
-		
+
 		self.inst:RemoveTag("yotb_conteststartable")
 
 		self.inst:PushEvent("conteststarted")
 		self.inst:PushEvent("trader_arrives")
 
 		self.inst.SoundEmitter:PlaySound("yotb_2021/music/event","eventbg")
-		
+
 		table.insert(self.queue, function()
 			self:Start_phase2()
 		end)
@@ -605,7 +605,7 @@ function YOTB_Stager:Start_phase3()
 		table.insert(self.tasks,task)
 	else
 
-		local task = self.inst:DoTaskInTime(4, function() 
+		local task = self.inst:DoTaskInTime(4, function()
 			self.inst.components.talker:Say(STRINGS.YOTB_NO_EXTRA_BEEF,3.5)
 		end)
 		table.insert(self.tasks,task)
@@ -624,7 +624,7 @@ function YOTB_Stager:GetParameterLine(category)
 	local selected_line = target_lines[category].EXTREMELOW
 	for i, v in ipairs(target_thresholds) do
 	    if self.target_values[category] > v.threshold then
-	    	selected_line = target_lines[category][v.key]	
+	    	selected_line = target_lines[category][v.key]
 	        break
 	    end
 	end
@@ -659,18 +659,18 @@ function YOTB_Stager:StateParameters_Phase2()
 		self.inst.components.talker:Say(selectcomment(self:GetParameterLine("FEARSOME")), 5.5)
 	end)
 	table.insert(self.tasks,task3)
-	
+
 	time = time + 6
 	local task4 = self.inst:DoTaskInTime(time, function() self:BuildSuspense() end)
 	table.insert(self.tasks,task4)
 
 	local task5 = self.inst:DoTaskInTime(time-1, function() self.inst.SoundEmitter:KillSound("eventbg") end)
-	table.insert(self.tasks,task5)	
+	table.insert(self.tasks,task5)
 end
 
 function YOTB_Stager:unhighlitepost(post)
 	self.inst.current_contest_target = nil
-	if self.light then 
+	if self.light then
 	self.light.fadeout(self.light)
 	end
 end
@@ -704,7 +704,7 @@ function YOTB_Stager:GetBeefScore(beef)
 	local score = {
 		FEARSOME = 0,
 		FESTIVE = 0,
-		FORMAL = 0,	
+		FORMAL = 0,
 	}
 
 	for i,item in pairs(clothing) do
@@ -758,13 +758,13 @@ function YOTB_Stager:GetComment(post)
 
 	local beefalo = post.components.hitcher and post.components.hitcher:GetHitched() or nil
 	if beefalo then
-	
+
 		-- TODO actually compare it with the values generated
 		beefalo.candidate_values = self:GetBeefScore(beefalo)
 
 		local selected_category = categories[1]
 		if self.choice == "random" then
-			selected_category = self:GetRandom(beefalo.candidate_values) 
+			selected_category = self:GetRandom(beefalo.candidate_values)
 		elseif self.choice == "far" then
 			selected_category = self:GetFurthest(beefalo.candidate_values)
 		elseif not self.choice or self.choice == "close" then
@@ -803,8 +803,8 @@ function YOTB_Stager:BuildSuspense()
 		for i, trainer in ipairs(self.temp_trainers) do
 			trainer:DoTaskInTime(0.3+(math.random()*1), function()
 				trainer.components.timer:StartTimer("contest_panic",1 + (math.random()*7))
-				trainer:ListenForEvent("timerdone", function(inst,data) 
-					if data.name == "contest_panic" then 
+				trainer:ListenForEvent("timerdone", function(inst,data)
+					if data.name == "contest_panic" then
 						local post = self.posts[math.random(1,#self.posts)]
 						trainer.yotb_post_to_mark = post
 					end
@@ -817,7 +817,7 @@ function YOTB_Stager:BuildSuspense()
 
 	local task1 = self.inst:DoTaskInTime(6, function()
 		self.inst.components.talker:Say(STRINGS.YOTB_GUESS_WHO_2, 5.5)
-	end)	
+	end)
 	local task2 = self.inst:DoTaskInTime(12, function()
 		self.inst.components.talker:Say(STRINGS.YOTB_GUESS_WHO_3, 4.5)
 	end)
@@ -831,8 +831,8 @@ function YOTB_Stager:BuildSuspense()
 			post.components.markable:SetMarkable(false)
 		end
 		self.inst.components.talker:Say(STRINGS.YOTB_GUESS_WHO_4, 4.5)
-	end)	
-	
+	end)
+
 	local task4 = self.inst:DoTaskInTime(23, function()
 		self.inst.SoundEmitter:PlaySound("yotb_2021/music/event","eventbg")
 	end)
@@ -850,10 +850,10 @@ end
 function YOTB_Stager:SpawnVoiceName(rank,speech)
 	self.current_post = rank.post
 		self:highlitepost(self.posts[self.current_post])
-		local name = self.posts[self.current_post] and 
-			self.posts[self.current_post].components.hitcher and 
+		local name = self.posts[self.current_post] and
+			self.posts[self.current_post].components.hitcher and
 			self.posts[self.current_post].components.hitcher:GetHitched() and
-			self.posts[self.current_post].components.hitcher:GetHitched().components.named and 
+			self.posts[self.current_post].components.hitcher:GetHitched().components.named and
 			self.posts[self.current_post].components.hitcher:GetHitched().components.named.name
 			or speech
 	self:SpawnVoice( Vector3(self.posts[self.current_post].Transform:GetWorldPosition()), name, 4)
@@ -875,7 +875,7 @@ function YOTB_Stager:DeclareWinner()
 		local beefalo = v.components.hitcher:GetHitched()
 
 		if beefalo then
-			
+
 			beefalo.candidate_values = self:GetBeefScore(beefalo)
 			local score = 0
 			for i,cat in ipairs(categories) do
@@ -891,9 +891,9 @@ function YOTB_Stager:DeclareWinner()
 		end
 	end
 
-	table.sort(scores,function(a,b) 
+	table.sort(scores,function(a,b)
 		return a.score < b.score
-	end)	
+	end)
 
 	local first = scores[1]
 	local second = scores[2]
@@ -901,7 +901,7 @@ function YOTB_Stager:DeclareWinner()
 
 	local task1 = self.inst:DoTaskInTime(time, function()
 		self.inst.components.talker:Say(STRINGS.YOTB_CONTEST_THIRD_PLACE, 3.5)
-	end)	
+	end)
 	table.insert(self.tasks,task1)
 
 	time = time + 4
@@ -916,13 +916,13 @@ function YOTB_Stager:DeclareWinner()
 			local comment = self:GetComment(self.posts[self.current_post])
 			self:SpawnVoice( Vector3(self.posts[self.current_post].Transform:GetWorldPosition()), selectcomment(comment.strs), 6)
 		end)
-		table.insert(self.tasks,task3)	
+		table.insert(self.tasks,task3)
 
 	time = time + 6
 	local task4 = self.inst:DoTaskInTime(time, function()
 		self:unhighlitepost(self.posts[self.current_post])
 		self.inst.components.talker:Say(STRINGS.YOTB_CONTEST_SECOND_PLACE, 3.5)
-	end)	
+	end)
 	table.insert(self.tasks,task4)
 
 	time = time + 4
@@ -933,16 +933,16 @@ function YOTB_Stager:DeclareWinner()
 
 	time = time + 4
 		local task6 = self.inst:DoTaskInTime(time, function()
-			local comment = self:GetComment(self.posts[self.current_post])			
+			local comment = self:GetComment(self.posts[self.current_post])
 			self:SpawnVoice( Vector3(self.posts[self.current_post].Transform:GetWorldPosition()), selectcomment(comment.strs), 6)
 		end)
-		table.insert(self.tasks,task6)		
+		table.insert(self.tasks,task6)
 
 	time = time + 6
 	local task7 = self.inst:DoTaskInTime(time, function()
 		self:unhighlitepost(self.posts[self.current_post])
-		self.inst.components.talker:Say(STRINGS.YOTB_CONTEST_FIRST_PLACE, 3.5)		
-	end)	
+		self.inst.components.talker:Say(STRINGS.YOTB_CONTEST_FIRST_PLACE, 3.5)
+	end)
 	table.insert(self.tasks,task7)
 
 	local skip_next = false
@@ -951,7 +951,7 @@ function YOTB_Stager:DeclareWinner()
 		local name = self:SpawnVoiceName(first,STRINGS.YOTB_CONGRATS_WINNER)
 		if name == STRINGS.YOTB_CONGRATS_WINNER then
 			skip_next = true
-		end		
+		end
 		local fx = SpawnPrefab("confetti_fx")
 		fx.Transform:SetPosition(self.posts[self.current_post].Transform:GetWorldPosition())
 	end)
@@ -960,7 +960,7 @@ function YOTB_Stager:DeclareWinner()
 	if not skip_next then
 		time = time + 4
 		local task9 = self.inst:DoTaskInTime(time, function()
-			self:SpawnVoice( Vector3(self.posts[self.current_post].Transform:GetWorldPosition()), STRINGS.YOTB_CONGRATS_WINNER, 4) 
+			self:SpawnVoice( Vector3(self.posts[self.current_post].Transform:GetWorldPosition()), STRINGS.YOTB_CONGRATS_WINNER, 4)
 		end)
 		table.insert(self.tasks,task9)
 	end
@@ -1151,7 +1151,7 @@ function YOTB_Stager:EndContest(reason)
 
 	self:cleartimers()
 	self.inst:RemoveTag("has_prize")
-	
+
 	if self.posts and #self.posts > 0 then
 
 		self:unhighlitepost(self.posts[self.current_post])
@@ -1172,7 +1172,7 @@ function YOTB_Stager:EndContest(reason)
 
 	self.posts = nil
 
-	self.inst:PushEvent("onflourishend")	
+	self.inst:PushEvent("onflourishend")
 
 	local speech = STRINGS.YOTB_CONTEST_END
 	if reason then
@@ -1180,7 +1180,7 @@ function YOTB_Stager:EndContest(reason)
 			speech = STRINGS.YOTB_CONTEST_FIGHT_END
 		elseif reason == "toolate" then
 			speech = STRINGS.YOTB_TOO_LATE_PRIZE
-		end		
+		end
 	end
 
 	self.inst.components.talker:Say(speech,3)
@@ -1193,7 +1193,7 @@ end
 function YOTB_Stager:EndContest_phase2()
 
 	self:DisableContest()
-	
+
 	self.inst:PushEvent("trader_leaves")
 	self.inst.components.workable:SetWorkable(true)
 
@@ -1217,13 +1217,13 @@ function YOTB_Stager:EndContest_phase2()
 				ent:DoTaskInTime(math.random()*0.5,function() self:RemoveTrainer(ent) end)
 			end
 		end
-	end	
+	end
 
 	self.temp_trainers = nil
 
 	self.contest_ending = nil
 
-	self.voice:Remove()	
+	self.voice:Remove()
 
 	self.inst:DoTaskInTime(2,function()
 		if TheWorld.components.yotb_stagemanager and TheWorld.components.yotb_stagemanager:IsContestEnabled() then
@@ -1242,7 +1242,7 @@ function YOTB_Stager:appraisedoll(doll)
 		FORMAL = set_data.categories[doll.category].FORMAL * 5,
 	}
 
-	
+
 	self.inst.components.workable:SetWorkable(false)
 
 	self.voice = SpawnPrefab("yotb_stage_voice")
@@ -1258,7 +1258,7 @@ function YOTB_Stager:appraisedoll(doll)
 	end
     self.tasks = {}
     self.queue = {}
-	
+
 	self.inst:RemoveTag("yotb_conteststartable")
 
 	self.inst:PushEvent("trader_arrives")
@@ -1286,7 +1286,7 @@ function YOTB_Stager:GetParameterLineDoll(category)
 	local selected_line = doll_lines[category].EXTREMELOW
 	for i, v in ipairs(target_thresholds) do
 	    if self.doll_values[category] > v.threshold then
-	    	selected_line = doll_lines[category][v.key]	
+	    	selected_line = doll_lines[category][v.key]
 	        break
 	    end
 	end
@@ -1310,16 +1310,16 @@ function YOTB_Stager:appraisedoll3()
 		self.inst.components.talker:Say(selectcomment(self:GetParameterLineDoll("FEARSOME")), 5.5)
 	end)
 	table.insert(self.tasks,task3)
-	
+
 	time = time + 6
-	local task4 = self.inst:DoTaskInTime(time, function() 
+	local task4 = self.inst:DoTaskInTime(time, function()
 		self.inst.components.talker:Say(STRINGS.YOTB_APPRAISE_END, 3.5)
 	end)
 	table.insert(self.tasks,task4)
 
 	time = time + 4
 	local task5 = self.inst:DoTaskInTime(time, function() self:Endppraisedoll() end)
-	table.insert(self.tasks,task5)	
+	table.insert(self.tasks,task5)
 end
 
 function YOTB_Stager:Endppraisedoll()
@@ -1327,8 +1327,8 @@ function YOTB_Stager:Endppraisedoll()
 	self.inst:PushEvent("trader_leaves")
 	self.inst.components.workable:SetWorkable(true)
 	self.inst:AddTag("yotb_conteststartable")
-	self.voice:Remove()	
-end 
+	self.voice:Remove()
+end
 -------------------------------
 
 

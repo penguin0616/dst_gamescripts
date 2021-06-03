@@ -14,14 +14,14 @@ end
 
 local Winch = Class(function(self, inst)
 	self.inst = inst
-	
+
 	-- self.onfullyloweredfn = nil
 	-- self.onfullyraisedfn = nil
 	-- self.onstartloweringfn = nil
 	-- self.onstartraisingfn = nil
 
 	self.winch_ready = true
-	
+
     self.line_length = 0
 	self.is_raising = false
 	self.is_static = true
@@ -67,10 +67,10 @@ end
 -- 	if data ~= nil then
 -- 		if data.line_length then
 -- 			self.line_length = data.line_length
-			
+
 -- 			if self.line_length > 0 then
 -- 				self.winch_ready = false
-	
+
 -- 				if data.is_raising then
 -- 					self.is_raising = true
 -- 					self:StartRaising()
@@ -153,7 +153,7 @@ function Winch:StartLowering(loading_in)
 	if self.onstartloweringfn ~= nil then
 		self.onstartloweringfn(self.inst)
 	end
-	
+
 	self.inst:PushEvent("start_lowering_winch", loading_in)
 	return true
 end
@@ -195,7 +195,7 @@ end
 
 function Winch:OnUpdate(dt)
 	local depth = self:GetCurrentDepth()
-	
+
 	if self.is_raising then
 		self.line_length = self.line_length - (dt*self.raising_speed)
 		if self.line_length <= 0 then

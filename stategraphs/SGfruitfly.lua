@@ -1,13 +1,13 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
     ActionHandler(ACTIONS.INTERACT_WITH, "plant_dance"),
-	ActionHandler(ACTIONS.ATTACKPLANT, 
+	ActionHandler(ACTIONS.ATTACKPLANT,
 		function(inst)
 			return inst:HasTag("lordfruitfly") and "plant_attack" or "plant_attack_minion"
 		end),
-	ActionHandler(ACTIONS.PLANTWEED, 
+	ActionHandler(ACTIONS.PLANTWEED,
 		function(inst)
 			return inst:HasTag("lordfruitfly") and "plant_attack" or "plant_attack_minion"
 		end),
@@ -64,13 +64,13 @@ local states=
 			StartFlap(inst)
 		end,
 
-		events = 
+		events =
 		{
 			EventHandler("animover", function(inst)
 				if math.random() < 0.05 then
 					inst.sg:GoToState("bored")
 				else
-					inst.sg:GoToState("idle") 
+					inst.sg:GoToState("idle")
 				end
 			end)
 		},
@@ -85,7 +85,7 @@ local states=
 			StartFlap(inst)
 		end,
 
-		events = 
+		events =
 		{
 			EventHandler("animover", function(inst) inst.sg:GoToState("idle") end)
 		},
@@ -100,9 +100,9 @@ local states=
 			inst.AnimState:PushAnimation("plant_dance_loop", true)
 			StartFlap(inst)
 		end,
-	
+
 		timeline =
-		{ 
+		{
 			TimeEvent(77 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
 				inst.sg:GoToState("plant_dance_pst")
@@ -119,7 +119,7 @@ local states=
 			StartFlap(inst)
         end,
 
-		events = 
+		events =
 		{
             EventHandler("animover", function(inst)
                 inst:PerformBufferedAction()
@@ -188,7 +188,7 @@ local states=
 			StartFlap(inst)
         end,
 
-		events = 
+		events =
 		{
             EventHandler("animover", function(inst)
 				inst.sg:GoToState("idle")
@@ -263,7 +263,7 @@ local states=
 			inst.AnimState:PushAnimation("plant_dance_pst", false)
             inst.SoundEmitter:PlaySound(inst.sounds.buzz)
 		end,
-        
+
         events=
         {
             EventHandler("animqueueover", function(inst) inst.sg:GoToState("idle") end),
@@ -274,7 +274,7 @@ local states=
 --CommonStates.AddSimpleActionState(states, "action", "idle", FRAMES*5, {"busy"})
 CommonStates.AddCombatStates(states,
 {
-	hittimeline = 
+	hittimeline =
 	{
 		TimeEvent(0, function(inst) StartFlap(inst) end),
 		TimeEvent(0, function(inst)	inst.SoundEmitter:PlaySound(inst.sounds.hurt) end)
@@ -285,7 +285,7 @@ CommonStates.AddCombatStates(states,
         TimeEvent(8*FRAMES, function(inst) inst.components.combat:DoAttack(inst.sg.statemem.target) end),
 		TimeEvent(7*FRAMES, function(inst)	inst.SoundEmitter:PlaySound(inst.sounds.attack) end), --fruitfly only.
     },
-	deathtimeline = 
+	deathtimeline =
 	{
 		TimeEvent(0, function(inst) StartFlap(inst) end),
 		TimeEvent(0, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.die) end),
@@ -294,8 +294,8 @@ CommonStates.AddCombatStates(states,
 		TimeEvent(18*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.die_ground) end)
 	},
 })
-CommonStates.AddWalkStates(states, 
-{	
+CommonStates.AddWalkStates(states,
+{
 	starttimeline = {TimeEvent(0, function(inst) StartFlap(inst) end)},
 	walktimeline = {TimeEvent(0, function(inst) StartFlap(inst) end)},
 	endtimeline = {TimeEvent(0, function(inst) StartFlap(inst) end)},
@@ -303,7 +303,7 @@ CommonStates.AddWalkStates(states,
 CommonStates.AddSleepStates(states,
 {
 	starttimeline = {TimeEvent(0, function(inst) StartFlap(inst) end)},
-	sleeptimeline = 
+	sleeptimeline =
 		{
 			TimeEvent(0*FRAMES, function(inst) StopFlap(inst) end),
 			TimeEvent(35*FRAMES, function(inst) StartFlap(inst) end),
@@ -316,5 +316,5 @@ CommonStates.AddSleepStates(states,
     onwake = RaiseFlyingCreature,
 })
 CommonStates.AddFrozenStates(states, LandFlyingCreature, RaiseFlyingCreature)
-  
+
 return StateGraph("fruitfly", states, events, "taunt", actionhandlers)

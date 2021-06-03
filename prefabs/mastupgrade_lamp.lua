@@ -62,7 +62,7 @@ local function fn()
     inst.AnimState:SetBank("mastupgrade_lamp_item")
     inst.AnimState:SetBuild("mastupgrade_lamp")
     inst.AnimState:PlayAnimation("full")
-    
+
     inst:AddTag("NOCLICK")
     inst:AddTag("DECOR")
 

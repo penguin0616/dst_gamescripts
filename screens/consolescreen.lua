@@ -18,7 +18,7 @@ local ConsoleScreen = Class(Screen, function(self)
 	Screen._ctor(self, "ConsoleScreen")
     self.runtask = nil
 	self:DoInit()
-	
+
 	self.ctrl_pasting = false
 end)
 
@@ -44,7 +44,7 @@ end
 function ConsoleScreen:OnControl(control, down)
 	if self.runtask ~= nil or ConsoleScreen._base.OnControl(self, control, down) then return true end
 
-	if not down and (control == CONTROL_CANCEL or control == CONTROL_OPEN_DEBUG_CONSOLE) then 
+	if not down and (control == CONTROL_CANCEL or control == CONTROL_OPEN_DEBUG_CONSOLE) then
 		self:Close()
 		return true
 	end
@@ -61,7 +61,7 @@ function ConsoleScreen:ToggleRemoteExecute(force)
         elseif force == false then
             self.toggle_remote_execute = false
         end
-        
+
         if self.toggle_remote_execute then
         	self.console_remote_execute:SetString(STRINGS.UI.CONSOLESCREEN.REMOTEEXECUTE)
         	self.console_remote_execute:SetColour(0.7,0.7,1,1)
@@ -83,10 +83,10 @@ function ConsoleScreen:OnRawKey(key, down)
 	if down then return end
 
 	if self.runtask ~= nil then return true end
-	if ConsoleScreen._base.OnRawKey(self, key, down) then 
-		return true 
+	if ConsoleScreen._base.OnRawKey(self, key, down) then
+		return true
 	end
-	
+
 	return self:OnRawKeyHandler(key, down)
 end
 
@@ -96,7 +96,7 @@ function ConsoleScreen:OnRawKeyHandler(key, down)
 	end
 
 	if down then return end
-	
+
 	if key == KEY_UP then
 		local len = #CONSOLE_HISTORY
 		if len > 0 then
@@ -134,11 +134,11 @@ function ConsoleScreen:Run()
 	local fnstr = self.console_edit:GetString()
 
     SuUsedAdd("console_used")
-	
+
 	if fnstr ~= "" then
 		table.insert( CONSOLE_HISTORY, fnstr )
 	end
-	
+
 	if self.toggle_remote_execute then
         local x, y, z = TheSim:ProjectScreenPos(TheSim:GetPosition())
 		TheNet:SendRemoteExecute(fnstr, x, z)
@@ -150,7 +150,7 @@ end
 function ConsoleScreen:Close()
 	--SetPause(false)
 	TheInput:EnableDebugToggle(true)
-	TheFrontEnd:PopScreen(self)	
+	TheFrontEnd:PopScreen(self)
 	TheFrontEnd:HideConsoleLog()
 end
 
@@ -188,7 +188,7 @@ function ConsoleScreen:DoInit()
 	local fontsize = 30
 	local edit_width = 900
 	local edit_bg_padding = 100
-	
+
 	self.edit_width   = edit_width
 	self.label_height = label_height
 
@@ -199,7 +199,7 @@ function ConsoleScreen:DoInit()
     --self.root:SetMaxPropUpscale(MAX_HUD_SCALE)
 	self.root = self.root:AddChild(Widget(""))
 	self.root:SetPosition(0,100,0)
-	
+
     self.edit_bg = self.root:AddChild( Image() )
 	self.edit_bg:SetTexture( "images/textboxes.xml", "textbox_long.tex" )
 	self.edit_bg:SetPosition( 0, 0 )
@@ -216,7 +216,7 @@ function ConsoleScreen:DoInit()
 	self.console_edit = self.root:AddChild( TextEdit( DEFAULTFONT, fontsize, "" ) )
 	self.console_edit.edit_text_color = {1,1,1,1}
 	self.console_edit.idle_text_color = {1,1,1,1}
-	self.console_edit:SetEditCursorColour(1,1,1,1) 
+	self.console_edit:SetEditCursorColour(1,1,1,1)
 	self.console_edit:SetPosition( -4,0,0)
 	self.console_edit:SetRegionSize( edit_width, label_height )
 	self.console_edit:SetHAlign(ANCHOR_LEFT)
@@ -250,7 +250,7 @@ function ConsoleScreen:DoInit()
 	self.console_edit.validrawkeys[KEY_UP] = true
 	self.console_edit.validrawkeys[KEY_DOWN] = true
 	self.toggle_remote_execute = false
-		
+
 end
 
 return ConsoleScreen

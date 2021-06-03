@@ -11,10 +11,10 @@ local EMERGE_MAX2 = EMERGE_MAX*EMERGE_MAX
 
 local events =
 {
-    EventHandler("attacked", function(inst) 
+    EventHandler("attacked", function(inst)
         if not (inst.components.health:IsDead() or
                 inst.sg:HasStateTag("hit") or
-                inst.sg:HasStateTag("attack")) then 
+                inst.sg:HasStateTag("attack")) then
             inst.sg:GoToState("hit")
         end
     end),

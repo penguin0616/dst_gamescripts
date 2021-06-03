@@ -242,7 +242,7 @@ local function pondmos()
     inst.OnPreLoad = OnPreLoadMosquito
 
     return inst
-end 
+end
 
 local function pondfrog()
     local inst = commonfn("")

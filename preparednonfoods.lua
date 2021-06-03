@@ -25,7 +25,7 @@ local items =
         hunger = TUNING.HUNGERREGEN_TICK_VALUE,
         sanity = 0,
     },
-    
+
 	dustmeringue =
 	{
 		test = function(cooker, names, tags) return (names.refined_dust) end,
@@ -36,7 +36,7 @@ local items =
 		overridebuild = "cook_pot_food6",
 		floater = {"small", 0.05, 1},
         oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_DUST_MOTH_FOOD,
-        
+
 		health = 0,
 		hunger = TUNING.CALORIES_SMALL,
 		sanity = 0,

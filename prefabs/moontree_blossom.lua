@@ -28,7 +28,7 @@ local function fn()
 
     inst:AddTag("cattoy")
     inst:AddTag("vasedecoration")
-    
+
     MakeInventoryFloatable(inst)
 
     inst.entity:SetPristine()

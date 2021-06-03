@@ -20,7 +20,7 @@ function HungerBadge:OnUpdate(dt)
         self.owner.replica.hunger ~= nil and
         self.owner.replica.hunger:GetPercent() > 0 then
 
-        anim = "arrow_loop_decrease" 
+        anim = "arrow_loop_decrease"
     end
 
     if self.owner.components.debuffable and

@@ -96,7 +96,7 @@ if PLATFORM == "NACL" then
 end
 
 --used for A/B testing and preview features. Gets serialized into and out of save games
-GameplayOptions = 
+GameplayOptions =
 {
 }
 
@@ -124,7 +124,7 @@ local loadfn = function(modulename)
         local filename = string.gsub(string.gsub(path, "%?", modulepath), "\\", "/")
 		local result = kleiloadlua(filename, pathdata.manifest, "scripts/"..modulepath..".lua")
 		if result then
-			local filetime = TheSim:GetFileModificationTime(filename)			
+			local filetime = TheSim:GetFileModificationTime(filename)
 			RequiredFilesForReload[filename] = filetime
 			return result
 		end
@@ -150,7 +150,7 @@ end
 --if not TheNet:GetIsClient() then
 --	require("mobdebug").start()
 --end
-	
+
 require("strict")
 require("debugprint")
 -- add our print loggers
@@ -265,7 +265,7 @@ NewWallUpdatingEnts = {}
 num_updating_ents = 0
 NumEnts = 0
 
-prefabs = nil -- this is here so mods dont crash because one of our prefab scripts missed the local and a number of mods were erroneously abusing it 
+prefabs = nil -- this is here so mods dont crash because one of our prefab scripts missed the local and a number of mods were erroneously abusing it
 
 TheGlobalInstance = nil
 
@@ -334,7 +334,7 @@ local function ModSafeStartup()
 
 	--Ensure we have a fresh filesystem
 	TheSim:ClearFileSystemAliases()
-	
+
 	---PREFABS AND ENTITY INSTANTIATION
 
 	ModManager:LoadMods()
@@ -415,7 +415,7 @@ if Settings.reset_action == RESET_ACTION.JOIN_SERVER then
 	Settings.current_asset_set = Settings.last_asset_set
 end
 
-local load_frontend_reset_action = Settings.reset_action == nil or Settings.reset_action == RESET_ACTION.LOAD_FRONTEND 
+local load_frontend_reset_action = Settings.reset_action == nil or Settings.reset_action == RESET_ACTION.LOAD_FRONTEND
 
 if Settings.memoizedFilePaths ~= nil then
 	if not load_frontend_reset_action then

@@ -43,7 +43,7 @@ local Combat = Class(function(self, inst)
     --
 
 	-- these are a temporary aggro system for the sling shot that may be replaced in the future. Modders: This variable may be removed one day
-	-- self.temp_disable_aggro 
+	-- self.temp_disable_aggro
 	self.lastwasattackedbytargettime = 0
 
 	self.externaldamagemultipliers = SourceModifierList(self.inst) -- damage dealt to others multiplier
@@ -274,8 +274,8 @@ function Combat:OnUpdate(dt)
 
             if not self.target:IsValid() or
                 self.target:IsInLimbo() or
-                not self.keeptargetfn(self.inst, self.target) or not 
-                (self.target and self.target.components.combat and self.target.components.combat:CanBeAttacked(self.inst)) then                    
+                not self.keeptargetfn(self.inst, self.target) or not
+                (self.target and self.target.components.combat and self.target.components.combat:CanBeAttacked(self.inst)) then
                 self.inst:PushEvent("losttarget")
                 self:DropTarget()
             end
@@ -293,8 +293,8 @@ end
 
 function Combat:StartTrackingTarget(target)
     if target then
-        self.losetargetcallback = function() 
-            TargetDisappeared(self, target) 
+        self.losetargetcallback = function()
+            TargetDisappeared(self, target)
         end
         self.inst:ListenForEvent("enterlimbo", self.losetargetcallback, target)
         self.inst:ListenForEvent("onremove", self.losetargetcallback, target)
@@ -655,7 +655,7 @@ function Combat:LocomotorCanAttack(reached_dest, target)
 end
 
 function Combat:TryAttack(target)
-    local target = target or self.target 
+    local target = target or self.target
 
     local is_attacking = self.inst.sg:HasStateTag("attack")
     if is_attacking then
@@ -810,7 +810,7 @@ end
 
 function Combat:CanExtinguishTarget(target, weapon)
 	local burnable = target.components.burnable
-    return burnable ~= nil 
+    return burnable ~= nil
         and (burnable:IsSmoldering() or burnable:IsBurning())
         and (weapon ~= nil and weapon:HasTag("extinguisher") or self.inst:HasTag("extinguisher"))
 end

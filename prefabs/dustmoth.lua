@@ -59,7 +59,7 @@ end
 
 local function StartDustoffCooldown(inst)
     inst._find_dustables = false
-    
+
     if inst._dustoff_cooldown_task ~= nil then
         inst._dustoff_cooldown_task:Cancel()
     end
@@ -145,7 +145,7 @@ local function fn()
     end
 
     inst._sounds = sounds
-    
+
     inst._charged = false
 
     inst._previous_position = Vector3(0,0,0)
@@ -175,7 +175,7 @@ local function fn()
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.DUSTMOTH.HEALTH)
     inst.components.health:StartRegen(TUNING.DUSTMOTH.HEALTH_REGEN, 1)
-    
+
     inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(ShouldAcceptItem)
     inst.components.trader.onrefuse = OnRefuseItem
@@ -210,7 +210,7 @@ local function fn()
     inst.OnEntityWake = OnEntityWake
 
     inst.OnSave = OnSave
-    inst.OnLoad = OnLoad    
+    inst.OnLoad = OnLoad
 
     return inst
 end

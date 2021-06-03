@@ -106,7 +106,7 @@ function Health:GetCurrent()
         return self.inst.components.health.currenthealth
     elseif self.classified ~= nil then
         return self.classified.currenthealth:value()
-    else        
+    else
         return 100
     end
 end

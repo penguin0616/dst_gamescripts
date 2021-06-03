@@ -59,7 +59,7 @@ end
 
 function SleepingBag:DoSleep(doer)
     if self.sleeper == nil and doer.sleepingbag == nil then
-        
+
         self.sleeper = doer
         self.sleeper.sleepingbag = self.inst
         self.sleeper.components.sleepingbaguser:DoSleep(self.inst)
@@ -73,11 +73,11 @@ end
 function SleepingBag:DoWakeUp(nostatechange)
     local sleeper = self.sleeper
     if sleeper ~= nil and sleeper.sleepingbag == self.inst then
-        
+
         sleeper.sleepingbag = nil
         sleeper.components.sleepingbaguser:DoWakeUp(nostatechange)
         self.sleeper = nil
-        
+
         if self.onwake ~= nil then
             self.onwake(self.inst, sleeper, nostatechange)
         end

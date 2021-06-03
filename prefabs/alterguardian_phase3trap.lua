@@ -55,7 +55,7 @@ local function do_landed(inst)
             if has_health and target:HasTag("smashable") then
                 target.components.health:Kill()
             elseif target.components.workable ~= nil
-                    and target.components.workable:CanBeWorked() 
+                    and target.components.workable:CanBeWorked()
                     and target.components.workable.action ~= ACTIONS.NET then
                 local tx, ty, tz = target.Transform:GetWorldPosition()
                 if not target:HasTag("moonglass") then
@@ -153,7 +153,7 @@ local function do_groggy_pulse(inst)
 
     for _, target in ipairs(nearby_targets) do
         if target.entity:IsVisible()
-                and not target.components.health:IsDead() 
+                and not target.components.health:IsDead()
                 and target.sg ~= nil then
             -- Smash some sleepiness onto anything with grogginess or sleeper components.
             -- Specifically, to hit combat targets, like players, pigs, merms, etc.
@@ -215,7 +215,7 @@ local function start_pulse(inst)
 
     -- After NUM_PULSE_LOOPS, shut down all of the stuff.
     inst.components.timer:StartTimer("finish_pulse", pulse_pre_len + (pulse_loop_len * NUM_PULSE_LOOPS))
-    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_trap_LP","trap_LP") 
+    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian3/atk_trap_LP","trap_LP")
 end
 
 local function start_charge(inst)

@@ -224,7 +224,7 @@ local function common_fn(widthscale, is_spawner)
     inst.AnimState:SetMultColour(0.3, 0.5, 1.0, 1.0)
 
     inst.Transform:SetScale(2*widthscale, 2, 2*widthscale) -- Art is made small coz of flash weirdness, the giant stage was exporting strangely
-    
+
     inst:AddTag("daylight")
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")

@@ -74,7 +74,7 @@ local function SetDigits(inst, weight)
 		weight = "00000"
 	elseif type(weight) == "number" then
 		local formatted = string.format("%06.2f", weight)
-		
+
 		-- Decimal point at ind 4
 		weight = string.sub(formatted, 1, 3)..string.sub(formatted, 5)
 	end
@@ -157,7 +157,7 @@ local function onnewtrophy(inst, data_old_and_new)
 	end
 
 	inst.SoundEmitter:PlaySound(sounds.newtrophy, "new_trophy")
-	
+
 	inst.soundtask_playspin = inst:DoTaskInTime(sound_delay.spin*FRAMES, function() inst.SoundEmitter:PlaySound(sounds.spin, "spin_loop") end)
 	inst.soundtask_stopspin = inst:DoTaskInTime(sound_delay.spin_stop*FRAMES, function() inst.SoundEmitter:KillSound("spin_loop") end)
 	inst.soundtask_playbell = inst:DoTaskInTime(sound_delay.bell*FRAMES, function() inst.SoundEmitter:PlaySound(sounds.bell, "bell", bell_sound_param) end)
@@ -184,7 +184,7 @@ local function onhammered(inst, worker)
     inst.components.lootdropper:DropLoot()
 
 	DropItem(inst, inst.components.trophyscale:GetItemData())
-    
+
     local fx = SpawnPrefab("collapse_small")
 	local x, y, z = inst.Transform:GetWorldPosition()
     fx.Transform:SetPosition(x, y, z)
@@ -256,7 +256,7 @@ local function getdesc(inst, viewer)
 				subfmt(GetDescription(viewer, inst, "HAS_ITEM"..heavy_postfix), {weight = data.weight or "", owner = name or ""})
 		end
 	end
-	
+
 	return GetDescription(viewer, inst) or nil
 end
 

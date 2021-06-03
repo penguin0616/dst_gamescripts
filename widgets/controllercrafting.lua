@@ -35,9 +35,9 @@ local ControllerCrafting = Class(Crafting, function(self, owner)
 
 	self.groupname = self:AddChild(Text(TITLEFONT, 100))
 	--self.groupname:SetPosition(-400, 90, 0)
-	self.groupname:SetPosition(-410, 115, 0)
+	self.groupname:SetPosition(-210, 115, 0)
 	self.groupname:SetHAlign(ANCHOR_LEFT)
-	self.groupname:SetRegionSize(400, 120)
+	self.groupname:SetRegionSize(800, 120)
 
 	--self.groupimg1 = self:AddChild(Image())
 	--self.groupimg1:SetPosition(-200, 90, 0)
@@ -196,8 +196,8 @@ function ControllerCrafting:OpenRecipeTab(idx)
 		--self.groupimg1:SetTexture(tab.icon_atlas, tab.icon)
 		--self.groupimg2:SetTexture(tab.icon_atlas, tab.icon)
 
-		--self.idx = self.slot_idx_by_tab_idx[self.tabidx] or 1			
-		self:SetFilter( 
+		--self.idx = self.slot_idx_by_tab_idx[self.tabidx] or 1
+		self:SetFilter(
 			function(recname)
 				local recipe = GetValidRecipe(recname)
 				return recipe ~= nil
@@ -218,9 +218,9 @@ function ControllerCrafting:Refresh()
 end
 
 function ControllerCrafting:OnControl(control, down)
-  
+
   	if control == CONTROL_NEXTVALUE or control == CONTROL_PREVVALUE then
-    	if self.recipepopup then 
+    	if self.recipepopup then
     		self.recipepopup:OnControl(control, down)
     	end
     end

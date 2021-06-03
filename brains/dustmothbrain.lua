@@ -60,10 +60,10 @@ local function EatFoodAction(inst)
     if inst.sg:HasStateTag("busy") or inst._charged then
         return
     end
-    
+
     local target = inst.components.inventory:GetItemInSlot(1)
     local attempt_play_search_anim = false
-    
+
     if target == nil or not target:HasTag("dustmothfood") then
         attempt_play_search_anim = true
 
@@ -109,14 +109,14 @@ end
 function DustMothBrain:OnStart()
     local root = PriorityNode(
     {
-        WhileNode(function() return self.inst.components.health.takingfiredamage or self.inst.components.burnable:IsBurning() end, "OnFire", 
+        WhileNode(function() return self.inst.components.health.takingfiredamage or self.inst.components.burnable:IsBurning() end, "OnFire",
             Panic(self.inst)),
-            
+
         WhileNode(function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
         WhileNode(function() return self.inst.components.inventory:GetItemInSlot(1) == nil end, "RunAwayAll",
             RunAway(self.inst, "scarytoprey", SEE_THREAT_DIST, STOP_RUN_DIST)),
         RunAway(self.inst, HUNTERPARAMS_NOPLAYER, SEE_THREAT_DIST, STOP_RUN_DIST),
-        
+
         WhileNode(function() return self.inst:GetBufferedAction() ~= nil and self.inst._time_spent_stuck >= STUCK_MAX_TIME and not self.inst.sg:HasStateTag("busy") end, "CheckStuck",
             ActionNode(function()
                 self.inst._time_spent_stuck = 0
@@ -132,7 +132,7 @@ function DustMothBrain:OnStart()
 
         Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, 40),
     }, .25)
-    
+
     self.bt = BT(self.inst, root)
 end
 

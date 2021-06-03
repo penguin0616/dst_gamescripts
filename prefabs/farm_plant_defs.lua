@@ -105,17 +105,17 @@ local M = TUNING.FARM_PLANT_CONSUME_NUTRIENT_MED
 local L = TUNING.FARM_PLANT_CONSUME_NUTRIENT_HIGH
 
 PLANT_DEFS.randomseed.nutrient_consumption		= {0, 0, 0}
---													  	 
+--
 PLANT_DEFS.carrot.nutrient_consumption			= {M, 0, 0}
 PLANT_DEFS.corn.nutrient_consumption			= {0, M, 0}
 PLANT_DEFS.potato.nutrient_consumption			= {0, 0, M}
 PLANT_DEFS.tomato.nutrient_consumption			= {S, S, 0}
---													  	 
+--
 PLANT_DEFS.asparagus.nutrient_consumption		= {0, M, 0}
 PLANT_DEFS.eggplant.nutrient_consumption		= {0, 0, M}
 PLANT_DEFS.pumpkin.nutrient_consumption			= {M, 0, 0}
 PLANT_DEFS.watermelon.nutrient_consumption		= {0, S, S}
---													  	 
+--
 PLANT_DEFS.dragonfruit.nutrient_consumption		= {0, 0, L}
 PLANT_DEFS.durian.nutrient_consumption			= {0, L, 0}
 PLANT_DEFS.garlic.nutrient_consumption			= {0, L, 0}
@@ -188,25 +188,25 @@ PLANT_DEFS.pepper.pictureframeanim = {anim = "emote_swoon", time = 37*FRAMES}
 PLANT_DEFS.pomegranate.pictureframeanim = {anim = "emoteXL_loop_dance8", time = 27*FRAMES}
 
 -- Sounds
-PLANT_DEFS.randomseed.sounds = 
+PLANT_DEFS.randomseed.sounds =
 {
 }
 
-PLANT_DEFS.asparagus.sounds = 
+PLANT_DEFS.asparagus.sounds =
 {
 	grow_oversized = "farming/common/farm/asparagus/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
 	grow_rot = "farming/common/farm/rot",
 }
 
-PLANT_DEFS.garlic.sounds = 
+PLANT_DEFS.garlic.sounds =
 {
 	grow_oversized = "farming/common/farm/garlic/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
 	grow_rot = "farming/common/farm/rot",
 }
 
-PLANT_DEFS.pumpkin.sounds = 
+PLANT_DEFS.pumpkin.sounds =
 {
 	grow_oversized = "farming/common/farm/pumpkin/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
@@ -215,7 +215,7 @@ PLANT_DEFS.pumpkin.sounds =
 PLANT_DEFS.corn.sounds = PLANT_DEFS.pumpkin.sounds
 PLANT_DEFS.onion.sounds = PLANT_DEFS.pumpkin.sounds
 
-PLANT_DEFS.potato.sounds = 
+PLANT_DEFS.potato.sounds =
 {
 	grow_oversized = "farming/common/farm/potato/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
@@ -225,7 +225,7 @@ PLANT_DEFS.dragonfruit.sounds = PLANT_DEFS.potato.sounds
 PLANT_DEFS.pomegranate.sounds = PLANT_DEFS.potato.sounds
 PLANT_DEFS.eggplant.sounds = PLANT_DEFS.potato.sounds
 
-PLANT_DEFS.tomato.sounds = 
+PLANT_DEFS.tomato.sounds =
 {
 	grow_oversized = "farming/common/farm/tomato/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
@@ -233,7 +233,7 @@ PLANT_DEFS.tomato.sounds =
 }
 PLANT_DEFS.watermelon.sounds = PLANT_DEFS.tomato.sounds
 
-PLANT_DEFS.pepper.sounds = 
+PLANT_DEFS.pepper.sounds =
 {
 	grow_oversized = "farming/common/farm/pepper/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
@@ -241,7 +241,7 @@ PLANT_DEFS.pepper.sounds =
 }
 PLANT_DEFS.durian.sounds = PLANT_DEFS.pepper.sounds
 
-PLANT_DEFS.carrot.sounds = 
+PLANT_DEFS.carrot.sounds =
 {
 	grow_oversized = "farming/common/farm/carrot/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",

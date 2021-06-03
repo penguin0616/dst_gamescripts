@@ -22,7 +22,7 @@ local RedeemDialog = Class(Screen, function(self)
     local buttons =
     {
         {text=STRINGS.UI.REDEEMDIALOG.SUBMIT, cb = function() self:DoSubmitCode() end },
-        {text=STRINGS.UI.REDEEMDIALOG.CANCEL, cb = function() self:Close() end }  
+        {text=STRINGS.UI.REDEEMDIALOG.CANCEL, cb = function() self:Close() end }
     }
 	if IsConsole() then
         VALID_CHARS = [[abcdefghjklmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ1234567890-]]
@@ -32,7 +32,7 @@ local RedeemDialog = Class(Screen, function(self)
 	end
 
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
-    self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())	
+    self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
 	self.dialog = self.root:AddChild(TEMPLATES.CurlyWindow(480, 220, STRINGS.UI.REDEEMDIALOG.TITLE, buttons, nil, ""))
 
     self.proot = self.root:AddChild(Widget("proot"))
@@ -158,7 +158,7 @@ function RedeemDialog:MakeTextEntryBox(parent)
 					    if i ~= 1 then
 						    redeem_code	= redeem_code .. "-"
 					    end
-					    redeem_code	= redeem_code .. entrybox.textboxes[i]:GetString() 
+					    redeem_code	= redeem_code .. entrybox.textboxes[i]:GetString()
 				    end
                 end
 
@@ -211,12 +211,12 @@ function RedeemDialog:MakeTextEntryBox(parent)
     self.entrybox = entrybox
 end
 
-function RedeemDialog:DisplayResult(success, status, item_type, currency, currency_amt, category, message) 
+function RedeemDialog:DisplayResult(success, status, item_type, currency, currency_amt, category, message)
 	-- Possible responses when attempting to query server:
 	--success=true, status="ACCEPTED"
 	--success=false, status="INVALID_CODE"
 	--success=false, status="ALREADY_REDEEMED"
-	--success=false, status="FAILED_TO_CONTACT"	
+	--success=false, status="FAILED_TO_CONTACT"
 
 	if IsNotConsole() then
     	self.submit_btn:Unselect()
@@ -270,7 +270,7 @@ end
 function RedeemDialog:OnControl(control, down)
     if RedeemDialog._base.OnControl(self,control, down) then return true end
 
-    if control == CONTROL_CANCEL and not down then    
+    if control == CONTROL_CANCEL and not down then
         if self.buttons and #self.buttons > 1 and self.buttons[#self.buttons] then
             self.buttons[#self.buttons].cb()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
@@ -283,7 +283,7 @@ function RedeemDialog:OnControl(control, down)
     end
 end
 
-function RedeemDialog:DoSubmitCode()	
+function RedeemDialog:DoSubmitCode()
 	self.entrybox.textboxes[1]:OnTextEntered()
 end
 
@@ -295,11 +295,11 @@ function RedeemDialog:GetHelpText()
 	local controller_id = TheInput:GetControllerID()
 	local t = {}
 	if self.buttons and #self.buttons > 1 and self.buttons[#self.buttons] then
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)	
+        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
     end
 
     if IsConsole() then
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)	
+        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
     end
 	return table.concat(t, "  ")
 end

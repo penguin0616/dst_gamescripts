@@ -130,13 +130,13 @@ local events =
             inst.sg.mem.queueleaveworld = true
         end
     end),
-    EventHandler("onsinkholesstarted", function(inst, data) 
+    EventHandler("onsinkholesstarted", function(inst, data)
         inst.sg.mem.causingsinkholes = true
         if CanGoToActionState(inst) then
             inst.sg:GoToState("sinkhole_pre", data)
         end
     end),
-    EventHandler("onsinkholesfinished", function(inst, data) 
+    EventHandler("onsinkholesfinished", function(inst, data)
         inst.sg.mem.causingsinkholes = false
     end),
 }
@@ -421,7 +421,7 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                if inst.AnimState:AnimDone() then 
+                if inst.AnimState:AnimDone() then
                     inst:Remove()
                 end
             end),

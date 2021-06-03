@@ -165,7 +165,7 @@ local function fn()
     end
 
     inst:AddComponent("lootdropper")
-    
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(2)

@@ -434,7 +434,7 @@ function ItemTile:CancelDrag()
         self.spoilage:Show()
     end
 
-    self.image:SetClickable(true) 
+    self.image:SetClickable(true)
 end
 --]]
 

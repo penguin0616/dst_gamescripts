@@ -1,8 +1,8 @@
 require "prefabutil"
 
-local function OnIsPathFindingDirty(inst)    
+local function OnIsPathFindingDirty(inst)
     local wall_x, wall_y, wall_z = inst.Transform:GetWorldPosition()
-    if TheWorld.Map:GetPlatformAtPoint(wall_x, wall_z) == nil then        
+    if TheWorld.Map:GetPlatformAtPoint(wall_x, wall_z) == nil then
         if inst._ispathfinding:value() then
             if inst._pfpos == nil then
                 inst._pfpos = Point(wall_x, wall_y, wall_z)
@@ -84,9 +84,9 @@ local function onload(inst,data)
     end
 
     if data and data.gridnudge then
-        local function normalize(coord)       
+        local function normalize(coord)
 
-            local temp = coord%0.5 
+            local temp = coord%0.5
             coord = coord + 0.5 - temp
 
             if  coord%1 == 0 then
@@ -150,7 +150,7 @@ function MakeWallType(data)
 
     local function ondeploywall(inst, pt, deployer)
         --inst.SoundEmitter:PlaySound("dontstarve/creatures/spider/spider_egg_sack")
-        local wall = SpawnPrefab("wall_"..data.name, inst.linked_skinname, inst.skin_id) 
+        local wall = SpawnPrefab("wall_"..data.name, inst.linked_skinname, inst.skin_id)
         if wall ~= nil then
             local x = math.floor(pt.x) + .5
             local z = math.floor(pt.z) + .5
@@ -158,7 +158,7 @@ function MakeWallType(data)
             wall.Physics:Teleport(x, 0, z)
             wall.Physics:SetCollides(true)
             inst.components.stackable:Get():Remove()
-            
+
             if data.buildsound ~= nil then
                 wall.SoundEmitter:PlaySound(data.buildsound)
             end
@@ -273,7 +273,7 @@ function MakeWallType(data)
         inst.Physics:SetDontRemoveOnSleep(true)
 
         --inst.Transform:SetScale(1.3,1.3,1.3)
-        
+
         if data.name == "hay" then
         	--roughly try to match the grass colouring
             local s = 0.9
@@ -321,7 +321,7 @@ function MakeWallType(data)
         end
         if data.name == "stone_2" then
             inst.components.repairable.repairmaterial = "stone"
-        end        
+        end
 
         inst:AddComponent("combat")
         inst.components.combat:SetKeepTargetFunction(keeptargetfn)
@@ -355,7 +355,7 @@ function MakeWallType(data)
         inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
         inst.components.workable:SetWorkLeft(data.name == MATERIALS.MOONROCK and TUNING.MOONROCKWALL_WORK or 3)
         inst.components.workable:SetOnFinishCallback(onhammered)
-        inst.components.workable:SetOnWorkCallback(onhit) 
+        inst.components.workable:SetOnWorkCallback(onhit)
 
         MakeHauntableWork(inst)
 
@@ -382,7 +382,7 @@ local walldata =
     { name = MATERIALS.WOOD,     material = "wood",  tags = { "wood" },              loot = "log",              maxloots = 2, maxhealth = TUNING.WOODWALL_HEALTH,     flammable = true, buildsound = "dontstarve/common/place_structure_wood"  },
     { name = MATERIALS.HAY,      material = "straw", tags = { "grass" },             loot = "cutgrass",         maxloots = 2, maxhealth = TUNING.HAYWALL_HEALTH,      flammable = true, buildsound = "dontstarve/common/place_structure_straw" },
     { name = "ruins",            material = "stone", tags = { "stone", "ruins" },    loot = "thulecite_pieces", maxloots = 2, maxhealth = TUNING.RUINSWALL_HEALTH,                      buildsound = "dontstarve/common/place_structure_stone" },
-    { name = "ruins_2",          material = "stone", tags = { "stone", "ruins" },    loot = "thulecite_pieces", maxloots = 2, maxhealth = TUNING.RUINSWALL_HEALTH,                      buildsound = "dontstarve/common/place_structure_stone" },    
+    { name = "ruins_2",          material = "stone", tags = { "stone", "ruins" },    loot = "thulecite_pieces", maxloots = 2, maxhealth = TUNING.RUINSWALL_HEALTH,                      buildsound = "dontstarve/common/place_structure_stone" },
     { name = MATERIALS.MOONROCK, material = "stone", tags = { "stone", "moonrock" }, loot = "moonrocknugget",   maxloots = 2, maxhealth = TUNING.MOONROCKWALL_HEALTH,                   buildsound = "dontstarve/common/place_structure_stone" },
 }
 for i, v in ipairs(walldata) do

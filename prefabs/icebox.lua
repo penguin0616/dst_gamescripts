@@ -85,7 +85,7 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(2)
     inst.components.workable:SetOnFinishCallback(onhammered)
-    inst.components.workable:SetOnWorkCallback(onhit) 
+    inst.components.workable:SetOnWorkCallback(onhit)
 
     inst:ListenForEvent("onbuilt", onbuilt)
     MakeSnowCovered(inst)

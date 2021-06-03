@@ -148,7 +148,7 @@ local function MakeMeatrack(name, common_postinit, master_postinit)
 
         if common_postinit ~= nil then
             common_postinit(inst)
-        end        
+        end
 
         inst.entity:SetPristine()
 
@@ -169,12 +169,12 @@ local function MakeMeatrack(name, common_postinit, master_postinit)
         MakeSnowCovered(inst)
         inst:ListenForEvent("onbuilt", onbuilt)
 
-        inst.OnSave = onsave 
+        inst.OnSave = onsave
         inst.OnLoad = onload
 
         if master_postinit then
             master_postinit(inst)
-        end        
+        end
 
         return inst
     end
@@ -206,10 +206,10 @@ local function meatrack_master(inst)
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER) -- should be DRY
     inst.components.workable:SetWorkLeft(4)
     inst.components.workable:SetOnFinishCallback(onhammered)
-    inst.components.workable:SetOnWorkCallback(onhit)  
+    inst.components.workable:SetOnWorkCallback(onhit)
 
     MakeMediumBurnable(inst, nil, nil, true)
-    MakeSmallPropagator(inst)        
+    MakeSmallPropagator(inst)
 end
 
 local function meatrack_hermit_master(inst)

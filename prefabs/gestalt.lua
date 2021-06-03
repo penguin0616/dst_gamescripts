@@ -20,7 +20,7 @@ local brain = require "brains/brightmare_gestaltbrain"
 
 local function SetHeadAlpha(inst, a)
 	if inst.blobhead then
-		inst.blobhead.AnimState:SetMultColour(a, a, a, a) 
+		inst.blobhead.AnimState:SetMultColour(a, a, a, a)
 	end
 end
 
@@ -62,7 +62,7 @@ end
 
 local function Retarget(inst)
     -- If we don't have a tracking target, are in combat cooldown, or are too far away, no target.
-    if inst.tracking_target == nil 
+    if inst.tracking_target == nil
             or inst.components.combat:InCooldown()
             or not inst:IsNear(inst.tracking_target, TUNING.GESTALT_AGGRESSIVE_RANGE) then
         return nil
@@ -138,7 +138,7 @@ local function fn()
 		inst.blobhead = SpawnPrefab("gestalt_head")
 		inst.blobhead.entity:SetParent(inst.entity) --prevent 1st frame sleep on clients
 		inst.blobhead.Follower:FollowSymbol(inst.GUID, "head_fx", 0, 0, 0)
-	
+
 		inst.blobhead.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
 	    inst.highlightchildren = { inst.blobhead }
@@ -185,7 +185,7 @@ local function fn()
 	inst:ListenForEvent("newcombattarget", OnNewCombatTarget)
 	inst:ListenForEvent("droppedtarget", OnNoCombatTarget)
 	inst:ListenForEvent("losttarget", OnNoCombatTarget)
-	
+
     inst:SetStateGraph("SGbrightmare_gestalt")
     inst:SetBrain(brain)
 

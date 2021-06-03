@@ -179,7 +179,7 @@ local function OnEquip(inst, owner)
 end
 
 local function OnUnequip(inst, owner)
-    inst._light.Light:Enable(true) 
+    inst._light.Light:Enable(true)
     inst._light._lightlevel:set(false)
     inst._light._lightframe:set(inst._light._lightframe:value())
     OnLightDirty(inst._light)
@@ -325,7 +325,7 @@ local function fn()
     inst.components.sleeper:SetWakeTest(WakeTest)
     --inst.components.sleeper:SetNocturnal(true)
 
-    inst:AddComponent("knownlocations")    
+    inst:AddComponent("knownlocations")
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aura = -TUNING.SANITYAURA_SMALL
@@ -355,7 +355,7 @@ local function fn()
         end
         inst:ListenForEvent("onremove", inst.ondetach, owner)
         inst._light.entity:SetParent(owner.entity)
-        inst._owner = owner        
+        inst._owner = owner
     end
     inst.ondetach = function()
         if inst._owner ~= nil then

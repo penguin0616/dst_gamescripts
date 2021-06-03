@@ -64,8 +64,8 @@ end
 ---PREFABS AND ENTITY INSTANTIATION
 
 function ShouldIgnoreResolve( filename, assettype )
-    if assettype == "INV_IMAGE" then 
-        return true 
+    if assettype == "INV_IMAGE" then
+        return true
     end
     if assettype == "MINIMAP_IMAGE" then
         return true
@@ -81,7 +81,7 @@ function ShouldIgnoreResolve( filename, assettype )
         if assettype == "SOUND" then
             return true
         end
-        if filename:find(".ogv") then 
+        if filename:find(".ogv") then
             return true
         end
         if filename:find(".fev") and assettype == "PKGREF" then
@@ -100,16 +100,16 @@ local modprefabinitfns = {}
 function RegisterPrefabsImpl(prefab, resolve_fn)
     --print ("Register " .. tostring(prefab))
     -- allow mod-relative asset paths
-	
+
     for i,asset in ipairs(prefab.assets) do
-        if not ShouldIgnoreResolve(asset.file, asset.type) then 
+        if not ShouldIgnoreResolve(asset.file, asset.type) then
        		resolve_fn(prefab, asset)
         end
     end
 
     modprefabinitfns[prefab.name] = ModManager:GetPostInitFns("PrefabPostInit", prefab.name)
     Prefabs[prefab.name] = prefab
-    
+
     TheSim:RegisterPrefab(prefab.name, prefab.assets, prefab.deps)
 end
 
@@ -123,8 +123,8 @@ end
 
 local function VerifyPrefabAssetExistsAsync(prefab, asset)
 	-- this is being done to prime the HDD's file cache and ensure all the assets exist before going into game
-	--TheSim:VerifyFileExistsAsync(asset.file) 
-	TheSim:AddBatchVerifyFileExists(asset.file) 
+	--TheSim:VerifyFileExistsAsync(asset.file)
+	TheSim:AddBatchVerifyFileExists(asset.file)
 end
 
 function RegisterPrefabs(...)
@@ -213,7 +213,7 @@ end
 function RegisterAchievements(achievements)
     for i, achievement in ipairs(achievements) do
         --print ("Registering achievement:", achievement.name, achievement.id.steam, achievement.id.psn)
-        TheGameService:RegisterAchievement(achievement.name, achievement.id.steam, achievement.id.psn)        
+        TheGameService:RegisterAchievement(achievement.name, achievement.id.steam, achievement.id.psn)
     end
 end
 
@@ -321,7 +321,7 @@ function SpawnPrefabFromSim(name)
             for k,prefabpostinitany in pairs(ModManager:GetPostInitFns("PrefabPostInitAny")) do
                 prefabpostinitany(inst)
             end
-            
+
             return inst.entity:GetGUID()
         else
             print( "Failed to spawn", name )
@@ -351,7 +351,7 @@ end
 
 function ReplacePrefab(original_inst, name, skin, skin_id, creator)
     local x,y,z = original_inst.Transform:GetWorldPosition()
-    
+
     local replacement_inst = SpawnPrefab(name, skin, skin_id, creator)
     replacement_inst.Transform:SetPosition(x,y,z)
 
@@ -368,7 +368,7 @@ function SpawnSaveRecord(saved, newents)
 		if saved.alt_skin_ids then
 			inst.alt_skin_ids = saved.alt_skin_ids
 		end
-		
+
         inst.Transform:SetPosition(saved.x or 0, saved.y or 0, saved.z or 0)
         if not inst.entity:IsValid() then
             --print(string.format("SpawnSaveRecord [%s, %s] FAILED - entity invalid", tostring(saved.id), saved.prefab))
@@ -379,9 +379,9 @@ function SpawnSaveRecord(saved, newents)
 
             --this is kind of weird, but we can't use non-saved ids because they might collide
             if saved.id  then
-                newents[saved.id] = {entity=inst, data=saved.data} 
+                newents[saved.id] = {entity=inst, data=saved.data}
             else
-                newents[inst] = {entity=inst, data=saved.data} 
+                newents[inst] = {entity=inst, data=saved.data}
             end
 
         end
@@ -828,7 +828,7 @@ function SaveGame(isshutdown, cb)
     local references = {}
     for k, v in pairs(Ents) do
         if v.persists and v.prefab ~= nil and v.Transform ~= nil and v.entity:GetParent() == nil and v:IsValid() then
-            local x, y, z = v.Transform:GetWorldPosition()   
+            local x, y, z = v.Transform:GetWorldPosition()
             local record, new_references = v:GetSaveRecord()
             record.prefab = nil
 
@@ -979,7 +979,7 @@ function ProcessJsonMessage(message)
 
     local player = ThePlayer
 
-    local command = TrackedAssert("ProcessJsonMessage",  json.decode, message) 
+    local command = TrackedAssert("ProcessJsonMessage",  json.decode, message)
 
     -- Sim commands
     if command.sim ~= nil then
@@ -1374,7 +1374,7 @@ end
 local function postsavefn()
     TheNet:Disconnect(true)
     EnableAllMenuDLC()
-    
+
     if TheNet:GetIsHosting() then
         TheSystemService:StopDedicatedServers()
     end
@@ -1390,7 +1390,7 @@ local function savefn()
         postsavefn()
     elseif TheWorld.ismastersim then
         DoWorldOverseerShutdown()
-        
+
         for i, v in ipairs(AllPlayers) do
             v:OnDespawn()
         end
@@ -1436,7 +1436,7 @@ end
 
 -- Receive a message that does not disconnect the user
 function OnPushPopupDialog( message )
-    local title = STRINGS.UI.POPUPDIALOG.TITLE[message] or STRINGS.UI.POPUPDIALOG.TITLE.DEFAULT 
+    local title = STRINGS.UI.POPUPDIALOG.TITLE[message] or STRINGS.UI.POPUPDIALOG.TITLE.DEFAULT
     message = STRINGS.UI.POPUPDIALOG.BODY[message] or STRINGS.UI.POPUPDIALOG.BODY.DEFAULT
 
     local function doclose( )
@@ -1481,7 +1481,7 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
         accounts_link = {text=STRINGS.UI.NETWORKDISCONNECT.ACCOUNTS, cb = function() TheFrontEnd:GetAccountManager():VisitAccountPage() end}
     end
 
-    local title = STRINGS.UI.NETWORKDISCONNECT.TITLE[message] or STRINGS.UI.NETWORKDISCONNECT.TITLE.DEFAULT 
+    local title = STRINGS.UI.NETWORKDISCONNECT.TITLE[message] or STRINGS.UI.NETWORKDISCONNECT.TITLE.DEFAULT
     message = STRINGS.UI.NETWORKDISCONNECT.BODY[message] or STRINGS.UI.NETWORKDISCONNECT.BODY.DEFAULT
 
     local screen = TheFrontEnd:GetActiveScreen()
@@ -1765,13 +1765,13 @@ function BuildTagsStringCommon(tagsTable)
     for i, mod_tag in ipairs(KnownModIndex:GetEnabledModTags()) do
         table.insert(tagsTable, mod_tag)
     end
-    
+
     -- Beta tag (forced to front of list)
     if BRANCH == "staging" and CURRENT_BETA > 0 then
         table.insert(tagsTable, 1, BETA_INFO[CURRENT_BETA].SERVERTAG)
         table.insert(tagsTable, 1, BETA_INFO[PUBLIC_BETA].SERVERTAG)
     end
-    
+
     -- Language tag (forced to front of list, don't put anything else at slot 1, or language detection will fail!)
     table.insert(tagsTable, 1, STRINGS.PRETRANSLATED.LANGUAGES[LOC.GetLanguage()] or "")
 
@@ -1809,7 +1809,7 @@ end
 
 local currently_displaying = nil
 function DisplayAntiAddictionNotification( notification )
-    if notification ~= currently_displaying then        
+    if notification ~= currently_displaying then
         local Text = require "widgets/text"
         local title = Text(CHATFONT_OUTLINE, 35)
         title:SetString(STRINGS.ANTIADDICTION[notification])

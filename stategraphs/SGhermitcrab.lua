@@ -191,7 +191,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.FISH_OCEAN, "fishing_ocean_pre"),
     ActionHandler(ACTIONS.OCEAN_FISHING_POND, "fishing_ocean_pre"),
     ActionHandler(ACTIONS.OCEAN_FISHING_CAST, function(inst,action) inst.restocklures(inst) return "oceanfishing_cast" end),
-    ActionHandler(ACTIONS.OCEAN_FISHING_REEL, 
+    ActionHandler(ACTIONS.OCEAN_FISHING_REEL,
         function(inst, action)
             local fishable = action.invobject ~= nil and action.invobject.components.oceanfishingrod.target or nil
             if fishable ~= nil and fishable.components.oceanfishable ~= nil and fishable:HasTag("partiallyhooked") then
@@ -283,7 +283,7 @@ local actionhandlers =
         end),
 
     ActionHandler(ACTIONS.BUNDLE, "bundle"),
-   
+
     ActionHandler(ACTIONS.UNWRAP,
         function(inst, action)
             return "dolongaction"
@@ -296,8 +296,8 @@ local actionhandlers =
 
     ActionHandler(ACTIONS.COMMENT, function(inst, action)
         if not inst.sg:HasStateTag("talking") then  --  and not inst.components.locomotor.dest
-            return "talkto" 
-        end 
+            return "talkto"
+        end
     end),
     ActionHandler(ACTIONS.WATER_TOSS, "toss"),
 }
@@ -306,7 +306,7 @@ local events =
 {
     EventHandler("freeze", function(inst)
         inst.sg:GoToState("frozen")
-    end),    
+    end),
     EventHandler("locomote", function(inst, data)
         if inst.sg:HasStateTag("busy") then
             return
@@ -320,7 +320,7 @@ local events =
        --     else
                 inst.sg:GoToState("walk_stop")
          --   end
-        elseif not is_moving and should_move then        
+        elseif not is_moving and should_move then
            -- if inst.components.locomotor:WantsToRun() then
             --    inst.sg:GoToState("run_start")
            -- else
@@ -377,11 +377,11 @@ local events =
         end
     end),
 
-    EventHandler("ontalk", function(inst, data)      
+    EventHandler("ontalk", function(inst, data)
         if not inst.sg:HasStateTag("talking") and not inst.components.locomotor.dest then
-            inst.sg:GoToState("talkto")        
+            inst.sg:GoToState("talkto")
         end
-    end),  
+    end),
 
     EventHandler("toolbroke",
         function(inst, data)
@@ -447,7 +447,7 @@ local events =
         function(inst, data)
             if inst.sg:HasStateTag("npc_fishing") then
                 if data ~= nil and data.reason ~= nil then
-                    
+
                     if data.reason == "linesnapped" or data.reason == "toofaraway" then
                         inst.sg.statemem.continue = true
                         inst.sg:GoToState("oceanfishing_linesnapped", {escaped_str = STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_LINESNAP})
@@ -456,7 +456,7 @@ local events =
                         inst.sg:GoToState("oceanfishing_stop", {escaped_str = data.reason == "linetooloose" and STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_LINETOOLOOSE
                                                                             or data.reason == "badcast" and STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_BADCAST
                                                                             or (data.reason == "bothered") and STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_BOTHERED[inst.getgeneralfriendlevel(inst)]
-                                                                            or (data.reason ~= "reeledin") and STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_GOTAWAY                                                                            
+                                                                            or (data.reason ~= "reeledin") and STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_GOTAWAY
                                                                             or nil})
                     end
                 else
@@ -474,7 +474,7 @@ local events =
     EventHandler("tossitem",
         function(inst)
             inst.sg:GoToState("tossitem")
-        end),    
+        end),
     EventHandler("use_pocket_scale",
         function(inst, data)
             inst.sg:GoToState("use_pocket_scale", data)
@@ -490,7 +490,7 @@ local events =
 	EventHandler("teleported",
 		function(inst)
             inst.sg:GoToState("idle")
-        end),    
+        end),
 
     CommonHandlers.OnHop(),
 }
@@ -588,9 +588,9 @@ local states =
                 inst.sg:GoToState("sink_fast")
                 return
             end
-            
+
             if not inst.components.timer:TimerExists("complain_time") and not inst.components.timer:TimerExists("speak_time") then
-                inst.complain(inst)                
+                inst.complain(inst)
             end
 
             inst.sg.statemem.ignoresandstorm = true
@@ -607,7 +607,7 @@ local states =
             if inst.components.inventory:IsHeavyLifting() then
                 table.insert(anims, "heavy_idle")
                 dofunny = false
-            else              
+            else
                 if inst:HasTag("groggy") then
                     table.insert(anims, "idle_groggy_pre")
                     table.insert(anims, "idle_groggy")
@@ -650,8 +650,8 @@ local states =
             end
             if royalty ~= nil then
                 inst.sg:GoToState("bow", royalty)
-            else            
-                inst.sg:GoToState("idle")                                    
+            else
+                inst.sg:GoToState("idle")
             end
         end,
     },
@@ -669,9 +669,9 @@ local states =
                 inst.sg:GoToState("sink_fast")
                 return
             end
-            
+
             if not inst.components.timer:TimerExists("complain_time") and not inst.components.timer:TimerExists("speak_time") then
-                inst.complain(inst)                
+                inst.complain(inst)
             end
 
             inst.sg.statemem.ignoresandstorm = true
@@ -688,7 +688,7 @@ local states =
             if inst.components.inventory:IsHeavyLifting() then
                 table.insert(anims, "heavy_idle")
                 dofunny = false
-            else              
+            else
                 if inst:HasTag("groggy") then
                     table.insert(anims, "idle_groggy_pre")
                     table.insert(anims, "idle_groggy")
@@ -737,7 +737,7 @@ local states =
                 elseif inst.getgeneralfriendlevel(inst) == "MED" then
                     inst.sg:GoToState("funnyidle_clack_pre")
                 else
-                    inst.sg:GoToState("funnyidle_tango_pre")                    
+                    inst.sg:GoToState("funnyidle_tango_pre")
                 end
             end
         end,
@@ -748,35 +748,35 @@ local states =
         name = "funnyidle_tap_pre",
         tags = { "idle", "canrotate", "alert" },
 
-        onenter = function(inst)           
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_tap_pre")
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)            
-                inst.sg:GoToState("funnyidle_tap")                
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("funnyidle_tap")
             end),
         },
     },
-    
+
     State{
         name = "funnyidle_tap",
         tags = { "idle", "canrotate", "alert" },
 
         onenter = function(inst)
-        
-            inst.AnimState:PushAnimation("idle_tap_loop")   
+
+            inst.AnimState:PushAnimation("idle_tap_loop")
 
             inst.sg:SetTimeout(math.random(2,4) * (22 * FRAMES))
         end,
-        
+
         timeline =
         {
-    
+
             TimeEvent(1*FRAMES,         function(inst) PlayFootstep(inst) end),
             TimeEvent(11*FRAMES,        function(inst) PlayFootstep(inst) end),
-            TimeEvent((1+22)*FRAMES,    function(inst) PlayFootstep(inst) end), 
+            TimeEvent((1+22)*FRAMES,    function(inst) PlayFootstep(inst) end),
             TimeEvent((11+22)*FRAMES,   function(inst) PlayFootstep(inst) end),
             TimeEvent((1+44)*FRAMES,    function(inst) PlayFootstep(inst) end),
             TimeEvent((11+44)*FRAMES,   function(inst) PlayFootstep(inst) end),
@@ -790,19 +790,19 @@ local states =
             inst.sg:GoToState("funnyidle_tap_pst")
         end,
     },
-    
+
     State{
         name = "funnyidle_tap_pst",
         tags = { "idle", "canrotate", "alert" },
 
-        onenter = function(inst)           
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_tap_pst")
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)            
-                inst.sg:GoToState("idle")                
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
             end),
         },
     },
@@ -811,25 +811,25 @@ local states =
         name = "funnyidle_clack_pre",
         tags = { "idle", "canrotate", "alert" },
 
-        onenter = function(inst)           
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_clack_pre")
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)            
-                inst.sg:GoToState("funnyidle_clack")                
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("funnyidle_clack")
             end),
         },
     },
-    
+
     State{
         name = "funnyidle_clack",
         tags = { "idle", "canrotate", "alert" },
 
         onenter = function(inst)
-        
-            inst.AnimState:PushAnimation("idle_clack_loop")   
+
+            inst.AnimState:PushAnimation("idle_clack_loop")
 
             inst.sg:SetTimeout(math.random(2,4) * (31 * FRAMES))
         end,
@@ -851,7 +851,7 @@ local states =
             if inst.getgeneralfriendlevel(inst) == "HIGH" then
                 local x,y,z = inst.Transform:GetWorldPosition()
                 local players = TheSim:FindEntities(x,y,z, TUNING.HERMITCRAB.DANCE_RANGE, PLAYER_TAGS)
-               
+
                 for i,player in pairs(players)do
                     print(player.prefab)
                     if player.sg and player.sg:HasStateTag("dancing") then
@@ -867,47 +867,47 @@ local states =
             end
         end,
     },
-    
+
     State{
         name = "funnyidle_clack_pst",
         tags = { "idle", "canrotate", "alert" },
 
-        onenter = function(inst)           
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_clack_pst")
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)            
-                inst.sg:GoToState("idle")                
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
             end),
-        },        
-    }, 
+        },
+    },
 
     -- TANGO idle
     State{
         name = "funnyidle_tango_pre",
         tags = { "idle", "canrotate", "alert" },
 
-        onenter = function(inst)           
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_tango_pre")
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)            
-                inst.sg:GoToState("funnyidle_tango")                
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("funnyidle_tango")
             end),
         },
     },
-    
+
     State{
         name = "funnyidle_tango",
         tags = { "idle", "canrotate", "dancing", "alert"},
 
         onenter = function(inst)
-        
-            inst.AnimState:PlayAnimation("idle_tango_loop", true)   
+
+            inst.AnimState:PlayAnimation("idle_tango_loop", true)
 
             inst.sg:SetTimeout(2 * (81 * FRAMES))
         end,
@@ -930,7 +930,7 @@ local states =
             TimeEvent((44+81)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/clap") end),
             TimeEvent((52+81)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/clap") end),
             TimeEvent((60+81)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/clap") end),
-            TimeEvent((68+81)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/clap") end),            
+            TimeEvent((68+81)*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/clap") end),
         },
 
         ontimeout = function(inst)
@@ -950,22 +950,22 @@ local states =
             end
         end,
     },
-    
+
     State{
         name = "funnyidle_tango_pst",
         tags = { "idle", "canrotate", "dancing", "alert" },
 
-        onenter = function(inst)           
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle_tango_pst")
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)            
-                inst.sg:GoToState("idle")                
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
             end),
-        },        
-    },    
+        },
+    },
     -- end idles
 
     State{
@@ -1401,8 +1401,8 @@ local states =
         timeline =
         {
             TimeEvent(15 * FRAMES, function(inst)
-                inst:PerformBufferedAction() 
-                inst.sg:RemoveStateTag("predig") 
+                inst:PerformBufferedAction()
+                inst.sg:RemoveStateTag("predig")
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/dig")
             end),
 
@@ -1555,9 +1555,9 @@ local states =
 
         events =
         {
-            EventHandler("fishingnibble", function(inst) 
+            EventHandler("fishingnibble", function(inst)
                 inst.sg.statemem.continue = true
-                inst.sg:GoToState("fishing_nibble") 
+                inst.sg:GoToState("fishing_nibble")
             end),
         },
     },
@@ -1592,7 +1592,7 @@ local states =
         end,
 
         ontimeout = function(inst)
-            inst.sg.statemem.continue = true        
+            inst.sg.statemem.continue = true
             inst.sg:GoToState("fishing", "bite_light_pst")
         end,
 
@@ -1605,9 +1605,9 @@ local states =
 
         events =
         {
-            EventHandler("fishingstrain", function(inst) 
+            EventHandler("fishingstrain", function(inst)
                 inst.sg.statemem.continue = true
-                inst.sg:GoToState("fishing_strain") 
+                inst.sg:GoToState("fishing_strain")
             end),
         },
     },
@@ -1642,7 +1642,7 @@ local states =
 
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
     },
 
@@ -1672,7 +1672,7 @@ local states =
             inst.AnimState:ClearOverrideSymbol("fish01")
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
 
         events =
@@ -1699,10 +1699,10 @@ local states =
             inst.AnimState:PlayAnimation("fish_nocatch")
         end,
 
-        onexit = function(inst)        
+        onexit = function(inst)
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
 
         timeline =
@@ -1955,7 +1955,7 @@ local states =
                 inst.components.friendlevels:CompleteTask(inst.delayfriendtask)
                 inst.delayfriendtask = nil
             end
-                
+
             if inst.itemstotoss then
                 inst.sg:GoToState("tossitem")
             else
@@ -2294,7 +2294,7 @@ local states =
 
             for i=#food,1,-1 do
                 food[i]:Remove()
-            end           
+            end
         end,
 
         events =
@@ -2412,7 +2412,7 @@ local states =
             inst.SoundEmitter:PlaySound("hookline/common/trophyscale_fish/pocket")
 
             inst.AnimState:OverrideSymbol("swap_pocket_scale_body", "pocket_scale", "pocket_scale_body")
-            
+
             inst.AnimState:Hide("ARM_carry")
             inst.AnimState:Show("ARM_normal")
 
@@ -2489,7 +2489,7 @@ local states =
                         inst:FacePoint(player.Transform:GetWorldPosition())
                         inst.components.lootdropper:SetFlingTarget(player:GetPosition(), 20)
                     end
-       
+
                     for i,gift in ipairs(inst.itemstotoss) do
                         if gift and gift:IsValid() then
                             inst.components.inventory:DropItem(gift)
@@ -2598,14 +2598,14 @@ local states =
 
         events =
         {
-           
+
             EventHandler("animqueueover", function(inst)
                 local gfl = inst.getgeneralfriendlevel(inst)
                 inst.components.npc_talker:Say( STRINGS.HERMITCRAB_THROWBOTTLE[gfl][math.random(1,#STRINGS.HERMITCRAB_THROWBOTTLE[gfl])]  )
                 inst.sg:GoToState("idle")
             end),
         },
-    },    
+    },
 
     State{
         name = "catch_pre",
@@ -2667,7 +2667,7 @@ local states =
             ConfigureRunState(inst)
             inst.components.locomotor:WalkForward()
             inst.AnimState:PlayAnimation(GetWalkStateAnim(inst).."_pre")
-            
+
             inst.sg.mem.footsteps = 0
         end,
 
@@ -2732,7 +2732,7 @@ local states =
         timeline =
         {
             --unmounted
-            TimeEvent(6 * FRAMES, function(inst)                
+            TimeEvent(6 * FRAMES, function(inst)
                 if inst.sg.statemem.normal then
 
                     DoRunSounds(inst)
@@ -2797,7 +2797,7 @@ local states =
         },
 
         events =
-        {         
+        {
             EventHandler("carefulwalking", function(inst, data)
                 if not data.careful then
                     if inst.sg.statemem.careful then
@@ -2851,7 +2851,7 @@ local states =
             ConfigureRunState(inst)
             inst.components.locomotor:RunForward()
             inst.AnimState:PlayAnimation(GetRunStateAnim(inst).."_pre")
-            
+
             inst.sg.mem.footsteps = 0
         end,
 
@@ -2978,7 +2978,7 @@ local states =
         },
 
         events =
-        {         
+        {
             EventHandler("carefulwalking", function(inst, data)
                 if not data.careful then
                     if inst.sg.statemem.careful then
@@ -3248,7 +3248,7 @@ local states =
 
         timeline =
         {
-            TimeEvent(13*FRAMES, function(inst) 
+            TimeEvent(13*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/common/fishingpole_cast")
                 inst.sg:RemoveStateTag("prefish")
                 inst:PerformBufferedAction()
@@ -3392,7 +3392,7 @@ local states =
         end,
     },
 
-    
+
     State{
         name = "oceanfishing_sethook",
         tags = { "npc_fishing", "doing", "busy" },
@@ -3423,7 +3423,7 @@ local states =
             inst:RemoveTag("fishing_idle")
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
     },
 
@@ -3448,7 +3448,7 @@ local states =
             inst.AnimState:ClearOverrideSymbol("fish01")
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
     },
 
@@ -3466,16 +3466,16 @@ local states =
             end
         end,
 
-        onexit = function(inst)        
+        onexit = function(inst)
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
 
         events =
         {
             EventHandler("animqueueover", function(inst)
-                if inst.AnimState:AnimDone() then                    
+                if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
                 end
             end),
@@ -3498,18 +3498,18 @@ local states =
             TimeEvent(7 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/common/fishingpole_linebreak")
             end),
-            TimeEvent(29*FRAMES, function(inst) 
-                if inst.components.talker ~= nil then 
+            TimeEvent(29*FRAMES, function(inst)
+                if inst.components.talker ~= nil then
                     inst.dotalkingtimers(inst)
                     inst.components.npc_talker:Say(inst.sg.statemem.escaped_str or STRINGS.HERMITCRAB_ANNOUNCE_OCEANFISHING_LINESNAP, nil, nil, true)
                 end
             end),
         },
 
-        onexit = function(inst)        
+        onexit = function(inst)
             if not inst.sg.statemem.continue then
                 inst.stopfishing(inst)
-            end            
+            end
         end,
 
         events =
@@ -3869,7 +3869,7 @@ local states =
     State{
         name = "frozen",
         tags = { "busy", "frozen", "nopredict", "nodangle" },
-        
+
         onenter = function(inst)
             if inst.components.pinnable ~= nil and inst.components.pinnable:IsStuck() then
                 inst.components.pinnable:Unstick()

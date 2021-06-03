@@ -44,7 +44,7 @@ SetSharedLootTable('minotaur',
 	{"chesspiece_minotaur_sketch", 1.00},
 })
 
-local chest_loot = 
+local chest_loot =
 {
 	{item = {"armorruins", "ruinshat"}, count = 1},
 	{item = {"ruins_bat", "orangestaff", "yellowstaff"}, count = 1},

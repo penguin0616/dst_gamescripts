@@ -196,7 +196,7 @@ local function commonfn(build, tags)
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:AddRandomLoot("honey", 1)
-    inst.components.lootdropper:AddRandomLoot("stinger", 5)   
+    inst.components.lootdropper:AddRandomLoot("stinger", 5)
     inst.components.lootdropper.numrandomloot = 1
 
     ------------------
@@ -311,7 +311,7 @@ local function killerbee()
     inst:ListenForEvent("spawnedfromhaunt", OnSpawnedFromHaunt)
 
     return inst
-end 
+end
 
 return Prefab("bee", workerbee, assets, prefabs),
         Prefab("killerbee", killerbee, assets, prefabs)

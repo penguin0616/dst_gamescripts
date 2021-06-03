@@ -78,7 +78,7 @@ function DefaultBurntStructureFn(inst)
         inst:RemoveComponent("dryer")
     end
     if inst.components.stewer then
-        inst.components.stewer:StopCooking("fire") 
+        inst.components.stewer:StopCooking("fire")
         inst:RemoveComponent("stewer")
     end
     if inst.components.harvestable then
@@ -637,6 +637,12 @@ MakeFeedablePet = MakeFeedableSmallLivestock
 function MakeDragonflyBait() end
 MaybeMakeDragonflyBait = MakeDragonflyBait
 RemoveDragonflyBait = MakeDragonflyBait
+
+function MakeHauntable(inst, cooldown, haunt_value)
+    if not inst.components.hauntable then inst:AddComponent("hauntable") end
+    inst.components.hauntable.cooldown = cooldown or TUNING.HAUNT_COOLDOWN_SMALL
+	inst.components.hauntable:SetHauntValue(haunt_value or TUNING.HAUNT_TINY)
+end
 
 function MakeHauntableLaunch(inst, chance, speed, cooldown, haunt_value)
     if not inst.components.hauntable then inst:AddComponent("hauntable") end

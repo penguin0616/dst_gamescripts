@@ -396,7 +396,7 @@ local function fn()
     inst.components.inspectable:RecordViews()
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('beequeen') 
+    inst.components.lootdropper:SetChanceLootTable('beequeen')
 
     inst:AddComponent("sleeper")
     inst.components.sleeper:SetResistance(4)

@@ -19,7 +19,7 @@ local function convertnodelist(data)
 end
 
 local function checkspawn(inst)
-    
+
     if not ThePlayer then
         return
     end
@@ -31,13 +31,13 @@ local function checkspawn(inst)
 
     if inst.anglemod then
         anglemod = inst.anglemod
-    else 
+    else
         anglemod = (math.random()*40 -20) *DEGREES
     end
 
     local angle = (inst.Transform:GetRotation() * DEGREES) + (PI/2) + anglemod
     local newpos = Vector3(pos.x + math.cos(angle) * radius, 0, pos.z - math.sin(angle) * radius)
-    
+
     if not TheWorld.Map:IsVisualGroundAtPoint(newpos.x, 0, newpos.z) then
         return false
     end
@@ -46,7 +46,7 @@ local function checkspawn(inst)
 
     local node_index = TheWorld.Map:GetNodeIdAtPoint(newpos.x, 0, newpos.z)
     local nodes = TheWorld.net.components.moonstorms._moonstorm_nodes:value()
-  
+
     local test = false
     for i, node in pairs(nodes) do
         if node == node_index then
@@ -80,7 +80,7 @@ local function fn(pondtype)
     inst.AnimState:SetSortOrder(3)
 
     inst.AnimState:SetMultColour(0.5,0.5,1,1)
-    
+
     inst.Transform:SetScale(1,1,1)
     inst.Transform:SetRotation(math.random()*360)
     --inst.Transform:SetRotation(90)

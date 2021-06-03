@@ -477,7 +477,7 @@ local function MakeWeed(weed_def)
 		inst.displaynamefn = GetDisplayName
 
         inst.weed_def = weed_def
-        
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then

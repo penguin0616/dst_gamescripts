@@ -14,7 +14,7 @@ local slurp ="set_sfx/everything_else_muted"
 --function Mixer:AddNewMix(name, fadetime, priority, levels, reverb)
 
 TheMixer:AddNewMix("normal", 2, 1,
-{ 
+{
     [amb] = .8,
     [cloud] = 0,
     [music] = 1,
@@ -28,7 +28,7 @@ TheMixer:AddNewMix("normal", 2, 1,
 })
 
 TheMixer:AddNewMix("high", 2, 3,
-{ 
+{
     [amb] = .2,
     [cloud] = 1,
     [music] = .5,
@@ -98,7 +98,7 @@ TheMixer:AddNewMix("slurp", 1, 1,
 })
 
 TheMixer:AddNewMix("lobby", 2, 8,
-{ 
+{
     [amb] = 0,
     [cloud] = 0,
     [music] = 1,
@@ -112,7 +112,7 @@ TheMixer:AddNewMix("lobby", 2, 8,
 })
 
 TheMixer:AddNewMix("moonstorm", 2, 8,
-{ 
+{
     [amb] = 1,
     [cloud] = 0,
     [music] = .3,
@@ -129,7 +129,7 @@ TheMixer:AddNewMix("moonstorm", 2, 8,
 
 --quagmire uses the same one as lavaarena
 TheMixer:AddNewMix("lavaarena_normal", .1, 1,
-{ 
+{
     [amb] = .8,
     [cloud] = 0,
     [music] = 1,

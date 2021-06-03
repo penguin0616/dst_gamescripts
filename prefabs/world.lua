@@ -38,7 +38,7 @@ local assets =
     Asset("DYNAMIC_ATLAS", "images/bg_spiral_anim_overlay.xml"),
     Asset("PKGREF", "images/bg_spiral_anim_overlay.tex"),
 
-    
+
 	Asset("IMAGE", "images/waterfall_mask.tex"),
 	Asset("IMAGE", "levels/textures/waterfall_noise1.tex"),
 	Asset("IMAGE", "levels/textures/waterfall_noise2.tex"),
@@ -207,10 +207,11 @@ local prefabs =
     "dummytarget",
     "float_fx_front",
     "float_fx_back",
-    "groundshadow",
 
     "puffin",
 
+	-- summer carnival
+	"carnival_host",
 
 	-- Farming
 	"slow_farmplot", -- deprecated but still used in old worlds and mods
@@ -232,15 +233,15 @@ local function OnPlayerSpawn(world, inst)
     inst:DoTaskInTime(0, function()
         if TheWorld.auto_teleport_players then
             local teleported = false
-            
-            for k,v in pairs(Ents) do                            
-                if v:IsValid() and v:HasTag("player") and v ~= inst and not teleported then                    
+
+            for k,v in pairs(Ents) do
+                if v:IsValid() and v:HasTag("player") and v ~= inst and not teleported then
                     inst.Transform:SetPosition(v.Transform:GetWorldPosition())
                     inst:SnapCamera()
                     teleported = true
-                end         
+                end
             end
-        end    
+        end
     end)
 end
 
@@ -410,7 +411,7 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
 
         --Initialize lua components
         inst:AddComponent("groundcreep")
-        
+
         --Public member functions
         inst.PostInit = PostInit
         inst.OnRemoveEntity = OnRemoveEntity
@@ -443,7 +444,7 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         if not inst.ismastersim then
             return inst
         end
-        
+
         inst:AddComponent("klaussackloot")
 
         inst:AddComponent("worldsettingstimer")

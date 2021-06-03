@@ -142,7 +142,7 @@ end
 
 local function FindTargetOfInterest(inst)
     if not inst.curious then
-        return 
+        return
     end
 
     if inst.harassplayer == nil and inst.components.combat.target == nil then
@@ -322,7 +322,7 @@ local function fn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddSoundEmitter()   
+    inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 

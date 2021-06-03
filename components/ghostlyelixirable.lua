@@ -9,7 +9,7 @@ function GhostlyElixirable:GetApplyToTarget(doer, elixir)
 	if self.overrideapplytotargetfn ~= nil then
 		return self.overrideapplytotargetfn(self.inst, doer, elixir)
 	end
-		
+
 	return self.inst
 end
 

@@ -2,88 +2,88 @@ require "constants"
 
 -- Update terrain.lua to keep GROUND definitions in sync
 
----------------- Ground colors ---------------- 
+---------------- Ground colors ----------------
 -- primary == noise textures
 -- secondary == base colour
-local GROUND_OCEAN_COLOR = -- Color for blending to the land ground tiles 
-{ 
-    primary_color =         {  0,   0,   0,  25 }, 
-    secondary_color =       { 0,  20,  33,  0 }, 
-    secondary_color_dusk =  { 0,  20,  33,  80 }, 
+local GROUND_OCEAN_COLOR = -- Color for blending to the land ground tiles
+{
+    primary_color =         {  0,   0,   0,  25 },
+    secondary_color =       { 0,  20,  33,  0 },
+    secondary_color_dusk =  { 0,  20,  33,  80 },
     minimap_color =         {  23,  51,  62, 102 },
 }
 
----------------- Ocean colors ---------------- 
+---------------- Ocean colors ----------------
 
-local COASTAL_SHORE_OCEAN_COLOR = 
-{ 
-    primary_color =         { 220, 240, 255,  60 }, 
-    secondary_color =       {  21,  96, 110, 140 }, 
-    secondary_color_dusk =  {   0,   0,   0,  50 }, 
+local COASTAL_SHORE_OCEAN_COLOR =
+{
+    primary_color =         { 220, 240, 255,  60 },
+    secondary_color =       {  21,  96, 110, 140 },
+    secondary_color_dusk =  {   0,   0,   0,  50 },
     minimap_color =         {   23, 51,  62, 102 },
 }
 
-local COASTAL_OCEAN_COLOR = 
-{ 
-    primary_color =         { 220, 255, 255,  28 }, 
+local COASTAL_OCEAN_COLOR =
+{
+    primary_color =         { 220, 255, 255,  28 },
     secondary_color =       {  25, 123, 167, 100 },
     secondary_color_dusk =  {  10, 120, 125, 120 },
     minimap_color =         {  23,  51,  62, 102 },
 }
 
-local SWELL_OCEAN_COLOR = 
-{ 
-    primary_color =         {  150, 255, 255,  18 }, 
-    secondary_color =       {  0,  45,  80, 220 },  
-    secondary_color_dusk =  {  9,  52,  57, 150 },  
+local SWELL_OCEAN_COLOR =
+{
+    primary_color =         {  150, 255, 255,  18 },
+    secondary_color =       {  0,  45,  80, 220 },
+    secondary_color_dusk =  {  9,  52,  57, 150 },
     minimap_color =         {  14,  34,  61, 204 },
 }
 
-local ROUGH_OCEAN_COLOR = 
-{ 
-    primary_color =         {  10, 200, 220,  30 }, 
-    secondary_color =       {  1,  20,  45, 230 }, 
-    secondary_color_dusk =  {  5,  20,  25, 230 }, 
+local ROUGH_OCEAN_COLOR =
+{
+    primary_color =         {  10, 200, 220,  30 },
+    secondary_color =       {  1,  20,  45, 230 },
+    secondary_color_dusk =  {  5,  20,  25, 230 },
     minimap_color =         {  19,  20,  40, 230 },
 }
 
-local HAZARDOUS_OCEAN_COLOR = 
-{ 
-    primary_color =         { 255, 255, 255,  25 }, 
+local HAZARDOUS_OCEAN_COLOR =
+{
+    primary_color =         { 255, 255, 255,  25 },
     secondary_color =       {   0,   8,  18,  51 },
     secondary_color_dusk =  {   0,   0,  0,  150 },
     minimap_color =         {   8,   8,  14,  51 },
 }
 
-local BRINEPOOL_OCEAN_COLOR = 
-{ 
-    primary_color =         {   5, 185, 220,  60 }, 
+local BRINEPOOL_OCEAN_COLOR =
+{
+    primary_color =         {   5, 185, 220,  60 },
     secondary_color =       {   5,  20,  45, 200 },
     secondary_color_dusk =  {   5,  15,  20, 200 },
     minimap_color =         {  40,  87,  93,  51 },
 }
 
 -- Unused
-local BRINEPOOL_SHORE_OCEAN_COLOR = 
-{ 
-    primary_color =         { 255, 255, 255,  25 }, 
-    secondary_color =       { 255,   0,   0, 255 }, 
-    secondary_color_dusk =  { 255,   0,   0, 255 }, 
+local BRINEPOOL_SHORE_OCEAN_COLOR =
+{
+    primary_color =         { 255, 255, 255,  25 },
+    secondary_color =       { 255,   0,   0, 255 },
+    secondary_color_dusk =  { 255,   0,   0, 255 },
     minimap_color =         { 255,   0,   0, 255 },
 }
 
-local WAVETINTS = 
+local WAVETINTS =
 {
     shallow =               {0.8,   0.9,    1},
     rough =                 {0.65,  0.84,   0.94},
     swell =                 {0.65,  0.84,   0.94},
     brinepool =             {0.65,  0.92,   0.94},
-    hazardous =             {0.40,  0.50,   0.62},           
+    hazardous =             {0.40,  0.50,   0.62},
 }
 
 local GROUND_PROPERTIES =
 {
-	{ GROUND.OCEAN_COASTAL_SHORE,	{ name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",		      runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, is_shoreline = true, ocean_depth="SHALLOW", colors=COASTAL_SHORE_OCEAN_COLOR, wavetint = WAVETINTS.shallow  } },	
+	{ GROUND.OCEAN_COASTAL_SHORE,	{ name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",		      runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, is_shoreline = true, ocean_depth="SHALLOW", colors=COASTAL_SHORE_OCEAN_COLOR, wavetint = WAVETINTS.shallow  } },
 	{ GROUND.OCEAN_BRINEPOOL_SHORE, { name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",			  runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, is_shoreline = true, ocean_depth="SHALLOW", colors=BRINEPOOL_SHORE_OCEAN_COLOR, wavetint = WAVETINTS.brinepool } },
 
 	{ GROUND.OCEAN_COASTAL,			{ name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",	          runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, ocean_depth="SHALLOW", colors=COASTAL_OCEAN_COLOR, wavetint = WAVETINTS.shallow } },
@@ -101,8 +101,8 @@ local GROUND_PROPERTIES =
     { GROUND.ROAD,					{ name = "cobblestone", noise_texture = "images/square.tex",                          runsound="dontstarve/movement/run_dirt",        walksound="dontstarve/movement/walk_dirt",      snowsound="dontstarve/movement/run_ice",    mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR   } },
 
     { GROUND.PEBBLEBEACH,			{ name = "rocky",		noise_texture = "levels/textures/noise_pebblebeach.tex",      runsound="turnoftides/movement/run_pebblebeach",        walksound="turnoftides/movement/run_pebblebeach",      snowsound="dontstarve/movement/run_ice",    mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR } },
-    { GROUND.SHELLBEACH,            { name = "cave",       noise_texture = "levels/textures/ground_noise_shellbeach.tex",runsound="turnoftides/movement/run_pebblebeach",        walksound="turnoftides/movement/run_pebblebeach",      snowsound="dontstarve/movement/run_ice",    mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR  } },    
-    
+    { GROUND.SHELLBEACH,            { name = "cave",       noise_texture = "levels/textures/ground_noise_shellbeach.tex",runsound="turnoftides/movement/run_pebblebeach",        walksound="turnoftides/movement/run_pebblebeach",      snowsound="dontstarve/movement/run_ice",    mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR  } },
+
     { GROUND.MARSH,      { name = "marsh",      noise_texture = "levels/textures/Ground_noise_marsh.tex",           runsound="dontstarve/movement/run_marsh",       walksound="dontstarve/movement/walk_marsh",     snowsound="dontstarve/movement/run_ice",    mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR   } },
     { GROUND.ROCKY,      { name = "rocky",      noise_texture = "levels/textures/noise_rocky.tex",                  runsound="dontstarve/movement/run_dirt",        walksound="dontstarve/movement/walk_dirt",      snowsound="dontstarve/movement/run_ice",    mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR   } },
     { GROUND.SAVANNA,    { name = "yellowgrass",noise_texture = "levels/textures/Ground_noise_grass_detail.tex",    runsound="dontstarve/movement/run_tallgrass",   walksound="dontstarve/movement/walk_tallgrass", snowsound="dontstarve/movement/run_snow",   mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, colors=GROUND_OCEAN_COLOR   } },
@@ -187,7 +187,7 @@ local TURF_PROPERTIES =
     [GROUND.FUNGUSGREEN] =  { name = "fungus_green",    anim = "fungus_green"   ,   bank_build = "turf" },
     [GROUND.FUNGUSMOON] =   { name = "fungus_moon",     anim = "fungus_moon"	,   bank_build = "turf_fungus_moon" },
 
-    [GROUND.ARCHIVE] =		{ name = "archive",			anim = "archive"		,   bank_build = "turf_archives" },    
+    [GROUND.ARCHIVE] =		{ name = "archive",			anim = "archive"		,   bank_build = "turf_archives" },
 
     [GROUND.SINKHOLE] =     { name = "sinkhole",        anim = "sinkhole"       ,   bank_build = "turf" },
     [GROUND.UNDERROCK] =    { name = "underrock",       anim = "rock"           ,   bank_build = "turf" },
@@ -289,8 +289,8 @@ function PlayFootstep(inst, volume, ispredicted)
                 ),
                 nil,
                 volume or 1,
-                ispredicted            
-                )        
+                ispredicted
+                )
         elseif tileinfo ~= nil then
             sound:PlaySound(
                 (   inst.sg ~= nil and inst.sg:HasStateTag("running") and tileinfo.runsound or tileinfo.walksound

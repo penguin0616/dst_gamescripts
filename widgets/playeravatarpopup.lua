@@ -338,7 +338,7 @@ function PlayerAvatarPopup:GetHelpText()
     --[[local controller_id = TheInput:GetControllerID()
     local t = {}
     if #self.buttons > 1 and self.buttons[#self.buttons] then
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK) 
+        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
     end
     return table.concat(t, "  ")
     ]]
@@ -366,11 +366,11 @@ end
 
 function PlayerAvatarPopup:UpdateSkinWidgetForSlot(image_group, slot, skin_name)
     image_group._text:SetColour(unpack(GetColorForItem(skin_name)))
-       
+
     local namestr = STRINGS.NAMES[string.upper(skin_name)] or GetSkinName(skin_name)
 
     image_group._text:SetMultilineTruncatedString(namestr, 2, TEXT_WIDTH, 25, true, true)
-    
+
     local skin_build = GetBuildForItem(skin_name)
     if skin_build == nil or skin_build == "none" then
         skin_build =
@@ -380,7 +380,7 @@ function PlayerAvatarPopup:UpdateSkinWidgetForSlot(image_group, slot, skin_name)
             (slot == "feet" and "feet_default1") or
             self.currentcharacter
     end
-    
+
     image_group._image:GetAnimState():OverrideSkinSymbol("SWAP_ICON", skin_build, "SWAP_ICON")
 end
 

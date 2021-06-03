@@ -37,7 +37,7 @@ local MainScreen = Class(Screen, function(self, profile)
     self.profile = profile
 	self.log = true
     self.targetversion = -1
-	self:DoInit() 
+	self:DoInit()
     self.default_focus = self.play_button
     self.music_playing = false
 end)
@@ -48,15 +48,15 @@ function MainScreen:DoInit()
 
 	TheFrontEnd:GetGraphicsOptions():DisableStencil()
 	TheFrontEnd:GetGraphicsOptions():DisableLightMapComponent()
-	
+
 	TheInputProxy:SetCursorVisible(true)
 
     --self.portal_root = self:AddChild(Widget("portal_root"))
-    self.bg = self:AddChild(TEMPLATES.PlainBackground())	
+    self.bg = self:AddChild(TEMPLATES.PlainBackground())
     --self.fg = self.portal_root:AddChild(TEMPLATES.AnimatedPortalForeground())
-    
+
     self.fg = self:AddChild(TEMPLATES.ReduxForeground())
-    
+
 
 	-- FIXED ROOT
     self.fixed_root = self:AddChild(Widget("root"))
@@ -208,7 +208,7 @@ function MainScreen:OnLoginButton(push_mp_main_screen)
     local function GoToMultiplayerMainMenu(offline)
 		TheFrontEnd:SetOfflineMode(offline)
         CacheCurrentVanityItems(self.profile)
-		
+
 		if push_mp_main_screen then
             local function session_mapping_cb(data)
 				TheFrontEnd:FadeToScreen( self, function() return MultiplayerMainScreen(self, self.profile, offline, data) end, function(new_screen) new_screen:FinishedFadeIn() end, "swipe" )
@@ -222,12 +222,12 @@ function MainScreen:OnLoginButton(push_mp_main_screen)
 			end, nil, nil, "alpha")
 		end
     end
-    	
+
     local function onCancel()
         self.play_button:Enable()
         self.exit_button:Enable()
     end
-    	
+
     local function onLogin(forceOffline)
 	    local account_manager = TheFrontEnd:GetAccountManager()
         local is_banned, banned_reason = account_manager:IsBanned()
@@ -235,7 +235,7 @@ function MainScreen:OnLoginButton(push_mp_main_screen)
 	    local communication_succeeded = account_manager:CommunicationSucceeded()
 	    local inventory_succeeded = TheInventory:HasDownloadedInventory()
 		local has_auth_token = account_manager:HasAuthToken()
-		
+
         if is_banned then -- We are banned
         	TheFrontEnd:PopScreen()
 	        TheNet:NotifyAuthenticationFailure()
@@ -257,14 +257,14 @@ function MainScreen:OnLoginButton(push_mp_main_screen)
             TheFrontEnd:PopScreen()
             local confirm = PopupDialogScreen( STRINGS.UI.MAINSCREEN.OFFLINEMODE,STRINGS.UI.MAINSCREEN.OFFLINEMODEDESC,
 								{
-								  	{text=STRINGS.UI.MAINSCREEN.PLAYOFFLINE, cb = function() 
+								  	{text=STRINGS.UI.MAINSCREEN.PLAYOFFLINE, cb = function()
 								  		TheFrontEnd:PopScreen()
 								  		GoToMultiplayerMainMenu(true)
 								  	end },
-								  	{text=STRINGS.UI.MAINSCREEN.CANCELOFFLINE,   cb = function() 
-								  		onCancel() 
-								  		TheFrontEnd:PopScreen() 
-								  	end}  
+								  	{text=STRINGS.UI.MAINSCREEN.CANCELOFFLINE,   cb = function()
+								  		onCancel()
+								  		TheFrontEnd:PopScreen()
+								  	end}
 								})
             TheFrontEnd:PushScreen(confirm)
             TheNet:NotifyAuthenticationFailure()
@@ -272,45 +272,45 @@ function MainScreen:OnLoginButton(push_mp_main_screen)
             print ( "[Warning] Failed to download local inventory" )
         end
     end
-	
+
 	if TheSim:GetDataCollectionSetting() == false then
 		if RUN_GLOBAL_INIT then
-			local notice = PopupDialogScreen( STRINGS.UI.DATACOLLECTION_LOGIN.TITLE, STRINGS.UI.DATACOLLECTION_LOGIN.BODY, 
+			local notice = PopupDialogScreen( STRINGS.UI.DATACOLLECTION_LOGIN.TITLE, STRINGS.UI.DATACOLLECTION_LOGIN.BODY,
 							{
 							 {text=STRINGS.UI.DATACOLLECTION_LOGIN.CONTINUE, cb = function() TheFrontEnd:PopScreen() GoToMultiplayerMainMenu(true) end },
 							},
 							nil, "big", "dark_wide")
 			TheFrontEnd:PushScreen(notice)
 		else
-			TheFrontEnd:PopScreen() 
+			TheFrontEnd:PopScreen()
 			GoToMultiplayerMainMenu(true)
 		end
 	elseif TheSim:IsLoggedOn() or account_manager:HasAuthToken() then
 		if TheSim:GetUserHasLicenseForApp(DONT_STARVE_TOGETHER_APPID) then
 			account_manager:Login( "Client Login" )
-            TheFrontEnd:PushScreen(NetworkLoginPopup(onLogin, onCancel, hadPendingConnection)) 
+            TheFrontEnd:PushScreen(NetworkLoginPopup(onLogin, onCancel, hadPendingConnection))
 		else
 			TheNet:NotifyAuthenticationFailure()
 			OnNetworkDisconnect( "APP_OWNERSHIP_CHECK_FAILED", false, false )
 		end
-	else			
+	else
 		-- Set lan mode
         TheNet:NotifyAuthenticationFailure()
         local title = STRINGS.UI.MAINSCREEN.STEAMOFFLINEMODE
         local desc = STRINGS.UI.MAINSCREEN.STEAMOFFLINEMODEDESC
-        if IsRail() then 
+        if IsRail() then
             title = STRINGS.UI.MAINSCREEN.WEGAMEOFFLINEMODE
             desc = STRINGS.UI.MAINSCREEN.WEGAMEFFLINEMODEDESC
         end
-		local confirm = PopupDialogScreen( title, desc, 
+		local confirm = PopupDialogScreen( title, desc,
 						{
 						 {text=STRINGS.UI.MAINSCREEN.PLAYOFFLINE, cb = function() TheFrontEnd:PopScreen() GoToMultiplayerMainMenu(true) end },
-						 {text=STRINGS.UI.MAINSCREEN.CANCELOFFLINE,  cb = function() onCancel() TheFrontEnd:PopScreen() end}  
+						 {text=STRINGS.UI.MAINSCREEN.CANCELOFFLINE,  cb = function() onCancel() TheFrontEnd:PopScreen() end}
 						})
 		TheFrontEnd:PushScreen(confirm)
 	end
-	
-	-- self.menu:Disable()	
+
+	-- self.menu:Disable()
     self.play_button:Disable()
     self.exit_button:Disable()
 end
@@ -384,7 +384,7 @@ function MainScreen:MakeDebugButtons()
             join_play_test_button:SetScale(.8)
             join_play_test_button:SetPosition(lcol-100+300, 250)
             join_play_test_button:SetText(STRINGS.UI.MAINSCREEN.JOIN_PLAY_TEST)
-            join_play_test_button:SetOnClick( function() self:OnJoinPlayTestButton() end )        
+            join_play_test_button:SetOnClick( function() self:OnJoinPlayTestButton() end )
         end
 	end
 end
@@ -427,9 +427,9 @@ function MainScreen:OnUpdate(dt)
         self.music_playing = true
     end
 
-    --[[if self.bg.anim_root.portal:GetAnimState():AnimDone() and not self.leaving then 
-    	if math.random() < .33 then 
-			self.bg.anim_root.portal:GetAnimState():PlayAnimation("portal_idle_eyescratch", false) 
+    --[[if self.bg.anim_root.portal:GetAnimState():AnimDone() and not self.leaving then
+    	if math.random() < .33 then
+			self.bg.anim_root.portal:GetAnimState():PlayAnimation("portal_idle_eyescratch", false)
     	else
     		self.bg.anim_root.portal:GetAnimState():PlayAnimation("portal_idle", false)
     	end

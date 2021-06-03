@@ -2,9 +2,28 @@ Follow = Class(BehaviourNode, function(self, inst, target, min_dist, target_dist
     BehaviourNode._ctor(self, "Follow")
     self.inst = inst
     self.target = target
-    self.min_dist = min_dist
-    self.max_dist = max_dist
-    self.target_dist = target_dist
+
+	if type(min_dist) == "function" then
+		self.min_dist_fn = min_dist
+		self.min_dist = nil
+	else
+	    self.min_dist = min_dist
+	end
+
+	if type(max_dist) == "function" then
+		self.max_dist_fn = max_dist
+		self.max_dist = nil
+	else
+	    self.max_dist = max_dist
+	end
+
+	if type(target_dist) == "function" then
+		self.target_dist_fn = target_dist
+		self.target_dist = nil
+	else
+	    self.target_dist = target_dist
+	end
+
     self.canrun = canrun ~= false
     self.currenttarget = nil
     self.action = "STAND"
@@ -13,6 +32,18 @@ end)
 function Follow:GetTarget()
     local target = FunctionOrValue(self.target, self.inst)
     return target ~= nil and target:IsValid() and target or nil
+end
+
+function Follow:EvaluateDistances() -- this is run once per follow target
+	if self.min_dist_fn ~= nil then
+		self.min_dist = self.min_dist_fn(self.inst)
+	end
+	if self.max_dist_fn ~= nil then
+		self.max_dist = self.max_dist_fn(self.inst)
+	end
+	if self.target_dist_fn ~= nil then
+		self.target_dist = self.target_dist_fn(self.inst)
+	end
 end
 
 function Follow:DBString()
@@ -40,7 +71,7 @@ function Follow:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
         local my_platform = map:GetPlatformAtPoint(my_x, my_z)
         local target_platform = map:GetPlatformAtPoint(target_x, target_z)
         return my_platform ~= target_platform
-    end    
+    end
     return false
 end
 
@@ -49,9 +80,14 @@ function Follow:Visit()
     local dist_sq, target_pos
 
     if self.status == READY then
+		local prev_target = self.currenttarget
         self.currenttarget = self:GetTarget()
         if self.currenttarget ~= nil then
             dist_sq, target_pos = _distsq(self.inst, self.currenttarget)
+
+			if prev_target ~= self.currenttarget then
+				self:EvaluateDistances()
+			end
 
             local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
             local target_x, target_y, target_z = self.currenttarget.Transform:GetWorldPosition()

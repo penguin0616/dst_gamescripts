@@ -43,9 +43,9 @@ function basic_clear_fn(inst, def_build)
     if inst.components.inventoryitem ~= nil then
         inst.components.inventoryitem:ChangeImageName()
     end
-    
+
     if inst.components.floater ~= nil then
-        if inst.components.floater:IsFloating() then            
+        if inst.components.floater:IsFloating() then
             inst.components.floater:SwitchToDefaultAnim(true)
             inst.components.floater:SwitchToFloatAnim()
         end
@@ -80,7 +80,7 @@ hammer_init_fn = function(inst, build_name)
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
     end
-    basic_init_fn( inst, build_name, "swap_hammer" ) 
+    basic_init_fn( inst, build_name, "swap_hammer" )
 end
 hammer_clear_fn = function(inst)
     inst.components.floater.do_bank_swap = true
@@ -316,6 +316,9 @@ arrowsign_post_clear_fn = function(inst) basic_clear_fn(inst, "sign_arrow_post" 
 treasurechest_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "treasure_chest" ) end
 treasurechest_clear_fn = function(inst) basic_clear_fn(inst, "treasure_chest" ) end
 
+dragonflychest_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "dragonfly_chest" ) end
+dragonflychest_clear_fn = function(inst) basic_clear_fn(inst, "dragonfly_chest" ) end
+
 wardrobe_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "wardrobe" ) end
 wardrobe_clear_fn = function(inst) basic_clear_fn(inst, "wardrobe" ) end
 
@@ -402,7 +405,7 @@ end
 --------------------------------------------------------------------------
 wathgrithrhat_init_fn = function(inst, build_name, opentop)
     basic_init_fn( inst, build_name, "hat_wathgrithr" )
-    
+
     if opentop then
         inst:AddTag("open_top_hat")
         inst.components.equippable:SetOnEquip(inst._opentop_onequip)
@@ -410,7 +413,7 @@ wathgrithrhat_init_fn = function(inst, build_name, opentop)
 end
 wathgrithrhat_clear_fn = function(inst)
     basic_clear_fn(inst, "hat_wathgrithr" )
-    
+
     inst:RemoveTag("open_top_hat")
     inst.components.equippable:SetOnEquip(inst._onequip)
 end
@@ -444,8 +447,8 @@ end
 --[[ Science machine skin functions ]]
 --------------------------------------------------------------------------
 researchlab_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "researchlab" ) 
-    
+    basic_init_fn( inst, build_name, "researchlab" )
+
     inst.AnimState:OverrideSymbol("bolt_b", "researchlab", "bolt_b")
     inst.AnimState:OverrideSymbol("bolt_c", "researchlab", "bolt_c")
 
@@ -458,7 +461,7 @@ researchlab_init_fn = function(inst, build_name)
 end
 researchlab_clear_fn = function(inst)
     basic_clear_fn(inst, "researchlab" )
-    
+
     inst.AnimState:ClearOverrideSymbol("bolt_b")
     inst.AnimState:ClearOverrideSymbol("bolt_c")
 
@@ -506,7 +509,7 @@ end
 --[[ Bundle skin functions ]]
 --------------------------------------------------------------------------
 function bundlewrap_init_fn(inst, build_name)
-    basic_init_fn( inst, build_name, "bundle" ) 
+    basic_init_fn( inst, build_name, "bundle" )
     inst.components.bundlemaker:SetSkinData( build_name, inst.skin_id )
 end
 function bundlewrap_clear_fn(inst)
@@ -515,7 +518,7 @@ function bundlewrap_clear_fn(inst)
 end
 
 function bundle_init_fn(inst, build_name)
-    basic_init_fn( inst, build_name, "bundle" ) 
+    basic_init_fn( inst, build_name, "bundle" )
     inst:UpdateInventoryImage()
 end
 function bundle_clear_fn(inst)
@@ -532,7 +535,7 @@ function abigail_flower_init_fn(inst, build_name)
         return
     end
     inst.flower_skin_id:set(inst.skin_id)
-    
+
     inst.AnimState:SetSkin(build_name, "abigail_flower_rework")
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
     inst.linked_skinname = string.gsub(build_name, "_flower", "")
@@ -563,7 +566,7 @@ function bugnet_init_fn(inst, build_name)
 
     inst.AnimState:SetSkin(build_name, "swap_bugnet")
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
-    
+
     local skin_data = GetSkinData(inst:GetSkinName())
     inst.overridebugnetsound = skin_data.skin_sound
 end
@@ -669,7 +672,7 @@ function firepit_init_fn(inst, build_name, fxoffset)
         end
         inst:ListenForEvent("takefuel", inst._takefuel_fn)
     end
-    
+
     if inst.restart_firepit ~= nil then
         inst:restart_firepit() --restart any fire after getting skinned to reposition
     end
@@ -771,7 +774,7 @@ function glomling_init_fn(inst, build_name, default_build, skin_sound)
     end
 
     inst.AnimState:SetSkin(build_name, default_build)
-    inst.skin_sound = skin_sound   
+    inst.skin_sound = skin_sound
 end
 
 
@@ -1090,7 +1093,7 @@ function reviver_init_fn(inst, build_name)
             inst.PlayBeatAnimation = reviver_playbeatanimation
         end
     end
-    
+
     inst:skin_switched()
 end
 function reviver_clear_fn(inst)
@@ -1241,7 +1244,7 @@ end
 function nightsword_clear_fn(inst)
     inst.AnimState:SetBuild("nightmaresword")
     inst.components.inventoryitem:ChangeImageName()
-    
+
     inst:RemoveEventCallback("equipped", nightsword_equipped)
     inst:RemoveEventCallback("unequipped", nightsword_unequipped)
     inst:RemoveEventCallback("onremove", nightsword_unequipped)
@@ -1671,7 +1674,7 @@ function icebox_clear_fn(inst)
     inst:RemoveEventCallback("onopen", icebox_opened)
     inst:RemoveEventCallback("onclose", icebox_closed)
     inst:RemoveEventCallback("onremove", icebox_closed)
-    
+
     icebox_closed(inst)
 end
 
@@ -1767,8 +1770,8 @@ function CreatePrefabSkin(name, info)
         for _,base_skin in pairs(info.has_alternate_for_skirt) do
             BASE_ALTERNATE_FOR_SKIRT[base_skin] = true
         end
-    end 
-    
+    end
+
     if info.one_piece_skirt_builds ~= nil then
         for _,base_skin in pairs(info.one_piece_skirt_builds) do
             ONE_PIECE_SKIRT[base_skin] = true

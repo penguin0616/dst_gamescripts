@@ -259,7 +259,7 @@ function Follower:LongUpdate(dt)
         local time = GetTime()
         local time_left = self.targettime - GetTime() - dt
         if time_left < 0 then
-            self:SetLeader(nil) 
+            self:SetLeader(nil)
         else
             self.targettime = GetTime() + time_left
             self.task = self.inst:DoTaskInTime(time_left, stopfollow, self)

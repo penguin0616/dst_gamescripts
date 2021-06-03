@@ -1,5 +1,5 @@
 local function onstormlevel(self, stormlevel)
-    if self.inst.player_classified ~= nil then        
+    if self.inst.player_classified ~= nil then
         self.inst.player_classified.stormlevel:set(math.floor(stormlevel * 7 + .5))
     end
 end
@@ -26,11 +26,11 @@ local StormWatcher = Class(function(self, inst)
             next(TheWorld.net.components.moonstorms:GetMoonstormNodes()) then
         self:UpdateStorms({stormtype= STORM_TYPES.MOONSTORM, setting = true})
     end
-    
+
     if TheWorld.components.sandstorms ~= nil and
             TheWorld.components.sandstorms:IsSandstormActive() then
         self:UpdateStorms({stormtype= STORM_TYPES.SANDSTORM, setting = true})
-    end    
+    end
 
 end,
 nil,
@@ -48,7 +48,7 @@ end
 function StormWatcher:GetCurrentStorm(inst)
     local currentstorm = STORM_TYPES.NONE
     if TheWorld.components.sandstorms ~= nil then
-        if TheWorld.components.sandstorms:IsInSandstorm(self.inst) then 
+        if TheWorld.components.sandstorms:IsInSandstorm(self.inst) then
             currentstorm = STORM_TYPES.SANDSTORM
         end
     end
@@ -88,7 +88,7 @@ function StormWatcher:UpdateStorms(data)
             storms = true
             if self.delay == nil then
                 self.delay = math.random()
-            end            
+            end
             break
         end
     end
@@ -101,7 +101,7 @@ function StormWatcher:UpdateStorms(data)
     end
 end
 
-function StormWatcher:UpdateStormLevel()  
+function StormWatcher:UpdateStormLevel()
     self:CheckStorms()
     if self.currentstorm ~= STORM_TYPES.NONE then
         local level = self.stormlevel
@@ -109,7 +109,7 @@ function StormWatcher:UpdateStormLevel()
         if self.currentstorm == STORM_TYPES.SANDSTORM then
             level = math.floor(TheWorld.components.sandstorms:GetSandstormLevel(self.inst) * 7 + .5) / 7
             self.inst.components.sandstormwatcher:UpdateSandstormLevel()
-        elseif self.currentstorm == STORM_TYPES.MOONSTORM then 
+        elseif self.currentstorm == STORM_TYPES.MOONSTORM then
             level = math.floor(TheWorld.net.components.moonstorms:GetMoonstormLevel(self.inst) * 7 + .5) / 7
             self.inst.components.moonstormwatcher:UpdateMoonstormLevel()
         end
@@ -121,7 +121,7 @@ function StormWatcher:UpdateStormLevel()
         if self.laststorm ~= STORM_TYPES.NONE then
             if self.laststorm == STORM_TYPES.SANDSTORM then
                 self.inst.components.locomotor:RemoveExternalSpeedMultiplier(self.inst, "sandstorm")
-            elseif self.laststorm == STORM_TYPES.MOONSTORM then 
+            elseif self.laststorm == STORM_TYPES.MOONSTORM then
                 self.inst.components.locomotor:RemoveExternalSpeedMultiplier(self.inst, "moonstorm")
             end
         end

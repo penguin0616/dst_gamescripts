@@ -104,7 +104,7 @@ function GiftItemPopUp:ShowMenu()
         local button_w = 200
         local space_between = 40
         local spacing = button_w + space_between
-        local buttons = {{text = STRINGS.UI.ITEM_SCREEN.USE_LATER, cb = function() self:OnClose() end}, 
+        local buttons = {{text = STRINGS.UI.ITEM_SCREEN.USE_LATER, cb = function() self:OnClose() end},
                          {text = STRINGS.UI.ITEM_SCREEN.USE_NOW, cb = function() self:ApplySkin() end}
                         }
         self.menu = self.proot:AddChild(Menu(buttons, spacing, true))
@@ -199,11 +199,11 @@ end
 function GiftItemPopUp:OnControl(control, down)
     if GiftItemPopUp._base.OnControl(self, control, down) then return true end
 
-    if TheInput:ControllerAttached() and self.show_menu then 
+    if TheInput:ControllerAttached() and self.show_menu then
         if not down and control == CONTROL_CANCEL then
             self:OnClose()
             return true
-        elseif not down and not self.disable_use_now and control == CONTROL_PAUSE then 
+        elseif not down and not self.disable_use_now and control == CONTROL_PAUSE then
             self:ApplySkin()
             return true
         end

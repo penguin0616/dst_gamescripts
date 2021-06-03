@@ -67,7 +67,7 @@ function AmphibiousCreature:OnExitOcean()
 	self.inst:RemoveTag("swimming")
 	if self.exitwaterfn then
 		self.exitwaterfn(self.inst)
-	end	
+	end
 end
 
 function AmphibiousCreature:SetOnTileChangeFn(fn)

@@ -17,7 +17,7 @@ local function pickspawnprefab(items_in, ground_type)
 --		return
 --	end
 	local items = {}
-	if ground_type ~= nil then		
+	if ground_type ~= nil then
 		-- Filter the items
 	    for item,v in pairs(items_in) do
 	    	items[item] = items_in[item]
@@ -25,14 +25,14 @@ local function pickspawnprefab(items_in, ground_type)
 --	        	if ground_type == GROUND.ROAD then
 --	        		print ("Filter", item, terrain.filter.Print(terrain.filter[item]), GROUND_NAMES[ground_type])
 --	        	end
-	        	
+
 	            for idx,gt in ipairs(terrain.filter[item]) do
         			if gt == ground_type then
         				items[item] = nil
         				--print ("Filtered", item, GROUND_NAMES[ground_type], " (".. terrain.filter.Print(terrain.filter[item])..")")
         			end
-   				end        
-	        end 
+   				end
+	        end
 	    end
 	end
     local total = 0
@@ -71,7 +71,7 @@ local function pickspawncountprefabforground(prefabs, ground_type)
 					break
 				end
 			end
-			if add then 
+			if add then
 				table.insert(items, item)
 			end
 		end
@@ -176,11 +176,11 @@ local TRANSLATE_TO_PREFABS = {
 	["cave_ponds"] = 		{"pond", "pond_cave"},
 	["bees"] = 				{"beehive", "bee"},
 	["grass"] = 			{"grass","grassgekko"},
-	["rock"] = 				{"rocks", "rock1", "rock2", "rock_flintless","rock_petrified_tree"}, 
+	["rock"] = 				{"rocks", "rock1", "rock2", "rock_flintless","rock_petrified_tree"},
 	["sapling"] = 			{"sapling","twiggytree","ground_twigs"},
 	["reeds"] = 			{"reeds"},
-	["trees"] = 			{"evergreen", "evergreen_sparse", "deciduoustree", "marsh_tree"},	
-	["evergreen"] = 		{"evergreen"},	
+	["trees"] = 			{"evergreen", "evergreen_sparse", "deciduoustree", "marsh_tree"},
+	["evergreen"] = 		{"evergreen"},
 	["carrot"] = 			{"carrot_planted"},
 	["berrybush"] = 		{"berrybush", "berrybush2", "berrybush_juicy"},
 	["maxwelllight"] = 		{"maxwelllight"},
@@ -215,9 +215,9 @@ local TRANSLATE_TO_PREFABS = {
     ["rocky"] =             {"rocky"},
     ["lichen"] =            {"lichen"},
     ["banana"] =            {"cave_banana_tree"},
-    ["monkey"] =            {"monkeybarrel_spawner"}, 
+    ["monkey"] =            {"monkeybarrel_spawner"},
 	["mooncarrot"] =        {"mooncarrot_planted"},
-	
+
 	--lunar island stuff, all prefixed with "moon_"
 	["moon_tree"] =			{"moon_tree"},
 	["moon_sapling"] =		{"sapling_moon"},
@@ -245,7 +245,7 @@ local TRANSLATE_TO_CLUMP = {
 
 local TRANSLATE_AND_OVERRIDE = { --These are entities that should be translated to prefabs for world gen but also have a postinit override to do
 	["flowers"] =			{"flower", "flower_evil"},
-	["rock_ice"] = 			{"rock_ice"}, 
+	["rock_ice"] = 			{"rock_ice"},
 }
 
 local function TranslateWorldGenChoices(gen_params)
@@ -333,7 +333,7 @@ local DEFAULT_SEASON = "autumn"
 
 local function UpdatePercentage(distributeprefabs, gen_params)
 	for selected, v in pairs(gen_params) do
-		if v ~= "default" then		
+		if v ~= "default" then
 			for i, prefab in ipairs(TRANSLATE_TO_PREFABS[selected]) do
 				if distributeprefabs[prefab] ~= nil then
 					distributeprefabs[prefab] = distributeprefabs[prefab] * MULTIPLY[v]
@@ -404,7 +404,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
     if current_gen_params.no_joining_islands ~= nil then
         story_gen_params.no_joining_islands = current_gen_params.no_joining_islands
     end
-	
+
     if current_gen_params.has_ocean ~= nil then
         story_gen_params.has_ocean = current_gen_params.has_ocean
     end
@@ -458,7 +458,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
 	WorldSim:WorldGen_VoronoiPass(100)
 
-	storygen:AddRegionsToMainland(function() 	
+	storygen:AddRegionsToMainland(function()
 		WorldSim:WorldGen_AddNewPositions()
 		WorldSim:WorldGen_VoronoiPass(50)
 	end)
@@ -479,12 +479,12 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 	WorldSim:SeparateIslands()
     print("Map Baked!")
 	map_width, map_height = WorldSim:GetWorldSize()
-	
+
 	local join_islands = not current_gen_params.no_joining_islands
 
 	-- Note: This also generates land tiles
     WorldSim:ForceConnectivity(join_islands, false)--prefab == "cave" )
-    
+
     local entities = {}
 	-- turning this off for now because its conflicting with the island tech and disconnected node stripping, causing wormholes in the atrium
 	if false and not current_gen_params.no_wormholes_to_disconnected_tiles then
@@ -496,17 +496,17 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 			end
 		end
 	end
-		
+
 	if prefab ~= "cave" then
 	    WorldSim:SetRoadParameters(
 			ROAD_PARAMETERS.NUM_SUBDIVISIONS_PER_SEGMENT,
 			ROAD_PARAMETERS.MIN_WIDTH, ROAD_PARAMETERS.MAX_WIDTH,
 			ROAD_PARAMETERS.MIN_EDGE_WIDTH, ROAD_PARAMETERS.MAX_EDGE_WIDTH,
 			ROAD_PARAMETERS.WIDTH_JITTER_SCALE )
-		
-		WorldSim:DrawRoads(join_islands) 
+
+		WorldSim:DrawRoads(join_islands)
 	end
-		
+
 	-- Run Node specific functions here
 	local nodes = topology_save.root:GetNodes(true)
 	for k,node in pairs(nodes) do
@@ -514,7 +514,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 	end
 
     print("Encoding...")
-    
+
     local save = {}
     save.ents = {}
     save.map = {
@@ -534,7 +534,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
     -- if any are less than minumum - restart the generation
 
     for idx,val in ipairs(save.map.topology.nodes) do
-		if string.find(save.map.topology.ids[idx], "LOOP_BLANK_SUB") == nil  then    
+		if string.find(save.map.topology.ids[idx], "LOOP_BLANK_SUB") == nil  then
  	    	local area = WorldSim:GetSiteArea(save.map.topology.ids[idx])
 	    	if area < 8 then
 	    		print ("ERROR: Site "..save.map.topology.ids[idx].." area < 8: "..area)
@@ -549,10 +549,10 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     print("Checking Tags")
 	local obj_layout = require("map/object_layout")
-		
-	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset) 
+
+	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset)
 				WorldSim:ReserveTile(points_x[current_pos_idx], points_y[current_pos_idx])
-		
+
 				local x = (points_x[current_pos_idx] - width/2.0)*TILE_SCALE
 				local y = (points_y[current_pos_idx] - height/2.0)*TILE_SCALE
 				x = math.floor(x*100)/100.0
@@ -562,7 +562,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 				end
 				local save_data = {x=x, z=y}
 				if prefab_data then
-					
+
 					if prefab_data.data then
 						if type(prefab_data.data) == "function" then
 							save_data["data"] = prefab_data.data()
@@ -592,7 +592,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 	   		-- TODO: place items of interest in these locations
 			if xs ~= nil and #xs >0 then
 				for idx = 1,#xs do
-			   		if types[idx] == 0 then	
+			   		if types[idx] == 0 then
 			   			--Spawning chests within the labyrinth.
 						local prefab = "pandoraschest"
 						local x = (xs[idx]+1.5 - map_width/2.0)*TILE_SCALE --gjans: note the +1.5 instead of +0.5... RunMaze points are in a strange position.
@@ -649,7 +649,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 				table.sort(distances, function(a,b) return a.dist < b.dist end)
 
 				if choices.archive ~= nil then
-				
+
 					local ends = {}
 					for _,d in ipairs(distances) do
 						local maze_room = math.abs(types[d.idx])
@@ -662,11 +662,11 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 					local endidx = ends[choice]
 					table.remove(ends,choice)
 					obj_layout.Place({xs[endidx], ys[endidx]}, MAZE_CELL_EXITS_INV[math.abs(types[endidx])], add_fn, choices.special.finish)
-					
+
 					choice = math.random(1,#ends)
 					local startidx = ends[choice]
 					obj_layout.Place({xs[startidx], ys[startidx]}, MAZE_CELL_EXITS_INV[math.abs(types[startidx])], add_fn, choices.special.start)
-					
+
 					local reservedindex = math.random(1,#xs)
 					while reservedindex == endidx or reservedindex == startidx do
 						reservedindex = math.random(1,#xs)
@@ -677,7 +677,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 							if types[idx] > 0 then
 								obj_layout.Place({xs[idx], ys[idx]}, MAZE_CELL_EXITS_INV[types[idx] ], add_fn, choices.rooms)
 							else
-								obj_layout.Place({xs[idx], ys[idx]}, MAZE_CELL_EXITS_INV[-types[idx] ], add_fn, choices.bosses)													
+								obj_layout.Place({xs[idx], ys[idx]}, MAZE_CELL_EXITS_INV[-types[idx] ], add_fn, choices.bosses)
 							end
 						end
 					end
@@ -689,11 +689,11 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 					local x, y = xs[closest_index], ys[closest_index]
 					local s_x, s_y = WorldSim:GetSite(topology_save.GlobalTags["MazeEntrance"][task][1])
 
-					WorldSim:DrawGroundLine( x, y, s_x, s_y, GROUND.DIRT, true, true) 
-					WorldSim:DrawGroundLine( x+2, y+2, x-2, y-2, GROUND.DIRT, true, true) 
-					WorldSim:DrawGroundLine( x-2, y+2, x+2, y-2, GROUND.DIRT, true, true) 
+					WorldSim:DrawGroundLine( x, y, s_x, s_y, GROUND.DIRT, true, true)
+					WorldSim:DrawGroundLine( x+2, y+2, x-2, y-2, GROUND.DIRT, true, true)
+					WorldSim:DrawGroundLine( x-2, y+2, x+2, y-2, GROUND.DIRT, true, true)
 
- 					-- ARCHIVE SEALS 
+ 					-- ARCHIVE SEALS
 					local x_diff = s_x - x
 					local y_diff = s_y - y
 					local incx = (x_diff/2) *TILE_SCALE
@@ -710,10 +710,10 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 					end
 					if not entities["rubble2"] then
 						entities["rubble2"] = {}
-					end		
+					end
 
 					newx = newx + incx/2 -- /10
-					newz = newz + incz/2 -- /10								
+					newz = newz + incz/2 -- /10
 					table.insert(entities["rubble1"],{ x = newx, z = newz })
 					table.insert(entities["rubble2"],{ x = newx, z = newz })
 --[[
@@ -759,18 +759,18 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 				end
 
                 -- The maze can cut itself off from land at the edge, so draw a little road to attempt to bring it together.
-                for i,node in ipairs(topology_save.GlobalTags["MazeEntrance"][task]) do 
+                for i,node in ipairs(topology_save.GlobalTags["MazeEntrance"][task]) do
                     local entrance_node = topology_save.root:GetNodeById(node)
                     for id, edge in pairs(entrance_node.edges) do
                         if edge.node1.data.type ~= NODE_TYPE.Blank and edge.node2.data.type ~= NODE_TYPE.Blank then
-                            WorldSim:DrawCellLine( edge.node1.id, edge.node2.id, NODE_INTERNAL_CONNECTION_TYPE.EdgeSite, choices.bridge_ground or GROUND.BRICK, nil, true) 
+                            WorldSim:DrawCellLine( edge.node1.id, edge.node2.id, NODE_INTERNAL_CONNECTION_TYPE.EdgeSite, choices.bridge_ground or GROUND.BRICK, nil, true)
 
                             -- If the maze is force disconnected then double make sure that the maze is connected with the fake ground
                             local othernode = edge.node1 == entrance_node and edge.node2 or edge.node1
                             if table.contains(othernode.data.tags, "ForceDisconnected") then
 								for id, edge in pairs(othernode.edges) do
 									if edge.node1.data.type ~= NODE_TYPE.Blank and edge.node2.data.type ~= NODE_TYPE.Blank then
-										WorldSim:DrawCellLine( edge.node1.id, edge.node2.id, NODE_INTERNAL_CONNECTION_TYPE.EdgeSite, GROUND.FAKE_GROUND, nil, true) 
+										WorldSim:DrawCellLine( edge.node1.id, edge.node2.id, NODE_INTERNAL_CONNECTION_TYPE.EdgeSite, GROUND.FAKE_GROUND, nil, true)
 									end
 								end
                             end
@@ -801,7 +801,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 	else
 		print("Not checking for disconnected tiles.")
 	end
-	
+
     save.map.generated = {}
     save.map.generated.densities = {}
 
@@ -824,8 +824,8 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     for k,ents in pairs(entities) do
         for i=#ents, 1, -1 do
-            local x = ents[i].x/TILE_SCALE + map_width/2.0 
-            local y = ents[i].z/TILE_SCALE + map_height/2.0 
+            local x = ents[i].x/TILE_SCALE + map_width/2.0
+            local y = ents[i].z/TILE_SCALE + map_height/2.0
 
             local tiletype = WorldSim:GetVisualTileAtPosition(x,y) -- Warning: This does not quite work as expected. It thinks the ground type id is in rendering order, which it totally is not!
             if tiletype == GROUND.IMPASSABLE then

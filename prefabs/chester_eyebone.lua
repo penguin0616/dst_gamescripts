@@ -115,7 +115,7 @@ local function SpawnChester(inst)
     local spawn_pt = GetSpawnPoint(pt)
     if spawn_pt ~= nil then
         --print("    at", spawn_pt)
-        local chester = SpawnPrefab("chester", inst.linked_skinname, inst.skin_id ) 
+        local chester = SpawnPrefab("chester", inst.linked_skinname, inst.skin_id )
         if chester ~= nil then
             chester.Physics:Teleport(spawn_pt:Get())
             chester:FacePoint(pt:Get())
@@ -171,7 +171,7 @@ local function FixChester(inst)
     --take an existing chester if there is one
     if not RebindChester(inst) then
         CloseEye(inst)
-        
+
         if inst.components.inventoryitem.owner ~= nil then
             local time_remaining = inst.respawntime ~= nil and math.max(0, inst.respawntime - GetTime()) or 0
             StartRespawn(inst, time_remaining)

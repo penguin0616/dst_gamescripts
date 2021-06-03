@@ -160,19 +160,19 @@ function ChildSpawner:SetEmergencyRadius(rad)
     self.emergencydetectionradius = rad
 end
 
-function ChildSpawner:IsFull() 
+function ChildSpawner:IsFull()
 	return self:NumChildren() >= self.maxchildren
 end
 
-function ChildSpawner:NumChildren() 
+function ChildSpawner:NumChildren()
 	return self.numchildrenoutside + self.childreninside
 end
 
-function ChildSpawner:IsEmergencyFull() 
+function ChildSpawner:IsEmergencyFull()
 	return self:NumEmergencyChildren() >= self.maxemergencychildren
 end
 
-function ChildSpawner:NumEmergencyChildren() 
+function ChildSpawner:NumEmergencyChildren()
 	return self.numemergencychildrenoutside + self.emergencychildreninside
 end
 
@@ -507,7 +507,7 @@ function ChildSpawner:DoSpawnChild(target, prefab, radius)
             self.childname
         )
     if child ~= nil then
-        child.Transform:SetPosition(x + offset.x, 0, z + offset.z)
+        child.Transform:SetPosition(x + offset.x, self.spawn_height or 0, z + offset.z)
         if target ~= nil and child.components.combat ~= nil then
             child.components.combat:SetTarget(target)
         end

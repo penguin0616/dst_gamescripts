@@ -181,7 +181,7 @@ function Mine:Explode(target)
     self:StopTesting()
     self.target = target
     self.issprung = true
-    self.inactive = false    
+    self.inactive = false
     ProfileStatsAdd("trap_sprung_"..(target ~= nil and target.prefab or ""))
     if self.onexplode ~= nil then
         self.onexplode(self.inst, target)

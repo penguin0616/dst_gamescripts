@@ -1,7 +1,7 @@
 
 local BALLOONS = require "prefabs/balloons_common"
 
-local prefabs = 
+local prefabs =
 {
 	"balloon_held_child_client",
 }
@@ -10,7 +10,7 @@ local function updateballonrunningstate(inst)
 	local owner = inst.entity:GetParent()
 	local running
 	if owner.sg ~= nil then
-		running = owner.sg:HasStateTag("moving") 
+		running = owner.sg:HasStateTag("moving")
 	else
 		running = owner:HasTag("moving")
 	end
@@ -37,7 +37,7 @@ local function SetupFromBaseItem(inst, baseitem, owner, picked_up_from_ground, c
 	inst._swap_sym:set(swap_sym or 0)
 
 	if baseitem.components.fueled ~= nil then
-		inst:ListenForEvent("onfueldsectionchanged", function() 
+		inst:ListenForEvent("onfueldsectionchanged", function()
 			local swap_build, swap_sym
 			if baseitem:IsValid() then
 				swap_build, swap_sym = baseitem.AnimState:GetSymbolOverride("swap_balloon")
@@ -48,7 +48,7 @@ local function SetupFromBaseItem(inst, baseitem, owner, picked_up_from_ground, c
 			if inst.client_obj ~= nil then
 				inst.client_obj.sg:GoToState("deflate")
 			end
-			inst._deflate_event:push() 
+			inst._deflate_event:push()
 		end, baseitem)
 	end
 end
@@ -97,7 +97,7 @@ local function fn()
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
-	    inst:ListenForEvent("ballon_held_child.deflateevent", function() 
+	    inst:ListenForEvent("ballon_held_child.deflateevent", function()
 			if inst.client_obj ~= nil then
 				inst.client_obj.sg:GoToState("deflate")
 			end
@@ -134,7 +134,7 @@ local function client_fn()
     inst.entity:SetPristine()
 
     inst.persists = false
-	
+
 	inst._isrunning = false
 
 	inst.UpdateBalloonSymbol = UpdateBalloonSymbol

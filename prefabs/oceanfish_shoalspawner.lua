@@ -34,7 +34,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     inst.MiniMapEntity:SetIcon("oceanfish_shoalspawner.png")
-    
+
     inst:AddTag("NOBLOCK")
 	inst:AddTag("ignorewalkableplatforms")
 

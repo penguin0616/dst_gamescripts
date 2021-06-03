@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
     ActionHandler(ACTIONS.GOHOME, "action"),
     ActionHandler(ACTIONS.RAISE_SAIL, "short_action"),
@@ -36,7 +36,7 @@ local states=
 {
 
     State{
-        
+
         name = "in",
         tags = {"busy"},
         onenter = function(inst, playanim)
@@ -50,18 +50,18 @@ local states=
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end ),
         },
     },
-    
+
     State{
-        
+
         name = "idle",
         tags = {"idle", "canrotate"},
         onenter = function(inst, playanim)
             passtate(inst,"STATE_IDLE")
-         
+
             inst.Physics:Stop()
         end,
     },
-  
+
     State{
         name = "premoving",
         tags = {"moving", "canrotate"},
@@ -83,7 +83,7 @@ local states=
 
         onenter = function(inst)
             passtate(inst,"STATE_MOVING")
-           
+
             inst.components.locomotor:WalkForward()
         end,
 
@@ -103,7 +103,7 @@ local states=
 
         events=
         {
-            EventHandler("performbufferedaction", function(inst) 
+            EventHandler("performbufferedaction", function(inst)
                 inst:PerformBufferedAction()
                 inst:ClearWaveyJonesTarget()
                 if inst.arm and inst.arm.jones then
@@ -122,10 +122,10 @@ local states=
 
         onenter = function(inst)
             passtate(inst,"STATE_LOOP_ACTION_ANCHOR")
-           
+
             inst.anchor = inst.bufferedaction.target
             inst.components.locomotor:Stop()
-           
+
             if inst.bufferedaction ~= nil then
                 inst.sg.statemem.action = inst.bufferedaction
                 if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
@@ -150,9 +150,9 @@ local states=
              EventHandler("stopraisinganchor", function(inst)
 
                 inst.sg:GoToState("loop_action_anchor_pst")
-            end), 
+            end),
         },
-    },  
+    },
 
     State{
         name = "loop_action_anchor_pst",
@@ -164,21 +164,21 @@ local states=
 
         events=
         {
-            EventHandler("animover", function(inst) 
-                inst.sg:GoToState("idle") 
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
             end),
         },
-    }, 
-    
+    },
+
     State{
         name = "trapped",
         tags = {"busy","trapped"},
 
         onenter = function(inst)
-            passtate(inst,"STATE_TRAPPED")   
+            passtate(inst,"STATE_TRAPPED")
             inst.Physics:Stop()
             inst:ClearBufferedAction()
-            inst.components.timer:StartTimer("trappedtimer", 1)     
+            inst.components.timer:StartTimer("trappedtimer", 1)
         end,
 
         onexit = function(inst)
@@ -208,7 +208,7 @@ local states=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
-    }, 
+    },
 
     State{
         name = "scared_relocate",
@@ -221,11 +221,11 @@ local states=
         events=
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle") 
+                inst.sg:GoToState("idle")
             end),
         },
     },
 }
 
-  
+
 return StateGraph("waveyjoneshand", states, events, "idle", actionhandlers)

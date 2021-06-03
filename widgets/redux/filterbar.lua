@@ -36,7 +36,7 @@ function FilterBar:BuildFocusFinder()
         -- If we have no items to display, then we can't push focus to the
         -- picker since it will contain nothing to focus.
         if self.picker.scroll_list and #self.picker.scroll_list.items > 0 then
-            return self.picker 
+            return self.picker
         else
             return self
         end
@@ -46,7 +46,7 @@ end
 function FilterBar:RefreshFilterState()
     self.no_refresh_picker = true --we don't want to refresh the picker multiple times when setting the filter states and sort type. We're do one manual refresh once we're done updating
         for i,filter in ipairs(self.filter_btns) do
-            local state = Profile:GetCustomizationFilterState(self.filter_category, filter.btnid)   
+            local state = Profile:GetCustomizationFilterState(self.filter_category, filter.btnid)
             filter.widget:SetFilterState(state)
         end
 
@@ -106,7 +106,7 @@ function FilterBar:AddSorter()
 
         btn:SetHoverText( subfmt(STRINGS.UI.WARDROBESCREEN.SORT_MODE_FMT, { mode = STRINGS.UI.WARDROBESCREEN[sort_mode] }) )
         btn.icon:SetTexture("images/button_icons.xml", modes[sort_mode] )
-        
+
         if not self.no_refresh_picker then
             self.picker:RefreshItems(self:_ConstructFilter())
         end
@@ -118,7 +118,7 @@ function FilterBar:AddSorter()
         if sort_mode == nil then
             sort_mode = "SORT_RELEASE"
         end
-        
+
         Profile:SetItemSortMode(sort_mode)
         btn:SetSortType(sort_mode)
     end
@@ -135,9 +135,9 @@ local search_subwords = function( search, str, sub_len )
     local str_len = string.len(str)
 
     local i = 1
-    for i=i,str_len - sub_len + 1 do        
+    for i=i,str_len - sub_len + 1 do
         local sub = str:sub( i, i + sub_len - 1 )
-        
+
         local dist = DamLevDist( search, sub, 2 )
         if dist < 2 then
             return true
@@ -159,7 +159,7 @@ local search_match = function( search, str )
 
     if sub_len > 3 then
         if search_subwords( search, str, sub_len ) then return true end
-        
+
         --Try again with 1 fewer character
         sub_len = sub_len - 1
         if search_subwords( search, str, sub_len ) then return true end
@@ -208,7 +208,7 @@ function FilterBar:AddSearch( thin )
         end
 
         if self.entered_string ~= searchbox.textbox:GetString() then
-            self.search_delay = self.inst:DoTaskInTime(0.25, function() 
+            self.search_delay = self.inst:DoTaskInTime(0.25, function()
                 searchbox.textbox:OnTextEntered()
             end)
         end
@@ -232,7 +232,7 @@ function FilterBar:AddSearch( thin )
                 return true
             end
         end
-        
+
         local collection_name = GetItemCollectionName(item_key)
         if collection_name ~= nil then
             if search_match( search_str, string.upper(collection_name) ) then
@@ -250,7 +250,7 @@ function FilterBar:AddSearch( thin )
     searchbox.focus_forward = searchbox.textbox
 
     self.search_box = searchbox
-    
+
     self:_UpdatePositions()
 
     return searchbox
@@ -279,7 +279,7 @@ end
 
 function FilterBar:_UpdatePositions()
     local width,_ = self.picker.scroll_list:GetScrollRegionSize()
-    
+
     local squeeze = 0
     if self.thin_mode then
         squeeze = 12
@@ -323,7 +323,7 @@ function FilterBar:_UpdatePositions()
             search_width = 23
         end
         self.search_box:SetPosition( x_offset + -width/2 + num_btns*self.sort_btn.size_x + search_width, 4)
-        
+
         prev_btn:SetFocusChangeDir(MOVE_RIGHT, self.search_box)
         self.search_box:SetFocusChangeDir(MOVE_LEFT, prev_btn)
     end

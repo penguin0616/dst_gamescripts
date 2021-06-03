@@ -57,7 +57,7 @@ function MotdPanel:ShowMOTDSyncingIndicator()
 
 	local text = self.sync_indicator:AddChild(Text(self.config.font, 26, STRINGS.UI.MAINSCREEN.MOTD_SYNCING, UICOLOURS.GOLD_UNIMPORTANT))
     text:SetPosition(0, -20)
-	
+
 
 	local image = self.sync_indicator:AddChild(Image("images/avatars.xml", "loading_indicator.tex"))
 	image:SetTint(unpack(UICOLOURS.GOLD_UNIMPORTANT))
@@ -74,7 +74,7 @@ function MotdPanel:ShowMOTDSyncingFailed()
 	self.error_indicator = self.root:AddChild(TEMPLATES.RectangleWindow(240, 60))
 	self.error_indicator:SetBackgroundTint(0,0,0,0.85)
     self.error_indicator:SetPosition(30, -100)
-	
+
 	local text = self.error_indicator:AddChild(Text(self.config.font, 20, STRINGS.UI.MAINSCREEN.MOTD_SYNCING_FAILED, UICOLOURS.GOLD_UNIMPORTANT))
     --text:SetPosition(0, -20)
 	end
@@ -84,7 +84,7 @@ function MakeDownloadingImageIndicator()
 
 	local text = sync_indicator:AddChild(Text(BODYTEXTFONT, 18, STRINGS.UI.MAINSCREEN.MOTD_DOWNLOADING_IMAGE, UICOLOURS.GOLD_UNIMPORTANT))
     text:SetPosition(0, -22)
-	
+
 
 	local image = sync_indicator:AddChild(Image("images/avatars.xml", "loading_indicator.tex"))
 	local function dorotate() image:RotateTo(0, -360, .75, dorotate) end
@@ -206,15 +206,15 @@ function MotdPanel:OnMotdLoaded()
 		w.motd_body_shadow = w.cell_root:AddChild(Text(self.config.font, body_size, "", UICOLOURS.BLACK))
 		w.motd_body_shadow:SetHAlign(ANCHOR_LEFT)
 		w.motd_body_shadow:MoveToBack()
-		
-		w.link_btn = w.cell_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "goto_url.tex", nil, false, false, 
+
+		w.link_btn = w.cell_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "goto_url.tex", nil, false, false,
 			function()
 				--Stats.PushMetricsEvent("motd2.clicked", TheNet:GetUserID(), motd_msg, "is_only_local_users_data")
 
 				if w.cell_data.data.link_url == "skins" then
-					self.config.on_to_skins_cb( {initial_item_key = w.cell_data.data.link_skins} )
+					self.config.on_to_skins_cb( w.cell_data.data.filter_info )
 				else
-					VisitURL(w.cell_data.data.link_url) 
+					VisitURL(w.cell_data.data.link_url)
 				end
 			end))
 		w.link_btn:SetScale(0.6)
@@ -224,6 +224,15 @@ function MotdPanel:OnMotdLoaded()
 		w.isnew_image:SetScale(.3)
 		w.isnew_image:SetPosition(cell_width / 2 - 20, cell_height / 2 - 28)
 		w.isnew_image:SetHoverText(STRINGS.UI.MAINSCREEN.MOTD_NEW_ANNOUNCEMENT)
+
+		w.issale_image = w.cell_root:AddChild(Image("images/global_redux.xml", "motd_sale_tag.tex"))
+		--w.issale_image = w.cell_root:AddChild(Image("images/global_redux.xml", "shop_discount.tex"))
+		w.issale_image:SetScale(.7)
+		w.issale_image:SetPosition(cell_width / 2 - 50, cell_height / 2 - 50)
+		--w.issale_image:SetHoverText(STRINGS.UI.MAINSCREEN.MOTD_SALE_ANNOUNCEMENT)
+		w.issale_image.text = w.issale_image:AddChild(Text(HEADERFONT, 36, STRINGS.UI.MAINSCREEN.MOTD_SALE_ANNOUNCEMENT, UICOLOURS.BLACK))
+		w.issale_image.text:SetPosition(20, 20)
+		w.issale_image.text:SetRotation(45)
 
 		w.fader = w.cell_root:AddChild(Image("images/global.xml", "square.tex"))
 		w.fader:SetTint(0, 0, 0, 0)
@@ -294,11 +303,13 @@ function MotdPanel:OnMotdLoaded()
 					self:SetFocus()
 				end
 			end
-			
-			if cell_data.meta.is_new then
+
+			w.issale_image:Hide()
+			w.isnew_image:Hide()
+			if cell_data.meta.is_sale then
+				w.issale_image:Show()
+			elseif cell_data.meta.is_new then
 				w.isnew_image:Show()
-			else
-				w.isnew_image:Hide()
 			end
 
 			if cell_data.meta.image_file ~= nil or cell_data.data.no_image then
@@ -350,7 +361,7 @@ function MotdPanel:OnMotdLoaded()
 		SetCellData(nil, self.box_2_widget, box2_motd_info)
 		self.box_2_widget:SetPosition(smallbox_x, boxes_y + smallbox_y_offset)
 	end
-	
+
 	if box3_motd_info ~= nil then
 		self.box_3_widget = self.root:AddChild( CellWidgetCtor(nil, "3", smallbox_scale, smallbox_font_scale, "motd_frame_small_gold2", 306) )
 		SetCellData(nil, self.box_3_widget, box3_motd_info)
@@ -377,7 +388,7 @@ function MotdPanel:OnMotdLoaded()
 		self.bullet_root.inst:DoPeriodicTask(1, update_bullet_controller_pos) -- why do we not have an event for this?
 		update_bullet_controller_pos()
 
-		local function bullet_clicked(w, i) 
+		local function bullet_clicked(w, i)
 			if self.box_1_root.last_selected then
 				self.box_1_root.last_selected:Unselect()
 			end
@@ -435,7 +446,7 @@ function MotdPanel:OnMotdLoaded()
 		end
 		bullet_clicked(initial_bullet)
 	end
-	
+
 	self.focus_forward = function() return focusforward_fn(self) end
 	self:DoFocusHookups()
 end

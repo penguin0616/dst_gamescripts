@@ -117,15 +117,15 @@ function HealthBadge:OnUpdate(dt)
     end
 
     -- Show the up-arrow when we're sleeping (but not in a straw roll: that doesn't heal us)
-    local up = down == nil and 
+    local up = down == nil and
         (
             (   (self.owner.player_classified ~= nil and self.owner.player_classified.issleephealing:value()) or
                 next(self.hots) ~= nil or
                 (self.owner.replica.inventory ~= nil and self.owner.replica.inventory:EquipHasTag("regen"))
             ) or
-            (self.owner.components.debuffable and self.owner.components.debuffable:HasDebuff("wintersfeastbuff")) 
+            (self.owner.components.debuffable and self.owner.components.debuffable:HasDebuff("wintersfeastbuff"))
         ) and
-        self.owner.replica.health ~= nil and self.owner.replica.health:IsHurt() 
+        self.owner.replica.health ~= nil and self.owner.replica.health:IsHurt()
 
     local anim =
         (down ~= nil and ("arrow_loop_decrease"..down)) or

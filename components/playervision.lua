@@ -136,7 +136,7 @@ function PlayerVision:UpdateCCTable()
         or (self.nightmarevision and NIGHTMARE_COLORCUBES)
         or nil
 
-    local ccphasefn = 
+    local ccphasefn =
         (cctable == NIGHTVISION_COLOURCUBES and NIGHTVISION_PHASEFN)
         or (cctable == NIGHTMARE_COLORCUBES and NIGHTMARE_PHASEFN)
         or nil

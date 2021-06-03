@@ -3,7 +3,7 @@ local assets =
     Asset("ANIM", "anim/charged_particle.zip"),
 }
 
-local prefabs = 
+local prefabs =
 {
     "moonstorm_spark_shock_fx",
 }
@@ -39,12 +39,12 @@ local function dospark(inst)
                 ent.components.fueled:SetPercent(math.min(1,ent.components.fueled:GetPercent()+0.1))
             end
         end
-        inst:DoTaskInTime(0.5,function() 
-            inst.Light:SetRadius(1.5) 
+        inst:DoTaskInTime(0.5,function()
+            inst.Light:SetRadius(1.5)
         end)
         inst.sparktask = inst:DoTaskInTime(5 + math.random()* 10, dospark)
     end)
-  
+
 end
 
 local function depleted(inst)
@@ -73,7 +73,7 @@ end
 
 local function onpickup(inst)
 
-    --These last longer when held    
+    --These last longer when held
     inst.components.perishable:SetLocalMultiplier( TUNING.SEG_TIME * 3/ TUNING.PERISH_SLOW )
     inst.SoundEmitter:KillSound("idle_LP")
     if inst.crowdingtask ~= nil then
@@ -111,7 +111,7 @@ local function ondropped(inst)
         inst.crowdingtask = inst:DoTaskInTime(TUNING.MUSHSPORE_DENSITY_CHECK_TIME + math.random()*TUNING.MUSHSPORE_DENSITY_CHECK_VAR, checkforcrowding)
     end
     inst.Light:Enable(true)
-    
+
     if not inst.sparktask then
         inst.sparktask = inst:DoTaskInTime(5 + math.random()* 10, dospark)
     end
@@ -175,7 +175,7 @@ local function fn()
     inst:AddTag("moonstorm_spark")
 
     inst.SoundEmitter:PlaySound("moonstorm/common/moonstorm/spark_LP","idle_LP")
-    
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

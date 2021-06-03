@@ -21,7 +21,7 @@ local BIRD_TYPES =
     [GROUND.GRASS] = { "robin" },
     [GROUND.FOREST] = { "robin", "crow" },
     [GROUND.MARSH] = { "crow" },
-    
+
     [GROUND.OCEAN_COASTAL] = {"puffin"},
     [GROUND.OCEAN_COASTAL_SHORE] = {"puffin"},
     [GROUND.OCEAN_SWELL] = {"puffin"},
@@ -117,6 +117,7 @@ local function ToggleUpdate(force)
 end
 
 local SCARECROW_TAGS = { "scarecrow" }
+local CARNIVAL_EVENT_ONEOF_TAGS = { "carnivaldecor", "carnivaldecor_ranker" }
 local function PickBird(spawnpoint)
     local bird = "crow"
 	if TheNet:GetServerGameMode() == "quagmire" then
@@ -126,15 +127,19 @@ local function PickBird(spawnpoint)
 		if BIRD_TYPES[tile] ~= nil then
 			bird = GetRandomItem(BIRD_TYPES[tile])
 		end
-	end
 
-    if bird == "crow" then
-        local x, y, z = spawnpoint:Get()
-        local canarylure = TheSim:FindEntities(x, y, z, TUNING.BIRD_CANARY_LURE_DISTANCE, SCARECROW_TAGS)
-        if #canarylure ~= 0 then
-            bird = "canary"
-        end
-    end
+		if IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) and bird ~= "crow" and IsLandTile(tile) then
+			local x, y, z = spawnpoint:Get()
+			if TheSim:CountEntities(x, y, z, TUNING.BIRD_CANARY_LURE_DISTANCE, nil, nil, CARNIVAL_EVENT_ONEOF_TAGS) > 0 then
+				bird = "crow"
+			end
+		elseif bird == "crow" then
+			local x, y, z = spawnpoint:Get()
+			if TheSim:CountEntities(x, y, z, TUNING.BIRD_CANARY_LURE_DISTANCE, SCARECROW_TAGS) > 0 then
+				bird = "canary"
+			end
+		end
+	end
 
     return _worldstate.iswinter and bird == "robin" and "robin_winter" or bird
 end

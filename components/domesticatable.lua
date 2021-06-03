@@ -175,7 +175,7 @@ function Domesticatable:SetDomesticated(domesticated)
     self.domesticated = domesticated
     self:Validate()
     if domesticated then
-        self.inst:AddTag("domesticated") 
+        self.inst:AddTag("domesticated")
     else
         if self.inst:HasTag("domesticated") then
             self.inst:RemoveTag("domesticated")

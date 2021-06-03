@@ -38,10 +38,10 @@ local RETARGET_CANT_TAGS = { "spiderwhisperer", "spiderdisguise", "INLIMBO" }
 local function Retarget(inst)
     if not inst.components.health:IsDead() and not inst.components.sleeper:IsAsleep() then
         local oldtarget = inst.components.combat.target
-        local newtarget = FindEntity(inst, 10, 
-            function(guy) 
+        local newtarget = FindEntity(inst, 10,
+            function(guy)
                 return (not guy:HasTag("monster") or guy:HasTag("player"))
-                    and inst.components.combat:CanTarget(guy) 
+                    and inst.components.combat:CanTarget(guy)
             end,
             RETARGET_MUST_TAGS,
             RETARGET_CANT_TAGS

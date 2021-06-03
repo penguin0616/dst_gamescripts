@@ -14,7 +14,7 @@ local assets =
 
     Asset("SOUNDPACKAGE", "sound/wes.fev"),
     Asset("FILE", "sound/wes.fsb"),
-    
+
     Asset("SOUNDPACKAGE", "sound/grotto.fev"),
     Asset("FILE", "sound/grotto_sfx.fsb"),
     Asset("FILE", "sound/grotto_amb.fsb"),
@@ -24,7 +24,7 @@ local assets =
     Asset("FILE", "sound/moonstorm.fsb"),
 
     Asset("SOUNDPACKAGE", "sound/dangerous_sea.fev"),
-    Asset("FILE", "sound/dangerous_sea.fsb"),      
+    Asset("FILE", "sound/dangerous_sea.fsb"),
 
     Asset("SOUNDPACKAGE", "sound/yotc_2020.fev"),
     Asset("FILE", "sound/yotc_2020.fsb"),
@@ -37,6 +37,10 @@ local assets =
 
     Asset("SOUNDPACKAGE", "sound/wintersfeast2019.fev"),
     Asset("FILE", "sound/wintersfeast2019.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/summerevent.fev"),
+    Asset("FILE", "sound/summerevent.fsb"),
+    Asset("FILE", "sound/summerevent_music.fsb"),
 
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods
@@ -95,7 +99,7 @@ local assets =
 
     Asset("DYNAMIC_ATLAS", "images/fepanels.xml"),
     Asset("PKGREF", "images/fepanels.tex"),
-    
+
     --item explorer stuff in and out of game
     Asset("ANIM", "anim/bolt_of_cloth.zip"),
     Asset("ANIM", "anim/spool.zip"),
@@ -268,14 +272,11 @@ local assets =
     Asset("SHADER", "shaders/moonstorm_goggles.ksh", 1), --1 to indicate do a fallback if needed
     Asset("PKGREF", "shaders/moonstorm_goggles_fallback.ksh" ),
 
-    Asset("SHADER", "shaders/anim.ksh"),
-    Asset("SHADER", "shaders/anim_bloom.ksh"),
-    Asset("SHADER", "shaders/anim_fade.ksh"),
     Asset("SHADER", "shaders/anim_haunted.ksh"),
     Asset("SHADER", "shaders/anim_fade_haunted.ksh"),
     Asset("SHADER", "shaders/anim_bloom_haunted.ksh"),
     Asset("SHADER", "shaders/minimapblend.ksh"),
-    
+
     --common UI elements that we will always need
     Asset("ATLAS", "images/ui.xml"),
     Asset("IMAGE", "images/ui.tex"),
@@ -288,7 +289,7 @@ local assets =
     Asset("ANIM", "anim/generating_world.zip"),
     Asset("ANIM", "anim/generating_forest.zip"),
     Asset("ANIM", "anim/generating_cave.zip"),
-    Asset("ANIM", "anim/creepy_hands.zip"),    
+    Asset("ANIM", "anim/creepy_hands.zip"),
     Asset("ANIM", "anim/saving_indicator.zip"),
     Asset("ANIM", "anim/cookbook_newrecipe.zip"),
 
@@ -329,6 +330,7 @@ local assets =
     Asset("ANIM", "anim/werebeaver_basic.zip"),
     Asset("ANIM", "anim/weremoose_basic.zip"),
     Asset("ANIM", "anim/weregoose_basic.zip"),
+    Asset("ANIM", "anim/player_basic.zip"),
     Asset("ANIM", "anim/player_idles.zip"),
     Asset("ANIM", "anim/player_idles_walter.zip"),
     Asset("ANIM", "anim/player_idles_ui.zip"),
@@ -362,7 +364,7 @@ local assets =
     Asset("DYNAMIC_ANIM", "anim/dynamic/previous_skin.zip"),
     Asset("PKGREF", "anim/dynamic/previous_skin.dyn"),
     Asset("DYNAMIC_ANIM", "anim/dynamic/random_skin.zip"),
-    Asset("PKGREF", "anim/dynamic/random_skin.dyn"),   
+    Asset("PKGREF", "anim/dynamic/random_skin.dyn"),
 }
 
 require "fonts"
@@ -382,7 +384,7 @@ for _,char in ipairs(official_characters) do
 
     table.insert(assets, Asset("DYNAMIC_ATLAS", "images/names_gold_"..char..".xml"))
     table.insert(assets, Asset("PKGREF", "images/names_gold_"..char..".tex"))
-    
+
     table.insert(assets, Asset("DYNAMIC_ATLAS", "images/names_gold_cn_"..char..".xml"))
     table.insert(assets, Asset("PKGREF", "images/names_gold_cn_"..char..".tex"))
 

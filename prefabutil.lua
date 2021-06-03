@@ -58,16 +58,18 @@ function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, f
     return Prefab(name, fn)
 end
 
-local function deployablekititem_ondeploy(inst, pt, deployer)
+local function deployablekititem_ondeploy(inst, pt, deployer, rot)
     local structure = SpawnPrefab(inst._prefab_to_deploy)
     if structure ~= nil then
         structure.Transform:SetPosition(pt:Get())
-		structure:PushEvent("onbuilt", { builder = deployer, pos = pt })
+		structure:PushEvent("onbuilt", { builder = deployer, pos = pt, rot = rot, deployable = inst })
         inst:Remove()
     end
 end
 
-function MakeDeployableKitItem(name, prefab_to_deploy, bank, build, anim, assets, floatable_data, tags, burnable, deployable_data)
+function MakeDeployableKitItem(name, prefab_to_deploy, bank, build, anim, assets, floatable_data, tags, burnable, deployable_data, stack_size)
+	deployable_data = deployable_data or {}
+
 	return Prefab(name, function(inst)
 		local inst = CreateEntity()
 
@@ -92,7 +94,7 @@ function MakeDeployableKitItem(name, prefab_to_deploy, bank, build, anim, assets
         end
         inst:AddTag("deploykititem")
 
-        if deployable_data ~= nil then
+        if deployable_data.custom_candeploy_fn ~= nil then
             inst._custom_candeploy_fn = deployable_data.custom_candeploy_fn
         end
 
@@ -114,22 +116,37 @@ function MakeDeployableKitItem(name, prefab_to_deploy, bank, build, anim, assets
 			inst.components.inventoryitem:SetSinks(true)
 		end
 
+		if stack_size ~= nil then
+			inst:AddComponent("stackable")
+			inst.components.stackable.maxsize = stack_size
+		end
+
 		inst._prefab_to_deploy = prefab_to_deploy
 		inst:AddComponent("deployable")
 		inst.components.deployable.ondeploy = deployablekititem_ondeploy
-        if deployable_data ~= nil then
+        if deployable_data.deploymode ~= nil then
             inst.components.deployable:SetDeployMode(deployable_data.deploymode)
         end
-
+        if deployable_data.deployspacing ~= nil then
+			inst.components.deployable:SetDeploySpacing(deployable_data.deployspacing)
+		end
+		
 		if burnable.fuelvalue ~= nil then
 			inst:AddComponent("fuel")
 			inst.components.fuel.fuelvalue = burnable.fuelvalue
 		end
 
+        if deployable_data.master_postinit ~= nil then
+            deployable_data.master_postinit(inst)
+        end
+
 		MakeHauntableLaunch(inst)
 
+		inst.OnSave = deployable_data.OnSave
+		inst.OnLoad = deployable_data.OnLoad
+
 		return inst
-	end, 
-	assets, 
+	end,
+	assets,
 	{prefab_to_deploy})
 end

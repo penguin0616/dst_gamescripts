@@ -33,7 +33,7 @@ local events =
             inst.sg:GoToState("teleport_to_land")
         end
     end),
-    
+
     CommonHandlers.OnLocomote(false, true),
 }
 
@@ -162,13 +162,13 @@ local states =
 
                 local target = inst.components.combat.target
                 local boat = nil
-                
+
                 local tx, ty, tz
-                
+
                 if target ~= nil then
                     tx, ty, tz = target.Transform:GetWorldPosition()
                     local new_boat = TheWorld.Map:GetPlatformAtPoint(tx, tz)
-                    
+
                     if new_boat ~= nil then
                         boat = new_boat
                     elseif math.random() < 0.333 then
@@ -190,7 +190,7 @@ local states =
                     local theta = not inst.sg.statemem.force_random_angle_on_boat and target ~= nil
                         and (math.atan2(tz - bz, tx - bx) - (TELEPORT_ANGLE_VARIANCE * 0.5) + math.random() * TELEPORT_ANGLE_VARIANCE)
                         or (math.random() * PI * 2)
-                    
+
                     inst.Transform:SetPosition(math.cos(theta) * radius, 0, math.sin(theta) * radius)
                 else
                     inst._detach_from_boat_fn(inst)
@@ -328,26 +328,26 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("taunt", false)
             inst.AnimState:PushAnimation("disappear", false)
-              
+
         end,
 
         timeline =
         {
-            TimeEvent(42*FRAMES, function(inst)             
+            TimeEvent(42*FRAMES, function(inst)
                 local x,y,z = inst.Transform:GetWorldPosition()
-                local fx = SpawnPrefab("shadow_teleport_out") 
-                fx.Transform:SetPosition(x,y,z) 
+                local fx = SpawnPrefab("shadow_teleport_out")
+                fx.Transform:SetPosition(x,y,z)
             end),
         },
 
         events =
         {
-            EventHandler("animqueueover", function(inst) 
+            EventHandler("animqueueover", function(inst)
                 inst:ExchangeWithTerrorBeak()
                 inst:Remove()
             end),
         },
-    },    
+    },
 }
 CommonStates.AddWalkStates(states)
 

@@ -1,10 +1,10 @@
 
-local prefabs = 
+local prefabs =
 {
 	"alterguardian_hat_equipped_client",
 }
 
-local assets = 
+local assets =
 {
 	Asset("ANIM", "anim/hat_alterguardian_equipped.zip"),
 }

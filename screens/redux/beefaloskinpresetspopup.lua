@@ -6,7 +6,7 @@ local AccountItemFrame = require "widgets/redux/accountitemframe"
 
 local BeefaloSkinPresetsPopup = Class(Screen, function(self, user_profile, character, selected_skins, apply_cb)
     Screen._ctor(self, "BeefaloSkinPresetsPopup")
-    
+
     self.user_profile = user_profile
     self.character = character
     self.selected_skins = selected_skins
@@ -45,7 +45,7 @@ local BeefaloSkinPresetsPopup = Class(Screen, function(self, user_profile, chara
     if TheInput:ControllerAttached() then
         self.dialog.actions:Hide()
     end
-    
+
 
     local function ScrollWidgetsCtor(context, i)
         local item = Widget("item-"..i)
@@ -57,13 +57,13 @@ local BeefaloSkinPresetsPopup = Class(Screen, function(self, user_profile, chara
 
         local x_start = -180
         local x_step = 50
-        
+
         if table.contains(DST_CHARACTERLIST, self.character) then --no base option for mod characters
             item.base_icon = item.root:AddChild( AccountItemFrame() )
             item.base_icon:SetStyle_Normal()
             item.base_icon:SetScale(0.4)
             item.base_icon:SetPosition(x_start + 0 * x_step,0)
-            
+
             item.row_label:SetPosition(-210,-1)
             item.root:SetPosition(20,0)
         else
@@ -117,14 +117,14 @@ local BeefaloSkinPresetsPopup = Class(Screen, function(self, user_profile, chara
         return item
     end
     local function ScrollWidgetApply(context, item, data, index)
-        if data then            
+        if data then
             item.i = index
             item.row_label:SetString(tostring(index)..":")
 
             if table.contains(DST_CHARACTERLIST, self.character) then --no base option for mod characters
                 if data.base then
                     item.base_icon:SetItem(data.base)
-                else      
+                else
                     item.base_icon:SetItem(self.character.."_none")
                 end
             end
@@ -158,7 +158,7 @@ local BeefaloSkinPresetsPopup = Class(Screen, function(self, user_profile, chara
             else
                 item.beef_tail_icon:SetItem("beef_tail_default1")
             end
-          
+
             item.root:Show()
         else
             item.root:Hide()

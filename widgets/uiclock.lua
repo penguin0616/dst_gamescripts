@@ -123,7 +123,7 @@ local UIClock = Class(Widget, function(self)
         self.inst:ListenForEvent("phasechanged", function(inst, data) self:OnPhaseChanged(data) end, TheWorld)
         self.inst:ListenForEvent("moonphasechanged2", function(inst, data) self:OnMoonPhaseChanged2(data) end, TheWorld)
         self.inst:ListenForEvent("moonphasestylechanged", function(inst, data) self:OnMoonPhaseStyleChanged(data) end, TheWorld)
-		
+
     end
     self.inst:ListenForEvent("clocktick", function(inst, data) self:OnClockTick(data) end, TheWorld)
 end)
@@ -257,7 +257,7 @@ function UIClock:OnClockSegsChanged(data)
 
             local color
             if k <= day then
-                color = self._cave and CAVE_DAY_COLOUR or DAY_COLOUR 
+                color = self._cave and CAVE_DAY_COLOUR or DAY_COLOUR
             else
                 color = self._cave and CAVE_DUSK_COLOUR or DUSK_COLOUR
             end

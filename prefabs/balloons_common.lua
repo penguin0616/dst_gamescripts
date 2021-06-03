@@ -161,7 +161,7 @@ local function MakeBalloonMasterInit(inst, onpopfn, drop_on_built)
 	MakeHauntableLaunch(inst)
 end
 
-local function oncollide(inst, other)    
+local function oncollide(inst, other)
     if (inst:IsValid() and Vector3(inst.Physics:GetVelocity()):LengthSq() > .1) or
         (other ~= nil and other:IsValid() and other.Physics ~= nil and Vector3(other.Physics:GetVelocity()):LengthSq() > .1) then
         inst.AnimState:PlayAnimation("hit")
@@ -199,7 +199,7 @@ local function SetRopeShape(inst)
     inst.AnimState:OverrideSymbol("swap_rope", "balloon2", "rope_"..tostring(math.random(4)))
 end
 
-return 
+return
 {
 	MakeBalloonMasterInit = MakeBalloonMasterInit,
 	MakeFloatingBallonPhysics = MakeFloatingBallonPhysics,

@@ -19,8 +19,8 @@ local assets =
 --------------------------------------------------------------------------
 local function InitEnvelope()
     local envs = {}
-    
-    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..0, 
+
+    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..0,
         {
             { 0, IntColour(255, 0, 0, 255) },
             { 0.5, IntColour(255, 0, 0, 255) },
@@ -28,23 +28,23 @@ local function InitEnvelope()
         }
     )
 
-    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..1, 
+    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..1,
         {
             { 0, IntColour(0, 200, 0, 255) },
             { 0.5, IntColour(0, 200, 0, 255) },
             { 1, IntColour(0, 200, 0, 0) },
         }
-    ) 
-    
-    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..2, 
+    )
+
+    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..2,
         {
             { 0, IntColour(21, 85, 203, 255) },
             { 0.5, IntColour(21, 85, 203, 255) },
             { 1, IntColour(21, 85, 203, 0) },
         }
     )
-    
-    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..3, 
+
+    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..3,
         {
             { 0, IntColour(255, 255, 255, 255) },
             { 0.5, IntColour(255, 255, 255, 255) },
@@ -52,7 +52,7 @@ local function InitEnvelope()
         }
     )
 
-    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..4, 
+    EnvelopeManager:AddColourEnvelope(COLOUR_ENVELOPE_NAME..4,
         {
             { 0, IntColour(233, 224, 44, 255) },
             { 0.5, IntColour(233, 224, 44, 255) },
@@ -62,7 +62,7 @@ local function InitEnvelope()
 
 
     local envs = {}
-    
+
     local max_scale = .7
     local end_scale = .4
     local t = 0
@@ -80,7 +80,7 @@ local function InitEnvelope()
 
     EnvelopeManager:AddVector2Envelope( SCALE_ENVELOPE_NAME, envs )
 
-    
+
 
     InitEnvelope = nil
     IntColour = nil
@@ -144,7 +144,7 @@ local function fn()
         effect:SetSortOrder(i, 0)
         effect:SetSortOffset(i, 0)
         effect:SetGroundPhysics(i, true)
-        
+
         effect:SetAcceleration(i, 0, -0.8, 0)
         effect:SetDragCoefficient(i, .1)
     end
@@ -170,11 +170,11 @@ local function fn()
         local dist_moved = inst:GetPosition() - inst.last_pos
         local move = dist_moved:Length()
         move = math.clamp((move - 0.2) * 10, 0, 1)
-        
+
         local per_tick = Lerp(low_per_tick, high_per_tick, move)
 
         inst.last_pos = inst:GetPosition()
-        
+
         for i = 0,num_emitters do
             local num_to_emit = per_tick
             while num_to_emit > 0 do

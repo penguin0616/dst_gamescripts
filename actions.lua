@@ -65,7 +65,7 @@ end
 local function CheckTileWithinRange(doer, dest)
 	local doer_pos = doer:GetPosition()
 	local target_pos = Vector3(dest:GetPoint())
-    
+
     local tile_x, tile_y, tile_z = TheWorld.Map:GetTileCenterPoint(target_pos.x, 0, target_pos.z)
     local dist = TILE_SCALE * 0.5
     if math.abs(tile_x - doer_pos.x) <= dist and math.abs(tile_z - doer_pos.z) <= dist then
@@ -227,7 +227,7 @@ ACTIONS =
     SLEEPIN = Action(),
     CHANGEIN = Action({ priority=-1 }),
     HITCHUP = Action({ priority=-1 }),
-    MARK = Action({ distance=2, priority=-1 }),    
+    MARK = Action({ distance=2, priority=-1 }),
     UNHITCH = Action({ distance=2, priority=-1 }),
     HITCH = Action({ priority=-1 }),
     EQUIP = Action({ priority=0,instant=true, mount_valid=true, encumbered_valid=true }),
@@ -362,16 +362,16 @@ ACTIONS =
 
     -- boats
     RAISE_SAIL = Action({ distance=1.25 }),
-    LOWER_SAIL = Action({ distance=1.25 }),    
+    LOWER_SAIL = Action({ distance=1.25 }),
     LOWER_SAIL_BOOST = Action({ distance=1.25 }),
-    LOWER_SAIL_FAIL = Action({ distance=1.25, do_not_locomote=true }),    
+    LOWER_SAIL_FAIL = Action({ distance=1.25, do_not_locomote=true }),
     RAISE_ANCHOR = Action({ distance=2.5 }),
     LOWER_ANCHOR = Action({ distance=2.5 }),
     EXTEND_PLANK = Action({ distance=2.5 }),
-    RETRACT_PLANK = Action({ distance=2.5 }),             
-    ABANDON_SHIP = Action({ distance=2.5, priority=4 }),             
-    MOUNT_PLANK = Action({ distance=0.5 }),            
-    DISMOUNT_PLANK = Action({ distance=2.5 }),            
+    RETRACT_PLANK = Action({ distance=2.5 }),
+    ABANDON_SHIP = Action({ distance=2.5, priority=4 }),
+    MOUNT_PLANK = Action({ distance=0.5 }),
+    DISMOUNT_PLANK = Action({ distance=2.5 }),
     REPAIR_LEAK = Action({ distance=2.5 }),
     STEER_BOAT = Action({ distance=0.1 }),
     SET_HEADING = Action({distance=9999, do_not_locomote=true}),
@@ -379,7 +379,7 @@ ACTIONS =
     CAST_NET = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=12, mount_valid=true, disable_platform_hopping=true }),
     ROW_FAIL = Action({customarrivecheck=function() return true end, disable_platform_hopping=true, skip_locomotor_facing=true}),
     ROW = Action({priority=3, customarrivecheck=CheckRowRange, is_relative_to_platform=true, disable_platform_hopping=true}),
-    ROW_CONTROLLER = Action({priority=3, is_relative_to_platform=true, disable_platform_hopping=true, do_not_locomote=true}),    
+    ROW_CONTROLLER = Action({priority=3, is_relative_to_platform=true, disable_platform_hopping=true, do_not_locomote=true}),
     BOARDPLATFORM = Action({ customarrivecheck=CheckIsOnPlatform }),
     OCEAN_TOSS = Action({priority=3, rmb=true, customarrivecheck=CheckOceanFishingCastRange, is_relative_to_platform=true, disable_platform_hopping=true}),
     UNPATCH = Action({ distance=0.5 }),
@@ -394,10 +394,14 @@ ACTIONS =
     WAX = Action({ encumbered_valid = true, }),
     APPRAISE = Action(),
 
+    CARNIVAL_HOST_SUMMON = Action(),
+
     -- YOTB
     YOTB_SEW = Action({ priority=1, mount_valid=true }),
     YOTB_STARTCONTEST = Action(),
     YOTB_UNLOCKSKIN = Action(),
+
+	CARNIVALGAME_FEED = Action({ mount_valid=true }),
 
 }
 
@@ -564,7 +568,7 @@ ACTIONS.PICKUP.fn = function(act)
 end
 
 ACTIONS.REPAIR.strfn = function(act)
-	return act.target ~= nil 
+	return act.target ~= nil
 			and (act.target:HasTag("repairable_moon_altar") and "SOCKET")
 			or nil
 end
@@ -657,7 +661,9 @@ ACTIONS.DROP.fn = function(act)
                 not (act.invobject ~= nil and
                     act.invobject.components.stackable ~= nil and
                     act.invobject.components.stackable.forcedropsingle),
-                false,
+                (act.invobject.components.inventoryitem ~= nil
+                    and act.invobject.components.inventoryitem.droprandomdir)
+                or false,
                 act:GetActionPoint())
         or nil
 end
@@ -721,12 +727,12 @@ local function row(act)
     local oar = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 
     if oar == nil then return false end
-    
+
     local pos = act:GetActionPoint()
     if pos == nil then
         pos = act.target:GetPosition()
     end
-    oar.components.oar:Row(act.doer, pos)   
+    oar.components.oar:Row(act.doer, pos)
     act.doer:PushEvent("working",{}) -- it's not actually doing work, but it can fall out of your hand when wet.
     return true
 end
@@ -777,7 +783,7 @@ ACTIONS.OCEAN_FISHING_STOP.fn = function(act)
         act.doer.sg:GoToState("oceanfishing_stop")
 		rod.components.oceanfishingrod:StopFishing("reeledin")
 	end
-	
+
 	return true
 end
 
@@ -787,7 +793,7 @@ ACTIONS.OCEAN_FISHING_CATCH.fn = function(act)
         act.doer.sg:GoToState("oceanfishing_catch")
 		rod.components.oceanfishingrod:CatchFish()
 	end
-	
+
 	return true
 end
 
@@ -804,7 +810,7 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 	if act.invobject == nil or equipped == nil or equipped.components.container == nil then
 		return false
 	end
-	
+
 	if act.invobject.components.inventoryitem:IsHeldBy(equipped) then
 		local item = equipped.components.container:RemoveItem(act.invobject, true)
 
@@ -826,7 +832,7 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 	        local item = act.invobject.components.inventoryitem:RemoveFromOwner(equipped.components.container.acceptsstacks)
 			equipped.components.container:GiveItem(item, targetslot, nil, false)
 		else
-			if equipped.components.container.acceptsstacks and act.invobject.prefab == cur_item.prefab and act.invobject.skinname == cur_item.skinname 
+			if equipped.components.container.acceptsstacks and act.invobject.prefab == cur_item.prefab and act.invobject.skinname == cur_item.skinname
 				and (cur_item.components.stackable == nil or not cur_item.components.stackable:IsFull()) then -- if full up the stack
 
 		        local item = act.invobject.components.inventoryitem:RemoveFromOwner(equipped.components.container.acceptsstacks)
@@ -844,7 +850,7 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 				if not equipped.components.container:GiveItem(item, targetslot, nil, false) then
 					act.doer.components.inventory:GiveItem(item, nil, equipped:GetPosition())
 				end
-				if old_item ~= nil then 
+				if old_item ~= nil then
 					act.doer.components.inventory:GiveItem(old_item, nil, equipped:GetPosition())
 				end
 				return true
@@ -855,7 +861,7 @@ ACTIONS.CHANGE_TACKLE.fn = function(act)
 	return false
 end
 
-ACTIONS.TALKTO.fn = function(act)    
+ACTIONS.TALKTO.fn = function(act)
     local targ = act.target or act.invobject
     if targ and targ.components.talkable then
         act.doer.components.locomotor:Stop()
@@ -876,7 +882,7 @@ ACTIONS.INTERACT_WITH.strfn = function(act)
 		or nil
 end
 
-ACTIONS.INTERACT_WITH.fn = function(act)    
+ACTIONS.INTERACT_WITH.fn = function(act)
 	if act.target ~= nil and act.target.components.farmplanttendable ~= nil then
         if act.target.components.farmplanttendable:TendTo(act.doer) then
             if act.doer.components.talker ~= nil then
@@ -919,7 +925,7 @@ end
 
 ACTIONS.DEPLOY.fn = function(act)
 	local act_pos = act:GetActionPoint()
-    if act.invobject ~= nil and act.invobject.components.deployable ~= nil and act.invobject.components.deployable:CanDeploy(act_pos, nil, act.doer) then
+    if act.invobject ~= nil and act.invobject.components.deployable ~= nil and act.invobject.components.deployable:CanDeploy(act_pos, nil, act.doer, act.rotation) then
         if act.invobject.components.deployable.keep_in_inventory_on_deploy then
             return act.invobject.components.deployable:Deploy(act_pos, act.doer, act.rotation)
         else
@@ -1061,7 +1067,7 @@ ACTIONS.FERTILIZE.fn = function(act)
             if act.target ~= nil then
             if act.target.components.crop ~= nil and not (act.target.components.crop:IsReadyForHarvest() or act.target:HasTag("withered")) then
                     applied = act.target.components.crop:Fertilize(act.invobject, act.doer)
-            elseif act.target.components.grower ~= nil and act.target.components.grower:IsEmpty() then                
+            elseif act.target.components.grower ~= nil and act.target.components.grower:IsEmpty() then
                     applied = act.target.components.grower:Fertilize(act.invobject, act.doer)
             elseif act.target.components.pickable ~= nil and act.target.components.pickable:CanBeFertilized() then
                     applied = act.target.components.pickable:Fertilize(act.invobject, act.doer)
@@ -1345,7 +1351,7 @@ ACTIONS.FILL.fn = function(act)
     elseif source_object ~= nil
         and filled_object.components.fillable ~= nil
         and source_object.prefab == filled_object.components.fillable.filledprefab then
-        
+
         return false
     end
 
@@ -1552,10 +1558,19 @@ ACTIONS.DECORATEVASE.fn = function(act)
     end
 end
 
+ACTIONS.CARNIVALGAME_FEED.fn = function(act)
+    if act.invobject ~= nil and act.invobject:IsValid() and act.target ~= nil and act.target:IsValid() and act.target.components.carnivalgamefeedable ~= nil then
+		if not act.target.components.carnivalgamefeedable.enabled then
+			return false, "TOO_LATE"
+		end
+        return act.target.components.carnivalgamefeedable:DoFeed(act.invobject, act.doer)
+    end
+end
+
 ACTIONS.STORE.fn = function(act)
     local target = act.target
     --V2C: For dropping items onto the object rather than construction widget
-    if target.components.container == nil and target.components.constructionsite ~= nil then        
+    if target.components.container == nil and target.components.constructionsite ~= nil then
         local builder = target.components.constructionsite.builder
         target = builder == act.doer and builder.components.constructionbuilder ~= nil and builder.components.constructionbuilder.constructioninst or nil
         if target == nil then
@@ -1773,7 +1788,7 @@ end
 
 ACTIONS.UNHITCH.fn = function(act)
     if act.doer ~= nil and
-        act.target ~= nil and 
+        act.target ~= nil and
         act.target.components.hitcher and
         not act.target:HasTag("hitcher") then
             act.target.components.hitcher:Unhitch()
@@ -1832,7 +1847,7 @@ ACTIONS.CHANGEIN.fn = function(act)
         end
         if act.target.components.groomer then
             component = act.target.components.groomer
-        end 
+        end
 
         local success, reason = component:CanBeginChanging(act.doer)
         if not success then
@@ -1920,7 +1935,7 @@ ACTIONS.INVESTIGATE.fn = function(act)
     end
 end
 
-ACTIONS.COMMENT.fn = function(act)    
+ACTIONS.COMMENT.fn = function(act)
     if act.doer.components.talker ~= nil and act.doer.comment_data then
         act.doer.components.talker:Say(act.doer.comment_data.speech)
         act.doer.comment_data = nil
@@ -2265,7 +2280,7 @@ ACTIONS.COMBINESTACK.fn = function(act)
     if invobj and target and invobj.prefab == target.prefab and invobj.skinname == target.skinname and target.components.stackable and not target.components.stackable:IsFull() then
         target.components.stackable:Put(invobj)
         return true
-    end 
+    end
 end
 
 ACTIONS.TRAVEL.fn = function(act)
@@ -2556,7 +2571,7 @@ ACTIONS.MOUNT.fn = function(act)
         or (act.target.components.freezable and
             act.target.components.freezable:IsFrozen())
         or (act.target.components.hitchable ~= nil and
-            act.target.components.hitchable:GetHitch() ~= nil) 
+            act.target.components.hitchable:GetHitch() ~= nil)
         or (act.target.hitchingspot ~= nil) then
         return false
     elseif act.target.components.rideable:IsBeingRidden() then
@@ -2564,7 +2579,7 @@ ACTIONS.MOUNT.fn = function(act)
     elseif act.target:HasTag("dogrider_only") and act.doer:HasTag("dogrider") and act.target._playerlink ~= act.doer then
         return false
     end
-    
+
     act.doer.components.rider:Mount(act.target)
     return true
 end
@@ -2856,7 +2871,7 @@ ACTIONS.DISMANTLE.fn = function(act)
         if act.target.candismantle and not act.target:candismantle() then
             return false
         end
-        
+
         act.target.components.portablestructure:Dismantle(act.doer)
         return true
     end
@@ -2937,7 +2952,7 @@ end
 
 ACTIONS.WEIGH_ITEM.fn = function(act)
 	if act.target ~= nil and act.invobject ~= nil then
-		local weigher = act.target.components.itemweigher and act.target 
+		local weigher = act.target.components.itemweigher and act.target
 						or act.invobject.components.itemweigher and act.invobject
 						or nil
 		local weighable = weigher ~= act.target and act.target or act.invobject
@@ -2963,7 +2978,7 @@ ACTIONS.START_CARRAT_RACE.fn = function(act)
 		act.target.components.yotc_racestart:StartRace()
         if act.doer and act.target.racestartstring then
             act.doer:DoTaskInTime(2,function() if act.target:HasTag("race_on") then act.doer.components.talker:Say(GetString(act.doer, act.target.racestartstring)) end end)
-        end        
+        end
 		return true
 	end
 end
@@ -3085,7 +3100,7 @@ ACTIONS.RAISE_SAIL.fn = function(act)     -- this name is backwards. "raising" i
     return true
 end
 
-ACTIONS.RAISE_SAIL.stroverridefn = function(act) 
+ACTIONS.RAISE_SAIL.stroverridefn = function(act)
     return STRINGS.ACTIONS.RAISE_SAIL
 end
 
@@ -3105,7 +3120,7 @@ end
 local function GetLowerSailStr(act)
     local doer = act.doer
 
-    local str_idx = 1 
+    local str_idx = 1
 
     if doer:HasTag("switchtoho") then
         str_idx = 2
@@ -3114,7 +3129,7 @@ local function GetLowerSailStr(act)
     return STRINGS.ACTIONS.LOWER_SAIL_BOOST[str_idx]
 end
 
-ACTIONS.LOWER_SAIL_BOOST.stroverridefn = function(act) 
+ACTIONS.LOWER_SAIL_BOOST.stroverridefn = function(act)
     return GetLowerSailStr(act)
 end
 
@@ -3122,7 +3137,7 @@ ACTIONS.LOWER_SAIL_FAIL.fn = function(act)
     return true
 end
 
-ACTIONS.LOWER_SAIL_FAIL.stroverridefn = function(act) 
+ACTIONS.LOWER_SAIL_FAIL.stroverridefn = function(act)
     return GetLowerSailStr(act)
 end
 
@@ -3158,7 +3173,7 @@ ACTIONS.RETRACT_PLANK.fn = function(act)
     return true
 end
 
-ACTIONS.REPAIR_LEAK.fn = function(act)    
+ACTIONS.REPAIR_LEAK.fn = function(act)
     if act.invobject ~= nil and act.target ~= nil and act.target.components.boatleak ~= nil and act.target:HasTag("boat_leak") then
 	    return act.target.components.boatleak:Repair(act.doer, act.invobject)
 	end
@@ -3167,7 +3182,7 @@ end
 ACTIONS.STEER_BOAT.fn = function(act)
 	if act.target ~= nil
 		and (act.target.components.steeringwheel ~= nil and act.target.components.steeringwheel.sailor == nil)
-		and (act.target.components.burnable ~= nil and not act.target.components.burnable:IsBurning()) 
+		and (act.target.components.burnable ~= nil and not act.target.components.burnable:IsBurning())
 		and act.doer.components.steeringwheeluser ~= nil then
 
 		act.doer.components.steeringwheeluser:SetSteeringWheel(act.target)
@@ -3185,7 +3200,7 @@ end
 
 ACTIONS.STOP_STEERING_BOAT.fn = function(act)
 	if act.doer.components.steeringwheeluser ~= nil then
-	    act.doer.components.steeringwheeluser:SetSteeringWheel(nil)    
+	    act.doer.components.steeringwheeluser:SetSteeringWheel(nil)
 	end
     return true
 end
@@ -3195,9 +3210,9 @@ ACTIONS.CAST_NET.fn = function(act)
 		local act_pos = act:GetActionPoint()
         if act_pos == nil then
             local pos_x, pos_y, pos_z = act.target.Transform:GetWorldPosition()
-            act.invobject.components.fishingnet:CastNet(pos_x, pos_z, act.doer)        
+            act.invobject.components.fishingnet:CastNet(pos_x, pos_z, act.doer)
         else
-            act.invobject.components.fishingnet:CastNet(act_pos.x, act_pos.z, act.doer)        
+            act.invobject.components.fishingnet:CastNet(act_pos.x, act_pos.z, act.doer)
         end
         return true
     end
@@ -3299,7 +3314,7 @@ end
 ACTIONS.SING.fn = function(act)
     local singinginspiration = act.doer.components.singinginspiration
     if act.invobject and singinginspiration ~= nil then
-        
+
         local songdata = act.invobject.songdata
         if songdata ~= nil then
 
@@ -3322,7 +3337,7 @@ ACTIONS.SING_FAIL.fn = function(act)
     return true
 end
 
-ACTIONS.SING_FAIL.stroverridefn = function(act) 
+ACTIONS.SING_FAIL.stroverridefn = function(act)
     return STRINGS.ACTIONS.SING
 end
 
@@ -3432,7 +3447,7 @@ end
 
 ACTIONS.UNPATCH.fn = function(act)
     if act.target ~= nil and act.target.components.boatleak ~= nil then
-        
+
         if act.target.components.lootdropper then
             local build = act.target.AnimState:GetBuild()
 
@@ -3443,9 +3458,9 @@ ACTIONS.UNPATCH.fn = function(act)
             local patch = SpawnPrefab(prefab)
 
             if patch.components.repairer and patch.components.repairer.healthrepairvalue then
-                local boat = act.target:GetCurrentPlatform()                
-                if boat.components.health ~= nil then                    
-                    boat.components.health:DoDelta(-patch.components.repairer.healthrepairvalue)                    
+                local boat = act.target:GetCurrentPlatform()
+                if boat.components.health ~= nil then
+                    boat.components.health:DoDelta(-patch.components.repairer.healthrepairvalue)
                 end
             end
 
@@ -3488,7 +3503,7 @@ ACTIONS.PLANTREGISTRY_RESEARCH_FAIL.fn = function(act)
     if targ and targ:HasTag("fertilizerresearchable") then
         return false, "FERTILIZER"
     end
-    
+
     return false
 end
 
@@ -3503,14 +3518,14 @@ ACTIONS.PLANTREGISTRY_RESEARCH.fn = function(act)
                 end
             else
                 targ.components.plantresearchable:LearnPlant(act.doer)
-                
+
                 if act.doer.components.talker then
                     act.doer.components.talker:Say(GetString(act.doer, "ANNOUNCE_PLANT_RESEARCHED"), nil, targ.components.inspectable.noanim)
                 end
             end
         elseif targ.components.fertilizerresearchable then
             targ.components.fertilizerresearchable:LearnFertilizer(act.doer)
-            
+
             if act.doer.components.talker then
                 act.doer.components.talker:Say(GetString(act.doer, "ANNOUNCE_FERTILIZER_RESEARCHED"), nil, targ.components.inspectable.noanim)
         end
@@ -3602,17 +3617,17 @@ ACTIONS.YOTB_STARTCONTEST.fn = function(act)
     elseif TheWorld.components.yotb_stagemanager:IsContestActive() then
         return false, "ALREADYACTIVE"
     end
-    
+
     act.target.components.yotb_stager:StartContest(act.doer)
     return true
 end
 
 ACTIONS.YOTB_UNLOCKSKIN.fn = function(act)
-    if act.invobject and act.invobject.components.yotb_skinunlocker and 
+    if act.invobject and act.invobject.components.yotb_skinunlocker and
        act.doer and act.doer.YOTB_unlockskinset ~= nil and act.doer.YOTB_issetunlocked ~= nil then
-        
+
         local skin = act.invobject.components.yotb_skinunlocker:GetSkin()
-        
+
         if act.invobject.makedoll then
             act.invobject:makedoll(act.invobject,act.doer)
         end
@@ -3626,5 +3641,4 @@ ACTIONS.YOTB_UNLOCKSKIN.fn = function(act)
             return true
         end
     end
-    
 end

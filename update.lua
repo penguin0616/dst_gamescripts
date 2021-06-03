@@ -31,7 +31,7 @@ end
 
 --this is an update that always runs on wall time (not sim time)
 function WallUpdate(dt)
-    if AUTOSPAWN_MASTER_SECONDARY then 
+    if AUTOSPAWN_MASTER_SECONDARY then
         SpawnSecondInstance()
     end
 
@@ -146,7 +146,7 @@ function PostPhysicsWallUpdate(dt)
         if walkable_platform_manager ~= nil then
             walkable_platform_manager:PostUpdate(dt)
         end
-    end    
+    end
 end
 
 local StaticComponentLongUpdates = {}

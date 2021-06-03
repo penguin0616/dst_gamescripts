@@ -44,7 +44,7 @@ local actionhandlers =
 }
 
 local events =
-{    
+{
     CommonHandlers.OnLocomote(true,true),
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
@@ -115,7 +115,7 @@ local states =
             play_shadow_animation(inst, "emerge")
             --inst.AnimState:PlayAnimation("emerge")
             inst.SoundEmitter:PlaySound("turnoftides/common/together/water/emerge/medium")
-            
+
         end,
 
         events =
@@ -134,7 +134,7 @@ local states =
         onenter = function(inst,target)
 
             inst.Transform:SetEightFaced()
-            if target:IsValid() then  
+            if target:IsValid() then
                 inst.boat = target
                 inst:ListenForEvent("onremove", function() removeboat( inst ) end, inst.boat)
             end
@@ -170,14 +170,14 @@ local states =
                 inst.sg:GoToState("clamp")
             end),
         },
-    }, 
+    },
     State{
         name = "clamp",
         tags = {"canrotate","clampped"},
 
         onenter = function(inst)
             inst.Transform:SetEightFaced()
-         
+
             play_shadow_animation(inst, "clamp")
         end,
 
@@ -207,7 +207,7 @@ local states =
 
         onenter = function(inst)
             inst.Transform:SetEightFaced()
-            
+
             play_shadow_animation(inst, "clamp_hit")
         end,
 
@@ -232,18 +232,18 @@ local states =
         tags = {"busy","canrotate","clampped"},
 
         onenter = function(inst,boat)
-            inst.sg.statemem.boat = boat     
+            inst.sg.statemem.boat = boat
             inst.Transform:SetEightFaced()
-       
+
             play_shadow_animation(inst, "clamping")
         end,
-        
+
         timeline=
         {
             TimeEvent(11*FRAMES, function(inst)
                 local boat = inst.sg.statemem.boat
                 if boat and boat:IsValid() then
-                    inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity= .3})             
+                    inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity= .3})
                     boat.components.health:DoDelta(-TUNING.CRABKING_CLAW_BOATDAMAGE/4)
                     ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.3, 0.03, 0.25, boat, boat:GetPhysicsRadius(4))
                 end
@@ -251,7 +251,7 @@ local states =
             TimeEvent(22*FRAMES, function(inst)
                 local boat = inst.sg.statemem.boat
                 if boat and boat:IsValid() then
-                    inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity= .3})                     
+                    inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity= .3})
                     boat.components.health:DoDelta(-TUNING.CRABKING_CLAW_BOATDAMAGE/4)
                     ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.3, 0.03, 0.25, boat, boat:GetPhysicsRadius(4))
                 end
@@ -260,37 +260,37 @@ local states =
 
         onexit = function(inst)
             inst.Transform:SetSixFaced()
-        end,  
+        end,
 
         events =
         {
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("clamp")
             end),
-        },                
-    },         
+        },
+    },
     State{
         name = "clamp_pst",
         tags = { "busy", "canrotate"},
 
         onenter = function(inst)
             inst.Transform:SetEightFaced()
-            
+
             play_shadow_animation(inst, "clamp_pst")
         end,
-        
+
         onexit = function(inst)
             --removeshadow(inst)
             inst.Transform:SetSixFaced()
-        end,  
+        end,
 
         events =
         {
-            EventHandler("animover", function(inst)               
+            EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
             end),
         },
-    }, 
+    },
 }
 
 CommonStates.AddWalkStates(states,

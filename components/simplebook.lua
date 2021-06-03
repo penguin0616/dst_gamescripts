@@ -3,7 +3,7 @@ local SimpleBook = Class(function(self, inst)
 	self.inst = inst
 
 	self.inst:AddTag("simplebook")
-	
+
 	--self.onreadfn = nil
 end)
 

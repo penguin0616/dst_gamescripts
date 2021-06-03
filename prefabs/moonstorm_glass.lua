@@ -55,7 +55,7 @@ local function explode(inst)
                     end
                 end
             end
-        end        
+        end
         inst:Remove()
     end)
 end
@@ -76,7 +76,7 @@ local function OnWork(inst, worker, workleft)
             local fx = SpawnPrefab("collapse_small")
             fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
         end
-        inst:Remove()        
+        inst:Remove()
     end
 end
 
@@ -84,7 +84,7 @@ local function on_save(inst, data)
     data.defused = inst.defused or nil
 end
 
-local function on_load(inst, data)    
+local function on_load(inst, data)
     if data and data.defused then
         inst.components.timer:StopTimer("defusetime")
         explode(inst)
@@ -114,7 +114,7 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddLight()    
+    inst.entity:AddLight()
     inst.entity:AddNetwork()
 
     inst.AnimState:SetBuild("moonglass_charged_tile")
@@ -140,7 +140,7 @@ local function fn()
 
     inst:AddComponent("named")
 
-    inst:AddComponent("lootdropper") 
+    inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('moonstorm_glass_infused')
 
     inst:AddComponent("workable")
@@ -164,14 +164,14 @@ local function fn()
             if time/TIME > 0.1 and time/TIME < 0.3 then
                 if not inst.AnimState:IsCurrentAnimation("idle2_loop") then
                     inst.AnimState:PlayAnimation("idle2_loop",true)
-                end            
+                end
             elseif time/TIME < 0.5 then
                 if not inst.AnimState:IsCurrentAnimation("idle1_loop") then
                     inst.AnimState:PlayAnimation("idle1_loop",true)
                 end
             elseif time/TIME < 0.9 then
                 if not inst.AnimState:IsCurrentAnimation("idle1") then
-                    inst.AnimState:PlayAnimation("idle1",true)   
+                    inst.AnimState:PlayAnimation("idle1",true)
                 end
             end
         end
@@ -181,7 +181,7 @@ local function fn()
     inst.OnLoad = on_load
     inst.spawnin = spawnin
 
-    inst:ListenForEvent("onremove", function() 
+    inst:ListenForEvent("onremove", function()
         if inst.nub then
             inst.nub:Remove()
         end
@@ -209,8 +209,8 @@ end
 
 local function OnWorkNub(inst, worker, workleft)
     if inst.glass then
-        inst.glass.components.workable:WorkedBy(worker)        
-        setanim(inst, workleft)   
+        inst.glass.components.workable:WorkedBy(worker)
+        setanim(inst, workleft)
     end
 end
 
@@ -245,7 +245,7 @@ local function nubfn()
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
     inst.components.workable:SetWorkLeft(TUNING.ROCKS_MINE)
     inst.components.workable:SetOnWorkCallback(OnWorkNub)
-    
+
 
     inst.setanim = setanim
 

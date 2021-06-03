@@ -6,7 +6,7 @@ local assets =
     Asset("SCRIPT", "scripts/prefabs/balloons_common.lua"),
 }
 
-local prefabs = 
+local prefabs =
 {
 	"balloon_pop_body",
 }

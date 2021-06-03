@@ -30,7 +30,7 @@ local LURES =
 	["oceanfishinglure_spinner_yellow"]		= { build = "oceanfishing_lure_spinner", symbol = "yellow", lure_data = TUNING.OCEANFISHING_LURE.SPINNERBAIT_WIP, },
 	["oceanfishinglure_spinner_white"]		= { build = "oceanfishing_lure_spinner", symbol = "white",	lure_data = TUNING.OCEANFISHING_LURE.SPINNERBAIT_WIP, },
 
-	-- other lures: 
+	-- other lures:
 	-- spoon = tinket_17
 	-- berry = berries, berries_juicy
 	-- seed = seeds, seed_<veggie>

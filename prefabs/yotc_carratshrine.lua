@@ -3,7 +3,7 @@ require "prefabutil"
 local assets =
 {
     Asset("ANIM", "anim/yotc_carratshrine.zip"),
-    Asset("INV_IMAGE", "yotc_carratshrine"),    
+    Asset("INV_IMAGE", "yotc_carratshrine"),
 }
 
 local prefabs =
@@ -73,7 +73,7 @@ local function SetOffering(inst, offering, loading)
     if offering:HasTag("edible_SEEDS") then
         inst.AnimState:ClearOverrideSymbol("seeds01")
     elseif offering.prefab == "carrot" then
-        inst.AnimState:OverrideSymbol("seeds01", "carrot", "carrot01") 
+        inst.AnimState:OverrideSymbol("seeds01", "carrot", "carrot01")
     end
     inst.AnimState:Show("seeds")
 
@@ -184,7 +184,7 @@ local function onsave(inst, data)
     end
 end
 
-local function onload(inst, data)   
+local function onload(inst, data)
     if data ~= nil and data.burnt then
         inst.components.burnable.onburnt(inst)
     elseif data ~= nil and data.offering ~= nil then
@@ -285,9 +285,9 @@ local function fn()
 
     inst:ListenForEvent("yotc_ratraceprizechange", function() PrizeChange(inst) end, TheWorld)
     inst:ListenForEvent("ondeconstructstructure", DropOffering)
-    
+
     inst.AnimState:Hide("idol_3")
-    inst.AnimState:Hide("seeds") 
+    inst.AnimState:Hide("seeds")
 
     inst:DoTaskInTime(0,function() PrizeChange(inst,true) end)
     return inst

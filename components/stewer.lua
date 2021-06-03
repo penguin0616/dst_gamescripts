@@ -76,7 +76,7 @@ local function dostew(inst, self)
     self.task = nil
     self.targettime = nil
     self.spoiltime = nil
-    
+
     if self.ondonecooking ~= nil then
         self.ondonecooking(inst)
     end
@@ -209,7 +209,7 @@ function Stewer:OnSave()
         product_spoilage = self.product_spoilage,
         spoiltime = self.spoiltime,
         remainingtime = remainingtime > 0 and remainingtime or nil,
-	
+
 		chef_id = self.chef_id,
 		ingredient_prefabs = self.ingredient_prefabs,
     }
@@ -291,7 +291,7 @@ function Stewer:Harvest(harvester)
 				if stacksize > 1 then
 					loot.components.stackable:SetStackSize(stacksize)
 				end
-            
+
                 if self.spoiltime ~= nil and loot.components.perishable ~= nil then
                     local spoilpercent = self:GetTimeToSpoil() / self.spoiltime
                     loot.components.perishable:SetPercent(self.product_spoilage * spoilpercent)
@@ -315,7 +315,7 @@ function Stewer:Harvest(harvester)
         self.spoiltime = nil
         self.product_spoilage = nil
 
-        if self.inst.components.container ~= nil then      
+        if self.inst.components.container ~= nil then
             self.inst.components.container.canbeopened = true
         end
 
@@ -331,7 +331,7 @@ function Stewer:LongUpdate(dt)
         if self.targettime - dt > GetTime() then
             self.targettime = self.targettime - dt
             self.task = self.inst:DoTaskInTime(self.targettime - GetTime(), dostew, self)
-            dt = 0            
+            dt = 0
         else
             dt = dt - self.targettime + GetTime()
             dostew(self.inst, self)

@@ -108,7 +108,7 @@ local function fn()
     inst.components.inventoryitem:SetOnDroppedFn(OnDropped)
     inst.components.inventoryitem:SetOnPickupFn(OnPickup)
     inst.components.inventoryitem:SetOnPutInInventoryFn(OnPickup)
-    
+
     inst:AddComponent("fertilizerresearchable")
     inst.components.fertilizerresearchable:SetResearchFn(fertilizerresearchfn)
 

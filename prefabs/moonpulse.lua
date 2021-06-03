@@ -134,7 +134,7 @@ local function Update(inst)
             end
         else
             inst.hold_time = inst.hold_time - FRAMES
-            
+
             if inst.hold_time <= 0 then
                 inst.hold_time = nil
                 incrementStage(inst)
@@ -156,7 +156,7 @@ local function Update(inst)
 
         local theta = VecUtil_GetAngleInRads(dx, dz)
         local dist = VecUtil_Length(dx, dz)
-        
+
         local normalized_range_coefficient = math.clamp(dist / DIST_FOR_MAX_COVERAGE, 0, 1)
         local angle_to_player = theta - (PI / 4) - (((TheCamera.heading - 45) / 360) * 2 * PI)
         PostProcessor:SetMoonPulseParams(angle_to_player, dist, inst.glow_intensity, inst.wave_progress)
@@ -170,7 +170,7 @@ local function StartPostFX(inst)
     if STAGES[inst.stage].ENTER_FN ~= nil then
         STAGES[inst.stage].ENTER_FN(inst)
     end
-    
+
     PostProcessor:EnablePostProcessEffect(PostProcessorEffects.MoonPulse, true)
     PostProcessor:EnablePostProcessEffect(PostProcessorEffects.MoonPulseGrading, true)
 
@@ -198,7 +198,7 @@ local function fn()
     if not TheNet:IsDedicated() then
         inst:AddTag("NOCLICK")
         inst:AddTag("NOBLOCK")
-        
+
         StartPostFX(inst)
 
         inst:ListenForEvent("onremove", onremove)

@@ -95,6 +95,8 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
     self.product       = product or name
     self.tab           = tab
 
+	self.description   = more_data.description -- override the description string in the crafting menu
+
     self.imagefn       = type(image) == "function" and image or nil
     self.image         = self.imagefn == nil and image or (self.product .. ".tex")
     self.atlas         = (atlas and resolvefilepath(atlas))-- or resolvefilepath(GetInventoryItemAtlas(self.image))

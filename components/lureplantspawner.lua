@@ -85,7 +85,7 @@ local function FindSpawnLocationInTrail(trail)
     for i, v in ipairs(trail) do
         weight = weight + v[2]
     end
-    
+
     local rnd = math.random() * weight
     for i, v in ipairs(trail) do
         rnd = rnd - v[2]

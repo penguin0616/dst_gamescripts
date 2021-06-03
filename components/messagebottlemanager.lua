@@ -95,7 +95,7 @@ end
 local function gettreasurepos(doer)
 	local offset = nil
 	local offset_radius = math.max(TheWorld.Map:GetSize() * (1 - BORDER_SCALE) + WATER_RADIUS_CHECK_BIAS, 0)
-	
+
 	if treasure_spawn_positions == nil then
 		treasure_spawn_positions = {}
 	end
@@ -120,7 +120,7 @@ local function gettreasurepos(doer)
 	if not offset or not base_point then
 		return false, "NO_VALID_SPAWN_POINT_FOUND"
 	end
-	
+
 	return Vector3(
 		base_point.x + offset.x,
 		0,
@@ -183,7 +183,7 @@ end
 
 function self:UseMessageBottle(bottle, doer, is_not_from_hermit)
 	local hermitcrab = self:GetHermitCrab()
-	
+
 	if not is_not_from_hermit and hermitcrab ~= nil and not self:GetPlayerHasFoundHermit(doer) then
 		return hermitcrab:GetPosition()--, reason=nil
 	else
@@ -213,7 +213,7 @@ function self:UseMessageBottle(bottle, doer, is_not_from_hermit)
 					table.insert(keys, k)
 				end
 				active_hunt = keys[ind]
-				
+
 				if active_hunt ~= nil and active_hunt:IsValid() then
 					return active_hunt:GetPosition()--, reason=nil
 				else
@@ -240,7 +240,7 @@ function self:OnSave()
 	if next(self.player_has_used_a_bottle) ~= nil then
 		data.player_has_used_a_bottle = self.player_has_used_a_bottle
 	end
-	
+
     return data
 end
 

@@ -85,7 +85,7 @@ local function moonconversionoverridefn(inst)
 	inst._is_moon = true
 	inst.AnimState:SetBank("sapling_moon")
 	inst.AnimState:SetBuild("sapling_moon")
-	
+
 	inst.prefab = "sapling_moon"
 
 	inst:RemoveComponent("halloweenmoonmutable")

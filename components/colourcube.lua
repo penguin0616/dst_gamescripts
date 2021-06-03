@@ -24,7 +24,7 @@ local INSANITY_COLOURCUBES =
     full_moon = "images/colour_cubes/insane_night_cc.tex",
 }
 
-local LUNACY_COLOURCUBES = 
+local LUNACY_COLOURCUBES =
 {
 	regular = "images/colour_cubes/lunacy_regular_cc.tex",
     full_moon = "images/colour_cubes/purple_moon_cc.tex",
@@ -131,7 +131,7 @@ local function GetInsanityPhase()
 end
 
 local function GetLunacyPhase()
-	return _phase == "night" and _fullmoonphase 
+	return _phase == "night" and _fullmoonphase
 			or _in_moonstorm and "moon_storm"
 			or "regular"
 end
@@ -140,7 +140,7 @@ local function Blend(time)
     local ambientcctarget = _ambientcctable[GetCCPhase()] or IDENTITY_COLOURCUBE
     local insanitycctarget = _insanitycctable[GetInsanityPhase()] or IDENTITY_COLOURCUBE
     local lunacycctarget = _lunacycctable[GetLunacyPhase()] or IDENTITY_COLOURCUBE
-	
+
     if _overridecc ~= nil then
         _ambientcc[2] = ambientcctarget
         _insanitycc[2] = insanitycctarget
@@ -450,7 +450,7 @@ function self:OnUpdate(dt)
         _lunacyintensity = new_lunacyintensity
         local sanity_percent = ThePlayer.replica.sanity:GetPercentWithPenalty()
         local lunacy_percent = 1 - sanity_percent
-    
+
         local lunacy_distortion = 1 - easing.outQuad(lunacy_percent, 0, 1, 1)
         local sanity_distortion = 1 - easing.outQuad(sanity_percent, 0, 1, 1)
         if ThePlayer ~= nil and ThePlayer:HasTag("dappereffects") then

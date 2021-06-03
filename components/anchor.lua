@@ -25,11 +25,11 @@ local Anchor = Class(function(self, inst)
 
     self.is_anchor_lowered = false
 
-    self.raisers = {}        
+    self.raisers = {}
     self.numberofraisers = 0
     self.raiseunits = 0
     self.currentraiseunits = 0
-    self.autolowerunits = 3    
+    self.autolowerunits = 3
 
     self.inst:StartUpdatingComponent(self)
 
@@ -38,7 +38,7 @@ local Anchor = Class(function(self, inst)
     end
 
     if not POPULATING then
-	    self.inst:DoTaskInTime(0, function() SetBoat(self, inst:GetCurrentPlatform()) end)    
+	    self.inst:DoTaskInTime(0, function() SetBoat(self, inst:GetCurrentPlatform()) end)
 	end
 end,
 nil,
@@ -85,17 +85,17 @@ function Anchor:LoadPostPass()--newents, data)
     if not self.inst:HasTag("burnt") then
         SetBoat(self, self.inst:GetCurrentPlatform())
 
-        if self.raiseunits <= 0 then                        
+        if self.raiseunits <= 0 then
             self.inst.sg:GoToState("raised")
         else
             local depth = self:GetCurrentDepth()
 
-            if self.raiseunits >= depth then                                
+            if self.raiseunits >= depth then
                 if not self.boat then
-                    self.inst.sg:GoToState("lowered_land") 
+                    self.inst.sg:GoToState("lowered_land")
                 else
-                    self.inst.sg:GoToState("lowered") 
-                end                            
+                    self.inst.sg:GoToState("lowered")
+                end
             else
                 self.is_anchor_transitioning = true
                 self.inst.sg:GoToState("lowering")
@@ -145,14 +145,14 @@ function Anchor:StartLoweringAnchor()
     end
 end
 
-function Anchor:AddAnchorRaiser(doer)  
+function Anchor:AddAnchorRaiser(doer)
     if self.inst:HasTag("burnt") then
         return false
     end
 
     if not self.is_anchor_transitioning then
         self.inst:AddTag("anchor_transitioning")
-        self.is_anchor_transitioning = true        
+        self.is_anchor_transitioning = true
     end
     self.inst:PushEvent("raising_anchor")
     self.rasing = true
@@ -160,17 +160,17 @@ function Anchor:AddAnchorRaiser(doer)
         self.numberofraisers = self.numberofraisers +1
     end
     self.raisers[doer] = 1  -- raise units/second
-    self.currentraiseunits = self.currentraiseunits + self.raisers[doer] 
+    self.currentraiseunits = self.currentraiseunits + self.raisers[doer]
     return true
 end
 
-function Anchor:RemoveAnchorRaiser(doer) 
+function Anchor:RemoveAnchorRaiser(doer)
     if self.raisers[doer] then
-        self.currentraiseunits = self.currentraiseunits - self.raisers[doer] 
+        self.currentraiseunits = self.currentraiseunits - self.raisers[doer]
         self.numberofraisers = self.numberofraisers -1
-        self.raisers[doer] = nil    
-        doer:PushEvent("stopraisinganchor")           
-    end    
+        self.raisers[doer] = nil
+        doer:PushEvent("stopraisinganchor")
+    end
     if not next(self.raisers) then
         if self.is_anchor_transitioning then
             self.inst:PushEvent("lowering_anchor")
@@ -185,7 +185,7 @@ function Anchor:AnchorRaised()
     self.inst:RemoveTag("anchor_transitioning")
     for raiser,data in pairs(self.raisers)do
         self:RemoveAnchorRaiser(raiser)
-    end    
+    end
     self.inst:PushEvent("anchor_raised")
 end
 
@@ -199,9 +199,9 @@ end
 function Anchor:OnUpdate(dt)
 
     local depth = self:GetCurrentDepth()
-    --print("RAISE UNITS",self.raiseunits, "BOTTOM",self:GetCurrentDepth(),self.is_anchor_transitioning)    
+    --print("RAISE UNITS",self.raiseunits, "BOTTOM",self:GetCurrentDepth(),self.is_anchor_transitioning)
     if self.is_anchor_transitioning then
-        if next(self.raisers) then    
+        if next(self.raisers) then
             self.raiseunits =  math.max(0,self.raiseunits - (dt*self.currentraiseunits))
         else
             self.raiseunits = math.min(depth ,self.raiseunits + (dt*self.autolowerunits))

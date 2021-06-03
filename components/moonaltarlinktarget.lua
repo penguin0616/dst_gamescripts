@@ -31,15 +31,15 @@ end
 
 function MoonAltarLinkTarget:TryEstablishLink()
     local x, y, z = self.inst.Transform:GetWorldPosition()
-    
+
     local ents = TheSim:FindEntities(x, y, z, self.link_radius, link_search_tags)
-    
+
     local looking_for_altars = { moon_altar = true, moon_altar_cosmic = true, moon_altar_astral = true }
     looking_for_altars[self.inst.prefab] = nil
 
     local altars = { self.inst }
     local altars_found = 1
-    
+
     for i, v in ipairs(ents) do
         if looking_for_altars[v.prefab] and v.components.moonaltarlinktarget:CanBeLinked() then
             local tx, _, tz = v.Transform:GetWorldPosition()

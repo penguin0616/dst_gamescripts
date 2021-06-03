@@ -67,7 +67,7 @@ local Inv = Class(Widget, function(self, owner)
 		self.bg = self.root:AddChild(Image(HUD_ATLAS, "inventory_bg.tex"))
 		self.bgcover = self.root:AddChild(Image(HUD_ATLAS, "inventory_bg_cover.tex"))
 	end
-	
+
     self.hovertile = nil
     self.cursortile = nil
 
@@ -101,6 +101,8 @@ local Inv = Class(Widget, function(self, owner)
     self.inst:ListenForEvent("itemlose", function(inst, data) self:OnItemLose(self.inv[data.slot]) end, self.owner)
     self.inst:ListenForEvent("refreshinventory", function() self:Refresh() end, self.owner)
     self.inst:ListenForEvent("refresh_integrated_container", function() self:RefreshIntegratedContainer() end, self.owner)
+    self.inst:ListenForEvent("onplacershown", function() self:OnPlacerChanged(true) end, self.owner)
+    self.inst:ListenForEvent("onplacerhidden", function() self:OnPlacerChanged(false) end, self.owner)
 
     self.root:SetPosition(self.in_pos)
     self:StartUpdating()
@@ -177,7 +179,7 @@ local function RebuildLayout_Quagmire(self, inventory, overflow, do_integrated_b
     end
 
 
-	x = x 
+	x = x
 
 	local equip_scale = 0.8
 	local equip_y = -74
@@ -384,11 +386,11 @@ function Inv:Rebuild()
     self.backpackinv = {}
 
 	local controller_attached = TheInput:ControllerAttached()
-    self.controller_build = controller_attached 
+    self.controller_build = controller_attached
 	self.integrated_backpack = controller_attached or Profile:GetIntegratedBackpack()
 
     local inventory = self.owner.replica.inventory
-    
+
 	local overflow = inventory:GetOverflowContainer()
 	overflow = (overflow ~= nil and overflow:IsOpenedBy(self.owner)) and overflow or nil
 
@@ -819,7 +821,7 @@ function Inv:UpdateCursorText()
 
                 table.insert(str, TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_DROP) .. " " .. GetDropActionString(self.owner, inv_item))
             end
-        else 
+        else
             if is_equip_slot then
                 --handle the quip slot stuff as a special case because not every item can go there
                 if active_item ~= nil and active_item.replica.equippable ~= nil and active_item.replica.equippable:EquipSlot() == self.active_slot.equipslot and not active_item.replica.equippable:IsRestricted(self.owner) then
@@ -1082,6 +1084,26 @@ function Inv:RefreshIntegratedContainer()
     end
 end
 
+function Inv:OnPlacerChanged(placer_shown)
+	if self.hovertile ~= nil then 
+		if placer_shown then
+			if self.hovertile.image ~= nil then
+				self.hovertile.image:Hide() 
+			end
+			if self.hovertile.imagebg ~= nil then
+				self.hovertile.imagebg:Hide() 
+			end
+		else
+			if self.hovertile.image ~= nil then
+				self.hovertile.image:Show() 
+			end
+			if self.hovertile.imagebg ~= nil then
+				self.hovertile.imagebg:Show() 
+			end
+		end
+	end
+end
+
 function Inv:Cancel()
     local inventory = self.owner.replica.inventory
     local active_item = inventory:GetActiveItem()
@@ -1094,7 +1116,7 @@ function Inv:OnItemLose(slot)
     if slot then
         slot:SetTile(nil)
     end
-    
+
     --self:UpdateCursor()
 end
 
@@ -1167,7 +1189,7 @@ function Inv:OnItemGet(item, slot, source_pos, ignore_stacksize_anim)
             end
             im:MoveTo(Vector3(TheSim:GetScreenPos(source_pos:Get())), dest_pos, .3, function() tile:Show() tile:ScaleTo(2, 1, .25) im:Kill() end)
         else
-            tile:Show() 
+            tile:Show()
             --tile:ScaleTo(2, 1, .25)
         end
     end

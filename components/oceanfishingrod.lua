@@ -43,7 +43,7 @@ nil,
 })
 
 local function TrackFishingStart(self, tackle)
-	self.fishing_stats = 
+	self.fishing_stats =
 	{
 		bobber = tackle.bobber ~= nil and tackle.bobber.prefab or "oceanfishingbobber_none",
 		lure = tackle.lure ~= nil and tackle.lure.prefab or "emptyhook",
@@ -151,10 +151,10 @@ end
 function OceanFishingRod:_CalcCastDest(src_pos, dest_pos)
 	local cast_vect = dest_pos - src_pos
 	local cast_dist = math.min(cast_vect:Length(), self.casting_data.dist_max)
-	
+
 	local cast_dist_accuracy = math.random() * (self.casting_data.dist_max_accuracy - self.casting_data.dist_min_accuracy) + self.casting_data.dist_min_accuracy
 	cast_dist = math.max(2, cast_dist * cast_dist_accuracy)
-	
+
 	local theta = math.random() * 2 - 1
 	theta = theta * theta * theta * self.casting_data.max_angle_offset / RADIANS + math.atan2(cast_vect.z, cast_vect.x)
 	cast_vect.x = cast_dist * math.cos(theta)
@@ -214,7 +214,7 @@ function OceanFishingRod:UpdateTensionRating()
 			end
 		end
 		local target_dist = fishing_dir:Length()
-		
+
 		local max_offset = 3
 		local tension_offset = target_dist - self.line_dist
 		self.line_tension = tension_offset > 0 and math.min(max_tension_rating, (1 + 1/max_offset) - (1 + 1/max_offset)/(tension_offset + 1)) or 0
@@ -229,7 +229,7 @@ function OceanFishingRod:Reel()
 	if self.target ~= nil and self.target.components.oceanfishable ~= nil and self.fisher and self.fisher:IsValid() then
 		local dir = self.fisher:GetPosition() - self.target:GetPosition()
 		local len = dir:Length()
-	
+
 		self.target.components.oceanfishable:OnReelingIn(self.fisher)
 
 		local was_high_tension = self:IsLineTensionHigh()
@@ -301,7 +301,7 @@ end
 function OceanFishingRod:OnUpdate(dt)
     if not self.fisher:IsValid() or self.target == nil then
 		self:StopFishing()
-    elseif (not self.inst.components.equippable or not self.inst.components.equippable.isequipped) 
+    elseif (not self.inst.components.equippable or not self.inst.components.equippable.isequipped)
 		or (not self.fisher.sg:HasStateTag("fishing") and not self.fisher.sg:HasStateTag("npc_fishing") and not self.fisher.sg:HasStateTag("catchfish")) then
 
 		local has_fish = self.target.components.oceanfishinghook == nil and not self.target:HasTag("projectile")

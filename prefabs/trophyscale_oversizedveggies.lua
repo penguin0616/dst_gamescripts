@@ -57,7 +57,7 @@ local function DropItem(inst, data)
 		end
 	end
 end
- 
+
 local function SetDigits(inst, weight)
 	if weight == nil or weight == 0 then
 		inst.AnimState:ClearOverrideSymbol("column1")
@@ -68,11 +68,11 @@ local function SetDigits(inst, weight)
 	else
 		if type(weight) == "number" then
 			local formatted = string.format("%06.2f", weight)
-			
+
 			-- Decimal point at ind 4
 			weight = string.sub(formatted, 1, 3)..string.sub(formatted, 5)
 		end
-		
+
 		for i=1,5 do
 			inst.AnimState:OverrideSymbol("column"..i, "trophyscale_oversizedveggies", "number"..string.sub(weight, i, i)..(DIGIT_COLORS[i] or "_black"))
 		end
@@ -184,7 +184,7 @@ local function onnewtrophy(inst, data_old_and_new)
 
 	-- Turning off this sound for now
 	inst.SoundEmitter:PlaySound(sounds.newtrophy, "new_trophy")
-	
+
 	inst.soundtask_playspin = inst:DoTaskInTime(sound_delay.spin*FRAMES, function() inst.SoundEmitter:PlaySound(sounds.spin, "spin_loop") end)
 	inst.soundtask_stopspin = inst:DoTaskInTime(sound_delay.spin_stop*FRAMES, function() inst.SoundEmitter:KillSound("spin_loop") end)
 	if play_bell_sound then
@@ -225,7 +225,7 @@ local function onhammered(inst, worker)
     inst.components.lootdropper:DropLoot()
 
 	DropItem(inst, inst.components.trophyscale:GetItemData())
-    
+
     local fx = SpawnPrefab("collapse_small")
 	local x, y, z = inst.Transform:GetWorldPosition()
     fx.Transform:SetPosition(x, y, z)
@@ -240,7 +240,7 @@ local function onhit(inst)
 			if inst.components.trophyscale.item_data == nil
 				or inst.components.trophyscale.item_data.weight == nil
 				or inst.components.trophyscale.item_data.weight <= 0 then
-			
+
 				inst.AnimState:PlayAnimation("veg_light_hit")
 				inst.AnimState:PushAnimation("veg_light_idle", true)
 			else
@@ -292,7 +292,7 @@ local function getdesc(inst, viewer)
 		local heavy_postfix =  (data.is_heavy and "_HEAVY" or "")
 		return subfmt(GetDescription(viewer, inst, "HAS_ITEM"..heavy_postfix), {weight = data.weight or "", day = data.day or ""})
 	end
-	
+
 	return GetDescription(viewer, inst) or nil
 end
 

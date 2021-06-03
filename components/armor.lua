@@ -72,7 +72,7 @@ function Armor:SetCondition(amount)
 	if self.indestructible then
 		return
 	end
-	
+
     self.condition = math.min(amount, self.maxcondition)
     self.inst:PushEvent("percentusedchange", { percent = self:GetPercent() })
 

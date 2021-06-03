@@ -96,7 +96,7 @@ function LavaePetBrain:OnStart()
     PriorityNode({
 
         WhileNode(function() return self.inst.components.hauntable ~= nil and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
-        
+
         WhileNode(function() return self.inst.components.hunger:GetPercent() < 0.05 end, "STARVING BABY ALERT!",
             PriorityNode{
                 --Eat the foods
@@ -113,7 +113,7 @@ function LavaePetBrain:OnStart()
         Follow(self.inst, function() return self.inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
 
         DoAction(self.inst, EatFoodAction),
-        
+
         FailIfRunningDecorator(FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn)),
 
         WhileNode(function() return OwnerIsClose(self.inst) end, "Owner Is Close",

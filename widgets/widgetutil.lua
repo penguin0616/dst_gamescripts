@@ -58,7 +58,7 @@ function DoRecipeClick(owner, recipe, skin)
                     owner.components.playercontroller:StartBuildPlacementMode(recipe, skin)
                 end
             elseif can_build then
-                --TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")           
+                --TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
                 if recipe.placer == nil then
                     owner.replica.builder:MakeRecipeFromMenu(recipe, skin)
                     return true

@@ -6,17 +6,17 @@ local events=
     EventHandler("onburnt", function(inst, data)
                 inst.sg:GoToState("burnt", data)
             end),
-    EventHandler("hit", function(inst) 
+    EventHandler("hit", function(inst)
                 if not inst.sg:HasStateTag("hit") and not inst:HasTag("burnt") then
-                    inst.sg:GoToState("hit") 
+                    inst.sg:GoToState("hit")
                 end
-            end), 
-    EventHandler("ratupdate", function(inst, data) 
+            end),
+    EventHandler("ratupdate", function(inst, data)
                 if not inst.sg:HasStateTag("hit") and not inst:HasTag("burnt") then
                     inst.sg:GoToState("idle")
                 end
-            end),   
-    EventHandler("endtraining", function(inst, data) 
+            end),
+    EventHandler("endtraining", function(inst, data)
                 if not inst:HasTag("burnt") then
                     if inst.sg:HasStateTag("active") then
                         inst.sg:GoToState("active_pst", data)
@@ -24,18 +24,18 @@ local events=
                         inst.sg:GoToState("idle")
                     end
                 end
-            end),  
+            end),
     EventHandler("starttraining", function(inst, data)
                 if not inst.sg:HasStateTag("active") and not inst:HasTag("burnt") then
                     inst.sg:GoToState("active_pre", data)
                 end
-            end), 
-    EventHandler("rest", function(inst, data) 
+            end),
+    EventHandler("rest", function(inst, data)
                 if not inst.sg:HasStateTag("sleep") and not inst:HasTag("burnt") then
                     inst.sg:GoToState("sleep_pre", data)
                 end
             end),
-    EventHandler("endrest", function(inst, data) 
+    EventHandler("endrest", function(inst, data)
                 if inst.sg:HasStateTag("sleep") and not inst:HasTag("burnt") then
                     inst.sg:GoToState("sleep_pst", data)
                 end
@@ -57,7 +57,7 @@ local states =
         events =
         {
             EventHandler("animover",
-                function(inst)                 
+                function(inst)
                     if inst.components.gym and inst.components.gym.trainee and math.random()<0.05 then
                         inst.sg:GoToState("idle2")
                     else
@@ -72,7 +72,7 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("burnt")
         end,
-    },    
+    },
 
     State{
         name = "idle2",
@@ -88,7 +88,7 @@ local states =
                         inst.sg:GoToState("idle2")
                     else
                         inst.sg:GoToState("idle")
-                    end                    
+                    end
                 end),
         },
     },
@@ -127,10 +127,10 @@ local states =
         end,
 
         timeline =
-        {   
+        {
         --------------------    DIRECTION
            TimeEvent(0 * FRAMES, function(inst) if inst.prefab == "yotc_carrat_gym_direction" then  inst.SoundEmitter:PlaySound("yotc_2020/gym/direction/active_pre")  end end),
-        --------------------    REACTION 
+        --------------------    REACTION
            TimeEvent(0 * FRAMES, function(inst) if inst.prefab == "yotc_carrat_gym_reaction" then  inst.SoundEmitter:PlaySound("yotc_2020/gym/reaction/active_pre")  end end),
         --------------------    SPEED
            TimeEvent(0 * FRAMES, function(inst) if inst.prefab == "yotc_carrat_gym_speed" then  inst.SoundEmitter:PlaySound("yotc_2020/gym/speed/active_pre")  end end),
@@ -174,7 +174,7 @@ local states =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("active_loop") end),
         },
-    },  
+    },
     State{
         name = "active_pst",
         onenter = function(inst)
@@ -216,7 +216,7 @@ local states =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
-    },    
+    },
 
     State{
         name = "sleep_pre",
@@ -254,7 +254,7 @@ local states =
         end,
 
         events =
-        {            
+        {
             EventHandler("animover", function(inst) inst.sg:GoToState("sleep") end),
         },
     },
@@ -276,7 +276,7 @@ local states =
                 if inst.components.timer:TimerExists("training") then
                     inst.sg:GoToState("active_pre")
                 else
-                    inst.sg:GoToState("idle") 
+                    inst.sg:GoToState("idle")
                 end
             end),
         },

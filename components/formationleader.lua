@@ -81,7 +81,7 @@ function FormationLeader:OrganizeFormations()
 	local formations = {}
 	local x,y,z = self.inst.Transform:GetWorldPosition()
 	local ents = TheSim:FindEntities(x,y,z, self.searchradius, self.formationleadersearchtags)
-	
+
 	for k,v in pairs(ents) do
 		if v.components.formationleader and v.components.formationleader.target == self.target then
 			table.insert(formations, v)
@@ -95,9 +95,9 @@ function FormationLeader:OrganizeFormations()
 	end
 
 	table.sort(formations, sort)
-	
+
 	if formations[1] ~= self.inst then return end
-	
+
 	if self.makeotherformationssecondaryfn ~= nil then
 		self.makeotherformationssecondaryfn(self.inst, formations)
 	end
@@ -162,7 +162,7 @@ function FormationLeader:NewFormationMember(member)
 
 		self.formation[member] = member
 		self.inst:ListenForEvent("death", member.deathfn, member)
-		
+
 		self.inst:ListenForEvent("onremove", member.deathfn, member)
 		self.inst:ListenForEvent("onenterlimbo", member.deathfn, member)
 		member.components.formationfollower.formationleader = self
@@ -179,12 +179,12 @@ function FormationLeader:OnLostFormationMember(member)
 		end
 
 		self.inst:RemoveEventCallback("death", member.deathfn, member)
-		
+
 		self.inst:RemoveEventCallback("onremove", member.deathfn, member)
 		self.inst:RemoveEventCallback("onenterlimbo", member.deathfn, member)
 		self.formation[member] = nil
 		member.components.formationfollower.formationleader = nil
-		
+
 		member.components.formationfollower.in_formation = false
 		member.components.combat.target = nil
 
@@ -203,7 +203,7 @@ function FormationLeader:GetFormationPositions()
 
         local offset = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))
 		v.components.formationfollower.formationpos = pt + offset
-		
+
         theta = theta - (2 * PI/steps)
     end
 end
@@ -213,7 +213,7 @@ function FormationLeader:IsFormationEmpty()
 end
 
 function FormationLeader:GetTheta(dt)
-	if self.reverse then 
+	if self.reverse then
 		return self.theta - (dt * self.thetaincrement)
 	else
 		return self.theta + (dt * self.thetaincrement)
@@ -238,7 +238,7 @@ function FormationLeader:OnUpdate(dt)
 	self.age = self.age + dt
 	self:OrganizeFormations()
 	self:FormationSizeControl()
-	
+
 	if self.target and self.target:IsValid() then -- Is there a target?
 		self.theta = self:GetTheta(dt) -- Spin the formation
 		self:GetFormationPositions()

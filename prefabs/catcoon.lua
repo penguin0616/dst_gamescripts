@@ -256,7 +256,7 @@ local function WakeTest(inst)
 end
 
 local function PickRandomGift(inst, tier)
-	local table = (inst.components.follower and inst.components.follower.leader) and 
+	local table = (inst.components.follower and inst.components.follower.leader) and
 		friendGiftPrefabs or neutralGiftPrefabs
 	-- Neutral and friend tables aren't the same size. Make sure we're in valid range in case loyalty gets added/expired while retching.
 	if tier > #table then tier = #table end
@@ -286,9 +286,9 @@ local function OnGetItemFromPlayer(inst, giver, item)
         inst.last_hairball_time = GetTime()
         inst.hairball_friend_interval = math.random(2,4) -- Jumpstart the hairball timer (slot machine time!)
         inst.components.follower:AddLoyaltyTime(TUNING.CATCOON_LOYALTY_PER_ITEM)
-        if not inst.sg:HasStateTag("busy") then 
+        if not inst.sg:HasStateTag("busy") then
             inst:FacePoint(giver.Transform:GetWorldPosition())
-            inst.sg:GoToState("pawground") 
+            inst.sg:GoToState("pawground")
        	end
     end
     item:Remove()
@@ -298,7 +298,7 @@ local function OnRefuseItem(inst, item)
 	inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/catcoon/hiss_pre")
 	if inst.components.sleeper:IsAsleep() then
         inst.components.sleeper:WakeUp()
-    -- elseif not inst.sg:HasStateTag("busy") then 
+    -- elseif not inst.sg:HasStateTag("busy") then
     -- 	inst.sg:GoToState("hiss")
     end
 end
@@ -358,7 +358,7 @@ local function fn()
     inst.components.combat.battlecryinterval = 20
 
 	inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('catcoon') 
+    inst.components.lootdropper:SetChanceLootTable('catcoon')
 
 	inst:AddComponent("follower")
     inst.components.follower.maxfollowtime = TUNING.CATCOON_LOYALTY_MAXTIME

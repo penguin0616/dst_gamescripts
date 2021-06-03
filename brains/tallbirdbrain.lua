@@ -12,30 +12,30 @@ local WARN_BEFORE_ATTACK_TIME = 2
 
 
 local function GoHomeAction(inst)
-    if inst.components.homeseeker and 
-       inst.components.homeseeker:HasHome() then 
+    if inst.components.homeseeker and
+       inst.components.homeseeker:HasHome() then
         return BufferedAction(inst, inst.components.homeseeker.home, ACTIONS.GOHOME, nil, nil, nil, 0.2)
     end
 end
 
 local function DefendHomeAction(inst)
-    if inst.components.homeseeker and 
-       inst.components.homeseeker:HasHome() then 
+    if inst.components.homeseeker and
+       inst.components.homeseeker:HasHome() then
         return BufferedAction(inst, inst.components.homeseeker.home, ACTIONS.WALKTO, nil, nil, nil, 0.2)
     end
 end
 
 local function LayEggAction(inst)
-    if inst.components.homeseeker and 
+    if inst.components.homeseeker and
        inst.components.homeseeker:HasHome() and
-	   inst.components.homeseeker.home.readytolay then 
+	   inst.components.homeseeker.home.readytolay then
         return BufferedAction(inst, inst.components.homeseeker.home, ACTIONS.LAYEGG, nil, nil, nil, 0.2)
     end
 end
 
 local function IsNestEmpty(inst)
-    return inst.components.homeseeker and 
-		inst.components.homeseeker:HasHome() and 
+    return inst.components.homeseeker and
+		inst.components.homeseeker:HasHome() and
 		(not inst.components.homeseeker.home.components.pickable or not inst.components.homeseeker.home.components.pickable:CanBePicked() )
 end
 
@@ -72,9 +72,9 @@ function TallbirdBrain:OnStart()
 			DoAction(self.inst, function() return LayEggAction(self.inst) end, "LayEgg", true),
 			Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, MAX_WANDER_DIST),
       },1)
-    
-    self.bt = BT(self.inst, root) 
-           
+
+    self.bt = BT(self.inst, root)
+
 end
 
 function TallbirdBrain:OnInitializationComplete()

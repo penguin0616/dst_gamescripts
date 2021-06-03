@@ -81,7 +81,7 @@ function MoonstormWatcher:UpdateMoonstormWalkSpeed()
             self.inst.components.locomotor:RemoveExternalSpeedMultiplier(self.inst, "moonstorm")
         else
             self.inst.components.locomotor:SetExternalSpeedMultiplier(self.inst, "moonstorm", self.moonstormspeedmult)
-        end        
+        end
     end
     self.inst:PushEvent("moonstormlevel",{level = level})
 end

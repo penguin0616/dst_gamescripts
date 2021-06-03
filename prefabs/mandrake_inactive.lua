@@ -46,7 +46,7 @@ end
 
 local function oneaten_raw(inst, eater)
     eater.SoundEmitter:PlaySound("dontstarve/creatures/mandrake/death")
-    eater:DoTaskInTime(0.5, function() 
+    eater:DoTaskInTime(0.5, function()
         doareasleep(eater, TUNING.MANDRAKE_SLEEP_RANGE, TUNING.MANDRAKE_SLEEP_TIME)
     end)
 end
@@ -60,7 +60,7 @@ end
 
 local function oneaten_cooked(inst, eater)
     eater.SoundEmitter:PlaySound("dontstarve/creatures/mandrake/death")
-    eater:DoTaskInTime(0.5, function() 
+    eater:DoTaskInTime(0.5, function()
         doareasleep(eater, TUNING.MANDRAKE_SLEEP_RANGE_COOKED, TUNING.MANDRAKE_SLEEP_TIME)
     end)
 end
@@ -101,7 +101,7 @@ local function commonfn(anim, cookable)
     inst.components.edible.foodtype = FOODTYPE.VEGGIE
 
     inst:AddComponent("tradable")
-    
+
     if cookable then
         inst:AddComponent("cookable")
         inst.components.cookable.product = "cookedmandrake"

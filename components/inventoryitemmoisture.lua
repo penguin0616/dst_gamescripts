@@ -2,7 +2,7 @@
 --     component, and should not be used on its own.
 
 --note: There is up to an UPDATE_TIME error when an enity sleeps due to the remainging time in the task.
---  There is up to an UPDATE_TIME error when an enity wakes due to the random start time. 
+--  There is up to an UPDATE_TIME error when an enity wakes due to the random start time.
 --  At this point moisture is not critical enough to factor for these
 
 local UPDATE_TIME = 1.0
@@ -23,14 +23,14 @@ local function debugUpdate()
 	if tick ~= prev_tick then
 		local total = 0
 		local active = 0
-		for _, v in pairs(Ents) do 
+		for _, v in pairs(Ents) do
 			if v.components.inventoryitemmoisture ~= nil then
 				total = total + 1
 			end
 			if v.moistureupdatetask ~= nil then
 				active = active + 1
 			end
-		end 
+		end
 
 		print("Active InventoryItemMoisture: total: " .. total .. "  active: " .. active .. "  updated: " .. moisture_updates)
 		prev_tick = tick

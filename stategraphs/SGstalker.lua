@@ -497,7 +497,7 @@ local states =
                             local targets = inst:FindSnareTargets()
                             if targets ~= nil then
                                 inst.sg:GoToState("snare", targets)
-                                return 
+                                return
                             end
                         end
                         if inst.sg.statemem.dospikes then

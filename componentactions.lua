@@ -5,7 +5,7 @@ local BEEF_HASTAGS = {"beefalo"}
 local function CanCastFishingNetAtPoint(thrower, target_x, target_z)
     local min_throw_distance = 2
     local thrower_x, thrower_y, thrower_z = thrower.Transform:GetWorldPosition()
-	
+
     if TheWorld.Map:IsOceanAtPoint(target_x, 0, target_z) and VecUtil_LengthSq(target_x - thrower_x, target_z - thrower_z) > min_throw_distance * min_throw_distance then
         return true
     end
@@ -21,7 +21,7 @@ local function Row(inst, doer, pos, actions)
     local my_platform = map:GetPlatformAtPoint(doer_x, doer_z)
     local is_controller_attached = doer.components.playercontroller.isclientcontrollerattached
 
-    local is_hovering_cursor_over_my_platform = false 
+    local is_hovering_cursor_over_my_platform = false
     if not is_controller_attached then
         is_hovering_cursor_over_my_platform = my_platform ~= nil and (my_platform == platform_under_cursor)
     end
@@ -43,7 +43,7 @@ local function Row(inst, doer, pos, actions)
             local my_platform_x, my_platform_y, my_platform_z = my_platform.Transform:GetWorldPosition()
             local dir_x, dir_z = VecUtil_Normalize(doer_x - my_platform_x, doer_z - my_platform_z)
             local test_length = 0.5
-            -- So the position on the client/server don't quite match and the server position doesn't stick as tight to the 
+            -- So the position on the client/server don't quite match and the server position doesn't stick as tight to the
             -- area surrounding the boat so give a little leeway when checking to see if there's water around you when the client
             -- is requesting to row
             if ThePlayer ~= doer then
@@ -100,6 +100,7 @@ local function GetFishingAction(doer, fishing_target)
 	return nil
 end
 
+-- SCENE, USEITEM, POINT, EQUIPPED, INVENTORY
 local COMPONENT_ACTIONS =
 {
     SCENE = --args: inst, doer, actions, right
@@ -137,6 +138,7 @@ local COMPONENT_ACTIONS =
                 table.insert(actions, ACTIONS.BUNDLE)
             end
         end,
+
 
 		yotc_racestart = function(inst, doer, actions, right)
 			if right and not (inst:HasTag("burnt") or inst:HasTag("fire") or inst:HasTag("race_on")) then
@@ -198,8 +200,8 @@ local COMPONENT_ACTIONS =
                 if right then
                     if inst.replica.container then -- Added for wobysmall
                         table.insert(actions, ACTIONS.PET)
-                    elseif doer.replica.builder ~= nil 
-                       and doer.replica.builder:GetTechTrees().ORPHANAGE > 0 
+                    elseif doer.replica.builder ~= nil
+                       and doer.replica.builder:GetTechTrees().ORPHANAGE > 0
                        and not inst:HasTag("noabandon") then
                         table.insert(actions, ACTIONS.ABANDON)
                     end
@@ -215,7 +217,7 @@ local COMPONENT_ACTIONS =
                 table.insert(actions, ACTIONS.HARVEST)
             end
         end,
-        
+
         cyclable = function(inst, doer, actions, right)
             if right and inst:HasTag("cancycle") then
                 table.insert(actions, ACTIONS.CYCLE)
@@ -223,7 +225,7 @@ local COMPONENT_ACTIONS =
         end,
 
         dryer = function(inst, doer, actions)
-            if inst:HasTag("dried") and not inst:HasTag("burnt") then 
+            if inst:HasTag("dried") and not inst:HasTag("burnt") then
                 table.insert(actions, ACTIONS.HARVEST)
             end
         end,
@@ -303,17 +305,17 @@ local COMPONENT_ACTIONS =
             if inst:HasTag("sailraised") then
                 if not doer:HasTag("is_furling") then
                     return table.insert(actions, ACTIONS.LOWER_SAIL_BOOST)
-                else                    
+                else
                     if doer.AnimState:IsCurrentAnimation("pull_big_pre") or doer.AnimState:IsCurrentAnimation("pull_big_lag") or doer.AnimState:IsCurrentAnimation("pull_big_loop") then
-                        return table.insert(actions, ACTIONS.LOWER_SAIL_FAIL)                    
+                        return table.insert(actions, ACTIONS.LOWER_SAIL_FAIL)
                     elseif doer.AnimState:IsCurrentAnimation("pull_small_loop") or doer.AnimState:IsCurrentAnimation("pull_small_pre") then
                         return table.insert(actions, ACTIONS.LOWER_SAIL_BOOST)
                     end
                 end
             elseif inst:HasTag("saillowered") and not inst:HasTag("sail_transitioning") then
                 table.insert(actions, ACTIONS.RAISE_SAIL)
-            end        
-        end,        
+            end
+        end,
 
         mine = function(inst, doer, actions, right)
             if right and inst:HasTag("minesprung") and not inst:HasTag("mine_not_reusable") then
@@ -379,12 +381,12 @@ local COMPONENT_ACTIONS =
         end,
 
         rideable = function(inst, doer, actions, right)
-            if right and inst:HasTag("rideable") and 
+            if right and inst:HasTag("rideable") and
 
                not inst:HasTag("hitched") and
-               (not inst:HasTag("dogrider_only") or 
+               (not inst:HasTag("dogrider_only") or
                (inst:HasTag("dogrider_only") and doer:HasTag("dogrider"))) then
-                
+
                 local rider = doer.replica.rider
                 if rider ~= nil and not rider:IsRiding() then
                     table.insert(actions, ACTIONS.MOUNT)
@@ -487,7 +489,7 @@ local COMPONENT_ACTIONS =
         trap = function(inst, doer, actions)
             if inst:HasTag("trapsprung") then
                 table.insert(actions, ACTIONS.CHECKTRAP)
-            end 
+            end
         end,
 
         trophyscale = function(inst, doer, actions, right)
@@ -535,7 +537,7 @@ local COMPONENT_ACTIONS =
             if inst:HasTag("groomer") and not inst:HasTag("fire") and not inst:HasTag("burnt") and not inst:HasTag("hitcher") and right then
                 table.insert(actions, ACTIONS.CHANGEIN)
             end
-        end,   
+        end,
 
         hitcher = function(inst, doer, actions, right)
             if inst:HasTag("hitcher") and not inst:HasTag("fire") and not inst:HasTag("burnt") and not inst:HasTag("hitcher_locked")  then
@@ -548,7 +550,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        markable = function(inst, doer, actions, right) 
+        markable = function(inst, doer, actions, right)
             if inst:HasTag("markable") then
                 table.insert(actions, ACTIONS.MARK)
             end
@@ -576,10 +578,10 @@ local COMPONENT_ACTIONS =
             else
                 if inst:HasTag("interactable") then
                     if inst:HasTag("plank_extended") then
-                        table.insert(actions, ACTIONS.MOUNT_PLANK) 
+                        table.insert(actions, ACTIONS.MOUNT_PLANK)
                     end
                 end
-            end            
+            end
 		end,
 
         writeable = function(inst, doer, actions)
@@ -636,7 +638,7 @@ local COMPONENT_ACTIONS =
                         inst.replica.container:IsFull() and
                         inst.replica.container:IsOpenedBy(doer)
                     )) then
-                    
+
                     table.insert(actions, ACTIONS.YOTB_SEW)
                 end
             end
@@ -645,7 +647,6 @@ local COMPONENT_ACTIONS =
 
     USEITEM = --args: inst, doer, target, actions, right
     {
-
         appraisable = function(inst, doer, target, actions)
             if target:HasTag("appraiser") then
                 table.insert(actions, ACTIONS.APPRAISE)
@@ -674,6 +675,14 @@ local COMPONENT_ACTIONS =
             if not right and target:HasTag("brushable") then
                 table.insert(actions, ACTIONS.BRUSH)
             end
+        end,
+
+        carnivalgameitem = function(inst, doer, target, actions, right)
+			if target:HasTag("carnivalgame_canfeed") then
+				if target.prefab == "carnivalgame_feedchicks_nest" then
+					table.insert(actions, ACTIONS.CARNIVALGAME_FEED)
+				end
+			end
         end,
 
         cookable = function(inst, doer, target, actions)
@@ -1147,7 +1156,7 @@ local COMPONENT_ACTIONS =
                 not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding() and
                 not (target.replica.inventoryitem ~= nil and target.replica.inventoryitem:IsGrandOwner(doer))) and
                 inst:HasTag("vasedecoration") then
-                
+
                 table.insert(actions, ACTIONS.DECORATEVASE)
             end
         end,
@@ -1310,7 +1319,7 @@ local COMPONENT_ACTIONS =
         end,
 
         deployable = function(inst, doer, pos, actions, right)
-            if right and inst.replica.inventoryitem ~= nil and inst.replica.inventoryitem:CanDeploy(pos, nil, doer) then
+            if right and inst.replica.inventoryitem ~= nil and inst.replica.inventoryitem:CanDeploy(pos, nil, doer, (doer.components.playercontroller ~= nil and doer.components.playercontroller.deployplacer ~= nil) and doer.components.playercontroller.deployplacer.Transform:GetRotation() or 0) then
                 if inst:HasTag("tile_deploy") then
                     table.insert(actions, ACTIONS.DEPLOY_TILEARRIVE)
                 else
@@ -1369,7 +1378,7 @@ local COMPONENT_ACTIONS =
                 end
             end
         end,
-		
+
 		spellcaster = function(inst, doer, pos, actions, right)
             if right then
                 local cast_on_water = inst:HasTag("castonpointwater")
@@ -1439,6 +1448,14 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+        carnivalgameitem = function(inst, doer, target, actions, right)
+			if target:HasTag("carnivalgame_canfeed") then
+				if target.prefab == "carnivalgame_feedchicks_nest" then
+					table.insert(actions, ACTIONS.CARNIVALGAME_FEED)
+				end
+			end
+        end,
+
         complexprojectile = function(inst, doer, target, actions, right)
             if right and
                 not (doer.components.playercontroller ~= nil and
@@ -1486,7 +1503,7 @@ local COMPONENT_ACTIONS =
         end,
 
         fishingnet = function(inst, doer, target, actions, right)
-            local pos_x, pos_y, pos_z = target.Transform:GetWorldPosition()        
+            local pos_x, pos_y, pos_z = target.Transform:GetWorldPosition()
             if right and CanCastFishingNetAtPoint(doer, pos_x, pos_z) then
                 table.insert(actions, ACTIONS.CAST_NET)
             end
@@ -1575,7 +1592,7 @@ local COMPONENT_ACTIONS =
         weapon = function(inst, doer, target, actions, right)
             if not right
                 and doer.replica.combat ~= nil
-                and (inst:HasTag("projectile") or inst:HasTag("rangedweapon") or not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding())) 
+                and (inst:HasTag("projectile") or inst:HasTag("rangedweapon") or not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()))
 				and not inst:HasTag("outofammo") then
                 if doer.replica.combat:CanExtinguishTarget(target, inst) or
                     doer.replica.combat:CanLightTarget(target, inst) then

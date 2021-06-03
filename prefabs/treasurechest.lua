@@ -7,7 +7,7 @@ local function onopen(inst)
         inst.AnimState:PlayAnimation("open")
         inst.SoundEmitter:PlaySound("dontstarve/wilson/chest_open")
     end
-end 
+end
 
 local function onclose(inst)
     if not inst:HasTag("burnt") then
@@ -87,7 +87,7 @@ local function MakeChest(name, bank, build, indestructible, master_postinit, pre
         inst.AnimState:PlayAnimation("closed")
 
 		MakeSnowCoveredPristine(inst)
-		
+
         if common_postinit ~= nil then
             common_postinit(inst)
         end
@@ -128,7 +128,7 @@ local function MakeChest(name, bank, build, indestructible, master_postinit, pre
         MakeSnowCovered(inst)
 
 		-- Save / load is extended by some prefab variants
-        inst.OnSave = onsave 
+        inst.OnSave = onsave
         inst.OnLoad = onload
 
         if master_postinit ~= nil then
@@ -227,7 +227,7 @@ end
 
 local function sunken_common_postinit(inst)
 	inst:AddTag("heavy")
-	
+
 	MakeHeavyObstaclePhysics(inst, SUNKEN_PHYSICS_RADIUS)
 	inst:SetPhysicsRadiusOverride(SUNKEN_PHYSICS_RADIUS)
 end
@@ -239,7 +239,7 @@ local function sunken_master_postinit(inst)
 
 	inst:AddComponent("heavyobstaclephysics")
 	inst.components.heavyobstaclephysics:SetRadius(SUNKEN_PHYSICS_RADIUS)
-	
+
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.cangoincontainer = false
 
@@ -248,13 +248,13 @@ local function sunken_master_postinit(inst)
     inst.components.equippable:SetOnEquip(sunken_OnEquip)
     inst.components.equippable:SetOnUnequip(sunken_OnUnequip)
     inst.components.equippable.walkspeedmult = TUNING.HEAVY_SPEED_MULT
-    
+
     inst.components.container.canbeopened = false
-	
+
 	inst:AddComponent("submersible")
 	inst:AddComponent("symbolswapdata")
     inst.components.symbolswapdata:SetData("swap_sunken_treasurechest", "swap_body")
-	
+
 	inst:ListenForEvent("on_submerge", sunken_OnSubmerge)
 end
 

@@ -13,7 +13,7 @@ function Hull:AttachEntityToBoat(obj, offset_x, offset_z, parent_to_boat)
 
     if parent_to_boat then
     	obj.entity:SetParent(self.inst.entity)
-    	obj.Transform:SetPosition(offset_x, 0, offset_z)        	
+    	obj.Transform:SetPosition(offset_x, 0, offset_z)
 	else
 		self.inst:DoTaskInTime(0, function(boat)
     		local boat_x, boat_y, boat_z = boat.Transform:GetWorldPosition()
@@ -28,11 +28,11 @@ end
 
 function Hull:SetBoatLip(obj)
 	self.boat_lip = obj;
-	obj.entity:SetParent(self.inst.entity)	
+	obj.entity:SetParent(self.inst.entity)
 end
 
 function Hull:SetRadius(radius)
-	self.radius = radius	
+	self.radius = radius
 end
 
 function Hull:GetRadius(radius)
@@ -43,7 +43,7 @@ function Hull:OnDeployed()
 	self.boat_lip.AnimState:PlayAnimation("place_lip")
 	self.boat_lip.AnimState:PushAnimation("lip", true)
     self.plank:Hide()
-    self.plank:DoTaskInTime(1.25, function() self.plank:Show() self.plank.AnimState:PlayAnimation("plank_place") end)    
+    self.plank:DoTaskInTime(1.25, function() self.plank:Show() self.plank.AnimState:PlayAnimation("plank_place") end)
 end
 
 return Hull

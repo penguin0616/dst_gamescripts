@@ -1185,7 +1185,7 @@ local applyoverrides_pre = {
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
     perd = function(difficulty)
-        local tuning_vars = 
+        local tuning_vars =
         {
             never = {
                 PERD_SPAWNCHANCE = 0,
@@ -2331,7 +2331,7 @@ local applyoverrides_pre = {
                 METEOR_SHOWER_LVL3_MEDMETEORS_MIN = 0,
                 METEOR_SHOWER_LVL3_MEDMETEORS_MAX = 0,
                 METEOR_SHOWER_LVL3_LRGMETEORS_MIN = 0,
-                METEOR_SHOWER_LVL3_LRGMETEORS_MAX = 0, 
+                METEOR_SHOWER_LVL3_LRGMETEORS_MAX = 0,
             },
             rare = {
                 METEOR_SHOWER_LVL1_BASETIME = TUNING.TOTAL_DAY_TIME*12,
@@ -2369,7 +2369,7 @@ local applyoverrides_pre = {
                 METEOR_SHOWER_LVL3_MEDMETEORS_MIN = 3,
                 METEOR_SHOWER_LVL3_MEDMETEORS_MAX = 6,
                 METEOR_SHOWER_LVL3_LRGMETEORS_MIN = 3,
-                METEOR_SHOWER_LVL3_LRGMETEORS_MAX = 10, 
+                METEOR_SHOWER_LVL3_LRGMETEORS_MAX = 10,
             },
             --[[
             default = {
@@ -2379,7 +2379,7 @@ local applyoverrides_pre = {
                 METEOR_SHOWER_LVL2_VARTIME = TUNING.TOTAL_DAY_TIME*6,
                 METEOR_SHOWER_LVL3_BASETIME = TUNING.TOTAL_DAY_TIME*12,
                 METEOR_SHOWER_LVL3_VARTIME = TUNING.TOTAL_DAY_TIME*8,
-        
+
                 METEOR_SHOWER_LVL1_DURATION_BASE = 5,
                 METEOR_SHOWER_LVL1_DURATIONVAR_MIN = 5,
                 METEOR_SHOWER_LVL1_DURATIONVAR_MAX = 10,
@@ -2389,7 +2389,7 @@ local applyoverrides_pre = {
                 METEOR_SHOWER_LVL1_MEDMETEORS_MAX = 3,
                 METEOR_SHOWER_LVL1_LRGMETEORS_MIN = 1,
                 METEOR_SHOWER_LVL1_LRGMETEORS_MAX = 4,
-        
+
                 METEOR_SHOWER_LVL2_DURATION_BASE = 5,
                 METEOR_SHOWER_LVL2_DURATIONVAR_MIN = 10,
                 METEOR_SHOWER_LVL2_DURATIONVAR_MAX = 20,
@@ -2399,7 +2399,7 @@ local applyoverrides_pre = {
                 METEOR_SHOWER_LVL2_MEDMETEORS_MAX = 4,
                 METEOR_SHOWER_LVL2_LRGMETEORS_MIN = 2,
                 METEOR_SHOWER_LVL2_LRGMETEORS_MAX = 7,
-        
+
                 METEOR_SHOWER_LVL3_DURATION_BASE = 5,
                 METEOR_SHOWER_LVL3_DURATIONVAR_MIN = 15,
                 METEOR_SHOWER_LVL3_DURATIONVAR_MAX = 30,
@@ -2447,7 +2447,7 @@ local applyoverrides_pre = {
                 METEOR_SHOWER_LVL3_MEDMETEORS_MIN = 3,
                 METEOR_SHOWER_LVL3_MEDMETEORS_MAX = 6,
                 METEOR_SHOWER_LVL3_LRGMETEORS_MIN = 3,
-                METEOR_SHOWER_LVL3_LRGMETEORS_MAX = 10, 
+                METEOR_SHOWER_LVL3_LRGMETEORS_MAX = 10,
             },
             always = {
                 METEOR_SHOWER_LVL1_BASETIME = TUNING.TOTAL_DAY_TIME*2,
@@ -2906,7 +2906,7 @@ local applyoverrides_post = {
 		end
 	end,
 	day = function(difficulty)
-		local lookup = { 
+		local lookup = {
 			["onlyday"] = {
 				day = 3, dusk = 0, night = 0
 			},
@@ -2928,7 +2928,7 @@ local applyoverrides_post = {
 			["longnight"] = {
 				day = 0.7, dusk = 0.7, night = 1.6
 			},
-			["noday"] = { 
+			["noday"] = {
 				day = 0, dusk = 1.5, night = 1.5
 			},
 			["nodusk"] = {

@@ -66,12 +66,12 @@ local function onturnon(inst)
             inst.AnimState:PushAnimation("proximity_loop", true)
             if not inst.SoundEmitter:PlayingSound("loop_sound") then
                 inst.SoundEmitter:PlaySound("grotto/common/turf_crafting_station/prox_LP", "loop_sound")
-            end    
+            end
         else
             inst.AnimState:PlayAnimation("proximity_loop", true)
             if not inst.SoundEmitter:PlayingSound("loop_sound") then
                 inst.SoundEmitter:PlaySound("grotto/common/turf_crafting_station/prox_LP", "loop_sound")
-            end            
+            end
         end
     end
 end

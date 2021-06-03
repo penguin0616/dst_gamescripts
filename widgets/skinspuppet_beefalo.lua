@@ -19,10 +19,10 @@ local SkinsPuppet = Class(Button, function(self)
 
 	self.anim:SetFacing(FACING_DOWN)
 
-    self.animstate:Hide("HEAT")    
+    self.animstate:Hide("HEAT")
 
     self.anim:SetScale(.1)
-    
+
     self.last_skins = { prefabname = "", base_skin = "", beef_body = "", beef_horn = "", beef_feet = "", beef_tail = "", beef_head = "" }
 end)
 
@@ -32,7 +32,7 @@ function SkinsPuppet:AddShadow()
 	self.shadow:SetScale(.2)
 	self.shadow:MoveToBack()
 end
-    
+
 function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change_emote)
 
 	--[[
@@ -56,7 +56,7 @@ function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change
 
 	local base_build = prefabname
 	base_build = base_item or (prefabname .."_none")
-	
+
 	self.default_build = base_build
 	self.animstate:SetBuild(self.default_build)
 

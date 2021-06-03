@@ -54,7 +54,7 @@ local function OnSeasonChange(inst, season)
     end
 
 	local active = false
-	if inst.components.mood.moodseasons then 
+	if inst.components.mood.moodseasons then
 	    for i, s in pairs(inst.components.mood.moodseasons) do
 	        if s == season then
 	            active = true
@@ -66,7 +66,7 @@ local function OnSeasonChange(inst, season)
         inst.components.mood:SetIsInMood(true, true)
     else
         inst.components.mood:ResetMood()
-    end        
+    end
 end
 
 -- Use this to set the mood correctly (used for making sure the beefalo are mating when the start season is spring)
@@ -117,7 +117,7 @@ function Mood:SetIsInMood(inmood, entireseason)
     end
 
     if self.isinmood ~= inmood or entireseason then
-    
+
         self.isinmood = inmood
         if self.isinmood then
             if entireseason then
@@ -156,7 +156,7 @@ function Mood:OnLoad(data)
     self.isinmood = not data.inmood
     local active = false
     local season = TheWorld.state.season
-    if self.moodseasons then 
+    if self.moodseasons then
 	    for i, s in pairs(self.moodseasons) do
 	        if season and s == season then
 	            active = true

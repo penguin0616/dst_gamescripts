@@ -41,9 +41,9 @@ local function AddSquareTopolopy(topology, left, top, size, room_id, tags)
 	node.type = NODE_TYPE.Default
 	node.x = node.cent[1]
 	node.y = node.cent[2]
-	
+
 	node.validedges = {}
-	
+
 	topology.nodes[index] = node
 end
 
@@ -55,7 +55,7 @@ local function TurnOfTidesRetrofitting_MoonIsland(map, savedata)
 	local map_height = savedata.map.height
 	local entities = savedata.ents
 
-	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset) 
+	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset)
 				local x = (points_x[current_pos_idx] - width/2.0)*TILE_SCALE
 				local y = (points_y[current_pos_idx] - height/2.0)*TILE_SCALE
 				x = math.floor(x*100)/100.0
@@ -65,7 +65,7 @@ local function TurnOfTidesRetrofitting_MoonIsland(map, savedata)
 				end
 				local save_data = {x=x, z=y}
 				if prefab_data then
-					
+
 					if prefab_data.data then
 						if type(prefab_data.data) == "function" then
 							save_data["data"] = prefab_data.data()
@@ -113,7 +113,7 @@ local function TurnOfTidesRetrofitting_MoonIsland(map, savedata)
 
 		if #candidtates > 0 then
 			table.sort(candidtates, function(a, b) return a.distsq < b.distsq end)
-			local top, left = candidtates[1].top, candidtates[1].left	
+			local top, left = candidtates[1].top, candidtates[1].left
 
 			obj_layout.Place({left, top}, name, add_fn, nil, map)
 			local tags = {"moonhunt", "nohasslers", "lunacyarea", "not_mainland"}
@@ -141,7 +141,7 @@ local function TurnOfTidesRetrofitting_HermitIsland(map, savedata)
 	local map_height = savedata.map.height
 	local entities = savedata.ents
 
-	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset) 
+	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset)
 				local x = (points_x[current_pos_idx] - width/2.0)*TILE_SCALE
 				local y = (points_y[current_pos_idx] - height/2.0)*TILE_SCALE
 				x = math.floor(x*100)/100.0
@@ -151,7 +151,7 @@ local function TurnOfTidesRetrofitting_HermitIsland(map, savedata)
 				end
 				local save_data = {x=x, z=y}
 				if prefab_data then
-					
+
 					if prefab_data.data then
 						if type(prefab_data.data) == "function" then
 							save_data["data"] = prefab_data.data()
@@ -228,7 +228,7 @@ local function TurnOfTidesRetrofitting_HermitIsland(map, savedata)
 
 			shuffleArray(candidtates)
 			for _, candidtate in ipairs(candidtates) do
-				local top, left = candidtates[1].top, candidtates[1].left	
+				local top, left = candidtates[1].top, candidtates[1].left
 				local world_top, world_left = (left-topology_delta)*4 - (map_width * 0.5 * 4), (top-topology_delta)*4 - (map_height * 0.5 * 4)
 
 				local ents_to_remove = FindEntsInArea(savedata.ents, world_top - 5, world_left - 5, world_size + 10, {"boat", "malbatross", "oceanfish_shoalspawner", "chester_eyebone", "glommerflower", "klaussackkey"})
@@ -271,7 +271,7 @@ local function TurnOfTidesRetrofitting_HermitIsland(map, savedata)
 end
 
 
-return { 
+return {
 	TurnOfTidesRetrofitting_MoonIsland = TurnOfTidesRetrofitting_MoonIsland,
 	TurnOfTidesRetrofitting_HermitIsland = TurnOfTidesRetrofitting_HermitIsland,
 }

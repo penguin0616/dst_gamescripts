@@ -440,7 +440,7 @@ EndQuake = _ismastersim and function(inst, continue)
     if continue then
         SetNextQuake(_quakedata)
     end
-    
+
     for i, op in ipairs(_originalplayers) do
 	    for j, ap in ipairs(_activeplayers) do
 			if op == ap and not op:HasTag("playerghost") then
@@ -460,7 +460,7 @@ local StartQuake = _ismastersim and function(inst, data, overridetime)
 	_originalplayers = {}
     for i, v in ipairs(_activeplayers) do
         ScheduleDrop(v)
-        
+
         table.insert(_originalplayers, v)
     end
 

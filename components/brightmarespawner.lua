@@ -44,7 +44,7 @@ local function GetTuningLevelForPlayer(player)
 end
 
 local function IsValidTrackingTarget(target)
-	return target.components.health ~= nil and not target.components.health:IsDead() and not target:HasTag("playerghost") and target.entity:IsVisible() 
+	return target.components.health ~= nil and not target.components.health:IsDead() and not target:HasTag("playerghost") and target.entity:IsVisible()
 end
 
 local function StopTracking(ent)
@@ -56,11 +56,11 @@ local function FindGestaltSpawnPtForPlayer(player, wantstomorph)
 	local x, y, z = player.Transform:GetWorldPosition()
 	local function IsValidGestaltSpawnPt(offset)
 		local x1, z1 = x + offset.x, z + offset.z
-		return #TheSim:FindEntities(x1, 0, z1, 6, nil, nil, SPAWN_ONEOF_TAGS) == 0 
+		return #TheSim:FindEntities(x1, 0, z1, 6, nil, nil, SPAWN_ONEOF_TAGS) == 0
 	end
-    local offset = FindValidPositionByFan(math.random() * 2 * PI, 
+    local offset = FindValidPositionByFan(math.random() * 2 * PI,
 											(wantstomorph and TUNING.GESTALT_SPAWN_MORPH_DIST or TUNING.GESTALT_SPAWN_DIST) + math.random() * 2 * TUNING.GESTALT_SPAWN_DIST_VAR - TUNING.GESTALT_SPAWN_DIST_VAR,
-											8, 
+											8,
 											IsValidGestaltSpawnPt)
 	if offset ~= nil then
 		offset.x = offset.x + x
@@ -110,9 +110,9 @@ local function UpdatePopulation()
 
 				if math.random() < inc_chance then
 					TrySpawnGestaltForPlayer(player, level, data)
-				end		
+				end
 			end
-				
+
 		end
 	end
 
@@ -173,7 +173,7 @@ local function OnSanityModeChanged(player, data)
 	else
 		_players[player] = nil
 	end
-	
+
 	if next(_players) ~= nil then
 		Start()
 	else

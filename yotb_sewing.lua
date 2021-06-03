@@ -31,7 +31,7 @@ local function GetCandidateRecipes(ingdata)
 
 	table.sort( candidates, function(a,b) return (a.priority or 0) > (b.priority or 0) end )
 	if #candidates > 0 then
-		
+
 		--find the set of highest priority recipes
 		local top_candidates = {}
 		local val = candidates[1].priority or 0

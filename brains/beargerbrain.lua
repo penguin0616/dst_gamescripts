@@ -170,7 +170,7 @@ end
 local BEEHIVE_TAGS = { "beehive" }
 
 local function AttackHiveAction(inst)
-    local hive = FindEntity(inst, SEE_STRUCTURE_DIST, function(guy) 
+    local hive = FindEntity(inst, SEE_STRUCTURE_DIST, function(guy)
             return inst.components.combat:CanTarget(guy) and guy:IsOnValidGround()
         end,
         BEEHIVE_TAGS)

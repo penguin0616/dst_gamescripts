@@ -142,7 +142,7 @@ local function AddPlacerRing(inst, ringdata, deployhelper_key)
     inst.components.placer:LinkEntity(placer_ring)
 end
 
-return 
+return
 {
 	AddDeployHelper = AddDeployHelper,
 	AddPlacerRing = AddPlacerRing,

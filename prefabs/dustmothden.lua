@@ -32,7 +32,7 @@ local function StartRepairing(inst, repairer)
     else
         inst.components.timer:StartTimer("repair", TUNING.DUSTMOTHDEN_REPAIR_TIME)
     end
-    
+
     inst.components.entitytracker:TrackEntity("repairer", repairer)
 
     inst.AnimState:PlayAnimation("repair", true)
@@ -55,10 +55,10 @@ local function MakeWhole(inst, play_growth_anim)
     else
         inst.AnimState:PlayAnimation("idle_thulecite")
     end
-    
+
     inst.components.workable.workleft = inst.components.workable.workleft <= 0 and inst.components.workable.maxwork or inst.components.workable.workleft
     inst.components.workable.workable = true
-    
+
     local repairer = inst.components.entitytracker:GetEntity("repairer")
     if repairer ~= nil and repairer:IsValid() then
         repairer:PushEvent("dustmothden_repaired", inst)
@@ -88,7 +88,7 @@ local function OnLoadPostPass(inst, ents, data)
     else
         MakeWhole(inst, false)
     end
-    
+
     if inst.components.timer:TimerExists("repair") then
         PauseRepairing(inst)
     end
@@ -127,7 +127,7 @@ local function fn()
 
     inst._start_repairing_fn = StartRepairing
     inst._pause_repairing_fn = PauseRepairing
-    
+
     inst:AddComponent("childspawner")
     inst.components.childspawner.childname = "dustmoth"
     inst.components.childspawner:SetRegenPeriod(TUNING.DUSTMOTHDEN_REGEN_TIME)
@@ -150,13 +150,13 @@ local function fn()
 
     inst.components.workable.workleft = 0
     inst.components.workable.workable = false
-    
+
     inst:AddComponent("timer")
     inst:AddComponent("entitytracker")
-    
+
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('dustmothden')
-    
+
     inst:AddComponent("inspectable")
 
     inst:ListenForEvent("timerdone", OnTimerDone)

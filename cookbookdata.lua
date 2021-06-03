@@ -24,7 +24,7 @@ end
 
 function CookbookData:Load()
 	self.preparedfoods = {}
-	TheSim:GetPersistentString("cookbook", function(load_success, data) 
+	TheSim:GetPersistentString("cookbook", function(load_success, data)
 		if load_success and data ~= nil then
 			local status, recipe_book = pcall( function() return json.decode(data) end )
 		    if status and recipe_book then

@@ -13,7 +13,7 @@ local assets =
     Asset("ANIM", "anim/werepig_actions.zip"),
     Asset("ANIM", "anim/pig_token.zip"),
     Asset("SOUND", "sound/pig.fsb"),
-    Asset("ANIM", "anim/merm_actions.zip"),    
+    Asset("ANIM", "anim/merm_actions.zip"),
 }
 
 local PIG_TOKEN_PREFAB = "pig_token"
@@ -175,7 +175,7 @@ local function OnAttacked(inst, data)
     inst:ClearBufferedAction()
 
 	if attacker ~= nil then
-		if attacker.prefab == "deciduous_root" and attacker.owner ~= nil then 
+		if attacker.prefab == "deciduous_root" and attacker.owner ~= nil then
 			OnAttackedByDecidRoot(inst, attacker.owner)
 		elseif attacker.prefab ~= "deciduous_root" and not attacker:HasTag("pigelite") then
 			inst.components.combat:SetTarget(attacker)
@@ -502,8 +502,8 @@ local function SetWerePig(inst)
 
     inst.components.combat:SetDefaultDamage(TUNING.WEREPIG_DAMAGE)
     inst.components.combat:SetAttackPeriod(TUNING.WEREPIG_ATTACK_PERIOD)
-    inst.components.locomotor.runspeed = TUNING.WEREPIG_RUN_SPEED 
-    inst.components.locomotor.walkspeed = TUNING.WEREPIG_WALK_SPEED 
+    inst.components.locomotor.runspeed = TUNING.WEREPIG_RUN_SPEED
+    inst.components.locomotor.walkspeed = TUNING.WEREPIG_WALK_SPEED
 
     inst.components.sleeper:SetSleepTest(WerepigSleepTest)
     inst.components.sleeper:SetWakeTest(WerepigWakeTest)
@@ -684,7 +684,7 @@ local function common(moonbeast)
         inst.components.trader.onrefuse = OnRefuseItem
         inst.components.trader.deleteitemonaccept = false
     end
-    
+
     ------------------------------------------
 
     inst:AddComponent("sanityaura")
@@ -807,8 +807,8 @@ local function moon()
 
     inst.components.combat:SetDefaultDamage(TUNING.WEREPIG_DAMAGE)
     inst.components.combat:SetAttackPeriod(TUNING.WEREPIG_ATTACK_PERIOD)
-    inst.components.locomotor.runspeed = TUNING.WEREPIG_RUN_SPEED 
-    inst.components.locomotor.walkspeed = TUNING.WEREPIG_WALK_SPEED 
+    inst.components.locomotor.runspeed = TUNING.WEREPIG_RUN_SPEED
+    inst.components.locomotor.walkspeed = TUNING.WEREPIG_WALK_SPEED
 
     inst.components.sleeper:SetSleepTest(WerepigSleepTest)
     inst.components.sleeper:SetWakeTest(WerepigWakeTest)

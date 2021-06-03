@@ -25,7 +25,7 @@ local function retargetfn(inst)
     return FindEntity(
         inst,
         TUNING.TENTACLE_ATTACK_DIST,
-        function(guy) 
+        function(guy)
             return guy.prefab ~= inst.prefab
                 and guy.entity:IsVisible()
                 and not guy.components.health:IsDead()
@@ -93,7 +93,7 @@ local function fn()
     inst.AnimState:SetBuild("tentacle")
     inst.AnimState:PlayAnimation("idle")
 
-    inst:AddTag("monster")    
+    inst:AddTag("monster")
     inst:AddTag("hostile")
     inst:AddTag("wet")
     inst:AddTag("WORM_DANGER")

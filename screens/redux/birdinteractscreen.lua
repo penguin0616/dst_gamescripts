@@ -27,10 +27,10 @@ local BirdInteractScreen = Class(Screen, function(self, buttons)
     self.proot:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
     --throw up the background
-    self.bg = self.proot:AddChild(TEMPLATES.CurlyWindow(250, 236, STRINGS.UI.TRADESCREEN.BIRDS, nil, nil, STRINGS.UI.TRADESCREEN.BIRDS_TITLE_SUB))
+    self.bg = self.proot:AddChild(TEMPLATES.CurlyWindow(250, 286, STRINGS.UI.TRADESCREEN.BIRDS, nil, nil, STRINGS.UI.TRADESCREEN.BIRDS_TITLE_SUB))
     self.bg.body:SetVAlign(ANCHOR_TOP)
     self.bg.body:SetSize(20)
-    
+
     --create the menu itself
     local button_w = 250
     local button_h = 53
@@ -56,7 +56,7 @@ end
 function BirdInteractScreen:GetHelpText()
     local controller_id = TheInput:GetControllerID()
     local t = {}
-    
+
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.TRADESCREEN.BACK)
 
     return table.concat(t, "  ")

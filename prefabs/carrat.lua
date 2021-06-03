@@ -45,7 +45,7 @@ local carratsounds =
     eat = "turnoftides/creatures/together/carrat/eat",
     stunned = "turnoftides/creatures/together/carrat/stunned",
 	reaction = "turnoftides/creatures/together/carrat/reaction",
-	
+
 	step = "dontstarve/creatures/mandrake/footstep",
 }
 
@@ -134,7 +134,7 @@ local function common_onload(inst, data)
             inst._trained_today = data.has_trained
         end
     end
-    
+
     if inst._spread_stats_task then
         inst._spread_stats_task:Cancel()
         inst._spread_stats_task = nil
@@ -146,7 +146,7 @@ local function common_onload(inst, data)
 end
 
 local function OnMusicStateDirty(inst)
-    if inst._musicstate:value() > 0 then     
+    if inst._musicstate:value() > 0 then
         if inst._musicstate:value() == CARRAT_MUSIC_STATES.RACE then
             if ThePlayer:GetDistanceSqToInst(inst) < 20*20 then
                 ThePlayer:PushEvent("playracemusic")
@@ -160,13 +160,13 @@ local function docarratfailtalk(inst,stat)
     if inst.components.entitytracker:GetEntity("yotc_trainer") then
         local player = inst.components.entitytracker:GetEntity("yotc_trainer")
         if inst:GetDistanceSqToInst(player) < 20*20 then
-            if stat == "direction" then            
+            if stat == "direction" then
                 inst:DoTaskInTime(2,function() player.components.talker:Say(GetString(player, "ANNOUNCE_CARRAT_ERROR_WRONG_WAY")) end)
-            elseif stat == "reaction" then            
+            elseif stat == "reaction" then
                 inst:DoTaskInTime(2,function() player.components.talker:Say(GetString(player, "ANNOUNCE_CARRAT_ERROR_STUNNED")) end)
-            elseif stat == "speed" then            
+            elseif stat == "speed" then
                 inst:DoTaskInTime(4,function() player.components.talker:Say(GetString(player, "ANNOUNCE_CARRAT_ERROR_WALKING")) end)
-            elseif stat == "stamina" then            
+            elseif stat == "stamina" then
                 inst:DoTaskInTime(2,function() player.components.talker:Say(GetString(player, "ANNOUNCE_CARRAT_ERROR_FELL_ASLEEP")) end)
             end
         end
@@ -220,7 +220,7 @@ local function go_to_submerged(inst)
 			end
 		end
         inst:RemoveComponent("yotc_racecompetitor")
-	end		
+	end
 
     inst:RemoveComponent("locomotor")
     inst:RemoveComponent("cookable")
@@ -481,7 +481,7 @@ local function go_to_emerged(inst)
 
     inst:AddComponent("combat")
     inst.components.combat.hiteffectsymbol = "carrat_body"
-    
+
     inst:AddComponent("sleeper")
     inst:AddComponent("tradable")
 
@@ -498,7 +498,7 @@ local function go_to_emerged(inst)
 
     inst:SetBrain(brain)
     inst:RestartBrain()
-    
+
     -- Track if we're burrowed for save/load
     inst._is_burrowed = false
 end
@@ -578,7 +578,7 @@ local function yotc_nighttime_degrade_test(inst, isnight)
                 inst.components.yotc_racestats:DegradePoints(degrade_amount)
                 if inst.gymscale then
                     inst.gymscale.updateratstats(inst.gymscale)
-                end 
+                end
             end
         else
             inst._trained_today = false
@@ -592,13 +592,13 @@ local function settrapdata(inst)
     local stats = inst.components.yotc_racestats
     if stats then
         lootdata.stats = {speed = stats.speed,stamina = stats.stamina,direction = stats.direction,reaction = stats.reaction}
-    end    
+    end
     return lootdata
 end
 
 local function getcarratfromtrap(inst,data)
     if data.colour then
-        inst._setcolorfn(inst, data.colour)        
+        inst._setcolorfn(inst, data.colour)
     end
     if data.stats then
         if inst.components.yotc_racestats then
@@ -611,13 +611,13 @@ local function getcarratfromtrap(inst,data)
             inst.components.yotc_racestats.reaction = data.stats.reaction
             inst.components.yotc_racestats.stamina = data.stats.stamina
         end
-    end    
+    end
 end
 
 local food_colors =
 {
     watermelon_seeds = "blue",
-    
+
     onion_seeds = "brown",
     potato_seeds = "brown",
 
@@ -630,7 +630,7 @@ local food_colors =
 	pepper_seeds = "pink",
 
     eggplant_seeds = "purple",
-    
+
 	garlic_seeds = "white",
 
 	corn_seeds = "yellow",
@@ -702,9 +702,9 @@ local function fn()
     if not TheNet:IsDedicated() then
         inst:ListenForEvent("musicstatedirty", OnMusicStateDirty)
     end
-    
+
     inst.entity:SetPristine()
-    if not TheWorld.ismastersim then    
+    if not TheWorld.ismastersim then
         return inst
     end
 
@@ -742,7 +742,7 @@ local function fn()
         inst:ListenForEvent("carrat_error_direction", function() docarratfailtalk(inst,"direction") end)
         inst:ListenForEvent("carrat_error_walking", function() docarratfailtalk(inst,"speed") end)
         inst:ListenForEvent("carrat_error_sleeping", function() docarratfailtalk(inst,"stamina") end)
-        inst:WatchWorldState("isnight", yotc_nighttime_degrade_test)         
+        inst:WatchWorldState("isnight", yotc_nighttime_degrade_test)
     end
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
@@ -760,7 +760,7 @@ local function fn()
     inst.components.cookable.product = "plantmeat_cooked"
     inst.components.cookable:SetOnCookedFn(on_cooked_fn)
 
-    inst:AddComponent("homeseeker")   
+    inst:AddComponent("homeseeker")
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.CARRAT.HEALTH)
@@ -788,7 +788,7 @@ local function fn()
     inst:AddComponent("inspectable")
     inst:AddComponent("sleeper")
     inst.components.sleeper.watchlight = true
-    inst:AddComponent("tradable")   
+    inst:AddComponent("tradable")
 
     MakeHauntablePanic(inst)
 

@@ -14,10 +14,10 @@ local function onlocked(self)
     end
 end
 
-local Hitcher = Class(function(self, inst) 
+local Hitcher = Class(function(self, inst)
 	self.inst = inst
 	self.hitched = nil
-	self.canbehitched = true	
+	self.canbehitched = true
 	self.locked = false
 end,
 nil,
@@ -37,10 +37,10 @@ function Hitcher:SetHitched( target )
 	if target.components.hitchable then
 		target.components.hitchable:SetHitched( self.inst )
 	end
-	--self.hitched:AddTag("hitched")	
+	--self.hitched:AddTag("hitched")
 	if self.hitchedfn then
 		self.hitchedfn(self.inst, self.hitched)
-	end	
+	end
 end
 
 function Hitcher:Unhitch()
@@ -49,10 +49,10 @@ function Hitcher:Unhitch()
 	local oldtarget = self.hitched
 	if self.hitched and not self.hitched.components.hitchable.canbehitched then
 		self.hitched.components.hitchable:Unhitch()
-	end	
+	end
 	if self.unhitchfn then
 		self.unhitchfn(self.inst,oldtarget)
-	end	
+	end
 	self.hitched = nil
 	self.inst:PushEvent("unhitched")
 end

@@ -84,10 +84,10 @@ local function RegisterActiveShell(inst)
 	if TheWorld.components.singingshellmanager == nil then
 		TheWorld:AddComponent("singingshellmanager")
 	end
-	
+
 	TheWorld.components.singingshellmanager:RememberActiveShell(inst)
 end
-	
+
 local function UnregisterActiveShell(inst)
 	if TheWorld.components.singingshellmanager ~= nil then
 		TheWorld.components.singingshellmanager:ForgetActiveShell(inst)
@@ -142,7 +142,7 @@ local function MakeShell(octave, common_postinit, master_postinit, prefabs)
 		inst.entity:AddNetwork()
 
 		MakeInventoryPhysics(inst)
-		
+
         inst.AnimState:SetBank("singingshell")
         inst.AnimState:SetBuild("singingshell")
 		inst.AnimState:PlayAnimation("idle")
@@ -166,7 +166,7 @@ local function MakeShell(octave, common_postinit, master_postinit, prefabs)
 
 		-- Prevents shell from immediately playing if spawning within range of a singingshelltrigger
 		inst:DoTaskInTime(0, PreventImmediateActivate)
-		
+
 		inst._sound = "hookline_2/common/shells/sea_sound_"..(octave == 3 and 1 or octave == 4 and 2 or 3).."_LP"
 
 		inst._octave = octave
@@ -200,12 +200,12 @@ local function MakeShell(octave, common_postinit, master_postinit, prefabs)
 		inst:AddComponent("hauntable")
 		inst.components.hauntable:SetHauntValue(TUNING.HAUNT_SMALL)
 		inst.components.hauntable:SetOnHauntFn(OnHaunt)
-		
+
 		inst:ListenForEvent("onremove", UnregisterActiveShell)
 
 		inst.OnSave = OnSave
 		inst.OnLoad = OnLoad
-		
+
 		inst.OnEntityWake = RegisterActiveShell
 		inst.OnEntitySleep = UnregisterActiveShell
 
@@ -234,13 +234,13 @@ local function critterfn()
     inst.AnimState:SetBuild("singingshell_creature_basic")
     local breaknum = math.random(1,3)
 	inst.AnimState:PlayAnimation("break_"..breaknum, false)
-	
+
 
 	local times = {12}
 	if breaknum == 2 then
 		times = {3,6}
 	elseif breaknum == 3 then
-		times = {20}		
+		times = {20}
 	end
 
 	for i,time in ipairs(times)do
@@ -273,10 +273,10 @@ local function critterfn()
 					if TheWorld.Map:GetPlatformAtPoint(pos.x,pos.z) and TheWorld.Map:GetPlatformAtPoint(pos.x,pos.z):HasTag("wood") then
 						SpawnPrefab("singingshell_creature_woodfx").Transform:SetPosition(inst.Transform:GetWorldPosition())
 					else
-						SpawnPrefab("singingshell_creature_rockfx").Transform:SetPosition(inst.Transform:GetWorldPosition())					
+						SpawnPrefab("singingshell_creature_rockfx").Transform:SetPosition(inst.Transform:GetWorldPosition())
 					end
 				end)
-			end)		
+			end)
 		end
 		if inst.AnimState:IsCurrentAnimation("break_1") or inst.AnimState:IsCurrentAnimation("break_2") or inst.AnimState:IsCurrentAnimation("break_3") then
 
@@ -285,7 +285,7 @@ local function critterfn()
 				if inst.AnimState:IsCurrentAnimation("jump_pre") then
 					inst.SoundEmitter:PlaySound("hookline_2/common/shells/creature/scared")
 				end
-			end)			
+			end)
 		end
 
 	end)
@@ -305,7 +305,7 @@ local function critterfn()
 			inst.entity:SetParent(platform.entity)
 			inst.Transform:SetPosition(platform_x, platform_y, platform_z)
 		elseif not TheWorld.Map:IsVisualGroundAtPoint(pos.x,pos.y,pos.z) then		
-			SpawnPrefab("splash_green_small").Transform:SetPosition(pos.x,pos.y,pos.z)			
+			SpawnPrefab("splash_green_small").Transform:SetPosition(pos.x,pos.y,pos.z)
 			inst:Remove()
 		end
 

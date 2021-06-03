@@ -1,5 +1,5 @@
 
-local Appraisable = Class(function(self, inst) 
+local Appraisable = Class(function(self, inst)
 	self.inst = inst
 end,
 nil,

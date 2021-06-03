@@ -73,7 +73,7 @@ SGCritterStates.AddNuzzle(states, actionhandlers,
             TimeEvent(19*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/sheepington/grunt") end),
         })
 
-SGCritterStates.AddWalkStates(states, 
+SGCritterStates.AddWalkStates(states,
 	{
 		walktimeline =
 		{
@@ -86,11 +86,11 @@ SGCritterStates.AddWalkStates(states,
 	}, true)
 CommonStates.AddSleepExStates(states,
 		{
-			starttimeline = 
+			starttimeline =
 			{
 				TimeEvent(22*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/sheepington/bodyfall") end),
 			},
-			sleeptimeline = 
+			sleeptimeline =
 			{
 				TimeEvent(22*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/sheepington/sleep") end),
 				TimeEvent(57*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/creatures/together/sheepington/sleep") end),

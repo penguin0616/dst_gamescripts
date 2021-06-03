@@ -32,10 +32,10 @@ local function OnUpdateWindow(window, inst, snow)
                 snow.AnimState:SetBuild("pig_house")
             end
         end
-        
+
         if not window._shown then
             window._shown = true
-            
+
             window:Show()
             snow:Show()
         end
@@ -128,7 +128,7 @@ local function onoccupieddoortask(inst)
 end
 
 local function onoccupied(inst, child)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.SoundEmitter:PlaySound("dontstarve/pig/pig_in_hut", "pigsound")
         inst.SoundEmitter:PlaySound("dontstarve/common/pighouse_door")
 
@@ -195,7 +195,7 @@ local function onhammered(inst, worker)
 end
 
 local function onhit(inst, worker)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("hit")
         if inst.lightson then
             inst.AnimState:PushAnimation("lit")
@@ -438,7 +438,7 @@ local function fn()
     inst:ListenForEvent("burntup", onburntup)
     inst:ListenForEvent("onignite", onignite)
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     MakeHauntableWork(inst)

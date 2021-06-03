@@ -40,7 +40,7 @@ local function ReturnChildren(inst)
     end
 end
 
-local function OnHit(inst, attacker, damage) 
+local function OnHit(inst, attacker, damage)
     if inst.components.childspawner ~= nil then
         inst.components.childspawner:SpawnChild(attacker)
     end
@@ -118,7 +118,7 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
-    
+
     inst:AddComponent("childspawner")
     inst.components.childspawner:SetRegenPeriod(TUNING.SLURTLEHOLE_REGEN_PERIOD)
     inst.components.childspawner:SetSpawnPeriod(TUNING.SLURTLEHOLE_SPAWN_PERIOD)

@@ -62,7 +62,7 @@ local function IsEligible(player)
 	local area = player.components.areaaware
 	return player:IsValid()
 			and TheWorld.Map:IsVisualGroundAtPoint(player.Transform:GetWorldPosition())
-			and area:GetCurrentArea() ~= nil 
+			and area:GetCurrentArea() ~= nil
 			and not area:CurrentlyInTag("nohasslers")
 end
 
@@ -121,7 +121,7 @@ end
 local function ReleaseHassler(targetPlayer)
     assert(targetPlayer)
 
-    if _numSpawned >= _numToSpawn then 
+    if _numSpawned >= _numToSpawn then
         print("Not spawning bearger - already at maximum number")
         return nil
     end
@@ -191,7 +191,7 @@ local function OnPlayerLeft(src,player)
     for i, v in ipairs(_activeplayers) do
         if v == player then
             table.remove(_activeplayers, i)
-            if player == _targetplayer then 
+            if player == _targetplayer then
             	_targetplayer = nil
             end
             return
@@ -259,7 +259,7 @@ local function _DoWarningSpeech(player)
 end
 
 function self:DoWarningSpeech(_targetplayer)
-    for i, v in ipairs(_activeplayers) do 
+    for i, v in ipairs(_activeplayers) do
         if v == _targetplayer or v:IsNear(_targetplayer, HASSLER_SPAWN_DIST * 2) then
             v:DoTaskInTime(math.random() * 2, _DoWarningSpeech)
         end
@@ -338,7 +338,7 @@ function self:OnSave()
 
 	data.activehasslers = {}
 
-	for k,v in pairs(_activehasslers) do 
+	for k,v in pairs(_activehasslers) do
 		if k ~= nil then
 			table.insert(data.activehasslers, k.GUID)
 			table.insert(ents, k.GUID)
@@ -365,8 +365,8 @@ end
 
 function self:LoadPostPass(newents, savedata)
 	if savedata.activehasslers ~= nil then
-		for k,v in pairs(savedata.activehasslers) do 
-			if newents[v] ~= nil then 
+		for k,v in pairs(savedata.activehasslers) do
+			if newents[v] ~= nil then
 				_activehasslers[newents[v].entity] = true
 			end
 		end
@@ -376,7 +376,7 @@ function self:LoadPostPass(newents, savedata)
 		_worldsettingstimer:ResumeTimer(BEARGER_TIMERNAME)
 		self.inst:StartUpdatingComponent(self)
 	end
-	
+
 end
 
 

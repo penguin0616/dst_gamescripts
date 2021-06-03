@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
     ActionHandler(ACTIONS.EAT, "eat"),
 }
@@ -43,7 +43,7 @@ local states=
             inst.AnimState:PlayAnimation("eat")
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/eat") end),
             TimeEvent(27*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/beefalo/chew") end),
@@ -88,10 +88,10 @@ local states=
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("give")
-            
+
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(22*FRAMES, function(inst) inst:TradeItem() end),
             TimeEvent(23*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/warcry")end),
@@ -115,13 +115,13 @@ local states=
             inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/warning")
         end,
 
-        timeline = 
+        timeline =
         {
             -- Staff reaches the peak
             TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/call") end),
             TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/warcry") end),
             TimeEvent(30*FRAMES, function(inst) -- Staff hits the ground
-                inst.CallGuards(inst) 
+                inst.CallGuards(inst)
             end),
         },
 
@@ -163,11 +163,11 @@ local states=
 
 CommonStates.AddCombatStates(states,
 {
-    hittimeline = 
+    hittimeline =
     {
         TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/hit") end),
     },
-    deathtimeline = 
+    deathtimeline =
     {
         TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/merm/king/death") end),
     },

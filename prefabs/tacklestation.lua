@@ -63,7 +63,7 @@ end
 local function onturnoff(inst)
 	if inst._activetask == nil then
 		inst:PushEvent("onturnoff")
-		
+
 		inst.AnimState:PlayAnimation("idle", false)
 		inst.SoundEmitter:KillSound("idlesound")
     end
@@ -196,7 +196,7 @@ local function fn()
 
 	inst:ListenForEvent("onlearnednewtacklesketch", onlearnednewtacklesketch)
 	inst:ListenForEvent("onbuilt", onbuilt)
-		
+
     inst.OnSave = onsave
     inst.OnLoad = onload
 

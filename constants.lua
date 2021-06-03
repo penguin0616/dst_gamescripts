@@ -72,7 +72,7 @@ NUM_CRAFTING_RECIPES = 10
 --push priorities
 STATIC_PRIORITY = 10000
 
--- Controls: 
+-- Controls:
 -- Must match the Control enum in DontStarveInputHandler.h
 -- Must match STRINGS.UI.CONTROLSSCREEN.CONTROLS
 
@@ -98,7 +98,7 @@ CONTROL_ROTATE_RIGHT = 12 -- right shoulder
 
 -- player movement controls
 CONTROL_PAUSE = 13  -- start
-CONTROL_MAP = 14 
+CONTROL_MAP = 14
 CONTROL_INV_1 = 15
 CONTROL_INV_2 = 16
 CONTROL_INV_3 = 17
@@ -149,7 +149,7 @@ CONTROL_PUTSTACK = 55
 CONTROL_CONTROLLER_ATTACK = 56 -- X on xbox controller
 CONTROL_CONTROLLER_ACTION = 57 -- A
 CONTROL_CONTROLLER_ALTACTION = 58 -- B
-CONTROL_USE_ITEM_ON_ITEM = 59 
+CONTROL_USE_ITEM_ON_ITEM = 59
 
 CONTROL_MAP_ZOOM_IN = 60
 CONTROL_MAP_ZOOM_OUT = 61
@@ -559,7 +559,7 @@ GROUND =
 {
 	INVALID = 255,
     IMPASSABLE = 1,
-    
+
     ROAD = 2,
     ROCKY = 3,
     DIRT = 4,
@@ -652,7 +652,7 @@ GROUND =
 	OCEAN_BRINEPOOL = 205,
 	OCEAN_BRINEPOOL_SHORE = 206,
 	OCEAN_HAZARDOUS = 207,
-	
+
 	-- MODS OCEAN TILES [231, 247]  <--PUBLIC USE SPACE FOR MODS --
 
 	OCEAN_END = 247, -- enum for checking if tile is ocean water
@@ -675,13 +675,14 @@ SPECIAL_EVENTS =
     NONE = "none",
     HALLOWED_NIGHTS = "hallowed_nights",
     WINTERS_FEAST = "winters_feast",
+	CARNIVAL = "crow_carnival",
     YOTG = "year_of_the_gobbler",
     YOTV = "year_of_the_varg",
     YOTP = "year_of_the_pig",
     YOTC = "year_of_the_carrat",
     YOTB = "year_of_the_beefalo",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.CARNIVAL
 
 FESTIVAL_EVENTS =
 {
@@ -757,7 +758,14 @@ SPECIAL_EVENT_MUSIC =
     {
         bank = "music_frontend_yotb.fsb",
         sound = "yotb_2021/music/FE",
-    },   
+    },
+
+	-- crow carnival
+    [SPECIAL_EVENTS.CARNIVAL] =
+    {
+        bank = "music_frontend.fsb",
+        sound = "dontstarve/music/music_FE_summerevent",
+    },
 }
 
 FESTIVAL_EVENT_MUSIC =
@@ -909,9 +917,9 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_moonstorm_FE"
+    --"dontstarve/music/music_moonstorm_FE"
    -- "dontstarve_DLC001/music/music_wigfrid_FE"
-   -- "dontstarve/music/music_FE"
+   "dontstarve/music/music_FE"
 
 
 ---------------------------------------------------------
@@ -959,8 +967,12 @@ TECH =
     WARGOFFERING_THREE = { WARGOFFERING = 3 },
     PIGOFFERING_THREE = { PIGOFFERING = 3 },
     CARRATOFFERING_THREE = { CARRATOFFERING = 3 },
-    BEEFOFFERING_THREE = { BEEFOFFERING = 3 },    
+    BEEFOFFERING_THREE = { BEEFOFFERING = 3 },
     MADSCIENCE_ONE = { MADSCIENCE = 1 },
+	CARNIVAL_PRIZESHOP_ONE = { CARNIVAL_PRIZESHOP = 1 },
+	CARNIVAL_HOSTSHOP_ONE = { CARNIVAL_HOSTSHOP = 1 },
+	CARNIVAL_HOSTSHOP_THREE = { CARNIVAL_HOSTSHOP = 3 },
+
     FOODPROCESSING_ONE = { FOODPROCESSING = 1 },
 	FISHING_ONE = { FISHING = 1 },
 
@@ -994,7 +1006,7 @@ NODE_TYPE =
     Blocker = 4,		-- Adds 2 Blank nodes beside it
     Room = 5,			-- Land can only touch the room(s) it is connected to by the graph (adds impassable around its parameter with a single land bidge)
     BackgroundRoom = 6,
-	SeparatedRoom = 7,	-- adds impassable around its entire parameter 
+	SeparatedRoom = 7,	-- adds impassable around its entire parameter
 }
 
 -- See cell_data.h
@@ -1102,7 +1114,7 @@ LAYOUT_ROTATION =
 	WEST = 3, 	-- 270 Degrees
 }
 
-PLACE_MASK = 
+PLACE_MASK =
 {
 	NORMAL = 0,
 	IGNORE_IMPASSABLE = 1,
@@ -1133,7 +1145,7 @@ LUABIT =
 -- keep up to date with COLLISION_GROUP in simconstants.h
 COLLISION =
 {
-    GROUND            = 32, 
+    GROUND            = 32,
 	BOAT_LIMITS       = 64,
 	LAND_OCEAN_LIMITS = 128,             -- physics wall between water and land
     LIMITS            = 128 + 64,        -- BOAT_LIMITS + LAND_OCEAN_LIMITS
@@ -1189,6 +1201,8 @@ RECIPETABS =
     ORPHANAGE =				{ str = "ORPHANAGE",			sort = 100, icon = "tab_orphanage.tex",			crafting_station = true },
     PERDOFFERING =			{ str = "PERDOFFERING",			sort = 100, icon = "tab_perd_offering.tex",		crafting_station = true },
     MADSCIENCE =			{ str = "MADSCIENCE",			sort = 100, icon = "tab_madscience_lab.tex",	crafting_station = true, manufacturing_station = true },
+	CARNIVAL_PRIZESHOP =	{ str = "CARNIVAL_PRIZESHOP",	sort = 100, icon = "tab_prizebooth.tex",		crafting_station = true , shop = true, icon_atlas = "images/hud2.xml"},
+	CARNIVAL_HOSTSHOP =		{ str = "CARNIVAL_HOSTSHOP",	sort = 100, icon = "tab_host.tex",				crafting_station = true , shop = true, icon_atlas = "images/hud2.xml"},
     FOODPROCESSING =		{ str = "FOODPROCESSING",		sort = 100, icon = "tab_foodprocessing.tex",	crafting_station = true },
 	FISHING =				{ str = "FISHING",				sort = 100, icon = "tab_fishing.tex",			crafting_station = true },
 	WINTERSFEASTCOOKING =	{ str = "WINTERSFEASTCOOKING",	sort = 100, icon = "tab_feast_oven.tex",		crafting_station = true },
@@ -1272,7 +1286,7 @@ ANIM_SORT_ORDER_BELOW_GROUND =
 {
     UNDERWATER = 0,
     BOAT_TRAIL = 1,
-    BOAT_LIP = 2,    
+    BOAT_LIP = 2,
     UNUSED = 3,
 }
 
@@ -1456,7 +1470,7 @@ ANNOUNCEMENT_ICONS =
     ["mod"] =               { atlas = "images/button_icons.xml", texture = "mod_announcement.tex" },
 }
 
-ROAD_STRIPS = 
+ROAD_STRIPS =
 {
 	CORNERS = 0,
 	ENDS = 1,
@@ -1464,7 +1478,7 @@ ROAD_STRIPS =
 	CENTER = 3,
 }
 
-WRAP_MODE = 
+WRAP_MODE =
 {
 	WRAP = 0,
 	CLAMP = 1,
@@ -1535,9 +1549,9 @@ NUM_SKIN_PRESET_SLOTS = 10
 NUM_SAVE_SLOTS = 5
 NUM_DST_SAVE_SLOTS = NUM_SAVE_SLOTS
 
-SAVELOAD = 
-{    
-    OPERATION = 
+SAVELOAD =
+{
+    OPERATION =
     {
         PREPARE = 0,
         LOAD = 1,
@@ -1545,8 +1559,8 @@ SAVELOAD =
         DELETE = 3,
         NONE = 4,
     },
-    
-    STATUS = 
+
+    STATUS =
     {
         OK = 0,
         DAMAGED = 1,
@@ -1673,10 +1687,10 @@ FOODGROUP =
         },
     },
 
-    VEGETARIAN = 
+    VEGETARIAN =
     {
         name = "VEGETARIAN",
-        types = 
+        types =
         {
             FOODTYPE.VEGGIE,
             FOODTYPE.SEEDS,
@@ -1911,7 +1925,7 @@ RATE_SCALE =
 }
 
 -- Twitch status codes
-TWITCH = 
+TWITCH =
 {
     UNDEFINED = -1,
     CHAT_CONNECTED = 0,
@@ -1955,7 +1969,7 @@ HOUNDWARNINGTYPE =
     LVL1_WORM = 4,
     LVL2_WORM = 5,
     LVL3_WORM = 6,
-    LVL4_WORM = 7,    
+    LVL4_WORM = 7,
 }
 
 -- Domestication tendencies
@@ -2063,13 +2077,13 @@ COMMAND_RESULT = {
     INVALID = "INVALID",
 }
 
-CARRAT_MUSIC_STATES = {   
+CARRAT_MUSIC_STATES = {
     NONE = 0,
     TRAINING = 1,
     RACE = 2,
 }
 
-LOCALPLAYER_MUSIC = {   
+LOCALPLAYER_MUSIC = {
     NONE = 0,
     WINTERS_FEAST = 1,
 }
@@ -2079,7 +2093,7 @@ MAX_VOTE_OPTIONS = 6
 USER_HISTORY_EXPIRY_TIME = 60*60*24*30 -- 30 days
 
 -- Mirrors enum in SystemService.h
-LANGUAGE = 
+LANGUAGE =
 {
     ENGLISH = 0,
     ENGLISH_UK = 1,
@@ -2146,7 +2160,7 @@ OCEAN_POPULATION_EDGE_DIST = 4
 OCEAN_WATERFALL_MAX_DIST = 14
 
 -- needs to be kept synchronized with InventoryProgress enum in InventoryManager.h
-INVENTORY_PROGRESS = 
+INVENTORY_PROGRESS =
 {
 	IDLE = 0,
 	CHECK_SHOP = 1,
@@ -2168,7 +2182,7 @@ BETA_INFO =
 		URL = "https://forums.kleientertainment.com/forums/topic/106156-how-to-opt-in-to-return-of-them-beta-for-dont-starve-together/ ",
 	},
 
-    {	
+    {
 		NAME = "ANRBETA",
 		SERVERTAG = "a_new_reign_beta",
 		VERSION_MISMATCH_STRING = "VERSION_MISMATCH_ARNBETA",
@@ -2209,7 +2223,7 @@ CHARACTER_BUTTON_OFFSET =
     winona = -49,
     wurt = -45,
     webber = -45,
-    
+
     default = -47,
 }
 

@@ -4,13 +4,13 @@ local treasure_templates =
 --	TREASUREPREFAB1 = -- Prefab to spawn at point
 --	{
 --		treasure_type_weight = 1, -- Relative container prefab appearance rate
---	
+--
 --		presets = -- OPTIONAL! If there are no presets the treasureprefab will simply spawn as is
 --		{
 --			PRESET1 = -- Preset names have no functionality other than making it easier to keep track of which one is which
 --			{
 --				preset_weight = 1, -- Relative preset appearance rate
---		
+--
 --				guaranteed_loot =
 --				{
 --					-- Container is guaranteed to contain this many of these prefabs
@@ -37,7 +37,7 @@ local treasure_templates =
 	sunkenchest =
 	{
 		treasure_type_weight = 1,
-		
+
 		presets =
 		{
 			saltminer =
@@ -79,7 +79,7 @@ local treasure_templates =
 			fisher =
 			{
 				preset_weight = 3,
-				
+
 				guaranteed_loot =
 				{
 					boatpatch = {4, 8},
@@ -98,7 +98,7 @@ local treasure_templates =
 			miner =
 			{
 				preset_weight = 2,
-				
+
 				guaranteed_loot =
 				{
 					cutstone = {3, 6},
@@ -117,7 +117,7 @@ local treasure_templates =
 			splunker =
 			{
 				preset_weight = 1,
-				
+
 				guaranteed_loot =
 				{
 					gears = {1, 2},
@@ -179,7 +179,7 @@ local function GenerateTreasure(pt, overrideprefab, spawn_as_empty, postfn)
 		if not spawn_as_empty and (treasure.components.container ~= nil or treasure.components.inventory ~= nil) and weighted_treasure_contents[prefab] ~= nil and type(weighted_treasure_contents) == "table" and next(weighted_treasure_contents[prefab]) ~= nil then
 			local lootpreset = weighted_random_choice(weighted_treasure_contents[prefab])
 			local prefabstospawn = {}
-			
+
 			if lootpreset.guaranteed_loot ~= nil then
 				for itemprefab, count in pairs(lootpreset.guaranteed_loot) do
 					local total = type(count) ~= "table" and count or math.random(count[1], count[2])
@@ -188,14 +188,14 @@ local function GenerateTreasure(pt, overrideprefab, spawn_as_empty, postfn)
 					end
 				end
 			end
-			
+
 			if lootpreset.randomly_selected_loot ~= nil then
 				for i, one_of in ipairs(lootpreset.randomly_selected_loot) do
 					table.insert(prefabstospawn, weighted_random_choice(one_of))
 				end
 			end
 
-			
+
 			local item = nil
 			for i, itemprefab in ipairs(prefabstospawn) do
 				item = SpawnPrefab(itemprefab)
@@ -240,7 +240,7 @@ local function GetPrefabs()
 						prefabscontain[itemprefab] = true
 					end
 				end
-				
+
 				if weighted_list.randomly_selected_loot ~= nil then
 					for i, v in ipairs(weighted_list.randomly_selected_loot) do
 						for itemprefab, _--[[weight]] in pairs(v) do

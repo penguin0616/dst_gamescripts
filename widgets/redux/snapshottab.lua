@@ -87,11 +87,11 @@ function SnapshotTab:MakeSnapshotsMenu()
                 day_text = STRINGS.UI.SERVERADMINSCREEN.DAY_UNKNOWN
             end
 
-            
+
             if data.world_season ~= nil then
                 day_text = day_text .. " - " .. data.world_season
             end
-         
+
             widget.day_and_season:SetString(day_text)
             widget.empty = false
 
@@ -107,7 +107,7 @@ function SnapshotTab:MakeSnapshotsMenu()
     local extra_rows = 0
 
     self.snapshot_scroll_list = self.snapshot_page_scroll_root:AddChild(TEMPLATES.ScrollingGrid(
-            self.snapshots, 
+            self.snapshots,
             {
                 scroll_context = {
                 },
@@ -133,14 +133,14 @@ function SnapshotTab:OnClickSnapshot(snapshot_num)
     end
 
     TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-    
+
     local day_text_header = ""
     if self.snapshots[snapshot_num].world_day ~= nil then
         day_text_header = subfmt(STRINGS.UI.SERVERADMINSCREEN.HEADER_DAY, {day_count = self.snapshots[snapshot_num].world_day} )
     else
         day_text_header = STRINGS.UI.SERVERADMINSCREEN.HEADER_DAY_UNKNOWN
     end
-    
+
     local popup = PopupDialogScreen(day_text_header, STRINGS.UI.SERVERADMINSCREEN.RESTORE_SNAPSHOT_BODY, {
         {
             text = STRINGS.UI.SERVERADMINSCREEN.YES,
@@ -186,7 +186,7 @@ function SnapshotTab:ListSnapshots()
         for i, v in ipairs(snapshot_infos) do
             if v.snapshot_id ~= nil then
                 local info = { snapshot_id = v.snapshot_id }
-                if v.world_file ~= nil then                   
+                if v.world_file ~= nil then
                     local function onreadmetafile(success, str, slot, shard, file)
                         if success then
                             if str ~= nil and #str > 0 then

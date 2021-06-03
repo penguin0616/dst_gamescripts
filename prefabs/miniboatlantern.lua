@@ -149,7 +149,7 @@ local function OnInventoryLanded(inst)
 	if TheWorld.Map:IsPassableAtPoint(x, y, z) then
         if HasFuel(inst) then
             inst.components.locomotor.walkspeed = 0
-    
+
             if inst._acceleration_task ~= nil then
                 inst._acceleration_task:Cancel()
             end
@@ -161,7 +161,7 @@ local function OnInventoryLanded(inst)
             inst._acceleration_task = nil
         end
     end
-    
+
     inst.sg:GoToState("idle")
 end
 
@@ -245,7 +245,7 @@ local function fn()
 	--inst.AnimState:PlayAnimation("idle", true)
 
     inst.Transform:SetSixFaced()
-    
+
     MakeInventoryFloatable(inst, "small", 0.165, 1)
 
     inst.entity:SetPristine()
@@ -297,7 +297,7 @@ local function fn()
     inst.components.hauntable:SetOnHauntFn(OnHaunt)
 
     TurnOn(inst)
-    
+
     inst:ListenForEvent("on_landed", OnInventoryLanded)
     inst:ListenForEvent("onburnt", OnBurnt)
     inst:ListenForEvent("onextinguish", OnExtinguish)

@@ -26,7 +26,7 @@ local function onequip(inst, owner)
     else
         owner.AnimState:OverrideSymbol("swap_object", "swap_ham_bat", "swap_ham_bat")
     end
-    
+
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 end
@@ -105,4 +105,4 @@ local function fn()
     return inst
 end
 
-return Prefab( "hambat", fn, assets) 
+return Prefab( "hambat", fn, assets)

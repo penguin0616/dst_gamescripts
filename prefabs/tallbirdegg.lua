@@ -23,7 +23,7 @@ local loot_cold =
 
 local function Hatch(inst)
     --print("tallbirdegg - Hatch")
-   
+
     local smallbird = SpawnPrefab("smallbird")
     smallbird.Transform:SetPosition(inst.Transform:GetWorldPosition())
     smallbird.sg:GoToState("hatch")

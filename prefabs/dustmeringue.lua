@@ -18,7 +18,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
-    
+
     inst.AnimState:SetBank("cook_pot_food")
     inst.AnimState:SetBuild("cook_pot_food6")
     inst.AnimState:PlayAnimation("idle")

@@ -4,7 +4,7 @@ local assets =
     Asset("SOUND", "sound/common.fsb"),
 }
 
-local prefabs = 
+local prefabs =
 {
 	"oceanfishingbobber_twig_projectile",
 }

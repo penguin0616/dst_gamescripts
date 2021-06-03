@@ -45,7 +45,7 @@ local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "hound", "walrus" }
 local RETARGET_ONEOF_TAGS = { "animal", "character", "monster" }
 local function Retarget(inst)
-    return FindEntity(inst, TUNING.WALRUS_TARGET_DIST, function(guy) 
+    return FindEntity(inst, TUNING.WALRUS_TARGET_DIST, function(guy)
         return inst.components.combat:CanTarget(guy)
     end,
     RETARGET_MUST_TAGS,
@@ -69,7 +69,7 @@ end
 local function OnStopDay(inst)
     --print("OnStopDay", inst)
     if inst:IsAsleep() then
-        DoReturn(inst)  
+        DoReturn(inst)
     end
 end
 
@@ -98,7 +98,7 @@ local function EquipBlowdart(inst)
         blowdart.persists = false
         blowdart.components.inventoryitem:SetOnDroppedFn(inst.Remove)
         blowdart:AddComponent("equippable")
-        
+
         inst.components.inventory:Equip(blowdart)
     end
 end

@@ -248,8 +248,8 @@ local function MakeBeebox(name, common_postinit, master_postinit)
         inst:AddTag("playerowned")
         inst:AddTag("beebox")
 
-        MakeSnowCoveredPristine(inst)        
-        
+        MakeSnowCoveredPristine(inst)
+
         if common_postinit ~= nil then
             common_postinit(inst)
         end
@@ -260,7 +260,7 @@ local function MakeBeebox(name, common_postinit, master_postinit)
             return inst
         end
 
-        ---------------------  
+        ---------------------
 
         inst:AddComponent("harvestable")
         inst.components.harvestable:SetUp("honey", 6, nil, onharvest, updatelevel)
@@ -344,7 +344,7 @@ local function beebox_master(inst)
 
     MakeMediumBurnable(inst, nil, nil, true)
     MakeLargePropagator(inst)
-    inst:ListenForEvent("onignite", onignite)    
+    inst:ListenForEvent("onignite", onignite)
 end
 
 local function beebox_hermit_master(inst)
@@ -355,4 +355,4 @@ return MakeBeebox("beebox", beebox_common, beebox_master),
         MakePlacer("beebox_placer", "bee_box", "bee_box", "idle"),
         MakeBeebox("beebox_hermit", beebox_hermit, beebox_hermit_master)
 
-    
+

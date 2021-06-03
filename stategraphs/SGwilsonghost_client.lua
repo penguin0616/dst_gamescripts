@@ -29,7 +29,7 @@ local events =
     end),
 }
 
-local states = 
+local states =
 {
     State{
         name = "idle",
@@ -71,7 +71,7 @@ local states =
     State{
         name = "run",
         tags = { "moving", "running", "canrotate" },
-        
+
         onenter = function(inst)
             inst.components.locomotor:RunForward()
             if not inst.AnimState:IsCurrentAnimation("idle") then
@@ -123,7 +123,7 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("dissipate")
             inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_haunt", nil, nil, true)
-            
+
             inst:PerformPreviewBufferedAction()
             inst.sg:SetTimeout(TIMEOUT)
         end,

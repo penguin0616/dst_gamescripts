@@ -38,7 +38,7 @@ end
 local function dosew(inst, self)
     self.task = nil
     self.targettime = nil
-    
+
     if self.ondonesewing ~= nil then
         self.ondonesewing(inst)
     end
@@ -60,7 +60,7 @@ end
 local function doreject(inst, self)
     self.task = nil
     self.targettime = nil
-    
+
     if self.ondonesewing ~= nil then
         self.ondonesewing(inst)
     end

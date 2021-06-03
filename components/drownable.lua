@@ -142,7 +142,7 @@ function Drownable:TakeDrowningDamage()
 		if delta < 0 then
 			self.inst.components.hunger:DoDelta(delta)
 		end
-	end    
+	end
 
 	if self.inst.components.health ~= nil then
 		if tunings.HEALTH_PENALTY ~= nil then
@@ -155,7 +155,7 @@ function Drownable:TakeDrowningDamage()
 				self.inst.components.health:DoDelta(delta, false, "drowning", true, nil, true)
 			end
 		end
-	end    
+	end
 
 	if self.inst.components.sanity ~= nil and tunings.SANITY ~= nil then
 		local delta = -math.min(tunings.SANITY, self.inst.components.sanity.current - 30)

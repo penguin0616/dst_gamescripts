@@ -15,7 +15,7 @@ local brain = require "brains/frogbrain"
 local RESTARGET_MUST_TAGS = {"_combat","_health"}
 local function retargetfn(inst)
     if not inst.components.health:IsDead() and not inst.components.sleeper:IsAsleep() then
-        return FindEntity(inst, TUNING.FROG_TARGET_DIST, function(guy) 
+        return FindEntity(inst, TUNING.FROG_TARGET_DIST, function(guy)
             if not guy.components.health:IsDead() then
                 return guy.components.inventory ~= nil
             end

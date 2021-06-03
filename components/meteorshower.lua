@@ -200,7 +200,7 @@ local function OnUpdate(inst, self)
         self.spawn_mod = (self.spawn_mod or 1) - TUNING.METEOR_SHOWER_OFFSCREEN_MOD
         if self.spawn_mod <= 0 then
             self.spawn_mod = self.spawn_mod + 1
-            self:SpawnMeteor(TUNING.METEOR_SHOWER_OFFSCREEN_MOD)            
+            self:SpawnMeteor(TUNING.METEOR_SHOWER_OFFSCREEN_MOD)
         end
     end
 

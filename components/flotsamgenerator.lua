@@ -72,26 +72,26 @@ local function GetSpawnPoint(pt,platform)
         local function TestSpawnPoint(offset)
             local spawnpoint_x, spawnpoint_y, spawnpoint_z = (pt + offset):Get()
             local tile = _map:GetTileAtPoint(spawnpoint_x, spawnpoint_y, spawnpoint_z)
-            local allow_water = true            
+            local allow_water = true
             return IsOceanTile(tile) and
                    tile ~= GROUND.OCEAN_COASTAL_SHORE and
                    #TheSim:FindEntities(spawnpoint_x, spawnpoint_y, spawnpoint_z, RANGE-SHORTRANGE, nil, nil, SPAWNPOINT_1_ONEOF_TAGS) <= 0 and
-                   #TheSim:FindEntities(spawnpoint_x, spawnpoint_y, spawnpoint_z, SHORTRANGE, nil, SPAWNPOINT_2_ONEOF_TAGS) <= 0 
+                   #TheSim:FindEntities(spawnpoint_x, spawnpoint_y, spawnpoint_z, SHORTRANGE, nil, SPAWNPOINT_2_ONEOF_TAGS) <= 0
         end
 
         local theta = math.random() * 2 * PI
 
         if platform and platform.components.boatphysics then
             local vel_x, vel_z = platform.components.boatphysics.velocity_x, platform.components.boatphysics.velocity_z
-			
+
 			if vel_x ~= 0 or vel_z ~= 0 then
 				local vel = platform.components.boatphysics:GetVelocity()
                 print("vel:", vel)
 				local x_normalized, y_normalized = VecUtil_Normalize(vel_x, vel_z)------------------
-				
+
 				local lower = 0.1
 				local upper = 1.5
-				
+
 				local vel_remapped = (math.min(upper, math.max(lower, vel)) - lower) / upper
 				vel_remapped = 1 - vel_remapped
 
@@ -127,7 +127,7 @@ local function SpawnFlotsamForPlayer(player, reschedule, override_prefab, overri
     return flotsam
 end
 
-local function ScheduleSpawn(player, initialspawn)  
+local function ScheduleSpawn(player, initialspawn)
     if _scheduledtasks[player] == nil  then
         local mindelay = _minspawndelay
         local maxdelay = _maxspawndelay
@@ -305,7 +305,7 @@ function self:ToggleUpdate()
     ToggleUpdate(true)
 end
 
-function self:setinsttoflotsam(inst, time, notag)    
+function self:setinsttoflotsam(inst, time, notag)
     if not time then
         time = LIFESPAN.base + (math.random()*LIFESPAN.varriance)
     end
@@ -316,16 +316,16 @@ function self:setinsttoflotsam(inst, time, notag)
         inst:AddTag("flotsam")
     end
     inst.components.timer:StartTimer("flotsamgenerator_sink", time)
-    
-    inst:ListenForEvent("timerdone", OnTimerDone)    
-    inst:ListenForEvent("onpickup", clearflotsamtimer)
-    inst:ListenForEvent("onremove", clearflotsamtimer)    
 
-    rememberflotsam(inst)    
+    inst:ListenForEvent("timerdone", OnTimerDone)
+    inst:ListenForEvent("onpickup", clearflotsamtimer)
+    inst:ListenForEvent("onremove", clearflotsamtimer)
+
+    rememberflotsam(inst)
 end
 
 function self:SpawnFlotsam(spawnpoint,prefab,notrealflotsam)
-    -- notrealflotsam means the prefab won't get the flotsam tag, so it won't block other flotsam from spawning. 
+    -- notrealflotsam means the prefab won't get the flotsam tag, so it won't block other flotsam from spawning.
     if not prefab then
         prefab = PickFlotsam(spawnpoint)
     end
@@ -391,7 +391,7 @@ function self:OnSave()
     data.time = {}
     data.flotsamtag = {}
 
-    for k,v in pairs(_flotsam) do 
+    for k,v in pairs(_flotsam) do
         if k ~= nil then
             table.insert(data.flotsam, k.GUID)
             table.insert(ents, k.GUID)
@@ -412,9 +412,9 @@ function self:OnLoad(data)
 end
 
 function self:LoadPostPass(newents, savedata)
-    if savedata and savedata.flotsam then        
-        for k,v in pairs(savedata.flotsam) do 
-            if newents[v] ~= nil then 
+    if savedata and savedata.flotsam then
+        for k,v in pairs(savedata.flotsam) do
+            if newents[v] ~= nil then
                 local notag = true
                 if savedata.flotsamtag and savedata.flotsamtag[k] then
                     notag = nil

@@ -5,7 +5,7 @@ local prefabs =
 
 local function CanSpawn(inst)
     -- Note that there are other conditions inside periodic spawner governing this as well.
-    
+
     if inst.components.herd == nil or inst.components.herd:IsFull() then
         return false
     end

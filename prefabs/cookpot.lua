@@ -93,7 +93,7 @@ local function onopen(inst)
 end
 
 local function onclose(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         if not inst.components.stewer:IsCooking() then
             inst.AnimState:PlayAnimation("idle_empty")
             inst.SoundEmitter:KillSound("snd")
@@ -151,14 +151,14 @@ local function donecookfn(inst)
 end
 
 local function continuedonefn(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("idle_full")
         ShowProduct(inst)
     end
 end
 
 local function continuecookfn(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("cooking_loop", true)
         inst.Light:Enable(true)
         inst.SoundEmitter:KillSound("snd")
@@ -197,7 +197,7 @@ local function onload(inst, data)
     if data ~= nil and data.burnt then
         inst.components.burnable.onburnt(inst)
         inst.Light:Enable(false)
-    end   
+    end
 end
 
 local function onloadpostpass(inst, newents, data)
@@ -244,18 +244,18 @@ local function cookpot_common(inst)
     inst.AnimState:SetBank("cook_pot")
     inst.AnimState:SetBuild("cook_pot")
     inst.AnimState:PlayAnimation("idle_empty")
-    inst.MiniMapEntity:SetIcon("cookpot.png")    
+    inst.MiniMapEntity:SetIcon("cookpot.png")
 end
 
 local function cookpot_common_master(inst)
-    inst.components.container:WidgetSetup("cookpot")    
+    inst.components.container:WidgetSetup("cookpot")
 end
 
 local function cookpot_archive(inst)
     inst.AnimState:SetBank("cook_pot")
     inst.AnimState:SetBuild("cookpot_archive")
     inst.AnimState:PlayAnimation("idle_empty")
-    inst.MiniMapEntity:SetIcon("cookpot_archive.png")  
+    inst.MiniMapEntity:SetIcon("cookpot_archive.png")
 end
 
 local function cookpot_archive_master(inst)
@@ -334,7 +334,7 @@ local function MakeCookPot(name, common_postinit, master_postinit, assets, prefa
         MakeMediumBurnable(inst, nil, nil, true)
         MakeSmallPropagator(inst)
 
-        inst.OnSave = onsave 
+        inst.OnSave = onsave
         inst.OnLoad = onload
         inst.OnLoadPostPass = onloadpostpass
 
@@ -346,7 +346,7 @@ local function MakeCookPot(name, common_postinit, master_postinit, assets, prefa
     end
 
     return Prefab(name, fn, assets, prefabs)
-end 
+end
 
 return MakeCookPot("cookpot", cookpot_common, cookpot_common_master, assets, prefabs),
     MakePlacer("cookpot_placer", "cook_pot", "cook_pot", "idle_empty"),

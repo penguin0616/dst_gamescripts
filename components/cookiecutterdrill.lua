@@ -40,7 +40,7 @@ function CookieCutterDrill:FinishDrilling()
 	local boat = TheWorld.Map:GetPlatformAtPoint(pt.x, pt.z)
 	if boat ~= nil then
 		if self.inst.components.eater ~= nil then
-			self.inst.components.eater.lasteattime = GetTime() 
+			self.inst.components.eater.lasteattime = GetTime()
 		end
 
         if self.leak_damage and boat.components.hullhealth then

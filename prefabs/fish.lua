@@ -94,13 +94,13 @@ local function commonfn(build, anim, loop, dryable, cookable)
 end
 
 local function flopsound(inst)
-    inst.floptask = inst:DoTaskInTime(10/30, function() 
+    inst.floptask = inst:DoTaskInTime(10/30, function()
         inst.SoundEmitter:PlaySound("dontstarve/common/fishingpole_fishland")
         if inst.floptask then
             inst.floptask:Cancel()
             inst.floptask = nil
         end
-        inst.floptask = inst:DoTaskInTime(12/30, function() 
+        inst.floptask = inst:DoTaskInTime(12/30, function()
             inst.SoundEmitter:PlaySound("dontstarve/common/fishingpole_fishland")
         end)
     end)
@@ -120,8 +120,8 @@ local function rawfn(build)
     inst:DoTaskInTime(5, stopkicking)
     inst.components.inventoryitem:SetOnPickupFn(stopkicking)
     inst.OnLoad = stopkicking
-    
-    inst:ListenForEvent("animover", function()     
+
+    inst:ListenForEvent("animover", function()
         if inst.AnimState:IsCurrentAnimation("idle") then
             flopsound(inst)
             inst.AnimState:PlayAnimation("idle")

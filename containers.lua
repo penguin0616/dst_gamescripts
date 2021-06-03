@@ -152,9 +152,9 @@ params.yotb_sewingmachine =
     {
         slotpos =
         {
-            Vector3(-(64 + 12), 0, 0), 
+            Vector3(-(64 + 12), 0, 0),
             Vector3(0, 0, 0),
-            Vector3(64 + 12, 0, 0), 
+            Vector3(64 + 12, 0, 0),
         },
 
         slotbg =
@@ -310,9 +310,9 @@ params.bundle_container =
     {
         slotpos =
         {
-            Vector3(-37.5, 32 + 4, 0), 
+            Vector3(-37.5, 32 + 4, 0),
             Vector3(37.5, 32 + 4, 0),
-            Vector3(-37.5, -(32 + 4), 0), 
+            Vector3(-37.5, -(32 + 4), 0),
             Vector3(37.5, -(32 + 4), 0),
         },
         animbank = "ui_bundle_2x2",
@@ -401,9 +401,9 @@ params.mushroom_light =
     {
         slotpos =
         {
-            Vector3(0, 64 + 32 + 8 + 4, 0), 
+            Vector3(0, 64 + 32 + 8 + 4, 0),
             Vector3(0, 32 + 4, 0),
-            Vector3(0, -(32 + 4), 0), 
+            Vector3(0, -(32 + 4), 0),
             Vector3(0, -(64 + 32 + 8 + 4), 0),
         },
         animbank = "ui_lamp_1x4",
@@ -469,9 +469,9 @@ params.sisturn =
     {
         slotpos =
         {
-            Vector3(-37.5, 32 + 4, 0), 
+            Vector3(-37.5, 32 + 4, 0),
             Vector3(37.5, 32 + 4, 0),
-            Vector3(-37.5, -(32 + 4), 0), 
+            Vector3(-37.5, -(32 + 4), 0),
             Vector3(37.5, -(32 + 4), 0),
         },
         slotbg =
@@ -504,9 +504,9 @@ params.livingtree_halloween =
     {
         slotpos =
         {
-            Vector3(-(64 + 12), 0, 0), 
+            Vector3(-(64 + 12), 0, 0),
             Vector3(0, 0, 0),
-            Vector3(64 + 12, 0, 0), 
+            Vector3(64 + 12, 0, 0),
         },
         animbank = "ui_chest_3x1",
         animbuild = "ui_chest_3x1",
@@ -993,9 +993,9 @@ params.quagmire_pot =
     {
         slotpos =
         {
-            Vector3(0, 64 + 32 + 8 + 4, 0), 
+            Vector3(0, 64 + 32 + 8 + 4, 0),
             Vector3(0, 32 + 4, 0),
-            Vector3(0, -(32 + 4), 0), 
+            Vector3(0, -(32 + 4), 0),
             Vector3(0, -(64 + 32 + 8 + 4), 0),
         },
         animbank = "quagmire_ui_pot_1x4",
@@ -1024,9 +1024,9 @@ params.quagmire_pot_small =
     {
         slotpos =
         {
-            Vector3(0, 64 + 8, 0), 
+            Vector3(0, 64 + 8, 0),
             Vector3(0, 0, 0),
-            Vector3(0, -(64 + 8), 0), 
+            Vector3(0, -(64 + 8), 0),
         },
         animbank = "quagmire_ui_pot_1x3",
         animbuild = "quagmire_ui_pot_1x3",
@@ -1073,9 +1073,9 @@ params.quagmire_pot_syrup =
     {
         slotpos =
         {
-            Vector3(0, 64 + 8, 0), 
+            Vector3(0, 64 + 8, 0),
             Vector3(0, 0, 0),
-            Vector3(0, -(64 + 8), 0), 
+            Vector3(0, -(64 + 8), 0),
         },
         animbank = "quagmire_ui_pot_1x3",
         animbuild = "quagmire_ui_pot_1x3",

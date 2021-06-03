@@ -176,7 +176,7 @@ end
 function _IsPackInsideOther( pack_a, pack_b )
 	local a_items = GetPurchasePackOutputItems(pack_a)
 	local b_items = GetPurchasePackOutputItems(pack_b)
-	
+
 	for _,item in ipairs( a_items ) do
 		if not table.contains( b_items, item ) then
 			return false
@@ -194,13 +194,13 @@ function GetFeaturedPacks()
 
 	for _,iap in ipairs(iap_defs) do
 		local item_type = iap.item_type
-		
+
 		if IsPackFeatured(item_type) then
 			if highest_group == 0 then
 				highest_group = GetReleaseGroup(item_type)
 				table.insert(iaps, item_type)
 			else
-				
+
 				local group = GetReleaseGroup(item_type)
 				if group >= highest_group then
 					if group > highest_group then
@@ -221,7 +221,7 @@ function _GetSubPacks(item_key)
     local sub_packs = {}
 	local output_items = GetPurchasePackOutputItems(item_key)
 	local pack_count = #output_items
-	
+
 	--Build a table of items to their pack, use the smallest pack size to indicate which pack an item belongs to
 	--If this is too slow, we could cache it in the pipeline, or on download of the iap
 	local item_to_packinfo = {}
@@ -248,7 +248,7 @@ function _GetSubPacks(item_key)
 			sub_packs[item_to_packinfo[item].pack] = true
 		end
 	end
-	
+
 	--Ugh, packs such as pack_character_wormwood, which have a unique item, plus one other, have one sub pack, which makes us think it's a bundle, but it's not really...
 	if GetTableSize(sub_packs) == 1 then
 		sub_packs = {}
@@ -265,7 +265,7 @@ function _GetSubPacks(item_key)
 			end
 		end
 	end
-	
+
 	return sub_packs
 end
 
@@ -283,13 +283,13 @@ function IsItemInAnyPack(item_key)
 end
 
 
-function GetPackTotalSets(item_key)	
+function GetPackTotalSets(item_key)
 	if item_key == "pack_starter_2019" then --don't show invalid skin sets because Wurt conufuses it
 		return 0
 	end
 
     local sub_packs = _GetSubPacks(item_key)
-    
+
     local count = 0
     for pack,_ in pairs(sub_packs) do
         count = count + 1
@@ -315,8 +315,8 @@ function IsPackABundle(item_key)
 				print("Error!!! Figure out iap for this platform.")
 			end
 		end
-	end    
-    return (value > 0), value 
+	end
+    return (value > 0), value
 end
 
 function GetPriceFromIAPDef( iap_def, sale_active )
@@ -366,7 +366,7 @@ function BuildPriceStr( value, iap_def, sale_active )
 
 			return string.format( "%s %0.0f", currency_code, value / 100 )
 		else
-		
+
 			return string.format( "%s %1.2f", currency_code, value / 100 )
 		end
 	elseif IsRail() then
@@ -399,7 +399,7 @@ end
 
 function IsPackClothingOnly(item_key)
 	local output_items = GetPurchasePackOutputItems(item_key)
-	
+
 	for _,item in pairs(output_items) do
 		local item_data = GetSkinData(item)
 
@@ -417,7 +417,7 @@ end
 
 function IsPackBelongingsOnly(item_key)
 	local output_items = GetPurchasePackOutputItems(item_key)
-	
+
 	for _,item in pairs(output_items) do
 		local item_data = GetSkinData(item)
 
@@ -722,7 +722,7 @@ function IsPackRestrictedDueToOwnership(item_type)
 			if pack_data.warning_only_on_restricted then
 				return "warning", data.base_prefab
 			else
-				return "error", data.base_prefab			
+				return "error", data.base_prefab
 			end
 		end
 	end
@@ -1196,7 +1196,7 @@ function GetSkinCollectionCompletionForHero(herocharacter)
 	local bonus = HasHeirloomItem(herocharacter)
 	local owned_items = {}
 	local need_items = {}
-	
+
     for i,item_key in ipairs(SKIN_AFFINITY_INFO[herocharacter] or {}) do
 		if ShouldDisplayItemInCollection(item_key) then
 			local build = GetBuildForItem(item_key)
@@ -1408,7 +1408,7 @@ function IsValidBeefaloClothing( name )
 end
 
 function ValidatePreviewItems(currentcharacter, preview_skins, filter)
-    for key,item_key in pairs(preview_skins) do    	
+    for key,item_key in pairs(preview_skins) do
         if key ~= "base" and not IsValidClothing(preview_skins[key]) and not IsValidBeefaloClothing(preview_skins[key]) then
             preview_skins[key] = nil
         end
@@ -1649,17 +1649,17 @@ function DisplayInventoryFailedPopup( screen )
 		local unowned_popup = PopupDialogScreen(STRINGS.UI.PLAYERSUMMARYSCREEN.FAILED_INVENTORY_TITLE, STRINGS.UI.PLAYERSUMMARYSCREEN.FAILED_INVENTORY_BODY,
 		{
 			{text=STRINGS.UI.PLAYERSUMMARYSCREEN.FAILED_INVENTORY_YES, cb = function()
-				
+
                 screen.leave_from_fail = true
                 TheFrontEnd:PopScreen() --pop the failed dialog
-                
+
                 screen.items_get_popup = GenericWaitingPopup("GetAllItemsPopup", STRINGS.UI.PLAYERSUMMARYSCREEN.GET_INVENTORY, nil, true, function()
                     screen.poll_task:Cancel()
                     screen.poll_task = nil
                 end )
                 TheFrontEnd:PushScreen(screen.items_get_popup)
-                
-                screen.poll_task = scheduler:ExecutePeriodic( 1, function() 
+
+                screen.poll_task = scheduler:ExecutePeriodic( 1, function()
                     if not TheInventory:IsDownloadingInventory() then
                         screen.items_get_popup:Close()
                     end
@@ -1671,14 +1671,14 @@ function DisplayInventoryFailedPopup( screen )
 
 			end},
 			{text=STRINGS.UI.PLAYERSUMMARYSCREEN.FAILED_INVENTORY_NO, cb = function()
-				
+
                 screen.leave_from_fail = true
                 TheFrontEnd:PopScreen()
 				screen:Close()
-				
+
 			end},
 		})
-		TheFrontEnd:PushScreen(unowned_popup)		
+		TheFrontEnd:PushScreen(unowned_popup)
     end
 end
 
@@ -1741,7 +1741,7 @@ function GetPlayerBadgeData(character, ghost, state_1, state_2, state_3 )
 				return "wilson", "idle_loop_ui", "normal_skin", .23, -50
 			end
 		end
-	elseif character == "woodie" then		
+	elseif character == "woodie" then
 		if ghost then
 			if state_1 then
 				return "ghost", "idle", "ghost_werebeaver_skin", .15, -55

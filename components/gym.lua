@@ -3,7 +3,7 @@ local Gym = Class(function(self, inst)
     self.inst = inst
     self.trainfn = nil
     self.trainee = nil
-    self.inst:ListenForEvent("timerdone", function(inst, data) self:OnTimerDone(data) end )  
+    self.inst:ListenForEvent("timerdone", function(inst, data) self:OnTimerDone(data) end )
 
     self.inst:WatchWorldState("phase", function(inst, phase) self:checktraineesleep(phase) end )
 
@@ -14,7 +14,7 @@ function Gym:SetOnRemoveTraineeFn(fn)
     self.onLoseTraineeFn = fn
 end
 
-function Gym:RemoveTrainee()    
+function Gym:RemoveTrainee()
     if self.trainee then
         if self.onLoseTraineeFn then
             self.onLoseTraineeFn(self.inst)
@@ -23,13 +23,13 @@ function Gym:RemoveTrainee()
         self.inst:RemoveEventCallback("death", self._removetrainee, self.trainee)
         self._removetrainee = nil
         self.trainee = nil
-    end        
+    end
     if self.inst.components.timer:TimerExists("training") then
         self:StopTraining()
     end
 end
 
-function Gym:SetTrainee(inst)    
+function Gym:SetTrainee(inst)
     if inst ~= nil then
         self.trainee = inst
         self._removetrainee = function() self:RemoveTrainee() end
@@ -53,7 +53,7 @@ function Gym:StartTraining(inst, time)
     if not time then
         time = self.traintime
     end
-    if not self.inst.components.timer:TimerExists("training") then   
+    if not self.inst.components.timer:TimerExists("training") then
         self.inst.components.timer:StartTimer("training", time )
     end
     if TheWorld.state.isnight then
@@ -77,11 +77,11 @@ function Gym:StopTraining()
     if self.perishcheck then
         self.perishcheck:Cancel()
         self.perishcheck = nil
-    end 
+    end
     if self.montagemusic then
         self.montagemusic:Cancel()
         self.montagemusic = nil
-    end 
+    end
 end
 
 function Gym:CheckPerish()
@@ -93,7 +93,7 @@ function Gym:CheckPerish()
                     if self.inst.components.timer:TimerExists("training") and self.trainee then
                         self.inst:PushEvent("starttraining")
                     end
-                end) 
+                end)
             end
         end
     end
@@ -108,7 +108,7 @@ end
 
 function Gym:Train()
     if self.trainfn and self.trainee then
-        if not self.trainee.training then 
+        if not self.trainee.training then
             self.trainee.training = 0
         end
         self.trainee.training = self.trainee.training + 1

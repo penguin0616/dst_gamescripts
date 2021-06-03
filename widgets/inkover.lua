@@ -17,7 +17,7 @@ end)
 function InkOver:Flash()
 
     TheFrontEnd:GetSound():PlaySound("hookline/creatures/squid/ink")
-   
+
     local time1 = GetTime() - self.InkOver.time
     local time2 = GetTime() - self.InkOver2.time
     if time1 > 2 then
@@ -25,7 +25,7 @@ function InkOver:Flash()
     end
     if time2 > 2 then
         time2 = nil
-    end        
+    end
 
     if time1 and time2 then
         if time1 < time2 then

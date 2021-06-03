@@ -17,7 +17,7 @@ local function onopen(inst)
         inst.AnimState:PlayAnimation("open")
         inst.SoundEmitter:PlaySound(inst._sounds.open)
     end
-end 
+end
 
 local function onclose(inst)
     if not inst:HasTag("burnt") then
@@ -67,7 +67,7 @@ local function MakeTackleContainer(name, bank, build, assets)
         inst.AnimState:SetBank(bank)
         inst.AnimState:SetBuild(build)
         inst.AnimState:PlayAnimation("closed")
-		
+
 		MakeInventoryPhysics(inst)
 		MakeInventoryFloatable(inst, "med")
 
@@ -87,10 +87,10 @@ local function MakeTackleContainer(name, bank, build, assets)
         inst.components.container.skipopensnd = true
 		inst.components.container.droponopen = true
 
-		
+
 		inst:AddComponent("inventoryitem")
 		inst.components.inventoryitem:SetOnPutInInventoryFn(OnPutInInventory)
-		
+
 		inst:AddComponent("lootdropper")
 
 		MakeSmallBurnable(inst)
@@ -105,7 +105,7 @@ local function MakeTackleContainer(name, bank, build, assets)
         else
             inst._sounds = tacklecontainer_sounds
         end
-		
+
         inst.OnSave = onsave
         inst.OnLoad = onload
 

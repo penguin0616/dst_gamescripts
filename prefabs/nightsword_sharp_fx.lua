@@ -119,7 +119,7 @@ local function emit_smoke_fn(effect, sphere_emitter, adjust_vec)
     )
 end
 
-local function emit_spark_fn(effect, sphere_emitter, adjust_vec)            
+local function emit_spark_fn(effect, sphere_emitter, adjust_vec)
     local vx, vy, vz = .05 * UnitRand(), .05 * UnitRand(), .05 * UnitRand()
     local lifetime = SPARK_MAX_LIFETIME * (0.7 + math.random() * .3)
     local px, py, pz = sphere_emitter()
@@ -140,7 +140,7 @@ local function emit_spark_fn(effect, sphere_emitter, adjust_vec)
     )
 end
 
-local function emit_ember_fn(effect, sphere_emitter, adjust_vec)            
+local function emit_ember_fn(effect, sphere_emitter, adjust_vec)
     local vx, vy, vz = .17 * UnitRand(), .17 * UnitRand(), .17 * UnitRand()
     local lifetime = EMBER_MAX_LIFETIME * (0.7 + math.random() * .3)
     local px, py, pz = sphere_emitter()
@@ -237,7 +237,7 @@ local function fn()
             if mount == nil then
                 local attack_playing = parent.AnimState:IsCurrentAnimation("atk")
                 local anim_time = parent.AnimState:GetCurrentAnimationTime()
-        
+
                 if attack_playing then
                     if anim_time > 0.13 and burst_state == 0 then
                         burst_state = 1 --do burst
@@ -251,7 +251,7 @@ local function fn()
                     local num_to_emit_smoke = 10
                     local num_to_emit_spark = 20
                     local num_to_emit_ember = 60
-                    
+
                     local adjust_vec = nil
                     if parent.AnimState:GetCurrentFacing() == 1 then
                         --Do custom positioning
@@ -262,7 +262,7 @@ local function fn()
                         emit_smoke_fn(effect, smoke_sphere_emitter, adjust_vec)
                         num_to_emit_smoke = num_to_emit_smoke - 1
                     end
-                    
+
                     while num_to_emit_spark > 1 do
                         emit_spark_fn(effect, spark_sphere_emitter, adjust_vec)
                         num_to_emit_spark = num_to_emit_spark - 1

@@ -28,7 +28,7 @@ local levels =
     { amount=0, idle="idle", hit="hit_idle" },
 }
 
-local spore_to_cap = 
+local spore_to_cap =
 {
     spore_tall = "blue_cap",
     spore_medium = "red_cap",
@@ -65,7 +65,7 @@ local function setlevel(inst, level, dotransition)
         if inst.anims.idle == level.idle then
             dotransition = false
         end
-        
+
         inst.anims.idle = level.idle
         inst.anims.hit = level.hit
 
@@ -90,7 +90,7 @@ local function setlevel(inst, level, dotransition)
         else
             inst.AnimState:PlayAnimation(inst.anims.idle)
         end
-        
+
     end
 end
 
@@ -321,7 +321,7 @@ local function fn()
         return inst
     end
 
-    ---------------------  
+    ---------------------
     inst:AddComponent("harvestable")
     inst.components.harvestable:SetOnGrowFn(ongrow)
     inst.components.harvestable:SetOnHarvestFn(onharvest)

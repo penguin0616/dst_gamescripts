@@ -87,9 +87,9 @@ local function fn()
     inst:AddTag("gnarwail_horn")
     inst:AddTag("nopunch")
     inst:AddTag("allow_action_on_impassable")
-    
+
     inst.spelltype = "MUSIC"
-    
+
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = reticuletargetfunction
     inst.components.reticule.ease = true

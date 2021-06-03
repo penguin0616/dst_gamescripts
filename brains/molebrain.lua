@@ -86,7 +86,7 @@ function MoleBrain:OnStart()
     local root = PriorityNode(
     {
         WhileNode( function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
-        WhileNode( function() return ShouldMakeHome(self.inst) end, "HomeDugUp", 
+        WhileNode( function() return ShouldMakeHome(self.inst) end, "HomeDugUp",
             DoAction(self.inst, MakeNewHomeAction, "make home", false)),
         WhileNode(function() return self.inst.flee == true end, "Flee",
             RunAway(self.inst, "scarytoprey", AVOID_PLAYER_DIST, AVOID_PLAYER_STOP)),
@@ -94,7 +94,7 @@ function MoleBrain:OnStart()
             DoAction(self.inst, PeekAction, "peek", false)),
         WhileNode(function() return self.inst.components.inventory:IsFull() end, "DepositInv",
             DoAction(self.inst, GoHomeAction, "go home", false)),
-        EventNode(self.inst, "gohome", 
+        EventNode(self.inst, "gohome",
             DoAction(self.inst, GoHomeAction, "go home", false)),
         DoAction(self.inst, TakeBaitAction, "take bait", false),
         WhileNode(function() return TheWorld.state.isday or (TheWorld.state.iscaveday and self.inst:IsInLight()) end, "IsDay",

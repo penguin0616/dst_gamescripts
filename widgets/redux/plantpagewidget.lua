@@ -18,7 +18,7 @@ local PlantPageWidget = Class(Widget, function(self, name, plantspage, data)
         self.back_button:SetTextures("images/plantregistry.xml", "turnarrow_icon.tex", "turnarrow_icon_over.tex")
         self.back_button:SetFont(HEADERFONT)
         self.back_button:SetDisabledFont(HEADERFONT)
-        
+
         --reset text with the new font
         self.back_button:SetText(STRINGS.UI.SERVERLISTINGSCREEN.BACK, true)
     end

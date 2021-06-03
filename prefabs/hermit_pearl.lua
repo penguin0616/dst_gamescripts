@@ -19,7 +19,7 @@ local function commonfn()
     MakeInventoryPhysics(inst)
 
     inst:AddTag("irreplaceable")
-    
+
 	MakeInventoryFloatable(inst, "med", .15, 0.7)
 
     inst.entity:SetPristine()

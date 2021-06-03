@@ -55,7 +55,7 @@ local function CanDeploy(inst)
     return true
 end
 
-local function OnDeploy(inst, pt, deployer) 
+local function OnDeploy(inst, pt, deployer)
     local flower = SpawnPrefab("planted_flower")
     if flower then
         flower:PushEvent("growfrombutterfly")

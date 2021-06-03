@@ -63,7 +63,7 @@ local function fn()
 
     inst:AddComponent("inspectable")
 
-    ---------------------        
+    ---------------------
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.SMALL_FUEL
 
@@ -71,7 +71,7 @@ local function fn()
     MakeSmallPropagator(inst)
     MakeNoGrowInWinter(inst)
     MakeHauntableIgnite(inst)
-    ---------------------   
+    ---------------------
 
     return inst
 end

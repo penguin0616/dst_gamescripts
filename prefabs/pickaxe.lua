@@ -66,7 +66,7 @@ local function common_fn(bank, build)
     inst:AddComponent("finiteuses")
     inst.components.finiteuses:SetMaxUses(TUNING.PICKAXE_USES)
     inst.components.finiteuses:SetUses(TUNING.PICKAXE_USES)
-    inst.components.finiteuses:SetOnFinished(inst.Remove) 
+    inst.components.finiteuses:SetOnFinished(inst.Remove)
     inst.components.finiteuses:SetConsumption(ACTIONS.MINE, 1)
 
     -------

@@ -64,7 +64,7 @@ local PlayerHud = Class(Screen, function(self)
 
     if not TheWorld.ismastersim then
         self.inst:ListenForEvent("deactivateworld", function()
-            --Essential cleanup when client is notified of 
+            --Essential cleanup when client is notified of
             --pending server c_reset or c_regenerateworld.
             if self.playeravatarpopup ~= nil then
                 if self.playeravatarpopup.started and self.playeravatarpopup.inst:IsValid() then
@@ -109,9 +109,9 @@ function PlayerHud:CreateOverlays(owner)
 
     self.drops_vig:SetClickable(false)
     self.drops_vig:Hide()
-    self.drops_alpha= 0 
+    self.drops_alpha= 0
 
-    self.inst:ListenForEvent("moisturedelta", function(inst, data)         
+    self.inst:ListenForEvent("moisturedelta", function(inst, data)
             if data.new > data.old then
                 self.dropsplash = true
                 if self.droptask then
@@ -145,7 +145,7 @@ function PlayerHud:CreateOverlays(owner)
     end
     self.sandover = self.overlayroot:AddChild(SandOver(owner, self.sanddustover))
     self.moonstormover = self.overlayroot:AddChild(MoonstormOver(owner, self.moonstormdust))
-    
+
     self.gogglesover = self.overlayroot:AddChild(GogglesOver(owner, self.storm_overlays))
     self.nutrientsover = self.overlayroot:AddChild(NutrientsOver(owner))
     self.bloodover = self.overlayroot:AddChild(BloodOver(owner))
@@ -207,7 +207,7 @@ function PlayerHud:OnLoseFocus()
     if self.controls ~= nil then
         self.controls.hover:Hide()
         self.controls.item_notification:ToggleHUDFocus(false)
-        
+
         local resurrectbutton = self.controls.status:GetResurrectButton()
         if resurrectbutton ~= nil then
             resurrectbutton:ToggleHUDFocus(false)
@@ -252,7 +252,7 @@ function PlayerHud:Toggle(targetindicators)
             for i, target in pairs(self.targetindicators) do
                 target:Hide()
             end
-        end        
+        end
     else
         self:Show()
         if self.targetindicators then
@@ -313,7 +313,7 @@ local function OpenContainerWidget(self, container, side)
     --self.controls[side and "containerroot_side" or "containerroot"]:AddChild(containerwidget)
     --self.controls.bottom_root:AddChild(containerwidget)
     --self.controls.inv.hand_inv:AddChild(containerwidget)
-	
+
 	containerwidget:MoveToBack()
     containerwidget:Open(container, self.owner)
     self.controls.containers[container] = containerwidget
@@ -356,7 +356,7 @@ function PlayerHud:TogglePlayerAvatarPopup(player_name, data, show_net_profile, 
     )
 end
 
---ThePlayer.HUD:ShowEndOfMatchPopup({victory=true}) 
+--ThePlayer.HUD:ShowEndOfMatchPopup({victory=true})
 function PlayerHud:ShowEndOfMatchPopup(data)
     self.inst:DoTaskInTime(data.victory and 2.5 or 0, function()
         if self.endofmatchpopup == nil then
@@ -424,13 +424,13 @@ function PlayerHud:OpenWardrobeScreen(target)
         TheFrontEnd:PopScreen(self.wardrobepopup)
     end
 
-    if target ~= nil then        
+    if target ~= nil then
         self.wardrobepopup =
             ScarecrowClothingPopupScreen(
                 target,
                 self.owner,
                 Profile
-            )        
+            )
     else
         self.wardrobepopup =
             GridWardrobePopupScreen(
@@ -457,7 +457,7 @@ function PlayerHud:CloseWardrobeScreen()
     local activescreen = TheFrontEnd:GetActiveScreen()
 
     if activescreen == nil then return end
-    
+
     if activescreen.name ~= "ItemServerContactPopup" then
         --Hack for holding offset when transitioning from giftitempopup to wardrobepopup
         TheCamera:PopScreenHOffset(self)
@@ -513,7 +513,7 @@ function PlayerHud:CloseGroomerScreen()
     local activescreen = TheFrontEnd:GetActiveScreen()
 
     if activescreen == nil then return end
-    
+
     if activescreen.name ~= "ItemServerContactPopup" then
         --Hack for holding offset when transitioning from giftitempopup to groomerpopup
         TheCamera:PopScreenHOffset(self)
@@ -997,7 +997,7 @@ end
 local DROPS_ALPHA_INCREASE_RATE = 0.01
 local DROPS_ALPHA_DECREASE_RATE = 0.05
 function PlayerHud:UpdateDrops(camera)
-  
+
     if self.dropsplash  then
         if self.drops_alpha >= 1 then
             return

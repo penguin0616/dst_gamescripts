@@ -270,7 +270,7 @@ local function DoActualRez(inst, source, item)
     else -- Telltale Heart
         inst.sg:GoToState("reviver_rebirth", item)
     end
- 
+
     --Default to electrocute light values
     inst.Light:SetIntensity(.8)
     inst.Light:SetRadius(.5)

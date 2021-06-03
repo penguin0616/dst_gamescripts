@@ -74,7 +74,7 @@ end
 local function buff_OnAttached(inst, target)
 	inst.entity:SetParent(target.entity)
 	inst.Transform:SetPosition(0, 0, 0)
-	
+
     inst:ListenForEvent("death", function()
         inst.components.debuff:Stop()
     end, target)
@@ -149,7 +149,7 @@ local function debuff_fn(anim)
 	inst.components.debuff:SetDetachedFn(buff_OnDetached)
 	inst.components.debuff:SetExtendedFn(buff_OnExtended)
 	inst.components.debuff.keepondespawn = true
-	
+
 	buff_OnExtended(inst)
 
 	inst.OnSave = OnSave

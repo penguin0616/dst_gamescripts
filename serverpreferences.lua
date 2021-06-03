@@ -1,7 +1,7 @@
 local Stats = require("stats")
 
 ServerPreferences = Class(function(self)
-    self.persistdata = {} 
+    self.persistdata = {}
 	self.profanityservers = {}
 
     self.dirty = true
@@ -114,7 +114,7 @@ function ServerPreferences:UpdateProfanityFilteredServers(servers)
 					self.profanityservers[server_id] = not server.owner
 				end
 			end
-		else	
+		else
 			local name = TheNet:GetServerName()
 			local server_id = MakeServerID(name)
 			if self.profanityservers[server_id] == nil and (ProfanityFilter:HasProfanity(name) or ProfanityFilter:HasProfanity(TheNet:GetServerDescription())) then
@@ -155,10 +155,10 @@ end
 
 function ServerPreferences:Load(callback)
     TheSim:GetPersistentString(self:GetSaveName(),
-        function(load_success, str) 
+        function(load_success, str)
         	-- Can ignore the successfulness cause we check the string
 			self:OnLoad( str, callback )
-        end, false)    
+        end, false)
 end
 
 function ServerPreferences:OnLoad(str, callback)

@@ -61,7 +61,7 @@ local function GetWalterInteractionFn(inst)
         return leader
     end
 
-    return nil 
+    return nil
 end
 
 local function GetGenericInteractionFn(inst)
@@ -183,6 +183,23 @@ local function ValidateCombatAvoidance(self)
     return true
 end
 
+--- Minigames
+local function WatchingMinigame(inst)
+	return (inst.components.follower.leader ~= nil and inst.components.follower.leader.components.minigame_participator ~= nil) and inst.components.follower.leader.components.minigame_participator:GetMinigame() or nil
+end
+local function WatchingMinigame_MinDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_min or 0
+end
+local function WatchingMinigame_TargetDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_target or 0
+end
+local function WatchingMinigame_MaxDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_max or 0
+end
+
 -------------------------------------------------------------------------------
 
 
@@ -191,6 +208,13 @@ local WobyBigBrain = Class(Brain, function(self, inst)
 end)
 
 function WobyBigBrain:OnStart()
+	local watch_game = WhileNode( function() return WatchingMinigame(self.inst) end, "Watching Game",
+        PriorityNode{
+				Follow(self.inst, WatchingMinigame, WatchingMinigame_MinDist, WatchingMinigame_TargetDist, WatchingMinigame_MaxDist),
+				RunAway(self.inst, "minigame_participator", 5, 7),
+				FaceEntity(self.inst, WatchingMinigame, WatchingMinigame ),
+        }, 0.1)
+
     local root = PriorityNode(
     {
         WhileNode(function() return self.inst.components.hauntable ~= nil and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
@@ -198,26 +222,28 @@ function WobyBigBrain:OnStart()
             Panic(self.inst)),
 
         PriorityNode{
-            RunAway(self.inst, {tags={"_combat", "_health"}, notags={"wall", "INLIMBO"}, 
-                    fn=CombatAvoidanceFindEntityCheck(self)}, 
-                    COMBAT_TOO_CLOSE_DIST, 
+            RunAway(self.inst, {tags={"_combat", "_health"}, notags={"wall", "INLIMBO"},
+                    fn=CombatAvoidanceFindEntityCheck(self)},
+                    COMBAT_TOO_CLOSE_DIST,
                     COMBAT_SAFE_TO_WATCH_FROM_DIST),
-            
+
             WhileNode( function() return ValidateCombatAvoidance(self) end, "Is Near Combat",
                 FaceEntity(self.inst, GetOwner, KeepFaceOwnerFn, nil, "cower")
                 ),
         },
-        
+
+		watch_game,
+
         -- These two are kept separatly because we have different animations for mounting vs. opening and feeding
         FaceEntity(self.inst, GetRiderFn, KeepRiderFn),
         FaceEntity(self.inst, GetWalterInteractionFn, KeepGenericInteractionFn, nil, "sit_alert_tailwag"),
 
-        Follow(self.inst, function() return self.inst.components.follower.leader end, 
+        Follow(self.inst, function() return self.inst.components.follower.leader end,
                      MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST, true),
 
         -- Kept down here because woby should prioritize following walter over storage and food by other players
         FaceEntity(self.inst, GetGenericInteractionFn, KeepGenericInteractionFn, nil, "sit_alert"),
-        
+
 
         Wander(self.inst, GetHomePos, GetWanderDist, {minwaittime = 6, randwaittime = 6}),
     }, .25)

@@ -267,7 +267,7 @@ local function maketree(name, data, state)
         inst.Light:SetIntensity(.8)
         inst.Light:SetRadius(data.lightradius)
         inst.Light:SetColour(unpack(data.lightcolour))
-        
+
         inst:AddTag("cavedweller")
         inst:AddTag("mushtree")
         inst:AddTag("plant")

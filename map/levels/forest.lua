@@ -5,13 +5,13 @@ local survival_together = {
 	location = "forest",
 	version = 4,
 	overrides = {
-	},		
+	},
 	required_setpieces = {
 		"Sculptures_1",
 		"Maxwell5",
 	},
 	numrandom_set_pieces = 4,
-	random_set_pieces = 
+	random_set_pieces =
 	{
 		"Sculptures_2",
 		"Sculptures_3",
@@ -50,7 +50,7 @@ mod_missing.desc = STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC.MOD_MISSING
 mod_missing.hideinfrontend = true
 AddLevel(LEVELTYPE.SURVIVAL, mod_missing)
 
-AddLevel(LEVELTYPE.SURVIVAL, { 
+AddLevel(LEVELTYPE.SURVIVAL, {
 	id = "SURVIVAL_TOGETHER_CLASSIC",
 	name = STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELS.SURVIVAL_TOGETHER_CLASSIC,
 	desc = STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC.SURVIVAL_TOGETHER_CLASSIC,
@@ -83,7 +83,7 @@ AddLevel(LEVELTYPE.SURVIVAL, {
 		"Maxwell5",
 	},
 	numrandom_set_pieces = 4,
-	random_set_pieces = 
+	random_set_pieces =
 	{
 		"Sculptures_2",
 		"Sculptures_3",
@@ -130,7 +130,7 @@ if IsConsole() then   -- boons and spiders at default values rather than "often"
 			"Maxwell5",
 		},
 		numrandom_set_pieces = 4,
-		random_set_pieces = 
+		random_set_pieces =
 		{
 			"Sculptures_2",
 			"Sculptures_3",
@@ -180,7 +180,7 @@ else
 			"Maxwell5",
 		},
 		numrandom_set_pieces = 4,
-		random_set_pieces = 
+		random_set_pieces =
 		{
 			"Sculptures_2",
 			"Sculptures_3",
@@ -223,7 +223,7 @@ AddLevel(LEVELTYPE.SURVIVAL, {
 		"Maxwell5",
 	},
 	numrandom_set_pieces = 4,
-	random_set_pieces = 
+	random_set_pieces =
 	{
 		"Sculptures_2",
 		"Sculptures_3",
@@ -399,7 +399,7 @@ local worldgen_survival_plus = {id="SURVIVAL_DEFAULT_PLUS",
 		"Maxwell5",
 	},
 	numrandom_set_pieces = 4,
-	random_set_pieces = 
+	random_set_pieces =
 	{
 		"Sculptures_2",
 		"Sculptures_3",
@@ -452,7 +452,7 @@ AddWorldGenLevel(LEVELTYPE.SURVIVAL, {id="COMPLETE_DARKNESS",
 		"Maxwell5",
 	},
 	numrandom_set_pieces = 4,
-	random_set_pieces = 
+	random_set_pieces =
 	{
 		"Sculptures_2",
 		"Sculptures_3",

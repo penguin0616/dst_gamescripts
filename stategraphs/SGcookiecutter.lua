@@ -29,21 +29,21 @@ local events =
 			end
 		end
 	end),
-	EventHandler("onsink", function(inst) 
+	EventHandler("onsink", function(inst)
 		if inst.components.health ~= nil and not inst.components.health:IsDead() and not inst.sg:HasStateTag("jumping") and not inst.sg:HasStateTag("drilling_pst") then
 			if inst.sg:HasStateTag("drilling") then
 				inst.sg:GoToState("drill_pst")
 			else
 				inst.sg:GoToState("gohome")
 			end
-		end 
+		end
 	end),
 	EventHandler("gohome", function(inst) if inst.components.health ~= nil and not inst.components.health:IsDead() then inst.sg:GoToState("gohome") end end),
-	EventHandler("death", function(inst) 
+	EventHandler("death", function(inst)
 		if inst.sg.mem.in_water then
-			inst.sg:GoToState("death") 
+			inst.sg:GoToState("death")
 		else
-			inst.sg:GoToState("death_boat") 
+			inst.sg:GoToState("death_boat")
 		end
 	end),
 	EventHandler("gotosleep", function(inst) if inst.components.health ~= nil and not inst.components.health:IsDead() and inst:HasTag("swimming") and not inst.sg:HasStateTag("jumping") then inst.sg:GoToState(inst.sg:HasStateTag("sleeping") and "sleeping" or "sleep") end end),
@@ -56,7 +56,7 @@ local events =
 }
 
 local function RestoreCollidesWith(inst)
-	inst.Physics:CollidesWith(COLLISION.WORLD 
+	inst.Physics:CollidesWith(COLLISION.WORLD
 						+ COLLISION.OBSTACLES
 						+ COLLISION.SMALLOBSTACLES
 						+ COLLISION.CHARACTERS
@@ -133,7 +133,7 @@ local states =
 			end
 		end,
 
-		timeline = 
+		timeline =
 		{
 			TimeEvent(9*FRAMES, function(inst)
 				inst:RemoveTag("NOCLICK")
@@ -201,7 +201,7 @@ local states =
             inst.components.lootdropper:DropLoot(inst:GetPosition())
         end,
 
-		timeline = 
+		timeline =
 		{
 			TimeEvent(5*FRAMES, function(inst)
 	            inst.SoundEmitter:PlaySound("saltydog/creatures/cookiecutter/death")
@@ -285,7 +285,7 @@ local states =
 			SetInvincible(inst, true)
         end,
 
-		timeline = 
+		timeline =
 		{
 			TimeEvent(9*FRAMES, function(inst)
 	            inst.components.locomotor:RunForward()
@@ -336,7 +336,7 @@ local states =
 			SetInvincible(inst, true)
         end,
 
-		timeline = 
+		timeline =
 		{
 			TimeEvent(9*FRAMES, function(inst)
 				inst.sg:GoToState("idle", true)
@@ -382,7 +382,7 @@ local states =
 			inst.AnimState:PlayAnimation("jump_pre")
         end,
 
-		timeline = 
+		timeline =
 		{
 			TimeEvent(10*FRAMES, function(inst)
 				SpawnPrefab("splash").Transform:SetPosition(inst.Transform:GetWorldPosition())

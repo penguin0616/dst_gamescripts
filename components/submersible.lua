@@ -71,7 +71,7 @@ function Submersible:Submerge()
 	local can_deploy_at_point = TheWorld.Map:IsSurroundedByWater(pt.x, pt.y, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + 0.2)
 
 	local has_moved = false
-	
+
 	local x, y, z = pt.x, pt.y, pt.z
 	local spawn_x, spawn_y, spawn_z = x, y, z
 	local data = CheckNearbyTiles(x, y, z)
@@ -127,7 +127,7 @@ function Submersible:Submerge()
 						break
 					end
 				end
-				
+
 				move_to_land = not found_applicable_waterpoint
 			end
 		else
@@ -167,7 +167,7 @@ function Submersible:MakeSunken(x, z)
 			underwater_object.components.inventory:GiveItem(self.inst)
 
 			self.inst:PushEvent("on_submerge", { underwater_object = underwater_object })
-			
+
 			SpawnPrefab("splash_green").Transform:SetPosition(x, 0, z)
 		end
 	end

@@ -394,6 +394,22 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 109,
 	},
+	loading_carnival1 =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 119,
+	},
+	loading_carnival2 =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 119,
+	},
 	loading_charlie =
 	{
 		type = "loading",
@@ -465,6 +481,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 108,
+	},
+	loading_gameplay_trailer =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 119,
 	},
 	loading_gingersnow =
 	{
@@ -4182,6 +4206,13 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 32,
 	},
+	playerportrait_bg_dragonflychestkraken =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 119,
+	},
 	playerportrait_bg_dragonflyfurnacecrystal =
 	{
 		type = "playerportrait",
@@ -4973,6 +5004,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 106,
 	},
+	profileflair_corvus =
+	{
+		type = "profileflair",
+		skin_tags = { "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 119,
+	},
 	profileflair_crow =
 	{
 		type = "profileflair",
@@ -4980,6 +5018,13 @@ MISC_ITEMS =
 		rarity = "Common",
 		rarity_modifier = "Woven",
 		release_group = 32,
+	},
+	profileflair_crowkid =
+	{
+		type = "profileflair",
+		skin_tags = { "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 119,
 	},
 	profileflair_cupcake =
 	{
@@ -5004,6 +5049,13 @@ MISC_ITEMS =
 		rarity = "Common",
 		rarity_modifier = "Woven",
 		release_group = 32,
+	},
+	profileflair_dragonflychest_kraken =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 119,
 	},
 	profileflair_dragonflyfurnace_crystal =
 	{

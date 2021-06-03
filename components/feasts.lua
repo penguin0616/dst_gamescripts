@@ -41,7 +41,7 @@ local function isintable(testtable,entry)
         if data == entry then
             return true
         end
-    end    
+    end
 end
 
 local function gettablegroup(target)
@@ -61,7 +61,7 @@ local function ApplyFeastBuff(feaster, tables, totalfeasters)
     for i,wintertable in ipairs(tables)do
         local food = wintertable.components.inventory:GetItemInSlot(1)
         if food ~= nil and food:HasTag("wintersfeastcookedfood") then
-            foods[food.prefab] = true               
+            foods[food.prefab] = true
             totalfood = totalfood + 1
         end
     end
@@ -95,7 +95,7 @@ local function doFeastCheck()
                     wintertable:PushEvent("ruffle")
                 end
             end
-        end        
+        end
         for i, feaster in ipairs(feasters)do
             ApplyFeastBuff(feaster,_tablegroups[group],#feasters)
         end
@@ -137,7 +137,7 @@ local function OnFeasterAdded(inst,data)
     if not inst.feastingtask then
         inst.feastingtask = inst:DoPeriodicTask(TICK_RATE,doFeastCheck)
 	end
-	
+
 	local group = gettablegroup(data.target)
 	if group ~= nil then
 		_tablegroups[group].time_until_announce = ANNOUNCE_INITIAL_DELAY
@@ -197,7 +197,7 @@ end
 
 function self:GetTableGroups()
     return _tablegroups
-end 
+end
 
 function self:GetFeasterGroup(feaster)
     local group = nil
@@ -228,40 +228,40 @@ function self:RegisterTable(inst)
                         if not inst:GetCurrentPlatform() or (grouptable:GetCurrentPlatform() and inst:GetCurrentPlatform() == grouptable:GetCurrentPlatform()) then
                             table.insert(closegroups,t)
                             break
-                        end                        
-                    end                    
+                        end
+                    end
                 end
             end
         end
     end
     -- merge all found groups together.
 
-    if #closegroups > 0 then 
+    if #closegroups > 0 then
         table.insert(_tablegroups[closegroups[1]],inst)
-        
+
         if #closegroups > 1 then
 			table.sort(closegroups)
             for i=#closegroups, 2, -1 do
                 for t,grouptable in ipairs(_tablegroups[closegroups[i]])do
                     table.insert(_tablegroups[closegroups[1]],grouptable)
                 end
-                table.remove(_tablegroups,closegroups[i])            
+                table.remove(_tablegroups,closegroups[i])
             end
         end
     else
         table.insert(_tablegroups,{inst})
     end
-    
-    local thisgroup = self:GetTableGroup(inst)        
+
+    local thisgroup = self:GetTableGroup(inst)
     local delay = 0.2    -- delay*(#self:GetTableGroups()[thisgroup]-i+1)
-    for i=#self:GetTableGroups()[thisgroup],1,-1 do        
+    for i=#self:GetTableGroups()[thisgroup],1,-1 do
         local wintertable = self:GetTableGroups()[thisgroup][i]
         if wintertable ~= inst then
             local dist = inst:GetDistanceSqToInst(wintertable)
             local oneseconddist = 20
             local time = Remap(dist,0,oneseconddist*oneseconddist,0,1)
-            wintertable:DoTaskInTime(time,function() 
-                wintertable:PushEvent("ruffle")                
+            wintertable:DoTaskInTime(time,function()
+                wintertable:PushEvent("ruffle")
             end)
         end
     end
@@ -276,25 +276,25 @@ function self:UnregisterTable(inst)
                 group = t
                 table.remove(tablegroup,g)
                 break
-            end                    
+            end
         end
     end
 
-    -- group up remaining tables here    
+    -- group up remaining tables here
     if group then -- table might have burned?
         while #_tablegroups[group] > 0 do
             local openlist = {_tablegroups[group][1]}
             local closedlist = {}
 
             while #openlist > 0 do
-                for c,checktable in ipairs(_tablegroups[group])do            
-                    if not isintable(closedlist,checktable) and not isintable(openlist,checktable) and checktable:GetDistanceSqToInst(openlist[1]) < TUNING.WINTERSFEASTTABLE.TABLE_RANGE * TUNING.WINTERSFEASTTABLE.TABLE_RANGE then                    
+                for c,checktable in ipairs(_tablegroups[group])do
+                    if not isintable(closedlist,checktable) and not isintable(openlist,checktable) and checktable:GetDistanceSqToInst(openlist[1]) < TUNING.WINTERSFEASTTABLE.TABLE_RANGE * TUNING.WINTERSFEASTTABLE.TABLE_RANGE then
                         table.insert(openlist,checktable)
                     end
                 end
                 table.insert(closedlist,openlist[1])
                 table.remove(openlist,1)
-            end               
+            end
             for i=#_tablegroups[group], 1, -1 do
                 if isintable(closedlist,_tablegroups[group][i]) then
                     table.remove(_tablegroups[group],i)

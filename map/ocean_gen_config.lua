@@ -28,7 +28,7 @@ local watergen =
 	noise_scale_grave = 18,
 	--noise maps will make values 0.0-1.0
 	init_level_coral = 0.65, --greater then this = coral - increase to lower coral
-	init_level_medium = 0.55, --greater than this = medium, increase for less medium 
+	init_level_medium = 0.55, --greater than this = medium, increase for less medium
 	init_level_grave = 0.65, --greater then this = shipgraves - increase to lower shipgraves
 
 	--after everything above is done it will take that and blend it

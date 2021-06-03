@@ -54,11 +54,11 @@ local function onstopuse(inst)
     end
 end
 
-local function onequip(inst, owner) 
+local function onequip(inst, owner)
     owner.AnimState:OverrideSymbol("swap_body_tall", "armor_slurtleshell", "swap_body_tall")
     inst:ListenForEvent("blocked", OnBlocked, owner)
     inst:ListenForEvent("newstate", ProtectionLevels, owner)
-    
+
     -- check for slurtlehat pairing achievement
     if owner:HasTag("player") then
 		local equipped_head = owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil

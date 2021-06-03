@@ -21,11 +21,11 @@ local events =
     EventHandler("attacked", function(inst) if not inst.components.health:IsDead() and not inst.sg:HasStateTag("attack") and not inst.sg:HasStateTag("jumping") then inst.sg:GoToState("hit") end end),
     EventHandler("death", function(inst) inst.sg:GoToState("death", inst.sg.statemem.dead) end),
     EventHandler("doattack", function(inst, data) if not inst.components.health:IsDead() and (inst.sg:HasStateTag("hit") or not inst.sg:HasStateTag("busy")) then inst.sg:GoToState("attack", data.target) end end),
-    EventHandler("dive_eat", function(inst) 
+    EventHandler("dive_eat", function(inst)
         if inst.foodtoeat then
             local x,y,z = inst.foodtoeat.Transform:GetWorldPosition()
-            if inst.foodtoeat:IsValid() and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) then 
-                inst.sg:GoToState("eat_pre") 
+            if inst.foodtoeat:IsValid() and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) then
+                inst.sg:GoToState("eat_pre")
             end
         end
     end),
@@ -56,10 +56,10 @@ local function  DoAttack(inst)
     if targetavailable then
        inst.notargets = nil
     else
-        inst.notargets = true         
+        inst.notargets = true
     end
     inst.components.combat:DoAttack()
-    if inst:GetCurrentPlatform() then 
+    if inst:GetCurrentPlatform() then
         ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, 0.2, 0.05, 0.10, inst:GetCurrentPlatform())
     end
 end
@@ -68,12 +68,12 @@ end
 local function findwater(inst)
     local foundwater = false
     local position = Vector3(inst.Transform:GetWorldPosition())
-    
+
     local start_angle = inst.Transform:GetRotation() * DEGREES
-    
+
     local foundwater = false
     local radius = 4
-    
+
     local test_fn = function(offset)
         local x = position.x + offset.x
         local z = position.z + offset.z
@@ -86,8 +86,8 @@ local function findwater(inst)
         offset = FindValidPositionByFan(start_angle, radius, 16, test_fn)
         if offset and offset.x and offset.z then
             foundwater = true
-        else            
-            radius = radius + 4            
+        else
+            radius = radius + 4
         end
     end
 
@@ -124,23 +124,23 @@ local states =
         tags = { "busy","attack"},
         onenter = function(inst, playanim)
             inst.Physics:Stop()
-           
+
             inst.AnimState:PlayAnimation("attack", true)
         end,
         timeline =
         {
             TimeEvent(8*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bark") end),
-            TimeEvent(12*FRAMES, function(inst) 
+            TimeEvent(12*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite")
                 DoAttack(inst)
             end),
             TimeEvent(15*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bark") end),
-            TimeEvent(18*FRAMES, function(inst) 
+            TimeEvent(18*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite")
                 DoAttack(inst)
             end),
             TimeEvent(22*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bark") end),
-            TimeEvent(26*FRAMES, function(inst) 
+            TimeEvent(26*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite")
                 DoAttack(inst)
             end),
@@ -149,14 +149,14 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst) 
+            EventHandler("animover", function(inst)
                 if math.random() < 0.3 then
                     inst.sg:GoToState("bite")
-                else                 
-                    inst.sg:GoToState("rest") 
+                else
+                    inst.sg:GoToState("rest")
                 end
             end),
-        },        
+        },
     },
 
     State{
@@ -177,11 +177,11 @@ local states =
         },
 
         ontimeout = function(inst)
-            inst.readytoswim = true    
+            inst.readytoswim = true
             inst:PushEvent("leap")
             inst.sg:GoToState("idle")
-        end,        
-    },    
+        end,
+    },
 
     State{
         name = "attack",
@@ -198,7 +198,7 @@ local states =
         {
             TimeEvent(12*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite")
-                inst.components.combat:DoAttack(inst.sg.statemem.target) 
+                inst.components.combat:DoAttack(inst.sg.statemem.target)
             end),
         },
 
@@ -225,17 +225,17 @@ local states =
 
         timeline =
         {
-            TimeEvent(17*FRAMES, function(inst) 
+            TimeEvent(17*FRAMES, function(inst)
                 local action = inst:GetBufferedAction()
                 if action and action.target and action.target:IsValid() then
-                    action.target:Remove() 
+                    action.target:Remove()
                 end
                 inst:ClearBufferedAction()
                 inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bark")
-            end),                    
-            TimeEvent(21*FRAMES, function(inst) 
+            end),
+            TimeEvent(21*FRAMES, function(inst)
                 SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
-                inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite") 
+                inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite")
             end)
         },
 
@@ -265,7 +265,7 @@ local states =
         name = "leap",
         tags = { "busy","jumping" },
 
-        onenter = function(inst)    
+        onenter = function(inst)
             if not inst.readytoswim then
                 if inst.components.combat.target then
                     local x,y,z =  inst.components.combat.target.Transform:GetWorldPosition()
@@ -273,16 +273,16 @@ local states =
                 end
             else
                 -- find water, jump to that.
-                local offset = findwater(inst)    
-                local position = Vector3(inst.Transform:GetWorldPosition())                            
+                local offset = findwater(inst)
+                local position = Vector3(inst.Transform:GetWorldPosition())
                 inst:ForceFacePoint(position.x + offset.x, 0, position.z + offset.z)
                 inst.components.timer:StartTimer("getdistance", 3)
             end
             inst.readytoswim = nil
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
-            
-            
+
+
             inst.AnimState:PlayAnimation("jump")
             inst.AnimState:PushAnimation("jump_loop",true)
 
@@ -302,27 +302,27 @@ local states =
 
         timeline =
         {
-            TimeEvent(5*FRAMES, function(inst) 
-                if inst:HasTag("swimming") then 
-                    SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+            TimeEvent(5*FRAMES, function(inst)
+                if inst:HasTag("swimming") then
+                    SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
                     else
-                    inst.Physics:SetMotorVelOverride(15,0,0) 
+                    inst.Physics:SetMotorVelOverride(15,0,0)
                 end
-            end),            
+            end),
         },
 
         onexit = function(inst)
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
             inst.Physics:ClearMotorVelOverride()
-            
+
             inst.Physics:ClearLocalCollisionMask()
             if inst.sg.statemem.collisionmask ~= nil then
                 inst.Physics:SetCollisionMask(inst.sg.statemem.collisionmask)
-            end            
+            end
         end,
 
-        onupdate = function(inst)                
+        onupdate = function(inst)
             local target = inst.components.combat.target
             if target and not inst.components.timer:TimerExists("getdistance") then
                 local x,y,z = inst.Transform:GetWorldPosition()
@@ -351,23 +351,23 @@ local states =
 
         timeline =
         {
-            TimeEvent(6*FRAMES, function(inst) 
-                if inst:HasTag("swimming") then 
-                    SpawnPrefab("splash_green_large").Transform:SetPosition(inst.Transform:GetWorldPosition())                 
+            TimeEvent(6*FRAMES, function(inst)
+                if inst:HasTag("swimming") then
+                    SpawnPrefab("splash_green_large").Transform:SetPosition(inst.Transform:GetWorldPosition())
                 end
             end),
-            TimeEvent(9*FRAMES, function(inst)  
-                if not inst:HasTag("swimming") then                
+            TimeEvent(9*FRAMES, function(inst)
+                if not inst:HasTag("swimming") then
                     if inst:GetCurrentPlatform() then
                         ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, 0.3, 0.03, 0.15, inst:GetCurrentPlatform())
                     end
                     groundsound(inst)
                 end
             end),
-        },        
+        },
 
         onexit = function(inst)
-            if inst:HasTag("swimming") then 
+            if inst:HasTag("swimming") then
                 if inst.notargets then
                     if not inst.missedtargets then
                         inst.missedtargets = 0
@@ -420,7 +420,7 @@ local states =
         onenter = function(inst)
             inst:ClearBufferedAction()
             inst.components.locomotor:RunForward()
-            inst.AnimState:PlayAnimation("dive")                        
+            inst.AnimState:PlayAnimation("dive")
         end,
 
         onexit = function(inst)
@@ -429,9 +429,9 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst) 
-                inst.Physics:SetActive(false) 
-                inst.sg:SetTimeout(2) 
+            EventHandler("animover", function(inst)
+                inst.Physics:SetActive(false)
+                inst.sg:SetTimeout(2)
             end),
         },
         ontimeout = function(inst)
@@ -441,8 +441,8 @@ local states =
             end
             inst.Transform:SetPosition(targetpt.x,0,targetpt.z)
             inst.sg:GoToState("eat_pst")
-        end,   
-    },    
+        end,
+    },
 
     State{
         name = "eat_pst",
@@ -451,39 +451,39 @@ local states =
         onenter = function(inst, cb)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("eat")
-           -- SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+           -- SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
         end,
 
         timeline =
-        {        
+        {
             TimeEvent(1*FRAMES, function(inst)
                 if inst.foodtoeat then
                     inst.foodtoeat:Remove()
                 end
                 inst.foodtoeat = nil
             end),
-            TimeEvent(7*FRAMES, function(inst) 
-                inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite") 
+            TimeEvent(7*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/bite")
                 SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
-            end),         
+            end),
 
-            TimeEvent(30*FRAMES, function(inst) 
-                if inst:HasTag("swimming") then 
-                    SpawnPrefab("splash_green_large").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+            TimeEvent(30*FRAMES, function(inst)
+                if inst:HasTag("swimming") then
+                    SpawnPrefab("splash_green_large").Transform:SetPosition(inst.Transform:GetWorldPosition())
                 else
                     groundsound(inst)
                 end
-            end),                       
+            end),
         },
 
         events =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
-    },    
+    },
 }
 
-CommonStates.AddAmphibiousCreatureHopStates(states, 
+CommonStates.AddAmphibiousCreatureHopStates(states,
 { -- config
 	swimming_clear_collision_frame = 9 * FRAMES,
 },
@@ -492,22 +492,22 @@ CommonStates.AddAmphibiousCreatureHopStates(states,
 { -- timeline
 	hop_pre =
 	{
-		TimeEvent(0, function(inst) 
-			if inst:HasTag("swimming") then 
-				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+		TimeEvent(0, function(inst)
+			if inst:HasTag("swimming") then
+				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
 			end
 		end),
 	},
 	hop_pst = {
-		TimeEvent(4 * FRAMES, function(inst) 
-			if inst:HasTag("swimming") then 
+		TimeEvent(4 * FRAMES, function(inst)
+			if inst:HasTag("swimming") then
 				inst.components.locomotor:Stop()
-				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())                                         
+				SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
 			end
             groundsound(inst)
 		end),
-		TimeEvent(6 * FRAMES, function(inst) 
-			if not inst:HasTag("swimming") then 
+		TimeEvent(6 * FRAMES, function(inst)
+			if not inst:HasTag("swimming") then
                 inst.components.locomotor:StopMoving()
 			end
 		end),
@@ -553,7 +553,7 @@ CommonStates.AddRunStates(states,
         TimeEvent(4 * FRAMES, function(inst)
             if inst:HasTag("swimming") then
                 inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small",nil,.25)
-            else            
+            else
                 PlayFootstep(inst)
             end
         end),
@@ -567,7 +567,7 @@ CommonStates.AddRunStates(states,
         end
     end,
     runonupdate = function(inst)
-    
+
         inst:testfooddist()
     end,
 })
@@ -575,7 +575,7 @@ CommonStates.AddWalkStates(states,
 {
     walktimeline =
     {
-        --TimeEvent(0, function(inst) inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/swim") end),        
+        --TimeEvent(0, function(inst) inst.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/swim") end),
     },
 },nil,nil,nil,
 {

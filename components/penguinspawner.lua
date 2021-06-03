@@ -42,7 +42,7 @@ local _activeplayers = {}
 --------------------------------------------------------------------------
 local function FindLandNextToWater( playerpos, waterpos )
     --print("FindWalkableOffset:")
-    local ignore_walls = true 
+    local ignore_walls = true
     local radius = WATER_CHECK_RADIUS
     local ground = TheWorld
 
@@ -199,16 +199,16 @@ local function EstablishColony(loc)
         if check_los and
             not ground.Pathfinder:IsClear(loc.x, loc.y, loc.z,
                                                          run_point.x, run_point.y, run_point.z,
-                                                         {ignorewalls = ignore_walls, ignorecreep = true}) then 
+                                                         {ignorewalls = ignore_walls, ignorecreep = true}) then
 			--print("no path or los")
             return false
         end
-        
+
         if FindValidPositionByFan(0, 6, 16, NearWaterTest) then
             --print("colony too near water")
             return false
         end
-		
+
         if #(TheSim:FindEntities(run_point.x, run_point.y, run_point.z, TUNING.PENGUINS_MIN_DIST_FROM_STRUCTURES, STRUCTURES_TAGS)) > 0 then
             --print("colony too close to structures")
 			return false
@@ -235,13 +235,13 @@ local function EstablishColony(loc)
             if pos and distsq(loc,pos) < SEARCH_RADIUS2+60 and
                 ground.Pathfinder:IsClear(loc.x, loc.y, loc.z,                    -- check for interposing water
                                          pos.x, pos.y, pos.z,
-                                         {ignorewalls = false, ignorecreep = true}) then 
+                                         {ignorewalls = false, ignorecreep = true}) then
                 --print("************* Found existing colony")
                 return i
             end
         end
     end
-    
+
     -- Make a new colony
     local newFlock = { members={} }
 
@@ -251,7 +251,7 @@ local function EstablishColony(loc)
         newFlock.rookery = FindValidPositionByFan(math.random()*PI*2.0, radius, 32, testfn)
         radius = radius - 10
     end
-    
+
     if newFlock.rookery then
         newFlock.rookery = newFlock.rookery + loc
 		newFlock.is_mutated = TheWorld.Map:IsInLunacyArea(newFlock.rookery.x, 0, newFlock.rookery.z) and TUNING.SPAWN_MOON_PENGULLS
@@ -274,12 +274,12 @@ local function EstablishColony(loc)
                 local angle = math.random(minang, maxang)
                 local pos = newFlock.ice:GetPosition()
                 local offset = FindWalkableOffset(pos, angle*DEGREES, math.random(5,15), 120, false, false)
-                if offset then 
+                if offset then
                     local ents = TheSim:FindEntities(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z, 1.2)
                     if #ents == 0 then
                         foundvalidplacement = true
                         numboulders = numboulders - 1
-                        
+
                         local icerock = SpawnPrefab("rock_ice")
                         icerock.Transform:SetPosition(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z)
                         icerock.remove_on_dryup = true
@@ -338,7 +338,7 @@ local function TryToSpawnFlockForPlayer(playerdata)
     -- Go find a spot on land close to water
     -- returns offset, check_angle, deflected
     local loc,check_angle,deflected = FindSpawnLocationForPlayer(player)
-    if loc then 
+    if loc then
         --print("trying to spawn: Angle is",check_angle/DEGREES)
         local colony = EstablishColony(loc)
 
@@ -417,10 +417,10 @@ local function OnSeasonTick(inst, data)
 					v.ice:QueueRemove()
 				end
 			end
-			
+
 			_colonies = {}
 		end
-		
+
 		_totalBirds = 0
 	end
 end
@@ -512,9 +512,9 @@ end
 function self:GetDebugString()
 	local s = ""
 	s = s .. ", " .. tostring(_totalBirds) .."/".. tostring(_maxPenguins) .. " Penguins"
-	
+
 	s = s .. ", " .. tostring(#_colonies) .."/".. tostring(_maxColonies) .. " Colonies"
-	
+
 	if _totalBirds >= _maxPenguins then
 		s = s .. ", Limit Reached"
 	else
@@ -525,7 +525,7 @@ function self:GetDebugString()
 			s = s .. ", next spawn imminent"
 		end
 	end
-		
+
 	return s
 end
 

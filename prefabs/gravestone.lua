@@ -17,7 +17,7 @@ local function onload(inst, data, newents)
     if data then
         if inst.mound and data.mounddata then
             if newents and data.mounddata.id then
-                newents[data.mounddata.id] = {entity=inst.mound, data=data.mounddata} 
+                newents[data.mounddata.id] = {entity=inst.mound, data=data.mounddata}
             end
             inst.mound:SetPersistData(data.mounddata.data, newents)
         end

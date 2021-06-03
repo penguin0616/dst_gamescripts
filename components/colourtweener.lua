@@ -58,7 +58,7 @@ function ColourTweener:StartTween(colour, time, callback)
 
 	self.time = time
 	self.timepassed = 0
-	self.inst:PushEvent("colourtweener_start")	
+	self.inst:PushEvent("colourtweener_start")
 	self.tweening = true
 	if self.time > 0 then
 		self.inst:StartUpdatingComponent(self)
@@ -67,7 +67,7 @@ function ColourTweener:StartTween(colour, time, callback)
 	end
 end
 
-function ColourTweener:OnUpdate(dt)	
+function ColourTweener:OnUpdate(dt)
 	self.timepassed = self.timepassed + dt
 	local t = self.timepassed/self.time
 	if t > 1 then
@@ -75,12 +75,12 @@ function ColourTweener:OnUpdate(dt)
 	end
 
 	if self.i_colour_r and self.t_colour_r and
-	 self.i_colour_g and self.t_colour_g and 
-	 self.i_colour_b and self.t_colour_b and 
-	 self.i_alpha and self.t_alpha then	 	 
+	 self.i_colour_g and self.t_colour_g and
+	 self.i_colour_b and self.t_colour_b and
+	 self.i_alpha and self.t_alpha then
 		self.inst.AnimState:SetMultColour(
-		Lerp(self.i_colour_r, self.t_colour_r, t), 
-		Lerp(self.i_colour_g, self.t_colour_g, t), 
+		Lerp(self.i_colour_r, self.t_colour_r, t),
+		Lerp(self.i_colour_g, self.t_colour_g, t),
 		Lerp(self.i_colour_b, self.t_colour_b, t),
 		Lerp(self.i_alpha, self.t_alpha, t))
 	end

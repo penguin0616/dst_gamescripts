@@ -160,7 +160,7 @@ function MetaClass(base, _ctor)
     c._ctor = _ctor
     c.is_a = function(self, klass)
         local m = getmetatable(self).c
-        while m do 
+        while m do
             if m == klass then return true end
             m = m._base
         end

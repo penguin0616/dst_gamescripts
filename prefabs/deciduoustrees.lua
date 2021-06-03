@@ -233,7 +233,7 @@ local function UpdateIdleLeafFx(inst)
 		end
 	elseif inst.spawnleaffxtask ~= nil then
 		inst.spawnleaffxtask:Cancel()
-		inst.spawnleaffxtask = nil 
+		inst.spawnleaffxtask = nil
 	end
 end
 
@@ -245,7 +245,7 @@ local function GrowLeavesFn(inst, monster, monsterout)
         return
     end
 
-    if inst.leaf_state == "barren" or inst.target_leaf_state == "barren" then 
+    if inst.leaf_state == "barren" or inst.target_leaf_state == "barren" then
         inst:RemoveEventCallback("animover", GrowLeavesFn)
         if inst.target_leaf_state == "barren" then
             inst.build = "barren"
@@ -425,7 +425,7 @@ local function chop_tree(inst, chopper, chopsleft, numchops)
     SpawnLeafFX(inst, nil, true)
 
     -- Force update anims if monster
-    if inst.monster then 
+    if inst.monster then
         inst.anims = monster_anims
     end
     inst.AnimState:PlayAnimation(inst.anims.chop)
@@ -934,9 +934,9 @@ local function OnEntityWake(inst)
         inst.sg:GoToState("empty")
         inst.AnimState:ClearOverrideSymbol("eye")
         inst.AnimState:ClearOverrideSymbol("mouth")
-        if not inst:HasTag("stump") then 
+        if not inst:HasTag("stump") then
             inst.AnimState:ClearOverrideSymbol("legs")
-            inst.AnimState:ClearOverrideSymbol("legs_mouseover") 
+            inst.AnimState:ClearOverrideSymbol("legs_mouseover")
         end
         inst.AnimState:SetBank("tree_leaf")
         OnBurnt(inst, true)

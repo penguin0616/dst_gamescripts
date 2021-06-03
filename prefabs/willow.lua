@@ -28,7 +28,7 @@ end
 local FIRE_TAGS = { "fire" }
 local function sanityfn(inst)--, dt)
     local delta = inst.components.temperature:IsFreezing() and -TUNING.SANITYAURA_LARGE or 0
-    local x, y, z = inst.Transform:GetWorldPosition() 
+    local x, y, z = inst.Transform:GetWorldPosition()
     local max_rad = 10
     local ents = TheSim:FindEntities(x, y, z, max_rad, FIRE_TAGS)
     for i, v in ipairs(ents) do

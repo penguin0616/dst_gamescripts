@@ -14,13 +14,13 @@ local states=
         end,
         events =
         {
-            EventHandler("sg_update_running_state", function(inst) 
+            EventHandler("sg_update_running_state", function(inst)
 				if inst._isrunning then
                    inst.sg:GoToState("start_running")
                 end
             end),
         },
-    }, 
+    },
 
     State{
         name = "start_running",
@@ -30,17 +30,17 @@ local states=
         events =
         {
             EventHandler("animover", function(inst)
-				inst.sg:GoToState(inst._isrunning and "running" or "stop_running") 
+				inst.sg:GoToState(inst._isrunning and "running" or "stop_running")
 			end),
         },
-    }, 
+    },
 
     State{
         name = "running",
         onenter = function(inst)
 			inst.AnimState:PlayAnimation("held_running_loop")
         end,
-        
+
         timeline =
         {
             TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wes/characters/wes/speedballoon") end),
@@ -48,7 +48,7 @@ local states=
 
         events =
         {
-            EventHandler("sg_update_running_state", function(inst) 
+            EventHandler("sg_update_running_state", function(inst)
 				if not inst._isrunning then
                    inst.sg:GoToState("stop_running")
                 end
@@ -57,7 +57,7 @@ local states=
                 inst.sg:GoToState("running")
             end),
         },
-    }, 
+    },
 
     State{
         name = "stop_running",
@@ -67,15 +67,15 @@ local states=
         events =
         {
             EventHandler("animover", function(inst)
-				inst.sg:GoToState("idle") 
+				inst.sg:GoToState("idle")
 			end),
             EventHandler("sg_update_running_state", function(inst)
 				if inst.sg.timeinstate * FRAMES <= 3 then
-					inst.sg:GoToState("running") 
+					inst.sg:GoToState("running")
 				end
 			end),
         },
-    }, 
+    },
 
     State{
         name = "deflate",
@@ -96,9 +96,9 @@ local states=
         events =
         {
             EventHandler("animover", function(inst)
-				inst.sg:GoToState(inst._isrunning and "running" 
+				inst.sg:GoToState(inst._isrunning and "running"
 								or inst.sg.statemem._wasrunning and "stop_running"
-								or "idle") 
+								or "idle")
 			end),
         },
 
@@ -107,7 +107,7 @@ local states=
 				inst:UpdateBalloonSymbol()
 			end
         end,
-    }, 
+    },
 }
 
 return StateGraph("balloonheld", states, {}, "idle")

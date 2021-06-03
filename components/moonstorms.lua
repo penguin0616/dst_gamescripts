@@ -20,7 +20,7 @@ local _mapmarkers = {}
 
 self._moonstorm_nodes = net_bytearray(inst.GUID, "moonstorm.moonstorm_nodes", "moonstorm_nodes_dirty")
 
-self.inst:ListenForEvent("moonstorm_nodes_dirty", function(w,data) 
+self.inst:ListenForEvent("moonstorm_nodes_dirty", function(w,data)
     TheWorld:PushEvent("moonstorm_nodes_dirty_relay",data)
 end)
 
@@ -103,7 +103,7 @@ function self:AddMoonstormNodes(node_indices, firstnode)
     if type(node_indices) ~= "table" then
         node_indice = { node_indices }
     end
-    
+
     for _, v in ipairs(node_indices) do
         _active_moonstorm_nodes[v] = true
 
@@ -147,7 +147,7 @@ function self:GetMoonstormCenter()
         x, y = x + center[1], y + center[2]
         num_nodes = num_nodes + 1
     end
-    
+
     return num_nodes > 0 and Point(x / num_nodes, 0, y / num_nodes) or nil
 end
 

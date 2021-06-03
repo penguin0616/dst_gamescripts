@@ -125,7 +125,7 @@ local function fn()
     inst.AnimState:SetBank("beefalo")
     inst.AnimState:SetBuild("beefalo_baby_build")
     inst.AnimState:PlayAnimation("idle_loop", true)
-    
+
     inst:AddTag("beefalo")
     inst:AddTag("baby")
     inst:AddTag("animal")

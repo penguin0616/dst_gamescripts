@@ -18,7 +18,7 @@ local function KeepFaceTargetFn(inst, target)
 end
 
 local function should_emergency_pollen(inst)
-    return inst._can_cloud and 
+    return inst._can_cloud and
             inst.components.burnable ~= nil and
             (inst.components.burnable:IsBurning() or inst.components.burnable:IsSmoldering())
 end

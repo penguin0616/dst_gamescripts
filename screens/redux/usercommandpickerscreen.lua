@@ -46,7 +46,7 @@ local UserCommandPickerScreen = Class(Screen, function(self, owner, targetuserid
 
     local bg_root = self.proot:AddChild(Widget("bg_root"))
     bg_root:SetScale(.8, .8)
-    
+
 	local command_desc_text = self.proot:AddChild(Text(CHATFONT, DESC_FONT_SIZE, "", UICOLOURS.WHITE))
 
     self:UpdateActions()
@@ -183,7 +183,7 @@ function UserCommandPickerScreen:OnControl(control, down)
     if UserCommandPickerScreen._base.OnControl(self,control, down) then return true end
 
     if not down and control == CONTROL_CANCEL then
-        TheFrontEnd:PopScreen() 
+        TheFrontEnd:PopScreen()
         return true
     end
 end
@@ -224,7 +224,7 @@ function UserCommandPickerScreen:RefreshButtons()
                 button:Select()
             else
                 button:ClearHoverText()
-                if TheInput:ControllerAttached() then                    
+                if TheInput:ControllerAttached() then
 					-- this is the first active widget we've come across so set it as focus
                     if nil == self.force_focus_button then
                         self.force_focus_button = button

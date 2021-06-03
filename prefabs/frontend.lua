@@ -40,11 +40,11 @@ local assets =
 
     Asset("ATLAS", "images/frontscreen.xml"),
     Asset("IMAGE", "images/frontscreen.tex"),
-        
+
     -- Asset("ANIM", "anim/portrait_frame.zip"), -- Not currently used, but likely to come back
 
     Asset("ANIM", "anim/build_status.zip"),
-    
+
     -- Swirly fire frontend menu background
     --~ Asset("ANIM", "anim/animated_title.zip"), -- Not currently used, but likely to come back
     --~ Asset("ANIM", "anim/animated_title2.zip"), -- Not currently used, but likely to come back
@@ -124,17 +124,17 @@ local assets =
     Asset("ANIM", "anim/player_actions_item.zip"),
     Asset("ANIM", "anim/player_idles_warly.zip"),
     Asset("ANIM", "anim/player_idles_wendy.zip"),
-    Asset("ANIM", "anim/player_idles_willow.zip"),    
+    Asset("ANIM", "anim/player_idles_willow.zip"),
     Asset("ANIM", "anim/player_idles_winona.zip"),
     Asset("ANIM", "anim/player_idles_woodie.zip"),
     Asset("ANIM", "anim/player_idles_wormwood.zip"),
-    Asset("ANIM", "anim/player_idles_wortox.zip"),    
+    Asset("ANIM", "anim/player_idles_wortox.zip"),
     Asset("ANIM", "anim/player_idles_wurt.zip"),
     Asset("ANIM", "anim/player_idles_wathgrithr.zip"),
     Asset("ANIM", "anim/player_idles_wes.zip"),
     Asset("ANIM", "anim/bernie_build.zip"),
     Asset("ANIM", "anim/swap_lucy_axe.zip"),
-    
+
     -- Wardrobe
     Asset("ANIM", "anim/player_emotesxl.zip"), -- idle emote animations
 
@@ -144,7 +144,7 @@ local assets =
     Asset("DYNAMIC_ATLAS", "images/serverbrowser.xml"),
     Asset("PKGREF", "images/serverbrowser.tex"),
     --
-    
+
     Asset("ATLAS", "images/tradescreen.xml"),
     Asset("IMAGE", "images/tradescreen.tex"),
     Asset("ATLAS", "images/tradescreen_overflow.xml"),
@@ -160,7 +160,7 @@ local assets =
 
 
     Asset("ANIM", "anim/mod_player_build.zip"),
-    
+
 
     -- DISABLE SPECIAL RECIPES
     --Asset("ANIM", "anim/button_weeklyspecial.zip"),
@@ -204,12 +204,13 @@ local assets =
     Asset("DYNAMIC_ANIM", "anim/dynamic/box_shared.zip"),
     Asset("PKGREF", "anim/dynamic/box_shared.dyn"),
 
-    
+
     Asset("DYNAMIC_ANIM", "anim/dynamic/box_bolt.zip"),
     Asset("PKGREF", "anim/dynamic/box_bolt.dyn"),
 
-    
+
     --Mini Game Assets
+    Asset("ANIM", "anim/crow_kids.zip"),
     Asset("ANIM", "anim/crow.zip"),
     Asset("ANIM", "anim/crow_build.zip"),
     Asset("ANIM", "anim/robin_winter_build.zip"),
@@ -246,6 +247,8 @@ local assets =
     Asset("PKGREF", "anim/dynamic/oddment_gravy.dyn"),
     Asset("PKGREF", "anim/dynamic/oddment_berrysauce.dyn"),
     Asset("PKGREF", "anim/dynamic/oddment_pumpkinpie.dyn"),
+    Asset("DYNAMIC_ATLAS", "images/maze.xml"),
+    Asset("ASSET_PKGREF", "images/maze.tex"),
 }
 
 --Including these here as well as global to ensure the exporter's resizing dependency works

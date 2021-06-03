@@ -188,7 +188,7 @@ local function OnPicked(inst, picker)
     local x, y, z = inst.Transform:GetWorldPosition()
 
 	for i=1,NUM_LOOTS do
-		local loot = weighted_random_choice(weighted_loot) 
+		local loot = weighted_random_choice(weighted_loot)
 		SpawnPrefab(loot).Transform:SetPosition(x, y, z)
 	end
 	if IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) and math.random() < TUNING.HALLOWEEN_ORNAMENT_FLOTSAM_CHANCE then
@@ -342,7 +342,7 @@ local function landfn(data)
         end
         return true
 	end)
-	
+
 	inst:ListenForEvent("onsink", OnSink)
 	inst:ListenForEvent("on_landed", OnLanded)
 

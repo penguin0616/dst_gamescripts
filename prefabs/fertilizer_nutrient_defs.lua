@@ -45,7 +45,7 @@ setmetatable(FERTILIZER_DEFS, {
 	end,
 })
 
-local sort_order = 
+local sort_order =
 {
 	"spoiled_fish_small",
 	"spoiled_fish",

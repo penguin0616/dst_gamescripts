@@ -84,7 +84,7 @@ local states =
     State{
         name = "death",
         tags = { "busy" },
-        
+
         onenter = function(inst)
             inst.AnimState:PlayAnimation("death")
             inst.Physics:Stop()
@@ -266,7 +266,7 @@ local states =
         name = "hop",
         tags = { "moving", "canrotate", "hopping" },
 
-        onenter = function(inst) 
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("hop")
             inst.Physics:SetMotorVel(5, 0, 0)
         end,
@@ -355,7 +355,7 @@ local states =
         name = "stunned",
         tags = { "busy" },
 
-        onenter = function(inst) 
+        onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("stunned_loop", true)
             inst.sg:SetTimeout(GetRandomWithVariance(6, 2))

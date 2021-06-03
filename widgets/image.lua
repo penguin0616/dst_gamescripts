@@ -2,9 +2,9 @@ local Widget = require "widgets/widget"
 
 Image = Class(Widget, function(self, atlas, tex, default_tex)
     Widget._ctor(self, "Image")
-    
+
     self.inst.entity:AddImageWidget()
-    
+
     assert( ( atlas == nil and tex == nil ) or ( atlas ~= nil and tex ~= nil ) )
 
     self.tint = {1,1,1,1}
@@ -79,7 +79,7 @@ function Image:SetAlphaRange(min, max)
 	self.inst.ImageWidget:SetAlphaRange(min, max)
 end
 
--- NOTE: the default_tex parameter is handled, but using 
+-- NOTE: the default_tex parameter is handled, but using
 -- it will produce a bunch of warnings in the log.
 function Image:SetTexture(atlas, tex, default_tex)
     assert( atlas ~= nil )
@@ -139,7 +139,7 @@ end
 
 function Image:SetFadeAlpha(a, skipChildren)
 	if not self.can_fade_alpha then return end
-	
+
     self.inst.ImageWidget:SetTint(self.tint[1], self.tint[2], self.tint[3], self.tint[4] * a)
     Widget.SetFadeAlpha( self, a, skipChildren )
 end
@@ -182,7 +182,7 @@ end
 
 function Image:SetEffect(filename)
     self.inst.ImageWidget:SetEffect(filename)
-    
+
     if filename == "shaders/ui_cc.ksh" then
         --hack for faked ambient lighting influence (common_postinit, quagmire.lua)
         --might need to get the colour from the gamemode???
@@ -214,7 +214,7 @@ end
 function Image:SetUVMode(uvmode)
     self.inst.ImageWidget:SetUVMode(uvmode)
 end
-	
+
 function Image:SetBlendMode(mode)
 	self.inst.ImageWidget:SetBlendMode(mode)
 end

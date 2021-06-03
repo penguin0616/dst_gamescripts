@@ -99,7 +99,7 @@ end
 
 local function OnSpringChange(inst, isSpring)
 	if isSpring and TheWorld.state.cycles > TUNING.NO_BOSS_TIME then
-		self:InitializeNests()	
+		self:InitializeNests()
 	end
 end
 

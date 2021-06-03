@@ -1,8 +1,13 @@
 local HomeSeeker = Class(function(self, inst)
     self.inst = inst
-    self.onhomeremoved = function()
-        self:SetHome(nil)
-        self.inst:RemoveComponent("homeseeker")
+    self.removecomponent = true
+    self.onhomeremoved = function(home)
+        if self.home == home then
+            self:SetHome(nil)
+            if self.removecomponent then
+                self.inst:RemoveComponent("homeseeker")
+            end
+        end
     end
 end)
 

@@ -42,12 +42,12 @@ local emotes =
 
 SGCritterStates.AddIdle(states, #emotes)
 SGCritterStates.AddRandomEmotes(states, emotes)
-SGCritterStates.AddEmote(states, "cute", 
+SGCritterStates.AddEmote(states, "cute",
 		{
 			TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/emote") end),
 			TimeEvent(26*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/emote") end),
 		})
-SGCritterStates.AddPetEmote(states, 
+SGCritterStates.AddPetEmote(states,
 	{
 		TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/emote_nuzzle") end),
 	})
@@ -88,11 +88,11 @@ SGCritterStates.AddNuzzle(states, actionhandlers,
 SGCritterStates.AddWalkStates(states, nil, true)
 CommonStates.AddSleepExStates(states,
 		{
-			starttimeline = 
+			starttimeline =
 			{
 				TimeEvent(12*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/yawn") end),
 			},
-			sleeptimeline = 
+			sleeptimeline =
 			{
 				TimeEvent(31*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/sleep") end),
 			},

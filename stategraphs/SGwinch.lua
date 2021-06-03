@@ -64,7 +64,7 @@ local states =
                 end),
         },
     },
-    
+
     State{
         name = "raising_ground",
         onenter = function(inst)
@@ -110,7 +110,7 @@ local states =
                 inst.SoundEmitter:PlaySound(inst.sounds.reel_fast, "mooring")
             end
         end,
-        
+
         timeline =
         {
             TimeEvent(45 * FRAMES, function(inst)
@@ -160,7 +160,7 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("drop_pre")
             inst.AnimState:PushAnimation("drop_loop", true)
-            
+
             inst.SoundEmitter:PlaySound(inst.sounds.drop_water_pre)
         end,
 

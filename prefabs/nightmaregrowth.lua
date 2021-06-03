@@ -51,9 +51,9 @@ end
 local function grow(inst)
     inst.AnimState:PlayAnimation("grow")
     inst.AnimState:PushAnimation("idle", false)
-    
+
     SpawnCrack(inst)
-    
+
     inst._crack.AnimState:PlayAnimation("crack")
     inst._crack.AnimState:PushAnimation("crack_idle", false)
 
@@ -91,7 +91,7 @@ local function fn()
     inst.AnimState:SetBuild("nightmaregrowth")
     inst.AnimState:SetBank("nightmaregrowth")
     inst.AnimState:PlayAnimation("idle")
-	
+
     inst.MiniMapEntity:SetIcon("nightmaregrowth.png")
 
     MakeObstaclePhysics(inst, 1.1)
@@ -109,7 +109,7 @@ local function fn()
     inst.components.sanityaura.aura = -TUNING.SANITYAURA_SUPERHUGE
 
     inst:AddComponent("inspectable")
-    
+
     inst.growfn = grow
 
     inst:DoTaskInTime(0, SpawnCrack)
@@ -128,7 +128,7 @@ local function crackfn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-    
+
     inst.AnimState:SetBank("nightmaregrowth")
     inst.AnimState:SetBuild("nightmaregrowth")
     inst.AnimState:PlayAnimation("crack_idle", false)
@@ -148,7 +148,7 @@ local function crackfn()
     end
 
     inst.persists = false
-    
+
     inst.Transform:SetRotation(math.random() * 360)
 
     return inst

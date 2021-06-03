@@ -6,9 +6,9 @@ local function onmarkable(self)
     end
 end
 
-local Markable = Class(function(self, inst) 
+local Markable = Class(function(self, inst)
 	self.inst = inst
-	self.marks = {}	
+	self.marks = {}
 	self.markpool_reset = {1,2,3,4,5,6,7,8}
 	self.markpool = deepcopy(self.markpool_reset)
 end,
@@ -45,7 +45,7 @@ function Markable:Mark(doer)
 			return true
 		end
 	end
-	
+
 	-- nothing was found so mark it.
 	local can, failreason = false, nil
 	if self.canmarkfn then
@@ -60,7 +60,7 @@ function Markable:Mark(doer)
 		end
 		table.insert(self.marks,{doer=doer,id=id})
 
-		return true	
+		return true
 	end
 
 	return false, failreason
@@ -70,7 +70,7 @@ end
 function Markable:Unmarkall()
 	if self.unmarkallfn then
 		self.unmarkallfn(self.inst)
-	end		
+	end
 	self.markpool = deepcopy(self.markpool_reset)
 	self.marks = {}
 end
@@ -92,7 +92,7 @@ function Markable:HasMarked( doer )
 		if mark.doer == doer then
 			return true
 		end
-	end	
+	end
 end
 
 function Markable:OnSave()

@@ -56,7 +56,7 @@ local function checkforcrowding(inst)
 end
 
 local function onpickup(inst)
-    --These last longer when held    
+    --These last longer when held
     inst.components.perishable:SetLocalMultiplier( TUNING.SEG_TIME * 3/ TUNING.PERISH_SLOW )
     if inst.crowdingtask ~= nil then
         inst.crowdingtask:Cancel()

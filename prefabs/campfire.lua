@@ -99,7 +99,7 @@ local function OnHaunt(inst)
 end
 
 local function OnSave(inst, data)
-	data._has_debuffable = inst.components.debuffable ~= nil 
+	data._has_debuffable = inst.components.debuffable ~= nil
 end
 
 local function OnPreLoad(inst, data)

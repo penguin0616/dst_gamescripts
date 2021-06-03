@@ -49,22 +49,22 @@ VEGGIES =
 
     corn = MakeVegStats(COMMON, TUNING.CALORIES_MED,    TUNING.HEALING_SMALL,   TUNING.PERISH_MED, 0,
                                 TUNING.CALORIES_SMALL,  TUNING.HEALING_SMALL,   TUNING.PERISH_SLOW, 0),
-    
+
     pumpkin = MakeVegStats(UNCOMMON,    TUNING.CALORIES_LARGE,  TUNING.HEALING_SMALL,       IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) and TUNING.PERISH_PRESERVED or TUNING.PERISH_MED, 0,
                                         TUNING.CALORIES_LARGE,  TUNING.HEALING_MEDSMALL,    TUNING.PERISH_FAST, 0,
                                         nil,    {"small", 0.1, nil}),
-    
+
     eggplant = MakeVegStats(UNCOMMON,   TUNING.CALORIES_MED,    TUNING.HEALING_MEDSMALL,    TUNING.PERISH_MED, 0,
                                         TUNING.CALORIES_MED,    TUNING.HEALING_MED,     TUNING.PERISH_FAST, 0),
-    
+
     durian = MakeVegStats(RARE, TUNING.CALORIES_MED,    -TUNING.HEALING_SMALL,  TUNING.PERISH_MED, -TUNING.SANITY_TINY,
                                 TUNING.CALORIES_MED,    0,                      TUNING.PERISH_FAST, -TUNING.SANITY_TINY,
                                 nil, nil, nil, FOODTYPE.MONSTER),
-    
+
     pomegranate = MakeVegStats(RARE,    TUNING.CALORIES_TINY,   TUNING.HEALING_SMALL,       TUNING.PERISH_FAST, 0,
                                         TUNING.CALORIES_SMALL,  TUNING.HEALING_MED, TUNING.PERISH_SUPERFAST, 0,
                                         {"small", nil, 0.8},    {"small", nil, 0.8}),
-    
+
     dragonfruit = MakeVegStats(RARE,    TUNING.CALORIES_TINY,   TUNING.HEALING_SMALL,       TUNING.PERISH_FAST, 0,
                                         TUNING.CALORIES_SMALL,  TUNING.HEALING_MED, TUNING.PERISH_SUPERFAST, 0,
                                         {"small", 0.1, 0.8},    {"small", 0.05, nil},
@@ -99,7 +99,7 @@ VEGGIES =
 
 	kelp = MakeVegStats(0,   TUNING.CALORIES_TINY,  -TUNING.HEALING_TINY,   TUNING.PERISH_MED, -TUNING.SANITY_SMALL,
                              TUNING.CALORIES_TINY,  0,                      TUNING.PERISH_MED, -TUNING.SANITY_TINY,
-                       {"med", nil, 0.7},      {"med", nil, 0.65}, 
+                       {"med", nil, 0.7},      {"med", nil, 0.65},
                        { build = "meat_rack_food_tot", hunger = TUNING.CALORIES_TINY, health = TUNING.HEALING_TINY, sanity = TUNING.SANITY_SMALL, perish = TUNING.PERISH_PRESERVED, time = TUNING.DRY_SUPERFAST }),
 
 
@@ -115,22 +115,22 @@ VEGGIES =
                                      TUNING.CALORIES_MED, TUNING.HEALING_SMALL, TUNING.PERISH_SUPERFAST, 0,
                                      {"med", nil, 0.7}),
 
-    onion = MakeVegStats(RARE, TUNING.CALORIES_TINY, 0, TUNING.PERISH_SLOW, -TUNING.SANITY_SMALL, 
+    onion = MakeVegStats(RARE, TUNING.CALORIES_TINY, 0, TUNING.PERISH_SLOW, -TUNING.SANITY_SMALL,
                                    TUNING.CALORIES_TINY, TUNING.HEALING_TINY, TUNING.PERISH_MED, -TUNING.SANITY_TINY,
                                    {"large", 0.05, 0.45}),
-    
-    garlic = MakeVegStats(RARE, TUNING.CALORIES_TINY, 0, TUNING.PERISH_SLOW, -TUNING.SANITY_SMALL, 
+
+    garlic = MakeVegStats(RARE, TUNING.CALORIES_TINY, 0, TUNING.PERISH_SLOW, -TUNING.SANITY_SMALL,
                                    TUNING.CALORIES_TINY, TUNING.HEALING_TINY, TUNING.PERISH_MED, -TUNING.SANITY_TINY,
                                    {nil, 0.05, 0.775}),
-    
-    pepper = MakeVegStats(RARE, TUNING.CALORIES_TINY, -TUNING.HEALING_MED, TUNING.PERISH_SLOW, -TUNING.SANITY_MED, 
+
+    pepper = MakeVegStats(RARE, TUNING.CALORIES_TINY, -TUNING.HEALING_MED, TUNING.PERISH_SLOW, -TUNING.SANITY_MED,
                                     TUNING.CALORIES_TINY, -TUNING.HEALING_SMALL, TUNING.PERISH_SLOW, -TUNING.SANITY_SMALL,
                                     {nil, 0.1, 0.75}),
 }
 
-local SEEDLESS = 
+local SEEDLESS =
 {
-	berries = true, 
+	berries = true,
 	cave_banana = true,
 	cactus_meat = true,
 	berries_juicy = true,
@@ -226,7 +226,7 @@ local function Seed_GetDisplayName(inst)
 	local registry_key = inst.plant_def.product
 
 	local plantregistryinfo = inst.plant_def.plantregistryinfo
-	return (ThePlantRegistry:KnowsSeed(registry_key, plantregistryinfo) and ThePlantRegistry:KnowsPlantName(registry_key, plantregistryinfo)) and STRINGS.NAMES["KNOWN_"..string.upper(inst.prefab)] 
+	return (ThePlantRegistry:KnowsSeed(registry_key, plantregistryinfo) and ThePlantRegistry:KnowsPlantName(registry_key, plantregistryinfo)) and STRINGS.NAMES["KNOWN_"..string.upper(inst.prefab)]
 			or nil
 end
 
@@ -251,7 +251,7 @@ local function dowaxfn(inst, doer, waxitem)
     if doer.components.inventory and doer.components.inventory:IsHeavyLifting() and doer.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) == inst then
         doer.components.inventory:Unequip(EQUIPSLOTS.BODY)
         doer.components.inventory:Equip(waxedveggie)
-    else       
+    else
         waxedveggie.Transform:SetPosition(inst.Transform:GetWorldPosition())
         waxedveggie.AnimState:PlayAnimation("wax_oversized", false)
         waxedveggie.AnimState:PushAnimation("idle_oversized")
@@ -298,7 +298,7 @@ local function MakeVeggie(name, has_seeds)
         Asset("ANIM", "anim/"..name..".zip"),
         Asset("INV_IMAGE", name.."_cooked"),
     }
-    
+
     local usequagmireicon = table.contains(QUAGMIRE_PORTS, name)
     if usequagmireicon then
         table.insert(assets, Asset("INV_IMAGE", "quagmire_"..name))
@@ -323,14 +323,14 @@ local function MakeVeggie(name, has_seeds)
 	end
 
 	local seeds_prefabs = has_seeds and { "farm_plant_"..name } or nil
-    
+
     local assets_oversized = {}
     if has_seeds then
         table.insert(prefabs, name.."_oversized")
         table.insert(prefabs, name.."_oversized_waxed")
         table.insert(prefabs, name.."_oversized_rotten")
         table.insert(prefabs, "splash_green")
-        
+
         table.insert(assets_oversized, Asset("ANIM", "anim/"..PLANT_DEFS[name].build..".zip"))
     end
 
@@ -408,7 +408,7 @@ local function MakeVeggie(name, has_seeds)
 
 		inst:AddComponent("oceanfishingtackle")
         inst.components.oceanfishingtackle:SetupLure({build = "oceanfishing_lure_mis", symbol = "hook_seeds", single_use = true, lure_data = TUNING.OCEANFISHING_LURE.SEED})
-        
+
         MakeSmallBurnable(inst)
         MakeSmallPropagator(inst)
 
@@ -437,7 +437,7 @@ local function MakeVeggie(name, has_seeds)
 			--dryable (from dryable component) added to pristine state for optimization
 			inst:AddTag("dryable")
         end
-        
+
         if not SEEDLESS[name] then
             --weighable (from weighable component) added to pristine state for optimization
             inst:AddTag("weighable_OVERSIZEDVEGGIES")
@@ -463,7 +463,7 @@ local function MakeVeggie(name, has_seeds)
         inst:AddComponent("edible")
         inst.components.edible.healthvalue = VEGGIES[name].health
         inst.components.edible.hungervalue = VEGGIES[name].hunger
-        inst.components.edible.sanityvalue = VEGGIES[name].sanity or 0      
+        inst.components.edible.sanityvalue = VEGGIES[name].sanity or 0
         inst.components.edible.foodtype = FOODTYPE.VEGGIE
         inst.components.edible.secondaryfoodtype = VEGGIES[name].secondary_foodtype
 
@@ -475,7 +475,7 @@ local function MakeVeggie(name, has_seeds)
         inst:AddComponent("stackable")
         if name ~= "pumpkin" and
             name ~= "eggplant" and
-            name ~= "durian" and 
+            name ~= "durian" and
             name ~= "watermelon" then
             inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
         end
@@ -508,14 +508,14 @@ local function MakeVeggie(name, has_seeds)
 
         MakeSmallBurnable(inst)
         MakeSmallPropagator(inst)
-        ---------------------        
+        ---------------------
 
         inst:AddComponent("bait")
 
         ------------------------------------------------
         inst:AddComponent("tradable")
 
-        ------------------------------------------------  
+        ------------------------------------------------
 
         inst:AddComponent("cookable")
         inst.components.cookable.product = name.."_cooked"
@@ -590,7 +590,7 @@ local function MakeVeggie(name, has_seeds)
 
         MakeSmallBurnable(inst)
         MakeSmallPropagator(inst)
-        ---------------------        
+        ---------------------
 
         inst:AddComponent("bait")
 
@@ -807,7 +807,7 @@ local function MakeVeggie(name, has_seeds)
 
         inst:ListenForEvent("onputininventory", CancelWaxTask)
         inst:ListenForEvent("ondropped", StartWaxTask)
-    
+
         inst.OnEntitySleep = CancelWaxTask
         inst.OnEntityWake = StartWaxTask
 

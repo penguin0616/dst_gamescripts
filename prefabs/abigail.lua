@@ -6,7 +6,7 @@ local assets =
     Asset("SOUND", "sound/ghost.fsb"),
 }
 
-local prefabs = 
+local prefabs =
 {
     "abigail_attack_fx",
     "abigail_attack_fx_ground",
@@ -78,16 +78,16 @@ local function HasFriendlyLeader(inst, target)
 
         local PVP_enabled = TheNet:GetPVPEnabled()
 
-        return leader == target or (target_leader ~= nil 
-                and (target_leader == leader or (target_leader:HasTag("player") 
+        return leader == target or (target_leader ~= nil
+                and (target_leader == leader or (target_leader:HasTag("player")
                 and not PVP_enabled))) or
-                (target.components.domesticatable and target.components.domesticatable:IsDomesticated() 
+                (target.components.domesticatable and target.components.domesticatable:IsDomesticated()
                 and not PVP_enabled) or
                 (target.components.saltlicker and target.components.saltlicker.salted
                 and not PVP_enabled)
     end
 
-    return false    
+    return false
 end
 
 local function CommonRetarget(inst, v)
@@ -112,7 +112,7 @@ local function DefensiveRetarget(inst)
         )
 
         local leader = inst.components.follower.leader
-        
+
         for _, v in ipairs(entities_near_me) do
             if CommonRetarget(inst, v)
                     and (v.components.combat.target == inst._playerlink or
@@ -479,7 +479,7 @@ local function fn()
     inst.IsWithinDefensiveRange = IsWithinDefensiveRange
 
     inst.LinkToPlayer = linktoplayer
-    
+
 
     inst.is_defensive = true
     inst.issued_health_warning = false
@@ -680,4 +680,3 @@ return Prefab("abigail", fn, assets, prefabs),
 	   Prefab("abigail_retaliation", retaliationattack_fn, {Asset("ANIM", "anim/abigail_shield.zip")} ),
 	   Prefab("abigail_vex_debuff", abigail_vex_debuff_fn, {Asset("ANIM", "anim/abigail_debuff_fx.zip")}, {"abigail_vex_hit"} ),
 	   Prefab("abigail_vex_hit", abigail_vex_hit_fn, {Asset("ANIM", "anim/abigail_debuff_fx.zip")} )
-	   

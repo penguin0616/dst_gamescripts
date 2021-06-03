@@ -155,7 +155,7 @@ AddUserCommand("kick", {
     end,
 })
 
-local ban_info = 
+local ban_info =
 {
     prettyname = nil, --default to STRINGS.UI.BUILTINCOMMANDS.BAN.PRETTYNAME
     desc = nil, --default to STRINGS.UI.BUILTINCOMMANDS.BAN.DESC

@@ -298,7 +298,7 @@ local function fn()
     inst.components.prototyper.onturnon = onturnon
     inst.components.prototyper.onturnoff = onturnoff
     inst.components.prototyper.onactivate = onactivate
-    inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.MOONORB_LOW 
+    inst.components.prototyper.trees = TUNING.PROTOTYPER_TREES.MOONORB_LOW
 
     MakeHauntableLaunch(inst)
 

@@ -76,7 +76,7 @@ end
 local function dropgems(inst)
     for k, v in pairs(inst.components.objectspawner.objects) do
         if v.components.pickable ~= nil and v.components.pickable.caninteractwith then
-            inst.components.lootdropper:SpawnLootPrefab("purplegem")   
+            inst.components.lootdropper:SpawnLootPrefab("purplegem")
         end
     end
 end

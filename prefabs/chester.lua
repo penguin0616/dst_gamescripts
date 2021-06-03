@@ -98,7 +98,7 @@ local function SetBuild(inst)
         elseif inst.ChesterState == "SNOW" then
             inst.AnimState:SetBuild("chester_snow_build")
         else
-            inst.AnimState:SetBuild("chester_build")        
+            inst.AnimState:SetBuild("chester_build")
         end
     end
 end

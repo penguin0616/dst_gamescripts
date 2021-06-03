@@ -5,9 +5,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.TOSS,
         function(inst, action)
             if not inst.sg:HasStateTag('busy') then
-                inst.sg:GoToState("shoot", action.target) 
+                inst.sg:GoToState("shoot", action.target)
             end
-        end),    
+        end),
 }
 
 local events =
@@ -19,7 +19,7 @@ local events =
 	end),
     EventHandler("arrive", function(inst)
         inst.sg:GoToState("emerge")
-    end),    
+    end),
 
     EventHandler("doattack", function(inst)
         if not (inst.sg:HasStateTag("busy")) then
@@ -33,7 +33,7 @@ local states=
     State{
         name = "idle",
         tags = {"idle", "canrotate"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("idle")
@@ -48,7 +48,7 @@ local states=
     State{
         name = "emerge",
         tags = {"busy", "noattack", "canrotate"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("emerge")
@@ -58,7 +58,7 @@ local states=
         {
             --TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/rabbit/hop") end ),
         },
-        
+
         events =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
@@ -68,7 +68,7 @@ local states=
     State{
         name = "death",
         tags = {"busy", "noattack"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("melt")
@@ -88,7 +88,7 @@ local states=
     State{
         name = "attack",
         tags = { "busy", "attack"},
-		
+
         onenter = function(inst)
             inst.AnimState:PlayAnimation("mutate")
 			inst.components.locomotor:Stop()
@@ -97,21 +97,21 @@ local states=
 			end
 	        inst.components.combat:StartAttack()
 		end,
-        
+
         timeline=
         {
-            TimeEvent(30*FRAMES, function(inst) 
+            TimeEvent(30*FRAMES, function(inst)
 					inst.components.combat:DoAttack()
                     inst.sg:RemoveStateTag("attack")
-                    inst.sg:RemoveStateTag("busy")                    
+                    inst.sg:RemoveStateTag("busy")
 				end ),
-        
+
         },
-        
+
         events =
         {
-            EventHandler("animover", function(inst) 
-				inst.sg:GoToState("idle") 
+            EventHandler("animover", function(inst)
+				inst.sg:GoToState("idle")
 			end),
         },
     },
@@ -134,11 +134,11 @@ local states=
         end,
 
         timeline =
-        {   
+        {
        --     TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.spit) end),
             TimeEvent(24*FRAMES, function(inst)
                 if inst.sg.statemem.target and inst.sg.statemem.target:IsValid() then
-                    inst.sg.statemem.spitpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())            
+                    inst.sg.statemem.spitpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())
                     inst:LaunchProjectile(inst.sg.statemem.spitpos)
 
                     inst.components.timer:StopTimer("spit_cooldown")
@@ -149,11 +149,11 @@ local states=
 
         events =
         {
-            EventHandler("animover",function(inst) 
+            EventHandler("animover",function(inst)
                 inst.sg:GoToState("idle")
             end),
         },
-    },    
+    },
 
 
 }

@@ -44,7 +44,7 @@ local events =
         if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
             inst.sg:GoToState("win_yotb")
         end
-    end),        
+    end),
 }
 
 local states =
@@ -286,7 +286,7 @@ local states =
                 inst.sg:GoToState("idle")
             end),
         },
-    }, 
+    },
 
     State{
         name = "win_yotb",
@@ -303,7 +303,7 @@ local states =
                 inst.sg:GoToState("idle")
             end),
         },
-    },        
+    },
 }
 
 CommonStates.AddWalkStates(states,

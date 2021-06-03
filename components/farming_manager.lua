@@ -104,7 +104,7 @@ local function SetSoilMoisture(data, soil_moisture)
 	local prev_moisture = data.soilmoisture or 0
 	data.soilmoisture = Clamp(soil_moisture, TheWorld.state.wetness, MAX_SOIL_MOISTURE)
 	local new_moisture = data.soilmoisture or 0
-		
+
 	if data.nutrients_overlay ~= nil then
 		data.nutrients_overlay:UpdateMoisture(data.soilmoisture / MAX_SOIL_MOISTURE)
 	end
@@ -234,7 +234,7 @@ local function TrySpawnWeed(x, y)
 				end
 			end
 		end
-		
+
 		if spawn_x ~= nil then
 			local new_weed = SpawnPrefab(weighted_random_choice(WEIGHTED_SEED_TABLE))
 			new_weed.Transform:SetPosition(spawn_x, spawn_y, spawn_z)
@@ -250,7 +250,7 @@ local function OnSeasonChange(inst, season)
 	if weed_chance ~= nil and weed_chance > 0 then
 		local world_width = TheWorld.Map:GetSize()
 		local spawn_window = TheWorld.state.remainingdaysinseason * 0.25
-		
+
 		-- start updating weeds
 		for x, ylist in pairs(tile_data) do
 			for y, data in pairs(ylist) do
@@ -287,7 +287,7 @@ function self:_RefreshSoilMoisture(dt)
 				else
 					-- if its raining, then add moisture based on how hard its raining, otherwise, the world temp may do some drying
 					local world_rate = rain_rate > 0 and (rain_rate * SOIL_RAIN_MOD)
-								or Remap(Clamp(world_temp, MIN_DRYING_TEMP, MAX_DRYING_TEMP), MIN_DRYING_TEMP, MAX_DRYING_TEMP, SOIL_MIN_TEMP_DRY_RATE, SOIL_MAX_TEMP_DRY_RATE)	-- 
+								or Remap(Clamp(world_temp, MIN_DRYING_TEMP, MAX_DRYING_TEMP), MIN_DRYING_TEMP, MAX_DRYING_TEMP, SOIL_MIN_TEMP_DRY_RATE, SOIL_MAX_TEMP_DRY_RATE)	--
 
 					local obj_rate = 0
 					if data.soil_drinkers ~= nil then
@@ -373,7 +373,7 @@ function self:CycleNutrientsAtPoint(_x, _y, _z, consume, restore, test_only)
 
     local x, y = TheWorld.Map:GetTileCoordsAtPoint(_x, _y, _z)
     local nutrients = {self:GetTileNutrients(x, y)}
-	
+
 	local depleted = false
     if consume ~= nil then
         local updatenutrients = {0, 0, 0}
@@ -384,7 +384,7 @@ function self:CycleNutrientsAtPoint(_x, _y, _z, consume, restore, test_only)
             total_restore_count = total_restore_count + consumptioncount
 			depleted = depleted or consumptioncount ~= count
 		end
-		
+
 		if test_only then
 			return depleted
 		end

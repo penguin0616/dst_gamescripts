@@ -6,7 +6,7 @@ local assets =
     Asset("ANIM", "anim/archive_centipede.zip"),
     Asset("ANIM", "anim/archive_centipede_actions.zip"),
     Asset("ANIM", "anim/archive_centipede_build.zip"),
-    
+
 }
 
 local prefabs =
@@ -25,7 +25,7 @@ local light_params =
         falloff = .6,
         colour = {237/255, 237/255, 209/255},
         time = 80/30,
-    },    
+    },
 
     off =
     {
@@ -42,7 +42,7 @@ local function pushparams(inst, params)
     inst.Light:SetIntensity(params.intensity)
     inst.Light:SetFalloff(params.falloff)
     inst.Light:SetColour(unpack(params.colour))
-    
+
     if TheWorld.ismastersim then
         if params.intensity > 0 then
             inst.Light:Enable(true)
@@ -84,7 +84,7 @@ local function OnUpdateLight(inst, dt)
     lerpparams(inst._currentlight, inst._startlight, inst._endlight, inst._endlight.time > 0 and inst._currentlight.time / inst._endlight.time or 1)
     pushparams(inst, inst._currentlight)
     local remap = Remap(inst._currentlight.intensity, 0,1, 0,1)
-    inst.AnimState:SetLightOverride(remap)    
+    inst.AnimState:SetLightOverride(remap)
 end
 
 local function beginfade(inst)
@@ -94,7 +94,7 @@ local function beginfade(inst)
 
     if inst._lighttask == nil then
         inst._lighttask = inst:DoPeriodicTask(FRAMES, OnUpdateLight, nil, FRAMES)
-    end    
+    end
 
 end
 -- END LIGHTING
@@ -245,7 +245,7 @@ local function fn_common(tag)
     inst.widthscale = 1
     inst._endlight = light_params.off
     inst._startlight = {}
-    inst._currentlight = {}    
+    inst._currentlight = {}
     copyparams(inst._startlight, inst._endlight)
     copyparams(inst._currentlight, inst._endlight)
     pushparams(inst, inst._currentlight)
@@ -311,9 +311,9 @@ local function fn_common(tag)
     MakeHauntablePanic(inst)
 
     inst.kind = ""
-    
+
     inst:ListenForEvent("attacked", OnAttacked)
-    inst:ListenForEvent("animover", function() 
+    inst:ListenForEvent("animover", function()
         if inst.AnimState:IsCurrentAnimation("death") then
             local husk = SpawnPrefab("archive_centipede_husk")
             local x,y,z = inst.Transform:GetWorldPosition()
@@ -321,9 +321,9 @@ local function fn_common(tag)
             husk.Transform:SetRotation(inst.Transform:GetRotation())
             inst:Remove()
         end
-    end)    
+    end)
 
-    inst:DoTaskInTime(0,function()            
+    inst:DoTaskInTime(0,function()
         inst.SoundEmitter:PlaySound("grotto/creatures/centipede/active_LP","alive")
     end)
 
@@ -353,28 +353,28 @@ local BOTTOM_THRESHOLD = 0.2 --0.50
 
 local function OnHealthDelta(inst, oldpercent, newpercent)
     if newpercent < oldpercent then
-        if oldpercent >= MED_THRESHOLD_DOWN and 
+        if oldpercent >= MED_THRESHOLD_DOWN and
             newpercent < MED_THRESHOLD_DOWN and newpercent >= LOW_THRESHOLD_DOWN then
                 inst.AnimState:PlayAnimation("idle_med")
                 inst:RemoveTag("gestalt_possessable")
-        elseif oldpercent >=  MED_THRESHOLD_DOWN and 
+        elseif oldpercent >=  MED_THRESHOLD_DOWN and
             newpercent < LOW_THRESHOLD_DOWN then
-                inst.AnimState:PlayAnimation("idle_low")   
+                inst.AnimState:PlayAnimation("idle_low")
                 inst:RemoveTag("gestalt_possessable")
         elseif oldpercent <  MED_THRESHOLD_DOWN and  oldpercent >= LOW_THRESHOLD_DOWN and
             newpercent < LOW_THRESHOLD_DOWN then
-                inst.AnimState:PlayAnimation("idle_low")                 
+                inst.AnimState:PlayAnimation("idle_low")
                 inst:RemoveTag("gestalt_possessable")
         end
     else
-        if oldpercent < LOW_THRESHOLD_UP and 
+        if oldpercent < LOW_THRESHOLD_UP and
             newpercent >= LOW_THRESHOLD_UP and newpercent < MED_THRESHOLD_UP then
                 inst.AnimState:PlayAnimation("low_to_med")
                 inst.AnimState:PushAnimation("idle_med")
                 inst.SoundEmitter:PlaySound("grotto/creatures/centipede/low_to_med")
-        elseif oldpercent <  LOW_THRESHOLD_UP and 
+        elseif oldpercent <  LOW_THRESHOLD_UP and
             newpercent >= MED_THRESHOLD_UP then
-                inst.AnimState:PlayAnimation("low_to_med")                
+                inst.AnimState:PlayAnimation("low_to_med")
                 inst.AnimState:PushAnimation("med_to_full")
                 inst.AnimState:PushAnimation("idle_full")
                 inst.SoundEmitter:PlaySound("grotto/creatures/centipede/low_to_med")
@@ -385,12 +385,12 @@ local function OnHealthDelta(inst, oldpercent, newpercent)
                 inst.AnimState:PushAnimation("idle_full")
                 inst.SoundEmitter:PlaySound("grotto/creatures/centipede/med_to_full")
                 inst:AddTag("gestalt_possessable")
-        end        
+        end
     end
     if newpercent < (BOTTOM_THRESHOLD) then
         if inst.components.combat then
             inst:RemoveComponent("combat")
-        end      
+        end
         if newpercent < BOTTOM_THRESHOLD - 0.05 then
             inst.components.health:SetPercent(BOTTOM_THRESHOLD - 0.05)
         end
@@ -411,7 +411,7 @@ local function onpossess(inst, data)
         if inst.idle2task then
             inst.idle2task:Cancel()
             inst.idle2task = nil
-        end        
+        end
         inst:Remove()
     end
 end
@@ -429,7 +429,7 @@ local function OnAttacked(inst)
             inst.AnimState:PlayAnimation("full_hit")
             inst.AnimState:PushAnimation("idle_full")
         end
-    end    
+    end
 end
 
 local function playidle2(inst)
@@ -441,18 +441,18 @@ local function playidle2(inst)
 
     if inst.AnimState:IsCurrentAnimation("idle_full") or
        inst.AnimState:IsCurrentAnimation("idle_med") or
-       inst.AnimState:IsCurrentAnimation("idle_low") then    
+       inst.AnimState:IsCurrentAnimation("idle_low") then
 
         inst.SoundEmitter:PlaySound("grotto/creatures/centipede/electricity/idle2")
         if inst.components.health:GetPercent() < LOW_THRESHOLD_DOWN then
             inst.AnimState:PlayAnimation("idle2_low")
-            inst.AnimState:PushAnimation("idle_low")        
+            inst.AnimState:PushAnimation("idle_low")
         elseif inst.components.health:GetPercent() < MED_THRESHOLD_DOWN then
             inst.AnimState:PlayAnimation("idle2_med")
-            inst.AnimState:PushAnimation("idle_med")            
+            inst.AnimState:PushAnimation("idle_med")
         else
             inst.AnimState:PlayAnimation("idle2_full")
-            inst.AnimState:PushAnimation("idle_full")            
+            inst.AnimState:PushAnimation("idle_full")
         end
     end
 
@@ -483,7 +483,7 @@ local function huskfn()
         return inst
     end
 
-    inst:AddComponent("lootdropper") 
+    inst:AddComponent("lootdropper")
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.ARCHIVE_CENTIPEDE.HUSK_HEALTH)
     inst.components.health.ondelta = OnHealthDelta

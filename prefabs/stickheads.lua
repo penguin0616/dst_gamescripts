@@ -38,8 +38,8 @@ local function OnFinish(inst)
     inst:Remove()
 end
 
-local function OnWorked(inst) 
-    if not inst:HasTag("burnt") then 
+local function OnWorked(inst)
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("hit")
         inst.AnimState:PushAnimation(inst.awake and "idle_awake" or "idle_asleep")
     end

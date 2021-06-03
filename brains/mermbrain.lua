@@ -51,8 +51,8 @@ end
 local function KeepFaceTargetFn(inst, target)
     if inst.components.timer:TimerExists("dontfacetime") then
         return nil
-    end    
-    local keepface = (inst.components.follower.leader and inst.components.follower.leader == target) or (target:IsValid() and inst:IsNear(target, SEE_PLAYER_DIST)) 
+    end
+    local keepface = (inst.components.follower.leader and inst.components.follower.leader == target) or (target:IsValid() and inst:IsNear(target, SEE_PLAYER_DIST))
     if not keepface then
         inst.components.timer:StopTimer("facetime")
     end
@@ -95,7 +95,7 @@ local function FindTreeToChopAction(inst)
         else
             target = FindDeciduousTreeMonster(inst) or target
         end
-        
+
         return BufferedAction(inst, target, ACTIONS.CHOP)
     end
 end
@@ -107,7 +107,7 @@ end
 local function KeepMiningAction(inst)
     local keep_mining = (inst.components.follower.leader ~= nil and
             inst:IsNear(inst.components.follower.leader, KEEP_MINING_DIST))
-    
+
     return keep_mining
 end
 
@@ -136,7 +136,7 @@ end
 local function KeepHammeringAction(inst)
     local keep_hammering = (inst.components.follower.leader ~= nil and
             inst:IsNear(inst.components.follower.leader, KEEP_HAMMERING_DIST))
-    
+
     return keep_hammering
 end
 
@@ -266,7 +266,7 @@ local function GetNoLeaderHomePos(inst)
 end
 
 local function CurrentContestTarget(inst)
-    local stage = inst.npc_stage 
+    local stage = inst.npc_stage
     if stage.current_contest_target then
         return stage.current_contest_target
     else
@@ -299,7 +299,7 @@ function MermBrain:OnStart()
                 DoAction(self.inst, MarkPost, "mark post", true ),   --)
             WhileNode( function() return self.inst.components.timer and self.inst.components.timer:TimerExists("contest_panic") end, "Panic Contest",
                 ChattyNode(self.inst, "MERM_TALK_CONTEST_PANIC",
-                    Panic(self.inst))),            
+                    Panic(self.inst))),
             ChattyNode(self.inst, "MERM_TALK_CONTEST_OOOH",
                 FaceEntity(self.inst, CurrentContestTarget, CurrentContestTarget ), 5, 15),
         }, 0.1))
@@ -350,7 +350,7 @@ function MermBrain:OnStart()
 
 
         WhileNode( function() return IsHomeOnFire(self.inst) end, "HomeOnFire", Panic(self.inst)),
-        
+
         WhileNode(function() return ShouldGoHome(self.inst) end, "ShouldGoHome",
             DoAction(self.inst, GoHomeAction, "Go Home", true)),
 

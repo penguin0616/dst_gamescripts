@@ -26,7 +26,7 @@ local function GetAvatarAtlas(character, is_mod_character)
         if MOD_AVATAR_LOCATIONS[character] ~= nil then
             location = MOD_AVATAR_LOCATIONS[character]
         end
-        
+
         return location .. "avatar_" .. character .. ".xml"
     end
     return DEFAULT_ATLAS
@@ -81,7 +81,7 @@ local PlayerDetailsPopup = Class(Screen, function(self, entry, buttons)
 
     self.details_headframe = self.details_icon:AddChild(Image("images/avatars.xml", "avatar_frame_white.tex"))
     self.details_headframe:SetTint(.5,.5,.5,1)
-    
+
     w = self.details_headframe:GetSize() * self.details_icon:GetScale().x
     self.details_playername:SetPosition(.5 * w + 17, title_height, 0)
 
@@ -90,14 +90,14 @@ local PlayerDetailsPopup = Class(Screen, function(self, entry, buttons)
     self.details_date_label:SetPosition(0, 10, 0)
     self.details_date_label:SetString(STRINGS.UI.SERVERADMINSCREEN.BANNED..(entry.date or STRINGS.UI.SERVERADMINSCREEN.UNKNOWN_DATE))
     self.details_date_label:SetColour(UICOLOURS.GOLD)
-    
+
     self.details_servername_label = self.details_panel:AddChild(Text(CHATFONT, 27))
     self.details_servername_label:SetHAlign(ANCHOR_RIGHT)
     self.details_servername_label:SetPosition(-193, -25, 0)
     self.details_servername_label:SetRegionSize( 200, 40 )
     self.details_servername_label:SetString(STRINGS.UI.SERVERADMINSCREEN.SERVER_NAME)
     self.details_servername_label:SetColour(UICOLOURS.GOLD)
-    
+
     self.details_servername = self.details_panel:AddChild(Text(CHATFONT, 27))
     self.details_servername:SetColour(UICOLOURS.GOLD)
     self.details_servername:SetTruncatedString(
@@ -108,14 +108,14 @@ local PlayerDetailsPopup = Class(Screen, function(self, entry, buttons)
     )
     w = self.details_servername:GetRegionSize()
     self.details_servername:SetPosition(.5 * w - 83, -25, 0)
-    
+
     self.details_serverdescription_label = self.details_panel:AddChild(Text(CHATFONT, 27))
     self.details_serverdescription_label:SetHAlign(ANCHOR_RIGHT)
     self.details_serverdescription_label:SetPosition(-193, -60, 0)
     self.details_serverdescription_label:SetRegionSize( 200, 40 )
     self.details_serverdescription_label:SetString(STRINGS.UI.SERVERADMINSCREEN.SERVER_DESCRIPTION)
     self.details_serverdescription_label:SetColour(UICOLOURS.GOLD)
-        
+
     self.details_serverdescription = self.details_panel:AddChild(Text(CHATFONT, 27))
     self.details_serverdescription:SetPosition(97, -60, 0)
     self.details_serverdescription:SetColour(UICOLOURS.GOLD)
@@ -127,15 +127,15 @@ local PlayerDetailsPopup = Class(Screen, function(self, entry, buttons)
     )
     w = self.details_serverdescription:GetRegionSize()
     self.details_serverdescription:SetPosition(.5 * w - 83, -60, 0)
-      
+
 	self.buttons = buttons
 	self.default_focus = self.dialog
 end)
 
 function PlayerDetailsPopup:OnControl(control, down)
     if PlayerDetailsPopup._base.OnControl(self,control, down) then return true end
-    
-    if control == CONTROL_CANCEL and not down then    
+
+    if control == CONTROL_CANCEL and not down then
         if self.buttons then
             self.buttons[#self.buttons].cb()
             return true
@@ -149,7 +149,7 @@ function PlayerDetailsPopup:GetHelpText()
 	local controller_id = TheInput:GetControllerID()
 	local t = {}
 	if (nil == self.buttons) or (#self.buttons > 1 and self.buttons[#self.buttons]) then
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)	
+        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
     end
 	return table.concat(t, "  ")
 end
@@ -159,7 +159,7 @@ local BanTab = Class(Screen, function(self)
 
 	self.can_view_profile = not IsPS4()
     self.root = self:AddChild(Widget("root"))
-    
+
     self.dialog = self.root:AddChild(TEMPLATES.RectangleWindow(736, 400))
     local r,g,b = unpack(UICOLOURS.BROWN_DARK)
     self.dialog:SetBackgroundTint(r,g,b, 1) -- need high opacity because of text behind
@@ -167,7 +167,7 @@ local BanTab = Class(Screen, function(self)
 
     local title = self.root:AddChild(Text(HEADERFONT, 28, STRINGS.UI.SERVERCREATIONSCREEN.BANS, UICOLOURS.HIGHLIGHT_GOLD))
     title:SetPosition(0, 222)
-    
+
 
     self.ban_page = self.root:AddChild(Widget("ban_page"))
 
@@ -206,10 +206,10 @@ function BanTab:MakePlayerList()
         widget.EMPTY:SetColour(UICOLOURS.GOLD)
         widget.EMPTY:Hide()
 
-        local buttons = 
+        local buttons =
         {
             {widget=TEMPLATES.IconButton("images/button_icons.xml", "view_ban.tex", STRINGS.UI.SERVERADMINSCREEN.PLAYER_DETAILS, false, false, function() self:ShowPlayerDetails(widget.index) end, {size=22/.85})},
-			-- this button moved below because not all platforms can view profiles 
+			-- this button moved below because not all platforms can view profiles
 			-- {widget=TEMPLATES.IconButton("images/button_icons.xml", "player_info.tex", STRINGS.UI.PLAYERSTATUSSCREEN.VIEWPROFILE, false, false, function() self:ShowNetProfile(index) end, {size=22/.85})},
             {widget=TEMPLATES.IconButton("images/button_icons.xml", "unban.tex", STRINGS.UI.SERVERADMINSCREEN.PLAYER_DELETE, false, false, function() self:PromptDeletePlayer(widget.index) end, {size=22/.85})},
         }
@@ -225,15 +225,15 @@ function BanTab:MakePlayerList()
         local menu_item_width = 55
         local menu_width = menu_item_width * #buttons
         widget.MENU = widget:AddChild(Menu(buttons, menu_item_width, true))
-        widget.MENU:SetPosition(-(menu_item_width*(#buttons-1))/2 + item_width/2 - menu_width/2 - end_spacing, 0) 
+        widget.MENU:SetPosition(-(menu_item_width*(#buttons-1))/2 + item_width/2 - menu_width/2 - end_spacing, 0)
 
         return widget
     end
 
     local function bannedPlayerRowUpdate(context, widget, data, index)
-        if data and not data.empty then 
+        if data and not data.empty then
             widget.index = index
-                    
+
             widget.NAME:SetTruncatedString(
                 (data.netprofilename ~= "" and data.netprofilename) or
                 (data.userid ~= "" and data.userid) or
@@ -246,7 +246,7 @@ function BanTab:MakePlayerList()
             widget.NAME:SetPosition(-item_width/2 + widget.NAME:GetRegionSize()/2 + end_spacing, 0)
             widget.NAME:Show()
             widget.EMPTY:Hide()
-            
+
             if "" == data.character and "" == data.servername and "" == data.serverdescription then
                 widget.MENU.items[1]:Select()
             else
@@ -260,16 +260,16 @@ function BanTab:MakePlayerList()
 					widget.MENU.items[2]:Unselect()
 				end
 			end
-			
+
             widget.MENU:Show()
             widget:Enable()
             widget.focus_forward = widget.MENU
         else
             widget.index = index
-                       
+
             widget.NAME:Hide()
             widget.EMPTY:Show()
-            
+
             widget.MENU:Hide()
             widget.focus_forward = widget.bg
         end
@@ -282,7 +282,7 @@ function BanTab:MakePlayerList()
 
     --Not adding this to the hierachy yet, it will be inserted after returning
     self.player_scroll_list = TEMPLATES.ScrollingGrid(
-        self.blacklist, 
+        self.blacklist,
         {
             scroll_context = {
             },
@@ -297,7 +297,7 @@ function BanTab:MakePlayerList()
         })
 
     self:RefreshPlayers()
-    
+
     if self.clear_button ~= nil then
         self.ban_page_row_root:SetFocusChangeDir(MOVE_RIGHT, function() return self.clear_button:IsVisible() and self.clear_button:IsEnabled() and self.clear_button or nil end)
         self.clear_button:SetFocusChangeDir(MOVE_LEFT, self.player_scroll_list)
@@ -395,7 +395,7 @@ function BanTab:DeletePlayer(selected_player)
 end
 
 function BanTab:ClearPlayers()
-    local popup = PopupDialogScreen(STRINGS.UI.SERVERADMINSCREEN.CLEAR_LIST_TITLE, STRINGS.UI.SERVERADMINSCREEN.CLEAR_LIST_BODY, 
+    local popup = PopupDialogScreen(STRINGS.UI.SERVERADMINSCREEN.CLEAR_LIST_TITLE, STRINGS.UI.SERVERADMINSCREEN.CLEAR_LIST_BODY,
 		{{text=STRINGS.UI.SERVERADMINSCREEN.YES, cb = function()
             self.blacklist = {}
             TheNet:SetBlacklist(self.blacklist)
@@ -442,10 +442,10 @@ end
 
 function BanTab:OnControl(control, down)
     if BanTab._base.OnControl(self, control, down) then return true end
-    
-    if not self.allEmpties and not down then 
-        if TheInput:ControllerAttached() and not TheFrontEnd.tracking_mouse then 
-            if control == CONTROL_INSPECT then 
+
+    if not self.allEmpties and not down then
+        if TheInput:ControllerAttached() and not TheFrontEnd.tracking_mouse then
+            if control == CONTROL_INSPECT then
                 self:ClearPlayers()
                 return true
             end

@@ -61,7 +61,7 @@ local function LightsOff(inst)
 end
 
 local function onoccupieddoortask(inst)
-    inst.doortask = nil  
+    inst.doortask = nil
     if not inst.nolight then
         LightsOn(inst)
     end
@@ -69,7 +69,7 @@ end
 
 
 local function onoccupied(inst, child)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.SoundEmitter:PlaySound("hookline_2/characters/hermit/house/inside_LP", "hermitsound")
 
         if inst.level > 1 then
@@ -144,15 +144,15 @@ local function OnConstructed(inst, doer)
 		local child = inst.components.spawner.child
         local ishome =  inst.components.spawner:IsOccupied()
         inst.components.spawner:ReleaseChild()
-        
+
         local new_house = ReplacePrefab(inst, inst._construction_product)
         new_house.SoundEmitter:PlaySound("hookline_2/characters/hermit/house/stage"..new_house.level.."_place")
 
         new_house.components.spawner:TakeOwnership(child)
         child:PushEvent("home_upgraded",{house=new_house,doer=doer})
         if ishome then
-        	new_house.components.spawner:GoHome(child)        	
-        end        
+        	new_house.components.spawner:GoHome(child)
+        end
         new_house.AnimState:PlayAnimation("stage"..new_house.level.."_placing")
         new_house.AnimState:PushAnimation("idle_stage"..new_house.level)
         if inst:HasTag("highfriendlevel") then
@@ -293,7 +293,7 @@ local function MakeHermitCrabHouse(name, client_postinit, master_postinit, const
 		if construction_data then
 			--inst.AnimState:SetAddColour(construction_data.level / #construction_data, 0, 0, 0)
             inst.AnimState:PlayAnimation("idle_stage"..(construction_data.level), true)
-            
+
 			inst:AddTag("constructionsite")
 		end
 
@@ -307,7 +307,7 @@ local function MakeHermitCrabHouse(name, client_postinit, master_postinit, const
 
         if client_postinit ~= nil then
             client_postinit(inst)
-        end		
+        end
 
 		if not TheWorld.ismastersim then
 			return inst
@@ -347,8 +347,8 @@ local function MakeHermitCrabHouse(name, client_postinit, master_postinit, const
 		inst:ListenForEvent("onbuilt", onconstruction_built)
 		inst.inittask = inst:DoTaskInTime(0, oninit)
         inst.dowind = dowind
-		
-        inst:ListenForEvent("clocksegschanged", function(world, data) 
+
+        inst:ListenForEvent("clocksegschanged", function(world, data)
             inst.segs = data
             if inst.segs["night"] + inst.segs["dusk"] >= 16 then
                 inst.components.spawner:ReleaseChild()
@@ -357,14 +357,14 @@ local function MakeHermitCrabHouse(name, client_postinit, master_postinit, const
 
         if inst.level == 3 or inst.level == 4 then
             inst:DoTaskInTime(math.random()*5, function() inst.dowind(inst) end)
-        end        
+        end
 
 		inst.OnSave = onsave
 		inst.OnLoad = onload
 
         if master_postinit then
            master_postinit(inst)
-        end		
+        end
 
         return inst
 	end

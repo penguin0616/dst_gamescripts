@@ -30,7 +30,7 @@ local PlayerSummaryScreen = Class(Screen, function(self, prev_screen, user_profi
     TheSim:PauseFileExistsAsync(true)
 
     self:DoInit()
-    
+
     self:StartUpdating()
 
 	self.default_focus = self.menu
@@ -38,7 +38,7 @@ end)
 
 function PlayerSummaryScreen:DoInit()
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
-    self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())	
+    self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.PLAYERSUMMARYSCREEN.TITLE, ""))
 
     self.onlinestatus = self.root:AddChild(OnlineStatus(true))
@@ -51,7 +51,7 @@ function PlayerSummaryScreen:DoInit()
         -- Profileflair and rank are displayed on experiencebar when its visible.
         self.puppet:AlwaysHideRankBadge()
     end
- 
+
     self:_BuildPosse()
 
     self.bottom_root = self.root:AddChild(Widget("bototom_root"))
@@ -71,9 +71,9 @@ function PlayerSummaryScreen:DoInit()
                 end
             ))
     end
-    
+
     if IsConsole() then
-        self.task = self.inst:DoPeriodicTask(1, function() 
+        self.task = self.inst:DoPeriodicTask(1, function()
             if TheFrontEnd:GetActiveScreen() == self then
                 TheInventory:RefreshDLCSkinOwnership() --this refreshes both player's inventories if a second is logged in.
                 MakeSkinDLCPopup() --refresh any pending skin DLC (will only happen for player1, which is good, no need to double up the UI presentation)
@@ -85,7 +85,7 @@ end
 function PlayerSummaryScreen:_BuildItemsSummary()
     local width = 300
     local NUM_RECENT_ITEMS = 6
-    
+
     local new_root = Widget("new items root")
     new_root.new_label = new_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.NEW_STUFF, UICOLOURS.GOLD_SELECTED))
     new_root.new_label:SetPosition(0, 15)
@@ -94,7 +94,7 @@ function PlayerSummaryScreen:_BuildItemsSummary()
 	local divider_top = new_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )
 	divider_top:SetScale(0.5)
     divider_top:SetPosition(0, 0)
-	
+
     local no_items = new_root:AddChild(Text(UIFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.NO_ITEMS))
     no_items:SetPosition(0, -45)
     no_items:SetRegionSize(width,30)
@@ -175,7 +175,7 @@ function PlayerSummaryScreen:_BuildItemsSummary()
 			end
 		end
     end
-   
+
     new_root.ScheduleRefresh = function()
 		-- Player could navigate to this screen before inventory finishes downloading. Keep looking for updated data until it's ready.
 		if self.refresh_task then
@@ -208,7 +208,7 @@ function PlayerSummaryScreen:_BuildPosse()
     self.glow2:SetClickable(false)
 
     self.posse = {}
-    
+
     local x_off = 114
     local y_off = -140
     local num_in_row = 9
@@ -216,19 +216,19 @@ function PlayerSummaryScreen:_BuildPosse()
     local x = 0
     local y = 0
     local offset = 0
-    
+
     for k,v in pairs( DST_CHARACTERLIST ) do
         local puppet = self.posse_root:AddChild(Puppet( 15, 40 ))
         puppet.add_change_emote_for_idle = true
         puppet:SetScale(1.8)
         puppet:AddShadow()
         puppet:SetPosition(x * x_off + offset * (x_off/2), y * y_off)
-        
+
         local clothing = self.user_profile:GetSkinsForCharacter(v)
         puppet:SetSkins(v, nil, {}, true)
 
         table.insert( self.posse, puppet )
-        
+
         x = x + 1
         if k == 9 then
             x = 0
@@ -254,7 +254,7 @@ function PlayerSummaryScreen:_RefreshPuppets()
         local prefab = DST_CHARACTERLIST[rand_key]
         local clothing = self.user_profile:GetSkinsForCharacter(prefab)
         self.posse[k]:SetSkins(prefab, clothing.base, clothing, true)
-        
+
         self.posse[k]:SetOnClick(function()
             TheFrontEnd:FadeToScreen( self, function() return WardrobeScreen(self.user_profile, prefab) end, nil )
         end )
@@ -266,10 +266,10 @@ function PlayerSummaryScreen:_RefreshPuppets()
 end
 
 function PlayerSummaryScreen:_BuildMenu()
-    
+
     local menu_root = self.root:AddChild(Widget("meun_root"))
     menu_root:SetPosition(0, -50)
-    
+
 	-- choose whether to use standard or wide menu buttons based on the length of the longest string
 	local menu_button_character_limit = 22
 	local menu_button_style = nil
@@ -287,10 +287,10 @@ function PlayerSummaryScreen:_BuildMenu()
 	local shopStr = STRINGS.UI.PLAYERSUMMARYSCREEN.PURCHASE
 	if IsShopNew(self.user_profile) then
 		shopStr = string.format("%s (%s)", shopStr, STRINGS.UI.COLLECTIONSCREEN.NEW)
-	end 
-	local menu_strings = { skinsStr, 
-						   mysteryboxStr, 
-						   STRINGS.UI.PLAYERSUMMARYSCREEN.TRADING, 
+	end
+	local menu_strings = { skinsStr,
+						   mysteryboxStr,
+						   STRINGS.UI.PLAYERSUMMARYSCREEN.TRADING,
 						   shopStr,
 						   STRINGS.UI.REDEEMDIALOG.MENU_BUTTON_TITLE,
 						 }
@@ -313,7 +313,7 @@ function PlayerSummaryScreen:_BuildMenu()
         {widget = mysterybox_button},
         {widget = skins_button},
     }
-	
+
     -- These won't be available when you first attempt to load this screen
     -- because they require the inventory to function correctly.
     self.waiting_for_inventory = {
@@ -332,15 +332,15 @@ function PlayerSummaryScreen:_BuildMenu()
     end
 
 	if self.can_shop then
-		local purchase_button   = TEMPLATES.MenuButton(STRINGS.UI.PLAYERSUMMARYSCREEN.PURCHASE, function() self:_FadeToScreen(PurchasePackScreen, {}) end, STRINGS.UI.PLAYERSUMMARYSCREEN.TOOLTIP_PURCHASE, self.tooltip, menu_button_style)	
+		local purchase_button   = TEMPLATES.MenuButton(STRINGS.UI.PLAYERSUMMARYSCREEN.PURCHASE, function() self:_FadeToScreen(PurchasePackScreen, {}) end, STRINGS.UI.PLAYERSUMMARYSCREEN.TOOLTIP_PURCHASE, self.tooltip, menu_button_style)
         table.insert(menu_items, 1, {widget = purchase_button})
         table.insert(self.waiting_for_inventory, 1, purchase_button)
     else
-        local purchase_button   = TEMPLATES.MenuButton(STRINGS.UI.PLAYERSUMMARYSCREEN.PURCHASE, function() TheSystemService:GotoSkinDLCStorePage()  end, STRINGS.UI.PLAYERSUMMARYSCREEN.TOOLTIP_PURCHASE, self.tooltip, menu_button_style)	
+        local purchase_button   = TEMPLATES.MenuButton(STRINGS.UI.PLAYERSUMMARYSCREEN.PURCHASE, function() TheSystemService:GotoSkinDLCStorePage()  end, STRINGS.UI.PLAYERSUMMARYSCREEN.TOOLTIP_PURCHASE, self.tooltip, menu_button_style)
         table.insert(menu_items, 1, {widget = purchase_button})
         table.insert(self.waiting_for_inventory, 1, purchase_button)
     end
-	
+
     for i,w in ipairs(self.waiting_for_inventory) do
         w:Disable()
     end
@@ -385,7 +385,7 @@ function PlayerSummaryScreen:_RefreshTitles()
 		text_font_size = default_menu_text_size
 	end
 	self.menu:EditItem(#self.menu.items, skinsStr, text_font_size)				-- skins are the last item in the menu
-		
+
 	local text_font_size = 25
 	if mysteryboxStr:utf8len() > max_menu_text_length then
 		text_font_size = 20
@@ -393,13 +393,13 @@ function PlayerSummaryScreen:_RefreshTitles()
 		text_font_size = default_menu_text_size
 	end
 	self.menu:EditItem(#self.menu.items - 1, mysteryboxStr, text_font_size)		-- mystery box is the second last item in the menu
-    
+
 	if self.can_shop then
 		local shopStr = STRINGS.UI.PLAYERSUMMARYSCREEN.PURCHASE
 		if IsShopNew(self.user_profile) then
 			shopStr = string.format("%s (%s)", shopStr, STRINGS.UI.COLLECTIONSCREEN.NEW)
-		end    
-		
+		end
+
 		if shopStr:utf8len() > max_menu_text_length then
 			text_font_size = 20
 		else
@@ -407,13 +407,13 @@ function PlayerSummaryScreen:_RefreshTitles()
 		end
 		self.menu:EditItem(1, shopStr, text_font_size)
 	end
-	
+
 end
 
 function PlayerSummaryScreen:_RefreshClientData()
     -- Always update the puppet so it doesn't have the rank unless appropriate.
     self:_RefreshPuppets()
-    
+
     for i,w in ipairs(self.waiting_for_inventory) do
         w:Enable()
     end
@@ -445,7 +445,7 @@ function PlayerSummaryScreen:_FadeToScreen(screen_ctor, data)
     self.last_focus_widget = TheFrontEnd:GetFocusWidget()
     self.menu:Disable()
     self.leaving = true
-    
+
     TheFrontEnd:FadeToScreen( self, function() return screen_ctor(self, self.user_profile, unpack(data)) end, nil )
 end
 

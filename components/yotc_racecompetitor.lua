@@ -14,8 +14,8 @@ local YOTC_RaceCompetitor = Class(function(self, inst)
 	self.checkpoint_timer = 0
 
 	self.forgetfulness = 0
-	self.stamina_max = 8 
-	self.stamina_max_var = 2 
+	self.stamina_max = 8
+	self.stamina_max_var = 2
 	self.stamina = self.stamina_max
 	self.exhausted_time = 2
 	self.exhausted_time_var = 1
@@ -85,7 +85,7 @@ function YOTC_RaceCompetitor:_SetCheckPoint(checkpoint, is_starting_line)
         self.inst:RemoveEventCallback("burntup", self.onnextcheckpointremove, self.next_checkpoint)
         self.inst:RemoveEventCallback("yotc_racebegun", self.start_race, self.next_checkpoint)
 	end
-	
+
 	self.next_checkpoint = checkpoint
 	self.checkpoint_timer = GetTime()
 
@@ -178,7 +178,7 @@ function YOTC_RaceCompetitor:_FindNextCheckPoint()
 	if cur_checkpoint ~= nil and TheWorld.components.yotc_raceprizemanager then
 		TheWorld.components.yotc_raceprizemanager:RegisterCheckpoint(self.inst, cur_checkpoint)
 	end
-	
+
 	if self.prev_checkpoint ~= nil and self.prev_checkpoint:IsValid() and (self.isforgetful and math.random() < (self.forgetfulness*self.forgetfulness)/(TUNING.YOTC_RACER_FORGETFULNESS_MAX_CHECKPOINTS*TUNING.YOTC_RACER_FORGETFULNESS_MAX_CHECKPOINTS)) then
 		self:_SetCheckPoint(self.prev_checkpoint)
 		self.prev_checkpoint = nil
@@ -213,7 +213,7 @@ function YOTC_RaceCompetitor:_FindNextCheckPoint()
 		if cur_checkpoint ~= nil and self.next_checkpoint ~= nil and self.checkpoints[self.next_checkpoint] == nil then
 			self.race_distance = self.race_distance + math.sqrt(cur_checkpoint:GetDistanceSqToInst(self.next_checkpoint))
 		end
-		
+
 		if self.isforgetful then
 			self.forgetfulness = self.forgetfulness + 1
 		end
@@ -270,7 +270,7 @@ function YOTC_RaceCompetitor:OnUpdate(dt)
 end
 
 local function on_late_start_finished(inst)
-	if inst.components.yotc_racecompetitor ~= nil then 
+	if inst.components.yotc_racecompetitor ~= nil then
 		inst.components.yotc_racecompetitor.latestartertask = nil
 	end
 end

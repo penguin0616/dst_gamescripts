@@ -24,29 +24,29 @@ local events =
 {
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
-    EventHandler("attacked", function(inst, data) 
+    EventHandler("attacked", function(inst, data)
         inst.flee = true
         inst:DoTaskInTime(math.random(3, 6), onstopflee)
         if data ~= nil and data.weapon ~= nil then
             if data.weapon:HasTag("hammer") then
-                inst.components.inventory:DropEverything(false, true) 
+                inst.components.inventory:DropEverything(false, true)
                 if inst.components.health ~= nil and not inst.components.health:IsDead() then
                     inst.sg:GoToState("stunned", false)
                 end
             elseif not inst.sg:HasStateTag("busy") and inst.components.health ~= nil and not inst.components.health:IsDead() then
-                inst.sg:GoToState("hit") 
+                inst.sg:GoToState("hit")
             end
         end
     end),
     EventHandler("death", function(inst)
         inst.sg:GoToState("death")
     end),
-    EventHandler("trapped", function(inst) 
+    EventHandler("trapped", function(inst)
         inst.flee = true
         inst:DoTaskInTime(math.random(3, 6), onstopflee)
     end),
-    EventHandler("locomote", 
-        function(inst) 
+    EventHandler("locomote",
+        function(inst)
             if inst.sg:HasStateTag("idle") or inst.sg:HasStateTag("moving") then
                 inst.sg:GoToState(
                     inst.components.locomotor:WantsToMoveForward() and
@@ -551,7 +551,7 @@ local states =
     State{
         name = "sleep",
         tags = { "busy", "sleeping" },
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             if inst.isunder then
@@ -604,7 +604,7 @@ local states =
         },
 
         events =
-        {   
+        {
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("sleeping")
             end),
@@ -617,7 +617,7 @@ local states =
     State{
         name = "wake",
         tags = { "busy", "waking" },
-        
+
         onenter = function(inst)
             inst:SetAbovePhysics()
             inst.components.locomotor:StopMoving()

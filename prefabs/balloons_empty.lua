@@ -43,7 +43,7 @@ local function onsave(inst, data)
             data.decaytime = time
         end
     end
-end    
+end
 
 local function onload(inst, data)
     if inst._decaytask ~= nil and data ~= nil and data.decaytime ~= nil then

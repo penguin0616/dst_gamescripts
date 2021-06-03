@@ -47,8 +47,8 @@ end
 local function KeepFaceTargetFn(inst, target)
     if inst.components.timer:TimerExists("dontfacetime") then
         return nil
-    end    
-    local keepface = (inst.components.follower.leader and inst.components.follower.leader == target) or (target:IsValid() and inst:IsNear(target, SEE_PLAYER_DIST)) 
+    end
+    local keepface = (inst.components.follower.leader and inst.components.follower.leader == target) or (target:IsValid() and inst:IsNear(target, SEE_PLAYER_DIST))
     if not keepface then
         inst.components.timer:StopTimer("facetime")
     end
@@ -72,7 +72,7 @@ local function KeepChoppingAction(inst)
         or (inst.components.follower.leader ~= nil and
             inst:IsNear(inst.components.follower.leader, KEEP_CHOPPING_DIST))
         or FindDeciduousTreeMonster(inst) ~= nil
-    
+
     return keep_chopping
 end
 
@@ -95,7 +95,7 @@ local function FindTreeToChopAction(inst)
         else
             target = FindDeciduousTreeMonster(inst) or target
         end
-        
+
         return BufferedAction(inst, target, ACTIONS.CHOP)
     end
 end
@@ -108,7 +108,7 @@ local MIND_TAGS = { "MINE_workable" }
 local function KeepMiningAction(inst)
     local keep_mining = (inst.components.follower.leader ~= nil and
             inst:IsNear(inst.components.follower.leader, KEEP_MINING_DIST))
-    
+
     return keep_mining
 end
 
@@ -137,7 +137,7 @@ local HAMMER_TAGS =  { "HAMMER_workable" }
 local function KeepHammeringAction(inst)
     local keep_hammering = (inst.components.follower.leader ~= nil and
             inst:IsNear(inst.components.follower.leader, KEEP_HAMMERING_DIST))
-    
+
     return keep_hammering
 end
 
@@ -197,7 +197,7 @@ function MermBrain:OnStart()
         WhileNode(function() return self.inst.components.combat.target ~= nil and self.inst.components.combat:InCooldown() end, "Dodge",
             RunAway(self.inst, function() return self.inst.components.combat.target end, RUN_AWAY_DIST, STOP_RUN_AWAY_DIST)),
 
-        WhileNode(function() 
+        WhileNode(function()
                 if not self.inst.king or (not self.inst.king:IsValid() or (self.inst.king.components.health and self.inst.king.components.health:IsDead())) then
                     self.inst.return_to_king = false
                     if self.inst.king then
@@ -206,10 +206,10 @@ function MermBrain:OnStart()
                     self.inst.king = nil
                 end
 
-                return self.inst.return_to_king 
+                return self.inst.return_to_king
             end, "ShouldGoToThrone",
             PriorityNode({
-                Leash(self.inst, function() return self.inst.king:GetPosition() end, 
+                Leash(self.inst, function() return self.inst.king:GetPosition() end,
                 2, 2, true),
                 IfNode(function() return true end, "IsThroneValid",
                     ActionNode(function()

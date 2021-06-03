@@ -14,7 +14,7 @@ local FLOWER_TAGS = {"flower"}
 
 local function NearestFlowerPos(inst)
     local flower = GetClosestInstWithTag(FLOWER_TAGS, inst, SEE_FLOWER_DIST)
-    if flower and 
+    if flower and
        flower:IsValid() then
         return Vector3(flower.Transform:GetWorldPosition() )
     end
@@ -22,7 +22,7 @@ end
 
 local function GoHomeAction(inst)
     local flower = GetClosestInstWithTag(FLOWER_TAGS, inst, SEE_FLOWER_DIST)
-    if flower and 
+    if flower and
        flower:IsValid() then
         return BufferedAction(inst, flower, ACTIONS.GOHOME, nil, Vector3(flower.Transform:GetWorldPosition() ))
     end
@@ -45,13 +45,13 @@ function ButterflyBrain:OnStart()
             IfNode(function() return self.inst.components.pollinator:HasCollectedEnough() end, "IsFullOfPollen",
                 DoAction(self.inst, GoHomeAction, "go home", true )),
             FindFlower(self.inst),
-            Wander(self.inst, NearestFlowerPos, MAX_WANDER_DIST)            
+            Wander(self.inst, NearestFlowerPos, MAX_WANDER_DIST)
         },1)
-    
-    
+
+
     self.bt = BT(self.inst, root)
-    
-         
+
+
 end
 
 return ButterflyBrain

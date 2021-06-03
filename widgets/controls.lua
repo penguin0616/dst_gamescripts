@@ -240,7 +240,7 @@ function Controls:MakeScalingNodes()
     self.right_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
     self.right_root:SetHAnchor(ANCHOR_RIGHT)
     self.right_root:SetVAnchor(ANCHOR_MIDDLE)
-    self.right_root:SetMaxPropUpscale(MAX_HUD_SCALE)   
+    self.right_root:SetMaxPropUpscale(MAX_HUD_SCALE)
 
     self.bottomright_root = self:AddChild(Widget("bottomright"))
     self.bottomright_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
@@ -252,7 +252,7 @@ function Controls:MakeScalingNodes()
     self.left_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
     self.left_root:SetHAnchor(ANCHOR_LEFT)
     self.left_root:SetVAnchor(ANCHOR_MIDDLE)
-    self.left_root:SetMaxPropUpscale(MAX_HUD_SCALE)    
+    self.left_root:SetMaxPropUpscale(MAX_HUD_SCALE)
 
     self.topright_over_root = self:AddChild(Widget("topright_over"))
     self.topright_over_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
@@ -357,7 +357,7 @@ function Controls:OnUpdate(dt)
             elseif self.owner.components.playercontroller.placer ~= nil then
                 self.groundactionhint:Show()
                 self.groundactionhint:SetTarget(self.owner)
-                self.groundactionhint.text:SetString(TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ACTION) .. " " .. STRINGS.UI.HUD.BUILD.."\n" .. TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ALTACTION) .. " " .. STRINGS.UI.HUD.CANCEL.."\n")    
+                self.groundactionhint.text:SetString(TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ACTION) .. " " .. STRINGS.UI.HUD.BUILD.."\n" .. TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ALTACTION) .. " " .. STRINGS.UI.HUD.CANCEL.."\n")
             end
         else
             local aoetargeting = self.owner.components.playercontroller:IsAOETargeting()
@@ -502,7 +502,7 @@ function Controls:OnUpdate(dt)
         self.dismounthintdelay = self.dismounthintdelay - dt
     end
 
-    --default offsets   
+    --default offsets
     self.playeractionhint:SetScreenOffset(0,0)
     self.attackhint:SetScreenOffset(0,0)
 
@@ -612,7 +612,7 @@ function Controls:FocusMapOnWorldPosition(mapscreen, worldx, worldz)
 
 	local player_x, player_y, player_z = self.owner.Transform:GetWorldPosition()
 	local dx, dy = worldx - player_x, worldz - player_z
-	
+
 	local angle_correction = (PI / 4) * (10 - (math.fmod(TheCamera:GetHeadingTarget() / 360, 1) * 8))
 	local theta = math.atan2(dy, dx)
 	local mag = math.sqrt(dx * dx + dy * dy)

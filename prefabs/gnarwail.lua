@@ -377,7 +377,7 @@ local function GetFormationOffsetNormal(inst, leader, leader_platform, leader_ve
         separation_steering = recalculated_separation_steering
     end
     -- separation steering --
-    
+
     local desired_position_offset = mtlp_normal * (mtlp_length - DESIRED_BOAT_DISTANCE)
     return desired_position_offset + separation_steering
 end

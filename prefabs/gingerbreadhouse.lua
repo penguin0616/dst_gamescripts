@@ -26,7 +26,7 @@ SetSharedLootTable( 'gingerbreadhouse',
 })
 
 
-local animdata = 
+local animdata =
 {
     { build = "gingerbread_house1", bank = "gingerbread_house1" },
     { build = "gingerbread_house3", bank = "gingerbread_house2" },
@@ -71,7 +71,7 @@ local function onhammered(inst, worker)
 end
 
 local function onhit(inst, worker)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("hit")
         inst.AnimState:PushAnimation("idle", false)
     end
@@ -116,7 +116,7 @@ local function fn()
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('gingerbreadhouse')
-    
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(4)

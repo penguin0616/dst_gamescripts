@@ -69,7 +69,7 @@ function HudIndicatorWatcher:OnUpdate()
     --Check which players have moved outside of view
     if TheWorld.components.hudindicatablemanager then
         for i, v in pairs(TheWorld.components.hudindicatablemanager.items) do
-            if not (checked[v] or v == self.inst) and self:ShouldShowIndicator(v) then                                
+            if not (checked[v] or v == self.inst) and self:ShouldShowIndicator(v) then
                 if not table.contains(self.offScreenItems, v) then
                     self.inst.HUD:AddTargetIndicator(v)
                     table.insert(self.offScreenItems, v)

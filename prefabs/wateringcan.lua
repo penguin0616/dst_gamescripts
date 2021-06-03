@@ -27,7 +27,7 @@ local function OnFill(inst, from_object)
     if from_object ~= nil
         and from_object.components.watersource ~= nil
         and from_object.components.watersource.override_fill_uses ~= nil then
-        
+
         inst.components.finiteuses:SetUses(math.min(inst.components.finiteuses.total, inst.components.finiteuses:GetUses() + from_object.components.watersource.override_fill_uses))
     else
         inst.components.finiteuses:SetPercent(1)
@@ -115,7 +115,7 @@ local function MakeWateringCan(name, uses, water_amount)
         inst.Transform:SetTwoFaced()
 
         MakeInventoryPhysics(inst)
-        
+
         inst.AnimState:SetBank(name)
         inst.AnimState:SetBuild(name)
         inst.AnimState:PlayAnimation("idle")

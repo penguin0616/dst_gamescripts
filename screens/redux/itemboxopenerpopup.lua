@@ -274,11 +274,11 @@ function ItemBoxOpenerPopup:_HasNextItem()
 end
 
 function ItemBoxOpenerPopup:_UpdateSwapIcon(index)
-    
+
     local item_key = self.items[index]
     local desired_symbol = "SWAP_ICON"
     local build = GetBuildForItem(item_key)
-    
+
     --if there's a portrait we can use it, otherwise we'll just use the SWAP_ICON
     local portrait = GetBigPortraitAnimForItem(item_key)
     if portrait and portrait.build then
@@ -400,7 +400,7 @@ end
 
 
 function ItemBoxOpenerPopup:OnControl(control, down)
-    if ItemBoxOpenerPopup._base.OnControl(self,control, down) then 
+    if ItemBoxOpenerPopup._base.OnControl(self,control, down) then
         return true
     end
 

@@ -42,7 +42,7 @@ local GridWardrobePopupScreen = Class(Screen, function(self, owner_player, profi
     self.root:SetPosition(-RESOLUTION_X/2, -RESOLUTION_Y/2, 0)
 
 	local bg = self.proot:AddChild(Image("images/bg_redux_wardrobe_bg.xml", "wardrobe_bg.tex"))
-	bg:SetScale(.8) 
+	bg:SetScale(.8)
 	bg:SetPosition(-200, 0)
 	bg:SetTint(1, 1, 1, .76)
 
@@ -90,7 +90,7 @@ local GridWardrobePopupScreen = Class(Screen, function(self, owner_player, profi
 
 	self.loadout:SetPosition(-306, 0)
 	self.menu:SetPosition(493, -260, 0)
-   
+
 	self.default_focus = self.loadout
 
     TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
@@ -135,7 +135,7 @@ function GridWardrobePopupScreen:GetTimestamp()
 	local timestamp = 0
 
 	for k,v in ipairs(templist) do
-		if v.modified_time > timestamp then 
+		if v.modified_time > timestamp then
 			timestamp = v.modified_time
 		end
 	end
@@ -150,8 +150,8 @@ end
 
 function GridWardrobePopupScreen:OnControl(control, down)
     if GridWardrobePopupScreen._base.OnControl(self,control, down) then return true end
-    
-    if control == CONTROL_CANCEL and not down then    
+
+    if control == CONTROL_CANCEL and not down then
         self:Cancel()
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
         return true
@@ -169,7 +169,7 @@ end
 
 function GridWardrobePopupScreen:Close()
 	local skins = self.loadout.selected_skins
-	
+
     local data = {}
     if TheNet:IsOnlineMode() then
 		data = skins

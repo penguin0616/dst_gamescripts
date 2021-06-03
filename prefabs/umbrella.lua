@@ -91,7 +91,7 @@ local function common_fn(name)
 
     inst.AnimState:SetBank(name)
     inst.AnimState:SetBuild(name)
-    inst.AnimState:PlayAnimation("idle")  
+    inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("nopunch")
     inst:AddTag("umbrella")

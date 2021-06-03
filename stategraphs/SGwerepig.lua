@@ -214,7 +214,7 @@ local states =
         end,
 
         events =
-        {   
+        {
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("walk")
             end),
@@ -248,7 +248,7 @@ local states =
         name = "walk_stop",
         tags = { "canrotate" },
 
-        onenter = function(inst) 
+        onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("were_walk_pst")
         end,

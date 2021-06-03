@@ -314,7 +314,7 @@ end
 
 local function create_hutch()
     local inst = CreateEntity()
-    
+
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()

@@ -17,7 +17,7 @@ AddRoom("BGGrassBurnt", {
 										flint=0.05,
 										sapling=0.2,
 										twiggytree = 0.2,
-										ground_twigs = 0.08,											
+										ground_twigs = 0.08,
 										evergreen=0.3,
 					                },
 									prefabdata={
@@ -47,7 +47,7 @@ AddRoom("BGGrass", {
 										berrybush_juicy = 0.025,
 										sapling=0.2,
 										twiggytree = 0.2,
-										ground_twigs = 0.08,										
+										ground_twigs = 0.08,
 										tree = {weight = 0.3, prefabs = {"evergreen", "deciduoustree"}},
 										pond=.001,
 					                    blue_mushroom = .005,

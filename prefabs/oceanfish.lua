@@ -15,8 +15,8 @@ end
 local brain = require "brains/oceanfishbrain"
 
 local function flopsoundcheck(inst)
-	if inst.AnimState:IsCurrentAnimation("flop_loop") then 
-		inst.SoundEmitter:PlaySound("dontstarve/common/fishingpole_fishland") 
+	if inst.AnimState:IsCurrentAnimation("flop_loop") then
+		inst.SoundEmitter:PlaySound("dontstarve/common/fishingpole_fishland")
 	end
 end
 
@@ -321,7 +321,7 @@ local function water_common(data)
 	inst.components.oceanfishable.onsetrodfn = OnSetRod
 	inst.components.oceanfishable:StrugglingSetup(inst.components.locomotor.walkspeed, inst.components.locomotor.runspeed, data.stamina or TUNING.OCEANFISH.FISHABLE_STAMINA)
 	inst.components.oceanfishable.catch_distance = TUNING.OCEAN_FISHING.FISHING_CATCH_DIST
-	
+
     inst:AddComponent("eater")
 	if data and data.diet then
 		inst.components.eater:SetDiet(data.diet.caneat or FOODGROUP.BERRIES_AND_SEEDS, data.diet.preferseating)
@@ -339,7 +339,7 @@ local function water_common(data)
     inst.components.herdmember:Enable(false)
 
 	inst:AddComponent("weighable")
-	--inst.components.weighable.type = TROPHYSCALE_TYPES.FISH -- No need to set a weighable type, this is just here for data and will be copied over to the inventory item	
+	--inst.components.weighable.type = TROPHYSCALE_TYPES.FISH -- No need to set a weighable type, this is just here for data and will be copied over to the inventory item
 	inst.components.weighable:Initialize(inst.fish_def.weight_min, inst.fish_def.weight_max)
 	inst.components.weighable:SetWeight(Lerp(inst.fish_def.weight_min, inst.fish_def.weight_max, CalcNewSize()))
 
@@ -393,7 +393,7 @@ local function inv_common(fish_def)
 	    inst.entity:AddDynamicShadow()
 	end
 
-    inst.entity:AddNetwork()    
+    inst.entity:AddNetwork()
     MakeInventoryPhysics(inst)
 
 	inst.Transform:SetTwoFaced()
@@ -433,13 +433,13 @@ local function inv_common(fish_def)
 
     inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem:SetOnPutInInventoryFn(onpickup)
-    
+
     inst:AddComponent("perishable")
     inst.components.perishable:SetPerishTime(TUNING.PERISH_ONE_DAY)
     inst.components.perishable:StartPerishing()
     inst.components.perishable.onperishreplacement = fish_def.perish_product
 	inst.components.perishable.ignorewentness = true
-	
+
 	inst:AddComponent("murderable")
 
 	inst:AddComponent("lootdropper")
@@ -474,7 +474,7 @@ local function inv_common(fish_def)
     inst.components.tradable.goldvalue = TUNING.GOLD_VALUES.MEAT
 
 	inst.flop_task = inst:DoTaskInTime(math.random() * 2 + 1, Flop)
-	
+
 	if fish_def.heater ~= nil then
 		inst:AddComponent("heater")
 		inst.components.heater.heat = fish_def.heater.heat
@@ -515,7 +515,7 @@ local fish_prefabs = {}
 
 local function MakeFish(data)
 	local assets = { Asset("ANIM", "anim/"..data.bank..".zip"), Asset("SCRIPT", "scripts/prefabs/oceanfishdef.lua"), }
-	if data.bank ~= data.build then 
+	if data.bank ~= data.build then
 		table.insert(assets, Asset("ANIM", "anim/"..data.build..".zip"))
 	end
 
@@ -526,9 +526,9 @@ local function MakeFish(data)
     end
 
 	local prefabs = {
-		data.prefab.."_inv", 
+		data.prefab.."_inv",
 		"schoolherd_"..data.prefab,
-		"spoiled_fish", 
+		"spoiled_fish",
 		data.cooking_product,
 	}
 	ConcatArrays(prefabs, data.loot, data.extra_prefabs)

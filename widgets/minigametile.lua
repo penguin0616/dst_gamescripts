@@ -11,7 +11,7 @@ local MiniGameTile = Class(Widget, function(self, screen, index, mover)
     self.screen = screen
     self.index = index
 	self.exploded = false
-	
+
     self.tile = self:AddChild(UIAnim())
     self.tile:GetAnimState():SetBuild("minigametile")
     self.tile:GetAnimState():SetBank("minigametile")
@@ -22,9 +22,9 @@ local MiniGameTile = Class(Widget, function(self, screen, index, mover)
 		self.tile:GetAnimState():Hide("frameBG")
 		self.tile:Disable()
 	end
-	
+
     self.tile:SetScale(image_scale)
-    
+
 	self.tile_num = self:AddChild(Text(CHATFONT_OUTLINE, 35))
 	self.tile_num:SetPosition(2,-4)
 
@@ -106,7 +106,7 @@ end
 function MiniGameTile:OnGainFocus()
 	self._base:OnGainFocus()
 
-	if self.tile and self:IsEnabled() then 
+	if self.tile and self:IsEnabled() then
 		self:Embiggen()
 		self.tile:GetAnimState():PushAnimation(self.view_state.."_hover", true)
 	end
@@ -116,7 +116,7 @@ end
 function MiniGameTile:OnLoseFocus()
 	self._base:OnLoseFocus()
 
-	if self.tile and not self.clicked then 
+	if self.tile and not self.clicked then
 		self:Shrink()
 	end
 	self.tile:GetAnimState():PushAnimation(self.view_state, true)
@@ -152,10 +152,10 @@ function MiniGameTile:OnControl(control, down)
 			if self:IsEnabled() then
         		if not down then
         			if self.clickFn then
-		       			self.clickFn(self.index) 
+		       			self.clickFn(self.index)
 		       		end
         		end
-        		
+
 				return true
 			end
         end

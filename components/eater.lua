@@ -113,7 +113,7 @@ function Eater:SetOnEatFn(fn)
 end
 
 function Eater:DoFoodEffects(food)
-    return not ((self.strongstomach and food:HasTag("monstermeat")) or 
+    return not ((self.strongstomach and food:HasTag("monstermeat")) or
                 (self.inst.components.foodaffinity and self.inst.components.foodaffinity:HasPrefabAffinity(food)))
 end
 
@@ -142,7 +142,7 @@ end
 function Eater:Eat(food, feeder)
     feeder = feeder or self.inst
     -- This used to be CanEat. The reason for two checks is to that special diet characters (e.g.
-    -- wigfrid) can TRY to eat all foods (they get the actions for it) but upon actually put it in 
+    -- wigfrid) can TRY to eat all foods (they get the actions for it) but upon actually put it in
     -- their mouth, they bail and "spit it out" so to speak.
     if self:PrefersToEat(food) then
         local stack_mult = self.eatwholestack and food.components.stackable ~= nil and food.components.stackable:StackSize() or 1

@@ -129,7 +129,7 @@ function Fishable:RefreshFish()
 end
 
 function Fishable:GetFishPercent()
-    return self.fishleft / self.maxfish 
+    return self.fishleft / self.maxfish
 end
 
 function Fishable:OnSave()

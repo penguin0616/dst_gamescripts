@@ -26,7 +26,7 @@ local function fn()
     end
 
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM    
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
     inst:AddComponent("inspectable")
     inst:AddComponent("fuel")
     inst.components.fuel.fueltype = FUELTYPE.NIGHTMARE

@@ -66,7 +66,7 @@ local SPECIAL_EVENT_DEPS =
             {
                 Asset("PKGREF", "anim/dst_menu_halloween.zip"),
                 Asset("PKGREF", "anim/dst_menu_wurt.zip"),
-                
+
                 Asset("ANIM", "anim/dst_menu_grotto.zip"),
             },
         },
@@ -95,6 +95,26 @@ local SPECIAL_EVENT_DEPS =
                 Asset("PKGREF", "anim/dst_menu_inker_winter.zip"),
 
                 Asset("ANIM", "anim/dst_menu_farming_winter.zip"),
+            },
+        },
+    },
+
+    [SPECIAL_EVENTS.CARNIVAL] =
+    {
+        frontend =
+        {
+            assets =
+            {
+                Asset("ANIM", "anim/dst_menu_carnival.zip"),
+            },
+        },
+        backend =
+        {
+            assets =
+            {
+            },
+            prefabs =
+            {
             },
         },
     },
@@ -169,7 +189,7 @@ local SPECIAL_EVENT_DEPS =
                 Asset("SOUND", "sound/music_frontend_yotb.fsb"),
             },
         },
-    },    
+    },
 
     [SPECIAL_EVENTS.NONE] =
     {
@@ -199,7 +219,7 @@ local SPECIAL_EVENT_DEPS =
                 Asset("PKGREF", "anim/dst_menu_grotto.zip"),
                 Asset("PKGREF", "anim/dst_menu_farming.zip"),
                 Asset("ANIM", "anim/dst_menu_wes2.zip"),
-                
+
                 Asset("ANIM", "anim/dst_menu_moonstorm.zip"),
                 Asset("ANIM", "anim/dst_menu_moonstorm_background.zip"),
                 Asset("ANIM", "anim/dst_menu_moonstorm_foreground.zip"),

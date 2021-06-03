@@ -20,9 +20,9 @@ local SCIENCE_STAGES =
     { time = 2, anim = "cooking_loop3", pre_anim = "cooking_loop3_pre", fire_pre_anim = "fire3_pre", fire_anim = "fire3"},
 }
 
-local EXPERIMENT_RESULTS = 
+local EXPERIMENT_RESULTS =
 {
-    halloween_experiment_bravery = 
+    halloween_experiment_bravery =
     {
         halloweenpotion_bravery_small = 2,
         halloweenpotion_bravery_large = 1,
@@ -136,7 +136,7 @@ local function OnInactive(inst)
         PlayAnimation(inst, "idle", true)
         MakePrototyper(inst)
         RemoveFireFx(inst)
-    end 
+    end
 end
 
 local function OnFireFXOver(firefx)
@@ -150,7 +150,7 @@ end
 local function OnStageStarted(inst, stage)
     inst:RemoveComponent("prototyper")
 
-    if SCIENCE_STAGES[stage].pre_anim then 
+    if SCIENCE_STAGES[stage].pre_anim then
         PlayAnimation(inst, SCIENCE_STAGES[stage].pre_anim)
     end
     PushAnimation(inst, SCIENCE_STAGES[stage].anim, true)
@@ -160,7 +160,7 @@ local function OnStageStarted(inst, stage)
 
     RemoveFireFx(inst)
     MakeFireFx(inst)
-    if SCIENCE_STAGES[stage].fire_pre_anim then 
+    if SCIENCE_STAGES[stage].fire_pre_anim then
         inst._firefx.AnimState:PlayAnimation(SCIENCE_STAGES[stage].fire_pre_anim)
     end
     inst._firefx.AnimState:PushAnimation(SCIENCE_STAGES[stage].fire_anim, true)

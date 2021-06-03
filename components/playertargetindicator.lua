@@ -23,7 +23,7 @@ local PlayerTargetIndicator = Class(function(self, inst)
 
     --inst:ListenForEvent("playerexited", self.onplayerexited, TheWorld)
     inst:ListenForEvent("unregister_hudindicatable", self.onplayerexited, TheWorld)
-    
+
     inst:StartUpdatingComponent(self)
 end)
 

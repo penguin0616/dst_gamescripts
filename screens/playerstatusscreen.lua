@@ -233,7 +233,7 @@ function PlayerStatusScreen:RefreshServerName()
         self.servertitle:SetTruncatedString(serverNameStr, 600, 110, true)
     else
         self.servertitle:SetTruncatedString(serverNameStr, 800, 145, true)
-    end							
+    end
 
     local serverDescStr = TheNet:GetServerDescription()
     if serverDescStr == "" then
@@ -339,7 +339,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
 
     if not self.players_number then
         self.players_number = self.root:AddChild(Text(UIFONT, 25))
-        self.players_number:SetPosition(318,170) 
+        self.players_number:SetPosition(318,170)
         self.players_number:SetRegionSize(100,30)
         self.players_number:SetHAlign(ANCHOR_RIGHT)
         self.players_number:SetColour(1,1,1,1)
@@ -360,7 +360,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
     if self.viewgroup_button ~= nil then
         self.viewgroup_button:SetPosition(servermenux - (self.servermenunumbtns > 1 and servermenubtnoffs or 0), 200)
     end
-	
+
     if self.toggleservertext_button ~= nil then
         self.toggleservertext_button:SetPosition(servermenux + (self.servermenunumbtns > 1 and servermenubtnoffs or 0), 200)
     end
@@ -510,7 +510,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
                     TheNet:SetPlayerMuted(playerListing.userid, playerListing.isMuted)
                     if playerListing.isMuted then
                         playerListing.mute.image_focus = "mute.tex"
-                        playerListing.mute.image:SetTexture("images/scoreboard.xml", "mute.tex") 
+                        playerListing.mute.image:SetTexture("images/scoreboard.xml", "mute.tex")
                         playerListing.mute:SetTextures("images/scoreboard.xml", "mute.tex")
                         playerListing.mute:SetHoverText(STRINGS.UI.PLAYERSTATUSSCREEN.UNMUTE)
                     else
@@ -617,7 +617,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
         playerListing.displayName = self:GetDisplayName(client)
 
         playerListing.userid = client.userid
-        
+
         if self.show_player_badge then
             if client.netid ~= nil then
                 local _, _, _, profileflair, rank = GetSkinsDataFromClientTableData(client)
@@ -704,7 +704,7 @@ function PlayerStatusScreen:DoInit(ClientObjs)
         playerListing.isMuted = client.muted == true
         if playerListing.isMuted then
             playerListing.mute.image_focus = "mute.tex"
-            playerListing.mute.image:SetTexture("images/scoreboard.xml", "mute.tex") 
+            playerListing.mute.image:SetTexture("images/scoreboard.xml", "mute.tex")
             playerListing.mute:SetTextures("images/scoreboard.xml", "mute.tex")
             playerListing.mute:SetHoverText(STRINGS.UI.PLAYERSTATUSSCREEN.UNMUTE)
         else

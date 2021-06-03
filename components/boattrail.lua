@@ -43,7 +43,7 @@ end
 
 function BoatTrail:OnUpdate(dt)
     local x, y, z = self.inst.Transform:GetWorldPosition()
-    
+
     if not self.total_distance_traveled then
         self.last_x, self.last_z = x, z
         self.total_distance_traveled = 0

@@ -32,9 +32,9 @@ local CompendiumScreen = Class(Screen, function(self, prev_screen)
     self:AddChild(TEMPLATES.old.ForegroundLetterbox())
 
 	self.root = self:AddChild(TEMPLATES.ScreenRoot("CompendiumScreenRoot"))
-    self.bg = self.root:AddChild(TEMPLATES.PlainBackground())	
+    self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.MAINSCREEN.COMPENDIUM, ""))
-    
+
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
 
 	self.cancel_button = self.root:AddChild(TEMPLATES.BackButton(function() self:Close() end))
@@ -74,7 +74,7 @@ end)
 
 function CompendiumScreen:_BuildMenu(subscreener)
     self.tooltip = self.root:AddChild(TEMPLATES.ScreenTooltip())
-	
+
     local menu_items = {
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.CINEMATICS, "cinematics", STRINGS.UI.COMPENDIUM.TOOLTIP_CINEMATICS, self.tooltip)},
         {widget = subscreener:MenuButton(STRINGS.UI.COMPENDIUM.OBITUARIES, "obituaries", STRINGS.UI.COMPENDIUM.TOOLTIP_OBITUARIES, self.tooltip)},
@@ -90,7 +90,7 @@ end
 
 function CompendiumScreen:OnControl(control, down)
     if CompendiumScreen._base.OnControl(self, control, down) then return true end
-    
+
     if not down then
 	    if control == CONTROL_CANCEL then
 			self:Close() --go back
@@ -102,7 +102,7 @@ end
 
 function CompendiumScreen:Close(fn)
     TheFrontEnd:FadeBack(nil, nil, fn)
-end	
+end
 
 function CompendiumScreen:OnBecomeActive()
     CompendiumScreen._base.OnBecomeActive(self)

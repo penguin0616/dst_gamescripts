@@ -23,7 +23,7 @@ local StoryTeller = Class(function(self, inst)
 
 	self.inst:AddTag("storyteller")
 
-	self.storyprop_onremove = function(prop) 
+	self.storyprop_onremove = function(prop)
 		self:AbortStory()
 	end
 end)
@@ -31,7 +31,7 @@ end)
 function StoryTeller:OnRemoveFromEntity()
 	self.inst:RemoveTag("storyteller")
 end
-  
+
 function StoryTeller:SetStoryToTellFn(fn)
     self.storytotellfn = fn
 end
@@ -56,7 +56,7 @@ function StoryTeller:AbortStory(reason)
 			self.inst.components.talker:ShutUp()
 		end
 	else
-		self:OnDone() 
+		self:OnDone()
 	end
 end
 

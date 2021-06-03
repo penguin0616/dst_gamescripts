@@ -48,8 +48,8 @@ function Map:IsPassableAtPointWithPlatformRadiusBias(x, y, z, allow_water, exclu
         if not exclude_boats then
             local entities = TheSim:FindEntities(x, 0, z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + platform_radius_bias, WALKABLE_PLATFORM_TAGS)
             for i, v in ipairs(entities) do
-                local walkable_platform = v.components.walkableplatform            
-                if walkable_platform ~= nil then  
+                local walkable_platform = v.components.walkableplatform
+                if walkable_platform ~= nil then
                     local platform_x, platform_y, platform_z = v.Transform:GetWorldPosition()
                     local distance_sq = VecUtil_LengthSq(x - platform_x, z - platform_z)
                     return distance_sq <= walkable_platform.radius * walkable_platform.radius
@@ -202,7 +202,7 @@ function Map:IsDeployPointClear(pt, inst, min_spacing, min_spacing_sq_fn, near_o
     return true
 end
 
-function Map:CanDeployAtPoint(pt, inst, mouseover)    
+function Map:CanDeployAtPoint(pt, inst, mouseover)
     local x,y,z = pt:Get()
     return (mouseover == nil or mouseover:HasTag("player") or mouseover:HasTag("walkableplatform"))
         and self:IsPassableAtPointWithPlatformRadiusBias(x,y,z, false, false, TUNING.BOAT.NO_BUILD_BORDER_RADIUS, true)
@@ -264,10 +264,10 @@ function Map:CanDeployMastAtPoint(pt, inst, mouseover)
     for i, v in ipairs(entities) do
         return false
     end
-    
+
     return (mouseover == nil or mouseover:HasTag("player") or mouseover:HasTag("walkableplatform"))
         and self:IsPassableAtPointWithPlatformRadiusBias(pt.x,pt.y,pt.z, false, false, TUNING.BOAT.NO_BUILD_BORDER_RADIUS, true)
-        and self:IsDeployPointClear(pt, nil, inst.replica.inventoryitem:DeploySpacingRadius())    
+        and self:IsDeployPointClear(pt, nil, inst.replica.inventoryitem:DeploySpacingRadius())
 end
 
 function Map:CanPlacePrefabFilteredAtPoint(x, y, z, prefab)
@@ -286,17 +286,17 @@ function Map:CanPlacePrefabFilteredAtPoint(x, y, z, prefab)
     end
     return true
 end
-    
+
 function Map:CanDeployRecipeAtPoint(pt, recipe, rot)
     local is_valid_ground = false;
     if BUILDMODE.WATER == recipe.build_mode then
-        local pt_x, pt_y, pt_z = pt:Get()        
+        local pt_x, pt_y, pt_z = pt:Get()
         is_valid_ground = not self:IsPassableAtPoint(pt_x, pt_y, pt_z)
         if is_valid_ground then
             is_valid_ground = TheWorld.Map:IsSurroundedByWater(pt_x, pt_y, pt_z, 5)
         end
     else
-        local pt_x, pt_y, pt_z = pt:Get()       
+        local pt_x, pt_y, pt_z = pt:Get()
         is_valid_ground = self:IsPassableAtPointWithPlatformRadiusBias(pt_x, pt_y, pt_z, false, false, TUNING.BOAT.NO_BUILD_BORDER_RADIUS, true)
     end
 
@@ -307,15 +307,15 @@ end
 
 function Map:IsSurroundedByWater(x, y, z, radius)
     -- TheSim:ProfilerPush("isSurroundedByWater")
-    
+
     for i = -radius, radius, 1 do
-        if self:IsVisualGroundAtPoint(x - radius, y, z + i) or self:IsVisualGroundAtPoint(x + radius, y, z + i) 
+        if self:IsVisualGroundAtPoint(x - radius, y, z + i) or self:IsVisualGroundAtPoint(x + radius, y, z + i)
 			or not self:IsValidTileAtPoint(x - radius, y, z + i) or not self:IsValidTileAtPoint(x + radius, y, z + i) then
             return false
         end
     end
     for i = -(radius - 1), radius - 1, 1 do
-        if self:IsVisualGroundAtPoint(x + i, y, z -radius) or self:IsVisualGroundAtPoint(x + i, y, z + radius) 
+        if self:IsVisualGroundAtPoint(x + i, y, z -radius) or self:IsVisualGroundAtPoint(x + i, y, z + radius)
 			or not self:IsValidTileAtPoint(x + i, y, z -radius) or not self:IsValidTileAtPoint(x + i, y, z + radius) then
             return false
         end
@@ -328,7 +328,7 @@ end
 function Map:GetNearestPointOnWater(x, z, radius, iterations)
     local test_increment = radius / iterations
     local map = TheWorld.Map
-    
+
     for i=1,iterations do
         local test_x, test_z = 0,0
 
@@ -350,8 +350,8 @@ function Map:GetNearestPointOnWater(x, z, radius, iterations)
         test_x, test_z = x + 0, z + -test_increment * i
         if self:InternalIsPointOnWater(test_x, test_z) then
             return true, test_x, test_z
-        end                     
-    end 
+        end
+    end
 
     return false, 0, 0
 end
@@ -363,7 +363,7 @@ function Map:InternalIsPointOnWater(test_x, test_y, test_z)
 	end
     if self:IsVisualGroundAtPoint(test_x, test_y, test_z) or self:GetPlatformAtPoint(test_x, test_y, test_z) ~= nil then
         return false
-    else        
+    else
         return true
     end
 end
@@ -377,7 +377,7 @@ function Map:GetPlatformAtPoint(pos_x, pos_y, pos_z, extra_radius)
 	end
     local entities = TheSim:FindEntities(pos_x, pos_y, pos_z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + (extra_radius or 0), WALKABLE_PLATFORM_TAGS)
     for i, v in ipairs(entities) do
-        return v 
+        return v
     end
     return nil
 end
@@ -437,7 +437,7 @@ function Map:FindVisualNodeAtPoint(x, y, z, has_tag)
 
 	local best = FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 0.95)
 				or FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 1.25) -- this is the handle some of the corner case when there the player is really standing quite far into the water tile, but logically on land
-				or FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 1.5) 
+				or FindVisualNodeAtPoint_TestArea(self, x, z, on_land, 1.5)
 
 	local node_index = (on_land and best ~= nil) and self:GetNodeIdAtPoint(best.x, 0, best.z) or 0
 	if has_tag == nil then

@@ -215,7 +215,7 @@ function self:SpawnSchool(spawnpoint, target, override_spawn_offset)
         local offset = FindSwimmableOffset(school_spawnpoint, angle, radius, 12, true, nil, nil, true)
         if offset then
 			if count == 0 then
-				DoSpawnFish(schooldata.prefab, school_spawnpoint + offset, rotation, herd) 
+				DoSpawnFish(schooldata.prefab, school_spawnpoint + offset, rotation, herd)
 			else
 	            self.inst:DoTaskInTime(0.1+math.random()*1,function() DoSpawnFish(schooldata.prefab, school_spawnpoint + offset, rotation, herd) end)
 			end

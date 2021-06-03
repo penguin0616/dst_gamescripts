@@ -5,7 +5,7 @@ local assets =
     Asset("ANIM", "anim/squid_build.zip"),
 }
 
-local inkassets = 
+local inkassets =
 {
     Asset("ANIM","anim/squid_inked.zip"),
 }
@@ -39,7 +39,7 @@ local sounds =
 SetSharedLootTable('squid',
 {
     {'monstermeat', 1.000},
-    {'lightbulb', 0.33},    
+    {'lightbulb', 0.33},
 })
 
 local WAKE_TO_FOLLOW_DISTANCE = 8
@@ -74,7 +74,7 @@ local function ShouldWakeUp(inst)
 end
 
 local function ShouldSleep(inst)
-    -- this will always return false at the momnent, until we decide how they should naturally sleep. 
+    -- this will always return false at the momnent, until we decide how they should naturally sleep.
     return false
         and not (inst.components.combat and inst.components.combat.target)
         and not (inst.components.burnable and inst.components.burnable:IsBurning())
@@ -194,7 +194,7 @@ local function fncommon()
             inst.hop_distance = inst.components.locomotor.hop_distance
             inst.components.locomotor.hop_distance = 4
             inst.DynamicShadow:Enable(false)
-        end)            
+        end)
     inst.components.amphibiouscreature:SetExitWaterFn(
         function(inst)
             if inst.hop_distance then
@@ -225,14 +225,14 @@ local function fncommon()
     inst.components.combat:SetHurtSound(inst.sounds.hurt)
     inst.components.combat:SetRange(TUNING.SQUID_TARGET_RANGE, TUNING.SQUID_ATTACK_RANGE)
     inst.components.combat:EnableAreaDamage(true)
-    inst.components.combat:SetAreaDamage(TUNING.SQUID_ATTACK_RANGE, 1, function(ent, inst) 
+    inst.components.combat:SetAreaDamage(TUNING.SQUID_ATTACK_RANGE, 1, function(ent, inst)
         if not ent:HasTag("squid") then
             return true
-        else  
-            if ent:IsValid() then   
-                ent.SoundEmitter:PlaySound("hookline/creatures/squid/slap")         
+        else
+            if ent:IsValid() then
+                ent.SoundEmitter:PlaySound("hookline/creatures/squid/slap")
                 local x,y,z = ent.Transform:GetWorldPosition()
-                local angle = inst:GetAngleToPoint(x,y,z) 
+                local angle = inst:GetAngleToPoint(x,y,z)
                 ent.Transform:SetRotation(angle)
                 ent.sg:GoToState("fling")
             end
@@ -259,7 +259,7 @@ local function fncommon()
     inst:ListenForEvent("newcombattarget", OnNewTarget)
 
     inst:AddComponent("knownlocations")
-    
+
     inst:AddComponent("timer")
 
     inst:AddComponent("herdmember")
@@ -290,7 +290,7 @@ local function fncommon()
     inst.eyeglow = SpawnPrefab("squideyelight")
     inst.eyeglow.entity:SetParent(inst.entity) --prevent 1st frame sleep on clients
     inst.eyeglow.entity:AddFollower()
-    inst.eyeglow.Follower:FollowSymbol(inst.GUID, "glow", 0, 0, 0)    
+    inst.eyeglow.Follower:FollowSymbol(inst.GUID, "glow", 0, 0, 0)
 
     return inst
 end
@@ -301,11 +301,11 @@ local function squideyelightfn()
 
     inst.entity:AddTransform()
     inst.entity:AddNetwork()
-    inst.entity:AddLight()    
+    inst.entity:AddLight()
 
     inst.Light:SetRadius(TUNING.SQUID_LIGHT_UP_RADIUS)
-    inst.Light:SetIntensity(TUNING.SQUID_LIGHT_UP_INTENSITY)    
-    inst.Light:SetFalloff(TUNING.SQUID_LIGHT_UP_FALLOFF)    
+    inst.Light:SetIntensity(TUNING.SQUID_LIGHT_UP_INTENSITY)
+    inst.Light:SetFalloff(TUNING.SQUID_LIGHT_UP_FALLOFF)
     inst.Light:SetColour(200 / 255, 150 / 255, 50 / 255)
     inst.Light:Enable(true)
 
@@ -337,9 +337,9 @@ end
 
 local function OnDetached(inst)
     inst.AnimState:PlayAnimation("ink_pst")
-    inst:ListenForEvent("animover", function() 
+    inst:ListenForEvent("animover", function()
         --inst.components.debuff:Stop()
-        inst:Remove() 
+        inst:Remove()
     end)
 end
 
@@ -353,7 +353,7 @@ local function inkfn()
 
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")
-  
+
     inst.AnimState:SetBank("squid_ink_follow")
     inst.AnimState:SetBuild("squid_inked")
     inst.AnimState:PlayAnimation("ink_pre")
@@ -364,7 +364,7 @@ local function inkfn()
 
     if not TheWorld.ismastersim then
         return inst
-    end    
+    end
 
     inst:AddComponent("debuff")
     inst.components.debuff:SetAttachedFn(OnAttached)
@@ -373,6 +373,6 @@ local function inkfn()
     return inst
 end
 
-return Prefab("squid", fncommon, assets, prefabs),   
-       Prefab("squid_ink_player_fx", inkfn, inkassets),   
+return Prefab("squid", fncommon, assets, prefabs),
+       Prefab("squid_ink_player_fx", inkfn, inkassets),
        Prefab("squideyelight", squideyelightfn)

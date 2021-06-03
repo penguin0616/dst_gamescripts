@@ -181,7 +181,7 @@ end
 
 function Projectile:Stop()
     self.inst.Physics:CollidesWith(COLLISION.LIMITS)
-    
+
     self.inst:StopUpdatingComponent(self)
     self.target = nil
     self.owner = nil
@@ -194,7 +194,7 @@ function Projectile:Hit(target)
     StopTrackingDelayOwner(self)
     self:Stop()
     self.inst.Physics:Stop()
-	
+
     if attacker.components.combat == nil and attacker.components.weapon ~= nil and attacker.components.inventoryitem ~= nil then
         weapon = (self.has_damage_set and weapon.components.weapon ~= nil) and weapon or attacker
         attacker = attacker.components.inventoryitem.owner

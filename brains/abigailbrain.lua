@@ -77,7 +77,7 @@ local function DefensiveCanFight(inst)
         inst.components.combat:GiveUp()
     end
 
-    return false 
+    return false
 end
 
 local MAX_AGGRESSIVE_FIGHT_DSQ = math.pow(TUNING.ABIGAIL_COMBAT_TARGET_DISTANCE + 2, 2)
@@ -116,16 +116,16 @@ function AbigailBrain:OnStart()
     }, .25))
 
 
-    local defensive_mode = WhileNode(function() return self.inst.is_defensive end, "DefensiveMove", 
+    local defensive_mode = WhileNode(function() return self.inst.is_defensive end, "DefensiveMove",
         PriorityNode({
             dance,
             watch_game,
-            
+
             WhileNode(function() return DefensiveCanFight(self.inst) end, "CanFight",
                 ChaseAndAttack(self.inst, TUNING.DEFENSIVE_MAX_CHASE_TIME)),
-            
+
 			FaceEntity(self.inst, GetTraderFn, KeepTraderFn),
-            Follow(self.inst, function() return self.inst.components.follower.leader end, 
+            Follow(self.inst, function() return self.inst.components.follower.leader end,
                     TUNING.ABIGAIL_DEFENSIVE_MIN_FOLLOW, TUNING.ABIGAIL_DEFENSIVE_MED_FOLLOW, TUNING.ABIGAIL_DEFENSIVE_MAX_FOLLOW, true),
             Wander(self.inst, nil, nil, WANDER_TIMING),
         }, .25)

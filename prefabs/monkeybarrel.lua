@@ -181,7 +181,7 @@ local function fn()
     inst.components.childspawner.childname = "monkey"
     inst.components.childspawner:StartSpawning()
     inst.components.childspawner.ongohome = ongohome
-    inst.components.childspawner:SetSpawnedFn(shake)    
+    inst.components.childspawner:SetSpawnedFn(shake)
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('monkey_barrel')
@@ -195,7 +195,7 @@ local function fn()
     local function ondanger()
         if inst.components.childspawner ~= nil then
             inst.components.childspawner:StopSpawning()
-            ReturnChildren(inst) 
+            ReturnChildren(inst)
         end
     end
 

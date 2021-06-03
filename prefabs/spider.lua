@@ -34,7 +34,7 @@ function GetOtherSpiders(inst)
 end
 
 local function OnGetItemFromPlayer(inst, giver, item)
-    if inst.components.eater:CanEat(item) then  
+    if inst.components.eater:CanEat(item) then
         inst.sg:GoToState("eat", true)
 
         local playedfriendsfx = false
@@ -204,7 +204,7 @@ end
 
 local function create_common(build, tag)
     local inst = CreateEntity()
-    
+
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
@@ -258,11 +258,11 @@ local function create_common(build, tag)
     inst.components.lootdropper:AddRandomHauntedLoot("spidergland", 1)
     inst.components.lootdropper.numrandomloot = 1
 
-    ---------------------        
+    ---------------------
     MakeMediumBurnableCharacter(inst, "body")
     MakeMediumFreezableCharacter(inst, "body")
     inst.components.burnable.flammability = TUNING.SPIDER_FLAMMABILITY
-    ---------------------       
+    ---------------------
 
     inst:AddComponent("health")
     inst:AddComponent("combat")

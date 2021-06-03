@@ -1,4 +1,4 @@
-local assets = 
+local assets =
 {
     Asset("ANIM", "anim/table_winters_feast.zip"),
 	Asset("ANIM", "anim/winona_battery_placement.zip"),
@@ -69,7 +69,7 @@ local function onhammered(inst, worker)
 	if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then
 		inst.components.burnable:Extinguish()
 	end
-	
+
 	local item = DropFoodFromShelf(inst)
 	if item ~= nil then
 		item.Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -98,20 +98,20 @@ end
 
 local function EjectFood(inst)
 	local item = DropFoodFromShelf(inst)
-	
+
 	if item ~= nil then
 		item.Transform:SetPosition(inst.Transform:GetWorldPosition())
 
 		-- Turning off collision with obstacles so item can be spawned inside table collider
 		item.Physics:ClearCollidesWith(COLLISION.OBSTACLES)
 		item:DoTaskInTime(0.5, function(inst) inst.Physics:CollidesWith(COLLISION.OBSTACLES) end)
-		
-		Launch2(item, inst, FOOD_LAUNCH_SPEED, 1, FOOD_LAUNCH_STARTHEIGHT, 0)	
+
+		Launch2(item, inst, FOOD_LAUNCH_SPEED, 1, FOOD_LAUNCH_STARTHEIGHT, 0)
 	end
 	if inst.AnimState:IsCurrentAnimation("bump") then
 		inst.SoundEmitter:PlaySound(sounds.bump)
 		inst.SoundEmitter:PlaySound(sounds.eject_food)
-	end	
+	end
 end
 
 local function RefuseFood(inst)
@@ -180,7 +180,7 @@ local function OnFinishFood(inst)
 		inst.components.shelf.cantakeitem = false
 
 		SpawnPrefab("winters_feast_food_depleted").Transform:SetPosition(inst.Transform:GetWorldPosition())
-		
+
 	    inst.SoundEmitter:PlaySound(sounds.finish_food)
 	end)
 end
@@ -268,10 +268,10 @@ local function onburnt(inst)
 
 	inst.components.wintersfeasttable.canfeast = false
 	inst.components.shelf.cantakeitem = false
-	
+
 	if TheWorld.components.feasts then
 		TheWorld.components.feasts:UnregisterTable(inst)
-	end	
+	end
 end
 
 local function onignite(inst)--, data)
@@ -339,7 +339,7 @@ local PLACER_SCALE = 1.25
 
 local function testforgrouphilighted(inst)
 	if  TheWorld.components.feasts then
-		local thisgroup = TheWorld.components.feasts:GetTableGroup(inst.parent)		
+		local thisgroup = TheWorld.components.feasts:GetTableGroup(inst.parent)
 		if thisgroup then
 			for i,wintertable in ipairs(TheWorld.components.feasts:GetTableGroups()[thisgroup])do
 				if wintertable ~= inst.parent and wintertable.highlited then
@@ -347,7 +347,7 @@ local function testforgrouphilighted(inst)
 				end
 			end
 		end
-	end		
+	end
 end
 
 local function platformtest(instA,instB)
@@ -361,13 +361,13 @@ local function platformtest(instA,instB)
 	end
 end
 
-local function OnUpdatePlacerHelper(helperinst)	
-	
+local function OnUpdatePlacerHelper(helperinst)
+
 	helperinst.parent.highlited = nil
 
     if not helperinst.placerinst:IsValid() then
         helperinst.components.updatelooper:RemoveOnUpdateFn(OnUpdatePlacerHelper)
-        helperinst.AnimState:SetAddColour(0, 0, 0, 0)        
+        helperinst.AnimState:SetAddColour(0, 0, 0, 0)
     elseif (helperinst:IsNear(helperinst.placerinst, TUNING.WINTERSFEASTTABLE.TABLE_RANGE) and platformtest(helperinst,helperinst.placerinst)) or testforgrouphilighted(helperinst) then
         local hp = helperinst:GetPosition()
         local p1 = TheWorld.Map:GetPlatformAtPoint(hp.x, hp.z)
@@ -376,16 +376,16 @@ local function OnUpdatePlacerHelper(helperinst)
         local p2 = TheWorld.Map:GetPlatformAtPoint(pp.x, pp.z)
 
         if p1 == p2 then
-            helperinst.AnimState:SetAddColour(helperinst.placerinst.AnimState:GetAddColour())            
+            helperinst.AnimState:SetAddColour(helperinst.placerinst.AnimState:GetAddColour())
             if helperinst:IsNear(helperinst.placerinst, TUNING.WINTERSFEASTTABLE.TABLE_RANGE) then
             	helperinst.parent.highlited = true
             end
         else
             helperinst.AnimState:SetAddColour(0, 0, 0, 0)
-            
-        end        
+
+        end
     else
-        helperinst.AnimState:SetAddColour(0, 0, 0, 0)        
+        helperinst.AnimState:SetAddColour(0, 0, 0, 0)
     end
 end
 
@@ -420,8 +420,8 @@ local function OnEnableHelper(inst, enabled, recipename, placerinst)
     if enabled then
         if inst.helper == nil and not inst:HasTag("burnt") then
             if recipename == "table_winters_feast" then
-                inst.helper = CreatePlacerRing()    
-                inst.helper.parent = inst            
+                inst.helper = CreatePlacerRing()
+                inst.helper.parent = inst
                 inst.helper.entity:SetParent(inst.entity)
                 if placerinst ~= nil and recipename == "table_winters_feast" then
                     inst.helper:AddComponent("updatelooper")
@@ -467,7 +467,7 @@ local function fn()
     end
 
     --MakeSnowCoveredPristine(inst)
-    
+
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
@@ -519,7 +519,7 @@ local function fn()
 			if not inst:HasTag("burnt") then
 				inst.AnimState:PlayAnimation("ruffle")
                 inst.AnimState:PushAnimation("idle")
-                inst.SoundEmitter:PlaySound(sounds.ruffle)                
+                inst.SoundEmitter:PlaySound(sounds.ruffle)
             end
         end)
 

@@ -52,7 +52,7 @@ SetSharedLootTable( 'beefalo',
     {'horn',            0.33},
 })
 
-local sounds = 
+local sounds =
 {
     walk = "dontstarve/beefalo/walk",
     grunt = "dontstarve/beefalo/grunt",
@@ -137,7 +137,7 @@ local function testforcarratexit(inst)
     local x,y,z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x,y,z, 12)
     local carrat = createcarrat(inst)
-     
+
     local foundfood = nil
     for i,ent in ipairs(ents) do
         if carrat.components.eater:CanEat(ent) and ent.components.bait and not ent:HasTag("planted") and
@@ -259,7 +259,7 @@ local function ApplyBuildOverrides(inst, animstate)
     if inst.components.skinner_beefalo then
         local clothing_names = inst.components.skinner_beefalo:GetClothing()
         SetBeefaloSkinsOnAnim( animstate, clothing_names, inst.GUID )
-    end    
+    end
 end
 
 local function OnEnterMood(inst)
@@ -377,7 +377,7 @@ end
 fns.UnSkin = function(inst)
     if inst.components.skinner_beefalo then
         if inst.components.sleeper:IsAsleep() then
-            
+
             if fns.testforskins(inst) then
                 local fx = SpawnPrefab("explode_reskin")
                 fx.Transform:SetScale(2,2,2)
@@ -401,7 +401,7 @@ local function OnResetBeard(inst)
     inst.sg:GoToState("shaved")
     inst.components.brushable:SetBrushable(false)
     inst.components.domesticatable:DeltaObedience(TUNING.BEEFALO_DOMESTICATION_SHAVED_OBEDIENCE)
-    
+
     inst:UnSkin()
 end
 
@@ -610,7 +610,7 @@ local function OnDeath(inst, data)
     if inst:HasTag("HasCarrat") and IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         local x,y,z = inst.Transform:GetWorldPosition()
         local carrat = createcarrat(inst)
-        
+
         if inst._carratcolor then
             carrat._setcolorfn(carrat, inst._carratcolor)
         end
@@ -752,7 +752,7 @@ end
 local function dobeefalounhitch(inst)
     if inst.components.hitchable and not inst.components.hitchable.canbehitched then
         inst.components.hitchable:Unhitch()
-    end    
+    end
 end
 
 local function OnHitchTo(inst, data)
@@ -846,7 +846,7 @@ fns.OnLoad = function(inst, data)
 		if data ~= nil and data.carratcolor then
 			inst._carratcolor = data.carratcolor
 		end
-	end 
+	end
 end
 
 fns.OnLoadPostPass = function(inst,data)
@@ -858,9 +858,9 @@ fns.OnLoadPostPass = function(inst,data)
 end
 
 local function CanSpawnPoop(inst)
-   
-    if inst.components.hitchable and not inst.components.hitchable.canbehitched then return false end     
-    
+
+    if inst.components.hitchable and not inst.components.hitchable.canbehitched then return false end
+
 	return inst.components.rideable == nil or not inst.components.rideable:IsBeingRidden()
 end
 
@@ -921,7 +921,7 @@ local function beefalo()
     --saltlicker (from saltlicker component) added to pristine state for optimization
     inst:AddTag("saltlicker")
 
-    -- used for the function that gets the skin of the beefalo. used by client. 
+    -- used for the function that gets the skin of the beefalo. used by client.
     inst:AddTag("has_beard")
 
     inst.sounds = sounds

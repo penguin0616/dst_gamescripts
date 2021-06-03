@@ -37,7 +37,7 @@ function Vector3:Cross( rhs )
 end
 
 function Vector3:__tostring()
-    return string.format("(%2.2f, %2.2f, %2.2f)", self.x, self.y, self.z) 
+    return string.format("(%2.2f, %2.2f, %2.2f)", self.x, self.y, self.z)
 end
 
 function Vector3:__eq( rhs )
@@ -91,7 +91,7 @@ function ToVector3(obj,y,z)
     if not obj then
         return
     end
-    if obj.IsVector3 then  -- note: specifically not a function call! 
+    if obj.IsVector3 then  -- note: specifically not a function call!
         return obj
     end
     if type(obj) == "table" then

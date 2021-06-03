@@ -142,7 +142,7 @@ local plantables =
         anim = "dead1",
         floater = {"med", nil, 0.95},
     },
-	
+
 }
 
 local prefabs = {}

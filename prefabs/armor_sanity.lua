@@ -3,11 +3,11 @@ local assets =
     Asset("ANIM", "anim/armor_sanity.zip"),
 }
 
-local function OnBlocked(owner) 
-    owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_nightarmour") 
+local function OnBlocked(owner)
+    owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_nightarmour")
 end
 
-local function onequip(inst, owner) 
+local function onequip(inst, owner)
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
         owner:PushEvent("equipskinneditem", inst:GetSkinName())
@@ -15,11 +15,11 @@ local function onequip(inst, owner)
     else
         owner.AnimState:OverrideSymbol("swap_body", "armor_sanity", "swap_body")
     end
-    
+
     inst:ListenForEvent("blocked", OnBlocked, owner)
 end
 
-local function onunequip(inst, owner) 
+local function onunequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_body")
     inst:RemoveEventCallback("blocked", OnBlocked, owner)
 
@@ -58,7 +58,7 @@ local function fn()
     inst:AddTag("shadow_item")
 
     inst.foleysound = "dontstarve/movement/foley/nightarmour"
-    
+
     MakeInventoryFloatable(inst, "small", 0.2, 0.80)
 
     inst.entity:SetPristine()

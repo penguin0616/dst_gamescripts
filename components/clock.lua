@@ -108,13 +108,13 @@ function self:GetTimeUntilPhase(phase)
 	local cur_phase = _phase:value()
 	if target_phase ~= nil and target_phase ~= cur_phase then
 		local time = _remainingtimeinphase:value()
-		
+
 		cur_phase = (cur_phase % #PHASE_NAMES) + 1
 		while (cur_phase ~= target_phase) do
 			time = time + (_segs[cur_phase]:value() * TUNING.SEG_TIME)
 			cur_phase = (cur_phase % #PHASE_NAMES) + 1
 		end
-		
+
 		return time
 	end
 
@@ -179,7 +179,7 @@ local OnSetClockSegs = _ismastersim and function(src, segs)
 	-- cache the current time of day so we can restore it after the segs change
 	local time_of_day = CalcTimeOfDay()
 
-	-- change the segs to the new setup	
+	-- change the segs to the new setup
     if segs then
         local totalsegs = 0
         for i, v in ipairs(_segs) do
@@ -202,7 +202,7 @@ local OnSetClockSegs = _ismastersim and function(src, segs)
 			time_of_day = time_of_day - phase_time
 		end
 	end
-	
+
 	_phase:set(new_phase)
 	_totaltimeinphase:set(_segs[_phase:value()]:value() * TUNING.SEG_TIME)
     _remainingtimeinphase:set(new_remainingtimeinphase)
@@ -517,7 +517,7 @@ function self:Dump()
        print("phase ",  PHASE_NAMES[_phase:value()])
        print("moonphase2 ",  MOON_PHASE_NAMES[_moonphase:value()])
        print("moonwaxing ",  _mooniswaxing:value())
-	   
+
        print("totaltimeinphase ",  _totaltimeinphase:value())
        print("remainingtimeinphase ",  _remainingtimeinphase:value())
        print("total segs phase ",  _totaltimeinphase:value()/TUNING.SEG_TIME)

@@ -44,11 +44,11 @@ end
 
 local function onregenfn(inst)
     if TheWorld.state.issummer then
-        inst.AnimState:PlayAnimation("grow_flower") 
+        inst.AnimState:PlayAnimation("grow_flower")
         inst.AnimState:PushAnimation("idle_flower", true)
         inst.has_flower = true
     else
-        inst.AnimState:PlayAnimation("grow") 
+        inst.AnimState:PlayAnimation("grow")
         inst.AnimState:PushAnimation("idle", true)
         inst.has_flower = false
     end

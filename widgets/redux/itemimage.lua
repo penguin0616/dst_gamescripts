@@ -33,7 +33,7 @@ end
 
 function ItemImage:PlaySpecialAnimation(name, pushdefault)
 	self.frame:GetAnimState():PlayAnimation(name, false)
-	if pushdefault then 
+	if pushdefault then
 		self.frame:GetAnimState():PushAnimation("icon", true)
 	end
 end
@@ -46,13 +46,13 @@ function ItemImage:SetItem(type, name, item_id, timestamp)
 	self.warn_marker:Hide()
 
 	-- Display an empty frame if there's no data
-	if not type and not name then 
+	if not type and not name then
 		self:ClearFrame()
 		return
 	end
 
 
-	if type ~= "" and type ~= "base" and name == "" then 
+	if type ~= "" and type ~= "base" and name == "" then
 		name = type.."_default1"
 	end
 
@@ -69,7 +69,7 @@ function ItemImage:SetItem(type, name, item_id, timestamp)
 	self.item_id = item_id
 
 	self.rarity = GetRarityForItem( name )
-	
+
     self.frame:SetItem(name)
 
 	local collection_timestamp = self.user_profile and self.user_profile:GetCollectionTimestamp() or timestamp
@@ -88,9 +88,9 @@ end
 function ItemImage:Mark(value)
 	self.warning = value
 
-	if self.warning then 
+	if self.warning then
 		self.warn_marker:Show()
-	else 
+	else
 		self.warn_marker:Hide()
 	end
 end
@@ -102,7 +102,7 @@ function ItemImage:OnGainFocus()
 end
 
 function ItemImage:_GainFocus_Internal()
-	if self:IsEnabled() then 
+	if self:IsEnabled() then
         self:MoveToFront()
 		self:Embiggen()
 	end
@@ -173,9 +173,9 @@ function ItemImage:ApplyDataToWidget(context, widget_data, data_index)
 		list_widget:SetItem(GetTypeForItem(widget_data.item_key), widget_data.item_key, widget_data.item_id, widget_data.acquire_timestamp)
 
         list_widget.owned_count:SetString(GetCountText(widget_data.owned_count))
-        
+
         list_widget.frame:SetWeavable( IsUserCommerceAllowedOnItemType( widget_data.item_key ) )
-        
+
 		list_widget:Show()
 
 		if screen and screen.show_hover_text then

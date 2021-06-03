@@ -5,7 +5,7 @@ local prefabs =
 	"homesign",
 }
 
-local STRUCTURE_TAGS = {"structure"} 
+local STRUCTURE_TAGS = {"structure"}
 local ALTAR_TAGS = {"altar"}
 local LOCOMOTOR_TAGS = {"locomotor"}
 
@@ -56,7 +56,7 @@ local function DoRetrofitting(inst, force_pt)
 		w2.Transform:SetPosition(force_pt:Get())
 	end
 
-	if w2 ~= nil then 
+	if w2 ~= nil then
 		local x, y, z = inst.Transform:GetWorldPosition()
 
 		-- replace this marker with a wormhole

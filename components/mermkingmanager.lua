@@ -9,7 +9,7 @@ local MermKingManager = Class(function(self, inst)
     self.candidates = {}
     self.candidate_transforming = nil
 
-    self.inst:ListenForEvent("oncandidatekingarrived", function(inst, data) 
+    self.inst:ListenForEvent("oncandidatekingarrived", function(inst, data)
     	if data then
     		if not self:IsCandidate(data.candidate) then
     			print ("ERROR: WRONG CANDIDATE")
@@ -33,7 +33,7 @@ local MermKingManager = Class(function(self, inst)
     	end
 	end)
 
-    self.inst:ListenForEvent("onthronedestroyed", function(inst, data) 
+    self.inst:ListenForEvent("onthronedestroyed", function(inst, data)
     	if data and data.throne then
     		self:OnThroneDestroyed(data.throne)
     	end
@@ -49,14 +49,14 @@ end
 
 local function OnKingRemoval(inst, data)
 	local manager = TheWorld.components.mermkingmanager
-	
+
 	manager.inst:RemoveEventCallback("onremove", OnKingRemoval, manager.king)
 	manager.inst:RemoveEventCallback("death", OnKingDeath, manager.king)
-	
+
 	TheWorld:PushEvent("onmermkingdestroyed", {throne = manager.main_throne})
 
 	table.insert(manager.thrones, manager.main_throne)
-	
+
 	manager.main_throne = nil
 	manager.king = nil
 	manager.king_dying = false
@@ -131,7 +131,7 @@ function MermKingManager:CreateMermKing(candidate, throne)
 
 	self.king = ReplacePrefab(candidate, "mermking")
 	self.king:PushEvent("oncreated")
-	
+
 	self.inst:ListenForEvent("onremove", OnKingRemoval, self.king)
 	self.inst:ListenForEvent("death", OnKingDeath, self.king)
 
@@ -166,10 +166,10 @@ function MermKingManager:FindMermCandidate(throne)
 	end
 
 	if throne then
-		local merm_candidate = FindEntity(throne, 50, 
+		local merm_candidate = FindEntity(throne, 50,
 			function(ent)
 				return ent:IsValid() and ent.components.health and not ent.components.health:IsDead() and not self:IsCandidate(ent)
-			end, 
+			end,
 		MERMCANDIDATE_MUST_TAGS, MERMCANDIDATE_CANT_TAGS)
 
 	    if merm_candidate then
@@ -200,7 +200,7 @@ end
 
 function MermKingManager:ShouldTransform(merm)
 	local throne = self:GetThrone(merm)
-	
+
 	local should_transform = merm and throne and self:IsCandidateAtThrone(merm, throne) and
 		  merm.components.mermcandidate:ShouldTransform() and (self.candidate_transforming == nil or self.candidate_transforming == merm)
 

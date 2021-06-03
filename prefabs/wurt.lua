@@ -41,12 +41,12 @@ local function UpdateStats(inst, maxhealth, maxhunger, maxsanity)
 end
 
 local function RoyalUpgrade(inst, silent)
-    
+
     UpdateStats(inst, TUNING.WURT_HEALTH_KINGBONUS, TUNING.WURT_HUNGER_KINGBONUS, TUNING.WURT_SANITY_KINGBONUS)
 
     if not silent and not inst.royal then
     	inst.royal = true
-    	inst.components.talker:Say(GetString(inst, "ANNOUNCE_KINGCREATED"))        
+    	inst.components.talker:Say(GetString(inst, "ANNOUNCE_KINGCREATED"))
         inst.sg:PushEvent("powerup_wurt")
         inst.SoundEmitter:PlaySound("dontstarve/characters/wurt/transform_to")
     end
@@ -114,7 +114,7 @@ local function DisableTentacleWarning(inst)
 		inst.tentacle_warning_task:Cancel()
 		inst.tentacle_warning_task = nil
 	end
-			
+
 	for t, w in pairs(inst._active_warnings) do
 		if w:IsValid() then
 			w:Remove()

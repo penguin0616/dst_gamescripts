@@ -6,7 +6,7 @@ local function onmarkable(self)
     end
 end
 
-local Markable_proxy = Class(function(self, inst) 
+local Markable_proxy = Class(function(self, inst)
 	self.inst = inst
 	self.proxy = nil
 end,

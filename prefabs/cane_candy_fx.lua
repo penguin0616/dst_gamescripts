@@ -51,7 +51,7 @@ local function emit_fn(effect, emitter_fn)
     local lifetime = MAX_LIFETIME * (.6 + math.random() * .4)
     local px, py, pz = emitter_fn()
 
-    local angle = math.random() * 360    
+    local angle = math.random() * 360
     local uv_offset = math.random(0, 7) * .125
     local ang_vel = UnitRand() * 2
 
@@ -111,7 +111,7 @@ local function fn()
     local high_per_tick = desired_pps_high * tick_time
     local num_to_emit = 0
 
-    local emitter_fn = CreateBoxEmitter( -0.1, -0.3, -0.1, 0.1, 0.2, 0.1 ) 
+    local emitter_fn = CreateBoxEmitter( -0.1, -0.3, -0.1, 0.1, 0.2, 0.1 )
     inst.last_pos = inst:GetPosition()
 
     EmitterManager:AddEmitter(inst, nil, function()
@@ -122,7 +122,7 @@ local function fn()
         local per_tick = Lerp(low_per_tick, high_per_tick, move)
 
         inst.last_pos = inst:GetPosition()
-                
+
         num_to_emit = num_to_emit + per_tick * math.random() * 3
         while num_to_emit > 1 do
             emit_fn(effect, emitter_fn)

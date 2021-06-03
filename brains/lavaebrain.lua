@@ -45,7 +45,7 @@ function LavaeBrain:OnStart()
             ChaseAndAttack(self.inst),
             StandStill(self.inst),
         }, 1)
-    
+
     self.bt = BT(self.inst, root)
 end
 

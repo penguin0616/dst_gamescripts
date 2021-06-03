@@ -32,8 +32,8 @@ function TeamAttacker:GetDebugString()
 	return str
 end
 
-function TeamAttacker:SearchForTeam()	
-	local pt = Vector3(self.inst.Transform:GetWorldPosition()) 
+function TeamAttacker:SearchForTeam()
+	local pt = Vector3(self.inst.Transform:GetWorldPosition())
 	local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, self.searchradius, self.teamsearchtags)
 
 	for k,v in pairs(ents) do
@@ -65,7 +65,7 @@ end
 function TeamAttacker:LeaveTeam()
 	if self.teamleader then
 		self.teamleader:OnLostTeammate(self.inst)
-	end	
+	end
 end
 
 function TeamAttacker:OnUpdate(dt)
@@ -73,7 +73,7 @@ function TeamAttacker:OnUpdate(dt)
 
 	if self.teamleader and self.teamleader:CanAttack() then --did you find a team?
 		if self.orders == ORDERS.HOLD or self.orders == nil then --if you don't have anything to do.. look menacing
-			self.inst.components.combat.target = nil			
+			self.inst.components.combat.target = nil
 			if self.formationpos then
 				local destpos = self.formationpos
         		local mypos = Point(self.inst.Transform:GetWorldPosition())
@@ -89,7 +89,7 @@ function TeamAttacker:OnUpdate(dt)
 
 			end
 		elseif self.orders == ORDERS.WARN then
-			self.inst.components.combat.target = nil			
+			self.inst.components.combat.target = nil
 			if self.formationpos then
 				local destpos = self.formationpos
         		local mypos = Point(self.inst.Transform:GetWorldPosition())
@@ -100,7 +100,7 @@ function TeamAttacker:OnUpdate(dt)
 				end
 			end
 		elseif self.orders == ORDERS.ATTACK then	--You have been told to attack. Get the target from your leader.
-			self.inst.components.combat:SuggestTarget(self.teamleader.threat)			
+			self.inst.components.combat:SuggestTarget(self.teamleader.threat)
 		end
 	end
 end

@@ -27,9 +27,9 @@ local function onunequip(inst, owner)
 end
 
 local function onattack(inst, attacker, target)
-	inst.components.weapon.attackwear = target ~= nil and target:IsValid() 
-		and (target:HasTag("shadow") or target:HasTag("shadowminion") or target:HasTag("shadowchesspiece") or target:HasTag("stalker") or target:HasTag("stalkerminion")) 
-		and TUNING.GLASSCUTTER.SHADOW_WEAR 
+	inst.components.weapon.attackwear = target ~= nil and target:IsValid()
+		and (target:HasTag("shadow") or target:HasTag("shadowminion") or target:HasTag("shadowchesspiece") or target:HasTag("stalker") or target:HasTag("stalkerminion"))
+		and TUNING.GLASSCUTTER.SHADOW_WEAR
 		or 1
 end
 

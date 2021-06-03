@@ -97,7 +97,7 @@ function Channelable:StopChanneling(aborted)
     self.inst:StopUpdatingComponent(self)
 end
 
-function Channelable:OnUpdate(dt)   
+function Channelable:OnUpdate(dt)
     if not self:IsChanneling() then
         self:StopChanneling(true)
     end

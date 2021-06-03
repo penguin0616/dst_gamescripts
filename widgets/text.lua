@@ -68,7 +68,7 @@ end
 
 function Text:SetFadeAlpha(a, skipChildren)
     if not self.can_fade_alpha then return end
-    
+
     self.inst.TextWidget:SetColour(self.colour[1], self.colour[2], self.colour[3], self.colour[4] * a)
     Widget.SetFadeAlpha( self, a, skipChildren )
 end
@@ -186,7 +186,7 @@ function Text:SetMultilineTruncatedString(str, maxlines, maxwidth, maxcharsperli
             local words = {}
             local first = str:match("([^%s]+)(.+)")
 
-            if shrink_to_fit and not self.shrink_in_progress then       
+            if shrink_to_fit and not self.shrink_in_progress then
                 --ensure that we reset the size back to the original size when we get new text
                 if self.original_size ~= nil then
                     self:SetSize( self.original_size )
@@ -213,7 +213,7 @@ function Text:SetMultilineTruncatedString(str, maxlines, maxwidth, maxcharsperli
                         end
                     end
                     str = str:sub(#line + 1)
-                    
+
                     if not found_white then
                         --Testing for finding areas where we've had to split on
                         --print("Warning: ".. line .. " was split on non-whitespace.")
@@ -251,7 +251,7 @@ function Text:SetAutoSizingString(str, max_width, allow_scaling_up)
 
 	self.target_font_size = self:GetSize()
 	local w = self:GetRegionSize()
-	
+
 	local scale = allow_scaling_up and (max_width / w) or math.min(1, max_width / w)
 	if scale ~= 1 then
 		self:SetSize(self.target_font_size * scale)

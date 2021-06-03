@@ -4,11 +4,11 @@ AddRoom("BGMarsh", {
 					value = GROUND.MARSH,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_1"},
 					contents =  {
-									countstaticlayouts={["MushroomRingMedium"] = function()  
-																				if math.random(0,1000) > 985 then 
-																					return 1 
+									countstaticlayouts={["MushroomRingMedium"] = function()
+																				if math.random(0,1000) > 985 then
+																					return 1
 																				end
-																				return 0 
+																				return 0
 																			   end},
 					                distributepercent = .25,
 					                distributeprefabs=
@@ -16,7 +16,7 @@ AddRoom("BGMarsh", {
 										spiderden=0.003,
 										sapling=0.0001,
 										twiggytree = 0.0001,
-										ground_twigs = 0.00003,										
+										ground_twigs = 0.00003,
 										pond_mos=0.005,
 										reeds=0.005,
 										tentacle=0.095,
@@ -33,11 +33,11 @@ AddRoom("Marsh", {
 					value = GROUND.MARSH,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2"},
 					contents =  {
-									countstaticlayouts={["MushroomRingMedium"]=function()  
-																				if math.random(0,1000) > 985 then 
-																					return 1 
+									countstaticlayouts={["MushroomRingMedium"]=function()
+																				if math.random(0,1000) > 985 then
+																					return 1
 																				end
-																				return 0 
+																				return 0
 																			   end},
 					                distributepercent = .1,
 					                distributeprefabs=

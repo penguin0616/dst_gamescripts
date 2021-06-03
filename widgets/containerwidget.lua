@@ -189,7 +189,7 @@ function ContainerWidget:OnItemGet(data)
             local im = Image(data.item.replica.inventoryitem:GetAtlas(), data.item.replica.inventoryitem:GetImage())
             im:MoveTo(Vector3(TheSim:GetScreenPos(data.src_pos:Get())), dest_pos, .3, function() tile:Show() im:Kill() end)
         else
-            tile:Show() 
+            tile:Show()
         end
     end
 

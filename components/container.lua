@@ -147,7 +147,7 @@ end
 
 function Container:DropItem(itemtodrop)
     local item = self:RemoveItem(itemtodrop)
-    if item then 
+    if item then
         local pos = Vector3(self.inst.Transform:GetWorldPosition())
         item.Transform:SetPosition(pos:Get())
         if item.components.inventoryitem then
@@ -267,7 +267,7 @@ function Container:GiveItem(item, slot, src_pos, drop_on_fail)
         end
 
         if in_slot then
-            --weird case where we are trying to force a stack into a non-stacking container. this should probably have been handled earlier, but this is a failsafe        
+            --weird case where we are trying to force a stack into a non-stacking container. this should probably have been handled earlier, but this is a failsafe
             if not self.acceptsstacks and item.components.stackable and item.components.stackable:StackSize() > 1 then
                 item = item.components.stackable:Get()
                 self.slots[in_slot] = item
@@ -349,7 +349,7 @@ function Container:GetAllItems()
         if v ~= nil then
             table.insert(collected_items, v)
         end
-    end 
+    end
 
     return collected_items
 end
@@ -561,7 +561,7 @@ function Container:GetItemByName(item, amount)
 
     for k,v in pairs(self.slots) do
         total_num_found = total_num_found + tryfind(v)
-        
+
         if total_num_found >= amount then
             break
         end

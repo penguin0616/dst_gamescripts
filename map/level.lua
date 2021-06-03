@@ -53,7 +53,7 @@ end
 function Level:GetOverridesForTasks(tasklist)
 	-- Update the task with whatever overrrides are going
 	local resources = require("map/resource_substitution")
-	
+
 	-- WE MAKE ONE SELECTION FOR ALL TASKS or ONE PER TASK
 	for name, override in pairs(self.substitutes) do
 
@@ -63,7 +63,7 @@ function Level:GetOverridesForTasks(tasklist)
 			print("Substituting [".. substitute.."] for [".. name.."]")
 			for task_idx,val in ipairs(tasklist) do
 				local chance = 	math.random()
-				if chance < override.perstory then 
+				if chance < override.perstory then
 					if tasklist[task_idx].substitutes == nil then
 						tasklist[task_idx].substitutes = {}
 					end
@@ -100,13 +100,13 @@ function Level:ChooseTasks()
 		print("Applying mod to current task set")
 		modfn(task_set_data)
 	end
-	
+
     assert(task_set_data ~= nil, ("TaskSet '" .. tostring(task_set) .. "' has no data! If preset '".. tostring(self.id) .. "' was created with mods enabled, please enable the mods."))
 
 	for k, v in pairs(task_set_data) do
 		self[k] = v
 	end
-	
+
 	local modfns = ModManager:GetPostInitFns("LevelPreInit", self.id)
 	for i,modfn in ipairs(modfns) do
 		print("Applying mod to level '"..self.id.."'")
@@ -117,11 +117,11 @@ function Level:ChooseTasks()
 		print("Applying mod to current level")
 		modfn(self)
 	end
-	
+
 	for i=1,#self.tasks do
 		self:EnqueueATask(tasklist, self.tasks[i])
 	end
-	
+
 	self:ApplyModsToTasks(tasklist)
 
 	if self.numoptionaltasks and self.numoptionaltasks > 0 and self.optionaltasks then

@@ -25,7 +25,7 @@ local function startaura(inst)
     if skin_build ~= nil then
         inst.attack_fx.AnimState:OverrideItemSkinSymbol("flower", skin_build, "flower", inst.GUID, "abigail_attack_fx" )
     end
-    
+
 --   inst.attack_fx_ground = SpawnPrefab("abigail_attack_fx_ground")
 --   inst:AddChild(inst.attack_fx_ground)
 --   inst.attack_fx_ground.AnimState:PlayAnimation(attack_anim .. "_ground_pre")
@@ -59,7 +59,7 @@ local events =
         end
     end),
     EventHandler("dance", function(inst)
-        if not (inst.sg:HasStateTag("dancing") or inst.sg:HasStateTag("busy") or 
+        if not (inst.sg:HasStateTag("dancing") or inst.sg:HasStateTag("busy") or
                 inst.components.health:IsDead() or inst.sg:HasStateTag("dissipate")) then
             inst.sg:GoToState("dance")
         end
@@ -245,7 +245,7 @@ local states =
 				local fx = SpawnPrefab("abigaillevelupfx")
 				fx.entity:SetParent(inst.entity)
                 fx.Transform:SetRotation(inst.Transform:GetRotation())
-                
+
                 local skin_build = inst:GetSkinBuild()
                 if skin_build ~= nil then
                     fx.AnimState:OverrideItemSkinSymbol("flower", skin_build, "flower", inst.GUID, "abigail_attack_fx" )
@@ -298,10 +298,10 @@ local states =
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(1 * FRAMES, function(inst)if math.random() < 0.8 then inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl") end end),
-        },  
+        },
 
         ontimeout = function(inst)
             inst.sg:GoToState("walk")
@@ -364,10 +364,10 @@ local states =
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(1 * FRAMES, function(inst) if math.random() < 0.8 then inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/abigail/howl") end end),
-        },  
+        },
 
         ontimeout = function(inst)
             inst.sg:GoToState("run")

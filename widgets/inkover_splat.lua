@@ -6,7 +6,7 @@ local PRE = 1
 local LOOP = 2
 local PST = 3
 
-local PRE_SPEED = 5 -- units per second.  
+local PRE_SPEED = 5 -- units per second.
 local PST_SPEED = 0.5
 local LOOPTIME = 2
 
@@ -27,14 +27,14 @@ local InkOver_splat =  Class(UIAnim, function(self, owner)
     self:GetAnimState():PlayAnimation("ink")
 
     self:Hide()
-      
+
 end)
 
 function InkOver_splat:Flash(anim)
     self.time = GetTime()
     self:Show()
-    print(anim)    
-    anim = anim or "ink" 
+    print(anim)
+    anim = anim or "ink"
 
     --[[
     if math.random() > 0.5 then

@@ -19,7 +19,7 @@ local BeefBloodOver =  Class(Widget, function(self, owner)
     self.level = 0
     self.k = 1
     --self:UpdateState()
-    self.time_since_pulse = 0 
+    self.time_since_pulse = 0
     self.pulse_period = 1
 
     local function _UpdateState() self:UpdateState() end

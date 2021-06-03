@@ -6,7 +6,7 @@ local Propagator = Class(function(self, inst)
 
     self.propagaterange = 3
     self.heatoutput = 5
-    
+
     self.damages = false
     self.damagerange = 3
 

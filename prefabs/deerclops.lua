@@ -240,7 +240,7 @@ local function fn()
     ------------------------------------------
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
-    inst.components.locomotor.walkspeed = 3  
+    inst.components.locomotor.walkspeed = 3
 
     ------------------------------------------
     inst:SetStateGraph("SGdeerclops")

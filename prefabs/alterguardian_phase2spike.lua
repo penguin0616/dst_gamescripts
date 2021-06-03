@@ -130,7 +130,7 @@ local function emerge(inst)
     inst:DoTaskInTime(WALL_SPIKE_DELAY * safezone_remove_time, inst.Remove)
 end
 
-local TRAIL_SPEED_PERSECOND = 20 --units/second 
+local TRAIL_SPEED_PERSECOND = 20 --units/second
 local WATER_CHECK_RATE = FRAMES
 local function check_over_water(inst)
     local ipos = inst:GetPosition()
@@ -294,7 +294,7 @@ local function spikefn()
     inst.AnimState:PlayAnimation("spike_pre")
     inst.AnimState:PushAnimation("spike_loop", true)
 
-    inst.SoundEmitter:PlaySoundWithParams("moonstorm/creatures/boss/alterguardian2/spike",  { intensity = math.random() }) 
+    inst.SoundEmitter:PlaySoundWithParams("moonstorm/creatures/boss/alterguardian2/spike",  { intensity = math.random() })
 
     inst:AddTag("groundspike")
     inst:AddTag("moonglass")

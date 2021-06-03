@@ -243,34 +243,34 @@ local states =
         tags = { "busy", "noattack", "teleporting" },
         onenter = function(inst, playanim)
 
-                local x,y,z = inst.Transform:GetWorldPosition() 
-                local fx = SpawnPrefab("shadow_teleport_out") 
-                fx.Transform:SetPosition(x,y,z) 
+                local x,y,z = inst.Transform:GetWorldPosition()
+                local fx = SpawnPrefab("shadow_teleport_out")
+                fx.Transform:SetPosition(x,y,z)
 
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("taunt", false)
-            inst.AnimState:PushAnimation("disappear", false)  
+            inst.AnimState:PushAnimation("disappear", false)
         end,
 
         timeline =
         {
-            TimeEvent(40*FRAMES, function(inst)             
+            TimeEvent(40*FRAMES, function(inst)
                 local x,y,z = inst.Transform:GetWorldPosition()
                 print("TELEPORT OUT TERRORBEAK")
-                local fx = SpawnPrefab("shadow_teleport_out") 
-                fx.Transform:SetPosition(x,y,z) 
+                local fx = SpawnPrefab("shadow_teleport_out")
+                fx.Transform:SetPosition(x,y,z)
             end),
         },
 
         events =
         {
-            EventHandler("animqueueover", function(inst) 
+            EventHandler("animqueueover", function(inst)
                 print("EXCHANGE TERROR BEAK")
                 inst:ExchangeWithOceanTerror()
                 inst:Remove()
             end),
         },
-    },      
+    },
 }
 CommonStates.AddWalkStates(states)
 

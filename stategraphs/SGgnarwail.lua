@@ -145,7 +145,7 @@ local states =
             EventHandler("animover", return_to_idle),
         },
 
-        timeline= 
+        timeline=
         {
             TimeEvent(8*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/water/splash/jump_small")
@@ -172,7 +172,7 @@ local states =
             end
         end,
 
-        timeline= 
+        timeline=
         {
             TimeEvent(8*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/water/splash/jump_small")
@@ -197,7 +197,7 @@ local states =
 
             inst:PlayAnimation("dead", false)
             inst:PushAnimation("dead_loop", true)
-            
+
             inst.SoundEmitter:PlaySound("hookline/creatures/gnarwail/death")
 
             RemovePhysicsColliders(inst)
@@ -410,7 +410,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             inst:PlayAnimation("bite")
         end,
 
@@ -804,7 +804,7 @@ end
 
 CommonStates.AddFrozenStates(states, frozen_onoverridesymbols)
 CommonStates.AddSleepExStates(states,
-{ 
+{
     starttimeline =
     {
         TimeEvent(0, function(inst)
@@ -816,7 +816,7 @@ CommonStates.AddSleepExStates(states,
             inst.SoundEmitter:PlaySound("hookline/creatures/gnarwail/yawn")
         end),
     },
-    sleeptimeline = 
+    sleeptimeline =
     {
         TimeEvent(0, function(inst)
             if inst._water_shadow ~= nil then
@@ -830,7 +830,7 @@ CommonStates.AddSleepExStates(states,
             inst.SoundEmitter:PlaySound("hookline/creatures/gnarwail/sleep_in")
         end),
     },
-    waketimeline = 
+    waketimeline =
     {
         TimeEvent(0, function(inst)
             if inst._water_shadow ~= nil then

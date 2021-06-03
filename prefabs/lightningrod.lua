@@ -105,7 +105,7 @@ local function fn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
-    inst.entity:AddAnimState() 
+    inst.entity:AddAnimState()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddLight()
     inst.entity:AddSoundEmitter()

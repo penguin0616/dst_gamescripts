@@ -1,7 +1,7 @@
 require "prefabutil"
 
 local assets =
-{    
+{
     Asset("ANIM", "anim/farm_plow.zip"),
 }
 
@@ -110,7 +110,7 @@ local function dirt_anim(inst, quad, timer)
 		if TheWorld.Map:CanTillSoilAtPoint(_x, 0, _z, true) then
 			TheWorld.Map:CollapseSoilAtPoint(_x, 0, _z)
 			SpawnPrefab("farm_soil").Transform:SetPosition(_x, 0, _z)
-		end		
+		end
 	end
 
 	local t = math.min(1, timer/(TUNING.FARM_PLOW_DRILLING_DURATION))
@@ -142,7 +142,7 @@ local function timerdone(inst, data)
 		if inst.components.terraformer ~= nil then
 			if not inst.components.terraformer:Terraform(inst:GetPosition()) then
 				Finished(inst)
-			end			
+			end
 		else
 			Finished(inst)
 		end
@@ -231,7 +231,7 @@ local function item_ondeploy(inst, pt, deployer)
 
     local obj = SpawnPrefab("farm_plow")
 	obj.Transform:SetPosition(cx, cy, cz)
-    
+
 	inst.components.finiteuses:Use(1)
 	if inst:IsValid() then
 		obj.deploy_item_save_record = inst:GetSaveRecord()
@@ -257,7 +257,7 @@ end
 
 local function item_fn()
     local inst = CreateEntity()
-   
+
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
@@ -340,4 +340,4 @@ end
 return  Prefab("farm_plow", main_fn, assets),
 		Prefab("farm_plow_item", item_fn, assets, prefabs),
 		Prefab("farm_plow_item_placer", placer_fn)
-		
+

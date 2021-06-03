@@ -19,7 +19,7 @@ local prefabs_item =
 local function OnAnimOver(inst)
     if inst.AnimState:AnimDone() and inst.AnimState:IsCurrentAnimation("disassemble") then
         local current_uses = inst.components.finiteuses:GetUses()
-        
+
         local item = ReplacePrefab(inst, "portabletent_item")
         item.components.finiteuses:SetUses(current_uses)
         item.AnimState:PlayAnimation("idle_item")
@@ -201,7 +201,7 @@ local function fn()
 
     inst:AddComponent("inspectable")
     inst:AddComponent("lootdropper")
-    
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(4)
@@ -231,7 +231,7 @@ local function fn()
 
     MakeMediumPropagator(inst)
 
-    inst.OnSave = OnSave 
+    inst.OnSave = OnSave
     inst.OnLoad = OnLoad
 
     return inst
@@ -250,9 +250,9 @@ local function OnDeploy(inst, pt, deployer)
 
         tent.AnimState:PlayAnimation("place")
         tent.AnimState:PushAnimation("idle", false)
-        
+
         tent.SoundEmitter:PlaySound("dontstarve/characters/walter/tent/open")
-        
+
         tent.components.finiteuses:SetUses(inst.components.finiteuses:GetUses())
 
         inst:Remove()

@@ -1,6 +1,6 @@
 local BoatDrag = Class(function(self, inst)
 	self.inst = inst
-	
+
 	self.drag = 0
 	self.max_velocity_mod = 1
 

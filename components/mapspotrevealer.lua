@@ -3,7 +3,7 @@ local MapSpotRevealer = Class(function(self, inst)
 
 	self.gettargetfn = nil
 	self.prerevealfn = nil
-	
+
 	self.open_map_on_reveal = true
 end)
 
@@ -48,7 +48,7 @@ function MapSpotRevealer:RevealMap(doer)
 			doer.player_classified.revealmapspot_worldz:set(z)
 			doer.player_classified.revealmapspotevent:push()
 		end
-		
+
 		doer:DoTaskInTime(4*FRAMES, function()
 			doer.player_classified.MapExplorer:RevealArea(x, y, z, true, true)
 		end)

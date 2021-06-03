@@ -38,7 +38,7 @@ local function fn()
     inst.AnimState:SetBank("boat_leak")
     inst.AnimState:SetBuild("boat_leak_build")
 
-    inst.entity:SetPristine()    
+    inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
@@ -50,7 +50,7 @@ local function fn()
 	inst.components.boatleak.onsprungleak = onsprungleak
 	inst.components.boatleak.onrepairedleak = onrepairedleak
 
-    inst:AddComponent("lootdropper")   
+    inst:AddComponent("lootdropper")
 
     return inst
 end

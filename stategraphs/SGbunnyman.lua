@@ -97,7 +97,7 @@ local states =
         tags = { "attack", "busy" },
 
         onenter = function(inst)
-            inst.SoundEmitter:PlaySound("dontstarve/creatures/bunnyman/attack")       
+            inst.SoundEmitter:PlaySound("dontstarve/creatures/bunnyman/attack")
             inst.components.combat:StartAttack()
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("atk")

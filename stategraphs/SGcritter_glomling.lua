@@ -70,7 +70,7 @@ local emotes =
 
 SGCritterStates.AddIdle(states, #emotes)
 SGCritterStates.AddRandomEmotes(states, emotes)
-SGCritterStates.AddEmote(states, "cute", 
+SGCritterStates.AddEmote(states, "cute",
 		{
             TimeEvent(5*FRAMES, LandFlyingCreature),
 			TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound( (inst.skin_sound or sound_path) .. "bounce_ground" ) end),
@@ -85,7 +85,7 @@ SGCritterStates.AddEmote(states, "cute",
 			TimeEvent(47*FRAMES, function(inst) inst.SoundEmitter:PlaySound( (inst.skin_sound or sound_path) .. "bounce_voice" ) end),
             TimeEvent(51*FRAMES, RaiseFlyingCreature),
 		})
-SGCritterStates.AddPetEmote(states, 
+SGCritterStates.AddPetEmote(states,
 	{
 		TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound( (inst.skin_sound or sound_path) .. "emote_2" ) end),
 	})
@@ -173,7 +173,7 @@ end
 
 CommonStates.AddSleepExStates(states,
 		{
-			starttimeline = 
+			starttimeline =
 			{
 				TimeEvent(35*FRAMES, function(inst)
                     StopFlapping(inst)
@@ -181,7 +181,7 @@ CommonStates.AddSleepExStates(states,
                     inst.SoundEmitter:PlaySound( (inst.skin_sound or sound_path) .. "bounce_ground" )
                 end),
 			},
-			sleeptimeline = 
+			sleeptimeline =
 			{
 				TimeEvent(41*FRAMES, function(inst) inst.SoundEmitter:PlaySound( (inst.skin_sound or sound_path) .. "sleep_voice" ) end),
 			},

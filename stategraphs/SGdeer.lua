@@ -226,7 +226,7 @@ local states =
             inst:ShowAntler()
         end,
     },
-    
+
     State{
         name = "knockoffantler",
         tags = { "busy" },

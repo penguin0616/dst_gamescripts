@@ -67,7 +67,7 @@ local states =
                 inst.AnimState:PlayAnimation("idle", true)
             end
         end,
-        
+
         events =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
@@ -100,14 +100,14 @@ local states =
             inst.AnimState:PlayAnimation("sneeze")
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(36*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._sounds.sneeze)
             end),
         },
 
-        events = 
+        events =
         {
             EventHandler("animover", function(inst)
                 local ba = inst:GetBufferedAction()
@@ -212,19 +212,19 @@ local states =
             end),
         },
     },
-    
+
     State{
         name = "repair_den_pre",
         tags = { "busy" },
 
         onenter = function(inst)
             inst.Physics:Stop()
-            
+
             inst.AnimState:PlayAnimation("clean_pre")
 
             inst.sg.statemem.startpos = inst:GetPosition()
         end,
-        
+
         timeline=
         {
             TimeEvent(10*FRAMES, function(inst)
@@ -254,7 +254,7 @@ local states =
         onenter = function(inst, data)
             if inst._charged then
                 inst.Physics:Stop()
-            
+
                 inst.AnimState:Hide("clean_dust")
                 inst.AnimState:PlayAnimation("clean_loop")
 
@@ -294,7 +294,7 @@ local states =
 
         onexit = function(inst)
             inst.AnimState:Show("clean_dust")
-            
+
             if inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() and inst.sg.statemem.target._pause_repairing_fn ~= nil then
                 inst:RemoveEventCallback("onremove", inst.sg.statemem.ondenremovedfn, inst.sg.statemem.target)
                 inst.sg.statemem.target:_pause_repairing_fn()
@@ -311,13 +311,13 @@ local states =
             end
         end,
 
-        events = 
+        events =
         {
             EventHandler("animqueueover", function(inst)
                 if inst.sg.statemem.dust_anim_loops > 0 then
                     inst.AnimState:PlayAnimation("clean_loop")
                     inst.sg.statemem.dust_anim_loops = inst.sg.statemem.dust_anim_loops - 1
-                    
+
                     inst.sg.statemem.sound_task1 = inst:DoTaskInTime(9*FRAMES, PlaySoundDustoff)
                     if math.random() < REPAIR_LOOP_CLEAN_SOUND_CHANCE then
                         inst.sg.statemem.sound_task2 = inst:DoTaskInTime(16*FRAMES, PlaySoundClean)
@@ -341,7 +341,7 @@ local states =
 
         onenter = function(inst)
             inst.Physics:Stop()
-            
+
             inst.AnimState:PlayAnimation("clean_pst")
         end,
 
@@ -370,7 +370,7 @@ local states =
             inst.AnimState:PlayAnimation("pickup")
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(10*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._sounds.eat_slide)
@@ -398,18 +398,18 @@ local states =
             inst.AnimState:PlayAnimation("eat")
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(5*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._sounds.eat)
             end),
         },
 
-        events = 
+        events =
         {
             EventHandler("animover", function(inst)
                 inst._time_spent_stuck = 0
-                
+
                 inst:PerformBufferedAction()
                 inst.sg:GoToState("idle")
             end)
@@ -425,7 +425,7 @@ local states =
             inst.AnimState:PlayAnimation("idle2")
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(9*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._sounds.mumble)
@@ -435,7 +435,7 @@ local states =
             end),
         },
 
-        events = 
+        events =
         {
             EventHandler("animqueueover", function(inst) inst.sg:GoToState("idle") end)
         },
@@ -455,7 +455,7 @@ local states =
             inst.AnimState:PlayAnimation("idle2")
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(9*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._sounds.mumble)
@@ -465,7 +465,7 @@ local states =
             end),
         },
 
-        events = 
+        events =
         {
             EventHandler("animqueueover", function(inst) inst.sg:GoToState("idle") end)
         },
@@ -500,19 +500,19 @@ CommonStates.AddCombatStates(states,
 {
     hittimeline =
     {
-        TimeEvent(1*FRAMES, function(inst)  
+        TimeEvent(1*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound(inst._sounds.hit)
         end),
     },
     deathtimeline =
     {
-        TimeEvent(7*FRAMES, function(inst)  
+        TimeEvent(7*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound(inst._sounds.death)
         end),
-        TimeEvent(20*FRAMES, function(inst)  
+        TimeEvent(20*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound(inst._sounds.death)
         end),
-        TimeEvent(24*FRAMES, function(inst)  
+        TimeEvent(24*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound(inst._sounds.fall)
         end),
 

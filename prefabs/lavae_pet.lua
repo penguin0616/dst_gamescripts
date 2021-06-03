@@ -1,4 +1,4 @@
---is a constant source of light and (too much) heat. 
+--is a constant source of light and (too much) heat.
 --requires sustanence in the form of ashes. If you let him starve he turns to rock and dies. :(
 
 local brain = require("brains/lavaepetbrain")
@@ -112,7 +112,7 @@ local function fn()
     inst.Light:SetIntensity(0.75)
     inst.Light:SetColour(235/255, 121/255, 12/255)
     inst.Light:Enable(true)
-    
+
     inst.Transform:SetScale(0.75, 0.75, 0.75)
 
     inst.entity:SetPristine()

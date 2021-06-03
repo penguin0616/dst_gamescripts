@@ -50,10 +50,10 @@ local WardrobePopupScreen = Class(Screen, function(self, owner_player, profile, 
     local offline = not TheNet:IsOnlineMode()
 
     local buttons = {}
-    if offline then 
+    if offline then
     	buttons = {{text = STRINGS.UI.POPUPDIALOG.OK, cb = function() self:Close() end}}
     else
-    	buttons = {{text = STRINGS.UI.WARDROBE_POPUP.CANCEL, cb = function() self:Cancel() end}, 
+    	buttons = {{text = STRINGS.UI.WARDROBE_POPUP.CANCEL, cb = function() self:Cancel() end},
                      {text = STRINGS.UI.WARDROBE_POPUP.RESET, cb = function() self:Reset() end},
                      {text = STRINGS.UI.WARDROBE_POPUP.SET, cb = function() self:Close() end},
                   }
@@ -67,9 +67,9 @@ local WardrobePopupScreen = Class(Screen, function(self, owner_player, profile, 
 		self.menu:SetPosition(0, -280, 0)
     else
         self.dressup:SetPosition(140, 30)
-        self.menu:SetPosition(-230, -280, 0) 
+        self.menu:SetPosition(-230, -280, 0)
     end
-   
+
 	self.default_focus = self.menu
 
 	self.dressup:ReverseFocus()
@@ -99,17 +99,17 @@ end
 
 function WardrobePopupScreen:OnControl(control, down)
     if WardrobePopupScreen._base.OnControl(self,control, down) then return true end
-    
-    if control == CONTROL_CANCEL and not down then    
+
+    if control == CONTROL_CANCEL and not down then
         self:Cancel()
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
         return true
     end
-   
+
 	if down then
 	 	if control == CONTROL_PREVVALUE then  -- r-stick left
 	    	self.dressup:ScrollBack(control)
-			return true 
+			return true
 		elseif control == CONTROL_NEXTVALUE then -- r-stick right
 			self.dressup:ScrollFwd(control)
 			return true
@@ -136,7 +136,7 @@ end
 function WardrobePopupScreen:Close()
 	-- Gets the current skin names (and sets them as the character default)
 	local skins = self.dressup:GetSkinsForGameStart()
-	
+
     local data = {}
     if TheNet:IsOnlineMode() then
 		data = skins
@@ -152,12 +152,12 @@ function WardrobePopupScreen:SetPortrait()
     if TheNet:IsOnlineMode() then
         local herocharacter = self.dressup.currentcharacter
         local portrait_name = GetPortraitNameForItem(self.dressup:GetBaseSkin())
-        
-        
+
+
         if portrait_name and portrait_name ~= "" then
             self.heroportrait:SetTexture("bigportraits/"..portrait_name..".xml", portrait_name.."_oval.tex", herocharacter.."_none.tex")
         else
-            if softresolvefilepath("bigportraits/"..herocharacter.."_none.xml") then 
+            if softresolvefilepath("bigportraits/"..herocharacter.."_none.xml") then
                 self.heroportrait:SetTexture("bigportraits/"..herocharacter.."_none.xml", herocharacter.."_none_oval.tex")
             else
                 -- mod characters

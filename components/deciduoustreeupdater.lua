@@ -89,14 +89,14 @@ end
 local prefabs =
 {
     "green_leaves",
-    "red_leaves",    
+    "red_leaves",
     "orange_leaves",
     "yellow_leaves",
     "deciduous_root",
     "birchnutdrake",
 }
 
-local builds = 
+local builds =
 {
     normal = { --Green
         leavesbuild="tree_leaf_green_build",

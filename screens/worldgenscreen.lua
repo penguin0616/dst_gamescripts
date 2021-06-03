@@ -91,7 +91,7 @@ local WorldGenScreen = Class(Screen, function(self, profile, cb, world_gen_data,
 
 	self.total_time = 0
 	self.cb = cb
-	
+
     if TheNet:GetIsServer() then
         assert(world_gen_data.profile_data ~= nil and world_gen_data.level_data ~= nil, "Worldgen must be started with a complete profile and level description.")
 
@@ -141,7 +141,7 @@ function WorldGenScreen:OnUpdate(dt)
                 self.cb(self.worlddata)
             elseif self.total_time > 0 --[[ MIN_GEN_TIME ]]and self.cb then
                 self.done = false
-                --TheFrontEnd:Fade(FADE_OUT, 1, function() 
+                --TheFrontEnd:Fade(FADE_OUT, 1, function()
                     self.cb(self.worlddata)
                 --end, nil, nil, "white")
             end

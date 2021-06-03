@@ -59,7 +59,7 @@ local function ShouldGoToClue(inst)
         end
 
         local pos = inst.components.knownlocations:GetLocation("clue")
-        
+
         inst.components.knownlocations:ForgetLocation("clue")
         if inst.hunt_count ~= 0 then
             inst:erode(3)
@@ -67,7 +67,7 @@ local function ShouldGoToClue(inst)
                 local pos = pos
                 --inst.busy = inst.busy and math.max(inst.busy - 2,0) or nil
                 inst.busy = inst.busy and inst.busy > 0 and inst.busy - 1 or nil
-                
+
                 inst.meetingplayer = nil
                 inst.Transform:SetPosition(pos.x, pos.y, pos.z)
                 if inst.hunt_count and inst.hunt_count == 0 then
@@ -78,10 +78,10 @@ local function ShouldGoToClue(inst)
                     local static = SpawnPrefab("moonstorm_static")
                     local radius = 1
                     local theta = (inst.Transform:GetRotation() + 90)*DEGREES
-                    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))                    
+                    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
                     static.Transform:SetPosition(pos.x+ offset.x, pos.y, pos.z+ offset.z)
                   --  inst:FacePoint(static:GetPosition())
-                    inst:DoTaskInTime(0,function() 
+                    inst:DoTaskInTime(0,function()
                         inst:ForceFacePoint(pos.x, pos.y, pos.z)
                     end)
                     inst.static = static
@@ -110,7 +110,7 @@ function Wagstaff_NPCBrain:OnStart()
                 DoAction(self.inst, ShouldGoToClue, "Go to clue", true )),
             WhileNode(function() return not self.inst.busy or self.inst.busy < 1 end, "looking around",
                 ChattyNode(self.inst, "WAGSTAFF_NPC_MUMBLE_1",
-                    StandStill(self.inst))),  
+                    StandStill(self.inst))),
             StandStill(self.inst),
         }, .5)
 

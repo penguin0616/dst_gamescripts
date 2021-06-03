@@ -91,23 +91,23 @@ end
 
 local function GameGridConstructor(screen, parent)
 	local widgets = {}
-		
+
 	local x_offset = (NUM_COLUMNS/2) * SPACING + SPACING/2
 	local y_offset = (NUM_ROWS/2) * SPACING + SPACING/2
-	
+
 	for y = 1,NUM_ROWS do
 		for x = 1,NUM_COLUMNS do
 			local index = XYtoIndex( x-1, y-1 )
-			
+
 			local crowtile = parent:AddChild(MiniGameTile( screen, index ))
 			crowtile.clickFn = function(index)
 				local x_click, y_click = IndexToXY(index)
 				screen:OnTileClick(x_click, y_click)
 			end
-		
+
 			crowtile:SetPosition( x * SPACING - x_offset, y * SPACING - y_offset, 0)
 			widgets[index] = crowtile
-			
+
 			if x > 1 then
 				crowtile:SetFocusChangeDir(MOVE_LEFT, widgets[index-1])
 				widgets[index-1]:SetFocusChangeDir(MOVE_RIGHT, crowtile)
@@ -116,9 +116,9 @@ local function GameGridConstructor(screen, parent)
 				crowtile:SetFocusChangeDir(MOVE_DOWN, widgets[index-NUM_COLUMNS])
 				widgets[index-NUM_COLUMNS]:SetFocusChangeDir(MOVE_UP, crowtile)
 			end
-		end	
+		end
 	end
-	
+
 	return widgets
 end
 
@@ -145,7 +145,7 @@ local ExplodeFX = Class(Widget, function(self, pos, scale)
 
 	self:SetPosition(pos)
 	self:SetScale(scale*0.17)
-	
+
     self.anim = self:AddChild(UIAnim())
     self.anim:GetAnimState():SetBank("explode")
     self.anim:GetAnimState():SetBuild("explode")
@@ -155,30 +155,30 @@ end)
 
 local CrowFX = Class(Widget, function(self, pos, fn)
     Widget._ctor(self, "CrowFX")
-	
+
     self.anim = self:AddChild(UIAnim())
     self.anim:GetAnimState():SetBank("crow")
     self.anim:GetAnimState():SetBuild("crow_build")
     self.anim:GetAnimState():PushAnimation("takeoff_diagonal_loop", true)
-	
+
 	local dest_pos = {}
-	
+
 	local lr = math.random()
 	if lr > 0.5 then
 		lr = 1
 	else
 		lr = -1
 	end
-	
+
 	pos.y = pos.y - 40.0
-	
+
 	local x = math.random() * 1000 - 300
 	local y = math.random() * 1000 - 300
 	dest_pos.x = pos.x + (lr * (700 + x))
 	dest_pos.y = pos.y + 900 + y
 	dest_pos.z = pos.z
     self.inst.components.uianim:MoveTo(pos, dest_pos, 2.5, function() fn(self) end )
-	
+
 	local scale = 0.28
 	self:SetScale(scale*lr, scale, 1)
 
@@ -233,31 +233,31 @@ local CrowGameScreen = Class(Screen, function(self, profile)
 	self.game_state = GS_GAME_OVER
 
     self:GetPowerupData()
-	self:SetupUI()	
+	self:SetupUI()
 	self:UpdateInterface()
 end)
 
 local LEFT_COLUMN_POS_SCALE = 0.35
 local RIGHT_COLUMN_POS_SCALE = 0.35
 function CrowGameScreen:SetupUI()
-	
+
 	-- FIXED ROOT
     self.fixed_root = self:AddChild(Widget("root"))
     self.fixed_root:SetVAnchor(ANCHOR_MIDDLE)
     self.fixed_root:SetHAnchor(ANCHOR_MIDDLE)
     self.fixed_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
-  
+
     self.panel_bg = self.fixed_root:AddChild(TEMPLATES.NoPortalBackground())
 	self.menu_bg = self.fixed_root:AddChild(TEMPLATES.LeftGradient())
-	
+
 	self:SetupMachine()
 
 	self.game_grid_root = self.fixed_root:AddChild(Widget("game_grid"))
 	self.game_grid_root:SetScale(0.7)
 	self.game_grid_root:SetPosition(0, 15)
 	self.game_grid = GameGridConstructor(self, self.game_grid_root, false)
-	
-	
+
+
 	self.score_root = self.fixed_root:AddChild(Widget("score_root"))
 	self.score_root:SetPosition(-RESOLUTION_X*LEFT_COLUMN_POS_SCALE, -33)
 	self.high_score_text = self.score_root:AddChild(Text(TALKINGFONT, 24, "", {1, 1, 1, 1}))
@@ -265,13 +265,13 @@ function CrowGameScreen:SetupUI()
 	self.score_text = self.score_root:AddChild(Text(TALKINGFONT, 24, "", {1, 1, 1, 1}))
 	self.move_score_text = self.score_root:AddChild(Text(TALKINGFONT, 24, "", {1, 1, 1, 1}))
 	self.move_score_text:SetPosition(0, -40)
-	
-    if not TheInput:ControllerAttached() then 
-    	self.exit_button = self.fixed_root:AddChild(TEMPLATES.BackButton(function() self:Quit() end)) 
+
+    if not TheInput:ControllerAttached() then
+    	self.exit_button = self.fixed_root:AddChild(TEMPLATES.BackButton(function() self:Quit() end))
     	self.exit_button:SetPosition(-RESOLUTION_X*.415, -RESOLUTION_Y*.505 + BACK_BUTTON_Y )
     	self.exit_button:Enable()
   	end
-	  
+
 	self.scissor_root = self.game_grid_root:AddChild(Widget("scissor"))
 	self.scissor_root:SetScissor(-300, -350, 600, 660)
 
@@ -286,12 +286,12 @@ function CrowGameScreen:SetupUI()
 			table.insert( self.all_movers, mover )
 		end
 	end
-	
+
 	self.game_grid_root:SetFocusChangeDir(MOVE_DOWN, self.pwup_root)
 	self.pwup_root:SetFocusChangeDir(MOVE_UP, self.game_grid[XYtoIndex( 2, 0 )])
 
 	-- Skin collector
-	self.innkeeper = self.fixed_root:AddChild(SkinCollector( 0, true, STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_CROW.START )) 
+	self.innkeeper = self.fixed_root:AddChild(SkinCollector( 0, true, STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_CROW.START ))
 	self.innkeeper:SetPosition(410, -400)
 	self.innkeeper:Appear()
 
@@ -337,7 +337,7 @@ function CrowGameScreen:SetupMachine()
 	self.claw_machine_bg:SetScale(machine_scale)
 	self.claw_machine_bg:SetPosition(0, 65)
 
-  
+
 
 	self.claw_machine = self.fixed_root:AddChild(UIAnim())
 	self.claw_machine:GetAnimState():SetBuild("swapshoppe")
@@ -345,7 +345,7 @@ function CrowGameScreen:SetupMachine()
 	self.claw_machine:SetScale(machine_scale)
 	self.claw_machine:SetPosition(0, 65)
 
-  
+
   	self:PlayMachineAnim("idle_empty", true)
 
 	-- Title (Trade Inn sign)
@@ -363,10 +363,10 @@ function CrowGameScreen:SetupMachine()
 		self.joystick:SetPosition(5, -550)
 	end
 
-  
 
-  
-	-- the buttons aren't used on console but don't hide them since they're part of the decor and they add the 
+
+
+	-- the buttons aren't used on console but don't hide them since they're part of the decor and they add the
 	-- button prompts to the help bar; hide the text only so players don't try to navigate to them
 	local reset_button_text = STRINGS.UI.TRADESCREEN.RESET
 	local trade_button_text = STRINGS.UI.TRADESCREEN.START
@@ -377,25 +377,25 @@ function CrowGameScreen:SetupMachine()
 	end
 
 	-- reset button bg
-	self.resetbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button", 
+	self.resetbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button",
 												{idle = "idle_red", over = "up_red", disabled = "down_red"},
-												1, 
-												function() 
+												1,
+												function()
 													self:InitGameBoard()
 												end,
-												reset_button_text, 
+												reset_button_text,
 												30))
 	self.resetbutton:SetPosition(-200, pretty_button_y)
 
 	-- trade button bg
-	
-	self.startbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button", 
+
+	self.startbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button",
 												{idle = "idle_green", over = "up_green", disabled = "down_green"},
-												1, 
-												function() 
+												1,
+												function()
 													self:InitGameBoard()
 												end,
-												trade_button_text, 
+												trade_button_text,
 												30))
 	self.startbutton:SetPosition(208, pretty_button_y)
 
@@ -413,7 +413,7 @@ function CrowGameScreen:SetupMachine()
 	end
 
 
-    if not TheInput:ControllerAttached() then 
+    if not TheInput:ControllerAttached() then
 		self.info_button = self.claw_machine:AddChild(NEW_TEMPLATES.StandardButton(
 				show_help_fn,
 				STRINGS.UI.PURCHASEPACKSCREEN.INFO_BTN, --reuse
@@ -445,7 +445,7 @@ function CrowGameScreen:AddPowerupUI( order, data )
 
 	self.pwup_button[data.powerup]:SetPosition(x_pos, 0)
 	self.pwup_button[data.powerup]:SetScale(PWUP_BUTTON_SCALE)
-	
+
 	self.pwup_txt[data.powerup] = self.pwup_button[data.powerup]:AddChild(Text(TALKINGFONT, 26, "", {1, 1, 1, 1}))
 	self.pwup_txt[data.powerup]:SetPosition(-10, 2)
 end
@@ -457,15 +457,15 @@ function CrowGameScreen:InitGameBoard()
 		self.moves = 0
 		self.crows_cleared = 0
 		self.tiles_cleared = 0
-		for _,data in pairs(POWERUPS) do		
+		for _,data in pairs(POWERUPS) do
 			self.num_powerup[data.powerup] = self.num_powerup_default[data.powerup]
 		end
-		
+
 		for _,tile in pairs(self.game_grid) do
 			tile:ClearTile()
 		end
 		self:FillEmptyTiles()
-		scheduler:ExecuteInTime(DROP_WAIT, function() 
+		scheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_REG
 			self:UpdateInterface()
 		end)
@@ -511,45 +511,45 @@ function CrowGameScreen:OnTileClick(x, y)
 		--check if any neighbours are matching
 		if self:TileHasMove(x,y) then
 			self.game_state = GS_TILES_CLEARING
-			
+
 			self.crows_cleared = 0
 			self.tiles_cleared = 0
 			self:UpdateInterface()
-			
+
 			local explode_delay = self:ClearTilesNoRec(x, y)
-			
+
 			self:WaitForClearingToFinish(explode_delay)
 		end
 	elseif self.game_state == GS_TILE_SELECT_CLEAR then
 		if self.game_grid[ XYtoIndex(x, y) ].tile_type ~= CROW_TILE then
 			self.game_state = GS_TILES_CLEARING
-			
+
 			self.crows_cleared = 0
 			self.tiles_cleared = 0
 			self:UpdateInterface()
-			
+
 			local clearing_tile_type = self.game_grid[ XYtoIndex(x, y) ].tile_type
-			
+
 			local explode_delay = 0
 			for grid_x = 0,NUM_COLUMNS-1 do
 				for grid_y = 0,NUM_ROWS-1 do
-					if self.game_grid[XYtoIndex( grid_x, grid_y )].tile_type == clearing_tile_type then	
+					if self.game_grid[XYtoIndex( grid_x, grid_y )].tile_type == clearing_tile_type then
 						local delay = (math.abs(grid_x-x) + math.abs(grid_y-y)) * EXPLODE_TIME_DELAY
 						self:ExplodeTile(delay, grid_x, grid_y)
 						explode_delay = math.max(explode_delay, delay)
 					end
 				end
 			end
-			
+
 			self:WaitForClearingToFinish(explode_delay+EXPLODE_TIME_DELAY) --need a slight addition so that the clearing tiles finish before we start dropping
 		end
 	elseif self.game_state == GS_TILE_SELECT_SLICE then
 		self.game_state = GS_TILES_CLEARING
-		
+
 		self.crows_cleared = 0
 		self.tiles_cleared = 0
 		self:UpdateInterface()
-		
+
 		local explode_delay = 0
 		for grid_x = 0,NUM_COLUMNS-1 do
 			local delay = math.abs(grid_x-x) * EXPLODE_TIME_DELAY
@@ -561,50 +561,50 @@ function CrowGameScreen:OnTileClick(x, y)
 
 	elseif self.game_state == GS_TILE_SELECT_BOMB then
 		self.game_state = GS_TILES_CLEARING
-		
+
 		self.crows_cleared = 0
 		self.tiles_cleared = 0
 		self:UpdateInterface()
-		
+
 		if self:IsValidPosition(x-1, y+1) then self:ExplodeTile(6*EXPLODE_TIME_DELAY, x-1, y+1) end
 		if self:IsValidPosition(x+0, y+1) then self:ExplodeTile(7*EXPLODE_TIME_DELAY, x+0, y+1) end
 		if self:IsValidPosition(x+1, y+1) then self:ExplodeTile(8*EXPLODE_TIME_DELAY, x+1, y+1) end
-		
+
 		if self:IsValidPosition(x-1, y+0) then self:ExplodeTile(5*EXPLODE_TIME_DELAY, x-1, y+0) end
 		if self:IsValidPosition(x+0, y+0) then self:ExplodeTile(0*EXPLODE_TIME_DELAY, x+0, y+0) end
 		if self:IsValidPosition(x+1, y+0) then self:ExplodeTile(1*EXPLODE_TIME_DELAY, x+1, y+0) end
-		
+
 		if self:IsValidPosition(x-1, y-1) then self:ExplodeTile(4*EXPLODE_TIME_DELAY, x-1, y-1) end
 		if self:IsValidPosition(x+0, y-1) then self:ExplodeTile(3*EXPLODE_TIME_DELAY, x+0, y-1) end
 		if self:IsValidPosition(x+1, y-1) then self:ExplodeTile(2*EXPLODE_TIME_DELAY, x+1, y-1) end
-				
+
 		self:WaitForClearingToFinish(9*EXPLODE_TIME_DELAY) --need a slight addition so that the clearing tiles finish before we start dropping
 	elseif self.game_state == GS_TILE_SELECT_ARROW then
 		self.game_state = GS_TILES_CLEARING
-		
+
 		self.crows_cleared = 0
 		self.tiles_cleared = 0
 		self:UpdateInterface()
-		
-		self:ExplodeTile(0, x, y)	
-		
+
+		self:ExplodeTile(0, x, y)
+
 		self:WaitForClearingToFinish(EXPLODE_TIME_DELAY) --need a slight addition so that the clearing tiles finish before we start dropping
 	elseif self.game_state == GS_TILE_SELECT_BAIT then
 		self.game_state = GS_TILES_CLEARING
-		
+
 		self.crows_cleared = 0
 		self.tiles_cleared = 0
 		self:UpdateInterface()
-		
+
 		--place crow at bait point, so there's atleast 1 crow
 		self.game_grid[XYtoIndex(x,y)]:SetTileTypeUnHidden( CROW_TILE )
 		self.game_grid[XYtoIndex(x,y)].crow_walked = true
 		self.game_grid[XYtoIndex(x,y)].final_crow_pos = true
-		
+
 		for tile_index,tile in pairs(self.game_grid) do
 			tile.start_index = tile_index
 		end
-			
+
 		local check_crows = true
 		while check_crows do
 			check_crows = false
@@ -612,13 +612,13 @@ function CrowGameScreen:OnTileClick(x, y)
 				if tile.tile_type == CROW_TILE and not tile.final_crow_pos then
 					--tile.crow_walked = true
 					check_crows = true
-					
+
 					--now walk crows to bait point, xy, stopping when we hit a walked crow
 					local crow_x, crow_y = IndexToXY(start_index)
 					local walking = true
 					while walking do
 						local current_index = XYtoIndex( crow_x, crow_y )
-						
+
 						--find biggest axis away
 						local x_dist = math.abs(x - crow_x)
 						local y_dist = math.abs(y - crow_y)
@@ -630,9 +630,9 @@ function CrowGameScreen:OnTileClick(x, y)
 							--move on y
 							crow_y = crow_y + sign(y - crow_y)
 						end
-						
+
 						local next_index = XYtoIndex( crow_x, crow_y )
-						
+
 						if self.game_grid[next_index].final_crow_pos then
 							self.game_grid[current_index].final_crow_pos = true
 							walking = false
@@ -641,7 +641,7 @@ function CrowGameScreen:OnTileClick(x, y)
 							local tmp_type = self.game_grid[next_index].tile_type
 							self.game_grid[next_index].tile_type = self.game_grid[current_index].tile_type
 							self.game_grid[current_index].tile_type = tmp_type
-							
+
 							local tmp_index = self.game_grid[next_index].start_index
 							self.game_grid[next_index].start_index = self.game_grid[current_index].start_index
 							self.game_grid[current_index].start_index = tmp_index
@@ -650,13 +650,13 @@ function CrowGameScreen:OnTileClick(x, y)
 				end
 			end
 		end
-		
+
 		for tile_index,tile in pairs(self.game_grid) do
-			if tile_index ~= tile.start_index then				
+			if tile_index ~= tile.start_index then
 				local start_index = tile.start_index
-				
+
 				tile:SetTileTypeHidden(tile.tile_type)
-				
+
 				local mover = self:GetMoverTile()
 				mover.Move(tile.tile_type,
 									self.game_grid[start_index]:GetPosition(),
@@ -667,10 +667,10 @@ function CrowGameScreen:OnTileClick(x, y)
 				end)
 			end
 		end
-		
+
 		self:WaitForClearingToFinish(DROP_TIME+EXPLODE_TIME_DELAY) --need a slight addition so that the clearing tiles finish before we start dropping
 	else
-		self.queued_click = { x = x, y = y } 
+		self.queued_click = { x = x, y = y }
 	end
 end
 
@@ -702,7 +702,7 @@ end
 
 function CrowGameScreen:TileHasMove(x, y)
 	return self.game_grid[ XYtoIndex(x, y) ].tile_type ~= CROW_TILE and
-		(self:DoesNeighbourMatch( x, y, TILE_UP ) or 
+		(self:DoesNeighbourMatch( x, y, TILE_UP ) or
 		self:DoesNeighbourMatch( x, y, TILE_DOWN ) or
 		self:DoesNeighbourMatch( x, y, TILE_LEFT ) or
 		self:DoesNeighbourMatch( x, y, TILE_RIGHT ))
@@ -735,7 +735,7 @@ function CrowGameScreen:DoesNeighbourMatch( x, y, direction, clearing_tile_type 
 	else
 		assert( false, "Bad neighbour direction" )
 	end
-	
+
 	if clearing_tile_type ~= nil then
 		local this_tile = self.game_grid[ XYtoIndex(x, y) ]
 		local neighbour_tile = self.game_grid[ XYtoIndex(new_x, new_y) ]
@@ -752,18 +752,18 @@ end
 
 function CrowGameScreen:ExplodeTile( explode_delay, x, y )
 	self.game_grid[ XYtoIndex(x, y) ].exploded = true
-	scheduler:ExecuteInTime(explode_delay, function() 
+	scheduler:ExecuteInTime(explode_delay, function()
 		if self.game_grid[ XYtoIndex(x,y) ].tile_type == CROW_TILE then
 			self.crows_cleared = self.crows_cleared + 1
 			self.game_grid[ XYtoIndex(x,y) ]:ClearTile()
 			TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_crow")
-			
+
 			local crow = self.game_grid_root:AddChild( CrowFX( self.game_grid[XYtoIndex(x,y)]:GetPosition(), function(widg) widg:Kill() end ) )
 			crow:MoveToFront()
 		else
 			self.tiles_cleared = self.tiles_cleared + 1
 			self.game_grid[ XYtoIndex(x,y) ]:ClearTile()
-			
+
 			local explode_widg = ExplodeFX( self.game_grid[XYtoIndex(x,y)]:GetWorldPosition(), self.fixed_root:GetScale().x )
 			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/creditpage_flip")
 
@@ -776,14 +776,14 @@ end
 function CrowGameScreen:ClearTilesNoRec( start_x, start_y )
 	self:ExplodeTile(0, start_x, start_y)
 	local tile_type = self.game_grid[ XYtoIndex(start_x, start_y) ].tile_type
-	
+
 	local explode_delay = EXPLODE_TIME_DELAY
 	local new_explode = true
 	while new_explode do
 		new_explode = false
 		for x = 0,NUM_COLUMNS-1 do
 			for y = 0,NUM_ROWS-1 do
-				if not self.game_grid[XYtoIndex( x, y )].exploded then	
+				if not self.game_grid[XYtoIndex( x, y )].exploded then
 					if self:DoesNeighbourMatch( x, y, TILE_UP, tile_type ) or
 					self:DoesNeighbourMatch( x, y, TILE_DOWN, tile_type ) or
 					self:DoesNeighbourMatch( x, y, TILE_LEFT, tile_type ) or
@@ -796,7 +796,7 @@ function CrowGameScreen:ClearTilesNoRec( start_x, start_y )
 		--second loop, so that setting an explode flag on a tile, does trigger an explode on the next row/column
 		for x = 0,NUM_COLUMNS-1 do
 			for y = 0,NUM_ROWS-1 do
-				if self.game_grid[XYtoIndex( x, y )].pending_explode then	
+				if self.game_grid[XYtoIndex( x, y )].pending_explode then
 					self.game_grid[XYtoIndex( x, y )].pending_explode = nil
 					self:ExplodeTile(explode_delay, x, y)
 					new_explode = true
@@ -824,7 +824,7 @@ function CrowGameScreen:WaitForClearingToFinish(t)
 		self:FillEmptyTiles()
 
 		self:UpdateInterface()
-		
+
 		scheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_REG
 			if self.queued_click ~= nil then
@@ -862,10 +862,10 @@ function CrowGameScreen:DropTiles()
 				end
 				if swap_index ~= -1 then
 					local dropping_tile_type = self.game_grid[swap_index].tile_type
-					
+
 					self.game_grid[swap_index]:ClearTile()
 					self.game_grid[index]:SetTileTypeHidden( dropping_tile_type )
-					
+
 					local dropping_tile = self:GetMoverTile()
 					dropping_tile.Move(dropping_tile_type,
 										self.game_grid[swap_index]:GetPosition(),
@@ -893,7 +893,7 @@ function CrowGameScreen:FillEmptyTiles()
 
 				local new_tile_type = TILE_TYPES[math.random(#TILE_TYPES)]
 				self.game_grid[index]:SetTileTypeHidden( new_tile_type )
-				
+
 				local filling_tile = self:GetMoverTile()
 				filling_tile.Move(new_tile_type,
 									start_pos,
@@ -909,17 +909,17 @@ end
 
 function CrowGameScreen:GrantBonusPowerups()
 	if (self.tiles_cleared + self.crows_cleared) >= 10 then
-		
+
 		local powerup_data = GetRandomItem(POWERUPS)
 		local pup = powerup_data.powerup
 		self.num_powerup[pup] = self.num_powerup[pup] + 1
-		
+
 		local str = subfmt( STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_CROW.CLEARED_LOTS, { tiles_cleared = self.tiles_cleared + self.crows_cleared, powerup = STRINGS.UI.TRADESCREEN.CROW_GAME.POWERUP_NAME[pup] } )
 		self.innkeeper:Say( str )
-		
+
 	elseif self.crows_cleared >= 5 then
 		self.innkeeper:Say( STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_CROW.CLEARED_CROW_LOTS )
-	end		
+	end
 end
 
 
@@ -952,7 +952,7 @@ function CrowGameScreen:UpdateInterface()
 
 			--THE GAME IS OVER! REPORT IT TO THE SERVER AND GET THE ITEM
 			local waiting_popup = GenericWaitingPopup("ReportCrowGame", STRINGS.UI.TRADESCREEN.CROW_GAME.REPORTING, nil, true )
-			TheFrontEnd:PushScreen(waiting_popup)			
+			TheFrontEnd:PushScreen(waiting_popup)
 
 			TheItems:ReportCrowGame(self.score, self.moves, function(status, item_type)
 				self.inst:DoTaskInTime(0, function() --we need to delay a frame so that the popping of the screens happens at the right time in the frame.
@@ -970,7 +970,7 @@ function CrowGameScreen:UpdateInterface()
 										TheFrontEnd:PopScreen()
 										local items = {}
 										table.insert(items, {item=item_type, item_id=0, gifttype="DEFAULT", message=STRINGS.UI.TRADESCREEN.CROW_GAME.THANKS})
-										
+
 										local thankyou_popup = ThankYouPopup(items)
 										TheFrontEnd:PushScreen(thankyou_popup)
 									end
@@ -978,7 +978,7 @@ function CrowGameScreen:UpdateInterface()
 							}
 						)
 						TheFrontEnd:PushScreen(game_over_popup)
-						
+
 					elseif status == REPORT_CROW_ALREADY_COMPLETED or status == REPORT_CROW_FAILED_TO_CONTACT then
 						--todo. Optimize this, by recording it, so we don't report again?
 						--don't care about errors for now
@@ -998,7 +998,7 @@ function CrowGameScreen:UpdateInterface()
 					end
 				end )
 			end)
-			
+
 			self.innkeeper:Say( STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_CROW.GAME_OVER )
 		else
 			if not has_board_move then
@@ -1006,7 +1006,7 @@ function CrowGameScreen:UpdateInterface()
 			end
 		end
 	end
-	
+
 	if self.game_state == GS_GAME_OVER then
 		self.startbutton:Enable()
 		self.resetbutton:Disable()
@@ -1014,7 +1014,7 @@ function CrowGameScreen:UpdateInterface()
 		self.startbutton:Disable()
 		self.resetbutton:Enable()
 	end
-	
+
 	local forward_to_first = true
 	local last_active_pwup = ""
 	for powerup,_ in pairs(self.pwup_button) do
@@ -1032,10 +1032,10 @@ function CrowGameScreen:UpdateInterface()
 			self.pwup_button[powerup]:SetScale(PWUP_BUTTON_SCALE)
 		end
 	end
-	
+
 	--fixup powerup focus changing
 	for _,data in ipairs(POWERUPS) do
-		local powerup = data.powerup 
+		local powerup = data.powerup
 
 		if self.pwup_button[powerup]:IsEnabled() then
 			if forward_to_first then
@@ -1050,8 +1050,8 @@ function CrowGameScreen:UpdateInterface()
 			last_active_pwup = powerup
 		end
 	end
-	
-	
+
+
 	self.high_score_text:SetString(STRINGS.UI.TRADESCREEN.CROW_GAME.HIGH_SCORE .. tostring(self.profile:GetCrowGameHighScore(SCORE_VERSION)))
 	self.score_text:SetString(STRINGS.UI.TRADESCREEN.CROW_GAME.GAME_SCORE .. tostring(self.score))
 	self.move_score_text:SetString(STRINGS.UI.TRADESCREEN.CROW_GAME.MOVE_SCORE .. tostring(self:GetMoveScore()))
@@ -1091,11 +1091,11 @@ end
 
 function CrowGameScreen:OnControl(control, down)
     if CrowGameScreen._base.OnControl(self, control, down) then return true end
-    if not down and control == CONTROL_CANCEL then 
+    if not down and control == CONTROL_CANCEL then
 		self:Quit()
-		return true 
+		return true
 	end
-	
+
 	if down then
 		if control == CONTROL_MENU_MISC_1 or control == CONTROL_PAUSE then
 			self:InitGameBoard()
@@ -1111,7 +1111,7 @@ end
 function CrowGameScreen:GetHelpText()
     local controller_id = TheInput:GetControllerID()
     local t = {}
-	
+
 	if self.resetbutton:IsEnabled() then
 		table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.TRADESCREEN.RESET)
 	end
@@ -1121,9 +1121,9 @@ function CrowGameScreen:GetHelpText()
 	end
 
 	table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_INSPECT) .. " " .. STRINGS.UI.TRADESCREEN.CROW_GAME.HELP)
-	
+
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.SKINSSCREEN.BACK)
-    
+
     return table.concat(t, "  ")
 end
 

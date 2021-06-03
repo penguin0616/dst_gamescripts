@@ -201,7 +201,7 @@ local function on_begin_quest(inst, doer)
 
             inst._toys[toy] = true
 
-            inst:ListenForEvent("onremove", function(t) 
+            inst:ListenForEvent("onremove", function(t)
                 if inst._toys ~= nil and next(inst._toys) ~= nil and inst._toys[t] ~= nil then
                     inst._toys[t] = nil
                 end

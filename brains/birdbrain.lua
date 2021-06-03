@@ -21,16 +21,16 @@ end
 function BirdBrain:OnStart()
     local root = PriorityNode(
     {
-        WhileNode( function() return self.inst.components.hauntable ~= nil and self.inst.components.hauntable.panic end, "PanicHaunted", 
+        WhileNode( function() return self.inst.components.hauntable ~= nil and self.inst.components.hauntable.panic end, "PanicHaunted",
 			ActionNode(function() return FlyAway(self.inst) end)),
         IfNode(function() return ShouldFlyAway(self.inst) end, "Threat Near",
             ActionNode(function() return FlyAway(self.inst) end)),
-        EventNode(self.inst, "threatnear", 
+        EventNode(self.inst, "threatnear",
             ActionNode(function() return FlyAway(self.inst) end)),
-        EventNode(self.inst, "gohome", 
+        EventNode(self.inst, "gohome",
             ActionNode(function() return FlyAway(self.inst) end)),
     }, .25)
-    
+
     self.bt = BT(self.inst, root)
 end
 

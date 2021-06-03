@@ -11,7 +11,7 @@ local function makepiece(name, socket_product)
         Asset("ANIM", "anim/swap_altar_"..name.."piece.zip"),
 	    Asset("MINIMAP_IMAGE", "moon_altar_"..name.."_piece"),
 	}
-	
+
 	local piece_prefabs =
 	{
 		"underwater_salvageable",
@@ -75,7 +75,7 @@ local function makepiece(name, socket_product)
 
         -- There are 3 altar piece variations, so each one repairs 1/3rd of the total amount.
 		inst.components.repairer.workrepairvalue = TUNING.MOON_ALTAR_COMPLETE_WORK / 3
-		
+
 		inst:AddComponent("submersible")
 		inst:AddComponent("symbolswapdata")
 		inst.components.symbolswapdata:SetData("swap_altar_"..name.."piece", "swap_body")
@@ -95,7 +95,7 @@ end
 
 local function OnWork(inst, worker, workleft, numworks)
     if workleft <= 0 then
-        
+
 		local x, y, z = inst.Transform:GetWorldPosition()
 		SpawnPrefab("moon_altar_"..inst._altar_piece).Transform:SetPosition(x, y, z)
 
@@ -114,7 +114,7 @@ local function OnWork(inst, worker, workleft, numworks)
 			elseif (workleft + numworks >= TUNING.MOONALTAR_ROCKS_MINE * 2 / 3) and (workleft < TUNING.MOONALTAR_ROCKS_MINE * 2 / 3) then
 				worker.components.talker:Say(GetString(worker, "ANNOUNCE_MOONALTAR_MINE", string.upper(inst._altar_piece).."_MED"))
 			end
-		end	
+		end
         inst.AnimState:PlayAnimation(
             (workleft < TUNING.MOONALTAR_ROCKS_MINE / 3 and "low") or
             (workleft < TUNING.MOONALTAR_ROCKS_MINE * 2 / 3 and "med") or
@@ -130,7 +130,7 @@ local function makerockpiece(name, socket_product)
 	    Asset("MINIMAP_IMAGE", "moon_altar_"..name.."_rock"),
     }
 
-	local rock_prefabs = 
+	local rock_prefabs =
 	{
 		"rock_break_fx",
 		"collapse_small",
@@ -168,7 +168,7 @@ local function makerockpiece(name, socket_product)
 
 		inst._altar_piece = name
 
-		inst:AddComponent("lootdropper") 
+		inst:AddComponent("lootdropper")
 		inst.components.lootdropper:SetLoot({ "moon_altar_"..name })
 
 		inst:AddComponent("workable")
@@ -194,7 +194,7 @@ end
 
 
 local function makemarker(name, socket_product)
- 
+
     local function fn()
         local inst = CreateEntity()
 
@@ -216,14 +216,14 @@ local function makemarker(name, socket_product)
 end
 
 --For searching: "moon_altar_idol", "moon_altar_glass", "moon_altar_seed", "moon_altar_crown", "moon_altar_rock_glass", "moon_altar_rock_seed", "moon_altar_rock_idol" ,"moon_altar_ward", "moon_altar_icon"
-return 
+return
     makerockpiece("idol"),
-    makepiece("idol"),	   
+    makepiece("idol"),
 	makerockpiece("glass"),
     makepiece("glass", "moon_altar"),
     makerockpiece("seed"),
     makepiece("seed"),
-	
+
     makepiece("crown", "moon_altar_cosmic"),
 
     makepiece("ward"),

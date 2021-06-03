@@ -78,8 +78,8 @@ local function FindFoodAction(inst)
 	if GetFoodTarget(inst) == nil then
 		local target = FindEntity(inst, SEE_LURE_OR_FOOD_DIST, function(food)
 							if food:HasTag("fishinghook") then
-								return food.components.oceanfishinghook ~= nil 
-									and TheWorld.Map:IsOceanAtPoint(food.Transform:GetWorldPosition()) 
+								return food.components.oceanfishinghook ~= nil
+									and TheWorld.Map:IsOceanAtPoint(food.Transform:GetWorldPosition())
 									and not food.components.oceanfishinghook:HasLostInterest(inst)
 									and food.components.oceanfishinghook:TestInterest(inst)
 							end
@@ -172,7 +172,7 @@ function OceanFishBrain:OnStart()
 
 				WhileNode(function() return self.inst.components.oceanfishable ~= nil and self.inst.components.oceanfishable:GetRod() ~= nil end, "Hooked",
 					PriorityNode({
-				        WhileNode(function() return self.inst:HasTag("partiallyhooked") end, "partiallyhooked", 
+				        WhileNode(function() return self.inst:HasTag("partiallyhooked") end, "partiallyhooked",
 							StandStill(self.inst)),
 						PriorityNode({
 							WhileNode(function() self.inst.components.oceanfishable:UpdateStruggleState() return self.inst.components.oceanfishable:IsStruggling() end, "struggle",
@@ -201,7 +201,7 @@ function OceanFishBrain:OnStart()
 				Wander(self.inst, WanderTarget, getWanderDist(self.inst), WANDER_TIMES, getdirectionFn)
             }, 0.25)),
     }, 0.25)
-    
+
     self.bt = BT(self.inst, root)
 end
 

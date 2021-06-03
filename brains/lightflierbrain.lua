@@ -104,7 +104,7 @@ function LightFlierBrain:OnStart()
                     end, "Panic",
                         Panic(self.inst)
                 ),
-                
+
                 WhileNode(function() return GetTime() - self.inst._time_since_formation_attacked < TUNING.LIGHTFLIER.ON_ATTACKED_ALERT_DURATION end, "Recently Attacked",
                     RunAway(self.inst, hunterparams_alert, SEE_THREAT_DIST_ALERT, STOP_RUN_DIST_ALERT)),
 
@@ -114,14 +114,14 @@ function LightFlierBrain:OnStart()
                         WhileNode(function()
                             return ShouldGoHome(self.inst)
                         end, "ShouldGoHome", DoAction(self.inst, GoHomeAction, "GoHome")),
-                        
+
                         Wander(self.inst, function()
                             local homepos = self.inst.components.homeseeker ~= nil and self.inst.components.homeseeker:GetHomePos() or nil
                             homepos = homepos or self.inst.components.knownlocations:GetLocation("home")
                             return homepos
                         end, MAX_WANDER_DIST),
                     }),
-                    
+
                 -- Else no need to do anything from here, movement is handled on update from formationfollower component
                 ActionNode(function()
                     self.inst.components.formationfollower.active = true

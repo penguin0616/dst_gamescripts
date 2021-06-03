@@ -83,7 +83,7 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("sleep_pre")
         end,
-        timeline = 
+        timeline =
         {
             TimeEvent(20*FRAMES, function(inst)
                 local ba = inst:GetBufferedAction()

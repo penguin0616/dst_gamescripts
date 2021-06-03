@@ -71,7 +71,7 @@ local function onattackfn(inst)
             inst.components.timer:StartTimer("GroundPound", TUNING.BEARGER_NORMAL_GROUNDPOUND_COOLDOWN)
         end
 
-        if not (inst.canyawn or inst.components.timer:TimerExists("Yawn")) and inst:HasTag("hibernation") then 
+        if not (inst.canyawn or inst.components.timer:TimerExists("Yawn")) and inst:HasTag("hibernation") then
             --print("Starting yawn timer ", TUNING.BEARGER_YAWN_COOLDOWN)
             inst.components.timer:StartTimer("Yawn", TUNING.BEARGER_YAWN_COOLDOWN)
         end
@@ -298,8 +298,8 @@ local states=
 		tags = {"yawn", "busy"},
 
 		onenter = function(inst)
-			
-			if inst.components.locomotor then 
+
+			if inst.components.locomotor then
 				inst.components.locomotor:StopMoving()
 			end
 
@@ -314,7 +314,7 @@ local states=
 
 		events =
 		{
-			EventHandler("animqueueover", function(inst) 
+			EventHandler("animqueueover", function(inst)
 					if not inst.components.timer:TimerExists("Yawn") then
 						--print("Starting yawn timer ", TUNING.BEARGER_YAWN_COOLDOWN)
 						inst.components.timer:StartTimer("Yawn", TUNING.BEARGER_YAWN_COOLDOWN)
@@ -481,7 +481,7 @@ local states=
 			if (ba and ba.target) then
 				inst.last_food_good = ba.target.components.stackable and ba.target.components.stackable:StackSize() or 1
 
-				if ba.target:HasTag("honeyed") then 
+				if ba.target:HasTag("honeyed") then
 					inst.last_food_good = inst.last_food_good * 2
 				end
 			else

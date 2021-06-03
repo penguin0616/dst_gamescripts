@@ -136,7 +136,7 @@ local states =
             inst.components.health:SetInvincible(false)
             inst.AnimState:SetBuild("alterguardian_phase1")
             inst.AnimState:SetBankAndPlayAnimation("alterguardian_phase1", "idle")
-            
+
             inst:SetNoMusic(false)
         end,
     },
@@ -205,7 +205,7 @@ local states =
 
         timeline =
         {
-            
+
             TimeEvent(12*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/step")
             end),
@@ -437,7 +437,7 @@ local states =
 
         timeline =
         {
-            
+
             TimeEvent(5*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/tantrum")
             end),
@@ -448,7 +448,7 @@ local states =
 
                 spawn_landfx(inst)
             end),
-            
+
             TimeEvent(8*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/tantrum")
 
@@ -518,7 +518,7 @@ local states =
 
             inst.AnimState:PlayAnimation("shield_pre")
         end,
-        
+
         timeline =
         {
             TimeEvent(0*FRAMES, function(inst)
@@ -534,7 +534,7 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/shield")
             end),
         },
-        
+
         events =
         {
             EventHandler("animover", function(inst)
@@ -595,7 +595,7 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("shield_pst")
         end,
-        
+
         timeline =
         {
             TimeEvent(20*FRAMES, function(inst)
@@ -608,7 +608,7 @@ local states =
                 inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian1/step")
             end),
         },
-        
+
         events =
         {
             EventHandler("animover", go_to_idle),

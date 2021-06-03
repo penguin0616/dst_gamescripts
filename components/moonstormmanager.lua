@@ -65,7 +65,7 @@ local MAX_NODES = 10
 
 local BIRDBLOCKER_TAGS = {"birdblocker"}
 local function customcheckfn(pt)
-	return #(TheSim:FindEntities(pt.x, 0, pt.z, 4, BIRDBLOCKER_TAGS)) == 0 and TheWorld.net.components.moonstorms ~= nil and TheWorld.net.components.moonstorms:IsPointInMoonstorm(pt) or false	 
+	return #(TheSim:FindEntities(pt.x, 0, pt.z, 4, BIRDBLOCKER_TAGS)) == 0 and TheWorld.net.components.moonstorms ~= nil and TheWorld.net.components.moonstorms:IsPointInMoonstorm(pt) or false
 end
 
 local function screencheckfn(pt)
@@ -145,7 +145,7 @@ local function AltarAngleTest(altar, other_altar1, other_altar2)
     local dot_this_to_other1_other2 = VecUtil_Dot(
         delta_normalized_this_to_other1_x, delta_normalized_this_to_other1_z,
         delta_normalized_this_to_other2_x, delta_normalized_this_to_other2_z)
-        
+
     return math.abs(dot_this_to_other1_other2) <= TUNING.MOON_ALTAR_LINK_MAX_ABS_DOT
 end
 
@@ -172,19 +172,19 @@ local function OnPlayerLeft(src, player)
             table.remove(_activeplayers, i)
             return
         end
-    end    
+    end
 end
 
 local function setmoonphasestyle()
-	
-	TheWorld:PushEvent("ms_setmoonphasestyle", {style = _alterguardian_defeated_count == 0 and "alter_active" or "glassed_alter_active"}) 
+
+	TheWorld:PushEvent("ms_setmoonphasestyle", {style = _alterguardian_defeated_count == 0 and "alter_active" or "glassed_alter_active"})
     TheWorld:PushEvent("ms_lockmoonphase", {lock = true})
 
 end
 
 local function StartTheMoonstorms()
-    TheWorld:PushEvent("ms_setclocksegs", {day = 0, dusk = 0, night = 16}) 
-    TheWorld:PushEvent("ms_setmoonphase", {moonphase = "full", iswaxing = false}) 
+    TheWorld:PushEvent("ms_setclocksegs", {day = 0, dusk = 0, night = 16})
+    TheWorld:PushEvent("ms_setmoonphase", {moonphase = "full", iswaxing = false})
 	setmoonphasestyle()
     _moonstyle_altar = true
     self:StartMoonstorm()
@@ -193,8 +193,8 @@ end
 local function StopTheMoonstorms()
 	_alterguardian_defeated_count = _alterguardian_defeated_count + 1
 
-	TheWorld:PushEvent("ms_setclocksegs", {day = 0, dusk = 0, night = 16}) 
-	TheWorld:PushEvent("ms_setmoonphase", {moonphase = "new", iswaxing = true}) 
+	TheWorld:PushEvent("ms_setclocksegs", {day = 0, dusk = 0, night = 16})
+	TheWorld:PushEvent("ms_setmoonphase", {moonphase = "new", iswaxing = true})
 	TheWorld:PushEvent("ms_setmoonphasestyle", {style = "glassed_default"})
 	TheWorld:PushEvent("ms_lockmoonphase", {lock = false})
 	_moonstyle_altar = nil
@@ -217,17 +217,17 @@ local function on_day_change()
 
 			        self.wagstaff:PushEvent("talk")
   					self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY1))
-			        
-			        self.wagstaff:DoTaskInTime(3,function() 
+
+			        self.wagstaff:DoTaskInTime(3,function()
 
 			        	self.wagstaff:PushEvent("talk")
   						self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY2))
-					
-						self.wagstaff:DoTaskInTime(3,function() 
+
+						self.wagstaff:DoTaskInTime(3,function()
 
 							self.wagstaff:PushEvent("talk")
   							self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_NO_WAY3))
-				            
+
 				            self.wagstaff:DoTaskInTime(2,function()
 				                self.wagstaff:erode(2,nil,true)
 				            end)
@@ -284,7 +284,7 @@ function self:CalcNewMoonstormBaseNodeIndex()
 			if _currentbasenodeindex ~= nil then
 				local new_x, new_z = new_node.cent[1], new_node.cent[2]
 				local current_x, current_z = current_node.cent[1], current_node.cent[2]
-				
+
 				if NodeCanHaveMoonstorm(new_node) and VecUtil_LengthSq(new_x - current_x, new_z - current_z) > mindistsq then
 					return ind
 				end
@@ -314,7 +314,7 @@ function self:StartMoonstorm(set_first_node_index,nodes)
 
 	local checked_nodes = {}
 	local new_storm_nodes = nodes or {}
-	local first_node_index = set_first_node_index or nil	
+	local first_node_index = set_first_node_index or nil
 
 	local function propagatestorm(node, steps, nodelist)
 		if not checked_nodes[node] and NodeCanHaveMoonstorm(TheWorld.topology.nodes[node]) then
@@ -324,7 +324,7 @@ function self:StartMoonstorm(set_first_node_index,nodes)
 
 			local node_edges = TheWorld.topology.nodes[node].validedges
 			-- print("		adding node:", node, "		steps remaining:", steps)
-			
+
 			-- print("iterating", #node_edges, "node edges")
 			for _, edge_index in ipairs(node_edges) do
 				local edge_nodes = TheWorld.topology.edgeToNodes[edge_index]
@@ -350,11 +350,11 @@ function self:StartMoonstorm(set_first_node_index,nodes)
 				end
 				first_node_index = self:CalcNewMoonstormBaseNodeIndex()
 			end
-			if first_node_index == nil then 
+			if first_node_index == nil then
 				print("MoonstormManager failed to start moonstorm")
 				return
 			end
-			--end		
+			--end
 			propagatestorm(first_node_index, _nummoonstormpropagationsteps, new_storm_nodes)
 		end
 	end
@@ -364,7 +364,7 @@ function self:StartMoonstorm(set_first_node_index,nodes)
 
 	TheWorld.net.components.moonstorms:ClearMoonstormNodes()
 	TheWorld.net.components.moonstorms:AddMoonstormNodes(new_storm_nodes, _currentbasenodeindex)
-    
+
 	self.spawn_wagstaff_test_task = self.inst:DoPeriodicTask(10,function() self:DoTestForWagstaff() end)
 	self.moonstorm_spark_task = self.inst:DoPeriodicTask(30,function() self:DoTestForSparks() end)
 	self.moonstorm_lightning_task = self.inst:DoTaskInTime(getlightningtime(),function() self:DoTestForLightning() end)
@@ -400,7 +400,7 @@ end
 function self:StopExperimentTasks()
 
 	self.inst.components.timer:StopTimer("moonstorm_experiment_complete")
-	
+
 	if self.tools_task then
 		self.tools_task:Cancel()
 		self.tools_task = nil
@@ -408,12 +408,12 @@ function self:StopExperimentTasks()
 	if self.tools_need then
 		self.tools_need:Cancel()
 		self.tools_need = nil
-	end		
+	end
 
 	if self.defence_task then
 		self.defence_task:Cancel()
 		self.defence_task = nil
-	end			
+	end
 	if self.wagstaff and self.wagstaff.need_tool_task then
 		self.wagstaff.need_tool_task:Cancel()
 		self.wagstaff.need_tool_task = nil
@@ -422,18 +422,18 @@ function self:StopExperimentTasks()
 end
 
 -- WAGSTAFF HUNT FUNCTIONS
-function self:StopExperiment()	
+function self:StopExperiment()
 	self:StopExperimentTasks()
 	if self.wagstaff_tools then
 		for i=#self.wagstaff_tools,1,-1 do
-			local tool = self.wagstaff_tools[i]		
+			local tool = self.wagstaff_tools[i]
 			if tool:IsInLimbo() then
 				tool:Remove()
 			else
 				tool:RemoveComponent("inventoryitem")
 				tool:erode(2,nil,true)
 			end
-			
+
 		end
 		self.wagstaff_tools = nil
 	end
@@ -467,10 +467,10 @@ function self:EndExperiment()
 		self.wagstaff:PushEvent("doneexperiment")
 		self.wagstaff:PushEvent("talk")
 		self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_EXPERIMENT_DONE_1))
-		self.wagstaff:DoTaskInTime(4,function() 
+		self.wagstaff:DoTaskInTime(4,function()
 			self.wagstaff:PushEvent("talk")
 			self.wagstaff.components.talker:Say(self.wagstaff.getline(STRINGS.WAGSTAFF_NPC_EXPERIMENT_DONE_2))
-			self.wagstaff:DoTaskInTime(4,function() 
+			self.wagstaff:DoTaskInTime(4,function()
 
 				self.wagstaff:erode(2,nil,true)
 			end)
@@ -483,7 +483,7 @@ function self:EndExperiment()
 
 		self:StartMoonstorm()
 	end
-	
+
 	self:StopExperiment()
 end
 
@@ -495,7 +495,7 @@ function self:beginWagstaffHunt(player)
 		wagstaff.hunt_stage = "hunt"
 	    wagstaff.hunt_count = 0
 		wagstaff.Transform:SetPosition(pos.x,pos.y,pos.z)
-		
+
 		wagstaff.components.timer:StartTimer("expiretime",TUNING.WAGSTAFF_NPC_EXPIRE_TIME)
 		wagstaff.components.timer:StartTimer("wagstaff_movetime",10 + (math.random()*5))
 		wagstaff:ListenForEvent("onremove", onremovewagstaff)
@@ -506,14 +506,14 @@ end
 function self:AdvanceWagstaff()
 	if self.wagstaff then
 		local pos = self:GetNewWagstaffLocation(self.wagstaff)
-		if pos and self.wagstaff.hunt_stage == "hunt" then			
+		if pos and self.wagstaff.hunt_stage == "hunt" then
 			self.wagstaff.components.timer:SetTimeLeft("expiretime",TUNING.WAGSTAFF_NPC_EXPIRE_TIME)
 			return pos
 		end
 	end
 end
 
-function self:FindUnmetCharacter()	
+function self:FindUnmetCharacter()
 	local players = {}
 	local player = nil
 	for i, v in ipairs(_activeplayers) do
@@ -527,12 +527,12 @@ function self:FindUnmetCharacter()
 	if #players > 0 then
 		player = players[math.random(1,#players)]
 	end
- 	if player then 		
+ 	if player then
 		return Vector3(player.Transform:GetWorldPosition())
 	end
 end
 
-function self:GetNewWagstaffLocation(wagstaff)	
+function self:GetNewWagstaffLocation(wagstaff)
 	local newpos = Vector3(wagstaff.Transform:GetWorldPosition())
 	return findnewcluelocation(newpos, wagstaff.hunt_count and wagstaff.hunt_count >= TUNING.WAGSTAFF_NPC_HUNTS)
 end
@@ -546,7 +546,7 @@ function self:startNeedTool()
 end
 
 function self:foundTool()
-	self.inst.components.timer:ResumeTimer("moonstorm_experiment_complete")	
+	self.inst.components.timer:ResumeTimer("moonstorm_experiment_complete")
 	self.wagstaff:PushEvent("doexperiment")
 	self.tools_need = inst:DoTaskInTime(10 + (math.random()*10), function() self:startNeedTool() end)
 	if self.wagstaff.need_tool_task then
@@ -619,14 +619,14 @@ function self:spawnGestaltWave()
 			end
 			for i=1,math.random(1,3) do
 				inst:DoTaskInTime(math.random()*0.5,function() self:SpawnGestalt(angle, "bird_mutant_spitter") end)
-			end	
+			end
 		end
-		local timeleft = self.inst.components.timer:GetTimeLeft("moonstorm_experiment_complete") 
-		local time = Remap(timeleft,TUNING.WAGSTAFF_EXPERIMENT_TIME,0,15,7)			
+		local timeleft = self.inst.components.timer:GetTimeLeft("moonstorm_experiment_complete")
+		local time = Remap(timeleft,TUNING.WAGSTAFF_EXPERIMENT_TIME,0,15,7)
 		if self.defence_task then
 			self.defence_task:Cancel()
 			self.defence_task = nil
-		end			
+		end
 		self.defence_task = inst:DoTaskInTime(time,function() self:spawnGestaltWave() end)
 	end
 end
@@ -663,7 +663,7 @@ function self:spawnTool()
 		--[[
 		if #self.wagstaff_tools >= 4 then
 			local oldtool = self.wagstaff_tools[1]
-			table.insert(self.wagstaff_tools_original,oldtool.prefab)	
+			table.insert(self.wagstaff_tools_original,oldtool.prefab)
 			table.remove(self.wagstaff_tools, 1)
 			oldtool:Remove()
 		end
@@ -687,7 +687,7 @@ function self:DoTestForWagstaff()
 		end
 		if #eligible_players > 0 then
 			self:beginWagstaffHunt(eligible_players[math.random(1,#eligible_players)])
-		end		
+		end
 	end
 end
 
@@ -699,7 +699,7 @@ function self:DoTestForSparks()
 		local pt = Vector3(v.Transform:GetWorldPosition())
 		if TheWorld.net.components.moonstorms and TheWorld.net.components.moonstorms:IsPointInMoonstorm(pt) then
 			local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, 30, MOONSTORM_SPARKS_MUST_HAVE,MOONSTORM_SPARKS_CANT_HAVE)
-			if #ents < SPARKLIMIT then 
+			if #ents < SPARKLIMIT then
 				local pos = FindWalkableOffset(pt, math.random()*2*PI, 5 + math.random()* 20, 16, nil, nil, customcheckfn, nil, nil)
 				if pos then
 					local spark = SpawnPrefab("moonstorm_spark")
@@ -727,7 +727,7 @@ function self:DoTestForLightning()
 			local spark = SpawnPrefab("moonstorm_lightning")
 			spark.Transform:SetPosition(pt.x + pos.x,0,pt.z + pos.z)
 		end
-	end	
+	end
 	self.moonstorm_lightning_task = self.inst:DoTaskInTime(getlightningtime(),function() self:DoTestForLightning() end)
 end
 
@@ -811,8 +811,8 @@ function self:OnLoad(data)
 	if data ~= nil then
 		if data._alterguardian_defeated_count then
 			_alterguardian_defeated_count = data._alterguardian_defeated_count
-			if _alterguardian_defeated_count > 0 then	
-				self.inst:DoTaskInTime(0,function()			
+			if _alterguardian_defeated_count > 0 then
+				self.inst:DoTaskInTime(0,function()
 					TheWorld:PushEvent("ms_setmoonphasestyle", {style = "glassed_default"})
 				end)
 			end
@@ -821,7 +821,7 @@ function self:OnLoad(data)
 		-- THIS MUST COME AFTER THE _alterguardian_defeated_count IS SET
 		if data.moonstyle_altar then
 			_moonstyle_altar = data.moonstyle_altar
-			self.inst:DoTaskInTime(0,setmoonphasestyle)    		
+			self.inst:DoTaskInTime(0,setmoonphasestyle)
 		end
 
 		if data.metplayers then
@@ -838,12 +838,12 @@ function self:OnLoad(data)
 			end
 			if data.currentbasenodeindex ~= nil then
 				self.currentbasenodeindextemp = data.currentbasenodeindex
-				self.inst:DoTaskInTime(1,function() 
-						self:StartMoonstorm(data.currentbasenodeindex, data.currentnodes) 
+				self.inst:DoTaskInTime(1,function()
+						self:StartMoonstorm(data.currentbasenodeindex, data.currentnodes)
 						self.currentbasenodeindextemp = nil
 					end)
 			else
-				self.startstormtask = self.inst:DoTaskInTime(1,function() self:StartMoonstorm() end)		
+				self.startstormtask = self.inst:DoTaskInTime(1,function() self:StartMoonstorm() end)
 			end
 		end
 	end
@@ -856,7 +856,7 @@ end
 function self:GetDebugString()
 
 	if true then
-		return nil 
+		return nil
 	end
 
 end

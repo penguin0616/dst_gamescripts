@@ -24,7 +24,7 @@ local prefabs_item =
 }
 
 local function ondeploy(inst, pt)--, deployer)
-    local ent = SpawnPrefab("minisign", inst.linked_skinname, inst.skin_id ) 
+    local ent = SpawnPrefab("minisign", inst.linked_skinname, inst.skin_id )
 
     if inst.components.stackable ~= nil then
         inst.components.stackable:Get():Remove()
@@ -69,7 +69,7 @@ local function OnDrawnFn(inst, image, src, atlas, bgimage, bgatlas)
             inst.AnimState:OverrideSymbol("SWAP_SIGN_BG", bgatlas or GetInventoryItemAtlas(bgimage..".tex"), bgimage..".tex")
         else
             inst.AnimState:ClearOverrideSymbol("SWAP_SIGN_BG")
-        end  
+        end
 
         if inst:HasTag("sign") then
             inst.components.drawable:SetCanDraw(false)

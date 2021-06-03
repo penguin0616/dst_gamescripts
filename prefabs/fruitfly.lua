@@ -163,7 +163,7 @@ end
 local function NumFruitFliesToSpawn(inst)
     local numFruitFlies = TUNING.LORDFRUITFLY_FRUITFLY_AMOUNT
     local numFollowers = inst.components.leader:CountFollowers()
-    
+
     local num = math.min(numFollowers+numFruitFlies/2, numFruitFlies) -- only spawn half the fruit flies per buzz
     num = (math.log(num)/0.4)+1 -- 0.4 is approx log(1.5)
     num = RoundToNearest(num, 1)
@@ -241,7 +241,7 @@ local function fn()
     inst.components.lootdropper:SetChanceLootTable("lordfruitfly")
     inst.components.lootdropper:SetLootSetupFn(LordLootSetupFunction)
     LordLootSetupFunction(inst.components.lootdropper)
-    
+
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWake)
 
@@ -296,7 +296,7 @@ local function minifn()
     local inst = common()
 
     inst.sounds = minionsounds
-    
+
     inst.AnimState:SetBuild("fruitfly_evil_minion")
     inst.AnimState:PlayAnimation("idle")
 
@@ -312,7 +312,7 @@ local function minifn()
     end
 
     common_server(inst)
-    
+
     inst:AddComponent("follower")
 
     inst:AddComponent("combat")
@@ -326,7 +326,7 @@ local function minifn()
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.FRUITFLY_HEALTH)
-    
+
     inst.components.sleeper:SetSleepTest(ShouldSleep)
     inst.components.sleeper:SetWakeTest(ShouldWake)
 
@@ -362,7 +362,7 @@ local function FriendlyShouldWakeUp(inst)
 end
 
 local function FriendlyShouldSleep(inst)
-    return DefaultSleepTest(inst) 
+    return DefaultSleepTest(inst)
         and inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE)
 end
 
@@ -375,7 +375,7 @@ local function OnStopFollowing(inst)
 end
 
 local function OnStartFollowing(inst)
-    if inst.components.follower.leader:HasTag("fruitflyfruit") then 
+    if inst.components.follower.leader:HasTag("fruitflyfruit") then
         inst:AddTag("companion")
     end
 end
@@ -430,7 +430,7 @@ local function friendlyfn()
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aura = TUNING.SANITYAURA_TINY
-    
+
     inst:SetBrain(friendlybrain)
     inst:SetStateGraph("SGfruitfly")
 
@@ -551,7 +551,7 @@ local function fruitfn()
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = getstatus
     inst:AddComponent("inventoryitem")
-    
+
 
     MakeHauntableLaunch(inst)
 

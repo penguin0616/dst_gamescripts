@@ -2,7 +2,7 @@
 
 local potion_tunings =
 {
-	ghostlyelixir_slowregen = 
+	ghostlyelixir_slowregen =
 	{
 		TICK_RATE = TUNING.GHOSTLYELIXIR_SLOWREGEN_TICK_TIME,
 		ONAPPLY = function(inst, target) target:PushEvent("startsmallhealthregen", inst) end,
@@ -12,7 +12,7 @@ local potion_tunings =
 		fx = "ghostlyelixir_slowregen_fx",
 		dripfx = "ghostlyelixir_slowregen_dripfx",
 	},
-	ghostlyelixir_fastregen = 
+	ghostlyelixir_fastregen =
 	{
 		TICK_RATE = TUNING.GHOSTLYELIXIR_FASTREGEN_TICK_TIME,
 		ONAPPLY = function(inst, target) target:PushEvent("starthealthregen", inst) end,
@@ -22,9 +22,9 @@ local potion_tunings =
 		fx = "ghostlyelixir_fastregen_fx",
 		dripfx = "ghostlyelixir_fastregen_dripfx",
 	},
-	ghostlyelixir_attack = 
+	ghostlyelixir_attack =
 	{
-		ONAPPLY = function(inst, target) 
+		ONAPPLY = function(inst, target)
 			if target.UpdateDamage ~= nil then
 				target:UpdateDamage()
 			end
@@ -39,7 +39,7 @@ local potion_tunings =
 		fx = "ghostlyelixir_attack_fx",
 		dripfx = "ghostlyelixir_attack_dripfx",
 	},
-	ghostlyelixir_speed = 
+	ghostlyelixir_speed =
 	{
 		DURATION = TUNING.GHOSTLYELIXIR_SPEED_DURATION,
 		ONAPPLY = function(inst, target) target.components.locomotor:SetExternalSpeedMultiplier(inst, "ghostlyelixir", TUNING.GHOSTLYELIXIR_SPEED_LOCO_MULT) end,
@@ -48,7 +48,7 @@ local potion_tunings =
 		dripfx = "ghostlyelixir_speed_dripfx",
 		speed_hauntable = true,
 	},
-	ghostlyelixir_shield = 
+	ghostlyelixir_shield =
 	{
 		DURATION = TUNING.GHOSTLYELIXIR_SHIELD_DURATION,
         FLOATER = {"small", 0.15, 0.8},
@@ -56,7 +56,7 @@ local potion_tunings =
 		fx = "ghostlyelixir_shield_fx",
 		dripfx = "ghostlyelixir_shield_dripfx",
 	},
-	ghostlyelixir_retaliation = 
+	ghostlyelixir_retaliation =
 	{
 		DURATION = TUNING.GHOSTLYELIXIR_RETALIATION_DURATION,
         FLOATER = {"small", 0.2, 0.4},
@@ -176,7 +176,7 @@ end
 local function buff_OnAttached(inst, target)
 	inst.entity:SetParent(target.entity)
 	inst.Transform:SetPosition(0, 0, 0) --in case of loading
-	
+
 	if inst.potion_tunings.ONAPPLY ~= nil then
 		inst.potion_tunings.ONAPPLY(inst, target)
 	end
@@ -276,7 +276,7 @@ local function AddPotion(potions, name, anim)
 		Asset("ANIM", "anim/abigail_buff_drip.zip"),
 	}
 	local prefabs = {
-		buff_prefab, 
+		buff_prefab,
 		potion_tunings[potion_prefab].fx,
 		potion_tunings[potion_prefab].dripfx,
 	}
@@ -286,7 +286,7 @@ local function AddPotion(potions, name, anim)
 
 	local function _buff_fn() return buff_fn(potion_tunings[potion_prefab]) end
 	local function _potion_fn() return potion_fn(anim, potion_tunings[potion_prefab], buff_prefab) end
-		
+
 	table.insert(potions, Prefab(potion_prefab, _potion_fn, assets, prefabs))
 	table.insert(potions, Prefab(buff_prefab, _buff_fn))
 end

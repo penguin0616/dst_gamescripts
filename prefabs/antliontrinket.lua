@@ -36,7 +36,7 @@ local function fn()
 
     inst:AddComponent("stackable")
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
-    
+
     MakeHauntableLaunch(inst)
 
     return inst

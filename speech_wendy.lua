@@ -2,7 +2,7 @@
 return{
 	ACTIONFAIL =
 	{
-        APPRAISE = 
+        APPRAISE =
         {
             NOTNOW = "Oh. I suppose he's too busy...",
         },
@@ -38,7 +38,7 @@ return{
             MISMATCH = "I can't do anything right.",
         },
 		RUMMAGE =
-		{	
+		{
 			GENERIC = "Must everything in life be hard?",
 			INUSE = "I can come back later...",
             NOTMASTERCHEF = "That belongs to Warly.",
@@ -53,9 +53,12 @@ return{
         	KLAUS = "Death would surely find me if I tried...",
 			QUAGMIRE_WRONGKEY = "Should I give up, or find another key?",
         },
-		ACTIVATE = 
+		ACTIVATE =
 		{
 			LOCKED_GATE = "I can't open it without a key.",
+            HOSTBUSY = "I suppose he has more important things to do.",
+            CARNIVAL_HOST_HERE = "Mr. Raven? Are you here?",
+            NOCARNIVAL = "The ravens have deserted this place... I think I'll miss them."
 		},
         COOK =
         {
@@ -67,7 +70,7 @@ return{
         {
             NO_RACERS = "I suppose I'll have to go find some Carrats...",
         },
-        
+
 		DISMANTLE =
 		{
 			COOKING = "Mother warned me not to touch a pot while it's cooking.",
@@ -115,6 +118,8 @@ return{
 			PIGKINGGAME_MESSY = "Help me clean up, Abigail.",
 			PIGKINGGAME_DANGER = "Danger lurks. There's no time for games.",
 			PIGKINGGAME_TOOLATE = "It's much too late for games.",
+			CARNIVALGAME_INVALID_ITEM = "That's not what it wants.",
+			CARNIVALGAME_ALREADY_PLAYING = "They already started without me...",
         },
         GIVETOPLAYER =
         {
@@ -168,7 +173,7 @@ return{
 
             --MapRecorder/MapExplorer
             WRONGWORLD = "It's... not right...",
-			
+
 			--MapSpotRevealer/messagebottle
 			MESSAGEBOTTLEMANAGER_NOT_FOUND = "The world is too dark... I can't see it clearly.",--Likely trying to read messagebottle treasure map in caves
         },
@@ -192,8 +197,8 @@ return{
         },
         REPLATE =
         {
-            MISMATCH = "Like my soul, this food doesn't belong in this vessel.", 
-            SAMEDISH = "I've already put this on a dish.", 
+            MISMATCH = "Like my soul, this food doesn't belong in this vessel.",
+            SAMEDISH = "I've already put this on a dish.",
         },
         SAIL =
         {
@@ -229,7 +234,7 @@ return{
         {
             ONEGHOST = "I can only ferry one soul to their destination at a time...",
         },
-		TELLSTORY = 
+		TELLSTORY =
 		{
 			GENERIC = "only_used_by_walter",
 --fallback to speech_wilson.lua 			NOT_NIGHT = "only_used_by_walter",
@@ -272,22 +277,26 @@ return{
             BEEF_HITCHED = "My beefalo can only leave when I choose it so.",
             INMOOD = "I don't think I can manage it while they're like this.",
         },
-        MARK = 
+        MARK =
         {
             ALREADY_MARKED = "I made my choice.",
             NOT_PARTICIPANT = "Maybe next time I can enter a beefalo of my own...",
         },
-        YOTB_STARTCONTEST = 
+        YOTB_STARTCONTEST =
         {
             DOESNTWORK = "Hello sir? He seems to be out.",
             ALREADYACTIVE = "He must be busy somewhere else.",
         },
-        YOTB_UNLOCKSKIN = 
+        YOTB_UNLOCKSKIN =
         {
             ALREADYKNOWN = "Ah. I've seen it before.",
-        }
-
+        },
+        CARNIVALGAME_FEED =
+        {
+            TOO_LATE = "I was too late...",
+        },
 	},
+
 	ACTIONFAIL_GENERIC = "I can't do anything right.",
 	ANNOUNCE_BOAT_LEAK = "Our boat weeps salty tears.",
 	ANNOUNCE_BOAT_SINK = "Here I come, Ophelia.",
@@ -310,13 +319,13 @@ return{
 	ANNOUNCE_BOOMERANG = "Ow! That was karma.",
 	ANNOUNCE_CHARLIE = "Demon! Show yourself!",
 	ANNOUNCE_CHARLIE_ATTACK = "I am attacked!",
---fallback to speech_wilson.lua 	ANNOUNCE_CHARLIE_MISSED = "only_used_by_winona", --winona specific 
+--fallback to speech_wilson.lua 	ANNOUNCE_CHARLIE_MISSED = "only_used_by_winona", --winona specific
 	ANNOUNCE_COLD = "I am chilled to the bone.",
 	ANNOUNCE_HOT = "I am miserably hot.",
 	ANNOUNCE_CRAFTING_FAIL = "I lack the necessary materials.",
 	ANNOUNCE_DEERCLOPS = "That could be bad.",
 	ANNOUNCE_CAVEIN = "We're going to be crushed...",
-	ANNOUNCE_ANTLION_SINKHOLE = 
+	ANNOUNCE_ANTLION_SINKHOLE =
 	{
 		"Oh, now what?",
 		"The ground crumbles beneath me.",
@@ -331,7 +340,7 @@ return{
 	ANNOUNCE_SACREDCHEST_YES = "It accepted our items.",
 	ANNOUNCE_SACREDCHEST_NO = "We failed... again...",
     ANNOUNCE_DUSK = "The sickly sweet scent of roses fills the air...",
-    
+
     --wx-78 specific
 --fallback to speech_wilson.lua     ANNOUNCE_CHARGE = "only_used_by_wx78",
 --fallback to speech_wilson.lua 	ANNOUNCE_DISCHARGE = "only_used_by_wx78",
@@ -344,7 +353,7 @@ return{
 		STALE = "Was that stale?",
 		INVALID = "I would never.",
         YUCKY = "I fear consuming that.",
-        
+
         --Warly specific ANNOUNCE_EAT strings
 --fallback to speech_wilson.lua 		COOKED = "only_used_by_warly",
 --fallback to speech_wilson.lua 		DRIED = "only_used_by_warly",
@@ -357,7 +366,7 @@ return{
 --fallback to speech_wilson.lua         SAME_OLD_5 = "only_used_by_warly",
 --fallback to speech_wilson.lua 		TASTY = "only_used_by_warly",
     },
-    
+
     ANNOUNCE_ENCUMBERED =
     {
         "I must carry... my own burden...",
@@ -370,7 +379,7 @@ return{
         "Don't worry... Abby... I got it...",
         "My heart is heavy enough... without this...",
     },
-    ANNOUNCE_ATRIUM_DESTABILIZING = 
+    ANNOUNCE_ATRIUM_DESTABILIZING =
     {
 		"The dead shall rise.",
 		"The beasts are coming.",
@@ -424,7 +433,7 @@ return{
 	ANNOUNCE_TOWNPORTALTELEPORT = "Did I die?",
 	ANNOUNCE_CANFIX = "\nUnlike my heart, this could be mended.",
 	ANNOUNCE_ACCOMPLISHMENT = "All of this is transient.",
-	ANNOUNCE_ACCOMPLISHMENT_DONE = "This will be forgotten too, some day.",	
+	ANNOUNCE_ACCOMPLISHMENT_DONE = "This will be forgotten too, some day.",
 	ANNOUNCE_INSUFFICIENTFERTILIZER = "It could use a bit more.",
 	ANNOUNCE_TOOL_SLIP = "Oh well, I didn't need it anyways.",
 	ANNOUNCE_LIGHTNING_DAMAGE_AVOIDED = "So close to death, yet so far.",
@@ -486,25 +495,25 @@ return{
 --fallback to speech_wilson.lua     },
 
     --winona specific
---fallback to speech_wilson.lua     ANNOUNCE_HUNGRY_SLOWBUILD = 
+--fallback to speech_wilson.lua     ANNOUNCE_HUNGRY_SLOWBUILD =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua 	    "only_used_by_winona",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_HUNGRY_FASTBUILD = 
+--fallback to speech_wilson.lua     ANNOUNCE_HUNGRY_FASTBUILD =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua 	    "only_used_by_winona",
 --fallback to speech_wilson.lua     },
 
     --wormwood specific
---fallback to speech_wilson.lua     ANNOUNCE_KILLEDPLANT = 
+--fallback to speech_wilson.lua     ANNOUNCE_KILLEDPLANT =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wormwood",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_GROWPLANT = 
+--fallback to speech_wilson.lua     ANNOUNCE_GROWPLANT =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wormwood",
 --fallback to speech_wilson.lua     },
---fallback to speech_wilson.lua     ANNOUNCE_BLOOMING = 
+--fallback to speech_wilson.lua     ANNOUNCE_BLOOMING =
 --fallback to speech_wilson.lua     {
 --fallback to speech_wilson.lua         "only_used_by_wormwood",
 --fallback to speech_wilson.lua     },
@@ -561,19 +570,19 @@ return{
     ANNOUNCE_ATTACH_BUFF_WORKEFFECTIVENESS = "I suppose I might as well make myself useful.",
     ANNOUNCE_ATTACH_BUFF_MOISTUREIMMUNITY  = "At least I'll stay dry through my misery.",
     ANNOUNCE_ATTACH_BUFF_SLEEPRESISTANCE   = "If Abigail cannot rest, I won't either.",
-    
+
     ANNOUNCE_DETACH_BUFF_ELECTRICATTACK    = "The storm has passed.",
     ANNOUNCE_DETACH_BUFF_ATTACK            = "My strength is fading.",
     ANNOUNCE_DETACH_BUFF_PLAYERABSORPTION  = "Ah. It couldn't last.",
     ANNOUNCE_DETACH_BUFF_WORKEFFECTIVENESS = "It seems my zeal was short-lived.",
     ANNOUNCE_DETACH_BUFF_MOISTUREIMMUNITY  = "Once more I'm left defenseless against the elements.",
     ANNOUNCE_DETACH_BUFF_SLEEPRESISTANCE   = "I'm sorry... I'm getting so tired...",
-    
+
 	ANNOUNCE_OCEANFISHING_LINESNAP = "Ah. Predictable.",
 	ANNOUNCE_OCEANFISHING_LINETOOLOOSE = "My line is too loose.",
 	ANNOUNCE_OCEANFISHING_GOTAWAY = "It can't evade death forever.",
 	ANNOUNCE_OCEANFISHING_BADCAST = "Sigh. Of course.",
-	ANNOUNCE_OCEANFISHING_IDLE_QUOTE = 
+	ANNOUNCE_OCEANFISHING_IDLE_QUOTE =
 	{
 		"It's not like I have anything better to do.",
 		"I suppose I'll just starve.",
@@ -594,7 +603,7 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_CANTBUILDHERE_THRONE = "only_used_by_wurt",
 --fallback to speech_wilson.lua     ANNOUNCE_CANTBUILDHERE_HOUSE = "only_used_by_wurt",
 --fallback to speech_wilson.lua     ANNOUNCE_CANTBUILDHERE_WATCHTOWER = "only_used_by_wurt",
-    ANNOUNCE_READ_BOOK = 
+    ANNOUNCE_READ_BOOK =
     {
 --fallback to speech_wilson.lua         BOOK_SLEEP = "only_used_by_wurt",
 --fallback to speech_wilson.lua         BOOK_BIRDS = "only_used_by_wurt",
@@ -612,8 +621,8 @@ return{
         "Of course you'd go in the opposite direction.",
         "Are you trying to mock me, Carrat?",
     },
-    ANNOUNCE_CARRAT_ERROR_FELL_ASLEEP = "Wake up, you silly Carrat!",    
-    ANNOUNCE_CARRAT_ERROR_WALKING = "Must you drag your heels so?",    
+    ANNOUNCE_CARRAT_ERROR_FELL_ASLEEP = "Wake up, you silly Carrat!",
+    ANNOUNCE_CARRAT_ERROR_WALKING = "Must you drag your heels so?",
     ANNOUNCE_CARRAT_ERROR_STUNNED = "Why won't you move?",
 
     ANNOUNCE_GHOST_QUEST = "You need me to... find something you've lost?",
@@ -629,14 +638,14 @@ return{
     ANNOUNCE_ABIGAIL_DEATH = "No... don't leave me alone again!",
     ANNOUNCE_ABIGAIL_RETRIEVE = "I'm sorry... it's not safe for you out here.",
 	ANNOUNCE_ABIGAIL_LOW_HEALTH = "Be careful, Abigail!",
-    ANNOUNCE_ABIGAIL_SUMMON = 
+    ANNOUNCE_ABIGAIL_SUMMON =
 	{
 		LEVEL1 = "I know you're tired, but I can't do this alone...",
 		LEVEL2 = "I need your help, Abigail...",
 		LEVEL3 = "You've rested in peace long enough, dear sister.",
 	},
 
-    ANNOUNCE_GHOSTLYBOND_LEVELUP = 
+    ANNOUNCE_GHOSTLYBOND_LEVELUP =
 	{
 		LEVEL2 = "You seem to have brightened up a bit, Abigail.",
 		LEVEL3 = "Abigail has always been my guiding light in the darkness...",
@@ -659,14 +668,14 @@ return{
 
     ANNOUNCE_FERTILIZER_RESEARCHED = "I suppose we will all be nourishment for plants one day.",
 
-	ANNOUNCE_FIRENETTLE_TOXIN = 
+	ANNOUNCE_FIRENETTLE_TOXIN =
 	{
 		"Why should my life be anything other than pain...",
 		"What a terrible poison... I feel as though I might burn up.",
 	},
 	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "Alas, I still live.",
 
-	ANNOUNCE_TALK_TO_PLANTS = 
+	ANNOUNCE_TALK_TO_PLANTS =
 	{
         "Abigail was the one who loved the garden. She would have been better at this than me.",
         "Go on then, grow if you must.",
@@ -936,7 +945,7 @@ return{
 --fallback to speech_wilson.lua             OPEN = "If I step through, will I still be me?",
 --fallback to speech_wilson.lua             FULL = "It seems to be popular over there.",
 --fallback to speech_wilson.lua         },
-        GLOMMER = 
+        GLOMMER =
         {
             GENERIC = "Well aren't you a happy little fuzzball. Die.",
             SLEEPING = "Is it dead? Oh, just sleeping.",
@@ -998,7 +1007,7 @@ return{
 			GENERIC = "For when I don't want to be alone...",
 			ACTIVE = "The way is clear.",
 		},
-        TOWNPORTALTALISMAN = 
+        TOWNPORTALTALISMAN =
         {
 			GENERIC = "It came from the belly of the sphinx.",
 			ACTIVE = "Take me far from here.",
@@ -1014,7 +1023,7 @@ return{
             WRONGSTAFF = "That doesn't look right...",
             MOONSTAFF = "Bathed in pale eternal light...",
         },
-        MOONDIAL = 
+        MOONDIAL =
         {
 			GENERIC = "Does it reflect from the other side too, Abigail?",
 			NIGHT_NEW = "A new moon looms above us.",
@@ -1053,7 +1062,7 @@ return{
 		ORANGESTAFF = "With each use the wielder dies and is again reborn.",
 		YELLOWAMULET = "A brief light in a dark life.",
 		GREENAMULET = "A flash of brilliance!",
-		SLURPERPELT = "An empty bag of hunger.",	
+		SLURPERPELT = "An empty bag of hunger.",
 
 		SLURPER = "Ah, to be so simple.",
 		SLURPER_PELT = "An empty bag of hunger.",
@@ -1064,12 +1073,12 @@ return{
 		ORANGEGEM = "Such things used to bring me happiness.",
         OPALSTAFF = "As cold and lifeless as... well...",
         OPALPRECIOUSGEM = "I see a million sad eyes reflecting back at me...",
-        TELEBASE = 
+        TELEBASE =
 		{
 			VALID = "Energy flows through it.",
 			GEMS = "The focus is so lifeless.",
 		},
-		GEMSOCKET = 
+		GEMSOCKET =
 		{
 			VALID = "The gem has focused it.",
 			GEMS = "It looks so empty.",
@@ -1090,7 +1099,7 @@ return{
 		CAVE_BANANA_COOKED = "Warmed banana mush is so much better.",
 		CAVE_BANANA_TREE = "Poor plant, locked away from the sun.",
 		ROCKY = "What terrible sights they have seen.",
-		
+
 		COMPASS =
 		{
 			GENERIC="I am directionless.",
@@ -1233,14 +1242,14 @@ return{
 		POWCAKE = "I would have to be desperate.",
         CAVE_ENTRANCE = "Someone is trying to keep the underground at bay.",
         CAVE_ENTRANCE_RUINS = "Someone is trying to keep the underground at bay.",
-       
-       	CAVE_ENTRANCE_OPEN = 
+
+       	CAVE_ENTRANCE_OPEN =
         {
             GENERIC = "I'm too busy descending into madness to descend that cave.",
             OPEN = "A great evil lurks beneath the surface.",
             FULL = "There's no room at the cave party for me...",
         },
-        CAVE_EXIT = 
+        CAVE_EXIT =
         {
             GENERIC = "Why leave? The light here compliments my complexion.",
             OPEN = "The surface beckons.",
@@ -1257,12 +1266,12 @@ return{
                 "It was so lonely without you here.",
                 "That's my twin sister, Abigail.",
             },
-            LEVEL2 = 
+            LEVEL2 =
             {
                 "We'll never be apart again.",
                 "That's my twin sister, Abigail.",
             },
-            LEVEL3 = 
+            LEVEL3 =
             {
                 "Let's play, Abigail!",
                 "That's my twin sister, Abigail.",
@@ -1283,7 +1292,7 @@ return{
 			REMAINS_THINGIE = "This was once some thing before it got burned...",
 		},
 		AXE = "An instrument for industry and murder.",
-		BABYBEEFALO = 
+		BABYBEEFALO =
 		{
 			GENERIC = "Enjoy your youth. Soon you will learn the terrors of the real world.",
 		    SLEEPING = "Don't wake up.",
@@ -1301,7 +1310,7 @@ return{
 		BEARGER_FUR = "It smells like death.",
 		BEDROLL_STRAW = "Sleep is but a temporary death.",
 		BEEQUEEN = "As regal as she is ruthless...",
-		BEEQUEENHIVE = 
+		BEEQUEENHIVE =
 		{
 			GENERIC = "The bees left their sweet mark upon the earth.",
 			GROWING = "It is not a danger... yet...",
@@ -1406,8 +1415,8 @@ return{
 		BLOWDART_YELLOW = "Airborne lightning and death.",
 		BLUEAMULET = "A familiar, chilling embrace.",
 		BLUEGEM = "Blue like... er... a sad bird?",
-		BLUEPRINT = 
-		{ 
+		BLUEPRINT =
+		{
             COMMON = "Whoever drew this is probably dead.",
             RARE = "I'm surprised we didn't die trying to get this.",
         },
@@ -1437,7 +1446,7 @@ return{
 
 		SHADOWDIGGER = "Was he your brother?",
 
-		CACTUS = 
+		CACTUS =
 		{
 			GENERIC = "Knives out.",
 			PICKED = "Flattened.",
@@ -1466,7 +1475,7 @@ return{
 		},
 		CANE = "To explore to the ends of this wretched world.",
 		CATCOON = "I wonder if it had a twin, too.",
-		CATCOONDEN = 
+		CATCOONDEN =
 		{
 			GENERIC = "I could curl up and die in there.",
 			EMPTY = "All cats must die.",
@@ -1615,21 +1624,21 @@ return{
 		ARMORDRAGONFLY = "I'd wear it inside-out.",
 		DRAGON_SCALES = "Scales of pain.",
 		DRAGONFLYCHEST = "Boom box.",
-		DRAGONFLYFURNACE = 
+		DRAGONFLYFURNACE =
 		{
 			HAMMERED = "Pathetic.",
 			GENERIC = "Its teeth do not even gnash.", --no gems
 			NORMAL = "Burns hot... but not bright...", --one gem
 			HIGH = "No need to lean in and check if it's hot. I can feel it from here.", --two gems
 		},
-        
+
         HUTCH = "He is blissfully ignorant.",
         HUTCH_FISHBOWL =
         {
             GENERIC = "It's not floating, yet.",
             WAITING = "It's reached its natural state.",
         },
-		LAVASPIT = 
+		LAVASPIT =
 		{
 			HOT = "It spit up.",
 			COOL = "It's cooled off and smells funny.",
@@ -1637,14 +1646,14 @@ return{
 		LAVA_POND = "I could jump in and be done.",
 		LAVAE = "It burns with the fires of Hell.",
 		LAVAE_COCOON = "Cold-blooded.",
-		LAVAE_PET = 
+		LAVAE_PET =
 		{
 			STARVING = "He is approaching death.",
 			HUNGRY = "He is suffering the pangs of hunger.",
 			CONTENT = "Enjoy your happiness while it lasts, little lavae.",
 			GENERIC = "A spark of life illuminating the darkness.",
 		},
-		LAVAE_EGG = 
+		LAVAE_EGG =
 		{
 			GENERIC = "Is it worth it to put stake in your future?",
 		},
@@ -1673,8 +1682,8 @@ return{
 		EGGPLANT = "Almost a deadly nightshade. Almost.",
 		EGGPLANT_COOKED = "Cooking this nightshade made it even less deadly.",
 		EGGPLANT_SEEDS = "It's a plant that's waiting to be.",
-		
-		ENDTABLE = 
+
+		ENDTABLE =
 		{
 			BURNT = "Nothing lasts forever.",
 			GENERIC = "We pulled the flowers from their homes for our own amusement.",
@@ -1683,7 +1692,7 @@ return{
 			FRESHLIGHT = "It's illuminating... for now.",
 			OLDLIGHT = "It, too, will die.", -- will be wilted soon, light radius will be very small at this point
 		},
-		DECIDUOUSTREE = 
+		DECIDUOUSTREE =
 		{
 			BURNING = "It's burning brightly.",
 			BURNT = "Used up and done for.",
@@ -1709,12 +1718,12 @@ return{
 			CHOPPED = "Everything dies.",
 			GENERIC = "Its cycle of life is ending.",
 		},
-		TWIGGYTREE = 
+		TWIGGYTREE =
 		{
 			BURNING = "It's burning brightly.",
 			BURNT = "Used up and done for.",
 			CHOPPED = "Everything dies.",
-			GENERIC = "How all must toil for the necessities of life.",			
+			GENERIC = "How all must toil for the necessities of life.",
 			DISEASED = "It's not long for this world...",
 		},
 		TWIGGY_NUT_SAPLING = "It looks so innocent.",
@@ -1762,8 +1771,8 @@ return{
 			OUT = "That is not a good sign.",
 		},
 		FIRESTAFF = "The world will burn before this staff.",
-		FIRESUPPRESSOR = 
-		{	
+		FIRESUPPRESSOR =
+		{
 			ON = "I don't know why you bother. We're all going to burn.",
 			OFF = "Quiet as a corpse.",
 			LOWFUEL = "It's running on fumes.",
@@ -1775,7 +1784,7 @@ return{
 		FISHTACOS = "Hopefully no bones still linger within.",
 		FISH_COOKED = "A proper grilling puts a stop to the flopping.",
 		FLINT = "A tiny blade-like rock.",
-		FLOWER = 
+		FLOWER =
 		{
             GENERIC = "They are bright and cheery. Yuck.",
             ROSE = "Prickly and blood red...",
@@ -1807,7 +1816,7 @@ return{
 		FROGLEGS = "Torn right from the frog.",
 		FROGLEGS_COOKED = "Definitely not twitching any longer.",
 		FRUITMEDLEY = "Sweet, tart and in a cup.",
-		FURTUFT = "This came from a living creature.", 
+		FURTUFT = "This came from a living creature.",
 		GEARS = "The insides of a mechanical demon.",
 		GHOST = "He has risen from the grave!",
 		GOLDENAXE = "One might as well kill trees with style.",
@@ -1825,9 +1834,9 @@ return{
 			DISEASED = "It's not long for this world...",
 			DISEASING = "It is on the precipice...",
 		},
-		GRASSGEKKO = 
+		GRASSGEKKO =
 		{
-			GENERIC = "This is a creature ruled by fear.",	
+			GENERIC = "This is a creature ruled by fear.",
 			DISEASED = "It's suffering.",
 		},
 		GREEN_CAP = "This mushroom is disappointingly normal.",
@@ -1912,7 +1921,7 @@ return{
 			CHARGED = "Even this power will run out.",
 			GENERIC = "Focuses the destruction.",
 		},
-		LIGHTNINGGOAT = 
+		LIGHTNINGGOAT =
 		{
 			GENERIC = "Look at those hooves.",
 			CHARGED = "Chaaaarge!",
@@ -2216,7 +2225,7 @@ return{
 			DISEASED = "It's not long for this world...",
 			DISEASING = "It is on the precipice...",
 		},
-   		SCARECROW = 
+   		SCARECROW =
    		{
 			GENERIC = "Who would want to scare crows away?",
 			BURNING = "Antagonizing crows is always bad luck.",
@@ -2230,7 +2239,7 @@ return{
 			BURNT = "...I can't be disappointed... If I expect nothing...",
    		},
         SCULPTURE_KNIGHTHEAD = "Off with his head! Heehee.",
-		SCULPTURE_KNIGHTBODY = 
+		SCULPTURE_KNIGHTBODY =
 		{
 			COVERED = "There's a sickly beauty to it...",
 			UNCOVERED = "We all have monsters within, I suppose.",
@@ -2238,7 +2247,7 @@ return{
 			READY = "It wants out...",
 		},
         SCULPTURE_BISHOPHEAD = "How did this get here?",
-		SCULPTURE_BISHOPBODY = 
+		SCULPTURE_BISHOPBODY =
 		{
 			COVERED = "A beautiful corruption gnaws at its base...",
 			UNCOVERED = "The more the marble wastes, the more the statue grows.",
@@ -2246,7 +2255,7 @@ return{
 			READY = "It wants out...",
 		},
         SCULPTURE_ROOKNOSE = "Strange marble debris...",
-		SCULPTURE_ROOKBODY = 
+		SCULPTURE_ROOKBODY =
 		{
 			COVERED = "I feel... queasy...",
 			UNCOVERED = "Perhaps it wanted to hide the shame of its monstrous form?",
@@ -2300,7 +2309,7 @@ return{
 			AWAKE = "A creature of shadow that seeks the light... how sad...",
 			HIDING = "My heart aches with its beauty.",
         },
-        STATUE_MARBLE = 
+        STATUE_MARBLE =
         {
             GENERIC = "Cold, hard stone...",
             TYPE1 = "Each of us wear many masks...",
@@ -2352,12 +2361,12 @@ return{
 		TELEPORTATO_POTATO = "What a hideous creation!",
 		TELEPORTATO_RING = "It has no sharp edges.",
 		TELESTAFF = "We could escape if it were more powerful.",
-		TENT = 
+		TENT =
 		{
 			GENERIC = "Sleep is but a preview of death.",
 			BURNT = "A preview of the fires of Hell.",
 		},
-		SIESTAHUT = 
+		SIESTAHUT =
 		{
 			GENERIC = "A siesta is but a preview of death.",
 			BURNT = "A preview of the fires of Hell.",
@@ -2375,19 +2384,19 @@ return{
 		TRAP = "Simple grass has become deadly.",
 		TRAP_TEETH = "A devious surprise from underground.",
 		TRAP_TEETH_MAXWELL = "Death when I least expect it.",
-		TREASURECHEST = 
+		TREASURECHEST =
 		{
 			GENERIC = "For which to contain my lucre.",
 			BURNT = "It couldn't even hold ashes.",
 		},
 		TREASURECHEST_TRAP = "Every once in awhile, things go my way.",
-		SACRED_CHEST = 
+		SACRED_CHEST =
 		{
 			GENERIC = "It is touched by death.",
 			LOCKED = "It judges my very being.",
 		},
 		TREECLUMP = "Was this placed intentionally?",
-		
+
 		TRINKET_1 = "Perfectly misshapen.", --Melted Marbles
 		TRINKET_2 = "Just a temptation, like death.", --Fake Kazoo
 		TRINKET_3 = "If only knives solved more of my problems...", --Gord's Knot
@@ -2446,7 +2455,7 @@ return{
         LOST_TOY_19 = "I get the feeling... that this meant a great deal to someone.",
         LOST_TOY_42 = "I get the feeling... that this meant a great deal to someone.",
         LOST_TOY_43 = "I get the feeling... that this meant a great deal to someone.",
-        
+
         HALLOWEENCANDY_1 = "Oh... it's... g-good.",
         HALLOWEENCANDY_2 = "The most delicious lie.",
         HALLOWEENCANDY_3 = "Sigh. At least it's honest.",
@@ -2465,18 +2474,18 @@ return{
 
 		HALLOWEEN_ORNAMENT_1 = "It reminds me of Abigail. I'll hang it somewhere.",
 		HALLOWEEN_ORNAMENT_2 = "It longs to be hung somewhere.",
-		HALLOWEEN_ORNAMENT_3 = "Decoration for a devilish day.", 
+		HALLOWEEN_ORNAMENT_3 = "Decoration for a devilish day.",
 		HALLOWEEN_ORNAMENT_4 = "A memorial for a monster.",
 		HALLOWEEN_ORNAMENT_5 = "It descends into darkness.",
-		HALLOWEEN_ORNAMENT_6 = "Crows in trees mean souls trapped between worlds.", 
+		HALLOWEEN_ORNAMENT_6 = "Crows in trees mean souls trapped between worlds.",
 
 		HALLOWEENPOTION_DRINKS_WEAK = "Like life, it's a bit disappointing.",
 		HALLOWEENPOTION_DRINKS_POTENT = "If only life was so potent.",
         HALLOWEENPOTION_BRAVERY = "Things seem less horrifying with this.",
 		HALLOWEENPOTION_MOON = "If only it could change the past.",
-		HALLOWEENPOTION_FIRE_FX = "I wish I possessed such burning within my heart.", 
+		HALLOWEENPOTION_FIRE_FX = "I wish I possessed such burning within my heart.",
 		MADSCIENCE_LAB = "Madness lies within.",
-		LIVINGTREE_ROOT = "Potential horror.", 
+		LIVINGTREE_ROOT = "Potential horror.",
 		LIVINGTREE_SAPLING = "It'll grow up big and abhorrent.",
 
         DRAGONHEADHAT = "What big eyes you have.",
@@ -2493,19 +2502,19 @@ return{
         FIRECRACKERS = "It needs only a light.",
         PERDFAN = "It's... surprisingly soft.",
         REDPOUCH = "What lies within?",
-        WARGSHRINE = 
+        WARGSHRINE =
         {
             GENERIC = "The hounds are baying.",
             EMPTY = "We must light a fire to honor the hound.",
 --fallback to speech_wilson.lua             BURNING = "I should make something fun.", --for willow to override
             BURNT = "Dust to dust.",
         },
-        CLAYWARG = 
+        CLAYWARG =
         {
         	GENERIC = "To perish now would save me much sorrow.",
         	STATUE = "There is no life in its eyes.",
         },
-        CLAYHOUND = 
+        CLAYHOUND =
         {
         	GENERIC = "My, what big teeth you have.",
         	STATUE = "Naught but a pithy imitation of life.",
@@ -2564,44 +2573,44 @@ return{
             BURNT = "Ashes to ashes.",
         },
 
-        YOTC_CARRAT_GYM_DIRECTION = 
+        YOTC_CARRAT_GYM_DIRECTION =
         {
             GENERIC = "If only my life could find some direction.",
             RAT = "An exercise in futility.",
             BURNT = "Returned to dust.",
         },
-        YOTC_CARRAT_GYM_SPEED = 
+        YOTC_CARRAT_GYM_SPEED =
         {
             GENERIC = "I had a hamster once. It died.",
             RAT = "Running, running, yet going nowhere.",
             BURNT = "Returned to dust.",
         },
-        YOTC_CARRAT_GYM_REACTION = 
+        YOTC_CARRAT_GYM_REACTION =
         {
             GENERIC = "After all, one never knows when disaster will strike...",
             RAT = "What a silly creature.",
             BURNT = "Returned to dust.",
         },
-        YOTC_CARRAT_GYM_STAMINA = 
+        YOTC_CARRAT_GYM_STAMINA =
         {
             GENERIC = "Abigail would have enjoyed this.",
             RAT = "You know you'll never get that berry, don't you?",
             BURNT = "Returned to dust.",
-        }, 
+        },
 
         YOTC_CARRAT_GYM_DIRECTION_ITEM = "I suppose I'd better get started.",
         YOTC_CARRAT_GYM_SPEED_ITEM = "I'd rather not carry it any longer.",
         YOTC_CARRAT_GYM_STAMINA_ITEM = "Perhaps I could put it over here...",
         YOTC_CARRAT_GYM_REACTION_ITEM = "What a lot of trouble to go to.",
 
-        YOTC_CARRAT_SCALE_ITEM = "How do you measure one's worth?",           
-        YOTC_CARRAT_SCALE = 
+        YOTC_CARRAT_SCALE_ITEM = "How do you measure one's worth?",
+        YOTC_CARRAT_SCALE =
         {
             GENERIC = "What is the measure of a Carrat?",
             CARRAT = "I don't know what I expected, really.",
             CARRAT_GOOD = "Oh... that's actually pretty good.",
             BURNT = "\"Ashes, ashes, we all fall down.\"",
-        },                
+        },
 
         YOTB_BEEFALOSHRINE =
         {
@@ -2631,8 +2640,8 @@ return{
 		GRASS_UMBRELLA = "The sun beats down.",
 		UNIMPLEMENTED = "It's not done, like life.",
 		WAFFLES = "They're definitely waffles.",
-		WALL_HAY = 
-		{	
+		WALL_HAY =
+		{
 			GENERIC = "That is a mere suggestion of defense.",
 			BURNT = "Defenses down.",
 		},
@@ -2641,7 +2650,7 @@ return{
 		WALL_STONE_ITEM = "These won't protect from the demons within.",
 		WALL_RUINS = "These didn't protect the ancients, now did they!",
 		WALL_RUINS_ITEM = "Are the very stones haunted?",
-		WALL_WOOD = 
+		WALL_WOOD =
 		{
 			GENERIC = "It will only delay the inevitable.",
 			BURNT = "The inevitable is coming.",
@@ -2661,7 +2670,7 @@ return{
 			GENERIC = "This home is not a happy one, I fear.",
 		},
 		WALRUS_TUSK = "I gnash at thee.",
-		WARDROBE = 
+		WARDROBE =
 		{
 			GENERIC = "It reminds me of a story I used to read with Abigail.",
             BURNING = "Soon it will be nothing but ashes.",
@@ -2677,7 +2686,7 @@ return{
 		WETGOOP = "A miserable mess, just like life.",
         WHIP = "It only provides the illusion of control.",
 		WINTERHAT = "It helps stave off the encroaching cold.",
-		WINTEROMETER = 
+		WINTEROMETER =
 		{
 			GENERIC = "Why do I feel that it is measuring our mortality?",
 			BURNT = "Does that mean my day to die is here?",
@@ -2690,7 +2699,7 @@ return{
             CANDECORATE = "Oh, joy.",
             YOUNG = "It's not ready yet.",
         },
-		WINTER_TREESTAND = 
+		WINTER_TREESTAND =
 		{
 			GENERIC = "We can plant a Winter's Feast tree.",
             BURNT = "Death comes for all of us...",
@@ -2737,7 +2746,7 @@ return{
 		TAMALES = "Little pockets of warmth in this cold world.",
 		TOURTIERE = "I cannot be comforted by comfort food... but I will have some more...",
 
-		TABLE_WINTERS_FEAST = 
+		TABLE_WINTERS_FEAST =
 		{
 			GENERIC = "A table for gatherings.",
 			HAS_FOOD = "I wish Abigail could enjoy some of that.",
@@ -2745,8 +2754,8 @@ return{
 			BURNT = "It seems the time for celebration is over.",
 		},
 
-		GINGERBREADWARG = "Horrible evil in a festive coating.", 
-		GINGERBREADHOUSE = "Temporary joy, meant to be consumed.", 
+		GINGERBREADWARG = "Horrible evil in a festive coating.",
+		GINGERBREADHOUSE = "Temporary joy, meant to be consumed.",
 		GINGERBREADPIG = "No one wants to be my friend.",
 		CRUMBS = "The little guy is falling apart.",
 		WINTERSFEASTFUEL = "Makes me think of holidays with Abigail.",
@@ -2760,12 +2769,12 @@ return{
 			OPEN = "No matter what it consumes, it is never satisfied.",
 		},
 		WORMHOLE_LIMITED = "It will soon give up.",
-		ACCOMPLISHMENT_SHRINE = "I've never much cared for metaphor.",        
+		ACCOMPLISHMENT_SHRINE = "I've never much cared for metaphor.",
 		LIVINGTREE = "Can it never die?",
 		ICESTAFF = "A staff to freeze.",
 		REVIVER = "Choices matter.",
 		SHADOWHEART = "It beats with a sorrow to span the skies and plumb the darkest seas.",
-        ATRIUM_RUBBLE = 
+        ATRIUM_RUBBLE =
         {
 			LINE_1 = "A people struck by famine and sorrow.",
 			LINE_2 = "A piece of their story, lost to time.",
@@ -2774,7 +2783,7 @@ return{
 			LINE_5 = "Finally, a city, full of life.",
 		},
         ATRIUM_STATUE = "A tortured soul.",
-        ATRIUM_LIGHT = 
+        ATRIUM_LIGHT =
         {
 			ON = "A deathly light dances across the room.",
 			OFF = "There is no light to be found.",
@@ -2822,7 +2831,7 @@ return{
 		RHINODRILL = "Brotherly camaraderie will not save you.",
 		BEETLETAUR = "You are a prisoner of your own doomed destiny.",
 
-        LAVAARENA_PORTAL = 
+        LAVAARENA_PORTAL =
         {
             ON = "I bid you good day.",
             GENERIC = "I dared not hope it would take me home.",
@@ -2870,49 +2879,49 @@ return{
 		LAVAARENA_HEAVYBLADE = "It's too heavy. Like my soul.",
 
         --Quagmire
-        QUAGMIRE_ALTAR = 
+        QUAGMIRE_ALTAR =
         {
         	GENERIC = "The monster's hunger shall never cease.",
         	FULL = "We have prolonged our horrific demise.",
     	},
 		QUAGMIRE_ALTAR_STATUE1 = "What horror have those eyes witnessed?",
 		QUAGMIRE_PARK_FOUNTAIN = "Long dry.",
-		
+
         QUAGMIRE_HOE = "To till the corrupt soil.",
-        
+
         QUAGMIRE_TURNIP = "It's... a turnip.",
         QUAGMIRE_TURNIP_COOKED = "The turnip is now cooked.",
         QUAGMIRE_TURNIP_SEEDS = "The life they contain is a mystery.",
-        
+
         QUAGMIRE_GARLIC = "It gives food flavor.",
         QUAGMIRE_GARLIC_COOKED = "It smells a bit nice.",
         QUAGMIRE_GARLIC_SEEDS = "The life they contain is a mystery.",
-        
+
         QUAGMIRE_ONION = "I never cry.",
         QUAGMIRE_ONION_COOKED = "It will never make anyone cry again.",
         QUAGMIRE_ONION_SEEDS = "The life they contain is a mystery.",
-        
+
         QUAGMIRE_POTATO = "It has eyes, yet it never cries.",
         QUAGMIRE_POTATO_COOKED = "Now its eyes will never open.",
         QUAGMIRE_POTATO_SEEDS = "The life they contain is a mystery.",
-        
+
         QUAGMIRE_TOMATO = "Red as heart's blood.",
         QUAGMIRE_TOMATO_COOKED = "Its flesh is far more bloody now.",
         QUAGMIRE_TOMATO_SEEDS = "The life they contain is a mystery.",
-        
+
         QUAGMIRE_FLOUR = "Flour by any other name would smell as sweet.",
         QUAGMIRE_WHEAT = "We can grind it down into flour.",
         QUAGMIRE_WHEAT_SEEDS = "The life they contain is a mystery.",
         --NOTE: raw/cooked carrot uses regular carrot strings
         QUAGMIRE_CARROT_SEEDS = "The life they contain is a mystery.",
-        
+
         QUAGMIRE_ROTTEN_CROP = "Time came for it.",
-        
+
 		QUAGMIRE_SALMON = "It flops as its life slowly leaves its body.",
 		QUAGMIRE_SALMON_COOKED = "Not so lively now.",
 		QUAGMIRE_CRABMEAT = "Its insides are as horrid as its outsides.",
 		QUAGMIRE_CRABMEAT_COOKED = "It's ready now.",
-		QUAGMIRE_SUGARWOODTREE = 
+		QUAGMIRE_SUGARWOODTREE =
 		{
 			GENERIC = "It has a sickly beauty.",
 			STUMP = "All things must end.",
@@ -2921,7 +2930,7 @@ return{
 			TAPPED_BUGS = "All that sacrifice for nothing.",
 			WOUNDED = "Its life ebbs.",
 		},
-		QUAGMIRE_SPOTSPICE_SHRUB = 
+		QUAGMIRE_SPOTSPICE_SHRUB =
 		{
 			GENERIC = "I suppose it could be edible.",
 			PICKED = "We've taken all there was to take.",
@@ -2935,11 +2944,11 @@ return{
 			READY = "There is salt to be had.",
 			GENERIC = "There is no salt, yet.",
 		},
-		
+
 		QUAGMIRE_POND_SALT = "Water, water, everywhere...",
 		QUAGMIRE_SALT_RACK_ITEM = "It's for collecting salt from the pond.",
 
-		QUAGMIRE_SAFE = 
+		QUAGMIRE_SAFE =
 		{
 			GENERIC = "Let's have a peek inside...",
 			LOCKED = "Locked, like my heart.",
@@ -2949,7 +2958,7 @@ return{
 		QUAGMIRE_KEY_PARK = "The key to a beautiful place, locked long away.",
         QUAGMIRE_PORTAL_KEY = "Perhaps I'll be happier in the next world.",
 
-		
+
 		QUAGMIRE_MUSHROOMSTUMP =
 		{
 			GENERIC = "They thrive on a stump made by death.",
@@ -2959,7 +2968,7 @@ return{
         QUAGMIRE_MEALINGSTONE = "I am ground down on the mealing stone of life.",
 		QUAGMIRE_PEBBLECRAB = "Had I such a shell, I would never emerge.",
 
-		
+
 		QUAGMIRE_RUBBLE_CARRIAGE = "It's been forgotten.",
         QUAGMIRE_RUBBLE_CLOCK = "Time is an illusion.",
         QUAGMIRE_RUBBLE_CATHEDRAL = "Nothing more to pray for.",
@@ -2984,7 +2993,7 @@ return{
             SLEEPING = "He is practicing for the big sleep.",
         },
         QUAGMIRE_SWAMPIG = "They're less standoffish than their brethren.",
-        
+
         QUAGMIRE_PORTAL = "There's no night here. It is a nice change.",
         QUAGMIRE_SALTROCK = "It needs to be ground down before we can use it.",
         QUAGMIRE_SALT = "It adds flavor...",
@@ -2997,7 +3006,7 @@ return{
             MATCH = "The beast will be satisfied with this.",
             MATCH_BUT_SNACK = "This will satisfy the beast, but not for long.",
         },
-        
+
         QUAGMIRE_FERN = "Wilson calls them \"greens\"... but they're purple...",
         QUAGMIRE_FOLIAGE_COOKED = "Cooked purples.",
         QUAGMIRE_COIN1 = "I shall put them on my eyes when I die.",
@@ -3008,7 +3017,7 @@ return{
         QUAGMIRE_SYRUP = "Not as sweet as Abigail.",
         QUAGMIRE_SAP_SPOILED = "As bittersweet as life.",
         QUAGMIRE_SEEDPACKET = "Planting seeds requires an optimism I don't possess.",
-        
+
         QUAGMIRE_POT = "We cook to stave off death.",
         QUAGMIRE_POT_SMALL = "We will cook, or we will die.",
         QUAGMIRE_POT_SYRUP = "Sweetness begets sweetness.",
@@ -3025,7 +3034,7 @@ return{
         QUAGMIRE_PLATE_SILVER = "If only life had been handed to me on a silver plate.",
         QUAGMIRE_BOWL_SILVER = "It is empty, like my heart.",
 --fallback to speech_wilson.lua         QUAGMIRE_CRATE = "Kitchen stuff.",
-        
+
         QUAGMIRE_MERM_CART1 = "I, too, cart around my baggage.", --sammy's wagon
         QUAGMIRE_MERM_CART2 = "Nothing in there could bring me happiness.", --pipton's cart
         QUAGMIRE_PARK_ANGEL = "It's winged, but it's no angel.",
@@ -3041,7 +3050,7 @@ return{
         QUAGMIRE_CRABTRAP = "Life is a trap.",
         QUAGMIRE_TRADER_MERM = "How do you do?",
         QUAGMIRE_TRADER_MERM2 = "How do you do?",
-        
+
         QUAGMIRE_GOATMUM = "Hello, ma'am. Care to trade?",
         QUAGMIRE_GOATKID = "What childhood is this for you?",
         QUAGMIRE_PIGEON =
@@ -3066,21 +3075,21 @@ return{
         QUAGMIRE_LAMP_SHORT = "The only light in my life is Abigail.",
 
         --v2 Winona
-        WINONA_CATAPULT = 
+        WINONA_CATAPULT =
         {
         	GENERIC = "It visits death upon intruders.",
         	OFF = "It's dead...",
         	BURNING = "Oh no...",
         	BURNT = "It all crumbles to ash, in the end.",
         },
-        WINONA_SPOTLIGHT = 
+        WINONA_SPOTLIGHT =
         {
         	GENERIC = "But what if I liked the dark?",
         	OFF = "It's dead...",
         	BURNING = "Oh no...",
         	BURNT = "It all crumbles to ash, in the end.",
         },
-        WINONA_BATTERY_LOW = 
+        WINONA_BATTERY_LOW =
         {
         	GENERIC = "It's a kind of electrical box.",
         	LOWPOWER = "It's not long for this world.",
@@ -3088,7 +3097,7 @@ return{
         	BURNING = "Oh no...",
         	BURNT = "It all crumbles to ash, in the end.",
         },
-        WINONA_BATTERY_HIGH = 
+        WINONA_BATTERY_HIGH =
         {
         	GENERIC = "This one looks odd.",
         	LOWPOWER = "It's slowly dying.",
@@ -3113,7 +3122,7 @@ return{
         STEERINGWHEEL = "Yet still I am directionless.",
         ANCHOR = "For when I feel I can go no further.",
         BOATPATCH = "To mend what the cruel seas have crushed.",
-        DRIFTWOOD_TREE = 
+        DRIFTWOOD_TREE =
         {
             BURNING = "Oh. It's burning.",
             BURNT = "Your suffering is over now.",
@@ -3123,7 +3132,7 @@ return{
 
         DRIFTWOOD_LOG = "Bleached like bones left in the sun.",
 
-        MOON_TREE = 
+        MOON_TREE =
         {
             BURNING = "Oh. It's burning.",
             BURNT = "Your suffering is over now.",
@@ -3132,7 +3141,7 @@ return{
         },
 		MOON_TREE_BLOSSOM = "Delicate and impermanent.",
 
-        MOONBUTTERFLY = 
+        MOONBUTTERFLY =
         {
         	GENERIC = "Such beauty can never last.",
         	HELD = "Give up. You won't escape my grasp.",
@@ -3143,7 +3152,7 @@ return{
         ROCK_AVOCADO_FRUIT_RIPE = "I can eat it now.",
         ROCK_AVOCADO_FRUIT_RIPE_COOKED = "It might actually taste good at this point.",
         ROCK_AVOCADO_FRUIT_SPROUT = "Why do you persevere?",
-        ROCK_AVOCADO_BUSH = 
+        ROCK_AVOCADO_BUSH =
         {
         	BARREN = "It will never again bear fruit.",
 			WITHERED = "I feel much the same.",
@@ -3154,7 +3163,7 @@ return{
 			BURNING = "Oh. It's burning.",
 		},
         DEAD_SEA_BONES = "The sea rejects its dead.",
-        HOTSPRING = 
+        HOTSPRING =
         {
         	GENERIC = "When I gaze upon my reflection, a ghost stares back at me.",
         	BOMBED = "I don't see how this helped.",
@@ -3171,7 +3180,7 @@ return{
             CLOSED = "If only it had swallowed me whole.",
         },
         DUG_TRAP_STARFISH = "A pity it didn't crunch me up when it had the chance.",
-        SPIDER_MOON = 
+        SPIDER_MOON =
         {
         	GENERIC = "Death on legs.",
         	SLEEPING = "It slumbers soundly.",
@@ -3203,9 +3212,9 @@ return{
 
         MINIFLARE = "Why? No one will come.",
 
-		MOON_FISSURE = 
+		MOON_FISSURE =
 		{
-			GENERIC = "I see the light.", 
+			GENERIC = "I see the light.",
 			NOLIGHT = "Even the earth is falling apart under the pressure.",
 		},
         MOON_ALTAR =
@@ -3227,7 +3236,7 @@ return{
 
         MOON_ALTAR_ASTRAL = "You are whole again.",
         MOON_ALTAR_ICON = "I will take you to your final resting place.",
-        MOON_ALTAR_WARD = "So lost and alone... my sister and I will help you.",        
+        MOON_ALTAR_WARD = "So lost and alone... my sister and I will help you.",
 
         SEAFARING_PROTOTYPER =
         {
@@ -3238,20 +3247,20 @@ return{
         STEERINGWHEEL_ITEM = "It would make a steering wheel...",
         ANCHOR_ITEM = "It's for a burdensome boat anchor.",
         MAST_ITEM = "It's for making a mast.",
-        MUTATEDHOUND = 
+        MUTATEDHOUND =
         {
         	DEAD = "It's better this way.",
         	GENERIC = "For this creature, to live is to suffer.",
         	SLEEPING = "Don't wake up.",
         },
 
-        MUTATED_PENGUIN = 
+        MUTATED_PENGUIN =
         {
 			DEAD = "It's better this way.",
 			GENERIC = "To let it live would be a cruelty.",
 			SLEEPING = "Don't wake up.",
 		},
-        CARRAT = 
+        CARRAT =
         {
         	DEAD = "It is no more.",
         	GENERIC = "I despise how it skitters...",
@@ -3259,7 +3268,7 @@ return{
         	SLEEPING = "It is arrested by deepest sleep.",
         },
 
-		BULLKELP_PLANT = 
+		BULLKELP_PLANT =
         {
             GENERIC = "It's just seaweed.",
             PICKED = "There's no more seaweed here.",
@@ -3381,7 +3390,7 @@ return{
 		SEAFOODGUMBO = "A sea once teeming with life. No more.",
 		SURFNTURF = "It could be worse.",
 
-        WOBSTER_SHELLER = "Its hard exterior shelters it from the cruel outside world.", 
+        WOBSTER_SHELLER = "Its hard exterior shelters it from the cruel outside world.",
         WOBSTER_DEN = "A damp and dreary home.",
         WOBSTER_SHELLER_DEAD = "It's met its maker. I've met my lunch.",
         WOBSTER_SHELLER_DEAD_COOKED = "It's a feast!",
@@ -3393,7 +3402,7 @@ return{
         MOONGLASS_WOBSTER_DEN = "What lives within that cold glass mound?",
 
 		TRIDENT = "It was stolen from the sea, but it still holds power over the waves.",
-		
+
 		WINCH =
 		{
 			GENERIC = "I doubt I'll find anything of interest.",
@@ -3404,8 +3413,8 @@ return{
         HERMITHOUSE = {
             GENERIC = "Perhaps broken things can be fixed... over time...",
             BUILTUP = "It's hardly worth saving.",
-        }, 
-        
+        },
+
         SHELL_CLUSTER = "They're all clumped together... it seems a shame to separate them...",
         --
 		SINGINGSHELL_OCTAVE3 =
@@ -3428,7 +3437,7 @@ return{
             GENERIC = "No treasure could replace what I've lost.",
             LOCKED = "Of course. It's locked.",
         },
-        
+
         HERMIT_BUNDLE = "For once I'm rewarded for my efforts.",
         HERMIT_BUNDLE_SHELLS = "Abigail likes the shells.",
 
@@ -3439,21 +3448,21 @@ return{
 		----------------------- ROT STRINGS GO ABOVE HERE ------------------
 
 		-- Walter
-        WOBYBIG = 
+        WOBYBIG =
         {
             "She's... soft. And nice.",
             "She's... soft. And nice.",
         },
-        WOBYSMALL = 
+        WOBYSMALL =
         {
             "I wonder how she came to this miserable place.",
             "I wonder how she came to this miserable place.",
         },
 		WALTERHAT = "It doesn't suit me.",
 		SLINGSHOT = "Abigail used to play with one of these.",
-		SLINGSHOTAMMO_ROCK = "Someone could trip and break their neck. Maybe it will be me.",		
-		SLINGSHOTAMMO_MARBLE = "Someone could trip and break their neck. Maybe it will be me.",		
-		SLINGSHOTAMMO_THULECITE = "Someone could trip and break their neck. Maybe it will be me.",	
+		SLINGSHOTAMMO_ROCK = "Someone could trip and break their neck. Maybe it will be me.",
+		SLINGSHOTAMMO_MARBLE = "Someone could trip and break their neck. Maybe it will be me.",
+		SLINGSHOTAMMO_THULECITE = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_GOLD = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_SLOW = "Someone could trip and break their neck. Maybe it will be me.",
         SLINGSHOTAMMO_FREEZE = "Someone could trip and break their neck. Maybe it will be me.",
@@ -3469,7 +3478,7 @@ return{
         BATTLESONG_FIRERESISTANCE = "My heart has no desire to sing.",
         BATTLESONG_INSTANT_TAUNT = "I only like tragedies.",
         BATTLESONG_INSTANT_PANIC = "I only like tragedies.",
-        
+
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "It's all I can do to help...",
 		GHOSTLYELIXIR_FASTREGEN = "You have to take your medicine, Abigail.",
@@ -3496,7 +3505,7 @@ return{
 			COOKING_SHORT = "It will all be over soon.",
 			EMPTY = "A foodless void.",
         },
-        
+
         PORTABLEBLENDER_ITEM = "Inflicts chaos and turmoil on food.",
         PORTABLESPICER_ITEM =
         {
@@ -3531,24 +3540,24 @@ return{
         TURNIP = "It's... a turnip.",
         TURNIP_COOKED = "The turnip is now cooked.",
         TURNIP_SEEDS = "The life they contain is a mystery.",
-        
+
         GARLIC = "It gives food flavor.",
         GARLIC_COOKED = "It smells a bit nice.",
         GARLIC_SEEDS = "The life they contain is a mystery.",
-        
+
         ONION = "I never cry.",
         ONION_COOKED = "It will never make anyone cry again.",
         ONION_SEEDS = "The life they contain is a mystery.",
-        
+
         POTATO = "It has eyes, yet it never cries.",
         POTATO_COOKED = "Now its eyes will never open.",
         POTATO_SEEDS = "The life they contain is a mystery.",
-        
+
         TOMATO = "Red as heart's blood.",
         TOMATO_COOKED = "Its flesh is far more bloody now.",
         TOMATO_SEEDS = "The life they contain is a mystery.",
 
-        ASPARAGUS = "Vegetables are good for you, but what do I care?", 
+        ASPARAGUS = "Vegetables are good for you, but what do I care?",
         ASPARAGUS_COOKED = "If I ever feel like eating anything, I'll eat it.",
         ASPARAGUS_SEEDS = "Will I live to see this grow?",
 
@@ -3565,13 +3574,13 @@ return{
         {
             GENERIC = "\"The Frogs Who Desired a King\"...",
             BURNT = "Their kingdom vanishes as swiftly as it appeared.",
-        },        
+        },
         MERMTHRONE_CONSTRUCTION =
         {
             GENERIC = "I don't know why you bother.",
             BURNT = "All that work, for nothing.",
-        },        
-        MERMHOUSE_CRAFTED = 
+        },
+        MERMHOUSE_CRAFTED =
         {
             GENERIC = "It has not yet been touched by the ravages of time.",
             BURNT = "Nothing but ash.",
@@ -3588,13 +3597,13 @@ return{
 		GHOSTFLOWER = "I promise to use it well.",
         SMALLGHOST = "Another life cut short.",
 
-        CRABKING = 
+        CRABKING =
         {
             GENERIC = "One of us will be sent to a watery grave...",
             INERT = "A crumbling edifice of sand... it's not even decorated.",
         },
 		CRABKING_CLAW = "It wants to drag me down to the icy depths of the sea.",
-		
+
 		MESSAGEBOTTLE = "I wonder what poor forgotten soul sent that.",
 		MESSAGEBOTTLEEMPTY = "It holds nothing but emptiness.",
 
@@ -3691,20 +3700,20 @@ return{
         },
 
         ARCHIVE_MOON_STATUE = "This place feels rather like a tomb.",
-        ARCHIVE_RUNE_STATUE = 
+        ARCHIVE_RUNE_STATUE =
         {
             LINE_1 = "Words of a dead language.",
             LINE_2 = "It was important enough to carve into stone, but we'll never know the meaning.",
             LINE_3 = "What a pity.",
             LINE_4 = "It was important enough to carve into stone, but we'll never know the meaning.",
             LINE_5 = "What a pity.",
-        },        
+        },
 
         ARCHIVE_RESONATOR = {
             GENERIC = "All paths lead to suffering.",
             IDLE = "There's nothing left to look for.",
         },
-        
+
         ARCHIVE_RESONATOR_ITEM = "The ones who designed it are long dead.",
 
         ARCHIVE_LOCKBOX_DISPENCER = {
@@ -3753,8 +3762,8 @@ return{
             BURNT = "Ashes to ashes.",
         },
         COMPOST = "Rot and decay.",
-        SOIL_AMENDER = 
-		{ 
+        SOIL_AMENDER =
+		{
 			GENERIC = "We nourish the plants' soil with the decomposed husks of their ocean cousins.",
 			STALE = "It's decomposing nicely.",
 			SPOILED = "It has the stench of death... and yet it brings life.",
@@ -3762,7 +3771,7 @@ return{
 
 		SOIL_AMENDER_FERMENTED = "It's finished now.",
 
-        WATERINGCAN = 
+        WATERINGCAN =
         {
             GENERIC = "I could water the ground well enough with my tears.",
             EMPTY = "Dry as a bone...",
@@ -3797,7 +3806,7 @@ return{
 			BURNING = "Nothing can ever last.",
 			BURNT = "Ashes to ashes.",
         },
-        
+
         CARROT_OVERSIZED = "A clump of giant, gnarled roots for eating.",
         CORN_OVERSIZED = "I could pop enough corn for everyone.",
         PUMPKIN_OVERSIZED = "If only it could become a carriage and carry me far away from here.",
@@ -3812,7 +3821,7 @@ return{
         ONION_OVERSIZED = "You won't draw any tears from me.",
         GARLIC_OVERSIZED = "Oh. It's nicely braided.",
         PEPPER_OVERSIZED = "That is a very significant amount of pepper.",
-        
+
         VEGGIE_OVERSIZED_ROTTEN = "Dead and rotting.",
 
 		FARM_PLANT =
@@ -3835,6 +3844,91 @@ return{
         FRUITFLYFRUIT = "Now you may trade your lord for a queen.",
 
         SEEDPOUCH = "Another burden for me to shoulder.",
+
+		-- Crow Carnival
+		CARNIVAL_HOST = "How do you do, Mr. Raven?",
+		CARNIVAL_CROWKID = "A murder has flown in.",
+		CARNIVAL_GAMETOKEN = "It gleams in the light.",
+		CARNIVAL_PRIZETICKET =
+		{
+			GENERIC = "I... won something?",
+			GENERIC_SMALLSTACK = "I've collected quite a few now.",
+			GENERIC_LARGESTACK = "M-maybe I'll take a look at the prizes...!",
+		},
+
+		CARNIVALGAME_FEEDCHICKS_NEST = "It's a little door.",
+		CARNIVALGAME_FEEDCHICKS_STATION =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "What a funny game.",
+		},
+		CARNIVALGAME_FEEDCHICKS_KIT = "Can I... help set up the carnival?",
+		CARNIVALGAME_FEEDCHICKS_FOOD = "At least they're not real worms.",
+
+		CARNIVALGAME_MEMORY_KIT = "Can I... help set up the carnival?",
+		CARNIVALGAME_MEMORY_STATION =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "I'm very good at remembering... aren't I, Abigail?",
+		},
+		CARNIVALGAME_MEMORY_CARD =
+		{
+			GENERIC = "It's a little door.",
+			PLAYING = "Abigail, do you remember which one it was?",
+		},
+
+		CARNIVALGAME_HERDING_KIT = "Can I... help set up the carnival?",
+		CARNIVALGAME_HERDING_STATION =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "They look so silly running about.",
+		},
+		CARNIVALGAME_HERDING_CHICK = "You can't outrun the inevitable.",
+
+		CARNIVAL_PRIZEBOOTH_KIT = "I wonder what kind of prizes they have...",
+		CARNIVAL_PRIZEBOOTH =
+		{
+			GENERIC = "Maybe I'll just take a peek...",
+		},
+
+		CARNIVALCANNON_KIT = "I suppose I should try to be useful...",
+		CARNIVALCANNON =
+		{
+			GENERIC = "Oh. That might be... f-fun...",
+			COOLDOWN = "Heehee...!",
+		},
+
+		CARNIVAL_PLAZA_KIT = "Perhaps I might enjoy its shade one day.",
+		CARNIVAL_PLAZA =
+		{
+			GENERIC = "Abigail thinks it needs some decorations around it.",
+			LEVEL_2 = "The ravens seem quite drawn to the decorations.",
+			LEVEL_3 = "It does look quite pretty, doesn't it?",
+		},
+
+		CARNIVALDECOR_EGGRIDE_KIT = "I suppose I should try to be useful...",
+		CARNIVALDECOR_EGGRIDE = "I doubt those eggs will ever hatch.",
+
+		CARNIVALDECOR_LAMP_KIT = "I suppose I should try to be useful...",
+		CARNIVALDECOR_LAMP = "It can't hold back the darkness forever.",
+		CARNIVALDECOR_PLANT_KIT = "I suppose I should try to be useful...",
+		CARNIVALDECOR_PLANT = "A small reminder of... a nice day.",
+
+		CARNIVALDECOR_FIGURE =
+		{
+			RARE = "Here it shall rest, forever.",
+			UNCOMMON = "The colors are so cheery, yet I don't despise it. How odd.",
+			GENERIC = "Oh. It's a little wooden statue.",
+		},
+		CARNIVALDECOR_FIGURE_KIT = "What secrets does it hide?",
+
+        CARNIVAL_BALL = "Won't you play with me, Abigail?",
+		CARNIVAL_SEEDPACKET = "It tastes like disappointment.",
+		CARNIVALFOOD_CORNTEA = "Oh. There really is corn in it...",
+
+        CARNIVAL_VEST_A = "I wish you could try it on Abigail, I think it would suit you.",
+        CARNIVAL_VEST_B = "I find a curious comfort in the sound of dead, rustling leaves.",
+        CARNIVAL_VEST_C = "Perhaps I could join the ravens and fly far, far away...",
 
         -- YOTB
         YOTB_SEWINGMACHINE = "Mother liked to sew matching outfits for Abigail and I.",

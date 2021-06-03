@@ -85,7 +85,7 @@ end
 
 function MotdManager:IsImageLoaded(cell_id)
 	local cell = self.motd_info[cell_id]
-	return cell ~= nil and cell.meta.image_file 
+	return cell ~= nil and cell.meta.image_file
 end
 
 function MotdManager:SetLoadingDone()
@@ -115,9 +115,9 @@ local category_order =
 	patchnotes = 1,
 	skins = 2,
 	twitch = 3,
-	news = 4, 
+	news = 4,
 
-	none = 100, 
+	none = 100,
 }
 
 function MotdManager:MakeSortedKeys(motd_info)
@@ -194,7 +194,7 @@ function MotdManager:GetImagesToDownload()
 				free_boxes[box_num] = nil
 			end
 		end
-	end		
+	end
 
 --	print("download_queue")
 --	dumptable(download_queue)
@@ -218,14 +218,14 @@ local function makefakemotd()
 -- group: any boxes with the same group will be grouped up into a single box
 -- weight: when there are mutliple boxes in a group, this will be used to do a weighted random select to determin the one that is showing
 
-	local data = 
+	local data =
 	{
 		["live-version"] = "-1",
-		["boxes-live"] = 
+		["boxes-live"] =
 		{{
-			Category = 
+			Category =
 			{
-				skins = 
+				skins =
 				{
 					{
 						guid = "c4dda89e-5db1-4433-a343-74515503a2da",
@@ -294,7 +294,7 @@ local function makefakemotd()
 					}
 				},
 
-				patchnotes = 
+				patchnotes =
 				{
 					{
 						guid = "g4dda89e-5db1-4433-a343-74515503a2d6",
@@ -305,7 +305,7 @@ local function makefakemotd()
 					}
 				},
 
-				news = 
+				news =
 				{
 					{
 						guid = "k4dda89e-5db1-4433-a343-74515503a2da",
@@ -396,8 +396,8 @@ local function reformat_motd(src_motd)
 					box.image_url = (src_box.image ~= nil and type(src_box.image) == "string" and string.match(src_box.image, ".tex")) and src_box.image or nil
 
 					box.link_url = src_box.href
-					if src_box.filter_discount or src_box.filter_menu ~= nil then
-						box.filter_info = { initial_item_key = src_box.filter_menu, filter_menu = src_box.filter_menu }
+					if src_box.filter_discount ~= nil or src_box.filter_menu ~= nil then
+						box.filter_info = { initial_item_key = src_box.filter_menu ~= "" and src_box.filter_menu or nil, initial_discount_key = src_box.filter_discount ~= "" and src_box.filter_discount or nil }
 					end
 
 					box.weight = tonumber(src_box.weight) or 1
@@ -460,9 +460,9 @@ function MotdManager:DownloadMotdInfo(remaining_retries)
 	local url = TheSim:GetMOTDQueryURL()
 	print("[MOTD] Downloading info from", url)
 
-	TheSim:QueryServer( url, function(motd_json, isSuccessful, resultCode) 
-		local status, motd_src = "", "" 
-		if isSuccessful and string.len(motd_json) > 1 and resultCode == 200 then 
+	TheSim:QueryServer( url, function(motd_json, isSuccessful, resultCode)
+		local status, motd_src = "", ""
+		if isSuccessful and string.len(motd_json) > 1 and resultCode == 200 then
 			motd_json = fix_web_string(motd_json)
 			status, motd_src = pcall( function() return json.decode(motd_json) end )
 			local motd_info = {}
@@ -485,6 +485,8 @@ function MotdManager:DownloadMotdInfo(remaining_retries)
 						cell.meta = {}
 						cell.meta.is_new = true
 					end
+
+					cell.meta.is_sale = cell.data.filter_info ~= nil and cell.data.filter_info.initial_discount_key == "SALE"
 
 					motd_info[box_id] = cell
 				end
@@ -547,7 +549,7 @@ function MotdManager:DownloadMotdImages(download_queue, retries)
 					print("[MOTD] MotdManager: Failed to download image " .. tostring(data.image_file) .. ", using fallback image.")
 					self.motd_info[data.cell_id].data.no_image = true
 					TheGlobalInstance:PushEvent("motd_image_loaded", {cell_id = data.cell_id})
-					
+
 					download_queue[itr] = nil
 					self:DownloadMotdImages(download_queue, 0)
 				end

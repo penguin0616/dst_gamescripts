@@ -188,7 +188,7 @@ end
 --Register events
 inst:ListenForEvent("ms_registergrottopool", TrackPool)
 
---Initialize 
+--Initialize
 local init_task = inst:DoTaskInTime(0, function(i)
     for _ = 1, NUM_EMITTERS do
         table.insert(_soundemitters, SpawnPrefab("grottopool_sfx"))

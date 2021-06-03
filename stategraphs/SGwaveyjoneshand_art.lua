@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
 
 }
@@ -14,7 +14,7 @@ local states=
 {
 
     State{
-        
+
         name = "in",
         tags = {"idle", "canrotate"},
         onenter = function(inst, playanim)
@@ -27,30 +27,30 @@ local states=
 
         events=
         {
-            EventHandler("animover", function(inst) 
+            EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
                 inst.parent:PushEvent("animover")
             end ),
         },
     },
-    
+
     State{
-        
+
         name = "idle",
         tags = {"idle", "canrotate"},
         onenter = function(inst, playanim)
             if playanim then
-                inst.AnimState:PlayAnimation(playanim) 
+                inst.AnimState:PlayAnimation(playanim)
                 inst.AnimState:PushAnimation("hand_in_loop")
             elseif not inst.AnimState:IsCurrentAnimation("hand_in_loop") then
                 inst.AnimState:PlayAnimation("hand_in_loop")
             end
-            
+
         end,
 
         events=
         {
-            EventHandler("animover", function(inst) 
+            EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
                 if inst.parent then inst.parent:PushEvent("animover") end
             end ),
@@ -89,7 +89,7 @@ local states=
 
         events=
         {
-            EventHandler("animover", function(inst) 
+            EventHandler("animover", function(inst)
                 if inst.parent then inst.parent:PushEvent("animover") end
                 inst.sg:GoToState("moving")
             end),
@@ -204,7 +204,7 @@ local states=
 
         events=
         {
-            EventHandler("animover", function(inst) 
+            EventHandler("animover", function(inst)
                 if inst.parent then inst.parent:PushEvent("animover") end
                 inst.sg:GoToState("idle")
             end)
@@ -224,7 +224,7 @@ local states=
         {
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
-                if inst.parent then 
+                if inst.parent then
                     inst.parent:PushEvent("animover")
                     inst.parent:resetposition()
                 end
@@ -233,5 +233,5 @@ local states=
     },
 }
 
-  
+
 return StateGraph("waveyjoneshand_art", states, events, "idle", actionhandlers)

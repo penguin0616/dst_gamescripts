@@ -124,7 +124,7 @@ local function OnGivenItem(inst, giver, item)
 
     inst.tributer = giver
     inst.pendingrewarditem =
-        (item.prefab == "antliontrinket" and "townportal_blueprint") or 
+        (item.prefab == "antliontrinket" and "townportal_blueprint") or
         (item.components.tradable.goldvalue > 0 and "townportaltalisman") or
         nil
 

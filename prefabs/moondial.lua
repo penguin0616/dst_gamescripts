@@ -158,7 +158,7 @@ local function fn()
 
     inst:AddComponent("lootdropper")
 	inst.components.lootdropper:SetLootSetupFn(glassed_loot_fn)
-	
+
     inst:WatchWorldState("moonphase", onmoonphasechagned)
     inst:WatchWorldState("isalterawake", onalterawake)
 

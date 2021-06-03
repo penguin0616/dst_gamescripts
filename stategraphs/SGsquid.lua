@@ -13,7 +13,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.TOSS,
         function(inst, action)
             if not inst.sg:HasStateTag('busy') then
-                inst.sg:GoToState("shoot", action.target) 
+                inst.sg:GoToState("shoot", action.target)
             end
         end),
 }
@@ -53,36 +53,36 @@ local function dimLight(inst,dim,instant,zero,time)
     if dim then
         if instant then
             inst.eyeglow.Light:SetRadius(TUNING.SQUID_LIGHT_DOWN_RADIUS)
-            inst.eyeglow.Light:SetIntensity(TUNING.SQUID_LIGHT_DOWN_INTENSITY)    
-            inst.eyeglow.Light:SetFalloff(TUNING.SQUID_LIGHT_DOWN_FALLOFF)   
-        else            
-            inst.eyeglow.components.fader:Fade(1, 0, frames, function(v)            
-                inst.eyeglow.Light:SetIntensity(Remap(v, 1, 0, TUNING.SQUID_LIGHT_UP_INTENSITY, TUNING.SQUID_LIGHT_DOWN_INTENSITY))            
-                inst.eyeglow.Light:SetFalloff(Remap(v, 1, 0, TUNING.SQUID_LIGHT_UP_FALLOFF, TUNING.SQUID_LIGHT_DOWN_FALLOFF))            
-                inst.eyeglow.Light:SetRadius(Remap(v, 1, 0, TUNING.SQUID_LIGHT_UP_RADIUS, TUNING.SQUID_LIGHT_DOWN_RADIUS))           
-            end)        
+            inst.eyeglow.Light:SetIntensity(TUNING.SQUID_LIGHT_DOWN_INTENSITY)
+            inst.eyeglow.Light:SetFalloff(TUNING.SQUID_LIGHT_DOWN_FALLOFF)
+        else
+            inst.eyeglow.components.fader:Fade(1, 0, frames, function(v)
+                inst.eyeglow.Light:SetIntensity(Remap(v, 1, 0, TUNING.SQUID_LIGHT_UP_INTENSITY, TUNING.SQUID_LIGHT_DOWN_INTENSITY))
+                inst.eyeglow.Light:SetFalloff(Remap(v, 1, 0, TUNING.SQUID_LIGHT_UP_FALLOFF, TUNING.SQUID_LIGHT_DOWN_FALLOFF))
+                inst.eyeglow.Light:SetRadius(Remap(v, 1, 0, TUNING.SQUID_LIGHT_UP_RADIUS, TUNING.SQUID_LIGHT_DOWN_RADIUS))
+            end)
         end
     else
         if instant then
             inst.eyeglow.Light:SetRadius(TUNING.SQUID_LIGHT_UP_RADIUS)
-            inst.eyeglow.Light:SetIntensity(TUNING.SQUID_LIGHT_UP_INTENSITY)    
-            inst.eyeglow.Light:SetFalloff(TUNING.SQUID_LIGHT_UP_FALLOFF)               
+            inst.eyeglow.Light:SetIntensity(TUNING.SQUID_LIGHT_UP_INTENSITY)
+            inst.eyeglow.Light:SetFalloff(TUNING.SQUID_LIGHT_UP_FALLOFF)
         else
             if zero then
-                inst.eyeglow.components.fader:Fade(0, 1, frames, function(v) 
-                    inst.eyeglow.Light:SetIntensity(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_INTENSITY, TUNING.SQUID_LIGHT_UP_INTENSITY))        
-                    
+                inst.eyeglow.components.fader:Fade(0, 1, frames, function(v)
+                    inst.eyeglow.Light:SetIntensity(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_INTENSITY, TUNING.SQUID_LIGHT_UP_INTENSITY))
+
                     inst.eyeglow.Light:SetFalloff(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_FALLOFF, TUNING.SQUID_LIGHT_UP_FALLOFF))
-                    
+
                     inst.eyeglow.Light:SetRadius(Remap(v, 0, 1, 0.01, TUNING.SQUID_LIGHT_UP_RADIUS))
                 end)
             else
-                inst.eyeglow.components.fader:Fade(0, 1, frames, function(v) 
-                    inst.eyeglow.Light:SetIntensity(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_INTENSITY, TUNING.SQUID_LIGHT_UP_INTENSITY))        
-                    
+                inst.eyeglow.components.fader:Fade(0, 1, frames, function(v)
+                    inst.eyeglow.Light:SetIntensity(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_INTENSITY, TUNING.SQUID_LIGHT_UP_INTENSITY))
+
                     inst.eyeglow.Light:SetFalloff(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_FALLOFF, TUNING.SQUID_LIGHT_UP_FALLOFF))
-                    
-                    inst.eyeglow.Light:SetRadius(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_RADIUS, TUNING.SQUID_LIGHT_UP_RADIUS))            
+
+                    inst.eyeglow.Light:SetRadius(Remap(v, 0, 1, TUNING.SQUID_LIGHT_DOWN_RADIUS, TUNING.SQUID_LIGHT_UP_RADIUS))
                 end)
             end
         end
@@ -112,7 +112,7 @@ local function setdivelayering(inst,under)
 
     if dive and not inst.under then
         inst.AnimState:SetSortOrder(ANIM_SORT_ORDER_BELOW_GROUND.UNDERWATER)
-        inst.AnimState:SetLayer(LAYER_WIP_BELOW_OCEAN)        
+        inst.AnimState:SetLayer(LAYER_WIP_BELOW_OCEAN)
         inst.under = true
     else
         inst.AnimState:SetSortOrder(0)
@@ -126,7 +126,7 @@ local function RestorRunSpeed(inst)
 end
 
 local function RestoreCollidesWith(inst)
-    inst.Physics:CollidesWith(COLLISION.WORLD 
+    inst.Physics:CollidesWith(COLLISION.WORLD
                         + COLLISION.OBSTACLES
                         + COLLISION.SMALLOBSTACLES
                         + COLLISION.CHARACTERS
@@ -152,7 +152,7 @@ local states =
         tags = { "idle", "canrotate" },
         onenter = function(inst, playanim)
             setdivelayering(inst, false)
-            
+
             inst.Physics:Stop()
 
             local random_roll = math.random()
@@ -169,7 +169,7 @@ local states =
 
             inst.sg:SetTimeout(2*math.random()+.5)
         end,
-        
+
         timeline =
         {
             TimeEvent(8*FRAMES, function(inst)
@@ -196,7 +196,7 @@ local states =
 
         onexit = function(inst)
            inst.eyeglow.Light:Enable(true)
-        end,       
+        end,
 
         events =
         {
@@ -249,7 +249,7 @@ local states =
         },
 
         onexit = RemoveNoClick,
-    },    
+    },
 
     State{
         name = "attack",
@@ -271,24 +271,24 @@ local states =
         timeline =
         {
             TimeEvent(8*FRAMES, function(inst)
-                if inst:HasTag("swimming") then 
+                if inst:HasTag("swimming") then
                     SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
                 end
             end),
 
             TimeEvent(10*FRAMES, function(inst)
-                inst.components.combat:DoAttack(inst.sg.statemem.target) 
+                inst.components.combat:DoAttack(inst.sg.statemem.target)
                 inst.SoundEmitter:PlaySound(inst.sounds.attack)
-                inst.components.locomotor:EnableGroundSpeedMultiplier(false)            
+                inst.components.locomotor:EnableGroundSpeedMultiplier(false)
                 inst.Physics:SetMotorVelOverride(3,0,0)
             end),
 
             TimeEvent(18*FRAMES, function(inst)
-                inst.components.combat:DoAttack(inst.sg.statemem.target) 
+                inst.components.combat:DoAttack(inst.sg.statemem.target)
             end),
 
             TimeEvent(26*FRAMES, function(inst)
-                inst.components.combat:DoAttack(inst.sg.statemem.target) 
+                inst.components.combat:DoAttack(inst.sg.statemem.target)
                 inst.components.locomotor:Stop()
             end),
         },
@@ -324,11 +324,11 @@ local states =
         end,
 
         timeline =
-        {   
+        {
             TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.spit) end),
             TimeEvent(15*FRAMES, function(inst)
                 if inst.sg.statemem.target and inst.sg.statemem.target:IsValid() then
-                    inst.sg.statemem.inkpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())            
+                    inst.sg.statemem.inkpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())
                     inst:LaunchProjectile(inst.sg.statemem.inkpos)
 
                     inst.components.timer:StopTimer("ink_cooldown")
@@ -341,7 +341,7 @@ local states =
         {
             EventHandler("animover", GoToIdle),
         },
-    },    
+    },
 
     State{
         name = "eat",
@@ -361,7 +361,7 @@ local states =
         },
 
         events =
-        {           
+        {
             EventHandler("animover", GoToIdle),
         },
     },
@@ -376,11 +376,11 @@ local states =
             setdivelayering(inst,true)
             inst.components.timer:StartTimer("gobble_cooldown", 2 + math.random()*5)
             AddNoClick(inst)
-        end,      
+        end,
 
         timeline =
         {
-            TimeEvent(12*FRAMES, function(inst) 
+            TimeEvent(12*FRAMES, function(inst)
                 inst.components.locomotor:Stop()
                 inst.components.locomotor:EnableGroundSpeedMultiplier(false)
                 inst.Physics:SetMotorVelOverride(20,0,0)
@@ -400,7 +400,7 @@ local states =
 
                             inst:PushEvent("attacked",{attacker = rod.components.oceanfishingrod.fisher})
                         end
-                        action.target:Remove() 
+                        action.target:Remove()
                     else
                         inst.sg.statemem.miss = true
                         action.target:PushEvent("dobreach")
@@ -433,7 +433,7 @@ local states =
         tags = { "busy" },
 
         onenter = function(inst)
-            setdivelayering(inst,true)            
+            setdivelayering(inst,true)
             local herd = inst.components.herdmember:GetHerd()
             if herd then
                 for k,v in pairs(herd.components.herd.members)do
@@ -455,7 +455,7 @@ local states =
 
         timeline =
         {
-            TimeEvent(6*FRAMES, function(inst) 
+            TimeEvent(6*FRAMES, function(inst)
                 inst.components.locomotor:Stop()
                 inst.components.locomotor:EnableGroundSpeedMultiplier(true)
                 inst.Physics:ClearMotorVelOverride()
@@ -472,7 +472,7 @@ local states =
         {
             EventHandler("animover", GoToIdle),
         },
-        
+
         onexit = function(inst)
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
@@ -480,7 +480,7 @@ local states =
             setdivelayering(inst,false)
 
             RemoveNoClick(inst)
-        end,        
+        end,
     },
 
     State{
@@ -489,10 +489,10 @@ local states =
 
         onenter = function(inst)
             setdivelayering(inst,true)
-            inst.Physics:Stop()    
+            inst.Physics:Stop()
             inst.AnimState:PlayAnimation("gobble_fail")
 
-            -- If the squid misses, give up this target and choose another from it's school 
+            -- If the squid misses, give up this target and choose another from it's school
             -- so that it doesn't chase it off into no mans land away from the rest of the squid
             if inst.foodtarget then
                 local herd = inst.foodtarget.components.herdmember:GetHerd()
@@ -553,7 +553,7 @@ local states =
 
         onenter = function(inst, norepeat)
             inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("taunt")        
+            inst.AnimState:PlayAnimation("taunt")
         end,
 
         timeline =
@@ -578,20 +578,20 @@ local states =
                 inst.fling_land = false
             else
                 inst.fling_land = true
-            end        
+            end
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("jump")
             inst.AnimState:SetTime(5*FRAMES)
-            inst.AnimState:PushAnimation("jump_loop")       
+            inst.AnimState:PushAnimation("jump_loop")
 
-            inst:StopBrain()     
+            inst:StopBrain()
 
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
 
             inst.Physics:SetMotorVelOverride(10,0,0)
 
-            inst.sg:SetTimeout(0.35) 
+            inst.sg:SetTimeout(0.35)
 
             inst.Physics:SetCollisionMask(COLLISION.GROUND)
         end,
@@ -607,7 +607,7 @@ local states =
                     inst.components.amphibiouscreature:OnExitOcean()
                     inst.fling_land = true
                 end
-            end        
+            end
         end,
 
         onexit = function(inst)
@@ -616,23 +616,23 @@ local states =
             inst.Physics:ClearMotorVelOverride()
 
             RestoreCollidesWith(inst)
-        end,        
+        end,
 
         timeline =
         {
-            TimeEvent(9 * FRAMES, function(inst) 
-                if inst:HasTag("swimming") then 
+            TimeEvent(9 * FRAMES, function(inst)
+                if inst:HasTag("swimming") then
                     SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
-                else 
+                else
                     inst.SoundEmitter:PlaySound("hookline/creatures/squid/land")
-                end 
+                end
             end),
         },
 
         ontimeout = function(inst)
             inst.sg:GoToState("fling_pst")
         end,
-    },    
+    },
 
     State{
         name = "fling_pst",
@@ -645,9 +645,9 @@ local states =
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
 
-            inst.Physics:SetMotorVelOverride(10,0,0) 
+            inst.Physics:SetMotorVelOverride(10,0,0)
             inst.Physics:SetCollisionMask(COLLISION.GROUND)
-        end, 
+        end,
 
         onupdate = function(inst)
             if inst:IsOnOcean() then
@@ -665,9 +665,9 @@ local states =
 
         timeline =
         {
-            TimeEvent(8 * FRAMES, function(inst) 
+            TimeEvent(8 * FRAMES, function(inst)
                 inst.fling_land = nil
-                inst.components.locomotor:Stop() 
+                inst.components.locomotor:Stop()
                 if inst:HasTag("swimming") then
                     SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
                 end
@@ -679,16 +679,16 @@ local states =
         onexit = function(inst)
             inst.components.locomotor:Stop()
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
-            inst.Physics:ClearMotorVelOverride()     
+            inst.Physics:ClearMotorVelOverride()
             inst:RestartBrain()
-            RestoreCollidesWith(inst)     
-        end,  
+            RestoreCollidesWith(inst)
+        end,
 
         events =
         {
             EventHandler("animover", GoToIdle),
-        },        
-    },  
+        },
+    },
 
     State{
         name = "death",
@@ -701,7 +701,7 @@ local states =
                 inst.AnimState:PlayAnimation("dead")
                 if inst.components.amphibiouscreature ~= nil and inst.components.amphibiouscreature.in_water then
                     inst.AnimState:PushAnimation("dead_loop", true)
-                end         
+                end
             end
             inst.Physics:Stop()
             RemovePhysicsColliders(inst)
@@ -746,7 +746,7 @@ local states =
     State{
         name = "bitehook_pre",
         tags = {"busy"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("struggle_pre")
@@ -768,25 +768,25 @@ local states =
         },
 
         onexit = RemoveNoClick,
-    },    
+    },
 
     State{
         name = "bitehook_loop",
         tags = {"busy"},
-        
+
         onenter = function(inst, remaining_loops)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("struggle_loop", true)
             inst.sg:SetTimeout(3 + math.random() * 0.5) -- TODO: make tuning varaibles per fish def
         end,
-        
+
         onupdate = function(inst)
             if inst.components.oceanfishable ~= nil and inst.components.oceanfishable:GetRod() ~= nil then
                 if not inst:HasTag("partiallyhooked") then
                     inst.sg.statemem.not_interupted = true
                     inst.sg:GoToState("idle")
                 end
-            else 
+            else
                 inst.sg:GoToState("bitehook_jump")
             end
         end,
@@ -808,7 +808,7 @@ local states =
     State{
         name = "bitehook_jump",
         tags = {"busy", "jumping"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("struggle_to_breach")
@@ -817,7 +817,7 @@ local states =
 
         timeline =
         {
-            TimeEvent(3*FRAMES, function(inst) 
+            TimeEvent(3*FRAMES, function(inst)
                 local theta, speed = math.random() * 2 * PI, 1
                 inst.Physics:SetMotorVelOverride(math.sin(theta) * speed, 0, math.cos(theta) * speed)
             end),
@@ -828,7 +828,7 @@ local states =
                 AddNoClick(inst)
             end),
         },
-        
+
         events =
         {
             EventHandler("animqueueover", function(inst)
@@ -856,12 +856,12 @@ local states =
 
             RemoveNoClick(inst)
         end,
-    },    
+    },
 
     State{
         name = "breach",
         tags = {"busy"},
-        
+
         onenter = function(inst, remaining_loops)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("breach_pre", false)
@@ -879,7 +879,7 @@ local states =
         },
 
         onexit = RemoveNoClick,
-    },  
+    },
 
 -- END FISHING STATES
 
@@ -896,22 +896,22 @@ local states =
             --UpdateRunSpeed(inst)
 
             --inst.AnimState:SetSortOrder(ANIM_SORT_ORDER_BELOW_GROUND.UNDERWATER)
-            --inst.AnimState:SetLayer(LAYER_WIP_BELOW_OCEAN)            
+            --inst.AnimState:SetLayer(LAYER_WIP_BELOW_OCEAN)
         end,
 
         onupdate = function(inst)
             --UpdateRunSpeed(inst)
         end,
 
-        timeline = 
+        timeline =
         {
-            TimeEvent(1 * FRAMES, function(inst)  
+            TimeEvent(1 * FRAMES, function(inst)
                 if inst:HasTag("swimming") then
                     dimLight(inst,true)
                 end
-            end), 
-            TimeEvent(3 * FRAMES, function(inst) 
-                testExtinguish(inst) 
+            end),
+            TimeEvent(3 * FRAMES, function(inst)
+                testExtinguish(inst)
                 setdivelayering(inst,true)
             end),
             TimeEvent(5 * FRAMES, function(inst)
@@ -919,7 +919,7 @@ local states =
                     AddNoClick(inst)
                 end
             end),
-        },        
+        },
 
         onexit = function(inst)
             if inst.staydim then
@@ -937,8 +937,8 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.staydim = true 
-                inst.sg:GoToState("run") 
+                inst.staydim = true
+                inst.sg:GoToState("run")
             end),
         },
     },
@@ -974,49 +974,49 @@ local states =
 
         timeline =
         {
-            TimeEvent(0, function(inst)                
-                if inst:HasTag("swimming") then 
-                    inst.Physics:Stop()  
+            TimeEvent(0, function(inst)
+                if inst:HasTag("swimming") then
+                    inst.Physics:Stop()
                 else
                     PlayFootstep(inst,0.2)
-                end                
+                end
             end),
-            TimeEvent(2*FRAMES, function(inst) 
+            TimeEvent(2*FRAMES, function(inst)
                 if not inst:HasTag("swimming") then
-                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run") 
-                end 
+                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run")
+                end
             end),
 
             TimeEvent(4 * FRAMES, function(inst)
-                if inst:HasTag("swimming") then 
+                if inst:HasTag("swimming") then
                     inst.SoundEmitter:PlaySound(inst.sounds.swim)
                 else
-                    PlayFootstep(inst,0.2)                    
+                    PlayFootstep(inst,0.2)
                 end
             end),
-            TimeEvent(6*FRAMES, function(inst) 
+            TimeEvent(6*FRAMES, function(inst)
                 if not inst:HasTag("swimming") then
-                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run") 
-                end 
+                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run")
+                end
             end),
-            TimeEvent(7 * FRAMES, function(inst) 
-                if inst:HasTag("swimming") then 
-                    inst.components.locomotor:RunForward() 
-                end 
+            TimeEvent(7 * FRAMES, function(inst)
+                if inst:HasTag("swimming") then
+                    inst.components.locomotor:RunForward()
+                end
             end),
-            TimeEvent(8*FRAMES, function(inst) 
+            TimeEvent(8*FRAMES, function(inst)
                 if not inst:HasTag("swimming") then
-                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run") 
-                end 
+                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run")
+                end
             end),
-            TimeEvent(10*FRAMES, function(inst) 
+            TimeEvent(10*FRAMES, function(inst)
                 if not inst:HasTag("swimming") then
-                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run") 
-                end 
+                    inst.SoundEmitter:PlaySound("hookline/creatures/squid/run")
+                end
             end),
         },
 
-        onexit = function(inst)     
+        onexit = function(inst)
             if inst.waketask then
                 inst.waketask:Cancel()
                 inst.waketask = nil
@@ -1034,8 +1034,8 @@ local states =
         end,
 
         ontimeout = function(inst)
-            inst.staydim = true 
-            inst.sg:GoToState("run") 
+            inst.staydim = true
+            inst.sg:GoToState("run")
         end,
     },
 
@@ -1070,10 +1070,10 @@ local states =
         {
             EventHandler("animqueueover", GoToIdle),
         },
-    },   
+    },
 }
 
-CommonStates.AddAmphibiousCreatureHopStates(states, 
+CommonStates.AddAmphibiousCreatureHopStates(states,
 { -- config
     swimming_clear_collision_frame = 9 * FRAMES,
 },
@@ -1081,26 +1081,26 @@ nil, -- anims
 { -- timeline
     hop_pre =
     {
-        TimeEvent(0, function(inst) 
-            if inst:HasTag("swimming") then 
-                SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+        TimeEvent(0, function(inst)
+            if inst:HasTag("swimming") then
+                SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
             end
         end),
     },
     hop_pst = {
-        TimeEvent(4 * FRAMES, function(inst) 
-            if inst:HasTag("swimming") then 
+        TimeEvent(4 * FRAMES, function(inst)
+            if inst:HasTag("swimming") then
                 inst.components.locomotor:Stop()
-                SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition()) 
+                SpawnPrefab("splash_green").Transform:SetPosition(inst.Transform:GetWorldPosition())
                 testExtinguish(inst)
             end
         end),
-        TimeEvent(6 * FRAMES, function(inst) 
-            if not inst:HasTag("swimming") then 
+        TimeEvent(6 * FRAMES, function(inst)
+            if not inst:HasTag("swimming") then
                 inst.components.locomotor:StopMoving()
             end
         end),
-        TimeEvent(9 * FRAMES, function(inst) 
+        TimeEvent(9 * FRAMES, function(inst)
             setdivelayering(inst,true)
         end),
         TimeEvent(17 * FRAMES, function(inst)
@@ -1116,7 +1116,7 @@ CommonStates.AddSleepStates(states,
         TimeEvent(17 * FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.sleep) end),
     },
 
-    waketimeline = 
+    waketimeline =
     {
         TimeEvent(8*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline/creatures/squid/run") end),
         TimeEvent(11*FRAMES, function(inst) inst.SoundEmitter:PlaySound("hookline/creatures/squid/run") end),

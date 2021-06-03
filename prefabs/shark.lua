@@ -1,8 +1,8 @@
     local assets =
 {
     Asset("ANIM", "anim/shark_basic.zip"),
-    Asset("ANIM", "anim/shark_basic_water.zip"),    
-    Asset("ANIM", "anim/shark_build.zip"),        
+    Asset("ANIM", "anim/shark_basic_water.zip"),
+    Asset("ANIM", "anim/shark_build.zip"),
 }
 
 local prefabs =
@@ -73,7 +73,7 @@ local function Retarget(inst)
                     if not guy:HasTag("shark") and not inst.components.timer:TimerExists("calmtime") and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) then
                         return inst.components.combat:CanTarget(guy)
                     end
-                end                
+                end
             )
         or nil
 end
@@ -164,7 +164,7 @@ local function GetFormationOffsetNormal(inst,boat_velocity)
         separation_steering = recalculated_separation_steering
     end
     -- separation steering --
-    
+
     local desired_position_offset = mtlp_normal * (mtlp_length - DESIRED_BOAT_DISTANCE)
     return desired_position_offset + separation_steering
 end
@@ -230,7 +230,7 @@ local function fn()
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.SHARK.HEALTH)
     inst.components.health:StartRegen(TUNING.BEEFALO_HEALTH_REGEN, TUNING.BEEFALO_HEALTH_REGEN_PERIOD)
-  
+
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable('shark')
 
@@ -240,13 +240,13 @@ local function fn()
     MakeLargeBurnableCharacter(inst, "beefalo_body")
     MakeLargeFreezableCharacter(inst, "beefalo_body")
 
-    inst:AddComponent("timer")    
+    inst:AddComponent("timer")
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.walkspeed = TUNING.SHARK.WALK_SPEED_LAND
     inst.components.locomotor.runspeed = TUNING.SHARK.RUN_SPEED_LAND
 
-    inst.components.locomotor.pathcaps = { allowocean = true, ignoreland = true }   
+    inst.components.locomotor.pathcaps = { allowocean = true, ignoreland = true }
 
     inst:AddComponent("amphibiouscreature")
     inst.components.amphibiouscreature:SetBanks("shark", "shark_water")
@@ -257,7 +257,7 @@ local function fn()
             inst.components.locomotor.runspeed = TUNING.SHARK.RUN_SPEED
             inst.components.locomotor.walkspeed = TUNING.SHARK.WALK_SPEED
             inst.DynamicShadow:Enable(false)
-        end)            
+        end)
 
     inst.components.amphibiouscreature:SetExitWaterFn(
         function(inst)
@@ -281,7 +281,7 @@ local function fn()
             local target = inst.components.combat.target
             if target then
                 if target:GetCurrentPlatform() then
-                    if not inst.sg:HasStateTag("jumping") and 
+                    if not inst.sg:HasStateTag("jumping") and
                        not inst.components.timer:TimerExists("getdistance") and
                        target:GetDistanceSqToInst(inst) < JUMPDIST*JUMPDIST then
                         inst:PushEvent("leap")
@@ -298,7 +298,7 @@ local function fn()
     inst.components.sleeper:SetWakeTest(ShouldWakeUp)
 
     inst:ListenForEvent("newcombattarget", OnNewTarget)
-  
+
     inst.removefood = removefood
     inst.testfooddist = testfooddist
     inst.GetFormationOffsetNormal = GetFormationOffsetNormal

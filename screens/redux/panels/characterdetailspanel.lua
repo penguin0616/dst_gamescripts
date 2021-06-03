@@ -18,7 +18,7 @@ local CharacterDetailsPanel = Class(Widget, function(self, parent_screen)
     Widget._ctor(self, "CharacterDetailsPanel")
 
     self.root = self:AddChild(Widget("ROOT"))
-    
+
     self.root:SetPosition(0,0)
 
     local scale = 0.6
@@ -39,7 +39,7 @@ local CharacterDetailsPanel = Class(Widget, function(self, parent_screen)
         ))
     self.character_scroll_list:SetPosition(280, 100)
 	self.character_scroll_list.selectedportrait:SetPosition(0,-50)
-    
+
     self.focus_forward = self.character_scroll_list
 end)
 

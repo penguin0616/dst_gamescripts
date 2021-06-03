@@ -261,7 +261,7 @@ function ObituariesPanel:DoInit()
             scrollbar_offset = 20,
             scrollbar_height_offset = -60
         }))
- 
+
 end
 
 

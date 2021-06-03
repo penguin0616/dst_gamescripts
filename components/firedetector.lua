@@ -233,7 +233,7 @@ local function EmergencyResponse(inst, self, target)
 
         if self.warningStartTime ~= nil and
             #self.emergencyBurnt >= self.emergencyLevelMax and
-            GetTime() - self.warningStartTime > TUNING.EMERGENCY_WARNING_TIME and 
+            GetTime() - self.warningStartTime > TUNING.EMERGENCY_WARNING_TIME and
             DetectFireEmergency(inst, self) ~= nil then
             Cancel(inst, self)
             self.emergencyLevel = self.emergencyLevelMax

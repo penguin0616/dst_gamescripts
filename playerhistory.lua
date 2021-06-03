@@ -58,14 +58,14 @@ function PlayerHistory:UpdateHistoryFromClientTable()
         for i, v in ipairs(ClientObjs) do
             if v.userid ~= my_userid and (is_client_hosted or v.performance == nil) then -- Skip yourself and dedicated server host
 				if self.seen_players[v.userid] == nil then
-					self.seen_players[v.userid] = 
+					self.seen_players[v.userid] =
 					{
 						userid = v.userid,
 						netid = v.netid,
 						time_played_with = 0,
 					}
 				end
-			
+
 				local stats = self.seen_players[v.userid]
 
 				if self.seen_players_updatetime[v.userid] ~= nil then
@@ -101,7 +101,7 @@ function PlayerHistory:GetRows() -- sort by last seen
 		local data = deepcopy(v)
 		table.insert(history, data)
 	end
-	table.sort(history, function(a, b) 
+	table.sort(history, function(a, b)
 		if (a.last_seen_date or 0) > (b.last_seen_date or 0) then
 			return true
 		elseif (a.last_seen_date or 0) < (b.last_seen_date or 0) then
@@ -125,7 +125,7 @@ function PlayerHistory:GetRowsMostTime()
 		local data = deepcopy(v)
 		table.insert(history, data)
 	end
-	table.sort(history, function(a, b) 
+	table.sort(history, function(a, b)
 		if (a.time_played_with or 0) > (b.time_played_with or 0) then
 			return true
 		elseif (a.time_played_with or 0) < (b.time_played_with or 0) then
@@ -142,7 +142,7 @@ function PlayerHistory:GetRowsMostTime()
 	return history
 end
 
-function PlayerHistory:RemoveUser(userid)	
+function PlayerHistory:RemoveUser(userid)
 	self.seen_players[userid] = nil
 	self.dirty = true
 	self:Save()
@@ -169,7 +169,7 @@ function PlayerHistory:LoadDataVersion1(data)
 	for k, v in pairs(data) do
 		local last_seen_date = os.time({year = tonumber(string.sub(v.sort_date, 1, 4)), month = tonumber(string.sub(v.sort_date, 5, 6)), day = tonumber(string.sub(v.sort_date, 7, 8))})
 		if self.seen_players[v.userid] == nil then
-			self.seen_players[v.userid] = 
+			self.seen_players[v.userid] =
 			{
 				userid = v.userid,
 				netid = v.netid,

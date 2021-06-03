@@ -104,7 +104,7 @@ function KrampusBrain:OnStart()
             stealnode),
 
         RunAway(self.inst, "player", MIN_RUNAWAY, MAX_RUNAWAY),
-        Follow(self.inst, function() return self.mytarget end, MIN_FOLLOW, MED_FOLLOW, MAX_FOLLOW), 
+        Follow(self.inst, function() return self.mytarget end, MIN_FOLLOW, MED_FOLLOW, MAX_FOLLOW),
         Wander(self.inst, function() local player = self.mytarget if player then return Vector3(player.Transform:GetWorldPosition()) end end, 20)
     }, 2)
 

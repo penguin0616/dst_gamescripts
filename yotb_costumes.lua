@@ -2,8 +2,8 @@ local costumes =
 {
 	WAR =
 	{
-		test = function(ingredients) 
-			return ingredients["yotb_pattern_fragment_1"] and ingredients["yotb_pattern_fragment_1"] > 1 and 
+		test = function(ingredients)
+			return ingredients["yotb_pattern_fragment_1"] and ingredients["yotb_pattern_fragment_1"] > 1 and
 				   ingredients["yotb_pattern_fragment_2"]
 		end,
 
@@ -20,8 +20,8 @@ local costumes =
 
 	DOLL =
 	{
-		test = function(ingredients) 
-			return ingredients["yotb_pattern_fragment_2"] and ingredients["yotb_pattern_fragment_2"] > 1 and 
+		test = function(ingredients)
+			return ingredients["yotb_pattern_fragment_2"] and ingredients["yotb_pattern_fragment_2"] > 1 and
 				   ingredients["yotb_pattern_fragment_3"]
 		end,
 		priority = 2,
@@ -35,7 +35,7 @@ local costumes =
 		},
 	},
 
-	ROBOT = 
+	ROBOT =
 	{
 		test = function(ingredients)
 			-- Add more tech related fillers
@@ -53,10 +53,10 @@ local costumes =
 		},
 	},
 
-	NATURE = 
+	NATURE =
 	{
-		test = function(ingredients) 
-			return ingredients["yotb_pattern_fragment_3"] and ingredients["yotb_pattern_fragment_3"] > 1 and 
+		test = function(ingredients)
+			return ingredients["yotb_pattern_fragment_3"] and ingredients["yotb_pattern_fragment_3"] > 1 and
 				   ingredients["yotb_pattern_fragment_2"]
 		end,
 
@@ -71,7 +71,7 @@ local costumes =
 		},
 	},
 
-	FORMAL = 
+	FORMAL =
 	{
 		test = function(ingredients)
 			return ingredients["yotb_pattern_fragment_2"] and ingredients["yotb_pattern_fragment_2"] > 2
@@ -87,10 +87,10 @@ local costumes =
 		},
 	},
 
-	VICTORIAN = 
+	VICTORIAN =
 	{
 		test = function(ingredients)
-			return ingredients["yotb_pattern_fragment_1"] and ingredients["yotb_pattern_fragment_2"] and 
+			return ingredients["yotb_pattern_fragment_1"] and ingredients["yotb_pattern_fragment_2"] and
 				   ingredients["yotb_pattern_fragment_3"]
 		end,
 
@@ -105,10 +105,10 @@ local costumes =
 		},
 	},
 
-	ICE = 
+	ICE =
 	{
-		test = function(ingredients) 
-			return ingredients["yotb_pattern_fragment_1"] and ingredients["yotb_pattern_fragment_1"] > 1 and 
+		test = function(ingredients)
+			return ingredients["yotb_pattern_fragment_1"] and ingredients["yotb_pattern_fragment_1"] > 1 and
 				   ingredients["yotb_pattern_fragment_3"]
 		end,
 		priority = 3,
@@ -122,9 +122,9 @@ local costumes =
 		},
 	},
 
-	FESTIVE = 
+	FESTIVE =
 	{
-		test = function(ingredients) 
+		test = function(ingredients)
 			return ingredients["yotb_pattern_fragment_3"] and ingredients["yotb_pattern_fragment_3"] > 2
 		end,
 		priority = 3,
@@ -136,12 +136,12 @@ local costumes =
 			"beefalo_tail_festive",
 			"beefalo_feet_festive",
 		},
-	},	
+	},
 
-	BEAST = 
+	BEAST =
 	{
-		test = function(ingredients) 
-			return ingredients["yotb_pattern_fragment_3"] and ingredients["yotb_pattern_fragment_3"] > 1 and 
+		test = function(ingredients)
+			return ingredients["yotb_pattern_fragment_3"] and ingredients["yotb_pattern_fragment_3"] > 1 and
 				   ingredients["yotb_pattern_fragment_1"]
 		end,
 		priority = 3,
@@ -153,7 +153,7 @@ local costumes =
 			"beefalo_tail_beast",
 			"beefalo_feet_beast",
 		},
-	},		
+	},
 }
 
 for k, v in pairs(costumes) do
@@ -165,49 +165,49 @@ end
 local WAR = {
 	FEARSOME = 2,
 	FESTIVE = 0,
-	FORMAL = 1,	
+	FORMAL = 1,
 }
 
 local DOLL = {
 	FEARSOME = 0,
 	FESTIVE = 1,
-	FORMAL = 2,	
+	FORMAL = 2,
 }
 
 local FESTIVE = {
 	FEARSOME = 0,
 	FESTIVE = 3,
-	FORMAL = 0,	
+	FORMAL = 0,
 }
 
 local ROBOT = {
 	FEARSOME = 3,
 	FESTIVE = 0,
-	FORMAL = 1,	
+	FORMAL = 1,
 }
 
 local NATURE = {
 	FEARSOME = 0,
 	FESTIVE = 2,
-	FORMAL = 1,	
+	FORMAL = 1,
 }
 
 local VICTORIAN = {
 	FEARSOME = 1,
 	FESTIVE = 1,
-	FORMAL = 1,	
+	FORMAL = 1,
 }
 
 local FORMAL = {
 	FEARSOME = 0,
 	FESTIVE = 0,
-	FORMAL = 3,	
+	FORMAL = 3,
 }
 
 local ICE = {
 	FEARSOME = 2,
 	FESTIVE = 1,
-	FORMAL = 0,	
+	FORMAL = 0,
 }
 
 local DEFAULT = {
@@ -219,7 +219,7 @@ local DEFAULT = {
 local BEAST = {
 	FEARSOME = 1,
 	FESTIVE = 2,
-	FORMAL = 0,	
+	FORMAL = 0,
 }
 
 local categories = {
@@ -235,20 +235,20 @@ local categories = {
 	BEAST = BEAST,
 }
 
-local parts = 
+local parts =
 {
 	beefalo_head_war = WAR,
 	beefalo_body_war = WAR,
 	beefalo_horn_war = WAR,
 	beefalo_tail_war = WAR,
 	beefalo_feet_war = WAR,
-	
+
 	beefalo_head_doll = DOLL,
 	beefalo_body_doll = DOLL,
 	beefalo_horn_doll = DOLL,
 	beefalo_tail_doll = DOLL,
 	beefalo_feet_doll = DOLL,
-	
+
 	beefalo_head_festive = FESTIVE,
 	beefalo_body_festive = FESTIVE,
 	beefalo_horn_festive = FESTIVE,
@@ -271,7 +271,7 @@ local parts =
 	beefalo_body_ice = ICE,
 	beefalo_horn_ice = ICE,
 	beefalo_tail_ice = ICE,
-	beefalo_feet_ice = ICE,	
+	beefalo_feet_ice = ICE,
 
 	beefalo_head_formal = FORMAL,
 	beefalo_body_formal = FORMAL,
@@ -289,7 +289,7 @@ local parts =
 	beefalo_body_beast = BEAST,
 	beefalo_horn_beast = BEAST,
 	beefalo_tail_beast = BEAST,
-	beefalo_feet_beast = BEAST,	
+	beefalo_feet_beast = BEAST,
 
 	default = DEFAULT,
 }

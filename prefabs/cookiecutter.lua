@@ -179,7 +179,7 @@ local function fn()
     inst:AddComponent("combat")
     inst.components.combat:SetHurtSound("saltydog/creatures/cookiecutter/hit")
 	inst.components.combat.defaultdamage = TUNING.COOKIECUTTER.DAMAGE
-	
+
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetChanceLootTable("cookiecutter")
 
@@ -188,7 +188,7 @@ local function fn()
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODTYPE.WOOD }, { FOODTYPE.WOOD })
 	inst.components.eater:SetOnEatFn(OnEatFn)
-    
+
 	inst:AddComponent("sleeper")
     inst.components.sleeper:SetResistance(3)
 	inst.components.sleeper.sleeptestfn = nil -- they don't sleep at night or day

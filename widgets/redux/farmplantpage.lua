@@ -45,7 +45,7 @@ local item_name_remap = {}
 
 local function MakeItemWidget(root, cursor, x, y, ingredient_size, item_name, name_prefix)
     name_prefix = name_prefix or ""
-    
+
     local img_name = (item_icon_remap[item_name] or item_name)..".tex"
     local img_atlas = GetInventoryItemAtlas(img_name, true)
     local backing = root:AddChild(Image(img_atlas or "images/plantregistry.xml", img_atlas ~= nil and img_name or "missing.tex"))
@@ -147,7 +147,7 @@ local FarmPlantPage = Class(PlantPageWidget, function(self, plantspage, data)
     if not knows_plant then
         self.product:SetColour(PLANTREGISTRYUICOLOURS.LOCKEDBROWN)
     end
-    
+
     self.product_line = MakeDetailsLine(self.root, x_start, product_y, 0.5)
     product_y = product_y - 2 - ingredient_size / 2
 
@@ -354,7 +354,7 @@ local FarmPlantPage = Class(PlantPageWidget, function(self, plantspage, data)
             table.insert(self.nutrients_icons, nutrients_icon)
         end
 
-        local nutrients_count = #self.nutrients_icons 
+        local nutrients_count = #self.nutrients_icons
         local nutrients_x = x_start - (total_width + (nutrients_count - 1) * nutrients_gap) / 2
         nutrients_y = nutrients_y - 10 - nutrients_size / 2
 
@@ -539,7 +539,7 @@ function FarmPlantPage:_DoFocusHookups()
             if previous_plant_widget then
                 plant_widget:SetFocusChangeDir(MOVE_LEFT, previous_plant_widget)
             end
-            
+
             local next_plant_widget
             for k = i + 1, #self.data.info do
                 local _plant_widget = self.plant_grid[k]
@@ -585,7 +585,7 @@ function FarmPlantPage:BuildPlantGrid()
                 w.plant_anim:GetAnimState():OverrideSymbol("soil01", "farm_soil", "soil01")
                 w.plant_anim:GetAnimState():SetBuild(self.data.plant_def.build)
                 w.plant_anim:GetAnimState():SetBankAndPlayAnimation(w.info.bank or self.data.plant_def.bank, w.info.anim, w.info.loop ~= false)
-                
+
                 w.cell_root.OnGainFocus = function()
                     if w.info.grow_anim and w.plant_anim:GetAnimState():IsCurrentAnimation(w.info.anim) then
                         w.plant_anim:GetAnimState():PlayAnimation(w.info.grow_anim, false)

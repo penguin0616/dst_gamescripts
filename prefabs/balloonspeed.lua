@@ -6,7 +6,7 @@ local assets =
 {
     Asset("ANIM", "anim/balloon.zip"),
     Asset("ANIM", "anim/balloon_shapes.zip"),
-    Asset("ANIM", "anim/balloon2.zip"), 
+    Asset("ANIM", "anim/balloon2.zip"),
     Asset("ANIM", "anim/balloon_shapes2.zip"),
     Asset("ANIM", "anim/balloon_shapes_speed.zip"),
     Asset("SCRIPT", "scripts/prefabs/balloons_common.lua"),

@@ -15,7 +15,7 @@ local function ShouldWakeUp(inst)
 end
 
 local function ShouldSleep(inst)
-    return (DefaultSleepTest(inst) 
+    return (DefaultSleepTest(inst)
             or IsLeaderSleeping(inst))
             and inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE)
 end
@@ -34,7 +34,7 @@ local function oneat(inst, food)
 			inst.components.perishable.perishtime = TUNING.CRITTER_DOMINANTTRAIT_HUNGERTIME_MIN
 		end
 	end
-	
+
     inst.components.perishable:SetPercent(1)
     inst.components.perishable:StartPerishing()
 end
@@ -190,12 +190,12 @@ local function MakeCritter(name, animname, face, diet, flying, data, prefabs)
         inst.IsAffectionate = IsAffectionate
         inst.IsSuperCute = IsSuperCute
         inst.IsPlayful = IsPlayful
-        
+
 		inst.playmatetags = {"critter"}
 		if data ~= nil and data.playmatetags ~= nil then
 			inst.playmatetags = JoinArrays(inst.playmatetags, data.playmatetags)
 		end
-	
+
         inst:AddComponent("inspectable")
 
         inst:AddComponent("follower")
@@ -320,13 +320,13 @@ local function lunarmoth_special_powers_fn(inst, data)
 			--light.Follower:FollowSymbol(inst.GUID, "lm_body", 0, 0, 0)
 			inst._special_powers.buff = light
 			inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-			inst:ListenForEvent("onremove", function(buff) 
-				if inst._special_powers.buff == buff then 
-					inst._special_powers.buff = nil 
+			inst:ListenForEvent("onremove", function(buff)
+				if inst._special_powers.buff == buff then
+					inst._special_powers.buff = nil
 					inst.AnimState:SetLightOverride(0)
 					inst.DynamicShadow:Enable(true)
 					inst.AnimState:ClearBloomEffectHandle()
-				end 
+				end
 			end, inst._special_powers.buff)
 
 			inst.AnimState:SetLightOverride(0.3)

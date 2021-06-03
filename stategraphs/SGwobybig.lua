@@ -2,7 +2,7 @@ require("stategraphs/commonstates")
 
 local RANDOM_IDLES = { "bark_idle", "shake", "sit", "scratch" }
 
-local actionhandlers = 
+local actionhandlers =
 {
 }
 
@@ -16,7 +16,7 @@ local events=
     CommonHandlers.OnHop(),
     CommonHandlers.OnSink(),
 
-    EventHandler("transform", function(inst, data) 
+    EventHandler("transform", function(inst, data)
         if inst.sg.currentstate.name ~= "transform" then
             inst.sg:GoToState("transform")
         end
@@ -28,18 +28,18 @@ local states=
     State{
         name = "idle",
         tags = {"idle", "canrotate"},
-        
+
         onenter = function(inst, pushanim)
             inst.components.locomotor:StopMoving()
-            
+
             if pushanim then
                 inst.AnimState:PushAnimation("idle_loop", true)
             else
                 inst.AnimState:PlayAnimation("idle_loop", true)
             end
-            
+
             inst.sg:SetTimeout(2 + math.random())
-            
+
         end,
 
         ontimeout=function(inst)
@@ -54,11 +54,11 @@ local states=
             end
         end,
     },
-    
+
     State{
         name = "despawn",
         tags = {"busy", "notinterupt"},
-        
+
         onenter = function(inst, pushanim)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("idle_loop", true)
@@ -79,7 +79,7 @@ local states=
                 inst.AnimState:PushAnimation("bark1_woby", false)
             end
         end,
-        
+
         timeline=
         {
             TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/bark") end),
@@ -95,7 +95,7 @@ local states=
     State{
         name = "shake",
         tags = {"idle", "canrotate"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("shake_woby")
@@ -106,20 +106,20 @@ local states=
             TimeEvent(3*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/foley") end),
             TimeEvent(8*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/foley") end),
         },
-       
+
         events=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
     },
-    
+
     State{
         name = "sit",
         tags = {},
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
-            if not (inst.AnimState:IsCurrentAnimation("sit_woby") or 
-               inst.AnimState:IsCurrentAnimation("sit_woby_loop") or 
+            if not (inst.AnimState:IsCurrentAnimation("sit_woby") or
+               inst.AnimState:IsCurrentAnimation("sit_woby_loop") or
                inst.AnimState:IsCurrentAnimation("sit_woby_pst")) then
 
                 inst.AnimState:PlayAnimation("sit_woby", false)
@@ -138,7 +138,7 @@ local states=
             TimeEvent(20*FRAMES, function(inst) inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/footstep", {intensity= 1}) end),
 
         },
-        
+
         events=
         {
             EventHandler("animqueueover", function(inst) inst.sg:GoToState("idle") end),
@@ -148,7 +148,7 @@ local states=
     State{
         name = "cower",
         tags = {"canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.sg:GoToState("actual_cower")
         end,
@@ -164,7 +164,7 @@ local states=
                 inst.AnimState:PushAnimation("cower_woby_loop", true)
             end
         end,
-        
+
         timeline=
         {
             TimeEvent(4*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/foley") end),
@@ -181,8 +181,8 @@ local states=
         tags = {"idle"},
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
-            if not (inst.AnimState:IsCurrentAnimation("scratch_woby_pre") or 
-               inst.AnimState:IsCurrentAnimation("scratch_woby_loop") or 
+            if not (inst.AnimState:IsCurrentAnimation("scratch_woby_pre") or
+               inst.AnimState:IsCurrentAnimation("scratch_woby_loop") or
                inst.AnimState:IsCurrentAnimation("scratch_woby_pst")) then
 
                 inst.AnimState:PlayAnimation("scratch_woby_pre", false)
@@ -190,7 +190,7 @@ local states=
                 inst.AnimState:PushAnimation("scratch_woby_pst", false)
             end
         end,
-        
+
         timeline=
         {
             TimeEvent(4*FRAMES, function(inst) inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/foley", {intensity= .5}) end),
@@ -227,16 +227,16 @@ local states=
     State{
         name = "alert",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.sg:GoToState("actual_alert")
         end,
     },
-    
+
     State{
         name = "actual_alert",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             if not inst.AnimState:IsCurrentAnimation("alert_woby_loop") then
@@ -255,16 +255,16 @@ local states=
     State{
         name = "sit_alert_tailwag",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.sg:GoToState("actual_sit_alert_tailwag")
         end,
     },
-    
+
     State{
         name = "actual_sit_alert_tailwag",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("sit_woby")
@@ -275,12 +275,12 @@ local states=
             EventHandler("animover", function(inst) inst.sg:GoToState("actual_sit_alert_tailwag_loop") end),
         },
     },
-   
+
 
     State{
         name = "actual_sit_alert_tailwag_loop",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("sit_woby_tailwag_loop", true)
@@ -306,16 +306,16 @@ local states=
     State{
         name = "sit_alert",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.sg:GoToState("actual_sit_alert")
         end,
     },
-    
+
     State{
         name = "actual_sit_alert",
         tags = {"idle", "canrotate", "alert"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             if not inst.AnimState:IsCurrentAnimation("sit_woby_loop") then
@@ -349,7 +349,7 @@ local states=
             end),
         },
     },
-   
+
     State{
         name = "run",
         tags = { "moving", "running", "canrotate" },
@@ -373,12 +373,12 @@ local states=
             inst.sg:GoToState("run")
         end,
     },
-   
+
     State{
         name = "run_stop",
         tags = { "idle" },
 
-        onenter = function(inst) 
+        onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("run_woby_pst")
         end,
@@ -402,10 +402,10 @@ CommonStates.AddWalkStates(
     states,
     {
         walktimeline =
-        {   
+        {
 
-            ---- SNIFF SOUNDS-----               
-            TimeEvent(4*FRAMES, function(inst) 
+            ---- SNIFF SOUNDS-----
+            TimeEvent(4*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
@@ -413,7 +413,7 @@ CommonStates.AddWalkStates(
                 end
             end),
 
-            TimeEvent(15*FRAMES, function(inst) 
+            TimeEvent(15*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
@@ -421,7 +421,7 @@ CommonStates.AddWalkStates(
                 end
             end),
 
-            TimeEvent(31*FRAMES, function(inst) 
+            TimeEvent(31*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
@@ -429,28 +429,17 @@ CommonStates.AddWalkStates(
                 end
             end),
 
-            TimeEvent(43*FRAMES, function(inst) 
+            TimeEvent(43*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
                    inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/sniff")-- Sniff walk sounds
                 end
             end),
-            
+
             --FOOTSTEPS SOUNDS----
 
-            TimeEvent(7*FRAMES, function(inst) 
-                if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
-                   inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
-                   inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
-                    inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/footstep", {intensity= .1})
-                else
-                    inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/footstep", {intensity= .3}) -- Regular walk sounds
-                end
-            end),
-            
-
-            TimeEvent(30*FRAMES, function(inst) 
+            TimeEvent(7*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
@@ -460,7 +449,8 @@ CommonStates.AddWalkStates(
                 end
             end),
 
-            TimeEvent(45*FRAMES, function(inst) 
+
+            TimeEvent(30*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
@@ -469,9 +459,19 @@ CommonStates.AddWalkStates(
                     inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/footstep", {intensity= .3}) -- Regular walk sounds
                 end
             end),
-            
 
-            TimeEvent(60*FRAMES, function(inst) 
+            TimeEvent(45*FRAMES, function(inst)
+                if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
+                   inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
+                   inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
+                    inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/footstep", {intensity= .1})
+                else
+                    inst.SoundEmitter:PlaySoundWithParams("dontstarve/characters/walter/woby/big/footstep", {intensity= .3}) -- Regular walk sounds
+                end
+            end),
+
+
+            TimeEvent(60*FRAMES, function(inst)
                 if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_loop") or
                    inst.AnimState:IsCurrentAnimation("sniff_woby_pst") then
@@ -485,7 +485,7 @@ CommonStates.AddWalkStates(
         }
     },
     {
-        startwalk =  function(inst) 
+        startwalk =  function(inst)
             if math.random() < 0.33 then
                 return "sniff_woby_pre"
             end
@@ -499,7 +499,7 @@ CommonStates.AddWalkStates(
             end
             return "walk_woby_loop"
         end,
-        
+
         stopwalk = function(inst)
             if inst.AnimState:IsCurrentAnimation("sniff_woby_pre") or
                inst.AnimState:IsCurrentAnimation("sniff_woby_loop") then
@@ -514,17 +514,17 @@ CommonStates.AddFrozenStates(states)
 CommonStates.AddSinkAndWashAsoreStates(states)
 CommonStates.AddHopStates(states, true, { pre = "boat_jump_pre", loop = "boat_jump_loop", pst = "boat_jump_pst"},
 {
-    hop_pre = 
-    {
-        TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/sleep") end)
-    },
-    
-    hop_loop = 
+    hop_pre =
     {
         TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/sleep") end)
     },
 
-    hop_pst = 
+    hop_loop =
+    {
+        TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/sleep") end)
+    },
+
+    hop_pst =
     {
         TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/sleep") end)
     },
@@ -532,10 +532,10 @@ CommonStates.AddHopStates(states, true, { pre = "boat_jump_pre", loop = "boat_ju
 
 CommonStates.AddSleepStates(states,
 {
-    sleeptimeline = 
+    sleeptimeline =
     {
         TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/walter/woby/big/sleep") end)
     },
 })
-    
+
 return StateGraph("wobybig", states, events, "idle", actionhandlers)

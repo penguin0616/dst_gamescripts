@@ -38,7 +38,7 @@ end
 local function MakeWorldNetwork(name, customprefabs, customassets, custom_postinit)
     local function fn()
         local inst = CreateEntity()
-        
+
         assert(TheWorld ~= nil and TheWorld.net == nil)
         TheWorld.net = inst
 

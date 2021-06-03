@@ -561,7 +561,7 @@ local function MoveItemFromAllOfSlot(inst, slot, container)
                 else
                     remainder = container_classified:ReceiveItem(item)
                 end
-                
+
                 if container_classified.ignoreoverflow then
                     container_classified.ignoreoverflow = false
                 end
@@ -601,7 +601,7 @@ local function MoveItemFromHalfOfSlot(inst, slot, container)
                 else
                     remainder = container_classified:ReceiveItem(item, math.floor(item.replica.stackable:StackSize() / 2))
                 end
-                
+
                 if container_classified.ignoreoverflow then
                     container_classified.ignoreoverflow = false
                 end

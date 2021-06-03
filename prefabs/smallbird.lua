@@ -124,7 +124,7 @@ local function FollowLeader(inst)
     if leader.components.leader ~= nil then
         --print("   adding follower")
         leader.components.leader:AddFollower(inst)
-        --[[if leader.components.homeseeker and leader.components.homeseeker:HasHome() and leader.components.homeseeker.home.prefab == "tallbirdnest" then 
+        --[[if leader.components.homeseeker and leader.components.homeseeker:HasHome() and leader.components.homeseeker.home.prefab == "tallbirdnest" then
             leader.components.homeseeker.home.canspawnsmallbird = true
         end]]
     end
@@ -449,7 +449,7 @@ local function create_teen_smallbird()
     inst.AnimState:SetBuild("tallbird_teen_build")
     inst.AnimState:PlayAnimation("idle")
     inst.AnimState:Hide("beakfull")
-    
+
     inst:AddTag("teenbird")
 
     inst.Transform:SetScale(.8, .8, .8)

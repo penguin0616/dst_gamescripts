@@ -12,7 +12,7 @@ AddTaskSet("default", {
 			"Badlands",
 			"For a nice walk",
 			"Lightning Bluff",
-			
+
 			-- meteor island
 			"MoonIsland_IslandShards",
 			"MoonIsland_Beach",
@@ -51,7 +51,7 @@ AddTaskSet("default", {
 			["MoonAltarRockIdol"] = { count = 1, tasks={"MoonIsland_Mine"} },
 			["MoonAltarRockSeed"] = { count = 1, tasks={"MoonIsland_Mine"} },
             ["BathbombedHotspring"] = {count = 1, tasks={"MoonIsland_Baths"}},
-            ["MoonFissures"] = {count = 1, tasks={"MoonIsland_Fissures","MoonIsland_Mine","MoonIsland_Forest"}},            
+            ["MoonFissures"] = {count = 1, tasks={"MoonIsland_Fissures","MoonIsland_Mine","MoonIsland_Forest"}},
 		},
 		ocean_prefill_setpieces = {
 			["BrinePool1"] = {count = 4}, -- todo: make this scale based on world gen size
@@ -61,7 +61,7 @@ AddTaskSet("default", {
 
 		ocean_population = {
             "OceanCoastalShore",
-			"OceanCoastal", 
+			"OceanCoastal",
 			"OceanSwell",
 			"OceanRough",
 			"OceanHazardous",

@@ -20,7 +20,7 @@ local TimeMultipliers = {
     end,
     ["twiggytree"] = function()
         return TUNING.TWIGGYTREE_REGROWTH_TIME_MULT
-    end,    
+    end,
     ["deciduoustree"] = function()
         return TUNING.DECIDIOUS_REGROWTH_TIME_MULT * ((not TheWorld.state.isspring and 0) or 1)
     end,
@@ -126,6 +126,8 @@ local PlantRegrowth = Class(function(self, inst)
     self.area = nil -- defer this until we try regrowing, to spread out the cost
 end)
 
+PlantRegrowth.TimeMultipliers = TimeMultipliers
+
 function PlantRegrowth:ResetGrowthTime()
     self.nextregrowth = InternalTimes[self.inst.prefab] + GetRandomWithVariance(self.regrowthrate, self.regrowthrate * 0.2)
 end
@@ -170,7 +172,7 @@ local function GetSpawnPoint(from_pt, radius, prefab)
         if map:CanPlantAtPoint(try_pos:Get())
             and map:CanPlacePrefabFilteredAtPoint(try_pos.x, try_pos.y, try_pos.z, prefab)
             and not (RoadManager ~= nil and RoadManager:IsOnRoad(try_pos.x, 0, try_pos.z))
-            and #TheSim:FindEntities(try_pos.x, try_pos.y, try_pos.z, 3) <= 0 
+            and #TheSim:FindEntities(try_pos.x, try_pos.y, try_pos.z, 3) <= 0
 			and #TheSim:FindEntities(try_pos.x, try_pos.y, try_pos.z, BASE_RADIUS, nil, nil, SPAWN_BLOCKER_TAGS) <= 0 then
             validpos = try_pos
             break

@@ -990,7 +990,7 @@ local function GetNextAvailableSlot(inst, item)
                 end
             end
         end
-        
+
         if prioritize_container and inv_slot and inv_pref then
             return inv_slot, inv_pref
         end
@@ -1034,7 +1034,7 @@ local function ReceiveItem(inst, item, count)--, forceslot)
 
     local originalcount = count and math.min(count, originalstacksize) or originalstacksize
     count = originalcount
-    
+
     if slot then
         if overflow ~= nil and container_pref == "overflow" then
             local remainder = overflow:ReceiveItem(item, count)

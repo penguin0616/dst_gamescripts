@@ -15,7 +15,7 @@ local function PlayImpactAnim(proxy)
     inst.entity:AddAnimState()
 
     inst.Transform:SetFromProxy(proxy.GUID)
-    
+
     inst.AnimState:SetBank("rhino_impact")
     inst.AnimState:SetBuild("rhino_impact")
     inst.AnimState:PlayAnimation("anim")

@@ -112,7 +112,7 @@ end
 local DAYLIGHT_SEARCH_RANGE = 30
 local CANGROW_TAGS = { "daylight", "lightsource" }
 function Crop:DoGrow(dt, nowither)
-    if not self.inst:HasTag("withered") and self.growthpercent < 1 then 
+    if not self.inst:HasTag("withered") and self.growthpercent < 1 then
         local shouldgrow = nowither or not TheWorld.state.isnight
         if not shouldgrow then
             local x, y, z = self.inst.Transform:GetWorldPosition()

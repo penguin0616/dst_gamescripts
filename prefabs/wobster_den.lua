@@ -83,7 +83,7 @@ local function updateart(inst)
 end
 
 local function try_blink(inst)
-    if inst.components.workable.workleft > FIRST_WORK_LEVEL 
+    if inst.components.workable.workleft > FIRST_WORK_LEVEL
             and inst.components.childspawner.childreninside > 0 then
         inst.AnimState:PlayAnimation("blink")
         inst.AnimState:PushAnimation("eyes_loop", true)

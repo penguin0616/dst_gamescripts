@@ -160,8 +160,8 @@ local function returntobeefalo(inst)
             target = ents[1]
         end
         if target then
-            return BufferedAction(inst, target, ACTIONS.GOHOME)    
-        end        
+            return BufferedAction(inst, target, ACTIONS.GOHOME)
+        end
     end
 end
 
@@ -196,7 +196,7 @@ function CarratBrain:OnStart()
             ),
 			WhileNode( function() return self.inst.components.yotc_racecompetitor ~= nil and self.inst.components.yotc_racecompetitor.racestate == "racing" end, "Racing",
                 PriorityNode({
-					WhileNode( function() return self.inst.components.yotc_racecompetitor ~= nil and self.inst.components.yotc_racecompetitor:IsStartingLate() end, "PanicRaceStart", 
+					WhileNode( function() return self.inst.components.yotc_racecompetitor ~= nil and self.inst.components.yotc_racecompetitor:IsStartingLate() end, "PanicRaceStart",
 						Panic(self.inst)),
 					Wander(self.inst, function() return racing_get_checkpoint_pt(self.inst) end, RACE_WANDER_MAX_DIST, RACE_WANDER_TIMES, get_race_direction, nil, nil, RACE_WANDER_DATA)
                 }, 0.1)
@@ -207,12 +207,12 @@ function CarratBrain:OnStart()
 
     local root = PriorityNode(
     {
-        WhileNode( function() return (self.inst.components.health ~= nil and self.inst.components.health.takingfiredamage) or (self.inst.components.burnable ~= nil and self.inst.components.burnable:IsBurning()) end, "OnFire", 
+        WhileNode( function() return (self.inst.components.health ~= nil and self.inst.components.health.takingfiredamage) or (self.inst.components.burnable ~= nil and self.inst.components.burnable:IsBurning()) end, "OnFire",
 			Panic(self.inst)),
 
         race_brain,
 
-        WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", 
+        WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted",
 			Panic(self.inst)),
 
         RunAway(self.inst, "scarytoprey", AVOID_PLAYER_DIST, AVOID_PLAYER_STOP),

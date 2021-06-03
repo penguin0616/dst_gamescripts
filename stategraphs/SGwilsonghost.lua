@@ -277,7 +277,7 @@ local states =
             inst.components.locomotor:Stop()
             inst.components.locomotor:Clear()
             inst:ClearBufferedAction()
-            
+
             inst.Light:Enable(false)
             inst.AnimState:PlayAnimation("dissipate")
             if not inst:HasTag("mime") then

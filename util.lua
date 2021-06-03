@@ -133,7 +133,7 @@ end
 
 function table.contains(table, element)
     if table == nil then return false end
-    
+
     for _, value in pairs(table) do
         if value == element then
           return true
@@ -167,11 +167,11 @@ end
 function table.reverse(tab)
     local size = #tab
     local newTable = {}
- 
+
     for i,v in ipairs(tab) do
         newTable[size-i+1] = v
     end
- 
+
     return newTable
 end
 
@@ -281,7 +281,7 @@ end
 -- This is actually GetRandomItemWithKey
 function GetRandomItemWithIndex(choices)
     local choice = math.random(GetTableSize(choices)) -1
-    
+
     local idx = nil
     local item = nil
 
@@ -315,7 +315,7 @@ function PickSomeWithDups(num, choices)
     local ret = {}
     for i=1,num do
         local choice = math.random(#l_choices)
-        table.insert(ret, l_choices[choice])       
+        table.insert(ret, l_choices[choice])
     end
     return ret
 end
@@ -508,7 +508,7 @@ end
 
 function GetRandomKey(choices)
  	local choice = math.random(GetTableSize(choices)) -1
- 	
+
  	local picked = nil
  	for k,v in pairs(choices) do
  		picked = k
@@ -535,7 +535,7 @@ function distsq(v1, v2, v3, v4)
 
     assert(v1, "Something is wrong: v1 is nil stale component reference?")
     assert(v2, "Something is wrong: v2 is nil stale component reference?")
-    
+
     --special case for 2dvects passed in as numbers
     if v4 and v3 and v2 and v1 then
         local dx = v1-v3
@@ -667,7 +667,7 @@ local function count_all(f)
 end
 
 function isnan(x) return x ~= x end
-math.inf = 1/0 
+math.inf = 1/0
 function isinf(x) return x == math.inf or x == -math.inf end
 function isbadnumber(x) return isinf(x) or isnan(x) end
 
@@ -680,11 +680,11 @@ local function type_count()
 	count_all(enumerate)
 	return counts
 end
-   
+
 function mem_report()
     local tmp = {}
-    
-    for k,v in pairs(type_count()) do 
+
+    for k,v in pairs(type_count()) do
         table.insert(tmp, {num=v, name=k})
     end
     table.sort(tmp, function(a,b) return a.num > b.num end)
@@ -692,7 +692,7 @@ function mem_report()
     for k,v in ipairs(tmp) do
         table.insert(tmp2, tostring(v.num).."\t"..tostring(v.name))
     end
-    
+
     print (table.concat(tmp2,"\n"))
 end
 
@@ -711,22 +711,22 @@ function weighted_random_choice(choices)
     end
 
     local threshold = math.random() * weighted_total(choices)
-    
+
     local last_choice
     for choice, weight in pairs(choices) do
         threshold = threshold - weight
         if threshold <= 0 then return choice end
         last_choice = choice
     end
-    
+
     return last_choice
 end
- 
 
- 
+
+
  function PrintTable(tab)
     local str = {}
-    
+
     local function internal(tab, str, indent)
         for k,v in pairs(tab) do
             if type(v) == "table" then
@@ -737,7 +737,7 @@ end
             end
         end
     end
-    
+
     internal(tab, str, '')
     return table.concat(str, '')
 end
@@ -747,7 +747,7 @@ end
 local env = {  -- add functions you know are safe here
     loadstring=loadstring -- functions can get serialized to text, this is required to turn them back into functions
  }
- 
+
 
 function RunInEnvironment(fn, fnenv)
 	setfenv(fn, fnenv)
@@ -779,7 +779,7 @@ function RunInSandboxSafe(untrusted_code, error_handler)
 	return xpcall(untrusted_function, error_handler or function() end)
 end
 
-function GetTickForTime(target_time) 
+function GetTickForTime(target_time)
 	return math.floor( target_time/GetTickTime() )
 end
 
@@ -828,15 +828,15 @@ end
 
 function TrackedAssert(tracking_data, function_ptr, function_data)
 	--print("TrackedAssert", tracking_data, function_ptr, function_data)
-	_G['tracked_assert'] = function(pass, reason)		
-							--print("Tracked:Assert", tracking_data, pass, reason)	 								
+	_G['tracked_assert'] = function(pass, reason)
+							--print("Tracked:Assert", tracking_data, pass, reason)
 			 				assert(pass, tracking_data.." --> "..reason)
 			 			end
-			 							
+
 	local result = function_ptr( function_data )
-					
+
 	_G['tracked_assert'] = _G.assert
-	
+
 	return result
 end
 
@@ -887,7 +887,7 @@ function fastdump(value)
 
 	local function printtable(in_table)
 		table.insert(items, "{")
-		
+
 		for k,v in pairs(in_table) do
 			local t = type(v)
 			local comma = true
@@ -924,7 +924,7 @@ function fastdump(value)
 				table.insert(items, ",")
 			end
 		end
-		
+
 		table.insert(items, "}")
 		collectgarbage("step")
 	end
@@ -990,7 +990,7 @@ function RingBuffer:Get(index)
         return nil
     end
 
-    local pos = (self.pos-self.entries) + index 
+    local pos = (self.pos-self.entries) + index
     if pos < 1 then
         pos = pos + self.entries
     end
@@ -1027,7 +1027,7 @@ end
 -- pt is in world space, walkable_platform is optional, if nil, the constructor will search for a platform at pt.
 -- GetPosition() will return nil if a platform was being tracked but no longer exists.
 DynamicPosition = Class(function(self, pt, walkable_platform)
-	if pt ~= nil then		
+	if pt ~= nil then
 		self.walkable_platform = walkable_platform or TheWorld.Map:GetPlatformAtPoint(pt.x, pt.z)
 		if self.walkable_platform ~= nil then
 			self.local_pt = pt - self.walkable_platform:GetPosition()
@@ -1043,7 +1043,7 @@ end
 
 function DynamicPosition:__tostring()
 	local pt = self:GetPosition()
-    return pt ~= nil 
+    return pt ~= nil
 		and string.format("%2.2f, %2.2f on %s", pt.x, pt.z, tostring(self.walkable_platform))
         or "nil"
 end
@@ -1331,9 +1331,9 @@ function IsWithinAngle(position, forward, width, testPos)
 	local testAngle = math.acos(testVec:Dot(forward))
 
 	-- Return true if testAngle is <= +/- .5*width
-	if math.abs(testAngle) <= .5*math.abs(width) then 
+	if math.abs(testAngle) <= .5*math.abs(width) then
 		return true
-	else 
+	else
 		return false
 	end
 end
@@ -1413,13 +1413,13 @@ function CalcDiminishingReturns(current, basedelta)
     return current + dcharge
 end
 
-function Dist2dSq(p1, p2) 
+function Dist2dSq(p1, p2)
 	local dx = p1.x - p2.x
 	local dy = p1.y - p2.y
 	return dx*dx + dy*dy
 end
 
-function DistPointToSegmentXYSq(p, v1, v2) 
+function DistPointToSegmentXYSq(p, v1, v2)
 	local l2 = Dist2dSq(v1, v2)
 	if (l2 == 0) then
 		return Dist2dSq(p, v1)

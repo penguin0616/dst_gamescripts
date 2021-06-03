@@ -58,9 +58,9 @@ local function onhammered(inst, worker)
     if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then
         inst.components.burnable:Extinguish()
     end
-    
+
     dropharvestablecompost(inst)
-    
+
     inst.components.lootdropper:DropLoot()
     local fx = SpawnPrefab("collapse_small")
     fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -114,7 +114,7 @@ local function onburnt(inst)
     inst.components.timer:StopTimer("composting")
 
     dropharvestablecompost(inst)
-    
+
     updategroundcompostlayers(inst)
 
     inst.components.pickable.canbepicked = false
@@ -124,7 +124,7 @@ local function onburnt(inst)
     inst.components.compostingbin.browns = 0
 
     inst.components.compostingbin.accepts_items = false
-    
+
     inst.SoundEmitter:KillSound("lp")
 end
 
@@ -231,7 +231,7 @@ local function getstatus(inst)
     if inst:HasTag("burnt") then
         return "BURNT"
     end
-    
+
     if inst.components.timer:TimerExists("composting") then
         return getwetdrybalance(inst)
     end

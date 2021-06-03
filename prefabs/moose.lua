@@ -75,8 +75,8 @@ end
 local function KeepTargetFn(inst, target)
     local landing = inst.components.knownlocations:GetLocation("landpoint") or inst:GetPosition()
 
-    return inst.components.combat:CanTarget(target) 
-    and inst:GetPosition():Dist(target:GetPosition()) <= LOSE_TARGET_DIST 
+    return inst.components.combat:CanTarget(target)
+    and inst:GetPosition():Dist(target:GetPosition()) <= LOSE_TARGET_DIST
     and target:GetPosition():Dist(landing) <= LOSE_TARGET_DIST
 
 end

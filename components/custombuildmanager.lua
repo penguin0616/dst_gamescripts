@@ -5,7 +5,7 @@ local Custombuildmanager = Class(function(self, inst)
 end)
 
 function Custombuildmanager:refreshart()
-    for g,group in pairs(self.groups) do        
+    for g,group in pairs(self.groups) do
         for s,symbol in ipairs(self.groups[g])do
             local build = self.current[g]
             if build then
@@ -31,19 +31,19 @@ end
 
 function Custombuildmanager:ChangeGroup(group, build)
     if self.groups[group] then
-        if build then            
+        if build then
             self.current[group] = build
         else
             self.current[group] = nil
         end
     end
-    self:refreshart()   
+    self:refreshart()
 end
 
 function Custombuildmanager:OnSave(data)
     return
     {
-        current = self.current,        
+        current = self.current,
     }
 end
 

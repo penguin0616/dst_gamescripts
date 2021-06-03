@@ -128,7 +128,7 @@ function self:racethemecheck()
             racer._musicstate:set(CARRAT_MUSIC_STATES.NONE)
             racer._musicstate:set(CARRAT_MUSIC_STATES.RACE)
         end
-    end 
+    end
     if not next(self._races) then
         self._themetask:Cancel()
         self._themetask = nil
@@ -176,8 +176,8 @@ function self:EndOfRace(race_id)
 	if race ~= nil then
     for racer,i in pairs(race.racers) do
         print("SETTING NET VAR to OFF")
-        racer._musicstate:set(CARRAT_MUSIC_STATES.NONE)   
-    end    
+        racer._musicstate:set(CARRAT_MUSIC_STATES.NONE)
+    end
 
 	if race.checkpoints ~= nil then
 		for checkpoint, _ in pairs(race.checkpoints) do

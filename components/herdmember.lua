@@ -20,7 +20,7 @@ local HerdMember = Class(function(self, inst)
 
     self.herd = nil
     self.herdprefab = "beefaloherd"
-    
+
     self.task = self.inst:DoTaskInTime(5, OnInit)
 end,
 nil,

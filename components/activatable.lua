@@ -39,6 +39,7 @@ nil,
 function Activatable:OnRemoveFromEntity()
     self.inst:RemoveTag("inactive")
     self.inst:RemoveTag("quickactivation")
+    self.inst:RemoveTag("standingactivation")
 end
 
 function Activatable:CanActivate(doer)

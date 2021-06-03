@@ -1,18 +1,18 @@
 
 
-local BunchBlockers = 
+local BunchBlockers =
 {
 
 }
 
-local Bunches = 
+local Bunches =
 {
     seastack_spawner_swell = {
         prefab = "seastack",
         range = 50,
         min = 30,
         max = 50,
-        min_spacing = 8, 
+        min_spacing = 8,
         valid_tile_types = {
             GROUND.OCEAN_SWELL,
         },
@@ -89,7 +89,7 @@ local Bunches =
         valid_tile_types = {
             GROUND.DIRT,
         },
-    },    
+    },
 
     rubble2 = {
         prefab = "cavein_boulder",
@@ -103,7 +103,7 @@ local Bunches =
     },
 }
 
-return 
+return
 {
     Bunches = Bunches,
     BunchBlockers = BunchBlockers,

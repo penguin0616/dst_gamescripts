@@ -18,7 +18,7 @@ local SPAWN_DIST = 30
 
 --Public
 self.inst = inst
-    
+
 --Private
 local _activeplayers = {}
 

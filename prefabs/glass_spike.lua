@@ -138,7 +138,7 @@ local function MakeSpikeFn(shape, size)
         inst.components.workable:SetWorkLeft(1)
         inst.components.workable:SetOnWorkCallback(onworked)
 		inst.components.workable:SetOnFinishCallback(onworkfinished)
-		
+
 		inst:AddComponent("submersible")
 		inst:AddComponent("symbolswapdata")
 		if shape == "spike" then

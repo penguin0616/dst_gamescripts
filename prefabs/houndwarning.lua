@@ -9,15 +9,15 @@ local WARNING_LEVEL_DISTANCE =
 }
 
 local function PlayWarningSound(inst, radius)
-    
+
     inst.entity:SetParent(TheFocalPoint.entity)
-    
+
     --Everyone gets their own hounds and therefore their own warnings
     local theta = math.random() * 2 * PI
 
     inst.Transform:SetPosition(radius * math.cos(theta), 0, radius * math.sin(theta))
     inst.SoundEmitter:PlaySound("dontstarve/creatures/hound/distant")
-    inst:Remove()    
+    inst:Remove()
 end
 
 local function makewarning(distance)
@@ -25,11 +25,11 @@ local function makewarning(distance)
         local inst = CreateEntity()
 
         inst.entity:AddTransform()
-        inst.entity:AddSoundEmitter()        
+        inst.entity:AddSoundEmitter()
 
         inst:AddTag("FX")
 
-		inst:DoTaskInTime(0, function() 
+		inst:DoTaskInTime(0, function()
             PlayWarningSound(inst, distance)
         end)
 

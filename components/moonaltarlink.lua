@@ -39,7 +39,7 @@ function MoonAltarLink:BreakLink()
             end
         end
     end
-    
+
     if self.onlinkbrokenfn ~= nil then
         self.onlinkbrokenfn(self.inst, self.altars)
     end

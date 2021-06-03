@@ -184,7 +184,7 @@ function PetHealthBar:SetPet(pet, symbol, maxhealth)
             self.inst:RemoveEventCallback("startcorrosivedebuff", self._onstartcorrsivedebuff, self.pet)
             self.inst:RemoveEventCallback("starthealthregen", self._onstarthealthregen, self.pet)
             self.inst:RemoveEventCallback("startsmallhealthregen", self._onstartsmallhealthregen, self.pet)
-			
+
             local k = next(self.corrosives)
             while k ~= nil do
                 self.inst:RemoveEventCallback("onremove", self._onremovecorrosive, k)
@@ -215,7 +215,7 @@ function PetHealthBar:SetPet(pet, symbol, maxhealth)
         self.inst:ListenForEvent("startsmallhealthregen", self._onstartsmallhealthregen, pet)
         self.task = self.inst:DoTaskInTime(0, InitPet, self, pet)
 
-        self.inst:StartUpdatingComponent(self)  
+        self.inst:StartUpdatingComponent(self)
     end
 end
 

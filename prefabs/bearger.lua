@@ -182,7 +182,7 @@ local function LaunchItem(inst, target, item)
 end
 
 local function OnGroundPound(inst)
-    if math.random() < .2 then 
+    if math.random() < .2 then
         inst.components.shedder:DoMultiShed(3, false) -- can't drop too many, or it'll be really easy to farm for thick furs
     end
 end
@@ -200,7 +200,7 @@ end
 local function ontimerdone(inst, data)
     if data.name == "GroundPound" then
         inst.cangroundpound = true
-    elseif data.name == "Yawn" and inst:HasTag("hibernation") then 
+    elseif data.name == "Yawn" and inst:HasTag("hibernation") then
         inst.canyawn = true
     end
 end

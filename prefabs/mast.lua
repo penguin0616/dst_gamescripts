@@ -7,13 +7,13 @@ local assets =
 
 local malbatross_assets =
 {
-    -- Asset("ANIM", "anim/boat_mast_malbatross.zip"), 
+    -- Asset("ANIM", "anim/boat_mast_malbatross.zip"),
     Asset("ANIM", "anim/boat_mast_malbatross_wip.zip"),
-    -- Asset("ANIM", "anim/boat_mast_malbatross_knots.zip"), 
-    -- Asset("ANIM", "anim/boat_mast_malbatross_opens.zip"), 
+    -- Asset("ANIM", "anim/boat_mast_malbatross_knots.zip"),
+    -- Asset("ANIM", "anim/boat_mast_malbatross_opens.zip"),
     -- Asset("ANIM", "anim/boat_mast_malbatross_build.zip"),
-    Asset("ANIM", "anim/boat_mast_malbatross_knots_wip.zip"), 
-    Asset("ANIM", "anim/boat_mast_malbatross_opens_wip.zip"), 
+    Asset("ANIM", "anim/boat_mast_malbatross_knots_wip.zip"),
+    Asset("ANIM", "anim/boat_mast_malbatross_opens_wip.zip"),
     Asset("ANIM", "anim/boat_mast_malbatross_build.zip"),
 
     Asset("ANIM", "anim/seafarer_mast_malbatross.zip"), -- item
@@ -121,8 +121,8 @@ local function lamp_turnon(inst)
         inst.Light:Enable(true)
 
         lamp_fuelupdate(inst)
-    
-        inst._lamp:PushEvent("mast_lamp_on")        
+
+        inst._lamp:PushEvent("mast_lamp_on")
     end
     inst.SoundEmitter:PlaySound("dontstarve/common/fireAddFuel")
 end
@@ -187,7 +187,7 @@ local function onburnt(inst)
     end
 
     inst:RemoveComponent("mast")
-    
+
     lamp_turnoff(inst)
 
     inst.components.upgradeable.upgradetype = nil
@@ -233,7 +233,7 @@ local function lootsetup(lootdropper)
         for k,v in ipairs(recipeloot) do
             table.insert(loots, v)
         end
-        
+
         if #loots > 0 then
             lootdropper:SetLoot(loots)
         end
@@ -249,7 +249,7 @@ local function onsave(inst, data)
 		data.rotation = inst.Transform:GetRotation()
 		data.is_sail_raised = inst.components.mast and inst.components.mast.is_sail_raised or nil
     end
-    
+
     if inst._lamp ~= nil then
         data.lamp_fuel = inst.components.fueled.currentfuel
     elseif inst._lightningrod ~= nil then
@@ -324,7 +324,7 @@ local function fn_pst(inst)
     -- The mast loot that this drops is generated from the uncraftable recipe; see recipes.lua for the items.
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetLootSetupFn(lootsetup)
-    
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(3)
@@ -334,7 +334,7 @@ local function fn_pst(inst)
     inst:AddComponent("upgradeable")
     inst.components.upgradeable.upgradetype = UPGRADETYPES.MAST
     inst.components.upgradeable.onupgradefn = OnUpgrade
-    
+
     inst:ListenForEvent("onbuilt", onbuilt)
     inst:ListenForEvent("ondeconstructstructure", ondeconstructstructure)
 
@@ -416,7 +416,7 @@ local function setondeploy(inst, prefab)
         end
     end
 
-    inst.components.deployable.ondeploy = ondeploy  
+    inst.components.deployable.ondeploy = ondeploy
 end
 
 
@@ -437,13 +437,13 @@ local function item_fn_pst(inst)
     inst:AddComponent("deployable")
     setondeploy(inst, "mast")
     inst.components.deployable:SetDeployMode(DEPLOYMODE.MAST)
-    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.LESS)   
+    inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.LESS)
 
     MakeLargeBurnable(inst)
     MakeLargePropagator(inst)
 
     inst:AddComponent("inspectable")
-    inst:AddComponent("inventoryitem")    
+    inst:AddComponent("inventoryitem")
 
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
@@ -487,7 +487,7 @@ local function malbatross_item_fn()
     end
 
     item_fn_pst(inst)
-	
+
     setondeploy(inst ,"mast_malbatross")
 
     return inst

@@ -55,7 +55,7 @@ local function fn()
     inst.components.fuel.fueltype = FUELTYPE.CAVE
 
     MakeSmallBurnable(inst, TUNING.TINY_BURNTIME)
-    MakeSmallPropagator(inst)    
+    MakeSmallPropagator(inst)
     MakeHauntableLaunchAndIgnite(inst)
 
     inst:AddComponent("inventoryitem")

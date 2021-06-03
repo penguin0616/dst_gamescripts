@@ -37,7 +37,7 @@ local InputDialogScreen = Class(Screen, function(self, title, buttons, modal, st
             end
         end
     end
-        
+
     self.proot = self:AddChild(Widget("ROOT"))
     self.proot:SetScaleMode(SCALEMODE_PROPORTIONAL)
     if modal then
@@ -49,12 +49,12 @@ local InputDialogScreen = Class(Screen, function(self, title, buttons, modal, st
         self.proot:SetHAnchor(ANCHOR_MIDDLE)
         self.proot:SetPosition(0,120,0)
     end
-    
+
     local spacing = 300
 
 	--throw up the background
     self.bg = self.proot:AddChild(TEMPLATES.CurlyWindow(450, 100, title, buttons, spacing, ""))
-    
+
     local textbox_font_ratio = 0.8
     self.edit_text_bg = self.proot:AddChild( Image("images/global_redux.xml", "textbox3_gold_normal.tex") )
     self.edit_text_bg:ScaleToSize(460, 40)
@@ -106,7 +106,7 @@ function InputDialogScreen:OnControl(control, down)
         self.edit_text:OnControl(control, down)
        	return true
     end
-    
+
     -- gjans: This makes it so that if the text box loses focus and you click
     -- on the bg, it presses accept. Kind of weird behaviour. I'm guessing
     -- something like it is needed for controllers, but it's not exaaaactly
@@ -134,7 +134,7 @@ function InputDialogScreen:GetHelpText()
 	local controller_id = TheInput:GetControllerID()
 	local t = {}
 	if #self.buttons > 1 and self.buttons[#self.buttons] then
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)	
+        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
     end
 	return table.concat(t, "  ")
 end

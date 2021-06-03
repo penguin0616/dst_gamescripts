@@ -33,7 +33,7 @@ local function on_hammered(inst, hammerer)
 end
 
 local function fn()
-    
+
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -45,7 +45,7 @@ local function fn()
     inst:SetStateGraph("SGwalkingplank")
 
     inst.AnimState:SetBank("plank")
-    inst.AnimState:SetBuild("boat_plank_build")  
+    inst.AnimState:SetBuild("boat_plank_build")
     inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT)
     inst.AnimState:SetFinalOffset(2)
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)

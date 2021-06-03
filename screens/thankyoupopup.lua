@@ -20,7 +20,7 @@ local ItemIsCurrency = function(item)
 end
 
 local GetThankYouBuild = function(item)
-    if ItemIsCurrency(item) then        
+    if ItemIsCurrency(item) then
         local currency = item.currency
         if currency == "SPOOLS" then
             return "spool"
@@ -41,7 +41,7 @@ local ThankYouPopup = Class(Screen, function(self, items, callbackfn)
 
     global("TAB")
     TAB = self
-	
+
     --darken everything behind the dialog
     self.black = self:AddChild(Image("images/global.xml", "square.tex"))
     self.black:SetVRegPoint(ANCHOR_MIDDLE)
@@ -58,17 +58,17 @@ local ThankYouPopup = Class(Screen, function(self, items, callbackfn)
     self.center_root:SetVAnchor(ANCHOR_MIDDLE)
     self.center_root:SetHAnchor(ANCHOR_MIDDLE)
     self.center_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
-	
+
     self.proot = self.center_root:AddChild(Widget("ROOT_P"))
     self.proot:MoveTo({x=0,y=RESOLUTION_Y,z=0}, {x=0,y=0,z=0}, TRANSITION_DURATION, nil)
-    
+
 
     self.bg = self.proot:AddChild(Image())
 	self.bg:SetVRegPoint(ANCHOR_MIDDLE)
     self.bg:SetHRegPoint(ANCHOR_MIDDLE)
     self.bg:SetScale(.97)
 
-    --title 
+    --title
     self.title = self.proot:AddChild(Text(TITLEFONT, DEFAULT_TITLE_SIZE))
     self.title:SetPosition(0, 235, 0)
 
@@ -142,10 +142,10 @@ local ThankYouPopup = Class(Screen, function(self, items, callbackfn)
     self.can_close = false;
 	self.can_right = false;
 	self.can_left = false;
-	
+
     self:EvaluateButtons()
     self:ChangeGift(0)
-    
+
     self:AddChild(TEMPLATES.ForegroundLetterbox())
 end)
 
@@ -268,7 +268,7 @@ function ThankYouPopup:ChangeGift(offset)
 	local message = self.items[self.current_item].message
     self.title:SetString( (message ~= "" and message) or STRINGS.THANKS_POPUP[gt] )
     self.title:SetSize( gt_data.title_size or DEFAULT_TITLE_SIZE )
-    
+
     if gt_data.titleoffset ~= nil then
         self.title:SetPosition(
                 gt_data.titleoffset[1] + 0,
@@ -280,17 +280,17 @@ function ThankYouPopup:ChangeGift(offset)
     end
 
     TheFrontEnd:GetSound():KillSound("gift_idle")
-    
+
     if not self.revealed_items[self.current_item] then -- Unopened item
     	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/player_receives_gift_animation_spin", "ty_activate_sound")
         self.spawn_portal:GetAnimState():PlayAnimation("activate")
         self.spawn_portal:GetAnimState():PushAnimation("idle", true)
         self.open_btn:Hide()
         self.close_btn:Hide()
-        
+
 		self.can_open = false;
 		self.can_close = false;
-    
+
     else -- Already opened item
         local build = GetThankYouBuild(self.items[self.current_item])
         self.spawn_portal:GetAnimState():OverrideSkinSymbol("SWAP_ICON", build, "SWAP_ICON")
@@ -299,7 +299,7 @@ function ThankYouPopup:ChangeGift(offset)
         self.spawn_portal:GetAnimState():PushAnimation("skin_loop", true)
         self.close_btn:Hide()
         self.open_btn:Hide()
-        
+
 		self.can_open = false;
 		self.can_close = false;
     end
@@ -314,7 +314,7 @@ function ThankYouPopup:GoAway()
 	TheFrontEnd:GetSound():KillSound("gift_idle")
 	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/player_receives_gift_animation_skinout", "ty_close_sound")
     self.spawn_portal:GetAnimState():PlayAnimation("skin_out")
-    
+
     --self.banner:Hide()
     self.item_name:Hide()
     self.upper_banner_text:Hide()
@@ -346,8 +346,8 @@ function ThankYouPopup:OpenGift()
 end
 
 function ThankYouPopup:OnControl(control, down)
-    if ThankYouPopup._base.OnControl(self,control, down) then 
-        return true 
+    if ThankYouPopup._base.OnControl(self,control, down) then
+        return true
     end
 
     if not down and control == CONTROL_ACCEPT then
@@ -406,7 +406,7 @@ function ThankYouPopup:GetHelpText()
     elseif self.can_close then
 		table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.ITEM_SCREEN.OK_BUTTON)
     end
-    
+
     if self.can_left then
 		if self.can_right then
 			table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLBACK, false, false) .. "/" .. TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLFWD, false, false) .. " " .. STRINGS.UI.HELP.CHANGEPAGE)
@@ -416,7 +416,7 @@ function ThankYouPopup:GetHelpText()
 	elseif self.can_right then
 		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLFWD, false, false) .. " " .. STRINGS.UI.HELP.NEXT)
 	end
-    
+
     return table.concat(t, "  ")
 end
 

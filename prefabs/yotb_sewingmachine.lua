@@ -27,13 +27,13 @@ local function onhammered(inst, worker)
     if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then
         inst.components.burnable:Extinguish()
     end
-    
+
     if inst.components.container ~= nil then
         inst.components.container:DropEverything()
     end
-    
+
     inst.components.lootdropper:DropLoot()
-    
+
     local fx = SpawnPrefab("collapse_small")
     fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
     fx:SetMaterial("metal")
@@ -43,7 +43,7 @@ end
 local function onhit(inst, worker)
     if not inst:HasTag("burnt") then
         if inst.components.container ~= nil and inst.components.container:IsOpen() then
-            inst.components.container:Close() 
+            inst.components.container:Close()
             --onclose will trigger sfx already
         else
             inst.SoundEmitter:PlaySound("yotb_2021/common/sewing_machine/close")
@@ -68,11 +68,11 @@ local function onopen(inst)
 end
 
 local function onclose(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         if not inst.components.yotb_sewer:IsSewing() then
             inst.AnimState:PlayAnimation("close")
             inst.AnimState:PushAnimation("idle_closed", true)
-            
+
             inst.SoundEmitter:KillSound("snd")
         end
 
@@ -96,7 +96,7 @@ local function OnStartSewing(inst)
 end
 
 local function OnContinueSewing(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("active_pre")
         inst.AnimState:PushAnimation("active_loop", true)
         inst.SoundEmitter:KillSound("snd")
@@ -105,7 +105,7 @@ local function OnContinueSewing(inst)
 end
 
 local function OnContinueDone(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("idle")
     end
 end
@@ -200,7 +200,7 @@ local function fn()
     MakeMediumBurnable(inst, nil, nil, true)
     MakeSmallPropagator(inst)
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     return inst

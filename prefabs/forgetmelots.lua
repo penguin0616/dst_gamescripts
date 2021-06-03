@@ -185,4 +185,4 @@ end
 return Prefab("forgetmelots", fn, assets, prefabs),
 	Prefab("sweettea_buff", debuff_fn),
 	Prefab("weed_forgetmelots_respawner", respawner_fn)
-	
+

@@ -20,7 +20,7 @@ local function fn()
     anim:SetBuild("boat_water_fx2")
     anim:PlayAnimation("idle_loop_1")
     anim:SetSortOrder(ANIM_SORT_ORDER_BELOW_GROUND.BOAT_TRAIL)
-    anim:SetOrientation(ANIM_ORIENTATION.OnGround)    
+    anim:SetOrientation(ANIM_ORIENTATION.OnGround)
     anim:SetLayer(LAYER_BELOW_GROUND)
     anim:SetOceanBlendParams(TUNING.OCEAN_SHADER.EFFECT_TINT_AMOUNT)
 

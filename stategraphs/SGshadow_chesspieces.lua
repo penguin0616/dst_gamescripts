@@ -136,7 +136,7 @@ end
 --------------------------------------------------------------------------
 local function ondeath(inst, data)
     inst.sg:GoToState(inst.level == 1 and "death" or "evolved_death", data)
-end    
+end
 
 ShadowChess.Events.OnDeath = function()
     return EventHandler("death", ondeath)
@@ -147,7 +147,7 @@ local function ondespawn(inst, data)
     if not inst.components.health:IsDead() then
         inst.sg:GoToState("despawn", data)
     end
-end    
+end
 
 ShadowChess.Events.OnDespawn = function()
     return EventHandler("despawn", ondespawn)
@@ -408,7 +408,7 @@ end
 ShadowChess.States.AddAppear = function(states, anim, timeline)
     timeline = timeline or {}
     table.insert(timeline, ExtendedSoundTimelineEvent(0, "disappear"))
-	
+
     table.insert(states, State{
         name = "appear",
         tags = { "busy" },

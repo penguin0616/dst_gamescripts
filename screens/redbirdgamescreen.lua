@@ -57,24 +57,24 @@ end
 
 local function GameGridConstructor(screen, parent)
 	local widgets = {}
-		
+
 	local x_offset = (NUM_COLUMNS/2) * SPACING + SPACING/2
 	local y_offset = (NUM_ROWS/2) * SPACING + SPACING/2
-	
+
 	for y = 1,NUM_ROWS do
 		for x = 1,NUM_COLUMNS do
 			local index = XYtoIndex( x-1, y-1 )
-			
+
 			local tile = parent:AddChild(MiniGameTile( screen, index ))
 			tile:SetScale(TILE_SCALE)
 			tile.clickFn = function(index)
 				local x_click, y_click = IndexToXY(index)
 				screen:OnTileClick(x_click, y_click)
 			end
-		
+
 			tile:SetPosition( x * SPACING - x_offset, y * SPACING - y_offset, 0)
 			widgets[index] = tile
-			
+
 			if x > 1 then
 				tile:SetFocusChangeDir(MOVE_LEFT, widgets[index-1])
 				widgets[index-1]:SetFocusChangeDir(MOVE_RIGHT, tile)
@@ -83,9 +83,9 @@ local function GameGridConstructor(screen, parent)
 				tile:SetFocusChangeDir(MOVE_DOWN, widgets[index-NUM_COLUMNS])
 				widgets[index-NUM_COLUMNS]:SetFocusChangeDir(MOVE_UP, tile)
 			end
-		end	
+		end
 	end
-	
+
 	return widgets
 end
 
@@ -113,7 +113,7 @@ local ExplodeFX = Class(Widget, function(self, pos, scale)
 
 	self:SetPosition(pos)
 	self:SetScale(scale*0.17)
-	
+
     self.anim = self:AddChild(UIAnim())
     self.anim:GetAnimState():SetBank("explode")
     self.anim:GetAnimState():SetBuild("explode")
@@ -123,7 +123,7 @@ end)
 
 local RobinFX = Class(Widget, function(self, pos, fn)
     Widget._ctor(self, "RobinFX")
-	
+
     self.anim = self:AddChild(UIAnim())
     self.anim:GetAnimState():SetBank("crow")
     self.anim:GetAnimState():SetBuild("robin_build")
@@ -131,23 +131,23 @@ local RobinFX = Class(Widget, function(self, pos, fn)
 	self.anim:SetScale(TILE_SCALE)
 
 	local dest_pos = {}
-	
+
 	local lr = math.random()
 	if lr > 0.5 then
 		lr = 1
 	else
 		lr = -1
 	end
-	
+
 	pos.y = pos.y - 40.0
-	
+
 	local x = math.random() * 1000 - 300
 	local y = math.random() * 1000 - 300
 	dest_pos.x = pos.x + (lr * (700 + x))
 	dest_pos.y = pos.y + 900 + y
 	dest_pos.z = pos.z
     self.inst.components.uianim:MoveTo(pos, dest_pos, 2.5, function() fn(self) end )
-	
+
 	local scale = 0.28
 	self:SetScale(scale*lr, scale, 1)
 
@@ -197,32 +197,32 @@ local RedbirdGameScreen = Class(Screen, function(self, profile)
 	self.score = 0
 	self.game_state = GS_GAME_BEGINNING
 	self.egg_timer = EGG_TIMER
-	
-	self:SetupUI()	
+
+	self:SetupUI()
 	self:UpdateInterface()
 end)
 
 local LEFT_COLUMN_POS_SCALE = 0.35
 local RIGHT_COLUMN_POS_SCALE = 0.35
 function RedbirdGameScreen:SetupUI()
-	
+
 	-- FIXED ROOT
     self.fixed_root = self:AddChild(Widget("root"))
     self.fixed_root:SetVAnchor(ANCHOR_MIDDLE)
     self.fixed_root:SetHAnchor(ANCHOR_MIDDLE)
     self.fixed_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
-  
+
     self.panel_bg = self.fixed_root:AddChild(TEMPLATES.NoPortalBackground())
 	self.menu_bg = self.fixed_root:AddChild(TEMPLATES.LeftGradient())
-	
+
 	self:SetupMachine()
 
 	self.game_grid_root = self.fixed_root:AddChild(Widget("game_grid"))
 	self.game_grid_root:SetScale(0.7)
 	self.game_grid_root:SetPosition(0, 15)
 	self.game_grid = GameGridConstructor(self, self.game_grid_root, false)
-	
-	
+
+
 	self.score_root = self.fixed_root:AddChild(Widget("score_root"))
 	self.score_root:SetPosition(-RESOLUTION_X*LEFT_COLUMN_POS_SCALE, -100)
 	self.high_score_text = self.score_root:AddChild(Text(TALKINGFONT, 24, "", {1, 1, 1, 1}))
@@ -230,21 +230,21 @@ function RedbirdGameScreen:SetupUI()
 	self.score_text = self.score_root:AddChild(Text(TALKINGFONT, 24, "", {1, 1, 1, 1}))
 	self.egg_timer_text = self.score_root:AddChild(Text(TALKINGFONT, 24, "", {1, 1, 1, 1}))
 	self.egg_timer_text:SetPosition(0, 125)
-	
+
 	self.egg_timer_bar = self.score_root:AddChild(UIAnim())
 	self.egg_timer_bar:SetPosition( 0, 80 )
     self.egg_timer_bar:GetAnimState():SetBank("skin_progressbar")
     self.egg_timer_bar:GetAnimState():SetBuild("skin_progressbar")
     self.egg_timer_bar:GetAnimState():PlayAnimation("fill_progress", true)
 	self.egg_timer_bar:GetAnimState():HideSymbol("block")
-	
 
-    if not TheInput:ControllerAttached() then 
-    	self.exit_button = self.fixed_root:AddChild(TEMPLATES.BackButton(function() self:Quit() end)) 
+
+    if not TheInput:ControllerAttached() then
+    	self.exit_button = self.fixed_root:AddChild(TEMPLATES.BackButton(function() self:Quit() end))
     	self.exit_button:SetPosition(-RESOLUTION_X*.415, -RESOLUTION_Y*.505 + BACK_BUTTON_Y )
     	self.exit_button:Enable()
   	end
-	  
+
 	self.scissor_root = self.game_grid_root:AddChild(Widget("scissor"))
 	self.scissor_root:SetScissor(-300, -350, 600, 660)
 
@@ -259,9 +259,9 @@ function RedbirdGameScreen:SetupUI()
 			table.insert( self.all_movers, mover )
 		end
 	end
-	
 
-	self.innkeeper = self.fixed_root:AddChild(SkinCollector( 0, true, STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_REDBIRD.START )) 
+
+	self.innkeeper = self.fixed_root:AddChild(SkinCollector( 0, true, STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_REDBIRD.START ))
 	self.innkeeper:SetPosition(410, -400)
 	self.innkeeper:Appear()
 
@@ -307,7 +307,7 @@ function RedbirdGameScreen:SetupMachine()
 	self.claw_machine_bg:SetScale(machine_scale)
 	self.claw_machine_bg:SetPosition(0, 65)
 
-  
+
 
 	self.claw_machine = self.fixed_root:AddChild(UIAnim())
 	self.claw_machine:GetAnimState():SetBuild("swapshoppe")
@@ -315,7 +315,7 @@ function RedbirdGameScreen:SetupMachine()
 	self.claw_machine:SetScale(machine_scale)
 	self.claw_machine:SetPosition(0, 65)
 
-  
+
   	self:PlayMachineAnim("idle_empty", true)
 
 	-- Title (Trade Inn sign)
@@ -333,10 +333,10 @@ function RedbirdGameScreen:SetupMachine()
 		self.joystick:SetPosition(5, -550)
 	end
 
-  
 
-  
-	-- the buttons aren't used on console but don't hide them since they're part of the decor and they add the 
+
+
+	-- the buttons aren't used on console but don't hide them since they're part of the decor and they add the
 	-- button prompts to the help bar; hide the text only so players don't try to navigate to them
 	local reset_button_text = STRINGS.UI.TRADESCREEN.RESET
 	local trade_button_text = STRINGS.UI.TRADESCREEN.START
@@ -347,31 +347,31 @@ function RedbirdGameScreen:SetupMachine()
 	end
 
 	-- reset button bg
-	self.resetbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button", 
+	self.resetbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button",
 												{idle = "idle_red", over = "up_red", disabled = "down_red"},
-												1, 
-												function() 
+												1,
+												function()
 													self:InitGameBoard()
 												end,
-												reset_button_text, 
+												reset_button_text,
 												30))
 	self.resetbutton:SetPosition(-200, pretty_button_y)
 
 	-- trade button bg
-	
-	self.startbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button", 
+
+	self.startbutton = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button",
 												{idle = "idle_green", over = "up_green", disabled = "down_green"},
-												1, 
-												function() 
+												1,
+												function()
 													self:InitGameBoard()
 												end,
-												trade_button_text, 
+												trade_button_text,
 												30))
 	self.startbutton:SetPosition(208, pretty_button_y)
 
 
 
-    if not TheInput:ControllerAttached() then 
+    if not TheInput:ControllerAttached() then
 		self.info_button = self.claw_machine:AddChild(NEW_TEMPLATES.StandardButton(
 				show_help_fn,
 				STRINGS.UI.PURCHASEPACKSCREEN.INFO_BTN, --reuse
@@ -404,7 +404,7 @@ function RedbirdGameScreen:InitGameBoard()
 			tile:ShowTile()
 		end
 		self:FillEmptyTiles( true )
-		scheduler:ExecuteInTime(DROP_WAIT, function() 
+		scheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_1
 		end)
 		self:UpdateInterface()
@@ -426,11 +426,11 @@ function RedbirdGameScreen:ExplodeTile( explode_delay, tile, is_bird, is_rotten 
 		if is_bird then
 			if is_rotten then
 				TheFrontEnd:GetSound():PlaySound("dontstarve/birds/chirp_robin")
-				
+
 				tile:SetTileTypeUnHidden("oddment_egg_rotten")
 			else
 				TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_robin")
-				
+
 				local robin = self.game_grid_root:AddChild( RobinFX( tile:GetPosition(), function(widg) widg:Kill() end ) )
 				robin:MoveToFront()
 
@@ -454,7 +454,7 @@ function RedbirdGameScreen:WaitForClearingToFinish(t)
 		self:FillEmptyTiles()
 
 		self:UpdateInterface()
-		
+
 		scheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_1
 			self:CheckGameOverCondition()
@@ -497,7 +497,7 @@ function RedbirdGameScreen:DropTiles()
 					local tile_type = self.game_grid[swap_index].tile_type
 					self.game_grid[swap_index]:ClearTile()
 
-					if num ~= nil then						
+					if num ~= nil then
 						self.game_grid[index].number = num --this keeps it hidden but occupied until SetTileNumber is called below
 
 						local dropping_tile = self:GetMoverTile()
@@ -540,9 +540,9 @@ function RedbirdGameScreen:FillEmptyTiles( allow_dupes )
 				steps = steps + 1
 
 				local number = math.random(TILE_RAND_LIMIT)
-				
+
 				self.game_grid[index].number = number --this keeps it hidden but occupied until SetTileNumber is called below
-				
+
 				local filling_tile = self:GetMoverTile()
 				filling_tile.Move( number,
 									start_pos,
@@ -560,7 +560,7 @@ function RedbirdGameScreen:OnTileClick(x, y)
 	if self.game_state == GS_TILE_SELECT_1 then
 		if self.game_grid[ XYtoIndex(x, y) ].number then
 			self.game_state = GS_TILE_SELECT_2
-			
+
 			self.selected_tile = self.game_grid[ XYtoIndex(x, y) ]
 			self.selected_tile:HighlightTileNum()
 		else
@@ -568,18 +568,18 @@ function RedbirdGameScreen:OnTileClick(x, y)
 		end
 	elseif self.game_state == GS_TILE_SELECT_2 then
 		local second_tile = self.game_grid[ XYtoIndex(x, y) ]
-		
+
 		local sel_x, sel_y = IndexToXY(self.selected_tile.index)
-		
+
 		if (
 				((sel_x - 1) == x and y == sel_y) or
 				((sel_x + 1) == x and y == sel_y) or
 				(sel_x  == x and y == (sel_y - 1)) or
 				(sel_x == x and y == (sel_y + 1)) or
 				(sel_x == x and y == sel_y)
-			) and 
+			) and
 			second_tile.number then
-			
+
 			if self.selected_tile ~= second_tile then
 				if self.selected_tile.number + second_tile.number == TARGET_NUMBER then
 					local is_rotten = self.egg_timer <= 0
@@ -598,13 +598,13 @@ function RedbirdGameScreen:OnTileClick(x, y)
 						self.innkeeper:Say( subfmt(phrase, { points = points } ) )
 					end
 					self.score = self.score + points
-					
+
 					self.selected_tile:UnhighlightTileNum()
 					self:ExplodeTile(0, self.selected_tile)
 					second_tile:SetTileNumber(self.selected_tile.number + second_tile.number)
 					self.selected_tile = nil
 					self:ExplodeTile(0, second_tile, true, is_rotten )
-					
+
 					self.egg_timer = EGG_TIMER
 					self.game_state = GS_TRANSITION
 					self:WaitForClearingToFinish(0.2)
@@ -623,8 +623,8 @@ function RedbirdGameScreen:OnTileClick(x, y)
 					self.game_state = GS_TILE_SELECT_1
 					self.selected_tile:UnhighlightTileNum()
 					self.selected_tile = nil
-				end	
-				
+				end
+
 				if self.score > self.profile:GetRedbirdGameHighScore(SCORE_VERSION) then
 					self.profile:SetRedbirdGameHighScore(self.score, SCORE_VERSION)
 				end
@@ -641,7 +641,7 @@ function RedbirdGameScreen:OnTileClick(x, y)
 			self.selected_tile = nil
 		end
 	else
-		self.queued_click = { x = x, y = y } 
+		self.queued_click = { x = x, y = y }
 	end
 end
 
@@ -688,7 +688,7 @@ function RedbirdGameScreen:TileHasMove(x, y)
 	end
 
 	local num = self.game_grid[ XYtoIndex(x, y) ].number
-	return self:CanAddTo( x + 1, y, num ) or 
+	return self:CanAddTo( x + 1, y, num ) or
 		self:CanAddTo( x - 1, y, num ) or
 		self:CanAddTo( x, y + 1, num ) or
 		self:CanAddTo( x, y - 1, num )
@@ -714,7 +714,7 @@ function RedbirdGameScreen:CanAddTo( x, y, num )
 	if not self:IsValidPosition( x, y ) then
 		return false
 	end
-	
+
 	local tile = self.game_grid[ XYtoIndex(x, y) ]
 	if tile.tile_type ~= "" then
 		return false
@@ -722,7 +722,7 @@ function RedbirdGameScreen:CanAddTo( x, y, num )
 
 	if tile.number + num > 100 then
 		return false
-	end 
+	end
 
 	return true
 end
@@ -761,7 +761,7 @@ function RedbirdGameScreen:CheckGameOverCondition()
 		else
 			over_body = subfmt( STRINGS.UI.TRADESCREEN.REDBIRD_GAME.GAME_OVER_POPUP_BODY, { score = self.score, eggs = eggs_completed } )
 		end
-		
+
 		if eggs_completed >= 6 or rotten_eggs_completed > 0 then
 			local waiting_popup = GenericWaitingPopup("ReportRedbirdGame", STRINGS.UI.TRADESCREEN.REDBIRD_GAME.REPORTING, nil, true )
 			TheFrontEnd:PushScreen(waiting_popup)
@@ -780,7 +780,7 @@ function RedbirdGameScreen:CheckGameOverCondition()
 										TheFrontEnd:PopScreen()
 										local items = {}
 										table.insert(items, {item=item_type, item_id=0, gifttype="DEFAULT", message=STRINGS.UI.TRADESCREEN.REDBIRD_GAME.THANKS})
-										
+
 										local thankyou_popup = ThankYouPopup(items)
 										TheFrontEnd:PushScreen(thankyou_popup)
 									end
@@ -788,7 +788,7 @@ function RedbirdGameScreen:CheckGameOverCondition()
 							}
 						)
 						TheFrontEnd:PushScreen(game_over_popup)
-						
+
 					elseif status == REPORT_ALREADY_COMPLETED or status == REPORT_FAILED_TO_CONTACT then
 						--todo. Optimize this, by recording it, so we don't report again?
 						--don't care about errors for now
@@ -801,7 +801,7 @@ function RedbirdGameScreen:CheckGameOverCondition()
 		else
 			game_over_display( over_title, over_body )
 		end
-		
+
 		if eggs_completed >= 12 then
 			self.innkeeper:Say( STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH_REDBIRD.GAME_OVER_REDBIRD )
 		elseif eggs_completed >= 6 then
@@ -818,7 +818,7 @@ function RedbirdGameScreen:UpdateInterface()
 	if not (self.inst:IsValid()) then
         return
 	end
-	
+
 	if self.game_state == GS_GAME_OVER or self.game_state == GS_GAME_BEGINNING then
 		self.startbutton:Enable()
 		self.resetbutton:Disable()
@@ -826,7 +826,7 @@ function RedbirdGameScreen:UpdateInterface()
 		self.startbutton:Disable()
 		self.resetbutton:Enable()
 	end
-	
+
 	if self.game_state == GS_GAME_OVER then
 		self.egg_timer_text:SetString( STRINGS.UI.TRADESCREEN.REDBIRD_GAME.EGG_TIMER_OVER )
 
@@ -866,11 +866,11 @@ end
 
 function RedbirdGameScreen:OnControl(control, down)
     if RedbirdGameScreen._base.OnControl(self, control, down) then return true end
-    if not down and control == CONTROL_CANCEL then 
+    if not down and control == CONTROL_CANCEL then
 		self:Quit()
-		return true 
+		return true
 	end
-	
+
 	if down then
 		if control == CONTROL_MENU_MISC_1 or control == CONTROL_PAUSE then
 			self:InitGameBoard()
@@ -886,7 +886,7 @@ end
 function RedbirdGameScreen:GetHelpText()
     local controller_id = TheInput:GetControllerID()
     local t = {}
-	
+
 	if self.resetbutton:IsEnabled() then
 		table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.TRADESCREEN.RESET)
 	end
@@ -896,9 +896,9 @@ function RedbirdGameScreen:GetHelpText()
 	end
 
 	table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_INSPECT) .. " " .. STRINGS.UI.TRADESCREEN.REDBIRD_GAME.HELP)
-	
+
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.SKINSSCREEN.BACK)
-    
+
     return table.concat(t, "  ")
 end
 

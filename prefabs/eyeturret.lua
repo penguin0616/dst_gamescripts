@@ -116,7 +116,7 @@ local function EquipWeapon(inst)
         weapon.persists = false
         weapon.components.inventoryitem:SetOnDroppedFn(weapon.Remove)
         weapon:AddComponent("equippable")
-        
+
         inst.components.inventory:Equip(weapon)
     end
 end
@@ -146,7 +146,7 @@ end
 
 local function itemfn()
     local inst = CreateEntity()
-   
+
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
@@ -178,7 +178,7 @@ local function itemfn()
     inst.components.deployable.ondeploy = ondeploy
     --inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
     --inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.NONE)
-    
+
     return inst
 end
 
@@ -250,7 +250,7 @@ local function fn()
     inst:DoTaskInTime(1, EquipWeapon)
 
     inst:AddComponent("sanityaura")
-    inst.components.sanityaura.aura = -TUNING.SANITYAURA_TINY    
+    inst.components.sanityaura.aura = -TUNING.SANITYAURA_TINY
 
     inst:AddComponent("inspectable")
     inst:AddComponent("lootdropper")

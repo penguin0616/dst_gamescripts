@@ -242,7 +242,7 @@ function GnarwailBrain:OnStart()
                     "FindFoodIfNotInCombat",
                     DoAction(self.inst, FindFoodAction)
                 ),
-                IfNode( function() return not self.inst:HornIsBroken() and 
+                IfNode( function() return not self.inst:HornIsBroken() and
                         (not self.inst.components.combat:HasTarget() or self.inst.components.follower:GetLeader() ~= nil) and
                         GetNearbyTossTarget(self.inst) ~= nil end,
                     "ShouldToss",

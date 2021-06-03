@@ -19,7 +19,7 @@ ERRORS = {
     CONFIG_DIR_DISK_SPACE = {
         message = "There is not enough available hard drive space to reliably save worlds. Please free up some hard drive space.",
     },
-	
+
 }
 
 if DEBUG_MODE then

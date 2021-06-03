@@ -41,7 +41,7 @@ local function IsPointInRange(player, x, z)
     return distsq(x, z, px, pz) <= 4096
 end
 
-local function ConvertPlatformRelativePositionToAbsolutePosition(relative_x, relative_z, platform, platform_relative)    
+local function ConvertPlatformRelativePositionToAbsolutePosition(relative_x, relative_z, platform, platform_relative)
     if platform_relative then
 		if platform ~= nil and platform.Transform ~= nil then
 			local platform_x, platform_y, platform_z = platform.Transform:GetWorldPosition()
@@ -373,7 +373,7 @@ local RPC_HANDLERS =
 
         playercontroller:OnRemoteStartHop(x, z, platform)
 
-    end,    
+    end,
 
     SteerBoat = function(player, dir_x, dir_z)
         if not (checknumber(dir_x) and
@@ -385,7 +385,7 @@ local RPC_HANDLERS =
         if steering_wheel_user ~= nil then
             steering_wheel_user:SteerInDir(dir_x, dir_z)
         end
-    end,    
+    end,
 
 
     StopWalking = function(player)
@@ -409,7 +409,7 @@ local RPC_HANDLERS =
                 local buttoninfo = widget ~= nil and widget.buttoninfo or nil
                 if buttoninfo ~= nil and (buttoninfo.validfn == nil or buttoninfo.validfn(target)) and buttoninfo.fn ~= nil then
                     buttoninfo.fn(target, player)
-                end            
+                end
             end
         end
     end,
@@ -765,20 +765,20 @@ local RPC_HANDLERS =
 
     MovementPredictionEnabled = function(player)
         player.components.locomotor:SetAllowPlatformHopping(false)
-    end,    
+    end,
 
     MovementPredictionDisabled = function(player)
         player.components.locomotor:SetAllowPlatformHopping(true)
-    end,    
+    end,
 
     Hop = function(player, hopper, hop_x, hop_z, other_platform)
         --print("HOP: ", hop_x, hop_z, other_platform ~= nil and other_platform.name)
-    end,       
+    end,
 
     StopHopping = function(player, hopper)
         --local playercontroller = hopper.components.playercontroller
         --playercontroller:OnRemoteStopHopping()
-    end, 
+    end,
 
     MakeRecipeAtPoint = function(player, recipe, x, z, rot, skin_index, platform, platform_relative)
         if not (checknumber(recipe) and

@@ -32,7 +32,7 @@ FrontEnd = Class(function(self, name)
 
 	self.overlayroot = Widget("overlayroot")
 
-	------ CONSOLE -----------	
+	------ CONSOLE -----------
 	self.consoletext = Text(BODYTEXTFONT, 20, "CONSOLE TEXT")
 	self.consoletext:SetVAlign(ANCHOR_BOTTOM)
 	self.consoletext:SetHAlign(ANCHOR_LEFT)
@@ -64,7 +64,7 @@ FrontEnd = Class(function(self, name)
     self.topblackoverlay:SetTint(0,0,0,0)
 	self.topblackoverlay:SetClickable(false)
 	self.topblackoverlay:Hide()
-	
+
 	self.swipeoverlay = Image("images/global.xml", "noise.tex")
 	self.swipeoverlay:SetEffect( "shaders/swipe_fade.ksh" )
 	self.swipeoverlay:SetEffectParams(0.5,0,0,0)
@@ -76,7 +76,7 @@ FrontEnd = Class(function(self, name)
     self.swipeoverlay:SetTint(1,1,1,0)
 	self.swipeoverlay:SetClickable(false)
 	self.swipeoverlay:Hide()
-	
+
 	self.topswipeoverlay = Image("images/global.xml", "noise.tex")
 	self.topswipeoverlay:SetEffect( "shaders/swipe_fade.ksh" )
 	self.topswipeoverlay:SetEffectParams(0,0,0,0)
@@ -101,7 +101,7 @@ FrontEnd = Class(function(self, name)
 
 	self.vigoverlay = TEMPLATES.BackgroundVignette()
 	self.vigoverlay:SetClickable(false)
-	self.vigoverlay:Hide()	
+	self.vigoverlay:Hide()
 
     self.topwhiteoverlay = Image("images/global.xml", "square.tex")
     self.topwhiteoverlay:SetVRegPoint(ANCHOR_MIDDLE)
@@ -115,7 +115,7 @@ FrontEnd = Class(function(self, name)
 
 	self.topvigoverlay = TEMPLATES.BackgroundVignette()
 	self.topvigoverlay:SetClickable(false)
-	self.topvigoverlay:Hide()	
+	self.topvigoverlay:Hide()
 
 	self.helptext = self.overlayroot:AddChild(Widget("HelpText"))
 	self.helptext:SetScaleMode(SCALEMODE_FIXEDPROPORTIONAL)
@@ -205,7 +205,7 @@ FrontEnd = Class(function(self, name)
         self.widget_editor = WidgetDebug(self)
         self.entity_editor = EntityDebug(self)
     end
-    
+
     -- data from the current game that is to be passed back to the game when the server resets (used for showing results in events when back in the lobby)
     -- Never set this to nil or people will crash. If needed, test for empty list if needed to control flow.
     self.match_results = {}
@@ -314,7 +314,7 @@ function FrontEnd:GetHelpText()
 			-- Only use this widgets help text, clear all other help text
 			t = {}
 		end
-		
+
 		local str = widget:GetHelpText()
 		if str and str ~= "" then
 			table.insert(t, widget:GetHelpText())
@@ -381,7 +381,7 @@ function FrontEnd:OnControl(control, down)
         return true
 
     elseif SHOWLOG_ENABLED and not down and control == CONTROL_TOGGLE_LOG then
-        if self.consoletext.shown then 
+        if self.consoletext.shown then
             self:HideConsoleLog()
         else
             self:ShowConsoleLog()
@@ -544,7 +544,7 @@ function FrontEnd:SetFadeLevel(alpha, time, time_total)
             self.topswipeoverlay:Show()
         end
         self.topswipeoverlay:SetTint(1, 1, 1, alpha)
-        
+
         local progress = 0 --progress should be a float from 0 to 1 over the whole fade in and out
         local phase_1 = 0
         local fade_progress = time and (time/time_total) or 0
@@ -555,7 +555,7 @@ function FrontEnd:SetFadeLevel(alpha, time, time_total)
 			progress = fade_progress/2
 			phase_1 = 0
         end
-        
+
         self.swipeoverlay:SetEffectParams(progress, phase_1, 0, 0)
         self.topswipeoverlay:SetEffectParams(progress, phase_1, 0, 0)
     end
@@ -608,7 +608,7 @@ function FrontEnd:DoFadingUpdate(dt)
 end
 
 function FrontEnd:UpdateConsoleOutput()
-    local consolestr = table.concat(GetConsoleOutputList(), "\n") 
+    local consolestr = table.concat(GetConsoleOutputList(), "\n")
     consolestr = consolestr.."\n(Press CTRL+L to close this log)"
    	self.consoletext:SetString(consolestr)
 end
@@ -747,7 +747,7 @@ function FrontEnd:Update(dt)
 	for k,v in pairs(self.updating_widgets) do
 		self.updating_widgets_alt[k] = v
 	end
-	
+
 	for k,v in pairs(self.updating_widgets_alt) do
 		if k.enabled then
 			k:OnUpdate(dt)
@@ -884,7 +884,7 @@ function FrontEnd:FadeToScreen( existing_screen, new_screen_fn, fade_complete_cp
 	if fade_type == "swipe" then
 		fade_time = SWIPE_FADE_TIME
 	end
-	
+
 	self:Fade(FADE_OUT, fade_time,
 		function()
 			local new_screen = new_screen_fn()
@@ -900,7 +900,7 @@ function FrontEnd:FadeBack( fade_complete_cb, fade_type, fade_out_complete_cb )
 	if fade_type == "swipe" then
 		fade_time = SWIPE_FADE_TIME
 	end
-	
+
 	self:Fade(FADE_OUT, fade_time,
 		function()
 			if fade_out_complete_cb ~= nil then
@@ -943,7 +943,7 @@ function FrontEnd:PopScreen(screen)
 			screen:OnDestroy()
 			self.screenroot:RemoveChild(screen)
 		end
-		
+
 	end
 
 	if #self.screenstack > 0 and old_head ~= self.screenstack[#self.screenstack] then
@@ -1092,7 +1092,7 @@ function FrontEnd:OnSaveLoadError(operation, filename, status)
             local function OnProfileLoaded(success)
                 --print("OnProfileLoaded", success)
                 if success then
-                    
+
                     SaveGameIndex:Load(function()
                         ShardSaveGameIndex:Load(function()
                             ShardGameIndex:Load(OnSaveGameIndexLoaded)
@@ -1134,7 +1134,7 @@ function FrontEnd:OnSaveLoadError(operation, filename, status)
         end
 
         local function cancel()
-            TheSystemService:EnableStorage(TheSystemService:IsAutosaveEnabled())            
+            TheSystemService:EnableStorage(TheSystemService:IsAutosaveEnabled())
             TheSystemService:ClearLastOperation()
             self:PopScreen() -- saveload error message box
         end

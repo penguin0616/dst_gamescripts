@@ -80,7 +80,7 @@ local function checkground(inst, map, x, y, z, ground)
 	if not is_ground then return false end
 
 	local radius = 2
-	return map:IsValidTileAtPoint( x - radius, y, z ) 
+	return map:IsValidTileAtPoint( x - radius, y, z )
 			and map:IsValidTileAtPoint( x + radius, y, z )
 			and map:IsValidTileAtPoint( x, y, z - radius )
 			and map:IsValidTileAtPoint( x, y, z + radius )
@@ -102,7 +102,7 @@ local WaveManager = Class(function(self, inst)
 	}
 
 	self.ripple_per_sec = 10
-	self.ripple_idle_time = 5 
+	self.ripple_idle_time = 5
 
 	self.shimmer_per_sec_mod = 1.0
 
@@ -118,7 +118,7 @@ end
 
 local function calcPerSecMult(min, max)
 	local percent = (math.clamp(TheCamera:GetDistance(), 30, 100) - 30) / (70)
-	local mult = (1.5 - 1) * percent + 1 -- 1x to 1.5x 
+	local mult = (1.5 - 1) * percent + 1 -- 1x to 1.5x
 	--print("Per sec", TheCamera:GetDistance(), mult)
 	return mult
 end
@@ -128,7 +128,7 @@ function WaveManager:OnUpdate(dt)
 
 	local map = TheWorld.Map
 	if map == nil then return end
-	
+
 	local px, py, pz = ThePlayer.Transform:GetWorldPosition()
 	local mult = calcPerSecMult()
 

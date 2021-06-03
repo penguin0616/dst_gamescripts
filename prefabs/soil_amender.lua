@@ -110,7 +110,7 @@ local function update_fertilizer(inst)
 			inst.components.inventoryitem:ChangeImageName("soil_amender_spoiled")
 			inst.fertilizer_index:set(3)
 		end
-	end 
+	end
 end
 
 local function GetFertilizerKey(inst)

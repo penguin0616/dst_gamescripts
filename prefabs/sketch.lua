@@ -3,7 +3,7 @@ local assets =
     Asset("ANIM", "anim/blueprint_sketch.zip"),
 }
 
-local SKETCHES = 
+local SKETCHES =
 {
     { item = "chesspiece_pawn",         recipe = "chesspiece_pawn_builder" },
     { item = "chesspiece_rook",         recipe = "chesspiece_rook_builder" },

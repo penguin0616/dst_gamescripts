@@ -41,7 +41,7 @@ local function Make(anim)
         if not TheNet:IsDedicated() then
             --Delay one frame so that we are positioned properly before starting the effect
             --or in case we are about to be removed
-            
+
             inst.anim = anim
             inst:DoTaskInTime(0, PlayFX)
         end

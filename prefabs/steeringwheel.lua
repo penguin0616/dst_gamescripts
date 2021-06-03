@@ -17,7 +17,7 @@ local prefabs =
 
 local function on_start_steering(inst)
 	inst.AnimState:HideSymbol("boat_wheel_round")
-	inst.AnimState:HideSymbol("boat_wheel_stick")	
+	inst.AnimState:HideSymbol("boat_wheel_stick")
 end
 
 local function on_stop_steering(inst)
@@ -85,7 +85,7 @@ local function fn()
 
     inst.AnimState:SetBank("boat_wheel")
     inst.AnimState:SetBuild("boat_wheel")
-    inst.AnimState:PlayAnimation("idle")    
+    inst.AnimState:PlayAnimation("idle")
 	inst.AnimState:SetFinalOffset(1)
 
     inst:AddTag("structure")

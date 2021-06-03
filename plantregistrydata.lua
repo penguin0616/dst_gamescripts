@@ -106,7 +106,7 @@ function PlantRegistryData:Save(force_save)
 end
 
 function PlantRegistryData:Load()
-	TheSim:GetPersistentString("plantregistry", function(load_success, data) 
+	TheSim:GetPersistentString("plantregistry", function(load_success, data)
 		if load_success and data ~= nil then
             local success, plant_registry = RunInSandbox(data)
 		    if success and plant_registry then
@@ -265,7 +265,7 @@ function PlantRegistryData:TakeOversizedPicture(plant, weight, player, beardskin
 		print("Invalid plant or weight or player", plant, weight, player)
 		return
 	end
-	
+
 	if not table.contains(GetOfficialCharacterList(), player.prefab) then
 		--modded characters pose too many complications, sorry.
 		return false

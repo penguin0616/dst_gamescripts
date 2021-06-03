@@ -76,7 +76,7 @@ function Deployable:IsDeployable(deployer)
         or (deployer ~= nil and deployer:HasTag(self.restrictedtag))
 end
 
-function Deployable:CanDeploy(pt, mouseover, deployer)
+function Deployable:CanDeploy(pt, mouseover, deployer, rot)
     if not self:IsDeployable(deployer) then
         return false
     elseif self.mode == DEPLOYMODE.ANYWHERE then
@@ -97,15 +97,15 @@ function Deployable:CanDeploy(pt, mouseover, deployer)
         })
     elseif self.mode == DEPLOYMODE.CUSTOM then
         if self.inst._custom_candeploy_fn ~= nil then
-            return self.inst._custom_candeploy_fn(self.inst, pt, mouseover, deployer)
+            return self.inst._custom_candeploy_fn(self.inst, pt, mouseover, deployer, rot)
         else -- use old DEPLOYMODE.MAST logic
             return TheWorld.Map:CanDeployMastAtPoint(pt, self.inst, mouseover)
-        end      
+        end
     end
 end
 
 function Deployable:Deploy(pt, deployer, rot)
-    if not self:CanDeploy(pt, nil, deployer) then
+    if not self:CanDeploy(pt, nil, deployer, rot) then
         return
     end
     local isplant = self.inst:HasTag("deployedplant")

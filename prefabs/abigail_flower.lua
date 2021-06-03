@@ -6,7 +6,7 @@ local assets =
 	Asset("INV_IMAGE", "abigail_flower_level0"),
 	Asset("INV_IMAGE", "abigail_flower_level2"),
 	Asset("INV_IMAGE", "abigail_flower_level3"),
-	
+
     Asset("INV_IMAGE", "abigail_flower_old"),		-- deprecated, left in for mods
     Asset("INV_IMAGE", "abigail_flower2"),			-- deprecated, left in for mods
     Asset("INV_IMAGE", "abigail_flower_haunted"),	-- deprecated, left in for mods
@@ -25,7 +25,7 @@ local function UpdateGroundAnimation(inst)
 				end
 			end
 		end
-	end    
+	end
 
 	if #players > 1 then
 		table.sort(players, function(a, b) return a.dist < b.dist end)
@@ -95,7 +95,7 @@ end
 
 local function OnSkinIDDirty(inst)
 	inst.skin_id = inst.flower_skin_id:value()
-	
+
 	inst:DoTaskInTime(0, function()
 		local image_name = string.gsub(inst.AnimState:GetBuild(), "abigail_", "abigail_flower_")
 		if not inst.clientside_imageoverrides[image_name] then
@@ -229,7 +229,7 @@ local function MakeSummonFX(anim, use_anim_for_build, is_mounted)
 	        inst.Transform:SetFourFaced()
 		end
 
-	
+
         inst.AnimState:SetBank(anim)
 		if use_anim_for_build then
 	        inst.AnimState:SetBuild(anim)

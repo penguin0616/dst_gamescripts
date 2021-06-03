@@ -155,7 +155,7 @@ function Builder:EvaluateTechTrees()
                 --activate the first machine in the list. This will be the one you're closest to.
                 v.components.prototyper:TurnOn(self.inst)
                 self.accessible_tech_trees = v.components.prototyper:GetTechTrees()
-                
+
                 if v.components.craftingstation ~= nil then
                     local recs = v.components.craftingstation:GetRecipes(self.inst)
                     for _, recname in ipairs(recs) do
@@ -165,7 +165,7 @@ function Builder:EvaluateTechTrees()
                             self.station_recipes[recname] = true
 						end
                     end
-				end                    
+				end
 
                 prototyper_active = true
                 self.current_prototyper = v
@@ -226,14 +226,14 @@ function Builder:EvaluateTechTrees()
 
     if not trees_changed then
         for k, v in pairs(old_accessible_tech_trees) do
-            if v ~= self.accessible_tech_trees[k] then 
+            if v ~= self.accessible_tech_trees[k] then
                 trees_changed = true
                 break
             end
         end
         if not trees_changed then
             for k, v in pairs(self.accessible_tech_trees) do
-                if v ~= old_accessible_tech_trees[k] then 
+                if v ~= old_accessible_tech_trees[k] then
                     trees_changed = true
                     break
                 end
@@ -471,7 +471,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                     --self.inst.components.inventory:GiveItem(prod)
                     self.inst:PushEvent("builditem", { item = prod, recipe = recipe, skin = skin, prototyper = self.current_prototyper })
                     if self.current_prototyper ~= nil and self.current_prototyper:IsValid() then
-                        self.current_prototyper:PushEvent("builditem", { item = prod, recipe = recipe, skin = skin }) -- added this back for the gorge. 
+                        self.current_prototyper:PushEvent("builditem", { item = prod, recipe = recipe, skin = skin }) -- added this back for the gorge.
                     end
                     ProfileStatsAdd("build_"..prod.prefab)
 
@@ -522,7 +522,21 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                     return true
                 end
             else
-                prod.Transform:SetPosition(pt:Get())
+                local spawn_pos = pt
+
+                -- If a non-inventoryitem recipe specifies dropitem, position the created object
+                -- away from the builder so that they don't overlap.
+                if recipe.dropitem then
+                    local angle = (self.inst.Transform:GetRotation() + GetRandomMinMax(-65, 65)) * DEGREES
+                    local r = prod:GetPhysicsRadius(0.5) + self.inst:GetPhysicsRadius(0.5) + 0.1
+                    spawn_pos = Vector3(
+                        spawn_pos.x + r * math.cos(angle),
+                        spawn_pos.y,
+                        spawn_pos.z - r * math.sin(angle)
+                    )
+                end
+
+                prod.Transform:SetPosition(spawn_pos:Get())
                 --V2C: or 0 check added for backward compatibility with mods that
                 --     have not been updated to support placement rotation yet
                 prod.Transform:SetRotation(rotation or 0)

@@ -5,7 +5,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.TOSS,
         function(inst, action)
             if not inst.sg:HasStateTag('busy') then
-                inst.sg:GoToState("shoot", action.target) 
+                inst.sg:GoToState("shoot", action.target)
             end
         end),
 }
@@ -19,13 +19,13 @@ local events =
 	end),
     EventHandler("arrive", function(inst)
         inst.sg:GoToState("glide")
-    end),    
+    end),
 
     EventHandler("doattack", function(inst)
         if not (inst.sg:HasStateTag("busy")) then
             inst.sg:GoToState("attack")
         end
-    end), 
+    end),
 
     EventHandler("trapped", function(inst)
         inst.sg:GoToState("trapped")
@@ -39,9 +39,9 @@ local events =
         local should_move = inst.components.locomotor:WantsToMoveForward()
         local should_run = inst.components.locomotor:WantsToRun()
 
-        --if is_moving and not should_move then        
+        --if is_moving and not should_move then
         if not inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("moving") then
-            inst.sg:GoToState("walk")    
+            inst.sg:GoToState("walk")
         end
         --end
     end),
@@ -53,13 +53,13 @@ local states=
     State{
         name = "idle",
         tags = {"idle", "canrotate"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("idle",true)
             inst.sg:SetTimeout(math.random() *2 )
         end,
-        
+
         ontimeout = function(inst)
             inst.sg:GoToState("idle_taunt")
         end,
@@ -73,7 +73,7 @@ local states=
     State{
         name = "idle_taunt",
         tags = {"busy", "canrotate"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("caw")
@@ -89,7 +89,7 @@ local states=
     State{
         name = "emerge",
         tags = {"busy", "noattack", "canrotate"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("land")
@@ -99,7 +99,7 @@ local states=
         {
             --TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/rabbit/hop") end ),
         },
-        
+
         events =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
@@ -109,7 +109,7 @@ local states=
     State{
         name = "death",
         tags = {"busy", "noattack"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:Stop()
             RemovePhysicsColliders(inst)
@@ -130,7 +130,7 @@ local states=
     State{
         name = "attack",
         tags = { "busy", "attack"},
-		
+
         onenter = function(inst)
             inst.AnimState:PlayAnimation("attack")
 			inst.components.locomotor:Stop()
@@ -140,21 +140,21 @@ local states=
 	        inst.components.combat:StartAttack()
             inst.SoundEmitter:PlaySound(inst.sounds.attack)
 		end,
-        
+
         timeline=
         {
-            TimeEvent(8*FRAMES, function(inst) 
+            TimeEvent(8*FRAMES, function(inst)
 					inst.components.combat:DoAttack()
                     inst.sg:RemoveStateTag("attack")
                     inst.sg:RemoveStateTag("busy")
                     inst.components.combat.target = nil
 				end ),
         },
-        
+
         events =
         {
-            EventHandler("animover", function(inst) 
-				inst.sg:GoToState("idle") 
+            EventHandler("animover", function(inst)
+				inst.sg:GoToState("idle")
 			end),
         },
     },
@@ -178,10 +178,10 @@ local states=
         end,
 
         timeline =
-        {   
+        {
             TimeEvent(14*FRAMES, function(inst)
                 if inst.sg.statemem.target and inst.sg.statemem.target:IsValid() then
-                    inst.sg.statemem.spitpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())            
+                    inst.sg.statemem.spitpos = Vector3(inst.sg.statemem.target.Transform:GetWorldPosition())
                     inst:LaunchProjectile(inst.sg.statemem.spitpos)
 
                     inst.SoundEmitter:PlaySound(inst.sounds.chirp)
@@ -194,11 +194,11 @@ local states=
 
         events =
         {
-            EventHandler("animover",function(inst) 
+            EventHandler("animover",function(inst)
                 inst.sg:GoToState("idle")
             end),
         },
-    },    
+    },
 
     State{
         name = "walk",
@@ -211,22 +211,22 @@ local states=
         end,
 
         onexit = function(inst)
-            inst.components.locomotor:StopMoving()    
+            inst.components.locomotor:StopMoving()
         end,
 
         timeline =
-        {   
+        {
             TimeEvent(4*FRAMES, function(inst)
                 inst.components.locomotor:WalkForward()
             end),
             TimeEvent(10*FRAMES, function(inst)
                 inst.components.locomotor:StopMoving()
-            end),            
+            end),
         },
 
         events =
         {
-            EventHandler("animover",function(inst)  
+            EventHandler("animover",function(inst)
                 if math.random() < 0.1 then
                     inst.sg:GoToState("walk_wait_caw")
                 else
@@ -244,7 +244,7 @@ local states=
             inst.AnimState:PlayAnimation("idle", true)
             inst.sg:SetTimeout(math.random() *2 )
         end,
-        
+
         ontimeout = function(inst)
             inst.sg:GoToState("walk")
         end,
@@ -256,11 +256,11 @@ local states=
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("caw")
-            inst.SoundEmitter:PlaySound(inst.sounds.chirp)            
+            inst.SoundEmitter:PlaySound(inst.sounds.chirp)
         end,
         events =
         {
-            EventHandler("animover",function(inst)                
+            EventHandler("animover",function(inst)
                 inst.sg:GoToState("walk")
             end),
         },
@@ -314,10 +314,10 @@ local states=
         events =
         {
             EventHandler("animover",function(inst)
-                inst.AnimState:PlayAnimation("idle")                
+                inst.AnimState:PlayAnimation("idle")
             end),
         },
-    },    
+    },
 
 
     State{
@@ -339,7 +339,7 @@ local states=
         name = "stunned",
         tags = { "busy" },
 
-        onenter = function(inst) 
+        onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("stunned_loop", true)
             inst.sg:SetTimeout(GetRandomWithVariance(6, 2))
@@ -357,7 +357,7 @@ local states=
                 inst.components.inventoryitem.canbepickedup = false
             end
         end,
-    },    
+    },
 }
 
 return StateGraph("bird_mutant", states, events, "idle", actionhandlers)

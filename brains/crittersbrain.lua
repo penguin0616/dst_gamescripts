@@ -40,7 +40,7 @@ local function LoveOwner(inst)
     local owner = GetOwner(inst)
     return owner ~= nil
         and not owner:HasTag("playerghost")
-        and (GetTime() - (inst.sg.mem.prevnuzzletime or 0) > TUNING.CRITTER_NUZZLE_DELAY) 
+        and (GetTime() - (inst.sg.mem.prevnuzzletime or 0) > TUNING.CRITTER_NUZZLE_DELAY)
         and math.random() < 0.05
         and BufferedAction(inst, owner, ACTIONS.NUZZLE)
         or nil
@@ -72,7 +72,7 @@ local function FindPlaymate(self)
     local we_fly = self.inst:HasTag("flying")
     self.playfultarget = can_play and
         not owner.components.locomotor:WantsToMoveForward() and
-        FindEntity(self.inst, find_dist, 
+        FindEntity(self.inst, find_dist,
             function(v)
                 return (v.IsPlayful == nil or v:IsPlayful()) and v:IsNear(owner, max_dist_from_owner) and (we_fly or v:IsOnPassablePoint())
             end, nil, nil, self.inst.playmatetags)
@@ -154,6 +154,23 @@ local function ValidateCombatAvoidance(self)
     return true
 end
 
+--- Minigames
+local function WatchingMinigame(inst)
+	return (inst.components.follower.leader ~= nil and inst.components.follower.leader.components.minigame_participator ~= nil) and inst.components.follower.leader.components.minigame_participator:GetMinigame() or nil
+end
+local function WatchingMinigame_MinDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_min or 0
+end
+local function WatchingMinigame_TargetDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_target or 0
+end
+local function WatchingMinigame_MaxDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_max or 0
+end
+
 -------------------------------------------------------------------------------
 --  Brain
 
@@ -162,18 +179,23 @@ local CritterBrain = Class(Brain, function(self, inst)
 end)
 
 function CritterBrain:OnStart()
-    local root =
-    PriorityNode({
+	local watch_game = WhileNode( function() return WatchingMinigame(self.inst) end, "Watching Game",
+        PriorityNode{
+				Follow(self.inst, WatchingMinigame, WatchingMinigame_MinDist, WatchingMinigame_TargetDist, WatchingMinigame_MaxDist),
+				RunAway(self.inst, "minigame_participator", 5, 7),
+				FaceEntity(self.inst, WatchingMinigame, WatchingMinigame ),
+        }, 0.1)
+
+    local root = PriorityNode({
         WhileNode( function() return self.inst.components.follower.leader end, "Has Owner",
             PriorityNode{
+				watch_game,
                 -- Combat Avoidance
                 PriorityNode{
                     RunAway(self.inst, {tags={"_combat", "_health"}, notags={"wall", "INLIMBO"}, fn=CombatAvoidanceFindEntityCheck(self)}, COMBAT_TOO_CLOSE_DIST, COMBAT_SAFE_TO_WATCH_FROM_DIST),
                     WhileNode( function() return ValidateCombatAvoidance(self) end, "Is Near Combat",
-                        FaceEntity(self.inst, GetOwner, KeepFaceTargetFn)
-                        ),
+                        FaceEntity(self.inst, GetOwner, KeepFaceTargetFn)),
                 },
-
                 WhileNode(function() return FindPlaymate(self) end, "Playful",
                     SequenceNode{
                         WaitNode(6),

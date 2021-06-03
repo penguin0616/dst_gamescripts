@@ -106,13 +106,13 @@ function GetProfilerMetaData()
 	GetProfilerServerStats(results)
 	GetProfilerSave(results)
 	GetProfilerPlayers(results)
-	GetProfilerModInfo(results)	
+	GetProfilerModInfo(results)
 	return results
 end
 
 function ExpandWorldFromProfile()
 	local profile
-	TheSim:GetPersistentString( "../profile.json",	
+	TheSim:GetPersistentString( "../profile.json",
 		function(load_success, str)
     		if load_success == true then
 				profile = str

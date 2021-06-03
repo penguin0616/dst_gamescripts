@@ -31,7 +31,7 @@ local function commonfn(Sim)
 	inst:AddTag("NOBLOCK")
 	inst:AddTag("ignorewalkableplatforms")
 
-	inst.OnEntitySleep = onSleep    
+	inst.OnEntitySleep = onSleep
 	--swap comments on these lines:
 	inst:ListenForEvent( "animover", animover )
 

@@ -15,7 +15,7 @@ local function get_closest_toy(toy_owner, dist_inst, dsq_gate)
     end
 
     local closest_toy = nil
-    
+
     local closest_toy_dsq = dsq_gate or math.huge
     for toy, _ in pairs(toy_owner._toys) do
         local dsq = dist_inst:GetDistanceSqToInst(toy)
@@ -295,7 +295,7 @@ function SmallGhostBrain:OnStart()
             end),
         }
     }, 1)
-        
+
     self.bt = BT(self.inst, root)
 end
 

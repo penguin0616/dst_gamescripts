@@ -52,7 +52,7 @@ local function _ontimerdone(inst, data)
             end
         end
         self.saltlick = nil
-        
+
         if inst:IsInLimbo() or
             (inst.components.sleeper ~= nil and inst.components.sleeper:IsAsleep()) or
             (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) then

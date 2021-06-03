@@ -32,7 +32,7 @@ local HEATSOURCE_MUST_TAGS = {"HASHEATER"}
 local HEATSOURCE_CANT_TAGS = {"monster"}
 
 local function FindNewHome(inst)
-	if inst.components.timer:TimerExists("panicing") 
+	if inst.components.timer:TimerExists("panicing")
 		or inst.components.sleeper:IsAsleep()
 		or inst.components.combat.target ~= nil then
 		return
@@ -70,7 +70,7 @@ end
 local function KeepTarget(inst, target)
 	if target:HasTag("fruitdragon") then
 		return (target.components.combat.target == nil or target.components.combat.target:HasTag("fruitdragon"))
-				and not target.components.timer:TimerExists("panicing") 
+				and not target.components.timer:TimerExists("panicing")
 				and inst:IsNear(target, TUNING.FRUITDRAGON.CHALLENGE_DIST)
 	end
 
@@ -78,7 +78,7 @@ local function KeepTarget(inst, target)
 end
 
 local function ShouldTarget(target)
-	return target:HasTag("fruitdragon") 
+	return target:HasTag("fruitdragon")
 			and not target.components.timer:TimerExists("panicing")
 			and target.components.combat.target == nil
 end
@@ -204,7 +204,7 @@ end
 
 local function IsHomeGoodEnough(inst, dist, min_temp)
 	local home = inst.components.entitytracker:GetEntity("home")
-	return home ~= nil and home.components.heater ~= nil 
+	return home ~= nil and home.components.heater ~= nil
 			and inst:IsNear(home, dist)
 			and home.components.heater:GetHeat(inst) >= min_temp
 end
@@ -235,7 +235,7 @@ local function Sleeper_SleepTest(inst)
 	return false
 end
 
--- TODO: on lose home, call: inst.components.sleeper:WakeUp() 
+-- TODO: on lose home, call: inst.components.sleeper:WakeUp()
 
 local function Sleeper_WakeTest(inst)
 	if (inst.components.combat ~= nil and inst.components.combat.target ~= nil) then
@@ -263,7 +263,7 @@ end
 
 local function Sleeper_OnWakeUp(inst)
 	if not inst._sleep_interupted then
-		if not inst._ripen_pending and not inst._is_ripe 
+		if not inst._ripen_pending and not inst._is_ripe
 			and IsHomeGoodEnough(inst, TUNING.FRUITDRAGON.NAP_DIST_FROM_HOME, TUNING.FRUITDRAGON.RIPEN_NAP_MIN_HEAT) then
 
 			QueueRipen(inst)

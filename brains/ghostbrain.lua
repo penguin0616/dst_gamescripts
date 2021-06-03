@@ -25,7 +25,7 @@ local function GetFollowTarget(ghost)
 
         ghost.brain.followtarget = nil
     end
-    
+
     if ghost.brain.followtarget == nil then
 
         local gx, gy, gz = ghost.Transform:GetWorldPosition()
@@ -55,7 +55,7 @@ end
 function GhostBrain:OnStart()
     local root = PriorityNode(
     {
-        WhileNode(function() return GetFollowTarget(self.inst) ~= nil end, "FollowTarget", 
+        WhileNode(function() return GetFollowTarget(self.inst) ~= nil end, "FollowTarget",
             Follow(self.inst, function() return self.inst.brain.followtarget end, TUNING.GHOST_RADIUS*.25, TUNING.GHOST_RADIUS*.5, TUNING.GHOST_RADIUS)
         ),
         SequenceNode{
@@ -66,7 +66,7 @@ function GhostBrain:OnStart()
             ActionNode(function() self.inst.sg:GoToState("dissipate") end),
         }
     }, 1)
-        
+
     self.bt = BT(self.inst, root)
 end
 

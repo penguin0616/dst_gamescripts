@@ -126,7 +126,7 @@ end
 function ControllerCrafting:OpenRecipeTab()
 	local tab = self:GetTabs():OpenTab(self.tabidx)
 	if tab ~= nil then
-		self:SetFilter( 
+		self:SetFilter(
 			function(recname)
 				local recipe = GetValidRecipe(recname)
 				return recipe ~= nil

@@ -37,9 +37,9 @@ end
 
 local function OnInit(inst)
     inst:WatchWorldState("stopsummer", OnStopSummer)
-    inst:ListenForEvent("ms_stormchanged", function(src, data) 
+    inst:ListenForEvent("ms_stormchanged", function(src, data)
             if data.stormtype == STORM_TYPES.SANDSTORM then
-                OnSandstormChanged(inst, data.setting) 
+                OnSandstormChanged(inst, data.setting)
             end
         end, TheWorld)
     if not TheWorld.state.issummer then

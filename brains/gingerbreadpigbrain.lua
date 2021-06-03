@@ -48,12 +48,12 @@ function GingerBreadPigBrain:OnStart()
     {
     	WhileNode(function() return self.inst.components.health.takingfiredamage or self.inst.components.hauntable.panic end, "Panic",
             Panic(self.inst)),
-    	
+
     	RunAway(self.inst, "scarytoprey", SEE_PLAYER_DIST, STOP_RUN_DIST, function(hunter) return self.inst.chased_by_player end, nil, true),
-    	
+
     	IfNode(function() return self.inst.leash_target ~= nil and not self.inst.chased end, "shouldapproach",
     		Leash(self.inst, GetLeashTargetPosition, LEASH_START_DIST, LEASH_STOP_DIST, true)),
-    	
+
     	FaceEntity(self.inst, GetTarget, KeepFaceTargetFn)
     }, 0.01)
 

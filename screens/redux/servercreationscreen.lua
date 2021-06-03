@@ -49,14 +49,14 @@ local ServerCreationScreen = Class(Screen, function(self, prev_screen, save_slot
     local r,g,b = unpack(UICOLOURS.BROWN_DARK)
     self.detail_panel_frame:SetBackgroundTint(r,g,b,0.6)
     self.detail_panel_frame.top:Hide() -- top crown would cover our tabs.
-    
+
 	self.mods_enabled = IsNotConsole()
 
     self.dirty = false
 
 
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.SERVERCREATIONSCREEN.HOST_GAME))
-    
+
     self.detail_panel = self.detail_panel_frame:InsertWidget( Widget("detail_panel") )
 
     self:MakeButtons()
@@ -98,7 +98,7 @@ local ServerCreationScreen = Class(Screen, function(self, prev_screen, save_slot
 
     self:SetDataOnTabs()
     self:SetTab("settings")
-    
+
     self:MakeClean() --we're done setting the data, so make sure we're clean.
 
     self.focus_handler = self:AddChild(Widget("FocusHandler"))
@@ -155,7 +155,7 @@ function ServerCreationScreen:SetDataOnTabs()
     end
 
 	self:SetLevelLocations(nil)
-    
+
     self.server_settings_tab:SetDataForSlot(self.save_slot)
 
     for i,tab in ipairs(self.world_tabs) do
@@ -172,7 +172,7 @@ function ServerCreationScreen:CanResume()
 end
 
 function ServerCreationScreen:UpdateButtons(slot)
- 
+
     if self:CanResume() then
         -- Save data
         if self.create_button then self.create_button.text:SetString(STRINGS.UI.SERVERCREATIONSCREEN.RESUME) end
@@ -320,7 +320,7 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
 
             if is_multi_level then
                 ShowLoading()
-                launchingServerPopup = LaunchingServerPopup({}, 
+                launchingServerPopup = LaunchingServerPopup({},
                     function()
                         local start_worked = TheNet:StartClient(DEFAULT_JOIN_IP, 10999, -1, serverdata.password)
                         if start_worked then
@@ -432,7 +432,7 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
                                     self:Create(true)
                                 end},
                                 {text=STRINGS.UI.SERVERCREATIONSCREEN.CANCEL, cb = function()
-                                    TheFrontEnd:PopScreen() 
+                                    TheFrontEnd:PopScreen()
                                 end}
                             },
                             nil,
@@ -451,7 +451,7 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
         local online_only_popup = PopupDialogScreen(STRINGS.UI.SERVERCREATIONSCREEN.ONLINEONYTITLE, body,
                             {
                                 {text=STRINGS.UI.SERVERCREATIONSCREEN.OK, cb = function()
-                                    TheFrontEnd:PopScreen() 
+                                    TheFrontEnd:PopScreen()
                                 end}
                             })
         self.last_focus = TheFrontEnd:GetFocusWidget()
@@ -472,9 +472,9 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
         self.last_focus = TheFrontEnd:GetFocusWidget()
         TheFrontEnd:PushScreen(TextListPopup(BuildModList(disabledmods),
                             STRINGS.UI.SERVERCREATIONSCREEN.MODSDISABLEDWARNINGTITLE,
-                            STRINGS.UI.SERVERCREATIONSCREEN.MODSDISABLEDWARNINGBODY, 
+                            STRINGS.UI.SERVERCREATIONSCREEN.MODSDISABLEDWARNINGBODY,
                             {
-                                {text=STRINGS.UI.SERVERCREATIONSCREEN.CONTINUE, 
+                                {text=STRINGS.UI.SERVERCREATIONSCREEN.CONTINUE,
                                 cb = function()
                                     TheFrontEnd:PopScreen()
                                     self:Create(true, true)
@@ -676,7 +676,7 @@ function ServerCreationScreen:SaveChanges()
         local serverdata = self.server_settings_tab:GetServerData()
         ShardSaveGameIndex:SetSlotServerData(self.save_slot, serverdata)
         ShardSaveGameIndex:SetSlotEnabledServerMods(self.save_slot)
-        
+
         for i, tab in ipairs(self.world_tabs) do
             local options = tab:CollectOptions()
             ShardSaveGameIndex:SetSlotGenOptions(self.save_slot, i == 1 and "Master" or "Caves", options)
@@ -690,27 +690,27 @@ function ServerCreationScreen:Cancel()
     if self:IsDirty() and self:CanResume() then
         TheFrontEnd:PushScreen(
             PopupDialogScreen( STRINGS.UI.SERVERCREATIONSCREEN.CANCEL_TITLE, STRINGS.UI.SERVERCREATIONSCREEN.CANCEL_BODY,
-            { 
-                { 
-                    text = STRINGS.UI.SERVERCREATIONSCREEN.SAVECHANGES, 
+            {
+                {
+                    text = STRINGS.UI.SERVERCREATIONSCREEN.SAVECHANGES,
                     cb = function()
                         TheFrontEnd:PopScreen()
                         self:SaveChanges()
                         self:Cancel()
                     end
                 },
-                { 
-                    text = STRINGS.UI.SERVERCREATIONSCREEN.DISCARDCHANGES, 
+                {
+                    text = STRINGS.UI.SERVERCREATIONSCREEN.DISCARDCHANGES,
                     cb = function()
                         TheFrontEnd:PopScreen()
                         self:MakeClean()
                         self:Cancel()
                     end
                 },
-                { 
-                    text = STRINGS.UI.SERVERCREATIONSCREEN.CANCEL, 
+                {
+                    text = STRINGS.UI.SERVERCREATIONSCREEN.CANCEL,
                     cb = function()
-                        TheFrontEnd:PopScreen()                 
+                        TheFrontEnd:PopScreen()
                     end
                 }
             }
@@ -731,7 +731,7 @@ function ServerCreationScreen:OnControl(control, down)
     if ServerCreationScreen._base.OnControl(self, control, down) then return true end
 
     if not down then
-        if control == CONTROL_CANCEL then 
+        if control == CONTROL_CANCEL then
             self:Cancel()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
         else

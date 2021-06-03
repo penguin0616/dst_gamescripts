@@ -107,9 +107,9 @@ local function common_postinit(inst)
 	inst.refreshflowertooltip = net_event(inst.GUID, "refreshflowertooltip")
     inst:ListenForEvent("playeractivated", OnPlayerActivated)
 	inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
-	
+
 	inst:ListenForEvent("clientpetskindirty", OnClientPetSkinChanged)
-	
+
 	inst:ListenForEvent("refreshflowertooltip", RefreshFlowerTooltip)
 end
 
@@ -174,7 +174,7 @@ local function ghostlybond_changebehaviour(inst, ghost)
         ghost:BecomeDefensive()
     end
 	inst.refreshflowertooltip:push()
-    
+
 	return true
 end
 
@@ -188,7 +188,7 @@ local function update_sisturn_state(inst, is_active)
 end
 
 local function CustomCombatDamage(inst, target)
-	return (target.components.debuffable ~= nil and target.components.debuffable:HasDebuff("abigail_vex_debuff")) and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD 
+	return (target.components.debuffable ~= nil and target.components.debuffable:HasDebuff("abigail_vex_debuff")) and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
 		or (target == inst.components.ghostlybond.ghost and target:HasTag("abigail")) and 0
 		or 1
 end
@@ -246,7 +246,7 @@ local function master_postinit(inst)
 		inst.components.ghostlybond.onrecallfn = ghostlybond_onrecall
 		inst.components.ghostlybond.onsummoncompletefn = ghostlybond_onsummoncomplete
 		inst.components.ghostlybond.changebehaviourfn = ghostlybond_changebehaviour
-		
+
 		inst.components.ghostlybond:Init("abigail", TUNING.ABIGAIL_BOND_LEVELUP_TIME)
 
 		inst.components.combat.customdamagemultfn = CustomCombatDamage

@@ -115,7 +115,7 @@ local function projectile_fn(data, name)
     end
 
 	inst.persists = false
-    
+
 	inst._floater_prefab = data.floater_prefab or (name.."_floater")
 
 	inst:AddComponent("complexprojectile")
@@ -295,7 +295,7 @@ end
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
-local ret = 
+local ret =
 {
 	Prefab("oceanfishinghook_ripple", ripple_fn, {Asset("ANIM", "anim/oceanfishing_hook.zip")}),
 }
@@ -309,7 +309,7 @@ for name, v in pairs(BOBBERS) do
 		table.insert(assets, Asset("ANIM", "anim/"..v.build..".zip"))
 	end
 
-	local prefabs = 
+	local prefabs =
 	{
 		name.."_projectile",
 		name.."_floater",

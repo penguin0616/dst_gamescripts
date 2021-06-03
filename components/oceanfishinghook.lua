@@ -80,7 +80,7 @@ function OceanFishingHook:OnUpdate(dt)
 end
 
 function OceanFishingHook:TestInterest(fish)
-	return (self.interest[fish.GUID] == nil or self.interest[fish.GUID] > 0) 
+	return (self.interest[fish.GUID] == nil or self.interest[fish.GUID] > 0)
 			and fish:IsNear(self.inst, self.lure_data.radius)
 end
 

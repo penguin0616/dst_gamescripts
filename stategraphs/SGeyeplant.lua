@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
     ActionHandler(ACTIONS.HARVEST, "eat_enter"),
     ActionHandler(ACTIONS.PICK, "eat_enter"),
@@ -16,10 +16,10 @@ local events=
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnAttack(),
     CommonHandlers.OnDeath(),
-    EventHandler("attacked", function(inst) 
-        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("attack") then           
-            inst.sg:GoToState("hit") 
-        end 
+    EventHandler("attacked", function(inst)
+        if not inst.components.health:IsDead() and not inst.sg:HasStateTag("attack") then
+            inst.sg:GoToState("hit")
+        end
     end),
 }
 
@@ -30,12 +30,12 @@ local states=
         tags = {"busy"},
 
         onenter = function(inst, playanim)
-            inst.Physics:Stop()           
+            inst.Physics:Stop()
             inst.AnimState:PlayAnimation("spawn")
-            inst.AnimState:PushAnimation("idle", true)   
-            inst.SoundEmitter:PlaySound("dontstarve/creatures/eyeplant/eye_emerge")        
+            inst.AnimState:PushAnimation("idle", true)
+            inst.SoundEmitter:PlaySound("dontstarve/creatures/eyeplant/eye_emerge")
         end,
-        
+
         events=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
@@ -43,7 +43,7 @@ local states=
 
     },
 
-    State{        
+    State{
         name = "idle",
         tags = {"idle", "canrotate"},
         onenter = function(inst)
@@ -54,11 +54,11 @@ local states=
 
     },
 
-    State{        
+    State{
         name = "action",
         tags = {"idle", "canrotate"},
         onenter = function(inst, playanim)
-            inst:PerformBufferedAction()            
+            inst:PerformBufferedAction()
         end,
 
         events=
@@ -68,18 +68,18 @@ local states=
     },
 
     State{
-        
+
         name = "alert",
         tags = {"idle", "canrotate"},
         onenter = function(inst, playanim)
             inst.Physics:Stop()
-            if inst.components.combat.target then    
+            if inst.components.combat.target then
                 inst:ForceFacePoint(inst.components.combat.target.Transform:GetWorldPosition())
             end
-            inst.AnimState:PlayAnimation("lookat", true) 
+            inst.AnimState:PlayAnimation("lookat", true)
         end,
 
-        events = 
+        events =
         {
             EventHandler("losttarget", function(inst) inst.sg:GoToState("idle") end),
         },
@@ -88,40 +88,40 @@ local states=
     State{
         name = "hit",
         tags = {"busy", "hit"},
-        
+
         onenter = function(inst)
-            inst.AnimState:PlayAnimation("hit")            
+            inst.AnimState:PlayAnimation("hit")
         end,
-        
+
         events=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("attack") end),
         },
-        
-    },  
 
-    State{ 
+    },
+
+    State{
         name = "attack",
         tags = {"attack", "canrotate"},
         onenter = function(inst)
-            if inst.components.combat.target then    
+            if inst.components.combat.target then
                 inst:ForceFacePoint(inst.components.combat.target.Transform:GetWorldPosition())
             end
             inst.AnimState:PlayAnimation("atk")
         end,
-        
+
         timeline=
         {
             TimeEvent(14*FRAMES, function(inst) inst.components.combat:DoAttack()
             inst.SoundEmitter:PlaySound("dontstarve/creatures/eyeplant/eye_bite")
             end),
         },
-        
+
         events=
         {
-            EventHandler("animqueueover", function(inst) 
-                if inst.components.combat.target and 
-                    distsq(inst.components.combat.target:GetPosition(),inst:GetPosition()) <= 
+            EventHandler("animqueueover", function(inst)
+                if inst.components.combat.target and
+                    distsq(inst.components.combat.target:GetPosition(),inst:GetPosition()) <=
                     inst.components.combat:CalcAttackRangeSq(inst.components.combat.target) then
 
                     inst.sg:GoToState("attack")
@@ -135,13 +135,13 @@ local states=
     State{
         name = "death",
         tags = {"busy"},
-        
+
         onenter = function(inst)
             inst.AnimState:PlayAnimation("despawn")
-            RemovePhysicsColliders(inst) 
-            inst.SoundEmitter:PlaySound("dontstarve/creatures/eyeplant/eye_retract")      
+            RemovePhysicsColliders(inst)
+            inst.SoundEmitter:PlaySound("dontstarve/creatures/eyeplant/eye_retract")
 
-        end,        
+        end,
     },
 
     State{
@@ -153,18 +153,18 @@ local states=
             inst.AnimState:PlayAnimation("atk", false)
         end,
 
-        timeline = 
+        timeline =
         {
-            TimeEvent(14*FRAMES, function(inst) 
+            TimeEvent(14*FRAMES, function(inst)
             if inst:GetBufferedAction().target then
                 inst:GetBufferedAction().target:PushEvent("ontrapped")
             end
-            inst:PerformBufferedAction() 
+            inst:PerformBufferedAction()
             inst.SoundEmitter:PlaySound("dontstarve/creatures/eyeplant/eye_bite")
             end ), --take food
         },
 
-        events = 
+        events =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end)
         },
@@ -185,7 +185,7 @@ local states=
             inst.sg:GoToState("idle")
         end,
 
-        events = 
+        events =
         {
             EventHandler("attacked", function(inst) inst.components.inventory:DropEverything() inst.sg:GoToState("idle") end) --drop food
         },
@@ -208,7 +208,7 @@ local states=
             inst:PerformBufferedAction()
 
         end,
-        
+
         events=
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
@@ -219,5 +219,5 @@ local states=
 
 
 CommonStates.AddFrozenStates(states)
-    
+
 return StateGraph("eyeplant", states, events, "idle", actionhandlers)

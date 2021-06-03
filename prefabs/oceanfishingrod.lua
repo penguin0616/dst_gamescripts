@@ -12,7 +12,7 @@ local prefabs =
 local function onequip(inst, owner)
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
-        owner:PushEvent("equipskinneditem", inst:GetSkinName())        
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
         owner.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, "swap_fishingrod_ocean", inst.GUID, "swap_fishingrod_ocean")
         owner.AnimState:OverrideItemSkinSymbol("fishingline", skin_build, "fishingline",           inst.GUID, "swap_fishingrod_ocean")
         owner.AnimState:OverrideItemSkinSymbol("FX_fishing",  skin_build, "FX_fishing",            inst.GUID, "swap_fishingrod_ocean")
@@ -49,7 +49,7 @@ end
 local function GetTackle(inst)
 	return (inst.components.oceanfishingrod ~= nil and inst.components.container ~= nil) and
 		{
-			bobber = inst.components.container.slots[1], 
+			bobber = inst.components.container.slots[1],
 			lure = inst.components.container.slots[2]
 		}
 		or {}

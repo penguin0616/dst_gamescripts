@@ -129,7 +129,7 @@ function Bloomness:OnLoad(data)
 			self.inst:StartUpdatingComponent(self)
 			self.onlevelchangedfn(self.inst, self.level)
 		end
-    end	
+    end
 end
 
 function Bloomness:GetDebugString()

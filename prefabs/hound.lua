@@ -34,7 +34,7 @@ local prefabs_clay =
     "eyeflame",
 }
 
-local gargoyles = 
+local gargoyles =
 {
     "gargoyle_houndatk",
     "gargoyle_hounddeath",
@@ -455,11 +455,11 @@ local function fncommon(bank, build, morphlist, custombrain, tag, data)
                 inst.components.locomotor.runspeed = TUNING.HOUND_SWIM_SPEED
                 inst.hop_distance = inst.components.locomotor.hop_distance
                 inst.components.locomotor.hop_distance = 4
-            end)            
+            end)
         inst.components.amphibiouscreature:SetExitWaterFn(
             function(inst)
                 if inst.landspeed then
-                    inst.components.locomotor.runspeed = inst.landspeed 
+                    inst.components.locomotor.runspeed = inst.landspeed
                 end
                 if inst.hop_distance then
                     inst.components.locomotor.hop_distance = inst.hop_distance
@@ -469,7 +469,7 @@ local function fncommon(bank, build, morphlist, custombrain, tag, data)
 		inst.components.locomotor.pathcaps = { allowocean = true }
 	end
 
-    
+
 
     inst:SetBrain(custombrain or brain)
 

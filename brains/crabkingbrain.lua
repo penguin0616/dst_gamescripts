@@ -14,7 +14,7 @@ local function ShouldHaveClaws(inst)
     return nil
 end
 
-local function ShouldHeal(inst) 
+local function ShouldHeal(inst)
     if inst.components.health:GetPercent() < TUNING.CRABKING_HEAL_THRESHOLD and not inst.components.timer:TimerExists("heal_cooldown") then
         inst.components.timer:StopTimer("clawsummon_cooldown")
         inst.wantstoheal = true
@@ -59,12 +59,12 @@ function CrabkingBrain:OnStart()
             PriorityNode({
 
                 DoAction(self.inst, ShouldHaveClaws, "claws?"),
-                DoAction(self.inst, ShouldHeal, "Heal?"),                             
-                DoAction(self.inst, ShouldDoAttackSpell, "casting"),                      
+                DoAction(self.inst, ShouldHeal, "Heal?"),
+                DoAction(self.inst, ShouldDoAttackSpell, "casting"),
 
             }, 1)),
     }, 1)
-    
+
     self.bt = BT(self.inst, root)
 end
 

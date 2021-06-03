@@ -110,7 +110,7 @@ local function IsHomeOnFire(inst)
 end
 
 local function GetLeader(inst)
-    return inst.components.follower.leader 
+    return inst.components.follower.leader
 end
 
 local function GetHomePos(inst)
@@ -130,7 +130,7 @@ end)
 
 function BunnymanBrain:OnStart()
     --print(self.inst, "PigBrain:OnStart")
-    local root = 
+    local root =
         PriorityNode(
         {
             BrainCommon.PanicWhenScared(self.inst, .25, "RABBIT_PANICBOSS"),

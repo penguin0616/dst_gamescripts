@@ -2,7 +2,7 @@ local WinchTarget = Class(function(self, inst)
     self.inst = inst
 
     self.depth = -1 -- -1: use ocean depth value at point
-    
+
     self.salvagefn = nil
 
     self.inst:AddTag("winchtarget")

@@ -9,7 +9,7 @@ local assets =
     Asset("MINIMAP_IMAGE", "archive_moon_statue1"),
     Asset("MINIMAP_IMAGE", "archive_moon_statue2"),
     Asset("MINIMAP_IMAGE", "archive_moon_statue3"),
-    Asset("MINIMAP_IMAGE", "archive_moon_statue4"),    
+    Asset("MINIMAP_IMAGE", "archive_moon_statue4"),
 }
 
 local prefabs =
@@ -22,7 +22,7 @@ local assets_desk =
     Asset("ANIM", "anim/archive_security_desk.zip"),
 }
 
-local prefabs_desk = 
+local prefabs_desk =
 {
     "archive_security_pulse",
     "archive_security_waypoint",
@@ -33,12 +33,12 @@ local assets_security =
     Asset("ANIM", "anim/archive_security_pulse.zip"),
 }
 
-local prefabs_security = 
+local prefabs_security =
 {
     "archive_security_pulse_sfx",
 }
 
-local assets_switch = 
+local assets_switch =
 {
     Asset("ANIM", "anim/archive_switch.zip"),
     Asset("MINIMAP_IMAGE", "archive_power_switch"),
@@ -52,12 +52,12 @@ local prefabs_switch =
     "grotto_war_sfx",
 }
 
-local assets_switch_base = 
+local assets_switch_base =
 {
     Asset("ANIM", "anim/archive_switch_ground.zip"),
 }
 
-local assets_switch_pad = 
+local assets_switch_pad =
 {
     Asset("ANIM", "anim/archive_switch_ground_small.zip"),
 }
@@ -69,12 +69,12 @@ SetSharedLootTable('archive_statues',
     {'moonrocknugget',0.05},
 })
 
-local assets_seal = 
+local assets_seal =
 {
     Asset("ANIM", "anim/moonbase_fx.zip"),
 }
 
-local assets_portal = 
+local assets_portal =
 {
     Asset("ANIM", "anim/archive_portal.zip"),
     Asset("ANIM", "anim/archive_portal_base.zip"),
@@ -101,7 +101,7 @@ local function OnWorkFinished(inst)--, worker)
     inst:Remove()
 end
 
-local function setminimapiconstatue(inst)   
+local function setminimapiconstatue(inst)
     inst.MiniMapEntity:SetIcon("archive_moon_statue"..inst.anim..".png")
 end
 
@@ -183,7 +183,7 @@ end
 local function onsaveRune(inst, data)
     data.storyprogress = inst.storyprogress
     data.animid = inst.animid
-    data.anim = inst.anim    
+    data.anim = inst.anim
 end
 
 local function setruneanimation(inst)
@@ -191,7 +191,7 @@ local function setruneanimation(inst)
         inst.AnimState:PlayAnimation("idle")
     else
         inst.AnimState:PlayAnimation("idle"..inst.anim)
-    end   
+    end
 end
 
 local function onloadRune(inst, data)
@@ -255,13 +255,13 @@ local function canspawn(inst)
 end
 
 local function OnUpdateDesk(inst)
-    local archive = TheWorld.components.archivemanager 
-    
+    local archive = TheWorld.components.archivemanager
+
     if archive and not archive:GetPowerSetting() then
         if not inst.AnimState:IsCurrentAnimation("idle_leave") and
            not inst.AnimState:IsCurrentAnimation("leave") then
             inst.AnimState:PlayAnimation("leave",false)
-            inst.AnimState:PushAnimation("idle_leave",false)  
+            inst.AnimState:PushAnimation("idle_leave",false)
             inst.Light:Enable(false)
             inst.SoundEmitter:KillSound("loop")
         end
@@ -270,31 +270,31 @@ local function OnUpdateDesk(inst)
             if  not inst.AnimState:IsCurrentAnimation("appear") and
                 not inst.AnimState:IsCurrentAnimation("idle") then
                     inst.AnimState:PlayAnimation("appear",false)
-                    inst.AnimState:PushAnimation("idle",true) 
+                    inst.AnimState:PushAnimation("idle",true)
 
-                    inst.SoundEmitter:PlaySound("grotto/common/archive_security_desk/appear")             
-            end            
+                    inst.SoundEmitter:PlaySound("grotto/common/archive_security_desk/appear")
+            end
             inst.components.childspawner:SpawnChild()
             inst.Light:Enable(true)
             if not inst.SoundEmitter:PlayingSound("loop") then
                 inst.SoundEmitter:PlaySound("grotto/common/archive_security_desk/contained_LP","loop")
             end
-        else        
+        else
             if  not inst.AnimState:IsCurrentAnimation("idle_leave") and
                 not inst.AnimState:IsCurrentAnimation("leave") then
                     inst.AnimState:PlayAnimation("leave",false)
-                    inst.AnimState:PushAnimation("idle_leave",false)        
-            end    
+                    inst.AnimState:PushAnimation("idle_leave",false)
+            end
             inst.Light:Enable(false)
             inst.SoundEmitter:KillSound("loop")
-        end 
-    end       
+        end
+    end
 end
 
 local function getStatusPower(inst)
-    local archive = TheWorld.components.archivemanager 
+    local archive = TheWorld.components.archivemanager
 
-    return archive and not archive:GetPowerSetting() and "POWEROFF"        
+    return archive and not archive:GetPowerSetting() and "POWEROFF"
 end
 
 local function securityfn()
@@ -345,12 +345,12 @@ local function securityfn()
     inst.components.childspawner:SetSpawnPeriod(TUNING.ARCHIVE_SECURITY.RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(1)
     inst.components.childspawner:StartSpawning()
-    inst.components.childspawner:SetSpawnedFn(function() 
+    inst.components.childspawner:SetSpawnedFn(function()
         inst.SoundEmitter:PlaySound("grotto/common/archive_security_desk/leave")
     end)
     inst.components.childspawner.canspawnfn = canspawn
 
-    inst.components.childspawner.overridespawnlocation = function(inst) 
+    inst.components.childspawner.overridespawnlocation = function(inst)
         return Vector3(0,0,0)
     end
 
@@ -421,17 +421,17 @@ local function securitypulsefn()
 
     if not TheWorld.ismastersim then
         return inst
-    end    
+    end
 
     inst.patrol = true
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.walkspeed = TUNING.ARCHIVE_SECURITY.WALK_SPEED
 
-    inst:ListenForEvent("locomote", function(inst) 
-        local should_move = inst.components.locomotor:WantsToMoveForward()        
+    inst:ListenForEvent("locomote", function(inst)
+        local should_move = inst.components.locomotor:WantsToMoveForward()
         if should_move then
-            inst.components.locomotor:WalkForward() 
+            inst.components.locomotor:WalkForward()
         else
             inst.components.locomotor:StopMoving()
         end
@@ -453,9 +453,9 @@ local function securitypulsefn()
     end)
 
     inst.sfx_prefab = inst:SpawnChild("archive_security_pulse_sfx")
-    inst:DoTaskInTime(0,function()       
+    inst:DoTaskInTime(0,function()
         inst.sfx_prefab.Transform:SetPosition(SFXRANGE,0,0)
-    end)    
+    end)
 
     inst:SetBrain(brain)
     return inst
@@ -477,30 +477,30 @@ end
 local function securitypulse_sfxfn()
     local inst = CreateEntity()
 
-    inst.entity:AddTransform()    
-    inst.entity:AddSoundEmitter()    
+    inst.entity:AddTransform()
+    inst.entity:AddSoundEmitter()
 
     inst.entity:AddNetwork()
 
     --[[ for debugging
-    
-    inst.entity:AddAnimState()    
+
+    inst.entity:AddAnimState()
     inst.AnimState:SetBank("grass")
     inst.AnimState:SetBuild("grass1")
     inst.AnimState:PlayAnimation("idle", true)
-    
+
     ]]
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
-    end    
+    end
 
     inst.persists = false
-    
+
     inst:AddComponent("updatelooper")
-    inst.components.updatelooper:AddOnUpdateFn(OnUpdatePulseSFX)    
+    inst.components.updatelooper:AddOnUpdateFn(OnUpdatePulseSFX)
 
     inst.SoundEmitter:PlaySound("grotto/common/archive_security_desk/leave_LP", "loop")
 
@@ -553,7 +553,7 @@ local function testbetweenpoints(pt1,pt2)
     local zdiff = (z2 - z1)/2
 
     local x = x1 + xdiff
-    local z = z1 + zdiff 
+    local z = z1 + zdiff
 
     return TheWorld.Map:IsVisualGroundAtPoint(x,0,z)
 end
@@ -561,11 +561,11 @@ end
 local WAYPOINT_RANGE = 34
 local function startpowersound(inst)
     local wp = findwaypoints(inst, 5)
-    
+
     if #wp > 0 then
         wp = wp[1]
         local wps = findwaypoints(wp, WAYPOINT_RANGE)
-        
+
         local pos = Vector3(wp.Transform:GetWorldPosition())
         spawnsounderobj(pos, "grotto/common/archive_switch/start")
         print("1 NUMBER OF WAY POINTS!",#wps)
@@ -573,7 +573,7 @@ local function startpowersound(inst)
 
         for i=#wps,1,-1 do
             if not testbetweenpoints(wp,wps[i]) then
-                table.remove(wps,i)            
+                table.remove(wps,i)
             end
         end
         print("2 NUMBER OF WAY POINTS!",#wps)
@@ -583,33 +583,33 @@ local function startpowersound(inst)
             local x,y,z = ent.Transform:GetWorldPosition()
             local theta = wp:GetAngleToPoint(x,y,z)*DEGREES
             local radius = 6
-            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta )) 
+            local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
             local time = 0
 
 
             time = time + 1
-            wp:DoTaskInTime(time,function()  
-                local pos1 = pos + offset    
+            wp:DoTaskInTime(time,function()
+                local pos1 = pos + offset
                 spawnsounderobj(pos1, "grotto/common/archive_switch/1")
-            end)        
+            end)
 
             time = time + 1
-            wp:DoTaskInTime(time,function()        
+            wp:DoTaskInTime(time,function()
                 local pos1 = pos + (offset *2)
                 spawnsounderobj(pos1, "grotto/common/archive_switch/2")
-            end)        
+            end)
 
             time = time + 1
-            wp:DoTaskInTime(time,function()     
+            wp:DoTaskInTime(time,function()
                 local pos1 = pos + (offset *3)
                 spawnsounderobj(pos1, "grotto/common/archive_switch/3")
-            end)        
-            
+            end)
+
             time = time + 1
-            wp:DoTaskInTime(time,function()        
+            wp:DoTaskInTime(time,function()
                 local pos1 = pos + (offset *4)
                 spawnsounderobj(pos1, "grotto/common/archive_switch/4")
-            end)                
+            end)
         end
     end
 end
@@ -627,7 +627,7 @@ local function checkforgems(inst)
         end
     end
 
-    local archive = TheWorld.components.archivemanager    
+    local archive = TheWorld.components.archivemanager
     if archive and #ents >= 3  then
         archive:SwitchPowerOn(true)
         startpowersound(inst)
@@ -643,8 +643,8 @@ end
 
 local function OnGemGiven(inst, giver, item)
     --Disable trading, enable picking.
-    inst.SoundEmitter:PlaySound("dontstarve/common/telebase_gemplace")    
-    
+    inst.SoundEmitter:PlaySound("dontstarve/common/telebase_gemplace")
+
     inst.components.trader:Disable()
     inst.components.pickable:SetUp("opalpreciousgem", 1000000)
     inst.components.pickable:Pause()
@@ -657,40 +657,40 @@ local function OnGemGiven(inst, giver, item)
     else
         if not inst.AnimState:IsCurrentAnimation("idle_full") then
             if not inst.AnimState:IsCurrentAnimation("activate") then
-                inst:DoTaskInTime(11/30, function() 
+                inst:DoTaskInTime(11/30, function()
                     local pos = Vector3(inst.Transform:GetWorldPosition())
                     ShakeAllCameras(CAMERASHAKE.SIDE, 2, .02, .05, pos, 50)
                 end)
                 inst.AnimState:PlayAnimation("activate",false)
                 inst.SoundEmitter:PlaySound("grotto/common/archive_switch/on")
-            end        
-        end 
-    end   
+            end
+        end
+    end
 end
 
 local function OnGemTaken(inst)
 
     inst.components.trader:Enable()
     inst.components.pickable.caninteractwith = false
-    inst.gem = false 
+    inst.gem = false
 
     local archive = TheWorld.components.archivemanager
     if archive then
-        archive:SwitchPowerOn(false)      
+        archive:SwitchPowerOn(false)
     end
     if not inst.AnimState:IsCurrentAnimation("idle_empty") then
         if not inst.AnimState:IsCurrentAnimation("deactivate") then
-           
+
             local pos = Vector3(inst.Transform:GetWorldPosition())
             ShakeAllCameras(CAMERASHAKE.SIDE, 20/30, .02, .05, pos, 50)
-          
+
             inst.AnimState:PlayAnimation("deactivate",false)
             inst.SoundEmitter:PlaySound("grotto/common/archive_switch/off")
-        end        
+        end
     end
 end
 
-local function ShatterGem(inst) 
+local function ShatterGem(inst)
     inst.SoundEmitter:KillSound("hover_loop")
     inst.AnimState:ClearBloomEffectHandle()
     inst.AnimState:PlayAnimation("shatter")
@@ -718,12 +718,12 @@ local function OnLoadPostPassSwitch(inst, newents, data) --OnLoadSwitch
     end
 
     if not inst.components.pickable.caninteractwith then
-        OnGemTaken(inst)  
+        OnGemTaken(inst)
     else
         OnGemGiven(inst)
     end
 
-    if data and data.startwar then 
+    if data and data.startwar then
         startshadowwar(inst)
     end
 end
@@ -772,14 +772,14 @@ local function switchfn()
 
     inst.DestroyGemFn = DestroyGem
 
-    inst:ListenForEvent("animover", function() 
+    inst:ListenForEvent("animover", function()
         if inst.AnimState:IsCurrentAnimation("activate") then
             inst.AnimState:PlayAnimation("idle_full")
             checkforgems(inst)
         end
         if inst.AnimState:IsCurrentAnimation("deactivate") then
             inst.AnimState:PlayAnimation("idle_empty")
-        end        
+        end
     end)
 
     inst:DoTaskInTime(0,function()
@@ -806,7 +806,7 @@ local function switchpadfn()
 
     inst.AnimState:SetBank("archive_switch_ground_small")
     inst.AnimState:SetBuild("archive_switch_ground_small")
-    inst.AnimState:PlayAnimation("idle") 
+    inst.AnimState:PlayAnimation("idle")
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(2)
@@ -819,7 +819,7 @@ local function switchpadfn()
 
     inst.persists = false
 
-    return inst    
+    return inst
 end
 
 local SWITCH_MUST_TAGS = {"archive_switch"}
@@ -833,7 +833,7 @@ local function switchbasefn()
 
     inst.AnimState:SetBank("archive_switch_ground")
     inst.AnimState:SetBuild("archive_switch_ground")
-    inst.AnimState:PlayAnimation("idle") 
+    inst.AnimState:PlayAnimation("idle")
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(1)
@@ -855,19 +855,19 @@ local function switchbasefn()
         end
     end)
 
-    inst:ListenForEvent("arhivepoweron", function() 
+    inst:ListenForEvent("arhivepoweron", function()
             inst.AnimState:PlayAnimation("activate", false)
             inst.AnimState:PushAnimation("activate_loop", true)
 
             inst.SoundEmitter:PlaySound("grotto/common/archive_switch/LP","loop")
         end,TheWorld)
-    inst:ListenForEvent("arhivepoweroff", function() 
+    inst:ListenForEvent("arhivepoweroff", function()
             inst.AnimState:PlayAnimation("deactivate", false)
             inst.AnimState:PushAnimation("idle", true)
             inst.SoundEmitter:KillSound("loop")
         end,TheWorld)
 
-    return inst    
+    return inst
 end
 
 local function CreateDropShadow(parent)
@@ -897,9 +897,9 @@ local function CreateDropShadow(parent)
 end
 
 local function getstatusportal(inst)
-    local archive = TheWorld.components.archivemanager 
+    local archive = TheWorld.components.archivemanager
 
-    return archive and not archive:GetPowerSetting() and "POWEROFF"        
+    return archive and not archive:GetPowerSetting() and "POWEROFF"
 end
 
 local function portalfn()
@@ -908,7 +908,7 @@ local function portalfn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
-    inst.entity:AddMiniMapEntity()    
+    inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
     inst.Transform:SetEightFaced()
@@ -919,7 +919,7 @@ local function portalfn()
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
     inst.AnimState:SetSortOrder(1)
-    inst.AnimState:SetFinalOffset(2)    
+    inst.AnimState:SetFinalOffset(2)
 
     inst.MiniMapEntity:SetIcon("archive_portal.png")
     inst:AddTag("groundhole")
@@ -955,10 +955,10 @@ local function ambientfn()
         return inst
     end
 
-    inst:ListenForEvent("arhivepoweron", function() 
+    inst:ListenForEvent("arhivepoweron", function()
             inst.SoundEmitter:PlaySound("grotto/common/archive_on/"..math.random(1,4),"loop")
         end,TheWorld)
-    inst:ListenForEvent("arhivepoweroff", function() 
+    inst:ListenForEvent("arhivepoweroff", function()
             inst.SoundEmitter:KillSound("loop")
         end,TheWorld)
 
@@ -968,7 +968,7 @@ end
 local function worldgenitemfn()
     -- this is just used during world gen and should not stick around.
     local inst = CreateEntity()
-    inst.entity:AddTransform()    
+    inst.entity:AddTransform()
 
     inst.entity:SetPristine()
 
@@ -976,7 +976,7 @@ local function worldgenitemfn()
         return inst
     end
 
-    inst.persists = false    
+    inst.persists = false
 
     inst:DoTaskInTime(0,function() inst:Remove() end)
     return inst

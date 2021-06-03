@@ -77,7 +77,7 @@ function TeamLeader:OrganizeTeams()
 	end
 
 	table.sort(teams, sort)
-	
+
 	if teams[1] ~= self.inst then return end
 
 	local radius = 5
@@ -148,7 +148,7 @@ function TeamLeader:NewTeammate(member)
 	if self:ValidMember(member) then
 		member.deathfn = function() self:OnLostTeammate(member) end
 		member.attackedfn = function() self:BroadcastDistress(member) end
-		member.attackedotherfn = function() 
+		member.attackedotherfn = function()
 			self.chasetime = 0
 			member.components.combat.target = nil
 			member.components.teamattacker.orders = ORDERS.HOLD
@@ -200,18 +200,18 @@ end
 function TeamLeader:CenterLeader()
 	local updatedPos = nil
 	local validMembers = 0
-	for k,v in pairs(self.team) do            
+	for k,v in pairs(self.team) do
         if not updatedPos then
             updatedPos = Vector3(k.Transform:GetWorldPosition() )
         else
             updatedPos = updatedPos + Vector3(k.Transform:GetWorldPosition() )
         end
-        validMembers = validMembers + 1            
+        validMembers = validMembers + 1
     end
 
     if updatedPos then
         updatedPos = updatedPos / validMembers
-        self.inst.Transform:SetPosition(updatedPos:Get() )    
+        self.inst.Transform:SetPosition(updatedPos:Get() )
 	end
 end
 
@@ -227,7 +227,7 @@ function TeamLeader:GetFormationPositions()
 
         if v.components.teamattacker.orders == ORDERS.WARN then
             radius = self.radius - 1
-        end 
+        end
 
         local offset = Vector3(radius * math.cos(theta), 0, -radius * math.sin(theta))
         v.components.teamattacker.formationpos = pt + offset
@@ -265,7 +265,7 @@ end
 function TeamLeader:GiveOrdersToAllWithOrder(order, oldorder)
 	for k,v in pairs(self.team) do
 		if v ~= nil and v.components.teamattacker.orders == oldorder then
-			v.components.teamattacker.orders = order			
+			v.components.teamattacker.orders = order
 		end
 	end
 end
@@ -291,7 +291,7 @@ function TeamLeader:SetNewThreat(threat)
 end
 
 function TeamLeader:GetTheta(dt)
-	if self.reverse then 
+	if self.reverse then
 		return self.theta - (dt * self.thetaincrement)
 	else
 		return self.theta + (dt * self.thetaincrement)

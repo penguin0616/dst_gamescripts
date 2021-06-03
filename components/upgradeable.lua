@@ -77,7 +77,7 @@ function Upgradeable:OnSave()
 	local data = {}
 	data.numupgrades = self.numupgrades
 	data.stage = self.stage
-	return data 
+	return data
 end
 
 function Upgradeable:OnLoad(data)

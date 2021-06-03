@@ -14,7 +14,7 @@ local SWIMMING_COLLISION_MASK   = COLLISION.GROUND
 								+ COLLISION.LAND_OCEAN_LIMITS
 								+ COLLISION.OBSTACLES
                                 + COLLISION.SMALLOBSTACLES
-                                
+
 local function OnSalvage(inst)
     return inst.components.inventory:GetItemInSlot(1)
 end
@@ -36,7 +36,7 @@ local function fn(data)
 
     inst.entity:AddMiniMapEntity()
     inst.MiniMapEntity:SetIcon("flotsam_heavy.png")
-	
+
     inst.Physics:SetCollisionGroup(COLLISION.CHARACTERS)
 	inst.Physics:SetCollisionMask(SWIMMING_COLLISION_MASK)
     inst.Physics:SetCapsule(0.5, 1)
@@ -62,7 +62,7 @@ local function fn(data)
 
     inst:AddComponent("winchtarget")
     inst.components.winchtarget:SetSalvageFn(OnSalvage)
-    
+
     inst:AddComponent("treasuremarked")
 
 	inst:AddComponent("inventory")

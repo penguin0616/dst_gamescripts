@@ -124,7 +124,7 @@ function Groomer:SetChangeInDelay(delay)
 end
 
 function Groomer:CanBeginChanging(doer)
-    if not self.enabled then        
+    if not self.enabled then
         return false, "INUSE"
     elseif doer.sg == nil or
         (doer.sg:HasStateTag("busy") and doer.sg.currentstate.name ~= "opengift") then
@@ -177,7 +177,7 @@ end
 
 function Groomer:EndChanging(doer)
 
-    if self.changers[doer] then 
+    if self.changers[doer] then
         self.changers[doer] = nil
     end
 
@@ -196,7 +196,7 @@ function Groomer:EndChanging(doer)
         if self.onclosefn ~= nil then
             self.onclosefn(self.inst)
         end
-    end    
+    end
 end
 
 function Groomer:EndAllChanging()
@@ -211,7 +211,7 @@ end
 
 local function DoChange(self, doer, skins)
     doer.sg.statemem.ischanging = true
-    doer.sg:GoToState("dressupwardrobe", function() 
+    doer.sg:GoToState("dressupwardrobe", function()
         if self.occupant then
             self.occupant.sg:GoToState("skin_change", function()
                 self:ApplyTargetSkins(self.occupant, doer, skins)
@@ -291,7 +291,7 @@ function Groomer:ApplySkins(doer, diff)
             if CLOTHING[diff.beef_tail] ~= nil then
                 doer.components.skinner:SetClothing(diff.beef_tail)
             end
-        end        
+        end
     end
 end
 
@@ -303,7 +303,7 @@ function Groomer:GetSkinCategory(skin)
                 category = i
             end
         end
-    end  
+    end
 
     return category
 end

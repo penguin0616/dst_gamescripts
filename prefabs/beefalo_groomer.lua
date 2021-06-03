@@ -207,7 +207,7 @@ local function fn()
     inst.components.hitcher.hitchedfn = onhitch
     inst.components.hitcher.unhitchfn = onunhitch
 
-    inst:ListenForEvent("onremove", onremove) 
+    inst:ListenForEvent("onremove", onremove)
     inst:ListenForEvent("onbuilt", onbuilt)
 
     inst.OnSave = onsave

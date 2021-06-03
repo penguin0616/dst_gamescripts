@@ -26,7 +26,7 @@ local events =
 			end
 		end
 	end),
-	
+
 	EventHandler("attacked", function(inst, data)
 		if inst.components.health ~= nil and not inst.components.health:IsDead()
 			and (not inst.sg:HasStateTag("busy") or
@@ -39,7 +39,7 @@ local events =
 	EventHandler("wake_up_to_challenge", function(inst)
 		inst.sg:GoToState("hit")
 	end),
-	
+
 
 	EventHandler("lostfruitdragonchallenge", function(inst)
 		inst.sg:GoToState("challenge_lose")
@@ -51,7 +51,7 @@ local states=
     State{
         name = "idle",
         tags = {"idle", "canrotate"},
-		
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.SoundEmitter:PlaySound(inst.sounds.idle)
@@ -155,11 +155,11 @@ local states=
         timeline =
 		{
 			TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.attack_fire) end),
-			TimeEvent(16*FRAMES, function(inst) 
+			TimeEvent(16*FRAMES, function(inst)
 				inst.Light:Enable(true)
 				inst.DynamicShadow:Enable(false)
 			end),
-			TimeEvent(20*FRAMES, function(inst) 
+			TimeEvent(20*FRAMES, function(inst)
                 inst.components.timer:StopTimer("fire_cd")
                 inst.components.timer:StartTimer("fire_cd", TUNING.FRUITDRAGON.FIREATTACK_COOLDOWN)
 
@@ -177,7 +177,7 @@ local states=
 				end
 			end),
 
-			TimeEvent(37*FRAMES, function(inst) 
+			TimeEvent(37*FRAMES, function(inst)
 				inst.Light:Enable(false)
 				inst.DynamicShadow:Enable(true)
 				inst.sg:RemoveStateTag("busy")
@@ -194,7 +194,7 @@ local states=
 			inst.DynamicShadow:Enable(true)
 		end
     },
-	
+
 	State{
         name = "challenge_attack_pre",
         tags = {"busy", "canrotate", "caninterrupt"},

@@ -117,7 +117,7 @@ local function emit_smoke_fn(effect, sphere_emitter, adjust_vec)
     )
 end
 
-local function emit_spark_fn(effect, sphere_emitter, adjust_vec)            
+local function emit_spark_fn(effect, sphere_emitter, adjust_vec)
     local lifetime = SPARK_MAX_LIFETIME * (0.7 + math.random() * .3)
     local px, py, pz = sphere_emitter()
     if adjust_vec ~= nil then
@@ -140,13 +140,13 @@ local function emit_spark_fn(effect, sphere_emitter, adjust_vec)
     )
 end
 
-local function emit_ember_fn(effect, sphere_emitter, adjust_vec, direction)            
+local function emit_ember_fn(effect, sphere_emitter, adjust_vec, direction)
     local sz = 0.18
     local vx, vy, vz = sz * UnitRand(), 3*sz * UnitRand(), sz * UnitRand()
     vx = vx + direction.x
     vy = vy + direction.y
     vz = vz + direction.z
-    
+
     local lifetime = EMBER_MAX_LIFETIME * (0.7 + math.random() * .3)
     local px, py, pz = sphere_emitter()
     if adjust_vec ~= nil then
@@ -154,7 +154,7 @@ local function emit_ember_fn(effect, sphere_emitter, adjust_vec, direction)
         py = py + adjust_vec.y
         pz = pz + adjust_vec.z
     end
-    
+
     local uv_offset = math.random(0, 3) * .25
 
     effect:AddParticleUV(
@@ -247,7 +247,7 @@ local function fn()
             if mount == nil then
                 local attack_playing = parent.AnimState:IsCurrentAnimation("atk")
                 local anim_time = parent.AnimState:GetCurrentAnimationTime()
-            
+
 
                 if attack_playing then
                     if anim_time > 0.13 and burst_state == 0 then
@@ -262,7 +262,7 @@ local function fn()
                     local num_to_emit_smoke = 15
                     local num_to_emit_spark = 1
                     local num_to_emit_ember = 25
-                    
+
                     local adjust_vec = nil
                     if parent.AnimState:GetCurrentFacing() == 1 then
                         --Do custom positioning
@@ -273,7 +273,7 @@ local function fn()
                         emit_smoke_fn(effect, smoke_sphere_emitter, adjust_vec)
                         num_to_emit_smoke = num_to_emit_smoke - 1
                     end
-                    
+
                     while num_to_emit_spark > 0 do
                         emit_spark_fn(effect, spark_sphere_emitter, adjust_vec)
                         num_to_emit_spark = num_to_emit_spark - 1

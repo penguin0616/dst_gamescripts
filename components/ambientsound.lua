@@ -17,7 +17,7 @@ local easing = require("easing")
 local HALF_TILES = 5
 local MAX_MIX_SOUNDS = 3
 local WAVE_VOLUME_SCALE = 3 / (HALF_TILES * HALF_TILES * 8)
-local WAVE_SOUNDS = { 
+local WAVE_SOUNDS = {
     ["autumn"] = "dontstarve/AMB/waves",
     ["winter"] = "dontstarve/AMB/waves_winter",
     ["spring"] = "dontstarve/AMB/waves",--"dontstarve_DLC001/spring/springwaves",
@@ -41,13 +41,13 @@ local AMBIENT_SOUNDS =
     [GROUND.CHECKER] = {sound = "dontstarve/AMB/chess", wintersound = "dontstarve/AMB/chess_winter", springsound = "dontstarve/AMB/chess", summersound = "dontstarve_DLC001/AMB/chess_summer", rainsound = "dontstarve_DLC001/AMB/chess_summer"},--springsound = "dontstarve_DLC001/spring/springchessAMB", summersound = "dontstarve_DLC001/AMB/chess_summer", rainsound = "dontstarve_DLC001/AMB/chess_summer"},
     [GROUND.METEOR] = {sound = "turnoftides/together_amb/moon_island/fall", wintersound = "turnoftides/together_amb/moon_island/winter", springsound = "turnoftides/together_amb/moon_island/spring", summersound = "turnoftides/together_amb/moon_island/summer", rainsound = "dontstarve_DLC001/AMB/chess_summer"},
     [GROUND.PEBBLEBEACH] = {sound = "turnoftides/together_amb/moon_island/fall", wintersound = "turnoftides/together_amb/moon_island/winter", springsound = "turnoftides/together_amb/moon_island/spring", summersound = "turnoftides/together_amb/moon_island/summer", rainsound = "dontstarve/AMB/badland_rain"},--springsound = "dontstarve_DLC001/spring/springbadlandAMB", summersound = "dontstarve_DLC001/AMB/badland_summer", rainsound = "dontstarve/AMB/badland_rain"},
-    [GROUND.SHELLBEACH] = {sound = "hookline_2/amb/hermit_island", wintersound = "hookline_2/amb/hermit_island", springsound = "hookline_2/amb/hermit_island", summersound = "hookline_2/amb/hermit_island", rainsound = "hookline_2/amb/hermit_island"},--springsound = "dontstarve_DLC001/spring/springbadlandAMB", summersound = "dontstarve_DLC001/AMB/badland_summer", rainsound = "dontstarve/AMB/badland_rain"},    
+    [GROUND.SHELLBEACH] = {sound = "hookline_2/amb/hermit_island", wintersound = "hookline_2/amb/hermit_island", springsound = "hookline_2/amb/hermit_island", summersound = "hookline_2/amb/hermit_island", rainsound = "hookline_2/amb/hermit_island"},--springsound = "dontstarve_DLC001/spring/springbadlandAMB", summersound = "dontstarve_DLC001/AMB/badland_summer", rainsound = "dontstarve/AMB/badland_rain"},
     [GROUND.CAVE] = {sound = "dontstarve/AMB/caves/main"},
 
     [GROUND.FUNGUS] = { sound = "dontstarve/AMB/caves/fungus_forest" },
     [GROUND.FUNGUSRED] = { sound = "dontstarve/AMB/caves/fungus_forest" },
     [GROUND.FUNGUSGREEN] = { sound = "dontstarve/AMB/caves/fungus_forest" },
-    
+
     [GROUND.ARCHIVE] = {sound = "grotto/amb/archive"},
     [GROUND.FUNGUSMOON] = {sound = "grotto/amb/grotto"},
 
@@ -70,7 +70,7 @@ local AMBIENT_SOUNDS =
 
     [GROUND.LAVAARENA_FLOOR] = { sound = "dontstarve/AMB/lava_arena/arena_day" },
     [GROUND.LAVAARENA_TRIM] = { sound = "dontstarve/AMB/lava_arena/arena_day" },
-	
+
     [GROUND.QUAGMIRE_PEATFOREST] = {sound = "dontstarve/AMB/quagmire/peat_forest"},
     [GROUND.QUAGMIRE_PARKFIELD] = {sound = "dontstarve/AMB/quagmire/park_field"},
     [GROUND.QUAGMIRE_PARKSTONE] = {sound = "dontstarve/AMB/quagmire/park_field"},
@@ -78,7 +78,7 @@ local AMBIENT_SOUNDS =
     [GROUND.QUAGMIRE_SOIL] = {sound = "dontstarve/AMB/quagmire/city_stone"},
     [GROUND.QUAGMIRE_CITYSTONE] = {sound = "dontstarve/AMB/quagmire/city_stone"},
 
-    ABYSS = { sound = "dontstarve/AMB/caves/pit" }, --- IMPASSABLE 
+    ABYSS = { sound = "dontstarve/AMB/caves/pit" }, --- IMPASSABLE
     VOID = { sound = "dontstarve/AMB/caves/void", wintersound = "dontstarve/AMB/caves/void", springsound="dontstarve/AMB/caves/void", summersound="dontstarve/AMB/caves/void", rainsound = "dontstarve/AMB/caves/void" },
     CIVRUINS = { sound = "dontstarve/AMB/caves/civ_ruins" },
 }
@@ -298,7 +298,7 @@ function self:OnUpdate(dt)
                 elseif tile ~= nil then
                     local soundgroup = AMBIENT_SOUNDS[tile]
                     if soundgroup ~= nil then
-                        local sound = 
+                        local sound =
                                 (_rainmix and _heavyrainmix and soundgroup.rainsound) or
                                 (_seasonmix and soundgroup[SEASON_SOUND_KEY[_seasonmix]]) or
                                 soundgroup.sound
@@ -415,7 +415,7 @@ function self:OnUpdate(dt)
     if _enlightparam ~= enlightparam then
         SetEnlightenment(enlightparam)
         _enlightparam = enlightparam
-    end    
+    end
 end
 
 --------------------------------------------------------------------------
@@ -424,10 +424,10 @@ end
 
 function self:GetDebugString()
     local str = {}
-    
+
     table.insert(str, string.format("AMBIENT SOUNDS: raining:%s heavy:%s season:%s", tostring(_rainmix), tostring(_heavyrainmix), _seasonmix))
     table.insert(str, string.format("    atten=%2.2f, day=%2.2f, waves=%2.2f", _ambientvolume, _daytimeparam, _wavesvolume))
-    
+
     for k, v in pairs(_soundvolumes) do
         table.insert(str, string.format("\t%s = %2.2f", k, v))
     end

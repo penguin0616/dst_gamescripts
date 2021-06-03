@@ -49,7 +49,7 @@ local function fn()
     end
 
     inst:AddComponent("stackable")
-    inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM    
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM
     inst:AddComponent("inspectable")
 
     inst:AddComponent("fuel")

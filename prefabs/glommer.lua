@@ -32,8 +32,8 @@ local function ShouldWakeUp(inst)
 end
 
 local function ShouldSleep(inst)
-    return DefaultSleepTest(inst) 
-        and inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE) 
+    return DefaultSleepTest(inst)
+        and inst.components.follower:IsNearLeader(SLEEP_NEAR_LEADER_DISTANCE)
         and not TheWorld.state.isfullmoon
 end
 
@@ -62,7 +62,7 @@ local function OnStopFollowing(inst)
 end
 
 local function OnStartFollowing(inst)
-    if inst.components.follower.leader:HasTag("glommerflower") then 
+    if inst.components.follower.leader:HasTag("glommerflower") then
         inst:AddTag("companion")
     end
 end

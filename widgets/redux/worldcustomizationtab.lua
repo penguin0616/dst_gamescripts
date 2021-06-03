@@ -171,18 +171,18 @@ local WorldCustomizationTab = Class(Widget, function(self, tab_location_index, s
                         if not ShardSaveGameIndex:IsSlotEmpty(self.slot) then
                             TheFrontEnd:PushScreen(
                                 PopupDialogScreen(action, STRINGS.UI.SANDBOXMENU.ADDLEVEL_EXISTINGWARNING,
-                                { 
-                                    { 
-                                        text = action, 
+                                {
+                                    {
+                                        text = action,
                                         cb = function()
                                             TheFrontEnd:PopScreen()
                                             addmultilevel()
                                         end
                                     },
-                                    { 
-                                        text = STRINGS.UI.SERVERCREATIONSCREEN.CANCEL, 
+                                    {
+                                        text = STRINGS.UI.SERVERCREATIONSCREEN.CANCEL,
                                         cb = function()
-                                            TheFrontEnd:PopScreen()                 
+                                            TheFrontEnd:PopScreen()
                                         end
                                     }
                                 }
@@ -204,13 +204,13 @@ local WorldCustomizationTab = Class(Widget, function(self, tab_location_index, s
 	self.sublevel_adder_overlay.body:SetPosition(0, 60)
 
 	self.autoaddcaves = self.sublevel_adder_overlay:AddChild(TEMPLATES.LabelCheckbox(
-			function(w) 
+			function(w)
 				w.checked = not w.checked
 				Profile:SetAutoCavesEnabled(w.checked)
 				Profile:Save()
 				w:Refresh()
-			end, 
-			Profile:GetAutoCavesEnabled(), 
+			end,
+			Profile:GetAutoCavesEnabled(),
 			string.format(STRINGS.UI.SANDBOXMENU.AUTOADDLEVEL, tabname)))
 
 	local text_width = self.autoaddcaves.text:GetRegionSize()

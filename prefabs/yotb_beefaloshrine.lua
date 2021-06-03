@@ -3,7 +3,7 @@ require "prefabutil"
 local assets =
 {
     Asset("ANIM", "anim/yotb_beefaloshrine.zip"),
-    Asset("INV_IMAGE", "yotb_beefaloshrine"),    
+    Asset("INV_IMAGE", "yotb_beefaloshrine"),
 }
 
 local prefabs =
@@ -167,7 +167,7 @@ local function onsave(inst, data)
     end
 end
 
-local function onload(inst, data)   
+local function onload(inst, data)
     if data ~= nil and data.burnt then
         inst.components.burnable.onburnt(inst)
     elseif data ~= nil and data.offering ~= nil then
@@ -262,9 +262,9 @@ local function fn()
     inst:ListenForEvent("yotb_contestfinished", function() PrizeChange(inst) end, TheWorld)
 
     inst:ListenForEvent("ondeconstructstructure", DropOffering)
-    
+
     inst.AnimState:Hide("idol2")
-    inst.AnimState:Hide("offering") 
+    inst.AnimState:Hide("offering")
 
     inst:DoTaskInTime(0,function() PrizeChange(inst) end)
     return inst

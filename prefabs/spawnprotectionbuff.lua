@@ -3,7 +3,7 @@ local assets = 	{
     Asset("ANIM", "anim/spawnprotectionbuff.zip"),
 }
 
-local prefabs = 
+local prefabs =
 {
 	"battlesong_instant_panic_fx",
 }
@@ -48,12 +48,12 @@ local function buff_OnAttached(inst, target)
 	inst.entity:SetParent(target.entity)
 
 	inst.spawn_pt = target:GetPosition()
-	
+
 	inst.fx = SpawnFx(target)
 
 	inst.expire_task = inst:DoTaskInTime(TUNING.SPAWNPROTECTIONBUFF_IDLE_DURATION, start_exipiring)
 	inst.check_dist_task = inst:DoPeriodicTask(0.25, check_dist_from_spawnpt, nil, target)
-	
+
 	inst:OnEnableProtectionFn(target, true)
 
 --[[

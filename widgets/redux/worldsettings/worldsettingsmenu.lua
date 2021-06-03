@@ -32,7 +32,7 @@ local WorldSettingsMenu = Class(Widget, function(self, levelcategory, parent_wid
     end
 
     self.combined = self.multipresetbox:AddChild(Widget("combined"))
-    
+
     local tab_tint_width = 250
     local tab_tint_height = 60
 

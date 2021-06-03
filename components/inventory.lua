@@ -570,7 +570,7 @@ function Inventory:GetNextAvailableSlot(item)
                 end
             end
         end
-        
+
         if prioritize_container and inv_slot and inv_pref then
             return inv_slot, inv_pref
         end
@@ -756,7 +756,7 @@ function Inventory:GiveItem(inst, slot, src_pos)
 
         local leftovers = nil
         if overflow ~= nil and container == overflow then
-            local itemInSlot = overflow:GetItemInSlot(slot) 
+            local itemInSlot = overflow:GetItemInSlot(slot)
             if itemInSlot then
                 leftovers = itemInSlot.components.stackable:Put(inst, src_pos)
             else
@@ -1556,7 +1556,7 @@ function Inventory:ControllerUseItemOnSelfFromInvTile(item, actioncode, mod_name
         self:CanAccessItem(item) and
         self.inst.components.playercontroller ~= nil then
         local act = nil
-        
+
         SetClientRequestedAction(actioncode, mod_name)
         if not (item.components.equippable ~= nil and item.components.equippable:IsEquipped()) then
             act = self.inst.components.playercontroller:GetItemSelfAction(item)
@@ -1779,7 +1779,7 @@ function Inventory:GetEquippedMoistureRate(slot)
     end
     return moisture, max
 end
- 
+
 function Inventory:GetWaterproofness(slot)
     if self.inst.components.moisture ~= nil and self.inst.components.moisture:GetWaterproofInventory() then
         return 1
@@ -1795,7 +1795,7 @@ function Inventory:GetWaterproofness(slot)
     else
         for k,v in pairs(self.equipslots) do
             if v and v.components.waterproofer then
-                waterproofness = waterproofness + v.components.waterproofer:GetEffectiveness()  
+                waterproofness = waterproofness + v.components.waterproofer:GetEffectiveness()
             end
         end
     end

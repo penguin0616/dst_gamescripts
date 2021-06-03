@@ -1249,6 +1249,16 @@ table.insert(prefs, CreatePrefabSkin("cookpot_tureen",
 	release_group = 43,
 }))
 
+table.insert(prefs, CreatePrefabSkin("dragonflychest_kraken",
+{
+	base_prefab = "dragonflychest",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) dragonflychest_init_fn(inst, "dragonflychest_kraken") end,
+	skin_tags = { "DRAGONFLYCHEST", "NAUTICAL", "CRAFTABLE", },
+	release_group = 119,
+}))
+
 table.insert(prefs, CreatePrefabSkin("dragonflyfurnace_antique",
 {
 	base_prefab = "dragonflyfurnace",
@@ -1391,6 +1401,16 @@ table.insert(prefs, CreatePrefabSkin("endtable_carpet",
 	skin_tags = { "ENDTABLE", "CRAFTABLE", },
 	marketable = true,
 	release_group = 18,
+}))
+
+table.insert(prefs, CreatePrefabSkin("endtable_cawnival",
+{
+	base_prefab = "endtable",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) endtable_init_fn(inst, "endtable_cawnival") end,
+	skin_tags = { "ENDTABLE", "CRAFTABLE", },
+	release_group = 119,
 }))
 
 table.insert(prefs, CreatePrefabSkin("endtable_dragonfly",

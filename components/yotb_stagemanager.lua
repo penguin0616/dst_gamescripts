@@ -64,7 +64,7 @@ function YOTB_StageManager:OnStageBuilt(stage)
 end
 
 function YOTB_StageManager:OnStageDestroyed(stage)
-	
+
 	self.inst:RemoveEventCallback("conteststarted", conteststarted, stage)
 	self.inst:RemoveEventCallback("contestcheckpoint", contestcheckpoint, stage)
 --	self.inst:RemoveEventCallback("contestfinished", contestfinished, stage)

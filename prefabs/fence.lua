@@ -15,7 +15,7 @@ local function CalcRotationEnum(rot)
 end
 
 local function CalcFacingAngle(rot)
-    return CalcRotationEnum(rot) * 45 
+    return CalcRotationEnum(rot) * 45
 end
 
 local function IsNarrow(inst)
@@ -135,7 +135,7 @@ local function SetOrientation(inst, rotation)
     inst.Transform:SetRotation(rotation)
 
     if inst.anims.narrow then
-        
+
         if IsNarrow(inst) then
             if not inst.bank_narrow_set then
                 inst.bank_narrow_set = true
@@ -191,7 +191,7 @@ local function RefreshDoorOffset(inst)
     if otherdoor and do_offset == false then
         do_offset = _calcdooroffset(otherdoor)
     end
-    
+
     if inst.offsetdoor ~= do_offset then
         inst.offsetdoor = do_offset
         ApplyDoorOffset(inst)
@@ -231,7 +231,7 @@ local function FixUpFenceOrientation(inst, deployedrotation)
         neighbor_index = neighbor_index + 1
         neighbor = neighbors[neighbor_index]
     end
-        
+
     if neighbor == nil then
         --no fence/gates, try the first item again it should be a wall
         rot = inst.Transform:GetRotation()
@@ -433,7 +433,7 @@ local function onload(inst, data)
         inst.offsetdoor = data.offsetdoor
 
         if inst._isswingright ~= nil then
-            SetIsSwingRight(inst, data.swingright or (data.doorpairside == 2)) -- data.doorpairside is deprecated v2, swingright is v3 
+            SetIsSwingRight(inst, data.swingright or (data.doorpairside == 2)) -- data.doorpairside is deprecated v2, swingright is v3
         end
 
         local rotation = 0
@@ -661,7 +661,7 @@ local function MakeInvItem(name, placement, animdata, isdoor)
     }
 
     local function ondeploywall(inst, pt, deployer, rot )
-        local wall = SpawnPrefab(placement, inst.linked_skinname, inst.skin_id ) 
+        local wall = SpawnPrefab(placement, inst.linked_skinname, inst.skin_id )
         if wall ~= nil then
             local x = math.floor(pt.x) + .5
             local z = math.floor(pt.z) + .5
@@ -760,7 +760,7 @@ local function MakeWallPlacer(placer, placement, anims, isdoor)
         anims.wide,
         anims.wide,
         not isdoor and "idle" or nil,
-        nil, nil, true, nil, 0, "eight", 
+        nil, nil, true, nil, 0, "eight",
         function(inst)
             inst.components.placer.onupdatetransform = placerupdate
             inst.anims = anims

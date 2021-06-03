@@ -59,7 +59,7 @@ local function attack_behaviour(inst, target)
             return false
         end
     else
-        if target.components.sanity ~= nil then 
+        if target.components.sanity ~= nil then
             target.components.sanity:DoDelta(TUNING.GESTALT_ATTACK_DAMAGE_SANITY)
         end
 

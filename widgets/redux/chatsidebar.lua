@@ -38,10 +38,10 @@ function ChatSidebar:_BlockScroll(widget, control, down)
     local mouseX = TheInput:GetScreenPosition().x
     local w,h = TheSim:GetScreenSize()
 
-    if mouseX and mouseX < (w*.2) then 
+    if mouseX and mouseX < (w*.2) then
         if down then
             -- Eat scroll commands so the character list doesn't scroll when the mouse is over the sidebar
-            if control == CONTROL_SCROLLBACK or control == CONTROL_SCROLLFWD then 
+            if control == CONTROL_SCROLLBACK or control == CONTROL_SCROLLFWD then
                 return true
             end
         end
@@ -118,10 +118,10 @@ function ChatSidebar:BuildChatWindow()
     self:MakeTextEntryBox(self.chat_pane)
 
     self.chatqueue = self.chat_pane:AddChild(LobbyChatQueue(TheNet:GetUserID(), self.chatbox.textbox, function() --[[TODO: put sounds back in!]] end))
-    self.chatqueue:SetPosition(42,-25) 
+    self.chatqueue:SetPosition(42,-25)
 
     self.chat_pane:SetPosition(70,320)
-    
+
     self.chatbox:MoveToFront()
 end
 

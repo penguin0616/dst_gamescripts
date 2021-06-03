@@ -326,7 +326,7 @@ local function fn()
 end
 
 local function onruinsrespawn(inst)
-	inst.sg:GoToState("lure_enter") 
+	inst.sg:GoToState("lure_enter")
 end
 
 return Prefab("worm", fn, assets, prefabs),

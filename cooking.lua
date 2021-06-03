@@ -1,6 +1,6 @@
 require "tuning"
 
-local official_foods = {} 
+local official_foods = {}
 
 local cookerrecipes = {}
 
@@ -167,7 +167,7 @@ local foods = require("preparedfoods")
 for k,recipe in pairs (foods) do
 	AddCookerRecipe("cookpot", recipe)
 	AddCookerRecipe("portablecookpot", recipe)
-	AddCookerRecipe("archive_cookpot", recipe)	
+	AddCookerRecipe("archive_cookpot", recipe)
 end
 
 local portable_foods = require("preparedfoods_warly")
@@ -184,7 +184,7 @@ local nonfoods = require("preparednonfoods")
 for k, recipe in pairs(nonfoods) do
     AddCookerRecipe("cookpot", recipe)
     AddCookerRecipe("portablecookpot", recipe)
-    AddCookerRecipe("archive_cookpot", recipe)	
+    AddCookerRecipe("archive_cookpot", recipe)
 end
 
 local function GetIngredientValues(prefablist)

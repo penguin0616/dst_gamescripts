@@ -3,7 +3,7 @@ local PotionCommon = require "prefabs/halloweenpotion_common"
 
 local potion_tunings =
 {
-	halloweenpotion_health_small = 
+	halloweenpotion_health_small =
 	{
         HEALTH = TUNING.HEALING_MEDSMALL,
 		TICK_RATE = 2,
@@ -12,7 +12,7 @@ local potion_tunings =
         FUEL = TUNING.SMALL_FUEL,
         FLOATER = {"small", 0.15, 0.55},
 	},
-	halloweenpotion_health_large = 
+	halloweenpotion_health_large =
 	{
         HEALTH = TUNING.HEALING_MED,
 		TICK_RATE = 2,
@@ -21,7 +21,7 @@ local potion_tunings =
         FUEL = TUNING.MED_FUEL,
         FLOATER = {"small", 0.15, 0.8},
 	},
-	halloweenpotion_sanity_small = 
+	halloweenpotion_sanity_small =
 	{
         SANITY = TUNING.SANITY_TINY,
 		TICK_RATE = 2,
@@ -30,7 +30,7 @@ local potion_tunings =
         FUEL = TUNING.SMALL_FUEL,
         FLOATER = {"small", 0.1, 0.5},
 	},
-	halloweenpotion_sanity_large = 
+	halloweenpotion_sanity_large =
 	{
         SANITY = TUNING.SANITY_MED,
 		TICK_RATE = 2,
@@ -39,14 +39,14 @@ local potion_tunings =
         FUEL = TUNING.MED_FUEL,
         FLOATER = {"small", 0.2, 0.4},
 	},
-	halloweenpotion_bravery_small = 
+	halloweenpotion_bravery_small =
 	{
 		DURATION = TUNING.TOTAL_DAY_TIME * .5,
         FUEL = TUNING.SMALL_FUEL,
 		WISECRACKER = "ANNOUNCE_BRAVERY_POTION",
         FLOATER = {"small", 0.15, 0.75},
 	},
-	halloweenpotion_bravery_large = 
+	halloweenpotion_bravery_large =
 	{
 		DURATION = TUNING.TOTAL_DAY_TIME * .75,
         FUEL = TUNING.MED_FUEL,
@@ -220,7 +220,7 @@ local function AddPotion(potions, name, size, buff_dodelta_fn, nameoverride_post
 	local buff_id = "halloweenpotion_"..name.."_buff"
     local nameoverride = nameoverride_postfix ~= nil and ("halloweenpotion_drinks_"..nameoverride_postfix) or ("halloweenpotion_"..name)
 
-	local assets = JoinArrays(PotionCommon.assets, 
+	local assets = JoinArrays(PotionCommon.assets,
 	{
 		Asset("ANIM", "anim/halloween_potions.zip"),
 		Asset("SCRIPT", "scripts/prefabs/halloweenpotion_common.lua"),
@@ -229,7 +229,7 @@ local function AddPotion(potions, name, size, buff_dodelta_fn, nameoverride_post
 
 	local function _buff_fn() return buff_fn(potion_tunings[potion_prefab], buff_dodelta_fn) end
 	local function _potion_fn() return potion_fn(name .. "_" .. size, potion_tunings[potion_prefab], buff_id, buff_prefab, nameoverride) end
-		
+
 	table.insert(potions, Prefab(potion_prefab, _potion_fn, assets, prefabs))
 	table.insert(potions, Prefab(buff_prefab, _buff_fn))
 end

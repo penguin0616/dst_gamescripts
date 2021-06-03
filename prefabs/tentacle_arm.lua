@@ -73,7 +73,7 @@ local function ShouldKeepTarget(inst, target)
         and target:IsNear(inst, TUNING.TENTACLE_PILLAR_ARM_STOPATTACK_DIST)
 end
 
-local function OnHit(inst, attacker, damage) 
+local function OnHit(inst, attacker, damage)
     if attacker.components.combat and not attacker:HasTag("player") and math.random() > 0.5 then
         -- Followers should stop hitting the pillar
         attacker.components.combat:SetTarget(nil)

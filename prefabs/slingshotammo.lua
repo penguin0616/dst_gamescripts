@@ -16,7 +16,7 @@ local function ImpactFx(inst, attacker, target)
     if target ~= nil and target:IsValid() then
 		local impactfx = SpawnPrefab(inst.ammo_def.impactfx)
 		impactfx.Transform:SetPosition(target.Transform:GetWorldPosition())
-				
+
 		if inst.ammo_def.hit_sound ~= nil then
 			inst.SoundEmitter:PlaySound(inst.ammo_def.hit_sound)
 		end
@@ -77,7 +77,7 @@ local function OnHit_Thulecite(inst, attacker, target)
 		SpawnShadowTentacle(target, pt, theta)
     end
 
-    inst:Remove() 
+    inst:Remove()
 end
 
 local function onloadammo_ice(inst, data)
@@ -142,7 +142,7 @@ end
 
 local function OnHit_Distraction(inst, attacker, target)
 	ImpactFx(inst, attacker, target)
- 
+
 	if target ~= nil and target:IsValid() and target.components.combat ~= nil then
 		local targets_target = target.components.combat.target
 		if targets_target == nil or targets_target == attacker then
@@ -202,7 +202,7 @@ local function projectile_fn(ammo_def)
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(ammo_def.damage)
 	inst.components.weapon:SetOnAttack(OnAttack)
-	
+
 
     inst:AddComponent("projectile")
     inst.components.projectile:SetSpeed(25)
@@ -297,7 +297,7 @@ local ammo =
         hit_sound = "dontstarve/characters/walter/slingshot/marble",
 	},
 	{
-		name = "slingshotammo_thulecite", -- chance to spawn a Shadow Tentacle 
+		name = "slingshotammo_thulecite", -- chance to spawn a Shadow Tentacle
 		symbol = "thulecite",
 		onhit = OnHit_Thulecite,
 		damage = TUNING.SLINGSHOT_AMMO_DAMAGE_THULECITE,

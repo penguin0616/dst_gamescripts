@@ -356,8 +356,8 @@ function CraftTabs:OpenControllerCrafting()
 
     if not self.controllercraftingopen then
         self.controllercraftingopen = true
-        self.crafting:Close()   
-        self.controllercrafting:Open()  
+        self.crafting:Close()
+        self.controllercrafting:Open()
     end
 end
 

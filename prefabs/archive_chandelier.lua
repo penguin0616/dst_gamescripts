@@ -2,10 +2,10 @@ local assets =
 {
     Asset("ANIM", "anim/chandelier_archives.zip"),
     Asset("ANIM", "anim/chandelier_fire.zip"),
-    
+
 }
 
-local prefabs = 
+local prefabs =
 {
     "chandelier_fire",
     "chandelier_sfx",
@@ -31,7 +31,7 @@ local light_params =
         falloff = .6,
         colour = { 131/255, 194/255, 255/255 },
         time = 3,
-    },    
+    },
 
     off =
     {
@@ -46,7 +46,7 @@ local light_params =
 local FLAMEDATA = {
     "flame1",
     "flame2",
-    "flame3", 
+    "flame3",
     "flame4",
 }
 
@@ -61,11 +61,11 @@ local function firesound(inst, setting)
     if inst.sfxprop then
         if setting > 0 then
             if not inst.sfxprop.SoundEmitter:PlayingSound("firesfx") then
-                inst.sfxprop.SoundEmitter:PlaySound("grotto/common/chandelier_LP", "firesfx")    
+                inst.sfxprop.SoundEmitter:PlaySound("grotto/common/chandelier_LP", "firesfx")
             end
             inst.sfxprop.SoundEmitter:SetParameter("firesfx", "intensity", setting)
         else
-            inst.sfxprop.SoundEmitter:KillSound("firesfx")    
+            inst.sfxprop.SoundEmitter:KillSound("firesfx")
         end
     end
 end
@@ -75,14 +75,14 @@ local function pushparams(inst, params)
     inst.Light:SetIntensity(params.intensity)
     inst.Light:SetFalloff(params.falloff)
     inst.Light:SetColour(unpack(params.colour))
-    
+
     if TheWorld.ismastersim then
-        if params.intensity > 0 then                      
+        if params.intensity > 0 then
             inst.Light:Enable(true)
         else
             inst.Light:Enable(false)
         end
-        firesound(inst, params.intensity)  
+        firesound(inst, params.intensity)
     end
 end
 
@@ -115,14 +115,14 @@ local function OnUpdateLight(inst, dt)
         inst._lighttask:Cancel()
         inst._lighttask = nil
     end
-    
+
     lerpparams(inst._currentlight, inst._startlight, inst._endlight, inst._endlight.time > 0 and inst._currentlight.time / inst._endlight.time or 1)
     pushparams(inst, inst._currentlight)
-    inst.AnimState:SetLightOverride(Remap(inst._currentlight.intensity, light_params.off.intensity,light_params.on.intensity, 0,1))    
+    inst.AnimState:SetLightOverride(Remap(inst._currentlight.intensity, light_params.off.intensity,light_params.on.intensity, 0,1))
     for k, v in pairs(FLAMEDATA) do
         if inst[v] then
             local val = Remap(inst._currentlight.intensity, light_params.off.intensity,light_params.on.intensity, 0,1)
-            inst[v].AnimState:SetLightOverride(val)    
+            inst[v].AnimState:SetLightOverride(val)
             inst[v].Transform:SetScale(val,val,val)
             if inst._currentlight.intensity == 0 and val == 0 then
                 inst[v]:Remove()
@@ -152,7 +152,7 @@ local function OnLightPhaseDirty(inst)
             inst._endlight = params
             if inst._lighttask == nil then
                 inst._lighttask = inst:DoPeriodicTask(FRAMES, OnUpdateLight, nil, FRAMES)
-            end    
+            end
         end
     end
 end
@@ -167,7 +167,7 @@ local function OnSpawnTask(inst, cavephase)
 end
 
 local function updatelight(inst)
-    local archive = TheWorld.components.archivemanager    
+    local archive = TheWorld.components.archivemanager
     if inst.components.playerprox:IsPlayerClose() and (not archive or archive:GetPowerSetting())then
         if inst._lightphase:value() ~= ON then
             inst._lightphase:set(ON)
@@ -203,7 +203,7 @@ local function OnInit(inst)
             end
             pushparams(inst, inst._currentlight)
         end
-    end    
+    end
 
     inst.sfxprop = SpawnPrefab("chandelier_sfx")
     local x,y,z = inst.Transform:GetWorldPosition()
@@ -215,7 +215,7 @@ local function fn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddLight()    
+    inst.entity:AddLight()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
@@ -224,9 +224,9 @@ local function fn()
     inst.AnimState:PlayAnimation("idle", true)
 
     inst.AnimState:SetTime(math.random() * 2)
-    
+
     inst.Light:EnableClientModulation(true)
-    
+
     inst:AddTag("NOCLICK")
     inst:AddTag("FX")
     inst:AddTag("archive_chandelier")
@@ -276,11 +276,11 @@ local function firefxfn()
     inst.AnimState:SetBank("chandelier_fire")
     inst.AnimState:SetBuild("chandelier_fire")
     inst.AnimState:PlayAnimation("idle", true)
-    
+
     inst:AddTag("NOCLICK")
     inst:AddTag("FX")
 
-    inst.persists = false 
+    inst.persists = false
 
     inst.entity:SetPristine()
 
@@ -297,11 +297,11 @@ local function soundfn()
     inst.entity:AddTransform()
     inst.entity:AddNetwork()
     inst.entity:AddSoundEmitter()
-    
+
     inst:AddTag("NOCLICK")
     inst:AddTag("FX")
 
-    inst.persists = false 
+    inst.persists = false
 
     inst.entity:SetPristine()
 

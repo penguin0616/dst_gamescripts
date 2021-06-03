@@ -32,7 +32,7 @@ local ScriptErrorWidget = Class(Widget, function(self, title, text, buttons, tex
     self.root:SetPosition(0,0,0)
     self.root:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-    --title 
+    --title
     self.title = self.root:AddChild(Text(TITLEFONT, 50))
     self.title:SetPosition(0, 170, 0)
     self.title:SetString(title)

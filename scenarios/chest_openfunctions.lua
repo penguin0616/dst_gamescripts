@@ -1,7 +1,7 @@
 local function sanitydelta(inst, scenariorunner, data) --Changes sanity up or down
 	local tar = data.doer or data.worker
 
-	if not tar then 
+	if not tar then
 		return
 	end
 
@@ -14,7 +14,7 @@ end
 local function hungerdelta(inst, scenariorunner, data) --Changes hunger up or down
 	local tar = data.doer or data.worker
 
-	if not tar then 
+	if not tar then
 		return
 	end
 
@@ -27,7 +27,7 @@ end
 local function healthdelta(inst, scenariorunner, data) --Changes health (For the better! We don't want the player to die from this)
 	local tar = data.doer or data.worker
 
-	if not tar then 
+	if not tar then
 		return
 	end
 
@@ -40,7 +40,7 @@ end
 local function inventorydelta(inst, scenariorunner, data) --Does some sort of effect on an item in your inventory
 	local tar = data.doer or data.worker
 
-	if not tar then 
+	if not tar then
 		return
 	end
 
@@ -64,7 +64,7 @@ local function inventorydelta(inst, scenariorunner, data) --Does some sort of ef
 			item.components.armor:SetPercent(math.min(GetRandomWithVariance(item.components.armor:GetPercent(), 0.2)))
 		else
 			local items = inv:FindItems(function(item) return item.components.fueled end)
-			local item = GetRandomItem(items)			
+			local item = GetRandomItem(items)
 			if not item then return end
 			item.components.fueled:SetPercent(math.min(GetRandomWithVariance(item.components.fueled:GetPercent(), 0.2)))
 		end
@@ -87,12 +87,12 @@ local function summonmonsters(inst, scenariorunner, data)
     local radius = 4
     local steps = 12
     local ground = TheWorld
-    
+
 
     for i = 1, steps do
         local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
         local wander_point = pt + offset
-       
+
         if ground.Map and ground.Map:GetTileAtPoint(wander_point.x, wander_point.y, wander_point.z) ~= GROUND.IMPASSABLE then
         	local spawn = SpawnPrefab(monster)
             spawn.Transform:SetPosition( wander_point.x, wander_point.y, wander_point.z )

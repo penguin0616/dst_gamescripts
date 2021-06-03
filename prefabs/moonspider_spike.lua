@@ -23,7 +23,7 @@ local function shouldhit(inst, target)
 	end
 
 	-- other player's and their followers
-	if inst.spider_leader_isplayer and not TheNet:GetPVPEnabled() 
+	if inst.spider_leader_isplayer and not TheNet:GetPVPEnabled()
 		and (target:HasTag("player") or (target.components.follower ~= nil and target.components.follower.leader ~= nil and target.components.follower.leader:HasTag("player"))) then
 		return false
 	end
@@ -32,7 +32,7 @@ local function shouldhit(inst, target)
     if inst.spider_leader ~= nil then
         return not (inst.spider_leader == target or (target.components.follower ~= nil and target.components.follower.leader == inst.spider_leader))
     end
-	
+
 	return not target:HasTag("spider_moon")
 end
 

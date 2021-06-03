@@ -291,7 +291,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", onbuilt)
 	inst:ListenForEvent("ondeconstructstructure", ondeconstructstructure)
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     return inst

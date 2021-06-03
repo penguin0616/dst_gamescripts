@@ -17,16 +17,16 @@ local function updateinvimage(inst, owner)
             (inst._container.components.equippable and inst._container.components.equippable:IsEquipped()) then
             inst:RemoveEventCallback("unequipped", inst._onunequipped, inst._container)
         end
-        
+
 
         inst._container = owner
         local grand_owner = owner.components.inventoryitem and owner.components.inventoryitem:GetGrandOwner()
-        
+
         -- We've been put on an already equipped backpack
         if owner.components.equippable ~= nil and owner.components.equippable:IsEquipped() and grand_owner ~= nil then
             owner = grand_owner
             inst:ListenForEvent("unequipped", inst._onunequipped, inst._container)
-        
+
         -- We've been put on an unnequipped backpack
         elseif owner.components.equippable ~= nil then
             inst:ListenForEvent("equipped", inst._onequipped, inst._container)
@@ -51,11 +51,11 @@ local function updateinvimage(inst, owner)
 
         inst._owner = owner
         oninspirationdelta(inst)
-        
+
         if not inst._owner:HasTag("backpack") then
             inst:ListenForEvent("inspirationdelta", inst._oninspirationdelta, owner)
         end
-    
+
     elseif not owner and inst._owner then
         if not inst._owner:HasTag("backpack") then
             inst:RemoveEventCallback("inspirationdelta", inst._oninspirationdelta, inst._owner)
@@ -91,7 +91,7 @@ local function song_fn(songdata, prefabname)
     MakeInventoryFloatable(inst)
 
     inst:AddTag("battlesong")
-    
+
     inst.songdata = songdata
 
     inst.entity:SetPristine()
@@ -116,7 +116,7 @@ local function song_fn(songdata, prefabname)
     inst.components.fuel.fuelvalue = TUNING.SMALL_FUEL
 
     MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
-    
+
     inst._oninspirationdelta = function(owner) oninspirationdelta(inst) end
     inst._onequipped = function(container, data) onequipped(inst, container, data.owner) end
     inst._onunequipped = function(container, data) onunequipped(inst, container) end
@@ -160,9 +160,9 @@ end
 local function CheckForLoopFx(inst, target)
 
     -- Only display the fx on the targets rather than the singers
-    if inst.songdata.LOOP_FX and target.battlesong_fx_task == nil and 
+    if inst.songdata.LOOP_FX and target.battlesong_fx_task == nil and
         (target.components.singinginspiration == nil or not target.components.singinginspiration:IsSinging()) then
-        
+
         target.battlesong_fx_task = inst:DoPeriodicTask(4 + math.random(), function()
             -- If the target is a singer and suddenly starts singing we want the trebleclef fx to vanish
             if target.components.singinginspiration ~= nil and target.components.singinginspiration:IsSinging() then
@@ -195,7 +195,7 @@ end
 local function buff_OnAttached(inst, target)
 	inst.entity:SetParent(target.entity)
 	inst.Transform:SetPosition(0, 0, 0) --in case of loading
-	
+
 	if inst.songdata.ONAPPLY ~= nil then
 		inst.songdata.ONAPPLY(inst, target)
 	end
@@ -206,7 +206,7 @@ local function buff_OnAttached(inst, target)
 
 	inst.expire_time = GetTime() + TUNING.SONG_REFRESH_PERIOD
 	inst.task = inst:DoPeriodicTask(TUNING.SONG_REFRESH_PERIOD, buff_OnTick, TUNING.SONG_REFRESH_PERIOD + math.random(), target)
-        
+
     if target.battlesong_count == nil then
         target.battlesong_count = 0
     end

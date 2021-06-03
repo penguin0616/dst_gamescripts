@@ -25,7 +25,7 @@ AddRoom("Plain", {
 					                {
 					                	rock1 = 0.05,
 					                    perma_grass = 0.5,
-					                    rabbithole= 0.25, 
+					                    rabbithole= 0.25,
 					                    green_mushroom = .005,
 					                },
 					            }

@@ -78,10 +78,10 @@ local ScrollableList = Class(Widget, function(self, items, listwidth, listheight
     self.up_button:SetScale(self.scrollbar_style.scale)
     local handle_scale = bar_width_scale_factor * self.scrollbar_style.scale
     self.up_button:SetPosition(self.width/2, self.height/2-10, 0)
-    self.up_button:SetWhileDown( function() 
+    self.up_button:SetWhileDown( function()
         if not self.last_up_button_time or GetTime() - self.last_up_button_time > button_repeat_time then
             self.last_up_button_time = GetTime()
-            self:Scroll(-scroll_per_click, true) 
+            self:Scroll(-scroll_per_click, true)
         end
     end)
     self.up_button:SetOnClick( function()
@@ -89,14 +89,14 @@ local ScrollableList = Class(Widget, function(self, items, listwidth, listheight
     end)
     -- self.up_button:StartUpdating()
 
-    
+
     self.down_button = self.scroll_bar_container:AddChild(ImageButton(self.scrollbar_style.atlas, self.scrollbar_style.down))
     self.down_button:SetScale(self.scrollbar_style.scale)
     self.down_button:SetPosition(self.width/2, -self.height/2+10, 0)
-    self.down_button:SetWhileDown( function() 
+    self.down_button:SetWhileDown( function()
         if not self.last_down_button_time or GetTime() - self.last_down_button_time > button_repeat_time then
             self.last_down_button_time = GetTime()
-            self:Scroll(scroll_per_click, true) 
+            self:Scroll(scroll_per_click, true)
         end
     end)
     self.down_button:SetOnClick( function()
@@ -114,10 +114,10 @@ local ScrollableList = Class(Widget, function(self, items, listwidth, listheight
     self.scroll_bar.scale_on_focus = false
     self.scroll_bar.move_on_click = false
     self.scroll_bar:SetPosition(self.width/2, 0)
-    self.scroll_bar:SetOnDown( function() 
+    self.scroll_bar:SetOnDown( function()
         self.page_jump = true
     end)
-    self.scroll_bar:SetOnClick( function() 
+    self.scroll_bar:SetOnClick( function()
         if self.position_marker and self.page_jump then
             local marker = self.position_marker:GetWorldPosition()
             if TheFrontEnd.lasty >= marker.y then
@@ -135,15 +135,15 @@ local ScrollableList = Class(Widget, function(self, items, listwidth, listheight
     self.position_marker:SetPosition(self.width/2, self.height/2 - arrow_button_size, 0)
     local handle_scale = bar_width_scale_factor * self.scrollbar_style.scale
     self.position_marker:SetScale(handle_scale, handle_scale, 1)
-    self.position_marker:SetOnDown( function() 
+    self.position_marker:SetOnDown( function()
         self.do_dragging = true
         self.y_adjustment = 0
     end)
-    self.position_marker:SetWhileDown( function() 
+    self.position_marker:SetWhileDown( function()
         if self.do_dragging then
             TheFrontEnd:LockFocus(true)
             self.dragging = true
-            self:DoDragScroll() 
+            self:DoDragScroll()
         end
     end)
     self.position_marker.OnLoseFocus = function()
@@ -151,14 +151,14 @@ local ScrollableList = Class(Widget, function(self, items, listwidth, listheight
         self.dragging = false
         self.do_dragging = false
         self.y_adjustment = 0
-        self:MoveMarkerToNearestStep() 
+        self:MoveMarkerToNearestStep()
     end
-    self.position_marker:SetOnClick( function() 
+    self.position_marker:SetOnClick( function()
         TheFrontEnd:LockFocus(false)
         self.dragging = false
         self.do_dragging = false
         self.y_adjustment = 0
-        self:MoveMarkerToNearestStep() 
+        self:MoveMarkerToNearestStep()
     end)
 
     --self.position_marker:MoveToBack()
@@ -402,9 +402,9 @@ function ScrollableList:LayOutStaticWidgets(yInitial, skipFixUp, focusChildren)
                     local controller_id = TheInput:GetControllerID()
                     local t = {}
                     if self.scroll_bar and self.scroll_bar:IsVisible() then
-                        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLBACK, false, false).."/"..TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLFWD, false, false).. " " .. STRINGS.UI.HELP.SCROLL)   
+                        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLBACK, false, false).."/"..TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLFWD, false, false).. " " .. STRINGS.UI.HELP.SCROLL)
                     end
-                    if helptextFn then 
+                    if helptextFn then
                         table.insert(t, helptextFn())
                     end
                     return table.concat(t, "  ")
@@ -450,7 +450,7 @@ function ScrollableList:DoDragScroll()
     local marker = self.position_marker:GetWorldPosition()
     if self.dragging and math.abs(TheFrontEnd.lastx - marker.x) <= DRAG_SCROLL_X_THRESHOLD then
         local pos = self:GetWorldPosition()
-	
+
 		local _,scaleY,_ = self:GetHierarchicalScale()
 
         local click_y = TheFrontEnd.lasty
@@ -478,7 +478,7 @@ function ScrollableList:DoDragScroll()
         if curr_step ~= prev_step then
             self:Scroll(prev_step - curr_step, false)
         end
-        self:MoveMarkerToNearestStep() 
+        self:MoveMarkerToNearestStep()
     end
 end
 

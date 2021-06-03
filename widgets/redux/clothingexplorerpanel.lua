@@ -25,7 +25,7 @@ local ClothingExplorerPanel = Class(Widget, function(self, owner, user_profile, 
     self.filter_bar = self:AddChild(FilterBar(self.picker, "wardrobescreen"))
     local hero_filter = GetAffinityFilterForHero(self.owner.currentcharacter)
     if filter_options ~= nil and filter_options.ignore_hero then
-        hero_filter = GetNullFilter()        
+        hero_filter = GetNullFilter()
     end
 
     if not filter_options or not filter_options.ignore_survivor then
@@ -34,7 +34,7 @@ local ClothingExplorerPanel = Class(Widget, function(self, owner, user_profile, 
     self.picker.header:AddChild( self.filter_bar:AddFilter(STRINGS.UI.WARDROBESCREEN.OWNED_FILTER_FMT, "owned_filter_on.tex", "owned_filter_off.tex", "lockedFilter", GetLockedSkinFilter()) )
     self.picker.header:AddChild( self.filter_bar:AddFilter(STRINGS.UI.WARDROBESCREEN.WEAVEABLE_FILTER_FMT, "weave_filter_on.tex", "weave_filter_off.tex", "weaveableFilter", GetWeaveableSkinFilter()) )
     self.picker.header:AddChild( self.filter_bar:AddSorter() )
-    if self.item_type == "base" or (filter_options ~= nil and filter_options.ignore_hero) or self.yotb_filter  then        
+    if self.item_type == "base" or (filter_options ~= nil and filter_options.ignore_hero) or self.yotb_filter  then
         self.filter_bar:HideFilter("heroFilter")
         self.picker.header:AddChild( self.filter_bar:AddSearch( ) )
     else

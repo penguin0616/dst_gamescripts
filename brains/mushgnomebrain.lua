@@ -46,7 +46,7 @@ function MushGnomeBrain:OnStart()
             RunAway(self.inst, THREAT_PARAMS, 5, 10),
             Wander(self.inst),
         }, 1)
-    
+
     self.bt = BT(self.inst, root)
 end
 

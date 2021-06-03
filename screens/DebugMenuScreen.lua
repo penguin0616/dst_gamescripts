@@ -60,7 +60,7 @@ end
 
 function DebugMenuScreen:OnBecomeActive()
 	DebugMenuScreen._base.OnBecomeActive(self)
-	SetPause(true,"console")	
+	SetPause(true,"console")
 
 	self.menu = menus.TextMenu(InGamePlay() and "IN GAME DEBUG MENU" or "FRONT END DEBUG MENU")
 	local main_options = {}
@@ -117,7 +117,7 @@ function DebugMenuScreen:OnBecomeActive()
 	local current = {}
 	for k = 1, #allprefabs do
 		table.insert(current, allprefabs[k])
-		
+
 		if k % PER_PAGE == 0 then
 			table.insert(spawn_lists, current)
 			current = {}
@@ -139,7 +139,7 @@ function DebugMenuScreen:OnBecomeActive()
 
 
     local weathercontrol = {
-        menus.CheckBox("Toggle Precipitation", function() return TheWorld.state.precipitation ~= "none" or TheWorld.state.moisture >= TheWorld.state.moistureceil end, 
+        menus.CheckBox("Toggle Precipitation", function() return TheWorld.state.precipitation ~= "none" or TheWorld.state.moisture >= TheWorld.state.moistureceil end,
             function(val)
                 ConsoleRemote('TheWorld:PushEvent("ms_forceprecipitation", true)')
             end),
@@ -152,13 +152,13 @@ function DebugMenuScreen:OnBecomeActive()
                 end
             end)
     }
-    
-    local languages = 
+
+    local languages =
     {
-		menus.DoAction("French", function() LOC.SwapLanguage(LANGUAGE.FRENCH) self:Close() end),	
+		menus.DoAction("French", function() LOC.SwapLanguage(LANGUAGE.FRENCH) self:Close() end),
         menus.DoAction("Spanish", function() LOC.SwapLanguage(LANGUAGE.SPANISH) self:Close() end),
         menus.DoAction("Mexican", function() LOC.SwapLanguage(LANGUAGE.SPANISH_LA) self:Close() end),
-        menus.DoAction("German", function() LOC.SwapLanguage(LANGUAGE.GERMAN) self:Close() end),	
+        menus.DoAction("German", function() LOC.SwapLanguage(LANGUAGE.GERMAN) self:Close() end),
 		menus.DoAction("Italian", function() LOC.SwapLanguage(LANGUAGE.ITALIAN) self:Close() end),
         menus.DoAction("Brazilian", function() LOC.SwapLanguage(LANGUAGE.PORTUGUESE_BR) self:Close() end),
         menus.DoAction("Polish", function() LOC.SwapLanguage(LANGUAGE.POLISH) self:Close() end),
@@ -167,15 +167,15 @@ function DebugMenuScreen:OnBecomeActive()
         menus.DoAction("Chinese (T)", function() LOC.SwapLanguage(LANGUAGE.CHINESE_T) self:Close() end),
         menus.DoAction("Chinese (S)", function() LOC.SwapLanguage(LANGUAGE.CHINESE_S) self:Close() end),
     }
-    
+
 	if InGamePlay() then
-		table.insert(main_options, menus.CheckBox("Toggle God Mode", function() return god end, function(val) god = val ConsoleRemote("c_godmode()") end))		
-		table.insert(main_options, menus.CheckBox("Toggle Reveal Map", function() return map_reveal end, 
-                                            function(val) 
-                                                map_reveal = val 
+		table.insert(main_options, menus.CheckBox("Toggle God Mode", function() return god end, function(val) god = val ConsoleRemote("c_godmode()") end))
+		table.insert(main_options, menus.CheckBox("Toggle Reveal Map", function() return map_reveal end,
+                                            function(val)
+                                                map_reveal = val
                                                 map.MiniMap:EnableFogOfWar(not map_reveal)
-                                            end))		
-		table.insert(main_options, menus.CheckBox("Toggle Free Crafting", function() return free_craft end, function(val) free_craft = val ConsoleRemote("c_freecrafting()") end))		
+                                            end))
+		table.insert(main_options, menus.CheckBox("Toggle Free Crafting", function() return free_craft end, function(val) free_craft = val ConsoleRemote("c_freecrafting()") end))
 		table.insert(main_options, menus.Submenu("Teleport", teleport))
 		table.insert(main_options, menus.Submenu("Time Control", timecontrol))
 		table.insert(main_options, menus.Submenu("Weather Control", weathercontrol))
@@ -198,7 +198,7 @@ end
 function DebugMenuScreen:OnControl(control, down)
 	if DebugMenuScreen._base.OnControl(self, control, down) then return true end
 
-	if not down and control == CONTROL_OPEN_DEBUG_MENU then 
+	if not down and control == CONTROL_OPEN_DEBUG_MENU then
 		self:Close()
 
 		return true

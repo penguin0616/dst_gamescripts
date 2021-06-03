@@ -82,7 +82,7 @@ local function createglass(name, preinit, postinit)
         if postinit then
            inst = postinit(inst)
         end
-        
+
         return inst
     end
 
@@ -108,7 +108,7 @@ local function infused_preinit(inst)
     inst.Light:SetIntensity(0.75)
     inst.Light:SetFalloff(0.5)
     inst.Light:SetRadius(1)
-    inst.Light:Enable(true)    
+    inst.Light:Enable(true)
 
     return inst
 end

@@ -136,17 +136,17 @@ end
 local function OnMermKingCreated(inst, data)
     if data and data.throne == inst then
         inst.components.workable:SetWorkable(false)
-        
+
         inst:RemoveComponent("propagator")
         inst:RemoveComponent("burnable")
-        
+
         inst.MiniMapEntity:SetIcon("merm_king_carpet_occupied.png")
     end
 end
 
 local function OnMermKingDestroyed(inst, data)
     if data and data.throne == inst then
-        
+
         if inst.components.workable then
             inst.components.workable:SetWorkable(true)
         end

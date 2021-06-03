@@ -116,13 +116,13 @@ function Wander:PickNewDirection()
         self.inst.components.locomotor:GoToPoint(self:GetHomePos())
     else
         local pt = Point(self.inst.Transform:GetWorldPosition())
-        local angle = (self.getdirectionFn and self.getdirectionFn(self.inst)) 
-       -- print("got angle ", angle) 
-        if not angle then 
+        local angle = (self.getdirectionFn and self.getdirectionFn(self.inst))
+       -- print("got angle ", angle)
+        if not angle then
             angle = math.random()*2*PI
             --print("no angle, picked", angle, self.setdirectionFn)
             if self.setdirectionFn then
-                --print("set angle to ", angle) 
+                --print("set angle to ", angle)
                 self.setdirectionFn(self.inst, angle)
             end
         end
@@ -138,7 +138,7 @@ function Wander:PickNewDirection()
         if check_angle then
             angle = check_angle
             if self.setdirectionFn then
-                --print("(second case) reset angle to ", angle) 
+                --print("(second case) reset angle to ", angle)
                 self.setdirectionFn(self.inst, angle)
             end
         else

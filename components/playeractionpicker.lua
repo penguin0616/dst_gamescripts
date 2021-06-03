@@ -134,9 +134,9 @@ end
 
 function PlayerActionPicker:GetSteeringActions(inst, pos, right)
     if not self.inst:HasTag("steeringboat") then return nil end
-    
+
     local map = TheWorld.Map
-    local player_pos = Vector3(inst.Transform:GetWorldPosition())    
+    local player_pos = Vector3(inst.Transform:GetWorldPosition())
     local player_platform = map:GetPlatformAtPoint(player_pos.x, player_pos.z)
     local target_platform = map:GetPlatformAtPoint(pos.x, pos.z)
 
@@ -147,7 +147,7 @@ function PlayerActionPicker:GetSteeringActions(inst, pos, right)
             return self:SortActionList({ ACTIONS.SET_HEADING }, pos)
         end
     end
-    
+
     return nil
 end
 
@@ -190,7 +190,7 @@ function PlayerActionPicker:GetInventoryActions(useitem, right)
 	else
 		actions = {ACTIONS.DROP}
 	end
-	
+
     local sorted_acts = self:SortActionList(actions, nil, useitem)
 
     if not self.inst.components.playercontroller:IsControlPressed(CONTROL_FORCE_STACK) then
@@ -201,7 +201,7 @@ function PlayerActionPicker:GetInventoryActions(useitem, right)
             end
         end
     end
-    
+
     return sorted_acts
 end
 
@@ -295,7 +295,7 @@ function PlayerActionPicker:GetRightClickActions(position, target)
     if steering_actions ~= nil then
         --self.disable_right_click = true
         return steering_actions
-    end    
+    end
 
     local actions = nil
     local useitem = self.inst.replica.inventory:GetActiveItem()
@@ -367,13 +367,13 @@ function PlayerActionPicker:DoGetMouseActions(position, target)
         end
 
         --Check for actions in the dark
-        if not cansee then  
+        if not cansee then
             local lmb = nil
-            local rmb = nil          
+            local rmb = nil
             if not isaoetargeting then
                 local lmbs = self:GetLeftClickActions(position)
                 for i, v in ipairs(lmbs) do
-                    if (v.action == ACTIONS.DROP and self.inst:GetDistanceSqToPoint(position:Get()) < 16) or 
+                    if (v.action == ACTIONS.DROP and self.inst:GetDistanceSqToPoint(position:Get()) < 16) or
                         v.action == ACTIONS.SET_HEADING then
                         lmb = v
                     end
@@ -384,7 +384,7 @@ function PlayerActionPicker:DoGetMouseActions(position, target)
                     if (v.action == ACTIONS.STOP_STEERING_BOAT) then
                         rmb = v
                     end
-                end                
+                end
             end
 
             return lmb, rmb

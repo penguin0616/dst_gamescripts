@@ -359,7 +359,7 @@ function CustomizationTab:UpdateMultilevelUI()
 
     for i, tabbtn in ipairs(self.multileveltabs.tabs) do
 		local valid_level = self.current_level_locations[i] ~= nil
-		
+
         local locationid = valid_level and self:GetLocationStringID(i) or nil
         local locationname = locationid and STRINGS.UI.SANDBOXMENU.LOCATIONTABNAME[locationid] or ""
 
@@ -641,7 +641,7 @@ function CustomizationTab:UpdateSlot(slotnum, prevslot, delete)
             end
         else
             local location = self.current_level_locations[1]
-            
+
             self:LoadPreset(1, nil)
         end
     else -- Save data

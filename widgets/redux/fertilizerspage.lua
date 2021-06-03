@@ -29,7 +29,7 @@ local FertilizersPage = Class(Widget, function(self, parent_widget, ismodded)
 	end
 
 	self.fertilizer_grid:SetItemsData(fertilizer_grid_data)
-	
+
     self.parent_default_focus = self.fertilizer_grid
 end)
 
@@ -37,7 +37,7 @@ function FertilizersPage:BuildFertlizerScrollGrid()
     local row_w = 160
     local row_h = 230
 	local row_spacing = 2
-	
+
 	local item_size = 48
 	local nutrient_size = 24
 
@@ -50,7 +50,7 @@ function FertilizersPage:BuildFertlizerScrollGrid()
 	local function ScrollWidgetsCtor(context, index)
 		local w = Widget("fertilizer-cell-".. index)
 		w.cell_root = w:AddChild(Image("images/plantregistry.xml", "plant_entry.tex"))
-		
+
 		w.focus_forward = w.cell_root
 
 		w.cell_root.ongainfocusfn = function()
@@ -59,7 +59,7 @@ function FertilizersPage:BuildFertlizerScrollGrid()
 
 		w.fertilizer_seperator = w.cell_root:AddChild(Image("images/plantregistry.xml", "plant_entry_seperator.tex"))
 		w.fertilizer_seperator:SetPosition(0, 75)
-		
+
 		local _OnGainFocus = w.cell_root.OnGainFocus
 		function w.cell_root.OnGainFocus()
 			_OnGainFocus(w.cell_root)

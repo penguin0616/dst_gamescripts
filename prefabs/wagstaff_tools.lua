@@ -1,7 +1,7 @@
 local assets =
 {
     Asset("ANIM", "anim/wagstaff_tools.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),    
+    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function OnDropped(inst)
@@ -22,7 +22,7 @@ end
 
 local function erode(inst,time, erodein,removewhendone)
 
-    local time_to_erode  = time or 1    
+    local time_to_erode  = time or 1
     local tick_time = TheSim:GetTickTime()
 
     inst:StartThread(function()
@@ -30,7 +30,7 @@ local function erode(inst,time, erodein,removewhendone)
         while ticks * tick_time < time_to_erode do
             local erode_amount = ticks * tick_time / time_to_erode
             if erodein then
-                erode_amount = 1 - erode_amount 
+                erode_amount = 1 - erode_amount
             end
             inst.AnimState:SetErosionParams(erode_amount, inst.erodeparam, -1.0)
             ticks = ticks + 1
@@ -40,7 +40,7 @@ local function erode(inst,time, erodein,removewhendone)
             if erodein then
                 truetest = 1- erode_amount
                 falsetest = erode_amount
-            end 
+            end
 
             if inst.shadow == true then
                 if math.random() < truetest then
@@ -79,7 +79,7 @@ local function maketool(name, build, bank, state ,erodeparam)
 
         inst.entity:AddTransform()
         inst.entity:AddAnimState()
-        inst.entity:AddLight()   
+        inst.entity:AddLight()
         inst.entity:AddNetwork()
 
         MakeInventoryPhysics(inst)
@@ -99,9 +99,9 @@ local function maketool(name, build, bank, state ,erodeparam)
         inst:AddTag("irreplaceable")
 
         MakeInventoryFloatable(inst, "med", 0.05, 0.68)
-    
+
         inst.displaynamefn = nameupdater
-        
+
         inst:ListenForEvent("ms_playerdespawn", nameupdater, TheWorld)
         inst:ListenForEvent("ms_playerdespawnanddelete", nameupdater, TheWorld)
 
@@ -121,7 +121,7 @@ local function maketool(name, build, bank, state ,erodeparam)
         inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
         inst:AddComponent("inspectable")
-        
+
         inst:AddComponent("tradable")
         inst.erodeparam = erodeparam or 1
         inst.erode = erode

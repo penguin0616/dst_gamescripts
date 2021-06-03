@@ -113,7 +113,7 @@ local function onopen(inst)
 end
 
 local function onclose(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         if not inst.components.stewer:IsCooking() then
             inst.AnimState:PlayAnimation("close")
             inst.SoundEmitter:KillSound("snd")
@@ -167,14 +167,14 @@ local function donecookfn(inst)
 end
 
 local function continuedonefn(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("idle_full")
         ShowProduct(inst)
     end
 end
 
 local function continuecookfn(inst)
-    if not inst:HasTag("burnt") then 
+    if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("cooking_loop", true)
         inst.SoundEmitter:KillSound("snd")
         inst.SoundEmitter:PlaySound("dontstarve/common/together/portable/spicer/cooking_LP", "snd")
@@ -300,7 +300,7 @@ local function fn()
     inst.components.burnable:SetFXLevel(2)
     inst.components.burnable:SetOnBurntFn(OnBurnt)
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     return inst

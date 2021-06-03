@@ -183,7 +183,7 @@ local function AddDecor(inst, data)
     else
         inst.AnimState:OverrideSymbol("plain"..data.slot, data.item.winter_ornament_build or "winter_ornaments", data.item.winter_ornamentid)
     end
-    
+
 end
 
 -------------------------------------------------------------------------------
@@ -272,16 +272,16 @@ local function dogifting(inst)
 					player.components.wintertreegiftable:OnGiftGiven()
                     table.insert(loot, { prefab = "winter_food".. math.random(NUM_WINTERFOOD), stack = math.random(3) + (fully_decorated and 3 or 0)})
                     table.insert(loot, { prefab = not fully_decorated and GetRandomBasicWinterOrnament()
-											or math.random() < 0.5 and GetRandomFancyWinterOrnament() 
+											or math.random() < 0.5 and GetRandomFancyWinterOrnament()
 											or GetRandomFestivalEventWinterOrnament() })
-                    
+
 					table.insert(loot, { prefab = weighted_random_choice(random_gift1) })
 
 					if fully_decorated then
 						table.insert(loot, { prefab = weighted_random_choice(random_gift2) })
 					else
 	                    table.insert(loot, { prefab = PickRandomTrinket() })
-					end						
+					end
                 else
                     table.insert(loot, { prefab = "winter_food".. math.random(NUM_WINTERFOOD), stack = math.random(3) })
                     table.insert(loot, { prefab = "charcoal" })
@@ -390,12 +390,12 @@ local function trygifting(inst)
 end
 
 queuegifting = function(inst)
-    if IsSpecialEventActive( SPECIAL_EVENTS.WINTERS_FEAST ) and 
+    if IsSpecialEventActive( SPECIAL_EVENTS.WINTERS_FEAST ) and
 		TheWorld.state.isnight and
         inst.components.container ~= nil and
         not inst.components.container:IsEmpty() and
         inst.giftingtask == nil then
-        
+
         --print("queuegifting")
         inst.giftingtask = inst:DoTaskInTime(2, trygifting, inst)
     end
@@ -814,7 +814,7 @@ local function AddWinterTree(treetype)
         local inst = CreateEntity()
 
         inst.entity:AddTransform()
-        inst.entity:AddAnimState()  
+        inst.entity:AddAnimState()
         inst.entity:AddSoundEmitter()
         inst.entity:AddMiniMapEntity()
         inst.entity:AddLight()

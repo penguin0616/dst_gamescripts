@@ -91,7 +91,7 @@ local function mark(inst,doer, id)
         if oldmark then
             oldmark.components.markable:Mark(doer)
         end
-    end 
+    end
 
     if not inst.ribbons then
         inst.ribbons = {}
@@ -121,14 +121,14 @@ local function mark(inst,doer, id)
     else
         -- NPC
     end
-    
+
     ribbon.AnimState:SetMultColour(color[1],color[2],color[3],color[4])
 
     inst.ribbons[id] = ribbon
 end
 
 local function unmark(inst,doer, id)
-    if inst.ribbons and inst.ribbons then 
+    if inst.ribbons and inst.ribbons then
         inst.ribbons[id]:Remove()
         inst.ribbons[id] = nil
 
@@ -243,7 +243,7 @@ local function fn()
     MakeHauntableWork(inst)
 
     inst:ListenForEvent("onburnt", onburnt)
-    inst:ListenForEvent("onremove", onremove)    
+    inst:ListenForEvent("onremove", onremove)
     inst:ListenForEvent("onbuilt", onbuilt)
 
     inst.OnSave = onsave
@@ -402,7 +402,7 @@ local function lightfn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddMiniMapEntity()
-    inst.entity:AddLight()    
+    inst.entity:AddLight()
     inst.entity:AddNetwork()
 
     inst:AddTag("fx")
@@ -442,7 +442,7 @@ local function lightfn()
     return inst
 end
 
--- RIBBON 
+-- RIBBON
 
 local function ribbonfn()
     local inst = CreateEntity()
@@ -479,11 +479,11 @@ local function can_deploy(inst, pt, mouseover, deployer)
 
     local stage_ents =  TheSim:FindEntities(pt.x, pt.y, pt.z, TUNING.YOTB_STAGERANGE, stage_tags)
     local post_ents =  TheSim:FindEntities(pt.x, pt.y, pt.z, TUNING.YOTB_POSTDISTANCE, post_tags)
-    
+
     return TheWorld.Map:CanDeployAtPoint(pt, inst, mouseover) and #stage_ents > 0 and #post_ents == 0
 end
 
-local deployable_data = 
+local deployable_data =
 {
     deploymode = DEPLOYMODE.CUSTOM,
     custom_candeploy_fn = can_deploy

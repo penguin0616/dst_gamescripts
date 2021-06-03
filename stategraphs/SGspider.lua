@@ -20,7 +20,7 @@ local events =
             end
         end
     end),
-    EventHandler("doattack", function(inst, data) 
+    EventHandler("doattack", function(inst, data)
         if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
             --target CAN go invalid because SG events are buffered
             if inst:HasTag("spider_warrior") then
@@ -58,7 +58,7 @@ local events =
     EventHandler("entershield", function(inst) inst.sg:GoToState("shield") end),
     EventHandler("exitshield", function(inst) inst.sg:GoToState("shield_end") end),
 
-    EventHandler("locomote", function(inst) 
+    EventHandler("locomote", function(inst)
         if not inst.sg:HasStateTag("busy") then
             local is_moving = inst.sg:HasStateTag("moving")
             local wants_to_move = inst.components.locomotor:WantsToMoveForward()
@@ -105,7 +105,7 @@ local states =
             inst.AnimState:PlayAnimation("death")
             inst.Physics:Stop()
             RemovePhysicsColliders(inst)
-            inst.components.lootdropper:DropLoot(Vector3(inst.Transform:GetWorldPosition()))            
+            inst.components.lootdropper:DropLoot(Vector3(inst.Transform:GetWorldPosition()))
         end,
     },
 
@@ -223,8 +223,8 @@ local states =
 
         ontimeout = function(inst)
             inst.sg:GoToState("idle", "eat_pst")
-        end,       
-    },  
+        end,
+    },
 
     State{
         name = "taunt",
@@ -240,7 +240,7 @@ local states =
         {
             EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
         },
-    },    
+    },
 
     State{
         name = "investigate",
@@ -347,7 +347,7 @@ local states =
 
         timeline =
         {
-            TimeEvent(7*FRAMES, function(inst) 
+            TimeEvent(7*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound(SoundPath(inst, "spit_web")) end),
 
             TimeEvent(21*FRAMES, function(inst) inst.components.combat:DoAttack(inst.sg.statemem.target)
@@ -411,7 +411,7 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("hit")
-            inst.Physics:Stop()            
+            inst.Physics:Stop()
         end,
 
         events=
@@ -441,7 +441,7 @@ local states =
         tags = {"busy", "shield"},
 
         onenter = function(inst)
-            --If taking fire damage, spawn fire effect. 
+            --If taking fire damage, spawn fire effect.
             inst.components.health:SetAbsorptionAmount(TUNING.SPIDER_HIDER_SHELL_ABSORB)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hide")
@@ -506,7 +506,7 @@ CommonStates.AddSleepStates(states,
     starttimeline = {
         TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound(SoundPath(inst, "fallAsleep")) end ),
     },
-    sleeptimeline = 
+    sleeptimeline =
     {
         TimeEvent(35*FRAMES, function(inst) inst.SoundEmitter:PlaySound(SoundPath(inst, "sleeping")) end ),
     },

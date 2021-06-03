@@ -13,7 +13,7 @@ function AncientArchiveInit(ents, map_width, map_height)
 end
 
 function AncientArchivePass(entities, map_width, map_height, world, add_entity_fn)
-    
+
     AncientArchiveInit(entities, map_width, map_height)
 
     local products = {"archive_resonator_item","refined_dust","turfcraftingstation"}
@@ -26,7 +26,7 @@ function AncientArchivePass(entities, map_width, map_height, world, add_entity_f
             prop.data.product_orchestrina = products[index]
             index = index > 2 and 1 or index + 1
         end
-        
+
         if #entities["archive_lockbox_dispencer"] < 3 then
             local need = 3-#entities["archive_lockbox_dispencer"]
             need = 3
@@ -37,7 +37,7 @@ function AncientArchivePass(entities, map_width, map_height, world, add_entity_f
                 end
                 local random = math.random(1,#list)
 
-                local newprop = entities["archive_lockbox_dispencer_temp"][list[random]]                
+                local newprop = entities["archive_lockbox_dispencer_temp"][list[random]]
                 if newprop and not newprop.data then
                     newprop.data = {}
                 end
@@ -50,6 +50,6 @@ function AncientArchivePass(entities, map_width, map_height, world, add_entity_f
     end
 
     entities["archive_lockbox_dispencer_temp"] = nil
-        
+
     return entities
 end

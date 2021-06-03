@@ -26,8 +26,8 @@ function EmitterManagerClass:AddEmitter( inst, lifetime, updateFunc )
 	end
 
 	destinationTable[ inst ] = { lifetime = lifetime, updateFunc = updateFunc }
-    
-    inst:ListenForEvent( "onremove", function() self:RemoveEmitter(inst)  end, inst )    
+
+    inst:ListenForEvent( "onremove", function() self:RemoveEmitter(inst)  end, inst )
 end
 
 
@@ -43,7 +43,7 @@ function EmitterManagerClass:PostUpdate()
 	if IsSimPaused() then
 		return
 	end
-	
+
 	local ticktime = TheSim:GetTickTime()
 
 	-- AWAKE --
@@ -118,7 +118,7 @@ function CreateRingEmitter( radius )
 			y = -y
 		end
 
-		return x, y 
+		return x, y
 	end
 end
 
@@ -153,7 +153,7 @@ function CreateBoxEmitter( x_min, y_min, z_min, x_max, y_max, z_max )
 end
 
 function CreateAreaEmitter(polygon, centroid)
-	
+
 	return function()
 		local p1_idx = math.random(1, #polygon)
 		local p2_idx = p1_idx + 1
@@ -161,22 +161,22 @@ function CreateAreaEmitter(polygon, centroid)
 			p2_idx = 1
 		end
 
-		local v0 = { x = polygon[p1_idx][1] - centroid[1], y = polygon[p1_idx][2] - centroid[2]}		
+		local v0 = { x = polygon[p1_idx][1] - centroid[1], y = polygon[p1_idx][2] - centroid[2]}
 		local v2 = { x = polygon[p2_idx][1] - centroid[1], y = polygon[p2_idx][2] - centroid[2]}
-			
+
 		-- u = random [0-1]
 		local u = math.random()
-			
+
 		-- v = random [0-1]
 		local v =  math.random()
-			
+
 		-- u+v < 1
 		if u + v > 1 then
 			u = 1-u
 			v = 1-v
 		end
-			
-		-- P = centroid + u*v0 + v*v2 
+
+		-- P = centroid + u*v0 + v*v2
 		--local p = {centroid[1] + v0.x*u + v2.x*v, centroid[2] + v0.y*u + v2.y*v}
 		-- The consumer of this is expecting relative positions
 		return  v0.x*u + v2.x*v, v0.y*u + v2.y*v

@@ -7,7 +7,7 @@ StandAndAttack = Class(BehaviourNode, function(self, inst, findnewtargetfn, time
 
     -- we need to store this function as a key to use to remove itself later
     self.onattackfn = function(inst, data)
-        self:OnAttackOther(data.target) 
+        self:OnAttackOther(data.target)
     end
 
     self.inst:ListenForEvent("onattackother", self.onattackfn)

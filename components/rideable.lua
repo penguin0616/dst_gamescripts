@@ -116,7 +116,7 @@ function Rideable:SetSaddle(doer, newsaddle)
 			self.saddle:ListenForEvent("on_landed", OnSaddleDiscard)
 		end
 		self.inst.components.lootdropper:FlingItem(self.saddle, pt)
-		
+
         self.canride = false
         self.saddle = nil
         self.inst:PushEvent("saddlechanged", { saddle = nil })

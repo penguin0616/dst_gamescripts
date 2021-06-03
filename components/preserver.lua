@@ -9,7 +9,7 @@ function Preserver:SetPerishRateMultiplier(rate)
 end
 
 function Preserver:GetPerishRateMultiplier(item)
-	return type(self.perish_rate_multiplier) == "number" and self.perish_rate_multiplier 
+	return type(self.perish_rate_multiplier) == "number" and self.perish_rate_multiplier
 			or self.perish_rate_multiplier(self.inst, item)
 			or 1
 end

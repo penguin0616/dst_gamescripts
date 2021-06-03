@@ -59,7 +59,7 @@ function Edible:OnRemoveFromEntity()
     if self.secondaryfoodtype ~= nil then
         self.inst:RemoveTag("edible_"..self.secondaryfoodtype)
     end
-	
+
     self.inst:RemoveTag("edible_"..FOODTYPE.BERRY)
 end
 
@@ -130,7 +130,7 @@ function Edible:GetHealth(eater)
         multiplier = multiplier + TUNING.SPICE_MULTIPLIERS[spice_source].HEALTH
     end
 
-    return multiplier * healthvalue 
+    return multiplier * healthvalue
 end
 
 function Edible:GetDebugString()

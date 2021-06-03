@@ -39,7 +39,7 @@ local function PlayAction(inst)
     if target and target:HasTag("cattoyairborne") and not (target.sg and (target.sg:HasStateTag("landing") or target.sg:HasStateTag("landed"))) then
         if inst.last_play_air_time and (GetTime() - inst.last_play_air_time) < 15 then return end
         target:RemoveTag("cattoyairborne")
-        target:DoTaskInTime(GetRandomWithVariance(30, 5), function(target) 
+        target:DoTaskInTime(GetRandomWithVariance(30, 5), function(target)
             if target and not target:HasTag("cattoyairborne") and not target:HasTag("stump") and not target:HasTag("burnt") then
                 target:AddTag("cattoyairborne")
             end
@@ -81,8 +81,8 @@ local function KeepFaceTargetFn(inst, target)
 end
 
 local function GoHomeAction(inst)
-    if inst.components.homeseeker and 
-       inst.components.homeseeker.home and 
+    if inst.components.homeseeker and
+       inst.components.homeseeker.home and
        inst.components.homeseeker.home:IsValid() then
         return BufferedAction(inst, inst.components.homeseeker.home, ACTIONS.GOHOME)
     else
@@ -132,14 +132,14 @@ function CatcoonBrain:OnStart()
         ChaseAndAttack(self.inst, MAX_CHASE_TIME, MAX_CHASE_DIST),
         DoAction(self.inst, WhineAction, "whine", true),
         Follow(self.inst, GetLeader, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
-        WhileNode(function() return self.inst.raining end, "GoingHome", 
+        WhileNode(function() return self.inst.raining end, "GoingHome",
             DoAction(self.inst, GoHomeAction, "go home", true )),
         DoAction(self.inst, PlayAction, "play", true),
         IfNode(function() return GetLeader(self.inst) end, "has leader",
             FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn )),
         Leash(self.inst, GetNoLeaderHomePos, LEASH_MAX_DIST, LEASH_RETURN_DIST),
         RunAway(self.inst, "player", AVOID_DIST, AVOID_STOP, nil, nil, NO_TAGS),
-        Wander(self.inst, function() return self.inst:GetPosition() end, MAX_WANDER_DIST),   
+        Wander(self.inst, function() return self.inst:GetPosition() end, MAX_WANDER_DIST),
     }, .25)
     self.bt = BT(self.inst, root)
 end

@@ -11,7 +11,7 @@ local debug = debug
 local taskguid = 0
 local Task = Class( function(self, fn, id, param)
     self.guid = taskguid
-    taskguid = taskguid + 1    
+    taskguid = taskguid + 1
     self.param = param
     self.id = id
     self.fn = fn
@@ -171,7 +171,7 @@ function Scheduler:OnTick(tick)
         for k,v in pairs(self.attime[tick]) do
             if v then
                 local already_dead = k.limit and k.limit == 0
-                    
+
                 if not already_dead and k.fn then
                     if k.arg then
                         k.fn(unpack(k.arg))
@@ -253,12 +253,12 @@ function Scheduler:KillAll()
     self.waitingfortick = {}
     self.waking = {}
     self.attime = {}
-    
+
 end
 
 local function removeif(tab, fn)
     for k, v in pairs(tab) do
-        if fn(v) then 
+        if fn(v) then
             tab[k] = nil
         end
     end

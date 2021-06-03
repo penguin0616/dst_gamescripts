@@ -191,7 +191,7 @@ function Dryer:StartDrying(dryable)
     end
     if not self.protectedfromrain then
         StartWatchingRain(self)
-    end    
+    end
 
     if self.onstartdrying ~= nil then
         self.onstartdrying(self.inst, self.ingredient, self.buildfile)
@@ -256,7 +256,7 @@ function Dryer:DropItem()
 	if self.ingredient == nil and self.product == nil then
 		return
 	end
-	
+
     local loot = SpawnPrefab(self.ingredient or self.product)
     if loot ~= nil then
 		LaunchAt(loot, self.inst, nil, .25, 1)

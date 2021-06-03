@@ -64,16 +64,16 @@ local CinematicsPanel = Class(Widget, function(self, parent_screen)
 		end,
 		STRINGS.UI.OPTIONS.CREDITS, {button_width, button_height})
 	)
-	
+
 	if IsSteam() then
 		table.insert(self.buttons, TEMPLATES.StandardButton(function() VisitURL("https://www.youtube.com/channel/UCzbYAkDCuQYdZ_fKz9MLrWA") end, STRINGS.UI.OPTIONS.VIDEO_CHANNEL, {button_width, button_height}))
 	end
-	
+
     self.grid = self.title_root:AddChild(Grid())
     self.grid:SetPosition(0, -75)
 
     self.grid:FillGrid(1, button_width, button_height, self.buttons)
-    
+
     self.focus_forward = self.grid
 end)
 

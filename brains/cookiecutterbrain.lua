@@ -21,9 +21,9 @@ local WANDER_TIMES = {minwalktime=2.0, randwalktime=4.0, minwaittime=3.0, randwa
 
 local function EatFoodAction(inst)
 	local target = inst.target_wood
-	return (target ~= nil and target:IsValid() 
+	return (target ~= nil and target:IsValid()
 				and inst:IsNear(target, 2)
-				and target:HasTag("edible_WOOD") and not target:HasTag("INLIMBO") 
+				and target:HasTag("edible_WOOD") and not target:HasTag("INLIMBO")
 				and (target.components.burnable == nil or (not target.components.burnable:IsBurning() and not target.components.burnable:IsSmoldering()))
 				and TheWorld.Map:IsOceanAtPoint(target.Transform:GetWorldPosition()))
 			and BufferedAction(inst, target, ACTIONS.EAT)
@@ -66,7 +66,7 @@ function CookieCutterBrain:OnStart()
 						StandStill(self.inst)),
 
 					RunAway(self.inst, {tags = {"scarytocookiecutters"}}, SCATTER_DIST, SCATTER_STOP),
-					WhileNode(function() return self.inst.is_fleeing end, "Fleeing", 
+					WhileNode(function() return self.inst.is_fleeing end, "Fleeing",
 						RunAway(self.inst, "scarytoprey", FLEE_DIST, FLEE_STOP)),
 
 					WhileNode(function() return IsTooFarFromHome(self.inst) end, "AwayFromHome",
@@ -84,7 +84,7 @@ function CookieCutterBrain:OnStart()
 					DoAction(self.inst, EatFoodAction, "Eat Floating", false),
 
 					Leash(self.inst, GetTargetPosition, 0.1, 0.1, false),
-			
+
 					Wander(self.inst, function() return GetWanderPoint(self.inst) end, WANDER_DIST, WANDER_TIMES, CalcWanderDir),
             }, .25)),
         }, .25)

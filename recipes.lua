@@ -429,7 +429,7 @@ Recipe("fish_box",			   {Ingredient("cutstone", 1), 		Ingredient("rope", 3)}, RE
     end)
 Recipe("winch",				   {Ingredient("boards", 2), Ingredient("cutstone", 1), Ingredient("rope", 2)}, RECIPETABS.SEAFARING, TECH.LOST, "winch_placer", 1.5)
 Recipe("mastupgrade_lamp_item", {Ingredient("boards", 1), Ingredient("rope", 2), Ingredient("flint", 4)}, RECIPETABS.SEAFARING, TECH.SEAFARING_TWO)
-Recipe("mastupgrade_lightningrod_item", {Ingredient("goldnugget", 5)},                                      RECIPETABS.SEAFARING, TECH.SEAFARING_TWO) 
+Recipe("mastupgrade_lightningrod_item", {Ingredient("goldnugget", 5)},                                      RECIPETABS.SEAFARING, TECH.SEAFARING_TWO)
 Recipe("waterpump",            {Ingredient("boards", 2),Ingredient("oceanfish_small_9_inv", 1)},               RECIPETABS.SEAFARING, TECH.SEAFARING_TWO, "waterpump_placer", 1.5, nil, nil, nil, nil, "waterpump_item.tex")
 
 --Recipe("fishingnet", {Ingredient("silk", 6)}, RECIPETABS.SEAFARING, TECH.SEAFARING_ONE, nil, nil, true)
@@ -619,6 +619,50 @@ Recipe("turf_fungus", {Ingredient("cutlichen", 1), Ingredient("spore_tall", 1)},
 Recipe("turf_fungus_red", {Ingredient("cutlichen", 1), Ingredient("spore_medium", 1)}, RECIPETABS.TURFCRAFTING, TECH.TURFCRAFTING_ONE, nil, nil, true)
 Recipe("turf_fungus_green", {Ingredient("cutlichen", 1), Ingredient("spore_small", 1)}, RECIPETABS.TURFCRAFTING, TECH.TURFCRAFTING_ONE, nil, nil, true)
 
+--- summer carnival prize shop ---
+Recipe("carnival_popcorn",					{Ingredient("carnival_prizeticket", 12)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true, description = "carnival_popcorn"}, nil, true, 3, nil, nil, nil, nil, "corn_cooked")
+Recipe("carnival_seedpacket",				{Ingredient("carnival_prizeticket", 12)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivalfood_corntea",				{Ingredient("carnival_prizeticket", 12)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnival_vest_a",					{Ingredient("carnival_prizeticket", 24)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnival_vest_b",					{Ingredient("carnival_prizeticket", 48)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnival_vest_c",					{Ingredient("carnival_prizeticket", 48)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+
+Recipe("carnivaldecor_figure_kit",			{Ingredient("carnival_prizeticket", 12)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivalcannon_confetti_kit",		{Ingredient("carnival_prizeticket", 18)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivalcannon_sparkle_kit",		{Ingredient("carnival_prizeticket", 18)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivalcannon_streamer_kit",		{Ingredient("carnival_prizeticket", 18)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivaldecor_plant_kit",			{Ingredient("carnival_prizeticket", 24)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivaldecor_eggride1_kit",		{Ingredient("carnival_prizeticket", 36)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivaldecor_eggride2_kit",		{Ingredient("carnival_prizeticket", 36)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivaldecor_eggride3_kit",		{Ingredient("carnival_prizeticket", 36)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+Recipe("carnivaldecor_lamp_kit",			{Ingredient("carnival_prizeticket", 48)}, RECIPETABS.CARNIVAL_PRIZESHOP, TECH.CARNIVAL_PRIZESHOP_ONE, {no_deconstruction = true}, nil, true)
+
+--- summar carnival prize, return the kit when destroyed
+Recipe("carnivaldecor_plant",				{Ingredient("carnivaldecor_plant_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivaldecor_figure",				{Ingredient("carnivaldecor_figure_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivaldecor_eggride1",			{Ingredient("carnivaldecor_eggride1_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivaldecor_eggride2",			{Ingredient("carnivaldecor_eggride2_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivaldecor_eggride3",			{Ingredient("carnivaldecor_eggride3_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivaldecor_lamp",				{Ingredient("carnivaldecor_lamp_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivalcannon_confetti",			{Ingredient("carnivalcannon_confetti_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivalcannon_sparkle",			{Ingredient("carnivalcannon_sparkle_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivalcannon_streamer",			{Ingredient("carnivalcannon_streamer_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+
+--- summer carnival host
+Recipe("carnival_plaza_kit",				{Ingredient("goldnugget", 1), Ingredient("seeds", 3)},	RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_ONE,   {no_deconstruction = true}, nil, true)
+Recipe("carnival_prizebooth_kit",			{Ingredient("goldnugget", 1), Ingredient("seeds", 3)},	RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_THREE, {no_deconstruction = true}, nil, true)
+Recipe("carnival_gametoken",				{Ingredient("seeds", 1)},								RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_THREE, {no_deconstruction = true}, nil, true)
+Recipe("carnival_gametoken_multiple",		{Ingredient("goldnugget", 1)},							RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_THREE, {no_deconstruction = true, description = "carnival_gametoken_multiple"}, nil, true, 3, nil, nil, "carnival_gametoken_multiple.tex", nil, "carnival_gametoken")
+Recipe("carnivalgame_memory_kit",			{Ingredient("goldnugget", 1), Ingredient("seeds", 3)},	RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_THREE, {no_deconstruction = true}, nil, true)
+Recipe("carnivalgame_feedchicks_kit",		{Ingredient("goldnugget", 1), Ingredient("seeds", 3)},	RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_THREE, {no_deconstruction = true}, nil, true)
+Recipe("carnivalgame_herding_kit",			{Ingredient("goldnugget", 1), Ingredient("seeds", 3)},	RECIPETABS.CARNIVAL_HOSTSHOP, TECH.CARNIVAL_HOSTSHOP_THREE, {no_deconstruction = true}, nil, true)
+
+--- summar carnival host, return the kit when destroyed
+Recipe("carnival_plaza",					{Ingredient("carnival_plaza_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnival_prizebooth",				{Ingredient("carnival_prizebooth_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivalgame_memory_station",		{Ingredient("carnivalgame_memory_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivalgame_feedchicks_station",	{Ingredient("carnivalgame_feedchicks_kit", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("carnivalgame_herding_station",		{Ingredient("carnivalgame_herding_kit", 1)}, nil, TECH.LOST, nil, nil, true)
 
 ----UNCRAFTABLE----
 --NOTE: These recipes are not supposed to be craftable!
@@ -676,7 +720,7 @@ CONSTRUCTION_PLANS =
 	["hermithouse_construction1"] = { Ingredient("cookiecuttershell", 10), Ingredient("boards", 10) },
 	["hermithouse_construction2"] = { Ingredient("marble", 10), Ingredient("rope", 10) },
 	["hermithouse_construction3"] = { Ingredient("moonrocknugget", 5),   Ingredient("cactus_flower", 10) },
-	
+
 	["moon_device_construction1"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonstorm_spark", 10), Ingredient("moonglass_charged", 10) },
 	["moon_device_construction2"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonglass_charged", 20), Ingredient("moonrockseed", 1) },
 }

@@ -36,7 +36,7 @@ local function fn()
 
     inst:AddComponent("inventoryitem")
     inst:AddComponent("tradable")
-    
+
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BODY
     inst.components.equippable.dapperness = TUNING.DAPPERNESS_MED

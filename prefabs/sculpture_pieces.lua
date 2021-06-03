@@ -10,7 +10,7 @@ local function makepiece(name)
         Asset("ANIM", "anim/sculpture_pieces.zip"),
         Asset("ANIM", "anim/swap_sculpture_"..name..".zip"),
 	}
-	
+
 	local prefabs =
 	{
 		"underwater_salvageable",
@@ -69,7 +69,7 @@ local function makepiece(name)
         inst:AddComponent("repairer")
         inst.components.repairer.repairmaterial = MATERIALS.SCULPTURE
 		inst.components.repairer.workrepairvalue = TUNING.SCULPTURE_COMPLETE_WORK
-		
+
 		inst:AddComponent("submersible")
 		inst:AddComponent("symbolswapdata")
 		inst.components.symbolswapdata:SetData("swap_sculpture_"..name, "swap_body")

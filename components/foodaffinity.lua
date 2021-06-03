@@ -35,7 +35,7 @@ function FoodAffinity:RemoveFoodtypeAffinity(foodtype)
 end
 
 function FoodAffinity:HasAffinity(food)
-    
+
     if self.prefab_affinites[food.prefab] ~= nil then
         return true
     end

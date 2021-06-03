@@ -249,7 +249,7 @@ function BeefaloBrain:OnStart()
             }),
             Wander(self.inst, function() return GetLoiterAnchor(self.inst) end, GetWanderDistFn),
         }),
-        Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("herd") end, GetWanderDistFn)        
+        Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("herd") end, GetWanderDistFn)
     }, .25)
 
     self.bt = BT(self.inst, root)

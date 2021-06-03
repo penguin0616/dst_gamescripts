@@ -119,7 +119,7 @@ local function OnRadiusDirty(inst)
 end
 
 local function OnSave(inst, data)
-	data._has_debuffable = inst.components.debuffable ~= nil 
+	data._has_debuffable = inst.components.debuffable ~= nil
 end
 
 local function OnPreLoad(inst, data)
@@ -233,7 +233,7 @@ local function fn()
 
 	inst.OnSave = OnSave
 	inst.OnPreLoad = OnPreLoad
-    
+
     inst.restart_firepit = function( inst )
         local fuel_percent = inst.components.fueled:GetPercent()
         inst.components.fueled:MakeEmpty()
@@ -247,4 +247,4 @@ end
 
 return Prefab("firepit", fn, assets, prefabs),
     MakePlacer("firepit_placer", "firepit", "firepit", "preview")
-	
+

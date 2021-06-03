@@ -32,7 +32,7 @@ local Perishable = Class(function(self, inst)
     --self.perishtime = nil
 
     self.frozenfiremult = false
-    
+
     self.targettime = nil
     --self.perishremainingtime = nil
     self.updatetask = nil
@@ -114,10 +114,10 @@ local function Update(inst, dt)
         modifier = modifier * self.localPerishMultiplyer
 
 		modifier = modifier * TUNING.PERISH_GLOBAL_MULT
-		
+
 		local old_val = self.perishremainingtime
 		local delta = dt or (10 + math.random()*FRAMES*8)
-		if self.perishremainingtime then 
+		if self.perishremainingtime then
 			self.perishremainingtime = math.min(self.perishtime, self.perishremainingtime - delta*modifier)
 	        if math.floor(old_val*100) ~= math.floor(self.perishremainingtime*100) then
 		        inst:PushEvent("perishchange", {percent = self:GetPercent()})
@@ -201,7 +201,7 @@ function Perishable:GetPercent()
 end
 
 function Perishable:SetPercent(percent)
-	if self.perishtime then 
+	if self.perishtime then
 		if percent < 0 then percent = 0 end
 		if percent > 1 then percent = 1 end
 		self.perishremainingtime = percent*self.perishtime

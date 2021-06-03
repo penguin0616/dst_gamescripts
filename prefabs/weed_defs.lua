@@ -81,7 +81,7 @@ WEED_DEFS.weed_ivy.prefab_deps			= {"ivy_snare"}
 -------------------------------------------------------------------------------
 local WEED_FORGETMELOTS_RESPAWNER_TAG = {"weed_forgetmelots_respawner", "CLASSIFIED"}
 WEED_DEFS.weed_forgetmelots.ondigup = function(inst)
-	local stage_data = inst.components.growable ~= nil and inst.components.growable:GetCurrentStageData() 
+	local stage_data = inst.components.growable ~= nil and inst.components.growable:GetCurrentStageData()
 	if stage_data and stage_data.name == "bolting" then
 		local x, y, z = inst.Transform:GetWorldPosition()
 		local num_respawners = #TheSim:FindEntities(x, y, z, 12, WEED_FORGETMELOTS_RESPAWNER_TAG)
@@ -261,7 +261,7 @@ end
 for weed, data in pairs(WEED_DEFS) do
 	data.prefab = weed
 	data.sameweedtags = {weed}
-	
+
 	if data.stage_netvar == nil then
 		data.stage_netvar = net_tinybyte
 	end

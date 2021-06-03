@@ -172,7 +172,7 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
     self.bg:GetAnimState():PlayAnimation("blind_loop", true)
 
     self.letterbox = self:AddChild(CreateLetterbox())
-    
+
     self.dust = dustlayer
 
     self.ambientlighting = TheWorld.components.ambientlighting
@@ -190,7 +190,7 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
     self.time = 0
 
     self.alpha = 0
-    
+
     self.intensity = 0
     self.world_scroll_x = 0
     self.world_scroll_y = 0
@@ -207,7 +207,7 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
         (function()
             return TheSim:GetWindowSize()
         end)
-    
+
     self:Hide()
 
     if owner ~= nil then
@@ -219,15 +219,15 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
             else
                 self.dust:SetEffect( "shaders/moonstorm.ksh" )
             end
-            
+
             self:UpdateAlphaRangeShaderUniforms()
         end, owner)
-        
+
         self.inst:ListenForEvent("stormlevel", function(owner, data)
             if data.stormtype == STORM_TYPES.MOONSTORM then
-                self:FadeTo(data.level, TheFrontEnd:GetFadeLevel() >= 1) 
+                self:FadeTo(data.level, TheFrontEnd:GetFadeLevel() >= 1)
             else
-                self:FadeTo(0, TheFrontEnd:GetFadeLevel() >= 1) 
+                self:FadeTo(0, TheFrontEnd:GetFadeLevel() >= 1)
             end
         end, owner)
 
@@ -238,7 +238,7 @@ local MoonstormOver = Class(Widget, function(self, owner, dustlayer, dustlayer_g
         else
             self.dust:SetEffect( "shaders/moonstorm.ksh" )
         end
-        
+
         self:UpdateAlphaRangeShaderUniforms()
 
         if owner.GetStormLevel ~= nil then
@@ -401,7 +401,7 @@ function MoonstormOver:OnUpdate(dt)
             dirty = true
         end
     end
-    
+
     if dirty then
         self:ApplyLevels()
     else
@@ -416,7 +416,7 @@ function MoonstormOver:OnUpdate(dt)
             s = Remap(math.clamp(self.camera:GetDistance(), self.camera.mindist, self.camera.maxdist), self.camera.mindist, self.camera.maxdist, 1, 0)
             s = self.minscale + (self.maxscale - self.minscale) * s * s
         end
-        s = s * (3 - self.alpha * 2)        
+        s = s * (3 - self.alpha * 2)
         self.bg:SetScale(s, s, s)
     end
 

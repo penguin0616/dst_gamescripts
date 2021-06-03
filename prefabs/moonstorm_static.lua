@@ -3,7 +3,7 @@ local assets =
     Asset("ANIM", "anim/static_ball_contained.zip"),
 }
 
-local prefabs = 
+local prefabs =
 {
     "moonstorm_static_item",
 }
@@ -25,10 +25,10 @@ local function ondeath(inst)
     inst.SoundEmitter:KillSound("loop")
     inst.AnimState:PlayAnimation("explode", false)
     inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/explode")
-    
-    inst:ListenForEvent("animover", function()    
+
+    inst:ListenForEvent("animover", function()
         inst:Remove()
-    end)     
+    end)
 end
 
 local function finished(inst)
@@ -40,14 +40,14 @@ local function finished(inst)
         local item = SpawnPrefab("moonstorm_static_item")
         item.Transform:SetPosition(inst.Transform:GetWorldPosition())
         inst:Remove()
-    end)   
+    end)
 end
 
-local function stormstopped(inst)        
+local function stormstopped(inst)
     inst:DoTaskInTime(1,function()
         if TheWorld.net.components.moonstorms and not TheWorld.net.components.moonstorms:IsInMoonstorm(inst) then
             inst.components.health:Kill()
-        end    
+        end
     end)
 end
 
@@ -92,11 +92,11 @@ local function fn()
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.MOONSTORM_SPARK_HEALTH)
     inst.components.health.nofadeout = true
-    
+
     inst:AddComponent("combat")
     inst:ListenForEvent("attacked", onattackedfn)
     inst:ListenForEvent("death", ondeath)
-    
+
     inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/idle_LP","loop")
 
     inst:ListenForEvent("ms_stormchanged", function(w, data) print("static:",  data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM) if data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM then stormstopped(inst) end end, TheWorld)
@@ -141,7 +141,7 @@ local function itemfn()
         inst.SoundEmitter:KillSound("loop")
     end)
     inst.components.inventoryitem:SetOnDroppedFn(function()
-        inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/finished_idle_LP","loop")  
+        inst.SoundEmitter:PlaySound("moonstorm/common/static_ball_contained/finished_idle_LP","loop")
     end)
 
     return inst

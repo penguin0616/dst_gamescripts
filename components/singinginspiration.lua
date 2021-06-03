@@ -109,13 +109,13 @@ end
 
 function SingingInspiration:OnAttack(data)
     local target = data.target
-    if target ~= nil and target:IsValid() and target.components.health and not target.components.health:IsDead() and 
+    if target ~= nil and target:IsValid() and target.components.health and not target.components.health:IsDead() and
        (self.validvictimfn == nil or self.validvictimfn(target)) then
 
         self.is_draining = false
         self.last_attack_time = GetTime()
 
-        local player_damage = (data.weapon ~= nil and data.weapon.components.weapon:GetDamage(self.inst, target)) 
+        local player_damage = (data.weapon ~= nil and data.weapon.components.weapon:GetDamage(self.inst, target))
                                 or self.inst.components.combat.defaultdamage
 
         -- INSPIRATION_GAIN_RATE = 0.03
@@ -136,7 +136,7 @@ function SingingInspiration:DoDelta(delta, forceupdate)
     local newpercent = self:GetPercent()
     local old_slots_available = self.available_slots
     self.available_slots = self.CalcAvailableSlotsForInspirationFn(self.inst, newpercent)
-    
+
     self.inst:PushEvent("inspirationdelta", { newpercent = newpercent, slots_available = self.available_slots })
 
 	--print("slots_available", self.available_slots, old_slots_available)
@@ -158,7 +158,7 @@ function SingingInspiration:CanAddSong(songdata)
 end
 
 function SingingInspiration:DisplayFx()
-    
+
     if self.display_fx_count == nil or self.display_fx_count > #self.active_songs then
         self.display_fx_count = 1
     end
@@ -196,7 +196,7 @@ function SingingInspiration:DisplayFx()
 
     self.display_fx_count = self.display_fx_count + 1
     local next_display_time = 0.4 + math.random()/2
-    
+
     if self.display_fx_count > #self.active_songs then
         self.display_fx_count = 1
         next_display_time = 4
@@ -275,7 +275,7 @@ function SingingInspiration:FindFriendlyTargetsToInspire()
 		if player.components.leader ~= nil then
 			for follower, _ in pairs(player.components.leader.followers) do
 				if not follower:HasTag("critter")
-					and (follower.components.health == nil or not follower.components.health:IsDead()) 
+					and (follower.components.health == nil or not follower.components.health:IsDead())
 					and (follower.components.combat == nil or follower.components.combat.target ~= self.inst)
 					and follower:GetDistanceSqToPoint(x, y, z) <= self.attach_radius*self.attach_radius
 					then
@@ -289,7 +289,7 @@ function SingingInspiration:FindFriendlyTargetsToInspire()
 		for j = 1, #leader_items do
 			for follower, _ in pairs(leader_items[j].components.leader.followers) do
 				if not follower:HasTag("critter")
-					and (follower.components.health == nil or not follower.components.health:IsDead()) 
+					and (follower.components.health == nil or not follower.components.health:IsDead())
 					and (follower.components.combat == nil or follower.components.combat.target ~= self.inst)
 					and follower:GetDistanceSqToPoint(x, y, z) <= self.attach_radius*self.attach_radius
 					then
@@ -317,7 +317,7 @@ local function HasFriendlyLeader(target, singer, PVP_enabled)
 
     return  (target_leader ~= nil and (target_leader == singer or (not PVP_enabled and target_leader:HasTag("player"))))
 			or (not PVP_enabled and target.components.domesticatable and target.components.domesticatable:IsDomesticated())
-			or (not PVP_enabled and target.components.saltlicker and target.components.saltlicker.salted) 
+			or (not PVP_enabled and target.components.saltlicker and target.components.saltlicker.salted)
 end
 
 local INSTANT_TARGET_MUST_HAVE_TAGS = {"_combat", "_health"}
@@ -335,7 +335,7 @@ function SingingInspiration:InstantInspire(songdata)
 				and not HasFriendlyLeader(ent, self.inst, PVP_enabled)
 				and (not ent:HasTag("prey") or (ent:HasTag("prey") and ent:HasTag("hostile")))
 				then
-            
+
 				fn(self.inst, ent)
 			end
 		end
@@ -360,7 +360,7 @@ end
 
 function SingingInspiration:OnUpdate(dt)
     local current_time = GetTime()
-    
+
     if self.last_attack_time ~= nil and (current_time - self.last_attack_time >= TUNING.INSPIRATION_DRAIN_BUFFER_TIME) then
         self.is_draining = true
         self:DoDelta(TUNING.INSPIRATION_DRAIN_RATE * dt)

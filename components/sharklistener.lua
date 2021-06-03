@@ -32,22 +32,22 @@ local function processsharks()
     local count = 0
     for shark,i in pairs(_sharks) do
         count = count + 1
-    end    
+    end
 
     for player,i in pairs(_players) do
         local closest = nil
-        for shark,s in pairs(_sharks) do  
+        for shark,s in pairs(_sharks) do
             if shark:IsValid() then
-                local distsq = player:GetDistanceSqToInst(shark)  
+                local distsq = player:GetDistanceSqToInst(shark)
                 if distsq <= DIST*DIST then
-                    if shark:IsValid() and not shark:HasTag("walking") then 
+                    if shark:IsValid() and not shark:HasTag("walking") then
                         closest = nil
-                        break                        
+                        break
                     elseif shark:IsValid() then
                         if not closest or distsq < closest then
-                            closest = distsq                        
+                            closest = distsq
                         end
-                    end        
+                    end
                 end
             end
         end
@@ -63,8 +63,8 @@ local function processsharks()
             player.killtask = player:DoTaskInTime(3,function()
                 player._sharksoundparam:set(2)
             end)
-        end    
-        
+        end
+
     end
 end
 

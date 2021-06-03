@@ -41,8 +41,8 @@ end
 
 function Shelf:TakeItem(taker)
     if self.cantakeitem and self.itemonshelf ~= nil then
-        
-        if self.takeitemtstfn and not self.takeitemtstfn(self.inst,taker, self.itemonshelf) then 
+
+        if self.takeitemtstfn and not self.takeitemtstfn(self.inst,taker, self.itemonshelf) then
             return
         end
 

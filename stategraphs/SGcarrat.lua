@@ -46,13 +46,13 @@ local events =
 
     EventHandler("trapped", function(inst) inst.sg:GoToState("trapped") end),
 
-    EventHandler("yotc_racer_exhausted", function(inst) 
+    EventHandler("yotc_racer_exhausted", function(inst)
 		if (inst.components.health == nil or not inst.components.health:IsDead())
 			and not inst.sg:HasStateTag("sleeping") and not inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("exhausted") then
-			inst.sg:GoToState("exhausted") 
+			inst.sg:GoToState("exhausted")
 		end
 	end),
-    
+
     EventHandler("stunbomb", function(inst)
         inst.sg:GoToState("stunned")
     end),
@@ -102,7 +102,7 @@ local states =
         end,
 
         ontimeout= function(inst)
-            if ((inst.sg.mem.emerge_time or 0) + TUNING.CARRAT.EMERGED_TIME_LIMIT) < GetTime() and not beefalotest(inst) then                
+            if ((inst.sg.mem.emerge_time or 0) + TUNING.CARRAT.EMERGED_TIME_LIMIT) < GetTime() and not beefalotest(inst) then
                 inst.sg:GoToState("submerge")
             elseif math.random() > 0.55 then
                 inst.sg:GoToState("idle2")
@@ -253,7 +253,7 @@ local states =
 
         events =
         {
-            EventHandler("animqueueover", function(inst)                
+            EventHandler("animqueueover", function(inst)
                 if beefalotest(inst) then
                     inst.sg:GoToState("idle")
                 elseif inst.AnimState:AnimDone() then
@@ -298,7 +298,7 @@ local states =
                 inst.components.inventoryitem.canbepickedup = false
             end
         end,
-        
+
         ontimeout = function(inst)
             inst.sg:GoToState("idle", "stunned_pst")
         end,
@@ -307,14 +307,14 @@ local states =
     State {
         name = "trapped",
         tags = { "busy", "trapped" },
-        
+
         onenter = function(inst)
             inst.Physics:Stop()
             inst:ClearBufferedAction()
             inst.AnimState:PlayAnimation("stunned_loop", true)
             inst.sg:SetTimeout(1)
         end,
-        
+
         ontimeout = function(inst)
             inst.sg:GoToState("idle")
         end,
@@ -413,7 +413,7 @@ local states =
             inst.AnimState:PlayAnimation("give_big_pre")
             inst.AnimState:PushAnimation("give_big_loop", true)
 		end,
-		
+
         timeline =
         {
 			TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.reaction) end),
@@ -430,13 +430,13 @@ local states =
             inst.AnimState:PlayAnimation("give_small_pre")
 			inst.AnimState:PushAnimation("give_small_loop", true)
 		end,
-		
+
         timeline =
         {
 			TimeEvent(10*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.reaction) end),
 			TimeEvent(21*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.emerge, "lift") end),
 		},
-		
+
         onexit = function(inst)
 			inst.SoundEmitter:KillSound("lift")
         end,
@@ -459,7 +459,7 @@ local states =
                 inst.sg:GoToState("alert")
             end),
 		},
-		
+
         timeline =
         {
 			TimeEvent(9*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.reaction) end),
@@ -489,7 +489,7 @@ local states =
                 inst.sg:GoToState("alert")
             end),
 		},
-		
+
         timeline =
         {
 			TimeEvent(25*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.emerge) end),
@@ -510,7 +510,7 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("speed")
-			
+
 			inst.sg.statemem.step_sound_task = inst:DoPeriodicTask(4*FRAMES, function() inst.SoundEmitter:PlaySound(inst.sounds.step) end)
         end,
 
@@ -522,7 +522,7 @@ local states =
                 end
             end),
 		},
-		
+
         timeline =
         {
 			TimeEvent(2*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.reaction) end),
@@ -535,7 +535,7 @@ local states =
 				end
 			end),
 		},
-		
+
         onexit = function(inst)
 			if inst.sg.statemem.step_sound_task ~= nil then
 				inst.sg.statemem.step_sound_task:Cancel()
@@ -561,7 +561,7 @@ local states =
                 end
             end),
 		},
-		
+
         timeline =
         {
 			TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.reaction) end),
@@ -587,7 +587,7 @@ local states =
                 end
             end),
 		},
-		
+
         timeline =
         {
 			TimeEvent(40*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.eat) end),
@@ -613,7 +613,7 @@ local states =
                 end
             end),
 		},
-		
+
         timeline =
         {
 			TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound(inst.sounds.reaction) end),
@@ -707,10 +707,10 @@ local states =
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hit")
         end,
-        
+
         events =
         {
-            EventHandler("animover", function(inst) 
+            EventHandler("animover", function(inst)
 				inst.sg:GoToState("idle")
 			end),
         },
@@ -733,10 +733,10 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst) 
-				if inst.AnimState:AnimDone() then 
-					inst.sg:GoToState("race_startstunned_loop", inst.sg.statemem.stun_loops) 
-				end 
+            EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("race_startstunned_loop", inst.sg.statemem.stun_loops)
+				end
 			end),
         },
     },
@@ -753,15 +753,15 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst) 
-				if inst.AnimState:AnimDone() then 
+            EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
 					inst.sg.statemem.stun_loops = inst.sg.statemem.stun_loops - 1
 					if inst.sg.statemem.stun_loops > 0 then
-						inst.sg:GoToState("race_startstunned_loop", inst.sg.statemem.stun_loops) 
+						inst.sg:GoToState("race_startstunned_loop", inst.sg.statemem.stun_loops)
 					else
-						inst.sg:GoToState("race_startstunned_pst") 
+						inst.sg:GoToState("race_startstunned_pst")
 					end
-				end 
+				end
 			end),
         },
     },
@@ -779,10 +779,10 @@ local states =
 
         events =
         {
-            EventHandler("animqueueover", function(inst) 
-				if inst.AnimState:AnimDone() then 
+            EventHandler("animqueueover", function(inst)
+				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle")
-				end 
+				end
 			end),
         },
     },
@@ -855,7 +855,7 @@ CommonStates.AddWalkStates(states,
             --inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small",nil,.25)
         end),
     },
-    walktimeline = 
+    walktimeline =
     {
         TimeEvent(1*FRAMES, function(inst) PlayFootstep(inst)
             --inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small",nil,.25)
@@ -870,7 +870,7 @@ CommonStates.AddWalkStates(states,
             --inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small",nil,.25)
         end),
     },
-    endtimeline = 
+    endtimeline =
     {
         TimeEvent(0*FRAMES, function(inst) PlayFootstep(inst)
             --inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small",nil,.25)

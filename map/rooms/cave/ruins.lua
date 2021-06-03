@@ -14,7 +14,7 @@ require "map/room_functions"
 AddRoom("WetWilds", {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.MUD,
-    tags = {"Hutch_Fishbowl"},    
+    tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = 0.25,
         distributeprefabs=
@@ -125,7 +125,7 @@ AddRoom("LichenLand", {
 bgwilds = {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.MUD,
-    tags = {"Hutch_Fishbowl"},    
+    tags = {"Hutch_Fishbowl"},
     contents =  {
         countprefabs=
         {
@@ -500,7 +500,7 @@ AddRoom("RuinedGuarden", {
             ["WalledGarden"] = 1,
         },
         countprefabs= {
-            
+
             flower_cave = function () return 5 + math.random(3) end,
             gravestone = function () return 4 + math.random(4) end,
             mound = function () return 4 + math.random(4) end

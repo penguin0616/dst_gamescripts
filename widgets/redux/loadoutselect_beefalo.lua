@@ -25,9 +25,9 @@ local LoadoutSelect_beefalo = Class(Widget, function(self, user_profile, charact
 
     self.initial_skins = initial_skins
 
-    self.loadout_root = self:AddChild(Widget("LoadoutRoot"))   
+    self.loadout_root = self:AddChild(Widget("LoadoutRoot"))
 
-    --title 
+    --title
     self.beefname = self.loadout_root:AddChild(Text(UIFONT, 50))
     self.beefname:SetPosition(-35,210)
     self.beefname:SetString(character.replica.named._name:value())
@@ -48,7 +48,7 @@ local LoadoutSelect_beefalo = Class(Widget, function(self, user_profile, charact
 	self.puppet:SetPosition(self.puppet_base_offset[1], self.puppet_base_offset[2])
 	self.puppet_default_scale = 4.5
     self.puppet:SetScale(self.puppet_default_scale)
-    self.puppet:SetClickable(false)	
+    self.puppet:SetClickable(false)
 
     self:_LoadSavedSkins()
 
@@ -58,21 +58,21 @@ local LoadoutSelect_beefalo = Class(Widget, function(self, user_profile, charact
 
         self.frame = self.bg_group:AddChild(Widget("offline frame"))
         self.frame:SetScale(.7)
-	   
+
         self.frame.top = self.frame:AddChild(Image("images/global_redux.xml", "player_list_banner.tex"))
         self.frame.top:SetPosition(0, 150)
-        
+
         self.frame.bottom = self.frame:AddChild(Image("images/global_redux.xml", "player_list_banner.tex"))
         self.frame.bottom:SetScale(-1)
         self.frame.bottom:SetPosition(0, -150)
 
 		local text1 = self.bg_group:AddChild(Text(CHATFONT, 30, STRINGS.UI.LOBBYSCREEN.CUSTOMIZE))
-		text1:SetPosition(0,20) 
+		text1:SetPosition(0,20)
 		text1:SetHAlign(ANCHOR_MIDDLE)
 		text1:SetColour(UICOLOURS.GOLD_UNIMPORTANT)
 
 		local text2 = self.bg_group:AddChild(Text(CHATFONT, 30, STRINGS.UI.LOBBYSCREEN.OFFLINE))
-		text2:SetPosition(0,-20) 
+		text2:SetPosition(0,-20)
 		text2:SetHAlign(ANCHOR_MIDDLE)
 		text2:SetColour(UICOLOURS.GOLD_UNIMPORTANT)
     else
@@ -100,19 +100,19 @@ local LoadoutSelect_beefalo = Class(Widget, function(self, user_profile, charact
             beef_horn = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "beef_horn", reader, writer_builder("beef_horn"), filter_options)),
             beef_head = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "beef_head", reader, writer_builder("beef_head"), filter_options)),
             beef_feet = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "beef_feet", reader, writer_builder("beef_feet"), filter_options)),
-            beef_tail = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "beef_tail", reader, writer_builder("beef_tail"), filter_options)),            
+            beef_tail = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "beef_tail", reader, writer_builder("beef_tail"), filter_options)),
         }
 
         self.subscreener = Subscreener(self, self._MakeMenu, explorer_panels)
 
-        self.subscreener.menu:SetPosition(379, 315) 
+        self.subscreener.menu:SetPosition(379, 315)
 
 
         for k,screen in pairs(self.subscreener.sub_screens) do
             screen:SetScale(0.85)
             screen:SetPosition(130, -10)
         end
-    
+
         self.subscreener:SetPostMenuSelectionAction( function(selection)
             if selection ~= "base" then
                 self:_CycleView(true)
@@ -126,7 +126,7 @@ local LoadoutSelect_beefalo = Class(Widget, function(self, user_profile, charact
         local active_sub = self.subscreener:GetActiveSubscreenFn()
         self.focus_forward = active_sub
     end
-    
+
     if not TheInput:ControllerAttached() then
         if TheNet:IsOnlineMode() then
             self.presetsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "save.tex", STRINGS.UI.SKIN_PRESETS.TITLE, false, false, function()
@@ -158,10 +158,10 @@ function LoadoutSelect_beefalo:_MakeMenu(subscreener)
     self.button_beef_horn = subscreener:WardrobeButtonMinimal("beef_horn")
     self.button_beef_head = subscreener:WardrobeButtonMinimal("beef_head")
     self.button_beef_feet = subscreener:WardrobeButtonMinimal("beef_feet")
-    self.button_beef_tail = subscreener:WardrobeButtonMinimal("beef_tail")    
+    self.button_beef_tail = subscreener:WardrobeButtonMinimal("beef_tail")
 
-    local menu_items = nil     
-    menu_items = 
+    local menu_items = nil
+    menu_items =
     {
         {widget = self.button_beef_body },
         {widget = self.button_beef_horn },
@@ -186,13 +186,13 @@ function LoadoutSelect_beefalo:_LoadSkinPresetsScreen()
     TheFrontEnd:PushScreen( scr )
 end
 
-function LoadoutSelect_beefalo:ApplySkinPresets(skins) 
+function LoadoutSelect_beefalo:ApplySkinPresets(skins)
     if skins.base == nil then
         if table.contains(DST_CHARACTERLIST, self.currentcharacter) then --no base option for mod characters
             skins.base = self.currentcharacter.."_none"
         end
     end
-    
+
     if skins.beef_body == nil then
         skins.beef_body = "beef_body_default1"
     end
@@ -215,7 +215,7 @@ function LoadoutSelect_beefalo:ApplySkinPresets(skins)
 
     ValidateItemsLocal(self.currentcharacter, skins)
     ValidatePreviewItems(self.currentcharacter, skins, self.filter)
-    
+
     self.preview_skins = shallowcopy(skins)
 
     local selected_skins = {}
@@ -238,7 +238,7 @@ function LoadoutSelect_beefalo:ApplySkinPresets(skins)
 end
 
 function LoadoutSelect_beefalo:_LoadSavedSkins()
-    if TheNet:IsOnlineMode() then 
+    if TheNet:IsOnlineMode() then
         self.selected_skins = self.user_profile:GetSkinsForCharacter(self.currentcharacter)
     else
         self.selected_skins = { base = self.currentcharacter.."_none" }
@@ -292,7 +292,7 @@ function LoadoutSelect_beefalo:_UpdateMenu(skins)
     if self.button_base then
         if skins["base"] then
             self.button_base:SetItem(skins["base"])
-        else      
+        else
             self.button_base:SetItem(self.currentcharacter.."_none")
         end
     end
@@ -330,7 +330,7 @@ function LoadoutSelect_beefalo:_UpdateMenu(skins)
         else
             self.button_beef_tail:SetItem("beef_tail_default1")
         end
-    end    
+    end
 end
 
 function LoadoutSelect_beefalo:OnControl(control, down)
@@ -383,7 +383,7 @@ end
 
 
 function LoadoutSelect_beefalo:YOTB_event_check(skin)
-    if not IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then          
+    if not IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
         return true
     end
     for i,set in pairs(BEEFALO_COSTUMES.costumes)do
@@ -396,7 +396,7 @@ function LoadoutSelect_beefalo:YOTB_event_check(skin)
                 end
             end
         end
-    end 
+    end
 end
 
 return LoadoutSelect_beefalo

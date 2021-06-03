@@ -9,14 +9,14 @@ local prefabs =
     "archive_dispencer_sfx"
 }
 
-local assetsdispencer = 
+local assetsdispencer =
 {
     Asset("ANIM", "anim/archive_knowledge_dispensary.zip"),
     Asset("ANIM", "anim/archive_knowledge_dispensary_b.zip"),
-    Asset("ANIM", "anim/archive_knowledge_dispensary_c.zip"),    
-    Asset("MINIMAP_IMAGE", "archive_knowledge_dispensary"),  
-    Asset("MINIMAP_IMAGE", "archive_knowledge_dispensary_b"),  
-    Asset("MINIMAP_IMAGE", "archive_knowledge_dispensary_c"),  
+    Asset("ANIM", "anim/archive_knowledge_dispensary_c.zip"),
+    Asset("MINIMAP_IMAGE", "archive_knowledge_dispensary"),
+    Asset("MINIMAP_IMAGE", "archive_knowledge_dispensary_b"),
+    Asset("MINIMAP_IMAGE", "archive_knowledge_dispensary_c"),
 }
 
 local OCHESTRINA_MAIN_MUST = {"archive_orchestrina_main"}
@@ -48,8 +48,8 @@ local function teach(inst)
     local pos = Vector3(inst.Transform:GetWorldPosition())
     local players = FindPlayersInRange( pos.x, pos.y, pos.z, 20, true )
 
-    for i,player in ipairs(players) do        
-        if recipe and player.components.builder then 
+    for i,player in ipairs(players) do
+        if recipe and player.components.builder then
             local fx = SpawnPrefab("archive_lockbox_player_fx")
             if fx ~= nil then
                 player:AddChild(fx)
@@ -67,7 +67,7 @@ local function teach(inst)
                     player.components.talker:Say(GetString(player, "ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE"), nil, true)
                 end
             end
-        end        
+        end
     end
 end
 
@@ -129,18 +129,18 @@ local function fn()
             local main = TheSim:FindEntities(x,y,z, 10, OCHESTRINA_MAIN_MUST)
             if main then
                 for i,ent in ipairs(main)do
-                    ent.busy = false 
+                    ent.busy = false
                 end
             end
             inst:Remove()
         end
-    end)    
+    end)
 
     return inst
 end
 
 local function movesound(inst, baseangle, pos)
-   
+
     local sound = {angle = 0, dist=0}
     if inst.soundlist and inst.soundlist[1] then
         sound = inst.soundlist[1]
@@ -148,14 +148,14 @@ local function movesound(inst, baseangle, pos)
     end
     local radius = sound.dist
     local theta = sound.angle + baseangle
-    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))       
+    local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
  --   local test = SpawnPrefab("cutgrass")
   --  test.Transform:SetPosition(offset.x+pos.x,0,offset.z+pos.z)
     inst.Transform:SetPosition(offset.x+pos.x,0,offset.z+pos.z)
     inst.SoundEmitter:PlaySound("grotto/common/archive_lockbox/hit")
 end
 
-local function OnActivate(inst, doer)  
+local function OnActivate(inst, doer)
     local archive = TheWorld.components.archivemanager
     if (not archive or archive:GetPowerSetting() ) then
         if not inst.AnimState:IsCurrentAnimation("use_pre") and not inst.AnimState:IsCurrentAnimation("use_loop") and not inst.AnimState:IsCurrentAnimation("use_post") then
@@ -165,23 +165,23 @@ local function OnActivate(inst, doer)
             inst.sfx.SoundEmitter:PlaySound("grotto/common/archive_lockbox/LP", "loopsound")
             local baserotation = math.random()*PI*2
             local pos = Vector3(inst.Transform:GetWorldPosition())
-            inst.sfx.soundlist = { 
+            inst.sfx.soundlist = {
                 {angle=0,dist=20},
                 {angle=PI/6,dist=15},
                 {angle=-PI/12,dist=10},
                 {angle=-PI/2.3,dist=8},
-                {angle=0,dist=4},                
+                {angle=0,dist=4},
             }
             movesound(inst.sfx, baserotation, pos)
-         --   inst.sfx:DoPeriodicTask(1,function() movesound(inst.sfx, baserotation, pos) end)   
+         --   inst.sfx:DoPeriodicTask(1,function() movesound(inst.sfx, baserotation, pos) end)
 
-            inst.sfx:DoTaskInTime(1,function() movesound(inst.sfx, baserotation, pos) end)        
-            inst.sfx:DoTaskInTime(1.7,function() movesound(inst.sfx, baserotation, pos) end)        
-            inst.sfx:DoTaskInTime(2.7,function() movesound(inst.sfx, baserotation, pos) end)        
-            inst.sfx:DoTaskInTime(3.8,function() movesound(inst.sfx, baserotation, pos) end)        
-            inst.sfx:DoTaskInTime(4.5,function() movesound(inst.sfx, baserotation, pos) end)        
+            inst.sfx:DoTaskInTime(1,function() movesound(inst.sfx, baserotation, pos) end)
+            inst.sfx:DoTaskInTime(1.7,function() movesound(inst.sfx, baserotation, pos) end)
+            inst.sfx:DoTaskInTime(2.7,function() movesound(inst.sfx, baserotation, pos) end)
+            inst.sfx:DoTaskInTime(3.8,function() movesound(inst.sfx, baserotation, pos) end)
+            inst.sfx:DoTaskInTime(4.5,function() movesound(inst.sfx, baserotation, pos) end)
         end
-    else         
+    else
         -- power is off
         --revert to inactive
         inst.components.activatable.inactive = true
@@ -217,9 +217,9 @@ end
 
 
 local function getstatus(inst)
-    local archive = TheWorld.components.archivemanager 
+    local archive = TheWorld.components.archivemanager
 
-    return archive and not archive:GetPowerSetting() and "POWEROFF"        
+    return archive and not archive:GetPowerSetting() and "POWEROFF"
 end
 
 local function dispencerfn()
@@ -232,16 +232,16 @@ local function dispencerfn()
     inst.entity:AddMiniMapEntity()
     inst.MiniMapEntity:SetIcon("archive_knowledge_dispensary.png")
 
-    MakeObstaclePhysics(inst, 0.66)    
+    MakeObstaclePhysics(inst, 0.66)
 
     inst.AnimState:SetBank("knowledge_dispensary")
     inst.AnimState:SetBuild("archive_knowledge_dispensary")
     inst.AnimState:PlayAnimation("idle",false)
 
     inst:ListenForEvent("animover", function()
-        
+
         if inst.AnimState:IsCurrentAnimation("idle") then
-            local archive = TheWorld.components.archivemanager            
+            local archive = TheWorld.components.archivemanager
             if (not archive or archive:GetPowerSetting()) and  math.random()< 1/30 then
                 local rand = math.random(1,3)
                 inst.AnimState:PlayAnimation("taunt"..rand)
@@ -253,8 +253,8 @@ local function dispencerfn()
         end
 
         if inst.AnimState:IsCurrentAnimation("use_pre") then
-            inst.AnimState:PlayAnimation("use_loop",true)        
-            --inst.AnimState:PushAnimation("use_loop")      
+            inst.AnimState:PlayAnimation("use_loop",true)
+            --inst.AnimState:PushAnimation("use_loop")
             inst:DoTaskInTime((45/30) * 2,function()
                 inst.SoundEmitter:PlaySound("grotto/common/archive_lockbox/use")
             end)
@@ -264,26 +264,26 @@ local function dispencerfn()
                     if inst.sfx then
                         inst.sfx:Remove()
                     end
-                
-                    if inst.pastloot and inst.pastloot.removewhenspawned then 
+
+                    if inst.pastloot and inst.pastloot.removewhenspawned then
                         ErodeAway(inst.pastloot)
-                    end                    
+                    end
                     local loot = SpawnPrefab("archive_lockbox")
                     local pt = Vector3(inst.Transform:GetWorldPosition())
                     pt.y = 3
                     inst.components.lootdropper:FlingItem(loot, pt)
 
                     loot.product_orchestrina = inst.product_orchestrina
-                    inst.components.activatable.inactive = true            
+                    inst.components.activatable.inactive = true
                     inst.pastloot = loot
                     loot.removewhenspawned = true
-                end)             
-            end)  
+                end)
+            end)
         end
 
         if inst.AnimState:IsCurrentAnimation("use_post") then
             inst.AnimState:PlayAnimation("idle")
-        end            
+        end
     end)
 
 
@@ -316,19 +316,19 @@ local function dispencerfn()
 
     return inst
 end
-       
+
 local function archive_dispencer_sfxfn()
     local inst = CreateEntity()
 
-    inst.entity:AddTransform()    
-    inst.entity:AddSoundEmitter()    
+    inst.entity:AddTransform()
+    inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
-    end    
+    end
 
     inst.persists = false
 
@@ -338,7 +338,7 @@ end
 local function worldgenitemfn()
     -- this is just used during world gen and should not stick around.
     local inst = CreateEntity()
-    inst.entity:AddTransform()   
+    inst.entity:AddTransform()
     inst.entity:AddNetwork()
 
     inst.entity:SetPristine()
@@ -347,7 +347,7 @@ local function worldgenitemfn()
         return inst
     end
 
-    inst.persists = false    
+    inst.persists = false
 
     inst:DoTaskInTime(0,function() inst:Remove() end)
     return inst

@@ -1,6 +1,6 @@
 
 local YOTC_RaceStart = Class(function(self, inst)
-	self.inst = inst	
+	self.inst = inst
 
 	self.onstartracefn = nil
 	self.rats = {}

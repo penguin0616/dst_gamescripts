@@ -73,7 +73,7 @@ local sounds =
         prototyper_loop = "grotto/common/moon_alter/claw/LP",
         prototyper_use = "grotto/common/moon_alter/claw/use",
         hit = "dontstarve/wilson/chest_close",
-    },    
+    },
 }
 
 local LIGHT_RADIUS = 0.9
@@ -108,7 +108,7 @@ local function onturnon(inst)
         if inst.AnimState:IsCurrentAnimation("proximity_pre") or
             inst.AnimState:IsCurrentAnimation("proximity_loop") or
             inst.AnimState:IsCurrentAnimation(GetStageAnim(inst, "place")) then
-            
+
             if inst.components.moonaltarlinktarget.link == nil then
                 --NOTE: push again even if already playing, in case an idle was also pushed
                 inst.AnimState:PushAnimation("proximity_pre")
@@ -476,7 +476,7 @@ local function moon_altar_master_postinit(inst)
     inst.components.workable.workleft = TUNING.MOON_ALTAR_COMPLETE_WORK / 3
 
     AddRepairable(inst)
-    
+
     inst.components.moonaltarlinktarget.canbelinkedfn = MoonAltarCanBeLinked
 
     inst.OnSave = moon_altar_on_save
@@ -489,7 +489,7 @@ local function moon_altar_cosmic_master_postinit(inst)
     addprototyper(inst)
 
     inst:ListenForEvent("on_fissure_socket", OnFissureSocket_CosmicPost)
-    
+
     inst.components.moonaltarlinktarget.canbelinkedfn = MoonAltarCosmicCanBeLinked
 
     inst.OnSave = moon_altar_cosmic_on_save

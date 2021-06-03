@@ -191,7 +191,7 @@ local function common_fn(bank, build, icon, tag, onbuiltfn)
     MakeLargeBurnable(inst, nil, nil, true)
     MakeMediumPropagator(inst)
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     MakeHauntableWork(inst)

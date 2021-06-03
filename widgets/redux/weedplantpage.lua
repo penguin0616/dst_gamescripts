@@ -23,7 +23,7 @@ local item_name_remap = {}
 
 local function MakeItemWidget(root, cursor, x, y, ingredient_size, item_name, name_prefix)
     name_prefix = name_prefix or ""
-    
+
     local img_name = (item_icon_remap[item_name] or item_name)..".tex"
     local img_atlas = GetInventoryItemAtlas(img_name, true)
     local backing = root:AddChild(Image(img_atlas or "images/plantregistry.xml", img_atlas ~= nil and img_name or "missing.tex"))
@@ -74,7 +74,7 @@ local WeedPlantPage = Class(PlantPageWidget, function(self, plantspage, data)
     self.plant_name = self.root:AddChild(Text(HEADERFONT, name_font_size, plant_name_str))
     self.plant_name:SetPosition(0, 275 - 15 - 17.5)
     self.plant_name:SetHAlign(ANCHOR_MIDDLE)
-    
+
     if plant_name_str == STRINGS.UI.PLANTREGISTRY.MYSTERY_PLANT then
         self.plant_name:SetColour(PLANTREGISTRYUICOLOURS.LOCKEDBROWN)
     else
@@ -220,7 +220,7 @@ local WeedPlantPage = Class(PlantPageWidget, function(self, plantspage, data)
             table.insert(self.nutrients_icons, nutrients_icon)
         end
 
-        local nutrients_count = #self.nutrients_icons 
+        local nutrients_count = #self.nutrients_icons
         local nutrients_x = x_start - (total_width + (nutrients_count - 1) * nutrients_gap) / 2
         nutrients_y = nutrients_y - 10 - nutrients_size / 2
 
@@ -242,7 +242,7 @@ local WeedPlantPage = Class(PlantPageWidget, function(self, plantspage, data)
     --nutrients--
 
     x_start = x_start + line_width + line_gap
-    
+
     --product--
     if self.data.plant_def.product then
         local knows_plant = ThePlantRegistry:KnowsPlantName(self.data.plant, self.data.info)
@@ -254,10 +254,10 @@ local WeedPlantPage = Class(PlantPageWidget, function(self, plantspage, data)
         if not knows_plant then
             self.product:SetColour(PLANTREGISTRYUICOLOURS.LOCKEDBROWN)
         end
-        
+
         self.product_line = MakeDetailsLine(self.root, x_start, product_y, 0.5)
         product_y = product_y - 2 - ingredient_size / 2
-    
+
         local product_name = knows_plant and self.data.plant_def.product or ""
         self.product_icon = MakeItemWidget(self.root, self.cursor, x_start, product_y, ingredient_size, product_name)
     end
@@ -343,7 +343,7 @@ function WeedPlantPage:_DoFocusHookups()
             if previous_plant_widget then
                 plant_widget:SetFocusChangeDir(MOVE_LEFT, previous_plant_widget)
             end
-            
+
             local next_plant_widget
             for k = i + 1, #self.data.info do
                 local _plant_widget = self.plant_grid[k]
@@ -382,7 +382,7 @@ function WeedPlantPage:BuildPlantGrid()
             local w = self.plant_grid_root:AddChild(Widget("plant-grid-"..i))
             w.info = info
             w.row_w = row_w
-            
+
             if ThePlantRegistry:KnowsPlantStage(self.data.plant, i) then
                 w.cell_root = w:AddChild(Image("images/plantregistry.xml", row_w >= 100 and "plant_cell_active.tex" or "plant_cell_narrow_active.tex"))
             else
@@ -397,7 +397,7 @@ function WeedPlantPage:BuildPlantGrid()
                 w.plant_anim:GetAnimState():OverrideSymbol("soil01", "farm_soil", "soil01")
                 w.plant_anim:GetAnimState():SetBuild(self.data.plant_def.build)
                 w.plant_anim:GetAnimState():SetBankAndPlayAnimation(w.info.bank or self.data.plant_def.bank, w.info.anim, w.info.loop ~= false)
-                
+
                 w.cell_root.OnGainFocus = function()
                     if w.info.grow_anim and w.plant_anim:GetAnimState():IsCurrentAnimation(w.info.anim) then
                         w.plant_anim:GetAnimState():PlayAnimation(w.info.grow_anim, false)
@@ -409,7 +409,7 @@ function WeedPlantPage:BuildPlantGrid()
                 end
                 w.cell_root.OnLoseFocus = function()
                     w.cell_root:SetTexture("images/plantregistry.xml", w.row_w >= 100 and "plant_cell_active.tex" or "plant_cell_narrow_active.tex")
-                    
+
                     w.plant_label:SetColour(PLANTREGISTRYUICOLOURS.UNLOCKEDBROWN)
                 end
                 w.plant_anim.focus_forward = w.cell_root

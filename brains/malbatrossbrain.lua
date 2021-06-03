@@ -64,8 +64,8 @@ local function GetCombatFaceTargetFn(inst)
 end
 
 local function KeepCombatFaceTargetFn(inst, target)
-    
-    if inst and inst.components.combat and inst.components.combat.target then                                          
+
+    if inst and inst.components.combat and inst.components.combat.target then
 
         local potential = FindClosestPlayerToInst(inst, RETURNTOFIGHT_DIST, true)
         if potential then
@@ -90,19 +90,19 @@ local function KeepCombatFaceTargetFn(inst, target)
         and inst:IsValid()
         and target:IsValid()
         and not (target:HasTag("notarget") or
-                target:HasTag("playerghost"))  
+                target:HasTag("playerghost"))
 end
 --[[
 local function GetFaceTargetFn(inst)
     -- if the malbatross is fleeing, don't Face
     -- if it has a target and should stardown, then staredown
     -- if it's just wandering and a target comes close, stare
-    if inst and inst.components.combat and inst.components.combat.target then 
+    if inst and inst.components.combat and inst.components.combat.target then
         return nil
     end
 
     local target = nil
-   
+
     target = FindClosestPlayerToInst(inst, START_FACE_DIST, true)
 
     local dist = TUNING.MALBATROSS_MAX_CHASEAWAY_DIST - 10
@@ -114,12 +114,12 @@ local function GetFaceTargetFn(inst)
     return target ~= nil and not target:HasTag("notarget") and target or nil
 end
 
-local function KeepFaceTargetFn(inst, target) 
+local function KeepFaceTargetFn(inst, target)
 
-    if inst and inst.components.combat and inst.components.combat.target then 
+    if inst and inst.components.combat and inst.components.combat.target then
         return nil
     end
-  
+
     if not inst:IsNear(target, KEEP_FACE_DIST) then
         return nil
     end
@@ -135,7 +135,7 @@ local function KeepFaceTargetFn(inst, target)
         and inst:IsValid()
         and target:IsValid()
         and not (target:HasTag("notarget") or
-                target:HasTag("playerghost"))  
+                target:HasTag("playerghost"))
 end
 ]]
 
@@ -179,7 +179,7 @@ local function GetEatAction(inst)
 
     local target = FindEntity(
         inst,
-        SEE_BAIT_DIST, 
+        SEE_BAIT_DIST,
         function(found_entity)
             return not (found_entity.components.inventoryitem and found_entity.components.inventoryitem:IsHeld()) and
                     not found_entity:IsOnPassablePoint()
@@ -191,7 +191,7 @@ local function GetEatAction(inst)
     if target then
         local act = BufferedAction(inst, target, ACTIONS.EAT)
         act.validfn = function()
-            return not (target.components.inventoryitem and target.components.inventoryitem:IsHeld()) and 
+            return not (target.components.inventoryitem and target.components.inventoryitem:IsHeld()) and
                     not target:IsOnPassablePoint()
         end
         return act
@@ -206,7 +206,7 @@ local function ShouldLeaveLand(inst)
             inst.landtimer = GetTime()
         end
         if GetTime() -  inst.landtimer > 5 then
-            inst:PushEvent("depart")      
+            inst:PushEvent("depart")
         end
     else
         inst.landtimer = nil
@@ -228,14 +228,14 @@ function MalbatrossBrain:OnStart()
 
                 RunAway(self.inst, function() return CheckForFleeAndDive(self.inst) end, RUN_AWAY_DIST, STOP_RUN_AWAY_DIST),
 
-                FaceEntity(self.inst, GetCombatFaceTargetFn, KeepCombatFaceTargetFn),                        
+                FaceEntity(self.inst, GetCombatFaceTargetFn, KeepCombatFaceTargetFn),
 
                 ChaseAndAttack(self.inst, CHASE_TIME, CHASE_DIST),
                 DoAction(self.inst, GetEatAction, "Dive For Fish"),
                 Wander(self.inst, GetWanderPos, 30, {minwaittime = 6}),
             }, 1)),
     }, 1)
-    
+
     self.bt = BT(self.inst, root)
 end
 

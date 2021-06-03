@@ -65,16 +65,16 @@ local function fn()
         return inst
     end
 
-    ---------------------        
+    ---------------------
 	inst.underwater = SpawnPrefab("bullkelp_plant_leaves")
 	inst.underwater.entity:SetParent(inst.entity)
 	inst.underwater.Transform:SetPosition(0,0,0)
-    ---------------------        
+    ---------------------
 
 	local start_time = math.random() * 2
     inst.AnimState:SetTime(start_time)
     inst.underwater.AnimState:SetTime(start_time)
-	
+
     local color = 0.75 + math.random() * 0.25
     inst.AnimState:SetMultColour(color, color, color, 1)
 
@@ -88,11 +88,11 @@ local function fn()
 
     inst:AddComponent("inspectable")
 
-    ---------------------        
+    ---------------------
     MakeSmallBurnable(inst, TUNING.SMALL_FUEL)
     MakeSmallPropagator(inst)
-    MakeHauntableIgnite(inst)    
-    ---------------------   
+    MakeHauntableIgnite(inst)
+    ---------------------
 
     return inst
 end
@@ -107,7 +107,7 @@ local function underwaterleafsfn()
 	inst.AnimState:SetBank("bullkelp")
     inst.AnimState:SetBuild("bullkelp")
     inst.AnimState:PlayAnimation("idle", true)
-    inst.AnimState:SetLayer(LAYER_BACKGROUND)    
+    inst.AnimState:SetLayer(LAYER_BACKGROUND)
 
 	inst.AnimState:Hide("water_shadow2")
 	inst.AnimState:Hide("ripple2")

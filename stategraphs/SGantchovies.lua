@@ -14,7 +14,7 @@ local states =
         events =
         {
             EventHandler("on_caught_in_net", function(inst) inst.sg:GoToState("caught_in_net") end),
-        },                        
+        },
     },
 
     State{
@@ -26,7 +26,7 @@ local states =
         events =
         {
             EventHandler("on_release_from_net", function(inst) inst.sg:GoToState("released_from_net") end),
-        },                        
+        },
     },
 
     State{
@@ -39,8 +39,8 @@ local states =
         events =
         {
             --EventHandler("lowering_anchor", function(inst) inst.sg:GoToState("lowering") end),
-        },                        
-    }       
+        },
+    }
 }
 
 return StateGraph("antchovies", states, events, "idle")

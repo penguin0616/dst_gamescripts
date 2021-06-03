@@ -1,6 +1,6 @@
 --Returns a sine wave based on game time. Mod will modify the period of the wave and abs is wether or not you want
 -- the abs value of the wave
-function GetSineVal(mod, abs, inst)	
+function GetSineVal(mod, abs, inst)
     local time = (inst and inst:GetTimeAlive() or GetTime()) * (mod or 1)
     local val = math.sin(PI * time)
     if abs then

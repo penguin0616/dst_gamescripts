@@ -41,7 +41,7 @@ local states=
 
         timeline =
         {
-            TimeEvent(4*FRAMES, function(inst) 
+            TimeEvent(4*FRAMES, function(inst)
                 inst.Light:Enable(false)
                 inst.DynamicShadow:Enable(false)
 
@@ -81,7 +81,7 @@ local states=
 
         timeline =
         {
-            TimeEvent(14*FRAMES, function(inst) 
+            TimeEvent(14*FRAMES, function(inst)
                 inst.Light:Enable(true)
                 inst.DynamicShadow:Enable(true)
                 inst.SoundEmitter:PlaySound("dontstarve/cave/mushtree_tall_spore_land")

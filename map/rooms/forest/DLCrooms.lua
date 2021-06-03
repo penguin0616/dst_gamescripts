@@ -55,7 +55,7 @@ AddRoom("Badlands", {
 									},
 					            }
 					})
-					
+
 AddRoom("DragonflyArena", {
 					colour={r=0.3,g=0.2,b=0.1,a=0.3},
 					value = GROUND.DIRT_NOISE,
@@ -130,7 +130,7 @@ AddRoom("BGDeciduous", {
 
 										sapling=1,
 					                    twiggytree=0.4,
-										grass=0.03,								
+										grass=0.03,
 
 										flower=0.75,
 

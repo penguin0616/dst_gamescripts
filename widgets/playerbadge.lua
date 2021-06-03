@@ -14,7 +14,7 @@ local PlayerBadge = Class(Widget, function(self, prefab, colour, ishost, userfla
 
     self.icon = self.root:AddChild(Widget("target"))
     self.icon:SetScale(.8)
- 
+
     self.userflags = 0 --we need a default for GetBG to not crash
     self.headbg = self.icon:AddChild(Image(DEFAULT_ATLAS, self:GetBG()))
     self:_SetupHeads()
@@ -79,7 +79,7 @@ function PlayerBadge:Set(prefab, colour, ishost, userflags, base_skin)
     end
     if dirty then
         self.headbg:SetTexture(DEFAULT_ATLAS, self:GetBG())
-        
+
         if self:UseAvatarImage() then
             self.head:Show()
             self.head_anim:Hide()
@@ -194,7 +194,7 @@ function PlayerBadge:GetAvatarImage()
     end
 
     return DEFAULT_AVATAR
-    
+
     --[[local starting = self:IsGhost() and "avatar_ghost_" or "avatar_"
     local ending =
         (self:IsCharacterState1() and "_1" or "")..

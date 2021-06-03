@@ -91,7 +91,7 @@ local function CheckTargetPiece(inst)
         inst.SoundEmitter:PlaySound("dontstarve/common/diviningrod_ping", "ping")
         inst.SoundEmitter:SetParameter("ping", "intensity", intensity)
         inst.task = inst:DoTaskInTime(nextpingtime or 1, CheckTargetPiece)
-    end 
+    end
 end
 
 local function onequip(inst, owner)
@@ -99,8 +99,8 @@ local function onequip(inst, owner)
     owner.AnimState:Hide("ARM_normal")
     owner.AnimState:OverrideSymbol("swap_object", "swap_diviningrod", "swap_diviningrod")
     if not inst.disabled then
-        inst.closeness = nil 
-        inst.tracking_parts = nil       
+        inst.closeness = nil
+        inst.tracking_parts = nil
         inst.task = inst:DoTaskInTime(1, CheckTargetPiece)
     end
 end
@@ -145,7 +145,7 @@ local function fn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddSoundEmitter()        
+    inst.entity:AddSoundEmitter()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 

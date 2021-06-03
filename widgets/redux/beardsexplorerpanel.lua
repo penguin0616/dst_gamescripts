@@ -84,7 +84,7 @@ function BeardsExplorerPanel:OnClickedItem(item_data, is_selected)
     if item_data.item_key ~= "beard_default1" then
         self.character = item_data.item_key:sub(1,string.find(item_data.item_key, "_")-1)
     end
-    
+
     local clothing = self.user_profile:GetSkinsForCharacter(self.character)
     self.puppet:SetSkins(self.character, clothing.base, clothing, true, "normalSkin")
     self.puppet:SetBeard(item_data.item_key)

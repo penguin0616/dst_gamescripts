@@ -39,7 +39,7 @@ local function SummonMalbatross(target_shoal, the_malbatross)
     assert(target_shoal ~= nil)
 
     the_malbatross = the_malbatross or
-            TheSim:FindFirstEntityWithTag("malbatross") or 
+            TheSim:FindFirstEntityWithTag("malbatross") or
             SpawnPrefab("malbatross")
 
     _firstspawn = false
@@ -113,7 +113,7 @@ local function OnShoalFishHooked(source, fish_shoal)
     end
 end
 
-local function OnMalbatrossTimerDone(source)
+local function OnMalbatrossTimerDone()
     inst:StartUpdatingComponent(self)
 end
 
@@ -181,8 +181,9 @@ end
 --------------------------------------------------------------------------
 
 function self:OnSave()
-    local data = { 
+    local data = {
         _firstspawn = _firstspawn,
+        _timerfinished = not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) or nil
     }
 
     if _activemalbatross ~= nil then
@@ -199,6 +200,9 @@ end
 function self:OnLoad(data)
     if data._time_until_spawn then
         _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, math.min(data._time_until_spawn, TUNING.MALBATROSS_SPAWNDELAY_BASE + TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
+    elseif data._timerfinished then
+        _worldsettingstimer:StopTimer(MALBATROSS_TIMERNAME)
+        OnMalbatrossTimerDone()
     end
     _firstspawn = data._firstspawn
 end

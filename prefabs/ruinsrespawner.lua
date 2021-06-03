@@ -2,7 +2,7 @@ local function onnewobjectfn(inst, obj)
     inst:ListenForEvent("onremove", function(obj)
         table.removearrayvalue(inst.components.objectspawner.objects, obj)
     end, obj)
-    
+
     if inst.listenforprefabsawp then
 		inst:ListenForEvent("onprefabswaped", function(_, data)
 			inst.components.objectspawner:TakeOwnership(data.newobj)
@@ -81,7 +81,7 @@ local function MakeRuinsRespawnerWorldGen(obj, onrespawnfn, data)
 		local inst = MakeFn(obj, onrespawnfn, data)()
 
 		inst:SetPrefabName(obj.."_ruinsrespawner_inst")
-		
+
         inst.resetruins = true
 		inst:DoTaskInTime(0, tryspawn)
 

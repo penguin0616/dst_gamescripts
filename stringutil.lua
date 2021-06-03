@@ -329,12 +329,12 @@ function str_seconds(time)
 	else
 		return subfmt(STRINGS.UI.TIME_FORMAT.MMSS, {minutes=minutes_str or 0, seconds=seconds_str})
 	end
-	
+
 end
 
 function str_date(os_time)
 	local os_date = os.date("*t", os_time)
-	
+
 	return subfmt(STRINGS.UI.DATE_FORMAT.MDY, {month = STRINGS.UI.DATE.MONTH_ABBR[os_date.month], day = tostring(os_date.day), year = tostring(os_date.year)})
 end
 
@@ -342,7 +342,7 @@ function str_play_time(time)
 	local minutes = 0
 	local hours = 0
 	local days = 0
-	
+
 	time = math.floor(time / 60) -- drop the seconds, we dont want to display them
 	if time > 0  then
 		minutes = time % 60
@@ -376,7 +376,7 @@ function DamLevDist( a, b, limit )
     end
 
     --Note(Peter): does this work with unicode?
-    a = { string.byte( a, 1, a_len ) } 
+    a = { string.byte( a, 1, a_len ) }
     b = { string.byte( b, 1, b_len ) }
 
     local d = {} --2d array, 0-based, indexed as [i * num_columns + j]
@@ -388,7 +388,7 @@ function DamLevDist( a, b, limit )
 
     --Initialize insertion and deletion costs
     for i = 0, a_len do
-        d[ id(i,0) ] = i 
+        d[ id(i,0) ] = i
     end
     for j = 0, b_len do
         d[ id(0,j) ] = j
@@ -400,28 +400,28 @@ function DamLevDist( a, b, limit )
 
         for j = 1, b_len do
             local cost = a[i] ~= b[j] and 1 or 0
-            
-            local current = math.min( 
+
+            local current = math.min(
                 d[ id(i-1, j  ) ] + 1,    --Deletion
                 d[ id(i,   j-1) ] + 1,    --Insertion
                 d[ id(i-1, j-1) ] + cost  --Cost of substitution, could be 0 if they are the same
             )
             d[ id(i,j) ] = current
-            
+
             --Check if we can transpose
             if i > 1 and j > 1 and a[ i ] == b[ j-1 ] and a[ i-1 ] == b[ j ] then
                 d[ id(i,j) ] = math.min( current, d[ id(i-2, j-2) ] + cost ) -- Cost of transposition
             end
-            
+
             if current < low then
                 low = current
             end
         end
-        
+
         if low >= limit then
             return limit
         end
     end
-    
+
     return d[ id(a_len,b_len) ]
 end

@@ -194,7 +194,7 @@ local function OnInactive(inst)
     if not inst:HasTag("burnt") then
         inst:RemoveEventCallback("animover", OnInactive)
 		inst.AnimState:PlayAnimation("item_idle")
-    end 
+    end
 end
 
 local function OnStageStarted(inst, stage)

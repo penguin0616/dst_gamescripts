@@ -27,7 +27,7 @@ local show_graphics = PLATFORM ~= "NACL"
 local enableDisableOptions = { { text = STRINGS.UI.OPTIONS.DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.ENABLED, data = true } }
 local integratedbackpackOptions = { { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_ENABLED, data = true } }
 local enableScreenFlashOptions = { { text = STRINGS.UI.OPTIONS.DEFAULT, data = 1 }, { text = STRINGS.UI.OPTIONS.DIM, data = 2 } , { text = STRINGS.UI.OPTIONS.DIMMEST, data = 3 } }
-local function FindEnableScreenFlashOptionsIndex(value) 
+local function FindEnableScreenFlashOptionsIndex(value)
     for i = 1, #enableScreenFlashOptions do
 		if enableScreenFlashOptions[i].data == value then
 			return i
@@ -36,7 +36,7 @@ local function FindEnableScreenFlashOptionsIndex(value)
 	return 1
 end
 
-local all_controls = 
+local all_controls =
 {
     -- mouse
     {name=CONTROL_PRIMARY, keyboard=CONTROL_PRIMARY, controller=nil},
@@ -142,29 +142,29 @@ local function GetDisplays()
 	for i = 0, num_displays - 1 do
 		table.insert( displays, { text = STRINGS.UI.OPTIONS.DISPLAY.." "..i+1, data = i } )
 	end
-	
+
 	return displays
 end
 
 local function GetRefreshRates( display_id, mode_idx )
 	local gOpts = TheFrontEnd:GetGraphicsOptions()
-	
+
 	local w, h, hz = gOpts:GetDisplayMode( display_id, mode_idx )
 	local num_refresh_rates = gOpts:GetNumRefreshRates( display_id, w, h )
-	
+
 	local refresh_rates = {}
 	for i = 0, num_refresh_rates - 1 do
 		local refresh_rate = gOpts:GetRefreshRate( display_id, w, h, i )
 		table.insert( refresh_rates, { text = string.format( "%d", refresh_rate ), data = refresh_rate } )
 	end
-	
+
 	return refresh_rates
 end
 
 local function GetDisplayModes( display_id )
 	local gOpts = TheFrontEnd:GetGraphicsOptions()
 	local num_modes = gOpts:GetNumDisplayModes( display_id )
-	
+
 	local res_data = {}
 	for i = 0, num_modes - 1 do
 		local w, h, hz = gOpts:GetDisplayMode( display_id, i )
@@ -190,14 +190,14 @@ end
 local function GetDisplayModeIdx( display_id, w, h, hz )
 	local gOpts = TheFrontEnd:GetGraphicsOptions()
 	local num_modes = gOpts:GetNumDisplayModes( display_id )
-	
+
 	for i = 0, num_modes - 1 do
 		local tw, th, thz = gOpts:GetDisplayMode( display_id, i )
 		if tw == w and th == h and thz == hz then
 			return i
 		end
 	end
-	
+
 	return nil
 end
 
@@ -264,15 +264,15 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 	self.working = deepcopy(self.options)
 
 	self.is_mapping = false
-    
+
     TheInputProxy:StartMappingControls()
 
     self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
 
 	self.root = self:AddChild(TEMPLATES.ScreenRoot("GameOptions"))
-    self.bg = self.root:AddChild(TEMPLATES.PlainBackground())	
+    self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.OPTIONS.TITLE, ""))
-    
+
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
 
     -- action menu is the bottom buttons
@@ -337,7 +337,7 @@ end)
 
 function OptionsScreen:_BuildMenu(subscreener)
     self.tooltip = self.root:AddChild(TEMPLATES.ScreenTooltip())
-	
+
 	local settings_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.SETTINGS, "settings", STRINGS.UI.OPTIONS.TOOLTIP_SETTINGS, self.tooltip)
 	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIP_GRAPHICS, self.tooltip)
 	local controls_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.CONTROLS, "controls", STRINGS.UI.OPTIONS.TOOLTIP_CONTROLS, self.tooltip)
@@ -361,12 +361,12 @@ end
 
 function OptionsScreen:MakeBackButton()
 	self.cancel_button = self.root:AddChild(TEMPLATES.BackButton(
-		function() 
+		function()
 			if self:IsDirty() then
 				self:ConfirmRevert() --revert and go back, or stay
 			else
 				self:Close() --go back
-			end 
+			end
 		end))
 end
 
@@ -383,7 +383,7 @@ end
 
 function OptionsScreen:OnControl(control, down)
     if OptionsScreen._base.OnControl(self, control, down) then return true end
-    
+
     if not down then
 	    if control == CONTROL_CANCEL then
 			if self:IsDirty() then
@@ -395,15 +395,15 @@ function OptionsScreen:OnControl(control, down)
 			return true
 		elseif control == CONTROL_MAP and TheInput:ControllerAttached() then
             TheFrontEnd:PushScreen(PopupDialogScreen( STRINGS.UI.CONTROLSSCREEN.RESETTITLE, STRINGS.UI.CONTROLSSCREEN.RESETBODY,
-            { 
-                { 
+            {
+                {
                     text = STRINGS.UI.CONTROLSSCREEN.YES,
                     cb = function()
                         self:LoadDefaultControls()
                         TheFrontEnd:PopScreen()
                     end
                 },
-                { 
+                {
                     text = STRINGS.UI.CONTROLSSCREEN.NO,
                     cb = function()
                         TheFrontEnd:PopScreen()
@@ -434,21 +434,21 @@ end
 
 function OptionsScreen:Close(fn)
     TheFrontEnd:FadeBack(nil, nil, fn)
-end	
+end
 
 function OptionsScreen:ConfirmRevert()
 	TheFrontEnd:PushScreen(
 		PopupDialogScreen( STRINGS.UI.OPTIONS.BACKTITLE, STRINGS.UI.OPTIONS.BACKBODY,
-		  { 
-		  	{ 
+		  {
+		  	{
 		  		text = STRINGS.UI.OPTIONS.YES,
 		  		cb = function()
 					self:RevertChanges()
 					self:Close(function() TheFrontEnd:PopScreen() end)
 				end
 			},
-			
-			{ 
+
+			{
 				text = STRINGS.UI.OPTIONS.NO,
 				cb = function()
 					TheFrontEnd:PopScreen()
@@ -456,33 +456,33 @@ function OptionsScreen:ConfirmRevert()
 			}
 		  }
 		)
-	)		
+	)
 end
 
 function OptionsScreen:ConfirmApply( )
-	
+
 	TheFrontEnd:PushScreen(
 		PopupDialogScreen( STRINGS.UI.OPTIONS.ACCEPTTITLE, STRINGS.UI.OPTIONS.ACCEPTBODY,
-		  { 
-		  	{ 
-		  		text = STRINGS.UI.OPTIONS.ACCEPT, 
+		  {
+		  	{
+		  		text = STRINGS.UI.OPTIONS.ACCEPT,
 		  		cb = function()
 					self:Apply()
-					self:Save(function() 
+					self:Save(function()
 						self:Close(function() TheFrontEnd:PopScreen() end)
 					end)
 				end
 			},
-			
-			{ 
-				text = STRINGS.UI.OPTIONS.CANCEL, 
+
+			{
+				text = STRINGS.UI.OPTIONS.CANCEL,
 				cb = function()
-					TheFrontEnd:PopScreen()					
+					TheFrontEnd:PopScreen()
 				end
 			}
 		  }
 		)
-	)	
+	)
 end
 
 function OptionsScreen:GetHelpText()
@@ -563,7 +563,7 @@ end
 function OptionsScreen:IsDirty()
 	for k,v in pairs(self.working) do
 		if v ~= self.options[k] then
-			return true	
+			return true
 		end
 	end
 	return self.dirty
@@ -597,7 +597,7 @@ function OptionsScreen:ConfirmGraphicsChanges(fn)
 
 						self:Apply()
 						self:Save(
-							function() 
+							function()
 								self.applying = false
 								self:UpdateMenu()
 								TheFrontEnd:PopScreen()
@@ -609,7 +609,7 @@ function OptionsScreen:ConfirmGraphicsChanges(fn)
 						self.applying = false
 						self:RevertChanges()
 						self:ChangeGraphicsMode()
-						TheFrontEnd:PopScreen()					
+						TheFrontEnd:PopScreen()
 					end
 				}
 			  }
@@ -674,7 +674,7 @@ end
 function OptionsScreen:LoadCurrentControls()
 	TheInputProxy:LoadCurrentControlMapping()
 	self:MakeClean()
-    self:RefreshControls()	
+    self:RefreshControls()
 end
 
 --[[function OptionsScreen:MapControlInputHandler(control, down)
@@ -694,7 +694,7 @@ function OptionsScreen:MapControl(deviceId, controlId)
     local popup = PopupDialogScreen(STRINGS.UI.CONTROLSSCREEN.CONTROLS[controlIndex], body_text, {})
 
     -- Better position within dialog.
-    popup.dialog.body:SetPosition(0, 0)    
+    popup.dialog.body:SetPosition(0, 0)
 
     -- Prevent any inputs from being consumed so TheInputProxy can work.
     popup.OnControl = function(_, control, down) --[[self:MapControlInputHandler(control, down)]] return true end
@@ -705,14 +705,14 @@ function OptionsScreen:MapControl(deviceId, controlId)
 end
 
 function OptionsScreen:OnControlMapped(deviceId, controlId, inputId, hasChanged)
-    if self.is_mapping then 
+    if self.is_mapping then
        -- print("Control [" .. controlId .. "] is now [" .. inputId .. "]", hasChanged, debugstack())
 
         -- removes the "press a button to bind" popup screen. This is not needed when clearing a binding because there is no popup
         if inputId ~= 0xFFFFFFFF then
             TheFrontEnd:PopScreen()
         end
-		
+
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
         for k, v in pairs(self.active_list.items) do
             if controlId == v.controlId then
@@ -720,8 +720,8 @@ function OptionsScreen:OnControlMapped(deviceId, controlId, inputId, hasChanged)
                     local ctrlString = TheInput:GetLocalizedControl(deviceId, v.controlId)
                     v.binding_btn:SetText(ctrlString)
                     -- hasChanged only refers to the immediate change, but if a control is modified
-                    -- and then modified again to the original we shouldn't highlight it 
-                    local changedFromOriginal = TheInputProxy:HasMappingChanged(deviceId, controlId) 
+                    -- and then modified again to the original we shouldn't highlight it
+                    local changedFromOriginal = TheInputProxy:HasMappingChanged(deviceId, controlId)
                     if changedFromOriginal then
                         v.changed_image:Show()
                     else
@@ -730,14 +730,14 @@ function OptionsScreen:OnControlMapped(deviceId, controlId, inputId, hasChanged)
                 end
             end
         end
-        
+
         -- set the dirty flag (if something changed) if it hasn't yet been set
         if not self:IsDirty() and hasChanged then
             self:MakeDirty()
         end
-        
+
 	    self.is_mapping = false
-    end 
+    end
 end
 
 function OptionsScreen:_BuildActionMenu()
@@ -748,20 +748,20 @@ function OptionsScreen:_BuildActionMenu()
     action_menu:AddCustomItem(self.apply_button, Vector3(450, 0, 0))
 
     self.reset_button = self.root:AddChild(TEMPLATES.StandardButton(
-            function() 
+            function()
                 TheFrontEnd:PushScreen(PopupDialogScreen( STRINGS.UI.CONTROLSSCREEN.RESETTITLE, STRINGS.UI.CONTROLSSCREEN.RESETBODY,
-                        { 
-                            { 
-                                text = STRINGS.UI.CONTROLSSCREEN.YES, 
+                        {
+                            {
+                                text = STRINGS.UI.CONTROLSSCREEN.YES,
                                 cb = function()
-                                    self:LoadDefaultControls() 
+                                    self:LoadDefaultControls()
                                     TheFrontEnd:PopScreen()
                                 end
                             },
-                            { 
-                                text = STRINGS.UI.CONTROLSSCREEN.NO, 
+                            {
+                                text = STRINGS.UI.CONTROLSSCREEN.NO,
                                 cb = function()
-                                    TheFrontEnd:PopScreen()					
+                                    TheFrontEnd:PopScreen()
                                 end
                             }
                     }))
@@ -791,7 +791,7 @@ end
 function OptionsScreen:OnDestroy()
     TheInputProxy:StopMappingControls()
 
-	if self.inputhandlers then     
+	if self.inputhandlers then
 	    for k,v in pairs(self.inputhandlers) do
 	        v:Remove()
 	    end
@@ -801,7 +801,7 @@ function OptionsScreen:OnDestroy()
 end
 
 function OptionsScreen:RefreshControls()
-	
+
 	local focus = self:GetDeepestFocus()
 	local old_idx = focus and focus.idx
 
@@ -875,7 +875,7 @@ function OptionsScreen:DoInit()
 
 	self.inputhandlers = {}
     table.insert(self.inputhandlers, TheInput:AddControlMappingHandler(
-        function(deviceId, controlId, inputId, hasChanged)  
+        function(deviceId, controlId, inputId, hasChanged)
             self:OnControlMapped(deviceId, controlId, inputId, hasChanged)
         end
     ))
@@ -931,9 +931,9 @@ end
 -- This is the "languages" tab
 function OptionsScreen:_BuildLanguages()
     local languagesRoot = Widget("ROOT")
-    
+
     languagesRoot:SetPosition(0,0)
-    
+
     local button_width = 430
     local button_height = 45
 
@@ -948,7 +948,7 @@ function OptionsScreen:_BuildLanguages()
         table.insert(self.langButtons, self:_BuildLangButton(button_width, button_height, id))
     end
     self.lang_grid:FillGrid(2, button_width, button_height, self.langButtons)
-    
+
     languagesRoot.focus_forward = self.lang_grid
 
     return languagesRoot
@@ -997,7 +997,7 @@ end
 -- This is the "graphics" tab
 function OptionsScreen:_BuildGraphics()
 	local graphicssroot = Widget("ROOT")
-	
+
 	-- NOTE: if we add more options, they should be made scrollable. Look at customization screen for an example.
     self.grid_graphics = graphicssroot:AddChild(Grid())
     self.grid_graphics:SetPosition(-90, 184, 0)
@@ -1011,13 +1011,13 @@ function OptionsScreen:_BuildGraphics()
 
 	if show_graphics then
 		local gOpts = TheFrontEnd:GetGraphicsOptions()
-											
+
 		self.fullscreenSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.FULLSCREEN, enableDisableOptions)
 		self.fullscreenSpinner.OnChanged =
 			function( _, data )
 				self.working.fullscreen = data
 				self:UpdateResolutionsSpinner()
-				self:UpdateMenu()				
+				self:UpdateMenu()
 			end
 		if gOpts:IsFullScreenEnabled() then
 			self.fullscreenSpinner:Enable()
@@ -1034,9 +1034,9 @@ function OptionsScreen:_BuildGraphics()
 				self:UpdateRefreshRatesSpinner()
 				self:UpdateMenu()
 			end
-		
+
 		local refresh_rates = GetRefreshRates( self.working.display, self.working.mode_idx )
-		self.refreshRateSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.REFRESHRATE, refresh_rates) 
+		self.refreshRateSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.REFRESHRATE, refresh_rates)
 		self.refreshRateSpinner.OnChanged =
 			function( _, data )
 				self.working.refreshrate = data
@@ -1050,8 +1050,8 @@ function OptionsScreen:_BuildGraphics()
 				self.working.mode_idx = data.idx
 				self:UpdateRefreshRatesSpinner()
 				self:UpdateMenu()
-			end			
-			
+			end
+
 		self.netbookModeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NETBOOKMODE, enableDisableOptions)
 		self.netbookModeSpinner.OnChanged =
 			function( _, data )
@@ -1067,9 +1067,9 @@ function OptionsScreen:_BuildGraphics()
 				--self:Apply()
 				self:UpdateMenu()
 			end
-						
+
 	end
-	
+
 	self.bloomSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BLOOM, enableDisableOptions)
 	self.bloomSpinner.OnChanged =
 		function( _, data )
@@ -1077,7 +1077,7 @@ function OptionsScreen:_BuildGraphics()
 			--self:Apply()
 			self:UpdateMenu()
 		end
-		
+
 	self.distortionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISTORTION, enableDisableOptions)
 	self.distortionSpinner.OnChanged =
 		function( _, data )
@@ -1107,18 +1107,18 @@ function OptionsScreen:_BuildGraphics()
 		function( spinner, data )
 			--print(v,data)
 			if not self.shownTextureStreamingWarning then
-				TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_TITLE, STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_BODY, 
+				TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_TITLE, STRINGS.UI.OPTIONS.RESTART_TEXTURE_STREAMING_BODY,
 				{
-					{text=STRINGS.UI.OPTIONS.OK,     cb = function() 
+					{text=STRINGS.UI.OPTIONS.OK,     cb = function()
 																self.shownTextureStreamingWarning = true
 																self.working.texturestreaming = data
-																TheFrontEnd:PopScreen() 
+																TheFrontEnd:PopScreen()
 																self:UpdateMenu()
 															end },
-					{text=STRINGS.UI.OPTIONS.CANCEL, cb = function() 
+					{text=STRINGS.UI.OPTIONS.CANCEL, cb = function()
 																spinner:SetSelectedIndex(EnabledOptionsIndex( self.working.texturestreaming ))
 																spinner:SetHasModification(false)
-																TheFrontEnd:PopScreen() 
+																TheFrontEnd:PopScreen()
 																self:UpdateMenu()	-- not needed but meh
 															end}
 				}))
@@ -1134,18 +1134,18 @@ function OptionsScreen:_BuildGraphics()
 			function( spinner, data )
 				--print(v,data)
 				if not self.shownThreadedRenderWarning then
-					TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_TITLE, STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_BODY, 
+					TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_TITLE, STRINGS.UI.OPTIONS.RESTART_THREADED_RENDER_BODY,
 					{
-						{text=STRINGS.UI.OPTIONS.OK,     cb = function() 
+						{text=STRINGS.UI.OPTIONS.OK,     cb = function()
 																	self.shownThreadedRenderWarning = true
 																	self.working.threadedrender = data
-																	TheFrontEnd:PopScreen() 
+																	TheFrontEnd:PopScreen()
 																	self:UpdateMenu()
 																end },
-						{text=STRINGS.UI.OPTIONS.CANCEL, cb = function() 
+						{text=STRINGS.UI.OPTIONS.CANCEL, cb = function()
 																	spinner:SetSelectedIndex(EnabledOptionsIndex( self.working.threadedrender ))
 																	spinner:SetHasModification(false)
-																	TheFrontEnd:PopScreen() 
+																	TheFrontEnd:PopScreen()
 																	self:UpdateMenu()	-- not needed but meh
 																end}
 					}))
@@ -1158,7 +1158,7 @@ function OptionsScreen:_BuildGraphics()
 
 	self.left_spinners_graphics = {}
 	self.right_spinners_graphics = {}
-		
+
 	table.insert( self.left_spinners_graphics, self.fullscreenSpinner )
 	table.insert( self.left_spinners_graphics, self.resolutionSpinner )
 	table.insert( self.left_spinners_graphics, self.displaySpinner )
@@ -1166,16 +1166,16 @@ function OptionsScreen:_BuildGraphics()
 	table.insert( self.left_spinners_graphics, self.smallTexturesSpinner )
 	table.insert( self.left_spinners_graphics, self.netbookModeSpinner )
 	table.insert( self.left_spinners_graphics, self.texturestreamingSpinner )
-	
+
 	if IsWin32() then
 		table.insert( self.left_spinners_graphics, self.threadedrenderSpinner )
 	end
-	
+
     table.insert( self.right_spinners_graphics, self.screenshakeSpinner )
     table.insert( self.right_spinners_graphics, self.distortionSpinner )
     table.insert( self.right_spinners_graphics, self.bloomSpinner )
     table.insert( self.right_spinners_graphics, self.screenFlashSpinner )
-	
+
 	self.grid_graphics:UseNaturalLayout()
 	self.grid_graphics:InitSize(2, math.max(#self.left_spinners_graphics, #self.right_spinners_graphics), 440, 40)
 
@@ -1231,7 +1231,7 @@ function OptionsScreen:_BuildSettings()
 			self:ApplyVolume()
 			self:UpdateMenu()
 		end
-		
+
 	self.hudSize = CreateNumericSpinner(STRINGS.UI.OPTIONS.HUDSIZE, 0, 10)
 	self.hudSize.OnChanged =
 		function( _, data )
@@ -1279,7 +1279,7 @@ function OptionsScreen:_BuildSettings()
 			--self:Apply()
 			self:UpdateMenu()
 		end
-		
+
 	self.integratedbackpackSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BACKPACKMODE, integratedbackpackOptions)
 	self.integratedbackpackSpinner.OnChanged =
 		function( _, data )
@@ -1287,7 +1287,7 @@ function OptionsScreen:_BuildSettings()
 			--self:Apply()
 			self:UpdateMenu()
 		end
-		
+
 
 	if self.show_datacollection then
 		self.datacollectionCheckbox = CreateCheckBox(STRINGS.UI.OPTIONS.DATACOLLECTION,
@@ -1295,8 +1295,8 @@ function OptionsScreen:_BuildSettings()
 				local opt_in = not TheSim:GetDataCollectionSetting()
 				local str = STRINGS.UI.DATACOLLECTION_POPUP[opt_in and "OPT_IN" or "OPT_OUT"]
 				TheFrontEnd:PushScreen(PopupDialogScreen( STRINGS.UI.DATACOLLECTION_POPUP.TITLE, STRINGS.UI.DATACOLLECTION_POPUP.BODY,
-				{ 
-					{ 
+				{
+					{
 						text = str.CONTINUE,
 						cb = function()
 							local saved = TheSim:SetDataCollectionSetting( opt_in )
@@ -1304,13 +1304,13 @@ function OptionsScreen:_BuildSettings()
 							SimReset()
 						end
 					},
-					{ 
+					{
 						text = STRINGS.UI.DATACOLLECTION_POPUP.PRIVACY_PORTAL,
 						cb = function()
 							VisitURL("https://www.klei.com/privacy-policy")
 						end
 					},
-					{ 
+					{
 						text = STRINGS.UI.DATACOLLECTION_POPUP.CANCEL,
 						cb = function()
 							TheFrontEnd:PopScreen()
@@ -1369,15 +1369,15 @@ function OptionsScreen:_BuildSettings()
             self:RefreshControls()
             self:MakeDirty()
 		end
-		
-		
+
+
 	self.autologinSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOLOGIN, enableDisableOptions)
 	self.autologinSpinner.OnChanged =
 		function( _, data )
 			self.working.autologin = data
 			self:UpdateMenu()
 		end
-		
+
 	self.animatedHeadsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.ANIMATED_HEADS, enableDisableOptions)
 		self.animatedHeadsSpinner.OnChanged =
 			function( _, data )
@@ -1387,7 +1387,7 @@ function OptionsScreen:_BuildSettings()
 
 	self.left_spinners = {}
 	self.right_spinners = {}
-	
+
     table.insert( self.left_spinners, self.deviceSpinner )
     table.insert( self.left_spinners, self.vibrationSpinner)
     table.insert( self.left_spinners, self.fxVolume )
@@ -1400,7 +1400,7 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.left_spinners, self.hudSize)
     table.insert( self.left_spinners, self.boatcameraSpinner)
     table.insert( self.left_spinners, self.integratedbackpackSpinner)
-	
+
     table.insert( self.right_spinners, self.movementpredictionSpinner )
 	table.insert( self.right_spinners, self.autologinSpinner )
 	table.insert( self.right_spinners, self.animatedHeadsSpinner )
@@ -1534,27 +1534,27 @@ function OptionsScreen:_BuildControls()
         local function is_valid_controller(device_id) return device_id and device_id ~= 0 and all_controls[i] and all_controls[i].controller end
         local group = BuildControlGroup(is_valid_controller, "controller", controllerDeviceId, all_controls[i], i)
         if group then
-            group.binding_btn.OnControl =  
+            group.binding_btn.OnControl =
                 function( _, control, down)
 					if group.binding_btn._base.OnControl(group.binding_btn, control, down) then return true end
-					
+
                     local device_id = self.deviceSpinner:GetSelectedData()
 					if not self.is_mapping and device_id ~= 0 then
 						if not down and control == CONTROL_MENU_MISC_2 then
 							-- Unbind the game control
                             self.is_mapping = true
 						    TheInputProxy:UnMapControl(device_id, group.control.controller)
-	
+
 							return true
 						end
 					end
-                end 
-           group.binding_btn.GetHelpText = 
+                end
+           group.binding_btn.GetHelpText =
 				function()
 					local controller_id = TheInput:GetControllerID()
 					local t = {}
-					table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2, false, false ) .. " " .. STRINGS.UI.CONTROLSSCREEN.UNBIND)	
-					table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT, false, false ) .. " " .. STRINGS.UI.CONTROLSSCREEN.CHANGEBIND)	
+					table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2, false, false ) .. " " .. STRINGS.UI.CONTROLSSCREEN.UNBIND)
+					table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT, false, false ) .. " " .. STRINGS.UI.CONTROLSSCREEN.CHANGEBIND)
 					return table.concat(t, "  ")
 				end
 
@@ -1634,7 +1634,7 @@ function OptionsScreen:InitializeSpinners(first)
 		local volume = self.working[ key ] or 7
 		spinner:SetSelectedIndex( math.floor( volume + 0.5 ) )
 	end
-	
+
 	self.hudSize:SetSelectedIndex( self.working.hudSize or 5)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
@@ -1656,7 +1656,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.automodsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.automods ) )
 	self.autologinSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autologin ) )
 	self.animatedHeadsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.animatedheads ) )
-	
+
 	if first then
 		-- Add the bg change when non-init value for all spinners
         local function SetupOnChange(i,spinner)
@@ -1677,8 +1677,8 @@ function OptionsScreen:InitializeSpinners(first)
 
 		for i,spinner in pairs(self.right_spinners) do
             SetupOnChange(i,spinner)
-		end	
-		
+		end
+
 		for i,spinner in pairs(self.left_spinners_graphics) do
             SetupOnChange(i,spinner)
 		end
@@ -1700,19 +1700,19 @@ end
 function OptionsScreen:UpdateRefreshRatesSpinner()
 	if show_graphics then
 		local current_refresh_rate = self.working.refreshrate
-		
+
 		local refresh_rates = GetRefreshRates( self.working.display, self.working.mode_idx )
 		self.refreshRateSpinner:SetOptions( refresh_rates )
 		self.refreshRateSpinner:SetSelectedIndex( 1 )
-		
+
 		for idx, refresh_rate_data in ipairs( refresh_rates ) do
 			if refresh_rate_data.data == current_refresh_rate then
 				self.refreshRateSpinner:SetSelectedIndex( idx )
 				break
 			end
 		end
-		
-		self.working.refreshrate = self.refreshRateSpinner:GetSelected().data		
+
+		self.working.refreshrate = self.refreshRateSpinner:GetSelected().data
 	end
 end
 
@@ -1720,7 +1720,7 @@ function OptionsScreen:UpdateResolutionsSpinner()
 	if show_graphics then
 		local resolutions = GetDisplayModes( self.working.display )
 		self.resolutionSpinner:SetOptions( resolutions )
-	
+
 		if self.fullscreenSpinner:GetSelected().data then
 			self.displaySpinner:Enable()
 			self.refreshRateSpinner:Enable()
@@ -1731,7 +1731,7 @@ function OptionsScreen:UpdateResolutionsSpinner()
 				local gOpts = TheFrontEnd:GetGraphicsOptions()
 				local mode_idx = gOpts:GetCurrentDisplayModeID( self.options.display )
 				local w, h, hz = GetDisplayModeInfo( self.working.display, mode_idx )
-				
+
 				for idx, option in pairs( self.resolutionSpinner.options ) do
 					if option.data.w == w and option.data.h == h then
 						spinner_idx = idx

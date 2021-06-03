@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
     ActionHandler(ACTIONS.BREAK, "break_molehill"),
     ActionHandler(ACTIONS.EAT, "eat_start"),
@@ -119,7 +119,7 @@ local states =
     State{
         name = "summon_ally",
         tags = {"busy"},
-        
+
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
 
@@ -239,7 +239,7 @@ local states =
                 inst:PerformBufferedAction()
 
                 inst.SoundEmitter:PlaySound("dontstarve/creatures/spat/spit_playerunstuck")
-            end),   
+            end),
         },
 
         ontimeout = return_to_idle,
@@ -290,7 +290,7 @@ local states =
 
 CommonStates.AddWalkStates(states,
 {
-    starttimeline = 
+    starttimeline =
     {
         TimeEvent(0       , function(inst)
             inst.Physics:Stop()
@@ -302,7 +302,7 @@ CommonStates.AddWalkStates(states,
         TimeEvent(0       , function(inst)
             inst.Physics:Stop()
         end),
-        TimeEvent(5*FRAMES, function(inst) 
+        TimeEvent(5*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound("grotto/creatures/mole_bat/walk")
             inst.components.locomotor:WalkForward()
         end ),
@@ -310,7 +310,7 @@ CommonStates.AddWalkStates(states,
             inst.Physics:Stop()
         end ),
     },
-    
+
     endtimeline =
     {
         TimeEvent(1*FRAMES, PlayFootstep ),
@@ -320,7 +320,7 @@ CommonStates.AddWalkStates(states,
 
 CommonStates.AddSleepStates(states,
 {
-    starttimeline = 
+    starttimeline =
     {
         TimeEvent(2*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound("grotto/creatures/mole_bat/yawn")

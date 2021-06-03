@@ -51,7 +51,7 @@ local function fn()
     inst.animname = names[math.random(#names)]
     inst.AnimState:PlayAnimation(inst.animname)
 
-    inst:AddComponent("inspectable") 
+    inst:AddComponent("inspectable")
 
     inst:AddComponent("sanityaura")
     inst.components.sanityaura.aura = -TUNING.SANITYAURA_SMALL
@@ -71,8 +71,8 @@ local function fn()
     MakeHauntableIgnite(inst)
 
     --------SaveLoad
-    inst.OnSave = onsave 
-    inst.OnLoad = onload 
+    inst.OnSave = onsave
+    inst.OnLoad = onload
 
     return inst
 end

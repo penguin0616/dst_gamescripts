@@ -19,7 +19,7 @@ function SaveFilterBar:BuildFocusFinder()
         -- If we have no items to display, then we can't push focus to the
         -- serverslotscreen since it will contain nothing to focus.
         if self.serverslotscreen.server_scroll_list and #self.serverslotscreen.server_scroll_list.items > 0 then
-            return self.serverslotscreen.server_scroll_list 
+            return self.serverslotscreen.server_scroll_list
         else
             return self
         end
@@ -50,7 +50,7 @@ function SaveFilterBar:AddSorter()
 
         btn:SetHoverText( subfmt(STRINGS.UI.SERVERCREATIONSCREEN.SORT_MODE_FMT, { mode = STRINGS.UI.SERVERCREATIONSCREEN[sort_mode] }) )
         btn.icon:SetTexture("images/button_icons2.xml", modes[sort_mode] )
-        
+
         if not self.no_refresh_saves then
             self.serverslotscreen:RefreshSaveFilter(self:_ConstructFilter())
         end
@@ -62,7 +62,7 @@ function SaveFilterBar:AddSorter()
         if sort_mode == nil then
             sort_mode = "SORT_LASTPLAYED"
         end
-        
+
         Profile:SetServerSortMode(sort_mode)
         btn:SetSortType(sort_mode)
     end
@@ -78,9 +78,9 @@ end
 local search_subwords = function( search, str, sub_len )
     local str_len = string.len(str)
 
-    for i=1,str_len - sub_len + 1 do        
+    for i=1,str_len - sub_len + 1 do
         local sub = str:sub( i, i + sub_len - 1 )
-        
+
         local dist = DamLevDist( search, sub, 2 )
         if dist < 2 then
             return true
@@ -102,7 +102,7 @@ local search_match = function( search, str )
 
     if sub_len > 3 then
         if search_subwords( search, str, sub_len ) then return true end
-        
+
         --Try again with 1 fewer character
         sub_len = sub_len - 1
         if search_subwords( search, str, sub_len ) then return true end
@@ -136,7 +136,7 @@ function SaveFilterBar:AddSearch()
             --Early out
             return true
         end
-        
+
         local serverdata = ShardSaveGameIndex:GetSlotServerData(slot)
         character = STRINGS.CHARACTER_NAMES[character] or character
 
@@ -156,7 +156,7 @@ function SaveFilterBar:AddSearch()
     searchbox.focus_forward = searchbox.textbox
 
     self.search_box = searchbox
-    
+
     self:_UpdatePositions()
 
     return searchbox

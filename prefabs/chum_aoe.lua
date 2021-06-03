@@ -49,12 +49,12 @@ local FISHABLE_TAGS = {"oceanfish", "oceanfishable"}
 local function SpawnFishSchool(inst)
     local retry = false
     local x, y, z = inst.Transform:GetWorldPosition()
-    
+
     local num_fish = #TheSim:FindEntities(x, y, z, TUNING.SCHOOL_SPAWNER_FISH_CHECK_RADIUS, FISHABLE_TAGS)
     if num_fish < TUNING.SCHOOL_SPAWNER_MAX_FISH + EXTRA_MAX_FISH_ALLOWED then
         local theta = math.random() * 2 * PI
         local spawn_offset = Vector3(math.cos(theta) * FISH_SPAWN_MAX_OFFSET, 0, math.sin(theta) * FISH_SPAWN_MAX_OFFSET)
-        
+
         local num_fish_spawned = TheWorld.components.schoolspawner:SpawnSchool(Vector3(x, y, z), nil, spawn_offset)
         if num_fish_spawned == nil or num_fish_spawned == 0 then
             retry = true
@@ -93,12 +93,12 @@ local function SpawnChumPieces(inst)
         local spawnx, spawnz = x + math.cos(theta) * offset, z + math.sin(theta) * offset
         if TheWorld.Map:IsOceanAtPoint(spawnx, 0, spawnz, false) then
             local piece = SpawnPrefab("chumpiece")
-            
+
             piece.Transform:SetPosition(spawnx, 0, spawnz)
             piece._source = inst
             inst._chumpieces[piece] = true
             inst._num_chumpieces = inst._num_chumpieces + 1
-            
+
             piece:ListenForEvent("onremove", OnPieceRemoved)
         end
     end
@@ -130,7 +130,7 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    
+
     inst.AnimState:SetBank("fish_chum")
     inst.AnimState:SetBuild("fish_chum")
     inst.AnimState:PlayAnimation("fish_chum_base_pre")

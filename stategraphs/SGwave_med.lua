@@ -42,18 +42,18 @@ local states=
 		events =
 		{
 			EventHandler("animover", function(inst)
-				
-				if inst.waitingtolower then 
+
+				if inst.waitingtolower then
 					inst.sg:GoToState("lower")
 				else
 					inst.AnimState:PlayAnimation("idle", false)
-				end 
+				end
 			end)
 		},
 
 		ontimeout = function(inst)
 			--inst.sg:GoToState("lower")
-			inst.waitingtolower = true 
+			inst.waitingtolower = true
 		end,
 	},
 
@@ -70,10 +70,10 @@ local states=
 			end
 		end,
 
-		events = 
+		events =
 		{
-			EventHandler("animover", function(inst) 
-				inst:Remove() 
+			EventHandler("animover", function(inst)
+				inst:Remove()
 			end)
 		},
 	},

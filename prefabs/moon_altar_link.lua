@@ -26,7 +26,7 @@ local ITEM_LAUNCH_SPEED_MULTIPLIER_VARIANCE = 2.5
 
 local function startmoonstorms(inst)
     TheWorld:PushEvent("ms_startthemoonstorms")
-    
+
     if not inst:HasTag("can_build_moon_device") then
         inst:AddTag("can_build_moon_device")
     end
@@ -123,14 +123,14 @@ local function OnLoadPostPass(inst)
             moon_altar._force_on = false
             moon_altar_cosmic._force_on = false
             moon_altar_astral._force_on = false
-            
+
             inst:Remove()
         end
     else
         if moon_altar ~= nil then moon_altar._force_on = false end
         if moon_altar_cosmic ~= nil then moon_altar_cosmic._force_on = false end
         if moon_altar_astral ~= nil then moon_altar_astral._force_on = false end
-        
+
         inst:Remove()
     end
 end
@@ -142,7 +142,7 @@ local function fn()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    
+
     inst.AnimState:SetBuild("moon_geyser")
     inst.AnimState:SetBank("moon_altar_geyser")
     inst.AnimState:PlayAnimation("stage0_low_idle", true)
@@ -179,7 +179,7 @@ local function fn()
 
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
-    
+
     inst.OnLoadPostPass = OnLoadPostPass
 
     return inst
@@ -199,13 +199,13 @@ local function contained_fn()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    
+
     inst.AnimState:SetBuild("moon_geyser")
     inst.AnimState:SetBank("moon_altar_geyser")
     inst.AnimState:PlayAnimation("stage1_idle", true)
 
     inst.AnimState:SetLightOverride(1)
-    
+
     inst:AddTag("FX")
     inst:AddTag("NOCLICK")
     inst:AddTag("NOBLOCK")

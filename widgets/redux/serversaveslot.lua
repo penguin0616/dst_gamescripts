@@ -123,7 +123,7 @@ local ServerSaveSlot = Class(Widget, function(self, serverslotscreen, isservercr
     self.mods.bg:SetScale(1)
     self.mods.img:SetScale(setting_image_s)
     self.mods:Hide()
-    
+
     self.offline = self.root:AddChild(Text(NEWFONT, 25, STRINGS.UI.SERVERCREATIONSCREEN.OFFLINE_WORLD))
     self.offline:SetColour(unpack(PLAYERCOLOURS.RED))
     self.offline:SetPosition(340 + offset, -20)
@@ -151,7 +151,7 @@ local ServerSaveSlot = Class(Widget, function(self, serverslotscreen, isservercr
     self.delete = self.root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "delete.tex", STRINGS.UI.SERVERCREATIONSCREEN.DELETE_SLOT, false, false, function() self:OnDeleteButton() end))
     self.delete:SetScale(0.6)
     self.delete:SetPosition(395, -18)
-    
+
     if isservercreationscreen or TheInput:ControllerAttached() or IsConsole() then
         self.openfolder:Hide()
         self.delete:Hide()
@@ -203,7 +203,7 @@ function ServerSaveSlot:SetSaveSlot(slot, server_data)
 
     self.server_name:SetTruncatedString(server_data.name or "", 360, nil, true)
     local w, h = self.server_name:GetRegionSize()
-    self.server_name:SetPosition(w/2 - 295, 15)	
+    self.server_name:SetPosition(w/2 - 295, 15)
 
     self.server_desc:SetTruncatedString(server_data.description or "", 360, nil, true)
 	w, h = self.server_desc:GetRegionSize()
@@ -217,7 +217,7 @@ function ServerSaveSlot:SetSaveSlot(slot, server_data)
 
         self.preset:SetString(self.serverslotscreen:GetPresetText(self.slot))
     end
-    
+
     local setting_icon_x = 355
     if self.isservercreationscreen or TheInput:ControllerAttached() or IsConsole() then
         setting_icon_x = 375
@@ -260,7 +260,7 @@ function ServerSaveSlot:SetSaveSlot(slot, server_data)
 end
 
 function ServerSaveSlot:OnDeleteButton()
-    local dialog_items = { 
+    local dialog_items = {
         { text=STRINGS.UI.SERVERCREATIONSCREEN.DELETE, cb = function() ShardSaveGameIndex:DeleteSlot(self.slot, function() self.serverslotscreen:ClearSlotCache(self.slot) self.serverslotscreen:UpdateSaveFiles() TheFrontEnd:PopScreen() end) end },
         { text=STRINGS.UI.SERVERCREATIONSCREEN.CANCEL, cb = function() TheFrontEnd:PopScreen() end },
     }
@@ -270,7 +270,7 @@ end
 function ServerSaveSlot:OnControl(control, down)
     if self.isservercreationscreen then return true end
 	if ServerSaveSlot._base.OnControl(self, control, down) then return true end
-	
+
 	if not down then
 		if control == CONTROL_ACCEPT then
 			self:onclick()
@@ -300,7 +300,7 @@ function ServerSaveSlot:GetHelpText()
         end
         table.insert(t, text)
     end
-	
+
 	return table.concat(t, "  ")
 end
 

@@ -1,6 +1,6 @@
--- spawner in unique from childspawner in that it manages a single persistant entity 
+-- spawner in unique from childspawner in that it manages a single persistant entity
 -- (eg. a specific named pigman with a specific hat)
--- whereas childspawner creates and destroys one or more generic entities as they enter 
+-- whereas childspawner creates and destroys one or more generic entities as they enter
 -- and leave the spawner (eg. spiders). it can manage more than one, but can not maintain
 -- individual properties of each entity
 
@@ -27,7 +27,7 @@ local Spawner = Class(function(self, inst)
     self.spawnoffscreen = nil
     --self.spawn_in_water
     --self.spawn_on_boats
-    
+
     self.task = nil
     self.nextspawntime = nil
     self.queue_spawn = nil
@@ -93,7 +93,7 @@ end
 function Spawner:Configure(childname, delay, startdelay)
     self.childname = childname
     self.delay = delay
-    
+
     self:SpawnWithDelay(startdelay or 0)
 end
 
@@ -214,7 +214,7 @@ function Spawner:ReleaseChild()
     if self.child == nil then
         local childname = self.childfn ~= nil and self.childfn(self.inst) or self.childname
         local child = SpawnPrefab(childname)
-        if child ~= nil then            
+        if child ~= nil then
             self:TakeOwnership(child)
             if self:GoHome(child) then
                 self:CancelSpawning()

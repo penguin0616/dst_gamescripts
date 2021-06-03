@@ -14,7 +14,7 @@ local OceanFishable = Class(function(self, inst)
 --  self.makeprojectilefn = nil -- implement this if you want to catch something other than this object.
 
 
-	-- Use StrugglingSetup to initialize all these 
+	-- Use StrugglingSetup to initialize all these
 --	self.stamina_def = {}
 --	self.stamina = 1.0
 --  self.is_struggling_state = false
@@ -45,7 +45,7 @@ function OceanFishable:WasEatenByA(tunafish)
 	if self.oneatenfn ~= nil then
 		self.oneatenfn(self.inst, tunafish)
 	end
-	
+
 	self.inst:Remove()
 end
 
@@ -105,7 +105,7 @@ end
 function OceanFishable:UpdateRunSpeed()
 	if self.inst.components.locomotor ~= nil then
 		local tension_mod = self.rod == nil and 1
-							or math.abs(anglediff(self.inst.Transform:GetRotation(), self.inst:GetAngleToPoint(self.rod.Transform:GetWorldPosition()))) > 90 and (1 - math.min(0.8, self.rod.components.oceanfishingrod:GetTensionRating())) 
+							or math.abs(anglediff(self.inst.Transform:GetRotation(), self.inst:GetAngleToPoint(self.rod.Transform:GetWorldPosition()))) > 90 and (1 - math.min(0.8, self.rod.components.oceanfishingrod:GetTensionRating()))
 							or (1 + self.rod.components.oceanfishingrod:GetTensionRating() * 0.5)
 
 		if self.max_walk_speed ~= nil then

@@ -250,7 +250,7 @@ local function fn()
     inst.components.burnable:SetOnIgniteFn(OnIgnite)
     inst.components.burnable:SetOnExtinguishFn(OnExtinguish)
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     inst:AddComponent("hauntable")

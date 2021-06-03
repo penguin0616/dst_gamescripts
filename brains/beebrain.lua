@@ -71,7 +71,7 @@ function BeeBrain:OnStart()
             Wander(self.inst, function() return GetBeeBeaconPos(self) end, MAX_WANDER_DIST_BEE_BEACON)),
 
         FindFlower(self.inst),
-        Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, beecommon.MAX_WANDER_DIST)            
+        Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, beecommon.MAX_WANDER_DIST)
     }, 1)
 
     self.bt = BT(self.inst, root)

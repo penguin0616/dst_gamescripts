@@ -70,7 +70,7 @@ local function update(inst)
             bx + dir_x * (radius + TUNING.OCEANHORROR.ATTACH_OFFSET_PADDING + boat_collision_radius_padding),
             0,
             bz + dir_z * (radius + TUNING.OCEANHORROR.ATTACH_OFFSET_PADDING + boat_collision_radius_padding)) then
-            
+
             inst:PushEvent("boatteleport", {force_random_angle_on_boat=true})
         end
     end
@@ -120,7 +120,7 @@ local function DetachFromBoat(inst)
         inst.entity:SetParent(nil)
         pivot:Remove()
     end
-    
+
     inst.Transform:SetPosition(x, y, z)
 
     inst._should_teleport_time = GetTime()
@@ -251,7 +251,7 @@ local function ExchangeWithTerrorBeak(inst)
                 shadow.sg:GoToState("appear")
                 shadow.components.combat:SetTarget(target)
                 TheWorld:PushEvent("ms_exchangeshadowcreature", {ent = inst, exchangedent = shadow})
-                local fx = SpawnPrefab("shadow_teleport_in") 
+                local fx = SpawnPrefab("shadow_teleport_in")
                 fx.Transform:SetPosition(sx,sy,sz)
             end
         end
@@ -279,7 +279,7 @@ local function fn()
     inst:AddTag("shadow")
     inst:AddTag("notraptrigger")
     inst:AddTag("ignorewalkableplatforms")
-    
+
     inst.AnimState:SetBank("oceanhorror")
     inst.AnimState:SetBuild("shadow_oceanhorror")
     inst.AnimState:PlayAnimation("idle_loop", true)
@@ -302,7 +302,7 @@ local function fn()
 
     inst._should_teleport_time = GetTime()
     -- inst._current_boat = nil
-    
+
     -- these are cached so that they can be accessed from the stategraph
     inst._attach_to_boat_fn = AttachToBoat
     inst._detach_from_boat_fn = DetachFromBoat
@@ -343,7 +343,7 @@ local function fn()
     inst:ListenForEvent("death", OnDeath)
 
     inst:ListenForEvent("onattackother", OnAttackOther)
-    
+
     inst._update_task = inst:DoPeriodicTask(FRAMES, update)
 
     inst.ExchangeWithTerrorBeak = ExchangeWithTerrorBeak
@@ -401,7 +401,7 @@ local function attachpivotfn()
     end
 
     inst.persists = false
-    
+
     inst:ListenForEvent("onsink", attachpivot_onsink)
 
     return inst

@@ -234,18 +234,18 @@ function ValidateSpawnPrefabRequest(user_id, prefab_name, skin_base, clothing_bo
     end
 
     if clothing_body ~= "" and TheInventory:CheckClientOwnership(user_id, clothing_body) and IsClothingItem(clothing_body) then
-        validated_clothing_body = clothing_body 
+        validated_clothing_body = clothing_body
     end
     if clothing_hand ~= "" and TheInventory:CheckClientOwnership(user_id, clothing_hand) and IsClothingItem(clothing_hand) then
-        validated_clothing_hand = clothing_hand 
+        validated_clothing_hand = clothing_hand
     end
     if clothing_legs ~= "" and TheInventory:CheckClientOwnership(user_id, clothing_legs) and IsClothingItem(clothing_legs) then
-        validated_clothing_legs = clothing_legs 
+        validated_clothing_legs = clothing_legs
     end
     if clothing_feet ~= "" and TheInventory:CheckClientOwnership(user_id, clothing_feet) and IsClothingItem(clothing_feet) then
-        validated_clothing_feet = clothing_feet 
+        validated_clothing_feet = clothing_feet
     end
-	
+
     return validated_prefab, validated_skin_base, validated_clothing_body, validated_clothing_hand, validated_clothing_legs, validated_clothing_feet
 end
 
@@ -282,7 +282,7 @@ function SerializeUserSession(player, isnewspawn)
         local data = DataDumper(playerinfo, nil, BRANCH ~= "dev")
 
         local metadataStr = ""
-        
+
         if TheNet:GetIsServer() then
             local metadata = {
                 character = player.prefab,
@@ -354,7 +354,7 @@ function DownloadMods( server_listing )
         local modinfo = KnownModIndex:GetModInfo(mod_name)
         if not modinfo.client_only_mod then
             if server_listing_contains( server_listing.mods_description, mod_name ) then
-                --we found it, so leave the mod enabled 
+                --we found it, so leave the mod enabled
             else
                 --this mod is required by all clients but the server doesn't have it enabled or it's a server mod, so locally disable it temporarily.
                 --print("Temp disabling ",mod_name)
@@ -386,7 +386,7 @@ function DownloadMods( server_listing )
             if mod.all_clients_require_mod then
                 if not KnownModIndex:DoesModExist( mod.mod_name, mod.version ) then
                     print("Failed to find mod "..mod.mod_name.." v:"..mod.version )
-                    
+
                     have_required_mods = false
                     local can_dl_mod = TheSim:QueueDownloadTempMod(mod.mod_name, mod.version)
                     if not can_dl_mod then
@@ -405,7 +405,7 @@ function DownloadMods( server_listing )
             TheNet:ServerModsDownloadCompleted(true, "", "")
         else
             if needed_mods_in_workshop then
-                TheSim:StartDownloadTempMods( 
+                TheSim:StartDownloadTempMods(
                     function( success, msg )
                         if success then
                             --downloading of mods succeeded, now double check if the right versions exists, if it doesn't then we downloaded the wrong version
@@ -416,7 +416,7 @@ function DownloadMods( server_listing )
                                 if mod.all_clients_require_mod then
                                     if not KnownModIndex:DoesModExist( mod.mod_name, mod.version, mod.version_compatible ) then
                                         all_mods_good = false
-                                        mod_with_invalid_version = mod                                      
+                                        mod_with_invalid_version = mod
                                     end
                                 end
                             end
@@ -443,7 +443,7 @@ function DownloadMods( server_listing )
                                 sku = "_RAIL"
                             end
                             if msg == "Access to mod denied" then
-                                TheNet:ServerModsDownloadCompleted(false, msg, "SERVER_MODS_WORKSHOP_ACCESS_DENIED"..sku)                                
+                                TheNet:ServerModsDownloadCompleted(false, msg, "SERVER_MODS_WORKSHOP_ACCESS_DENIED"..sku)
                             else
                                 TheNet:ServerModsDownloadCompleted(false, msg, "SERVER_MODS_WORKSHOP_FAILURE"..sku)
                             end
@@ -492,7 +492,7 @@ function JoinServer(server_listing, optional_password_override)
     local function after_mod_warning()
         if server_listing.has_password and (optional_password_override == "" or optional_password_override == nil) then
             local password_prompt_screen
-            password_prompt_screen = InputDialogScreen( STRINGS.UI.SERVERLISTINGSCREEN.PASSWORDREQUIRED, 
+            password_prompt_screen = InputDialogScreen( STRINGS.UI.SERVERLISTINGSCREEN.PASSWORDREQUIRED,
                                             {
                                                 {
                                                     text = STRINGS.UI.SERVERLISTINGSCREEN.OK,
@@ -513,7 +513,7 @@ function JoinServer(server_listing, optional_password_override)
             password_prompt_screen.edit_text.OnTextEntered = function()
                 if password_prompt_screen:GetActualString() ~= "" then
                     TheFrontEnd:PopScreen()
-                    send_response( password_prompt_screen:GetActualString() ) 
+                    send_response( password_prompt_screen:GetActualString() )
                 else
                     password_prompt_screen.edit_text:SetEditing(true)
                 end
@@ -521,7 +521,7 @@ function JoinServer(server_listing, optional_password_override)
             if not Profile:GetShowPasswordEnabled() then
                 password_prompt_screen.edit_text:SetPassword(true)
             end
-            TheFrontEnd:PushScreen(password_prompt_screen)  
+            TheFrontEnd:PushScreen(password_prompt_screen)
             password_prompt_screen.edit_text:SetForceEdit(true)
             password_prompt_screen.edit_text:OnControl(CONTROL_ACCEPT, false)
         else
@@ -542,7 +542,7 @@ function JoinServer(server_listing, optional_password_override)
 			local imageW, imageH = checkbox:GetSize()
 			text:SetVAlign(ANCHOR_LEFT)
 			text:SetColour(0,0,0,1)
-			local checkbox_x = -textW/2 - (imageW*2) 
+			local checkbox_x = -textW/2 - (imageW*2)
 			local region = 600
 			checkbox:SetPosition(checkbox_x, 0)
 			text:SetRegionSize(region,50)
@@ -593,20 +593,20 @@ function JoinServer(server_listing, optional_password_override)
 			mod_warning.dialog.actions.items[1]:SetPosition(305,55,0)
 			mod_warning.dialog.actions.items[2]:SetPosition(105,-10,0)
             mod_warning.dialog.actions.items[3]:SetPosition(355,-10,0)
-            
+
 			TheFrontEnd:PushScreen( mod_warning )
 		else
 			after_mod_warning()
 		end
 	end
-	
+
 	if server_listing.client_mods_disabled and
 		not IsMigrating() and
 		(server_listing.dedicated or not server_listing.owner) and
 		AreAnyClientModsEnabled() then
-		
+
 		local client_mod_msg = PopupDialogScreen(STRINGS.UI.SERVERLISTINGSCREEN.CLIENT_MODS_DISABLED_TITLE, STRINGS.UI.SERVERLISTINGSCREEN.CLIENT_MODS_DISABLED_BODY,
-			{{ text=STRINGS.UI.SERVERLISTINGSCREEN.CONTINUE, cb = function() 
+			{{ text=STRINGS.UI.SERVERLISTINGSCREEN.CONTINUE, cb = function()
 						TheFrontEnd:PopScreen()
 						after_client_mod_message()
 			end }})
@@ -615,7 +615,7 @@ function JoinServer(server_listing, optional_password_override)
 	else
 		after_client_mod_message()
 	end
-	
+
 end
 
 function MigrateToServer(serverIp, serverPort, serverPassword, serverNetId)
@@ -875,7 +875,7 @@ function CalcQuickJoinServerScore(server)
 		and (server.ping > 0 and server.ping < 200)							-- filter out bad pings
 	then
 		local score = 0
-		
+
 		if server.friend_playing then										score = score + 10		end
 		if server._has_character_on_server then								score = score + 4		end
 		if server.current_players >= 3 then									score = score + 3		end
@@ -884,10 +884,10 @@ function CalcQuickJoinServerScore(server)
 		if server.season ~= nil and server.season == SEASONS.AUTUMN then	score = score + 2		end
 
 		if server.current_players == 0 then									score = score - 1		end
-		
+
 		return score
 	end
-	
+
 	return -1
 end
 

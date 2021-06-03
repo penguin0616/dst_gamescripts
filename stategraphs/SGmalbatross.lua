@@ -18,7 +18,7 @@ end
 
 local function resetcollision(inst)
     inst.Physics:CollidesWith((TheWorld.has_ocean and COLLISION.GROUND) or COLLISION.WORLD)
-    inst.Physics:CollidesWith(COLLISION.FLYERS)    
+    inst.Physics:CollidesWith(COLLISION.FLYERS)
 end
 
 
@@ -197,9 +197,9 @@ local states =
             TimeEvent(14 * FRAMES, function(inst)
                 inst.sg:RemoveStateTag("noattack")
                 inst.sg:RemoveStateTag("nosleep")
-            end),            
+            end),
             TimeEvent(17*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
-            TimeEvent(27*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),            
+            TimeEvent(27*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
         },
 
         events =
@@ -221,7 +221,7 @@ local states =
         timeline =
         {
             TimeEvent(6*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
-            TimeEvent(30*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),       
+            TimeEvent(30*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
             TimeEvent(32 * FRAMES, function(inst)
                 inst.sg:AddStateTag("noattack")
             end),
@@ -436,7 +436,7 @@ local states =
         end,
 
         timeline =
-        {   
+        {
 
             TimeEvent(4 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/death") end),
             TimeEvent(33 * FRAMES, function(inst) inst.spawnfeather(inst,0.4) end),
@@ -447,15 +447,15 @@ local states =
             end),
             TimeEvent(35 * FRAMES, function(inst) inst.spawnfeather(inst,0.45) end),
             TimeEvent(36 * FRAMES, function(inst)
-                if math.random() < 0.3 then 
+                if math.random() < 0.3 then
                     inst.spawnfeather(inst,0.4)
                 end
             end),
             TimeEvent(38 * FRAMES, function(inst) inst.spawnfeather(inst,0.45) end),
-            TimeEvent(39 * FRAMES, function(inst) 
+            TimeEvent(39 * FRAMES, function(inst)
                 if inst.feathers < 24 then
                     for i=1,24-inst.feathers do
-                        inst.spawnfeather(inst,0.45) 
+                        inst.spawnfeather(inst,0.45)
                     end
                 end
             end),
@@ -533,7 +533,7 @@ local states =
         end,
 
         timeline =
-        {   
+        {
             TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/swoop") end),
         },
 
@@ -589,10 +589,10 @@ local states =
         end,
 
         timeline =
-        {   
-            TimeEvent(0 * FRAMES, function(inst) 
+        {
+            TimeEvent(0 * FRAMES, function(inst)
                 inst.sg:AddStateTag("longattack")
-                inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/attack_call") 
+                inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/attack_call")
             end),
             TimeEvent(13 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/attack_swipe_water") end),
@@ -600,7 +600,7 @@ local states =
             TimeEvent(29 * FRAMES, function(inst)
                 inst.components.combat:DoAttack(inst.sg.statemem.target)
 
-                SpawnMalbatrossAttackWaves(inst)                        
+                SpawnMalbatrossAttackWaves(inst)
             end),
         },
 
@@ -629,7 +629,7 @@ local states =
         {
             TimeEvent(10*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
             TimeEvent(19 * FRAMES, function(inst)
-				inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/large")                
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/large")
                 spawnsplash(inst)
                 spawnwave(inst, 1)
                 inst.DynamicShadow:Enable(false)
@@ -640,7 +640,7 @@ local states =
         ontimeout = function(inst)
             inst.sg:GoToState("combatdive_pst")
         end,
-        
+
         events =
         {
             EventHandler("animover", function(inst)
@@ -658,9 +658,9 @@ local states =
                 -- reposition away from target
                 local pt = Vector3(inst.Transform:GetWorldPosition())
                 local angle = inst:GetAngleToPoint(Vector3(inst.components.combat.target.Transform:GetWorldPosition())) + 180
-                local offset = FindSwimmableOffset(pt, angle * DEGREES, 12, 16, true) or 
-                               FindSwimmableOffset(pt, angle * DEGREES, 8, 16, true) or 
-                               FindSwimmableOffset(pt, angle * DEGREES, 4, 16, true) or 
+                local offset = FindSwimmableOffset(pt, angle * DEGREES, 12, 16, true) or
+                               FindSwimmableOffset(pt, angle * DEGREES, 8, 16, true) or
+                               FindSwimmableOffset(pt, angle * DEGREES, 4, 16, true) or
                                Vector3(0,0,0)
                 inst.Transform:SetPosition(pt.x +offset.x,pt.y,pt.z+offset.z)
             end
@@ -675,7 +675,7 @@ local states =
         timeline =
         {
             TimeEvent(1 * FRAMES, function(inst)
-             inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_large") 
+             inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_large")
                 spawnsplash(inst)
                 spawnwave(inst, 1)
                 inst.DynamicShadow:Enable(true)
@@ -714,7 +714,7 @@ local states =
                 end
                 if math.random() < 0.2 then
                     inst.sg:GoToState("taunt")
-                elseif not inst.components.timer:TimerExists("splashdelay") and target then  
+                elseif not inst.components.timer:TimerExists("splashdelay") and target then
                     inst.components.timer:StartTimer("splashdelay", math.random()*2 +8)
                     inst.sg:GoToState("wavesplash",target)
                 else
@@ -730,12 +730,12 @@ CommonStates.AddWalkStates(states,
     starttimeline =
     {
         TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
-        TimeEvent(9 * FRAMES, spawnripple),       
+        TimeEvent(9 * FRAMES, spawnripple),
     },
     walktimeline =
     {
         TimeEvent(33 * FRAMES, spawnripple),
-        TimeEvent(37*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),        
+        TimeEvent(37*FRAMES, function(inst) inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/flap") end),
     },
     endtimeline =
     {
@@ -751,9 +751,9 @@ CommonStates.AddCombatStates(states,
     },
     attacktimeline =
     {
-        TimeEvent(0 * FRAMES, function(inst) 
+        TimeEvent(0 * FRAMES, function(inst)
             inst.sg:AddStateTag("longattack")
-            inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/attack_call") 
+            inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/attack_call")
         end),
         TimeEvent(13 * FRAMES, function(inst)
             inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/attack_swipe_water") end),
@@ -761,7 +761,7 @@ CommonStates.AddCombatStates(states,
         TimeEvent(29 * FRAMES, function(inst)
             inst.components.combat:DoAttack(inst.sg.statemem.target)
 
-            SpawnMalbatrossAttackWaves(inst)                        
+            SpawnMalbatrossAttackWaves(inst)
         end),
     },
     deathtimeline =
@@ -779,16 +779,16 @@ CommonStates.AddCombatStates(states,
             if math.random() < 0.3 then
                 inst.spawnfeather(inst, 0.4)
             end
-        end),        
+        end),
         TimeEvent(38 * FRAMES, function(inst) inst.spawnfeather(inst,0.45) end),
-        TimeEvent(39 * FRAMES, function(inst) 
+        TimeEvent(39 * FRAMES, function(inst)
                 if inst.feathers < 24 then
                     for i=1,24-inst.feathers do
-                        inst.spawnfeather(inst,0.45) 
+                        inst.spawnfeather(inst,0.45)
                     end
                 end
-            end),        
-        TimeEvent(44 * FRAMES, function(inst) ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, 2, inst, SHAKE_DIST) end),        
+            end),
+        TimeEvent(44 * FRAMES, function(inst) ShakeAllCameras(CAMERASHAKE.FULL, .7, .02, 2, inst, SHAKE_DIST) end),
 		TimeEvent(44 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/bearger/groundpound") end),
     },
 })

@@ -77,7 +77,7 @@ local CompostingBin = Class(function(self, inst)
     -- self.onstartcompostingfn = nil
     -- self.onstopcompostingfn = nil
     -- self.onrefreshfn = nil
-    
+
     self.inst:ListenForEvent("timerdone", ontimerdone)
 end, nil,
 {
@@ -104,10 +104,10 @@ function CompostingBin:Refresh(cycle_completed)
         stopcomposting(self.inst)
     else
         self.greens_ratio = self.greens / greens_and_browns
-        
+
         local processing_time_alpha = math.abs(self.greens_ratio - 0.5) * 2
         local duration_multiplier = (self.calcdurationmultfn ~= nil and self.calcdurationmultfn(self.inst)) or 1
-        
+
         if self.inst.components.timer:TimerExists("composting") then
             local progress_percentage = self.inst.components.timer:GetTimeLeft("composting") / self.current_composting_time
             self.current_composting_time = Lerp(self.composting_time_min, self.composting_time_max, processing_time_alpha) * duration_multiplier

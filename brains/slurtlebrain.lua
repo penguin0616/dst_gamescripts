@@ -94,7 +94,7 @@ local function StealFoodAction(inst)
 
             if #validfood > 0 then
                 local itemtosteal = validfood[math.random(1, #validfood)]
-                if itemtosteal and 
+                if itemtosteal and
                 itemtosteal.components.inventoryitem and
                 itemtosteal.components.inventoryitem.owner and not
                 itemtosteal.components.inventoryitem.owner:HasTag("slurtle") then
@@ -136,10 +136,10 @@ function SlurtleBrain:OnStart()
         DoAction(self.inst, EatFoodAction),
         DoAction(self.inst, StealFoodAction),
         WhileNode(function() return ShouldGoHome(self.inst) end, "ShouldGoHome",
-            DoAction(self.inst, GoHomeAction, "Go Home", true )),   
+            DoAction(self.inst, GoHomeAction, "Go Home", true )),
         Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, 40),
     }, .25)
-    
+
     self.bt = BT(self.inst, root)
 end
 

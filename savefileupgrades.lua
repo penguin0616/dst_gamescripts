@@ -70,7 +70,7 @@ t = {
 					preset.ordered_story_setpieces = {}
 				end
 				preset.ordered_story_setpieces = ArrayUnion(preset.ordered_story_setpieces, {"Sculptures_1"})
-				
+
 				if preset.random_set_pieces == nil then
 					preset.random_set_pieces = {}
 				end
@@ -165,7 +165,7 @@ t = {
             if level.version ~= 2 then
                 return level
             end
-            
+
             print(string.format("Upgrading saved level data for '%s' from v2 to v3 (A New Reign Part 1).", tostring(level.id)))
 
             if level.location == "forest" then
@@ -173,7 +173,7 @@ t = {
 					level.ordered_story_setpieces = {}
 				end
 				level.ordered_story_setpieces = ArrayUnion(level.ordered_story_setpieces, {"Sculptures_1"})
-				
+
 				if level.random_set_pieces == nil then
 					level.random_set_pieces = {}
 				end
@@ -181,7 +181,7 @@ t = {
 			end
 
 			level.version = 3
-            return level        
+            return level
         end,
         UpgradeSavedLevelFromV3toV4 = function(level, master_world)
             if level.version ~= 3 then
@@ -361,7 +361,7 @@ t = {
         ConvertSaveIndexSlotToShardIndexSlots = function(savegameindex, shardsavegameindex, slot, ismultilevel)
             local masterShardIndex = shardsavegameindex:GetShardIndex(slot, "Master", true)
             masterShardIndex:NewShardInSlot(slot, "Master")
-            
+
             if not ismultilevel then
                 if TheSim:EnsureShardIndexPathExists(slot) then
                     t.utilities.ConvertSaveSlotToShardIndex(savegameindex, slot, masterShardIndex)
@@ -387,7 +387,7 @@ t = {
                     t.utilities.ConvertSaveSlotToShardIndex(masterSaveIndex, 1, masterShardIndex)
                     masterShardIndex.enabled_mods = enabled_mods
                 end)
-                
+
                 local cavesSaveIndex = SaveIndex()
                 cavesSaveIndex:LoadClusterSlot(slot, "Caves", function()
                     t.utilities.ConvertSaveSlotToShardIndex(cavesSaveIndex, 1, cavesShardIndex)
@@ -540,7 +540,7 @@ t = {
                         else
                             overrides.original = original
                         end
-                        
+
                     else
                         print("No overrides found, supplying Vanilla versions")
                         savedata.map.topology.overrides = {
@@ -623,7 +623,7 @@ t = {
 						savedata.map.persistdata.retrofitcavemap_anr = {}
 					end
 					savedata.map.persistdata.retrofitcavemap_anr.retrofit_artsandcrafts = true
-					
+
 				elseif savedata.map ~= nil and savedata.map.prefab == "forest" and savedata.map.persistdata ~= nil then
                     if savedata.map.persistdata.retrofitforestmap_anr == nil then
 						savedata.map.persistdata.retrofitforestmap_anr = {}
@@ -660,7 +660,7 @@ t = {
                 end
             end,
         },
-        
+
         {
             version = 4.5, -- ANR: Cute Herd Mentality
             fn = function(savedata)
@@ -675,7 +675,7 @@ t = {
                 end
             end,
         },
-        
+
         {
             version = 4.6, -- ANR: Against the Grain
             fn = function(savedata)
@@ -706,7 +706,7 @@ t = {
 				end
             end,
         },
- 
+
         {
             version = 4.72, -- ANR: Heart of the Ruins - fix for ruinsrespawners
             fn = function(savedata)
@@ -722,7 +722,7 @@ t = {
 				end
             end,
         },
- 
+
         {
             version = 4.73, -- ANR: Heart of the Ruins - altars
             fn = function(savedata)
@@ -902,7 +902,7 @@ t = {
              end,
         },
 
-		
+
         {
             version = 5.031, -- RoT: Brine Pool fixup - fixup for people who took a particular retrofitting path the resulted in no brine pools (salt stacks and cookie cutters).
             fn = function(savedata)
@@ -1057,9 +1057,9 @@ t = {
                 end
             end,
         },
-		
+
         {
-            version = 5.064, -- RoT: Forgotten Knowledge - fix converting the hermit crab's island to lunacy from retrofit_nodeidtilemap_secondpass 
+            version = 5.064, -- RoT: Forgotten Knowledge - fix converting the hermit crab's island to lunacy from retrofit_nodeidtilemap_secondpass
             fn = function(savedata)
                 if savedata ~= nil and savedata.map ~= nil then
                     if savedata.map.persistdata == nil then

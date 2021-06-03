@@ -61,11 +61,11 @@ local function OnRacerAtCheckpoint(inst, data)
 		inst.AnimState:PlayAnimation("hit_on")
         inst.SoundEmitter:PlaySound("yotc_2020/gym/checkpoint/active")
 		ToggleLights(inst, true, true)
-		
+
 		if racer._color then
 			inst.AnimState:OverrideSymbol("lantern", "yotc_carrat_race_checkpoint_colour_swaps", racer._color .. "_lantern")
             inst.AnimState:OverrideSymbol("light", "yotc_carrat_race_checkpoint_colour_swaps", racer._color .. "_light")
-            
+
             inst.Light:SetColour(carratrace_common.GetLightColor(racer._color):Get())
         else
             inst.AnimState:ClearOverrideSymbol("lantern")
@@ -138,7 +138,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", onbuilt)
     inst:ListenForEvent("yotc_racer_at_checkpoint", OnRacerAtCheckpoint)
     inst:ListenForEvent("yotc_race_over", ResetLights)
-	
+
 
     inst.is_on = false
     inst.taken = false
@@ -153,4 +153,3 @@ return Prefab("yotc_carrat_race_checkpoint", fn, assets, prefabs ),
 		function(inst)
 			return carratrace_common.PlacerPostInit_AddPlacerRing(inst, "yotc_carrat_race_deploy_checkpoint")
 		end)
-	

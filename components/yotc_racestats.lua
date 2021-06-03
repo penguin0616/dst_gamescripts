@@ -1,6 +1,6 @@
 local YOTC_RaceStats = Class(function(self, inst)
     self.inst = inst
-    
+
     self.speed = TUNING.RACE_STATS.INIT_STAT_VALUE
     self.direction = TUNING.RACE_STATS.INIT_STAT_VALUE
     self.reaction = TUNING.RACE_STATS.INIT_STAT_VALUE
@@ -41,7 +41,7 @@ end
 function YOTC_RaceStats:ModifyDirection(point_mod)
     if point_mod ~= nil and point_mod ~= 0 then
         self.direction = math.clamp(
-            self.direction + point_mod, 
+            self.direction + point_mod,
             self.baseline_direction or TUNING.RACE_STATS.MIN_STAT_VALUE,
             TUNING.RACE_STATS.MAX_STAT_VALUE
         )

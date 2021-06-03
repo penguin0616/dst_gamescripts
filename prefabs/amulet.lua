@@ -25,7 +25,7 @@ local function onequip_red(inst, owner)
     else
         owner.AnimState:OverrideSymbol("swap_body", "torso_amulets", "redamulet")
     end
-    
+
     inst.task = inst:DoPeriodicTask(30, healowner, nil, owner)
 end
 
@@ -33,12 +33,12 @@ local function onunequip_red(inst, owner)
     if owner.sg == nil or owner.sg.currentstate.name ~= "amulet_rebirth" then
         owner.AnimState:ClearOverrideSymbol("swap_body")
     end
-    
+
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
         owner:PushEvent("unequipskinneditem", inst:GetSkinName())
     end
-    
+
     if inst.task ~= nil then
         inst.task:Cancel()
         inst.task = nil
@@ -54,7 +54,7 @@ local function onequip_blue(inst, owner)
             data.attacker.components.freezable:AddColdness(0.67)
             data.attacker.components.freezable:SpawnShatterFX()
             inst.components.fueled:DoDelta(-0.03 * inst.components.fueled.maxfuel)
-        end 
+        end
     end
 
     inst:ListenForEvent("attacked", inst.freezefn, owner)
@@ -306,7 +306,7 @@ local BLUE_HAUNT_CANT_TAGS = { "FX", "NOCLICK", "DECOR","INLIMBO" }
 local function OnHauntBlue(inst)
     if math.random() <= TUNING.HAUNT_CHANCE_OCCASIONAL then
         local x, y, z = inst.Transform:GetWorldPosition()
-        local ents = TheSim:FindEntities(x, y, z, 10, BLUE_HAUNT_MUST_TAGS, BLUE_HAUNT_CANT_TAGS) 
+        local ents = TheSim:FindEntities(x, y, z, 10, BLUE_HAUNT_MUST_TAGS, BLUE_HAUNT_CANT_TAGS)
         for i, v in ipairs(ents) do
             if v.components.freezable ~= nil then
                 v.components.freezable:AddColdness(.67)

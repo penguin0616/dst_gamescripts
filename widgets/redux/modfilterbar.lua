@@ -31,7 +31,7 @@ end
 function ModFilterBar:RefreshFilterState()
     self.no_refresh_modstab = true --we don't want to refresh the modstab multiple times when setting the filter states and sort type. We're do one manual refresh once we're done updating
     for i,filter in ipairs(self.filter_btns) do
-        local state = Profile:GetCustomizationFilterState(self.filter_category, filter.btnid)   
+        local state = Profile:GetCustomizationFilterState(self.filter_category, filter.btnid)
         filter.widget:SetFilterState(state)
     end
     self.no_refresh_modstab = nil
@@ -115,9 +115,9 @@ local search_subwords = function( search, str, sub_len )
     local str_len = string.len(str)
 
     local i = 1
-    for i=i,str_len - sub_len + 1 do        
+    for i=i,str_len - sub_len + 1 do
         local sub = str:sub( i, i + sub_len - 1 )
-        
+
         local dist = DamLevDist( search, sub, 2 )
         if dist < 2 then
             return true
@@ -139,7 +139,7 @@ local search_match = function( search, str )
 
     if sub_len > 3 then
         if search_subwords( search, str, sub_len ) then return true end
-        
+
         --Try again with 1 fewer character
         sub_len = sub_len - 1
         if search_subwords( search, str, sub_len ) then return true end
@@ -191,7 +191,7 @@ function ModFilterBar:AddSearch()
     searchbox.focus_forward = searchbox.textbox
 
     self.search_box = searchbox
-    
+
     self:_UpdatePositions()
 
     return searchbox
@@ -223,7 +223,7 @@ end
 
 function ModFilterBar:_UpdatePositions()
     local width,_ = self.modstab.mods_scroll_list:GetScrollRegionSize()
-    
+
     local squeeze = 0
 
     local x_offset = 10
@@ -263,7 +263,7 @@ function ModFilterBar:_UpdatePositions()
         end
         local size_x = prev_btn and prev_btn.size_x or 0
         self.search_box:SetPosition( x_offset + -width/2 + num_btns*size_x + search_width, 4)
-        
+
         if prev_btn then
             prev_btn:SetFocusChangeDir(MOVE_RIGHT, self.search_box)
             self.search_box:SetFocusChangeDir(MOVE_LEFT, prev_btn)

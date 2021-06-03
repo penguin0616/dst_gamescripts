@@ -19,15 +19,15 @@ local ServerSlotScreen = Class(Screen, function(self, prev_screen)
 	self.root = self:AddChild(TEMPLATES.ScreenRoot())
     self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.SERVERCREATIONSCREEN.HOST_GAME))
-    
+
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
-	
+
     self.detail_panel_frame_parent = self.root:AddChild(Widget("detail_frame"))
     self.detail_panel_frame_parent:SetPosition(0, 0)
     self.detail_panel_frame = self.detail_panel_frame_parent:AddChild(TEMPLATES.RectangleWindow(dialog_size_x, dialog_size_y))
     local r,g,b = unpack(UICOLOURS.BROWN_DARK)
     self.detail_panel_frame:SetBackgroundTint(r,g,b,0.6)
-	
+
 	self.server_scroll_list = self.root:AddChild(self:_BuildSaveSlotList())
     self.server_scroll_list:SetPosition(0, -26)
 
@@ -37,7 +37,7 @@ local ServerSlotScreen = Class(Screen, function(self, prev_screen)
     self.savefilterbar:SetPosition(0, 220)
 
     self.filterfn = function(savename) return true end
-	
+
 	if not TheInput:ControllerAttached() then
 		self.cancelbutton = self.root:AddChild(TEMPLATES.BackButton(function() self:Close() end))
         self.new_button = self.root:AddChild(TEMPLATES.StandardButton(function() self:OnCreateNewSlot() end, STRINGS.UI.SERVERCREATIONSCREEN.CREATENEWGAME, {582, 90}))
@@ -146,7 +146,7 @@ function ServerSlotScreen:UpdateSaveFiles(force_update)
             table.insert(savefilescrollitems, {server_slot=slot})
         end
     end
-    
+
     --Sort the data that is going into the list
     local sort_type = Profile:GetServerSortMode() or "SORT_LASTPLAYED"
     local sort_fn = nil
@@ -181,7 +181,7 @@ function ServerSlotScreen:GetCharacterPortrait(slot)
         -- ShardSaveGameIndex:GetSlotCharacter is not cheap! Use it in FE only.
         -- V2C: This comment is here as a warning to future copy&pasters - __-"
         cache_slot.character_portrait = {character = ShardSaveGameIndex:GetSlotCharacter(slot) or ""}
-        
+
         local cache = cache_slot.character_portrait
         if cache.atlas == nil then
             cache.atlas = "images/saveslot_portraits"
@@ -197,7 +197,7 @@ function ServerSlotScreen:GetCharacterPortrait(slot)
 
         self.slot_cache[slot] = cache_slot
     end
-    
+
     return cache_slot.character_portrait.atlas, cache_slot.character_portrait.character
 
 end
@@ -209,7 +209,7 @@ function ServerSlotScreen:GetDayAndSeasonText(slot)
         cache_slot.dayandseason_text = ShardSaveGameIndex:GetSlotDayAndSeasonText(slot)
         self.slot_cache[slot] = cache_slot
     end
-    
+
     return cache_slot.dayandseason_text
 end
 
@@ -257,14 +257,14 @@ function ServerSlotScreen:_BuildSaveSlotList()
 	for i, slot in ipairs(ShardSaveGameIndex:GetValidSlots()) do
 		table.insert(self.savefilescrollitems, {server_slot=slot})
     end
-    
+
     table.sort(self.savefilescrollitems, sorttime)
-	
+
     local row_w = 910
     local row_h = 80
     local row_spacing = 5
     local scrollbar_offset = -12.5
-    
+
     if TheInput:ControllerAttached() or IsConsole() then
         row_w = 870
         scrollbar_offset = -5
@@ -274,7 +274,7 @@ function ServerSlotScreen:_BuildSaveSlotList()
     if IsConsole() then
         extra_rows = 0
 	end
-	
+
     local grid = TEMPLATES.ScrollingGrid(
         self.savefilescrollitems,
         {
@@ -289,7 +289,7 @@ function ServerSlotScreen:_BuildSaveSlotList()
             scrollbar_height_offset = -60,
 			extra_rows = extra_rows,
         })
-    
+
     return grid
 end
 

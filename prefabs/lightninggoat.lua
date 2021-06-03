@@ -28,7 +28,7 @@ SetSharedLootTable( 'chargedlightninggoat',
 {
     {'meat',              1.00},
     {'meat',              1.00},
-    {'goatmilk',          1.00},  
+    {'goatmilk',          1.00},
     {'lightninggoathorn', 0.25},
 })
 
@@ -82,7 +82,7 @@ end
 
 local function discharge(inst)
     inst:RemoveTag("charged")
-    inst.components.lootdropper:SetChanceLootTable('lightninggoat') 
+    inst.components.lootdropper:SetChanceLootTable('lightninggoat')
     inst.sg:GoToState("discharge")
     inst.AnimState:ClearBloomEffectHandle()
     inst.charged = false
@@ -103,7 +103,7 @@ local function setcharged(inst, instant)
     inst:AddTag("charged")
     inst.components.lootdropper:SetChanceLootTable('chargedlightninggoat')
     inst.AnimState:SetBuild("lightning_goat_shocked_build")
-    inst.AnimState:Show("fx") 
+    inst.AnimState:Show("fx")
     if not instant then
         inst.sg:GoToState("shocked")
     end
@@ -229,7 +229,7 @@ local function fn()
     ------------------------------------------
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('lightninggoat') 
+    inst.components.lootdropper:SetChanceLootTable('lightninggoat')
 
     ------------------------------------------
 

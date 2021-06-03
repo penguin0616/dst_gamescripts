@@ -63,7 +63,7 @@ local function CanBirdAttack(inst)
     local ents = TheSim:FindEntities(x,y,z, inst.components.combat.attackrange)
     local potentials = {}
     for i, ent in ipairs(ents) do
-        if ent:HasTag("player") or (ent.components.follower and ent.components.follower:GetLeader() and ent.components.follower:GetLeader():HasTag("player")) then                       
+        if ent:HasTag("player") or (ent.components.follower and ent.components.follower:GetLeader() and ent.components.follower:GetLeader():HasTag("player")) then
             table.insert(potentials,ent)
         end
     end
@@ -105,7 +105,7 @@ local function spit(inst)
     return act
 end
 
-local function shouldwaittospit(inst)   
+local function shouldwaittospit(inst)
 	if inst:HasTag("bird_mutant_spitter") then
 	    if inst.components.combat.target and inst.components.combat.target:IsValid() then
 	    	if inst:GetDistanceSqToInst(inst.components.combat.target) <= 4*4 then
@@ -128,7 +128,7 @@ function BirdMutantBrain:OnStart()
 
         WhileNode(function() return shouldspit(self.inst) end, "Spit",
         	DoAction(self.inst, spit)),
-        
+
         IfNode(function() return shouldwaittospit(self.inst) end, "waittospit",
         	StandStill(self.inst)),
 

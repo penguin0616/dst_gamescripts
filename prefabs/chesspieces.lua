@@ -44,7 +44,7 @@ local PIECES =
     {name="antlion",	moonevent=false},
     {name="minotaur",	moonevent=false},
     {name="guardianphase3", moonevent=false},
-} 
+}
 
 local MOON_EVENT_RADIUS = 12
 local MOON_EVENT_MINPIECES = 3
@@ -75,7 +75,7 @@ local function SetMaterial(inst, materialid)
     inst.AnimState:SetBuild(build)
 
 	inst.components.lootdropper:SetLoot({MATERIALS[materialid].prefab})
-	
+
 	inst.components.symbolswapdata:SetData(build, "swap_body")
 
     local inv_image_suffix = (materialid ~= nil and MATERIALS[materialid].inv_suffix) or ""
@@ -213,10 +213,10 @@ local function makepiece(pieceid, materialid)
         Asset("ANIM", "anim/chesspiece.zip"),
     }
 
-    local prefabs = 
+    local prefabs =
     {
 		"collapse_small",
-		
+
 		"underwater_salvageable",
 		"splash_green",
     }
@@ -291,7 +291,7 @@ local function makepiece(pieceid, materialid)
         inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
         inst.components.workable:SetWorkLeft(1)
 		inst.components.workable:SetOnFinishCallback(onworkfinished)
-		
+
 		inst:AddComponent("submersible")
 		inst:AddComponent("symbolswapdata")
 		inst.components.symbolswapdata:SetData(build, "swap_body")

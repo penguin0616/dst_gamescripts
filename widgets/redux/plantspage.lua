@@ -16,7 +16,7 @@ local PlantsPage = Class(Widget, function(self, parent_widget, ismodded)
     self.ismodded = ismodded
 
 	self.root = self:AddChild(Widget("root"))
-	
+
 	self.plant_grid = self.root:AddChild(self:BuildPlantScrollGrid())
 	self.plant_grid:SetPosition(-15, 0)
 
@@ -43,7 +43,7 @@ local PlantsPage = Class(Widget, function(self, parent_widget, ismodded)
 	end
 
 	self.plant_grid:SetItemsData(plant_grid_data)
-	
+
 	self.parent_default_focus = self.plant_grid
 end)
 
@@ -69,7 +69,7 @@ function PlantsPage:BuildPlantScrollGrid()
     local row_w = 160
     local row_h = 230
 	local row_spacing = 2
-	
+
 	local width_spinner = 135
 	local width_label = 135
 	local height = 25
@@ -80,7 +80,7 @@ function PlantsPage:BuildPlantScrollGrid()
 	local function ScrollWidgetsCtor(context, index)
 		local w = Widget("plant-cell-".. index)
 		w.cell_root = w:AddChild(ImageButton("images/plantregistry.xml", "plant_entry.tex", "plant_entry_focus.tex"))
-		
+
 		w.focus_forward = w.cell_root
 
 		w.cell_root.ongainfocusfn = function()
@@ -146,7 +146,7 @@ function PlantsPage:BuildPlantScrollGrid()
 			if w.plant_spinner.focus or (control == CONTROL_PREVVALUE or control == CONTROL_NEXTVALUE) then if w.plant_spinner:IsVisible() then w.plant_spinner:OnControl(control, down) end return true end
 			return _OnControl(_, control, down)
 		end
-		
+
 		local _OnGainFocus = w.cell_root.OnGainFocus
 		function w.cell_root.OnGainFocus()
 			_OnGainFocus(w.cell_root)

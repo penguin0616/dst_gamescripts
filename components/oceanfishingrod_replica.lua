@@ -42,7 +42,7 @@ function OceanFishingRod:GetMaxCastDist()
 end
 
 function OceanFishingRod:GetDebugString()
-	return "Target: " .. tostring(self._target:value()) .. ", Tension: " .. (self:IsTensionHigh() and "High" or self:IsTensionGood() and "Good" or "Low")  
+	return "Target: " .. tostring(self._target:value()) .. ", Tension: " .. (self:IsTensionHigh() and "High" or self:IsTensionGood() and "Good" or "Low")
 end
 
 return OceanFishingRod

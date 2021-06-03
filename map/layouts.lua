@@ -1,24 +1,24 @@
 require("constants")
 
 local StaticLayout = require("map/static_layout")
-local ExampleLayout = 
+local ExampleLayout =
 	{
-		["Farmplot"] = 
+		["Farmplot"] =
 						{
 							-- Choose layout type
 							type = LAYOUT.STATIC,
-							
+
 							-- Add any arguments for the layout function
 							args = nil,
-							
+
 							-- Define a choice list for substitution below
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "carrot_planted","flower", "grass", "berrybush2" },
 								},
-							
+
 							-- Lay the objects in whatever pattern
-							layout = 
+							layout =
 								{
 									unknown_plant = {
 													 {x=-1,y=-1}, {x=0,y=-1}, {x=1,y=-1},
@@ -26,95 +26,95 @@ local ExampleLayout =
 													 {x=-1, y=1}, {x=0, y=1}, {x=1, y=1}
 													},
 								},
-								
+
 							-- Either choose to specify the objects positions or a number of objects
 							count = nil,
-								
+
 							-- Choose a scale on which to place everything
 							scale = 0.3
 						},
-		["StoneHenge"] = 
+		["StoneHenge"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "rock2", "rock1", "evergreen_tall", "evergreen_normal", "evergreen_short", "sapling"},
 								},
-							count = 
+							count =
 								{
 									unknown_plant = 9,
 								},
 							scale = 1.2
-						},						 
-		["CropCircle"] = 
+						},
+		["CropCircle"] =
 						{
 							type = LAYOUT.CIRCLE_RANDOM,
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "carrot_planted", "grass", "flower", "berrybush2"},
 								},
-							count = 
+							count =
 								{
 									unknown_plant = 15,
 								},
 							scale = 1.5
 						},
-		["HalloweenPumpkins"] = 
+		["HalloweenPumpkins"] =
 						{
 							type = LAYOUT.CIRCLE_RANDOM,
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "pumpkin" },
 								},
-							count = 
+							count =
 								{
 									unknown_plant = 15,
 								},
 							scale = 1.5
 						},
-		["TreeFarm"] = 
+		["TreeFarm"] =
 						{
 							type = LAYOUT.GRID,
-							count = 
+							count =
 								{
 									evergreen_short = 16,
 								},
 							scale = 0.9
 						},
-		["MushroomRingSmall"] = 
+		["MushroomRingSmall"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "red_mushroom", "green_mushroom", "blue_mushroom"},
 								},
-							count = 
+							count =
 								{
 									unknown_plant = 7,
 								},
 							scale = 1
 						},
-		["MushroomRingMedium"] = 
+		["MushroomRingMedium"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "red_mushroom", "green_mushroom", "blue_mushroom"},
 								},
-							count = 
+							count =
 								{
 									unknown_plant = 10,
 								},
 							scale = 1.2
 						},
-		["MushroomRingLarge"] = 
+		["MushroomRingLarge"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
-							defs = 
+							defs =
 								{
 								 	unknown_plant = { "red_mushroom", "green_mushroom", "blue_mushroom"},
 								},
-							count = 
+							count =
 								{
 									unknown_plant = 15,
 								},
@@ -135,21 +135,21 @@ local ExampleLayout =
 		["ResurrectionStoneLit"] = StaticLayout.Get("map/static_layouts/resurrectionstonelit"),
 		["ResurrectionStoneWinter"] = StaticLayout.Get("map/static_layouts/resurrectionstone_winter", {
 				areas = {
-					item_area = function() return nil end,							
-					resource_area = function() 
+					item_area = function() return nil end,
+					resource_area = function()
 							local choices = {{"cutgrass","cutgrass","twigs", "twigs"}, {"cutgrass","cutgrass","cutgrass","log", "log"}}
-							return choices[math.random(1,#choices)] 
+							return choices[math.random(1,#choices)]
 						end,
 					},
 			}),
 
 		["LivingTree"] = StaticLayout.Get("map/static_layouts/livingtree", {
-							
+
 						}),
 
-		
+
 --------------------------------------------------------------------------------
--- MacTusk 
+-- MacTusk
 --------------------------------------------------------------------------------
 		["MacTuskTown"] = StaticLayout.Get("map/static_layouts/mactusk_village"),
 		["MacTuskCity"] = StaticLayout.Get("map/static_layouts/mactusk_city", {
@@ -159,15 +159,15 @@ local ExampleLayout =
 						}),
 
 --------------------------------------------------------------------------------
--- Pigs 
+-- Pigs
 --------------------------------------------------------------------------------
 		["MaxMermShrine"] = StaticLayout.Get("map/static_layouts/maxwell_merm_shrine"),
 
 		["MaxPigShrine"] = StaticLayout.Get("map/static_layouts/maxwell_pig_shrine"),
-		["VillageSquare"] = 
+		["VillageSquare"] =
 						{
 							type = LAYOUT.RECTANGLE_EDGE,
-							count = 
+							count =
 								{
 									pighouse = 8,
 								},
@@ -181,10 +181,10 @@ local ExampleLayout =
 			layout_position = LAYOUT_POSITION.CENTER
         }),
 		["TorchPigking"] = StaticLayout.Get("map/static_layouts/torch_pigking"),
-		["FisherPig"] = 
+		["FisherPig"] =
 						{
 							type = LAYOUT.STATIC,
-							defs = 
+							defs =
 								{
 								 	unknown_hanging = { "drumstick", "smallmeat", "monstermeat", "meat"},
 								 	unknown_fruit = { "pumpkin", "eggplant", "durian", "pomegranate", "dragonfruit"},
@@ -201,7 +201,7 @@ local ExampleLayout =
 									{0, 1, 1, 1, 2, 1, 1, 1},
 									{0, 0, 1, 1, 2, 1, 1, 0},
 								},
-							layout = 
+							layout =
 								{
 									unknown_fruit = 	{ {x=-0.3, y=   0} },
 									pighouse = 			{ {x=   0, y=   0} },
@@ -210,27 +210,27 @@ local ExampleLayout =
 									wall_wood = {
 													 {x=-1.5,y=1.5},{x=-1.25,y=1.5}, {x=-1,y=1.5}, {x=-0.75,y=1.5},       {x=0.75,y=1.5}, {x=1,y=1.5}, {x=1.25,y=1.5}, {x=1.5,y=1.5},
 																		 		  {x=-0.5,y=1.75}, {x=0.5,y=1.75},
-																		 		  {x=-0.5,y=   2}, {x=0.5,y=   2}, 
+																		 		  {x=-0.5,y=   2}, {x=0.5,y=   2},
 																		 		  {x=-0.5,y=2.25}, {x=0.5,y=2.25},
-																		 		  {x=-0.5,y= 2.5}, {x=0.5,y= 2.5}, 
-																		 		  {x=-0.5,y=2.75}, {x=0.5,y=2.75}, 
-																		 		  {x=-0.5,y=   3}, {x=0.5,y=   3}, 
-																		 		  {x=-0.5,y=3.25}, {x=0.5,y=3.25}, 
-																		 		  {x=-0.5,y= 3.5}, {x=0.5,y= 3.5}, 
+																		 		  {x=-0.5,y= 2.5}, {x=0.5,y= 2.5},
+																		 		  {x=-0.5,y=2.75}, {x=0.5,y=2.75},
+																		 		  {x=-0.5,y=   3}, {x=0.5,y=   3},
+																		 		  {x=-0.5,y=3.25}, {x=0.5,y=3.25},
+																		 		  {x=-0.5,y= 3.5}, {x=0.5,y= 3.5},
 												},
 								},
 							scale = 1 -- scale must be 1 if we set grount tiles
 						},
-		["SwampPig"] = 
+		["SwampPig"] =
 						{
 							type = LAYOUT.STATIC,
-							defs = 
+							defs =
 								{
 								 	unknown_bird = { "crow", "robin"},
 								 	unknown_fruit = { "pumpkin", "eggplant", "durian", "pomegranate", "dragonfruit"},
 								 	unknown_plant = { "carrot_planted","flower", "grass"},
 								},
-							layout = 
+							layout =
 								{
 									unknown_plant = {
 													 {x=-1,y=-1}, {x=0,y=-1}, {x=1,y=-1},
@@ -240,15 +240,15 @@ local ExampleLayout =
 								},
 							scale = 0.3
 						},
-						
+
 --------------------------------------------------------------------------------
--- Start Nodes 
+-- Start Nodes
 --------------------------------------------------------------------------------
 		["DefaultStart"] = StaticLayout.Get("map/static_layouts/default_start", {
             start_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
             fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
             layout_position = LAYOUT_POSITION.CENTER,
-            
+
 			defs={
 				welcomitem = IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) and {"pumpkin_lantern"} or {"flower"},
 			},
@@ -271,11 +271,11 @@ local ExampleLayout =
 		["WinterStartHard"] = StaticLayout.Get("map/static_layouts/winter_start_hard"),
 		["PreSummerStart"] = StaticLayout.Get("map/static_layouts/presummer_start"),
 		["DarknessStart"] =StaticLayout.Get("map/static_layouts/total_darkness_start"),
-		
+
 --------------------------------------------------------------------------------
 -- Chess bits
 --------------------------------------------------------------------------------
-		
+
 		["ChessSpot1"] = StaticLayout.Get("map/static_layouts/chess_spot", {
 								defs={
 									evil_thing={"marblepillar","flower_evil","marbletree"},
@@ -300,9 +300,9 @@ local ExampleLayout =
 		["Maxwell7"] = StaticLayout.Get("map/static_layouts/maxwell_7"),
 
 --------------------------------------------------------------------------------
--- Blockers 
+-- Blockers
 --------------------------------------------------------------------------------
-		["TreeBlocker"] = 
+		["TreeBlocker"] =
 						{
 							type = LAYOUT.CIRCLE_RANDOM,
 							start_mask = PLACE_MASK.NORMAL,
@@ -319,62 +319,62 @@ local ExampleLayout =
 									--{0, 1, 1, 1, 1, 0},
 									--{0, 0, 1, 1, 0, 0},
 								},
-							defs = 
+							defs =
 								{
 								 	trees = { "evergreen_short", "evergreen_normal", "evergreen_tall"},
 								},
-							count = 
+							count =
 								{
 									trees = 185,
 								},
 							scale = 0.9,
 						},
-		["RockBlocker"] = 
+		["RockBlocker"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
 							start_mask = PLACE_MASK.NORMAL,
 							fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 							layout_position = LAYOUT_POSITION.CENTER,
 							ground_types = {GROUND.ROCKY},
-							defs = 
+							defs =
 								{
 								 	rocks = { "rock1", "rock2"},
 								},
-							count = 
+							count =
 								{
 									rocks = 35,
 								},
 							scale = 1.9,
 						},
-		["InsanityBlocker"] = 
+		["InsanityBlocker"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
 							start_mask = PLACE_MASK.NORMAL,
 							fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 							layout_position = LAYOUT_POSITION.CENTER,
 							ground_types = {GROUND.ROCKY},
-							defs = 
+							defs =
 								{
 								 	rocks = { "insanityrock"},
 								},
-							count = 
+							count =
 								{
 									rocks = 55,
 								},
 							scale = 4.0,
 						},
-		["SanityBlocker"] = 
+		["SanityBlocker"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
 							start_mask = PLACE_MASK.NORMAL,
 							fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 							layout_position = LAYOUT_POSITION.CENTER,
 							ground_types = {GROUND.ROCKY},
-							defs = 
+							defs =
 								{
 								 	rocks = { "sanityrock"},
 								},
-							count = 
+							count =
 								{
 									rocks = 55,
 								},
@@ -465,8 +465,8 @@ local ExampleLayout =
 							layout_position = LAYOUT_POSITION.CENTER,
 						}),
 		["MaxwellHome"] = StaticLayout.Get("map/static_layouts/maxwellhome", {
-							areas = 
-							{								
+							areas =
+							{
 								barren_area = function(area) return PickSomeWithDups( 0.5 * area
 									, {"marsh_tree", "marsh_bush", "rock1", "rock2", "evergreen_burnt", "evergreen_stump"}) end,
 								gold_area = function() return PickSomeWithDups(math.random(15,20), {"goldnugget"}) end,
@@ -486,9 +486,9 @@ local ExampleLayout =
 							fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 							layout_position = LAYOUT_POSITION.CENTER,
 						}),
-				
+
 --------------------------------------------------------------------------------
--- Wormhole 
+-- Wormhole
 --------------------------------------------------------------------------------
 		-- "Generic" wormholes
 		["WormholeGrass"] = StaticLayout.Get("map/static_layouts/wormhole_grass"),
@@ -504,17 +504,17 @@ local ExampleLayout =
 			},
 		}),
         ["TentaclePillar"] = StaticLayout.Get("map/static_layouts/tentacle_pillar"),
-		
+
 --------------------------------------------------------------------------------
--- Eyebone 
+-- Eyebone
 --------------------------------------------------------------------------------
 		["InsaneEyebone"] = StaticLayout.Get("map/static_layouts/insane_eyebone"),
 
 --------------------------------------------------------------------------------
--- TELEPORTATO 
+-- TELEPORTATO
 --------------------------------------------------------------------------------
 		["TeleportatoBoxLayout"] = StaticLayout.Get("map/static_layouts/teleportato_box_layout"),
-		["TeleportatoRingLayout"] = 
+		["TeleportatoRingLayout"] =
 						{
 							type = LAYOUT.CIRCLE_EDGE,
 							start_mask = PLACE_MASK.NORMAL,
@@ -544,7 +544,7 @@ local ExampleLayout =
 		["AdventurePortalLayout"] = StaticLayout.Get("map/static_layouts/adventure_portal_layout"),
 
 --------------------------------------------------------------------------------
--- MAX PUZZLE 
+-- MAX PUZZLE
 --------------------------------------------------------------------------------
 		--["SymmetryTest"] = StaticLayout.Get("map/static_layouts/symmetry_test"),
 		--["SymmetryTest2"] = StaticLayout.Get("map/static_layouts/symmetry_test2"),
@@ -561,7 +561,7 @@ local ExampleLayout =
 
 
 --------------------------------------------------------------------------------
--- CAVES 
+-- CAVES
 --------------------------------------------------------------------------------
 
     ["CaveEntrance"] = StaticLayout.Get("map/static_layouts/cave_entrance"),
@@ -598,7 +598,7 @@ local ExampleLayout =
             pondarea = { "pond", "grass", "grass", "berrybush", "sapling", "sapling" },
         },
     }),
-    ["SlurtleEnclave"] = 
+    ["SlurtleEnclave"] =
     {
         type = LAYOUT.CIRCLE_EDGE,
         ground_types = {GROUND.CAVE},
@@ -637,7 +637,7 @@ local ExampleLayout =
 
 	["WalledGarden"] = StaticLayout.Get("map/static_layouts/walledgarden",
 		{
-			areas = 
+			areas =
 			{
 				plants = function(area) return PickSomeWithDups(0.3 * area, {"cave_fern", "lichen", "flower_cave", "flower_cave_double", "flower_cave_triple"}) end,
 			},
@@ -645,15 +645,15 @@ local ExampleLayout =
 			fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 			layout_position = LAYOUT_POSITION.CENTER
 		}),
-	["MilitaryEntrance"] = StaticLayout.Get("map/static_layouts/military_entrance", {			
-			areas = 
+	["MilitaryEntrance"] = StaticLayout.Get("map/static_layouts/military_entrance", {
+			areas =
 			{
 				cave_hole_area = function(area) return {"cave_hole"} end,
 			},
 			start_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 			fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 			layout_position = LAYOUT_POSITION.CENTER}),
-	
+
 	--SACRED GROUNDS
 
 	["AltarRoom"] = StaticLayout.Get("map/static_layouts/altar",{
@@ -728,11 +728,11 @@ local ExampleLayout =
 	}),
 
 	["BlueMushyStart"] = StaticLayout.Get("map.static_layouts/blue_mushy_entrance"),
-	
-	["AntlionSpawningGround"] = 
+
+	["AntlionSpawningGround"] =
 	{
 		type = LAYOUT.STATIC,
-		layout = 
+		layout =
 		{
 			antlion_spawner = {{x=0, y=0}},
 		},
@@ -748,7 +748,7 @@ local ExampleLayout =
 		fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
 		layout_position = LAYOUT_POSITION.CENTER,
 	},
-	
+
 
 --------------------------------------------------------------------------------
 -- ANR - A New Reign
@@ -763,9 +763,9 @@ local ExampleLayout =
 	}),
 
 	["StagehandGarden"] = StaticLayout.Get("map/static_layouts/stagehandgarden"),
-	
+
 	["Sculptures_1"] = StaticLayout.Get("map/static_layouts/sculptures_1"),
-	
+
 	["Sculptures_2"] = StaticLayout.Get("map/static_layouts/sculptures_2",
 	{
 		areas =
@@ -773,7 +773,7 @@ local ExampleLayout =
 			sculpture_random = function(area) return PickSomeWithDups(1, {"statue_marble_muse", "statue_marble_pawn", "sculpture_knight", "sculpture_bishop"}) end,
 		},
 	}),
-	
+
 	["Sculptures_3"] = StaticLayout.Get("map/static_layouts/sculptures_3"),
 	["Sculptures_4"] = StaticLayout.Get("map/static_layouts/sculptures_4"),
 
@@ -797,7 +797,7 @@ local ExampleLayout =
 -- LAVAARENA
 --------------------------------------------------------------------------------
 
-	["LavaArenaLayout"] = StaticLayout.Get("map/static_layouts/events/lava_arena", 
+	["LavaArenaLayout"] = StaticLayout.Get("map/static_layouts/events/lava_arena",
     {
         start_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
         fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
@@ -809,8 +809,8 @@ local ExampleLayout =
 --------------------------------------------------------------------------------
 -- QUAGMIRE
 --------------------------------------------------------------------------------
-	
-	["Quagmire_Kitchen"] = StaticLayout.Get("map/static_layouts/events/quagmire_kitchen", 
+
+	["Quagmire_Kitchen"] = StaticLayout.Get("map/static_layouts/events/quagmire_kitchen",
     {
         start_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
         fill_mask = PLACE_MASK.IGNORE_IMPASSABLE_BARREN_RESERVED,
@@ -819,7 +819,7 @@ local ExampleLayout =
 
 		areas =
 		{
-			quagmire_parkspike_row = function(area, data) 
+			quagmire_parkspike_row = function(area, data)
 				local vert = data.height > data.width
 --				local x = vert and (data.x) or (data.x - data.width/2.0)
 --				local y = vert and (data.y - data.height/2.0) or (data.y)
@@ -830,7 +830,7 @@ local ExampleLayout =
 
 				local prefabs = {}
 				for i = 1, num do
-					table.insert(prefabs, 
+					table.insert(prefabs,
 					{
 						prefab = i % 2 == (vert and 0 or 1) and "quagmire_parkspike_short" or "quagmire_parkspike",
 						x = x,
@@ -898,7 +898,7 @@ local ExampleLayout =
 			kelp_area = function() return math.random() < 0.9 and {"bullkelp_plant"} or nil end,
 		}
     }),
-	
+
 	["BullkelpFarmMedium"] = StaticLayout.Get("map/static_layouts/bullkelpfarmmedium", {
 		areas =
 		{
@@ -979,7 +979,7 @@ local ExampleLayout =
 			fissure_area = {"moon_fissure"},
 		},
 	}),
-	
+
 	["retrofit_moonisland_large"] = StaticLayout.Get("map/static_layouts/retrofit_moonisland_large",
 	{
 		start_mask = PLACE_MASK.IGNORE_IMPASSABLE,
@@ -994,7 +994,7 @@ local ExampleLayout =
 	["retrofit_brinepool_tiny"] = StaticLayout.Get("map/static_layouts/retrofit_brinepool_tiny", {
 		areas =
 		{
-			saltstack_area = function() return {"saltstack"} end, 
+			saltstack_area = function() return {"saltstack"} end,
 		},
     }),
 
@@ -1007,9 +1007,9 @@ local ExampleLayout =
 		},
     }),
 
-	
-	
-	
+
+
+
 --------------------------------------------------------------------------------
 
 }

@@ -101,7 +101,7 @@ local function fn()
 
         if use_uv_offset then
 
-            local angle = math.random() * 360    
+            local angle = math.random() * 360
             local uv_offset = math.random(0, 7) * .125
             local ang_vel = UnitRand() * 4.0
             effect:AddRotatingParticleUV(

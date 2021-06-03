@@ -60,7 +60,7 @@ local function visualfn()
     --[[Non-networked entity]]
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    
+
     inst:AddTag("DECOR")
     inst:AddTag("NOCLICK")
 

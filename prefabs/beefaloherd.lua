@@ -112,7 +112,7 @@ local function fn()
 
     inst:AddComponent("herd")
     if inst:HasTag("migratory") then
-        inst.components.herd:SetMemberTag("beefalo_migratory") 
+        inst.components.herd:SetMemberTag("beefalo_migratory")
     else
         inst.components.herd:SetMemberTag("beefalo")
     end

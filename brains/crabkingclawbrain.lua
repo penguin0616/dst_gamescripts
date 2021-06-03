@@ -17,8 +17,8 @@ local function ShouldClamp(inst)
         local x,y,z = inst.Transform:GetWorldPosition()
         local ents = TheSim:FindEntities(x,y,z, 4.5, BOAT_TAGS)
         if #ents > 0 then
-            for i=#ents, 1, -1 do               
-                if not ents[i]:IsValid() or ents[i].components.health:IsDead() then                    
+            for i=#ents, 1, -1 do
+                if not ents[i]:IsValid() or ents[i].components.health:IsDead() then
                     table.remove(ents,i)
                 end
             end
@@ -26,7 +26,7 @@ local function ShouldClamp(inst)
         if #ents > 0 then
             inst:PushEvent("clamp",{target = ents[1]})
         end
-    end 
+    end
     return nil
 end
 
@@ -48,7 +48,7 @@ function CrabkingClawBrain:OnStart()
     {
        WhileNode(function() return not self.inst.sg:HasStateTag("clampped") end, "not clamping",
         PriorityNode({
-            
+
             Leash(self.inst, function() return self.inst.components.knownlocations:GetLocation("spawnpoint") end, LEASH_DIST, 5, false),
 
             DoAction(self.inst, ShouldClamp, "clamp!"),
@@ -61,10 +61,10 @@ function CrabkingClawBrain:OnStart()
                     minwaittime=1,
                     randwaittime=5,
                 }
-            )                 
+            )
         }, 0.2)),
     }, 0.2)
-    
+
     self.bt = BT(self.inst, root)
 end
 

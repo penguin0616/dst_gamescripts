@@ -186,7 +186,7 @@ local states =
             inst.components.combat:StartAttack()
         end,
 
-        timeline = 
+        timeline =
 		{
             TimeEvent(14 * FRAMES, function(inst) inst:LaunchGooIcing() end),
             TimeEvent(14*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbread_vargr/whoosh") end),
@@ -223,7 +223,7 @@ local states =
             inst.AnimState:PlayAnimation("gingerbread_eat_loop")
         end,
 
-        timeline = 
+        timeline =
 		{
 			TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbread_vargr/eat") end),
             TimeEvent(6*FRAMES, function(inst) if math.random() < 0.5 then inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbreadpig/vocal") end end),

@@ -216,7 +216,7 @@ local ModsTab = Class(Widget, function(self, servercreationscreen, settings)
 
     self.optionwidgets_client = OptionWidget()
     self.optionwidgets_server = OptionWidget()
-    
+
     self:CreateModsScrollList()
 
     local function workshopfnfilter(modname)
@@ -231,7 +231,7 @@ local ModsTab = Class(Widget, function(self, servercreationscreen, settings)
     local function disabledfnfilter(modname)
         return not KnownModIndex:IsModEnabled(modname)
     end
-    
+
     self.modfilterbar = self.mods_page:AddChild(ModFilterBar(self, "modfilter"))
     self.modfilterbar:AddChild(self.modfilterbar:AddModTypeFilter(STRINGS.UI.MODSSCREEN.WORKSHOP_FILTER_FMT, "workshop_filter.tex", "local_filter.tex", "workshoplocal_filter.tex", "workshopfilter", workshopfnfilter, localfnfilter))
     self.modfilterbar:AddChild(self.modfilterbar:AddModStatusFilter(STRINGS.UI.MODSSCREEN.STATUS_FILTER_FMT, "enabled_filter.tex", "disabled_filter.tex", "enableddisabled_filter.tex", "statusfilter", enabledfnfilter, disabledfnfilter))
@@ -616,7 +616,7 @@ function ModsTab:CreateDetailPanel()
 			else
 				no_mods = string.format(STRINGS.UI.MODSSCREEN.NO_MODS_TYPE, self.currentmodtype )
 			end
-           
+
             self.detaildesc_empty:SetString(no_mods)
             self:DisableConfigButton()
             self:DisableUpdateButton("uptodate")
@@ -868,7 +868,7 @@ function ModsTab:UpdateForWorkshop( force_refresh )
         self.forceupdatemodsorder = true
 
         --print("### Do UpdateForWorkshop refresh")
-        
+
         self.modnames_client_dl = curr_modnames_client_dl
         self.modnames_server_dl = curr_modnames_server_dl
         self.downloading_mods_count = #self.modnames_client_dl + #self.modnames_server_dl
@@ -950,7 +950,7 @@ function ModsTab:RefreshModFilter(filter_fn)
     self:UpdateModsOrder(true)
 
     self:_SetModsList(self.currentmodtype, true)
-    
+
     --self:UpdateForWorkshop(true) --Zachary: don't do this, this will cause the game to lag for a teeny bit every time you change the filter options
 end
 
@@ -1102,7 +1102,7 @@ function ModsTab:ShowModDetails(widget_idx, client_mod)
     local idx = items_table[widget_idx] and items_table[widget_idx].index or nil
 
     local modname = idx and modnames_versions[idx] and modnames_versions[idx].modname or nil
-    
+
     self.currentmodname = modname
     if client_mod and self.currentmodname then
         self.last_client_modname = self.currentmodname
@@ -1111,7 +1111,7 @@ function ModsTab:ShowModDetails(widget_idx, client_mod)
     end
 
     local modinfo = modname and KnownModIndex:GetModInfo(modname) or {}
-    
+
     local iconinfo = modname and self.infoprefabs[modname] or {}
     if iconinfo.icon and iconinfo.icon_atlas then
         self.detailimage:SetTexture(iconinfo.icon_atlas, iconinfo.icon)
@@ -1192,7 +1192,7 @@ function ModsTab:ShowModDetails(widget_idx, client_mod)
     else
         self.detailwarning:SetString("")
     end
-    
+
     self.modlinkbutton:Unselect()
     if not modname then
         self.modlinkbutton:ClearHoverText()

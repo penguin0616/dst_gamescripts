@@ -95,7 +95,7 @@ local function band_perish(inst)
     inst:Remove()
 end
 
-local function onequip(inst, owner) 
+local function onequip(inst, owner)
     if owner then
         owner.AnimState:OverrideSymbol("swap_body_tall", "swap_one_man_band", "swap_body_tall")
         inst.components.fueled:StartConsuming()
@@ -104,9 +104,9 @@ local function onequip(inst, owner)
     band_enable(inst)
 end
 
-local function onunequip(inst, owner) 
+local function onunequip(inst, owner)
     if owner then
-        owner.AnimState:ClearOverrideSymbol("swap_body_tall") 
+        owner.AnimState:ClearOverrideSymbol("swap_body_tall")
         inst.components.fueled:StopConsuming()
     end
 

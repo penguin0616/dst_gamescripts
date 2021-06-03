@@ -17,7 +17,7 @@ local events =
     CommonHandlers.OnAttacked(),
 
     EventHandler("doattack", function(inst, data)
-        if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy")) 
+        if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy"))
                 and (data.target ~= nil and data.target:IsValid()) then
             local dsq_to_target = inst:GetDistanceSqToInst(data.target)
 
@@ -69,14 +69,14 @@ local function SpawnBeam(inst, target_pos)
     local x_step = STEP
     if inst:GetDistanceSqToPoint(target_pos:Get()) < 4 then
         angle = math.atan2(iz - target_pos.z, ix - target_pos.x)
-    
+
         -- If the target is too close, use the minimum distance
         gx, gy, gz = inst.Transform:GetWorldPosition()
         gx = gx + (2 * math.cos(angle))
         gz = gz + (2 * math.sin(angle))
     else
         angle = math.atan2(iz - target_pos.z, ix - target_pos.x)
-    
+
         gx, gy, gz = target_pos:Get()
         gx = gx + (target_step_num * STEP * math.cos(angle))
         gz = gz + (target_step_num * STEP * math.sin(angle))
@@ -246,7 +246,7 @@ local function do_summon_spawn(inst)
         local dsq_to_player = p:GetDistanceSqToPoint(ix, 0, iz)
         if dsq_to_player < TUNING.ALTERGUARDIAN_PHASE3_SUMMONRSQ then
             -- Don't count ghosts, and don't "sleep-camp" players that are knocked out.
-            if (p.components.grogginess ~= nil and not p.components.grogginess:IsKnockedOut()) 
+            if (p.components.grogginess ~= nil and not p.components.grogginess:IsKnockedOut())
                     and not p:HasTag("playerghost") then
                 player_in_range = true
 
@@ -274,7 +274,7 @@ local function do_summon_spawn(inst)
 end
 
 local function do_stab_attack(inst)
-    inst.components.combat:DoAttack(inst.sg.statemem.target) 
+    inst.components.combat:DoAttack(inst.sg.statemem.target)
     --inst.SoundEmitter:PlaySound(attack sound)
 end
 
@@ -369,7 +369,7 @@ local states =
 
             TimeEvent(112*FRAMES, function(inst) set_lightvalues(inst, 0.925) end),
             TimeEvent(113*FRAMES, function(inst) set_lightvalues(inst, 0.95) end),
-            
+
             TimeEvent(118*FRAMES, function(inst) set_lightvalues(inst, 0.925) end),
 
             TimeEvent(125*FRAMES, function(inst) set_lightvalues(inst, 0.9) end),
@@ -960,10 +960,10 @@ CommonStates.AddWalkStates(states,
 
     },
     walktimeline = {
-    
+
     },
     endtimeline = {
-    
+
     },
 })
 

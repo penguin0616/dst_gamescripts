@@ -90,7 +90,7 @@ local function fn()
     inst.AnimState:SetBuild("chum_pouch")
     inst.AnimState:PlayAnimation("idle")
     inst.AnimState:SetDeltaTimeMultiplier(.75)
-    
+
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = ReticuleTargetFn
     inst.components.reticule.ease = true
@@ -106,7 +106,7 @@ local function fn()
     end
 
     inst:AddComponent("locomotor")
-    
+
     inst:AddComponent("oceanthrowable")
     inst.components.oceanthrowable:SetOnAddProjectileFn(OnAddProjectile)
 

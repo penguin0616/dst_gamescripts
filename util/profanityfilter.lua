@@ -9,7 +9,7 @@ function ProfanityFilter:AddDictionary(name, data)
 		exact_match = {
 			[smallhash("dst")] = true,
 		},
-		loose_match = 
+		loose_match =
 		{
 			"test",
 		},

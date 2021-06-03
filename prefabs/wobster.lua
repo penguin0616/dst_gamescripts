@@ -76,7 +76,7 @@ local PROJECTILE_COLLISION_MASK = COLLISION.GROUND
 
 local function on_projectile_landed(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
-    
+
     if TheWorld.Map:IsPassableAtPoint(x, y, z) then
         local wobster = SpawnPrefab(inst.fish_def.prefab.."_land")
         wobster.Transform:SetPosition(x, y, z)

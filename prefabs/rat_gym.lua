@@ -45,7 +45,7 @@ local function onhit(inst)
    -- toss rat
     if inst.components.gym and inst.components.gym.trainee then
         ejectitem(inst,inst.components.gym.trainee)
-    end 
+    end
     inst:PushEvent("hit")
 end
 
@@ -73,7 +73,7 @@ local function ShouldAcceptItem(inst, item, giver)
 end
 
 local function getcarrat(inst, item, train)
-    inst:PushEvent("ratupdate") 
+    inst:PushEvent("ratupdate")
     if inst.components.trader ~= nil then
         inst.components.trader:Disable()
     end
@@ -111,7 +111,7 @@ end
 
 local function OnLoseItem(inst)
     inst._musicstate:set(CARRAT_MUSIC_STATES.NONE)
-    inst:PushEvent("ratupdate") 
+    inst:PushEvent("ratupdate")
     if inst.components.trader ~= nil then
         inst.components.trader:Enable()
     end
@@ -136,7 +136,7 @@ local function OnLoseShelfItem(inst, taker, item)
         if inst.components.gym and item == inst.components.gym.trainee then
             inst.components.gym:RemoveTrainee()
         end
-    end 
+    end
 end
 
 local function OnShelfTakeTest(inst, taker, item)
@@ -189,8 +189,8 @@ local function ReactionGymTrain(inst,trainee)
 end
 
 local function OnMusicStateDirty(inst)
-    if inst._musicstate:value() > 0 and ThePlayer ~= nil then     
-        if inst._musicstate:value() == CARRAT_MUSIC_STATES.TRAINING then            
+    if inst._musicstate:value() > 0 and ThePlayer ~= nil then
+        if inst._musicstate:value() == CARRAT_MUSIC_STATES.TRAINING then
             if ThePlayer:GetDistanceSqToInst(inst) < 20*20 then
                 ThePlayer:PushEvent("playtrainingmusic")
             end
@@ -202,16 +202,16 @@ local function OnSave(inst, data)
     data.rat_trainer_id = inst.rat_trainer_id
 
     if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
-        data.burnt = true    
+        data.burnt = true
     end
 end
 
 local function OnLoad(inst, data)
-    if data then    
+    if data then
         if data.burnt then
             inst.components.burnable.onburnt(inst)
             inst:PushEvent("onburnt")
-        end        
+        end
         inst.rat_trainer_id = data.rat_trainer_id
     end
 end
@@ -312,7 +312,7 @@ local function MakeGym(name, build, size)
             inst:AddComponent("trader")
             inst.components.trader:SetAcceptTest(ShouldAcceptItem)
             inst.components.trader.onaccept = OnGetItemFromPlayer
-            inst.components.trader.deleteitemonaccept = false       
+            inst.components.trader.deleteitemonaccept = false
         end
 
         inst:AddComponent("inventory")
@@ -331,7 +331,7 @@ local function MakeGym(name, build, size)
             inst.components.gym:SetTrainFn(ReactionGymTrain)
         end
         inst.components.gym:SetOnRemoveTraineeFn(OnLoseItem)
-          
+
         --inst:ListenForEvent("itemget", OnGetItem)
         inst:ListenForEvent("itemlose", OnLoseItem)
 

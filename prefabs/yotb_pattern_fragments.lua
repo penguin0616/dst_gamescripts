@@ -5,7 +5,7 @@ local assets =
     Asset("ANIM", "anim/yotb_pattern_fragment_3.zip"),
 }
 
-local function make(name,bank) 
+local function make(name,bank)
 
     local function fn()
         local inst = CreateEntity()
@@ -20,7 +20,7 @@ local function make(name,bank)
         inst.AnimState:SetBuild(name)
         inst.AnimState:PlayAnimation("idle")
 
-        inst:AddTag("cattoy") 
+        inst:AddTag("cattoy")
         inst:AddTag("yotb_pattern_fragment")
 
         MakeInventoryFloatable(inst, "med", 0.05, 0.68)

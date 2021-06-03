@@ -1,5 +1,5 @@
 
-AddRoom("MoonIsland_IslandShard",  { 
+AddRoom("MoonIsland_IslandShard",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.METEORCOAST_NOISE,
     tags = {"RoadPoison"}, --"ForceDisconnected"
@@ -28,7 +28,7 @@ AddRoom("MoonIsland_IslandShard",  {
 	},
 })
 
-AddRoom("MoonIsland_Beach",  { 
+AddRoom("MoonIsland_Beach",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.PEBBLEBEACH,
 	contents = {
@@ -54,14 +54,14 @@ AddRoom("MoonIsland_Beach",  {
 	},
 })
 
-AddRoom("MoonIsland_Blank",  { 
+AddRoom("MoonIsland_Blank",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.IMPASSABLE,
     tags = {"ForceDisconnected", "RoadPoison"},
     internal_type = NODE_INTERNAL_CONNECTION_TYPE.EdgeCentroid,
 })
 
-AddRoom("MoonIsland_Forest",  { 
+AddRoom("MoonIsland_Forest",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.METEOR,
     --tags = {"ForceDisconnected", "RoadPoison"},
@@ -91,7 +91,7 @@ AddRoom("MoonIsland_Forest",  {
 	},
 })
 
-AddRoom("MoonIsland_Mine",  { 
+AddRoom("MoonIsland_Mine",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.METEORMINE_NOISE,
     --tags = {"ForceDisconnected", "RoadPoison"},
@@ -113,7 +113,7 @@ AddRoom("MoonIsland_Mine",  {
 	},
 })
 
-AddRoom("MoonIsland_Baths",  { 
+AddRoom("MoonIsland_Baths",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.METEOR,
 	tags = {"RoadPoison"},
@@ -138,7 +138,7 @@ AddRoom("MoonIsland_Baths",  {
 	},
 })
 
-AddRoom("MoonIsland_Meadows",  { 
+AddRoom("MoonIsland_Meadows",  {
     colour={r=0.3,g=0.2,b=0.1,a=0.3},
     value = GROUND.METEOR,
     --tags = {"ForceDisconnected", "RoadPoison"},
@@ -162,7 +162,7 @@ AddRoom("MoonIsland_Meadows",  {
 })
 
 -------------------------------------------------------------------------------
-AddRoom("Empty_Cove",  { 
+AddRoom("Empty_Cove",  {
     colour={r=1.0,g=1.0,b=1.0,a=0.3},
     value = GROUND.IMPASSABLE,
 	type = NODE_TYPE.Blank,

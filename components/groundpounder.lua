@@ -39,7 +39,7 @@ function GroundPounder:GetPoints(pt)
 
             theta = theta - (2*PI/numPoints)
         end
-        
+
         radius = radius + self.radiusStepDistance
 
     end
@@ -85,7 +85,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
                         if v2 ~= self.inst and
                             v2:IsValid() and
                             v2.components.health ~= nil and
-                            not v2.components.health:IsDead() and 
+                            not v2.components.health:IsDead() and
                             self.inst.components.combat:CanTarget(v2) then
                             self.inst.components.combat:DoAttack(v2, nil, nil, nil, self.groundpounddamagemult)
                         end

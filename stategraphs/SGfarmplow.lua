@@ -1,17 +1,17 @@
 require("stategraphs/commonstates")
 
 local events=
-{    
+{
 }
 
 local states=
-{   
+{
     State{
         name = "place",
         onenter = function(inst)
             inst.AnimState:PlayAnimation("place")
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + 0.5)
-        end, 
+        end,
 
 		ontimeout = function(inst)
 			inst.sg:GoToState("drilling")
@@ -26,7 +26,7 @@ local states=
 			end),
         },
     },
-    
+
 	State{
         name = "drilling",
         onenter = function(inst, drill_time)

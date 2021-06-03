@@ -202,7 +202,7 @@ local function Retarget(inst)
     )
 
     for _, target in ipairs(potential_targets) do
-        if target ~= inst and target.entity:IsVisible() 
+        if target ~= inst and target.entity:IsVisible()
                 and inst.components.combat:CanTarget(target) then
             return target, true
         end
@@ -409,7 +409,7 @@ local function fn()
     inst:ListenForEvent("phasetransition", OnPhaseTransition)
     inst:ListenForEvent("attacked", OnAttacked)
 
-    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/idle_LP","idle_LP") 
+    inst.SoundEmitter:PlaySound("moonstorm/creatures/boss/alterguardian2/idle_LP","idle_LP")
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad

@@ -4,7 +4,7 @@ local assets =
     Asset("SOUND", "sound/tentacle.fsb"),
 }
 
-local prefabs = 
+local prefabs =
 {
     "tentacle_pillar_arm",
     "tentacle_pillar_hole",
@@ -79,7 +79,7 @@ local function SpawnArms(inst, attacker)
         inst.spawnLocal = nil
     end
 
-    -- Walk the circle trying to find a valid spawn point 
+    -- Walk the circle trying to find a valid spawn point
     local map = TheWorld.Map
     for r = 1, rings do
         local theta = GetRandomWithVariance(0, PI / 2)
@@ -113,7 +113,7 @@ local function OnFar(inst)
     end
 end
 
-local function OnHit(inst, attacker, damage) 
+local function OnHit(inst, attacker, damage)
     if attacker.components.combat ~= nil and not attacker:HasTag("player") and math.random() < .5 then
         -- Followers should stop hitting the pillar
         attacker.components.combat:SetTarget(nil)
@@ -215,7 +215,7 @@ local function OnDeath(inst)
 end
 
 local function OnEntityWake(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/tentacle/tentapiller_idle_LP", "loop") 
+    inst.SoundEmitter:PlaySound("dontstarve/tentacle/tentapiller_idle_LP", "loop")
 end
 
 local function OnEntitySleep(inst)

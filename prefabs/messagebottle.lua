@@ -6,7 +6,7 @@ local assets =
 
 	Asset("ANIM", "anim/bottle.zip"),
 	Asset("INV_IMAGE", "messagebottle"),
-	
+
 	Asset("ANIM", "anim/swap_bottle.zip"),
 }
 
@@ -64,7 +64,7 @@ end
 
 local function prereveal(inst, doer)
 	local bottle_contains_note = false
-	
+
 	if TheWorld.components.messagebottlemanager ~= nil then
 		if (TheWorld.components.messagebottlemanager:GetPlayerHasUsedABottle(doer) or TheWorld.components.messagebottlemanager:GetPlayerHasFoundHermit(doer))
 			and math.random() < TUNING.MESSAGEBOTTLE_NOTE_CHANCE then
@@ -89,7 +89,7 @@ local function messagebottlefn()
 
     inst.entity:AddTransform()
 	inst.entity:AddNetwork()
-	
+
     inst.entity:AddAnimState()
     inst.AnimState:SetBank("bottle")
     inst.AnimState:SetBuild("bottle")
@@ -141,7 +141,7 @@ local function emptybottlefn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-	
+
     inst.AnimState:SetBank("bottle")
     inst.AnimState:SetBuild("bottle")
 	inst.AnimState:PlayAnimation("idle")
@@ -184,12 +184,12 @@ end
 
 local function OnHit(inst, attacker, target)
     local x, y, z = inst.Transform:GetWorldPosition()
-    if not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) then    	    
+    if not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) then
     	SpawnPrefab("splash_green_small").Transform:SetPosition(x,y,z)
 		inst.components.inventoryitem.canbepickedup = false
 
     	inst.AnimState:PlayAnimation("bob")
-		inst:ListenForEvent("animover", function(inst) inst:Remove() end) 
+		inst:ListenForEvent("animover", function(inst) inst:Remove() end)
     else
 		SpawnPrefab("messagebottle_break_fx").Transform:SetPosition(x,y,z)
 		inst:Remove()
@@ -243,7 +243,7 @@ local function bobbottlefn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-	
+
     inst.AnimState:SetBank("bottle")
     inst.AnimState:SetBuild("bottle")
 	inst.AnimState:PlayAnimation("bob")
@@ -260,7 +260,7 @@ local function bobbottlefn()
 
 	inst:AddComponent("inventoryitem")
 	inst.canbepickedup = false
-	inst:ListenForEvent("animover", function(inst) inst:Remove() end) 
+	inst:ListenForEvent("animover", function(inst) inst:Remove() end)
 
 	return inst
 end

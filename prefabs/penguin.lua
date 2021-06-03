@@ -109,7 +109,7 @@ local function OnEat(inst, food)
         local poo = SpawnPrefab("poop")
         poo.components.fertilizer.fertilizervalue = TUNING.POOP_FERTILIZE/2
         poo.components.fertilizer.soil_cycles = TUNING.POOP_SOILCYCLES/2
-        poo.Transform:SetPosition(inst.Transform:GetWorldPosition())        
+        poo.Transform:SetPosition(inst.Transform:GetWorldPosition())
         poo.Transform:SetScale(.5,.5,.5)
     end
 --]]
@@ -198,7 +198,7 @@ local function KeepTarget(inst, target)
     else
         --print(inst,"Loses TARGET")
         return false
-    end 
+    end
 end
 
 local function ShareTargetFn(dude)

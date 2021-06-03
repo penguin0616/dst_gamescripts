@@ -28,8 +28,8 @@ AddRoom("BGRocky", {
 					                distributeprefabs=
 					                {
 										flint=0.5,
-										rock1=1,										
-										rock2=1,										
+										rock1=1,
+										rock2=1,
 										rock_ice=0.4,
 										tallbirdnest=0.008,
 										grassgekko = 0.3,
@@ -100,7 +100,7 @@ AddRoom("GenericRockyNoThreat", {
 
 AddRoom("MolesvilleRocky", {
 					colour={r=.55,g=.75,b=.75,a=.50},
-					value = GROUND.ROCKY, 
+					value = GROUND.ROCKY,
 					contents =  {
 									distributepercent = 0.1,
 									distributeprefabs =
@@ -112,7 +112,7 @@ AddRoom("MolesvilleRocky", {
 										rocks = .5,
 										flint = .1,
 										grass = 0.1,
-										molehill = 1,										
+										molehill = 1,
 										grassgekko = 0.3,
 									},
 					            }

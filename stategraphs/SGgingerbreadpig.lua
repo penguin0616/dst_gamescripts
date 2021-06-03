@@ -46,9 +46,9 @@ local states =
 
         timeline =
         {
-            TimeEvent(0*FRAMES, function(inst) 
+            TimeEvent(0*FRAMES, function(inst)
                 if inst.chased then
-                    inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbreadpig/breath") 
+                    inst.SoundEmitter:PlaySound("wintersfeast2019/creatures/gingerbreadpig/breath")
                 end
             end)
         },
@@ -61,12 +61,12 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("death")
             inst.components.locomotor:StopMoving()
-            
+
             if (inst.chased and inst.chased_by_player) or inst:IsNearPlayer(30) then
                 inst.components.lootdropper:DropLoot(inst:GetPosition())
             end
-            
-            RemovePhysicsColliders(inst)            
+
+            RemovePhysicsColliders(inst)
         end,
 
         timeline =
@@ -81,9 +81,9 @@ local states =
         tags = { "busy" },
 
         onenter = function(inst)
-            inst.Physics:Stop()	
+            inst.Physics:Stop()
             inst.AnimState:PlayAnimation("scare")
-            
+
         end,
 
         events =

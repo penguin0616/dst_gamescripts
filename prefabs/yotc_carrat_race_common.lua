@@ -197,7 +197,7 @@ local function PostInit_AddCarpetAndPlacerRing(inst, deployhelper_key)
 	inst.components.placer:LinkEntity(rug)
 end
 
-return 
+return
 {
 	AddDeployHelper = AddDeployHelper,
 	PlacerPostInit_AddPlacerRing = PostInit_AddPlacerRing,

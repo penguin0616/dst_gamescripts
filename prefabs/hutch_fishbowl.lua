@@ -2,7 +2,7 @@ local assets =
 {
     Asset("ANIM", "anim/hutch_fishbowl.zip"),
     Asset("INV_IMAGE", "hutch_fishbowl"),
-    Asset("INV_IMAGE", "hutch_fishbowl_dead"), 
+    Asset("INV_IMAGE", "hutch_fishbowl_dead"),
 }
 
 local SPAWN_DIST = 30

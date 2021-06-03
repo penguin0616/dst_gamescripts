@@ -51,13 +51,13 @@ local function getdirectionFn(inst)
     local offset = Vector3(DIST * math.cos( theta ), 0, -DIST * math.sin( theta ))
     local x,y,z = inst.Transform:GetWorldPosition()
 
-    local r = math.random() * 2 - 1 
+    local r = math.random() * 2 - 1
     local newdir = (inst.Transform:GetRotation() + r*r*r * 60) * DEGREES
 
     if TheWorld.Map:IsVisualGroundAtPoint(x+offset.x,0,z+offset.z) then
         newdir =  newdir + PI
     end
-           
+
     return newdir
 end
 
@@ -177,22 +177,22 @@ end
 function SharkBrain:OnStart()
     local root = PriorityNode(
         {
-            WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "NotJumpingBehaviour",                
+            WhileNode(function() return not self.inst.sg:HasStateTag("jumping") end, "NotJumpingBehaviour",
                 PriorityNode({
-                    WhileNode(function() return not isOnWater(self.inst) and not self.inst.components.timer:TimerExists("getdistance") end, "NOT on water",    
+                    WhileNode(function() return not isOnWater(self.inst) and not self.inst.components.timer:TimerExists("getdistance") end, "NOT on water",
                         PriorityNode({
                             DoAction(self.inst, Attack, "attack", true),
                         })),
 
                     --WhileNode(function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
-                    WhileNode(function() return isOnWater(self.inst) end, "on water",    
+                    WhileNode(function() return isOnWater(self.inst) end, "on water",
                         PriorityNode({
-                            WhileNode(function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),                            
+                            WhileNode(function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
                             RunAway(self.inst, function() return self.inst.components.timer:TimerExists("getdistance") and self.inst.components.combat.target end, 10, 20),
                             ChaseAndAttack(self.inst, 100),
                             DoAction(self.inst, isfoodnearby, "gotofood", true),
                             DoAction(self.inst, EatFishAction, "eat fish", true),
-                            
+
                             --Leash(self.inst, GetBoatFollowPosition, GetBoatFollowDistance, 0.5, ShouldLeashRun),
 
                             Wander(self.inst, GetWanderPoint, 40, WANDER_TIMES, getdirectionFn)

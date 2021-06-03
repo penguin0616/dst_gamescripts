@@ -152,7 +152,7 @@ local function fn()
     inst:AddTag("largecreature")
 
     inst.entity:SetPristine()
-    
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -175,7 +175,7 @@ local function fn()
     inst:AddComponent("inventory")
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('spat')    
+    inst.components.lootdropper:SetChanceLootTable('spat')
 
     inst:AddComponent("inspectable")
 

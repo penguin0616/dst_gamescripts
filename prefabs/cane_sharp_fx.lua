@@ -107,7 +107,7 @@ local function fn()
     local glow_num_particles_to_emit = 0
 
     local sphere_emitter = CreateSphereEmitter(.05)
-    
+
     EmitterManager:AddEmitter(inst, nil, function()
 
         while glow_num_particles_to_emit > 1 do

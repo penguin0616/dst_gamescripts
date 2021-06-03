@@ -62,9 +62,9 @@ local function testforsquid(comp, forcesquid)
             if TheWorld.state.isnight then
                 chance = chance * 2
             end
-        
-            local max = TUNING.SQUID_MAX_NUMBERS[TheWorld.state.moonphase]        
-            
+
+            local max = TUNING.SQUID_MAX_NUMBERS[TheWorld.state.moonphase]
+
             if TheWorld.state.iswaxingmoon then
                 chance = chance / 3
                 max = 2
@@ -74,7 +74,7 @@ local function testforsquid(comp, forcesquid)
                 local herd = SpawnPrefab("squidherd")
                 local num = math.random(2,TUNING.SQUID_MAX_NUMBERS[TheWorld.state.moonphase])
                 for i=1,num do
-                    
+
                     local squidspawnpoint = Vector3(fishlist[math.random(1,#fishlist)].Transform:GetWorldPosition())
 
                     herd.Transform:SetPosition(squidspawnpoint.x, squidspawnpoint.y, squidspawnpoint.z)
@@ -90,8 +90,8 @@ local function testforsquid(comp, forcesquid)
                     end
                 end
             end
-            
-            -- remove nearby players from list        
+
+            -- remove nearby players from list
             local player = scrambled[1]
             table.remove(scrambled,1)
 
@@ -101,8 +101,8 @@ local function testforsquid(comp, forcesquid)
                         table.remove(scrambled,i)
                     end
                 end
-            end             
-        end            
+            end
+        end
     end
 end
 
@@ -136,9 +136,9 @@ local function onschoolspawned(src,data)
     testforsquid(self,data.spawnpoint)
 end
 
-local function spawntask() 
+local function spawntask()
     if TheWorld.state.isnight or TheWorld.state.isdusk then
-        testforsquid(self)   
+        testforsquid(self)
         if inst.squidtask then
             inst.squidtask:Cancel()
             inst.squidtask = nil
@@ -191,7 +191,7 @@ function self:OnLoad(data)
    -- _maxschools = data.maxbirds or TUNING.SCHOOL_SPAWN_MAX
    -- _minspawndelay = data.minspawndelay or TUNING.SCHOOL_SPAWN_DELAY.min
    -- _maxspawndelay = data.maxspawndelay or TUNING.SCHOOL_SPAWN_DELAY.max
-   -- _lastsquidattack = data.lastsquidattack or GetTime()    
+   -- _lastsquidattack = data.lastsquidattack or GetTime()
 end
 
 --------------------------------------------------------------------------

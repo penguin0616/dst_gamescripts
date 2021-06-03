@@ -248,7 +248,7 @@ function Widget:KillAllChildren()
         self:RemoveChild(k)
         k:Kill()
     end
-    
+
     self:ClearHoverText()
 end
 
@@ -413,7 +413,7 @@ function Widget:GetTooltipPos()
             end
         end
         return self.tooltip_pos
-    end 
+    end
 end
 
 function Widget:StartUpdating()
@@ -686,7 +686,7 @@ function Widget:SetHoverText(text, params)
 
             self.hovertext_root = Widget("hovertext_root")
             self.hovertext_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
-            
+
             if params.bg == nil or params.bg == true then
                 self.hovertext_bg = self.hovertext_root:AddChild(Image(params.bg_atlas or "images/frontend.xml", params.bg_texture or "scribble_black.tex"))
                 self.hovertext_bg:SetTint(1,1,1,.8)
@@ -694,17 +694,17 @@ function Widget:SetHoverText(text, params)
                 self.hovertext_bg:SetClickable(false)
             end
 
-            
+
             if not self.hovertext then
                 self.hovertext = self.hovertext_root:AddChild(Text(params.font or NEWFONT_OUTLINE, params.font_size or 22, text))
                 self.hovertext:SetClickable(false)
                 self.hovertext:SetScale(1.1,1.1)
 
-                if params.region_h ~= nil or params.region_w ~= nil then 
+                if params.region_h ~= nil or params.region_w ~= nil then
                     self.hovertext:SetRegionSize(params.region_w or 1000, params.region_h or 40)
                 end
 
-                if params.wordwrap ~= nil then 
+                if params.wordwrap ~= nil then
                     --print("Enabling word wrap", params.wordwrap)
                     self.hovertext:EnableWordWrap(params.wordwrap)
                 end
@@ -716,7 +716,7 @@ function Widget:SetHoverText(text, params)
             end
             self.hovertext:Hide()
 
-            
+
             if params.bg == nil or params.bg == true then
                 local w, h = self.hovertext:GetRegionSize()
                 self.hovertext_bg:SetSize(w*1.5, h*2.0)
@@ -796,7 +796,7 @@ function Widget:ClearHoverText()
     if self.hovertext ~= nil then
         self.hovertext:Kill()
         self.hovertext = nil
-        
+
         --unhook the hover text focus functions
         if self._OnGainFocus then
             self.OnGainFocus = self._OnGainFocus

@@ -66,7 +66,7 @@ local states =
         onenter = function(inst)
             local fx_boat_crackle = SpawnPrefab("fx_boat_crackle")
             fx_boat_crackle.Transform:SetPosition(inst.Transform:GetWorldPosition())
-            inst.AnimState:PlayAnimation("crack") 
+            inst.AnimState:PlayAnimation("crack")
             inst.sg:SetTimeout(1)
 
             for k,v in pairs(inst.components.walkableplatform:GetEntitiesOnPlatform()) do

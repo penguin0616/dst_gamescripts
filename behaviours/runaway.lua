@@ -1,4 +1,4 @@
-RunAway = Class(BehaviourNode, function(self, inst, hunterparams, see_dist, safe_dist, fn, runhome, fix_overhang, walk_instead)
+RunAway = Class(BehaviourNode, function(self, inst, hunterparams, see_dist, safe_dist, fn, runhome, fix_overhang, walk_instead, safe_point_fn)
     BehaviourNode._ctor(self, "RunAway")
     self.safe_dist = safe_dist
     self.see_dist = see_dist
@@ -18,13 +18,14 @@ RunAway = Class(BehaviourNode, function(self, inst, hunterparams, see_dist, safe
     self.shouldrunfn = fn
 	self.fix_overhang = fix_overhang -- this will put the point check back on land if self.inst is stepping on the ocean overhang part of the land
     self.walk_instead = walk_instead
+	self.safe_point_fn = safe_point_fn
 end)
 
 function RunAway:__tostring()
     return string.format("RUNAWAY %f from: %s", self.safe_dist, tostring(self.hunter))
 end
 
-function RunAway:GetRunAngle(pt, hp)
+function RunAway:GetRunAngle(pt, hp, sp)
     if self.avoid_angle ~= nil then
         local avoid_time = GetTime() - self.avoid_time
         if avoid_time < 1 then
@@ -35,12 +36,19 @@ function RunAway:GetRunAngle(pt, hp)
         end
     end
 
-    local angle = self.inst:GetAngleToPoint(hp) + 180 -- + math.random(30)-15
-    if angle > 360 then
-        angle = angle - 360
-    end
+	local angle
+	if sp ~= nil then
+		local dir1 = pt - hp
+		local dir2 = sp - pt
 
-    --print(string.format("RunAway:GetRunAngle me: %s, hunter: %s, run: %2.2f", tostring(pt), tostring(hp), angle))
+		local offset_x, offset_z = VecUtil_Slerp(dir2.x, dir2.z, dir1.x, dir1.z, 0.5)
+		angle = self.inst:GetAngleToPoint(pt + Vector3(offset_x, 0, offset_z))
+	else
+		angle = self.inst:GetAngleToPoint(hp) + 180 -- + math.random(30)-15
+		if angle > 360 then
+			angle = angle - 360
+		end
+	end
 
     local radius = 6
 
@@ -92,14 +100,13 @@ function RunAway:Visit()
             self.status = FAILED
             self.inst.components.locomotor:Stop()
         else
-            if self.runshomewhenchased and
-                self.inst.components.homeseeker ~= nil then
+            if self.runshomewhenchased and self.inst.components.homeseeker ~= nil then
                 self.inst.components.homeseeker:GoHome(true)
             else
                 local pt = self.inst:GetPosition()
                 local hp = self.hunter:GetPosition()
-
-                local angle = self:GetRunAngle(pt, hp)
+				local sp = self.safe_point_fn ~= nil and self.safe_point_fn(self.inst) or nil
+                local angle = self:GetRunAngle(pt, hp, sp)
                 if angle ~= nil then
                     if self.walk_instead then
                         self.inst.components.locomotor.dest = nil

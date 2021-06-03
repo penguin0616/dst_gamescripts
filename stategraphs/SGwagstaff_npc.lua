@@ -31,7 +31,7 @@ local events =
     CommonHandlers.OnStep(),
     CommonHandlers.OnLocomote(true, true),
     CommonHandlers.OnAttacked(true),
-    CommonHandlers.OnDeath(),       
+    CommonHandlers.OnDeath(),
     EventHandler("waitfortool", function(inst)
         inst.sg:GoToState("idle")
     end),
@@ -81,8 +81,8 @@ local states =
                     inst.sg:GoToState("idle")
                 end
             end),
-        },        
-    },    
+        },
+    },
 
     State{
         name = "talk",
@@ -139,7 +139,7 @@ local states =
                     inst.sg:GoToState("idle_experiment")
                 end
             end),
-        },        
+        },
     },
 
 
@@ -213,7 +213,7 @@ local states =
                 inst.sg:GoToState("idle")
             end),
         },
-    }, 
+    },
 
     State{
         name = "win_yotb",
@@ -230,7 +230,7 @@ local states =
                 inst.sg:GoToState("idle")
             end),
         },
-    }, 
+    },
 
     State{
         name = "wait_search",
@@ -247,7 +247,7 @@ local states =
                 inst.sg:GoToState("wait_search")
             end),
         },
-    },   
+    },
 
     State{
         name = "capture_appearandwork",
@@ -313,7 +313,7 @@ local states =
 
         onenter = function(inst)
             inst.Physics:Stop()
-            
+
             inst.AnimState:PlayAnimation("emote_impatient", true)
 
             inst.sg:SetTimeout(1.5)

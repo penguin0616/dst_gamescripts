@@ -84,7 +84,7 @@ local function GrowNext(spell, reader)
 		end
 	end
 
-	spell:Remove() 
+	spell:Remove()
 end
 
 local function do_book_horticulture_spell(spell, reader)
@@ -144,8 +144,8 @@ local book_defs =
         perusefn = function(inst,reader)
             if reader.peruse_tentacles then
                 reader.peruse_tentacles(reader)
-            end    
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_TENTACLES"))           
+            end
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_TENTACLES"))
             return true
         end,
     },
@@ -162,7 +162,7 @@ local book_defs =
             local pt = reader:GetPosition()
 
             reader.components.sanity:DoDelta(-TUNING.SANITY_HUGE)
-            
+
             --we can actually run out of command buffer memory if we allow for infinite birds
             local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, 10, BIRDSMAXCHECK_MUST_TAGS)
             if #ents > 30 then
@@ -193,10 +193,10 @@ local book_defs =
         perusefn = function(inst,reader)
             if reader.peruse_birds then
                 reader.peruse_birds(reader)
-            end    
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_BIRDS"))           
+            end
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_BIRDS"))
             return true
-        end,        
+        end,
     },
 
     {
@@ -222,10 +222,10 @@ local book_defs =
         perusefn = function(inst,reader)
             if reader.peruse_brimstone then
                 reader.peruse_brimstone(reader)
-            end   
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_BRIMSTONE"))           
+            end
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_BRIMSTONE"))
             return true
-        end,        
+        end,
     },
 
     {
@@ -262,10 +262,10 @@ local book_defs =
         perusefn = function(inst,reader)
             if reader.peruse_sleep then
                 reader.peruse_sleep(reader)
-            end 
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_SLEEP"))           
+            end
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_SLEEP"))
             return true
-        end,        
+        end,
     },
 
     {
@@ -292,9 +292,9 @@ local book_defs =
             if reader.peruse_gardening then
                 reader.peruse_gardening(reader)
             end
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_GARDENING"))           
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_GARDENING"))
             return true
-        end,         
+        end,
     },
 
     {
@@ -315,9 +315,9 @@ local book_defs =
             if reader.peruse_horticulture then
                 reader.peruse_horticulture(reader)
             end
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_HORTICULTURE"))           
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_HORTICULTURE"))
             return true
-        end,         
+        end,
     },
 
     {
@@ -344,9 +344,9 @@ local book_defs =
             if reader.peruse_silviculture then
                 reader.peruse_silviculture(reader)
             end
-            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_SILVICULTURE"))           
+            reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_SILVICULTURE"))
             return true
-        end,         
+        end,
     },
 }
 

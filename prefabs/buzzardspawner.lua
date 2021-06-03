@@ -303,12 +303,12 @@ local function CircleOnInit(inst)
 end
 
 local function DoFlap(inst)
-    if math.random() > 0.66 then 
-        inst.AnimState:PlayAnimation("shadow_flap_loop") 
+    if math.random() > 0.66 then
+        inst.AnimState:PlayAnimation("shadow_flap_loop")
         for i = 2, math.random(3, 6) do
-            inst.AnimState:PushAnimation("shadow_flap_loop") 
+            inst.AnimState:PushAnimation("shadow_flap_loop")
         end
-        inst.AnimState:PushAnimation("shadow") 
+        inst.AnimState:PushAnimation("shadow")
     end
 end
 

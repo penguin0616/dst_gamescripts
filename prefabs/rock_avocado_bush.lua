@@ -154,7 +154,7 @@ local function on_dug_up(inst, digger)
             inst.components.lootdropper:SpawnLootPrefab("rock_avocado_fruit")
             inst.components.lootdropper:SpawnLootPrefab("rock_avocado_fruit")
         end
-        
+
         inst.components.lootdropper:SpawnLootPrefab("dug_rock_avocado_bush")
     end
 

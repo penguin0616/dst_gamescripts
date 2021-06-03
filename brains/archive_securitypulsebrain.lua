@@ -21,18 +21,18 @@ local function testbetweenpoints(pt1,pt2)
     local zdiff = (z2 - z1)/2
 
     local x = x1 + xdiff
-    local z = z1 + zdiff 
+    local z = z1 + zdiff
 
     return TheWorld.Map:IsVisualGroundAtPoint(x,0,z)
 end
 
 local WAYPOINT_MUST_TAGS = {"archive_waypoint"}
 local function findwaypoint(inst)
-   
+
     local target = nil
-    local x,y,z = 0,0,0 
+    local x,y,z = 0,0,0
     local wp = inst.lastwaypointGUID and Ents[inst.lastwaypointGUID] or nil
-    if not wp then     
+    if not wp then
         -- find nearest instead.. using the inst doesnt work well.
         x,y,z = inst.Transform:GetWorldPosition()
         local ents = TheSim:FindEntities(x,y,z, WAYPOINT_RANGE,WAYPOINT_MUST_TAGS)
@@ -47,7 +47,7 @@ local function findwaypoint(inst)
     end
     if wp then
         x,y,z = wp.Transform:GetWorldPosition()
-        
+
         local ents = TheSim:FindEntities(x,y,z, WAYPOINT_RANGE,WAYPOINT_MUST_TAGS)
         for i=#ents,1,-1 do
             if ents[i] == wp or not testbetweenpoints(wp,ents[i]) then
@@ -56,7 +56,7 @@ local function findwaypoint(inst)
         end
 
         if #ents == 1 then
-            target = ents[1]     
+            target = ents[1]
         elseif #ents > 1 then
             for i=#ents,1,-1 do
                 if inst.secondlastwaypointGUID and ents[i] == Ents[inst.secondlastwaypointGUID] then
@@ -68,11 +68,11 @@ local function findwaypoint(inst)
             end
         end
     end
-    
-    if target then 
+
+    if target then
         inst.secondlastwaypointGUID = inst.lastwaypointGUID
         inst.lastwaypointGUID = target.GUID
-    end    
+    end
     return target
 end
 
@@ -92,10 +92,10 @@ end
 
 function Archive_SecurityPulseBrain:OnStart()
     local root = PriorityNode(
-    {  
-        WhileNode(function() return self.inst.patrol == true end, "find centipedes",            
+    {
+        WhileNode(function() return self.inst.patrol == true end, "find centipedes",
             Follow(self.inst, findcentipede, MIN_FOLLOW, TARGET_FOLLOW, MAX_FOLLOW, false)),
-        WhileNode(function() return self.inst.patrol == true end, "find waypoints",            
+        WhileNode(function() return self.inst.patrol == true end, "find waypoints",
             Follow(self.inst, findwaypoint, MIN_FOLLOW, TARGET_FOLLOW, MAX_FOLLOW, false)),
         StandStill(self.inst),
     }, .25)

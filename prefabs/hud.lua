@@ -72,7 +72,7 @@ local assets =
     Asset("IMAGE", "images/serverbrowser.tex"),
     --
 
-    Asset("PKGREF", "anim/wet_meter_player.zip"),     
+    Asset("PKGREF", "anim/wet_meter_player.zip"),
     Asset("ANIM", "anim/wet_meter.zip"),
 
     Asset("PKGREF", "anim/boat_meter.zip"),

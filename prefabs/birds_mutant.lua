@@ -2,14 +2,14 @@ require "prefabutil"
 
 local assets_robin =
 {
-    Asset("ANIM", "anim/mutated_robin.zip"),   
-    Asset("ANIM", "anim/bird_mutant_spitter_build.zip"),   
+    Asset("ANIM", "anim/mutated_robin.zip"),
+    Asset("ANIM", "anim/bird_mutant_spitter_build.zip"),
 }
 
 local assets_crow =
 {
-    Asset("ANIM", "anim/mutated_crow.zip"),   
-    Asset("ANIM", "anim/bird_mutant_build.zip"),   
+    Asset("ANIM", "anim/mutated_crow.zip"),
+    Asset("ANIM", "anim/bird_mutant_build.zip"),
 }
 
 local prefabs =
@@ -43,8 +43,8 @@ local function LaunchProjectile(inst, targetpos)
     local speed = easing.linear(rangesq, 15, 1, maxrange * maxrange)
     projectile.components.complexprojectile:SetHorizontalSpeed(speed)
     projectile.components.complexprojectile:SetGravity(-35)
-    projectile.components.complexprojectile:Launch(targetpos, inst, inst)   
-    
+    projectile.components.complexprojectile:Launch(targetpos, inst, inst)
+
     projectile.shooter = inst
 end
 
@@ -63,7 +63,7 @@ local function Retarget(inst)
                 TUNING.MUTANT_BIRD_TARGET_DIST,
                 function(guy)
                     local can = inst.components.combat:CanTarget(guy)
-                    if guy:HasTag("player") or (guy.components.follower and guy.components.follower:GetLeader() and guy.components.follower:GetLeader():HasTag("player")) then                       
+                    if guy:HasTag("player") or (guy.components.follower and guy.components.follower:GetLeader() and guy.components.follower:GetLeader():HasTag("player")) then
                         return can
                     end
                 end,
@@ -80,9 +80,9 @@ local function Retarget(inst)
                     if guy == inst.components.entitytracker:GetEntity("swarmTarget") then
                         return can
                     end
-                    if guy:HasTag("player") or (guy.components.follower and guy.components.follower:GetLeader() and guy.components.follower:GetLeader():HasTag("player")) then                       
+                    if guy:HasTag("player") or (guy.components.follower and guy.components.follower:GetLeader() and guy.components.follower:GetLeader():HasTag("player")) then
                         return can
-                    end                    
+                    end
                 end,
                 RETARGET_MUST_TAGS,
                 INVADER_RETARGET_CANT_TAGS
@@ -127,14 +127,14 @@ local function OnDropped(inst)
 end
 
 local function commonPreMain(inst)
-   
+
     --Core components
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
-    inst.entity:AddPhysics()   
-    inst.entity:AddDynamicShadow()     
+    inst.entity:AddPhysics()
+    inst.entity:AddDynamicShadow()
 
     inst.sounds =
     {
@@ -158,9 +158,9 @@ local function commonPreMain(inst)
     inst:AddTag("monster")
     inst:AddTag("scarytoprey")
     inst:AddTag("canbetrapped")
-    inst:AddTag("bird")    
+    inst:AddTag("bird")
 
-    inst.Transform:SetFourFaced()    
+    inst.Transform:SetFourFaced()
 
     inst.AnimState:SetBuild("crow_build")
     inst.AnimState:SetBank("crow")
@@ -204,7 +204,7 @@ local function commonPostMain(inst)
 	inst:ListenForEvent("newcombattarget", OnNewCombatTarget)
 	inst:ListenForEvent("droppedtarget", OnNoCombatTarget)
 	inst:ListenForEvent("losttarget", OnNoCombatTarget)
-	
+
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.nobounce = true
     inst.components.inventoryitem.canbepickedup = false
@@ -270,12 +270,12 @@ local function spitterfn()
     if not TheWorld.ismastersim then
         return inst
     end
-	
+
     inst.trappedbuild = "bird_mutant_spitter_build"
 
 	inst = commonPostMain(inst)
 	inst.LaunchProjectile = LaunchProjectile
-	
+
 	return inst
 end
 

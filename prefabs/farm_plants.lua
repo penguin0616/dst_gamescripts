@@ -2,7 +2,7 @@
 
 local PLANT_DEFS = require("prefabs/farm_plant_defs").PLANT_DEFS
 
-local grow_sounds = 
+local grow_sounds =
 {
 	grow_oversized = "farming/common/farm/grow_oversized",
 	grow_full = "farming/common/farm/grow_full",
@@ -235,7 +235,7 @@ local function MakeStressCheckpoint(inst, is_final_stage)
 
 		-- season
 		inst.components.farmplantstress:SetStressed("season", SeasonStressTest(inst, nil, true))
-		
+
 		-- moisture
 		local moisture = inst.components.farmsoildrinker
 		if moisture ~= nil then
@@ -372,7 +372,7 @@ end
 local function CalcGrowTime(step, num_steps, min_time, max_time)
 	local max_var = max_time - min_time
 	local var_per_point = max_var / num_steps
-	
+
 	return min_time + step * var_per_point + math.random()*var_per_point
 end
 
@@ -539,7 +539,7 @@ local GROWTH_STAGES =
         name = "rotten",
         time = GetSelfRegrowTime,
 		pregrowfn = function(inst)
-			MakeStressCheckpoint(inst) 
+			MakeStressCheckpoint(inst)
 			inst.components.farmplantstress:Reset()
 
 			TheWorld:PushEvent("ms_oncroprotted", inst)
@@ -738,13 +738,13 @@ local function MakePlant(plant_def)
 		inst.displaynamefn = GetDisplayName
 
         inst.plant_def = plant_def
-        
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then
             return inst
 		end
-		
+
 		inst._activatefn = PushFruitFlySpawnerEvent
 
 		inst.UpdateResearchStage = UpdateResearchStage

@@ -204,7 +204,7 @@ local function fn()
 
     inst.AnimState:SetBank("wobybig")
     inst.AnimState:SetBuild("woby_big_build")
-    
+
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:Hide("HEAT")
 

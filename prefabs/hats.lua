@@ -12,7 +12,7 @@ local function MakeHat(name)
     --[[local function generic_perish(inst)
         inst:Remove()
     end]]
-    
+
     local swap_data = { bank = symname, anim = "anim" }
 
 	-- do not pass this function to equippable:SetOnEquip as it has different a parameter listing
@@ -400,7 +400,7 @@ local function MakeHat(name)
             attractor.spawnmodifier:SetModifier(inst, TUNING.BIRD_SPAWN_MAXDELTA_FEATHERHAT, "maxbirds")
             attractor.spawnmodifier:SetModifier(inst, TUNING.BIRD_SPAWN_DELAYDELTA_FEATHERHAT.MIN, "mindelay")
             attractor.spawnmodifier:SetModifier(inst, TUNING.BIRD_SPAWN_DELAYDELTA_FEATHERHAT.MAX, "maxdelay")
-            
+
             local birdspawner = TheWorld.components.birdspawner
             if birdspawner ~= nil then
                 birdspawner:ToggleUpdate(true)
@@ -475,7 +475,7 @@ local function MakeHat(name)
 
         inst:AddComponent("waterproofer")
         inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
- 
+
         inst:AddComponent("fueled")
         inst.components.fueled.fueltype = FUELTYPE.USAGE
         inst.components.fueled:InitializeFuelLevel(TUNING.BEEFALOHAT_PERISHTIME)
@@ -789,7 +789,7 @@ local function MakeHat(name)
         end
 
         if inst.components.fueled ~= nil then
-            inst.components.fueled:StopConsuming()        
+            inst.components.fueled:StopConsuming()
         end
 
         inst:RemoveEventCallback("newstate", stopusingbush, owner)
@@ -973,13 +973,13 @@ local function MakeHat(name)
         return inst
     end
 
-    local function eyebrella_onequip(inst, owner) 
+    local function eyebrella_onequip(inst, owner)
         opentop_onequip(inst, owner)
 
         owner.DynamicShadow:SetSize(2.2, 1.4)
     end
 
-    local function eyebrella_onunequip(inst, owner) 
+    local function eyebrella_onunequip(inst, owner)
         _onunequip(inst, owner)
 
         owner.DynamicShadow:SetSize(1.3, 0.6)
@@ -1049,12 +1049,12 @@ local function MakeHat(name)
         end
     end
 
-    local function balloon_onequip(inst, owner) 
+    local function balloon_onequip(inst, owner)
         simple_onequip(inst, owner)
 		inst:ListenForEvent("attacked", balloon_onownerattackedfn, owner)
     end
 
-    local function balloon_onunequip(inst, owner) 
+    local function balloon_onunequip(inst, owner)
         _onunequip(inst, owner)
 		inst:RemoveEventCallback("attacked", balloon_onownerattackedfn, owner)
     end
@@ -1108,7 +1108,7 @@ local function MakeHat(name)
         if not TheWorld.ismastersim then
             return inst
         end
-        
+
         --Saved so we can re-assign with skins
         inst._opentop_onequip = opentop_onequip
         inst._onequip = simple_onequip
@@ -1140,7 +1140,7 @@ local function MakeHat(name)
         else
             _onequip(inst, owner, "swap_hat_large")
         end
-        
+
 		if owner._sanity_damage_protection ~= nil then
 			owner._sanity_damage_protection:SetModifier(inst, TUNING.WALTERHAT_SANITY_DAMAGE_PROTECTION)
 		end
@@ -1688,7 +1688,7 @@ local function MakeHat(name)
         local inst = simple(moonstorm_custom_init)
 
         inst.components.floater:SetSize("med")
-        inst.components.floater:SetScale(0.72)    
+        inst.components.floater:SetScale(0.72)
 
         if not TheWorld.ismastersim then
             return inst
@@ -1778,7 +1778,7 @@ local function MakeHat(name)
 			if owner.components.leader then
 	            owner.components.leader:RemoveFollowersByTag("pig")
             end
-            
+
 			if not owner:HasTag("merm") then
 				owner.mermhat_notamerm = true
 	            owner:AddTag("merm")
@@ -1914,11 +1914,11 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.65)
-        
+
         if not TheWorld.ismastersim then
             return inst
         end
-        
+
         inst.components.equippable:SetOnEquip(plantregistry_onequip)
         inst.components.equippable:SetOnUnequip(plantregistry_onunequip)
 
@@ -1951,7 +1951,7 @@ local function MakeHat(name)
 
         inst.components.floater:SetSize("med")
         inst.components.floater:SetScale(0.72)
-        
+
         if not TheWorld.ismastersim then
             return inst
         end
@@ -2098,7 +2098,7 @@ local function MakeHat(name)
 			if target and target ~= owner and target:IsValid() and (target.components.health == nil or not target.components.health:IsDead() and not target:HasTag("structure") and not target:HasTag("wall")) then
 
                 -- In combat, this is when we're just launching a projectile, so don't spawn a gestalt yet
-                if data.weapon ~= nil and data.projectile == nil 
+                if data.weapon ~= nil and data.projectile == nil
                         and (data.weapon.components.projectile ~= nil
                             or data.weapon.components.complexprojectile ~= nil
                             or data.weapon.components.weapon:CanRangedAttack()) then
@@ -2131,7 +2131,7 @@ local function MakeHat(name)
 
 		inst._onsanitydelta = function() alterguardian_onsanitydelta(inst, owner) end
 		inst:ListenForEvent("sanitydelta", inst._onsanitydelta, owner)
-		
+
 		local sanity = owner.components.sanity ~= nil and owner.components.sanity:GetPercent() or 0
 		if sanity > TUNING.SANITY_BECOME_ENLIGHTENED_THRESH then
 			alterguardian_activate(inst, owner)
@@ -2157,7 +2157,7 @@ local function MakeHat(name)
 		if inst._front ~= nil then
 			inst._front:Remove()
 			inst._front = nil
-		end 
+		end
 		if inst._back ~= nil then
 			inst._back:Remove()
 			inst._back = nil
@@ -2259,7 +2259,7 @@ local function MakeHat(name)
         fn = catcoon
     elseif name == "watermelon" then
         fn = watermelon
-    elseif name == "eyebrella" then 
+    elseif name == "eyebrella" then
         fn = eyebrella
     elseif name == "red_mushroom" then
         fn = red_mushroom
@@ -2280,7 +2280,7 @@ local function MakeHat(name)
     elseif name == "goggles" then
         fn = goggles
     elseif name == "moonstorm_goggles" then
-        fn = moonstorm_goggles        
+        fn = moonstorm_goggles
     elseif name == "skeleton" then
         fn = skeleton
     elseif name == "kelp" then
@@ -2395,15 +2395,15 @@ return  MakeHat("straw"),
         MakeHat("dragontail"),
         MakeHat("desert"),
         MakeHat("goggles"),
-        MakeHat("moonstorm_goggles"),        
+        MakeHat("moonstorm_goggles"),
         MakeHat("skeleton"),
         MakeHat("kelp"),
         MakeHat("merm"),
         MakeHat("cookiecutter"),
         MakeHat("batnose"),
         MakeHat("cookiecutter"),
-        MakeHat("nutrientsgoggles"), 
-        MakeHat("plantregistry"), 
+        MakeHat("nutrientsgoggles"),
+        MakeHat("plantregistry"),
         MakeHat("balloon"),
         MakeHat("alterguardian"),
         Prefab("minerhatlight", minerhatlightfn),

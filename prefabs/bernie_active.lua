@@ -40,7 +40,7 @@ local function gobig(inst)
     if inst:GetSkinName() ~= nil then
         skin_name = string.gsub(inst:GetSkinName(), "_active", "_big")
     end
-    
+
     local big = SpawnPrefab("bernie_big", skin_name, inst.skin_id, nil)
     if big ~= nil then
         --Rescale health %

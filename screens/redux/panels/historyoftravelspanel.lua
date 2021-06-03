@@ -29,8 +29,8 @@ local HistoryOfTravelsPanel = Class(Widget, function(self, parent_screen)
 
     self.festival_history = self.root:AddChild(self:_BuildFestivalHistory())
 	self.festival_history:SetPosition(0, -20)
-	
-    
+
+
     self.focus_forward = self.festivals_badges[1]
 	self:_DoFocusHookups()
 end)
@@ -47,10 +47,10 @@ end
 
 function HistoryOfTravelsPanel:_BuildMostCommonDeaths()
     local death_root = self.root:AddChild(Widget("death_root"))
-    
+
 	local death_label = death_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.MOST_COMMON_DEATH, UICOLOURS.GOLD_SELECTED))
     death_label:SetPosition(0,0)
-    
+
 	local death_divider_top = death_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )
     death_divider_top:SetScale(0.5)
     death_divider_top:SetPosition(0, -15)
@@ -128,10 +128,10 @@ end
 
 function HistoryOfTravelsPanel:_BuildMostCommonFriends()
     local friend_root = self.root:AddChild(Widget("friend_root"))
-    
+
 	local friend_label = friend_root:AddChild(Text(HEADERFONT, 25, STRINGS.UI.PLAYERSUMMARYSCREEN.MOST_COMMON_FRIENDS, UICOLOURS.GOLD_SELECTED))
     friend_label:SetPosition(0, 0)
-    
+
 	local friend_divider_top = friend_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )
     friend_divider_top:SetScale(0.5)
     friend_divider_top:SetPosition(0, -15)
@@ -170,9 +170,9 @@ function HistoryOfTravelsPanel:_BuildFestivalHistoryButton(festival_key, season)
                 else
                     local ok_scr = PopupDialogScreen( STRINGS.UI.PLAYERSUMMARYSCREEN.FESTIVAL_HISTORY, STRINGS.UI.ITEM_SERVER.FAILED_DEFAULT,
 					{
-						{text=STRINGS.UI.PURCHASEPACKSCREEN.OK, cb = function() 
+						{text=STRINGS.UI.PURCHASEPACKSCREEN.OK, cb = function()
 							TheFrontEnd:PopScreen()
-						end }, 
+						end },
 					})
                     TheFrontEnd:PushScreen(ok_scr)
                 end
@@ -194,7 +194,7 @@ function HistoryOfTravelsPanel:_BuildFestivalHistory()
     self.festivals_divider_top = festivals_root:AddChild( Image("images/frontend_redux.xml", "achievements_divider_top.tex") )
     self.festivals_divider_top:SetScale(0.5)
     self.festivals_divider_top:SetPosition(0, -15)
-        
+
     self.festivals_badges = {}
 	for i, eventinfo in ipairs(PREVIOUS_FESTIVAL_EVENTS_ORDER) do
         table.insert(self.festivals_badges, festivals_root:AddChild(self:_BuildFestivalHistoryButton(eventinfo.id, eventinfo.season)))

@@ -8,8 +8,8 @@ local AreaAware = Class(function(self, inst)
     self.inst:StartUpdatingComponent(self)
 
 	self._ForceUpdate = function() self:UpdatePosition(self.inst.Transform:GetWorldPosition()) end
-    self.inst:ListenForEvent("done_embark_movement", self._ForceUpdate)                
-	
+    self.inst:ListenForEvent("done_embark_movement", self._ForceUpdate)
+
 end)
 
 function AreaAware:OnRemoveFromEntity()

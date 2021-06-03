@@ -141,7 +141,7 @@ local function OnUpdateIceCircle(inst, x, z)
     inst._track2 = {}
 
     for i, v in ipairs(TheSim:FindEntities(x, 0, z, inst._rad:value(), nil, NOTAGS, FREEZETARGET_ONEOF_TAGS)) do
-        if v:IsValid() and not (v.components.health ~= nil and v.components.health:IsDead()) then            
+        if v:IsValid() and not (v.components.health ~= nil and v.components.health:IsDead()) then
             local gemresist = false
             if v.components.locomotor ~= nil then
                 if v:HasTag("deergemresistance") then

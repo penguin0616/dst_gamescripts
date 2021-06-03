@@ -24,7 +24,7 @@ local CharacterBioScreen = Class(Screen, function(self, character)
 	self.bio = self.root:AddChild(CharacterBio(character))
 	self.bio:SetPosition(0, 0)
 
-    self.bg = self.bio:AddChild(TEMPLATES.PlainBackground())	
+    self.bg = self.bio:AddChild(TEMPLATES.PlainBackground())
 	self.bg:MoveToBack()
     --self.title = self.root:AddChild(TEMPLATES.ScreenTitle("CharacterBioScreen", character))
 
@@ -39,13 +39,13 @@ local CharacterBioScreen = Class(Screen, function(self, character)
 	if self.videos then
 		if not TheInput:ControllerAttached() then
 			self.video_button = self.root:AddChild(TEMPLATES.StandardButton(function() VisitURL(self.videos[1]) end, STRINGS.CHARACTER_DETAILS.VIDEO_BUTTON, {260, 54}))
-			self.video_button:SetPosition(150, -320) 
+			self.video_button:SetPosition(150, -320)
 		end
 	end
-	
+
 	if not TheInput:ControllerAttached() then
 		self.wardrobe_button = self.root:AddChild(TEMPLATES.StandardButton(function() self:OnWardrobe()  end, STRINGS.UI.COLLECTIONSCREEN.SKINS, {200, 54}))
-		self.wardrobe_button:SetPosition(400, -320) 
+		self.wardrobe_button:SetPosition(400, -320)
 	end
 
 	self.focus_forward = self.bio
@@ -58,7 +58,7 @@ end
 
 function CharacterBioScreen:OnControl(control, down)
     if Screen.OnControl(self, control, down) then return true end
-    
+
 	if not down and control == CONTROL_CANCEL then
 		TheFrontEnd:FadeBack()
 	    return true
@@ -80,13 +80,13 @@ function CharacterBioScreen:GetHelpText()
 		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_PAUSE) .. "  " .. STRINGS.CHARACTER_DETAILS.VIDEO_BUTTON)
 	end
 	table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. "  " .. STRINGS.UI.COLLECTIONSCREEN.SKINS)
-	
+
 	return table.concat(t, "  ")
 
 end
 
 function CharacterBioScreen:Close(fn)
     TheFrontEnd:FadeBack(nil, nil, fn)
-end	
+end
 
 return CharacterBioScreen

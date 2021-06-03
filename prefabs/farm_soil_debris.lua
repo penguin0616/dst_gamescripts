@@ -93,7 +93,7 @@ local function fn()
 		inst._spawn_task = inst:DoTaskInTime(0, OnSpawnIn)
 	end
 
-    inst.OnSave = onsave 
+    inst.OnSave = onsave
     inst.OnLoad = onload
 
     return inst

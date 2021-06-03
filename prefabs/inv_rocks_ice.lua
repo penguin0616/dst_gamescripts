@@ -121,8 +121,8 @@ local function fn()
     inst:AddComponent("bait")
     inst:AddTag("molebait")
 
-    inst.OnSave = onsave 
-    inst.OnLoad = onload 
+    inst.OnSave = onsave
+    inst.OnLoad = onload
 
     MakeHauntableLaunchAndSmash(inst)
 

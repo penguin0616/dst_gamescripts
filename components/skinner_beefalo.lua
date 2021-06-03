@@ -1,4 +1,4 @@
-local Skinner_Beefalo = Class(function(self, inst) 
+local Skinner_Beefalo = Class(function(self, inst)
 	self.inst = inst
 	self.clothing = { beef_body = "", beef_horn = "", beef_head = "", beef_feet = "", beef_tail = "", }
 end,
@@ -10,14 +10,14 @@ local clothing_order = { "beef_tail", "beef_body", "beef_feet", "beef_head", "be
 function SetBeefaloSkinsOnAnim( anim_state, clothing_names, linked_beef_guid )
 	if linked_beef_guid == nil then
 		-- nil means we're applying directly to the beefalo
-		
-		-- We need to clear these overrides on the beefalo, 
+
+		-- We need to clear these overrides on the beefalo,
 		-- but we don't when we're applying to a player because a player will stomp all symbol overrides when they do ApplyBuildOverrides in beefalo.lua
 		for sym,_ in pairs(BEEFALO_CLOTHING_SYMBOLS) do
 			anim_state:ClearOverrideSymbol(sym)
 		end
 	end
-	
+
 	for sym,_ in pairs(BEEFALO_HIDE_SYMBOLS) do
 		anim_state:ShowSymbol(sym)
 	end
@@ -41,7 +41,7 @@ function SetBeefaloSkinsOnAnim( anim_state, clothing_names, linked_beef_guid )
 				for _,sym in pairs(BEEFALO_CLOTHING[name].symbol_hides) do
 					anim_state:HideSymbol(sym)
 				end
-			end			
+			end
 		end
 	end
 end
@@ -50,7 +50,7 @@ function Skinner_Beefalo:SetClothing( name )
 	if IsValidBeefaloClothing(name) then
 		self.clothing[BEEFALO_CLOTHING[name].type] = name
 		self.inst:PushEvent("onclothingchanged",{type=BEEFALO_CLOTHING[name].type, name= name})
-		SetBeefaloSkinsOnAnim( self.inst.AnimState, self.clothing )		
+		SetBeefaloSkinsOnAnim( self.inst.AnimState, self.clothing )
 	end
 end
 
@@ -60,7 +60,7 @@ function Skinner_Beefalo:GetClothing()
 		beef_horn = self.clothing.beef_horn,
 		beef_tail = self.clothing.beef_tail,
 		beef_head = self.clothing.beef_head,
-		beef_feet = self.clothing.beef_feet,		
+		beef_feet = self.clothing.beef_feet,
 	}
 end
 
@@ -97,7 +97,7 @@ assert(player)
 	local doer_userid = player.userid
 
 	self.inst.AnimState:AssignItemSkins(doer_userid, skins.beef_body or "", skins.beef_feet or "", skins.beef_horn or "", skins.beef_tail or "" , skins.beef_head or "" )
-	
+
     self:ClearAllClothing()
     self:SetClothing(skins.beef_horn)
     self:SetClothing(skins.beef_body)
@@ -117,12 +117,12 @@ function Skinner_Beefalo:reloadclothing(clothing)
     --     because the user is not actually logged in at that time.
 
     if clothing ~= nil then
-        self.clothing = clothing      
+        self.clothing = clothing
         for type,name in pairs(self.clothing)do
         	self.inst:PushEvent("onclothingchanged",{type=type, name= name})
-        end        
-        SetBeefaloSkinsOnAnim( self.inst.AnimState, self.clothing )           
-    end   
+        end
+        SetBeefaloSkinsOnAnim( self.inst.AnimState, self.clothing )
+    end
 
 end
 

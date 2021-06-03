@@ -179,7 +179,7 @@ end
 
 function ModsScreen:OnBecomeInactive()
     ModsScreen._base.OnBecomeInactive(self)
-    
+
     self.mods_page:OnBecomeInactive()
 end
 

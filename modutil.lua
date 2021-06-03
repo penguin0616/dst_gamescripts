@@ -49,9 +49,9 @@ function GetModConfigData(optionname, modname, get_local_config)
 						return v.saved_client
 
 					elseif v.saved ~= nil then
-						return v.saved 
+						return v.saved
 
-					else 
+					else
 						return v.default
 					end
 				end
@@ -340,7 +340,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 	--env.AddTile = function( tile_name, texture_name, noise_texture, runsound, walksound, snowsound, mudsound, flashpoint_modifier )
 	--	AddTile( env.modname, tile_name, texture_name, noise_texture, runsound, walksound, snowsound, mudsound, flashpoint_modifier )
 	--end
-	
+
 	env.ReleaseID = ReleaseID.IDs
 	env.CurrentRelease = CurrentRelease
 
@@ -371,7 +371,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		end
 		action.mod_name = env.modname
 
-		assert( action.id ~= nil and type(action.id) == "string", "Must specify an ID for your custom action! Example: \"MYACTION\"")			
+		assert( action.id ~= nil and type(action.id) == "string", "Must specify an ID for your custom action! Example: \"MYACTION\"")
 
 		initprint("AddAction", action.id)
 		ACTIONS[action.id] = action
@@ -388,7 +388,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		MOD_ACTIONS_BY_ACTION_CODE[action.mod_name][action.code] = action
 
 		STRINGS.ACTIONS[action.id] = action.str
-		
+
 		return ACTIONS[action.id]
 	end
 
@@ -564,12 +564,12 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		rec:SetModRPCID()
 		return rec
 	end
-	
+
 	env.Recipe = function(...)
 		print("Warning: function Recipe in modmain is deprecated, please use AddRecipe")
 		return env.AddRecipe(...)
 	end
-	
+
     env.AddRecipeTab = function( rec_str, rec_sort, rec_atlas, rec_icon, rec_owner_tag, rec_crafting_station )
 		CUSTOM_RECIPETABS[rec_str] = { str = rec_str, sort = rec_sort, icon_atlas = rec_atlas, icon = rec_icon, owner_tag = rec_owner_tag, crafting_station = rec_crafting_station }
 		STRINGS.TABS[rec_str] = rec_str
@@ -627,17 +627,17 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		initprint( "GetShardModRPCHandler", namespace, name )
 		return GetShardModRPCHandler( namespace, name )
 	end
-	
+
 	env.SendModRPCToServer = function( id_table, ... )
 		initprint( "SendModRPCToServer", id_table.namespace, id_table.id )
 		SendModRPCToServer( id_table, ... )
 	end
-	
+
 	env.SendModRPCToClient = function( id_table, ... )
 		initprint( "SendModRPCToClient", id_table.namespace, id_table.id )
 		SendModRPCToClient( id_table, ... )
 	end
-	
+
 	env.SendModRPCToShard = function( id_table, ... )
 		initprint( "SendModRPCToShard", id_table.namespace, id_table.id )
 		SendModRPCToShard( id_table, ... )
@@ -676,13 +676,13 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 
 	env.AddVoteCommand = function(command_name, init_options_fn, process_result_fn, vote_timeout )
 		initprint("AddVoteCommand", command_name, init_options_fn, process_result_fn, vote_timeout )
-		
+
 		if env.vote_commands == nil then
 	        env.vote_commands = {}
 	    end
 		env.vote_commands[command_name] = { InitOptionsFn = init_options_fn, ProcessResultFn = process_result_fn, Timeout = vote_timeout or 15 }
 	end
-	
+
 	env.ExcludeClothingSymbolForModCharacter = function(name, symbol)
         initprint("ExcludeClothingSymbolForModCharacter", name, symbol)
 
@@ -694,12 +694,12 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 	    end
 	    table.insert( env.clothing_exclude[name], symbol )
     end
-	
+
 	env.RegisterInventoryItemAtlas = function(atlas, prefabname) -- for this to work properly (without having to spawn an item), you should be using the prefab name for the inventory image name
 		initprint("RegisterInventoryItemAtlas", atlas, prefabname)
 		RegisterInventoryItemAtlas(atlas, prefabname)
 	end
-    
+
 end
 
 return {

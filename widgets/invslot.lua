@@ -104,7 +104,7 @@ function InvSlot:Click(stack_mod)
                 else
                     --Add entire stack
                     container:AddAllOfActiveItemToSlot(slot_number)
-                end             
+                end
                 TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_object")
 
             elseif active_item.replica.stackable ~= nil and active_item.replica.stackable:IsStack() and not container:AcceptsStacks() then

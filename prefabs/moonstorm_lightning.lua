@@ -18,7 +18,7 @@ local function PlayThunderSound(lighting)
 	local k = math.max(0, math.min(1, distsq / LIGHTNING_MAX_DIST_SQ))
 	local intensity = math.min(1, k * 1.1 * (k - 2) + 1.1)
 	if intensity <= 0 then
-		return 
+		return
 	end
 
     local minsounddist = 10

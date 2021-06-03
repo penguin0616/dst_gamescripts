@@ -80,7 +80,7 @@ local function make(name,build,bank,anim, category)
         MakeSmallPropagator(inst)
 
         MakeHauntableLaunchAndIgnite(inst)
-        inst.category = category 
+        inst.category = category
 
         return inst
     end

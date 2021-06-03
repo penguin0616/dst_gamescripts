@@ -56,7 +56,7 @@ local function Dotinker(inst)
     end
 
     local platform = inst:GetCurrentPlatform()
-    local target = nil    
+    local target = nil
     if platform and platform.components.hull then
         local x,y,z = platform.Transform:GetWorldPosition()
         local ents = TheSim:FindEntities(x, y, z, platform.components.hull:GetRadius(),nil,nil, DOTINKER_CAN_HAVE)
@@ -86,7 +86,7 @@ local function Dotinker(inst)
                 if shortest.dist == nil or shortest.dist > dist then
                     shortest = {dist = dist, id = i}
                 end
-            end            
+            end
             if shortest.id then
                 target = ents[shortest.id] -- math.random(1,#ents)
             end
@@ -99,16 +99,16 @@ local function Dotinker(inst)
 
         if patchcheck(target) and sanity <= 0.25 then
             return BufferedAction(inst, target, ACTIONS.UNPATCH)
-        end  
+        end
         if anchorcheck(target) then
             return BufferedAction(inst, target, ACTIONS.RAISE_ANCHOR)
-        end                
+        end
         if mastcheck(target) then
             return BufferedAction(inst, target, ACTIONS.RAISE_SAIL)
         end
         if firecheck(target) or fuelcheck(target) and sanity <= 0.5 then
             return BufferedAction(inst, target, ACTIONS.EXTINGUISH)
-        end              
+        end
     end
 end
 

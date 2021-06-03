@@ -5,7 +5,7 @@
 return Class(function(self, inst)
 
 assert(not TheNet:IsDedicated(), "hudindicatablemanager should only exist on client")
-                                  
+
 --------------------------------------------------------------------------
 --[[ Dependencies ]]
 --------------------------------------------------------------------------
@@ -75,7 +75,7 @@ end
 
 function self:GetDebugString()
 	if true then
-		return nil 
+		return nil
 	end
 end
 

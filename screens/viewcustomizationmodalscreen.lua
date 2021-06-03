@@ -42,7 +42,7 @@ local ViewCustomizationModalScreen = Class(Screen, function(self, leveldata)
     self.clickroot:SetHAnchor(ANCHOR_MIDDLE)
     self.clickroot:SetPosition(0,0,0)
     self.clickroot:SetScaleMode(SCALEMODE_PROPORTIONAL)
-    
+
     --menu buttons
     self.optionspanel = self.clickroot:AddChild(Widget("optionspanel"))
     self.optionspanel:SetPosition(0,20,0)

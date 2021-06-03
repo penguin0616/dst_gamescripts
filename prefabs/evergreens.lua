@@ -871,7 +871,7 @@ local function tree(name, build, stage, data)
 
         inst.growfromseed = handler_growfromseed
 
-        ---------------------        
+        ---------------------
         inst:AddComponent("plantregrowth")
         inst.components.plantregrowth:SetRegrowthRate(GetBuild(inst).regrowth_tuning.OFFSPRING_TIME)
         inst.components.plantregrowth:SetProduct(GetBuild(inst).regrowth_product)

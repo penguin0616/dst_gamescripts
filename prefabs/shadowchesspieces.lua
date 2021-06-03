@@ -194,7 +194,7 @@ local function commonlevelup(inst, overridelevel)
         inst.AnimState:SetMultColour(1, 1, 1, 0.5 + (0.12*(level-1)))
 
         inst.components.health:SetMaxHealth(tunings.HEALTH[level])
-        
+
         if level > 1 then
             inst:AddTag("epic")
             inst:AddTag("noepicmusic")

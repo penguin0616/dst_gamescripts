@@ -294,7 +294,7 @@ local function on_new_combat_target(inst, data)
 end
 
 local function on_dropped_target(inst, data)
-    if inst._stage == 3 and (inst.components.freezable == nil or not inst.components.freezable:IsFrozen()) 
+    if inst._stage == 3 and (inst.components.freezable == nil or not inst.components.freezable:IsFrozen())
             and (inst.components.health ~= nil and not inst.components.health:IsDead()) then
         inst.sg:GoToState("switch_to_bud")
     end

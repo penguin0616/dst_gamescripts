@@ -106,7 +106,7 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
             return self.server_pw.textbox
         else
             return nil
-        end        
+        end
     end)
     self.server_desc.textbox:SetOnTabGoToTextEditWidget(function()
         if self.server_pw.textbox:IsVisible() then
@@ -115,7 +115,7 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
             return self.server_name.textbox
         else
             return nil
-        end  
+        end
     end)
     self.server_pw.textbox:SetOnTabGoToTextEditWidget(function()
         if self.server_name.textbox:IsVisible() then
@@ -124,7 +124,7 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
             return self.server_desc.textbox
         else
             return nil
-        end  
+        end
     end)
 
     self.privacy_type = Widget("Privacy Group")
@@ -156,11 +156,11 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
     self.clan_admins.spinner:SetOnChangedFn(function() self.servercreationscreen:MakeDirty() end)
 
     self.game_mode = TEMPLATES.LabelSpinner(STRINGS.UI.SERVERCREATIONSCREEN.GAMEMODE, GetGameModesSpinnerData(ModManager:GetEnabledServerModNames()), narrow_label_width, narrow_input_width, label_height, space_between, NEWFONT, font_size, narrow_field_nudge)
-    self.game_mode.spinner:SetOnChangedFn(function(selected, old) 
+    self.game_mode.spinner:SetOnChangedFn(function(selected, old)
         self.servercreationscreen:OnChangeGameMode(selected)
     end)
 
-    self.game_mode.info_button = self.game_mode:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "info.tex", "", false, false, function() 
+    self.game_mode.info_button = self.game_mode:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "info.tex", "", false, false, function()
             local mode_title = GetGameModeString( self.game_mode.spinner:GetSelectedData() )
             if mode_title == "" then
                 mode_title = STRINGS.UI.GAMEMODES.UNKNOWN
@@ -170,8 +170,8 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
                 mode_body = STRINGS.UI.GAMEMODES.UNKNOWN_DESCRIPTION
             end
             local info_dialog = PopupDialogScreen(
-                    mode_title, 
-                    mode_body, 
+                    mode_title,
+                    mode_body,
                     {{ text = STRINGS.UI.SERVERLISTINGSCREEN.OK, cb = function() TheFrontEnd:PopScreen() end }},
                     nil,
                     "big"
@@ -222,7 +222,7 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
     end)
     self.online_mode.spinner:Disable() -- This is not user configurable
 
-    self.page_widgets = 
+    self.page_widgets =
     {
         self.server_name,
         self.server_desc,
@@ -260,7 +260,7 @@ local ServerSettingsTab = Class(Widget, function(self, servercreationscreen)
     self.scroll_list:SetPosition(170, 20)
     self.scroll_list:Hide()
     self.scroll_list.scroll_bar_container:SetPosition(80, 0)
-    
+
     self:DisplayClanControls(false) --this needs to be called to ensure that the self.clan_widgets belong to part of the hierarchy
 
     self.default_focus = self.scroll_list
@@ -419,7 +419,7 @@ function ServerSettingsTab:ShowNewHostPicker(show)
     end
 end
 
-function ServerSettingsTab:ClearCacheFlag() --only to be called when the character/day has changed, like on a rollback, due to UpdateSlot being very slow reading the data 
+function ServerSettingsTab:ClearCacheFlag() --only to be called when the character/day has changed, like on a rollback, due to UpdateSlot being very slow reading the data
     self.serverslot:SetSaveSlot(-1)
     self.serverslot:SetSaveSlot(self.slot, self:GetServerData())
 end
@@ -485,7 +485,7 @@ function ServerSettingsTab:SetDataForSlot(slot)
 		-- No editing online or game mode for servers that have already been created
         self.game_mode.spinner:Disable()
     end
-    
+
     self:UpdateSlot()
 end
 

@@ -494,6 +494,8 @@ local function GameCompleteFocus(inst)
 end
 
 local function FlagGameComplete(inst)
+	inst.components.minigame:SetIsOutro()
+
     inst.sg:GoToState("unimpressed")
     for k, v in pairs(inst._minigame_elites) do
         k.flagmatchover = true
@@ -511,6 +513,9 @@ local function DoGameRound(inst, roundsleft)
         roundsleft > 1 and
         inst:DoTaskInTime(ROUND_TIME, DoGameRound, roundsleft - 1) or
         inst:DoTaskInTime(ROUND_TIME, FlagGameComplete)
+
+	inst.components.minigame:SetIsPlaying()
+	inst.components.minigame:RecordExcitement()
 end
 
 local function StartMinigame(inst)
@@ -520,6 +525,7 @@ local function StartMinigame(inst)
         inst._minigame_score = nil
         inst._minigame_gold_tossed = 0
         inst.components.minigame:Activate()
+		inst.components.minigame:RecordExcitement()
         inst.sg:GoToState("intro")
         inst._minigametask = inst:DoTaskInTime(5, DoGameRound, NUM_ROUNDS)
         inst:ListenForEvent("pickupcheat", OnPickupCheat)
@@ -687,6 +693,7 @@ local function fn()
     inst.components.hauntable:SetOnHauntFn(OnHaunt)
 
 	inst:AddComponent("minigame")
+	inst.components.minigame.gametype = "pigking_wrestling"
 	inst.components.minigame:SetOnActivatedFn(OnActivateMinigame)
 	inst.components.minigame:SetOnDeactivatedFn(OnDeactivateMinigame)
 	inst.components.minigame.spectator_dist = TUNING.PIG_MINIGAME_ARENA_RADIUS + 20

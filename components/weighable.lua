@@ -72,11 +72,11 @@ function Weighable:SetPlayerAsOwner(owner)
 end
 
 function Weighable:OnSave()
-	return { 
+	return {
 		weight = self.weight,
 		owner_userid = self.owner_userid,
 		owner_name = self.owner_name,
-		prefab_override_owner = self.prefab_override_owner 		
+		prefab_override_owner = self.prefab_override_owner
 	}
 end
 

@@ -22,9 +22,9 @@ local function OnRemove(inst)
 			end
         end
         inst:PushEvent("onsink")
-    end    
+    end
 
-    --Removing the tag should make it so that entities being destroyed 
+    --Removing the tag should make it so that entities being destroyed
     --No longer detect the platform
     inst:RemoveTag("walkableplatform")
 
@@ -36,11 +36,11 @@ local function OnRemove(inst)
         if k:IsValid() then
             k:PushEvent("got_off_platform", inst)
         end
-    end          
+    end
 end
 
 local WalkablePlatform = Class(function(self, inst)
-    self.inst = inst    
+    self.inst = inst
 
     self.inst:AddTag("walkableplatform")
 
@@ -66,7 +66,7 @@ local IGNORE_WALKABLE_PLATFORM_TAGS = { "ignorewalkableplatforms", "flying", "FX
 
 
 --Client Only
-function WalkablePlatform:OnUpdate(dt) 
+function WalkablePlatform:OnUpdate(dt)
     self:CollectEntitiesOnPlatform(false)
     self:TriggerEvents()
 end
@@ -110,7 +110,7 @@ function WalkablePlatform:GetEmbarkPosition(embarker_x, embarker_z, embarker_min
     local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
     local embarkable_x, embarkable_y, embarkable_z = self.inst.Transform:GetWorldPosition()
     local embark_x, embark_z = VecUtil_Normalize(embarker_x - embarkable_x, embarker_z - embarkable_z)
-    return embarkable_x + embark_x * embarkable_radius, embarkable_z + embark_z * embarkable_radius         
+    return embarkable_x + embark_x * embarkable_radius, embarkable_z + embark_z * embarkable_radius
 end
 
 function WalkablePlatform:UpdatePositions()
@@ -169,7 +169,7 @@ function WalkablePlatform:CollectEntitiesOnPlatform(check_previous_objects)
                     if dist_sq <= platform_radius_sq then
                         self.new_objects_on_platform[entity] = true
                     end
-                end 
+                end
 			else
 				self.previous_objects_on_platform[entity] = nil
             end

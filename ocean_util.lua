@@ -79,7 +79,7 @@ function FindLandBetweenPoints(p0x, p0y, p1x, p1y)
         if math.abs(e1) < math.abs(e2) then
             p0x = p0x + ix
             e = e1
-		else 
+		else
             p0y = p0y + iy
             e = e2
         end
@@ -97,7 +97,7 @@ function FindRandomPointOnShoreFromOcean(x, y, z)
 		end
 	end
 	table.sort(nodes, function(a, b) return a.distsq < b.distsq end)
-	
+
 	local num_rooms_to_pick = 4
 
 	local closest = {}
@@ -212,7 +212,7 @@ function TintByOceanTile(inst)
         if tile_info then
             local color = tile_info.wavetint
             if color then
-                inst.AnimState:SetMultColour(color[1],color[2],color[3],1)  
+                inst.AnimState:SetMultColour(color[1],color[2],color[3],1)
             end
 
         else

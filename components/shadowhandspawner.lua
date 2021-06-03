@@ -82,19 +82,19 @@ local function testfortinkerthings(boat)
 
     local x,y,z = boat.Transform:GetWorldPosition()
     local items = TheSim:FindEntities(x, y, z, boat.components.hull:GetRadius(),nil,nil, TESTFORTINKER_CAN_TAGS)
-    
+
     for i=#items,1,-1 do
         local ent = items[i]
         local keep = false
-        if ent:HasTag("boat_repaired_patch") or 
-            ent.components.mast or 
-            ent.components.anchor or 
+        if ent:HasTag("boat_repaired_patch") or
+            ent.components.mast or
+            ent.components.anchor or
             (ent.components.fueled and ent.components.fueled.canbespecialextinguished) then
             keep = true
         end
         if not keep then
             table.remove(items,i)
-        end 
+        end
     end
 
     return #items > 0
@@ -262,13 +262,13 @@ inst.checkwaveyjonestarget = function(inst,target)
 end
 
 inst.reservewaveyjonestarget = function(inst,target)
-    _boattargets[target.GUID] = true    
+    _boattargets[target.GUID] = true
 end
 
 inst.removewaveyjonestarget = function(inst,target)
     if _boattargets[target.GUID] ~= nil then
-        _boattargets[target.GUID] = nil  
-    end  
+        _boattargets[target.GUID] = nil
+    end
 end
 
 inst.spawnwaveyjones = function(inst,boat)

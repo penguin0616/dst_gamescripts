@@ -29,7 +29,7 @@ self.inst = inst
 local retrofit_part1 = false
 
 
-local STRUCTURE_TAGS = {"structure"} 
+local STRUCTURE_TAGS = {"structure"}
 local WALKABLEPLATFORM_TAGS = {"walkableplatform"}
 local LAVA_TAGS = {"lava"}
 local IMPORTANT_OBJECT_TAGS = {"irreplaceable", "playerghost", "ghost", "flying", "player", "character", "animal", "monster", "giant"}
@@ -64,7 +64,7 @@ local function RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_struc
 					if dist_from_structures ~= nil then
 						ents = TheSim:FindEntities(x, 0, z, dist_from_structures, STRUCTURE_TAGS )
 					end
-					
+
 					if #ents == 0 then
 						local e = SpawnPrefab(prefab)
 						e.Transform:SetPosition(x, 0, z)
@@ -99,7 +99,7 @@ local function RetrofitNewOceanContentPrefab(inst, width, height, prefab, min_sp
 						if dist_from_structures ~= nil then
 							ents = TheSim:FindEntities(x, 0, z, dist_from_structures, STRUCTURE_TAGS )
 						end
-					
+
 						if #ents == 0 then
 							local e = SpawnPrefab(prefab)
 							e.Transform:SetPosition(x, 0, z)
@@ -208,7 +208,7 @@ local function TurnOfTidesRetrofitting_CleanupOceanPoution(inst)
 
 
 	local width, height = TheWorld.Map:GetSize()
-	
+
 	BunchSpawnerInit(nil, width, height)
 	local function SpawnBoatingSafePrefab(prefab, x, z)
 		if #TheSim:FindEntities(x, 0, z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + 4, WALKABLEPLATFORM_TAGS) == 0 then
@@ -287,13 +287,13 @@ local function SaltyRetrofitting_PopulateBrinePools()
 	require "map/bunch_spawner"
 
 	local bunches = require "map/bunches"
-	bunches.Bunches["SaltyRetrofitting_PopulateBrinePools"] = 
+	bunches.Bunches["SaltyRetrofitting_PopulateBrinePools"] =
 	{
 		prefab = "saltstack",
 		range = 14,
 		min = 4,
 		max = 6,
-		min_spacing = 3, 
+		min_spacing = 3,
 		valid_tile_types = {
 			GROUND.OCEAN_BRINEPOOL,
 		},
@@ -340,7 +340,7 @@ end
 local function SheSellsSeashellsRetrofitting_PopulateWobsterDens()
 	require "map/bunch_spawner"
 	local width, height = TheWorld.Map:GetSize()
-	
+
 	local count = 0
 
 	BunchSpawnerInit(nil, width, height)
@@ -516,7 +516,7 @@ local function RepositionInaccessibleUnderwaterObjects()
 			if ent.components.winchtarget ~= nil then
 				local sunken_object = ent.components.winchtarget:GetSunkenObject()
 				local x, y, z = ent.Transform:GetWorldPosition()
-				
+
 				if sunken_object ~= nil  then
 					ent.components.inventory:RemoveItem(sunken_object)
 					sunken_object.Transform:SetPosition(x, y, z)
@@ -577,8 +577,8 @@ local function MoonFissures()
 
 	for _, ent in pairs(Ents) do
 		if ent:IsValid() and ent.prefab == "moon_fissure" then
-			table.insert(moonfissures,ent)			
-		end		
+			table.insert(moonfissures,ent)
+		end
 	end
 	local options = {}
 	for i, ent in ipairs(moonfissures) do
@@ -586,34 +586,34 @@ local function MoonFissures()
 		local ents = TheSim:FindEntities(x,y,z, 12, HAS_WATERSOURCE)
 		if #ents == 0 then
 			table.insert(options,ent)
-		end		
+		end
 	end
 	if #options > 0 then
 		for i, ent in ipairs(options) do
 			local pos = Vector3(ent.Transform:GetWorldPosition())
 			local startangle = math.random()*PI*2
-			local offset_a = FindWalkableOffset(pos, startangle, 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true) 
+			local offset_a = FindWalkableOffset(pos, startangle, 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true)
 			local offset_b = nil
 			if offset_a then
-				offset_b = FindWalkableOffset(pos, startangle+(PI/3), 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true) 
+				offset_b = FindWalkableOffset(pos, startangle+(PI/3), 12, 36, true, true) or FindWalkableOffset(pos, startangle, 15, 36, true, true) or FindWalkableOffset(pos, startangle, 9, 36, true, true)
 			end
 			if offset_b then
 				local fissure_1 = SpawnPrefab("moon_fissure")
 				fissure_1.Transform:SetPosition( pos.x+offset_a.x , 0 , pos.z+offset_a.z )
 
 				local fissure_2 = SpawnPrefab("moon_fissure")
-				fissure_2.Transform:SetPosition( pos.x+offset_b.x , 0 , pos.z+offset_b.z )				
+				fissure_2.Transform:SetPosition( pos.x+offset_b.x , 0 , pos.z+offset_b.z )
 				print("Retrofitting: for Return of Them: Forgotten Knowledge - 2 Moon Fissures added ", pos.x+offset_a.x, pos.z+offset_a.z, ":", pos.x+offset_b.x, pos.z+offset_b.z)
 				break
-			end			
+			end
 		end
 	else
 		print("Retrofitting: for Return of Them: Forgotten Knowledge: No Moon Fissures added")
 	end
 end
-		
+
 local function AstralMarkers()
-		
+
 	local potential = {}
 	for i, node in ipairs(TheWorld.topology.nodes) do
 		if table.contains(node.tags, "ExitPiece") and not table.contains(node.tags, "lunacyarea") then
@@ -624,7 +624,7 @@ local function AstralMarkers()
     for k,v in pairs(Ents) do
         if v.prefab == "moon_altar_astral_marker_1" or v.prefab == "moon_altar_astral_marker_2" then
         	print("Retrofitting: for Return of Them: Forgotten Knowledge: Astral Markets Exist")
-    		return 
+    		return
         end
     end
 
@@ -636,7 +636,7 @@ local function AstralMarkers()
 			print("Retrofitting: for Return of Them: Forgotten Knowledge: No Astral Markers Added")
 			return
 		end
-		local rand = potential_count == 1 and 1 or math.random(1,potential_count) 
+		local rand = potential_count == 1 and 1 or math.random(1,potential_count)
 		local testnode = potential[rand]
 
 		if TheWorld.Map:IsVisualGroundAtPoint(testnode.cent[1], 0, testnode.cent[2]) then
@@ -656,7 +656,7 @@ local function AstralMarkers()
 			print("Retrofitting: for Return of Them: Forgotten Knowledge: Second Astral Marker Not Added")
 			return
 		end
-		local rand = potential_count == 1 and 1 or math.random(1,potential_count) 
+		local rand = potential_count == 1 and 1 or math.random(1,potential_count)
 		local testnode = potential[rand]
 
 		if TheWorld.Map:IsVisualGroundAtPoint(testnode.cent[1], 0, testnode.cent[2]) then
@@ -698,7 +698,7 @@ local function RetrofitAgainstTheGrain(area)
 				end
 			end
 		end
-		
+
 		return nil
 	end
 
@@ -727,7 +727,7 @@ local function RetrofitAgainstTheGrain(area)
 		print ("Retrofitting for Against the Grain: "..area.." is too small to retrofit.")
 		return false
 	end
-	
+
 	shuffleArray(candidtates)
 
 	local shortlist = {}
@@ -743,7 +743,7 @@ local function RetrofitAgainstTheGrain(area)
 	end
 
 	print ("Retrofitting for Against the Grain: " .. tostring(#node_indices) .. " nodes, " .. tostring(#candidtates) .. " canidates, ".. tostring(#shortlist).." short listed.")
-	
+
 	local antlion_pt, lake_pt = FindAreas(shortlist)
 	if antlion_pt == nil then
 		print "Retrofitting for Against the Grain: All nodes have structures."
@@ -803,7 +803,7 @@ local function RetrofitAgainstTheGrain(area)
 	end
 	SpawnPrefab("oasislake").Transform:SetPosition(lake_pt:Get())
 	print "Retrofitting for Against the Grain: Added Oasis Lake."
-	
+
 	-- Convert cactus to oasis_cactus
 	if area == "Oasis" then
 		local num_cactus = 0
@@ -821,7 +821,7 @@ local function RetrofitAgainstTheGrain(area)
 		end
 		print ("Retrofitting for Against the Grain: Converted " .. tostring(num_cactus) .. " cactus objects to oasis_cactus.")
 	end
-	
+
 	print ("Retrofitting for Against the Grain: "..area.." has been retrofitted to include Lightning Bluff.")
 	return true
 end
@@ -857,7 +857,7 @@ function self:OnPostInit()
 
 	if self.retrofit_artsandcrafts then
 		self.retrofit_artsandcrafts = nil
-		
+
 		local requires_retrofitting = true
 		local missing_sculpture = {pawn=true, knight=true, rook=true, bishop=true, muse=true, formal=true}
 	    for k,v in pairs(Ents) do
@@ -877,7 +877,7 @@ function self:OnPostInit()
 				elseif v.prefab == "sculpture_bishopbody" then
 					missing_sculpture.bishop = nil
 				end
-				
+
 				if next(missing_sculpture) == nil then
 					print ("Retrofitting for A New Reign: Arts and Crafts is not required.")
 					break;
@@ -904,10 +904,10 @@ function self:OnPostInit()
         inst:PushEvent("ms_unlockchesspiece", "muse")
         inst:PushEvent("ms_unlockchesspiece", "formal")
     end
-    
+
 	if self.retrofit_cutefuzzyanimals then
 		self.retrofit_cutefuzzyanimals = nil
-		
+
 		local missing_prefabs = {critterlab=true, beequeenhive=true}
 	    for k,v in pairs(Ents) do
 			if table.containskey(missing_prefabs, v.prefab) then
@@ -928,7 +928,7 @@ function self:OnPostInit()
 		end
 	end
 
-	
+
 	if self.retrofit_herdmentality then
 		self.retrofit_herdmentality = nil
 
@@ -940,12 +940,12 @@ function self:OnPostInit()
 				break
 			end
 		end
-		
+
 		if requires_retrofitting then
 			local deciduousfn = function(x, y, z, prefab)
 					return TheWorld.Map:GetTileAtPoint(x, y, z) == GROUND.DECIDUOUS
 				end
-				
+
 			print ("Retrofitting for A New Reign: Herd Mentality.")
 			RetrofitNewContentPrefab(inst, "deerspawningground", 1, 10, deciduousfn)
 			RetrofitNewContentPrefab(inst, "deerspawningground", 1, 10, deciduousfn)
@@ -958,10 +958,10 @@ function self:OnPostInit()
 		end
 
 	end
-	
+
 	if self.retrofit_againstthegrain then
 		self.retrofit_againstthegrain = nil
-		
+
 		local requires_retrofitting = true
 	    for k,v in pairs(Ents) do
 			if v.prefab == "antlion_spawner" then
@@ -970,7 +970,7 @@ function self:OnPostInit()
 				break
 			end
 		end
-		
+
 		if requires_retrofitting then
 			if not RetrofitAgainstTheGrain("Oasis") then
 				if not RetrofitAgainstTheGrain("Badlands") then
@@ -979,7 +979,7 @@ function self:OnPostInit()
 			end
 		end
 	end
-	
+
 	if self.retrofit_penguinice then
 		self.retrofit_penguinice = nil
 		local count = 0
@@ -996,7 +996,7 @@ function self:OnPostInit()
 				end
 			end
 		end
-		
+
 		if count ~= 0 then
 			print ("Retrofitting for Pengull spawned Mini Glaciers: Converted " .. count .. " Mini Glaciers near pengull colonies to be remove on dry up.")
 		end
@@ -1011,18 +1011,18 @@ function self:OnPostInit()
 
 		self.requiresreset = true
 	end
-	
+
 	if self.retrofit_turnoftides_betaupdate1 then
 		TheWorld.Map:RetrofitNavGrid()
 		print ("Retrofitting for Return Of Them: Turn of Tides - Updated Nav Grid")
 		self.requiresreset = true
 	end
-	
+
 	if self.retrofit_turnoftides_seastacks then
 		print ("Retrofitting for Return Of Them: Turn of Tides - Balancing Seastacks")
 		TurnOfTidesRetrofitting_CleanupOceanPoution(self.inst)
 	end
-	
+
 	if self.retrofit_fix_sculpture_pieces then
 		local count = 0
 		for _,obj in pairs(Ents) do
@@ -1053,7 +1053,7 @@ function self:OnPostInit()
 			print("Retrofitting - No sculpture pieces required repositioning.")
 		end
 	end
-	
+
 	if self.retrofit_salty then
 		-- add shoals for malbatross spawning, salt statcks and cookie citter spawners
 		print ("Retrofitting for Return Of Them: Salty Dog - Adding Malbatross food sources.")
@@ -1074,7 +1074,7 @@ function self:OnPostInit()
         print("Retrofitting for Return Of Them: Troubled Waters - Replacing Seastacks With Barnacle Plants")
         Barnacles_ReplaceSeastacks()
 	end
-	
+
 	if self.retrofit_inaccessibleunderwaterobjects then
 		print("Retrofitting for Return of Them: Forgotten Knowledge - Repositioning inaccessible underwater objects.")
 		RepositionInaccessibleUnderwaterObjects()
@@ -1096,7 +1096,7 @@ function self:OnPostInit()
 				TheWorld.Map:RepopulateNodeIdTileMap(i, node.x, node.y, node.poly, 10000, 2.1)
 			end
 		end
-	
+
 		print ("Retrofitting for Return of Them: Forgotten Knowledge - Repaired tile node ids for lunar island.")
 		self.requiresreset = true
 	end
@@ -1110,7 +1110,7 @@ function self:OnPostInit()
 				break
 			end
 		end
-	
+
 		print ("Retrofitting for Return of Them: Forgotten Knowledge - Repaired " .. tostring(num_tiles_repaired) .. " tile node ids for hermit island.")
 		self.requiresreset = self.requiresreset or num_tiles_repaired > 0
 	end

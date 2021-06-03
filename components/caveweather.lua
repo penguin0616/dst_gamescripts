@@ -663,7 +663,7 @@ function self:GetDebugString()
         string.format("preciprate:(%2.2f of %2.2f)", preciprate, _peakprecipitationrate:value()),
         string.format("wetness:%2.2f(%s%2.2f)%s", _wetness:value(), wetrate > 0 and "+" or "", wetrate, _wet:value() and " WET" or ""),
     }
-    
+
     return table.concat(str, ", ")
 end
 

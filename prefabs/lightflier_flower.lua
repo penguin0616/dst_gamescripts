@@ -84,7 +84,7 @@ local function SpawnLightflierFromStalk(inst)
 
     lightflier.Transform:SetPosition(inst:GetPosition():Get())
     lightflier:PushEvent("startled")
-    
+
     inst.components.childspawner.childreninside = math.max(inst.components.childspawner.childreninside - 1, 0)
 end
 
@@ -255,7 +255,7 @@ local function onpickedfn(inst, picker, loot)
     else
         inst.AnimState:PushAnimation("picked")
     end
-    
+
     inst.components.pickable:Pause() -- Do not re-grow until the population is lower than max
     StartCallForLightflierTask(inst)
 end

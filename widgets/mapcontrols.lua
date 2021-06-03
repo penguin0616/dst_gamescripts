@@ -22,7 +22,7 @@ end
 
 local MAPSCALE = .5
 
---base class for imagebuttons and animbuttons. 
+--base class for imagebuttons and animbuttons.
 local MapControls = Class(Widget, function(self)
     Widget._ctor(self, "Map Controls")
 

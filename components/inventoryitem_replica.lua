@@ -255,9 +255,9 @@ function InventoryItem:SetDeployRestrictedTag(restrictedtag)
     self.classified.deployrestrictedtag:set(restrictedtag or 0)
 end
 
-function InventoryItem:CanDeploy(pt, mouseover, deployer)
+function InventoryItem:CanDeploy(pt, mouseover, deployer, rot)
     if self.inst.components.deployable ~= nil then
-        return self.inst.components.deployable:CanDeploy(pt, mouseover, deployer)
+        return self.inst.components.deployable:CanDeploy(pt, mouseover, deployer, rot)
     elseif not self:IsDeployable(deployer) then
         return false
     elseif self.classified.deploymode:value() == DEPLOYMODE.ANYWHERE then
@@ -277,10 +277,10 @@ function InventoryItem:CanDeploy(pt, mouseover, deployer)
         })
     elseif self.classified.deploymode:value() == DEPLOYMODE.CUSTOM then
         if self.inst._custom_candeploy_fn ~= nil then
-            return self.inst._custom_candeploy_fn(self.inst, pt, mouseover, deployer)
+            return self.inst._custom_candeploy_fn(self.inst, pt, mouseover, deployer, rot)
         else -- use old DEPLOYMODE.MAST logic
             return TheWorld.Map:CanDeployMastAtPoint(pt, self.inst, mouseover)
-        end     
+        end
     end
 end
 

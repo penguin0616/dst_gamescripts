@@ -121,7 +121,7 @@ end
 function PlayerProfile:GetSkins()
 	local owned_skins = {}
 
-	for prefab, skins in pairs(PREFAB_SKINS) do 
+	for prefab, skins in pairs(PREFAB_SKINS) do
 		local skins = self:GetSkinsForPrefab(prefab)
 		owned_skins = JoinArrays(owned_skins, skins)
 	end
@@ -165,7 +165,7 @@ function PlayerProfile:GetLastSelectedCharacter()
     if not table.contains(DST_CHARACTERLIST, character) then
         character = DST_CHARACTERLIST[1]
 	end
-	
+
 	if not IsCharacterOwned( character ) then
 		character = "wilson"
 	end
@@ -189,7 +189,7 @@ function PlayerProfile:GetSkinPresetForCharacter(character, preset_index)
 	if not self.persistdata.skin_presets[character] then
         self.persistdata.skin_presets[character] = {}
 	end
-    
+
     --Do skins validation to ensure that the saved skins aren't available anymore
     --ValidateItemsLocal(character, self.persistdata.skin_presets[character][preset_index])
 
@@ -236,7 +236,7 @@ function PlayerProfile:GetSkinsForCharacter(character)
 		    self.persistdata.character_skins[character] = { base = character.."_none" }
         end
 	end
-    
+
     --Do skins validation to ensure that the saved skins aren't available anymore
     ValidateItemsLocal(character, self.persistdata.character_skins[character])
 
@@ -376,7 +376,7 @@ end
 
 function PlayerProfile:SetShopHash(_hash)
 	self.persistdata.purchase_screen_hash = _hash
-	
+
 	self:Save()
 end
 
@@ -394,7 +394,7 @@ end
 function PlayerProfile:GetRecipeTimestamp(recipe)
 	if self.persistdata.recipe_timestamps then
 		return self.persistdata.recipe_timestamps[recipe] or -10000
-	else 
+	else
 		return -10000
 	end
 end
@@ -622,7 +622,7 @@ function PlayerProfile:IsCampfireStoryCameraEnabled()
  	if USE_SETTINGS_FILE then
  		return TheSim:GetSetting("misc", "campfirestorycamera") ~= "false"
 	else
-		return self:GetValue("campfirestorycamera") ~= false 
+		return self:GetValue("campfirestorycamera") ~= false
 	end
 end
 
@@ -907,7 +907,7 @@ local function UpgradeProfilePresets(presets_string)
                     presets[i] = savefileupgrades.utilities.UpgradeUserPresetFromV1toV2(preset, presets)
                     didupgrade = true
                 end
-                
+
                 if preset.version == 2 then
                     presets[i] = savefileupgrades.utilities.UpgradeUserPresetFromV2toV3(preset, presets)
                     didupgrade = true
@@ -1124,7 +1124,7 @@ function PlayerProfile:Set(str, callback, minimal_load)
         if self.persistdata.play_instance == nil then
             self.persistdata.play_instance = 0
 		end
-		
+
 		if self.persistdata.favorite_mods == nil then
 			self.persistdata.favorite_mods = {}
 		end
@@ -1151,10 +1151,10 @@ function PlayerProfile:Set(str, callback, minimal_load)
                 self.persistdata.movementprediction = true
 		    end
 		end
-        
+
         if minimal_load then
             assert(callback == nil)
-            return 
+            return
         end
 
 
@@ -1373,7 +1373,7 @@ function PlayerProfile:SaveKlumpCipher(file, cipher)
         --we've already saved the cipher for this klump, no need to save it again
         return
     end
-    
+
     if self.persistdata.klump_ciphers[file] ~= nil then
         print("ERROR: New klump cipher detected for file:", file)
         print("old cipher", self.persistdata.klump_ciphers[file])
@@ -1391,7 +1391,7 @@ function PlayerProfile:GetKlumpCipher(file)
         print("~~~ERROR~~~ GetKlumpCipher should never be called on console")
         return ""
     end
-     
+
 	if not self.persistdata.klump_ciphers then
 		return nil
 	end
@@ -1443,7 +1443,7 @@ function PlayerProfile:GetLanguageID()
 	if self:GetValue("language_id") ~= nil then
 		return self:GetValue("language_id")
 	elseif IsConsole() then
-		return TheSystemService:GetLanguage()	
+		return TheSystemService:GetLanguage()
 	else
 		return LANGUAGE.ENGLISH
 	end

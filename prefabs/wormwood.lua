@@ -214,7 +214,7 @@ end
 
 local function DoSpawnPollen(inst, fertilized)
     --This is an untracked task from PollenTick, so we nil check .pollentask instead.
-    if (fertilized or inst.pollentask ~= nil) 
+    if (fertilized or inst.pollentask ~= nil)
 		and (inst.sg:HasStateTag("self_fertilizing") or not (inst.sg:HasStateTag("nomorph") or inst.sg:HasStateTag("silentmorph") or inst.sg:HasStateTag("ghostbuild") or inst.components.health:IsDead()))
         and inst.entity:IsVisible() then
         --randomize, favoring ones that haven't been used recently
@@ -248,7 +248,7 @@ local function PlantTick(inst)
 					or t <= TUNING.WORMWOOD_BLOOM_PLANTS_WARNING_TIME_LOW and 1/3
 					or t <= TUNING.WORMWOOD_BLOOM_PLANTS_WARNING_TIME_MED and 2/3
 					or 1
-					
+
 	if chance < 1 and math.random() > chance then
 		return
 	end

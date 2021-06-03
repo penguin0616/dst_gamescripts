@@ -35,7 +35,7 @@ local _ambush_prefab = "bat"
 
 --Public
 self.inst = inst
-    
+
 -- Private
 local _activeplayers = {}
 local _activehunts = {}
@@ -274,7 +274,7 @@ end
 local function IsEligible(player)
 	local area = player.components.areaaware
 	return TheWorld.Map:IsVisualGroundAtPoint(player.Transform:GetWorldPosition())
-			and area:GetCurrentArea() ~= nil 
+			and area:GetCurrentArea() ~= nil
 			and not area:CurrentlyInTag("nohunt")
 			and not area:CurrentlyInTag("moonhunt")
 end
@@ -299,11 +299,11 @@ OnUpdateHunt = function(inst, hunt)
     if hunt.lastdirttime ~= nil then
         if hunt.trackspawned >= 1 then
             local wet = TheWorld.state.wetness > 15 or TheWorld.state.israining
-            
+
             local lastdirttime = GetTime() - hunt.lastdirttime
             local maxtime = wet and 0.75*TUNING.SEG_TIME or 1.25*TUNING.SEG_TIME
             if lastdirttime > maxtime then
-    
+
                 -- check if the player is currently active in any other hunts
                 local playerIsInOtherHunt = false
                 for i,v in ipairs(_activehunts) do
@@ -328,7 +328,7 @@ OnUpdateHunt = function(inst, hunt)
 
     if hunt.lastdirt == nil then
         -- pick a player that is available, meaning, not being the active participant in a hunt
-        local huntingPlayers = {}   
+        local huntingPlayers = {}
         for i,v in ipairs(_activehunts) do
             if v.activeplayer then
                 huntingPlayers[v.activeplayer] = true
@@ -352,7 +352,7 @@ OnUpdateHunt = function(inst, hunt)
     else
         -- if no player near enough, then give up this hunt and start a new one
         local x, y, z = hunt.lastdirt.Transform:GetWorldPosition()
-        
+
         if not IsAnyPlayerInRange(x, y, z, TUNING.MAX_DIRT_DISTANCE) then
             -- try again rather soon
             StartCooldown(inst, hunt, .1)
@@ -436,7 +436,7 @@ local function OnPlayerJoined(src, player)
         end
     end
     table.insert(_activeplayers, player)
-    -- one hunt per player. 
+    -- one hunt per player.
     KickOffHunt()
 end
 
@@ -553,7 +553,7 @@ end
 function self:GetDebugString()
     local str = ""
     for i, hunt in ipairs(_activehunts) do
-        str = str.." Cooldown: ".. (hunt.cooldowntime and string.format("%2.2f", math.max(1, hunt.cooldowntime - GetTime())) or "-") 
+        str = str.." Cooldown: ".. (hunt.cooldowntime and string.format("%2.2f", math.max(1, hunt.cooldowntime - GetTime())) or "-")
 		if hunt.trackspawned ~= nil then
 			str = str .. " Track # " .. tostring(hunt.trackspawned) .. "/" .. tostring(hunt.numtrackstospawn) .. (hunt.ambush_track_num ~= nil and (" ambush at " .. tostring(hunt.ambush_track_num)) or "")
 		end

@@ -249,7 +249,7 @@ local function waterballoon_fn()
     inst.components.reticule.ease = true
 
     MakeInventoryFloatable(inst, "med", 0.05, 0.65)
-    
+
     -- From watersource component
     inst:AddTag("watersource")
 
@@ -381,6 +381,6 @@ end
 
 return Prefab("snowball", snowball_fn, snowball_assets, snowball_prefabs),
     Prefab("waterballoon", waterballoon_fn, waterballoon_assets, waterballoon_prefabs),
-    Prefab("inksplat", ink_fn, ink_assets, ink_prefabs),    
+    Prefab("inksplat", ink_fn, ink_assets, ink_prefabs),
     Prefab("bilesplat", bile_fn, bile_assets, bile_prefabs),
     Prefab("waterstreak_projectile", waterstreak_fn, waterstreak_assets, waterstreak_prefabs)

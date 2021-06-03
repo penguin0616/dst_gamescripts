@@ -81,7 +81,7 @@ local function AddEffectBonus(inst, num_feasters, num_foodtypes, num_totalfood)
 
 	--local gainmultiplier = math.min((num_foodtypes - 1) / 2, 1)--
 
-    local score = ((num_feasters^0.3)*0.3* (num_foodtypes))  + ((num_totalfood-num_foodtypes)*0.2)    
+    local score = ((num_feasters^0.3)*0.3* (num_foodtypes))  + ((num_totalfood-num_foodtypes)*0.2)
     local bonus = (score * TUNING.TOTAL_DAY_TIME/2)/TUNING.WINTERSFEASTBUFF.EATTIME
 --    print("Score",score,"bonus",bonus)
 	if bonus > 0 then
@@ -89,7 +89,7 @@ local function AddEffectBonus(inst, num_feasters, num_foodtypes, num_totalfood)
 --		print("bonus duration:", bonus)
 	else
 --		print("no bonus duration")
-	end    
+	end
 
 	inst.SoundEmitter:SetParameter("loop", "intensity", CalcIntensity(inst))
 end

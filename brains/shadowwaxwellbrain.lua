@@ -74,7 +74,7 @@ local function FindEntityToWorkAction(inst, action, addtltags)
                     target.components.burnable:IsSmoldering())) and
             target.entity:IsVisible() and
             target:IsNear(leader, KEEP_WORKING_DIST) then
-                
+
             if addtltags ~= nil then
                 for i, v in ipairs(addtltags) do
                     if target:HasTag(v) then
@@ -135,11 +135,24 @@ local function WatchingMinigame(inst)
 	return (inst.components.follower.leader ~= nil and inst.components.follower.leader.components.minigame_participator ~= nil) and inst.components.follower.leader.components.minigame_participator:GetMinigame() or nil
 end
 
+local function WatchingMinigame_MinDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_min or 0
+end
+local function WatchingMinigame_TargetDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_target or 0
+end
+local function WatchingMinigame_MaxDist(inst)
+	local minigame = WatchingMinigame(inst)
+	return minigame ~= nil and minigame.components.minigame.watchdist_max or 0
+end
+
 function ShadowWaxwellBrain:OnStart()
 
 	local watch_game = WhileNode( function() return ShouldWatchMinigame(self.inst) end, "Watching Game",
         PriorityNode({
-            Follow(self.inst, WatchingMinigame, TUNING.MINIGAME_CROWD_DIST_MIN, TUNING.MINIGAME_CROWD_DIST_TARGET, TUNING.MINIGAME_CROWD_DIST_MAX),
+            Follow(self.inst, WatchingMinigame, WatchingMinigame_MinDist, WatchingMinigame_TargetDist, WatchingMinigame_MaxDist),
             RunAway(self.inst, "minigame_participator", 5, 7),
             FaceEntity(self.inst, WatchingMinigame, WatchingMinigame),
 		}, 0.25))

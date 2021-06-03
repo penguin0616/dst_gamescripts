@@ -82,7 +82,7 @@ local TrueScrollList = Class(Widget, function(self, context, create_widgets_fn, 
     self.focus_forward = self.list_root
 
 	self:SetItemsData(nil) --initialize with no data
-	
+
     self:StartUpdating()
 end)
 
@@ -156,27 +156,27 @@ function TrueScrollList:BuildScrollBar()
     self.up_button:SetWhileDown( function()
         if not self.last_up_button_time or GetTime() - self.last_up_button_time > button_repeat_time then
             self.last_up_button_time = GetTime()
-            self:Scroll(-self.scroll_per_click) 
+            self:Scroll(-self.scroll_per_click)
         end
     end)
     self.up_button:SetOnClick( function()
         self.last_up_button_time = nil
     end)
-    
+
     self.down_button = self.scroll_bar_container:AddChild(ImageButton("images/global_redux.xml", "scrollbar_arrow_down.tex"))
     self.down_button:SetPosition(0, -self.scrollbar_height/2 - nudge_y/2)
     self.down_button:SetScale(0.3)
     self.down_button:SetWhileDown( function()
         if not self.last_down_button_time or GetTime() - self.last_down_button_time > button_repeat_time then
             self.last_down_button_time = GetTime()
-            self:Scroll(self.scroll_per_click) 
+            self:Scroll(self.scroll_per_click)
         end
     end)
     self.down_button:SetOnClick( function()
         self.last_down_button_time = nil
-    end)    
-    
-    local line_height = self.scrollbar_height - arrow_button_size/2 
+    end)
+
+    local line_height = self.scrollbar_height - arrow_button_size/2
     self.scroll_bar_line = self.scroll_bar_container:AddChild(Image("images/global_redux.xml", "scrollbar_bar.tex"))
     self.scroll_bar_line:ScaleToSize(11*bar_width_scale_factor, line_height)
     self.scroll_bar_line:SetPosition(0, 0)
@@ -205,18 +205,18 @@ function TrueScrollList:BuildScrollBar()
     self.position_marker.show_stuff = true
     self.position_marker:SetPosition(0, self.scrollbar_height/2 - arrow_button_size)
     self.position_marker:SetScale(bar_width_scale_factor*0.3, bar_width_scale_factor*0.3, 1)
-    self.position_marker:SetOnDown( function() 
+    self.position_marker:SetOnDown( function()
         TheFrontEnd:LockFocus(true)
         self.dragging = true
         self.saved_scroll_pos = self.current_scroll_pos
     end)
-    self.position_marker:SetWhileDown( function() 
+    self.position_marker:SetWhileDown( function()
 		self:DoDragScroll()
-    end)   
+    end)
     self.position_marker.OnLoseFocus = function()
         --do nothing OnLoseFocus
     end
-    self.position_marker:SetOnClick( function() 
+    self.position_marker:SetOnClick( function()
         self.dragging = nil
         TheFrontEnd:LockFocus(false)
         self:RefreshView() --refresh again after we've been moved back to the "up-click" position in Button:OnControl
@@ -237,17 +237,17 @@ function TrueScrollList:DoDragScroll()
         self.position_marker:SetPosition(0, self:GetSlideStart() - self:GetSlideRange())
         marker = self.position_marker:GetWorldPosition()
         local end_y = marker.y
-        
+
         local scroll_value = math.clamp( (TheFrontEnd.lasty - end_y)/(start_y - end_y), 0, 1 )
         self.current_scroll_pos = Lerp( scroll_value, 1, self.end_pos )
         self.target_scroll_pos = self.current_scroll_pos
-        
+
     else
 		-- Far away from the scroll bar, revert to original pos
         self.current_scroll_pos = self.saved_scroll_pos
         self.target_scroll_pos = self.saved_scroll_pos
     end
-    
+
     self:RefreshView()
 end
 
@@ -274,7 +274,7 @@ end
 function TrueScrollList:OnUpdate(dt)
     local last_scroll_pos = self.current_scroll_pos
 	self.current_scroll_pos = math.abs(self.current_scroll_pos - self.target_scroll_pos) > 0.01 and Lerp(self.current_scroll_pos, self.target_scroll_pos, 0.25) or self.target_scroll_pos
-	
+
 	if self.current_scroll_pos < 1 then
 		--print("hit the start")
 		self.current_scroll_pos = 1
@@ -285,7 +285,7 @@ function TrueScrollList:OnUpdate(dt)
 		self.current_scroll_pos = self.end_pos
 		self.target_scroll_pos = self.end_pos
 	end
-	
+
 	--only bother refreshing if we've actually moved a bit
 	if self.current_scroll_pos ~= last_scroll_pos then
         self:RefreshView()
@@ -379,14 +379,14 @@ function TrueScrollList:RefreshView()
     self.displayed_start_index = start_index
 
 	-- call update_fn for each
-	for i = 1,self.items_per_view do 
+	for i = 1,self.items_per_view do
         self.update_fn(self.context, self.widgets_to_update[i], self.items[start_index + i], start_index + i)
         if self.itemfocus and self.itemfocus == start_index + i then
             self.widgets_to_update[i]:SetFocus()
         end
         --self.widgets_to_update[i]:Show()
 	end
-	
+
 	--position the scroll bar marker
 	if self:CanScroll() then
 		self.scroll_bar_container:Show()
@@ -511,7 +511,7 @@ function TrueScrollList:GetHelpText()
 	if self:CanScroll() then
 	    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLBACK) .. "/" .. TheInput:GetLocalizedControl(controller_id, CONTROL_SCROLLFWD) .. " " .. STRINGS.UI.HELP.SCROLL)
 	end
-	
+
 	return table.concat(t, "  ")
 end
 

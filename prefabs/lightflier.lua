@@ -63,7 +63,7 @@ local function LeaderOnUpdate(inst)
         -- inst._offset is initialized in MakeFormation()
         inst._offset.x = Lerp(inst._offset.x, targetoffset_x, FORMATION_OFFSET_LERP)
         inst._offset.z = Lerp(inst._offset.z, targetoffset_z, FORMATION_OFFSET_LERP)
-        
+
         inst.Transform:SetPosition(inst._offset.x, ty, inst._offset.z)
     end
 end
@@ -83,7 +83,7 @@ local function LeaderValidateFormation(inst)
 
     local x, y, z = inst.Transform:GetWorldPosition()
     local leaders = TheSim:FindEntities(x, y, z, FORMATION_SEARCH_RADIUS + FORMATION_RADIUS, inst.components.formationleader.formationleadersearchtags)
-    
+
     local formationsize = GetTableSize(inst.components.formationleader.formation)
     if formationsize > 1 then
         if inst._formation_distribution_toggle then
@@ -211,7 +211,7 @@ MakeFormation = function(inst, target)
 
     leader.components.formationleader.radius = FORMATION_RADIUS
     leader.components.formationleader.thetaincrement = FORMATION_ROTATION_SPEED
-    
+
     leader.components.formationleader.onupdatefn = LeaderOnUpdate
 
     leader:DoPeriodicTask(VALIDATE_FORMATION_FREQ, LeaderValidateFormation)
@@ -231,7 +231,7 @@ local function FindTarget(inst)
     if formationfollower:SearchForFormation(leaders) then
         return
     end
-    
+
     local target = FindEntity(inst, FIND_TARGET_RADIUS, findtargettest, FIND_TARGET_MUSTTAGS, FIND_TARGET_NOTAGS, nil)
     if target ~= nil then
         MakeFormation(inst, target)
@@ -281,11 +281,11 @@ local function OnDropped(inst)
             end
         end
     end
-    
+
     StartLookingForTarget(inst)
     inst.components.formationfollower:StartUpdating()
     inst:EnableBuzz(true)
-    
+
     -- Needs to wait one frame in order for dropped stacks of lightfliers to run this at the correct time
     inst:DoTaskInTime(0, MakeCurrentPositionHome)
 end
@@ -408,7 +408,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     MakeGhostPhysics(inst, 1, .5)
-    
+
     inst.DynamicShadow:SetSize(1, .5)
 
     inst.Transform:SetFourFaced()
@@ -417,7 +417,7 @@ local function fn()
     inst.AnimState:SetBuild("lightflier")
 
     inst.AnimState:SetLightOverride(1)
-    
+
     inst.Light:SetFalloff(0.7)
     inst.Light:SetIntensity(.5)
     inst.Light:SetRadius(1.8)
@@ -433,7 +433,7 @@ local function fn()
     inst:AddTag("lightbattery")
 
     MakeInventoryFloatable(inst)
-    
+
     MakeFeedableSmallLivestockPristine(inst)
 
     inst.entity:SetPristine()
@@ -462,7 +462,7 @@ local function fn()
     inst.components.inventoryitem.pushlandedevents = false
 
     inst:AddComponent("tradable")
-    
+
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.NET)
     inst.components.workable:SetWorkLeft(1)

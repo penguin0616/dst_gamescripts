@@ -10,8 +10,8 @@ local assets =
     Asset("ANIM", "anim/meat_rack_food.zip"),
     Asset("ANIM", "anim/meat_rack_food_tot.zip"),
     Asset("ANIM", "anim/batwing.zip"),
-    Asset("ANIM", "anim/plant_meat.zip"),  
-    Asset("ANIM", "anim/barnacle.zip"),  
+    Asset("ANIM", "anim/plant_meat.zip"),
+    Asset("ANIM", "anim/barnacle.zip"),
 }
 
 local quagmire_assets =
@@ -130,7 +130,7 @@ local function common(bank, build, anim, tags, dryable, cookable)
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
-    
+
     MakeInventoryPhysics(inst)
 
     inst.AnimState:SetBank(bank)
@@ -261,7 +261,7 @@ local function humanmeat_dried()
 
     return inst
 end
-    
+
 local function monster()
     local inst = common("monstermeat", "meat_monster", "idle", { "monstermeat" }, { product = "monstermeat_dried", time = TUNING.DRY_FAST }, { product = "cookedmonstermeat" })
 
@@ -364,7 +364,7 @@ end
 
 local function raw()
     local inst = common("meat", "meat", "raw", { "catfood" }, { product = "meat_dried", time = TUNING.DRY_MED }, { product = "cookedmeat" })
-    
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -560,7 +560,7 @@ local function batwing()
     inst.components.edible.healthvalue = TUNING.HEALING_SMALL
     inst.components.edible.hungervalue = TUNING.CALORIES_SMALL
     inst.components.edible.sanityvalue = -TUNING.SANITY_SMALL
-    
+
     inst.components.perishable:SetPerishTime(TUNING.PERISH_FAST)
 
     return inst
@@ -639,9 +639,9 @@ local function barnacle()
 
     if not TheWorld.ismastersim then
         return inst
-    end    
+    end
 
-    inst.components.edible.ismeat = true    
+    inst.components.edible.ismeat = true
     inst.components.edible.foodtype = FOODTYPE.MEAT
     inst.components.edible.healthvalue = 0
     inst.components.edible.hungervalue = TUNING.CALORIES_SMALL
@@ -698,7 +698,7 @@ local function batnose()
     inst.components.edible.healthvalue = TUNING.HEALING_SMALL
     inst.components.edible.hungervalue = TUNING.CALORIES_SMALL
     inst.components.edible.sanityvalue = -TUNING.SANITY_SMALL
-    
+
     inst.components.perishable:SetPerishTime(TUNING.PERISH_FAST)
 
     return inst

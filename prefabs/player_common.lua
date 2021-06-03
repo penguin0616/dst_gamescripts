@@ -44,7 +44,7 @@ function fns.YOTB_isskinunlocked(inst, skin)
                     end
                 end
             end
-        end 
+        end
     end
 end
 
@@ -258,7 +258,7 @@ local function OnGetItem(inst, giver, item)
     end
 end
 
-local function DropWetTool(inst, data)    
+local function DropWetTool(inst, data)
     --Tool slip.
     if inst.components.moisture:GetSegs() < 4 or inst:HasTag("stronggrip") then
         return
@@ -653,7 +653,7 @@ local function EnableMovementPrediction(inst, enable)
                 inst:DoTaskInTime(0, function(inst)
                     SendRPCToServer(RPC.MovementPredictionEnabled)
                     end)
-            end            
+            end
         elseif inst.components.locomotor ~= nil then
             inst:RemoveEventCallback("cancelmovementprediction", OnCancelMovementPrediction)
             inst.entity:EnableMovementPrediction(false)
@@ -665,10 +665,10 @@ local function EnableMovementPrediction(inst, enable)
             inst:RemoveComponent("locomotor")
             print("Movement prediction disabled")
             --This is unfortunate but it doesn't seem like you can send an rpc on the first
-            --frame when a character is spawned            
+            --frame when a character is spawned
             inst:DoTaskInTime(0, function(inst)
                 SendRPCToServer(RPC.MovementPredictionDisabled)
-                end)            
+                end)
         end
     end
 
@@ -1264,7 +1264,7 @@ local function OnGotOnPlatform(player, platform)
     player.Transform:SetIsOnPlatform(true)
 end
 
-local function OnGotOffPlatform(player, platform)    
+local function OnGotOffPlatform(player, platform)
     player.Transform:SetIsOnPlatform(false)
 end
 
@@ -1284,7 +1284,7 @@ local function OnSharkSound(inst)
     if ThePlayer ~= nil and  ThePlayer == inst then
         if inst._sharksoundparam:value() <= 1 then
             if not TheFocalPoint.SoundEmitter:PlayingSound("shark") then
-                TheFocalPoint.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/swim_LP" ,"shark")               
+                TheFocalPoint.SoundEmitter:PlaySound("dangerous_sea/creatures/shark/swim_LP" ,"shark")
             end
             TheFocalPoint.SoundEmitter:SetParameter("shark", "distance", inst._sharksoundparam:value())
         else
@@ -1504,8 +1504,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             table.insert(assets, v)
         end
     end
-	
-	local function SetInstanceFunctions(inst)	
+
+	local function SetInstanceFunctions(inst)
 		-- we're bumping against the limit of upvalues in a lua function so work around by breaking this assignment out into its own function
         inst.AttachClassified = AttachClassified
         inst.DetachClassified = DetachClassified
@@ -1591,7 +1591,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_emote_extra")
         inst.AnimState:AddOverrideBuild("player_boat")
         inst.AnimState:AddOverrideBuild("player_boat_plank")
-        inst.AnimState:AddOverrideBuild("player_boat_net")        
+        inst.AnimState:AddOverrideBuild("player_boat_net")
         inst.AnimState:AddOverrideBuild("player_boat_sink")
         inst.AnimState:AddOverrideBuild("player_oar")
 
@@ -1659,7 +1659,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:AddComponent("playeravatardata")
         inst:AddComponent("constructionbuilderuidata")
-        
+
         inst:AddComponent("inkable")
 
         inst:AddComponent("cookbookupdater")
@@ -1911,7 +1911,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:AddComponent("steeringwheeluser")
 		inst:AddComponent("walkingplankuser")
-		
+
 		inst:AddComponent("singingshelltrigger")
         inst.components.singingshelltrigger.trigger_range = TUNING.SINGINGSHELL_TRIGGER_RANGE
 

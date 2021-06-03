@@ -151,7 +151,7 @@ function Grower:RemoveCrop(crop)
     self.crops[crop] = nil
 
     for k, v in pairs(self.crops) do
-        return 
+        return
     end
 
     self.isempty = true

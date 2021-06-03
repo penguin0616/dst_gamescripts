@@ -50,4 +50,4 @@ return Prefab("staffcastfx", MakeStaffFX("staff"), assets),
     Prefab("staffcastfx_mount", MakeStaffFX("staff_mount"), assets),
 	Prefab("cointosscastfx", MakeStaffFX("cointoss", "cointosscast_fx", "cointosscast_fx"), assets_cointoss),
 	Prefab("cointosscastfx_mount", MakeStaffFX("cointoss", "cointosscast_fx", "mount_cointosscast_fx"), assets_cointoss)
-	
+

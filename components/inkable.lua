@@ -4,7 +4,7 @@ local Inkable = Class(function(self, inst)
     self.inktime = 0
 end)
 
-function Inkable:Ink()    
+function Inkable:Ink()
 	self.inktime = 2
 
 	self.inked = true

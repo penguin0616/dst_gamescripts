@@ -35,7 +35,7 @@ local SEASON_DANGER_MUSIC =
 local TRIGGERED_DANGER_MUSIC =
 {
 
-    wagstaff_experiment = 
+    wagstaff_experiment =
     {
         "moonstorm/characters/wagstaff/music_wagstaff_experiment",
     },
@@ -49,7 +49,7 @@ local TRIGGERED_DANGER_MUSIC =
     {
         "saltydog/music/malbatross",
     },
-        
+
     moonbase =
     {
         "dontstarve/music/music_epicfight_moonbase",
@@ -130,6 +130,8 @@ local BUSYTHEMES = {
     TRAINING = 8,
     HERMIT = 9,
     FARMING = 10,
+	CARNIVAL_AMBIENT = 11,
+	CARNIVAL_MINIGAME = 12,
 }
 
 --------------------------------------------------------------------------
@@ -187,7 +189,7 @@ local function StopBusy(inst, istimeout)
 end
 
 local function StartBusy(player)
-    if not (_iscave or _isday) then        
+    if not (_iscave or _isday) then
         return
     elseif _busytask ~= nil then
         _extendtime = GetTime() + 15
@@ -208,7 +210,7 @@ local function StartBusy(player)
                 _busytheme = BUSYTHEMES.CAVE
             end
         else
-            if IsOnLunarIsland(player) then                    
+            if IsOnLunarIsland(player) then
                 if _busytheme ~= BUSYTHEMES.LUNARISLAND then
                     _soundemitter:KillSound("busy")
                     _soundemitter:PlaySound("turnoftides/music/working", "busy")
@@ -222,7 +224,7 @@ local function StartBusy(player)
                 _busytheme = BUSYTHEMES.FOREST
             end
         end
-        
+
         _soundemitter:SetParameter("busy", "intensity", 1)
         _busytask = inst:DoTaskInTime(15, StopBusy, true)
         _extendtime = 0
@@ -342,6 +344,15 @@ end
 
 local function StartFarming(player)
 	StartBusyTheme(player, BUSYTHEMES.FARMING, "farming/music/farming", 15)
+end
+
+local function StartCarnivalMustic(player, is_game_active)
+	if _dangertask ~= nil or (_busytask ~= nil and _busytheme == BUSYTHEMES.CARNIVAL_MINIGAME and not is_game_active) then
+		return
+	end
+
+	local theme = is_game_active and BUSYTHEMES.CARNIVAL_MINIGAME or BUSYTHEMES.CARNIVAL_AMBIENT
+	StartBusyTheme(player, theme, theme == BUSYTHEMES.CARNIVAL_MINIGAME and "summerevent/music/2" or "summerevent/music/1", 2)
 end
 
 local function ExtendBusy()
@@ -514,11 +525,12 @@ local function StartPlayerListeners(player)
     inst:ListenForEvent("triggeredevent", StartTriggeredDanger, player)
     inst:ListenForEvent("boatspedup", StartTriggeredWater, player)
     inst:ListenForEvent("isfeasting", StartTriggeredFeasting, player)
-    inst:ListenForEvent("playracemusic", StartRacing, player)   
-    inst:ListenForEvent("playhermitmusic", StartHermit, player)   
+    inst:ListenForEvent("playracemusic", StartRacing, player)
+    inst:ListenForEvent("playhermitmusic", StartHermit, player)
     inst:ListenForEvent("playtrainingmusic", StartTraining, player)
     inst:ListenForEvent("playfarmingmusic", StartFarming, player)
     inst:ListenForEvent("hasinspirationbuff", OnHasInspirationBuff, player)
+    inst:ListenForEvent("playcarnivalmusic", StartCarnivalMustic, player)
 end
 
 local function StopPlayerListeners(player)
@@ -536,6 +548,7 @@ local function StopPlayerListeners(player)
     inst:RemoveEventCallback("playtrainingmusic", StartTraining, player)
     inst:RemoveEventCallback("playfarmingmusic", StartFarming, player)
     inst:RemoveEventCallback("hasinspirationbuff", OnHasInspirationBuff, player)
+    inst:RemoveEventCallback("playcarnivalmusic", StartCarnivalMustic, player)
 end
 
 local function OnPhase(inst, phase)

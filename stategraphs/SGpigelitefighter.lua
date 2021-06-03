@@ -22,7 +22,7 @@ local events =
         end
     end),
 
-	EventHandler("onsink", function(inst) 
+	EventHandler("onsink", function(inst)
         if inst.components.health == nil or not inst.components.health:IsDead() then
             inst.sg:GoToState("despawn")
         end
@@ -183,7 +183,7 @@ local states =
             inst.Physics:SetMass(DEFAULT_MASS)
         end,
     },
-	
+
     State{
         name = "despawn",
         tags = { "endpose", "busy", "nofreeze", "nosleep", "noattack", "jumping" },
@@ -216,7 +216,7 @@ local states =
             end),
         },
     },
-	
+
 }
 
 CommonStates.AddWalkStates(states,

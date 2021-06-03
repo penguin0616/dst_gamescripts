@@ -151,7 +151,7 @@ end
 
 function Hatchable:OnSave()
     --print("Hatchable:OnSave")
-    local data = 
+    local data =
     {
         state = self.state,
         progress = self.progress,

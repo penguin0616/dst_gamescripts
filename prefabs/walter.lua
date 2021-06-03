@@ -75,7 +75,7 @@ end
 local function oneat(inst, food)
 	if food ~= nil and food:IsValid() and (food.prefab == "glommerfuel" or food:HasTag("tallbirdegg")) then
         inst:ListenForEvent("animqueueover", startsong)
-	end 
+	end
 end
 
 local REQUIRED_TREE_TAGS = { "tree" }
@@ -96,7 +96,7 @@ end
 local function SpawnWoby(inst)
     local player_check_distance = 40
     local attempts = 0
-    
+
     local max_attempts = 30
     local x, y, z = inst.Transform:GetWorldPosition()
 
@@ -111,7 +111,7 @@ local function SpawnWoby(inst)
         if offset then
             local spawn_x = x + offset.x
             local spawn_z = z + offset.z
-            
+
             if attempts >= max_attempts then
                 woby.Transform:SetPosition(spawn_x, y, spawn_z)
                 break
@@ -125,7 +125,7 @@ local function SpawnWoby(inst)
             woby.Transform:SetPosition(x, y, z)
             break
         else
-            attempts = attempts + 1    
+            attempts = attempts + 1
         end
     end
 
@@ -238,13 +238,13 @@ local function master_postinit(inst)
 	inst.components.eater:SetOnEatFn(oneat)
 
     inst.components.sleepingbaguser:SetHungerBonusMult(TUNING.EFFICIENT_SLEEP_HUNGER_MULT)
-    
+
 	inst.components.petleash:SetMaxPets(0) -- walter can only have Woby as a pet
 
 	inst:AddComponent("storyteller")
 	inst.components.storyteller:SetStoryToTellFn(StoryToTellFn)
 	inst.components.storyteller:SetOnStoryOverFn(StoryTellingDone)
-	
+
 	inst:ListenForEvent("healthdelta", OnHealthDelta)
     inst:ListenForEvent("attacked", OnAttacked)
 
@@ -268,13 +268,13 @@ end
 -------------------------------------------------------------------------------
 
 local function CampfireStory_OnNotNight(inst, isnight)
-	if not isnight and inst.storyteller:IsValid() and inst.storyteller.components.storyteller ~= nil then 
-		inst.storyteller.components.storyteller:AbortStory(GetString(inst.storyteller, "ANNOUNCE_STORYTELLING_ABORT_NOT_NIGHT")) 
+	if not isnight and inst.storyteller:IsValid() and inst.storyteller.components.storyteller ~= nil then
+		inst.storyteller.components.storyteller:AbortStory(GetString(inst.storyteller, "ANNOUNCE_STORYTELLING_ABORT_NOT_NIGHT"))
 	end
 end
 
 local function CampfireStory_CheckFire(inst, data)
-	if data ~= nil and data.newsection == 0 and inst.storyteller:IsValid() and inst.components.storyteller ~= nil then 
+	if data ~= nil and data.newsection == 0 and inst.storyteller:IsValid() and inst.components.storyteller ~= nil then
 		inst.storyteller.components.storyteller:AbortStory(GetString(inst.storyteller, "ANNOUNCE_STORYTELLING_ABORT_FIREWENTOUT"))
 	end
 end
@@ -302,7 +302,7 @@ local function walter_campfire_story_proxy_fn()
 
     inst.entity:AddTransform()
     inst.entity:AddNetwork()
-    
+
     inst:AddTag("NOBLOCK")
 
 	if Profile:IsCampfireStoryCameraEnabled() then

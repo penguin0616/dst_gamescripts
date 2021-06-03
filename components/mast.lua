@@ -18,12 +18,12 @@ local function on_remove(inst)
     else
         mast_sinking = SpawnPrefab("collapse_small")
 	end
-	
+
 	if mast_sinking ~= nil then
 		local x_pos, y_pos, z_pos = inst.Transform:GetWorldPosition()
 		mast_sinking.Transform:SetPosition(x_pos, y_pos, z_pos)
 	end
-    
+
     if mast ~= nil then
         mast:SetBoat(nil)
     end
@@ -51,22 +51,22 @@ local Mast = Class(function(self, inst)
     self.inst:ListenForEvent("onremove", on_remove)
 
     self.inst:DoTaskInTime(0,
-    	function() 
+    	function()
 			local mast_x, mast_y, mast_z = self.inst.Transform:GetWorldPosition()
     		self:SetBoat(TheWorld.Map:GetPlatformAtPoint(mast_x, mast_z))
 
-			self:SetRudder(SpawnPrefab('rudder'))       
+			self:SetRudder(SpawnPrefab('rudder'))
     	end)
 end,
 nil,
-{	
+{
     is_sail_raised = onissailraised,
 })
 
 function Mast:SetReveseDeploy(set)
 	self.furlunits = set and 0 or self.furlunits
 	self.is_sail_raised = set
-    self.inverted = set    
+    self.inverted = set
 end
 
 function Mast:SetSailForce(set)
@@ -134,14 +134,14 @@ function Mast:RemoveSailFurler(doer)
     if self.furlers[doer] then
         self.furlers[doer] = nil
         doer:PushEvent("stopfurling")
-    end    
+    end
 end
 
 function Mast:GetCurrentFurlUnits()
     local total_strength = 0
     for furler,strength in pairs(self.furlers) do
         local active_time = TUNING.BOAT.MAST.HEAVABLE_ACTIVE_FRAME/30
-        if furler.AnimState:IsCurrentAnimation("pull_small_loop") or (furler.AnimState:IsCurrentAnimation("pull_big_loop") and furler.AnimState:GetCurrentAnimationTime() < active_time) then            
+        if furler.AnimState:IsCurrentAnimation("pull_small_loop") or (furler.AnimState:IsCurrentAnimation("pull_big_loop") and furler.AnimState:GetCurrentAnimationTime() < active_time) then
             total_strength = total_strength + strength
         end
     end
@@ -195,15 +195,15 @@ function Mast:GetFurled0to1()
     return self.furlunits / self.furlunits_max
 end
 
-function Mast:OnRemoveFromEntity()  
-    self.inst:RemoveEventCallback("onremove", on_remove)    
+function Mast:OnRemoveFromEntity()
+    self.inst:RemoveEventCallback("onremove", on_remove)
 end
 
-function Mast:OnUpdate(dt)    
+function Mast:OnUpdate(dt)
 
     if not self.inst.AnimState:IsCurrentAnimation("knot_release") then
         if self.is_sail_transitioning then
-        
+
             if next(self.furlers) then
                 self.furlunits = math.min(self.furlunits_max,self.furlunits + (dt*self:GetCurrentFurlUnits()))
 
@@ -215,9 +215,9 @@ function Mast:OnUpdate(dt)
 
                 if self.furlunits <= 0 then
                     self:SailUnfurled()
-                end            
+                end
             end
-            
+
         end
         -- it still transitioning
         if self.is_sail_transitioning then

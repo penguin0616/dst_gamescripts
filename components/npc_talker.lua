@@ -3,7 +3,7 @@ local Npc_talker = Class(function(self, inst)
     self.inst = inst
     self.queue = {}
     self.soundqueue = {}
-    --self.inst:ListenForEvent("done_npc_talk", function(inst) self:checknextline() end) 
+    --self.inst:ListenForEvent("done_npc_talk", function(inst) self:checknextline() end)
 end)
 
 function Npc_talker:Say(lines, override, stompable, sound)
@@ -12,10 +12,10 @@ function Npc_talker:Say(lines, override, stompable, sound)
 
 
     if override or self.stompable then
-       self.queue = {}  
+       self.queue = {}
        self.soundqueue = {}
        self.stompable = false
-    end  
+    end
 
     if stompable and #self.queue > 0 then
         return
@@ -25,7 +25,7 @@ function Npc_talker:Say(lines, override, stompable, sound)
 
         table.insert(self.soundqueue,sound or false)
 
-        if type(lines) ~= "table" then            
+        if type(lines) ~= "table" then
             table.insert(self.queue,lines)
         else
             for i,line in ipairs(lines) do
@@ -33,9 +33,9 @@ function Npc_talker:Say(lines, override, stompable, sound)
                     table.insert(self.soundqueue, false)
                 end
                 table.insert(self.queue, line)
-            end               
+            end
         end
-    end    
+    end
 
     if stompable then
         self.stompable = true

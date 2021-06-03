@@ -105,7 +105,7 @@ local events =
     EventHandler("stun_finished", onstunfinishedfn),
     EventHandler("spawnlavae", onspawnlavae),
     EventHandler("transform", transform),
-    --Because this comes from an event players can prevent it by having dragonfly 
+    --Because this comes from an event players can prevent it by having dragonfly
     --in sleep/ freeze/ knockdown states when this is triggered.
 }
 
@@ -430,7 +430,7 @@ local states =
                 local x, y, z = 0.5019684438612,7.5216834009827,2.7178563798944
                 inst.Physics:SetMotorVel(x, y, z)
             end),
-            TimeEvent(6, function(inst) 
+            TimeEvent(6, function(inst)
                 inst:DoDespawn()
             end)
         },
@@ -514,7 +514,7 @@ local states =
                 inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/firedup", "fireflying")
             end),
         },
-    },  
+    },
 
     State{
         name = "transform_normal",
@@ -571,8 +571,8 @@ local states =
 
         timeline =
         {
-            TimeEvent(2*FRAMES, function(inst) 
-                inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/blink") 
+            TimeEvent(2*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/blink")
             end),
         },
     },

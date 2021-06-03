@@ -111,7 +111,7 @@ function MoonBeastBrain:OnStart()
 
         WhileNode(function() return shouldspit(self.inst) end, "Spit",
         	DoAction(self.inst, spit)),
-        
+
         WhileNode(function() return shouldwaittospit(self.inst) end, "waittospit",
         	StandStill(self.inst)),
 

@@ -12,7 +12,7 @@ local function buff_OnAttached(inst, target)
 
 	inst.entity:SetParent(target.entity)
 	inst.Transform:SetPosition(0, 0, 0)
-	
+
     inst:ListenForEvent("death", function()
         inst.components.debuff:Stop()
     end, target)

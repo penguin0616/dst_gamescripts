@@ -256,7 +256,7 @@ function MinionSpawner:MakeSpawnLocations()
             not ground.Map:IsPointNearHole(pos) then
             table.insert(useablepositions, pos)
             if #useablepositions >= maxpositions then
-                return useablepositions 
+                return useablepositions
             end
         end
     end

@@ -85,7 +85,7 @@ local function OnKilled(inst)
     inst.components.lootdropper:DropLoot(inst:GetPosition())
 end
 
-local function OnHit(inst, attacker, damage) 
+local function OnHit(inst, attacker, damage)
     if inst.components.childspawner ~= nil then
         inst.components.childspawner:ReleaseAllChildren(attacker, "killerbee")
     end

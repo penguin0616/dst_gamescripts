@@ -19,11 +19,13 @@ function ChattyNode:Visit()
         if self.nextchattime == nil or t > self.nextchattime then
             if type(self.chatlines) == "function" then
                 local str = self.chatlines(self.inst)
-                if self.inst.components.npc_talker then
-                    self.inst.components.npc_talker:Say(str,nil,true)
-                else
-                    self.inst.components.talker:Say(str)
-                end
+				if str ~= nil then
+					if self.inst.components.npc_talker then
+						self.inst.components.npc_talker:Say(str,nil,true)
+					else
+						self.inst.components.talker:Say(str)
+					end
+				end
             elseif type(self.chatlines) == "table" then
                 --legacy, will only show on host
                 local str = self.chatlines[math.random(#self.chatlines)]

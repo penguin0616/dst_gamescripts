@@ -46,10 +46,10 @@ function CancelTipWidget:KeepAlive( auto_increment )
 		self.cancel_tip_widget = local_cancel_tip_widget
 		self.cached_fade_level = 0.0
 		self.initialized = true
-		
+
 		just_initialized = true
 	end
-	
+
 	if self.initialized then
 	    if self.is_enabled then
 		    if TheFrontEnd and auto_increment == false then
@@ -57,15 +57,15 @@ function CancelTipWidget:KeepAlive( auto_increment )
 		    else
 			    self.cached_fade_level = 1.0
 		    end
-		    
+
 		    self.cancel_tip_widget:SetColour(1,1,1,self.cached_fade_level*self.cached_fade_level)
-		    
+
 		    if 0.01 > self.cached_fade_level then
 		        self.is_enabled = false
 		        self:Hide()
 		        self:StopUpdating()
-		    end		    
-		end	
+		    end
+		end
 	end
 end
 

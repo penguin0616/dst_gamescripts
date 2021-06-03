@@ -10,11 +10,11 @@ local function OnPoweredFn(inst, ispowered)
 end
 
 local function choosebroken(inst, broken)
-    local state = "full"    
+    local state = "full"
     if broken ~= nil then
         if broken == true then
             state = "broken"
-        end        
+        end
     else
         state = math.random() < 0.2 and "broken"
     end

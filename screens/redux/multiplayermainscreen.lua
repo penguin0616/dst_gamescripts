@@ -57,7 +57,7 @@ function MakeBanner(self)
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_ROT_BETA_TITLE
 
-        
+
         anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
         anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
         anim:GetAnimState():PlayAnimation("loop_w1", true)
@@ -93,7 +93,7 @@ function MakeBanner(self)
         anim_wagstaff:SetScale(.667)
         anim_wagstaff:GetAnimState():SetErosionParams(1, 0, -1.0)
         anim_wagstaff:GetAnimState():SetMultColour(0.9, 0.9, 0.9, 0.9)
-        
+
         local wagstaff_erosion_min = 0.02 -- Not 0 so there's always a little bit of influence on the alpha from the lines
         local wagstaff_erosion_max = 1.2 -- Overshoots 1.2 to get more stable alpha lines when close to fully faded out
         local wagstaff_erosion_speed = 1.65
@@ -165,7 +165,7 @@ function MakeBanner(self)
 		anim_bg:SetScale(0.7)
 		anim_bg:GetAnimState():PlayAnimation("loop", true)
 		anim_bg:MoveToBack()
-        
+
 		anim:GetAnimState():SetBuild("dst_menu_carrat")
 		anim:GetAnimState():SetBank("dst_carrat")
         anim:GetAnimState():PlayAnimation("loop", true)
@@ -189,6 +189,12 @@ function MakeBanner(self)
             anim:GetAnimState():OverrideSymbol("ear2", "dst_menu_carrat_swaps", color.."_ear2")
             anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")
         end
+	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
+        anim:GetAnimState():SetBuild("dst_menu_carnival")
+        anim:GetAnimState():SetBank ("dst_menu_carnival")
+        anim:SetScale(.667)
+        anim:GetAnimState():PlayAnimation("loop", true)
+
 	elseif true then
         --[[
         anim:GetAnimState():SetBuild("dst_menu_wes2")
@@ -197,7 +203,7 @@ function MakeBanner(self)
         anim:GetAnimState():PlayAnimation("loop", true)
         ]]
 
-     
+
         anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
         anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
         anim:GetAnimState():PlayAnimation("loop_w1", true)
@@ -233,7 +239,7 @@ function MakeBanner(self)
         anim_wagstaff:SetScale(.667)
         anim_wagstaff:GetAnimState():SetErosionParams(1, 0, -1.0)
         anim_wagstaff:GetAnimState():SetMultColour(0.9, 0.9, 0.9, 0.9)
-        
+
         local wagstaff_erosion_min = 0.02 -- Not 0 so there's always a little bit of influence on the alpha from the lines
         local wagstaff_erosion_max = 1.2 -- Overshoots 1.2 to get more stable alpha lines when close to fully faded out
         local wagstaff_erosion_speed = 1.65
@@ -297,13 +303,13 @@ function MakeBanner(self)
         anim:SetScale(.667)
     	anim_bg:GetAnimState():PlayAnimation("loop", true)
         anim_bg:MoveToBack()
-        
+
         anim:GetAnimState():SetBuild("dst_menu_v2")
         anim:GetAnimState():SetBank("dst_menu_v2")
         anim:GetAnimState():PlayAnimation("loop", true)
         anim:SetScale(.667)
-        
-        local creatures = 
+
+        local creatures =
         {
             "creature_cookie",
             "creature_squid",
@@ -315,18 +321,18 @@ function MakeBanner(self)
         for _,v in pairs(creatures) do
             anim:GetAnimState():Hide(v)
         end
-	    
+
         local c1 = creatures[math.random(1,#creatures)]
         local c2 = creatures[math.random(1,#creatures)]
         local c3 = creatures[math.random(1,#creatures)]
-      
+
         --could end up with dupes picked, that's okay, then we'll have only 1 or 2 chosen
         anim:GetAnimState():Show(c1)
         anim:GetAnimState():Show(c2)
         anim:GetAnimState():Show(c3)
-        
+
         --[[
-		local cur_time = os.time() 
+		local cur_time = os.time()
 		if cur_time <= 1585810740 and (not IsConsole() or cur_time >= 1585759200) then -- 9:40am to 11:59pm PDT
 			anim:GetAnimState():SetBuild("dst_menu_wes")
 			anim:GetAnimState():SetBank("dst_menu_wes")
@@ -344,7 +350,7 @@ function MakeBanner(self)
 
 	if title_str then
 		if title_str ~= nil then
-			local x = 170 
+			local x = 170
 			local y = 75
 			local text_width = 880
 
@@ -352,7 +358,7 @@ function MakeBanner(self)
 			local title = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.HIGHLIGHT_GOLD))
 			title:SetRegionSize(text_width, 2*(font_size + 2))
 			title:SetHAlign(ANCHOR_RIGHT)
-			title:SetPosition(x, y + 4)    
+			title:SetPosition(x, y + 4)
 
 			local shadow = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.BLACK))
 			shadow:SetRegionSize(text_width, 2*(font_size + 2))
@@ -382,7 +388,7 @@ end)
 
 function MultiplayerMainScreen:GotoShop( filter_info )
 	if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
-		TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE, 
+		TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
 			{
 				{text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
 						SimReset()
@@ -399,7 +405,7 @@ end
 function MultiplayerMainScreen:getStatsPanel()
     return MainMenuStatsPanel({store_cb = function()
         if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
-            TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE, 
+            TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
                 {
                     {text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
                             SimReset()
@@ -470,14 +476,14 @@ function MultiplayerMainScreen:DoInit()
 		self.motd_panel = self.fixed_root:AddChild(self:getStatsPanel())
 	end
 
-    if IsAnyFestivalEventActive() then        
+    if IsAnyFestivalEventActive() then
         if not TheFrontEnd:GetIsOfflineMode() then
 			self.userprogress = self.fixed_root:AddChild(TEMPLATES.UserProgress(function()
 				self:OnPlayerSummaryButton()
 			end))
 		end
     end
-	
+
 
     ----------------------------------------------------------
 
@@ -588,7 +594,7 @@ function MultiplayerMainScreen:_GoToFestfivalEventScreen(fadeout_cb)
     if GetFestivalEventInfo().FEMUSIC ~= nil then
         self:StopMusic() --only stop the main menu music if we have something for the next screeen
     end
-	
+
 	self.last_focus_widget = TheFrontEnd:GetFocusWidget()
     self.menu:Disable()
     self.leaving = true --Note(Peter): what is this even used for?!?
@@ -605,7 +611,7 @@ end
 
 function MultiplayerMainScreen:OnFestivalEventButton()
     if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
-        TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_TITLE, STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_BODY[WORLD_FESTIVAL_EVENT], 
+        TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_TITLE, STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_BODY[WORLD_FESTIVAL_EVENT],
             {
                 {text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
                         SimReset()
@@ -615,7 +621,7 @@ function MultiplayerMainScreen:OnFestivalEventButton()
     else
 		if AreAnyModsEnabled() and not KnownModIndex:GetIsSpecialEventModWarningDisabled() then
 			local popup_body = subfmt(STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_BODY, {event=STRINGS.UI.GAMEMODES[string.upper(GetFestivalEventInfo().GAME_MODE)]})
-			TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_TITLE, popup_body, 
+			TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_TITLE, popup_body,
 				{
 					{text=STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_DISABLE_MODS, cb = function()
 							self:Disable()
@@ -626,20 +632,20 @@ function MultiplayerMainScreen:OnFestivalEventButton()
                                 SimReset()
                             end)
 						end},
-					{text=STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_CONTINUE, cb=function() 
+					{text=STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_CONTINUE, cb=function()
 						    KnownModIndex:SetDisableSpecialEventModWarning()
                             KnownModIndex:Save(function()
 								self:_GoToFestfivalEventScreen(function() TheFrontEnd:PopScreen() end)
 							end)
 						end},
-					{text=STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_CANCEL, cb=function() 
+					{text=STRINGS.UI.FESTIVALEVENTSCREEN.MODS_POPUP_CANCEL, cb=function()
 								TheFrontEnd:PopScreen()
 						end},
 				}))
 		else
 			self:_GoToFestfivalEventScreen()
 		end
-    
+
 	end
 end
 
@@ -682,7 +688,7 @@ function MultiplayerMainScreen:OnBrowseServersButton()
 		end
     else
         self.filter_settings = {}
-        table.insert(self.filter_settings, {name = "SHOWLAN", data=self.offline} )   
+        table.insert(self.filter_settings, {name = "SHOWLAN", data=self.offline} )
     end
 
     self:_GoToOnlineScreen(ServerListingScreen, { self.filter_settings, cb, self.offline, self.session_data })
@@ -691,7 +697,7 @@ end
 function MultiplayerMainScreen:OnPlayerSummaryButton()
 
     if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
-        TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE, 
+        TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
             {
                 {text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
                         SimReset()
@@ -718,7 +724,7 @@ function MultiplayerMainScreen:OnQuickJoinServersButton()
     self.leaving = true
 
     -- QuickJoin is a popup, so don't fade to it.
-    TheFrontEnd:PushScreen(QuickJoinScreen(self, self.offline, self.session_data, 
+    TheFrontEnd:PushScreen(QuickJoinScreen(self, self.offline, self.session_data,
 		"",
 		CalcQuickJoinServerScore,
 		function() self:OnCreateServerButton() end,
@@ -733,7 +739,7 @@ end
 function MultiplayerMainScreen:OnModsButton()
     self:_FadeToScreen(ModsScreen, {})
 end
- 
+
 function MultiplayerMainScreen:Quit()
     self.last_focus_widget = TheFrontEnd:GetFocusWidget()
     TheFrontEnd:PushScreen(PopupDialogScreen(
@@ -787,7 +793,7 @@ function MultiplayerMainScreen:MakeMainMenu()
         local btn = TEMPLATES.MenuButton(text, onclick, tooltip_text, tooltip_widget)
         return btn
     end
-	
+
     local browse_button		= MakeMainMenuButton(STRINGS.UI.MAINSCREEN.BROWSE,    function() self:OnBrowseServersButton() end, STRINGS.UI.MAINSCREEN.TOOLTIP_BROWSE, self.tooltip)
     local host_button		= MakeMainMenuButton(STRINGS.UI.MAINSCREEN.CREATE,    function() self:OnCreateServerButton() end,  STRINGS.UI.MAINSCREEN.TOOLTIP_HOST, self.tooltip)
     local summary_button	= MakeMainMenuButton(STRINGS.UI.PLAYERSUMMARYSCREEN.TITLE, function() self:OnPlayerSummaryButton() end, STRINGS.UI.MAINSCREEN.TOOLTIP_PLAYERSUMMARY, self.tooltip)
@@ -826,7 +832,7 @@ function MultiplayerMainScreen:MakeMainMenu()
 
     self.menu = self.menu_root:AddChild(TEMPLATES.StandardMenu(menu_items, 38, nil, nil, true))
 
-    -- For Debugging/Testing    
+    -- For Debugging/Testing
     if SHOW_DST_DEBUG_HOST_JOIN then
 		local debug_menu_items = {}
         table.insert( debug_menu_items, {text=STRINGS.UI.MAINSCREEN.JOIN, cb= function() self:OnJoinButton() end})
@@ -937,12 +943,12 @@ function MultiplayerMainScreen:FinishedFadeIn()
 		for _,item in pairs(entitlement_items) do
 			table.insert(items, { item = item.item_type, item_id = item.item_id, gifttype = SkinGifts.types[item.item_type] or "DEFAULT" })
         end
-        
+
         local daily_gift = GetDailyGiftItem()
         if daily_gift then
             table.insert(items, { item = daily_gift, item_id = 0, gifttype = "DAILY_GIFT" })
         end
-	
+
 		if #items > 0 then
 			local thankyou_popup = ThankYouPopup(items)
 			TheFrontEnd:PushScreen(thankyou_popup)

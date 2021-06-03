@@ -57,7 +57,7 @@ local function GetBetaInfoId(tags)
 			return i
 		end
 	end
-	
+
 	return 0
 end
 
@@ -117,7 +117,7 @@ local ServerListingScreen = Class(Screen, function(self, prev_screen, filters, c
     self:MakeDetailPanel(right_col, details_height)
 
     self:MakeMenuButtons(left_col, right_col, nav_col) --put in this before self.server_list is added so that hover text is on top of the buttons.
-    
+
     self.server_list = self.content_root:AddChild(Widget("server_list"))
     self.server_list:SetPosition(left_col,0)
 
@@ -371,7 +371,7 @@ function ServerListingScreen:Join(warnedOffline, warnedLanguage)
                                         self:Join(true)
                                     end},
                                     {text=STRINGS.UI.SERVERLISTINGSCREEN.CANCEL, cb = function()
-                                        TheFrontEnd:PopScreen() 
+                                        TheFrontEnd:PopScreen()
                                     end}
                                 })
             self.last_focus = TheFrontEnd:GetFocusWidget()
@@ -393,7 +393,7 @@ function ServerListingScreen:Join(warnedOffline, warnedLanguage)
         else
             local filters = {}
             for i, v in ipairs(self.filters) do
-                if v.spinner ~= nil then 
+                if v.spinner ~= nil then
                     table.insert(filters, {name=v.name, data=v.spinner:GetSelectedData()})
                 elseif v.textbox then
                     table.insert(filters, {name="search", data=v.textbox:GetString()})
@@ -405,7 +405,7 @@ function ServerListingScreen:Join(warnedOffline, warnedLanguage)
             end
 			ServerPreferences:RefreshLastSeen(self.servers)
             JoinServer( self.selected_server )
-        end 
+        end
     else
         assert(false, "Invalid server selection")
     end
@@ -415,17 +415,17 @@ function ServerListingScreen:Report()
     local index = self.selected_index_actual
     local guid = self.servers[index] and self.servers[index].guid
     local servname = string.len(self.servers[index].name) > 18 and string.sub(self.servers[index].name,1,18).."..." or self.servers[index].name
-    local report_dialog = InputDialogScreen( STRINGS.UI.SERVERLISTINGSCREEN.REPORTREASON.." ("..servname..")", 
+    local report_dialog = InputDialogScreen( STRINGS.UI.SERVERLISTINGSCREEN.REPORTREASON.." ("..servname..")",
                                         {
                                             {
-                                                text = STRINGS.UI.SERVERLISTINGSCREEN.OK, 
+                                                text = STRINGS.UI.SERVERLISTINGSCREEN.OK,
                                                 cb = function()
                                                     TheNet:ReportListing(guid, InputDialogScreen:GetText())
                                                     TheFrontEnd:PopScreen()
                                                 end
                                             },
                                                                                         {
-                                                text = STRINGS.UI.SERVERLISTINGSCREEN.CANCEL, 
+                                                text = STRINGS.UI.SERVERLISTINGSCREEN.CANCEL,
                                                 cb = function()
                                                     TheFrontEnd:PopScreen()
                                                 end
@@ -437,7 +437,7 @@ function ServerListingScreen:Report()
         TheFrontEnd:PopScreen()
     end
     report_dialog:SetValidChars([[ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,[]@!()'*+-/?{}" ]]) --'
-    TheFrontEnd:PushScreen(report_dialog)  
+    TheFrontEnd:PushScreen(report_dialog)
     report_dialog.edit_text:OnControl(CONTROL_ACCEPT, false)
 end
 
@@ -487,8 +487,8 @@ function ServerListingScreen:ViewServerMods()
 
         if error_msg then
             TheFrontEnd:PushScreen(PopupDialogScreen(
-                    STRINGS.UI.SERVERLISTINGSCREEN.MODSTITLE, 
-                    error_msg, 
+                    STRINGS.UI.SERVERLISTINGSCREEN.MODSTITLE,
+                    error_msg,
                     {{ text = STRINGS.UI.SERVERLISTINGSCREEN.OK, cb = function() TheFrontEnd:PopScreen() end }}))
         else
             TheFrontEnd:PushScreen(TextListPopup(mods_list, STRINGS.UI.SERVERLISTINGSCREEN.MODSTITLE))
@@ -813,7 +813,7 @@ function ServerListingScreen:SearchForServers()
     elseif not self.view_online then
         self.server_count:SetString("("..STRINGS.UI.SERVERLISTINGSCREEN.LAN..")")
     end
-    
+
     for i, v in ipairs(self.filters) do
         if v.name == "VERSIONCHECK" then
             TheNet:SetCheckVersionOnQuery(v.spinner:GetSelectedData())
@@ -942,7 +942,7 @@ function ServerListingScreen:MakeServerListWidgets()
         intent.img:ScaleToSize(row_height-5,row_height-5)
         intent:SetHoverText("INTENTION", {font = NEWFONT_OUTLINE, offset_x = 2, offset_y = -28, colour = {1,1,1,1}})
         row.INTENTION = intent
-        
+
         row.NAME = row:AddChild(Text(CHATFONT, font_size))
         row.NAME:SetHAlign(ANCHOR_MIDDLE)
         row.NAME:SetString("")
@@ -963,7 +963,7 @@ function ServerListingScreen:MakeServerListWidgets()
             row.DETAILS:SetPosition(column_offsets.DETAILS-40, y_offset_top)
         end
         local details_widgets = {}
-        
+
         row.HAS_PASSWORD_ICON = TEMPLATES.ServerDetailIcon("images/servericons.xml", "password.tex", "rust", STRINGS.UI.SERVERLISTINGSCREEN.PASSWORD_ICON_HOVER, nil, {-1,0}, .08, .073)
         row.HAS_PASSWORD_ICON:Hide()
         table.insert(details_widgets, row.HAS_PASSWORD_ICON)
@@ -1097,7 +1097,7 @@ function ServerListingScreen:MakeServerListWidgets()
                 widget.INTENTION:Show()
                 widget.INTENTION.img:SetTexture("images/servericons.xml", intention_images[serverdata.intention].small)
                 widget.INTENTION:SetHoverText(STRINGS.UI.INTENTION[string.upper(serverdata.intention)])
-         
+
             else
                 widget.INTENTION:Hide()
             end
@@ -1160,12 +1160,12 @@ function ServerListingScreen:MakeServerListWidgets()
                 widget.CLAN_OPEN_ICON:Hide()
                 widget.CLAN_CLOSED_ICON:Hide()
             end
-            if serverdata.has_password then 
+            if serverdata.has_password then
                 widget.HAS_PASSWORD_ICON:Show()
             else
                 widget.HAS_PASSWORD_ICON:Hide()
             end
-            if serverdata.dedicated then 
+            if serverdata.dedicated then
                 widget.DEDICATED_ICON:Show()
 
 				local overrides = widget.DEDICATED_ICON.overrides[serverdata.kleiofficial and "official" or "unofficial"]
@@ -1345,7 +1345,7 @@ function ServerListingScreen:ProcessPlayerData(session)
                 }
             end
         end
-    end 
+    end
 end
 
 function ServerListingScreen:IsValidWithFilters(server)
@@ -1497,7 +1497,7 @@ function ServerListingScreen:ResetFilters()
     for i, v in ipairs(self.filters) do
         if v.spinner ~= nil and not v.is_forced
             and v ~= self.connection_spinner -- online -> LAN causes full server reload
-            then 
+            then
             v.spinner:SetSelectedIndex(1)
             v.spinner:SetHasModification(false)
             if v.name == "GAMEMODE" then
@@ -1570,7 +1570,7 @@ function ServerListingScreen:DoFiltering(doneSearching, keepScrollFocusPos)
     if self.servers and #self.servers > 0 then
         for i, v in ipairs(self.servers) do
             if self:IsValidWithFilters(v) then
-                table.insert(filtered_servers, 
+                table.insert(filtered_servers,
                     {
                         name=v.name,
                         mode=v.mode,
@@ -1578,7 +1578,7 @@ function ServerListingScreen:DoFiltering(doneSearching, keepScrollFocusPos)
                         description=v.description,
                         mods_description=v.mods_description,
                         mods_failed_deserialization=v.mods_failed_deserialization,
-                        dedicated=v.dedicated, 
+                        dedicated=v.dedicated,
                         pvp=v.pvp,
                         current_players=v.current_players,
                         max_players=v.max_players,
@@ -1648,7 +1648,7 @@ function ServerListingScreen:Cancel()
     TheFrontEnd:Fade(FADE_OUT, SCREEN_FADE_TIME, function()
         local filters = {}
         for i, v in ipairs(self.filters) do
-            if v.spinner ~= nil then 
+            if v.spinner ~= nil then
                 table.insert(filters, {name=v.name, data=v.spinner:GetSelectedData()})
             elseif v.textbox then
                 table.insert(filters, {name="search", data=v.textbox:GetString()})
@@ -2028,7 +2028,7 @@ function ServerListingScreen:MakeDetailPanel(right_col, details_height)
 
     self.viewgroup_button = MakeImgButton(self.details_tab, 28, -46, STRINGS.UI.SERVERLISTINGSCREEN.GROUP_NONE, function() self:ViewServerGroup() end, "icon", "clan")
     self.viewgroup_button:Select()
-	
+
     self.toggleservertext_button = MakeImgButton(self.details_tab, 28, -46, STRINGS.UI.SERVERLISTINGSCREEN.TOGGLE_SERVER_NAME, function() self:OnToggleServerName() end, "icon", "toggle_server_name")
 
 	local button_scale = 0.8
@@ -2068,7 +2068,7 @@ function ServerListingScreen:MakeDetailPanel(right_col, details_height)
     -- self.game_mode_description.text:SetRegionSize( 200, 50 )
     self.game_mode_description.text:SetString("???")
     self.game_mode_description.text:SetColour(UICOLOURS.GOLD_UNIMPORTANT)
-    self.game_mode_description.info_button = self.game_mode_description:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "info.tex", nil, false, false, function()  
+    self.game_mode_description.info_button = self.game_mode_description:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "info.tex", nil, false, false, function()
             local mode_title = GetGameModeString( self.selected_server.mode )
             if mode_title == "" then
                 mode_title = STRINGS.UI.GAMEMODES.UNKNOWN
@@ -2078,8 +2078,8 @@ function ServerListingScreen:MakeDetailPanel(right_col, details_height)
                 mode_body = STRINGS.UI.GAMEMODES.UNKNOWN_DESCRIPTION
             end
             TheFrontEnd:PushScreen(PopupDialogScreen(
-                mode_title, 
-                mode_body, 
+                mode_title,
+                mode_body,
                 {{ text = STRINGS.UI.SERVERLISTINGSCREEN.OK, cb = function() TheFrontEnd:PopScreen() end }},
                 nil,
                 "big"
@@ -2257,9 +2257,9 @@ end
 
 function OnServerListingUpdated(row_id)
     local active_screen = TheFrontEnd:GetActiveScreen()
-    if active_screen and tostring(active_screen) == "ServerListingScreen" and active_screen.selected_server 
+    if active_screen and tostring(active_screen) == "ServerListingScreen" and active_screen.selected_server
     and active_screen.selected_server.row and active_screen.selected_server.row == row_id and active_screen.selected_server.actualindex then
-        active_screen.selected_server = TheNet:GetServerListingFromActualIndex( active_screen.selected_server.actualindex ) 
+        active_screen.selected_server = TheNet:GetServerListingFromActualIndex( active_screen.selected_server.actualindex )
     end
 end
 

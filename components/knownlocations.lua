@@ -63,7 +63,7 @@ function KnownLocations:RememberLocation(name, pos, dont_overwrite)
 end
 
 function KnownLocations:GetLocation(name)
-    return self.locations[name] 
+    return self.locations[name]
 end
 
 function KnownLocations:ForgetLocation(name)

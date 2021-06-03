@@ -44,7 +44,7 @@ local states =
 			inst.SoundEmitter:KillSound("loop")
 		end,
     },
-    
+
 	State{
 		name = "next",
 
@@ -62,7 +62,7 @@ local states =
             EventHandler("animover", function(inst) if inst.AnimState:AnimDone() then inst.sg:GoToState("idle") end end),
         },
     },
-    
+
 	State{
 		name = "hit",
 
@@ -125,7 +125,7 @@ local states =
             EventHandler("animover", function(inst) if inst.AnimState:AnimDone() then inst.sg:GoToState("glassed_idle") end end),
         },
     },
-	
+
 	State{
 		name = "glassed_idle",
 
@@ -142,7 +142,7 @@ local states =
 			inst.SoundEmitter:KillSound("loop")
 		end,
     },
-	
+
 	State{
 		name = "glassed_pst",
 

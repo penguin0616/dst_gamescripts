@@ -25,11 +25,11 @@ local assets_item =
 }
 
 local prefabs_item =
-{    
+{
     "yotb_stage",
 }
 
-local DEPLOYRING_DATA = 
+local DEPLOYRING_DATA =
 {
     bank =  "firefighter_placement",
     build = "firefighter_placement",
@@ -115,7 +115,7 @@ local function fn()
     inst.components.hauntable:SetHauntValue(TUNING.HAUNT_TINY)
 
     MakeSnowCovered(inst)
-    
+
     inst:ListenForEvent("onbuilt", onbuilt)
     inst:ListenForEvent("onremove", onremove)
 
@@ -154,12 +154,12 @@ local function voicefn()
     inst.persists = false
 
     inst:ListenForEvent("donetalking", function()
-        if inst.proxy then 
+        if inst.proxy then
             inst.proxy:PushEvent("donetalking")
         end
     end)
     inst:ListenForEvent("ontalk", function()
-        if inst.proxy then 
+        if inst.proxy then
             inst.proxy:PushEvent("ontalk")
         end
     end)

@@ -66,7 +66,7 @@ local function fallfn()
         local x,y,z = inst.Transform:GetWorldPosition()
         local prop = SpawnPrefab("malbatross_feather")
         prop.Transform:SetPosition(x,y,z)
-        prop.components.floater:OnLandedServer()  
+        prop.components.floater:OnLandedServer()
         inst:Remove()
     end)
 

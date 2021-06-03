@@ -1,5 +1,5 @@
 local BoatLeak = Class(function(self, inst)
-    self.inst = inst    
+    self.inst = inst
 
     self.has_leaks = false
 	self.leak_build = "boat_leak_build"
@@ -123,7 +123,7 @@ end
 -- Note: Currently save and load is only used for dynamic leaks (e.g. caused by cookie cutter). Saving/loading
 -- for leaks caused by collision is handled from HullHealth.
 function BoatLeak:OnSave(data)
-	return (self.current_state ~= nil and self.isdynamic) and { leak_state = self.current_state } or nil 
+	return (self.current_state ~= nil and self.isdynamic) and { leak_state = self.current_state } or nil
 end
 
 function BoatLeak:OnLoad(data)

@@ -2,31 +2,31 @@ require("constants")
 
 local StaticLayout = require("map/static_layout")
 
-local ruins_areas = 
+local ruins_areas =
 {
 	rubble = function(area) return nil end,
 	debris = function(area) return PickSomeWithDups( 0.25 * area
 	, {"rocks"}) end,
 }
 
-local archive_areas = 
+local archive_areas =
 {
-	creature_area = function() 
+	creature_area = function()
 		if math.random() < 0.2 then
 			return {"archive_centipede_husk"}
 		end
 	end,
-	
-	archive_sound_area = function() 
+
+	archive_sound_area = function()
 		if math.random() < 0.5 then
 			return {"archive_ambient_sfx"}
 		end
 	end,
 
 	archive_cookpot_area = function(area, data)
-		if math.random() < 0.2 then 
+		if math.random() < 0.2 then
 			return {{
-				prefab = "archive_cookpot", 
+				prefab = "archive_cookpot",
 				x = data.x,
 				y = data.y,
 				properties = {data = {additems = {"refined_dust"}}},
@@ -50,7 +50,7 @@ local archive_areas =
 local function GetLayoutsForType( name, sub_dir, params, areas )
 	sub_dir = "map/static_layouts/" .. (sub_dir or "rooms") .. "/"
 	params = params or {}
-	local layouts = 
+	local layouts =
 		{
 			["SINGLE_NORTH"] = 	StaticLayout.Get(sub_dir..name.."/one",	{
 				force_rotation = LAYOUT_ROTATION.NORTH,
@@ -126,7 +126,7 @@ end
 
 local function GetSpecialLayoutsForType( layout_dir, name, sub_dir, areas )
 	local path = "map/static_layouts/" .. (sub_dir or "rooms") .. "/" .. layout_dir .. "/" .. name
-	local layouts = 
+	local layouts =
 		{
 			["SINGLE_NORTH"] = 	StaticLayout.Get(path,	{
 				force_rotation = LAYOUT_ROTATION.NORTH, areas = areas}),
@@ -150,16 +150,16 @@ end
 return {
 		Layouts = GetLayoutsForType("room"),
 		AllLayouts = {
-			["default"] = GetLayoutsForType("room"), 
-			["hallway"] = GetLayoutsForType("hallway"), 
-			["hallway_armoury"] = GetLayoutsForType("hallway_armoury"), 
-			["hallway_residential"] = GetLayoutsForType("hallway_residential"), 
+			["default"] = GetLayoutsForType("room"),
+			["hallway"] = GetLayoutsForType("hallway"),
+			["hallway_armoury"] = GetLayoutsForType("hallway_armoury"),
+			["hallway_residential"] = GetLayoutsForType("hallway_residential"),
 			["hallway_residential_two"] = GetLayoutsForType("hallway_residential_two"),
-			--["hallway_shop"] = GetLayoutsForType("hallway_shop"), 
-			-- ["default"] = GetLayoutsForType("room_shop"), 
-			["room_armoury"] = GetLayoutsForType("room_armoury", nil, nil, ruins_areas), 
+			--["hallway_shop"] = GetLayoutsForType("hallway_shop"),
+			-- ["default"] = GetLayoutsForType("room_shop"),
+			["room_armoury"] = GetLayoutsForType("room_armoury", nil, nil, ruins_areas),
 			["room_armoury_two"] = GetLayoutsForType("room_armoury_two", nil, nil, ruins_areas),
-			["room_residential"] = GetLayoutsForType("room_residential", nil, nil, ruins_areas), 
+			["room_residential"] = GetLayoutsForType("room_residential", nil, nil, ruins_areas),
 			["room_residential_two"] = GetLayoutsForType("room_residential_two", nil, nil, ruins_areas),
 			["room_open"] = GetLayoutsForType("room_open", nil, nil, ruins_areas),
 			["pit_hallway_armoury"] = GetLayoutsForType("pit_hallway_armoury", nil, nil, ruins_areas),

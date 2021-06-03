@@ -568,7 +568,7 @@ local function OnNewTarget(inst, data)
         inst:RemoveEventCallback("newcombattarget", OnNewTarget)
         inst.engaged = true
 
-        --Ability first use timers 
+        --Ability first use timers
         inst.components.timer:StartTimer("sporebomb_cd", TUNING.TOADSTOOL_ABILITY_INTRO_CD)
         --inst.components.timer:StartTimer("mushroombomb_cd", inst.mushroombomb_cd)
         inst.components.timer:StartTimer("mushroomsprout_cd", inst.mushroomsprout_cd)

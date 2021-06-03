@@ -22,7 +22,7 @@ local SPIDERQUEEN_TAGS = {"spiderqueen"}
 function SpiderQueenBrain:CanPlantNest()
 	if self.inst:GetTimeAlive() > TUNING.SPIDERQUEEN_MINWANDERTIME then
 		local pt = Vector3(self.inst.Transform:GetWorldPosition())
-	    local ents = TheSim:FindEntities(pt.x,pt.y,pt.z, 4, BLOCKER_TAGS) 
+	    local ents = TheSim:FindEntities(pt.x,pt.y,pt.z, 4, BLOCKER_TAGS)
 		local min_spacing = 3
 
 	    for k, v in pairs(ents) do
@@ -58,17 +58,17 @@ function SpiderQueenBrain:OnStart()
         IfNode(function() return self:CanPlantNest() end, "can plant nest",
 			ActionNode(function() self.inst.sg:GoToState("makenest") end)),
 
-		IfNode(function() return self:CanSpawnChild() end, "needs follower", 
+		IfNode(function() return self:CanSpawnChild() end, "needs follower",
 			ActionNode(function() self.inst.sg:GoToState("poop_pre") return SUCCESS end, "make child" )),
-        
+
         --SPIDERQUEEN_MINDENSPACING
-        
+
         ChaseAndAttack(self.inst, 60, 40, nil, nil, nil, TUNING.WINONA_CATAPULT_MAX_RANGE + TUNING.MAX_WALKABLE_PLATFORM_RADIUS + TUNING.WINONA_CATAPULT_KEEP_TARGET_BUFFER + 1),
         Wander(self.inst),
     }, 2)
-    
+
     self.bt = BT(self.inst, root)
-    
+
 end
 
 return SpiderQueenBrain

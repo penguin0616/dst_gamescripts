@@ -7,11 +7,11 @@ end
 local function RemoveDurabilityMult(inst, equip)
    if equip ~= nil and equip.components.weapon ~= nil and equip.components.finiteuses ~= nil then
         equip.components.weapon.attackwearmultipliers:RemoveModifier(inst)
-    end 
+    end
 end
 
 local function AddEnemyDebuffFx(fx, target)
-    target:DoTaskInTime(math.random()*0.25, function() 
+    target:DoTaskInTime(math.random()*0.25, function()
         local x, y, z = target.Transform:GetWorldPosition()
         local fx = SpawnPrefab(fx)
         if fx then
@@ -39,7 +39,7 @@ local song_defs =
                         AddDurabilityMult(inst, data.item)
                     end
                 end, target)
-                
+
                 inst:ListenForEvent("unequip", function(target, data)
                     if data.eslot == EQUIPSLOTS.HANDS then
                         RemoveDurabilityMult(inst, data.item)
@@ -47,14 +47,14 @@ local song_defs =
                 end, target)
             end
         end,
-        
+
         ONDETACH = function(inst, target)
             if target.components.inventory then
                 local equip = target.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
                 RemoveDurabilityMult(inst, equip)
             end
         end,
-        
+
         ATTACH_FX = "battlesong_attach",
         LOOP_FX = "battlesong_durability_fx",
         DETACH_FX = "battlesong_detach",
@@ -65,7 +65,7 @@ local song_defs =
     {
         ONAPPLY = function(inst, target)
             if target.components.health then
-                inst:ListenForEvent("onattackother", function(attacker, data) 
+                inst:ListenForEvent("onattackother", function(attacker, data)
                     if target:HasTag("battlesinger") then
                         target.components.health:DoDelta(TUNING.BATTLESONG_HEALTHGAIN_DELTA_SINGER)
                     else
@@ -85,7 +85,7 @@ local song_defs =
     {
         ONAPPLY = function(inst, target)
             if target.components.sanity then
-                inst:ListenForEvent("onattackother", function(attacker, data) 
+                inst:ListenForEvent("onattackother", function(attacker, data)
                     target.components.sanity:DoDelta(TUNING.BATTLESONG_SANITYGAIN_DELTA)
                 end, target)
             end
@@ -104,13 +104,13 @@ local song_defs =
                 target.components.sanity.neg_aura_modifiers:SetModifier(inst, TUNING.BATTLESONG_NEG_SANITY_AURA_MOD)
             end
         end,
-        
-        ONDETACH = function(inst, target) 
+
+        ONDETACH = function(inst, target)
             if target.components.sanity ~= nil then
                 target.components.sanity.neg_aura_modifiers:RemoveModifier(inst)
             end
         end,
-        
+
         ATTACH_FX = "battlesong_attach",
         LOOP_FX = "battlesong_sanityaura_fx",
         DETACH_FX = "battlesong_detach",
@@ -124,13 +124,13 @@ local song_defs =
                 target.components.health.externalfiredamagemultipliers:SetModifier(inst, TUNING.BATTLESONG_FIRE_RESIST_MOD)
             end
         end,
-        
-        ONDETACH = function(inst, target) 
+
+        ONDETACH = function(inst, target)
             if target.components.health ~= nil then
                 target.components.health.externalfiredamagemultipliers:RemoveModifier(inst)
             end
         end,
-        
+
         ATTACH_FX = "battlesong_attach",
         LOOP_FX = "battlesong_fireresistance_fx",
         DETACH_FX = "battlesong_detach",

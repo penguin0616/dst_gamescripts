@@ -134,7 +134,7 @@ function LoadingWidget:KeepAlive(auto_increment)
         self.vig:SetTint(1, 1, 1, fade_sq)
 
         local time = GetTime()
-        local time_delta = time - self.step_time 
+        local time_delta = time - self.step_time
         local NEXT_STATE = 1.0
         if time_delta > NEXT_STATE or auto_increment then
             if self.elipse_state == 0 then

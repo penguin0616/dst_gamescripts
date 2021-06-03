@@ -27,7 +27,7 @@ local assets =
     Asset("ANIM", "anim/lightning.zip"),
 
     Asset("SOUND", "sound/forest_stream.fsb"),
-    Asset("SOUND", "sound/amb_stream.fsb"),    
+    Asset("SOUND", "sound/amb_stream.fsb"),
     Asset("SOUND", "sound/turnoftides_music.fsb"),
     Asset("SOUND", "sound/turnoftides_amb.fsb"),
 
@@ -161,11 +161,11 @@ local assets =
     Asset("IMAGE", "images/lunacy_over_lunacy_over0037.tex"),
     Asset("IMAGE", "images/lunacy_over_lunacy_over0038.tex"),
     Asset("IMAGE", "images/lunacy_over_lunacy_over0039.tex"),
-    Asset("IMAGE", "images/lunacy_over_lunacy_over0040.tex"),    
-    Asset("IMAGE", "images/lunacy_over_lunacy_over0041.tex"),    
-    Asset("IMAGE", "images/lunacy_over_lunacy_over0042.tex"),    
-    Asset("IMAGE", "images/lunacy_over_lunacy_over0043.tex"),    
-    Asset("IMAGE", "images/lunacy_over_lunacy_over0044.tex"),  
+    Asset("IMAGE", "images/lunacy_over_lunacy_over0040.tex"),
+    Asset("IMAGE", "images/lunacy_over_lunacy_over0041.tex"),
+    Asset("IMAGE", "images/lunacy_over_lunacy_over0042.tex"),
+    Asset("IMAGE", "images/lunacy_over_lunacy_over0043.tex"),
+    Asset("IMAGE", "images/lunacy_over_lunacy_over0044.tex"),
 
     Asset("ATLAS", "images/lunacy_over_lunacy_over0001.xml"),
     Asset("ATLAS", "images/lunacy_over_lunacy_over0002.xml"),
@@ -206,11 +206,11 @@ local assets =
     Asset("ATLAS", "images/lunacy_over_lunacy_over0037.xml"),
     Asset("ATLAS", "images/lunacy_over_lunacy_over0038.xml"),
     Asset("ATLAS", "images/lunacy_over_lunacy_over0039.xml"),
-    Asset("ATLAS", "images/lunacy_over_lunacy_over0040.xml"),    
-    Asset("ATLAS", "images/lunacy_over_lunacy_over0041.xml"),    
-    Asset("ATLAS", "images/lunacy_over_lunacy_over0042.xml"),    
-    Asset("ATLAS", "images/lunacy_over_lunacy_over0043.xml"),    
-    Asset("ATLAS", "images/lunacy_over_lunacy_over0044.xml"),          
+    Asset("ATLAS", "images/lunacy_over_lunacy_over0040.xml"),
+    Asset("ATLAS", "images/lunacy_over_lunacy_over0041.xml"),
+    Asset("ATLAS", "images/lunacy_over_lunacy_over0042.xml"),
+    Asset("ATLAS", "images/lunacy_over_lunacy_over0043.xml"),
+    Asset("ATLAS", "images/lunacy_over_lunacy_over0044.xml"),
 }
 
 local prefabs =
@@ -250,11 +250,11 @@ local prefabs =
     "teleportato_box",
     "teleportato_crank",
     "teleportato_potato",
-    "pond", 
-    "marsh_tree", 
-    "marsh_bush", 
+    "pond",
+    "marsh_tree",
+    "marsh_bush",
     "burnt_marsh_bush",
-    "reeds", 
+    "reeds",
     "mist",
     "snow",
     "rain",
@@ -372,7 +372,7 @@ local prefabs =
 	"moon_altar_rock_glass",
 	"moon_altar_rock_seed",
     "carrat_planted",
-    "hermitcrab",	
+    "hermitcrab",
 	"hermithouse_construction1",
 
 	-- fish
@@ -483,7 +483,7 @@ local function common_postinit(inst)
         inst:AddComponent("wavemanager")
         inst:AddComponent("moonstormlightningmanager")
         inst.Map:SetTransparentOcean(true)
-    end   
+    end
 end
 
 local function master_postinit(inst)
@@ -533,9 +533,11 @@ local function master_postinit(inst)
     if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
         inst:AddComponent("gingerbreadhunter")
     end
-    
+
     inst:AddComponent("feasts")
-    
+
+    inst:AddComponent("carnivalevent")
+
     inst:AddComponent("yotc_raceprizemanager")
     inst:AddComponent("yotb_stagemanager")
 

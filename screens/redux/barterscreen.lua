@@ -106,7 +106,7 @@ function BarterScreen:_BuildDialog()
                 end
             end
         }
-        
+
         if self.owned_count > 1 then
             go_dupe_btn = {
                 text = STRINGS.UI.BARTERSCREEN.COMMERCE_GRIND_DUPES,
@@ -146,7 +146,7 @@ function BarterScreen:_BuildDialog()
                         },
                         {
                             text=STRINGS.UI.BARTERSCREEN.CANCEL,
-                            cb = function() 
+                            cb = function()
                                 TheFrontEnd:PopScreen()
                             end
                         },
@@ -161,7 +161,7 @@ function BarterScreen:_BuildDialog()
         go_btn,
         {
             text=STRINGS.UI.BARTERSCREEN.CANCEL,
-            cb = function() 
+            cb = function()
                 self:_OnCancel()
             end
         },
@@ -181,7 +181,7 @@ function BarterScreen:_BuildDialog()
         buttons = {
             {
                 text = STRINGS.UI.BARTERSCREEN.OK,
-                cb = function() 
+                cb = function()
                     self:_OnCancel()
                 end
             },
@@ -201,7 +201,7 @@ function BarterScreen:_BuildDialog()
     dialog.illustration.doodad_image = dialog.illustration:AddChild(TEMPLATES.DoodadCounter(self.doodad_value))
 	dialog.illustration.doodad_image:SetPosition(illustration_spacing * doodad_sign, 0)
 
-	dialog.illustration.item_image = dialog.illustration:AddChild(AccountItemFrame()) 
+	dialog.illustration.item_image = dialog.illustration:AddChild(AccountItemFrame())
 	dialog.illustration.item_image:SetStyle_Normal()
 	dialog.illustration.item_image:SetScale(1.65)
 	dialog.illustration.item_image:SetItem(self.item_key)
@@ -241,11 +241,11 @@ function BarterScreen:_BarterComplete(success, status, sounds)
 end
 
 function BarterScreen:OnControl(control, down)
-    if BarterScreen._base.OnControl(self,control, down) then 
-        return true 
+    if BarterScreen._base.OnControl(self,control, down) then
+        return true
     end
-    
-    if TheInput:ControllerAttached() and control == CONTROL_CANCEL and not down then    
+
+    if TheInput:ControllerAttached() and control == CONTROL_CANCEL and not down then
         self:_OnCancel()
     end
 end

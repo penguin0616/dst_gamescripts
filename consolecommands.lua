@@ -305,7 +305,7 @@ end
 -- Some helper shortcut functions
 function c_freecrafting()
     local player = ConsoleCommandPlayer()
-	player.components.builder:GiveAllRecipes() 
+	player.components.builder:GiveAllRecipes()
 	player:PushEvent("techlevelchange")
 end
 
@@ -701,7 +701,7 @@ function c_find(prefab, radius, inst)
     local ents = TheSim:FindEntities(x,y,z, radius)
     for k,v in pairs(ents) do
         if v ~= inst and v.prefab == prefab then
-            if not founddistsq or inst:GetDistanceSqToInst(v) < founddistsq then 
+            if not founddistsq or inst:GetDistanceSqToInst(v) < founddistsq then
                 found = v
                 founddistsq = inst:GetDistanceSqToInst(v)
             end
@@ -863,7 +863,7 @@ end
 
 function c_summondeerclops()
     local player = ConsoleCommandPlayer()
-    if player then 
+    if player then
         TheWorld.components.deerclopsspawner:SummonMonster(player)
     end
 end
@@ -871,7 +871,7 @@ end
 function c_summonbearger()
     local player = ConsoleCommandPlayer()
     print("Summoning bearger for player ", player)
-    if player then 
+    if player then
         TheWorld.components.beargerspawner:SummonMonster(player)
     end
 end
@@ -905,7 +905,7 @@ function c_groundtype()
     local index, table = ConsoleCommandPlayer():GetCurrentTileType()
     print("Ground type is ", index)
 
-    for k,v in pairs(table) do 
+    for k,v in pairs(table) do
         print(k,v)
     end
 end
@@ -1271,10 +1271,10 @@ function c_makeboat()
 
 	inst = SpawnPrefab("lantern")
 	inst.Transform:SetPosition(x - 3.25, y, z)
-	
+
 	inst = SpawnPrefab("oceanfishingrod")
 	inst.Transform:SetPosition(x - 3.25, y, z + 1.25)
-	
+
 end
 
 function c_makecrabboat()
@@ -1283,8 +1283,8 @@ function c_makecrabboat()
     local inst = SpawnPrefab("boat")
     inst.Transform:SetPosition(x, y, z)
 
-    inst = SpawnPrefab("oar")    
-    inst.Transform:SetPosition(x + 1, y, z - 2)        
+    inst = SpawnPrefab("oar")
+    inst.Transform:SetPosition(x + 1, y, z - 2)
 
     inst = SpawnPrefab("oar_driftwood")
     inst.Transform:SetPosition(x + 1, y, z - 1.25)
@@ -1300,7 +1300,7 @@ function c_makecrabboat()
 
     inst = SpawnPrefab("boards")
     inst.Transform:SetPosition(x+1, y, z + 1.25)
-    inst.components.stackable:SetStackSize(10)    
+    inst.components.stackable:SetStackSize(10)
 
 
 
@@ -1326,7 +1326,7 @@ function c_makecrabboat()
     inst = SpawnPrefab("purplegem")
     inst.Transform:SetPosition(x - 3.25, y, z)
     inst.components.stackable:SetStackSize(9)
-    
+
 end
 
 function c_makeboatspiral()
@@ -1347,8 +1347,8 @@ function c_makeboatspiral()
         meat_dried = {5, 5, 5},
         boatpatch = 3,
         torch = 4,
-        log = {20, 20}, 
-        boards = {10, 10}, 
+        log = {20, 20},
+        boards = {10, 10},
 		lantern = 1,
         goldnugget = {5,5},
         rocks = {20,20},
@@ -1362,7 +1362,7 @@ function c_makeboatspiral()
     for prefab, stacks in pairs(items) do
 		stacks = type(stacks) == "table" and stacks or {stacks}
 		for _, count in pairs(stacks) do
-			for i = 1, count, 1 do            
+			for i = 1, count, 1 do
 				local inst = DebugSpawn(prefab)
 				if inst ~= nil then
 
@@ -1404,7 +1404,7 @@ function c_dumpentities()
 	local first = true
 
 	local total = 0
-    for k,v in pairs(Ents) do        
+    for k,v in pairs(Ents) do
         local name = v.prefab or (v.widget and v.widget.name) or v.name
 
         if(type(name) == "table") then
@@ -1416,7 +1416,7 @@ function c_dumpentities()
 			name = "NONAME"
 		end
         local count = ent_counts[name]
-        if count == nil then 
+        if count == nil then
             count = 1
         else
             count = count + 1
@@ -1433,7 +1433,7 @@ function c_dumpentities()
 
     table.sort(sorted_ent_counts, function(a,b) return a[2] > b[2] end )
 
-	
+
     print("Entity, Count")
     for k,v in ipairs(sorted_ent_counts) do
         print(v[1] .. ",", v[2])
@@ -1468,7 +1468,7 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
     -- Example file: notetable_dsmaintheme
 
     song = song or require("notetable_dsmaintheme")
-    
+
 	if song == nil or type(song) ~= "table" then
 		print("Error: Invalid 'notes' table")
 		return false, "INVALID_NOTES_TABLE"
@@ -1483,7 +1483,7 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
 		singingshell_octave4 = 49, -- middle C
 		singingshell_octave5 = 61,
     }
-    
+
     local allowed_semitone_range = { lower = 37, upper = 72 }
 
 	local semitone_to_shell = {}
@@ -1501,13 +1501,13 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
 	end
 
     --
-    
+
     if out_of_range_mode ~= "AUTO_TRANSPOSE" and out_of_range_mode ~= "OMIT" and out_of_range_mode ~= "TRUNCATE" and out_of_range_mode ~= "TERMINATE" then
         out_of_range_mode = "AUTO_TRANSPOSE"
     end
 
     --
-    
+
     startpos = startpos or ConsoleWorldPosition()
 
 	placementfn = placementfn or function(currentpos, multiplier)
@@ -1518,12 +1518,12 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
 	spacing_multiplier = spacing_multiplier or 1
 
     --
-    
+
     local shells_to_spawn = {}
 
 	local spawning_pos = startpos
     local spawned_shells = {}
-    
+
     local lowest_semitone = allowed_semitone_range.upper
     local highest_semitone = allowed_semitone_range.lower
 
@@ -1558,7 +1558,7 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
 				-- Assume type is number
 				semitone = note
             end
-            
+
             if semitone >= 0 then
                 lowest_semitone = math.min(semitone, lowest_semitone)
                 highest_semitone = math.max(semitone, highest_semitone)
@@ -1600,9 +1600,9 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
             end
 
             for i, shell_data in ipairs(shells_to_spawn) do
-                
+
                 local transposed_semitone = shell_data.semitone + auto_transposition_steps
-                
+
                 local shell_prefab = semitone_to_shell[transposed_semitone]
 
                 if shell_prefab == nil or shell_prefab == "" then
@@ -1656,7 +1656,7 @@ function c_shellsfromtable(song, startpos, placementfn, spacing_multiplier, out_
             end
         end
     end
-    
+
 	return spawned_shells
 end
 
@@ -1667,7 +1667,7 @@ function c_guitartab(songdata, overrides, dont_spawn_shells)
 	if overrides == nil or type(overrides) ~= "table" then
 		overrides = {}
     end
-    
+
     songdata = songdata == nil and "guitartab_dsmaintheme" or songdata
 
 	if type(songdata) == "string" then
@@ -1731,7 +1731,7 @@ function ResetControllersAndQuitGame()
 	Profile:SetValue("controls",{})
 	Profile:Save()
 	-- And quit the game, we want a restart
-	RequestShutdown()	
+	RequestShutdown()
     else
 	print("ResetControllersAndQuitGame can only be called from the frontend")
     end

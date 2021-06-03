@@ -37,8 +37,8 @@ local ViewCustomizationModalScreen = Class(Screen, function(self, leveldata)
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
 
     local buttons = nil
-    
-    if TheInput:ControllerAttached() then 
+
+    if TheInput:ControllerAttached() then
         -- Button is awkward to navigate to, so rely on CONTROL_CANCEL instead.
         buttons = {}
     else
@@ -132,7 +132,7 @@ local ViewCustomizationModalScreen = Class(Screen, function(self, leveldata)
         self.last_selected = self.tabs[1]
         self.last_selected:Select()
         self.last_selected:MoveToFront()
-        
+
         self.activesettingswidget = button_data[1].get_widget_fn()
         self.activesettingswidget:Show()
         self.activelevelcategory = button_data[1].levelcategory

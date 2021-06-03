@@ -63,10 +63,10 @@ local ValidFoodsToPick =
 {
     "berries",
     "cave_banana",
-    "carrot",   
+    "carrot",
     "red_cap",
     "blue_cap",
-    "green_cap", 
+    "green_cap",
 }
 
 local function ItemIsInList(item, list)
@@ -276,14 +276,14 @@ local function EquipWeapon(inst, weapon)
 end
 
 function MonkeyBrain:OnStart()
-    
+
     local root = PriorityNode(
     {
         WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
         WhileNode( function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
 
         --Monkeys go home when quakes start.
-        EventNode(self.inst, "gohome", 
+        EventNode(self.inst, "gohome",
             DoAction(self.inst, GoHome)),
 
         --In combat (with the player)... Should only ever use poop throwing.
@@ -294,7 +294,7 @@ function MonkeyBrain:OnStart()
                 ChaseAndAttack(self.inst, MAX_CHASE_TIME, MAX_CHASE_DIST),
             })),
         --Pick up poop to throw
-        WhileNode(function() return self.inst.components.combat.target and self.inst.components.combat.target:HasTag("player") and not self.inst.HasAmmo(self.inst) end, "Pick Up Poop", 
+        WhileNode(function() return self.inst.components.combat.target and self.inst.components.combat.target:HasTag("player") and not self.inst.HasAmmo(self.inst) end, "Pick Up Poop",
             DoAction(self.inst, GetPoop)),
         --Eat/ pick/ harvest foods.
         WhileNode(function() return self.inst.components.combat.target and self.inst.components.combat.target:HasTag("player") or self.inst.components.combat.target == nil end, "Should Eat",
@@ -314,14 +314,14 @@ function MonkeyBrain:OnStart()
                 ChaseAndAttack(self.inst, MAX_CHASE_TIME, MAX_CHASE_DIST),
             })),
 
-        
+
         --Following
-        WhileNode(function() return self.inst.harassplayer end, "Annoy Leader", 
+        WhileNode(function() return self.inst.harassplayer end, "Annoy Leader",
             DoAction(self.inst, AnnoyLeader)),
         Follow(self.inst, function() return self.inst.harassplayer end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST),
-        
+
         --Doing nothing
-        WhileNode(function() return self.inst.harassplayer  end, "Wander Around Leader", 
+        WhileNode(function() return self.inst.harassplayer  end, "Wander Around Leader",
             Wander(self.inst, function() if self.inst.harassplayer  then return self.inst.harassplayer:GetPosition() end end, MAX_FOLLOW_DIST)),
         WhileNode(function() return not self.inst.harassplayer and not self.inst.components.combat.target end,
         "Wander Around Home", Wander(self.inst, function() return self.inst.components.knownlocations:GetLocation("home") end, MAX_WANDER_DIST))

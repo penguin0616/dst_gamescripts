@@ -215,7 +215,7 @@ local function SetVariation(inst, variation)
     end
     if inst.variation ~= variation then
 		inst.variation = variation
-		
+
 		if variation ~= nil then
 			local new_symbol = "swap_boulder"..tostring(variation)
 			inst.AnimState:OverrideSymbol("swap_boulder", "swap_cavein_boulder", new_symbol)
@@ -598,7 +598,7 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
     inst.components.workable:SetWorkLeft(TUNING.CAVEIN_BOULDER_MINE)
 	inst.components.workable:SetOnFinishCallback(OnWorked)
-	
+
 	inst:AddComponent("submersible")
 	inst:AddComponent("symbolswapdata")
 	inst.components.symbolswapdata:SetData("swap_cavein_boulder", "swap_boulder")

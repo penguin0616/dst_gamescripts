@@ -13,7 +13,7 @@ AddTask("MoonIsland_IslandShards", {
         ["Empty_Cove"] = 2,
     },
     room_bg = GROUND.PEBBLEBEACH,
-    background_room = "Empty_Cove", 
+    background_room = "Empty_Cove",
 	cove_room_name = "Blank",
     make_loop = true,
 	crosslink_factor = 2,
@@ -34,7 +34,7 @@ AddTask("MoonIsland_Beach", {
         ["MoonIsland_Beach"] = 2,
     },
     room_bg = GROUND.PEBBLEBEACH,
-    background_room = "Empty_Cove", 
+    background_room = "Empty_Cove",
 	cove_room_name = "Empty_Cove",
 	cove_room_chance = 1,
     make_loop = true,
@@ -53,7 +53,7 @@ AddTask("MoonIsland_Forest", {
         ["MoonIsland_Forest"] = 3,
     },
     room_bg = GROUND.METEOR,
-    background_room = "Empty_Cove", 
+    background_room = "Empty_Cove",
 	cove_room_name = "Empty_Cove",
 	crosslink_factor = 1,
 	cove_room_chance = 1,
@@ -61,7 +61,7 @@ AddTask("MoonIsland_Forest", {
     colour={r=0.6,g=0.6,b=0.0,a=1},
 })
 
-AddTask("MoonIsland_Mine", { 
+AddTask("MoonIsland_Mine", {
 	locks={LOCKS.ISLAND_TIER4},
 	keys_given={},
 	region_id = "island1",
@@ -69,7 +69,7 @@ AddTask("MoonIsland_Mine", {
 	room_tags = {"RoadPoison", "moonhunt", "nohasslers", "lunacyarea", "not_mainland"},
 	room_choices={
 		["MoonIsland_Mine"] = 3,
-	},  
+	},
 	room_bg=GROUND.METEOR,
 	background_room = "Empty_Cove",
 	cove_room_name = "Empty_Cove",
@@ -90,7 +90,7 @@ AddTask("MoonIsland_Baths", {
 		["MoonIsland_Meadows"] = 2,
     },
     room_bg = GROUND.METEOR,
-    background_room = "MoonIsland_Meadows", 
+    background_room = "MoonIsland_Meadows",
 	cove_room_name = "Empty_Cove",
 	cove_room_chance = 1,
 	cove_room_max_edges = 2,

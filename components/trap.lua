@@ -97,7 +97,7 @@ function Trap:SetOnBaitedFn(fn)
     self.onbaited = fn
 end
 
-function Trap:IsFree() 
+function Trap:IsFree()
     return self.bait == nil
 end
 
@@ -211,7 +211,7 @@ function Trap:StartStarvation()
         self.target.components.perishable ~= nil and
         self.target.components.perishable.perishremainingtime or
         TUNING.TOTAL_DAY_TIME * 2
-    
+
     self.starvedlootprefabs =
         self.target.components.lootdropper ~= nil and
         self.target.components.lootdropper:GenerateLoot() or
@@ -332,8 +332,8 @@ function Trap:Harvest(doer)
                         loot.components.perishable:LongUpdate(timeintrap)
                     end
                     if loot.getcarratfromtrap then
-                        loot.getcarratfromtrap(loot,self.lootdata)       
-                        self.lootdata = nil                 
+                        loot.getcarratfromtrap(loot,self.lootdata)
+                        self.lootdata = nil
                     end
                 end
             end
@@ -410,7 +410,7 @@ function Trap:OnSave()
         souls = self.numsouls,
         starvedsouls = self.starvednumsouls,
         starvedloot = self.starvedlootprefabs,
-        lootdata = self.lootdata,        
+        lootdata = self.lootdata,
     },
     {
         self.bait ~= nil and self.bait.GUID or nil,
@@ -434,9 +434,9 @@ function Trap:OnLoad(data)
         (type(data.starvedloot) == "string" and { data.starvedloot }) or
         (type(data.starvedloot) == "table" and data.starvedloot) or
         { "spoiled_food" }
-    
+
     self.lootdata = data and data.lootdata
-    
+
     if self.isset then
         self:StartUpdate()
     elseif self.issprung then

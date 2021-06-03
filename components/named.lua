@@ -35,7 +35,7 @@ function Named:OnSave()
                 nameformat = self.nameformat
             }
         or nil
-end   
+end
 
 function Named:OnLoad(data)
     if data ~= nil and data.name ~= nil then

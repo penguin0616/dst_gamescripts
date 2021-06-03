@@ -40,7 +40,7 @@ function self:OnPostInit()
 
 	if IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
 		-- retrofitting code to support changing from halloweentrinkets as a bool to as a number
-		
+
 		-- figure out if there are enough trinkets already in the world (for worlds with last year's halloween trinkets still around)
 		if self.halloweentrinkets and self.halloweentrinkets ~= CURRENT_HALLOWEEN then
 			local count = 0
@@ -66,7 +66,7 @@ function self:OnPostInit()
 		if (not self.halloweentrinkets) or self.halloweentrinkets ~= CURRENT_HALLOWEEN then
 			self.halloweentrinkets = CURRENT_HALLOWEEN
 			local count = 0
-			
+
 			local trinkets = {}
 			for i = HALLOWEDNIGHTS_TINKET_START, HALLOWEDNIGHTS_TINKET_END do
 				table.insert(trinkets, "trinket_"..i)
@@ -75,9 +75,9 @@ function self:OnPostInit()
 			for i = 1, NUM_HALLOWEEN_ORNAMENTS do
 				table.insert(trinkets, "halloween_ornament_"..i)
 			end
-			
+
 			trinkets = shuffleArray(trinkets)
-			
+
 			for i,area in pairs(TheWorld.topology.nodes) do
 				if (i % 3) == 0 then
 					local points_x, points_y = TheWorld.Map:GetRandomPointsForSite(area.x, area.y, area.poly, 1)
@@ -106,7 +106,7 @@ end
 --------------------------------------------------------------------------
 
 function self:OnSave()
-	return 
+	return
 	{
 		halloweentrinkets = self.halloweentrinkets,
 		halloween_bats = self.halloween_bat_grave_spawn_chance,

@@ -103,7 +103,7 @@ function LootDropper:GetRecipeLoot(recipe)
 
     for k,v in ipairs(recipe.ingredients) do
         local amt = math.ceil( (v.amount * TUNING.HAMMER_LOOT_PERCENT) * percent)
-        if self.inst:HasTag("burnt") then 
+        if self.inst:HasTag("burnt") then
             amt = math.ceil( (v.amount * TUNING.BURNT_HAMMER_LOOT_PERCENT) * percent)
         end
         for n = 1, amt do

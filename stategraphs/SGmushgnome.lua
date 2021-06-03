@@ -1,6 +1,6 @@
 require("stategraphs/commonstates")
 
-local actionhandlers = 
+local actionhandlers =
 {
 }
 
@@ -32,9 +32,9 @@ local events =
         if not inst.components.health:IsDead() and not
                 inst.sg:HasStateTag("attack") and not
                 inst.sg:HasStateTag("waking") and not
-                inst.sg:HasStateTag("sleeping") and 
+                inst.sg:HasStateTag("sleeping") and
                 (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("frozen")) then
-            inst.sg:GoToState("hit") 
+            inst.sg:GoToState("hit")
         end
     end),
 
@@ -88,7 +88,7 @@ local states =
     State{
         name = "death",
         tags = {"busy"},
-        
+
         onenter = function(inst)
             inst.AnimState:PlayAnimation("death")
             inst.SoundEmitter:PlaySound("grotto/creatures/mushgnome/death")
@@ -107,13 +107,13 @@ local states =
             end),
         },
     },
-    
+
     State{
         name = "tree",
         onenter = function(inst)
             inst.AnimState:PlayAnimation("tree_idle", true)
         end,
-    },   
+    },
 
     State{
         name = "panic",
@@ -124,7 +124,7 @@ local states =
         end,
         onexit = function(inst)
         end,
-        
+
         onupdate = function(inst)
             if inst.components.burnable and not inst.components.burnable:IsBurning() and inst.sg.timeinstate > .3 then
                 inst.sg:GoToState("idle", "panic_post")
@@ -272,7 +272,7 @@ local states =
     State{
         name = "hit",
         tags = {"hit", "busy"},
-        
+
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hit")
@@ -295,12 +295,12 @@ local states =
     State{
         name = "spawn",
         tags = {"waking", "busy", "noattack"},
-        
+
         onenter = function(inst, start_anim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("spawn")
         end,
-        
+
         events =
         {
             EventHandler("animover", return_to_idle),
@@ -328,7 +328,7 @@ CommonStates.AddWalkStates(states,
         TimeEvent(17*FRAMES, function(inst) inst.Physics:Stop() end),
     },
     walktimeline =
-    { 
+    {
         TimeEvent(0*FRAMES, PlayFootstep ),
         TimeEvent(14*FRAMES, PlayFootstep ),
     },
@@ -357,7 +357,7 @@ CommonStates.AddSleepExStates(states,
         -- end),
     },
 
-    sleeptimeline = 
+    sleeptimeline =
     {
         TimeEvent(0*FRAMES, function(inst)
             inst.SoundEmitter:PlaySound("grotto/creatures/mushgnome/sleep_in")

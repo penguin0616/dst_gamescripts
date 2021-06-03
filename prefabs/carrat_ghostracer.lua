@@ -23,7 +23,7 @@ local shadowcarratsounds =
 	step = "dontstarve/creatures/mandrake/footstep",
 }
 
-local prefabs = 
+local prefabs =
 {
 	"shadow_puff",
 }
@@ -78,7 +78,7 @@ local function race_over_fn(inst)
 end
 
 local function OnMusicStateDirty(inst)
-    if inst._musicstate:value() > 0 then     
+    if inst._musicstate:value() > 0 then
         if inst._musicstate:value() == CARRAT_MUSIC_STATES.RACE then
             if ThePlayer:GetDistanceSqToInst(inst) < 20*20 then
                 ThePlayer:PushEvent("playracemusic")
@@ -122,7 +122,7 @@ local function fn()
     if not TheNet:IsDedicated() then
         inst:ListenForEvent("musicstatedirty", OnMusicStateDirty)
     end
-    
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

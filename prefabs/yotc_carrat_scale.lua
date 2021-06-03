@@ -6,12 +6,12 @@ local FOOD_LAUNCH_STARTHEIGHT = 1
 
 local function SetStat(inst, dir, stam, reac, speed)
     if dir and stam and reac and speed then
-        inst:DoTaskInTime(12 * FRAMES, function() inst.AnimState:OverrideSymbol("scale_rod_direction", "yotc_carrat_scale", "direction_"..dir) end)        
+        inst:DoTaskInTime(12 * FRAMES, function() inst.AnimState:OverrideSymbol("scale_rod_direction", "yotc_carrat_scale", "direction_"..dir) end)
         inst:DoTaskInTime(12 * FRAMES, function() inst.AnimState:OverrideSymbol("scale_rod_stamina", "yotc_carrat_scale", "stamina_"..stam) end)
         inst:DoTaskInTime(12 * FRAMES, function() inst.AnimState:OverrideSymbol("scale_rod_reaction", "yotc_carrat_scale", "reaction_"..reac) end)
         inst:DoTaskInTime(12 * FRAMES, function() inst.AnimState:OverrideSymbol("scale_rod_speed", "yotc_carrat_scale", "speed_"..speed) end)
     end
-    inst:DoTaskInTime(29 * FRAMES, function() 
+    inst:DoTaskInTime(29 * FRAMES, function()
         if inst.AnimState:IsCurrentAnimation("on_extend") then
             inst.SoundEmitter:PlaySound("yotc_2020/gym/scale/close")
         end
@@ -40,7 +40,7 @@ local function OnIgnite(inst)
     DefaultBurnFn(inst)
     if inst.rat then
         ejectitem(inst,inst.rat)
-    end 
+    end
 end
 
 local function OnExtinguish(inst)
@@ -79,9 +79,9 @@ local function ShouldAcceptItem(inst, item,giver)
             return true
         else
             giver.components.talker:Say(GetString(giver, "ANNOUNCE_WEAK_RAT"))
-        end        
+        end
     end
-end    
+end
 
 local function OnGetItemFromPlayer(inst, giver, item)
     if giver:HasTag("player") then
@@ -95,7 +95,7 @@ local function OnGetItem(inst, data, notrain)
         if item.prefab == "carrat" and not inst.components.burnable:IsBurning() then
             inst.rat = item
             item.gymscale = inst
-            --inst:PushEvent("ratupdate") 
+            --inst:PushEvent("ratupdate")
             inst.components.trader:Disable()
             item.OnRemoveFn = function() inst.OnRemoveItem(inst) end
             inst:ListenForEvent("removed", item.OnRemoveFn, item)
@@ -116,7 +116,7 @@ local function OnGetItem(inst, data, notrain)
             SetStat(inst,stats.direction,stats.stamina,stats.reaction,stats.speed)
 
             inst.SoundEmitter:PlaySound("yotc_2020/gym/scale/slide")
-            
+
             if item._color ~= nil then
                 inst.AnimState:OverrideSymbol("carrat_tail", "yotc_carrat_colour_swaps", item._color.."_carrat_tail")
                 inst.AnimState:OverrideSymbol("carrat_ear", "yotc_carrat_colour_swaps", item._color.."_carrat_ear")
@@ -156,7 +156,7 @@ local function OnLoseItem(inst, data)
         inst.rat.gymscale = nil
     end
     inst.rat = nil
-    --inst:PushEvent("ratupdate") 
+    --inst:PushEvent("ratupdate")
     inst.components.trader:Enable()
 
     SetStat(inst,5,5,5,5)
@@ -166,11 +166,11 @@ local function OnLoseItem(inst, data)
             inst.SoundEmitter:PlaySound("yotc_2020/gym/scale/close")
         end
     end)
-    
+
     inst.AnimState:PlayAnimation("off")
     inst.AnimState:PushAnimation("off_pst")
     inst.AnimState:PushAnimation("idle",true)
-    
+
     inst.AnimState:ClearOverrideSymbol("carrat_tail")
     inst.AnimState:ClearOverrideSymbol("carrat_ear")
     inst.AnimState:ClearOverrideSymbol("carrot_parts")
@@ -227,10 +227,10 @@ end
 
 local function OnSave(inst, data)
     data.rat_trainer_id = inst.rat_trainer_id
-    
+
     if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
-        data.burnt = true    
-    end    
+        data.burnt = true
+    end
 end
 
 local function OnLoad(inst, data)
@@ -252,14 +252,14 @@ local function getstatus(inst)
     if inst:HasTag("burnt") then
         return "BURNT"
     elseif inst.rat then
-        local stats = inst.rat.components.yotc_racestats   
-        if stats.direction >= 5 or 
+        local stats = inst.rat.components.yotc_racestats
+        if stats.direction >= 5 or
             stats.reaction >= 5 or
             stats.speed >= 5 or
             stats.stamina >= 5 then
 
             return "CARRAT_GOOD"
-        end        
+        end
         return "CARRAT"
     end
 end
@@ -279,11 +279,11 @@ local function TestForCarratIdle(inst)
                     elseif rand <= inst.rat.components.yotc_racestats.speed + inst.rat.components.yotc_racestats.direction + inst.rat.components.yotc_racestats.reaction then
                         stat = "reaction"
                     elseif rand <= inst.rat.components.yotc_racestats.speed + inst.rat.components.yotc_racestats.direction + inst.rat.components.yotc_racestats.reaction + inst.rat.components.yotc_racestats.stamina then
-                        stat = "stamina"   
-                    end                 
+                        stat = "stamina"
+                    end
                     inst.AnimState:PlayAnimation(stat)
                     inst.AnimState:PushAnimation("on_loop", true)
-                else                
+                else
                     inst.AnimState:PlayAnimation("on_loop", true)
                 end
             else
@@ -302,7 +302,7 @@ end
 
 local assets =
 {
-    Asset("ANIM", "anim/yotc_carrat_scale.zip"),        
+    Asset("ANIM", "anim/yotc_carrat_scale.zip"),
     Asset("ANIM", "anim/yotc_carrat_colour_swaps.zip"),
     Asset("ANIM", "anim/carrat_build.zip"),
     Asset("INV_IMAGE", "yotc_carrat_scale_item"),
@@ -359,7 +359,7 @@ local function fn()
     inst.components.trader:SetAcceptTest(ShouldAcceptItem)
     inst.components.trader.onaccept = OnGetItemFromPlayer
     inst.components.trader.deleteitemonaccept = false
-    
+
     inst:AddComponent("inventory")
     inst.components.inventory.maxslots = 1
 
@@ -379,7 +379,7 @@ local function fn()
     MakeSmallPropagator(inst)
     inst.components.burnable:SetOnBurntFn(OnBurnt)
     inst.components.burnable:SetOnIgniteFn(OnIgnite)
-    inst.components.burnable:SetOnExtinguishFn(OnExtinguish)    
+    inst.components.burnable:SetOnExtinguishFn(OnExtinguish)
 
     inst:ListenForEvent("onbuilt", onbuilt)
     inst.updateratstats = updateratstats
@@ -394,15 +394,15 @@ end
 
 return Prefab("yotc_carrat_scale", fn, assets, prefabs ),
         MakeDeployableKitItem(
-            "yotc_carrat_scale_item", 
-            "yotc_carrat_scale", 
-            "yotc_carrat_scale_item", 
-            "yotc_carrat_scale_item", 
-            "idle", 
-            {Asset("ANIM", "anim/yotc_carrat_scale_item.zip")}, 
-            {size = "med", scale = 0.77}, 
-            nil, 
-            {fuelvalue = TUNING.LARGE_FUEL}, 
+            "yotc_carrat_scale_item",
+            "yotc_carrat_scale",
+            "yotc_carrat_scale_item",
+            "yotc_carrat_scale_item",
+            "idle",
+            {Asset("ANIM", "anim/yotc_carrat_scale_item.zip")},
+            {size = "med", scale = 0.77},
+            nil,
+            {fuelvalue = TUNING.LARGE_FUEL},
             carratrace_common.deployable_data
         ),
        MakePlacer("yotc_carrat_scale_item_placer", "yotc_carrat_scale", "yotc_carrat_scale", "placer")

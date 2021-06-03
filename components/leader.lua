@@ -14,7 +14,7 @@ local Leader = Class(function(self, inst)
     self.inst = inst
     self.followers = {}
     self.numfollowers = 0
-    
+
 	--self.loyaltyeffectiveness = nil
 
     inst:ListenForEvent("newcombattarget", OnNewCombatTarget)
@@ -154,7 +154,7 @@ function Leader:OnSave()
     for k, v in pairs(self.followers) do
         table.insert(followers, k.GUID)
     end
-    
+
     if #followers > 0 then
         return { followers = followers }, followers
     end

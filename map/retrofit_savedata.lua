@@ -7,7 +7,7 @@ local function TryToAddLayout(name, num, isvalidtile, savedata, world_map, valid
 	local map_width = savedata.map.width
 	local map_height = savedata.map.height
 
-	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset) 
+	local add_fn = {fn=function(prefab, points_x, points_y, current_pos_idx, entitiesOut, width, height, prefab_list, prefab_data, rand_offset)
 			local x = (points_x[current_pos_idx] - width/2.0)*TILE_SCALE
 			local y = (points_y[current_pos_idx] - height/2.0)*TILE_SCALE
 			x = math.floor(x*100)/100.0
@@ -95,7 +95,7 @@ local function FixNoBrinePools(savedata, world_map)
 		end
 		return true
 	end
-	
+
 	local map_width = savedata.map.width
 	local map_height = savedata.map.height
 
@@ -121,7 +121,7 @@ local function FixNoBrinePools(savedata, world_map)
 			print("Retrofitting for Return Of Them: Brine Pools Fixup - Added " .. tostring(num_layouts_added) .. " of 20 Brine Pools (".. tostring(num_cookiecutterspawners) .. " 'cookiecutter_spawner' and " .. tostring(num_saltstacks) .. " 'saltstack' prefabs)")
 
 			local extra_brine_pools_required = 8 - math.floor(num_layouts_added/2) -- /2 because the retrofitted layouts are so small
-			if extra_brine_pools_required > 0 then 
+			if extra_brine_pools_required > 0 then
 				local function isopenoceantile(tile) return tile == GROUND.OCEAN_ROUGH or tile == GROUND.OCEAN_SWELL end
 				print("Retrofitting for Return Of Them: Brine Pools Fixup - Brine pools are not dence enough, adding some more...")
 				local num_extras_added = TryToAddLayout("BrinePool1", extra_brine_pools_required, isopenoceantile, savedata, world_map, NoBoatCheck).num_added
@@ -148,7 +148,7 @@ local function FixNoBrinePools(savedata, world_map)
 	else
 		print ("Retrofitting for Return Of Them: Brine Pools Fixup - World has enough brine pools.")
 	end
-	
+
 end
 
 local function RepopulateNodeIdTileMap(world_map, savedata)
@@ -156,7 +156,7 @@ local function RepopulateNodeIdTileMap(world_map, savedata)
 		local node = savedata.map.topology.nodes[i]
 		world_map:RepopulateNodeIdTileMap(i, node.x, node.y, node.poly)
 	end
-	
+
 	print ("Retrofitting for Return of Them: Forgotten Knowledge - Added Node Id's to the world.")
 end
 
@@ -203,7 +203,7 @@ local function DoRetrofitting(savedata, world_map)
 		require("map/caves_retrofit_land").ReturnOfThemRetrofitting_AcientArchives(TheWorld.Map, savedata)
 		dirty = true
 	end
-	
+
 	if dirty then
 		savedata.map.tiles = world_map:GetStringEncode()
 		savedata.map.nodeidtilemap = world_map:GetNodeIdTileMapStringEncode()

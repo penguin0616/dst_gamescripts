@@ -110,12 +110,12 @@ local REDHAUNTTARGET_MUST_TAGS = { "canlight" }
 local REDHAUNTTARGET_CANT_TAGS = { "fire", "burnt", "INLIMBO" }
 local function onhauntred(inst, haunter)
     if math.random() <= TUNING.HAUNT_CHANCE_RARE then
-        local x, y, z = inst.Transform:GetWorldPosition() 
+        local x, y, z = inst.Transform:GetWorldPosition()
         local ents = TheSim:FindEntities(x, y, z, 6, REDHAUNTTARGET_MUST_TAGS, REDHAUNTTARGET_CANT_TAGS)
         if #ents > 0 then
             for i, v in ipairs(ents) do
                 if v:IsValid() and not v:IsInLimbo() then
-                    onattack_red(inst, haunter, v, true) 
+                    onattack_red(inst, haunter, v, true)
                 end
             end
             inst.components.hauntable.hauntvalue = TUNING.HAUNT_LARGE
@@ -167,12 +167,12 @@ local BLUEHAUNTTARGET_MUST_TAGS = { "freezable" }
 local BLUEHAUNTTARGET_CANT_TAGS = { "INLIMBO" }
 local function onhauntblue(inst, haunter)
     if math.random() <= TUNING.HAUNT_CHANCE_RARE then
-        local x, y, z = inst.Transform:GetWorldPosition() 
+        local x, y, z = inst.Transform:GetWorldPosition()
         local ents = TheSim:FindEntities(x, y, z, 6, BLUEHAUNTTARGET_MUST_TAGS, BLUEHAUNTTARGET_CANT_TAGS)
         if #ents > 0 then
             for i, v in ipairs(ents) do
                 if v:IsValid() and not v:IsInLimbo() then
-                    onattack_blue(inst, haunter, v, true) 
+                    onattack_blue(inst, haunter, v, true)
                 end
             end
             inst.components.hauntable.hauntvalue = TUNING.HAUNT_LARGE
@@ -282,7 +282,7 @@ local function teleport_start(teleportee, staff, caster, loctarget, target_in_oc
     local locpos = teleportee.components.teleportedoverride ~= nil and teleportee.components.teleportedoverride:GetDestPosition()
 				or loctarget == nil and getrandomposition(caster, teleportee, target_in_ocean)
 				or loctarget.teletopos ~= nil and loctarget:teletopos()
-				or loctarget:GetPosition() 
+				or loctarget:GetPosition()
 
     if teleportee.components.locomotor ~= nil then
         teleportee.components.locomotor:StopMoving()
@@ -362,7 +362,7 @@ local function onhauntpurple(inst)
     if math.random() <= TUNING.HAUNT_CHANCE_RARE then
         local target = FindEntity(inst, 20, nil, TELEPORT_MUST_TAGS, TELEPORT_CANT_TAGS)
         if target ~= nil then
-            teleport_func(inst, target) 
+            teleport_func(inst, target)
             inst.components.hauntable.hauntvalue = TUNING.HAUNT_LARGE
             return true
         end
@@ -376,7 +376,7 @@ local function onblink(staff, pos, caster)
     if caster.components.sanity ~= nil then
         caster.components.sanity:DoDelta(-TUNING.SANITY_MED)
     end
-    staff.components.finiteuses:Use(1) 
+    staff.components.finiteuses:Use(1)
 end
 
 local function NoHoles(pt)
@@ -602,7 +602,7 @@ local function onhauntgreen(inst)
     if math.random() <= TUNING.HAUNT_CHANCE_RARE then
         local target = FindEntity(inst, 20, HasRecipe, nil, GREENHAUNT_CANT_TAGS)
         if target ~= nil then
-            destroystructure(inst, target) 
+            destroystructure(inst, target)
             SpawnPrefab("collapse_small").Transform:SetPosition(target.Transform:GetWorldPosition())
             inst.components.hauntable.hauntvalue = TUNING.HAUNT_LARGE
             return true

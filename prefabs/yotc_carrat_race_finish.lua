@@ -20,7 +20,7 @@ local prefabs =
 local sounds =
 {
 	onbuilt = "yotc_2020/gym/finish/place",
-	finishrace = "yotc_2020/gym/finish/active_LP", 
+	finishrace = "yotc_2020/gym/finish/active_LP",
 }
 
 local WIN_ANIM_MIN_TIME = 3.5
@@ -93,10 +93,10 @@ local function OnFinishRace(inst, data)
 
 		if data ~= nil and data.racer ~= nil then
 			local color = data.racer._color
-			
+
 			if color ~= nil then
 				currentlightcol = color
-				
+
 				inst.AnimState:OverrideSymbol("fx_glow", "yotc_carrat_race_finish_colour_swap", color.."_fx_glow")
 				inst.AnimState:OverrideSymbol("fx_spark_specks", "yotc_carrat_race_finish_colour_swap", color.."_fx_spark_specks")
 			else
@@ -110,12 +110,12 @@ local function OnFinishRace(inst, data)
 			end
 		end
 		inst._light.Light:SetColour(carratrace_common.GetLightColor(currentlightcol or DEFAULT_LIGHT_COLOR):Get())
-		
+
 		inst.AnimState:PlayAnimation("active_pre")
 		inst.AnimState:PushAnimation("active_loop", true)
 
 		inst:ListenForEvent("animover", Spin)
-		
+
 		inst.SoundEmitter:PlaySound(sounds.finishrace, "finish_lp")
 	end
 end
@@ -168,7 +168,7 @@ local function getdesc(inst, viewer)
 			return subfmt(GetDescription(viewer, inst, "SOMEONE_ELSE_WON"), { winner = inst._winner.name })
 		end
 	end
-	
+
 	return GetDescription(viewer, inst) or nil
 end
 
@@ -277,7 +277,7 @@ local function fn()
 	inst:ListenForEvent("onbuilt", onbuilt)
 	inst:ListenForEvent("yotc_racer_at_checkpoint", OnFinishRace)
 	inst:ListenForEvent("yotc_race_over", OnRaceOver)
-	
+
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
 
@@ -291,4 +291,3 @@ return Prefab("yotc_carrat_race_finish", fn, assets, prefabs),
 			return carratrace_common.PlacerPostInit_AddCarpetAndPlacerRing(inst, "yotc_carrat_race_deploy_finish")
 		end),
 	Prefab("yotc_carrat_race_finish_light", light_fn)
-	

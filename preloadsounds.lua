@@ -80,7 +80,7 @@ local MainSounds =
     "yotc_2020.fsb",
 
     "yotb_2021.fev",
-    "yotb_2021.fsb",    
+    "yotb_2021.fsb",
 
     "hookline_2.fev",
     "hookline_2.fsb",
@@ -94,7 +94,7 @@ local MainSounds =
     "grotto.fev",
     "grotto_sfx.fsb",
     "grotto_amb.fsb",
-    
+
     "moonstorm.fev",
     "moonstorm.fsb",
 
@@ -115,12 +115,16 @@ local MainSounds =
 	"wx78.fsb",
 	"wurt.fsb",
 	"walter.fsb",
-	
+
 	"wes.fev",
     "wes.fsb",
 
 	"wintersfeast2019.fev",
 	"wintersfeast2019.fsb",
+
+	"summerevent.fev",
+	"summerevent.fsb",
+	"summerevent_music.fsb",
 }
 
 function PreloadSoundList(list)

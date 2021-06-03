@@ -9,7 +9,7 @@ function Oar:Row(doer, pos)
 	local doer_x, doer_y, doer_z = doer.Transform:GetWorldPosition()
 	local platform = TheWorld.Map:GetPlatformAtPoint(doer_x, doer_z)
 	if platform == nil or not platform:IsValid() then return end
-	
+
 	local boat_physics = platform.components.boatphysics
 	if boat_physics == nil then return end
 

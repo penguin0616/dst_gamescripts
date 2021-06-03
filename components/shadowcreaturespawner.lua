@@ -109,13 +109,13 @@ UpdateSpawn = function(player, params)
 
             if _map:IsOceanAtPoint(spawn_x, 0, spawn_z) then
                 _failed_ocean_spawn_attempts = 0
-                
+
                 local ent = SpawnOceanShadowCreature(player)
                 ent.Transform:SetPosition(spawn_x, 0, spawn_z)
                 StartTracking(player, params, ent)
             else
                 _failed_ocean_spawn_attempts = _failed_ocean_spawn_attempts + 1
-                
+
                 if _failed_ocean_spawn_attempts >= OCEAN_SPAWN_ATTEMPTS then
                     if _map:IsPassableAtPoint(spawn_x, 0, spawn_z, false, false) then
                         _failed_ocean_spawn_attempts = 0
@@ -128,7 +128,7 @@ UpdateSpawn = function(player, params)
             end
         else
             _failed_ocean_spawn_attempts = 0
-            
+
             local angle = math.random() * 2 * PI
             x = x + 15 * math.cos(angle)
             z = z - 15 * math.sin(angle)
@@ -153,7 +153,7 @@ UpdateSpawn = function(player, params)
                 table.insert(toremove, v)
             end
         end
-        
+
         for i = #toremove, params.targetpop + 1, -1 do
             local ent = table.remove(toremove, math.random(i))
             ent.persists = false
@@ -261,7 +261,7 @@ local function UpdatePopulation(player, params)
         end
 
         --Reschedule population update
-        params.poptask = player:DoTaskInTime(is_insanity_mode and (TUNING.SANITYMONSTERS_POP_CHANGE_INTERVAL + TUNING.SANITYMONSTERS_POP_CHANGE_VARIANCE * math.random()) 
+        params.poptask = player:DoTaskInTime(is_insanity_mode and (TUNING.SANITYMONSTERS_POP_CHANGE_INTERVAL + TUNING.SANITYMONSTERS_POP_CHANGE_VARIANCE * math.random())
 												or (NON_INSANITY_MODE_DESPAWN_INTERVAL + NON_INSANITY_MODE_DESPAWN_VARIANCE * math.random())
 											, UpdatePopulation, params)
     end

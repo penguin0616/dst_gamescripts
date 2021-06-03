@@ -91,21 +91,21 @@ function Rider:Mount(target, instant)
 
     self.inst.AnimState:SetBank("wilsonbeefalo")
     if target.ApplyBuildOverrides ~= nil then
-        target:ApplyBuildOverrides(self.inst.AnimState)  
+        target:ApplyBuildOverrides(self.inst.AnimState)
         if target.components.skinner_beefalo then
             local clothing_names = target.components.skinner_beefalo:GetClothing()
             SetBeefaloSkinsOnAnim( self.inst.AnimState, clothing_names, target.GUID )
         end
     end
-    
+
     if saddler then
         if saddler.skin_guid then --indicates a skinned saddle
             self.inst.AnimState:OverrideItemSkinSymbol("swap_saddle", saddler.swapbuild, saddler.swapsymbol, saddler.skin_guid, "saddle_basic" )
         else
-            self.inst.AnimState:OverrideSymbol("swap_saddle", saddler.swapbuild, saddler.swapsymbol)        
+            self.inst.AnimState:OverrideSymbol("swap_saddle", saddler.swapbuild, saddler.swapsymbol)
         end
     end
-    
+
     self.inst.Transform:SetSixFaced()
 
     self.inst.sg:GoToState(instant and "idle" or "mount")

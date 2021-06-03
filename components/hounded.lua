@@ -140,13 +140,13 @@ local function CalcPlayerAttackSize(player)
         or _spawndata.attack_levels.crazy.numspawns()
 end
 
-local function ClearWaterImunity()	
+local function ClearWaterImunity()
 	for GUID,data in pairs(_targetableplayers) do
 		_targetableplayers[GUID] = nil
 	end
 end
 
-local function PlanNextAttack()	
+local function PlanNextAttack()
 	ClearWaterImunity()
 	if _timetoattack > 0 then
 		-- we came in through a savegame that already had an attack scheduled
@@ -363,7 +363,7 @@ local function SummonSpawn(pt)
     end
 end
 
-local function ReleaseSpawn(target)	
+local function ReleaseSpawn(target)
 	if not _targetableplayers[target.GUID] or _targetableplayers[target.GUID] == "land" then
 	    local spawn = SummonSpawn(target:GetPosition())
 	    if spawn ~= nil then
@@ -412,7 +412,7 @@ local function OnPlayerLeft(src, player)
             table.remove(_activeplayers, i)
             return
         end
-    end    
+    end
 end
 
 local function OnPauseHounded(src, data)
@@ -427,21 +427,21 @@ local function OnUnpauseHounded(src, data)
     end
 end
 
-local function CheckForWaterImunity(player)	
-	
+local function CheckForWaterImunity(player)
+
     if not _targetableplayers[player.GUID] then
-		-- block hound wave targeting when target is on water.. for now. 
+		-- block hound wave targeting when target is on water.. for now.
 		local x,y,z = player.Transform:GetWorldPosition()
-		if TheWorld.Map:IsVisualGroundAtPoint(x,y,z) then			
+		if TheWorld.Map:IsVisualGroundAtPoint(x,y,z) then
 			_targetableplayers[player.GUID] = "land"
-		else			
+		else
 			_targetableplayers[player.GUID] = "water"
 		end
     end
 end
 
-local function CheckForWaterImunityAllPlayers()	
-	for i, v in ipairs(_activeplayers) do 
+local function CheckForWaterImunityAllPlayers()
+	for i, v in ipairs(_activeplayers) do
 		CheckForWaterImunity(v)
 	end
 end
@@ -557,7 +557,7 @@ end
 -- TheWorld.components.hounded:ForceNextWave()
 function self:ForceNextWave()
 	PlanNextAttack()
-	_timetoattack = 0	
+	_timetoattack = 0
 	self:OnUpdate(1)
 end
 
@@ -567,10 +567,10 @@ end
 
 function self:DoWarningSpeech()
     --for i, v in ipairs(_activeplayers) do
-    for GUID,data in pairs(_targetableplayers) do	    	
+    for GUID,data in pairs(_targetableplayers) do
     	if data == "land" then
-    		local player = Ents[GUID]    		
-        	player:DoTaskInTime(math.random() * 2, _DoWarningSpeech)        
+    		local player = Ents[GUID]
+        	player:DoTaskInTime(math.random() * 2, _DoWarningSpeech)
     	end
     end
 end
@@ -580,7 +580,7 @@ function self:DoWarningSound()
     	if _timetoattack <= v.time or _timetoattack == nil then
     		for GUID,data in pairs(_targetableplayers)do
     			local player = Ents[GUID]
-    			if player and data == "land" then    	
+    			if player and data == "land" then
     				player:PushEvent("houndwarning",HOUNDWARNINGTYPE[v.sound])
     			end
     		end
@@ -658,7 +658,7 @@ function self:OnUpdate(dt)
 		_timetonextwarningsound = 0
 	end
 
-    if _warning then        	
+    if _warning then
 
         _timetonextwarningsound	= _timetonextwarningsound - dt
 

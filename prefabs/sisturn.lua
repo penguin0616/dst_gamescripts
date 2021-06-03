@@ -69,7 +69,7 @@ local function update_idle_anim(inst)
     if inst:HasTag("burnt") then
 		return
 	end
-	
+
 	if IsFullOfFlowers(inst) then
 		inst.AnimState:PlayAnimation("on_pre")
 		inst.AnimState:PushAnimation("on", true)

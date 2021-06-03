@@ -54,7 +54,7 @@ local _activeplayers = {}
 local function AllowedToAttack()
 	--print("Deerclopsspawner allowed to attack?", #_activeplayers, TheWorld.state.cycles, _attackoffseason, TheWorld.state.season)
     return  #_activeplayers > 0 and
-            TheWorld.state.cycles > TUNING.NO_BOSS_TIME and  
+            TheWorld.state.cycles > TUNING.NO_BOSS_TIME and
                 (_attackoffseason or
                 TheWorld.state.season == "winter")
 end
@@ -62,7 +62,7 @@ end
 local function IsEligible(player)
 	local area = player.components.areaaware
 	return TheWorld.Map:IsVisualGroundAtPoint(player.Transform:GetWorldPosition())
-			and area:GetCurrentArea() ~= nil 
+			and area:GetCurrentArea() ~= nil
 			and not area:CurrentlyInTag("nohasslers")
 end
 
@@ -87,11 +87,11 @@ local function PickAttackTarget()
 	local numStructures = 0
 	local loopCount = 0
 	local player = nil
-	while (numStructures <  STRUCTURES_PER_SPAWN) and (loopCount < (#playerlist + 3)) do 
+	while (numStructures <  STRUCTURES_PER_SPAWN) and (loopCount < (#playerlist + 3)) do
 		player = playerlist[1 + (loopCount % #playerlist)]
 
 		local x,y,z = player.Transform:GetWorldPosition()
-		local ents = TheSim:FindEntities(x,y,z, STRUCTURE_DIST, ATTACK_MUST_TAGS) 
+		local ents = TheSim:FindEntities(x,y,z, STRUCTURE_DIST, ATTACK_MUST_TAGS)
 
 		--print("Deerclopsspawner loop", #ents, loopCount, player)
 		numStructures = #ents
@@ -288,7 +288,7 @@ local function _DoWarningSpeech(player)
 end
 
 function self:DoWarningSpeech(_targetplayer)
-    for i, v in ipairs(_activeplayers) do 
+    for i, v in ipairs(_activeplayers) do
         if v == _targetplayer or v:IsNear(_targetplayer, HASSLER_SPAWN_DIST * 2) then
             v:DoTaskInTime(math.random() * 2, _DoWarningSpeech)
         end

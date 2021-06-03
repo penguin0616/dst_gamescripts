@@ -15,7 +15,7 @@ function Thief:StealItem(victim, itemtosteal, attack)
         if attack then
             self.inst.components.combat:DoAttack(victim)
         end
-      
+
         if item then
             local direction = Vector3(self.inst.Transform:GetWorldPosition()) - Vector3(victim.Transform:GetWorldPosition() )
             victim.components.inventory:DropItem(item, false, direction:GetNormalized())
@@ -28,7 +28,7 @@ function Thief:StealItem(victim, itemtosteal, attack)
         local item = itemtosteal or victim.components.container:FindItem(function(item) return not item:HasTag("nosteal") end)
 
         if attack then
-            if victim.components.equippable and victim.components.inventoryitem and victim.components.inventoryitem.owner  then 
+            if victim.components.equippable and victim.components.inventoryitem and victim.components.inventoryitem.owner  then
                 self.inst.components.combat:DoAttack(victim.components.inventoryitem.owner)
             end
         end

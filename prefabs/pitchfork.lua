@@ -89,7 +89,7 @@ local function normal()
     return inst
 end
 
---local function onequipgold(inst, owner) 
+--local function onequipgold(inst, owner)
     --owner.AnimState:OverrideSymbol("swap_object", "swap_goldenpitchfork", "swap_goldenpitchfork")
     --owner.SoundEmitter:PlaySound("dontstarve/wilson/equip_item_gold")
     --owner.AnimState:Show("ARM_carry")

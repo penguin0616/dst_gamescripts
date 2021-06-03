@@ -180,7 +180,7 @@ function Floater:OnNoLongerLandedServer()
         self.inst:PushEvent("floater_stopfloating")
         self._is_landed:set(false)
         self.showing_effect = false
-        
+
         self:SwitchToDefaultAnim()
     end
 end

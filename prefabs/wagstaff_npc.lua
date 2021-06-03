@@ -1,10 +1,10 @@
 local assets =
 {
-    Asset("ANIM", "anim/player_actions.zip"), 
+    Asset("ANIM", "anim/player_actions.zip"),
     Asset("ANIM", "anim/player_idles.zip"),
     Asset("ANIM", "anim/player_emote_extra.zip"),
     Asset("ANIM", "anim/wagstaff_face_swap.zip"),
-    Asset("ANIM", "anim/hat_gogglesnormal.zip"),   
+    Asset("ANIM", "anim/hat_gogglesnormal.zip"),
     Asset("ANIM", "anim/wagstaff.zip"),
 }
 
@@ -93,7 +93,7 @@ local function OnRefuseItem(inst, item)
 end
 
 local function OnAttacked(inst, data)
-  
+
 end
 
 local function OnNewTarget(inst, data)
@@ -109,7 +109,7 @@ local function KeepTargetFn(inst, target)
 end
 
 local function OnItemGet(inst, data)
-	
+
 end
 
 local function OnItemLose(inst, data)
@@ -125,7 +125,7 @@ end
 local function WaitForTool(inst)
     inst:PushEvent("waitfortool")
 
-    local tools = 
+    local tools =
     {
         "wagstaff_tool_1",
         "wagstaff_tool_2",
@@ -141,7 +141,7 @@ local function WaitForTool(inst)
     local str = getline(STRINGS["WAGSTAFF_NPC_WANT_TOOL_"..rand])
     inst.components.talker:Say(str)
     inst:PushEvent("talk_experiment")
-    inst.need_tool_task = inst:DoPeriodicTask(5,function() 
+    inst.need_tool_task = inst:DoPeriodicTask(5,function()
         inst.components.talker:Say(str)
         inst:PushEvent("talk_experiment")
     end)
@@ -176,7 +176,7 @@ local function giveblueprints(inst,player, recipe)
     if player and player.components.timer:TimerExists("wagstaff_npc_blueprints") then
         return
     end
-    if player and not player.components.builder:KnowsRecipe(recipe) then 
+    if player and not player.components.builder:KnowsRecipe(recipe) then
         local blueprint = SpawnPrefab(recipe .. "_blueprint")
         local x,y,z = inst.Transform:GetWorldPosition()
         local angle
@@ -205,7 +205,7 @@ local function waypointadvance(inst, txt)
     else
         inst.busy = inst.busy and inst.busy + 1 or 1
         inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_NO_WAY1))
-        inst:DoTaskInTime(4,function() 
+        inst:DoTaskInTime(4,function()
             inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_NO_WAY2))
             inst:DoTaskInTime(2,function()
                 inst:erode(2,nil,true)
@@ -221,7 +221,7 @@ local function doblueprintcheck(inst)
             giveblueprints(inst,v,"moonstorm_goggleshat")
             giveblueprints(inst,v,"moon_device_construction1")
             if not v.components.timer:TimerExists("wagstaff_npc_blueprints") then
-                v.components.timer:StartTimer("wagstaff_npc_blueprints",120)            
+                v.components.timer:StartTimer("wagstaff_npc_blueprints",120)
             end
         end
     end
@@ -252,9 +252,9 @@ local function onplayernear(inst,player)
         end
     else
         if not TheWorld.components.moonstormmanager.metplayers[player.userid] then
-            
+
             TheWorld.components.moonstormmanager:AddMetplayer(player.userid)
-            
+
             inst:PushEvent("talk")
             inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_MEETING))
 
@@ -298,12 +298,12 @@ local function ontimerdone(inst, data)
         if inst.hunt_count and inst.hunt_count == 0 and TheWorld.components.moonstormmanager then
             local pos = TheWorld.components.moonstormmanager:FindUnmetCharacter()
             if pos then
-                inst.components.knownlocations:RememberLocation("clue",pos)                
+                inst.components.knownlocations:RememberLocation("clue",pos)
             else
                 inst.components.timer:StartTimer("wagstaff_movetime",10 + (math.random()*5))
             end
         end
-    end    
+    end
 end
 --[[
 local function OnSleep(inst)
@@ -321,7 +321,7 @@ local function erode(inst,time, erodein, removewhendone)
         while ticks * tick_time < time_to_erode do
             local erode_amount = ticks * tick_time / time_to_erode
             if erodein then
-                erode_amount = 1 - erode_amount 
+                erode_amount = 1 - erode_amount
             end
             inst.AnimState:SetErosionParams(erode_amount, SHADER_CUTOFF_HEIGHT, -1.0)
             ticks = ticks + 1
@@ -331,7 +331,7 @@ local function erode(inst,time, erodein, removewhendone)
             if erodein then
                 truetest = 1- erode_amount
                 falsetest = erode_amount
-            end 
+            end
 
             if inst.shadow == true then
                 if math.random() < truetest then
@@ -396,7 +396,7 @@ end
 local max_range = TUNING.MAX_INDICATOR_RANGE * 1.5
 
 local function ShouldTrackfn(inst, viewer)
-    return inst:IsValid() and 
+    return inst:IsValid() and
         viewer:HasTag("wagstaff_detector") and
         inst:IsNear(inst, max_range) and
         not inst.entity:FrustumCheck() and
@@ -412,7 +412,7 @@ local function teleport_override_fn(inst)
         pt = pt + offset
     end
 
-    return pt 
+    return pt
 end
 
 local function OnTeleported(inst)
@@ -420,10 +420,10 @@ local function OnTeleported(inst)
         local pos = inst:GetPosition()
         local radius = 1
         local theta = (inst.Transform:GetRotation() + 90)*DEGREES
-        local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))                    
+        local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
         inst.static.Transform:SetPosition(pos.x+ offset.x, pos.y, pos.z+ offset.z)
       --  inst:FacePoint(static:GetPosition())
-        inst:DoTaskInTime(0,function() 
+        inst:DoTaskInTime(0,function()
             inst:ForceFacePoint(pos.x, pos.y, pos.z)
         end)
     end
@@ -465,7 +465,7 @@ local function fn()
     inst.Light:SetRadius(1)
     inst.Light:SetColour(255/255, 200/255, 200/255) --179/255, 107/255)
     inst.Light:Enable(true)
-    
+
     --trader (from trader component) added to pristine state for optimization
     inst:AddTag("trader")
 
@@ -557,18 +557,18 @@ local function fn()
             local msm = TheWorld.components.moonstormmanager
             if inst.hunt_stage == "experiment" and msm then
                 inst.failtasks = true
-                msm:StopExperimentTasks()     
+                msm:StopExperimentTasks()
                 if msm.spawn_wagstaff_test_task then
                     msm.spawn_wagstaff_test_task:Cancel()
                     msm.spawn_wagstaff_test_task = nil
-                end           
+                end
                 inst.static:DoTaskInTime(5,function() inst.static.components.health:Kill() end)
             end
 
             inst:DoTaskInTime(4,function()
                 inst:PushEvent("talk")
                 inst.components.talker:Say(getline(STRINGS.WAGSTAFF_GOTTAGO2))
-                inst:erode(3,nil,true)       
+                inst:erode(3,nil,true)
             end)
 
             -- STOP MORE WAGSTAFFS FROM SPAWNING FOR A WHILE
@@ -590,10 +590,10 @@ local function fn()
         end
     end, TheWorld)
     inst:ListenForEvent("teleported", OnTeleported)
-    
+
 
     inst.AnimState:SetErosionParams(0, SHADER_CUTOFF_HEIGHT, -1.0)
-   
+
     return inst
 end
 

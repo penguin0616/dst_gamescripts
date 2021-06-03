@@ -225,13 +225,13 @@ end
 local function MooseLeftClickPicker(inst, target)
     return target ~= nil
         and target ~= inst
-        and (   (   inst.replica.combat:CanTarget(target) and 
+        and (   (   inst.replica.combat:CanTarget(target) and
 					(not target:HasTag("player") or inst.components.playercontroller:IsControlPressed(CONTROL_FORCE_ATTACK)) and
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.ATTACK }, target, nil)
                 )
 				or
-				(   target:HasTag("walkingplank") and 
-					target:HasTag("interactable") and 
+				(   target:HasTag("walkingplank") and
+					target:HasTag("interactable") and
 					target:HasTag("plank_extended") and
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.MOUNT_PLANK }, target, nil)
                 )

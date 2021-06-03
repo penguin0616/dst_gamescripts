@@ -149,14 +149,14 @@ SetSharedLootTable( 'rock_petrified_tree_tall',
 })
 SetSharedLootTable( 'rock_petrified_tree_short',
 {
-    {'rocks',  1.00},    
+    {'rocks',  1.00},
     {'rocks',  0.35},
     {'nitre',  0.25},
     {'flint',  0.25},
 })
 SetSharedLootTable( 'rock_petrified_tree_old',
 {
-    {'rocks',  0.50},    
+    {'rocks',  0.50},
     {'rocks',  0.50},
     {'nitre',  0.25},
     {'flint',  0.75},
@@ -223,7 +223,7 @@ local function onload(inst, data)
         inst.treeSize = data.treeSize
         --V2C: Note that this will reset workleft as well
         --     Gotta change this if you set workable to savestate
-        setPetrifiedTreeSize(inst) 
+        setPetrifiedTreeSize(inst)
     end
 end
 
@@ -270,7 +270,7 @@ local function baserock_fn(bank, build, anim, icon, tag, multcolour)
         return inst
     end
 
-    inst:AddComponent("lootdropper") 
+    inst:AddComponent("lootdropper")
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
@@ -456,7 +456,7 @@ local function rock_petrified_tree_common(size)
     if not size then
         local rand = math.random()
         if rand > 0.90 then
-            size = 4 
+            size = 4
         elseif rand > 0.60 then
             size = 1
         elseif rand < 0.30 then
@@ -510,4 +510,4 @@ return Prefab("rock1", rock1_fn, rock1_assets, prefabs),
     Prefab("rock_petrified_tree_med", rock_petrified_tree_med, rock_petrified_tree_assets, prefabs),
     Prefab("rock_petrified_tree_tall", rock_petrified_tree_tall, rock_petrified_tree_assets, prefabs),
     Prefab("rock_petrified_tree_short", rock_petrified_tree_short, rock_petrified_tree_assets, prefabs),
-    Prefab("rock_petrified_tree_old", rock_petrified_tree_old, rock_petrified_tree_assets, prefabs)    
+    Prefab("rock_petrified_tree_old", rock_petrified_tree_old, rock_petrified_tree_assets, prefabs)

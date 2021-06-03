@@ -40,7 +40,7 @@ local function DropBundle(inst, items)
             items[i].components.stackable.stacksize = v[2]
         end
     end
-    
+
     local bundle = SpawnPrefab(IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) and "gift" or "bundle")
     bundle.components.unwrappable:WrapItems(items)
     for i, v in ipairs(items) do
