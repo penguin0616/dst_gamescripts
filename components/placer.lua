@@ -15,6 +15,8 @@ local Placer = Class(function(self, inst)
     self.linked = {}
     self.offset = 1
 
+	self.hide_inv_icon = true
+
     self.override_build_point_fn = nil
     self.override_testfn = nil
 end)
@@ -88,7 +90,7 @@ function Placer:OnUpdate(dt)
         self.mouse_blocked = false
     end
 
-    if self.builder ~= nil and was_mouse_blocked ~= self.mouse_blocked then
+    if self.builder ~= nil and was_mouse_blocked ~= self.mouse_blocked and self.hide_inv_icon then
 		self.builder:PushEvent(self.mouse_blocked and "onplacerhidden" or "onplacershown")
 	end
 

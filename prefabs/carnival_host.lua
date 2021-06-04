@@ -79,9 +79,9 @@ local function OnSummonedToPlaza(inst, plaza)
 	local cur_home = inst.components.knownlocations:GetLocation("home")
 	local new_home = plaza:GetPosition()
 
-	if cur_home == new_home then
-		return false, "CARNIVAL_HOST_HERE"
-	end
+	--if cur_home == new_home and inst:GetDistanceSqToPoint(new_home.x, new_home.y, new_home.z) <= MAX_WANDER_DIST_SQ then
+	--	return false, "CARNIVAL_HOST_HERE"
+	--end
 
 	if inst.summoncooldown ~= nil or inst:HasTag("busy") or inst.sg:HasStateTag("flight") then
 		return false, "HOSTBUSY"
@@ -89,16 +89,17 @@ local function OnSummonedToPlaza(inst, plaza)
 
     inst.hassold_plaza = true
 	inst.hasbeento_plaza = true
+	AddPlazaWares(inst)
 
 	inst.components.knownlocations:RememberLocation("home", new_home)
 	inst.summoncooldown = inst:DoTaskInTime(15, SummonCooldownTask)
 
 	if inst:IsAsleep() then
-		inst.sg:GoToState("land")
+		inst.sg:GoToState("glide")
 	else
-		if cur_home == nil or inst:GetDistanceSqToPoint(new_home.x, new_home.y, new_home.z) > MAX_WANDER_DIST_SQ then
+		--if cur_home == nil or inst:GetDistanceSqToPoint(new_home.x, new_home.y, new_home.z) > MAX_WANDER_DIST_SQ then
 			inst.sg:GoToState("flyaway")
-		end
+		--end
 	end
 
 	return true
@@ -107,6 +108,7 @@ end
 local function OnFirstPlazaBuiltImpl(inst, plaza)
     inst.hassold_plaza = true
 	inst.hasbeento_plaza = true
+	AddPlazaWares(inst)
 	inst:RemoveEventCallback("ms_carnivalplazabuilt", inst.OnFirstPlazaBuilt, TheWorld)
 	OnSummonedToPlaza(inst, plaza)
 end
@@ -127,6 +129,13 @@ local function OnLoad(inst, data)
 	end
 	if inst.hasbeento_plaza then
 		inst:RemoveEventCallback("ms_carnivalplazabuilt", inst.OnFirstPlazaBuilt, TheWorld)
+	end
+end
+
+local function OnLoadPostPass(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+	if y > 0.1 then
+		inst.Transform:SetPosition(x, 0, z)
 	end
 end
 
@@ -195,6 +204,7 @@ local function fn()
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
+    inst.OnLoadPostPass = OnLoadPostPass
 
 	if not IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
 		inst:DoTaskInTime(0, inst.Remove)

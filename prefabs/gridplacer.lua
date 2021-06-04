@@ -33,6 +33,7 @@ local function fn()
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
 
     inst:AddComponent("placer")
+	inst.components.placer.hide_inv_icon = false
     inst.components.placer.snap_to_tile = true
     inst.components.placer.oncanbuild = OnCanBuild
     inst.components.placer.oncannotbuild = OnCannotBuild
@@ -92,6 +93,7 @@ local function farmablesoil_fn()
     inst.AnimState:Hide("Layer 3")
 
     inst:AddComponent("placer")
+	inst.components.placer.hide_inv_icon = false
     inst.components.placer.snap_to_tile = true
     inst.components.placer.oncanbuild = OnCanBuild
     inst.components.placer.oncannotbuild = OnCannotBuild
