@@ -55,6 +55,7 @@ local function fn()
 
     inst:AddTag("character")
     inst:AddTag("_named")
+    inst:AddTag("NOBLOCK")
 
     inst.entity:SetPristine()
 

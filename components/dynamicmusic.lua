@@ -601,6 +601,7 @@ local function StopSoundEmitter()
         inst:StopWatchingWorldState("phase", OnPhase)
         inst:StopWatchingWorldState("season", OnSeason)
         _isday = nil
+		_busytheme = nil
         _isbusydirty = nil
         _extendtime = nil
         _soundemitter = nil

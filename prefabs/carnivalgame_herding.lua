@@ -282,7 +282,7 @@ end
 local function OnLaunchLanded(inst)
 	local x, y, z = inst.Transform:GetWorldPosition()
 
-	if not TheWorld.Map:FindVisualNodeAtPoint(x, y, z) then
+	if not TheWorld.Map:IsVisualGroundAtPoint(x, y, z) then
 		SinkEntity(inst)
 		return
 	end

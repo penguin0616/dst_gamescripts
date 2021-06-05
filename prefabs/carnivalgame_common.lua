@@ -134,7 +134,7 @@ local function OnDeactivateMinigame(inst)
 end
 
 local function UpdateGameMusic(inst)
-	if ThePlayer:IsNear(inst, TUNING.CARNIVAL_THEME_MUSIC_RANGE) then
+	if ThePlayer ~= nil and ThePlayer:IsValid() and ThePlayer:IsNear(inst, TUNING.CARNIVAL_THEME_MUSIC_RANGE) then
 		ThePlayer:PushEvent("playcarnivalmusic", not inst:HasTag("trader"))
 	end
 end

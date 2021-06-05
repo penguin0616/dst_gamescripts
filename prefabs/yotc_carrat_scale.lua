@@ -253,14 +253,7 @@ local function getstatus(inst)
         return "BURNT"
     elseif inst.rat then
         local stats = inst.rat.components.yotc_racestats
-        if stats.direction >= 5 or
-            stats.reaction >= 5 or
-            stats.speed >= 5 or
-            stats.stamina >= 5 then
-
-            return "CARRAT_GOOD"
-        end
-        return "CARRAT"
+        return (stats ~= nil and (stats.direction >= 5 or stats.reaction >= 5 or stats.speed >= 5 or stats.stamina >= 5)) and "CARRAT_GOOD" or "CARRAT"
     end
 end
 

@@ -1064,7 +1064,7 @@ local function geyserfn()
     inst.SoundEmitter:SetParameter("burble", "intensity", 0)
     inst.burblestarttime = GetTime()
     inst.burbleintensity = inst:DoPeriodicTask(1,function()
-            local totalcasttime = TUNING.CRABKING_CAST_TIME - (inst.crab and inst.crab:IsValid() and math.floor(inst.crab.countgems(inst.crab).yellow/2 or 0))
+            local totalcasttime = TUNING.CRABKING_CAST_TIME - ((inst.crab and inst.crab:IsValid()) and math.floor(inst.crab.countgems(inst.crab).yellow/2) or 0)
             local intensity = math.min(1,( GetTime() - inst.burblestarttime ) / totalcasttime)
 
             inst.SoundEmitter:SetParameter("burble", "intensity", intensity)

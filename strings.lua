@@ -5763,6 +5763,7 @@ STRINGS.UI =
             SCULPTING = "Put stone on the wheel to create a Sculpting Block!",
 
         },
+        NEEDCARNIVAL_HOSTSHOP_PLAZA = "Purchase the Cawnival Sapling to unlock!",
         CANTRESEARCH = "Some things are unknowable.",
         DEFAULT = "Classic",
     },

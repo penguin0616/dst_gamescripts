@@ -162,7 +162,7 @@ function WalkablePlatform:CollectEntitiesOnPlatform(check_previous_objects)
     if check_previous_objects then
         for entity in pairs(self.previous_objects_on_platform) do
             if entity:IsValid() then
-                if not entity.components.embarker and not self.new_objects_on_platform[entity] then
+                if not entity.components.embarker and not self.new_objects_on_platform[entity] and entity.entity:GetParent() == nil then
                     local entity_x, entity_y, entity_z = entity.Transform:GetWorldPosition()
                     local delta_x, delta_z = entity_x - platform_x, entity_z - platform_z
                     local dist_sq = delta_x * delta_x + delta_z * delta_z

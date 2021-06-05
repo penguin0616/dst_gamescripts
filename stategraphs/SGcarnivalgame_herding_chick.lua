@@ -82,11 +82,13 @@ local states =
         name = "turn_off",
 		tags = {"busy", "death"},
         onenter = function(inst)
-			inst.components.locomotor:StopMoving()
-			RemovePhysicsColliders(inst)
+			if inst:IsValid() then -- when a chick turns off over the water, they will be invalid
+				inst.components.locomotor:StopMoving()
+				RemovePhysicsColliders(inst)
 
-            inst.SoundEmitter:KillSound("active_loop")
-            inst.AnimState:PlayAnimation("lose")
+				inst.SoundEmitter:KillSound("active_loop")
+				inst.AnimState:PlayAnimation("lose")
+			end
         end,
 
         timeline =
