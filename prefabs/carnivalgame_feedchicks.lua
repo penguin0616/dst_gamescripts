@@ -71,8 +71,8 @@ local function CreateFloor(parent)
 	inst.AnimState:SetSortOrder(-2)
 
 	inst.entity:SetParent(parent.entity)
-	if inst.components.placer ~= nil then
-		inst.components.placer:LinkEntity(floor)
+	if parent.components.placer ~= nil then
+		parent.components.placer:LinkEntity(inst, 0.25)
 	end
 
 	inst:ListenForEvent("onbuilt", function() inst.AnimState:PlayAnimation("place") inst.AnimState:PushAnimation("idle", false) end, parent)

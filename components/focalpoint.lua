@@ -62,6 +62,15 @@ function FocalPoint:StopFocusSource(source, id)
 	end
 end
 
+function FocalPoint:RemoveAllFocusSources(no_snap)
+	for source, sourcetbl in pairs(self.targets) do
+		for id, params in pairs(sourcetbl) do
+			self:StopFocusSource(source, id)
+		end
+	end
+	self:Reset(no_snap)
+end
+
 -- deprecated, kept for backward compatibility
 function FocalPoint:PushTempFocus(target, minrange, maxrange, priority)
 	print("PushTempFocus is deprecated")

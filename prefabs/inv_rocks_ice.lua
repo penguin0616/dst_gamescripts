@@ -31,6 +31,7 @@ local function onperish(inst)
 		local x, y, z = inst.Transform:GetWorldPosition()
         TheWorld.components.farming_manager:AddSoilMoistureAtPoint(x, y, z, stacksize * TUNING.ICE_MELT_GROUND_MOISTURE_AMOUNT)
 
+		inst.persists = false
         inst.components.inventoryitem.canbepickedup = false
         inst.AnimState:PlayAnimation("melt")
         inst:ListenForEvent("animover", inst.Remove)

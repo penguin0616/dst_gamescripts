@@ -58,7 +58,7 @@ local function CreateFloorPart(parent, bank, anim, deploy_anim, offset, rot)
 	inst.entity:SetParent(parent.entity)
 
 	if parent.components.placer ~= nil then
-		parent.components.placer:LinkEntity(inst)
+		parent.components.placer:LinkEntity(inst, 0.25)
 	end
 
 	if offset ~= nil then

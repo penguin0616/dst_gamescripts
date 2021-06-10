@@ -197,6 +197,11 @@ local TERRAIN_FILTER=
 		quagmire_fern = OnlyAllow({GROUND.QUAGMIRE_PARKFIELD}),
 	}
 
+-- nothing can grow on these tiles:
+for terrain, tiles in pairs(TERRAIN_FILTER) do
+	table.insert(tiles, GROUND.ARCHIVE)
+end
+
 TERRAIN_FILTER.Print = function (filter)
 	local val = ""
 	for i,v in ipairs(filter) do

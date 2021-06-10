@@ -25,21 +25,11 @@ local function OnPickup(inst)
     inst.Light:Enable(false)
 end
 
-local FULL_LIGHTVALS =
-{
-    radius = 0.5,
-    falloff = .85,
-    intensity = 0.5,
-}
 local COLOUR_TINT = { 0.4, 0.2 }
 local MULT_TINT = { 0.7, 0.35 }
 local function UpdateLightState(inst)
     local was_on = inst.Light:IsEnabled()
     if not inst.components.container:IsEmpty() then
-        inst.Light:SetRadius(FULL_LIGHTVALS.radius)
-        inst.Light:SetFalloff(FULL_LIGHTVALS.falloff)
-        inst.Light:SetIntensity(FULL_LIGHTVALS.intensity)
-
         local item = inst.components.container:GetItemInSlot(1)
         local r = (item.prefab == MUSHTREE_SPORE_RED and 1) or 0
         local g = (item.prefab == MUSHTREE_SPORE_GREEN and 1) or 0
@@ -86,11 +76,10 @@ local function fn()
     inst.AnimState:PlayAnimation("idle")
     inst.AnimState:SetMultColour(.7, .7, .7, 1)
 
-    inst.Light:SetRadius(FULL_LIGHTVALS.radius)
-    inst.Light:SetFalloff(FULL_LIGHTVALS.falloff)
-    inst.Light:SetIntensity(FULL_LIGHTVALS.intensity)
-    inst.Light:SetColour(.65, .65, .5)
-    inst.Light:Enable(true)
+    inst.Light:SetRadius(0.5)
+    inst.Light:SetFalloff(0.85)
+    inst.Light:SetIntensity(0.5)
+    inst.Light:Enable(false)
 
     inst:AddTag("fulllighter")
     inst:AddTag("lightcontainer")

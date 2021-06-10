@@ -164,14 +164,14 @@ local SEASON_DYNRANGE_DAY = {
     autumn = .4,
     winter = .05,
     spring = .4,
-    summer = .65,
+    summer = .3,
 }
 
-local SEASON_DYNRANGE_NIGHT = {
+local SEASON_DYNRANGE_NIGHT = { -- dusk and night
     autumn = .25,
     winter = 0,
     spring = .25,
-    summer = .5,
+    summer = .2,
 }
 
 --------------------------------------------------------------------------
@@ -975,8 +975,9 @@ function self:GetDebugString()
         string.format("preciprate:(%2.2f of %2.2f)", preciprate, _peakprecipitationrate:value()),
         string.format("snowlevel:%2.2f", _snowlevel:value()),
         string.format("wetness:%2.2f(%s%2.2f)%s", _wetness:value(), wetrate > 0 and "+" or "", wetrate, _wet:value() and " WET" or ""),
+        string.format("light:%2.5f", CalculateLight()),
     }
-
+	
     if _ismastersim then
         table.insert(str, string.format("lightning:%2.2f", _nextlightningtime))
     end

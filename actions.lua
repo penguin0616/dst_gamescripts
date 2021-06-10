@@ -3096,8 +3096,10 @@ ACTIONS.BATHBOMB.fn = function(act)
     end
 
 ACTIONS.RAISE_SAIL.fn = function(act)     -- this name is backwards. "raising" in this case means making a full sail
-    act.target.components.mast:UnfurlSail()
-    return true
+	if act.target ~= nil and act.target.components.mast ~= nil then
+		act.target.components.mast:UnfurlSail()
+		return true
+	end
 end
 
 ACTIONS.RAISE_SAIL.stroverridefn = function(act)
@@ -3113,8 +3115,10 @@ ACTIONS.LOWER_SAIL.stroverridefn = function(act)
 end
 
 ACTIONS.LOWER_SAIL_BOOST.fn = function(act)
-    act.target.components.mast:AddSailFurler(act.doer, 10)
-    return true
+	if act.target ~= nil and act.target.components.mast ~= nil then
+		act.target.components.mast:AddSailFurler(act.doer, 10)
+		return true
+	end
 end
 
 local function GetLowerSailStr(act)

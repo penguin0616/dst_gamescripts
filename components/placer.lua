@@ -28,8 +28,11 @@ function Placer:SetBuilder(builder, recipe, invobject)
     self.inst:StartWallUpdatingComponent(self)
 end
 
-function Placer:LinkEntity(ent)
+function Placer:LinkEntity(ent, lightoverride)
     table.insert(self.linked, ent)
+	if lightoverride == nil or lightoverride > 0 then
+		ent.AnimState:SetLightOverride(lightoverride or 1)
+	end
 end
 
 function Placer:GetDeployAction()

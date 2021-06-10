@@ -189,7 +189,7 @@ end
 local FRUITFLYSPAWNER_MUST_TAGS = { "fruitflyspawner" }
 local function OnFruitFlySpawnerActive(data)
     local plant = data.plant
-    if plant:IsAsleep() or _worldsettingstimer:ActiveTimerExists(LORDFRUITFLY_TIMERNAME) or TheSim:FindFirstEntityWithTag("lordfruitfly") or (data.check_others == true and not plant:IsNearPlayer(15, true)) then
+    if not TUNING.SPAWN_LORDFRUITFLY or plant:IsAsleep() or _worldsettingstimer:ActiveTimerExists(LORDFRUITFLY_TIMERNAME) or TheSim:FindFirstEntityWithTag("lordfruitfly") or (data.check_others == true and not plant:IsNearPlayer(15, true)) then
         return
     end
     local x, y, z = plant.Transform:GetWorldPosition()

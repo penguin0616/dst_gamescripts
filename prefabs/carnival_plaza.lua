@@ -67,8 +67,13 @@ local function chop_down_tree(inst, chopper)
         inst.SoundEmitter:PlaySound("summerevent/plaza/fall")
     end
 
-	inst.components.activatable.inactive = false
+	if inst.components.activatable ~= nil then
+		inst.components.activatable.inactive = false
+	end
+
 	inst._choppeddown = true
+
+	inst:RemoveTag("shelter")
 
 	inst.persists = false
 	inst:DoTaskInTime(14*FRAMES, chop_down_tree_shake)
@@ -201,8 +206,8 @@ local function CreateFloor(parent)
 	inst.AnimState:SetSortOrder(-2)
 
 	inst.entity:SetParent(parent.entity)
-	if inst.components.placer ~= nil then
-		inst.components.placer:LinkEntity(floor)
+	if parent.components.placer ~= nil then
+		parent.components.placer:LinkEntity(inst, 0.25)
 	end
 
 	inst:ListenForEvent("onbuilt", function() inst.AnimState:PlayAnimation("place") inst.AnimState:PushAnimation("idle", false) end, parent)
@@ -332,6 +337,7 @@ local function fn()
 	inst:AddTag("carnival_plaza")
     inst:AddTag("structure")
 	inst:AddTag("carnivalgame_part")
+    inst:AddTag("shelter")
 
     MakeSnowCoveredPristine(inst)
 

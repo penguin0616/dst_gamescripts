@@ -68,8 +68,6 @@ local function TryBeginningMalbatrossSpawns()
         end
 
         _shuffled_shoals_for_spawning = _shuffled_shoals_for_spawning or shuffledKeys(_fishshoals)
-
-        self.inst:StartUpdatingComponent(self)
     end
 end
 
@@ -200,9 +198,6 @@ end
 function self:OnLoad(data)
     if data._time_until_spawn then
         _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, math.min(data._time_until_spawn, TUNING.MALBATROSS_SPAWNDELAY_BASE + TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
-    elseif data._timerfinished then
-        _worldsettingstimer:StopTimer(MALBATROSS_TIMERNAME)
-        OnMalbatrossTimerDone()
     end
     _firstspawn = data._firstspawn
 end
@@ -210,6 +205,10 @@ end
 function self:LoadPostPass(newents, data)
     if data.activeguid ~= nil and newents[data.activeguid] ~= nil then
         _activemalbatross = newents[data.activeguid].entity
+    end
+    if data._timerfinished then
+        _worldsettingstimer:StopTimer(MALBATROSS_TIMERNAME)
+        OnMalbatrossTimerDone()
     end
 end
 
