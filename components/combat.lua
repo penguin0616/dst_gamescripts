@@ -991,25 +991,6 @@ function Combat:CanBeAttacked(attacker)
     return self.inst.replica.combat:CanBeAttacked(attacker)
 end
 
-function Combat:OnSave()
-    if self.target ~= nil and
-        self.target:IsValid() and --This is possible because invalid targets may be released by brain polling rather than events
-        self.target.persists and --Pets and such don't save normally, so references would not work on them
-        not (self.inst:HasTag("player") or
-            self.target:HasTag("player")) then
-        return { target = self.target.GUID }, { self.target.GUID }
-    end
-end
-
-function Combat:LoadPostPass(newents, data)
-    if data.target ~= nil then
-        local target = newents[data.target]
-        if target ~= nil then
-            self:SetTarget(target.entity)
-        end
-    end
-end
-
 function Combat:OnRemoveFromEntity()
     if self.target ~= nil then
         self:StopTrackingTarget(self.target)

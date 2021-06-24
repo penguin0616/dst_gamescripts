@@ -310,6 +310,7 @@ PREFAB_SKINS = {
 	farm_hoe =
 	{
 		"farm_hoe_invisible",
+		"farm_hoe_rustic",
 	},
 	featherfan =
 	{
@@ -488,11 +489,13 @@ PREFAB_SKINS = {
 	mast =
 	{
 		"mast_crabking",
+		"mast_nautical",
 		"mast_rose",
 	},
 	mast_item =
 	{
 		"mast_crabking_item",
+		"mast_nautical_item",
 		"mast_rose_item",
 	},
 	meatrack =
@@ -668,6 +671,10 @@ PREFAB_SKINS = {
 		"saltbox_shaker",
 		"saltbox_victorian",
 	},
+	seedpouch =
+	{
+		"seedpouch_rustic",
+	},
 	shovel =
 	{
 		"shovel_feathered",
@@ -836,6 +843,10 @@ PREFAB_SKINS = {
 		"warly_rose",
 		"warly_victorian",
 	},
+	wateringcan =
+	{
+		"wateringcan_rustic",
+	},
 	watermelonhat =
 	{
 		"watermelonhat_pumpkin",
@@ -894,23 +905,29 @@ PREFAB_SKINS = {
 		"webber_bat",
 		"webber_bat_d",
 		"webber_bat_p",
+		"webber_boy",
 		"webber_combatant",
 		"webber_cook",
 		"webber_formal",
+		"webber_formalp",
 		"webber_gladiator",
 		"webber_ice",
 		"webber_magma",
 		"webber_none",
 		"webber_punk",
 		"webber_rose",
+		"webber_rosep",
 		"webber_shadow",
+		"webber_shadowp",
 		"webber_survivor",
+		"webber_survivorp",
 		"webber_victorian",
 		"webber_wrestler",
 	},
 	webber_beard =
 	{
 		"webber_beard_bat",
+		"webber_beard_boy",
 		"webber_beard_formal",
 		"webber_beard_gladiator",
 		"webber_beard_ice",

@@ -110,7 +110,7 @@ local function create_common(bankandbuild)
     inst.entity:AddNetwork()
 
     inst:AddTag("structure")
-    inst:AddTag("chewable")  -- for werebeaver
+    inst:AddTag("beaverchewable")  -- for werebeaver
 
     inst.AnimState:SetBank(bankandbuild)
     inst.AnimState:SetBuild(bankandbuild)

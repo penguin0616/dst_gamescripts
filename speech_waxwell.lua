@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Those blasted things move too fast!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "I don't hold any power over them.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "That didn't work.",
 	ANNOUNCE_BOAT_LEAK = "We've sprung a leak!",
@@ -3474,6 +3489,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "No. I do NOT sing.",
         BATTLESONG_INSTANT_TAUNT = "My acts were always a bit more improvisational.",
         BATTLESONG_INSTANT_PANIC = "My acts were always a bit more improvisational.",
+
+        -- Webber
+        MUTATOR_WARRIOR = "I'm not eating that.",
+        MUTATOR_DROPPER = "How sickeningly endearing.",
+        MUTATOR_HIDER = "I'm not eating that.",
+        MUTATOR_SPITTER = "How sickeningly endearing.",
+        MUTATOR_MOON = "I'm not eating that.",
+        MUTATOR_HEALER = "How sickeningly endearing.",
+        SPIDER_WHISTLE = "It's probably covered in spider spit.",
+        SPIDERDEN_BEDAZZLER = "Careful child, it's a slippery slope towards a career in the arts.",
+        SPIDER_HEALER = "I don't think that's one of mine.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "It appears someone has been toying with the dark arts and crafts.",

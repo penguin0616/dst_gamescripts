@@ -42,6 +42,12 @@ local assets =
     Asset("FILE", "sound/summerevent.fsb"),
     Asset("FILE", "sound/summerevent_music.fsb"),
 
+    Asset("SOUNDPACKAGE", "sound/webber2.fev"),
+    Asset("FILE", "sound/webber2.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/webber1.fev"),
+    Asset("FILE", "sound/webber1.fsb"),
+
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/wallace.fsb"),        -- Legacy sound that can be used in mods

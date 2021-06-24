@@ -371,6 +371,18 @@ seedpouch_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, 
 seedpouch_clear_fn = function(inst) basic_clear_fn(inst, "seedpouch" ) end
 
 
+--------------------------------------------------------------------------
+--[[ Stagehand skin functions ]]
+--------------------------------------------------------------------------
+stagehand_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "stagehand" )
+    --inst.MiniMapEntity:SetIcon(build_name .. ".png")
+end
+stagehand_clear_fn = function(inst)
+    basic_clear_fn(inst, "stagehand" )
+    --inst.MiniMapEntity:SetIcon("wormhole.png")
+end
+
 
 
 --------------------------------------------------------------------------

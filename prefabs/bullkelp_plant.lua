@@ -4,6 +4,11 @@ local assets =
     Asset("SOUND", "sound/common.fsb"),
 }
 
+local underwater_assets =
+{
+    Asset("ANIM", "anim/bullkelp_underwater.zip"),
+}
+
 local prefabs =
 {
     "kelp",
@@ -50,13 +55,10 @@ local function fn()
     inst.AnimState:SetBank("bullkelp")
     inst.AnimState:SetBuild("bullkelp")
     inst.AnimState:PlayAnimation("idle", true)
-	inst.AnimState:Hide("below_water")
-	inst.AnimState:Hide("kelp_root1")
 	inst.AnimState:SetFinalOffset(1)
 
 	AddDefaultRippleSymbols(inst, true, false)
-
-    inst:AddTag("blocker")
+    
     inst:AddTag("kelp")
 
     inst.entity:SetPristine()
@@ -84,7 +86,6 @@ local function fn()
     inst.components.pickable.onregenfn = onregenfn
     inst.components.pickable.onpickedfn = onpickedfn
     inst.components.pickable.makeemptyfn = makeemptyfn
-    inst.components.pickable.SetRegenTime = 120
 
     inst:AddComponent("inspectable")
 
@@ -104,21 +105,12 @@ local function underwaterleafsfn()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
 
-	inst.AnimState:SetBank("bullkelp")
-    inst.AnimState:SetBuild("bullkelp")
+	inst.AnimState:SetBank("bullkelp_underwater")
+    inst.AnimState:SetBuild("bullkelp_underwater")
     inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
 
-	inst.AnimState:Hide("water_shadow2")
-	inst.AnimState:Hide("ripple2")
-	inst.AnimState:Hide("water_shadow1")
-	inst.AnimState:Hide("ripple1")
-	inst.AnimState:Hide("kelp_ball")
-	inst.AnimState:Hide("kelp_root2")
-	inst.AnimState:Hide("above_water")
-
 	inst:AddTag("DECOR")
-
 
     inst.entity:SetPristine()
 
@@ -132,4 +124,4 @@ local function underwaterleafsfn()
 end
 
 return Prefab("bullkelp_plant", fn, assets, prefabs),
-		Prefab("bullkelp_plant_leaves", underwaterleafsfn, assets)
+		Prefab("bullkelp_plant_leaves", underwaterleafsfn, underwater_assets)

@@ -3,6 +3,11 @@ local MakePlayerCharacter = require("prefabs/player_common")
 local assets =
 {
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
+    Asset("ANIM", "anim/webber_spiderwhistle.zip"),
+    Asset("ANIM", "anim/player_spider_repellent.zip"),
+    Asset("ANIM", "anim/webber_mount_spiderwhistle.zip"),
+    Asset("ANIM", "anim/player_mount_spider_repellent.zip"),
+    Asset("ANIM", "anim/player_idles_webber.zip"),
     Asset("SOUND", "sound/webber.fsb"),
     Asset("ANIM", "anim/beard_silk.zip"),
 }
@@ -20,12 +25,21 @@ end
 
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
+local function CLIENT_Webber_HostileTest(inst, target)
+    return (target:HasTag("hostile") or target:HasTag("pig") or target:HasTag("catcoon"))
+        and (not target:HasTag("spiderden"))
+        and (not target:HasTag("spider") or target:HasTag("spiderqueen"))
+end
+
 local function common_postinit(inst)
     inst:AddTag("spiderwhisperer")
     inst:AddTag("playermonster")
     inst:AddTag("monster")
     inst:AddTag("dualsoul")
     inst:AddTag(UPGRADETYPES.SPIDER.."_upgradeuser")
+
+    inst.customidleanim = "idle_webber"
+    inst.AnimState:AddOverrideBuild("player_idles_webber")
 
     if TheNet:GetServerGameMode() == "quagmire" then
         inst:AddTag("fastpicker")
@@ -35,6 +49,11 @@ local function common_postinit(inst)
 
     --bearded (from beard component) added to pristine state for optimization
     inst:AddTag("bearded")
+
+    inst.AnimState:AddOverrideBuild("webber_spiderwhistle")
+    inst.AnimState:AddOverrideBuild("player_spider_repellent")
+
+    inst.HostileTest = CLIENT_Webber_HostileTest
 end
 
 --tune the beard economy...
@@ -72,13 +91,22 @@ local function OnGrowLongBeard(inst, skinname)
     inst.components.beard.bits = BEARD_BITS[3]
 end
 
+local function ReleaseSpiderFollowers(inst)
+    for follower, v in pairs(inst.components.leader.followers) do
+        if follower:HasTag("spider") and follower.defensive then
+            follower.defensive = false
+            follower.no_targeting = false
+        end
+    end
+end
+
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
     inst.talker_path_override = "dontstarve_DLC001/characters/"
 
     if inst.components.eater ~= nil then
-        inst.components.eater.strongstomach = true
+        inst.components.eater:SetStrongStomach(true)
     end
 
     inst.components.foodaffinity:AddPrefabAffinity("icecream", TUNING.AFFINITY_15_CALORIES_MED)
@@ -97,6 +125,14 @@ local function master_postinit(inst)
     inst.components.beard:AddCallback(BEARD_DAYS[3], OnGrowLongBeard)
 
     inst.components.locomotor:SetTriggersCreep(false)
+    inst.components.locomotor.fasteroncreep = true
+    --inst.components.locomotor:SetFasterOnCreep(true)
+
+    inst:ListenForEvent("attacked",      ReleaseSpiderFollowers)
+    inst:ListenForEvent("onattackother", ReleaseSpiderFollowers)
+    inst:ListenForEvent("death",         ReleaseSpiderFollowers)
+    inst:ListenForEvent("onremove",      ReleaseSpiderFollowers)
+
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/webber").master_postinit(inst)

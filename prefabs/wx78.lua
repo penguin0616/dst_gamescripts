@@ -296,10 +296,11 @@ local function master_postinit(inst)
     inst.watchingrain = false
 
     if inst.components.eater ~= nil then
-        inst.components.eater.ignoresspoilage = true
+        inst.components.eater:SetIgnoresSpoilage(true)
         inst.components.eater:SetCanEatGears()
         inst.components.eater:SetOnEatFn(oneat)
     end
+    
     applyupgrades(inst)
 
     inst.components.foodaffinity:AddPrefabAffinity("butterflymuffin", TUNING.AFFINITY_15_CALORIES_LARGE)

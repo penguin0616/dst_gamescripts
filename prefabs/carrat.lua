@@ -754,7 +754,7 @@ local function fn()
 
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODGROUP.OMNI }, { FOODGROUP.OMNI })
-    inst.components.eater.strongstomach = true
+    inst.components.eater:SetStrongStomach(true)
 
     inst:AddComponent("cookable")
     inst.components.cookable.product = "plantmeat_cooked"

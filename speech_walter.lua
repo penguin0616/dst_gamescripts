@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Darnit! I wasn't fast enough.",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "They're not listening to me! Maybe Webber can talk to them...",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "It won't work.",
 	ANNOUNCE_BOAT_LEAK = "Um. That might be a problem.",
@@ -3474,6 +3489,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "This seems a bit more complicated than the songs I learned in the Pioneers.",
         BATTLESONG_INSTANT_TAUNT = "This story could use a few more monsters.",
         BATTLESONG_INSTANT_PANIC = "This story could use a few more monsters.",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Hey, cookies! Um... what are these made of, exactly?",
+        MUTATOR_DROPPER = "Neat! There aren't any actual spider bits in these though, right?",
+        MUTATOR_HIDER = "Hey, cookies! Um... what are these made of, exactly?",
+        MUTATOR_SPITTER = "Neat! There aren't any actual spider bits in these though, right?",
+        MUTATOR_MOON = "Hey, cookies! Um... what are these made of, exactly?",
+        MUTATOR_HEALER = "Neat! There aren't any actual spider bits in these though, right?",
+        SPIDER_WHISTLE = "Hey Webber, let's call some spiders!",
+        SPIDERDEN_BEDAZZLER = "He's well on his way to getting his Arts and Crafts badge.",
+        SPIDER_HEALER = "Aw, what a helpful little guy!",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Ghosts can drink potions? Uh, of course I knew that!",

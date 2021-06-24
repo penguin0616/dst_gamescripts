@@ -125,6 +125,12 @@ local MainSounds =
 	"summerevent.fev",
 	"summerevent.fsb",
 	"summerevent_music.fsb",
+
+	"webber2.fev",
+    "webber2.fsb",
+
+    "webber1.fev",
+    "webber1.fsb",
 }
 
 function PreloadSoundList(list)

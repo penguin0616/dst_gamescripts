@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Aw, we weren't fast enough.",
         },
-	},
+        HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "Okay everybody, follow us!",
+        },
+        BEDAZZLE =
+        {
+            BURNING = "Aaah! Spiderfriends, your house!!",
+            BURNT = "There isn't really much left to decorate...",
+            FROZEN = "Hmm it might be hard to get our decorations to stick to ice...",
+            ALREADY_BEDAZZLED = "We think we already decorated it pretty good.",
+        },
+        UPGRADE = 
+        {
+            BEDAZZLED = "But we made it look so nice! Let's keep it the way it is.",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "Mom told me never to do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat is crying!",
@@ -3182,7 +3197,7 @@ return{
         	SLEEPING = "Night-night, scary friend.",
         	DEAD = "Sorry!",
         },
-        MOONSPIDERDEN = "I don't want to be friends with those ones.",
+        MOONSPIDERDEN = "They're not so bad once you get to know them.",
 		FRUITDRAGON =
 		{
 			GENERIC = "It smells like yummy fruit.",
@@ -3474,6 +3489,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "We like singing songs!",
         BATTLESONG_INSTANT_TAUNT = "We probably shouldn't repeat this one. It sounds rude.",
         BATTLESONG_INSTANT_PANIC = "The characters talk just like Wigfrid!",
+
+        -- Webber
+        MUTATOR_WARRIOR = "We just know they're going to love it!",
+        MUTATOR_DROPPER = "Who wants a cookie?",
+        MUTATOR_HIDER = "We came up with the recipe all by ourselves!",
+        MUTATOR_SPITTER = "We made it look just like our friend!",
+        MUTATOR_MOON = "We made this cookie special!",
+        MUTATOR_HEALER = "Doesn't it look tasty?",
+        SPIDER_WHISTLE = "We can call our spider friends!",
+        SPIDERDEN_BEDAZZLER = "We know what'll make our spiderfriends happy, decorating their house!",
+        SPIDER_HEALER = "We feel better just having them around!",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Hey, you didn't tell me you were making crafts!",

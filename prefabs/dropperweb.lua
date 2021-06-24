@@ -56,6 +56,31 @@ local function OnPreLoad(inst, data)
     WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.DROPPERWEB_RELEASE_TIME, TUNING.DROPPERWEB_REGEN_TIME)
 end
 
+local function OnGoHome(inst, child)
+    -- Drops the hat before it goes home if it has any
+    local hat = child.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+    if hat ~= nil then
+        child.components.inventory:DropItem(hat)
+    end
+end
+
+local function SummonChildren(inst, data)
+    if inst.components.health and not inst.components.health:IsDead() then
+        if inst.components.childspawner ~= nil then
+            local children_released = inst.components.childspawner:ReleaseAllChildren()
+
+            for i,v in ipairs(children_released) do
+                if v.components.debuffable == nil then
+                    v:AddComponent("debuffable")
+                end
+                
+                v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+                v.sg:GoToState("dropper_enter")
+            end
+        end
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -83,6 +108,8 @@ local function fn()
     inst:AddComponent("childspawner")
     inst.components.childspawner:SetRegenPeriod(TUNING.DROPPERWEB_REGEN_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.DROPPERWEB_RELEASE_TIME)
+    inst.components.childspawner:SetGoHomeFn(OnGoHome)
+
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.DROPPERWEB_RELEASE_TIME, TUNING.DROPPERWEB_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.DROPPERWEB_REGEN_TIME, TUNING.DROPPERWEB_ENABLED)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.DROPPERWEB_MIN_CHILDREN, TUNING.DROPPERWEB_MAX_CHILDREN))
@@ -94,6 +121,8 @@ local function fn()
     inst.components.childspawner.emergencychildname = "spider_dropper"
     inst.components.childspawner.emergencychildrenperplayer = 1
     inst.components.childspawner.canemergencyspawn = TUNING.DROPPERWEB_ENABLED
+
+    inst.SummonChildren = SummonChildren
 
     inst.lastwebtime = GetTime()
     inst.OnEntityWake = OnEntityWake

@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "I must move with greater haste!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "The spiderchild is the only one who can tame those little beasts!",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
 	ANNOUNCE_BOAT_LEAK = "Our vessel hath sprung a leak!",
@@ -3463,7 +3478,7 @@ return{
         SLINGSHOTAMMO_SLOW = "What fun is a battle without hand to hand combat?",
         SLINGSHOTAMMO_FREEZE = "What fun is a battle without hand to hand combat?",
 		SLINGSHOTAMMO_POOP = "I could do without the stench...",
-        PORTABLETENT = "Tis a finely made shelter indeed!",
+        PORTABLETENT = "'Tis a finely made shelter indeed!",
         PORTABLETENT_ITEM = "My talent lies in battle, not in building.",
 
         -- Wigfrid
@@ -3475,18 +3490,29 @@ return{
         BATTLESONG_INSTANT_TAUNT = "A well aimed insult can turn the tide in battle.",
         BATTLESONG_INSTANT_PANIC = "My very words art enough to make my foes tremble!",
 
+        -- Webber
+        MUTATOR_WARRIOR = "They look like the little beasts, but lack the ferocity.",
+        MUTATOR_DROPPER = "They look like the little beasts, but lack the ferocity.",
+        MUTATOR_HIDER = "They look like the little beasts, but lack the ferocity.",
+        MUTATOR_SPITTER = "They look like the little beasts, but lack the ferocity.",
+        MUTATOR_MOON = "They look like the little beasts, but lack the ferocity.",
+        MUTATOR_HEALER = "They look like the little beasts, but lack the ferocity.",
+        SPIDER_WHISTLE = "'Tis a spider war horn.",
+        SPIDERDEN_BEDAZZLER = "The spiderchild has taken up the arts, has he?",
+        SPIDER_HEALER = "Be you the healer of your clan?",
+
 		-- Wendy
-		GHOSTLYELIXIR_SLOWREGEN = "Tis a powerful elixir!",
-		GHOSTLYELIXIR_FASTREGEN = "Tis a powerful elixir!",
-		GHOSTLYELIXIR_SHIELD = "Tis a powerful elixir!",
-		GHOSTLYELIXIR_ATTACK = "Tis a powerful elixir!",
-		GHOSTLYELIXIR_SPEED = "Tis a powerful elixir!",
-		GHOSTLYELIXIR_RETALIATION = "Tis a powerful elixir!",
+		GHOSTLYELIXIR_SLOWREGEN = "'Tis a powerful elixir!",
+		GHOSTLYELIXIR_FASTREGEN = "'Tis a powerful elixir!",
+		GHOSTLYELIXIR_SHIELD = "'Tis a powerful elixir!",
+		GHOSTLYELIXIR_ATTACK = "'Tis a powerful elixir!",
+		GHOSTLYELIXIR_SPEED = "'Tis a powerful elixir!",
+		GHOSTLYELIXIR_RETALIATION = "'Tis a powerful elixir!",
 		SISTURN =
 		{
 			GENERIC = "A small langhús for the ghostly warrior to regain her strength.",
 			SOME_FLOWERS = "Flowers doth please this spirit.",
-			LOTS_OF_FLOWERS = "Tis a fine monument indeed.",
+			LOTS_OF_FLOWERS = "'Tis a fine monument indeed.",
 		},
 
         --Wortox
@@ -3565,7 +3591,7 @@ return{
         WEREITEM_GOOSE = "It's... er... very fearsome!",
         WEREITEM_MOOSE = "It represents a warrior's spirit!",
 
-        MERMHAT = "Tis a deceitful mask.",
+        MERMHAT = "'Tis a deceitful mask.",
         MERMTHRONE =
         {
             GENERIC = "Have you chosen a chieftain?",
@@ -3574,15 +3600,15 @@ return{
         MERMTHRONE_CONSTRUCTION =
         {
             GENERIC = "The little beast toils away.",
-            BURNT = "Tis a sad day for the fish beasts.",
+            BURNT = "'Tis a sad day for the fish beasts.",
         },
         MERMHOUSE_CRAFTED =
         {
             GENERIC = "A home fit for a fish beast.",
-            BURNT = "Tis the way of things.",
+            BURNT = "'Tis the way of things.",
         },
 
-        MERMWATCHTOWER_REGULAR = "Tis a fine fortress for a fish beast.",
+        MERMWATCHTOWER_REGULAR = "'Tis a fine fortress for a fish beast.",
         MERMWATCHTOWER_NOKING = "They are lost without their chieftain.",
         MERMKING = "Lord of the fish beasts!",
         MERMGUARD = "A formidable warrior, to be sure.",
@@ -3590,7 +3616,7 @@ return{
 
         SQUID = "It lights my voyage through murky waters.",
 
-		GHOSTFLOWER = "Tis all that remains.",
+		GHOSTFLOWER = "'Tis all that remains.",
         SMALLGHOST = "Such a wee specter!",
 
         CRABKING =
@@ -3610,7 +3636,7 @@ return{
             DRYINGINRAIN = "All this rain isn't helping.",
             GENERIC = "I'd be cantankerous too if I were left without meat!",
             BURNT = "Such a shame.",
-            DONE_NOTMEAT = "Tis as dry as an empty well!",
+            DONE_NOTMEAT = "'Tis as dry as an empty well!",
             DRYING_NOTMEAT = "It's drying out nicely.",
             DRYINGINRAIN_NOTMEAT = "All this rain isn't helping.",
         },
@@ -3642,7 +3668,7 @@ return{
 
         WATERPUMP = "We hath safeguarded our vessel against a fiery end.",
 
-        BARNACLE = "Tis a paltry bit of sea meat.",
+        BARNACLE = "'Tis a paltry bit of sea meat.",
         BARNACLE_COOKED = "You will find a new home in my belly.",
 
         BARNACLEPITA = "Why hide the meat within this bready pocket?",
@@ -3710,7 +3736,7 @@ return{
             IDLE = "Its quest is complete.",
         },
 
-        ARCHIVE_RESONATOR_ITEM = "Tis the machine from my vision.",
+        ARCHIVE_RESONATOR_ITEM = "'Tis the machine from my vision.",
 
         ARCHIVE_LOCKBOX_DISPENCER = {
           POWEROFF = "This place has been long forgotten.",
@@ -3936,8 +3962,8 @@ return{
 
 
         YOTB_PATTERN_FRAGMENT_1 = "'Tis but a fragment of a complete pattern.",
-        YOTB_PATTERN_FRAGMENT_2 = "Tis but a fragment of a complete pattern.",
-        YOTB_PATTERN_FRAGMENT_3 = "Tis but a fragment of a complete pattern.",
+        YOTB_PATTERN_FRAGMENT_2 = "'Tis but a fragment of a complete pattern.",
+        YOTB_PATTERN_FRAGMENT_3 = "'Tis but a fragment of a complete pattern.",
 
         YOTB_BEEFALO_DOLL_WAR = {
             GENERIC = "A stuffed effigy of a valiant steed!",

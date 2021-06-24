@@ -2,18 +2,22 @@ local DEBUG_MODE = BRANCH == "dev"
 
 ERRORS = {
     CONFIG_DIR_WRITE_PERMISSION = {
-        message = "Unable to write to config directory. Please make sure you have permissions for your Klei save folder.",
+        message = "Unable to write to config directory.\nPlease make sure you have permissions for your Klei save folder.",
         url = "https://support.klei.com/hc/en-us/articles/360029882171",
     },
     CONFIG_DIR_READ_PERMISSION = {
-        message = "Unable to read from config directory. Please make sure you have read permissions for your Klei save folder.",
+        message = "Unable to read from config directory.\nPlease make sure you have read permissions for your Klei save folder.",
         url = "https://support.klei.com/hc/en-us/articles/360035294792",
+    },
+    CONFIG_DIR_CLIENT_LOG_PERMISSION = {
+        message = "Unable to write to files in the config directory.\nPlease make sure you have permissions for your Klei save folder.",
+        url = "https://support.klei.com/hc/en-us/articles/360029882171",
     },
     CUSTOM_COMMANDS_ERROR = {
         message = "Error loading customcommands.lua.",
     },
     AGREEMENTS_WRITE_PERMISSION = {
-        message = "Unable to write to the agreements file. Please make sure you have permissions for your Klei save folder.",
+        message = "Unable to write to the agreements file.\nPlease make sure you have permissions for your Klei save folder.",
         url = "https://support.klei.com/hc/en-us/articles/360029881751",
     },
     CONFIG_DIR_DISK_SPACE = {

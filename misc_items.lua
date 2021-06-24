@@ -1077,6 +1077,20 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 115,
 	},
+	pack_boy_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 2,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_boy_items.xml",
+		display_tex = "boy_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "farm_hoe_rustic", "wateringcan_rustic", "seedpouch_rustic", },
+		output_items = {  "farm_hoe_rustic", "wateringcan_rustic", "seedpouch_rustic", },
+		release_group = 120,
+	},
 	pack_character_wormwood =
 	{
 		type = "purchase",
@@ -3169,6 +3183,85 @@ MISC_ITEMS =
 		output_klei_currency_cost = 75000,
 		release_group = 79,
 	},
+	pack_webber_boy =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 111,
+		build_name_override = "webber_boy",
+		display_atlas = "bigportraits/webber_boy.xml",
+		display_tex = "webber_boy_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "webber_boy", "body_webber_boy", "legs_webber_boy", "webber_beard_boy", },
+		output_items = {  "webber_boy", "body_webber_boy", "legs_webber_boy", "webber_beard_boy", },
+		release_group = 120,
+	},
+	pack_webber_deluxe =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_webber_deluxe.xml",
+		display_tex = "webber_deluxe.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "webber_formalp", "webber_rosep", "webber_shadowp", "webber_survivorp", "webber_boy", },
+		output_items = {  "webber_boy", "body_webber_boy", "legs_webber_boy", "webber_beard_boy", "webber_formalp", "body_webber_formalp", "webber_beard_formal", "webber_survivorp", "body_webber_survivorp", "webber_beard_survivor", "webber_shadowp", "body_webber_shadowp", "webber_beard_shadow", "webber_rosep", "body_webber_rosep", "webber_beard_rose", },
+		release_group = 120,
+	},
+	pack_webber_formal =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 111,
+		build_name_override = "webber_formal",
+		display_atlas = "bigportraits/webber_formal.xml",
+		display_tex = "webber_formal_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "webber_formalp", "body_webber_formalp", "webber_beard_formal", },
+		output_items = {  "webber_formalp", "body_webber_formalp", "webber_beard_formal", },
+		release_group = 120,
+	},
+	pack_webber_rose =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 111,
+		build_name_override = "webber_rose",
+		display_atlas = "bigportraits/webber_rose.xml",
+		display_tex = "webber_rose_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "webber_rosep", "body_webber_rosep", "webber_beard_rose", },
+		output_items = {  "webber_rosep", "body_webber_rosep", "webber_beard_rose", },
+		release_group = 120,
+	},
+	pack_webber_shadow =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 111,
+		build_name_override = "webber_shadow",
+		display_atlas = "bigportraits/webber_shadow.xml",
+		display_tex = "webber_shadow_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "webber_shadowp", "body_webber_shadowp", "webber_beard_shadow", },
+		output_items = {  "webber_shadowp", "body_webber_shadowp", "webber_beard_shadow", },
+		release_group = 120,
+	},
+	pack_webber_survivor =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 111,
+		build_name_override = "webber_survivor",
+		display_atlas = "bigportraits/webber_survivor.xml",
+		display_tex = "webber_survivor_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "webber_survivorp", "body_webber_survivorp", "webber_beard_survivor", },
+		output_items = {  "webber_survivorp", "body_webber_survivorp", "webber_beard_survivor", },
+		release_group = 120,
+	},
 	pack_wendy_deluxe =
 	{
 		type = "purchase",
@@ -4475,6 +4568,13 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 32,
 	},
+	playerportrait_bg_mastnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 120,
+	},
 	playerportrait_bg_messylab =
 	{
 		type = "playerportrait",
@@ -5430,6 +5530,13 @@ MISC_ITEMS =
 		rarity = "Common",
 		rarity_modifier = "Woven",
 		release_group = 32,
+	},
+	profileflair_mast_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 120,
 	},
 	profileflair_merm =
 	{
@@ -6479,6 +6586,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 102,
+	},
+	webber_beard_boy =
+	{
+		type = "beard",
+		skin_tags = { "BOY", "WEBBER_BEARD", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 120,
 	},
 	webber_beard_formal =
 	{

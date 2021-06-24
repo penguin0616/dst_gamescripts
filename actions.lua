@@ -195,7 +195,7 @@ ACTIONS =
     DROP = Action({ priority=-1, mount_valid=true, encumbered_valid=true, is_relative_to_platform=true, extra_arrive_dist=ExtraDropDist }),
     TRAVEL = Action(),
     CHOP = Action(),
-    ATTACK = Action({ priority=2, canforce=true, mount_valid=true }), -- No custom range check, attack already handles that
+    ATTACK = Action({priority=2, canforce=true, mount_valid=true }), -- No custom range check, attack already handles that
     EAT = Action({ mount_valid=true }),
     PICK = Action({ canforce=true, rangecheckfn=DefaultRangeCheck, extra_arrive_dist=ExtraPickupRange, mount_valid = true }),
     PICKUP = Action({ priority=1, extra_arrive_dist=ExtraPickupRange, mount_valid=true }),
@@ -403,6 +403,11 @@ ACTIONS =
 
 	CARNIVALGAME_FEED = Action({ mount_valid=true }),
 
+    -- WEBBER
+    MUTATE_SPIDER = Action(),
+    HERD_FOLLOWERS = Action({ mount_valid=true }),
+    REPEL = Action({ mount_valid=true }),
+    BEDAZZLE = Action(),
 }
 
 ACTIONS_BY_ACTION_CODE = {}
@@ -534,6 +539,10 @@ ACTIONS.PICKUP.fn = function(act)
             if trainer ~= nil and trainer ~= act.doer then
                 return false, "NOTMINE_YOTC"
             end
+        end
+
+        if act.target.components.inventory ~= nil and act.target:HasTag("drop_inventory_pickup") then
+            act.target.components.inventory:TransferInventory(act.doer)
         end
 
         act.doer:PushEvent("onpickupitem", { item = act.target })
@@ -1527,6 +1536,10 @@ ACTIONS.FEEDPLAYER.fn = function(act)
         act.invobject.components.edible ~= nil and
         act.target.components.eater:CanEat(act.invobject) and
         (TheNet:GetPVPEnabled() or
+        (act.target:HasTag("strongstomach") and 
+            act.invobject:HasTag("monstermeat")) or
+        (act.invobject:HasTag("spoiled") and act.target:HasTag("ignoresspoilage") and not 
+            (act.invobject:HasTag("badfood") or act.invobject:HasTag("unsafefood"))) or
         not (act.invobject:HasTag("badfood") or
             act.invobject:HasTag("unsafefood") or
             act.invobject:HasTag("spoiled"))) then
@@ -2065,6 +2078,10 @@ ACTIONS.MURDER.fn = function(act)
             end
         end
 
+        if murdered.components.inventory and murdered:HasTag("drop_inventory_murder") then
+            murdered.components.inventory:TransferInventory(act.doer)
+        end
+
         act.doer:PushEvent("murdered", { victim = murdered, stackmult = stacksize })
         act.doer:PushEvent("killed", { victim = murdered, stackmult = stacksize })
         murdered:Remove()
@@ -2330,7 +2347,11 @@ ACTIONS.MOLEPEEK.fn = function(act)
 end
 
 ACTIONS.FEED.fn = function(act)
-    if act.doer ~= nil and act.target ~= nil and act.target.components.eater ~= nil and act.target.components.eater:CanEat(act.invobject) then
+
+    if act.target.components.trader and act.target.components.trader:AbleToAccept(act.invobject,act.doer) then
+        act.target.components.trader:AcceptGift(act.doer, act.invobject, 1)
+        return true
+    elseif act.doer ~= nil and act.target ~= nil and act.target.components.eater ~= nil and act.target.components.eater:CanEat(act.invobject) then
         act.target.components.eater:Eat(act.invobject, act.doer)
         local murdered =
             act.target:IsValid() and
@@ -2485,10 +2506,17 @@ end
 ACTIONS.WATER_TOSS.fn = ACTIONS.TOSS.fn
 
 ACTIONS.UPGRADE.fn = function(act)
-    if act.invobject and act.target
-        and act.invobject.components.upgrader
-        and act.invobject.components.upgrader:CanUpgrade(act.target, act.doer) then
-        return act.target.components.upgradeable:Upgrade(act.invobject, act.doer)
+    if act.invobject and act.target and 
+        act.invobject.components.upgrader and
+        act.invobject.components.upgrader:CanUpgrade(act.target, act.doer) and
+        act.target.components.upgradeable then
+
+        local can_upgrade, reason = act.target.components.upgradeable:CanUpgrade()
+        if can_upgrade then
+            return act.target.components.upgradeable:Upgrade(act.invobject, act.doer)
+        end
+
+        return false, reason
     end
 end
 
@@ -3644,5 +3672,43 @@ ACTIONS.YOTB_UNLOCKSKIN.fn = function(act)
             act.invobject:Remove()
             return true
         end
+    end 
+end
+
+ACTIONS.MUTATE_SPIDER.fn = function(act)
+    if act.invobject.components.spidermutator:CanMutate(act.target) then
+        act.invobject.components.spidermutator:Mutate(act.target)
+        return true
+    else
+        return false, "SAMETYPE"
     end
+end
+
+ACTIONS.HERD_FOLLOWERS.fn = function (act)
+    local can_herd, reason = act.invobject.components.followerherder:CanHerd(act.doer)
+    if not can_herd then
+        return false, reason
+    end
+
+    act.invobject.components.followerherder:Herd(act.doer)
+    return true
+end
+
+ACTIONS.BEDAZZLE.fn = function (act)
+    local can_bedazzle, reason = act.invobject.components.bedazzler:CanBedazzle(act.target)
+    if not can_bedazzle then
+        return false, reason
+    end
+
+    act.invobject.components.bedazzler:Bedazzle(act.target)
+    return true
+end
+
+ACTIONS.REPEL.fn = function(act)
+    if act.invobject.components.repellent then
+        act.invobject.components.repellent:Repel(act.doer)
+        return true
+    end
+
+    return false
 end

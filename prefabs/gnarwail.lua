@@ -546,7 +546,7 @@ local function gnarwail()
 
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODTYPE.MEAT }, { FOODTYPE.MEAT })
-    inst.components.eater.strongstomach = true
+    inst.components.eater:SetStrongStomach(true)
 
     ------------------------------------------
 

@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Guess I wasn't quick enough.",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "They're not too keen on listenin' to me.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "Sorry, I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "All this water is making me very anxious.",
@@ -3475,6 +3490,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Don't recognize the song. Maybe it wasn't released in Canada.",
         BATTLESONG_INSTANT_TAUNT = "I can't sit and watch a play when there's wood to be chopped!",
         BATTLESONG_INSTANT_PANIC = "I can't sit and watch a play when there's wood to be chopped!",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Sorry little buddy, I think I'll have to pass.",
+        MUTATOR_DROPPER = "Sorry little buddy, I think I'll have to pass.",
+        MUTATOR_HIDER = "Sorry little buddy, I think I'll have to pass.",
+        MUTATOR_SPITTER = "Sorry little buddy, I think I'll have to pass.",
+        MUTATOR_MOON = "Sorry little buddy, I think I'll have to pass.",
+        MUTATOR_HEALER = "Sorry little buddy, I think I'll have to pass.",
+        SPIDER_WHISTLE = "Planning on havin' a little shindig?",
+        SPIDERDEN_BEDAZZLER = "Always gotta support the arts.",
+        SPIDER_HEALER = "It better stay far away if it knows what's good for it.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Whoof, smells like week-old sockeye!",

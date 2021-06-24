@@ -108,6 +108,32 @@ function Eater:SetPrefersEatingTag(tag)
     end
 end
 
+function Eater:SetStrongStomach(is_strong)
+    if is_strong then
+        self.inst:AddTag("strongstomach")
+        self.strongstomach = true
+    else
+        if self.inst:HasTag("strongstomach") then
+            self.inst:RemoveTag("strongstomach")
+        end
+
+        self.strongstomach = false
+    end
+end
+
+function Eater:SetIgnoresSpoilage(ignores)
+    if ignores then
+        self.inst:AddTag("ignoresspoilage")
+        self.ignoresspoilage = true
+    else
+        if self.inst:HasTag("ignoresspoilage") then
+            self.inst:RemoveTag("ignoresspoilage")
+        end
+
+        self.ignoresspoilage = false
+    end
+end
+
 function Eater:SetOnEatFn(fn)
     self.oneatfn = fn
 end

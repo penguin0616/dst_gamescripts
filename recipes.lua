@@ -45,7 +45,6 @@ Recipe("mermthrone_construction", {Ingredient("boards", 5), Ingredient("rope", 5
 Recipe("mermwatchtower", {Ingredient("boards", 5), Ingredient("tentaclespots", 1), Ingredient("spear", 2)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "mermwatchtower_placer", nil, nil, nil, "merm_builder", nil, nil, IsMarshLand)
 Recipe("turf_marsh", {Ingredient("cutreeds", 1), Ingredient("spoiled_food", 2)}, RECIPETABS.TOWN,  TECH.SCIENCE_TWO, nil, nil, nil, nil, "merm_builder")
 
-Recipe("spidereggsack", {Ingredient("silk", 12), Ingredient("spidergland", 6), Ingredient("papyrus", 6)}, RECIPETABS.TOWN, TECH.NONE, nil, nil, nil, nil, "spiderwhisperer")
 Recipe("sisturn", {Ingredient("cutstone", 3), Ingredient("boards", 3), Ingredient("ash", 1)}, RECIPETABS.TOWN, TECH.NONE, "sisturn_placer", nil, nil, nil, "ghostlyfriend")
 
 Recipe("treasurechest", {Ingredient("boards", 3)}, RECIPETABS.TOWN, TECH.SCIENCE_ONE, "treasurechest_placer",1)
@@ -387,7 +386,7 @@ Recipe("ghostlyelixir_retaliation",	{Ingredient("livinglog", 1),	Ingredient("gho
 Recipe("ghostlyelixir_attack",		{Ingredient("stinger", 1), 		Ingredient("ghostflower", 3)}, CUSTOM_RECIPETABS.ELIXIRBREWING, TECH.NONE, nil, nil, nil, nil, "elixirbrewer")
 Recipe("ghostlyelixir_speed",		{Ingredient("honey", 1), 		Ingredient("ghostflower", 1)}, CUSTOM_RECIPETABS.ELIXIRBREWING, TECH.NONE, nil, nil, nil, nil, "elixirbrewer")
 
----- Battlesongs ----
+---- BATTLESONGS ----
 Recipe("battlesong_durability",			{Ingredient("papyrus", 1), 	Ingredient("featherpencil", 1), Ingredient("sewing_kit", 1)},								CUSTOM_RECIPETABS.BATTLESONGS, TECH.NONE, nil, nil, nil, nil, "battlesinger")
 Recipe("battlesong_healthgain",			{Ingredient("papyrus", 1), 	Ingredient("featherpencil", 1), Ingredient("amulet", 1)}, 									CUSTOM_RECIPETABS.BATTLESONGS, TECH.NONE, nil, nil, nil, nil, "battlesinger")
 Recipe("battlesong_sanitygain",			{Ingredient("papyrus", 1), 	Ingredient("featherpencil", 1), Ingredient("moonbutterflywings", 1)}, 						CUSTOM_RECIPETABS.BATTLESONGS, TECH.NONE, nil, nil, nil, nil, "battlesinger")
@@ -396,6 +395,21 @@ Recipe("battlesong_fireresistance",		{Ingredient("papyrus", 1), 	Ingredient("fea
 Recipe("battlesong_instant_taunt",		{Ingredient("papyrus", 1), 	Ingredient("featherpencil", 1), Ingredient("tomato", 1, nil, nil, "quagmire_tomato.tex")}, 	CUSTOM_RECIPETABS.BATTLESONGS, TECH.NONE, nil, nil, nil, nil, "battlesinger")
 Recipe("battlesong_instant_panic",		{Ingredient("papyrus", 1), 	Ingredient("featherpencil", 1), Ingredient("purplegem", 1)}, 								CUSTOM_RECIPETABS.BATTLESONGS, TECH.NONE, nil, nil, nil, nil, "battlesinger")
 
+
+----- SPIDER -----
+Recipe("spidereggsack", 		{ Ingredient("silk", 12),  Ingredient("spidergland", 4), Ingredient("papyrus", 3)}, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.NONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("spiderden_bedazzler",   { Ingredient("silk", 1),   Ingredient("papyrus", 1), 	 Ingredient("boards", 2) }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.NONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("spider_whistle",  		{ Ingredient("silk", 3),   Ingredient("twigs", 2) }, 								CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.NONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("spider_repellent",  	{ Ingredient("boards", 2), Ingredient("goldnugget", 2),  Ingredient("rope", 1) }, 	CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.NONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("spider_healer_item",  	{ Ingredient("honey", 2),  Ingredient("ash",  2), 		 Ingredient("silk", 2) }, 	CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.NONE, nil, nil, nil, nil, "spiderwhisperer")
+
+Recipe("mutator_warrior", 		{ Ingredient("monstermeat", 2), Ingredient("silk", 1), Ingredient("pigskin", 1)   	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("mutator_dropper", 		{ Ingredient("monstermeat", 1), Ingredient("silk", 1), Ingredient("manrabbit_tail", 1) }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("mutator_hider",	  		{ Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("cutstone", 2)  	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("mutator_spitter", 		{ Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("nitre", 4) 	  	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("mutator_moon",	  		{ Ingredient("monstermeat", 2), Ingredient("silk", 3), Ingredient("moonglass", 2) 	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("mutator_healer",  		{ Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("honey", 2) 	  	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+
 ----NATURE----
 Recipe("livinglog", 	{Ingredient(CHARACTER_INGREDIENT.HEALTH, 20)}, CUSTOM_RECIPETABS.NATURE, TECH.NONE, nil, nil, nil, nil, "plantkin")
 Recipe("armor_bramble", {Ingredient("livinglog", 2), Ingredient("boneshard", 4)}, CUSTOM_RECIPETABS.NATURE, TECH.NONE, nil, nil, nil, nil, "plantkin")
@@ -403,13 +417,13 @@ Recipe("trap_bramble",  {Ingredient("livinglog", 1), Ingredient("stinger", 1)}, 
 Recipe("compostwrap",   {Ingredient("poop", 5), Ingredient("spoiled_food", 2), Ingredient("nitre", 1)}, CUSTOM_RECIPETABS.NATURE, TECH.NONE, nil, nil, nil, nil, "plantkin")
 
 -- SLINGSHOT AMMO --
-Recipe("slingshotammo_rock",		{Ingredient("rocks", 1)},												CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.NONE,				{no_deconstruction = true}, nil, nil, 10, "pebblemaker")
-Recipe("slingshotammo_gold",		{Ingredient("goldnugget", 1)},											CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.SCIENCE_ONE,		{no_deconstruction = true}, nil, nil, 10, "pebblemaker")
-Recipe("slingshotammo_marble",		{Ingredient("marble", 1)},												CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.SCIENCE_TWO,		{no_deconstruction = true}, nil, nil, 10, "pebblemaker")
-Recipe("slingshotammo_poop",		{Ingredient("poop", 1)},												CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.SCIENCE_ONE,		{no_deconstruction = true}, nil, nil, 10, "pebblemaker")
-Recipe("slingshotammo_freeze",		{Ingredient("moonrocknugget", 1), Ingredient("bluegem", 1)},			CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.MAGIC_TWO,		{no_deconstruction = true}, nil, nil, 10, "pebblemaker")
-Recipe("slingshotammo_slow",		{Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},			CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.MAGIC_THREE,		{no_deconstruction = true}, nil, nil, 10, "pebblemaker")
-Recipe("slingshotammo_thulecite",	{Ingredient("thulecite_pieces", 1), Ingredient("nightmarefuel", 1)},	CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.ANCIENT_TWO,		{no_deconstruction = true}, nil, true, 10, "pebblemaker")
+Recipe("slingshotammo_rock",	  {Ingredient("rocks", 1)},											   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.NONE,		  {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
+Recipe("slingshotammo_gold",	  {Ingredient("goldnugget", 1)},									   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.SCIENCE_ONE, {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
+Recipe("slingshotammo_marble",	  {Ingredient("marble", 1)},										   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.SCIENCE_TWO, {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
+Recipe("slingshotammo_poop",	  {Ingredient("poop", 1)},											   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.SCIENCE_ONE, {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
+Recipe("slingshotammo_freeze",	  {Ingredient("moonrocknugget", 1), Ingredient("bluegem", 1)},		   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.MAGIC_TWO,	  {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
+Recipe("slingshotammo_slow",	  {Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},	   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.MAGIC_THREE, {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
+Recipe("slingshotammo_thulecite", {Ingredient("thulecite_pieces", 1), Ingredient("nightmarefuel", 1)}, CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.ANCIENT_TWO, {no_deconstruction = true}, nil, true, 10, "pebblemaker")
 
 ----CARTOGRAPHY----
 Recipe("mapscroll", {Ingredient("featherpencil", 1), Ingredient("papyrus", 1)}, RECIPETABS.CARTOGRAPHY, TECH.CARTOGRAPHY_TWO, nil, nil, true, nil, nil, nil, function() return TheWorld.worldprefab == "forest" and "mapscroll.tex" or ("mapscroll_"..TheWorld.worldprefab..".tex") end)

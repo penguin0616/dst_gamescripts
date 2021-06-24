@@ -190,21 +190,22 @@ function MakeBanner(self)
             anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")
         end
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
-        anim:GetAnimState():SetBuild("dst_menu_carnival")
-        anim:GetAnimState():SetBank ("dst_menu_carnival")
+
+        anim:GetAnimState():SetBuild("dst_menu_webber_carnival")
+        anim:GetAnimState():SetBank ("dst_menu_webber")
         anim:SetScale(.667)
         anim:GetAnimState():PlayAnimation("loop", true)
 
 	elseif true then
-        --[[
-        anim:GetAnimState():SetBuild("dst_menu_wes2")
-        anim:GetAnimState():SetBank ("dst_menu_wes2")
+        
+        anim:GetAnimState():SetBuild("dst_menu_webber")
+        anim:GetAnimState():SetBank ("dst_menu_webber")
         anim:SetScale(.667)
         anim:GetAnimState():PlayAnimation("loop", true)
-        ]]
+        
 
 
-        anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
+        --[[anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
         anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
         anim:GetAnimState():PlayAnimation("loop_w1", true)
         anim:SetScale(.667)
@@ -293,7 +294,7 @@ function MakeBanner(self)
         anim_foreground:SetScale(.667)
         anim_foreground.inst:ListenForEvent("animover", function()
             anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3))
-        end)
+        end)]]
 
 	else
 		-- default banner

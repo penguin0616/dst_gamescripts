@@ -344,7 +344,7 @@ local function fn()
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODGROUP.OMNI }, { FOODGROUP.OMNI })
     inst.components.eater:SetCanEatHorrible()
-    inst.components.eater.strongstomach = true -- can eat monster meat!
+    inst.components.eater:SetStrongStomach(true) -- can eat monster meat!
     inst.components.eater:SetOnEatFn(OnEat)
 
     inst:AddComponent("sleeper")
@@ -469,7 +469,7 @@ local function mutated_fn()
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODGROUP.OMNI }, { FOODGROUP.OMNI })
     inst.components.eater:SetCanEatHorrible()
-    inst.components.eater.strongstomach = true -- can eat monster meat!
+    inst.components.eater:SetStrongStomach(true) -- can eat monster meat!
     inst.components.eater:SetOnEatFn(OnEat)
 
     inst:AddComponent("sleeper")

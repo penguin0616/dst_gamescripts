@@ -408,7 +408,7 @@ function MainScreen:OnBecomeActive()
     if not self.auto_login_started then
         if Profile:GetAutoLoginEnabled() then
             self.inst:DoTaskInTime(0, function() --wait a frame, so that this happens after construction
-                if TheFrontEnd:GetActiveScreen() == self and self.play_button:IsEnabled() then
+                if TheFrontEnd:GetActiveScreen() == self and self.play_button:IsEnabled() and not global_error_widget then
                     self.auto_login_started = true
                     print("Do AutoLogin")
                     self.play_button:Disable()

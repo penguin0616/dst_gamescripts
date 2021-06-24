@@ -25,6 +25,7 @@ local function ConfigurePlayerLocomotor(inst)
     inst.components.locomotor.walkspeed = TUNING.WILSON_WALK_SPEED -- 4
     inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED -- 6
     inst.components.locomotor.fasteronroad = true
+    inst.components.locomotor.fasteroncreep = false
     inst.components.locomotor:SetTriggersCreep(not inst:HasTag("spiderwhisperer"))
     inst.components.locomotor:SetAllowPlatformHopping(true)
 	inst.components.locomotor.hop_distance_fn = GetHopDistance

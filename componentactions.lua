@@ -275,6 +275,7 @@ local COMPONENT_ACTIONS =
                 doer.replica.inventory ~= nil and
                 (doer.replica.inventory:GetNumSlots() > 0 or inst.replica.equippable ~= nil) and
                 not (inst:HasTag("catchable") or inst:HasTag("fire") or inst:HasTag("smolder")) and
+                (not inst:HasTag("spider") or doer:HasTag("spiderwhisperer")) and
                 (right or not inst:HasTag("heavy")) and
                 not (right and inst.replica.container ~= nil and inst.replica.equippable == nil) then
                 table.insert(actions, ACTIONS.PICKUP)
@@ -413,7 +414,8 @@ local COMPONENT_ACTIONS =
         --]]
 
         sleepingbag = function(inst, doer, actions)
-            if doer:HasTag("player") and not doer:HasTag("insomniac") and not inst:HasTag("hassleeper") then
+            if (doer:HasTag("player") and not doer:HasTag("insomniac") and not inst:HasTag("hassleeper")) and
+               (not inst:HasTag("spiderden") or doer:HasTag("spiderwhisperer")) then
                 table.insert(actions, ACTIONS.SLEEPIN)
             end
         end,
@@ -748,7 +750,11 @@ local COMPONENT_ACTIONS =
                                             table.insert(actions, ACTIONS.FEED)
                                         end
                                     elseif target:HasTag("player") then
-                                        if TheNet:GetPVPEnabled() or not (inst:HasTag("badfood") or inst:HasTag("unsafefood") or inst:HasTag("spoiled")) then
+                                        if TheNet:GetPVPEnabled() or 
+                                            (target:HasTag("strongstomach") and inst:HasTag("monstermeat")) or
+                                            (inst:HasTag("spoiled") and target:HasTag("ignoresspoilage") and not 
+                                                (inst:HasTag("badfood") or inst:HasTag("unsafefood"))) or not -- ignoresspoilage still checks for unsage foods
+                                            (inst:HasTag("badfood") or inst:HasTag("unsafefood") or inst:HasTag("spoiled")) then
                                             table.insert(actions, ACTIONS.FEEDPLAYER)
                                         end
                                     elseif (target:HasTag("small_livestock") or ishandfed)
@@ -768,8 +774,12 @@ local COMPONENT_ACTIONS =
                                     table.insert(actions, ACTIONS.FEED)
                                 end
                             elseif target:HasTag("player") then
-                                if TheNet:GetPVPEnabled() or not (inst:HasTag("badfood") or inst:HasTag("unsafefood") or inst:HasTag("spoiled")) then
-                                    table.insert(actions, ACTIONS.FEEDPLAYER)
+                                if TheNet:GetPVPEnabled() or 
+                                    (target:HasTag("strongstomach") and inst:HasTag("monstermeat")) or
+                                    (inst:HasTag("spoiled") and target:HasTag("ignoresspoilage") and not 
+                                        (inst:HasTag("badfood") or inst:HasTag("unsafefood"))) or not -- ignoresspoilage still checks for unsage foods
+                                    (inst:HasTag("badfood") or inst:HasTag("unsafefood") or inst:HasTag("spoiled")) then
+                                    table.insert(actions, ACTIONS.FEEDPLAYER) 
                                 end
                             elseif (target:HasTag("small_livestock") or ishandfed)
                                 and target.replica.inventoryitem ~= nil
@@ -1047,14 +1057,19 @@ local COMPONENT_ACTIONS =
         end,
 
         shaver = function(inst, doer, target, actions)
-            if target:HasTag("bearded") and
-                not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()) then
-                table.insert(actions, ACTIONS.SHAVE)
+            if target:HasTag("bearded") and not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()) then
+                local is_den = target:HasTag("spiderden")
+                if is_den and doer:HasTag("spiderwhisperer") then
+                    table.insert(actions, ACTIONS.SHAVE)
+                elseif not is_den then
+                    table.insert(actions, ACTIONS.SHAVE)
+                end
             end
         end,
 
         sleepingbag = function(inst, doer, target, actions)
-           if doer == target and doer:HasTag("player") and not doer:HasTag("insomniac") and not inst:HasTag("hassleeper") then
+           if (doer == target and doer:HasTag("player") and not doer:HasTag("insomniac") and not inst:HasTag("hassleeper")) and
+              (not inst:HasTag("spiderden") or doer:HasTag("spiderwhisperer")) then
                 table.insert(actions, ACTIONS.SLEEPIN)
             end
         end,
@@ -1299,6 +1314,18 @@ local COMPONENT_ACTIONS =
         quagmire_slaughtertool = function(inst, doer, target, actions)
             if target:HasTag("canbeslaughtered") and target.replica.health ~= nil and not target.replica.health:IsDead() then
                 table.insert(actions, ACTIONS.SLAUGHTER)
+            end
+        end,
+
+        spidermutator = function(inst, doer, target, actions)
+            if target:HasTag("spider") and target.replica.health ~= nil and not target.replica.health:IsDead() then
+                table.insert(actions, ACTIONS.MUTATE_SPIDER)
+            end
+        end,
+
+        bedazzler = function(inst, doer, target, actions)
+            if doer:HasTag("spiderwhisperer") and target:HasTag("spiderden") and not target:HasTag("bedazzled") then
+               table.insert(actions, ACTIONS.BEDAZZLE) 
             end
         end,
     },
@@ -1833,7 +1860,8 @@ local COMPONENT_ACTIONS =
         end,
 
         sleepingbag = function(inst, doer, actions)
-            if doer:HasTag("player") and not doer:HasTag("insomniac") and not inst:HasTag("hassleeper") then
+            if (doer:HasTag("player") and not doer:HasTag("insomniac") and not inst:HasTag("hassleeper")) and 
+               (not inst:HasTag("spiderden") or doer:HasTag("spiderwhisperer")) then
                 table.insert(actions, ACTIONS.SLEEPIN)
             end
         end,
@@ -1932,7 +1960,17 @@ local COMPONENT_ACTIONS =
             if doer:HasTag("player") then
                 table.insert(actions, ACTIONS.YOTB_UNLOCKSKIN)
             end
-        end
+        end,
+
+        followerherder = function(inst, doer, actions, right)
+            table.insert(actions, ACTIONS.HERD_FOLLOWERS)
+        end,
+
+        repellent = function(inst, doer, actions, right)
+            if doer:HasTag("spiderwhisperer") then
+                table.insert(actions, ACTIONS.REPEL)
+            end
+        end,
     },
 
     ISVALID = --args: inst, action, right

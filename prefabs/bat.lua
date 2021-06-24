@@ -174,7 +174,7 @@ local function fn()
 
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODTYPE.MEAT }, { FOODTYPE.MEAT })
-    inst.components.eater.strongstomach = true
+    inst.components.eater:SetStrongStomach(true)
 
     inst:AddComponent("sleeper")
     inst.components.sleeper:SetResistance(3)

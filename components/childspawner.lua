@@ -653,15 +653,32 @@ end
 
 function ChildSpawner:ReleaseAllChildren(target, prefab)
 	local failures = 0 -- prevent infinate loops when SpawnChild fails to spawn its child
+    local children_released = {}
+
 	while self:CanSpawn() and failures < 3 do
-		failures = self:SpawnChild(target, prefab) == nil and (failures + 1) or 0
+        local new_child = self:SpawnChild(target, prefab)
+
+        if new_child == nil then
+            failures = failures + 1
+        else
+            failures = 0
+            table.insert(children_released, new_child)
+        end
 	end
 
 	failures = 0
 	self:UpdateMaxEmergencyCommit()
 	while self:CanEmergencySpawn() and failures < 3 do
-		failures = self:SpawnEmergencyChild(target, prefab) == nil and (failures + 1) or 0
+        local new_child = self:SpawnEmergencyChild(target, prefab)
+        if new_child == nil then
+            failures = failures + 1
+        else
+            table.insert(children_released, new_child)
+            failures = 0
+        end
 	end
+
+    return children_released
 end
 
 function ChildSpawner:AddChildrenInside(count)

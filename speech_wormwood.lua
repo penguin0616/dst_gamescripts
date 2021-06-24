@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Too slow",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "Leggy Bugs don't listen",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "Nope",
 	ANNOUNCE_BOAT_LEAK = "Water! Water coming!",
@@ -3478,6 +3493,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Biiiig mouth sounds",
         BATTLESONG_INSTANT_TAUNT = "Funny words",
         BATTLESONG_INSTANT_PANIC = "Funny words",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Belly stuff for Leggy Bugs?",
+        MUTATOR_DROPPER = "Belly stuff for Leggy Bugs?",
+        MUTATOR_HIDER = "Belly stuff for Leggy Bugs?",
+        MUTATOR_SPITTER = "Belly stuff for Leggy Bugs?",
+        MUTATOR_MOON = "Belly stuff for Leggy Bugs?",
+        MUTATOR_HEALER = "Belly stuff for Leggy Bugs?",
+        SPIDER_WHISTLE = "Fweee!",
+        SPIDERDEN_BEDAZZLER = "Making pretty things",
+        SPIDER_HEALER = "Takes care of leggy friends",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "For ghost friend",

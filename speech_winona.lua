@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Shoot! I've gotta be faster next time!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "Looks like I'm not the boss here.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "I sure gummed the works there.",
 	ANNOUNCE_BOAT_LEAK = "We gotta repair this ol'girl!",
@@ -3480,6 +3495,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Opera's a bit hoity-toity for me.",
         BATTLESONG_INSTANT_TAUNT = "This kind of stuff was more Charlie's thing...",
         BATTLESONG_INSTANT_PANIC = "This kind of stuff was more Charlie's thing...",
+
+        -- Webber
+        MUTATOR_WARRIOR = "I don't think I'll be takin' a bite out of that.",
+        MUTATOR_DROPPER = "Hope those spiders have strong stomachs.",
+        MUTATOR_HIDER = "I don't think I'll be takin' a bite out of that.",
+        MUTATOR_SPITTER = "Hope those spiders have strong stomachs.",
+        MUTATOR_MOON = "I don't think I'll be takin' a bite out of that.",
+        MUTATOR_HEALER = "Hope those spiders have strong stomachs.",
+        SPIDER_WHISTLE = "Sure wish that kid would hang around a better crowd.",
+        SPIDERDEN_BEDAZZLER = "Doing some home improvements, kiddo?",
+        SPIDER_HEALER = "You're a real stinker, you know that?",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "I don't think that's safe to drink...",

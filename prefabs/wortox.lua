@@ -320,6 +320,12 @@ end
 
 --------------------------------------------------------------------------
 
+local function CLIENT_Wortox_HostileTest(inst, target)
+    return (target:HasTag("hostile") or target:HasTag("pig") or target:HasTag("catcoon"))
+end
+
+--------------------------------------------------------------------------
+
 local function common_postinit(inst)
     inst:AddTag("playermonster")
     inst:AddTag("monster")
@@ -333,6 +339,8 @@ local function common_postinit(inst)
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = ReticuleTargetFn
     inst.components.reticule.ease = true
+
+    inst.HostileTest = CLIENT_Wortox_HostileTest
 end
 
 local function master_postinit(inst)

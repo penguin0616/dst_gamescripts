@@ -26,6 +26,7 @@ self.inst = inst
 
 local _fishshoals = {}
 local _firstspawn = true
+local _spawnpending = false
 local _shuffled_shoals_for_spawning = nil
 local _activemalbatross = nil
 
@@ -62,7 +63,7 @@ local function SummonMalbatross(target_shoal, the_malbatross)
 end
 
 local function TryBeginningMalbatrossSpawns()
-    if next(_fishshoals) ~= nil then
+    if next(_fishshoals) ~= nil and not _spawnpending then
         if not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
             _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, (_firstspawn and 0) or GetRandomWithVariance(TUNING.MALBATROSS_SPAWNDELAY_BASE, TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
         end
@@ -103,15 +104,12 @@ local function OnShoalFishHooked(source, fish_shoal)
     if _activemalbatross == nil and fish_shoal ~= nil and (not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) or _worldsettingstimer:GetTimeLeft(MALBATROSS_TIMERNAME) < 10)
             and math.random() < TUNING.MALBATROSS_HOOKEDFISH_SUMMONCHANCE then
 
-        if not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
-            _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, 0)
-        end
-
         _shuffled_shoals_for_spawning = {fish_shoal}
     end
 end
 
 local function OnMalbatrossTimerDone()
+    _spawnpending = true
     inst:StartUpdatingComponent(self)
 end
 
@@ -198,6 +196,9 @@ end
 function self:OnLoad(data)
     if data._time_until_spawn then
         _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, math.min(data._time_until_spawn, TUNING.MALBATROSS_SPAWNDELAY_BASE + TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
+    elseif data._timerfinished then
+        _worldsettingstimer:StopTimer(MALBATROSS_TIMERNAME)
+        OnMalbatrossTimerDone()
     end
     _firstspawn = data._firstspawn
 end
@@ -205,10 +206,6 @@ end
 function self:LoadPostPass(newents, data)
     if data.activeguid ~= nil and newents[data.activeguid] ~= nil then
         _activemalbatross = newents[data.activeguid].entity
-    end
-    if data._timerfinished then
-        _worldsettingstimer:StopTimer(MALBATROSS_TIMERNAME)
-        OnMalbatrossTimerDone()
     end
 end
 

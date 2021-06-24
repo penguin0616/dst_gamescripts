@@ -266,13 +266,13 @@ STRINGS =
 		{
             { title = "Birthday", desc = "July 23" },
             { title = "Favorite Food", desc = "Turkey Dinner" },
-			{ title = "The Curtain Calls", desc = "Wigfrid always knew she was meant for the stage. Her debut performance was an instant sensation, launching her from obscurity to overnight stardom. Fans delighted in her portrayal of a noble and fearsome Valkyrie warrior, and she in turn took great pains to fully embody the role. She was perfect for it... perhaps too perfect. Every part she played afterward seemed to fall flat, never again achieving that magical quality that had once drawn audiences to her performances like bees to honey. As Wigfrid’s stardom slowly began to fade, she retreated to the memories of her glory days, losing herself in her fantasies...\nUntil one day, she was lost entirely." },
+			{ title = "The Curtain Calls", desc = "Wigfrid always knew she was meant for the stage. Her debut performance was an instant sensation, launching her from obscurity to overnight stardom. Fans delighted in her portrayal of a noble and fearsome Valkyrie warrior, and she in turn took great pains to fully embody the role. She was perfect for it... perhaps too perfect. Every part she played afterward seemed to fall flat, never again achieving that magical quality that had once drawn audiences to her performances like bees to honey. As Wigfrid's stardom slowly began to fade, she retreated to the memories of her glory days, losing herself in her fantasies...\nUntil one day, she was lost entirely." },
 		},
         webber =
 		{
             { title = "Birthday", desc = "April 30" },
             { title = "Favorite Food", desc = "Ice Cream" },
-			{ title = "His Past...", desc = "Is yet to be revealed." },
+			{ title = "Along Came a Spider", desc = "Once upon a time, there was a young boy who lived with his family on a small farmstead. Though they lived humbly, the boy's home was filled with love, and he grew up happy and kind. The boy might have lived contentedly for the rest of his days if not for the sudden arrival of an old aquaintance, who came to the house beseeching the boy's father for his expertise on a strange and secretive project..." },
 		},
         winona =
 		{
@@ -808,7 +808,6 @@ STRINGS =
         BEGIN_QUEST = "Assist",
         ABANDON_QUEST = "Abandon",
 
-
         -- Wigfrid
         SING = "Sing",
         QUOTE = "Recite",
@@ -821,6 +820,12 @@ STRINGS =
             GENERIC = "Choose This Beefalo",
             UNMARK = "Take Back",
         },
+
+        -- Webber
+        MUTATE_SPIDER = "Feed",
+        HERD_FOLLOWERS = "Herd Spiders",
+        REPEL = "Shoo Spiders",
+        BEDAZZLE = "Decorate",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -3129,6 +3134,18 @@ STRINGS =
         MOON_DEVICE_CONSTRUCTION3 = "Lunar Siphonator",
 
         MOON_DEVICE = "Lunar Siphonator",
+		-- Webber
+        MUTATOR_WARRIOR = "Warrior Switcherdoodle",
+        MUTATOR_DROPPER = "Dangler Switcherdoodle",
+        MUTATOR_HIDER = "Cave Switcherdoodle",
+        MUTATOR_SPITTER = "Spitter Switcherdoodle",
+        MUTATOR_MOON = "Shatter Switcherdoodle",
+        MUTATOR_HEALER = "Nurse Switcherdoodle",
+        SPIDER_WHISTLE = "Webby Whistle",
+        SPIDERDEN_BEDAZZLER = "Den Decorating Set",
+        SPIDER_HEALER = "Nurse Spider",
+        SPIDER_REPELLENT = "Shoo Box",
+        SPIDER_HEALER_ITEM = "Healing Glop",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3810,9 +3827,20 @@ STRINGS =
 
         MOONSTORM_GOGGLESHAT = "Utilize potato eyes to see through storms.",
         MOON_DEVICE_CONSTRUCTION1 = "Mad science approved, never tested.",
-    },
 
-    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
+        -- Webber
+        MUTATOR_WARRIOR = "Make the sweetest little bodyguards.",
+        MUTATOR_DROPPER = "The flavor might catch you by surprise.",
+        MUTATOR_HIDER = "Crunchy outside, soft inside.",
+        MUTATOR_SPITTER = "It's the spitting image of a spider.",
+        MUTATOR_MOON = "Its recipient will be over the moon!",
+        MUTATOR_HEALER = "Extra grainy, so it has to be healthy!",
+        SPIDER_WHISTLE = "Call your creepy crawly friends.",
+        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",        
+        SPIDER_REPELLENT = "Let your friends know you need some space.",
+        SPIDER_HEALER_ITEM = "Gross, gooey, and good for you!",
+        
+    },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_QUEST_SURVIVE = {
     --  {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -4984,6 +5012,7 @@ STRINGS =
         ENGINEERING = "Engineering",
 		ELIXIRBREWING = "Ectoherbology",
         BATTLESONGS = "Stagecraft",
+        SPIDERCRAFT = "Spider Care",
         NATURE = "Green Thumb",
         CARTOGRAPHY = "Cartography",
         SEAFARING = "Seafaring",
@@ -5545,6 +5574,7 @@ STRINGS.PIGNAMES =
     "Bryce",
     "Bug", --Joe's kid
     "Seth",
+    "Hugo",
 
     --food that Sloth likes
     "Moon Pie",
@@ -5764,6 +5794,7 @@ STRINGS.UI =
 
         },
         NEEDCARNIVAL_HOSTSHOP_PLAZA = "Purchase the Cawnival Sapling to unlock!",
+        NEEDSSPIDERFRIENDSHIP = "Make friends with spiders to learn a recipe!",
         CANTRESEARCH = "Some things are unknowable.",
         DEFAULT = "Classic",
     },

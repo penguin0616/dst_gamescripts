@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Slow down, birdies!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "Hey! Talking to you! Listen!!",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "Grrr... can't do it, florpt.",
 	ANNOUNCE_BOAT_LEAK = "Yay! Boat getting wetter!",
@@ -3474,6 +3489,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Someone drew bunch of flies stuck in Spiderfolk webs, florpt.",
         BATTLESONG_INSTANT_TAUNT = "Glurgh... these words really hard...",
         BATTLESONG_INSTANT_PANIC = "Glurgh... these words really hard...",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Webby boy make Merm cookie next!!",
+        MUTATOR_DROPPER = "Webby boy make Merm cookie next!!",
+        MUTATOR_HIDER = "Webby boy make Merm cookie next!!",
+        MUTATOR_SPITTER = "Webby boy make Merm cookie next!!",
+        MUTATOR_MOON = "Webby boy make Merm cookie next!!",
+        MUTATOR_HEALER = "Webby boy make Merm cookie next!!",
+        SPIDER_WHISTLE = "It tickly!",
+        SPIDERDEN_BEDAZZLER = "What you making Webby boy?",
+        SPIDER_HEALER = "Glurgh, dusty spider!",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Ooooh! Me wanna make some too, florp!",

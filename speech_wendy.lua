@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "I was too late...",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "They are Webber's friends, not mine.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "I can't do anything right.",
 	ANNOUNCE_BOAT_LEAK = "Our boat weeps salty tears.",
@@ -3478,6 +3493,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "My heart has no desire to sing.",
         BATTLESONG_INSTANT_TAUNT = "I only like tragedies.",
         BATTLESONG_INSTANT_PANIC = "I only like tragedies.",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Very well, since you made the cookies you can bring one spider friend to our tea party.",
+        MUTATOR_DROPPER = "Webber sees the world in a most curious way.",
+        MUTATOR_HIDER = "Very well, since you made the cookies you can bring one spider friend to our tea party.",
+        MUTATOR_SPITTER = "It's the only thing smiling around here.",
+        MUTATOR_MOON = "Very well, since you made the cookies you can bring one spider friend to our tea party.",
+        MUTATOR_HEALER = "It's the only thing smiling around here.",
+        SPIDER_WHISTLE = "I don't think I want to play with that.",
+        SPIDERDEN_BEDAZZLER = "I wonder if I might ask to borrow some colored pencils...",
+        SPIDER_HEALER = "It's only prolonging the inevitable. How sad.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "It's all I can do to help...",

@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Oh dear, I wasn't quite fast enough.",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "I'm afraid this isn't my area of expertise.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "It seems I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat has fallen into dangerous disrepair.",
@@ -3474,6 +3489,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Musical notation, if I'm not mistaken.",
         BATTLESONG_INSTANT_TAUNT = "Oh my, those are some rather colorful turns of phrase.",
         BATTLESONG_INSTANT_PANIC = "Ah, how I love the classics!",
+
+        -- Webber
+        MUTATOR_WARRIOR = "How interesting! They appear to alter an arachnid's form when ingested.",
+        MUTATOR_DROPPER = "They're lovely, dear.",
+        MUTATOR_HIDER = "How interesting! They appear to alter an arachnid's form when ingested.",
+        MUTATOR_SPITTER = "They're lovely, dear.",
+        MUTATOR_MOON = "How interesting! They appear to alter an arachnid's form when ingested.",
+        MUTATOR_HEALER = "They're lovely, dear.",
+        SPIDER_WHISTLE = "Arachnids seem to find the sound quite agreeable.",
+        SPIDERDEN_BEDAZZLER = "Be sure to tidy up when you're finished, young arachnid.",
+        SPIDER_HEALER = "This arachnid has evolved the ability to heal others around it.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Color-coded and clearly labeled. Well done!",

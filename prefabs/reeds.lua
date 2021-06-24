@@ -59,7 +59,6 @@ local function fn()
     inst.components.pickable.onregenfn = onregenfn
     inst.components.pickable.onpickedfn = onpickedfn
     inst.components.pickable.makeemptyfn = makeemptyfn
-    inst.components.pickable.SetRegenTime = 120
 
     inst:AddComponent("inspectable")
 

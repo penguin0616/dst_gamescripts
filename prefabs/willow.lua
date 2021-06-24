@@ -44,7 +44,9 @@ local function sanityfn(inst)--, dt)
 end
 
 local function GetFuelMasterBonus(inst, item, target)
-    return (target:HasTag("campfire") or target.prefab == "nightlight") and TUNING.WILLOW_CAMPFIRE_FUEL_MULT or 1
+
+    -- The TAG "firefuellight" is used for items that are not campfires in that they won't incubate something but Willow should benefit from fueling it.
+    return (target:HasTag("firefuellight") or target:HasTag("campfire") or target.prefab == "nightlight") and TUNING.WILLOW_CAMPFIRE_FUEL_MULT or 1
 end
 
 local function OnRespawnedFromGhost(inst)

@@ -19,7 +19,23 @@ local function _spawn_list(list, spacing, fn)
 			end
 		end
 	end
+end
 
+function d_allmutators()
+    c_give("mutator_warrior")
+    c_give("mutator_dropper")
+    c_give("mutator_hider")
+    c_give("mutator_spitter")
+    c_give("mutator_moon")
+end
+
+function d_spiders()
+    c_give("spider")
+    c_give("spider_warrior")
+    c_give("spider_dropper")
+    c_give("spider_hider")
+    c_give("spider_spitter")
+    c_give("spider_moon")
 end
 
 function d_decodedata(path)

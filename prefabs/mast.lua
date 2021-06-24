@@ -137,6 +137,8 @@ local function upgrade_lamp(inst, no_built_callback)
     inst.components.fueled.accepting = true
     inst.components.fueled.canbespecialextinguished = true
 
+    inst:AddTag("firefuellight")
+
     lamp_turnon(inst)
 
     inst.components.upgradeable.upgradetype = nil

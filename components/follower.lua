@@ -133,6 +133,8 @@ function Follower:StartLeashing()
         self.inst:ListenForEvent("entitywake", self._onleaderwake, self.leader)
         self.inst:ListenForEvent("entitysleep", OnEntitySleep)
     end
+
+    self.inst:PushEvent("startleashing")
 end
 
 function Follower:StopLeashing()
@@ -145,6 +147,8 @@ function Follower:StopLeashing()
             self.porttask = nil
         end
     end
+
+    self.inst:PushEvent("stopleashing")
 end
 
 function Follower:SetLeader(inst)
@@ -201,6 +205,8 @@ function Follower:AddLoyaltyTime(time)
     timeLeft = math.min(self.maxfollowtime or 0, timeLeft + time)
 
     self.targettime = currentTime + timeLeft
+
+    self.inst:PushEvent("gainloyalty", { leader = self.leader })
 
     if self.task ~= nil then
         self.task:Cancel()

@@ -194,6 +194,7 @@ local function CreateFloor(parent)
 	inst:AddTag("CLASSIFIED")
 	inst:AddTag("NOCLICK")
 	inst:AddTag("DECOR")
+	inst:AddTag("event_trigger")
 
 	--local s = .9
 	--inst.Transform:SetScale(s, s, s)

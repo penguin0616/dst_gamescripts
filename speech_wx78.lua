@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "I MISSED THAT ON PURPOSE",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "AS THE MINIONS OF MY MINION YOU SHOULD OBEY ME!",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "ERROR: ACTION UNAVAILABLE",
 	ANNOUNCE_BOAT_LEAK = "MY WORST NIGHTMARE IS REALIZED",
@@ -3474,6 +3489,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "FLESHSACKS MAKE SUCH ATROCIOUS FACE SOUNDS",
         BATTLESONG_INSTANT_TAUNT = "I CARE FOR FICTIONAL HUMANS EVEN LESS THAN REAL ONES",
         BATTLESONG_INSTANT_PANIC = "I CARE FOR FICTIONAL HUMANS EVEN LESS THAN REAL ONES",
+
+        -- Webber
+        MUTATOR_WARRIOR = "IT IS A CRUDE AND DISGUSTING. AN ACCURATE DEPICTION",
+        MUTATOR_DROPPER = "IT IS A CRUDE AND DISGUSTING. AN ACCURATE DEPICTION",
+        MUTATOR_HIDER = "IT IS A CRUDE AND DISGUSTING. AN ACCURATE DEPICTION",
+        MUTATOR_SPITTER = "IT IS A CRUDE AND DISGUSTING. AN ACCURATE DEPICTION",
+        MUTATOR_MOON = "IT IS A CRUDE AND DISGUSTING. AN ACCURATE DEPICTION",
+        MUTATOR_HEALER = "IT IS A CRUDE AND DISGUSTING. AN ACCURATE DEPICTION",
+        SPIDER_WHISTLE = "WHY MUST IT HAVE LEGS",
+        SPIDERDEN_BEDAZZLER = "ART IS POINTLESS",
+        SPIDER_HEALER = "SPIDER REPAIR UNIT",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "INFERIOR CRAFTSMANSHIP. A CHILD COULD HAVE MADE THIS",

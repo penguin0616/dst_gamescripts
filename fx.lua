@@ -2055,7 +2055,35 @@ local fx =
         build = "alterguardian_meteor",
         anim = "meteor_pst",
         sound = "turnoftides/common/together/moon_glass/mine",
-    }
+    },
+    {
+        name = "spider_mutate_fx",
+        bank = "mutate_fx",
+        build = "mutate_fx",
+        anim = "mutate",
+    },
+
+    {
+        name = "spider_heal_fx",
+        bank = "heal_fx",
+        build = "spider_heal_fx",
+        anim = "heal",
+    },
+
+    {
+        name = "spider_heal_target_fx",
+        bank = "heal_fx",
+        build = "spider_heal_fx",
+        anim = "heal_buff",
+    },
+
+    {
+        name = "spider_heal_ground_fx",
+        bank = "heal_fx",
+        build = "spider_heal_fx",
+        anim = "heal_aoe",
+        fn = GroundOrientation,
+    },
 }
 
 for cratersteamindex = 1, 4 do

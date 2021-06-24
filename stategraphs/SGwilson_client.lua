@@ -518,10 +518,16 @@ local actionhandlers =
             return "dolongaction"
         end
     end),
+    
     ActionHandler(ACTIONS.STOPUSINGITEM, "dolongaction"),
 
     ActionHandler(ACTIONS.YOTB_STARTCONTEST, "doshortaction"),
     ActionHandler(ACTIONS.CARNIVAL_HOST_SUMMON, "give"),
+
+    ActionHandler(ACTIONS.MUTATE_SPIDER, "give"),
+    ActionHandler(ACTIONS.HERD_FOLLOWERS, "use_inventory_item"),
+    ActionHandler(ACTIONS.REPEL, "use_inventory_item"),
+    ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
 }
 
 local events =
@@ -4212,6 +4218,35 @@ local states =
         end,
     },
 
+
+    State{
+        name = "use_inventory_item",
+        tags = { "doing", "playing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("useitem_pre")
+            inst.AnimState:PushAnimation("useitem_lag", false)
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.sg:GoToState("idle")
+        end,
+    },
 }
 
 local hop_timelines =

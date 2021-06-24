@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Oh ho, too slow!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "Fiddle dee dee, they won't listen to me!",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "No, no, no.",
 	ANNOUNCE_BOAT_LEAK = "Now this ride's getting fun!",
@@ -3480,6 +3495,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Singing is good for the soul.",
         BATTLESONG_INSTANT_TAUNT = "Oooh, yay! Are we putting on a play?",
         BATTLESONG_INSTANT_PANIC = "Oooh, yay! Are we putting on a play?",
+
+        -- Webber
+        MUTATOR_WARRIOR = "A tasty treat for those tiny terrors!",
+        MUTATOR_DROPPER = "A tasty treat for those tiny terrors!",
+        MUTATOR_HIDER = "A tasty treat for those tiny terrors!",
+        MUTATOR_SPITTER = "A tasty treat for those tiny terrors!",
+        MUTATOR_MOON = "A tasty treat for those tiny terrors!",
+        MUTATOR_HEALER = "A tasty treat for those tiny terrors!",
+        SPIDER_WHISTLE = "Hyuyu! Who knew spiders liked to whistle?",
+        SPIDERDEN_BEDAZZLER = "I should paint mustaches on the mortals while they're sleeping...",
+        SPIDER_HEALER = "I'm not sure I trust that strange orange dust.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Hyuyu! Someone's getting crafty!",

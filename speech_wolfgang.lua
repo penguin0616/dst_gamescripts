@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Little bird is too fast!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "Eep! Creepy bugs not listen to Wolfgang!",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "I am not mighty enough to do that.",
 	ANNOUNCE_BOAT_LEAK = "Drippy drops is come through boat!",
@@ -3475,6 +3490,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Stronglady have voice as powerful as her muscles!",
         BATTLESONG_INSTANT_TAUNT = "Wolfgang will stick to lifting and punching.",
         BATTLESONG_INSTANT_PANIC = "Wolfgang will stick to lifting and punching.",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        MUTATOR_DROPPER = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        MUTATOR_HIDER = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        MUTATOR_SPITTER = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        MUTATOR_MOON = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        MUTATOR_HEALER = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        SPIDER_WHISTLE = "Wolfgang not sure he wants to be at spider party...",
+        SPIDERDEN_BEDAZZLER = "Monsterchild will draw Wolfgang next, yes?",
+        SPIDER_HEALER = "Scary dust spider!",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Wolfgang not trust tiny bottles made by creepy girl.",

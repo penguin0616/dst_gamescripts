@@ -145,7 +145,6 @@ local function AltarAngleTest(altar, other_altar1, other_altar2)
     local dot_this_to_other1_other2 = VecUtil_Dot(
         delta_normalized_this_to_other1_x, delta_normalized_this_to_other1_z,
         delta_normalized_this_to_other2_x, delta_normalized_this_to_other2_z)
-
     return math.abs(dot_this_to_other1_other2) <= TUNING.MOON_ALTAR_LINK_MAX_ABS_DOT
 end
 
@@ -603,12 +602,13 @@ function self:SpawnGestalt(angle, prefab)
 end
 
 local MUTANT_BIRD_MUST_HAVE = {"bird_mutant"}
+local MUTANT_BIRD_MUST_NOT_HAVE = {"INLIMBO"}
 
 function self:spawnGestaltWave()
 
 	if self.wagstaff then
 		local x,y,z = self.wagstaff.Transform:GetWorldPosition()
-		local ents = TheSim:FindEntities(x, y, z, 30, MUTANT_BIRD_MUST_HAVE)
+		local ents = TheSim:FindEntities(x, y, z, 30, MUTANT_BIRD_MUST_HAVE,MUTANT_BIRD_MUST_NOT_HAVE)
 
 		if #ents < 16 then
 			local currentpos = Vector3(self.wagstaff.Transform:GetWorldPosition())

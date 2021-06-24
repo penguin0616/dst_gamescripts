@@ -98,6 +98,25 @@ local function ClientFasterOnRoad(self)
     return self.fasteronroad
 end
 
+local function ServerFasterOnCreep(self)
+    if self.inst.components.rider ~= nil then
+        local mount = self.inst.components.rider:IsRiding() and self.inst.components.rider:GetMount() or nil
+        if mount ~= nil then
+            return false
+        end
+    end
+    return self.fasteroncreep
+end
+
+local function ClientFasterOnCreep(self)
+    local rider = self.inst.replica.rider
+    local mount = rider ~= nil and rider:IsRiding() and rider:GetMount() or nil
+    if mount ~= nil then
+        return false
+    end
+    return self.fasteroncreep
+end
+
 local function ServerExternalSpeedMutliplier(self)
     return self.externalspeedmultiplier
 end
@@ -182,12 +201,14 @@ local LocoMotor = Class(function(self, inst)
         inst:AddTag("locomotor")
         self.RunSpeed = ServerRunSpeed
         self.FasterOnRoad = ServerFasterOnRoad
+        self.FasterOnCreep = ServerFasterOnCreep
         self.ExternalSpeedMultiplier = ServerExternalSpeedMutliplier
         self.GetSpeedMultiplier = ServerGetSpeedMultiplier
 		self.IsFasterOnGroundTile = ServerIsFasterOnGroundTile
     else
         self.RunSpeed = ClientRunSpeed
         self.FasterOnRoad = ClientFasterOnRoad
+        self.FasterOnCreep = ClientFasterOnCreep
         self.ExternalSpeedMultiplier = ClientExternalSpeedMultiplier
         self.GetSpeedMultiplier = ClientGetSpeedMultiplier
 		self.IsFasterOnGroundTile = ClientIsFasterOnGroundTile
@@ -350,6 +371,10 @@ function LocoMotor:SetTriggersCreep(triggers)
     self.triggerscreep = triggers
 end
 
+function LocoMotor:SetFasterOnCreep(faster)
+    self.fasteroncreep = faster
+end
+
 function LocoMotor:EnableGroundSpeedMultiplier(enable)
     self.enablegroundspeedmultiplier = enable
     if not enable then
@@ -381,8 +406,9 @@ end
 
 function LocoMotor:UpdateGroundSpeedMultiplier()
     local x, y, z = self.inst.Transform:GetWorldPosition()
-    local oncreep = self.triggerscreep and TheWorld.GroundCreep:OnCreep(x, y, z)
-    if oncreep then
+    local oncreep = TheWorld.GroundCreep:OnCreep(x, y, z)
+    
+    if oncreep and self.triggerscreep then
         -- if this ever needs to happen when self.enablegroundspeedmultiplier is set, need to move the check for self.enablegroundspeedmultiplier above
         if not self.wasoncreep then
             for _, v in ipairs(TheWorld.GroundCreep:GetTriggeredCreepSpawners(x, y, z)) do
@@ -395,9 +421,12 @@ function LocoMotor:UpdateGroundSpeedMultiplier()
         self.wasoncreep = false
 
         local current_ground_tile = TheWorld.Map:GetTileAtPoint(x, 0, z)
-        self.groundspeedmultiplier = (self:IsFasterOnGroundTile(current_ground_tile) or (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or current_ground_tile == GROUND.ROAD)))
-									and self.fastmultiplier
-									or 1
+        self.groundspeedmultiplier = (self:IsFasterOnGroundTile(current_ground_tile) or 
+                                     (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or current_ground_tile == GROUND.ROAD)) or
+                                     (self:FasterOnCreep() and oncreep))
+									 and self.fastmultiplier 
+									 or 1
+
     end
 end
 

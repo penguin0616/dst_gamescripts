@@ -806,7 +806,7 @@ function FrontEnd:PushScreen(screen)
 
 	--self.tracking_mouse = false
 	--jcheng: don't allow any other screens to push if we're displaying an error
-    if global_error_widget ~= nil then return end
+    --if global_error_widget ~= nil then return end -- Note: this just leaves screens outside the screen hierarchy which is worse than having them pushed
 
     Print(VERBOSITY.DEBUG, 'FrontEnd:PushScreen', screen.name)
     if #self.screenstack > 0 then

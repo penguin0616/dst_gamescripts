@@ -1467,6 +1467,17 @@ table.insert(prefs, CreatePrefabSkin("farm_hoe_invisible",
 	release_group = 117,
 }))
 
+table.insert(prefs, CreatePrefabSkin("farm_hoe_rustic",
+{
+	base_prefab = "farm_hoe",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) farm_hoe_init_fn(inst, "farm_hoe_rustic") end,
+	skin_tags = { "BOY", "FARM_HOE", "CRAFTABLE", },
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("featherfan_exotic",
 {
 	base_prefab = "featherfan",
@@ -2762,6 +2773,27 @@ table.insert(prefs, CreatePrefabSkin("mast_crabking_item",
 	release_group = 95,
 }))
 
+table.insert(prefs, CreatePrefabSkin("mast_nautical",
+{
+	base_prefab = "mast",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) mast_init_fn(inst, "mast_nautical") end,
+	skin_tags = { "MAST", "NAUTICAL", "CRAFTABLE", },
+	release_group = 120,
+}))
+
+table.insert(prefs, CreatePrefabSkin("mast_nautical_item",
+{
+	base_prefab = "mast_item",
+	type = "item",
+	build_name_override = "mast_nautical",
+	rarity = "Loyal",
+	init_fn = function(inst) mast_item_init_fn(inst, "mast_nautical") end,
+	skin_tags = { },
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("mast_rose",
 {
 	base_prefab = "mast",
@@ -3804,6 +3836,17 @@ table.insert(prefs, CreatePrefabSkin("saltbox_victorian",
 	release_group = 113,
 }))
 
+table.insert(prefs, CreatePrefabSkin("seedpouch_rustic",
+{
+	base_prefab = "seedpouch",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) seedpouch_init_fn(inst, "seedpouch_rustic") end,
+	skin_tags = { "BOY", "SEEDPOUCH", "CRAFTABLE", },
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("shovel_feathered",
 {
 	base_prefab = "shovel",
@@ -4811,6 +4854,17 @@ table.insert(prefs, CreatePrefabSkin("warly_victorian",
 	release_group = 70,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wateringcan_rustic",
+{
+	base_prefab = "wateringcan",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wateringcan_init_fn(inst, "wateringcan_rustic") end,
+	skin_tags = { "BOY", "WATERINGCAN", "CRAFTABLE", },
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("watermelonhat_pumpkin",
 {
 	base_prefab = "watermelonhat",
@@ -5330,6 +5384,21 @@ table.insert(prefs, CreatePrefabSkin("webber_bat_p",
 	release_group = 105,
 }))
 
+table.insert(prefs, CreatePrefabSkin("webber_boy",
+{
+	base_prefab = "webber",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "BOY", "BASE", "WEBBER", },
+	bigportrait = { build = "bigportraits/webber_boy.xml", symbol = "webber_boy_oval.tex"},
+	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_boy", },
+	torso_tuck_builds = { "webber_boy", },
+	has_alternate_for_body = { "webber_boy", },
+	linked_beard = "webber_beard_boy",
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("webber_combatant",
 {
 	base_prefab = "webber",
@@ -5356,7 +5425,7 @@ table.insert(prefs, CreatePrefabSkin("webber_formal",
 {
 	base_prefab = "webber",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "FORMAL", "BASE", "WEBBER", },
 	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_formal", },
 	torso_tuck_builds = { "webber_formal", },
@@ -5364,6 +5433,22 @@ table.insert(prefs, CreatePrefabSkin("webber_formal",
 	linked_beard = "webber_beard_formal",
 	marketable = true,
 	release_group = 2,
+}))
+
+table.insert(prefs, CreatePrefabSkin("webber_formalp",
+{
+	base_prefab = "webber",
+	type = "base",
+	build_name_override = "webber_formal",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "FORMAL", "BASE", "WEBBER", },
+	bigportrait = { build = "bigportraits/webber_formal.xml", symbol = "webber_formal_oval.tex"},
+	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_formal", },
+	torso_tuck_builds = { "webber_formal", },
+	has_alternate_for_body = { "webber_formal", },
+	linked_beard = "webber_beard_formal",
+	release_group = 120,
 }))
 
 table.insert(prefs, CreatePrefabSkin("webber_gladiator",
@@ -5443,7 +5528,7 @@ table.insert(prefs, CreatePrefabSkin("webber_rose",
 {
 	base_prefab = "webber",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "ROSE", "BASE", "WEBBER", },
 	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_rose", },
 	torso_tuck_builds = { "webber_rose", },
@@ -5453,11 +5538,27 @@ table.insert(prefs, CreatePrefabSkin("webber_rose",
 	release_group = 10,
 }))
 
+table.insert(prefs, CreatePrefabSkin("webber_rosep",
+{
+	base_prefab = "webber",
+	type = "base",
+	build_name_override = "webber_rose",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "ROSE", "BASE", "WEBBER", },
+	bigportrait = { build = "bigportraits/webber_rose.xml", symbol = "webber_rose_oval.tex"},
+	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_rose", },
+	torso_tuck_builds = { "webber_rose", },
+	has_alternate_for_body = { "webber_rose", },
+	linked_beard = "webber_beard_rose",
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("webber_shadow",
 {
 	base_prefab = "webber",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "SHADOW", "BASE", "WEBBER", },
 	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_shadow", },
 	torso_tuck_builds = { "webber_shadow", },
@@ -5467,11 +5568,27 @@ table.insert(prefs, CreatePrefabSkin("webber_shadow",
 	release_group = 6,
 }))
 
+table.insert(prefs, CreatePrefabSkin("webber_shadowp",
+{
+	base_prefab = "webber",
+	type = "base",
+	build_name_override = "webber_shadow",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "SHADOW", "BASE", "WEBBER", },
+	bigportrait = { build = "bigportraits/webber_shadow.xml", symbol = "webber_shadow_oval.tex"},
+	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_shadow", },
+	torso_tuck_builds = { "webber_shadow", },
+	has_alternate_for_body = { "webber_shadow", },
+	linked_beard = "webber_beard_shadow",
+	release_group = 120,
+}))
+
 table.insert(prefs, CreatePrefabSkin("webber_survivor",
 {
 	base_prefab = "webber",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "SURVIVOR", "BASE", "WEBBER", },
 	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_survivor", },
 	torso_tuck_builds = { "webber_survivor", },
@@ -5479,6 +5596,22 @@ table.insert(prefs, CreatePrefabSkin("webber_survivor",
 	linked_beard = "webber_beard_survivor",
 	marketable = true,
 	release_group = 4,
+}))
+
+table.insert(prefs, CreatePrefabSkin("webber_survivorp",
+{
+	base_prefab = "webber",
+	type = "base",
+	build_name_override = "webber_survivor",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "SURVIVOR", "BASE", "WEBBER", },
+	bigportrait = { build = "bigportraits/webber_survivor.xml", symbol = "webber_survivor_oval.tex"},
+	skins = { ghost_skin = "ghost_webber_build", normal_skin = "webber_survivor", },
+	torso_tuck_builds = { "webber_survivor", },
+	has_alternate_for_body = { "webber_survivor", },
+	linked_beard = "webber_beard_survivor",
+	release_group = 120,
 }))
 
 table.insert(prefs, CreatePrefabSkin("webber_victorian",

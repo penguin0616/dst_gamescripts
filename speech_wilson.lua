@@ -304,7 +304,22 @@ return {
         {
             TOO_LATE = "I need to be quicker!",
         },
-	},
+        HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "They won't listen to me, but they might listen to Webber.",
+        },
+        BEDAZZLE =
+        {
+            BURNING = "only_used_by_webber",
+            BURNT = "only_used_by_webber",
+            FROZEN = "only_used_by_webber",
+            ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+            BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "We're taking on a lot of water.",
@@ -3483,6 +3498,17 @@ return {
         BATTLESONG_FIRERESISTANCE = "I once burned my vest before seeing a play. I call that dramatic ironing.",
         BATTLESONG_INSTANT_TAUNT = "I'm afraid I'm not a licensed poetic.",
         BATTLESONG_INSTANT_PANIC = "I'm afraid I'm not a licensed poetic.",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Oh wow, that looks um... delicious, Webber!",
+        MUTATOR_DROPPER = "Ah, I... just ate! Why don't you give it to one of your spider friends?",
+        MUTATOR_HIDER = "Oh wow, that looks um... delicious, Webber!",
+        MUTATOR_SPITTER = "Ah, I... just ate! Why don't you give it to one of your spider friends?",
+        MUTATOR_MOON = "Oh wow, that looks um... delicious, Webber!",
+        MUTATOR_HEALER = "Ah, I... just ate! Why don't you give it to one of your spider friends?",
+        SPIDER_WHISTLE = "I don't want to call any spiders over to me!",
+        SPIDERDEN_BEDAZZLER = "It looks like someone's been getting crafty.",
+        SPIDER_HEALER = "Oh wonderful. Now the spiders can heal themselves.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Ah yes. Very science-y.",

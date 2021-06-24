@@ -458,12 +458,12 @@ fns.OnChangeArea = function(inst, area)
 end
 
 fns.OnAlterNight = function(inst)
-	local enable_lunacy = TheWorld.state.isnight and TheWorld.state.isalterawake
+	local enable_lunacy = TheWorld.state.isnight and TheWorld.state.isalterawake  
 	inst.components.sanity:EnableLunacy(enable_lunacy, "alter_night")
 end
 
 fns.OnStormLevelChanged = function(inst, data)
-	local in_moonstorm = data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM
+	local in_moonstorm = data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0   
 	inst.components.sanity:EnableLunacy(in_moonstorm, "moon_storm")
 end
 
@@ -1314,6 +1314,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_actions_item.zip"),
         Asset("ANIM", "anim/player_cave_enter.zip"),
         Asset("ANIM", "anim/player_actions_uniqueitem.zip"),
+        Asset("ANIM", "anim/player_actions_useitem.zip"),
         Asset("ANIM", "anim/player_actions_bugnet.zip"),
         Asset("ANIM", "anim/player_actions_unsaddle.zip"),
         Asset("ANIM", "anim/player_actions_fishing.zip"),
@@ -1414,8 +1415,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_mount_actions.zip"),
         Asset("ANIM", "anim/player_mount_actions_item.zip"),
         Asset("ANIM", "anim/player_mount_actions_reading.zip"),
-
         Asset("ANIM", "anim/player_mount_unique_actions.zip"),
+        Asset("ANIM", "anim/player_mount_actions_useitem.zip"),
         Asset("ANIM", "anim/player_mount_one_man_band.zip"),
         Asset("ANIM", "anim/player_mount_boat_jump.zip"),
         Asset("ANIM", "anim/player_mount_boat_sink.zip"),

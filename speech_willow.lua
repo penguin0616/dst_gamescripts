@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "I wasn't too slow, it was too fast.",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "These jerks won't listen to me.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "I can'tttttt.",
 	ANNOUNCE_BOAT_LEAK = "Gross, I hate water.",
@@ -3481,6 +3496,17 @@ return{
         BATTLESONG_FIRERESISTANCE = "Hey look, fancy kindling!",
         BATTLESONG_INSTANT_TAUNT = "Heh. Okay, I'm using that one.",
         BATTLESONG_INSTANT_PANIC = "Boring words I don't care about.",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Give one to Wilson, I'm sure he'd loooove to try it! Heheh.",
+        MUTATOR_DROPPER = "Eww, there's legs sticking out of it!",
+        MUTATOR_HIDER = "Give one to Wilson, I'm sure he'd loooove to try it! Heheh.",
+        MUTATOR_SPITTER = "Eww, there's legs sticking out of it!",
+        MUTATOR_MOON = "Give one to Wilson, I'm sure he'd loooove to try it! Heheh.",
+        MUTATOR_HEALER = "Eww, there's legs sticking out of it!",
+        SPIDER_WHISTLE = "Nu-uh, I'm not putting that thing anywhere near my face.",
+        SPIDERDEN_BEDAZZLER = "Hey Webber, it's way more fun to burn paper than to draw on it!",
+        SPIDER_HEALER = "Ew, it stinks!",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Someone should probably check if it's flammable. I volunteer!",

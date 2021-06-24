@@ -143,6 +143,22 @@ local function SpawnInvestigators(inst, data)
     end
 end
 
+local function SummonChildren(inst, data)
+    if inst.components.childspawner ~= nil then
+        local children_released = inst.components.childspawner:ReleaseAllChildren()
+
+        for i,v in ipairs(children_released) do
+            if v.components.debuffable == nil then
+                v:AddComponent("debuffable")
+            end
+
+            v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+        end
+    end
+
+    push_twitch_idle(inst)
+end
+
 ---------------------------------------------------------------------------
 
 local function ReturnChildren(inst)
@@ -251,6 +267,14 @@ local function OnPreLoad(inst, data)
     WorldSettings_ChildSpawner_PreLoad(inst, data, TUNING.MOONSPIDERDEN_RELEASE_TIME, TUNING.MOONSPIDERDEN_SPIDER_REGENTIME)
 end
 
+local function OnGoHome(inst, child)
+    -- Drops the hat before it goes home if it has any
+    local hat = child.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+    if hat ~= nil then
+        child.components.inventory:DropItem(hat)
+    end
+end
+
 local function moonspiderden_fn()
     local inst = CreateEntity()
 
@@ -294,6 +318,8 @@ local function moonspiderden_fn()
     inst:AddComponent("childspawner")
     inst.components.childspawner:SetRegenPeriod(TUNING.MOONSPIDERDEN_SPIDER_REGENTIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.MOONSPIDERDEN_RELEASE_TIME)
+    inst.components.childspawner:SetGoHomeFn(OnGoHome)
+
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.MOONSPIDERDEN_RELEASE_TIME, TUNING.MOONSPIDERDEN_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.MOONSPIDERDEN_SPIDER_REGENTIME, TUNING.MOONSPIDERDEN_ENABLED)
     if not TUNING.MOONSPIDERDEN_ENABLED then
@@ -325,6 +351,8 @@ local function moonspiderden_fn()
     inst.OnSave = on_save
     inst.OnLoad = on_load
     inst.OnPreLoad = OnPreLoad
+
+    inst.SummonChildren = SummonChildren
 
     MakeSnowCovered(inst)
 

@@ -67,10 +67,12 @@ end
 
 local function SpawnInvestigators(inst, data)
     if not inst.components.health:IsDead() and inst.components.childspawner ~= nil then
+        
         local num_to_release = math.min(2, inst.components.childspawner.childreninside)
         local num_investigators = inst.components.childspawner:CountChildrenOutside(IsInvestigator)
         num_to_release = num_to_release - num_investigators
         local targetpos = data ~= nil and data.target ~= nil and data.target:GetPosition() or nil
+        
         for k = 1, num_to_release do
             local spider = inst.components.childspawner:SpawnChild()
             if spider ~= nil and targetpos ~= nil then
@@ -80,9 +82,33 @@ local function SpawnInvestigators(inst, data)
     end
 end
 
+local function SummonChildren(inst, data)
+    if inst.components.health and not inst.components.health:IsDead() then
+        if inst.components.childspawner ~= nil then
+            local children_released = inst.components.childspawner:ReleaseAllChildren()
+
+            for i,v in ipairs(children_released) do
+                if v.components.debuffable == nil then
+                    v:AddComponent("debuffable")
+                end
+                
+                v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+            end
+        end
+    end
+end
+
 local function spawner_onworked(inst, worker, workleft)
     if inst.components.childspawner ~= nil then
         inst.components.childspawner:ReleaseAllChildren(worker)
+    end
+end
+
+local function OnGoHome(inst, child)
+    -- Drops the hat before it goes home if it has any
+    local hat = child.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+    if hat ~= nil then
+        child.components.inventory:DropItem(hat)
     end
 end
 
@@ -123,6 +149,8 @@ local function commonfn(anim, minimap_icon, tag, hascreep)
 
     inst:AddComponent("inspectable")
     inst:AddComponent("workable")
+
+    inst.SummonChildren = SummonChildren
 
     return inst
 end
@@ -171,6 +199,8 @@ local function spawnerfn()
     inst:AddComponent("childspawner")
     inst.components.childspawner:SetRegenPeriod(TUNING.SPIDERHOLE_REGEN_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.SPIDERHOLE_RELEASE_TIME)
+    inst.components.childspawner:SetGoHomeFn(OnGoHome)
+
     WorldSettings_ChildSpawner_SpawnPeriod(inst, TUNING.SPIDERHOLE_RELEASE_TIME, TUNING.SPIDERHOLE_ENABLED)
     WorldSettings_ChildSpawner_RegenPeriod(inst, TUNING.SPIDERHOLE_REGEN_TIME, TUNING.SPIDERHOLE_ENABLED)
     inst.components.childspawner:SetMaxChildren(math.random(TUNING.SPIDERHOLE_MIN_CHILDREN, TUNING.SPIDERHOLE_MAX_CHILDREN))

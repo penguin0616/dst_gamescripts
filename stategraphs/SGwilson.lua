@@ -883,6 +883,12 @@ local actionhandlers =
     ActionHandler(ACTIONS.YOTB_UNLOCKSKIN, "dolongaction"),
     ActionHandler(ACTIONS.YOTB_SEW, "dolongaction"),
     ActionHandler(ACTIONS.CARNIVAL_HOST_SUMMON, "give"),
+
+    ActionHandler(ACTIONS.MUTATE_SPIDER, "give"),
+    
+    ActionHandler(ACTIONS.HERD_FOLLOWERS, "herd_followers"),
+    ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
+    ActionHandler(ACTIONS.REPEL, "repel_followers"),
 }
 
 local events =
@@ -14022,6 +14028,60 @@ local states =
         },
     },
 
+    State{
+        name = "herd_followers",
+        tags = { "busy", "doing", "nodangle" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("useitem_pre")
+            inst.AnimState:PushAnimation("webber_spider_whistle", false)
+            inst.AnimState:PushAnimation("useitem_pst", false)
+        end,
+
+        timeline = 
+        {
+            TimeEvent(26 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/woodie/goose/death_voice") end),
+            TimeEvent(26 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber1/spiderwhistle/blow",nil,.8) end),
+            TimeEvent(35 * FRAMES, function(inst) inst:PerformBufferedAction() end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "repel_followers",
+        tags = { "busy", "doing", "nodangle" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("useitem_pre")
+            inst.AnimState:PushAnimation("spider_repellent", false)
+            inst.AnimState:PushAnimation("useitem_pst", false)
+        end,
+
+        timeline = 
+        {
+            TimeEvent(15 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber2/common/spider_repellent") end),
+            TimeEvent(17 * FRAMES, function(inst) inst:PerformBufferedAction() end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
 }
 
 local hop_timelines =

@@ -764,7 +764,8 @@ SPECIAL_EVENT_MUSIC =
     [SPECIAL_EVENTS.CARNIVAL] =
     {
         bank = "music_frontend.fsb",
-        sound = "dontstarve/music/music_FE_summerevent",
+        --sound = "dontstarve/music/music_FE_summerevent",
+        sound = "dontstarve/music/music_FE_webber", -- RESTORE THIS TO THE SOUND ABOVE ONCE THE EVENT IS OVER
     },
 }
 
@@ -918,8 +919,8 @@ FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
     --"dontstarve/music/music_moonstorm_FE"
-   -- "dontstarve_DLC001/music/music_wigfrid_FE"
-   "dontstarve/music/music_FE"
+   "dontstarve/music/music_FE_webber"
+   --"dontstarve/music/music_FE"
 
 
 ---------------------------------------------------------
@@ -994,6 +995,8 @@ TECH =
     YOTB = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
 
     LOST = { MAGIC = 10, SCIENCE = 10, ANCIENT = 10 },
+
+    SPIDERCRAFT_ONE = { SPIDERCRAFT = 1 }
 }
 
 -- See cell_data.h
@@ -1216,7 +1219,8 @@ CUSTOM_RECIPETABS =
     SHADOW        = { str = "SHADOW",			sort = 999, icon = "tab_shadow.tex",        owner_tag = "shadowmagic"  },
     ENGINEERING   = { str = "ENGINEERING",		sort = 999, icon = "tab_engineering.tex",   owner_tag = "handyperson"  },
 	ELIXIRBREWING = { str = "ELIXIRBREWING",	sort = 999, icon = "tab_elixirbrewing.tex", owner_tag = "elixirbrewer" },
-    BATTLESONGS   = { str = "BATTLESONGS",      sort = 999, icon = "tab_battlesongs.tex",   owner_tag = "battlesinger", icon_atlas = "images/hud2.xml" },
+    BATTLESONGS   = { str = "BATTLESONGS",      sort = 999, icon = "tab_battlesongs.tex",   owner_tag = "battlesinger",    icon_atlas = "images/hud2.xml" },
+    SPIDERCRAFT   = { str = "SPIDERCRAFT",      sort = 999, icon = "tab_spidercraft.tex",   owner_tag = "spiderwhisperer", icon_atlas = "images/hud2.xml" },
     NATURE        = { str = "NATURE",			sort = 999, icon = "tab_nature.tex",        owner_tag = "plantkin"     },
 	SLINGSHOTAMMO =	{ str = "SLINGSHOTAMMO",	sort = 999, icon = "tab_slingshot.tex",	    owner_tag = "pebblemaker"  },
 	BALLOONOMANCY = { str = "BALLOONOMANCY",	sort = 999, icon = "tab_balloonomancy.tex",	owner_tag = "balloonomancer", icon_atlas = "images/hud2.xml" },

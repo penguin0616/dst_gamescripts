@@ -1275,6 +1275,10 @@ function Tune(overrides)
             TURFCRAFTING = TechTree.Create({
                 TURFCRAFTING = 1,
             }),
+
+            SPIDERCRAFT = TechTree.Create({
+                SPIDERCRAFT = 1,
+            }),
 		},
 
         RABBIT_HEALTH = 25 * multiplayer_attack_modifier,
@@ -3021,7 +3025,7 @@ function Tune(overrides)
 				WAXWELL = {"waxwelljournal", "nightmarefuel", "nightmarefuel", "nightmarefuel", "nightmarefuel", "nightmarefuel", "nightmarefuel"},
 				WOODIE = {"lucy"},
 				WATHGRITHR = {"spear_wathgrithr", "wathgrithrhat", "meat", "meat", "meat", "meat"},
-				WEBBER = {"spidereggsack", "monstermeat", "monstermeat"},
+				WEBBER = {"spidereggsack", "monstermeat", "monstermeat", "spider_whistle"},
 				WINONA = {"sewing_tape", "sewing_tape", "sewing_tape"},
                 WORTOX = {"wortox_soul", "wortox_soul", "wortox_soul", "wortox_soul", "wortox_soul", "wortox_soul"},
                 WORMWOOD = {},
@@ -3525,6 +3529,7 @@ function Tune(overrides)
         MOON_ALTAR_COMPLETE_WORK = 3,
         MOON_ALTAR_ASTRAL_COMPLETE_WORK = 2,
         MOON_ALTAR_ESTABLISH_LINK_RADIUS = 20,
+        MOON_ALTAR_LINK_MAX_ABS_DOT = 0.975,
 
 		MOONALTAR_ROCKS_MINE = 20,
 
@@ -4149,8 +4154,8 @@ function Tune(overrides)
         ABIGAIL_AGGRESSIVE_MAX_FOLLOW = 10,
         ABIGAIL_AGGRESSIVE_MED_FOLLOW = 6,
 
-        DEFENSIVE_MAX_CHASE_TIME = 3,
-        AGGRESSIVE_MAX_CHASE_TIME = 6,
+        ABIGAIL_DEFENSIVE_MAX_CHASE_TIME = 3,
+        ABIGAIL_AGGRESSIVE_MAX_CHASE_TIME = 6,
 
 		GHOSTLYELIXIR_SLOWREGEN_HEALING = 2,
 		GHOSTLYELIXIR_SLOWREGEN_TICK_TIME = 1,
@@ -5049,9 +5054,7 @@ function Tune(overrides)
 		CARNIVALDECOR_EGGRIDE_TOKEN_TIME = total_day_time * 5,
 
         CARNIVAL_BALL_COLLISIONTIMEBUFFER = 8 * FRAMES,
-        CARNIVAL_BALL_YBOUNCE = 20.0,
-
-        -- YOTB: Year of the Beefalo
+        CARNIVAL_BALL_YBOUNCE = 20.0,        -- YOTB: Year of the Beefalo
         BASE_SEWING_TIME = night_time*.3333,
         REJECTION_SEWING_TIME = night_time*.3333,
         YOTB_STAGERANGE = 12,
@@ -5283,8 +5286,52 @@ function Tune(overrides)
         MOON_ALTAR_LINK_AREA_CLEAR_RADIUS = 6,
         MOON_ALTAR_LINK_POINT_VALID_RADIUS_SQ = 2.5*2.5,
         MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ = 2.5*2.5,
-        MOON_ALTAR_LINK_MAX_ABS_DOT = 0.975,
-    }
+		
+
+
+        SPIDER_SUMMON_TIME = 12,
+        SPIDER_WHISTLE_USE_AMOUNT = 2.5,
+        SPIDER_DEN_SHAVING_AMOUNT = 1,
+        
+        SPIDER_PERISH_TIME = total_day_time * 5,
+        
+        SPIDER_HEALER_HEALTH = 400,
+        SPIDER_HEALER_DAMAGE = 10,
+
+        SPIDER_HEALING_AMOUNT = 150,
+        SPIDER_HEALING_RADIUS = 8,
+        SPIDER_HEALING_COOLDOWN = 8,
+        SPIDER_HEALING_MELEE_RANGE = 1,
+
+        SPIDER_HEALING_ITEM_AMOUNT = 80,
+        SPIDER_HEALING_ITEM_RADIUS = 5,
+
+        SPIDER_WHISTLE_DURATION = 10,
+        SPIDER_WHISTLE_RANGE = 16,
+
+        SPIDER_DEFENSIVE_MIN_FOLLOW = 2,
+        SPIDER_DEFENSIVE_MED_FOLLOW = 2,
+        SPIDER_DEFENSIVE_MAX_FOLLOW = 4,
+        SPIDER_AGGRESSIVE_MIN_FOLLOW = 2,
+        SPIDER_AGGRESSIVE_MED_FOLLOW = 3,
+        SPIDER_AGGRESSIVE_MAX_FOLLOW = 8,
+        
+        SPIDER_DEFENSIVE_MAX_CHASE_TIME = 3,
+        SPIDER_AGGRESSIVE_MAX_CHASE_TIME = 8,
+
+        BEDAZZLEMENT_RATE = 1,
+        BEDAZZLEMENT_RADIUS = { 12, 16, 20 },
+        BEDAZZLEMENT_DURATION = 2,
+        BEDAZZLER_USE_AMOUNT = 20,
+
+        SPIDERDEN_CREEP_RADIUS_BEDAZZLED = 4,
+        SPIDERDEN_CREEP_RADIUS = {5, 9, 9 },
+
+        SPIDER_REPELLENT_USES = 20,
+        SPIDER_REPELLENT_RADIUS = 8,
+
+        SPIDER_FOLLOWER_COUNT = 2,
+	}
 
     TUNING_MODIFIERS = {}
     ORIGINAL_TUNING = {}

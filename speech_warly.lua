@@ -295,7 +295,22 @@ return{
         {
             TOO_LATE = "Zut! Too slow!",
         },
-	},
+		HERD_FOLLOWERS =
+        {
+            WEBBERONLY = "I'm afraid they won't listen to me.",
+        },
+        BEDAZZLE =
+        {
+--fallback to speech_wilson.lua             BURNING = "only_used_by_webber",
+--fallback to speech_wilson.lua             BURNT = "only_used_by_webber",
+--fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
+--fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
+        },
+        UPGRADE = 
+        {
+--fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
+        },
+    },
 
 	ACTIONFAIL_GENERIC = "I cannot do that.",
 	ANNOUNCE_BOAT_LEAK = "Mon dieu! She is sinking!",
@@ -3474,6 +3489,18 @@ return{
         BATTLESONG_FIRERESISTANCE = "I didn't know she was such an accomplished singer!",
         BATTLESONG_INSTANT_TAUNT = "Shakespeare? I wonder how a Viking came upon this...",
         BATTLESONG_INSTANT_PANIC = "Shakespeare? I wonder how a Viking came upon this...",
+
+        -- Webber
+        MUTATOR_WARRIOR = "Next time, let's bake something together, non?",
+        MUTATOR_DROPPER = "Oh my...",
+        MUTATOR_HIDER = "Next time, let's bake something together, non?",
+        MUTATOR_SPITTER = "Oh my...",
+        MUTATOR_MOON = "Next time, let's bake something together, non?",
+        MUTATOR_HEALER = "Oh my...",
+        SPIDER_WHISTLE = "Oh dear, it's quite sticky.",
+        SPIDERDEN_BEDAZZLER = "It's nice to see the petit monsieur expressing his creativity!",
+        SPIDER_HEALER = "I suppose it's good to have a healthier alternative.",
+
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "I'm not sure about some of those ingredients, mademoiselle.",

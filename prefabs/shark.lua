@@ -218,7 +218,7 @@ local function fn()
     inst:AddComponent("eater")
     inst.components.eater:SetDiet({ FOODTYPE.MEAT }, { FOODTYPE.MEAT })
     inst.components.eater:SetCanEatHorrible()
-    inst.components.eater.strongstomach = true -- can eat monster meat!
+    inst.components.eater:SetStrongStomach(true) -- can eat monster meat!
 
     inst:AddComponent("combat")
     inst.components.combat.hiteffectsymbol = "shark_parts"

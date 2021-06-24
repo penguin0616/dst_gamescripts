@@ -99,6 +99,10 @@ function Inventory:TransferInventory(receiver)
     for k,v in pairs(self.itemslots) do
         inv:GiveItem(self:RemoveItemBySlot(k))
     end
+
+    for k,v in pairs(self.equipslots) do
+       inv:GiveItem(self:Unequip(k)) 
+    end
 end
 
 function Inventory:OnSave()

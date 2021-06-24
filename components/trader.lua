@@ -76,15 +76,18 @@ end
 
 -- Able to accept refers to physical ability, i.e. am I in combat, or sleeping, or dead
 function Trader:AbleToAccept(item, giver)
+    local on_inventory = self.inst.components.inventoryitem ~= nil and self.inst.components.inventoryitem.owner ~= nil
+
     if not self.enabled or item == nil then
         return false
     elseif self.abletoaccepttest ~= nil then
         return self.abletoaccepttest(self.inst, item, giver)
     elseif self.inst.components.health ~= nil and self.inst.components.health:IsDead() then
         return false, "DEAD"
-    elseif self.inst.components.sleeper ~= nil and self.inst.components.sleeper:IsAsleep() then
+    elseif (self.inst.components.sleeper ~= nil and self.inst.components.sleeper:IsAsleep()) and not on_inventory then
         return false, "SLEEPING"
-    elseif self.inst.sg ~= nil and self.inst.sg:HasStateTag("busy") then
+    elseif self.inst.sg ~= nil and self.inst.sg:HasStateTag("busy") and not on_inventory then
+        print ("BUSY")
         return false, "BUSY"
     end
     return true

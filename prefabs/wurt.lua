@@ -203,6 +203,11 @@ local function OnRespawn(inst)
     end
 end
 
+local function CLIENT_Wurt_HostileTest(inst, target)
+    return (target:HasTag("hostile") or target:HasTag("pig"))
+        and not target:HasTag("merm") and not target:HasTag("manrabbit")
+end
+
 local function common_postinit(inst)
     inst:AddTag("playermerm")
     inst:AddTag("merm")
@@ -227,6 +232,8 @@ local function common_postinit(inst)
 			inst:ListenForEvent("playeractivated", EnableTentacleWarning)
 		end
 	end
+
+    inst.HostileTest = CLIENT_Wurt_HostileTest
 end
 
 local function master_postinit(inst)

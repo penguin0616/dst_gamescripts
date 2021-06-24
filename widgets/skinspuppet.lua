@@ -18,6 +18,7 @@ local player_emotes_to_choose = {
 	wortox = "idle_wortox",
 	wurt = "idle_wurt",
 	wes = "idle_wes",
+	webber = "idle_webber",
 }
 
 local emote_min_time = 6
@@ -157,6 +158,9 @@ function SkinsPuppet:DoIdleEmote()
 				self.item_equip = true
 			elseif self.prefabname == "wes" then
 				self.override_build = "player_idles_wes"
+				self.animstate:AddOverrideBuild(self.override_build)
+			elseif self.prefabname == "webber" then
+				self.override_build = "player_idles_webber"
 				self.animstate:AddOverrideBuild(self.override_build)
 			end
 

@@ -182,7 +182,7 @@ local function fn()
     inst.AnimState:PlayAnimation("idle")
 
     inst:AddTag("structure")
-    inst:AddTag("chewable") -- by werebeaver
+    inst:AddTag("beaverchewable") -- by werebeaver
     inst:AddTag("catcoonden")
 
     MakeSnowCoveredPristine(inst)

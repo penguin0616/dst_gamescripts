@@ -36,6 +36,10 @@ nil,
 	numstages = onstage,
 })
 
+function Upgradeable:GetStage()
+	return self.stage
+end
+
 function Upgradeable:SetStage(num)
 	self.stage = num
 end
@@ -50,11 +54,25 @@ function Upgradeable:AdvanceStage()
 end
 
 function Upgradeable:CanUpgrade()
-	return self.stage and self.numstages and self.stage < self.numstages
+	local not_at_max = self.stage and self.numstages and self.stage < self.numstages
+
+	if self.canupgradefn then
+		local can_upgrade, reason = self.canupgradefn(self.inst)
+		if can_upgrade then
+			return can_upgrade and not_at_max
+		end
+
+		return false, reason
+	end
+
+	return not_at_max
+end
+
+function Upgradeable:SetCanUpgradeFn(fn)
+	self.canupgradefn = fn
 end
 
 function Upgradeable:Upgrade(obj, upgrade_performer)
-	if not self:CanUpgrade() then return false end
 	self.numupgrades = self.numupgrades + obj.components.upgrader.upgradevalue
 
 	if obj.components.stackable then
@@ -67,9 +85,10 @@ function Upgradeable:Upgrade(obj, upgrade_performer)
 		self.onupgradefn(self.inst, upgrade_performer)
 	end
 
-	if self:CanUpgrade() and self.numupgrades >= self.upgradesperstage then
+	if self.numupgrades >= self.upgradesperstage then
 		self:AdvanceStage()
 	end
+
 	return true
 end
 
