@@ -587,6 +587,8 @@ local states =
 
                         if inst.components.follower.leader ~= nil then
                             new_spider.components.follower:SetLeader(inst.components.follower.leader)
+                        elseif inst.mutator_giver ~= nil then
+                            new_spider.components.follower:SetLeader(inst.mutator_giver)
                         end
 
                         if inst.components.combat:HasTarget() then

@@ -263,7 +263,8 @@ local prefabs = {}
 table.insert(prefabs, Prefab("blueprint", MakeAnyBlueprint, assets))
 for k, v in pairs(RECIPETABS) do
     if not v.crafting_station then
-        table.insert(prefabs, Prefab(string.lower(v.str or "NONAME").."_blueprint", MakeAnyBlueprintFromTab(v), assets))
+		-- Renamed WAR_blueprint because another prefab of the same name was added and this, for many reasons, was the easier one to fix.
+        table.insert(prefabs, Prefab(string.lower(v.str == "WAR" and "WARTAB" or v.str or "NONAME").."_blueprint", MakeAnyBlueprintFromTab(v), assets))
     end
 end
 for k, v in pairs(AllRecipes) do

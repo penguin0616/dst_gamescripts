@@ -21,6 +21,7 @@ SKIN_FX_PREFAB = {}
 --------------------------------------------------------------------------
 --[[ Basic skin functions ]]
 --------------------------------------------------------------------------
+--Note(Peter): If you use basic_init_fn/basic_clear_fn and won't have a default bank, then you'll need to set swap data in MakeInventoryFloatable
 function basic_init_fn( inst, build_name, def_build )
     if inst.components.placer == nil and not TheWorld.ismastersim then
         return
@@ -576,15 +577,13 @@ function bugnet_init_fn(inst, build_name)
         return
     end
 
-    inst.AnimState:SetSkin(build_name, "swap_bugnet")
-    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+    basic_init_fn( inst, build_name, "swap_bugnet" )
 
     local skin_data = GetSkinData(inst:GetSkinName())
     inst.overridebugnetsound = skin_data.skin_sound
 end
 function bugnet_clear_fn(inst)
-    inst.AnimState:SetBuild("swap_bugnet")
-    inst.components.inventoryitem:ChangeImageName()
+    basic_clear_fn(inst, "swap_bugnet" )
     inst.overridebugnetsound = nil
 end
 
@@ -1188,9 +1187,8 @@ function cane_init_fn(inst, build_name)
         return
     end
 
-    inst.AnimState:SetSkin(build_name, "swap_cane")
+    basic_init_fn( inst, build_name, "swap_cane" )
     inst.AnimState:OverrideSymbol("grass", "swap_cane", "grass")
-    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 
     local skin_fx = SKIN_FX_PREFAB[build_name] --build_name is prefab name for canes
     if skin_fx ~= nil then
@@ -1207,9 +1205,9 @@ function cane_init_fn(inst, build_name)
     end
 end
 function cane_clear_fn(inst)
-    inst.AnimState:SetBuild("swap_cane")
+    
+    basic_clear_fn(inst, "swap_cane" )
     inst.AnimState:ClearOverrideSymbol("grass")
-    inst.components.inventoryitem:ChangeImageName()
 
     inst:RemoveEventCallback("equipped", cane_equipped)
     inst:RemoveEventCallback("unequipped", cane_unequipped)
@@ -1240,8 +1238,7 @@ function nightsword_init_fn(inst, build_name)
         return
     end
 
-    inst.AnimState:SetSkin(build_name, "nightmaresword")
-    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+    basic_init_fn( inst, build_name, "nightmaresword" )
 
     local skin_fx = SKIN_FX_PREFAB[build_name] --build_name is prefab name for nightsword
     if skin_fx ~= nil then
@@ -1254,8 +1251,7 @@ function nightsword_init_fn(inst, build_name)
     end
 end
 function nightsword_clear_fn(inst)
-    inst.AnimState:SetBuild("nightmaresword")
-    inst.components.inventoryitem:ChangeImageName()
+    basic_clear_fn(inst, "nightmaresword" )
 
     inst:RemoveEventCallback("equipped", nightsword_equipped)
     inst:RemoveEventCallback("unequipped", nightsword_unequipped)
@@ -1269,14 +1265,12 @@ local function staff_init_fn(inst, build_name)
         return
     end
 
-    inst.AnimState:SetSkin(build_name, "staffs")
+    basic_init_fn( inst, build_name, "staffs" )
     inst.AnimState:OverrideSymbol("grass", "staffs", "grass")
-    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 end
 local function staff_clear_fn(inst)
-    inst.AnimState:SetBuild("staffs")
+    basic_clear_fn(inst, "staffs" )
     inst.AnimState:ClearOverrideSymbol("grass")
-    inst.components.inventoryitem:ChangeImageName()
 end
 
 function orangestaff_init_fn(inst, build_name)

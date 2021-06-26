@@ -7,11 +7,11 @@ function Bedazzler:SetUseAmount(use_amount)
 end
 
 function Bedazzler:CanBedazzle(target)
-	if target.components.burnable:IsBurning() then
+	if target.components.burnable ~= nil and target.components.burnable:IsBurning() then
 		return false, "BURNING"
 	elseif target:HasTag("burnt") then
 		return false, "BURNT"
-	elseif target.components.freezable:IsFrozen() then
+	elseif target.components.freezable ~= nil and target.components.freezable:IsFrozen() then
 		return false, "FROZEN"
 	elseif target:HasTag("bedazzled") then
 		return false, "ALREADY_BEDAZZLED"

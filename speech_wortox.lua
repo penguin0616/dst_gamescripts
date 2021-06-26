@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "The night is upon us!",
 			CARNIVALGAME_INVALID_ITEM = "Oh drat, it doesn't want that.",
 			CARNIVALGAME_ALREADY_PLAYING = "Let them have their fun, then I'll show the mortals how it's done.",
+            SPIDERNOHAT = "My pocket's too tight for that hat to sit right.",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "Oh ho, too slow!",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "Fiddle dee dee, they won't listen to me!",
         },
@@ -3506,6 +3507,8 @@ return{
         SPIDER_WHISTLE = "Hyuyu! Who knew spiders liked to whistle?",
         SPIDERDEN_BEDAZZLER = "I should paint mustaches on the mortals while they're sleeping...",
         SPIDER_HEALER = "I'm not sure I trust that strange orange dust.",
+        SPIDER_REPELLENT = "The easiest way to get rid of a spider is with a big shoo, hyuyu!",
+        SPIDER_HEALER_ITEM = "I think I'll make do without eating that goo.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Hyuyu! Someone's getting crafty!",

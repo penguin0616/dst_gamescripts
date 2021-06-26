@@ -33,7 +33,7 @@ local spitterassets =
 local dropperassets =
 {
     Asset("ANIM", "anim/ds_spider_basic.zip"),
-    Asset("ANIM", "anim/ds_spider_warrior_2.zip"),
+    Asset("ANIM", "anim/ds_spider_warrior.zip"),
     Asset("ANIM", "anim/spider_white_2.zip"),
     Asset("SOUND", "sound/spider.fsb"),
 }
@@ -72,8 +72,8 @@ local brain = require "brains/spiderbrain"
 local function ShouldAcceptItem(inst, item, giver)
 
     local in_inventory = inst.components.inventoryitem.owner ~= nil
-    if in_inventory then
-        return false, "BUSY"
+    if in_inventory and not inst.components.eater:CanEat(item) then
+        return false, "SPIDERNOHAT"
     end
 
     return (giver:HasTag("spiderwhisperer") and inst.components.eater:CanEat(item)) or
@@ -85,13 +85,20 @@ local SPIDER_IGNORE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
 local function GetOtherSpiders(inst, radius, tags)
     tags = tags or SPIDER_TAGS
     local x, y, z = inst.Transform:GetWorldPosition()
-    return TheSim:FindEntities(x, y, z, radius, SPIDER_TAGS, SPIDER_IGNORE_TAGS)
+    return TheSim:FindEntities(x, y, z, radius, nil, SPIDER_IGNORE_TAGS, tags)
 end
 
 local function OnGetItemFromPlayer(inst, giver, item)
+
     if inst.components.eater:CanEat(item) then
-        inst.sg:GoToState("eat", true)
-        item:Remove()
+        inst.components.eater:Eat(item)
+
+        local state = "eat"
+        if inst.components.inventoryitem.owner ~= nil then
+            state = "idle"
+        end
+
+        inst.sg:GoToState(state)
 
         local playedfriendsfx = false
         if inst.components.combat.target == giver then
@@ -436,6 +443,7 @@ local function DoHeal(inst)
 
     local other_spiders = GetOtherSpiders(inst, TUNING.SPIDER_HEALING_RADIUS, {"spider", "spiderwhisperer", "spiderqueen"})
     for i, spider in ipairs(other_spiders) do
+
         local heal_amount = spider:HasTag("spiderwhisperer") and TUNING.HEALING_MEDSMALL or TUNING.SPIDER_HEALING_AMOUNT
         spider.components.health:DoDelta(heal_amount, false, inst.prefab)
         SpawnHealFx(spider, "spider_heal_target_fx")
@@ -556,6 +564,7 @@ local function create_common(bank, build, tag, common_init)
     inst:AddComponent("inventory")
     inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(ShouldAcceptItem)
+    inst.components.trader:SetAbleToAcceptTest(ShouldAcceptItem)
     inst.components.trader.onaccept = OnGetItemFromPlayer
     inst.components.trader.onrefuse = OnRefuseItem
     inst.components.trader.deleteitemonaccept = false

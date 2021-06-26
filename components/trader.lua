@@ -87,7 +87,6 @@ function Trader:AbleToAccept(item, giver)
     elseif (self.inst.components.sleeper ~= nil and self.inst.components.sleeper:IsAsleep()) and not on_inventory then
         return false, "SLEEPING"
     elseif self.inst.sg ~= nil and self.inst.sg:HasStateTag("busy") and not on_inventory then
-        print ("BUSY")
         return false, "BUSY"
     end
     return true
@@ -100,7 +99,7 @@ function Trader:WantsToAccept(item, giver)
 end
 
 function Trader:AcceptGift(giver, item, count)
-    if self:AbleToAccept(item, giver) ~= true then
+    if not self:AbleToAccept(item, giver) then
         return false
     end
 

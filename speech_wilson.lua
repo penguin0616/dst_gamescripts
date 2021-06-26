@@ -129,6 +129,7 @@ return {
 			PIGKINGGAME_TOOLATE = "It's too late for that now.",
 			CARNIVALGAME_INVALID_ITEM = "I need to buy some tokens.",
 			CARNIVALGAME_ALREADY_PLAYING = "A game is already underway.",
+            SPIDERNOHAT = "I can't fit them together in my pocket",
         },
         GIVETOPLAYER =
         {
@@ -3509,6 +3510,8 @@ return {
         SPIDER_WHISTLE = "I don't want to call any spiders over to me!",
         SPIDERDEN_BEDAZZLER = "It looks like someone's been getting crafty.",
         SPIDER_HEALER = "Oh wonderful. Now the spiders can heal themselves.",
+        SPIDER_REPELLENT = "If only science could make it work for me.",
+        SPIDER_HEALER_ITEM = "If I see any spiders around I'll be sure to give it to them. Maybe.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Ah yes. Very science-y.",

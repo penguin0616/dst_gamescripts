@@ -22,8 +22,6 @@ local function fn()
     inst.AnimState:PlayAnimation("idle", true)
     MakeInventoryPhysics(inst)
 
-    inst.MiniMapEntity:SetIcon("abigail_flower.png")
-
     MakeInventoryFloatable(inst, "small", 0.15, 0.9)
 
 	inst.entity:SetPristine()

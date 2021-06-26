@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "'Tis too late for revelry!",
 			CARNIVALGAME_INVALID_ITEM = "'Tis not to its liking.",
 			CARNIVALGAME_ALREADY_PLAYING = "A warrior must be patient.",
+            SPIDERNOHAT = "It hath no use for such things while it's in my pocket.",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "I must move with greater haste!",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "The spiderchild is the only one who can tame those little beasts!",
         },
@@ -3500,6 +3501,8 @@ return{
         SPIDER_WHISTLE = "'Tis a spider war horn.",
         SPIDERDEN_BEDAZZLER = "The spiderchild has taken up the arts, has he?",
         SPIDER_HEALER = "Be you the healer of your clan?",
+        SPIDER_REPELLENT = "The spiderchild uses it to manage his horde.",
+        SPIDER_HEALER_ITEM = "It is only fit for the small toothy beasts.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "'Tis a powerful elixir!",

@@ -30,12 +30,20 @@ function d_allmutators()
 end
 
 function d_spiders()
-    c_give("spider")
-    c_give("spider_warrior")
-    c_give("spider_dropper")
-    c_give("spider_hider")
-    c_give("spider_spitter")
-    c_give("spider_moon")
+    local spiders = {
+        "spider",
+        "spider_warrior",
+        "spider_dropper",
+        "spider_hider",
+        "spider_spitter",
+        "spider_moon",
+        "spider_healer",
+    }
+
+    for i,v in ipairs(spiders) do
+        local spider = c_spawn(v)
+        spider.components.follower:SetLeader(ThePlayer)
+    end
 end
 
 function d_decodedata(path)

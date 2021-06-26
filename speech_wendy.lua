@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "It's much too late for games.",
 			CARNIVALGAME_INVALID_ITEM = "That's not what it wants.",
 			CARNIVALGAME_ALREADY_PLAYING = "They already started without me...",
+            SPIDERNOHAT = "I have a feeling the spider would get it all rumpled in my pocket.",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "I was too late...",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "They are Webber's friends, not mine.",
         },
@@ -3504,6 +3505,8 @@ return{
         SPIDER_WHISTLE = "I don't think I want to play with that.",
         SPIDERDEN_BEDAZZLER = "I wonder if I might ask to borrow some colored pencils...",
         SPIDER_HEALER = "It's only prolonging the inevitable. How sad.",
+        SPIDER_REPELLENT = "Nothing I try seems to work well for me.",
+        SPIDER_HEALER_ITEM = "Merely a temporary respite from the pain of the world.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "It's all I can do to help...",

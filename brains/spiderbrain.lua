@@ -98,7 +98,9 @@ function SpiderBrain:OnStart()
     })
 
     local attack_nodes = PriorityNode({
-        AttackWall(self.inst),
+        IfNode(function() return not self.inst.bedazzled and self.inst.components.follower.leader == nil end, "AttackWall",
+            AttackWall(self.inst)),
+
         ChaseAndAttack(self.inst, SpringCombatMod(TUNING.SPIDER_AGGRESSIVE_MAX_CHASE_TIME)),
     })
 

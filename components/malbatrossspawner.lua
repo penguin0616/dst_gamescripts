@@ -97,6 +97,7 @@ end
 
 local function OnMalbatrossKilledOrRemoved(source, the_malbatross)
     _activemalbatross = nil
+    _spawnpending = false
     TryBeginningMalbatrossSpawns()
 end
 

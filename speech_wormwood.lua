@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "Too late!",
 			CARNIVALGAME_INVALID_ITEM = "Not right",
 			CARNIVALGAME_ALREADY_PLAYING = "Not yet",
+            SPIDERNOHAT = "No room",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "Too slow",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "Leggy Bugs don't listen",
         },
@@ -3504,6 +3505,8 @@ return{
         SPIDER_WHISTLE = "Fweee!",
         SPIDERDEN_BEDAZZLER = "Making pretty things",
         SPIDER_HEALER = "Takes care of leggy friends",
+        SPIDER_REPELLENT = "Clicky-clack!",
+        SPIDER_HEALER_ITEM = "Gloopy",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "For ghost friend",

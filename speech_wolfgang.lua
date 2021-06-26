@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "Is dark. No games now.",
 			CARNIVALGAME_INVALID_ITEM = "Haha! Wolfgang thought it would be funny to try that!",
 			CARNIVALGAME_ALREADY_PLAYING = "Friends are having good time, Wolfgang can wait.",
+            SPIDERNOHAT = "Wolfgang's pockets are too small for both bug and hat!",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "Little bird is too fast!",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "Eep! Creepy bugs not listen to Wolfgang!",
         },
@@ -3501,6 +3502,8 @@ return{
         SPIDER_WHISTLE = "Wolfgang not sure he wants to be at spider party...",
         SPIDERDEN_BEDAZZLER = "Monsterchild will draw Wolfgang next, yes?",
         SPIDER_HEALER = "Scary dust spider!",
+        SPIDER_REPELLENT = "Is clicky clacky spider box.",
+        SPIDER_HEALER_ITEM = "Wolfgang will leave yucky glop for spiders.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Wolfgang not trust tiny bottles made by creepy girl.",

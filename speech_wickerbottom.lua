@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "No time for that now. It'll be dark soon.",
 			CARNIVALGAME_INVALID_ITEM = "That doesn't appear to be the correct form of payment.",
 			CARNIVALGAME_ALREADY_PLAYING = "I'm afraid I'll have to wait.",
+            SPIDERNOHAT = "There simply isn't enough room for that.",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "Oh dear, I wasn't quite fast enough.",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "I'm afraid this isn't my area of expertise.",
         },
@@ -3500,6 +3501,8 @@ return{
         SPIDER_WHISTLE = "Arachnids seem to find the sound quite agreeable.",
         SPIDERDEN_BEDAZZLER = "Be sure to tidy up when you're finished, young arachnid.",
         SPIDER_HEALER = "This arachnid has evolved the ability to heal others around it.",
+        SPIDER_REPELLENT = "Unfortunately, it seems that the arachnids only respond to one of their kind.",
+        SPIDER_HEALER_ITEM = "This balm appears specially formulated to heal arachnids.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Color-coded and clearly labeled. Well done!",

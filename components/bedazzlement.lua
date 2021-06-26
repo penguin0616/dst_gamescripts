@@ -38,6 +38,7 @@ function Bedazzlement:Stop()
 	if not self.inst:HasTag("bedazzled") then
 		return
 	end
+
 	self.inst.SoundEmitter:PlaySound("webber2/common/spiderden/downgrade")--- hugo
 
 	self.inst:RemoveTag("bedazzled")
@@ -53,6 +54,10 @@ function Bedazzlement:Stop()
         self.inst.GroundCreepEntity:SetRadius(TUNING.SPIDERDEN_CREEP_RADIUS[self.inst.data.stage])
     end
 
+    if self.inst.shaving then
+    	self.inst.shaving = nil
+    end
+
 	if self.bedazzle_task ~= nil then
 		self.bedazzle_task:Cancel()
 		self.bedazzle_task = nil
@@ -64,6 +69,10 @@ end
 function Bedazzlement:PacifySpiders()
 	local x, y, z = self.inst.Transform:GetWorldPosition()
 	local den_tier = self.inst.components.growable ~= nil and self.inst.components.growable:GetStage() or 1
+
+	if den_tier > 3 then
+		den_tier = 3
+	end
 
     local ents = TheSim:FindEntities(x, y, z, TUNING.BEDAZZLEMENT_RADIUS[den_tier], {"spider"}, {"spiderqueen"})
     

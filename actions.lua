@@ -404,7 +404,7 @@ ACTIONS =
 	CARNIVALGAME_FEED = Action({ mount_valid=true }),
 
     -- WEBBER
-    MUTATE_SPIDER = Action(),
+    MUTATE_SPIDER = Action({priority = 2}),
     HERD_FOLLOWERS = Action({ mount_valid=true }),
     REPEL = Action({ mount_valid=true }),
     BEDAZZLE = Action(),
@@ -1469,13 +1469,15 @@ end
 
 ACTIONS.GIVE.fn = function(act)
     if act.target ~= nil then
-		if act.target.components.ghostlyelixirable ~= nil and act.invobject.components.ghostlyelixir ~= nil then
-            return act.invobject.components.ghostlyelixir:Apply(act.doer, act.target)
+		
+        if act.target.components.ghostlyelixirable ~= nil and act.invobject.components.ghostlyelixir ~= nil then
+            return act.invobject.components.ghostlyelixir:Apply(act.doer, act.target)        
         elseif act.target.components.trader ~= nil then
             local able, reason = act.target.components.trader:AbleToAccept(act.invobject, act.doer)
             if not able then
                 return false, reason
             end
+
             act.target.components.trader:AcceptGift(act.doer, act.invobject)
             return true
         elseif act.target.components.moontrader ~= nil then
@@ -2347,10 +2349,16 @@ ACTIONS.MOLEPEEK.fn = function(act)
 end
 
 ACTIONS.FEED.fn = function(act)
+    
+    if act.target.components.trader then
+        local abletoaccept, reason = act.target.components.trader:AbleToAccept(act.invobject,act.doer)
+        if abletoaccept then
+            act.target.components.trader:AcceptGift(act.doer, act.invobject, 1)
+            return true
+        else
+            return false, reason
+        end
 
-    if act.target.components.trader and act.target.components.trader:AbleToAccept(act.invobject,act.doer) then
-        act.target.components.trader:AcceptGift(act.doer, act.invobject, 1)
-        return true
     elseif act.doer ~= nil and act.target ~= nil and act.target.components.eater ~= nil and act.target.components.eater:CanEat(act.invobject) then
         act.target.components.eater:Eat(act.invobject, act.doer)
         local murdered =
@@ -3677,7 +3685,7 @@ end
 
 ACTIONS.MUTATE_SPIDER.fn = function(act)
     if act.invobject.components.spidermutator:CanMutate(act.target) then
-        act.invobject.components.spidermutator:Mutate(act.target)
+        act.invobject.components.spidermutator:Mutate(act.target, false, act.doer)
         return true
     else
         return false, "SAMETYPE"

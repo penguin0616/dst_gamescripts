@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "It's a bit late in the evening for that.",
 			CARNIVALGAME_INVALID_ITEM = "That wasn't to its liking.",
 			CARNIVALGAME_ALREADY_PLAYING = "Un moment, the game has already started.",
+            SPIDERNOHAT = "I'm afraid that's a bit of a tight squeeze.",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "Zut! Too slow!",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "I'm afraid they won't listen to me.",
         },
@@ -3500,7 +3501,8 @@ return{
         SPIDER_WHISTLE = "Oh dear, it's quite sticky.",
         SPIDERDEN_BEDAZZLER = "It's nice to see the petit monsieur expressing his creativity!",
         SPIDER_HEALER = "I suppose it's good to have a healthier alternative.",
-
+        SPIDER_REPELLENT = "Unfortunately, it seems only spiders can shoo other spiders.",
+        SPIDER_HEALER_ITEM = "It only appeals to a very specific palate.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "I'm not sure about some of those ingredients, mademoiselle.",

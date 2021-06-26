@@ -1324,7 +1324,7 @@ local COMPONENT_ACTIONS =
         end,
 
         bedazzler = function(inst, doer, target, actions)
-            if doer:HasTag("spiderwhisperer") and target:HasTag("spiderden") and not target:HasTag("bedazzled") then
+            if doer:HasTag("spiderwhisperer") and target:HasTag("spiderden") and target:HasTag("bedazzleable") and not target:HasTag("bedazzled") then
                table.insert(actions, ACTIONS.BEDAZZLE) 
             end
         end,
@@ -1963,7 +1963,9 @@ local COMPONENT_ACTIONS =
         end,
 
         followerherder = function(inst, doer, actions, right)
-            table.insert(actions, ACTIONS.HERD_FOLLOWERS)
+            if doer:HasTag("spiderwhisperer") then
+                table.insert(actions, ACTIONS.HERD_FOLLOWERS)
+            end
         end,
 
         repellent = function(inst, doer, actions, right)

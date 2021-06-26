@@ -120,6 +120,7 @@ return{
 			PIGKINGGAME_TOOLATE = "Can't do that now. It'll be dark soon.",
 			CARNIVALGAME_INVALID_ITEM = "Had to give it a shot, eh?",
 			CARNIVALGAME_ALREADY_PLAYING = "It's not polite to cut in line.",
+            SPIDERNOHAT = "No sense dressing it up when no one's gonna see it, eh?",
         },
         GIVETOPLAYER =
         {
@@ -295,7 +296,7 @@ return{
         {
             TOO_LATE = "Guess I wasn't quick enough.",
         },
-		HERD_FOLLOWERS =
+        HERD_FOLLOWERS =
         {
             WEBBERONLY = "They're not too keen on listenin' to me.",
         },
@@ -3501,6 +3502,8 @@ return{
         SPIDER_WHISTLE = "Planning on havin' a little shindig?",
         SPIDERDEN_BEDAZZLER = "Always gotta support the arts.",
         SPIDER_HEALER = "It better stay far away if it knows what's good for it.",
+        SPIDER_REPELLENT = "A nice bit of woodworking there, kiddo.",
+        SPIDER_HEALER_ITEM = "Looks like food for a bug.",
 
 		-- Wendy
 		GHOSTLYELIXIR_SLOWREGEN = "Whoof, smells like week-old sockeye!",

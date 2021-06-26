@@ -128,7 +128,6 @@ local function AddSleepingBag(inst)
     inst.components.sleepingbag.dryingrate = math.max(0, -TUNING.SLEEP_WETNESS_PER_TICK / TUNING.SLEEP_TICK_PERIOD)
     
     inst.components.sleepingbag:SetTemperatureTickFn(temperaturetick)
-    inst.components.sleepingbag:SetSleepPhase("day")
 
     inst:AddTag("tent")
 end
@@ -254,6 +253,10 @@ local function AttemptMakeQueen(inst)
     end
 
     if inst:HasTag("bedazzled") then
+        return
+    end
+
+    if inst.components.sleepingbag and inst.components.sleepingbag:InUse() then
         return
     end
 
@@ -527,7 +530,7 @@ local function OnUpgrade(inst, upgrade_doer)
 end
 
 local function CanUpgrade(inst)
-    if inst:HasTag("bedazzled") then
+    if inst:HasTag("bedazzled") and not inst.shaving then
         return false, "BEDAZZLED"
     end
 
@@ -613,6 +616,7 @@ local function OnShaved(inst, shaver, shaving_implement)
         --inst.components.childspawner:ReleaseAllChildren()
         inst.components.health:Kill()
     else
+        inst.shaving = true
         local downgraded_stage = stage - 1
 
         if downgraded_stage < 3 and inst.components.sleepingbag then
@@ -668,6 +672,7 @@ local function MakeSpiderDenFn(den_level)
         inst:AddTag("beaverchewable") -- by werebeaver
         inst:AddTag("hostile")
         inst:AddTag("spiderden")
+        inst:AddTag("bedazzleable")
         inst:AddTag("hive")
 
         MakeSnowCoveredPristine(inst)
@@ -775,7 +780,7 @@ local function MakeSpiderDenFn(den_level)
         inst:AddComponent("bedazzlement")
 
         inst:DoTaskInTime(0, function()
-            if inst.components.growable:GetStage() == 3 then
+            if inst.components.growable:GetStage() >= 3 then
                 AddSleepingBag(inst)
             end
         end)

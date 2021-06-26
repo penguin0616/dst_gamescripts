@@ -48,7 +48,7 @@ local prefabs =
     "SURVIVAL_blueprint",
     "FARM_blueprint",
     "SCIENCE_blueprint",
-    "WAR_blueprint",
+    "WARTAB_blueprint",
     "TOWN_blueprint",
     "REFINE_blueprint",
     "MAGIC_blueprint",
