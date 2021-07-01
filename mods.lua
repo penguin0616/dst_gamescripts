@@ -413,8 +413,8 @@ function ModWrangler:FrontendLoadMod(modname)
 	self.currentlyloadingmod = modname
 
     -- Only worldgenmain, to populate the presets panel etc.
-	self:InitializeModMain(modname, env, "modworldgenmain.lua", true)
 	self:InitializeModMain(modname, frontend_env, "modservercreationmain.lua", true)
+	self:InitializeModMain(modname, env, "modworldgenmain.lua", true)
 
     self.currentlyloadingmod = nil
     package.path = oldpath

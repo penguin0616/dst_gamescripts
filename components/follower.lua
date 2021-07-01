@@ -8,6 +8,10 @@ local function onleader(self, leader)
     self.inst.replica.follower:SetLeader(leader)
 end
 
+--both of these are defined lower in the file where it makes more sense.
+local OnPlayerJoined
+local OnNewPlayerSpawned
+
 local Follower = Class(function(self, inst)
     self.inst = inst
 
@@ -22,6 +26,9 @@ local Follower = Class(function(self, inst)
     self.OnLeaderRemoved = function()
         self:SetLeader(nil)
     end
+    
+    self.cached_player_join_fn = function(world, player) OnPlayerJoined(self, player) end
+    self.cached_new_player_spawned_fn = function(world, player) OnNewPlayerSpawned(self, player) end
 end,
 nil,
 {
@@ -151,34 +158,102 @@ function Follower:StopLeashing()
     self.inst:PushEvent("stopleashing")
 end
 
-function Follower:SetLeader(inst)
-    if self.leader ~= nil and self.leader.components.leader ~= nil then
-        self.leader.components.leader:RemoveFollower(self.inst)
-    end
-    if inst ~= nil and inst.components.leader ~= nil then
-        inst.components.leader:AddFollower(self.inst)
-    end
+OnPlayerJoined = function(self, player)
+    if self.cached_player_leader_userid == player.userid then
+        local current_time = GetTime()
+        if self.inst:GetDistanceSqToInst(player) <= TUNING.FOLLOWER_REFOLLOW_DIST_SQ and
+        (not self.cached_player_leader_timeleft or self.cached_player_leader_timeleft > current_time) then
 
-    self:StopLeashing()
+            self:SetLeader(player)
 
-    if self.leader ~= nil then
+            self.targettime = nil
+            if self.cached_player_leader_timeleft then
+                self:AddLoyaltyTime(self.cached_player_leader_timeleft - current_time)
+            end
+        else
+            self:ClearCachedPlayerLeader()
+        end
+    end
+end
+
+OnNewPlayerSpawned = function(self, player)
+    if self.cached_player_leader_userid == player.userid then
+        self:ClearCachedPlayerLeader()
+    end
+end
+
+local function clear_cached_player_leader(inst, self)
+    self:ClearCachedPlayerLeader()
+end
+
+function Follower:CachePlayerLeader(userid, timeleft)
+    if userid or (self.leader and self.leader:HasTag("player") and self.leader.userid) then
+        self.cached_player_leader_userid = userid or self.leader.userid
+
+        if timeleft or self.targettime then
+            local current_time = GetTime()
+            self.cached_player_leader_timeleft = current_time + (timeleft or math.max(0, self.targettime - current_time))
+
+            if self.cached_player_leader_task then
+                self.cached_player_leader_task:Cancel()
+                self.cached_player_leader_task = nil
+            end
+            self.cached_player_leader_task = self.inst:DoTaskInTime(self.cached_player_leader_timeleft - current_time, clear_cached_player_leader, self)
+        end
+
+        self.inst:ListenForEvent("ms_playerjoined", self.cached_player_join_fn, TheWorld)
+        self.inst:ListenForEvent("ms_newplayerspawned", self.cached_new_player_spawned_fn, TheWorld)
+    end
+end
+
+function Follower:ClearCachedPlayerLeader()
+    --moved outside the if block so that the event will always get cleared even if the cached_player_leader_userid is nil
+    self.inst:RemoveEventCallback("ms_newplayerspawned", self.cached_new_player_spawned_fn, TheWorld)
+    self.inst:RemoveEventCallback("ms_playerjoined", self.cached_player_join_fn, TheWorld)
+
+    if self.cached_player_leader_userid then
+        if self.cached_player_leader_task then
+            self.cached_player_leader_task:Cancel()
+            self.cached_player_leader_task = nil
+        end
+
+        self.cached_player_leader_timeleft = nil
+
+        self.cached_player_leader_userid = nil
+    end
+end
+
+function Follower:SetLeader(new_leader)
+    if self.leader and self.leader ~= new_leader then
+        local leader_cmp = self.leader.components.leader
+        if leader_cmp then
+            leader_cmp:RemoveFollower(self.inst)
+        end
+
+        self:StopLeashing()
+
         self.inst:RemoveEventCallback("onremove", self.OnLeaderRemoved, self.leader)
+
+        self:CancelLoyaltyTask()
+
+        self.leader = nil
     end
-    if inst ~= nil then
-        self.inst:ListenForEvent("onremove", self.OnLeaderRemoved, inst)
 
-        self.leader = inst
+    if new_leader and self.leader ~= new_leader then
+        self:ClearCachedPlayerLeader()
 
-        if inst:HasTag("player") or inst.components.inventoryitem ~= nil then
+        self.leader = new_leader
+
+        local leader_cmp = new_leader.components.leader
+        if leader_cmp then
+            leader_cmp:AddFollower(self.inst)
+        end
+
+        self.inst:ListenForEvent("onremove", self.OnLeaderRemoved, new_leader)
+
+        if new_leader:HasTag("player") or new_leader.components.inventoryitem ~= nil then
             --Special case for pets leashed to players or inventory items
             self:StartLeashing()
-        end
-    else
-        self.leader = nil
-
-        if self.task ~= nil then
-            self.task:Cancel()
-            self.task = nil
         end
     end
 end
@@ -196,26 +271,38 @@ local function stopfollow(inst, self)
 end
 
 function Follower:AddLoyaltyTime(time)
-    if self.leader ~= nil and self.leader.components.leader ~= nil and self.leader.components.leader.loyaltyeffectiveness ~= nil then
-		time = time * self.leader.components.leader.loyaltyeffectiveness
+    local leader_cmp = self.leader and self.leader.components.leader
+    if leader_cmp and leader_cmp.loyaltyeffectiveness then
+		time = time * leader_cmp.loyaltyeffectiveness
 	end
-    local currentTime = GetTime()
-    local timeLeft = self.targettime or 0
-    timeLeft = math.max(0, timeLeft - currentTime)
-    timeLeft = math.min(self.maxfollowtime or 0, timeLeft + time)
 
-    self.targettime = currentTime + timeLeft
+    local current_time = GetTime()
+    if self.targettime then
+        self.targettime = math.clamp(math.max(current_time, self.targettime) + time, current_time, current_time + (self.maxfollowtime or 0))
+    else
+        self.targettime = current_time + math.clamp(time, 0, self.maxfollowtime or 0)
+    end
 
     self.inst:PushEvent("gainloyalty", { leader = self.leader })
 
     if self.task ~= nil then
         self.task:Cancel()
+        self.task = nil
     end
-    self.task = self.inst:DoTaskInTime(timeLeft, stopfollow, self)
+    self.task = self.inst:DoTaskInTime(self.targettime - current_time, stopfollow, self)
+end
+
+function Follower:CancelLoyaltyTask()
+    self.targettime = nil
+    if self.task ~= nil then
+        self.task:Cancel()
+        self.task = nil
+    end
 end
 
 function Follower:StopFollowing()
     if self.inst:IsValid() then
+        self.targettime = nil
         self.inst:PushEvent("loseloyalty", { leader = self.leader })
         self:SetLeader(nil)
     end
@@ -226,16 +313,34 @@ function Follower:IsNearLeader(dist)
 end
 
 function Follower:OnSave()
+    local data = {}
+
     local time = GetTime()
-    return self.targettime ~= nil
-        and self.targettime > time
-        and { time = math.floor(self.targettime - time) }
-        or nil
+    if self.targetime and self.targettime > time then
+        data.time = math.floor(self.targettime - time)
+    end
+
+    if self.cached_player_leader_userid then
+        data.cached_player_leader_userid = self.cached_player_leader_userid
+
+        if self.cached_player_leader_timeleft and self.cached_player_leader_timeleft > time then
+            data.cached_player_leader_timeleft = math.floor(self.cached_player_leader_timeleft - time)
+        end
+    elseif self.leader and self.leader:HasTag("player") and self.leader.userid then
+        data.cached_player_leader_userid = self.leader.userid
+        data.cached_player_leader_timeleft = data.time
+    end
+
+    return not IsTableEmpty(data) and data or nil
 end
 
 function Follower:OnLoad(data)
     if data.time ~= nil then
         self:AddLoyaltyTime(data.time)
+    end
+
+    if data.cached_player_leader_userid then
+        self:CachePlayerLeader(data.cached_player_leader_userid, data.cached_player_leader_timeleft)
     end
 end
 
@@ -262,13 +367,25 @@ function Follower:LongUpdate(dt)
         self.task:Cancel()
         self.task = nil
 
-        local time = GetTime()
         local time_left = self.targettime - GetTime() - dt
         if time_left < 0 then
             self:SetLeader(nil)
         else
             self.targettime = GetTime() + time_left
             self.task = self.inst:DoTaskInTime(time_left, stopfollow, self)
+        end
+    end
+
+    if self.cached_player_leader_task and self.cached_player_leader_timeleft then
+        self.cached_player_leader_task:Cancel()
+        self.cached_player_leader_task = nil
+
+        local time_left = self.cached_player_leader_timeleft - GetTime() - dt
+        if time_left < 0 then
+            self:ClearCachedPlayerLeader()
+        else
+            self.cached_player_leader_timeleft = GetTime() + time_left
+            self.cached_player_leader_task = self.inst:DoTaskInTime(time_left, clear_cached_player_leader, self)
         end
     end
 end
@@ -279,7 +396,13 @@ function Follower:OnRemoveFromEntity()
         self.task:Cancel()
         self.task = nil
     end
+    if self.cached_player_leader_task then
+        self.cached_player_leader_task:Cancel()
+        self.cached_player_leader_task = nil
+    end
     self.inst:RemoveEventCallback("attacked", onattacked)
+    self.inst:RemoveEventCallback("ms_newplayerspawned", self.cached_new_player_spawned_fn, TheWorld)
+    self.inst:RemoveEventCallback("ms_playerjoined", self.cached_player_join_fn, TheWorld)
     if self.leader ~= nil then
         self.inst:RemoveEventCallback("onremove", self.OnLeaderRemoved, self.leader)
     end

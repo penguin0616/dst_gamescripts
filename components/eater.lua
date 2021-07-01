@@ -121,6 +121,19 @@ function Eater:SetStrongStomach(is_strong)
     end
 end
 
+function Eater:SetCanEatRawMeat(can_eat)
+    if can_eat then
+        self.inst:AddTag("eatsrawmeat")
+        self.eatsrawmeat = true
+    else
+        if self.inst:HasTag("eatsrawmeat") then
+            self.inst:RemoveTag("eatsrawmeat")
+        end
+
+        self.eatsrawmeat = false
+    end
+end
+
 function Eater:SetIgnoresSpoilage(ignores)
     if ignores then
         self.inst:AddTag("ignoresspoilage")
@@ -140,6 +153,7 @@ end
 
 function Eater:DoFoodEffects(food)
     return not ((self.strongstomach and food:HasTag("monstermeat")) or
+                (self.eatsrawmeat and food:HasTag("rawmeat")) or 
                 (self.inst.components.foodaffinity and self.inst.components.foodaffinity:HasPrefabAffinity(food)))
 end
 

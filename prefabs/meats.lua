@@ -363,7 +363,7 @@ local function driedmeat()
 end
 
 local function raw()
-    local inst = common("meat", "meat", "raw", { "catfood" }, { product = "meat_dried", time = TUNING.DRY_MED }, { product = "cookedmeat" })
+    local inst = common("meat", "meat", "raw", { "catfood", "rawmeat" }, { product = "meat_dried", time = TUNING.DRY_MED }, { product = "cookedmeat" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -387,7 +387,7 @@ local function raw()
 end
 
 local function smallmeat()
-    local inst = common("meat_small", "meat_small", "raw", { "catfood" }, { product = "smallmeat_dried", time = TUNING.DRY_FAST }, { product = "cookedsmallmeat" })
+    local inst = common("meat_small", "meat_small", "raw", { "catfood", "rawmeat" }, { product = "smallmeat_dried", time = TUNING.DRY_FAST }, { product = "cookedsmallmeat" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -445,7 +445,7 @@ local function driedsmallmeat()
 end
 
 local function drumstick()
-	local inst = common("drumstick", "drumstick", "raw", { "drumstick", "catfood" }, { product = "smallmeat_dried", time = TUNING.DRY_FAST }, { product = "drumstick_cooked" })
+	local inst = common("drumstick", "drumstick", "raw", { "drumstick", "catfood", "rawmeat" }, { product = "smallmeat_dried", time = TUNING.DRY_FAST }, { product = "drumstick_cooked" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -515,7 +515,7 @@ local function fishmeat_small_cooked()
 end
 
 local function fishmeat()
-	local inst = common("fishmeat", "fishmeat", "raw", { "fishmeat", "catfood" }, { product = "meat_dried", build = "meat_rack_food_tot", dried_build = "meat_rack_food", time = TUNING.DRY_FAST }, { product = "fishmeat_cooked" })
+	local inst = common("fishmeat", "fishmeat", "raw", { "fishmeat", "catfood", "rawmeat" }, { product = "meat_dried", build = "meat_rack_food_tot", dried_build = "meat_rack_food", time = TUNING.DRY_FAST }, { product = "fishmeat_cooked" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -547,7 +547,7 @@ local function fishmeat_cooked()
 end
 
 local function batwing()
-    local inst = common("batwing", "batwing", "raw", { "batwing", "catfood" }, { product = "smallmeat_dried", time = TUNING.DRY_MED }, { product = "batwing_cooked" })
+    local inst = common("batwing", "batwing", "raw", { "batwing", "catfood", "rawmeat" }, { product = "smallmeat_dried", time = TUNING.DRY_MED }, { product = "batwing_cooked" })
 
     inst.components.floater:SetSize("med")
     inst.components.floater:SetVerticalOffset(0.02)
@@ -581,7 +581,7 @@ local function batwing_cooked()
 end
 
 local function plantmeat()
-    local inst = common("plant_meat", "plant_meat", "raw", {"lureplant_bait"}, nil, { product = "plantmeat_cooked" })
+    local inst = common("plant_meat", "plant_meat", "raw", {"lureplant_bait", "rawmeat"}, nil, { product = "plantmeat_cooked" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -611,7 +611,7 @@ local function plantmeat_cooked()
 end
 
 local function quagmire_smallmeat()
-    local inst = common("quagmire_meat_small", "quagmire_meat_small", "raw", { "catfood" }, nil, { product = "quagmire_cookedsmallmeat" })
+    local inst = common("quagmire_meat_small", "quagmire_meat_small", "raw", { "catfood", "rawmeat" }, nil, { product = "quagmire_cookedsmallmeat" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -635,7 +635,7 @@ local function quagmire_cookedsmallmeat()
 end
 
 local function barnacle()
-    local inst = common("barnacle", "barnacle", "raw", {"barnacle"}, nil, { product = "barnacle_cooked" })
+    local inst = common("barnacle", "barnacle", "raw", {"barnacle", "rawmeat"}, nil, { product = "barnacle_cooked" })
 
     if not TheWorld.ismastersim then
         return inst
@@ -676,7 +676,7 @@ local function barnacle_cooked()
     return inst
 end
 
-local BATNOSE_TAGS = { "catfood" }
+local BATNOSE_TAGS = { "catfood", "rawmeat" }
 local BATNOSE_DRYABLE_DATA =
 {
     product = "smallmeat_dried",

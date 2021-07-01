@@ -1061,7 +1061,7 @@ local function ClearModData(modname)
 		if MOD_WORLDSETTINGS_GROUP[modname] then
 			for name, group in pairs(MOD_WORLDSETTINGS_GROUP[modname]) do
 				for itemname, item in pairs(group.items) do
-					group.items[name] = nil
+					group.items[itemname] = nil
 					MOD_OPTIONS[item.modname][itemname] = nil
 				end
 				assert(IsTableEmpty(group.items))
@@ -1072,7 +1072,7 @@ local function ClearModData(modname)
 		if MOD_WORLDGEN_GROUP[modname] then
 			for name, group in pairs(MOD_WORLDGEN_GROUP[modname]) do
 				for itemname, item in pairs(group.items) do
-					group.items[name] = nil
+					group.items[itemname] = nil
 					MOD_OPTIONS[item.modname][itemname] = nil
 				end
 				assert(IsTableEmpty(group.items))

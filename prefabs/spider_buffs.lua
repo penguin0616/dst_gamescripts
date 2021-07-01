@@ -23,6 +23,8 @@ local function OnDetached(inst, target)
     if inst.detachfn ~= nil then
         inst.detachfn(inst, target)
     end
+
+    inst:Remove()
 end
 
 local function whistle_fn()

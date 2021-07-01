@@ -107,6 +107,7 @@ local function master_postinit(inst)
 
     if inst.components.eater ~= nil then
         inst.components.eater:SetStrongStomach(true)
+        inst.components.eater:SetCanEatRawMeat(true)
     end
 
     inst.components.foodaffinity:AddPrefabAffinity("icecream", TUNING.AFFINITY_15_CALORIES_MED)

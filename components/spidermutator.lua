@@ -11,15 +11,18 @@ function SpiderMutator:CanMutate(spider)
 end
 
 function SpiderMutator:Mutate(spider, skip_event, giver)
-    local owner = spider.components.inventoryitem.owner
-    if owner ~= nil then
+    if spider.components.inventoryitem and spider.components.inventoryitem.owner ~= nil then
+        
+        local owner = spider.components.inventoryitem.owner
     	local new_spider = SpawnPrefab(self.mutation_target)
-    	local slot = owner.components.inventory:GetItemSlot(spider)
+        local component_name = owner.components.inventory ~= nil and "inventory" or "container"
+        local slot = owner.components[component_name]:GetItemSlot(spider)
 
-    	owner.components.inventory:RemoveItem(spider)
-    	spider:Remove()
+        owner.components[component_name]:RemoveItem(spider)
+        spider:Remove()
 
-    	owner.components.inventory:GiveItem(new_spider, slot)
+        owner.components[component_name]:GiveItem(new_spider, slot)
+        new_spider.components.follower:SetLeader(giver)
     else	
 	    spider.mutation_target = self.mutation_target
 		spider.mutator_giver = giver

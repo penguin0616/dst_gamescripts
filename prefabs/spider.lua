@@ -85,7 +85,17 @@ local SPIDER_IGNORE_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
 local function GetOtherSpiders(inst, radius, tags)
     tags = tags or SPIDER_TAGS
     local x, y, z = inst.Transform:GetWorldPosition()
-    return TheSim:FindEntities(x, y, z, radius, nil, SPIDER_IGNORE_TAGS, tags)
+    
+    local spiders = TheSim:FindEntities(x, y, z, radius, nil, SPIDER_IGNORE_TAGS, tags)
+    local valid_spiders = {}
+
+    for _, spider in ipairs(spiders) do
+        if spider:IsValid() and not spider.components.health:IsDead() and not spider:HasTag("playerghost") then
+            table.insert(valid_spiders, spider)
+        end
+    end
+
+    return valid_spiders
 end
 
 local function OnGetItemFromPlayer(inst, giver, item)
@@ -93,12 +103,11 @@ local function OnGetItemFromPlayer(inst, giver, item)
     if inst.components.eater:CanEat(item) then
         inst.components.eater:Eat(item)
 
-        local state = "eat"
         if inst.components.inventoryitem.owner ~= nil then
-            state = "idle"
+            inst.sg:GoToState("idle")
+        else
+            inst.sg:GoToState("eat", true)
         end
-
-        inst.sg:GoToState(state)
 
         local playedfriendsfx = false
         if inst.components.combat.target == giver then
@@ -114,29 +123,31 @@ local function OnGetItemFromPlayer(inst, giver, item)
         end
 
         if giver.components.leader ~= nil then
-            local spiders = GetOtherSpiders(inst, 15)
+            local spiders = GetOtherSpiders(inst, 15) --note: also returns the calling instance of the spider in the list
             local maxSpiders = TUNING.SPIDER_FOLLOWER_COUNT
 
             for i, v in ipairs(spiders) do
-                if maxSpiders <= 0 then
-                    break
-                end
-
-                if v.components.combat.target == giver then
-                    v.components.combat:SetTarget(nil)
-                elseif giver.components.leader ~= nil and
-                    v.components.follower ~= nil and
-                    v.components.follower.leader == nil then
-                    if not playedfriendsfx then
-                        giver:PushEvent("makefriend")
-                        playedfriendsfx = true
+                if v ~= inst then
+                    if maxSpiders <= 0 then
+                        break
                     end
-                    giver.components.leader:AddFollower(v)
-                end
-                maxSpiders = maxSpiders - 1
 
-                if v.components.sleeper:IsAsleep() then
-                    v.components.sleeper:WakeUp()
+                    if v.components.combat.target == giver then
+                        v.components.combat:SetTarget(nil)
+                    elseif giver.components.leader ~= nil and
+                        v.components.follower ~= nil and
+                        v.components.follower.leader == nil then
+                        if not playedfriendsfx then
+                            giver:PushEvent("makefriend")
+                            playedfriendsfx = true
+                        end
+                        giver.components.leader:AddFollower(v)
+                    end
+                    maxSpiders = maxSpiders - 1
+
+                    if v.components.sleeper:IsAsleep() then
+                        v.components.sleeper:WakeUp()
+                    end
                 end
             end
         end
@@ -345,6 +356,14 @@ local function OnEat(inst, data)
     end
 end
 
+local function OnDropped(inst, data)
+    if ShouldWake(inst) then
+        inst.sg:GoToState("idle")
+    elseif ShouldSleep(inst) then
+        inst.sg:GoToState("sleep")
+    end
+end
+
 local function OnGoToSleep(inst)
     inst.components.inventoryitem.canbepickedup = true
 end
@@ -354,7 +373,12 @@ local function OnWakeUp(inst)
 end
 
 local function CalcSanityAura(inst, observer)
-    return observer:HasTag("spiderwhisperer") and 0 or inst.components.sanityaura.aura
+    if observer:HasTag("spiderwhisperer") or inst.bedazzled or 
+    (inst.components.follower.leader ~= nil and inst.components.follower.leader:HasTag("spiderwhisperer")) then
+        return 0
+    end
+    
+    return inst.components.sanityaura.aura
 end
 
 local function HalloweenMoonMutate(inst, new_inst)
@@ -554,6 +578,7 @@ local function create_common(bank, build, tag, common_init)
     inst.components.eater:SetDiet({ FOODTYPE.MEAT }, { FOODTYPE.MEAT })
     inst.components.eater:SetCanEatHorrible()
     inst.components.eater:SetStrongStomach(true) -- can eat monster meat!
+    inst.components.eater:SetCanEatRawMeat(true)
 
     ------------------
 
@@ -597,6 +622,8 @@ local function create_common(bank, build, tag, common_init)
     
     inst:ListenForEvent("ontrapped", OnTrapped)
     inst:ListenForEvent("oneat", OnEat)
+
+    inst:ListenForEvent("ondropped", OnDropped)
 
     inst:ListenForEvent("gotosleep", OnGoToSleep)
     inst:ListenForEvent("onwakeup", OnWakeUp)

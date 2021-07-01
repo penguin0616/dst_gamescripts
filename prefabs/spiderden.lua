@@ -12,7 +12,6 @@ local prefabs =
 local assets =
 {
     Asset("ANIM", "anim/spider_cocoon.zip"),
-    Asset("ANIM", "anim/spider_cocoon_2.zip"),
     Asset("SOUND", "sound/spider.fsb"),
 	Asset("MINIMAP_IMAGE", "spiderden_1"),
     Asset("MINIMAP_IMAGE", "spiderden_2"),
@@ -288,6 +287,9 @@ end
 
 local function onspawnspider(inst, spider)
     spider.sg:GoToState("taunt")
+    if inst:HasTag("bedazzled") then
+        inst.components.bedazzlement:PacifySpiders()
+    end
 end
 
 local function OnKilled(inst)
@@ -404,12 +406,14 @@ local function SummonChildren(inst, data)
             
             local children_released = inst.components.childspawner:ReleaseAllChildren()
 
-            for i,v in ipairs(children_released) do
-                if v.components.debuffable == nil then
-                    v:AddComponent("debuffable")
+            if children_released then
+                for i,v in ipairs(children_released) do
+                    if v.components.debuffable == nil then
+                        v:AddComponent("debuffable")
+                    end
+                    
+                    v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
                 end
-                
-                v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
             end
 
             if inst:HasTag("bedazzled") then
@@ -432,6 +436,10 @@ local function StopSpawning(inst)
     if inst.components.childspawner ~= nil then
         inst.components.childspawner:StopSpawning()
     end
+end
+
+local function OnExtinguish(inst)
+    inst.SoundEmitter:PlaySound("dontstarve/creatures/spider/spidernest_LP", "loop")
 end
 
 local function OnIgnite(inst)
@@ -597,13 +605,8 @@ local function OnPreLoad(inst, data)
 end
 
 local function CanShave(inst, shaver, shaving_implement)
-
-    if not shaver:HasTag("spiderwhisperer") then
-        return false
-    end
-
-    -- TODO: check if there's someone sleeping in the den before returning
-    return true
+    return shaver:HasTag("spiderwhisperer") and not inst.components.health:IsDead() and 
+           not inst.components.burnable:IsBurning() and not inst.components.freezable:IsFrozen()
 end
 
 local function OnShaved(inst, shaver, shaving_implement)
@@ -663,7 +666,7 @@ local function MakeSpiderDenFn(den_level)
         inst.MiniMapEntity:SetIcon("spiderden_" .. tostring(den_level) .. ".png")
 
         inst.AnimState:SetBank("spider_cocoon")
-        inst.AnimState:SetBuild("spider_cocoon_2")
+        inst.AnimState:SetBuild("spider_cocoon")
         inst.AnimState:PlayAnimation("cocoon_small", true)
         inst.AnimState:HideSymbol("bedazzled_flare")
 
@@ -723,6 +726,7 @@ local function MakeSpiderDenFn(den_level)
         ---------------------
         MakeMediumBurnable(inst)
         inst.components.burnable:SetOnIgniteFn(OnIgnite)
+        inst.components.burnable:SetOnExtinguishFn(OnExtinguish)
         -------------------
 
         ---------------------

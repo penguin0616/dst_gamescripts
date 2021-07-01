@@ -23,9 +23,9 @@ local function SpawnFx(inst, fx_prefab, scale)
 end
 
 local function OnHealFn(inst, target)
-
-    inst.SoundEmitter:PlaySound("webber1/creatures/spider_cannonfodder/heal_fartcloud")
-
+    if target.SoundEmitter ~= nil then
+        target.SoundEmitter:PlaySound("webber1/creatures/spider_cannonfodder/heal_fartcloud")
+    end
 
     -- We heal webber manually instead of through the healer component because only webber should be healed by it
     if target:HasTag("spiderwhisperer") then

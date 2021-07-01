@@ -1036,6 +1036,7 @@ local function OnDespawn(inst, migrationdata)
 
     inst:PushEvent("player_despawn")
 
+    inst.components.leader:HaveFollowersCachePlayerLeader()
     inst.components.leader:RemoveAllFollowers()
 
     if inst.components.playercontroller ~= nil then

@@ -426,7 +426,6 @@ function LocoMotor:UpdateGroundSpeedMultiplier()
                                      (self:FasterOnCreep() and oncreep))
 									 and self.fastmultiplier 
 									 or 1
-
     end
 end
 

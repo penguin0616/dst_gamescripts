@@ -63,8 +63,8 @@ local function SummonMalbatross(target_shoal, the_malbatross)
 end
 
 local function TryBeginningMalbatrossSpawns()
-    if next(_fishshoals) ~= nil and not _spawnpending then
-        if not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) then
+    if next(_fishshoals) ~= nil then
+        if not _worldsettingstimer:ActiveTimerExists(MALBATROSS_TIMERNAME) and not _spawnpending then
             _worldsettingstimer:StartTimer(MALBATROSS_TIMERNAME, (_firstspawn and 0) or GetRandomWithVariance(TUNING.MALBATROSS_SPAWNDELAY_BASE, TUNING.MALBATROSS_SPAWNDELAY_RANDOM))
         end
 
@@ -217,10 +217,11 @@ end
 function self:GetDebugString()
     local s = nil
     local time_until_spawn = _worldsettingstimer:GetTimeLeft(MALBATROSS_TIMERNAME)
-    if not time_until_spawn then
+    local trying_to_spawn = self.inst.updatecomponents[self] ~= nil
+    if trying_to_spawn then
+        s = "Spawning: "..tostring(_spawnpending)..", shoals_for_spawning: "..tostring(#_shuffled_shoals_for_spawning)
+    elseif not time_until_spawn then
         s = "DORMANT <no time>"
-    elseif self.inst.updatecomponents[self] == nil then
-        s = "DORMANT "..time_until_spawn
     elseif time_until_spawn > 0 then
         s = string.format("Malbatross is coming in %2.2f", time_until_spawn)
     else

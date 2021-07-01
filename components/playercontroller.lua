@@ -1209,6 +1209,14 @@ function PlayerController:RefreshReticule()
     end
 end
 
+local function TargetIsHostile(inst, target)
+    if inst.HostileTest ~= nil then
+        return inst:HostileTest(target)
+    else
+        return target:HasTag("hostile")
+    end
+end
+
 local function ValidateAttackTarget(combat, target, force_attack, x, z, has_weapon, reach)
     if not combat:CanTarget(target) then
         return false
@@ -1223,8 +1231,7 @@ local function ValidateAttackTarget(combat, target, force_attack, x, z, has_weap
                     combat:IsRecentTarget(target) or
                     targetcombat:GetTarget() == combat.inst) then
             --must use force attack non-hostile creatures
-            if not (target:HasTag("hostile") or
-                    (has_weapon and target:HasTag("monster") and not target:HasTag("player"))) then
+            if not TargetIsHostile(combat.inst, target) then
                 return false
             end
             --must use force attack on players' followers
@@ -1443,9 +1450,11 @@ local function GetPickupAction(self, target, tool)
         return ACTIONS.RESETMINE
     elseif target:HasTag("inactive") then
         return (not target:HasTag("wall") or self.inst:IsNear(target, 2.5)) and ACTIONS.ACTIVATE or nil
+    
     elseif target.replica.inventoryitem ~= nil and
         target.replica.inventoryitem:CanBePickedUp() and
-        not (target:HasTag("heavy") or target:HasTag("fire") or target:HasTag("catchable")) then
+        not (target:HasTag("heavy") or target:HasTag("fire") or target:HasTag("catchable")) and
+        (not target:HasTag("spider") or self.inst:HasTag("spiderwhisperer")) then
         return (self:HasItemSlots() or target.replica.equippable ~= nil) and ACTIONS.PICKUP or nil
     elseif target:HasTag("pickable") and not target:HasTag("fire") then
         return ACTIONS.PICK

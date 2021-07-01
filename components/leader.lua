@@ -136,6 +136,14 @@ function Leader:RemoveAllFollowersOnDeath()
     end
 end
 
+function Leader:HaveFollowersCachePlayerLeader()
+    for k,v in pairs(self.followers) do
+        if k.components.follower then
+            k.components.follower:CachePlayerLeader()
+        end
+    end
+end
+
 function Leader:IsBeingFollowedBy(prefabName)
     for k,v in pairs(self.followers) do
         if k.prefab == prefabName then

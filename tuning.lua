@@ -5331,6 +5331,8 @@ function Tune(overrides)
         SPIDER_REPELLENT_RADIUS = 8,
 
         SPIDER_FOLLOWER_COUNT = 2,
+
+        FOLLOWER_REFOLLOW_DIST_SQ = 20 * 20,
 	}
 
     TUNING_MODIFIERS = {}
