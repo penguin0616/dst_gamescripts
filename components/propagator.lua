@@ -78,6 +78,7 @@ function Propagator:StopSpreading(reset, heatpct)
     end
 end
 
+--really this is TemperatureResistance, since it prevents cold from spreading also.
 function Propagator:GetHeatResistance()
     local tile, data = self.inst:GetCurrentTileType()
     return data ~= nil
@@ -92,11 +93,11 @@ function Propagator:AddHeat(amount)
         return
     end
 
-    if self.currentheat <= 0 then
+    self.currentheat = self.currentheat + amount * self:GetHeatResistance()
+
+    if self.currentheat ~= 0 then
         self:StartUpdating()
     end
-
-    self.currentheat = self.currentheat + amount * self:GetHeatResistance()
 
     if self.currentheat > self.flashpoint then
         self.pauseheating = true
@@ -115,7 +116,11 @@ end
 local TARGET_CANT_TAGS = { "INLIMBO" }
 local TARGET_MELT_MUST_TAGS = { "frozen", "firemelt" }
 function Propagator:OnUpdate(dt)
-    self.currentheat = math.max(0, self.currentheat - dt * self.decayrate)
+    if self.currentheat > 0 then
+        self.currentheat = math.max(0, self.currentheat - dt * self.decayrate)
+    elseif self.currentheat < 0 then
+        self.currentheat = math.min(0, self.currentheat + dt * self.decayrate)
+    end
 
 	local x, y, z = self.inst.Transform:GetWorldPosition()
     local prop_range = TheWorld.state.isspring and self.propagaterange * TUNING.SPRING_FIRE_RANGE_MOD or self.propagaterange
@@ -181,7 +186,7 @@ function Propagator:OnUpdate(dt)
                 v:RemoveTag("firemelt")
             end
         end
-        if self.currentheat <= 0 then
+        if self.currentheat == 0 then
             self:StopUpdating()
         end
     end

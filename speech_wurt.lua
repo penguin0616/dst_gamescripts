@@ -626,8 +626,8 @@ return{
         BOOK_TENTACLES =  "This a good one!",
         BOOK_BRIMSTONE = "Flurrgh, wanna know how it ends!",
         BOOK_GARDENING = "So many hard words...",
---fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
---fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+        BOOK_SILVICULTURE = "Is whole story about trees? Me know about trees!",
+        BOOK_HORTICULTURE = "So many hard words...",
     },
     ANNOUNCE_WEAK_RAT = "It not look so good...",
 

@@ -55,7 +55,8 @@ local function GoHomeAction(inst)
     local home = inst.components.homeseeker ~= nil and inst.components.homeseeker.home or nil
 
     if home ~= nil and ((home.components.burnable ~= nil and home.components.burnable:IsBurning()) or
-                        (home.components.freezable ~= nil and home.components.freezable:IsFrozen())) then
+                        (home.components.freezable ~= nil and home.components.freezable:IsFrozen()) or
+                        (home.components.health ~= nil and home.components.health:IsDead())) then
         home = nil
     end 
 

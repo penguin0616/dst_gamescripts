@@ -277,9 +277,9 @@ function InventoryItem:OnPickup(pickupguy, src_pos)
         end
     end
 
-    self.inst.Transform:SetPosition(0, 0, 0)
+
     self.inst:PushEvent("onpickup", { owner = pickupguy })
-    return type(self.onpickupfn) == "function" and self.onpickupfn(self.inst, pickupguy, src_pos)
+    return self.onpickupfn and self.onpickupfn(self.inst, pickupguy, src_pos)
 end
 
 function InventoryItem:IsHeld()

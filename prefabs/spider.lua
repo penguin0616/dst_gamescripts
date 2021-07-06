@@ -1,7 +1,7 @@
 local assets =
 {
     Asset("ANIM", "anim/ds_spider_basic.zip"),
-    Asset("ANIM", "anim/spider_build_2.zip"),
+    Asset("ANIM", "anim/spider_build.zip"),
     Asset("ANIM", "anim/ds_spider_boat_jump.zip"),
     Asset("SOUND", "sound/spider.fsb"),
 }
@@ -34,7 +34,7 @@ local dropperassets =
 {
     Asset("ANIM", "anim/ds_spider_basic.zip"),
     Asset("ANIM", "anim/ds_spider_warrior.zip"),
-    Asset("ANIM", "anim/spider_white_2.zip"),
+    Asset("ANIM", "anim/spider_white.zip"),
     Asset("SOUND", "sound/spider.fsb"),
 }
 
@@ -132,6 +132,8 @@ local function OnGetItemFromPlayer(inst, giver, item)
                         break
                     end
 
+                    local effectdone = true
+
                     if v.components.combat.target == giver then
                         v.components.combat:SetTarget(nil)
                     elseif giver.components.leader ~= nil and
@@ -142,11 +144,16 @@ local function OnGetItemFromPlayer(inst, giver, item)
                             playedfriendsfx = true
                         end
                         giver.components.leader:AddFollower(v)
+                    else
+                        effectdone = false
                     end
-                    maxSpiders = maxSpiders - 1
 
-                    if v.components.sleeper:IsAsleep() then
-                        v.components.sleeper:WakeUp()
+                    if effectdone then
+                        maxSpiders = maxSpiders - 1
+    
+                        if v.components.sleeper:IsAsleep() then
+                            v.components.sleeper:WakeUp()
+                        end
                     end
                 end
             end
@@ -476,6 +483,10 @@ local function DoHeal(inst)
     inst.healtime = GetTime()
 end
 
+local function OnPickup(inst)
+    inst:PushEvent("detachchild")
+end
+
 local function create_common(bank, build, tag, common_init)
     local inst = CreateEntity()
 
@@ -628,6 +639,8 @@ local function create_common(bank, build, tag, common_init)
     inst:ListenForEvent("gotosleep", OnGoToSleep)
     inst:ListenForEvent("onwakeup", OnWakeUp)
 
+    inst:ListenForEvent("onpickup", OnPickup)
+
     inst:WatchWorldState("iscaveday", OnIsCaveDay)
     OnIsCaveDay(inst, TheWorld.state.iscaveday)
 
@@ -638,7 +651,7 @@ local function create_common(bank, build, tag, common_init)
 end
 
 local function create_spider()
-    local inst = create_common("spider", "spider_build_2")
+    local inst = create_common("spider", "spider_build")
 
     if not TheWorld.ismastersim then
         return inst
@@ -747,7 +760,7 @@ local function create_spitter()
 end
 
 local function create_dropper()
-    local inst = create_common("spider", "spider_white_2", "spider_warrior")
+    local inst = create_common("spider", "spider_white", "spider_warrior")
 
     if not TheWorld.ismastersim then
         return inst

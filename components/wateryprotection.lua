@@ -26,10 +26,8 @@ function WateryProtection:SpreadProtectionAtPoint(x, y, z, dist, noextinguish)
                 v.components.witherable:Protect(self.witherprotectiontime)
             end
             if not noextinguish and self.extinguish then
-                if v.components.burnable:IsBurning() then
+                if v.components.burnable:IsBurning() or v.components.burnable:IsSmoldering() then
                     v.components.burnable:Extinguish(true, self.extinguishheatpercent)
-                elseif v.components.burnable:IsSmoldering() then
-                    v.components.burnable:Extinguish(true)
                 end
             end
         end

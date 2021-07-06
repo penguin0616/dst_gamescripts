@@ -682,7 +682,7 @@ SPECIAL_EVENTS =
     YOTC = "year_of_the_carrat",
     YOTB = "year_of_the_beefalo",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.CARNIVAL
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
 
 FESTIVAL_EVENTS =
 {
@@ -764,8 +764,7 @@ SPECIAL_EVENT_MUSIC =
     [SPECIAL_EVENTS.CARNIVAL] =
     {
         bank = "music_frontend.fsb",
-        --sound = "dontstarve/music/music_FE_summerevent",
-        sound = "dontstarve/music/music_FE_webber", -- RESTORE THIS TO THE SOUND ABOVE ONCE THE EVENT IS OVER
+        sound = "dontstarve/music/music_FE_summerevent",
     },
 }
 

@@ -316,7 +316,7 @@ function Follower:OnSave()
     local data = {}
 
     local time = GetTime()
-    if self.targetime and self.targettime > time then
+    if self.targettime and self.targettime > time then
         data.time = math.floor(self.targettime - time)
     end
 

@@ -112,7 +112,7 @@ end
 function string.rfind(s, pattern, init, plain)
     local matches = s:findall(pattern, init, plain)
     if #matches > 0 then
-        return table.unpack(matches[#matches])
+        return unpack(matches[#matches])
     end
     return nil
 end

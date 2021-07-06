@@ -73,5 +73,10 @@ local function fn()
     return inst
 end
 
+local function placer_postinit(placer)
+    placer.AnimState:HideSymbol("bedazzled_flare")
+end
+
 return Prefab("spidereggsack", fn, assets, prefabs),
-    MakePlacer("spidereggsack_placer", "spider_cocoon", "spider_cocoon", "cocoon_small")
+    --function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, fixedcameraoffset, facing, postinit_fn, offset, onfailedplacement)
+    MakePlacer("spidereggsack_placer", "spider_cocoon", "spider_cocoon", "cocoon_small", nil, nil, nil, nil, nil, nil, placer_postinit)

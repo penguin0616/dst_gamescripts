@@ -1078,11 +1078,11 @@ function PurchasePackScreen:_BuildPurchasePanel()
                 self.sales_btn:SetTextSize(30)
                 self.sales_btn:SetText(STRINGS.UI.PURCHASEPACKSCREEN.GO_TO_SALES)
                 self.sales_btn:SetScale(0.80)
-                self.sales_btn:SetPosition(0, 80)
+                self.sales_btn:SetPosition(0, -170)
                 self.sales_btn:SetOnClick(function() print("sales") self.filters[FILTER_DISCOUNT_INDEX].spinner:SetSelected("SALE") end)
 
-                self.sales_btn:SetFocusChangeDir(MOVE_DOWN, self.filters[1])
-                self.filters[1]:SetFocusChangeDir(MOVE_UP, self.sales_btn)
+                self.filters[FILTER_DISCOUNT_INDEX]:SetFocusChangeDir(MOVE_DOWN, self.sales_btn)
+                self.sales_btn:SetFocusChangeDir(MOVE_UP, self.filters[FILTER_DISCOUNT_INDEX])
             end
         end
     else

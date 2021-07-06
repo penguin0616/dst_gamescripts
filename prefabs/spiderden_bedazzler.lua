@@ -5,7 +5,7 @@ local assets =
 
 local prefabs = 
 {
-    "bedazzler_buff",
+    "bedazzle_buff",
 }
 
 local function fn()

@@ -377,11 +377,11 @@ seedpouch_clear_fn = function(inst) basic_clear_fn(inst, "seedpouch" ) end
 --------------------------------------------------------------------------
 stagehand_init_fn = function(inst, build_name)
     basic_init_fn( inst, build_name, "stagehand" )
-    --inst.MiniMapEntity:SetIcon(build_name .. ".png")
+    inst.AnimState:OverrideSymbol("stagehand_fingers", "stagehand", "stagehand_fingers")
 end
 stagehand_clear_fn = function(inst)
     basic_clear_fn(inst, "stagehand" )
-    --inst.MiniMapEntity:SetIcon("wormhole.png")
+    inst.AnimState:ClearOverrideSymbol("stagehand_fingers")
 end
 
 
@@ -1205,7 +1205,6 @@ function cane_init_fn(inst, build_name)
     end
 end
 function cane_clear_fn(inst)
-    
     basic_clear_fn(inst, "swap_cane" )
     inst.AnimState:ClearOverrideSymbol("grass")
 
