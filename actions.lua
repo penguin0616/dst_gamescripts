@@ -541,7 +541,12 @@ ACTIONS.PICKUP.fn = function(act)
             end
         end
 
-        if act.target.components.inventory ~= nil and act.target:HasTag("drop_inventory_pickup") then
+        if (act.target:HasTag("spider") and act.doer:HasTag("spiderwhisperer")) and 
+           (act.target.components.follower.leader ~= nil and act.target.components.follower.leader ~= act.doer) then
+            return false, "NOTMINE_SPIDER"
+        end
+
+        if act.target.components.inventory ~= nil and act.target:HasTag("drop_inventory_onpickup") then
             act.target.components.inventory:TransferInventory(act.doer)
         end
 
@@ -2080,7 +2085,7 @@ ACTIONS.MURDER.fn = function(act)
             end
         end
 
-        if murdered.components.inventory and murdered:HasTag("drop_inventory_murder") then
+        if murdered.components.inventory and murdered:HasTag("drop_inventory_onmurder") then
             murdered.components.inventory:TransferInventory(act.doer)
         end
 

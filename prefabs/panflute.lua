@@ -1,7 +1,6 @@
 local assets =
 {
     Asset("ANIM", "anim/pan_flute.zip"),
-    Asset("ANIM", "anim/pan_flute_water.zip"),
 }
 
 local function HearPanFlute(inst, musician, instrument)
@@ -45,7 +44,6 @@ local function fn()
     inst:AddTag("tool")
 
     MakeInventoryFloatable(inst, "small", 0.05, 0.8)
-    inst.AnimState:AddOverrideBuild("pan_flute_water")
 
     inst.entity:SetPristine()
 

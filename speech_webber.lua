@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "We don't want to use that.",
 			INUSE = "Oops. Someone else is using that.",
+            NOTMINE_SPIDER = "Oh! We're sorry, you looked like a friend of ours.",
             NOTMINE_YOTC =
             {
                 "Whoops! Wrong Carrat!",

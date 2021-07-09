@@ -221,6 +221,8 @@ local function FindTarget(inst, radius)
                     and inst.components.combat:CanTarget(guy)
                     and not (inst.components.follower ~= nil and inst.components.follower.leader == guy)
                     and not HasFriendlyLeader(inst, guy)
+                    and not (inst.components.follower.leader ~= nil and inst.components.follower.leader:HasTag("player") 
+                        and guy:HasTag("player") and not TheNet:GetPVPEnabled())
             end,
             TARGET_MUST_TAGS,
             TARGET_CANT_TAGS
@@ -335,6 +337,7 @@ end
 
 local function OnStartLeashing(inst, data)
     inst:SetHappyFace(true)
+    inst.components.inventoryitem.canbepickedup = true
 
     if inst.recipe then
         local leader = inst.components.follower.leader
@@ -347,6 +350,7 @@ end
 local function OnStopLeashing(inst, data)
     inst.defensive = false
     inst.no_targeting = false
+    inst.components.inventoryitem.canbepickedup = false
 
     if not inst.bedazzled then
         inst:SetHappyFace(false)
@@ -376,7 +380,9 @@ local function OnGoToSleep(inst)
 end
 
 local function OnWakeUp(inst)
-    inst.components.inventoryitem.canbepickedup = false
+    if inst.components.follower.leader == nil then
+        inst.components.inventoryitem.canbepickedup = false
+    end
 end
 
 local function CalcSanityAura(inst, observer)
@@ -473,11 +479,26 @@ local function DoHeal(inst)
     SpawnHealFx(inst, "spider_heal_fx", scale)
 
     local other_spiders = GetOtherSpiders(inst, TUNING.SPIDER_HEALING_RADIUS, {"spider", "spiderwhisperer", "spiderqueen"})
-    for i, spider in ipairs(other_spiders) do
+    local leader = inst.components.follower.leader
 
-        local heal_amount = spider:HasTag("spiderwhisperer") and TUNING.HEALING_MEDSMALL or TUNING.SPIDER_HEALING_AMOUNT
-        spider.components.health:DoDelta(heal_amount, false, inst.prefab)
-        SpawnHealFx(spider, "spider_heal_target_fx")
+    for i, spider in ipairs(other_spiders) do
+        local target = inst.components.combat.target
+
+        -- Don't heal the spider if it's targetting us, our leader or our leader's other followers
+        local targetting_us = target ~= nil and 
+                             (target == inst or (leader ~= nil and 
+                             (target == leader or leader.components.leader:IsFollower(target))))
+
+        -- Don't heal the spider if we're targetting it, or our leader is targetting it or our leader's other followers
+        local targetted_by_us = inst.components.combat.target == spider or (leader ~= nil and
+                                (leader.components.combat:TargetIs(spider) or
+                                leader.components.leader:IsTargetedByFollowers(spider)))
+
+        if not (targetting_us or targetted_by_us) then
+            local heal_amount = spider:HasTag("spiderwhisperer") and TUNING.HEALING_MEDSMALL or TUNING.SPIDER_HEALING_AMOUNT
+            spider.components.health:DoDelta(heal_amount, false, inst.prefab)
+            SpawnHealFx(spider, "spider_heal_target_fx")
+        end
     end
 
     inst.healtime = GetTime()
@@ -508,8 +529,8 @@ local function create_common(bank, build, tag, common_init)
     inst:AddTag("canbetrapped")
     inst:AddTag("smallcreature")
     inst:AddTag("spider")
-    inst:AddTag("drop_inventory_pickup")
-    inst:AddTag("drop_inventory_murder")
+    inst:AddTag("drop_inventory_onpickup")
+    inst:AddTag("drop_inventory_onmurder")
     
     if tag ~= nil then
         inst:AddTag(tag)
@@ -611,6 +632,7 @@ local function create_common(bank, build, tag, common_init)
     inst.components.inventoryitem.nobounce = true
     inst.components.inventoryitem.canbepickedup = false
     inst.components.inventoryitem.canbepickedupalive = true
+    inst.components.inventoryitem:SetSinks(true)
 
     --------------------
 

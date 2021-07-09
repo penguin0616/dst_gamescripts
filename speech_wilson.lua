@@ -195,6 +195,7 @@ return {
         {
 			RESTRICTION = "I'm not skilled enough to use that.",
 			INUSE = "Science says I have to wait my turn.",
+            NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "You're not my Carrat.",

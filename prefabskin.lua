@@ -74,9 +74,6 @@ batbat_clear_fn = function(inst) basic_clear_fn(inst, "batbat" ) end
 boomerang_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "boomerang" ) end
 boomerang_clear_fn = function(inst) basic_clear_fn(inst, "boomerang" ) end
 
-panflute_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "pan_flute" ) end
-panflute_clear_fn = function(inst) basic_clear_fn(inst, "pan_flute" ) end
-
 hammer_init_fn = function(inst, build_name)
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
@@ -370,6 +367,16 @@ wateringcan_clear_fn = function(inst) basic_clear_fn(inst, "wateringcan" ) end
 
 seedpouch_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "seedpouch" ) end
 seedpouch_clear_fn = function(inst) basic_clear_fn(inst, "seedpouch" ) end
+
+
+seafaring_prototyper_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "seafaring_prototyper" ) end
+seafaring_prototyper_clear_fn = function(inst) basic_clear_fn(inst, "seafaring_prototyper" ) end
+
+tacklecontainer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "tacklecontainer" ) end
+tacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "tacklecontainer" ) end
+
+supertacklecontainer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "supertacklecontainer" ) end
+supertacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "supertacklecontainer" ) end
 
 
 --------------------------------------------------------------------------
@@ -1479,6 +1486,28 @@ function lantern_clear_fn(inst)
     inst:RemoveEventCallback("unequipped", lantern_off)
     inst:RemoveEventCallback("onremove", lantern_off)
 end
+
+--------------------------------------------------------------------------
+--[[ Pan flute skin functions ]]
+--------------------------------------------------------------------------
+panflute_init_fn = function(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+
+    inst.AnimState:SetSkin(build_name, "pan_flute")
+    if inst.components.inventoryitem ~= nil then
+        inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+    end
+
+end
+panflute_clear_fn = function(inst)    
+    inst.AnimState:SetBuild("pan_flute")
+    if inst.components.inventoryitem ~= nil then
+        inst.components.inventoryitem:ChangeImageName()
+    end
+end
+
 
 --------------------------------------------------------------------------
 --[[ ResearchLab2 skin functions ]]

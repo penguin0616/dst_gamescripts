@@ -389,7 +389,7 @@ function Burnable:StopSmoldering(heatpct)
 end
 
 function Burnable:Extinguish(resetpropagator, heatpct, smotherer)
-    self:StopSmoldering()
+    self:StopSmoldering(heatpct)
 
     if smotherer ~= nil then
         if smotherer.components.finiteuses ~= nil then

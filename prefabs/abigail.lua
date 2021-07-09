@@ -237,7 +237,14 @@ local function auratest(inst, target)
         return true
     end
 
-    return target:HasTag("monster") or target:HasTag("prey")
+    local ismonster = target:HasTag("monster")
+    if ismonster and not TheNet:GetPVPEnabled() and 
+       ((target.components.follower and target.components.follower.leader ~= nil and 
+         target.components.follower.leader:HasTag("player")) or target.bedazzled) then
+        return false
+    end
+
+    return ismonster or target:HasTag("prey")
 end
 
 local function UpdateDamage(inst)

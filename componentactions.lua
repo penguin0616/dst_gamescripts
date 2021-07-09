@@ -275,7 +275,7 @@ local COMPONENT_ACTIONS =
                 doer.replica.inventory ~= nil and
                 (doer.replica.inventory:GetNumSlots() > 0 or inst.replica.equippable ~= nil) and
                 not (inst:HasTag("catchable") or inst:HasTag("fire") or inst:HasTag("smolder")) and
-                (not inst:HasTag("spider") or doer:HasTag("spiderwhisperer")) and
+                (not inst:HasTag("spider") or (doer:HasTag("spiderwhisperer") and right)) and
                 (right or not inst:HasTag("heavy")) and
                 not (right and inst.replica.container ~= nil and inst.replica.equippable == nil) then
                 table.insert(actions, ACTIONS.PICKUP)
