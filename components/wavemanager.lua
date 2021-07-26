@@ -99,6 +99,7 @@ local WaveManager = Class(function(self, inst)
 		[GROUND.OCEAN_SWELL] = {per_sec = 80, spawn_rate = 0, checkfn = checkground, spawnfn = SpawnWaveShimmerMedium},
 		[GROUND.OCEAN_ROUGH] = {per_sec = 80, spawn_rate = 0, checkfn = checkground, spawnfn = SpawnWaveShimmerDeep},
 		[GROUND.OCEAN_HAZARDOUS] = {per_sec = 80, spawn_rate = 0, checkfn = checkground, spawnfn = SpawnWaveShimmerDeep},
+		[GROUND.OCEAN_WATERLOG] = {per_sec = 80, spawn_rate = 0, checkfn = checkground, spawnfn = SpawnWaves},
 	}
 
 	self.ripple_per_sec = 10

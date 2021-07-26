@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "I don't think that's for me.",
 			INUSE = "Excusez-moi.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Pardonnez-moi, I mistook you for my Carrat!",
@@ -3369,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Its scales have such a lovely sheen.",
 		OCEANFISH_MEDIUM_7 = "Its scales have such a lovely sheen.",
 		OCEANFISH_MEDIUM_8 = "I prefer to use fresh fish, not frozen...",
+        OCEANFISH_MEDIUM_9 = "The meat has a subtle sweetness that makes for some interesting dishes.",
 
 		PONDFISH = "Poisson!",
 		PONDEEL = "Anguille.",
@@ -3821,6 +3823,8 @@ return{
 		SWEETTEA = "Ah... je me sens relaxé.",
 		TILLWEED = "I'm afraid you're bothering the other plants, mon ami.",
 		TILLWEEDSALVE = "Those weeds turned out to be a useful ingredient after all.",
+        WEED_IVY = "What are you doing in my lovely garden?",
+        IVY_SNARE = "It's trying to get between me and my ingredients!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4062,7 +4066,31 @@ return{
             GENERIC = "Ah, some kind of light fixture perhaps?",
             CONSTRUCTION1 = "Some kind of platter for the ground?",
             CONSTRUCTION2 = "Only a few more ingredients left.",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Une grande surprise!",
+        OCEANTREE = "To think they could grow this far out to sea!",
+        OCEANTREENUT = "I don't think that will fit in my pocket...",
+        WATERTREE_ROOT = "A lonely tree root.",
+
+        OCEANTREE_PILLAR = "A large souvenir from our travels at sea.",
+
+        OCEANVINE = "Sigh. Another grapeless vine.",
+        FIG = "You would be delicious in a tart.",
+
+        SPIDER_WATER = "Mon dieu, these spiders have gotten their sea legs!",
+        MUTATOR_WATER = "Next time, let's bake something together, non?",
+        OCEANVINE_COCOON = "Perhaps I'll just leave that be.",
+
+        GRASSGATOR = "He seems to be a gentle soul.",
+
+        TREEGROWTHSOLUTION = "A growing tree should eat well!",
+
+        FIGATONI = "I've never had pasta so decadent!",
+        FIGKABAB = "Something about being on a stick brings out more of the flavor.",
+        KOALEFIG_TRUNK = "I might have overdone it with the figs.",
+        FROGNEWTON = "A lesser known French recipe.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

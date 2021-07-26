@@ -53,6 +53,13 @@ local healer_assets =
     Asset("SOUND", "sound/spider.fsb"),
 }
 
+local water_assets =
+{
+    Asset("ANIM", "anim/spider_water.zip"),
+    Asset("ANIM", "anim/spider_water_water.zip"),
+    Asset("SOUND", "sound/spider.fsb"),
+}
+
 local prefabs =
 {
     "spidergland",
@@ -506,9 +513,15 @@ end
 
 local function OnPickup(inst)
     inst:PushEvent("detachchild")
+    if inst.components.homeseeker then
+        inst.components.homeseeker:SetHome(nil)
+        inst:RemoveComponent("homeseeker")
+    end
 end
 
-local function create_common(bank, build, tag, common_init)
+local DIET = { FOODTYPE.MEAT }
+local BASE_PATHCAPS = { ignorecreep = true }
+local function create_common(bank, build, tag, common_init, extra_data)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -562,14 +575,14 @@ local function create_common(bank, build, tag, common_init)
     inst:AddComponent("locomotor")
     inst.components.locomotor:SetSlowMultiplier( 1 )
     inst.components.locomotor:SetTriggersCreep(false)
-    inst.components.locomotor.pathcaps = { ignorecreep = true }
+    inst.components.locomotor.pathcaps = (extra_data and extra_data.pathcaps) or BASE_PATHCAPS
     -- boat hopping setup
     inst.components.locomotor:SetAllowPlatformHopping(true)
     
     inst:AddComponent("embarker")
     inst:AddComponent("drownable")
 
-    inst:SetStateGraph("SGspider")
+    inst:SetStateGraph((extra_data and extra_data.sg) or "SGspider")
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:AddRandomLoot("monstermeat", 1)
@@ -607,7 +620,7 @@ local function create_common(bank, build, tag, common_init)
     ------------------
 
     inst:AddComponent("eater")
-    inst.components.eater:SetDiet({ FOODTYPE.MEAT }, { FOODTYPE.MEAT })
+    inst.components.eater:SetDiet(DIET, DIET)
     inst.components.eater:SetCanEatHorrible()
     inst.components.eater:SetStrongStomach(true) -- can eat monster meat!
     inst.components.eater:SetCanEatRawMeat(true)
@@ -646,7 +659,7 @@ local function create_common(bank, build, tag, common_init)
     MakeFeedableSmallLivestock(inst, TUNING.SPIDER_PERISH_TIME)
     MakeHauntablePanic(inst)
 
-    inst:SetBrain(brain)
+    inst:SetBrain((extra_data and extra_data.brain) or brain)
 
     inst:ListenForEvent("attacked", OnAttacked)
     
@@ -667,7 +680,7 @@ local function create_common(bank, build, tag, common_init)
     OnIsCaveDay(inst, TheWorld.state.iscaveday)
 
     inst.build = build
-    inst.SetHappyFace = SetHappyFace
+    inst.SetHappyFace = (extra_data and extra_data.SetHappyFaceFn) or SetHappyFace
 
     return inst
 end
@@ -868,10 +881,99 @@ local function create_healer()
     return inst
 end
 
+------ Water Strider --------------------------------------------------------------------------------
+local function WaterSpider_SetHappyFace(inst, is_happy)
+    if is_happy then
+        inst.AnimState:OverrideSymbol("waterforest_eyes", inst.build, "happy_face")
+        inst.AnimState:OverrideSymbol("fangs", inst.build, "happy_fangs")
+    else
+        inst.AnimState:ClearOverrideSymbol("fangs")
+        inst.AnimState:ClearOverrideSymbol("waterforest_eyes")
+    end
+end
+
+-- Custom SG and brain for amphibious creature support.
+local SPIDER_WATER_EXTRADATA =
+{
+    sg = "SGspider_water",
+    brain = require "brains/spider_waterbrain",
+    pathcaps = { ignorecreep = true, allowocean = true },
+    SetHappyFaceFn = WaterSpider_SetHappyFace,
+}
+
+local function OnEnterWater(inst)
+    inst.hop_distance = inst.components.locomotor.hop_distance
+    inst.components.locomotor.hop_distance = 4
+
+    inst.AnimState:SetBuild("spider_water_water")
+end
+
+local function OnExitWater(inst)
+    if inst.hop_distance then
+        inst.components.locomotor.hop_distance = inst.hop_distance
+    end
+
+    inst.AnimState:SetBuild("spider_water")
+end
+
+local function WaterRetarget(inst)
+    -- If we're chasing a fish, go to a lower target distance so they're not as aggressive.
+    local dist = (inst._fishtarget ~= nil and inst._fishtarget:IsValid() and TUNING.SPIDER_WATER_FISH_TARGET_DIST)
+        or inst.components.knownlocations:GetLocation("investigate") ~= nil and TUNING.SPIDER_INVESTIGATETARGET_DIST
+        or TUNING.SPIDER_TARGET_DIST
+
+    return FindTarget(inst, dist)
+end
+
+local function create_water()
+    local inst = create_common("spider_water", "spider_water", "spider_water", nil, SPIDER_WATER_EXTRADATA)
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.components.embarker.embark_speed = inst.components.locomotor.runspeed
+    ------------------
+
+    inst:AddComponent("amphibiouscreature")
+    inst.components.amphibiouscreature:SetBanks("spider_water", "spider_water_water")
+    inst.components.amphibiouscreature:SetEnterWaterFn(OnEnterWater)
+    inst.components.amphibiouscreature:SetExitWaterFn(OnExitWater)
+    ------------------
+
+    inst:AddComponent("timer")
+    ------------------
+
+    inst.components.combat:SetDefaultDamage(TUNING.SPIDER_WATER_DAMAGE)
+    inst.components.combat:SetAttackPeriod(TUNING.SPIDER_WATER_ATTACK_PERIOD + math.random() * 2)
+    inst.components.combat:SetRange(TUNING.SPIDER_WATER_HIT_RANGE)
+    inst.components.combat:SetRetargetFunction(2, WaterRetarget)
+    ------------------
+
+    inst.components.locomotor.walkspeed = TUNING.SPIDER_WATER_WALKSPEED
+    inst.components.locomotor.runspeed = TUNING.SPIDER_WATER_RUNSPEED
+    ------------------
+
+    inst.components.inventoryitem:SetSinks(false)
+    ------------------
+
+    inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
+    ------------------
+
+    inst.components.health:SetMaxHealth(TUNING.SPIDER_WATER_HEALTH)
+    ------------------
+
+    inst.recipe = "mutator_water"
+
+    return inst
+end
+-----------------------------------------------------------------------------------------------------
+
 return Prefab("spider", create_spider, assets, prefabs),
        Prefab("spider_warrior", create_warrior, warrior_assets, prefabs),
        Prefab("spider_hider", create_hider, hiderassets, prefabs),
        Prefab("spider_spitter", create_spitter, spitterassets, prefabs),
        Prefab("spider_dropper", create_dropper, dropperassets, prefabs),
        Prefab("spider_moon", create_moon, moon_assets, prefabs),
-       Prefab("spider_healer", create_healer, healer_assets, prefabs)
+       Prefab("spider_healer", create_healer, healer_assets, prefabs),
+       Prefab("spider_water", create_water, water_assets, prefabs)

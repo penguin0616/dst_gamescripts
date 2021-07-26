@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "There is no glory in that weapon!",
 			INUSE = "Someone hath beat me to it!",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Thou art not the one I seek.",
@@ -3369,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Your bad luck is my good fortune, beastie.",
 		OCEANFISH_MEDIUM_7 = "Your bad luck is my good fortune, beastie.",
 		OCEANFISH_MEDIUM_8 = "It must hail from the icy waters of Niflheim.",
+        OCEANFISH_MEDIUM_9 = "Are ye fish or fruit? My eyes hath been decieved before!",
 
 		PONDFISH = "Pond meat!",
 		PONDEEL = "Delicious slimy snake fish.",
@@ -3821,6 +3823,8 @@ return{
 		SWEETTEA = "A warrior does not partake in \"tea time\".",
 		TILLWEED = "Remove yourself from my sight, cowardly weed!",
 		TILLWEEDSALVE = "Hmm, it doth appear that foul weed has a use after all.",
+        WEED_IVY = "This weed is armed with thorns.",
+        IVY_SNARE = "Ha! At least this plant hath some spirit!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4062,7 +4066,31 @@ return{
             GENERIC = "Mere mortals were not meant to tamper so with the power of the gods...",
             CONSTRUCTION1 = "I know not its purpose. A tribute to Mani, perhaps?",
             CONSTRUCTION2 = "The more I build, the stranger it appears.",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "By the gods, have I found Yggdrasil itself?",
+        OCEANTREE = "It hath been hardened by the sea.",
+        OCEANTREENUT = "May the roots of the worldtree spread far and wide!",
+        WATERTREE_ROOT = "What is it you seek, yon root?",
+
+        OCEANTREE_PILLAR = "Yon tree shall guard us from the treacherous sun.",
+
+        OCEANVINE = "Ropes from the branches of Yggdrasil.",
+        FIG = "Bah! Foul non-meat!",
+
+        SPIDER_WATER = "Have at thee, water walkers!",
+        MUTATOR_WATER = "They look like the little beasts, but lack the ferocity.",
+        OCEANVINE_COCOON = "The nest of the water walking beasts!",
+
+        GRASSGATOR = "What fine flaxen hair.",
+
+        TREEGROWTHSOLUTION = "An offering to the trees, may they carry it on to great Yggdrasil itself.",
+
+        FIGATONI = "I will not sully my warrior tastebuds with such filth.",
+        FIGKABAB = "Food with a wooden spear lanced through it!",
+        KOALEFIG_TRUNK = "The trunk hath been fattened up.",
+        FROGNEWTON = "Into my belly with ye!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

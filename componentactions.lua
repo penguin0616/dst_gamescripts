@@ -18,7 +18,7 @@ local function Row(inst, doer, pos, actions)
     local platform_under_cursor = map:GetPlatformAtPoint(pos.x, pos.z)
 
     local doer_x, doer_y, doer_z = doer.Transform:GetWorldPosition()
-    local my_platform = map:GetPlatformAtPoint(doer_x, doer_z)
+    local my_platform = doer:GetCurrentPlatform()
     local is_controller_attached = doer.components.playercontroller.isclientcontrollerattached
 
     local is_hovering_cursor_over_my_platform = false
@@ -245,6 +245,15 @@ local COMPONENT_ACTIONS =
         hauntable = function(inst, doer, actions)
             if not (inst:HasTag("haunted") or inst:HasTag("catchable")) then
                 table.insert(actions, ACTIONS.HAUNT)
+            end
+        end,
+        
+        heavyobstacleusetarget = function(inst, doer, actions, right)
+            local item = doer.replica.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+            if right and item ~= nil and item:HasTag("heavy") and inst:HasTag("can_use_heavy")
+                and (inst.use_heavy_obstacle_action_filter == nil or inst.use_heavy_obstacle_action_filter(inst, doer, item)) then
+                
+                table.insert(actions, ACTIONS.USE_HEAVY_OBSTACLE)
             end
         end,
 
@@ -596,6 +605,12 @@ local COMPONENT_ACTIONS =
             if doer.components.attuner ~= nil and --V2C: this is on clients too
                 not doer.components.attuner:IsAttunedTo(inst) then
                 table.insert(actions, ACTIONS.ATTUNE)
+            end
+        end,
+
+        winch = function(inst, doer, actions, right)
+            if right and inst:HasTag("takeshelfitem") then
+                table.insert(actions, ACTIONS.UNLOAD_WINCH)
             end
         end,
 
@@ -1032,7 +1047,7 @@ local COMPONENT_ACTIONS =
                 for k, v in pairs(MATERIALS) do
                     if target:HasTag("repairable_"..v) then
                         if (inst:HasTag("work_"..v) and target:HasTag("workrepairable"))
-                            or (inst:HasTag("health_"..v) and target.replica.health ~= nil and not target.replica.health:IsFull())
+                            or (inst:HasTag("health_"..v) and target:HasTag("healthrepairable"))
                             or (inst:HasTag("freshen_"..v) and (target:HasTag("fresh") or target:HasTag("stale") or target:HasTag("spoiled"))) then
                             table.insert(actions, ACTIONS.REPAIR)
                         end
@@ -1138,6 +1153,19 @@ local COMPONENT_ACTIONS =
                 not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding() and
                     not (target.replica.inventoryitem ~= nil and target.replica.inventoryitem:IsGrandOwner(doer))) then
                 table.insert(actions, ACTIONS.GIVE)
+            end
+		end,
+
+        treegrowthsolution = function(inst, doer, target, actions)
+            if target:HasTag("tree") and
+                not target:HasTag("monster") and
+                not target:HasTag("fire") and
+                not target:HasTag("burnt") and
+                not target:HasTag("stump") and
+                not target:HasTag("leif") and
+                not target:HasTag("no_force_grow") then
+
+                table.insert(actions, ACTIONS.ADVANCE_TREE_GROWTH)
             end
 		end,
 

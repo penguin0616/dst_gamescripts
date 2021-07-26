@@ -37,7 +37,7 @@ function CookieCutterDrill:FinishDrilling()
 	self.drill_progress = 0
 
 	local pt = self.inst:GetPosition()
-	local boat = TheWorld.Map:GetPlatformAtPoint(pt.x, pt.z)
+	local boat = self.inst:GetCurrentPlatform()
 	if boat ~= nil then
 		if self.inst.components.eater ~= nil then
 			self.inst.components.eater.lasteattime = GetTime()

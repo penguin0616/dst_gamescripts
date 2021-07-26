@@ -3,6 +3,7 @@ local prefabs = {}
 local assets =
 {
     Asset("ANIM", "anim/spider_mutators.zip"),
+    Asset("ANIM", "anim/spider_water_mutator.zip"),
 }
 
 local mutator_targets = 
@@ -12,10 +13,19 @@ local mutator_targets =
     "hider",
     "spitter",
     "moon",
-    "healer"
+    "healer",
+    "water",
 }
 
-local function MakeMutatorFn(mutator_target)
+local mutator_extra_data =
+{
+    ["water"] = {
+        bank = "spider_water_mutator",
+        build = "spider_water_mutator",
+    },
+}
+
+local function MakeMutatorFn(mutator_target, extra_data)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -24,8 +34,8 @@ local function MakeMutatorFn(mutator_target)
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank("spider_mutator_all")
-    inst.AnimState:SetBuild("spider_mutators")
+    inst.AnimState:SetBank((extra_data and extra_data.bank) or "spider_mutator_all")
+    inst.AnimState:SetBuild((extra_data and extra_data.build) or "spider_mutators")
     inst.AnimState:PlayAnimation(mutator_target)
 
     MakeInventoryFloatable(inst)
@@ -69,7 +79,18 @@ end
 
 local mutator_prefabs = {}
 for i, mutator_target in ipairs(mutator_targets) do
-    table.insert(mutator_prefabs, Prefab("mutator_" .. mutator_target, function() return MakeMutatorFn(mutator_target) end, assets, prefabs))
+    local extra_data = mutator_extra_data[mutator_target]
+    table.insert(
+        mutator_prefabs,
+        Prefab(
+            "mutator_" .. mutator_target,
+            function()
+                return MakeMutatorFn(mutator_target, extra_data)
+            end,
+            assets,
+            prefabs
+        )
+    )
 end
 
 return unpack(mutator_prefabs)

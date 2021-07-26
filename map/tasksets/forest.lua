@@ -57,6 +57,7 @@ AddTaskSet("default", {
 			["BrinePool1"] = {count = 4}, -- todo: make this scale based on world gen size
 			["BrinePool2"] = {count = 2}, -- todo: make this scale based on world gen size
 			["BrinePool3"] = {count = 2}, -- todo: make this scale based on world gen size
+			["Waterlogged1"] = {count = 3}, -- todo: make this scale based on world gen size
 		},
 
 		ocean_population = {

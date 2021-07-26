@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "I have no use of such things.",
 			INUSE = "It's unavailable.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Say, pal, why don't you come work for me?",
@@ -3369,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Don't be koi with me.",
 		OCEANFISH_MEDIUM_7 = "Don't be koi with me.",
 		OCEANFISH_MEDIUM_8 = "Stay frosty, pal.",
+        OCEANFISH_MEDIUM_9 = "It seems we share an appreciation for figs.",
 
 		PONDFISH = "Fresh from the murky depths.",
 		PONDEEL = "It slithers all the way down.",
@@ -3821,6 +3823,8 @@ return{
 		SWEETTEA = "I can't even remember the last time I had a decent cup of tea.",
 		TILLWEED = "Nuisance.",
 		TILLWEEDSALVE = "This will have to do.",
+        WEED_IVY = "You have no place here.",
+        IVY_SNARE = "I nearly got my suit caught on those thorns!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4062,7 +4066,31 @@ return{
             GENERIC = "That old fool...",
             CONSTRUCTION1 = "I don't see why I must be the one to do all the work.",
             CONSTRUCTION2 = "How odd to be the one laboring on a machine for an unknown purpose...",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "When did this get here?",
+        OCEANTREE = "An aquatic tree, what next?",
+        OCEANTREENUT = "I have no interest in lugging that thing around. Back in the drink you go.",
+        WATERTREE_ROOT = "I've found the root of the problem.",
+
+        OCEANTREE_PILLAR = "It could use a good pruning.",
+
+        OCEANVINE = "It's just hanging around.",
+        FIG = "A fruit for more refined tastes.",
+
+        SPIDER_WATER = "Well aren't you a delight!",
+        MUTATOR_WATER = "I'm not eating that.",
+        OCEANVINE_COCOON = "It looks like someone's already made themselves comfortable here.",
+
+        GRASSGATOR = "Quite a skittish creature.",
+
+        TREEGROWTHSOLUTION = "Looks like you're in a bit of a jam, pal.",
+
+        FIGATONI = "Exquisite.",
+        FIGKABAB = "Pleasantly sweet.",
+        KOALEFIG_TRUNK = "I hope it was well cleaned before we stuffed the figs inside.",
+        FROGNEWTON = "This recipe has legs.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

@@ -263,7 +263,7 @@ function self:SpawnAtNextLocation(inst, player)
 end
 
 local SPAWNLIGHT_TAGS = { "spawnlight" }
-function self:SpawnAtLocation(inst, player, x, y, z, isloading)
+function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx, ry, rz)
     -- if migrating, resolve map location
     if player.migration ~= nil then
         -- make sure we're not just back in our
@@ -285,6 +285,18 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading)
     end
 
 	_players_spawned[player.userid] = true
+
+    if platform_uid then
+        local walkableplatformmanager = TheWorld.components.walkableplatformmanager
+        if walkableplatformmanager then
+            local platform = walkableplatformmanager:GetPlatformWithUID(platform_uid)
+            if platform then
+                local px, py, pz = platform.Transform:GetWorldPosition()
+                x, y, z = px + rx, py + ry, pz + rz
+                platform:AddPlatformFollower(player)
+            end
+        end
+    end
 
     print(string.format("Spawning player at: [%s] (%2.2f, %2.2f, %2.2f)", isloading and "Load" or MODES[_mode], x, y, z))
     player.Physics:Teleport(x, y, z)

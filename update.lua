@@ -98,6 +98,12 @@ function WallUpdate(dt)
     end
     TheSim:ProfilerPop()
 
+    TheSim:ProfilerPush("shade")
+    if not IsSimPaused() then
+        ShadeEffectUpdate(dt)
+    end
+    TheSim:ProfilerPop()
+
     --TheSim:ProfilerPop()
 
     -- Server termination script

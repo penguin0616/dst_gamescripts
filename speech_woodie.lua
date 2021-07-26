@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "I ain't too keen on that, eh?",
 			INUSE = "Oops! Sorry. Someone's using that.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Sorry, wrong Carrat!",
@@ -3370,6 +3371,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Sorry bud, but your whiskers don't hold a candle to mine.",
 		OCEANFISH_MEDIUM_7 = "Sorry bud, but your whiskers don't hold a candle to mine.",
 		OCEANFISH_MEDIUM_8 = "You'd be right at home in the Great White North.",
+        OCEANFISH_MEDIUM_9 = "You'd go well with a nice maple glaze... if we had any maple here.",
 
 		PONDFISH = "Looks like a cod.",
 		PONDEEL = "This should cook up nicely.",
@@ -3822,6 +3824,8 @@ return{
 		SWEETTEA = "Almost makes me forget where I am.",
 		TILLWEED = "It sure doesn't give up without a fight.",
 		TILLWEEDSALVE = "Never hurts to have some of this stuff around.",
+        WEED_IVY = "It has some nasty looking thorns on it.",
+        IVY_SNARE = "What a mess of thorns!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4063,7 +4067,31 @@ return{
             GENERIC = "Huh. Whattaya figure it's for, Luce?",
             CONSTRUCTION1 = "Might as well help the old guy out, eh?",
             CONSTRUCTION2 = "Still a bit of building left to do.",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Look at all that tree...",
+        OCEANTREE = "Did you get lost, bud? Land's back thataway.",
+        OCEANTREENUT = "I'm gonna enjoy chopping you down one day.",
+        WATERTREE_ROOT = "Some stray bits of tree.",
+
+        OCEANTREE_PILLAR = "This one I can chop, right?",
+
+        OCEANVINE = "Nice of it to hold that fig for me.",
+        FIG = "That's one fancy fruit.",
+
+        SPIDER_WATER = "I respect its affinity for giant trees.",
+        MUTATOR_WATER = "Sorry little buddy, I think I'll have to pass.",
+        OCEANVINE_COCOON = "A part of me is just dying to poke it.",
+
+        GRASSGATOR = "Can't tell if it's an animal or a real lively shrub.",
+
+        TREEGROWTHSOLUTION = "The bigger the tree, the better to chop down!",
+
+        FIGATONI = "Now that's some real comfort food.",
+        FIGKABAB = "Nothin' better than food served on a wooden stick, eh?",
+        KOALEFIG_TRUNK = "I'm the one who's gonna be stuffed if I eat that whole thing.",
+        FROGNEWTON = "The fig masks the swamp taste.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

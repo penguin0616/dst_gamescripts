@@ -90,6 +90,14 @@ VEGGIES =
 									nil,
                                     {lure_data = TUNING.OCEANFISHING_LURE.BERRY, single_use = true, build = "oceanfishing_lure_mis", symbol = "hook_juiceberries"}),
 
+    fig = MakeVegStats(0,   TUNING.CALORIES_SMALL,   0,  TUNING.PERISH_FAST, 0,
+                                    TUNING.CALORIES_MEDSMALL,  TUNING.HEALING_TINY,    TUNING.PERISH_SUPERFAST, 0,
+                                    {"med", nil, 0.7},      {"med", nil, 0.65},
+                                    nil,
+                                    FOODTYPE.BERRY,
+                                    nil, 
+                                    {lure_data = TUNING.OCEANFISHING_LURE.BERRY, single_use = true, build = "oceanfishing_lure_mis", symbol = "hook_fig"}),
+
     cactus_meat = MakeVegStats(0, TUNING.CALORIES_SMALL, -TUNING.HEALING_SMALL, TUNING.PERISH_MED, -TUNING.SANITY_TINY,
                                   TUNING.CALORIES_SMALL, TUNING.HEALING_TINY, TUNING.PERISH_MED, TUNING.SANITY_MED),
 
@@ -134,6 +142,7 @@ local SEEDLESS =
 	cave_banana = true,
 	cactus_meat = true,
 	berries_juicy = true,
+	fig = true,
 	kelp = true,
 }
 

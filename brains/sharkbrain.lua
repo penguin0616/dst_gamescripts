@@ -39,10 +39,7 @@ local function GetWanderPoint(inst)
 end
 
 local function isOnWater(inst)
-    local x,y,z = inst.Transform:GetWorldPosition()
-    if not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) then
-        return true
-    end
+    return not inst:GetCurrentPlatform() and not TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition())
 end
 
 local function getdirectionFn(inst)
@@ -73,7 +70,7 @@ local function removefood(inst,target)
 end
 
 local function isfoodnearby(inst)
-    local target = FindEntity(inst, SEE_DIST, function(item) local x,y,z = item.Transform:GetWorldPosition() return inst.components.eater:CanEat(item) and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) end)
+    local target = FindEntity(inst, SEE_DIST, function(item) return inst.components.eater:CanEat(item) and not item:GetCurrentPlatform() and not TheWorld.Map:IsVisualGroundAtPoint(item.Transform:GetWorldPosition()) end)
 
     -- don't target food if its too close..ironically
     if target and target:GetDistanceSqToInst(inst) < 6*6 then

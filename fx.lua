@@ -27,6 +27,11 @@ local function BloomOrange(inst)
     inst.AnimState:SetFinalOffset(1)
 end
 
+local function OceanTreeLeafFxFallUpdate(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    inst.Transform:SetPosition(x, y - inst.fall_speed * FRAMES, z)
+end
+
 
 
 local fx =
@@ -2061,6 +2066,7 @@ local fx =
         bank = "mutate_fx",
         build = "mutate_fx",
         anim = "mutate",
+        nofaced = true,
     },
 
     {
@@ -2083,6 +2089,32 @@ local fx =
         build = "spider_heal_fx",
         anim = "heal_aoe",
         fn = GroundOrientation,
+    },
+
+    {
+        name = "treegrowthsolution_use_fx",
+        bank = "treegrowthsolution",
+        build = "treegrowthsolution",
+        anim = "use",
+        sound = "waterlogged1/common/use_figjam",
+    },
+    {
+        name = "oceantree_leaf_fx_fall",
+        bank = "oceantree_leaf_fx",
+        build = "oceantree_leaf_fx",
+        anim = "fall",
+        fn = function(inst)
+            local scale = 1 + 0.3 * math.random()
+            inst.Transform:SetScale(scale, scale, scale)
+            inst.fall_speed = 2.75 + 3.5 * math.random()
+            inst:DoPeriodicTask(FRAMES, OceanTreeLeafFxFallUpdate)
+        end,
+    },
+    {
+        name = "oceantree_leaf_fx_chop",
+        bank = "oceantree_leaf_fx",
+        build = "oceantree_leaf_fx",
+        anim = "chop",
     },
 }
 

@@ -87,9 +87,9 @@ local function onhammered(inst, worker)
 	fx.Transform:SetPosition(x, y, z)
     fx:SetMaterial("metal")
 
-	local boat = TheWorld.Map:GetPlatformAtPoint(x, z)
+	local boat = inst:GetCurrentPlatform()
 	if boat ~= nil then
-		boat:PushEvent("spawnnewboatleak", { pt = inst:GetPosition(), leak_size = "med_leak", playsoundfx = true })
+		boat:PushEvent("spawnnewboatleak", { pt = Vector3(x, y, z), leak_size = "med_leak", playsoundfx = true })
 	end
 
     inst:Remove()

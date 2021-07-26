@@ -17,6 +17,11 @@ function WinchTarget:SetSalvageFn(fn)
 end
 
 function WinchTarget:Salvage()
+    local sunken_obj = self:GetSunkenObject()
+    if sunken_obj ~= nil and sunken_obj.components.submersible ~= nil then
+        sunken_obj.components.submersible.force_no_repositioning = false
+    end
+
     return self.salvagefn ~= nil and self.salvagefn(self.inst) or nil
 end
 

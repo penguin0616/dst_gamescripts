@@ -46,9 +46,11 @@ local function dropitems(inst)
 	local item = GetHeldItem(inst)
 	if item ~= nil then
 		inst.components.inventory:DropItem(item)
-		if not inst:HasTag("takeshelfitem") then
+		if not inst:HasTag("takeshelfitem") and inst:GetCurrentPlatform() ~= nil then
 			item:PushEvent("onsink")
 		end
+
+		return item
 	end
 end
 
@@ -60,7 +62,7 @@ local function on_hammered(inst, hammerer)
     collapse_fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
     collapse_fx:SetMaterial("wood")
 
-	local boat = TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition())
+	local boat = inst:GetCurrentPlatform()
 	if boat ~= nil then
 		boat:PushEvent("spawnnewboatleak", { pt = inst:GetPosition(), leak_size = "med_leak", playsoundfx = true })
 	end
@@ -83,7 +85,7 @@ local function raise_claw(inst, delay)
 	inst._raise_claw_task = inst:DoTaskInTime(delay, function()
 		if GetHeldItem(inst) == nil and FindEntity(inst, CLAW_CATCHING_RADIUS + CLAW_CATCHING_ALMOST_SUCCESS_THRESHOLD, nil, CLAW_TARGET_MUST_TAGS) ~= nil then
 			if inst._most_recent_interacting_player ~= nil and inst._most_recent_interacting_player:IsValid() and inst._most_recent_interacting_player.components.talker ~= nil and
-				TheWorld.Map:GetPlatformAtPoint(inst._most_recent_interacting_player.Transform:GetWorldPosition()) == TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) then
+				inst._most_recent_interacting_player:GetCurrentPlatform() == inst:GetCurrentPlatform() then
 
 				inst._most_recent_interacting_player.components.talker:Say(GetString(inst._most_recent_interacting_player, "ANNOUNCE_WINCH_CLAW_MISS"))
 			end
@@ -99,14 +101,14 @@ local function turn_off_boat_drag(inst)
 		inst._boat_drag_task = nil
 	end
 
-	local boat = TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition())
+	local boat = inst:GetCurrentPlatform()
 	if boat ~= nil and boat.components.boatphysics ~= nil then
 		boat.components.boatphysics:RemoveBoatDrag(inst)
 	end
 end
 
 local function turn_on_boat_drag(inst, boat, duration)
-	boat = boat or TheWorld.Map:GetPlatformAtPoint(GetWorldPosition())
+	boat = boat
 	if boat == nil then
 		return nil
 	end
@@ -125,8 +127,7 @@ end
 
 local CLAW_CATCH_MUST_TAGS = {"winchtarget"}
 local function OnFullyLowered(inst)
-	local x, y, z = inst.Transform:GetWorldPosition()
-	local boat = TheWorld.Map:GetPlatformAtPoint(x, z)
+	local boat = inst:GetCurrentPlatform()
 
 	local salvaged_item = nil
 	if GetHeldItem(inst) == nil then
@@ -181,10 +182,7 @@ local function OnLoweringUpdate(inst)
 
 			salvageable:Remove()
 
-			local boat = TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition())
-			if boat ~= nil then
-				ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, 0.2, 0.015, 0.07, boat)
-			end
+			ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, 0.2, 0.015, 0.07, inst:GetCurrentPlatform())
 
 			inst.components.winch:StartRaising()
 		end
@@ -244,7 +242,7 @@ local function MakeEmpty(inst)
 end
 
 local function OnActivate(inst, doer)
-	if TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) ~= nil then
+	if inst:GetCurrentPlatform() ~= nil then
 		inst.components.winch:StartLowering()
 	else
 		inst.components.activatable.inactive = true
@@ -260,7 +258,7 @@ local function CanActivate(inst, doer)
 	return inst:HasTag("winch_ready")
 end
 
-local function onitemget(inst, data)
+local function onitemget(inst, data, no_CHEVO_event)
 	local item = data.item
 	inst.components.shelf:PutItemOnShelf(item)
 
@@ -268,7 +266,9 @@ local function onitemget(inst, data)
 		inst.AnimState:OverrideSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
 	end
 
-	TheWorld:PushEvent("CHEVO_heavyobject_winched",{target=inst,doer=nil})
+	if not no_CHEVO_event then
+		TheWorld:PushEvent("CHEVO_heavyobject_winched",{target=inst,doer=nil})
+	end
 end
 
 local function onitemlose(inst, data)
@@ -312,6 +312,51 @@ local function OnHaunt(inst, haunter)
 	end
 end
 
+local function load_object_action_filter(inst, doer, heavy_item)
+	return inst:HasTag("inactive")
+		and not inst:HasTag("takeshelfitem")
+		and not inst:HasTag("burnt")
+		and not inst.sg:HasStateTag("lowered_ground")
+		and not inst:HasTag("fire")
+		and not inst:HasTag("burnt")
+end
+
+local function OnUseHeavy(inst, doer, heavy_item)
+	if heavy_item == nil then
+		return
+	end
+
+	doer.components.inventory:RemoveItem(heavy_item)
+	inst.components.inventory:GiveItem(heavy_item)
+
+	OnFullyRaised(inst)
+
+	return true
+end
+
+local function Unload(inst)
+	if inst.components.shelf.cantakeitem then
+		inst.components.shelf.cantakeitem = false
+
+		inst:DoTaskInTime(14*FRAMES, function()
+			inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/medium")		
+			local item = dropitems(inst)
+			if item ~= nil and inst:GetCurrentPlatform() ~= nil then
+				item.components.submersible.force_no_repositioning = true
+				local x, _, z = inst.Transform:GetWorldPosition()
+				item.components.submersible:MakeSunken(x, z, true, true)				
+			end
+		end)
+
+		inst.AnimState:PlayAnimation("unload", false)
+		inst.AnimState:PushAnimation("idle", false)
+
+		return true
+	else
+		return false
+	end
+end
+
 local function OnSave(inst, data)
 	if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
 		data.burnt = true
@@ -342,7 +387,7 @@ local function OnLoadPostPass(inst)
 			end
 		end
 
-		if TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) ~= nil then
+		if inst:GetCurrentPlatform() ~= nil then
 			if inst.components.winch ~= nil then
 				if inst.components.winch.is_static then
 					if inst.components.winch.line_length > 0 then
@@ -365,7 +410,6 @@ local function OnLoadPostPass(inst)
 end
 
 local function fn()
-
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -378,6 +422,9 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle", true)
 
     inst:AddTag("structure")
+
+	inst.use_heavy_obstacle_string_key = "LOAD_WINCH"
+	inst.use_heavy_obstacle_action_filter = load_object_action_filter
 
     inst.entity:SetPristine()
 
@@ -402,6 +449,10 @@ local function fn()
 	inst.components.winch:SetOnStartRaisingFn(OnStartRaising)
 	inst.components.winch:SetOnStartLoweringFn(OnStartLowering)
 	inst.components.winch:SetOverrideGetCurrentDepthFn(GetCurrentWinchDepth)
+	inst.components.winch:SetUnloadFn(Unload)
+
+	inst:AddComponent("heavyobstacleusetarget")
+	inst.components.heavyobstacleusetarget.on_use_fn = OnUseHeavy
 
 	inst:AddComponent("activatable")
 	inst.components.activatable.OnActivate = OnActivate

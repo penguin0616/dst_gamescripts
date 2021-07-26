@@ -1,5 +1,3 @@
-local GroundTiles = require("worldtiledefs")
-
 local waveassets =
 {
 	Asset( "ANIM", "anim/wave.zip" ),
@@ -17,7 +15,7 @@ local prefabs =
 
 local SPLASH_WETNESS = 9
 
-local function do_splash(inst)
+local function DoSplash(inst)
     local wave_splash = SpawnPrefab("wave_splash")
     local pos = inst:GetPosition()
     TintByOceanTile(wave_splash)
@@ -41,16 +39,12 @@ end
 
 local function oncollidewave(inst, other)
     if other and (inst.waveactive or not other:HasTag("wave")) then
-        if other.collisionboat and inst.waveactive then
+        if other.components.boatphysics and inst.waveactive then
             local vx, vy, vz = inst.Physics:GetVelocity()
-            local speed_modifier = VecUtil_Length(vx, vz)
-            vx,vz = VecUtil_Normalize(vx,vz)
-
-        local boat_physics = other.collisionboat.components.boatphysics
-            boat_physics:ApplyForce(vx, vz, speed_modifier)
+            other.components.boatphysics:ApplyForce(VecUtil_NormalAndLength(vx, vz))
         end
 
-        do_splash(inst)
+        DoSplash(inst)
     end
 end
 
@@ -60,7 +54,7 @@ local function CheckGround(inst)
     local vx, vy, vz = inst.Physics:GetVelocity()
 
     if TheWorld.Map:IsVisualGroundAtPoint(x + vx, y, z + vz) then
-        do_splash(inst)
+        DoSplash(inst)
     end
 end
 
@@ -94,7 +88,7 @@ local function CheckForItems(inst)
     end
 end
 
-local function onRemove(inst)
+local function OnRemoveEntity(inst)
     inst.SoundEmitter:KillSound("wave")
 end
 
@@ -113,7 +107,16 @@ local function med_fn()
 
     TintByOceanTile(inst)
 
-    MakeCharacterPhysics(inst, 100, 1)
+    local phys = inst.entity:AddPhysics()
+    phys:SetSphere(1)
+    phys:SetCollisionGroup(COLLISION.OBSTACLES)
+    phys:ClearCollisionMask()
+    phys:CollidesWith(COLLISION.WORLD)
+    phys:CollidesWith(COLLISION.OBSTACLES)
+    phys:CollidesWith(COLLISION.SMALLOBSTACLES)
+    phys:CollidesWith(COLLISION.CHARACTERS)
+    phys:CollidesWith(COLLISION.GIANTS)
+    phys:SetCollides(false) --Still will get collision callback, just not dynamic collisions.
 
     inst:AddTag("scarytoprey")
     inst:AddTag("wave")
@@ -128,13 +131,14 @@ local function med_fn()
     end
 
     inst.entity:SetPristine()
+
     if not TheWorld.ismastersim then
         return inst
     end
 
 	inst.persists = false
 
-    inst.checkgroundtask = inst:DoPeriodicTask(0.5, CheckGround)
+    inst:DoPeriodicTask(0.5, CheckGround)
     inst:DoPeriodicTask(10*FRAMES, CheckForItems, 0)
 
     inst.OnEntitySleep = inst.Remove
@@ -147,9 +151,9 @@ local function med_fn()
     inst.SoundEmitter:PlaySound("turnoftides/common/together/water/wave/LP", "wave")
     inst.SoundEmitter:SetParameter("wave", "size", 0.5)
 
-    inst:ListenForEvent("onremove", function() onRemove(inst) end)
+    inst.OnRemoveEntity = OnRemoveEntity
 
-    inst.DoSplash = do_splash
+    inst.DoSplash = DoSplash
 
     return inst
 end

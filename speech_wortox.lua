@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "I am cautious about touching it.",
 			INUSE = "Another soul has use of it.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "What's the matter? I won't bite.",
@@ -3375,6 +3376,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "I'm afraid your journey has been cut short.",
 		OCEANFISH_MEDIUM_7 = "I'm afraid your journey has been cut short.",
 		OCEANFISH_MEDIUM_8 = "What a chilly reception!",
+        OCEANFISH_MEDIUM_9 = "Purple, but not a people eater.",
 
 		PONDFISH = "You are quite fragrant.",
 		PONDEEL = "A slippery soul, that one.",
@@ -3827,6 +3829,8 @@ return{
 		SWEETTEA = "A little sip will do the trick.",
 		TILLWEED = "Till what, weed?",
 		TILLWEEDSALVE = "A welcome break from pains and aches.",
+        WEED_IVY = "It seems a little wound up.",
+        IVY_SNARE = "That seemed like an overreaction.",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4068,7 +4072,31 @@ return{
             GENERIC = "Hyuyuyu, I don't think they'll like that...",
             CONSTRUCTION1 = "I'll help a bit, but if it's no fun I'll quit!",
             CONSTRUCTION2 = "What mysterious machinations!",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "It seems we've found safe arbor, hyuyu!",
+        OCEANTREE = "How is ocean life treating you?",
+        OCEANTREENUT = "The sea is a nutty place to plant a tree.",
+        WATERTREE_ROOT = "Hyuyuyu! You won't trip me up with your tricky roots!",
+
+        OCEANTREE_PILLAR = "They grow up so fast!",
+
+        OCEANVINE = "A fine enough vine.",
+        FIG = "They say the low hanging fruit is the sweetest!",
+
+        SPIDER_WATER = "They're just getting their feet wet.",
+        MUTATOR_WATER = "A tasty treat for those tiny terrors!",
+        OCEANVINE_COCOON = "Rock-a-bye spiders, in the treetop...",
+
+        GRASSGATOR = "See you later, gator.",
+
+        TREEGROWTHSOLUTION = "It'll really rib to your sticks.",
+
+        FIGATONI = "I'll pass.",
+        FIGKABAB = "Food on a stick won't do the trick.",
+        KOALEFIG_TRUNK = "As mortal dishes go, that looks particularly revolting.",
+        FROGNEWTON = "How do the mortals come up with these things?",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "I'm not using that!",
 			INUSE = "But I want to use it!",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Hey, you're not my Carrat!",
@@ -3376,6 +3377,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "It's kind of pretty for something that lives in the water.",
 		OCEANFISH_MEDIUM_7 = "It's kind of pretty for something that lives in the water.",
 		OCEANFISH_MEDIUM_8 = "I dare someone to lick it!",
+        OCEANFISH_MEDIUM_9 = "Another stupid fish.",
 
 		PONDFISH = "Slippery fishy!",
 		PONDEEL = "I don't like the look it's giving me!",
@@ -3828,6 +3830,8 @@ return{
 		SWEETTEA = "What's so great about it? It's just leaf juice.",
 		TILLWEED = "Stupid weed.",
 		TILLWEEDSALVE = "I guess that weed was good for something.",
+        WEED_IVY = "It's all spiny.",
+        IVY_SNARE = "Get outta here you stupid weed!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4069,7 +4073,31 @@ return{
             GENERIC = "Great! So what does it do?",
             CONSTRUCTION1 = "Uuuugh, why can't that old guy just build this thing himself?",
             CONSTRUCTION2 = "I guess I could just burn it and be done with it, but now I'm kinda curious...",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "The bigger the tree, the more there is to burn.",
+        OCEANTREE = "Heh, you thought you'd be safe from my lighter out here on the water?",
+        OCEANTREENUT = "Ugh, it's still wet.",
+        WATERTREE_ROOT = "I bet it'll still burn.",
+
+        OCEANTREE_PILLAR = "Hey, it's gonna stop the sun from burning things!",
+
+        OCEANVINE = "Oh look, a really long wick!",
+        FIG = "Looks like old people fruit.",
+
+        SPIDER_WATER = "Get outta the water so I can burn you!",
+        MUTATOR_WATER = "Give one to Wilson, I'm sure he'd loooove to try it! Heheh.",
+        OCEANVINE_COCOON = "Ewww look at it just dangling up there!",
+
+        GRASSGATOR = "It needs a haircut.",
+
+        TREEGROWTHSOLUTION = "Eww tree gunk!",
+
+        FIGATONI = "I won't turn down a plate of pasta.",
+        FIGKABAB = "When I'm done with the food I can burn the stick!",
+        KOALEFIG_TRUNK = "Sweet and rubbery.",
+        FROGNEWTON = "All that fig almost masks the frog flavor.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

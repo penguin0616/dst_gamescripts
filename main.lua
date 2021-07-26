@@ -398,8 +398,13 @@ local function ModSafeStartup()
 		SortAndEnableShaders()
 	end
 
+	require("shadeeffects")
+
 	FontManager = TheGlobalInstance.entity:AddFontManager()
 	MapLayerManager = TheGlobalInstance.entity:AddMapLayerManager()
+
+	--intentionally STATIC, this can be called from anywhere to globally update the max radius used for physics waker calculations.
+	PhysicsWaker.SetMaxPhysicsRadius(MAX_PHYSICS_RADIUS)
 
     -- I think we've got everything we need by now...
    	if IsNotConsole() then

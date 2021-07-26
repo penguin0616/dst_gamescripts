@@ -3379,6 +3379,7 @@ return {
 		OCEANFISH_MEDIUM_6 = "Now that's the real McKoi!",
 		OCEANFISH_MEDIUM_7 = "Now that's the real McKoi!",
 		OCEANFISH_MEDIUM_8 = "Ice bream, youse bream.",
+        OCEANFISH_MEDIUM_9 = "That's the sweet smell of a successful fishing trip.",
 
 		PONDFISH = "Now I shall eat for a day.",
 		PONDEEL = "This will make a delicious meal.",
@@ -3831,6 +3832,8 @@ return {
 		SWEETTEA = "A nice cup of tea to forget all my problems.",
 		TILLWEED = "Out of my garden, you!",
 		TILLWEEDSALVE = "My salve-ation.",
+        WEED_IVY = "Hey, you're not a vegetable!",
+        IVY_SNARE = "Now that's just rude.",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4072,7 +4075,31 @@ return {
             GENERIC = "It's containing the energy! I knew what it was for all along, of course.",
             CONSTRUCTION1 = "The science has only just started.",
             CONSTRUCTION2 = "That's looking much more science-y already!",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "That tree is massive!",
+        OCEANTREE = "I think these trees are a little lost.",
+        OCEANTREENUT = "There's something alive inside.",
+        WATERTREE_ROOT = "It's not a square root.",
+
+        OCEANTREE_PILLAR = "It's not quite as great as the original, but still pretty good.",
+        
+        OCEANVINE = "The scientific term is \"tree noodles\".",
+        FIG = "I'll call it \"Newton's Fig\".",
+
+        SPIDER_WATER = "Why in the name of science do they get to float?",
+        MUTATOR_WATER = "Oh wow, that looks um... delicious, Webber!",
+        OCEANVINE_COCOON = "What if I just gave it a little poke?",
+
+        GRASSGATOR = "I don't think he likes me very much.",
+
+        TREEGROWTHSOLUTION = "Mmmm, tree food!",
+
+        FIGATONI = "Mama mia!",
+        FIGKABAB = "Fig with a side of stick.",
+        KOALEFIG_TRUNK = "Great, now I've got a stuffed nose.",
+        FROGNEWTON = "The fig really brings it all together.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

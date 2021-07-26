@@ -798,6 +798,16 @@ STRINGS =
 
         WAX = "Wax",
 
+        UNLOAD_WINCH = "Drop Overboard",
+
+        USE_HEAVY_OBSTACLE =
+        {
+            GENERIC = "Use",
+            LOAD_WINCH = "Load Winch",
+        },
+
+        ADVANCE_TREE_GROWTH = "Apply",
+
 		-- Winter's Feast 2019
 		WINTERSFEAST_FEAST = "Feast",
 
@@ -2726,6 +2736,7 @@ STRINGS =
 		OCEANFISH_MEDIUM_6 = "Dappled Koi",
 		OCEANFISH_MEDIUM_7 = "Golden Koi",
 		OCEANFISH_MEDIUM_8 = "Ice Bream",
+        OCEANFISH_MEDIUM_9 = "Sweetish Fish",
 
 		OCEANFISH_SMALL_1_INV = "Runty Guppy",
 		OCEANFISH_SMALL_2_INV = "Needlenosed Squirt",
@@ -2744,6 +2755,7 @@ STRINGS =
 		OCEANFISH_MEDIUM_6_INV = "Dappled Koi",
 		OCEANFISH_MEDIUM_7_INV = "Golden Koi",
 		OCEANFISH_MEDIUM_8_INV = "Ice Bream",
+        OCEANFISH_MEDIUM_9_INV = "Sweetish Fish",
 
 		PONDFISH = "Freshwater Fish",
 		PONDEEL = "Live Eel",
@@ -3018,8 +3030,8 @@ STRINGS =
         MOON_ALTAR_LINK = "Mysterious Energy",
 
         -- FARMING
-		FARM_PLOW = "Garden Rigamajig",
-		FARM_PLOW_ITEM = "Garden Rigamajig",
+		FARM_PLOW = "Garden Digamajig",
+		FARM_PLOW_ITEM = "Garden Digamajig",
 		FARM_HOE = "Garden Hoe",
 		GOLDEN_FARM_HOE = "Splendid Garden Hoe",
         NUTRIENTSGOGGLESHAT = "Premier Gardeneer Hat",
@@ -3134,7 +3146,8 @@ STRINGS =
         MOON_DEVICE_CONSTRUCTION3 = "Lunar Siphonator",
 
         MOON_DEVICE = "Lunar Siphonator",
-		-- Webber
+
+        -- Webber
         MUTATOR_WARRIOR = "Warrior Switcherdoodle",
         MUTATOR_DROPPER = "Dangler Switcherdoodle",
         MUTATOR_HIDER = "Cave Switcherdoodle",
@@ -3146,6 +3159,31 @@ STRINGS =
         SPIDER_HEALER = "Nurse Spider",
         SPIDER_REPELLENT = "Shoo Box",
         SPIDER_HEALER_ITEM = "Healing Glop",
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Great Tree Trunk",
+        WATERTREE_ROOT = "Great Tree Root",
+
+        OCEANTREE_PILLAR = "Above-Average Tree Trunk",
+
+        OCEANTREE = "Knobbly Trees",
+        OCEANTREENUT = "Knobbly Tree Nut",
+
+        OCEANVINE = "Mossy Vine",
+        FIG = "Fig",
+
+        GRASSGATOR = "Grass Gator",
+
+        SPIDER_WATER = "Sea Strider",
+        MUTATOR_WATER = "Strider Switcherdoodle",
+        OCEANVINE_COCOON = "Sea Strider Nest",
+
+        TREEGROWTHSOLUTION = "Tree Jam",
+
+        FIGATONI = "Figatoni",
+        FIGKABAB = "Figkabab",
+        KOALEFIG_TRUNK = "Fig-Stuffed Trunk",
+        FROGNEWTON = "Figgy Frogwich",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3839,7 +3877,11 @@ STRINGS =
         SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",        
         SPIDER_REPELLENT = "Let your friends know you need some space.",
         SPIDER_HEALER_ITEM = "Gross, gooey, and good for you!",
-        
+
+        -- Waterlog
+        MUTATOR_WATER = "They look simply mouthwatering!",
+        TREEGROWTHSOLUTION = "Encourages trees to reach new heights.",        
+
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_QUEST_SURVIVE = {
@@ -6264,8 +6306,8 @@ STRINGS.UI =
         CANT_LOAD_TITLE = "Load Failed",
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
-		MAINBANNER_ROT_BETA_TITLE = "Return of Them Beta\nEye of the Storm",
-		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
+		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
+		MAINBANNER_BETA_TITLE = "Waterlogged\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7095,6 +7137,7 @@ STRINGS.UI =
             VERSION_MISMATCH_PUBLIC_BETA = "Public Beta Server",
             VERSION_MISMATCH_ARNBETA = "A New Reign Beta",
 			VERSION_MISMATCH_ROTBETA = "Return of Them Beta",
+			VERSION_MISMATCH_UPDATEBETA = "Beta Branch",
             VERSION_HANDSHAKE_FAILED    = "Version Mismatch",
             ID_INCOMPATIBLE_PROTOCOL_VERSION = "Version Mismatch",
             ID_DST_INCOMPATIBLE_PROTOCOL_VERSION = "Version Mismatch",
@@ -7161,6 +7204,7 @@ STRINGS.UI =
             VERSION_MISMATCH_PUBLIC_BETA = "The server is running a public beta world. You'll need to opt into the beta to play on this server.",
             VERSION_MISMATCH_ARNBETA = "The server is running the A New Reign Beta version. You'll need to opt into the beta to play on this server.",
 			VERSION_MISMATCH_ROTBETA = "The server is running the Return of Them Beta version. You'll need to opt into the beta to play on this server.",
+			VERSION_MISMATCH_UPDATEBETA = "The server is running the Beta Branch version. You'll need to opt into the beta to play on this server.",
             VERSION_HANDSHAKE_FAILED = "The server is on a different version than you. Please check that your game version is up-to-date.",
             ID_INCOMPATIBLE_PROTOCOL_VERSION = "The server has a different version than you do. Please check that your game version is up-to-date.",
             ID_DST_INCOMPATIBLE_PROTOCOL_VERSION = "The server has a different version than you do. Please check that your game version is up-to-date.",
@@ -8309,6 +8353,12 @@ STRINGS.UI =
     {
         TITLE = "Clothing Presets",
     },
+    
+    ITEM_SKIN_DEFAULTS =
+    {
+        TITLE = "Curios for Starting Items",
+    },
+
 
     LOBBY_WAITING_FOR_PLAYERS_SCREEN =
     {

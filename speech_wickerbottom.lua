@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "That's not my area of expertise.",
 			INUSE = "It's already in use.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Oh my, I seem to have gotten a bit mixed up.",
@@ -3369,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "It appears to be a subspecies of Cyprinus carpio.",
 		OCEANFISH_MEDIUM_7 = "It appears to be a subspecies of Cyprinus carpio.",
 		OCEANFISH_MEDIUM_8 = "All fish are cold-blooded of course, but this is exceptional.",
+        OCEANFISH_MEDIUM_9 = "I surmise that its coloring is a result of its fig-based diet.",
 
 		PONDFISH = "Some kind of whitefish, I believe.",
 		PONDEEL = "It's an eel.",
@@ -3821,6 +3823,8 @@ return{
 		SWEETTEA = "It's as if all my worries and cares are fading away.",
 		TILLWEED = "What a nuisance!",
 		TILLWEEDSALVE = "The Tillweed's roots appear to have limited healing capabilities.",
+        WEED_IVY = "Another garden pest.",
+        IVY_SNARE = "This plant is quite territorial.",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4062,7 +4066,31 @@ return{
             GENERIC = "As I suspected, it's meant to function as a battery of sorts.",
             CONSTRUCTION1 = "I'm afraid I can't yet ascertain its function.",
             CONSTRUCTION2 = "The pieces are slowly falling into place.",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "I wonder what contributed to its advanced growth?",
+        OCEANTREE = "It seems to be a hybrid between the genera Rhizophora and Salix.",
+        OCEANTREENUT = "Oh my, this seed seems quite eager to grow.",
+        WATERTREE_ROOT = "I suggest we avoid hitting those with our boat.",
+
+        OCEANTREE_PILLAR = "I was able to recreate the growth conditions, but not to the extent of the original.",
+
+        OCEANVINE = "These vines seem to enjoy a symbiotic relationship with the tree.",
+        FIG = "I do enjoy a nice ripe fig.",
+
+        SPIDER_WATER = "It's incredible that they can create enough surface tension to stay above water at that size.",
+        MUTATOR_WATER = "How interesting! They appear to alter an arachnid's form when ingested.",
+        OCEANVINE_COCOON = "This species seems to be both arboreal and aquatic.",
+
+        GRASSGATOR = "It appears docile enough.",
+
+        TREEGROWTHSOLUTION = "This fig mixture appears to induce rapid arboreal growth.",
+
+        FIGATONI = "An unexpected, but not unpleasant combination.",
+        FIGKABAB = "I suppose this is the next logical step after meat on a stick.",
+        KOALEFIG_TRUNK = "High in protein and fiber.",
+        FROGNEWTON = "It has quite a unique flavor.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

@@ -114,8 +114,7 @@ function OceanShadowCreatureBrain:OnStart()
 
             Wander(self.inst, function()
                 if self.mytarget ~= nil then
-                    local targetpos = self.mytarget:GetPosition()
-                    return TheWorld.Map:GetPlatformAtPoint(targetpos.x, targetpos.z) ~= nil and targetpos or nil
+                    return self.mytarget:GetCurrentPlatform() ~= nil and self.mytarget:GetPosition() or nil
                 else
                     return nil
                 end

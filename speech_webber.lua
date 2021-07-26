@@ -3370,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "It looks like it has whiskers!",
 		OCEANFISH_MEDIUM_7 = "It looks like it has whiskers!",
 		OCEANFISH_MEDIUM_8 = "It's a fishsicle!",
+        OCEANFISH_MEDIUM_9 = "Look, it has a little mustache!",
 
 		PONDFISH = "It could stand to be fried.",
 		PONDEEL = "Fresh water-snake.",
@@ -3822,6 +3823,8 @@ return{
 		SWEETTEA = "Mother used to make tea for me... at least I think she did...",
 		TILLWEED = "It likes to make a mess of our garden.",
 		TILLWEEDSALVE = "It helps get rid of booboos.",
+        WEED_IVY = "This one's got lots of thorns.",
+        IVY_SNARE = "It really doesn't like when we pick the other plants!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4063,7 +4066,31 @@ return{
             GENERIC = "It looks pretty impressive... whatever it is!",
             CONSTRUCTION1 = "There's so much building to do, can't we go play instead?",
             CONSTRUCTION2 = "It's coming along!",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Can we make a big swing to hang from it?",
+        OCEANTREE = "The water made it all pruney!",
+        OCEANTREENUT = "It's almost as big as we are!",
+        WATERTREE_ROOT = "Tree toesies.",
+
+        OCEANTREE_PILLAR = "Now we have our own big tree!",
+
+        OCEANVINE = "Maybe we could use that for a swing!",
+        FIG = "This fruit is kinda weird, but tasty!",
+
+        SPIDER_WATER = "Maybe they can teach us how to swim.",
+        MUTATOR_WATER = "This one turned out really good!",
+        OCEANVINE_COCOON = "Oooh, can we come play in your tree house?",
+
+        GRASSGATOR = "We don't think it wants to be friends with us.",
+
+        TREEGROWTHSOLUTION = "If only we had some peanut butter.",
+
+        FIGATONI = "We've never had sweet pasta before!",
+        FIGKABAB = "We like to play swords with the stick when we're done.",
+        KOALEFIG_TRUNK = "That looks extra filling!",
+        FROGNEWTON = "Something we both like!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

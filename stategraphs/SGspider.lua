@@ -214,14 +214,35 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("eat")
             inst.sg.statemem.forced = forced
+            inst.SoundEmitter:PlaySound(SoundPath(inst, "eat"), "eating")
         end,
 
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState((inst:PerformBufferedAction() or inst.sg.statemem.forced) and "eat_loop" or "idle")
+                local state = (inst:PerformBufferedAction() or inst.sg.statemem.forced) and "eat_loop" or "idle"
+                if state == "idle" then
+                    inst.SoundEmitter:KillSound("eating")
+                end
+                inst.sg:GoToState(state)
             end),
         },
+    },
+
+    State{
+        name = "eat_loop",
+        tags = {"busy"},
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("eat_loop", true)
+            inst.sg:SetTimeout(1+math.random()*1)
+        end,
+
+        ontimeout = function(inst)
+            inst.SoundEmitter:KillSound("eating")
+            inst.sg:GoToState("idle", "eat_pst")
+        end,
     },
 
     State{
@@ -238,20 +259,6 @@ local states =
         },
     },
 
-    State{
-        name = "eat_loop",
-        tags = {"busy"},
-
-        onenter = function(inst)
-            inst.Physics:Stop()
-            inst.AnimState:PlayAnimation("eat_loop", true)
-            inst.sg:SetTimeout(1+math.random()*1)
-        end,
-
-        ontimeout = function(inst)
-            inst.sg:GoToState("idle", "eat_pst")
-        end,
-    },
 
     State{
         name = "taunt",
@@ -560,12 +567,16 @@ local states =
         onenter = function(inst, start_anim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("mutate_pre")
+            inst.SoundEmitter:PlaySound(SoundPath(inst, "eat"), "eating")
         end,
 
 
         timeline=
         {
-            TimeEvent(15*FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber2/common/mutate") end),
+            TimeEvent(15*FRAMES, function(inst) 
+                inst.SoundEmitter:KillSound("eating")
+                inst.SoundEmitter:PlaySound("webber2/common/mutate") 
+            end),
         },
 
         events=
@@ -573,7 +584,6 @@ local states =
             EventHandler("animover", function(inst) 
                 local x,y,z = inst.Transform:GetWorldPosition()        
                 local fx = SpawnPrefab("spider_mutate_fx")
-                fx.Transform:SetNoFaced()
                 fx.Transform:SetPosition(x,y,z)
 
                 inst:DoTaskInTime(0.25, function() 

@@ -102,6 +102,7 @@ Recipe("saltbox", {Ingredient("saltrock", 10), Ingredient("bluegem", 1), Ingredi
 Recipe("farm_plow_item", {Ingredient("boards", 3), Ingredient("rope", 2), Ingredient("flint", 2)}, RECIPETABS.FARM,  TECH.SCIENCE_ONE)
 Recipe("fertilizer", {Ingredient("poop", 3), Ingredient("boneshard", 2), Ingredient("log", 4)}, RECIPETABS.FARM, TECH.SCIENCE_TWO)
 Recipe("soil_amender", {Ingredient("messagebottleempty", 1), Ingredient("kelp", 1), Ingredient("ash", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
+Recipe("treegrowthsolution", {Ingredient("fig", 2), Ingredient("glommerfuel", 1)}, RECIPETABS.FARM, TECH.SCIENCE_TWO)
 Recipe("compostingbin", {Ingredient("boards", 3), Ingredient("spoiled_food", 1), Ingredient("cutgrass", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE, "compostingbin_placer")
 Recipe("plantregistryhat", {Ingredient("fertilizer", 1), Ingredient("seeds", 3), Ingredient("transistor", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
 
@@ -409,6 +410,7 @@ Recipe("mutator_hider",	  		{ Ingredient("monstermeat", 1), Ingredient("silk", 2
 Recipe("mutator_spitter", 		{ Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("nitre", 4) 	  	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
 Recipe("mutator_moon",	  		{ Ingredient("monstermeat", 2), Ingredient("silk", 3), Ingredient("moonglass", 2) 	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
 Recipe("mutator_healer",  		{ Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("honey", 2) 	  	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
+Recipe("mutator_water",  		{ Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("fig", 2) 	  	   }, CUSTOM_RECIPETABS.SPIDERCRAFT, TECH.SPIDERCRAFT_ONE, nil, nil, nil, nil, "spiderwhisperer")
 
 ----NATURE----
 Recipe("livinglog", 	{Ingredient(CHARACTER_INGREDIENT.HEALTH, 20)}, CUSTOM_RECIPETABS.NATURE, TECH.NONE, nil, nil, nil, nil, "plantkin")
@@ -439,7 +441,7 @@ Recipe("mast_malbatross_item", {Ingredient("driftwood_log", 3), Ingredient("rope
 Recipe("steeringwheel_item",   {Ingredient("boards", 2), 		Ingredient("rope", 1)}, RECIPETABS.SEAFARING, TECH.SEAFARING_TWO)
 Recipe("fish_box",			   {Ingredient("cutstone", 1), 		Ingredient("rope", 3)}, RECIPETABS.SEAFARING, TECH.SEAFARING_TWO, "fish_box_placer", 1.5, nil, nil, nil, nil, nil,
     function(pt)
-       return TheWorld.Map:GetPlatformAtPoint(pt.x, 0, pt.z, - 0.5) ~= nil
+       return TheWorld.Map:GetPlatformAtPoint(pt.x, 0, pt.z, -0.5) ~= nil
     end)
 Recipe("winch",				   {Ingredient("boards", 2), Ingredient("cutstone", 1), Ingredient("rope", 2)}, RECIPETABS.SEAFARING, TECH.LOST, "winch_placer", 1.5)
 Recipe("mastupgrade_lamp_item", {Ingredient("boards", 1), Ingredient("rope", 2), Ingredient("flint", 4)}, RECIPETABS.SEAFARING, TECH.SEAFARING_TWO)

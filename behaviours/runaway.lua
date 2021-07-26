@@ -25,6 +25,8 @@ function RunAway:__tostring()
     return string.format("RUNAWAY %f from: %s", self.safe_dist, tostring(self.hunter))
 end
 
+
+
 function RunAway:GetRunAngle(pt, hp, sp)
     if self.avoid_angle ~= nil then
         local avoid_time = GetTime() - self.avoid_time
@@ -53,7 +55,11 @@ function RunAway:GetRunAngle(pt, hp, sp)
     local radius = 6
 
 	local find_offset_fn = self.inst.components.locomotor:IsAquatic() and FindSwimmableOffset or FindWalkableOffset
-	local result_offset, result_angle, deflected = find_offset_fn(pt, angle*DEGREES, radius, 8, true, false) -- try avoiding walls
+    local allowwater_or_allowboat = nil
+    if find_offset_fn == FindWalkableOffset then
+        allowwater_or_allowboat = self.inst.components.locomotor:CanPathfindOnWater()
+    end
+	local result_offset, result_angle, deflected = find_offset_fn(pt, angle*DEGREES, radius, 8, true, false, nil, allowwater_or_allowboat) -- try avoiding walls
     if result_angle == nil then
 		result_offset, result_angle, deflected = find_offset_fn(pt, angle*DEGREES, radius, 8, true, true) -- ok don't try to avoid walls
         if result_angle == nil then

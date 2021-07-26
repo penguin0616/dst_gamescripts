@@ -20,6 +20,8 @@ local Winch = Class(function(self, inst)
 	-- self.onstartloweringfn = nil
 	-- self.onstartraisingfn = nil
 
+	-- self.unloadfn = nil
+
 	self.winch_ready = true
 
     self.line_length = 0
@@ -121,6 +123,10 @@ end
 
 function Winch:SetOverrideGetCurrentDepthFn(fn)
 	self.overridegetcurrentdepthfn = fn
+end
+
+function Winch:SetUnloadFn(fn)
+	self.unloadfn = fn
 end
 
 function Winch:GetCurrentDepth()

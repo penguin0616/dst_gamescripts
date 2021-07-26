@@ -586,7 +586,9 @@ local function PopulateWorld(savedata, profile)
                 SpawnSaveRecord(v, newents)
             end
         end
-
+		if world.components.walkableplatformmanager then
+			world.components.walkableplatformmanager:PostUpdate(0)
+		end
         --post pass in neccessary to hook up references
         for k, v in pairs(newents) do
             v.entity:LoadPostPass(newents, v.data)
@@ -918,8 +920,8 @@ local function DoInitGame(savedata, profile)
 
 	if TheNet:GetIsServer() then
 	    NotifyLoadingState( LoadingStates.DoneLoading )
+		ShardGameIndex:WriteTimeFile()
 	end
-    ShardGameIndex:WriteTimeFile()
 end
 
 local function UpgradeSaveFile(savedata)

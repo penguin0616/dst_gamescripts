@@ -533,52 +533,55 @@ local OnSetLightningDelay = _ismastersim and function(src, data)
 end or nil
 
 local LIGHTNINGSTRIKE_CANT_TAGS = { "playerghost", "INLIMBO" }
-local LIGHTNINGSTRIKE_ONEOF_TAGS = { "lightningrod", "lightningtarget" }
+local LIGHTNINGSTRIKE_ONEOF_TAGS = { "lightningrod", "lightningtarget", "lightningblocker" }
+local LIGHTNINGSTRIKE_SEARCH_RANGE = 40
 local OnSendLightningStrike = _ismastersim and function(src, pos)
-    local target = nil
-    local isrod = false
-    local mindistsq = nil
-    local pos0 = pos
+    local closest_generic = nil
+    local closest_rod = nil
+    local closest_blocker = nil
 
-    local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, 40, nil, LIGHTNINGSTRIKE_CANT_TAGS, LIGHTNINGSTRIKE_ONEOF_TAGS)
-    for k, v in pairs(ents) do
-        local visrod = v:HasTag("lightningrod")
-        local vpos = v:GetPosition()
-        local vdistsq = distsq(pos0.x, pos0.z, vpos.x, vpos.z)
-        --First, check if we're a valid target:
-        --rods are always valid
-        --playerlightning target is valid by chance (when not invincible)
-        if (visrod or
-            (   (v.components.health == nil or not v.components.health:IsInvincible()) and
-                (v.components.playerlightningtarget == nil or math.random() <= v.components.playerlightningtarget:GetHitChance())
-            ))
-            --Now check for better match
-            and (target == nil or
-                (visrod and not isrod) or
-                (visrod == isrod and vdistsq < mindistsq)) then
-            target = v
-            isrod = visrod
-            pos = vpos
-            mindistsq = vdistsq
+    local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, LIGHTNINGSTRIKE_SEARCH_RANGE, nil, LIGHTNINGSTRIKE_CANT_TAGS, LIGHTNINGSTRIKE_ONEOF_TAGS)
+    for _, v in pairs(ents) do
+        if closest_blocker == nil
+                and v.components.lightningblocker ~= nil
+                and (v.components.lightningblocker.block_rsq + 0.0001) > v:GetDistanceSqToPoint(pos:Get()) then
+            closest_blocker = v
+        elseif closest_rod == nil and v:HasTag("lightningrod") then
+            closest_rod = v
+        elseif closest_generic == nil then
+            if (v.components.health == nil or not v.components.health:IsInvincible())
+                    and (v.components.playerlightningtarget == nil or math.random() <= v.components.playerlightningtarget:GetHitChance()) then
+                closest_generic = v
+            end
         end
     end
 
-    if isrod then
-        target:PushEvent("lightningstrike")
+    local strike_position = pos
+    local prefab_type = "lightning"
+
+    if closest_blocker ~= nil then
+        closest_blocker.components.lightningblocker:DoLightningStrike(strike_position)
+        prefab_type = "thunder"
+    elseif closest_rod ~= nil then
+        closest_rod:PushEvent("lightningstrike")
+        strike_position = closest_rod:GetPosition()
     else
-        if target ~= nil and target.components.playerlightningtarget ~= nil then
-            target.components.playerlightningtarget:DoStrike()
+        if closest_generic ~= nil then
+            if closest_generic.components.playerlightningtarget ~= nil then
+                closest_generic.components.playerlightningtarget:DoStrike()
+            end
+            strike_position = closest_generic:GetPosition()
         end
 
-        ents = TheSim:FindEntities(pos.x, pos.y, pos.z, 3, nil, _lightningexcludetags)
-        for k, v in pairs(ents) do
+        ents = TheSim:FindEntities(strike_position.x, strike_position.y, strike_position.z, 3, nil, _lightningexcludetags)
+        for _, v in pairs(ents) do
             if v.components.burnable ~= nil then
                 v.components.burnable:Ignite()
             end
         end
     end
 
-    SpawnPrefab("lightning").Transform:SetPosition(pos:Get())
+    SpawnPrefab(prefab_type).Transform:SetPosition(strike_position:Get())
 end or nil
 
 local OnSimUnpaused = _ismastersim and function()

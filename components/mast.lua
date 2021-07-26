@@ -1,4 +1,4 @@
-local function onissailraised(self)
+local function on_is_sail_raised(self)
 	if self.is_sail_raised then
 		self.inst:RemoveTag("saillowered")
 		self.inst:AddTag("sailraised")
@@ -8,24 +8,11 @@ local function onissailraised(self)
 	end
 end
 
-local function on_remove(inst)
-	local mast = inst.components.mast
-
-	local mast_sinking
-
-	if mast ~= nil and mast.boat ~= nil and mast.sink_fx ~= nil then
-		mast_sinking = SpawnPrefab(mast.sink_fx)
+local function on_is_sail_transitioning(self, is_sail_transitioning)
+    if is_sail_transitioning then
+        self.inst:StartUpdatingComponent(self)
     else
-        mast_sinking = SpawnPrefab("collapse_small")
-	end
-
-	if mast_sinking ~= nil then
-		local x_pos, y_pos, z_pos = inst.Transform:GetWorldPosition()
-		mast_sinking.Transform:SetPosition(x_pos, y_pos, z_pos)
-	end
-
-    if mast ~= nil then
-        mast:SetBoat(nil)
+        self.inst:StopUpdatingComponent(self)
     end
 end
 
@@ -37,7 +24,7 @@ local Mast = Class(function(self, inst)
     self.has_speed = false
     self.boat = nil
     self.rudder = nil
-  --  self.max_velocity_mod = TUNING.BOAT.MAST.BASIC.MAX_VELOCITY_MOD
+    --self.max_velocity_mod = TUNING.BOAT.MAST.BASIC.MAX_VELOCITY_MOD
     self.max_velocity = TUNING.BOAT.MAST.BASIC.MAX_VELOCITY
     self.rudder_turn_drag = TUNING.BOAT.MAST.BASIC.RUDDER_TURN_DRAG
 
@@ -46,22 +33,39 @@ local Mast = Class(function(self, inst)
     self.autounfurlunits = 8
     self.furlers = {}
 
-    self.inst:StartUpdatingComponent(self)
+    self.OnBoatRemoved = function() self.boat = nil end
+    self.OnBoatDeath = function() self:OnDeath() end
 
-    self.inst:ListenForEvent("onremove", on_remove)
+    self:SetRudder(SpawnPrefab("rudder"))
 
-    self.inst:DoTaskInTime(0,
-    	function()
-			local mast_x, mast_y, mast_z = self.inst.Transform:GetWorldPosition()
-    		self:SetBoat(TheWorld.Map:GetPlatformAtPoint(mast_x, mast_z))
-
-			self:SetRudder(SpawnPrefab('rudder'))
-    	end)
+    self.inst:DoTaskInTime(0, function()
+        self:SetBoat(self.inst:GetCurrentPlatform())
+    end)
 end,
 nil,
 {
-    is_sail_raised = onissailraised,
+    is_sail_raised = on_is_sail_raised,
+    is_sail_transitioning = on_is_sail_transitioning,
 })
+
+function Mast:OnRemoveEntity()
+	local mast_sinking
+
+	if self.boat ~= nil and self.sink_fx ~= nil then
+		mast_sinking = SpawnPrefab(self.sink_fx)
+    else
+        mast_sinking = SpawnPrefab("collapse_small")
+	end
+
+	if mast_sinking ~= nil then
+		local x_pos, y_pos, z_pos = self.inst.Transform:GetWorldPosition()
+		mast_sinking.Transform:SetPosition(x_pos, y_pos, z_pos)
+	end
+
+    if self ~= nil then
+        self:SetBoat(nil)
+    end
+end
 
 function Mast:SetReveseDeploy(set)
 	self.furlunits = set and 0 or self.furlunits
@@ -100,26 +104,29 @@ function Mast:SetBoat(boat)
 
     if self.boat ~= nil then
         self.boat.components.boatphysics:RemoveMast(self)
+        self.inst:RemoveEventCallback("onremove", self.OnBoatRemoved, boat)
+        self.inst:RemoveEventCallback("death", self.OnBoatDeath, boat)
     end
 
     self.boat = boat
 
     if boat ~= nil then
+        self.inst.Transform:SetRotation(self.boat.Transform:GetRotation())
         boat.components.boatphysics:AddMast(self)
-        boat:ListenForEvent("death", function() self:OnDeath() end)
+        self.inst:ListenForEvent("onremove", self.OnBoatRemoved, boat)
+        self.inst:ListenForEvent("death", self.OnBoatDeath, boat)
     end
 end
 
 function Mast:SetRudder(obj)
-    self.rudder = obj;
+    self.rudder = obj
     obj.entity:SetParent(self.inst.entity)
 end
 
 function Mast:OnDeath()
-	self.sinking = true
-
 	if self.inst:IsValid() then
 	    self.inst.SoundEmitter:KillSound("boat_movement")
+        self:SetBoat(nil)
 	end
 end
 
@@ -191,17 +198,26 @@ function Mast:SailUnfurled() -- sail is lowered
 	end
 end
 
+--instantly closes the sail to the "inactive state"
+function Mast:CloseSail()
+    if self.inverted then
+        self:SailUnfurled()
+    else
+        self:SailFurled()
+    end
+end
+
 function Mast:GetFurled0to1()
     return self.furlunits / self.furlunits_max
 end
 
-function Mast:OnRemoveFromEntity()
-    self.inst:RemoveEventCallback("onremove", on_remove)
+function Mast:SetRudderDirection(rudder_direction_x, rudder_direction_z)
+    local mast_x, mast_y, mast_z = self.inst.Transform:GetWorldPosition()
+    self.inst:FacePoint(rudder_direction_x + mast_x, 0, rudder_direction_z + mast_z)
 end
 
 function Mast:OnUpdate(dt)
-
-    if not self.inst.AnimState:IsCurrentAnimation("knot_release") then
+    if self.is_sail_transitioning and not self.inst.AnimState:IsCurrentAnimation("knot_release") then
         if self.is_sail_transitioning then
 
             if next(self.furlers) then
@@ -225,13 +241,6 @@ function Mast:OnUpdate(dt)
             self.inst.AnimState:SetPercent("open_pst",self.furlunits / self.furlunits_max)
         end
     end
-    local mast_x, mast_y, mast_z = self.inst.Transform:GetWorldPosition()
-
-    if self.boat == nil then return end
-
-    local boat_physics = self.boat.components.boatphysics
-    local rudder_direction_x, rudder_direction_z = boat_physics.rudder_direction_x, boat_physics.rudder_direction_z
-	self.inst:FacePoint(rudder_direction_x + mast_x, 0, rudder_direction_z + mast_z)
 end
 
 return Mast

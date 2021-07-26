@@ -528,6 +528,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.HERD_FOLLOWERS, "use_inventory_item"),
     ActionHandler(ACTIONS.REPEL, "use_inventory_item"),
     ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
+    ActionHandler(ACTIONS.UNLOAD_WINCH, "give"),
+    ActionHandler(ACTIONS.USE_HEAVY_OBSTACLE, "dolongaction"),
+    ActionHandler(ACTIONS.ADVANCE_TREE_GROWTH, "dolongaction"),
 }
 
 local events =
@@ -4255,9 +4258,6 @@ local hop_timelines =
     {
         TimeEvent(0, function(inst)
             inst.components.embarker.embark_speed = math.clamp(inst.components.locomotor:RunSpeed() * inst.components.locomotor:GetSpeedMultiplier() + TUNING.WILSON_EMBARK_SPEED_BOOST, TUNING.WILSON_EMBARK_SPEED_MIN, TUNING.WILSON_EMBARK_SPEED_MAX)
-        end),
-        TimeEvent(4, function(inst)
-            inst.components.embarker:StartMoving()
         end),
     },
 }

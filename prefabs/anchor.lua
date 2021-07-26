@@ -26,7 +26,7 @@ local function on_hammered(inst, hammerer)
 		inst.components.anchor:SetIsAnchorLowered(false)
 	end
 
-	local boat = TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition())
+	local boat = inst:GetCurrentPlatform()
 	if boat ~= nil then
 		boat:PushEvent("spawnnewboatleak", { pt = inst:GetPosition(), leak_size = "med_leak", playsoundfx = true })
 	end

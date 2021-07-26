@@ -889,6 +889,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.HERD_FOLLOWERS, "herd_followers"),
     ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
     ActionHandler(ACTIONS.REPEL, "repel_followers"),
+    ActionHandler(ACTIONS.UNLOAD_WINCH, "give"),
+    ActionHandler(ACTIONS.USE_HEAVY_OBSTACLE, "dolongaction"),
+    ActionHandler(ACTIONS.ADVANCE_TREE_GROWTH, "dolongaction"),
 }
 
 local events =

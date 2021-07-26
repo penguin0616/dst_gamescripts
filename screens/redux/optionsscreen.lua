@@ -656,6 +656,7 @@ function OptionsScreen:Apply()
 
     if ThePlayer ~= nil then
         ThePlayer:EnableMovementPrediction(self.working.movementprediction)
+		ThePlayer:EnableBoatCamera(self.working.boatcamera)
     end
 
     if self.working.lang_id ~= Profile:GetLanguageID() then

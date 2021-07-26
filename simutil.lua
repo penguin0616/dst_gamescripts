@@ -209,16 +209,12 @@ function ShakeAllCameras(mode, duration, speed, scale, source_or_pt, maxDist)
 end
 
 function ShakeAllCamerasOnPlatform(mode, duration, speed, scale, platform)
-	if platform == nil then
-		return nil
-	end
+    local walkableplatform = platform and platform.components.walkableplatform or nil
+	if walkableplatform == nil then return end
 
-	for i, v in ipairs(AllPlayers) do
-		local x, y, z = v.Transform:GetWorldPosition()
-		if TheWorld.Map:GetPlatformAtPoint(x, z) == platform then
-			v:ShakeCamera(mode, duration, speed, scale)
-		end
-	end
+    for k in pairs(walkableplatform:GetPlayersOnPlatform()) do
+        k:ShakeCamera(mode, duration, speed, scale)
+    end
 end
 
 -- Use this function to fan out a search for a point that meets a condition.

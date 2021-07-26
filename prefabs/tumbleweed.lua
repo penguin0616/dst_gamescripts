@@ -182,7 +182,7 @@ local function MakeLoot(inst)
         {chance = 0.1,    item = "SURVIVAL_blueprint"},
         {chance = 0.1,    item = "FARM_blueprint"},
         {chance = 0.1,    item = "SCIENCE_blueprint"},
-        {chance = 0.1,    item = "WAR_blueprint"},
+        {chance = 0.1,    item = "WARTAB_blueprint"},
         {chance = 0.1,    item = "TOWN_blueprint"},
         {chance = 0.1,    item = "REFINE_blueprint"},
         {chance = 0.1,    item = "MAGIC_blueprint"},

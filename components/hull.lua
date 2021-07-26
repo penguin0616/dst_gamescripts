@@ -27,8 +27,9 @@ function Hull:SetPlank(obj)
 end
 
 function Hull:SetBoatLip(obj)
-	self.boat_lip = obj;
-	obj.entity:SetParent(self.inst.entity)
+	self.boat_lip = obj
+	self.inst:AddPlatformFollower(obj)
+	self:AttachEntityToBoat(obj, 0, 0)
 end
 
 function Hull:SetRadius(radius)

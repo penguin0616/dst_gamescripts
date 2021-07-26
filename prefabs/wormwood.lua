@@ -253,11 +253,11 @@ local function PlantTick(inst)
 		return
 	end
 
-    local x, y, z = inst.Transform:GetWorldPosition()
-	if TheWorld.Map:GetPlatformAtPoint(x, z) ~= nil then
+	if inst:GetCurrentPlatform() ~= nil then
 		return
 	end
 
+    local x, y, z = inst.Transform:GetWorldPosition()
     if #TheSim:FindEntities(x, y, z, PLANTS_RANGE, PLANTFX_TAGS) < MAX_PLANTS then
         local map = TheWorld.Map
         local pt = Vector3(0, 0, 0)

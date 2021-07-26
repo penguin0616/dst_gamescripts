@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "That's not really my forte.",
 			INUSE = "Shucks. Someone beat me to it.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Whoops, hard to keep track of whose racer is whose!",
@@ -3375,6 +3376,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Looks like one of those fish rich people put in ponds.",
 		OCEANFISH_MEDIUM_7 = "Looks like one of those fish rich people put in ponds.",
 		OCEANFISH_MEDIUM_8 = "It's an ice fish if I do say so myself. Ha!",
+        OCEANFISH_MEDIUM_9 = "You'll make a nice dinner!",
 
 		PONDFISH = "I'd rather eat for a day than not at all.",
 		PONDEEL = "You're looking a little eel. Ha!",
@@ -3827,6 +3829,8 @@ return{
 		SWEETTEA = "I've got no time for tea! There's work to be done, like... er...",
 		TILLWEED = "Stubborn rascals.",
 		TILLWEEDSALVE = "Glad to have found a use for those weeds.",
+        WEED_IVY = "I don't like the look of that one.",
+        IVY_SNARE = "Now I've got to clean all this up!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4068,7 +4072,31 @@ return{
             GENERIC = "Wonder what the boss is gonna use all this energy for?",
             CONSTRUCTION1 = "Feels kinda like old times back at the factory.",
             CONSTRUCTION2 = "Well, it's not shaping up to be a portal. I was hopin' the boss had figured out a way back...",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Yeesh, look at the size of that thing!",
+        OCEANTREE = "Must be a really stubborn tree to be able to grow out here.",
+        OCEANTREENUT = "Turns out it's not a tough nut to crack.",
+        WATERTREE_ROOT = "Let's get to the root of this problem. Ha!",
+
+        OCEANTREE_PILLAR = "It's no industrial ice flinger, but it'll help me beat the heat.",
+
+        OCEANVINE = "That's all vine and dandy. Ha!",
+        FIG = "Never tried one back home, seemed too fancy-shmancy for me.",
+
+        SPIDER_WATER = "You and your creepy long legs better stay far away from me!",
+        MUTATOR_WATER = "I don't think I'll be takin' a bite out of that.",
+        OCEANVINE_COCOON = "I'm... trying not to think about how many of those are probably dangling above us.",
+
+        GRASSGATOR = "How can he see anything like that?",
+
+        TREEGROWTHSOLUTION = "Alright trees, come get your grub!",
+
+        FIGATONI = "Gotta say, that's good eatin'!",
+        FIGKABAB = "Just the kind of thing you'd want on your lunch break.",
+        KOALEFIG_TRUNK = "Looks like some really snooty food. Ha!",
+        FROGNEWTON = "Surprisingly tasty.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

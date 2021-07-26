@@ -293,6 +293,7 @@ local function handartfn()
     inst.AnimState:SetLayer(LAYER_WORLD_BACKGROUND)
 
     inst:AddTag("NOCLICK")
+    inst:AddTag("DECOR")
 
     inst.no_wet_prefix = true
 

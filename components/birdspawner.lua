@@ -29,6 +29,7 @@ local BIRD_TYPES =
     [GROUND.OCEAN_BRINEPOOL] = {"puffin"},
     [GROUND.OCEAN_BRINEPOOL_SHORE] = {"puffin"},
     [GROUND.OCEAN_HAZARDOUS] = {"puffin"},
+    [GROUND.OCEAN_WATERLOG] = {},
 }
 
 --------------------------------------------------------------------------

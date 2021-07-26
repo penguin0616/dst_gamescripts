@@ -1,9 +1,9 @@
 local function onworkable(self)
-    if self.maxwork ~= nil and self.workleft < self.maxwork and self.workable then
-        self.inst:AddTag("workrepairable")
-    else
-        self.inst:RemoveTag("workrepairable")
+    local repairable = self.inst.components.repairable
+    if repairable then
+        repairable:SetWorkRepairable(self.maxwork ~= nil and self.workleft < self.maxwork and self.workable)
     end
+
     if self.action ~= nil then
         if self.workleft > 0 and self.workable then
             self.inst:AddTag(self.action.id.."_workable")

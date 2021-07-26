@@ -24,9 +24,9 @@ local function onhammered(inst, worker)
         inst.components.burnable:Extinguish()
     end
 
-	local boat = TheWorld.Map:GetPlatformAtPoint(x, z)
+	local boat = inst:GetCurrentPlatform()
 	if boat ~= nil then
-		boat:PushEvent("spawnnewboatleak", { pt = inst:GetPosition(), leak_size = "med_leak", playsoundfx = true })
+		boat:PushEvent("spawnnewboatleak", { pt = Vector3(x, y, z), leak_size = "med_leak", playsoundfx = true })
 	end
 
     inst.components.lootdropper:DropLoot()
@@ -149,7 +149,6 @@ local function OnEnableHelper(inst, enabled)
             inst.helper.entity:AddTransform()
             inst.helper.entity:AddAnimState()
 
-
             inst.helper:AddTag("CLASSIFIED")
             inst.helper:AddTag("NOCLICK")
             inst.helper:AddTag("placer")
@@ -175,12 +174,10 @@ local function OnEnableHelper(inst, enabled)
 end
 
 local function startprojectilelaunch(inst)
-    local channeler = inst.channeler
-
     inst.AnimState:PlayAnimation("use_loop")
     inst.SoundEmitter:PlaySound("dangerous_sea/common/water_pump/LP","pump")
 
-    if TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) ~= nil then
+    if inst:GetCurrentPlatform() ~= nil then
         inst._launch_projectile_task = inst:DoTaskInTime(7*FRAMES, LaunchProjectile)
     end
 end

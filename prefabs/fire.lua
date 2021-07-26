@@ -9,7 +9,7 @@ local prefabs =
     "firefx_light",
 }
 
-local heats = { 30, 70, 120, 180, 220 }
+local heats = { 30, 70, 120, 180, 220, 240 }
 
 local function GetHeatFn(inst)
     return heats[inst.components.firefx.level] or 20
@@ -22,6 +22,7 @@ local firelevels =
     {anim="level3", sound="dontstarve/common/campfire", radius=4, intensity=.8, falloff=.33, colour = {255/255,255/255,192/255}, soundintensity=.6},
     {anim="level4", sound="dontstarve/common/campfire", radius=5, intensity=.9, falloff=.25, colour = {255/255,190/255,121/255}, soundintensity=1},
     {anim="level4", sound="dontstarve/common/forestfire", radius=6, intensity=.9, falloff=.2, colour = {255/255,190/255,121/255}, soundintensity=1},
+    {anim="level5", sound="dontstarve/common/forestfire", radius=7, intensity=.9, falloff=.2, colour = {255/255,190/255,121/255}, soundintensity=1},
 }
 
 local function fn()

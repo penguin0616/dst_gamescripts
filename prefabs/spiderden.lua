@@ -142,9 +142,9 @@ local function SetStage(inst, stage, skip_anim)
         inst.MiniMapEntity:SetIcon("spiderden_" .. tostring(stage) .. ".png")
 
         if not skip_anim then
-            inst.AnimState:PlayAnimation(inst.anims.init)
-            inst.AnimState:PushAnimation(inst.anims.idle, true)
-        end
+        inst.AnimState:PlayAnimation(inst.anims.init)
+        inst.AnimState:PushAnimation(inst.anims.idle, true)
+    end
     end
 
     inst.components.upgradeable:SetStage(stage)
@@ -170,6 +170,10 @@ local function SetSmall(inst)
         inst.components.freezable:SetShatterFXLevel(3)
         inst.components.freezable:SetResistance(2)
     end
+
+    if inst:GetCurrentPlatform() then
+        inst.GroundCreepEntity:SetRadius(5)
+    end
 end
 
 local function SetMedium(inst)
@@ -185,6 +189,10 @@ local function SetMedium(inst)
     if inst.components.freezable ~= nil then
         inst.components.freezable:SetShatterFXLevel(4)
         inst.components.freezable:SetResistance(3)
+    end
+
+    if inst:GetCurrentPlatform() then
+        inst.GroundCreepEntity:SetRadius(9)
     end
 end
 
@@ -204,6 +212,9 @@ local function SetLarge(inst)
     end
 
     AddSleepingBag(inst)
+    if inst:GetCurrentPlatform() then
+        inst.GroundCreepEntity:SetRadius(9)
+    end
 end
 
 local function PlayLegBurstSound(inst)
@@ -339,13 +350,13 @@ local function SpawnDefenders(inst, attacker)
 
             inst.components.childspawner.childname = "spider"
             if not inst:HasTag("bedazzled") then
-                local emergencyspider = inst.components.childspawner:TrySpawnEmergencyChild()
-                if emergencyspider ~= nil then
-                    emergencyspider.components.combat:SetTarget(attacker)
-                    emergencyspider.components.combat:BlankOutAttacks(1.5 + math.random() * 2)
-                end
+            local emergencyspider = inst.components.childspawner:TrySpawnEmergencyChild()
+            if emergencyspider ~= nil then
+                emergencyspider.components.combat:SetTarget(attacker)
+                emergencyspider.components.combat:BlankOutAttacks(1.5 + math.random() * 2)
             end
         end
+    end
     end
 end
 
@@ -526,8 +537,8 @@ local function OnInit(inst)
 end
 
 local function OnStageAdvance(inst)
-    inst.components.growable:DoGrowth()
-    return true
+   inst.components.growable:DoGrowth()
+   return true
 end
 
 local function OnUpgrade(inst, upgrade_doer)
@@ -802,6 +813,6 @@ local function MakeSpiderDenFn(den_level)
     end
 end
 
-return Prefab("spiderden",   MakeSpiderDenFn(1), assets, prefabs),
-       Prefab("spiderden_2", MakeSpiderDenFn(2), assets, prefabs),
+return Prefab("spiderden", MakeSpiderDenFn(1), assets, prefabs),
+    Prefab("spiderden_2", MakeSpiderDenFn(2), assets, prefabs),
        Prefab("spiderden_3", MakeSpiderDenFn(3), assets, prefabs)

@@ -9,6 +9,7 @@ local prefabs =
 {
     "thunder_close",
     "thunder_far",
+    "thunder",
     "lightning",
 }
 

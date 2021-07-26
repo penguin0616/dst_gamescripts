@@ -526,6 +526,10 @@ function GetExtendedDebugString()
     elseif WORLDSTATEDEBUG_ENABLED then
         return TheWorld and TheWorld.components.worldstate and TheWorld.components.worldstate:Dump()
     end
+
+    if TheFrontEnd and TheFrontEnd:GetActiveScreen() then
+        return "Current screen:" .. TheFrontEnd:GetActiveScreen().name
+    end
     return ""
 end
 
@@ -561,6 +565,7 @@ end
 function OnEntitySleep(guid)
     local inst = Ents[guid]
     if inst then
+        inst:PushEvent("entitysleep")
 
         if inst.OnEntitySleep then
             inst:OnEntitySleep()
@@ -589,6 +594,7 @@ end
 function OnEntityWake(guid)
     local inst = Ents[guid]
     if inst then
+        inst:PushEvent("entitywake")
 
         if inst.OnEntityWake then
             inst:OnEntityWake()
@@ -612,6 +618,36 @@ function OnEntityWake(guid)
         for k,v in pairs(inst.components) do
             if v.OnEntityWake then
                 v:OnEntityWake()
+            end
+        end
+    end
+end
+
+function OnPhysicsWake(guid)
+    local inst = Ents[guid]
+    if inst then
+        if inst.OnPhysicsWake then
+            inst:OnPhysicsWake()
+        end
+
+        for k, v in pairs(inst.components) do
+            if v.OnPhysicsWake then
+                v:OnPhysicsWake()
+            end
+        end
+    end
+end
+
+function OnPhysicsSleep(guid)
+    local inst = Ents[guid]
+    if inst then
+        if inst.OnPhysicsSleep then
+            inst:OnPhysicsSleep()
+        end
+
+        for k,v in pairs(inst.components) do
+            if v.OnPhysicsSleep then
+                v:OnPhysicsSleep()
             end
         end
     end
@@ -828,7 +864,6 @@ function SaveGame(isshutdown, cb)
     local references = {}
     for k, v in pairs(Ents) do
         if v.persists and v.prefab ~= nil and v.Transform ~= nil and v.entity:GetParent() == nil and v:IsValid() then
-            local x, y, z = v.Transform:GetWorldPosition()
             local record, new_references = v:GetSaveRecord()
             record.prefab = nil
 
@@ -845,7 +880,6 @@ function SaveGame(isshutdown, cb)
                 save.ents[v.prefab] = {}
             end
             table.insert(save.ents[v.prefab], record)
-            record.prefab = nil
             nument = nument + 1
         end
     end
@@ -1651,7 +1685,7 @@ function ResumeExistingUserSession(data, guid)
             player:SetPersistData( data.data or {} )
 
             -- Spawn the player to last known location
-            TheWorld.components.playerspawner:SpawnAtLocation(TheWorld, player, data.x or 0, data.y or 0, data.z or 0, true)
+            TheWorld.components.playerspawner:SpawnAtLocation(TheWorld, player, data.x or 0, data.y or 0, data.z or 0, true, data.puid, data.rx or 0, data.ry or 0, data.rz or 0)
 
             return player.player_classified ~= nil and player.player_classified.entity or nil
         end
@@ -1671,6 +1705,18 @@ function RestoreSnapshotUserSession(sessionid, userid)
                         player.userid = userid
                         player:SetPersistData(playerdata.data or {})
                         player.Physics:Teleport(playerdata.x or 0, playerdata.y or 0, playerdata.z or 0)
+                        if playerdata.puid then
+                            local walkableplatformmanager = TheWorld.components.walkableplatformmanager
+                            if walkableplatformmanager then
+                                local platform = walkableplatformmanager:GetPlatformWithUID(playerdata.puid)
+                                if platform then
+                                    local px, py, pz = platform.Transform:GetWorldPosition()
+                                    local x, y, z = px + (playerdata.rx or 0), py + (playerdata.ry or 0), pz + (playerdata.rz or 0)
+                                    player.Physics:Teleport(x, y, z)
+                                    platform:AddPlatformFollower(player)
+                                end
+                            end
+                        end
                         return player.player_classified ~= nil and player.player_classified.entity or nil
                     end
                 end

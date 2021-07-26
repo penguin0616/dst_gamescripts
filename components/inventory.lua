@@ -336,7 +336,7 @@ function Inventory:SelectActiveItemFromEquipSlot(slot)
     if self.equipslots[slot] then
         local olditem = self.activeitem
         local newitem = self:Unequip(slot)
-        self:SetActiveItem(newitem)
+        self:GiveActiveItem(newitem)
 
         if olditem and not self:IsItemEquipped(olditem) then
             self:GiveItem(olditem)

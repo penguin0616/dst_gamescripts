@@ -1,5 +1,3 @@
-local GroundTiles = require("worldtiledefs")
-
 local function on_is_anchor_lowered(self, is_anchor_lowered)
 	if is_anchor_lowered then
 		self.inst:RemoveTag("anchor_raised")
@@ -10,13 +8,39 @@ local function on_is_anchor_lowered(self, is_anchor_lowered)
 	end
 end
 
+local function on_is_anchor_transitioning(self, is_anchor_transitioning)
+    if not self.is_boat_moving then
+        if is_anchor_transitioning then
+            self.inst:StartUpdatingComponent(self)
+        else
+            self.inst:StopUpdatingComponent(self)
+        end
+    end
+end
+
+local function on_is_boat_moving(self, is_boat_moving)
+    if not self.is_anchor_transitioning then
+        if is_boat_moving then
+            self.inst:StartUpdatingComponent(self)
+        else
+            self.inst:StopUpdatingComponent(self)
+        end
+    end
+end
+
+
 local function SetBoat(self, boat)
 	if self.boat ~= nil then
 		self.inst:RemoveEventCallback("onremove", self.OnBoatRemoved, self.boat)
+		self.inst:RemoveEventCallback("boat_stop_moving", self.OnBoatStopMoving, self.boat)
+		self.inst:RemoveEventCallback("boat_start_moving", self.OnBoatStartMoving, self.boat)
 	end
 	self.boat = boat
 	if self.boat ~= nil then
+        self.is_boat_moving = self.boat.components.boatphysics.was_moving
 	    self.inst:ListenForEvent("onremove", self.OnBoatRemoved, self.boat)
+		self.inst:ListenForEvent("boat_stop_moving", self.OnBoatStopMoving, self.boat)
+		self.inst:ListenForEvent("boat_start_moving", self.OnBoatStartMoving, self.boat)
 	end
 end
 
@@ -31,10 +55,17 @@ local Anchor = Class(function(self, inst)
     self.currentraiseunits = 0
     self.autolowerunits = 3
 
-    self.inst:StartUpdatingComponent(self)
+    self.is_boat_moving = false
 
     self.OnBoatRemoved = function()
         self.boat = nil
+        self.is_boat_moving = false
+    end
+    self.OnBoatStopMoving = function()
+        self.is_boat_moving = false
+    end
+    self.OnBoatStartMoving = function()
+        self.is_boat_moving = true
     end
 
     if not POPULATING then
@@ -44,6 +75,8 @@ end,
 nil,
 {
     is_anchor_lowered = on_is_anchor_lowered,
+    is_anchor_transitioning = on_is_anchor_transitioning,
+    is_boat_moving = on_is_boat_moving,
 })
 
 function Anchor:SetVelocityMod(set)

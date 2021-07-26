@@ -43,9 +43,7 @@ local function CheckRowRange(doer, dest)
 end
 
 local function CheckIsOnPlatform(doer, dest)
-	local doer_pos = doer:GetPosition()
-	local p = TheWorld.Map:GetPlatformAtPoint(doer_pos.x, doer_pos.z)
-	return p ~= nil
+    return doer:GetCurrentPlatform() ~= nil
 end
 
 local function CheckOceanFishingCastRange(doer, dest)
@@ -393,6 +391,9 @@ ACTIONS =
     ADDCOMPOSTABLE = Action(),
     WAX = Action({ encumbered_valid = true, }),
     APPRAISE = Action(),
+    UNLOAD_WINCH = Action({rmb=true, priority=3}),
+    USE_HEAVY_OBSTACLE = Action({encumbered_valid=true, rmb=true, priority=1}),
+    ADVANCE_TREE_GROWTH = Action(),
 
     CARNIVAL_HOST_SUMMON = Action(),
 
@@ -2526,8 +2527,8 @@ ACTIONS.UPGRADE.fn = function(act)
 
         local can_upgrade, reason = act.target.components.upgradeable:CanUpgrade()
         if can_upgrade then
-            return act.target.components.upgradeable:Upgrade(act.invobject, act.doer)
-        end
+        return act.target.components.upgradeable:Upgrade(act.invobject, act.doer)
+    end
 
         return false, reason
     end
@@ -3637,6 +3638,30 @@ ACTIONS.WAX.fn = function(act)
     end
 end
 
+ACTIONS.UNLOAD_WINCH.fn = function(act)
+    if act.target.components.winch ~= nil and act.target.components.winch.unloadfn ~= nil then
+        return act.target.components.winch.unloadfn(act.target)
+    end
+end
+
+ACTIONS.USE_HEAVY_OBSTACLE.strfn = function(act)
+	return act.target.use_heavy_obstacle_string_key
+end
+
+ACTIONS.USE_HEAVY_OBSTACLE.fn = function(act)
+    local heavy_item = act.doer.replica.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+
+    if heavy_item == nil or not act.target:HasTag("can_use_heavy")
+        or (act.target.use_heavy_obstacle_action_filter ~= nil and not act.target.use_heavy_obstacle_action_filter(act.target, act.doer, heavy_item)) then
+
+        return false
+    end
+    
+    if heavy_item ~= nil and act.target ~= nil and act.target.components.heavyobstacleusetarget ~= nil then
+        return act.target.components.heavyobstacleusetarget:UseHeavyObstacle(act.doer, heavy_item)
+    end
+end
+
 ACTIONS.YOTB_SEW.fn = function(act)
     if act.target:HasTag("sewingmachine") then
         if act.target.components.yotb_sewer:IsSewing() then
@@ -3721,6 +3746,14 @@ ACTIONS.REPEL.fn = function(act)
     if act.invobject.components.repellent then
         act.invobject.components.repellent:Repel(act.doer)
         return true
+    end
+
+    return false
+end
+
+ACTIONS.ADVANCE_TREE_GROWTH.fn = function(act)
+    if act.target ~= nil and act.invobject.components.treegrowthsolution then
+        return act.invobject.components.treegrowthsolution:GrowTarget(act.target)
     end
 
     return false

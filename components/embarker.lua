@@ -13,11 +13,19 @@ function Embarker:UpdateEmbarkingPos(dt)
 
     local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
     local delta_x, delta_z = embark_x - my_x, embark_z - my_z
-    local delta_dist = math.max(VecUtil_Length(delta_x, delta_z), 0.0001)
+    local delta_length = VecUtil_Length(delta_x, delta_z)
+
+    local orig_embark_dist_difference = VecUtil_Dist(embark_x, embark_z, self.orig_embark_dest_x, self.orig_embark_dest_z)
+    if math.max(delta_length, orig_embark_dist_difference) > self.orig_embark_dist  then
+        self:Cancel()
+        self.inst:PushEvent("done_embark_movement")
+    end
+
+    local delta_dist = math.max(delta_length, 0.0001)
     local travel_dist = self.embark_speed * dt
 
     delta_x, delta_z = travel_dist * delta_x / delta_dist, travel_dist * delta_z / delta_dist
-    self.inst.Physics:TeleportRespectingInterpolation(my_x + delta_x, my_y, my_z + delta_z)
+    self.inst.Physics:TeleportOffset(delta_x, 0, delta_z)
 
     if delta_dist <= travel_dist then
         self.inst:PushEvent("done_embark_movement")
@@ -49,10 +57,16 @@ function Embarker:SetDisembarkActionPos(pos_x, pos_z)
 end
 
 function Embarker:StartMoving()
-	self.inst.Physics:Stop()
-    self.inst:StartWallUpdatingComponent(self)
+    if not self.orig_embark_dist then
+        self.inst.Physics:Stop()
+        self.inst:StartWallUpdatingComponent(self)
 
-    self.inst:PushEvent("start_embark_movement")
+        local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
+        self.orig_embark_dest_x, self.orig_embark_dest_z = self:GetEmbarkPosition()
+        self.orig_embark_dist = VecUtil_Length(self.orig_embark_dest_x - my_x, self.orig_embark_dest_z - my_z) * 1.5
+
+        self.inst:PushEvent("start_embark_movement")
+    end
 end
 
 function Embarker:OnWallUpdate(dt)
@@ -87,6 +101,9 @@ function Embarker:Embark()
     self.disembark_z = nil
     self.last_embark_x = nil
     self.last_embark_z = nil
+    self.orig_embark_dist = nil
+    self.orig_embark_dest_x = nil
+    self.orig_embark_dest_z = nil
     self.inst:StopWallUpdatingComponent(self)
 end
 
@@ -97,6 +114,7 @@ function Embarker:Cancel()
     self.disembark_z = nil
     self.last_embark_x = nil
     self.last_embark_z = nil
+    self.orig_embark_dist = nil
     self.inst:StopWallUpdatingComponent(self)
 end
 

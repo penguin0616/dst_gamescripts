@@ -175,7 +175,7 @@ CommonStates.AddIdle = function(states, funny_idle_state, anim_override, timelin
 end
 
 --------------------------------------------------------------------------
-CommonStates.AddSimpleState = function(states, name, anim, tags, finishstate)
+CommonStates.AddSimpleState = function(states, name, anim, tags, finishstate, timeline)
     table.insert(states, State{
         name = name,
         tags = tags or {},
@@ -186,6 +186,8 @@ CommonStates.AddSimpleState = function(states, name, anim, tags, finishstate)
             end
             inst.AnimState:PlayAnimation(anim)
         end,
+        
+        timeline = timeline,
 
         events =
         {
@@ -630,7 +632,7 @@ CommonStates.AddHopStates = function(states, wait_for_pre, anims, timelines, lan
 
 		onexit = function(inst)
 			-- here for now, should be moved into timeline
-            if land_sound and TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) ~= nil then
+            if land_sound and inst:GetCurrentPlatform() then
 	            --For now we just have the land on boat sound
                 inst.SoundEmitter:PlaySound(land_sound)
             end
@@ -710,7 +712,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
 					inst.components.locomotor:FinishHopping()
 
 					local x, y, z = inst.Transform:GetWorldPosition()
-					inst.sg:GoToState("hop_pst", not TheWorld.Map:IsVisualGroundAtPoint(x, y, z) and TheWorld.Map:GetPlatformAtPoint(x, z) == nil)
+					inst.sg:GoToState("hop_pst", not TheWorld.Map:IsVisualGroundAtPoint(x, y, z) and inst:GetCurrentPlatform() == nil)
 				end
             elseif inst.sg.statemem.timeout or
                    (inst.sg.statemem.tryexit and inst.sg.statemem.swimming == TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition())) or
@@ -718,7 +720,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
 				inst.components.embarker:Cancel()
 				inst.components.locomotor:FinishHopping()
 				local x, y, z = inst.Transform:GetWorldPosition()
-				inst.sg:GoToState("hop_pst", not TheWorld.Map:IsVisualGroundAtPoint(x, y, z) and TheWorld.Map:GetPlatformAtPoint(x, z) == nil)
+				inst.sg:GoToState("hop_pst", not TheWorld.Map:IsVisualGroundAtPoint(x, y, z) and inst:GetCurrentPlatform() == nil)
 			end
 		end,
 
@@ -732,7 +734,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
         {
             EventHandler("done_embark_movement", function(inst)
 				if not inst.AnimState:IsCurrentAnimation("jump_loop") then
-					inst.AnimState:PlayAnimation("jump_loop", false)
+					inst.AnimState:PlayAnimation(anims.loop or "jump_loop", false)
 				end
 				inst.sg.statemem.embarked = true
             end),
@@ -743,7 +745,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
 							inst.sg.statemem.tryexit = true
 						end
 					end
-					inst.AnimState:PlayAnimation("jump_loop", false)
+					inst.AnimState:PlayAnimation(anims.loop or "jump_loop", false)
 				end
             end),
         },
@@ -776,7 +778,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
 				onenters.hop_pst(inst)
 			end
 
-            inst.AnimState:PlayAnimation("jump_pst")
+            inst.AnimState:PlayAnimation(anims.pst or "jump_pst")
         end,
 
         timeline = timelines.hop_pst,
@@ -805,7 +807,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
             inst.components.locomotor:StopMoving()
             inst.sg.statemem.swimming = inst:HasTag("swimming")
 
-            inst.AnimState:PlayAnimation("jump_antic")
+            inst.AnimState:PlayAnimation(anims.antic or "jump_antic")
 
             inst.sg:SetTimeout(30 * FRAMES)
 
@@ -1446,7 +1448,7 @@ CommonStates.AddRowStates = function(states, is_client)
 
             local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
             local boat_x, boat_y, boat_z = 0, 0, 0
-            local boat = TheWorld.Map:GetPlatformAtPoint(my_x, my_z)
+            local boat = inst:GetCurrentPlatform()
             if boat ~= nil then
                 boat_x, boat_y, boat_z = boat.Transform:GetWorldPosition()
             end

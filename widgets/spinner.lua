@@ -490,7 +490,7 @@ end
 function Spinner:UpdateText( msg )
 	local _msg = tostring(msg) --Bogus data in spinners was using numbers as strings. The previous function here, SetString handled that, but SetTruncatedString does not.
 
-	local width = self.textsize.width-45 --offset for space for the spinner buttons
+	local width = self.textsize.width - 50 --offset for space for the spinner buttons
 	local chars = width / 4 --Note(Peter): 4 is roughly the right size of a miniumum character, no guarantees!
 
 	if chars > 5 and width > 10 then --Note(Peter): Quick hack fix to address tiny spinners in mods.

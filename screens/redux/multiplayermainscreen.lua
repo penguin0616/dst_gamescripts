@@ -55,8 +55,17 @@ function MakeBanner(self)
 
 
 	if IS_BETA then
-		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_ROT_BETA_TITLE
+		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
 
+
+        local anim_bg = baner_root:AddChild(UIAnim())
+        anim_bg:GetAnimState():SetBuild("dst_menu_waterlogged")
+        anim_bg:GetAnimState():SetBank("dst_menu_waterlogged")
+        anim_bg:SetScale(0.667)
+        anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:MoveToBack()
+
+--[[
 
         anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
         anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
@@ -148,16 +157,8 @@ function MakeBanner(self)
         anim_foreground.inst:ListenForEvent("animover", function()
             anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3))
         end)
-
-
-    --[[
-        local anim_bg = baner_root:AddChild(UIAnim())
-        anim_bg:GetAnimState():SetBuild("dst_menu_beefalo_bg")
-        anim_bg:GetAnimState():SetBank("dst_menu_beefalo_bg")
-        anim:SetScale(.667)
-        anim_bg:GetAnimState():PlayAnimation("loop", true)
-        anim_bg:MoveToBack()
 ]]
+
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
 		local anim_bg = baner_root:AddChild(UIAnim())
 		anim_bg:GetAnimState():SetBuild("dst_menu_carrat_bg")
@@ -197,15 +198,20 @@ function MakeBanner(self)
         anim:GetAnimState():PlayAnimation("loop", true)
 
 	elseif true then
-        
-        anim:GetAnimState():SetBuild("dst_menu_webber")
+
+        local anim_bg = baner_root:AddChild(UIAnim())
+        anim_bg:GetAnimState():SetBuild("dst_menu_waterlogged")
+        anim_bg:GetAnimState():SetBank("dst_menu_waterlogged")
+        anim_bg:SetScale(0.667)
+        anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:MoveToBack()
+
+        --[[anim:GetAnimState():SetBuild("dst_menu_webber")
         anim:GetAnimState():SetBank ("dst_menu_webber")
         anim:SetScale(.667)
         anim:GetAnimState():PlayAnimation("loop", true)
-        
 
-
-        --[[anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
+		anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
         anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
         anim:GetAnimState():PlayAnimation("loop_w1", true)
         anim:SetScale(.667)

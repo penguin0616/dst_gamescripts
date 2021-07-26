@@ -218,7 +218,7 @@ function self:GetDebugString()
     local s = nil
     local time_until_spawn = _worldsettingstimer:GetTimeLeft(MALBATROSS_TIMERNAME)
     local trying_to_spawn = self.inst.updatecomponents[self] ~= nil
-    if trying_to_spawn then
+    if trying_to_spawn and _shuffled_shoals_for_spawning then
         s = "Spawning: "..tostring(_spawnpending)..", shoals_for_spawning: "..tostring(#_shuffled_shoals_for_spawning)
     elseif not time_until_spawn then
         s = "DORMANT <no time>"

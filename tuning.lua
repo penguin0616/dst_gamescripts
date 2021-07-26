@@ -251,6 +251,7 @@ function Tune(overrides)
 
 			SEED				= { charm = 0.2, reel_charm = -0.3, radius = 3.0, style = "seed", timeofday = {day = 1, dusk = 1, night = 1}, dist_max = 1 },
 			BERRY				= { charm = 0.3, reel_charm = -0.3, radius = 3.0, style = "berry", timeofday = {day = 1, dusk = 1, night = 1}, dist_max = 1 },
+            FIG                 = { charm = 0.5, reel_charm = -0.3, radius = 4.0, style = "berry", timeofday = {day = 1, dusk = 1, night = 1}, dist_max = 1 },
 
 			SPOON_DAY			= { charm = 0.2, reel_charm =  0.3, radius = 4.0, style = "spoon", timeofday = {day = 1.0, dusk = 0.3, night = 0.3}, dist_max = 1 },
 			SPOON_DUSK			= { charm = 0.2, reel_charm =  0.3, radius = 4.0, style = "spoon", timeofday = {day = 0.3, dusk = 1.0, night = 0.3}, dist_max = 1 },
@@ -281,6 +282,7 @@ function Tune(overrides)
 			SMALL_MEAT		= { hook = 0.25, special = 1.0, rot = 1.0, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 0.00, insect = 1.00 },
 			MEAT			= { hook = 0.25, special = 1.0, rot = 0.5, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
             WOBSTER         = { hook = 0.25, special = 1.0, rot = 1.0, seed = 0.25, berry = 1.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
+            BERRY           = { hook = 0.25, special = 1.0, rot = 0.5, seed = 1.50, berry = 1.50, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
 		},
 
         OCEANFISH_MIN_INTEREST_TO_BITE = 0.2,
@@ -1459,6 +1461,10 @@ function Tune(overrides)
         SPOILEDFOOD_SOILCYCLES = 2,
         SPOILEDFOOD_WITHEREDCYCLES = 0.5,
 
+        TREEGROWTH_SOILCYCLES = 8,
+        TREEGROWTH_FERTILIZE = day_time,
+        TREEGROWTH_WITHEREDCYCLES = 1,
+
         MUSHROOMFARM_MAX_HARVESTS = 4,
         MUSHROOMFARM_FULL_GROW_TIME = total_day_time * 3.75,
         MUSHROOMFARM_SPAWN_SPORE_CHANCE = 0.50,
@@ -1852,6 +1858,7 @@ function Tune(overrides)
         REPAIR_LOGS_HEALTH = 25/4,
         REPAIR_STICK_HEALTH = 13,
         REPAIR_CUTGRASS_HEALTH = 13,
+        REPAIR_TREEGROWTH_HEALTH = 20,
 
         REPAIR_MOONROCK_CRATER_HEALTH = 80,
         REPAIR_MOONROCK_CRATER_WORK = 4,
@@ -2531,7 +2538,7 @@ function Tune(overrides)
         FIRE_DETECTOR_RANGE = 15,
         FIRESUPPRESSOR_RELOAD_TIME = 3,
         FIRESUPPRESSOR_MAX_FUEL_TIME = total_day_time*5,
-        FIRESUPPRESSOR_EXTINGUISH_HEAT_PERCENT = -1,
+        FIRESUPPRESSOR_EXTINGUISH_HEAT_PERCENT = -3,
         FIRESUPPRESSOR_TEMP_REDUCTION = 5,
         FIRESUPPRESSOR_PROTECTION_TIME = 60,
         FIRESUPPRESSOR_ADD_COLDNESS = 2,
@@ -2837,9 +2844,10 @@ function Tune(overrides)
         SALTLICK_DURATION = total_day_time / 8,
         SALTLICK_MAX_LICKS = 240, -- 15 days @ 8 beefalo licks per day
         SALTLICK_BEEFALO_USES = 2,
-        SALTLICK_KOALEFANT_USES = 4,
+        SALTLICK_KOALEFANT_USES = 4,        
         SALTLICK_LIGHTNINGGOAT_USES = 1,
         SALTLICK_DEER_USES = 1,
+        SALTLICK_GRASSGATOR_USES = 4,
 
         ANTLION_HEALTH = 6000,
         ANTLION_MAX_ATTACK_PERIOD = 4,
@@ -3607,17 +3615,21 @@ function Tune(overrides)
             MAX_HULL_HEALTH_DAMAGE = 70,
             MASS = 500,
 
-            MAX_ALLOWED_VELOCITY = 5,
+            WAKE_TEST_TIME = 2,
 
-            BASE_DRAG = 0.4,
+            MAX_ALLOWED_VELOCITY = 10,
+
+            BASE_DRAG = 0.2,
+            MAX_DRAG = 1.5,
             MAX_VELOCITY = 1.2,
             MAX_VELOCITY_MOD = 1,
             PUSH_BACK_VELOCITY = 1.75,
             SCARY_MINSPEED_SQR = 1,
+            SCARY_MINSPEED = 1,
             RUDDER_TURN_SPEED = 0.6,
             NO_BUILD_BORDER_RADIUS = -0.2,
 			FIRE_DAMAGE = 5,
-            BOATPHYSICS_COLLISION_TIME_BUFFER = 4 * FRAMES,
+            BOATPHYSICS_COLLISION_TIME_BUFFER = 4 * FRAMES, --now unused.
 
             OARS =
             {
@@ -3670,9 +3682,9 @@ function Tune(overrides)
 
                 MALBATROSS =
                 {
-                    MAX_VELOCITY = 3,
+                    MAX_VELOCITY = 4,
       --              MAX_VELOCITY_MOD = 1.2,
-                    SAIL_FORCE = 1,
+                    SAIL_FORCE = 1.3,
                     RUDDER_TURN_DRAG = 0.23,
                 },
 
@@ -4955,6 +4967,8 @@ function Tune(overrides)
         COMPOSTWRAP_NUTRIENTS			= { 24, 32, 24 },
         GLOMMERFUEL_NUTRIENTS			= {  8,  8,  8 },
 
+        TREEGROWTH_NUTRIENTS            = {  8, 32,  8 },
+
 		WORMWOOD_MANURE_HEAL_VALUES = { 2, 3, 8, 12 },
 
 		WORMWOOD_COMPOST_HEAL_VALUES = { 4, 6, 8, 32 },
@@ -5333,7 +5347,77 @@ function Tune(overrides)
         SPIDER_FOLLOWER_COUNT = 2,
 
         FOLLOWER_REFOLLOW_DIST_SQ = 20 * 20,
-	}
+
+        -- Waterlogged
+        OCEANVINE_ENABLED = true,
+        OCEANVINE_COCOON_SPIDER_RADIUS = 16,
+        OCEANVINE_COCOON_REGEN_TIME = total_day_time/4,
+        OCEANVINE_COCOON_RELEASE_TIME = total_day_time/2,
+        OCEANVINE_COCOON_MIN_CHILDREN = 2,
+        OCEANVINE_COCOON_MAX_CHILDREN = 3,
+        OCEANVINE_COCOON_REGEN_BASE = 3 * total_day_time,
+        OCEANVINE_COCOON_REGEN_RAND = 2 * total_day_time,
+
+        SPIDER_WATER_DAMAGE = 20,
+        SPIDER_WATER_ATTACK_PERIOD = 3,
+        SPIDER_WATER_HIT_RANGE = 2,
+        SPIDER_WATER_HEALTH = 200,
+        SPIDER_WATER_EATCD = 20,
+        SPIDER_WATER_FISH_TARGET_DIST = 1.5,
+        SPIDER_WATER_INVESTIGATETIMEBASE = 15,
+        SPIDER_WATER_WALKSPEED = 3.0,
+        SPIDER_WATER_RUNSPEED = 7.0,
+        SPIDER_WATER_OCEANFLOATSPEED = 1.5,
+        SPIDER_WATER_OCEANDASHSPEED = 10,
+
+        GRASSGATOR_WALKSPEED = 1.5,
+        GRASSGATOR_RUNSPEED = 6.5,
+        GRASSGATOR_RUNSPEED_WATER = 3.5,
+        GRASSGATOR_HEALTH = 500 * 2, -- harder for multiplayer
+        GRASSGATOR_DAMAGE = 50,
+        GRASSGATOR_TARGET_DIST = 5,
+        GRASSGATOR_CHASE_DIST = 30,
+        GRASSGATOR_FOLLOW_TIME = 30,
+        GRASSGATOR_SHEDTIME_SET = total_day_time/2,
+        GRASSGATOR_SHEDTIME_VAR = total_day_time/2,
+        GRASSGATOR_REGEN_TIME = seg_time * 4,
+        GRASSGATOR_RELEASE_TIME = seg_time,
+        GRASSGATOR_MAXCHILDREN = 1,
+        GRASSGATOR_ENABLED = true,
+
+
+        SHADE_CANOPY_RANGE = 28,
+        SHADE_CANOPY_RANGE_SMALL = 22, -- this is just a number now.. 
+        WATERTREE_PILLAR_CANOPY_BUFFER = 1,
+
+        WATERTREE_PILLAR_RAM_RECHARGE_TIME = 1.5, -- in days
+        OCEANTREENUT_REGENERATE_TIME = total_day_time * 1,
+        OCEANTREENUT_REGENERATE_TIME_VARIANCE = total_day_time * 0.5,
+
+        CANOPY_MAX_ROTATION = 20,
+        CANOPY_ROTATION_SPEED = 5,
+        CANOPY_MAX_TRANSLATION = 1,
+        CANOPY_TRANSLATION_SPEED = 5,
+
+        CANOPY_MIN_STRENGTH = 0.2,
+        CANOPY_MAX_STRENGTH = 0.4,  --0.7
+
+        CANOPY_SCALE = 4,
+
+        OCEANTREE_ENRICHED_COOLDOWN_MIN = 4, -- total_day_time * 3,
+        OCEANTREE_ENRICHED_COOLDOWN_VARIANCE = 1,-- total_day_time * 1.5,
+        OCEANTREE_CHOPS_NORMAL = 10,
+        OCEANTREE_PILLAR_CHOPS = 25,
+
+        OCEANTREE_VINE_DROP_MAX = 4,
+
+        OCEANTREENUT_GROW_TIME = total_day_time * 1.2,
+        OCEANTREENUT_GROW_TIME_VARIANCE = total_day_time * 1.5,
+
+        WATERTREE_ROOT_CHOPS = 3,
+
+        OCEANVINE_REGROW_TIME = total_day_time*2.5,
+    }
 
     TUNING_MODIFIERS = {}
     ORIGINAL_TUNING = {}

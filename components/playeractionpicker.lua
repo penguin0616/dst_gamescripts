@@ -135,11 +135,6 @@ end
 function PlayerActionPicker:GetSteeringActions(inst, pos, right)
     if not self.inst:HasTag("steeringboat") then return nil end
 
-    local map = TheWorld.Map
-    local player_pos = Vector3(inst.Transform:GetWorldPosition())
-    local player_platform = map:GetPlatformAtPoint(player_pos.x, player_pos.z)
-    local target_platform = map:GetPlatformAtPoint(pos.x, pos.z)
-
     if right then
         return self:SortActionList({ ACTIONS.STOP_STEERING_BOAT }, pos)
     else

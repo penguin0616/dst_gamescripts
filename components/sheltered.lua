@@ -55,11 +55,19 @@ end
 
 local SHELTERED_MUST_TAGS = { "shelter" }
 local SHELTERED_CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "stump", "burnt" }
+local SHADECANOPY_MUST_TAGS = {"shadecanopy"}
+local SHADECANOPY_SMALL_MUST_TAGS = {"shadecanopysmall"}
 function Sheltered:OnUpdate(dt)
     self.announcecooldown = math.max(0, self.announcecooldown - dt)
 
     local x, y, z = self.inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, 2, SHELTERED_MUST_TAGS, SHELTERED_CANT_TAGS)
+    if #ents == 0 then
+        ents = TheSim:FindEntities(x,y,z, TUNING.SHADE_CANOPY_RANGE, SHADECANOPY_MUST_TAGS)
+        if #ents == 0 then
+            ents = TheSim:FindEntities(x,y,z, TUNING.SHADE_CANOPY_RANGE_SMALL, SHADECANOPY_SMALL_MUST_TAGS)
+        end
+    end
     self:SetSheltered(#ents > 0)
 end
 

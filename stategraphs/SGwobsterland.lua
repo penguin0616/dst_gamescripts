@@ -111,7 +111,7 @@ local states =
             dx = speed_dist * dx / ddist
             dz = speed_dist * dz / ddist
 
-            inst.Physics:TeleportRespectingInterpolation(ix + dx, iy, iz + dz)
+            inst.Physics:TeleportOffset(dx, 0, dz)
 
             if ddist <= dt then
                 if inst:IsOnOcean(false) then

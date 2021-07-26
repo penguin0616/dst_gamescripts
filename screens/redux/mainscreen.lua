@@ -91,15 +91,18 @@ function MainScreen:DoInit()
     self.updatename:SetPosition( updatename_x, updatename_y )
     self.updatename:SetColour(1,1,1,1)
     self.updatename:SetHAlign(ANCHOR_RIGHT)
-    self.updatename:SetRegionSize(200,45)
-    local suffix = ""
+    self.updatename:SetRegionSize(250,45)
+    local suffix = " ("
     if BRANCH == "dev" then
-		suffix = " (internal v"..APP_VERSION..")"
+		suffix = suffix .. "internal v"..APP_VERSION
     elseif BRANCH == "staging" then
-		suffix = " (preview v"..APP_VERSION..")"
+		suffix = suffix .. "preview v"..APP_VERSION
     else
-        suffix = " (v"..APP_VERSION..")"
+        suffix = suffix .. " v"..APP_VERSION
     end
+    suffix = suffix .. ", "..(APP_ARCHITECTURE == "x32" and "32-bit" or APP_ARCHITECTURE == "x64" and "64-bit" or "??-bit")
+	suffix = suffix .. ")"
+	
     self.updatename:SetString(STRINGS.UI.MAINSCREEN.DST_UPDATENAME .. suffix)
 
 
