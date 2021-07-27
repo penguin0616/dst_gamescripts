@@ -45,10 +45,15 @@ local states =
         name = "lowered_ground",
         tags  = { "lowered_ground" },
         onenter = function(inst)
+            inst:AddTag("lowered_ground")
             inst.AnimState:PlayAnimation("drop_ground_pre")
             inst.AnimState:PushAnimation("drop_ground_loop")
 
             inst.SoundEmitter:PlaySound(inst.sounds.drop_ground_pre)
+        end,
+
+        onexit = function(inst)
+            inst:RemoveTag("lowered_ground")
         end,
 
         events =

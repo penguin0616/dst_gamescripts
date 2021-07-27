@@ -5,7 +5,8 @@ local assets =
     Asset("ANIM", "anim/oceantree_pillar_small_build1.zip"),
     Asset("ANIM", "anim/oceantree_pillar_small_build2.zip"),
     Asset("ANIM", "anim/oceantree_pillar_small.zip"),
-    Asset("SCRIPT", "scripts/prefabs/canopyshadows.lua")
+    Asset("SCRIPT", "scripts/prefabs/canopyshadows.lua"),
+    Asset("MINIMAP_IMAGE", "oceantree_pillar_small"),
 }
 
 local prefabs = 
@@ -107,8 +108,29 @@ local function OnNear(inst,player)
     end
 end
 
-local function removecanopy(inst)
+local function removecanopyshadow(inst)
+    if inst.canopy_data ~= nil then
+        for _, shadetile_key in ipairs(inst.canopy_data.shadetile_keys) do
+            if TheWorld.shadetiles[shadetile_key] ~= nil then
+                TheWorld.shadetiles[shadetile_key] = TheWorld.shadetiles[shadetile_key] - 1
 
+                if TheWorld.shadetiles[shadetile_key] <= 0 then
+                    if TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key] ~= nil then
+                        DespawnLeafCanopy(TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key])
+                        TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key] = nil
+                    end
+                end
+            end
+        end
+
+        for _, ray in ipairs(inst.canopy_data.lightrays) do
+            ray:Remove()
+        end
+    end
+end
+
+local function removecanopy(inst)
+    print("REMOVING CANOPU")
     if inst.roots then
         inst.roots:Remove()
     end
@@ -128,24 +150,7 @@ local function removecanopy(inst)
             end
         end
     end
-    if inst.canopy_data ~= nil then
-        for _, shadetile_key in ipairs(inst.canopy_data.shadetile_keys) do
-            if TheWorld.shadetiles[shadetile_key] ~= nil then
-                TheWorld.shadetiles[shadetile_key] = TheWorld.shadetiles[shadetile_key] - 1
-
-                if TheWorld.shadetiles[shadetile_key] <= 0 then
-                    if TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key] ~= nil then
-                        DespawnLeafCanopy(TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key])
-                        TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key] = nil
-                    end
-                end
-            end
-        end
-
-        for _, ray in ipairs(inst.canopy_data.lightrays) do
-            ray:Remove()
-        end
-    end
+    inst._hascanopy:set(false)    
 end
 
 local function chop_tree(inst, chopper, chopsleft, numchops)
@@ -425,7 +430,7 @@ local function fn()
 
     inst:AddTag("shadecanopysmall")
     
-    inst.MiniMapEntity:SetIcon("tentacle_pillar.png")
+    inst.MiniMapEntity:SetIcon("oceantree_pillar_small.png")
 
     inst.AnimState:SetBank("oceantree_pillar_small")
     inst.AnimState:SetBuild("oceantree_pillar_small_build1")
@@ -437,10 +442,22 @@ local function fn()
         inst:AddComponent("distancefade")
         inst.components.distancefade:Setup(15,25)
     end
+    
+    inst._hascanopy = net_bool(inst.GUID, "oceantree_pillar._hascanopy", "hascanopydirty")
+    inst._hascanopy:set(true)    
+    inst:DoTaskInTime(0, function()    
+        inst.canopy_data = CANOPY_SHADOW_DATA.spawnshadow(inst, math.floor(TUNING.SHADE_CANOPY_RANGE_SMALL/4), true)
+    end)
+
+    inst:ListenForEvent("hascanopydirty", function()
+                if not inst._hascanopy:value() then 
+                    removecanopyshadow(inst) 
+                end
+        end)
 
     inst.entity:SetPristine()
 
-    if not TheWorld.ismastersim then
+    if not TheWorld.ismastersim then        
         return inst
     end
 
@@ -483,10 +500,6 @@ local function fn()
 
     inst:ListenForEvent("on_collide", OnCollide)
     inst:ListenForEvent("onremove", OnRemove)
-
-    inst:DoTaskInTime(0, function()
-        inst.canopy_data = CANOPY_SHADOW_DATA.spawnshadow(inst, math.floor(TUNING.SHADE_CANOPY_RANGE_SMALL/4), true)
-    end)
 
     inst._ripples = SpawnPrefab("oceantree_pillar_ripples")
     inst._ripples.entity:SetParent(inst.entity)

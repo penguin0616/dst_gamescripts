@@ -240,12 +240,12 @@ end
 
 local function commonfn(Sim)
 	local inst = CreateEntity()
-	local trans = inst.entity:AddTransform()
+	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
-	local sound = inst.entity:AddSoundEmitter()
+	inst.entity:AddSoundEmitter()
 	inst.shadow = inst.entity:AddDynamicShadow()
     inst.entity:AddMiniMapEntity()
-        
+    inst.entity:AddNetwork()
 
     inst.MiniMapEntity:SetIcon("oceanvine.png")
 

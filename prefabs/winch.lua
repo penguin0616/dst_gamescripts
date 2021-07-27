@@ -316,7 +316,7 @@ local function load_object_action_filter(inst, doer, heavy_item)
 	return inst:HasTag("inactive")
 		and not inst:HasTag("takeshelfitem")
 		and not inst:HasTag("burnt")
-		and not inst.sg:HasStateTag("lowered_ground")
+		and not inst:HasTag("lowered_ground")
 		and not inst:HasTag("fire")
 		and not inst:HasTag("burnt")
 end

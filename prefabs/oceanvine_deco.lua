@@ -25,6 +25,7 @@ local function commonfn(Sim)
 	local inst = CreateEntity()
 	local trans = inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
 	
 	--inst.shadow = inst.entity:AddDynamicShadow()
 

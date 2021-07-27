@@ -240,10 +240,14 @@ end
 
 function BoatPhysics:GetForceDampening()
     local dampening = 1
+
+    dampening = dampening - easing.inCubic(VecUtil_Length(self.velocity_x, self.velocity_z), TUNING.BOAT.BASE_DAMPENING, TUNING.BOAT.MAX_DAMPENING - TUNING.BOAT.BASE_DAMPENING, TUNING.BOAT.MAX_ALLOWED_VELOCITY / 2)
+
     for k,v in pairs(self.boatdraginstances) do
 		dampening = dampening - v.forcedampening
     end
-    return dampening
+
+    return math.max(0, dampening)
 end
 
 

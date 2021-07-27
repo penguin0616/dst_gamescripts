@@ -282,7 +282,7 @@ function Tune(overrides)
 			SMALL_MEAT		= { hook = 0.25, special = 1.0, rot = 1.0, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 0.00, insect = 1.00 },
 			MEAT			= { hook = 0.25, special = 1.0, rot = 0.5, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
             WOBSTER         = { hook = 0.25, special = 1.0, rot = 1.0, seed = 0.25, berry = 1.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
-            BERRY           = { hook = 0.25, special = 1.0, rot = 0.5, seed = 1.50, berry = 1.50, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
+            BERRY           = { hook = 0.25, special = 1.0, rot = 0.5, seed = 0.50, berry = 2.00, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
 		},
 
         OCEANFISH_MIN_INTEREST_TO_BITE = 0.2,
@@ -3621,6 +3621,8 @@ function Tune(overrides)
 
             BASE_DRAG = 0.2,
             MAX_DRAG = 1.5,
+            BASE_DAMPENING = 0,
+            MAX_DAMPENING = 1,
             MAX_VELOCITY = 1.2,
             MAX_VELOCITY_MOD = 1,
             PUSH_BACK_VELOCITY = 1.75,
@@ -3665,8 +3667,8 @@ function Tune(overrides)
             {
                 BASIC =
                 {
-                    MAX_VELOCITY_MOD = 0.1,
-                    ANCHOR_DRAG = 0.45,
+                    MAX_VELOCITY_MOD = 0.15,
+                    ANCHOR_DRAG = 1.5,
                 },
             },
 
@@ -5404,8 +5406,8 @@ function Tune(overrides)
 
         CANOPY_SCALE = 4,
 
-        OCEANTREE_ENRICHED_COOLDOWN_MIN = 4, -- total_day_time * 3,
-        OCEANTREE_ENRICHED_COOLDOWN_VARIANCE = 1,-- total_day_time * 1.5,
+        OCEANTREE_ENRICHED_COOLDOWN_MIN = total_day_time * 3,
+        OCEANTREE_ENRICHED_COOLDOWN_VARIANCE = total_day_time * 1.5,
         OCEANTREE_CHOPS_NORMAL = 10,
         OCEANTREE_PILLAR_CHOPS = 25,
 

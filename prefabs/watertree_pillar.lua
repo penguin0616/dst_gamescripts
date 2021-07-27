@@ -57,6 +57,27 @@ local NEW_VINES_SPAWN_RADIUS_MIN = 6
 local ATTEMPT_DROP_OCEANTREENUT_MAX_ATTEMPTS = 5
 local ATTEMPT_DROP_OCEANTREENUT_RADIUS = 6
 
+local function removecanopyshadow(inst)
+    if inst.canopy_data ~= nil then
+        for _, shadetile_key in ipairs(inst.canopy_data.shadetile_keys) do
+            if TheWorld.shadetiles[shadetile_key] ~= nil then
+                TheWorld.shadetiles[shadetile_key] = TheWorld.shadetiles[shadetile_key] - 1
+
+                if TheWorld.shadetiles[shadetile_key] <= 0 then
+                    if TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key] ~= nil then
+                        DespawnLeafCanopy(TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key])
+                        TheWorld.shadetile_key_to_leaf_canopy_id[shadetile_key] = nil
+                    end
+                end
+            end
+        end
+
+        for _, ray in ipairs(inst.canopy_data.lightrays) do
+            ray:Remove()
+        end
+    end
+end
+
 local function OnFar(inst)
     if inst.players then
         local x, y, z = inst.Transform:GetWorldPosition()
@@ -389,6 +410,34 @@ local function OnLoadPostPass(inst, ents, data)
     
 end
 
+local function removecanopy(inst)
+    print("REMOVING CANOPU")
+    if inst.roots then
+        inst.roots:Remove()
+    end
+    if inst._ripples then
+        inst._ripples:Remove()
+    end
+
+    if inst.players ~= nil then
+        for k, v in pairs(inst.players) do
+            if k:IsValid() then
+                if k.canopytrees ~= nil then
+                    k.canopytrees = k.canopytrees - 1
+                    if k.canopytrees <= 0 then
+                        k:PushEvent("onchangecanopyzone", false)
+                    end
+                end
+            end
+        end
+    end
+    inst._hascanopy:set(false)    
+end
+
+local function OnRemove(inst)
+    removecanopy(inst)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -419,6 +468,18 @@ local function fn()
         inst:AddComponent("distancefade")
         inst.components.distancefade:Setup(15,25)
     end
+
+    inst._hascanopy = net_bool(inst.GUID, "oceantree_pillar._hascanopy", "hascanopydirty")
+    inst._hascanopy:set(true)  
+    inst:ListenForEvent("hascanopydirty", function()
+                if not inst._hascanopy:value() then 
+                    removecanopyshadow(inst) 
+                end
+        end)
+
+    inst:DoTaskInTime(0,function()
+        inst.canopy_data = CANOPY_SHADOW_DATA.spawnshadow(inst, math.floor(TUNING.SHADE_CANOPY_RANGE/4))
+    end)
 
     inst.entity:SetPristine()
 
@@ -468,13 +529,12 @@ local function fn()
     inst:ListenForEvent("on_collide", OnCollide)
     inst:ListenForEvent("timerdone", OnTimerDone)
     inst:ListenForEvent("cocoon_destroyed", OnNearbyCocoonDestroyed)
+    inst:ListenForEvent("onremove", OnRemove)
 
     --inst.components.childspawner.canspawnfn = canspawn
     inst.components.childspawner:SetSpawnedFn(onspawnchild)
     inst.components.childspawner:StartSpawning()
-    inst:DoTaskInTime(0,function()
-        CANOPY_SHADOW_DATA.spawnshadow(inst, math.floor(TUNING.SHADE_CANOPY_RANGE/4))
-    end)
+
 
     inst._ripples = SpawnPrefab("watertree_pillar_ripples")
     inst._ripples.entity:SetParent(inst.entity)
