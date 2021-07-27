@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "Maybe one of them will turn out to be a snake!",
         FIG = "I don't really like figs...",
+        FIG_COOKED = "I don't really like cooked figs any better...",
 
         SPIDER_WATER = "Woah, look how fast they are on the water, Woby!",
         MUTATOR_WATER = "Hey, cookies! Um... what are these made of, exactly?",
         OCEANVINE_COCOON = "That must be their nest! If I could just get a closer look...",
+        OCEANVINE_COCOON_BURNT = "The poor spiders...",
 
         GRASSGATOR = "He seems pretty shy.",
 

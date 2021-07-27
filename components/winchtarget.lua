@@ -26,7 +26,11 @@ function WinchTarget:Salvage()
 end
 
 function WinchTarget:GetSunkenObject()
-    return self.inst.components.inventory ~= nil and self.inst.components.inventory:GetItemInSlot(1)
+    if self.inst.components.inventory ~= nil then
+        return self.inst.components.inventory:GetItemInSlot(1)
+    else
+        return nil
+    end
 end
 
 return WinchTarget

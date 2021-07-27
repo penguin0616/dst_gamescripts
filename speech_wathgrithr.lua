@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "Ropes from the branches of Yggdrasil.",
         FIG = "Bah! Foul non-meat!",
+        FIG_COOKED = "Roasted fig flesh.",
 
         SPIDER_WATER = "Have at thee, water walkers!",
         MUTATOR_WATER = "They look like the little beasts, but lack the ferocity.",
         OCEANVINE_COCOON = "The nest of the water walking beasts!",
+        OCEANVINE_COCOON_BURNT = "T'was consumed by flames.",
 
         GRASSGATOR = "What fine flaxen hair.",
 

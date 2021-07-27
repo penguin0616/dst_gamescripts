@@ -3617,10 +3617,11 @@ function Tune(overrides)
 
             WAKE_TEST_TIME = 2,
 
+            MAX_FORCE_VELOCITY = 3.5,
             MAX_ALLOWED_VELOCITY = 10,
 
             BASE_DRAG = 0.2,
-            MAX_DRAG = 1.5,
+            MAX_DRAG = 1,
             BASE_DAMPENING = 0,
             MAX_DAMPENING = 1,
             MAX_VELOCITY = 1.2,
@@ -3669,6 +3670,7 @@ function Tune(overrides)
                 {
                     MAX_VELOCITY_MOD = 0.15,
                     ANCHOR_DRAG = 1.5,
+                    SAILFORCEDRAG = 0.6,
                 },
             },
 
@@ -3676,7 +3678,7 @@ function Tune(overrides)
             {
                 BASIC =
                 {
-                    MAX_VELOCITY = 1.5,
+                    MAX_VELOCITY = 2.5,
         --            MAX_VELOCITY_MOD = 1.2,
                     SAIL_FORCE = 0.6,
                     RUDDER_TURN_DRAG = 0.23,
@@ -4287,7 +4289,7 @@ function Tune(overrides)
         MALBATROSS_AOE_SCALE = 0.8,
         MALBATROSS_LOSE_TARGET_PERIOD = 60,
         MALBATROSS_BOAT_DAMAGE = 5,
-        MALBATROSS_BOAT_PUSH = 2,
+        MALBATROSS_BOAT_PUSH = 1,
         MALBATROSS_NOTHUNGRY_TIME =
         {
             MIN = 15,

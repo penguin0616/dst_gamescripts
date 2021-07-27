@@ -175,8 +175,6 @@ local states =
                 inst.components.locomotor:RunForward()
 
                 inst.SoundEmitter:PlaySound(SoundPath("walk_water"))
-
-                inst.sg.statemem._dashtime = 0
             else
                 inst.components.locomotor:WalkForward()
             end
@@ -240,7 +238,7 @@ local states =
             if inst.components.amphibiouscreature.in_water then
                 local current_speed, y, z = inst.Physics:GetMotorVel()
                 if current_speed > TUNING.SPIDER_WATER_OCEANFLOATSPEED then
-                    inst.sg.statemem._dashtime = inst.sg.statemem._dashtime + dt
+                    inst.sg.statemem._dashtime = (inst.sg.statemem._dashtime or 0) + dt
 
                     local new_speed = -1 * easing.inQuad(
                         inst.sg.statemem._dashtime,

@@ -48,6 +48,7 @@ local function OnSpawnNewBoatLeak(inst, data)
 		table.insert(inst.components.hullhealth.leak_indicators_dynamic, leak)
 
 		if inst.components.walkableplatform ~= nil then
+            inst.components.walkableplatform:AddEntityToPlatform(leak)
             for k in pairs(inst.components.walkableplatform:GetPlayersOnPlatform()) do
 	            if k:IsValid() then
 	                k:PushEvent("on_standing_on_new_leak")
@@ -206,7 +207,7 @@ local function fn()
     inst.components.healthsyncer.max_health = max_health
 
     inst:AddComponent("waterphysics")
-    inst.components.waterphysics.restitution = 1.75
+    inst.components.waterphysics.restitution = 0.75
 
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = ReticuleTargetFn

@@ -439,7 +439,7 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         inst:AddComponent("walkableplatformmanager")
 
         inst:AddComponent("waterphysics")
-        inst.components.waterphysics.restitution = 1.75
+        inst.components.waterphysics.restitution = 0.75
 
         if not inst.ismastersim then
             return inst

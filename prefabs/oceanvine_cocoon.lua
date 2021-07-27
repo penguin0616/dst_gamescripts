@@ -228,6 +228,28 @@ local function OnPreLoad(inst, data)
     WorldSettings_ChildSpawner_PreLoad(inst, data, PRELOAD_RELEASETIME, PRELOAD_REGENTIME)
 end
 
+local function SummonChildren(inst)
+    if not inst.components.health:IsDead() and
+            not (inst.components.freezable ~= nil and inst.components.freezable:IsFrozen()) then
+        play_hit(inst)
+
+        if inst.components.childspawner ~= nil then
+            local children_released = inst.components.childspawner:ReleaseAllChildren()
+
+            if children_released then
+                for _, v in ipairs(children_released) do
+                    if v.components.debuffable == nil then
+                        v:AddComponent("debuffable")
+                    end
+                    v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+
+                    v.sg:GoToState("dropper_enter")
+                end
+            end
+        end
+    end
+end
+
 local ZERO_VECTOR = Vector3(0,0,0)
 local function fn()
     local inst = CreateEntity()
@@ -254,6 +276,7 @@ local function fn()
     inst:AddTag("flying")
     inst:AddTag("ignorewalkableplatform")
     inst:AddTag("plant")
+    inst:AddTag("spidercocoon")
     inst:AddTag("webbed")
 
     if not TheNet:IsDedicated() then
@@ -324,6 +347,7 @@ local function fn()
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad
     inst.OnLoad = OnLoad
+    inst.SummonChildren = SummonChildren -- For spider_whistle support.
 
     inst:ListenForEvent("death", OnKilled)
     inst:ListenForEvent("activated", spawn_investigators)

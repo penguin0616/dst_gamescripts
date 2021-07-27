@@ -4079,10 +4079,12 @@ return{
 
         OCEANVINE = "AAAH-- oh. Wolfgang thought was snake.",
         FIG = "Is big sweet fruit.",
+        FIG_COOKED = "Warm fruit ready for Wolfgang to eat!",
 
         SPIDER_WATER = "Scary water spider!",
         MUTATOR_WATER = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
         OCEANVINE_COCOON = "Wolfgang not like look of that...",
+        OCEANVINE_COCOON_BURNT = "Hmm, Wolfgang smell burnt spiders.",
 
         GRASSGATOR = "If he not bother Wolfgang, Wolfgang not bother him.",
 

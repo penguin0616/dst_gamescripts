@@ -19,8 +19,8 @@ end
 
 local function OnHerd(whistle, leader)
     local x, y, z = leader.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.SPIDER_WHISTLE_RANGE, {"spiderden"})
-    
+    local ents = TheSim:FindEntities(x, y, z, TUNING.SPIDER_WHISTLE_RANGE, nil, nil, {"spidercocoon", "spiderden"})
+
     for _, den in pairs(ents) do
         if den.components.childspawner and den.components.childspawner.childreninside > 0 and den.SummonChildren then
             den:SummonChildren()

@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "These vines seem to enjoy a symbiotic relationship with the tree.",
         FIG = "I do enjoy a nice ripe fig.",
+        FIG_COOKED = "Cooking it brings out more of the flavor.",
 
         SPIDER_WATER = "It's incredible that they can create enough surface tension to stay above water at that size.",
         MUTATOR_WATER = "How interesting! They appear to alter an arachnid's form when ingested.",
         OCEANVINE_COCOON = "This species seems to be both arboreal and aquatic.",
+        OCEANVINE_COCOON_BURNT = "How unfortunate.",
 
         GRASSGATOR = "It appears docile enough.",
 

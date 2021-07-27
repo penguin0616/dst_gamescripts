@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "There some yummy fruit over there!",
         FIG = "Mmmm! Mine!",
+        FIG_COOKED = "Mmm, squishy!",
 
         SPIDER_WATER = "Spiderfolk run on water?? No fair!!",
         MUTATOR_WATER = "Webby boy make Merm cookie next!!",
         OCEANVINE_COCOON = "Why Spiderfolk house in tree?",
+        OCEANVINE_COCOON_BURNT = "No tell Webby boy!",
 
         GRASSGATOR = "Hee-hee! Scaredy gator!",
 

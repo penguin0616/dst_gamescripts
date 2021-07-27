@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "Sigh. Another grapeless vine.",
         FIG = "You would be delicious in a tart.",
+        FIG_COOKED = "It could use a bit of honey, perhaps some cinnamon and nutmeg...",
 
         SPIDER_WATER = "Mon dieu, these spiders have gotten their sea legs!",
         MUTATOR_WATER = "Next time, let's bake something together, non?",
         OCEANVINE_COCOON = "Perhaps I'll just leave that be.",
+        OCEANVINE_COCOON_BURNT = "Burnt to a crisp.",
 
         GRASSGATOR = "He seems to be a gentle soul.",
 

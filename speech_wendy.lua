@@ -4081,11 +4081,13 @@ return{
         OCEANTREE_PILLAR = "It reminds me of happier days, sitting in the dappled shade...",
 
         OCEANVINE = "This would make a good hangman's tree.",
-        FIG = "Abigail always told me they were full of wasps.",
+        FIG = "Abigail always told me they were filled with wasps.",
+        FIG_COOKED = "Any wasps it held seem to have been burned away.",
 
         SPIDER_WATER = "Its legs look so thin and delicate, like they could snap at the slightest kick...",
         MUTATOR_WATER = "Webber sees the world in a most curious way.",
         OCEANVINE_COCOON = "Something sinister lurks above us.",
+        OCEANVINE_COCOON_BURNT = "Nothing but ash remains.",
 
         GRASSGATOR = "It fears what it does not know.",
 

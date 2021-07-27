@@ -145,8 +145,8 @@ function SpiderWaterBrain:OnStart()
 
             IfNode(function() return not self.inst.defensive end, "AggressiveOrNoFollow",
                 PriorityNode({
-                    DoAction(self.inst, EatFishAction),
-                    DoAction(self.inst, EatFoodAction),
+                    DoAction(self.inst, EatFishAction, "Try Eating A Fish", nil, 15),
+                    DoAction(self.inst, EatFoodAction, "Try Eating Food", nil, 15),
                     Follow(self.inst, function()
                             return self.inst.components.follower.leader
                         end,

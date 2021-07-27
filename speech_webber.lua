@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "Maybe we could use that for a swing!",
         FIG = "This fruit is kinda weird, but tasty!",
+        FIG_COOKED = "Now it's hot fruit.",
 
         SPIDER_WATER = "Maybe they can teach us how to swim.",
         MUTATOR_WATER = "This one turned out really good!",
         OCEANVINE_COCOON = "Oooh, can we come play in your tree house?",
+        OCEANVINE_COCOON_BURNT = "Oh no! Your tree house!",
 
         GRASSGATOR = "We don't think it wants to be friends with us.",
 

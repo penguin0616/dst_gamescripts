@@ -4085,10 +4085,12 @@ return{
 
         OCEANVINE = "Oh look, a really long wick!",
         FIG = "Looks like old people fruit.",
+        FIG_COOKED = "As usual, fire made it better.",
 
         SPIDER_WATER = "Get outta the water so I can burn you!",
         MUTATOR_WATER = "Give one to Wilson, I'm sure he'd loooove to try it! Heheh.",
         OCEANVINE_COCOON = "Ewww look at it just dangling up there!",
+        OCEANVINE_COCOON_BURNT = "Fire is a quick redecorator.",
 
         GRASSGATOR = "It needs a haircut.",
 

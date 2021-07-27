@@ -14,7 +14,7 @@ require("util")
 require("networking")
 require("stringutil")
 
-local LoadoutSelect = Class(Widget, function(self, user_profile, character, initial_skintype)
+local LoadoutSelect = Class(Widget, function(self, user_profile, character, initial_skintype, hide_item_skinner)
     Widget._ctor(self, "LoadoutSelect")
     self.user_profile = user_profile
 
@@ -219,7 +219,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
                         end
                     end
         
-                    if show_button then
+                    if show_button and not hide_item_skinner then
                         self.itemskinsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "sweep.tex", STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE, false, false, function()
                                 self:_LoadItemSkinsScreen()
                             end

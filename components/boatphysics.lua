@@ -238,10 +238,13 @@ function BoatPhysics:GetVelocity()
 end
 
 
-function BoatPhysics:GetForceDampening()
+function BoatPhysics:GetForceDampening(boat_dir_modifier)
     local dampening = 1
 
-    dampening = dampening - easing.inCubic(VecUtil_Length(self.velocity_x, self.velocity_z), TUNING.BOAT.BASE_DAMPENING, TUNING.BOAT.MAX_DAMPENING - TUNING.BOAT.BASE_DAMPENING, TUNING.BOAT.MAX_ALLOWED_VELOCITY / 2)
+    boat_dir_modifier = boat_dir_modifier or 0
+
+    local max_velocity = TUNING.BOAT.MAX_FORCE_VELOCITY
+    dampening = dampening - easing.inCubic(math.min(VecUtil_Length(self.velocity_x, self.velocity_z), max_velocity) * boat_dir_modifier, TUNING.BOAT.BASE_DAMPENING, TUNING.BOAT.MAX_DAMPENING - TUNING.BOAT.BASE_DAMPENING, max_velocity)
 
     for k,v in pairs(self.boatdraginstances) do
 		dampening = dampening - v.forcedampening
@@ -252,15 +255,18 @@ end
 
 
 function BoatPhysics:ApplyForce(dir_x, dir_z, force)
+    local dir_normal_x, dir_normal_z = VecUtil_Normalize(dir_x, dir_z)
+    local velocity_normal_x, velocity_normal_z = VecUtil_Normalize(self.velocity_x, self.velocity_z)
+    local force_dir_modifier = math.max(0, VecUtil_Dot(velocity_normal_x, velocity_normal_z, dir_normal_x, dir_normal_z))
 
-    force = force * self:GetForceDampening()
+    force = force * self:GetForceDampening(force_dir_modifier)
 
     self.velocity_x, self.velocity_z = self.velocity_x + dir_x * force, self.velocity_z + dir_z * force
 
     local velocity_length = VecUtil_Length(self.velocity_x, self.velocity_z)
 
     if velocity_length > TUNING.BOAT.MAX_ALLOWED_VELOCITY then
-        local maxx,maxz = VecUtil_Scale(dir_x, dir_z,  TUNING.BOAT.MAX_ALLOWED_VELOCITY)
+        local maxx,maxz = VecUtil_Scale(dir_x, dir_z, TUNING.BOAT.MAX_ALLOWED_VELOCITY)
         self.velocity_x, self.velocity_z = maxx,maxz
     end
 end
@@ -300,18 +306,26 @@ function BoatPhysics:GetTotalAnchorDrag()
     return total_anchor_drag
 end
 
-function BoatPhysics:GetRudderTurnSpeed()
+function BoatPhysics:GetAnchorSailForceModifier()
+    local sail_force_modifier = 1
+    for k,v in pairs(self.boatdraginstances) do
+        sail_force_modifier = sail_force_modifier * v.sailforcemodifier
+    end
+    return sail_force_modifier
+end
 
+function BoatPhysics:GetRudderTurnSpeed()
     local velocity_length = VecUtil_Length(self.velocity_x, self.velocity_z)
 
     local speed = 0.6
-
-    if velocity_length >= 1.3 and velocity_length < 2 then
-        speed = 0.37
-    elseif velocity_length >= 2 and velocity_length < 3 then
-        speed = 0.255
-    elseif velocity_length >= 3 then
+    if velocity_length > 7 then
         speed = 0.1975
+    elseif velocity_length > 5 then
+        speed = 0.255
+    elseif velocity_length > 3 then
+        speed = 0.37
+    elseif velocity_length > 1.5 then
+        speed = 0.48
     end
 
     return speed
@@ -373,10 +387,12 @@ function BoatPhysics:OnUpdate(dt)
         self.inst:PushEvent("stopturning")
     end
 
+
+    local sail_force_modifier = self:GetAnchorSailForceModifier()
     local raised_sail_count = 0
     local sail_force = 0
     for k,v in pairs(self.masts) do
-		local f = k:CalcSailForce()
+		local f = k:CalcSailForce() * sail_force_modifier
         if f ~= 0 then
             sail_force = sail_force + f
             raised_sail_count = raised_sail_count + 1

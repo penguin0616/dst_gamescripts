@@ -146,6 +146,7 @@ function Projectile:Throw(owner, target, attacker)
     self:RotateToTarget(self.dest)
     self.inst.Physics:SetMotorVel(self.speed, 0, 0)
     self.inst:StartUpdatingComponent(self)
+    self.inst:AddTag("activeprojectile")
     self.inst:PushEvent("onthrown", { thrower = owner, target = target })
     target:PushEvent("hostileprojectile", { thrower = owner, attacker = attacker, target = target })
     if self.onthrown ~= nil then
@@ -182,6 +183,7 @@ end
 function Projectile:Stop()
     self.inst.Physics:CollidesWith(COLLISION.LIMITS)
 
+    self.inst:RemoveTag("activeprojectile")
     self.inst:StopUpdatingComponent(self)
     self.target = nil
     self.owner = nil

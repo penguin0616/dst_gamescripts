@@ -4087,10 +4087,12 @@ return {
         
         OCEANVINE = "The scientific term is \"tree noodles\".",
         FIG = "I'll call it \"Newton's Fig\".",
+        FIG_COOKED = "It's been warmed by science.",
 
         SPIDER_WATER = "Why in the name of science do they get to float?",
         MUTATOR_WATER = "Oh wow, that looks um... delicious, Webber!",
         OCEANVINE_COCOON = "What if I just gave it a little poke?",
+        OCEANVINE_COCOON_BURNT = "I smell burnt toast.",
 
         GRASSGATOR = "I don't think he likes me very much.",
 

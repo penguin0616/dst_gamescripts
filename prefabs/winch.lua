@@ -339,12 +339,14 @@ local function Unload(inst)
 		inst.components.shelf.cantakeitem = false
 
 		inst:DoTaskInTime(14*FRAMES, function()
-			inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/medium")		
+			inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/medium")
 			local item = dropitems(inst)
-			if item ~= nil and inst:GetCurrentPlatform() ~= nil then
+
+            -- Items without a submersible component should just work when dropped.
+			if (item ~= nil and item.components.submersible ~= nil) and inst:GetCurrentPlatform() ~= nil then
 				item.components.submersible.force_no_repositioning = true
 				local x, _, z = inst.Transform:GetWorldPosition()
-				item.components.submersible:MakeSunken(x, z, true, true)				
+				item.components.submersible:MakeSunken(x, z, true, true)
 			end
 		end)
 
@@ -462,6 +464,7 @@ local function fn()
 	inst:AddComponent("boatdrag")
 	inst.components.boatdrag.drag = TUNING.BOAT.ANCHOR.BASIC.ANCHOR_DRAG
 	inst.components.boatdrag.max_velocity_mod = TUNING.BOAT.ANCHOR.BASIC.MAX_VELOCITY_MOD
+	inst.components.boatdrag.sailforcemodifier = TUNING.BOAT.ANCHOR.BASIC.SAILFORCEDRAG
 
 	inst:SetStateGraph("SGwinch")
 

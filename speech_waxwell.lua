@@ -4078,10 +4078,12 @@ return{
 
         OCEANVINE = "It's just hanging around.",
         FIG = "A fruit for more refined tastes.",
+        FIG_COOKED = "Quite decadent.",
 
         SPIDER_WATER = "Well aren't you a delight!",
         MUTATOR_WATER = "I'm not eating that.",
         OCEANVINE_COCOON = "It looks like someone's already made themselves comfortable here.",
+        OCEANVINE_COCOON_BURNT = "Not quite so comfortable anymore.",
 
         GRASSGATOR = "Quite a skittish creature.",
 

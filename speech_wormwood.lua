@@ -4082,10 +4082,12 @@ return{
 
         OCEANVINE = "Wants to give fruit",
         FIG = "From hanging tree friend",
+        FIG_COOKED = "Sweet yums",
 
         SPIDER_WATER = "Belly stuff for Leggy Bugs?",
         MUTATOR_WATER = "Tall Leggy Bug",
         OCEANVINE_COCOON = "Made house in friend",
+        OCEANVINE_COCOON_BURNT = "No more house",
 
         GRASSGATOR = "Friend?",
 

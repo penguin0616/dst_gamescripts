@@ -4084,10 +4084,12 @@ return{
 
         OCEANVINE = "That's all vine and dandy. Ha!",
         FIG = "Never tried one back home, seemed too fancy-shmancy for me.",
+        FIG_COOKED = "A bit hoity-toity, but I've gotta admit it's pretty tasty.",
 
         SPIDER_WATER = "You and your creepy long legs better stay far away from me!",
         MUTATOR_WATER = "I don't think I'll be takin' a bite out of that.",
         OCEANVINE_COCOON = "I'm... trying not to think about how many of those are probably dangling above us.",
+        OCEANVINE_COCOON_BURNT = "One less to worry about.",
 
         GRASSGATOR = "How can he see anything like that?",
 

@@ -328,12 +328,20 @@ local function chop_down_tree(inst, chopper)
 
     local falling_tree = SpawnPrefab("oceantree_falling")
     falling_tree.Transform:SetPosition(inst:GetPosition():Get())
+    if  inst.buds_used then
+        for i,bud in ipairs(inst.buds_used) do
+            falling_tree.AnimState:Show("tree_bud"..bud)
+        end
+    end
+
+    local stage = inst.components.growable and inst.components.growable.stage or 3
+    local bank = "oceantree_"..growth_stages[stage].name
 
     if he_right then
-        falling_tree:start_falling_fn(inst.AnimState:GetBuild(), true, inst.components.growable.stage, TheCamera:GetRightVec())
+        falling_tree:start_falling_fn(inst.AnimState:GetBuild(), bank, true, stage, TheCamera:GetRightVec())
         inst.components.lootdropper:DropLoot(pt - TheCamera:GetRightVec())
     else
-        falling_tree:start_falling_fn(inst.AnimState:GetBuild(), false, inst.components.growable.stage, TheCamera:GetRightVec())
+        falling_tree:start_falling_fn(inst.AnimState:GetBuild(), bank, false, stage, TheCamera:GetRightVec())
         inst.components.lootdropper:DropLoot(pt + TheCamera:GetRightVec())
     end
 
@@ -368,9 +376,11 @@ local function OnCollide(inst, data)
 end
 
 local function MakeEnriched(inst)
-    --@waterlog_todo: turn on flowers in sequence
-    inst.AnimState:SetBuild("oceantree_tall_jammed_build")    
+    inst:DoTaskInTime(15*FRAMES, function() inst.AnimState:SetBuild("oceantree_tall_jammed_build") end)
     inst:AddTag("no_force_grow")
+
+    inst.AnimState:PlayAnimation("gooped")
+    PushSway(inst)
 
     if inst.components.growable ~= nil then
         inst:RemoveComponent("growable")
@@ -387,13 +397,15 @@ end
 
 local function MakeNotEnriched(inst)
 
+    inst:DoTaskInTime(15*FRAMES, function() inst.AnimState:SetBuild("oceantree_"..growth_stages[3].name) end)
+    inst.AnimState:PlayAnimation("ungooped")
+    PushSway(inst)
+
     local random = math.random(1,#inst.buds)
     table.insert(inst.buds_used,inst.buds[random])
     table.remove(inst.buds,random)
 
     showbuds(inst)
-
-    inst.AnimState:SetBuild("oceantree_"..growth_stages[3].name)
         
     inst:RemoveTag("no_force_grow")
 end
@@ -566,7 +578,7 @@ local function tree(name, stage, data)
         inst.MiniMapEntity:SetPriority(-1)
 
         inst:SetPhysicsRadiusOverride(2.35)
-        MakeWaterObstaclePhysics(inst, 0.80, 2, 1.25)
+        MakeWaterObstaclePhysics(inst, 0.80, 2, 0.75)
         
         inst:AddTag("ignorewalkableplatforms")
         inst:AddTag("evergreens")
@@ -577,7 +589,7 @@ local function tree(name, stage, data)
         local bank = "oceantree_"..growth_stages[stage].name
         local build = bank
         inst.AnimState:SetBuild(build)
-        inst.AnimState:SetBank(bank)
+        inst.AnimState:SetBank(bank)        
 
         local scale = 1.1
         inst.Transform:SetScale(scale, scale, scale)
@@ -794,17 +806,25 @@ local function falling_tree_land(inst)
     end
 end
 
-local function falling_tree_start_falling(inst, build, fallleft, growth_stage, camera_right)
+local function falling_tree_start_falling(inst, build, bank, fallleft, growth_stage, camera_right)
     inst.SoundEmitter:PlaySound("dontstarve/forest/treefall")
 
     inst.falling_left = fallleft
     inst.growth_stage = growth_stage
     inst.camera_right_on_start_falling = camera_right
 
-    inst.AnimState:SetBank(build)
+    inst.AnimState:SetBank(bank)
     inst.AnimState:SetBuild(build)
     inst.AnimState:PlayAnimation(inst.falling_left and "fallleft" or "fallright")
     inst.AnimState:Hide("stump")
+
+    inst.buds = {1,2,3,5,6,7}
+    inst.buds_used = {}
+    for i=1,7 do
+        inst.AnimState:Hide("tree_bud"..i)
+    end
+    
+    --inst.AnimState:Hide("snow")
 
     inst:DoTaskInTime(tree_data.chop_camshake_delay, falling_tree_land)
 end
@@ -818,7 +838,7 @@ local function falling_tree_fn()
     inst.entity:AddNetwork()
 
     inst:AddTag("FX")
-    inst:AddTag("NOCLICK")
+    inst:AddTag("NOCLICK")        
 
     -- Build, bank, and anim are set from falling_tree_start_falling()
 
@@ -829,7 +849,9 @@ local function falling_tree_fn()
     end
 
     inst.persists = false
-
+    
+    MakeSnowCovered(inst)
+    
     inst.start_falling_fn = falling_tree_start_falling
 
     return inst

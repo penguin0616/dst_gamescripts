@@ -99,6 +99,7 @@ local function fn()
 	inst:AddComponent("boatdrag")
 	inst.components.boatdrag.drag = TUNING.BOAT.ANCHOR.BASIC.ANCHOR_DRAG
 	inst.components.boatdrag.max_velocity_mod = TUNING.BOAT.ANCHOR.BASIC.MAX_VELOCITY_MOD
+	inst.components.boatdrag.sailforcemodifier = TUNING.BOAT.ANCHOR.BASIC.SAILFORCEDRAG
 
     inst:AddComponent("hauntable")
     inst:AddComponent("inspectable")

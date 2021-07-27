@@ -102,7 +102,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
                     local mx, mz = v2x - v.x, v2z - v.z
                     if mx ~= 0 or mz ~= 0 then
                         local normalx, normalz = VecUtil_Normalize(mx, mz)
-                        p_ent.components.boatphysics:ApplyForce(normalx, normalz, 5)
+                        p_ent.components.boatphysics:ApplyForce(normalx, normalz, 3)
                     end
                 end
             end
@@ -179,7 +179,7 @@ function GroundPounder:GroundPound_Offscreen(position)
                 local mx, mz = v2x - v.x, v2z - v.z
                 if mx ~= 0 or mz ~= 0 then
                     local normalx, normalz = VecUtil_Normalize(mx, mz)
-                    p_ent.components.boatphysics:ApplyForce(normalx, normalz, 5)
+                    p_ent.components.boatphysics:ApplyForce(normalx, normalz, 3)
                 end
             end
         end

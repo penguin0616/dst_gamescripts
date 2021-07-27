@@ -447,7 +447,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    MakeWaterObstaclePhysics(inst, 4, 2, 1.25)
+    MakeWaterObstaclePhysics(inst, 4, 2, 0.75)
 
     -- HACK: this should really be in the c side checking the maximum size of the anim or the _current_ size of the anim instead
     -- of frame 0

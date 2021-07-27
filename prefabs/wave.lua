@@ -41,7 +41,8 @@ local function oncollidewave(inst, other)
     if other and (inst.waveactive or not other:HasTag("wave")) then
         if other.components.boatphysics and inst.waveactive then
             local vx, vy, vz = inst.Physics:GetVelocity()
-            other.components.boatphysics:ApplyForce(VecUtil_NormalAndLength(vx, vz))
+            local norm_x, norm_z, length = VecUtil_NormalAndLength(vx, vz)
+            other.components.boatphysics:ApplyForce(norm_x, norm_z, length * 0.5)
         end
 
         DoSplash(inst)

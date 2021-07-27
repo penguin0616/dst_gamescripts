@@ -128,10 +128,12 @@ function ComplexProjectile:Launch(targetPos, attacker, owningweapon)
         self.onlaunchfn(self.inst)
     end
 
+    self.inst:AddTag("activeprojectile")
     self.inst:StartUpdatingComponent(self)
 end
 
 function ComplexProjectile:Hit(target)
+    self.inst:RemoveTag("activeprojectile")
     self.inst:StopUpdatingComponent(self)
 
     self.inst.Physics:SetMotorVel(0,0,0)

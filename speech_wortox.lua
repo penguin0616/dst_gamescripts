@@ -4084,10 +4084,12 @@ return{
 
         OCEANVINE = "A fine enough vine.",
         FIG = "They say the low hanging fruit is the sweetest!",
+        FIG_COOKED = "The mortals seem to prefer it this way.",
 
         SPIDER_WATER = "They're just getting their feet wet.",
         MUTATOR_WATER = "A tasty treat for those tiny terrors!",
         OCEANVINE_COCOON = "Rock-a-bye spiders, in the treetop...",
+        OCEANVINE_COCOON_BURNT = "What a shame, it went up in flames.",
 
         GRASSGATOR = "See you later, gator.",
 

@@ -32,6 +32,10 @@ function WalkablePlatform:OnRemoveEntity()
     for k in pairs(self.objects_on_platform) do
         self.inst:RemovePlatformFollower(k)
     end
+
+    if self.uid then
+        TheWorld.components.walkableplatformmanager:UnregisterPlatform(self.inst)
+    end
 end
 
 function WalkablePlatform:GetUID()
@@ -58,8 +62,8 @@ function WalkablePlatform:StopUpdating()
     TheWorld.components.walkableplatformmanager:RemovePlatform(self.inst)
 end
 
-local IGNORE_WALKABLE_PLATFORM_TAGS_ON_REMOVE = { "ignorewalkableplatforms", "ignorewalkableplatformdrowning", "projectile", "flying", "FX", "DECOR", "INLIMBO", "player" }
-local IGNORE_WALKABLE_PLATFORM_TAGS = { "ignorewalkableplatforms", "projectile", "flying", "FX", "DECOR", "INLIMBO" }
+local IGNORE_WALKABLE_PLATFORM_TAGS_ON_REMOVE = { "ignorewalkableplatforms", "ignorewalkableplatformdrowning", "activeprojectile", "flying", "FX", "DECOR", "INLIMBO", "player" }
+local IGNORE_WALKABLE_PLATFORM_TAGS = { "ignorewalkableplatforms", "activeprojectile", "flying", "FX", "DECOR", "INLIMBO" }
 
 function WalkablePlatform:DestroyObjectsOnPlatform()
     if not TheWorld.ismastersim then return end
@@ -98,6 +102,16 @@ function WalkablePlatform:GetEmbarkPosition(embarker_x, embarker_z, embarker_min
     local embarkable_x, embarkable_y, embarkable_z = self.inst.Transform:GetWorldPosition()
     local embark_x, embark_z = VecUtil_Normalize(embarker_x - embarkable_x, embarker_z - embarkable_z)
     return embarkable_x + embark_x * embarkable_radius, embarkable_z + embark_z * embarkable_radius
+end
+
+function WalkablePlatform:AddEntityToPlatform(ent)
+    if ent.entity:GetParent() == nil then
+        if not self.objects_on_platform[ent] then
+            self.inst:AddPlatformFollower(ent)
+        else
+            self.objects_on_platform[ent] = true
+        end
+    end
 end
 
 --server only.

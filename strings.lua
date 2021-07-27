@@ -3171,12 +3171,15 @@ STRINGS =
 
         OCEANVINE = "Mossy Vine",
         FIG = "Fig",
+        FIG_COOKED = "Cooked Fig",
 
         GRASSGATOR = "Grass Gator",
 
         SPIDER_WATER = "Sea Strider",
         MUTATOR_WATER = "Strider Switcherdoodle",
         OCEANVINE_COCOON = "Sea Strider Nest",
+        OCEANVINE_COCOON_BURNT = "Sea Strider Nest",
+        
 
         TREEGROWTHSOLUTION = "Tree Jam",
 
