@@ -541,15 +541,27 @@ local OnSendLightningStrike = _ismastersim and function(src, pos)
     local closest_blocker = nil
 
     local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, LIGHTNINGSTRIKE_SEARCH_RANGE, nil, LIGHTNINGSTRIKE_CANT_TAGS, LIGHTNINGSTRIKE_ONEOF_TAGS)
+    local blockers = nil
     for _, v in pairs(ents) do
-        if closest_blocker == nil
-                and v.components.lightningblocker ~= nil
+        -- Track any blockers we find, since we redirect the strike position later,
+        -- and might redirect it into their block range.
+        local is_blocker = v.components.lightningblocker ~= nil
+        if is_blocker then
+            if blockers == nil then
+                blockers = {v}
+            else
+                table.insert(blockers, v)
+            end
+        end
+
+        if closest_blocker == nil and is_blocker
                 and (v.components.lightningblocker.block_rsq + 0.0001) > v:GetDistanceSqToPoint(pos:Get()) then
             closest_blocker = v
         elseif closest_rod == nil and v:HasTag("lightningrod") then
             closest_rod = v
         elseif closest_generic == nil then
             if (v.components.health == nil or not v.components.health:IsInvincible())
+                    and not is_blocker -- If we're out of range of the first branch, ignore blocker objects.
                     and (v.components.playerlightningtarget == nil or math.random() <= v.components.playerlightningtarget:GetHitChance()) then
                 closest_generic = v
             end
@@ -563,20 +575,53 @@ local OnSendLightningStrike = _ismastersim and function(src, pos)
         closest_blocker.components.lightningblocker:DoLightningStrike(strike_position)
         prefab_type = "thunder"
     elseif closest_rod ~= nil then
-        closest_rod:PushEvent("lightningstrike")
         strike_position = closest_rod:GetPosition()
-    else
-        if closest_generic ~= nil then
-            if closest_generic.components.playerlightningtarget ~= nil then
-                closest_generic.components.playerlightningtarget:DoStrike()
+
+        -- Check if we just redirected into a lightning blocker's range.
+        if blockers ~= nil then
+            for _, blocker in ipairs(blockers) do
+                if blocker:GetDistanceSqToPoint(strike_position:Get()) < (blocker.components.lightningblocker.block_rsq + 0.0001) then
+                    prefab_type = "thunder"
+                    blocker.components.lightningblocker:DoLightningStrike(strike_position)
+                    break
+                end
             end
-            strike_position = closest_generic:GetPosition()
         end
 
-        ents = TheSim:FindEntities(strike_position.x, strike_position.y, strike_position.z, 3, nil, _lightningexcludetags)
-        for _, v in pairs(ents) do
-            if v.components.burnable ~= nil then
-                v.components.burnable:Ignite()
+        -- If we didn't get blocked, push the event that does all the fx and behaviour.
+        if prefab_type == "lightning" then
+            closest_rod:PushEvent("lightningstrike")
+        end
+    else
+        if closest_generic ~= nil then
+            strike_position = closest_generic:GetPosition()
+
+            -- Check if we just redirected into a lightning blocker's range.
+            if blockers ~= nil then
+                for _, blocker in ipairs(blockers) do
+                    if blocker:GetDistanceSqToPoint(strike_position:Get()) < (blocker.components.lightningblocker.block_rsq + 0.0001) then
+                        prefab_type = "thunder"
+                        blocker.components.lightningblocker:DoLightningStrike(strike_position)
+                        break
+                    end
+                end
+            end
+
+            -- If we didn't redirect, strike the playerlightningtarget if there is one.
+            if prefab_type == "lightning" then
+                if closest_generic.components.playerlightningtarget ~= nil then
+                    closest_generic.components.playerlightningtarget:DoStrike()
+                end
+            end
+        end
+
+        -- If we're doing lightning, light nearby unprotected objects on fire.
+        if prefab_type == "lightning" then
+            ents = TheSim:FindEntities(strike_position.x, strike_position.y, strike_position.z, 3, nil, _lightningexcludetags)
+            for _, v in pairs(ents) do
+                if v.components.burnable ~= nil then
+                    v.components.burnable:Ignite()
+                end
             end
         end
     end
@@ -649,7 +694,7 @@ if _ismastersim then
     _maxlightningdelay = nil
     _nextlightningtime = 5
     _lightningtargets = {}
-    _lightningexcludetags = { "player", "INLIMBO" }
+    _lightningexcludetags = { "player", "INLIMBO", "lightningblocker" }
 
     for k, v in pairs(FUELTYPE) do
         if v ~= FUELTYPE.USAGE then --Not a real fuel

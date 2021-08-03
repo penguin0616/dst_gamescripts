@@ -4660,6 +4660,8 @@ function Tune(overrides)
             },
         },
 
+        WATERPLANT_ROCK_WORKAMOUNT = 3,
+
         WAVEYJONES =
         {
             HAND =

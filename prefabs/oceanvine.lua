@@ -257,6 +257,7 @@ local function commonfn(Sim)
 
 	inst:AddTag("hangingvine")
     inst:AddTag("flying")
+    inst:AddTag("NOBLOCK")                  -- To not block boat deployment.
     inst:AddTag("oceanvine")
 --[[
     if not TheNet:IsDedicated() then
@@ -288,6 +289,7 @@ local function commonfn(Sim)
 
     MakeSmallBurnable(inst, nil, nil, nil, "swap_fire")
     inst.components.burnable.fxdata[1].prefab = "character_fire"
+    inst.components.burnable.fxdata[1].followaschild = true
     inst.components.burnable:SetFXOffset(0, 1, 0)
     inst.components.burnable:SetBurnTime(BURN_DURATION + 5) -- 5 = a value considerably higher than the burn anim duration
     inst.components.burnable:SetOnIgniteFn(OnIgnite)

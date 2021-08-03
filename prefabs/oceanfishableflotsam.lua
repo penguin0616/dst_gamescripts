@@ -210,7 +210,7 @@ local function overrideflotsamsinkfn(inst)
 end
 
 local function OnSalvage(inst)
-	local product = SpawnPrefab("oceanfishableFlotsam")
+	local product = SpawnPrefab("oceanfishableflotsam")
 	product.Transform:SetPosition(inst.Transform:GetWorldPosition())
 	return product
 end
@@ -322,6 +322,7 @@ local function landfn(data)
 	inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem.canbepickedup = false
 	inst.components.inventoryitem.cangoincontainer = false
+    inst.components.inventoryitem.canonlygoinpocket = true -- Without this, the player's inventory tries to make this its active item when removed from a winch.
 
 	inst:AddComponent("pickable")
 	inst.components.pickable.picksound = "hookline/common/ocean_flotsam/picked"

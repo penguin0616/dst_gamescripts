@@ -466,6 +466,12 @@ local function PopulateWorld(savedata, profile)
 
         --this was spawned by the level file. kinda lame - we should just do everything from in here.
         map:SetSize(savedata.map.width, savedata.map.height)
+		if savedata.map.width > 1024 and savedata.map.height > 1024 then
+			--increase this by as little as possible!
+			--this number creates a series of small regions that is used to help cull out objects that aren't on screen.
+			--the larger this number is, the larger those regions, and the more wasted time rendering objects that are offscreen.
+			TheSim:UpdateRenderExtents(math.max(savedata.map.width, savedata.map.height) * TILE_SCALE)
+		end
 		map:SetFromString(savedata.map.tiles)
 		map:SetNodeIdTileMapFromString(savedata.map.nodeidtilemap)
         map:ResetVisited()

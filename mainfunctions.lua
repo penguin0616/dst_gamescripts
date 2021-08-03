@@ -855,7 +855,7 @@ function SaveGame(isshutdown, cb)
     end
 
     local save = {}
-    save.ents = {}
+	local savedata_entities = {}
 
     --print("Saving...")
     --save the entities
@@ -876,10 +876,10 @@ function SaveGame(isshutdown, cb)
 
             saved_ents[v.GUID] = record
 
-            if save.ents[v.prefab] == nil then
-                save.ents[v.prefab] = {}
+            if savedata_entities[v.prefab] == nil then
+                savedata_entities[v.prefab] = {}
             end
-            table.insert(save.ents[v.prefab], record)
+            table.insert(savedata_entities[v.prefab], record)
             nument = nument + 1
         end
     end
@@ -958,11 +958,10 @@ function SaveGame(isshutdown, cb)
     assert(save.map.width, "Map width missing from savedata on save")
     assert(save.map.height, "Map height missing from savedata on save")
     --assert(save.map.topology, "Map topology missing from savedata on save")
-    assert(save.ents, "Entities missing from savedata on save")
+    --assert(save.ents, "Entities missing from savedata on save")
     assert(save.mods, "Mod records missing from savedata on save")
 
     local PRETTY_PRINT = BRANCH == "dev"
-    local data = DataDumper(save, nil, not PRETTY_PRINT)
 
     local patterns
     if BRANCH == "dev" then
@@ -970,13 +969,34 @@ function SaveGame(isshutdown, cb)
     else
         patterns = {"=-1#.IND", "=1.#QNAN", "=1.#INF", "=-1.#INF"}
     end
-    for i, corrupt_pattern in ipairs(patterns) do
-        local found = string.find(data, corrupt_pattern, 1, true)
-        if found ~= nil then
-            print(string.sub(data, found - 100, found + 50))
-            error("Error saving game, corruption detected.")
-        end
+
+    local data = {}
+    for key,value in pairs(save) do    
+        data[key] = DataDumper(value, key, not PRETTY_PRINT)
+		
+		for i, corrupt_pattern in ipairs(patterns) do
+			local found = string.find(data[key], corrupt_pattern, 1, true)
+			if found ~= nil then
+				print(string.sub(data[key], found - 100, found + 50))
+				error("Error saving game, corruption detected.")
+			end
+		end
     end
+
+	-- special handling for the entities table; contents are dumped per entity rather than 
+	-- dumping the whole entities table at once as is done for the other parts of the save data
+	data.ents = {}
+	for key, value in pairs(savedata_entities) do
+		data.ents[key] = DataDumper(value, key, not PRETTY_PRINT)
+
+		for i, corrupt_pattern in ipairs(patterns) do
+			local found = string.find(data.ents[key], corrupt_pattern, 1, true)
+			if found ~= nil then
+				print(string.sub(data.ents[key], found - 100, found + 50))
+				error("Error saving game, corruption detected.")
+			end
+		end
+	end
 
 
     local function callback()

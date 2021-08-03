@@ -584,7 +584,8 @@ local function tree(name, stage, data)
         inst:AddTag("evergreens")
         inst:AddTag("shelter")
         inst:AddTag("plant")
-        inst:AddTag("tree")
+        inst:AddTag("event_trigger")
+        inst:AddTag("tree")        
         
         local bank = "oceantree_"..growth_stages[stage].name
         local build = bank

@@ -25,13 +25,14 @@ local function chop_tree(inst, chopper, chopsleft, numchops)
 end
 
 local function OnWork(inst, worker, workleft)
-    if not (worker ~= nil and worker:HasTag("playerghost")) then
-            inst.SoundEmitter:PlaySound(
-            worker ~= nil and worker:HasTag("beaver") and
-            "dontstarve/characters/woodie/beaver_chop_tree" or
-            "dontstarve/wilson/use_axe_tree"
+    if worker == nil or not worker:HasTag("playerghost") then
+        inst.SoundEmitter:PlaySound(
+            (worker == nil and "dontstarve/wilson/use_axe_tree")
+            or (worker:HasTag("boat") and "waterlogged1/common/boat_wood_small_impact")
+            or (worker:HasTag("beaver") and "dontstarve/characters/woodie/beaver_chop_tree")
+            or "dontstarve/wilson/use_axe_tree"
         )
-    end    
+    end
 
    inst.AnimState:PlayAnimation("hit"..inst.artid)
    inst.AnimState:PushAnimation("idle"..inst.artid, true)

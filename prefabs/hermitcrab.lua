@@ -622,7 +622,7 @@ local FIND_LUREPLANT_TAGS = {"lureplant"}
 local FIND_FLOWER_TAGS = {"flower"}
 local FIND_PLANT_TAGS = {"bush","plant"}
 local FIND_STRUCTURE_TAGS = {"structure"}
-local FIND_HEAVY_TAGS = {"heavy"}
+local FIND_HEAVY_TAGS = {"underwater_salvageable"}
 local FIND_HERMITCRAB_LURE_MARKER_TAGS = {"hermitcrab_lure_marker"}
 
 local function lureplantcomplainfn(inst)
@@ -836,16 +836,14 @@ local function initfriendlevellisteners(inst)
         local range = ISLAND_RADIUS + 10
         if source and data.target:GetDistanceSqToInst(source) < range * range then
             local x, y, z = source.Transform:GetWorldPosition()
+
             local ents = TheSim:FindEntities(x, y, z, range, FIND_HEAVY_TAGS)
-            for i = #ents,1,-1 do
-                local e_x, e_y, e_z = ents[i].Transform:GetWorldPosition()
-                if TheWorld.Map:IsVisualGroundAtPoint(e_x, e_y, e_z) or ents[i]:GetCurrentPlatform() then
-                    table.remove(ents, i)
-                end
+
+            if #ents > 0 then
+                return
             end
-            if #ents <= 0 then
-                inst.components.friendlevels:CompleteTask(TASKS.REMOVE_JUNK, data.doer)
-            end
+
+            inst.components.friendlevels:CompleteTask(TASKS.REMOVE_JUNK, data.doer)            
         end
     end
 

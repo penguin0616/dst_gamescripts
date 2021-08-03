@@ -4084,8 +4084,8 @@ return{
         FIG = "From hanging tree friend",
         FIG_COOKED = "Sweet yums",
 
-        SPIDER_WATER = "Belly stuff for Leggy Bugs?",
-        MUTATOR_WATER = "Tall Leggy Bug",
+        SPIDER_WATER = "Tall Leggy Bug",
+        MUTATOR_WATER = "Belly stuff for Leggy Bugs?",
         OCEANVINE_COCOON = "Made house in friend",
         OCEANVINE_COCOON_BURNT = "No more house",
 

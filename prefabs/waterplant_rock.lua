@@ -121,7 +121,7 @@ local function fn()
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(1)
+    inst.components.workable:SetWorkLeft(TUNING.WATERPLANT_ROCK_WORKAMOUNT)
     inst.components.workable:SetOnWorkCallback(OnWork)
     inst.components.workable.savestate = true
 

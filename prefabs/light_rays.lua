@@ -12,7 +12,6 @@ local function OnEntitySleep(inst)
 end
 
 local function showlightrays(inst)
-    inst.components.colourtweener:StartTween({255/255,177/255,32/255,1}, 2)
     local rays = {1,2,3,4,5,6,7,8,9,10,11}
     for i=1,#rays,1 do
         inst.AnimState:Hide("lightray"..i)
@@ -26,6 +25,7 @@ local function showlightrays(inst)
 end
 
 local function hiderays(inst)
+    inst.rayshidden = true
     local rays = {1,2,3,4,5,6,7,8,9,10,11}
     for i=1,#rays,1 do
         inst.AnimState:Hide("lightray"..i)
@@ -33,37 +33,58 @@ local function hiderays(inst)
 end
 
 local function hidelightrays(inst)
-    inst.components.colourtweener:StartTween({0,0,0,0}, 2, hiderays)
+    inst.intensity_target = 0
 end
 
 local function fadelightrays(inst)
-    inst.components.colourtweener:StartTween({255/255/3,177/255/3,32/255/3,1/3}, 2)        
+    inst.intensity_target = 0.5        
+end
+
+local function updateintensity(inst)
+    local inc = 0.5/ (5 * 30)
+    if inst.intensity ~= inst.intensity_target then
+        if inst.intensity < inst.intensity_target then
+            inst.intensity = math.min(inst.intensity + inc, inst.intensity_target)
+        elseif inst.intensity > inst.intensity_target then
+            inst.intensity = math.max(inst.intensity - inc, inst.intensity_target)
+        end 
+    end
+
+    if inst.intensity <= 0 and not inst.rayshidden then
+        hiderays(inst)
+    end
+
+    if inst.intensity > 0 and inst.rayshidden then
+        inst.rayshidden = nil
+        showlightrays(inst)
+    end        
 end
 
 local function OnPhase(inst, phase)
 
     if phase == "dusk" then
-        print("LIGHTRRAYS fade")
-        fadelightrays(inst)
+        inst.intensity_target = 0.3
     end
 
     if phase == "night" then
-        if TheWorld.state.isfullmoon then
-            inst.components.colourtweener:StartTween({255/255,177/255,32/255,1}, 2)
+        if TheWorld.state.isfullmoon then 
+            inst.intensity_target = 1
         else
-            print("LIGHTRRAYS  hide")
             hidelightrays(inst)
         end
     end
 
     if phase == "day" then
-        print("LIGHTRRAYS show")
         if not inst.lastphasefullmoon then 
-            showlightrays(inst)
+            inst.intensity_target = 1
         end
     end
 
     inst.lastphasefullmoon = TheWorld.state.isfullmoon
+end
+
+local function getintensity(inst)
+    return inst.intensity or 1
 end
 
 local function makefn()
@@ -96,6 +117,7 @@ local function makefn()
         if not TheNet:IsDedicated() then
             inst:AddComponent("distancefade")
             inst.components.distancefade:Setup(15,25)
+            inst.components.distancefade:SetExtraFn(getintensity)
         end
 
         inst.entity:SetPristine()
@@ -104,8 +126,12 @@ local function makefn()
             return inst
         end
 
-        inst:AddComponent("colourtweener")
-        inst.components.colourtweener:StartTween({255/255,177/255,32/255,1}, 0)
+--        inst:AddComponent("colourtweener")
+--        inst.components.colourtweener:StartTween({255/255,177/255,32/255,1}, 0)
+
+        inst.intensity = 1
+        inst.intensity_target = 1
+        inst:DoPeriodicTask(1*FRAMES, updateintensity)
 
         inst:WatchWorldState("phase", OnPhase)
 

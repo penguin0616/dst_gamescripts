@@ -429,7 +429,8 @@ local function fn()
     inst.entity:SetAABB(60, 20)
 
     inst:AddTag("shadecanopysmall")
-    
+    inst:AddTag("event_trigger")
+
     inst.MiniMapEntity:SetIcon("oceantree_pillar_small.png")
 
     inst.AnimState:SetBank("oceantree_pillar_small")

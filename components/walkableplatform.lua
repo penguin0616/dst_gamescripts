@@ -8,33 +8,37 @@ local WalkablePlatform = Class(function(self, inst)
     self.inst:AddTag("walkableplatform")
 
     if TheWorld.ismastersim then
+        self.inst:DoTaskInTime(0, function() self:SpawnPlayerCollision() end)
         self:StartUpdating()
     end
 end)
 
 function WalkablePlatform:OnRemoveEntity()
-    self:StopUpdating()
+    if TheWorld.ismastersim then
+        self:StopUpdating()
+        self:DespawnPlayerCollision()
 
-    local shore_pt
-    for k in pairs(self:GetEntitiesOnPlatform()) do
-        if k.components.drownable ~= nil then
-            if shore_pt == nil then
-                shore_pt = Vector3(FindRandomPointOnShoreFromOcean(self.inst.Transform:GetWorldPosition()))
+        local shore_pt
+        for k in pairs(self:GetEntitiesOnPlatform()) do
+            if k.components.drownable ~= nil then
+                if shore_pt == nil then
+                    shore_pt = Vector3(FindRandomPointOnShoreFromOcean(self.inst.Transform:GetWorldPosition()))
+                end
+                k:PushEvent("onsink", {boat = self.inst, shore_pt = shore_pt})
+            else
+                k:PushEvent("onsink", {boat = self.inst})
             end
-            k:PushEvent("onsink", {boat = self.inst, shore_pt = shore_pt})
-        else
-            k:PushEvent("onsink", {boat = self.inst})
         end
-    end
-    self.inst:PushEvent("onsink")
-    self:DestroyObjectsOnPlatform()
+        self.inst:PushEvent("onsink")
+        self:DestroyObjectsOnPlatform()
 
-    for k in pairs(self.objects_on_platform) do
-        self.inst:RemovePlatformFollower(k)
-    end
+        for k in pairs(self.objects_on_platform) do
+            self.inst:RemovePlatformFollower(k)
+        end
 
-    if self.uid then
-        TheWorld.components.walkableplatformmanager:UnregisterPlatform(self.inst)
+        if self.uid then
+            TheWorld.components.walkableplatformmanager:UnregisterPlatform(self.inst)
+        end
     end
 end
 
@@ -156,12 +160,10 @@ end
 function WalkablePlatform:CommitPlayersOnPlatform()
     local has_players = not IsTableEmpty(self.players_on_platform)
     if self.had_players and not has_players then
-        self:DespawnPlayerCollision()
         if self.inst.components.boatdrifter then
             self.inst.components.boatdrifter:OnStartDrifting()
         end
     elseif not self.had_players and has_players then
-        self:SpawnPlayerCollision()
         if self.inst.components.boatdrifter then
             self.inst.components.boatdrifter:OnStopDrifting()
         end

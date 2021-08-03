@@ -28,3 +28,5 @@ end
 function global(...)
    for _, v in ipairs{...} do mt.__declared[v] = true end
 end
+
+global("MAIN", "WORLDGEN_MAIN")

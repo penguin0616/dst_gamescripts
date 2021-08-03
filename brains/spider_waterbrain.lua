@@ -132,7 +132,11 @@ function SpiderWaterBrain:OnStart()
                     end, "OnFire",
                 Panic(self.inst)
             ),
-            AttackWall(self.inst),
+            IfNode(function()
+                    return not self.inst.bedazzled and self.inst.components.follower.leader == nil
+                end, "AttackWall",
+                AttackWall(self.inst)
+            ),
             ChaseAndAttack(self.inst, SpringCombatMod(MAX_CHASE_TIME)),
 
             IfNode(function() return self.inst.defensive end, "DefensiveFollow",

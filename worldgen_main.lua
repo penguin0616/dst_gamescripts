@@ -474,8 +474,24 @@ function GenerateNew(debug, world_gen_data)
 	print("Generation complete")
 
     local PRETTY_PRINT = BRANCH == "dev"
-	local strdata = DataDumper(savedata, nil, not PRETTY_PRINT)
-	return strdata
+	local savedata_entities = savedata.ents
+	savedata.ents = nil
+
+    local data = {}
+    for key,value in pairs(savedata) do    
+        data[key] = DataDumper(value, key, not PRETTY_PRINT)
+    end
+
+	--special handling for the entities table; contents are dumped per entity rather than 
+	--dumping the whole entities table at once as is done for the other parts of the save data
+	data.ents = {}
+	for key, value in pairs(savedata_entities) do
+		if key ~= "" then
+			data.ents[key] = DataDumper(value, key, not PRETTY_PRINT)
+		end
+	end
+
+	return data
 end
 
 local function LoadParametersAndGenerate(debug)

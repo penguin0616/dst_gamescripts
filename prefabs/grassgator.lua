@@ -17,7 +17,7 @@ local prefabs =
 }
 
 local grass_gator = {"plantmeat","plantmeat","plantmeat","plantmeat","plantmeat","plantmeat","plantmeat","cutgrass","twigs","cutgrass","twigs"}
---V2C: "trunk" is a dummy loot prefab that should be converted to "trunk_cooked"
+local loot_fire = {"plantmeat","plantmeat","plantmeat","plantmeat","plantmeat","plantmeat","plantmeat"}
 
 local WAKE_TO_RUN_DISTANCE = 10
 local SLEEP_NEAR_ENEMY_DISTANCE = 14
@@ -37,7 +37,7 @@ local function KeepTarget(inst, target)
 end
 
 local function ShareTargetFn(dude)
-    return dude:HasTag("koalefant") and not dude:HasTag("player") and not dude.components.health:IsDead()
+    return dude:HasTag("grassgator") and not dude:HasTag("player") and not dude.components.health:IsDead()
 end
 
 local function OnAttacked(inst, data)
@@ -101,8 +101,10 @@ local function checkforshallowwater(inst)
         return
     end
 
+
     if inst:IsValid() and not inst.components.sleeper:IsAsleep() and (not inst.sg or not inst.sg:HasStateTag("diving")) then
-        if not isovershallowwater(inst) then        
+        if not isovershallowwater(inst) then 
+
             --inst.movetoshallow = true       
             inst:PushEvent("diveandrelocate")
         end         

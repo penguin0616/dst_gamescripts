@@ -264,7 +264,12 @@ function Anchor:OnUpdate(dt)
 end
 
 function Anchor:GetDebugString()
-	return "Boat: " .. tostring(self.boat)
+	local s = "Boat: " .. tostring(self.boat)
+
+    local depth = self:GetCurrentDepth()
+    s = s.." numberofraisers: "..self.numberofraisers.." raiseunits: "..self.raiseunits.." currentraiseunits: "..self.currentraiseunits.." depth: "..depth
+
+    return s
 end
 
 return Anchor

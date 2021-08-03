@@ -2527,8 +2527,8 @@ ACTIONS.UPGRADE.fn = function(act)
 
         local can_upgrade, reason = act.target.components.upgradeable:CanUpgrade()
         if can_upgrade then
-        return act.target.components.upgradeable:Upgrade(act.invobject, act.doer)
-    end
+            return act.target.components.upgradeable:Upgrade(act.invobject, act.doer)
+        end
 
         return false, reason
     end

@@ -280,7 +280,7 @@ local states=
         timeline=
         {
             TimeEvent(1*FRAMES, function(inst) 
-               spawnwaves(inst, 6, 360, 4, nil, 2, 2, nil, true)
+               spawnwaves(inst, 6, 360, 4, nil, nil, 2, nil, true)
             end),
             TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/large") end),
             
@@ -312,7 +312,7 @@ local states=
             TimeEvent(21*FRAMES, function(inst) inst.SoundEmitter:PlaySound("turnoftides/common/together/water/submerge/medium") end),
 
             TimeEvent(27*FRAMES, function(inst) 
-                spawnwaves(inst, 6, 360, 4, nil, 2, 2, nil, true)
+                spawnwaves(inst, 6, 360, 4, nil, nil, 2, nil, true)
             end),
         },
 
@@ -385,7 +385,7 @@ local states=
         timeline=
         {
             TimeEvent(4*FRAMES, function(inst) 
-                spawnwaves(inst, 6, 360, 4, nil, 2, 2, nil, true)
+                spawnwaves(inst, 6, 360, 4, nil, nil, 2, nil, true)
             end),
             TimeEvent(5*FRAMES, function(inst) 
                 inst.SoundEmitter:PlaySound("turnoftides/common/together/water/emerge/medium") 

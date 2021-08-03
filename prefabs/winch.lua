@@ -135,7 +135,7 @@ local function OnFullyLowered(inst)
 			local salvageable = FindEntity(inst, CLAW_CATCHING_RADIUS, nil, CLAW_CATCH_MUST_TAGS, nil)
 			if salvageable ~= nil then
 				salvaged_item = salvageable.components.winchtarget:Salvage()
-
+				
 				if salvaged_item ~= nil then
 					inst.components.inventory:GiveItem(salvaged_item)
 					salvaged_item:PushEvent("on_salvaged")
@@ -143,7 +143,7 @@ local function OnFullyLowered(inst)
 					turn_on_boat_drag(inst, boat, TUNING.BOAT_WINCH.BOAT_DRAG_DURATION)
 				end
 
-				salvageable:Remove()
+				salvageable:Remove()			
 			end
 		end
 
@@ -174,7 +174,7 @@ local function OnLoweringUpdate(inst)
 
 		if depth > 0 and inst.components.winch.line_length >= depth then
 			local salvaged_item = salvageable.components.winchtarget:Salvage()
-
+				
 			if salvaged_item ~= nil then
 				inst.components.inventory:GiveItem(salvaged_item)
 				salvaged_item:PushEvent("on_salvaged")
@@ -267,7 +267,7 @@ local function onitemget(inst, data, no_CHEVO_event)
 	end
 
 	if not no_CHEVO_event then
-		TheWorld:PushEvent("CHEVO_heavyobject_winched",{target=inst,doer=nil})
+		inst:DoTaskInTime(0,function() TheWorld:PushEvent("CHEVO_heavyobject_winched",{target=inst,doer=nil}) end)
 	end
 end
 
