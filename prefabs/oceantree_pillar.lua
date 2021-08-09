@@ -504,7 +504,7 @@ end
 
 
 local function OnLoad(inst, data)
-    if data.droppedvines then
+    if data and data.droppedvines then
         inst.droppedvines = true
     end
 end
