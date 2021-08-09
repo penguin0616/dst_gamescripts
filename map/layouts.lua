@@ -1056,7 +1056,7 @@ local ExampleLayout =
             	end
 
 
-                for i=1,20 do
+                for i=1,10 do
                     if math.random()<0.4 then
                         table.insert(stuff, "fireflies")
                     end

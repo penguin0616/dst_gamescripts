@@ -78,48 +78,20 @@ local function removecanopyshadow(inst)
     end
 end
 
-local function OnFar(inst)
-    if inst.players then
-        local x, y, z = inst.Transform:GetWorldPosition()
-        local testset = {}
-        for player,i in pairs(inst.players)do
-            testset[player] = true        
-        end
-
-        for i,player in ipairs(FindPlayersInRangeSq(x, y, z, MAX*MAX))do
-            if testset[player] then
-                testset[player] = false
-            end
-        end
-
-        for player,i in pairs(testset)do
-            if i == true then
-                if player.canopytrees then   
-                   player.canopytrees = player.canopytrees - 1
-                   if player.canopytrees == 0 then
-                       player:PushEvent("onchangecanopyzone", false)
-                   end
-                end
-                inst.players[player] = nil
-            end
-        end
+local function OnFar(inst, player)
+    if player.canopytrees then   
+        player.canopytrees = player.canopytrees - 1
+        player:PushEvent("onchangecanopyzone", player.canopytrees > 0)
     end
+    inst.players[player] = nil
 end
 
 local function OnNear(inst,player)
-    if not inst.players then
-        inst.players = {}
-    end
-
     inst.players[player] = true
 
-    if not player.canopytrees then
-        player.canopytrees = 0
-    end
-    player.canopytrees = player.canopytrees + 1
-    if player.canopytrees == 1 then
-        player:PushEvent("onchangecanopyzone", true)
-    end
+    player.canopytrees = (player.canopytrees or 0) + 1
+
+    player:PushEvent("onchangecanopyzone", player.canopytrees > 0)
 end
 
 local UpdateShadowSize = function(shadow, height)
@@ -407,11 +379,9 @@ end
 
 local function OnLoadPostPass(inst, ents, data)
 
-    
 end
 
 local function removecanopy(inst)
-    print("REMOVING CANOPU")
     if inst.roots then
         inst.roots:Remove()
     end
@@ -419,19 +389,16 @@ local function removecanopy(inst)
         inst._ripples:Remove()
     end
 
-    if inst.players ~= nil then
-        for k, v in pairs(inst.players) do
-            if k:IsValid() then
-                if k.canopytrees ~= nil then
-                    k.canopytrees = k.canopytrees - 1
-                    if k.canopytrees <= 0 then
-                        k:PushEvent("onchangecanopyzone", false)
-                    end
-                end
+    for player in pairs(inst.players) do
+        if player:IsValid() then
+            if player.canopytrees then
+                player.canopytrees = player.canopytrees - 1
+                player:PushEvent("onchangecanopyzone", player.canopytrees > 0)
             end
         end
     end
-    inst._hascanopy:set(false)    
+
+    inst._hascanopy:set(false)
 end
 
 local function OnRemove(inst)
@@ -495,8 +462,11 @@ local function fn()
     inst._cocoons_to_regrow = 0
 
     -------------------
+
+    inst.players = {}
    
     inst:AddComponent("playerprox")
+    inst.components.playerprox:SetTargetMode(inst.components.playerprox.TargetModes.AllPlayers)
     inst.components.playerprox:SetDist(MIN, MAX)
     inst.components.playerprox:SetOnPlayerFar(OnFar)
     inst.components.playerprox:SetOnPlayerNear(OnNear)

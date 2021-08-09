@@ -3,6 +3,7 @@ if TheNet:IsDedicated() then
     ShadeEffectUpdate = nullfunc
     SpawnLeafCanopy = nullfunc
     DespawnLeafCanopy = nullfunc
+    EnableShadeRenderer = nullfunc
     return
 end
 
@@ -29,4 +30,8 @@ function ShadeEffectUpdate(dt)
 
     ShadeRenderer:SetShadeStrength(ShadeTypes.LeafCanopy, Lerp(TUNING.CANOPY_MIN_STRENGTH, TUNING.CANOPY_MAX_STRENGTH, ((r + g + b) / 3) / 255))
     ShadeRenderer:Update(dt)
+end
+
+function EnableShadeRenderer(enable)
+    ShadeRenderer:Enable(enable)
 end

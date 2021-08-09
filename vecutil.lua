@@ -36,6 +36,17 @@ function VecUtil_Lerp(p1_x, p1_z, p2_x, p2_z, percent)
 	return (p2_x - p1_x) * percent + p1_x,  (p2_z - p1_z) * percent + p1_z
 end
 
+--returns 0,0 if normalize would result in a NaN
+function VecUtil_NormalizeNoNaN(p1_x, p1_z)
+	if p1_x == 0 and p1_z == 0 then
+		return 0, 0
+	end
+    local x_sq = p1_x * p1_x
+    local z_sq = p1_z * p1_z
+    local length = sqrt(x_sq + z_sq)
+    return p1_x / length, p1_z / length
+end
+
 function VecUtil_Normalize(p1_x, p1_z)
     local x_sq = p1_x * p1_x
     local z_sq = p1_z * p1_z

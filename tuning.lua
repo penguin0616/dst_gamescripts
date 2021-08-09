@@ -3621,7 +3621,7 @@ function Tune(overrides)
             MAX_ALLOWED_VELOCITY = 10,
 
             BASE_DRAG = 0.2,
-            MAX_DRAG = 1,
+            MAX_DRAG = 1.5,
             BASE_DAMPENING = 0,
             MAX_DAMPENING = 1,
             MAX_VELOCITY = 1.2,
@@ -3669,8 +3669,8 @@ function Tune(overrides)
                 BASIC =
                 {
                     MAX_VELOCITY_MOD = 0.15,
-                    ANCHOR_DRAG = 1.5,
-                    SAILFORCEDRAG = 0.6,
+                    ANCHOR_DRAG = 2,
+                    SAILFORCEDRAG = 0.4,
                 },
             },
 

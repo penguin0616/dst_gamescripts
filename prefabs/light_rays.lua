@@ -3,6 +3,11 @@ local assets=
     Asset("ANIM", "anim/lightrays.zip"),
 }
 
+local RAYS_ID ={
+    DAY = 1,
+    DUSK = 2,
+    NIGHT = 3,
+}
 local function OnEntityWake(inst)
     inst.Transform:SetRotation(45)
 end
@@ -60,27 +65,23 @@ local function updateintensity(inst)
     end        
 end
 
+local function OnRays(inst, phase)
+
+end
+
 local function OnPhase(inst, phase)
 
     if phase == "dusk" then
-        inst.intensity_target = 0.3
+        inst._rays:set(RAYS_ID.DUSK)
     end
 
     if phase == "night" then
-        if TheWorld.state.isfullmoon then 
-            inst.intensity_target = 1
-        else
-            hidelightrays(inst)
-        end
+        inst._rays:set(RAYS_ID.NIGHT)
     end
 
     if phase == "day" then
-        if not inst.lastphasefullmoon then 
-            inst.intensity_target = 1
-        end
+        inst._rays:set(RAYS_ID.DAY)
     end
-
-    inst.lastphasefullmoon = TheWorld.state.isfullmoon
 end
 
 local function getintensity(inst)
@@ -114,6 +115,32 @@ local function makefn()
         inst:AddTag("NOBLOCK")
         inst:AddTag("NOCLICK")
 
+        inst.intensity = 1
+        inst.intensity_target = 1
+
+        inst._rays = net_tinybyte(inst.GUID, "lightrays_canopy._rays", "raysdirty")
+
+        inst:ListenForEvent("raysdirty", function()
+            local rays = inst._rays:value()
+            if rays == RAYS_ID.DAY then
+                if not inst.lastphasefullmoon then 
+                    inst.intensity_target = 1
+                end
+            elseif rays == RAYS_ID.DUSK then
+                inst.intensity_target = 0.3
+            else
+                if TheWorld.state.isfullmoon then 
+                    inst.intensity_target = 1
+                else
+                    hidelightrays(inst)
+                end
+            end
+            inst.lastphasefullmoon = TheWorld.state.isfullmoon
+        end)
+        inst:DoPeriodicTask(1*FRAMES, updateintensity)
+
+        showlightrays(inst)
+
         if not TheNet:IsDedicated() then
             inst:AddComponent("distancefade")
             inst.components.distancefade:Setup(15,25)
@@ -129,13 +156,11 @@ local function makefn()
 --        inst:AddComponent("colourtweener")
 --        inst.components.colourtweener:StartTween({255/255,177/255,32/255,1}, 0)
 
-        inst.intensity = 1
-        inst.intensity_target = 1
-        inst:DoPeriodicTask(1*FRAMES, updateintensity)
+        
+
+
 
         inst:WatchWorldState("phase", OnPhase)
-
-        showlightrays(inst)
 
         return inst
     end

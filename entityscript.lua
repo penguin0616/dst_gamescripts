@@ -749,6 +749,10 @@ function EntityScript:AddChild(child)
 end
 
 function EntityScript:RemovePlatformFollower(child)
+    if child.platform ~= self then
+        return
+    end
+
     child.platform = nil
     if self.platformfollowers then
         self.platformfollowers[child] = nil
@@ -771,6 +775,7 @@ function EntityScript:AddPlatformFollower(child)
     self.platformfollowers[child] = true
     child.entity:SetPlatform(self.entity)
 end
+
 --only works on master sim
 function EntityScript:GetPlatformFollowers()
     return self.platformfollowers

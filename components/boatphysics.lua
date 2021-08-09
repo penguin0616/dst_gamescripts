@@ -255,8 +255,8 @@ end
 
 
 function BoatPhysics:ApplyForce(dir_x, dir_z, force)
-    local dir_normal_x, dir_normal_z = VecUtil_Normalize(dir_x, dir_z)
-    local velocity_normal_x, velocity_normal_z = VecUtil_Normalize(self.velocity_x, self.velocity_z)
+    local dir_normal_x, dir_normal_z = VecUtil_NormalizeNoNaN(dir_x, dir_z)
+    local velocity_normal_x, velocity_normal_z = VecUtil_NormalizeNoNaN(self.velocity_x, self.velocity_z)
     local force_dir_modifier = math.max(0, VecUtil_Dot(velocity_normal_x, velocity_normal_z, dir_normal_x, dir_normal_z))
 
     force = force * self:GetForceDampening(force_dir_modifier)
@@ -306,6 +306,10 @@ function BoatPhysics:GetTotalAnchorDrag()
     return total_anchor_drag
 end
 
+function BoatPhysics:GetBoatDrag(velocity)
+    return easing.inCubic(velocity, TUNING.BOAT.BASE_DRAG, TUNING.BOAT.MAX_DRAG - TUNING.BOAT.BASE_DRAG, TUNING.BOAT.MAX_ALLOWED_VELOCITY)
+end
+
 function BoatPhysics:GetAnchorSailForceModifier()
     local sail_force_modifier = 1
     for k,v in pairs(self.boatdraginstances) do
@@ -338,6 +342,37 @@ function BoatPhysics:SetCanSteeringRotate(can_rotate)
     if can_rotate then
         self.boat_rotation_offset = self.inst.Transform:GetRotation() - -VecUtil_GetAngleInDegrees(self.rudder_direction_x, self.rudder_direction_z)
     end
+end
+
+function BoatPhysics:ApplyDrag(dt, total_drag, cur_velocity, velocity_normal_x, velocity_normal_z)
+    if cur_velocity > 0 then
+        local velocity_length = math.min(-total_drag, 0) * dt
+        self.velocity_x, self.velocity_z = VecUtil_Add(self.velocity_x, self.velocity_z, VecUtil_Scale(velocity_normal_x, velocity_normal_z, velocity_length))
+        cur_velocity = cur_velocity + velocity_length
+
+        if cur_velocity < 0 then
+            self.velocity_x, self.velocity_z = 0, 0
+            cur_velocity = 0
+        end
+	end
+
+    return cur_velocity
+end
+
+function BoatPhysics:ApplySailForce(dt, sail_force, cur_velocity, max_velocity)
+    if sail_force > 0 and cur_velocity < max_velocity then
+        local velocity_length = sail_force * dt
+        self.velocity_x, self.velocity_z = VecUtil_Add(self.velocity_x, self.velocity_z, VecUtil_Scale(self.rudder_direction_x, self.rudder_direction_z, velocity_length))
+        cur_velocity = cur_velocity + velocity_length
+
+        if cur_velocity > max_velocity then
+            local velocity_normal_x, velocity_normal_z = VecUtil_Normalize(self.velocity_x, self.velocity_z)
+            self.velocity_x, self.velocity_z = VecUtil_Scale(velocity_normal_x, velocity_normal_z, max_velocity)
+            cur_velocity = max_velocity
+        end
+    end
+
+    return cur_velocity
 end
 
 function BoatPhysics:OnUpdate(dt)
@@ -389,41 +424,23 @@ function BoatPhysics:OnUpdate(dt)
 
 
     local sail_force_modifier = self:GetAnchorSailForceModifier()
-    local raised_sail_count = 0
     local sail_force = 0
     for k,v in pairs(self.masts) do
-		local f = k:CalcSailForce() * sail_force_modifier
-        if f ~= 0 then
-            sail_force = sail_force + f
-            raised_sail_count = raised_sail_count + 1
-        end
+        sail_force = sail_force + k:CalcSailForce() * sail_force_modifier
     end
 
     local velocity_normal_x, velocity_normal_z, cur_velocity = VecUtil_NormalAndLength(self.velocity_x, self.velocity_z)
     local max_velocity = self:GetMaxVelocity()
 
     local total_anchor_drag = self:GetTotalAnchorDrag()
-    local total_drag = easing.inCubic(cur_velocity, TUNING.BOAT.BASE_DRAG, TUNING.BOAT.MAX_DRAG - TUNING.BOAT.BASE_DRAG, TUNING.BOAT.MAX_ALLOWED_VELOCITY) + total_anchor_drag
 
-    if raised_sail_count > 0 and cur_velocity < max_velocity then
-        local velocity_length = math.max(sail_force - total_drag, 0) * dt
-        self.velocity_x, self.velocity_z = VecUtil_Add(self.velocity_x, self.velocity_z, VecUtil_Scale(self.rudder_direction_x, self.rudder_direction_z, velocity_length))
-        cur_velocity = cur_velocity + velocity_length
-
-        if cur_velocity > max_velocity then
-            self.velocity_x, self.velocity_z = VecUtil_Scale(self.rudder_direction_x, self.rudder_direction_z, max_velocity)
-            cur_velocity = max_velocity
-		end
-	elseif cur_velocity > 0 then
-        local velocity_length = math.min(-total_drag, 0) * dt
-        self.velocity_x, self.velocity_z = VecUtil_Add(self.velocity_x, self.velocity_z, VecUtil_Scale(velocity_normal_x, velocity_normal_z, velocity_length))
-        cur_velocity = cur_velocity + velocity_length
-
-        if cur_velocity < 0 then
-            self.velocity_x, self.velocity_z = 0, 0
-            cur_velocity = 0
-        end
-	end
+    if total_anchor_drag > 0 and sail_force > 0 then
+        cur_velocity = self:ApplySailForce(dt, sail_force, cur_velocity, max_velocity)
+        cur_velocity = self:ApplyDrag(dt, self:GetBoatDrag(cur_velocity) + total_anchor_drag, cur_velocity, VecUtil_Normalize(self.velocity_x, self.velocity_z))
+    else
+        cur_velocity = self:ApplyDrag(dt, self:GetBoatDrag(cur_velocity) + total_anchor_drag, cur_velocity, velocity_normal_x, velocity_normal_z)
+        cur_velocity = self:ApplySailForce(dt, sail_force, cur_velocity, max_velocity)
+    end
 
     local is_moving = cur_velocity > 0
     if self.was_moving and not is_moving then
@@ -457,7 +474,7 @@ function BoatPhysics:OnUpdate(dt)
 
     local time = GetTime()
     if self.lastzoomtime == nil or time - self.lastzoomtime > 1.0 then
-        local should_zoom_out = raised_sail_count > 0 and total_anchor_drag <= 0
+        local should_zoom_out = sail_force > 0 and total_anchor_drag <= 0
         if not self.inst.doplatformcamerazoom:value() and should_zoom_out then
             self.inst.doplatformcamerazoom:set(true)
         elseif self.inst.doplatformcamerazoom:value() and not should_zoom_out then

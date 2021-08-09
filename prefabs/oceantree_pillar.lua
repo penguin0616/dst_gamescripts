@@ -26,14 +26,18 @@ local MAX = MIN + TUNING.WATERTREE_PILLAR_CANOPY_BUFFER
 local DROP_ITEMS_DIST_MIN = 6
 local DROP_ITEMS_DIST_VARIANCE = 10
 
-local NUM_DROP_SMALL_ITEMS_MIN = 20
-local NUM_DROP_SMALL_ITEMS_MAX = 35
+local NUM_DROP_SMALL_ITEMS_MIN = 10
+local NUM_DROP_SMALL_ITEMS_MAX = 14
 
-local NUM_DROP_SMALL_ITEMS_MIN_RAM = 10
-local NUM_DROP_SMALL_ITEMS_MAX_RAM = 14
+local NUM_DROP_SMALL_ITEMS_MIN_RAM = 4
+local NUM_DROP_SMALL_ITEMS_MAX_RAM = 7
 
 local NUM_DROP_SMALL_ITEMS_MIN_LIGHTNING = 3
 local NUM_DROP_SMALL_ITEMS_MAX_LIGHTNING = 5
+
+local RAM_ALERT_COCOONS_RADIUS = 20
+
+local NEW_VINES_SPAWN_RADIUS_MIN = 6
 
 local DROPPED_ITEMS_SPAWN_HEIGHT = 10
 
@@ -63,49 +67,22 @@ local function spawnwaves(inst, numWaves, totalAngle, waveSpeed, wavePrefab, ini
     )
 end
 
-
-local function OnFar(inst)
-    if inst.players then
-        local x, y, z = inst.Transform:GetWorldPosition()
-        local testset = {}
-        for player,i in pairs(inst.players)do
-            testset[player] = true        
-        end
-
-        for i,player in ipairs(FindPlayersInRangeSq(x, y, z, MAX*MAX))do
-            if testset[player] then
-                testset[player] = false
-            end
-        end
-
-        for player,i in pairs(testset)do
-            if i == true then
-                if player.canopytrees then
-                   player.canopytrees = player.canopytrees - 1
-                   if player.canopytrees == 0 then
-                       player:PushEvent("onchangecanopyzone", false)
-                   end
-                end
-                inst.players[player] = nil
-            end
-        end
+local function OnFar(inst, player)
+    print("ON FAR", inst.GUID)
+    if player.canopytrees then   
+        player.canopytrees = player.canopytrees - 1
+        player:PushEvent("onchangecanopyzone", player.canopytrees > 0)
     end
+    inst.players[player] = nil
 end
 
 local function OnNear(inst,player)
-    if not inst.players then
-        inst.players = {}
-    end
-
+    print("NEAR TREE",inst.GUID)
     inst.players[player] = true
 
-    if not player.canopytrees then
-        player.canopytrees = 0
-    end
-    player.canopytrees = player.canopytrees + 1
-    if player.canopytrees == 1 then
-        player:PushEvent("onchangecanopyzone", true)
-    end
+    player.canopytrees = (player.canopytrees or 0) + 1
+
+    player:PushEvent("onchangecanopyzone", player.canopytrees > 0)
 end
 
 local function removecanopyshadow(inst)
@@ -129,8 +106,8 @@ local function removecanopyshadow(inst)
     end
 end
 
+local OCEANVINES_MUST = {"oceanvine"}
 local function removecanopy(inst)
-    print("REMOVING CANOPU")
     if inst.roots then
         inst.roots:Remove()
     end
@@ -138,18 +115,21 @@ local function removecanopy(inst)
         inst._ripples:Remove()
     end
 
-    if inst.players ~= nil then
-        for k, v in pairs(inst.players) do
-            if k:IsValid() then
-                if k.canopytrees ~= nil then
-                    k.canopytrees = k.canopytrees - 1
-                    if k.canopytrees <= 0 then
-                        k:PushEvent("onchangecanopyzone", false)
-                    end
-                end
+    for player in pairs(inst.players) do
+        if player:IsValid() then
+            if player.canopytrees then
+                OnFar(inst, player)
             end
         end
     end
+    local point = inst:GetPosition()
+    local oceanvines = TheSim:FindEntities(point.x, point.y, point.z, MAX+1, OCEANVINES_MUST)
+    if #oceanvines > 0 then
+        for i, ent in ipairs(oceanvines) do
+            ent.fall(ent)
+        end
+    end
+
     inst._hascanopy:set(false)    
 end
 
@@ -236,6 +216,7 @@ local function DropItems(inst)
 
     if #inst.items_to_drop < 1 then
         inst.items_to_drop = nil
+        inst.drop_items_task:Cancel()
         inst.drop_items_task = nil
         if inst.removeme then
             inst.itemsdone = true  
@@ -244,8 +225,42 @@ local function DropItems(inst)
             end                        
         end
     else
-        inst:DoTaskInTime(0.05, function() DropItems(inst) end)
+        inst.drop_items_task = inst:DoTaskInTime(0.05, function() DropItems(inst) end)
     end
+end
+
+local function DropLog(inst)
+    if inst.logs > 0 then
+     
+        local item_to_spawn = "log"
+
+        local x, _, z = inst.Transform:GetWorldPosition()
+
+        local item = SpawnPrefab(item_to_spawn)
+
+        local dist = 0 + (math.random()*6)
+        local theta = math.random() * 2 * PI
+
+        local spawn_x, spawn_z
+
+        spawn_x, spawn_z = x + math.cos(theta) * dist, z + math.sin(theta) * dist
+
+        item.Transform:SetPosition(spawn_x, DROPPED_ITEMS_SPAWN_HEIGHT, spawn_z)    
+        inst.logs = inst.logs -1
+    end
+end
+
+local function DropLogs(inst)
+    
+    DropLog(inst)
+    DropLog(inst)
+    if inst.logs < 1 then
+        inst.logs = nil
+        inst.drop_logs_task:Cancel()
+        inst.drop_logs_task = nil        
+    else
+        inst.drop_logs_task = inst:DoTaskInTime(0.05, function() DropLogs(inst) end)
+    end    
 end
 
 local function generate_items_to_drop(inst, itemnum)
@@ -271,6 +286,46 @@ local function dropcanopystuff(inst,num, dropleaves)
     dropcanopy(inst,dropleaves)
 end
 
+local function spawnvine(inst)
+    local x, _, z = inst.Transform:GetWorldPosition()
+    local radius_variance = MAX - NEW_VINES_SPAWN_RADIUS_MIN
+    local vine = SpawnPrefab("oceanvine")
+    vine.components.pickable:MakeEmpty()
+    local theta = math.random() * PI * 2
+    local offset = NEW_VINES_SPAWN_RADIUS_MIN + radius_variance * math.random()
+    vine.Transform:SetPosition(x + math.cos(theta) * offset, 0, z + math.sin(theta) * offset)
+    vine:fall_down_fn()    
+
+    vine.SoundEmitter:PlaySound("dontstarve/movement/foley/hidebush")
+end
+
+
+local VINE_TAGS = { "oceanvine" }
+local function SpawnMissingVines(inst)
+    local x, _, z = inst.Transform:GetWorldPosition()
+    local ents = TheSim:FindEntities(x, 0, z, MAX, VINE_TAGS)
+    local num_existing_vines = ents ~= nil and #ents or 0
+
+    print("FOUND VINES", num_existing_vines)
+    if num_existing_vines < 1  then 
+
+        local num_new_vines = math.random(1,2)
+
+        for i=1,num_new_vines do
+            spawnvine(inst)
+        end
+    end
+end
+
+local COCOON_TAGS = {"webbed"}
+local function alert_nearby_cocoons(inst, picker, loot)
+    local px, py, pz = inst.Transform:GetWorldPosition()
+    local nearby_cocoons = TheSim:FindEntities(px, py, pz, RAM_ALERT_COCOONS_RADIUS, COCOON_TAGS)
+    for _, cocoon in ipairs(nearby_cocoons) do
+        cocoon:PushEvent("activated", {target = picker})
+    end
+end
+
 local DAMAGE_SCALE = 0.25
 local function OnCollide(inst, data)
 
@@ -284,10 +339,24 @@ local function OnCollide(inst, data)
                 local time = TheWorld.state.cycles + TheWorld.state.time
                 if inst.last_ram_time == nil or time - inst.last_ram_time >= TUNING.WATERTREE_PILLAR_RAM_RECHARGE_TIME then                
                     inst.last_ram_time = time
-                    dropcanopystuff(inst, math.random(NUM_DROP_SMALL_ITEMS_MIN_RAM,NUM_DROP_SMALL_ITEMS_MAX))
+                    dropcanopystuff(inst, math.random(NUM_DROP_SMALL_ITEMS_MIN_RAM,NUM_DROP_SMALL_ITEMS_MAX_RAM))
                 end
                 ShakeAllCamerasOnPlatform(CAMERASHAKE.SIDE, 2.8, .025, .3, data.other)
             end)
+
+            if inst.drop_items_task == nil or next(inst.items_to_drop) == nil then
+                alert_nearby_cocoons(inst)
+
+                local time = TheWorld.state.cycles + TheWorld.state.time
+                if inst.last_ram_time == nil or time - inst.last_ram_time >= TUNING.WATERTREE_PILLAR_RAM_RECHARGE_TIME then
+                    inst.last_ram_time = time
+
+                    inst:DoTaskInTime(0.65, SpawnMissingVines)
+
+                    dropcanopystuff(inst, math.random(NUM_DROP_SMALL_ITEMS_MIN,NUM_DROP_SMALL_ITEMS_MAX), true )
+                end
+            end
+
         end
     end    
 end
@@ -326,6 +395,8 @@ local function chop_down_tree(inst, chopper)
     inst.removeme = true
     inst.persits = false
     dropcanopystuff(inst, math.random(NUM_DROP_SMALL_ITEMS_MIN,NUM_DROP_SMALL_ITEMS_MAX), true )
+    inst.logs = 15
+    DropLogs(inst)
     
     inst:DoTaskInTime(.5, function() ShakeAllCameras(CAMERASHAKE.FULL, 0.25, 0.03, 0.6, inst, 6) end)
 end
@@ -335,8 +406,9 @@ local function OnRemove(inst)
 end
 
 local function OnSprout(inst)
+
     inst.AnimState:PlayAnimation("grow_tall_to_pillar")
-    inst.AnimState:PushAnimation("idle",true)
+    inst.AnimState:PushAnimation("idle",true)    
 end
 
 local function OnBurnt(inst)
@@ -413,6 +485,30 @@ local function OnLightningStrike(inst)
     inst._lightning_drop_task = inst:DoTaskInTime(20*FRAMES, DropLightningItems, items_to_drop)
 end
 
+local function startvines(inst)
+    inst:DoTaskInTime(2 + math.random(),function() spawnvine(inst) end)
+    inst:DoTaskInTime(2.5 + math.random(),function() spawnvine(inst) end)
+    inst:DoTaskInTime(2.5 + math.random(),function() spawnvine(inst) end)
+    if math.random() < 0.33 then 
+        inst:DoTaskInTime(3 + math.random(),function() spawnvine(inst) end)
+    end
+    inst.droppedvines = true
+end
+
+
+local function OnSave(inst, data)
+    if inst.droppedvines then
+        data.droppedvines = true
+    end
+end
+
+
+local function OnLoad(inst, data)
+    if data.droppedvines then
+        inst.droppedvines = true
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -468,9 +564,12 @@ local function fn()
     -------------------
    
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetLoot({"log", "log", "log", "log","log", "log", "twigs", "twigs"})
+    inst.components.lootdropper:SetLoot({"log", "log", "log", "log", "twigs", "twigs", "twigs"})
+
+    inst.players = {}
 
     inst:AddComponent("playerprox")
+    inst.components.playerprox:SetTargetMode(inst.components.playerprox.TargetModes.AllPlayers)
     inst.components.playerprox:SetDist(MIN, MAX)
     inst.components.playerprox:SetOnPlayerFar(OnFar)
     inst.components.playerprox:SetOnPlayerNear(OnNear)
@@ -507,6 +606,15 @@ local function fn()
     
     inst.roots = SpawnPrefab("oceantree_pillar_roots")
     inst.roots.entity:SetParent(inst.entity)
+
+    inst.OnSave = OnSave    
+    inst.OnLoad = OnLoad
+
+    inst:DoTaskInTime(0.5,function()
+        if not inst.droppedvines then
+            startvines(inst)
+        end
+    end)
 
     return inst
 end

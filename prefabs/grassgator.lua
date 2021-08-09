@@ -137,6 +137,11 @@ local function findnewshallowlocation(inst, range)
     end
 end
 
+local function OnEntitySleep(inst)
+    local pos = inst:GetPosition()
+    inst.Transform:SetPosition(pos.x,0,pos.z)
+end
+
 local function create_base(build)
     local inst = CreateEntity()
 
@@ -255,6 +260,7 @@ local function create_base(build)
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
+    inst.OnEntitySleep = OnEntitySleep    
 
     return inst
 end

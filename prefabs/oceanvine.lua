@@ -214,6 +214,7 @@ local function onpicked(inst, picker, loot)
 end
 
 local function makeempty(inst)
+    inst.AnimState:Hide("fig")
     inst.AnimState:PlayAnimation("idle_nofruit", true)
 
     if inst.components.inspectable ~= nil then
@@ -222,6 +223,7 @@ local function makeempty(inst)
 end
 
 local function makefull(inst)
+    inst.AnimState:Show("fig")
     if POPULATING then
         inst.AnimState:PlayAnimation("idle_fruit", true)
     else
@@ -236,6 +238,28 @@ end
 
 local function onloadpostpass(inst, newents, savedata)
     inst.AnimState:SetTime(math.random() * inst.AnimState:GetCurrentAnimationLength())
+end
+
+local function fall(inst)
+    inst.persists = false
+    local point = inst:GetPosition()
+    local onland = TheWorld.Map:IsVisualGroundAtPoint(point.x,point.y,point.z) or TheWorld.Map:GetPlatformAtPoint(point.x,point.z) 
+    if onland then
+        inst.AnimState:PlayAnimation("fall_land", false)
+        inst:ListenForEvent("animover", function() ErodeAway(inst) end)
+    else
+        inst.AnimState:PlayAnimation("fall_ocean", false)
+        inst:ListenForEvent("animover", function() inst:Remove() end)
+    end
+    inst:DoTaskInTime(19*FRAMES, function() 
+        if inst.components.pickable:CanBePicked() then
+            local point = inst:GetPosition()
+            inst.components.pickable:MakeEmpty()
+            local product = SpawnPrefab(inst.components.pickable.product)
+            product.Transform:SetPosition(point.x,0,point.z)
+        end
+    end)
+
 end
 
 local function commonfn(Sim)
@@ -299,7 +323,7 @@ local function commonfn(Sim)
     MakeHauntableIgnite(inst)
     
     inst.placegoffgrids = placegoffgrids
-
+    inst.fall = fall
     inst.OnLoadPostPass = onloadpostpass
 	
 	return inst

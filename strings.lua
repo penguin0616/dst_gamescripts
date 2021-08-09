@@ -6942,6 +6942,7 @@ STRINGS.UI =
         TEXTURESTREAMING = "Texture Streaming",
         THREADEDRENDER = "Threaded Render:",
 		SCREEN_FLASH_INTENSITY = "Screen Flashes:",
+        DYNAMIC_TREE_SHADOWS = "Canopy Shadows:",
         RESTART_TEXTURE_STREAMING_TITLE = "Restart Required",
         RESTART_TEXTURE_STREAMING_BODY = "For Texture Streaming changes to take effect, you will have to exit and restart the game.",
         RESTART_THREADED_RENDER_TITLE = "Restart Required",

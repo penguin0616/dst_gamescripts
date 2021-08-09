@@ -1961,7 +1961,7 @@ MISC_ITEMS =
 		box_build = "box_shop_heart",
 		display_items = {  "amulet_red_heart", "firepit_firebird", "birdcage_romantic", "playerportrait_bg_heart1", "playerportrait_bg_heart2", },
 		output_items = {  "amulet_red_heart", "firepit_firebird", "birdcage_romantic", "playerportrait_bg_heart1", "playerportrait_bg_heart2", },
-		release_group = 122,
+		release_group = 57,
 	},
 	pack_hl_gift =
 	{

@@ -123,6 +123,13 @@ local function OnDoPlatformCameraZoomDirty(self, doplatformcamerazoom)
     end
 end
 
+local function DoStartBoatCamera(inst)
+    local self = inst.components.walkableplatformplayer
+    if self and self.platform and not TheNet:IsDedicated() and self.inst == ThePlayer and self.boat_camera_enabled then
+        self:StartBoatCamera()
+    end
+end
+
 local WalkablePlatformPlayer = Class(function(self, inst)
     self.inst = inst
     self.boat_camera_enabled = false
@@ -134,6 +141,7 @@ local WalkablePlatformPlayer = Class(function(self, inst)
     self._doplatformcamerazoomdirty = function(platform) OnDoPlatformCameraZoomDirty(self, platform.doplatformcamerazoom:value()) end
     inst:ListenForEvent("enableboatcamera", EnableBoatCamera)
     inst:ListenForEvent("enablemovementprediction", EnableMovementPrediction)
+    inst:ListenForEvent("playeractivated", function(inst) inst:DoTaskInTime(0, function() DoStartBoatCamera(inst) end) end)
 end)
 
 function WalkablePlatformPlayer:StartBoatMusicTest()
