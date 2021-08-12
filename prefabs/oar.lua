@@ -81,6 +81,7 @@ local function fn(data, build, swap_build, fuel_value, is_wooden, is_waterproof)
     inst:AddComponent("inventoryitem")
     inst:AddComponent("oar")
     inst.components.oar.force = data.FORCE
+    inst.components.oar.max_velocity = data.MAX_VELOCITY
     inst:AddComponent("inspectable")
 
     if is_waterproof then

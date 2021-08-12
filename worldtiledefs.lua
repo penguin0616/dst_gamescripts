@@ -5,8 +5,9 @@ require "constants"
 ---------------- Ground colors ----------------
 -- primary == noise textures
 -- secondary == base colour
-local GROUND_OCEAN_COLOR = -- Color for blending to the land ground tiles
-{
+
+local GROUND_OCEAN_COLOR = -- Color for blending to the land ground tiles 
+{ 
     primary_color =         {  0,   0,   0,  25 },
     secondary_color =       { 0,  20,  33,  0 },
     secondary_color_dusk =  { 0,  20,  33,  80 },
@@ -15,62 +16,80 @@ local GROUND_OCEAN_COLOR = -- Color for blending to the land ground tiles
 
 ---------------- Ocean colors ----------------
 
-local COASTAL_SHORE_OCEAN_COLOR =
-{
+
+local COASTAL_SHORE_OCEAN_COLOR = 
+{ 
     primary_color =         { 220, 240, 255,  60 },
     secondary_color =       {  21,  96, 110, 140 },
     secondary_color_dusk =  {   0,   0,   0,  50 },
     minimap_color =         {   23, 51,  62, 102 },
 }
 
-local COASTAL_OCEAN_COLOR =
-{
+local COASTAL_OCEAN_COLOR = 
+{ 
     primary_color =         { 220, 255, 255,  28 },
     secondary_color =       {  25, 123, 167, 100 },
     secondary_color_dusk =  {  10, 120, 125, 120 },
     minimap_color =         {  23,  51,  62, 102 },
 }
 
-local SWELL_OCEAN_COLOR =
-{
+local SWELL_OCEAN_COLOR = 
+{ 
     primary_color =         {  150, 255, 255,  18 },
     secondary_color =       {  0,  45,  80, 220 },
     secondary_color_dusk =  {  9,  52,  57, 150 },
     minimap_color =         {  14,  34,  61, 204 },
 }
 
-local ROUGH_OCEAN_COLOR =
-{
+local ROUGH_OCEAN_COLOR = 
+{ 
     primary_color =         {  10, 200, 220,  30 },
     secondary_color =       {  1,  20,  45, 230 },
     secondary_color_dusk =  {  5,  20,  25, 230 },
     minimap_color =         {  19,  20,  40, 230 },
 }
 
-local HAZARDOUS_OCEAN_COLOR =
-{
+local HAZARDOUS_OCEAN_COLOR = 
+{ 
     primary_color =         { 255, 255, 255,  25 },
     secondary_color =       {   0,   8,  18,  51 },
     secondary_color_dusk =  {   0,   0,  0,  150 },
     minimap_color =         {   8,   8,  14,  51 },
 }
 
-local BRINEPOOL_OCEAN_COLOR =
-{
+local BRINEPOOL_OCEAN_COLOR = 
+{ 
     primary_color =         {   5, 185, 220,  60 },
     secondary_color =       {   5,  20,  45, 200 },
     secondary_color_dusk =  {   5,  15,  20, 200 },
     minimap_color =         {  40,  87,  93,  51 },
 }
+--[[
+local WATERLOG_OCEAN_COLOR = 
+{ 
+    primary_color =         { 98,   207, 207,  180 },-- { 108,   149, 149,  60 },
+    secondary_color =       { 62,   168, 112,   60 }, -- { 28,    39,  39,  140 },
+    secondary_color_dusk =  { 31,    74,  56,   30 },
+    minimap_color =         { 52,    86,  86,  102 },
+}
+]]
+local WATERLOG_OCEAN_COLOR = 
+{ 
+    primary_color =         { 220, 255, 255,  28 },
+    secondary_color =       {  25, 123, 167, 100 },
+    secondary_color_dusk =  {  10, 120, 125, 120 },
+    minimap_color =         {  40,  87,  93,  51 },
+}
 
--- Unused
-local BRINEPOOL_SHORE_OCEAN_COLOR =
-{
+local BRINEPOOL_SHORE_OCEAN_COLOR = 
+{ 
     primary_color =         { 255, 255, 255,  25 },
     secondary_color =       { 255,   0,   0, 255 },
     secondary_color_dusk =  { 255,   0,   0, 255 },
     minimap_color =         { 255,   0,   0, 255 },
 }
+
+
 
 local WAVETINTS =
 {
@@ -79,6 +98,7 @@ local WAVETINTS =
     swell =                 {0.65,  0.84,   0.94},
     brinepool =             {0.65,  0.92,   0.94},
     hazardous =             {0.40,  0.50,   0.62},
+    waterlog =              {1,   1,    1},
 }
 
 local GROUND_PROPERTIES =
@@ -87,6 +107,7 @@ local GROUND_PROPERTIES =
 	{ GROUND.OCEAN_BRINEPOOL_SHORE, { name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",			  runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, is_shoreline = true, ocean_depth="SHALLOW", colors=BRINEPOOL_SHORE_OCEAN_COLOR, wavetint = WAVETINTS.brinepool } },
 
 	{ GROUND.OCEAN_COASTAL,			{ name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",	          runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, ocean_depth="SHALLOW", colors=COASTAL_OCEAN_COLOR, wavetint = WAVETINTS.shallow } },
+    { GROUND.OCEAN_WATERLOG,        { name = "cave",        noise_texture = "levels/textures/ocean_noise.tex",            runsound="dontstarve/movement/run_marsh",     walksound="dontstarve/movement/walk_marsh",     snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, ocean_depth="SHALLOW", colors=WATERLOG_OCEAN_COLOR, wavetint = WAVETINTS.waterlog  } },
 	{ GROUND.OCEAN_BRINEPOOL,		{ name = "cave",	    noise_texture = "levels/textures/ocean_noise.tex",	          runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, ocean_depth="SHALLOW", colors=BRINEPOOL_OCEAN_COLOR, wavetint = WAVETINTS.brinepool} },
 	{ GROUND.OCEAN_SWELL,			{ name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",	          runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, ocean_depth="BASIC", colors=SWELL_OCEAN_COLOR, wavetint = WAVETINTS.swell  } },
 	{ GROUND.OCEAN_ROUGH,			{ name = "cave",		noise_texture = "levels/textures/ocean_noise.tex",	          runsound="dontstarve/movement/run_marsh",		walksound="dontstarve/movement/walk_marsh",		snowsound="dontstarve/movement/run_ice", mudsound = "dontstarve/movement/run_mud", flashpoint_modifier = 0, ocean_depth="DEEP", colors=ROUGH_OCEAN_COLOR, wavetint = WAVETINTS.rough  } },
@@ -267,7 +288,7 @@ function PlayFootstep(inst, volume, ispredicted)
     if sound ~= nil then
         local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
         local map = TheWorld.Map
-        local my_platform = map:GetPlatformAtPoint(my_x, my_z)
+        local my_platform = inst:GetCurrentPlatform()
 
         local tile = inst.components.locomotor ~= nil and inst.components.locomotor:TempGroundTile() or nil
         local tileinfo = tile ~= nil and GetTileInfo(tile) or nil

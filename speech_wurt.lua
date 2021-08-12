@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "Don't wanna.",
 			INUSE = "Flurmph. Gotta wait.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "It not want to come, flort.",
@@ -626,8 +627,8 @@ return{
         BOOK_TENTACLES =  "This a good one!",
         BOOK_BRIMSTONE = "Flurrgh, wanna know how it ends!",
         BOOK_GARDENING = "So many hard words...",
-        BOOK_SILVICULTURE = "Is whole story about trees? Me know about trees!",
-        BOOK_HORTICULTURE = "So many hard words...",
+		BOOK_SILVICULTURE = "Is whole story about trees? Me know about trees!",
+		BOOK_HORTICULTURE = "So many hard words...",
     },
     ANNOUNCE_WEAK_RAT = "It not look so good...",
 
@@ -3369,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "You very pretty, florp.",
 		OCEANFISH_MEDIUM_7 = "Like your scales, flort!",
 		OCEANFISH_MEDIUM_8 = "Brrrr, chilly fishy!",
+        OCEANFISH_MEDIUM_9 = "Aww, you so sweet!",
 
 		PONDFISH = "Awwww, it so cute!",
 		PONDEEL = "Hello long fishy!",
@@ -3821,6 +3823,8 @@ return{
 		SWEETTEA = "Mmm... is nice.",
 		TILLWEED = "What is difference between weeds and other plants?",
 		TILLWEEDSALVE = "See? Weeds more useful than flowers.",
+        WEED_IVY = "It pretty!",
+        IVY_SNARE = "It warrior plant.",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4062,7 +4066,33 @@ return{
             GENERIC = "Have weird feeling, florp...",
             CONSTRUCTION1 = "Is throne? Not as good as Mermfolk throne.",
             CONSTRUCTION2 = "Hmm... now it not look like throne at all...",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "It biggest tree ever!",
+        OCEANTREE = "Tree like the water, florpt.",
+        OCEANTREENUT = "Gonna plant new water tree.",
+        WATERTREE_ROOT = "It just boring old root, flurt.",
+
+        OCEANTREE_PILLAR = "It probably second biggest tree ever.",
+
+        OCEANVINE = "There some yummy fruit over there!",
+        FIG = "Mmmm! Mine!",
+        FIG_COOKED = "Mmm, squishy!",
+
+        SPIDER_WATER = "Spiderfolk run on water?? No fair!!",
+        MUTATOR_WATER = "Webby boy make Merm cookie next!!",
+        OCEANVINE_COCOON = "Why Spiderfolk house in tree?",
+        OCEANVINE_COCOON_BURNT = "No tell Webby boy!",
+
+        GRASSGATOR = "Hee-hee! Scaredy gator!",
+
+        TREEGROWTHSOLUTION = "Glurph. Put all over face and didn't grow any bigger!",
+
+        FIGATONI = "Mmmmmmm chewy sweet!",
+        FIGKABAB = "Blegh, fruit ruined with meat!",
+        KOALEFIG_TRUNK = "Glurgh... fruit have yucky nose juice all over...",
+        FROGNEWTON = "Glurph! There frog leg in this!",
     },
 
     DESCRIBE_GENERIC = "What that?",

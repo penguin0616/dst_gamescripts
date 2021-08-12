@@ -81,13 +81,12 @@ function FishingNetVisualizer:UpdateWhenOpening(dt)
 				local collect_distance = self.collect_velocity * dt
 
 				delta_x, delta_z = delta_x * collect_distance, delta_z * collect_distance
-		        local new_entity_position_x, new_entity_position_z = entity_position_x + delta_x, entity_position_z + delta_z
 
 		        local physics = v.Physics
 		        if physics ~= nil then
-		            physics:TeleportRespectingInterpolation(new_entity_position_x, entity_position_y, new_entity_position_z)
+		            physics:TeleportOffset(delta_x, 0, delta_z)
 		        else
-				  v.Transform:SetPosition(new_entity_position_x, entity_position_y, new_entity_position_z)
+				    v.Transform:OffsetPosition(delta_x, 0, delta_z)
 		        end
 
 		        self.captured_entities_collect_distance[v] = accumulated_collect_distance + collect_distance

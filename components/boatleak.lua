@@ -35,7 +35,7 @@ function BoatLeak:Repair(doer, patch_item)
 	return true
 end
 
-function BoatLeak:ChangeToRepaired(repair_build_name)
+function BoatLeak:ChangeToRepaired(repair_build_name, sndoverride)
     self.inst:RemoveTag("boat_leak")
     self.inst:AddTag("boat_repaired_patch")
 
@@ -46,7 +46,12 @@ function BoatLeak:ChangeToRepaired(repair_build_name)
     anim_state:SetOrientation(ANIM_ORIENTATION.OnGround)
     anim_state:SetLayer(LAYER_BACKGROUND)
 
-    self.inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/repair")
+    if not sndoverride then
+        self.inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/repair")
+    else
+        self.inst.SoundEmitter:PlaySound(sndoverride)
+    end
+
     self.inst.SoundEmitter:KillSound("small_leak")
     self.inst.SoundEmitter:KillSound("med_leak")
 
@@ -76,7 +81,7 @@ function BoatLeak:SetState(state, skip_open)
             anim_state:SetTime(11 * FRAMES)
         end
 
-        self.inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/untain_small_LP", "small_leak")
+        self.inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/fountain_small_LP", "small_leak")
 
         self.has_leaks = true
 
@@ -110,6 +115,16 @@ function BoatLeak:SetState(state, skip_open)
         self:ChangeToRepaired("boat_repair_build")
 	elseif state == "repaired_tape" then
         self:ChangeToRepaired("boat_repair_tape_build")
+    elseif state == "repaired_treegrowth" then
+        self:ChangeToRepaired("treegrowthsolution","waterlogged2/common/repairgoop")
+        self.inst.AnimState:SetBankAndPlayAnimation("treegrowthsolution", "pre_idle")
+        self.inst:ListenForEvent("animover", function()
+            if self.inst.AnimState:IsCurrentAnimation("pre_idle") then
+                self.inst.AnimState:PlayAnimation("idle")
+            elseif self.inst.AnimState:IsCurrentAnimation("idle") then
+                self.inst:Remove()
+            end
+        end)
     end
 
 	self.current_state = state
@@ -131,8 +146,7 @@ function BoatLeak:OnLoad(data)
 		self.isdynamic = true
 
 		self.inst:DoTaskInTime(0, function()
-			local x, y, z = self.inst.Transform:GetWorldPosition()
-			local boat = TheWorld.Map:GetPlatformAtPoint(x, z)
+			local boat = self.inst:GetCurrentPlatform()
 
 			if boat ~= nil then
 				self:SetBoat(boat)

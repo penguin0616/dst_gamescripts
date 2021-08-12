@@ -44,6 +44,7 @@ local PlayerProfile = Class(function(self)
 		self.persistdata.threaded_renderer = true
 		self.persistdata.bloom = true
 		self.persistdata.distortion = true
+		self.persistdata.dynamic_tree_shadows = true
     end
 
     self.dirty = true
@@ -79,6 +80,7 @@ function PlayerProfile:Reset()
 		self.persistdata.threaded_renderer = true
 		self.persistdata.bloom = true
 		self.persistdata.distortion = true
+		self.persistdata.dynamic_tree_shadows = true
     end
 
     --self.persistdata.starts = 0 -- save starts?
@@ -704,6 +706,15 @@ function PlayerProfile:SetThreadedRenderEnabled(enabled)
     end
 end
 
+function PlayerProfile:SetDynamicTreeShadowsEnabled(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "dynamic_tree_shadows", tostring(enabled))
+    else
+        self:SetValue("dynamic_tree_shadows", enabled)
+        self.dirty = true
+    end
+end
+
 function PlayerProfile:GetMovementPredictionEnabled()
     -- an undefined movementprediction is considered to be enabled
     if USE_SETTINGS_FILE then
@@ -872,6 +883,14 @@ function PlayerProfile:GetThreadedRenderEnabled()
 		return TheSim:GetSetting("misc", "use_threaded_renderer") == "true"
     else
 		return self:GetValue("threaded_renderer")
+    end
+end
+
+function PlayerProfile:GetDynamicTreeShadowsEnabled()
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "dynamic_tree_shadows") ~= "false"
+    else
+		return self:GetValue("dynamic_tree_shadows") ~= false
     end
 end
 
@@ -1191,6 +1210,8 @@ function PlayerProfile:Set(str, callback, minimal_load)
 			print("bloom_enabled",bloom_enabled)
 			PostProcessor:SetBloomEnabled( bloom_enabled )
 			PostProcessor:SetDistortionEnabled( distortion_enabled )
+
+			EnableShadeRenderer( GetValueOrDefault( self.persistdata.dynamic_tree_shadows, true ) )
 		end
 
 		-- old save data will not have the controls section so create it

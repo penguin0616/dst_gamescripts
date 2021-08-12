@@ -19,10 +19,6 @@ local states=
 
         timeline=
         {
-            --[[TimeEvent(5*FRAMES, function(inst)
-            	--if inst.soundrise then inst.SoundEmitter:PlaySound("dontstarve_DLC002/common/rogue_waves/"..inst.soundrise) end
-            	--if inst.soundloop then inst.SoundEmitter:PlaySound("dontstarve_DLC002/common/rogue_waves/"..inst.soundloop, inst.soundloop) end
-            end),]]
             TimeEvent(10*FRAMES, function(inst)
                 inst.waveactive = true
             end),
@@ -43,14 +39,6 @@ local states=
 			inst.AnimState:PlayAnimation("appear")
             inst.AnimState:SetTime(10*FRAMES)
 		end,
-
-        --[[timeline=
-        {
-            TimeEvent(5*FRAMES, function(inst)
-            	--if inst.soundrise then inst.SoundEmitter:PlaySound("dontstarve_DLC002/common/rogue_waves/"..inst.soundrise) end
-            	--if inst.soundloop then inst.SoundEmitter:PlaySound("dontstarve_DLC002/common/rogue_waves/"..inst.soundloop, inst.soundloop) end
-            end),
-        },]]
 
 		events =
 		{
@@ -81,10 +69,6 @@ local states=
 			inst.waveactive = true
 			inst.AnimState:Resume()
 			inst.AnimState:PlayAnimation("disappear")
-
-			if inst.soundloop then
-				inst.SoundEmitter:KillSound(inst.soundloop)
-			end
 		end,
 
         timeline =

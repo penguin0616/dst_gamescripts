@@ -65,4 +65,13 @@ function Shelf:TakeItem(taker)
     end
 end
 
+function Shelf:GetDebugString()
+    if self.itemonshelf == nil then
+        return ""
+    end
+
+    local canbetakenstr = (self.cantakeitem and "Can" or "Cannot").." be taken"
+    return self.itemonshelf.prefab..": "..canbetakenstr
+end
+
 return Shelf

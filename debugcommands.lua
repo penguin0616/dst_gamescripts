@@ -27,6 +27,7 @@ function d_allmutators()
     c_give("mutator_hider")
     c_give("mutator_spitter")
     c_give("mutator_moon")
+    c_give("mutator_water")
 end
 
 function d_spiders()
@@ -44,6 +45,7 @@ function d_spiders()
         local spider = c_spawn(v)
         spider.components.follower:SetLeader(ThePlayer)
     end
+    c_give("spider_water")
 end
 
 function d_decodedata(path)

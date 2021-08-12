@@ -622,7 +622,7 @@ local FIND_LUREPLANT_TAGS = {"lureplant"}
 local FIND_FLOWER_TAGS = {"flower"}
 local FIND_PLANT_TAGS = {"bush","plant"}
 local FIND_STRUCTURE_TAGS = {"structure"}
-local FIND_HEAVY_TAGS = {"heavy"}
+local FIND_HEAVY_TAGS = {"underwater_salvageable"}
 local FIND_HERMITCRAB_LURE_MARKER_TAGS = {"hermitcrab_lure_marker"}
 
 local function lureplantcomplainfn(inst)
@@ -831,24 +831,19 @@ local function initfriendlevellisteners(inst)
     end, TheWorld)
 
     --REMOVE_JUNK
-    local function checkforclearwaters(inst,data)
+    local function checkforclearwaters(inst, data)
         local source = inst.CHEVO_marker
-        local range = ISLAND_RADIUS +10
+        local range = ISLAND_RADIUS + 10
         if source and data.target:GetDistanceSqToInst(source) < range * range then
-            local pos = Vector3(source.Transform:GetWorldPosition())
-            local ents = TheSim:FindEntities(pos.x,pos.y,pos.z, range, FIND_HEAVY_TAGS)
-            for i=#ents,1,-1 do
-                local testpos = Vector3(ents[i].Transform:GetWorldPosition())
-                if TheWorld.Map:IsVisualGroundAtPoint(testpos.x,testpos.y,testpos.z) or TheWorld.Map:GetPlatformAtPoint(testpos.x,testpos.z) then
-                    table.remove(ents,i)
-                end
+            local x, y, z = source.Transform:GetWorldPosition()
+
+            local ents = TheSim:FindEntities(x, y, z, range, FIND_HEAVY_TAGS)
+
+            if #ents > 0 then
+                return
             end
-            for i=#ents,1,-1 do
-                local pos = Vector3(ents[i].Transform:GetWorldPosition())
-            end
-            if #ents <= 0 then
-                inst.components.friendlevels:CompleteTask(TASKS.REMOVE_JUNK, data.doer)
-            end
+
+            inst.components.friendlevels:CompleteTask(TASKS.REMOVE_JUNK, data.doer)            
         end
     end
 
@@ -861,8 +856,8 @@ local function initfriendlevellisteners(inst)
         local source = inst.CHEVO_marker
         local range = ISLAND_RADIUS +10
         if source and source:GetDistanceSqToPoint(data.pt) < range * range then
-            local pos = Vector3(source.Transform:GetWorldPosition())
-            local ents = TheSim:FindEntities(pos.x,pos.y,pos.z, range, FIND_LUREPLANT_TAGS)
+            local x, y, z = source.Transform:GetWorldPosition()
+            local ents = TheSim:FindEntities(x, y, z, range, FIND_LUREPLANT_TAGS)
             for i=#ents,1,-1 do
                 if ents[i].components.health:IsDead() then
                     table.remove(ents,i)

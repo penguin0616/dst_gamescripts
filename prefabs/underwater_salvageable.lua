@@ -46,6 +46,7 @@ local function fn(data)
 	inst:AddTag("NOCLICK")
     inst:AddTag("NOBLOCK")-- it's fine to build things on top of them
     inst:AddTag("winchtarget")--from winchtarget component
+    inst:AddTag("underwater_salvageable")
 
     inst.AnimState:SetBank("flotsam_heavy")
     inst.AnimState:SetBuild("flotsam_heavy")

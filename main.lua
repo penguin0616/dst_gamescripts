@@ -42,7 +42,8 @@ end
 --defines
 MAIN = 1
 ENCODE_SAVES = BRANCH ~= "dev"
-CHEATS_ENABLED = BRANCH == "dev" or (IsConsole() and CONFIGURATION ~= "PRODUCTION")
+CHEATS_ENABLED = CONFIGURATION ~= "PRODUCTION"
+CAN_USE_DBUI = CHEATS_ENABLED and PLATFORM == "WIN32_STEAM"
 SOUNDDEBUG_ENABLED = false
 SOUNDDEBUGUI_ENABLED = false
 WORLDSTATEDEBUG_ENABLED = false
@@ -398,8 +399,13 @@ local function ModSafeStartup()
 		SortAndEnableShaders()
 	end
 
+	require("shadeeffects")
+
 	FontManager = TheGlobalInstance.entity:AddFontManager()
 	MapLayerManager = TheGlobalInstance.entity:AddMapLayerManager()
+
+	--intentionally STATIC, this can be called from anywhere to globally update the max radius used for physics waker calculations.
+	PhysicsWaker.SetMaxPhysicsRadius(MAX_PHYSICS_RADIUS)
 
     -- I think we've got everything we need by now...
    	if IsNotConsole() then

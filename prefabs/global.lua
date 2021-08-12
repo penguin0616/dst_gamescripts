@@ -48,6 +48,15 @@ local assets =
     Asset("SOUNDPACKAGE", "sound/webber1.fev"),
     Asset("FILE", "sound/webber1.fsb"),
 
+    Asset("SOUNDPACKAGE", "sound/waterlogged2.fev"),
+    Asset("FILE", "sound/waterlogged2.fsb"),
+    Asset("FILE", "sound/waterlogged2_amb.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/waterlogged1.fev"),
+    Asset("FILE", "sound/waterlogged1.fsb"),
+    Asset("FILE", "sound/waterlogged1_amb.fsb"),
+    
+    
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/wallace.fsb"),        -- Legacy sound that can be used in mods
@@ -102,6 +111,7 @@ local assets =
     Asset("IMAGE", "images/circle.tex"),
     Asset("IMAGE", "images/square.tex"),
     Asset("IMAGE", "images/trans.tex"),
+    Asset("IMAGE", "images/tree.tex"),
 
     Asset("DYNAMIC_ATLAS", "images/fepanels.xml"),
     Asset("PKGREF", "images/fepanels.tex"),
@@ -255,6 +265,8 @@ local assets =
     Asset("SHADER", "shaders/swipe_fade.ksh"),
     Asset("SHADER", "shaders/ui_anim.ksh"),
     Asset("SHADER", "shaders/ui_anim_holo.ksh"),
+    Asset("SHADER", "shaders/ui_anim_cc.ksh"),
+	Asset("SHADER", "shaders/shade.ksh"),
 
     Asset("SHADER", "shaders/blurh.ksh"),
     Asset("SHADER", "shaders/blurv.ksh"),

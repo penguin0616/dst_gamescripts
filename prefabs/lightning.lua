@@ -96,4 +96,34 @@ local function fn()
     return inst
 end
 
-return Prefab("lightning", fn, assets)
+local function thunderfn()
+    local inst = CreateEntity()
+
+    -- V2C: This could ostensibly be a non-networked entity,
+    -- but it's lighter than the lightning and spawns in place of it,
+    -- and would require effort at the spawn site to be client-only.
+    -- So, for the sake of brevity, it's just a copy without an anim state.
+
+    inst.entity:AddTransform()
+    inst.entity:AddNetwork()
+
+    if not TheNet:IsDedicated() then
+        inst:DoTaskInTime(0, PlayThunderSound)
+    end
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:DoTaskInTime(0, StartFX) -- so we can use the position to affect the screen flash
+
+    inst.entity:SetCanSleep(false)
+    inst.persists = false
+    inst:DoTaskInTime(.5, inst.Remove)
+
+    return inst
+end
+
+return Prefab("lightning", fn, assets),
+        Prefab("thunder", thunderfn)

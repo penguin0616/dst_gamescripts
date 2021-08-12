@@ -68,7 +68,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     inst:SetPhysicsRadiusOverride(2.35)
-    MakeWaterObstaclePhysics(inst, 0.80, 2, 1.25)
+    MakeWaterObstaclePhysics(inst, 0.80, 2, 0.75)
 
     inst.Transform:SetSixFaced()
 
@@ -121,7 +121,7 @@ local function fn()
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.MINE)
-    inst.components.workable:SetWorkLeft(1)
+    inst.components.workable:SetWorkLeft(TUNING.WATERPLANT_ROCK_WORKAMOUNT)
     inst.components.workable:SetOnWorkCallback(OnWork)
     inst.components.workable.savestate = true
 

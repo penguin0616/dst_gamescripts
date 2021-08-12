@@ -367,7 +367,7 @@ local function fn()
     inst.entity:AddNetwork()
 
     inst:SetPhysicsRadiusOverride(2.35)
-    MakeWaterObstaclePhysics(inst, 0.80, 2, 1.25)
+    MakeWaterObstaclePhysics(inst, 0.80, 2, 0.75)
 
     inst.MiniMapEntity:SetIcon("barnacle_plant.png")
 

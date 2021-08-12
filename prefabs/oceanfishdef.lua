@@ -26,6 +26,7 @@ eel		165.16, 212.12
 6	YOT Koi 1			188.88, 238.88	+-		+-		+-									OMNI			easy-medium catch
 7	YOT Koi 2			188.88, 238.88	+-		+-		+-									OMNI			easy-medium catch
 8   Snowy Whitefish		190.90, 270.70			++											OMNI			long pulls
+9   Berryfish		    210.50, 315.14														BERRY			easy-medium catch
 ]]
 
 --[[ Catching Behaviours
@@ -56,6 +57,7 @@ num		walk	run		stam.drain	stam.recover	stam.struggle_time	stam.tired_time		tired
 6		1.2		3.0		0.05		0.10			2+1		6+1			3+1		2+1			80				120
 7		1.2		3.0		0.05		0.10			2+1		6+1			3+1		2+1			80				120
 8		1.5		3.0		0.05		0.15			7+1		10+5		3+1		2+1			90				100
+9		1.2		3.0		0.05		0.10			3+1		6+1			3+1		2+1			80				120
 
 ]]
 
@@ -138,6 +140,7 @@ local DIET = {
 	OMNI = { caneat = { FOODGROUP.OMNI } },--, preferseating = { FOODGROUP.OMNI } },
 	VEGGIE = { caneat = { FOODGROUP.VEGETARIAN } },
 	MEAT = { caneat = { FOODTYPE.MEAT } },
+	BERRY = { caneat = { FOODTYPE.BERRY } },
 }
 
 -- crokpot values
@@ -923,7 +926,7 @@ local FISH_DEFS =
 
 		set_hook_time = SET_HOOK_TIME_MEDIUM,
 		breach_fx = BREACH_FX_MEDIUM,
-		loot = LOOT.ICE,
+		loot = LOOT.MEDIUM,
 		cooking_product = COOKING_PRODUCT.MEDIUM,
         perish_product = PERISH.MEDIUM,
         fishtype = "meat",
@@ -937,6 +940,51 @@ local FISH_DEFS =
 
 		heater = { endothermic = true, carriedheat = -5, heat = -5, carriedheatmultiplier = 2 }, -- heat radius is only 5 for this
 	},
+
+	oceanfish_medium_9 = {
+		prefab = "oceanfish_medium_9",
+		bank = "oceanfish_medium",
+		build = "oceanfish_medium_9",
+	  	weight_min = 210.50, 
+	  	weight_max = 315.14,
+
+	  	walkspeed = 1.2,
+	  	runspeed = 3.0,
+		stamina =
+		{
+			drain_rate = 0.05,
+			recover_rate = 0.1,
+			struggle_times	= {low = 2, r_low = 1, high = 6, r_high = 1},
+			tired_times		= {low = 3, r_low = 1, high = 2, r_high = 1},
+			tiredout_angles = {has_tention = 80, low_tention = 120},
+		},
+
+	  	schoolmin = SCHOOL_SIZE.SMALL.min,
+	  	schoolmax = SCHOOL_SIZE.SMALL.max,
+	  	schoolrange = SCHOOL_AREA.SMALL,
+	  	schoollifetimemin = SCHOOL_WORLD_TIME.MEDIUM.min,
+	  	schoollifetimemax = SCHOOL_WORLD_TIME.MEDIUM.max,
+
+	  	herdwandermin = WANDER_DIST.SHORT.min,
+	  	herdwandermax = WANDER_DIST.SHORT.max,
+	  	herdarrivedist = ARRIVE_DIST.MEDIUM,
+	  	herdwanderdelaymin = WANDER_DELAY.SHORT.min,
+		herdwanderdelaymax = WANDER_DELAY.SHORT.max,
+
+		set_hook_time = SET_HOOK_TIME_MEDIUM,
+		breach_fx = BREACH_FX_MEDIUM,
+		loot = LOOT.MEDIUM,
+		cooking_product = COOKING_PRODUCT.MEDIUM,
+        perish_product = PERISH.MEDIUM,
+        fishtype = "meat",
+
+		lures = TUNING.OCEANFISH_LURE_PREFERENCE.BERRY,
+		diet = DIET.BERRY,
+		cooker_ingredient_value = COOKER_INGREDIENT_MEDIUM,
+		edible_values = EDIBLE_VALUES_MEDIUM_MEAT,
+
+		dynamic_shadow = SHADOW_MEDIUM,
+	},	
 }
 
 local SCHOOL_VERY_COMMON		= 4
@@ -985,6 +1033,12 @@ local SCHOOL_WEIGHTS = {
 		{
 	        oceanfish_medium_3 = SCHOOL_VERY_COMMON,
 		},
+	    [GROUND.OCEAN_WATERLOG] = 
+		{
+	        oceanfish_small_2 = SCHOOL_UNCOMMON,
+	        oceanfish_small_4 = SCHOOL_RARE,
+	        oceanfish_medium_9 = SCHOOL_COMMON,
+	    },		
     },
 }
 SCHOOL_WEIGHTS[SEASONS.WINTER] = deepcopy(SCHOOL_WEIGHTS[SEASONS.AUTUMN])
@@ -996,6 +1050,7 @@ SCHOOL_WEIGHTS[SEASONS.SUMMER] = deepcopy(SCHOOL_WEIGHTS[SEASONS.AUTUMN])
 SCHOOL_WEIGHTS[SEASONS.AUTUMN][GROUND.OCEAN_SWELL].oceanfish_small_6 = SCHOOL_UNCOMMON
 SCHOOL_WEIGHTS[SEASONS.WINTER][GROUND.OCEAN_SWELL].oceanfish_medium_8 = SCHOOL_UNCOMMON
 SCHOOL_WEIGHTS[SEASONS.SPRING][GROUND.OCEAN_COASTAL].oceanfish_small_7 = SCHOOL_UNCOMMON
+SCHOOL_WEIGHTS[SEASONS.SPRING][GROUND.OCEAN_WATERLOG].oceanfish_small_7 = SCHOOL_UNCOMMON
 SCHOOL_WEIGHTS[SEASONS.SUMMER][GROUND.OCEAN_SWELL].oceanfish_small_8 = SCHOOL_UNCOMMON
 
 

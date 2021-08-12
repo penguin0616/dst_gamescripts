@@ -5,6 +5,7 @@ local Widget = require "widgets/widget"
 local ClothingExplorerPanel = require "widgets/redux/clothingexplorerpanel"
 local Subscreener = require "screens/redux/subscreener"
 local SkinPresetsPopup = require "screens/redux/skinpresetspopup"
+local DefaultSkinSelectionPopup = require "screens/redux/defaultskinselection"
 
 local TEMPLATES = require "widgets/redux/templates"
 
@@ -13,7 +14,7 @@ require("util")
 require("networking")
 require("stringutil")
 
-local LoadoutSelect = Class(Widget, function(self, user_profile, character, initial_skintype)
+local LoadoutSelect = Class(Widget, function(self, user_profile, character, initial_skintype, hide_item_skinner)
     Widget._ctor(self, "LoadoutSelect")
     self.user_profile = user_profile
 
@@ -207,6 +208,30 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
                 self.menu:SetFocusChangeDir(MOVE_LEFT, self.presetsbutton)
                 self.presetsbutton:SetFocusChangeDir(MOVE_RIGHT, self.menu)
                 self.presetsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
+
+                local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(self.currentcharacter)]
+
+                if inv_item_list ~= nil and #inv_item_list > 0 then
+                    local show_button = false
+                    for _,item in pairs(inv_item_list) do
+                        if PREFAB_SKINS[item] then
+                            show_button = true
+                        end
+                    end
+        
+                    if show_button and not hide_item_skinner then
+                        self.itemskinsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "sweep.tex", STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE, false, false, function()
+                                self:_LoadItemSkinsScreen()
+                            end
+                        ))
+                        self.itemskinsbutton:SetPosition(145, 315)
+                        self.itemskinsbutton:SetScale(0.77)
+
+                        self.presetsbutton:SetFocusChangeDir(MOVE_LEFT, self.itemskinsbutton)
+                        self.itemskinsbutton:SetFocusChangeDir(MOVE_RIGHT, self.presetsbutton)
+                        self.itemskinsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
+                    end
+                end
             end
         end
 	end
@@ -319,6 +344,12 @@ end
 
 function LoadoutSelect:_LoadSkinPresetsScreen()
 	local scr = SkinPresetsPopup( self.user_profile, self.currentcharacter, self.selected_skins, function(skins) self:ApplySkinPresets(skins) end )
+	scr.owned_by_wardrobe = true
+    TheFrontEnd:PushScreen( scr )
+end
+
+function LoadoutSelect:_LoadItemSkinsScreen()
+	local scr = DefaultSkinSelectionPopup( self.user_profile, self.currentcharacter )
 	scr.owned_by_wardrobe = true
     TheFrontEnd:PushScreen( scr )
 end
@@ -483,6 +514,10 @@ function LoadoutSelect:OnControl(control, down)
             self:_LoadSkinPresetsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
+        elseif control == CONTROL_MENU_MISC_2 and TheNet:IsOnlineMode() then
+            self:_LoadItemSkinsScreen()
+            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+            return true
         end
 	end
 
@@ -503,6 +538,9 @@ function LoadoutSelect:GetHelpText()
         end
         if TheNet:IsOnlineMode() then
 		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SKIN_PRESETS.TITLE)
+        end
+        if TheNet:IsOnlineMode() then
+		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE)
         end
 
 		return table.concat(t, "  ")

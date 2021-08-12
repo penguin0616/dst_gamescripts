@@ -67,6 +67,7 @@ local AMBIENT_SOUNDS =
 	[GROUND.OCEAN_ROUGH] =         { sound = "turnoftides/together_amb/ocean/deep",    rainsound = "turnoftides/together_amb/ocean/deep_rain" },
 	[GROUND.OCEAN_BRINEPOOL] =     { sound = "turnoftides/together_amb/ocean/deep",    rainsound = "turnoftides/together_amb/ocean/deep_rain" },
 	[GROUND.OCEAN_HAZARDOUS] =     { sound = "turnoftides/together_amb/ocean/deep",    rainsound = "turnoftides/together_amb/ocean/deep_rain" },
+    [GROUND.OCEAN_WATERLOG] =      {sound = "waterlogged2/amb/fall", wintersound = "waterlogged2/amb/winter", springsound = "waterlogged1/amb/spring", summersound = "waterlogged1/amb/summer", rainsound = "waterlogged1/amb/spring"},
 
     [GROUND.LAVAARENA_FLOOR] = { sound = "dontstarve/AMB/lava_arena/arena_day" },
     [GROUND.LAVAARENA_TRIM] = { sound = "dontstarve/AMB/lava_arena/arena_day" },

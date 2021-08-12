@@ -1103,6 +1103,18 @@ t = {
                 --end
             end,
         },
+
+        {
+            version = 5.07, --Waterlogged - new content
+            fn = function(savedata)
+                if savedata ~= nil and savedata.map ~= nil and savedata.map.prefab == "forest" then
+                    if savedata.map.persistdata == nil then
+                        savedata.map.persistdata = {}
+                    end
+                    savedata.retrofit_waterlogged_waterlog_setpiece = true -- static layouts need to be done before the map is finalized
+                end
+            end,
+        },        
     },
 }
 

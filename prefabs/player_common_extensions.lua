@@ -620,7 +620,8 @@ local function GivePlayerStartingItems(inst, items)
         inst.components.inventory.ignoresound = true
         if inst.components.inventory:GetNumSlots() > 0 then
             for i, v in ipairs(items) do
-                inst.components.inventory:GiveItem(SpawnPrefab(v))
+                local skin_name = Profile:GetLastUsedSkinForItem(v)
+                inst.components.inventory:GiveItem(SpawnPrefab(v, skin_name, nil, inst.userid))
             end
         else
             local spawned_items = {}

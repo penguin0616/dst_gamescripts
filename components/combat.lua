@@ -737,7 +737,7 @@ function Combat:CalcDamage(target, weapon, multiplier)
 
     return basedamage
         * (basemultiplier or 1)
-        * self.externaldamagemultipliers:Get()
+        * externaldamagemultipliers:Get()
         * (multiplier or 1)
         * playermultiplier
         * pvpmultiplier

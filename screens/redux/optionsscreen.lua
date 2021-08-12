@@ -239,6 +239,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		integratedbackpack = Profile:GetIntegratedBackpack(),
         lang_id = Profile:GetLanguageID(),
 		texturestreaming = Profile:GetTextureStreamingEnabled(),
+		dynamictreeshadows = Profile:GetDynamicTreeShadowsEnabled(),
 	}
 
 	if IsWin32() then
@@ -529,6 +530,7 @@ function OptionsScreen:Save(cb)
 	if IsWin32() then
 		Profile:SetThreadedRenderEnabled( self.options.threadedrender )
 	end
+	Profile:SetDynamicTreeShadowsEnabled( self.options.dynamictreeshadows )
 
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.options.integratedbackpack )
@@ -638,6 +640,8 @@ function OptionsScreen:Apply()
 	Profile:SetBoatCameraEnabled( self.working.boatcamera )
 	TheSim:SetNetbookMode(self.working.netbookmode)
 
+	EnableShadeRenderer( self.working.dynamictreeshadows )
+
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.working.integratedbackpack )
 	end
@@ -656,6 +660,7 @@ function OptionsScreen:Apply()
 
     if ThePlayer ~= nil then
         ThePlayer:EnableMovementPrediction(self.working.movementprediction)
+		ThePlayer:EnableBoatCamera(self.working.boatcamera)
     end
 
     if self.working.lang_id ~= Profile:GetLanguageID() then
@@ -1156,6 +1161,14 @@ function OptionsScreen:_BuildGraphics()
 			end
 	end
 
+	self.dynamicTreeShadowsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DYNAMIC_TREE_SHADOWS, enableDisableOptions)
+	self.dynamicTreeShadowsSpinner.OnChanged =
+		function( _, data )
+			self.working.dynamictreeshadows = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
 	self.left_spinners_graphics = {}
 	self.right_spinners_graphics = {}
 
@@ -1175,6 +1188,7 @@ function OptionsScreen:_BuildGraphics()
     table.insert( self.right_spinners_graphics, self.distortionSpinner )
     table.insert( self.right_spinners_graphics, self.bloomSpinner )
     table.insert( self.right_spinners_graphics, self.screenFlashSpinner )
+	table.insert( self.right_spinners_graphics, self.dynamicTreeShadowsSpinner )
 
 	self.grid_graphics:UseNaturalLayout()
 	self.grid_graphics:InitSize(2, math.max(#self.left_spinners_graphics, #self.right_spinners_graphics), 440, 40)
@@ -1648,6 +1662,7 @@ function OptionsScreen:InitializeSpinners(first)
 	if IsWin32() then
 		self.threadedrenderSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.threadedrender ) )
 	end
+	self.dynamicTreeShadowsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.dynamictreeshadows ) )
 
 	if self.show_datacollection then
 		--self.datacollectionCheckbox: -- the current behaviour does not reuqire this to be (re)initialized at any point after construction

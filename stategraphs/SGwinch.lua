@@ -11,7 +11,7 @@ local events =
         inst.sg:GoToState("lowering_pst")
     end),
     EventHandler("winch_fully_raised", function(inst)
-        if TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) == nil then
+        if inst:GetCurrentPlatform() == nil then
             inst.sg:GoToState("raised")
         else
             inst.sg:GoToState("raising_pst")
@@ -45,10 +45,15 @@ local states =
         name = "lowered_ground",
         tags  = { "lowered_ground" },
         onenter = function(inst)
+            inst:AddTag("lowered_ground")
             inst.AnimState:PlayAnimation("drop_ground_pre")
             inst.AnimState:PushAnimation("drop_ground_loop")
 
             inst.SoundEmitter:PlaySound(inst.sounds.drop_ground_pre)
+        end,
+
+        onexit = function(inst)
+            inst:RemoveTag("lowered_ground")
         end,
 
         events =
@@ -136,7 +141,7 @@ local states =
             TimeEvent(18 * FRAMES, function(inst)
                 local item = inst.components.inventory ~= nil and inst.components.inventory:GetItemInSlot(1) or nil
                 if item ~= nil then
-                    local boat =  TheWorld.Map:GetPlatformAtPoint(inst.Transform:GetWorldPosition())
+                    local boat = inst:GetCurrentPlatform()
                     if boat ~= nil then
                         if item:HasTag("heavy") then
                             ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, 0.3, 0.015, 0.35, boat)

@@ -32,7 +32,7 @@ local function onvacate(inst, child)
     --inst.SoundEmitter:KillSound("pigsound")
 
     if not inst:HasTag("burnt") and child ~= nil then
-        local child_platform = child:GetCurrentPlatform()
+        local child_platform = TheWorld.Map:GetPlatformAtPoint(child.Transform:GetWorldPosition())
         if (child_platform == nil and not child:IsOnValidGround()) then
             local fx = SpawnPrefab("splash_sink")
             fx.Transform:SetPosition(child.Transform:GetWorldPosition())

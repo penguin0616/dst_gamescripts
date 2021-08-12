@@ -1,10 +1,8 @@
-local DEBUG_MODE = BRANCH == "dev"
-local CAN_USE_DBUI = DEBUG_MODE and CONFIGURATION ~= "PRODUCTION" and PLATFORM == "WIN32_STEAM"
-
 local easing = require("easing")
 local Widget = require "widgets/widget"
-local WidgetDebug = CAN_USE_DBUI and require("dbui_no_package/widgetdebug") or nil
-local EntityDebug = CAN_USE_DBUI and require("dbui_no_package/entitydebug") or nil
+local DebugPanel2 = CAN_USE_DBUI and require("dbui_no_package/debug_panel2") or nil
+local DebugEntity = CAN_USE_DBUI and require("dbui_no_package/debug_entity") or nil
+local DebugNodes = CAN_USE_DBUI and require("dbui_no_package/debug_nodes") or nil
 local Text = require "widgets/text"
 local UIAnim = require "widgets/uianim"
 local Image = require "widgets/image"
@@ -202,8 +200,9 @@ FrontEnd = Class(function(self, name)
 	self.autosave_enabled = true
 
     if CAN_USE_DBUI then
-        self.widget_editor = WidgetDebug(self)
-        self.entity_editor = EntityDebug(self)
+        self.imgui = require("dbui_no_package/imgui")
+        self.debug_panels = {}
+        self.imgui_font_size = Profile:GetValue("imgui_font_size") or 1
     end
 
     -- data from the current game that is to be passed back to the game when the server resets (used for showing results in events when back in the lobby)
@@ -735,8 +734,44 @@ function FrontEnd:Update(dt)
     end
 
     if CAN_USE_DBUI then
-        self.widget_editor:Update(dt)
-        self.entity_editor:Update(dt)
+    	if not self.imgui_is_running and self.imgui_enabled then
+
+			local i = 1
+
+			--jcheng: this is to stop imgui from re-running while inside imgui, for example if you do a sim step
+			self.imgui_is_running = true
+
+			while i <= #self.debug_panels do
+				local panel = self.debug_panels[i]
+
+				local ok, result = xpcall( function() return panel:RenderPanel(self.imgui) end, generic_error )
+				if ok and panel._wants_to_close then
+					result = false
+				end
+
+				if not ok or not result then
+					print("closing panel "..tostring(panel))
+					panel:OnClose()
+					table.remove( self.debug_panels, i )
+					if not ok then
+						print( tostring(result) )
+						break
+					end
+				else
+					i = i + 1
+				end
+			end
+
+			if #self.debug_panels == 0 then
+				self.imgui_enabled = false
+			end
+
+			self.imgui_is_running = false
+
+    	end
+    	
+        --self.widget_editor:Update(dt)
+        --self.entity_editor:Update(dt)
     end
 
 	TheSim:ProfilerPush("update widgets")
@@ -1224,28 +1259,41 @@ function FrontEnd:GetIsOfflineMode()
     return self.offline
 end
 
-function FrontEnd:EnableWidgetDebugging()
-    if CAN_USE_DBUI then
-        self.widget_editor:EnableWidgetDebugging()
+function FrontEnd:ToggleImgui(node)
+	if not CAN_USE_DBUI then
+		return
+	end
+
+    if TheRawImgui:IsImguiEnabled() then
+        if self.imgui_enabled then
+            self.imgui_enabled = false
+        else
+            self.imgui_enabled = true
+            self.imgui.ActivateImgui()
+
+            if #self.debug_panels == 0 and not node then
+                self:CreateDebugPanel( DebugEntity() )
+            end
+        end
     end
 end
 
-function FrontEnd:EnableEntityDebugging()
-    if CAN_USE_DBUI then
-        self.entity_editor:EnableEntityDebugging()
-    end
+function FrontEnd:CreateDebugPanel( node )
+	if not CAN_USE_DBUI then
+		return
+	end
+
+	local node = DebugPanel2( node )
+	if not self.imgui_enabled then
+		self:ToggleImgui(node)
+	end
+
+	table.insert( self.debug_panels, node )
 end
 
--- Programmatically set the debug target.
---
--- Don't submit code calling this function! You can call it after constructing
--- your widget to skip the interactive selection, but we don't want this
--- sprinkled throughout the code (don't want imgui activating unless
--- user-triggered).
-function FrontEnd:SetWidgetDebuggingTarget(widget)
-    --~ print("TheFrontEnd:SetWidgetDebuggingTarget called. Be sure to remove before submit!", debugstack())
-    if CAN_USE_DBUI then
-        self.widget_editor:SetDebugTarget(widget)
-    end
+function FrontEnd:SetImguiFontSize( font_size )
+	self.imgui_font_size = font_size
+    Profile:SetValue("imgui_font_size", self.imgui_font_size)
+    Profile.dirty = true
+    Profile:Save()
 end
-

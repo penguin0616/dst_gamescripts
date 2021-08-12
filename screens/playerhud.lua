@@ -14,6 +14,7 @@ local SandOver = require "widgets/sandover"
 local SandDustOver = require "widgets/sanddustover"
 local MoonstormOver = require "widgets/moonstormover"
 local MoonstormOver_Lightning = require "widgets/moonstormover_lightning"
+local Leafcanopy = require "widgets/leafcanopy"
 local MindControlOver = require "widgets/mindcontrolover"
 local InkOver = require "widgets/inkover"
 local GogglesOver = require "widgets/gogglesover"
@@ -121,6 +122,8 @@ function PlayerHud:CreateOverlays(owner)
                 self.droptask = self.inst:DoTaskInTime(3,function() self.dropsplash = nil end)
             end
         end, owner)
+
+    self.leafcanopy = self.overlayroot:AddChild(Leafcanopy(owner))
 
     self.storm_root = self.over_root:AddChild(Widget("storm_root"))
     self.storm_overlays = self.storm_root:AddChild(Widget("storm_overlays"))
@@ -695,6 +698,9 @@ function PlayerHud:OnUpdate(dt)
             self.controls.godmodeindicator.inst:DoTaskInTime(2, function(inst) inst.widget:Kill() end)
             self.controls.godmodeindicator = nil
         end
+    end
+    if self.leafcanopy then
+        self.leafcanopy:OnUpdate(dt)
     end
 end
 

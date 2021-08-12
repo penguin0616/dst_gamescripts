@@ -659,6 +659,7 @@ function OptionsScreen:Apply()
 
     if ThePlayer ~= nil then
         ThePlayer:EnableMovementPrediction(self.working.movementprediction)
+		ThePlayer:EnableBoatCamera(self.working.boatcamera)
     end
 
     self:MakeClean()

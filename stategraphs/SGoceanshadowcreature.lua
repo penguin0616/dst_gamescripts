@@ -167,7 +167,7 @@ local states =
 
                 if target ~= nil then
                     tx, ty, tz = target.Transform:GetWorldPosition()
-                    local new_boat = TheWorld.Map:GetPlatformAtPoint(tx, tz)
+                    local new_boat = target:GetCurrentPlatform()
 
                     if new_boat ~= nil then
                         boat = new_boat

@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "That is not mighty weapon!",
 			INUSE = "Wolfgang will wait for friend to finish.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Is not Wolfgang's leggy carrot.",
@@ -3370,6 +3371,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Is mighty fish!",
 		OCEANFISH_MEDIUM_7 = "Is mighty fish!",
 		OCEANFISH_MEDIUM_8 = "Brrr, gives Wolfgang the chills.",
+        OCEANFISH_MEDIUM_9 = "Pretty purple fishy.",
 
 		PONDFISH = "Is fishy.",
 		PONDEEL = "Eel needs cooking!",
@@ -3822,6 +3824,8 @@ return{
 		SWEETTEA = "Ahhh... is nice.",
 		TILLWEED = "Took Wolfgang ages to get out of garden!",
 		TILLWEEDSALVE = "Feels nice on the boo-boos.",
+        WEED_IVY = "Is sharp looking.",
+        IVY_SNARE = "Now is more weeds in the way.",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4063,7 +4067,33 @@ return{
             GENERIC = "Wolfgang understand, is giant night light!",
             CONSTRUCTION1 = "Is nice floor for light ball.",
             CONSTRUCTION2 = "Wolfgang just follow instructions.",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Tree must lift lot of weights to get so big!",
+        OCEANTREE = "What is tree doing way out here?",
+        OCEANTREENUT = "Is heavy, but not too heavy for Wolfgang!",
+        WATERTREE_ROOT = "Is big tree root.",
+
+        OCEANTREE_PILLAR = "Wolfgang make mighty tree of his own!",
+
+        OCEANVINE = "AAAH-- oh. Wolfgang thought was snake.",
+        FIG = "Is big sweet fruit.",
+        FIG_COOKED = "Warm fruit ready for Wolfgang to eat!",
+
+        SPIDER_WATER = "Scary water spider!",
+        MUTATOR_WATER = "Tiny spider will be crushed in Wolfgang's mighty jaws! Or maybe not.",
+        OCEANVINE_COCOON = "Wolfgang not like look of that...",
+        OCEANVINE_COCOON_BURNT = "Hmm, Wolfgang smell burnt spiders.",
+
+        GRASSGATOR = "If he not bother Wolfgang, Wolfgang not bother him.",
+
+        TREEGROWTHSOLUTION = "Grow, tree! Be strong!",
+
+        FIGATONI = "Is noodles of sweetness.",
+        FIGKABAB = "All food should go on stick!",
+        KOALEFIG_TRUNK = "Is nose, cooked and stuffed.",
+        FROGNEWTON = "Is sweet, but also slimy.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

@@ -48,6 +48,22 @@ function Dest:GetPoint()
     return 0, 0, 0
 end
 
+function Dest:GetPlatform()
+    if self.inst ~= nil and self.inst.components.inventoryitem ~= nil and self.inst.components.inventoryitem.owner ~= nil then
+        return self.inst.components.inventoryitem.owner:GetCurrentPlatform()
+    elseif self.inst ~= nil then
+        return self.inst:GetCurrentPlatform()
+    elseif self.pt then
+        return TheWorld.Map:GetPlatformAtPoint(self.pt:Get())
+    elseif self.buffered_action ~= nil then
+        local act_pos = self.buffered_action:GetActionPoint()
+        if act_pos ~= nil then
+            return TheWorld.Map:GetPlatformAtPoint(act_pos:Get())
+        end
+    end
+    return nil
+end
+
 local function onrunspeed(self, runspeed)
     if self.inst.player_classified ~= nil then
         self.inst.player_classified.runspeed:set(runspeed)
@@ -685,16 +701,6 @@ function LocoMotor:GoToEntity(target, bufferedaction, run)
     self:StartUpdatingInternal()
 end
 
-local function GetPlatformForAction(inst, pt, bufferedaction)
-    if bufferedaction ~= nil and bufferedaction.action.is_relative_to_platform then
-        local my_x, my_y, my_z = inst.Transform:GetWorldPosition()
-        return TheWorld.Map:GetPlatformAtPoint(my_x, my_z) --locator is relative to my platform
-    else
-        return TheWorld.Map:GetPlatformAtPoint(pt.x, pt.z) --locator is relative to clicked platform
-    end
-    return nil
-end
-
 --V2C: Added overridedest for additional network controller support
 function LocoMotor:GoToPoint(pt, bufferedaction, run, overridedest)
     self.dest = Dest(overridedest, pt, bufferedaction)
@@ -1181,7 +1187,6 @@ function LocoMotor:OnUpdate(dt)
             local mypos_x, mypos_y, mypos_z = self.inst.Transform:GetWorldPosition()
 
             local destpos_x, destpos_y, destpos_z
-            destpos_y = 0
 
             local rotation = self.inst.Transform:GetRotation() * DEGREES
             local forward_x, forward_z = math.cos(rotation), -math.sin(rotation)
@@ -1189,7 +1194,7 @@ function LocoMotor:OnUpdate(dt)
             local dest_dot_forward = 0
 
             local map = TheWorld.Map
-            local my_platform = map:GetPlatformAtPoint(mypos_x, mypos_z)
+            local my_platform = self.inst:GetCurrentPlatform()
 
             if self.dest and self.dest:IsValid() then
                 destpos_x, destpos_y, destpos_z = self.dest:GetPoint()
@@ -1197,7 +1202,7 @@ function LocoMotor:OnUpdate(dt)
                 dest_dot_forward = VecUtil_Dot(dest_dir_x, dest_dir_z, forward_x, forward_z)
                 local dist = VecUtil_Length(destpos_x - mypos_x, destpos_z - mypos_z)
                 if dist <= 1.5 then
-                    local other_platform = map:GetPlatformAtPoint(destpos_x, destpos_z)
+                    local other_platform = self.dest:GetPlatform()
                     if my_platform == other_platform then
                         dest_dot_forward = 1
                     end
@@ -1231,8 +1236,8 @@ function LocoMotor:OnUpdate(dt)
                     local dist = self.inst:GetPhysicsRadius(0) + 2.5
                     local _x, _z = forward_x * dist + mypos_x, forward_z * dist + mypos_z
                     if my_platform ~= nil then
-                        local temp_x, temp_z, temp_platform = nil, nil, nil
-                        can_hop, temp_x, temp_z, temp_platform, blocked = self:ScanForPlatform(nil, _x, _z, hop_distance)
+                        local _
+                        can_hop, _, _, _, blocked = self:ScanForPlatform(nil, _x, _z, hop_distance)
                     end
 
                     if not can_hop and self.inst.components.amphibiouscreature:ShouldTransition(_x, _z) then

@@ -62,6 +62,7 @@ local function fn()
     inst:AddComponent("repairer")
     inst.components.repairer.repairmaterial = MATERIALS.WOOD
     inst.components.repairer.healthrepairvalue = TUNING.REPAIR_STICK_HEALTH
+    inst.components.repairer.boatrepairsound = "turnoftides/common/together/boat/repair_with_wood"
 
 	inst:AddComponent("oceanfishingtackle")
 	inst.components.oceanfishingtackle:SetCastingData(TUNING.OCEANFISHING_TACKLE.BOBBER_TWIG, "oceanfishingbobber_twig_projectile")

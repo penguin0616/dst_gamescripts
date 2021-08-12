@@ -69,8 +69,8 @@ local states =
             inst.AnimState:PlayAnimation("crack")
             inst.sg:SetTimeout(1)
 
-            for k,v in pairs(inst.components.walkableplatform:GetEntitiesOnPlatform()) do
-                v:PushEvent("onpresink")
+            for k in pairs(inst.components.walkableplatform:GetPlayersOnPlatform()) do
+                k:PushEvent("onpresink")
             end
         end,
 

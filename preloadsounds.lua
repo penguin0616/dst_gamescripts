@@ -130,7 +130,15 @@ local MainSounds =
     "webber2.fsb",
 
     "webber1.fev",
-    "webber1.fsb",
+    "webber1.fsb",	
+	
+    "waterlogged2.fev",
+    "waterlogged2.fsb",
+	"waterlogged2_amb.fsb",
+
+	"waterlogged1.fev",
+    "waterlogged1.fsb",
+	"waterlogged1_amb.fsb",
 }
 
 function PreloadSoundList(list)

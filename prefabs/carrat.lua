@@ -313,10 +313,11 @@ end
 local YOTC_RACESTART_MUSTHAVETAGS = {"yotc_racestart"}
 local YOTC_RACESTART_CANTHAVETAGS = {"fire", "burnt", "INLIMBO", "race_on"}
 local function find_yotc_race_startentity(inst)
+    local platform = inst:GetCurrentPlatform()
     local ix, iy, iz = inst.Transform:GetWorldPosition()
     local start_points = TheSim:FindEntities(ix, iy, iz, TUNING.YOTC_ADDTORACE_DIST, YOTC_RACESTART_MUSTHAVETAGS, YOTC_RACESTART_CANTHAVETAGS)
     for _, v in ipairs(start_points) do
-		if TheWorld.Map:GetPlatformAtPoint(ix, iy, iz) == TheWorld.Map:GetPlatformAtPoint(v.Transform:GetWorldPosition()) then
+		if platform == v:GetCurrentPlatform() then
 			return v
 		end
     end
@@ -509,9 +510,10 @@ local function client_get_drop_action_string(inst, drop_pst)
     end
 
     local dx, dy, dz = drop_pst:Get()
+    local drop_platform = TheWorld.Map:GetPlatformAtPoint(dx, dy, dz)
     local start_points = TheSim:FindEntities(dx, dy, dz, TUNING.YOTC_ADDTORACE_DIST, YOTC_RACESTART_MUSTHAVETAGS, YOTC_RACESTART_CANTHAVETAGS)
     for _, v in ipairs(start_points) do
-		if not TheWorld.Map:IsOceanAtPoint(dx, dy, dz) and TheWorld.Map:GetPlatformAtPoint(dx, dy, dz) == TheWorld.Map:GetPlatformAtPoint(v.Transform:GetWorldPosition()) then
+		if not TheWorld.Map:IsOceanAtPoint(dx, dy, dz) and drop_platform == v:GetCurrentPlatform() then
 			return "YOTC_ENTERRACE"
 		end
     end

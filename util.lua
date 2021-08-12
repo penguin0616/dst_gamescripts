@@ -20,9 +20,9 @@ end
 function DebugSpawn(prefab)
     if TheSim ~= nil and TheInput ~= nil then
         TheSim:LoadPrefabs({ prefab })
-        if Prefabs[prefab] ~= nil and not Prefabs[prefab].is_skin then
+        if Prefabs[prefab] ~= nil and not Prefabs[prefab].is_skin and Prefabs[prefab].fn then
 			local inst = SpawnPrefab(prefab)
-			if inst ~= nil then
+			if inst ~= nil and inst.Transform then
 				inst.Transform:SetPosition(ConsoleWorldPosition():Get())
 				return inst
 			end
@@ -1179,6 +1179,15 @@ function LinkedList:Iterator()
     }
 end
 
+function table.count( t, value )
+    local count = 0
+    for k,v in pairs(t) do
+        if value == nil or v == value then
+            count = count + 1
+        end
+    end
+    return count
+end
 
 function table.setfield(Table,Name,Value)
 
@@ -1531,3 +1540,52 @@ function FunctionOrValue(func_or_val, ...)
     end
     return func_or_val
 end
+
+
+--jcheng taken from griftlands
+--START--
+function rawstring( t )
+    if type(t) == "table" then
+        local mt = getmetatable( t )
+        if mt then
+            -- Seriously, is there any better way to bypass the tostring metamethod?
+            setmetatable( t, nil )
+            local s = tostring( t )
+            setmetatable( t, mt )
+            return s
+        end
+    end
+
+    return tostring(t)
+end
+
+local function StringSort( a, b )
+    if type(a) == "number" and type(b) == "number" then
+        return a < b
+    else
+        return tostring(a) < tostring(b)
+    end
+end
+
+local function SortedKeysIter( state, i )
+    i = next( state.sorted_keys, i )
+    if i then
+        local key = state.sorted_keys[ i ]
+        return i, key, state.t[ key ]
+    end
+end
+
+function sorted_pairs( t, fn )
+    local sorted_keys = {}
+    for k, v in pairs(t) do
+        table.insert( sorted_keys, k )
+    end
+    table.sort( sorted_keys, fn or StringSort )
+    return SortedKeysIter, { sorted_keys = sorted_keys, t = t }
+end
+
+function generic_error( err )
+    return tostring(err).."\n"..debugstack()
+end
+
+--END--

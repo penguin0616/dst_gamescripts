@@ -151,14 +151,10 @@ local function fn()
     inst.entity:AddLight()
     inst.entity:AddNetwork()
 
-    inst:AddTag("NOBLOCK")
-    inst:AddTag("NOCLICK")
-
     inst.Light:SetFalloff(1)
-    inst.Light:SetIntensity(INTENSITY)
+    inst.Light:SetIntensity(0)
     inst.Light:SetRadius(1)
     inst.Light:SetColour(180/255, 195/255, 150/255)
-    inst.Light:SetIntensity(0)
     inst.Light:Enable(false)
     inst.Light:EnableClientModulation(true)
 
@@ -169,7 +165,9 @@ local function fn()
     inst.AnimState:SetRayTestOnBB(true)
 
     inst:AddTag("cattoyairborne")
-	inst:AddTag("flying")
+    inst:AddTag("flying")
+    inst:AddTag("NOBLOCK")
+    inst:AddTag("NOCLICK")
 
     inst._fadeval = net_float(inst.GUID, "fireflies._fadeval")
     inst._faderate = net_smallbyte(inst.GUID, "fireflies._faderate", "onfaderatedirty")

@@ -5,6 +5,7 @@ PREFAB_SKINS = {
 	{
 		"abigail_formal",
 		"abigail_handmedown",
+		"abigail_nature",
 		"abigail_rose",
 		"abigail_shadow",
 		"abigail_survivor",
@@ -13,6 +14,7 @@ PREFAB_SKINS = {
 	{
 		"abigail_flower_formal",
 		"abigail_flower_handmedown",
+		"abigail_flower_nature",
 		"abigail_flower_rose",
 		"abigail_flower_shadow",
 		"abigail_flower_survivor",
@@ -197,10 +199,12 @@ PREFAB_SKINS = {
 	chester =
 	{
 		"chester_lamb",
+		"chester_walrus",
 	},
 	chester_eyebone =
 	{
 		"chester_eyebone_lamb",
+		"chester_eyebone_walrus",
 	},
 	coldfirepit =
 	{
@@ -261,11 +265,15 @@ PREFAB_SKINS = {
 	},
 	critter_perdling =
 	{
+		"perdling_pelican",
+		"perdling_puffin",
 		"perdling_rooster",
 		"perdling_winter",
 	},
 	critter_perdling_builder =
 	{
+		"perdling_pelican_builder",
+		"perdling_puffin_builder",
 		"perdling_rooster_builder",
 		"perdling_winter_builder",
 	},
@@ -436,6 +444,7 @@ PREFAB_SKINS = {
 	},
 	hambat =
 	{
+		"hambat_nautical",
 		"hambat_potroast",
 		"hambat_spiralcut",
 	},
@@ -671,6 +680,10 @@ PREFAB_SKINS = {
 		"saltbox_shaker",
 		"saltbox_victorian",
 	},
+	seafaring_prototyper =
+	{
+		"seafaring_prototyper_lighthouse",
+	},
 	seedpouch =
 	{
 		"seedpouch_rustic",
@@ -699,11 +712,26 @@ PREFAB_SKINS = {
 		"spear_wathgrithr_valkyrie",
 		"spear_wathgrithr_wrestle",
 	},
+	stagehand =
+	{
+		"stagehand_carpet",
+		"stagehand_cawnival",
+		"stagehand_dragonfly",
+		"stagehand_vintage",
+	},
 	strawhat =
 	{
 		"strawhat_bonnet",
 		"strawhat_cowboy",
 		"strawhat_floppy",
+	},
+	supertacklecontainer =
+	{
+		"supertacklecontainer_shell",
+	},
+	tacklecontainer =
+	{
+		"tacklecontainer_shell",
 	},
 	telebase =
 	{
@@ -715,6 +743,7 @@ PREFAB_SKINS = {
 	},
 	tent =
 	{
+		"tent_beach",
 		"tent_circus",
 		"tent_leaf",
 	},
@@ -812,6 +841,7 @@ PREFAB_SKINS = {
 		"walter_detective",
 		"walter_formal",
 		"walter_ice",
+		"walter_nature",
 		"walter_none",
 		"walter_survivor",
 		"walter_ventriloquist",
@@ -822,6 +852,7 @@ PREFAB_SKINS = {
 		"walterhat_detective",
 		"walterhat_formal",
 		"walterhat_ice",
+		"walterhat_nature",
 		"walterhat_survivor",
 		"walterhat_ventriloquist",
 		"walterhat_victorian",
@@ -839,6 +870,7 @@ PREFAB_SKINS = {
 		"warly_chef",
 		"warly_fisherman",
 		"warly_ice",
+		"warly_nature",
 		"warly_none",
 		"warly_rose",
 		"warly_victorian",
@@ -913,6 +945,7 @@ PREFAB_SKINS = {
 		"webber_gladiator",
 		"webber_ice",
 		"webber_magma",
+		"webber_nature",
 		"webber_none",
 		"webber_punk",
 		"webber_rose",
@@ -932,6 +965,7 @@ PREFAB_SKINS = {
 		"webber_beard_gladiator",
 		"webber_beard_ice",
 		"webber_beard_magma",
+		"webber_beard_nature",
 		"webber_beard_punk",
 		"webber_beard_rose",
 		"webber_beard_shadow",
@@ -953,6 +987,7 @@ PREFAB_SKINS = {
 		"wendy_lureplant_d",
 		"wendy_lureplant_p",
 		"wendy_magma",
+		"wendy_nature",
 		"wendy_none",
 		"wendy_rose",
 		"wendy_rosep",
@@ -1168,6 +1203,7 @@ PREFAB_SKINS = {
 		"wortox_dragon",
 		"wortox_ice",
 		"wortox_minotaur",
+		"wortox_nature",
 		"wortox_none",
 		"wortox_original",
 		"wortox_survivor",

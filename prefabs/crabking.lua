@@ -943,7 +943,7 @@ local function burble(inst)
     if TheWorld.Map:IsOceanAtPoint(x+offset.x, 0, z+offset.z) then
         local fx = SpawnPrefab(prefab)
         fx.Transform:SetPosition(x+offset.x,y+offset.y,z+offset.z)
-    elseif TheWorld.Map:GetPlatformAtPoint(x+offset.x, z+offset.z) then
+    else
         local boat = TheWorld.Map:GetPlatformAtPoint(x+offset.x, z+offset.z)
         if boat then
             ShakeAllCameras(CAMERASHAKE.VERTICAL, 0.1, 0.01, 0.3, boat, boat:GetPhysicsRadius(4))

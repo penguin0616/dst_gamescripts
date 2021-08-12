@@ -98,7 +98,7 @@ UpdateSpawn = function(player, params)
     if params.targetpop > #params.ents then
         local x, y, z = player.Transform:GetWorldPosition()
 
-        local boat = _map:GetPlatformAtPoint(x, z)
+        local boat = player:GetCurrentPlatform()
         if player.components.sanity:GetPercent() < .1 and boat ~= nil then
             local boat_x, boat_y, boat_z = boat.Transform:GetWorldPosition()
 

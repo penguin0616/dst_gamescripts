@@ -618,10 +618,13 @@ local states =
 
         onupdate = function(inst)
             -- Track the target's position, so long as they exist and they are over a platform.
-            if not inst.sg.statemem.stop_tracking and inst.sg.statemem.target ~= nil and inst.sg.statemem.target:IsValid() then
-                local tpos = inst.sg.statemem.target:GetPosition()
-                if TheWorld.Map:GetPlatformAtPoint(tpos.x, tpos.z) ~= nil then
-                    inst.sg.statemem.target_position = tpos
+            if inst.sg.statemem.stop_tracking then return end
+            local target = inst.sg.statemem.target
+            if target and target:IsValid() then
+                local platform = target and target:GetCurrentPlatform()
+                if platform then
+                    inst.sg.statemem.target_platform = platform
+                    inst.sg.statemem.target_position = target:GetPosition()
                 end
             end
         end,
@@ -649,8 +652,8 @@ local states =
         ontimeout = function(inst)
             local tpos = inst.sg.statemem.target_position
             if tpos ~= nil then
-                local target_platform = TheWorld.Map:GetPlatformAtPoint(tpos.x, tpos.z)
-                if target_platform ~= nil and target_platform.components.walkableplatform:CanBeWalkedOn() then
+                local target_platform = inst.sg.statemem.target_platform
+                if target_platform ~= nil and target_platform:IsValid() then
                     ShakeAllCamerasOnPlatform(CAMERASHAKE.VERTICAL, .75, 0.1, 0.1, target_platform)
                     inst.SoundEmitter:PlaySoundWithParams("moonstorm/creatures/boss/alterguardian2/spike", { intensity = 0.2*math.random() })
 

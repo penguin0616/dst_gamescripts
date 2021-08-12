@@ -64,13 +64,9 @@ local function _distsq(inst, targ)
     return dx * dx + dy * dy + dz * dz, Vector3(x1, y1, z1)
 end
 
-function Follow:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
-    local different_platforms = false
+function Follow:AreDifferentPlatforms(inst, target)
     if self.inst.components.locomotor.allow_platform_hopping then
-        local map = TheWorld.Map
-        local my_platform = map:GetPlatformAtPoint(my_x, my_z)
-        local target_platform = map:GetPlatformAtPoint(target_x, target_z)
-        return my_platform ~= target_platform
+        return inst:GetCurrentPlatform() ~= target:GetCurrentPlatform()
     end
     return false
 end
@@ -89,15 +85,12 @@ function Follow:Visit()
 				self:EvaluateDistances()
 			end
 
-            local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-            local target_x, target_y, target_z = self.currenttarget.Transform:GetWorldPosition()
-
-            local on_different_platforms = self:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
+            local on_different_platforms = self:AreDifferentPlatforms(self.inst, self.currenttarget)
 
             if not on_different_platforms and dist_sq < self.min_dist * self.min_dist then
                 self.status = RUNNING
                 self.action = "BACKOFF"
-            elseif dist_sq > self.max_dist * self.max_dist or on_different_platforms then
+            elseif on_different_platforms or dist_sq > self.max_dist * self.max_dist then
                 self.status = RUNNING
                 self.action = "APPROACH"
             else
@@ -123,10 +116,7 @@ function Follow:Visit()
                 dist_sq, target_pos = _distsq(self.inst, self.currenttarget)
             end
 
-            local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-            local target_x, target_y, target_z = self.currenttarget.Transform:GetWorldPosition()
-
-            local different_platforms = self:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
+            local different_platforms = self:AreDifferentPlatforms(self.inst, self.currenttarget)
 
             if not different_platforms and dist_sq < self.target_dist * self.target_dist then
                 self.status = SUCCESS

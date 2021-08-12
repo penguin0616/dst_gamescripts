@@ -109,6 +109,8 @@ local assets =
     Asset("PKGREF", "images/bg_redux_wardrobe_bg.tex"),
 
     Asset("ANIM", "anim/ink_over.zip"),
+
+    Asset("ANIM", "anim/leaves_canopy.zip"),
 }
 
 local prefabs =

@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "Nope. Can't use it",
 			INUSE = "Someone else's",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Someone else's friend",
@@ -3373,6 +3374,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Pretty Glub Glub",
 		OCEANFISH_MEDIUM_7 = "Gold Glub Glub",
 		OCEANFISH_MEDIUM_8 = "Cold!",
+        OCEANFISH_MEDIUM_9 = "Glub Glub smell sweet like fruit!",
 
 		PONDFISH = "Glub Glub",
 		PONDEEL = "Sea Wiggly",
@@ -3825,6 +3827,8 @@ return{
 		SWEETTEA = "Mmmm... ahhh",
 		TILLWEED = "Stubborn friends",
 		TILLWEEDSALVE = "Thank you friends!",
+        WEED_IVY = "Pointy friends",
+        IVY_SNARE = "Oooh, friends got mad",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4066,7 +4070,33 @@ return{
             GENERIC = "Oooooh!",
             CONSTRUCTION1 = "Lots to do",
             CONSTRUCTION2 = "Almost done",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Biiiiig friend!",
+        OCEANTREE = "Friends like water",
+        OCEANTREENUT = "Baby friend growing",
+        WATERTREE_ROOT = "Oh! Don't bump into friends!",
+
+        OCEANTREE_PILLAR = "Biiig friend!",
+
+        OCEANVINE = "Wants to give fruit",
+        FIG = "From hanging tree friend",
+        FIG_COOKED = "Sweet yums",
+
+        SPIDER_WATER = "Tall Leggy Bug",
+        MUTATOR_WATER = "Belly stuff for Leggy Bugs?",
+        OCEANVINE_COCOON = "Made house in friend",
+        OCEANVINE_COCOON_BURNT = "No more house",
+
+        GRASSGATOR = "Friend?",
+
+        TREEGROWTHSOLUTION = "Tree friends like it!",
+
+        FIGATONI = "Sweet pocket",
+        FIGKABAB = "Friend helped!",
+        KOALEFIG_TRUNK = "Think is for belly...?",
+        FROGNEWTON = "Squishy",
     },
 
     DESCRIBE_GENERIC = "Friend?",

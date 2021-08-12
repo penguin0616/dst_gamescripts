@@ -16,6 +16,8 @@ local Propagator = Class(function(self, inst)
     --We need a separate internal flag since acceptsheat is
     --used as a public property for configuring propagator.
     --self.pauseheating = nil
+    
+    self.heat_this_update = 0
 
     self.spreading = false
     self.delay = nil
@@ -46,6 +48,7 @@ function Propagator:Delay(time)
 end
 
 function Propagator:StopUpdating()
+    self.heat_this_update = 0
     if self.task ~= nil then
         self.task:Cancel()
         self.task = nil
@@ -56,10 +59,11 @@ local function _OnUpdate(inst, self, dt)
     self:OnUpdate(dt)
 end
 
+local PROPAGATOR_DT = 0.5
+
 function Propagator:StartUpdating()
     if self.task == nil then
-        local dt = .5
-        self.task = self.inst:DoPeriodicTask(dt, _OnUpdate, dt + math.random() * .67, self, dt)
+        self.task = self.inst:DoPeriodicTask(PROPAGATOR_DT, _OnUpdate, PROPAGATOR_DT + math.random() * 0.67, self, PROPAGATOR_DT)
     end
 end
 
@@ -93,7 +97,15 @@ function Propagator:AddHeat(amount)
         return
     end
 
-    self.currentheat = self.currentheat + amount * self:GetHeatResistance()
+    local max_heat_this_update = (self.flashpoint / 2) * PROPAGATOR_DT
+    if self.heat_this_update >= max_heat_this_update then
+        return
+    end
+
+    local heat = math.min(amount * self:GetHeatResistance(), max_heat_this_update - self.heat_this_update)
+
+    self.heat_this_update = self.heat_this_update + heat
+    self.currentheat = self.currentheat + heat
 
     if self.currentheat ~= 0 then
         self:StartUpdating()
@@ -109,6 +121,7 @@ end
 
 function Propagator:Flash()
     if self.acceptsheat and not self.pauseheating and self.delay == nil then
+        self.heat_this_update = self.heat_this_update - (self.flashpoint + 1)
         self:AddHeat(self.flashpoint + 1)
     end
 end
@@ -116,6 +129,8 @@ end
 local TARGET_CANT_TAGS = { "INLIMBO" }
 local TARGET_MELT_MUST_TAGS = { "frozen", "firemelt" }
 function Propagator:OnUpdate(dt)
+    self.heat_this_update = 0
+
     if self.currentheat > 0 then
         self.currentheat = math.max(0, self.currentheat - dt * self.decayrate)
     elseif self.currentheat < 0 then

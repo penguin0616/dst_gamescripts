@@ -853,6 +853,69 @@ local foods =
         end,
 	},
 
+	koalefig_trunk =
+	{
+		test = function(cooker, names, tags) return (names.trunk_summer or names.trunk_cooked or names.trunk_winter) and (names.fig or names.fig_cooked) end,
+		priority = 40,
+		overridebuild = "cook_pot_food8",
+		foodtype = FOODTYPE.MEAT,
+		health = TUNING.HEALING_HUGE,  									-- 40 + 1 = 60
+		hunger = TUNING.CALORIES_LARGE + TUNING.CALORIES_MEDSMALL,	    -- 12.5 +37.5 = 56
+		sanity = 0,										-- 0 + 0
+		perishtime = TUNING.PERISH_MED,
+		cooktime = 2,
+        potlevel = "high",
+        floater = {"med", 0.05, 0.65},
+	},
+
+	figatoni =
+	{
+		test = function(cooker, names, tags) return (names.fig or names.fig_cooked) and tags.veggie and tags.veggie >= 2  and not tags.meat end,
+		priority = 30,
+		overridebuild = "cook_pot_food8",
+		foodtype = FOODTYPE.VEGGIE,
+		health = TUNING.HEALING_MEDLARGE,
+        hunger = TUNING.CALORIES_LARGE + TUNING.CALORIES_MEDSMALL,
+        perishtime = TUNING.PERISH_FAST,
+        sanity = TUNING.SANITY_MED,
+		cooktime = 2,
+        potlevel = "high",
+        floater = {"med", 0.05, 0.65},
+	},
+
+	figkabab =
+	{
+		test = function(cooker, names, tags) return (names.fig or names.fig_cooked) and names.twigs and tags.meat and tags.meat >= 1 and (not tags.monster or tags.monster <= 1) end,
+		priority = 30,
+		overridebuild = "cook_pot_food8",
+		foodtype = FOODTYPE.MEAT,
+		health = TUNING.HEALING_MED,
+		hunger = TUNING.CALORIES_MED,
+		perishtime = TUNING.PERISH_SLOW,
+		sanity = TUNING.SANITY_MED,
+		temperature = TUNING.HOT_FOOD_BONUS_TEMP,
+		temperatureduration = TUNING.FOOD_TEMP_LONG,
+		cooktime = 1,
+        potlevel = "high",
+        floater = {"med", nil, 0.55},
+	},
+
+	frognewton =
+	{
+		test = function(cooker, names, tags) return (names.fig or names.fig_cooked) and (names.froglegs or names.froglegs_cooked) end,
+		priority = 1,
+		overridebuild = "cook_pot_food8",
+		foodtype = FOODTYPE.MEAT,
+		health = TUNING.HEALING_MEDSMALL,
+		hunger = TUNING.CALORIES_MEDSMALL,
+		perishtime = TUNING.PERISH_SLOW,
+		sanity = TUNING.SANITY_SMALL,
+		temperature = TUNING.HOT_FOOD_BONUS_TEMP,
+		temperatureduration = TUNING.FOOD_TEMP_LONG,
+		cooktime = 1,
+        potlevel = "high",
+        floater = {"med", nil, 0.55},
+	},
 
 }
 

@@ -26,6 +26,7 @@ AddModReleaseID( "R13_ROT_FORGOTTENKNOWLEDGE" )
 AddModReleaseID( "R14_FARMING_REAPWHATYOUSOW" )
 AddModReleaseID( "R15_QOL_WORLDSETTINGS" )
 AddModReleaseID( "R16_ROT_MOONSTORMS" )
+AddModReleaseID( "R17_WATERLOGGED" )
 
 -----------------------------------------------------------------------------------------------
 

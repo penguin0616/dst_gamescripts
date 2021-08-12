@@ -43,10 +43,9 @@ local function _distsq(inst, targ)
     return dx * dx + dy * dy + dz * dz, Vector3(x1, y1, z1)
 end
 
-function Approach:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
+function Approach:AreDifferentPlatforms(inst, target)
     if self.inst.components.locomotor.allow_platform_hopping then
-        local map = TheWorld.Map
-        return map:GetPlatformAtPoint(my_x, my_z) ~= map:GetPlatformAtPoint(target_x, target_z)
+        return inst:GetCurrentPlatform() ~= target:GetCurrentPlatform()
     end
     return false
 end
@@ -65,10 +64,7 @@ function Approach:Visit()
 				self:EvaluateDistances()
 			end
 
-            local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-            local target_x, target_y, target_z = self.currenttarget.Transform:GetWorldPosition()
-
-            on_different_platforms = self:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
+            on_different_platforms = self:AreDifferentPlatforms(self.inst, self.currenttarget)
 
             if on_different_platforms or dist_sq > self.dist * self.dist then
                 self.status = RUNNING
@@ -90,12 +86,9 @@ function Approach:Visit()
             return
         end
 
-        local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-        local target_x, target_y, target_z = self.currenttarget.Transform:GetWorldPosition()
-
         if dist_sq == nil then
             dist_sq, target_pos = _distsq(self.inst, self.currenttarget)
-            on_different_platforms = self:AreDifferentPlatforms(my_x, my_z, target_x, target_z)
+            on_different_platforms = self:AreDifferentPlatforms(self.inst, self.currenttarget)
         end
 
         if not on_different_platforms and dist_sq < self.dist * self.dist then

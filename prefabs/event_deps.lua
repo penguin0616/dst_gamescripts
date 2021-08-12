@@ -223,11 +223,13 @@ local SPECIAL_EVENT_DEPS =
 
                 Asset("ANIM", "anim/dst_menu_webber.zip"),
 
-                Asset("ANIM", "anim/dst_menu_moonstorm.zip"),
-                Asset("ANIM", "anim/dst_menu_moonstorm_background.zip"),
-                Asset("ANIM", "anim/dst_menu_moonstorm_foreground.zip"),
-                Asset("ANIM", "anim/dst_menu_moonstorm_wagstaff.zip"),
-                Asset("ANIM", "anim/dst_menu_moonstorm_wrench.zip"),
+                Asset("PKGREF", "anim/dst_menu_moonstorm.zip"),
+                Asset("PKGREF", "anim/dst_menu_moonstorm_background.zip"),
+                Asset("PKGREF", "anim/dst_menu_moonstorm_foreground.zip"),
+                Asset("PKGREF", "anim/dst_menu_moonstorm_wagstaff.zip"),
+                Asset("PKGREF", "anim/dst_menu_moonstorm_wrench.zip"),
+
+                Asset("ANIM", "anim/dst_menu_waterlogged.zip"),                
             },
         },
     },

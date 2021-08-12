@@ -86,8 +86,6 @@ local function GetSpawnPoint(pt,platform)
 
 			if vel_x ~= 0 or vel_z ~= 0 then
 				local vel = platform.components.boatphysics:GetVelocity()
-                print("vel:", vel)
-				local x_normalized, y_normalized = VecUtil_Normalize(vel_x, vel_z)------------------
 
 				local lower = 0.1
 				local upper = 1.5

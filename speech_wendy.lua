@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "No... I don't want that...",
 			INUSE = "Someone's beat me to it.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "It... doesn't seem to like me very much.",
@@ -3373,6 +3374,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "It's almost too pretty to eat. Almost.",
 		OCEANFISH_MEDIUM_7 = "It's almost too pretty to eat. Almost.",
 		OCEANFISH_MEDIUM_8 = "It has no warmth... like my life without Abigail.",
+        OCEANFISH_MEDIUM_9 = "A fish, by any name, should not smell sweet.",
 
 		PONDFISH = "It was flopping around desperately for life. The poor fool.",
 		PONDEEL = "An eel.",
@@ -3825,6 +3827,8 @@ return{
 		SWEETTEA = "Would you care for a tea party, Abigail?",
 		TILLWEED = "A most stubborn weed.",
 		TILLWEEDSALVE = "A balm to ease my suffering.",
+        WEED_IVY = "All the thorns of a rose, with none of the beauty.",
+        IVY_SNARE = "I suppose I must deserve this.",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4066,7 +4070,33 @@ return{
             GENERIC = "How very peculiar.",
             CONSTRUCTION1 = "There's so much left to be done...",
             CONSTRUCTION2 = "It's quite odd looking, isn't it?",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "I'd be filled with awe if my heart still felt such things.",
+        OCEANTREE = "Its roots have the appearance of sunbleached bones.",
+        OCEANTREENUT = "How strange that it doesn't drown when dropped to the bottom of the ocean.",
+        WATERTREE_ROOT = "Perhaps my boat will be dashed upon it.",
+
+        OCEANTREE_PILLAR = "It reminds me of happier days, sitting in the dappled shade...",
+
+        OCEANVINE = "This would make a good hangman's tree.",
+        FIG = "Abigail always told me they were filled with wasps.",
+        FIG_COOKED = "Any wasps it held seem to have been burned away.",
+
+        SPIDER_WATER = "Its legs look so thin and delicate, like they could snap at the slightest kick...",
+        MUTATOR_WATER = "Webber sees the world in a most curious way.",
+        OCEANVINE_COCOON = "Something sinister lurks above us.",
+        OCEANVINE_COCOON_BURNT = "Nothing but ash remains.",
+
+        GRASSGATOR = "It fears what it does not know.",
+
+        TREEGROWTHSOLUTION = "I suppose even trees get hungry.",
+
+        FIGATONI = "The fig cowers in its pasta shell.",
+        FIGKABAB = "The fig pieces look like little pierced hearts.",
+        KOALEFIG_TRUNK = "How terrible.",
+        FROGNEWTON = "Sweet and only a little slimy.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

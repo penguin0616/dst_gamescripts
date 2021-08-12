@@ -237,13 +237,14 @@ EntityScript = Class(function(self, entity)
     self.worldstatewatching = nil
     self.pendingtasks = nil
     self.children = nil
+    self.platformfollowers = nil
 
     self.actionreplica = nil
     self.replica = Replica(self)
 end)
 
 function EntityScript:GetSaveRecord()
-    local record = {}
+    local record = nil
 
     if self.entity:HasTag("player") then
         record = {
@@ -251,6 +252,27 @@ function EntityScript:GetSaveRecord()
             --id = self.GUID,
             age = self.Network:GetPlayerAge()
         }
+
+        local platform = self:GetCurrentPlatform()
+        if platform then
+            local px, py, pz = platform.Transform:GetWorldPosition()
+            local x, y, z = self.Transform:GetWorldPosition()
+
+            local rx, ry, rz = x - px, y - py, z - pz
+
+            --Qnan hunting
+            rx = rx ~= rx and 0 or rx
+            ry = ry ~= ry and 0 or ry
+            rz = rz ~= rz and 0 or rz
+
+            record.puid = platform.components.walkableplatform:GetUID()
+
+            record.rx = rx and math.floor(rx*1000)/1000 or 0
+            record.rz = rz and math.floor(rz*1000)/1000 or 0
+            if ry ~= 0 then
+                record.ry = ry and math.floor(ry*1000)/1000 or 0
+            end
+        end
     else
         record = {
             prefab = self.prefab,
@@ -258,38 +280,26 @@ function EntityScript:GetSaveRecord()
         }
     end
 
+    local x, y, z = self.Transform:GetWorldPosition()
 
+    --Qnan hunting
+    x = x ~= x and 0 or x
+    y = y ~= y and 0 or y
+    z = z ~= z and 0 or z
 
-    if self.Transform then
-        local x, y, z = self.Transform:GetWorldPosition()
-
-        --Qnan hunting
-        x = x ~= x and 0 or x
-        y = y ~= y and 0 or y
-        z = z ~= z and 0 or z
-
-        record.x = x and math.floor(x*1000)/1000 or 0
-        record.z = z and math.floor(z*1000)/1000 or 0
-        --y is often 0 in our game, so be selective.
-        if y ~= 0 then
-            record.y = y and math.floor(y*1000)/1000 or 0
-        end
+    record.x = x and math.floor(x*1000)/1000 or 0
+    record.z = z and math.floor(z*1000)/1000 or 0
+    --y is often 0 in our game, so be selective.
+    if y ~= 0 then
+        record.y = y and math.floor(y*1000)/1000 or 0
     end
 
-    if self.skinname then 
-    	record.skinname = self.skinname
-    end
-    if self.skin_id then 
-    	record.skin_id = self.skin_id
-    end
-    if self.alt_skin_ids then
-		record.alt_skin_ids = self.alt_skin_ids
-	end
+    record.skinname = self.skinname
+    record.skin_id = self.skin_id
+    record.alt_skin_ids = self.alt_skin_ids
 
     local references = nil
     record.data, references = self:GetPersistData()
-
-
 
     return record, references
 end
@@ -723,6 +733,8 @@ function EntityScript:RemoveChild(child)
 end
 
 function EntityScript:AddChild(child)
+    child.platform = nil
+
     if child.parent then
         child.parent:RemoveChild(child)
     end
@@ -734,7 +746,39 @@ function EntityScript:AddChild(child)
 
     self.children[child] = true
     child.entity:SetParent(self.entity)
+end
 
+function EntityScript:RemovePlatformFollower(child)
+    if child.platform ~= self then
+        return
+    end
+
+    child.platform = nil
+    if self.platformfollowers then
+        self.platformfollowers[child] = nil
+    end
+    child.entity:SetPlatform(nil)
+end
+
+function EntityScript:AddPlatformFollower(child)
+    child.parent = nil
+
+    if child.platform then
+        child.platform:RemovePlatformFollower(child)
+    end
+
+    child.platform = self
+    if not self.platformfollowers then
+        self.platformfollowers = {}
+    end
+
+    self.platformfollowers[child] = true
+    child.entity:SetPlatform(self.entity)
+end
+
+--only works on master sim
+function EntityScript:GetPlatformFollowers()
+    return self.platformfollowers
 end
 
 function EntityScript:GetBrainString()
@@ -1355,6 +1399,12 @@ function EntityScript:Remove()
         self.parent:RemoveChild(self)
     end
 
+    if self.platformfollowers then
+        for k,v in pairs(self.platformfollowers) do
+            k.platform = nil
+        end
+    end
+
     OnRemoveEntity(self.GUID)
 
     self:PushEvent("onremove")
@@ -1462,13 +1512,11 @@ function EntityScript:IsOnOcean(allow_boats)
 end
 
 function EntityScript:GetCurrentPlatform()
-    local x, y, z = self.Transform:GetWorldPosition()
-    local platform = TheWorld.Map:GetPlatformAtPoint(x, z)
-
-    if platform ~= nil and platform.components.walkableplatform:CanBeWalkedOn() then
-        return platform
+    if TheWorld.ismastersim then
+        return self.platform
+    else
+        return self.entity:GetPlatform()
     end
-    return nil
 end
 
 function EntityScript:GetCurrentTileType()
@@ -1525,52 +1573,34 @@ function EntityScript:PutBackOnGround()
 end
 
 function EntityScript:GetPersistData()
-    local references = nil
-    local data = nil
-    for k,v in pairs(self.components) do
+    local references = {}
+    local data = {}
+    for k, v in pairs(self.components) do
         if v.OnSave then
             local t, refs = v:OnSave()
-            if type(t) == "table" then
-                if t and next(t) and not data then
-                    data = {}
-                end
-                if t and data then
-                    data[k] = t
-                end
+            if type(t) == "table" and not IsTableEmpty(t) then
+                data[k] = t
             end
 
             if refs then
-                if not references then
-                    references = {}
-                end
-                for k,v in pairs(refs) do
-
-                    table.insert(references, v)
+                for k1, v1 in pairs(refs) do
+                    table.insert(references, v1)
                 end
             end
         end
     end
 
     if self.OnSave then
-        if not data then
-            data = {}
-        end
-
         local refs = self.OnSave(self, data)
 
         if refs then
-            if not references then
-                references = {}
-            end
-            for k,v in pairs(refs) do
-
+            for k, v in pairs(refs) do
                 table.insert(references, v)
             end
         end
-
     end
 
-    if (data and next(data)) or references then
+    if not IsTableEmpty(data) or not IsTableEmpty(references) then
         return data, references
     end
 end

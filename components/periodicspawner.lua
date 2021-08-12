@@ -103,7 +103,7 @@ function PeriodicSpawner:TrySpawn(prefab)
         end
     end
     local inst = nil
-    if not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) and TheWorld.components.flotsamgenerator then
+    if not self.inst:GetCurrentPlatform() and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and TheWorld.components.flotsamgenerator then
         inst = TheWorld.components.flotsamgenerator:SpawnFlotsam(Vector3(x,y,z),prefab,true)
     else
         inst = SpawnPrefab(prefab)

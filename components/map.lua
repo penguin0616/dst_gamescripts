@@ -240,8 +240,7 @@ function Map:CanDeployAtPointInWater(pt, inst, mouseover, data)
     -- check if there's a boat in the way
     local min_distance_from_boat = (data and data.boat) or 0
     local radius = (data and data.radius) or 0
-    local entities = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + radius + min_distance_from_boat, WALKABLE_PLATFORM_TAGS)
-    for i, v in ipairs(entities) do
+    if TheSim:CountEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + radius + min_distance_from_boat, WALKABLE_PLATFORM_TAGS) > 0 then
         return false
     end
 

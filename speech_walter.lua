@@ -186,6 +186,7 @@ return{
         {
 			RESTRICTION = "That's not mine.",
 			INUSE = "Guess I have to wait.",
+--fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
                 "Wait... you're not my Carrat!",
@@ -3369,6 +3370,7 @@ return{
 		OCEANFISH_MEDIUM_6 = "Don't you usually live in ponds?",
 		OCEANFISH_MEDIUM_7 = "Don't you usually live in ponds?",
 		OCEANFISH_MEDIUM_8 = "Will it melt if I try to cook it?",
+        OCEANFISH_MEDIUM_9 = "Aww, it's got cute little ear fins!",
 
 		PONDFISH = "Sorry, but someone has to be dinner.",
 		PONDEEL = "It has sharp little teeth.",
@@ -3821,6 +3823,8 @@ return{
 		SWEETTEA = "It makes my head feel a bit fuzzy... but I'm sure that's fine!",
 		TILLWEED = "Hey! No weeds allowed in the garden!",
 		TILLWEEDSALVE = "Even weeds can be helpful in the wilderness!",
+        WEED_IVY = "It looks like it has a little monster claw, ready to grab you!",
+        IVY_SNARE = "Ah! It really is trying to grab me!",
 
 		TROPHYSCALE_OVERSIZEDVEGGIES =
 		{
@@ -4062,7 +4066,33 @@ return{
             GENERIC = "Wow! I wonder what it's for?",
             CONSTRUCTION1 = "We've still got a ways to go.",
             CONSTRUCTION2 = "It's almost set up!",
-        }
+        },
+
+        -- Waterlog
+        WATERTREE_PILLAR = "Woah, would you look at the size of that tree!",
+        OCEANTREE = "I guess they don't have to worry about getting enough water.",
+        OCEANTREENUT = "That's one big seed!",
+        WATERTREE_ROOT = "Watch out for water hazards!",
+
+        OCEANTREE_PILLAR = "It's a pretty swell shade tree!",
+
+        OCEANVINE = "Maybe one of them will turn out to be a snake!",
+        FIG = "I don't really like figs...",
+        FIG_COOKED = "I don't really like cooked figs any better...",
+
+        SPIDER_WATER = "Woah, look how fast they are on the water, Woby!",
+        MUTATOR_WATER = "Hey, cookies! Um... what are these made of, exactly?",
+        OCEANVINE_COCOON = "That must be their nest! If I could just get a closer look...",
+        OCEANVINE_COCOON_BURNT = "The poor spiders...",
+
+        GRASSGATOR = "He seems pretty shy.",
+
+        TREEGROWTHSOLUTION = "I'm glad we found a use for those figs other than eating them...",
+
+        FIGATONI = "At least the fig's hidden inside.",
+        FIGKABAB = "Aw, did it have to be figs?",
+        KOALEFIG_TRUNK = "How many figs are in there?!",
+        FROGNEWTON = "Hey, that's pretty good! What's in it?",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

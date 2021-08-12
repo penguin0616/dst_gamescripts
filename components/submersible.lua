@@ -1,4 +1,9 @@
-local function OnSink(inst)
+local function OnSink(inst, data)
+	if data ~= nil and data.boat ~= nil then
+		-- Sinking from a boat, meaning the location is guaranteed to be accessible by boat
+		inst.components.submersible.force_no_repositioning = true
+	end
+
 	inst.components.submersible:Submerge()
 end
 
@@ -37,6 +42,8 @@ end
 local Submersible = Class(function(self, inst)
 	self.inst = inst
 
+	self.force_no_repositioning = false
+
 	self.inst:ListenForEvent("onsink", OnSink)
 	self.inst:ListenForEvent("on_landed", OnLanded)
 end)
@@ -68,17 +75,17 @@ function Submersible:Submerge()
 	end
 
 	local pt = self.inst:GetPosition()
+	local x, y, z = pt.x, pt.y, pt.z
+	local spawn_x, spawn_y, spawn_z = x, y, z
+
 	local can_deploy_at_point = TheWorld.Map:IsSurroundedByWater(pt.x, pt.y, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + 0.2)
 
 	local has_moved = false
-
-	local x, y, z = pt.x, pt.y, pt.z
-	local spawn_x, spawn_y, spawn_z = x, y, z
 	local data = CheckNearbyTiles(x, y, z)
 
 	local move_to_land = false
 
-	if not can_deploy_at_point and not data.area_free then
+	if not self.force_no_repositioning and not can_deploy_at_point and not data.area_free then
 		if #data.waterpoints > 0 then
 			-- Spot might not be reachable by boat; we need to test nearby positions
 
@@ -158,8 +165,8 @@ function Submersible:Submerge()
 	return has_moved
 end
 
-function Submersible:MakeSunken(x, z)
-	if TheWorld.Map:IsOceanAtPoint(x, 0, z) then
+function Submersible:MakeSunken(x, z, ignore_boats, nosplash)
+	if TheWorld.Map:IsOceanAtPoint(x, 0, z, ignore_boats) then
 		local underwater_object = SpawnPrefab("underwater_salvageable")
 
 		if underwater_object ~= nil then
@@ -167,10 +174,22 @@ function Submersible:MakeSunken(x, z)
 			underwater_object.components.inventory:GiveItem(self.inst)
 
 			self.inst:PushEvent("on_submerge", { underwater_object = underwater_object })
-
-			SpawnPrefab("splash_green").Transform:SetPosition(x, 0, z)
+			if not nosplash then
+				SpawnPrefab("splash_green").Transform:SetPosition(x, 0, z)
+			end
 		end
 	end
+end
+
+function Submersible:OnSave()
+    return
+	{
+        force_no_repositioning = self.force_no_repositioning,
+    }
+end
+
+function Submersible:OnLoad(data)
+    self.force_no_repositioning = data.force_no_repositioning or false
 end
 
 return Submersible

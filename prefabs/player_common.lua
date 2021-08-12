@@ -625,6 +625,7 @@ end
 
 local function EnableMovementPrediction(inst, enable)
     if USE_MOVEMENT_PREDICTION and not TheWorld.ismastersim then
+        inst:PushEvent("enablemovementprediction", enable)
         if enable then
             if inst.components.locomotor == nil then
                 local isghost =
@@ -671,7 +672,10 @@ local function EnableMovementPrediction(inst, enable)
                 end)
         end
     end
+end
 
+function fns.EnableBoatCamera(inst, enable)
+    inst:PushEvent("enableboatcamera", enable)
 end
 
 --Always on the bottom of the stack
@@ -726,6 +730,7 @@ local function OnSetOwner(inst)
     if inst ~= nil and (inst == ThePlayer or TheWorld.ismastersim) then
         if inst.components.playercontroller == nil then
             EnableMovementPrediction(inst, Profile:GetMovementPredictionEnabled())
+            fns.EnableBoatCamera(inst, Profile:IsBoatCameraEnabled())
             inst:AddComponent("playeractionpicker")
             inst:AddComponent("playercontroller")
             inst:AddComponent("playervoter")
@@ -1261,14 +1266,6 @@ local function LoadForReroll(inst, data)
     end
 end
 
-local function OnGotOnPlatform(player, platform)
-    player.Transform:SetIsOnPlatform(true)
-end
-
-local function OnGotOffPlatform(player, platform)
-    player.Transform:SetIsOnPlatform(false)
-end
-
 local function OnWintersFeastMusic(inst)
     if ThePlayer ~= nil and  ThePlayer == inst then
         ThePlayer:PushEvent("isfeasting")
@@ -1524,6 +1521,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.GetStormLevel = GetStormLevel -- Didn't want to make stormwatcher a networked component
         inst.IsCarefulWalking = IsCarefulWalking -- Didn't want to make carefulwalking a networked component
         inst.EnableMovementPrediction = EnableMovementPrediction
+        inst.EnableBoatCamera = fns.EnableBoatCamera
         inst.ShakeCamera = ShakeCamera
         inst.SetGhostMode = SetGhostMode
         inst.IsActionsVisible = IsActionsVisible
@@ -1538,6 +1536,14 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
                 inst:IsNear(inst, max_range) and
                 not inst.entity:FrustumCheck() and
                 CanEntitySeeTarget(viewer, inst)
+    end
+
+    local function OnUnderLeafCanopy(inst)
+        
+    end
+
+    local function OnChangeCanopyZone(inst, underleaves)
+        inst._underleafcanopy:set(underleaves)
     end
 
     local function fn()
@@ -1667,6 +1673,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("cookbookupdater")
         inst:AddComponent("plantregistryupdater")
 
+        inst:AddComponent("walkableplatformplayer")
+
 		if TheNet:GetServerGameMode() == "lavaarena" then
             inst:AddComponent("healthsyncer")
         end
@@ -1698,13 +1706,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("embarker")
         inst.components.embarker.embark_speed = TUNING.WILSON_RUN_SPEED
 
-        --TODO(YOG): Replace these with relative error prediction in transform component
-        inst:ListenForEvent("got_on_platform", function(player, platform) OnGotOnPlatform(inst, platform) end)
-        inst:ListenForEvent("got_off_platform", function(player, platform) OnGotOffPlatform(inst, platform) end)
-
         inst._sharksoundparam = net_float(inst.GUID, "localplayer._sharksoundparam","sharksounddirty")
         inst._winters_feast_music = net_event(inst.GUID, "localplayer._winters_feast_music")
         inst._hermit_music = net_event(inst.GUID, "localplayer._hermit_music")
+        inst._underleafcanopy = net_bool(inst.GUID, "localplayer._underleafcanopy","underleafcanopydirty")
 
         if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
             inst.yotb_skins_sets = net_shortint(inst.GUID, "player.yotb_skins_sets")
@@ -1719,7 +1724,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             inst.components.hudindicatable:SetShouldTrackFunction(ShouldTrackfn)
         end
 
-        inst:ListenForEvent("sharksounddirty", OnSharkSound)
+        inst:ListenForEvent("sharksounddirty", OnSharkSound)  
+        inst:ListenForEvent("underleafcanopydirty", OnUnderLeafCanopy)        
 
         inst.entity:SetPristine()
         if not TheWorld.ismastersim then
@@ -1978,6 +1984,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:ListenForEvent("startfiredamage", OnStartFireDamage)
         inst:ListenForEvent("stopfiredamage", OnStopFireDamage)
         inst:ListenForEvent("burnt", OnBurntHands)
+        inst:ListenForEvent("onchangecanopyzone", OnChangeCanopyZone)
 --[[
         inst:ListenForEvent("stormlevel", function(owner, data)
             if data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0 then

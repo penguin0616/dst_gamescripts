@@ -317,7 +317,9 @@ function Ocean_ConvertImpassibleToWater(width, height, data)
 					local cmlevel = cm[y * width + x] * falloff
 					local glevel = g[y * width + x] * falloff
 					if ellevel > final_level_shallow then
-						if cmlevel > final_level_coral and tile == GROUND.OCEAN_BRINEPOOL then
+						if tile == GROUND.OCEAN_WATERLOG then
+							world:SetTile(x, y, GROUND.OCEAN_WATERLOG)
+						elseif cmlevel > final_level_coral and tile == GROUND.OCEAN_BRINEPOOL then
 							world:SetTile(x, y, GROUND.OCEAN_BRINEPOOL)
 						else
 							world:SetTile(x, y, GROUND.OCEAN_COASTAL)
@@ -592,8 +594,8 @@ local function PlaceOceanLayout(layout, prefabs, populating_tile, ReserveAndPlac
 	end
 	return false
 end
-
-local function AddSquareTopolopy(encoded_topology, left, top, size, add_topology) -- less than ideal, but it will have to do
+               
+local function AddSquareTopology(encoded_topology, left, top, size, add_topology) -- less than ideal, but it will have to do
 	local index = #encoded_topology.ids + 1
 	encoded_topology.ids[index] = add_topology.room_id
 	encoded_topology.story_depths[index] = 0
@@ -617,6 +619,11 @@ local function AddSquareTopolopy(encoded_topology, left, top, size, add_topology
 
 	encoded_topology.nodes[index] = node
 
+	for x = left, left + size do
+		for y = top, top + size do
+			world:SetTileNodeId(x, y, index)
+		end
+	end
 end
 
 function Ocean_PlaceSetPieces(set_pieces, add_entity, obj_layout, populating_tile, min_dist_from_land, encoded_topology, map_width, map_height)
@@ -633,7 +640,7 @@ function Ocean_PlaceSetPieces(set_pieces, add_entity, obj_layout, populating_til
 
 			if layout.add_topology ~= nil then
 				local topology_delta = 0
-				AddSquareTopolopy(encoded_topology, (position[1]-topology_delta)*TILE_SCALE - (map_width * 0.5 * TILE_SCALE), (position[2]-topology_delta)*TILE_SCALE - (map_height * 0.5 * TILE_SCALE), (area_size + (topology_delta*2))*TILE_SCALE, layout.add_topology)
+				AddSquareTopology(encoded_topology, (position[1]-topology_delta)*TILE_SCALE - (map_width * 0.5 * TILE_SCALE), (position[2]-topology_delta)*TILE_SCALE - (map_height * 0.5 * TILE_SCALE), (area_size + (topology_delta*2))*TILE_SCALE, layout.add_topology)
 			end
 	    end
 

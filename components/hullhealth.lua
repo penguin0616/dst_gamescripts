@@ -127,25 +127,23 @@ function HullHealth:OnCollide(data)
 
         local hit_adjacent_speed = boat_physics:GetVelocity() * absolute_hit_normal_overlap_percentage
 
-		if hit_adjacent_speed > 1.1 then
+		if hit_adjacent_speed > 2 then
 			local leak_dmg = self.leak_damage[leak_idx]
 
 			if leak_dmg < 1 then
-				local damage_applied = math.min(hit_adjacent_speed - 1.1, 1 - leak_dmg)
+				local damage_applied = math.min(hit_adjacent_speed - 2, 1 - leak_dmg)
 				leak_dmg = leak_dmg + damage_applied
 				self.leak_damage[leak_idx] = leak_dmg
 			end
 
 			if self:RefreshLeakIndicator(leak_idx) and self.inst.components.walkableplatform ~= nil then
-	            for k,v in pairs(self.inst.components.walkableplatform:GetEntitiesOnPlatform()) do
-	            	if v:IsValid() then
-	                	v:PushEvent("on_standing_on_new_leak")
-	                end
+	            for k in pairs(self.inst.components.walkableplatform:GetPlayersOnPlatform()) do
+	                k:PushEvent("on_standing_on_new_leak")
 	            end
 			end
 		end
 
-        if hit_adjacent_speed > TUNING.BOAT.OARS.DRIFTWOOD.FORCE then
+        if hit_adjacent_speed > TUNING.BOAT.OARS.MALBATROSS.FORCE then
             local velocity_damage_percent = math.min(hit_adjacent_speed / TUNING.BOAT.MAX_ALLOWED_VELOCITY, 1)
 		    self.inst.components.health:DoDelta(-1 * math.floor(TUNING.BOAT.MAX_HULL_HEALTH_DAMAGE * velocity_damage_percent))
         end

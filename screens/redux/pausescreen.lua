@@ -78,7 +78,7 @@ local PauseScreen = Class(Screen, function(self)
         table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("http://plat.tgp.qq.com/forum/index.html#/2000004?type=11") end })
 	elseif IsNotConsole() then
 		if BRANCH == "staging" then
-		    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("https://forums.kleientertainment.com/klei-bug-tracker/dont-starve-together-return-of-them/") end })
+		    table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("https://forums.kleientertainment.com/klei-bug-tracker/dont-starve-together-beta-branch/") end })
 		else
 			table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("http://forums.kleientertainment.com/klei-bug-tracker/dont-starve-together/") end })
 		end

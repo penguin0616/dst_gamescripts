@@ -24,7 +24,7 @@ local events =
     EventHandler("dive_eat", function(inst)
         if inst.foodtoeat then
             local x,y,z = inst.foodtoeat.Transform:GetWorldPosition()
-            if inst.foodtoeat:IsValid() and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not TheWorld.Map:GetPlatformAtPoint(x,z) then
+            if inst.foodtoeat:IsValid() and not TheWorld.Map:IsVisualGroundAtPoint(x,y,z) and not inst.foodtoeat:GetCurrentPlatform() then
                 inst.sg:GoToState("eat_pre")
             end
         end
@@ -288,9 +288,6 @@ local states =
 
             inst.sg.statemem.collisionmask = inst.Physics:GetCollisionMask()
             inst.Physics:SetCollisionMask(COLLISION.GROUND)
-            if not TheWorld.ismastersim then
-                inst.Physics:SetLocalCollisionMask(COLLISION.GROUND)
-            end
 
             if inst:HasTag("swimming") then
                 inst.Physics:SetMotorVelOverride(15,0,0)
@@ -316,7 +313,6 @@ local states =
             inst.components.locomotor:EnableGroundSpeedMultiplier(true)
             inst.Physics:ClearMotorVelOverride()
 
-            inst.Physics:ClearLocalCollisionMask()
             if inst.sg.statemem.collisionmask ~= nil then
                 inst.Physics:SetCollisionMask(inst.sg.statemem.collisionmask)
             end

@@ -9,8 +9,15 @@ local function oncurrent(self, current)
     end
 end
 
-local function onsheltered(inst, sheltered)
-    inst.components.temperature.sheltered = sheltered
+local function onsheltered(inst, data)
+    if type(data) == "table" then
+        inst.components.temperature.sheltered = data.sheltered
+        if data.level then
+            inst.components.temperature.sheltered_level = data.level
+        end
+    else
+        inst.components.temperature.sheltered = data
+    end
 end
 
 local Temperature = Class(function(self, inst)
@@ -41,6 +48,7 @@ local Temperature = Class(function(self, inst)
     self.rate = 0
 
     self.sheltered = false
+    self.sheltered_level = 1
     self.inst:ListenForEvent("sheltered", onsheltered)
 
     self:OnUpdate(0)
@@ -297,6 +305,11 @@ function Temperature:OnUpdate(dt, applyhealthdelta)
         end
 
         --print(ambient_temperature, "ambient_temperature")
+        if self.sheltered_level > 1 then
+            ambient_temperature = math.min(ambient_temperature,  self.overheattemp - 5)
+        end
+
+        ambient_temperature = ambient_temperature
         self.delta = (ambient_temperature + self.totalmodifiers + self:GetMoisturePenalty()) - self.current
         --print(self.delta + self.current, "initial target")
 

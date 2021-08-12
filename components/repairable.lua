@@ -7,9 +7,28 @@ local function onrepairmaterial(self, repairmaterial, old_repairmaterial)
     end
 end
 
+local function onhealthrepairable(self, healthrepairable)
+    if healthrepairable then
+        self.inst:AddTag("healthrepairable")
+    else
+        self.inst:RemoveTag("healthrepairable")
+    end
+end
+
+local function onworkrepairable(self, workrepairable)
+    if workrepairable then
+        self.inst:AddTag("workrepairable")
+    else
+        self.inst:RemoveTag("workrepairable")
+    end
+end
+
+
 local Repairable = Class(function(self, inst)
     self.inst = inst
     self.repairmaterial = nil
+    self.healthrepairable = nil
+    self.workrepairable = nil
     self.noannounce = nil
     self.checkmaterialfn = nil
     self.testvalidrepairfn = nil
@@ -17,11 +36,27 @@ end,
 nil,
 {
     repairmaterial = onrepairmaterial,
+    healthrepairable = onhealthrepairable,
+    workrepairable = onworkrepairable,
 })
+
+function Repairable:SetHealthRepairable(repairable)
+    self.healthrepairable = repairable
+end
+
+function Repairable:SetWorkRepairable(repairable)
+    self.workrepairable = repairable
+end
 
 function Repairable:OnRemoveFromEntity()
     if self.repairmaterial ~= nil then
         self.inst:RemoveTag("repairable_"..self.repairmaterial)
+    end
+    if self.healthrepairable then
+        self.inst:RemoveTag("healthrepairable")
+    end
+    if self.workrepairable then
+        self.inst:RemoveTag("workrepairable")
     end
 end
 
@@ -70,6 +105,10 @@ function Repairable:Repair(doer, repair_item)
     else
         --not repairable
         return false
+    end
+
+    if repair_item.components.repairer.boatrepairsound then
+        self.inst.SoundEmitter:PlaySound(repair_item.components.repairer.boatrepairsound)
     end
 
     if repair_item.components.stackable ~= nil then

@@ -5,6 +5,8 @@ local BoatDrag = Class(function(self, inst)
 	self.max_velocity_mod = 1
 
 	self.forcedampening = 0
+
+	self.sailforcemodifier = 1
 end,
 nil,
 {})

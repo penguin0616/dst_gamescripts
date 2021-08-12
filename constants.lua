@@ -652,6 +652,7 @@ GROUND =
 	OCEAN_BRINEPOOL = 205,
 	OCEAN_BRINEPOOL_SHORE = 206,
 	OCEAN_HAZARDOUS = 207,
+    OCEAN_WATERLOG = 208, 
 
 	-- MODS OCEAN TILES [231, 247]  <--PUBLIC USE SPACE FOR MODS --
 
@@ -1161,6 +1162,8 @@ COLLISION =
     GIANTS            = 16384,	-- collide with obstacles but not small obstacles
 }
 
+MAX_PHYSICS_RADIUS = 4 --boats are currently the largest.
+
 BLENDMODE =
 {
 	Disabled = 0,
@@ -1523,8 +1526,7 @@ SamplerColourMode = {
 }
 
 TexSamplers = {}
-UniformVariables = {
-}
+UniformVariables = {}
 SamplerEffects = {}
 PostProcessorEffects = {}
 
@@ -1536,6 +1538,8 @@ RESET_ACTION =
 	DO_DEMO = 3,
     JOIN_SERVER = 4
 }
+
+ShadeTypes = {}
 
 HUD_ATLAS = "images/hud.xml"
 UI_ATLAS = "images/ui.xml"
@@ -2178,6 +2182,13 @@ INVENTORY_PROGRESS =
 CURRENT_BETA = 1 -- set to 0 if there is no beta. Note: release builds wont use this so only staging and dev really care
 BETA_INFO =
 {
+    {
+		NAME = "UPDATEBETA",
+		SERVERTAG = "public_update_beta",
+		VERSION_MISMATCH_STRING = "VERSION_MISMATCH_UPDATEBETA",
+		URL = "https://forums.kleientertainment.com/forums/topic/106156-how-to-opt-in-to-return-of-them-beta-for-dont-starve-together/",
+	},
+
     {
 		NAME = "ROTBETA",
 		SERVERTAG = "return_of_them_beta",

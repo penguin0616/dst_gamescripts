@@ -45,7 +45,7 @@ end
 local function horn_retreat(horn_inst, horn_broken, leak_size)
     -- Try to spawn a boat leak at our location.
     local horn_x, horn_y, horn_z = horn_inst.Transform:GetWorldPosition()
-    local boat = TheWorld.Map:GetPlatformAtPoint(horn_x, horn_z)
+    local boat = horn_inst:GetCurrentPlatform()
     if boat then
         local leak = SpawnPrefab("boat_leak")
         leak.Transform:SetPosition(horn_x, horn_y, horn_z)

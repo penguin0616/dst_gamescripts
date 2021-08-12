@@ -24,8 +24,7 @@ function WalkingPlank:MountPlank(doer)
     end
 
 	self.doer = doer
-	doer.Transform:SetPosition(self.inst.Transform:GetWorldPosition())
-	doer.Physics:ClearTransformationHistory()
+	doer.Physics:Teleport(self.inst.Transform:GetWorldPosition())
 	self.inst:PushEvent("start_mounting")
 	doer.components.walkingplankuser:SetCurrentPlank(self.inst)
 

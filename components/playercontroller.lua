@@ -2811,7 +2811,7 @@ function PlayerController:OnRemoteStartHop(x, z, platform)
     if platform ~= nil then
         target_x, target_z = platform.components.walkableplatform:GetEmbarkPosition(my_x, my_z)
     else
-        platform_for_velocity_calculation = TheWorld.Map:GetPlatformAtPoint(my_x, my_z)
+        platform_for_velocity_calculation = self.inst:GetCurrentPlatform()
     end
 
 	if platform == nil and (platform_for_velocity_calculation == nil or TheWorld.Map:IsOceanAtPoint(target_x, 0, target_z)) then
@@ -3454,7 +3454,6 @@ end
 
 function PlayerController:GetPlatformRelativePosition(absolute_x,absolute_z)
     local platform = TheWorld.Map:GetPlatformAtPoint(absolute_x,absolute_z)
-    local relative_x, relative_z = absolute_x, absolute_z
     if platform ~= nil then
         local platform_x, platform_y, platform_z = platform.Transform:GetWorldPosition()
         absolute_x = absolute_x - platform_x

@@ -1,3 +1,14 @@
+local DebugNodes = require "dbui_no_package/debug_nodes"
+require "dbui_no_package/debug_entity"
+require "dbui_no_package/debug_prefabs"
+require "dbui_no_package/debug_audio"
+require "dbui_no_package/debug_weather"
+require "dbui_no_package/debug_skins"
+require "dbui_no_package/debug_widget"
+require "dbui_no_package/debug_player"
+require "dbui_no_package/debug_input"
+require "dbui_no_package/debug_strings"
+
 require "consolecommands"
 
 local function DebugKeyPlayer()
@@ -61,50 +72,214 @@ if CHEATS_ENABLED and userName == "My Username" then
     CHEATS_ENABLE_DPRINT = true
 end
 
-AddGlobalDebugKey(KEY_HOME, function()
-    if not TheSim:IsDebugPaused() then
-        print("Home key pressed PAUSING GAME")
-        TheSim:ToggleDebugPause()
-    end
-    if TheInput:IsKeyDown(KEY_CTRL) then
-        TheSim:ToggleDebugPause()
-    else
-        print("Home key pressed STEPPING")
-        TheSim:Step()
-    end
-    return true
-end)
-
-AddGlobalDebugKey(KEY_F1, function()
-    if TheInput:IsKeyDown(KEY_CTRL) then
-        TheSim:TogglePerfGraph()
-        return true
-    elseif TheInput:IsKeyDown(KEY_SHIFT) then
-		c_select(TheWorld)
-    else
-        c_select()
-        if c_sel() ~= nil then
-            if c_sel().prefab == "beefalo" then
-                c_sel():DoPeriodicTask(1, function(inst)
-                    --[[]
-					if inst.components.domesticatable ~= nil then
-						print("Tendencies:",
-							"default", inst.components.domesticatable.tendencies.DEFAULT or 'nil',
-							"ornery", inst.components.domesticatable.tendencies.ORNERY or 'nil',
-							"rider", inst.components.domesticatable.tendencies.RIDER or 'nil',
-							"pudgy", inst.components.domesticatable.tendencies.PUDGY or 'nil')
-					end
-                    ]]
-				end)
-            elseif c_sel():HasTag("player") then
-                c_sel():ListenForEvent("onattackother", function(inst)
-                    --print("I DID ATTTACCCCKED")
-                end)
+GLOBAL_KEY_BINDINGS = 
+{
+    {
+        binding = { key = KEY_HOME },
+        name = "Pause / Step Game",
+        fn = function()
+            if not TheSim:IsDebugPaused() then
+                print("Home key pressed PAUSING GAME")
+                TheSim:ToggleDebugPause()
+            else
+                print("Home key pressed STEPPING")
+                TheSim:Step()
             end
         end
-    end
+    },
+    {
+        binding = { key = KEY_HOME, CTRL=true },
+        name = "Toggle Pause Game",
+        fn = function()
+            print("Home key pressed TOGGLING")
+            TheSim:ToggleDebugPause()
+        end
+    },
+    {
+        binding = { key = KEY_G },
+        name = "God Mode",
+        fn = function()
+            c_godmode()
+        end
+    },
+    {
+        binding = { key = KEY_G, SHIFT=true },
+        name = "Super God Mode",
+        fn = function()
+            c_supergodmode()
+        end,
+        tooltip = "Also restores are health, hunger, sanity, moisture"
+    },
+    {
+        binding = { key = KEY_A, CTRL=true },
+        name = "Unlock All Recipes",
+        fn = function()
+            local MainCharacter = DebugKeyPlayer()
+            if MainCharacter ~= nil and MainCharacter.components.builder ~= nil then
+                MainCharacter.components.builder:GiveAllRecipes()
+                MainCharacter:PushEvent("techlevelchange")
+            end
+            return true
+        end
+    },
+    {
+        binding = { key = KEY_F1 },
+        name = "Select Entity under mouse",
+        fn = function()
+            c_select()
+            if c_sel() ~= nil then
+                if c_sel().prefab == "beefalo" then
+                    c_sel():DoPeriodicTask(1, function(inst)
+                        --[[]
+                        if inst.components.domesticatable ~= nil then
+                            print("Tendencies:",
+                                "default", inst.components.domesticatable.tendencies.DEFAULT or 'nil',
+                                "ornery", inst.components.domesticatable.tendencies.ORNERY or 'nil',
+                                "rider", inst.components.domesticatable.tendencies.RIDER or 'nil',
+                                "pudgy", inst.components.domesticatable.tendencies.PUDGY or 'nil')
+                        end
+                        ]]
+                    end)
+                elseif c_sel():HasTag("player") then
+                    c_sel():ListenForEvent("onattackother", function(inst)
+                        --print("I DID ATTTACCCCKED")
+                    end)
+                end
+            end
+        end
+    },
+    {
+        binding = { key = KEY_W, CTRL=true },
+        name = "Toggle IMGUI",
+        fn = function()
+            TheFrontEnd:ToggleImgui()    
+        end
+    },
+    {
+        binding = { key = KEY_F10, SHIFT=true },
+        name = "Next Nightmare Phase",
+        fn = function()
+            TheWorld:PushEvent("ms_nextnightmarephase")
+        end
+    },
+    {
+        binding = { key = KEY_F10 },
+        name = "Next Day Phase",
+        fn = function()
+            TheWorld:PushEvent("ms_nextphase")
+        end
+    },
+}
 
-end)
+PROGRAMMER_KEY_BINDINGS = 
+{
+    {
+        binding = { key = KEY_F1, ALT=true },
+        name = "Select World",
+        fn = function()
+            c_select(TheWorld)
+        end
+    },
+    {
+        binding = { key = KEY_F1, CTRL=true },
+        name = "Toggle Perf Graph",
+        fn = function()
+            TheSim:TogglePerfGraph()
+        end
+    },    
+}
+
+WINDOW_KEY_BINDINGS = 
+{
+    {
+        binding = { key = KEY_P, SHIFT=true },
+        name = "Prefabs",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugPrefabs() )            
+        end
+    },
+    {
+        binding = { key = KEY_A, SHIFT=true },
+        name = "Audio",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugAudio() )            
+        end
+    },
+    {
+        binding = { key = KEY_W, SHIFT=true },
+        name = "UI",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugWidget() )            
+        end
+    },
+    {
+        name = "Entity",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugEntity() )            
+        end
+    },
+    {
+        name = "Player",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugPlayer() )            
+        end
+    },
+    {
+        name = "Weather",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugWeather() )            
+        end
+    },
+    {
+        name = "Skins",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugSkins() )            
+        end
+    },
+    {
+        name = "Input",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugInput() )            
+        end
+    },
+    {
+        name = "Character Examine Strings",
+        fn = function()
+            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugStrings() )            
+        end
+    },
+}
+
+local function BindKeys( bindings )
+    for _,v in pairs(bindings) do
+        if v.binding then
+            AddGlobalDebugKey( v.binding.key, 
+                function() 
+                    if (v.binding.CTRL and not TheInput:IsKeyDown(KEY_CTRL)) or 
+                        (v.binding.CTRL == nil and TheInput:IsKeyDown(KEY_CTRL)) then  
+                        return false
+                    end
+
+                    if (v.binding.SHIFT and not TheInput:IsKeyDown(KEY_SHIFT)) or 
+                        (v.binding.SHIFT == nil and TheInput:IsKeyDown(KEY_SHIFT)) then  
+                        return false
+                    end
+
+                    if (v.binding.ALT and not TheInput:IsKeyDown(KEY_ALT)) or 
+                        (v.binding.ALT == nil and TheInput:IsKeyDown(KEY_ALT)) then  
+                        return false
+                    end
+
+                    --print("Activating hotkey: "..v.name)
+                    return v.fn() 
+                end, v.down)
+        end
+    end
+end
+
+BindKeys( GLOBAL_KEY_BINDINGS )
+BindKeys( PROGRAMMER_KEY_BINDINGS )
+BindKeys( WINDOW_KEY_BINDINGS )
 
 AddGlobalDebugKey(KEY_R, function()
     if TheInput:IsKeyDown(KEY_CTRL) then
@@ -510,16 +685,6 @@ AddGameDebugKey(KEY_F9, function()
     return true
 end)
 
-AddGameDebugKey(KEY_F10, function()
-    if TheInput:IsKeyDown(KEY_SHIFT) then
-        TheWorld:PushEvent("ms_nextnightmarephase")
-    else
-        TheWorld:PushEvent("ms_nextphase")
-    end
-    return true
-end)
-
-
 AddGameDebugKey(KEY_F11, function()
     for k,v in pairs(Ents) do
         if v.prefab == "carrot_planted" and v.components.pickable then
@@ -682,12 +847,8 @@ AddGameDebugKey(KEY_G, function()
                 end
             end
         end
-    elseif TheInput:IsKeyDown(KEY_SHIFT) then
-		c_supergodmode()
     elseif TheInput:IsKeyDown(KEY_ALT) then
 		c_armor()
-    else
-        c_godmode()
     end
     return true
 end)
@@ -717,31 +878,6 @@ AddGameDebugKey(KEY_P, function()
         end
     end
     return true
-end)
-
-AddGlobalDebugKey(KEY_W, function()
-    -- Only respond to plain ctrl-w
-    if TheInput:IsKeyDown(KEY_CTRL)
-        and not TheInput:IsKeyDown(KEY_SHIFT)
-        and not TheInput:IsKeyDown(KEY_ALT)
-        then
-        TheFrontEnd:EnableWidgetDebugging()
-        return true
-    end
-    return false
-end)
-
-AddGameDebugKey(KEY_W, function()
-    -- Only respond to ctrl-shift-w
-    if TheInput:IsKeyDown(KEY_CTRL)
-        and TheInput:IsKeyDown(KEY_SHIFT)
-        and not TheInput:IsKeyDown(KEY_ALT)
-        then
-        c_select()
-        TheFrontEnd:EnableEntityDebugging()
-        return true
-    end
-    return false
 end)
 
 AddGameDebugKey(KEY_K, function()
@@ -904,17 +1040,6 @@ end)
 AddGameDebugKey(KEY_S, function()
     if TheInput:IsKeyDown(KEY_CTRL) then
         TheWorld:PushEvent("ms_save")
-        return true
-    end
-end)
-
-AddGameDebugKey(KEY_A, function()
-    if TheInput:IsKeyDown(KEY_CTRL) then
-        local MainCharacter = DebugKeyPlayer()
-        if MainCharacter ~= nil and MainCharacter.components.builder ~= nil then
-            MainCharacter.components.builder:GiveAllRecipes()
-            MainCharacter:PushEvent("techlevelchange")
-        end
         return true
     end
 end)
@@ -1289,7 +1414,7 @@ function d_addemotekeys()
 	AddGameDebugKey(KEY_KP_6, function() UserCommands.RunUserCommand("facepalm", {}, ThePlayer, false) end)
 	AddGameDebugKey(KEY_KP_7, function() UserCommands.RunUserCommand("impatient", {}, ThePlayer, false) end)
 	AddGameDebugKey(KEY_KP_8, function() UserCommands.RunUserCommand("shrug", {}, ThePlayer, false) end)
-	AddGameDebugKey(KEY_KP_9, function() UserCommands.RunUserCommand("sleepy", {}, ThePlayer, false) end)
+	AddGameDebugKey(KEY_KP_9, function() UserCommands.RunUserCommand("wave", {}, ThePlayer, false) end)
 	AddGameDebugKey(KEY_KP_PERIOD, function() UserCommands.RunUserCommand("fistshake", {}, ThePlayer, false) end)
 
 end

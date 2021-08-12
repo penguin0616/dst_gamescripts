@@ -178,14 +178,16 @@ function self:GetSpawnPoint(pt)
 end
 
 local function DoSpawnFish(prefab, pos, rot, herd)
-    local fish = SpawnPrefab(prefab)
-    fish.Physics:Teleport(pos:Get())
-    fish.Transform:SetRotation(rot)
-    fish.components.herdmember:Enable(true)
-    fish.components.herdmember.herdprefab = herd.prefab
-    fish.sg:GoToState("arrive")
+    if herd:IsValid() then
+        local fish = SpawnPrefab(prefab)
+        fish.Physics:Teleport(pos:Get())
+        fish.Transform:SetRotation(rot)
+        fish.components.herdmember:Enable(true)
+        fish.components.herdmember.herdprefab = herd.prefab
+        fish.sg:GoToState("arrive")
 
-	herd.components.herd:AddMember(fish)
+    	herd.components.herd:AddMember(fish)
+    end
 end
 
 function self:SpawnSchool(spawnpoint, target, override_spawn_offset)

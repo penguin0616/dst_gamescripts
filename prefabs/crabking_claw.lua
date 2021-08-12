@@ -154,6 +154,7 @@ local function fn()
 	inst.components.boatdrag.drag = TUNING.CRABKING_ANCHOR_DRAG
 	inst.components.boatdrag.forcedampening = 1
 	inst.components.boatdrag.max_velocity_mod = TUNING.CRABKING_MAX_VELOCITY_MOD
+    inst.components.boatdrag.sailforcemodifier = 0
 
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.CRABKING_CLAW_WALK_SPEED

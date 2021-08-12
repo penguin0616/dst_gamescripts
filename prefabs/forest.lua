@@ -404,6 +404,15 @@ local prefabs =
     "moonstorm_spark",
     "bird_mutant",
     "bird_mutant_spitter",
+
+    "oceantree",
+    "oceanvine",
+    "oceanvine_deco",
+    "oceanvine_cocoon",
+    "watertree_pillar",
+    "watertree_root",
+    "lightrays_canopy",
+    "grassgator",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")
@@ -536,7 +545,7 @@ local function master_postinit(inst)
 
     inst:AddComponent("feasts")
 
-    inst:AddComponent("carnivalevent")
+    --inst:AddComponent("carnivalevent")
 
     inst:AddComponent("yotc_raceprizemanager")
     inst:AddComponent("yotb_stagemanager")

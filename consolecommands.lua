@@ -170,7 +170,7 @@ function c_spawn(prefab, count, dontselect)
 
     for i = 1, count do
         inst = DebugSpawn(prefab)
-        if inst.components.skinner ~= nil and IsRestrictedCharacter(prefab) then
+        if inst and inst.components.skinner ~= nil and IsRestrictedCharacter(prefab) then
             inst.components.skinner:SetSkinMode("normal_skin")
         end
     end
