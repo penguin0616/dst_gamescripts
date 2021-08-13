@@ -756,7 +756,7 @@ local RPC_HANDLERS =
         if builder ~= nil then
             for k, v in pairs(AllRecipes) do
                 if v.rpc_id == recipe then
-                    builder:MakeRecipeFromMenu(v, skin_index ~= nil and PREFAB_SKINS[v.name] ~= nil and PREFAB_SKINS[v.name][skin_index] or nil)
+                    builder:MakeRecipeFromMenu(v, skin_index ~= nil and PREFAB_SKINS[v.product] ~= nil and PREFAB_SKINS[v.product][skin_index] or nil)
                     return
                 end
             end

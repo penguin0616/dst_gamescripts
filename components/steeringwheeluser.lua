@@ -95,10 +95,10 @@ function SteeringWheelUser:SteerInDir(dir_x, dir_z)
 		if math.abs(tx - rx)<TOLERANCE and math.abs(tz - rz)<TOLERANCE then
 			dontsteer = true
 		end
-	end
-	if not dontsteer then
-		self.should_play_left_turn_anim = (rz * dir_x - rx * dir_z) > 0
-		self.inst:PushEvent("set_heading")
+		if not dontsteer then
+			self.should_play_left_turn_anim = (rz * dir_x - rx * dir_z) > 0
+			self.inst:PushEvent("set_heading")
+		end
 	end
 end
 

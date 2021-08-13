@@ -164,6 +164,7 @@ local function fn()
     inst.AnimState:SetBuild("fireflies")
     inst.AnimState:SetRayTestOnBB(true)
 
+    inst:AddTag("firefly")
     inst:AddTag("cattoyairborne")
     inst:AddTag("flying")
     inst:AddTag("NOBLOCK")

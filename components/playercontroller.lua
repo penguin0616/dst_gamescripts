@@ -3772,7 +3772,7 @@ end
 
 function PlayerController:RemoteMakeRecipeFromMenu(recipe, skin)
     if not self.ismastersim then
-        local skin_index = skin ~= nil and PREFAB_SKINS_IDS[recipe.name][skin] or nil
+        local skin_index = skin ~= nil and PREFAB_SKINS_IDS[recipe.product][skin] or nil
         if self.locomotor == nil then
             SendRPCToServer(RPC.MakeRecipeFromMenu, recipe.rpc_id, skin_index)
         elseif self:CanLocomote() then

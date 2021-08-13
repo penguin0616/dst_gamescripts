@@ -404,25 +404,13 @@ end
 local function OnRemove(inst)
     removecanopy(inst)
 end
-local FIREFLY_MUST = {"flying"}
-local FIREFLY_MUST = {"flying"}
+local FIREFLY_MUST = {"firefly"}
 local function OnPhaseChanged(inst, phase)
    if phase == "day" then
 
         local x, y, z = inst.Transform:GetWorldPosition()
 
-        local ents = TheSim:FindEntities(x,y,z, TUNING.SHADE_CANOPY_RANGE, FIREFLY_MUST)
-
-        if #ents > 0 then
-            for i=#ents,1,-1 do
-                local ent = ents[i]
-                if ent.prefab ~= "fireflies" then
-                    table.remove(ents,i)
-                end
-            end
-        end
-
-        if #ents < 10 then
+        if TheSim:CountEntities(x,y,z, TUNING.SHADE_CANOPY_RANGE, FIREFLY_MUST) < 10 then
             if math.random()<0.7 then
                 local pos = nil
                 local offset = nil
@@ -433,17 +421,16 @@ local function OnPhaseChanged(inst, phase)
                     offset = {x= math.cos(angle) * radius, y=0, z=math.sin(angle) * radius}   
                     count = count + 1
 
-                    local pos = {x=x+offset.x,y=0,z=z+offset.z}
+                    pos = {x=x+offset.x,y=0,z=z+offset.z}
 
-                    local things = TheSim:FindEntities(pos.x,pos.y,pos.z, 5)
-                    if #things > 0 then
+                    if TheSim:CountEntities(pos.x, pos.y, pos.z, 5) > 0 then
                         offset = nil
                     end
                 end
 
                 if offset then
                     local firefly = SpawnPrefab("fireflies")
-                    firefly.Transform:SetPosition(x+offset.x,0,z+offset.z)                   
+                    firefly.Transform:SetPosition(x+offset.x,0,z+offset.z)
                 end
             end
         end
