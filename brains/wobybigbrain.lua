@@ -97,7 +97,7 @@ end
 local function GetWanderDist(inst)
    local platform = inst:GetCurrentPlatform()
     if platform then
-        return platform.components.walkableplatform and platform.components.walkableplatform.radius or PLATFORM_WANDER_DIST
+        return platform.components.walkableplatform and platform.components.walkableplatform.platform_radius or PLATFORM_WANDER_DIST
     else
         return WANDER_DIST
     end

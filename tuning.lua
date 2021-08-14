@@ -3673,7 +3673,7 @@ function Tune(overrides)
                 {
                     MAX_VELOCITY_MOD = 0.15,
                     ANCHOR_DRAG = 2,
-                    SAILFORCEDRAG = 0.4,
+                    SAILFORCEDRAG = 0.8,
                 },
             },
 

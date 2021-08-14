@@ -249,7 +249,7 @@ function ValidateSpawnPrefabRequest(user_id, prefab_name, skin_base, clothing_bo
     return validated_prefab, validated_skin_base, validated_clothing_body, validated_clothing_hand, validated_clothing_legs, validated_clothing_feet
 end
 
-function SpawnNewPlayerOnServerFromSim(player_guid, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+function SpawnNewPlayerOnServerFromSim(player_guid, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet, starting_item_skins)
     local player = Ents[player_guid]
     if player ~= nil then
         local skinner = player.components.skinner
@@ -261,7 +261,7 @@ function SpawnNewPlayerOnServerFromSim(player_guid, skin_base, clothing_body, cl
         skinner:SetSkinMode("normal_skin")
 
         if player.OnNewSpawn ~= nil then
-            player:OnNewSpawn()
+            player:OnNewSpawn(starting_item_skins)
             player.OnNewSpawn = nil
         end
         TheWorld.components.playerspawner:SpawnAtNextLocation(TheWorld, player)

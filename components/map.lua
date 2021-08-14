@@ -52,7 +52,7 @@ function Map:IsPassableAtPointWithPlatformRadiusBias(x, y, z, allow_water, exclu
                 if walkable_platform ~= nil then
                     local platform_x, platform_y, platform_z = v.Transform:GetWorldPosition()
                     local distance_sq = VecUtil_LengthSq(x - platform_x, z - platform_z)
-                    return distance_sq <= walkable_platform.radius * walkable_platform.radius
+                    return distance_sq <= walkable_platform.platform_radius * walkable_platform.platform_radius
                 end
             end
         end
@@ -240,8 +240,12 @@ function Map:CanDeployAtPointInWater(pt, inst, mouseover, data)
     -- check if there's a boat in the way
     local min_distance_from_boat = (data and data.boat) or 0
     local radius = (data and data.radius) or 0
-    if TheSim:CountEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + radius + min_distance_from_boat, WALKABLE_PLATFORM_TAGS) > 0 then
-        return false
+
+    local entities = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + radius + min_distance_from_boat, WALKABLE_PLATFORM_TAGS)
+    for i, v in ipairs(entities) do
+        if v.components.walkableplatform and math.sqrt(v:GetDistanceSqToPoint(pt.x, 0, pt.z)) <= (v.components.walkableplatform.platform_radius + radius + min_distance_from_boat) then
+            return false
+        end
     end
 
     local min_distance_from_land = (data and data.land) or 0
@@ -376,7 +380,9 @@ function Map:GetPlatformAtPoint(pos_x, pos_y, pos_z, extra_radius)
 	end
     local entities = TheSim:FindEntities(pos_x, pos_y, pos_z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + (extra_radius or 0), WALKABLE_PLATFORM_TAGS)
     for i, v in ipairs(entities) do
-        return v
+        if v.components.walkableplatform and math.sqrt(v:GetDistanceSqToPoint(pos_x, 0, pos_z)) <= v.components.walkableplatform.platform_radius then
+            return v
+        end
     end
     return nil
 end

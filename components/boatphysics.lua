@@ -313,8 +313,18 @@ function BoatPhysics:GetTotalAnchorDrag()
     return total_anchor_drag
 end
 
-function BoatPhysics:GetBoatDrag(velocity)
-    return easing.inCubic(velocity, TUNING.BOAT.BASE_DRAG, TUNING.BOAT.MAX_DRAG - TUNING.BOAT.BASE_DRAG, TUNING.BOAT.MAX_ALLOWED_VELOCITY)
+function BoatPhysics:GetBoatDrag(velocity, total_anchor_drag)
+    return easing.inCubic(
+        velocity,
+        TUNING.BOAT.BASE_DRAG,
+        TUNING.BOAT.MAX_DRAG - TUNING.BOAT.BASE_DRAG,
+        TUNING.BOAT.MAX_ALLOWED_VELOCITY
+    ) + easing.outExpo(
+        velocity,
+        0,
+        total_anchor_drag,
+        TUNING.BOAT.MAX_ALLOWED_VELOCITY
+    )
 end
 
 function BoatPhysics:GetAnchorSailForceModifier()
@@ -443,9 +453,9 @@ function BoatPhysics:OnUpdate(dt)
 
     if total_anchor_drag > 0 and sail_force > 0 then
         cur_velocity = self:ApplySailForce(dt, sail_force, cur_velocity, max_velocity)
-        cur_velocity = self:ApplyDrag(dt, self:GetBoatDrag(cur_velocity) + total_anchor_drag, cur_velocity, VecUtil_Normalize(self.velocity_x, self.velocity_z))
+        cur_velocity = self:ApplyDrag(dt, self:GetBoatDrag(cur_velocity, total_anchor_drag), cur_velocity, VecUtil_Normalize(self.velocity_x, self.velocity_z))
     else
-        cur_velocity = self:ApplyDrag(dt, self:GetBoatDrag(cur_velocity) + total_anchor_drag, cur_velocity, velocity_normal_x, velocity_normal_z)
+        cur_velocity = self:ApplyDrag(dt, self:GetBoatDrag(cur_velocity, total_anchor_drag), cur_velocity, velocity_normal_x, velocity_normal_z)
         cur_velocity = self:ApplySailForce(dt, sail_force, cur_velocity, max_velocity)
     end
 

@@ -68,7 +68,6 @@ local function spawnwaves(inst, numWaves, totalAngle, waveSpeed, wavePrefab, ini
 end
 
 local function OnFar(inst, player)
-    print("ON FAR", inst.GUID)
     if player.canopytrees then   
         player.canopytrees = player.canopytrees - 1
         player:PushEvent("onchangecanopyzone", player.canopytrees > 0)
@@ -77,7 +76,6 @@ local function OnFar(inst, player)
 end
 
 local function OnNear(inst,player)
-    print("NEAR TREE",inst.GUID)
     inst.players[player] = true
 
     player.canopytrees = (player.canopytrees or 0) + 1

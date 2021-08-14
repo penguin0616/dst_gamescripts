@@ -615,12 +615,12 @@ local function OnMakePlayerCorpse(inst, data)
 end
 
 
-local function GivePlayerStartingItems(inst, items)
+local function GivePlayerStartingItems(inst, items, starting_item_skins)
     if items ~= nil and #items > 0 and inst.components.inventory ~= nil then
         inst.components.inventory.ignoresound = true
         if inst.components.inventory:GetNumSlots() > 0 then
             for i, v in ipairs(items) do
-                local skin_name = Profile:GetLastUsedSkinForItem(v)
+                local skin_name = starting_item_skins[v]
                 inst.components.inventory:GiveItem(SpawnPrefab(v, skin_name, nil, inst.userid))
             end
         else

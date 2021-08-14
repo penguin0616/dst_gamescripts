@@ -32,6 +32,16 @@ local Repairable = Class(function(self, inst)
     self.noannounce = nil
     self.checkmaterialfn = nil
     self.testvalidrepairfn = nil
+
+    local workable = inst.components.workable
+    if workable then
+        self:SetWorkRepairable(workable.maxwork ~= nil and workable.workleft < workable.maxwork and workable.workable)
+    end
+
+    local health = inst.components.health
+    if health then
+        self:SetHealthRepairable(health.currenthealth < health.maxhealth)
+    end
 end,
 nil,
 {

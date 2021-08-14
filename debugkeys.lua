@@ -1,13 +1,15 @@
-local DebugNodes = require "dbui_no_package/debug_nodes"
-require "dbui_no_package/debug_entity"
-require "dbui_no_package/debug_prefabs"
-require "dbui_no_package/debug_audio"
-require "dbui_no_package/debug_weather"
-require "dbui_no_package/debug_skins"
-require "dbui_no_package/debug_widget"
-require "dbui_no_package/debug_player"
-require "dbui_no_package/debug_input"
-require "dbui_no_package/debug_strings"
+local DebugNodes = CAN_USE_DBUI and require "dbui_no_package/debug_nodes" or nil
+if CAN_USE_DBUI then
+    require "dbui_no_package/debug_entity"
+    require "dbui_no_package/debug_prefabs"
+    require "dbui_no_package/debug_audio"
+    require "dbui_no_package/debug_weather"
+    require "dbui_no_package/debug_skins"
+    require "dbui_no_package/debug_widget"
+    require "dbui_no_package/debug_player"
+    require "dbui_no_package/debug_input"
+    require "dbui_no_package/debug_strings"
+end
 
 require "consolecommands"
 
@@ -279,7 +281,9 @@ end
 
 BindKeys( GLOBAL_KEY_BINDINGS )
 BindKeys( PROGRAMMER_KEY_BINDINGS )
-BindKeys( WINDOW_KEY_BINDINGS )
+if CAN_USE_DBUI then
+    BindKeys( WINDOW_KEY_BINDINGS )
+end
 
 AddGlobalDebugKey(KEY_R, function()
     if TheInput:IsKeyDown(KEY_CTRL) then

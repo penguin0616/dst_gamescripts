@@ -1668,7 +1668,26 @@ end
 local function OnUserPickedCharacter(char, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
     local function doSpawn()
         TheFrontEnd:PopScreen()
-        TheNet:SendSpawnRequestToServer(char, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+
+        local starting_skins = {}
+        --get the starting inventory skins and send those along to the spawn request
+        local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(char)]
+        
+        local inv_items, item_count = {}, {}
+        for _, v in ipairs(inv_item_list) do
+            if item_count[v] == nil then
+                item_count[v] = 1
+                table.insert(inv_items, v)
+            end
+        end
+        for _, item in ipairs(inv_items) do
+            if PREFAB_SKINS[item] then
+                local skin_name = Profile:GetLastUsedSkinForItem(item)
+                starting_skins[item] = skin_name
+            end
+        end
+
+        TheNet:SendSpawnRequestToServer(char, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet, starting_skins)
     end
 
     TheFrontEnd:Fade(FADE_OUT, 1, doSpawn, nil, nil, "white")

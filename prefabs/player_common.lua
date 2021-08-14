@@ -1053,17 +1053,17 @@ end
 
 --Will be triggered from SpawnNewPlayerOnServerFromSim
 --only if it is a new spawn
-local function OnNewSpawn(inst)
-	ex_fns.GivePlayerStartingItems(inst, inst.starting_inventory)
+local function OnNewSpawn(inst, starting_item_skins)
+	ex_fns.GivePlayerStartingItems(inst, inst.starting_inventory, starting_item_skins)
 
 	if TheWorld.components.playerspawner ~= nil and TheWorld.components.playerspawner:IsPlayersInitialSpawn(inst) then -- only give the late-starting assist on the very first time a player spawns (ie, not every time they respawn in Wilderness mode)
 		local extra_starting_items = TUNING.EXTRA_STARTING_ITEMS[TheWorld.state.season]
 		if extra_starting_items ~= nil and TheWorld.state.cycles >= TUNING.EXTRA_STARTING_ITEMS_MIN_DAYS then
-			ex_fns.GivePlayerStartingItems(inst, extra_starting_items)
+			ex_fns.GivePlayerStartingItems(inst, extra_starting_items, starting_item_skins)
 		end
 		local seasonal_starting_items = TUNING.SEASONAL_STARTING_ITEMS[TheWorld.state.season]
 		if seasonal_starting_items ~= nil and TheWorld.state.cycles > TheWorld.state.elapseddaysinseason then -- only if the world is not in the starting season.
-			ex_fns.GivePlayerStartingItems(inst, seasonal_starting_items)
+			ex_fns.GivePlayerStartingItems(inst, seasonal_starting_items, starting_item_skins)
 		end
 	end
 

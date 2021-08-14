@@ -200,7 +200,7 @@ local function fn()
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
 
     inst:AddComponent("walkableplatform")
-    inst.components.walkableplatform.radius = radius
+    inst.components.walkableplatform.platform_radius = radius
     inst.components.walkableplatform.player_collision_prefab = "boat_player_collision"
 
     inst:AddComponent("healthsyncer")
