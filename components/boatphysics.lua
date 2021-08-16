@@ -1,7 +1,7 @@
 local easing = require("easing")
 
 local function OnCollide(inst, other, world_position_on_a_x, world_position_on_a_y, world_position_on_a_z, world_position_on_b_x, world_position_on_b_y, world_position_on_b_z, world_normal_on_b_x, world_normal_on_b_y, world_normal_on_b_z, lifetime_in_frames)
-    if other ~= nil and other:IsValid() and (other == TheWorld or other:HasTag("BLOCKER") or other.components.boatphysics) and lifetime_in_frames <= 1 then
+    if other ~= nil and other:IsValid() and (other == TheWorld or other:HasTag("BLOCKER") or other.components.boatphysics) then
 
         if inst.invalid_collision_remove then
             return
@@ -25,7 +25,7 @@ local function OnCollide(inst, other, world_position_on_a_x, world_position_on_a
         local current_tick = GetTick()
         local too_soon = false
         for id, tick in pairs(boat_physics._recent_collisions) do
-            if (tick+4 < current_tick) then
+            if (tick + 4 < current_tick) then
                 boat_physics._recent_collisions[id] = nil
             else
                 if other.GUID == id then
@@ -47,8 +47,17 @@ local function OnCollide(inst, other, world_position_on_a_x, world_position_on_a
 
     	local other_boat_physics = other.components.boatphysics
     	if other_boat_physics ~= nil then
-	    	relative_velocity_x = relative_velocity_x - other_boat_physics.velocity_x
-    		relative_velocity_z = relative_velocity_z - other_boat_physics.velocity_z
+            if other_boat_physics.cached_velocity_x and other_boat_physics.cached_velocity_z then
+                relative_velocity_x = relative_velocity_x - other_boat_physics.cached_velocity_x
+                relative_velocity_z = relative_velocity_z - other_boat_physics.cached_velocity_z
+                other_boat_physics.cached_velocity_x = nil
+                other_boat_physics.cached_velocity_z = nil
+            else
+                boat_physics.cached_velocity_x = relative_velocity_x
+                boat_physics.cached_velocity_z = relative_velocity_z
+                relative_velocity_x = relative_velocity_x - other_boat_physics.velocity_x
+                relative_velocity_z = relative_velocity_z - other_boat_physics.velocity_z
+            end
     	end
 
     	local speed = VecUtil_Length(relative_velocity_x, relative_velocity_z)
@@ -61,7 +70,7 @@ local function OnCollide(inst, other, world_position_on_a_x, world_position_on_a
     	local hit_normal_x, hit_normal_z = VecUtil_Normalize(world_normal_on_b_x, world_normal_on_b_z)
     	local hit_dot_velocity = VecUtil_Dot(hit_normal_x, hit_normal_z, velocity_normalized_x, velocity_normalized_z)
 
-        if not other:HasTag("boat") then --if other is a boat, then in its OnCollide callback it will push the event outside this loop.
+        if not other_boat_physics then --if other is a boat, then in its OnCollide callback it will push the event outside this loop.
             inst:PushEvent("on_collide", {
                 other = other,
                 world_position_on_a_x = world_position_on_a_x,

@@ -1671,7 +1671,7 @@ local function OnUserPickedCharacter(char, skin_base, clothing_body, clothing_ha
 
         local starting_skins = {}
         --get the starting inventory skins and send those along to the spawn request
-        local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(char)]
+        local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(char)] or {}
         
         local inv_items, item_count = {}, {}
         for _, v in ipairs(inv_item_list) do

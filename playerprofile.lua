@@ -1189,6 +1189,7 @@ function PlayerProfile:Set(str, callback, minimal_load)
 		if TheFrontEnd then
 			local bloom_enabled = GetValueOrDefault( self.persistdata.bloom, true )
 			local distortion_enabled = GetValueOrDefault( self.persistdata.distortion, true )
+			local dynamic_tree_shadows_enabled = GetValueOrDefault( self.persistdata.dynamic_tree_shadows, true )
 
  	        if USE_SETTINGS_FILE then
 				-- Copy over old settings
@@ -1205,13 +1206,14 @@ function PlayerProfile:Set(str, callback, minimal_load)
 				else
 					bloom_enabled = self:GetBloomEnabled()
 					distortion_enabled = self:GetDistortionEnabled()
+					dynamic_tree_shadows_enabled = self:GetDynamicTreeShadowsEnabled()
 				end
 			end
 			print("bloom_enabled",bloom_enabled)
 			PostProcessor:SetBloomEnabled( bloom_enabled )
 			PostProcessor:SetDistortionEnabled( distortion_enabled )
 
-			EnableShadeRenderer( GetValueOrDefault( self.persistdata.dynamic_tree_shadows, true ) )
+			EnableShadeRenderer( dynamic_tree_shadows_enabled )
 		end
 
 		-- old save data will not have the controls section so create it

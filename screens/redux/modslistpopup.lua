@@ -27,7 +27,6 @@ local function BuildModList(mod_ids)
     return mods
 end
 
---todo: seperate query for rail mods.
 local function QueryName(modname, modtable, textlistpopup)
     if IsWorkshopMod(modname) then
         TheSim:QueryWorkshopModName(GetWorkshopIdNumber(modname),

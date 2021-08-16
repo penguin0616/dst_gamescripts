@@ -545,7 +545,7 @@ local function master_postinit(inst)
 
     inst:AddComponent("feasts")
 
-    --inst:AddComponent("carnivalevent")
+    inst:AddComponent("carnivalevent")
 
     inst:AddComponent("yotc_raceprizemanager")
     inst:AddComponent("yotb_stagemanager")

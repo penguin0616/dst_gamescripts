@@ -33,5 +33,6 @@ function ShadeEffectUpdate(dt)
 end
 
 function EnableShadeRenderer(enable)
+    print("EnableShadeRenderer: ", enable)
     ShadeRenderer:Enable(enable)
 end
