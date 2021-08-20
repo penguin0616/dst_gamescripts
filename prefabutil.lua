@@ -59,7 +59,7 @@ function MakePlacer(name, bank, build, anim, onground, snap, metersnap, scale, f
 end
 
 local function deployablekititem_ondeploy(inst, pt, deployer, rot)
-    local structure = SpawnPrefab(inst._prefab_to_deploy)
+    local structure = SpawnPrefab(inst._prefab_to_deploy, inst.linked_skinname, inst.skin_id )
     if structure ~= nil then
         structure.Transform:SetPosition(pt:Get())
 		structure:PushEvent("onbuilt", { builder = deployer, pos = pt, rot = rot, deployable = inst })

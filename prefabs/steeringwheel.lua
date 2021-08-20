@@ -15,14 +15,27 @@ local prefabs =
 	"steeringwheel_item", -- deprecated but kept for existing worlds and mods
 }
 
-local function on_start_steering(inst)
+local function on_start_steering(inst, sailor)
 	inst.AnimState:HideSymbol("boat_wheel_round")
 	inst.AnimState:HideSymbol("boat_wheel_stick")
+
+    if inst.skinname ~= nil then
+        local skin_build = GetBuildForItem(inst.skinname)
+        sailor.AnimState:OverrideItemSkinSymbol( "boat_wheel_round", skin_build, "boat_wheel_round", inst.GUID, "player_boat")
+        sailor.AnimState:OverrideItemSkinSymbol( "boat_wheel_stick", skin_build, "boat_wheel_stick", inst.GUID, "player_boat")
+    else
+        sailor.AnimState:AddOverrideBuild("player_boat")
+    end
 end
 
-local function on_stop_steering(inst)
+local function on_stop_steering(inst, sailor)
 	inst.AnimState:ShowSymbol("boat_wheel_round")
 	inst.AnimState:ShowSymbol("boat_wheel_stick")
+
+    if sailor ~= nil then
+        sailor.AnimState:ClearOverrideSymbol("boat_wheel_round")
+        sailor.AnimState:ClearOverrideSymbol("boat_wheel_stick")
+    end
 end
 
 local function on_hammered(inst, hammerer)
@@ -33,7 +46,7 @@ local function on_hammered(inst, hammerer)
     collapse_fx:SetMaterial("wood")
 
     if inst.components.steeringwheel ~= nil and inst.components.steeringwheel.sailor ~= nil then
-        inst.components.steeringwheel:StopSteering(inst.components.steeringwheel.sailor)
+        inst.components.steeringwheel:StopSteering()
     end
 
     inst:Remove()
@@ -44,7 +57,7 @@ local function onignite(inst)
 
 	if inst.components.steeringwheel.sailor ~= nil then
 		local sailor = inst.components.steeringwheel.sailor
-		inst.components.steeringwheel:StopSteering(inst.components.steeringwheel.sailor)
+		inst.components.steeringwheel:StopSteering()
 
 		sailor.components.steeringwheeluser:SetSteeringWheel(nil)
 		sailor:PushEvent("stop_steering_boat")

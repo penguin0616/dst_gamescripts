@@ -880,6 +880,31 @@ end
 
 
 --------------------------------------------------------------------------
+--[[ steeringwheel skin functions ]]
+--------------------------------------------------------------------------
+function steeringwheel_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "seafarer_wheel") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function steeringwheel_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("seafarer_wheel")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function steeringwheel_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "boat_wheel")
+end
+function steeringwheel_clear_fn(inst)
+    inst.AnimState:SetBuild("boat_wheel")
+end
+
+
+
+--------------------------------------------------------------------------
 --[[ wall_moonrock skin functions ]]
 --------------------------------------------------------------------------
 function wall_moonrock_item_init_fn(inst, build_name)

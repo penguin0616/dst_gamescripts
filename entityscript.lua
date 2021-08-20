@@ -1513,8 +1513,15 @@ end
 
 function EntityScript:GetCurrentPlatform()
     if TheWorld.ismastersim then
+        if self.parent then
+            return self.parent:GetCurrentPlatform()
+        end
         return self.platform
     else
+        local parent = self.entity:GetParent()
+        if parent then
+            return parent:GetCurrentPlatform()
+        end
         return self.entity:GetPlatform()
     end
 end

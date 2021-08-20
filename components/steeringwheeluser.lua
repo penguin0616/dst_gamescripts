@@ -7,7 +7,7 @@ local SteeringWheelUser = Class(function(self, inst)
 		    self.inst:StopUpdatingComponent(self)
 			self.inst:RemoveTag("steeringboat")
 
-            self.steering_wheel.components.steeringwheel:StopSteering(self.inst)
+            self.steering_wheel.components.steeringwheel:StopSteering()
             self.inst:PushEvent("stop_steering_boat")
             self.steering_wheel = nil
 
@@ -39,7 +39,7 @@ function SteeringWheelUser:SetSteeringWheel(steering_wheel)
 		end
 
 		if prev_steering_wheel.components.steeringwheel ~= nil then
-			prev_steering_wheel.components.steeringwheel:StopSteering(self.inst)
+			prev_steering_wheel.components.steeringwheel:StopSteering()
 		end
 
 		if self.boat then

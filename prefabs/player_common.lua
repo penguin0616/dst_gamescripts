@@ -1597,7 +1597,6 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_multithrust")
         inst.AnimState:AddOverrideBuild("player_parryblock")
         inst.AnimState:AddOverrideBuild("player_emote_extra")
-        inst.AnimState:AddOverrideBuild("player_boat")
         inst.AnimState:AddOverrideBuild("player_boat_plank")
         inst.AnimState:AddOverrideBuild("player_boat_net")
         inst.AnimState:AddOverrideBuild("player_boat_sink")

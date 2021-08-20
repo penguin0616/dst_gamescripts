@@ -1275,6 +1275,8 @@ function FrontEnd:ToggleImgui(node)
                 self:CreateDebugPanel( DebugEntity() )
             end
         end
+    else
+        print("IsImguiEnabled is disabled due to threaded renderer being enabled")
     end
 end
 

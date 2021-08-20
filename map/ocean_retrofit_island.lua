@@ -271,7 +271,8 @@ local function TurnOfTidesRetrofitting_HermitIsland(map, savedata)
 end
 
 
-local function WaterloggedRetrofitting_WaterlogSetpiece(map, savedata)
+local function WaterloggedRetrofitting_WaterlogSetpiece(map, savedata, max_count)
+	max_count = max_count or 3
 	local obj_layout = require("map/object_layout")
 
 	local topology = savedata.map.topology
@@ -388,15 +389,18 @@ local function WaterloggedRetrofitting_WaterlogSetpiece(map, savedata)
 		end
 		return false
 	end
-	for i=1,3 do 
+	for i=1, max_count do 
 	    print("Retrofitting for Return Of Them: Watterlogged - Adding Waterlog biome "..i)
-		local success = TryToAddLayout("Waterlogged1", 0, is_rough_ocean)
-						or TryToAddLayout("Waterlogged1", 0, is_rough_or_swell_ocean)
+		local success
+		for j = 1, 4 do
+			success = TryToAddLayout("Waterlogged"..j, 0, is_rough_ocean) or TryToAddLayout("Waterlogged"..j, 0, is_rough_or_swell_ocean)
+			if success then break end
+		end
 		if success then
 			print("Retrofitting for Return Of Them: Waterlogged - Added Waterlog setpiece "..i.." to the world.")
 		else
 			print("Retrofitting for Return Of Them: Waterlogged - Failed to add Waterlog setpiece "..i.." to the world!")
-		end	
+		end
 	end
 end
 

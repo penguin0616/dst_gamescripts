@@ -161,9 +161,11 @@ function TradeScreen:DoInit()
 	self.crow_anim:SetPosition(-130, -220)
 	self.crow_anim:SetScale(0.5)
 	self.crow_anim:SetOnClick( function()
-		TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_crow")
-		TheFrontEnd:FadeToScreen( self, function() return CrowGameScreen(self.profile) end, nil )
-		self.innkeeper:Sleep()
+		if not self.quitting then
+			TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_crow")
+			TheFrontEnd:FadeToScreen( self, function() return CrowGameScreen(self.profile) end, nil )
+			self.innkeeper:Sleep()
+		end
 	end )
 
 	self.redbird_anim = self.fixed_root:AddChild(UIAnimButton("crow", "robin_build", "idle", "caw" ))
@@ -174,9 +176,11 @@ function TradeScreen:DoInit()
 	self.redbird_anim:SetPosition(130, -220)
 	self.redbird_anim:SetScale(0.5)
 	self.redbird_anim:SetOnClick( function()
-		TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_crow")
-		TheFrontEnd:FadeToScreen( self, function() return RedbirdGameScreen(self.profile) end, nil )
-		self.innkeeper:Sleep()
+		if not self.quitting then
+			TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_crow")
+			TheFrontEnd:FadeToScreen( self, function() return RedbirdGameScreen(self.profile) end, nil )
+			self.innkeeper:Sleep()
+		end
 	end )
 
 	self.snowbird_anim = self.fixed_root:AddChild(UIAnimButton("crow", "robin_winter_build", "idle", "caw" ))
@@ -187,9 +191,11 @@ function TradeScreen:DoInit()
 	self.snowbird_anim:SetPosition(-540, 218)
 	self.snowbird_anim:SetScale(0.5)
 	self.snowbird_anim:SetOnClick( function()
-		TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_junco")
-		TheFrontEnd:FadeToScreen( self, function() return SnowbirdGameScreen(self.profile) end, nil )
-		self.innkeeper:Sleep()
+		if not self.quitting then
+			TheFrontEnd:GetSound():PlaySound("dontstarve/birds/takeoff_junco")
+			TheFrontEnd:FadeToScreen( self, function() return SnowbirdGameScreen(self.profile) end, nil )
+			self.innkeeper:Sleep()
+		end
 	end )
 
 	self.crowkid_anim = self.fixed_root:AddChild(UIAnimButton("crow_kids", "crow_kids", "idle", "taunt" ))
@@ -200,9 +206,11 @@ function TradeScreen:DoInit()
 	self.crowkid_anim:SetPosition(-360, -340)
 	self.crowkid_anim:SetScale(0.5)
 	self.crowkid_anim:SetOnClick( function()
-		TheFrontEnd:GetSound():PlaySound("summerevent/characters/crowkid/neutral")
-		TheFrontEnd:FadeToScreen( self, function() return CrowKidGameScreen(self.profile) end, nil )
-		self.innkeeper:Sleep()
+		if not self.quitting then
+			TheFrontEnd:GetSound():PlaySound("summerevent/characters/crowkid/neutral")
+			TheFrontEnd:FadeToScreen( self, function() return CrowKidGameScreen(self.profile) end, nil )
+			self.innkeeper:Sleep()
+		end
 	end )
 end
 
@@ -1360,6 +1368,10 @@ if IsConsole() then
 end
 
 function TradeScreen:OnControl(control, down)
+	if self.quitting then
+		return
+	end
+
     if TradeScreen._base.OnControl(self, control, down) then return true end
 
     if not down then

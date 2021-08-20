@@ -210,6 +210,13 @@ local function DoRetrofitting(savedata, world_map)
 		dirty = true
 	end
 
+	if savedata.retrofit_waterlogged_waterlog_setpiece_retry then
+		savedata.retrofit_waterlogged_waterlog_setpiece_retry = nil
+		require("map/ocean_retrofit_island").WaterloggedRetrofitting_WaterlogSetpiece(TheWorld.Map, savedata, savedata.retrofit_waterlogged_waterlog_place_count)
+		savedata.retrofit_waterlogged_waterlog_place_count = nil
+		dirty = true
+	end
+
 	if dirty then
 		savedata.map.tiles = world_map:GetStringEncode()
 		savedata.map.nodeidtilemap = world_map:GetNodeIdTileMapStringEncode()

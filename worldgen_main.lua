@@ -479,7 +479,7 @@ function GenerateNew(debug, world_gen_data)
 
     local data = {}
     for key,value in pairs(savedata) do    
-        data[key] = DataDumper(value, key, not PRETTY_PRINT)
+        data[key] = DataDumper(value, nil, not PRETTY_PRINT)
     end
 
 	--special handling for the entities table; contents are dumped per entity rather than 
@@ -487,7 +487,7 @@ function GenerateNew(debug, world_gen_data)
 	data.ents = {}
 	for key, value in pairs(savedata_entities) do
 		if key ~= "" then
-			data.ents[key] = DataDumper(value, key, not PRETTY_PRINT)
+			data.ents[key] = DataDumper(value, nil, not PRETTY_PRINT)
 		end
 	end
 

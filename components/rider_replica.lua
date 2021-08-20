@@ -59,7 +59,7 @@ local function GetPickupAction(inst, target)
             or (target.components.inventoryitem ~= nil and target.components.canbepickedup)
 
     if is_inventory
-            and not (target:HasTag("heavy") or target:HasTag("fire") or target:HasTag("catchable")) then
+            and not (target:HasTag("heavy") or target:HasTag("fire") or target:HasTag("catchable") or target:HasTag("spider")) then
         return (inst.components.playercontroller:HasItemSlots() or target.replica.equippable ~= nil or target.components.equippable ~= nil) and ACTIONS.PICKUP or nil
     elseif target:HasTag("pickable") and not target:HasTag("fire") then
         return ACTIONS.PICK

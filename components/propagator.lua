@@ -1,3 +1,7 @@
+local easing = require("easing")
+
+local PROPAGATOR_DT = 0.5
+
 local Propagator = Class(function(self, inst)
     self.inst = inst
     self.flashpoint = 100
@@ -16,12 +20,17 @@ local Propagator = Class(function(self, inst)
     --We need a separate internal flag since acceptsheat is
     --used as a public property for configuring propagator.
     --self.pauseheating = nil
-    
-    self.heat_this_update = 0
+
+    self:CalculateHeatCap()
 
     self.spreading = false
     self.delay = nil
 end)
+
+function Propagator:CalculateHeatCap()
+    self.heat_this_update = 0
+    self.max_heat_this_update = (self.flashpoint / easing.outCubic(math.random(), 1, 3, 1)) * PROPAGATOR_DT
+end
 
 function Propagator:OnRemoveFromEntity()
     self:StopSpreading(true)
@@ -48,7 +57,7 @@ function Propagator:Delay(time)
 end
 
 function Propagator:StopUpdating()
-    self.heat_this_update = 0
+    self:CalculateHeatCap()
     if self.task ~= nil then
         self.task:Cancel()
         self.task = nil
@@ -58,8 +67,6 @@ end
 local function _OnUpdate(inst, self, dt)
     self:OnUpdate(dt)
 end
-
-local PROPAGATOR_DT = 0.5
 
 function Propagator:StartUpdating()
     if self.task == nil then
@@ -77,7 +84,7 @@ function Propagator:StopSpreading(reset, heatpct)
     self.source = nil
     self.spreading = false
     if reset then
-        self.currentheat = heatpct ~= nil and heatpct * self.flashpoint or 0
+        self.currentheat = heatpct ~= nil and (heatpct * easing.outCubic(math.random(), 0, 1, 1)) * self.flashpoint or 0
         self.pauseheating = nil
     end
 end
@@ -97,12 +104,11 @@ function Propagator:AddHeat(amount)
         return
     end
 
-    local max_heat_this_update = (self.flashpoint / 2) * PROPAGATOR_DT
-    if self.heat_this_update >= max_heat_this_update then
+    if self.heat_this_update >= self.max_heat_this_update then
         return
     end
 
-    local heat = math.min(amount * self:GetHeatResistance(), max_heat_this_update - self.heat_this_update)
+    local heat = math.min(amount * self:GetHeatResistance(), self.max_heat_this_update - self.heat_this_update)
 
     self.heat_this_update = self.heat_this_update + heat
     self.currentheat = self.currentheat + heat
@@ -129,7 +135,7 @@ end
 local TARGET_CANT_TAGS = { "INLIMBO" }
 local TARGET_MELT_MUST_TAGS = { "frozen", "firemelt" }
 function Propagator:OnUpdate(dt)
-    self.heat_this_update = 0
+    self:CalculateHeatCap()
 
     if self.currentheat > 0 then
         self.currentheat = math.max(0, self.currentheat - dt * self.decayrate)

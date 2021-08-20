@@ -971,8 +971,8 @@ function SaveGame(isshutdown, cb)
     end
 
     local data = {}
-    for key,value in pairs(save) do    
-        data[key] = DataDumper(value, key, not PRETTY_PRINT)
+    for key,value in pairs(save) do
+        data[key] = DataDumper(value, nil, not PRETTY_PRINT)
 		
 		for i, corrupt_pattern in ipairs(patterns) do
 			local found = string.find(data[key], corrupt_pattern, 1, true)
@@ -987,7 +987,7 @@ function SaveGame(isshutdown, cb)
 	-- dumping the whole entities table at once as is done for the other parts of the save data
 	data.ents = {}
 	for key, value in pairs(savedata_entities) do
-		data.ents[key] = DataDumper(value, key, not PRETTY_PRINT)
+		data.ents[key] = DataDumper(value, nil, not PRETTY_PRINT)
 
 		for i, corrupt_pattern in ipairs(patterns) do
 			local found = string.find(data.ents[key], corrupt_pattern, 1, true)

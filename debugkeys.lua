@@ -233,6 +233,7 @@ WINDOW_KEY_BINDINGS =
         end
     },
     {
+        binding = { key = KEY_S, SHIFT=true, ALT=true },
         name = "Skins",
         fn = function()
             TheFrontEnd:CreateDebugPanel( DebugNodes.DebugSkins() )            
