@@ -20,7 +20,7 @@ local CHECK_NEARBY_BOATS_OFFSET = PHYSICS_RADIUS + 0.1
 local TWOPI = 6.28319
 
 local function OnWorked(inst, worker)
-	SpawnPrefab("rock_break_fx").Transform:SetPosition(inst.Transform:GetPosition())
+	SpawnPrefab("rock_break_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
 
     inst:Remove()
 end

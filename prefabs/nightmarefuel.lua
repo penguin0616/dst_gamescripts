@@ -16,6 +16,7 @@ local function fn()
     inst.AnimState:SetBuild("nightmarefuel")
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:SetMultColour(1, 1, 1, 0.5)
+    inst.AnimState:UsePointFiltering(true)
 
     MakeInventoryFloatable(inst)
 
