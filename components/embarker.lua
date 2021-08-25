@@ -59,7 +59,7 @@ end
 function Embarker:StartMoving()
     if not self.orig_embark_dist then
         self.inst.Physics:Stop()
-        self.inst:StartWallUpdatingComponent(self)
+        self.inst:StartUpdatingComponent(self)
 
         local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
         self.orig_embark_dest_x, self.orig_embark_dest_z = self:GetEmbarkPosition()
@@ -69,7 +69,7 @@ function Embarker:StartMoving()
     end
 end
 
-function Embarker:OnWallUpdate(dt)
+function Embarker:OnUpdate(dt)
     self:UpdateEmbarkingPos(dt)
 end
 
@@ -104,7 +104,7 @@ function Embarker:Embark()
     self.orig_embark_dist = nil
     self.orig_embark_dest_x = nil
     self.orig_embark_dest_z = nil
-    self.inst:StopWallUpdatingComponent(self)
+    self.inst:StopUpdatingComponent(self)
 end
 
 function Embarker:Cancel()
@@ -115,7 +115,7 @@ function Embarker:Cancel()
     self.last_embark_x = nil
     self.last_embark_z = nil
     self.orig_embark_dist = nil
-    self.inst:StopWallUpdatingComponent(self)
+    self.inst:StopUpdatingComponent(self)
 end
 
 function GetDisembarkPosAndDistance(inst, target_x, target_z)

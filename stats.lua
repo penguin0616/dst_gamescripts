@@ -75,13 +75,15 @@ end
 local function PrefabListToMetrics(list)
     local metrics = {}
     for i,item in ipairs(list) do
-        if metrics[item.prefab] == nil then
-            metrics[item.prefab] = 0
-        end
-        if item.components.stackable ~= nil then
-            metrics[item.prefab] = metrics[item.prefab] + item.components.stackable:StackSize()
-        else
-            metrics[item.prefab] = metrics[item.prefab] + 1
+        if item.prefab then
+            if metrics[item.prefab] == nil then
+                metrics[item.prefab] = 0
+            end
+            if item.components.stackable ~= nil then
+                metrics[item.prefab] = metrics[item.prefab] + item.components.stackable:StackSize()
+            else
+                metrics[item.prefab] = metrics[item.prefab] + 1
+            end
         end
     end
     -- format for storage

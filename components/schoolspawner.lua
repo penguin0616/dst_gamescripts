@@ -50,8 +50,9 @@ end
 
 local SHARK_SPAWN_RADIUS = 20
 local SHARK_TIMING = {8, 10} -- min 8, max 10
+local SHARK_TAGS = { "shark" }
 local function testforshark(comp, spawnpoint)
-    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, TUNING.SHARK_TEST_RADIUS, GNARWAIL_TAGS)
+    local ents = TheSim:FindEntities(spawnpoint.x, spawnpoint.y, spawnpoint.z, TUNING.SHARK_TEST_RADIUS, SHARK_TAGS)
     if #ents < 2 and math.random() < TUNING.SHARK_SPAWN_CHANCE then
         local offset = FindSwimmableOffset(spawnpoint, math.random()*2*PI, SHARK_SPAWN_RADIUS)
         if offset then

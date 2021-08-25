@@ -448,12 +448,12 @@ function self:OnUpdate(dt)
     local new_lunacyintensity = math.clamp(_lunacyintensity + dt * _lunacyspeed, 0, 1)
     if new_lunacyintensity ~= _lunacyintensity then
         _lunacyintensity = new_lunacyintensity
-        local sanity_percent = ThePlayer.replica.sanity:GetPercentWithPenalty()
+        local sanity_percent = ThePlayer and ThePlayer.replica.sanity:GetPercentWithPenalty() or 1
         local lunacy_percent = 1 - sanity_percent
 
         local lunacy_distortion = 1 - easing.outQuad(lunacy_percent, 0, 1, 1)
         local sanity_distortion = 1 - easing.outQuad(sanity_percent, 0, 1, 1)
-        if ThePlayer ~= nil and ThePlayer:HasTag("dappereffects") then
+        if ThePlayer and ThePlayer:HasTag("dappereffects") then
             lunacy_distortion = lunacy_distortion * lunacy_distortion
             sanity_distortion = sanity_distortion * sanity_distortion
         end

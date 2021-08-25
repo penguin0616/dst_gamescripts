@@ -166,8 +166,8 @@ function MakeSmallPropagator(inst)
     inst.components.propagator:SetOnFlashPoint(DefaultIgniteFn)
     inst.components.propagator.flashpoint = 5 + math.random()*5
     inst.components.propagator.decayrate = 0.5
-    inst.components.propagator.propagaterange = 5
-    inst.components.propagator.heatoutput = 5--8
+    inst.components.propagator.propagaterange = 3 + math.random()*2
+    inst.components.propagator.heatoutput = 3 + math.random()*2--8
 
     inst.components.propagator.damagerange = 2
     inst.components.propagator.damages = true
@@ -179,8 +179,8 @@ function MakeMediumPropagator(inst)
     inst.components.propagator:SetOnFlashPoint(DefaultIgniteFn)
     inst.components.propagator.flashpoint = 15+math.random()*10
     inst.components.propagator.decayrate = 0.5
-    inst.components.propagator.propagaterange = 7
-    inst.components.propagator.heatoutput = 8.5--12
+    inst.components.propagator.propagaterange = 5 + math.random()*2
+    inst.components.propagator.heatoutput = 5 + math.random()*3.5--12
 
     inst.components.propagator.damagerange = 3
     inst.components.propagator.damages = true
@@ -192,8 +192,8 @@ function MakeLargePropagator(inst)
     inst.components.propagator:SetOnFlashPoint(DefaultIgniteFn)
     inst.components.propagator.flashpoint = 45+math.random()*10
     inst.components.propagator.decayrate = 0.5
-    inst.components.propagator.propagaterange = 8
-    inst.components.propagator.heatoutput = 9.5--12
+    inst.components.propagator.propagaterange = 6 + math.random()*2
+    inst.components.propagator.heatoutput = 6 + math.random()*3.5--12
 
     inst.components.propagator.damagerange = 3
     inst.components.propagator.damages = true

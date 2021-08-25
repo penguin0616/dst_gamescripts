@@ -485,7 +485,6 @@ local function fn()
 
     MakeSmallPropagator(inst)
     inst.components.propagator.flashpoint = 5 + math.random()*3
-    inst.components.propagator.propagaterange = 5
 
     inst.OnEntityWake = OnEntityWake
     inst.OnEntitySleep = CancelRunningTasks

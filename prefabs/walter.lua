@@ -170,6 +170,7 @@ end
 local function OnDespawn(inst)
     if inst.woby ~= nil then
 		inst.woby:OnPlayerLinkDespawn()
+        inst.woby:PushEvent("player_despawn")
     end
 end
 

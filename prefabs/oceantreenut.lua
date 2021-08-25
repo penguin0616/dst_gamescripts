@@ -19,6 +19,12 @@ local CHECK_NEARBY_BOATS_OFFSET = PHYSICS_RADIUS + 0.1
 
 local TWOPI = 6.28319
 
+local function OnWorked(inst, worker)
+	SpawnPrefab("rock_break_fx").Transform:SetPosition(inst.Transform:GetPosition())
+
+    inst:Remove()
+end
+
 local function OnUnequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_body")
 end
@@ -169,8 +175,7 @@ local function fn()
 
     inst:AddComponent("inspectable")
 
-    inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable("shell_cluster")
+    -------------------------
 
     inst:AddComponent("heavyobstaclephysics")
     inst.components.heavyobstaclephysics:SetRadius(PHYSICS_RADIUS)
@@ -185,12 +190,17 @@ local function fn()
     inst.components.equippable:SetOnUnequip(OnUnequip)
     inst.components.equippable.walkspeedmult = TUNING.HEAVY_SPEED_MULT
 
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    inst.components.workable:SetWorkLeft(1)
+	inst.components.workable:SetOnFinishCallback(OnWorked)
+
     inst:AddComponent("timer")
-    
+
     inst:AddComponent("submersible")
     inst:AddComponent("symbolswapdata")
     inst.components.symbolswapdata:SetData("oceantreenut", "swap_body")
-    
+
     inst:ListenForEvent("on_submerge", OnSubmerge)
     inst:ListenForEvent("on_salvaged", OnSalvaged)
 
