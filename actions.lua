@@ -277,6 +277,7 @@ ACTIONS =
     TAKEITEM = Action(),
     MAKEBALLOON = Action({ mount_valid=true }),
     CASTSPELL = Action({ priority=-1, rmb=true, distance=20, mount_valid=true }),
+	CAST_POCKETWATCH = Action({ priority=-1, rmb=true, mount_valid=true }), -- to actually use the mounted action, the pocket watch will need the pocketwatch_mountedcast tag
     BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true }),
     COMBINESTACK = Action({ mount_valid=true, extra_arrive_dist=ExtraPickupRange }),
     TOGGLE_DEPLOY_MODE = Action({ priority=HIGH_ACTION_PRIORITY, instant=true }),
@@ -409,6 +410,9 @@ ACTIONS =
     HERD_FOLLOWERS = Action({ mount_valid=true }),
     REPEL = Action({ mount_valid=true }),
     BEDAZZLE = Action(),
+
+    -- WANDA
+    DISMANTLE_POCKETWATCH = Action({ mount_valid=true }),
 }
 
 ACTIONS_BY_ACTION_CODE = {}
@@ -540,6 +544,8 @@ ACTIONS.PICKUP.fn = function(act)
             if trainer ~= nil and trainer ~= act.doer then
                 return false, "NOTMINE_YOTC"
             end
+		elseif act.doer.components.inventory.noheavylifting and act.target:HasTag("heavy") then
+			return false, "NO_HEAVY_LIFTING"
         end
 
         if (act.target:HasTag("spider") and act.doer:HasTag("spiderwhisperer")) and 
@@ -2043,6 +2049,19 @@ ACTIONS.ACTIVATE.strfn = function(act)
     if act.target.GetActivateVerb ~= nil then
         return act.target:GetActivateVerb(act.doer)
     end
+end
+
+ACTIONS.CAST_POCKETWATCH.strfn = function(act)
+    if act.invobject ~= nil then
+        return FunctionOrValue(act.invobject.GetActionVerb_CAST_POCKETWATCH, act.invobject, act.doer, act.target)
+    end
+end
+
+ACTIONS.CAST_POCKETWATCH.fn = function(act)
+    local caster = act.doer
+    if act.invobject ~= nil and caster ~= nil and caster:HasTag("pocketwatchcaster") then
+		return act.invobject.components.pocketwatch:CastSpell(caster, act.target, act:GetActionPoint())
+	end
 end
 
 ACTIONS.HAUNT.fn = function(act)
@@ -3757,4 +3776,13 @@ ACTIONS.ADVANCE_TREE_GROWTH.fn = function(act)
     end
 
     return false
+end
+
+ACTIONS.DISMANTLE_POCKETWATCH.fn = function(act)
+    local can_dismantle, reason = act.invobject.components.pocketwatch_dismantler:CanDismantle(act.target, act.doer)
+    if can_dismantle then
+        act.invobject.components.pocketwatch_dismantler:Dismantle(act.target, act.doer)
+    end
+
+    return can_dismantle, reason
 end

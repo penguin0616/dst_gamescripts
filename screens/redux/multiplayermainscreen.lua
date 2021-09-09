@@ -200,10 +200,10 @@ function MakeBanner(self)
 	elseif true then
 
         local anim_bg = baner_root:AddChild(UIAnim())
-        anim_bg:GetAnimState():SetBuild("dst_menu_waterlogged")
-        anim_bg:GetAnimState():SetBank("dst_menu_waterlogged")
+        anim_bg:GetAnimState():SetBuild("dst_menu_wanda")
+        anim_bg:GetAnimState():SetBank("dst_menu_wanda")
         anim_bg:SetScale(0.667)
-        anim_bg:GetAnimState():PlayAnimation("loop", true)
+        anim_bg:GetAnimState():PlayAnimation("loop_"..math.random(3), true)
         anim_bg:MoveToBack()
 
         --[[anim:GetAnimState():SetBuild("dst_menu_webber")

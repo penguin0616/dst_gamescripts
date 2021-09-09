@@ -92,6 +92,26 @@ function LootDropper:PickRandomLoot()
     end
 end
 
+function LootDropper:GetFullRecipeLoot(recipe)
+    local loot = {}
+
+    for k,v in ipairs(recipe.ingredients) do
+        local amt = v.amount
+        for n = 1, amt do
+            if v.deconstruct then
+                local recipeloot = self:GetFullRecipeLoot(AllRecipes[v.type])
+                for k,v in ipairs(recipeloot) do
+                    table.insert(loot, v)
+                end
+            else
+                table.insert(loot, v.type)
+            end
+        end
+    end
+
+    return loot
+end
+
 function LootDropper:GetRecipeLoot(recipe)
     local percent = 1
 

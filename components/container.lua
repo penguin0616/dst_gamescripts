@@ -505,6 +505,12 @@ function Container:FindItems(fn)
     return items
 end
 
+function Container:ForEachItem(fn, ...)
+    for k,v in pairs(self.slots) do
+        fn(v, ...)
+    end
+end
+
 function Container:Has(item, amount)
     local num_found = 0
     for k,v in pairs(self.slots) do

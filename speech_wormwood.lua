@@ -192,6 +192,7 @@ return{
                 "Someone else's friend",
                 "Not friend",
             },
+--fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
         },
         SLAUGHTER =
         {
@@ -312,13 +313,24 @@ return{
         {
 --fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
         },
+		CAST_POCKETWATCH = 
+		{
+--fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			WARP_NO_POINTS_LEFT = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			SHARD_UNAVAILABLE = "only_used_by_wanda",
+		},
+        DISMANTLE_POCKETWATCH =
+        {
+--fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "Nope",
 	ANNOUNCE_BOAT_LEAK = "Water! Water coming!",
 	ANNOUNCE_BOAT_SINK = "Why sinking, Floater?",
-	ANNOUNCE_DIG_DISEASE_WARNING = "Poor sick friend",
-	ANNOUNCE_PICK_DISEASE_WARNING = "Ooh. Smells sick",
+	ANNOUNCE_DIG_DISEASE_WARNING = "Poor sick friend", --removed
+	ANNOUNCE_PICK_DISEASE_WARNING = "Ooh. Smells sick", --removed
 	ANNOUNCE_ADVENTUREFAIL = "Try again",
     ANNOUNCE_MOUNT_LOWHEALTH = "Riding friend is hurt",
 
@@ -614,7 +626,6 @@ return{
 	ANNOUNCE_WEIGHT = "Weight: {weight}",
 	ANNOUNCE_WEIGHT_HEAVY  = "Weight: {weight}\nHeavy",
 
-	-- these are just for testing for now, no need to write real strings yet
 	ANNOUNCE_WINCH_CLAW_MISS = "Oh. Missed",
 	ANNOUNCE_WINCH_CLAW_NO_ITEM = "Nothing",
 
@@ -671,6 +682,18 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NOINSPIRATION = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_PANIC_BUFF = "only_used_by_wathgrithr",
+
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_YOUNGTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOOLD = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_OLDTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOYOUNG = "only_used_by_wanda",
+
+	ANNOUNCE_POCKETWATCH_PORTAL = "Ouch! Oooooh...",
+
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_MARK = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_RECALL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD = "only_used_by_wanda",
 
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "Oooooh, pictures!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "Know it",
@@ -956,11 +979,21 @@ return{
             FIRESTARTER = "No! Stop %s!",
         },
 
+        WANDA =
+        {
+            GENERIC = "Friend keeps changing",
+            ATTACKER = "Don't make hurt, %s!",
+            MURDERER = "Why make friends dead? %s bad!",
+            REVIVER = "%s is nice friend",
+            GHOST = "Is %s? Need helping?",
+            FIRESTARTER = "No fire, %s! No fire!",
+        },
+
         MIGRATION_PORTAL =
         {
-            GENERIC = "Door to friends",
-            OPEN = "Can go through",
-            FULL = "Oh. Full",
+        --    GENERIC = "If I had any friends, this could take me to them.",
+        --    OPEN = "If I step through, will I still be me?",
+        --    FULL = "It seems to be popular over there.",
         },
         GLOMMER =
         {
@@ -1273,7 +1306,7 @@ return{
             FULL = "Can't go there",
         },
 
-		MAXWELLPHONOGRAPH = "Can't dance to it",
+		MAXWELLPHONOGRAPH = "Can't dance to it",--single player
 		BOOMERANG = "Returny Stick",
 		PIGGUARD = "Twirly Tail Tough Guy",
 		ABIGAIL =
@@ -1319,7 +1352,7 @@ return{
 		BACKPACK = "For more things carrying",
 		BACONEGGS = "Belly filler",
 		BANDAGE = "Sweet Heal Paper",
-		BASALT = "Too heavy",
+		BASALT = "Too heavy", --removed
 		BEARDHAIR = "Fuzzy",
 		BEARGER = "Mad Molter",
 		BEARGERVEST = "Warm. Cozy",
@@ -1385,7 +1418,7 @@ return{
         BEESWAX = "Buzz Blocks",
 		BEEHIVE = "Buzz Home",
 		BEEMINE = "Buzz Ka-bloey",
-		BEEMINE_MAXWELL = "It's buzzing...",
+		BEEMINE_MAXWELL = "It's buzzing...",--removed
 		BERRIES = "Tiny little belly fillers",
 		BERRIES_COOKED = "Slurp!",
         BERRIES_JUICY = "Tiny squishy belly fillers",
@@ -1396,8 +1429,8 @@ return{
 			WITHERED = "Poor guy",
 			GENERIC = "Full of stuff for belly",
 			PICKED = "Belly fillers will grow back",
-			DISEASED = "Sick! Very, very sick!",
-			DISEASING = "You sick, friend?",
+			DISEASED = "Sick! Very, very sick!",--removed
+			DISEASING = "You sick, friend?",--removed
 			BURNING = "Oh! Oh no!",
 		},
 		BERRYBUSH_JUICY =
@@ -1406,11 +1439,11 @@ return{
 			WITHERED = "Too hot, friend?",
 			GENERIC = "Full of belly fillers!",
 			PICKED = "Oh. Out of belly fillers",
-			DISEASED = "Oh! Friend got sick!",
-			DISEASING = "Get well soon",
+			DISEASED = "Oh! Friend got sick!",--removed
+			DISEASING = "Get well soon",--removed
 			BURNING = "Oh! Stop! Stop!",
 		},
-		BIGFOOT = "Smelly Stomper",
+		BIGFOOT = "Smelly Stomper",--removed
 		BIRDCAGE =
 		{
 			GENERIC = "Needs a friend",
@@ -1602,7 +1635,7 @@ return{
 		CUTGRASS = "Hair from friends!",
 		CUTREEDS = "Hair cut",
 		CUTSTONE = "Square stones",
-		DEADLYFEAST = "Nope",
+		DEADLYFEAST = "Nope", --unimplemented
 		DEER =
 		{
 			GENERIC = "Where eyes?",
@@ -1624,19 +1657,19 @@ return{
 		DIRTPILE = "What's hiding?",
 		DIVININGROD =
 		{
-			COLD = "It's quiet",
-			GENERIC = "Leads to somewhere",
-			HOT = "It's LOUD!",
-			WARM = "Humming",
-			WARMER = "More humming!",
+			COLD = "It's quiet", --singleplayer
+			GENERIC = "Leads to somewhere", --singleplayer
+			HOT = "It's LOUD!", --singleplayer
+			WARM = "Humming", --singleplayer
+			WARMER = "More humming!", --singleplayer
 		},
 		DIVININGRODBASE =
 		{
-			GENERIC = "Hmm...",
-			READY = "Needs key",
-			UNLOCKED = "Works!",
+			GENERIC = "Hmm...", --singleplayer
+			READY = "Needs key", --singleplayer
+			UNLOCKED = "Works!", --singleplayer
 		},
-		DIVININGRODSTART = "Stick",
+		DIVININGRODSTART = "Stick", --singleplayer
 		DRAGONFLY = "Patuey Fly",
 		ARMORDRAGONFLY = "Fire Keeper Outer",
 		DRAGON_SCALES = "Fiery clothes",
@@ -1741,7 +1774,7 @@ return{
 			BURNT = "So young...",
 			CHOPPED = "Keep growing, friend!",
 			GENERIC = "Skinny friend!",
-			DISEASED = "Sick?",
+			DISEASED = "Sick?", --unimplemented
 		},
 		TWIGGY_NUT_SAPLING = "Cute little friend",
         TWIGGY_OLD = "Wise old friend",
@@ -1762,7 +1795,7 @@ return{
 		FEATHER_CANARY = "Tweeter clothes",
 		FEATHERPENCIL = "Draws pretty pictures",
         COOKBOOK = "Belly things",
-		FEM_PUPPET = "Friend?",
+		FEM_PUPPET = "Friend?", --single player
 		FIREFLIES =
 		{
 			GENERIC = "Glow Bums",
@@ -1848,13 +1881,13 @@ return{
 			BURNING = "Agghh!",
 			GENERIC = "Smells nice",
 			PICKED = "Nice trim!",
-			DISEASED = "Sick! Sick friend!",
-			DISEASING = "Get better soon",
+			DISEASED = "Sick! Sick friend!", --unimplemented
+			DISEASING = "Get better soon", --unimplemented
 		},
 		GRASSGEKKO =
 		{
 			GENERIC = "Looking good. Like hair",
-			DISEASED = "Sick?",
+			DISEASED = "Sick?", --unimplemented
 		},
 		GREEN_CAP = "Hurts head",
 		GREEN_CAP_COOKED = "Helps head",
@@ -1955,7 +1988,7 @@ return{
 		LUCY = "Aggah! Stay back, please!",
 		LUREPLANT = "Careful!",
 		LUREPLANTBULB = "For dirt",
-		MALE_PUPPET = "Friend?",
+		MALE_PUPPET = "Friend?", --single player
 
 		MANDRAKE_ACTIVE = "Merp! Merp! Meep! Merp!",
 		MANDRAKE_PLANTED = "Hiding",
@@ -1986,11 +2019,11 @@ return{
             CHOPPED = "(sob)",
             GENERIC = "Sleeping. Shh...",
         },
-        MAXWELL = "Not friend",
-        MAXWELLHEAD = "Not friend head",
-        MAXWELLLIGHT = "Bright rock",
-        MAXWELLLOCK = "Needs key",
-        MAXWELLTHRONE = "Smells bad",
+        MAXWELL = "Not friend",--single player
+        MAXWELLHEAD = "Not friend head",--removed
+        MAXWELLLIGHT = "Bright rock",--single player
+        MAXWELLLOCK = "Needs key",--single player
+        MAXWELLTHRONE = "Smells bad",--single player
         MEAT = "For belly",
         MEATBALLS = "Balls of belly stuff",
         MEATRACK =
@@ -2192,13 +2225,13 @@ return{
             GENERIC = "Snow Tweeter",
             HELD = "Needs home",
         },
-        ROBOT_PUPPET = "Friend?",
+        ROBOT_PUPPET = "Friend?", --single player
         ROCK_LIGHT =
         {
-            GENERIC = "Dirt is bleeding",
-            OUT = "All better",
-            LOW = "Healing",
-            NORMAL = "Earth blood",
+            GENERIC = "Dirt is bleeding",--removed
+            OUT = "All better",--removed
+            LOW = "Healing",--removed
+            NORMAL = "Earth blood",--removed
         },
         CAVEIN_BOULDER =
         {
@@ -2239,8 +2272,8 @@ return{
 			WITHERED = "Poor friend",
 			GENERIC = "Hello? Little friend?",
 			PICKED = "Keep growing, friend!",
-			DISEASED = "Sick. Very, very sick",
-			DISEASING = "Looks sick. Poor little guy",
+			DISEASED = "Sick. Very, very sick", --removed
+			DISEASING = "Looks sick. Poor little guy", --removed
 		},
    		SCARECROW =
    		{
@@ -2289,7 +2322,7 @@ return{
 		SILK = "Soft",
 		SKELETON = "Still alive?",
 		SCORCHED_SKELETON = "Oh. Oh no",
-		SKULLCHEST = "Stuff inside",
+		SKULLCHEST = "Stuff inside", --removed
 		SMALLBIRD =
 		{
 			GENERIC = "Baby Eye Tweeter",
@@ -2368,15 +2401,15 @@ return{
 		},
 		TELEPORTATO_BASE =
 		{
-			ACTIVE = "Open",
-			GENERIC = "Hmm...",
-			LOCKED = "Key?",
-			PARTIAL = "Needs more things",
+			ACTIVE = "Open", --single player
+			GENERIC = "Hmm...", --single player
+			LOCKED = "Key?", --single player
+			PARTIAL = "Needs more things", --single player
 		},
-		TELEPORTATO_BOX = "Box",
-		TELEPORTATO_CRANK = "Crank",
-		TELEPORTATO_POTATO = "Thing",
-		TELEPORTATO_RING = "Ring",
+		TELEPORTATO_BOX = "Box", --single player
+		TELEPORTATO_CRANK = "Crank", --single player
+		TELEPORTATO_POTATO = "Thing", --single player
+		TELEPORTATO_RING = "Ring", --single player
 		TELESTAFF = "Poof stick",
 		TENT =
 		{
@@ -2400,7 +2433,7 @@ return{
 		TRANSISTOR = "It's humming! Hummm...",
 		TRAP = "Snap!",
 		TRAP_TEETH = "Hurty Spikes",
-		TRAP_TEETH_MAXWELL = "Hurty Spikes",
+		TRAP_TEETH_MAXWELL = "Hurty Spikes", --single player
 		TREASURECHEST =
 		{
 			GENERIC = "Stuff!",
@@ -2412,7 +2445,7 @@ return{
 			GENERIC = "Put stuff in there!",
 			LOCKED = "Stuff is gone",
 		},
-		TREECLUMP = "Party!",
+		TREECLUMP = "Party!", --removed
 
 		TRINKET_1 = "Swirly rocks", --Melted Marbles
 		TRINKET_2 = "Hummm...", --Fake Kazoo
@@ -2786,7 +2819,7 @@ return{
 			OPEN = "Deep. Dark",
 		},
 		WORMHOLE_LIMITED = "Get well soon",
-		ACCOMPLISHMENT_SHRINE = "Pretty!",
+		ACCOMPLISHMENT_SHRINE = "Pretty!", --single player
 		LIVINGTREE = "Friend?",
 		ICESTAFF = "Chilly stick",
 		REVIVER = "Ba-bum. Ba-bum",
@@ -3134,8 +3167,8 @@ return{
 		BOAT_LEAK = "Floaty is spitting!",
         MAST = "Hello! Helping, Friend?",
         SEASTACK = "Oops! Watch out!",
-        FISHINGNET = "Catches Glub Glubs",
-        ANTCHOVIES = "Aww... so cute!",
+        FISHINGNET = "Catches Glub Glubs", --unimplemented
+        ANTCHOVIES = "Aww... so cute!", --unimplemented
         STEERINGWHEEL = "Which way?",
         ANCHOR = "Won't let Floaty move",
         BOATPATCH = "Floaty Fixer",
@@ -3175,8 +3208,8 @@ return{
 			WITHERED = "Hot enough for you?",
 			GENERIC = "Grows rocks for belly",
 			PICKED = "No belly rocks yet",
-			DISEASED = "Oh no! Friend is sick!",
-            DISEASING = "Feeling okay, friend?",
+			DISEASED = "Oh no! Friend is sick!", --unimplemented
+            DISEASING = "Feeling okay, friend?", --unimplemented
 			BURNING = "NOOO! AGH! HELP!",
 		},
         DEAD_SEA_BONES = "Dead?",
@@ -3222,10 +3255,10 @@ return{
 
         ICEBERG =
         {
-            GENERIC = "Big Cold Water Rock!",
-            MELTED = "Oh. Water now",
+            GENERIC = "Big Cold Water Rock!", --unimplemented
+            MELTED = "Oh. Water now", --unimplemented
         },
-        ICEBERG_MELTED = "Oh. Water now",
+        ICEBERG_MELTED = "Oh. Water now", --unimplemented
 
         MINIFLARE = "Makes pretty lights",
 
@@ -3955,7 +3988,7 @@ return{
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Surprise",
 
-        CARNIVAL_BALL = "Bouncy bounce",
+        CARNIVAL_BALL = "Bouncy bounce", --unimplemented
 		CARNIVAL_SEEDPACKET = "Thanks Tweeters!",
 		CARNIVALFOOD_CORNTEA = "Mmmm",
 
@@ -4072,6 +4105,53 @@ return{
             CONSTRUCTION2 = "Almost done",
         },
 
+		-- Wanda
+        POCKETWATCH_HEAL = {
+			GENERIC = "Tick tock tick tock",
+			RECHARGING = "Tock tick tock tick",
+		},
+
+        POCKETWATCH_REVIVE = {
+			GENERIC = "Tick tock tick tock",
+			RECHARGING = "Tock tick tock tick",
+		},
+
+        POCKETWATCH_WARP = {
+			GENERIC = "Tick tock tick tock",
+			RECHARGING = "Tock tick tock tick",
+		},
+
+        POCKETWATCH_RECALL = {
+			GENERIC = "Tick tock tick tock",
+			RECHARGING = "Tock tick tock tick",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PORTAL = {
+			GENERIC = "Tick tock tick tock",
+			RECHARGING = "Tock tick tock tick",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda unmarked",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda same shard",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda other shard",
+		},
+
+        POCKETWATCH_WEAPON = {
+			GENERIC = "Hurty Tick Tock",
+--fallback to speech_wilson.lua 			DEPLETED = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PARTS = "Tick Tock insides",
+        POCKETWATCH_DISMANTLER = "Full of funny little sticks",
+
+        POCKETWATCH_PORTAL_ENTRANCE = 
+		{
+			GENERIC = "Spinny hole",
+			DIFFERENTSHARD = "Spinny hole",
+		},
+        POCKETWATCH_PORTAL_EXIT = "Spinny sky hole",
+
         -- Waterlog
         WATERTREE_PILLAR = "Biiiiig friend!",
         OCEANTREE = "Friends like water",
@@ -4079,7 +4159,7 @@ return{
         WATERTREE_ROOT = "Oh! Don't bump into friends!",
 
         OCEANTREE_PILLAR = "Biiig friend!",
-
+        
         OCEANVINE = "Wants to give fruit",
         FIG = "From hanging tree friend",
         FIG_COOKED = "Sweet yums",

@@ -31,6 +31,22 @@ return
 		"walter_ventriloquist",
 		"walter_victorian",
 	},
+	wanda =
+	{
+		"body_wanda_formal",
+		"body_wanda_shadow",
+		"body_wanda_steampunk",
+		"feet_wanda_formal",
+		"hand_wanda_formal",
+		"hand_wanda_shadow",
+		"hand_wanda_steampunk",
+		"legs_wanda_shadow",
+		"legs_wanda_steampunk",
+		"wanda_formal",
+		"wanda_none",
+		"wanda_shadow",
+		"wanda_steampunk",
+	},
 	warly =
 	{
 		"body_warly_candyman",

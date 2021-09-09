@@ -134,7 +134,11 @@ end
 -- Get the bigportrait UIAnim assets loaded by the prefab. Many prefabs don't have this info (only necessary to animate a bigportrait like when you get one in a mysterybox).
 function GetBigPortraitAnimForItem(item_key)
 	if Prefabs[item_key] ~= nil then
-		return Prefabs[item_key].bigportrait
+		if Prefabs[item_key].share_bigportrait_name ~= nil then
+			return GetBigPortraitAnimForItem(Prefabs[item_key].share_bigportrait_name)
+		else
+			return Prefabs[item_key].bigportrait_anim
+		end
 	end
 
 	return nil
@@ -144,7 +148,8 @@ function GetPortraitNameForItem(item_key)
 	if IsDefaultCharacterSkin(item_key) then
 		return item_key
 	else
-		return GetBuildForItem(item_key)
+		local skin_data = GetSkinData(item_key)
+		return skin_data.share_bigportrait_name or GetBuildForItem(item_key)
 	end
 end
 
@@ -1714,6 +1719,13 @@ function GetSkinModes(character)
 			wurt = {
 				{ type = "normal_skin", play_emotes = true },
 				{ type = "powerup", play_emotes = true },
+				{ type = "ghost_skin", anim_bank = "ghost", idle_anim = "idle", scale = ghost_preview_scale, offset = { 0, ghost_preview_y_offset } }
+			},
+
+			wanda = {
+				{ type = "normal_skin", play_emotes = true },
+				{ type = "young_skin", play_emotes = true },
+				{ type = "old_skin", play_emotes = true },
 				{ type = "ghost_skin", anim_bank = "ghost", idle_anim = "idle", scale = ghost_preview_scale, offset = { 0, ghost_preview_y_offset } }
 			},
 

@@ -56,6 +56,14 @@ local assets =
     Asset("FILE", "sound/waterlogged1.fsb"),
     Asset("FILE", "sound/waterlogged1_amb.fsb"),
     
+
+    Asset("SOUNDPACKAGE", "sound/wanda2.fev"),
+    Asset("FILE", "sound/wanda2.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/wanda1.fev"),
+    Asset("FILE", "sound/wanda1.fsb"),
+
+
     
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods

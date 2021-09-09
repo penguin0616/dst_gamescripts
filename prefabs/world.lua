@@ -32,6 +32,7 @@ local assets =
     Asset("ANIM", "anim/frames_comp.zip"),
 
     Asset("ANIM", "anim/frozen.zip"),
+    Asset("ANIM", "anim/floating_items.zip"),
 
     Asset("DYNAMIC_ATLAS", "images/bg_spiral_anim.xml"),
     Asset("PKGREF", "images/bg_spiral_anim.tex"),

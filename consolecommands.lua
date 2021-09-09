@@ -675,10 +675,10 @@ end
 
 function c_armor(player)
     player = ListingOrConsolePlayer(player)
-    if player ~= nil then
-        SuUsed("c_armor", true)
-        player.components.health:SetAbsorptionAmount(1)
-        print("Enabled full absorption on " .. tostring(player.userid))
+    if player ~= nil and player.components.health ~= nil then
+		SuUsed("c_armor", true)
+		player.components.health:SetAbsorptionAmount(1)
+		print("Enabled full absorption on " .. tostring(player.userid))
 	end
 end
 

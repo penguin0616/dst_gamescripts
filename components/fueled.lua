@@ -187,7 +187,7 @@ function Fueled:TakeFuelItem(item, doer)
         item:Remove()
 
         if self.ontakefuelfn ~= nil then
-            self.ontakefuelfn(self.inst)
+            self.ontakefuelfn(self.inst, fuelvalue)
         end
         self.inst:PushEvent("takefuel", { fuelvalue = fuelvalue })
 

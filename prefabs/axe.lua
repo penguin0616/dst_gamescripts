@@ -2,21 +2,18 @@ local assets =
 {
     Asset("ANIM", "anim/axe.zip"),
     Asset("ANIM", "anim/swap_axe.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local golden_assets =
 {
     Asset("ANIM", "anim/goldenaxe.zip"),
     Asset("ANIM", "anim/swap_goldenaxe.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local moonglass_assets =
 {
     Asset("ANIM", "anim/glassaxe.zip"),
     Asset("ANIM", "anim/swap_glassaxe.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function onequip(inst, owner)

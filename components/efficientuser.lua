@@ -18,9 +18,7 @@ function EfficientUser:AddMultiplier(action, multiplier, source)
 end
 
 function EfficientUser:RemoveMultiplier(action, source)
-    if not self.actions[action] then
-        print ("NO MULTIPLIER FOR THE ACTION ", action)
-    else
+    if self.actions[action] then
         self.actions[action]:RemoveModifier(source)
     end
 end

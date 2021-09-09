@@ -264,11 +264,10 @@ local function onothercollide(inst, other)
             local boat = other:GetCurrentPlatform()
             if boat then
                 local vx, vy, vz = inst.Physics:GetVelocity()
-                local speed_modified = VecUtil_Length(vx, vz)
-                vx,vz = VecUtil_Normalize(vx,vz)
+                vx, vz = VecUtil_Normalize(vx, vz)
 
                 local boat_physics = boat.components.boatphysics
-                boat_physics:ApplyForce(vx, vz, speed_modified)
+                boat_physics:ApplyForce(vx, vz, 3)
             end
 
             spawnfeather(inst,0.4)

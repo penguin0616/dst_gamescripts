@@ -121,17 +121,27 @@ end
 
 local OnMemberNewTarget -- forward declaration
 local DespawnedFromHaunt
+local DetachChild
 
 local function TrackMember(inst, member)
     inst.data.children[member] = true
     inst:ListenForEvent("death", function(...) OnMemberKilled(inst, ...) end, member)
     inst:ListenForEvent("newcombattarget", function(...) OnMemberNewTarget(inst, ...) end, member)
     inst:ListenForEvent("despawnedfromhaunt", function(member, data) DespawnedFromHaunt(inst,member,data) end, member)
+    inst:ListenForEvent("detachchild", function(member) DetachChild(inst, member) end, member)
 
     if not member.components.homeseeker then
         member:AddComponent("homeseeker")
     end
     member.components.homeseeker:SetHome(inst)
+end
+
+DetachChild = function(inst, oldchild)
+    inst.data.children[oldchild] = nil
+
+    if inst:IsAsleep() then
+        UpdateCampOccupied(inst)
+    end
 end
 
 DespawnedFromHaunt = function(inst, oldchild, data)

@@ -110,7 +110,7 @@ local events =
     EventHandler("doswoop", function(inst, data)
         if not inst.components.health:IsDead() and not inst.components.freezable:IsFrozen() and not inst.components.sleeper:IsAsleep() then
             inst:DoTaskInTime((math.random()*6) + 10, function(inst) inst.readytoswoop = true end)
-            inst.sg:GoToState("swoop_pre", data.target or inst.components.combat.target)
+            inst.sg:GoToState("R", data.target or inst.components.combat.target)
         end
     end),
     EventHandler("death", function(inst, data)
@@ -829,7 +829,6 @@ CommonStates.AddSleepExStates(states,
     },
 },
 {
-    onsleepexit = raise_without_floater,
     onsleeping = function(inst)
         land_without_floater(inst)
         if not inst:IsOnPassablePoint() then
@@ -843,6 +842,7 @@ CommonStates.AddSleepExStates(states,
             inst.AnimState:PlayAnimation("sleep_ocean_pst")
         end
     end,
+    onexitwake = raise_without_floater,
 })
 
 CommonStates.AddFrozenStates(states, LandFlyingCreature, RaiseFlyingCreature)

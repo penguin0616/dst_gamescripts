@@ -198,6 +198,12 @@ function InventoryItem:OnPutInInventory(owner)
         self.onputininventoryfn(self.inst, owner)
     end
     self.inst:PushEvent("onputininventory", owner)
+
+	if self.inst.components.container ~= nil then
+		for _, item in pairs(self.inst.components.container.slots) do
+			item:PushEvent("onownerputininventory", owner)
+		end
+	end
 end
 
 function InventoryItem:OnRemoved()
@@ -223,6 +229,12 @@ function InventoryItem:OnDropped(randomdir, speedmult)
         self.ondropfn(self.inst)
     end
     self.inst:PushEvent("ondropped")
+
+	if self.inst.components.container ~= nil then
+		for _, item in pairs(self.inst.components.container.slots) do
+			item:PushEvent("onownerdropped")
+		end
+	end
 
     if self.inst.components.propagator ~= nil then
         self.inst.components.propagator:Delay(5)

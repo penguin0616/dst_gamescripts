@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/staffs.zip"),
     Asset("ANIM", "anim/swap_staffs.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local prefabs =
@@ -49,8 +48,12 @@ local prefabs =
 ---------RED STAFF---------
 
 local function onattack_red(inst, attacker, target, skipsanity)
-    if not skipsanity and attacker ~= nil and attacker.components.sanity ~= nil then
-        attacker.components.sanity:DoDelta(-TUNING.SANITY_SUPERTINY)
+    if not skipsanity and attacker ~= nil then
+        if attacker.components.staffsanity then
+            attacker.components.staffsanity:DoCastingDelta(-TUNING.SANITY_SUPERTINY)
+        elseif attacker.components.sanity ~= nil then
+            attacker.components.sanity:DoDelta(-TUNING.SANITY_SUPERTINY)
+        end
     end
 
     attacker.SoundEmitter:PlaySound("dontstarve/wilson/fireball_explo")
@@ -128,8 +131,12 @@ end
 ---------BLUE STAFF---------
 
 local function onattack_blue(inst, attacker, target, skipsanity)
-    if not skipsanity and attacker ~= nil and attacker.components.sanity ~= nil then
-        attacker.components.sanity:DoDelta(-TUNING.SANITY_SUPERTINY)
+    if not skipsanity and attacker ~= nil then
+        if attacker.components.staffsanity then
+            attacker.components.staffsanity:DoCastingDelta(-TUNING.SANITY_SUPERTINY)
+        elseif attacker.components.sanity ~= nil then
+            attacker.components.sanity:DoDelta(-TUNING.SANITY_SUPERTINY)
+        end
     end
 
     if not target:IsValid() then
@@ -319,8 +326,12 @@ local function teleport_start(teleportee, staff, caster, loctarget, target_in_oc
         teleportee.components.burnable.burning = false
     end
 
-    if caster ~= nil and caster.components.sanity ~= nil then
-        caster.components.sanity:DoDelta(-TUNING.SANITY_HUGE)
+    if caster ~= nil then
+        if caster.components.staffsanity then
+            caster.components.staffsanity:DoCastingDelta(-TUNING.SANITY_HUGE)
+        elseif caster.components.sanity ~= nil then
+            caster.components.sanity:DoDelta(-TUNING.SANITY_HUGE)
+        end
     end
 
     ground:PushEvent("ms_deltamoisture", TUNING.TELESTAFF_MOISTURE)
@@ -373,9 +384,14 @@ end
 ---------ORANGE STAFF-----------
 
 local function onblink(staff, pos, caster)
-    if caster.components.sanity ~= nil then
-        caster.components.sanity:DoDelta(-TUNING.SANITY_MED)
+    if caster then
+        if caster.components.staffsanity then
+            caster.components.staffsanity:DoCastingDelta(-TUNING.SANITY_MED)
+        elseif caster.components.sanity ~= nil then
+            caster.components.sanity:DoDelta(-TUNING.SANITY_MED)
+        end
     end
+
     staff.components.finiteuses:Use(1)
 end
 
@@ -508,7 +524,7 @@ end
 
 local function destroystructure(staff, target)
     local recipe = AllRecipes[target.prefab]
-    if recipe == nil or recipe.no_deconstruction then
+    if recipe == nil or FunctionOrValue(recipe.no_deconstruction, target) then
         --Action filters should prevent us from reaching here normally
         return
     end
@@ -540,7 +556,9 @@ local function destroystructure(staff, target)
     if caster ~= nil then
         caster.SoundEmitter:PlaySound("dontstarve/common/staff_dissassemble")
 
-        if caster.components.sanity ~= nil then
+        if caster.components.staffsanity then
+            caster.components.staffsanity:DoCastingDelta(-TUNING.SANITY_MEDLARGE)
+        elseif caster.components.sanity ~= nil then
             caster.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
         end
     end
@@ -619,8 +637,12 @@ local function createlight(staff, target, pos)
     staff.components.finiteuses:Use(1)
 
     local caster = staff.components.inventoryitem.owner
-    if caster ~= nil and caster.components.sanity ~= nil then
-        caster.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
+    if caster ~= nil then
+        if caster.components.staffsanity then
+            caster.components.staffsanity:DoCastingDelta(-TUNING.SANITY_MEDLARGE)
+        elseif caster.components.sanity ~= nil then
+            caster.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
+        end
     end
 end
 

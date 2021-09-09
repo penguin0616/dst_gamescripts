@@ -192,6 +192,7 @@ return{
                 "Oh my, I seem to have gotten a bit mixed up.",
                 "My glasses need a good cleaning, that's clearly not my Daucus carota rattus!",
             },
+--fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
         },
         SLAUGHTER =
         {
@@ -312,13 +313,24 @@ return{
         {
 --fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
         },
+		CAST_POCKETWATCH = 
+		{
+--fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			WARP_NO_POINTS_LEFT = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			SHARD_UNAVAILABLE = "only_used_by_wanda",
+		},
+        DISMANTLE_POCKETWATCH =
+        {
+--fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "It seems I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat has fallen into dangerous disrepair.",
 	ANNOUNCE_BOAT_SINK = "Goodness, we're sinking!",
-	ANNOUNCE_DIG_DISEASE_WARNING = "Caught it just in time. The roots were nearly rotten.",
-	ANNOUNCE_PICK_DISEASE_WARNING = "This plant is exhibiting concerning signs.",
+	ANNOUNCE_DIG_DISEASE_WARNING = "Caught it just in time. The roots were nearly rotten.", --removed
+	ANNOUNCE_PICK_DISEASE_WARNING = "This plant is exhibiting concerning signs.", --removed
 	ANNOUNCE_ADVENTUREFAIL = "We must learn from our failures.",
     ANNOUNCE_MOUNT_LOWHEALTH = "My mount requires attention of the medical variety.",
 
@@ -610,7 +622,6 @@ return{
 	ANNOUNCE_WEIGHT = "Weight: {weight}",
 	ANNOUNCE_WEIGHT_HEAVY  = "Weight: {weight}\nThis specimen is decidedly larger than average.",
 
-	-- these are just for testing for now, no need to write real strings yet
 	ANNOUNCE_WINCH_CLAW_MISS = "This will require a bit more precision on my part.",
 	ANNOUNCE_WINCH_CLAW_NO_ITEM = "Oh dear... perhaps it's time to clean my glasses.",
 
@@ -667,6 +678,18 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NOINSPIRATION = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_PANIC_BUFF = "only_used_by_wathgrithr",
+
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_YOUNGTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOOLD = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_OLDTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOYOUNG = "only_used_by_wanda",
+
+	ANNOUNCE_POCKETWATCH_PORTAL = "Oof! Might I suggest realigning the exit point closer to the ground next time, dear?",
+
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_MARK = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_RECALL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD = "only_used_by_wanda",
 
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "What a peculiar sensation, it's transmitting a blueprint telepathically!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "I'm already familiar with this particular piece of knowledge.",
@@ -952,11 +975,21 @@ return{
             FIRESTARTER = "Not everything is a campfire, dear.",
         },
 
+        WANDA =
+        {
+            GENERIC = "Greetings dear %s! Do you have any new insights on what lies ahead?",
+            ATTACKER = "Really %s, you need to set a better example for the children.",
+            MURDERER = "You should have known you wouldn't get away with it, %s. Attack!",
+            REVIVER = "I appreciate you taking the time, dear.",
+            GHOST = "Oh dear, even after all the precautions you took?",
+            FIRESTARTER = "Surely you have the foresight to know that's unwise, don't you?",
+        },
+
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "If I had any friends, this could take me to them.",
---fallback to speech_wilson.lua             OPEN = "If I step through, will I still be me?",
---fallback to speech_wilson.lua             FULL = "It seems to be popular over there.",
+--fallback to speech_wilson.lua         --    GENERIC = "If I had any friends, this could take me to them.",
+--fallback to speech_wilson.lua         --    OPEN = "If I step through, will I still be me?",
+--fallback to speech_wilson.lua         --    FULL = "It seems to be popular over there.",
 --fallback to speech_wilson.lua         },
         GLOMMER =
         {
@@ -1269,7 +1302,7 @@ return{
             FULL = "With all those people? It's bound to be cacophony.",
         },
 
-		MAXWELLPHONOGRAPH = "It appears to have no power source.",
+		MAXWELLPHONOGRAPH = "It appears to have no power source.",--single player
 		BOOMERANG = "It is a flat aerofoil.",
 		PIGGUARD = "One of the warrior caste.",
 		ABIGAIL =
@@ -1315,7 +1348,7 @@ return{
 		BACKPACK = "That could carry so many books.",
 		BACONEGGS = "Blue eggs and bacon!",
 		BANDAGE = "Medicinal dressings.",
-		BASALT = "Material of great density!",
+		BASALT = "Material of great density!", --removed
 		BEARDHAIR = "This is human facial hair.",
 		BEARGER = "It's the Caniformia suborder... Beyond that, I cannot say.",
 		BEARGERVEST = "Whatever it was, its pelt makes for a fine garment.",
@@ -1381,7 +1414,7 @@ return{
         BEESWAX = "Naturally antibacterial. Could slow food decay if we use it properly.",
 		BEEHIVE = "The natural home of the bee.",
 		BEEMINE = "A dangerous mine filled with Antophila.",
-		BEEMINE_MAXWELL = "A dangerous mine filled with Culicidae.",
+		BEEMINE_MAXWELL = "A dangerous mine filled with Culicidae.",--removed
 		BERRIES = "Some Ardisia crenata berries, I think.",
 		BERRIES_COOKED = "Roasted Ardisia crenata, just in case.",
         BERRIES_JUICY = "A variant of Ardisia crenata berries. Good hydration.",
@@ -1392,8 +1425,8 @@ return{
 			WITHERED = "Ardisia crenata don't do well in extreme heat.",
 			GENERIC = "It's an Ardisia crenata bush.",
 			PICKED = "The berries are growing back, slowly.",
-			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",
-			DISEASING = "Hm... The leaves are curling at the edges.",
+			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",--removed
+			DISEASING = "Hm... The leaves are curling at the edges.",--removed
 			BURNING = "Combustion!",
 		},
 		BERRYBUSH_JUICY =
@@ -1402,11 +1435,11 @@ return{
 			WITHERED = "The Ardisia crenata variant has shriveled in the heat.",
 			GENERIC = "That bush looks ready for harvest.",
 			PICKED = "It will have to wait.",
-			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",
-			DISEASING = "Hm... The leaves are curling at the edges.",
+			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",--removed
+			DISEASING = "Hm... The leaves are curling at the edges.",--removed
 			BURNING = "Combustion!",
 		},
-		BIGFOOT = "Prehistoric!",
+		BIGFOOT = "Prehistoric!",--removed
 		BIRDCAGE =
 		{
 			GENERIC = "This will safely contain one avian specimen.",
@@ -1598,7 +1631,7 @@ return{
 		CUTGRASS = "Some grass cuttings.",
 		CUTREEDS = "Some rush cuttings.",
 		CUTSTONE = "Some smoothed rock slabs.",
-		DEADLYFEAST = "I'm not sure that's good to eat.",
+		DEADLYFEAST = "I'm not sure that's good to eat.", --unimplemented
 		DEER =
 		{
 			GENERIC = "It has shed its antler for the warmer months.",
@@ -1620,19 +1653,19 @@ return{
 		DIRTPILE = "Unhygienic!",
 		DIVININGROD =
 		{
-			COLD = "The dial is moving faintly.",
-			GENERIC = "It is a magitechnical homing device.",
-			HOT = "Here we are!",
-			WARM = "This is definitely the right track.",
-			WARMER = "Must be getting close.",
+			COLD = "The dial is moving faintly.", --singleplayer
+			GENERIC = "It is a magitechnical homing device.", --singleplayer
+			HOT = "Here we are!", --singleplayer
+			WARM = "This is definitely the right track.", --singleplayer
+			WARMER = "Must be getting close.", --singleplayer
 		},
 		DIVININGRODBASE =
 		{
-			GENERIC = "It will need some work before it can function.",
-			READY = "It simply needs a key now.",
-			UNLOCKED = "Ah. The beauty of functionality.",
+			GENERIC = "It will need some work before it can function.", --singleplayer
+			READY = "It simply needs a key now.", --singleplayer
+			UNLOCKED = "Ah. The beauty of functionality.", --singleplayer
 		},
-		DIVININGRODSTART = "This rod could be useful!",
+		DIVININGRODSTART = "This rod could be useful!", --singleplayer
 		DRAGONFLY = "It's some kind of mythical variant of a Diptera.",
 		ARMORDRAGONFLY = "Pyrotechnic armor!",
 		DRAGON_SCALES = "Scales from an insect? Unheard of!",
@@ -1737,7 +1770,7 @@ return{
 			BURNT = "A carbonized tree.",
 			CHOPPED = "It has been harvested.",
 			GENERIC = "This species yields lumber and pliable sprigs. Useful.",
-			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",
+			DISEASED = "It's afflicted with an agrarian disease beyond my curing.", --unimplemented
 		},
 		TWIGGY_NUT_SAPLING = "It is fast growing into a fine young tree.",
         TWIGGY_OLD = "It would be a waste of time and resources to chop that old thing.",
@@ -1758,7 +1791,7 @@ return{
 		FEATHER_CANARY = "Feather of Canaria.",
 		FEATHERPENCIL = "Oh, how I missed proper writing implements!",
         COOKBOOK = "A collection of culinary observations.",
-		FEM_PUPPET = "Poor girl.",
+		FEM_PUPPET = "Poor girl.", --single player
 		FIREFLIES =
 		{
 			GENERIC = "They disperse when I approach.",
@@ -1844,13 +1877,13 @@ return{
 			BURNING = "Combustion!",
 			GENERIC = "A cluster graminoid stalks.",
 			PICKED = "I think it will grow back.",
-			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",
-			DISEASING = "Hm... There are spots of discoloration here.",
+			DISEASED = "It's afflicted with an agrarian disease beyond my curing.", --unimplemented
+			DISEASING = "Hm... There are spots of discoloration here.", --unimplemented
 		},
 		GRASSGEKKO =
 		{
 			GENERIC = "I've never encountered this species before. Seems harmless.",
-			DISEASED = "It appears to be infected by some unknown pathogen.",
+			DISEASED = "It appears to be infected by some unknown pathogen.", --unimplemented
 		},
 		GREEN_CAP = "Seems edible, though it may not be totally sane to consume it.",
 		GREEN_CAP_COOKED = "Chemistry has altered it.",
@@ -1951,7 +1984,7 @@ return{
 		LUCY = "A perfectly fine looking axe.",
 		LUREPLANT = "An invasive plant species.",
 		LUREPLANTBULB = "Now it can be planted wherever is best.",
-		MALE_PUPPET = "Poor boy.",
+		MALE_PUPPET = "Poor boy.", --single player
 
 		MANDRAKE_ACTIVE = "Mandragora officinarum. But with a face.",
 		MANDRAKE_PLANTED = "Mandragora officinarum.",
@@ -1982,11 +2015,11 @@ return{
             CHOPPED = "It has been felled.",
             GENERIC = "A mangal rhizophora.",
         },
-        MAXWELL = "Get down from there this instant!",
-        MAXWELLHEAD = "I wish he wouldn't do that.",
-        MAXWELLLIGHT = "How magical!",
-        MAXWELLLOCK = "Now I just need a key.",
-        MAXWELLTHRONE = "What an intimidating chair.",
+        MAXWELL = "Get down from there this instant!",--single player
+        MAXWELLHEAD = "I wish he wouldn't do that.",--removed
+        MAXWELLLIGHT = "How magical!",--single player
+        MAXWELLLOCK = "Now I just need a key.",--single player
+        MAXWELLTHRONE = "What an intimidating chair.",--single player
         MEAT = "It's improper to eat it raw, but if we've no choice...",
         MEATBALLS = "A pile of processed meat. Who knows what went into this.",
         MEATRACK =
@@ -2188,13 +2221,13 @@ return{
             GENERIC = "A winter coat for the Cardinalis? How peculiar!",
             HELD = "It's so delicate.",
         },
-        ROBOT_PUPPET = "Poor child.",
+        ROBOT_PUPPET = "Poor child.", --single player
         ROCK_LIGHT =
         {
-            GENERIC = "A capped lava pit.",
-            OUT = "Nothing but a sheath of igneous rock now.",
-            LOW = "The cooling process has begun.",
-            NORMAL = "Much too hot to touch.",
+            GENERIC = "A capped lava pit.",--removed
+            OUT = "Nothing but a sheath of igneous rock now.",--removed
+            LOW = "The cooling process has begun.",--removed
+            NORMAL = "Much too hot to touch.",--removed
         },
         CAVEIN_BOULDER =
         {
@@ -2235,8 +2268,8 @@ return{
 			WITHERED = "The heat's gotten to it.",
 			GENERIC = "It's a small tree.",
 			PICKED = "Odd. I thought that would have killed it.",
-			DISEASED = "It's afflicted with an agrarian disease beyond my curing.",
-			DISEASING = "Hm... Seems more brittle than is usual.",
+			DISEASED = "It's afflicted with an agrarian disease beyond my curing.", --removed
+			DISEASING = "Hm... Seems more brittle than is usual.", --removed
 		},
    		SCARECROW =
    		{
@@ -2285,7 +2318,7 @@ return{
 		SILK = "Protein fiber extruded from an arachnid.",
 		SKELETON = "An incredibly well preserved human skeleton.",
 		SCORCHED_SKELETON = "You don't inspire a great deal of confidence, dear.",
-		SKULLCHEST = "A container resembling a cranium.",
+		SKULLCHEST = "A container resembling a cranium.", --removed
 		SMALLBIRD =
 		{
 			GENERIC = "A rather diminutive specimen of the class Aves.",
@@ -2364,15 +2397,15 @@ return{
 		},
 		TELEPORTATO_BASE =
 		{
-			ACTIVE = "This machine can be used to travel between worlds.",
-			GENERIC = "This runestone has unique geometric properties!",
-			LOCKED = "The device needs to be activated.",
-			PARTIAL = "The device is in a partial state of completion.",
+			ACTIVE = "This machine can be used to travel between worlds.", --single player
+			GENERIC = "This runestone has unique geometric properties!", --single player
+			LOCKED = "The device needs to be activated.", --single player
+			PARTIAL = "The device is in a partial state of completion.", --single player
 		},
-		TELEPORTATO_BOX = "An electrical charge regulator.",
-		TELEPORTATO_CRANK = "It applies basic mechanical principles.",
-		TELEPORTATO_POTATO = "Neither fully organic nor inorganic!",
-		TELEPORTATO_RING = "A torus of alloys and wiring.",
+		TELEPORTATO_BOX = "An electrical charge regulator.", --single player
+		TELEPORTATO_CRANK = "It applies basic mechanical principles.", --single player
+		TELEPORTATO_POTATO = "Neither fully organic nor inorganic!", --single player
+		TELEPORTATO_RING = "A torus of alloys and wiring.", --single player
 		TELESTAFF = "The gem appears to focus the nightmare fuel.",
 		TENT =
 		{
@@ -2396,7 +2429,7 @@ return{
 		TRANSISTOR = "This is quite advanced technology.",
 		TRAP = "A simple stick-and-basket trap.",
 		TRAP_TEETH = "It's covered with a thin film of canine digestive fluid.",
-		TRAP_TEETH_MAXWELL = "A crude attempt at tricking me.",
+		TRAP_TEETH_MAXWELL = "A crude attempt at tricking me.", --single player
 		TREASURECHEST =
 		{
 			GENERIC = "A storage chest.",
@@ -2408,7 +2441,7 @@ return{
 			GENERIC = "A small dimension tightly bound in magic.",
 			LOCKED = "The magic's at work.",
 		},
-		TREECLUMP = "The flora grows thick here.",
+		TREECLUMP = "The flora grows thick here.", --removed
 
 		TRINKET_1 = "What a lovely set of bottle washers! Too bad they're all melted.", --Melted Marbles
 		TRINKET_2 = "A fake membranophone.", --Fake Kazoo
@@ -2782,7 +2815,7 @@ return{
 			OPEN = "Concentric rings of teeth for rapid ingestion.",
 		},
 		WORMHOLE_LIMITED = "It will only last a few trips.",
-		ACCOMPLISHMENT_SHRINE = "I feel a compulsive urge to activate it, again and again.",
+		ACCOMPLISHMENT_SHRINE = "I feel a compulsive urge to activate it, again and again.", --single player
 		LIVINGTREE = "This tree is special.",
 		ICESTAFF = "Some kind of ice-throwing contraption.",
 		REVIVER = "This provides a corporeal anchor for the ectoplasmic configuration.",
@@ -3130,8 +3163,8 @@ return{
 		BOAT_LEAK = "Our ship is taking on water.",
         MAST = "Simply raise a sail, and off we go!",
         SEASTACK = "It would be no good to run aground of that.",
-        FISHINGNET = "The sea is a treasure trove of survival resources.",
-        ANTCHOVIES = "Ah, I see! A brand new oceanic species!",
+        FISHINGNET = "The sea is a treasure trove of survival resources.", --unimplemented
+        ANTCHOVIES = "Ah, I see! A brand new oceanic species!", --unimplemented
         STEERINGWHEEL = "Ship steering is no easy task.",
         ANCHOR = "An anchor for our vessel.",
         BOATPATCH = "For repairing hull damages.",
@@ -3171,8 +3204,8 @@ return{
 			WITHERED = "These are not ideal conditions for this species.",
 			GENERIC = "Surely that can't be fruit.",
 			PICKED = "A bush that grew from the lunar soil.",
-			DISEASED = "I fear it has contracted a disease.",
-            DISEASING = "Hm, I see browning at the leaves' edges.",
+			DISEASED = "I fear it has contracted a disease.", --unimplemented
+            DISEASING = "Hm, I see browning at the leaves' edges.", --unimplemented
 			BURNING = "Tsk. Such a waste of resources.",
 		},
         DEAD_SEA_BONES = "What curious skeletal structures.",
@@ -3218,10 +3251,10 @@ return{
 
         ICEBERG =
         {
-            GENERIC = "We ought to steer the ships clear of that.",
-            MELTED = "From dangerous solid to harmless liquid. Thank-you, heat.",
+            GENERIC = "We ought to steer the ships clear of that.", --unimplemented
+            MELTED = "From dangerous solid to harmless liquid. Thank-you, heat.", --unimplemented
         },
-        ICEBERG_MELTED = "From dangerous solid to harmless liquid. Thank-you, heat.",
+        ICEBERG_MELTED = "From dangerous solid to harmless liquid. Thank-you, heat.", --unimplemented
 
         MINIFLARE = "It's safer for everyone to stick together.",
 
@@ -3951,7 +3984,7 @@ return{
 		},
 		CARNIVALDECOR_FIGURE_KIT = "How intriguing! I wonder what's inside?",
 
-        CARNIVAL_BALL = "I don't want to see anyone playing with this near any breakables.",
+        CARNIVAL_BALL = "I don't want to see anyone playing with this near any breakables.", --unimplemented
 		CARNIVAL_SEEDPACKET = "A bit of extra fiber added to one's diet never hurts.",
 		CARNIVALFOOD_CORNTEA = "An acquired taste, but nevertheless quite refreshing.",
 
@@ -4068,6 +4101,53 @@ return{
             CONSTRUCTION2 = "The pieces are slowly falling into place.",
         },
 
+		-- Wanda
+        POCKETWATCH_HEAL = {
+			GENERIC = "Horology mixed with magic, truly fascinating.",
+			RECHARGING = "It appears to require some time to replenish its power between uses.",
+		},
+
+        POCKETWATCH_REVIVE = {
+			GENERIC = "Horology mixed with magic, truly fascinating.",
+			RECHARGING = "It appears to require some time to replenish its power between uses.",
+		},
+
+        POCKETWATCH_WARP = {
+			GENERIC = "Horology mixed with magic, truly fascinating.",
+			RECHARGING = "It appears to require some time to replenish its power between uses.",
+		},
+
+        POCKETWATCH_RECALL = {
+			GENERIC = "Horology mixed with magic, truly fascinating.",
+			RECHARGING = "It appears to require some time to replenish its power between uses.",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PORTAL = {
+			GENERIC = "Horology mixed with magic, truly fascinating.",
+			RECHARGING = "It appears to require some time to replenish its power between uses.",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda unmarked",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda same shard",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda other shard",
+		},
+
+        POCKETWATCH_WEAPON = {
+			GENERIC = "A handy bit of pocket-sized weaponry.",
+--fallback to speech_wilson.lua 			DEPLETED = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PARTS = "It appears these pieces of clockwork have been infused with shadow fuel.",
+        POCKETWATCH_DISMANTLER = "These tools are specialized for clockmaking.",
+
+        POCKETWATCH_PORTAL_ENTRANCE = 
+		{
+			GENERIC = "Magic triggered by a clockwork mechanism, how fascinating!",
+			DIFFERENTSHARD = "Magic triggered by a clockwork mechanism, how fascinating!",
+		},
+        POCKETWATCH_PORTAL_EXIT = "I wonder if she would allow me to write down my observations...",
+
         -- Waterlog
         WATERTREE_PILLAR = "I wonder what contributed to its advanced growth?",
         OCEANTREE = "It seems to be a hybrid between the genera Rhizophora and Salix.",
@@ -4075,7 +4155,7 @@ return{
         WATERTREE_ROOT = "I suggest we avoid hitting those with our boat.",
 
         OCEANTREE_PILLAR = "I was able to recreate the growth conditions, but not to the extent of the original.",
-
+        
         OCEANVINE = "These vines seem to enjoy a symbiotic relationship with the tree.",
         FIG = "I do enjoy a nice ripe fig.",
         FIG_COOKED = "Cooking it brings out more of the flavor.",

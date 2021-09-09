@@ -389,10 +389,12 @@ function Sanity:Recalc(dt)
 	if self.dapperness_mult ~= 0 then
 		local total_dapperness = self.dapperness
 		for k, v in pairs(self.inst.components.inventory.equipslots) do
-			local equippable = v.components.equippable
-			if equippable ~= nil and (not self.only_magic_dapperness or equippable.is_magic_dapperness) then
-				total_dapperness = total_dapperness + equippable:GetDapperness(self.inst, self.no_moisture_penalty)
-			end
+            local equippable = v.components.equippable
+            
+            if equippable ~= nil then
+                local item_dapperness = self.get_equippable_dappernessfn ~= nil and self.get_equippable_dappernessfn(self.inst, equippable) or equippable:GetDapperness(self.inst, self.no_moisture_penalty)
+                total_dapperness = total_dapperness + item_dapperness
+            end
 		end
 
 		total_dapperness = total_dapperness * self.dapperness_mult

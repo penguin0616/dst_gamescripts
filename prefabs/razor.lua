@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/razor.zip"),
     Asset("ANIM", "anim/swap_razor.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function fn()

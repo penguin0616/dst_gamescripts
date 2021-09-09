@@ -88,6 +88,9 @@ local function PlayerRemove(player, deletesession, migrationdata, readytoremove)
                 worldid = TheShard:GetShardId(),
                 portalid = migrationdata.portalid,
                 sessionid = TheWorld.meta.session_identifier,
+				dest_x = migrationdata.x,
+				dest_y = migrationdata.y,
+				dest_z = migrationdata.z,
             } or nil
             SerializeUserSession(player)
         end
@@ -226,7 +229,12 @@ local function GetDestinationPortalLocation(player)
             return x + offset.x, 0, z + offset.z
         end
         return x, 0, z
-    else
+    elseif player.migration.dest_x ~= nil and player.migration.dest_y ~= nil and player.migration.dest_z ~= nil then
+		local pt = Vector3(player.migration.dest_x, player.migration.dest_y, player.migration.dest_z)
+        print("Player will spawn near ".. tostring(pt))
+        pt = pt + (FindWalkableOffset(pt, math.random() * PI * 2, 2, 8, false, true, NoHoles) or Vector3(0,0,0))
+        return pt:Get()
+	else
         print("Player will spawn at default location")
         return GetNextSpawnPosition()
     end

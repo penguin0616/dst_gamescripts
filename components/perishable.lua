@@ -165,6 +165,16 @@ function Perishable:Dilute(number, timeleft)
 	end
 end
 
+function Perishable:AddTime(time)
+    if self.updatetask ~= nil then
+		local old_val = self.perishremainingtime
+		self.perishremainingtime = math.min(time + self.perishremainingtime, self.perishtime)
+        if math.floor(old_val*100) ~= math.floor(self.perishremainingtime*100) then
+			self.inst:PushEvent("perishchange", {percent = self:GetPercent()})
+		end
+	end
+end
+
 function Perishable:SetPerishTime(time)
 	self.perishtime = time
 	self.perishremainingtime = time

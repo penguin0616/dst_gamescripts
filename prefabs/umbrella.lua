@@ -4,7 +4,6 @@ local assets =
     Asset("ANIM", "anim/swap_umbrella.zip"),
     Asset("ANIM", "anim/parasol.zip"),
     Asset("ANIM", "anim/swap_parasol.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function onequip(inst, owner)

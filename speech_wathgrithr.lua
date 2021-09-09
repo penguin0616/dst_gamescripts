@@ -116,7 +116,7 @@ return{
             WRONGSHADOWFORM = "We must rearrange the bones of the beast.",
             NOMOON = "Needs the gaze of Mani to work.",
 			PIGKINGGAME_MESSY = "I must clear the battlefield first!",
-			PIGKINGGAME_DANGER = "Danger is near! 'tis no time for games.",
+			PIGKINGGAME_DANGER = "Danger is near! 'Tis no time for games.",
 			PIGKINGGAME_TOOLATE = "'Tis too late for revelry!",
 			CARNIVALGAME_INVALID_ITEM = "'Tis not to its liking.",
 			CARNIVALGAME_ALREADY_PLAYING = "A warrior must be patient.",
@@ -192,6 +192,7 @@ return{
                 "Thou art not the one I seek.",
                 "Where is your master, veggie beast?",
             },
+--fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
         },
         SLAUGHTER =
         {
@@ -312,13 +313,24 @@ return{
         {
 --fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
         },
+		CAST_POCKETWATCH = 
+		{
+--fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			WARP_NO_POINTS_LEFT = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			SHARD_UNAVAILABLE = "only_used_by_wanda",
+		},
+        DISMANTLE_POCKETWATCH =
+        {
+--fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
 	ANNOUNCE_BOAT_LEAK = "Our vessel hath sprung a leak!",
 	ANNOUNCE_BOAT_SINK = "A Viking shalln't abandon her ship!",
-	ANNOUNCE_DIG_DISEASE_WARNING = "Be banished, beastly blight!",
-	ANNOUNCE_PICK_DISEASE_WARNING = "Foul!",
+	ANNOUNCE_DIG_DISEASE_WARNING = "Be banished, beastly blight!", --removed
+	ANNOUNCE_PICK_DISEASE_WARNING = "Foul!", --removed
 	ANNOUNCE_ADVENTUREFAIL = "Back to the Otherworld, victory shall be mine!",
     ANNOUNCE_MOUNT_LOWHEALTH = "Don't give up, beast! Fight!",
 
@@ -610,7 +622,6 @@ return{
 	ANNOUNCE_WEIGHT = "Weight: {weight}",
 	ANNOUNCE_WEIGHT_HEAVY  = "Weight: {weight}\nBy the gods, I've netted a monster!",
 
-	-- these are just for testing for now, no need to write real strings yet
 	ANNOUNCE_WINCH_CLAW_MISS = "My aim wasn't true...",
 	ANNOUNCE_WINCH_CLAW_NO_ITEM = "My efforts were for naught.",
 
@@ -667,6 +678,18 @@ return{
     ANNOUNCE_NOINSPIRATION = "I must warm up my voice... in the heat of battle!",
     ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "\"You scullion! You rampallian! You fustilarian! I’ll tickle your catastrophe!\"",
     ANNOUNCE_BATTLESONG_INSTANT_PANIC_BUFF = "\"By the pricking of my thumbs, something wicked this way comes!\"",
+
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_YOUNGTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOOLD = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_OLDTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOYOUNG = "only_used_by_wanda",
+
+	ANNOUNCE_POCKETWATCH_PORTAL = "T'was not one of my more graceful exits...",
+
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_MARK = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_RECALL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD = "only_used_by_wanda",
 
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "The gods have given me a vision... some kind of machine?",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "I've already seen this vision.",
@@ -952,11 +975,21 @@ return{
             FIRESTARTER = "%s, why do you break your cherished code?",
         },
 
+        WANDA =
+        {
+            GENERIC = "Good health to you through the ages, %s!",
+            ATTACKER = "You think it wise to test me, %s?",
+            MURDERER = "Thou shall answer for this betrayal, %s! Meet my spear!",
+            REVIVER = "%s is a powerful ally indeed.",
+            GHOST = "Fear not! I will find you a heart, with utmost haste!",
+            FIRESTARTER = "I don't wish to question your intentions, %s...",
+        },
+
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "If I had any friends, this could take me to them.",
---fallback to speech_wilson.lua             OPEN = "If I step through, will I still be me?",
---fallback to speech_wilson.lua             FULL = "It seems to be popular over there.",
+--fallback to speech_wilson.lua         --    GENERIC = "If I had any friends, this could take me to them.",
+--fallback to speech_wilson.lua         --    OPEN = "If I step through, will I still be me?",
+--fallback to speech_wilson.lua         --    FULL = "It seems to be popular over there.",
 --fallback to speech_wilson.lua         },
         GLOMMER =
         {
@@ -1269,7 +1302,7 @@ return{
             FULL = "There are too many people up there.",
         },
 
-		MAXWELLPHONOGRAPH = "A mechanical songstress.",
+		MAXWELLPHONOGRAPH = "A mechanical songstress.",--single player
 		BOOMERANG = "For flinging at foes!",
 		PIGGUARD = "He is battle ready, I can tell.",
 		ABIGAIL =
@@ -1315,7 +1348,7 @@ return{
 		BACKPACK = "A portable armory.",
 		BACONEGGS = "Pig and eggs!",
 		BANDAGE = "To heal even the deepest of battle wounds.",
-		BASALT = "A thousand mortals couldn't break through this stone.",
+		BASALT = "A thousand mortals couldn't break through this stone.", --removed
 		BEARDHAIR = "Fur of the crazies.",
 		BEARGER = "Beast or berserker?",
 		BEARGERVEST = "BEAR-SERKER!",
@@ -1381,7 +1414,7 @@ return{
         BEESWAX = "The stuff of candlemakers.",
 		BEEHIVE = "Always buzzing, always plotting.",
 		BEEMINE = "It sounds suspicious.",
-		BEEMINE_MAXWELL = "Watch your step!",
+		BEEMINE_MAXWELL = "Watch your step!",--removed
 		BERRIES = "Fruits. I don't like 'em.",
 		BERRIES_COOKED = "Warm red mush.",
         BERRIES_JUICY = "I'd prefer a juicy steak.",
@@ -1392,8 +1425,8 @@ return{
 			WITHERED = "It's too hot to grow.",
 			GENERIC = "A fruit bush.",
 			PICKED = "The fruits have been snatched.",
-			DISEASED = "Disease festers within its soul.",
-			DISEASING = "It is weakening before mine eyes!",
+			DISEASED = "Disease festers within its soul.",--removed
+			DISEASING = "It is weakening before mine eyes!",--removed
 			BURNING = "Consumed by passionate flame!",
 		},
 		BERRYBUSH_JUICY =
@@ -1402,11 +1435,11 @@ return{
 			WITHERED = "It looks atrocious.",
 			GENERIC = "It's covered in rabbit food.",
 			PICKED = "The rabbit food is all gone.",
-			DISEASED = "Disease festers within its soul.",
-			DISEASING = "It is weakening before mine eyes!",
+			DISEASED = "Disease festers within its soul.",--removed
+			DISEASING = "It is weakening before mine eyes!",--removed
 			BURNING = "Consumed by passionate flame!",
 		},
-		BIGFOOT = "That's something completely different!",
+		BIGFOOT = "That's something completely different!",--removed
 		BIRDCAGE =
 		{
 			GENERIC = "A home for my ravens!",
@@ -1598,7 +1631,7 @@ return{
 		CUTGRASS = "A craftwoman's most elemental resource.",
 		CUTREEDS = "I cleaned all the bugs out! Then I ate them.",
 		CUTSTONE = "Solid stone!",
-		DEADLYFEAST = "A most potent dish.",
+		DEADLYFEAST = "A most potent dish.", --unimplemented
 		DEER =
 		{
 			GENERIC = "The beauty of Freya dwells in all creatures!",
@@ -1620,19 +1653,19 @@ return{
 		DIRTPILE = "A small hill of earth.",
 		DIVININGROD =
 		{
-			COLD = "All is quiet.",
-			GENERIC = "A mechanical hunting hound. For the hunt.",
-			HOT = "Sound the horns! We've arrived!",
-			WARM = "We've got the scent!",
-			WARMER = "The hound is excited. We're getting close.",
+			COLD = "All is quiet.", --singleplayer
+			GENERIC = "A mechanical hunting hound. For the hunt.", --singleplayer
+			HOT = "Sound the horns! We've arrived!", --singleplayer
+			WARM = "We've got the scent!", --singleplayer
+			WARMER = "The hound is excited. We're getting close.", --singleplayer
 		},
 		DIVININGRODBASE =
 		{
-			GENERIC = "What cryptic ruins.",
-			READY = "Seems it's missing a piece...",
-			UNLOCKED = "Ready! The saga continues!",
+			GENERIC = "What cryptic ruins.", --singleplayer
+			READY = "Seems it's missing a piece...", --singleplayer
+			UNLOCKED = "Ready! The saga continues!", --singleplayer
 		},
-		DIVININGRODSTART = "This mysterious sword feels important.",
+		DIVININGRODSTART = "This mysterious sword feels important.", --singleplayer
 		DRAGONFLY = "Ah, dragon! At last we meet!",
 		ARMORDRAGONFLY = "Excellent armor for the heat of battle.",
 		DRAGON_SCALES = "Mystical scales.",
@@ -1737,7 +1770,7 @@ return{
 			BURNT = "Loge took that one.",
 			CHOPPED = "Chopped by the warrior in the woods!",
 			GENERIC = "Triumph will accompany its many resources.",
-			DISEASED = "Disease festers within its soul.",
+			DISEASED = "Disease festers within its soul.", --unimplemented
 		},
 		TWIGGY_NUT_SAPLING = "Grow tall and strong.",
         TWIGGY_OLD = "It will soon return to the earth.",
@@ -1758,7 +1791,7 @@ return{
 		FEATHER_CANARY = "In remembrance of a songbird.",
 		FEATHERPENCIL = "Perhaps I'll pen a saga of my journeys!",
         COOKBOOK = "'Tis filled with too many non-meat dishes if you ask me.",
-		FEM_PUPPET = "She looks unhappy upon her throne.",
+		FEM_PUPPET = "She looks unhappy upon her throne.", --single player
 		FIREFLIES =
 		{
 			GENERIC = "Tiny fairy lights aglow!",
@@ -1844,13 +1877,13 @@ return{
 			BURNING = "Loge looks upon you!",
 			GENERIC = "That could be useful.",
 			PICKED = "I eagerly await the next harvest.",
-			DISEASED = "Disease festers within its soul.",
-			DISEASING = "It is weakening before mine eyes!",
+			DISEASED = "Disease festers within its soul.", --unimplemented
+			DISEASING = "It is weakening before mine eyes!", --unimplemented
 		},
 		GRASSGEKKO =
 		{
 			GENERIC = "What flaxen scales.",
-			DISEASED = "Alas! It is stricken.",
+			DISEASED = "Alas! It is stricken.", --unimplemented
 		},
 		GREEN_CAP = "Terrible!",
 		GREEN_CAP_COOKED = "Charred by flame or not, that will not touch my lips!",
@@ -1951,7 +1984,7 @@ return{
 		LUCY = "It's nice, but it's no spear.",
 		LUREPLANT = "Finally! A useful vegetable.",
 		LUREPLANTBULB = "Perhaps I will be a meat farmer after all!",
-		MALE_PUPPET = "He looks unhappy upon his throne.",
+		MALE_PUPPET = "He looks unhappy upon his throne.", --single player
 
 		MANDRAKE_ACTIVE = "She just wants to go on a rutabaga saga.",
 		MANDRAKE_PLANTED = "A rutabaga!",
@@ -1982,11 +2015,11 @@ return{
             CHOPPED = "Another must be planted to maintain the balance of this realm.",
             GENERIC = "A warrior tree.",
         },
-        MAXWELL = "Arrg! Is that the antagonist to my saga?!",
-        MAXWELLHEAD = "I can see into his pores.",
-        MAXWELLLIGHT = "Dark magic lives here.",
-        MAXWELLLOCK = "Shall I unlock it?",
-        MAXWELLTHRONE = "I prefer to roam free, my unicorn and I.",
+        MAXWELL = "Arrg! Is that the antagonist to my saga?!",--single player
+        MAXWELLHEAD = "I can see into his pores.",--removed
+        MAXWELLLIGHT = "Dark magic lives here.",--single player
+        MAXWELLLOCK = "Shall I unlock it?",--single player
+        MAXWELLTHRONE = "I prefer to roam free, my unicorn and I.",--single player
         MEAT = "The true fruit of the earth!",
         MEATBALLS = "Tiny feast balls.",
         MEATRACK =
@@ -2188,13 +2221,13 @@ return{
             GENERIC = "This bird knows about the cold.",
             HELD = "Such fluffy feathers.",
         },
-        ROBOT_PUPPET = "A prisoner!",
+        ROBOT_PUPPET = "A prisoner!", --single player
         ROCK_LIGHT =
         {
-            GENERIC = "The lava crust is firm.",
-            OUT = "Looks delicate.",
-            LOW = "The lava crust is reforming.",
-            NORMAL = "Beautiful light!",
+            GENERIC = "The lava crust is firm.",--removed
+            OUT = "Looks delicate.",--removed
+            LOW = "The lava crust is reforming.",--removed
+            NORMAL = "Beautiful light!",--removed
         },
         CAVEIN_BOULDER =
         {
@@ -2235,8 +2268,8 @@ return{
 			WITHERED = "It has been shriveled by the heat.",
 			GENERIC = "It longs to be a spear.",
 			PICKED = "The small tree has been slain!",
-			DISEASED = "Disease festers within its soul.",
-			DISEASING = "It is weakening before mine eyes!",
+			DISEASED = "Disease festers within its soul.", --removed
+			DISEASING = "It is weakening before mine eyes!", --removed
 		},
    		SCARECROW =
    		{
@@ -2285,7 +2318,7 @@ return{
 		SILK = "Useful for binding, and for remembering victories past.",
 		SKELETON = "Rest easy in Valhalla.",
 		SCORCHED_SKELETON = "Rest easy, spirit. Your fight is over.",
-		SKULLCHEST = "Ah, that was a good battle.",
+		SKULLCHEST = "Ah, that was a good battle.", --removed
 		SMALLBIRD =
 		{
 			GENERIC = "You are not fierce yet, bird.",
@@ -2364,15 +2397,15 @@ return{
 		},
 		TELEPORTATO_BASE =
 		{
-			ACTIVE = "To Asgard!",
-			GENERIC = "A bridge to another world.",
-			LOCKED = "The bridge is unstable yet.",
-			PARTIAL = "The bridge is incomplete.",
+			ACTIVE = "To Asgard!", --single player
+			GENERIC = "A bridge to another world.", --single player
+			LOCKED = "The bridge is unstable yet.", --single player
+			PARTIAL = "The bridge is incomplete.", --single player
 		},
-		TELEPORTATO_BOX = "Perhaps it holds the secret to this land's Bifrost.",
-		TELEPORTATO_CRANK = "A sturdy crank.",
-		TELEPORTATO_POTATO = "No decency. It's not even metal meat.",
-		TELEPORTATO_RING = "It appears to be similar to the Bifrost.",
+		TELEPORTATO_BOX = "Perhaps it holds the secret to this land's Bifrost.", --single player
+		TELEPORTATO_CRANK = "A sturdy crank.", --single player
+		TELEPORTATO_POTATO = "No decency. It's not even metal meat.", --single player
+		TELEPORTATO_RING = "It appears to be similar to the Bifrost.", --single player
 		TELESTAFF = "Ride through the air and the sea!",
 		TENT =
 		{
@@ -2396,7 +2429,7 @@ return{
 		TRANSISTOR = "A marvel of science.",
 		TRAP = "A well constructed trap. Tonight we feast!",
 		TRAP_TEETH = "A treacherous trap.",
-		TRAP_TEETH_MAXWELL = "An excellent mace wasted, buried in the ground.",
+		TRAP_TEETH_MAXWELL = "An excellent mace wasted, buried in the ground.", --single player
 		TREASURECHEST =
 		{
 			GENERIC = "A place to store my helm and spear whilst I rest.",
@@ -2408,7 +2441,7 @@ return{
 			GENERIC = "What foul manner of chest is this?",
 			LOCKED = "I shall submit to the gods' judgment.",
 		},
-		TREECLUMP = "A dead end! I must stand and fight.",
+		TREECLUMP = "A dead end! I must stand and fight.", --removed
 
 		TRINKET_1 = "Toys do not interest a great warrior such as I.", --Melted Marbles
 		TRINKET_2 = "Accompaniment for my ballad of triumphs.", --Fake Kazoo
@@ -2782,7 +2815,7 @@ return{
 			OPEN = "Its maw welcomes me.",
 		},
 		WORMHOLE_LIMITED = "It is sickly and weak.",
-		ACCOMPLISHMENT_SHRINE = "My victories shall be remembered!",
+		ACCOMPLISHMENT_SHRINE = "My victories shall be remembered!", --single player
 		LIVINGTREE = "A tree of life, but it is not Yggdrasil.",
 		ICESTAFF = "A gift from Ullr!",
 		REVIVER = "Feel the passion inside!",
@@ -3130,8 +3163,8 @@ return{
 		BOAT_LEAK = "My vessel hath been wounded!",
         MAST = "T'will harness Njord's mighty breath.",
         SEASTACK = "I shall not dash mine ship upon thee!",
-        FISHINGNET = "I shall feed all my allies for a day!",
-        ANTCHOVIES = "I wrested them from the sea.",
+        FISHINGNET = "I shall feed all my allies for a day!", --unimplemented
+        ANTCHOVIES = "I wrested them from the sea.", --unimplemented
         STEERINGWHEEL = "Njord guide our journey.",
         ANCHOR = "Tis light as a feather thanks to my Viking's strength!",
         BOATPATCH = "If a Viking cares for her vessel, t'will do the same in return.",
@@ -3171,8 +3204,8 @@ return{
 			WITHERED = "It had not the strength to withstand this heat.",
 			GENERIC = "Hark, be wary! Tis fruit I see.",
 			PICKED = "It hath been stripped of its bounty.",
-			DISEASED = "The plague hath overwhelmed it completely!",
-            DISEASING = "A plague festers within it!",
+			DISEASED = "The plague hath overwhelmed it completely!", --unimplemented
+            DISEASING = "A plague festers within it!", --unimplemented
 			BURNING = "Tis consumed by flame!",
 		},
         DEAD_SEA_BONES = "Njord's depths hold many secrets.",
@@ -3218,10 +3251,10 @@ return{
 
         ICEBERG =
         {
-            GENERIC = "A trap left by the dastardly ice giants, no doubt.",
-            MELTED = "Twas no match for this great heat.",
+            GENERIC = "A trap left by the dastardly ice giants, no doubt.", --unimplemented
+            MELTED = "Twas no match for this great heat.", --unimplemented
         },
-        ICEBERG_MELTED = "Twas no match for this great heat.",
+        ICEBERG_MELTED = "Twas no match for this great heat.", --unimplemented
 
         MINIFLARE = "Never split thy party!",
 
@@ -3951,7 +3984,7 @@ return{
 		},
 		CARNIVALDECOR_FIGURE_KIT = "A box of mystery.",
 
-        CARNIVAL_BALL = "This may be useful for testing my companions' reflexes.",
+        CARNIVAL_BALL = "This may be useful for testing my companions' reflexes.", --unimplemented
 		CARNIVAL_SEEDPACKET = "'Tis food for birds, not Vikings.'",
 		CARNIVALFOOD_CORNTEA = "Nay.",
 
@@ -4068,6 +4101,53 @@ return{
             CONSTRUCTION2 = "The more I build, the stranger it appears.",
         },
 
+		-- Wanda
+        POCKETWATCH_HEAL = {
+			GENERIC = "A Viking warrior can tell the time by the position of the sun.",
+			RECHARGING = "'Tis merely biding its time.",
+		},
+
+        POCKETWATCH_REVIVE = {
+			GENERIC = "A Viking warrior can tell the time by the position of the sun.",
+			RECHARGING = "'Tis merely biding its time.",
+		},
+
+        POCKETWATCH_WARP = {
+			GENERIC = "A Viking warrior can tell the time by the position of the sun.",
+			RECHARGING = "'Tis merely biding its time.",
+		},
+
+        POCKETWATCH_RECALL = {
+			GENERIC = "A Viking warrior can tell the time by the position of the sun.",
+			RECHARGING = "'Tis merely biding its time.",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PORTAL = {
+			GENERIC = "A Viking warrior can tell the time by the position of the sun.",
+			RECHARGING = "'Tis merely biding its time.",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda unmarked",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda same shard",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda other shard",
+		},
+
+        POCKETWATCH_WEAPON = {
+			GENERIC = "Aha! 'Tis not a time-teller, but a weapon in disguise!",
+--fallback to speech_wilson.lua 			DEPLETED = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PARTS = "Be this the work of dark magic?",
+        POCKETWATCH_DISMANTLER = "The tools of a craftswoman.",
+
+        POCKETWATCH_PORTAL_ENTRANCE = 
+		{
+			GENERIC = "Charge!!",
+			DIFFERENTSHARD = "Charge!!",
+		},
+        POCKETWATCH_PORTAL_EXIT = "Be it up so high to test our landing prowess?",
+
         -- Waterlog
         WATERTREE_PILLAR = "By the gods, have I found Yggdrasil itself?",
         OCEANTREE = "It hath been hardened by the sea.",
@@ -4075,7 +4155,7 @@ return{
         WATERTREE_ROOT = "What is it you seek, yon root?",
 
         OCEANTREE_PILLAR = "Yon tree shall guard us from the treacherous sun.",
-
+        
         OCEANVINE = "Ropes from the branches of Yggdrasil.",
         FIG = "Bah! Foul non-meat!",
         FIG_COOKED = "Roasted fig flesh.",

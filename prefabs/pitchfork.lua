@@ -4,7 +4,6 @@ local assets =
     --Asset("ANIM", "anim/goldenpitchfork.zip"),
     Asset("ANIM", "anim/swap_pitchfork.zip"),
     --Asset("ANIM", "anim/swap_goldenpitchfork.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local prefabs =

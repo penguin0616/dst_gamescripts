@@ -100,7 +100,12 @@ local function GetFishingAction(doer, fishing_target)
 	return nil
 end
 
--- SCENE, USEITEM, POINT, EQUIPPED, INVENTORY
+-- SCENE		using an object in the world
+-- USEITEM		using an inventory item on an object in the world
+-- POINT		using an inventory item on a point in the world
+-- EQUIPPED		using an equiped item on yourself or a target object in the world
+-- INVENTORY	using an inventory item
+
 local COMPONENT_ACTIONS =
 {
     SCENE = --args: inst, doer, actions, right
@@ -1025,6 +1030,14 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+        pocketwatch = function(inst, doer, target, actions)
+            if inst:HasTag("pocketwatch_inactive") and doer:HasTag("pocketwatchcaster") and inst.pocketwatch_CanTarget ~= nil and inst:pocketwatch_CanTarget(doer, target) then
+				if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()) or inst:HasTag("pocketwatch_mountedcast") then
+	                table.insert(actions, ACTIONS.CAST_POCKETWATCH)
+				end
+            end
+        end,
+
         preservative = function(inst, doer, target, actions, right)
 			if right and target.replica.health == nil
 				and (target:HasTag("fresh") or target:HasTag("stale") or target:HasTag("spoiled"))
@@ -1356,6 +1369,12 @@ local COMPONENT_ACTIONS =
                table.insert(actions, ACTIONS.BEDAZZLE) 
             end
         end,
+
+        pocketwatch_dismantler = function (inst, doer, target, actions)
+            if doer:HasTag("clockmaker") and target:HasTag("pocketwatch") then
+                table.insert(actions, ACTIONS.DISMANTLE_POCKETWATCH)
+            end
+        end,
     },
 
     POINT = --args: inst, doer, pos, actions, right
@@ -1611,7 +1630,7 @@ local COMPONENT_ACTIONS =
         spellcaster = function(inst, doer, target, actions, right)
             if right and not target:HasTag("nomagic") and (
                     inst:HasTag("castontargets") or
-                    (inst:HasTag("castonrecipes") and AllRecipes[target.prefab] ~= nil and not AllRecipes[target.prefab].no_deconstruction) or
+                    (inst:HasTag("castonrecipes") and AllRecipes[target.prefab] ~= nil and not FunctionOrValue(AllRecipes[target.prefab].no_deconstruction, target)) or
                     (target:HasTag("locomotor") and (
                         inst:HasTag("castonlocomotors") or
                         (inst:HasTag("castonlocomotorspvp") and (target == doer or TheNet:GetPVPEnabled() or not (target:HasTag("player") and doer:HasTag("player"))))
@@ -1859,6 +1878,14 @@ local COMPONENT_ACTIONS =
                 if rod ~= nil and rod.replica.container ~= nil and rod.replica.container:IsOpenedBy(doer) and rod:HasTag("accepts_oceanfishingtackle") and rod.replica.container:CanTakeItemInSlot(inst) then
                     table.insert(actions, ACTIONS.CHANGE_TACKLE)
                 end
+            end
+        end,
+
+        pocketwatch = function(inst, doer, actions)
+            if inst:HasTag("pocketwatch_inactive") and doer:HasTag("pocketwatchcaster") and inst:HasTag("pocketwatch_castfrominventory") then
+				if not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()) or inst:HasTag("pocketwatch_mountedcast") then
+	                table.insert(actions, ACTIONS.CAST_POCKETWATCH)
+				end
             end
         end,
 

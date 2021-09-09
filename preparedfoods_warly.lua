@@ -13,7 +13,7 @@ local foods =
         cooktime = 2,
 		oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_SWAP_HEALTH_AND_SANITY,
         oneatenfn = function(inst, eater)
-            if eater.components.sanity ~= nil and eater.components.health ~= nil then
+            if eater.components.sanity ~= nil and eater.components.health ~= nil and eater.components.oldager == nil then
                 local sanity_percent = eater.components.sanity:GetPercent()
                 local health_percent = eater.components.health:GetPercent()
                 --Use DoDelta so that we don't bypass invincibility

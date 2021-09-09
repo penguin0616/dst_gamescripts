@@ -1131,6 +1131,20 @@ MISC_ITEMS =
 		output_items = {  "farm_hoe_rustic", "wateringcan_rustic", "seedpouch_rustic", },
 		release_group = 120,
 	},
+	pack_character_wanda =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 3,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_character_wanda.xml",
+		display_tex = "character_wanda.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_none", "wanda_formal", "body_wanda_formal", "hand_wanda_formal", "feet_wanda_formal", },
+		output_items = {  "wanda_none", "wanda_formal", "body_wanda_formal", "hand_wanda_formal", "feet_wanda_formal", },
+		release_group = 123,
+	},
 	pack_character_wormwood =
 	{
 		type = "purchase",
@@ -2709,6 +2723,22 @@ MISC_ITEMS =
 		output_items = {  "wortox_none", "wilson_victorian", "wilson_beard_victorian", "body_wilson_victorian", "feet_wilson_victorian", "hand_wilson_victorian", "willow_formalp", "body_willow_formalp", "feet_formal_stilettop_black_scribble", "wathgrithr_nature", "body_wathgrithr_nature", "hand_wathgrithr_nature", "legs_wathgrithr_nature", "feet_wathgrithr_nature", "webber_wrestler", "webber_beard_wrestler", "body_webber_wrestler", "hand_webber_wrestler", "spear_ragged", "backpack_babybeef", "body_pj_red_redbird", "legs_pj_red_redbird", "bedroll_furry_quilt_red_redbird", },
 		release_group = 103,
 	},
+	pack_starter_2021 =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1710240,
+		rail_dlc_id = 2001708,
+		display_order = 0,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_starter_2021.xml",
+		display_tex = "starter_2021.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_none", "wilson_ice", "willow_victorian", "walter_formal", "winona_rosep", "backpack_splumonkey", "torch_pronged", "body_pj_orange_honey", "legs_pj_orange_honey", "bedroll_furry_quilt_orange_honey", },
+		output_items = {  "wanda_none", "wilson_ice", "wilson_beard_ice", "body_wilson_ice", "feet_wilson_ice", "hand_wilson_ice", "legs_wilson_ice", "willow_victorian", "body_willow_victorian", "hand_willow_victorian", "feet_willow_victorian", "walter_formal", "body_walter_formal", "feet_walter_formal", "legs_walter_formal", "walterhat_formal", "winona_rosep", "body_winona_rosep", "backpack_splumonkey", "torch_pronged", "body_pj_orange_honey", "legs_pj_orange_honey", "bedroll_furry_quilt_orange_honey", },
+		release_group = 123,
+	},
 	pack_sw_gift =
 	{
 		type = "purchase",
@@ -3094,6 +3124,74 @@ MISC_ITEMS =
 		display_items = {  "walter_survivor", "body_walter_survivor", "feet_walter_survivor", "walterhat_survivor", },
 		output_items = {  "walter_survivor", "body_walter_survivor", "feet_walter_survivor", "walterhat_survivor", },
 		release_group = 99,
+	},
+	pack_wanda_deluxe =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1710241,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_wanda_deluxe.xml",
+		display_tex = "wanda_deluxe.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_none", "wanda_formal", "wanda_steampunk", "wanda_shadow", },
+		output_items = {  "wanda_none", "wanda_formal", "body_wanda_formal", "feet_wanda_formal", "hand_wanda_formal", "wanda_steampunk", "body_wanda_steampunk", "hand_wanda_steampunk", "legs_wanda_steampunk", "wanda_shadow", "body_wanda_shadow", "hand_wanda_shadow", "legs_wanda_shadow", },
+		release_group = 123,
+	},
+	pack_wanda_deluxealt =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 2,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_wanda_deluxealt.xml",
+		display_tex = "wanda_deluxealt.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_formal", "wanda_steampunk", "wanda_shadow", },
+		output_items = {  "wanda_formal", "body_wanda_formal", "feet_wanda_formal", "hand_wanda_formal", "wanda_steampunk", "body_wanda_steampunk", "hand_wanda_steampunk", "legs_wanda_steampunk", "wanda_shadow", "body_wanda_shadow", "hand_wanda_shadow", "legs_wanda_shadow", },
+		release_group = 123,
+	},
+	pack_wanda_formal =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 6,
+		build_name_override = "wanda_formal",
+		display_atlas = "bigportraits/wanda_formal.xml",
+		display_tex = "wanda_formal_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_formal", "body_wanda_formal", "feet_wanda_formal", "hand_wanda_formal", },
+		output_items = {  "wanda_formal", "body_wanda_formal", "feet_wanda_formal", "hand_wanda_formal", },
+		release_group = 123,
+	},
+	pack_wanda_shadow =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 4,
+		build_name_override = "wanda_shadow",
+		display_atlas = "bigportraits/wanda_shadow.xml",
+		display_tex = "wanda_shadow_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_shadow", "body_wanda_shadow", "hand_wanda_shadow", "legs_wanda_shadow", },
+		output_items = {  "wanda_shadow", "body_wanda_shadow", "hand_wanda_shadow", "legs_wanda_shadow", },
+		release_group = 123,
+	},
+	pack_wanda_steampunk =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 4,
+		build_name_override = "wanda_steampunk",
+		display_atlas = "bigportraits/wanda_steampunk.xml",
+		display_tex = "wanda_steampunk_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wanda_steampunk", "body_wanda_steampunk", "hand_wanda_steampunk", "legs_wanda_steampunk", },
+		output_items = {  "wanda_steampunk", "body_wanda_steampunk", "hand_wanda_steampunk", "legs_wanda_steampunk", },
+		release_group = 123,
 	},
 	pack_warly_chef =
 	{
@@ -4929,6 +5027,13 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 32,
 	},
+	playerportrait_bg_steeringwheelnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 123,
+	},
 	playerportrait_bg_suspisciousdirtpile =
 	{
 		type = "playerportrait",
@@ -6117,6 +6222,13 @@ MISC_ITEMS =
 		skin_tags = { "CRYSTAL", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 69,
+	},
+	profileflair_steeringwheel_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 123,
 	},
 	profileflair_tallbird_eye =
 	{

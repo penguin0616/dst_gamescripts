@@ -101,6 +101,7 @@ ITEM_DISPLAY_BLACKLIST =
 	stagehand_cawnival = true,
 	stagehand_dragonfly = true,
 	stagehand_vintage = true,
+	steeringwheel_item_nautical = true,
 	wall_moonrock_victorianitem = true,
 	wall_ruins_thuleciteitem = true,
 	wall_ruins_victorianitem = true,

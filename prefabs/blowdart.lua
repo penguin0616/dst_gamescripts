@@ -3,7 +3,6 @@ local assets =
     Asset("ANIM", "anim/blow_dart.zip"),
     Asset("ANIM", "anim/swap_blowdart.zip"),
     Asset("ANIM", "anim/swap_blowdart_pipe.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local prefabs =

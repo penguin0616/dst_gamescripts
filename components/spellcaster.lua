@@ -197,7 +197,7 @@ function SpellCaster:CanCast(doer, target, pos)
         return false
     end
     return self.canuseontargets and (
-            (self.canonlyuseonrecipes and AllRecipes[target.prefab] ~= nil and not AllRecipes[target.prefab].no_deconstruction) or
+            (self.canonlyuseonrecipes and AllRecipes[target.prefab] ~= nil and not FunctionOrValue(AllRecipes[target.prefab].no_deconstruction, target)) or
             (target.components.locomotor ~= nil and (
                 (self.canonlyuseonlocomotors and not self.canonlyuseonlocomotorspvp) or
                 (self.canonlyuseonlocomotorspvp and (target == doer or TheNet:GetPVPEnabled() or not (target:HasTag("player") and doer:HasTag("player"))))

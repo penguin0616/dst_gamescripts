@@ -32,7 +32,7 @@ function CharacterSelect:_BuildCharactersList(additionalCharacters)
 
     local characters = {}
     for _,hero in ipairs(active_characters) do
-        if TheNet:IsOnlineMode() or not IsRestrictedCharacter( hero ) then
+        if true or TheNet:IsOnlineMode() or not IsRestrictedCharacter( hero ) then
             table.insert(characters, hero)
         end
     end

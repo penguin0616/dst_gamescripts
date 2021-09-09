@@ -47,7 +47,7 @@ local function MakeFx(t)
 
         inst.AnimState:SetBank(t.bank)
         inst.AnimState:SetBuild(t.build)
-        inst.AnimState:PlayAnimation(t.anim)
+        inst.AnimState:PlayAnimation(FunctionOrValue(t.anim)) -- THIS IS A CLIENT SIDE FUNCTION
         if t.tint ~= nil then
             inst.AnimState:SetMultColour(t.tint.x, t.tint.y, t.tint.z, t.tintalpha or 1)
         elseif t.tintalpha ~= nil then

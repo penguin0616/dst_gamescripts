@@ -391,26 +391,29 @@ function ItemTile:SetPercent(percent)
 end
 
 function ItemTile:SetChargePercent(percent)
+	local prev_precent = self.rechargepct
     self.rechargepct = percent
-    if percent < 1 then
-        self.recharge:GetAnimState():SetPercent("recharge", percent)
-        if not self.rechargeframe.shown then
-            self.rechargeframe:Show()
-        end
-        if percent >= 0.9999 then
-            self:StopUpdating()
-        elseif self.rechargetime < math.huge then
-            self:StartUpdating()
-        end
-    else
-        if not self.recharge:GetAnimState():IsCurrentAnimation("frame_pst") then
-            self.recharge:GetAnimState():PlayAnimation("frame_pst")
-        end
-        if self.rechargeframe.shown then
-            self.rechargeframe:Hide()
-        end
-        self:StopUpdating()
-    end
+	if self.recharge.shown then
+		if percent < 1 then
+			self.recharge:GetAnimState():SetPercent("recharge", percent)
+			if not self.rechargeframe.shown then
+				self.rechargeframe:Show()
+			end
+			if percent >= 0.9999 then
+				self:StopUpdating()
+			elseif self.rechargetime < math.huge then
+				self:StartUpdating()
+			end
+		else
+			if prev_precent < 1 and not self.recharge:GetAnimState():IsCurrentAnimation("frame_pst") then
+				self.recharge:GetAnimState():PlayAnimation("frame_pst")
+			end
+			if self.rechargeframe.shown then
+				self.rechargeframe:Hide()
+			end
+			self:StopUpdating()
+		end
+	end
 end
 
 function ItemTile:SetChargeTime(t)
@@ -450,8 +453,9 @@ function ItemTile:StartDrag()
         end
         if self.recharge ~= nil then
             self.recharge:Hide()
-            self.rechargeframe:Hide()
-        end
+			self.rechargeframe:Hide()
+			self:StopUpdating()
+		end
         self.image:SetClickable(false)
     end
 end

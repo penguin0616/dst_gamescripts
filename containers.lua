@@ -984,6 +984,33 @@ function params.alterguardianhat.itemtestfn(container, item, slot)
 end
 
 --------------------------------------------------------------------------
+--[[ pocketwatch ]]
+--------------------------------------------------------------------------
+
+params.pocketwatch =
+{
+    widget =
+    {
+        slotpos = {},
+        animbank = "ui_tacklecontainer_3x2",
+        animbuild = "ui_tacklecontainer_3x2",
+        pos = Vector3(-850, 100, 0),
+        side_align_tip = 100,
+    },
+    type = "hand_inv",
+}
+
+for y = 1, 0, -1 do
+    for x = 0, 2 do
+        table.insert(params.pocketwatch.widget.slotpos, Vector3(80 * x - 80 * 2 + 80, 80 * y - 80 * 2 + 120, 0))
+    end
+end
+
+function params.pocketwatch.itemtestfn(container, item, slot)
+	return item:HasTag("pocketwatchpart")
+end
+
+--------------------------------------------------------------------------
 --[[ quagmire_pot ]]
 --------------------------------------------------------------------------
 

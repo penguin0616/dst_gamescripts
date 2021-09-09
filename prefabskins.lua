@@ -101,6 +101,7 @@ PREFAB_SKINS = {
 		"backpack_rabbit",
 		"backpack_smallbird",
 		"backpack_spider",
+		"backpack_splumonkey",
 	},
 	batbat =
 	{
@@ -110,6 +111,7 @@ PREFAB_SKINS = {
 	{
 		"bedroll_furry_quilt_blue_frost",
 		"bedroll_furry_quilt_green_hunters",
+		"bedroll_furry_quilt_orange_honey",
 		"bedroll_furry_quilt_red_redbird",
 		"bedroll_furry_quilt_white_ivory",
 	},
@@ -719,6 +721,14 @@ PREFAB_SKINS = {
 		"stagehand_dragonfly",
 		"stagehand_vintage",
 	},
+	steeringwheel =
+	{
+		"steeringwheel_nautical",
+	},
+	steeringwheel_item =
+	{
+		"steeringwheel_item_nautical",
+	},
 	strawhat =
 	{
 		"strawhat_bonnet",
@@ -768,6 +778,7 @@ PREFAB_SKINS = {
 	{
 		"torch_carrat",
 		"torch_carrat_alt",
+		"torch_pronged",
 		"torch_rag",
 		"torch_shadow",
 		"torch_shadow_alt",
@@ -856,6 +867,13 @@ PREFAB_SKINS = {
 		"walterhat_survivor",
 		"walterhat_ventriloquist",
 		"walterhat_victorian",
+	},
+	wanda =
+	{
+		"wanda_formal",
+		"wanda_none",
+		"wanda_shadow",
+		"wanda_steampunk",
 	},
 	wardrobe =
 	{

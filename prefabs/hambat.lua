@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/ham_bat.zip"),
     Asset("ANIM", "anim/swap_ham_bat.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function UpdateDamage(inst)

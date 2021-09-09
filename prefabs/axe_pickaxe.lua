@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/multitool_axe_pickaxe.zip"),
     Asset("ANIM", "anim/swap_multitool_axe_pickaxe.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function onequip(inst, owner)

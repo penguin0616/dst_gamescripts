@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/boomerang.zip"),
     Asset("ANIM", "anim/swap_boomerang.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function OnFinished(inst)

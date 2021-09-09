@@ -267,8 +267,10 @@ function Health:StopRegen()
 end
 
 function Health:SetPenalty(penalty)
-    --Penalty should never be less than 0% or ever above 75%.
-    self.penalty = math.clamp(penalty, 0, TUNING.MAXIMUM_HEALTH_PENALTY)
+	if not self.disable_penalty then
+		--Penalty should never be less than 0% or ever above 75%.
+		self.penalty = math.clamp(penalty, 0, TUNING.MAXIMUM_HEALTH_PENALTY)
+	end
 end
 
 function Health:DeltaPenalty(delta)
@@ -392,7 +394,7 @@ function Health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, i
     self.inst:PushEvent("healthdelta", { oldpercent = old_percent, newpercent = self:GetPercent(), overtime = overtime, cause = cause, afflicter = afflicter, amount = amount })
 
     if self.ondelta ~= nil then
-        self.ondelta(self.inst, old_percent, self:GetPercent())
+        self.ondelta(self.inst, old_percent, self:GetPercent(), overtime, cause, afflicter, amount)
     end
     return amount
 end

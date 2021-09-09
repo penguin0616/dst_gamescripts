@@ -10,6 +10,11 @@ local function FinalOffset3(inst)
     inst.AnimState:SetFinalOffset(3)
 end
 
+local function FinalOffsetNegative1(inst)
+    inst.AnimState:SetFinalOffset(-1)
+end
+
+
 local function GroundOrientation(inst)
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
@@ -221,6 +226,17 @@ local fx =
         sound = "dontstarve/common/deathpoof",
         tint = Vector3(0, 0, 0),
         tintalpha = .5,
+        fn = function(inst)
+            inst.AnimState:SetFinalOffset(2)
+        end,
+    },
+    {
+        name = "shadow_puff_solid",
+        bank = "sand_puff",
+        build = "sand_puff",
+        anim = "forage_out",
+        sound = "dontstarve/common/deathpoof",
+        tint = Vector3(0, 0, 0),
         fn = function(inst)
             inst.AnimState:SetFinalOffset(2)
         end,
@@ -2061,6 +2077,122 @@ local fx =
         anim = "meteor_pst",
         sound = "turnoftides/common/together/moon_glass/mine",
     },
+
+    {
+        name = "oldager_become_younger_front_fx",
+        bank = "wanda_time_fx",
+        build = "wanda_time_fx",
+        anim = "younger_top",
+        nofaced = true,
+        fn = FinalOffset1,
+    },
+    {
+        name = "oldager_become_younger_back_fx",
+        bank = "wanda_time_fx",
+        build = "wanda_time_fx",
+        anim = "younger_bottom",
+        nofaced = true,
+        fn = FinalOffsetNegative1,
+    },
+    {
+        name = "oldager_become_older_fx",
+        bank = "wanda_time_fx",
+        build = "wanda_time_fx",
+        anim = "older",
+        nofaced = true,
+        fn = FinalOffset1,
+    },
+
+    {
+        name = "oldager_become_younger_front_fx_mount",
+        bank = "wanda_time_fx_mount",
+        build = "wanda_time_fx_mount",
+        anim = "younger_top",
+        nofaced = true,
+        fn = FinalOffset1,
+    },
+    {
+        name = "oldager_become_younger_back_fx_mount",
+        bank = "wanda_time_fx_mount",
+        build = "wanda_time_fx_mount",
+        anim = "younger_bottom",
+        nofaced = true,
+        fn = FinalOffsetNegative1,
+    },
+    {
+        name = "oldager_become_older_fx_mount",
+        bank = "wanda_time_fx_mount",
+        build = "wanda_time_fx_mount",
+        anim = "older",
+        nofaced = true,
+        fn = FinalOffset1,
+    },
+
+    {
+        name = "wanda_attack_pocketwatch_old_fx",
+        bank = "pocketwatch_weapon_fx",
+        build = "pocketwatch_weapon_fx",
+        anim = function() return "idle_big_"..math.random(3) end,
+        sound = "wanda2/characters/wanda/watch/weapon/shadow_hit_old",
+        fn = FinalOffset1,
+    },
+    {
+        name = "wanda_attack_pocketwatch_normal_fx",
+        bank = "pocketwatch_weapon_fx",
+        build = "pocketwatch_weapon_fx",
+        anim = function() return "idle_med_"..math.random(3) end,
+        sound = "wanda2/characters/wanda/watch/weapon/nightmare_FX",
+        fn = FinalOffset1,
+    },
+    {
+        name = "wanda_attack_shadowweapon_old_fx",
+        bank = "pocketwatch_weapon_fx",
+        build = "pocketwatch_weapon_fx",
+        anim = function() return "idle_big_"..math.random(3) end,
+        sound = "wanda2/characters/wanda/watch/weapon/shadow_hit",
+        fn = function(inst)
+			inst.AnimState:Hide("white")
+			inst.AnimState:SetFinalOffset(1)
+		end,
+    },
+    {
+        name = "wanda_attack_shadowweapon_normal_fx",
+        bank = "pocketwatch_weapon_fx",
+        build = "pocketwatch_weapon_fx",
+        anim = function() return "idle_med_"..math.random(3) end,
+        sound = "wanda2/characters/wanda/watch/weapon/nightmare_FX",
+        fn = FinalOffset1,
+    },
+
+	{
+        name = "pocketwatch_heal_fx",
+        bank = "pocketwatch_cast_fx",
+        build = "pocketwatch_casting_fx",
+        anim = "pocketwatch_heal_fx", --NOTE: 16 blank frames at the start for audio syncing
+        --sound = "dontstarve/common/lava_arena/portal_player",
+        fn = FinalOffset1,
+        bloom = true,
+    },
+	{
+        name = "pocketwatch_heal_fx_mount",
+        bank = "pocketwatch_casting_fx_mount",
+        build = "pocketwatch_casting_fx_mount",
+        anim = "pocketwatch_heal_fx", --NOTE: 16 blank frames at the start for audio syncing
+        --sound = "dontstarve/common/lava_arena/portal_player",
+        fn = FinalOffset1,
+        bloom = true,
+    },
+
+	{
+        name = "pocketwatch_ground_fx",
+        bank = "pocketwatch_cast_fx",
+        build = "pocketwatch_casting_fx",
+        anim = "pocketwatch_ground", --NOTE: 16 blank frames at the start for audio syncing
+        --sound = "dontstarve/common/lava_arena/portal_player",
+        fn = GroundOrientation,
+        bloom = true,
+    },
+
     {
         name = "spider_mutate_fx",
         bank = "mutate_fx",

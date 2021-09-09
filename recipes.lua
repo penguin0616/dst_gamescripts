@@ -427,6 +427,20 @@ Recipe("slingshotammo_freeze",	  {Ingredient("moonrocknugget", 1), Ingredient("b
 Recipe("slingshotammo_slow",	  {Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},	   CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.MAGIC_THREE, {no_deconstruction = true}, nil, nil, 10, "pebblemaker")
 Recipe("slingshotammo_thulecite", {Ingredient("thulecite_pieces", 1), Ingredient("nightmarefuel", 1)}, CUSTOM_RECIPETABS.SLINGSHOTAMMO, TECH.ANCIENT_TWO, {no_deconstruction = true}, nil, true, 10, "pebblemaker")
 
+-- CLOCKMAKER --
+local function pocketwatch_no_deconstruction_fn(inst) return not inst:HasTag("pocketwatch_inactive") end
+
+Recipe("pocketwatch_dismantler",	{Ingredient("goldnugget", 1), Ingredient("flint", 1), Ingredient("twigs", 3)},						CUSTOM_RECIPETABS.CLOCKMAKER, TECH.NONE,		{no_deconstruction = pocketwatch_no_deconstruction_fn}, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_parts",			{Ingredient("pocketwatch_dismantler", 0), Ingredient("thulecite_pieces", 8), Ingredient("nightmarefuel", 2)},				CUSTOM_RECIPETABS.CLOCKMAKER, TECH.NONE,		nil, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_heal",			{Ingredient("pocketwatch_parts", 1), Ingredient("marble", 2), Ingredient("redgem", 1)},				CUSTOM_RECIPETABS.CLOCKMAKER, TECH.NONE,		{no_deconstruction = pocketwatch_no_deconstruction_fn}, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_revive",		{Ingredient("pocketwatch_parts", 1), Ingredient("livinglog", 2), Ingredient("boneshard", 4)},		CUSTOM_RECIPETABS.CLOCKMAKER, TECH.NONE,		{no_deconstruction = pocketwatch_no_deconstruction_fn}, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_warp",			{Ingredient("pocketwatch_parts", 1), Ingredient("goldnugget", 2)},									CUSTOM_RECIPETABS.CLOCKMAKER, TECH.NONE,		{no_deconstruction = pocketwatch_no_deconstruction_fn}, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_recall",		{Ingredient("pocketwatch_parts", 2), Ingredient("goldnugget", 2), Ingredient("walrus_tusk", 1)},	CUSTOM_RECIPETABS.CLOCKMAKER, TECH.MAGIC_TWO,	{no_deconstruction = pocketwatch_no_deconstruction_fn}, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_portal",		{Ingredient("pocketwatch_recall", 1, nil, true), Ingredient("purplegem", 1)},						CUSTOM_RECIPETABS.CLOCKMAKER, TECH.MAGIC_TWO,	{no_deconstruction = pocketwatch_no_deconstruction_fn, actionstr = "SOCKET"}, nil, nil, nil, "clockmaker")
+Recipe("pocketwatch_weapon",		{Ingredient("pocketwatch_parts", 3), Ingredient("marble", 4), Ingredient("nightmarefuel", 8)},		CUSTOM_RECIPETABS.CLOCKMAKER, TECH.MAGIC_THREE, nil, nil, nil, nil, "clockmaker")
+
+
+
 ----CARTOGRAPHY----
 Recipe("mapscroll", {Ingredient("featherpencil", 1), Ingredient("papyrus", 1)}, RECIPETABS.CARTOGRAPHY, TECH.CARTOGRAPHY_TWO, nil, nil, true, nil, nil, nil, function() return TheWorld.worldprefab == "forest" and "mapscroll.tex" or ("mapscroll_"..TheWorld.worldprefab..".tex") end)
 

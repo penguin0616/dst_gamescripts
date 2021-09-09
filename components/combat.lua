@@ -503,7 +503,7 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli)
         if attacker ~= nil then
             attacker:PushEvent("onhitother", { target = self.inst, damage = damage, damageresolved = damageresolved, stimuli = stimuli, weapon = weapon, redirected = damageredirecttarget })
             if attacker.components.combat ~= nil and attacker.components.combat.onhitotherfn ~= nil then
-                attacker.components.combat.onhitotherfn(attacker, self.inst, damage, stimuli)
+                attacker.components.combat.onhitotherfn(attacker, self.inst, damage, stimuli, weapon, damageresolved)
             end
         end
     else
@@ -707,6 +707,7 @@ function Combat:CalcDamage(target, weapon, multiplier)
     local bonus = self.damagebonus --not affected by multipliers
     local playermultiplier = target ~= nil and target:HasTag("player")
     local pvpmultiplier = playermultiplier and self.inst:HasTag("player") and self.pvp_damagemod or 1
+	local mount = nil
 
     --NOTE: playermultiplier is for damage towards players
     --      generally only applies for NPCs attacking players
@@ -720,7 +721,7 @@ function Combat:CalcDamage(target, weapon, multiplier)
         playermultiplier = playermultiplier and self.playerdamagepercent or 1
 
         if self.inst.components.rider ~= nil and self.inst.components.rider:IsRiding() then
-            local mount = self.inst.components.rider:GetMount()
+            mount = self.inst.components.rider:GetMount()
             if mount ~= nil and mount.components.combat ~= nil then
                 basedamage = mount.components.combat.defaultdamage
                 basemultiplier = mount.components.combat.damagemultiplier
@@ -741,7 +742,7 @@ function Combat:CalcDamage(target, weapon, multiplier)
         * (multiplier or 1)
         * playermultiplier
         * pvpmultiplier
-		* (self.customdamagemultfn ~= nil and self.customdamagemultfn(self.inst, target, weapon, multiplier) or 1)
+		* (self.customdamagemultfn ~= nil and self.customdamagemultfn(self.inst, target, weapon, multiplier, mount) or 1)
         + (bonus or 0)
 end
 

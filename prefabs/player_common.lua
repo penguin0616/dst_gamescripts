@@ -846,6 +846,13 @@ local function OnSave(inst, data)
         data.wormlight = inst.wormlight:GetSaveRecord()
     end
 
+	if inst.last_death_position ~= nil then
+		data.death_posx = inst.last_death_position.x
+		data.death_posy = inst.last_death_position.y
+		data.death_posz = inst.last_death_position.z
+		data.death_shardid = inst.last_death_shardid
+	end
+
 	if IsConsole() then
 		TheGameService:NotifyProgress("flush",inst.components.age:GetDisplayAgeInDays(), inst.userid)
 		TheGameService:NotifyProgress("dayssaved",inst.components.age:GetDisplayAgeInDays(), inst.userid)
@@ -871,9 +878,13 @@ local function OnLoad(inst, data)
     inst.OnNewSpawn = nil
     inst._OnNewSpawn = nil
     inst.starting_inventory = nil
-
     if data ~= nil then
         if data.is_ghost then
+			if data.death_posx ~= nil and data.death_posy ~= nil and data.death_posz ~= nil then
+				inst.last_death_position = Vector3(data.death_posx, data.death_posy, data.death_posz)
+				inst.last_death_shardid = data.death_shardid
+			end
+
             ex_fns.OnMakePlayerGhost(inst, { loading = true })
         end
 
@@ -1325,6 +1336,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_actions_feast_eat.zip"),
         Asset("ANIM", "anim/player_actions_farming.zip"),
         Asset("ANIM", "anim/player_actions_cowbell.zip"),
+        Asset("ANIM", "anim/player_actions_reversedeath.zip"),
 
         Asset("ANIM", "anim/player_boat.zip"),
         Asset("ANIM", "anim/player_boat_plank.zip"),
@@ -1356,6 +1368,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_superjump.zip"),
         Asset("ANIM", "anim/player_attack_leap.zip"),
         Asset("ANIM", "anim/player_book_attack.zip"),
+        Asset("ANIM", "anim/player_pocketwatch_portal.zip"),
 
         Asset("ANIM", "anim/player_parryblock.zip"),
         Asset("ANIM", "anim/player_attack_prop.zip"),
@@ -1454,6 +1467,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         "attune_in_fx",
         "attune_ghost_in_fx",
         "staff_castinglight",
+		"staff_castinglight_small",
         "staffcastfx",
         "staffcastfx_mount",
         "book_fx",
@@ -1954,6 +1968,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         if inst.starting_inventory == nil then
             inst.starting_inventory = starting_inventory
         end
+
+		inst.skeleton_prefab = "skeleton_player"
 
         if master_postinit ~= nil then
             master_postinit(inst)

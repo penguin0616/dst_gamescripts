@@ -353,7 +353,8 @@ DST_CHARACTERLIST =
     "wortox",
     "wormwood",
     "wurt",
-    "walter"
+    "walter",
+    "wanda",
 }
 
 CHARACTER_VIDEOS =
@@ -375,6 +376,7 @@ CHARACTER_VIDEOS =
     warly = {"https://bit.ly/39vp0tG"},
     wurt = {"https://bit.ly/2QVJup1"},
 	walter = {"https://bit.ly/31Ajrpj"},
+--	wanda = {},
 }
 
 
@@ -498,6 +500,7 @@ CHARACTER_GENDERS =
         "wathgrithr",
         "winona",
         "wurt",
+        "wanda",
     },
     MALE =
     {
@@ -921,7 +924,7 @@ FE_MUSIC =
     --"dontstarve/music/music_moonstorm_FE"
     --"dontstarve/music/music_FE_webber"
     --"dontstarve/music/music_FE"
-    "dontstarve/music/music_FE_waterlogged"
+    "dontstarve/music/music_FE_wanda"
 
 ---------------------------------------------------------
 NUM_HALLOWEENCANDY = 14
@@ -1225,7 +1228,8 @@ CUSTOM_RECIPETABS =
     SPIDERCRAFT   = { str = "SPIDERCRAFT",      sort = 999, icon = "tab_spidercraft.tex",   owner_tag = "spiderwhisperer", icon_atlas = "images/hud2.xml" },
     NATURE        = { str = "NATURE",			sort = 999, icon = "tab_nature.tex",        owner_tag = "plantkin"     },
 	SLINGSHOTAMMO =	{ str = "SLINGSHOTAMMO",	sort = 999, icon = "tab_slingshot.tex",	    owner_tag = "pebblemaker"  },
-	BALLOONOMANCY = { str = "BALLOONOMANCY",	sort = 999, icon = "tab_balloonomancy.tex",	owner_tag = "balloonomancer", icon_atlas = "images/hud2.xml" },
+	BALLOONOMANCY = { str = "BALLOONOMANCY",	sort = 999, icon = "tab_balloonomancy.tex",	owner_tag = "balloonomancer",	icon_atlas = "images/hud2.xml" },
+	CLOCKMAKER =	{ str = "CLOCKMAKER",		sort = 999, icon = "tab_clockmaker.tex",	owner_tag = "clockmaker",		icon_atlas = "images/hud2.xml"},
 }
 
 QUAGMIRE_RECIPETABS =
@@ -1454,6 +1458,7 @@ CHARACTER_COLOURS =
     wormwood     = WEBCOLOURS.RED, --VITO do something here
     wurt         = WEBCOLOURS.RED, --VITO do something here
     walter       = WEBCOLOURS.RED, --VITO do something here
+    wanda        = WEBCOLOURS.RED, --VITO do something here
     --
     default      = WEBCOLOURS.THISTLE,
 }
@@ -1721,6 +1726,7 @@ CHARACTER_INGREDIENT =
     MAX_HEALTH = "half_health",
     SANITY = "decrease_sanity",
     MAX_SANITY = "half_sanity",
+	OLDAGE = "decrease_oldage",
 }
 
 --Character ingredient amounts must be multiples of 5
@@ -2237,6 +2243,7 @@ CHARACTER_BUTTON_OFFSET =
     winona = -49,
     wurt = -45,
     webber = -45,
+    wanda = -51,
 
     default = -47,
 }
@@ -2269,6 +2276,8 @@ SKIN_TYPES_THAT_RECEIVE_CLOTHING =
 	"stage_2",
     "stage_3",
     "stage_4",
+	"young_skin",
+	"old_skin",
 	"powerup",
 	"NO_BASE",
 }

@@ -115,6 +115,7 @@ local MainSounds =
 	"wx78.fsb",
 	"wurt.fsb",
 	"walter.fsb",
+	--"wanda.fsb",
 
 	"wes.fev",
     "wes.fsb",
@@ -139,6 +140,12 @@ local MainSounds =
 	"waterlogged1.fev",
     "waterlogged1.fsb",
 	"waterlogged1_amb.fsb",
+
+	"wanda2.fev",
+    "wanda2.fsb",	
+
+    "wanda1.fev",
+    "wanda1.fsb",
 }
 
 function PreloadSoundList(list)

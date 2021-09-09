@@ -591,19 +591,12 @@ local function onperish(inst)
     end
 end
 
-function MakeFeedableSmallLivestockPristine(inst)
+function MakeSmallPerishableCreaturePristine(inst)
     inst:AddTag("show_spoilage")
-    inst:AddTag("small_livestock")
 end
 
-function MakeFeedableSmallLivestock(inst, starvetime, oninventory, ondropped)
-    MakeFeedableSmallLivestockPristine(inst)
-
-    --This is acceptable.  Some eaters are added already to specify diets.
-    if inst.components.eater == nil then
-        inst:AddComponent("eater")
-    end
-    inst.components.eater:SetOnEatFn(oneat)
+function MakeSmallPerishableCreature(inst, starvetime, oninventory, ondropped)
+    MakeSmallPerishableCreaturePristine(inst)
 
     --We want to see the warnings for duplicating perishable
     inst:AddComponent("perishable")
@@ -624,6 +617,23 @@ function MakeFeedableSmallLivestock(inst, starvetime, oninventory, ondropped)
             ondropped(inst)
         end
     end)
+end
+
+function MakeFeedableSmallLivestockPristine(inst)
+    MakeSmallPerishableCreaturePristine(inst)
+    inst:AddTag("small_livestock")
+end
+
+function MakeFeedableSmallLivestock(inst, starvetime, oninventory, ondropped)
+    MakeFeedableSmallLivestockPristine(inst)
+
+    --This is acceptable.  Some eaters are added already to specify diets.
+    if inst.components.eater == nil then
+        inst:AddComponent("eater")
+    end
+    inst.components.eater:SetOnEatFn(oneat)
+
+    MakeSmallPerishableCreature(inst, starvetime, oninventory, ondropped)
 end
 
 --Backward compatibility for mods

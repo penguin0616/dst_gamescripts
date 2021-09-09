@@ -79,7 +79,7 @@ function Builder:OnLoad(data)
         for k, v in pairs(AllRecipes) do
             if data.buffered_builds[k] ~= nil and IsRecipeValid(v.name) then
                 self.inst.replica.builder:SetIsBuildBuffered(v.name, true)
-                self.buffered_builds[k] = type(data.buffered_builds[k]) == "number" and data.buffered_builds[k] or 0
+                self.buffered_builds[k] = true
             end
         end
     end
@@ -98,7 +98,7 @@ function Builder:OnLoad(data)
 end
 
 function Builder:IsBuildBuffered(recname)
-    return self.buffered_builds[recname] ~= nil
+    return self.buffered_builds[recname]
 end
 
 function Builder:OnUpdate()
@@ -324,10 +324,8 @@ function Builder:RemoveIngredients(ingredients, recname)
     if recipe then
         for k,v in pairs(recipe.character_ingredients) do
             if v.type == CHARACTER_INGREDIENT.HEALTH then
-                --Don't die from crafting!
-                local delta = math.min(math.max(0, self.inst.components.health.currenthealth - 1), v.amount)
                 self.inst:PushEvent("consumehealthcost")
-                self.inst.components.health:DoDelta(-delta, false, "builder", true, nil, true)
+                self.inst.components.health:DoDelta(-v.amount, false, "builder", true, nil, true)
             elseif v.type == CHARACTER_INGREDIENT.MAX_HEALTH then
                 self.inst:PushEvent("consumehealthcost")
                 self.inst.components.health:DeltaPenalty(v.amount)
@@ -350,8 +348,9 @@ function Builder:HasCharacterIngredient(ingredient)
     if ingredient.type == CHARACTER_INGREDIENT.HEALTH then
         if self.inst.components.health ~= nil then
             --round up health to match UI display
+			local amount_required = self.inst:HasTag("health_as_oldage") and math.ceil(ingredient.amount * TUNING.OLDAGE_HEALTH_SCALE) or ingredient.amount
             local current = math.ceil(self.inst.components.health.currenthealth)
-            return current >= ingredient.amount, current
+            return current > amount_required, current --Don't die from crafting!
         end
     elseif ingredient.type == CHARACTER_INGREDIENT.MAX_HEALTH then
         if self.inst.components.health ~= nil then
@@ -432,14 +431,9 @@ function Builder:DoBuild(recname, pt, rotation, skin)
             return false
         end
 
-        local wetlevel = self.buffered_builds[recname]
-        if wetlevel ~= nil then
+        if self.buffered_builds[recname] ~= nil then
             self.buffered_builds[recname] = nil
             self.inst.replica.builder:SetIsBuildBuffered(recname, false)
-        else
-            local materials = self:GetIngredients(recname)
-            wetlevel = self:GetIngredientWetness(materials)
-            self:RemoveIngredients(materials, recname)
         end
 
         if self.inst:HasTag("hungrybuilder") and not self.inst.sg:HasStateTag("slowaction") then
@@ -462,12 +456,21 @@ function Builder:DoBuild(recname, pt, rotation, skin)
         if prod ~= nil then
             pt = pt or self.inst:GetPosition()
 
-            if wetlevel > 0 and prod.components.inventoryitem ~= nil then
-                prod.components.inventoryitem:InheritMoisture(wetlevel, self.inst:GetIsWet())
-            end
-
             if prod.components.inventoryitem ~= nil then
                 if self.inst.components.inventory ~= nil then
+					local materials = self:GetIngredients(recname)
+
+					local wetlevel = self:GetIngredientWetness(materials)
+					if wetlevel > 0 and prod.components.inventoryitem ~= nil then
+						prod.components.inventoryitem:InheritMoisture(wetlevel, self.inst:GetIsWet())
+					end
+
+					if prod.onPreBuilt ~= nil then
+						prod:onPreBuilt(self.inst, materials, recipe)
+					end
+
+					self:RemoveIngredients(materials, recname)
+
                     --self.inst.components.inventory:GiveItem(prod)
                     self.inst:PushEvent("builditem", { item = prod, recipe = recipe, skin = skin, prototyper = self.current_prototyper })
                     if self.current_prototyper ~= nil and self.current_prototyper:IsValid() then
@@ -520,6 +523,9 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                     prod:OnBuilt(self.inst)
 
                     return true
+				else
+					prod:Remove()
+					prod = nil
                 end
             else
                 local spawn_pos = pt
@@ -684,9 +690,8 @@ function Builder:BufferBuild(recname)
                 return
             end
         local materials = self:GetIngredients(recname)
-        local wetlevel = self:GetIngredientWetness(materials)
         self:RemoveIngredients(materials, recname)
-        self.buffered_builds[recname] = wetlevel
+        self.buffered_builds[recname] = true
         self.inst.replica.builder:SetIsBuildBuffered(recname, true)
     end
 end

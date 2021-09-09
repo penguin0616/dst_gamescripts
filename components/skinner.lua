@@ -113,6 +113,10 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 				--wurt
 				elseif skintype == "powerup" and CLOTHING[name].symbol_overrides_powerup then
 					src_symbols = CLOTHING[name].symbol_overrides_powerup
+				
+				--wurt
+				elseif skintype == "old_skin" and CLOTHING[name].symbol_overrides_old then
+					src_symbols = CLOTHING[name].symbol_overrides_old
 
 				--just used by woodie's bare feet currently
 				elseif CLOTHING[name].symbol_overrides_by_character ~= nil then

@@ -7,7 +7,7 @@ local prefabs =
 {
     "alterguardian_phase2spike",
     "alterguardian_spike_breakfx",
-    "alterguardian_spiketrail_fx",
+    -- "alterguardian_spiketrail_fx", -- not a real prefab so it doesnt need to have a depenancy chain
 }
 
 local SPIKE_WALL_RADIUS = 1.1

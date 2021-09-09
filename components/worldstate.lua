@@ -261,6 +261,10 @@ inst:ListenForEvent("wetchanged", OnWetChanged)
 --[[ Public member functions ]]
 --------------------------------------------------------------------------
 
+function self:GetWorldAge()
+	return 1 + self.data.cycles + self.data.time
+end
+
 function self:AddWatcher(var, inst, fn, target)
     local watchers = _watchers[var]
     if watchers == nil then

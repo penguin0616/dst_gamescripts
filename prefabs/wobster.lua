@@ -238,29 +238,6 @@ local function moonglass_water()
     return base_water_wobster("lobster_moonglass", MOONGLASS_WOBSTER_FISH_DEF)
 end
 
-local function on_perish(inst)
-    local owner = inst.components.inventoryitem.owner
-    if owner ~= nil then
-        inst.components.inventoryitem:RemoveFromOwner(true)
-
-        local container = owner.components.inventory or owner.components.container or nil
-        if container ~= nil then
-            local loots = inst.components.lootdropper:GenerateLoot()
-            for _, loot_type in pairs(loots) do
-                container:GiveItem(SpawnPrefab(loot_type))
-            end
-        end
-    end
-end
-
-local function on_put_in_inventory(inst)
-    inst.components.perishable:StartPerishing()
-end
-
-local function on_dropped(inst)
-    inst.components.perishable:StopPerishing()
-end
-
 local function play_cooked_sound(inst)
     inst.SoundEmitter:PlaySound(inst._hit_sound)
 end
@@ -338,7 +315,6 @@ local function base_land_wobster(build_name, nameoverride, fish_def, fadeout, co
     inst:AddTag("animal")
     inst:AddTag("canbetrapped")
     inst:AddTag("prey")
-    inst:AddTag("show_spoilage")
     inst:AddTag("smallcreature")
     inst:AddTag("whackable")
 	inst:AddTag("smalloceancreature")
@@ -355,7 +331,10 @@ local function base_land_wobster(build_name, nameoverride, fish_def, fadeout, co
 
     inst:SetPrefabNameOverride(nameoverride)
 
+    MakeSmallPerishableCreaturePristine(inst)
+
     inst.entity:SetPristine()
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -369,17 +348,10 @@ local function base_land_wobster(build_name, nameoverride, fish_def, fadeout, co
     inst:AddComponent("inspectable")
     inst.components.inspectable.nameoverride = nameoverride
 
-    inst:AddComponent("perishable")
-    inst.components.perishable:SetPerishTime(TUNING.WOBSTER.SURVIVE_TIME)
-    inst.components.perishable:StopPerishing()
-    inst.components.perishable:SetOnPerishFn(on_perish)
-
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.nobounce = true
     inst.components.inventoryitem.canbepickedup = false
     inst.components.inventoryitem.canbepickedupalive = true
-    inst.components.inventoryitem:SetOnPutInInventoryFn(on_put_in_inventory)
-    inst.components.inventoryitem:SetOnDroppedFn(on_dropped)
 
     inst:AddComponent("murderable")
 
@@ -422,6 +394,8 @@ local function base_land_wobster(build_name, nameoverride, fish_def, fadeout, co
 
     inst:SetStateGraph("SGwobsterland")
     inst:SetBrain(brain_land)
+
+    MakeSmallPerishableCreature(inst, TUNING.WOBSTER.SURVIVE_TIME)
 
     return inst
 end

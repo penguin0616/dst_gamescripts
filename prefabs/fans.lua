@@ -6,7 +6,6 @@ local assets =
 local assets_perd =
 {
     Asset("ANIM", "anim/fan.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local prefabs_perd =

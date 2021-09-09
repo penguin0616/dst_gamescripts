@@ -100,6 +100,8 @@ function Tune(overrides)
 
 		DEFAULT_ATTACK_RANGE = 2,
 
+		DEFAULT_CHARACTER_HEALTH = wilson_health,
+
         WILSON_HEALTH = wilson_health,
         WILSON_ATTACK_PERIOD = wilson_attack_period,
         WILSON_HUNGER = wilson_hunger, --stomach size
@@ -2449,6 +2451,16 @@ function Tune(overrides)
 		WALTER_HUNGER = 110,
         WALTER_SANITY = wilson_sanity,
 
+		WANDA_OLDAGER = 60, -- 20 to 80 yo
+		OLDAGE_HEALTH_SCALE = 60/150, -- WANDA_OLDAGER / WILSON_HEALTH
+        WANDA_HUNGER = 175,
+        WANDA_SANITY = wilson_sanity,
+
+		CHARACTER_DETAILS_OVERRIDE =
+		{
+			wanda_health = "oldager",
+		},
+
         FISSURE_CALMTIME_MIN = 600,
         FISSURE_CALMTIME_MAX = 1200,
         FISSURE_WARNTIME_MIN = 20,
@@ -3017,6 +3029,7 @@ function Tune(overrides)
             WARLY = 200, --TODO
             WURT = 200, --TODO
             WALTER = 200, --TODO
+            WANDA = 200, --TODO
         },
 
 		GAMEMODE_STARTING_ITEMS =
@@ -3040,6 +3053,7 @@ function Tune(overrides)
                 WARLY = {"portablecookpot_item", "potato", "potato", "garlic"},
                 WURT = {},
                 WALTER = {"walterhat", "slingshot", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock", "slingshotammo_rock"},
+                WANDA = {"pocketwatch_heal", "pocketwatch_parts", "pocketwatch_parts", "pocketwatch_parts"},
 			},
 
 			LAVAARENA =
@@ -3061,6 +3075,7 @@ function Tune(overrides)
                 WARLY = {}, --TODO
                 WURT = {}, -- TODO
                 WALTER = {}, -- TODO
+                WANDA = {}, -- TODO
 			},
 			QUAGMIRE =
 			{
@@ -3081,6 +3096,7 @@ function Tune(overrides)
                 WARLY = {}, --TODO
                 WURT = {}, -- TODO
                 WALTER = {}, -- TODO
+                WANDA = {}, -- TODO
 			},
 		},
 
@@ -3748,6 +3764,14 @@ function Tune(overrides)
                 WETNESS = 100,
             },
 
+			WANDA =
+			{
+				HEALTH = 25,
+				HUNGER = 25,
+				SANITY = 25,
+				WETNESS = 100,
+			},
+
 			CREATURE =
 			{
 				WETNESS = 100,
@@ -4277,6 +4301,46 @@ function Tune(overrides)
         BATTLESONG_HEALTHGAIN_DELTA = 1,
         BATTLESONG_HEALTHGAIN_DELTA_SINGER = 0.5,
         BATTLESONG_SANITYGAIN_DELTA = 1,
+
+		-- WANDA
+		WANDA_MIN_YEARS_OLD = 20,
+		WANDA_MAX_YEARS_OLD = 80,
+
+        WANDA_AGE_THRESHOLD_OLD = .25,
+        WANDA_AGE_THRESHOLD_YOUNG = .75,
+
+		POCKETWATCH_SHADOW_DAMAGE = wilson_attack*2.4,
+		POCKETWATCH_DEPLETED_DAMAGE = wilson_attack*.8,
+
+		POCKETWATCH_HEAL_COOLDOWN = seg_time * 4,
+		POCKETWATCH_HEAL_HEALING = 20, -- health pre-oldager modifier
+
+		POCKETWATCH_REVIVE_COOLDOWN = total_day_time * 0.5,
+		POCKETWATCH_WARP_COOLDOWN = 2,
+		POCKETWATCH_RECALL_COOLDOWN = total_day_time,
+
+        WANDA_OLD_HAMMER_EFFECTIVENESS = 0.75,
+        LONGEST_ACTION_TIMEOUT = 1.5,
+
+        WANDA_STAFFSANITY_YOUNG = 1,
+        WANDA_STAFFSANITY_NORMAL = 0.5,
+        WANDA_STAFFSANITY_OLD = 0.25,
+
+        WANDA_SHADOW_RESISTANCE_YOUNG = 1,
+        WANDA_SHADOW_RESISTANCE_NORMAL = 0.33,
+        WANDA_SHADOW_RESISTANCE_OLD = 0,
+
+        WANDA_REGULAR_DAMAGE_OLD = 0.5,
+        WANDA_REGULAR_DAMAGE_NORMAL = 1,
+        WANDA_REGULAR_DAMAGE_YOUNG = 1,
+
+        WANDA_SHADOW_DAMAGE_OLD = 1.75,
+        WANDA_SHADOW_DAMAGE_NORMAL = 1.2,
+        WANDA_SHADOW_DAMAGE_YOUNG = 1,
+
+        WANDA_WARP_DIST_OLD = 2,
+        WANDA_WARP_DIST_NORMAL = 4,
+        WANDA_WARP_DIST_YOUNG = 8,
 
         -- Salty dog
         FLOTSAM_SPAWN_MAX = 4,

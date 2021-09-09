@@ -7,7 +7,7 @@ ShardPortals = {}
 local ShardConnected = {}
 
 function Shard_IsWorldAvailable(world_id)
-    return ShardConnected[world_id or SHARDID.MASTER] ~= nil
+    return world_id ~= nil and (ShardConnected[world_id or SHARDID.MASTER] ~= nil or world_id == TheShard:GetShardId())
 end
 
 function Shard_IsWorldFull(world_id)

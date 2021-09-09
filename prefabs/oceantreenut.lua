@@ -5,8 +5,17 @@ local assets =
 
 local prefabs =
 {
-    "spoiled_food",
+    "rock_break_fx",
+	"twigs",
+	"spoiled_fish_small",
 }
+
+SetSharedLootTable( 'oceantreenut',
+{
+    {'twigs',				1.00},
+    {'twigs',				0.50},
+    {'spoiled_fish_small',  0.01},
+})
 
 local PHYSICS_RADIUS = .75
 
@@ -19,8 +28,12 @@ local CHECK_NEARBY_BOATS_OFFSET = PHYSICS_RADIUS + 0.1
 
 local TWOPI = 6.28319
 
-local function OnWorked(inst, worker)
-	SpawnPrefab("rock_break_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+local function OnWorkedFinished(inst, worker)
+    inst.components.lootdropper:DropLoot()
+
+    local fx = SpawnPrefab("collapse_small")
+    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    fx:SetMaterial("stone")
 
     inst:Remove()
 end
@@ -175,7 +188,8 @@ local function fn()
 
     inst:AddComponent("inspectable")
 
-    -------------------------
+	inst:AddComponent("lootdropper")
+    inst.components.lootdropper:SetChanceLootTable('oceantreenut')
 
     inst:AddComponent("heavyobstaclephysics")
     inst.components.heavyobstaclephysics:SetRadius(PHYSICS_RADIUS)
@@ -193,7 +207,7 @@ local function fn()
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
     inst.components.workable:SetWorkLeft(1)
-	inst.components.workable:SetOnFinishCallback(OnWorked)
+	inst.components.workable:SetOnFinishCallback(OnWorkedFinished)
 
     inst:AddComponent("timer")
 

@@ -27,7 +27,7 @@ local prefabs =
     "oceantree_ripples_normal",
     "oceantree_ripples_tall",
     "oceantree_roots_short",
-    "oceantree_roots_medium",
+    "oceantree_roots_normal",
     "oceantree_roots_tall",
     "oceantree_falling",
     "collapse_small",

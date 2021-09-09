@@ -50,6 +50,8 @@ local Inventory = Class(function(self, inst)
     self.dropondeath = true
     inst:ListenForEvent("death", OnDeath)
 
+	-- self.noheavylifting = false
+
     inst:ListenForEvent("player_despawn", OnOwnerDespawned)
 
     if inst.replica.inventory.classified ~= nil then
@@ -460,6 +462,12 @@ function Inventory:FindItems(fn)
         end
     end
 
+    for k,v in pairs(self.equipslots) do
+        if fn(v) then
+            table.insert(items, v)
+        end
+    end
+
     if self.activeitem and fn(self.activeitem) then
         table.insert(items, self.activeitem)
     end
@@ -472,6 +480,25 @@ function Inventory:FindItems(fn)
     end
 
     return items
+end
+
+function Inventory:ForEachItem(fn, ...)
+    for k,v in pairs(self.itemslots) do
+        fn(v, ...)
+    end
+
+    for k,v in pairs(self.equipslots) do
+		fn(v, ...)
+    end
+
+    if self.activeitem then
+		fn(self.activeitem, ...)
+    end
+
+    local overflow = self:GetOverflowContainer()
+    if overflow ~= nil then
+        overflow:ForEachItem(fn, ...)
+    end
 end
 
 function Inventory:RemoveItemBySlot(slot)
@@ -859,7 +886,7 @@ function Inventory:SetActiveItem(item)
 end
 
 function Inventory:Equip(item, old_to_active)
-    if item == nil or item.components.equippable == nil or not item:IsValid() or item.components.equippable:IsRestricted(self.inst) then
+    if item == nil or item.components.equippable == nil or not item:IsValid() or item.components.equippable:IsRestricted(self.inst) or (self.noheavylifting and item:HasTag("heavy")) then
         return
     end
 
@@ -1202,14 +1229,14 @@ function Inventory:DropEverythingWithTag(tag)
 end
 
 function Inventory:DropEverything(ondeath, keepequip)
-    if self.activeitem ~= nil then
+    if self.activeitem ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) then
         self:DropItem(self.activeitem)
         self:SetActiveItem(nil)
     end
 
     for k = 1, self.maxslots do
         local v = self.itemslots[k]
-        if v ~= nil then
+        if v ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) then
             self:DropItem(v, true, true)
         end
     end

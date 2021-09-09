@@ -192,6 +192,7 @@ return{
                 "Pardonnez-moi, I mistook you for my Carrat!",
                 "Oh, je m'excuse, have you seen my Carrat around here?",
             },
+--fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
         },
         SLAUGHTER =
         {
@@ -312,13 +313,24 @@ return{
         {
 --fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
         },
+		CAST_POCKETWATCH = 
+		{
+--fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			WARP_NO_POINTS_LEFT = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			SHARD_UNAVAILABLE = "only_used_by_wanda",
+		},
+        DISMANTLE_POCKETWATCH =
+        {
+--fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I cannot do that.",
 	ANNOUNCE_BOAT_LEAK = "Mon dieu! She is sinking!",
 	ANNOUNCE_BOAT_SINK = "I don't want to be brined!",
-	ANNOUNCE_DIG_DISEASE_WARNING = "I hope that helps.",
-	ANNOUNCE_PICK_DISEASE_WARNING = "It has a most un-delicious smell.",
+	ANNOUNCE_DIG_DISEASE_WARNING = "I hope that helps.", --removed
+	ANNOUNCE_PICK_DISEASE_WARNING = "It has a most un-delicious smell.", --removed
 	ANNOUNCE_ADVENTUREFAIL = "I shall have to attempt that again.",
     ANNOUNCE_MOUNT_LOWHEALTH = "My poor sirloin's not looking so good!",
 
@@ -610,7 +622,6 @@ return{
 	ANNOUNCE_WEIGHT = "Weight: {weight}",
 	ANNOUNCE_WEIGHT_HEAVY  = "Weight: {weight}\nEnough fish to feed an entire crew!",
 
-	-- these are just for testing for now, no need to write real strings yet
 	ANNOUNCE_WINCH_CLAW_MISS = "Ah, just missed!",
 	ANNOUNCE_WINCH_CLAW_NO_ITEM = "Perhaps I'll try again.",
 
@@ -667,6 +678,18 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NOINSPIRATION = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "only_used_by_wathgrithr",
 --fallback to speech_wilson.lua     ANNOUNCE_BATTLESONG_INSTANT_PANIC_BUFF = "only_used_by_wathgrithr",
+
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_YOUNGTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOOLD = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_OLDTONORMAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua     ANNOUNCE_WANDA_NORMALTOYOUNG = "only_used_by_wanda",
+
+	ANNOUNCE_POCKETWATCH_PORTAL = "Mon dieu, somehow that made me a bit seasick...",
+
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_MARK = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_RECALL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL = "only_used_by_wanda",
+--fallback to speech_wilson.lua 	ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD = "only_used_by_wanda",
 
     ANNOUNCE_ARCHIVE_NEW_KNOWLEDGE = "Oh! It's teaching me a new recipe for a machine!",
     ANNOUNCE_ARCHIVE_OLD_KNOWLEDGE = "I believe I already knew that one.",
@@ -952,11 +975,21 @@ return{
             FIRESTARTER = "%s, are you feeling well?",
         },
 
+        WANDA =
+        {
+            GENERIC = "Bonjour, Mme. %s!",
+            ATTACKER = "That doesn't seem like a good use of your time, Mme. %s.",
+            MURDERER = "I can never forgive you for what you've done, Mme. %s!",
+            REVIVER = "I knew Mme. %s would come in my time of need.",
+            GHOST = "Let's get you back on your feet, Mme. %s!",
+            FIRESTARTER = "Is there... a reason you're setting fires, Mme. %s?",
+        },
+
         MIGRATION_PORTAL =
         {
-            GENERIC = "I think I'd like the company.",
-            OPEN = "It's ready, if I wish to go.",
-            FULL = "It's a little crowded for my taste.",
+        --    GENERIC = "If I had any friends, this could take me to them.",
+        --    OPEN = "If I step through, will I still be me?",
+        --    FULL = "It seems to be popular over there.",
         },
         GLOMMER =
         {
@@ -1269,7 +1302,7 @@ return{
             FULL = "I'll wait til there's a little more room.",
         },
 
-		MAXWELLPHONOGRAPH = "I wonder what is in his record collection?",
+		MAXWELLPHONOGRAPH = "I wonder what is in his record collection?",--single player
 		BOOMERANG = "Oh good. I have separation anxiety.",
 		PIGGUARD = "What are you guarding, besides your own deliciousness?",
 		ABIGAIL =
@@ -1315,7 +1348,7 @@ return{
 		BACKPACK = "It has my back.",
 		BACONEGGS = "Runny eggs... crisp bacon... I could die happy now...",
 		BANDAGE = "First aid.",
-		BASALT = "Made of strong stuff!",
+		BASALT = "Made of strong stuff!", --removed
 		BEARDHAIR = "Disgusting.",
 		BEARGER = "Oh, I don't like you one bit!",
 		BEARGERVEST = "Furry refuge from the elements.",
@@ -1381,7 +1414,7 @@ return{
         BEESWAX = "A first-rate preservative.",
 		BEEHIVE = "I can hear the activity within.",
 		BEEMINE = "Weaponized bees.",
-		BEEMINE_MAXWELL = "I pity whoever trips this.",
+		BEEMINE_MAXWELL = "I pity whoever trips this.",--removed
 		BERRIES = "Fresh fruit!",
 		BERRIES_COOKED = "Could use a pinch of sugar...",
         BERRIES_JUICY = "What a unique, tangy flavor.",
@@ -1392,8 +1425,8 @@ return{
 			WITHERED = "The heat has stifled these berries.",
 			GENERIC = "Berries!",
 			PICKED = "More will return.",
-			DISEASED = "It's got food poisoning.",
-			DISEASING = "I think it's coming down with a little something.",
+			DISEASED = "It's got food poisoning.",--removed
+			DISEASING = "I think it's coming down with a little something.",--removed
 			BURNING = "It's burning down!",
 		},
 		BERRYBUSH_JUICY =
@@ -1402,11 +1435,11 @@ return{
 			WITHERED = "It's much too hot, I agree.",
 			GENERIC = "Berries!",
 			PICKED = "I can't wait for more.",
-			DISEASED = "It's got food poisoning.",
-			DISEASING = "I think it's coming down with a little something.",
+			DISEASED = "It's got food poisoning.",--removed
+			DISEASING = "I think it's coming down with a little something.",--removed
 			BURNING = "It's burning down!",
 		},
-		BIGFOOT = "Please do not squish me!",
+		BIGFOOT = "Please do not squish me!",--removed
 		BIRDCAGE =
 		{
 			GENERIC = "Suitable lodgings for a feathered beast.",
@@ -1598,7 +1631,7 @@ return{
 		CUTGRASS = "What shall I craft?",
 		CUTREEDS = "Smells like greenery.",
 		CUTSTONE = "Compressed stones, nice presentation.",
-		DEADLYFEAST = "I would not recommend this.",
+		DEADLYFEAST = "I would not recommend this.", --unimplemented
 		DEER =
 		{
 			GENERIC = "Imagine... succulent venison bourguignon.",
@@ -1620,19 +1653,19 @@ return{
 		DIRTPILE = "It's making a bit of a mess, isn't it?",
 		DIVININGROD =
 		{
-			COLD = "Hmm, keep looking.",
-			GENERIC = "A finely tuned radar stick.",
-			HOT = "I can almost smell it!",
-			WARM = "I've caught onto something!",
-			WARMER = "Warmer, warmer...!",
+			COLD = "Hmm, keep looking.", --singleplayer
+			GENERIC = "A finely tuned radar stick.", --singleplayer
+			HOT = "I can almost smell it!", --singleplayer
+			WARM = "I've caught onto something!", --singleplayer
+			WARMER = "Warmer, warmer...!", --singleplayer
 		},
 		DIVININGRODBASE =
 		{
-			GENERIC = "Is it a chopping block?",
-			READY = "How do I turn it on?",
-			UNLOCKED = "Preparation complete!",
+			GENERIC = "Is it a chopping block?", --singleplayer
+			READY = "How do I turn it on?", --singleplayer
+			UNLOCKED = "Preparation complete!", --singleplayer
 		},
-		DIVININGRODSTART = "That looks important.",
+		DIVININGRODSTART = "That looks important.", --singleplayer
 		DRAGONFLY = "I'm not cut out for this.",
 		ARMORDRAGONFLY = "Heavy and hot.",
 		DRAGON_SCALES = "Hot to the touch!",
@@ -1737,7 +1770,7 @@ return{
 			BURNT = "Crisp, no?",
 			CHOPPED = "No more for now.",
 			GENERIC = "It's a tree made of kabob sticks.",
-			DISEASED = "It's under the weather.",
+			DISEASED = "It's under the weather.", --unimplemented
 		},
 		TWIGGY_NUT_SAPLING = "Just a petite bébé.",
         TWIGGY_OLD = "That tree looks like it's on its way out.",
@@ -1758,7 +1791,7 @@ return{
 		FEATHER_CANARY = "A bird's feather, in lemon yellow.",
 		FEATHERPENCIL = "Lighter than my meringue.",
         COOKBOOK = "I added a few of my own personal recipes.",
-		FEM_PUPPET = "She's trapped!",
+		FEM_PUPPET = "She's trapped!", --single player
 		FIREFLIES =
 		{
 			GENERIC = "A dash of glow.",
@@ -1844,13 +1877,13 @@ return{
 			BURNING = "I never burn anything in the kitchen.",
 			GENERIC = "A common ingredient for success around here.",
 			PICKED = "Plucked clean!",
-			DISEASED = "It's under the weather.",
-			DISEASING = "It's starting to look a little funny.",
+			DISEASED = "It's under the weather.", --unimplemented
+			DISEASING = "It's starting to look a little funny.", --unimplemented
 		},
 		GRASSGEKKO =
 		{
 			GENERIC = "It doesn't seem dangerous.",
-			DISEASED = "Would some nice soup make you feel better?",
+			DISEASED = "Would some nice soup make you feel better?", --unimplemented
 		},
 		GREEN_CAP = "Don't crowd the mushrooms.",
 		GREEN_CAP_COOKED = "Could use a slathering of butter and chives...",
@@ -1951,7 +1984,7 @@ return{
 		LUCY = "Bonjour, mademoiselle.",
 		LUREPLANT = "How alluring.",
 		LUREPLANTBULB = "Growing meat from the ground? Now I've seen it all...",
-		MALE_PUPPET = "Free him!",
+		MALE_PUPPET = "Free him!", --single player
 
 		MANDRAKE_ACTIVE = "How chatty you are, hm, bébé?",
 		MANDRAKE_PLANTED = "I could always use more fresh veg.",
@@ -1982,11 +2015,11 @@ return{
             CHOPPED = "There. Now you cannot prick anyone.",
             GENERIC = "I am ever so glad I'm not a tree hugger.",
         },
-        MAXWELL = "You! You... villain!",
-        MAXWELLHEAD = "He must eat massive sandwiches.",
-        MAXWELLLIGHT = "A light is always welcome.",
-        MAXWELLLOCK = "But where is the key?",
-        MAXWELLTHRONE = "Heavy is the bum that sits on the throne...",
+        MAXWELL = "You! You... villain!",--single player
+        MAXWELLHEAD = "He must eat massive sandwiches.",--removed
+        MAXWELLLIGHT = "A light is always welcome.",--single player
+        MAXWELLLOCK = "But where is the key?",--single player
+        MAXWELLTHRONE = "Heavy is the bum that sits on the throne...",--single player
         MEAT = "I must remember to cut across the grain.",
         MEATBALLS = "I'm having a ball!",
         MEATRACK =
@@ -2188,13 +2221,13 @@ return{
             GENERIC = "This little fellow seems quite frigid.",
             HELD = "Let me lend you my warmth, feathered friend.",
         },
-        ROBOT_PUPPET = "Surely no one deserves such treatment!",
+        ROBOT_PUPPET = "Surely no one deserves such treatment!", --single player
         ROCK_LIGHT =
         {
-            GENERIC = "The lava has crusted over.",
-            OUT = "It has no heat left to give.",
-            LOW = "Like a pie on a proverbial windowsill, it will soon cool.",
-            NORMAL = "Nature's fiery fondue pot.",
+            GENERIC = "The lava has crusted over.",--removed
+            OUT = "It has no heat left to give.",--removed
+            LOW = "Like a pie on a proverbial windowsill, it will soon cool.",--removed
+            NORMAL = "Nature's fiery fondue pot.",--removed
         },
         CAVEIN_BOULDER =
         {
@@ -2235,8 +2268,8 @@ return{
 			WITHERED = "It could use some love.",
 			GENERIC = "Those could be key to my continued survival.",
 			PICKED = "There is nothing left for me to grasp!",
-			DISEASED = "Would some nice soup make you feel better?",
-			DISEASING = "It's coming down with something.",
+			DISEASED = "Would some nice soup make you feel better?", --removed
+			DISEASING = "It's coming down with something.", --removed
 		},
    		SCARECROW =
    		{
@@ -2285,7 +2318,7 @@ return{
 		SILK = "Is that sanitary?",
 		SKELETON = "I have a bone to pick with you.",
 		SCORCHED_SKELETON = "A kitchen mishap, maybe?",
-		SKULLCHEST = "What an ominous container.",
+		SKULLCHEST = "What an ominous container.", --removed
 		SMALLBIRD =
 		{
 			GENERIC = "Hello food... uh, friend.",
@@ -2364,15 +2397,15 @@ return{
 		},
 		TELEPORTATO_BASE =
 		{
-			ACTIVE = "Where shall we go, thing?",
-			GENERIC = "It leads somewhere. And that is what I am afraid of.",
-			LOCKED = "It denies my access.",
-			PARTIAL = "It requires something additional.",
+			ACTIVE = "Where shall we go, thing?", --single player
+			GENERIC = "It leads somewhere. And that is what I am afraid of.", --single player
+			LOCKED = "It denies my access.", --single player
+			PARTIAL = "It requires something additional.", --single player
 		},
-		TELEPORTATO_BOX = "\"This\" likely connects to a \"that.\"",
-		TELEPORTATO_CRANK = "Definitely for a cranking action of some kind.",
-		TELEPORTATO_POTATO = "This, I do not even...",
-		TELEPORTATO_RING = "One ring to teleport them all!",
+		TELEPORTATO_BOX = "\"This\" likely connects to a \"that.\"", --single player
+		TELEPORTATO_CRANK = "Definitely for a cranking action of some kind.", --single player
+		TELEPORTATO_POTATO = "This, I do not even...", --single player
+		TELEPORTATO_RING = "One ring to teleport them all!", --single player
 		TELESTAFF = "Let us take a trip. I am not picky as to where.",
 		TENT =
 		{
@@ -2396,7 +2429,7 @@ return{
 		TRANSISTOR = "Positively charged to get my hands on one!",
 		TRAP = "I do not wish to be so tricky, but the dinner bell calls me.",
 		TRAP_TEETH = "This is not a cruelty-free trap.",
-		TRAP_TEETH_MAXWELL = "I must remember where this is...",
+		TRAP_TEETH_MAXWELL = "I must remember where this is...", --single player
 		TREASURECHEST =
 		{
 			GENERIC = "Treasure!",
@@ -2408,7 +2441,7 @@ return{
 			GENERIC = "Now to add the final ingredients.",
 			LOCKED = "Have I not been found worthy?",
 		},
-		TREECLUMP = "Someone or something does not want me to tree-spass.",
+		TREECLUMP = "Someone or something does not want me to tree-spass.", --removed
 
 		TRINKET_1 = "Someone must have really lost their marbles.", --Melted Marbles
 		TRINKET_2 = "I'll hum my own tune.", --Fake Kazoo
@@ -2782,7 +2815,7 @@ return{
 			OPEN = "Am I really doing this?",
 		},
 		WORMHOLE_LIMITED = "These things can look worse?",
-		ACCOMPLISHMENT_SHRINE = "I always wished to make a name for myself.",
+		ACCOMPLISHMENT_SHRINE = "I always wished to make a name for myself.", --single player
 		LIVINGTREE = "Tres suspicious...",
 		ICESTAFF = "It flash freezes poulet!",
 		REVIVER = "I don't like that it's still beating.",
@@ -3130,8 +3163,8 @@ return{
 		BOAT_LEAK = "I should do something about that.",
         MAST = "An important ingredient for any sailboat.",
         SEASTACK = "A big lumpy rock.",
-        FISHINGNET = "Fresh seafood awaits!",
-        ANTCHOVIES = "Mmmm you'd be delectable in a soup!",
+        FISHINGNET = "Fresh seafood awaits!", --unimplemented
+        ANTCHOVIES = "Mmmm you'd be delectable in a soup!", --unimplemented
         STEERINGWHEEL = "I'll steer us in the right direction!",
         ANCHOR = "Now you stay put!",
         BOATPATCH = "Better safe than sorry, non?",
@@ -3171,8 +3204,8 @@ return{
 			WITHERED = "It's withered from the heat.",
 			GENERIC = "What a strange looking shrub!",
 			PICKED = "I must be patient.",
-			DISEASED = "That doesn't look healthy.",
-            DISEASING = "I think something's wrong with it.",
+			DISEASED = "That doesn't look healthy.", --unimplemented
+            DISEASING = "I think something's wrong with it.", --unimplemented
 			BURNING = "Did I leave the stove on?",
 		},
         DEAD_SEA_BONES = "Hmm... that might be good in a soup.",
@@ -3218,10 +3251,10 @@ return{
 
         ICEBERG =
         {
-            GENERIC = "Iceberg ahead!",
-            MELTED = "Melted like butter!",
+            GENERIC = "Iceberg ahead!", --unimplemented
+            MELTED = "Melted like butter!", --unimplemented
         },
-        ICEBERG_MELTED = "Melted like butter!",
+        ICEBERG_MELTED = "Melted like butter!", --unimplemented
 
         MINIFLARE = "I can signal mes amis!",
 
@@ -3951,7 +3984,7 @@ return{
 		},
 		CARNIVALDECOR_FIGURE_KIT = "I wonder what could be inside?",
 
-        CARNIVAL_BALL = "Perhaps I'll toss it around with the children.",
+        CARNIVAL_BALL = "Perhaps I'll toss it around with the children.", --unimplemented
 		CARNIVAL_SEEDPACKET = "They could use a bit of seasoning.",
 		CARNIVALFOOD_CORNTEA = "It really shouldn't work, yet somehow it does...",
 
@@ -4068,6 +4101,53 @@ return{
             CONSTRUCTION2 = "Only a few more ingredients left.",
         },
 
+		-- Wanda
+        POCKETWATCH_HEAL = {
+			GENERIC = "Maybe I could ask her to make me a kitchen timer...",
+			RECHARGING = "I don't think it's ready just yet.",
+		},
+
+        POCKETWATCH_REVIVE = {
+			GENERIC = "Maybe I could ask her to make me a kitchen timer...",
+			RECHARGING = "I don't think it's ready just yet.",
+		},
+
+        POCKETWATCH_WARP = {
+			GENERIC = "Maybe I could ask her to make me a kitchen timer...",
+			RECHARGING = "I don't think it's ready just yet.",
+		},
+
+        POCKETWATCH_RECALL = {
+			GENERIC = "Maybe I could ask her to make me a kitchen timer...",
+			RECHARGING = "I don't think it's ready just yet.",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PORTAL = {
+			GENERIC = "Maybe I could ask her to make me a kitchen timer...",
+			RECHARGING = "I don't think it's ready just yet.",
+--fallback to speech_wilson.lua 			UNMARKED = "only_used_by_wanda unmarked",
+--fallback to speech_wilson.lua 			MARKED_SAMESHARD = "only_used_by_wanda same shard",
+--fallback to speech_wilson.lua 			MARKED_DIFFERENTSHARD = "only_used_by_wanda other shard",
+		},
+
+        POCKETWATCH_WEAPON = {
+			GENERIC = "I'm starting to think Mme. Wanda has a bit of pent up aggression...",
+--fallback to speech_wilson.lua 			DEPLETED = "only_used_by_wanda",
+		},
+
+        POCKETWATCH_PARTS = "This is what goes into the watches, non?",
+        POCKETWATCH_DISMANTLER = "Oh, Mme. Wanda left her tools!",
+
+        POCKETWATCH_PORTAL_ENTRANCE = 
+		{
+			GENERIC = "Must I... really go in?",
+			DIFFERENTSHARD = "Must I... really go in?",
+		},
+        POCKETWATCH_PORTAL_EXIT = "I wonder who might be coming through?",
+
         -- Waterlog
         WATERTREE_PILLAR = "Une grande surprise!",
         OCEANTREE = "To think they could grow this far out to sea!",
@@ -4075,7 +4155,7 @@ return{
         WATERTREE_ROOT = "A lonely tree root.",
 
         OCEANTREE_PILLAR = "A large souvenir from our travels at sea.",
-
+        
         OCEANVINE = "Sigh. Another grapeless vine.",
         FIG = "You would be delicious in a tart.",
         FIG_COOKED = "It could use a bit of honey, perhaps some cinnamon and nutmeg...",

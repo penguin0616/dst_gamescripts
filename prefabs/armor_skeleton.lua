@@ -102,6 +102,7 @@ local function ontakefuel(inst)
         inst.components.cooldown.onchargedfn = OnChargedFn
         inst.components.cooldown:StartCharging(TUNING.ARMOR_SKELETON_FIRST_COOLDOWN)
     end
+    inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
 end
 
 local function onequip(inst, owner)
@@ -132,6 +133,7 @@ local function fn()
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
     inst.entity:AddNetwork()
+    inst.entity:AddSoundEmitter()
 
     MakeInventoryPhysics(inst)
 

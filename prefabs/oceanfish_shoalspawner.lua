@@ -7,6 +7,12 @@ local prefabs =
 
 }
 
+local function OnSpawnFish(inst, child)
+	if child and child.sg then
+		child.sg:GoToState("arrive")
+	end
+end
+
 local function ReleaseAllFish(inst)
 	inst.components.childspawner:ReleaseAllChildren()
 end
@@ -48,6 +54,7 @@ local function fn()
     inst.components.childspawner:SetRegenPeriod(TUNING.OCEANFISH_SHOAL.CHILD_REGENPERIOD)
     inst.components.childspawner:SetSpawnPeriod(TUNING.OCEANFISH_SHOAL.CHILD_SPAWNPERIOD)
     inst.components.childspawner:SetMaxChildren(TUNING.OCEANFISH_SHOAL.MAX_CHILDREN)
+    inst.components.childspawner:SetSpawnedFn(OnSpawnFish)
     inst.components.childspawner:StartRegen()
 	inst.components.childspawner.spawnradius = TUNING.OCEANFISH_SHOAL.SPAWNRADIUS
 	inst.components.childspawner.childname = "oceanfish_medium_2"

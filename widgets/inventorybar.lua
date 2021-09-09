@@ -12,6 +12,13 @@ local HudCompass = require "widgets/hudcompass"
 local TEMPLATES = require "widgets/templates"
 
 local HUD_ATLAS = "images/hud.xml"
+local HUD2_ATLAS = "images/hud2.xml"
+
+local HUD_CHARACTERS = 
+{
+    ["wanda"] = HUD2_ATLAS,
+}
+
 local W = 68
 local SEP = 12
 local YSEP = 8
@@ -253,10 +260,11 @@ local function RebuildLayout(self, inventory, overflow, do_integrated_backpack, 
         x = x + W + (k % 5 == 0 and INTERSEP or SEP)
     end
 
-    local image_name = "self_inspect_"..self.owner.prefab..".tex"
-    local atlas_name = "images/avatars/self_inspect_"..self.owner.prefab..".xml"
+    local owner_prefab = self.owner.prefab
+    local image_name = "self_inspect_".. owner_prefab ..".tex"
+    local atlas_name = "images/avatars/self_inspect_".. owner_prefab.. ".xml"
     if softresolvefilepath(atlas_name) == nil then
-        atlas_name = "images/hud.xml"
+        atlas_name = HUD_CHARACTERS[owner_prefab] or HUD_ATLAS
     end
 
     if do_self_inspect then

@@ -192,6 +192,16 @@ local function SetTemperature(inst, temperature)
     end
 end
 
+fns.SetOldagerRate = function(inst, dps)
+    assert(dps >= -30 and dps <= 30, "Player oldager_rate out of range: "..tostring(dps))
+	inst.oldager_rate:set(dps + 30)
+end
+
+fns.GetOldagerRate = function(inst)
+	return inst.oldager_rate:value() - 30
+end
+
+
 --TouchStoneTracker stuff
 local function SetUsedTouchStones(inst, used)
     inst.touchstonetrackerused:set(used)
@@ -381,7 +391,6 @@ fns.OnInspirationSongsDirty = function(inst, slot)
     if inst._parent ~= nil then
 		local song_def = INSPIRATION_BATTLESONG_DEFS.GetBattleSongDefFromNetID(inst.inspirationsongs[slot]:value())
 		inst._parent:PushEvent("inspirationsongchanged", {songdata = song_def, slotnum = slot})
-    else
     end
 end
 
@@ -993,8 +1002,10 @@ local function fn()
 	}
     inst.hasinspirationbuff = net_bool(inst.GUID, "inspiration.hasbuff", "hasinspirationbuffdirty")
 
-	-- available_slots maybe?
-
+	-- oldager
+    inst.oldager_yearpercent = net_float(inst.GUID, "oldager.yearpercent")
+    inst.oldager_rate = net_smallbyte(inst.GUID, "oldager.rate") -- use the Get and Set functions because this value is a signed value incoded into an unsigned net_var
+	inst.GetOldagerRate = fns.GetOldagerRate
 
     --Temperature variables
     inst._oldtemperature = TUNING.STARTING_TEMP
@@ -1171,6 +1182,7 @@ local function fn()
     inst.ShowActions = fns.ShowActions
     inst.ShowHUD = fns.ShowHUD
     inst.EnableMapControls = fns.EnableMapControls
+	inst.SetOldagerRate = fns.SetOldagerRate
 
     inst.persists = false
 

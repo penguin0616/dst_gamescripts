@@ -97,6 +97,10 @@ spear_clear_fn = function(inst) basic_clear_fn(inst, "swap_spear" ) end
 spear_wathgrithr_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "swap_spear_wathgrithr" ) end
 spear_wathgrithr_clear_fn = function(inst) basic_clear_fn(inst, "swap_spear_wathgrithr" ) end
 
+reskin_tool_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "reskin_tool" ) end
+reskin_tool_clear_fn = function(inst) basic_clear_fn(inst, "reskin_tool" ) end
+
+
 axe_init_fn = function(inst, build_name)
     if string.find( build_name, "_invisible") ~= nil then
         inst.components.floater.do_bank_swap = false
@@ -1800,6 +1804,7 @@ function CreatePrefabSkin(name, info)
 	prefab_skin.marketable			= info.marketable
     prefab_skin.release_group       = info.release_group
     prefab_skin.linked_beard        = info.linked_beard
+    prefab_skin.share_bigportrait_name = info.share_bigportrait_name
 
     if info.torso_tuck_builds ~= nil then
         for _,base_skin in pairs(info.torso_tuck_builds) do

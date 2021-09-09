@@ -5,7 +5,8 @@ local assets =
 
 local prefabs =
 {
-    "driftwood",
+    "driftwood_log",
+    "twigs",
 }
 
 SetSharedLootTable( 'watertree_root',

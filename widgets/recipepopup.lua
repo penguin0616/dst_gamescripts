@@ -349,6 +349,10 @@ function RecipePopup:Refresh()
         --#BDOIG - does this need to listen for deltas and change while menu is open?
         --V2C: yes, but the entire craft tabs does. (will be added there)
         local has, amount = builder:HasCharacterIngredient(v)
+
+		if v.type == CHARACTER_INGREDIENT.HEALTH and owner:HasTag("health_as_oldage") then
+			v = Ingredient(CHARACTER_INGREDIENT.OLDAGE, math.ceil(v.amount * TUNING.OLDAGE_HEALTH_SCALE))
+		end
         local ing = self.contents:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), v.amount, amount, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type))
         if GetGameModeProperty("icons_use_cc") then
             ing.ing:SetEffect("shaders/ui_cc.ksh")
@@ -394,6 +398,7 @@ function RecipePopup:Refresh()
         local buttonstr =
             (not (knows or recipe.nounlock) and STRINGS.UI.CRAFTING.PROTOTYPE) or
             (buffered and STRINGS.UI.CRAFTING.PLACE) or
+			(recipe.actionstr ~= nil and STRINGS.UI.CRAFTING.RECIPEACTION[recipe.actionstr]) or
             STRINGS.UI.CRAFTING.TABACTION[recipe.tab.str] or
             STRINGS.UI.CRAFTING.BUILD
 

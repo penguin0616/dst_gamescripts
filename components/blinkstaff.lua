@@ -54,13 +54,13 @@ function BlinkStaff:Blink(pt, caster)
     caster.SoundEmitter:PlaySound("dontstarve/common/staff_blink")
 
     if caster.sg == nil then
-    caster:Hide()
-    if caster.DynamicShadow ~= nil then
-        caster.DynamicShadow:Enable(false)
-    end
-    if caster.components.health ~= nil then
-        caster.components.health:SetInvincible(true)
-    end
+		caster:Hide()
+		if caster.DynamicShadow ~= nil then
+			caster.DynamicShadow:Enable(false)
+		end
+		if caster.components.health ~= nil then
+			caster.components.health:SetInvincible(true)
+		end
     elseif caster.sg.statemem.onstartblinking ~= nil then
         caster.sg.statemem.onstartblinking()
     end

@@ -3,7 +3,6 @@ local assets =
 {
     Asset("ANIM", "anim/batbat.zip"),
     Asset("ANIM", "anim/swap_batbat.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local assets_bats =

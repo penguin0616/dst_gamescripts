@@ -231,6 +231,11 @@ return
 			"legs_pj_green_hunters",
 			"bedroll_furry_quilt_green_hunters",
 		},
+		{
+			"body_pj_orange_honey",
+			"legs_pj_orange_honey",
+			"bedroll_furry_quilt_orange_honey",
+		},
 	},
 }
 

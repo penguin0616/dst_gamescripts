@@ -1888,11 +1888,10 @@ function TEMPLATES.ReduxForeground()
 end
 
 -- for making static health/hunger/sanity for using in the lobby
-function TEMPLATES.MakeUIStatusBadge(status_name, c)
-	local status = Widget(status_name.."_status")
-	status._status_name = status_name
+function TEMPLATES.MakeUIStatusBadge(_status_name, c)
+	local status = Widget(_status_name.."_status")
 
-	status.status_icon = status:AddChild(Image("images/global_redux.xml", "status_"..status_name..".tex"))
+	status.status_icon = status:AddChild(Image())
 	status.status_icon:SetScale(.55)
 
 	status.status_image = status:AddChild(Image("images/global_redux.xml", "value_gold.tex"))
@@ -1903,6 +1902,10 @@ function TEMPLATES.MakeUIStatusBadge(status_name, c)
 	status.status_value:SetPosition(0, -34)
 
 	status.ChangeCharacter = function(self, character)
+		local status_name = TUNING.CHARACTER_DETAILS_OVERRIDE[character.."_".._status_name] or _status_name
+
+		status.status_icon:SetTexture("images/global_redux.xml", "status_"..status_name..".tex")
+
 		local v = tostring(TUNING[string.upper(character.."_"..status_name)] or STRINGS.CHARACTER_DETAILS.STAT_UNKNOW)
 		status.status_value:SetString(v)
 	end

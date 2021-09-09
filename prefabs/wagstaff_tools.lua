@@ -1,7 +1,6 @@
 local assets =
 {
     Asset("ANIM", "anim/wagstaff_tools.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
 }
 
 local function OnDropped(inst)

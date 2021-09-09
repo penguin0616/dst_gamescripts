@@ -63,6 +63,7 @@ STRINGS =
         warly = "Warly",
         wurt = "Wurt",
         walter = "Walter",
+        wanda = "Wanda",
         unknown = "The Unknown",
         random = "Random",
     },
@@ -87,6 +88,7 @@ STRINGS =
         warly = "\"Nothing worthwhile is ever done on an empty stomach!\"",
         wurt = "\"Mermfolk known for hos-per-tality, florp.\"",
         walter = "\"A Pinetree Pioneer is always prepared!\"",
+        wanda = "\"Time! I just need more time!\"",
         random = "Anybody could be under that hat.",
     },
 
@@ -109,6 +111,7 @@ STRINGS =
         warly = "The Culinarian",
         wurt = "The Half-Pint",
         walter = "The Fearless",
+        wanda = "The Timekeeper",
     },
 
     -- Use GetCharacterDescription from stringutil -- it handles variants!
@@ -133,6 +136,7 @@ STRINGS =
         warly = "*Has his own line of custom portable cookware \n*Can spice things up \n*Has an insatiable appetite \n*Only eats gourmet food",
         wurt = "*At home in the swamp \n*Has big plans for Merm-kind \n*Is a vegetarian",
         walter = "*Not afraid of anything, except getting hurt \n*Good with a slingshot \n*Has a four-legged friend \n*Allergic to bees \n*Has no interest in fashion",
+        wanda = "*Has excellent time management skills \n*Only as old as she feels \n*In a constant race against the clock",
         random = "Anybody could be under that hat",
     },
 
@@ -157,6 +161,7 @@ STRINGS =
         warly = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         wurt = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         walter = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
+        wanda = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         random = "\nSelect a random character",
     },
 
@@ -181,6 +186,7 @@ STRINGS =
         warly = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         wurt = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         walter = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
+        wanda = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         random = "\nSelect a random character",
     },
 
@@ -203,6 +209,7 @@ STRINGS =
         warly = "To Warly, cooking is a language through which to express love and gratitude to those he holds dear.",
         wurt = "Wurt is a curious young Merm trying to expand her horizons... as long as those horizons don't extend into Pig territory.",
         walter = "Walter is an odd but cheerful boy, whose ability to assess danger leaves something to be desired.",
+        wanda = "Wanda is a skilled clockmaker who will stop at nothing to outrun her future.",
     },
 
 	CHARACTER_BIOS =
@@ -310,6 +317,12 @@ STRINGS =
             { title = "Favorite Food", desc = "Trail Mix" },
             { title = "Constant Companion", desc = "The only thing that could ever rival Walter's love for the great outdoors was his fascination with monsters and mystery. Nothing captured his interest more than a spooky story heard over the radio or a local legend about an elusive cryptid.\nIt was that pursuit of the unknown that eventually led him to the Constant. While searching for a man who Walter believed would have answers to his questions about a mysterious creature rumored to live in the woods, he instead came upon an abandoned cabin. The owner seemed to have left hastily, leaving all their belongings behind... including an odd radio that miraculously still seemed to be working. With curiosity getting the better of him he investigated the radio further, springing a trap that had lain dormant for years...\nNow finding himself trapped in the Constant, Walter has befriended another lost soul - a scruffy dog named Woby. Though much about her remains a mystery, Walter has vowed to one day return her to her rightful home (after all, returning lost dogs is the Pinetree Pioneer thing to do)." },
 		},
+        wanda =
+		{
+			{ title = "Birthday", desc = "August 8" },
+            { title = "Favorite Food", desc = "Taffy" },
+            { title = "Long Shadows", desc = "An enigmatic woman of... well, fluctuating age, Wanda was torn from the world she knew after accidentally creating a fracture in time and space, pulling her from her own timeline into the land of the Constant. Though she avoids divulging many details of her past with the other Survivors, she seems to have an odd familiarity with them, as though she's run into them before... or perhaps, later?" },
+		},
 	},
 
 	CHARACTER_DETAILS =
@@ -342,6 +355,7 @@ STRINGS =
         warly = "Grim",
         wurt = "Slim",
         walter = "Slim",
+        wanda = "Slim",
         random = "Unknown",
         default = "Unknown",
     },
@@ -831,11 +845,22 @@ STRINGS =
             UNMARK = "Take Back",
         },
 
+		-- wanda
+		CAST_POCKETWATCH =
+		{
+            GENERIC = "Activate",
+			REVIVER = "Revive",
+			RECALL_MARK = "Set Time In Space",
+			--RECALL = "Travel Back",
+		},
+
         -- Webber
         MUTATE_SPIDER = "Feed",
         HERD_FOLLOWERS = "Herd Spiders",
         REPEL = "Shoo Spiders",
         BEDAZZLE = "Decorate",
+
+        DISMANTLE_POCKETWATCH = "Take Apart",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -1281,6 +1306,7 @@ STRINGS =
         WARLY = "Warly",
         WURT = "Wurt",
         WALTER = "Walter",
+        WANDA = "Wanda",
 
         PIGKING = "Pig King",
         STRAWHAT = "Straw Hat",
@@ -1962,6 +1988,7 @@ STRINGS =
         HALF_HEALTH = "Maximum Health",
         DECREASE_SANITY = "Sanity",
         HALF_SANITY = "Maximum Sanity",
+		DECREASE_OLDAGE = "Years",
 
         SCULPTING_MATERIAL = "Sculpting Block",
 
@@ -2832,6 +2859,22 @@ STRINGS =
 		SLINGSHOTAMMO_POOP = "Poop Pellets",
         PORTABLETENT_ITEM = "Tent Roll",
         PORTABLETENT = "Camper's Tent",
+
+		-- WANDA
+		OLDAGER_COMPONENT = "the passage of time", -- for "was killed by ..." string
+
+		POCKETWATCH_PARTS = "Time Pieces",
+		POCKETWATCH_WEAPON = "Alarming Clock",
+		POCKETWATCH_DISMANTLER = "Clockmaker's Tools",
+		POCKETWATCH_RECALL = "Backtrek Watch",
+		POCKETWATCH_HEAL = "Ageless Watch",
+		POCKETWATCH_REVIVE = "Second Chance Watch",
+		POCKETWATCH_REVIVE_REVIVER = "Second Chance Watch", -- for "was revived by ..." string
+		POCKETWATCH_WARP = "Backstep Watch",
+		POCKETWATCH_PORTAL = "Rift Watch",
+
+		POCKETWATCH_PORTAL_ENTRANCE = "Time Rift",
+		POCKETWATCH_PORTAL_EXIT = "Time Rift",
 
         -- Wigfrid
         BATTLESONG_DURABILITY = "Weaponized Warble",
@@ -3760,6 +3803,16 @@ STRINGS =
 		SLINGSHOTAMMO_POOP = "Disgusting and distracting.",
         PORTABLETENT = "Portable protection from the elements.",
         PORTABLETENT_ITEM = "Portable protection from the elements.",
+
+		-- WANDA
+		POCKETWATCH_PARTS = "It's what's inside, that counts.",
+		POCKETWATCH_WEAPON = "This clock strikes YOU.",
+		POCKETWATCH_DISMANTLER = "Tinker with timepieces.",
+		POCKETWATCH_RECALL = "Return to a distant point in time.",
+		POCKETWATCH_HEAL = "You're only as old as you feel.",
+		POCKETWATCH_REVIVE = "Undo a friend's untimely end.",
+		POCKETWATCH_WARP = "Retrace your last steps.",
+		POCKETWATCH_PORTAL = "Time travel is better with friends.",
 
         -- Wigfrid
         BATTLESONG_DURABILITY = "Give weapons more time in the spotlight.",
@@ -5078,6 +5131,7 @@ STRINGS =
 		WINTERSFEASTCOOKING = "Feast",
         HERMITCRABSHOP = "Bottle Exchange",
 		SLINGSHOTAMMO = "Slingshot Ammo",
+		CLOCKMAKER = "Clocksmithy",
         TURFCRAFTING = "Landscaping",
 		BALLOONOMANCY = "Balloonomancy",
     },
@@ -5818,6 +5872,10 @@ STRINGS.UI =
 			QUAGMIRE_TRADER_KID = "Purchase",
 			MADSCIENCE = "Mix",
         },
+		RECIPEACTION =
+		{
+            SOCKET = "Socket",
+		},
         TABNEEDSTUFF =
         {
             QUAGMIRE_MEALINGSTONE = "Find ingredients \nto grind!",
@@ -11105,6 +11163,7 @@ STRINGS.CHARACTERS =
     WARLY = require "speech_warly",
     WURT = require "speech_wurt",
     WALTER = require "speech_walter",
+    WANDA = require "speech_wanda",
 }
 
 STRINGS.LUCY =

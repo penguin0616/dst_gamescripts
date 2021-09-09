@@ -63,15 +63,15 @@ local function ConfigureGhostActions(inst)
 end
 
 local function RemoveDeadPlayer(inst, spawnskeleton)
-    if spawnskeleton and TheSim:HasPlayerSkeletons() then
+    if spawnskeleton and TheSim:HasPlayerSkeletons() and inst.skeleton_prefab ~= nil then
         local x, y, z = inst.Transform:GetWorldPosition()
 
         -- Spawn a skeleton
-        local skel = SpawnPrefab("skeleton_player")
+        local skel = SpawnPrefab(inst.skeleton_prefab)
         if skel ~= nil then
             skel.Transform:SetPosition(x, y, z)
             -- Set the description
-            skel:SetSkeletonDescription(inst.prefab, inst:GetDisplayName(), inst.deathcause, inst.deathpkname)
+            skel:SetSkeletonDescription(inst.prefab, inst:GetDisplayName(), inst.deathcause, inst.deathpkname, inst.userid)
             skel:SetSkeletonAvatarData(inst.deathclientobj)
         end
 
@@ -128,6 +128,9 @@ local function OnPlayerDeath(inst, data)
 
     inst.deathclientobj = TheNet:GetClientTableForUser(inst.userid)
     inst.deathcause = data ~= nil and data.cause or "unknown"
+	inst.last_death_position = Vector3(inst.Transform:GetWorldPosition())
+	inst.last_death_shardid = TheShard:GetShardId()
+
     if data == nil or data.afflicter == nil then
         inst.deathpkname = nil
     elseif data.afflicter.overridepkname ~= nil then
@@ -210,6 +213,9 @@ local function CommonActualRez(inst)
         inst.rezsource = nil
     end
     inst.remoterezsource = nil
+
+	inst.last_death_position = nil
+	inst.last_death_shardid = nil
 end
 
 local function DoActualRez(inst, source, item)
@@ -268,8 +274,28 @@ local function DoActualRez(inst, source, item)
             source:PushEvent("rez_player")
             inst.sg:GoToState("portal_rez")
         end
-    else -- Telltale Heart
-        inst.sg:GoToState("reviver_rebirth", item)
+    else 
+		if item ~= nil and (item.prefab == "pocketwatch_revive" or item.prefab == "pocketwatch_revive_reviver") then
+			inst.DynamicShadow:Enable(true)
+			inst.AnimState:SetBank("wilson")
+			inst.components.skinner:SetSkinMode("normal_skin") -- restore skin
+			inst.components.bloomer:PopBloom("playerghostbloom")
+			inst.AnimState:SetLightOverride(0)
+
+			item:PushEvent("activateresurrection", inst)
+
+            inst.components.inventory:Hide()
+            inst:PushEvent("ms_closepopups")
+			if inst:HasTag("wereplayer") then
+	            inst.sg:GoToState("wakeup")
+			else
+	            inst.sg:GoToState("rewindtime_rebirth")
+			end
+
+			SpawnPrefab("pocketwatch_ground_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+		else -- Telltale Heart
+	        inst.sg:GoToState("reviver_rebirth", item)
+		end
     end
 
     --Default to electrocute light values
@@ -281,7 +307,7 @@ local function DoActualRez(inst, source, item)
 
     MakeCharacterPhysics(inst, 75, .5)
 
-    CommonActualRez(inst, source, item)
+    CommonActualRez(inst)
 
     inst:RemoveTag("playerghost")
     inst.Network:RemoveUserFlag(USERFLAGS.IS_GHOST)
@@ -346,7 +372,7 @@ local function DoRezDelay(inst, source, delay)
         end
         inst.rezsource = nil
         inst.remoterezsource = nil
-        --Revert DoMoveToRezSource state
+        --Revert DoMoveToRezSource or DoMoveToRezPosition state
         inst:Show()
         inst.Light:Enable(true)
         inst:SetCameraDistance()
@@ -393,7 +419,38 @@ local function DoMoveToRezSource(inst, source, delay)
     DoRezDelay(inst, source, delay)
 end
 
-local function OnRespawnFromGhost(inst, data)
+local PLAYERSKELETON_TAG = {"playerskeleton"}
+
+local function DoMoveToRezPosition(inst, item, delay, fade_in)
+    inst:Hide()
+    inst.Light:Enable(false)
+	if inst.last_death_position ~= nil and inst.last_death_shardid ~= nil then
+		if inst.last_death_shardid == TheShard:GetShardId() then
+			inst.Physics:Teleport(inst.last_death_position:Get())
+			inst:SnapCamera()
+			inst:SetCameraDistance(24)
+
+			if inst.sg.statemem.faded or fade_in then
+				inst.sg.statemem.faded = false
+				inst:ScreenFade(true, 1)
+			end
+
+			inst:DoTaskInTime(delay, DoActualRez, nil, item)
+		elseif Shard_IsWorldAvailable(inst.last_death_shardid) then
+			if inst.sg.statemem.faded or fade_in then
+				inst.sg.statemem.faded = false
+				inst:ScreenFade(true, 0)
+			end
+			TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = inst, portalid = nil, worldid = inst.last_death_shardid, x = inst.last_death_position.x, y = inst.last_death_position.y, z = inst.last_death_position.z })
+		else
+			inst:DoTaskInTime(0, DoActualRez, nil, item)
+		end
+	else
+		inst:DoTaskInTime(0, DoActualRez, nil, item)
+	end
+end
+
+local function OnRespawnFromGhost(inst, data) -- from ListenForEvent "respawnfromghost"
     if not inst:HasTag("playerghost") then
         return
     end
@@ -416,6 +473,16 @@ local function OnRespawnFromGhost(inst, data)
     elseif inst.sg.currentstate.name == "remoteresurrect" then
         inst:DoTaskInTime(0, DoMoveToRezSource, data.source, 24 * FRAMES)
     elseif data.source.prefab == "reviver" then
+        inst:DoTaskInTime(0, DoActualRez, nil, data.source)
+    elseif data.source.prefab == "pocketwatch_revive" then
+        if not data.from_haunt then
+			inst.sg:GoToState("start_rewindtime_revive")
+			inst:DoTaskInTime(24*FRAMES, DoMoveToRezPosition, data.source, inst.skeleton_prefab == nil and 15 * FRAMES or 60 * FRAMES)
+		else
+			inst:ScreenFade(false, 1)
+			inst:DoTaskInTime(9*FRAMES, DoMoveToRezPosition, data.source, inst.skeleton_prefab == nil and 15 * FRAMES or 60 * FRAMES, true)
+		end
+    elseif data.source.prefab == "pocketwatch_revive_reviver" then
         inst:DoTaskInTime(0, DoActualRez, nil, data.source)
     elseif data.source.prefab == "amulet"
         or data.source.prefab == "resurrectionstone"
@@ -489,12 +556,12 @@ local function OnMakePlayerGhost(inst, data)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     -- Spawn a skeleton
-    if data ~= nil and data.skeleton and TheSim:HasPlayerSkeletons() then
-        local skel = SpawnPrefab("skeleton_player")
+    if inst.skeleton_prefab ~= nil and data ~= nil and data.skeleton and TheSim:HasPlayerSkeletons() then
+        local skel = SpawnPrefab(inst.skeleton_prefab)
         if skel ~= nil then
             skel.Transform:SetPosition(x, y, z)
             -- Set the description
-            skel:SetSkeletonDescription(inst.prefab, inst:GetDisplayName(), inst.deathcause, inst.deathpkname)
+            skel:SetSkeletonDescription(inst.prefab, inst:GetDisplayName(), inst.deathcause, inst.deathpkname, inst.userid)
             skel:SetSkeletonAvatarData(inst.deathclientobj)
         end
     end
@@ -538,7 +605,7 @@ local function OnMakePlayerGhost(inst, data)
     inst:AddTag("playerghost")
     inst.Network:AddUserFlag(USERFLAGS.IS_GHOST)
 
-    inst.components.health:SetCurrentHealth(TUNING.RESURRECT_HEALTH)
+    inst.components.health:SetCurrentHealth(TUNING.RESURRECT_HEALTH * (inst.resurrect_multiplier or 1))
     inst.components.health:ForceUpdateHUD(true)
 
     if inst.components.playercontroller ~= nil then

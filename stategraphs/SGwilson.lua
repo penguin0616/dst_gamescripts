@@ -395,7 +395,7 @@ local function IsMinigameItem(inst)
     return inst:HasTag("minigameitem")
 end
 
-local function DoPortalTint(inst, val)
+local function DoWortoxPortalTint(inst, val)
     if val > 0 then
         inst.components.colouradder:PushColour("portaltint", 154 / 255 * val, 23 / 255 * val, 19 / 255 * val, 0)
         val = 1 - val
@@ -526,6 +526,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.UPGRADE, "dolongaction"),
     ActionHandler(ACTIONS.ACTIVATE,
         function(inst, action)
+            local obj = action.target or action.invobject
             return action.target.components.activatable ~= nil
                 and (   (action.target.components.activatable.standingaction and "dostandingaction") or
                         (action.target.components.activatable.quickaction and "doshortaction") or
@@ -578,6 +579,7 @@ local actionhandlers =
                 or (action.recipe == "livinglog" and inst:HasTag("plantkin") and "form_log")
                 or (inst:HasTag("hungrybuilder") and "dohungrybuild")
                 or (inst:HasTag("fastbuilder") and "domediumaction")
+                or (inst:HasTag("slowbuilder") and "dolongestaction")
                 or "dolongaction"
         end),
     ActionHandler(ACTIONS.SHAVE, "shave"),
@@ -691,6 +693,15 @@ local actionhandlers =
                         (action.invobject:HasTag("parryweapon") and "parry_pre")
                     )
                 or "castspell"
+        end),
+    ActionHandler(ACTIONS.CAST_POCKETWATCH,
+        function(inst, action)
+            return action.invobject ~= nil
+                and (   action.invobject:HasTag("recall_unmarked") and "dolongaction"
+						or action.invobject:HasTag("pocketwatch_warp_casting") and "pocketwatch_warpback_pre"
+						or action.invobject.prefab == "pocketwatch_portal" and "pocketwatch_openportal"
+                    )
+                or "pocketwatch_cast"
         end),
     ActionHandler(ACTIONS.BLINK,
         function(inst, action)
@@ -892,6 +903,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.UNLOAD_WINCH, "give"),
     ActionHandler(ACTIONS.USE_HEAVY_OBSTACLE, "dolongaction"),
     ActionHandler(ACTIONS.ADVANCE_TREE_GROWTH, "dolongaction"),
+
+    ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),
 }
 
 local events =
@@ -1143,6 +1156,20 @@ local events =
         function(inst)
             if not inst.sg:HasStateTag("dead") then
                 inst.sg:GoToState("powerdown")
+            end
+        end),
+
+    EventHandler("becomeyounger_wanda",
+        function(inst)
+            if inst.sg:HasStateTag("idle") then
+                inst.sg:GoToState("becomeyounger_wanda")
+            end
+        end),
+
+    EventHandler("becomeolder_wanda",
+        function(inst)
+            if inst.sg:HasStateTag("idle") then
+                inst.sg:GoToState("becomeolder_wanda")
             end
         end),
 
@@ -1536,6 +1563,58 @@ local states =
                 --Lava Arena adds nointerrupt state tag to prevent hit interruption
                 inst.sg:RemoveStateTag("nointerrupt")
             end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    --------------------------------------------------------------------------
+
+    State{
+        name = "becomeyounger_wanda",
+        tags = { "nomorph" },
+
+        onenter = function(inst)
+            ForceStopHeavyLifting(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("wanda_young")
+        end,
+
+        timeline =
+        {
+            TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wanda2/characters/wanda/younger_transition") end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "becomeolder_wanda",
+        tags = { "nomorph", "nodangle" },
+
+        onenter = function(inst)
+            ForceStopHeavyLifting(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("wanda_old")
+        end,
+
+        timeline =
+        {
+            TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wanda2/characters/wanda/older_transition") end),
         },
 
         events =
@@ -2177,7 +2256,7 @@ local states =
                     inst.AnimState:PlayAnimation("death2")
                 else
                     inst.components.inventory:DropEverything(true)
-                    inst.AnimState:PlayAnimation("death")
+                    inst.AnimState:PlayAnimation(inst.deathanimoverride or "death")
                 end
 
                 inst.AnimState:Hide("swap_arm_carry")
@@ -2228,7 +2307,9 @@ local states =
 
                         inst.SoundEmitter:PlaySound("dontstarve/wilson/death")
 
-                        if not inst:HasTag("mime") then
+						if inst.deathsoundoverride ~= nil then
+							inst.SoundEmitter:PlaySound(FunctionOrValue(inst.deathsoundoverride, inst))
+						elseif not inst:HasTag("mime") then
                             inst.SoundEmitter:PlaySound((inst.talker_path_override or "dontstarve/characters/")..(inst.soundsname or inst.prefab).."/death_voice")
                         end
 
@@ -2239,7 +2320,7 @@ local states =
                             inst.AnimState:PlayAnimation("death2")
                         else
                             inst.components.inventory:DropEverything(true)
-                            inst.AnimState:PlayAnimation("death")
+                            inst.AnimState:PlayAnimation(inst.deathanimoverride or "death")
                         end
 
                         inst.AnimState:Hide("swap_arm_carry")
@@ -5270,6 +5351,13 @@ local states =
     },
 
     State{
+        name = "dolongestaction",
+        onenter = function(inst)
+            inst.sg:GoToState("dolongaction", TUNING.LONGEST_ACTION_TIMEOUT)
+        end,
+    },
+
+    State{
         name = "dolongaction",
         tags = { "doing", "busy", "nodangle" },
 
@@ -5358,6 +5446,19 @@ local states =
                 inst.sg.statemem.iswhip = true
                 inst.SoundEmitter:PlaySound("dontstarve/common/whip_large")
                 cooldown = 17 * FRAMES
+			elseif equip ~= nil and equip:HasTag("pocketwatch") then
+				inst.AnimState:PlayAnimation("pocketwatch_atk_pre" )
+				inst.AnimState:PushAnimation("pocketwatch_atk", false)
+				inst.sg.statemem.ispocketwatch = true
+				cooldown = 19 * FRAMES
+                if equip:HasTag("shadow_item") then
+	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre_shadow", nil, nil, true)
+					inst.AnimState:Show("pocketwatch_weapon_fx")
+					inst.sg.statemem.ispocketwatch_fueled = true
+                else
+	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre", nil, nil, true)
+					inst.AnimState:Hide("pocketwatch_weapon_fx")
+                end
             elseif equip ~= nil and equip.components.weapon ~= nil and not equip:HasTag("punch") then
                 inst.AnimState:PlayAnimation("atk_pre")
                 inst.AnimState:PushAnimation("atk", false)
@@ -5401,20 +5502,25 @@ local states =
             TimeEvent(6 * FRAMES, function(inst)
                 if inst.sg.statemem.isbeaver then
                     inst:PerformBufferedAction()
-                elseif not inst.sg.statemem.iswhip then
+                elseif not (inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch) then
                     inst.sg:RemoveStateTag("busy")
                 end
             end),
             TimeEvent(8 * FRAMES, function(inst)
-                if inst.sg.statemem.iswhip then
+                if inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch then
                     inst.sg:RemoveStateTag("busy")
                 elseif not inst.sg.statemem.isbeaver then
                     inst:PerformBufferedAction()
                 end
             end),
             TimeEvent(10 * FRAMES, function(inst)
-                if inst.sg.statemem.iswhip then
+                if inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch then
                     inst:PerformBufferedAction()
+                end
+            end),
+            TimeEvent(17*FRAMES, function(inst) 
+				if inst.sg.statemem.ispocketwatch then
+                    inst.SoundEmitter:PlaySound(inst.sg.statemem.ispocketwatch_fueled and "wanda2/characters/wanda/watch/weapon/pst_shadow" or "wanda2/characters/wanda/watch/weapon/pst")
                 end
             end),
         },
@@ -6862,6 +6968,9 @@ local states =
                 inst.sg:GoToState("idle", true)
                 return
             end
+            if inst.sg.laststate == inst.sg.currentstate then
+                inst.sg.statemem.chained = true
+            end
             local buffaction = inst:GetBufferedAction()
             local target = buffaction ~= nil and buffaction.target or nil
             local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
@@ -6873,6 +6982,7 @@ local states =
                 if equip ~= nil and (equip.components.projectile ~= nil or equip:HasTag("rangedweapon")) then
                     inst.AnimState:PlayAnimation("player_atk_pre")
                     inst.AnimState:PushAnimation("player_atk", false)
+
                     if (equip.projectiledelay or 0) > 0 then
                         --V2C: Projectiles don't show in the initial delayed frames so that
                         --     when they do appear, they're already in front of the player.
@@ -6906,8 +7016,21 @@ local states =
                 inst.AnimState:PlayAnimation("whip_pre")
                 inst.AnimState:PushAnimation("whip", false)
                 inst.sg.statemem.iswhip = true
-                inst.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, nil, true)
+                inst.SoundEmitter:PlaySound("dontstarve/common/whip_pre", nil, nil, true)
                 cooldown = math.max(cooldown, 17 * FRAMES)
+			elseif equip ~= nil and equip:HasTag("pocketwatch") then
+				inst.AnimState:PlayAnimation(inst.sg.statemem.chained and "pocketwatch_atk_pre_2" or "pocketwatch_atk_pre" )
+				inst.AnimState:PushAnimation("pocketwatch_atk", false)
+				inst.sg.statemem.ispocketwatch = true
+				cooldown = math.max(cooldown, 15 * FRAMES)
+                if equip:HasTag("shadow_item") then
+	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre_shadow", nil, nil, true)
+					inst.AnimState:Show("pocketwatch_weapon_fx")
+					inst.sg.statemem.ispocketwatch_fueled = true
+                else
+	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre", nil, nil, true)
+					inst.AnimState:Hide("pocketwatch_weapon_fx")
+                end
             elseif equip ~= nil and equip:HasTag("book") then
                 inst.AnimState:PlayAnimation("attack_book")
                 inst.sg.statemem.isbook = true
@@ -7022,6 +7145,7 @@ local states =
                 if not (inst.sg.statemem.isbeaver or
                         inst.sg.statemem.ismoose or
                         inst.sg.statemem.iswhip or
+						inst.sg.statemem.ispocketwatch or
                         inst.sg.statemem.isbook) and
                     inst.sg.statemem.projectiledelay == nil then
                     inst:PerformBufferedAction()
@@ -7029,12 +7153,18 @@ local states =
                 end
             end),
             TimeEvent(10 * FRAMES, function(inst)
-                if inst.sg.statemem.iswhip or inst.sg.statemem.isbook then
+                if inst.sg.statemem.iswhip or inst.sg.statemem.isbook or inst.sg.statemem.ispocketwatch then
                     inst:PerformBufferedAction()
                     inst.sg:RemoveStateTag("abouttoattack")
                 end
             end),
+            TimeEvent(17*FRAMES, function(inst) 
+				if inst.sg.statemem.ispocketwatch then
+                    inst.SoundEmitter:PlaySound(inst.sg.statemem.ispocketwatch_fueled and "wanda2/characters/wanda/watch/weapon/pst_shadow" or "wanda2/characters/wanda/watch/weapon/pst")
+                end
+            end),
         },
+
 
         ontimeout = function(inst)
             inst.sg:RemoveStateTag("attack")
@@ -9839,6 +9969,48 @@ local states =
     },
 
     State{
+        name = "rewindtime_rebirth",
+        tags = { "busy", "busy", "nopredict", "silentmorph" },
+
+        onenter = function(inst)
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+            end
+            inst.AnimState:PlayAnimation("death_reverse")
+
+            inst.sg:AddStateTag("nopredict")
+            inst.sg:AddStateTag("silentmorph")
+            inst.sg:RemoveStateTag("nomorph")
+            inst.components.health:SetInvincible(false)
+            inst:ShowHUD(false)
+            inst:SetCameraDistance(12)
+        end,
+
+        timeline =
+        {
+            TimeEvent(1 * FRAMES, function(inst)
+				inst.SoundEmitter:PlaySound("wanda1/wanda/rewindtime_rebirth")
+            end),
+        },
+		
+		events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            SetSleeperAwakeState(inst)
+            inst:ShowHUD(true)
+            inst:SetCameraDistance()
+            SerializeUserSession(inst)
+        end,
+    },
+
+    State{
         name = "corpse",
         tags = { "busy", "dead", "noattack", "nopredict", "nomorph", "nodangle" },
 
@@ -10027,7 +10199,7 @@ local states =
 
             inst.Physics:SetMotorVel(inst.sg.statemem.speed * .5, 0, 0)
 
-            inst.sg.statemem.teleportarrivestate = "jumpout"
+            inst.sg.statemem.teleportarrivestate = "jumpout" -- this can be overriden in the teleporter component
         end,
 
         timeline =
@@ -10037,6 +10209,22 @@ local states =
             end),
             TimeEvent(1 * FRAMES, function(inst)
                 inst.Physics:SetMotorVel(inst.sg.statemem.heavy and inst.sg.statemem.speed * .6 or inst.sg.statemem.speed, 0, 0)
+            end),
+
+            -- NORMAL WHOOSH SOUND GOES HERE
+            TimeEvent(1 * FRAMES, function(inst)
+                if not inst.sg.statemem.heavy then
+                    --print ("START NORMAL JUMPING SOUND")
+                    inst.SoundEmitter:PlaySound("wanda1/wanda/jump_whoosh")
+                end
+            end),
+
+            -- HEAVY WHOOSH SOUND GOES HERE
+            TimeEvent(5 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy then
+                    --print ("START HEAVY JUMPING SOUND")
+                    inst.SoundEmitter:PlaySound("wanda1/wanda/jump_whoosh")
+                end
             end),
 
             --Heavy lifting
@@ -13065,6 +13253,460 @@ local states =
         end,
     },
 
+    --------------------------------------------------------------------------
+    -- Wanda Pocket Watch
+
+
+    State{
+        name = "pocketwatch_cast",
+        tags = { "busy", "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("useitem_pre") -- 8 frames
+            inst.AnimState:PushAnimation("pocketwatch_cast", false)
+            inst.AnimState:PushAnimation("useitem_pst", false)
+
+			local buffaction = inst:GetBufferedAction()
+			if buffaction ~= nil then
+		        inst.AnimState:OverrideSymbol("watchprop", buffaction.invobject.AnimState:GetBuild(), "watchprop")
+				inst.sg.statemem.castfxcolour = buffaction.invobject.castfxcolour
+				inst.sg.statemem.pocketwatch = buffaction.invobject
+				inst.sg.statemem.target = buffaction.target
+			end
+        end,
+
+		timeline = 
+		{
+            TimeEvent(8 * FRAMES, function(inst)
+				inst.AnimState:Show("ARM_normal")
+
+				local pocketwatch = inst.sg.statemem.pocketwatch
+				if pocketwatch ~= nil and pocketwatch:IsValid() and pocketwatch.components.pocketwatch:CanCast(inst, inst.sg.statemem.target) then
+					inst.sg.statemem.stafffx = SpawnPrefab((inst.components.rider ~= nil and inst.components.rider:IsRiding()) and "pocketwatch_cast_fx_mount" or "pocketwatch_cast_fx")
+					inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
+					inst.sg.statemem.stafffx:SetUp(inst.sg.statemem.castfxcolour or { 1, 1, 1 })
+
+                    inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/heal")
+				end
+            end),
+            TimeEvent(16 * FRAMES, function(inst)
+				if inst.sg.statemem.stafffx ~= nil then
+					inst.sg.statemem.stafflight = SpawnPrefab("staff_castinglight_small")
+					inst.sg.statemem.stafflight.Transform:SetPosition(inst.Transform:GetWorldPosition())
+					inst.sg.statemem.stafflight:SetUp(inst.sg.statemem.castfxcolour or { 1, 1, 1 }, 0.75, 0)
+				end
+            end),
+            TimeEvent(25 * FRAMES, function(inst)
+				if not inst:PerformBufferedAction() then
+					inst.sg:GoToState("idle")
+				end
+            end),
+            TimeEvent(40 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(48 * FRAMES, function(inst)
+				if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+					inst.AnimState:Show("ARM_carry")
+					inst.AnimState:Hide("ARM_normal")
+				end
+            end),
+		},
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+	                inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+		onexit = function(inst)
+			if inst.sg.statemem.stafffx ~= nil and inst.sg.statemem.stafffx:IsValid() then
+				inst.sg.statemem.stafffx:Remove()
+			end
+			if inst.sg.statemem.stafflight ~= nil and inst.sg.statemem.stafflight:IsValid() then
+				inst.sg.statemem.stafflight:Remove()
+			end
+
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                inst.AnimState:Show("ARM_carry")
+                inst.AnimState:Hide("ARM_normal")
+            end
+		end,
+    },
+
+    State{
+        name = "pocketwatch_warpback_pre",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("pocketwatch_warp_pre")
+
+			local buffaction = inst:GetBufferedAction()
+			if buffaction ~= nil then
+		        inst.AnimState:OverrideSymbol("watchprop", buffaction.invobject.AnimState:GetBuild(), "watchprop")
+
+				inst.sg.statemem.castfxcolour = buffaction.invobject.castfxcolour
+			end
+        end,
+
+        timeline=
+        {
+            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/warp") end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+					if inst:PerformBufferedAction() then
+						inst.sg:GoToState("pocketwatch_warpback", inst.sg.statemem) -- 'warpback' is set by the action function
+					else
+	                    inst.sg:GoToState("idle")
+					end
+                end
+            end),
+        },
+    },
+
+
+    State{
+        name = "pocketwatch_warpback",
+        tags = { "busy", "pausepredict", "nodangle", "nomorph", "jumping" },
+
+        onenter = function(inst, data)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("pocketwatch_warp")
+
+			inst.sg.statemem.warpback_data = data.warpback -- 'warpback' passed in through the previous state bug is set by the action function
+			inst.sg.statemem.castfxcolour = data.castfxcolour
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:RemotePausePrediction()
+            end
+
+			inst.sg.statemem.stafffx = SpawnPrefab("pocketwatch_warpback_fx")
+			inst.sg.statemem.stafffx.entity:SetParent(inst.entity)
+			inst.sg.statemem.stafffx:SetUp(data.castfxcolour or { 1, 1, 1 })
+        end,
+
+        timeline =
+        {
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.sg:AddStateTag("noattack")
+                inst.components.health:SetInvincible(true)
+                inst.DynamicShadow:Enable(false)
+            end),
+
+            TimeEvent(4 * FRAMES, function(inst)
+				local warpback_data = inst.sg.statemem.warpback_data
+				local x, y, z = inst.Transform:GetWorldPosition()
+				if (warpback_data.dest_worldid == nil or warpback_data.dest_worldid == TheShard:GetShardId()) and VecUtil_DistSq(x, z, warpback_data.dest_x, warpback_data.dest_z) > 30*30 then
+					inst.sg.statemem.snap_camera = true
+					inst:ScreenFade(false, 0.5)
+				end
+
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+					if inst.sg.statemem.stafffx ~= nil then
+						-- detach fx
+						inst.sg.statemem.stafffx.entity:SetParent(nil)
+						inst.sg.statemem.stafffx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+						inst.sg.statemem.stafffx = nil
+					end
+
+					if inst.sg.statemem.snap_camera then
+						inst.sg.statemem.snap_camera = nil
+						inst.sg.statemem.queued_snap_camera = true
+					end
+
+					inst.sg.statemem.portaljumping = true
+					local warpback_data = inst.sg.statemem.warpback_data
+					local dest_worldid = warpback_data.dest_worldid
+					if dest_worldid ~= nil and dest_worldid ~= TheShard:GetShardId() then
+						if Shard_IsWorldAvailable(dest_worldid) then
+							TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = inst, portalid = nil, worldid = dest_worldid, x = warpback_data.dest_x, y = warpback_data.dest_y, z = warpback_data.dest_z })
+						else
+							warpback_data.dest_x, warpback_data.dest_y, warpback_data.dest_z = inst.Transform:GetWorldPosition()
+							inst.sg:GoToState("pocketwatch_warpback_pst", inst.sg.statemem)
+						end
+					else
+						inst.sg:GoToState("pocketwatch_warpback_pst", inst.sg.statemem)
+					end
+                end
+            end),
+        },
+
+        onexit = function(inst)
+			if inst.sg.statemem.snap_camera then
+				inst:SnapCamera()
+				inst:ScreenFade(true, 0.5)
+			end
+			if inst.sg.statemem.stafffx ~= nil and inst.sg.statemem.stafffx:IsValid() then
+				inst.sg.statemem.stafffx:Remove()
+			end
+            if not inst.sg.statemem.portaljumping then
+                inst.components.health:SetInvincible(false)
+                inst.DynamicShadow:Enable(true)
+            end
+        end,
+    },
+
+    State{
+        name = "pocketwatch_warpback_pst",
+        tags = { "busy", "nopredict", "nomorph", "noattack", "nointerrupt", "jumping" },
+
+        onenter = function(inst, data)
+            ToggleOffPhysics(inst)
+            inst.components.locomotor:Stop()
+            inst.DynamicShadow:Enable(false)
+            inst.components.health:SetInvincible(true)
+
+            inst.AnimState:PlayAnimation("pocketwatch_warp_pst")
+            inst.sg:SetTimeout(8 * FRAMES)
+
+			if data.queued_snap_camera then
+				inst:SnapCamera()
+				inst:ScreenFade(true, 0.5)
+			end
+
+            if data.warpback_data ~= nil then
+                inst.Physics:Teleport(data.warpback_data.dest_x, data.warpback_data.dest_y, data.warpback_data.dest_z)
+            end
+            inst:PushEvent("onwarpback", data.warpback_data)
+
+			local fx = SpawnPrefab("pocketwatch_warpbackout_fx")
+			fx.Transform:SetPosition(data.warpback_data.dest_x, data.warpback_data.dest_y, data.warpback_data.dest_z)
+			fx:SetUp(data.castfxcolour or { 1, 1, 1 })
+        end,
+
+        timeline =
+        {
+            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/recall") 
+            end),
+            
+            TimeEvent(3 * FRAMES, function(inst)
+                inst.DynamicShadow:Enable(true)
+                ToggleOnPhysics(inst)
+            end),
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.components.health:SetInvincible(false)
+                inst.sg:RemoveStateTag("noattack")
+                inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt")
+            end),
+        },
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle", true)
+        end,
+
+        onexit = function(inst)
+            inst.components.health:SetInvincible(false)
+            inst.DynamicShadow:Enable(true)
+            if inst.sg.statemem.isphysicstoggle then
+                ToggleOnPhysics(inst)
+            end
+        end,
+    },
+
+    State{
+        name = "pocketwatch_openportal",
+        tags = { "doing", "busy", "canrotate" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("useitem_pre")
+            inst.AnimState:PushAnimation("pocketwatch_portal", false)
+
+            inst.components.locomotor:Stop()
+
+            local watch = inst.bufferedaction ~= nil and inst.bufferedaction.invobject
+			if watch ~= nil then
+		        inst.AnimState:OverrideSymbol("watchprop", watch.AnimState:GetBuild(), "watchprop")
+	            inst.sg.statemem.castsound = watch.castsound
+				inst.sg.statemem.same_shard = watch.components.recallmark ~= nil and watch.components.recallmark:IsMarkedForSameShard()
+			end
+
+        end,
+
+        timeline =
+        {
+            TimeEvent(8 * FRAMES, function(inst)
+				inst.AnimState:Show("ARM_normal")
+			end),
+            TimeEvent(18 * FRAMES, function(inst)
+				if not inst:PerformBufferedAction() then
+					inst.sg.statemem.action_failed = true
+					inst.AnimState:Hide("gemshard")
+	                inst.SoundEmitter:PlaySound("dontstarve/wilson/hit")
+				else
+	                inst.SoundEmitter:PlaySound("turnoftides/common/together/moon_glass/mine")
+                end
+            end),
+            TimeEvent(14 * FRAMES, function(inst)
+                if inst.sg.statemem.castsound then
+                end
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+		            inst.AnimState:PlayAnimation("useitem_pst", false)
+					if not inst.sg.statemem.action_failed then
+						local line = inst.sg.statemem.same_shard and "ANNOUNCE_POCKETWATCH_OPEN_PORTAL" or "ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD"
+						inst:DoTaskInTime(6 * FRAMES, function() inst.components.talker:Say(GetString(inst, line)) end)
+					end
+					inst.sg:GoToState("idle", true)
+                end
+            end),
+        },
+
+        onexit = function(inst)
+			if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+				inst.AnimState:Show("ARM_carry")
+				inst.AnimState:Hide("ARM_normal")
+			end
+			if inst.sg.statemem.action_failed then
+				inst.AnimState:Show("gemshard")
+			end
+        end,
+    },
+
+    State{
+        name = "pocketwatch_portal_land",
+        tags = { "busy", "nopredict", "nomorph", "nodangle", "jumping", "noattack" },
+
+        onenter = function(inst, data)
+			if not inst:HasTag("pocketwatchcaster") then
+				inst.sg:GoToState("pocketwatch_portal_fallout")
+				return
+			end
+		
+            inst.components.locomotor:Stop()
+			ForceStopHeavyLifting(inst)
+			StartTeleporting(inst)
+
+			inst.AnimState:PlayAnimation("jumpportal_out")
+
+			local x, y, z = inst.Transform:GetWorldPosition()
+			local fx = SpawnPrefab("pocketwatch_portal_exit_fx")
+			fx.Transform:SetPosition(x, 4, z)
+        end,
+
+        timeline =
+        {
+            TimeEvent(16 * FRAMES, function(inst) 
+				inst:Show() -- hidden by StartTeleporting
+            end),
+
+            TimeEvent(17 * FRAMES, function(inst) 
+                inst.SoundEmitter:PlaySound("wanda1/wanda/jump_whoosh")
+            end),
+
+            TimeEvent(20 * FRAMES, function(inst)
+                inst.DynamicShadow:Enable(true)
+            end),
+
+            TimeEvent(22 * FRAMES, function(inst)
+                PlayFootstep(inst)
+            end),
+
+            TimeEvent(28 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("jumping")
+                inst.sg:RemoveStateTag("busy")
+                inst.sg:RemoveStateTag("nomorph")
+				inst.sg:RemoveStateTag("noattack")
+
+				DoneTeleporting(inst)
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+		onexit = function(inst)
+			if inst.sg.statemem.isteleporting then
+				DoneTeleporting(inst)
+			end
+		end,
+    },
+
+    State{
+        name = "pocketwatch_portal_fallout",
+        tags = { "busy", "nopredict", "nomorph", "nodangle", "jumping", "noattack" },
+
+        onenter = function(inst, data)
+            inst.components.locomotor:Stop()
+			ForceStopHeavyLifting(inst)
+			StartTeleporting(inst)
+
+			inst.AnimState:PlayAnimation("jumpportal2_out")
+			inst.AnimState:PushAnimation("jumpportal2_out_pst", false)
+
+			local x, y, z = inst.Transform:GetWorldPosition()
+			local fx = SpawnPrefab("pocketwatch_portal_exit_fx")
+			fx.Transform:SetPosition(x, 4, z)
+        end,
+
+        timeline =
+        {
+            TimeEvent(16 * FRAMES, function(inst) 
+				inst:Show() -- hidden by StartTeleporting
+            end),
+
+            TimeEvent(19 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("wanda1/wanda/jump_whoosh")
+            end),
+
+            TimeEvent(23 * FRAMES, function(inst)
+                inst.DynamicShadow:Enable(true)
+            end),
+
+            TimeEvent(27 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt")
+            end),
+
+            TimeEvent(59 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("jumping")
+                inst.sg:RemoveStateTag("busy")
+				DoneTeleporting(inst)
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+		onexit = function(inst)
+			if inst.sg.statemem.isteleporting then
+				DoneTeleporting(inst)
+			end
+		end,
+    },
+
+    --------------------------------------------------------------------------
+    -- Wortox soul hop
+
     State{
         name = "portal_jumpin_pre",
         tags = { "busy" },
@@ -13113,7 +13755,7 @@ local states =
 
         onupdate = function(inst)
             if inst.sg.statemem.tints ~= nil then
-                DoPortalTint(inst, table.remove(inst.sg.statemem.tints))
+                DoWortoxPortalTint(inst, table.remove(inst.sg.statemem.tints))
                 if #inst.sg.statemem.tints <= 0 then
                     inst.sg.statemem.tints = nil
                 end
@@ -13146,7 +13788,7 @@ local states =
             if not inst.sg.statemem.portaljumping then
                 inst.components.health:SetInvincible(false)
                 inst.DynamicShadow:Enable(true)
-                DoPortalTint(inst, 0)
+                DoWortoxPortalTint(inst, 0)
             end
         end,
     },
@@ -13167,14 +13809,14 @@ local states =
             SpawnPrefab("wortox_portal_jumpout_fx").Transform:SetPosition(dest:Get())
             inst.DynamicShadow:Enable(false)
             inst.sg:SetTimeout(14 * FRAMES)
-            DoPortalTint(inst, 1)
+            DoWortoxPortalTint(inst, 1)
             inst.components.health:SetInvincible(true)
             inst:PushEvent("soulhop")
         end,
 
         onupdate = function(inst)
             if inst.sg.statemem.tints ~= nil then
-                DoPortalTint(inst, table.remove(inst.sg.statemem.tints))
+                DoWortoxPortalTint(inst, table.remove(inst.sg.statemem.tints))
                 if #inst.sg.statemem.tints <= 0 then
                     inst.sg.statemem.tints = nil
                 end
@@ -13205,7 +13847,7 @@ local states =
         onexit = function(inst)
             inst.components.health:SetInvincible(false)
             inst.DynamicShadow:Enable(true)
-            DoPortalTint(inst, 0)
+            DoWortoxPortalTint(inst, 0)
             if inst.sg.statemem.isphysicstoggle then
                 ToggleOnPhysics(inst)
             end

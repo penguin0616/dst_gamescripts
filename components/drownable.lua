@@ -109,11 +109,14 @@ function Drownable:OnFallInOcean(shore_x, shore_y, shore_z)
 
 	local inv = self.inst.components.inventory
 	if inv ~= nil then
-		Launch(inv:DropActiveItem(), self.inst, 3)
+		local active_item = inv:GetActiveItem()
+		if active_item ~= nil and not active_item:HasTag("irreplaceable") and not active_item.components.inventoryitem.keepondrown then
+			Launch(inv:DropActiveItem(), self.inst, 3)
+		end
 
 		if self:ShouldDropItems() then
 			local handitem = inv:GetEquippedItem(EQUIPSLOTS.HANDS)
-			if handitem ~= nil then
+			if handitem ~= nil and not handitem:HasTag("irreplaceable") and not handitem.components.inventoryitem.keepondrown then
 				Launch(inv:DropItem(handitem), self.inst, 3)
 			end
 		end
@@ -178,7 +181,7 @@ function Drownable:DropInventory()
 	if inv ~= nil then
 		local to_drop = {}
 		for k, v in pairs(inv.itemslots) do
-			if not v:HasTag("irreplaceable") then
+			if not v:HasTag("irreplaceable") and not v.components.inventoryitem.keepondrown then
 				table.insert(to_drop, k)
 			end
 		end

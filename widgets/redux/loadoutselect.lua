@@ -36,9 +36,9 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
 
     self.characterquote = self.loadout_root:AddChild(Text(TALKINGFONT, 28))
     self.characterquote:SetHAlign(ANCHOR_MIDDLE)
-    self.characterquote:SetVAlign(ANCHOR_TOP)
-    self.characterquote:SetPosition(-35,-275)
-    self.characterquote:SetRegionSize(300, 80)
+    self.characterquote:SetVAlign(ANCHOR_MIDDLE)
+    self.characterquote:SetPosition(-30,-270)
+    self.characterquote:SetRegionSize(300, 150)
     self.characterquote:EnableWordWrap(true)
     self.characterquote:SetColour(UICOLOURS.IVORY)
 

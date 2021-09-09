@@ -764,16 +764,20 @@ AddGameDebugKey(KEY_KP_PLUS, function()
     local MainCharacter = DebugKeyPlayer()
     if MainCharacter ~= nil then
         if TheInput:IsKeyDown(KEY_CTRL) then
-            MainCharacter.components.sanity:DoDelta(5)
+			if TheInput:IsKeyDown(KEY_SHIFT) then
+				MainCharacter.components.health:DoDelta(50, nil, "debug_key")
+				c_sethunger(1)
+				c_sethealth(1)
+				c_setsanity(1)
+			else
+				MainCharacter.components.sanity:DoDelta(5)
+			end
         elseif TheInput:IsKeyDown(KEY_SHIFT) then
-            MainCharacter.components.hunger:DoDelta(50)
+            MainCharacter.components.hunger:DoDelta(25)
         elseif TheInput:IsKeyDown(KEY_ALT) then
-            MainCharacter.components.sanity:DoDelta(50)
+            MainCharacter.components.sanity:DoDelta(25)
         else
-            MainCharacter.components.health:DoDelta(50, nil, "debug_key")
-            c_sethunger(1)
-            c_sethealth(1)
-            c_setsanity(1)
+            MainCharacter.components.health:DoDelta(25, nil, "debug_key")
         end
     end
     return true

@@ -150,8 +150,9 @@ function Builder:HasCharacterIngredient(ingredient)
             local health = self.inst.replica.health
             if health ~= nil then
                 --round up health to match UI display
+				local amount_required = self.inst:HasTag("health_as_oldage") and math.ceil(ingredient.amount * TUNING.OLDAGE_HEALTH_SCALE) or ingredient.amount
                 local current = math.ceil(health:GetCurrent())
-                return current >= ingredient.amount, current
+                return current > amount_required, current --Don't die from crafting!
             end
         elseif ingredient.type == CHARACTER_INGREDIENT.MAX_HEALTH then
             local health = self.inst.replica.health

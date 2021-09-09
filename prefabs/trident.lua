@@ -2,7 +2,6 @@ local assets =
 {
     Asset("ANIM", "anim/trident.zip"),
     Asset("ANIM", "anim/swap_trident.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
     Asset("INV_IMAGE", "trident"),
 }
 

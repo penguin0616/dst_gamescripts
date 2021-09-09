@@ -193,25 +193,25 @@ end
 
 function PlayerSummaryScreen:_BuildPosse()
     self.posse_root = self.root:AddChild(Widget("bototom_root"))
-    self.posse_root:SetPosition(-350, 70)
+    self.posse_root:SetPosition(-230, 150)
+    --self.posse_root:SetScale(0.8)
 
     self.glow = self.posse_root:AddChild(Image("images/lobbyscreen.xml", "glow.tex"))
-	self.glow:SetPosition(260, 0)
-	self.glow:SetScale(4, 2.5)
+	self.glow:SetPosition(160, -80)
+	self.glow:SetScale(5, 3)
 	self.glow:SetTint(1, 1, 1, .5)
     self.glow:SetClickable(false)
 
     self.glow2 = self.posse_root:AddChild(Image("images/lobbyscreen.xml", "glow.tex"))
-	self.glow2:SetPosition(640, 0)
-	self.glow2:SetScale(4, 2.5)
+	self.glow2:SetPosition(640, -80)
+	self.glow2:SetScale(5, 3)
 	self.glow2:SetTint(1, 1, 1, .5)
     self.glow2:SetClickable(false)
 
     self.posse = {}
 
     local x_off = 114
-    local y_off = -140
-    local num_in_row = 9
+    local y_off = -150
 
     local x = 0
     local y = 0
@@ -230,10 +230,15 @@ function PlayerSummaryScreen:_BuildPosse()
         table.insert( self.posse, puppet )
 
         x = x + 1
-        if k == 9 then
+        if k == 6 then
             x = 0
             y = y + 1
             offset = 1
+        end
+        if k == 12 then
+            x = 0
+            y = y + 1
+            offset = 0
         end
     end
 end
