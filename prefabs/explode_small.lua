@@ -35,6 +35,10 @@ local function MakeExplosion(data)
         end
 
         inst:ListenForEvent("animover", inst.Remove)
+
+        if proxy.postExplodeFn ~= nil then
+            proxy.postExplodeFn(inst)
+        end
     end
 
     local function fn()

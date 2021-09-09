@@ -216,6 +216,8 @@ local function CommonActualRez(inst)
 
 	inst.last_death_position = nil
 	inst.last_death_shardid = nil
+
+	inst:RemoveTag("reviving")
 end
 
 local function DoActualRez(inst, source, item)
@@ -454,6 +456,8 @@ local function OnRespawnFromGhost(inst, data) -- from ListenForEvent "respawnfro
     if not inst:HasTag("playerghost") then
         return
     end
+
+	inst:AddTag("reviving")
 
     inst.deathclientobj = nil
     inst.deathcause = nil

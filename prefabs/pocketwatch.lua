@@ -112,7 +112,7 @@ end
 
 local function Revive_CanTarget(inst, doer, target)
 	-- This is a client side function
-	return target ~= nil and target:HasTag("playerghost")
+	return target ~= nil and target:HasTag("playerghost") and not target:HasTag("reviving")
 end
 
 local function Revive_DoCastSpell(inst, doer, target)
@@ -275,7 +275,7 @@ local function Recall_OnGemGiven(inst, giver, item)
 end
 
 local function Recall_OnBuiltFn(inst, builder)
-	builder.components.builder:UnlockRecipe("pocketwatch_portal")
+	builder.components.builder:AddRecipe("pocketwatch_portal")
 end
 
 local function Recall_GetActionVerb(inst, doer, target)

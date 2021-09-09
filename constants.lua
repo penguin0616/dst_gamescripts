@@ -376,7 +376,7 @@ CHARACTER_VIDEOS =
     warly = {"https://bit.ly/39vp0tG"},
     wurt = {"https://bit.ly/2QVJup1"},
 	walter = {"https://bit.ly/31Ajrpj"},
---	wanda = {},
+	wanda = {"https://klei.gg/dst-wanda-short"},
 }
 
 

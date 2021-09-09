@@ -123,7 +123,6 @@ local states=
         onenter = function(inst)
             passtate(inst,"STATE_LOOP_ACTION_ANCHOR")
 
-            inst.anchor = inst.bufferedaction.target
             inst.components.locomotor:Stop()
 
             if inst.bufferedaction ~= nil then

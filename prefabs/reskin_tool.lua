@@ -79,6 +79,15 @@ local reskin_fx_info =
 local function spellCB(tool, target, pos)
 
     local fx = SpawnPrefab("explode_reskin")
+    
+    if tool.skin_build_name ~= nil then
+        fx.postExplodeFn =
+            function( explode )
+                explode.AnimState:ClearBloomEffectHandle()
+                explode.AnimState:SetLightOverride(0)
+                explode.AnimState:OverrideItemSkinSymbol("shadow_dust", tool.skin_build_name, "shadow_dust", tool.GUID, "swap_reskin_tool")
+            end
+    end
 
     target = target or tool.components.inventoryitem.owner --if no target, then get the owner of the tool. Self target for beards
 

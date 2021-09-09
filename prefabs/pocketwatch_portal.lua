@@ -95,13 +95,15 @@ local function GetActionVerb(inst, doer, target)
 end
 
 local function onPreBuilt(inst, builder, materials, recipe)
-	local from_watch = next(materials.pocketwatch_recall)
-	if from_watch ~= nil then
-		inst.components.recallmark:Copy(from_watch)
-		if not from_watch.components.rechargeable:IsCharged() then
-		    inst.components.rechargeable:SetChargeTime(from_watch.components.rechargeable.chargetime)
-		    inst.components.rechargeable:SetCharge(from_watch.components.rechargeable.current)
-		    inst.components.pocketwatch.inactive = false
+	if materials ~= nil and materials.pocketwatch_recall ~= nil then
+		local from_watch = next(materials.pocketwatch_recall)
+		if from_watch ~= nil then
+			inst.components.recallmark:Copy(from_watch)
+			if not from_watch.components.rechargeable:IsCharged() then
+				inst.components.rechargeable:SetChargeTime(from_watch.components.rechargeable.chargetime)
+				inst.components.rechargeable:SetCharge(from_watch.components.rechargeable.current)
+				inst.components.pocketwatch.inactive = false
+			end
 		end
 	end
 end

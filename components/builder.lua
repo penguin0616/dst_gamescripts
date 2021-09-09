@@ -528,6 +528,11 @@ function Builder:DoBuild(recname, pt, rotation, skin)
 					prod = nil
                 end
             else
+				if self.buffered_builds[recname] == nil then -- items that have intermediate build items (like statues)
+					local materials = self:GetIngredients(recname)
+					self:RemoveIngredients(materials, recname)
+				end
+
                 local spawn_pos = pt
 
                 -- If a non-inventoryitem recipe specifies dropitem, position the created object
@@ -689,6 +694,7 @@ function Builder:BufferBuild(recname)
             else
                 return
             end
+
         local materials = self:GetIngredients(recname)
         self:RemoveIngredients(materials, recname)
         self.buffered_builds[recname] = true

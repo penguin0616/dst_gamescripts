@@ -984,3 +984,16 @@ function d_moonaltars()
 	altar = SpawnPrefab("moon_altar_cosmic")
 	altar.Transform:SetPosition(pos.x + offset, 0, pos.z + offset / 3)
 end
+
+function d_cookbook()
+	TheCookbook.save_enabled = false
+
+	local cooking = require("cooking")
+	for cat, cookbook_recipes in pairs(cooking.cookbook_recipes) do
+		for prefab, recipe_def in pairs(cookbook_recipes) do
+			TheCookbook:LearnFoodStats(prefab)
+			TheCookbook:AddRecipe(prefab, {"meat", "meat", "meat", "meat"})
+			TheCookbook:AddRecipe(prefab, {"twigs", "berries", "ice", "meat"})
+		end
+	end			
+end

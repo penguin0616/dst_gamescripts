@@ -8286,13 +8286,13 @@ local states =
         tags = { "doing", "nodangle" },
 
         onenter = function(inst)
-            inst.anchor = inst.bufferedaction.target
             inst.components.locomotor:Stop()
             inst.SoundEmitter:PlaySound("dontstarve/wilson/make_trap", "make")
             inst.AnimState:PlayAnimation("build_pre")
             inst.AnimState:PushAnimation("build_loop", true)
             if inst.bufferedaction ~= nil then
                 inst.sg.statemem.action = inst.bufferedaction
+	            inst.sg.statemem.anchor = inst.bufferedaction.target
                 if inst.bufferedaction.action.actionmeter then
                     inst.sg.statemem.actionmeter = true
                     StartActionMeter(inst, timeout)
@@ -8322,7 +8322,9 @@ local states =
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
-            inst.anchor.components.anchor:RemoveAnchorRaiser(inst)
+			if inst.sg.statemem.anchor ~= nil and inst.sg.statemem.anchor:IsValid() then
+	            inst.sg.statemem.anchor.components.anchor:RemoveAnchorRaiser(inst)
+			end
         end,
     },
 
