@@ -63,6 +63,7 @@ function OldAger:OnUpdate(dt)
 		self.damage_remaining = self.damage_remaining - frame_damage
 
 		if (prev_damage_remaining > 0 and self.damage_remaining < 0) or (prev_damage_remaining < 0 and self.damage_remaining > 0) then
+			frame_damage = prev_damage_remaining
 			self.damage_remaining = 0
 			self.damage_per_second = 0
 			sync_percent = true

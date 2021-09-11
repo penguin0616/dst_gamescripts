@@ -1892,6 +1892,7 @@ function TEMPLATES.MakeUIStatusBadge(_status_name, c)
 	local status = Widget(_status_name.."_status")
 
 	status.status_icon = status:AddChild(Image())
+	status.status_icon:SetTexture("images/global_redux.xml", "status_".._status_name..".tex")
 	status.status_icon:SetScale(.55)
 
 	status.status_image = status:AddChild(Image("images/global_redux.xml", "value_gold.tex"))

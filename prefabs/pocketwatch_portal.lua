@@ -481,6 +481,8 @@ local function portal_exit_fx_fn()
 
 	inst.lightupdaterate = 2
 
+	inst:SetPrefabNameOverride("pocketwatch_portal_exit")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

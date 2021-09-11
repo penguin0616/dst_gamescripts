@@ -431,7 +431,8 @@ function Builder:DoBuild(recname, pt, rotation, skin)
             return false
         end
 
-        if self.buffered_builds[recname] ~= nil then
+		local is_buffered_build = self.buffered_builds[recname] ~= nil
+        if is_buffered_build then
             self.buffered_builds[recname] = nil
             self.inst.replica.builder:SetIsBuildBuffered(recname, false)
         end
@@ -448,6 +449,8 @@ function Builder:DoBuild(recname, pt, rotation, skin)
         self.inst:PushEvent("refreshcrafting")
 
         if recipe.tab.manufacturing_station then
+			local materials = self:GetIngredients(recname)
+			self:RemoveIngredients(materials, recname)
             -- its up to the prototyper to implement onactivate and handle spawning the prefab
             return true
         end
@@ -528,7 +531,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
 					prod = nil
                 end
             else
-				if self.buffered_builds[recname] == nil then -- items that have intermediate build items (like statues)
+				if not is_buffered_build then -- items that have intermediate build items (like statues)
 					local materials = self:GetIngredients(recname)
 					self:RemoveIngredients(materials, recname)
 				end
