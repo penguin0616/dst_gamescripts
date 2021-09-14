@@ -42,6 +42,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
     self.characterquote:EnableWordWrap(true)
     self.characterquote:SetColour(UICOLOURS.IVORY)
 
+    self.hide_item_skinner = hide_item_skinner
 
     if self.show_puppet then
         self.heroportrait:Hide()
@@ -209,33 +210,38 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
                 self.presetsbutton:SetFocusChangeDir(MOVE_RIGHT, self.menu)
                 self.presetsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
 
-                local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(self.currentcharacter)]
-
-                if inv_item_list ~= nil and #inv_item_list > 0 then
-                    local show_button = false
-                    for _,item in pairs(inv_item_list) do
-                        if PREFAB_SKINS[item] then
-                            show_button = true
+                if self:_ShouldShowStartingItemSkinsButton() then
+                    self.itemskinsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "sweep.tex", STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE, false, false, function()
+                            self:_LoadItemSkinsScreen()
                         end
-                    end
-        
-                    if show_button and not hide_item_skinner then
-                        self.itemskinsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "sweep.tex", STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE, false, false, function()
-                                self:_LoadItemSkinsScreen()
-                            end
-                        ))
-                        self.itemskinsbutton:SetPosition(145, 315)
-                        self.itemskinsbutton:SetScale(0.77)
+                    ))
+                    self.itemskinsbutton:SetPosition(145, 315)
+                    self.itemskinsbutton:SetScale(0.77)
 
-                        self.presetsbutton:SetFocusChangeDir(MOVE_LEFT, self.itemskinsbutton)
-                        self.itemskinsbutton:SetFocusChangeDir(MOVE_RIGHT, self.presetsbutton)
-                        self.itemskinsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
-                    end
+                    self.presetsbutton:SetFocusChangeDir(MOVE_LEFT, self.itemskinsbutton)
+                    self.itemskinsbutton:SetFocusChangeDir(MOVE_RIGHT, self.presetsbutton)
+                    self.itemskinsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
                 end
             end
         end
 	end
 end)
+
+function LoadoutSelect:_ShouldShowStartingItemSkinsButton()
+    local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(self.currentcharacter)]
+
+    local show_button = false
+    if inv_item_list ~= nil and #inv_item_list > 0 then
+        for _,item in pairs(inv_item_list) do
+            if PREFAB_SKINS[item] then
+                show_button = true
+            end
+        end
+
+    end
+
+    return show_button and not self.hide_item_skinner
+end
 
 function LoadoutSelect:_SetSkinMode(skinmode)
 	self.selected_skinmode = skinmode
@@ -514,7 +520,7 @@ function LoadoutSelect:OnControl(control, down)
             self:_LoadSkinPresetsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
-        elseif control == CONTROL_MENU_MISC_2 and TheNet:IsOnlineMode() then
+        elseif control == CONTROL_MENU_MISC_2 and TheNet:IsOnlineMode() and self:_ShouldShowStartingItemSkinsButton() then
             self:_LoadItemSkinsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
@@ -539,7 +545,7 @@ function LoadoutSelect:GetHelpText()
         if TheNet:IsOnlineMode() then
 		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SKIN_PRESETS.TITLE)
         end
-        if TheNet:IsOnlineMode() then
+        if TheNet:IsOnlineMode() and self:_ShouldShowStartingItemSkinsButton() then
 		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE)
         end
 

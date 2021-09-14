@@ -2958,7 +2958,7 @@ function Tune(overrides)
         STALKER_AOE_RANGE = 2,
         STALKER_AOE_SCALE = .8,
         STALKER_SPEED = 4.2,
-        STALKER_HIT_RECOVERY = 1,
+        STALKER_HIT_RECOVERY = 1.5,
 
         STALKER_ABILITY_RETRY_CD = 3,
 
@@ -3250,7 +3250,7 @@ function Tune(overrides)
         BERNIE_BIG_HEALTH = 2000,
         BERNIE_BIG_WALK_SPEED = 4.5,
         BERNIE_BIG_RUN_SPEED = 11,
-        BERNIE_BIG_HIT_RECOVERY = 1,
+        BERNIE_BIG_HIT_RECOVERY = 1.5,
         BERNIE_BIG_DAMAGE = 50,
         BERNIE_BIG_ATTACK_PERIOD = 2,
         BERNIE_BIG_ATTACK_RANGE = 3,

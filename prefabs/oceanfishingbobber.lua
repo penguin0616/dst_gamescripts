@@ -21,6 +21,16 @@ local function SpawnSplashFx(inst)
 	end
 end
 
+function ApplyBobberSkin( nameoverride, skin_build, anim_state, guid )
+	if nameoverride ~= "oceanfishingbobber_none" then
+		if skin_build ~= nil then
+			for _,sym in pairs( { "bobber_01", "bobber_shad", "line_01", "line_loop", "bobberstring2" } ) do
+				anim_state:OverrideItemSkinSymbol(sym, skin_build, sym, guid, "oceanfishing_bobber_twig_build") --twig fallback if skin fails
+			end
+		end
+	end
+end
+
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
 local function OnProjectileLand(inst, caster, target)
@@ -32,6 +42,8 @@ local function OnProjectileLand(inst, caster, target)
 			local bobber = SpawnPrefab(inst._floater_prefab)
 			bobber.Transform:SetPosition(x, y, z)
 			bobber:ForceFacePoint(caster.Transform:GetWorldPosition())
+
+			ApplyBobberSkin( inst.nameoverride, rod.skin_build_name, bobber.AnimState, rod.GUID )
 
 			SpawnSplashFx(bobber)
 			bobber.SoundEmitter:PlaySound("dontstarve/common/fishingpole_baitsplash")

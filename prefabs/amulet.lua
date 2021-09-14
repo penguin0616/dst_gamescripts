@@ -9,7 +9,7 @@ add and remove event listeners, or start/stop update functions here. ]]
 
 ---RED
 local function healowner(inst, owner)
-    if (owner.components.health and owner.components.health:IsHurt())
+    if (owner.components.health and owner.components.health:IsHurt() and not owner.components.oldager)
     and (owner.components.hunger and owner.components.hunger.current > 5 )then
         owner.components.health:DoDelta(TUNING.REDAMULET_CONVERSION,false,"redamulet")
         owner.components.hunger:DoDelta(-TUNING.REDAMULET_CONVERSION)

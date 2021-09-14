@@ -202,7 +202,7 @@ function c_despawn(player)
         --V2C: need to avoid targeting c_spawned player entities
         --player = ListingOrConsolePlayer(player)
         if type(player) == "string" or type(player) == "number" then
-            player = UserToPlayer(input)
+            player = UserToPlayer(player)
         end
         if player == nil then
             player = c_sel() ~= nil and c_sel():HasTag("player") and c_sel() or nil
@@ -572,7 +572,7 @@ local lastfound = -1
 local lastprefab = nil
 function c_findnext(prefab, radius, inst)
     if type(inst) == "string" or type(inst) == "number" then
-        inst = UserToPlayer(input)
+        inst = UserToPlayer(inst)
         if inst == nil then
             return
         end

@@ -81,6 +81,8 @@ function OceanFishingRod:_LaunchCastingProjectile(source, targetpos, prefab)
     local projectile = SpawnPrefab(prefab)
     projectile.Transform:SetPosition(x, y, z)
 
+	ApplyBobberSkin( projectile.nameoverride, self.inst.skin_build_name, projectile.AnimState, self.inst.GUID )
+
 	local t = math.min(VecUtil_Length(targetpos.x - x,  targetpos.z - z) / (TUNING.OCEAN_FISHING.MAX_CAST_DIST), 1.0)
     projectile.components.complexprojectile:SetHorizontalSpeed(Lerp(8, 16, t))
     projectile.components.complexprojectile:SetGravity(Lerp(-30, -15, t))

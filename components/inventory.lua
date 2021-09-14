@@ -1229,7 +1229,7 @@ function Inventory:DropEverythingWithTag(tag)
 end
 
 function Inventory:DropEverything(ondeath, keepequip)
-    if self.activeitem ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) then
+    if self.activeitem ~= nil and not (ondeath and self.activeitem.components.inventoryitem.keepondeath) then
         self:DropItem(self.activeitem)
         self:SetActiveItem(nil)
     end

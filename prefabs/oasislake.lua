@@ -214,7 +214,7 @@ local function fn()
     inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
     inst.AnimState:SetLayer(LAYER_BACKGROUND)
-    inst.AnimState:SetSortOrder(2)
+    inst.AnimState:SetSortOrder(-3)
 
     inst.MiniMapEntity:SetIcon("oasis.png")
 

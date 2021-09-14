@@ -13,6 +13,8 @@ local OldAgeBadge = Class(Badge, function(self, owner)
 	self.rate_time = 0
 	self.warning_precent = 0.1
 
+	self.health_precent = 1
+
     self.year_hand = self.underNumber:AddChild(UIAnim())
     self.year_hand:GetAnimState():SetBank("status_oldage")
     self.year_hand:GetAnimState():SetBuild("status_oldage")
@@ -84,6 +86,8 @@ end
 function OldAgeBadge:SetPercent(val, max, penaltypercent)
 	local age_precent = 1 - val
 	local age = TUNING.WANDA_MIN_YEARS_OLD + age_precent * (TUNING.WANDA_MAX_YEARS_OLD - TUNING.WANDA_MIN_YEARS_OLD)
+	
+	self.health_precent = val
 
 	self.num:SetString(tostring(math.floor(age + 0.5)))
 
@@ -147,8 +151,13 @@ function OldAgeBadge:Pulse(color)
     else
         self:PulseRed()
         frontend_sound:KillSound("pulse_loop")
-        frontend_sound:PlaySound("wanda2/characters/wanda/down_health_LP", "pulse_loop")
-        frontend_sound:PlaySound("dontstarve/HUD/health_down")
+		frontend_sound:PlaySound("wanda2/characters/wanda/down_health_LP", "pulse_loop")
+
+		local volume = self.owner.player_classified:GetOldagerRate() > 0 and 1
+					or self.health_precent <= TUNING.WANDA_AGE_THRESHOLD_OLD and 1 
+					or self.health_precent < TUNING.WANDA_AGE_THRESHOLD_YOUNG and 0.65
+					or 0.4
+        frontend_sound:PlaySound("dontstarve/HUD/health_down", nil, volume)
     end
 
     self.pulsing = color

@@ -2250,7 +2250,7 @@ return{
         ROPE = "I'm sure I'll find some use for it sooner or later.",
         ROTTENEGG = "It must've been the last one out.",
         ROYAL_JELLY = "Victory is sweet.",
-        JELLYBEAN = "I like to keep a bit of candy in my pocket at all times",
+        JELLYBEAN = "I like to keep a bit of candy in my pocket at all times.",
         SADDLE_BASIC = "I've got a saddle, now I just need an animal to ride...",
         SADDLE_RACE = "This should help my beefalo pick up the pace.",
         SADDLE_WAR = "Very imposing.",

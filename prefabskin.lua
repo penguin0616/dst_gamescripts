@@ -100,6 +100,8 @@ spear_wathgrithr_clear_fn = function(inst) basic_clear_fn(inst, "swap_spear_wath
 reskin_tool_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "reskin_tool" ) end
 reskin_tool_clear_fn = function(inst) basic_clear_fn(inst, "reskin_tool" ) end
 
+whip_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "whip" ) end
+whip_clear_fn = function(inst) basic_clear_fn(inst, "whip" ) end
 
 axe_init_fn = function(inst, build_name)
     if string.find( build_name, "_invisible") ~= nil then
