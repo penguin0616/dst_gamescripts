@@ -9890,7 +9890,7 @@ local states =
 
             SpawnPrefab("ghost_transform_overlay_fx").entity:SetParent(inst.entity)
 
-            inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_get_bloodpump")
+            inst.SoundEmitter:PlaySound("dontstarve/ghost/player_revive")
             if inst.CustomSetSkinMode ~= nil then
                 inst:CustomSetSkinMode(inst.overrideghostskinmode or "ghost_skin")
             else
@@ -9918,7 +9918,7 @@ local states =
                     inst.components.skinner:SetSkinMode(inst.overrideskinmode or "normal_skin")
                 end
                 inst.AnimState:PlayAnimation("transform_end")
-                inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_use_bloodpump")
+                -- inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_use_bloodpump")
                 inst.sg:RemoveStateTag("ghostbuild")
                 inst:PushEvent("stopghostbuildinstate")
             end),

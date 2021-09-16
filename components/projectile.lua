@@ -106,6 +106,10 @@ function Projectile:SetOnHitFn(fn)
     self.onhit = fn
 end
 
+function Projectile:SetOnPreHitFn(fn)
+    self.onprehit = fn
+end
+
 function Projectile:SetOnCaughtFn(fn)
     self.oncaught = fn
 end

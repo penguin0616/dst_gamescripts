@@ -697,7 +697,6 @@ local function MakeVeggie(name, has_seeds)
 
         inst:AddComponent("heavyobstaclephysics")
         inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
-        inst.components.heavyobstaclephysics:MakeSmallObstacle()
 
         inst:AddComponent("perishable")
         inst.components.perishable:SetPerishTime(VEGGIES[name].perishtime * OVERSIZED_PERISHTIME_MULT)
@@ -783,7 +782,6 @@ local function MakeVeggie(name, has_seeds)
 
         inst:AddComponent("heavyobstaclephysics")
         inst.components.heavyobstaclephysics:SetRadius(OVERSIZED_PHYSICS_RADIUS)
-        inst.components.heavyobstaclephysics:MakeSmallObstacle()
 
         inst:AddComponent("inspectable")
         inst:AddComponent("inventoryitem")

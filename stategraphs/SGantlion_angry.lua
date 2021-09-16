@@ -127,7 +127,7 @@ local events =
         inst.sg.mem.wantstoeat = nil
         if not inst.components.health:IsDead() and
             (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and
-            (inst.sg.mem.last_hit_time or 0) + TUNING.ANTLION_HIT_RECOVERY < GetTime() then
+            not CommonHandlers.HitRecoveryDelay(inst, TUNING.ANTLION_HIT_RECOVERY) then
             inst.sg:GoToState("hit")
         end
     end),
@@ -188,7 +188,7 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve/creatures/together/antlion/hit")
-            inst.sg.mem.last_hit_time = GetTime()
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =

@@ -275,6 +275,7 @@ local states=
             inst.SoundEmitter:PlaySound("dontstarve/creatures/tallbird/hurt")
             inst.AnimState:PlayAnimation("hit")
             inst.Physics:Stop()
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events=

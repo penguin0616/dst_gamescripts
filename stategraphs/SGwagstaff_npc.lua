@@ -30,7 +30,7 @@ local events =
 {
     CommonHandlers.OnStep(),
     CommonHandlers.OnLocomote(true, true),
-    CommonHandlers.OnAttacked(true),
+    CommonHandlers.OnAttacked(),
     CommonHandlers.OnDeath(),
     EventHandler("waitfortool", function(inst)
         inst.sg:GoToState("idle")

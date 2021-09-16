@@ -639,6 +639,7 @@ local function markerfn(product)
         inst:AddTag("FX")
         inst:AddTag("NOCLICK")
         inst:AddTag("moon_altar_astral_marker")
+        inst:AddTag("antlion_sinkhole_blocker")
 
         inst.entity:SetPristine()
 

@@ -82,7 +82,7 @@ local events =
     EventHandler("attacked", function(inst)
         if not inst.components.health:IsDead() and
             (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and
-            (inst.sg.mem.last_hit_time or 0) + inst.hit_recovery < GetTime() then
+            not CommonHandlers.HitRecoveryDelay(inst) then
             inst.sg:GoToState("hit")
         end
     end),
@@ -318,7 +318,7 @@ local states =
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve/creatures/together/bee_queen/hit")
-            inst.sg.mem.last_hit_time = GetTime()
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =

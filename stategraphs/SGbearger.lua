@@ -35,6 +35,7 @@ end
 local function onattackedfn(inst, data)
     if inst.components.health ~= nil and
         not inst.components.health:IsDead() and
+		not CommonHandlers.HitRecoveryDelay(inst) and
        (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("frozen")) then
 
         -- Clear out the inventory if he got interrupted
@@ -285,6 +286,7 @@ local states=
 			else
 				inst.AnimState:PlayAnimation("standing_hit")
 			end
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
 		end,
 
 		events =

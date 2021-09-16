@@ -69,7 +69,7 @@ function MinotaurBrain:OnStart()
                     and not self.inst.sg:HasStateTag("running")
                     and self.inst.components.combat.target:IsNear(self.inst, 6)
             end,
-            "NormalAttack", ChaseAndAttack(self.inst, 3, 5)),
+            "NormalAttack", ChaseAndAttack(self.inst, 3, 10)),
         WhileNode(function() return self.inst.components.combat.target ~= nil and self.inst.components.combat:InCooldown() end, "Rest",
             StandStill(self.inst)),
         WhileNode(function() return self.inst.components.hauntable ~= nil and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),

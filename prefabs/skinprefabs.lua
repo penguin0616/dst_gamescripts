@@ -2227,8 +2227,9 @@ table.insert(prefs, CreatePrefabSkin("glomling_puft",
 	base_prefab = "critter_glomling",
 	type = "item",
 	rarity = "Loyal",
-	init_fn = function(inst) glomling_init_fn(inst, "glomling_puft", "glomling_build", "dontstarve_DLC001/creatures/together/puft/" ) end,
+	init_fn = function(inst) glomling_init_fn(inst, "glomling_puft", "glomling_build" ) end,
 	skin_tags = { "PET", "CRAFTABLE", },
+	skin_sound = "dontstarve_DLC001/creatures/together/puft/",
 	release_group = 76,
 }))
 

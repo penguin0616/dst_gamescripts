@@ -171,8 +171,7 @@ local events =
                     end
                 end
             end
-            if (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and
-                (inst.sg.mem.last_hit_time or 0) + TUNING.STALKER_HIT_RECOVERY < GetTime() then
+            if (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and not CommonHandlers.HitRecoveryDelay(inst, TUNING.STALKER_HIT_RECOVERY) then
                 if inst.hasshield and data.attacker ~= nil and data.attacker:IsValid() then
                     inst:ForceFacePoint(data.attacker.Transform:GetWorldPosition())
                 end
@@ -453,7 +452,7 @@ local states =
                 inst.SoundEmitter:PlaySound("dontstarve/creatures/together/stalker/hit")
                 inst.sg:SetTimeout(16 * FRAMES)
             end
-            inst.sg.mem.last_hit_time = GetTime()
+            CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         ontimeout = function(inst)

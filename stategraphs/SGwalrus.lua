@@ -18,7 +18,7 @@ local events=
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
     EventHandler("newcombattarget", function(inst) if not inst.components.health:IsDead() and not (inst.sg:HasStateTag("attack") or inst.sg:HasStateTag("busy")) then inst.sg:GoToState("taunt_newtarget") end end),
-    EventHandler("attacked", function(inst) if not inst.components.health:IsDead() and not inst.sg:HasStateTag("attack") then inst.sg:GoToState("hit") end end),
+    EventHandler("attacked", function(inst) if not inst.components.health:IsDead() and not inst.sg:HasStateTag("attack") and not CommonHandlers.HitRecoveryDelay(inst) then inst.sg:GoToState("hit") end end),
     EventHandler("death", function(inst) inst.sg:GoToState("death") end),
 
     EventHandler("doattack", function(inst)
@@ -200,6 +200,7 @@ local states=
             PlayCreatureSound(inst, "hurt")
             inst.AnimState:PlayAnimation("hit")
             inst.Physics:Stop()
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events=

@@ -80,17 +80,21 @@ function self:OnPostInit()
 
 			for i,area in pairs(TheWorld.topology.nodes) do
 				if (i % 3) == 0 then
-					local points_x, points_y = TheWorld.Map:GetRandomPointsForSite(area.x, area.y, area.poly, 1)
-					if #points_x == 1 and #points_y == 1 then
-						local x = points_x[1]
-						local z = points_y[1]
-
-						local ents = TheSim:FindEntities(x, 0, z, 1)
-						if #ents == 0 then
-							local e = SpawnPrefab(trinkets[(count % #trinkets) + 1])
-							e.Transform:SetPosition(x, 0, z)
-							count = count + 1
+					local points_x, points_y = TheWorld.Map:GetRandomPointsForSite(area.x, area.y, area.poly, 5)
+					local pi = 1
+					while points_x[pi] ~= nil do
+						local x = points_x[pi]
+						local z = points_y[pi]
+						if TheWorld.Map:IsAboveGroundAtPoint(x, 0, z, false) then
+							local ents =  TheSim:FindEntities(x, 0, z, 1)
+							if #ents == 0 then
+								local e = SpawnPrefab(trinkets[(count % #trinkets) + 1])
+								e.Transform:SetPosition(x, 0, z)
+								count = count + 1
+								break
+							end
 						end
+						pi = pi + 1
 					end
 				end
 			end

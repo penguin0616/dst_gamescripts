@@ -113,7 +113,7 @@ function Rider:Mount(target, instant)
     self.inst.DynamicShadow:SetSize(6, 2)
 
     if self.inst.components.sheltered ~= nil then
-        self.inst.components.sheltered:Stop()
+        self.inst.components.sheltered.mounted = true
     end
 
     if target.components.combat ~= nil then
@@ -187,7 +187,7 @@ function Rider:ActualDismount()
     self.inst.DynamicShadow:SetSize(1.3, .6)
 
     if self.inst.components.sheltered ~= nil then
-        self.inst.components.sheltered:Start()
+        self.inst.components.sheltered.mounted = false
     end
 
     if self.mount.components.combat ~= nil then

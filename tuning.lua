@@ -99,6 +99,7 @@ function Tune(overrides)
         DARK_SPAWNCUTOFF = 0.1,
 
 		DEFAULT_ATTACK_RANGE = 2,
+		DEFAULT_HIT_RECOVERY = .75,
 
 		DEFAULT_CHARACTER_HEALTH = wilson_health,
 
@@ -950,6 +951,7 @@ function Tune(overrides)
         LEIF_DAMAGE_PLAYER_PERCENT = .33,
         LEIF_ATTACK_PERIOD = 3,
         LEIF_FLAMMABILITY = .333,
+		LEIF_HIT_RECOVERY = 1.5,
 
         LEIF_MIN_DAY = 3,
         LEIF_PERCENT_CHANCE = 1/75,

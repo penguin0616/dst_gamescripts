@@ -5,7 +5,7 @@ local function onattackedfn(inst)
         if inst.sg:HasStateTag("grounded") then
             inst.sg.statemem.knockdown = true
             inst.sg:GoToState("knockdown_hit")
-        elseif (inst.sg.mem.last_hit_time or 0) + TUNING.DRAGONFLY_HIT_RECOVERY <= GetTime() then
+        elseif not CommonHandlers.HitRecoveryDelay(inst) then
             inst.sg:GoToState("hit")
         end
     end
@@ -68,7 +68,7 @@ end
 local function SwitchToFlyOverPhysics(inst)
     if not inst.sg.mem.flyoverphysics then
         inst.sg.mem.flyoverphysics = true
-        inst.sg.mem.last_hit_time = GetTime()
+        CommonHandlers.UpdateHitRecoveryDelay(inst)
         inst.hit_recovery = TUNING.DRAGONFLY_FLYING_HIT_RECOVERY
         inst.Physics:ClearCollisionMask()
         inst.Physics:CollidesWith(COLLISION.GROUND)
@@ -233,10 +233,10 @@ local states =
         tags = { "hit", "busy" },
 
         onenter = function(inst, cb)
-            inst.sg.mem.last_hit_time = GetTime()
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/blink")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =

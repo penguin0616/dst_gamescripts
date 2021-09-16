@@ -10,13 +10,15 @@ local events=
     CommonHandlers.OnStep(),
     CommonHandlers.OnLocomote(false,true),
     CommonHandlers.OnFreeze(),
-    EventHandler("attacked", function(inst) if not inst.components.health:IsDead() and not
-     inst.sg:HasStateTag("attack") and not
-      inst.sg:HasStateTag("waking") and not
-       inst.sg:HasStateTag("sleeping") and
-        (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("frozen")) then
-            inst.sg:GoToState("hit")
-      end
+    EventHandler("attacked", function(inst) 
+		if not inst.components.health:IsDead()
+			and not CommonHandlers.HitRecoveryDelay(inst, TUNING.LEIF_HIT_RECOVERY)
+			and not inst.sg:HasStateTag("attack") 
+			and not inst.sg:HasStateTag("waking") 
+			and not inst.sg:HasStateTag("sleeping")
+			and (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("frozen")) then
+			inst.sg:GoToState("hit")
+		end
     end),
     EventHandler("death", function(inst) inst.sg:GoToState("death") end),
 
@@ -105,7 +107,7 @@ local states=
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve/creatures/leif/hurt_VO")
-
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events=

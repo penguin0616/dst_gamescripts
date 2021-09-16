@@ -508,6 +508,11 @@ function ChildSpawner:DoSpawnChild(target, prefab, radius)
         )
     if child ~= nil then
         child.Transform:SetPosition(x + offset.x, self.spawn_height or 0, z + offset.z)
+		
+		if child.components.inventoryitem ~= nil then
+			child.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
+		end
+
         if target ~= nil and child.components.combat ~= nil then
             child.components.combat:SetTarget(target)
         end

@@ -124,7 +124,9 @@ end
 local function onattacked(inst)--, data)
     if not (inst.sg:HasStateTag("busy") or
             inst.components.health:IsDead() or
-            inst:WantsToLevelUp()) then
+            inst:WantsToLevelUp()) 
+		and not CommonHandlers.HitRecoveryDelay(inst) then
+
         inst.sg:GoToState("hit")
     end
 end
@@ -247,6 +249,7 @@ ShadowChess.States.AddHit = function(states, anim, sound_frame, busyover_frame)
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation(anim)
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =

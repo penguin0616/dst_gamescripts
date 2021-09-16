@@ -213,6 +213,7 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hit")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =

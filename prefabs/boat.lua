@@ -144,13 +144,21 @@ end
 
 local function OnPhysicsWake(inst)
     EnableBoatItemCollision(inst)
-    inst.components.walkableplatform:StartUpdating()
+    if inst.stopupdatingtask then
+        inst.stopupdatingtask:Cancel()
+        inst.stopupdatingtask = nil
+    else
+        inst.components.walkableplatform:StartUpdating()
+    end
     inst.components.boatphysics:StartUpdating()
 end
 
 local function OnPhysicsSleep(inst)
     DisableBoatItemCollision(inst)
-    inst.components.walkableplatform:StopUpdating()
+    inst.stopupdatingtask = inst:DoTaskInTime(1, function()
+        inst.components.walkableplatform:StopUpdating()
+        inst.stopupdatingtask = nil
+    end)
     inst.components.boatphysics:StopUpdating()
 end
 

@@ -9,7 +9,7 @@ local events =
 {
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
-    CommonHandlers.OnAttacked(true),
+    CommonHandlers.OnAttacked(),
     CommonHandlers.OnDeath(),
     CommonHandlers.OnLocomote(false,true),
     EventHandler("locomote",

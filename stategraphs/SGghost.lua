@@ -18,7 +18,7 @@ local events =
     EventHandler("startaura", startaura),
     EventHandler("stopaura", stopaura),
     EventHandler("attacked", function(inst)
-        if not (inst.sg:HasStateTag("jumping") or inst.components.health:IsDead()) then
+        if not (inst.sg:HasStateTag("jumping") or inst.components.health:IsDead()) and not CommonHandlers.HitRecoveryDelay(inst) then
             inst.sg:GoToState("hit")
         end
     end),
@@ -94,6 +94,7 @@ local states =
             inst.SoundEmitter:PlaySound(inst:HasTag("girl") and "dontstarve/ghost/ghost_girl_howl" or "dontstarve/ghost/ghost_howl")
             inst.AnimState:PlayAnimation("hit")
             inst.Physics:Stop()
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events =

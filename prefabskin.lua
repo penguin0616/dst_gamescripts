@@ -15,6 +15,7 @@ BASE_LEGS_SIZE = {}
 BASE_FEET_SIZE = {}
 
 SKIN_FX_PREFAB = {}
+SKIN_SOUND_FX = {}
 
 
 
@@ -99,9 +100,6 @@ spear_wathgrithr_clear_fn = function(inst) basic_clear_fn(inst, "swap_spear_wath
 
 reskin_tool_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "reskin_tool" ) end
 reskin_tool_clear_fn = function(inst) basic_clear_fn(inst, "reskin_tool" ) end
-
-whip_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "whip" ) end
-whip_clear_fn = function(inst) basic_clear_fn(inst, "whip" ) end
 
 axe_init_fn = function(inst, build_name)
     if string.find( build_name, "_invisible") ~= nil then
@@ -592,8 +590,7 @@ function bugnet_init_fn(inst, build_name)
 
     basic_init_fn( inst, build_name, "swap_bugnet" )
 
-    local skin_data = GetSkinData(inst:GetSkinName())
-    inst.overridebugnetsound = skin_data.skin_sound
+    inst.overridebugnetsound = SKIN_SOUND_FX[build_name]
 end
 function bugnet_clear_fn(inst)
     basic_clear_fn(inst, "swap_bugnet" )
@@ -792,13 +789,13 @@ function perdling_init_fn(inst, build_name, default_build, hungry_sound)
     inst.skin_hungry_sound = hungry_sound
 end
 
-function glomling_init_fn(inst, build_name, default_build, skin_sound)
+function glomling_init_fn(inst, build_name, default_build)
     if not TheWorld.ismastersim then
         return
     end
 
     inst.AnimState:SetSkin(build_name, default_build)
-    inst.skin_sound = skin_sound
+    inst.skin_sound = SKIN_SOUND_FX[build_name]
 end
 
 
@@ -1854,6 +1851,10 @@ function CreatePrefabSkin(name, info)
         for base_skin,size in pairs(info.feet_cuff_size) do
             BASE_FEET_SIZE[base_skin] = size
         end
+    end
+
+    if info.skin_sound ~= nil then
+        SKIN_SOUND_FX[name] = info.skin_sound
     end
 
     if info.fx_prefab ~= nil then

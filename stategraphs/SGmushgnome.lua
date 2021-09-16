@@ -33,6 +33,7 @@ local events =
                 inst.sg:HasStateTag("attack") and not
                 inst.sg:HasStateTag("waking") and not
                 inst.sg:HasStateTag("sleeping") and
+				not CommonHandlers.HitRecoveryDelay(inst) and
                 (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("frozen")) then
             inst.sg:GoToState("hit")
         end
@@ -277,6 +278,7 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("grotto/creatures/mushgnome/hit")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         -- timeline =

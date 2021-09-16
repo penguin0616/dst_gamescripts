@@ -301,7 +301,7 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx
             if platform then
                 local px, py, pz = platform.Transform:GetWorldPosition()
                 x, y, z = px + rx, py + ry, pz + rz
-                platform:AddPlatformFollower(player)
+                player.components.walkableplatformplayer:TestForPlatform()
             end
         end
     end

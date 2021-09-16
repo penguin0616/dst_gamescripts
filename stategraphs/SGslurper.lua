@@ -240,6 +240,7 @@ local states =
             end
             inst.AnimState:PlayAnimation("hit")
             inst._light.SoundEmitter:PlaySound("dontstarve/creatures/slurper/hurt")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events =

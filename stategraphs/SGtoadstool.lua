@@ -167,7 +167,7 @@ local events =
     EventHandler("attacked", function(inst)
         if not inst.components.health:IsDead() and
             (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and
-            (inst.sg.mem.last_hit_time or 0) + inst.hit_recovery < GetTime() then
+            not CommonHandlers.HitRecoveryDelay(inst) then
             inst.sg:GoToState("hit")
         end
     end),
@@ -387,7 +387,7 @@ local states =
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve/creatures/together/toad_stool/hit")
-            inst.sg.mem.last_hit_time = GetTime()
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =
@@ -521,10 +521,7 @@ local states =
         events =
         {
             EventHandler("attacked", function(inst)
-                if not inst.components.health:IsDead() and
-                    (   inst.sg.mem.last_hit_time == nil or
-                        inst.sg.mem.last_hit_time + inst.hit_recovery < GetTime()
-                    ) then
+                if not inst.components.health:IsDead() and not CommonHandlers.HitRecoveryDelay(inst) then
                     inst.sg:GoToState("channel_hit")
                 end
             end),
@@ -566,10 +563,7 @@ local states =
         events =
         {
             EventHandler("attacked", function(inst)
-                if not inst.components.health:IsDead() and
-                    (   inst.sg.mem.last_hit_time == nil or
-                        inst.sg.mem.last_hit_time + inst.hit_recovery < GetTime()
-                    ) then
+                if not inst.components.health:IsDead() and not CommonHandlers.HitRecoveryDelay(inst) then
                     inst.sg.statemem.continuechannel = true
                     inst.sg:GoToState("channel_hit")
                 end
@@ -606,7 +600,7 @@ local states =
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("hit_channeling")
             inst.SoundEmitter:PlaySound("dontstarve/creatures/together/toad_stool/hit")
-            inst.sg.mem.last_hit_time = GetTime()
+            CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         timeline =

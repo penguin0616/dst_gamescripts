@@ -1752,7 +1752,7 @@ function RestoreSnapshotUserSession(sessionid, userid)
                                     local px, py, pz = platform.Transform:GetWorldPosition()
                                     local x, y, z = px + (playerdata.rx or 0), py + (playerdata.ry or 0), pz + (playerdata.rz or 0)
                                     player.Physics:Teleport(x, y, z)
-                                    platform:AddPlatformFollower(player)
+                                    player.components.walkableplatformplayer:TestForPlatform()
                                 end
                             end
                         end

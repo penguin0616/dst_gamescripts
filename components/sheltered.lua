@@ -6,6 +6,7 @@ local Sheltered = Class(function(self, inst)
     self.sheltered = false
     self.announcecooldown = 0
     self.sheltered_level = 1
+    self.mounted = false
     self.waterproofness = TUNING.WATERPROOFNESS_SMALLMED
 
     self:Start()
@@ -32,6 +33,9 @@ function Sheltered:Stop()
 end
 
 function Sheltered:SetSheltered(issheltered, level)
+    if self.mounted and level < 2 then
+        issheltered = false
+    end
     self.sheltered_level = level
     if not issheltered then
         if self.presheltered then

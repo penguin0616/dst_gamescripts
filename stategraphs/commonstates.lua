@@ -68,16 +68,55 @@ CommonHandlers.OnFossilize = function()
 end
 
 --------------------------------------------------------------------------
-local function onattacked(inst, data)
+local function hit_recovery_delay(inst, delay, skip_cooldown_fn)
+	if (inst._last_hitreact_time ~= nil and inst._last_hitreact_time + (delay or inst.hit_recovery or TUNING.DEFAULT_HIT_RECOVERY) >= GetTime()) then	-- is hit react is on cooldown?
+		if skip_cooldown_fn ~= nil then
+			return not skip_cooldown_fn(inst, inst._last_hitreact_time, delay)																			-- skip_cooldown_fn should return true if you want to allow hit reacts while the hit react is in cooldown (allowing stun locking)
+		elseif inst.components.combat ~= nil then
+			return not (inst.components.combat:InCooldown() and inst.sg:HasStateTag("idle"))															-- skip the hit react cooldown if the creature is ready to attack
+		end
+		return true
+	end
+	return false
+
+	--if (inst._last_hitreact_time ~= nil and inst._last_hitreact_time + (delay or inst.hit_recovery or TUNING.DEFAULT_HIT_RECOVERY) >= GetTime()) then	-- is hit react is on cooldown?
+	--	if skip_cooldown_fn ~= nil then
+	--		return not skip_cooldown_fn(inst, inst._last_hitreact_time, delay)																			-- skip_cooldown_fn should return true if you want to allow hit reacts while the hit react is in cooldown (allowing stun locking)
+	--	elseif inst.components.combat ~= nil then
+	--		return not inst.components.combat:InCooldown()																								-- skip the hit react cooldown if the creature is ready to attack
+	--	end
+	--	return true																													
+	--end
+	--return false
+
+
+	-- while hit react is on cooldown, allow hit reacts if combat is on cooldown too
+	--return (inst._last_hitreact_time ~= nil and inst._last_hitreact_time + (delay or inst.hit_recovery or TUNING.DEFAULT_HIT_RECOVERY) >= GetTime())		-- hit react is on cooldown
+	--		and not (inst.components.combat ~= nil and inst.components.combat:InCooldown())																	-- while in cooldown, skip it if the creature is ready to attack
+end
+
+CommonHandlers.HitRecoveryDelay = hit_recovery_delay -- returns true if inst is still in a hit reaction cooldown
+
+local function update_hit_recovery_delay(inst)
+	inst._last_hitreact_time = GetTime()
+end
+
+CommonHandlers.UpdateHitRecoveryDelay = update_hit_recovery_delay
+local function onattacked(inst, data, hitreact_cooldown)
     if inst.components.health ~= nil and not inst.components.health:IsDead()
-        and (not inst.sg:HasStateTag("busy") or
-            inst.sg:HasStateTag("caninterrupt") or
-            inst.sg:HasStateTag("frozen")) then
+		and not hit_recovery_delay(inst, hitreact_cooldown)
+        and (not inst.sg:HasStateTag("busy")
+            or inst.sg:HasStateTag("caninterrupt")
+            or inst.sg:HasStateTag("frozen")) then
         inst.sg:GoToState("hit")
     end
 end
 
-CommonHandlers.OnAttacked = function()
+CommonHandlers.OnAttacked = function(hitreact_cooldown) -- hitreact_cooldown is optional
+	if hitreact_cooldown ~= nil and type(hitreact_cooldown) == "number" then
+		inst.hit_recovery = hitreact_cooldown
+	end
+
     return EventHandler("attacked", onattacked)
 end
 
@@ -1046,6 +1085,8 @@ CommonStates.AddCombatStates = function(states, timelines, anims, fns)
             if inst.SoundEmitter ~= nil and inst.sounds ~= nil and inst.sounds.hit ~= nil then
                 inst.SoundEmitter:PlaySound(inst.sounds.hit)
             end
+
+			update_hit_recovery_delay(inst)
         end,
 
         timeline = timelines ~= nil and timelines.hittimeline or nil,
@@ -1124,6 +1165,8 @@ CommonStates.AddHitState = function(states, timeline, anim)
             if inst.SoundEmitter ~= nil and inst.sounds ~= nil and inst.sounds.hit ~= nil then
                 inst.SoundEmitter:PlaySound(inst.sounds.hit)
             end
+
+			update_hit_recovery_delay(inst)
         end,
 
         timeline = timeline,

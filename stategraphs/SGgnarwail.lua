@@ -783,6 +783,7 @@ local states =
             inst.components.locomotor:StopMoving()
 
             inst:PlayAnimation("hit")
+			CommonHandlers.UpdateHitRecoveryDelay(inst)
         end,
 
         events =

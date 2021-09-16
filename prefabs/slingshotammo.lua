@@ -208,7 +208,7 @@ local function projectile_fn(ammo_def)
     inst.components.projectile:SetSpeed(25)
     inst.components.projectile:SetHoming(false)
     inst.components.projectile:SetHitDist(1.5)
-    inst.components.projectile:SetOnHitFn(OnPreHit)
+    inst.components.projectile:SetOnPreHitFn(OnPreHit)
     inst.components.projectile:SetOnHitFn(OnHit)
     inst.components.projectile:SetOnMissFn(OnMiss)
     inst.components.projectile.range = 30
