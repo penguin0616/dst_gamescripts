@@ -14,7 +14,7 @@ local events =
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnDeath(),
     CommonHandlers.OnLocomote(false, true),
-    CommonHandlers.OnAttacked(),
+    CommonHandlers.OnAttacked(nil, TUNING.ALTERGUARDIAN_PHASE3_MAX_STUN_LOCKS),
 
     EventHandler("doattack", function(inst, data)
         if not (inst.components.health:IsDead() or inst.sg:HasStateTag("busy"))

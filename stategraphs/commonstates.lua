@@ -68,31 +68,37 @@ CommonHandlers.OnFossilize = function()
 end
 
 --------------------------------------------------------------------------
-local function hit_recovery_delay(inst, delay, skip_cooldown_fn)
+-- delay: how long before we can play another hit reaction animation, 
+-- max_hitreacts: the number of hit reacts before we enter the react cooldown. The creature's AI may still early out of this.
+-- skip_cooldown_fn: return true if you want to allow hit reacts while the hit react is in cooldown (allowing stun locking)
+local function hit_recovery_delay(inst, delay, max_hitreacts, skip_cooldown_fn)
+	local on_cooldown = false
 	if (inst._last_hitreact_time ~= nil and inst._last_hitreact_time + (delay or inst.hit_recovery or TUNING.DEFAULT_HIT_RECOVERY) >= GetTime()) then	-- is hit react is on cooldown?
-		if skip_cooldown_fn ~= nil then
-			return not skip_cooldown_fn(inst, inst._last_hitreact_time, delay)																			-- skip_cooldown_fn should return true if you want to allow hit reacts while the hit react is in cooldown (allowing stun locking)
-		elseif inst.components.combat ~= nil then
-			return not (inst.components.combat:InCooldown() and inst.sg:HasStateTag("idle"))															-- skip the hit react cooldown if the creature is ready to attack
+		max_hitreacts = max_hitreacts or inst._max_hitreacts
+		if max_hitreacts then
+			if inst._hitreact_count == nil then
+				inst._hitreact_count = 2
+				return false
+			elseif inst._hitreact_count < max_hitreacts then
+				inst._hitreact_count = inst._hitreact_count + 1
+				return false
+			end
 		end
-		return true
+
+		skip_cooldown_fn = skip_cooldown_fn or inst._hitreact_skip_cooldown_fn
+		if skip_cooldown_fn ~= nil then
+			on_cooldown = not skip_cooldown_fn(inst, inst._last_hitreact_time, delay)
+		elseif inst.components.combat ~= nil then
+			on_cooldown = not (inst.components.combat:InCooldown() and inst.sg:HasStateTag("idle"))		-- skip the hit react cooldown if the creature is ready to attack
+		else
+			on_cooldown = true
+		end
 	end
-	return false
 
-	--if (inst._last_hitreact_time ~= nil and inst._last_hitreact_time + (delay or inst.hit_recovery or TUNING.DEFAULT_HIT_RECOVERY) >= GetTime()) then	-- is hit react is on cooldown?
-	--	if skip_cooldown_fn ~= nil then
-	--		return not skip_cooldown_fn(inst, inst._last_hitreact_time, delay)																			-- skip_cooldown_fn should return true if you want to allow hit reacts while the hit react is in cooldown (allowing stun locking)
-	--	elseif inst.components.combat ~= nil then
-	--		return not inst.components.combat:InCooldown()																								-- skip the hit react cooldown if the creature is ready to attack
-	--	end
-	--	return true																													
-	--end
-	--return false
-
-
-	-- while hit react is on cooldown, allow hit reacts if combat is on cooldown too
-	--return (inst._last_hitreact_time ~= nil and inst._last_hitreact_time + (delay or inst.hit_recovery or TUNING.DEFAULT_HIT_RECOVERY) >= GetTime())		-- hit react is on cooldown
-	--		and not (inst.components.combat ~= nil and inst.components.combat:InCooldown())																	-- while in cooldown, skip it if the creature is ready to attack
+	if inst._hitreact_count ~= nil and not on_cooldown then
+		inst._hitreact_count = 1
+	end
+	return on_cooldown
 end
 
 CommonHandlers.HitRecoveryDelay = hit_recovery_delay -- returns true if inst is still in a hit reaction cooldown
@@ -102,9 +108,9 @@ local function update_hit_recovery_delay(inst)
 end
 
 CommonHandlers.UpdateHitRecoveryDelay = update_hit_recovery_delay
-local function onattacked(inst, data, hitreact_cooldown)
+local function onattacked(inst, data, hitreact_cooldown, max_hitreacts, skip_cooldown_fn)
     if inst.components.health ~= nil and not inst.components.health:IsDead()
-		and not hit_recovery_delay(inst, hitreact_cooldown)
+		and not hit_recovery_delay(inst, hitreact_cooldown, max_hitreacts, skip_cooldown_fn)
         and (not inst.sg:HasStateTag("busy")
             or inst.sg:HasStateTag("caninterrupt")
             or inst.sg:HasStateTag("frozen")) then
@@ -112,12 +118,14 @@ local function onattacked(inst, data, hitreact_cooldown)
     end
 end
 
-CommonHandlers.OnAttacked = function(hitreact_cooldown) -- hitreact_cooldown is optional
-	if hitreact_cooldown ~= nil and type(hitreact_cooldown) == "number" then
-		inst.hit_recovery = hitreact_cooldown
-	end
+CommonHandlers.OnAttacked = function(hitreact_cooldown, max_hitreacts, skip_cooldown_fn) -- params are optional
+	hitreact_cooldown = type(hitreact_cooldown) == "number" and hitreact_cooldown or nil -- validting the data because a lot of poeple were passing in 'true' for no reason
 
-    return EventHandler("attacked", onattacked)
+	if hitreact_cooldown ~= nil or max_hitreacts ~= nil or skip_cooldown_fn ~= nil then
+		return EventHandler("attacked", function(inst, data) onattacked(inst, data, hitreact_cooldown, max_hitreacts, skip_cooldown_fn) end)
+	else
+	    return EventHandler("attacked", onattacked)
+	end
 end
 
 --------------------------------------------------------------------------

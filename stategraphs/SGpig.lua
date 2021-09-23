@@ -21,7 +21,7 @@ local events =
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnAttack(),
-    CommonHandlers.OnAttacked(),
+    CommonHandlers.OnAttacked(nil, TUNING.PIG_MAX_STUN_LOCKS),
     CommonHandlers.OnDeath(),
     CommonHandlers.OnHop(),
 	CommonHandlers.OnSink(),

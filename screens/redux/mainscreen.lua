@@ -86,25 +86,7 @@ function MainScreen:DoInit()
 
    	local updatename_x = RESOLUTION_X * .5 - 150
 	local updatename_y = -RESOLUTION_Y * .5 + 55
-
-    self.updatename = self.fixed_root:AddChild(Text(NEWFONT, 21))
-    self.updatename:SetPosition( updatename_x, updatename_y )
-    self.updatename:SetColour(1,1,1,1)
-    self.updatename:SetHAlign(ANCHOR_RIGHT)
-    self.updatename:SetRegionSize(250,45)
-    local suffix = " ("
-    if BRANCH == "dev" then
-		suffix = suffix .. "internal v"..APP_VERSION
-    elseif BRANCH == "staging" then
-		suffix = suffix .. "preview v"..APP_VERSION
-    else
-        suffix = suffix .. " v"..APP_VERSION
-    end
-    suffix = suffix .. ", "..(APP_ARCHITECTURE == "x32" and "32-bit" or APP_ARCHITECTURE == "x64" and "64-bit" or "??-bit")
-	suffix = suffix .. ")"
-	
-    self.updatename:SetString(STRINGS.UI.MAINSCREEN.DST_UPDATENAME .. suffix)
-
+	self.updatename = TEMPLATES.AddBuildString(self.fixed_root, {x = updatename_x, y = updatename_y, align = ANCHOR_RIGHT, w = 250, h = 45})
 
     self.play_button = self.fixed_root:AddChild(ImageButton("images/frontscreen.xml", "play_highlight.tex", nil, nil, nil, nil, {1,1}, {0,0}))--"highlight.tex", "highlight_hover.tex"))
     self.play_button.bg = self.play_button:AddChild(Image("images/frontscreen.xml", "play_highlight_hover.tex"))

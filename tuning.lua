@@ -371,6 +371,7 @@ function Tune(overrides)
         PIG_HEALTH = 250,
         PIG_ATTACK_PERIOD = 3,
         PIG_TARGET_DIST = 16,
+		PIG_MAX_STUN_LOCKS = 2,
         PIG_LOYALTY_MAXTIME = 2.5*total_day_time,
         PIG_LOYALTY_POLITENESS_MAXTIME_BONUS = .5*total_day_time,
         PIG_LOYALTY_PER_HUNGER = total_day_time/25,
@@ -488,6 +489,7 @@ function Tune(overrides)
         WALRUS_MELEE_RANGE = 5,
         WALRUS_TARGET_DIST = 10,
         WALRUS_LOSETARGET_DIST = 30,
+		WALRUS_MAX_STUN_LOCKS = 4,
         WALRUS_REGEN_PERIOD = total_day_time*2.5,
         WALRUS_REGEN_ENABLED = true,
 
@@ -598,6 +600,8 @@ function Tune(overrides)
         DEER_ATTACKER_REMEMBER_DIST = 20,
         DEER_WALK_SPEED = 2.5,
         DEER_RUN_SPEED = 8,
+		DEER_HIT_RECOVERY = 1,
+		DEER_MAX_STUN_LOCKS = 4,
 
         DEER_HERD_MOVE_DIST = 10,
 
@@ -2093,6 +2097,7 @@ function Tune(overrides)
         BEARDLORD_DAMAGE = 60,
         BUNNYMAN_HEALTH = 200,
         BUNNYMAN_ATTACK_PERIOD = 2,
+		BUNNYMAN_MAX_STUN_LOCKS = 2,
         BEARDLORD_ATTACK_PERIOD = 1,
         BUNNYMAN_RUN_SPEED = 6,
         BUNNYMAN_WALK_SPEED = 3,
@@ -2277,6 +2282,7 @@ function Tune(overrides)
         BEEQUEEN_MAX_GUARDS_PER_SPAWN = 5,
         BEEQUEEN_TOTAL_GUARDS = 8,
         BEEQUEEN_CHASE_TO_RANGE = 8,
+		BEEQUEEN_MAX_STUN_LOCKS = 4,
 
         BEEQUEEN_DODGE_SPEED = 6,
         BEEQUEEN_DODGE_HIT_RECOVERY = 2,
@@ -4080,6 +4086,7 @@ function Tune(overrides)
         MERM_WALK_SPEED = 3,
         MERM_TARGET_DIST = 10,
         MERM_DEFEND_DIST = 30,
+		MERM_MAX_STUN_LOCKS = 2,
 
         MERM_LOYALTY_MAXTIME = 3 * total_day_time,
         MERM_LOYALTY_PER_HUNGER = total_day_time/25,
@@ -5343,6 +5350,7 @@ function Tune(overrides)
         ALTERGUARDIAN_PHASE3_SUMMONMAXLOOPS = 60,
         ALTERGUARDIAN_PHASE3_SUMMONRSQ = 400, --20 ^2
         ALTERGUARDIAN_PHASE3_TARGET_DIST = 20,
+		ALTERGUARDIAN_PHASE3_MAX_STUN_LOCKS = 5,
 
         ALTERGUARDIAN_PROJECTILE_SPEED = 20,
 
@@ -5369,6 +5377,8 @@ function Tune(overrides)
         MOONSTORM_SPARK_HEALTH = 100,
 
         MOONSTORM_GOGGLES_PERISHTIME = total_day_time*1,
+
+        MOONSTORM_SPEED_MOD = .4,
 
         STORM_SWAP_TIME = 4/30,
 

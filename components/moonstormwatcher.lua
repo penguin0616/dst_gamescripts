@@ -2,7 +2,7 @@ local MoonstormWatcher = Class(function(self, inst)
     self.inst = inst
 
     self.moonstormlevel = 0
-    self.moonstormspeedmult = TUNING.SANDSTORM_SPEED_MOD
+    self.moonstormspeedmult = TUNING.MOONSTORM_SPEED_MOD
     self.delay = nil
 
     if TheWorld.net.components.moonstorms ~= nil then
@@ -51,9 +51,7 @@ end
 function MoonstormWatcher:SetMoonstormSpeedMultiplier(mult)
     mult = math.clamp(mult, 0, 1)
     if self.moonstormspeedmult ~= mult then
-        if self.delay == nil then
-            self.moonstormspeedmult = mult
-        elseif mult < 1 then
+        if mult < 1 then
             if self.moonstormspeedmult >= 1 then
                 AddMoonstormWalkSpeedListeners(self.inst)
             end

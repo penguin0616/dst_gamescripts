@@ -441,6 +441,8 @@ function MultiplayerMainScreen:DoInit()
 	self.sidebar:SetScale(0.95, 1.01)
 	self.sidebar:SetTint(0, 0, 0, .85)
 
+	self.build_number = TEMPLATES.AddBuildString(self.fixed_root, {x = RESOLUTION_X * .5 - 150, y = -RESOLUTION_Y * .5 + 20, size = 18, align = ANCHOR_RIGHT, w = 250, h = 45, colour = UICOLOURS.GOLD_UNIMPORTANT})
+
 	if IsFestivalEventActive(FESTIVAL_EVENTS.LAVAARENA) then
 		self.logo = self.fixed_root:AddChild(Image("images/lavaarena_frontend.xml", "title.tex"))
 		self.logo:SetScale(.6)

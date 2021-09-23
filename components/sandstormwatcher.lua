@@ -37,9 +37,7 @@ end
 function SandStormWatcher:SetSandstormSpeedMultiplier(mult)
     mult = math.clamp(mult, 0, 1)
     if self.sandstormspeedmult ~= mult then
-        if self.delay == nil then
-            self.sandstormspeedmult = mult
-        elseif mult < 1 then
+        if mult < 1 then
             if self.sandstormspeedmult >= 1 then
                 AddSandstormWalkSpeedListeners(self.inst)
             end

@@ -5,7 +5,7 @@ require "behaviours/follow"
 
 local BrainCommon = require("brains/braincommon")
 
-local MIN_FOLLOW_DIST = 1
+local MIN_FOLLOW_DIST = 0
 local TARGET_FOLLOW_DIST = 7
 local MAX_FOLLOW_DIST = 12
 

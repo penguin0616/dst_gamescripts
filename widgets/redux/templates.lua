@@ -182,6 +182,38 @@ function TEMPLATES.ClayWargAnim()
     return anim
 end
 
+----------------
+----------------
+--  VERSION   --
+----------------
+----------------
+function TEMPLATES.GetBuildString()
+	local version_str = BRANCH == "dev" and "Internal"
+						or BRANCH == "staging" and "Preview"
+						or STRINGS.UI.MAINSCREEN.DST_UPDATENAME
+
+	return version_str.." v"..APP_VERSION.." ("..(APP_ARCHITECTURE == "x32" and "32-bit" or APP_ARCHITECTURE == "x64" and "64-bit" or "??-bit")..")"
+end
+
+function TEMPLATES.AddBuildString(parent_widget, config)
+	config = config or {}
+    local version = parent_widget:AddChild(Text(config.font or BODYTEXTFONT, config.size or 21))
+    version:SetPosition( config.x or 0, config.y or 0 )
+	if config.colour then
+	    version:SetColour(unpack(config.colour))
+	else
+	    version:SetColour(config.r or .8, config.g or .8, config.b or .8, config.a or 1)
+	end
+	if config.align ~= nil then
+	    version:SetHAlign(config.align)
+	end
+	if config.w ~= nil and config.h ~= nil then
+		version:SetRegionSize(config.w, config.h)
+	end
+    version:SetString(TEMPLATES.GetBuildString())
+	return version
+end
+
 
 ----------------
 ----------------

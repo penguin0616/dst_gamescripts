@@ -82,7 +82,7 @@ local events =
     EventHandler("attacked", function(inst)
         if not inst.components.health:IsDead() and
             (not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt")) and
-            not CommonHandlers.HitRecoveryDelay(inst) then
+            not CommonHandlers.HitRecoveryDelay(inst, nil, TUNING.BEEQUEEN_MAX_STUN_LOCKS) then
             inst.sg:GoToState("hit")
         end
     end),

@@ -5,6 +5,9 @@ local assets =
 }
 
 local function onequip(inst, owner)
+    owner.AnimState:OverrideSymbol("swap_object", "swap_whip", "swap_whip")
+    owner.AnimState:OverrideSymbol("whipline", "swap_whip", "whipline")
+
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 end
