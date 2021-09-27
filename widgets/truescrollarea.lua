@@ -63,8 +63,8 @@ function TrueScrollArea:BuildScrollBar()
     self.up_button:SetPosition(0, self.scrollbar_height/2 + nudge_y/2)
     self.up_button:SetScale(0.3)
     self.up_button:SetWhileDown( function()
-        if not self.last_up_button_time or GetTime() - self.last_up_button_time > button_repeat_time then
-            self.last_up_button_time = GetTime()
+        if not self.last_up_button_time or GetStaticTime() - self.last_up_button_time > button_repeat_time then
+            self.last_up_button_time = GetStaticTime()
             self:Scroll(-self.scroll_per_click)
         end
     end)
@@ -76,8 +76,8 @@ function TrueScrollArea:BuildScrollBar()
     self.down_button:SetPosition(0, -self.scrollbar_height/2 - nudge_y/2)
     self.down_button:SetScale(0.3)
     self.down_button:SetWhileDown( function()
-        if not self.last_down_button_time or GetTime() - self.last_down_button_time > button_repeat_time then
-            self.last_down_button_time = GetTime()
+        if not self.last_down_button_time or GetStaticTime() - self.last_down_button_time > button_repeat_time then
+            self.last_down_button_time = GetStaticTime()
             self:Scroll(self.scroll_per_click)
         end
     end)

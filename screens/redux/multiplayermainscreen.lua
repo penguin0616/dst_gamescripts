@@ -33,7 +33,7 @@ local PurchasePackScreen = require "screens/redux/purchasepackscreen"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging" -- BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -42,317 +42,257 @@ local function PlayBannerSound(inst, self, sound)
     end
 end
 
-function MakeBanner(self)
+local function MakeWaterloggedBanner(self, baner_root, anim)
+    local anim_bg = baner_root:AddChild(UIAnim())
+    anim_bg:GetAnimState():SetBuild("dst_menu_waterlogged")
+    anim_bg:GetAnimState():SetBank("dst_menu_waterlogged")
+    anim_bg:SetScale(0.667)
+    anim_bg:GetAnimState():PlayAnimation("loop", true)
+    anim_bg:MoveToBack()
+end
+
+local function MakeMoonstormBanner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
+    anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
+    anim:GetAnimState():PlayAnimation("loop_w1", true)
+    anim:SetScale(.667)
+    anim.inst:ListenForEvent("animover", function()
+        anim:GetAnimState():PlayAnimation("loop_w"..math.random(3))
+    end)
+
+
+    local anim_wrench = baner_root:AddChild(UIAnim())
+    anim_wrench:GetAnimState():SetBuild("dst_menu_moonstorm_wrench")
+    anim_wrench:GetAnimState():SetBank ("dst_menu_moonstorm_wrench")
+    anim_wrench:GetAnimState():PlayAnimation("loop_w1", false)
+    anim_wrench:SetScale(.667)
+    anim_wrench:GetAnimState():SetErosionParams(0.06, 0, -1.0)
+    anim_wrench.inst.holo_time = 0
+    anim_wrench.inst:DoPeriodicTask(FRAMES, function()
+        anim_wrench.inst.holo_time = anim_wrench.inst.holo_time + FRAMES
+        anim_wrench:GetAnimState():SetErosionParams(0.06, anim_wrench.inst.holo_time, -1.0)
+    end)
+    anim_wrench.inst:ListenForEvent("animover", function()
+        -- This is a hack to get it to loop in sync with Wilson in the background,
+        -- since the Wilson anim isn't set to loop either (it switches randomly
+        -- between different animations)
+        anim_wrench:GetAnimState():PlayAnimation("loop_w1")
+    end)
+
+
+    local anim_wagstaff = baner_root:AddChild(UIAnim())
+    anim_wagstaff:GetAnimState():SetBuild("dst_menu_moonstorm_wagstaff")
+    anim_wagstaff:GetAnimState():SetBank ("dst_menu_moonstorm_wagstaff")
+    anim_wagstaff:GetAnimState():PlayAnimation("loop_w2", true)
+    anim_wagstaff:SetScale(.667)
+    anim_wagstaff:GetAnimState():SetErosionParams(1, 0, -1.0)
+    anim_wagstaff:GetAnimState():SetMultColour(0.9, 0.9, 0.9, 0.9)
+
+    local wagstaff_erosion_min = 0.02 -- Not 0 so there's always a little bit of influence on the alpha from the lines
+    local wagstaff_erosion_max = 1.2 -- Overshoots 1.2 to get more stable alpha lines when close to fully faded out
+    local wagstaff_erosion_speed = 1.65
+    local wagstaff_visible_time_min = 5.2
+    local wagstaff_visible_time_variance = 3.4
+    local wagstaff_invisible_time_min = 8
+    local wagstaff_invisible_time_variance = 5.7
+    --
+    anim_wagstaff.inst.holo_time = 0
+    anim_wagstaff.inst.holo_erosion = 1
+    anim_wagstaff.inst.holo_fade_in = false
+    anim_wagstaff.inst.holo_position = math.random(3)
+    anim_wagstaff.inst:DoPeriodicTask(FRAMES, function()
+        if anim_wagstaff.inst.holo_fade_in then
+            anim_wagstaff.inst.holo_erosion = math.max(wagstaff_erosion_min, anim_wagstaff.inst.holo_erosion - FRAMES * wagstaff_erosion_speed)
+        else
+            anim_wagstaff.inst.holo_erosion = math.min(wagstaff_erosion_max, anim_wagstaff.inst.holo_erosion + FRAMES * wagstaff_erosion_speed)
+        end
+        anim_wagstaff.inst.holo_time = anim_wagstaff.inst.holo_time + FRAMES
+        anim_wagstaff:GetAnimState():SetErosionParams(anim_wagstaff.inst.holo_erosion, anim_wagstaff.inst.holo_time, -1)
+    end)
+    local holo_fade_in
+    local holo_fade_out
+    holo_fade_out = function(inst)
+        anim_wagstaff.inst.holo_fade_in = false
+
+        inst:DoTaskInTime(wagstaff_invisible_time_min + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
+    end
+    holo_fade_in = function(inst)
+        anim_wagstaff.inst.holo_fade_in = true
+        anim_wagstaff.inst.holo_time = 0
+
+        local anim_variations = {[1] = 1, [2] = 1, [3] = 1}
+        anim_variations[anim_wagstaff.inst.holo_position] = 0
+        anim_wagstaff.inst.holo_position = weighted_random_choice(anim_variations)
+        anim_wagstaff:GetAnimState():PlayAnimation("loop_w"..anim_wagstaff.inst.holo_position, true)
+
+        if anim_wagstaff.inst.holo_position == 1 and IsConsole() then
+            anim_wagstaff:GetAnimState():PlayAnimation("loop_w1_console", true)
+        end
+
+        anim_wagstaff.inst:DoTaskInTime(wagstaff_visible_time_min + wagstaff_visible_time_variance * math.random(), holo_fade_out)
+    end
+    anim_wagstaff.inst:DoTaskInTime(1.5 + wagstaff_invisible_time_min * math.random() + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
+
+
+    local anim_foreground = baner_root:AddChild(UIAnim())
+    anim_foreground:GetAnimState():SetBuild("dst_menu_moonstorm_foreground")
+    anim_foreground:GetAnimState():SetBank ("dst_menu_moonstorm_foreground")
+    anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3), true)
+    anim_foreground:SetScale(.667)
+    anim_foreground.inst:ListenForEvent("animover", function()
+        anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3))
+    end)
+end
+
+local function MakeYOTCBanner(self, baner_root, anim)
+    local anim_bg = baner_root:AddChild(UIAnim())
+    anim_bg:GetAnimState():SetBuild("dst_menu_carrat_bg")
+    anim_bg:GetAnimState():SetBank("dst_carrat_bg")
+    anim_bg:SetScale(0.7)
+    anim_bg:GetAnimState():PlayAnimation("loop", true)
+    anim_bg:MoveToBack()
+
+    anim:GetAnimState():SetBuild("dst_menu_carrat")
+    anim:GetAnimState():SetBank("dst_carrat")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(0.6)
+
+    local colors ={
+        "blue",
+        "brown",
+        "pink",
+        "purple",
+        "yellow",
+        "green",
+        "white",
+        nil, -- normal?
+        }
+
+    local color = colors[math.random(1,#colors)]
+
+    if color then
+        anim:GetAnimState():OverrideSymbol("ear1", "dst_menu_carrat_swaps", color.."_ear1")
+        anim:GetAnimState():OverrideSymbol("ear2", "dst_menu_carrat_swaps", color.."_ear2")
+        anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")
+    end
+end
+
+local function MakeCawnivalBanner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_carnival")
+    anim:GetAnimState():SetBank ("dst_menu_carnival")
+    anim:SetScale(.667)
+    anim:GetAnimState():PlayAnimation("loop", true)
+end
+
+local function MakeWebberCawnivalBanner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_webber_carnival")
+    anim:GetAnimState():SetBank ("dst_menu_webber")
+    anim:SetScale(.667)
+    anim:GetAnimState():PlayAnimation("loop", true)
+end
+
+local function MakeWesV1Banner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wes")
+    anim:GetAnimState():SetBank("dst_menu_wes")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
+
+local function MakeWesV2Banner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wes2")
+    anim:GetAnimState():SetBank ("dst_menu_wes2")
+    anim:SetScale(.667)
+    anim:GetAnimState():PlayAnimation("loop", true)
+end
+
+local function MakeWendyBanner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wendy")
+    anim:GetAnimState():SetBank("dst_menu_wendy")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
+
+local function MakeWebberBanner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_webber")
+    anim:GetAnimState():SetBank ("dst_menu_webber")
+    anim:SetScale(.667)
+    anim:GetAnimState():PlayAnimation("loop", true)
+end
+
+local function MakeWandaBanner(self, baner_root, anim)
+    local anim_bg = baner_root:AddChild(UIAnim())
+    anim_bg:GetAnimState():SetBuild("dst_menu_wanda")
+    anim_bg:GetAnimState():SetBank("dst_menu_wanda")
+    anim_bg:SetScale(0.667)
+    anim_bg:GetAnimState():PlayAnimation("loop_"..math.random(3), true)
+    anim_bg:MoveToBack()
+end
+
+local function MakeDefaultBanner(self, baner_root, anim)
 	local banner_height = 350
+	baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
+
+    local anim_bg = baner_root:AddChild(UIAnim())
+    anim_bg:GetAnimState():SetBuild("dst_menu_v2_bg")
+    anim_bg:GetAnimState():SetBank("dst_menu_v2_bg")
+    anim:SetScale(.667)
+    anim_bg:GetAnimState():PlayAnimation("loop", true)
+    anim_bg:MoveToBack()
+
+    anim:GetAnimState():SetBuild("dst_menu_v2")
+    anim:GetAnimState():SetBank("dst_menu_v2")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+
+    local creatures =
+    {
+        "creature_cookie",
+        "creature_squid",
+        "creature_gnarwail",
+        "creature_puffin",
+        "creature_hound",
+        "creature_malbatross",
+    }
+    for _,v in pairs(creatures) do
+        anim:GetAnimState():Hide(v)
+    end
+
+    local c1 = creatures[math.random(1,#creatures)]
+    local c2 = creatures[math.random(1,#creatures)]
+    local c3 = creatures[math.random(1,#creatures)]
+
+    --could end up with dupes picked, that's okay, then we'll have only 1 or 2 chosen
+    anim:GetAnimState():Show(c1)
+    anim:GetAnimState():Show(c2)
+    anim:GetAnimState():Show(c3)
+end
+
+function MakeBanner(self)
 	local title_str = nil
 
 	local baner_root = Widget("banner_root")
-	--baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
 	baner_root:SetPosition(0, 0)
-
 	local anim = baner_root:AddChild(UIAnim())
-
-
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-
-
-        local anim_bg = baner_root:AddChild(UIAnim())
-        anim_bg:GetAnimState():SetBuild("dst_menu_waterlogged")
-        anim_bg:GetAnimState():SetBank("dst_menu_waterlogged")
-        anim_bg:SetScale(0.667)
-        anim_bg:GetAnimState():PlayAnimation("loop", true)
-        anim_bg:MoveToBack()
-
---[[
-
-        anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
-        anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
-        anim:GetAnimState():PlayAnimation("loop_w1", true)
-        anim:SetScale(.667)
-        anim.inst:ListenForEvent("animover", function()
-            anim:GetAnimState():PlayAnimation("loop_w"..math.random(3))
-        end)
-
-
-        local anim_wrench = baner_root:AddChild(UIAnim())
-        anim_wrench:GetAnimState():SetBuild("dst_menu_moonstorm_wrench")
-        anim_wrench:GetAnimState():SetBank ("dst_menu_moonstorm_wrench")
-        anim_wrench:GetAnimState():PlayAnimation("loop_w1", false)
-        anim_wrench:SetScale(.667)
-        anim_wrench:GetAnimState():SetErosionParams(0.06, 0, -1.0)
-        anim_wrench.inst.holo_time = 0
-        anim_wrench.inst:DoPeriodicTask(FRAMES, function()
-            anim_wrench.inst.holo_time = anim_wrench.inst.holo_time + FRAMES
-            anim_wrench:GetAnimState():SetErosionParams(0.06, anim_wrench.inst.holo_time, -1.0)
-        end)
-        anim_wrench.inst:ListenForEvent("animover", function()
-            -- This is a hack to get it to loop in sync with Wilson in the background,
-            -- since the Wilson anim isn't set to loop either (it switches randomly
-            -- between different animations)
-            anim_wrench:GetAnimState():PlayAnimation("loop_w1")
-        end)
-
-
-        local anim_wagstaff = baner_root:AddChild(UIAnim())
-        anim_wagstaff:GetAnimState():SetBuild("dst_menu_moonstorm_wagstaff")
-        anim_wagstaff:GetAnimState():SetBank ("dst_menu_moonstorm_wagstaff")
-        anim_wagstaff:GetAnimState():PlayAnimation("loop_w2", true)
-        anim_wagstaff:SetScale(.667)
-        anim_wagstaff:GetAnimState():SetErosionParams(1, 0, -1.0)
-        anim_wagstaff:GetAnimState():SetMultColour(0.9, 0.9, 0.9, 0.9)
-
-        local wagstaff_erosion_min = 0.02 -- Not 0 so there's always a little bit of influence on the alpha from the lines
-        local wagstaff_erosion_max = 1.2 -- Overshoots 1.2 to get more stable alpha lines when close to fully faded out
-        local wagstaff_erosion_speed = 1.65
-        local wagstaff_visible_time_min = 5.2
-        local wagstaff_visible_time_variance = 3.4
-        local wagstaff_invisible_time_min = 8
-        local wagstaff_invisible_time_variance = 5.7
-        --
-        anim_wagstaff.inst.holo_time = 0
-        anim_wagstaff.inst.holo_erosion = 1
-        anim_wagstaff.inst.holo_fade_in = false
-        anim_wagstaff.inst.holo_position = math.random(3)
-        anim_wagstaff.inst:DoPeriodicTask(FRAMES, function()
-            if anim_wagstaff.inst.holo_fade_in then
-                anim_wagstaff.inst.holo_erosion = math.max(wagstaff_erosion_min, anim_wagstaff.inst.holo_erosion - FRAMES * wagstaff_erosion_speed)
-            else
-                anim_wagstaff.inst.holo_erosion = math.min(wagstaff_erosion_max, anim_wagstaff.inst.holo_erosion + FRAMES * wagstaff_erosion_speed)
-            end
-            anim_wagstaff.inst.holo_time = anim_wagstaff.inst.holo_time + FRAMES
-            anim_wagstaff:GetAnimState():SetErosionParams(anim_wagstaff.inst.holo_erosion, anim_wagstaff.inst.holo_time, -1)
-        end)
-        local holo_fade_in
-        local holo_fade_out
-        holo_fade_out = function(inst)
-            anim_wagstaff.inst.holo_fade_in = false
-
-            inst:DoTaskInTime(wagstaff_invisible_time_min + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
-        end
-        holo_fade_in = function(inst)
-            anim_wagstaff.inst.holo_fade_in = true
-            anim_wagstaff.inst.holo_time = 0
-
-            local anim_variations = {[1] = 1, [2] = 1, [3] = 1}
-            anim_variations[anim_wagstaff.inst.holo_position] = 0
-            anim_wagstaff.inst.holo_position = weighted_random_choice(anim_variations)
-            anim_wagstaff:GetAnimState():PlayAnimation("loop_w"..anim_wagstaff.inst.holo_position, true)
-
-            if anim_wagstaff.inst.holo_position == 1 and IsConsole() then
-                anim_wagstaff:GetAnimState():PlayAnimation("loop_w1_console", true)
-            end
-
-            anim_wagstaff.inst:DoTaskInTime(wagstaff_visible_time_min + wagstaff_visible_time_variance * math.random(), holo_fade_out)
-        end
-        anim_wagstaff.inst:DoTaskInTime(1.5 + wagstaff_invisible_time_min * math.random() + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
-
-
-        local anim_foreground = baner_root:AddChild(UIAnim())
-        anim_foreground:GetAnimState():SetBuild("dst_menu_moonstorm_foreground")
-        anim_foreground:GetAnimState():SetBank ("dst_menu_moonstorm_foreground")
-        anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3), true)
-        anim_foreground:SetScale(.667)
-        anim_foreground.inst:ListenForEvent("animover", function()
-            anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3))
-        end)
-]]
-
+        MakeWandaBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
-		local anim_bg = baner_root:AddChild(UIAnim())
-		anim_bg:GetAnimState():SetBuild("dst_menu_carrat_bg")
-		anim_bg:GetAnimState():SetBank("dst_carrat_bg")
-		anim_bg:SetScale(0.7)
-		anim_bg:GetAnimState():PlayAnimation("loop", true)
-		anim_bg:MoveToBack()
-
-		anim:GetAnimState():SetBuild("dst_menu_carrat")
-		anim:GetAnimState():SetBank("dst_carrat")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(0.6)
-
-        local colors ={
-            "blue",
-            "brown",
-            "pink",
-            "purple",
-            "yellow",
-            "green",
-            "white",
-            nil, -- normal?
-            }
-
-        local color = colors[math.random(1,#colors)]
-
-        if color then
-            anim:GetAnimState():OverrideSymbol("ear1", "dst_menu_carrat_swaps", color.."_ear1")
-            anim:GetAnimState():OverrideSymbol("ear2", "dst_menu_carrat_swaps", color.."_ear2")
-            anim:GetAnimState():OverrideSymbol("tail", "dst_menu_carrat_swaps", color.."_tail")
-        end
+        MakeYOTCBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
-
-        anim:GetAnimState():SetBuild("dst_menu_webber_carnival")
-        anim:GetAnimState():SetBank ("dst_menu_webber")
-        anim:SetScale(.667)
-        anim:GetAnimState():PlayAnimation("loop", true)
-
+        MakeWebberCawnivalBanner(self, baner_root, anim)
 	elseif true then
-
-        local anim_bg = baner_root:AddChild(UIAnim())
-        anim_bg:GetAnimState():SetBuild("dst_menu_wanda")
-        anim_bg:GetAnimState():SetBank("dst_menu_wanda")
-        anim_bg:SetScale(0.667)
-        anim_bg:GetAnimState():PlayAnimation("loop_"..math.random(3), true)
-        anim_bg:MoveToBack()
-
-        --[[anim:GetAnimState():SetBuild("dst_menu_webber")
-        anim:GetAnimState():SetBank ("dst_menu_webber")
-        anim:SetScale(.667)
-        anim:GetAnimState():PlayAnimation("loop", true)
-
-		anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
-        anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
-        anim:GetAnimState():PlayAnimation("loop_w1", true)
-        anim:SetScale(.667)
-        anim.inst:ListenForEvent("animover", function()
-            anim:GetAnimState():PlayAnimation("loop_w"..math.random(3))
-        end)
-
-
-        local anim_wrench = baner_root:AddChild(UIAnim())
-        anim_wrench:GetAnimState():SetBuild("dst_menu_moonstorm_wrench")
-        anim_wrench:GetAnimState():SetBank ("dst_menu_moonstorm_wrench")
-        anim_wrench:GetAnimState():PlayAnimation("loop_w1", false)
-        anim_wrench:SetScale(.667)
-        anim_wrench:GetAnimState():SetErosionParams(0.06, 0, -1.0)
-        anim_wrench.inst.holo_time = 0
-        anim_wrench.inst:DoPeriodicTask(FRAMES, function()
-            anim_wrench.inst.holo_time = anim_wrench.inst.holo_time + FRAMES
-            anim_wrench:GetAnimState():SetErosionParams(0.06, anim_wrench.inst.holo_time, -1.0)
-        end)
-        anim_wrench.inst:ListenForEvent("animover", function()
-            -- This is a hack to get it to loop in sync with Wilson in the background,
-            -- since the Wilson anim isn't set to loop either (it switches randomly
-            -- between different animations)
-            anim_wrench:GetAnimState():PlayAnimation("loop_w1")
-        end)
-
-
-        local anim_wagstaff = baner_root:AddChild(UIAnim())
-        anim_wagstaff:GetAnimState():SetBuild("dst_menu_moonstorm_wagstaff")
-        anim_wagstaff:GetAnimState():SetBank ("dst_menu_moonstorm_wagstaff")
-        anim_wagstaff:GetAnimState():PlayAnimation("loop_w2", true)
-        anim_wagstaff:SetScale(.667)
-        anim_wagstaff:GetAnimState():SetErosionParams(1, 0, -1.0)
-        anim_wagstaff:GetAnimState():SetMultColour(0.9, 0.9, 0.9, 0.9)
-
-        local wagstaff_erosion_min = 0.02 -- Not 0 so there's always a little bit of influence on the alpha from the lines
-        local wagstaff_erosion_max = 1.2 -- Overshoots 1.2 to get more stable alpha lines when close to fully faded out
-        local wagstaff_erosion_speed = 1.65
-        local wagstaff_visible_time_min = 5.2
-        local wagstaff_visible_time_variance = 3.4
-        local wagstaff_invisible_time_min = 8
-        local wagstaff_invisible_time_variance = 5.7
-        --
-        anim_wagstaff.inst.holo_time = 0
-        anim_wagstaff.inst.holo_erosion = 1
-        anim_wagstaff.inst.holo_fade_in = false
-        anim_wagstaff.inst.holo_position = math.random(3)
-        anim_wagstaff.inst:DoPeriodicTask(FRAMES, function()
-            if anim_wagstaff.inst.holo_fade_in then
-                anim_wagstaff.inst.holo_erosion = math.max(wagstaff_erosion_min, anim_wagstaff.inst.holo_erosion - FRAMES * wagstaff_erosion_speed)
-            else
-                anim_wagstaff.inst.holo_erosion = math.min(wagstaff_erosion_max, anim_wagstaff.inst.holo_erosion + FRAMES * wagstaff_erosion_speed)
-            end
-            anim_wagstaff.inst.holo_time = anim_wagstaff.inst.holo_time + FRAMES
-            anim_wagstaff:GetAnimState():SetErosionParams(anim_wagstaff.inst.holo_erosion, anim_wagstaff.inst.holo_time, -1)
-        end)
-        local holo_fade_in
-        local holo_fade_out
-        holo_fade_out = function(inst)
-            anim_wagstaff.inst.holo_fade_in = false
-
-            inst:DoTaskInTime(wagstaff_invisible_time_min + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
-        end
-        holo_fade_in = function(inst)
-            anim_wagstaff.inst.holo_fade_in = true
-            anim_wagstaff.inst.holo_time = 0
-
-            local anim_variations = {[1] = 1, [2] = 1, [3] = 1}
-            anim_variations[anim_wagstaff.inst.holo_position] = 0
-            anim_wagstaff.inst.holo_position = weighted_random_choice(anim_variations)
-            anim_wagstaff:GetAnimState():PlayAnimation("loop_w"..anim_wagstaff.inst.holo_position, true)
-
-            if anim_wagstaff.inst.holo_position == 1 and IsConsole() then
-                anim_wagstaff:GetAnimState():PlayAnimation("loop_w1_console", true)
-            end
-
-            anim_wagstaff.inst:DoTaskInTime(wagstaff_visible_time_min + wagstaff_visible_time_variance * math.random(), holo_fade_out)
-        end
-        anim_wagstaff.inst:DoTaskInTime(1.5 + wagstaff_invisible_time_min * math.random() + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
-
-
-        local anim_foreground = baner_root:AddChild(UIAnim())
-        anim_foreground:GetAnimState():SetBuild("dst_menu_moonstorm_foreground")
-        anim_foreground:GetAnimState():SetBank ("dst_menu_moonstorm_foreground")
-        anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3), true)
-        anim_foreground:SetScale(.667)
-        anim_foreground.inst:ListenForEvent("animover", function()
-            anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3))
-        end)]]
-
+        MakeWandaBanner(self, baner_root, anim)
 	else
-		-- default banner
-        local anim_bg = baner_root:AddChild(UIAnim())
-    	anim_bg:GetAnimState():SetBuild("dst_menu_v2_bg")
-    	anim_bg:GetAnimState():SetBank("dst_menu_v2_bg")
-        anim:SetScale(.667)
-    	anim_bg:GetAnimState():PlayAnimation("loop", true)
-        anim_bg:MoveToBack()
-
-        anim:GetAnimState():SetBuild("dst_menu_v2")
-        anim:GetAnimState():SetBank("dst_menu_v2")
-        anim:GetAnimState():PlayAnimation("loop", true)
-        anim:SetScale(.667)
-
-        local creatures =
-        {
-            "creature_cookie",
-            "creature_squid",
-            "creature_gnarwail",
-            "creature_puffin",
-            "creature_hound",
-            "creature_malbatross",
-        }
-        for _,v in pairs(creatures) do
-            anim:GetAnimState():Hide(v)
-        end
-
-        local c1 = creatures[math.random(1,#creatures)]
-        local c2 = creatures[math.random(1,#creatures)]
-        local c3 = creatures[math.random(1,#creatures)]
-
-        --could end up with dupes picked, that's okay, then we'll have only 1 or 2 chosen
-        anim:GetAnimState():Show(c1)
-        anim:GetAnimState():Show(c2)
-        anim:GetAnimState():Show(c3)
-
+        MakeDefaultBanner(self, baner_root, anim)
         --[[
 		local cur_time = os.time()
 		if cur_time <= 1585810740 and (not IsConsole() or cur_time >= 1585759200) then -- 9:40am to 11:59pm PDT
-			anim:GetAnimState():SetBuild("dst_menu_wes")
-			anim:GetAnimState():SetBank("dst_menu_wes")
-			anim:GetAnimState():PlayAnimation("loop", true)
-			anim:SetScale(.667)
-			anim:SetPosition(0, 0)
+            MakeWesV1Banner(self, baner_root, anim)
 		else
-			anim:GetAnimState():SetBuild("dst_menu_wendy")
-			anim:GetAnimState():SetBank("dst_menu_wendy")
-			anim:GetAnimState():PlayAnimation("loop", true)
-			anim:SetScale(.667)
-			anim:SetPosition(0, 0)
-        end]]
+            MakeWendyBanner(self, baner_root, anim)
+        end
+        ]]
 	end
 
 	if title_str then
@@ -919,8 +859,10 @@ function MultiplayerMainScreen:OnBecomeActive()
 		self.inst:DoTaskInTime(0, function()
 			if self.cached_entity_count ~= nil and self.cached_entity_count ~= TheSim:GetNumberOfEntities() then
 				print("### Error: Leaked entities in the frontend.", self.cached_entity_count, TheSim:GetNumberOfEntities())
-				for k, v in pairs(Ents) do if v.widget and (not v:IsValid() or v.widget.parent == nil) then
-					print(k, v.widget.name, v:IsValid(), v.widget.parent ~= nil, v) end
+				for k, v in pairs(Ents) do
+                    if v.widget and not v.widget.global_widget and (not v:IsValid() or v.widget.parent == nil) then
+					    print(k, v.widget.name, v:IsValid(), v.widget.parent ~= nil, v)
+                    end
 				end
 			end
 			self.cached_entity_count = TheSim:GetNumberOfEntities()

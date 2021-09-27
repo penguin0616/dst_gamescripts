@@ -4,6 +4,7 @@ local Image = require "widgets/image"
 local BloodOver =  Class(Widget, function(self, owner)
     self.owner = owner
     Widget._ctor(self, "BloodOver")
+    self:UpdateWhilePaused(false)
 
     self:SetClickable(false)
 
@@ -80,7 +81,8 @@ function BloodOver:OnUpdate(dt)
         self.level = self.level + delta * dt * self.k
     end
 
-    if self.base_level > 0 and not IsSimPaused() then
+    --this runs on WallUpdate so the pause check is needed.
+    if self.base_level > 0 and not TheNet:IsServerPaused() then
         self.time_since_pulse = self.time_since_pulse + dt
         if self.time_since_pulse > self.pulse_period then
             self.time_since_pulse = 0

@@ -16,7 +16,7 @@ local Inventory = Class(function(self, inst)
             self.classified = SpawnPrefab("inventory_classified")
             self.classified.entity:SetParent(inst.entity)
 
-            self.opentask = inst:DoTaskInTime(0, OpenInventory, self)
+            self.opentask = inst:DoStaticTaskInTime(0, OpenInventory, self)
 
             --Server intercepts messages and forwards to clients via classified net vars
             inst:ListenForEvent("newactiveitem", function(inst, data) self.classified:SetActiveItem(data.item) end)
@@ -93,7 +93,7 @@ function Inventory:AttachClassified(classified)
 
     self.inst:ListenForEvent("visibledirty", OnVisibleDirty, classified)
     self.inst:ListenForEvent("heavyliftingdirty", OnHeavyLiftingDirty, classified)
-    classified:DoTaskInTime(0, OnVisibleDirty)
+    classified:DoStaticTaskInTime(0, OnVisibleDirty)
 
     --V2C: can re-open inventory with backpack equipped as Werebeaver->Woodie
     --     need to do it here instead of container_replica for correct timing

@@ -133,13 +133,13 @@ function RecipePopup:BuildWithSpinner(horizontal)
         end
     end)
     self.button:SetOnDown(function()
-        if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+        if self.last_recipe_click and (GetStaticTime() - self.last_recipe_click) < 1 then
             self.recipe_held = true
             self.last_recipe_click = nil
         end
     end)
     self.button:SetOnClick(function()
-        self.last_recipe_click = GetTime()
+        self.last_recipe_click = GetStaticTime()
         if not self.recipe_held then
             if not DoRecipeClick(self.owner, self.recipe, self.skins_spinner.GetItem()) then
                 self.owner.HUD.controls.crafttabs:Close()
@@ -227,13 +227,13 @@ function RecipePopup:BuildNoSpinner(horizontal)
         end
     end)
     self.button:SetOnDown(function()
-        if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+        if self.last_recipe_click and (GetStaticTime() - self.last_recipe_click) < 1 then
             self.recipe_held = true
             self.last_recipe_click = nil
         end
     end)
     self.button:SetOnClick(function()
-        self.last_recipe_click = GetTime()
+        self.last_recipe_click = GetStaticTime()
         if not self.recipe_held then
             if not DoRecipeClick(self.owner, self.recipe) then
                 self.owner.HUD.controls.crafttabs:Close()
@@ -392,6 +392,12 @@ function RecipePopup:Refresh()
         self.teaser:SetMultilineTruncatedString(str, 3, TEASER_TEXT_WIDTH, 38, true)
         self.teaser:Show()
         showamulet = false
+    elseif TheNet:IsServerPaused() then
+        self.button:Hide()
+
+        self.teaser:SetScale(TEASER_SCALE_TEXT)
+        self.teaser:SetMultilineTruncatedString(STRINGS.UI.CRAFTING.GAMEPAUSED, 3, TEASER_TEXT_WIDTH, 38, true)
+        self.teaser:Show()
     else
         self.teaser:Hide()
 

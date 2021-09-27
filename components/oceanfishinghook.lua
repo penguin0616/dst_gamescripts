@@ -98,6 +98,8 @@ function OceanFishingHook:GetDebugString()
 end
 
 function OceanFishingHook:OnWallUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
 	if self.onwallupdate ~= nil then
 		self.onwallupdate(self.inst, dt)
 	end

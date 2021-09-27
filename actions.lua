@@ -169,6 +169,7 @@ Action = Class(function(self, data, instant, rmb, distance, ghost_valid, ghost_e
 	self.silent_fail = data.silent_fail or nil
 
     --new params, only supported by passing via data field
+    self.paused_valid = data.paused_valid or false
     self.actionmeter = data.actionmeter or nil
     self.customarrivecheck = data.customarrivecheck
     self.is_relative_to_platform = data.is_relative_to_platform
@@ -228,8 +229,8 @@ ACTIONS =
     MARK = Action({ distance=2, priority=-1 }),
     UNHITCH = Action({ distance=2, priority=-1 }),
     HITCH = Action({ priority=-1 }),
-    EQUIP = Action({ priority=0,instant=true, mount_valid=true, encumbered_valid=true }),
-    UNEQUIP = Action({ priority=-2,instant=true, mount_valid=true, encumbered_valid=true }),
+    EQUIP = Action({ priority=0,instant=true, mount_valid=true, encumbered_valid=true, paused_valid=true }),
+    UNEQUIP = Action({ priority=-2,instant=true, mount_valid=true, encumbered_valid=true, paused_valid=true }),
     --OPEN_SHOP = Action(),
     SHAVE = Action({ mount_valid=true }),
     STORE = Action(),

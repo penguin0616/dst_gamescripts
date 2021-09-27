@@ -18,6 +18,7 @@ local ContainerWidget = Class(Widget, function(self, owner)
 
     self.bganim = self:AddChild(UIAnim())
     self.bgimage = self:AddChild(Image())
+    self.bganim:GetAnimState():AnimateWhilePaused(false)
     self.isopen = false
 end)
 
@@ -250,7 +251,7 @@ function ContainerWidget:Close()
 
         self.isopen = false
 
-        self.inst:DoTaskInTime(.3, function() self.should_close_widget = true end)
+        self.inst:DoSimTaskInTime(.3, function() self.should_close_widget = true end)
     end
 end
 

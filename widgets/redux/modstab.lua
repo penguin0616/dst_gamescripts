@@ -643,7 +643,7 @@ function ModsTab:StartModsOrderUpdate()
     end
 
     self:UpdateModsOrder()
-    self.modsorderupdatetask = scheduler:ExecutePeriodic(FRAMES * 2, self.UpdateModsOrder, nil, 0, "updatemodsorder", self)
+    self.modsorderupdatetask = staticScheduler:ExecutePeriodic(FRAMES * 2, self.UpdateModsOrder, nil, 0, "updatemodsorder", self)
 end
 
 function ModsTab:StartWorkshopUpdate()
@@ -653,7 +653,7 @@ function ModsTab:StartWorkshopUpdate()
     end
 
     self:UpdateForWorkshop()
-    self.workshopupdatetask = scheduler:ExecutePeriodic( 1, self.UpdateForWorkshop, nil, 0, "updateforworkshop", self)
+    self.workshopupdatetask = staticScheduler:ExecutePeriodic( 1, self.UpdateForWorkshop, nil, 0, "updateforworkshop", self)
 end
 
 local function ModNameVersionTableContains( modnames_versions, modname )

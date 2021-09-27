@@ -79,9 +79,12 @@ local GiftItemPopUp = Class(Screen, function(self, owner, item_types, item_ids)
     TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/player_receives_gift_animation_spin")
 
     TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
+
+    SetAutopaused(true)
 end)
 
 function GiftItemPopUp:OnDestroy()
+    SetAutopaused(false)
     TheCamera:PopScreenHOffset(self)
     TheFrontEnd:GetSound():KillSound("gift_idle")
     self._base.OnDestroy(self)

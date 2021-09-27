@@ -146,7 +146,7 @@ function Tune(overrides)
         TELESTAFF_MOISTURE = 500,
         HAMBAT_USES = 100,
         BATBAT_USES = 75,
-        MULTITOOL_AXE_PICKAXE_USES = 400,
+        MULTITOOL_AXE_PICKAXE_USES = 800,
         RUINS_BAT_USES = 200,
         SADDLEHORN_USES = 10,
         BRUSH_USES = 75,
@@ -325,7 +325,7 @@ function Tune(overrides)
         FISHINGROD_DAMAGE = wilson_attack*.125,
         UMBRELLA_DAMAGE = wilson_attack*.5,
         CANE_DAMAGE = wilson_attack*.5,
-        MULTITOOL_DAMAGE = wilson_attack*.9,
+        MULTITOOL_DAMAGE = wilson_attack*1.25,
         RUINS_BAT_DAMAGE = wilson_attack * 1.75,
         NIGHTSTICK_DAMAGE = wilson_attack*.85, -- Due to the damage being electric, it will get multiplied by 1.5 against any mob
         MINIFAN_DAMAGE = wilson_attack*.5,
@@ -4278,7 +4278,7 @@ function Tune(overrides)
         BATTLESONG_DETACH_RADIUS = 16,
 
         INSPIRATION_MAX = 100,
-        INSPIRATION_GAIN_RATE = 0.03,
+        INSPIRATION_GAIN_RATE = 0.024,
         INSPIRATION_GAIN_EPIC_BONUS = 3,
         INSPIRATION_DRAIN_RATE = -2,
         INSPIRATION_DRAIN_BUFFER_TIME = 7.5,

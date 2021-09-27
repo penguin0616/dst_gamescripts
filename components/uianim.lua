@@ -3,7 +3,12 @@ local easing = require("easing")
 
 local UIAnim = Class(function(self, inst)
     self.inst = inst
+    self.update_while_paused = true
 end)
+
+function UIAnim:UpdateWhilePaused(update_while_paused)
+    self.update_while_paused = update_while_paused
+end
 
 function UIAnim:FinishCurrentTint()
     if not self.inst or not self.inst:IsValid() then
@@ -129,6 +134,8 @@ function UIAnim:OnWallUpdate(dt)
 		self.inst:StopWallUpdatingComponent(self)
 		return
     end
+
+    if not self.update_while_paused and TheNet:IsServerPaused() then return end
 
     local done = false
 

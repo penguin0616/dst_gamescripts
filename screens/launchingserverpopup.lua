@@ -18,7 +18,7 @@ local LaunchingServerPopup = Class(Screen, function(self, serverinfo, successCal
     self.serverinfo = serverinfo
     self.successCallback = successCallback
     self.errorCallback = errorCallback
-    self.launchtime = GetTime()
+    self.launchtime = GetStaticTime()
 	self.errorStartingServers = false
 
     --darken everything behind the dialog

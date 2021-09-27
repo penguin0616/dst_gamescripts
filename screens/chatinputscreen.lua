@@ -5,6 +5,7 @@ local TextEdit = require "widgets/textedit"
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 local ImageButton = require "widgets/imagebutton"
+local ScrollableChatQueue = require "widgets/redux/scrollablechatqueue"
 --local VirtualKeyboard = require "screens/virtualkeyboard"
 
 
@@ -27,6 +28,10 @@ function ChatInputScreen:OnBecomeActive()
 	if IsConsole() then
 		TheFrontEnd:LockFocus(true)
 	end
+
+    if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
+        ThePlayer.HUD.controls.networkchatqueue:Hide()
+    end
 end
 
 function ChatInputScreen:OnBecomeInactive()
@@ -35,6 +40,10 @@ function ChatInputScreen:OnBecomeInactive()
     if self.runtask ~= nil then
         self.runtask:Cancel()
         self.runtask = nil
+    end
+
+    if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
+        ThePlayer.HUD.controls.networkchatqueue:Show()
     end
 end
 
@@ -57,6 +66,8 @@ end
 
 function ChatInputScreen:OnControl(control, down)
     if self.runtask ~= nil or ChatInputScreen._base.OnControl(self, control, down) then return true end
+
+    if self.networkchatqueue:OnChatControl(control, down) then return true end
 
     --jcheng: don't allow debug menu stuff going on right now
     if control == CONTROL_OPEN_DEBUG_CONSOLE then
@@ -190,6 +201,8 @@ function ChatInputScreen:DoInit()
     self.chat_edit.OnTextEntered = function() self:OnTextEntered() end
     self.chat_edit:SetPassControlToScreen(CONTROL_CANCEL, true)
     self.chat_edit:SetPassControlToScreen(CONTROL_MENU_MISC_2, true) -- toggle between say and whisper
+    self.chat_edit:SetPassControlToScreen(CONTROL_SCROLLBACK, true)
+    self.chat_edit:SetPassControlToScreen(CONTROL_SCROLLFWD, true)
     self.chat_edit:SetTextLengthLimit(MAX_CHAT_INPUT_LENGTH)
     self.chat_edit:EnableWordWrap(false)
     --self.chat_edit:EnableWhitespaceWrap(true)
@@ -204,6 +217,14 @@ function ChatInputScreen:DoInit()
     self.chat_edit:AddWordPredictionDictionary(UserCommands.GetEmotesWordPredictionDictionary())
 
     self.chat_edit:SetString("")
+
+    self.chat_queue_root = self.chat_edit:AddChild(Widget("chat_queue_root"))
+    self.chat_queue_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
+    self.chat_queue_root:SetHAnchor(ANCHOR_MIDDLE)
+    self.chat_queue_root:SetVAnchor(ANCHOR_BOTTOM)
+    self.chat_queue_root = self.chat_queue_root:AddChild(Widget(""))
+    self.chat_queue_root:SetPosition(-90,765,0)
+    self.networkchatqueue = self.chat_queue_root:AddChild(ScrollableChatQueue())
 end
 
 return ChatInputScreen

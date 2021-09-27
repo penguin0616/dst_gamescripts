@@ -520,7 +520,7 @@ function LoadoutSelect:OnControl(control, down)
             self:_LoadSkinPresetsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
-        elseif control == CONTROL_MENU_MISC_2 and TheNet:IsOnlineMode() and self:_ShouldShowStartingItemSkinsButton() then
+        elseif control == CONTROL_MENU_MISC_4 and TheNet:IsOnlineMode() and self:_ShouldShowStartingItemSkinsButton() then
             self:_LoadItemSkinsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
@@ -546,7 +546,7 @@ function LoadoutSelect:GetHelpText()
 		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SKIN_PRESETS.TITLE)
         end
         if TheNet:IsOnlineMode() and self:_ShouldShowStartingItemSkinsButton() then
-		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE)
+		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_4) .. " " .. STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE)
         end
 
 		return table.concat(t, "  ")

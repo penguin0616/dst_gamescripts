@@ -212,6 +212,8 @@ local WriteableWidget = Class(Screen, function(self, owner, writeable, config)
     else
         self.bganim:GetAnimState():PlayAnimation("open")
     end
+
+    SetAutopaused(true)
 end)
 
 function WriteableWidget:OnBecomeActive()
@@ -286,6 +288,12 @@ function WriteableWidget:OnControl(control, down)
             return true
         end
     end
+end
+
+function WriteableWidget:OnDestroy()
+    SetAutopaused(false)
+
+	WriteableWidget._base.OnDestroy(self)
 end
 
 return WriteableWidget

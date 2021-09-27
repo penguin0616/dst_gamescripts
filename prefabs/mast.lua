@@ -249,7 +249,7 @@ local function onsave(inst, data)
 
 	if inst.components.mast == nil or inst.components.mast.boat == nil then
 		data.rotation = inst.Transform:GetRotation()
-		data.is_sail_raised = inst.components.mast and inst.components.mast.is_sail_raised or nil
+		data.is_sail_raised = inst.components.mast and inst.components.mast.is_sail_raised or false
     end
 
     if inst._lamp ~= nil then
@@ -269,8 +269,13 @@ local function onload(inst, data)
 		if data.rotation then
 			inst.Transform:SetRotation(data.rotation)
 		end
-		if data.is_sail_raised and inst.components.mast ~= nil then
-			inst.components.mast:SailUnfurled()
+
+		if inst.components.mast ~= nil and (data.is_sail_raised == not inst.components.mast.inverted) then
+			if inst.components.mast.inverted then
+				inst.components.mast:SailFurled()
+			else
+				inst.components.mast:SailUnfurled()
+			end
         end
 
         if data.lamp_fuel ~= nil then

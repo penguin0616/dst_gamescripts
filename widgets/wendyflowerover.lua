@@ -15,6 +15,7 @@ local WendyFlowerOver =  Class(Widget, function(self, owner)
 
     self.anim:GetAnimState():SetBank("wendy_flower_over")
     self.anim:GetAnimState():SetBuild("wendy_flower_over")
+    self.anim:GetAnimState():AnimateWhilePaused(false)
 end)
 
 function WendyFlowerOver:SetSkin( skinname )

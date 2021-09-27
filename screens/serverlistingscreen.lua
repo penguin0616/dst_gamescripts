@@ -807,12 +807,12 @@ end
 function ServerListingScreen:OnFinishClickServerInList(index)
     if self.viewed_servers and self.viewed_servers[index] ~= nil and self.viewed_servers[index].actualindex == self.selected_index_actual then
         -- If we're clicking on the same server as the last click, check for double-click Join
-        if self.last_server_click_time and GetTime() - self.last_server_click_time <= DOUBLE_CLICK_TIMEOUT then
+        if self.last_server_click_time and GetStaticTime() - self.last_server_click_time <= DOUBLE_CLICK_TIMEOUT then
             self:Join(false)
             return
         end
     end
-    self.last_server_click_time = GetTime()
+    self.last_server_click_time = GetStaticTime()
 end
 
 function ServerListingScreen:RefreshView(skipPoll, keepScrollFocusPos)

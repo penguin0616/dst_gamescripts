@@ -528,7 +528,7 @@ function CrowKidGameScreen:OnUpdate(dt)
 				self.puppet.anim:GetAnimState():PlayAnimation("pickup")
                 self.puppet.anim:GetAnimState():PushAnimation("pickup_pst", false)
 
-				scheduler:ExecuteInTime(0.35, function()
+				staticScheduler:ExecuteInTime(0.35, function()
 					self.game_state = GS_WAITING
 					self:DoQueuedMovement()
 				end)

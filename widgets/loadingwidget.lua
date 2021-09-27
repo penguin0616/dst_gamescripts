@@ -69,7 +69,7 @@ local LoadingWidget = Class(Widget, function(self, imageRand)
     self.cached_string  = ""
     self.elipse_state = 0
     self.cached_fade_level = 0.0
-    self.step_time = GetTime()
+    self.step_time = GetStaticTime()
 
 end)
 
@@ -105,7 +105,7 @@ function LoadingWidget:KeepAlive(auto_increment)
 		self.active_image:SetTint(1, 1, 1, fade_sq)
 		self.vig:SetTint(1, 1, 1, fade_sq)
 
-        local time = GetTime()
+        local time = GetStaticTime()
         local time_delta = time - self.step_time
         local NEXT_STATE = 1.0
         if time_delta > NEXT_STATE or auto_increment then

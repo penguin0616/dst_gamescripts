@@ -1,11 +1,6 @@
 local Screen = require "widgets/screen"
-local Button = require "widgets/button"
-local AnimButton = require "widgets/animbutton"
 local Menu = require "widgets/menu"
-local Text = require "widgets/text"
 local ImageButton = require "widgets/imagebutton"
-local Image = require "widgets/image"
-local UIAnim = require "widgets/uianim"
 local Widget = require "widgets/widget"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 local TEMPLATES = require "widgets/redux/templates"
@@ -41,19 +36,48 @@ local PauseScreen = Class(Screen, function(self)
     self.proot:SetPosition(0,0,0)
     self.proot:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
+    TheInputProxy:SetCursorVisible(true)
+
+    self.inst:ListenForEvent("serverpauseddirty", function() self:UpdateText() end, TheWorld)
+
+    SetAutopaused(true)
+
+    self.will_autopause = Profile:GetAutopauseEnabled() and #GetPlayerClientTable() == 1
+    self:BuildMenu()
+    self.will_autopause = nil
+    
+    self.inst:DoTaskInTime(1, function() self:UpdateText() end)
+end)
+
+function PauseScreen:BuildMenu()
+    local rebuild = false
+    if self.menu then
+        self.menu:Kill()
+        self.menu = nil
+        rebuild = true
+    end
+    if self.bg then
+        self.bg:Kill()
+        self.bg = nil
+    end
+    self.pause_button_index = nil
+    self.options_button_index = nil
 
     --create the menu itself
-    local player = ThePlayer
-    local can_save = player and player:IsValid() and player.components.health and not player.components.health:IsDead() and IsGamePurchased()
-    local button_w = 160
     local button_h = 50
-
 
     local buttons = {}
 	table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.PLAYERSTATUSSCREEN, cb=function()
 		self:unpause()
 		self.owner.HUD:ShowPlayerStatusScreen(true)
 	end })
+
+    if TheNet:GetIsServerAdmin() and (#GetPlayerClientTable() > 1 or not Profile:GetAutopauseEnabled() or TheNet:IsServerPaused(true)) then
+        table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.PAUSE_SERVER, cb=function()
+            self:ToggleServerPause()
+        end })
+        self.pause_button_index = #buttons
+    end
 
 	if #UserCommands.GetServerActions(self.owner) > 0 then
 		table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.SERVERACTIONS, cb=function()
@@ -70,9 +94,10 @@ local PauseScreen = Class(Screen, function(self)
             --unfocus this button during the screen change, resulting
             --in controllers having no focus when toggled on from the
             --options screen
-            self.last_focus = self.menu.items[2]
+            self.last_focus = self.menu.items[self.options_button_index]
         end)
     end })
+    self.options_button_index = #buttons
 
     if IsRail() then
         table.insert(buttons, {text=STRINGS.UI.PAUSEMENU.ISSUE, cb = function() VisitURL("http://plat.tgp.qq.com/forum/index.html#/2000004?type=11") end })
@@ -100,10 +125,42 @@ local PauseScreen = Class(Screen, function(self)
     for i,v in pairs(self.menu.items) do
         v:SetScale(.7)
     end
-
-    TheInputProxy:SetCursorVisible(true)
     self.default_focus = self.menu
-end)
+
+    if rebuild then
+        self.last_focus = self.menu.items[self.options_button_index]
+    end
+
+    self:UpdateText()
+end
+
+function PauseScreen:UpdateText()
+    if TheNet:IsServerPaused() or self.will_autopause then
+        self:PauseText()
+    else
+        self:UnpauseText()
+    end
+end
+
+function PauseScreen:PauseText()
+    self.bg.title:SetString(TheNet:IsServerPaused(true) and STRINGS.UI.PAUSEMENU.PAUSED_DST_TITLE or STRINGS.UI.PAUSEMENU.AUTOPAUSED_DST_TITLE)
+    self.bg.body:SetString(STRINGS.UI.PAUSEMENU.PAUSED_DST_SUBTITLE)
+    if self.pause_button_index then
+        self.menu:EditItem(self.pause_button_index, TheNet:IsServerPaused(true) and STRINGS.UI.PAUSEMENU.UNPAUSE_SERVER or STRINGS.UI.PAUSEMENU.PAUSE_SERVER)
+    end
+end
+
+function PauseScreen:UnpauseText()
+    self.bg.title:SetString(STRINGS.UI.PAUSEMENU.DST_TITLE)
+    self.bg.body:SetString(STRINGS.UI.PAUSEMENU.DST_SUBTITLE)
+    if self.pause_button_index then
+        self.menu:EditItem(self.pause_button_index, STRINGS.UI.PAUSEMENU.PAUSE_SERVER)
+    end
+end
+
+function PauseScreen:ToggleServerPause()
+    SetServerPaused()
+end
 
 function PauseScreen:unpause()
     TheInput:CacheController()
@@ -177,6 +234,12 @@ function PauseScreen:OnBecomeActive()
 	PauseScreen._base.OnBecomeActive(self)
 	-- Hide the topfade, it'll obscure the pause menu if paused during fade. Fade-out will re-enable it
 	TheFrontEnd:HideTopFade()
+end
+
+function PauseScreen:OnDestroy()
+    SetAutopaused(false)
+
+	PauseScreen._base.OnDestroy(self)
 end
 
 return PauseScreen

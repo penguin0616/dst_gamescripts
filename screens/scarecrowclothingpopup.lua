@@ -61,9 +61,12 @@ local ScarecrowClothingPopupScreen = Class(Screen, function(self, owner_scarecro
 	TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
 
     self:DoFocusHookups()
+
+    SetAutopaused(true)
 end)
 
 function ScarecrowClothingPopupScreen:OnDestroy()
+    SetAutopaused(false)
 	TheCamera:PopScreenHOffset(self)
     self._base.OnDestroy(self)
 end

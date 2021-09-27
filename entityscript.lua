@@ -228,6 +228,7 @@ EntityScript = Class(function(self, entity)
     self.data = nil
     self.listeners = nil
     self.updatecomponents = nil
+    self.updatestaticcomponents = nil
     self.actioncomponents = {}
     self.inherentactions = nil
     self.inherentsceneaction = nil
@@ -408,7 +409,7 @@ function EntityScript:GetTimeAlive()
     return GetTime() - self.spawntime
 end
 
-function EntityScript:StartUpdatingComponent(cmp)
+function EntityScript:StartUpdatingComponent(cmp, do_static_update)
     if not self:IsValid() then
         return
     end
@@ -417,6 +418,13 @@ function EntityScript:StartUpdatingComponent(cmp)
         self.updatecomponents = {}
         NewUpdatingEnts[self.GUID] = self
         num_updating_ents = num_updating_ents + 1
+    end
+
+    if do_static_update then
+        if not self.updatestaticcomponents then
+            self.updatestaticcomponents = {}
+            NewStaticUpdatingEnts[self.GUID] = self
+        end
     end
 
     if StopUpdatingComponents[cmp] == self then
@@ -431,29 +439,37 @@ function EntityScript:StartUpdatingComponent(cmp)
         end
     end
     self.updatecomponents[cmp] = cmpname or "component"
+
+    if do_static_update then
+        self.updatestaticcomponents[cmp] = cmpname or "component"
+    end
 end
 
 function EntityScript:StopUpdatingComponent(cmp)
-    if self.updatecomponents then   
+    if self.updatecomponents or self.updatestaticcomponents then
         StopUpdatingComponents[cmp] = self
     end
-end    
+end
 
 function EntityScript:StopUpdatingComponent_Deferred(cmp)
     if self.updatecomponents then
         self.updatecomponents[cmp] = nil
 
-        local num = 0
-        for k,v in pairs(self.updatecomponents) do
-            num = num + 1
-            break
-        end
-
-        if num == 0 then
+        if IsTableEmpty(self.updatecomponents) then
             self.updatecomponents = nil
             UpdatingEnts[self.GUID] = nil
             NewUpdatingEnts[self.GUID] = nil
             num_updating_ents = num_updating_ents - 1
+        end
+    end
+
+    if self.updatestaticcomponents then
+        self.updatestaticcomponents[cmp] = nil
+
+        if IsTableEmpty(self.updatestaticcomponents) then
+            self.updatestaticcomponents = nil
+            StaticUpdatingEnts[self.GUID] = nil
+            NewStaticUpdatingEnts[self.GUID] = nil
         end
     end
 end
@@ -1219,6 +1235,31 @@ local function task_finish(task, success, inst)
     end
 end
 
+function EntityScript:DoStaticPeriodicTask(time, fn, initialdelay, ...)
+    --print ("DO PERIODIC", time, self)
+    local per = staticScheduler:ExecutePeriodic(time, fn, nil, initialdelay, self.GUID, self, ...)
+
+    if not self.pendingtasks then
+        self.pendingtasks = {}
+    end
+
+    self.pendingtasks[per] = true
+    per.onfinish = task_finish --function() if self.pendingtasks then self.pendingtasks[per] = nil end end
+    return per
+end
+
+function EntityScript:DoStaticTaskInTime(time, fn, ...)
+    --print ("DO TASK IN TIME", time, self)
+    if not self.pendingtasks then
+        self.pendingtasks = {}
+    end
+
+    local per = staticScheduler:ExecuteInTime(time, fn, self.GUID, self, ...)
+    self.pendingtasks[per] = true
+    per.onfinish = task_finish -- function() if self and self.pendingtasks then self.pendingtasks[per] = nil end end
+    return per
+end
+
 function EntityScript:DoPeriodicTask(time, fn, initialdelay, ...)
 
     --print ("DO PERIODIC", time, self)
@@ -1432,6 +1473,12 @@ function EntityScript:Remove()
         num_updating_ents = num_updating_ents - 1
     end
     NewUpdatingEnts[self.GUID] = nil
+
+    if self.updatestaticcomponents then
+        self.updatestaticcomponents = nil
+        StaticUpdatingEnts[self.GUID] = nil
+    end
+    NewStaticUpdatingEnts[self.GUID] = nil
 
     if self.wallupdatecomponents then
         self.wallupdatecomponents = nil

@@ -81,6 +81,7 @@ local function addcanopyrow(widget,row)
         widget["leavesTop"..row.."_"..i]:SetScaleMode(SCALEMODE_PROPORTIONAL)
         widget["leavesTop"..row.."_"..i]:GetAnimState():UseColourCube(true)
         widget["leavesTop"..row.."_"..i]:GetAnimState():SetUILightParams(2.0, 4.0, 4.0, 20.0)
+        widget["leavesTop"..row.."_"..i]:GetAnimState():AnimateWhilePaused(false)
         widget["leavesTop"..row.."_"..i]:Hide()
         widget["leavesTop"..row.."_"..i].x_offset = getxoffset()
         widget["leavesTop"..row.."_"..i]:SetPosition( widget["leavesTop"..row.."_"..i].x_offset + POS_INDEX[i]*x/8,0)        
@@ -194,6 +195,8 @@ local SHADECANOPY_MUST = {"shadecanopy"}
 local SHADECANOPY_SMALL_MUST = {"shadecanopysmall"}
 
 function Leafcanopy:OnUpdate(dt)
+   if TheNet:IsServerPaused() then return end
+
     local zoomoffset = 0
     if TheCamera.distance and not TheCamera.dollyzoom then
         zoomoffset = Remap(TheCamera.distance,30,45,0,-75)

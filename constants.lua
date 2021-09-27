@@ -169,6 +169,8 @@ CONTROL_MENU_MISC_4 = 71  -- R
 
 CONTROL_INSPECT_SELF = 72 -- Keyboard self inspect [I]
 
+CONTROL_SERVER_PAUSE = 73
+
 CONTROL_CUSTOM_START = 100
 
 XBOX_CONTROLLER_ID = 17
@@ -614,7 +616,7 @@ GROUND =
 
     FARMING_SOIL = 47,
 
-	-- PUBLIC USE SPACE FOR MODS is 70 to 89 --
+	-- PUBLIC USE SPACE FOR MODS is 70 to 109 --
 
     --NOISE -- from 110 to 127 -- TODO: move noise tile range to > 255
 	FUNGUSMOON_NOISE = 120,

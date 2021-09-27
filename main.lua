@@ -228,6 +228,7 @@ require("skinsutils")
 require("wxputils")
 require("klump")
 require("popupmanager")
+require("chathistory")
 
 if TheConfig:IsEnabled("force_netbookmode") then
 	TheSim:SetNetbookMode(true)
@@ -260,6 +261,8 @@ AwakeEnts = {}
 UpdatingEnts = {}
 NewUpdatingEnts = {}
 StopUpdatingEnts = {}
+StaticUpdatingEnts = {}
+NewStaticUpdatingEnts = {}
 
 StopUpdatingComponents = {}
 
@@ -421,6 +424,7 @@ SetInstanceParameters(json_settings)
 
 if Settings.reset_action == RESET_ACTION.JOIN_SERVER then
 	Settings.current_asset_set = Settings.last_asset_set
+	ChatHistory:JoinServer()
 end
 
 local load_frontend_reset_action = Settings.reset_action == nil or Settings.reset_action == RESET_ACTION.LOAD_FRONTEND
@@ -430,6 +434,13 @@ if Settings.memoizedFilePaths ~= nil then
 		SetMemoizedFilePaths(Settings.memoizedFilePaths)
 	end
 	Settings.memoizedFilePaths = nil
+end
+
+if Settings.chatHistory ~= nil then
+	if not load_frontend_reset_action then
+		ChatHistory:SetChatHistory(Settings.chatHistory)
+	end
+	Settings.chatHistory = nil
 end
 
 if Settings.loaded_mods ~= nil then

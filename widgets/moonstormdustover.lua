@@ -13,6 +13,7 @@ local MoonstormDustOver = Class(UIAnim, function(self, owner)
     self:GetAnimState():SetBank("moonstorm_over")
     self:GetAnimState():SetBuild("moonstorm_over")
     self:GetAnimState():PlayAnimation("dust_loop", true)
+    self:GetAnimState():AnimateWhilePaused(false)
 end)
 
 return MoonstormDustOver

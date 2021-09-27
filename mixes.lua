@@ -55,6 +55,20 @@ TheMixer:AddNewMix("start", 1, 0,
     [slurp] = 1,
 })
 
+TheMixer:AddNewMix("serverpause", 0, 2147483647,
+{
+    [amb] = 0,
+    [cloud] = 0,
+    [music] = 0,
+    [voice] = 0,
+    [movement] = 0,
+    [creature] = 0,
+    [player] = 0,
+    [HUD] = 1,
+    [sfx] = 0,
+    [slurp] = 0,
+})
+
 TheMixer:AddNewMix("pause", 1, 4,
 {
     [amb] = .1,

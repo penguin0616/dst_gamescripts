@@ -441,6 +441,10 @@ function OnRemoveEntity(entityguid)
             num_updating_ents = num_updating_ents - 1
         end
 
+        if StaticUpdatingEnts[entityguid] then
+            StaticUpdatingEnts[entityguid] = nil
+        end
+
         if WallUpdatingEnts[entityguid] then
             WallUpdatingEnts[entityguid] = nil
         end
@@ -477,8 +481,16 @@ function GetTime()
     return TheSim:GetTick()*ticktime
 end
 
+function GetStaticTime()
+    return TheSim:GetStaticTick()*ticktime
+end
+
 function GetTick()
     return TheSim:GetTick()
+end
+
+function GetStaticTick()
+    return TheSim:GetStaticTick()
 end
 
 function GetTimeReal()
@@ -653,6 +665,55 @@ function OnPhysicsSleep(guid)
     end
 end
 
+local Paused = false
+local Autopaused = false
+local GameAutopaused = false
+
+function OnServerPauseDirty(pause, autopause, gameautopause, source)
+    --autopause means we are paused but we don't act like it,
+    --this would be for stuff like autpausing from the map being open.
+
+    --gameautopause means we are paused, but we really don't act like it, like not even acknowledge it at all.
+    --this only occurs when a non dedicated server has all players in the lobby.
+    --gameautopause has no information text, at the top of the screen, and doesn't push the sound mix that deafens the game.
+
+    local WasPaused = Paused or Autopaused or GameAutopaused
+    local IsPaused = pause or autopause or gameautopause
+
+    local WasNormalPaused = (Paused or Autopaused) and not GameAutopaused
+    local IsNormalPaused = (pause or autopause) and not gameautopause
+
+    if WasPaused and not IsPaused then
+        print("Server Unpaused")
+    elseif not Paused and pause then
+        print("Server Paused")
+    elseif (autopause or gameautopause) and not pause then
+        print("Server Autopaused")
+    end
+
+    Paused = pause
+    Autopaused = autopause
+    GameAutopaused = gameautopause
+
+    if not WasNormalPaused and IsNormalPaused then
+        TheMixer:PushMix("serverpause")
+    elseif not IsNormalPaused then
+        TheMixer:DeleteMix("serverpause")
+    end
+
+    if ThePlayer and ThePlayer.HUD then
+        ThePlayer.HUD:SetServerPaused(pause)
+    end
+
+    if TheFrontEnd then
+        TheFrontEnd:SetServerPauseText(pause and source or autopause and "autopause" or nil)
+    end
+
+    if TheWorld then
+        TheWorld:PushEvent("serverpauseddirty", {pause = pause, autopause = autopause, gameautopause = gameautopause, source = source})
+    end
+end
+
 function ReplicateEntity(guid)
     Ents[guid]:ReplicateEntity()
 end
@@ -698,6 +759,30 @@ end
 --V2C: We don't use this in DST
 function SetSimPause(val)
     simpaused = val
+end
+
+function SetServerPaused(pause)
+    if pause == nil then pause = not TheNet:IsServerPaused(true) end
+    TheNet:SetServerPaused(pause)
+end
+
+local autopausecount = 0
+function SetAutopaused(autopause)
+    autopausecount = autopausecount + (autopause and 1 or -1)
+    DoAutopause()
+end
+
+local consoleautopausecount = 0
+function SetConsoleAutopaused(autopause)
+    consoleautopausecount = consoleautopausecount + (autopause and 1 or -1)
+    DoAutopause()
+end
+
+function DoAutopause()
+    TheNet:SetAutopaused(
+        (autopausecount > 0 and Profile:GetAutopauseEnabled()) or
+        (consoleautopausecount > 0 and Profile:GetConsoleAutopauseEnabled())
+    )
 end
 
 ---------------------------------------------------------------------
@@ -1282,6 +1367,7 @@ function SimReset(instanceparameters)
     instanceparameters.loaded_mods = ModManager:GetUnloadPrefabsData()
     if Settings.current_asset_set == "BACKEND" then
         instanceparameters.memoizedFilePaths = GetMemoizedFilePaths()
+        instanceparameters.chatHistory = ChatHistory:GetChatHistory()
     end
 
     local params = json.encode(instanceparameters)

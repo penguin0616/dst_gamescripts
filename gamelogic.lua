@@ -701,7 +701,7 @@ local function SendResumeRequestToServer(world, delay)
         --world reset/regen/disconnect triggered
         return
     elseif delay > 0 then
-        world:DoTaskInTime(0, SendResumeRequestToServer, delay - 1)
+        world:DoStaticTaskInTime(0, SendResumeRequestToServer, delay - 1)
     elseif not TheNet:IsDedicated() and ThePlayer == nil then
         TheNet:SendResumeRequestToServer(TheNet:GetUserID())
     else
@@ -1199,7 +1199,21 @@ Profile:Load( function()
 			ShardGameIndex:Load( OnFilesLoaded )
 		end)
 	end)
-end )
+end)
+
+if not TheNet:IsDedicated() and (TheNet:GetIsClient() or TheNet:GetIsServer()) and not ChatHistory:HasHistory() then
+	local user_table = TheNet:GetClientTableForUser(TheNet:GetUserID())
+
+	if user_table then
+		ChatHistory:AddJoinMessageToHistory(
+			ChatTypes.Announcement,
+			nil,
+			string.format(STRINGS.UI.NOTIFICATION.JOINEDGAME, Networking_Announcement_GetDisplayName(TheNet:GetLocalUserName())),
+			user_table.colour or WHITE,
+			"join_game"
+		)
+	end
+end
 
 require "platformpostload" --Note(Peter): The location of this require is currently only dependent on being after the built in usercommands being loaded
 

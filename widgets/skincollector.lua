@@ -92,7 +92,7 @@ function SkinCollector:Say(text, rarity, name, number)
 		str = string.gsub(str, "<number>", number)
 	end
 
-	self.last_speech_time = GetTime()
+	self.last_speech_time = GetStaticTime()
 
 	if not (self.innkeeper:GetAnimState():IsCurrentAnimation("dialog_pre") or self.innkeeper:GetAnimState():IsCurrentAnimation("dial_loop")) then
 		self.innkeeper:GetAnimState():PlayAnimation("dialog_pre", false)
@@ -166,7 +166,7 @@ function SkinCollector:OnUpdate(dt)
 	end
 
 	if not self.crow_game then
-		if self.intro_done and (GetTime() - self.last_speech_time) > IDLE_SPEECH_DELAY then
+		if self.intro_done and (GetStaticTime() - self.last_speech_time) > IDLE_SPEECH_DELAY then
 			-- It's been a while since the last speech. Say something random
 			self:Say(STRINGS.UI.TRADESCREEN.SKIN_COLLECTOR_SPEECH.IDLE)
 		end

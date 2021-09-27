@@ -54,9 +54,6 @@ local assets =
     -- Asset("ATLAS", "images/bg_color.xml"), -- Not currently used, but likely to come back
     -- Asset("IMAGE", "images/bg_color.tex"), -- Not currently used, but likely to come back
 
-    Asset("ATLAS", "images/servericons.xml"),
-    Asset("IMAGE", "images/servericons.tex"),
-
     Asset("ATLAS", "images/server_intentions.xml"),
     Asset("IMAGE", "images/server_intentions.tex"),
 

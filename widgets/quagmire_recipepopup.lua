@@ -69,13 +69,13 @@ function RecipePopup:BuildNoSpinner()
         end
     end)
     self.button:SetOnDown(function()
-        if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+        if self.last_recipe_click and (GetStaticTime() - self.last_recipe_click) < 1 then
             self.recipe_held = true
             self.last_recipe_click = nil
         end
     end)
     self.button:SetOnClick(function()
-        self.last_recipe_click = GetTime()
+        self.last_recipe_click = GetStaticTime()
         if not self.recipe_held then
             if not DoRecipeClick(self.owner, self.recipe) then
                 self.owner.HUD.controls.crafttabs:Close()

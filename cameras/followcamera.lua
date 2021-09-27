@@ -291,40 +291,42 @@ function FollowCamera:SetCustomLocation(loc)
     self.targetpos.x, self.targetpos.y, self.targetpos.z  = loc:Get()
 end
 
-function FollowCamera:Update(dt)
+function FollowCamera:Update(dt, dontupdatepos)
     if self.paused then
         return
     end
 
     local pangain = dt * self.pangain
 
-    if self.cutscene then
-        self.currentpos.x = lerp(self.currentpos.x, self.targetpos.x + self.targetoffset.x, pangain)
-        self.currentpos.y = lerp(self.currentpos.y, self.targetpos.y + self.targetoffset.y, pangain)
-        self.currentpos.z = lerp(self.currentpos.z, self.targetpos.z + self.targetoffset.z, pangain)
-    else
-        if self.time_since_zoom ~= nil and not self.cutscene then
-            self.time_since_zoom = self.time_since_zoom + dt
-            if self.should_push_down and self.time_since_zoom > .25 then
-                self.distancetarget = self.distance - self.zoomstep
-            end
-        end
-
-        if self.target ~= nil then
-			if self.target.components.focalpoint then
-				self.target.components.focalpoint:CameraUpdate(dt)
-			end
-            local x, y, z = self.target.Transform:GetWorldPosition()
-            self.targetpos.x = x + self.targetoffset.x
-            self.targetpos.y = y + self.targetoffset.y
-            self.targetpos.z = z + self.targetoffset.z
+    if not dontupdatepos then
+        if self.cutscene then
+            self.currentpos.x = lerp(self.currentpos.x, self.targetpos.x + self.targetoffset.x, pangain)
+            self.currentpos.y = lerp(self.currentpos.y, self.targetpos.y + self.targetoffset.y, pangain)
+            self.currentpos.z = lerp(self.currentpos.z, self.targetpos.z + self.targetoffset.z, pangain)
         else
-            self.targetpos.x, self.targetpos.y, self.targetpos.z = self.targetoffset:Get()
-        end
+            if self.time_since_zoom ~= nil and not self.cutscene then
+                self.time_since_zoom = self.time_since_zoom + dt
+                if self.should_push_down and self.time_since_zoom > .25 then
+                    self.distancetarget = self.distance - self.zoomstep
+                end
+            end
 
-        self.currentpos.x = lerp(self.currentpos.x, self.targetpos.x, pangain)
-        self.currentpos.y = lerp(self.currentpos.y, self.targetpos.y, pangain)
-        self.currentpos.z = lerp(self.currentpos.z, self.targetpos.z, pangain)
+            if self.target ~= nil then
+                if self.target.components.focalpoint then
+                    self.target.components.focalpoint:CameraUpdate(dt)
+                end
+                local x, y, z = self.target.Transform:GetWorldPosition()
+                self.targetpos.x = x + self.targetoffset.x
+                self.targetpos.y = y + self.targetoffset.y
+                self.targetpos.z = z + self.targetoffset.z
+            else
+                self.targetpos.x, self.targetpos.y, self.targetpos.z = self.targetoffset:Get()
+            end
+
+            self.currentpos.x = lerp(self.currentpos.x, self.targetpos.x, pangain)
+            self.currentpos.y = lerp(self.currentpos.y, self.targetpos.y, pangain)
+            self.currentpos.z = lerp(self.currentpos.z, self.targetpos.z, pangain)
+        end
     end
 
     local screenxoffset = 0

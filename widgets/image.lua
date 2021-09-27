@@ -117,6 +117,13 @@ function Image:GetSize()
     return w, h
 end
 
+function Image:GetScaledSize()
+    local w, h = self.inst.ImageWidget:GetSize()
+    local w1, h1 = self:GetLooseScale()
+    local w2, h2 = self:GetParent():GetLooseScale()
+    return w*w1*w2, h*h1*h2
+end
+
 function Image:ScaleToSize(w, h)
 	local w0, h0 = self.inst.ImageWidget:GetSize()
 	local scalex = w / w0

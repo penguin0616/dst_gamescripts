@@ -21,6 +21,7 @@ local MoonstormOver_Lightning = Class(Widget, function(self, owner, dustlayer)
     self.lightning:GetAnimState():SetBuild("screenlightning")
     self.lightning:GetAnimState():SetBank("screenlightning")
     self.lightning:GetAnimState():PlayAnimation("lightningstrike1",true)
+    self.lightning:GetAnimState():AnimateWhilePaused(false)
     self.lightning:Hide()
     self.lightning.inst:ListenForEvent("animover", OnLightningDone)
     self.lightning.inst.ref = self.lightning
@@ -53,6 +54,8 @@ function MoonstormOver_Lightning:Activate(level)
 end
 
 function MoonstormOver_Lightning:OnUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
     if self.lightning.inst.next_time then
         self.lightning.inst.next_time = self.lightning.inst.next_time - dt
         if self.lightning.inst.next_time <= 0 then

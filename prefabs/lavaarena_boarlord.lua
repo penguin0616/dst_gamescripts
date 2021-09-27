@@ -23,6 +23,9 @@ local function OnTalk(inst, data)
         if inst.speechroot == nil then
             inst.speech_parent = ThePlayer.HUD.eventannouncer
             inst.speech_parent:SetPosition(0, -70)
+            if TheFrontEnd:GetActiveScreen() == ThePlayer.HUD then
+                ThePlayer.HUD:OffsetServerPausedWidget(TheFrontEnd.serverpausewidget)
+            end
             inst.speechroot = inst.speech_parent:AddChild(Widget("speech root"))
             inst.speechroot:MoveToBack()
 
@@ -53,6 +56,9 @@ local function OnTalk(inst, data)
             inst:ListenForEvent("onremove", function()
                 if inst.speech_parent ~= nil and inst.speech_parent.inst:IsValid() then
                     inst.speech_parent:SetPosition(0, 0)
+                    if TheFrontEnd:GetActiveScreen() == ThePlayer.HUD then
+                        ThePlayer.HUD:OffsetServerPausedWidget(TheFrontEnd.serverpausewidget)
+                    end
                     inst.speech_parent = nil
                 end
                 inst.speechroot = nil

@@ -137,6 +137,7 @@ end
 local SandOver = Class(Widget, function(self, owner, dustlayer)
     self.owner = owner
     Widget._ctor(self, "SandOver")
+    self:UpdateWhilePaused(false)
 
     self:SetClickable(false)
 
@@ -151,6 +152,7 @@ local SandOver = Class(Widget, function(self, owner, dustlayer)
     self.bg:GetAnimState():SetBank("sand_over")
     self.bg:GetAnimState():SetBuild("sand_over")
     self.bg:GetAnimState():PlayAnimation("blind_loop", true)
+    self.bg:GetAnimState():AnimateWhilePaused(false)
 
     self.letterbox = self:AddChild(CreateLetterbox())
 
@@ -259,6 +261,8 @@ function SandOver:ApplyLevels()
 end
 
 function SandOver:OnUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
     local dirty = false
 
     if self.blindto < self.blind then

@@ -1,6 +1,12 @@
 local events =
 {
-    EventHandler("close_meter", function(inst) inst.sg:GoToState("close_pre") end),
+    EventHandler("close_meter", function(inst, data)
+        if data.instant then
+            inst.sg:GoToState("closed")
+        else
+            inst.sg:GoToState("close_pre")
+        end
+    end),
     EventHandler("open_meter", function(inst) inst.sg:GoToState("open_pre") end),
 }
 

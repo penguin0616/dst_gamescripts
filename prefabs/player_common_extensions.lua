@@ -62,6 +62,30 @@ local function ConfigureGhostActions(inst)
     end
 end
 
+local function PausedActionFilter(inst, action)
+    return action.paused_valid
+end
+
+local function UnpausePlayerActions(inst)
+    if inst.components.playeractionpicker ~= nil then
+        inst.components.playeractionpicker:PopActionFilter(PausedActionFilter)
+    end
+end
+
+local function PausePlayerActions(inst)
+    if inst.components.playeractionpicker ~= nil then
+        inst.components.playeractionpicker:PushActionFilter(PausedActionFilter, 999)
+    end
+end
+
+local function OnWorldPaused(inst)
+    if TheNet:IsServerPaused(true) then
+        PausePlayerActions(inst)
+    else
+        UnpausePlayerActions(inst)
+    end
+end
+
 local function RemoveDeadPlayer(inst, spawnskeleton)
     if spawnskeleton and TheSim:HasPlayerSkeletons() and inst.skeleton_prefab ~= nil then
         local x, y, z = inst.Transform:GetWorldPosition()
@@ -780,6 +804,7 @@ return
     ConfigureGhostLocomotor     = ConfigureGhostLocomotor,
     ConfigurePlayerActions      = ConfigurePlayerActions,
     ConfigureGhostActions       = ConfigureGhostActions,
+    OnWorldPaused               = OnWorldPaused,
     OnPlayerDeath               = OnPlayerDeath,
     OnPlayerDied                = OnPlayerDied,
     OnMakePlayerGhost           = OnMakePlayerGhost,

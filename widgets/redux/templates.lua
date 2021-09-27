@@ -1307,7 +1307,7 @@ function TEMPLATES.CharacterSpinner(onchanged_fn, puppet, user_profile)
 end
 
 function TEMPLATES.ChatFlairBadge()
-    local flair = Widget("chat falir badge")
+    local flair = Widget("chat flair badge")
 
     flair.bg = flair:AddChild(Image())
     flair.bg:SetScale(0.8)
@@ -1334,10 +1334,7 @@ function TEMPLATES.ChatFlairBadge()
             if profileflair == "default" then
                 profileflair = nil
             end
-            self:Show()
             self.flair_img:SetTexture(GetProfileFlairAtlasAndTex(profileflair))
-        else
-            self:Hide()
         end
     end
 
@@ -1357,7 +1354,90 @@ function TEMPLATES.ChatFlairBadge()
 
     flair:SetScale(0.5)
 
+    flair.GetSize = function(self)
+        return self.flair_img:GetScaledSize()
+    end
+
     return flair
+end
+
+function TEMPLATES.AnnouncementBadge()
+    local announcement = Widget("chat announcement badge")
+
+    announcement.bg = announcement:AddChild(Image("images/button_icons.xml", "circle.tex"))
+    announcement.bg:SetScale(1.35)
+    announcement.bg:SetPosition(0,27)
+
+    announcement.announcement_img = announcement:AddChild(Image("images/button_icons.xml", "announcement.tex"))
+    announcement.announcement_img:SetScale(1.35)
+    announcement.announcement_img:SetPosition(0, 31)
+
+    announcement:Hide()
+    announcement:SetClickable(false)
+
+    --Setup custom widget functions
+    announcement.SetAnnouncement = function(self, announcement)
+        self.announcement = announcement
+
+        if announcement then
+            local icon_info = ANNOUNCEMENT_ICONS[announcement]
+            self.announcement_img:SetTexture(icon_info.atlas or "images/button_icons.xml", icon_info.texture or "announcement.tex")
+        end
+    end
+
+    announcement.GetAnnouncement = function(self)
+        return self.announcement
+    end
+
+    announcement.SetAlpha = function(self, a)
+        if a > 0.01 and self.announcement then
+            self:Show()
+            self.announcement_img:SetTint(1,1,1, a)
+        else
+            self:Hide()
+        end
+    end
+
+    announcement:SetScale(0.5)
+
+    announcement.GetSize = function(self)
+        return self.announcement_img:GetScaledSize()
+    end
+
+    return announcement
+end
+
+function TEMPLATES.SystemMessageBadge()
+    local systemmessage = Widget("chat system message badge")
+
+    systemmessage.bg = systemmessage:AddChild(Image("images/servericons.xml", "bg_brown.tex"))
+    systemmessage.bg:SetScale(0.22)
+    systemmessage.bg:SetPosition(0,31)
+
+    systemmessage.systemmessage_img = systemmessage:AddChild(Image("images/servericons.xml", "dedicated.tex"))
+    systemmessage.systemmessage_img:SetScale(0.19)
+    systemmessage.systemmessage_img:SetPosition(0, 31)
+
+    systemmessage:Hide()
+    systemmessage:SetClickable(false)
+
+    systemmessage.SetAlpha = function(self, a)
+        if a > 0.01 then
+            self:Show()
+            self.bg:SetTint(1,1,1, a)
+            self.systemmessage_img:SetTint(1,1,1, a)
+        else
+            self:Hide()
+        end
+    end
+
+    systemmessage:SetScale(0.5)
+
+    systemmessage.GetSize = function(self)
+        return self.systemmessage_img:GetScaledSize()
+    end
+
+    return systemmessage
 end
 
 function TEMPLATES.RankBadge()

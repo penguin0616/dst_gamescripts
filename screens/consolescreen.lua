@@ -20,6 +20,8 @@ local ConsoleScreen = Class(Screen, function(self)
 	self:DoInit()
 
 	self.ctrl_pasting = false
+
+	SetConsoleAutopaused(true)
 end)
 
 function ConsoleScreen:OnBecomeActive()
@@ -39,6 +41,12 @@ function ConsoleScreen:OnBecomeInactive()
         self.runtask:Cancel()
         self.runtask = nil
     end
+end
+
+function ConsoleScreen:OnDestroy()
+	SetConsoleAutopaused(false)
+
+	ConsoleScreen._base.OnDestroy(self)
 end
 
 function ConsoleScreen:OnControl(control, down)
@@ -166,7 +174,7 @@ end
 function ConsoleScreen:OnTextEntered()
     if self.runtask ~= nil then
         self.runtask:Cancel()
-    end
+	end
     self.runtask = self.inst:DoTaskInTime(0, DoRun, self)
 end
 

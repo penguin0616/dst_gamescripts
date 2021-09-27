@@ -62,6 +62,8 @@ function UpdateLooper:RemoveOnWallUpdateFn(fn)
 end
 
 function UpdateLooper:OnWallUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
 	for i = 1, #self.onwallupdatefns do
         self.onwallupdatefns[i](self.inst, dt)
     end
