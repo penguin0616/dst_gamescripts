@@ -925,8 +925,8 @@ FE_MUSIC =
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
     --"dontstarve/music/music_moonstorm_FE"
     --"dontstarve/music/music_FE_webber"
-    --"dontstarve/music/music_FE"
-    "dontstarve/music/music_FE_wanda"
+    "dontstarve/music/music_FE"
+    --"dontstarve/music/music_FE_wanda"
 
 ---------------------------------------------------------
 NUM_HALLOWEENCANDY = 14

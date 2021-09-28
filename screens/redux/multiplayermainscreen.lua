@@ -276,12 +276,12 @@ function MakeBanner(self)
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakeWandaBanner(self, baner_root, anim)
+        MakeDefaultBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeWebberCawnivalBanner(self, baner_root, anim)
-	elseif true then
+	elseif false then
         MakeWandaBanner(self, baner_root, anim)
 	else
         MakeDefaultBanner(self, baner_root, anim)
