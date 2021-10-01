@@ -94,7 +94,7 @@ Recipe("dragonflyfurnace", {Ingredient("dragon_scales", 1), Ingredient("redgem",
 Recipe("archive_resonator_item", {Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)}, RECIPETABS.TOWN, TECH.LOST)
 
 --FOOD (FARM)
-Recipe("cookbook", {Ingredient("seeds_cooked", 1), Ingredient("red_cap_cooked", 1), Ingredient("cookedsmallmeat", 1)}, RECIPETABS.FARM, TECH.NONE)
+Recipe("cookbook", {Ingredient("carrot_cooked", 1), Ingredient("red_cap_cooked", 1), Ingredient("cookedsmallmeat", 1)}, RECIPETABS.FARM, TECH.NONE)
 Recipe("cookpot", {Ingredient("cutstone", 3), Ingredient("charcoal", 6), Ingredient("twigs", 6)}, RECIPETABS.FARM, TECH.SCIENCE_ONE, "cookpot_placer")
 
 Recipe("icebox", {Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1)}, RECIPETABS.FARM,  TECH.SCIENCE_TWO, "icebox_placer", 1.5)
@@ -102,9 +102,9 @@ Recipe("saltbox", {Ingredient("saltrock", 10), Ingredient("bluegem", 1), Ingredi
 
 Recipe("farm_plow_item", {Ingredient("boards", 3), Ingredient("rope", 2), Ingredient("flint", 2)}, RECIPETABS.FARM,  TECH.SCIENCE_ONE)
 Recipe("fertilizer", {Ingredient("poop", 3), Ingredient("boneshard", 2), Ingredient("log", 4)}, RECIPETABS.FARM, TECH.SCIENCE_TWO)
-Recipe("soil_amender", {Ingredient("messagebottleempty", 1), Ingredient("kelp", 1), Ingredient("ash", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
+Recipe("soil_amender", {Ingredient("messagebottleempty", 1), Ingredient("kelp", 1), Ingredient("ash", 1)}, RECIPETABS.FARM, TECH.SCIENCE_TWO)
 Recipe("treegrowthsolution", {Ingredient("fig", 2), Ingredient("glommerfuel", 1)}, RECIPETABS.FARM, TECH.SCIENCE_TWO)
-Recipe("compostingbin", {Ingredient("boards", 3), Ingredient("spoiled_food", 1), Ingredient("cutgrass", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE, "compostingbin_placer")
+Recipe("compostingbin", {Ingredient("boards", 3), Ingredient("spoiled_food", 1), Ingredient("cutgrass", 1)}, RECIPETABS.FARM, TECH.SCIENCE_TWO, "compostingbin_placer")
 Recipe("plantregistryhat", {Ingredient("fertilizer", 1), Ingredient("seeds", 3), Ingredient("transistor", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
 
 Recipe("mushroom_farm", {Ingredient("spoiled_food", 8),Ingredient("poop", 5),Ingredient("livinglog", 2)}, RECIPETABS.FARM, TECH.SCIENCE_ONE, "mushroom_farm_placer", 2.5)
@@ -738,6 +738,10 @@ Recipe("wall_stone_2_item",             {Ingredient("cutstone", 2)},        nil,
 Recipe("archive_resonator",             {Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)},      nil, TECH.LOST, nil, nil, true)
 Recipe("alterguardianhat",              {Ingredient("alterguardianhatshard", 5)},                           nil, TECH.LOST, nil, nil, true)
 Recipe("hivehat",		{Ingredient("honeycomb", 4), Ingredient("honey", 3), Ingredient("royal_jelly", 2), Ingredient("bee", 4)}, nil, TECH.LOST, nil, nil, true)
+Recipe("spiderhat",		{Ingredient("silk", 4), Ingredient("spidergland", 2), Ingredient("monstermeat", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("armorskeleton",	{Ingredient("boneshard", 10), Ingredient("nightmarefuel", 6)}, nil, TECH.LOST, nil, nil, true)
+Recipe("skeletonhat",	{Ingredient("boneshard", 10), Ingredient("nightmarefuel", 4)}, nil, TECH.LOST, nil, nil, true)
+Recipe("thurible",		{Ingredient("cutstone", 2), Ingredient("nightmarefuel", 6), Ingredient("ash", 1)}, nil, TECH.LOST, nil, nil, true)
 
 -- old deprecated structures
 Recipe("slow_farmplot",		{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)},	nil, TECH.LOST, nil, nil, true)

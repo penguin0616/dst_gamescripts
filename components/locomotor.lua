@@ -846,8 +846,8 @@ function LocoMotor:WaitingForPathSearch()
     return self.path and self.path.handle
 end
 
-function LocoMotor:UpdateHopping(dt)
-    self.inst.Physics:Stop()
+function LocoMotor:UpdateHopping(dt) -- deprecated
+    --self.inst.Physics:Stop()
 end
 
 function LocoMotor:FinishHopping()
@@ -995,7 +995,7 @@ end
 
 function LocoMotor:OnUpdate(dt)
     if self.hopping then
-        self:UpdateHopping(dt)
+        --self:UpdateHopping(dt)
         return
     end
 
@@ -1223,7 +1223,6 @@ function LocoMotor:OnUpdate(dt)
             local hop_x, hop_z, target_platform, blocked
             local too_early_top_hop = self.time_before_next_hop_is_allowed > 0
             if my_platform ~= other_platform and not too_early_top_hop then
-
                 can_hop, hop_x, hop_z, target_platform, blocked = self:ScanForPlatform(my_platform, destpos_x, destpos_z, hop_distance)
             end
 

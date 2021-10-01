@@ -596,6 +596,7 @@ end
 function EntityScript:GetBasicDisplayName()
     return (self.displaynamefn ~= nil and self:displaynamefn())
         or (self.nameoverride ~= nil and STRINGS.NAMES[string.upper(self.nameoverride)])
+		or (self.name_author_netid ~= nil and ApplyLocalWordFilter(self.name, TEXT_FILTER_CTX_CHAT, self.name_author_netid)) -- this is more lika a TEXT_FILTER_CTX_NAME but its all user input (eg, naming a beefalo) so lets go with TEXT_FILTER_CTX_CHAT
         or self.name
 end
 

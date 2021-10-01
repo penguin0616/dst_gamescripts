@@ -51,10 +51,10 @@ function Inspectable:GetDescription(viewer)
         return GetString(viewer, "DESCRIBE_TOODARK")
     end
 
-    local desc = nil
+    local desc, filter_context, author
     if self.getspecialdescription ~= nil then
         -- for cases where we need to do additional processing before calling GetDescription (i.e. player skeleton)
-        desc = self.getspecialdescription(self.inst, viewer)
+        desc, filter_context, author = self.getspecialdescription(self.inst, viewer)
     elseif self.descriptionfn ~= nil then
         desc = self.descriptionfn(self.inst, viewer)
     else
@@ -68,7 +68,7 @@ function Inspectable:GetDescription(viewer)
         return GetString(viewer, "DESCRIBE_SMOLDERING")
     end
 
-    return desc
+    return desc, filter_context, author
 end
 
 return Inspectable

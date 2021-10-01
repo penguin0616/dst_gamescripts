@@ -622,7 +622,7 @@ local function unshackle_fn()
         return inst
     end
 
-    inst.persist = false
+    inst.persists = false
 
     inst:DoTaskInTime(15 * FRAMES, DoChainSound)
 
@@ -659,7 +659,7 @@ local function growantler_fn()
         return inst
     end
 
-    inst.persist = false
+    inst.persists = false
 
     inst:DoTaskInTime(2, ErodeAway)
 

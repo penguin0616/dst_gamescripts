@@ -358,31 +358,11 @@ function Projectile:OnUpdate(dt)
     DoUpdate(self, target, pos)
 end
 
-function Projectile:OnSave()
-    if self:IsThrown() and
-        self.owner ~= nil and self.target ~= nil and
-        self.owner:IsValid() and self.target:IsValid() and
-        self.owner.persists and self.target.persist and --Pets and such don't save normally, so references would not work on them
-        not (self.owner:HasTag("player") or self.target:HasTag("player")) then
-        return { target = self.target.GUID, owner = self.owner.GUID }, { self.target.GUID, self.owner.GUID }
-    end
-end
-
 function Projectile:RotateToTarget(dest)
     local direction = (dest - self.inst:GetPosition()):GetNormalized()
     local angle = math.acos(direction:Dot(Vector3(1, 0, 0))) / DEGREES
     self.inst.Transform:SetRotation(angle)
     self.inst:FacePoint(dest)
-end
-
-function Projectile:LoadPostPass(newents, savedata)
-    if savedata.target ~= nil and savedata.owner ~= nil then
-        local target = newents[savedata.target]
-        local owner = newents[savedata.owner]
-        if target ~= nil and owner ~= nil then
-            self:Throw(owner.entity, target.entity)
-        end
-    end
 end
 
 local function OnShow(inst, self)

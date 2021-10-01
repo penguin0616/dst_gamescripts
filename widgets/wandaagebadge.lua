@@ -49,6 +49,18 @@ local OldAgeBadge = Class(Badge, function(self, owner)
         end
     end, owner)
 
+    self.inst:ListenForEvent("serverpauseddirty", function()
+        if TheNet:IsServerPaused() then
+            TheFrontEnd:GetSound():KillSound("pulse_loop")
+        else
+            if self.playing_pulse_loop == "up" then
+                TheFrontEnd:GetSound():PlaySound("wanda2/characters/wanda/up_health_LP", "pulse_loop")
+            elseif self.playing_pulse_loop == "down" then
+                TheFrontEnd:GetSound():PlaySound("wanda2/characters/wanda/down_health_LP", "pulse_loop")
+            end
+        end
+    end, TheWorld)
+
     self.hots = {}
     self._onremovehots = function(debuff)
         self.hots[debuff] = nil
@@ -142,6 +154,7 @@ function OldAgeBadge:PulseOff()
     self.pulse:GetAnimState():PlayAnimation("off")
     self.pulse:GetAnimState():PushAnimation("idle")
     TheFrontEnd:GetSound():KillSound("pulse_loop")
+    self.playing_pulse_loop = nil
     self.pulsing = nil
 end
 
@@ -152,10 +165,12 @@ function OldAgeBadge:Pulse(color)
         self:PulseGreen()
         frontend_sound:KillSound("pulse_loop")
         frontend_sound:PlaySound("wanda2/characters/wanda/up_health_LP", "pulse_loop")
+        self.playing_pulse_loop = "up"
         frontend_sound:PlaySound("dontstarve/HUD/health_up")
     else
         self:PulseRed()
         frontend_sound:KillSound("pulse_loop")
+        self.playing_pulse_loop = "down"
 		frontend_sound:PlaySound("wanda2/characters/wanda/down_health_LP", "pulse_loop")
 
 		local volume = self.owner.player_classified:GetOldagerRate() > 0 and 1

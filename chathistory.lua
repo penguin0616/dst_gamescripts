@@ -23,42 +23,32 @@ end
 
 function ChatHistoryManager:OnAnnouncement(message, colour, announce_type)
     if self.join_server then return end
-    local chat_message = self:AddToHistory(ChatTypes.Announcement, nil, message, colour, announce_type)
-    for fn in pairs(self.listeners) do
-        fn(chat_message)
-    end
+    self:AddToHistory(ChatTypes.Announcement, nil, nil, nil, message, colour, announce_type)
 end
 
 function ChatHistoryManager:OnSkinAnnouncement(user_name, user_colour, skin_name)
     if self.join_server then return end
-    local chat_message = self:AddToHistory(ChatTypes.SkinAnnouncement, user_name, skin_name, user_colour)
-    for fn in pairs(self.listeners) do
-        fn(chat_message)
-    end
+    self:AddToHistory(ChatTypes.SkinAnnouncement, nil, nil, user_name, skin_name, user_colour)
 end
 
 function ChatHistoryManager:OnSystemMessage(message)
     if self.join_server then return end
-    local chat_message = self:AddToHistory(ChatTypes.SystemMessage, STRINGS.UI.SERVERADMINSCREEN.SYSTEMMESSAGE, message, WHITE)
-    for fn in pairs(self.listeners) do
-        fn(chat_message)
-    end
+    self:AddToHistory(ChatTypes.SystemMessage, nil, nil, STRINGS.UI.SERVERADMINSCREEN.SYSTEMMESSAGE, message, WHITE)
 end
 
-function ChatHistoryManager:OnSay(guid, userid, name, prefab, message, colour, whisper, isemote, user_vanity)
-    if self.join_server then return end
+function ChatHistoryManager:OnSay(guid, userid, netid, name, prefab, message, colour, whisper, isemote, user_vanity)
+    if self.join_server then 
+		return 
+	end
+
     name = self:GetDisplayName(name, prefab)
     local hud = ThePlayer and ThePlayer.HUD or nil
     local entity = Ents[guid]
     if not whisper or (entity and hud and (hud:HasTargetIndicator(entity) or entity.entity:FrustumCheck())) then
-        local chat_message
         if isemote then
-            chat_message = self:AddToHistory(ChatTypes.Emote, nil, name.." "..message, colour, nil, true, true)
+            self:AddToHistory(ChatTypes.Emote, userid, netid, nil, name.." "..message, colour, nil, true, true, TEXT_FILTER_CTX_CHAT)
         else
-            chat_message = self:AddToHistory(ChatTypes.Message, name, message, colour, GetRemotePlayerVanityItem(user_vanity or {}, "profileflair") or "default", whisper, whisper)
-        end
-        for fn in pairs(self.listeners) do
-            fn(chat_message)
+            self:AddToHistory(ChatTypes.Message, userid, netid, name, message, colour, GetRemotePlayerVanityItem(user_vanity or {}, "profileflair") or "default", whisper, whisper, TEXT_FILTER_CTX_CHAT)
         end
     end
 end
@@ -70,33 +60,33 @@ function ChatHistoryManager:SendCommandResponse(messages)
     end
 
     for _, message in ipairs(messages) do
-        local chat_message = self:AddToHistory(ChatTypes.CommandResponse, nil, message, WHITE, nil, nil, true)
-        for fn in pairs(self.listeners) do
-            fn(chat_message)
-        end
+        self:AddToHistory(ChatTypes.CommandResponse, nil, nil, nil, message, WHITE, nil, nil, true)
     end
 end
 
-function ChatHistoryManager:GenerateChatMessage(type, sender, message, colour, icondata, whisper, localonly)
+function ChatHistoryManager:GenerateChatMessage(type, sender_userid, sender_netid, sender_name, message, colour, icondata, whisper, localonly, text_filter_context)
     local chat_message = {}
 
     local is_announcement = type == ChatTypes.Announcement
 
     chat_message.type = type
     chat_message.localonly = localonly or nil
+	chat_message.sender_userid = sender_userid
+	chat_message.text_filter_context = text_filter_context
+	chat_message.sender_netid = sender_netid
 
     if not is_announcement then
-        if sender then
+        if sender_name then
             if whisper then
-                sender = STRINGS.UI.CHATINPUTSCREEN.WHISPER_DESIGNATOR.." "..sender
+                sender_name = STRINGS.UI.CHATINPUTSCREEN.WHISPER_DESIGNATOR.." "..sender_name
             end
-            chat_message.sender = sender
+            chat_message.sender = sender_name
 
             chat_message.s_colour = colour
         end
     end
 
-    chat_message.message = message
+	chat_message.message = (sender_userid ~= nil and text_filter_context ~= nil) and ApplyLocalWordFilter(message, text_filter_context, sender_netid) or message
 
     local m_colour = SAY_COLOR
     if type ~= ChatTypes.Message then
@@ -111,10 +101,10 @@ function ChatHistoryManager:GenerateChatMessage(type, sender, message, colour, i
     return chat_message
 end
 
-function ChatHistoryManager:AddToHistory(type, sender, message, colour, icondata, whisper, localonly)
+function ChatHistoryManager:AddToHistory(type, sender_userid, sender_netid, sender_name, message, colour, icondata, whisper, localonly, text_filter_context)
     if self.join_server then return end
 
-    local chat_message = self:GenerateChatMessage(type, sender, message, colour, icondata, whisper, localonly)
+	local chat_message = self:GenerateChatMessage(type, sender_userid, sender_netid, sender_name, message, colour, icondata, whisper, localonly, text_filter_context)
 
     self.history_start = (self.history_start % self.MAX_CHAT_HISTORY) + 1
 
@@ -128,6 +118,11 @@ function ChatHistoryManager:AddToHistory(type, sender, message, colour, icondata
     self.max_chat_history_plus_one = self.history[self.history_start]
 
     self.history[self.history_start] = chat_message
+
+    for fn in pairs(self.listeners) do
+        fn(chat_message)
+    end
+
     return chat_message
 end
 
@@ -164,10 +159,18 @@ function ChatHistoryManager:AddToHistoryAtIndex(chat_message, index)
 
     if count > 1 then
         for i, v in ipairs(chat_message) do
+			if not NoWordFilterForChatType[v.type] then
+				v.message = ApplyLocalWordFilter(v.message, TEXT_FILTER_CTX_CHAT, v.sender_netid)
+			end
+
             local insert_index = get_absolute_index(self, (index - 1) + count - (i - 1))
             self.history[insert_index] = v
         end
     else
+		if not NoWordFilterForChatType[chat_message.type] then
+			chat_message.message = ApplyLocalWordFilter(chat_message.message, TEXT_FILTER_CTX_CHAT, chat_message.sender_netid)
+		end
+
         local insert_index = get_absolute_index(self, index)
         self.history[insert_index] = chat_message
     end
@@ -196,12 +199,12 @@ function ChatHistoryManager:HasHistory()
     return not IsTableEmpty(self.history)
 end
 
-function ChatHistoryManager:AddJoinMessageToHistory(type, sender, message, colour, icondata, whisper, localonly)
+function ChatHistoryManager:AddJoinMessageToHistory(type, sender_name, message, colour, icondata, whisper, localonly)
     local request_history_start = self.request_history_start
     self.request_history_start = nil
     if not request_history_start then return end
 
-    local chat_message = self:GenerateChatMessage(type, sender, message, colour, icondata, whisper, localonly)
+    local chat_message = self:GenerateChatMessage(type, nil, nil, sender_name, message, colour, icondata, whisper, localonly)
 
     self:AddToHistoryAtIndex(chat_message, request_history_start)
 end
@@ -304,6 +307,12 @@ ChatTypes = {
     SkinAnnouncement = 4,
     SystemMessage = 5,
     CommandResponse = 6,
+}
+
+NoWordFilterForChatType = 
+{
+	[ChatTypes.SkinAnnouncement] = false,
+	[ChatTypes.CommandResponse] = true,
 }
 
 ChatHistory = ChatHistoryManager()

@@ -1550,6 +1550,16 @@ function FunctionOrValue(func_or_val, ...)
     return func_or_val
 end
 
+function ApplyLocalWordFilter(text, text_filter_context, net_id)
+	if text_filter_context == TEXT_FILTER_CTX_CHAT											-- we are only filtering chat at the moment
+		and Profile:GetProfanityFilterChatEnabled() 
+		then
+
+		text = TheSim:ApplyLocalWordFilter(text, text_filter_context, net_id) or text
+	end
+
+	return text
+end
 
 --jcheng taken from griftlands
 --START--

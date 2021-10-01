@@ -48,6 +48,7 @@ local PlayerProfile = Class(function(self)
 		self.persistdata.autopause = true
 		self.persistdata.consoleautopause = true
 		self.persistdata.hide_pause_underlay = false
+        self.persistdata.profanityfilter_chat = true
     end
 
     self.dirty = true
@@ -772,6 +773,24 @@ function PlayerProfile:GetProfanityFilterServerNamesEnabled()
         return TheSim:GetSetting("misc", "profanityfilterservernames") ~= "false"
     else
         return self:GetValue("profanityfilterservernames") ~= false
+    end
+end
+
+function PlayerProfile:SetProfanityFilterChatEanbled(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "profanityfilter_chat", tostring(enabled))
+    else
+        self:SetValue("profanityfilter_chat", enabled)
+        self.dirty = true
+    end
+end
+
+function PlayerProfile:GetProfanityFilterChatEnabled()
+    -- an undefined setting is considered to be enabled
+    if USE_SETTINGS_FILE then
+        return TheSim:GetSetting("misc", "profanityfilter_chat") ~= "false"
+    else
+        return self:GetValue("profanityfilter_chat") ~= false
     end
 end
 

@@ -229,6 +229,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		vibration = Profile:GetVibrationEnabled(),
 		showpassword = Profile:GetShowPasswordEnabled(),
 		profanityfilterservernames = Profile:GetProfanityFilterServerNamesEnabled(),
+		profanityfilterchat = Profile:GetProfanityFilterChatEnabled(),
         movementprediction = Profile:GetMovementPredictionEnabled(),
 		automods = Profile:GetAutoSubscribeModsEnabled(),
 		autologin = Profile:GetAutoLoginEnabled(),
@@ -527,6 +528,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetVibrationEnabled( self.options.vibration )
 	Profile:SetShowPasswordEnabled( self.options.showpassword )
 	Profile:SetProfanityFilterServerNamesEanbled( self.options.profanityfilterservernames )
+	Profile:SetProfanityFilterChatEanbled( self.options.profanityfilterchat )
     Profile:SetMovementPredictionEnabled(self.options.movementprediction)
 	Profile:SetAutoSubscribeModsEnabled( self.options.automods )
 	Profile:SetAutoLoginEnabled( self.options.autologin )
@@ -1293,6 +1295,14 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
+	self.profanityfilterchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_CHAT_FILTER, enableDisableOptions)
+	self.profanityfilterchatSpinner.OnChanged =
+		function( _, data )
+			self.working.profanityfilterchat = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
 	self.boatcameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BOATCAMERA, enableDisableOptions)
 	self.boatcameraSpinner.OnChanged =
 		function( _, data )
@@ -1402,11 +1412,14 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.right_spinners, self.passwordSpinner )
     table.insert( self.right_spinners, self.boatcameraSpinner )
     table.insert( self.right_spinners, self.integratedbackpackSpinner )
+	if IsSteam() then
+	    table.insert( self.right_spinners, self.profanityfilterchatSpinner )
+	end
     table.insert( self.right_spinners, self.profanityfilterSpinner )
     table.insert( self.right_spinners, self.autopauseSpinner )
 
 	if self.show_datacollection then
-		table.insert( self.left_spinners, self.datacollectionCheckbox)
+		table.insert( self.right_spinners, self.datacollectionCheckbox)
 	end
 
 	self.grid:UseNaturalLayout()
@@ -1733,6 +1746,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )
 	self.profanityfilterSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterservernames ) )
+	self.profanityfilterchatSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterchat ) )
     self.movementpredictionSpinner:SetSelectedIndex(EnabledOptionsIndex(self.working.movementprediction))
 	self.wathgrithrfontSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.wathgrithrfont ) )
 	self.waltercameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.waltercamera ) )

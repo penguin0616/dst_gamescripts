@@ -54,13 +54,15 @@ function Networking_Say(guid, userid, name, prefab, message, colour, whisper, is
         return
     end
 
+	local netid = TheNet:GetNetIdForUser(userid)
+
     local entity = Ents[guid]
     if not isemote and entity ~= nil and entity.components.talker ~= nil then
-        entity.components.talker:Say(not entity:HasTag("mime") and message or "", nil, nil, nil, true, colour)
+        entity.components.talker:Say(not entity:HasTag("mime") and message or "", nil, nil, nil, true, colour, TEXT_FILTER_CTX_CHAT, netid)
     end
 
     if message then
-        ChatHistory:OnSay(guid, userid, name, prefab, message, colour, whisper, isemote, user_vanity)
+        ChatHistory:OnSay(guid, userid, netid, name, prefab, message, colour, whisper, isemote, user_vanity)
     end
 end
 
@@ -133,10 +135,10 @@ function Networking_RollAnnouncement(userid, name, prefab, colour, rolls, max)
     Networking_Announcement(string.format(STRINGS.UI.NOTIFICATION.DICEROLLED, ChatHistory:GetDisplayName(name, prefab), table.concat(rolls, ", "), max), colour, "dice_roll")
 end
 
-function Networking_Talk(guid, message, duration)
+function Networking_Talk(guid, message, duration, text_filter_context, original_author)
     local entity = Ents[guid]
     if entity ~= nil and entity.components.talker ~= nil then
-        entity.components.talker:Say(message, duration, nil, nil, true)
+        entity.components.talker:Say(message, duration, nil, nil, true, nil, text_filter_context, original_author)
     end
 end
 

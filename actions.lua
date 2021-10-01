@@ -705,14 +705,14 @@ ACTIONS.LOOKAT.fn = function(act)
     local targ = act.target or act.invobject
 
     if targ ~= nil and targ.components.inspectable ~= nil then
-        local desc = targ.components.inspectable:GetDescription(act.doer)
+        local desc, text_filter_context, original_author = targ.components.inspectable:GetDescription(act.doer)
         if desc ~= nil then
             if act.doer.components.playercontroller == nil or
                 not act.doer.components.playercontroller.directwalking then
                 act.doer.components.locomotor:Stop()
             end
             if act.doer.components.talker ~= nil then
-                act.doer.components.talker:Say(desc, nil, targ.components.inspectable.noanim)
+                act.doer.components.talker:Say(desc, nil, targ.components.inspectable.noanim, nil, nil, nil, text_filter_context, original_author)
             end
             return true
         end

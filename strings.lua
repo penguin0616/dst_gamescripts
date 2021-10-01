@@ -7021,6 +7021,7 @@ STRINGS.UI =
         ANIMATED_HEADS = "Moving Head Icons:",
         SHOWPASSWORD = "Show Passwords:",
 		SERVER_NAME_PROFANITY_FILTER = "Filter Server Names:",
+		SERVER_NAME_PROFANITY_CHAT_FILTER = "Steam Chat Filtering:",
         SNAPSHOTS = "Server Snapshots",
         INPUT = "Input Device:",
         ACTION = "Action",
