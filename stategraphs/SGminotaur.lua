@@ -300,4 +300,4 @@ CommonStates.AddSleepStates(states,
 
 CommonStates.AddFrozenStates(states)
 
-return StateGraph("rook", states, events, "idle")
+return StateGraph("minotaur", states, events, "idle")

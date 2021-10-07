@@ -338,7 +338,7 @@ local function testforplayers(inst)
     end
 end
 
-local function mainfn(pondtype)
+local function mainfn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -359,6 +359,7 @@ local function mainfn(pondtype)
     inst.MiniMapEntity:SetIcon("archive_orchestrina_main.png")
 
     inst:AddTag("NOCLICK")
+    inst:AddTag("DECOR")
 
     inst.status = "off"
 
@@ -385,7 +386,7 @@ local function mainfn(pondtype)
     return inst
 end
 
-local function basefn(pondtype)
+local function basefn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -401,6 +402,7 @@ local function basefn(pondtype)
     inst.AnimState:SetSortOrder(1)
 
     inst:AddTag("NOCLICK")
+    inst:AddTag("DECOR")
 
     inst.entity:SetPristine()
 
@@ -413,7 +415,7 @@ local function basefn(pondtype)
     return inst
 end
 
-local function smallfn(pondtype)
+local function smallfn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -432,6 +434,7 @@ local function smallfn(pondtype)
     inst:AddTag("resonator_socket")
 
     inst:AddTag("NOCLICK")
+    inst:AddTag("DECOR")
 
     inst:DoTaskInTime(0,function()
         local x,y,z = inst.Transform:GetWorldPosition()

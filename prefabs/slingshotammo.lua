@@ -33,7 +33,9 @@ local function OnAttack(inst, attacker, target)
 end
 
 local function OnPreHit(inst, attacker, target)
-	target.components.combat.temp_disable_aggro = no_aggro(attacker, target)
+    if target ~= nil and target:IsValid() and target.components.combat ~= nil then
+		target.components.combat.temp_disable_aggro = no_aggro(attacker, target)
+	end
 end
 
 local function OnHit(inst, attacker, target)

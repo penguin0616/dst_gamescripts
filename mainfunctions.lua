@@ -769,6 +769,10 @@ end
 local autopausecount = 0
 function SetAutopaused(autopause)
     autopausecount = autopausecount + (autopause and 1 or -1)
+	if DEBUG_MODE and autopausecount < 0 or autopausecount > 5 then
+		print("ERROR: autopausecount is invalid:", autopausecount)
+		assert(false)
+	end
     DoAutopause()
 end
 
@@ -1062,7 +1066,8 @@ function SaveGame(isshutdown, cb)
 		for i, corrupt_pattern in ipairs(patterns) do
 			local found = string.find(data[key], corrupt_pattern, 1, true)
 			if found ~= nil then
-				print(string.sub(data[key], found - 100, found + 50))
+				local bad_data = string.sub(data[key], found - 100, found + 50)
+				print(bad_data)
 				error("Error saving game, corruption detected.")
 			end
 		end
@@ -1077,8 +1082,9 @@ function SaveGame(isshutdown, cb)
 		for i, corrupt_pattern in ipairs(patterns) do
 			local found = string.find(data.ents[key], corrupt_pattern, 1, true)
 			if found ~= nil then
-				print(string.sub(data.ents[key], found - 100, found + 50))
-				error("Error saving game, corruption detected.")
+				local bad_data = string.sub(data.ents[key], found - 100, found + 50)
+				print(bad_data)
+				error("Error saving game, entity table corruption detected.")
 			end
 		end
 	end

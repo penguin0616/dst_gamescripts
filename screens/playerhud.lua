@@ -733,8 +733,10 @@ end
 function PlayerHud:OpenControllerInventory()
     TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_open")
     TheFrontEnd:StopTrackingMouse()
-    self:CloseControllerCrafting()
-    self:HideControllerCrafting()
+    if self:IsControllerCraftingOpen() then
+        self:CloseControllerCrafting()
+	    self:HideControllerCrafting()
+    end
     self.controls.inv:OpenControllerInventory()
     self.controls.item_notification:ToggleController(true)
     self.controls.yotb_notification:ToggleController(true)
@@ -858,17 +860,23 @@ function PlayerHud:OpenControllerCrafting()
     if self.controls.crafttabs.tabs:GetFirstIdx() ~= nil then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_open")
         TheFrontEnd:StopTrackingMouse()
-        self:CloseControllerInventory()
+        if self:IsControllerInventoryOpen() then
+            self:CloseControllerInventory()
+		end
         self.controls.inv:Disable()
         self.controls.crafttabs:OpenControllerCrafting()
         self.controls.item_notification:ToggleController(true)
         self.controls.yotb_notification:ToggleController(true)
+
+	    SetAutopaused(true)
     end
 end
 
 function PlayerHud:CloseControllerCrafting()
     if self:IsControllerCraftingOpen() then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_close")
+
+	    SetAutopaused(false)
     end
     self.controls.crafttabs:CloseControllerCrafting()
     self.controls.inv:Enable()
