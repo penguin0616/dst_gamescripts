@@ -135,7 +135,9 @@ function LandFlyingCreature(creature)
     creature:RemoveTag("flying")
     creature:PushEvent("on_landed")
     if creature.Physics ~= nil then
-        creature.Physics:CollidesWith(COLLISION.LIMITS)
+        if TheWorld.has_ocean then
+            creature.Physics:CollidesWith(COLLISION.LIMITS)
+        end
         creature.Physics:ClearCollidesWith(COLLISION.FLYERS)
     end
 end
@@ -144,7 +146,9 @@ function RaiseFlyingCreature(creature)
     creature:AddTag("flying")
     creature:PushEvent("on_no_longer_landed")
     if creature.Physics ~= nil then
-        creature.Physics:ClearCollidesWith(COLLISION.LIMITS)
+        if TheWorld.has_ocean then
+            creature.Physics:ClearCollidesWith(COLLISION.LIMITS)
+        end
         creature.Physics:CollidesWith(COLLISION.FLYERS)
     end
 end

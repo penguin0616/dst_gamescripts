@@ -581,7 +581,6 @@ local function tree(name, stage, data)
         MakeWaterObstaclePhysics(inst, 0.80, 2, 0.75)
         
         inst:AddTag("ignorewalkableplatforms")
-        inst:AddTag("evergreens")
         inst:AddTag("shelter")
         inst:AddTag("plant")
         inst:AddTag("event_trigger")

@@ -253,7 +253,7 @@ local function onbecameghost(inst, data)
 
 	inst.age_state = "old"
 
-    inst:RemoveEventCallback("hungerdelta", onhealthchange)
+    inst:RemoveEventCallback("healthdelta", onhealthchange)
     inst:RemoveEventCallback("newstate", onnewstate)
 
 	if inst.components.positionalwarp ~= nil then

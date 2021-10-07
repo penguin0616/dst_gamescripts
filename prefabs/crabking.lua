@@ -1226,7 +1226,7 @@ local function freezefn()
 
     inst:AddComponent("age")
 
-    inst.persist = false
+    inst.persists = false
 
     inst.freezefx = freezefx
     inst.dofreeze = dofreeze
@@ -1313,7 +1313,7 @@ local function chipfn(type)
 
     inst.Physics:SetMotorVel(math.random(8,12), 0, 0)
 
-    inst.persist = false
+    inst.persists = false
 
     return inst
 end

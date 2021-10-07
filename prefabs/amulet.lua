@@ -116,7 +116,7 @@ end
 
 ---ORANGE
 local ORANGE_PICKUP_MUST_TAGS = { "_inventoryitem" }
-local ORANGE_PICKUP_CANT_TAGS = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive" }
+local ORANGE_PICKUP_CANT_TAGS = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive", "spider" }
 local function pickup(inst, owner)
     if owner == nil or owner.components.inventory == nil then
         return

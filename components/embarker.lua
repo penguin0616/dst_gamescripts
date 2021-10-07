@@ -12,23 +12,22 @@ function Embarker:UpdateEmbarkingPos(dt)
     self.last_embark_x, self.last_embark_z = embark_x, embark_z
 
     local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-    local delta_x, delta_z = embark_x - my_x, embark_z - my_z
-    local delta_length = VecUtil_Length(delta_x, delta_z)
+	local dir_x, dir_z = embark_x - my_x, embark_z - my_z
+	local reaming_dist = VecUtil_Length(dir_x, dir_z)
+    local frame_travel_dist = self.embark_speed * dt
 
-    local orig_embark_dist_difference = VecUtil_Dist(embark_x, embark_z, self.orig_embark_dest_x, self.orig_embark_dest_z)
-    if math.max(delta_length, orig_embark_dist_difference) > self.orig_embark_dist  then
-        self:Cancel()
+	if reaming_dist <= frame_travel_dist then
+		self.inst.Physics:TeleportRespectingInterpolation(embark_x, 0, embark_z)
         self.inst:PushEvent("done_embark_movement")
-    end
-
-    local delta_dist = math.max(delta_length, 0.0001)
-    local travel_dist = self.embark_speed * dt
-
-    delta_x, delta_z = travel_dist * delta_x / delta_dist, travel_dist * delta_z / delta_dist
-    self.inst.Physics:TeleportOffset(delta_x, 0, delta_z)
-
-    if delta_dist <= travel_dist then
-        self.inst:PushEvent("done_embark_movement")
+    else
+		local dist_traveled_sq = VecUtil_DistSq(self.hop_start_pt.x, self.hop_start_pt.z, my_x, my_z)
+		if dist_traveled_sq > self.max_hop_dist_sq then
+			self:Cancel()
+			self.inst:PushEvent("done_embark_movement")
+		else
+			self.inst.Transform:SetRotation(self.inst:GetAngleToPoint(embark_x, 0, embark_z)) -- seek to the embark point
+			self.inst.Physics:SetMotorVel(self.embark_speed, 0, 0)
+		end
     end
 end
 
@@ -57,13 +56,13 @@ function Embarker:SetDisembarkActionPos(pos_x, pos_z)
 end
 
 function Embarker:StartMoving()
-    if not self.orig_embark_dist then
+    if not self.max_hop_dist_sq then
         self.inst.Physics:Stop()
         self.inst:StartUpdatingComponent(self)
 
-        local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-        self.orig_embark_dest_x, self.orig_embark_dest_z = self:GetEmbarkPosition()
-        self.orig_embark_dist = VecUtil_Length(self.orig_embark_dest_x - my_x, self.orig_embark_dest_z - my_z) * 1.5
+		self.max_hop_dist_sq = self.inst.components.locomotor:GetHopDistance(self.inst.components.locomotor:GetSpeedMultiplier()) * 1.5
+		self.max_hop_dist_sq = self.max_hop_dist_sq * self.max_hop_dist_sq
+		self.hop_start_pt = self.inst:GetPosition()
 
         self.inst:PushEvent("start_embark_movement")
     end
@@ -92,6 +91,7 @@ function Embarker:GetEmbarkPosition()
 end
 
 function Embarker:Embark()
+    self.inst.Physics:Stop()
 	self.inst.components.locomotor.hopping = false
     --SendRPCToServer(RPC.FinishHop, self.inst, embark_x, embark_z)
     local embark_x, embark_z = self:GetEmbarkPosition()
@@ -101,20 +101,21 @@ function Embarker:Embark()
     self.disembark_z = nil
     self.last_embark_x = nil
     self.last_embark_z = nil
-    self.orig_embark_dist = nil
-    self.orig_embark_dest_x = nil
-    self.orig_embark_dest_z = nil
+	self.max_hop_dist_sq = nil
+	self.hop_start_pt = nil
     self.inst:StopUpdatingComponent(self)
 end
 
 function Embarker:Cancel()
+    self.inst.Physics:Stop()
 	self.inst.components.locomotor.hopping = false
     self.embarkable = nil
     self.disembark_x = nil
     self.disembark_z = nil
     self.last_embark_x = nil
     self.last_embark_z = nil
-    self.orig_embark_dist = nil
+	self.max_hop_dist_sq = nil
+	self.hop_start_pt = nil
     self.inst:StopUpdatingComponent(self)
 end
 
