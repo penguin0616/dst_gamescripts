@@ -1836,9 +1836,7 @@ local function MakeHat(name)
         inst.components.perishable:StartPerishing()
 
         owner:PushEvent("learncookbookstats", inst.prefab)
-        if owner.components.debuffable ~= nil then
-            owner.components.debuffable:AddDebuff("hungerregenbuff", "hungerregenbuff")
-        end
+        owner:AddDebuff("hungerregenbuff", "hungerregenbuff")
     end
 
     local function batnose_unequip(inst, owner)
@@ -1846,9 +1844,7 @@ local function MakeHat(name)
 
         inst.components.perishable:StopPerishing()
 
-        if owner.components.debuffable ~= nil then
-            owner.components.debuffable:RemoveDebuff("hungerregenbuff")
-        end
+        owner:RemoveDebuff("hungerregenbuff")
 
         if owner.components.foodmemory ~= nil then
             owner.components.foodmemory:RememberFood("hungerregenbuff")

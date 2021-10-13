@@ -38,7 +38,7 @@ function Explosive:OnBurnt()
     for i, v in ipairs(ents) do
         if v ~= self.inst and v:IsValid() and not v:IsInLimbo() then
             if v.components.workable ~= nil and v.components.workable:CanBeWorked() then
-                v.components.workable:WorkedBy(self.inst, self.buildingdamage)
+                v.components.workable:WorkedBy(self.inst, self.buildingdamage * stacksize)
             end
 
             --Recheck valid after work

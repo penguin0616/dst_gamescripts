@@ -25,10 +25,7 @@ local puff_fx_cold = {"halloween_firepuff_cold_1", "halloween_firepuff_cold_2", 
 
 local function potion_onputinfire(inst, target)
 	if target:HasTag("campfire") then
-		if target.components.debuffable == nil then
-			target:AddComponent("debuffable")
-		end
-        target.components.debuffable:AddDebuff(inst.buff_prefab, inst.buff_prefab)
+		target:AddDebuff(inst.buff_prefab, inst.buff_prefab)
 		PotionCommon.SpawnPuffFx(inst, target)
 	end
 end

@@ -653,8 +653,6 @@ local function create_common(bank, build, tag, common_init, extra_data)
     inst.components.sanityaura.aurafn = CalcSanityAura
 
     ------------------
-    inst:AddComponent("debuffable")
-    ------------------
     
     MakeFeedableSmallLivestock(inst, TUNING.SPIDER_PERISH_TIME)
     MakeHauntablePanic(inst)

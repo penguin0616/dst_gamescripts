@@ -4,9 +4,7 @@ local assets =
 }
 
 local function OnUse(inst, target)
-	if target.components.debuffable ~= nil and target.components.health ~= nil and not target.components.health:IsDead() then
-		target.components.debuffable:AddDebuff("tillweedsalve_buff", "tillweedsalve_buff")
-	end
+    target:AddDebuff("tillweedsalve_buff", "tillweedsalve_buff")
 end
 
 local function fn()

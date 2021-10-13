@@ -865,7 +865,7 @@ local function IsValidMindControlTarget(inst, guy, inatrium)
         return false
     end
     return not (guy.components.health:IsDead() or guy:HasTag("playerghost"))
-        and guy.components.debuffable:IsEnabled()
+        and (guy:DebuffsEnabled())
         and guy.entity:IsVisible()
 end
 
@@ -900,7 +900,8 @@ local function MindControl(inst)
     for i, v in ipairs(AllPlayers) do
         if IsValidMindControlTarget(inst, v, inatrium) and IsCrazyGuy(v) then
             count = count + 1
-            v.components.debuffable:AddDebuff("mindcontroller", "mindcontroller")
+
+            v:AddDebuff("mindcontroller", "mindcontroller")
         end
     end
 

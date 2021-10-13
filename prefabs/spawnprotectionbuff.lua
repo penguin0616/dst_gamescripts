@@ -18,8 +18,8 @@ local function SpawnFx(target)
 end
 
 local function owner_stop_buff_fn(owner)
-	if owner:IsValid() and owner.components.debuffable ~= nil then
-		owner.components.debuffable:RemoveDebuff("spawnprotectionbuff")
+	if owner:IsValid() then
+		owner:RemoveDebuff("spawnprotectionbuff")
 	end
 end
 

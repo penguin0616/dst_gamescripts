@@ -26,10 +26,7 @@ function HungerBadge:OnUpdate(dt)
         anim = "arrow_loop_decrease"
     end
 
-    if self.owner.components.debuffable and
-                (self.owner.components.debuffable:HasDebuff("wintersfeastbuff") or
-                self.owner.components.debuffable:HasDebuff("hungerregenbuff"))
-            then
+    if self.owner:HasDebuff("wintersfeastbuff") or self.owner:HasDebuff("hungerregenbuff") then
         anim = "arrow_loop_increase"
     end
 

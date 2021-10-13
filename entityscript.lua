@@ -1683,6 +1683,10 @@ function EntityScript:SetPersistData(data, newents)
     if data ~= nil then
         for k, v in pairs(data) do
             local cmp = self.components[k]
+            if cmp == nil and type(v) == "table" and v.add_component_if_missing then
+				self:AddComponent(k)
+                cmp = self.components[k]
+            end
             if cmp ~= nil and cmp.OnLoad ~= nil then
                 cmp:OnLoad(v, newents)
             end
@@ -1800,4 +1804,45 @@ function EntityScript:IsLightGreaterThan(lightThresh)
         local x, y, z = self.Transform:GetWorldPosition()
         return TheSim:GetLightAtPoint(x, y, z, lightThresh) >= lightThresh
     end
+end
+
+function EntityScript:DebuffsEnabled()
+    return self.components.debuffable == nil or self.components.debuffable:IsEnabled()
+end
+
+function EntityScript:HasDebuff(name)
+    if self.components.debuffable == nil then
+        return false
+    end
+    return self.components.debuffable:HasDebuff(name)
+end
+
+function EntityScript:GetDebuff(name)
+    if self.components.debuffable == nil then
+        return nil
+    end
+    return self.components.debuffable:GetDebuff(name)
+end
+
+function EntityScript:AddDebuff(name, prefab, data, skip_test, pre_buff_fn)
+    if self.components.debuffable == nil then
+        self:AddComponent("debuffable")
+    end
+
+    if skip_test or (self:DebuffsEnabled() and not (self.components.health ~= nil and self.components.health:IsDead()) and not self:HasTag("playerghost")) then
+        if pre_buff_fn then
+            pre_buff_fn()
+        end
+        self.components.debuffable:AddDebuff(name, prefab, data)
+        return true
+    end
+
+    return false
+end
+
+function EntityScript:RemoveDebuff(name)
+    if self.components.debuffable == nil then
+        return
+    end
+    self.components.debuffable:RemoveDebuff(name)
 end

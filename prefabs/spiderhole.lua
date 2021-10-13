@@ -88,11 +88,7 @@ local function SummonChildren(inst, data)
             local children_released = inst.components.childspawner:ReleaseAllChildren()
 
             for i,v in ipairs(children_released) do
-                if v.components.debuffable == nil then
-                    v:AddComponent("debuffable")
-                end
-                
-                v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+                v:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
             end
         end
     end

@@ -748,10 +748,10 @@ function PlayerHud:OpenControllerInventory()
 end
 
 function PlayerHud:CloseControllerInventory()
-    SetAutopaused(false)
-
     if self:IsControllerInventoryOpen() then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_close")
+
+	    SetAutopaused(false)
     end
     self.controls:HideStatusNumbers()
     self:ShowControllerCrafting()

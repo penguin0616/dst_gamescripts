@@ -454,11 +454,7 @@ local foods =
         prefabs = { "healthregenbuff" },
 		oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_HEALTH_REGEN,
         oneatenfn = function(inst, eater)
-            if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-                not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-                not eater:HasTag("playerghost") then
-                eater.components.debuffable:AddDebuff("healthregenbuff", "healthregenbuff")
-            end
+			eater:AddDebuff("healthregenbuff", "healthregenbuff")
         end,
         floater = {"small", nil, 0.85},
 	},
@@ -813,18 +809,12 @@ local foods =
         oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_SLEEP_RESISTANCE,
         oneatenfn = function(inst, eater)
             if eater.components.grogginess ~= nil and
-                    (eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled()) and
-                    not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-                    not eater:HasTag("playerghost") then
-
-                if eater.components.grogginess ~= nil then
-                    eater.components.grogginess:ResetGrogginess()
-                end
-
-                if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() then
-                    eater.components.debuffable:AddDebuff("shroomsleepresist", "buff_sleepresistance")
-                end
+			not (eater.components.health ~= nil and eater.components.health:IsDead()) and
+			not eater:HasTag("playerghost") then
+				eater.components.grogginess:ResetGrogginess()
             end
+
+			eater:AddDebuff("shroomsleepresist", "buff_sleepresistance")
         end,
     },
 
@@ -847,9 +837,7 @@ local foods =
 		tags = {"honeyed"},
         oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_HOT_SANITY_REGEN,
         oneatenfn = function(inst, eater)
-            if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() then
-                eater.components.debuffable:AddDebuff("sweettea_buff", "sweettea_buff")
-            end
+			eater:AddDebuff("sweettea_buff", "sweettea_buff")
         end,
 	},
 

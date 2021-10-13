@@ -9,8 +9,8 @@ local prefabs =
 }
 
 local function oneaten(inst, eater)
-	if eater.components.debuffable ~= nil and eater.components.health ~= nil and not eater.components.health:IsDead() and not eater:HasTag("plantkin") then
-		eater.components.debuffable:AddDebuff("firenettle_toxin", "firenettle_toxin")
+	if not eater:HasTag("plantkin") then
+        eater:AddDebuff("firenettle_toxin", "firenettle_toxin")
 	end
 end
 

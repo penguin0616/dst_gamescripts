@@ -11,7 +11,7 @@ function Inkable:Ink()
 	self.inst.player_classified.inked:push()
     --self.inst.SoundEmitter:PlaySound("hookline/creatures/squid/ink")
     self.inst:StartUpdatingComponent(self)
-    self.inst.components.debuffable:AddDebuff("squid_ink_player_fx", "squid_ink_player_fx")
+    self.inst:AddDebuff("squid_ink_player_fx", "squid_ink_player_fx")
 end
 
 function Inkable:OnUpdate(dt)
@@ -20,7 +20,7 @@ function Inkable:OnUpdate(dt)
 		--remove fx
 		self.inked = nil
 		self.inst:PushEvent("deinked")
-		self.inst.components.debuffable:RemoveDebuff("squid_ink_player_fx")
+		self.inst:RemoveDebuff("squid_ink_player_fx")
 		self.inst:StopUpdatingComponent(self)
 	end
 end

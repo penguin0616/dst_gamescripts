@@ -70,8 +70,8 @@ local function ApplyFeastBuff(feaster, tables, totalfeasters)
         differentfoodtypes = differentfoodtypes +1
     end
     --print("PLAYER FEASTING",feaster.prefab,"FOODS:",differentfoodtypes,"FEASTERS:",totalfeasters,"totalfood",totalfood)
-    feaster.components.debuffable:AddDebuff("wintersfeastbuff", "wintersfeastbuff")
-    local buff = feaster.components.debuffable:GetDebuff("wintersfeastbuff")
+    feaster:AddDebuff("wintersfeastbuff", "wintersfeastbuff")
+    local buff = feaster:GetDebuff("wintersfeastbuff")
     if buff ~= nil then
         buff.addeffectbonusfn(buff, totalfeasters, differentfoodtypes, totalfood)
     end

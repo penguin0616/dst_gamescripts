@@ -198,6 +198,12 @@ end
 
 local function DoDoerChanging(self, doer, skins)
     local old = doer.components.skinner:GetClothing()
+
+    local character_bases = GetCharacterSkinBases(doer.prefab)
+    if skins.base ~= nil and character_bases[skins.base] == nil then
+    	skins.base = doer.prefab.."_none"
+	end
+
     local diff =
     {
         base = skins.base ~= nil and skins.base ~= old.base and skins.base or nil,

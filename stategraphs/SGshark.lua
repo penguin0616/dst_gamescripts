@@ -46,7 +46,7 @@ end
 local function  DoAttack(inst)
     local targetavailable = false
     local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.SHARK.AOE_RANGE, nil,{"FX", "NOCLICK", "DECOR", "INLOMBO", "notarget",""} )
+    local ents = TheSim:FindEntities(x, y, z, TUNING.SHARK.AOE_RANGE, nil,{"FX", "NOCLICK", "DECOR", "INLIMBO", "notarget",""} )
     for i, ent in pairs(ents)do
         if inst.components.combat:CanAttack(ent) then
             targetavailable = true

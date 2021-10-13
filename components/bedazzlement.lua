@@ -70,10 +70,7 @@ function Bedazzlement:PacifySpiders()
     local ents = TheSim:FindEntities(x, y, z, TUNING.BEDAZZLEMENT_RADIUS[den_tier], {"spider"}, {"spiderqueen"})
 
     for k, spider in pairs(ents) do
-    	if spider.components.debuffable == nil then
-            spider:AddComponent("debuffable")
-        end
-        spider.components.debuffable:AddDebuff("bedazzle_buff", "bedazzle_buff")
+		spider:AddDebuff("bedazzle_buff", "bedazzle_buff")
     end
 end
 

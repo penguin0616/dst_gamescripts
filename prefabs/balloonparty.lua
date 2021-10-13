@@ -123,9 +123,7 @@ local function ApplyBuff(inst)
 	for i, v in ipairs(AllPlayers) do
 	    local x1, y1, z1 = v.Transform:GetWorldPosition()
 		if distsq(x, z, x1, z1) < CONFFETI_CLOUD_DIST_SQ then
-            if v.components.debuffable ~= nil and v.components.debuffable:IsEnabled() then
-                v.components.debuffable:AddDebuff("balloonparty_buff", "balloonparty_buff")
-            end
+            v:AddDebuff("balloonparty_buff", "balloonparty_buff")
 		end
 	end
 end

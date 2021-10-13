@@ -341,10 +341,7 @@ function SingingInspiration:Inspire()
     local targets = self:FindFriendlyTargetsToInspire()
     for _, target in ipairs(targets) do
         for _, song in ipairs(self.active_songs) do
-			if target.components.debuffable == nil then
-				target:AddComponent("debuffable")
-			end
-            target.components.debuffable:AddDebuff(song.NAME, song.NAME)
+            target:AddDebuff(song.NAME, song.NAME)
         end
     end
 end

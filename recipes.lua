@@ -58,7 +58,7 @@ Recipe("fence_item", {Ingredient("twigs", 3), Ingredient("rope", 1) }, RECIPETAB
 Recipe("wall_hay_item", {Ingredient("cutgrass", 4), Ingredient("twigs", 2) }, RECIPETABS.TOWN, TECH.SCIENCE_ONE,nil,nil,nil,4)
 Recipe("wall_wood_item", {Ingredient("boards", 2),Ingredient("rope", 1)}, RECIPETABS.TOWN,  TECH.SCIENCE_ONE,nil,nil,nil,8)
 Recipe("wall_stone_item", {Ingredient("cutstone", 2)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO,nil,nil,nil,6)
-Recipe("wall_moonrock_item", {Ingredient("moonrocknugget", 12)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO,nil,nil,nil,4)
+Recipe("wall_moonrock_item", {Ingredient("moonrocknugget", 4)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO,nil,nil,nil,4)
 
 Recipe("wardrobe", {Ingredient("boards", 4), Ingredient("cutgrass", 3)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "wardrobe_placer")
 Recipe("beefalo_groomer", {Ingredient("boards", 4), Ingredient("beefalowool", 2)}, RECIPETABS.TOWN, TECH.SCIENCE_TWO, "beefalo_groomer_item_placer")
@@ -94,8 +94,8 @@ Recipe("dragonflyfurnace", {Ingredient("dragon_scales", 1), Ingredient("redgem",
 Recipe("archive_resonator_item", {Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)}, RECIPETABS.TOWN, TECH.LOST)
 
 --FOOD (FARM)
-Recipe("cookbook", {Ingredient("carrot_cooked", 1), Ingredient("red_cap_cooked", 1), Ingredient("cookedsmallmeat", 1)}, RECIPETABS.FARM, TECH.NONE)
 Recipe("cookpot", {Ingredient("cutstone", 3), Ingredient("charcoal", 6), Ingredient("twigs", 6)}, RECIPETABS.FARM, TECH.SCIENCE_ONE, "cookpot_placer")
+Recipe("cookbook", {Ingredient("papyrus", 1), Ingredient("carrot", 1)}, RECIPETABS.FARM, TECH.SCIENCE_ONE)
 
 Recipe("icebox", {Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1)}, RECIPETABS.FARM,  TECH.SCIENCE_TWO, "icebox_placer", 1.5)
 Recipe("saltbox", {Ingredient("saltrock", 10), Ingredient("bluegem", 1), Ingredient("cutstone", 1)}, RECIPETABS.FARM,  TECH.SCIENCE_TWO, "saltbox_placer", 1.5)

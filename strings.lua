@@ -2707,11 +2707,8 @@ STRINGS =
         GLASSCUTTER = "Glass Cutter",
 
         MOON_FISSURE = "Celestial Fissure",
-        MOON_ALTAR =
-        {
-            MOON_ALTAR_WIP = "Partially Assembled Altar",
-            MOON_ALTAR = "Celestial Altar",
-        },
+        MOON_ALTAR_WIP = "Partially Assembled Altar",
+        MOON_ALTAR = "Celestial Altar",
         MOON_ALTAR_IDOL = "Celestial Altar Idol",
         MOON_ALTAR_GLASS = "Celestial Altar Base",
         MOON_ALTAR_SEED = "Celestial Altar Orb",

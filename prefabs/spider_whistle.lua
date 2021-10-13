@@ -31,13 +31,13 @@ local function OnHerd(whistle, leader)
     for _, spider in pairs(ents) do
         if spider.components.sleeper and spider.components.sleeper:IsAsleep() then
             spider.components.sleeper:WakeUp()
-            spider.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+            spider:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
         end
     end
 
     for follower, v in pairs(leader.components.leader.followers) do
         if follower:HasTag("spider") then
-            follower.components.debuffable:AddDebuff("spider_whistle_buff", "spider_whistle_buff")
+            follower:AddDebuff("spider_whistle_buff", "spider_whistle_buff")
         end
     end
 end

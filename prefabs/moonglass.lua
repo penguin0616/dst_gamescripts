@@ -115,7 +115,7 @@ end
 
 local function infused_postinit(inst)
     inst:AddComponent("perishable")
-    inst.components.perishable:SetPerishTime(TUNING.SEG_TIME * 3)
+    inst.components.perishable:SetPerishTime(TUNING.MOONGLASS_CHARGED_PERISH_TIME)
     inst.components.perishable:StartPerishing()
     inst.components.perishable.onperishreplacement = "moonglass"
 

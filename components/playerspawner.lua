@@ -319,9 +319,7 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx
 
 	if self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading) then
 		print("Enabling Spawn Protection for ", self.inst)
-		if player.components.debuffable ~= nil then
-			player.components.debuffable:AddDebuff("spawnprotectionbuff", "spawnprotectionbuff")
-		end
+        player:AddDebuff("spawnprotectionbuff", "spawnprotectionbuff")
 	end
 
     -- Portal FX, disable/give control to player if they're loading in

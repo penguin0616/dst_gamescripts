@@ -130,7 +130,7 @@ function HealthBadge:OnUpdate(dt)
                 next(self.hots) ~= nil or
                 (self.owner.replica.inventory ~= nil and self.owner.replica.inventory:EquipHasTag("regen"))
             ) or
-            (self.owner.components.debuffable and self.owner.components.debuffable:HasDebuff("wintersfeastbuff"))
+            (self.owner:HasDebuff("wintersfeastbuff"))
         ) and
         self.owner.replica.health ~= nil and self.owner.replica.health:IsHurt()
 

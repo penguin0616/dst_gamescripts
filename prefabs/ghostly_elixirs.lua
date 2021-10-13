@@ -67,15 +67,12 @@ local potion_tunings =
 }
 
 local function DoApplyElixir(inst, giver, target)
-	if target ~= nil and target.components.debuffable ~= nil then
-		local cur_buff = target.components.debuffable:GetDebuff("elixir_buff")
+	return target:AddDebuff("elixir_buff", inst.buff_prefab, nil, nil, function()
+		local cur_buff = target:GetDebuff("elixir_buff")
 		if cur_buff ~= nil and cur_buff.prefab ~= inst.buff_prefab then
-			target.components.debuffable:RemoveDebuff("elixir_buff")
+			target:RemoveDebuff("elixir_buff")
 		end
-		target.components.debuffable:AddDebuff("elixir_buff", inst.buff_prefab)
-
-		return true
-	end
+	end)
 end
 
 local SPEED_HAUNT_MULTIPLIER_NAME = "haunted_speedpot"

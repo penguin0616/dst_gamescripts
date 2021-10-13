@@ -106,8 +106,8 @@ local function weed_firenettle_bumped(inst, target)
 				apply_toxin_debuff = target.components.combat:GetAttacked(inst, TUNING.WEED_FIRENETTLE_DAMAGE)
 			end
 
-			if apply_toxin_debuff and target.components.debuffable ~= nil then
-				target.components.debuffable:AddDebuff("firenettle_toxin", "firenettle_toxin")
+			if apply_toxin_debuff then
+				target:AddDebuff("firenettle_toxin", "firenettle_toxin")
 			end
 		end
 	end
