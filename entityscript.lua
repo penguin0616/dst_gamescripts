@@ -661,6 +661,10 @@ end
 
 --Can be used on clients
 function EntityScript:GetIsWet()
+    if self:HasTag("moistureimmunity") then
+        return false
+    end
+
     local replica = self.replica.inventoryitem or self.replica.moisture
     if replica ~= nil then
         return replica:IsWet()
@@ -1829,7 +1833,7 @@ function EntityScript:AddDebuff(name, prefab, data, skip_test, pre_buff_fn)
         self:AddComponent("debuffable")
     end
 
-    if skip_test or (self:DebuffsEnabled() and not (self.components.health ~= nil and self.components.health:IsDead()) and not self:HasTag("playerghost")) then
+    if skip_test or (self:DebuffsEnabled() and not IsEntityDeadOrGhost(self)) then
         if pre_buff_fn then
             pre_buff_fn()
         end

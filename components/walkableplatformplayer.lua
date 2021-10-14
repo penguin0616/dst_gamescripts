@@ -90,7 +90,6 @@ local function EnableMovementPrediction(inst, enabled)
                 self.platform:AddPlatformFollower(self.inst)
                 self.platform.components.walkableplatform:SpawnPlayerCollision()
             else
-                self.platform:RemovePlatformFollower(self.inst)
                 self.platform.components.walkableplatform:DespawnPlayerCollision()
             end
         end

@@ -102,7 +102,7 @@ local function OnWork(inst, worker, workleft, numworks)
         local fx = SpawnPrefab("collapse_small")
         fx.Transform:SetPosition(x, y, z)
 
-		if worker ~= nil and worker.components.talker ~= nil then
+		if worker ~= nil and worker:HasTag("player") and worker.components.talker ~= nil then
 			worker.components.talker:Say(GetString(worker, "ANNOUNCE_MOONALTAR_MINE", string.upper(inst._altar_piece).."_REVEAL"))
 		end
 

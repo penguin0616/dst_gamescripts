@@ -18,7 +18,7 @@ local function UpdateGroundAnimation(inst)
     local players = {}
 	if not POPULATING then
 		for i, v in ipairs(AllPlayers) do
-			if v:HasTag("ghostlyfriend") and not v.replica.health:IsDead() and not v:HasTag("playerghost") and v.components.ghostlybond ~= nil and v.entity:IsVisible() and (v.sg == nil or not v.sg:HasStateTag("ghostbuild")) then
+			if v:HasTag("ghostlyfriend") and not IsEntityDeadOrGhost(v) and v.components.ghostlybond ~= nil and v.entity:IsVisible() and (v.sg == nil or not v.sg:HasStateTag("ghostbuild")) then
 				local dist = v:GetDistanceSqToPoint(x, y, z)
 				if dist < TUNING.ABIGAIL_FLOWER_PROX_DIST then
 					table.insert(players, {player = v, dist = dist})

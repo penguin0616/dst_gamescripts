@@ -946,8 +946,7 @@ function PlayerController:DoControllerAttackButton(target)
         end
 
         if not self.inst.replica.combat:CanHitTarget(target) or
-            target.replica.health == nil or
-            target.replica.health:IsDead() or
+            IsEntityDead(target, true) or
             not CanEntitySeeTarget(self.inst, target) then
             return
         end
@@ -1283,11 +1282,7 @@ function PlayerController:GetAttackTarget(force_attack, force_target, isretarget
         return
     end
 
-    if isretarget and
-        combat:CanHitTarget(force_target) and
-        force_target.replica.health ~= nil and
-        not force_target.replica.health:IsDead() and
-        CanEntitySeeTarget(self.inst, force_target) then
+    if isretarget and combat:CanHitTarget(force_target) and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
         return force_target
     end
 
@@ -1419,11 +1414,11 @@ local function ValidateHaunt(target)
 end
 
 local function ValidateBugNet(target)
-    return not target.replica.health:IsDead()
+    return not IsEntityDead(target)
 end
 
 local function ValidateUnsaddler(target)
-    return not target.replica.health:IsDead()
+    return not IsEntityDead(target)
 end
 
 local function ValidateCorpseReviver(target, inst)
@@ -1474,9 +1469,9 @@ local function GetPickupAction(self, target, tool)
         return ACTIONS.HARVEST
     elseif target:HasTag("donecooking") and not target:HasTag("burnt") then
         return ACTIONS.HARVEST
-    elseif tool ~= nil and tool:HasTag("unsaddler") and target:HasTag("saddled") and (not target.replica.health or not target.replica.health:IsDead()) then
+    elseif tool ~= nil and tool:HasTag("unsaddler") and target:HasTag("saddled") and not IsEntityDead(target) then
         return ACTIONS.UNSADDLE
-    elseif tool ~= nil and tool:HasTag("brush") and target:HasTag("brushable") and (not target.replica.health or not target.replica.health:IsDead()) then
+    elseif tool ~= nil and tool:HasTag("brush") and target:HasTag("brushable") and not IsEntityDead(target) then
         return ACTIONS.BRUSH
     elseif self.inst.components.revivablecorpse ~= nil and target:HasTag("corpse") and ValidateCorpseReviver(target, self.inst) then
         return ACTIONS.REVIVE_CORPSE
@@ -2323,7 +2318,7 @@ function PlayerController:OnUpdate(dt)
                 elseif self.inst.replica.combat ~= nil then
                     retarget = self.inst.replica.combat:GetTarget()
                 end
-                if (retarget ~= nil and not retarget.replica.health:IsDead()) and CanEntitySeeTarget(self.inst, retarget) then
+                if retarget and not IsEntityDead(retarget) and CanEntitySeeTarget(self.inst, retarget) then
                     --Handle chain attacking
                     if self.inst.sg ~= nil then
                         if self.handler == nil then
@@ -2508,9 +2503,7 @@ local function UpdateControllerAttackTarget(self, dt, x, y, z, dirx, dirz)
                 target = nil
                 target_isally = true
             end
-        elseif self.controller_target:HasTag("wall")
-            and self.controller_target.replica.health ~= nil
-            and not self.controller_target.replica.health:IsDead() then
+        elseif self.controller_target:HasTag("wall") and not IsEntityDead(self.controller_target, true) then
             --if we have no (X) control target, then give
             --it to our (Y) control target if it's a wall
             target = self.controller_target

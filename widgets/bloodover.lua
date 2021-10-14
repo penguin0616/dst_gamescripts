@@ -87,7 +87,7 @@ function BloodOver:OnUpdate(dt)
         if self.time_since_pulse > self.pulse_period then
             self.time_since_pulse = 0
 
-            if not self.owner.replica.health:IsDead() then
+            if not IsEntityDead(self.owner) then
                 TheInputProxy:AddVibration(VIBRATION_BLOOD_OVER, .2, .3, false)
             end
         end

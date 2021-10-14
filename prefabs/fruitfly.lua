@@ -61,8 +61,6 @@ local function common()
     inst.entity:AddSoundEmitter()
     inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
-
-    inst.DynamicShadow:SetSize(2, 0.75)
     inst.Transform:SetFourFaced()
 
     MakeGhostPhysics(inst, 1, 0.5)
@@ -198,6 +196,8 @@ local prefabs =
 local function fn()
     local inst = common()
 
+    inst.DynamicShadow:SetSize(1 * 2, 0.375 * 2)
+
     inst.sounds = sounds
 
     inst.AnimState:SetBuild("fruitfly_evil")
@@ -295,6 +295,8 @@ local miniassets =
 local function minifn()
     local inst = common()
 
+    inst.DynamicShadow:SetSize(1 * 0.5, 0.375 * 0.5)
+
     inst.sounds = minionsounds
 
     inst.AnimState:SetBuild("fruitfly_evil_minion")
@@ -388,6 +390,8 @@ local friendlyassets =
 
 local function friendlyfn()
     local inst = common()
+
+    inst.DynamicShadow:SetSize(1 * 0.75, 0.375 * 0.75)
 
     inst.sounds = friendlysounds
 

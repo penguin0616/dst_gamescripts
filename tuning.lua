@@ -5387,7 +5387,7 @@ function Tune(overrides)
         MOON_ALTAR_LINK_ALTAR_MIN_RADIUS_SQ = 2.5*2.5,
 		
         MOONGLASS_CHARGED_PERISH_TIME = total_day_time*1.5,
-        SPARK_PERISH_TIME = total_day_time*2,
+        SPARK_PERISH_TIME = total_day_time*0.75,
 
         SPIDER_SUMMON_TIME = 12,
         SPIDER_WHISTLE_USE_AMOUNT = 2.5,

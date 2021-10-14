@@ -332,6 +332,7 @@ local function ApplyDebuff(inst, data)
 	if target ~= nil then
         target:AddDebuff("abigail_vex_debuff", "abigail_vex_debuff")
 
+        local debuff = target:GetDebuff("abigail_vex_debuff")
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil and debuff ~= nil then
             debuff.AnimState:OverrideItemSkinSymbol("flower", skin_build, "flower", inst.GUID, "abigail_attack_fx" )

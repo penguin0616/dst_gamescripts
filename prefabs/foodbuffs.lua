@@ -27,11 +27,12 @@ local function attack_detach(inst, target)
 end
 
 local function work_attach(inst, target)
-    if target.components.workmultiplier ~= nil then
-        target.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-        target.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
-        target.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+    if target.components.workmultiplier == nil then
+        target:AddComponent("workmultiplier")
     end
+    target.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+    target.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
+    target.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, TUNING.BUFF_WORKEFFECTIVENESS_MODIFIER, inst)
 end
 
 local function work_detach(inst, target)
@@ -43,6 +44,7 @@ local function work_detach(inst, target)
 end
 
 local function moisture_attach(inst, target)
+    target:AddTag("moistureimmunity")
     if target.components.moisture ~= nil then
         target.components.moisture:ForceDry(true, inst)
         target.components.moisture:SetWaterproofInventory(true)
@@ -50,6 +52,7 @@ local function moisture_attach(inst, target)
 end
 
 local function moisture_detach(inst, target)
+    target:RemoveTag("moistureimmunity")
     if target.components.moisture ~= nil then
         target.components.moisture:ForceDry(false, inst)
         target.components.moisture:SetWaterproofInventory(false)

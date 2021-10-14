@@ -25,7 +25,7 @@ local function FindBestAttackTarget(inst)
     local closestPlayer = nil
 	local rangesq = TUNING.GESTALT_ATTACK_HIT_RANGE_SQ
     for i, v in ipairs(AllPlayers) do
-        if (not(v.replica.health:IsDead() or v:HasTag("playerghost"))) and
+        if not IsEntityDeadOrGhost(v) and
 			not (v.sg:HasStateTag("knockout") or v.sg:HasStateTag("sleeping") or v.sg:HasStateTag("bedroll") or v.sg:HasStateTag("tent") or v.sg:HasStateTag("waking")) and
             v.entity:IsVisible() then
             local distsq = v:GetDistanceSqToPoint(x, y, z)
