@@ -16,6 +16,7 @@ local TINT_FAIL = {255/255, 155/255, 155/255, 1}
 
 local NotificationWidget = Class(Widget, function(self, owner, centered_layout)
     Widget._ctor(self, "NotificationWidget")
+	self:UpdateWhilePaused(false)
 	self.owner = owner
 
 	self.NUM_SLOTS = centered_layout and 1 or 5

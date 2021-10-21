@@ -29,6 +29,8 @@ local MapScreen = Class(Screen, function(self, owner)
     self.hudcompass:SetPosition(-160,70,0)
 
     self.repeat_time = 0
+
+    SetAutopaused(true)
 end)
 
 function MapScreen:OnBecomeInactive()
@@ -52,6 +54,12 @@ function MapScreen:OnBecomeActive()
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --SetPause(true)
+end
+
+function MapScreen:OnDestroy()
+    SetAutopaused(false)
+
+	MapScreen._base.OnDestroy(self)
 end
 
 function MapScreen:OnUpdate(dt)

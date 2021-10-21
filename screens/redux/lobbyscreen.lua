@@ -700,10 +700,6 @@ function LobbyScreen:StopLobbyMusic()
     end
 end
 
-function LobbyScreen:ReceiveChatMessage(...)
-    self.chat_sidebar:ReceiveChatMessage(...)
-end
-
 local function FindNextPanelIndex(panels, cur, dir)
 	cur = cur + dir
 	while (cur > 0 and cur <= #panels and panels[cur].enabledfn ~= nil and not panels[cur]:enabledfn()) do

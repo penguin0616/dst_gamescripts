@@ -231,7 +231,7 @@ function d_test_skins_popup(param)
 	TheFrontEnd:PushScreen( SkinsItemPopUp(param or TEST_ITEM_NAME, "Peter", {1.0, 0.2, 0.6, 1.0}) )
 end
 function d_test_skins_announce(param)
-	ThePlayer.HUD.eventannouncer:ShowSkinAnnouncement("Peter", {1.0, 0.2, 0.6, 1.0}, param or TEST_ITEM_NAME)
+	Networking_SkinAnnouncement("Peter", {1.0, 0.2, 0.6, 1.0}, param or TEST_ITEM_NAME)
 end
 function d_test_skins_gift(param)
 	local GiftItemPopUp = require "screens/giftitempopup"

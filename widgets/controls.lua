@@ -22,7 +22,7 @@ local Quagmire_StatusDisplays = require "widgets/statusdisplays_quagmire"
 local Quagmire_StatusCravingDisplay = require "widgets/statusdisplays_quagmire_cravings"
 local Quagmire_NotificationWidget = require "widgets/quagmire_notificationwidget"
 local QuagmireRecipeBookScreen = require "screens/quagmire_recipebookscreen"
-local ChatQueue = require "widgets/chatqueue"
+local ChatQueue = require "widgets/redux/chatqueue"
 local Desync = require "widgets/desync"
 local WorldResetTimer = require "widgets/worldresettimer"
 local GiftItemToast = require "widgets/giftitemtoast"
@@ -107,7 +107,7 @@ local Controls = Class(Widget, function(self, owner)
 
 		self.clock = self.sidepanel:AddChild(UIClock(self.owner))
 		if self.clock:IsCaveClock() then
-			self.clock.inst:DoPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
+			self.clock.inst:DoSimPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
 		end
     end
 
@@ -125,7 +125,8 @@ local Controls = Class(Widget, function(self, owner)
     self.chat_queue_root:SetVAnchor(ANCHOR_BOTTOM)
     self.chat_queue_root = self.chat_queue_root:AddChild(Widget(""))
     self.chat_queue_root:SetPosition(-90,765,0)
-    self.networkchatqueue = self.chat_queue_root:AddChild(ChatQueue(self.owner))
+    self.networkchatqueue = self.chat_queue_root:AddChild(ChatQueue())
+    self.networkchatqueue:SetClickable(false)
 
     self.containers = {}
 

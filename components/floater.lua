@@ -77,6 +77,10 @@ function Floater:SetBankSwapOnFloat(should_bank_swap, float_index, swap_data)
     self.swap_data = swap_data
 end
 
+function Floater:SetSwapData(swap_data)
+    self.swap_data = swap_data
+end
+
 function Floater:ShouldShowEffect()
 	local pos_x, pos_y, pos_z = self.inst.Transform:GetWorldPosition()
 

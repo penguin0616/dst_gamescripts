@@ -93,8 +93,8 @@ function DoRecipeClick(owner, recipe, skin)
                     end
                 end
                 if not recipe.nounlock then
-                    if lastsoundtime == nil or GetTime() - lastsoundtime >= 1 then
-                        lastsoundtime = GetTime()
+                    if lastsoundtime == nil or GetStaticTime() - lastsoundtime >= 1 then
+                        lastsoundtime = GetStaticTime()
                         TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/research_unlock")
                     end
                 end

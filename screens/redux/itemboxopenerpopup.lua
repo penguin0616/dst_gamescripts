@@ -331,7 +331,7 @@ function ItemBoxOpenerPopup:_OpenItemBox()
             elseif #item_types == 22 or #item_types == 24 then
                 columns = 8
                 self.resize_root_small = true
-            elseif #item_types == 35 then
+            elseif #item_types == 31 or #item_types == 35 then
                 columns = 9
                 self.resize_root_small = true
             elseif #item_types == 38 then

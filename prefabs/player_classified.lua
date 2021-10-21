@@ -1157,7 +1157,7 @@ local function fn()
     inst.deathcause = net_string(inst.GUID, "morgue.deathcause")
 
     --Delay net listeners until after initial values are deserialized
-    inst:DoTaskInTime(0, RegisterNetListeners)
+    inst:DoStaticTaskInTime(0, RegisterNetListeners)
 
     inst.entity:SetPristine()
 

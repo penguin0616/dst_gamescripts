@@ -13,8 +13,6 @@ local Widget = require "widgets/widget"
 local ScrollableList = require "widgets/scrollablelist"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 local OnlineStatus = require "widgets/onlinestatus"
-local MovieDialog = require "screens/moviedialog"
-local CreditsScreen = require "screens/creditsscreen"
 local TEMPLATES = require "widgets/redux/templates"
 
 local controls_ui = {
@@ -70,6 +68,7 @@ local all_controls =
     {name=CONTROL_TOGGLE_WHISPER, keyboard=CONTROL_TOGGLE_WHISPER, controller=CONTROL_TOGGLE_WHISPER},
     {name=CONTROL_SHOW_PLAYER_STATUS, keyboard=CONTROL_SHOW_PLAYER_STATUS, controller=CONTROL_TOGGLE_PLAYER_STATUS},
     {name=CONTROL_PAUSE, keyboard=CONTROL_PAUSE, controller=CONTROL_PAUSE},
+	{name=CONTROL_SERVER_PAUSE, keyboard=CONTROL_SERVER_PAUSE, controller=nil},
     {name=CONTROL_INSPECT_SELF, keyboard=CONTROL_INSPECT_SELF, controller=nil},
 
     -- inventory
@@ -230,6 +229,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		vibration = Profile:GetVibrationEnabled(),
 		showpassword = Profile:GetShowPasswordEnabled(),
 		profanityfilterservernames = Profile:GetProfanityFilterServerNamesEnabled(),
+		profanityfilterchat = Profile:GetProfanityFilterChatEnabled(),
         movementprediction = Profile:GetMovementPredictionEnabled(),
 		automods = Profile:GetAutoSubscribeModsEnabled(),
 		autologin = Profile:GetAutoLoginEnabled(),
@@ -240,6 +240,9 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
         lang_id = Profile:GetLanguageID(),
 		texturestreaming = Profile:GetTextureStreamingEnabled(),
 		dynamictreeshadows = Profile:GetDynamicTreeShadowsEnabled(),
+		autopause = Profile:GetAutopauseEnabled(),
+		consoleautopause = Profile:GetConsoleAutopauseEnabled(),
+		waltercamera = Profile:IsCampfireStoryCameraEnabled(),
 	}
 
 	if IsWin32() then
@@ -295,6 +298,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
             -- Left menu items
             settings = self.panel_root:AddChild(self:_BuildSettings()),
             graphics = self.panel_root:AddChild(self:_BuildGraphics()),
+            advanced = self.panel_root:AddChild(self:_BuildAdvancedSettings()),
             controls = self.panel_root:AddChild(self:_BuildControls()),
         }
     if self.show_language_options then
@@ -341,6 +345,7 @@ function OptionsScreen:_BuildMenu(subscreener)
 
 	local settings_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.SETTINGS, "settings", STRINGS.UI.OPTIONS.TOOLTIP_SETTINGS, self.tooltip)
 	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIP_GRAPHICS, self.tooltip)
+	local advanced_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.ADVANCED, "advanced", STRINGS.UI.OPTIONS.TOOLTIP_ADVANCED, self.tooltip)
 	local controls_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.CONTROLS, "controls", STRINGS.UI.OPTIONS.TOOLTIP_CONTROLS, self.tooltip)
 	local languages_button = nil
     if self.show_language_options then
@@ -349,6 +354,7 @@ function OptionsScreen:_BuildMenu(subscreener)
 
     local menu_items = {
         {widget = controls_button},
+		{widget = advanced_button},
         {widget = graphics_button},
         {widget = settings_button},
     }
@@ -522,6 +528,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetVibrationEnabled( self.options.vibration )
 	Profile:SetShowPasswordEnabled( self.options.showpassword )
 	Profile:SetProfanityFilterServerNamesEanbled( self.options.profanityfilterservernames )
+	Profile:SetProfanityFilterChatEanbled( self.options.profanityfilterchat )
     Profile:SetMovementPredictionEnabled(self.options.movementprediction)
 	Profile:SetAutoSubscribeModsEnabled( self.options.automods )
 	Profile:SetAutoLoginEnabled( self.options.autologin )
@@ -531,6 +538,9 @@ function OptionsScreen:Save(cb)
 		Profile:SetThreadedRenderEnabled( self.options.threadedrender )
 	end
 	Profile:SetDynamicTreeShadowsEnabled( self.options.dynamictreeshadows )
+	Profile:SetAutopauseEnabled( self.options.autopause )
+	Profile:SetConsoleAutopauseEnabled( self.options.consoleautopause )
+	Profile:SetCampfireStoryCameraEnabled( self.options.waltercamera )
 
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.options.integratedbackpack )
@@ -637,10 +647,17 @@ function OptionsScreen:Apply()
 	gopts:SetSmallTexturesMode( self.working.smalltextures )
 	Profile:SetScreenShakeEnabled( self.working.screenshake )
 	Profile:SetWathgrithrFontEnabled( self.working.wathgrithrfont )
+	Profile:SetCampfireStoryCameraEnabled( self.working.waltercamera )
 	Profile:SetBoatCameraEnabled( self.working.boatcamera )
 	TheSim:SetNetbookMode(self.working.netbookmode)
 
 	EnableShadeRenderer( self.working.dynamictreeshadows )
+
+	Profile:SetAutopauseEnabled( self.working.autopause )
+	Profile:SetConsoleAutopauseEnabled( self.working.consoleautopause )
+	DoAutopause()
+	local pausescreen = TheFrontEnd:GetOpenScreenOfType("PauseScreen")
+	if pausescreen ~= nil then pausescreen:BuildMenu() end
 
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.working.integratedbackpack )
@@ -1278,10 +1295,10 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.wathgrithrfontSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WATHGRITHRFONT, enableDisableOptions)
-	self.wathgrithrfontSpinner.OnChanged =
+	self.profanityfilterchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_CHAT_FILTER, enableDisableOptions)
+	self.profanityfilterchatSpinner.OnChanged =
 		function( _, data )
-			self.working.wathgrithrfont = data
+			self.working.profanityfilterchat = data
 			--self:Apply()
 			self:UpdateMenu()
 		end
@@ -1338,25 +1355,6 @@ function OptionsScreen:_BuildSettings()
 			TheSim:GetDataCollectionSetting())
 	end
 
-    self.movementpredictionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.MOVEMENTPREDICTION,
-        {
-            { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_DISABLED, data = false },
-            { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_ENABLED, data = true },
-        },
-        spinner_width, spinner_height, nil, nil, nil, nil, true, nil, nil, spinner_scale_x, spinner_scale_y)
-    self.movementpredictionSpinner.OnChanged =
-        function(_, data)
-            self.working.movementprediction = data
-            self:UpdateMenu()
-        end
-
-	self.automodsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOMODS, enableDisableOptions)
-	self.automodsSpinner.OnChanged =
-		function( _, data )
-			self.working.automods = data
-			self:UpdateMenu()
-		end
-
 	self.deviceSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.INPUT, self.devices)
 	self.deviceSpinner.OnChanged =
 		function( _, data )
@@ -1391,13 +1389,14 @@ function OptionsScreen:_BuildSettings()
 			self.working.autologin = data
 			self:UpdateMenu()
 		end
-
-	self.animatedHeadsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.ANIMATED_HEADS, enableDisableOptions)
-		self.animatedHeadsSpinner.OnChanged =
-			function( _, data )
-				self.working.animatedheads = data
-				self:UpdateMenu()
-			end
+		
+	self.autopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOPAUSE, enableDisableOptions)
+	self.autopauseSpinner.OnChanged =
+		function( _, data )
+			self.working.autopause = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
 
 	self.left_spinners = {}
 	self.right_spinners = {}
@@ -1407,20 +1406,20 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.left_spinners, self.fxVolume )
     table.insert( self.left_spinners, self.musicVolume )
     table.insert( self.left_spinners, self.ambientVolume )
-    table.insert( self.left_spinners, self.passwordSpinner)
-    table.insert( self.left_spinners, self.profanityfilterSpinner)
-    table.insert( self.left_spinners, self.automodsSpinner )
-    table.insert( self.left_spinners, self.wathgrithrfontSpinner)
-    table.insert( self.left_spinners, self.hudSize)
-    table.insert( self.left_spinners, self.boatcameraSpinner)
-    table.insert( self.left_spinners, self.integratedbackpackSpinner)
+    table.insert( self.left_spinners, self.hudSize )
+	table.insert( self.left_spinners, self.autologinSpinner )
 
-    table.insert( self.right_spinners, self.movementpredictionSpinner )
-	table.insert( self.right_spinners, self.autologinSpinner )
-	table.insert( self.right_spinners, self.animatedHeadsSpinner )
+    table.insert( self.right_spinners, self.passwordSpinner )
+    table.insert( self.right_spinners, self.boatcameraSpinner )
+    table.insert( self.right_spinners, self.integratedbackpackSpinner )
+	if IsSteam() then
+	    table.insert( self.right_spinners, self.profanityfilterchatSpinner )
+	end
+    table.insert( self.right_spinners, self.profanityfilterSpinner )
+    table.insert( self.right_spinners, self.autopauseSpinner )
 
 	if self.show_datacollection then
-		table.insert( self.left_spinners, self.datacollectionCheckbox)
+		table.insert( self.right_spinners, self.datacollectionCheckbox)
 	end
 
 	self.grid:UseNaturalLayout()
@@ -1438,6 +1437,99 @@ function OptionsScreen:_BuildSettings()
     settingsroot.focus_forward = self.grid
     return settingsroot
 end
+
+
+-- This is the "advanced settings" tab
+function OptionsScreen:_BuildAdvancedSettings()
+    local advancedsettingsroot = Widget("ROOT")
+
+    -- NOTE: if we add more options, they should be made scrollable. Look
+    -- at customization screen for an example.
+    self.grid_advanced = advancedsettingsroot:AddChild(Grid())
+    self.grid_advanced:SetPosition(-90, 184, 0)
+
+	--------------
+	--------------
+	-- SETTINGS --
+	--------------
+	-------------
+
+	self.wathgrithrfontSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WATHGRITHRFONT, enableDisableOptions)
+	self.wathgrithrfontSpinner.OnChanged =
+		function( _, data )
+			self.working.wathgrithrfont = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.waltercameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WALTERCAMERA, enableDisableOptions)
+	self.waltercameraSpinner.OnChanged =
+		function( _, data )
+			self.working.waltercamera = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+    self.movementpredictionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.MOVEMENTPREDICTION,
+        {
+            { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_DISABLED, data = false },
+            { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_ENABLED, data = true },
+        })
+    self.movementpredictionSpinner.OnChanged =
+        function(_, data)
+            self.working.movementprediction = data
+            self:UpdateMenu()
+        end
+
+	self.automodsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOMODS, enableDisableOptions)
+	self.automodsSpinner.OnChanged =
+		function( _, data )
+			self.working.automods = data
+			self:UpdateMenu()
+		end
+
+	self.animatedHeadsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.ANIMATED_HEADS, enableDisableOptions)
+		self.animatedHeadsSpinner.OnChanged =
+			function( _, data )
+				self.working.animatedheads = data
+				self:UpdateMenu()
+			end
+
+	self.consoleautopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CONSOLEAUTOPAUSE, enableDisableOptions)
+	self.consoleautopauseSpinner.OnChanged =
+		function( _, data )
+			self.working.consoleautopause = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.left_spinners = {}
+	self.right_spinners = {}
+
+    table.insert( self.left_spinners, self.movementpredictionSpinner )
+    table.insert( self.left_spinners, self.wathgrithrfontSpinner)
+	table.insert( self.left_spinners, self.waltercameraSpinner)
+
+    table.insert( self.right_spinners, self.automodsSpinner )
+	table.insert( self.right_spinners, self.animatedHeadsSpinner )
+	table.insert( self.right_spinners, self.consoleautopauseSpinner )
+
+	self.grid_advanced:UseNaturalLayout()
+	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
+
+    -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
+	for k,v in ipairs(self.left_spinners) do
+		self.grid_advanced:AddItem(v.parent, 1, k)
+	end
+
+	for k,v in ipairs(self.right_spinners) do
+		self.grid_advanced:AddItem(v.parent, 2, k)
+	end
+
+    advancedsettingsroot.focus_forward = self.grid_advanced
+    return advancedsettingsroot
+end
+
 
 -- This is the "controls" tab
 function OptionsScreen:_BuildControls()
@@ -1466,6 +1558,9 @@ function OptionsScreen:_BuildControls()
             local group = Widget("control"..index)
             group.bg = group:AddChild(TEMPLATES.ListItemBackground(700, button_height))
             group.bg:SetPosition(-60,0)
+			if device_type == "keyboard" then
+	            group.bg:SetScale(1.025, 1)
+			end
             group:SetScale(1,1,0.75)
 
             group.device_type = device_type
@@ -1515,6 +1610,21 @@ function OptionsScreen:_BuildControls()
             if group.controlId then
                 group.binding_btn:SetText(initial_device_id and TheInput:GetLocalizedControl(initial_device_id, group.controlId) or "")
             end
+
+			if device_type == "keyboard" then
+				group.unbinding_btn = group:AddChild(ImageButton("images/global_redux.xml", "close.tex", "close.tex"))
+				group.unbinding_btn:SetOnClick(
+					function()
+						local device_id = self.deviceSpinner:GetSelectedData()
+						if is_valid_fn(device_id) then
+							self.is_mapping = true
+							TheInputProxy:UnMapControl(device_id, group.controlId)
+						end
+					end)
+				group.unbinding_btn:SetPosition(x - 5,0)
+				group.unbinding_btn:SetScale(0.4, 0.4)
+				group.unbinding_btn:SetHoverText(STRINGS.UI.CONTROLSSCREEN.UNBIND)
+			end
 
             group.focus_forward = group.binding_btn
 
@@ -1654,8 +1764,10 @@ function OptionsScreen:InitializeSpinners(first)
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )
 	self.profanityfilterSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterservernames ) )
+	self.profanityfilterchatSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterchat ) )
     self.movementpredictionSpinner:SetSelectedIndex(EnabledOptionsIndex(self.working.movementprediction))
 	self.wathgrithrfontSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.wathgrithrfont ) )
+	self.waltercameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.waltercamera ) )
 	self.boatcameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.boatcamera ) )
 	self.integratedbackpackSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.integratedbackpack ) )
 	self.texturestreamingSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.texturestreaming ) )
@@ -1671,6 +1783,8 @@ function OptionsScreen:InitializeSpinners(first)
 	self.automodsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.automods ) )
 	self.autologinSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autologin ) )
 	self.animatedHeadsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.animatedheads ) )
+	self.autopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autopause ) )
+	self.consoleautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.consoleautopause ) )
 
 	if first then
 		-- Add the bg change when non-init value for all spinners

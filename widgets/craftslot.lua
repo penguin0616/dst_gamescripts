@@ -49,7 +49,7 @@ function CraftSlot:OnControl(control, down)
             if not self.down then
                 self.down = true
 
-                if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+                if self.last_recipe_click and (GetStaticTime() - self.last_recipe_click) < 1 then
                     self.recipe_held = true
                     self.last_recipe_click = nil
                     self:StartUpdating()
@@ -69,7 +69,7 @@ function CraftSlot:OnControl(control, down)
                     end
 
                     self:StartUpdating()
-                    self.last_recipe_click = GetTime()
+                    self.last_recipe_click = GetStaticTime()
                     self.recipe_held = false
                     if not DoRecipeClick(self.owner, self.recipe, skin ) then
                         self:Close()

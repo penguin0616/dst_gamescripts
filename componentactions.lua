@@ -170,7 +170,7 @@ local COMPONENT_ACTIONS =
         combat = function(inst, doer, actions, right)
             if not right and
                 doer:CanDoAction(ACTIONS.ATTACK) and
-                inst.replica.health ~= nil and not inst.replica.health:IsDead() and
+                not IsEntityDead(inst, true) and
                 inst.replica.combat ~= nil and inst.replica.combat:CanBeAttacked(doer) then
                 table.insert(actions, ACTIONS.ATTACK)
             end
@@ -638,7 +638,7 @@ local COMPONENT_ACTIONS =
 
         yotc_racecompetitor = function(inst, doer, actions, right)
             if (inst:HasTag("has_prize") or inst:HasTag("has_no_prize"))
-                    and (inst.replica.health == nil or not inst.replica.health:IsDead()) then
+                    and not IsEntityDead(inst) then
                 table.insert(actions, ACTIONS.PICKUP)
             end
         end,
@@ -1353,13 +1353,13 @@ local COMPONENT_ACTIONS =
         end,
 
         quagmire_slaughtertool = function(inst, doer, target, actions)
-            if target:HasTag("canbeslaughtered") and target.replica.health ~= nil and not target.replica.health:IsDead() then
+            if target:HasTag("canbeslaughtered") and not IsEntityDead(target) then
                 table.insert(actions, ACTIONS.SLAUGHTER)
             end
         end,
 
         spidermutator = function(inst, doer, target, actions)
-            if target:HasTag("spider") and target.replica.health ~= nil and not target.replica.health:IsDead() then
+            if target:HasTag("spider") and not IsEntityDead(target) then
                 table.insert(actions, ACTIONS.MUTATE_SPIDER)
             end
         end,

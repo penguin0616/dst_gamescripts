@@ -8,7 +8,7 @@ local function OnEffigyDeactivated(inst)
 end
 
 local HealthBadge = Class(Badge, function(self, owner, art)
-    Badge._ctor(self, art, owner, { 174 / 255, 21 / 255, 21 / 255, 1 }, "status_health")
+    Badge._ctor(self, art, owner, { 174 / 255, 21 / 255, 21 / 255, 1 }, "status_health", nil, nil, true)
 
     self.topperanim = self.underNumber:AddChild(UIAnim())
     self.topperanim:GetAnimState():SetBank("status_meter")
@@ -17,6 +17,8 @@ local HealthBadge = Class(Badge, function(self, owner, art)
     self.topperanim:GetAnimState():SetMultColour(0, 0, 0, 1)
     self.topperanim:SetScale(1, -1, 1)
     self.topperanim:SetClickable(false)
+    self.topperanim:GetAnimState():AnimateWhilePaused(false)
+    self.topperanim:GetAnimState():SetPercent("anim", 1)
 
     if self.circleframe ~= nil then
         self.circleframe:GetAnimState():Hide("frame")
@@ -28,12 +30,14 @@ local HealthBadge = Class(Badge, function(self, owner, art)
     self.circleframe2:GetAnimState():SetBank("status_meter")
     self.circleframe2:GetAnimState():SetBuild("status_meter")
     self.circleframe2:GetAnimState():PlayAnimation("frame")
+    self.circleframe2:GetAnimState():AnimateWhilePaused(false)
 
     self.sanityarrow = self.underNumber:AddChild(UIAnim())
     self.sanityarrow:GetAnimState():SetBank("sanity_arrow")
     self.sanityarrow:GetAnimState():SetBuild("sanity_arrow")
     self.sanityarrow:GetAnimState():PlayAnimation("neutral")
     self.sanityarrow:SetClickable(false)
+    self.sanityarrow:GetAnimState():AnimateWhilePaused(false)
 
     self.effigyanim = self.underNumber:AddChild(UIAnim())
     self.effigyanim:GetAnimState():SetBank("status_health")
@@ -41,6 +45,7 @@ local HealthBadge = Class(Badge, function(self, owner, art)
     self.effigyanim:GetAnimState():PlayAnimation("effigy_deactivate")
     self.effigyanim:Hide()
     self.effigyanim:SetClickable(false)
+    self.effigyanim:GetAnimState():AnimateWhilePaused(false)
     self.effigyanim.inst:ListenForEvent("animover", OnEffigyDeactivated)
     self.effigy = false
     self.effigybreaksound = nil
@@ -106,6 +111,8 @@ function HealthBadge:SetPercent(val, max, penaltypercent)
 end
 
 function HealthBadge:OnUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
     local down
     if (self.owner.IsFreezing ~= nil and self.owner:IsFreezing()) or
         (self.owner.replica.health ~= nil and self.owner.replica.health:IsTakingFireDamageFull()) or
@@ -123,7 +130,7 @@ function HealthBadge:OnUpdate(dt)
                 next(self.hots) ~= nil or
                 (self.owner.replica.inventory ~= nil and self.owner.replica.inventory:EquipHasTag("regen"))
             ) or
-            (self.owner.components.debuffable and self.owner.components.debuffable:HasDebuff("wintersfeastbuff"))
+            (self.owner:HasDebuff("wintersfeastbuff"))
         ) and
         self.owner.replica.health ~= nil and self.owner.replica.health:IsHurt()
 

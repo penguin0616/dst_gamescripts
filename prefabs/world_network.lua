@@ -67,7 +67,7 @@ local function MakeWorldNetwork(name, customprefabs, customassets, custom_postin
         inst.PostInit = PostInit
         inst.OnRemoveEntity = OnRemoveEntity
 
-        inst:DoTaskInTime(0, DoPostInit)
+        inst:DoStaticTaskInTime(0, DoPostInit)
 
         return inst
     end

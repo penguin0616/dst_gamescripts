@@ -76,8 +76,8 @@ local function displaynamefn(inst)
     return not inst:HasTag("usesdepleted") and STRINGS.NAMES[string.upper(inst.prefab).."_NOT_EMPTY"] or nil
 end
 
-local function getdesc(inst, viewer)
-	return GetDescription(viewer, inst, inst:HasTag("usesdepleted") and "EMPTY" or nil)
+local function getstatus(inst, viewer)
+	return inst:HasTag("usesdepleted") and "EMPTY" or nil
 end
 
 local function OnSave(inst, data)
@@ -133,7 +133,7 @@ local function MakeWateringCan(name, uses, water_amount)
         end
 
         inst:AddComponent("inspectable")
-        inst.components.inspectable.getspecialdescription = getdesc
+        inst.components.inspectable.getstatus = getstatus
 
         inst:AddComponent("inventoryitem")
 

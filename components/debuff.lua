@@ -26,8 +26,8 @@ function Debuff:SetChangeFollowSymbolFn(fn)
 end
 
 function Debuff:Stop()
-    if self.target ~= nil and self.target.components.debuffable ~= nil then
-        self.target.components.debuffable:RemoveDebuff(self.name)
+    if self.target then
+        self.target:RemoveDebuff(self.name)
     end
 end
 

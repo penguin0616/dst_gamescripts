@@ -192,7 +192,7 @@ local function CancelFade(inst)
 end
 
 --------------------------------------------------------------------------
-local SPOREBOMBTARGET_MUST_TAGS = { "debuffable", "player" }
+local SPOREBOMBTARGET_MUST_TAGS = { "player" }
 local SPOREBOMBTARGET_CANT_TAGS = { "ghost", "playerghost", "shadow", "shadowminion", "noauradamage", "INLIMBO" }
 
 local function FindSporeBombTargets(inst, preferredtargets)
@@ -201,11 +201,8 @@ local function FindSporeBombTargets(inst, preferredtargets)
     if preferredtargets ~= nil then
         for i, v in ipairs(preferredtargets) do
             if v:IsValid() and v.entity:IsVisible() and
-                v.components.debuffable ~= nil and
-                v.components.debuffable:IsEnabled() and
-                not v.components.debuffable:HasDebuff("sporebomb") and
-                not (v.components.health ~= nil and
-                    v.components.health:IsDead()) and
+                v:DebuffsEnabled() and not v:HasDebuff("sporebomb") and
+                not (v.components.health ~= nil and v.components.health:IsDead()) and
                 not v:HasTag("playerghost") and
                 v:IsNear(inst, TUNING.TOADSTOOL_SPOREBOMB_HIT_RANGE) then
                 table.insert(targets, v)
@@ -221,10 +218,8 @@ local function FindSporeBombTargets(inst, preferredtargets)
     local ents = TheSim:FindEntities(x, y, z, TUNING.TOADSTOOL_SPOREBOMB_ATTACK_RANGE, SPOREBOMBTARGET_MUST_TAGS, SPOREBOMBTARGET_CANT_TAGS)
     for i, v in ipairs(ents) do
         if v.entity:IsVisible() and
-            v.components.debuffable ~= nil and
-            not v.components.debuffable:HasDebuff("sporebomb") and
-            not (v.components.health ~= nil and
-                v.components.health:IsDead()) then
+        v:DebuffsEnabled() and not v:HasDebuff("sporebomb") and
+        not (v.components.health ~= nil and v.components.health:IsDead()) then
             table.insert(newtargets, v)
         end
     end
@@ -241,7 +236,7 @@ end
 
 local function DoSporeBomb(inst, targets)
     for i, v in ipairs(FindSporeBombTargets(inst, targets)) do
-        v.components.debuffable:AddDebuff("sporebomb", "sporebomb")
+        v:AddDebuff("sporebomb", "sporebomb")
     end
 end
 

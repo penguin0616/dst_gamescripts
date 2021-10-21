@@ -70,11 +70,13 @@ local UIClock = Class(Widget, function(self)
         self._moonanim:GetAnimState():SetBank("moon_phases_clock")
         self._moonanim:GetAnimState():SetBuild("moon_phases_clock")
         self._moonanim:GetAnimState():PlayAnimation("hidden")
+        self._moonanim:GetAnimState():AnimateWhilePaused(false)
 
         self._anim = self:AddChild(UIAnim())
         self._anim:GetAnimState():SetBank("clock01")
         self._anim:GetAnimState():SetBuild("clock_transitions")
         self._anim:GetAnimState():PlayAnimation("idle_day", true)
+        self._anim:GetAnimState():AnimateWhilePaused(false)
     end
 
     self._face = self:AddChild(Image("images/hud.xml", "clock_NIGHT.tex"))
@@ -96,6 +98,7 @@ local UIClock = Class(Widget, function(self)
         self._rim:GetAnimState():SetBank("clock01")
         self._rim:GetAnimState():SetBuild("cave_clock")
         self._rim:GetAnimState():PlayAnimation("on")
+        self._rim:GetAnimState():AnimateWhilePaused(false)
 
         self._hands = self:AddChild(Widget("clockhands"))
         self._hands._img = self._hands:AddChild(Image("images/hud.xml", "clock_hand.tex"))
@@ -383,6 +386,8 @@ end
 --------------------------------------------------------------------------
 
 function UIClock:OnUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
     local k = self._hands._animtime + dt * TheSim:GetTimeScale()
     self._hands._animtime = k
 

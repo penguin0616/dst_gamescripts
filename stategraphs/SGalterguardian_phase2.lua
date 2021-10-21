@@ -325,7 +325,7 @@ local states =
                 local spin_speed = TUNING.ALTERGUARDIAN_PHASE2_SPIN_SPEED
                 local target = inst.sg.statemem.target
                 if target ~= nil and target:IsValid() and target.components.locomotor ~= nil then
-                    spin_speed = math.max(spin_speed, target.components.locomotor:GetRunSpeed()) - 0.25
+                    spin_speed = math.max(spin_speed, target.components.locomotor:GetRunSpeed() * inst.components.locomotor:GetSpeedMultiplier()) - 0.25
                     spin_speed = math.min(spin_speed, 35)
                 end
                 inst.sg.statemem.spin_speed = spin_speed

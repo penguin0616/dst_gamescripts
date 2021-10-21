@@ -42,13 +42,14 @@ local function OnSetPlayerMode(inst, self)
         if my_platform ~= nil and my_platform.components.healthsyncer ~= nil then
             self.boatmeter:Enable(my_platform)
         else
-            self.boatmeter:Disable(my_platform)
+            self.boatmeter:Disable(self.instantboatmeterclose)
         end
+        self.instantboatmeterclose = nil
 
         self.ongotonplatform = function(owner, platform) if platform.components.healthsyncer ~= nil then self.boatmeter:Enable(platform) end end
         self.inst:ListenForEvent("got_on_platform", self.ongotonplatform, self.owner)
 
-        self.ongotoffplatform = function(owner, platform) self.boatmeter:Disable(platform) end
+        self.ongotoffplatform = function(owner, platform) self.boatmeter:Disable() end
         self.inst:ListenForEvent("got_off_platform", self.ongotoffplatform, self.owner)
     end
 
@@ -164,6 +165,7 @@ end
 
 local StatusDisplays = Class(Widget, function(self, owner)
     Widget._ctor(self, "Status")
+    self:UpdateWhilePaused(false)
     self.owner = owner
 
     self.wereness = nil
@@ -203,6 +205,7 @@ local StatusDisplays = Class(Widget, function(self, owner)
     self.resurrectbuttonfx:SetScale(.75, .75, .75)
     self.resurrectbuttonfx:GetAnimState():SetBank("effigy_break")
     self.resurrectbuttonfx:GetAnimState():SetBuild("effigy_button")
+    self.resurrectbuttonfx:GetAnimState():AnimateWhilePaused(false)
     self.resurrectbuttonfx:Hide()
     self.resurrectbuttonfx.inst:ListenForEvent("animover", function(inst) inst.widget:Hide() end)
 
@@ -238,6 +241,7 @@ local StatusDisplays = Class(Widget, function(self, owner)
     self.rezbuttontask = nil
     self.modetask = nil
     self.isghostmode = true --force the initial SetGhostMode call to be dirty
+    self.instantboatmeterclose = true
     self:SetGhostMode(false)
 
     if owner:HasTag("wereness") then
@@ -416,7 +420,7 @@ function StatusDisplays:SetGhostMode(ghostmode)
     if self.modetask ~= nil then
         self.modetask:Cancel()
     end
-    self.modetask = self.inst:DoTaskInTime(0, ghostmode and OnSetGhostMode or OnSetPlayerMode, self)
+    self.modetask = self.inst:DoStaticTaskInTime(0, ghostmode and OnSetGhostMode or OnSetPlayerMode, self)
 end
 
 function StatusDisplays:SetHealthPercent(pct)

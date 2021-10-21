@@ -51,7 +51,8 @@ local function fn()
     --waterproofer (from waterproofer component) added to pristine state for optimization
     inst:AddTag("waterproofer")
 
-    MakeInventoryFloatable(inst, "med", 0.1, 0.65)
+    local swap_data = {bank = "backpack1", anim = "anim"}
+    MakeInventoryFloatable(inst, "med", 0.1, 0.65, nil, nil, swap_data)
 
     inst.entity:SetPristine()
 

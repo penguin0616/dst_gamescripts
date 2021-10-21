@@ -31,14 +31,10 @@ end
 
 --this is an update that always runs on wall time (not sim time)
 function WallUpdate(dt)
-    if AUTOSPAWN_MASTER_SECONDARY then
-        SpawnSecondInstance()
-    end
-
-    if IsSimPaused() then
-        TickRPCQueue()
-    end
-
+    local server_paused = TheNet:IsServerPaused()
+    --if AUTOSPAWN_MASTER_SECONDARY then
+    --    SpawnSecondInstance()
+    --end
 
     --TheSim:ProfilerPush("LuaWallUpdate")
 
@@ -76,19 +72,17 @@ function WallUpdate(dt)
     TheMixer:Update(dt)
     TheSim:ProfilerPop()
 
-    if not IsSimPaused() then
-        TheSim:ProfilerPush("camera")
-        TheCamera:Update(dt)
-        TheSim:ProfilerPop()
-    end
+    TheSim:ProfilerPush("camera")
+    TheCamera:Update(dt, server_paused)
+    TheSim:ProfilerPop()
 
     CheckForUpsellTimeout(dt)
 
-    TheSim:ProfilerPush("input")
     if not SimTearingDown then
+        TheSim:ProfilerPush("input")
         TheInput:OnUpdate()
+        TheSim:ProfilerPop()
     end
-    TheSim:ProfilerPop()
 
     TheSim:ProfilerPush("fe")
     if global_error_widget then
@@ -98,11 +92,11 @@ function WallUpdate(dt)
     end
     TheSim:ProfilerPop()
 
-    TheSim:ProfilerPush("shade")
-    if not IsSimPaused() then
+    if not server_paused then
+        TheSim:ProfilerPush("shade")
         ShadeEffectUpdate(dt)
+        TheSim:ProfilerPop()
     end
-    TheSim:ProfilerPop()
 
     --TheSim:ProfilerPop()
 
@@ -165,6 +159,60 @@ function RegisterStaticComponentUpdate(classname, fn)
     StaticComponentUpdates[classname] = fn
 end
 
+local last_static_tick_seen = -1
+function StaticUpdate(dt)
+    local static_tick = TheSim:GetStaticTick()
+    if static_tick <= last_static_tick_seen then
+        print("Saw this before")
+        return
+    end
+
+    TheSim:ProfilerPush("staticScheduler")
+    for i = last_static_tick_seen + 1, static_tick do
+        RunStaticScheduler(i)
+    end
+    TheSim:ProfilerPop()
+
+    TickRPCQueue()
+
+    if TheNet:IsServerPaused() then --only update static components when paused.
+        TheSim:ProfilerPush("static updating components")
+        for k, v in pairs(StaticUpdatingEnts) do
+            if v.updatecomponents then
+                for cmp in pairs(v.updatecomponents) do
+                    if cmp.OnStaticUpdate and not StopUpdatingComponents[cmp] then
+                        cmp:OnStaticUpdate(0) --DT is always 0 for static component updates
+                    end
+                end
+            end
+        end
+
+        if next(NewStaticUpdatingEnts) ~= nil then
+            for k, v in pairs(NewStaticUpdatingEnts) do
+                StaticUpdatingEnts[k] = v
+            end
+            NewStaticUpdatingEnts = {}
+        end
+
+        if next(StopUpdatingComponents) ~= nil then
+            for k, v in pairs(StopUpdatingComponents) do
+                v:StopUpdatingComponent_Deferred(k)
+            end
+            StopUpdatingComponents = {}
+        end
+
+        TheSim:ProfilerPop()
+
+        for i = last_static_tick_seen + 1, static_tick do
+            TheSim:ProfilerPush("LuaEventSG")
+            SGManager:UpdateEvents()
+            TheSim:ProfilerPop()
+        end
+    end
+
+    last_static_tick_seen = static_tick
+end
+
 local last_tick_seen = -1
 --This is where the magic happens
 function Update(dt)
@@ -172,10 +220,7 @@ function Update(dt)
     --TheSim:ProfilerPush("LuaUpdate")
     CheckDemoTimeout()
 
-    if IsSimPaused() then
-        --TheSim:ProfilerPop()
-        return
-    end
+    assert(not TheNet:IsServerPaused(), "Update() called on paused server!")
 
     local tick = TheSim:GetTick()
     if tick <= last_tick_seen then
@@ -183,8 +228,6 @@ function Update(dt)
         --TheSim:ProfilerPop()
         return
     end
-
-    TickRPCQueue()
 
     TheSim:ProfilerPush("scheduler")
     for i = last_tick_seen + 1, tick do

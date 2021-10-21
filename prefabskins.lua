@@ -634,6 +634,7 @@ PREFAB_SKINS = {
 	{
 		"researchlab3_ancient",
 		"researchlab3_crystal",
+		"researchlab3_monster",
 		"researchlab3_nature",
 	},
 	researchlab4 =
@@ -849,6 +850,9 @@ PREFAB_SKINS = {
 	},
 	walter =
 	{
+		"walter_bee",
+		"walter_bee_d",
+		"walter_bee_p",
 		"walter_detective",
 		"walter_formal",
 		"walter_ice",
@@ -860,6 +864,8 @@ PREFAB_SKINS = {
 	},
 	walterhat =
 	{
+		"walterhat_bee",
+		"walterhat_beep",
 		"walterhat_detective",
 		"walterhat_formal",
 		"walterhat_ice",
@@ -870,6 +876,9 @@ PREFAB_SKINS = {
 	},
 	wanda =
 	{
+		"wanda_bishop",
+		"wanda_bishop_d",
+		"wanda_bishop_p",
 		"wanda_formal",
 		"wanda_none",
 		"wanda_shadow",
@@ -885,6 +894,9 @@ PREFAB_SKINS = {
 	warly =
 	{
 		"warly_candyman",
+		"warly_carrat",
+		"warly_carrat_d",
+		"warly_carrat_p",
 		"warly_chef",
 		"warly_fisherman",
 		"warly_ice",
@@ -1213,6 +1225,9 @@ PREFAB_SKINS = {
 		"wormwood_none",
 		"wormwood_pumpkin",
 		"wormwood_rose",
+		"wormwood_saladmander",
+		"wormwood_saladmander_d",
+		"wormwood_saladmander_p",
 		"wormwood_shadow",
 		"wormwood_victorian",
 	},
@@ -1222,6 +1237,9 @@ PREFAB_SKINS = {
 		"wortox_ice",
 		"wortox_minotaur",
 		"wortox_nature",
+		"wortox_noeyeddeer",
+		"wortox_noeyeddeer_d",
+		"wortox_noeyeddeer_p",
 		"wortox_none",
 		"wortox_original",
 		"wortox_survivor",
@@ -1235,6 +1253,9 @@ PREFAB_SKINS = {
 		"wurt_rose",
 		"wurt_shadow",
 		"wurt_squid",
+		"wurt_toadstool",
+		"wurt_toadstool_d",
+		"wurt_toadstool_p",
 		"wurt_victorian",
 	},
 	wx78 =

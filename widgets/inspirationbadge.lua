@@ -6,7 +6,7 @@ local UIAnim = require "widgets/uianim"
 local NUM_SLOTS = 3
 
 local InspirationBadge = Class(Badge, function(self, owner, colour)
-    Badge._ctor(self, nil, owner, { 132/255, 62/255, 162/255, 1 }, nil, true, true)
+    Badge._ctor(self, nil, owner, { 132/255, 62/255, 162/255, 1 }, nil, true, true, true)
 
 	self._clientpredicteddraining = false
 
@@ -19,6 +19,7 @@ local InspirationBadge = Class(Badge, function(self, owner, colour)
 		self.slots[i]:GetAnimState():SetBank ("status_wathgrithr")
 		self.slots[i]:GetAnimState():SetBuild("status_wathgrithr")
 		self.slots[i]:GetAnimState():PlayAnimation("slot_deactivated_"..tostring(i))
+		self.slots[i]:GetAnimState():AnimateWhilePaused(false)
 	end
 	self.buffs = {}
 	for i = 1, NUM_SLOTS do
@@ -26,6 +27,7 @@ local InspirationBadge = Class(Badge, function(self, owner, colour)
 		self.buffs[i]:GetAnimState():SetBank ("status_wathgrithr")
 		self.buffs[i]:GetAnimState():SetBuild("status_wathgrithr")
 		self.buffs[i]:GetAnimState():PlayAnimation("buff_off")
+		self.buffs[i]:GetAnimState():AnimateWhilePaused(false)
 	end
 	self.num_active_slots = 0
 end)
@@ -77,6 +79,8 @@ function InspirationBadge:EnableClientPredictedDraining(enable)
 end
 
 function InspirationBadge:OnUpdate(dt)
+	if TheNet:IsServerPaused() then return end
+
 	local percent = math.max(0, self.percent + dt * TUNING.INSPIRATION_DRAIN_RATE * 0.98 / 100) -- just go a little bit slower than the server so there will be less jumping backwards in the meter
     self:SetPercent(percent)
 end

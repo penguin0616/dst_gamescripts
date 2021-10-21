@@ -31,8 +31,8 @@ local SingingInspiration = Class(function(self, inst)
     self.max_enemy_health = 5000
     self.inspiration_gain_bonus = 750
 
-    self.inst:ListenForEvent("onattackother", function(inst, data) self:OnAttack(data)   end)
-    self.inst:ListenForEvent("attacked",      function(inst, data) self:OnAttacked(data) end)
+    self.inst:ListenForEvent("onhitother", function(inst, data) self:OnHitOther(data)   end)
+    self.inst:ListenForEvent("attacked",   function(inst, data) self:OnAttacked(data) end)
 
     self.inst:ListenForEvent("death", function() self:SetInspiration(0) end)
 end,
@@ -107,18 +107,13 @@ function SingingInspiration:OnAttacked(data)
     end
 end
 
-function SingingInspiration:OnAttack(data)
+function SingingInspiration:OnHitOther(data)
     local target = data.target
-    if target ~= nil and target:IsValid() and target.components.health and not target.components.health:IsDead() and
-       (self.validvictimfn == nil or self.validvictimfn(target)) then
-
+    if target ~= nil and target:IsValid() and target.components.health and (self.validvictimfn == nil or self.validvictimfn(target)) then
         self.is_draining = false
         self.last_attack_time = GetTime()
 
-        local player_damage = (data.weapon ~= nil and data.weapon.components.weapon:GetDamage(self.inst, target))
-                                or self.inst.components.combat.defaultdamage
-
-        -- INSPIRATION_GAIN_RATE = 0.03
+        local player_damage = math.max(data.damageresolved or data.damage or 1, 1)
         local delta = (player_damage * TUNING.INSPIRATION_GAIN_RATE) * (1 - self:GetPercent())
 
         if target:HasTag("epic") then
@@ -346,10 +341,7 @@ function SingingInspiration:Inspire()
     local targets = self:FindFriendlyTargetsToInspire()
     for _, target in ipairs(targets) do
         for _, song in ipairs(self.active_songs) do
-			if target.components.debuffable == nil then
-				target:AddComponent("debuffable")
-			end
-            target.components.debuffable:AddDebuff(song.NAME, song.NAME)
+            target:AddDebuff(song.NAME, song.NAME)
         end
     end
 end

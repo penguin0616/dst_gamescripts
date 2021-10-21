@@ -53,6 +53,8 @@ function PlayerStatusScreen:OnBecomeActive()
     self:DoInit()
     self.time_to_refresh = REFRESH_INTERVAL
     self.scroll_list:SetFocus()
+
+    SetAutopaused(true)
 end
 
 function PlayerStatusScreen:OnBecomeInactive()
@@ -61,6 +63,9 @@ function PlayerStatusScreen:OnBecomeInactive()
             v.mute.image.inst:DisableMute()
         end
     end
+
+    SetAutopaused(false)
+
     PlayerStatusScreen._base.OnBecomeInactive(self)
 end
 

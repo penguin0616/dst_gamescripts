@@ -351,6 +351,9 @@ local assets =
     Asset("ATLAS", "images/profileflair.xml"),
     Asset("IMAGE", "images/profileflair.tex"),
 
+    Asset("ATLAS", "images/servericons.xml"),
+    Asset("IMAGE", "images/servericons.tex"),
+
     --Wardrobe previewing
     Asset("ANIM", "anim/player_ghost_withhat.zip"),
     Asset("ANIM", "anim/werebeaver_basic.zip"),

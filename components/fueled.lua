@@ -245,6 +245,8 @@ function Fueled:StartConsuming()
 end
 
 function Fueled:OnWallUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
     dt = self.firstperioddt
     self.firstperioddt = nil
     self.inst:StopWallUpdatingComponent(self)

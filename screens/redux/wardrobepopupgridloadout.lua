@@ -96,9 +96,17 @@ local GridWardrobePopupScreen = Class(Screen, function(self, owner_player, profi
     TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
 
     self:DoFocusHookups()
+
+    SetAutopaused(true)
 end)
 
+function GridWardrobePopupScreen:OffsetServerPausedWidget(serverpausewidget)
+	serverpausewidget:SetOffset(-650,0)
+end
+
 function GridWardrobePopupScreen:OnDestroy()
+    SetAutopaused(false)
+
     TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
     self._base.OnDestroy(self)
 

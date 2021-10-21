@@ -179,7 +179,7 @@ local function find_gestalt_target(gestalt)
     local target = nil
     local rangesq = 36
     for _, v in ipairs(AllPlayers) do
-        if (not(v.replica.health:IsDead() or v:HasTag("playerghost"))) and
+        if not IsEntityDeadOrGhost(v) and
                 not (v.sg:HasStateTag("knockout") or
                     v.sg:HasStateTag("sleeping") or
                     v.sg:HasStateTag("bedroll") or

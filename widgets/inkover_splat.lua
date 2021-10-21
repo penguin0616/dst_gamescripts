@@ -25,6 +25,7 @@ local InkOver_splat =  Class(UIAnim, function(self, owner)
     self:GetAnimState():SetBank("ink_over")
     self:GetAnimState():SetBuild("ink_over")
     self:GetAnimState():PlayAnimation("ink")
+    self:GetAnimState():AnimateWhilePaused(false)
 
     self:Hide()
 

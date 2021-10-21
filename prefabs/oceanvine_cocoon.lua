@@ -238,10 +238,7 @@ local function SummonChildren(inst)
 
             if children_released then
                 for _, v in ipairs(children_released) do
-                    if v.components.debuffable == nil then
-                        v:AddComponent("debuffable")
-                    end
-                    v.components.debuffable:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
+                    v:AddDebuff("spider_summoned_buff", "spider_summoned_buff")
 
                     v.sg:GoToState("dropper_enter")
                 end

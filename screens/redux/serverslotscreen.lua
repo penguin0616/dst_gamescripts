@@ -121,7 +121,7 @@ function ServerSlotScreen:StartUpdateSaveFiles()
     end
 
     self:UpdateSaveFiles()
-    self.updatesavefilestask = scheduler:ExecutePeriodic(30, self.UpdateSaveFiles, nil, 0, "updatesavefiles", self)
+    self.updatesavefilestask = staticScheduler:ExecutePeriodic(30, self.UpdateSaveFiles, nil, 0, "updatesavefiles", self)
 end
 
 local function CompareSaveFilesTable(a, b)

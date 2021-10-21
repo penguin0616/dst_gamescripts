@@ -99,7 +99,7 @@ local function PlayerRemove(player, deletesession, migrationdata, readytoremove)
             TheShard:StartMigration(migrationdata.player.userid, migrationdata.worldid)
         end
     else
-        player:DoTaskInTime(0, PlayerRemove, deletesession, migrationdata, true)
+        player:DoStaticTaskInTime(0, PlayerRemove, deletesession, migrationdata, true)
     end
 end
 
@@ -134,14 +134,14 @@ local function OnPlayerDespawn(inst, player, cb)
     player.components.locomotor:Clear()
 
     --Portal FX
-    local fx = SpawnPrefab("spawn_fx_medium")
+    local fx = SpawnPrefab("spawn_fx_medium_static")
     if fx ~= nil then
         fx.Transform:SetPosition(player.Transform:GetWorldPosition())
     end
 
     --After colour tween, remove player via task, because
     --we don't want to remove during component update loop
-    player.components.colourtweener:StartTween({ 0, 0, 0, 1 }, 13 * FRAMES, cb or PlayerRemove)
+    player.components.colourtweener:StartTween({ 0, 0, 0, 1 }, 13 * FRAMES, cb or PlayerRemove, true)
 end
 
 local function OnPlayerDespawnAndDelete(inst, player)
@@ -319,9 +319,7 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx
 
 	if self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading) then
 		print("Enabling Spawn Protection for ", self.inst)
-		if player.components.debuffable ~= nil then
-			player.components.debuffable:AddDebuff("spawnprotectionbuff", "spawnprotectionbuff")
-		end
+        player:AddDebuff("spawnprotectionbuff", "spawnprotectionbuff")
 	end
 
     -- Portal FX, disable/give control to player if they're loading in
@@ -329,15 +327,15 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx
         player.AnimState:SetMultColour(0,0,0,1)
         player:Hide()
         player.components.playercontroller:Enable(false)
-        local fx = SpawnPrefab("spawn_fx_medium")
+        local fx = SpawnPrefab("spawn_fx_medium_static")
         if fx ~= nil then
             fx.entity:SetParent(player.entity)
         end
-        player:DoTaskInTime(6*FRAMES, function(inst)
+        player:DoStaticTaskInTime(6*FRAMES, function(inst)
             player:Show()
             player.components.colourtweener:StartTween({1,1,1,1}, 19*FRAMES, function(player)
                 player.components.playercontroller:Enable(true)
-            end)
+            end, true)
         end)
     else
         TheWorld:PushEvent("ms_newplayercharacterspawned", { player = player, mode = isloading and "Load" or MODES[_mode] })

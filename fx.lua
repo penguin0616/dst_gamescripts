@@ -555,6 +555,15 @@ local fx =
         sound = "dontstarve/common/spawn/spawnportal_spawnplayer",
         fn = FinalOffset1,
     },
+    {
+        name = "spawn_fx_medium_static",
+        bank = "spawn_fx",
+        build = "puff_spawning",
+        anim = "medium",
+        sound = "dontstarve/common/spawn/spawnportal_spawnplayer",
+        fn = FinalOffset1,
+        update_while_paused = true
+    },
     --[[{
         name = "spawn_fx_large",
         bank = "spawn_fx",

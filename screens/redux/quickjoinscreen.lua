@@ -42,7 +42,7 @@ local QuickJoinScreen = Class(GenericWaitingPopup, function(self, prev_screen, o
     self.session_mapping = session_mapping
 
     TheNet:SearchServers(self.event_id)
-    self.startsearchtime = GetTime()
+    self.startsearchtime = GetStaticTime()
 
     self.keepsearchingtimer = 0
     self:KeepSearching(5)
@@ -141,7 +141,7 @@ function QuickJoinScreen:OnUpdate(dt)
 end
 
 function QuickJoinScreen:ShouldKeepSearching()
-	return TheNet:GetServerListingReadDirty() and TheNet:IsSearchingServers() and (GetTime() - self.startsearchtime) < MAX_INITIAL_SEARCH_TIME
+	return TheNet:GetServerListingReadDirty() and TheNet:IsSearchingServers() and (GetStaticTime() - self.startsearchtime) < MAX_INITIAL_SEARCH_TIME
 end
 
 local function PickBestServers(servers)
@@ -184,7 +184,7 @@ function QuickJoinScreen:TryPickServer()
     if self:ShouldKeepSearching() then
 	    self:KeepSearching(1)
 
-	    --print("[QuickJoin]: Still Searching", (GetTime() - self.startsearchtime))
+	    --print("[QuickJoin]: Still Searching", (GetStaticTime() - self.startsearchtime))
 	    return
 	end
 
@@ -213,7 +213,7 @@ function QuickJoinScreen:TryPickServer()
     end
 
 	if #self.filtered_servers == 0 then
-	    if (GetTime() - self.startsearchtime) < MAX_SEARCH_TIME then
+	    if (GetStaticTime() - self.startsearchtime) < MAX_SEARCH_TIME then
 		    self:KeepSearching(2)
 		else
 			print("[QuickJoin]: no servers passed the filters.")
@@ -225,7 +225,7 @@ function QuickJoinScreen:TryPickServer()
 			self:TryNextServer()
 		end
 	else
-	    print("[QuickJoin]: Done Searching. " .. string.format("Searched for %.2fs. %d of %d servers passed the filter", (GetTime() - self.startsearchtime), #self.filtered_servers, #servers))
+	    print("[QuickJoin]: Done Searching. " .. string.format("Searched for %.2fs. %d of %d servers passed the filter", (GetStaticTime() - self.startsearchtime), #self.filtered_servers, #servers))
 
 		self:KeepSearching(0)
 	    TheNet:StopSearchingServers()

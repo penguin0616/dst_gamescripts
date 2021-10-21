@@ -42,18 +42,18 @@ local ViewPlayersModalScreen = Class(Screen, function(self, players, maxPlayers)
     local function listingConstructor(v, i)
         local playerListing =  Widget("playerListing")
 
-        local displayName = v.name or ""
-        if TheSim:IsSteamChinaClient() then
-            displayName = TheSim:ApplyLocalWordFilter(displayName, TEXT_FILTER_CTX_NAME)
-        end
-
+        local displayName = ApplyLocalWordFilter(table.typecheckedgetfield(v, "string", "name") or "", TEXT_FILTER_CTX_NAME)
         playerListing.highlight = playerListing:AddChild(Image("images/scoreboard.xml", "row_short_goldoutline.tex"))
         playerListing.highlight:SetPosition(27, 0)
         playerListing.highlight:ScaleToSize(307,53)
         playerListing.highlight:Hide()
 
         local badge_x = -110
-        playerListing.characterBadge = playerListing:AddChild(PlayerBadge(v.prefab or "", v.colour or DEFAULT_PLAYER_COLOUR, v.performance ~= nil, v.userflags or 0))
+        local colour = table.typecheckedgetfield(v, "table", "colour")
+        if type(colour.r) ~= "number" or type(colour.g) ~= "number" or type(colour.b) ~= "number" or type(colour.a) ~= "number" then
+            colour = nil
+        end
+        playerListing.characterBadge = playerListing:AddChild(PlayerBadge(table.typecheckedgetfield(v, "string", "prefab"), colour or DEFAULT_PLAYER_COLOUR, table.typecheckedgetfield(v, nil, "performance") ~= nil, table.typecheckedgetfield(v, "number", "userflags") or 0))
         playerListing.characterBadge:SetScale(.45)
         playerListing.characterBadge:SetPosition(badge_x,0,0)
 
@@ -71,7 +71,7 @@ local ViewPlayersModalScreen = Class(Screen, function(self, players, maxPlayers)
             playerListing.rank = playerListing:AddChild(TEMPLATES.FestivalNumberBadge())
             playerListing.rank:SetPosition(badge_x-13- 20, -4)
             playerListing.rank:SetScale(.5)
-            playerListing.rank:SetRank(v.eventlevel or 0)
+            playerListing.rank:SetRank(table.typecheckedgetfield(v, "number", "eventlevel") or 0)
         end
 
         playerListing.name = playerListing:AddChild(Text(TALKINGFONT, 26))
@@ -97,15 +97,16 @@ local ViewPlayersModalScreen = Class(Screen, function(self, players, maxPlayers)
         playerListing.viewprofile:SetOnClick(
             function()
                 --TheFrontEnd:PushScreen(PlayerAvatarPopupScreen(v.name, v))
-                if v.netid ~= nil then
-                    TheNet:ViewNetProfile(v.netid)
+                local netid = table.typecheckedgetfield(v, "string", "netid")
+                if netid then
+                    TheNet:ViewNetProfile(netid)
                 end
             end)
 
         -- Skipping check for hiding my own profile button
         -- Shouldn't see this screen if i'm in game unless I just D/C and listings haven't updated
         -- Also, my offline ID won't match my online ID as well
-        if TheNet:IsNetIDPlatformValid(v.netid) then
+        if TheNet:IsNetIDPlatformValid(table.typecheckedgetfield(v, "string", "netid")) then
             playerListing.focus_forward = playerListing.viewprofile
         else
             playerListing.viewprofile:Hide()
@@ -121,7 +122,7 @@ local ViewPlayersModalScreen = Class(Screen, function(self, players, maxPlayers)
 
 	            if not down then
 	                if control == CONTROL_MAP then
-	                    TheNet:ViewNetProfile(v.netid)
+	                    TheNet:ViewNetProfile(table.typecheckedgetfield(v, "string", "netid"))
 	                end
 	            end
 	        end

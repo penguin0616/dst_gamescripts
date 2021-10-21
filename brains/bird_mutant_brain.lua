@@ -4,15 +4,8 @@ require "behaviours/attackwall"
 require "behaviours/leash"
 require "behaviours/standstill"
 
-local WORK_DIST = 3 --must be greater than physics radii
-local LOST_DIST = 60
 local RETURN_DIST = 15
 local BASE_DIST = 6
-
-local LOST_TIME = 5
-local AGGRO_TIME = 6
-local PETRIFY_TIME = 3
-local PETRIFY_TIME_VAR = 1
 
 local BirdMutantBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
@@ -22,25 +15,6 @@ end)
 
 local function GetSwarmTarget(inst)
     return inst.components.entitytracker:GetEntity("swarmTarget")
-end
-
-local function LostSwarmTarget(self)
-    local target = GetSwarmTarget(self.inst)
-    if target ~= nil and self.inst:IsNear(target, LOST_DIST) then
-        self._losttime = nil
-        return false
-    elseif self._losttime == nil then
-        self._losttime = GetTime()
-        return false
-    end
-    return GetTime() - self._losttime > LOST_TIME
-end
-
-local function ShouldTargetAttackTarget(inst)
-    local target = GetSwarmTarget(inst)
-    return target ~= nil
-        and target:HasTag("moonstorm_static")
-        and GetTime() - inst.components.combat:GetLastAttackedTime() > AGGRO_TIME
 end
 
 local function GetSwarmTargetPos(inst)
@@ -80,10 +54,6 @@ local function AttackTarget(inst)
     end
 end
 
-local function AttackInvadeTarget(inst)
-    --inst:PushEvent("workmoonbase", { invadetarget = GetSwarmTarget(inst) })
-end
-
 local BREAKSKELETONS_MUST_TAGS = { "playerskeleton", "HAMMER_workable" }
 local function BreakSkeletons(inst)
     local skel = FindEntity(inst, 1.25, nil, BREAKSKELETONS_MUST_TAGS)
@@ -93,11 +63,12 @@ local function BreakSkeletons(inst)
 end
 
 local function shouldspit(inst)
-	if inst:HasTag("bird_mutant_spitter") then
-	    if inst.components.combat.target and inst.components.combat.target:IsValid() and inst:GetDistanceSqToInst(inst.components.combat.target) <= TUNING.MUTANT_BIRD_SPIT_RANGE * TUNING.MUTANT_BIRD_SPIT_RANGE and not inst.components.timer:TimerExists("spit_cooldown") then
-	    	return true
-	    end
-	end
+    if inst.components.timer:TimerExists("spit_cooldown") then
+        return false
+    end
+    return inst.components.combat.target and
+        inst.components.combat.target:IsValid() and
+        inst:GetDistanceSqToInst(inst.components.combat.target) <= TUNING.MUTANT_BIRD_SPIT_RANGE * TUNING.MUTANT_BIRD_SPIT_RANGE
 end
 
 local function spit(inst)
@@ -106,31 +77,19 @@ local function spit(inst)
 end
 
 local function shouldwaittospit(inst)
-	if inst:HasTag("bird_mutant_spitter") then
-	    if inst.components.combat.target and inst.components.combat.target:IsValid() then
-	    	if inst:GetDistanceSqToInst(inst.components.combat.target) <= 4*4 then
-	    		return true
-	    	end
-	    end
-	end
+    return inst.components.combat.target and inst.components.combat.target:IsValid() and inst:GetDistanceSqToInst(inst.components.combat.target) <= 4*4
 end
 
 function BirdMutantBrain:OnStart()
-    local root = PriorityNode(
+    local brain =
     {
 
         WhileNode(function() return self.inst.components.hauntable ~= nil and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
         WhileNode(function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
 
-        --Teleported away, or moonbase got removed
-    --    WhileNode(function() return LostSwarmTarget(self) end, "Lost Target",
-    --        ActionNode(function() self.inst.components.health:Kill() end)),
-
-        WhileNode(function() return shouldspit(self.inst) end, "Spit",
-        	DoAction(self.inst, spit)),
-
-        IfNode(function() return shouldwaittospit(self.inst) end, "waittospit",
-        	StandStill(self.inst)),
+        --Mutant Spitter:
+            --Spit
+            --waittospit
 
         SequenceNode{
             ActionNode(function() BreakSkeletons(self.inst) end),
@@ -138,27 +97,27 @@ function BirdMutantBrain:OnStart()
             ActionNode(function() self.inst.components.combat:ResetCooldown() end),
         },
 
-
         IfNode(function() return CanBirdAttack(self.inst) end, "Attack",
             ActionNode(function() AttackTarget(self.inst) end)),
---[[
-        WhileNode(function() return ShouldTargetAttackTarget(self.inst) end, "InvadeTarget",
-            PriorityNode({
-                ChaseAndAttack(self.inst, 100),
-                --Leash(self.inst, function() return GetInvadeTarget(self.inst):GetPosition() end, WORK_DIST, WORK_DIST),
-                --ActionNode(function() AttackInvadeTarget(self.inst) end),
-                --StandStill(self.inst),
-            })),
-]]
---        ChaseAndAttack(self.inst, 100),
+
         IfNode(function() return GetSwarmTargetPos(self.inst) end, "move to target",
             Leash(self.inst, GetSwarmTargetPos, RETURN_DIST, BASE_DIST)),
+
         IfNode(function() return GetSwarmTargetPos(self.inst) end, "stand near target",
             StandStill(self.inst)),
-       -- Wander(self.inst)
-        Panic(self.inst),
-    }, .25)
 
+        Panic(self.inst),
+    }
+
+    if self.inst:HasTag("bird_mutant_spitter") then
+        table.insert(brain, 3, WhileNode(function() return shouldspit(self.inst) end, "Spit",
+            DoAction(self.inst, spit)))
+
+        table.insert(brain, 4, IfNode(function() return shouldwaittospit(self.inst) end, "waittospit",
+            StandStill(self.inst)))
+    end
+
+    local root = PriorityNode(brain, .25)
     self.bt = BT(self.inst, root)
 end
 

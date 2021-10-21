@@ -404,7 +404,7 @@ function RedbirdGameScreen:InitGameBoard()
 			tile:ShowTile()
 		end
 		self:FillEmptyTiles( true )
-		scheduler:ExecuteInTime(DROP_WAIT, function()
+		staticScheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_1
 		end)
 		self:UpdateInterface()
@@ -421,7 +421,7 @@ end
 
 function RedbirdGameScreen:ExplodeTile( explode_delay, tile, is_bird, is_rotten )
 	tile.exploded = true
-	scheduler:ExecuteInTime(explode_delay, function()
+	staticScheduler:ExecuteInTime(explode_delay, function()
 		tile:ClearTile()
 		if is_bird then
 			if is_rotten then
@@ -439,7 +439,7 @@ function RedbirdGameScreen:ExplodeTile( explode_delay, tile, is_bird, is_rotten 
 		else
 			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/creditpage_flip")
 			local explode_widg = ExplodeFX( tile:GetWorldPosition(), self.fixed_root:GetScale().x )
-			scheduler:ExecuteInTime(1, function() explode_widg:Kill() end)
+			staticScheduler:ExecuteInTime(1, function() explode_widg:Kill() end)
 		end
 		self:UpdateInterface()
 	end)
@@ -449,13 +449,13 @@ end
 
 function RedbirdGameScreen:WaitForClearingToFinish(t)
 	self:ClearExplodedFlags()
-	scheduler:ExecuteInTime(t, function()
+	staticScheduler:ExecuteInTime(t, function()
 		self:DropTiles()
 		self:FillEmptyTiles()
 
 		self:UpdateInterface()
 
-		scheduler:ExecuteInTime(DROP_WAIT, function()
+		staticScheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_1
 			self:CheckGameOverCondition()
 			if self.queued_click ~= nil then

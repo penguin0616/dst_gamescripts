@@ -64,7 +64,8 @@ local ViewCustomizationModalScreen = Class(Screen, function(self, leveldata)
 
     self.leveldata = deepcopy(leveldata)
 
-    if self.leveldata and self.leveldata[1] and self.leveldata[1].version and self.leveldata[1].version >= 2 then
+    local levelversion = table.typecheckedgetfield(self.leveldata, "number", 1, "version")
+    if levelversion and levelversion >= 2 then
         self.settings_widget = self.optionspanel:AddChild(SettingsList(self, LEVELCATEGORY.SETTINGS))
         self.settings_widget:SetPosition(0, -30)
         self.settings_widget:Hide()
@@ -148,7 +149,7 @@ local ViewCustomizationModalScreen = Class(Screen, function(self, leveldata)
         for i=1,2 do
             if self:IsLevelEnabled(i) then
                 assert(i > #tabs, "tab clicking will be broken. need to handle first item missing.")
-                local locationid = string.upper(self.leveldata[i].location)
+                local locationid = string.upper(table.typecheckedgetfield(self.leveldata, "string", i, "location") or "")
                 local locationname = STRINGS.UI.SANDBOXMENU.LOCATIONTABNAME[locationid] or STRINGS.UI.SANDBOXMENU.LOCATIONTABNAME.UNKNOWN
                 table.insert(tabs, {
                         text = locationname,
@@ -191,7 +192,7 @@ function ViewCustomizationModalScreen:IsEditable()
 end
 
 function ViewCustomizationModalScreen:GetOptions()
-    local location = self.leveldata[self.currentmultilevel].location
+    local location = table.typecheckedgetfield(self.leveldata, "string", self.currentmultilevel, "location")
 
     if self.activelevelcategory == LEVELCATEGORY.SETTINGS then
         return Customize.GetWorldSettingsOptionsWithLocationDefaults(location, self.currentmultilevel == 1)
@@ -208,7 +209,7 @@ function ViewCustomizationModalScreen:SelectMultilevel(level)
 end
 
 function ViewCustomizationModalScreen:IsLevelEnabled(level)
-    return self.leveldata[level] ~= nil
+    return table.typecheckedgetfield(self.leveldata, "table", level)
 end
 
 function ViewCustomizationModalScreen:Refresh()
@@ -236,8 +237,8 @@ function ViewCustomizationModalScreen:Refresh()
 end
 
 function ViewCustomizationModalScreen:GetValueForOption(option)
-    return self.leveldata[self.currentmultilevel].overrides[option]
-        or Customize.GetLocationDefaultForOption(self.leveldata[self.currentmultilevel].location, option)
+    return table.typecheckedgetfield(self.leveldata, nil, self.currentmultilevel, "overrides", option)
+        or Customize.GetLocationDefaultForOption(table.typecheckedgetfield(self.leveldata, "string", self.currentmultilevel, "location"), option)
 end
 
 function ViewCustomizationModalScreen:Cancel()

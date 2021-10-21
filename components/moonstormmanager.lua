@@ -692,7 +692,7 @@ function self:DoTestForWagstaff()
 end
 
 local MOONSTORM_SPARKS_MUST_HAVE= {"moonstorm_spark"}
-local MOONSTORM_SPARKS_CANT_HAVE= {"INLMBO"}
+local MOONSTORM_SPARKS_CANT_HAVE= {"INLIMBO"}
 
 function self:DoTestForSparks()
 	for i, v in ipairs(_activeplayers) do

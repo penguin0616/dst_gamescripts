@@ -14,15 +14,13 @@ function Bedazzlement:Start()
 	self.inst.AnimState:PlayAnimation(self.inst.anims.bedazzle, false)
 	self.inst.AnimState:PushAnimation(self.inst.anims.idle, true)
 
-
 	self.inst.SoundEmitter:PlaySound("webber2/common/spiderden/bedazzle")
 
 	self.inst.components.growable:StopGrowing()
 
 	self.inst.MiniMapEntity:SetIcon("spiderden_bedazzled.png")
 
-	local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-    if TheWorld.Map:GetPlatformAtPoint(my_x, my_z) == nil then
+	if self.inst:GetCurrentPlatform() == nil then
         self.inst.GroundCreepEntity:SetRadius(TUNING.SPIDERDEN_CREEP_RADIUS_BEDAZZLED)
     end
 
@@ -44,13 +42,10 @@ function Bedazzlement:Stop()
 	self.inst:RemoveTag("bedazzled")
 	self.inst.AnimState:HideSymbol("bedazzled_flare")
 
-
-	self.inst.components.growable:StartGrowing()
-
 	self.inst.MiniMapEntity:SetIcon("spiderden_" .. tostring(self.inst.data.stage) .. ".png")
 
-	local my_x, my_y, my_z = self.inst.Transform:GetWorldPosition()
-    if TheWorld.Map:GetPlatformAtPoint(my_x, my_z) == nil then
+	if self.inst:GetCurrentPlatform() == nil then
+		self.inst.components.growable:StartGrowing()
         self.inst.GroundCreepEntity:SetRadius(TUNING.SPIDERDEN_CREEP_RADIUS[self.inst.data.stage])
     end
 
@@ -62,8 +57,6 @@ function Bedazzlement:Stop()
 		self.bedazzle_task:Cancel()
 		self.bedazzle_task = nil
 	end
-
-	self.inst:StopUpdatingComponent(self)
 end
 
 function Bedazzlement:PacifySpiders()
@@ -75,12 +68,9 @@ function Bedazzlement:PacifySpiders()
 	end
 
     local ents = TheSim:FindEntities(x, y, z, TUNING.BEDAZZLEMENT_RADIUS[den_tier], {"spider"}, {"spiderqueen"})
-    
+
     for k, spider in pairs(ents) do
-    	if spider.components.debuffable == nil then
-            spider:AddComponent("debuffable")
-        end
-        spider.components.debuffable:AddDebuff("bedazzle_buff", "bedazzle_buff")
+		spider:AddDebuff("bedazzle_buff", "bedazzle_buff")
     end
 end
 

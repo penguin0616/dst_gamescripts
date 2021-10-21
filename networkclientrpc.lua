@@ -894,6 +894,20 @@ local RPC_HANDLERS =
             playercontroller:ClearActionHold()
         end
     end,
+
+    GetChatHistory = function(player, last_message_hash, first_message_hash)
+        if not (checkuint(last_message_hash) and
+                optuint(first_message_hash)) then
+            printinvalid("GetChatHistory", player)
+            return
+        end
+
+        --if the player is not yet spawned, "player" will be that clients userid.
+        if not player.sent_chat_history then
+            player.sent_chat_history = true
+            ChatHistory:SendChatHistory(player.userid, last_message_hash, first_message_hash)
+        end
+    end,
 }
 
 RPC = {}
@@ -906,12 +920,15 @@ for k, v in orderedPairs(RPC_HANDLERS) do
 end
 i = nil
 
+local USERID_RPCS = {}
+
 --Switch handler keys from code name to code value
 for k, v in orderedPairs(RPC) do
     RPC_HANDLERS[v] = RPC_HANDLERS[k]
     RPC_HANDLERS[k] = nil
 end
 
+--these rpc's don't need special verification because server->client communication is already trusted.
 local CLIENT_RPC_HANDLERS =
 {
     ShowPopup = function(popupcode, mod_name, show, ...)
@@ -957,6 +974,10 @@ local CLIENT_RPC_HANDLERS =
             plantregistryupdater:TakeOversizedPicture(plant, weight, beardskin, beardlength)
         end
     end,
+
+    RecieveChatHistory = function(chat_history)
+        ChatHistory:RecieveChatHistory(chat_history)
+    end,
 }
 
 CLIENT_RPC = {}
@@ -975,6 +996,7 @@ for k, v in orderedPairs(CLIENT_RPC) do
     CLIENT_RPC_HANDLERS[k] = nil
 end
 
+--these rpc's don't need special verification because server<->server communication is already trusted.
 local SHARD_RPC_HANDLERS =
 {
 }
@@ -1033,7 +1055,14 @@ local RPC_Shard_Timeline = {}
 function HandleRPC(sender, tick, code, data)
     local fn = RPC_HANDLERS[code]
     if fn ~= nil then
-        table.insert(RPC_Queue, { fn, sender, data, tick })
+        if (USERID_RPCS[fn] or type(sender) == "table") then
+            if USERID_RPCS[fn] then
+                sender = (type(sender) == "table" and sender.userid) or sender
+            end
+            table.insert(RPC_Queue, { fn, sender, data, tick })
+        else
+            print("Invalid RPC sender: expected player, got userid")
+        end
     else
         print("Invalid RPC code: "..tostring(code))
     end
@@ -1063,7 +1092,7 @@ function HandleRPCQueue()
     while i <= #RPC_Queue do
         local fn, sender, data, tick = unpack(RPC_Queue[i])
 
-        if not sender:IsValid() then
+        if type(sender) == "table" and not sender:IsValid() then
             table.remove(RPC_Queue, i)
         elseif RPC_Timeline[sender] == nil or RPC_Timeline[sender] == tick then
             table.remove(RPC_Queue, i)
@@ -1205,7 +1234,14 @@ function HandleModRPC(sender, tick, namespace, code, data)
     if MOD_RPC_HANDLERS[namespace] ~= nil then
         local fn = MOD_RPC_HANDLERS[namespace][code]
         if fn ~= nil then
-            table.insert(RPC_Queue, { fn, sender, data, tick })
+            if (USERID_RPCS[fn] or type(sender) == "table") then
+                if USERID_RPCS[fn] then
+                    sender = (type(sender) == "table" and sender.userid) or sender
+                end
+                table.insert(RPC_Queue, { fn, sender, data, tick })
+            else
+                print("Invalid RPC sender: expected player, got userid")
+            end
         else
             print("Invalid RPC code: ", namespace, code)
         end
@@ -1262,6 +1298,21 @@ end
 
 function GetShardModRPC(namespace, name)
     return SHARD_MOD_RPC[namespace][name]
+end
+
+function MarkUserIDRPC(namespace, name)
+    if not name then
+        name = namespace
+        namespace = nil
+    end
+
+    local fn
+    if namespace then
+        fn = GetModRPCHandler(namespace, name)
+    else
+        fn = RPC_HANDLERS[RPC[name]]
+    end
+    USERID_RPCS[fn] = true
 end
 
 --For gamelogic to deactivate world on a client when

@@ -202,7 +202,7 @@ local function fn()
     inst.components.workable:SetOnFinishCallback(onworked)
 
     inst:AddComponent("perishable")
-    inst.components.perishable:SetPerishTime(TUNING.SEG_TIME * 8)
+    inst.components.perishable:SetPerishTime(TUNING.SPARK_PERISH_TIME)
     inst.components.perishable:StartPerishing()
     inst.components.perishable:SetOnPerishFn(depleted)
 

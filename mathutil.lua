@@ -68,3 +68,7 @@ function math.range(start, stop, step)
     end
     return out
 end
+
+function math.diff(a, b)
+    return math.abs(a - b)
+end

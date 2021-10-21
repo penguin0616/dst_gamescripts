@@ -23,7 +23,7 @@ local FertilizersPage = Class(Widget, function(self, parent_widget, ismodded)
 	for i, v in ipairs(SORTED_FERTILIZERS) do
 		local def = FERTILIZER_DEFS[v]
 		--not operator used as a cast to boolean.
-		if def and ((not self.ismodded) == (not v.modded)) then
+		if def and ((not self.ismodded) == (not def.modded)) then
 			table.insert(fertilizer_grid_data, {fertilizer = v, def = def})
 		end
 	end

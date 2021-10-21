@@ -5,6 +5,9 @@ local Widget = Class(function(self, name)
     self.name = name
 
     self.inst = CreateEntity()
+    --if your widget does something that is based on gameplay, use these over the default, so that pausing freezes the effect.
+    self.inst.DoSimPeriodicTask = self.inst.DoPeriodicTask
+    self.inst.DoSimTaskInTime = self.inst.DoTaskInTime
     self.inst.widget = self
 	self.inst.name = name
 
@@ -16,6 +19,8 @@ local Widget = Class(function(self, name)
 
     self.inst:AddComponent("uianim")
 
+    self:UpdateWhilePaused(true)
+
     self.enabled = true
     self.shown = true
     self.focus = false
@@ -25,6 +30,18 @@ local Widget = Class(function(self, name)
     self.focus_flow = {}
     self.focus_flow_args = {}
 end)
+
+function Widget:UpdateWhilePaused(update_while_paused)
+    if update_while_paused then
+        --widgets run all their tasks on StaticUpdate instead of Update so pausing the server doesn't pause widget tasks.
+        self.inst.DoPeriodicTask = self.inst.DoStaticPeriodicTask
+        self.inst.DoTaskInTime = self.inst.DoStaticTaskInTime
+    else
+        self.inst.DoPeriodicTask = self.inst.DoSimPeriodicTask
+        self.inst.DoTaskInTime = self.inst.DoSimTaskInTime
+    end
+    self.inst.components.uianim:UpdateWhilePaused(update_while_paused)
+end
 
 function Widget:IsDeepestFocus()
     if self.focus then
@@ -265,14 +282,16 @@ end
 
 function Widget:Hide()
     self.inst.entity:Hide(false)
+    local was_visible = self.shown == true
     self.shown = false
-    self:OnHide()
+    self:OnHide(was_visible)
 end
 
 function Widget:Show()
     self.inst.entity:Show(false)
+    local was_hidden = self.shown == false
     self.shown = true
-    self:OnShow()
+    self:OnShow(was_hidden)
 end
 
 function Widget:Kill()
@@ -355,10 +374,10 @@ function Widget:SetHAnchor(anchor)
     self.inst.UITransform:SetHAnchor(anchor)
 end
 
-function Widget:OnShow()
+function Widget:OnShow(was_hidden)
 end
 
-function Widget:OnHide()
+function Widget:OnHide(was_visible)
 end
 
 function Widget:SetTooltip(str)
@@ -648,6 +667,7 @@ function Widget:SetHoverText(text, params)
             end
 
             self.hovertext_root = Widget("hovertext_root")
+            self.hovertext_root.global_widget = true
             self.hovertext_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
             if params.bg == nil or params.bg == true then

@@ -79,6 +79,9 @@ function ChatSidebar:MakeTextEntryBox(parent)
         local chat_string = self.chatbox.textbox:GetString()
         chat_string = chat_string ~= nil and chat_string:match("^%s*(.-%S)%s*$") or ""
         if chat_string ~= "" and chat_string:utf8len() <= MAX_CHAT_INPUT_LENGTH then
+            if self.chatqueue and self.chatqueue.scroll_list then
+                self.chatqueue.scroll_list:ScrollToEnd()
+            end
             TheNet:Say(chat_string)
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/Together_HUD/chat_send")
         end
@@ -117,16 +120,12 @@ function ChatSidebar:BuildChatWindow()
 
     self:MakeTextEntryBox(self.chat_pane)
 
-    self.chatqueue = self.chat_pane:AddChild(LobbyChatQueue(TheNet:GetUserID(), self.chatbox.textbox, function() --[[TODO: put sounds back in!]] end))
+    self.chatqueue = self.chat_pane:AddChild(LobbyChatQueue(self.chatbox.textbox, function() --[[TODO: put sounds back in!]] end))
     self.chatqueue:SetPosition(42,-25)
 
     self.chat_pane:SetPosition(70,320)
 
     self.chatbox:MoveToFront()
-end
-
-function ChatSidebar:ReceiveChatMessage(...)
-    self.chatqueue:OnMessageReceived(...)
 end
 
 function ChatSidebar:IsChatting()

@@ -3,27 +3,15 @@ require("tuning")
 local spicedfoods = {}
 
 local function oneaten_garlic(inst, eater)
-    if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-        not eater:HasTag("playerghost") then
-        eater.components.debuffable:AddDebuff("buff_playerabsorption", "buff_playerabsorption")
-    end
+    eater:AddDebuff("buff_playerabsorption", "buff_playerabsorption")
 end
 
 local function oneaten_sugar(inst, eater)
-    if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-        not eater:HasTag("playerghost") then
-        eater.components.debuffable:AddDebuff("buff_workeffectiveness", "buff_workeffectiveness")
-    end
+    eater:AddDebuff("buff_workeffectiveness", "buff_workeffectiveness")
 end
 
 local function oneaten_chili(inst, eater)
-    if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-        not eater:HasTag("playerghost") then
-        eater.components.debuffable:AddDebuff("buff_attack", "buff_attack")
-    end
+    eater:AddDebuff("buff_attack", "buff_attack")
 end
 
 local SPICES =

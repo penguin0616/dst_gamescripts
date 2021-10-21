@@ -229,7 +229,7 @@ function ControllerCrafting:OnControl(control, down)
 
     if down then
         if control == CONTROL_ACCEPT or control == CONTROL_ACTION then
-            if self.last_recipe_click and (GetTime() - self.last_recipe_click) < 1 then
+            if self.last_recipe_click and (GetStaticTime() - self.last_recipe_click) < 1 then
                 self.recipe_held = true
                 self.last_recipe_click = nil
             end
@@ -244,7 +244,7 @@ function ControllerCrafting:OnControl(control, down)
 				Profile:SetLastUsedSkinForItem(self.selected_recipe_by_tab_idx[self.tabidx].name, skin)
 				Profile:SetRecipeTimestamp(self.selected_recipe_by_tab_idx[self.tabidx].name, self.recipepopup.timestamp)
             end
-            self.last_recipe_click = GetTime()
+            self.last_recipe_click = GetStaticTime()
             if not self.recipe_held then
                 if not DoRecipeClick(self.owner, self.selected_recipe_by_tab_idx[self.tabidx], skin) then
                     self.owner.HUD:CloseControllerCrafting()

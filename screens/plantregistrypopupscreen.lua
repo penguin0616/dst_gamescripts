@@ -27,9 +27,13 @@ local PlantRegistryPopupScreen = Class(Screen, function(self, owner)
 	self.plantregistry = root:AddChild(PlantRegistryWidget(owner))
 
 	self.default_focus = self.plantregistry
+
+    SetAutopaused(true)
 end)
 
 function PlantRegistryPopupScreen:OnDestroy()
+    SetAutopaused(false)
+
     POPUPS.PLANTREGISTRY:Close(self.owner)
 
 	PlantRegistryPopupScreen._base.OnDestroy(self)

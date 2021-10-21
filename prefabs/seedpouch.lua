@@ -69,7 +69,8 @@ local function fn()
 
     inst:AddTag("backpack")
 
-    MakeInventoryFloatable(inst, "med", 0.125, 0.65)
+    local swap_data = {bank = "seedpouch", anim = "anim"}
+    MakeInventoryFloatable(inst, "med", 0.125, 0.65, nil, nil, swap_data)
 
     inst.entity:SetPristine()
 

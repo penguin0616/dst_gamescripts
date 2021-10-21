@@ -235,10 +235,7 @@ local function encounter_widget_update(context, w, data, index)
 		SetTruncatedLeftJustifiedString(w.widgets.playername, data.name or "")
 
 		local data_str = data.last_seen_date ~= nil and str_date(data.last_seen_date) or STRINGS.UI.MORGUESCREEN.UNKNOWN_DAYS -- todo: make this localization friendly
-		local filtered_text = data.server_name
-		if TheSim:IsSteamChinaClient() then
-			filtered_text = TheSim:ApplyLocalWordFilter(filtered_text, TEXT_FILTER_CTX_UNKNOWN)
-		end
+		local filtered_text = ApplyLocalWordFilter(data.server_name, TEXT_FILTER_CTX_SERVERNAME)
 		SetTruncatedLeftJustifiedString(w.widgets.desc, subfmt(STRINGS.UI.MORGUESCREEN.ENCOUNTERS.DESC, {date = data_str, server_name = ServerPreferences:IsNameAndDescriptionHidden(data.server_name) and STRINGS.UI.SERVERLISTINGSCREEN.HIDDEN_NAME or filtered_text or STRINGS.UI.MORGUESCREEN.UNKNOWN_DAYS}))
 
 		if data.time_played_with > 0 then

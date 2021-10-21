@@ -83,9 +83,17 @@ local GridGroomerPopupScreen = Class(Screen, function(self, target, owner_player
     TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
 
     self:DoFocusHookups()
+
+    SetAutopaused(true)
 end)
 
+function GridGroomerPopupScreen:OffsetServerPausedWidget(serverpausewidget)
+	serverpausewidget:SetOffset(-650,0)
+end
+
 function GridGroomerPopupScreen:OnDestroy()
+    SetAutopaused(false)
+
     TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
     self._base.OnDestroy(self)
 

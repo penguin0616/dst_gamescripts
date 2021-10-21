@@ -82,7 +82,7 @@ function Upgradeable:Upgrade(obj, upgrade_performer)
 	end
 
 	if self.onupgradefn then
-		self.onupgradefn(self.inst, upgrade_performer)
+		self.onupgradefn(self.inst, upgrade_performer, obj)
 	end
 
 	if self.numupgrades >= self.upgradesperstage then

@@ -445,9 +445,9 @@ local function OnFertilizedWithFormula(inst, value)
 end
 
 local function OnFertilizedWithCompost(inst, value)
-	if value > 0 and inst.components.debuffable ~= nil and inst.components.health ~= nil and not inst.components.health:IsDead() then
+	if value > 0 and inst.components.health ~= nil and not inst.components.health:IsDead() then
 		local healing = TUNING.WORMWOOD_COMPOST_HEAL_VALUES[math.ceil(value / 8)] or TUNING.WORMWOOD_COMPOST_HEAL_VALUES[1]
-		inst.components.debuffable:AddDebuff("compostheal_buff", "compostheal_buff", {duration = healing * (TUNING.WORMWOOD_COMPOST_HEALOVERTIME_TICK/TUNING.WORMWOOD_COMPOST_HEALOVERTIME_HEALTH)})
+        inst:AddDebuff("compostheal_buff", "compostheal_buff", {duration = healing * (TUNING.WORMWOOD_COMPOST_HEALOVERTIME_TICK/TUNING.WORMWOOD_COMPOST_HEALOVERTIME_HEALTH)})
 	end
 end
 

@@ -1349,6 +1349,8 @@ function MakeInventoryFloatable(inst, size, offset, scale, swap_bank, float_inde
 
     if swap_bank then
         inst.components.floater:SetBankSwapOnFloat(swap_bank, float_index, swap_data)
+    elseif swap_data then
+        inst.components.floater:SetSwapData(swap_data)
     end
 end
 

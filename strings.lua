@@ -2707,11 +2707,8 @@ STRINGS =
         GLASSCUTTER = "Glass Cutter",
 
         MOON_FISSURE = "Celestial Fissure",
-        MOON_ALTAR =
-        {
-            MOON_ALTAR_WIP = "Partially Assembled Altar",
-            MOON_ALTAR = "Celestial Altar",
-        },
+        MOON_ALTAR_WIP = "Partially Assembled Altar",
+        MOON_ALTAR = "Celestial Altar",
         MOON_ALTAR_IDOL = "Celestial Altar Idol",
         MOON_ALTAR_GLASS = "Celestial Altar Base",
         MOON_ALTAR_SEED = "Celestial Altar Orb",
@@ -5856,6 +5853,7 @@ STRINGS.UI =
         BUILD = "Build",
         PROTOTYPE = "Prototype",
         RESEARCH = "Research",
+        GAMEPAUSED = "Unpause the game to craft this.",
         TABACTION =
         {
             CARTOGRAPHY = "Scribe",
@@ -6368,7 +6366,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Waterlogged\nBeta Build",
+		MAINBANNER_BETA_TITLE = "October QoL\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -6939,6 +6937,7 @@ STRINGS.UI =
         TITLE = "Game Options",
         GRAPHICS = "Graphics",
         SETTINGS = "Settings",
+        ADVANCED = "Advanced",
         CONTROLS = "Controls",
         LANGUAGES = "Languages",
         LANG_TITLE = "Language Options",
@@ -6946,6 +6945,7 @@ STRINGS.UI =
         MORE = "More",
         TOOLTIP_GRAPHICS = "Modify the graphics settings",
         TOOLTIP_SETTINGS = "Modify features of the game and user interface",
+        TOOLTIP_ADVANCED = "Modify advanced features of the game and user interface",
         TOOLTIP_CONTROLS = "Rebind which input does which in-game action",
         TOOLTIP_LANGUAGES = "Select display language",
 		TOOLTIP_CONTROLS_CONSOLE = "Check which control does which in-game action",
@@ -6988,8 +6988,11 @@ STRINGS.UI =
         HUDSIZE = "HUD Size:",
         VIBRATION = "Vibration:",
         WATHGRITHRFONT = "Wigfrid's Umlauts:",
+        WALTERCAMERA = "Campfire Camera:",
         BOATCAMERA = "Seafaring Camera:",
         BACKPACKMODE = "Backpack Layout:",
+        AUTOPAUSE = "Auto-pause:",
+        CONSOLEAUTOPAUSE = "Console Auto-pause:",
 		INTEGRATEDBACKPACK_DISABLED = "Separated",
 		INTEGRATEDBACKPACK_ENABLED = "Integrated",
         DATACOLLECTION = "Data Collection:",
@@ -7015,6 +7018,7 @@ STRINGS.UI =
         ANIMATED_HEADS = "Moving Head Icons:",
         SHOWPASSWORD = "Show Passwords:",
 		SERVER_NAME_PROFANITY_FILTER = "Filter Server Names:",
+		SERVER_NAME_PROFANITY_CHAT_FILTER = "Steam Chat Filtering:",
         SNAPSHOTS = "Server Snapshots",
         INPUT = "Input Device:",
         ACTION = "Action",
@@ -7336,6 +7340,16 @@ STRINGS.UI =
         ISSUE = "Report an Issue",
         SERVERACTIONS = "Server Commands",
         CLOSE = "Close",
+        PAUSED_DST_TITLE = "Paused!",
+        AUTOPAUSED_DST_TITLE = "Auto-Paused!",
+        PAUSED_DST_SUBTITLE = "Seriously. It is!",
+        PAUSE_SERVER = "Pause Server",
+        UNPAUSE_SERVER = "Unpause Server",
+
+        AUTOPAUSE_TEXT = "The game is auto-paused.",
+        PLAYERPAUSED_TEXT = "{player} paused the game.",
+        HOSTPAUSED_TEXT = "The server host has paused the game.",
+        SELFPAUSED_TEXT = "You have paused the game.",
     },
 
 	WORDPREDICTIONWIDET =
@@ -8035,6 +8049,7 @@ STRINGS.UI =
         SERVERTYPE = "Server Type:",
         ISEMPTY = "Show Empty Servers:",
         ISFULL = "Show Full Servers:",
+        ISPAUSED = "Hide Paused Servers:",
         MINCURRPLAYERS = "Min Players Active",
         MAXCURRPLAYERS = "Max Players Active",
         MAXSERVERSIZE = "Max Players",--"Max Server Size",
@@ -8072,6 +8087,7 @@ STRINGS.UI =
         CLIENT_MODS_DISABLED_BODY = "Your client mods will be temporarily disabled while playing on this server.",
         PASSWORD_ICON_HOVER = "Passworded",
         DEDICATED_ICON_HOVER = "Dedicated Server",
+        PAUSED = "Paused",
 		DEDICATED_KLEI_ICON_HOVER = "Klei Official Server",
         FRIEND_ICON_HOVER = "Friends Playing",
         FRIEND_SERVER_ICON_HOVER = "Friend-Hosted",
@@ -8089,6 +8105,8 @@ STRINGS.UI =
         OFFLINE_MODE_BODY_PS4 = "You are currently in offline mode and cannot join online worlds. Please log in and try again.",
         OFFLINEWARNINGTITLE = "Offline World",
         OFFLINEMODEBODYJOIN = "Are you sure you want to join an offline world? You will not be able to receive or use Collection Items in this world.",
+        PAUSEDWARNING_TITLE = "Paused World",
+        PAUSEDWARNING_BODY = "Are you sure you want to join a paused world? You will not be able to play until the server is unpaused.",
         NO_CONNECTION_TO_MASTER_SERVER = "Network Error",
         NO_CONNECTION_TO_MASTER_SERVER_DESC = "Failed to connect to the master server.\nPlease check your network connection.",
         CHAR_AGE_1 = "Survived ",
@@ -8359,6 +8377,7 @@ STRINGS.UI =
         UNKNOWN_USER_NAME = "[unknown]", -- this is consistent with what steam when it can't get a player name
         SNAPSHOTS_TITLE = "Snapshots: ",
         RESTORE_SNAPSHOT = "Restore Snapshot",
+        SYSTEMMESSAGE = "Server",
     },
 
     LOBBYSCREEN =
@@ -10356,6 +10375,7 @@ STRINGS.UI =
             "Menu Misc 3", --controller
             "Menu Misc 4", --controller
             "Inspect Self",
+            "Pause Server",
         },
 
         DEVICE_TITLE = "Controls",

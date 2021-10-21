@@ -3633,6 +3633,16 @@ table.insert(prefs, CreatePrefabSkin("researchlab3_crystal",
 	release_group = 95,
 }))
 
+table.insert(prefs, CreatePrefabSkin("researchlab3_monster",
+{
+	base_prefab = "researchlab3",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) researchlab3_init_fn(inst, "researchlab3_monster") end,
+	skin_tags = { "HALLOWED", "MANIPULATOR", "CRAFTABLE", },
+	release_group = 124,
+}))
+
 table.insert(prefs, CreatePrefabSkin("researchlab3_nature",
 {
 	base_prefab = "researchlab3",
@@ -4834,6 +4844,42 @@ table.insert(prefs, CreatePrefabSkin("walrushat_blue",
 	release_group = 95,
 }))
 
+table.insert(prefs, CreatePrefabSkin("walter_bee",
+{
+	base_prefab = "walter",
+	type = "base",
+	rarity = "Event",
+	skin_tags = { "COSTUME", "BASE", "WALTER", },
+	bigportrait_anim = { build = "bigportraits/walter_bee.xml", symbol = "walter_bee_oval.tex"},
+	skins = { ghost_skin = "ghost_walter", normal_skin = "walter_bee", },
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("walter_bee_d",
+{
+	base_prefab = "walter",
+	type = "base",
+	rarity = "HeirloomElegant",
+	skin_tags = { "COSTUME", "BASE", "WALTER", },
+	share_bigportrait_name = "walter_bee",
+	skins = { ghost_skin = "ghost_walter", normal_skin = "walter_bee_d", },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("walter_bee_p",
+{
+	base_prefab = "walter",
+	type = "base",
+	build_name_override = "walter_bee_d",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "COSTUME", "BASE", "WALTER", },
+	share_bigportrait_name = "walter_bee",
+	skins = { ghost_skin = "ghost_walter", normal_skin = "walter_bee_d", },
+	release_group = 124,
+}))
+
 table.insert(prefs, CreatePrefabSkin("walter_detective",
 {
 	base_prefab = "walter",
@@ -4929,6 +4975,29 @@ table.insert(prefs, CreatePrefabSkin("walter_victorian",
 	release_group = 115,
 }))
 
+table.insert(prefs, CreatePrefabSkin("walterhat_bee",
+{
+	base_prefab = "walterhat",
+	type = "item",
+	rarity = "HeirloomDistinguished",
+	init_fn = function(inst) walterhat_init_fn(inst, "walterhat_bee") end,
+	skin_tags = { "COSTUME", "WALTERHAT", "CRAFTABLE", },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("walterhat_beep",
+{
+	base_prefab = "walterhat",
+	type = "item",
+	build_name_override = "walterhat_bee",
+	rarity = "Distinguished",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) walterhat_init_fn(inst, "walterhat_bee") end,
+	skin_tags = { "COSTUME", "WALTERHAT", "CRAFTABLE", },
+	release_group = 124,
+}))
+
 table.insert(prefs, CreatePrefabSkin("walterhat_detective",
 {
 	base_prefab = "walterhat",
@@ -5004,6 +5073,51 @@ table.insert(prefs, CreatePrefabSkin("walterhat_victorian",
 	init_fn = function(inst) walterhat_init_fn(inst, "walterhat_victorian") end,
 	skin_tags = { "VICTORIAN", "WALTERHAT", "CRAFTABLE", },
 	release_group = 115,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wanda_bishop",
+{
+	base_prefab = "wanda",
+	type = "base",
+	rarity = "Event",
+	skin_tags = { "COSTUME", "BASE", "WANDA", },
+	bigportrait_anim = { build = "bigportraits/wanda_bishop.xml", symbol = "wanda_bishop_oval.tex"},
+	skins = { ghost_skin = "ghost_wanda_build", normal_skin = "wanda_bishop", old_skin = "wanda_bishop_old", young_skin = "wanda_bishop_young", },
+	has_alternate_for_body = { "wanda_bishop_old", },
+	has_alternate_for_skirt = { "wanda_bishop_old", },
+	feet_cuff_size = { wanda_bishop = 1, wanda_bishop_old = 1, wanda_bishop_young = 1, },
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wanda_bishop_d",
+{
+	base_prefab = "wanda",
+	type = "base",
+	rarity = "HeirloomElegant",
+	skin_tags = { "COSTUME", "BASE", "WANDA", },
+	share_bigportrait_name = "wanda_bishop",
+	skins = { ghost_skin = "ghost_wanda_build", normal_skin = "wanda_bishop_d", old_skin = "wanda_bishop_d_old", young_skin = "wanda_bishop_d_young", },
+	has_alternate_for_body = { "wanda_bishop_d_old", },
+	has_alternate_for_skirt = { "wanda_bishop_d_old", },
+	feet_cuff_size = { wanda_bishop_d = 1, wanda_bishop_d_old = 1, wanda_bishop_d_young = 1, },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wanda_bishop_p",
+{
+	base_prefab = "wanda",
+	type = "base",
+	build_name_override = "wanda_bishop_d",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "COSTUME", "BASE", "WANDA", },
+	share_bigportrait_name = "wanda_bishop",
+	skins = { ghost_skin = "ghost_wanda_build", normal_skin = "wanda_bishop_d", old_skin = "wanda_bishop_d_old", young_skin = "wanda_bishop_d_young", },
+	has_alternate_for_body = { "wanda_bishop_d_old", },
+	has_alternate_for_skirt = { "wanda_bishop_d_old", },
+	feet_cuff_size = { wanda_bishop_d = 1, wanda_bishop_d_old = 1, wanda_bishop_d_young = 1, },
+	release_group = 124,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wanda_formal",
@@ -5121,6 +5235,42 @@ table.insert(prefs, CreatePrefabSkin("warly_candyman",
 	bigportrait_anim = { build = "bigportraits/warly_candyman.xml", symbol = "warly_candyman_oval.tex"},
 	skins = { ghost_skin = "ghost_warly_build", normal_skin = "warly_candyman", },
 	release_group = 77,
+}))
+
+table.insert(prefs, CreatePrefabSkin("warly_carrat",
+{
+	base_prefab = "warly",
+	type = "base",
+	rarity = "Event",
+	skin_tags = { "COSTUME", "BASE", "WARLY", },
+	bigportrait_anim = { build = "bigportraits/warly_carrat.xml", symbol = "warly_carrat_oval.tex"},
+	skins = { ghost_skin = "ghost_warly_build", normal_skin = "warly_carrat", },
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("warly_carrat_d",
+{
+	base_prefab = "warly",
+	type = "base",
+	rarity = "HeirloomElegant",
+	skin_tags = { "COSTUME", "BASE", "WARLY", },
+	share_bigportrait_name = "warly_carrat",
+	skins = { ghost_skin = "ghost_warly_build", normal_skin = "warly_carrat_d", },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("warly_carrat_p",
+{
+	base_prefab = "warly",
+	type = "base",
+	build_name_override = "warly_carrat_d",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "COSTUME", "BASE", "WARLY", },
+	share_bigportrait_name = "warly_carrat",
+	skins = { ghost_skin = "ghost_warly_build", normal_skin = "warly_carrat_d", },
+	release_group = 124,
 }))
 
 table.insert(prefs, CreatePrefabSkin("warly_chef",
@@ -8186,6 +8336,45 @@ table.insert(prefs, CreatePrefabSkin("wormwood_rose",
 	release_group = 67,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wormwood_saladmander",
+{
+	base_prefab = "wormwood",
+	type = "base",
+	rarity = "Event",
+	skin_tags = { "COSTUME", "BASE", "WORMWOOD", },
+	bigportrait_anim = { build = "bigportraits/wormwood_saladmander.xml", symbol = "wormwood_saladmander_oval.tex"},
+	skins = { ghost_skin = "ghost_wormwood_saladmander", normal_skin = "wormwood_saladmander", stage_2 = "wormwood_saladmander_stage2", stage_3 = "wormwood_saladmander_stage3", stage_4 = "wormwood_saladmander_stage4", },
+	has_alternate_for_body = { "wormwood_saladmander", "wormwood_saladmander_stage2", "wormwood_saladmander_stage3", "wormwood_saladmander_stage4", },
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wormwood_saladmander_d",
+{
+	base_prefab = "wormwood",
+	type = "base",
+	rarity = "HeirloomElegant",
+	skin_tags = { "COSTUME", "BASE", "WORMWOOD", },
+	share_bigportrait_name = "wormwood_saladmander",
+	skins = { ghost_skin = "ghost_wormwood_saladmander", normal_skin = "wormwood_saladmander_d", stage_2 = "wormwood_saladmander_d_stage2", stage_3 = "wormwood_saladmander_d_stage3", stage_4 = "wormwood_saladmander_d_stage4", },
+	has_alternate_for_body = { "wormwood_saladmander_d", "wormwood_saladmander_stage2", "wormwood_saladmander_stage3", "wormwood_saladmander_stage4", },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wormwood_saladmander_p",
+{
+	base_prefab = "wormwood",
+	type = "base",
+	build_name_override = "wormwood_saladmander_d",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "COSTUME", "BASE", "WORMWOOD", },
+	share_bigportrait_name = "wormwood_saladmander",
+	skins = { ghost_skin = "ghost_wormwood_saladmander", normal_skin = "wormwood_saladmander_d", stage_2 = "wormwood_saladmander_d_stage2", stage_3 = "wormwood_saladmander_d_stage3", stage_4 = "wormwood_saladmander_d_stage4", },
+	has_alternate_for_body = { "wormwood_saladmander_d", "wormwood_saladmander_stage2", "wormwood_saladmander_stage3", "wormwood_saladmander_stage4", },
+	release_group = 124,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wormwood_shadow",
 {
 	base_prefab = "wormwood",
@@ -8270,6 +8459,51 @@ table.insert(prefs, CreatePrefabSkin("wortox_nature",
 	torso_untuck_wide_builds = { "wortox_nature", },
 	has_alternate_for_body = { "wortox_nature", },
 	release_group = 121,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wortox_noeyeddeer",
+{
+	base_prefab = "wortox",
+	type = "base",
+	rarity = "Event",
+	skin_tags = { "BASE", "WORTOX", "COSTUME", },
+	bigportrait_anim = { build = "bigportraits/wortox_noeyeddeer.xml", symbol = "wortox_noeyeddeer_oval.tex"},
+	skins = { ghost_skin = "ghost_wortox_noeyeddeer", normal_skin = "wortox_noeyeddeer", },
+	torso_tuck_builds = { "wortox_noeyeddeer", },
+	torso_untuck_wide_builds = { "wortox_noeyeddeer", },
+	has_alternate_for_body = { "wortox_noeyeddeer", },
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wortox_noeyeddeer_d",
+{
+	base_prefab = "wortox",
+	type = "base",
+	rarity = "HeirloomElegant",
+	skin_tags = { "BASE", "WORTOX", "COSTUME", },
+	share_bigportrait_name = "wortox_noeyeddeer",
+	skins = { ghost_skin = "ghost_wortox_noeyeddeer", normal_skin = "wortox_noeyeddeer_d", },
+	torso_tuck_builds = { "wortox_noeyeddeer_d", },
+	torso_untuck_wide_builds = { "wortox_noeyeddeer_d", },
+	has_alternate_for_body = { "wortox_noeyeddeer_d", },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wortox_noeyeddeer_p",
+{
+	base_prefab = "wortox",
+	type = "base",
+	build_name_override = "wortox_noeyeddeer_d",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "BASE", "WORTOX", "COSTUME", },
+	share_bigportrait_name = "wortox_noeyeddeer",
+	skins = { ghost_skin = "ghost_wortox_noeyeddeer", normal_skin = "wortox_noeyeddeer_d", },
+	torso_tuck_builds = { "wortox_noeyeddeer_d", },
+	torso_untuck_wide_builds = { "wortox_noeyeddeer_d", },
+	has_alternate_for_body = { "wortox_noeyeddeer_d", },
+	release_group = 124,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wortox_none",
@@ -8416,6 +8650,48 @@ table.insert(prefs, CreatePrefabSkin("wurt_squid",
 	has_alternate_for_body = { "wurt_squid", },
 	feet_cuff_size = { wurt_squid = -1, wurt_squid_powerup = -1, },
 	release_group = 106,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wurt_toadstool",
+{
+	base_prefab = "wurt",
+	type = "base",
+	rarity = "Event",
+	skin_tags = { "COSTUME", "BASE", "WURT", },
+	bigportrait_anim = { build = "bigportraits/wurt_toadstool.xml", symbol = "wurt_toadstool_oval.tex"},
+	skins = { ghost_skin = "ghost_wurt_toadstool", normal_skin = "wurt_toadstool", powerup = "wurt_toadstool_powerup", },
+	has_alternate_for_body = { "wurt_toadstool", },
+	feet_cuff_size = { wurt_toadstool = -1, wurt_toadstool_powerup = -1, },
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wurt_toadstool_d",
+{
+	base_prefab = "wurt",
+	type = "base",
+	rarity = "HeirloomElegant",
+	skin_tags = { "COSTUME", "BASE", "WURT", },
+	share_bigportrait_name = "wurt_toadstool",
+	skins = { ghost_skin = "ghost_wurt_toadstool", normal_skin = "wurt_toadstool_d", powerup = "wurt_toadstool_d_powerup", },
+	has_alternate_for_body = { "wurt_toadstool_d", },
+	feet_cuff_size = { wurt_toadstool_d = -1, wurt_toadstool_d_powerup = -1, },
+	marketable = true,
+	release_group = 124,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wurt_toadstool_p",
+{
+	base_prefab = "wurt",
+	type = "base",
+	build_name_override = "wurt_toadstool_d",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "COSTUME", "BASE", "WURT", },
+	share_bigportrait_name = "wurt_toadstool",
+	skins = { ghost_skin = "ghost_wurt_toadstool", normal_skin = "wurt_toadstool_d", powerup = "wurt_toadstool_d_powerup", },
+	has_alternate_for_body = { "wurt_toadstool_d", },
+	feet_cuff_size = { wurt_toadstool_d = -1, wurt_toadstool_d_powerup = -1, },
+	release_group = 124,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wurt_victorian",

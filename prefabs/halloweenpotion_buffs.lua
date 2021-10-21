@@ -59,16 +59,11 @@ local puff_fx = {"halloween_firepuff_1", "halloween_firepuff_2", "halloween_fire
 local puff_fx_cold = {"halloween_firepuff_cold_1", "halloween_firepuff_cold_2", "halloween_firepuff_cold_3", }
 
 local function potion_oneatenfn(inst, eater)
-    if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-        not eater:HasTag("playerghost") then
-
-        if inst.potion_tunings.WISECRACKER ~= nil and eater.components.talker ~= nil and
-            not eater.components.debuffable:HasDebuff(inst.buff_id) then
+    eater:AddDebuff(inst.buff_id, inst.buff_prefab, nil, nil, function()
+        if inst.potion_tunings.WISECRACKER ~= nil and eater.components.talker ~= nil and not eater:HasDebuff(inst.buff_id) then
             eater.components.talker:Say(GetString(eater, inst.potion_tunings.WISECRACKER))
         end
-        eater.components.debuffable:AddDebuff(inst.buff_id, inst.buff_prefab)
-    end
+    end)
 end
 
 local function potion_onputinfire(inst, target)

@@ -411,9 +411,11 @@ function c_give(prefab, count, dontselect)
     prefab = string.lower(prefab)
 
     if MainCharacter ~= nil then
+        local first_inst = nil
         for i = 1, count or 1 do
             local inst = DebugSpawn(prefab)
             if inst ~= nil then
+                if first_inst == nil then first_inst = inst end
                 print("giving ", inst)
                 MainCharacter.components.inventory:GiveItem(inst)
                 if not dontselect then
@@ -422,6 +424,7 @@ function c_give(prefab, count, dontselect)
                 SuUsed("c_give_"..inst.prefab)
             end
         end
+        return first_inst
     end
 end
 

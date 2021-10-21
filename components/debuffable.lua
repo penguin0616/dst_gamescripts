@@ -133,7 +133,7 @@ function Debuffable:OnSave()
         local saved--[[, refs]] = v.inst:GetSaveRecord()
         data[k] = saved
     end
-    return { debuffs = data }
+    return { debuffs = data, add_component_if_missing = true }
 end
 
 function Debuffable:OnLoad(data)

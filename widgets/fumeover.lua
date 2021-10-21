@@ -60,6 +60,7 @@ end
 local FumeOver =  Class(Widget, function(self, owner)
     self.owner = owner
     Widget._ctor(self, "FumeOver")
+    self:UpdateWhilePaused(false)
 
     self:SetClickable(false)
 
@@ -165,6 +166,7 @@ function FumeOver:DoUpdate(layer, dt)
 end
 
 function FumeOver:OnUpdate(dt)
+    if TheNet:IsServerPaused() then return end
     -- ignore 0 interval
     -- ignore abnormally large intervals as they will destabilize the math in here
     if dt <= 0 or dt > 0.1 then

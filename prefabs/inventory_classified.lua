@@ -273,7 +273,7 @@ end
 
 local function QueueRefresh(inst, delay)
     if inst._refreshtask == nil then
-        inst._refreshtask = inst:DoTaskInTime(delay, Refresh)
+        inst._refreshtask = inst:DoStaticTaskInTime(delay, Refresh)
         inst._busy = true
     end
 end
@@ -400,27 +400,27 @@ local function RegisterNetListeners(inst)
     --Delay dirty handlers by one frame so that new items have time to replicate locally
 
     inst:ListenForEvent("activedirty", function()
-        QueueSlotTask(inst, inst._active, inst:DoTaskInTime(0, OnActiveDirty, inst._active))
+        QueueSlotTask(inst, inst._active, inst:DoStaticTaskInTime(0, OnActiveDirty, inst._active))
         CancelRefresh(inst)
     end)
 
     for i, v in ipairs(inst._items) do
         inst:ListenForEvent("items["..tostring(i).."]dirty", function()
-            QueueSlotTask(inst, v, inst:DoTaskInTime(0, OnItemsDirty, i, v))
+            QueueSlotTask(inst, v, inst:DoStaticTaskInTime(0, OnItemsDirty, i, v))
             CancelRefresh(inst)
         end)
     end
 
     for k, v in pairs(inst._equips) do
         inst:ListenForEvent("equips["..k.."]dirty", function()
-            QueueSlotTask(inst, v, inst:DoTaskInTime(0, OnEquipsDirty, k, v))
+            QueueSlotTask(inst, v, inst:DoStaticTaskInTime(0, OnEquipsDirty, k, v))
             CancelRefresh(inst)
         end)
     end
 
     inst:ListenForEvent("stackitemdirty", function(world, item)
         if IsHolding(inst, item) then
-            QueueSlotTask(inst, item, inst:DoTaskInTime(0, OnStackItemDirty, item))
+            QueueSlotTask(inst, item, inst:DoStaticTaskInTime(0, OnStackItemDirty, item))
             CancelRefresh(inst)
         end
     end, TheWorld)
@@ -1240,7 +1240,7 @@ local function fn()
         inst.IsBusy = IsBusy
 
         --Delay net listeners until after initial values are deserialized
-        inst:DoTaskInTime(0, RegisterNetListeners)
+        inst:DoStaticTaskInTime(0, RegisterNetListeners)
         return inst
     end
 

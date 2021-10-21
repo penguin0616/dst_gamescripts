@@ -28,14 +28,41 @@ function Networking_SlashCmd(guid, userid, cmd)
 end
 
 function Networking_Announcement(message, colour, announce_type)
-    if ThePlayer ~= nil and ThePlayer.HUD ~= nil and ThePlayer.HUD.eventannouncer.inst:IsValid() then
-        ThePlayer.HUD.eventannouncer:ShowNewAnnouncement(message, colour, announce_type)
+    if message then
+        colour = colour or {1, 1, 1, 1}
+        if not announce_type or announce_type == "" then
+            announce_type = "default"
+        end
+        ChatHistory:OnAnnouncement(message, colour, announce_type)
+    end
+end
+
+function Networking_SkinAnnouncement(user_name, user_colour, skin_name)
+    if user_name and user_colour and skin_name then
+        ChatHistory:OnSkinAnnouncement(user_name, user_colour, skin_name)
     end
 end
 
 function Networking_SystemMessage(message)
-    if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
-        ThePlayer.HUD.controls.networkchatqueue:DisplaySystemMessage(message)
+    if message then
+        ChatHistory:OnSystemMessage(message)
+    end
+end
+
+function Networking_Say(guid, userid, name, prefab, message, colour, whisper, isemote, user_vanity)
+    if message ~= nil and message:utf8len() > MAX_CHAT_INPUT_LENGTH then
+        return
+    end
+
+	local netid = TheNet:GetNetIdForUser(userid)
+
+    local entity = Ents[guid]
+    if not isemote and entity ~= nil and entity.components.talker ~= nil then
+        entity.components.talker:Say(not entity:HasTag("mime") and message or "", nil, nil, nil, true, colour, TEXT_FILTER_CTX_CHAT, netid)
+    end
+
+    if message then
+        ChatHistory:OnSay(guid, userid, netid, name, prefab, message, colour, whisper, isemote, user_vanity)
     end
 end
 
@@ -104,55 +131,14 @@ function Networking_VoteAnnouncement(commandid, targetname, passed)
     end
 end
 
-function Networking_SkinAnnouncement(user_name, user_colour, skin_name)
-    if ThePlayer ~= nil and ThePlayer.HUD ~= nil and ThePlayer.HUD.eventannouncer.inst:IsValid() then
-        ThePlayer.HUD.eventannouncer:ShowSkinAnnouncement(user_name, user_colour, skin_name)
-    end
-end
-
 function Networking_RollAnnouncement(userid, name, prefab, colour, rolls, max)
-    local hud = ThePlayer ~= nil and ThePlayer.HUD or nil
-    if hud ~= nil then
-        name = hud.controls.networkchatqueue:GetDisplayName(name, prefab)
-        Networking_Announcement(string.format(STRINGS.UI.NOTIFICATION.DICEROLLED, name, table.concat(rolls, ", "), max), colour, "dice_roll")
-    end
+    Networking_Announcement(string.format(STRINGS.UI.NOTIFICATION.DICEROLLED, ChatHistory:GetDisplayName(name, prefab), table.concat(rolls, ", "), max), colour, "dice_roll")
 end
 
-function Networking_Say(guid, userid, name, prefab, message, colour, whisper, isemote, user_vanity)
-    if message ~= nil and message:utf8len() > MAX_CHAT_INPUT_LENGTH then
-        return
-    end
-    local entity = Ents[guid]
-    if not isemote and entity ~= nil and entity.components.talker ~= nil then
-        entity.components.talker:Say(not entity:HasTag("mime") and message or "", nil, nil, nil, true, colour)
-    end
-    if message ~= nil then
-        if not (whisper or isemote) then
-            local screen = TheFrontEnd:GetActiveScreen()
-            if screen ~= nil and screen.ReceiveChatMessage then
-                screen:ReceiveChatMessage(name, prefab, message, colour, whisper)
-            end
-        end
-        local hud = ThePlayer ~= nil and ThePlayer.HUD or nil
-        if hud ~= nil
-            and (not whisper
-                or (entity ~= nil
-                    and (hud:HasTargetIndicator(entity) or
-                        entity.entity:FrustumCheck()))) then
-            if isemote then
-                hud.controls.networkchatqueue:DisplayEmoteMessage(name, prefab, message, colour, whisper)
-            else
-                local profileflair = GetRemotePlayerVanityItem(user_vanity or {}, "profileflair")
-                hud.controls.networkchatqueue:OnMessageReceived(name, prefab, message, colour, whisper, profileflair)
-            end
-        end
-    end
-end
-
-function Networking_Talk(guid, message, duration)
+function Networking_Talk(guid, message, duration, text_filter_context, original_author)
     local entity = Ents[guid]
     if entity ~= nil and entity.components.talker ~= nil then
-        entity.components.talker:Say(message, duration, nil, nil, true)
+        entity.components.talker:Say(message, duration, nil, nil, true, nil, text_filter_context, original_author)
     end
 end
 

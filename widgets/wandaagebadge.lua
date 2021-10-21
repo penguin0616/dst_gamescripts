@@ -8,7 +8,7 @@ local function OnEffigyDeactivated(inst)
 end
 
 local OldAgeBadge = Class(Badge, function(self, owner)
-    Badge._ctor(self, "status_oldage", owner, { .8, .8, .8, 1 })
+    Badge._ctor(self, "status_oldage", owner, { .8, .8, .8, 1 }, nil, nil, nil, true)
 
 	self.rate_time = 0
 	self.warning_precent = 0.1
@@ -19,11 +19,13 @@ local OldAgeBadge = Class(Badge, function(self, owner)
     self.year_hand:GetAnimState():SetBank("status_oldage")
     self.year_hand:GetAnimState():SetBuild("status_oldage")
 	self.year_hand:GetAnimState():PlayAnimation("year")
+    self.year_hand:GetAnimState():AnimateWhilePaused(false)
 
     self.days_hand = self.underNumber:AddChild(UIAnim())
     self.days_hand:GetAnimState():SetBank("status_oldage")
     self.days_hand:GetAnimState():SetBuild("status_oldage")
 	self.days_hand:GetAnimState():PlayAnimation("day")
+    self.days_hand:GetAnimState():AnimateWhilePaused(false)
 
     self.effigyanim = self.underNumber:AddChild(UIAnim())
     self.effigyanim:GetAnimState():SetBank("status_health")
@@ -31,6 +33,7 @@ local OldAgeBadge = Class(Badge, function(self, owner)
     self.effigyanim:GetAnimState():PlayAnimation("effigy_deactivate")
     self.effigyanim:Hide()
     self.effigyanim:SetClickable(false)
+    self.effigyanim:GetAnimState():AnimateWhilePaused(false)
     self.effigyanim.inst:ListenForEvent("animover", OnEffigyDeactivated)
     self.effigy = false
     self.effigybreaksound = nil
@@ -45,6 +48,18 @@ local OldAgeBadge = Class(Badge, function(self, owner)
             self.inst:ListenForEvent("onremove", self._onremovecorrosive, debuff)
         end
     end, owner)
+
+    self.inst:ListenForEvent("serverpauseddirty", function()
+        if TheNet:IsServerPaused() then
+            TheFrontEnd:GetSound():KillSound("pulse_loop")
+        else
+            if self.playing_pulse_loop == "up" then
+                TheFrontEnd:GetSound():PlaySound("wanda2/characters/wanda/up_health_LP", "pulse_loop")
+            elseif self.playing_pulse_loop == "down" then
+                TheFrontEnd:GetSound():PlaySound("wanda2/characters/wanda/down_health_LP", "pulse_loop")
+            end
+        end
+    end, TheWorld)
 
     self.hots = {}
     self._onremovehots = function(debuff)
@@ -97,6 +112,8 @@ function OldAgeBadge:SetPercent(val, max, penaltypercent)
 end
 
 function OldAgeBadge:OnUpdate(dt)
+    if TheNet:IsServerPaused() then return end
+
 	local player_classified = self.owner.player_classified
 	if player_classified == nil then
 		return
@@ -137,6 +154,7 @@ function OldAgeBadge:PulseOff()
     self.pulse:GetAnimState():PlayAnimation("off")
     self.pulse:GetAnimState():PushAnimation("idle")
     TheFrontEnd:GetSound():KillSound("pulse_loop")
+    self.playing_pulse_loop = nil
     self.pulsing = nil
 end
 
@@ -147,10 +165,12 @@ function OldAgeBadge:Pulse(color)
         self:PulseGreen()
         frontend_sound:KillSound("pulse_loop")
         frontend_sound:PlaySound("wanda2/characters/wanda/up_health_LP", "pulse_loop")
+        self.playing_pulse_loop = "up"
         frontend_sound:PlaySound("dontstarve/HUD/health_up")
     else
         self:PulseRed()
         frontend_sound:KillSound("pulse_loop")
+        self.playing_pulse_loop = "down"
 		frontend_sound:PlaySound("wanda2/characters/wanda/down_health_LP", "pulse_loop")
 
 		local volume = self.owner.player_classified:GetOldagerRate() > 0 and 1

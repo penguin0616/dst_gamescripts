@@ -465,7 +465,7 @@ function CrowGameScreen:InitGameBoard()
 			tile:ClearTile()
 		end
 		self:FillEmptyTiles()
-		scheduler:ExecuteInTime(DROP_WAIT, function()
+		staticScheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_REG
 			self:UpdateInterface()
 		end)
@@ -752,7 +752,7 @@ end
 
 function CrowGameScreen:ExplodeTile( explode_delay, x, y )
 	self.game_grid[ XYtoIndex(x, y) ].exploded = true
-	scheduler:ExecuteInTime(explode_delay, function()
+	staticScheduler:ExecuteInTime(explode_delay, function()
 		if self.game_grid[ XYtoIndex(x,y) ].tile_type == CROW_TILE then
 			self.crows_cleared = self.crows_cleared + 1
 			self.game_grid[ XYtoIndex(x,y) ]:ClearTile()
@@ -767,7 +767,7 @@ function CrowGameScreen:ExplodeTile( explode_delay, x, y )
 			local explode_widg = ExplodeFX( self.game_grid[XYtoIndex(x,y)]:GetWorldPosition(), self.fixed_root:GetScale().x )
 			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/creditpage_flip")
 
-			scheduler:ExecuteInTime(1, function() explode_widg:Kill() end)
+			staticScheduler:ExecuteInTime(1, function() explode_widg:Kill() end)
 		end
 		self:UpdateInterface()
 	end)
@@ -812,7 +812,7 @@ end
 
 function CrowGameScreen:WaitForClearingToFinish(t)
 	self:ClearExplodedFlags()
-	scheduler:ExecuteInTime(t, function()
+	staticScheduler:ExecuteInTime(t, function()
 		self:CalcMoveScore()
 		self.score = self.score + self:GetMoveScore()
 		if self.score > self.profile:GetCrowGameHighScore(SCORE_VERSION) then
@@ -825,7 +825,7 @@ function CrowGameScreen:WaitForClearingToFinish(t)
 
 		self:UpdateInterface()
 
-		scheduler:ExecuteInTime(DROP_WAIT, function()
+		staticScheduler:ExecuteInTime(DROP_WAIT, function()
 			self.game_state = GS_TILE_SELECT_REG
 			if self.queued_click ~= nil then
 				self:OnTileClick( self.queued_click.x, self.queued_click.y )

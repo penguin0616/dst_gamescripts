@@ -6,9 +6,11 @@ local SavingIndicator = Class(Widget, function(self, owner)
     self.owner = owner
 
     Widget._ctor(self, "Saving")
+    self:UpdateWhilePaused(false)
     self.anim = self:AddChild(UIAnim())
     self.anim:GetAnimState():SetBank("saving")
     self.anim:GetAnimState():SetBuild("saving")
+    self.anim:GetAnimState():AnimateWhilePaused(false)
     self:Hide()
 
     self._scale = .5

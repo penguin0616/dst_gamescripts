@@ -115,6 +115,19 @@ function Mixer:PopMix(mixname)
     end
 end
 
+function Mixer:DeleteMix(mixname)
+    local top = self.stack[1]
+    for k, v in ipairs(self.stack) do
+        if mixname == v.name then
+            table.remove(self.stack, k)
+            if top ~= self.stack[1] then
+                self.stack[1]:Apply()
+            end
+            break
+        end
+    end
+end
+
 
 function Mixer:PushMix(mixname)
 

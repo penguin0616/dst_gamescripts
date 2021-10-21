@@ -779,6 +779,26 @@ function RunInSandboxSafe(untrusted_code, error_handler)
 	return xpcall(untrusted_function, error_handler or function() end)
 end
 
+--same as above, but catches infinite loops
+function RunInSandboxSafeCatchInfiniteLoops(untrusted_code, error_handler)
+	if untrusted_code:byte(1) == 27 then return nil, "binary bytecode prohibited" end
+	local untrusted_function, message = loadstring(untrusted_code)
+	if not untrusted_function then return nil, message end
+	setfenv(untrusted_function, {print = print} )
+
+    local co = coroutine.create(function()
+        coroutine.yield(xpcall(untrusted_function, error_handler or function() end))
+    end)
+    debug.sethook(co, function() error("infinite loop detected") end, "", 20000)
+    --clear out all entries to the metatable of string, since that can be accessed even by doing local string = "" string.whatever()
+    local string_backup = deepcopy(string)
+    cleartable(string)
+    local result = {coroutine.resume(co)}
+    shallowcopy(string_backup, string)
+    debug.sethook(co)
+    return unpack(result, 2)
+end
+
 function GetTickForTime(target_time)
 	return math.floor( target_time/GetTickTime() )
 end
@@ -787,6 +807,7 @@ function GetTimeForTick(target_tick)
 	return target_tick*GetTickTime()
 end
 
+--only works for tasks created from scheduler, not from staticScheduler
 function GetTaskRemaining(task)
     return (task == nil and -1)
         or (task:NextTime() == nil and -1)
@@ -870,6 +891,14 @@ function shallowcopy(orig, dest)
         copy = orig
     end
     return copy
+end
+
+function cleartable(object)
+    if type(object) == "table" then
+        for k, v in pairs(object) do
+            object[k] = nil
+        end
+    end
 end
 
 -- if next(table) == nil, then the table is empty
@@ -1254,6 +1283,27 @@ function table.getfield(Table,Name)
     return Table
 end
 
+function table.typecheckedgetfield(Table, Type, ...)
+    if type(Table) ~= "table" then return end
+
+    local Names = {...}
+    local Names_Count = #Names
+    for i, Name in ipairs(Names) do
+        if i == Names_Count then
+            if Type == nil or type(Table[Name]) == Type then
+                return Table[Name]
+            end
+            return
+        else
+            if type(Table[Name]) == "table" then
+                Table = Table[Name]
+            else
+                return
+            end
+        end
+    end
+end
+
 function table.findfield(Table,Name)
     local indx = ""
 
@@ -1519,19 +1569,27 @@ function metarawget(t, k)
     return mt._[k] or mt.c[k]
 end
 
-function ZipAndEncodeSaveData(data)
-	return {str = TheSim:ZipAndEncodeString(DataDumper(data, nil, true))}
+function ZipAndEncodeString(data)
+	return TheSim:ZipAndEncodeString(DataDumper(data, nil, true))
 end
 
-function DecodeAndUnzipSaveData(data)
-    if data and data.str and type(data.str) == "string" then
-        local success, savedata = RunInSandbox(TheSim:DecodeAndUnzipString(data.str))
+function ZipAndEncodeSaveData(data)
+	return {str = ZipAndEncodeString(data)}
+end
+
+function DecodeAndUnzipString(str)
+    if type(str) == "string" then
+        local success, savedata = RunInSandbox(TheSim:DecodeAndUnzipString(str))
         if success then
             return savedata
         else
             return {}
         end
     end
+end
+
+function DecodeAndUnzipSaveData(data)
+    return DecodeAndUnzipString(data and data.str or nil)
 end
 
 function FunctionOrValue(func_or_val, ...)
@@ -1541,6 +1599,16 @@ function FunctionOrValue(func_or_val, ...)
     return func_or_val
 end
 
+function ApplyLocalWordFilter(text, text_filter_context, net_id)
+	if text_filter_context == TEXT_FILTER_CTX_CHAT											-- we are only filtering chat at the moment
+		and Profile:GetProfanityFilterChatEnabled() 
+		then
+
+		text = TheSim:ApplyLocalWordFilter(text, text_filter_context, net_id) or text
+	end
+
+	return text
+end
 
 --jcheng taken from griftlands
 --START--

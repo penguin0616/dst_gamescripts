@@ -150,9 +150,9 @@ local function AggressiveRetarget(inst)
 end
 
 local function StartForceField(inst)
-	if not inst.sg:HasStateTag("dissipate") and not inst.components.debuffable:HasDebuff("forcefield") and (inst.components.health == nil or not inst.components.health:IsDead()) then
-		local elixir_buff = inst.components.debuffable:GetDebuff("elixir_buff")
-		inst.components.debuffable:AddDebuff("forcefield", elixir_buff ~= nil and elixir_buff.potion_tunings.shield_prefab or "abigailforcefield")
+	if not inst.sg:HasStateTag("dissipate") and not inst:HasDebuff("forcefield") and (inst.components.health == nil or not inst.components.health:IsDead()) then
+		local elixir_buff = inst:GetDebuff("elixir_buff")
+		inst:AddDebuff("forcefield", elixir_buff ~= nil and elixir_buff.potion_tunings.shield_prefab or "abigailforcefield")
 	end
 end
 
@@ -168,9 +168,9 @@ local function OnAttacked(inst, data)
         end
     end
 
-	if inst.components.debuffable:HasDebuff("forcefield") then
+	if inst:HasDebuff("forcefield") then
 		if data.attacker ~= nil and data.attacker ~= inst._playerlink and data.attacker.components.combat ~= nil then
-			local elixir_buff = inst.components.debuffable:GetDebuff("elixir_buff")
+			local elixir_buff = inst:GetDebuff("elixir_buff")
 			if elixir_buff ~= nil and elixir_buff.prefab == "ghostlyelixir_retaliation_buff" then
 				local retaliation = SpawnPrefab("abigail_retaliation")
 				retaliation:SetRetaliationTarget(data.attacker)
@@ -194,8 +194,8 @@ end
 
 local function OnDeath(inst)
     inst.components.aura:Enable(false)
-	inst.components.debuffable:RemoveDebuff("ghostlyelixir")
-	inst.components.debuffable:RemoveDebuff("forcefield")
+	inst:RemoveDebuff("ghostlyelixir")
+	inst:RemoveDebuff("forcefield")
 end
 
 local function OnRemoved(inst)
@@ -248,7 +248,7 @@ local function auratest(inst, target)
 end
 
 local function UpdateDamage(inst)
-    local buff = inst.components.debuffable:GetDebuff("elixir_buff")
+    local buff = inst:GetDebuff("elixir_buff")
 
 	local phase = (buff ~= nil and buff.prefab == "ghostlyelixir_attack_buff") and "night" or TheWorld.state.phase
 	inst.components.combat.defaultdamage = (TUNING.ABIGAIL_DAMAGE[phase] or TUNING.ABIGAIL_DAMAGE.day) / TUNING.ABIGAIL_VEX_DAMAGE_MOD -- so abigail does her intended damage defined in tunings.lua
@@ -330,11 +330,9 @@ end
 local function ApplyDebuff(inst, data)
 	local target = data ~= nil and data.target
 	if target ~= nil then
-		if target.components.debuffable == nil then
-			target:AddComponent("debuffable")
-		end
-		local debuff = target.components.debuffable:AddDebuff("abigail_vex_debuff", "abigail_vex_debuff")
+        target:AddDebuff("abigail_vex_debuff", "abigail_vex_debuff")
 
+        local debuff = target:GetDebuff("abigail_vex_debuff")
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil and debuff ~= nil then
             debuff.AnimState:OverrideItemSkinSymbol("flower", skin_build, "flower", inst.GUID, "abigail_attack_fx" )
@@ -355,7 +353,7 @@ local function linktoplayer(inst, player)
     if player.components.pethealthbar ~= nil then
         player.components.pethealthbar:SetPet(inst, "", TUNING.ABIGAIL_HEALTH_LEVEL1)
 
-        local elixir_buff = inst.components.debuffable ~= nil and inst.components.debuffable:GetDebuff("elixir_buff") or nil
+        local elixir_buff = inst:GetDebuff("elixir_buff")
         if elixir_buff then
             player.components.pethealthbar:SetSymbol(elixir_buff.prefab)
         end

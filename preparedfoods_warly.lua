@@ -42,11 +42,7 @@ local foods =
 		prefabs = { "buff_electricattack" },
 		oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_ELECTRIC_ATTACK,
         oneatenfn = function(inst, eater)
-            if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-                not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-                not eater:HasTag("playerghost") then
-                eater.components.debuffable:AddDebuff("buff_electricattack", "buff_electricattack")
-            end
+            eater:AddDebuff("buff_electricattack", "buff_electricattack")
        	end,
         floater = {"med", nil, 0.65},
 	},
@@ -106,11 +102,7 @@ local foods =
         prefabs = { "buff_moistureimmunity" },
 		oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_DRY,
         oneatenfn = function(inst, eater)
-            if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
-                not (eater.components.health ~= nil and eater.components.health:IsDead()) and
-                not eater:HasTag("playerghost") then
-                eater.components.debuffable:AddDebuff("buff_moistureimmunity", "buff_moistureimmunity")
-            end
+            eater:AddDebuff("buff_moistureimmunity", "buff_moistureimmunity")
        	end,
         floater = {nil, 0.1},
     },

@@ -40,6 +40,7 @@ end
 
 local TargetIndicator = Class(Widget, function(self, owner, target, data)
     Widget._ctor(self, "TargetIndicator")
+    self:UpdateWhilePaused(false)
     self.owner = owner
     self.isFE = false
     self:SetClickable(true)
@@ -105,6 +106,7 @@ function TargetIndicator:GetTargetIndicatorAlpha(dist)
 end
 
 function TargetIndicator:OnUpdate()
+    if TheNet:IsServerPaused() then return end
     -- figure out how far away they are and scale accordingly
     -- then grab the new position of the target and update the HUD elt's pos accordingly
     -- kill on this is rough: it just pops in/out. would be nice if it faded in/out...

@@ -45,8 +45,9 @@ local function fn()
     inst:AddTag("marble")
 
     inst.foleysound = "dontstarve/movement/foley/marblearmour"
-
-    MakeInventoryFloatable(inst, "small", 0.2, 0.80)
+    
+    local swap_data = {bank = "armor_marble", anim = "anim"}
+    MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)
 
     inst.entity:SetPristine()
 

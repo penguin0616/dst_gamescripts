@@ -906,6 +906,30 @@ function steeringwheel_clear_fn(inst)
 end
 
 
+--------------------------------------------------------------------------
+--[[ mastupgrade_lamp skin functions ]]
+--------------------------------------------------------------------------
+function mastupgrade_lamp_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "mastupgrade_lamp") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function mastupgrade_lamp_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("mastupgrade_lamp")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function mastupgrade_lamp_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "mastupgrade_lamp")
+end
+function mastupgrade_lamp_clear_fn(inst)
+    inst.AnimState:SetBuild("mastupgrade_lamp")
+end
+
+
 
 --------------------------------------------------------------------------
 --[[ wall_moonrock skin functions ]]

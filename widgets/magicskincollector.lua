@@ -89,7 +89,7 @@ function MagicSkinCollector:Say(text, rarity, name, number)
 		str = string.gsub(str, "<number>", number)
 	end
 
-	self.last_speech_time = GetTime()
+	self.last_speech_time = GetStaticTime()
 
 	if not (self.innkeeper:GetAnimState():IsCurrentAnimation("dialog_pre") or self.innkeeper:GetAnimState():IsCurrentAnimation("dial_loop")) then
 		self.innkeeper:GetAnimState():PlayAnimation("dialog_pre", false)
@@ -140,8 +140,8 @@ function MagicSkinCollector:OnUpdate(dt)
 		return
 	end
 
-	if self.intro_done and (GetTime() - self.last_speech_time) > IDLE_SPEECH_DELAY then
-		--print("Playing idle speech at ", GetTime(), self.last_speech_time)
+	if self.intro_done and (GetStaticTime() - self.last_speech_time) > IDLE_SPEECH_DELAY then
+		--print("Playing idle speech at ", GetStaticTime(), self.last_speech_time)
 		-- It's been a while since the last speech. Say something random
 		self:Say(STRINGS.UI.TRADESCREEN.MAGICSKIN_COLLECTOR_SPEECH.IDLE)
 	end

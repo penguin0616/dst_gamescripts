@@ -188,7 +188,7 @@ local function update_sisturn_state(inst, is_active)
 end
 
 local function CustomCombatDamage(inst, target)
-	return (target.components.debuffable ~= nil and target.components.debuffable:HasDebuff("abigail_vex_debuff")) and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
+	return (target:HasDebuff("abigail_vex_debuff")) and TUNING.ABIGAIL_VEX_GHOSTLYFRIEND_DAMAGE_MOD
 		or (target == inst.components.ghostlybond.ghost and target:HasTag("abigail")) and 0
 		or 1
 end

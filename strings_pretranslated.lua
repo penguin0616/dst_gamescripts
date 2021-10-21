@@ -44,6 +44,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.RUSSIAN] = "Русский (Russian)",
         [_LANGUAGE.KOREAN] = "한국어 (Korean)",
         [_LANGUAGE.CHINESE_S] = "简体中文 (Simplified Chinese)",
+        [_LANGUAGE.CHINESE_T] = "繁體中文 (Traditional Chinese)",
     },
 
     LANGUAGES_TITLE =
@@ -59,6 +60,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.RUSSIAN] = "Вариант перевода",
         [_LANGUAGE.KOREAN] = "번역 옵션",
         [_LANGUAGE.CHINESE_S] = "语言设定",
+        [_LANGUAGE.CHINESE_T] = "語言設定",
     },
 
 	LANGUAGES_BODY =
@@ -74,6 +76,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.RUSSIAN] = "В качестве языка интерфейса выбран русский. Вам требуется перевод на ваш язык?",
         [_LANGUAGE.KOREAN] = "인터페이스 언어가 한국어로 설정되어 있습니다. 해당 언어의 번역을 사용 하시겠습니까?",
         [_LANGUAGE.CHINESE_S] = "是否把语言设定为中文？",
+        [_LANGUAGE.CHINESE_T] = "是否把語言設定為繁體中文？",
     },
 
 	LANGUAGES_YES =
@@ -88,7 +91,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.POLISH] = "Tak",
         [_LANGUAGE.RUSSIAN] = "Да",
         [_LANGUAGE.KOREAN] = "예",
-        [_LANGUAGE.CHINESE_S] = "是",
+        [_LANGUAGE.CHINESE_T] = "是",
     },
 
 	LANGUAGES_NO =
@@ -103,7 +106,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.POLISH] = "Nie",
         [_LANGUAGE.RUSSIAN] = "Нет",
         [_LANGUAGE.KOREAN] = "아니",
-        [_LANGUAGE.CHINESE_S] = "否",
+        [_LANGUAGE.CHINESE_T] = "否",
     },
 }
 

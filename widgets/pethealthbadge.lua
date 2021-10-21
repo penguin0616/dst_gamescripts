@@ -4,7 +4,7 @@ local UIAnim = require "widgets/uianim"
 -------------------------------------------------------------------------------------------------------
 
 local PetHealthBadge = Class(Badge, function(self, owner, colour, iconbuild)
-    Badge._ctor(self, nil, owner, colour, iconbuild)
+    Badge._ctor(self, nil, owner, colour, iconbuild, nil, nil, true)
 
 	self.OVERRIDE_SYMBOL_BUILD = {} -- modders can add symbols-build pairs to this table by calling SetBuildForSymbol
 	self.default_symbol_build = iconbuild
@@ -13,12 +13,14 @@ local PetHealthBadge = Class(Badge, function(self, owner, colour, iconbuild)
     self.arrow:GetAnimState():SetBank("sanity_arrow")
     self.arrow:GetAnimState():SetBuild("sanity_arrow")
     self.arrow:GetAnimState():PlayAnimation("neutral", true)
+	self.arrow:GetAnimState():AnimateWhilePaused(false)
     self.arrow:SetClickable(false)
 
     self.bufficon = self.underNumber:AddChild(UIAnim())
     self.bufficon:GetAnimState():SetBank("status_abigail")
     self.bufficon:GetAnimState():SetBuild("status_abigail")
     self.bufficon:GetAnimState():PlayAnimation("buff_none")
+	self.bufficon:GetAnimState():AnimateWhilePaused(false)
     self.bufficon:SetClickable(false)
 	self.buffsymbol = 0
 

@@ -183,6 +183,7 @@ AddRoom("MagicalDeciduous", {
 					colour={r=0,g=.9,b=0,a=.50},
 					value = GROUND.DECIDUOUS,
 					tags = {"ExitPiece", "Chester_Eyebone","Astral_2"},
+                    required_prefabs = {"statueglommer"},
 					contents =  {
 
 									countstaticlayouts={

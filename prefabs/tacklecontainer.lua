@@ -69,7 +69,9 @@ local function MakeTackleContainer(name, bank, build, assets)
         inst.AnimState:PlayAnimation("closed")
 
 		MakeInventoryPhysics(inst)
-		MakeInventoryFloatable(inst, "med")
+
+        local swap_data = {bank = bank, anim = "closed"}
+        MakeInventoryFloatable(inst, "med", nil, nil, nil, nil, swap_data)
 
         inst.entity:SetPristine()
 

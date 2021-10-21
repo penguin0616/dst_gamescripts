@@ -28,7 +28,8 @@ local function MakeSaddle(name, data)
 
         inst.mounted_foleysound = "dontstarve/beefalo/saddle/"..data.foley
 
-        MakeInventoryFloatable(inst, data.floater[1], data.floater[2], data.floater[3])
+        local swap_data = {bank = "saddlebasic", anim = "idle"}
+        MakeInventoryFloatable(inst, data.floater[1], data.floater[2], data.floater[3], nil, nil, swap_data)
 
         if data.extra_tags ~= nil then
             for _, tag in ipairs(data.extra_tags) do

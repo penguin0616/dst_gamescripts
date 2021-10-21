@@ -142,6 +142,10 @@ function StateGraphWrangler:Update(current_tick)
     end
     TheSim:ProfilerPop()
 
+    self:UpdateEvents()
+end
+
+function StateGraphWrangler:UpdateEvents()
     local evs = self.haveEvents
     self.haveEvents = {}
 

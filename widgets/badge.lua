@@ -3,8 +3,9 @@ local Text = require "widgets/text"
 local easing = require "easing"
 local Widget = require "widgets/widget"
 
-local Badge = Class(Widget, function(self, anim, owner, tint, iconbuild, circular_meter, use_clear_bg)
+local Badge = Class(Widget, function(self, anim, owner, tint, iconbuild, circular_meter, use_clear_bg, dont_update_while_paused)
     Widget._ctor(self, "Badge")
+    self:UpdateWhilePaused(not dont_update_while_paused)
     self.owner = owner
 
     --self:SetHAnchor(ANCHOR_RIGHT)
@@ -15,10 +16,12 @@ local Badge = Class(Widget, function(self, anim, owner, tint, iconbuild, circula
     self.pulse = self:AddChild(UIAnim())
     self.pulse:GetAnimState():SetBank("pulse")
     self.pulse:GetAnimState():SetBuild("hunger_health_pulse")
+    self.pulse:GetAnimState():AnimateWhilePaused(not dont_update_while_paused)
 
     self.warning = self:AddChild(UIAnim())
     self.warning:GetAnimState():SetBank("pulse")
     self.warning:GetAnimState():SetBuild("hunger_health_pulse")
+    self.warning:GetAnimState():AnimateWhilePaused(not dont_update_while_paused)
     self.warning:Hide()
     self.warningstarted = nil
     self.warningdelaytask = nil
@@ -41,6 +44,7 @@ local Badge = Class(Widget, function(self, anim, owner, tint, iconbuild, circula
             self.backing:GetAnimState():SetBuild("status_meter")
             self.backing:GetAnimState():PlayAnimation("bg")
         end
+        self.backing:GetAnimState():AnimateWhilePaused(not dont_update_while_paused)
 
         self.anim = self:AddChild(UIAnim())
         self.anim:GetAnimState():SetBank("status_meter")
@@ -56,6 +60,7 @@ local Badge = Class(Widget, function(self, anim, owner, tint, iconbuild, circula
             self.circular_meter:GetAnimState():SetBank( "status_meter_circle")
             self.circular_meter:GetAnimState():SetBuild("status_meter_circle")
             self.circular_meter:GetAnimState():PlayAnimation("meter")
+            self.circular_meter:GetAnimState():AnimateWhilePaused(not dont_update_while_paused)
 
             if tint ~= nil then
                 self.circular_meter:GetAnimState():SetMultColour(unpack(tint))
@@ -69,11 +74,13 @@ local Badge = Class(Widget, function(self, anim, owner, tint, iconbuild, circula
         self.circleframe:GetAnimState():SetBank("status_meter")
         self.circleframe:GetAnimState():SetBuild("status_meter")
         self.circleframe:GetAnimState():PlayAnimation("frame")
+        self.circleframe:GetAnimState():AnimateWhilePaused(not dont_update_while_paused)
         if iconbuild ~= nil then
             self.circleframe:GetAnimState():OverrideSymbol("icon", iconbuild, "icon")
             self.iconbuild = iconbuild
         end
     end
+    self.anim:GetAnimState():AnimateWhilePaused(not dont_update_while_paused)
 
     self.underNumber = self:AddChild(Widget("undernumber"))
 
