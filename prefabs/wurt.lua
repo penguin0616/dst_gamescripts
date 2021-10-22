@@ -82,7 +82,7 @@ local function UpdateTentacleWarnings(inst)
 			local p2x, p2y, p2z = t.Transform:GetWorldPosition()
 			local dist = VecUtil_Length(p1x - p2x, p1z - p2z)
 
-			if IsEntityDead(t, true) then
+			if not IsEntityDead(t, true) then
 				if inst._active_warnings[t] == nil then
 					local fx = SpawnPrefab("wurt_tentacle_warning")
 					fx.entity:SetParent(t.entity)

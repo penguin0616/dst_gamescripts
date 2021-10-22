@@ -745,7 +745,7 @@ function ServerListingScreen:UpdateServerData(selected_index_actual)
         end
 
         local gamedata = self:ProcessServerGameData()
-        local day = gamedata ~= nil and type(gamedata.day) == "string" and gamedata.day or STRINGS.UI.SERVERLISTINGSCREEN.UNKNOWN
+        local day = gamedata ~= nil and type(gamedata.day) == "number" and gamedata.day or STRINGS.UI.SERVERLISTINGSCREEN.UNKNOWN
         self.day_description.text:SetString(STRINGS.UI.SERVERLISTINGSCREEN.DAYDESC..day)
 
         local seasondesc = self.selected_server.season ~= nil and STRINGS.UI.SERVERLISTINGSCREEN.SEASONS[string.upper(self.selected_server.season)] or nil

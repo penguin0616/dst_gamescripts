@@ -42,7 +42,7 @@ local function fn()
     inst:AddComponent("inventoryitem")
 
     inst:AddComponent("edible")
-    inst.components.edible.healthvalue = -TUNING.HEALING_MED
+    inst.components.edible.healthvalue = -TUNING.HEALING_SMALL
     inst.components.edible.hungervalue = 0
     inst.components.edible.sanityvalue = -TUNING.SANITY_TINY
     inst.components.edible.foodtype = FOODTYPE.VEGGIE

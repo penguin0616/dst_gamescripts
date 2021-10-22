@@ -187,7 +187,10 @@ function PlayerProx:SetPlayerAliveMode(alivemode)
     self.alivemode = alivemode
 end
 
-function PlayerProx:Schedule()
+function PlayerProx:Schedule(new_period)
+	if new_period ~= nil then
+		self.period = new_period
+	end
     self:Stop()
     self.task = self.inst:DoPeriodicTask(self.period, self.targetmode, nil, self)
 end

@@ -997,3 +997,52 @@ function d_cookbook()
 		end
 	end			
 end
+
+function d_statues(material)
+	local mats = 
+	{
+		"marble",
+		"stone",
+		"moonglass",
+	}
+
+	local items = {
+		"pawn",       
+		"rook",       
+		"knight",     
+		"bishop",     
+		"muse",       
+		"formal",     
+		"hornucopia", 
+		"pipe",       
+		"deerclops",  
+		"bearger",    
+		"moosegoose", 
+		"dragonfly",  
+		"clayhound",  
+		"claywarg",   
+		"butterfly",  
+		"anchor",     
+		"moon",       
+		"carrat",     
+		"beefalo",    
+		"crabking",   
+		"malbatross", 
+		"toadstool",	
+		"stalker",	
+		"klaus",		
+		"beequeen",	
+		"antlion",	
+		"minotaur",	
+		"guardianphase3",
+	}
+
+	local material = (type(material) == "string" and table.contains(mats, material)) and material
+					or type(material) == "number" and mats[material]
+					or "marble"
+
+	for i, v in ipairs(items) do
+		items[i] = "chesspiece_".. v .."_" .. (material or "marble")
+	end
+	_spawn_list(items, 5)
+end
