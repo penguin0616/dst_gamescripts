@@ -3206,7 +3206,7 @@ STRINGS =
 
         OCEANTREE_PILLAR = "Above-Average Tree Trunk",
 
-        OCEANTREE = "Knobbly Trees",
+        OCEANTREE = "Knobbly Tree",
         OCEANTREENUT = "Knobbly Tree Nut",
 
         OCEANVINE = "Mossy Vine",

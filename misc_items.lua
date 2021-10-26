@@ -1094,6 +1094,16 @@ MISC_ITEMS =
 		skin_tags = { "MYSTERYBOX", },
 		build_name_override = "pack_hallowed",
 		box_build = "box_shop_hallowed",
+		rarity = "HeirloomElegant",
+		marketable = true,
+		release_group = 124,
+	},
+	mysterybox_trickortreat_alt =
+	{
+		type = "mysterybox",
+		skin_tags = { "MYSTERYBOX", },
+		build_name_override = "pack_hallowed",
+		box_build = "box_shop_hallowed",
 		rarity = "Elegant",
 		rarity_modifier = "Woven",
 		release_group = 124,

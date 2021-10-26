@@ -210,6 +210,8 @@ function ScrollableChatQueue:MakeChatScrollList()
         return current_chat_data
     end
 
+    self.chat_scroll_list:Scroll(1, true)
+
     self:RefreshWidgets(true)
 end
 

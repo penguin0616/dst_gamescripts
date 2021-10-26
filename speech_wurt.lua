@@ -1116,7 +1116,7 @@ return{
 		ORANGEAMULET = "It make me feel fancy, flurp.",
 		YELLOWSTAFF = "Has pretty yellow rock on it.",
 		YELLOWGEM = "There sunshine inside it.",
-		ORANGEGEM = "Weird orangey rock",
+		ORANGEGEM = "Weird orangey rock.",
         OPALSTAFF = "Rainbow light stick!",
         OPALPRECIOUSGEM = "There so many colors, flort!",
         TELEBASE =

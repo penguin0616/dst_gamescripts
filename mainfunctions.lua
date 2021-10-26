@@ -784,8 +784,9 @@ end
 
 function DoAutopause()
     TheNet:SetAutopaused(
-        (autopausecount > 0 and Profile:GetAutopauseEnabled()) or
-        (consoleautopausecount > 0 and Profile:GetConsoleAutopauseEnabled())
+        ((autopausecount > 0 and Profile:GetAutopauseEnabled()) or
+        (consoleautopausecount > 0 and Profile:GetConsoleAutopauseEnabled()))
+        and not TheFrontEnd:IsControlsDisabled()
     )
 end
 

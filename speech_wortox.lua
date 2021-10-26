@@ -878,7 +878,7 @@ return{
             ATTACKER = "I'll stop hiding your axe, promise! Hyuyu!",
             MURDERER = "Don't kill me, hyuyuyu!",
             REVIVER = "%s is oh so helpful!",
-            GHOST = "You wouldn't even noticed if I took a bite.",
+            GHOST = "You wouldn't even notice if I took a bite.",
             BEAVER = "Hyuyu, you're so funny, %s!",
             BEAVERGHOST = "What a funny soul! I wonder what it tastes like.",
             MOOSE = "The curse is growing, your antlers are showing!",

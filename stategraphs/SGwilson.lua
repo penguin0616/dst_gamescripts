@@ -7917,6 +7917,7 @@ local states =
             end
             local tent = bufferedaction.target
             if tent == nil or
+                not tent.components.sleepingbag or
                 not tent:HasTag("tent") or
                 tent:HasTag("hassleeper") or
                 tent:HasTag("siestahut") ~= TheWorld.state.isday or

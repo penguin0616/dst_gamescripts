@@ -601,9 +601,9 @@ function ServerListingScreen:ProcessServerPlayersData()
             for i, v in ipairs(data) do
                 if table.typecheckedgetfield(v, "string", "colour") then
                     local colourstr = "00000"..v.colour
-                    local r = tonumber(colourstr:sub(-6, -5), 16) / 255
-                    local g = tonumber(colourstr:sub(-4, -3), 16) / 255
-                    local b = tonumber(colourstr:sub(-2), 16) / 255
+                    local r = (tonumber(colourstr:sub(-6, -5), 16) or 255) / 255
+                    local g = (tonumber(colourstr:sub(-4, -3), 16) or 255) / 255
+                    local b = (tonumber(colourstr:sub(-2), 16) or 255) / 255
                     v.colour = { r, g, b, 1 }
                 end
             end

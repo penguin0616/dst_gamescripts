@@ -164,11 +164,13 @@ OnPlayerJoined = function(self, player)
         if self.inst:GetDistanceSqToInst(player) <= TUNING.FOLLOWER_REFOLLOW_DIST_SQ and
         (not self.cached_player_leader_timeleft or self.cached_player_leader_timeleft > current_time) then
 
+            local cached_player_leader_timeleft = self.cached_player_leader_timeleft
+
             self:SetLeader(player)
 
             self.targettime = nil
-            if self.cached_player_leader_timeleft then
-                self:AddLoyaltyTime(self.cached_player_leader_timeleft - current_time)
+            if cached_player_leader_timeleft then
+                self:AddLoyaltyTime(cached_player_leader_timeleft - current_time)
             end
         else
             self:ClearCachedPlayerLeader()

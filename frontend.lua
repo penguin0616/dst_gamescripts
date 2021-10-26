@@ -501,6 +501,7 @@ end
 
 function FrontEnd:SetFadeLevel(alpha, time, time_total)
     self.alpha = alpha
+    DoAutopause()
     if alpha <= 0 then
         if self.blackoverlay ~= nil then
             self.blackoverlay:Hide()
@@ -939,6 +940,7 @@ function FrontEnd:Fade(in_or_out, time_to_take, cb, fade_delay_time, delayovercb
 			self.topswipeoverlay:SetEffectParams(0,0,0,0)
 		end
 		self:ShowTopFade()
+        DoAutopause()
 	end
 	self.fade_delay_time = fade_delay_time
 	self.delayovercb = delayovercb

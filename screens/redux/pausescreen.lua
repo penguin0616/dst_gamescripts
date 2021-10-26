@@ -189,6 +189,10 @@ function PauseScreen:doconfirmquit()
  	self.active = false
 
 	local function doquit()
+        if not self.popped_autopause then
+            SetAutopaused(false)
+            self.popped_autopause = true
+        end
 		self.parent:Disable()
 		self.menu:Disable()
 		--self.afk_menu:Disable()
@@ -237,7 +241,10 @@ function PauseScreen:OnBecomeActive()
 end
 
 function PauseScreen:OnDestroy()
-    SetAutopaused(false)
+    if not self.popped_autopause then
+        SetAutopaused(false)
+        self.popped_autopause = true
+    end
 
 	PauseScreen._base.OnDestroy(self)
 end
