@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "I had a feeling that wouldn't work...",
 			CARNIVALGAME_ALREADY_PLAYING = "We can wait till they're done. Right Woby?",
             SPIDERNOHAT = "I don't think that would be very comfy for the spider.",
+            TERRARIUM_REFUSE = "I guess that was a silly thing to try...",
         },
         GIVETOPLAYER =
         {
@@ -1324,7 +1325,7 @@ return{
             },
 		},
 		ADVENTURE_PORTAL = "Don't be scared Woby, we'll do this together!",
-		AMULET = "I'm invincible!!'",
+		AMULET = "I'm invincible!!",
 		ANIMAL_TRACK = "Tracks! They go this way!",
 		ARMORGRASS = "Smells like a freshly mowed lawn.",
 		ARMORMARBLE = "Will I be able to walk in that?",
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "She really shook you up, didn't she Woby?",
         CHESSPIECE_BEEFALO = "Aw don't be jealous Woby, you deserve a statue too!",
         CHESSPIECE_GUARDIANPHASE3 = "It's so lifelike, I feel like they're staring right at me!",
+        CHESSPIECE_EYEOFTERROR = "Nothing to see here, folks! Ha ha, get it Woby?",
+        CHESSPIECE_TWINSOFTERROR = "Is this one of those sculptures where the eyes follow you around the room?",
 
         CHESSJUNK1 = "I don't think they're going to get up anytime soon.",
         CHESSJUNK2 = "I don't think they're going to get up anytime soon.",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "Aw, did it have to be figs?",
         KOALEFIG_TRUNK = "How many figs are in there?!",
         FROGNEWTON = "Hey, that's pretty good! What's in it?",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "Woah! That's not normal!",
+            CRIMSON = "Oh no, I think that shadow stuff made the tree sick...",
+            ENABLED = "WOAH! That's REALLY not normal!",
+			WAITING_FOR_DARK = "Spooky!",
+			COOLDOWN = "I guess it can't stay lit up all the time.",
+			SPAWN_DISABLED = "Aww, can't we turn it on for a little bit?",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "I wonder how it got here?",
+			BURNT = "Aww, and it was such a neat looking chest too...",
+			SHIMMER = "What do you say, Woby? Should we take a look inside?",
+		},
+
+		EYEMASKHAT = "Don't worry Woby. It's just a hat, see?",
+
+        EYEOFTERROR = "Wow! Do you think it escaped from a giant head?",
+        EYEOFTERROR_MINI = "Would you say they're... multipl-eying? Heh. Good one, Walter.",
+        EYEOFTERROR_MINI_GROUNDED = "Ohh, so that's how baby eyeballs are made.",
+
+        FROZENBANANADAIQUIRI = "Don't drink it too fast or you'll get a headache.",
+        BUNNYSTEW = "There's no Pioneer that could say no to this!",
+        MILKYWHITES = "Woby, can you find me a stick? I want to poke it.",
+
+        CRITTER_EYEOFTERROR = "What is it, boy? Do you see something?",
+
+        SHIELDOFTERROR ="I like to think it's smiling.",
+        TWINOFTERROR1 = "Somewhere, some poor giant robot is walking around completely blind...",
+        TWINOFTERROR2 = "Somewhere, some poor giant robot is walking around completely blind...",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

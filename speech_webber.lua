@@ -35,7 +35,7 @@ return{
             INUSE = "Aw, we don't wanna mess up someone else's stuff.",
             NOTALLOWED = "It doesn't go there.",
             EMPTY = "We need stuff to build with.",
-            MISMATCH = "I don't think these are the right plans.",
+            MISMATCH = "We don't think these are the right plans.",
         },
 		RUMMAGE =
 		{
@@ -102,13 +102,13 @@ return{
             GHOSTHEART = "We don't think we even want them to come back.",
             NOTGEM = "It doesn't fit right!",
             WRONGGEM = "We'd rather keep this one for ourselves.",
-            NOTSTAFF = "I think that'd make it angry.",
+            NOTSTAFF = "We think that'd make it angry.",
             MUSHROOMFARM_NEEDSSHROOM = "It needs a mushroom!",
             MUSHROOMFARM_NEEDSLOG = "It needs a special kind of log!",
-            MUSHROOMFARM_NOMOONALLOWED = "I don't think they're going to grow.",
+            MUSHROOMFARM_NOMOONALLOWED = "We don't think they're going to grow.",
             SLOTFULL = "Mom said to always finish my plate before seconds.",
             FOODFULL = "It's still working on the first one.",
-            NOTDISH = "I don't think we should offer that.",
+            NOTDISH = "We don't think we should offer that.",
             DUPLICATE = "We don't need two!",
             NOTSCULPTABLE = "Eight legs isn't nearly enough to sculpt with THAT.",
 --fallback to speech_wilson.lua             NOTATRIUMKEY = "It's not quite the right shape.",
@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Hmm, it doesn't want that.",
 			CARNIVALGAME_ALREADY_PLAYING = "We're playing next!",
             SPIDERNOHAT = "There's not enough room, we don't want to squish them by accident!",
+            TERRARIUM_REFUSE = "Maybe we can give it something else?",
         },
         GIVETOPLAYER =
         {
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "It's so life-like the mane looks fluffy!",
         CHESSPIECE_BEEFALO = "Now we want to go for a beefalo ride!",
         CHESSPIECE_GUARDIANPHASE3 = "It can't still see us... right?",
+        CHESSPIECE_EYEOFTERROR = "We think we could've been friends.",
+        CHESSPIECE_TWINSOFTERROR = "Now they'll always be together.",
 
         CHESSJUNK1 = "A mess of chess.",
         CHESSJUNK2 = "A mess of chess.",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "We like to play swords with the stick when we're done.",
         KOALEFIG_TRUNK = "That looks extra filling!",
         FROGNEWTON = "Something we both like!",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "So pretty! We want to shake it!",
+            CRIMSON = "Uh oh... is the tree sick?",
+            ENABLED = "WE DIDN'T SHAKE IT, WE PROMISE!!",
+			WAITING_FOR_DARK = "We could give it just a little shake, couldn't we?",
+			COOLDOWN = "Oh no! Did we lose the little tree somewhere?",
+			SPAWN_DISABLED = "We think we're done playing with Mr. Eyeball.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "We didn't find any toys inside.",
+			BURNT = "Aww, it was such a pretty chest.",
+			SHIMMER = "We bet there are plenty of toys inside!",
+		},
+
+		EYEMASKHAT = "We have even MORE eyes and teeth!",
+
+        EYEOFTERROR = "We don't like the look of that...",
+        EYEOFTERROR_MINI = "We're not usually so bothered by a few extra eyes.",
+        EYEOFTERROR_MINI_GROUNDED = "A baby eye is about to be born.",
+
+        FROZENBANANADAIQUIRI = "We can pretend it's a milkshake!",
+        BUNNYSTEW = "We were told we can't lick it clean...",
+        MILKYWHITES = "Poor friend. Looks yummy, though.",
+
+        CRITTER_EYEOFTERROR = "They're really good at hide and seek!",
+
+        SHIELDOFTERROR ="Ms. Wickerbottom says we shouldn't bite.",
+        TWINOFTERROR1 = "Aww, they brought a friend!",
+        TWINOFTERROR2 = "Aww, they brought a friend!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

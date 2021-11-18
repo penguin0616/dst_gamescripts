@@ -26,6 +26,11 @@ local function OnDeactivated(inst)
 	inst:ListenForEvent("animover", inst.Remove)
 end
 
+local function SetSkin(inst, skin_build, GUID)
+    inst.AnimState:OverrideItemSkinSymbol("p4_piece", skin_build, "p4_piece", GUID, "hat_alterguardian_equipped")
+    inst.AnimState:OverrideItemSkinSymbol("fx_glow", skin_build, "fx_glow", GUID, "hat_alterguardian_equipped")
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -52,6 +57,7 @@ local function fn()
 
     inst.persists = false
 
+    inst.SetSkin = SetSkin
 	inst.OnActivated = OnActivated
 	inst.OnDeactivated = OnDeactivated
 

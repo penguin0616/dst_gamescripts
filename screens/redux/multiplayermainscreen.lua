@@ -23,6 +23,7 @@ local TEMPLATES = require "widgets/redux/templates"
 local FriendsManager = require "widgets/friendsmanager"
 local OnlineStatus = require "widgets/onlinestatus"
 local ThankYouPopup = require "screens/thankyoupopup"
+local ItemBoxOpenerPopup = require "screens/redux/itemboxopenerpopup"
 local SkinGifts = require("skin_gifts")
 local Stats = require("stats")
 
@@ -235,6 +236,13 @@ local function MakeWandaBanner(self, baner_root, anim)
     anim_bg:MoveToBack()
 end
 
+local function MakeTerrariaBanner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_terraria")
+    anim:GetAnimState():SetBank("dst_menu_terraria")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
+
 local function MakeDefaultBanner(self, baner_root, anim)
 	local banner_height = 350
 	baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
@@ -290,8 +298,8 @@ function MakeBanner(self)
         MakeHallowedNightsBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeWebberCawnivalBanner(self, baner_root, anim)
-	elseif false then
-        MakeWandaBanner(self, baner_root, anim)
+	elseif true then
+        MakeTerrariaBanner(self, baner_root, anim)
 	else
         MakeDefaultBanner(self, baner_root, anim)
         --[[
@@ -897,52 +905,96 @@ function MultiplayerMainScreen:FinishedFadeIn()
             MakeSkinDLCPopup( function() self:FinishedFadeIn() end )
         end
     else
-		--Do new entitlement items
-		local items = {}
-		local entitlement_items = TheInventory:GetUnopenedEntitlementItems()
-		for _,item in pairs(entitlement_items) do
-			table.insert(items, { item = item.item_type, item_id = item.item_id, gifttype = SkinGifts.types[item.item_type] or "DEFAULT" })
-        end
+        local box_item = TheInventory:GetAutoBoxItem()
+        if box_item ~= nil then
+            local box_item_type = box_item.item_type
+            local box_item_id = box_item.item_id
 
-        local daily_gift = GetDailyGiftItem()
-        if daily_gift then
-            table.insert(items, { item = daily_gift, item_id = 0, gifttype = "DAILY_GIFT" })
-        end
+            if GetTypeForItem(box_item_type) ~= "mysterybox" then
+                --this isn't a mysterybox, so just set it as opened
+                TheInventory:SetItemOpened(box_item_id)
+                self:FinishedFadeIn()
+                return
+            end
 
-		if #items > 0 then
-			local thankyou_popup = ThankYouPopup(items)
-			TheFrontEnd:PushScreen(thankyou_popup)
-		else
-            if IsConsole() or IsSteam() then
-			    --Make sure we only do one mainscreen popup at a time
-			    --Do language assistance popup
-			    local interface_lang = TheNet:GetLanguageCode()
-			    if interface_lang ~= "english" then
-                    if Profile:GetValue("language_asked_"..interface_lang) ~= true then
-                        local lang_id = LANGUAGE_STEAMCODE_TO_ID[interface_lang]
-                        local locale = LOC.GetLocale(lang_id)
-                        if locale ~= nil then
-                            local show_dialog = false
-                            if IsConsole() then
-                                show_dialog = locale.in_console_menu
-                            elseif IsSteam() then
-                                show_dialog = locale.in_steam_menu
-                            end
+            local options = {
+                message = box_item.box_message,
+                allow_cancel = false,
+                box_build = box_item.box_build_override or GetBoxBuildForItem( box_item_type ),
+            }
+            local box_popup = ItemBoxOpenerPopup(options,
+                function(success_cb)
+                    TheItems:OpenBox(box_item_id, function(success, item_types)
+                        if not success or #item_types == 0 then
+                            local body_txt = (not success) and STRINGS.UI.BOX_POPUP.SERVER_ERROR_BODY or STRINGS.UI.BOX_POPUP.SERVER_NO_ITEM_BODY
+                            local box_error = PopupDialogScreen(STRINGS.UI.BOX_POPUP.SERVER_ERROR_TITLE, body_txt,
+                                {
+                                    {
+                                        text = STRINGS.UI.BOX_POPUP.OK,
+                                        cb = function()
+                                            SimReset()
+                                        end
+                                    }
+                                })
+                            TheFrontEnd:PushScreen( box_error )
+                        else
+                            success_cb(item_types)
+                        end
+                    end)
+                end,
+                function()
+                    self:FinishedFadeIn()
+                end
+            )
+            TheFrontEnd:PushScreen(box_popup)
+        else
+            --Do new entitlement items
+            local items = {}
+            local entitlement_items = TheInventory:GetUnopenedEntitlementItems()
+            for _,item in pairs(entitlement_items) do
+                table.insert(items, { item = item.item_type, item_id = item.item_id, gifttype = SkinGifts.types[item.item_type] or "DEFAULT" })
+            end
 
-                            if show_dialog then
-                                local popup_screen = PopupDialogScreen( STRINGS.PRETRANSLATED.LANGUAGES_TITLE[locale.id], STRINGS.PRETRANSLATED.LANGUAGES_BODY[locale.id],
-                                        {
-                                            { text = STRINGS.PRETRANSLATED.LANGUAGES_YES[locale.id], cb = function() Profile:SetLanguageID(lang_id, function() SimReset() end ) end },
-                                            { text = STRINGS.PRETRANSLATED.LANGUAGES_NO[locale.id], cb = function() TheFrontEnd:PopScreen() end}
-                                        }
-                                    )
-                                TheFrontEnd:PushScreen( popup_screen )
-                                Profile:SetValue("language_asked_"..interface_lang, true)
-                                Profile:Save()
+            local daily_gift = GetDailyGiftItem()
+            if daily_gift then
+                table.insert(items, { item = daily_gift, item_id = 0, gifttype = "DAILY_GIFT" })
+            end
+
+            if #items > 0 then
+                local thankyou_popup = ThankYouPopup(items)
+                TheFrontEnd:PushScreen(thankyou_popup)
+            else
+                if IsConsole() or IsSteam() then
+                    --Make sure we only do one mainscreen popup at a time
+                    --Do language assistance popup
+                    local interface_lang = TheNet:GetLanguageCode()
+                    if interface_lang ~= "english" then
+                        if Profile:GetValue("language_asked_"..interface_lang) ~= true then
+                            local lang_id = LANGUAGE_STEAMCODE_TO_ID[interface_lang]
+                            local locale = LOC.GetLocale(lang_id)
+                            if locale ~= nil then
+                                local show_dialog = false
+                                if IsConsole() then
+                                    show_dialog = locale.in_console_menu
+                                elseif IsSteam() then
+                                    show_dialog = locale.in_steam_menu
+                                end
+
+                                if show_dialog then
+                                    local popup_screen = PopupDialogScreen( STRINGS.PRETRANSLATED.LANGUAGES_TITLE[locale.id], STRINGS.PRETRANSLATED.LANGUAGES_BODY[locale.id],
+                                            {
+                                                { text = STRINGS.PRETRANSLATED.LANGUAGES_YES[locale.id], cb = function() Profile:SetLanguageID(lang_id, function() SimReset() end ) end },
+                                                { text = STRINGS.PRETRANSLATED.LANGUAGES_NO[locale.id], cb = function() TheFrontEnd:PopScreen() end}
+                                            }
+                                        )
+                                    TheFrontEnd:PushScreen( popup_screen )
+                                    Profile:SetValue("language_asked_"..interface_lang, true)
+                                    Profile:Save()
+                                end
                             end
                         end
                     end
-			    end
+                end
             end
 		end
 	end

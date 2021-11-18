@@ -10,7 +10,6 @@ require("util")
 require("networking")
 require("stringutil")
 
-local CHAT_INPUT_HISTORY = {}
 local lcol = -RESOLUTION_X/2
 
 local ChatSidebar = Class(Widget, function(self)

@@ -802,6 +802,9 @@ local ExampleLayout =
 		layout_position = LAYOUT_POSITION.CENTER,
 	},
 
+	["Terrarium_Forest_Spiders"] = StaticLayout.Get("map/static_layouts/terrarium_forest_spiders"),
+	["Terrarium_Forest_Pigs"] = StaticLayout.Get("map/static_layouts/terrarium_forest_pigs"),
+	["Terrarium_Forest_Fire"] = StaticLayout.Get("map/static_layouts/terrarium_forest_fire"),
 
 --------------------------------------------------------------------------------
 -- ANR - A New Reign

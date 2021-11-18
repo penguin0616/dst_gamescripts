@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Had to give it a shot, eh?",
 			CARNIVALGAME_ALREADY_PLAYING = "It's not polite to cut in line.",
             SPIDERNOHAT = "No sense dressing it up when no one's gonna see it, eh?",
+            TERRARIUM_REFUSE = "That ain't gonna cut it, eh?",
         },
         GIVETOPLAYER =
         {
@@ -1583,6 +1584,8 @@ return{
         CHESSPIECE_ANTLION = "Looks almost real, eh?",
         CHESSPIECE_BEEFALO = "Some real fine detail on the fur there.",
         CHESSPIECE_GUARDIANPHASE3 = "From ornery to ornament, eh?",
+        CHESSPIECE_EYEOFTERROR = "That's the worst case of cataract I've ever seen.",
+        CHESSPIECE_TWINSOFTERROR = "They make a good lookin' statue, eh?",
 
         CHESSJUNK1 = "Dead metal.",
         CHESSJUNK2 = "Dead metal.",
@@ -4174,6 +4177,39 @@ return{
         FIGKABAB = "Nothin' better than food served on a wooden stick, eh?",
         KOALEFIG_TRUNK = "I'm the one who's gonna be stuffed if I eat that whole thing.",
         FROGNEWTON = "The fig masks the swamp taste.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "That ain't no tree I've seen before.",
+            CRIMSON = "I've got a bad feelin'...",
+            ENABLED = "That weird tree's firing beams!!",
+			WAITING_FOR_DARK = "Trees don't usually do that, eh?",
+			COOLDOWN = "I've got a feelin' they'll be back.",
+			SPAWN_DISABLED = "How aboot we just leave that be, eh?",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "Looks just like any other chest now.",
+			BURNT = "What a waste of good lumber.",
+			SHIMMER = "Wood's not supposed to shine like that, eh?",
+		},
+
+		EYEMASKHAT = "Protective eye gear that protects everything but the eyes.",
+
+        EYEOFTERROR = "Feast your eye on my axe!",
+        EYEOFTERROR_MINI = "It's rude to stare, eh?",
+        EYEOFTERROR_MINI_GROUNDED = "Probably shouldn't let that eye open.",
+
+        FROZENBANANADAIQUIRI = "Nothin’ like kickin back with a cold one, eh?",
+        BUNNYSTEW = "A hearty comfort food.",
+        MILKYWHITES = "Oh... uh... do I have to touch it?",
+
+        CRITTER_EYEOFTERROR = "We'll have to get you some protective eye gear there, bud.",
+
+        SHIELDOFTERROR ="Hmm, metal teeth would sure be handy fer choppin'...",
+        TWINOFTERROR1 = "Lucy, I think I'm seeing double!",
+        TWINOFTERROR2 = "Lucy, I think I'm seeing double!",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

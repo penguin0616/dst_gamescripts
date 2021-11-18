@@ -27,7 +27,7 @@ AddRoom("BGCrappyForest", {
 AddRoom("BGForest", {
 					colour={r=.1,g=.8,b=.1,a=.50},
 					value = GROUND.FOREST,
-					tags = {"ExitPiece", "Chester_Eyebone", "StagehandGarden"},
+					tags = {"ExitPiece", "Chester_Eyebone", "StagehandGarden", "Terrarium_Spawner"},
 					contents =  {
 					                distributepercent = .6,
 					                distributeprefabs=

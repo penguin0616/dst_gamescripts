@@ -1123,7 +1123,7 @@ local function fn()
     --Leader variables
     inst.makefriendevent = net_event(inst.GUID, "leader.makefriend")
 
-    --Eater variables (more like feeding)
+    --Eater variables (more like feeding) (more like an event for playing a client sound)
     inst.feedincontainerevent = net_event(inst.GUID, "eater.feedincontainer")
 
     --Rider variables

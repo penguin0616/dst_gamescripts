@@ -45,12 +45,17 @@ local function NoHoles(pt)
     return not TheWorld.Map:IsPointNearHole(pt)
 end
 
-local function RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_structures, canplacefn)
+local function RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_structures, canplacefn, candidtate_nodes, on_add_prefab)
 	local attempt = 1
 	local topology = TheWorld.topology
 
 	while attempt <= MAX_PLACEMENT_ATTEMPTS do
-		local area =  topology.nodes[math.random(#topology.nodes)]
+		local area = nil
+		if candidtate_nodes ~= nil then
+			area = candidtate_nodes[math.random(#candidtate_nodes)]
+		else
+			area = topology.nodes[math.random(#topology.nodes)]
+		end
 
 		local points_x, points_y = TheWorld.Map:GetRandomPointsForSite(area.x, area.y, area.poly, 1)
 		if #points_x == 1 and #points_y == 1 then
@@ -68,6 +73,9 @@ local function RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_struc
 					if #ents == 0 then
 						local e = SpawnPrefab(prefab)
 						e.Transform:SetPosition(x, 0, z)
+						if on_add_prefab ~= nil then
+							on_add_prefab(e)
+						end
 						break
 					end
 				end
@@ -75,7 +83,8 @@ local function RetrofitNewContentPrefab(inst, prefab, min_space, dist_from_struc
 		end
 		attempt = attempt + 1
 	end
-	print ("Retrofitting world for " .. prefab .. ": " .. (attempt < MAX_PLACEMENT_ATTEMPTS and ("Success after "..attempt.." attempts.") or "Failed."))
+	print ("Retrofitting world for " .. prefab .. ": " .. (attempt <= MAX_PLACEMENT_ATTEMPTS and ("Success after "..attempt.." attempts.") or "Failed."))
+	return attempt <= MAX_PLACEMENT_ATTEMPTS
 end
 
 local function RetrofitNewOceanContentPrefab(inst, width, height, prefab, min_space, dist_from_structures, canplacefn)
@@ -569,6 +578,42 @@ local function EyeOfTheStorm_RemoveExtraAltarPieces()
     end
 
     print("Retrofitting for Return of Them: Eye of the Storm - Removed", removed_pieces, "pieces around 0,0,0")
+end
+
+local function TerrariumChest_Retrofitting()
+	if TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.terrariumchest == "never" then
+		print ("Retrofitting for Terraria: Terrarium Chest - Skipping due to overrides.terrariumchest")
+		return
+	end
+
+	local node_indices = {}
+	local candidtate_nodes = {}
+
+	for i,v in ipairs(TheWorld.topology.ids) do
+		if string.find(v, "BGForest") then
+			table.insert(candidtate_nodes, TheWorld.topology.nodes[i])
+		end
+	end
+
+	if #candidtate_nodes == 0 then
+		print ("Retrofitting for Terraria: Terrarium Chest - Failed to find any BGForest nodes!")
+		return false
+	end
+
+	local function on_add_prefab(inst)
+		inst:AddComponent("scenariorunner")
+		inst.components.scenariorunner:SetScript("chest_terrarium")
+		inst.components.scenariorunner:Run()
+	end
+
+	local forest_turf_fn = function(x, y, z, prefab)
+		return TheWorld.Map:GetTileAtPoint(x, y, z) == GROUND.FOREST
+	end
+
+	if not RetrofitNewContentPrefab(inst, "terrariumchest", 2, 8, forest_turf_fn, candidtate_nodes, on_add_prefab) then -- first try a BGForest with a forest ground tile
+		RetrofitNewContentPrefab(inst, "terrariumchest", 2, 4, nil, candidtate_nodes, on_add_prefab)
+	end
+
 end
 
 local HAS_WATERSOURCE = {"watersource"}
@@ -1120,6 +1165,12 @@ function self:OnPostInit()
         EyeOfTheStorm_RemoveExtraAltarPieces()
     end
 
+	if self.retrofit_terraria_terrarium then
+		-- add shoals for malbatross spawning, salt statcks and cookie citter spawners
+		print ("Retrofitting for Terraria: Adding Terrarium chest.")
+		TerrariumChest_Retrofitting()
+	end
+
 	---------------------------------------------------------------------------
 	if self.requiresreset then
 		print ("Retrofitting: Worldgen retrofitting requires the server to save and restart to fully take effect.")
@@ -1168,6 +1219,8 @@ function self:OnLoad(data)
 		self.retrofit_nodeidtilemap_secondpass = data.retrofit_nodeidtilemap_secondpass or false
 		self.retrofit_nodeidtilemap_thirdpass = data.retrofit_nodeidtilemap_thirdpass or false
         self.retrofit_removeextraaltarpieces = data.retrofit_removeextraaltarpieces or false
+        self.retrofit_terraria_terrarium = data.retrofit_terraria_terrarium or false
+		
     end
 end
 

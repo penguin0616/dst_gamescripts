@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Hmph. Picky.",
 			CARNIVALGAME_ALREADY_PLAYING = "It seems I'll have to bide my time.",
             SPIDERNOHAT = "Its dapperness would be wasted in my pocket.",
+            TERRARIUM_REFUSE = "Nothing. I wonder how it might respond to the fuel...",
         },
         GIVETOPLAYER =
         {
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "Is there a sinkhole I can bury this in?",
         CHESSPIECE_BEEFALO = "At least this version doesn't shed all over my poor suit.",
         CHESSPIECE_GUARDIANPHASE3 = "How could I not have seen...",
+        CHESSPIECE_EYEOFTERROR = "An eye could never best a master of illusion such as I.",
+        CHESSPIECE_TWINSOFTERROR = "The most troublesome pair I've ever seen.",
 
         CHESSJUNK1 = "There's a reason I never finished that.",
         CHESSJUNK2 = "That one was a jerk.",
@@ -3829,7 +3832,7 @@ return{
 			SPOILED = "Ugh, the smell... can we just put it in the ground already?",
 		},
 
-		SOIL_AMENDER_FERMENTED = "It's reached the peak of its power... and it's stench.",
+		SOIL_AMENDER_FERMENTED = "It's reached the peak of its power... and its stench.",
 
         WATERINGCAN =
         {
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "Pleasantly sweet.",
         KOALEFIG_TRUNK = "I hope it was well cleaned before we stuffed the figs inside.",
         FROGNEWTON = "This recipe has legs.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "My, this is some strange magic, even for me.",
+            CRIMSON = "The fuel has taken hold.",
+            ENABLED = "Just what manner of magic is this?!",
+			WAITING_FOR_DARK = "It's power is coalescing.",
+			COOLDOWN = "I'd bet it was that insufferable imp who brought it here.",
+			SPAWN_DISABLED = "Let it stay banished.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "It's just my style.",
+			BURNT = "That seemed unnecessary.",
+			SHIMMER = "How... unusual.",
+		},
+
+		EYEMASKHAT = "How deliciously macabre.",
+
+        EYEOFTERROR = "Don't look at me, it's definitely not one of mine.",
+        EYEOFTERROR_MINI = "We're going to be up to our eyeballs in... eyeballs.",
+        EYEOFTERROR_MINI_GROUNDED = "I should dispose of it before it hatches.",
+
+        FROZENBANANADAIQUIRI = "There are better beverages to make.",
+        BUNNYSTEW = "Good until the last hop.",
+        MILKYWHITES = "Nauseating. It must still contain some evil energy.",
+
+        CRITTER_EYEOFTERROR = "Tell me, what is it you see, little one?",
+
+        SHIELDOFTERROR ="At least dealing with that monstrosity was good for something.",
+        TWINOFTERROR1 = "Ah. Just what we needed, a fresh pair of eyes...",
+        TWINOFTERROR2 = "Ah. Just what we needed, a fresh pair of eyes...",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

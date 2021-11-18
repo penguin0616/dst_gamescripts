@@ -1667,7 +1667,6 @@ local function MakeHat(name)
         return inst
     end
 
-
     local function moonstorm_equip(inst, owner)
         _onequip(inst, owner)
         owner:AddTag("wagstaff_detector")
@@ -1703,6 +1702,61 @@ local function MakeHat(name)
 
         inst.components.equippable:SetOnEquip(moonstorm_equip)
         inst.components.equippable:SetOnUnequip(moonstorm_unequip)
+
+        inst:AddComponent("waterproofer")
+        inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
+
+        return inst
+    end
+
+    local function eyemask_custom_init(inst)
+        -- To play an eat sound when it's on the ground and fed.
+        inst.entity:AddSoundEmitter()
+
+        --waterproofer (from waterproofer component) added to pristine state for optimization
+        inst:AddTag("waterproofer")
+
+		inst:AddTag("handfed")
+		inst:AddTag("fedbyall")
+
+		-- for eater
+		inst:AddTag("eatsrawmeat")
+		inst:AddTag("strongstomach")
+    end
+
+	local function eyemask_oneatfn(inst, food)
+		local health = math.abs(food.components.edible:GetHealth(inst)) * inst.components.eater.healthabsorption
+		local hunger = math.abs(food.components.edible:GetHunger(inst)) * inst.components.eater.hungerabsorption
+		inst.components.armor:Repair(health + hunger)
+
+		if not inst.inlimbo then
+			inst.AnimState:PlayAnimation("eat")
+			inst.AnimState:PushAnimation("anim", true)
+
+			inst.SoundEmitter:PlaySound("dontstarve/creatures/hound/bite")
+		end
+	end
+
+    local function eyemask()
+        local inst = simple(eyemask_custom_init)
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.72)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+		inst:AddComponent("eater")
+        --inst.components.eater:SetDiet({ FOODGROUP.OMNI }, { FOODGROUP.OMNI }) -- FOODGROUP.OMNI  is default
+		inst.components.eater:SetOnEatFn(eyemask_oneatfn)
+		inst.components.eater:SetAbsorptionModifiers(4.0, 1.75, 0)
+		inst.components.eater:SetCanEatRawMeat(true)
+		inst.components.eater:SetStrongStomach(true)
+		inst.components.eater:SetCanEatHorrible(true)
+
+        inst:AddComponent("armor")
+        inst.components.armor:InitCondition(TUNING.ARMOR_FOOTBALLHAT, TUNING.ARMOR_FOOTBALLHAT_ABSORPTION)
 
         inst:AddComponent("waterproofer")
         inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
@@ -2040,6 +2094,12 @@ local function MakeHat(name)
 			inst._back:OnActivated(owner, false)
 		end
 
+        local skin_build = inst:GetSkinBuild()
+        if skin_build then
+            inst._front:SetSkin(skin_build, inst.GUID)
+            inst._back:SetSkin(skin_build, inst.GUID)
+        end
+
         if inst._light == nil then
             inst._light = SpawnPrefab("alterguardianhatlight")
 	        inst._light.entity:SetParent(owner.entity)
@@ -2305,6 +2365,8 @@ local function MakeHat(name)
         }
         table.insert(assets, Asset("ANIM", "anim/ui_alterguardianhat_1x6.zip"))
         fn = alterguardian
+	elseif name == "eyemask" then
+        fn = eyemask
     end
 
     return Prefab(prefabname, fn or default, assets, prefabs)
@@ -2401,5 +2463,6 @@ return  MakeHat("straw"),
         MakeHat("plantregistry"),
         MakeHat("balloon"),
         MakeHat("alterguardian"),
+        MakeHat("eyemask"),
         Prefab("minerhatlight", minerhatlightfn),
         Prefab("alterguardianhatlight", alterguardianhatlightfn)

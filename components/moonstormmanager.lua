@@ -655,7 +655,7 @@ function self:spawnTool()
 				end
 			end)
 		local currentpos = Vector3(self.wagstaff.Transform:GetWorldPosition())
-		local pos = FindWalkableOffset(currentpos, math.random()*2*PI, 6+ (math.random()* 4), 16, nil, nil, customcheckfn, nil, nil)
+		local pos = FindWalkableOffset(currentpos, math.random()*2*PI, 6+ (math.random()* 4), 16, nil, nil, customcheckfn, nil, nil) or Vector3(0,0,0)
 		local newpos = currentpos + pos
 		tool.Transform:SetPosition(newpos.x,0,newpos.z)
 		table.insert(self.wagstaff_tools,tool)

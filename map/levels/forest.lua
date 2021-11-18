@@ -487,3 +487,93 @@ AddSettingsPreset(LEVELTYPE.SURVIVAL, {id="COMPLETE_DARKNESS",
 		day = "onlynight",
 	},
 })
+
+---------------------------------------------------------------------------------
+local worldgen_survival_plus = {id="TERRARIA",
+	name=STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELS.TERRARIA,
+	desc= STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC.TERRARIA,
+	location = "forest",
+	version = 4,
+	overrides={
+        -- global
+        season_start = "spring",
+
+        -- world
+        boons = "never",
+
+        -- resources
+        rock_ice = "rare",
+
+        -- creatures/spawners
+        bees = "never",
+        angrybees = "always",
+	},
+	required_setpieces = {
+		"Sculptures_1",
+		"Maxwell5",
+	},
+	numrandom_set_pieces = 4,
+	random_set_pieces =
+	{
+		"Sculptures_2",
+		"Sculptures_3",
+		"Sculptures_3",
+		"Sculptures_3",
+		"Sculptures_4",
+		"Chessy_1",
+		"Chessy_2",
+		"Chessy_3",
+		"Chessy_4",
+		"Chessy_5",
+		"Chessy_6",
+		"Maxwell1",
+		"Maxwell2",
+		"Maxwell3",
+		"Maxwell4",
+		"Maxwell6",
+		"Maxwell7",
+		"Warzone_1",
+		"Warzone_2",
+		"Warzone_3",
+	},
+}
+if not IsConsole() then
+	--worldgen_survival_plus.overrides.boons = "often"
+	--worldgen_survival_plus.overrides.spiders = "often"
+end
+AddWorldGenLevel(LEVELTYPE.SURVIVAL, worldgen_survival_plus)
+AddSettingsPreset(LEVELTYPE.SURVIVAL, {id="TERRARIA",
+	name=STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELS.TERRARIA,
+	desc= STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC.TERRARIA,
+	location = "forest",
+    version = 4,
+	overrides={
+        -- global
+        day = "longnight",
+        --beefaloheat = "rare" or "never"?
+
+        -- survivors
+        shadowcreatures = "never",
+
+        -- world
+        lightning = "never", -- or "rare"
+        weather = "often",
+        wildfires = "never",
+
+        -- resource
+        regrowth = "fast",
+        carrots_regrowth = "never",
+        flowers_regrowth = "fast",
+
+        -- creatures
+        bees_setting = "never",
+        birds = "often",
+        rabbits_setting = "often",
+
+        -- monsters
+        bats_setting = "never",
+        wasps = "always",
+        sharks = "many",
+        lureplants = "often",
+    },
+})

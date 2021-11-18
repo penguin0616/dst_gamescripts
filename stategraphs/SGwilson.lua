@@ -3253,7 +3253,8 @@ local states =
             TimeEvent(7 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
                 inst.sg:RemoveStateTag("prehammer")
-                inst.SoundEmitter:PlaySound("dontstarve/wilson/hit")
+                local hit_skin_sound = inst.sg.statemem.action ~= nil and inst.sg.statemem.action.invobject ~= nil and inst.sg.statemem.action.invobject.hit_skin_sound or nil
+                inst.SoundEmitter:PlaySound(hit_skin_sound or "dontstarve/wilson/hit")
             end),
 
             TimeEvent(9 * FRAMES, function(inst)
@@ -7012,6 +7013,18 @@ local states =
                     DoMountSound(inst, inst.components.rider:GetMount(), "angry", true)
                     cooldown = math.max(cooldown, 16 * FRAMES)
                 end
+            elseif equip ~= nil and equip:HasTag("toolpunch") then
+
+                -- **** ANIMATION WARNING ****
+                -- **** ANIMATION WARNING ****
+                -- **** ANIMATION WARNING ****
+
+                --  THIS ANIMATION LAYERS THE LANTERN GLOW UNDER THE ARM IN THE UP POSITION SO CANNOT BE USED IN STANDARD LANTERN GLOW ANIMATIONS.
+                
+                inst.AnimState:PlayAnimation("toolpunch")
+                inst.sg.statemem.istoolpunch = true
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, inst.sg.statemem.attackvol, true)
+                cooldown = math.max(cooldown, 13 * FRAMES)
             elseif equip ~= nil and equip:HasTag("whip") then
                 inst.AnimState:PlayAnimation("whip_pre")
                 inst.AnimState:PushAnimation("whip", false)
@@ -10580,7 +10593,7 @@ local states =
                 end
             end
 
-            inst.sg.statemem.castsound = staff ~= nil and staff.castsound or "dontstarve/wilson/use_gemstaff"
+            inst.sg.statemem.castsound = staff ~= nil and staff.skin_castsound or staff.castsound or "dontstarve/wilson/use_gemstaff"
         end,
 
         timeline =

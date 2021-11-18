@@ -237,6 +237,9 @@ local TRANSLATE_TO_PREFABS = {
 	["ocean_waterplant"] =	{"waterplant_spawner_rough", "waterplant"},
 	["ocean_wobsterden"] =	{"wobster_den_spawner_shore"},
 	["ocean_bullkelp"] =	{"bullkelp_plant"},
+
+    -- Allow for the Terrarium to be a required world gen prefab, but still disable-able via World Gen settings
+    ["terrariumchest"] =    {"terrariumchest"},
 }
 
 local TRANSLATE_TO_CLUMP = {

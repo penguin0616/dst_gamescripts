@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "I guess that won't work.",
 			CARNIVALGAME_ALREADY_PLAYING = "Come on, hurry up!",
             SPIDERNOHAT = "Why does it need a hat when it's snug as a bug in my pocket?",
+            TERRARIUM_REFUSE = "What, that wasn't good enough for it?",
         },
         GIVETOPLAYER =
         {
@@ -1589,6 +1590,8 @@ return{
         CHESSPIECE_ANTLION = "Can't shake anything up like that.",
         CHESSPIECE_BEEFALO = "Hey, they got his good side!",
         CHESSPIECE_GUARDIANPHASE3 = "Ugh, I'd be happy never seeing that thing again.",
+        CHESSPIECE_EYEOFTERROR = "I still feel an evil presence watching me...",
+        CHESSPIECE_TWINSOFTERROR = "Great, another creepy statue.",
 
         CHESSJUNK1 = "Dead windup horsey.",
         CHESSJUNK2 = "Dead windup priest.",
@@ -4180,6 +4183,39 @@ return{
         FIGKABAB = "When I'm done with the food I can burn the stick!",
         KOALEFIG_TRUNK = "Sweet and rubbery.",
         FROGNEWTON = "All that fig almost masks the frog flavor.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "What horrors will you unleash upon our world?",
+            CRIMSON = "Oh yuck, it looks all gross inside!",
+            ENABLED = "Oooh... Aaah...",
+			WAITING_FOR_DARK = "Oooh, maybe it's getting ready to explode!",
+			COOLDOWN = "I hope it does fireworks instead of rainbows next time.",
+			SPAWN_DISABLED = "Looks like the fun's over.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "It'll be a nice place to put my stuff while I'm out burning.",
+			BURNT = "Do it again! Again!",
+			SHIMMER = "Please have fireworks inside, pleeeease!",
+		},
+
+		EYEMASKHAT = "Well, looks aren't everything.",
+
+        EYEOFTERROR = "What's your problem? Quit staring!",
+        EYEOFTERROR_MINI = "Ew ew ew!!",
+        EYEOFTERROR_MINI_GROUNDED = "Squish it!!",
+
+        FROZENBANANADAIQUIRI = "Ew, it's cold.",
+        BUNNYSTEW = "It warms from the inside out.",
+        MILKYWHITES = "No thanks.",
+
+        CRITTER_EYEOFTERROR = "Hey, looking good today!",
+
+        SHIELDOFTERROR ="At least there's no eye gunk on it.",
+        TWINOFTERROR1 = "Hey no fair, it brought backup!",
+        TWINOFTERROR2 = "Hey no fair, it brought backup!",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

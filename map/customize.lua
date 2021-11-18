@@ -328,6 +328,7 @@ local WORLDGEN_GROUP = {
 			["cavelight"] = {value = "default", image = "cavelight.tex", desc = speed_descriptions, order = 18, world={"cave"}},
 			["prefabswaps_start"] = {value = "default", image = "starting_variety.tex", options_remap = {img = "blank_grassy.tex", atlas = "images/customisation.xml"}, desc = starting_swaps_descriptions, order = 20, world={"forest", "cave"}},
 			["moon_fissure"] = {value = "default", image = "moon_fissure.tex", desc = worldgen_frequency_descriptions, world = {"forest"}},
+			["terrariumchest"] = {value = "default", image = "terrarium.tex", desc = yesno_descriptions, world={"forest"}},
 		}
 	},
 	["global"] = {
@@ -375,6 +376,7 @@ local WORLDSETTINGS_GROUP = {
 			["fruitfly"] = {value = "default", image = "fruitfly.tex", world={"forest", "cave"}},
 			["klaus"] = {value = "default", image = "klaus.tex", world={"forest"}},
 			["spiderqueen"] = {value = "default", image = "spiderqueen.tex", world={"forest", "cave"}},
+			["eyeofterror"] = {value = "default", image = "eyeofterror.tex", world={"forest"}},
 			--NO_BOSS_TIME?
 		}
 	},

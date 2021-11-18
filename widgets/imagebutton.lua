@@ -168,7 +168,7 @@ function ImageButton:OnControl(control, down)
 
 	if self:IsSelected() and not self.AllowOnControlWhenSelected then return false end
 
-    if control == self.control then
+	if control == self.control and (not self.mouseonly or TheFrontEnd.isprimary) then
         if down then
             if not self.down then
                 if self.has_image_down then

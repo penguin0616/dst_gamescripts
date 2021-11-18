@@ -3227,6 +3227,13 @@ local states =
                         cooldown = math.max(cooldown, 16 * FRAMES)
                     end
                 end
+            elseif equip ~= nil and equip:HasTag("toolpunch") then
+                inst.AnimState:PlayAnimation("toolpunch")
+                inst.sg.statemem.istoolpunch = true
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_weapon", nil, nil, true)
+                if cooldown > 0 then
+                    cooldown = math.max(cooldown, 13 * FRAMES)
+                end
             elseif equip ~= nil and equip:HasTag("whip") then
                 inst.AnimState:PlayAnimation("whip_pre")
                 inst.AnimState:PushAnimation("whip", false)

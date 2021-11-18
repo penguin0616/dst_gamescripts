@@ -7,7 +7,7 @@ local assets =
 }
 
 local function ondeploy(inst, pt)
-    local lp = SpawnPrefab("lureplant")
+    local lp = SpawnPrefab("lureplant", inst.linked_skinname, inst.skin_id)
     if lp ~= nil then
         lp.Transform:SetPosition(pt:Get())
         inst.components.stackable:Get():Remove()

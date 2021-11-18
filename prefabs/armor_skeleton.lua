@@ -106,7 +106,14 @@ local function ontakefuel(inst)
 end
 
 local function onequip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_body", "armor_skeleton", "swap_body")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_body", skin_build, "swap_body", inst.GUID, "armor_skeleton")
+    else
+		owner.AnimState:OverrideSymbol("swap_body", "armor_skeleton", "swap_body")
+    end
+
     inst.lastmainshield = 0
     if not inst.components.fueled:IsEmpty() then
         inst.components.cooldown.onchargedfn = OnChargedFn
@@ -124,6 +131,11 @@ local function onunequip(inst, owner)
     end
     for i, v in ipairs(RESISTANCES) do
         inst.components.resistance:RemoveResistance(v)
+    end
+
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("unequipskinneditem", inst:GetSkinName())
     end
 end
 
@@ -145,7 +157,8 @@ local function fn()
 
     inst.foleysound = "dontstarve/movement/foley/bone"
 
-    MakeInventoryFloatable(inst, "small", 0.2, 0.80)
+    local swap_data = {bank = "armor_skeleton", anim = "anim"}
+    MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)
 
     inst.entity:SetPristine()
 

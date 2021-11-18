@@ -123,6 +123,10 @@ function GhostlyBond:OnUpdate(dt)
 	end
 end
 
+function GhostlyBond:LongUpdate(dt)
+	self:OnUpdate(dt)
+end
+
 function GhostlyBond:SetBondTimeMultiplier(src, mult, key)
 	self.externalbondtimemultipliers:SetModifier(src, mult, key)
 end

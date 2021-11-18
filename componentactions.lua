@@ -110,9 +110,11 @@ local COMPONENT_ACTIONS =
 {
     SCENE = --args: inst, doer, actions, right
     {
-        activatable = function(inst, doer, actions)
+        activatable = function(inst, doer, actions, right)
             if inst:HasTag("inactive") then
-                table.insert(actions, ACTIONS.ACTIVATE)
+				if right or inst.replica.inventoryitem == nil then
+	                table.insert(actions, ACTIONS.ACTIVATE)
+				end
             end
         end,
 

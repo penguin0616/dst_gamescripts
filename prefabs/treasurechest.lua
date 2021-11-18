@@ -190,6 +190,85 @@ local function minotuar_master_postinit(inst)
     end, TheWorld)
 end
 
+
+--------------------------------------------------------------------------
+--[[ Terrarium ]]
+--------------------------------------------------------------------------
+
+local function terrarium_GetStatus(inst)
+    return inst.fx ~= nil and "SHIMMER" 
+			or inst:HasTag("burnt") and "BURNT"
+			or nil
+end
+
+local function terrarium_removefx(inst)
+	if inst.fx ~= nil then
+		inst.fx:Remove()
+		inst.fx = nil
+		inst:RemoveEventCallback("onburnt", terrarium_removefx)
+		inst:RemoveEventCallback("onopen", terrarium_removefx)
+		inst.SoundEmitter:KillSound("shimmer")
+	end
+end
+
+local function terrarium_master_postinit(inst)
+    inst.components.inspectable.getstatus = terrarium_GetStatus
+
+	if TUNING.SPAWN_EYEOFTERROR then
+		inst:DoTaskInTime(0, function(i)
+			if i.components.scenariorunner ~= nil then
+				i.fx = SpawnPrefab("terrariumchest_fx")
+				i.fx.entity:SetParent(i.entity)
+
+				i:ListenForEvent("onburnt", terrarium_removefx)
+				i:ListenForEvent("onopen", terrarium_removefx)
+
+				inst.SoundEmitter:PlaySound("terraria1/terrarium/shimmer_chest_lp", "shimmer")
+			end
+		end)
+	end
+end
+
+local function terrariumchest_fx_fn()
+	local inst = CreateEntity()
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+
+	inst.AnimState:SetBuild("terrariumchest_fx")
+	inst.AnimState:SetBank("terrariumchest_fx")
+	inst.AnimState:PlayAnimation("idle_back", true)
+	inst.AnimState:SetFinalOffset(1)
+	
+
+	if not TheNet:IsDedicated() then
+		local fx_front = CreateEntity()
+		fx_front.entity:AddTransform()
+		fx_front.entity:AddAnimState()
+		fx_front.entity:SetParent(inst.entity)
+
+		fx_front:AddTag("FX")
+		fx_front:AddTag("CLASSIFIED")
+
+		fx_front.AnimState:SetBuild("terrariumchest_fx")
+		fx_front.AnimState:SetBank("terrariumchest_fx")
+		fx_front.AnimState:PlayAnimation("idle_front", true)
+		fx_front.AnimState:SetFinalOffset(-3)
+	end
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+	inst.persists = false
+
+	return inst
+end
+
 --------------------------------------------------------------------------
 --[[ sunken ]]
 --------------------------------------------------------------------------
@@ -262,4 +341,6 @@ return MakeChest("treasurechest", "chest", "treasure_chest", false, nil, { "coll
     MakePlacer("treasurechest_placer", "chest", "treasure_chest", "closed"),
     MakeChest("pandoraschest", "pandoras_chest", "pandoras_chest", true, pandora_master_postinit, { "pandorachest_reset" }),
     MakeChest("minotaurchest", "pandoras_chest_large", "pandoras_chest_large", true, minotuar_master_postinit, { "collapse_small" }),
+    MakeChest("terrariumchest", "chest", "treasurechest_terrarium", false, terrarium_master_postinit, { "collapse_small", "terrariumchest_fx" }, { Asset("ANIM", "anim/treasurechest_terrarium.zip") }),
+	Prefab("terrariumchest_fx", terrariumchest_fx_fn, { Asset("ANIM", "anim/terrariumchest_fx.zip") }, { "collapse_small" }),
 	MakeChest("sunkenchest", "sunken_treasurechest", "sunken_treasurechest", false, sunken_master_postinit, { "collapse_small", "underwater_salvageable", "splash_green" }, { Asset("ANIM", "anim/swap_sunken_treasurechest.zip") }, sunken_common_postinit, true)

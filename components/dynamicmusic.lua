@@ -113,6 +113,11 @@ local TRIGGERED_DANGER_MUSIC =
         "moonstorm/creatures/boss/alterguardian3/music_epicfight",
     },
 
+    eyeofterror =
+    {
+        "terraria1/common/music_epicfight_eot",
+    },
+
     default =
     {
         "dontstarve/music/music_epicfight_ruins",

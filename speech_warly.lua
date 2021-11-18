@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "That wasn't to its liking.",
 			CARNIVALGAME_ALREADY_PLAYING = "Un moment, the game has already started.",
             SPIDERNOHAT = "I'm afraid that's a bit of a tight squeeze.",
+            TERRARIUM_REFUSE = "That doesn't seem to suit its tastes.",
         },
         GIVETOPLAYER =
         {
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "I do like her better like this.",
         CHESSPIECE_BEEFALO = "What a beautifully marbled steak.",
         CHESSPIECE_GUARDIANPHASE3 = "A three course fight I won't soon forget.",
+        CHESSPIECE_EYEOFTERROR = "Did it just blink?",
+        CHESSPIECE_TWINSOFTERROR = "They weren't the most polite guests, non?",
 
         CHESSJUNK1 = "Broken chess pieces?",
         CHESSJUNK2 = "More broken chess pieces?",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "Something about being on a stick brings out more of the flavor.",
         KOALEFIG_TRUNK = "I might have overdone it with the figs.",
         FROGNEWTON = "A lesser known French recipe.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "Is that broccoli growing inside? Non, it's a tiny tree!",
+            CRIMSON = "That petit tree doesn't look well at all.",
+            ENABLED = "What a lovely and fearsome light!",
+			WAITING_FOR_DARK = "I feel as though it's cooking up something...",
+			COOLDOWN = "For now, all seems well.",
+			SPAWN_DISABLED = "I think I'll sleep a bit better now.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "It doesn't look quite so strange now, non?",
+			BURNT = "C'est fini.",
+			SHIMMER = "Mon dieu, I think my eyes are playing tricks on me...",
+		},
+
+		EYEMASKHAT = "I must remember to avoid cutting onions while wearing this.",
+
+        EYEOFTERROR = "That eye has a hungry look to it...",
+        EYEOFTERROR_MINI = "I'm sure there are tastier things to eat than me!",
+        EYEOFTERROR_MINI_GROUNDED = "Don't make me scramble you!",
+
+        FROZENBANANADAIQUIRI = "There's no better refreshment!",
+        BUNNYSTEW = "Ah, lapin a la cocotte. A classic.",
+        MILKYWHITES = "Though it doesn't look too appealing now, it may be a useful substitute for other ingredients.",
+
+        CRITTER_EYEOFTERROR = "Would you like me to make you some bacon and eggs?",
+
+        SHIELDOFTERROR ="Mon dieu, it seems I have another mouth to feed...",
+        TWINOFTERROR1 = "I promise, I'm not as delicious as I appear!",
+        TWINOFTERROR2 = "I promise, I'm not as delicious as I appear!",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

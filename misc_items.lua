@@ -1088,6 +1088,15 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 58,
 	},
+	mysterybox_terraria =
+	{
+		type = "mysterybox",
+		skin_tags = { "MYSTERYBOX", },
+		box_build = "box_mystery_eye",
+		rarity = "Elegant",
+		rarity_modifier = "Inspired",
+		release_group = 125,
+	},
 	mysterybox_trickortreat =
 	{
 		type = "mysterybox",
@@ -4955,6 +4964,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 120,
 	},
+	playerportrait_bg_mastupgradelampnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 125,
+	},
 	playerportrait_bg_messylab =
 	{
 		type = "playerportrait",
@@ -5938,6 +5954,13 @@ MISC_ITEMS =
 		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 120,
+	},
+	profileflair_mastupgradelamp_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 125,
 	},
 	profileflair_merm =
 	{

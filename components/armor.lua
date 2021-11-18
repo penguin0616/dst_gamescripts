@@ -137,4 +137,15 @@ function Armor:TakeDamage(damage_amount)
     self.inst:PushEvent("armordamaged", damage_amount)
 end
 
+function Armor:Repair(amount)
+    self:SetCondition(self.condition + amount)
+    if self.onrepair ~= nil then
+        self.onrepair(self.inst, amount)
+    end
+end
+
+function Armor:GetDebugString()
+	return self.condition .. "/" .. self.maxcondition
+end
+
 return Armor

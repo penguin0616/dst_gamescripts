@@ -44,6 +44,8 @@ local PIECES =
     {name="antlion",	moonevent=false},
     {name="minotaur",	moonevent=false},
     {name="guardianphase3", moonevent=false},
+    {name="eyeofterror", moonevent=false},
+    {name="twinsofterror", moonevent=false},
 }
 
 local MOON_EVENT_RADIUS = 12

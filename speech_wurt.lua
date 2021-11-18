@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "It not want that.",
 			CARNIVALGAME_ALREADY_PLAYING = "Me next, me next!",
             SPIDERNOHAT = "Spiderfolk no need hat in there.",
+            TERRARIUM_REFUSE = "Glurph. Gotta try something else.",
         },
         GIVETOPLAYER =
         {
@@ -1574,7 +1575,7 @@ return{
         CHESSPIECE_MOON = "It look just like real thing!",
         CHESSPIECE_CARRAT = "Veggie rat look happy.",
         CHESSPIECE_MALBATROSS = "It very fancy looking statue.",
-        CHESSPIECE_CRABKING = "Glurgh, he made crab lady sad!",
+        CHESSPIECE_CRABKING = "Glurgh, he make crab lady sad!",
         CHESSPIECE_TOADSTOOL = "No more glurp-glurping.",
         CHESSPIECE_STALKER = "Not so spooky now.",
         CHESSPIECE_KLAUS = "Can't chase me anymore!",
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "How she stay so still?",
         CHESSPIECE_BEEFALO = "It just rock, real thing better.",
         CHESSPIECE_GUARDIANPHASE3 = "Glorp! Oh, it not real.",
+        CHESSPIECE_EYEOFTERROR = "Oh no... got dried out, glorp...",
+        CHESSPIECE_TWINSOFTERROR = "Ha ha, they just rocks now!",
 
         CHESSJUNK1 = "It all broken.",
         CHESSJUNK2 = "Didn't do it!!",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "Blegh, fruit ruined with meat!",
         KOALEFIG_TRUNK = "Glurgh... fruit have yucky nose juice all over...",
         FROGNEWTON = "Glurph! There frog leg in this!",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "It so... glowy...",
+            CRIMSON = "It look kinda funny inside.",
+            ENABLED = "WHAT GOING ON?!",
+			WAITING_FOR_DARK = "Ooooh! Wanna float like that too!",
+			COOLDOWN = "Where little tree go, florp?",
+			SPAWN_DISABLED = "It not working.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "It smell strange, not from here.",
+			BURNT = "Didn't do it!!",
+			SHIMMER = "Maybe have extra shiny treasure inside?",
+		},
+
+		EYEMASKHAT = "Feels like hug from a slug.",
+
+        EYEOFTERROR = "Glurp...",
+        EYEOFTERROR_MINI = "Grrrr, not afraid of little chompy eyes!",
+        EYEOFTERROR_MINI_GROUNDED = "It gonna open soon!",
+
+        FROZENBANANADAIQUIRI = "Cold fruit tastes yummy, florp!",
+        BUNNYSTEW = "Glorp... Bunny's bath was too hot...",
+        MILKYWHITES = "Squishy!",
+
+        CRITTER_EYEOFTERROR = "Will make sure no get dry, glorp. Very important.",
+
+        SHIELDOFTERROR ="How come it allowed to bite, but me get in trouble?!",
+        TWINOFTERROR1 = "M-mermfolk not scared of any Ironfolk, flort!",
+        TWINOFTERROR2 = "M-mermfolk not scared of any Ironfolk, flort!",
     },
 
     DESCRIBE_GENERIC = "What that?",

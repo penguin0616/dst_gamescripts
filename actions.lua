@@ -261,7 +261,7 @@ ACTIONS =
     JUMPIN = Action({ ghost_valid=true, encumbered_valid=true }),
     TELEPORT = Action({ rmb=true, distance=2 }),
     RESETMINE = Action({ priority=3 }),
-    ACTIVATE = Action(),
+    ACTIVATE = Action({priority=2}),
     MURDER = Action({ priority=1, mount_valid=true }),
     HEAL = Action({ mount_valid=true }),
     INVESTIGATE = Action(),

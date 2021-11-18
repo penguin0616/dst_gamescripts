@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "That doesn't appear to be the correct form of payment.",
 			CARNIVALGAME_ALREADY_PLAYING = "I'm afraid I'll have to wait.",
             SPIDERNOHAT = "There simply isn't enough room for that.",
+            TERRARIUM_REFUSE = "Perhaps I should make another attempt with something else.",
         },
         GIVETOPLAYER =
         {
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "A stately statuary of the Panthera auropunctata.",
         CHESSPIECE_BEEFALO = "It captures my beefalo's likeness quite well.",
         CHESSPIECE_GUARDIANPHASE3 = "I must commend the artist for their attention to detail.",
+        CHESSPIECE_EYEOFTERROR = "A trophy that doubles as a useful anatomical model.",
+        CHESSPIECE_TWINSOFTERROR = "A stone rendition of a pair of mechanical marvels.",
 
         CHESSJUNK1 = "The magician's unfinished projects?",
         CHESSJUNK2 = "The magician's unfinished projects?",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "I suppose this is the next logical step after meat on a stick.",
         KOALEFIG_TRUNK = "High in protein and fiber.",
         FROGNEWTON = "It has quite a unique flavor.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "This is certainly not of this world. Curious.",
+            CRIMSON = "The nightmare fuel appears to have had an adverse affect on it.",
+            ENABLED = "What is the meaning of this?!",
+			WAITING_FOR_DARK = "I believe it's storing up energy, but for what purpose?",
+			COOLDOWN = "It appears to have expended its energy, but I cannot say for how long.",
+			SPAWN_DISABLED = "It should remain inactive, as long as it's not disturbed.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "I wonder how it came to be here.",
+			BURNT = "Oh dear...",
+			SHIMMER = "That light is refracting rather unnaturally.",
+		},
+
+		EYEMASKHAT = "I doubt that they make my prescription in this size.",
+
+        EYEOFTERROR = "Oculus dexter or oculus sinister, I wonder? I have a suspicion it's the latter.",
+        EYEOFTERROR_MINI = "I'm fascinated, but now is not the time to study you.",
+        EYEOFTERROR_MINI_GROUNDED = "An eyeball... embryo? These creatures are quite perplexing.",
+
+        FROZENBANANADAIQUIRI = "This would pair nicely with a short book.",
+        BUNNYSTEW = "Caloric, but nutritious. It smells wonderful, as well. ",
+        MILKYWHITES = "Tunica albuginea oculi, the opaque white covering of the vitreous humor. Also known as disgusting.",
+
+        CRITTER_EYEOFTERROR = "Now, I wonder if your nerves are functional, or merely decorative...",
+
+        SHIELDOFTERROR ="It seems better suited to offensive measures, rather than defensive as one might think.",
+        TWINOFTERROR1 = "How curious, I wonder who might have constructed such a thing?",
+        TWINOFTERROR2 = "How curious, I wonder who might have constructed such a thing?",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

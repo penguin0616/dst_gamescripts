@@ -357,11 +357,6 @@ function TextEdit:OnControl(control, down)
     return false
 end
 
-function TextEdit:OnDestroy()
-    Self:SetEditing(false)
-    TheInput:EnableDebugToggle(true)
-end
-
 function TextEdit:OnFocusMove(dir, down)
 
     -- Note: It would be nice to call OnProcces() here, but this gets called when pressing WASD so it wont work.

@@ -54,4 +54,8 @@ function Activatable:DoActivate(doer)
 	return nil
 end
 
+function Activatable:GetDebugString()
+	return tostring(self.inactive)
+end
+
 return Activatable

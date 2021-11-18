@@ -100,9 +100,10 @@ end
 -------------------------------------------------------------------------------
 
 local function MakeCritter(name, animname, face, diet, flying, data, prefabs)
+    local buildname = (data and data.buildname) or animname.."_build"
     local assets =
     {
-	    Asset("ANIM", "anim/"..animname.."_build.zip"),
+        Asset("ANIM", "anim/"..buildname..".zip"),
 	    Asset("ANIM", "anim/"..animname.."_basic.zip"),
 	    Asset("ANIM", "anim/"..animname.."_emotes.zip"),
 	    Asset("ANIM", "anim/"..animname.."_traits.zip"),
@@ -134,7 +135,7 @@ local function MakeCritter(name, animname, face, diet, flying, data, prefabs)
         end
 
         inst.AnimState:SetBank(animname)
-        inst.AnimState:SetBuild(animname.."_build")
+        inst.AnimState:SetBuild(buildname)
         inst.AnimState:PlayAnimation("idle_loop")
 
         if flying then
@@ -351,4 +352,6 @@ return MakeCritter("critter_lamb", "sheepington", 6, standard_diet, false, {favo
        MakeCritter("critter_glomling", "glomling", 6, standard_diet, true, {favoritefood="taffy", playmatetags={"glommer"}, flyingsoundloop="dontstarve_DLC001/creatures/together/glomling/flap_LP"}),
        MakeBuilder("critter_glomling"),
        MakeCritter("critter_lunarmothling", "lunarmoth", 4, standard_diet, true, {favoritefood="flowersalad", flyingsoundloop="dontstarve_DLC001/creatures/together/dragonling/flap_LP", special_powers_fn = lunarmoth_special_powers_fn}, {"critterbuff_lunarmoth"}),
-       MakeBuilder("critter_lunarmothling")
+       MakeBuilder("critter_lunarmothling"),
+       MakeCritter("critter_eyeofterror", "eyeofterror_mini", 6, standard_diet, true, {buildname = "eyeofterror_mini_basic", favoritefood="baconeggs"--[[, flyingsoundloop = "a hover loop here, IF we want it"]] }),
+       MakeBuilder("critter_eyeofterror")

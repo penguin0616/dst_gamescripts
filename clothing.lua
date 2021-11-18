@@ -384,6 +384,16 @@ CLOTHING =
 		marketable = true,
 		release_group = 10,
 	},
+	body_merchant_coat =
+	{
+		type = "body",
+		skin_tags = { "T_UPDATE", "CLOTHING_BODY", "CLOTHING", },
+		symbol_overrides = { "torso", "arm_upper", },
+		torso_tuck = "untucked",
+		rarity = "Distinguished",
+		rarity_modifier = "Inspired",
+		release_group = 125,
+	},
 	body_outerwear_quilted_red_cardinal =
 	{
 		type = "body",
@@ -3070,7 +3080,7 @@ CLOTHING =
 		skin_tags = { "COOK", "CLOTHING_BODY", "CLOTHING", },
 		symbol_overrides = { "arm_upper", "torso", "torso_pelvis", "skirt", },
 		symbol_overrides_skinny = { arm_upper = "arm_upper_skinny", },
-		symbol_overrides_mighty = { torso = "torso_mighty", },
+		symbol_overrides_mighty = { arm_upper = "none", torso = "torso_mighty", },
 		torso_tuck = "skirt",
 		rarity = "Distinguished",
 		marketable = true,
@@ -3082,7 +3092,7 @@ CLOTHING =
 		skin_tags = { "FORMAL", "CLOTHING_BODY", "CLOTHING", },
 		symbol_overrides = { "arm_upper", "arm_upper_skin", "arm_lower", "torso", "torso_pelvis", "leg", "foot", },
 		symbol_overrides_skinny = { arm_lower = "arm_lower_skinny", arm_upper = "arm_upper_skinny", arm_upper_skin = "arm_upper_skin_skinny", },
-		symbol_overrides_mighty = { arm_lower = "arm_lower_mighty", arm_upper = "arm_upper_mighty", arm_upper_skin = "arm_upper_skin_mighty", torso = "torso_mighty", },
+		symbol_overrides_mighty = { arm_lower = "arm_lower_mighty", arm_upper = "arm_upper_mighty", torso = "torso_mighty", },
 		symbol_hides = { "skirt", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
@@ -3130,7 +3140,7 @@ CLOTHING =
 		type = "body",
 		skin_tags = { "VARG", "CLOTHING_BODY", "CLOTHING", },
 		symbol_overrides = { "arm_upper", "torso", "torso_pelvis", "leg", "foot", },
-		symbol_overrides_skinny = { arm_upper = "arm_upper_skinny", arm_upper_skin = "arm_upper_skin_skinny", },
+		symbol_overrides_skinny = { arm_upper = "arm_upper_skinny", },
 		symbol_overrides_mighty = { arm_upper = "arm_upper_mighty", torso = "torso_mighty", },
 		symbol_hides = { "skirt", },
 		torso_tuck = "untucked",
@@ -3142,9 +3152,9 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "ROSE", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "hand", "arm_lower", "arm_upper", "torso", "torso_pelvis", "leg", "foot", },
+		symbol_overrides = { "hand", "arm_lower", "arm_upper", "arm_upper_skin", "torso", "torso_pelvis", "leg", "foot", },
 		symbol_overrides_skinny = { arm_lower = "arm_lower_skinny", arm_upper = "arm_upper_skinny", },
-		symbol_overrides_mighty = { arm_lower = "arm_lower_mighty", arm_upper = "arm_upper_mighty", torso = "torso_mighty", },
+		symbol_overrides_mighty = { arm_lower = "arm_lower_mighty", arm_upper = "arm_upper_mighty", arm_upper_skin = "arm_upper_skin_mighty", torso = "torso_mighty", },
 		symbol_hides = { "skirt", },
 		symbol_in_base_hides = { "arm_lower_cuff", },
 		torso_tuck = "untucked",
@@ -3157,8 +3167,8 @@ CLOTHING =
 		type = "body",
 		skin_tags = { "SHADOW", "CLOTHING_BODY", "CLOTHING", },
 		symbol_overrides = { "arm_lower_cuff", "torso", "torso_pelvis", "leg", "foot", },
-		symbol_overrides_skinny = { torso = "torso_skinny", torso_pelvis = "torso_pelvis_skinny", },
-		symbol_overrides_mighty = { torso = "torso_mighty", torso_pelvis = "torso_pelvis_mighty", },
+		symbol_overrides_skinny = { arm_lower_cuff = "arm_lower_cuff", torso = "torso_skinny", torso_pelvis = "torso_pelvis_skinny", },
+		symbol_overrides_mighty = { arm_lower_cuff = "arm_lower_cuff", torso = "torso_mighty", torso_pelvis = "torso_pelvis_mighty", },
 		symbol_hides = { "skirt", "arm_upper", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
@@ -4224,6 +4234,16 @@ CLOTHING =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 92,
+	},
+	feet_merchant =
+	{
+		type = "feet",
+		skin_tags = { "T_UPDATE", "CLOTHING_FEET", "CLOTHING", },
+		symbol_overrides = { "foot", },
+		rarity = "Classy",
+		rarity_modifier = "Inspired",
+		feet_cuff_size = 2,
+		release_group = 125,
 	},
 	feet_ridingboot_white_pure =
 	{
@@ -6411,6 +6431,17 @@ CLOTHING =
 		legs_cuff_size = 2,
 		marketable = true,
 		release_group = 64,
+	},
+	legs_merchant =
+	{
+		type = "legs",
+		skin_tags = { "T_UPDATE", "CLOTHING_LEGS", "CLOTHING", },
+		symbol_overrides = { "torso_pelvis", "leg", },
+		symbol_hides = { "skirt", },
+		rarity = "Spiffy",
+		rarity_modifier = "Inspired",
+		legs_cuff_size = 5,
+		release_group = 125,
 	},
 	legs_pants_basic_black_scribble =
 	{

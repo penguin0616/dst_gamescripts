@@ -118,9 +118,10 @@ return{
 			PIGKINGGAME_MESSY = "It kind of reminds me of my old workshop... a pigsty.",
 			PIGKINGGAME_DANGER = "I'm not putting my life in danger for a game!",
 			PIGKINGGAME_TOOLATE = "It's getting dark. Maybe another time.",
-			CARNIVALGAME_INVALID_ITEM = "That won't work, it needs something that will fit into this small slot...",
+			CARNIVALGAME_INVALID_ITEM = "It needs something that will fit into this small slot...",
 			CARNIVALGAME_ALREADY_PLAYING = "I'll just come back later. Or earlier.",
             SPIDERNOHAT = "As whimsical as that would be, there isn't enough space in my pocket.",
+            TERRARIUM_REFUSE = "I wonder how the magic from this world might affect it?",
         },
         GIVETOPLAYER =
         {
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "Right. That time I was almost impaled by spikes.",
         CHESSPIECE_BEEFALO = "A real one would be marginally more interesting to look at.",
         CHESSPIECE_GUARDIANPHASE3 = "I hope I won't have to do that again.",
+        CHESSPIECE_EYEOFTERROR = "Certainly an eye to behold.",
+        CHESSPIECE_TWINSOFTERROR = "I'd be quite happy to never lay eyes on them again.",
 
         CHESSJUNK1 = "I don't see much in the way of proper clockwork in there.",
         CHESSJUNK2 = "I have a suspicion these were held together with more magic than craftsmanship.",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "No plates, no cutlery, no fuss!",
         KOALEFIG_TRUNK = "It looks very filling.",
         FROGNEWTON = "It's very flavorful.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "Does anyone else feel that shiver of interdimensionality in the air?",
+            CRIMSON = "Oh, it didn't take well to shadow magic, did it?",
+            ENABLED = "Being right all the time is getting old.",
+			WAITING_FOR_DARK = "I have a rather terrible feeling about this...",
+			COOLDOWN = "It's dormant, for the time being at least.",
+			SPAWN_DISABLED = "It doesn't seem to be active, perhaps now I can tinker with it...",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "Dimensional cross-contamination aside, it's quite a lovely chest.",
+			BURNT = "Erased from the timeline.",
+			SHIMMER = "That... seems suspect.",
+		},
+
+		EYEMASKHAT = "How bizarre... I simply must try it on!",
+
+        EYEOFTERROR = "I don't think that's supposed to be here...",
+        EYEOFTERROR_MINI = "My eyes aren't the best, but I'm not looking for replacements anytime soon!",
+        EYEOFTERROR_MINI_GROUNDED = "It's trying to hatch! I should keep my eye on it.",
+
+        FROZENBANANADAIQUIRI = "I'll be done with it in no time.",
+        BUNNYSTEW = "This rabbit was too late.",
+        MILKYWHITES = "The collagen in this is great for fighting aging. Magic watch is better, though.",
+
+        CRITTER_EYEOFTERROR = "An all seeing eye will be quite a useful companion.",
+
+        SHIELDOFTERROR ="Oh, how alarming... but I'm not one to look a gift shield in the mouth.",
+        TWINOFTERROR1 = "That doesn't look like any clockwork I've ever seen.",
+        TWINOFTERROR2 = "That doesn't look like any clockwork I've ever seen.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

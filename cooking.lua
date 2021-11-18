@@ -139,6 +139,8 @@ AddIngredientValues({"acorn_cooked"}, {seed=1})
 AddIngredientValues({"goatmilk"}, {dairy=1})
 -- AddIngredientValues({"seeds"}, {seed=1}, true)
 
+AddIngredientValues({"milkywhites"}, {dairy=1})
+
 AddIngredientValues({"nightmarefuel"}, {inedible=1, magic=1})
 AddIngredientValues({"boneshard"}, {inedible=1})
 

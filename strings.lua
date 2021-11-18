@@ -450,7 +450,7 @@ STRINGS =
         TALKTO = "Talk to",
 		INTERACT_WITH =
 		{
-            GENERIC = "Interact With",
+            GENERIC = "Use",
 			FARM_PLANT = "Talk To",
 		},
         MINE = "Mine",
@@ -2059,6 +2059,8 @@ STRINGS =
         CHESSPIECE_BEEQUEEN = "Bee Queen Figure",
         CHESSPIECE_ANTLION = "Antlion Figure",
         CHESSPIECE_GUARDIANPHASE3 = "Celestial Champion Figure",
+		CHESSPIECE_EYEOFTERROR = "Eye Of Terror Figure",
+        CHESSPIECE_TWINSOFTERROR = "Twins of Terror Figure",
 
         CHESSPIECE_PAWN_BUILDER = "Pawn Figure",
         CHESSPIECE_ROOK_BUILDER = "Rook Figure",
@@ -2088,6 +2090,8 @@ STRINGS =
         CHESSPIECE_BEEQUEEN_BUILDER = "Bee Queen Figure",
         CHESSPIECE_ANTLION_BUILDER = "Antlion Figure",
         CHESSPIECE_GUARDIANPHASE3_BUILDER = "Celestial Champion Figure",
+		CHESSPIECE_EYEOFTERROR_BUILDER = "Eye Of Terror Figure",
+        CHESSPIECE_TWINSOFTERROR_BUILDER = "Twins of Terror Figure",
 
 
         CHESSPIECE_BUTTERFLY_SKETCH = "Moon Moth Figure Sketch",
@@ -3219,7 +3223,6 @@ STRINGS =
         MUTATOR_WATER = "Strider Switcherdoodle",
         OCEANVINE_COCOON = "Sea Strider Nest",
         OCEANVINE_COCOON_BURNT = "Sea Strider Nest",
-        
 
         TREEGROWTHSOLUTION = "Tree Jam",
 
@@ -3227,6 +3230,25 @@ STRINGS =
         FIGKABAB = "Figkabab",
         KOALEFIG_TRUNK = "Fig-Stuffed Trunk",
         FROGNEWTON = "Figgy Frogwich",
+
+        -- Terraria
+        EYEOFTERROR = "Eye Of Terror",
+        EYEOFTERROR_MINI = "Suspicious Peeper",
+        EYEOFTERROR_MINI_GROUNDED = "Egg Of Terror",
+        TERRARIUM = "Terrarium",
+		EYEMASKHAT = "Eye Mask",
+        SHIELDOFTERROR = "Shield of Terror",
+        TWINOFTERROR1 = "Retinazor",
+        TWINOFTERROR2 = "Spazmatism",
+
+        FROZENBANANADAIQUIRI = "Frozen Banana Daiquiri",
+        BUNNYSTEW = "Bunny Stew",
+        MILKYWHITES = "Milky Whites",
+
+        TERRARIUMCHEST = "Conspicuous Chest",
+
+        CRITTER_EYEOFTERROR = "Friendly Peeper",
+        CRITTER_EYEOFTERROR_BUILDER = "Friendly Peeper",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3608,6 +3630,8 @@ STRINGS =
         CHESSPIECE_BEEQUEEN_BUILDER = "More regal than real.",
         CHESSPIECE_ANTLION_BUILDER = "Ain't this Antlion beautiful?",
         CHESSPIECE_GUARDIANPHASE3_BUILDER = "Its design radiates an otherworldly strangeness.",
+		CHESSPIECE_EYEOFTERROR_BUILDER = "Its stony gaze reminds you of an evil presence.",
+        CHESSPIECE_TWINSOFTERROR_BUILDER = "Double the eyes, double the terror.",
 
         CHESSPIECE_BUTTERFLY_SKETCH = "A sculpture sketch of a Moon Moth.",
         CHESSPIECE_ANCHOR_SKETCH = "A sculpture sketch of an anchor.",
@@ -3927,14 +3951,17 @@ STRINGS =
         MUTATOR_MOON = "Its recipient will be over the moon!",
         MUTATOR_HEALER = "Extra grainy, so it has to be healthy!",
         SPIDER_WHISTLE = "Call your creepy crawly friends.",
-        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",        
+        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",
         SPIDER_REPELLENT = "Let your friends know you need some space.",
         SPIDER_HEALER_ITEM = "Gross, gooey, and good for you!",
 
         -- Waterlog
         MUTATOR_WATER = "They look simply mouthwatering!",
-        TREEGROWTHSOLUTION = "Encourages trees to reach new heights.",        
+        TREEGROWTHSOLUTION = "Encourages trees to reach new heights.",
 
+		-- Terraria
+        CRITTER_EYEOFTERROR_BUILDER = "Summon a friendly ocular companion.",
+        
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_QUEST_SURVIVE = {
@@ -5164,7 +5191,7 @@ STRINGS =
     YOTB_CONTEST_THIRD_PLACE = "Alright, my pick for third place is...",
     YOTB_CONTEST_SECOND_PLACE = "And In second place...",
     YOTB_CONTEST_FIRST_PLACE = "Finally, my first place pick is...",
-    YOTB_CONGRATS_WINNER = "Congrats little guy! you win!",
+    YOTB_CONGRATS_WINNER = "Congrats little guy! You win!",
     YOTB_CONGRATS_WINNER_SECOND = "Congratulations!",
     YOTB_CONGRATS_WINNER_THIRD = "Take a bow!",
 
@@ -5486,6 +5513,14 @@ STRINGS =
 
     WAGSTAFF_GOTTAGO1 = "Aha! This selenological anomaly can only mean one thing!",
     WAGSTAFF_GOTTAGO2 = "Now is my chance!",
+
+    -- Terraria
+    EYEOFTERROR_COMING = "You feel an evil presence watching you...",
+    EYEOFTERROR_TARGET = "The Eye of Terror turns its gaze toward {player_name}",
+    EYEOFTERROR_CANCEL = "The evil presence has subsided.",
+
+    TWINS_COMING = "This is going to be a terrible night...",
+    TWINS_TARGET = "The Twins turn their gaze toward {player_name}",
 }
 
 STRINGS.BUNNYMANNAMES =
@@ -7726,6 +7761,8 @@ STRINGS.UI =
             DST_CAVE_PLUS = "Caves Plus",
             LAVAARENA = "The Forge",
             QUAGMIRE = "The Gorge",
+            TERRARIA = "Taste of Terraria",
+            TERRARIA_CAVE = "Caves of Terraria",
 
             MOD_MISSING = "<MOD MISSING>",
         },
@@ -7755,6 +7792,8 @@ STRINGS.UI =
             DST_CAVE_PLUS = "A darker, more arachnid-y cave experience.",
             LAVAARENA = "Dare you prove yourself in The Forge?",
             QUAGMIRE = "Can you stand the heat in The Gorge?",
+            TERRARIA = "Don't Starve Together, with a Terarria-inspired twist.",
+            TERRARIA_CAVE = "Don't Starve Together, with a Terarria-inspired twist... in the caves!",
 
             MOD_MISSING = "This preset came from a mod, but that mod isn't active right now!",
         },
@@ -7972,6 +8011,11 @@ STRINGS.UI =
         OCEAN_WATERPLANT = "Sea Weeds",
         OCEAN_WOBSTERDEN = "Wobster Mounds",
         OCEAN_BULLKELP = "Bull Kelp",
+
+		EYEOFTERROR = "Eye of Terror",
+		TERRARIUMCHEST = "Terrarium",
+
+		-- End of world customization strings
     },
 
     QUICKJOINSCREEN =
@@ -9803,8 +9847,8 @@ STRINGS.UI =
         Reward          = "Reward",
         Event           = "Event (Limited-Time Use)",
 
-        Lustrous        = "Lustrous",
 		Woven		    = "Woven - ",
+		Inspired        = "Inspired - ",
         CharacterModifier = "",
 
     },

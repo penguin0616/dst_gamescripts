@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "That's not what it wants.",
 			CARNIVALGAME_ALREADY_PLAYING = "They already started without me...",
             SPIDERNOHAT = "I have a feeling the spider would get it all rumpled in my pocket.",
+            TERRARIUM_REFUSE = "It refused my gift...",
         },
         GIVETOPLAYER =
         {
@@ -1586,6 +1587,8 @@ return{
         CHESSPIECE_ANTLION = "Still and lifeless.",
         CHESSPIECE_BEEFALO = "Merely a cold, lifeless copy.",
         CHESSPIECE_GUARDIANPHASE3 = "It won't be looking down on us anymore.",
+        CHESSPIECE_EYEOFTERROR = "Its stony gaze will glare for eternity.",
+        CHESSPIECE_TWINSOFTERROR = "I still remember watching the light leave their eyes.",
 
         CHESSJUNK1 = "Cold, dead artificial life.",
         CHESSJUNK2 = "Cold, dead artificial life.",
@@ -4177,6 +4180,39 @@ return{
         FIGKABAB = "The fig pieces look like little pierced hearts.",
         KOALEFIG_TRUNK = "How terrible.",
         FROGNEWTON = "Sweet and only a little slimy.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "So much beauty contained inside, will it ever escape?",
+            CRIMSON = "The darkness of this world has corrupted it.",
+            ENABLED = "Ah... so it has escaped.",
+			WAITING_FOR_DARK = "Abigail, are you doing that?",
+			COOLDOWN = "All beauty fades with time.",
+			SPAWN_DISABLED = "Let it be sealed away forever.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "What terrible things hide within?",
+			BURNT = "It didn't belong in this world.",
+			SHIMMER = "I feel its strange light drawing me in, like a moth to the flame.",
+		},
+
+		EYEMASKHAT = "I am the beholder of the eye.",
+
+        EYEOFTERROR = "Beware the evil eye.",
+        EYEOFTERROR_MINI = "I can feel the sting of their sharp gaze...",
+        EYEOFTERROR_MINI_GROUNDED = "One more blight will be brought into this world.",
+
+        FROZENBANANADAIQUIRI = "This won't be of help to my cold, cold heart.",
+        BUNNYSTEW = "You were fast, little rabbit, but death is faster.",
+        MILKYWHITES = "Ashes to ashes, dust to... this.",
+
+        CRITTER_EYEOFTERROR = "May we gaze into the abyss... together.",
+
+        SHIELDOFTERROR ="Nothing can truly shield you from the horrors of this cruel world.",
+        TWINOFTERROR1 = "Don't worry... Abby and I will make sure you leave this world together.",
+        TWINOFTERROR2 = "Don't worry... Abby and I will make sure you leave this world together.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

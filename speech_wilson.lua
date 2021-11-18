@@ -1,3 +1,4 @@
+
 -----------------------------------
 -- This file is the template for other speech files. Once a new string is added here, simply run PropagateSpeech.bat
 -- If you are adding strings that are character specific, or not required by all characters, you will still need to add the strings to speech_wilson.lua,
@@ -130,6 +131,7 @@ return {
 			CARNIVALGAME_INVALID_ITEM = "I need to buy some tokens.",
 			CARNIVALGAME_ALREADY_PLAYING = "A game is already underway.",
             SPIDERNOHAT = "I can't fit them together in my pocket",
+            TERRARIUM_REFUSE = "Maybe I should experiment with different kinds of fuel...",
         },
         GIVETOPLAYER =
         {
@@ -1591,6 +1593,8 @@ return {
         CHESSPIECE_ANTLION = "A stagn-antlion.",
         CHESSPIECE_BEEFALO = "This sculpture is pretty beefy.",
         CHESSPIECE_GUARDIANPHASE3 = "I much prefer it this way.",
+        CHESSPIECE_EYEOFTERROR = "It's giving me a stony stare.",
+        CHESSPIECE_TWINSOFTERROR = "That was a terrible night of very uncomfortable eye contact.",
 
         CHESSJUNK1 = "A pile of broken chess pieces.",
         CHESSJUNK2 = "Another pile of broken chess pieces.",
@@ -3772,9 +3776,9 @@ return {
         ARCHIVE_RUNE_STATUE =
         {
             LINE_1 = "So much knowledge, if only I could read it!",
-            LINE_2 = "These markings look different from the ones in the the rest of the ruins.",
+            LINE_2 = "These markings look different from the ones in the rest of the ruins.",
             LINE_3 = "So much knowledge, if only I could read it!",
-            LINE_4 = "These markings look different from the ones in the the rest of the ruins.",
+            LINE_4 = "These markings look different from the ones in the rest of the ruins.",
             LINE_5 = "So much knowledge, if only I could read it!",
         },
 
@@ -4182,6 +4186,39 @@ return {
         FIGKABAB = "Fig with a side of stick.",
         KOALEFIG_TRUNK = "Great, now I've got a stuffed nose.",
         FROGNEWTON = "The fig really brings it all together.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "Looking at it makes my head feel fuzzy... or... blocky?",
+            CRIMSON = "I have a nasty feeling about this...",
+            ENABLED = "Am I on the other side of the rainbow?!",
+			WAITING_FOR_DARK = "What could it be? Maybe I'll sleep on it.",
+			COOLDOWN = "It needs to cool down after that.",
+			SPAWN_DISABLED = "I shouldn't be bothered by anymore prying eyes now.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "What harm ever came from peeking inside a box?",
+			BURNT = "It won't be bothering anyone anymore.",
+			SHIMMER = "That seems a bit out of place...",
+		},
+
+		EYEMASKHAT = "You could say I have an eye for style.",
+
+        EYEOFTERROR = "Go for the eye!",
+        EYEOFTERROR_MINI = "I'm starting to feel self-conscious.",
+        EYEOFTERROR_MINI_GROUNDED = "I think it's about to hatch...",
+
+        FROZENBANANADAIQUIRI = "Yellow and mellow.",
+        BUNNYSTEW = "This one's luck has run out.",
+        MILKYWHITES = "...Ew.",
+
+        CRITTER_EYEOFTERROR = "Always good to have another set of eyes! Er... eye.",
+
+        SHIELDOFTERROR ="The best defense is a good mawfence.",
+        TWINOFTERROR1 = "Maybe they're friendly? ...Maybe not.",
+        TWINOFTERROR2 = "Maybe they're friendly? ...Maybe not.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

@@ -42,6 +42,7 @@ local ChatLine = Class(Widget, function(self, chat_font, user_width, user_max_ch
         end
         TheFrontEnd:PushScreen(SkinsItemPopUp(unpack(self.skin_data)))
     end)
+    self.skin_btn:SetControl(CONTROL_PRIMARY) --mouse left click only!
 
     self.skin_txt = self.skin_btn:AddChild(Text(chat_font, chat_size))
     self.skin_txt:SetPosition(0, 2)
@@ -106,9 +107,9 @@ function ChatLine:UpdateAlpha(alpha)
 
         if self.type == ChatTypes.SystemMessage then
             self.systemmessage:SetAlpha(alpha)
-        elseif self.typetype == ChatTypes.Announcement or self.typetype == ChatTypes.SkinAnnouncement then
+        elseif self.type == ChatTypes.Announcement or self.type == ChatTypes.SkinAnnouncement then
             self.announcement:SetAlpha(alpha)
-        elseif self.typetype == ChatTypes.Message then
+        elseif self.type == ChatTypes.Message then
             self.flair:SetAlpha(alpha)
         end
     else

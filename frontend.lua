@@ -371,7 +371,9 @@ function FrontEnd:OnControl(control, down)
         self:SetForceProcessTextInput(false, self.textProcessorWidget)
     end
 
+    self.isprimary = control == CONTROL_PRIMARY
     if self:IsControlsDisabled() then
+        self.isprimary = false
         return false
     --handle focus moves
 
@@ -380,17 +382,21 @@ function FrontEnd:OnControl(control, down)
     elseif #self.screenstack > 0
         and not (self.textProcessorWidget ~= nil and not self.textProcessorWidget.focus and self.textProcessorWidget:OnControl(control == CONTROL_PRIMARY and CONTROL_ACCEPT or control, down))
         and self.screenstack[#self.screenstack]:OnControl(control == CONTROL_PRIMARY and CONTROL_ACCEPT or control, down) then
+            self.isprimary = false
         return true
 
     elseif CONSOLE_ENABLED and not down and control == CONTROL_OPEN_DEBUG_CONSOLE then
+        self.isprimary = false
         self:PushScreen(ConsoleScreen())
         return true
 
     elseif DEBUG_MENU_ENABLED and not down and control == CONTROL_OPEN_DEBUG_MENU then
+        self.isprimary = false
         self:PushScreen(DebugMenuScreen())
         return true
 
     elseif SHOWLOG_ENABLED and not down and control == CONTROL_TOGGLE_LOG then
+        self.isprimary = false
         if self.consoletext.shown then
             self:HideConsoleLog()
         else
@@ -399,6 +405,7 @@ function FrontEnd:OnControl(control, down)
         return true
 
     elseif DEBUGRENDER_ENABLED and not down and control == CONTROL_TOGGLE_DEBUGRENDER then
+        self.isprimary = false
         --V2C: Special logic when text edit has focus, and assuming
         --     CONTROL_TOGGLE_DEBUGRENDER will always be BACKSPACE.
 
@@ -421,6 +428,7 @@ function FrontEnd:OnControl(control, down)
         return screen:OnCancel(down)
 --]]
     end
+    self.isprimary = false
 end
 
 function FrontEnd:ShowTitle(text,subtext)

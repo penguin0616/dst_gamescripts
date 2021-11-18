@@ -447,6 +447,28 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    eyeofterror = function(difficulty)
+        local tuning_vars = {
+            never = {
+                SPAWN_EYEOFTERROR = false,
+            },
+            rare = {
+                EYEOFTERROR_SPAWNDELAY = TUNING.TOTAL_DAY_TIME * 25,
+            },
+            --[[
+            default = {
+                EYEOFTERROR_SPAWNDELAY = TUNING.TOTAL_DAY_TIME * 15,
+            },
+            --]]
+            often = {
+                EYEOFTERROR_SPAWNDELAY = TUNING.TOTAL_DAY_TIME * 10,
+            },
+            always = {
+                EYEOFTERROR_SPAWNDELAY = TUNING.TOTAL_DAY_TIME * 5,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 
 
     --monsters

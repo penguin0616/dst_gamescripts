@@ -692,6 +692,7 @@ end
 params.pandoraschest = params.treasurechest
 params.skullchest = params.treasurechest
 params.minotaurchest = params.treasurechest
+params.terrariumchest = params.treasurechest
 params.sunkenchest = params.treasurechest
 
 params.quagmire_safe = deepcopy(params.treasurechest)

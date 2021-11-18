@@ -905,6 +905,44 @@ local foods =
         floater = {"med", nil, 0.55},
 	},
 
+    frozenbananadaiquiri =
+    {
+        test = function(cooker, names, tags)
+            return (names.cave_banana or names.cave_banana_cooked)
+                and (tags.frozen and tags.frozen >= 1)
+        end,
+        priority = 1,
+        overridebuild = "cook_pot_food9",
+        foodtype = FOODTYPE.GOODIES,
+        health = TUNING.HEALING_MEDLARGE,
+        hunger = TUNING.CALORIES_MEDSMALL,
+        perishtime = TUNING.PERISH_SLOW,
+        sanity = TUNING.SANITY_MED,
+        temperature = TUNING.COLD_FOOD_BONUS_TEMP,
+        temperatureduration = TUNING.FOOD_TEMP_LONG,
+        cooktime = 1,
+        floater = {"small", 0.05, 0.7},
+    },
+
+    bunnystew =
+    {
+        test = function(cooker, names, tags)
+            return (tags.meat and tags.meat < 1)
+                and (tags.frozen and tags.frozen >= 2)
+                and (not tags.inedible)
+        end,
+        priority = 1,
+        overridebuild = "cook_pot_food9",
+        foodtype = FOODTYPE.MEAT,
+		health = TUNING.HEALING_MED,
+		hunger = TUNING.CALORIES_LARGE,
+        perishtime = TUNING.PERISH_MED, 
+		sanity = TUNING.SANITY_TINY,
+        temperature = TUNING.HOT_FOOD_BONUS_TEMP,
+        temperatureduration = TUNING.FOOD_TEMP_BRIEF,
+        cooktime = 0.5,
+        floater = {"med", 0.05, 0.55},
+    },
 }
 
 for k, v in pairs(foods) do

@@ -1140,7 +1140,7 @@ function Story:GetExtrasForRoom(next_room)
 	local extra_tags = {}
 	if next_room.tags ~= nil then
 		for i,tag in ipairs(next_room.tags) do
-			local type, extra = self.map_tags.Tag[tag](self.map_tags.TagData)
+			local type, extra = self.map_tags.Tag[tag](self.map_tags.TagData, self.level)
 			if type == "STATIC" then
 				if extra_contents.static_layouts == nil then
 					extra_contents.static_layouts = {}

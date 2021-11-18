@@ -56,6 +56,25 @@ local function ongotnewitem(inst, data)
     end
 end
 
+local function SetSkin(inst, skin_build, GUID)
+    if skin_build then
+        inst.AnimState:OverrideItemSkinSymbol("black", skin_build, "black", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("green", skin_build, "green", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("white", skin_build, "white", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("leaf1", skin_build, "leaf1", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("leaf2", skin_build, "leaf2", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("leaf3", skin_build, "leaf3", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("leaf4", skin_build, "leaf4", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("leaf5", skin_build, "leaf5", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("leaf6", skin_build, "leaf6", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("shdw", skin_build, "shdw", GUID, "eyeplant")
+        inst.AnimState:OverrideItemSkinSymbol("ground_fx", skin_build, "ground_fx", GUID, "eyeplant")
+    else
+        inst.AnimState:ClearAllOverrideSymbols()
+        inst.AnimState:SetBuild("eyeplant")
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -114,6 +133,8 @@ local function fn()
     inst:SetStateGraph("SGeyeplant")
 
     inst:AddComponent("lootdropper")
+
+    inst.SetSkin = SetSkin
 
     MakeSmallBurnable(inst)
     MakeMediumPropagator(inst)

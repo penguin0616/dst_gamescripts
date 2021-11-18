@@ -146,6 +146,9 @@ local MainSounds =
 
     "wanda1.fev",
     "wanda1.fsb",
+
+    "terraria1.fev",
+    "terraria1.fsb",
 }
 
 function PreloadSoundList(list)

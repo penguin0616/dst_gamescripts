@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Guess it doesn't want that.",
 			CARNIVALGAME_ALREADY_PLAYING = "I can wait until they're done.",
             SPIDERNOHAT = "There just ain't enough space for that.",
+            TERRARIUM_REFUSE = "Maybe I should try powering it up with somethin' else?",
         },
         GIVETOPLAYER =
         {
@@ -1588,6 +1589,8 @@ return{
         CHESSPIECE_ANTLION = "Looks so real, I can almost feel the earth rumblin'.",
         CHESSPIECE_BEEFALO = "Aw, it looks just like my beefalo.",
         CHESSPIECE_GUARDIANPHASE3 = "A little too lifelike for my comfort.",
+        CHESSPIECE_EYEOFTERROR = "An eye (statue) for an eye (monster)!",
+        CHESSPIECE_TWINSOFTERROR = "A fresh pair of eyes is just what we needed around here!",
 
         CHESSJUNK1 = "A heap of spare parts.",
         CHESSJUNK2 = "A heap of spare parts.",
@@ -4179,6 +4182,39 @@ return{
         FIGKABAB = "Just the kind of thing you'd want on your lunch break.",
         KOALEFIG_TRUNK = "Looks like some really snooty food. Ha!",
         FROGNEWTON = "Surprisingly tasty.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "Something feels off about this... sure is pretty, though.",
+            CRIMSON = "Yeesh, that little tree sure isn't looking good.",
+            ENABLED = "Yikes! A power surge!",
+			WAITING_FOR_DARK = "It's working up to something...",
+			COOLDOWN = "Guess it's on its lunch break.",
+			SPAWN_DISABLED = "Looks like it's out of order.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "Well, a free chest's a free chest.",
+			BURNT = "Easy come, easy go.",
+			SHIMMER = "Why does that chest look like it's short-circuiting?",
+		},
+
+		EYEMASKHAT = "Guess I'll really be seein' the world through different eyes.",
+
+        EYEOFTERROR = "Yeesh, what an eyesore.",
+        EYEOFTERROR_MINI = "Can't fault them for doing their job with the big overseer right there.",
+        EYEOFTERROR_MINI_GROUNDED = "You'd think I'd be used to this kind of thing by now.",
+
+        FROZENBANANADAIQUIRI = "Perfect after a long day of work.",
+        BUNNYSTEW = "I'm so hungry I could eat a... bunny?",
+        MILKYWHITES = "That's not appetizing..",
+
+        CRITTER_EYEOFTERROR = "I spy with my little guy...",
+
+        SHIELDOFTERROR ="I can't bring myself to let good machinery go to waste.",
+        TWINOFTERROR1 = "You really can't help but admire the craftsmanship.",
+        TWINOFTERROR2 = "C'mon, I only want to take you apart a little!",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

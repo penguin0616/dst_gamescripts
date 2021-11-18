@@ -83,3 +83,35 @@ AddSettingsPreset(LEVELTYPE.SURVIVAL, {id="DST_CAVE_PLUS",
         flower_cave_regrowth = "rare",
     },
 })
+
+AddWorldGenLevel(LEVELTYPE.SURVIVAL, {id="TERRARIA_CAVE",
+    name=STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELS.TERRARIA_CAVE,
+    desc=STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC.TERRARIA_CAVE,
+    location = "cave",
+    version = 4, --??
+    overrides={
+        boons = "often",
+    },
+    background_node_range = {0,1},
+})
+-- Maybe non-console world_size = "huge"
+AddSettingsPreset(LEVELTYPE.SURVIVAL, {id="TERRARIA_CAVE",
+    name=STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELS.TERRARIA_CAVE,
+    desc= STRINGS.UI.CUSTOMIZATIONSCREEN.PRESETLEVELDESC.TERRARIA_CAVE,
+    location = "cave",
+    version = 4,
+    overrides={
+        -- world
+        weather = "often",
+        wormattacks = "often",
+
+        -- resources
+        flower_cave_regrowth = "fast",
+        mushtree_regrowth = "fast",
+        mushtree_moon_regrowth = "fast",
+
+        -- hostile creatures
+        bats_setting = "often",
+        spider_dropper = "often",
+    },
+})

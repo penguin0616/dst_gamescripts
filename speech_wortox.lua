@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Oh drat, it doesn't want that.",
 			CARNIVALGAME_ALREADY_PLAYING = "Let them have their fun, then I'll show the mortals how it's done.",
             SPIDERNOHAT = "My pocket's too tight for that hat to sit right.",
+            TERRARIUM_REFUSE = "What a picky little prism!",
         },
         GIVETOPLAYER =
         {
@@ -1588,6 +1589,8 @@ return{
         CHESSPIECE_ANTLION = "An anti Ant Lion, formerly furry. Hyuyu!",
         CHESSPIECE_BEEFALO = "This beefalo is even more hard-headed than most!",
         CHESSPIECE_GUARDIANPHASE3 = "In all its selenic splendour!",
+        CHESSPIECE_EYEOFTERROR = "He's gone, no matter how you look at it, hyuyu!",
+        CHESSPIECE_TWINSOFTERROR = "What an eye-catching statue, hyuyu!",
 
         CHESSJUNK1 = "It looks quite broke, and that's no joke!",
         CHESSJUNK2 = "It looks quite broke, and that's no joke!",
@@ -4179,6 +4182,39 @@ return{
         FIGKABAB = "Food on a stick won't do the trick.",
         KOALEFIG_TRUNK = "As mortal dishes go, that looks particularly revolting.",
         FROGNEWTON = "How do the mortals come up with these things?",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "A souvenir of sorts, hyuyu!",
+            CRIMSON = "Oh dear, perhaps I've taken this prank too far...",
+            ENABLED = "Hyuyu... whoopsie...",
+			WAITING_FOR_DARK = "I can't tell if that bodes well.",
+			COOLDOWN = "Its power's gone, but not for long.",
+			SPAWN_DISABLED = "It seems nobody here likes pranks.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "Exraordinarily ordinary!",
+			BURNT = "Hyuyu, someone's been playing pranks.",
+			SHIMMER = "Oh, pay it no mind!",
+		},
+
+		EYEMASKHAT = "Well, isn't this a sight for sore eyes. Hyuyuyu!",
+
+        EYEOFTERROR = "Whatever he says I did, it's a lie!",
+        EYEOFTERROR_MINI = "I feel positively terror eyes'd!",
+        EYEOFTERROR_MINI_GROUNDED = "Oh my, won't you open your eye?",
+
+        FROZENBANANADAIQUIRI = "Don't the mortals like to innovate? Hyuyu.",
+        BUNNYSTEW = "Are mortals attracted to this smell?",
+        MILKYWHITES = "This loot from our fight does not bring delight. ",
+
+        CRITTER_EYEOFTERROR = "I'm glad we could make amends, my ocular friend!",
+
+        SHIELDOFTERROR ="I stole the grin right off of him, hyuyu!",
+        TWINOFTERROR1 = "Double double, we're in trouble!",
+        TWINOFTERROR2 = "Double double, we're in trouble!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

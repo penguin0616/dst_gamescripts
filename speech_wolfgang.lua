@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Haha! Wolfgang thought it would be funny to try that!",
 			CARNIVALGAME_ALREADY_PLAYING = "Friends are having good time, Wolfgang can wait.",
             SPIDERNOHAT = "Wolfgang's pockets are too small for both bug and hat!",
+            TERRARIUM_REFUSE = "Tiny triangle is not wanting that.",
         },
         GIVETOPLAYER =
         {
@@ -1583,6 +1584,8 @@ return{
         CHESSPIECE_ANTLION = "Wolfgang will not battle it in staring contest.",
         CHESSPIECE_BEEFALO = "Is look almost like real hair-cow.",
         CHESSPIECE_GUARDIANPHASE3 = "Wolfgang glad is just statue.",
+        CHESSPIECE_EYEOFTERROR = "No like the way it look at Wolfgang.",
+        CHESSPIECE_TWINSOFTERROR = "Brrr, still sends chill down Wolfgang's spine.",
 
         CHESSJUNK1 = "Metal junk.",
         CHESSJUNK2 = "Metal junk.",
@@ -4174,6 +4177,39 @@ return{
         FIGKABAB = "All food should go on stick!",
         KOALEFIG_TRUNK = "Is nose, cooked and stuffed.",
         FROGNEWTON = "Is sweet, but also slimy.",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "How did tiny tree get inside?",
+            CRIMSON = "Should maybe not have fed scary stuff to weird triangle.",
+            ENABLED = "Tiny tree is shooting rainbow!",
+			WAITING_FOR_DARK = "Wolfgang likes the sparkles.",
+			COOLDOWN = "Tiny tree is now gone! Strange...",
+			SPAWN_DISABLED = "Wolfgang not want to see giant eye again.",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "Is looking like normal chest without sparkles.",
+			BURNT = "Is burned away to dust.",
+			SHIMMER = "Wolfgang wants to peek inside!",
+		},
+
+		EYEMASKHAT = "Wolgang not fan of squishy hat.",
+
+        EYEOFTERROR = "Wolfgang not like big scary eye!",
+        EYEOFTERROR_MINI = "Feeling of being watched is bad, but feeling of being bitten is much worse!",
+        EYEOFTERROR_MINI_GROUNDED = "Is weird thing trying to hatch?",
+
+        FROZENBANANADAIQUIRI = "Cold and tasty! ANOTHER!",
+        BUNNYSTEW = "Tiny rabbit makes big food? Wolfgang likes math.",
+        MILKYWHITES = "Looks gross, must be good for Wolfgang!",
+
+        CRITTER_EYEOFTERROR = "Little eye not so scary!",
+
+        SHIELDOFTERROR ="Haha! Now big scary teeth belong to Wolfgang!",
+        TWINOFTERROR1 = "Eep! Big scary metal eyes even worse!",
+        TWINOFTERROR2 = "Eep! Big scary metal eyes even worse!",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

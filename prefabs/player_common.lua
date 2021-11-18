@@ -243,6 +243,9 @@ end
 
 local function OnGetItem(inst, giver, item)
     if item ~= nil and item.prefab == "reviver" and inst:HasTag("playerghost") then
+        if item.skin_sound then
+            item.SoundEmitter:PlaySound(item.skin_sound)
+        end
         item:PushEvent("usereviver", { user = giver })
         giver.hasRevivedPlayer = true
         AwardPlayerAchievement("hasrevivedplayer", giver)

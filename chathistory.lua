@@ -1,4 +1,5 @@
 require "class"
+require("util/emoji")
 
 local MAX_CHAT_HISTORY = 100
 

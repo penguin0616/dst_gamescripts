@@ -1807,13 +1807,13 @@ function Tune(overrides)
         DRY_FAST = total_day_time,
         DRY_MED = 2*total_day_time,
 
-        CALORIES_TINY = calories_per_day/8, -- berries
-        CALORIES_SMALL = calories_per_day/6, -- veggies
-        CALORIES_MEDSMALL = calories_per_day/4,
-        CALORIES_MED = calories_per_day/3, -- meat
-        CALORIES_LARGE = calories_per_day/2, -- cooked meat
-        CALORIES_HUGE = calories_per_day, -- crockpot foods?
-        CALORIES_SUPERHUGE = calories_per_day*2, -- crockpot foods?
+        CALORIES_TINY = calories_per_day/8,			-- berries				 9.375
+        CALORIES_SMALL = calories_per_day/6,		-- veggies				 12.5
+        CALORIES_MEDSMALL = calories_per_day/4,		--						 18.75
+        CALORIES_MED = calories_per_day/3,			-- meat					 25
+        CALORIES_LARGE = calories_per_day/2,		-- cooked meat			 37.5
+        CALORIES_HUGE = calories_per_day,			-- crockpot foods?		 75
+        CALORIES_SUPERHUGE = calories_per_day*2,	-- crockpot foods?		150
 
 		-- food affinity multipliers to add 15 calories
 		AFFINITY_15_CALORIES_TINY = 2.6,
@@ -5503,6 +5503,55 @@ function Tune(overrides)
         WATERTREE_ROOT_CHOPS = 3,
 
         OCEANVINE_REGROW_TIME = total_day_time*2.5,
+
+        -- Eye For An Eye
+        SPAWN_EYEOFTERROR = true,
+        EYEOFTERROR_SPAWNDELAY = total_day_time * 15,
+
+		TERRARIUM_WARNING_TIME = 10,
+		TERRARIUM_SUMMON_DELAY = 5,
+
+        EYEOFTERROR_HEALTH = 5000,
+        EYEOFTERROR_HEALTHPCT_PERDAY = 0.05,
+        EYEOFTERROR_TRANSFORMPERCENT = 0.65,
+        EYEOFTERROR_DAMAGE = 125,
+        EYEOFTERROR_DAMAGEPLAYERPERCENT = 0.5,
+        EYEOFTERROR_DEAGGRO_DIST = 60,
+        EYEOFTERROR_CHARGESPEED = 15,
+        EYEOFTERROR_CHARGEMINDSQ = 0,
+        EYEOFTERROR_CHARGEMAXDSQ = 196,
+        EYEOFTERROR_ATTACK_RANGE = 3,
+        EYEOFTERROR_AOERANGE = 3,
+        EYEOFTERROR_AOE_DAMAGE = 100,
+        EYEOFTERROR_ATTACKPERIOD = 3,
+        EYEOFTERROR_SLEEPRESIST = 4,
+        EYEOFTERROR_CHOMP_SINKHOLERADIUS = 2.0,
+        EYEOFTERROR_MINGUARDS_PERSPAWN = 2,
+        EYEOFTERROR_EYE_MINGUARDS = 2,
+        EYEOFTERROR_MOUTH_MINGUARDS = 4,
+        EYEOFTERROR_EPICSCARE_RANGE = 10,
+
+        EYEOFTERROR_CHARGECD = 7,
+        EYEOFTERROR_MOUTHCHARGECD = 15,
+        EYEOFTERROR_SPAWNCD = 18,
+        EYEOFTERROR_FOCUSCD = 21,
+
+        EYEOFTERROR_MINI_EGGTIME = 15,
+        EYEOFTERROR_MINI_HEALTH = 200,
+        EYEOFTERROR_MINI_DAMAGE = 20,
+        EYEOFTERROR_MINI_ATTACK_RANGE = 4.0,
+        EYEOFTERROR_MINI_HIT_RANGE = 2.25,
+        EYEOFTERROR_MINI_ATTACK_PERIOD = 3,
+
+        TWINS_CHARGESPEED = 20,
+        TWINS_RESET_DAY_COUNT = 2,  -- 1 higher than we really want, just makes the code simpler.
+
+		EYEMASK_PERISHTIME = total_day_time*10,
+
+        SHIELDOFTERROR_DAMAGE = wilson_attack*1.5,
+        SHIELDOFTERROR_ABSORPTION = .8*multiplayer_armor_absorption_modifier,
+        SHIELDOFTERROR_ARMOR = wilson_health*3*multiplayer_armor_durability_modifier,
+        SHIELDOFTERROR_USEDAMAGE = 2,
     }
 
     TUNING_MODIFIERS = {}

@@ -56,7 +56,7 @@ local function onattack_red(inst, attacker, target, skipsanity)
         end
     end
 
-    attacker.SoundEmitter:PlaySound("dontstarve/wilson/fireball_explo")
+    attacker.SoundEmitter:PlaySound(inst.skin_sound or "dontstarve/wilson/fireball_explo")
 
     if not target:IsValid() then
         --target killed or removed in combat damage phase
@@ -137,6 +137,10 @@ local function onattack_blue(inst, attacker, target, skipsanity)
         elseif attacker.components.sanity ~= nil then
             attacker.components.sanity:DoDelta(-TUNING.SANITY_SUPERTINY)
         end
+    end
+
+    if inst.skin_sound then
+        attacker.SoundEmitter:PlaySound(inst.skin_sound)
     end
 
     if not target:IsValid() then
@@ -227,7 +231,7 @@ local function getrandomposition(caster, teleportee, target_in_ocean)
 	end
 end
 
-local function teleport_end(teleportee, locpos, loctarget)
+local function teleport_end(teleportee, locpos, loctarget, staff)
     if loctarget ~= nil and loctarget:IsValid() and loctarget.onteleto ~= nil then
         loctarget:onteleto()
     end
@@ -253,7 +257,7 @@ local function teleport_end(teleportee, locpos, loctarget)
     if teleportee:HasTag("player") then
         teleportee.sg.statemem.teleport_task = nil
         teleportee.sg:GoToState(teleportee:HasTag("playerghost") and "appear" or "wakeup")
-        teleportee.SoundEmitter:PlaySound("dontstarve/common/staffteleport")
+        teleportee.SoundEmitter:PlaySound(staff.skin_castsound or "dontstarve/common/staffteleport")
     else
         teleportee:Show()
         if teleportee.DynamicShadow ~= nil then
@@ -266,7 +270,7 @@ local function teleport_end(teleportee, locpos, loctarget)
     end
 end
 
-local function teleport_continue(teleportee, locpos, loctarget)
+local function teleport_continue(teleportee, locpos, loctarget, staff)
     if teleportee.Physics ~= nil then
         teleportee.Physics:Teleport(locpos.x, 0, locpos.z)
     else
@@ -276,9 +280,9 @@ local function teleport_continue(teleportee, locpos, loctarget)
     if teleportee:HasTag("player") then
         teleportee:SnapCamera()
         teleportee:ScreenFade(true, 1)
-        teleportee.sg.statemem.teleport_task = teleportee:DoTaskInTime(1, teleport_end, locpos, loctarget)
+        teleportee.sg.statemem.teleport_task = teleportee:DoTaskInTime(1, teleport_end, locpos, loctarget, staff)
     else
-        teleport_end(teleportee, locpos, loctarget)
+        teleport_end(teleportee, locpos, loctarget, staff)
     end
 end
 
@@ -337,9 +341,9 @@ local function teleport_start(teleportee, staff, caster, loctarget, target_in_oc
     ground:PushEvent("ms_deltamoisture", TUNING.TELESTAFF_MOISTURE)
 
     if isplayer then
-        teleportee.sg.statemem.teleport_task = teleportee:DoTaskInTime(3, teleport_continue, locpos, loctarget)
+        teleportee.sg.statemem.teleport_task = teleportee:DoTaskInTime(3, teleport_continue, locpos, loctarget, staff)
     else
-        teleport_continue(teleportee, locpos, loctarget)
+        teleport_continue(teleportee, locpos, loctarget, staff)
     end
 end
 

@@ -1,4 +1,18 @@
 
+local function FlagForRetrofitting_Forest(savedata, flag_name)
+    if savedata ~= nil and savedata.map ~= nil and savedata.map.prefab == "forest" then
+        if savedata.map.persistdata == nil then
+            savedata.map.persistdata = {}
+        end
+
+        if savedata.map.persistdata.retrofitforestmap_anr == nil then
+            savedata.map.persistdata.retrofitforestmap_anr = {}
+        end
+        savedata.map.persistdata.retrofitforestmap_anr[flag_name] = true
+    end
+
+end
+
 local t = nil
 t = {
     utilities = {
@@ -1134,6 +1148,13 @@ t = {
                         savedata.retrofit_waterlogged_waterlog_place_count = 3 - place_count
                     end
                 end
+            end,
+        },
+
+        {
+            version = 5.09, -- Terraria - new content
+            fn = function(savedata)
+				FlagForRetrofitting_Forest(savedata, "retrofit_terraria_terrarium")
             end,
         },
     },

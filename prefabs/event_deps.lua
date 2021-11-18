@@ -200,6 +200,7 @@ local SPECIAL_EVENT_DEPS =
             {
                 Asset("ANIM", "anim/dst_menu_v2.zip"),
                 Asset("ANIM", "anim/dst_menu_v2_bg.zip"),
+                Asset("ANIM", "anim/dst_menu_terraria.zip"),
 
                 Asset("PKGREF", "anim/dst_menu.zip"),
                 Asset("PKGREF", "anim/dst_menu_winona.zip"),
@@ -226,8 +227,8 @@ local SPECIAL_EVENT_DEPS =
                 Asset("PKGREF", "anim/dst_menu_moonstorm_foreground.zip"),
                 Asset("PKGREF", "anim/dst_menu_moonstorm_wagstaff.zip"),
                 Asset("PKGREF", "anim/dst_menu_moonstorm_wrench.zip"),
-                Asset("PKGREF", "anim/dst_menu_waterlogged.zip"),                
-                Asset("PKGREF", "anim/dst_menu_wanda.zip"),                
+                Asset("PKGREF", "anim/dst_menu_waterlogged.zip"),
+                Asset("PKGREF", "anim/dst_menu_wanda.zip"),
             },
         },
     },

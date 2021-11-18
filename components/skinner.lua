@@ -50,6 +50,7 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 				allow_arms = false
 			elseif skintype == "mighty_skin" then
 				allow_arms = false
+				allow_torso = false
 
 				--check to see if we're wearing a one piece clothing, if so, allow the torso
 				local name = clothing_names["body"]
@@ -67,8 +68,6 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 					if has_torso and has_pelvis then
 						--one piece clothing, so allow the torso
 						allow_torso = true
-					else
-						allow_torso = false
 					end
 				end
 			end
@@ -86,6 +85,9 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 
 		local symbol_overridden = {}
 
+		local torso_symbol = "torso"
+		local pelvis_symbol = "torso_pelvis"
+
 		for _,type in pairs( clothing_order ) do
 			local name = clothing_names[type]
 			if CLOTHING[name] ~= nil then
@@ -94,14 +96,41 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 				--wolfgang
 				if skintype == "wimpy_skin" and CLOTHING[name].symbol_overrides_skinny then
 					src_symbols = CLOTHING[name].symbol_overrides_skinny
-					allow_arms = true
+					
 				elseif skintype == "normal_skin" and (CLOTHING[name].symbol_overrides_skinny or CLOTHING[name].symbol_overrides_mighty) then
-					allow_arms = true
+					if CLOTHING[name].symbol_overrides_skinny ~= nil
+					and (CLOTHING[name].symbol_overrides_skinny["arm_upper"]
+						or CLOTHING[name].symbol_overrides_skinny["arm_upper_skin"]
+						or CLOTHING[name].symbol_overrides_skinny["arm_lower"]
+						or CLOTHING[name].symbol_overrides_skinny["arm_lower_cuff"])
+					or CLOTHING[name].symbol_overrides_mighty ~= nil
+					and (CLOTHING[name].symbol_overrides_mighty["arm_upper"]
+						or CLOTHING[name].symbol_overrides_mighty["arm_upper_skin"]
+						or CLOTHING[name].symbol_overrides_mighty["arm_lower"]
+						or CLOTHING[name].symbol_overrides_mighty["arm_lower_cuff"]) then
+						allow_arms = true
+					end
+
 				elseif skintype == "mighty_skin" and CLOTHING[name].symbol_overrides_mighty then
 					src_symbols = CLOTHING[name].symbol_overrides_mighty
-					allow_arms = true
-					allow_torso = true
 
+					if CLOTHING[name].symbol_overrides_skinny ~= nil
+					and (CLOTHING[name].symbol_overrides_skinny["arm_upper"]
+						or CLOTHING[name].symbol_overrides_skinny["arm_upper_skin"]
+						or CLOTHING[name].symbol_overrides_skinny["arm_lower"]
+						or CLOTHING[name].symbol_overrides_skinny["arm_lower_cuff"])
+					or CLOTHING[name].symbol_overrides_mighty ~= nil
+					and (CLOTHING[name].symbol_overrides_mighty["arm_upper"]
+						or CLOTHING[name].symbol_overrides_mighty["arm_upper_skin"]
+						or CLOTHING[name].symbol_overrides_mighty["arm_lower"]
+						or CLOTHING[name].symbol_overrides_mighty["arm_lower_cuff"]) then
+						allow_arms = true
+					end
+
+					if CLOTHING[name].symbol_overrides_mighty["torso"] then
+						allow_torso = true
+					end
+				
 				--wormwood
 				elseif skintype == "stage_2" and CLOTHING[name].symbol_overrides_stage2 then
 					src_symbols = CLOTHING[name].symbol_overrides_stage2
@@ -138,25 +167,31 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 
 				for _,sym in pairs(CLOTHING[name].symbol_overrides) do
 					if not ModManager:IsModCharacterClothingSymbolExcluded( prefab, sym ) then
-						if (not allow_torso and sym == "torso") or (not allow_arms and (sym == "arm_upper" or sym == "arm_upper_skin" or sym == "arm_lower")) then
+						if (not allow_torso and sym == "torso") or (not allow_arms and ((sym == "arm_upper" or sym == "arm_upper_skin" or sym == "arm_lower") or (sym == "arm_lower_cuff" and type == "body" )) ) then
 							--skip this symbol for wolfgang
 
 						elseif table.contains(symbols_to_use_base, sym) then
 							--skip this symbol because one of the clothing requested it fall to the default (hand_willow_gladiator)
 							--print("skip symbol and leave it at base:", sym)
 						else
-							--Slight cheat here, we know that name is the item name and the build for clothing, quicker than calling GetBuildForItem(name)
-							local real_build = GetBuildForItem(name)
-							if sym == "torso" then torso_build = real_build end
-							if sym == "torso_pelvis" then pelvis_build = real_build end
-							if sym == "skirt" then skirt_build = real_build end
-							if sym == "leg" then leg_build = real_build end
-							if sym == "foot" then foot_build = real_build end
-
 							local src_sym = sym
 							if src_symbols then
 								src_sym = src_symbols[sym] or sym
 							end
+
+							local real_build = GetBuildForItem(name)
+							if sym == "torso" then
+								torso_build = real_build
+								torso_symbol = src_sym
+							end
+							if sym == "torso_pelvis" then
+								pelvis_build = real_build
+								pelvis_symbol = src_sym
+							end
+							if sym == "skirt" then skirt_build = real_build end
+							if sym == "leg" then leg_build = real_build end
+							if sym == "foot" then foot_build = real_build end
+
 							anim_state:ShowSymbol(sym)
 							anim_state:OverrideSkinSymbol(sym, real_build, src_sym )
 							symbol_overridden[sym] = true
@@ -206,6 +241,11 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 			end
 		end
 
+		--Wolfgang's topless torso should always be tucked
+		if not allow_torso then
+			tuck_torso = "full"
+		end
+
 		--Future work to be done here: Is this a workable solution long term for skirt issues?
 		--Maybe we need a better system for tagging dresses that can't have torso symbols tucked into them.
 		--Hide any of the base symbols if requested (probably only ever the default skirts). This allows us to turn the skirt on manually with a clothing choice)
@@ -219,8 +259,6 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 		--	end
 		--end
 
-		local torso_symbol = "torso"
-		local pelvis_symbol = "torso_pelvis"
 		local wide = false
 		--Certain builds need to use the wide versions to fit clothing, nil build indicates it will use the base
 		if (BASE_ALTERNATE_FOR_BODY[base_skin] and torso_build == nil and (pelvis_build ~= nil or skirt_build ~= nil)) then

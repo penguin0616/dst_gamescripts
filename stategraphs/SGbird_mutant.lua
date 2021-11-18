@@ -14,6 +14,9 @@ local events =
 {
     CommonHandlers.OnLocomote(false, true),
 
+    CommonHandlers.OnSleep(),
+    CommonHandlers.OnFreeze(),
+
     EventHandler("death", function(inst)
 		inst.sg:GoToState("death", "death")
 	end),
@@ -330,5 +333,8 @@ local states=
         end,
     },
 }
+
+CommonStates.AddSleepStates(states)
+CommonStates.AddFrozenStates(states)
 
 return StateGraph("bird_mutant", states, events, "idle", actionhandlers)

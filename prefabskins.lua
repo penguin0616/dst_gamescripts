@@ -19,6 +19,10 @@ PREFAB_SKINS = {
 		"abigail_flower_shadow",
 		"abigail_flower_survivor",
 	},
+	alterguardianhat =
+	{
+		"alterguardianhat_lastprism",
+	},
 	amulet =
 	{
 		"amulet_red_heart",
@@ -53,6 +57,10 @@ PREFAB_SKINS = {
 		"armor_ruins_bulky",
 		"armor_ruins_leaf",
 		"armor_ruins_tusk",
+	},
+	armorskeleton =
+	{
+		"armor_skeleton_shadowscalemail",
 	},
 	armorwood =
 	{
@@ -164,11 +172,13 @@ PREFAB_SKINS = {
 	},
 	boomerang =
 	{
+		"boomerang_bananarang",
 		"boomerang_tiger",
 	},
 	bugnet =
 	{
 		"bugnet_frog",
+		"bugnet_lavaproof",
 		"bugnet_spider",
 		"bugnet_spider_white",
 	},
@@ -386,6 +396,7 @@ PREFAB_SKINS = {
 	firestaff =
 	{
 		"firestaff_bee",
+		"firestaff_flamelash",
 		"firestaff_gungnir",
 		"firestaff_hockey",
 		"firestaff_lance",
@@ -416,6 +427,11 @@ PREFAB_SKINS = {
 	gemsocket =
 	{
 		"gemsocket_crystal",
+		"gemsocket_hallowpylon",
+	},
+	glasscutter =
+	{
+		"glasscutter_terraprisma",
 	},
 	golden_farm_hoe =
 	{
@@ -454,6 +470,7 @@ PREFAB_SKINS = {
 	{
 		"hammer_crowbar",
 		"hammer_forge",
+		"hammer_hammush",
 		"hammer_invisible",
 	},
 	heatrock =
@@ -472,6 +489,7 @@ PREFAB_SKINS = {
 		"icestaff_bee",
 		"icestaff_gungnir",
 		"icestaff_hockey",
+		"icestaff_icerod",
 		"icestaff_lance",
 		"icestaff_northern",
 		"icestaff_rose",
@@ -479,6 +497,7 @@ PREFAB_SKINS = {
 	krampus_sack =
 	{
 		"krampus_sack_basket",
+		"krampus_sack_voidbag",
 	},
 	lantern =
 	{
@@ -497,6 +516,14 @@ PREFAB_SKINS = {
 		"lightning_rod_nautical",
 		"lightning_rod_robot",
 	},
+	lureplant =
+	{
+		"eyeplant_trap_plantera",
+	},
+	lureplantbulb =
+	{
+		"eyeplant_bulb_trap_plantera",
+	},
 	mast =
 	{
 		"mast_crabking",
@@ -508,6 +535,14 @@ PREFAB_SKINS = {
 		"mast_crabking_item",
 		"mast_nautical_item",
 		"mast_rose_item",
+	},
+	mastupgrade_lamp =
+	{
+		"mastupgradelamp_nautical",
+	},
+	mastupgrade_lamp_item =
+	{
+		"mastupgradelamp_item_nautical",
 	},
 	meatrack =
 	{
@@ -538,6 +573,10 @@ PREFAB_SKINS = {
 		"minisign_pickettan_item",
 		"minisign_picketwhite_item",
 	},
+	multitool_axe_pickaxe =
+	{
+		"multitool_axe_pickaxe_pickaxeaxe",
+	},
 	mushroom_light =
 	{
 		"mushroom_light_festive",
@@ -551,6 +590,7 @@ PREFAB_SKINS = {
 	nightsword =
 	{
 		"nightsword_curve",
+		"nightsword_lightsbane",
 		"nightsword_sharp",
 	},
 	oar =
@@ -563,17 +603,20 @@ PREFAB_SKINS = {
 	},
 	oceanfishingrod =
 	{
+		"oceanfishingrod_hotline",
 		"oceanfishingrod_ice",
 	},
 	opalstaff =
 	{
 		"moonstaff_crystal",
+		"moonstaff_portal",
 	},
 	orangestaff =
 	{
 		"orangestaff_ancient",
 		"orangestaff_candycane",
 		"orangestaff_harlequin",
+		"orangestaff_rodofdiscord",
 		"orangestaff_sharp",
 		"orangestaff_victorian",
 	},
@@ -586,6 +629,7 @@ PREFAB_SKINS = {
 		"pickaxe_feathered",
 		"pickaxe_invisible",
 		"pickaxe_northern",
+		"pickaxe_reavershark",
 		"pickaxe_scythe",
 		"pickaxe_victorian",
 	},
@@ -627,6 +671,7 @@ PREFAB_SKINS = {
 	},
 	researchlab2 =
 	{
+		"researchlab2_alchemytable",
 		"researchlab2_crystal",
 		"researchlab2_pod",
 	},
@@ -650,9 +695,14 @@ PREFAB_SKINS = {
 		"researchlab4_glommer_costumep",
 		"researchlab4_hutch_costume",
 		"researchlab4_hutch_costumep",
+		"researchlab4_merchant",
 		"researchlab4_tophat_circus",
 		"researchlab4_tophat_harlequin",
 		"researchlab4_witch_pyre",
+	},
+	reskin_tool =
+	{
+		"reskin_tool_brush",
 	},
 	reviver =
 	{
@@ -664,6 +714,7 @@ PREFAB_SKINS = {
 		"reviver_cupid_4",
 		"reviver_cupid_4alt",
 		"reviver_cupid_alt",
+		"reviver_lifecrystal",
 	},
 	ruins_bat =
 	{
@@ -697,6 +748,10 @@ PREFAB_SKINS = {
 		"shovel_invisible",
 		"shovel_northern",
 		"shovel_victorian",
+	},
+	skeletonhat =
+	{
+		"skeletonhat_shadowhelmet",
 	},
 	spear =
 	{
@@ -747,10 +802,12 @@ PREFAB_SKINS = {
 	telebase =
 	{
 		"telebase_crystal",
+		"telebase_hallowpylon",
 	},
 	telestaff =
 	{
 		"telestaff_crystal",
+		"telestaff_shadowbeam",
 	},
 	tent =
 	{
@@ -773,6 +830,7 @@ PREFAB_SKINS = {
 		"tophat_derby",
 		"tophat_festive_bell_red_firehound",
 		"tophat_harlequin",
+		"tophat_merchant",
 		"tophat_witch_pyre",
 	},
 	torch =
@@ -798,6 +856,8 @@ PREFAB_SKINS = {
 	treasurechest =
 	{
 		"treasurechest_carpetbag",
+		"treasurechest_corruption",
+		"treasurechest_crimson",
 		"treasurechest_cupid",
 		"treasurechest_gingerbread",
 		"treasurechest_monster",
@@ -1052,6 +1112,10 @@ PREFAB_SKINS = {
 		"wes_wrestler",
 		"wes_yule",
 	},
+	whip =
+	{
+		"whip_snapthorn",
+	},
 	wickerbottom =
 	{
 		"wickerbottom_combatant",
@@ -1282,6 +1346,7 @@ PREFAB_SKINS = {
 	yellowstaff =
 	{
 		"starstaff_crystal",
+		"starstaff_portal",
 	},
 
 }

@@ -230,6 +230,7 @@ require("klump")
 require("popupmanager")
 require("chathistory")
 require("componentutil")
+require("skins_defs_data")
 
 if TheConfig:IsEnabled("force_netbookmode") then
 	TheSim:SetNetbookMode(true)

@@ -688,7 +688,7 @@ SPECIAL_EVENTS =
     YOTC = "year_of_the_carrat",
     YOTB = "year_of_the_beefalo",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.HALLOWED_NIGHTS
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
 
 FESTIVAL_EVENTS =
 {
@@ -923,9 +923,10 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
+    "terraria1/common/music_main_eot"
+    --"dontstarve/music/music_FE"
     --"dontstarve/music/music_moonstorm_FE"
     --"dontstarve/music/music_FE_webber"
-    "dontstarve/music/music_FE"
     --"dontstarve/music/music_FE_wanda"
 
 ---------------------------------------------------------

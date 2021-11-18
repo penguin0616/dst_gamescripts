@@ -24,9 +24,15 @@ local function MakeExplosion(data)
 
         inst.AnimState:SetBank(data ~= nil and data.bank or "explode")
         inst.AnimState:SetBuild(data ~= nil and data.build or "explode")
+        if data ~= nil and data.skin_build ~= nil then
+            inst.AnimState:OverrideItemSkinSymbol(data.skin_symbol, data.skin_build, "shadow_dust", inst.GUID, "explode") --"explode" is unused here
+        end
+
         inst.AnimState:PlayAnimation(data ~= nil and data.anim or "small")
-        inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
-        inst.AnimState:SetLightOverride(1)
+        if data.bloom ~= false then
+            inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+        end
+        inst.AnimState:SetLightOverride(data ~= nil and data.light_override or 1)
 
         if data ~= nil and type(data.sound) == "function" then
             data.sound(inst)
@@ -35,10 +41,6 @@ local function MakeExplosion(data)
         end
 
         inst:ListenForEvent("animover", inst.Remove)
-
-        if proxy.postExplodeFn ~= nil then
-            proxy.postExplodeFn(inst)
-        end
     end
 
     local function fn()
@@ -82,6 +84,16 @@ local extras =
         anim = "puff",
         sound = "dontstarve/common/together/reskin_tool",
     },
+    reskin_brush =
+    {
+        bank = "fx_shadow_dust",
+        skin_build = "reskin_tool_brush",
+        skin_symbol = "shadow_dust",
+        anim = "puff",
+        sound = "terraria1/skins/spectrepaintbrush",
+        bloom = false,
+        light_override = 0,
+    },
     slurtle =
     {
         sound = "dontstarve/creatures/slurtle/explode",
@@ -102,6 +114,7 @@ local extras =
 
 return Prefab("explode_small", MakeExplosion(), assets),
     Prefab("explode_reskin", MakeExplosion(extras.reskin), assets),
+    Prefab("reskin_tool_brush_explode_fx", MakeExplosion(extras.reskin_brush), assets),
     Prefab("explode_small_slurtle", MakeExplosion(extras.slurtle), assets),
     Prefab("explode_small_slurtlehole", MakeExplosion(extras.slurtlehole), assets),
     Prefab("explode_firecrackers", MakeExplosion(extras.firecrackers), assets)

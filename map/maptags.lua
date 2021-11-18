@@ -6,7 +6,15 @@ local function MakeTags()
 			["Hutch_Fishbowl"] = true,
 			["StagehandGarden"] = true,
 			["SandstormOasis"] = true,
+			["Terrarium_Spawner"] = true,
 		}
+
+	local Terrarium_Spawners = 
+	{
+		"Terrarium_Forest_Spiders", 
+		"Terrarium_Forest_Pigs", 
+		"Terrarium_Forest_Fire"
+	}
 
 	local map_tags =
 		{
@@ -75,6 +83,20 @@ local function MakeTags()
 										tagdata["StagehandGarden"] = false
 										return "STATIC", "StagehandGarden"
 									end,
+
+			["Terrarium_Spawner"] =	function(tagdata, level)
+										if tagdata["Terrarium_Spawner"] == false then
+											return
+										end
+										tagdata["Terrarium_Spawner"] = false
+
+										if level ~= nil and level.overrides ~= nil and level.overrides.terrariumchest == "never" then
+											return
+										end
+
+										return "STATIC", Terrarium_Spawners[math.random(#Terrarium_Spawners)]
+									end,
+
 			["Hutch_Fishbowl"] =	function(tagdata)
 										if tagdata["Hutch_Fishbowl"] == false then
 											return

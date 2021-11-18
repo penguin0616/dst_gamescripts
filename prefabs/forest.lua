@@ -413,6 +413,10 @@ local prefabs =
     "watertree_root",
     "lightrays_canopy",
     "grassgator",
+
+    -- Terraria
+    "eyeofterror",
+    "terrarium",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")

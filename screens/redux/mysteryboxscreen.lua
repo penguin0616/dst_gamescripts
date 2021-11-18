@@ -117,7 +117,7 @@ function MysteryBoxScreen:_BuildBoxesPanel()
 	boxes_ss.image:GetAnimState():Hide("frame")
 	boxes_ss.image:GetAnimState():Hide("NEW")
 	boxes_ss.image:GetAnimState():PlayAnimation("idle_on")
-	boxes_ss.image:SetPosition(-100, 0)
+	boxes_ss.image:SetPosition(-100, 15)
 	boxes_ss.image:SetScale(1.75)
 
 	boxes_ss.count_text = boxes_ss.image:AddChild(Text(HEADERFONT, 20, nil, UICOLOURS.WHITE))

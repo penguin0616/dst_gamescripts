@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "Not right",
 			CARNIVALGAME_ALREADY_PLAYING = "Not yet",
             SPIDERNOHAT = "No room",
+            TERRARIUM_REFUSE = "Want something else?",
         },
         GIVETOPLAYER =
         {
@@ -1586,6 +1587,8 @@ return{
         CHESSPIECE_ANTLION = "Not moving",
         CHESSPIECE_BEEFALO = "Not fluffy...",
         CHESSPIECE_GUARDIANPHASE3 = "Big",
+        CHESSPIECE_EYEOFTERROR = "Not watching?",
+        CHESSPIECE_TWINSOFTERROR = "Can't see now",
 
         CHESSJUNK1 = "Machine stuff",
         CHESSJUNK2 = "Lots of machine stuff",
@@ -4177,6 +4180,39 @@ return{
         FIGKABAB = "Friend helped!",
         KOALEFIG_TRUNK = "Think is for belly...?",
         FROGNEWTON = "Squishy",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "Friend stuck inside?",
+            CRIMSON = "Ohhh, friend looks sick!",
+            ENABLED = "Friend free!",
+			WAITING_FOR_DARK = "Oooooh, friend is pretty!",
+			COOLDOWN = "Where friend go?",
+			SPAWN_DISABLED = "Closed up",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "Shiny gone...",
+			BURNT = "Oh",
+			SHIMMER = "Shiny stuff",
+		},
+
+		EYEMASKHAT = "Friend is watching",
+
+        EYEOFTERROR = "Biiiig peeper!",
+        EYEOFTERROR_MINI = "Little peepers",
+        EYEOFTERROR_MINI_GROUNDED = "Peeper baby?",
+
+        FROZENBANANADAIQUIRI = "Cold friend water",
+        BUNNYSTEW = "Poor Hopper...",
+        MILKYWHITES = "Peeper goop",
+
+        CRITTER_EYEOFTERROR = "Little peeper friend!",
+
+        SHIELDOFTERROR ="Chomp chomp!",
+        TWINOFTERROR1 = "Big machine peeper!",
+        TWINOFTERROR2 = "Big machine peeper!",
     },
 
     DESCRIBE_GENERIC = "Friend?",

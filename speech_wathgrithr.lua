@@ -121,6 +121,7 @@ return{
 			CARNIVALGAME_INVALID_ITEM = "'Tis not to its liking.",
 			CARNIVALGAME_ALREADY_PLAYING = "A warrior must be patient.",
             SPIDERNOHAT = "It hath no use for such things while it's in my pocket.",
+            TERRARIUM_REFUSE = "Perhaps it shall accept a different offering.",
         },
         GIVETOPLAYER =
         {
@@ -1582,6 +1583,8 @@ return{
         CHESSPIECE_ANTLION = "The artist hath captured her noble mane perfectly.",
         CHESSPIECE_BEEFALO = "A stone tribute to my faithful steed.",
         CHESSPIECE_GUARDIANPHASE3 = "You fought well, Champion of Mani.",
+        CHESSPIECE_EYEOFTERROR = "I shall feast my eyes upon this trophy!",
+        CHESSPIECE_TWINSOFTERROR = "A battle I shan't soon forget.",
 
         CHESSJUNK1 = "It's only a pile of fallen warriors.",
         CHESSJUNK2 = "More fallen mechanical warriors.",
@@ -3985,12 +3988,12 @@ return{
 		CARNIVALDECOR_FIGURE_KIT = "A box of mystery.",
 
         CARNIVAL_BALL = "This may be useful for testing my companions' reflexes.", --unimplemented
-		CARNIVAL_SEEDPACKET = "'Tis food for birds, not Vikings.'",
+		CARNIVAL_SEEDPACKET = "'Tis food for birds, not Vikings.",
 		CARNIVALFOOD_CORNTEA = "Nay.",
 
         CARNIVAL_VEST_A = "Blood red, to strike fear into the hearts of our enemies!",
         CARNIVAL_VEST_B = "'Tis not unlike the garb of a forest nymph.",
-        CARNIVAL_VEST_C = "'Tis a tree pelt.'",
+        CARNIVAL_VEST_C = "'Tis a tree pelt.",
 
         -- YOTB
         YOTB_SEWINGMACHINE = "The competition will be fierce, thus my beast's outfits must be fiercer!",
@@ -4173,6 +4176,39 @@ return{
         FIGKABAB = "Food with a wooden spear lanced through it!",
         KOALEFIG_TRUNK = "The trunk hath been fattened up.",
         FROGNEWTON = "Into my belly with ye!",
+
+        -- The Terrorarium
+        TERRARIUM = {
+            GENERIC = "I can feel the Bifrost's warmth from inside it!",
+            CRIMSON = "Something foul that taken hold...",
+            ENABLED = "Behold! The glory of the Bifrost!!",
+			WAITING_FOR_DARK = "Something draws near...",
+			COOLDOWN = "The Bifrost is sealed, but for how long?",
+			SPAWN_DISABLED = "The monster shall not terrorize this realm again!",
+        },
+
+        TERRARIUMCHEST = 
+		{
+			GENERIC = "T'would be a fine place to keep my weapons.",
+			BURNT = "Consumed by flames.",
+			SHIMMER = "Doth my eyes deceive me? The chest casts jagged light!",
+		},
+
+		EYEMASKHAT = "Follower of Heimdall, watch over my path!",
+
+        EYEOFTERROR = "Be it the plucked eye of Odin, returned for revenge?",
+        EYEOFTERROR_MINI = "I hath no fear of having all eyes upon me!",
+        EYEOFTERROR_MINI_GROUNDED = "I will prepare myself for the coming challenge!",
+
+        FROZENBANANADAIQUIRI = "Monkey drink.",
+        BUNNYSTEW = "A hearty meal worthy of praise!",
+        MILKYWHITES = "The goopy spoils of victory!",
+
+        CRITTER_EYEOFTERROR = "They shall watch and learn from my battles!",
+
+        SHIELDOFTERROR ="Why cower behind a shield when you can strike with it!",
+        TWINOFTERROR1 = "Do thine worst, foul metal fiend!",
+        TWINOFTERROR2 = "Do thine worst, foul metal fiend!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

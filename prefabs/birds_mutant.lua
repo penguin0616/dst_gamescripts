@@ -210,9 +210,6 @@ local function commonPostMain(inst)
 	inst:ListenForEvent("newcombattarget", OnNewCombatTarget)
 	inst:ListenForEvent("droppedtarget", OnNoCombatTarget)
 	inst:ListenForEvent("losttarget", OnNoCombatTarget)
-    
-    MakeSmallBurnableCharacter(inst)
-    MakeTinyFreezableCharacter(inst)
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.nobounce = true
@@ -252,6 +249,9 @@ local function runnerfn()
 
     inst.trappedbuild = "bird_mutant_build"
 
+    MakeSmallBurnableCharacter(inst, "mooncrow_body")
+    MakeTinyFreezableCharacter(inst, "mooncrow_body")
+
     inst = commonPostMain(inst)
 
 	return inst
@@ -281,6 +281,9 @@ local function spitterfn()
     end
 
     inst.trappedbuild = "bird_mutant_spitter_build"
+
+    MakeSmallBurnableCharacter(inst, "robin_body")
+    MakeTinyFreezableCharacter(inst, "robin_body")
 
 	inst = commonPostMain(inst)
 	inst.LaunchProjectile = LaunchProjectile

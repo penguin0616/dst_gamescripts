@@ -212,12 +212,6 @@ function ChatInputScreen:DoInit()
 	self.chat_edit:SetForceEdit(true)
     self.chat_edit.OnStopForceEdit = function() self:Close() end
 
-    self.chat_edit:EnableWordPrediction({width = 800, mode=Profile:GetChatAutocompleteMode()})
-    self.chat_edit:AddWordPredictionDictionary(Emoji.GetWordPredictionDictionary())
-    self.chat_edit:AddWordPredictionDictionary(UserCommands.GetEmotesWordPredictionDictionary())
-
-    self.chat_edit:SetString("")
-
     self.chat_queue_root = self.chat_edit:AddChild(Widget("chat_queue_root"))
     self.chat_queue_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
     self.chat_queue_root:SetHAnchor(ANCHOR_MIDDLE)
@@ -225,6 +219,12 @@ function ChatInputScreen:DoInit()
     self.chat_queue_root = self.chat_queue_root:AddChild(Widget(""))
     self.chat_queue_root:SetPosition(-90,765,0)
     self.networkchatqueue = self.chat_queue_root:AddChild(ScrollableChatQueue())
+
+    self.chat_edit:EnableWordPrediction({width = 800, mode=Profile:GetChatAutocompleteMode()})
+    self.chat_edit:AddWordPredictionDictionary(Emoji.GetWordPredictionDictionary())
+    self.chat_edit:AddWordPredictionDictionary(UserCommands.GetEmotesWordPredictionDictionary())
+
+    self.chat_edit:SetString("")
 end
 
 return ChatInputScreen
