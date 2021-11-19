@@ -29,7 +29,7 @@ local function MakeExplosion(data)
         end
 
         inst.AnimState:PlayAnimation(data ~= nil and data.anim or "small")
-        if data.bloom ~= false then
+        if data ~= nil and data.bloom ~= false then
             inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         end
         inst.AnimState:SetLightOverride(data ~= nil and data.light_override or 1)

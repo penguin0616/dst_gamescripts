@@ -1733,7 +1733,7 @@ local function MakeHat(name)
 			inst.AnimState:PlayAnimation("eat")
 			inst.AnimState:PushAnimation("anim", true)
 
-			inst.SoundEmitter:PlaySound("dontstarve/creatures/hound/bite")
+			inst.SoundEmitter:PlaySound("terraria1/eyemask/eat")
 		end
 	end
 

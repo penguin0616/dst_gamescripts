@@ -46,7 +46,7 @@ local function oneatfn(inst, food)
         inst.AnimState:PlayAnimation("eat")
         inst.AnimState:PushAnimation("idle", true)
 
-        inst.SoundEmitter:PlaySound("dontstarve/creatures/hound/bite")
+        inst.SoundEmitter:PlaySound("terraria1/eye_shield/eat")
     end
 end
 
