@@ -3003,6 +3003,7 @@ STRINGS =
         OCEANHORROR = "Terrorclaw",
 
         MASTUPGRADE_LAMP_ITEM = "Deck Illuminator",
+        MASTUPGRADE_LAMP = "Deck Illuminator",
         MASTUPGRADE_LIGHTNINGROD_ITEM = "Lightning Conductor",
 
         WATERPUMP = "Fire Pump",

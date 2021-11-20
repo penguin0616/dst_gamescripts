@@ -368,7 +368,9 @@ end
 -------------------------------------------------------------------------------
 
 local function AbleToAcceptTest(inst, item, giver)
-    if item.prefab ~= "nightmarefuel" then
+    if inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
+        return false, "SLEEPING"
+    elseif item.prefab ~= "nightmarefuel" then
         return false, "TERRARIUM_REFUSE"
     elseif inst._iscrimson:value() then
         return false, "SLOTFULL"

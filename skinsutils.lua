@@ -650,7 +650,7 @@ function GetSkinUsableOnString(item_type, popup_txt)
 			if granted_skin_data ~= nil and granted_skin_data.base_prefab ~= nil then
 				item2_str = STRINGS.NAMES[string.upper(granted_skin_data.base_prefab)]
 			end
-			local granted_skin_data = GetSkinData(skin_data.granted_items[2])
+			granted_skin_data = GetSkinData(skin_data.granted_items[2])
 			if granted_skin_data ~= nil and granted_skin_data.base_prefab ~= nil then
 				item3_str = STRINGS.NAMES[string.upper(granted_skin_data.base_prefab)]
 			end

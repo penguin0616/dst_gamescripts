@@ -3060,7 +3060,6 @@ table.insert(prefs, CreatePrefabSkin("mastupgradelamp_nautical",
 	init_fn = function(inst) mastupgrade_lamp_init_fn(inst, "mastupgradelamp_nautical") end,
 	skin_tags = { "MASTUPGRADE_LAMP", "NAUTICAL", "CRAFTABLE", },
 	release_group = 125,
-	granted_items = { "mastupgradelamp_item_nautical", },
 }))
 
 table.insert(prefs, CreatePrefabSkin("meatrack_butcher",

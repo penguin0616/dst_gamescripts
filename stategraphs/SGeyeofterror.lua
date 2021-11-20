@@ -671,11 +671,11 @@ local states =
 
     State {
         name = "arrive_delay",
-        tags = { "busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.sg:SetTimeout(10*FRAMES)
-
+            inst.components.health:SetInvincible(true)
             inst:Hide()
         end,
 
@@ -685,12 +685,13 @@ local states =
 
         onexit = function(inst)
             inst:Show()
+            inst.components.health:SetInvincible(false)
         end,
     },
 
     State {
         name = "arrive",
-        tags = { "busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -698,6 +699,8 @@ local states =
 
             local arrive_fx = SpawnPrefab("eyeofterror_arrive_fx")
             arrive_fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+            inst.components.health:SetInvincible(true)
         end,
 
         timeline =
@@ -706,7 +709,9 @@ local states =
                 inst.SoundEmitter:PlaySound(inst._soundpath .. "arrive")
             end),
             TimeEvent(122*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("flight")
                 inst.sg:RemoveStateTag("noattack")
+                inst.components.health:SetInvincible(false)
             end),
         },
 
@@ -714,6 +719,10 @@ local states =
         {
             CommonHandlers.OnNoSleepAnimOver("taunt"),
         },
+
+        onexit = function(inst)
+            inst.components.health:SetInvincible(false)
+        end,
     },
 
     State {
@@ -866,29 +875,33 @@ local states =
         timeline =
         {
             TimeEvent(23*FRAMES, function(inst)
+                inst.sg:AddStateTag("flight")
                 inst.sg:AddStateTag("noattack")
+                inst.components.health:SetInvincible(true)
             end),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
+                inst.sg.mem.sleeping = false        -- Clean up after the "gotosleep" sleepex listener, since we're doing something weird here.
                 inst:PushEvent("finished_leaving")
             end),
         },
 
         onexit = function(inst)
             inst.sg.mem.leaving = false
+            inst.components.health:SetInvincible(false)
         end,
     },
 
     State {
         name = "flyback_delay",
-        tags = { "busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.sg:SetTimeout(10*FRAMES)
-
+            inst.components.health:SetInvincible(true)
             inst:Hide()
         end,
 
@@ -898,12 +911,13 @@ local states =
 
         onexit = function(inst)
             inst:Show()
+            inst.components.health:SetInvincible(false)
         end,
     },
 
     State {
         name = "flyback",
-        tags = { "busy", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -915,13 +929,17 @@ local states =
             inst:FlybackHealthUpdate()
 
             inst.SoundEmitter:PlaySound(inst._soundpath .. "flyback")
+
+            inst.components.health:SetInvincible(true)
         end,
 
 
         timeline =
         {
             TimeEvent(25*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("flight")
                 inst.sg:RemoveStateTag("noattack")
+                inst.components.health:SetInvincible(false)
             end),
         },
 
@@ -929,6 +947,10 @@ local states =
         {
             CommonHandlers.OnNoSleepAnimOver("taunt"),
         },
+
+        onexit = function(inst)
+            inst.components.health:SetInvincible(false)
+        end,
     },
 }
 

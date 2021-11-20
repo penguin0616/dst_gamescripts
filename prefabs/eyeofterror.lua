@@ -309,6 +309,9 @@ local function common_fn(data)
     inst:AddTag("noepicmusic")
     inst:AddTag("scarytoprey")
 
+    -- Optimization tags
+    inst:AddTag("sleeper")      -- From sleeper component
+
     inst._musicdirty = net_event(inst.GUID, "eyeofterror._musicdirty", "musicdirty")
     inst._playingmusic = false
     --inst._musictask = nil
