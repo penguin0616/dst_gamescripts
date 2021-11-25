@@ -112,8 +112,6 @@ local function on_grounded_killed(inst)
 
     inst.AnimState:PlayAnimation("land_break")
     inst.SoundEmitter:PlaySound("terraria1/mini_eyeofterror/egg_crack")
-
-    inst:ListenForEvent("animover", inst.Remove)
 end
 
 local function try_to_hatch(inst)

@@ -4,6 +4,27 @@ local actionhandlers =
 {
 }
 
+local function PlaySpeechOnPlayerTarget(inst, speech_line_name)
+    -- We don't want both twins playing speech lines,
+    -- so we have a simple toggle set on the prefab.
+    if inst._nospeech then
+        return
+    end
+
+    -- Make our combat target speak.
+    local target = inst.components.combat.target
+
+    -- If we don't have a player combat target, find a nearby player.
+    if not target or not target:HasTag("player") then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        target = FindClosestPlayerInRangeSq(x, y, z, 324, true)
+    end
+
+    if target ~= nil and target.components.talker ~= nil and target:HasTag("player") then
+        target.components.talker:Say(GetString(target, speech_line_name))
+    end
+end
+
 local events =
 {
     CommonHandlers.OnLocomote(false, true),
@@ -73,16 +94,8 @@ local events =
         end
     end),
 
-    EventHandler("arrive_delay", function(inst)
-        inst.sg:GoToState("arrive_delay")
-    end),
-
     EventHandler("arrive", function(inst)
         inst.sg:GoToState("arrive")
-    end),
-
-    EventHandler("flyback_delay", function(inst)
-        inst.sg:GoToState("flyback_delay")
     end),
 
     EventHandler("flyback", function(inst)
@@ -106,7 +119,7 @@ end
 
 local function spawn_ground_fx(inst)
     if not TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition()) then
-        SpawnPrefab("malbatross_ripple").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        SpawnPrefab("boss_ripple_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
     else
         local fx = SpawnPrefab("slide_puff")
         fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -600,7 +613,9 @@ local states =
             inst.components.timer:StartTimer("focustarget_cd", get_rng_cooldown(inst._cooldowns.focustarget))
             inst.sg.mem.wantstofocustarget = nil
 
-            inst.sg:GoToState("taunt")
+            inst.AnimState:PlayAnimation("taunt")
+
+            inst.SoundEmitter:PlaySound(inst._soundpath .. "taunt_roar")
         end,
 
         onexit = function(inst)
@@ -619,7 +634,9 @@ local states =
                     if target ~= nil then
                         local soldiers = inst.components.commander:GetAllSoldiers()
                         for _, soldier in ipairs(soldiers) do
-                            soldier:FocusTarget(target)
+                            if soldier.FocusTarget ~= nil then
+                                soldier:FocusTarget(target)
+                            end
                         end
                     end
                 end
@@ -671,9 +688,11 @@ local states =
 
     State {
         name = "arrive_delay",
-        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "charge", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
+            inst.components.locomotor:Stop()
+
             inst.sg:SetTimeout(10*FRAMES)
             inst.components.health:SetInvincible(true)
             inst:Hide()
@@ -691,7 +710,7 @@ local states =
 
     State {
         name = "arrive",
-        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "charge", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -707,6 +726,9 @@ local states =
         {
             TimeEvent(36*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound(inst._soundpath .. "arrive")
+            end),
+            TimeEvent(44*FRAMES, function(inst)
+                PlaySpeechOnPlayerTarget(inst, "ANNOUNCE_EYEOFTERROR_ARRIVE")
             end),
             TimeEvent(122*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("flight")
@@ -860,7 +882,7 @@ local states =
 
     State {
         name = "flyaway",
-        tags = {"busy", "leaving", "noaoestun", "nofreeze", "nosleep", "nostun" },
+        tags = {"busy", "charge", "leaving", "noaoestun", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -879,12 +901,18 @@ local states =
                 inst.sg:AddStateTag("noattack")
                 inst.components.health:SetInvincible(true)
             end),
+            TimeEvent(24*FRAMES, function(inst)
+                PlaySpeechOnPlayerTarget(inst, "ANNOUNCE_EYEOFTERROR_FLYAWAY")
+            end),
         },
 
         events =
         {
             EventHandler("animover", function(inst)
                 inst.sg.mem.sleeping = false        -- Clean up after the "gotosleep" sleepex listener, since we're doing something weird here.
+
+                inst.sg.mem.leaving = false
+                inst.components.health:SetInvincible(false)
                 inst:PushEvent("finished_leaving")
             end),
         },
@@ -897,9 +925,11 @@ local states =
 
     State {
         name = "flyback_delay",
-        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "charge", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
+            inst.components.locomotor:Stop()
+
             inst.sg:SetTimeout(10*FRAMES)
             inst.components.health:SetInvincible(true)
             inst:Hide()
@@ -917,14 +947,14 @@ local states =
 
     State {
         name = "flyback",
-        tags = { "busy", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
+        tags = { "busy", "charge", "flight", "noaoestun", "noattack", "nofreeze", "nosleep", "nostun" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("flyback")
 
             local pos = inst:GetPosition()
-            inst.components.knownlocations:RememberLocation("spawnpoint", pos, true)
+            inst.components.knownlocations:RememberLocation("spawnpoint", pos)
 
             inst:FlybackHealthUpdate()
 
@@ -936,6 +966,9 @@ local states =
 
         timeline =
         {
+            TimeEvent(22*FRAMES, function(inst)
+                PlaySpeechOnPlayerTarget(inst, "ANNOUNCE_EYEOFTERROR_FLYBACK")
+            end),
             TimeEvent(25*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("flight")
                 inst.sg:RemoveStateTag("noattack")

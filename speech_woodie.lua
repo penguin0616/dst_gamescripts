@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "It's not polite to cut in line.",
             SPIDERNOHAT = "No sense dressing it up when no one's gonna see it, eh?",
             TERRARIUM_REFUSE = "That ain't gonna cut it, eh?",
+            TERRARIUM_COOLDOWN = "Gotta wait for that little tree to grow back there, eh.",
         },
         GIVETOPLAYER =
         {
@@ -726,6 +727,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Hey bud, over here!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Better put this closer to the judge's booth.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Hey, I think I figured out a new pattern, Luce!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "That's not what I was looking for, eh!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "I'll cut you down for good this time!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Daylight's too much for that big ol' eye, eh?",
 
 	BATTLECRY =
 	{

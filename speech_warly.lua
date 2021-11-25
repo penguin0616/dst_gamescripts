@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "Un moment, the game has already started.",
             SPIDERNOHAT = "I'm afraid that's a bit of a tight squeeze.",
             TERRARIUM_REFUSE = "That doesn't seem to suit its tastes.",
+            TERRARIUM_COOLDOWN = "Doesn't look like it's taking, maybe I should try again later.",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Over here, my mignon filet!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "I should build this within the judge's view, non?",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Ah, bon! A new flavor of beefalo costume!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Why do I suddenly feel such a sinking feeling in my stomach...",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Ah, it's back! Not going out without a fight, it seems.",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Leaving before breakfast?",
 
 	BATTLECRY =
 	{

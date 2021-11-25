@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "Let them have their fun, then I'll show the mortals how it's done.",
             SPIDERNOHAT = "My pocket's too tight for that hat to sit right.",
             TERRARIUM_REFUSE = "What a picky little prism!",
+            TERRARIUM_COOLDOWN = "Now wait one minute, there's nothing in it!",
         },
         GIVETOPLAYER =
         {
@@ -730,6 +731,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Over here, beefalo dear!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Alas, I fear I can't build that here.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Hyuyu! A new plan has taken shape!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "I don't suppose this is a friendly visit? Hyuyu...",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Hyuyu, back for more fun?",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "The light of day keeps the eye at bay!",
 
 	BATTLECRY =
 	{
@@ -4195,7 +4201,7 @@ return{
 
         TERRARIUMCHEST = 
 		{
-			GENERIC = "Exraordinarily ordinary!",
+			GENERIC = "Extraordinarily ordinary!",
 			BURNT = "Hyuyu, someone's been playing pranks.",
 			SHIMMER = "Oh, pay it no mind!",
 		},

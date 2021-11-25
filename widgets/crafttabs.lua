@@ -351,6 +351,8 @@ function CraftTabs:CloseControllerCrafting()
         self.controllercraftingopen = false
         self.tabs:DeselectAll()
         self.controllercrafting:Close()
+
+	    SetAutopaused(false)
     end
 end
 
@@ -361,6 +363,8 @@ function CraftTabs:OpenControllerCrafting()
         self.controllercraftingopen = true
         self.crafting:Close()
         self.controllercrafting:Open()
+
+	    SetAutopaused(true)
     end
 end
 

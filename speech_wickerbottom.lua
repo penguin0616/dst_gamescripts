@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "I'm afraid I'll have to wait.",
             SPIDERNOHAT = "There simply isn't enough room for that.",
             TERRARIUM_REFUSE = "Perhaps I should make another attempt with something else.",
+            TERRARIUM_COOLDOWN = "Oh that won't do, the intended arborous recipient appears to be missing.",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Come along now.",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "It would be much more practical to build this closer to the competition.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "I do believe I can fabricate a new bovine costume now.",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Something from outside our dimension is trying to come in.",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "This ocular creature seems rather persistent.",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "I suppose the daylight gives it a migraine.",
 
 	BATTLECRY =
 	{
@@ -3530,11 +3536,11 @@ return{
         BATTLESONG_INSTANT_PANIC = "Ah, how I love the classics!",
 
         -- Webber
-        MUTATOR_WARRIOR = "How interesting! They appear to alter an arachnid's form when ingested.",
+        MUTATOR_WARRIOR = "How interesting! It appears to alter an arachnid's form when ingested.",
         MUTATOR_DROPPER = "They're lovely, dear.",
-        MUTATOR_HIDER = "How interesting! They appear to alter an arachnid's form when ingested.",
+        MUTATOR_HIDER = "How interesting! It appears to alter an arachnid's form when ingested.",
         MUTATOR_SPITTER = "They're lovely, dear.",
-        MUTATOR_MOON = "How interesting! They appear to alter an arachnid's form when ingested.",
+        MUTATOR_MOON = "How interesting! It appears to alter an arachnid's form when ingested.",
         MUTATOR_HEALER = "They're lovely, dear.",
         SPIDER_WHISTLE = "Arachnids seem to find the sound quite agreeable.",
         SPIDERDEN_BEDAZZLER = "Be sure to tidy up when you're finished, young arachnid.",
@@ -3731,7 +3737,7 @@ return{
         BATNOSE_COOKED = "It's moderately better.",
         BATNOSEHAT = "How... innovative.",
 
-        MUSHGNOME = "Should I classify you under Anamalia or Fungi?",
+        MUSHGNOME = "Should I classify you under Animalia or Fungi?",
 
         SPORE_MOON = "An odd, yet effective defense mechanism.",
 
@@ -3875,7 +3881,7 @@ return{
         CARROT_OVERSIZED = "The result of proper research, planning and care.",
         CORN_OVERSIZED = "Quite an impressive harvest.",
         PUMPKIN_OVERSIZED = "A wonderfully plump squash.",
-        EGGPLANT_OVERSIZED = "A particularly respendent Solanum melongena.",
+        EGGPLANT_OVERSIZED = "A particularly resplendent Solanum melongena.",
         DURIAN_OVERSIZED = "Oh, our diminutive green friend will be thrilled!",
         POMEGRANATE_OVERSIZED = "A rather large Punica granatum specimen.",
         DRAGONFRUIT_OVERSIZED = "The result of proper research, planning and care.",
@@ -3883,7 +3889,7 @@ return{
         TOMATO_OVERSIZED = "I always was quite good at growing tomatoes.",
         POTATO_OVERSIZED = "A rather impressive tuber!",
         ASPARAGUS_OVERSIZED = "It's quite the source of fiber!",
-        ONION_OVERSIZED = "A rather large Allium sativum specimen.",
+        ONION_OVERSIZED = "A rather large Allium cepa specimen.",
         GARLIC_OVERSIZED = "How fascinating, it seems to have grown into a braided configuration all on its own!",
         PEPPER_OVERSIZED = "The result of proper research, planning and care.",
 

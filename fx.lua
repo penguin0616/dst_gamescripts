@@ -2257,6 +2257,17 @@ local fx =
         build = "oceantree_leaf_fx",
         anim = "chop",
     },
+    {
+        name = "boss_ripple_fx",
+        bank = "malbatross_ripple",
+        build = "malbatross_ripple",
+        anim = "idle",
+        fn = function(inst)
+            inst.AnimState:SetLayer(LAYER_BELOW_GROUND)
+            inst.AnimState:SetSortOrder(ANIM_SORT_ORDER_BELOW_GROUND.BOAT_TRAIL)
+            inst.AnimState:SetOceanBlendParams(TUNING.OCEAN_SHADER.EFFECT_TINT_AMOUNT)
+        end,
+    },
 }
 
 for cratersteamindex = 1, 4 do

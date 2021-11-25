@@ -471,6 +471,47 @@ fns.OnStormLevelChanged = function(inst, data)
 end
 
 --------------------------------------------------------------------------
+--Equipment Breaking Events
+--------------------------------------------------------------------------
+
+function fns.OnItemRanOut(inst, data)
+    if inst.components.inventory:GetEquippedItem(data.equipslot) == nil then
+        local sameTool = inst.components.inventory:FindItem(function(item)
+            return item.prefab == data.prefab and
+                item.components.equippable ~= nil and
+                item.components.equippable.equipslot == data.equipslot
+        end)
+        if sameTool ~= nil then
+            inst.components.inventory:Equip(sameTool)
+        end
+    end
+end
+
+function fns.OnUmbrellaRanOut(inst, data)
+    if inst.components.inventory:GetEquippedItem(data.equipslot) == nil then
+        local sameTool = inst.components.inventory:FindItem(function(item)
+            return item:HasTag("umbrella") and
+                item.components.equippable ~= nil and
+                item.components.equippable.equipslot == data.equipslot
+        end)
+        if sameTool ~= nil then
+            inst.components.inventory:Equip(sameTool)
+        end
+    end
+end
+
+function fns.ArmorBroke(inst, data)
+    if data.armor ~= nil then
+        local sameArmor = inst.components.inventory:FindItem(function(item)
+            return item.prefab == data.armor.prefab
+        end)
+        if sameArmor ~= nil then
+            inst.components.inventory:Equip(sameArmor)
+        end
+    end
+end
+
+--------------------------------------------------------------------------
 
 local function RegisterActivePlayerEventListeners(inst)
     --HUD Audio events
@@ -485,6 +526,10 @@ local function UnregisterActivePlayerEventListeners(inst)
 end
 
 local function RegisterMasterEventListeners(inst)
+    inst:ListenForEvent("itemranout", fns.OnItemRanOut)
+    inst:ListenForEvent("umbrellaranout", fns.OnUmbrellaRanOut)
+    inst:ListenForEvent("armorbroke", fns.ArmorBroke)
+
     --Audio events
     inst:ListenForEvent("picksomething", OnPickSomething)
     inst:ListenForEvent("dropitem", OnDropItem)

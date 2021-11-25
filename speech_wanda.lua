@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "I'll just come back later. Or earlier.",
             SPIDERNOHAT = "As whimsical as that would be, there isn't enough space in my pocket.",
             TERRARIUM_REFUSE = "I wonder how the magic from this world might affect it?",
+            TERRARIUM_COOLDOWN = "It isn't ready yet? Botheration, even tiny trees take ages to grow!",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Over here!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "It'd be more efficient to put it closer to the judge's booth.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Something new, how exciting!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "I feel a chill, did someone leave an interdimensional door open?",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Well, it's about time!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "I suppose we must wait until sundown to finish this squabble.",
 
 	BATTLECRY =
 	{

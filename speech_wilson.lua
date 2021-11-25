@@ -132,6 +132,7 @@ return {
 			CARNIVALGAME_ALREADY_PLAYING = "A game is already underway.",
             SPIDERNOHAT = "I can't fit them together in my pocket",
             TERRARIUM_REFUSE = "Maybe I should experiment with different kinds of fuel...",
+            TERRARIUM_COOLDOWN = "I suppose the tree has to grow back before we can give it anything.",
         },
         GIVETOPLAYER =
         {
@@ -735,6 +736,11 @@ return {
     ANNOUNCE_CALL_BEEF = "Come on over!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "The judge won't be able to see my beefalo from here.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "My mind has been filled with beefalo styling inspiration!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "What is that- a giant floating eyeball?!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Finally!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Get back here, I'm not finished with you yet!",
 
 	BATTLECRY =
 	{

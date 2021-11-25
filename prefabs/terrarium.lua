@@ -295,7 +295,7 @@ local function OnBossFightOver(inst)
     inst.components.inventoryitem:ChangeImageName("terrarium_cooldown")
 
     if inst.eyeofterror ~= nil then
-        inst.eyeofterror:PushEvent("leave", inst)
+        inst.eyeofterror:PushEvent("leave")
     end
 
     if not inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
@@ -321,22 +321,36 @@ local function spawn_eye_prefab(inst)
     end
 end
 
+local SPAWN_OFFSET = 10
 local function SpawnEyeOfTerror(inst)
-    local targeted_player = AllPlayers[math.random(#AllPlayers)]
-    if targeted_player ~= nil then
+    if AllPlayers ~= nil and #AllPlayers > 0 then
+        local targeted_player = AllPlayers[math.random(#AllPlayers)]
+
         local announce_template = (is_crimson(inst) and STRINGS.TWINS_TARGET) or STRINGS.EYEOFTERROR_TARGET
         TheNet:Announce(subfmt(announce_template, {player_name = targeted_player.name}))
 
         local angle = math.random() * 2 * PI
-        local spawn_position = targeted_player:GetPosition() + Vector3(10 * math.cos(angle), 0, 10 * math.sin(angle))
+        local player_pt = targeted_player:GetPosition()
+        local spawn_offset = FindWalkableOffset(player_pt, angle, SPAWN_OFFSET, nil, false, true, nil, true, true)
+            or Vector3(SPAWN_OFFSET * math.cos(angle), 0, SPAWN_OFFSET * math.sin(angle))
+        local spawn_position = player_pt + spawn_offset
+
         if inst.eyeofterror ~= nil and inst.eyeofterror:IsInLimbo() then
             inst.eyeofterror:ReturnToScene()
             inst.eyeofterror.Transform:SetPosition(spawn_position:Get())    -- Needs to be done so the spawn fx spawn in the right place
-            inst.eyeofterror:PushEvent("flyback", targeted_player)
+            if inst.eyeofterror.sg ~= nil then
+                inst.eyeofterror.sg:GoToState("flyback", targeted_player)
+            else
+                inst.eyeofterror:PushEvent("flyback", targeted_player)
+            end
         else
             inst.eyeofterror = spawn_eye_prefab(inst)
             inst.eyeofterror.Transform:SetPosition(spawn_position:Get())    -- Needs to be done so the spawn fx spawn in the right place
-            inst.eyeofterror:PushEvent("arrive", targeted_player)
+            if inst.eyeofterror.sg ~= nil then
+                inst.eyeofterror.sg:GoToState("arrive", targeted_player)
+            else
+                inst.eyeofterror:PushEvent("arrive", targeted_player)
+            end
         end
         inst.eyeofterror:PushEvent("set_spawn_target", targeted_player)
 
@@ -369,7 +383,7 @@ end
 
 local function AbleToAcceptTest(inst, item, giver)
     if inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
-        return false, "SLEEPING"
+        return false, "TERRARIUM_COOLDOWN"
     elseif item.prefab ~= "nightmarefuel" then
         return false, "TERRARIUM_REFUSE"
     elseif inst._iscrimson:value() then
@@ -438,6 +452,9 @@ local function OnSave(inst, data)
 
     local refs = nil
     if inst.eyeofterror ~= nil then
+        -- If the boss is dying as we save, record it.
+        data.boss_dead = inst.eyeofterror:IsDying()
+
         data.boss_guid = inst.eyeofterror.GUID
         refs = { inst.eyeofterror.GUID }
     end
@@ -450,31 +467,36 @@ local function OnLoad(inst, data)
         if data.is_crimson then
             become_crimson(inst)
         end
-
-        if data.is_on then
-            if data.boss_guid ~= nil or inst.components.timer:TimerExists("warning") then
-                TurnOn(inst, true)
-                StartSummoning(inst, true)
-            elseif TUNING.SPAWN_EYEOFTERROR then
-                TurnOn(inst, true)
-            end
-        elseif inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
-            OnBossFightOver(inst)
-        end
     end
 end
 
 local function OnLoadPostPass(inst, newents, data)
-    if data ~= nil and data.boss_guid then
-        if newents[data.boss_guid] ~= nil then
-            inst.eyeofterror = newents[data.boss_guid].entity
+    if data ~= nil then
+        if data.boss_guid then
+            if newents[data.boss_guid] ~= nil then
+                inst.eyeofterror = newents[data.boss_guid].entity
 
-            hookup_eye_listeners(inst, inst.eyeofterror)
+                hookup_eye_listeners(inst, inst.eyeofterror)
 
-            if not data.is_on and not inst.eyeofterror:IsInLimbo() then
-                inst.eyeofterror:PushEvent("leave")
+                if not TheWorld.state.isnight then
+                    OnEyeLeft(inst.eyeofterror, inst)
+                end
             end
-        else
+        end
+
+        if data.is_on then
+            if (inst.eyeofterror ~= nil and not inst.eyeofterror:IsInLimbo())
+                    or inst.components.timer:TimerExists("warning") then
+                TurnOn(inst, true)
+                StartSummoning(inst, true)
+            elseif data.boss_dead then
+                -- The boss was dying as we saved, so we should be turned off as though
+                -- we received the death message.
+                OnBossFightOver(inst)
+            elseif TUNING.SPAWN_EYEOFTERROR then
+                TurnOn(inst, true)
+            end
+        elseif inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
             OnBossFightOver(inst)
         end
     end

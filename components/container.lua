@@ -890,7 +890,7 @@ function Container:MoveItemFromAllOfSlot(slot, container, opener)
                     container.ignorefull = true
                 end
 
-                if not container:GiveItem(item, targetslot) then
+                if not container:GiveItem(item, targetslot, nil, false) then
                     self:GiveItem(item, slot, nil, true)
                 end
 

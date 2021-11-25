@@ -1725,7 +1725,7 @@ STRINGS =
        -- SPIDERHOLE_ROCK = "Spilagmite",
 
         EYEPLANT = "Eye Plant",
-        LUREPLANT = "Meat Bulb",
+        LUREPLANT = "Lureplant",
         LUREPLANTBULB = "Fleshy Bulb",
         BATBAT = "Bat Bat",
         BATCAVE = "Bat Cave",

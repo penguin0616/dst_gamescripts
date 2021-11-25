@@ -97,6 +97,7 @@ local states =
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("death")
             RemovePhysicsColliders(inst)
+            inst.components.lootdropper:DropLoot(inst:GetPosition())
 
             inst.SoundEmitter:PlaySound(inst.sounds.death)
         end,

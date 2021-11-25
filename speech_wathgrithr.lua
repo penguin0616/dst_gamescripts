@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "A warrior must be patient.",
             SPIDERNOHAT = "It hath no use for such things while it's in my pocket.",
             TERRARIUM_REFUSE = "Perhaps it shall accept a different offering.",
+            TERRARIUM_COOLDOWN = "I shall await the small tree's return before presenting it with another offering.",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "To me, beastie!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "'Tis too far from the festivities!",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Aha! A new plan has revealed itself before mine eyes!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Away, spying demon. To arms!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Thou hast returned, now let us finish this battle!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "You would flee this fight? Asgard does not honor cowards!",
 
 	BATTLECRY =
 	{
@@ -4180,7 +4186,7 @@ return{
         -- The Terrorarium
         TERRARIUM = {
             GENERIC = "I can feel the Bifrost's warmth from inside it!",
-            CRIMSON = "Something foul that taken hold...",
+            CRIMSON = "Something foul hath taken hold...",
             ENABLED = "Behold! The glory of the Bifrost!!",
 			WAITING_FOR_DARK = "Something draws near...",
 			COOLDOWN = "The Bifrost is sealed, but for how long?",

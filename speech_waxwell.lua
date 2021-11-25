@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "It seems I'll have to bide my time.",
             SPIDERNOHAT = "Its dapperness would be wasted in my pocket.",
             TERRARIUM_REFUSE = "Nothing. I wonder how it might respond to the fuel...",
+            TERRARIUM_COOLDOWN = "There's nothing in there to receive our offering. Yet.",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "And here comes my... er, \"beautiful\" assistant.",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "This seems a bit far from the festivities, don't you think?",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "At last, something new.",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Oh, what a magnificent horror.",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "I've been awaiting your return. Let's end this.",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "It'll be back.",
 
 	BATTLECRY =
 	{

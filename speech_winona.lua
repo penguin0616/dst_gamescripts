@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "I can wait until they're done.",
             SPIDERNOHAT = "There just ain't enough space for that.",
             TERRARIUM_REFUSE = "Maybe I should try powering it up with somethin' else?",
+            TERRARIUM_COOLDOWN = "Guess we gotta wait for the tree to grow back before we can give it anything.",
         },
         GIVETOPLAYER =
         {
@@ -731,6 +732,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Come over here, we've got work to do!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "I should build it closer to the judging area.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Hey, I think I figured out a new costume pattern!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Uhh... maybe it's a friendly giant eyeball?",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Back for more?",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Agh, I guess we'll finish it off another night.",
 
 	BATTLECRY =
 	{

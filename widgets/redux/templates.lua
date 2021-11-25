@@ -1392,6 +1392,7 @@ function TEMPLATES.AnnouncementBadge()
     announcement.SetAlpha = function(self, a)
         if a > 0.01 and self.announcement then
             self:Show()
+            self.bg:SetTint(1,1,1, a)
             self.announcement_img:SetTint(1,1,1, a)
         else
             self:Hide()

@@ -25,7 +25,7 @@ end
 local function spawnripple(inst)
     if not TheWorld.Map:IsVisualGroundAtPoint(inst.Transform:GetWorldPosition()) then
         inst.SoundEmitter:PlaySound("saltydog/creatures/boss/malbatross/ripple")
-        SpawnPrefab("malbatross_ripple").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        SpawnPrefab("boss_ripple_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
     end
 end
 
@@ -110,7 +110,7 @@ local events =
     EventHandler("doswoop", function(inst, data)
         if not inst.components.health:IsDead() and not inst.components.freezable:IsFrozen() and not inst.components.sleeper:IsAsleep() then
             inst:DoTaskInTime((math.random()*6) + 10, function(inst) inst.readytoswoop = true end)
-            inst.sg:GoToState("R", data.target or inst.components.combat.target)
+            inst.sg:GoToState("swoop_pre", data.target or inst.components.combat.target)
         end
     end),
     EventHandler("death", function(inst, data)

@@ -743,15 +743,11 @@ function PlayerHud:OpenControllerInventory()
     self.controls:ShowStatusNumbers()
 
     self.owner.components.playercontroller:OnUpdate(0)
-
-    SetAutopaused(true)
 end
 
 function PlayerHud:CloseControllerInventory()
     if self:IsControllerInventoryOpen() then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_close")
-
-	    SetAutopaused(false)
     end
     self.controls:HideStatusNumbers()
     self:ShowControllerCrafting()
@@ -867,16 +863,12 @@ function PlayerHud:OpenControllerCrafting()
         self.controls.crafttabs:OpenControllerCrafting()
         self.controls.item_notification:ToggleController(true)
         self.controls.yotb_notification:ToggleController(true)
-
-	    SetAutopaused(true)
     end
 end
 
 function PlayerHud:CloseControllerCrafting()
     if self:IsControllerCraftingOpen() then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_close")
-
-	    SetAutopaused(false)
     end
     self.controls.crafttabs:CloseControllerCrafting()
     self.controls.inv:Enable()

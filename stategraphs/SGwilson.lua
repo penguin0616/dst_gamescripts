@@ -1203,37 +1203,9 @@ local events =
             inst.sg:GoToState("toolbroke", data.tool)
         end),
 
-    EventHandler("umbrellaranout",
-        function(inst, data)
-            if inst.components.inventory:GetEquippedItem(data.equipslot) == nil then
-                local sameTool = inst.components.inventory:FindItem(function(item)
-                    return item:HasTag("umbrella") and
-                        item.components.equippable ~= nil and
-                        item.components.equippable.equipslot == data.equipslot
-                end)
-                if sameTool ~= nil then
-                    inst.components.inventory:Equip(sameTool)
-                end
-            end
-        end),
-
-    EventHandler("itemranout",
-        function(inst, data)
-            if inst.components.inventory:GetEquippedItem(data.equipslot) == nil then
-                local sameTool = inst.components.inventory:FindItem(function(item)
-                    return item.prefab == data.prefab and
-                        item.components.equippable ~= nil and
-                        item.components.equippable.equipslot == data.equipslot
-                end)
-                if sameTool ~= nil then
-                    inst.components.inventory:Equip(sameTool)
-                end
-            end
-        end),
-
     EventHandler("armorbroke",
-        function(inst, data)
-            inst.sg:GoToState("armorbroke", data.armor)
+        function(inst)
+            inst.sg:GoToState("armorbroke")
         end),
 
     EventHandler("fishingcancel",
@@ -9629,20 +9601,11 @@ local states =
         name = "armorbroke",
         tags = { "busy", "pausepredict" },
 
-        onenter = function(inst, armor)
+        onenter = function(inst)
             ForceStopHeavyLifting(inst)
 
             inst.AnimState:PlayAnimation("hit")
             inst.SoundEmitter:PlaySound("dontstarve/wilson/use_armour_break")
-
-            if armor ~= nil then
-                local sameArmor = inst.components.inventory:FindItem(function(item)
-                    return item.prefab == armor.prefab
-                end)
-                if sameArmor ~= nil then
-                    inst.components.inventory:Equip(sameArmor)
-                end
-            end
 
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
@@ -10593,7 +10556,11 @@ local states =
                 end
             end
 
-            inst.sg.statemem.castsound = staff ~= nil and staff.skin_castsound or staff.castsound or "dontstarve/wilson/use_gemstaff"
+            if staff ~= nil then
+                inst.sg.statemem.castsound = staff.skin_castsound or staff.castsound or "dontstarve/wilson/use_gemstaff"
+            else
+                inst.sg.statemem.castsound = "dontstarve/wilson/use_gemstaff"
+            end
         end,
 
         timeline =
@@ -12016,7 +11983,7 @@ local states =
                     inst.sg.statemem.emotefxtask = inst:DoTaskInTime(data.fxdelay, DoEmoteFX, data.fx)
                 end
             elseif data.fx ~= false then
-                DoEmoteFX(inst, "emote_fx", nil)
+                DoEmoteFX(inst, "emote_fx")
             end
 
             if data.sound then --sound might be a boolean, so don't do ~= nil

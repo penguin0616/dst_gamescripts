@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "We're playing next!",
             SPIDERNOHAT = "There's not enough room, we don't want to squish them by accident!",
             TERRARIUM_REFUSE = "Maybe we can give it something else?",
+            TERRARIUM_COOLDOWN = "Let's wait for the little tree to come back first!",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Over here, beefalo! Follow us!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "We should put this where the judge can see it.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "We can't wait for our beefalo to try it on!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Why do we feel like we're being watched?",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Coming back to play some more?",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "It doesn't want to play anymore.",
 
 	BATTLECRY =
 	{

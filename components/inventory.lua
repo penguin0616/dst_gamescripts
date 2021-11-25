@@ -1744,7 +1744,7 @@ function Inventory:MoveItemFromAllOfSlot(slot, container)
                 item = self:RemoveItemBySlot(slot)
                 item.prevcontainer = nil
                 item.prevslot = nil
-                if not container:GiveItem(item, targetslot) then
+                if not container:GiveItem(item, targetslot, nil, false) then
                     self.ignoresound = true
                     self:GiveItem(item, slot)
                     self.ignoresound = false

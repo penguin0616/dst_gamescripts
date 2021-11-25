@@ -21,8 +21,8 @@ local prefabs =
     "eyemaskhat",
     "eyeofterror_arrive_fx",
     "eyeofterror_mini_projectile",
+    "boss_ripple_fx",
     "eyeofterror_sinkhole",
-    "malbatross_ripple",
     "milkywhites",
     "slide_puff",
     "shieldofterror",
@@ -32,10 +32,10 @@ local twinprefabs =
 {
     "boat_leak",
     "eyeofterror_arrive_fx",
+    "boss_ripple_fx",
     "eyeofterror_sinkhole",
     "gears",
     "greengem",
-    "malbatross_ripple",
     "nightmarefuel",
     "slide_puff",
     "transistor",
@@ -237,10 +237,6 @@ local function OnSave(inst, data)
         data.is_transformed = inst.sg.mem.transformed
     end
 
-    if inst.sg.mem.leaving then
-        data.is_leaving = inst.sg.mem.leaving
-    end
-
     if inst._leftday ~= nil then
         data.leftday = inst._leftday
     end
@@ -264,10 +260,6 @@ local function OnLoad(inst, data)
             inst.AnimState:Hide("ball_eye")
 
             inst.sg.mem.transformed = true
-        end
-
-        if data.is_leaving then
-            inst.sg:GoToState("leave")
         end
     end
 end
@@ -357,6 +349,7 @@ local function common_fn(data)
 
     ------------------------------------------
     inst:AddComponent("lootdropper")
+    inst.components.lootdropper:SetChanceLootTable(data.chanceloottable)
 
     ------------------------------------------
     inst:AddComponent("inspectable")
@@ -453,48 +446,59 @@ local function eyeofterror_setspawntarget(inst, target)
     inst.components.combat:SetTarget(target)
 end
 
-local EYE_DATA =
-{
-    bank = "eyeofterror",
-    build = "eyeofterror_basic",
-    soundpath = "terraria1/eyeofterror/",
-    cooldowns =
-    {
-        charge =                TUNING.EYEOFTERROR_CHARGECD,
-        mouthcharge =           TUNING.EYEOFTERROR_MOUTHCHARGECD,
-        spawn =                 TUNING.EYEOFTERROR_SPAWNCD,
-        focustarget =           TUNING.EYEOFTERROR_FOCUSCD,
-    },
-    chargedata =
-    {
-        eyechargespeed =        TUNING.EYEOFTERROR_CHARGESPEED,
-        eyechargetimeout =      1.00,
-        mouthchargespeed =      1.25*TUNING.EYEOFTERROR_CHARGESPEED,
-        mouthchargetimeout =    1.00,
-        tauntchance =           1.00,
-    },
-    health = TUNING.EYEOFTERROR_HEALTH,
-    damage = TUNING.EYEOFTERROR_DAMAGE,
-    chompdamage = TUNING.EYEOFTERROR_AOE_DAMAGE,
-    mouthspawncount = TUNING.EYEOFTERROR_MINGUARDS_PERSPAWN,
-}
+local function eyeofterror_isdying(inst)
+    return inst.components.health:IsDead()
+end
+
+local function eyeofterror_onleave_entitysleepcleanup(inst)
+    if inst:IsAsleep() then
+        inst:PushEvent("finished_leaving")
+    end
+end
+
 local function eyefn()
+	local EYE_DATA =
+	{
+		bank = "eyeofterror",
+		build = "eyeofterror_basic",
+		soundpath = "terraria1/eyeofterror/",
+		cooldowns =
+		{
+			charge =                TUNING.EYEOFTERROR_CHARGECD,
+			mouthcharge =           TUNING.EYEOFTERROR_MOUTHCHARGECD,
+			spawn =                 TUNING.EYEOFTERROR_SPAWNCD,
+			focustarget =           TUNING.EYEOFTERROR_FOCUSCD,
+		},
+		chargedata =
+		{
+			eyechargespeed =        TUNING.EYEOFTERROR_CHARGESPEED,
+			eyechargetimeout =      1.00,
+			mouthchargespeed =      1.25*TUNING.EYEOFTERROR_CHARGESPEED,
+			mouthchargetimeout =    1.00,
+			tauntchance =           1.00,
+		},
+		health = TUNING.EYEOFTERROR_HEALTH,
+		damage = TUNING.EYEOFTERROR_DAMAGE,
+		chompdamage = TUNING.EYEOFTERROR_AOE_DAMAGE,
+		mouthspawncount = TUNING.EYEOFTERROR_MINGUARDS_PERSPAWN,
+		chanceloottable = "eyeofterror",
+	}
+
     local inst = common_fn(EYE_DATA)
 
-    inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.IsDying = eyeofterror_isdying
 
     ------------------------------------------
     inst._transformonhealthupdate = true
 
     ------------------------------------------
-    inst.components.lootdropper:SetChanceLootTable("eyeofterror")
-    
-    ------------------------------------------
     inst:ListenForEvent("set_spawn_target", eyeofterror_setspawntarget)
     inst:ListenForEvent("healthdelta", eyeofterror_should_transform)
+    inst:ListenForEvent("leave", eyeofterror_onleave_entitysleepcleanup)
 
     return inst
 end
@@ -522,44 +526,42 @@ SetSharedLootTable("twinofterror1",
     {"trinket_6",       0.50},
 })
 
-local TWIN1_DATA =
-{
-    bank = "eyeofterror",
-    build = "eyeofterror_twin1_build",
-    soundpath = "terraria1/robo_eyeofterror/",
-    cooldowns =
-    {
-        charge =                0.50*TUNING.EYEOFTERROR_CHARGECD,
-        mouthcharge =           0.50*TUNING.EYEOFTERROR_MOUTHCHARGECD,
-        spawn =                 0.30*TUNING.EYEOFTERROR_SPAWNCD,
-        focustarget =           0.60*TUNING.EYEOFTERROR_FOCUSCD,
-    },
-    chargedata =
-    {
-        eyechargespeed =        TUNING.TWINS_CHARGESPEED,
-        eyechargetimeout =      1.0,
-        mouthchargespeed =      1.1*TUNING.TWINS_CHARGESPEED,
-        mouthchargetimeout =    0.70,
-        tauntchance =           0.50,
-    },
-    health = 2.0*TUNING.EYEOFTERROR_HEALTH,
-    damage = 2.0*TUNING.EYEOFTERROR_DAMAGE,
-    chompdamage = 2.5*TUNING.EYEOFTERROR_AOE_DAMAGE,
-    mouthspawncount = TUNING.EYEOFTERROR_MINGUARDS_PERSPAWN + 2,
-}
-
 local function twin1fn()
+	local TWIN1_DATA =
+	{
+		bank = "eyeofterror",
+		build = "eyeofterror_twin1_build",
+		soundpath = "terraria1/robo_eyeofterror/",
+		cooldowns =
+		{
+			charge =                TUNING.TWIN1_CHARGECD,
+			mouthcharge =           TUNING.TWIN1_MOUTHCHARGECD,
+			spawn =                 TUNING.TWIN1_SPAWNCD,
+			focustarget =           TUNING.TWIN1_FOCUSCD,
+		},
+		chargedata =
+		{
+			eyechargespeed =        TUNING.TWIN1_CHARGESPEED,
+			eyechargetimeout =      TUNING.TWIN1_CHARGETIMEOUT,
+			mouthchargespeed =      TUNING.TWIN1_MOUTH_CHARGESPEED,
+			mouthchargetimeout =    TUNING.TWIN1_MOUTH_CHARGETIMEOUT,
+			tauntchance =           TUNING.TWIN1_TAUNT_CHANCE,
+		},
+		health = TUNING.TWIN1_HEALTH,
+		damage = TUNING.TWIN1_DAMAGE,
+		chompdamage = TUNING.TWIN1_AOE_DAMAGE,
+		mouthspawncount = TUNING.TWIN1_MINGUARDS_PERSPAWN,
+		chanceloottable = "twinofterror1",
+	}
+
     local inst = common_fn(TWIN1_DATA)
 
     inst:AddTag("mech")
+    inst:AddTag("soulless")
 
-    inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
-
-    ------------------------------------------
-    inst.components.lootdropper:SetChanceLootTable("twinofterror1")
 
     ------------------------------------------
     inst.components.sleeper:SetResistance(2*TUNING.EYEOFTERROR_SLEEPRESIST)
@@ -590,44 +592,45 @@ SetSharedLootTable("twinofterror2",
     {"trinket_6",       0.50},
 })
 
-local TWIN2_DATA =
-{
-    bank = "eyeofterror",
-    build = "eyeofterror_twin2_build",
-    soundpath = "terraria1/robo_eyeofterror2/",
-    cooldowns =
-    {
-        charge =                0.25*TUNING.EYEOFTERROR_CHARGECD,
-        mouthcharge =           0.25*TUNING.EYEOFTERROR_MOUTHCHARGECD,
-        spawn =                 TUNING.EYEOFTERROR_SPAWNCD,
-        focustarget =           0.60*TUNING.EYEOFTERROR_FOCUSCD,
-    },
-    chargedata =
-    {
-        eyechargespeed =        1.15*TUNING.TWINS_CHARGESPEED,
-        eyechargetimeout =      0.40,
-        mouthchargespeed =      1.25*TUNING.TWINS_CHARGESPEED,
-        mouthchargetimeout =    0.50,
-        tauntchance =           0.25,
-    },
-    health = 2.0*TUNING.EYEOFTERROR_HEALTH,
-    damage = 2.0*TUNING.EYEOFTERROR_DAMAGE,
-    chompdamage = 2.5*TUNING.EYEOFTERROR_AOE_DAMAGE,
-    mouthspawncount = TUNING.EYEOFTERROR_MINGUARDS_PERSPAWN,
-}
-
 local function twin2fn()
+	local TWIN2_DATA =
+	{
+		bank = "eyeofterror",
+		build = "eyeofterror_twin2_build",
+		soundpath = "terraria1/robo_eyeofterror2/",
+		cooldowns =
+		{
+			charge =                TUNING.TWIN2_CHARGECD,
+			mouthcharge =           TUNING.TWIN2_MOUTHCHARGECD,
+			spawn =                 TUNING.TWIN2_SPAWNCD,
+			focustarget =           TUNING.TWIN2_FOCUSCD,
+		},
+		chargedata =
+		{
+			eyechargespeed =        TUNING.TWIN2_CHARGESPEED,
+			eyechargetimeout =      TUNING.TWIN2_CHARGETIMEOUT,
+			mouthchargespeed =      TUNING.TWIN2_MOUTH_CHARGESPEED,
+			mouthchargetimeout =    TUNING.TWIN2_MOUTH_CHARGETIMEOUT,
+			tauntchance =           TUNING.TWIN2_TAUNT_CHANCE,
+		},
+		health = TUNING.TWIN2_HEALTH,
+		damage = TUNING.TWIN2_DAMAGE,
+		chompdamage = TUNING.TWIN2_AOE_DAMAGE,
+		mouthspawncount = TUNING.TWIN2_MINGUARDS_PERSPAWN,
+		chanceloottable = "twinofterror2",
+	}
+
     local inst = common_fn(TWIN2_DATA)
 
     inst:AddTag("mech")
+    inst:AddTag("soulless")
 
-    inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
 
     ------------------------------------------
-    inst.components.lootdropper:SetChanceLootTable("twinofterror2")
+    inst._nospeech = true
 
     ------------------------------------------
     inst.components.sleeper:SetResistance(2*TUNING.EYEOFTERROR_SLEEPRESIST)
@@ -637,7 +640,6 @@ end
 
 ------------------------------------------------------------------------
 
-local TWINS_TRANSFORM_AMOUNT = (TWIN1_DATA.health + TWIN2_DATA.health) * TUNING.EYEOFTERROR_TRANSFORMPERCENT
 local EXTRA_LOOT = {"chesspiece_twinsofterror_sketch", "shieldofterror"}
 local function hookup_twin_listeners(inst, twin)
     inst:ListenForEvent("onremove", function(t)
@@ -664,6 +666,7 @@ local function hookup_twin_listeners(inst, twin)
         if (t1 == nil or t1.components.health:IsDead())
                 and (t2 == nil or t2.components.health:IsDead()) then
             inst:PushEvent("turnoff_terrarium")
+            inst:Remove()
         end
     end, twin)
 
@@ -687,7 +690,7 @@ local function hookup_twin_listeners(inst, twin)
 
         local t1_health = (t1 == nil and 0) or t1.components.health.currenthealth
         local t2_health = (t2 == nil and 0) or t2.components.health.currenthealth
-        if (t1_health + t2_health) < TWINS_TRANSFORM_AMOUNT then
+        if (t1_health + t2_health) < ((TUNING.TWIN1_HEALTH + TUNING.TWIN2_HEALTH) * TUNING.EYEOFTERROR_TRANSFORMPERCENT) then
             if t1 ~= nil then
                 t1:PushEvent("health_transform")
             end
@@ -706,9 +709,17 @@ local function get_spawn_positions(inst, targeted_player)
     local player_position = targeted_player:GetPosition()
     local manager_to_player = (player_position - manager_position):Normalize()
 
-    local offset = manager_to_player:Cross(UP_VEC3):Normalize() * TWINS_SPAWN_OFFSET
+    local offset_unit = manager_to_player:Cross(UP_VEC3):Normalize()
 
-    return manager_position + offset, manager_position - offset
+    local offset1_angle = math.atan2(offset_unit.z, offset_unit.x)
+    local twin1_offset = FindWalkableOffset(manager_position, offset1_angle, TWINS_SPAWN_OFFSET, nil, false, true, nil, true, true)
+        or (offset_unit * TWINS_SPAWN_OFFSET)
+
+    local offset2_angle = offset1_angle + PI
+    local twin2_offset = FindWalkableOffset(manager_position, offset2_angle, TWINS_SPAWN_OFFSET, nil, false, true, nil, true, true)
+        or (offset_unit * -1 * TWINS_SPAWN_OFFSET)
+
+    return manager_position + twin1_offset, manager_position + twin2_offset
 end
 
 local function spawn_arriving_twins(inst, targeted_player)
@@ -717,17 +728,29 @@ local function spawn_arriving_twins(inst, targeted_player)
     local twin1 = SpawnPrefab("twinofterror1")
     inst.components.entitytracker:TrackEntity("twin1", twin1)
     twin1.Transform:SetPosition(twin1spawnpos:Get())
-    twin1:PushEvent("arrive")
+    twin1.sg:GoToState("arrive")
     hookup_twin_listeners(inst, twin1)
 
     local twin2 = SpawnPrefab("twinofterror2")
     inst.components.entitytracker:TrackEntity("twin2", twin2)
     twin2.Transform:SetPosition(twin2spawnpos:Get())
-    twin2:PushEvent("arrive_delay")
+    twin2.sg:GoToState("arrive_delay")
     hookup_twin_listeners(inst, twin2)
 
     -- Reset the hardmode reset counter whenever the boss is spawned back in to fight.
     inst._hardmode_days_reset_counter = TUNING.TWINS_RESET_DAY_COUNT
+end
+
+local function on_enterlimbo(inst)
+    local twin1 = inst.components.entitytracker:GetEntity("twin1")
+    if twin1 and not twin1:IsInLimbo() then
+        twin1:RemoveFromScene()
+    end
+
+    local twin2 = inst.components.entitytracker:GetEntity("twin2")
+    if twin2 and not twin2:IsInLimbo() then
+        twin2:RemoveFromScene()
+    end
 end
 
 local function flyback_twins(inst, targeted_player)
@@ -737,14 +760,17 @@ local function flyback_twins(inst, targeted_player)
     if twin1 then
         twin1:ReturnToScene()
         twin1.Transform:SetPosition(twin1returnpos:Get())
-        twin1:PushEvent("flyback")
+        twin1.sg:GoToState("flyback")
     end
 
     local twin2 = inst.components.entitytracker:GetEntity("twin2")
     if twin2 then
+        if not twin1 then
+            twin2._nospeech = false -- If our other twin died, we should start playing speech lines.
+        end
         twin2:ReturnToScene()
         twin2.Transform:SetPosition(twin2returnpos:Get())
-        twin2:PushEvent("flyback_delay")
+        twin2.sg:GoToState("flyback_delay")
     end
 
     -- Reset the hardmode reset counter whenever the boss is spawned back in to fight.
@@ -755,12 +781,40 @@ local function twinsmanager_leave(inst)
     local et = inst.components.entitytracker
     local t1 = et:GetEntity("twin1")
     if t1 ~= nil then
-        t1:PushEvent("leave")
+        if t1:IsAsleep() then
+            t1:RemoveFromScene()
+        else
+            t1:PushEvent("leave")
+        end
     end
 
     local t2 = et:GetEntity("twin2")
     if t2 ~= nil then
-        t2:PushEvent("leave")
+        if t2:IsAsleep() then
+            t2:RemoveFromScene()
+        else
+            t2:PushEvent("leave")
+        end
+    end
+
+    if (t1 == nil or t1:IsInLimbo()) and (t2 == nil or t2:IsInLimbo()) then
+        inst:PushEvent("finished_leaving")
+    end
+end
+
+local function twinsmanager_isdying(inst)
+    local et = inst.components.entitytracker
+    local t1 = et:GetEntity("twin1")
+    local t2 = et:GetEntity("twin2")
+
+    if t1 == nil and t2 == nil then
+        return false
+    elseif t1 == nil then
+        return t2.components.health:IsDead()
+    elseif t2 == nil then
+        return t1.components.health:IsDead()
+    else
+        return false
     end
 end
 
@@ -802,6 +856,26 @@ local function OnTwinManagerLoad(inst, data)
     end
 end
 
+local function OnTwinManagerLoadPostPass(inst, newents, data)
+    local manager_in_limbo = inst:IsInLimbo()
+
+    local t1 = inst.components.entitytracker:GetEntity("twin1")
+    if t1 then
+        hookup_twin_listeners(inst, t1)
+        if manager_in_limbo then
+            t1:RemoveFromScene()
+        end
+    end
+
+    local t2 = inst.components.entitytracker:GetEntity("twin2")
+    if t2 then
+        hookup_twin_listeners(inst, t2)
+        if manager_in_limbo then
+            t2:RemoveFromScene()
+        end
+    end
+end
+
 local function twinmanagerfn()
     local inst = CreateEntity()
 
@@ -813,6 +887,10 @@ local function twinmanagerfn()
         return inst
     end
 
+    ------------------------------------------
+    inst.IsDying = twinsmanager_isdying
+
+    ------------------------------------------
     inst._hardmode_days_reset_counter = TUNING.TWINS_RESET_DAY_COUNT
 
     ------------------------------------------
@@ -820,6 +898,7 @@ local function twinmanagerfn()
 
     ------------------------------------------
     inst:ListenForEvent("arrive", spawn_arriving_twins)
+    inst:ListenForEvent("enterlimbo", on_enterlimbo)
     inst:ListenForEvent("flyback", flyback_twins)
     inst:ListenForEvent("leave", twinsmanager_leave)
     inst:ListenForEvent("set_spawn_target", manager_setspawntarget)
@@ -829,6 +908,7 @@ local function twinmanagerfn()
     ------------------------------------------
     inst.OnSave = OnTwinManagerSave
     inst.OnLoad = OnTwinManagerLoad
+    inst.OnLoadPostPass = OnTwinManagerLoadPostPass
 
     return inst
 end

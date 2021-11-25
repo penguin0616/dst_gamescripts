@@ -91,6 +91,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.POLISH] = "Tak",
         [_LANGUAGE.RUSSIAN] = "Да",
         [_LANGUAGE.KOREAN] = "예",
+        [_LANGUAGE.CHINESE_S] = "是",
         [_LANGUAGE.CHINESE_T] = "是",
     },
 
@@ -106,6 +107,7 @@ STRINGS.PRETRANSLATED =
         [_LANGUAGE.POLISH] = "Nie",
         [_LANGUAGE.RUSSIAN] = "Нет",
         [_LANGUAGE.KOREAN] = "아니",
+        [_LANGUAGE.CHINESE_S] = "否",
         [_LANGUAGE.CHINESE_T] = "否",
     },
 }

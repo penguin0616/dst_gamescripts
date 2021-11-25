@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "Me next, me next!",
             SPIDERNOHAT = "Spiderfolk no need hat in there.",
             TERRARIUM_REFUSE = "Glurph. Gotta try something else.",
+            TERRARIUM_COOLDOWN = "There no tree inside for giving to, flurp! Will check later.",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "HEY! Come here!!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Too far away, flort.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Yay! New dress-up thing!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Sky is falling, glorp!!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Why you come back, flurt? Said go away!!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Y-Yeah, big eye better run away! Glurgh...",
 
 	BATTLECRY =
 	{

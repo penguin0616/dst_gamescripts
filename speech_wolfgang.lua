@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "Friends are having good time, Wolfgang can wait.",
             SPIDERNOHAT = "Wolfgang's pockets are too small for both bug and hat!",
             TERRARIUM_REFUSE = "Tiny triangle is not wanting that.",
+            TERRARIUM_COOLDOWN = "Wolfgang will wait for tiny tree to come back, then give present!",
         },
         GIVETOPLAYER =
         {
@@ -726,6 +727,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Come, hair-cow!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "How will judge see Wolfgang's beautiful hair-cow from so far away?",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Is new hair-cow costume! Wolfgang will make.",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Wolfgang no like the look of that!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Wolfgang stronger and braver now!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Big scary eye scared of daylight? Ha ha ha!",
 
 	BATTLECRY =
 	{
@@ -3875,7 +3881,7 @@ return{
 
         CARROT_OVERSIZED = "At least is big. Wolfgang can use for weights.",
         CORN_OVERSIZED = "Wolfgang's muscles will get even more mighty lifting giant corn!",
-        PUMPKIN_OVERSIZED = "Is even better than weakling science man's head!",
+        PUMPKIN_OVERSIZED = "Is even bigger than weakling science man's head!",
         EGGPLANT_OVERSIZED = "Wolfgang is getting tired of being fooled by non-egg plant...",
         DURIAN_OVERSIZED = "Is big and spiky fruit.",
         POMEGRANATE_OVERSIZED = "Is big and good for lifting!",

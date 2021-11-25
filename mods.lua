@@ -169,7 +169,7 @@ local runmodfn = function(fn,mod,modtype)
 		if fn then
 			local status, r = xpcall( function() return fn(unpack(arg)) end, debug.traceback)
 			if not status then
-				print("error calling "..modtype.." in mod "..ModInfoname(mod.modname)..": \n"..r)
+				print("error calling "..modtype.." in mod "..ModInfoname(mod.modname)..": \n"..(r or ""))
 				ModManager:RemoveBadMod(mod.modname,r)
 				ModManager:DisplayBadMods()
 			else

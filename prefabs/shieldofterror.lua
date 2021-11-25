@@ -4,10 +4,6 @@ local assets =
     Asset("ANIM", "anim/swap_eye_shield.zip"),
 }
 
-local function weaponused(owner,data)
-    data.weapon.components.armor:TakeDamage(TUNING.SHIELDOFTERROR_USEDAMAGE)
-end
-
 local function onequip(inst, owner)
     local skin_build = inst:GetSkinBuild()
     if skin_build ~= nil then
@@ -21,7 +17,8 @@ local function onequip(inst, owner)
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
     owner.AnimState:Show("LANTERN_OVERLAY")
-    owner:ListenForEvent("onattackother", weaponused)
+
+    owner:ListenForEvent("onattackother", inst._weaponused_callback)
 end
 
 local function onunequip(inst, owner)
@@ -31,7 +28,9 @@ local function onunequip(inst, owner)
     if skin_build ~= nil then
         owner:PushEvent("unequipskinneditem", inst:GetSkinName())
     end
-    owner:RemoveEventCallback("onattackother", weaponused)
+
+    owner:RemoveEventCallback("onattackother", inst._weaponused_callback)
+
     owner.AnimState:ClearOverrideSymbol("lantern_overlay")
     owner.AnimState:Hide("LANTERN_OVERLAY")
     owner.AnimState:ShowSymbol("swap_object")
@@ -80,6 +79,12 @@ local function fn()
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
+    end
+
+    inst._weaponused_callback = function(_, data)
+        if data.weapon ~= nil and data.weapon == inst then
+            inst.components.armor:TakeDamage(TUNING.SHIELDOFTERROR_USEDAMAGE)
+        end
     end
 
     inst:AddComponent("eater")

@@ -701,6 +701,9 @@ function Inv:OpenControllerInventory()
         --V2C: Don't set pause in multiplayer, all it does is change the
         --     audio settings, which we don't want to do now
         --SetPause(true, "inv")
+
+        SetAutopaused(true)
+
         self.open = true
         self.force_single_drop = false --reset the flag
 
@@ -730,6 +733,9 @@ function Inv:CloseControllerInventory()
         --V2C: Don't set pause in multiplayer, all it does is change the
         --     audio settings, which we don't want to do now
         --SetPause(false)
+
+        SetAutopaused(false)
+
         self.owner.HUD.controls:SetDark(false)
 
         self.owner.replica.inventory:ReturnActiveItem()

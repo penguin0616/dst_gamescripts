@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "They already started without me...",
             SPIDERNOHAT = "I have a feeling the spider would get it all rumpled in my pocket.",
             TERRARIUM_REFUSE = "It refused my gift...",
+            TERRARIUM_COOLDOWN = "I suppose it needs more time to recover from all it has been through.",
         },
         GIVETOPLAYER =
         {
@@ -729,6 +730,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Come now dear creature, don't be afraid.",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Closer to the judge would be best.",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Oh. Maybe I could try making this new costume...",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "The abyss gazes into me!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "There is never an end to the madness.",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "It's gone. And alas, I'm still here.",
 
 	BATTLECRY =
 	{

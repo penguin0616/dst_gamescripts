@@ -92,6 +92,7 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 			local name = clothing_names[type]
 			if CLOTHING[name] ~= nil then
 				local src_symbols = nil
+				local src_symbols_alt = nil
 
 				--wolfgang
 				if skintype == "wimpy_skin" and CLOTHING[name].symbol_overrides_skinny then
@@ -147,9 +148,11 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 				elseif skintype == "old_skin" and CLOTHING[name].symbol_overrides_old then
 					src_symbols = CLOTHING[name].symbol_overrides_old
 
-				--just used by woodie's bare feet currently
-				elseif CLOTHING[name].symbol_overrides_by_character ~= nil then
-					src_symbols = CLOTHING[name].symbol_overrides_by_character[prefab] or CLOTHING[name].symbol_overrides_by_character["default"]
+				end
+
+				--A secondary set of alternate src_symbols
+				if CLOTHING[name].symbol_overrides_by_character ~= nil then
+					src_symbols_alt = CLOTHING[name].symbol_overrides_by_character[prefab] or CLOTHING[name].symbol_overrides_by_character["default"]
 				end
 
                 if type == "body" then
@@ -177,6 +180,9 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, skintype
 							local src_sym = sym
 							if src_symbols then
 								src_sym = src_symbols[sym] or sym
+							end
+							if src_symbols_alt then
+								src_sym = src_symbols_alt[sym] or src_sym
 							end
 
 							local real_build = GetBuildForItem(name)

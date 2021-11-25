@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "Not yet",
             SPIDERNOHAT = "No room",
             TERRARIUM_REFUSE = "Want something else?",
+            TERRARIUM_COOLDOWN = "Friend is away... will come back later?",
         },
         GIVETOPLAYER =
         {
@@ -729,6 +730,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Here Shaggy Buddy!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "Too far for contest",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Ooooh! Make new thing",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Big peeper peeping!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Big peeper back!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Where going?",
 
 	BATTLECRY =
 	{

@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "Come on, hurry up!",
             SPIDERNOHAT = "Why does it need a hat when it's snug as a bug in my pocket?",
             TERRARIUM_REFUSE = "What, that wasn't good enough for it?",
+            TERRARIUM_COOLDOWN = "It's not taking it, is it broken? Where'd that tree go?",
         },
         GIVETOPLAYER =
         {
@@ -732,6 +733,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Hey beefalo! Get over here!",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "How would the judge even see my beefalo this far away?",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "I think I could make a new beefalo costume now.",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "Eww, it popped out!!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Did you come back just to get BURNED?",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Coward, stop running away!!",
 
 	BATTLECRY =
 	{

@@ -122,6 +122,7 @@ return{
 			CARNIVALGAME_ALREADY_PLAYING = "We can wait till they're done. Right Woby?",
             SPIDERNOHAT = "I don't think that would be very comfy for the spider.",
             TERRARIUM_REFUSE = "I guess that was a silly thing to try...",
+            TERRARIUM_COOLDOWN = "There's no tree to give anything to yet!",
         },
         GIVETOPLAYER =
         {
@@ -725,6 +726,11 @@ return{
     ANNOUNCE_CALL_BEEF = "Come here, girl! Or boy? It's hard to tell.",
     ANNOUNCE_CANTBUILDHERE_YOTB_POST = "It doesn't make sense to build it so far away...",
     ANNOUNCE_YOTB_LEARN_NEW_PATTERN =  "Hey, I think I can make a new beefalo costume!",
+
+    -- AE4AE
+    ANNOUNCE_EYEOFTERROR_ARRIVE = "I'm pretty sure that's supposed to be attached to something!",
+    ANNOUNCE_EYEOFTERROR_FLYBACK = "Oh good, they came back!",
+    ANNOUNCE_EYEOFTERROR_FLYAWAY = "Aww wait, come back!",
 
 	BATTLECRY =
 	{
