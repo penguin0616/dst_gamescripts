@@ -891,7 +891,7 @@ function ModWrangler:StartVersionChecking()
                 local modinfo = KnownModIndex:GetModInfo(mod_name)
                 if modinfo.all_clients_require_mod then
                     --print("adding mod to verify", mod_name)
-                    table.insert(mods_to_verify, { name = mod_name, version = modinfo.version })
+                    table.insert(mods_to_verify, { name = mod_name, version = modinfo.version, version_compatible = modinfo.version_compatible })
                 end
             end
         end
