@@ -197,13 +197,11 @@ local function OnFinishedLeaving(inst)
     inst._leftday = TheWorld.state.cycles
 end
 
-local HEALTH_PER_DAY = TUNING.EYEOFTERROR_HEALTHPCT_PERDAY*TUNING.EYEOFTERROR_HEALTH
-local MAX_GAIN_DAYS = 1/TUNING.EYEOFTERROR_HEALTHPCT_PERDAY
 local function FlybackHealthUpdate(inst)
     if inst._leftday ~= nil then
-        local day_difference = math.min(TheWorld.state.cycles - inst._leftday, MAX_GAIN_DAYS)
+        local day_difference = math.min(TheWorld.state.cycles - inst._leftday, 1/TUNING.EYEOFTERROR_HEALTHPCT_PERDAY)
         if day_difference > 0 then
-            inst.components.health:DoDelta(day_difference * HEALTH_PER_DAY)
+            inst.components.health:DoDelta(day_difference * TUNING.EYEOFTERROR_HEALTHPCT_PERDAY * inst.components.health.maxhealth)
         end
 
         if inst._transformonhealthupdate then

@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I sure gummed the works there.",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "BEEEES!",
 	ANNOUNCE_BOOMERANG = "I'll catch you next time! Ow...",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "I'd rather sleep than nap.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Sleeping down here ain't a bright idea.",
 	ANNOUNCE_NOHUNGERSIESTA = "I'd rather whip up some grub.",
-	ANNOUNCE_NODANGERAFK = "I gotta stay alert!",
 	ANNOUNCE_NO_TRAP = "That was a cinch.",
 	ANNOUNCE_PECKED = "Yeow! Lay off!",
 	ANNOUNCE_QUAKE = "Earthquake!",
@@ -4198,6 +4213,19 @@ return{
 			COOLDOWN = "Guess it's on its lunch break.",
 			SPAWN_DISABLED = "Looks like it's out of order.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "I might've helped him a little bit on the mechanical side of things.",
+            BURNT = "Aw shoot, I hope the big guy isn't too upset.",
+        },
+
+        DUMBBELL = "Why not do some real work instead of just liftin' these things?",
+        DUMBBELL_GOLDEN = "Awful fancy for something you just pick up and put down over and over.",
+        DUMBBELL_GEM = "Awful fancy for something you just pick up and put down over and over.",
+        POTATOSACK = "Always nice to have a snack on hand when you're workin'.",
+
 
         TERRARIUMCHEST = 
 		{

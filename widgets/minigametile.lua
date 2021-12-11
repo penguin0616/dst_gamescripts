@@ -110,7 +110,7 @@ function MiniGameTile:OnGainFocus()
 		self:Embiggen()
 		self.tile:GetAnimState():PushAnimation(self.view_state.."_hover", true)
 	end
-	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 end
 
 function MiniGameTile:OnLoseFocus()

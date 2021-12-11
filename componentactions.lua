@@ -667,6 +667,19 @@ local COMPONENT_ACTIONS =
                 end
             end
         end,
+
+        mightygym = function(inst, doer, actions, right)
+            if doer:HasTag("player") and doer:HasTag("strongman") and 
+                not inst:HasTag("hasstrongman") then
+                
+                if right and inst:HasTag("loaded") then
+                    -- TODO: unload gym action
+                    table.insert(actions, ACTIONS.UNLOAD_GYM)
+                else
+                    table.insert(actions, ACTIONS.ENTER_GYM)
+                end
+            end
+        end,
     },
 
     USEITEM = --args: inst, doer, target, actions, right
@@ -1389,8 +1402,12 @@ local COMPONENT_ACTIONS =
         end,
 
         complexprojectile = function(inst, doer, pos, actions, right)
-            if right and not TheWorld.Map:IsGroundTargetBlocked(pos) then
-                table.insert(actions, ACTIONS.TOSS)
+            if right and not TheWorld.Map:IsGroundTargetBlocked(pos) 
+				and (inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer)) then
+
+                if not inst:HasTag("dumbbell") or doer:HasTag("mightiness_mighty") then
+                    table.insert(actions, ACTIONS.TOSS)
+                end
             end
         end,
 
@@ -1534,10 +1551,13 @@ local COMPONENT_ACTIONS =
 
         complexprojectile = function(inst, doer, target, actions, right)
             if right and
-                not (doer.components.playercontroller ~= nil and
-                    doer.components.playercontroller.isclientcontrollerattached) and
-                not TheWorld.Map:IsGroundTargetBlocked(target:GetPosition()) then
-                table.insert(actions, ACTIONS.TOSS)
+                not (doer.components.playercontroller ~= nil and doer.components.playercontroller.isclientcontrollerattached) and
+                not TheWorld.Map:IsGroundTargetBlocked(target:GetPosition()) and
+				(inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer)) then
+                
+                if not inst:HasTag("dumbbell") or doer:HasTag("mightiness_mighty") then
+                    table.insert(actions, ACTIONS.TOSS)
+                end
             end
         end,
 
@@ -2028,6 +2048,17 @@ local COMPONENT_ACTIONS =
         repellent = function(inst, doer, actions, right)
             if doer:HasTag("spiderwhisperer") then
                 table.insert(actions, ACTIONS.REPEL)
+            end
+        end,
+
+        mightydumbbell = function(inst, doer, actions)
+            if doer:HasTag("player") and doer:HasTag("strongman") and 
+              (inst.replica.equippable ~= nil and inst.replica.equippable:IsEquipped()) then
+                if inst:HasTag("lifting") then
+                    table.insert(actions, ACTIONS.STOP_LIFT_DUMBBELL)
+                else
+                    table.insert(actions, ACTIONS.LIFT_DUMBBELL)
+                end
             end
         end,
     },

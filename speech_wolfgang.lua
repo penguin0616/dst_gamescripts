@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+            NOWEIGHT = "Wolfgang needs to find something to lift!",
+            UNBALANCED = "Wolfgang does not want one arm mightier than other!",
+            ONFIRE = "Is good to feel burn, but not that much.",
+            SMOULDER = "Wolfgang will stomp puny fire out first.",
+            DANGER = "Wolfgang can't think about lifting with scary things out!",
+            HUNGRY = "Too hungry... can't lift with tummy grumbling...",
+            FULL = "Is Wolfgang's turn for lifting now! Wait...",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I am not mighty enough to do that.",
@@ -344,7 +355,12 @@ return{
     ANNOUNCE_NORMALTOMIGHTY = "I AM MIGHTY!",
     ANNOUNCE_NORMALTOWIMPY = "I am not feeling so good.",
     ANNOUNCE_WIMPYTONORMAL = "Wolfgang is better.",
-    ANNOUNCE_MIGHTYTONORMAL = "I need to fill my mighty belly again!",
+    ANNOUNCE_MIGHTYTONORMAL = "No! Wolfgang must get stronger!",
+    ANNOUNCE_EXITGYM = {
+        MIGHTY = "Hah! Wolfgang feel back to old self!",
+        NORMAL = "Hmm muscles feel better, but could be stronger!",
+        WIMPY = "Wolfgang is just needing... a bit of rest...",
+    },
 
 	ANNOUNCE_BEES = "Bees! Nasty stinging bug men!",
 	ANNOUNCE_BOOMERANG = "Ow! Why did you hurt me, throwy stick?",
@@ -447,7 +463,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "Wolfgang have principles against siesta at night.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Wolfgang is tense. Too tense to relax.",
 	ANNOUNCE_NOHUNGERSIESTA = "Wolfgang take siesta after eating time.",
-	ANNOUNCE_NODANGERAFK = "Wolfgang will not abandon the fight!",
 	ANNOUNCE_NO_TRAP = "Easy like lift weights.",
 	ANNOUNCE_PECKED = "What I do to deserve this?",
 	ANNOUNCE_QUAKE = "Ground is shake. Wolfgang hate shaking ground.",
@@ -4193,6 +4208,19 @@ return{
 			COOLDOWN = "Tiny tree is now gone! Strange...",
 			SPAWN_DISABLED = "Wolfgang not want to see giant eye again.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Watch, puny friends! Wolfgang will perform feats of strength!",
+            BURNT = "Wolfgang will hold back mighty tears...",
+        },
+
+        DUMBBELL = "Ha! Wolfgang could lift boulders twice this size!",
+        DUMBBELL_GOLDEN = "Lift! Lift to get strong!",
+        DUMBBELL_GEM = "Make muscles mighty!",
+        POTATOSACK = "Ha! Lifting and potatoes are three of Wolfgang's favorite things!",
+
 
         TERRARIUMCHEST = 
 		{

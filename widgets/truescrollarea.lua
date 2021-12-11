@@ -243,7 +243,7 @@ function TrueScrollArea:OnControl(control, down)
                 scroll_amt = scroll_amt / 2
             end
             if self:Scroll(scroll_amt) then
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             end
             return true
         elseif control == CONTROL_SCROLLFWD then
@@ -252,7 +252,7 @@ function TrueScrollArea:OnControl(control, down)
                 scroll_amt = scroll_amt / 2
             end
             if self:Scroll(scroll_amt) then
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             end
             return true
         end

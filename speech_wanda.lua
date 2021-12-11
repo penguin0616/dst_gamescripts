@@ -326,6 +326,17 @@ return{
         {
             ONCOOLDOWN = "It needs a bit of time to unwind.",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "Not in this timeline.",
@@ -345,6 +356,11 @@ return{
     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Oh botheration. Those bees really tick me off!",
 	ANNOUNCE_BOOMERANG = "What goes around comes around.",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "Now is not the time for a siesta.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I'll take a break when I'm on the surface where it's safe...er.",
 	ANNOUNCE_NOHUNGERSIESTA = "I can't rest! I need to find something to eat, quickly!",
-	ANNOUNCE_NODANGERAFK = "I think it's safe...",
 	ANNOUNCE_NO_TRAP = "That was easy enough.",
 	ANNOUNCE_PECKED = "Alright, I'm going, I'm going!",
 	ANNOUNCE_QUAKE = "The timeline's collapsing! No, worse, it's the ground!",
@@ -4192,6 +4207,19 @@ return{
 			COOLDOWN = "It's dormant, for the time being at least.",
 			SPAWN_DISABLED = "It doesn't seem to be active, perhaps now I can tinker with it...",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "I don't know where he finds the time for such things.",
+            BURNT = "Well, that's that. Time to move on.",
+        },
+
+        DUMBBELL = "What a dreadfully repetitive way to spend one's time.",
+        DUMBBELL_GOLDEN = "What a dreadfully repetitive way to spend one's time.",
+        DUMBBELL_GEM = "What a dreadfully repetitive way to spend one's time.",
+        POTATOSACK = "Who would want to lug this heavy thing around?",
+
 
         TERRARIUMCHEST = 
 		{

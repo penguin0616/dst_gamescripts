@@ -70,6 +70,9 @@ local function buff_OnAttached(inst, target)
 
     inst:ListenForEvent("buildstructure", owner_stop_buff_fn, target)
     inst:ListenForEvent("builditem", owner_stop_buff_fn, target)
+
+    inst:ListenForEvent("on_enter_might_gym", owner_stop_buff_fn, target)
+	
 end
 
 local function buff_OnDetached(inst, target)

@@ -2183,7 +2183,7 @@ local function MakeHeader(self, parent, xPos, name, onclick)
 
     header.bg.OnGainFocus =
         function()
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             header.text:SetFont(NEWFONT_OUTLINE)
             header.text:SetColour(1,1,1,1)
             header.text:SetSize(33)

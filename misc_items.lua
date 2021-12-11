@@ -1058,7 +1058,7 @@ MISC_ITEMS =
 		box_build = "box_mystery_ice",
 		rarity = "Classy",
 		rarity_modifier = "Woven",
-		release_group = 109,
+		release_group = 110,
 	},
 	mysterybox_invisible_5 =
 	{
@@ -4449,7 +4449,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", },
 		output_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", "body_wathgrithr_yule", "body_waxwell_yule", "body_wes_yule", "body_winona_yule", "body_woodie_yule", "body_wx78_yule", "feet_wathgrithr_yule", "feet_wes_yule", "feet_wx78_yule", "hand_wathgrithr_yule", "hand_waxwell_yule", "hand_wes_yule", "hand_winona_yule", "hand_woodie_yule", "hand_wx78_yule", "legs_waxwell_yule", "legs_wes_yule", "legs_winona_yule", "legs_woodie_yule", "legs_wx78_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_bundle =
 	{
@@ -4463,7 +4463,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
 		output_items = {  "wathgrithr_yule", "waxwell_yule", "wes_yule", "winona_yule", "woodie_yule", "wx78_yule", "body_wathgrithr_yule", "body_waxwell_yule", "body_wes_yule", "body_winona_yule", "body_woodie_yule", "body_wx78_yule", "feet_wathgrithr_yule", "feet_wes_yule", "feet_wx78_yule", "hand_wathgrithr_yule", "hand_waxwell_yule", "hand_wes_yule", "hand_winona_yule", "hand_woodie_yule", "hand_wx78_yule", "legs_waxwell_yule", "legs_wes_yule", "legs_winona_yule", "legs_woodie_yule", "legs_wx78_yule", "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_items =
 	{
@@ -4478,7 +4478,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
 		output_items = {  "fence_gingerbread", "fence_gate_gingerbread", "cane_candycane", "earmuffshat_deerclops", "mushroom_light_festive", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_wathgrithr =
 	{
@@ -4491,7 +4491,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wathgrithr_yule", "body_wathgrithr_yule", "feet_wathgrithr_yule", "hand_wathgrithr_yule", },
 		output_items = {  "wathgrithr_yule", "body_wathgrithr_yule", "feet_wathgrithr_yule", "hand_wathgrithr_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_waxwell =
 	{
@@ -4504,7 +4504,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "waxwell_yule", "body_waxwell_yule", "hand_waxwell_yule", "legs_waxwell_yule", },
 		output_items = {  "waxwell_yule", "body_waxwell_yule", "hand_waxwell_yule", "legs_waxwell_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_wes =
 	{
@@ -4517,7 +4517,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wes_yule", "body_wes_yule", "feet_wes_yule", "hand_wes_yule", "legs_wes_yule", },
 		output_items = {  "wes_yule", "body_wes_yule", "feet_wes_yule", "hand_wes_yule", "legs_wes_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_winona =
 	{
@@ -4530,7 +4530,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "winona_yule", "body_winona_yule", "hand_winona_yule", "legs_winona_yule", },
 		output_items = {  "winona_yule", "body_winona_yule", "hand_winona_yule", "legs_winona_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_woodie =
 	{
@@ -4543,7 +4543,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "woodie_yule", "body_woodie_yule", "hand_woodie_yule", "legs_woodie_yule", },
 		output_items = {  "woodie_yule", "body_woodie_yule", "hand_woodie_yule", "legs_woodie_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	pack_yule_wx78 =
 	{
@@ -4556,7 +4556,7 @@ MISC_ITEMS =
 		box_build = "box_shop_ice",
 		display_items = {  "wx78_yule", "body_wx78_yule", "feet_wx78_yule", "hand_wx78_yule", "legs_wx78_yule", },
 		output_items = {  "wx78_yule", "body_wx78_yule", "feet_wx78_yule", "hand_wx78_yule", "legs_wx78_yule", },
-		release_group = 108,
+		release_group = 83,
 	},
 	playerportrait_bg_altarstatue =
 	{

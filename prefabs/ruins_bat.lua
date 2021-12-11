@@ -100,7 +100,7 @@ local function fn()
     inst:AddComponent("equippable")
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
-    inst.components.equippable.walkspeedmult = 1.1
+    inst.components.equippable.walkspeedmult = TUNING.RUINS_BAT_SPEED_MULT
 
     MakeHauntableLaunch(inst)
 

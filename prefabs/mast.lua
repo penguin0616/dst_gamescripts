@@ -7,11 +7,7 @@ local assets =
 
 local malbatross_assets =
 {
-    -- Asset("ANIM", "anim/boat_mast_malbatross.zip"),
     Asset("ANIM", "anim/boat_mast_malbatross_wip.zip"),
-    -- Asset("ANIM", "anim/boat_mast_malbatross_knots.zip"),
-    -- Asset("ANIM", "anim/boat_mast_malbatross_opens.zip"),
-    -- Asset("ANIM", "anim/boat_mast_malbatross_build.zip"),
     Asset("ANIM", "anim/boat_mast_malbatross_knots_wip.zip"),
     Asset("ANIM", "anim/boat_mast_malbatross_opens_wip.zip"),
     Asset("ANIM", "anim/boat_mast_malbatross_build.zip"),

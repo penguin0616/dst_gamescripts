@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "No, no, no.",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Fiddle dee dee, HERE COMES A BEE!",
 	ANNOUNCE_BOOMERANG = "Hyuyu!",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "No honorable imp would siesta at night.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "An imp must stay on guard when underground.",
 	ANNOUNCE_NOHUNGERSIESTA = "I'm too soul-famished to siesta.",
-	ANNOUNCE_NODANGERAFK = "I am in grave danger right now!",
 	ANNOUNCE_NO_TRAP = "Can't catch me!",
 	ANNOUNCE_PECKED = "But why!",
 	ANNOUNCE_QUAKE = "Shiver and shake, that's a quake!",
@@ -4198,6 +4213,19 @@ return{
 			COOLDOWN = "Its power's gone, but not for long.",
 			SPAWN_DISABLED = "It seems nobody here likes pranks.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Mortals have such curious ways.",
+            BURNT = "The exercise has been exorcised.",
+        },
+
+        DUMBBELL = "It's neither dumb, nor a bell. Mortals are strange, indeed.",
+        DUMBBELL_GOLDEN = "It's neither dumb, nor a bell. Mortals are strange, indeed.",
+        DUMBBELL_GEM = "He's turned those gemstones into gymstones, hyuyu!",
+        POTATOSACK = "Hyuyuyu, wouldn't it be fun to hide inside and give him a scare?",
+
 
         TERRARIUMCHEST = 
 		{

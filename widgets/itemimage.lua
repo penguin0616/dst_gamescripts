@@ -147,7 +147,7 @@ function ItemImage:OnGainFocus()
 	if self.screen and self.screen.SetFocusColumn ~= nil then
 		self.screen:SetFocusColumn(self)
 	end
-	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 end
 
 function ItemImage:OnLoseFocus()

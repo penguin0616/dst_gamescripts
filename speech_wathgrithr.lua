@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Back, wee speared creatures!",
 	ANNOUNCE_BOOMERANG = "Urg! I must master the curved weapon.",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "No napping in the moonlight.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "This doesn't feel like the time for a nap.",
 	ANNOUNCE_NOHUNGERSIESTA = "I'd like a meat snack first.",
-	ANNOUNCE_NODANGERAFK = "Only a coward would leave now!",
 	ANNOUNCE_NO_TRAP = "Thankfully, I am light of foot.",
 	ANNOUNCE_PECKED = "Away, feisty beaker!",
 	ANNOUNCE_QUAKE = "The world shudders!",
@@ -4192,6 +4207,19 @@ return{
 			COOLDOWN = "The Bifrost is sealed, but for how long?",
 			SPAWN_DISABLED = "The monster shall not terrorize this realm again!",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "My friend doth possess strength that could rival mighty Thor's!",
+            BURNT = "T'was a fiery display indeed!",
+        },
+
+        DUMBBELL = "'Tis not just strength, but cunning that makes a warrior!",
+        DUMBBELL_GOLDEN = "He hath strength, next we must work on his bravery!",
+        DUMBBELL_GEM = "My friend, if you want to be fighting fit you must join me in combat!",
+        POTATOSACK = "I have no use for a sack of non-meats.",
+
 
         TERRARIUMCHEST = 
 		{

@@ -688,7 +688,7 @@ SPECIAL_EVENTS =
     YOTC = "year_of_the_carrat",
     YOTB = "year_of_the_beefalo",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.WINTERS_FEAST
 
 FESTIVAL_EVENTS =
 {
@@ -923,11 +923,11 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "terraria1/common/music_main_eot"
-    --"dontstarve/music/music_FE"
+    "dontstarve/music/music_FE"
     --"dontstarve/music/music_moonstorm_FE"
     --"dontstarve/music/music_FE_webber"
     --"dontstarve/music/music_FE_wanda"
+    --"terraria1/common/music_main_eot"
 
 ---------------------------------------------------------
 NUM_HALLOWEENCANDY = 14
@@ -1232,7 +1232,8 @@ CUSTOM_RECIPETABS =
     NATURE        = { str = "NATURE",			sort = 999, icon = "tab_nature.tex",        owner_tag = "plantkin"     },
 	SLINGSHOTAMMO =	{ str = "SLINGSHOTAMMO",	sort = 999, icon = "tab_slingshot.tex",	    owner_tag = "pebblemaker"  },
 	BALLOONOMANCY = { str = "BALLOONOMANCY",	sort = 999, icon = "tab_balloonomancy.tex",	owner_tag = "balloonomancer",	icon_atlas = "images/hud2.xml" },
-	CLOCKMAKER =	{ str = "CLOCKMAKER",		sort = 999, icon = "tab_clockmaker.tex",	owner_tag = "clockmaker",		icon_atlas = "images/hud2.xml"},
+	CLOCKMAKER    =	{ str = "CLOCKMAKER",		sort = 999, icon = "tab_clockmaker.tex",	owner_tag = "clockmaker",		icon_atlas = "images/hud2.xml"},
+    STRONGMAN     =	{ str = "STRONGMAN",		sort = 999, icon = "tab_strongman.tex",	    owner_tag = "strongman",		icon_atlas = "images/hud2.xml"},
 }
 
 QUAGMIRE_RECIPETABS =

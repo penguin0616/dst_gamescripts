@@ -181,6 +181,7 @@ Action = Class(function(self, data, instant, rmb, distance, ghost_valid, ghost_e
     self.show_tile_placer_fn = data.show_tile_placer_fn
 	self.theme_music = data.theme_music
 	self.theme_music_fn = data.theme_music_fn -- client side function
+    self.pre_action_cb = data.pre_action_cb -- runs and client and server
 end)
 
 -- NOTE: High priority is intended to be a shortcut flag for actions that we expect to always dominate if they are available.
@@ -414,6 +415,19 @@ ACTIONS =
 
     -- WANDA
     DISMANTLE_POCKETWATCH = Action({ mount_valid=true }),
+
+    -- WOLFGANG
+    LIFT_DUMBBELL = Action({ priority = 1, mount_valid=false }),
+
+    STOP_LIFT_DUMBBELL = Action({ priority = 1, mount_valid=false, instant = true }),
+    ENTER_GYM = Action({ mount_valid=false }),    
+    UNLOAD_GYM = Action({ mount_valid=false}),
+
+    -- Minigame actions:
+    LEAVE_GYM = Action({ mount_valid=false, instant = true }),
+    LIFT_GYM_SUCCEED_PERFECT = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true }),
+    LIFT_GYM_SUCCEED = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true }),
+    LIFT_GYM_FAIL = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true }),    
 }
 
 ACTIONS_BY_ACTION_CODE = {}
@@ -748,7 +762,9 @@ end
 local function row(act)
     local oar = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 
-    if oar == nil then return false end
+    if oar == nil then 
+        return false 
+    end
 
     local pos = act:GetActionPoint()
     if pos == nil then
@@ -2520,7 +2536,7 @@ end
 
 ACTIONS.TOSS.fn = function(act)
     if act.invobject and act.doer then
-        if act.invobject.components.complexprojectile and act.doer.components.inventory then
+        if act.invobject.components.complexprojectile and act.doer.components.inventory and (act.invobject.components.equippable == nil or not act.invobject.components.equippable:IsRestricted(act.doer)) then
             local projectile = act.doer.components.inventory:DropItem(act.invobject, false)
             if projectile then
                 local pos = nil
@@ -3786,4 +3802,90 @@ ACTIONS.DISMANTLE_POCKETWATCH.fn = function(act)
     end
 
     return can_dismantle, reason
+end
+
+
+
+ACTIONS.STOP_LIFT_DUMBBELL.fn = function(act)
+    act.doer:PushEvent("stopliftingdumbbell")
+end
+
+ACTIONS.LIFT_DUMBBELL.fn = function(act)
+    if act.doer ~= nil and act.invobject ~= nil then
+        
+        local dumbbell = act.invobject
+        local lifter = act.doer.components.dumbbelllifter
+
+        if lifter~= nil and dumbbell ~= nil then
+            local can_lift, reason = lifter:CanLift(dumbbell)
+            if not can_lift then
+                return false, reason
+            end
+            
+            lifter:StartLifting(dumbbell)
+            return true
+        end
+    end
+
+    return false
+end
+
+ACTIONS.ENTER_GYM.fn = function(act)
+    if act.doer ~= nil and act.target ~= nil and act.target.components.mightygym then
+        local gym = act.target.components.mightygym
+        local can_workout, reason = gym:CanWorkout(act.doer)
+        if can_workout then
+            gym:CharacterEnterGym(act.doer)
+            return true
+		end
+        return false, reason
+    end
+    return false
+end
+
+ACTIONS.LIFT_GYM_FAIL.pre_action_cb = function(act)
+    if act.doer and act.doer.bell  then
+        act.doer.bell:ding("fail")
+    end
+
+    if not TheNet:IsDedicated() then 
+        act.doer:PushEvent("lift_gym",{result = "fail"})
+    end
+end
+
+ACTIONS.LIFT_GYM_FAIL.fn = function(act)
+    return true
+end
+
+ACTIONS.LIFT_GYM_SUCCEED_PERFECT.pre_action_cb = function(act)
+    if act.doer and act.doer.bell  then
+        act.doer.bell:ding("perfect")
+    end
+end
+
+ACTIONS.LIFT_GYM_SUCCEED_PERFECT.fn = function(act)
+    return true
+end
+
+ACTIONS.LIFT_GYM_SUCCEED.pre_action_cb = function(act)
+    if act.doer and act.doer.bell  then
+        act.doer.bell:ding("succeed")
+    end
+end
+
+ACTIONS.LIFT_GYM_SUCCEED.fn = function(act)
+    return true
+end
+
+ACTIONS.LEAVE_GYM.fn = function(act)
+    local gym =  act.doer.components.strongman.gym
+    gym.components.mightygym:CharacterExitGym(act.doer)
+    return true
+end
+
+ACTIONS.UNLOAD_GYM.fn = function(act)
+    if act.target then
+        act.target.components.mightygym:UnloadWeight()
+        return true
+    end
 end

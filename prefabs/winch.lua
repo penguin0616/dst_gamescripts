@@ -263,7 +263,11 @@ local function onitemget(inst, data, no_CHEVO_event)
 	inst.components.shelf:PutItemOnShelf(item)
 
 	if item.components.symbolswapdata ~= nil then
-		inst.AnimState:OverrideSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+		if item.components.symbolswapdata.is_skinned then
+			inst.AnimState:OverrideItemSkinSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol, item.GUID, "swap_cavein_boulder" ) --default should never be used
+		else
+			inst.AnimState:OverrideSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+		end
 	end
 
 	if not no_CHEVO_event then
@@ -385,7 +389,11 @@ local function OnLoadPostPass(inst)
 			inst.components.shelf:PutItemOnShelf(item)
 
 			if item.components.symbolswapdata ~= nil then
-				inst.AnimState:OverrideSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+				if item.components.symbolswapdata.is_skinned then
+					inst.AnimState:OverrideItemSkinSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol, item.GUID, "swap_cavein_boulder" ) --default should never be used
+				else
+					inst.AnimState:OverrideSymbol("swap_body", item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+				end
 			end
 		end
 

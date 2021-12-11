@@ -152,7 +152,12 @@ local function ServerGetSpeedMultiplier(self)
         else
             for k, v in pairs(self.inst.components.inventory.equipslots) do
                 if v.components.equippable ~= nil then
-                    mult = mult * v.components.equippable:GetWalkSpeedMult()
+					local item_speed_mult = v.components.equippable:GetWalkSpeedMult()
+                    if item_speed_mult > 0 and item_speed_mult < 1 and self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "mighty" then
+						item_speed_mult = math.min(1, item_speed_mult + TUNING.MIGHTY_HEAVY_SPEED_MULT_BONUS)
+					end
+
+                    mult = mult * item_speed_mult
                 end
             end
         end
@@ -175,7 +180,12 @@ local function ClientGetSpeedMultiplier(self)
             for k, v in pairs(inventory:GetEquips()) do
                 local inventoryitem = v.replica.inventoryitem
                 if inventoryitem ~= nil then
-                    mult = mult * inventoryitem:GetWalkSpeedMult()
+					local item_speed_mult = inventoryitem:GetWalkSpeedMult()
+                    if item_speed_mult > 0 and item_speed_mult < 1 and self.inst:HasTag("mightiness_mighty") then
+						item_speed_mult = math.min(1, item_speed_mult + TUNING.MIGHTY_HEAVY_SPEED_MULT_BONUS)
+					end
+
+                    mult = mult * item_speed_mult
                 end
             end
         end

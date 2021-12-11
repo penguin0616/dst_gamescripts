@@ -76,7 +76,7 @@ function SnapshotTab:MakeSnapshotsMenu()
         widget.OnGainFocus = function(self)
             if not widget:IsEnabled() then return end
             Widget.OnGainFocus(self)
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             widget.state_bg:Show()
         end
 

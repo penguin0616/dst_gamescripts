@@ -203,17 +203,27 @@ end
 
 local function OnUnequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_body")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("unequipskinneditem", inst:GetSkinName())
+    end
 end
 
 local function OnEquip(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_body", "swap_cavein_boulder", "swap_body"..tostring(inst.variation or ""))
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_body", skin_build, "swap_body", inst.GUID, "swap_body"..tostring(inst.variation or ""))
+    else
+        owner.AnimState:OverrideSymbol("swap_body", "swap_cavein_boulder", "swap_body"..tostring(inst.variation or ""))
+    end
 end
 
-local function SetVariation(inst, variation)
-    if variation <= 1 or variation > NUM_VARIATIONS then
+local function SetVariation(inst, variation, force)
+    if variation ~= nil and (variation <= 1 or variation > NUM_VARIATIONS) then
         variation = nil
     end
-    if inst.variation ~= variation then
+    if force or inst.variation ~= variation then
 		inst.variation = variation
 
 		if variation ~= nil then
@@ -289,7 +299,12 @@ local function OnSave(inst, data)
 end
 
 local function OnPreLoad(inst, data)
-    SetVariation(inst, math.floor(data ~= nil and data.variation or 1))
+    local variation = math.floor(data ~= nil and data.variation or 1)
+    if inst.skinname ~= nil then
+        inst.variation = variation
+    else
+        SetVariation(inst, variation)
+    end
     SetRaised(inst, data ~= nil and data.raised)
     SetFormed(inst, data ~= nil and (data.formed or data.raised))
     if data ~= nil and not inst.raised and data.fallx ~= nil and data.fallz ~= nil then
@@ -610,6 +625,7 @@ local function fn()
     inst.OnLoadPostPass = OnLoadPostPass
 
     SetVariation(inst, math.random(NUM_VARIATIONS))
+    inst.SetVariation = SetVariation
 
     inst:ListenForEvent("onremove", OnRemoveFromScene)
     inst:ListenForEvent("enterlimbo", OnRemoveFromScene)

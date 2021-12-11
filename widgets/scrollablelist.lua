@@ -235,12 +235,12 @@ function ScrollableList:OnControl(control, down, force)
     if down and ((self.focus and self.scroll_bar:IsVisible()) or force) then
         if control == CONTROL_SCROLLBACK then
             if self:Scroll(-scroll_per_click, true) then
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             end
             return true
         elseif control == CONTROL_SCROLLFWD then
             if self:Scroll(scroll_per_click, true) then
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             end
             return true
         end
@@ -724,14 +724,14 @@ function ScrollableList:OnFocusMove(dir, down)
             if dir == MOVE_UP then
                 if self.focused_index <= self.view_offset + 1 then
                     self:Scroll(-1, true)
-                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
                     self.static_widgets[1]:SetFocus()
                     self.focused_index = self.focused_index - 1
                     return true
                 end
             elseif dir == MOVE_DOWN and self.focused_index >= self.view_offset + #self.static_widgets and self.view_offset + #self.static_widgets < #self.items then
                 self:Scroll(1, true)
-                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
                 self.static_widgets[#self.static_widgets]:SetFocus()
                 self.focused_index = self.focused_index + 1
                 return true
@@ -747,7 +747,7 @@ function ScrollableList:OnFocusMove(dir, down)
             if dir == MOVE_UP and self.focused_index > 1 then
                 if self.focused_index <= self.view_offset + 1 then
                     self:Scroll(-1, true)
-                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
                     self.items[self.view_offset + 1]:SetFocus()
                     self.focused_index = self.focused_index - 1
                 end
@@ -755,7 +755,7 @@ function ScrollableList:OnFocusMove(dir, down)
             elseif dir == MOVE_DOWN and self.focused_index < #self.items then
                 if self.focused_index >= self.view_offset + self.widgets_per_view then
                     self:Scroll(1, true)
-                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+                    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
                     self.items[self.view_offset + self.widgets_per_view]:SetFocus()
                     self.focused_index = self.focused_index + 1
                 end

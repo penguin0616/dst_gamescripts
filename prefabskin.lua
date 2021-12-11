@@ -422,6 +422,15 @@ tacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "tacklecontainer"
 supertacklecontainer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "supertacklecontainer" ) end
 supertacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "supertacklecontainer" ) end
 
+cavein_boulder_init_fn = function(inst, build_name)
+    inst.AnimState:ClearOverrideSymbol("swap_boulder")
+    inst.components.symbolswapdata:SetData(build_name, "swap_boulder", true)
+    basic_init_fn( inst, build_name, "swap_cavein_boulder" )
+end
+cavein_boulder_clear_fn = function(inst)
+    inst:SetVariation( inst.variation, true )
+    basic_clear_fn(inst, "swap_cavein_boulder" )
+end
 
 --------------------------------------------------------------------------
 --[[ Stagehand skin functions ]]

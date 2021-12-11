@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "Nope",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Buzz! Buzz!",
 	ANNOUNCE_BOOMERANG = "Whoops. Missed it",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "Can't. It's nighttime",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Not in caves",
 	ANNOUNCE_NOHUNGERSIESTA = "Too hungry",
-	ANNOUNCE_NODANGERAFK = "Too scary!",
 	ANNOUNCE_NO_TRAP = "Lucky!",
 	ANNOUNCE_PECKED = "Ouch!",
 	ANNOUNCE_QUAKE = "Rumbles!",
@@ -4196,6 +4211,19 @@ return{
 			COOLDOWN = "Where friend go?",
 			SPAWN_DISABLED = "Closed up",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Muscle man home",
+            BURNT = "Oh... poor muscle man...",
+        },
+
+        DUMBBELL = "Rocks",
+        DUMBBELL_GOLDEN = "Heavy!",
+        DUMBBELL_GEM = "Sparkly rocks",
+        POTATOSACK = "Carry friends",
+
 
         TERRARIUMCHEST = 
 		{

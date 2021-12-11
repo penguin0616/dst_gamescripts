@@ -389,6 +389,15 @@ function Controls:OnUpdate(dt)
             l, r = self.owner.components.playercontroller:GetSceneItemControllerAction(controller_target)
         end
 
+        if not isplacing and l == nil and ground_l == nil then
+            ground_l = self.owner.components.playercontroller:GetGroundUseSpecialAction(nil, false)
+            if ground_l ~= nil then
+                table.insert(ground_cmds, TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ACTION).." "..ground_l:GetActionString())
+                self.groundactionhint:Show()
+                self.groundactionhint:SetTarget(self.owner)
+                self.groundactionhint.text:SetString(table.concat(ground_cmds, "\n"))
+            end
+        end
         if not isplacing and r == nil and ground_r == nil then
             ground_r = self.owner.components.playercontroller:GetGroundUseSpecialAction(nil, true)
             if ground_r ~= nil then

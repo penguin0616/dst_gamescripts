@@ -243,6 +243,23 @@ local function MakeTerrariaBanner(self, banner_root, anim)
     anim:SetScale(.667)
 end
 
+local WOLFGANG_STATES = {"wimpy", "mid", "mighty"}
+local function MakeWolfgangBanner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wolfgang")
+    anim:GetAnimState():SetBank("dst_menu_wolfgang")
+    anim:GetAnimState():PlayAnimation("loop", true)
+
+    local wolfgang_state_index = math.random(3)
+    for i, state in ipairs(WOLFGANG_STATES) do
+        if i == wolfgang_state_index then
+            anim:GetAnimState():Show(WOLFGANG_STATES[i])
+        else
+            anim:GetAnimState():Hide(WOLFGANG_STATES[i])
+        end
+    end
+    anim:SetScale(.667)
+end
+
 local function MakeDefaultBanner(self, baner_root, anim)
 	local banner_height = 350
 	baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
@@ -291,7 +308,7 @@ function MakeBanner(self)
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakeDefaultBanner(self, baner_root, anim)
+        MakeWolfgangBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
@@ -299,7 +316,7 @@ function MakeBanner(self)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeWebberCawnivalBanner(self, baner_root, anim)
 	elseif true then
-        MakeTerrariaBanner(self, baner_root, anim)
+        MakeWolfgangBanner(self, baner_root, anim)
 	else
         MakeDefaultBanner(self, baner_root, anim)
         --[[
@@ -416,7 +433,8 @@ function MultiplayerMainScreen:DoInit()
 
     self.onlinestatus = self.fixed_root:AddChild(OnlineStatus( true ))
 
-	if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+    --TODO(Peter) put the snowflakes back in after 2021
+	--[[if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
 		self.banner_snowfall = self.banner_root:AddChild(TEMPLATES.old.Snowfall(-.39 * RESOLUTION_Y, .35, 3, 15))
 		self.banner_snowfall:SetVAnchor(ANCHOR_TOP)
 		self.banner_snowfall:SetHAnchor(ANCHOR_MIDDLE)
@@ -426,7 +444,7 @@ function MultiplayerMainScreen:DoInit()
 		self.snowfall:SetVAnchor(ANCHOR_TOP)
 		self.snowfall:SetHAnchor(ANCHOR_MIDDLE)
 		self.snowfall:SetScaleMode(SCALEMODE_PROPORTIONAL)
-	end
+	end]]
 
     ----------------------------------------------------------
 	-- new MOTD

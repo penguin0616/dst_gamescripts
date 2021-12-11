@@ -542,19 +542,35 @@ local actionhandlers =
     ActionHandler(ACTIONS.ADVANCE_TREE_GROWTH, "dolongaction"),
 
     ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),   
+
+    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action) 
+        if inst:HasTag("liftingdumbbell") then
+            return "use_dumbbell_pst"
+        else
+            return "use_dumbbell_pre"
+        end
+    end), 
+
+    ActionHandler(ACTIONS.ENTER_GYM, "give"),
+    ActionHandler(ACTIONS.LIFT_GYM_FAIL, "mighty_gym_lift"),
+    ActionHandler(ACTIONS.LIFT_GYM_SUCCEED_PERFECT, "mighty_gym_lift"),
+    ActionHandler(ACTIONS.LIFT_GYM_SUCCEED, "mighty_gym_lift"),
 }
 
 local events =
 {
     EventHandler("locomote", function(inst)
-
         if (inst.sg:HasStateTag("busy") or inst:HasTag("busy")) and (inst:HasTag("jumping") and inst.sg:HasStateTag("jumping")) then
             return
         end
         local is_moving = inst.sg:HasStateTag("moving")
         local should_move = inst.components.locomotor:WantsToMoveForward()
 
-        if inst:HasTag("sleeping") then
+        if inst:HasTag("ingym") then
+            if should_move and not inst.sg:HasStateTag("exiting_gym") then
+                inst.sg:GoToState("mighty_gym_exit")
+            end
+        elseif inst:HasTag("sleeping") then
             if should_move and not inst.sg:HasStateTag("waking") then
                 inst.sg:GoToState("wakeup")
             end
@@ -615,7 +631,9 @@ local states =
                         "idle_groggy" or
                         "idle_loop"
                 end
-            else
+            elseif inst.player_classified ~= nil and inst.player_classified.inmightygym:value() > 0 then
+				anim = "mighty_gym_active_loop"
+			else
                 anim =
                     (inst.replica.inventory ~= nil and inst.replica.inventory:IsHeavyLifting() and "heavy_idle") or
                     (   inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL and
@@ -1530,6 +1548,129 @@ local states =
         ontimeout = function(inst)
             inst:ClearBufferedAction()
             inst.sg:GoToState("idle")
+        end,
+    },
+
+    State{
+        name = "use_dumbbell_pre",
+        tags = { "gym", "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            
+            if inst.GetCurrentMightinessState then
+                local state = inst:GetCurrentMightinessState()
+                if state == "wimpy" then
+                    inst.AnimState:PlayAnimation("dumbbell_skinny_pre")
+                    --inst.AnimState:PushAnimation("dumbbell_skinny_pre_lag", false)
+                elseif state == "normal" then
+                    inst.AnimState:PlayAnimation("dumbbell_normal_pre")
+                    --inst.AnimState:PushAnimation("dumbbell_normal_pre_lag", false)
+                else
+                    inst.AnimState:PlayAnimation("dumbbell_mighty_pre")
+                    --inst.AnimState:PushAnimation("dumbbell_mighty_pre_lag", false)
+                end
+            end
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.AnimState:PlayAnimation("pickup_pst")
+            inst.sg:GoToState("idle", true)
+        end,
+    },
+
+    State{
+        name = "use_dumbbell_pre",
+        tags = { "gym", "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            
+            if inst.GetCurrentMightinessState then
+                local state = inst:GetCurrentMightinessState()
+                if state == "wimpy" then
+                    inst.AnimState:PlayAnimation("dumbbell_skinny_pre")
+                    inst.AnimState:PushAnimation("dumbbell_skinny_lag", false)
+                elseif state == "normal" then
+                    inst.AnimState:PlayAnimation("dumbbell_normal_pre")
+                    inst.AnimState:PushAnimation("dumbbell_normal_lag", false)
+                else
+                    inst.AnimState:PlayAnimation("dumbbell_mighty_pre")
+                    inst.AnimState:PushAnimation("dumbbell_mighty_lag", false)
+                end
+            end
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.AnimState:PlayAnimation("pickup_pst")
+            inst.sg:GoToState("idle", true)
+        end,
+    },
+
+    State{
+        name = "use_dumbbell_pst",
+        tags = { "gym", "doing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            
+            if inst.GetCurrentMightinessState then
+                local state = inst:GetCurrentMightinessState()
+                if state == "wimpy" then
+                    inst.AnimState:PlayAnimation("dumbbell_skinny_pst")
+                elseif state == "normal" then
+                    inst.AnimState:PlayAnimation("dumbbell_normal_pst")
+                else
+                    inst.AnimState:PlayAnimation("dumbbell_mighty_pst")
+                end
+            end
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.AnimState:PlayAnimation("pickup_pst")
+            inst.sg:GoToState("idle", true)
         end,
     },
 
@@ -4055,6 +4196,66 @@ local states =
     },
 
     --------------------------------------------------------------------------
+	-- Wolfgang Might Gym
+
+	State{
+        name = "mighty_gym_lift",
+        tags = { "busy" },
+
+        onenter = function(inst, snap)
+			local anim = "lift" --(inst.player_classified ~= nil and inst.player_classified.currentmightiness:value() >= 100) and "lift_full" or "lift"
+
+            inst.AnimState:PlayAnimation(anim.."_pre")
+            inst.AnimState:PushAnimation(anim.."_lag", false)
+            inst:PerformPreviewBufferedAction()
+
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("busy") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.sg:GoToState("idle")
+        end,
+    },
+
+
+    State{
+        name = "mighty_gym_exit",
+        tags = {"exiting_gym"}, --,"busy"
+        onenter = function(inst)
+            print("ENTER THE mighty_gym_exit")
+            inst.entity:SetIsPredictingMovement(false)
+            inst.entity:FlattenMovementPrediction()
+            SendRPCToServer(RPC.exitgym)
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("busy") and
+                inst.entity:FlattenMovementPrediction() then
+                inst.sg:GoToState("idle", "noanim")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst.sg:GoToState("idle", "noanim")
+        end,
+
+        onexit = function(inst)
+            inst.entity:SetIsPredictingMovement(true)
+        end,        
+    }, 
+    --------------------------------------------------------------------------
 
     State{
 
@@ -4365,10 +4566,11 @@ local states =
         end,
 
         ontimeout = function(inst)
+            print("AT TIMEOUT")
             inst:ClearBufferedAction()
             inst.sg:GoToState("idle")
         end,
-    },
+    }, 
 }
 
 local hop_timelines =

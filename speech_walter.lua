@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "It won't work.",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "I love bees! Too bad I'm uh... deathly allergic to them.",
 	ANNOUNCE_BOOMERANG = "Hey, who threw that?! Oh, wait...",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "I'd rather just go to bed.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I can't rest now! There's too much to look at down here!",
 	ANNOUNCE_NOHUNGERSIESTA = "Maybe if I have a snack first.",
-	ANNOUNCE_NODANGERAFK = "No, wait! I can do this!",
 	ANNOUNCE_NO_TRAP = "Huh. I thought for sure there would be a trap.",
 	ANNOUNCE_PECKED = "Ouch!! Th-that hurt!",
 	ANNOUNCE_QUAKE = "Did you feel that, Woby?",
@@ -4192,6 +4207,19 @@ return{
 			COOLDOWN = "I guess it can't stay lit up all the time.",
 			SPAWN_DISABLED = "Aww, can't we turn it on for a little bit?",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Wow! I wonder if I could be as strong as Mr. Wolfgang one day...",
+            BURNT = "Aww, I never even got to try it...",
+        },
+
+        DUMBBELL = "I can do it! I just... need to get a good grip on it!",
+        DUMBBELL_GOLDEN = "Uh, m-maybe I should start with something a bit lighter.",
+        DUMBBELL_GEM = "Time to hit the gem! Get it? Because gem sounds like gym?",
+        POTATOSACK = "Do you think I'd get muscles if I ate more potatoes, Woby?",
+
 
         TERRARIUMCHEST = 
 		{

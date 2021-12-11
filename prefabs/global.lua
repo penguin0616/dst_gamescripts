@@ -66,6 +66,11 @@ local assets =
     Asset("SOUNDPACKAGE", "sound/terraria1.fev"),
     Asset("FILE", "sound/terraria1.fsb"),
 
+    Asset("SOUNDPACKAGE", "sound/wolfgang2.fev"),
+    Asset("FILE", "sound/wolfgang2.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/wolfgang1.fev"),
+    Asset("FILE", "sound/wolfgang1.fsb"),
 
     
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods

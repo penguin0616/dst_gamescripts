@@ -92,7 +92,7 @@ local ViewPlayersModalScreen = Class(Screen, function(self, players, maxPlayers)
         playerListing.viewprofile:SetScale(scale)
         --playerListing.viewprofile:SetNormalScale(scale)
         --playerListing.viewprofile:SetFocusScale(scale+.1)
-        --playerListing.viewprofile:SetFocusSound("dontstarve/HUD/click_mouseover")
+        --playerListing.viewprofile:SetFocusSound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
         --playerListing.viewprofile:SetHoverText(STRINGS.UI.PLAYERSTATUSSCREEN.VIEWPROFILE, { font = NEWFONT_OUTLINE, offset_x = 0, offset_y = 30, colour = {1,1,1,1}})
         playerListing.viewprofile:SetOnClick(
             function()

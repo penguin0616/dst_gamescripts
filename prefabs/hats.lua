@@ -1198,7 +1198,7 @@ local function MakeHat(name)
         inst.components.heater:SetThermics(false, true)
         inst.components.heater.equippedheat = TUNING.ICEHAT_COOLER
 
-        inst.components.equippable.walkspeedmult = 0.9
+        inst.components.equippable.walkspeedmult = TUNING.ICEHAT_SPEED_MULT
         inst.components.equippable.equippedmoisture = 1
         inst.components.equippable.maxequippedmoisture = 49 -- Meter reading rounds up, so set 1 below
 

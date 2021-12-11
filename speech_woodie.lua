@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "Sorry, I can't do that.",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Bees! Bees!",
 	ANNOUNCE_BOOMERANG = "Sorry! Clumsy me!",
@@ -447,7 +463,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "I prefer to siesta between chopping sessions, not at night.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I prefer to siesta between chopping sessions, not at night.",
 	ANNOUNCE_NOHUNGERSIESTA = "My belly is rumbling. I'd never be able to relax.",
-	ANNOUNCE_NODANGERAFK = "I better deal with these hosers first.",
 	ANNOUNCE_NO_TRAP = "Close one!",
 	ANNOUNCE_PECKED = "Sorry! I'll try harder!",
 	ANNOUNCE_QUAKE = "The ground is heaving!",
@@ -4193,6 +4208,19 @@ return{
 			COOLDOWN = "I've got a feelin' they'll be back.",
 			SPAWN_DISABLED = "How aboot we just leave that be, eh?",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "So that's where all my good boards went!!",
+            BURNT = "Ah, that's too bad, eh?",
+        },
+
+        DUMBBELL = "Looks pretty heavy, eh?",
+        DUMBBELL_GOLDEN = "I'll stick to lifting my axe.",
+        DUMBBELL_GEM = "Choppin' trees is enough of a workout for me.",
+        POTATOSACK = "Never know when you might need a potato, eh?",
+
 
         TERRARIUMCHEST = 
 		{

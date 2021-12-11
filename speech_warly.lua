@@ -326,6 +326,17 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I cannot do that.",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "The honeymakers are upon me!",
 	ANNOUNCE_BOOMERANG = "Ouch! Damnable thing!",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "Siesta in the dark? I think not.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "This does not strike me as a relaxing place for siesta.",
 	ANNOUNCE_NOHUNGERSIESTA = "I could use a nice meal first.",
-	ANNOUNCE_NODANGERAFK = "Non, I must defend myself!",
 	ANNOUNCE_NO_TRAP = "Went off without a hitch.",
 	ANNOUNCE_PECKED = "Gah! Enough!",
 	ANNOUNCE_QUAKE = "That is not a comforting sound...",
@@ -4192,6 +4207,19 @@ return{
 			COOLDOWN = "For now, all seems well.",
 			SPAWN_DISABLED = "I think I'll sleep a bit better now.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "I think perhaps I'll stick to cooking.",
+            BURNT = "I think he might have overdone it.",
+        },
+
+        DUMBBELL = "All of my arm strength comes from whisking egg whites.",
+        DUMBBELL_GOLDEN = "All of my arm strength comes from whisking egg whites.",
+        DUMBBELL_GEM = "All of my arm strength comes from whisking egg whites.",
+        POTATOSACK = "I suppose all that lifting works up quite an appetite.",
+
 
         TERRARIUMCHEST = 
 		{

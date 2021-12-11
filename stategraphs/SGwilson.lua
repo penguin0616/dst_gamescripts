@@ -110,6 +110,7 @@ local function DoMountSound(inst, mount, sound, ispredicted)
     end
 end
 
+--[[
 local DANGER_ONEOF_TAGS = { "monster", "pig", "_combat" }
 local DANGER_NOPIG_ONEOF_TAGS = { "monster", "_combat" }
 local function IsNearDanger(inst)
@@ -138,6 +139,7 @@ local function IsNearDanger(inst)
         end,
         nil, nil, nopigdanger and DANGER_NOPIG_ONEOF_TAGS or DANGER_ONEOF_TAGS) ~= nil
 end
+]]
 
 --V2C: This is for cleaning up interrupted states with legacy stuff, like
 --     freeze and pinnable, that aren't consistently controlled by either
@@ -199,6 +201,7 @@ local function SetSleeperAwakeState(inst)
     inst.components.inventory:Show()
     inst:ShowActions(true)
 end
+
 
 local function DoEmoteFX(inst, prefab)
     local fx = SpawnPrefab(prefab)
@@ -343,7 +346,8 @@ local function ConfigureRunState(inst)
 end
 
 local function GetRunStateAnim(inst)
-    return (inst.sg.statemem.heavy and "heavy_walk")
+    return ((inst.sg.statemem.heavy and inst:HasTag("mightiness_mighty")) and "heavy_fast_walk")
+        or (inst.sg.statemem.heavy and "heavy_walk")
         or (inst.sg.statemem.sandstorm and "sand_walk")
         or ((inst.sg.statemem.groggy or inst.sg.statemem.moosegroggy or inst.sg.statemem.goosegroggy) and "idle_walk")
         or (inst.sg.statemem.careful and "careful_walk")
@@ -905,6 +909,16 @@ local actionhandlers =
     ActionHandler(ACTIONS.ADVANCE_TREE_GROWTH, "dolongaction"),
 
     ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),
+
+    ActionHandler(ACTIONS.UNLOAD_GYM, "doshortaction"),
+
+    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action) 
+        if inst.components.dumbbelllifter:IsLifting(action.invobject) then
+            return "use_dumbbell_pst"
+        else
+            return "use_dumbbell_pre"
+        end
+    end),
 }
 
 local events =
@@ -913,10 +927,17 @@ local events =
         if inst.sg:HasStateTag("busy") then
             return
         end
+
         local is_moving = inst.sg:HasStateTag("moving")
         local should_move = inst.components.locomotor:WantsToMoveForward()
-
-        if inst.sg:HasStateTag("bedroll") or inst.sg:HasStateTag("tent") or inst.sg:HasStateTag("waking") then -- wakeup on locomote
+        
+        if inst:HasTag("ingym") then
+            inst.sg.statemem.dontleavegym = true
+            local gym = inst.components.strongman.gym 
+            if gym then
+                gym.components.mightygym:CharacterExitGym(inst)
+            end
+        elseif inst.sg:HasStateTag("bedroll") or inst.sg:HasStateTag("tent") or inst.sg:HasStateTag("waking") then -- wakeup on locomote
             if inst.sleepingbag ~= nil and inst.sg:HasStateTag("sleeping") then
                 inst.sleepingbag.components.sleepingbag:DoWakeUp()
                 inst.sleepingbag = nil
@@ -1148,6 +1169,10 @@ local events =
     EventHandler("powerup",
         function(inst)
             if not inst.sg:HasStateTag("dead") then
+                if inst.sg:HasStateTag("lifting_dumbbell") then
+                    inst.sg.mem.lifting_dumbbell = inst.components.dumbbelllifter.dumbbell
+                end
+
                 inst.sg:GoToState("powerup")
             end
         end),
@@ -1488,12 +1513,25 @@ local states =
         tags = { "busy", "pausepredict", "nomorph" },
 
         onenter = function(inst)
+            local x,y,z = inst.Transform:GetWorldPosition()
+            local fx = SpawnPrefab("wolfgang_mighty_fx").Transform:SetPosition(x,y,z)
             ForceStopHeavyLifting(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("powerup")
 
+            if inst.components.mightiness then
+                inst.components.mightiness:Pause()
+            end
+
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
+            end
+        end,
+
+        onexit = function(inst)
+            -- If the lifting_dumbbell is not nil at this point we got interrupted
+            if inst.sg.mem.lifting_dumbbell ~= nil then
+                inst.sg.mem.lifting_dumbbell = nil
             end
         end,
 
@@ -1509,7 +1547,19 @@ local states =
         {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
+
+                    local using_dumbbell = inst.sg.mem.lifting_dumbbell and inst.sg.mem.lifting_dumbbell:IsValid()
+                    if using_dumbbell then
+                        inst.components.dumbbelllifter:StartLifting(inst.sg.mem.lifting_dumbbell)
+                        inst.sg.mem.lifting_dumbbell = nil
+                        inst.sg:GoToState("use_dumbbell_pre")
+                    else
+                        inst.sg:GoToState("idle")
+                    end
+
+                    if inst.components.mightiness and not using_dumbbell then
+                        inst.components.mightiness:Resume()
+                    end
                 end
             end),
         },
@@ -4447,7 +4497,7 @@ local states =
             inst:ClearBufferedAction()
 
             local failstr =
-                (IsNearDanger(inst) and "ANNOUNCE_NODANGERGIFT") or
+                (inst.IsNearDanger(inst) and "ANNOUNCE_NODANGERGIFT") or
                 (inst.components.rider:IsRiding() and "ANNOUNCE_NOMOUNTEDGIFT") or
                 nil
 
@@ -5327,6 +5377,207 @@ local states =
         name = "dolongestaction",
         onenter = function(inst)
             inst.sg:GoToState("dolongaction", TUNING.LONGEST_ACTION_TIMEOUT)
+        end,
+    },
+
+    State{
+        name = "use_dumbbell_pre",
+        tags = { "doing", "nodangle", "lifting_dumbbell" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst:PerformBufferedAction()
+
+            local dumbbell = inst.components.dumbbelllifter.dumbbell
+            inst.AnimState:OverrideSymbol("swap_dumbbell", dumbbell.swap_dumbbell, dumbbell.swap_dumbbell)
+
+            if inst.components.mightiness then
+                local state = inst.components.mightiness:GetState()
+                local pre_anim = "dumbbell_skinny_pre"
+
+                if state == "normal" then
+                    pre_anim = "dumbbell_normal_pre"
+                elseif state == "mighty" then
+                    pre_anim = "dumbbell_mighty_pre"
+                end
+                
+                inst.AnimState:PlayAnimation(pre_anim)
+            end
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.dumbbell_anim_done then
+                inst.components.mightiness:Resume()
+                inst.components.dumbbelllifter:StopLifting()
+            end
+        end,
+
+        timeline = {
+            TimeEvent(FRAMES * 10, function(inst) 
+                if inst.components.mightiness then
+                    local state = inst.components.mightiness:GetState()
+                    if state == "wimpy" or state == "normal" then
+                        inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
+                    end 
+                end
+            end),
+        },
+
+        events =
+        {
+            EventHandler("stopliftingdumbbell", function(inst)
+                inst.sg.statemem.queue_stop = true
+            end),
+
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg.statemem.dumbbell_anim_done = true
+
+                    if inst.sg.statemem.queue_stop then
+                        inst.sg:GoToState("use_dumbbell_pst")
+                    else
+                        inst.sg:GoToState("use_dumbbell_loop")
+                    end
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "use_dumbbell_loop",
+        tags = { "doing", "nodangle", "lifting_dumbbell" },
+
+        onenter = function(inst)
+            inst.components.mightiness:Pause()
+
+            if inst.components.mightiness then
+                local state = inst.components.mightiness:GetState()
+                local loop_anim = "dumbbell_skinny_loop"
+                
+                if state == "normal" then
+                    loop_anim = "dumbbell_normal_loop"
+                elseif state == "mighty" then
+                    loop_anim = "dumbbell_mighty_loop"
+                end
+
+                inst.AnimState:PlayAnimation(loop_anim)
+            end
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.dumbbell_anim_done then
+                inst.components.mightiness:Resume()
+                inst.components.dumbbelllifter:StopLifting()
+            end
+        end,
+
+        timeline = {
+
+            TimeEvent(FRAMES * 7, function(inst) 
+                if inst.components.mightiness then
+                    local state = inst.components.mightiness:GetState()
+                    
+                    if state == "mighty" then
+                        inst.SoundEmitter:PlaySound("wolfgang1/dumbbell/twirl") 
+                    end
+                end
+            end),
+
+            
+            TimeEvent(FRAMES * 3, function(inst) 
+                if inst.components.mightiness then
+                    local state = inst.components.mightiness:GetState()
+                    
+                    if state == "mighty" then
+                        inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt") 
+                    end
+                end
+            end),
+
+            TimeEvent(FRAMES * 12, function(inst) 
+                if inst.components.mightiness then
+                    local state = inst.components.mightiness:GetState()
+                    if state == "wimpy" or state == "normal" then
+                        inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
+                    end 
+                end
+            end),
+        },
+
+        events =
+        {
+            EventHandler("stopliftingdumbbell", function(inst, data)
+                if data and data.instant then
+                    inst.sg:GoToState("idle")
+                else
+                    inst.sg.statemem.queue_stop = true
+                end
+            end),
+
+            EventHandler("animover", function(inst)
+                inst.sg.statemem.dumbbell_anim_done = true
+                
+                if inst.sg.statemem.queue_stop or
+                   inst.components.dumbbelllifter.dumbbell == nil then
+                    inst.sg:GoToState("use_dumbbell_pst")
+                elseif inst.components.dumbbelllifter:Lift() and inst.components.mightiness:GetPercent() < 1 then
+                    inst.sg:GoToState("use_dumbbell_loop")
+                else
+                    inst.sg:GoToState("use_dumbbell_pst")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "use_dumbbell_pst",
+        tags = { "doing", "nodangle", "lifting_dumbbell" },
+
+        onenter = function(inst)
+            if inst.components.mightiness then
+                inst.sg.statemem.mightiness = inst.components.mightiness:GetState()
+                local pst_anim = "dumbbell_skinny_pst"
+                
+                if inst.sg.statemem.mightiness == "normal" then
+                    pst_anim = "dumbbell_normal_pst"
+                elseif inst.sg.statemem.mightiness == "mighty" then
+                    pst_anim = "dumbbell_mighty_pst"
+                end
+
+                inst.AnimState:PlayAnimation(pst_anim)
+            end
+        end,
+
+        timeline = {
+            TimeEvent(FRAMES * 1, function(inst) 
+                if inst.components.mightiness then
+                    if inst.sg.statemem.mightiness == "wimpy" then
+                        inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
+                    end 
+                end
+            end),
+
+            TimeEvent(FRAMES * 10, function(inst) 
+                if inst.components.mightiness then
+                    if inst.sg.statemem.mightiness == "wimpy" then
+                        inst.SoundEmitter:PlaySound("wolfgang2/common/dumbel_drop")
+                    end 
+                end
+            end),
+        },
+
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+
+        onexit = function(inst)
+            inst.components.dumbbelllifter:StopLifting()
+            inst.components.mightiness:Resume()
+            inst.AnimState:ClearOverrideSymbol("swap_dumbbell")
         end,
     },
 
@@ -7778,7 +8029,7 @@ local states =
                 (TheWorld.state.isday and
                     (TheWorld:HasTag("cave") and "ANNOUNCE_NODAYSLEEP_CAVE" or "ANNOUNCE_NODAYSLEEP")
                 )
-                or (IsNearDanger(inst) and "ANNOUNCE_NODANGERSLEEP")
+                or (inst.IsNearDanger(inst) and "ANNOUNCE_NODANGERSLEEP")
                 -- you can still sleep if your hunger will bottom out, but not absolutely
                 or (inst.components.hunger.current < TUNING.CALORIES_MED and "ANNOUNCE_NOHUNGERSLEEP")
                 or nil
@@ -7872,7 +8123,7 @@ local states =
                 or (target.components.burnable ~= nil and
                     target.components.burnable:IsBurning() and
                     "ANNOUNCE_NOSLEEPONFIRE")
-                or (IsNearDanger(inst) and "ANNOUNCE_NODANGERSLEEP")
+                or (inst.IsNearDanger(inst) and "ANNOUNCE_NODANGERSLEEP")
                 -- you can still sleep if your hunger will bottom out, but not absolutely
                 or (inst.components.hunger.current < TUNING.CALORIES_MED and "ANNOUNCE_NOHUNGERSLEEP")
                 or nil
@@ -8016,6 +8267,9 @@ local states =
         },
 
         onexit = function(inst)
+            if inst.components.grogginess then
+                inst.components.grogginess.knockedout = false
+            end
             if inst.sg:HasStateTag("dismounting") then
                 --Interrupted
                 inst.components.rider:ActualDismount()
@@ -9857,6 +10111,7 @@ local states =
         tags = { "busy", "reviver_rebirth", "pausepredict", "silentmorph", "ghostbuild" },
 
         onenter = function(inst)
+
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(false)
                 inst.components.playercontroller:RemotePausePrediction()
@@ -14741,6 +14996,9 @@ local hop_anims =
 
 CommonStates.AddRowStates(states, false)
 CommonStates.AddHopStates(states, true, hop_anims, hop_timelines, "turnoftides/common/together/boat/jump_on", landed_in_water_state, {start_embarking_pre_frame = 4*FRAMES})
+
+local GymStates = require("stategraphs/SGwilson_gymstates")
+GymStates.AddGymStates(states, actionhandlers, events)
 
 if TheNet:GetServerGameMode() == "quagmire" then
     event_server_data("quagmire", "stategraphs/SGwilson").AddQuagmireStates(states, DoTalkSound, StopTalkSound, ToggleOnPhysics, ToggleOffPhysics)

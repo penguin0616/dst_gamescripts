@@ -20,6 +20,8 @@ local assets =
     Asset("ANIM", "anim/beefalo_carrat_idles.zip"),
     Asset("ANIM", "anim/yotc_carrat_colour_swaps.zip"),
 
+    Asset("ANIM", "anim/beefalo_carry.zip"),
+
     Asset("ANIM", "anim/beefalo_fx.zip"),
     Asset("ANIM", "anim/poop_cloud.zip"),
 
@@ -36,6 +38,7 @@ local prefabs =
     "horn",
     "carrat",
     "explode_reskin",
+    "beefalo_carry",
 }
 
 local brain = require("brains/beefalobrain")
@@ -1129,4 +1132,32 @@ local function beefalo()
     return inst
 end
 
-return Prefab("beefalo", beefalo, assets, prefabs)
+local function beefalo_carry()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+
+    inst.AnimState:SetBank("beefalo")
+    inst.AnimState:SetBuild("beefalo_build")
+    inst.AnimState:PlayAnimation("idle_carry", true)
+
+	inst.Transform:SetNoFaced()
+
+    --inst:AddTag("DECOR")
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.persists = false
+
+    return inst
+end
+
+
+return Prefab("beefalo", beefalo, assets, prefabs),
+       Prefab("beefalo_carry", beefalo_carry, assets, prefabs)

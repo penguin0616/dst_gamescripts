@@ -173,7 +173,7 @@ local RPC_HANDLERS =
         end
     end,
 
-    ControllerActionButtonPoint = function(player, action, x, z, isreleased, noforce, mod_name, platform, platform_relative)
+    ControllerActionButtonPoint = function(player, action, x, z, isreleased, noforce, mod_name, platform, platform_relative, isspecial)
         if not (checknumber(action) and
                 checknumber(x) and
                 checknumber(z) and
@@ -181,7 +181,8 @@ local RPC_HANDLERS =
                 optbool(noforce) and
                 optstring(mod_name) and
 				optentity(platform) and
-				checkbool(platform_relative)) then
+				checkbool(platform_relative) and
+				optbool(isspecial)) then
             printinvalid("ControllerActionButtonPoint", player)
             return
         end
@@ -191,7 +192,7 @@ local RPC_HANDLERS =
 			x, z = ConvertPlatformRelativePositionToAbsolutePosition(x, z, platform, platform_relative)
 			if x ~= nil then
 				if IsPointInRange(player, x, z) then
-					playercontroller:OnRemoteControllerActionButtonPoint(action, Vector3(x, 0, z), isreleased, noforce, mod_name)
+					playercontroller:OnRemoteControllerActionButtonPoint(action, Vector3(x, 0, z), isreleased, noforce, mod_name, isspecial)
 				else
 					print("Remote controller action button point out of range")
 				end
@@ -833,6 +834,14 @@ local RPC_HANDLERS =
             player.sleepingbag ~= nil and
             player.sg:HasStateTag("sleeping") and
             (player.sg:HasStateTag("bedroll") or player.sg:HasStateTag("tent")) then
+            player:PushEvent("locomote")
+        end
+    end,
+
+    exitgym = function(player)
+        local playercontroller = player.components.playercontroller
+        if playercontroller ~= nil and
+            playercontroller:IsEnabled() then
             player:PushEvent("locomote")
         end
     end,

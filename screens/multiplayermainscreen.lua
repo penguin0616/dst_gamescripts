@@ -691,7 +691,7 @@ function MultiplayerMainScreen:MakeMainMenu()
 
         btn.OnGainFocus = function()
             if btn.text then btn.text:SetColour(btn.textfocuscolour[1],btn.textfocuscolour[2],btn.textfocuscolour[3],btn.textfocuscolour[4]) end
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
             btn.image:Show()
             self.tooltip:SetString(tooltip)
 

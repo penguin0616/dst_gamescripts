@@ -326,11 +326,22 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "Grrr... can't do it, florpt.",
-	ANNOUNCE_BOAT_LEAK = "Yay! Boat getting wetter!",
-	ANNOUNCE_BOAT_SINK = "...Maybe boat too wet now.",
+	ANNOUNCE_BOAT_LEAK = "Boat getting wetter!",
+	ANNOUNCE_BOAT_SINK = "Boat too wet!",
 	ANNOUNCE_DIG_DISEASE_WARNING = "Look better?", --removed
 	ANNOUNCE_PICK_DISEASE_WARNING = "Gluurgh... smell bad.", --removed
 	ANNOUNCE_ADVENTUREFAIL = "Grrr, messed up!",
@@ -345,6 +356,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Glorp! Buzzy stingers!",
 	ANNOUNCE_BOOMERANG = "Glorp! Come-back stick hurts.",
@@ -446,7 +462,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "Don't want nap, want bedtime!",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Glurp... too scary in here...",
 	ANNOUNCE_NOHUNGERSIESTA = "Belly too rumbly!",
-	ANNOUNCE_NODANGERAFK = "Gotta be careful, florp!",
 	ANNOUNCE_NO_TRAP = "Easy, florp!",
 	ANNOUNCE_PECKED = "Ow! OW! Ouchie!",
 	ANNOUNCE_QUAKE = "Ground shaking!",
@@ -831,7 +846,7 @@ return{
         },
         WOLFGANG =
         {
-            GENERIC = "Hello muscly moustache man!",
+            GENERIC = "Hello muscly mustache man!",
             ATTACKER = "Not fair, you way bigger!",
             MURDERER = "Grrr, you just a bully!",
             REVIVER = "This mean you not scared of me anymore?",
@@ -4192,6 +4207,19 @@ return{
 			COOLDOWN = "Where little tree go, florp?",
 			SPAWN_DISABLED = "It not working.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Can do it too! Mermfolk super strong, flurt!",
+            BURNT = "Glurp! Didn't do it!!",
+        },
+
+        DUMBBELL = "Muscly mustache man leave rocks everywhere.",
+        DUMBBELL_GOLDEN = "Muscly mustache man leave rocks everywhere.",
+        DUMBBELL_GEM = "Muscly mustache man leave rocks everywhere.",
+        POTATOSACK = "Snacks! Mine!!",
+
 
         TERRARIUMCHEST = 
 		{

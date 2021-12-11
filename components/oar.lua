@@ -22,7 +22,12 @@ function Oar:Row(doer, pos)
 		row_dir_x, row_dir_z = VecUtil_Normalize(doer_x - boat_x, doer_z - boat_z)
 	end
 
-	boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.force, self.max_velocity)
+	local character_force_mult = 1
+	if doer.GetRowForceMultiplier ~= nil then
+		character_force_mult = doer:GetRowForceMultiplier()
+	end
+
+	boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.force * character_force_mult, self.max_velocity)
 end
 
 function Oar:RowFail(doer)

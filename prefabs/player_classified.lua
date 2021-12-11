@@ -387,10 +387,38 @@ fns.OnHasInspirationBuffDirty = function(inst)
 	end
 end
 
+fns.InMightyGymDirty = function(inst)
+
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("inmightygym", {ingym = inst.inmightygym:value() + 1, player=inst._parent})
+    end
+end
+
+fns.OnGymBellStart = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:Startbell()
+    end
+end
+
 fns.OnInspirationSongsDirty = function(inst, slot)
     if inst._parent ~= nil then
 		local song_def = INSPIRATION_BATTLESONG_DEFS.GetBattleSongDefFromNetID(inst.inspirationsongs[slot]:value())
 		inst._parent:PushEvent("inspirationsongchanged", {songdata = song_def, slotnum = slot})
+    end
+end
+
+local function OnMightinessDirty(inst)
+    if inst._parent ~= nil then
+        local percent = inst.currentmightiness:value() * .01
+        local data = 
+        {
+            oldpercent = inst._oldmightinesspercent,
+            newpercent = percent,
+            delta = inst.currentmightiness:value() - (inst._oldmightinesspercent / .01),
+        }
+        inst._oldmightinesspercent = percent
+
+        inst._parent:PushEvent("mightinessdelta", data)
     end
 end
 
@@ -875,6 +903,7 @@ local function RegisterNetListeners(inst)
 		inst:ListenForEvent("inspirationsong1dirty", function(_inst) fns.OnInspirationSongsDirty(_inst, 1) end)
 		inst:ListenForEvent("inspirationsong2dirty", function(_inst) fns.OnInspirationSongsDirty(_inst, 2) end)
 		inst:ListenForEvent("inspirationsong3dirty", function(_inst) fns.OnInspirationSongsDirty(_inst, 3) end)
+        inst:ListenForEvent("mightinessdirty", OnMightinessDirty)
         inst:ListenForEvent("temperaturedirty", OnTemperatureDirty)
         inst:ListenForEvent("moisturedirty", OnMoistureDirty)
         inst:ListenForEvent("techtreesdirty", OnTechTreesDirty)
@@ -889,7 +918,7 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("playercamerashake", OnPlayerCameraShake)
         inst:ListenForEvent("playerscreenflashdirty", OnPlayerScreenFlashDirty)
         inst:ListenForEvent("attunedresurrectordirty", OnAttunedResurrectorDirty)
-
+        
 
         OnIsTakingFireDamageDirty(inst)
         OnTemperatureDirty(inst)
@@ -900,11 +929,14 @@ local function RegisterNetListeners(inst)
             inst._oldsanitypercent = inst.maxsanity:value() > 0 and inst.currentsanity:value() / inst.maxsanity:value() or 0
             inst._oldwerenesspercent = inst.currentwereness:value() * .01
             inst._oldinspirationpercent = inst.currentinspiration:value() * .01
+            inst._oldmightinesspercent = inst.currentmightiness:value() * .01
             inst._oldmoisture = inst.moisture:value()
             UpdateAnimOverrideSanity(inst._parent)
         end
     end
 
+    inst:ListenForEvent("gym_bell_start", fns.OnGymBellStart)
+    inst:ListenForEvent("inmightygymdirty", fns.InMightyGymDirty)
     inst:ListenForEvent("stormleveldirty", OnStormLevelDirty)
     inst:ListenForEvent("hasinspirationbuffdirty", fns.OnHasInspirationBuffDirty)
     inst:ListenForEvent("builder.build", OnBuildEvent)
@@ -989,7 +1021,6 @@ local function fn()
     inst.iswerenesspulsedown = net_bool(inst.GUID, "wereness.dodeltaovertime(down)", "werenessdirty")
     inst.werenessdrainrate = net_smallbyte(inst.GUID, "wereness.drainrate")
 
-
 	--inspiration variables
     inst._oldinspirationpercent = 0
     inst.currentinspiration = net_byte(inst.GUID, "inspiration.current", "inspirationdirty")
@@ -1001,6 +1032,19 @@ local function fn()
 		net_tinybyte(inst.GUID, "inspiration.song3", "inspirationsong3dirty"),
 	}
     inst.hasinspirationbuff = net_bool(inst.GUID, "inspiration.hasbuff", "hasinspirationbuffdirty")
+    
+    -- Mightiness
+    --mighty gym variables
+    -- this is used to know if someone is on a gym but also what the weight on the gym is when used.
+    -- 0 = not on a gym
+    -- 1 - 7 .. on a gym and the weight is x + 1. So values of 2 to 8
+    inst.inmightygym = net_tinybyte(inst.GUID, "mightygym.in", "inmightygymdirty")
+    inst.inmightygym:set(0)
+
+
+    inst.gym_bell_start = net_event(inst.GUID, "gym_bell_start")
+    inst.currentmightiness = net_byte(inst.GUID, "mightiness.current", "mightinessdirty")
+    inst.mightinessratescale = net_tinybyte(inst.GUID, "mightiness.ratescale")
 
 	-- oldager
     inst.oldager_yearpercent = net_float(inst.GUID, "oldager.yearpercent")
