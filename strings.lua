@@ -5190,6 +5190,7 @@ STRINGS =
 		CLOCKMAKER = "Clocksmithy",
         TURFCRAFTING = "Landscaping",
 		BALLOONOMANCY = "Balloonomancy",
+        STRONGMAN = "Strongman",
     },
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
 

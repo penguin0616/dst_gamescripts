@@ -47,6 +47,7 @@ local function onbuilt(inst)
 end
 
 local function onburnt(inst)
+    inst:RemoveComponent("heavyobstacleusetarget")
     inst.components.mightygym:UnloadWeight()
 end
 

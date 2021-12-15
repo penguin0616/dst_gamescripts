@@ -3239,6 +3239,9 @@ local INVALIDHOLDACTIONS = {
     [ACTIONS.ROW_FAIL] = true,
     [ACTIONS.ROW] = true,
     [ACTIONS.ROW_CONTROLLER] = true,
+    [ACTIONS.LIFT_GYM_SUCCEED_PERFECT] = true,
+    [ACTIONS.LIFT_GYM_SUCCEED] = true,
+    [ACTIONS.LIFT_GYM_FAIL] = true,
 }
 
 function PlayerController:DoAction(buffaction)

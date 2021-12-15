@@ -51,6 +51,7 @@ local STATE_DATA =
 
         scale = 1.15,
         insulation = TUNING.INSULATION_SMALL,
+        work_effectiveness = TUNING.MIGHTY_WORK_EFFECTIVENESS,
     },
 }
 
@@ -267,7 +268,25 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
         self.inst.components.temperature.inherentinsulation = 0
         self.inst.components.temperature.inherentsummerinsulation = 0
     end
-    
+
+    if state_data.work_effectiveness then
+        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   state_data.work_effectiveness, self.inst)
+        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   state_data.work_effectiveness, self.inst)
+        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, state_data.work_effectiveness, self.inst)
+        
+        self.inst.components.efficientuser:AddMultiplier(ACTIONS.CHOP,    state_data.work_effectiveness, self.inst)
+        self.inst.components.efficientuser:AddMultiplier(ACTIONS.MINE,    state_data.work_effectiveness, self.inst)
+        self.inst.components.efficientuser:AddMultiplier(ACTIONS.HAMMER,  state_data.work_effectiveness, self.inst)
+    else
+        self.inst.components.workmultiplier:RemoveMultiplier(ACTIONS.CHOP,   self.inst)
+        self.inst.components.workmultiplier:RemoveMultiplier(ACTIONS.MINE,   self.inst)
+        self.inst.components.workmultiplier:RemoveMultiplier(ACTIONS.HAMMER, self.inst)
+
+        self.inst.components.efficientuser:RemoveMultiplier(ACTIONS.CHOP,    self.inst)
+        self.inst.components.efficientuser:RemoveMultiplier(ACTIONS.MINE,    self.inst)
+        self.inst.components.efficientuser:RemoveMultiplier(ACTIONS.HAMMER,  self.inst)
+    end
+
     if not self.inst:HasTag("ingym") then
         self.inst:ApplyScale("mightiness", state_data.scale)
     end

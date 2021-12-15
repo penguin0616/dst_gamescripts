@@ -24,18 +24,47 @@ local prefabs =
 {
     "wolfgang_mighty_fx",
 }
-
-
 prefabs = FlattenTree({ prefabs, start_inv }, true)
-local function CheckForPlayers(inst)
-    local x,y,z = inst.Transform:GetWorldPosition()
 
-    if IsAnyOtherPlayerNearInst(inst, TUNING.WOLFGANG_SANITY_RANGE, true) then
-        inst.components.sanity.night_drain_mult = TUNING.WOLFGANG_SANITY_DRAIN_SMALL
-        inst.components.sanity.neg_aura_mult = TUNING.WOLFGANG_SANITY_DRAIN_SMALL
+local function GetThreatCount(inst)
+    local monster_count = 0
+    local epic_count = 0
+
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local ents = TheSim:FindEntities(x, y, z, TUNING.WOLFGANG_SANITY_RANGE, nil, { "bedazzled" }, { "monster", "epic" })
+
+    for k, v in pairs(ents) do
+        if v:HasTag("epic") then
+            epic_count = epic_count + 1
+        elseif v:HasTag("monster") then
+            monster_count = monster_count + 1
+        end
+    end
+
+    return monster_count, epic_count
+end
+
+local function CheckForPlayers(inst)
+    local monster_count, epic_count = GetThreatCount(inst)
+    
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local players = FindPlayersInRange(x, y, z, TUNING.WOLFGANG_SANITY_RANGE, true)
+    
+    local player_count = #players
+    player_count = player_count - 1 -- Subtract Wolfgang himself
+    
+    local follower_count = 0
+    for k, v in pairs(players) do
+        follower_count = follower_count + v.components.leader:CountFollowers()
+    end
+
+    local sanity_rate = math.min(2, math.max(TUNING.WOLFGANG_SANITY_DRAIN, TUNING.WOLFGANG_SANITY_DRAIN + ((epic_count * 3) + monster_count - player_count - follower_count) * TUNING.WOLFGANG_SANITY_PER_MONSTER))
+    inst.components.sanity.neg_aura_mult = sanity_rate
+
+    if follower_count > 0 or player_count > 0 then
+        inst.components.sanity.night_drain_mult = TUNING.WOLFGANG_SANITY_NIGHT_DRAIN_SMALL
     else
-        inst.components.sanity.night_drain_mult = TUNING.WOLFGANG_SANITY_DRAIN
-        inst.components.sanity.neg_aura_mult = TUNING.WOLFGANG_SANITY_DRAIN
+        inst.components.sanity.night_drain_mult = TUNING.WOLFGANG_SANITY_NIGHT_DRAIN
     end
 end
 
@@ -92,6 +121,15 @@ local function OnUnequip(inst, data)
     end
 end
 
+local function OnWorked(inst, data)
+    if inst:HasTag("mightiness_mighty") and data and data.target then
+        local workable = data.target.components.workable
+        if workable and workable.workleft > 0 and math.random() >= 0.99 then
+            workable:Destroy(inst)
+        end
+    end
+end
+
 --------------------------------------------------------------------------
 
 local BASE_PHYSICS_RADIUS = .5
@@ -138,7 +176,7 @@ local function GetCurrentMightinessState(inst)
 end
 
 local function GetRowForceMultiplier(inst)
-    if GetState(inst) == "mighty" then
+    if  inst.components.mightiness:GetState() == "mighty" then
         return TUNING.MIGHTY_ROWER_MULT
     end
 
@@ -388,9 +426,14 @@ local function master_postinit(inst)
         inst:AddComponent("dumbbelllifter")
         inst:AddComponent("strongman")
 
+        if inst.components.efficientuser == nil then
+            inst:AddComponent("efficientuser")
+        end
+
         inst:ListenForEvent("equip",   OnEquip)
         inst:ListenForEvent("unequip", OnUnequip)
         
+        inst:ListenForEvent("working", OnWorked)
 
         inst.OnLoad = onload
         inst.OnNewSpawn = onload

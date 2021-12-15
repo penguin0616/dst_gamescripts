@@ -347,7 +347,7 @@ function Tune(overrides)
 
         CANE_SPEED_MULT = 1.25,
         PIGGYBACK_SPEED_MULT = 0.9,
-        HEAVY_SPEED_MULT = 0.3,
+        HEAVY_SPEED_MULT = 0.15,
 		ICEHAT_SPEED_MULT = 0.9,
 		RUINS_BAT_SPEED_MULT = 1.1,
 
@@ -5616,14 +5616,16 @@ function Tune(overrides)
         DUMBBELL_GOLDEN_DAMAGE = 40,
         DUMBBELL_GEM_DAMAGE = 59,
 
-
+        MIGHTY_WORK_EFFECTIVENESS = 1.5,
         MIGHTY_ROWER_MULT = 1.33,
 
-		MIGHTY_HEAVY_SPEED_MULT_BONUS = 0.3,
+		MIGHTY_HEAVY_SPEED_MULT_BONUS = 0.45,
 
-        WOLFGANG_SANITY_DRAIN = 1.25,
-        WOLFGANG_SANITY_DRAIN_SMALL = 1.1,
+        WOLFGANG_SANITY_DRAIN = 1.1,
+        WOLFGANG_SANITY_NIGHT_DRAIN = 1.25,
+        WOLFGANG_SANITY_NIGHT_DRAIN_SMALL = 1.1,
         WOLFGANG_SANITY_RANGE = 16,
+        WOLFGANG_SANITY_PER_MONSTER = 1/13,
 
         BELL_SUCESS_MIN_2 = nil, -- no perfect here
         BELL_SUCESS_MAX_2 = nil, -- no perfect here 

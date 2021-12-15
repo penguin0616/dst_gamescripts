@@ -21,7 +21,7 @@ local efficiency_rate_scale =
     [TUNING.DUMBBELL_EFFICIENCY_HIGH] = RATE_SCALE.INCREASE_HIGH,
 }
 
-function MightyDumbbell:CheckEfficiency()
+function MightyDumbbell:CheckEfficiency(doer)
     if self.strongman ~= nil then
         local mightiness = self.strongman.components.mightiness
         if mightiness ~= nil then
@@ -38,6 +38,24 @@ function MightyDumbbell:CheckEfficiency()
         end
     end
 
+    return 0
+end
+
+function MightyDumbbell:CheckAttackEfficiency(doer)
+    if doer ~= nil then
+        local mightiness = doer.components.mightiness
+        if mightiness ~= nil then
+            local efficiency = self.efficiency_mighty
+            
+            if mightiness.current < TUNING.WIMPY_THRESHOLD then
+                efficiency = self.efficiency_wimpy
+            elseif mightiness.current < TUNING.MIGHTY_THRESHOLD then
+                efficiency = self.efficiency_normal
+            end
+
+            return efficiency
+        end
+    end
     return 0
 end
 
@@ -61,6 +79,14 @@ function MightyDumbbell:SetEfficiency(wimpy, normal, mighty)
     self.efficiency_wimpy =  wimpy
     self.efficiency_normal = normal
     self.efficiency_mighty = mighty
+end
+
+function MightyDumbbell:DoAttackWorkout(doer)
+
+    if doer.components.mightiness then
+        local mightiness = self:CheckAttackEfficiency(doer)
+        doer.components.mightiness:DoDelta(mightiness)
+    end
 end
 
 function MightyDumbbell:DoWorkout(doer)

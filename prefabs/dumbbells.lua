@@ -76,15 +76,29 @@ local function CanDamage(inst, target)
     return true
 end
 
+local function ResetPhysics(inst)
+	inst.Physics:SetFriction(0.1)
+	inst.Physics:SetRestitution(0.5)
+	inst.Physics:SetCollisionGroup(COLLISION.ITEMS)
+	inst.Physics:ClearCollisionMask()
+	inst.Physics:CollidesWith(COLLISION.WORLD)
+	inst.Physics:CollidesWith(COLLISION.OBSTACLES)
+	inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
+end
+
 local function onthrown(inst)
     inst:AddTag("NOCLICK")
     inst.persists = false
+
+    local attacker = inst.components.complexprojectile.attacker
+    if attacker then
+        inst.components.mightydumbbell:DoAttackWorkout(attacker)
+    end
     
     inst.AnimState:PlayAnimation("spin_loop", true)
     inst.SoundEmitter:PlaySound("wolfgang1/dumbbell/throw_twirl", "spin_loop")
 
     inst.Physics:SetMass(1)
-    inst.Physics:SetCapsule(0.2, 0.2)
     inst.Physics:SetFriction(0)
     inst.Physics:SetDamping(0)
     inst.Physics:SetCollisionGroup(COLLISION.CHARACTERS)
@@ -114,6 +128,10 @@ local function OnHit(inst, attacker, target)
     inst.SoundEmitter:PlaySound(inst.impact_sound)
 
     inst.components.finiteuses:Use(inst.attack_consumption)
+
+    if inst.components.finiteuses:GetUses() > 0 then
+        ResetPhysics(inst) 
+    end
 end
 
 local function MakeTossable(inst)
@@ -173,6 +191,10 @@ local function onunequip(inst, owner)
     inst:RemoveEventCallback("mightiness_statechange", CheckMightiness, owner)
 end
 
+local function OnAttack(inst, attacker, target)
+    inst.components.mightydumbbell:DoAttackWorkout(attacker)
+end
+
 local function OnPickup(inst, owner)
     if owner then
         if owner:HasTag("mightiness_mighty") then
@@ -220,6 +242,7 @@ local function MakeDumbbell(name, consumption, efficiency, damage, attack_consum
 
         inst:AddComponent("weapon")
         inst.components.weapon:SetDamage(damage)
+        inst.components.weapon:SetOnAttack(OnAttack)
         inst.components.weapon.attackwear = attack_consumption
 
         inst:AddComponent("finiteuses")
@@ -250,6 +273,6 @@ local function MakeDumbbell(name, consumption, efficiency, damage, attack_consum
     return Prefab(name, fn, assets, prefabs)
 end
 
-return MakeDumbbell("dumbbell",        TUNING.DUMBBELL_CONSUMPTION,        { TUNING.DUMBBELL_EFFICIENCY_MED,  TUNING.DUMBBELL_EFFICIENCY_LOW,  TUNING.DUMBBELL_EFFICIENCY_LOW}, TUNING.DUMBBELL_DAMAGE,         TUNING.DUMBBELL_ATTACK_CONSUMPTION,        "wolfgang1/dumbbell/stone_impact"),
-       MakeDumbbell("dumbbell_golden", TUNING.DUMBBELL_GOLDEN_CONSUMPTION, { TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_MED,  TUNING.DUMBBELL_EFFICIENCY_LOW }, TUNING.DUMBBELL_GOLDEN_DAMAGE, TUNING.DUMBBELL_GOLDEN_ATTACK_CONSUMPTION, "wolfgang1/dumbbell/gold_impact"),
-       MakeDumbbell("dumbbell_gem",    TUNING.DUMBBELL_GEM_CONSUMPTION,    { TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_HIGH}, TUNING.DUMBBELL_GEM_DAMAGE,    TUNING.DUMBBELL_GEM_ATTACK_CONSUMPTION,    "wolfgang1/dumbbell/gem_impact")
+return MakeDumbbell("dumbbell",        TUNING.DUMBBELL_CONSUMPTION,        { TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_MED,  TUNING.DUMBBELL_EFFICIENCY_LOW  }, TUNING.DUMBBELL_DAMAGE,        TUNING.DUMBBELL_ATTACK_CONSUMPTION,        "wolfgang1/dumbbell/stone_impact"),
+       MakeDumbbell("dumbbell_golden", TUNING.DUMBBELL_GOLDEN_CONSUMPTION, { TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_LOW  }, TUNING.DUMBBELL_GOLDEN_DAMAGE, TUNING.DUMBBELL_GOLDEN_ATTACK_CONSUMPTION, "wolfgang1/dumbbell/gold_impact"),
+       MakeDumbbell("dumbbell_gem",    TUNING.DUMBBELL_GEM_CONSUMPTION,    { TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_HIGH, TUNING.DUMBBELL_EFFICIENCY_HIGH }, TUNING.DUMBBELL_GEM_DAMAGE,    TUNING.DUMBBELL_GEM_ATTACK_CONSUMPTION,    "wolfgang1/dumbbell/gem_impact")

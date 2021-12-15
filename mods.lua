@@ -28,6 +28,7 @@ AddModReleaseID( "R15_QOL_WORLDSETTINGS" )
 AddModReleaseID( "R16_ROT_MOONSTORMS" )
 AddModReleaseID( "R17_WATERLOGGED" )
 AddModReleaseID( "R18_QOL_SERVERPAUSING" )
+AddModReleaseID( "R19_REFRESH_WOLFGANG" )
 
 -----------------------------------------------------------------------------------------------
 

@@ -15,6 +15,24 @@ local function onunequip(inst, owner)
     owner.AnimState:ClearOverrideSymbol("swap_body")
 end
 
+local function onhammered(inst, worker)
+    if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then
+        inst.components.burnable:Extinguish()
+    end
+
+    inst.components.lootdropper:DropLoot()
+
+    local fx = SpawnPrefab("collapse_small")
+    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    fx:SetMaterial("rock")
+    inst:Remove()
+end
+
+local function onhit(inst, worker)
+    inst.AnimState:PlayAnimation("hit")
+    inst.AnimState:PushAnimation("idle_full")
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -62,6 +80,13 @@ local function fn()
     inst.components.equippable.walkspeedmult = TUNING.HEAVY_SPEED_MULT
 
     inst:AddComponent("submersible")
+
+    inst:AddComponent("lootdropper")
+    inst:AddComponent("workable")
+    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
+    inst.components.workable:SetWorkLeft(2)
+    inst.components.workable:SetOnFinishCallback(onhammered)
+    inst.components.workable:SetOnWorkCallback(onhit)
 
     MakeMediumBurnable(inst)
     MakeMediumPropagator(inst)

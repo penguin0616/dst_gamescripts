@@ -333,7 +333,6 @@ return{
 --fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
---fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },

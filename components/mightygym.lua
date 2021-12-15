@@ -109,26 +109,35 @@ end
 
 function MightyGym:LoadWeight(weight, slot)
     local inventory = self.inst.components.inventory
+    local selectedslot = nil
     if inventory:IsFull() and not slot then
         inventory:DropItem(inventory:GetItemInSlot(self.full_drop_slot))
         self.inst.SoundEmitter:PlaySound("wolfgang1/mightygym/item_removed")
 
         inventory:GiveItem(weight)
 
-        self.inst.AnimState:OverrideSymbol(slot_ids[self.full_drop_slot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
-        if self.strongman then
-            self.strongman.AnimState:OverrideSymbol(slot_ids[self.full_drop_slot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
-        end
+        selectedslot = self.full_drop_slot
         self.full_drop_slot = self.full_drop_slot == 1 and 2 or 1
     else
-        local selectedslot = inventory:GiveItem(weight,slot)
+        selectedslot = inventory:GiveItem(weight,slot)
         if slot then
             selectedslot = slot
         end
-        self.inst.sg:GoToState("place_weight",{slot=selectedslot})
-        self.inst.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
+    end
+
+    if weight.components.symbolswapdata ~= nil then
+        if weight.components.symbolswapdata.is_skinned then
+            self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
+        else
+            self.inst.sg:GoToState("place_weight",{slot=selectedslot})
+            self.inst.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
+        end
         if self.strongman then
-            self.strongman.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
+            if weight.components.symbolswapdata.is_skinned then
+                self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
+            else                
+                self.strongman.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
+            end
         end        
     end
 
@@ -193,9 +202,7 @@ function MightyGym:CanWorkout(doer)
     elseif self.inst.components.burnable and self.inst.components.burnable:IsBurning() then
         return false, "ONFIRE" 
     elseif  self.inst.components.burnable and self.inst.components.burnable:IsSmoldering() then
-        return false, "SMOULDER"
-    elseif doer.IsNearDanger(doer, true) then
-        return false, "DANGER"
+        return false, "SMOULDER"    
     elseif self.strongman ~= nil then
         return false, "FULL"
     elseif doer.components.hunger.current < TUNING.CALORIES_SMALL then
@@ -346,7 +353,9 @@ function MightyGym:CharacterExitGym(player)
         local theta = math.random() * PI * 2
         local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
         local teleport = false
-
+        
+        player.SetGymStopState(player)
+        
         -- JUMP OUT PLAYER
         if player.components.health:IsDead() then
             teleport = true
@@ -363,8 +372,6 @@ function MightyGym:CharacterExitGym(player)
             if player.DynamicShadow ~= nil then
                 player.DynamicShadow:Enable(true)
             end
-
-            player.SetGymStopState(player)
 
             local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
             player:FacePoint(pos.x+offset.x,0,pos.z+offset.z)

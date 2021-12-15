@@ -343,7 +343,6 @@ return {
             UNBALANCED = "only_used_by_wolfang",
             ONFIRE = "only_used_by_wolfang",
             SMOULDER = "only_used_by_wolfang",
-            DANGER = "only_used_by_wolfang",
             HUNGRY = "only_used_by_wolfang",
             FULL = "only_used_by_wolfang",
         },
