@@ -125,7 +125,7 @@ local function OnWorked(inst, data)
     if inst:HasTag("mightiness_mighty") and data and data.target then
         local workable = data.target.components.workable
         if workable and workable.workleft > 0 and math.random() >= 0.99 then
-            workable:Destroy(inst)
+            workable.workleft = 0
         end
     end
 end
@@ -261,11 +261,11 @@ local function CalcLiftAction(inst)
     local percent = inst.bell_percent
     local level  = inst.player_classified.inmightygym:value() + 1
 
-    local success_min = TUNING["BELL_SUCESS_MIN_"..level]
-    local success_max = TUNING["BELL_SUCESS_MAX_"..level]
+    local success_min = TUNING["BELL_SUCCESS_MIN_"..level]
+    local success_max = TUNING["BELL_SUCCESS_MAX_"..level]
 
-    local success_mid_min = TUNING["BELL_MID_SUCESS_MIN_"..level]
-    local success_mid_max = TUNING["BELL_MID_SUCESS_MAX_"..level]
+    local success_mid_min = TUNING["BELL_MID_SUCCESS_MIN_"..level]
+    local success_mid_max = TUNING["BELL_MID_SUCCESS_MAX_"..level]
 
     if not busy and success_min and percent >= success_min and percent <= success_max then
         return ACTIONS.LIFT_GYM_SUCCEED_PERFECT

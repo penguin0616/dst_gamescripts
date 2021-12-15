@@ -5627,40 +5627,40 @@ function Tune(overrides)
         WOLFGANG_SANITY_RANGE = 16,
         WOLFGANG_SANITY_PER_MONSTER = 1/13,
 
-        BELL_SUCESS_MIN_2 = nil, -- no perfect here
-        BELL_SUCESS_MAX_2 = nil, -- no perfect here 
-        BELL_MID_SUCESS_MIN_2 = 0.37,
-        BELL_MID_SUCESS_MAX_2 = 0.63,
+        BELL_SUCCESS_MIN_2 = nil, -- no perfect here
+        BELL_SUCCESS_MAX_2 = nil, -- no perfect here 
+        BELL_MID_SUCCESS_MIN_2 = 0.37,
+        BELL_MID_SUCCESS_MAX_2 = 0.63,
 
-        BELL_SUCESS_MIN_3 = nil, -- no perfect here
-        BELL_SUCESS_MAX_3 = nil, -- no perfect here 
-        BELL_MID_SUCESS_MIN_3 = 0.25,
-        BELL_MID_SUCESS_MAX_3 = 0.75,
+        BELL_SUCCESS_MIN_3 = nil, -- no perfect here
+        BELL_SUCCESS_MAX_3 = nil, -- no perfect here 
+        BELL_MID_SUCCESS_MIN_3 = 0.25,
+        BELL_MID_SUCCESS_MAX_3 = 0.75,
 
-        BELL_SUCESS_MIN_4 = 0.45,
-        BELL_SUCESS_MAX_4 = 0.60,
-        BELL_MID_SUCESS_MIN_4 = 0.12,
-        BELL_MID_SUCESS_MAX_4 = 0.90,
+        BELL_SUCCESS_MIN_4 = 0.45,
+        BELL_SUCCESS_MAX_4 = 0.60,
+        BELL_MID_SUCCESS_MIN_4 = 0.12,
+        BELL_MID_SUCCESS_MAX_4 = 0.90,
 
-        BELL_SUCESS_MIN_5 = 0.33,
-        BELL_SUCESS_MAX_5 = 0.69,
-        BELL_MID_SUCESS_MIN_5 = 0.14,
-        BELL_MID_SUCESS_MAX_5 = 0.87,
+        BELL_SUCCESS_MIN_5 = 0.33,
+        BELL_SUCCESS_MAX_5 = 0.69,
+        BELL_MID_SUCCESS_MIN_5 = 0.14,
+        BELL_MID_SUCCESS_MAX_5 = 0.87,
 
-        BELL_SUCESS_MIN_6 = 0.24,
-        BELL_SUCESS_MAX_6 = 0.78,
-        BELL_MID_SUCESS_MIN_6 = 0.12,
-        BELL_MID_SUCESS_MAX_6 = 0.88,
+        BELL_SUCCESS_MIN_6 = 0.24,
+        BELL_SUCCESS_MAX_6 = 0.78,
+        BELL_MID_SUCCESS_MIN_6 = 0.12,
+        BELL_MID_SUCCESS_MAX_6 = 0.88,
 
-        BELL_SUCESS_MIN_7 = 0.44,
-        BELL_SUCESS_MAX_7 = 0.57,
-        BELL_MID_SUCESS_MIN_7 = 0.12,
-        BELL_MID_SUCESS_MAX_7 = 0.86,
+        BELL_SUCCESS_MIN_7 = 0.44,
+        BELL_SUCCESS_MAX_7 = 0.57,
+        BELL_MID_SUCCESS_MIN_7 = 0.12,
+        BELL_MID_SUCCESS_MAX_7 = 0.86,
 
-        BELL_SUCESS_MIN_8 = 0.37,
-        BELL_SUCESS_MAX_8 = 0.66,
-        BELL_MID_SUCESS_MIN_8 = 0.14,
-        BELL_MID_SUCESS_MAX_8 = 0.90,
+        BELL_SUCCESS_MIN_8 = 0.37,
+        BELL_SUCCESS_MAX_8 = 0.66,
+        BELL_MID_SUCCESS_MIN_8 = 0.14,
+        BELL_MID_SUCCESS_MAX_8 = 0.90,
 
         MIGHTYGYM_WORKOUT_HUNGER = {
             LOW = 4,
