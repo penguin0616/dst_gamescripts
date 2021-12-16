@@ -7,6 +7,7 @@ local MoistureMeter    = require "widgets/moisturemeter"
 local BoatMeter        = require "widgets/boatmeter"
 local PetHealthBadge   = require "widgets/pethealthbadge"
 local InspirationBadge = require "widgets/inspirationbadge"
+local MightyBadge      = require "widgets/mightybadge"
 local ResurrectButton  = require "widgets/resurrectbutton"
 local UIAnim           = require "widgets/uianim"
 
@@ -71,6 +72,12 @@ local function OnSetPlayerMode(inst, self)
 		self:OnInspirationSongChanged(2, (self.owner:GetInspirationSong(2) or {}).NAME)
 		self:OnInspirationSongChanged(3, (self.owner:GetInspirationSong(3) or {}).NAME)
     end
+
+    if self.mightybadge ~= nil and self.onmightinessdelta == nil then
+        self.onmightinessdelta = function(owner, data) self:MightinessDelta(data) end
+        self.inst:ListenForEvent("mightinessdelta", self.onmightinessdelta, self.owner)
+        self:SetMightiness(self.owner:GetMightiness())
+    end    
 
 	if self.pethealthbadge ~= nil and self.onpethealthdirty == nil then
         self.onpethealthdirty = function() self:RefreshPetHealth() end
@@ -260,6 +267,11 @@ local StatusDisplays = Class(Widget, function(self, owner)
     if owner:HasTag("battlesinger") then
         self:AddInspiration()
     end
+
+    if owner:HasTag("strongman") then
+        self:AddMightiness()
+    end
+
 end)
 
 function StatusDisplays:ShowStatusNumbers()
@@ -361,6 +373,14 @@ function StatusDisplays:AddInspiration()
     end
 end
 
+function StatusDisplays:AddMightiness()
+    if self.mightybadge == nil then
+        self.mightybadge = self:AddChild(MightyBadge(self.owner))
+        self.mightybadge:SetPosition(-120, 20, 0)
+        self:SetMightiness(self.owner:GetMightiness())
+    end
+end
+
 function StatusDisplays:SetGhostMode(ghostmode)
     if not self.isghostmode == not ghostmode then --force boolean
         return
@@ -389,6 +409,10 @@ function StatusDisplays:SetGhostMode(ghostmode)
         if self.inspirationbadge ~= nil then
             self.inspirationbadge:Hide()
         end
+
+        if self.mightybadge ~= nil then
+            self.mightybadge:Hide()
+        end
     else
         self.isghostmode = nil
 
@@ -408,6 +432,10 @@ function StatusDisplays:SetGhostMode(ghostmode)
 
         if self.inspirationbadge ~= nil then
             self.inspirationbadge:Show()
+        end
+
+        if self.mightybadge ~= nil then
+            self.mightybadge:Show()
         end
     end
 
@@ -542,6 +570,24 @@ end
 
 function StatusDisplays:OnInspirationSongChanged(slot_num, song_name)
     self.inspirationbadge:OnBuffChanged(slot_num, song_name)
+end
+
+function StatusDisplays:SetMightiness(percent)
+    self.mightybadge:SetPercent(percent)
+end
+
+function StatusDisplays:MightinessDelta(data)
+    local newpercent = data ~= nil and data.newpercent or 0
+    local oldpercent = data ~= nil and data.oldpercent or 0
+
+    self:SetMightiness(newpercent)
+
+    if newpercent > oldpercent then
+        self.mightybadge:PulseGreen()
+    elseif newpercent < oldpercent and (self.previous_pulse == nil or (self.previous_pulse - oldpercent >= 0.009)) then
+        self.mightybadge:PulseRed()
+        self.previous_pulse = newpercent
+    end
 end
 
 function StatusDisplays:SetMoisturePercent(pct)

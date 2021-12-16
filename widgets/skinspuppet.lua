@@ -20,6 +20,7 @@ local player_emotes_to_choose = {
 	wes = "idle_wes",
 	webber = "idle_webber",
 	wanda = "idle_wanda",
+	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" }
 }
 
 local emote_min_time = 6
@@ -171,7 +172,18 @@ function SkinsPuppet:DoIdleEmote()
 			if self.prefabname == "wormwood" and not self.animstate:CompareSymbolBuilds("hand", "hand_idle_wormwood") then
 				--don't do player anim
 			else
-				self:DoEmote( player_emotes_to_choose[self.prefabname], false, true, self.item_equip)
+				local emote_anim = nil
+				if self.prefabname == "wolfgang" then
+					local skin_mode = ""
+					if self.current_skinmode then
+						skin_mode = self.current_skinmode.type or "normal_skin"
+					end
+					emote_anim = player_emotes_to_choose["wolfgang"][skin_mode]
+				else
+					emote_anim = player_emotes_to_choose[self.prefabname]
+				end
+
+				self:DoEmote( emote_anim, false, true, self.item_equip)
 				if self.item_equip then
 					self.animstate:PushAnimation("item_in")
 					self.animstate:PushAnimation("idle_loop", true) --fix for frame pop before the next play happens
@@ -275,6 +287,7 @@ function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change
 	if skinmode == nil then
 		skinmode = GetSkinModes(prefabname)[1]
 	end
+	self.current_skinmode = skinmode
 
 	local base_build = prefabname
 	base_item = base_item or (prefabname .."_none")

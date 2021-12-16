@@ -30,6 +30,36 @@ function d_allmutators()
     c_give("mutator_water")
 end
 
+function d_allheavy()
+	local heavy_objs = {
+		"cavein_boulder",
+		"sunkenchest",
+		"sculpture_knighthead",
+		"glassspike",
+		"moon_altar_idol",
+		"oceantreenut",
+		"shell_cluster",
+		"potato_oversized",
+		"chesspiece_knight_stone",
+		"chesspiece_knight_marble",
+		"chesspiece_knight_moonglass",
+		"potatosack"
+	}
+
+	local x,y,z = ConsoleWorldPosition():Get()
+	local start_x = x
+	for i,v in ipairs(heavy_objs) do
+		local obj = SpawnPrefab(v)
+		obj.Transform:SetPosition(x,y,z)
+
+		x = x + 2.5
+		if i == 6 then
+			z = z + 2.5
+			x = start_x
+		end
+	end
+end
+
 function d_spiders()
     local spiders = {
         "spider",

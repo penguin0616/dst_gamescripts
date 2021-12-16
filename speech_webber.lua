@@ -326,6 +326,16 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "Mom told me never to do that.",
@@ -345,6 +355,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Flying ouchies!",
 	ANNOUNCE_BOOMERANG = "It hurts us when we don't catch it.",
@@ -446,7 +461,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "We can't take a nap, it's nighttime!",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "No naps til daybreak!",
 	ANNOUNCE_NOHUNGERSIESTA = "Won't be able to nap with a rumbling tummy.",
-	ANNOUNCE_NODANGERAFK = "Can't! There's scary-biteys about!",
 	ANNOUNCE_NO_TRAP = "Easy peasy.",
 	ANNOUNCE_PECKED = "Bad bird!",
 	ANNOUNCE_QUAKE = "I don't think that was our tummy.",
@@ -4192,6 +4206,19 @@ return{
 			COOLDOWN = "Oh no! Did we lose the little tree somewhere?",
 			SPAWN_DISABLED = "We think we're done playing with Mr. Eyeball.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Can we try, Mr. Wolfgang? We've got extra arms to lift with!",
+            BURNT = "Uh oh... Mr. Wolfgang won't be very happy...",
+        },
+
+        DUMBBELL = "It looks so easy when Mr. Wolfgang does it...",
+        DUMBBELL_GOLDEN = "It looks so easy when Mr. Wolfgang does it...",
+        DUMBBELL_GEM = "It looks so easy when Mr. Wolfgang does it...",
+        POTATOSACK = "We peeked inside, some of them looked more like rocks than potatoes...",
+
 
         TERRARIUMCHEST = 
 		{

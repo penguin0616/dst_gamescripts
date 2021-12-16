@@ -379,9 +379,6 @@ meatrack_clear_fn = function(inst) basic_clear_fn(inst, "meat_rack" ) end
 beebox_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "bee_box" ) end
 beebox_clear_fn = function(inst) basic_clear_fn(inst, "bee_box" ) end
 
-rabbithouse_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "rabbit_house" ) end
-rabbithouse_clear_fn = function(inst) basic_clear_fn(inst, "rabbit_house" ) end
-
 beemine_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "bee_mine" ) end
 beemine_clear_fn = function(inst) basic_clear_fn(inst, "bee_mine" ) end
 
@@ -422,6 +419,44 @@ tacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "tacklecontainer"
 supertacklecontainer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "supertacklecontainer" ) end
 supertacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "supertacklecontainer" ) end
 
+--------------------------------------------------------------------------
+--[[ rabbithouse skin functions ]]
+--------------------------------------------------------------------------
+rabbithouse_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "rabbit_house" )
+
+    if inst.components.placer == nil and not inst:HasTag("burnt") then
+        local skin_fx = SKIN_FX_PREFAB[build_name]
+        if skin_fx ~= nil then
+            if skin_fx[1] ~= nil then
+                inst.glow_fx = SpawnPrefab(skin_fx[1])
+                inst.glow_fx.entity:SetParent(inst.entity)
+                inst.glow_fx.AnimState:OverrideItemSkinSymbol("glow", build_name, "glow", inst.GUID, "rabbit_house")
+            end
+        end
+    end
+end
+rabbithouse_clear_fn = function(inst)
+    basic_clear_fn(inst, "rabbit_house" )
+
+    if inst.glow_fx ~= nil then
+        inst.glow_fx:Remove()
+        inst.glow_fx = nil
+    end
+end
+
+--------------------------------------------------------------------------
+--[[ cavein boulder skin functions ]]
+--------------------------------------------------------------------------
+cavein_boulder_init_fn = function(inst, build_name)
+    inst.AnimState:ClearOverrideSymbol("swap_boulder")
+    inst.components.symbolswapdata:SetData(build_name, "swap_boulder", true)
+    basic_init_fn( inst, build_name, "swap_cavein_boulder" )
+end
+cavein_boulder_clear_fn = function(inst)
+    inst:SetVariation( inst.variation, true )
+    basic_clear_fn(inst, "swap_cavein_boulder" )
+end
 
 --------------------------------------------------------------------------
 --[[ Stagehand skin functions ]]

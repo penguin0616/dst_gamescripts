@@ -123,7 +123,7 @@ function CraftSlot:Open()
     end
     self.open = true
     self:ShowRecipe()
-    TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_mouseover")
+    TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 end
 
 function CraftSlot:Close()

@@ -326,6 +326,16 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "It seems I can't do that.",
@@ -345,6 +355,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Stinging nasties!",
 	ANNOUNCE_BOOMERANG = "I misjudged the timing of its return.",
@@ -446,7 +461,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "I can't sleep, no matter where I lie down.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I couldn't possibly relax in these caves.",
 	ANNOUNCE_NOHUNGERSIESTA = "My hunger won't make relaxing any easier!",
-	ANNOUNCE_NODANGERAFK = "Were I to lose focus now I'd be sure to sustain bodily injury.",
 	ANNOUNCE_NO_TRAP = "A cinch!",
 	ANNOUNCE_PECKED = "Settle down, this instant!",
 	ANNOUNCE_QUAKE = "A tremor! At least magnitude seven on the Richter scale.",
@@ -4192,6 +4206,19 @@ return{
 			COOLDOWN = "It appears to have expended its energy, but I cannot say for how long.",
 			SPAWN_DISABLED = "It should remain inactive, as long as it's not disturbed.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Do be careful not to overexert yourself, dear.",
+            BURNT = "I'd suggest looking elsewhere for a place to exercise.",
+        },
+
+        DUMBBELL = "A bit of exercise can be quite beneficial to one's health.",
+        DUMBBELL_GOLDEN = "A bit of exercise can be quite beneficial to one's health.",
+        DUMBBELL_GEM = "A bit of exercise can be quite beneficial to one's health.",
+        POTATOSACK = "He seems to have a deep fondness for tubers.",
+
 
         TERRARIUMCHEST = 
 		{

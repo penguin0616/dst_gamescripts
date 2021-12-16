@@ -222,7 +222,12 @@ function GetFeaturedPacks()
 	return iaps
 end
 
+local memoized_sub_packs = {}
 function _GetSubPacks(item_key)
+	if memoized_sub_packs[item_key] then
+		return memoized_sub_packs[item_key]
+	end
+
     local sub_packs = {}
 	local output_items = GetPurchasePackOutputItems(item_key)
 	local pack_count = #output_items
@@ -246,8 +251,6 @@ function _GetSubPacks(item_key)
 		end
 	end
 
-
-
 	for _,item in pairs(output_items) do
 		if item_to_packinfo[item].pack ~= item_key then
 			sub_packs[item_to_packinfo[item].pack] = true
@@ -270,6 +273,8 @@ function _GetSubPacks(item_key)
 			end
 		end
 	end
+	
+	memoized_sub_packs[item_key] = sub_packs
 
 	return sub_packs
 end
@@ -302,9 +307,14 @@ function GetPackTotalSets(item_key)
     return count
 end
 
-function IsPackABundle(item_key)
-    local sub_packs = _GetSubPacks(item_key)
+local memoized_is_a_bundle = {}
+function IsPackABundle(item_key)	
+	if memoized_is_a_bundle[item_key] then
+		local value = memoized_is_a_bundle[item_key]
+		return (value > 0), value
+	end
 
+    local sub_packs = _GetSubPacks(item_key)
     local value = 0
 
 	local iap_defs = TheItems:GetIAPDefs()
@@ -321,6 +331,8 @@ function IsPackABundle(item_key)
 			end
 		end
 	end
+	
+	memoized_is_a_bundle[item_key] = value
     return (value > 0), value
 end
 

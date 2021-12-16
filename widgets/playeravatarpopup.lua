@@ -193,6 +193,9 @@ function PlayerAvatarPopup:Layout(data, show_net_profile)
     if not TheInput:ControllerAttached() then
         self.close_button = self.proot:AddChild(TEMPLATES.SmallButton(STRINGS.UI.PLAYER_AVATAR.CLOSE, 26, .5, function() self:Close() end))
         self.close_button:SetPosition(0, -269)
+	else
+		self.close_text = self.proot:AddChild(Text(UIFONT, 25, TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_USE_ITEM_ON_ITEM) .. "  " .. STRINGS.UI.PLAYER_AVATAR.CLOSE))
+        self.close_text:SetPosition(0, -275)
     end
 end
 

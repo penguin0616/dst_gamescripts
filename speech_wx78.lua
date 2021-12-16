@@ -326,6 +326,16 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "ERROR: ACTION UNAVAILABLE",
@@ -345,6 +355,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "BEES!",
 	ANNOUNCE_BOOMERANG = "ERROR: CATCH FAILED",
@@ -446,7 +461,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "ERROR: SIESTA MODE UNAVAILABLE AT NIGHT",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "ERROR: ANTI-SIESTA CAVE PROTOCOL IN EFFECT",
 	ANNOUNCE_NOHUNGERSIESTA = "CANNOT SIESTA ON AN EMPTY NUTRIENT PROCESSOR",
-	ANNOUNCE_NODANGERAFK = "ERROR: DANGER FAILSAFES INITIATED",
 	ANNOUNCE_NO_TRAP = "ANALYSIS COMPLETE. SITUATION STABLE",
 	ANNOUNCE_PECKED = "OUCH",
 	ANNOUNCE_QUAKE = "EARTH DESTABILIZING",
@@ -4192,6 +4206,19 @@ return{
 			COOLDOWN = "RECHARGING INTERDIMENSIONAL BEAM",
 			SPAWN_DISABLED = "ACCESS TO INTERDIMENSIONAL ANOMALY DECLINED",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "THE LARGE ONE SEEMS TO LIKE THIS FLESHLING TORTURE DEVICE",
+            BURNT = "HOW SAD",
+        },
+
+        DUMBBELL = "MINION UPGRADE EQUIPMENT",
+        DUMBBELL_GOLDEN = "MINION UPGRADE EQUIPMENT",
+        DUMBBELL_GEM = "MINION UPGRADE EQUIPMENT",
+        POTATOSACK = "ILLOGICAL. CARRY ME INSTEAD",
+
 
         TERRARIUMCHEST = 
 		{

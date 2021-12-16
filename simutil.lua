@@ -121,6 +121,19 @@ function IsAnyPlayerInRange(x, y, z, range, isalive)
     return IsAnyPlayerInRangeSq(x, y, z, range * range, isalive)
 end
 
+function IsAnyOtherPlayerNearInst(inst, rangesq, isalive)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    for i, v in ipairs(AllPlayers) do
+        if (isalive == nil or isalive ~= IsEntityDeadOrGhost(v)) 
+            and v.entity:IsVisible() 
+            and v:GetDistanceSqToPoint(x, y, z) < rangesq 
+            and v ~= inst then
+            return true
+        end
+    end
+    return false
+end
+
 -- Get a location where it's safe to spawn an item so it won't get lost in the ocean
 function FindSafeSpawnLocation(x, y, z)
     local ent = x ~= nil and z ~= nil and FindClosestPlayer(x, y, z) or nil

@@ -1986,6 +1986,26 @@ function IsInFrontEnd()
 	return Settings.reset_action == nil or Settings.reset_action == RESET_ACTION.LOAD_FRONTEND
 end
 
+function CreateRepeatedSoundVolumeReduction(repeat_time, lowered_volume_percent)
+    local last_played_time = GetTime()
+    local lower_sound_repeat_time = repeat_time
+    local reduced_volume_percent = lowered_volume_percent
+    return function()
+        local current_time = GetTime()
+
+        local sound_volume = 1
+        if current_time - last_played_time <= lower_sound_repeat_time then
+            sound_volume = reduced_volume_percent
+        end
+
+        last_played_time = current_time
+        return sound_volume
+    end
+end
+
+--if fired in the last 0.25 seconds, reduce the volume to 75%
+ClickMouseoverSoundReduction = CreateRepeatedSoundVolumeReduction(0.25, 0.75)
+
 local currently_displaying = nil
 function DisplayAntiAddictionNotification( notification )
     if notification ~= currently_displaying then

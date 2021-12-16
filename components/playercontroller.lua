@@ -609,6 +609,7 @@ function PlayerController:DoControllerActionButton()
 
     local obj = nil
     local act = nil
+	local isspecial = nil
     if self.deployplacer ~= nil then
         if self.deployplacer.components.placer.can_build then
             act = self.deployplacer.components.placer:GetDeployAction()
@@ -635,6 +636,12 @@ function PlayerController:DoControllerActionButton()
         if obj ~= nil then
             act = self:GetSceneItemControllerAction(obj)
         end
+		if act == nil then
+			act = self:GetGroundUseSpecialAction(nil, false)
+			if act ~= nil then
+				isspecial = true
+			end
+		end
     end
 
     if act == nil then
@@ -657,12 +664,12 @@ function PlayerController:DoControllerActionButton()
     elseif obj == nil then
         if self.locomotor == nil then
             self.remote_controls[CONTROL_CONTROLLER_ACTION] = 0
-            SendRPCToServer(RPC.ControllerActionButtonPoint, act.action.code, act.pos.local_pt.x, act.pos.local_pt.z, nil, act.action.canforce, act.action.mod_name, act.pos.walkable_platform, act.pos.walkable_platform ~= nil)
+            SendRPCToServer(RPC.ControllerActionButtonPoint, act.action.code, act.pos.local_pt.x, act.pos.local_pt.z, nil, act.action.canforce, act.action.mod_name, act.pos.walkable_platform, act.pos.walkable_platform ~= nil, isspecial)
         elseif self:CanLocomote() then
             act.preview_cb = function()
                 self.remote_controls[CONTROL_CONTROLLER_ACTION] = 0
                 local isreleased = not TheInput:IsControlPressed(CONTROL_CONTROLLER_ACTION)
-                SendRPCToServer(RPC.ControllerActionButtonPoint, act.action.code, act.pos.local_pt.x, act.pos.local_pt.z, isreleased, nil, act.action.mod_name, act.pos.walkable_platform, act.pos.walkable_platform ~= nil)
+                SendRPCToServer(RPC.ControllerActionButtonPoint, act.action.code, act.pos.local_pt.x, act.pos.local_pt.z, isreleased, nil, act.action.mod_name, act.pos.walkable_platform, act.pos.walkable_platform ~= nil, isspecial)
             end
         end
     elseif self.locomotor == nil then
@@ -717,14 +724,19 @@ function PlayerController:OnRemoteControllerActionButton(actioncode, target, isr
     end
 end
 
-function PlayerController:OnRemoteControllerActionButtonPoint(actioncode, position, isreleased, noforce, mod_name)
+function PlayerController:OnRemoteControllerActionButtonPoint(actioncode, position, isreleased, noforce, mod_name, isspecial)
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         self.inst.components.combat:SetTarget(nil)
 
         self.remote_controls[CONTROL_CONTROLLER_ACTION] = 0
         self:ClearControlMods()
         SetClientRequestedAction(actioncode, mod_name)
-        local lmb, rmb = self:GetGroundUseAction(position)
+        local lmb, rmb
+        if isspecial then
+			lmb = self:GetGroundUseSpecialAction(position, false)
+		else
+			lmb, rmb = self:GetGroundUseAction(position)
+		end
         ClearClientRequestedAction()
         if isreleased then
             self.remote_controls[CONTROL_CONTROLLER_ACTION] = nil
@@ -972,6 +984,7 @@ function PlayerController:DoControllerAttackButton(target)
             self.inst:HasTag("playerghost") or
             self.inst:HasTag("weregoose") or
             self.inst.replica.inventory:IsHeavyLifting() or
+			(self.classified and self.classified.inmightygym:value() > 0) or
             GetGameModeProperty("no_air_attack")
         ) then
             --Except for player ghosts!
@@ -1260,6 +1273,7 @@ local REGISTERED_FIND_ATTACK_TARGET_TAGS = TheSim:RegisterFindTags({ "_combat" }
 function PlayerController:GetAttackTarget(force_attack, force_target, isretarget)
     if self.inst:HasTag("playerghost") or
         self.inst:HasTag("weregoose") or
+		(self.classified and self.classified.inmightygym:value() > 0) or
         self.inst.replica.inventory:IsHeavyLifting() then
         return
     end
@@ -1654,9 +1668,13 @@ function PlayerController:DoActionButton()
     --if self:IsAOETargeting() then
     --    return
     --end
-    if self.placer == nil then
+    if self.placer == nil then        
         local buffaction = self:GetActionButtonAction()
         if buffaction ~= nil then
+            if buffaction.action.pre_action_cb ~= nil then
+                buffaction.action.pre_action_cb(buffaction)
+            end
+
             if self.ismastersim then
                 self.locomotor:PushAction(buffaction, true)
                 return
@@ -2685,7 +2703,7 @@ local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
 end
 
 function PlayerController:UpdateControllerTargets(dt)
-    if self:IsAOETargeting() or (self.inst:HasTag("weregoose") and not self.inst:HasTag("playerghost")) then
+    if self:IsAOETargeting() or (self.inst:HasTag("weregoose") and not self.inst:HasTag("playerghost") or (self.classified and self.classified.inmightygym:value() > 0)) then
         self.controller_target = nil
         self.controller_target_age = 0
         self.controller_attack_target = nil
@@ -3221,6 +3239,9 @@ local INVALIDHOLDACTIONS = {
     [ACTIONS.ROW_FAIL] = true,
     [ACTIONS.ROW] = true,
     [ACTIONS.ROW_CONTROLLER] = true,
+    [ACTIONS.LIFT_GYM_SUCCEED_PERFECT] = true,
+    [ACTIONS.LIFT_GYM_SUCCEED] = true,
+    [ACTIONS.LIFT_GYM_FAIL] = true,
 }
 
 function PlayerController:DoAction(buffaction)
@@ -3270,6 +3291,10 @@ function PlayerController:DoAction(buffaction)
         self.lastheldaction = buffaction
     else
         self.actionholdtime = nil
+    end
+
+    if buffaction.action and buffaction.action.pre_action_cb ~= nil then
+        buffaction.action.pre_action_cb(buffaction)
     end
 
     if self.ismastersim then

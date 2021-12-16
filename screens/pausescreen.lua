@@ -110,21 +110,6 @@ function PauseScreen:unpause()
     TheWorld:PushEvent("continuefrompause")
 end
 
---[[
-function PauseScreen:goafk()
-	self:unpause()
-
-	local player = ThePlayer
-	if player.components.combat and player.components.combat:IsInDanger() then
-		--it's too dangerous to afk
-		player.components.talker:Say(GetString(player, "ANNOUNCE_NODANGERAFK"))
-		return
-	end
-
-	player.replica.afk:PrepareForAFK()
-end
-]]
-
 function PauseScreen:doconfirmquit()
  	self.active = false
 

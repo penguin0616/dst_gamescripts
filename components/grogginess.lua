@@ -15,6 +15,7 @@ local Grogginess = Class(function(self, inst)
     self.speedmod = nil
     self.enablespeedmod = true
     self.isgroggy = false
+    self.knockedout = false
 
     self._resistance_sources = SourceModifierList(inst, 0, SourceModifierList.additive)
 
@@ -211,10 +212,12 @@ end
 function Grogginess:KnockOut()
     if self.inst.entity:IsVisible() and not (self.inst.components.health ~= nil and self.inst.components.health:IsDead()) then
         self.inst:PushEvent("knockedout")
+        self.knockedout = true
     end
 end
 
 function Grogginess:ComeTo()
+    self.knockedout = false
     if self:IsKnockedOut() and not (self.inst.components.health ~= nil and self.inst.components.health:IsDead()) then
         self.grog_amount = self.resistance
         self.inst:PushEvent("cometo")

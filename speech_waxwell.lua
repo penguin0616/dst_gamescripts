@@ -326,6 +326,16 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "That didn't work.",
@@ -345,6 +355,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Killing me won't bring back your honey!",
 	ANNOUNCE_BOOMERANG = "Ow! Blasted... clumsy hands!",
@@ -446,7 +461,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "It's sleep time, not siesta time.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "It's a bit creepy out for that.",
 	ANNOUNCE_NOHUNGERSIESTA = "Traditionally, a siesta comes after eating, not before.",
-	ANNOUNCE_NODANGERAFK = "I must be ever vigilant!",
 	ANNOUNCE_NO_TRAP = "Odd. They forgot to set it.",
 	ANNOUNCE_PECKED = "Have patience!",
 	ANNOUNCE_QUAKE = "That rumbling can't be good.",
@@ -4192,6 +4206,19 @@ return{
 			COOLDOWN = "I'd bet it was that insufferable imp who brought it here.",
 			SPAWN_DISABLED = "Let it stay banished.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "Hmph. I suppose some people are impressed by shows of brute strength.",
+            BURNT = "The show's over.",
+        },
+
+        DUMBBELL = "I have no interest in such things.",
+        DUMBBELL_GOLDEN = "It's not that impressive.",
+        DUMBBELL_GEM = "It's not that impressive.",
+        POTATOSACK = "Potatoes are powerful things, not to be underestimated.",
+
 
         TERRARIUMCHEST = 
 		{

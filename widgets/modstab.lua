@@ -394,7 +394,7 @@ function ModsTab:UpdateForWorkshop( force_refresh )
 
 			opt.OnGainFocus =
 				function()
-					TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+					TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 					opt.state_bg:Show()
 				end
 
@@ -523,7 +523,7 @@ function ModsTab:UpdateForWorkshop( force_refresh )
 
 			opt.OnGainFocus =
 				function()
-					TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+					TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 					opt.state_bg:Show()
 				end
 

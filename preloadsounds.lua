@@ -149,6 +149,12 @@ local MainSounds =
 
     "terraria1.fev",
     "terraria1.fsb",
+
+    "wolfgang2.fev",
+	"wolfgang2.fsb",
+
+	"wolfgang1.fev",
+	"wolfgang1.fsb",
 }
 
 function PreloadSoundList(list)

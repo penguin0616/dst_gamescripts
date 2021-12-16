@@ -66,6 +66,11 @@ local function onhit(inst, worker)
     if not inst:HasTag("burnt") then
         inst.AnimState:PlayAnimation("hit")
         inst.AnimState:PushAnimation("idle")
+
+        if inst.glow_fx ~= nil then
+            inst.glow_fx.AnimState:PlayAnimation("hit")
+            inst.glow_fx.AnimState:PushAnimation("idle")
+        end
     end
 end
 
@@ -135,6 +140,10 @@ local function onburntup(inst)
     if inst.inittask ~= nil then
         inst.inittask:Cancel()
         inst.inittask = nil
+    end
+    if inst.glow_fx ~= nil then
+        inst.glow_fx:Remove()
+        inst.glow_fx = nil
     end
 end
 

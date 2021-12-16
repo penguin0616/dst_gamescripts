@@ -326,6 +326,16 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I can'tttttt.",
@@ -345,6 +355,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Aaaah! Pokey bugs!",
 	ANNOUNCE_BOOMERANG = "Stupid boomerang!",
@@ -448,7 +463,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "I couldn't get comfortable there.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I'd really rather be inside.",
 	ANNOUNCE_NOHUNGERSIESTA = "I can't take a siesta while my tummy is grumbling!",
-	ANNOUNCE_NODANGERAFK = "I'm not leaving now!",
 	ANNOUNCE_NO_TRAP = "Like lighting a barrel of fish on fire.",
 	ANNOUNCE_PECKED = "No! Bad birdy!",
 	ANNOUNCE_QUAKE = "That sound probably doesn't mean good things.",
@@ -3919,7 +3933,7 @@ return{
         FRUITFLY = "Get lost, you dumb bugs!",
         LORDFRUITFLY = "You think you can barge in here and mess up the garden? That's my job!",
         FRIENDLYFRUITFLY = "Hey, this one's actually helping!",
-        FRUITFLYFRUIT = "Now I'm the the one giving the orders! To Fruit Flies, but still.",
+        FRUITFLYFRUIT = "Now I'm the one giving the orders! To fruit flies, but still.",
 
         SEEDPOUCH = "It would be even easier to just set all the seeds on fire.",
 
@@ -4199,6 +4213,19 @@ return{
 			COOLDOWN = "I hope it does fireworks instead of rainbows next time.",
 			SPAWN_DISABLED = "Looks like the fun's over.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "You know what this strongman show needs? Pyrotechnics!",
+            BURNT = "I don't know what Wolfgang's so upset about, I thought the fire effects were great!",
+        },
+
+        DUMBBELL = "Quit making stuff I can't burn!",
+        DUMBBELL_GOLDEN = "Did he really need to make it so fancy?",
+        DUMBBELL_GEM = "Did he really need to make it so fancy?",
+        POTATOSACK = "I could make it a roasted potato sack, just say the word!",
+
 
         TERRARIUMCHEST = 
 		{

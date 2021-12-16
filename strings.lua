@@ -120,7 +120,7 @@ STRINGS =
         wilson = "\n*Grows a magnificent beard",
         willow = "*Has a fondness for fire, but hates the cold \n*Protected by her cuddly bear, Bernie\n*Has a reliable lighter",
         wendy = "*Is haunted by her twin sister \n*Feels comfortable in the dark \n*Dabbles in Ectoherbology \n*Doesn't hit very hard",
-        wolfgang = "*Grows mighty on a full belly \n*Becomes wimpy when hungry \n*Burns a lot of calories \n*Is afraid of monsters and the dark",
+        wolfgang = "*Works hard to grow mighty \n*Becomes wimpy without regular exercise \n*Can carry heavy objects with ease \n*Is afraid of monsters and the dark",
         wx78 = "*Not a picky eater \n*Is charged by lightning, but damaged by water \n*Can upgrade with gears",
         wickerbottom = "*Knows many things \n*Self-publishes books \n*Suffers from insomnia \n*Has a delicate stomach",
         wes = "*Can't talk \n*Practices balloonomancy \n*Is not a skilled fighter or worker \n*Has trouble staying alive",
@@ -243,7 +243,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "October 2" },
             { title = "Favorite Food", desc = "Roasted Potato" },
-			{ title = "His Past...", desc = "Is yet to be revealed." },
+			{ title = "The Incredible Strongman", desc = "Prior to his time in the Constant, Wolfgang's life revolved around the single-minded pursuit of one goal: to become the strongest man there ever was. His quest would lead him across Europe and eventually even across the Atlantic to America, where his feats of muscular prowess caught the attention of Misters Abernethy & Parker, who invited him to headline in their newly-formed traveling circus. Wolfgang quickly found himself caught up in the pageantry of circus life, and his attention began to shift to finding ways to make his show more spectacular. Fearing his own strength wouldn't be enough to keep impressing the crowds, he started employing a bit of stage trickery, with each new act becoming more unbelievable than the last. As his act grew more outlandish, the risk of being exposed as a fraud grew, and as he suffered one embarrassing mistake after another his once unshakable confidence in his abilities was slowly chipped away.\nUntil one day, a chance encounter gave him a taste of the ultimate strength he had craved for so long..." },
 		},
         wx78 =
 		{
@@ -267,7 +267,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "October 22" },
             { title = "Favorite Food", desc = "Lobster Dinner" },
-			{ title = "The Nightmare King", desc = "The former king of the Nightmare Throne and an egomaniac to boot. Maxwell (who earned his name from his former stage persona \"The Amazing Maxwell\") was once the naive and unimposing \"William Carter\", a penniless man from London who dreamt of being a world-renowned magician. When fate put William in possession of the Codex Umbra, he felt true power for the first time in his life. Casting off his old, meek ways and fully embracing his new persona as a charismatic master of dark magic, Maxwell achieved fame and success, but still found himself hungering for more. As he delved deeper and deeper into his magical tome, immersing himself in its secrets, the dark knowledge within addled his mind and clouded his heart. In his final performance, Maxwell lost control of the shadow magic he'd used so brazenly and both he and his stage assistant Charlie were pulled into the Constant. There he would remain for what seemed like an eternity, tethered to the Nightmare Throne and compelled to ensnare more victims in the Constant's trap.\nHe is still baffled by the thought that someone he tricked into the Constant could find it in their heart to set him free... well, baffled and annoyed really. He never liked owing a favor." },
+			{ title = "The Nightmare King", desc = "The former king of the Nightmare Throne and an egomaniac to boot, Maxwell (who earned his name from his former stage persona \"The Amazing Maxwell\") was once the naive and unimposing \"William Carter\", a penniless man from London who dreamt of being a world-renowned magician. When fate put William in possession of the Codex Umbra, he felt true power for the first time in his life. Casting off his old, meek ways and fully embracing his new persona as a charismatic master of dark magic, Maxwell achieved fame and success, but still found himself hungering for more. As he delved deeper and deeper into his magical tome, immersing himself in its secrets, the dark knowledge within addled his mind and clouded his heart. In his final performance, Maxwell lost control of the shadow magic he'd used so brazenly and both he and his stage assistant Charlie were pulled into the Constant. There he would remain for what seemed like an eternity, tethered to the Nightmare Throne and compelled to ensnare more victims in the Constant's trap.\nHe is still baffled by the thought that someone he tricked into the Constant could find it in their heart to set him free... well, baffled and annoyed really. He never liked owing a favor." },
 		},
         wathgrithr =
 		{
@@ -818,6 +818,7 @@ STRINGS =
         {
             GENERIC = "Use",
             LOAD_WINCH = "Load Winch",
+            LOAD_GYM = "Load Gym",
         },
 
         ADVANCE_TREE_GROWTH = "Apply",
@@ -853,6 +854,7 @@ STRINGS =
 			RECALL_MARK = "Set Time In Space",
 			--RECALL = "Travel Back",
 		},
+        DISMANTLE_POCKETWATCH = "Take Apart",
 
         -- Webber
         MUTATE_SPIDER = "Feed",
@@ -860,7 +862,19 @@ STRINGS =
         REPEL = "Shoo Spiders",
         BEDAZZLE = "Decorate",
 
-        DISMANTLE_POCKETWATCH = "Take Apart",
+        -- Wolfgang
+        ENTER_GYM = "Enter",
+
+        LIFT_DUMBBELL = "Lift",
+        STOP_LIFT_DUMBBELL = "Stop Lifting",
+
+        LIFT_GYM = "Lift",
+        LEAVE_GYM = "Stop",
+        UNLOAD_GYM = "Unload",
+
+        LIFT_GYM_SUCCEED_PERFECT = "Lift",
+        LIFT_GYM_SUCCEED = "Lift",
+        LIFT_GYM_FAIL = "Lift",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -3224,7 +3238,7 @@ STRINGS =
         MUTATOR_WATER = "Strider Switcherdoodle",
         OCEANVINE_COCOON = "Sea Strider Nest",
         OCEANVINE_COCOON_BURNT = "Sea Strider Nest",
-
+        
         TREEGROWTHSOLUTION = "Tree Jam",
 
         FIGATONI = "Figatoni",
@@ -3250,6 +3264,16 @@ STRINGS =
 
         CRITTER_EYEOFTERROR = "Friendly Peeper",
         CRITTER_EYEOFTERROR_BUILDER = "Friendly Peeper",
+
+
+
+
+        -- WOLFGANG
+        MIGHTY_GYM = "Mighty Gym",
+        DUMBBELL = "Dumbbell",
+        DUMBBELL_GOLDEN = "Golden Dumbbell",
+        DUMBBELL_GEM = "Gembell",
+        POTATOSACK = "Potato Sack",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3952,7 +3976,7 @@ STRINGS =
         MUTATOR_MOON = "Its recipient will be over the moon!",
         MUTATOR_HEALER = "Extra grainy, so it has to be healthy!",
         SPIDER_WHISTLE = "Call your creepy crawly friends.",
-        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",
+        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",        
         SPIDER_REPELLENT = "Let your friends know you need some space.",
         SPIDER_HEALER_ITEM = "Gross, gooey, and good for you!",
 
@@ -3963,6 +3987,13 @@ STRINGS =
 		-- Terraria
         CRITTER_EYEOFTERROR_BUILDER = "Summon a friendly ocular companion.",
         
+        -- WOLFGANG
+        MIGHTY_GYM = "Bring on the brawn!",
+        DUMBBELL = "Sticks and stones make muscles honed.",
+        DUMBBELL_GOLDEN = "The gold standard of weightlifting.",
+        DUMBBELL_GEM = "Polish every facet of your workout.",
+        POTATOSACK = "A potato's natural habitat.",
+
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_QUEST_SURVIVE = {
@@ -4803,8 +4834,8 @@ STRINGS =
         "Speak with Mumsy. Hurry on, then.",
     },
 
-    MERM_TALK_CONTEST_OOOH = {"Such taste.","Nicely done.","such a beauty"},
-    MERM_TALK_CONTEST_PANIC = {"I must choose!","How can I decide!"},
+    MERM_TALK_CONTEST_OOOH = {"Such taste.","Nicely done.","Such beauty."},
+    MERM_TALK_CONTEST_PANIC = {"Must choose!","How decide?!"},
 
     -- Lines that the small ghosts deliver when a player approaches them.
     SMALLGHOST_TALK =
@@ -5159,6 +5190,7 @@ STRINGS =
 		CLOCKMAKER = "Clocksmithy",
         TURFCRAFTING = "Landscaping",
 		BALLOONOMANCY = "Balloonomancy",
+        STRONGMAN = "Strongman",
     },
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
 
@@ -6007,6 +6039,9 @@ STRINGS.UI =
             "Matthew Barry",
             "Zachary Lockwood",
             "Amanda Niles",
+			"Auday Hussein",
+            "Jesse Blackston",
+            "Jeddy Zhang",
         },
 
         ALTGAMES =
@@ -6402,7 +6437,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "October QoL\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Wolfgang\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 

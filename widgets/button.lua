@@ -105,7 +105,7 @@ function Button:OnGainFocus()
 
     if self:IsEnabled() and not self.selected and TheFrontEnd:GetFadeLevel() <= 0 then
     	if self.text then self.text:SetColour(self.textfocuscolour) end
-		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 	end
 
     if self.ongainfocus then

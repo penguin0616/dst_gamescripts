@@ -122,6 +122,43 @@ return
 			"hand_wx78_yule",
 			"legs_wx78_yule",
 		},
+		{
+			"willow_yule",
+			"body_willow_yule",
+			"feet_willow_yule",
+			"hand_willow_yule",
+		},
+		{
+			"wormwood_yule",
+			"body_wormwood_yule",
+			"hand_wormwood_yule",
+			"legs_wormwood_yule",
+		},
+		{
+			"wurt_yule",
+			"body_wurt_yule",
+			"legs_wurt_yule",
+		},
+		{
+			"wanda_yule",
+			"body_wanda_yule",
+			"hand_wanda_yule",
+			"legs_wanda_yule",
+		},
+		{
+			"wilson_yule",
+			"wilson_beard_yule",
+			"body_wilson_yule",
+			"feet_wilson_yule",
+			"hand_wilson_yule",
+			"legs_wilson_yule",
+		},
+		{
+			"wickerbottom_yule",
+			"body_wickerbottom_yule",
+			"legs_wickerbottom_yule",
+			"feet_wickerbottom_yule",
+		},
 	},
 	emote_fistshake =
 	{

@@ -175,7 +175,7 @@ function ServerSaveSlot:OnGainFocus()
     if self.isservercreationscreen then return end
     if not self:IsEnabled() then return end
     ServerSaveSlot._base.OnGainFocus(self)
-    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+    TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
     self.frame_focused:Show()
 end
 

@@ -364,6 +364,13 @@ function c_sethunger(n)
     end
 end
 
+function c_setmightiness(n)
+    local player = ConsoleCommandPlayer()
+    if player ~= nil and player.components.mightiness then
+        player.components.mightiness:SetPercent(n)
+    end
+end
+
 function c_setwereness(n)
     local player = ConsoleCommandPlayer()
     if player ~= nil and player.components.wereness ~= nil and not player:HasTag("playerghost") then

@@ -63,7 +63,7 @@ function FertilizersPage:BuildFertlizerScrollGrid()
 		local _OnGainFocus = w.cell_root.OnGainFocus
 		function w.cell_root.OnGainFocus()
 			_OnGainFocus(w.cell_root)
-			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover")
+			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_mouseover", nil, ClickMouseoverSoundReduction())
 			w.fertilizer_label:SetColour(PLANTREGISTRYUICOLOURS.LOCKEDBROWN)
 			w.cell_root:SetTexture("images/plantregistry.xml", "plant_entry_focus.tex")
 			w.fertilizer_seperator:SetTexture("images/plantregistry.xml", "plant_entry_seperator_focus.tex")

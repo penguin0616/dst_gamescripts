@@ -326,6 +326,16 @@ return{
         {
 --fallback to speech_wilson.lua             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+--fallback to speech_wilson.lua             NOWEIGHT = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I can't do anything right.",
@@ -345,6 +355,11 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+--fallback to speech_wilson.lua         MIGHTY = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         NORMAL = "only_used_by_wolfang",
+--fallback to speech_wilson.lua         WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "Bees! Maybe I'm allergic!",
 	ANNOUNCE_BOOMERANG = "Ow! That was karma.",
@@ -446,7 +461,6 @@ return{
 	ANNOUNCE_NONIGHTSIESTA = "I'd really rather be in a tent.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I'd really rather be in a tent.",
 	ANNOUNCE_NOHUNGERSIESTA = "My stomach is as empty as my heart. I can't nap now.",
-	ANNOUNCE_NODANGERAFK = "I can't let my guard down right now...",
 	ANNOUNCE_NO_TRAP = "I was expecting great difficulty.",
 	ANNOUNCE_PECKED = "You try my patience.",
 	ANNOUNCE_QUAKE = "The ground shakes. Will it swallow me whole?",
@@ -4196,6 +4210,19 @@ return{
 			COOLDOWN = "All beauty fades with time.",
 			SPAWN_DISABLED = "Let it be sealed away forever.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "It seems strength can only be found through suffering.",
+            BURNT = "It's nothing but ashes and memories.",
+        },
+
+        DUMBBELL = "Oh. It's very heavy.",
+        DUMBBELL_GOLDEN = "It's almost as heavy as my heart.",
+        DUMBBELL_GEM = "Who would choose to carry such a burden...",
+        POTATOSACK = "Large enough to hold a corpse... or a few dozen potatoes.",
+
 
         TERRARIUMCHEST = 
 		{

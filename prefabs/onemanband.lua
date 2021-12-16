@@ -2,7 +2,6 @@ local assets =
 {
     --naming convention inconsistent
     Asset("ANIM", "anim/armor_onemanband.zip"),
-    Asset("ANIM", "anim/swap_one_man_band.zip"),
 }
 
 local function band_disable(inst)
@@ -97,7 +96,7 @@ end
 
 local function onequip(inst, owner)
     if owner then
-        owner.AnimState:OverrideSymbol("swap_body_tall", "swap_one_man_band", "swap_body_tall")
+        owner.AnimState:OverrideSymbol("swap_body_tall", "armor_onemanband", "swap_body_tall")
         inst.components.fueled:StartConsuming()
     end
 

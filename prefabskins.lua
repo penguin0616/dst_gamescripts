@@ -117,6 +117,7 @@ PREFAB_SKINS = {
 	},
 	bedroll_furry =
 	{
+		"bedroll_furry_potato",
 		"bedroll_furry_quilt_blue_frost",
 		"bedroll_furry_quilt_green_hunters",
 		"bedroll_furry_quilt_orange_honey",
@@ -207,6 +208,10 @@ PREFAB_SKINS = {
 		"catcoonhat_trapper_rooster",
 		"catcoonhat_trapperup_rooster",
 		"hat_puppy_cap",
+	},
+	cavein_boulder =
+	{
+		"cavein_boulder_kettlebell",
 	},
 	chester =
 	{
@@ -506,6 +511,7 @@ PREFAB_SKINS = {
 		"lantern_mummy",
 		"lantern_tesla",
 		"lantern_winter",
+		"lantern_winter_alt",
 	},
 	lighter =
 	{
@@ -547,6 +553,7 @@ PREFAB_SKINS = {
 	meatrack =
 	{
 		"meatrack_butcher",
+		"meatrack_circus",
 		"meatrack_victorian",
 	},
 	minerhat =
@@ -635,6 +642,7 @@ PREFAB_SKINS = {
 	},
 	piggyback =
 	{
+		"piggyback_elephant",
 		"piggyback_nose",
 	},
 	pighouse =
@@ -649,6 +657,7 @@ PREFAB_SKINS = {
 	rabbithouse =
 	{
 		"rabbithouse_carrat",
+		"rabbithouse_yule",
 	},
 	rainhat =
 	{
@@ -943,6 +952,7 @@ PREFAB_SKINS = {
 		"wanda_none",
 		"wanda_shadow",
 		"wanda_steampunk",
+		"wanda_yule",
 	},
 	wardrobe =
 	{
@@ -1133,6 +1143,7 @@ PREFAB_SKINS = {
 		"wickerbottom_spiderwitch",
 		"wickerbottom_survivor",
 		"wickerbottom_victorian",
+		"wickerbottom_yule",
 	},
 	willow =
 	{
@@ -1156,6 +1167,7 @@ PREFAB_SKINS = {
 		"willow_survivor",
 		"willow_survivorp",
 		"willow_victorian",
+		"willow_yule",
 	},
 	wilson =
 	{
@@ -1175,6 +1187,7 @@ PREFAB_SKINS = {
 		"wilson_shadow",
 		"wilson_survivor",
 		"wilson_victorian",
+		"wilson_yule",
 	},
 	wilson_beard =
 	{
@@ -1189,6 +1202,7 @@ PREFAB_SKINS = {
 		"wilson_beard_shadow",
 		"wilson_beard_survivor",
 		"wilson_beard_victorian",
+		"wilson_beard_yule",
 	},
 	winona =
 	{
@@ -1236,14 +1250,19 @@ PREFAB_SKINS = {
 		"wolfgang_combatant",
 		"wolfgang_cook",
 		"wolfgang_formal",
+		"wolfgang_formalp",
 		"wolfgang_gladiator",
 		"wolfgang_ice",
 		"wolfgang_magma",
 		"wolfgang_nature",
 		"wolfgang_none",
 		"wolfgang_rose",
+		"wolfgang_rosep",
 		"wolfgang_shadow",
+		"wolfgang_shadowp",
+		"wolfgang_strongman",
 		"wolfgang_survivor",
+		"wolfgang_survivorp",
 		"wolfgang_victorian",
 		"wolfgang_walrus",
 		"wolfgang_walrus_d",
@@ -1294,6 +1313,7 @@ PREFAB_SKINS = {
 		"wormwood_saladmander_p",
 		"wormwood_shadow",
 		"wormwood_victorian",
+		"wormwood_yule",
 	},
 	wortox =
 	{
@@ -1321,6 +1341,7 @@ PREFAB_SKINS = {
 		"wurt_toadstool_d",
 		"wurt_toadstool_p",
 		"wurt_victorian",
+		"wurt_yule",
 	},
 	wx78 =
 	{

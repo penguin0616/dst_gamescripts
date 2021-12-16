@@ -336,6 +336,16 @@ return {
         {
             ONCOOLDOWN = "only_used_by_wanda",
         },
+
+        ENTER_GYM =
+        {
+            NOWEIGHT = "only_used_by_wolfang",
+            UNBALANCED = "only_used_by_wolfang",
+            ONFIRE = "only_used_by_wolfang",
+            SMOULDER = "only_used_by_wolfang",
+            HUNGRY = "only_used_by_wolfang",
+            FULL = "only_used_by_wolfang",
+        },
     },
 
 	ACTIONFAIL_GENERIC = "I can't do that.",
@@ -355,6 +365,11 @@ return {
     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
     ANNOUNCE_WIMPYTONORMAL = "only_used_by_wolfang",
     ANNOUNCE_MIGHTYTONORMAL = "only_used_by_wolfang",
+    ANNOUNCE_EXITGYM = {
+        MIGHTY = "only_used_by_wolfang",
+        NORMAL = "only_used_by_wolfang",
+        WIMPY = "only_used_by_wolfang",
+    },
 
 	ANNOUNCE_BEES = "BEEEEEEEEEEEEES!!!!",
 	ANNOUNCE_BOOMERANG = "Ow! I should try to catch that!",
@@ -456,7 +471,6 @@ return {
 	ANNOUNCE_NONIGHTSIESTA = "Night is for sleeping, not taking siestas.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I don't think I could really relax down here.",
 	ANNOUNCE_NOHUNGERSIESTA = "I'm too hungry for a siesta!",
-	ANNOUNCE_NODANGERAFK = "Now's not the time to flee this fight!",
 	ANNOUNCE_NO_TRAP = "Well, that was easy.",
 	ANNOUNCE_PECKED = "Ow! Quit it!",
 	ANNOUNCE_QUAKE = "That doesn't sound good.",
@@ -4202,6 +4216,19 @@ return {
 			COOLDOWN = "It needs to cool down after that.",
 			SPAWN_DISABLED = "I shouldn't be bothered by anymore prying eyes now.",
         },
+
+        -- Wolfgang
+        MIGHTY_GYM = 
+        {
+            GENERIC = "I think I pulled a muscle just looking at it...",
+            BURNT = "It won't pull any muscles now.",
+        },
+
+        DUMBBELL = "I usually let my mind do all the heavy lifting.",
+        DUMBBELL_GOLDEN = "It's worth its weight in gold.",
+        DUMBBELL_GEM = "I'll conquer this weight with the power of-- ACK! My spine!!",
+        POTATOSACK = "It's either filled with potato-shaped rocks or rock-shaped potatoes.",
+
 
         TERRARIUMCHEST = 
 		{

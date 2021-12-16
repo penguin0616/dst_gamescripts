@@ -11,6 +11,51 @@ local USE_MOVEMENT_PREDICTION = true
 
 local DEFAULT_PLAYER_COLOUR = { 1, 1, 1, 1 }
 
+local DANGER_ONEOF_TAGS = { "monster", "pig", "_combat" }
+local DANGER_NOPIG_ONEOF_TAGS = { "monster", "_combat" }
+function fns.IsNearDanger(inst, hounded_ok)
+    local hounded = TheWorld.components.hounded
+    if hounded ~= nil and not hounded_ok and (hounded:GetWarning() or hounded:GetAttacking()) then
+        return true
+    end
+    local burnable = inst.components.burnable
+    if burnable ~= nil and (burnable:IsBurning() or burnable:IsSmoldering()) then
+        return true
+    end
+    -- See entityreplica.lua (for _combat tag usage)
+    local nospiderdanger = inst:HasTag("spiderwhisperer") or inst:HasTag("spiderdisguise")
+    local nopigdanger = not inst:HasTag("monster")
+    --Danger if:
+    -- being targetted
+    -- OR near monster that is not player
+    -- ignore shadow monsters when not insane
+    return FindEntity(inst, 10,
+        function(target)
+            return (target.components.combat ~= nil and target.components.combat.target == inst)
+                or ((target:HasTag("monster") or (not nopigdanger and target:HasTag("pig"))) and
+                    not target:HasTag("player") and
+                    not (nospiderdanger and target:HasTag("spider")) and
+                    not (inst.components.sanity:IsSane() and target:HasTag("shadowcreature")))
+        end,
+        nil, nil, nopigdanger and DANGER_NOPIG_ONEOF_TAGS or DANGER_ONEOF_TAGS) ~= nil
+end
+
+function fns.SetGymStartState(inst)
+    inst.Transform:SetNoFaced()
+
+	inst:PushEvent("on_enter_might_gym")
+    inst.components.inventory:Hide()
+    inst:PushEvent("ms_closepopups")
+    inst:ShowActions(true)
+end
+
+function fns.SetGymStopState(inst)
+    inst.Transform:SetFourFaced()
+
+    inst.components.inventory:Show()
+    inst:ShowActions(true)
+end
+
 function fns.YOTB_unlockskinset(inst, skinset)
     if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
         local bit = setbit(inst.yotb_skins_sets:value(), YOTB_COSTUMES[skinset])
@@ -1474,6 +1519,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_idles_groggy.zip"),
         Asset("ANIM", "anim/player_groggy.zip"),
         Asset("ANIM", "anim/player_encumbered.zip"),
+        Asset("ANIM", "anim/player_encumbered_fast.zip"),
         Asset("ANIM", "anim/player_encumbered_jump.zip"),
 
         Asset("ANIM", "anim/player_sandstorm.zip"),
@@ -1508,6 +1554,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_mount_cointoss.zip"),
         Asset("ANIM", "anim/player_mount_hornblow.zip"),
         Asset("ANIM", "anim/player_mount_strum.zip"),
+
+        Asset("ANIM", "anim/player_mighty_gym.zip"),
+        Asset("ANIM", "anim/mighty_gym.zip"),        
 
         Asset("INV_IMAGE", "skull_"..name),
 
@@ -1679,6 +1728,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.AnimState:AddOverrideBuild("player_actions_fishing_ocean_new")
         inst.AnimState:AddOverrideBuild("player_actions_farming")
         inst.AnimState:AddOverrideBuild("player_actions_cowbell")
+
 
         inst.DynamicShadow:SetSize(1.3, .6)
 
@@ -2020,6 +2070,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.YOTB_issetunlocked = fns.YOTB_issetunlocked
         inst.YOTB_isskinunlocked = fns.YOTB_isskinunlocked
 
+        inst.IsNearDanger = fns.IsNearDanger
+        inst.SetGymStartState = fns.SetGymStartState
+        inst.SetGymStopState = fns.SetGymStopState
 
         --Other
         inst._scalesource = nil

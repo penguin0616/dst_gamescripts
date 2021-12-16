@@ -49,7 +49,7 @@ local Submersible = Class(function(self, inst)
 end)
 
 function Submersible:OnRemoveFromEntity()
-	self.inst:RemoveEventCallback("onsink", Submerge)
+	self.inst:RemoveEventCallback("onsink", OnSink)
 	self.inst:RemoveEventCallback("on_landed", OnLanded)
 end
 

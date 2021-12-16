@@ -441,6 +441,11 @@ Recipe("pocketwatch_portal",		{Ingredient("pocketwatch_recall", 1, nil, true), I
 Recipe("pocketwatch_weapon",		{Ingredient("pocketwatch_parts", 3), Ingredient("marble", 4), Ingredient("nightmarefuel", 8)},		CUSTOM_RECIPETABS.CLOCKMAKER, TECH.MAGIC_THREE, nil, nil, nil, nil, "clockmaker")
 
 
+-- STRONGMAN --
+Recipe("mighty_gym",      {Ingredient("boards",     4), Ingredient("cutstone", 2), Ingredient("rope", 3)},  CUSTOM_RECIPETABS.STRONGMAN, TECH.SCIENCE_ONE, "mighty_gym_placer", nil, nil, nil, "strongman")
+Recipe("dumbbell",        {Ingredient("rocks",      4), Ingredient("twigs", 1  )},                          CUSTOM_RECIPETABS.STRONGMAN, TECH.NONE, nil, nil, nil, nil, "strongman")
+Recipe("dumbbell_golden", {Ingredient("goldnugget", 2), Ingredient("cutstone", 2), Ingredient("twigs", 2)}, CUSTOM_RECIPETABS.STRONGMAN, TECH.SCIENCE_ONE, nil, nil, nil, nil, "strongman")
+Recipe("dumbbell_gem",    {Ingredient("purplegem",  1), Ingredient("cutstone", 2), Ingredient("twigs", 2)}, CUSTOM_RECIPETABS.STRONGMAN, TECH.MAGIC_TWO, nil, nil, nil, nil, "strongman")
 
 ----CARTOGRAPHY----
 Recipe("mapscroll", {Ingredient("featherpencil", 1), Ingredient("papyrus", 1)}, RECIPETABS.CARTOGRAPHY, TECH.CARTOGRAPHY_TWO, nil, nil, true, nil, nil, nil, function() return TheWorld.worldprefab == "forest" and "mapscroll.tex" or ("mapscroll_"..TheWorld.worldprefab..".tex") end)
@@ -498,7 +503,7 @@ Recipe("chesspiece_guardianphase3_builder",		{Ingredient(TECH_INGREDIENT.SCULPTI
 Recipe("chesspiece_eyeofterror_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)}, RECIPETABS.SCULPTING, TECH.LOST, nil, nil, true, nil, nil, nil, "chesspiece_eyeofterror.tex")
 Recipe("chesspiece_twinsofterror_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)}, RECIPETABS.SCULPTING, TECH.LOST, nil, nil, true, nil, nil, nil, "chesspiece_twinsofterror.tex")
 
-----CRITTERS----
+----CRITTERS----"waterpump_item.tex"
 Recipe("critter_kitten_builder", 		{Ingredient("coontail", 1),      Ingredient("fishsticks", 1)}, 	   RECIPETABS.ORPHANAGE, TECH.ORPHANAGE_ONE, nil, nil, true)
 Recipe("critter_puppy_builder", 		{Ingredient("houndstooth", 4),   Ingredient("monsterlasagna", 1)}, RECIPETABS.ORPHANAGE, TECH.ORPHANAGE_ONE, nil, nil, true)
 Recipe("critter_lamb_builder", 			{Ingredient("steelwool", 1),     Ingredient("guacamole", 1)}, 	   RECIPETABS.ORPHANAGE, TECH.ORPHANAGE_ONE, nil, nil, true)
@@ -732,12 +737,12 @@ Recipe("yotc_carrat_race_start",      	{Ingredient("goldnugget", 1)}, nil, TECH.
 Recipe("yotc_carrat_race_finish",      	{Ingredient("goldnugget", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("yotc_carrat_race_checkpoint",   {Ingredient("lucky_goldnugget", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("yotc_carrat_gym_direction",     {Ingredient("lucky_goldnugget", 4)}, nil, TECH.LOST, nil, nil, true)
-Recipe("yotc_carrat_gym_speed",       	{Ingredient("lucky_goldnugget", 4)},nil, TECH.LOST, nil, nil, true)
-Recipe("yotc_carrat_gym_reaction",   	{Ingredient("lucky_goldnugget", 4)},nil, TECH.LOST, nil, nil, true)
-Recipe("yotc_carrat_gym_stamina",		{Ingredient("lucky_goldnugget", 4)},nil, TECH.LOST, nil, nil, true)
+Recipe("yotc_carrat_gym_speed",       	{Ingredient("lucky_goldnugget", 4)}, nil, TECH.LOST, nil, nil, true)
+Recipe("yotc_carrat_gym_reaction",   	{Ingredient("lucky_goldnugget", 4)}, nil, TECH.LOST, nil, nil, true)
+Recipe("yotc_carrat_gym_stamina",		{Ingredient("lucky_goldnugget", 4)}, nil, TECH.LOST, nil, nil, true)
 Recipe("yotc_carrat_scale",			    {Ingredient("lucky_goldnugget", 1)}, nil, TECH.LOST, nil, nil, true)
-Recipe("wall_ruins_2_item",             {Ingredient("thulecite", 1)},       nil, TECH.LOST, nil, nil, true)
-Recipe("wall_stone_2_item",             {Ingredient("cutstone", 2)},        nil, TECH.LOST, nil, nil, true)
+Recipe("wall_ruins_2_item",             {Ingredient("thulecite", 1)},        nil, TECH.LOST, nil, nil, true)
+Recipe("wall_stone_2_item",             {Ingredient("cutstone", 2)},         nil, TECH.LOST, nil, nil, true)
 Recipe("archive_resonator",             {Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)},      nil, TECH.LOST, nil, nil, true)
 Recipe("alterguardianhat",              {Ingredient("alterguardianhatshard", 5)},                           nil, TECH.LOST, nil, nil, true)
 Recipe("hivehat",						{Ingredient("honeycomb", 4), Ingredient("honey", 3), Ingredient("royal_jelly", 2), Ingredient("bee", 4)}, nil, TECH.LOST, nil, nil, true)
@@ -748,6 +753,7 @@ Recipe("thurible",						{Ingredient("cutstone", 2), Ingredient("nightmarefuel", 
 Recipe("terrariumchest",				{Ingredient("boards", 3)}, nil, TECH.LOST, nil, nil, true)
 Recipe("eyemaskhat",                    {Ingredient("milkywhites", 3), Ingredient("monstermeat", 2)}, nil, TECH.LOST, nil, nil, true)
 Recipe("shieldofterror",                {Ingredient("gears", 2), Ingredient("nightmarefuel", 3)}, nil, TECH.LOST, nil, nil, true)
+Recipe("potatosack",                    {Ingredient("cutgrass", 2), Ingredient("rocks", 3), Ingredient("potato", 1)}, nil, TECH.LOST, nil, nil, true)
 
 -- old deprecated structures
 Recipe("slow_farmplot",		{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)},	nil, TECH.LOST, nil, nil, true)
@@ -758,7 +764,7 @@ Recipe("book_gardening",	{Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingr
 CONSTRUCTION_PLANS =
 {
     ["multiplayer_portal_moonrock_constr"] = { Ingredient("purplemooneye", 1), Ingredient("moonrocknugget", 20) },
-	["mermthrone_construction"] = { Ingredient("kelp", 20), Ingredient("pigskin", 10), Ingredient("beefalowool", 15) },
+	["mermthrone_construction"]   = { Ingredient("kelp", 20), Ingredient("pigskin", 10), Ingredient("beefalowool", 15) },
 	["hermithouse_construction1"] = { Ingredient("cookiecuttershell", 10), Ingredient("boards", 10) },
 	["hermithouse_construction2"] = { Ingredient("marble", 10), Ingredient("rope", 10) },
 	["hermithouse_construction3"] = { Ingredient("moonrocknugget", 5),   Ingredient("cactus_flower", 10) },
@@ -768,5 +774,3 @@ CONSTRUCTION_PLANS =
 }
 -- {Ingredient("moonstorm_static_item", 1),Ingredient("moonstorm_spark", 5),Ingredient("transistor", 2)}
 mod_protect_Recipe = true
-
-

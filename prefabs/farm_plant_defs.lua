@@ -3,20 +3,20 @@
 local PLANT_DEFS = {}
 
 PLANT_DEFS.randomseed	= {build = "farm_soil", bank = "farm_soil"}
-PLANT_DEFS.asparagus	= {}
-PLANT_DEFS.garlic		= {}
-PLANT_DEFS.pumpkin		= {}
-PLANT_DEFS.corn			= {build = "farm_plant_corn_build", bank = "farm_plant_pumpkin"}
-PLANT_DEFS.onion		= {build = "farm_plant_onion_build", bank = "farm_plant_pumpkin"}
-PLANT_DEFS.potato		= {}
-PLANT_DEFS.dragonfruit	= {build = "farm_plant_dragonfruit_build", bank = "farm_plant_potato"}
-PLANT_DEFS.pomegranate	= {build = "farm_plant_pomegranate_build", bank = "farm_plant_potato"}
-PLANT_DEFS.eggplant		= {build = "farm_plant_eggplant_build", bank = "farm_plant_potato"}
-PLANT_DEFS.tomato		= {}
-PLANT_DEFS.watermelon	= {build = "farm_plant_watermelon_build", bank = "farm_plant_tomato"}
-PLANT_DEFS.pepper		= {}
-PLANT_DEFS.durian		= {build = "farm_plant_durian_build", bank = "farm_plant_pepper"}
-PLANT_DEFS.carrot		= {}
+PLANT_DEFS.asparagus	= {build_rotten = "farm_plant_asparagus_rotten_build"}
+PLANT_DEFS.garlic		= {build_rotten = "farm_plant_garlic_rotten_build"}
+PLANT_DEFS.pumpkin		= {build_rotten = "farm_plant_pumpkin_rotten_build"}
+PLANT_DEFS.corn			= {build = "farm_plant_corn_build", build_rotten = "farm_plant_corn_rotten_build", bank = "farm_plant_pumpkin"}
+PLANT_DEFS.onion		= {build = "farm_plant_onion_build", build_rotten = "farm_plant_onion_rotten_build", bank = "farm_plant_pumpkin"}
+PLANT_DEFS.potato		= {build_rotten = "farm_plant_potato_rotten_build"}
+PLANT_DEFS.dragonfruit	= {build = "farm_plant_dragonfruit_build", build_rotten = "farm_plant_dragonfruit_rotten_build", bank = "farm_plant_potato"}
+PLANT_DEFS.pomegranate	= {build = "farm_plant_pomegranate_build", build_rotten = "farm_plant_pomegranate_rotten_build", bank = "farm_plant_potato"}
+PLANT_DEFS.eggplant		= {build = "farm_plant_eggplant_build", build_rotten = "farm_plant_eggplant_rotten_build", bank = "farm_plant_potato"}
+PLANT_DEFS.tomato		= {build_rotten = "farm_plant_tomato_rotten_build"}
+PLANT_DEFS.watermelon	= {build = "farm_plant_watermelon_build", build_rotten = "farm_plant_watermelon_rotten_build", bank = "farm_plant_tomato"}
+PLANT_DEFS.pepper		= {build_rotten = "farm_plant_pepper_rotten_build"}
+PLANT_DEFS.durian		= {build = "farm_plant_durian_build", build_rotten = "farm_plant_durian_rotten_build", bank = "farm_plant_pepper"}
+PLANT_DEFS.carrot		= {build_rotten = "farm_plant_carrot_rotten_build"}
 
 local function MakeGrowTimes(germination_min, germination_max, full_grow_min, full_grow_max)
 	local grow_time = {}

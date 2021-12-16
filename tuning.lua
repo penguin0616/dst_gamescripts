@@ -347,7 +347,9 @@ function Tune(overrides)
 
         CANE_SPEED_MULT = 1.25,
         PIGGYBACK_SPEED_MULT = 0.9,
-        HEAVY_SPEED_MULT = .15,
+        HEAVY_SPEED_MULT = 0.15,
+		ICEHAT_SPEED_MULT = 0.9,
+		RUINS_BAT_SPEED_MULT = 1.1,
 
         TORCH_ATTACK_IGNITE_PERCENT = 1,
 
@@ -1575,7 +1577,6 @@ function Tune(overrides)
 
         WALTERHAT_PERISHTIME = total_day_time*10,
 
-
         GRASS_REGROW_TIME = total_day_time*3,
         SAPLING_REGROW_TIME = total_day_time*4,
         MARSHBUSH_REGROW_TIME = total_day_time*4,
@@ -2394,7 +2395,7 @@ function Tune(overrides)
         WX78_MAX_MOISTURE_DAMAGE = -.5,
         WX78_MOISTURE_DRYING_DAMAGE = -.3,
 
-        WOLFGANG_HUNGER = 300,
+        WOLFGANG_HUNGER = 200,
         WOLFGANG_START_HUNGER = 200,
         WOLFGANG_START_MIGHTY_THRESH = 225,
         WOLFGANG_END_MIGHTY_THRESH = 220,
@@ -3047,7 +3048,7 @@ function Tune(overrides)
 				WILSON = {},
 				WILLOW = {"lighter", "bernie_inactive"},
 				WENDY = {"abigail_flower"},
-				WOLFGANG = {},
+				WOLFGANG = {"dumbbell"},
 				WX78 = {},
 				WICKERBOTTOM = {"papyrus", "papyrus"},
 				WES = {"balloons_empty"},
@@ -5585,6 +5586,95 @@ function Tune(overrides)
         SHIELDOFTERROR_ABSORPTION = .8*multiplayer_armor_absorption_modifier,
         SHIELDOFTERROR_ARMOR = wilson_health*3*multiplayer_armor_durability_modifier,
         SHIELDOFTERROR_USEDAMAGE = 2,
+        
+        -- Wolfgang
+        MIGHTINESS_MAX = 100,
+        MIGHTINESS_DRAIN_RATE = 33/total_day_time,
+
+        MIGHTINESS_DRAIN_MULT_SLOW = 0.9,
+        MIGHTINESS_DRAIN_MULT_NORMAL = 1,
+        MIGHTINESS_DRAIN_MULT_FAST = 3,
+        MIGHTINESS_DRAIN_MULT_FASTEST = 6,
+        MIGHTINESS_DRAIN_MULT_STARVING = 12,
+
+        WIMPY_THRESHOLD = 25,
+        MIGHTY_THRESHOLD = 75,
+
+        DUMBBELL_CONSUMPTION = 1,
+        DUMBBELL_GOLDEN_CONSUMPTION = 0.5,
+        DUMBBELL_GEM_CONSUMPTION = 0.5,
+
+        DUMBBELL_ATTACK_CONSUMPTION = 10,
+        DUMBBELL_GOLDEN_ATTACK_CONSUMPTION = 5,
+        DUMBBELL_GEM_ATTACK_CONSUMPTION = 5,
+
+        DUMBBELL_EFFICIENCY_LOW = 0.3125,
+        DUMBBELL_EFFICIENCY_MED = 0.9375,
+        DUMBBELL_EFFICIENCY_HIGH = 1.875,
+        
+        DUMBBELL_DAMAGE = 27,
+        DUMBBELL_GOLDEN_DAMAGE = 40,
+        DUMBBELL_GEM_DAMAGE = 59,
+
+        MIGHTY_WORK_CHANCE = 0.99,
+        MIGHTY_WORK_EFFECTIVENESS = 1.5,
+        MIGHTY_ROWER_MULT = 1.33,
+
+		MIGHTY_HEAVY_SPEED_MULT_BONUS = 0.45,
+
+        WOLFGANG_SANITY_DRAIN = 1.1,
+        WOLFGANG_SANITY_NIGHT_DRAIN = 1.25,
+        WOLFGANG_SANITY_NIGHT_DRAIN_SMALL = 1.1,
+        WOLFGANG_SANITY_RANGE = 16,
+        WOLFGANG_SANITY_PER_MONSTER = 1/13,
+
+        BELL_SUCCESS_MIN_2 = nil, -- no perfect here
+        BELL_SUCCESS_MAX_2 = nil, -- no perfect here 
+        BELL_MID_SUCCESS_MIN_2 = 0.37,
+        BELL_MID_SUCCESS_MAX_2 = 0.63,
+
+        BELL_SUCCESS_MIN_3 = nil, -- no perfect here
+        BELL_SUCCESS_MAX_3 = nil, -- no perfect here 
+        BELL_MID_SUCCESS_MIN_3 = 0.25,
+        BELL_MID_SUCCESS_MAX_3 = 0.75,
+
+        BELL_SUCCESS_MIN_4 = 0.45,
+        BELL_SUCCESS_MAX_4 = 0.60,
+        BELL_MID_SUCCESS_MIN_4 = 0.12,
+        BELL_MID_SUCCESS_MAX_4 = 0.90,
+
+        BELL_SUCCESS_MIN_5 = 0.33,
+        BELL_SUCCESS_MAX_5 = 0.69,
+        BELL_MID_SUCCESS_MIN_5 = 0.14,
+        BELL_MID_SUCCESS_MAX_5 = 0.87,
+
+        BELL_SUCCESS_MIN_6 = 0.24,
+        BELL_SUCCESS_MAX_6 = 0.78,
+        BELL_MID_SUCCESS_MIN_6 = 0.12,
+        BELL_MID_SUCCESS_MAX_6 = 0.88,
+
+        BELL_SUCCESS_MIN_7 = 0.44,
+        BELL_SUCCESS_MAX_7 = 0.57,
+        BELL_MID_SUCCESS_MIN_7 = 0.12,
+        BELL_MID_SUCCESS_MAX_7 = 0.86,
+
+        BELL_SUCCESS_MIN_8 = 0.37,
+        BELL_SUCCESS_MAX_8 = 0.66,
+        BELL_MID_SUCCESS_MIN_8 = 0.14,
+        BELL_MID_SUCCESS_MAX_8 = 0.90,
+
+        MIGHTYGYM_WORKOUT_HUNGER = {
+            LOW = 4,
+            MED = 12,
+            HIGH = 28,
+        },
+
+        GYM_RATE = {
+            -- rate in number of hits to reach 100 mightiness
+            LOW = 100/60,
+            MED = 100/30,
+            HIGH = 100/15,     
+        },
     }
 
     TUNING_MODIFIERS = {}
