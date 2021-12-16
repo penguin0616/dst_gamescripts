@@ -608,6 +608,7 @@ return
 		"body_wolfgang_wolfman",
 		"body_wolfgang_wrestler",
 		"feet_ridingboot_white_pure",
+		"feet_ridingbootp_white_pure",
 		"feet_wolfgang_gladiator",
 		"feet_wolfgang_ice",
 		"feet_wolfgang_nature",

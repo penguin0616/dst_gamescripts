@@ -206,7 +206,7 @@ function MightyGym:CanWorkout(doer)
     elseif self.strongman ~= nil then
         return false, "FULL"
     elseif doer.components.hunger.current < TUNING.CALORIES_SMALL then
-        return false, "HUNGER"
+        return false, "HUNGRY"
     end
 
     local items = 0
@@ -322,7 +322,11 @@ function MightyGym:CharacterEnterGym(player)
     -- UPDATE THE WEIGHT ART.
     local function doitemswap(inventory,slot)
         local item = inventory:GetItemInSlot(slot)
-        player.AnimState:OverrideSymbol(slot_ids[slot],  item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+        if item.components.symbolswapdata.is_skinned then
+            player.AnimState:OverrideItemSkinSymbol(slot_ids[slot], item.components.symbolswapdata.build, item.components.symbolswapdata.symbol, item.GUID, "swap_cavein_boulder" )     
+        else
+            player.AnimState:OverrideSymbol(slot_ids[slot],  item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+        end
     end
 
     doitemswap(self.inst.components.inventory,1)

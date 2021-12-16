@@ -162,15 +162,15 @@ function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound)
     self.inst:PushEvent("mightinessdelta", { oldpercent = old / self.max, newpercent = self.current / self.max, delta = self.current-old })
 
     if self.current >= TUNING.MIGHTY_THRESHOLD then
-        if old <= TUNING.MIGHTY_THRESHOLD or force_update then
+        if self.state ~= "mighty" or force_update then
             self:BecomeState("mighty", force_update, delay_skin, forcesound)
         end
     elseif self.current >= TUNING.WIMPY_THRESHOLD then
-        if (old >= TUNING.MIGHTY_THRESHOLD or old <= TUNING.WIMPY_THRESHOLD) or force_update then
+        if self.state ~= "normal" or force_update then
             self:BecomeState("normal", force_update, delay_skin, forcesound)
         end
     else
-        if old >= TUNING.WIMPY_THRESHOLD or force_update then
+        if self.state ~= "wimpy" or force_update then
             self:BecomeState("wimpy", force_update, delay_skin, forcesound)
         end
     end
@@ -186,12 +186,8 @@ function Mightiness:SetPercent(percent, force_update, delay_skin, forcesound)
 end
 
 function Mightiness:DoDec(dt, ignore_damage)
-    local old = self.current
-
     if self.draining then
-        if self.current > 0 then
-            self:DoDelta(-self.rate * dt * self.drain_multiplier * self.ratemodifiers:Get())
-        end
+        self:DoDelta(-self.rate * dt * self.drain_multiplier * self.ratemodifiers:Get())
     end
 end
 

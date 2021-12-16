@@ -1322,7 +1322,7 @@ CLOTHING =
 		skin_tags = { "YULE", "CLOTHING_BODY", "CLOTHING", },
 		symbol_overrides = { "arm_lower", "arm_upper", "torso", },
 		symbol_overrides_old = { skirt = "skirt_old", torso = "torso_old", torso_pelvis = "torso_pelvis_old", },
-		symbol_hides = { "skirt", },
+		symbol_hides = { "skirt", "arm_upper_skin", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -4388,10 +4388,21 @@ CLOTHING =
 		type = "feet",
 		skin_tags = { "FORMAL", "CLOTHING_FEET", "CLOTHING", "WHITE", },
 		symbol_overrides = { "foot", },
-		rarity = "Classy",
+		rarity = "HeirloomClassy",
 		feet_cuff_size = 10,
 		marketable = true,
 		release_group = 2,
+	},
+	feet_ridingbootp_white_pure =
+	{
+		type = "feet",
+		build_name_override = "feet_ridingboot_white_pure",
+		skin_tags = { "FORMAL", "CLOTHING_FEET", "CLOTHING", "WHITE", },
+		symbol_overrides = { "foot", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		feet_cuff_size = 10,
+		release_group = 126,
 	},
 	feet_sandals_blue_catcoon =
 	{
@@ -7252,7 +7263,7 @@ CLOTHING =
 	legs_wanda_yule =
 	{
 		type = "legs",
-		skin_tags = { "SHADOW", "CLOTHING_LEGS", "CLOTHING", },
+		skin_tags = { "YULE", "CLOTHING_LEGS", "CLOTHING", },
 		symbol_overrides = { "foot", "leg", "torso_pelvis", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
