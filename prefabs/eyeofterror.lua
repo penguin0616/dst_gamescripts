@@ -41,6 +41,8 @@ local twinprefabs =
     "transistor",
     "trinket_6",
     "yellowgem",
+    "winter_ornament_boss_eyeofterror1",
+    "winter_ornament_boss_eyeofterror2",
 }
 
 local twinmanagerprefabs =

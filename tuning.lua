@@ -3194,6 +3194,10 @@ function Tune(overrides)
             MOOSE            = {basic=1, special="winter_ornament_boss_moose"}, -- goose?
             ANTLION          = {basic=1, special="winter_ornament_boss_antlion"},
             MALBATROSS       = {basic=1, special="winter_ornament_boss_malbatross"},
+            EYEOFTERROR      = {basic=1},
+            TWINOFTERROR1     = {basic=1, special="winter_ornament_boss_eyeofterror1"},
+            TWINOFTERROR2     = {basic=1, special="winter_ornament_boss_eyeofterror2"},
+            ALTERGUARDIAN_PHASE3 = {basic=2},
         },
 
         WINTERS_FEAST_LOOT_EXCLUSION =

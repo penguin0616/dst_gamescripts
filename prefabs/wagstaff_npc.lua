@@ -22,6 +22,7 @@ local prefabs =
     "wagstaff_tool_4",
     "wagstaff_tool_5",
     "moonstorm_static",
+    "winter_ornament_boss_wagstaff",
 }
 
 
@@ -704,6 +705,11 @@ local function docollect(inst)
     inst.AnimState:PlayAnimation("collect")
     inst.SoundEmitter:PlaySound("moonstorm/common/alterguardian_contained/collect")
 
+    if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+        local ornament = SpawnPrefab("winter_ornament_boss_wagstaff")
+        inst.components.lootdropper:FlingItem(ornament)
+    end
+
     inst:ListenForEvent("animover", contained_animover)
 end
 
@@ -734,6 +740,8 @@ local function alterguardian_containedfn()
     end
 
     inst.persists = false
+
+    inst:AddComponent("lootdropper")
 
     inst:AddComponent("inspectable")
 

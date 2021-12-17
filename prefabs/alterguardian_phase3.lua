@@ -17,6 +17,10 @@ local prefabs =
     "moonglass",
     "moonglass_charged",
     "moonrocknugget",
+    "winter_ornament_boss_celestialchampion4",
+    "winter_ornament_boss_celestialchampion3",
+    "winter_ornament_boss_celestialchampion2",
+    "winter_ornament_boss_celestialchampion1",
 }
 
 -- For a spray of moon glass and rocks when the boss dies
@@ -303,6 +307,25 @@ local function hauntchancefn(inst)
     end
 end
 
+local function dropLootFn(lootdropper)
+
+        if IsSpecialEventActive(SPECIAL_EVENTS.WINTERS_FEAST) then
+            local SELECTION = {
+                "winter_ornament_boss_celestialchampion1",
+                "winter_ornament_boss_celestialchampion2",
+                "winter_ornament_boss_celestialchampion3",
+                "winter_ornament_boss_celestialchampion4",
+            }
+        
+            for i=1,2 do
+                local ornamentnum = math.random(1,#SELECTION)
+                local ornament = SELECTION[ornamentnum]
+                table.remove(SELECTION,ornamentnum)
+                lootdropper:AddChanceLoot(ornament, 1)
+            end
+        end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -356,7 +379,9 @@ local function fn()
     inst:AddComponent("locomotor")
     inst.components.locomotor.walkspeed = TUNING.ALTERGUARDIAN_PHASE3_WALK_SPEED
 
+
     inst:SetStateGraph("SGalterguardian_phase3")
+
     inst:SetBrain(brain)
 
     inst:AddComponent("health")
@@ -387,6 +412,7 @@ local function fn()
     inst.components.lootdropper.max_speed = 6.0
     inst.components.lootdropper.y_speed = 14
     inst.components.lootdropper.y_speed_variance = 2
+    inst.components.lootdropper:SetLootSetupFn(dropLootFn)
 
     inst:AddComponent("inspectable")
 
