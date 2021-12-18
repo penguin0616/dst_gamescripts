@@ -117,7 +117,6 @@ local function fn()
     inst.components.workable:SetOnWorkCallback(onhit)
 
     inst:AddComponent("mightygym")
-    inst.gymweight = net_smallbyte(inst.GUID, "mighty_gym.weight", "weightdirty")
 
     inst:AddComponent("heavyobstacleusetarget")
 	inst.components.heavyobstacleusetarget.on_use_fn = OnUseHeavy
@@ -141,6 +140,7 @@ local function ding(inst, success)
     local pos = Vector3(inst.AnimState:GetSymbolPosition("meter",0,0,0))
     local fx = SpawnPrefab("mighty_gym_bell_"..success.."_fx")
     fx.Transform:SetPosition(pos.x,pos.y,pos.z)
+    fx.Network:SetClassifiedTarget(inst)
 end
 
 local function bell_fn()
@@ -148,9 +148,9 @@ local function bell_fn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddNetwork()
     inst.entity:AddSoundEmitter()
 
+    inst:AddTag("CLASSIFIED")
     inst:AddTag("NOCLICK")
     inst:AddTag("FX")
 
@@ -160,6 +160,8 @@ local function bell_fn()
     inst.AnimState:SetPercent("meter_move", 0)
     inst.AnimState:SetFinalOffset(2)
     
+    inst.persists = false
+
     inst.ding = ding
 
     inst.entity:SetPristine()

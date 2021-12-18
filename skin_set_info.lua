@@ -147,7 +147,6 @@ return
 		},
 		{
 			"wilson_yule",
-			"wilson_beard_yule",
 			"body_wilson_yule",
 			"feet_wilson_yule",
 			"hand_wilson_yule",

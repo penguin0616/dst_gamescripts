@@ -5349,6 +5349,7 @@ STRINGS.SKIN_TAG_CATEGORIES =
 		WATERMELONHAT = "Fashion Melon",
 		WATHGRITHRHAT = "Battle Helm",
 		WEBBER_BEARD = "Webber's Beard",
+		WHIP = "Tail o' Three Cats",
 		WILSON_BEARD = "Wilson's Beard",
 		WINTERHAT = "Winter Hat",
 		WINTEROMETER = "Thermal Measurer",

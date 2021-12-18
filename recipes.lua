@@ -753,7 +753,7 @@ Recipe("thurible",						{Ingredient("cutstone", 2), Ingredient("nightmarefuel", 
 Recipe("terrariumchest",				{Ingredient("boards", 3)}, nil, TECH.LOST, nil, nil, true)
 Recipe("eyemaskhat",                    {Ingredient("milkywhites", 3), Ingredient("monstermeat", 2)}, nil, TECH.LOST, nil, nil, true)
 Recipe("shieldofterror",                {Ingredient("gears", 2), Ingredient("nightmarefuel", 3)}, nil, TECH.LOST, nil, nil, true)
-Recipe("potatosack",                    {Ingredient("cutgrass", 2), Ingredient("rocks", 3), Ingredient("potato", 1)}, nil, TECH.LOST, nil, nil, true)
+Recipe("potatosack",                    {Ingredient("cutgrass", 2), Ingredient("rocks", 3)}, nil, TECH.LOST, nil, nil, true)
 
 -- old deprecated structures
 Recipe("slow_farmplot",		{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)},	nil, TECH.LOST, nil, nil, true)

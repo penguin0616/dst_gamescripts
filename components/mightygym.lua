@@ -9,7 +9,7 @@ local MightyGym = Class(function(self, inst)
     self.inst:DoTaskInTime(0,function() 
         self:CheckForWeight() 
         self:SetLevelArt(self:CalcWeight()) 
-    end)    
+    end)
 end)
 
 local slot_ids = 
@@ -135,10 +135,10 @@ function MightyGym:LoadWeight(weight, slot)
         if self.strongman then
             if weight.components.symbolswapdata.is_skinned then
                 self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
-            else                
+            else
                 self.strongman.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
             end
-        end        
+        end
     end
 
     self.inst:AddTag("loaded")
@@ -363,7 +363,7 @@ function MightyGym:CharacterExitGym(player)
         -- JUMP OUT PLAYER
         if player.components.health:IsDead() then
             teleport = true
-        else            
+        else
             player.AnimState:ClearOverrideBuild("mighty_gym")
             player.AnimState:ClearOverrideBuild("fx_wolfgang")  
             
@@ -393,7 +393,7 @@ function MightyGym:CharacterExitGym(player)
                 player:DoTaskInTime(0.3,function() 
                     local state = string.upper(player.components.mightiness:GetState())
                     player.components.talker:Say(GetString(player, "ANNOUNCE_EXITGYM", state))
-                end)                
+                end)
                 player.Transform:SetPosition(pos.x,pos.y,pos.z)        
             end    
         end

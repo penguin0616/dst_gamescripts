@@ -7181,7 +7181,7 @@ table.insert(prefs, CreatePrefabSkin("whip_snapthorn",
 	rarity = "Elegant",
 	rarity_modifier = "Inspired",
 	init_fn = function(inst) whip_init_fn(inst, "whip_snapthorn") end,
-	skin_tags = { "T_UPDATE", "PICKAXE", "CRAFTABLE", },
+	skin_tags = { "T_UPDATE", "WHIP", "CRAFTABLE", },
 	skin_sound = { "terraria1/skins/snapthorn", "terraria1/skins/snapthorn", },
 	release_group = 125,
 }))
