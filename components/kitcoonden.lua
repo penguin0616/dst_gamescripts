@@ -40,6 +40,12 @@ function KitcoonDen:RemoveKitcoon(kitcoon)
 	self.onremove_kitcoon(kitcoon)
 end
 
+function KitcoonDen:RemoveAllKitcoons()
+	for _, v in pairs(self.kitcoons) do
+		self.onremove_kitcoon(v)
+	end
+end
+
 function KitcoonDen:GetDebugString()
     return "Count:" .. self.num_kitcoons
 end

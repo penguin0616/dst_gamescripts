@@ -100,8 +100,15 @@ end
 local function OnBurnt(inst)
 	DefaultBurntStructureFn(inst)
 
-	inst:RemoveComponent("kitcoonden")
-	inst.components.hideandseekgame:Abort()
+	inst:RemoveTag("kitcoonden")
+	inst.components.activatable.inactive = false
+
+
+	inst:DoTaskInTime(0, function() 
+		inst.components.hideandseekgame:Abort()
+		inst.components.kitcoonden:RemoveAllKitcoons() 
+		inst.components.activatable.inactive = false
+	end)
 end
 
 -------------- Minigame code -------------- 
