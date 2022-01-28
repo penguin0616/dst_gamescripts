@@ -272,6 +272,7 @@ local fx =
         bank = "small_puff",
         build = "smoke_puff_small",
         anim = "puff",
+        fn = FinalOffset1,
         --sound = "dontstarve/common/deathpoof",
     },
     {
@@ -1260,6 +1261,12 @@ local fx =
     },
     {
         name = "redpouch_yotb_unwrap",
+        bank = "redpouch",
+        build = "redpouch",
+        anim = "unwrap",
+    },
+    {
+        name = "redpouch_yot_catcoon_unwrap",
         bank = "redpouch",
         build = "redpouch",
         anim = "unwrap",

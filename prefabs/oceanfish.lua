@@ -289,7 +289,14 @@ local function water_common(data)
 	inst:AddTag("oceanfish")
 	inst:AddTag("swimming")
 	inst:AddTag("herd_"..data.prefab)
-    inst:AddTag("ediblefish_"..data.fishtype)
+	if data.fishtype ~= nil then
+	    inst:AddTag("ediblefish_"..data.fishtype)
+	end
+	if data.tags ~= nil then
+		for _, tag in ipairs(data.tags) do
+			inst:AddTag(tag)
+		end
+	end
 
     inst.AnimState:SetBank(data.bank)
     inst.AnimState:SetBuild(data.build)
@@ -417,6 +424,12 @@ local function inv_common(fish_def)
 	inst:AddTag("smallcreature")
 	inst:AddTag("smalloceancreature")
 
+	if fish_def.tags ~= nil then
+		for _, tag in ipairs(fish_def.tags) do
+			inst:AddTag(tag)
+		end
+	end
+
 	if fish_def.heater ~= nil then
 		inst:AddTag("HASHEATER") --(from heater component) added to pristine state for optimization
 	end
@@ -467,8 +480,11 @@ local function inv_common(fish_def)
 	inst.components.weighable:Initialize(fish_def.weight_min, fish_def.weight_max)
 	inst.components.weighable:SetWeight(Lerp(fish_def.weight_min, fish_def.weight_max, CalcNewSize()))
 
-	inst:AddComponent("cookable")
-	inst.components.cookable.product = fish_def.cooking_product
+	if fish_def.cooking_product ~= nil then
+		inst:AddComponent("cookable")
+		inst.components.cookable.product = fish_def.cooking_product
+		inst.components.cookable.oncooked = fish_def.oncooked_fn
+	end
 
     inst:AddComponent("tradable")
     inst.components.tradable.goldvalue = TUNING.GOLD_VALUES.MEAT

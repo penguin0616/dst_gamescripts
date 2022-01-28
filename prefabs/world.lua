@@ -219,6 +219,17 @@ local prefabs =
     "fast_farmplot", -- deprecated but still used in old worlds and mods
     "nutrients_overlay",
     "lordfruitfly",
+
+	-- YOT Catcoon
+	"kitcoon_forest",
+	"kitcoon_savanna",
+	"kitcoon_marsh",
+	"kitcoon_deciduous",
+	"kitcoon_grass",
+	"kitcoon_rocky",
+	"kitcoon_desert",
+	"kitcoon_moon",
+	"kitcoon_yot",
 }
 
 for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do

@@ -64,6 +64,7 @@ local prefabs =
 	"acorn",
 	"pinecone",
 	"ice",
+	"redpouch_yot_catcoon",
 }
 
 SetSharedLootTable( 'catcoon',
@@ -209,6 +210,9 @@ local function KeepTargetFn(inst, target)
 	end
 end
 
+local RETARGET_TAGS = {"_health"}
+local RETARGET_NO_TAGS = {"INLIMBO", "notarget", "invisible" }
+
 local function RetargetFn(inst)
     return FindEntity(inst, TUNING.CATCOON_TARGET_DIST,
         function(guy)
@@ -228,7 +232,8 @@ local function RetargetFn(inst)
 	            	or 	(guy:HasTag("cattoyairborne")
             			and not (inst.components.follower and inst.components.follower:IsLeaderSame(guy)))
 	        end
-        end)
+        end, 
+		RETARGET_TAGS, RETARGET_NO_TAGS)
 end
 
 local function SleepTest(inst)
@@ -311,6 +316,13 @@ local function OnIsRaining(inst, raining)
 	end
 end
 
+local function OnWentHome(inst)
+    local den = inst.components.homeseeker and inst.components.homeseeker.home or nil
+	if den ~= nil and den.CacheItemsAtHome ~= nil then
+		den:CacheItemsAtHome(inst)
+	end
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -363,8 +375,6 @@ local function fn()
 	inst:AddComponent("follower")
     inst.components.follower.maxfollowtime = TUNING.CATCOON_LOYALTY_MAXTIME
 
-	inst:AddComponent("inventory")
-
 	inst:AddComponent("trader")
     inst.components.trader:SetAcceptTest(ShouldAcceptItem)
     inst.components.trader.onaccept = OnGetItemFromPlayer
@@ -395,12 +405,19 @@ local function fn()
 	inst:AddComponent("locomotor")
 	inst.components.locomotor.walkspeed = 3
 
+    inst:AddComponent("inventory")
+    inst.components.inventory.maxslots = 4
+
     -- boat hopping
     inst.components.locomotor:SetAllowPlatformHopping(true)
     inst:AddComponent("embarker")
+    inst.components.embarker.embark_speed = inst.components.locomotor.walkspeed + 2
     inst:AddComponent("drownable")
 
 	inst:WatchWorldState("israining", OnIsRaining)
+
+    inst.force_onwenthome_message = true -- for onwenthome event
+    inst:ListenForEvent("onwenthome", OnWentHome)
 
 	MakeSmallBurnableCharacter(inst, "catcoon_torso", Vector3(1,0,1))
 	MakeSmallFreezableCharacter(inst)

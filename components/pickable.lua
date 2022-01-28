@@ -67,6 +67,8 @@ local Pickable = Class(function(self, inst)
     --self.getregentimertime = nil
     --self.setregentimertime = nil
     --self.regentimerexists = nil
+
+	--self.remove_when_picked = false
 end,
 nil,
 {
@@ -538,6 +540,10 @@ function Pickable:Pick(picker)
         end
 
         self.inst:PushEvent("picked", { picker = picker, loot = loot, plant = self.inst })
+
+		if self.remove_when_picked then
+			self.inst:Remove()
+		end
 
 		return true
     end

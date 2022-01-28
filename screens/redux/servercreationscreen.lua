@@ -13,6 +13,8 @@ local TextListPopup = require "screens/redux/textlistpopup"
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 require("constants")
 require("tuning")
 
@@ -56,6 +58,12 @@ local ServerCreationScreen = Class(Screen, function(self, prev_screen, save_slot
 
 
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.SERVERCREATIONSCREEN.HOST_GAME))
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        {x = -450, y = 220,},
+        {x = 470, y = 255,},
+        {x = -415, y = -255,},
+    } ))
 
     self.detail_panel = self.detail_panel_frame:InsertWidget( Widget("detail_panel") )
 
@@ -124,12 +132,20 @@ function ServerCreationScreen:OnBecomeActive()
 		self.mods_tab:OnBecomeActive()
 	end
     if self.last_focus then self.last_focus:SetFocus() end
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
 end
 
 function ServerCreationScreen:OnBecomeInactive()
     ServerCreationScreen._base.OnBecomeInactive(self)
     if self.mods_enabled then
         self.mods_tab:OnBecomeInactive()
+    end
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
     end
 end
 

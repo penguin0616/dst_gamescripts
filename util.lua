@@ -722,7 +722,33 @@ function weighted_random_choice(choices)
     return last_choice
 end
 
+function weighted_random_choices(choices, num_choices)
 
+    local function weighted_total(choices)
+        local total = 0
+        for choice, weight in pairs(choices) do
+            total = total + weight
+        end
+        return total
+    end
+
+	local picks = {}
+	for i = 1, num_choices do
+	    local pick
+	    local threshold = math.random() * weighted_total(choices)
+		for choice, weight in pairs(choices) do
+			threshold = threshold - weight
+			pick = choice
+			if threshold <= 0 then 
+				break
+			end
+		end
+
+		table.insert(picks, pick)
+	end
+	
+    return picks
+end
 
  function PrintTable(tab)
     local str = {}
@@ -784,7 +810,7 @@ function RunInSandboxSafeCatchInfiniteLoops(untrusted_code, error_handler)
 	if untrusted_code:byte(1) == 27 then return nil, "binary bytecode prohibited" end
 	local untrusted_function, message = loadstring(untrusted_code)
 	if not untrusted_function then return nil, message end
-	setfenv(untrusted_function, {print = print} )
+	setfenv(untrusted_function, {} )
 
     local co = coroutine.create(function()
         coroutine.yield(xpcall(untrusted_function, error_handler or function() end))

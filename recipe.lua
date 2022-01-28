@@ -110,8 +110,9 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
     self.placer        = placer
     self.min_spacing   = min_spacing or 3.2
 
-    --V2C: custom test function if default test isn't enough
-    self.testfn        = testfn
+    
+    self.testfn        = testfn					-- custom placer test function if default test isn't enough
+	self.canbuild      = more_data.canbuild		-- custom test function to see if we should be allowed to craft this recipe, return a build action fail message if false
 
     self.nounlock      = nounlock or false
 

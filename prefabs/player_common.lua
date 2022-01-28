@@ -1485,6 +1485,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/goo.zip"),
         Asset("ANIM", "anim/shadow_hands.zip"),
         Asset("ANIM", "anim/player_wrap_bundle.zip"),
+        Asset("ANIM", "anim/player_hideseek.zip"),
 
         Asset("ANIM", "anim/player_wardrobe.zip"),
         Asset("ANIM", "anim/player_skin_change.zip"),

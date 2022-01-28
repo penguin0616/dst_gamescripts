@@ -185,7 +185,10 @@ AddRoom("MagicalDeciduous", {
 					tags = {"ExitPiece", "Chester_Eyebone","Astral_2"},
                     required_prefabs = {"statueglommer"},
 					contents =  {
-
+					                countprefabs =
+					                {
+					                    catcoonden = 1,
+					                },
 									countstaticlayouts={
 										["DeciduousPond"] = 1,
 									},

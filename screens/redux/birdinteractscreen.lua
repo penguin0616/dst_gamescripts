@@ -35,7 +35,7 @@ local BirdInteractScreen = Class(Screen, function(self, buttons)
     local button_w = 250
     local button_h = 53
     self.menu = self.proot:AddChild(Menu(buttons, -button_h, false, "carny_xlong", nil, 23))
-    self.menu:SetPosition(0, 50, 0)
+    self.menu:SetPosition(0, 103, 0)
     for i,v in pairs(self.menu.items) do
         v:SetScale(.9)
     end

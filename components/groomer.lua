@@ -55,7 +55,6 @@ local Groomer = Class(function(self, inst)
     end
 
     self.oncloseallgroomer = function(inst, data)
-    dumptable(self.changers)
         for i, v in pairs(self.changers) do
             self:EndChanging(i)
         end

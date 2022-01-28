@@ -107,6 +107,7 @@ local function common_fn(data)
 
 	inst:AddTag("carnivaldecor")
     inst:AddTag("structure")
+    inst:AddTag("cattoyairborne")
 
 	if data.common_postinit then
 		data.common_postinit(inst, data)

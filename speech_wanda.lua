@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "I'm going to pull a muscle if I try grabbing that from up here.",
             HASPET = "I can't divide my time between any more pets!",
+			TICOON = "Wait a tick, wasn't I already following one?",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Could I pick the lock? Locks and clocks are only a letter apart, after all.",
             HOSTBUSY = "Ugh, I should come back sooner... or maybe later.",
             CARNIVAL_HOST_HERE = "Didn't I see Goodfeather around here? I could have sworn I did...",
-            NOCARNIVAL = "Gone already? Time sure flies when you're having fun."
+            NOCARNIVAL = "Gone already? Time sure flies when you're having fun.",
+			EMPTY_CATCOONDEN = "Oh botheration! Looks like this was a waste of time.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It would be quite a short game, not that I'd mind...",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "There's nowhere to hide around here.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think I've spent quite enough time wrangling these tiny terrors today.",
 		},
         COOK =
         {
@@ -68,7 +73,7 @@ return{
         },
         START_CARRAT_RACE =
         {
-            NO_RACERS = "What am I forgetting? Oh! The Carrats!",
+            NO_RACERS = "What am I forgetting? Oh! The carrats!",
         },
 
 		DISMANTLE =
@@ -89,7 +94,7 @@ return{
         READ =
         {
             GENERIC = "only_used_by_wickerbottom",
-            NOBIRDS = "only_used_by_wickerbottom"
+            NOBIRDS = "only_used_by_wickerbottom",
         },
 
         GIVE =
@@ -191,8 +196,8 @@ return{
 --fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
-                "Wait a minute... I don't remember my Carrat looking like this.",
-                "Oh botheration, I think I grabbed the wrong Carrat.",
+                "Wait a minute... I don't remember my carrat looking like this.",
+                "Oh botheration, I think I grabbed the wrong carrat.",
             },
 			NO_HEAVY_LIFTING = "I might be able to manage it... if I was just a bit younger.",
         },
@@ -666,7 +671,7 @@ return{
         "Wrong way, go back!",
     },
     ANNOUNCE_CARRAT_ERROR_FELL_ASLEEP = "There's no time for sleeping!",
-    ANNOUNCE_CARRAT_ERROR_WALKING = "How did I end up with such a slow Carrat?",
+    ANNOUNCE_CARRAT_ERROR_WALKING = "How did I end up with such a slow carrat?",
     ANNOUNCE_CARRAT_ERROR_STUNNED = "This is no time to stand around!",
 
 --fallback to speech_wilson.lua     ANNOUNCE_GHOST_QUEST = "only_used_by_wendy",
@@ -735,6 +740,33 @@ return{
         "I don't have time for this!",
         "Maybe I could speed this up a little... you wouldn't mind that, would you?",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Alright go on now, let's make this quick.",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Perhaps I have time for one quick game...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Finally!",
+		"Found you at last.",
+		"So that's where you were hiding this whole time!",
+		"I knew you couldn't hide forever.",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "I seem to recall there being one more to find...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "That has to be the last one.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "Oh good, {name} finally found the last one.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Better hurry, our time's almost up!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Oh botheration, I wasn't quick enough.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "Surely they wouldn't have gone all the way out here?",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "Yes, this looks more familiar, I'm sure I'll find them here!",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "I thought I might find something hiding there!",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "He's certainly in a rush to get somewhere.",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Nothing seems to be catching its attention.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Are you waiting for me? What an odd turn of events.",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Yes yes, I'm coming!",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "Did I just hear a rustle? Perhaps it's nearby...",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Oh botheration, I didn't find it quick enough.",
+	ANNOUNCE_TICOON_ABANDONED = "I've spent enough time following you around for one day.",
+	ANNOUNCE_TICOON_DEAD = "His time was cut short... and my time's been wasted!",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Over here!",
@@ -1602,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "This will remind me not to go poking around beehives.",
         CHESSPIECE_ANTLION = "Right. That time I was almost impaled by spikes.",
         CHESSPIECE_BEEFALO = "A real one would be marginally more interesting to look at.",
+		CHESSPIECE_KITCOON = "Oh, a precariously tall statue, what could go wrong?",
+		CHESSPIECE_CATCOON = "I guess I did have time to play with you after all.",
         CHESSPIECE_GUARDIANPHASE3 = "I hope I won't have to do that again.",
         CHESSPIECE_EYEOFTERROR = "Certainly an eye to behold.",
         CHESSPIECE_TWINSOFTERROR = "I'd be quite happy to never lay eyes on them again.",
@@ -2656,7 +2690,7 @@ return{
         },
         YOTC_CARRAT_GYM_REACTION =
         {
-            GENERIC = "I want my Carrat to be a quick thinker.",
+            GENERIC = "I want my carrat to be a quick thinker.",
             RAT = "It looks smarter already!",
             BURNT = "That sure burnt away quickly.",
         },
@@ -2668,9 +2702,9 @@ return{
         },
 
         YOTC_CARRAT_GYM_DIRECTION_ITEM = "The preparations are done, now to find a place for it.",
-        YOTC_CARRAT_GYM_SPEED_ITEM = "Time to get my Carrat up and running.",
+        YOTC_CARRAT_GYM_SPEED_ITEM = "Time to get my carrat up and running.",
         YOTC_CARRAT_GYM_STAMINA_ITEM = "This shouldn't take too long to piece together.",
-        YOTC_CARRAT_GYM_REACTION_ITEM = "I hope training my Carrat won't take too long.",
+        YOTC_CARRAT_GYM_REACTION_ITEM = "I hope training my carrat won't take too long.",
 
         YOTC_CARRAT_SCALE_ITEM = "I'd better start setting it up.",
         YOTC_CARRAT_SCALE =
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "It makes taming beefalo so much faster!",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "What a charming little house.",
+            BURNT = "Well, that's that.",
+			PLAYING_HIDEANDSEEK = "Did I find them all? I think there are some still hiding.",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "Ugh, where are they? I'm running out of time!",
+		},
+
+		KITCOONDEN_KIT = "Did I not set that up already?",
+
+		TICOON = 
+		{
+			GENERIC = "Aha! I knew I remembered seeing orange ones!",
+			ABANDONED = "Oh don't look at me like that, it's nothing personal!",
+			SUCCESS = "You've found something, have you?",
+			LOST_TRACK = "Did he lose the trail? Ugh, what a waste of time!",
+			NEARBY = "He seems particularly interested in that area.",
+			TRACKING = "Having an expert around should speed things up.",
+			TRACKING_NOT_MINE = "They seem preoccupied with helping someone else.",
+			NOTHING_TO_TRACK = "Hmm, I suppose there's nothing around to track.",
+			TARGET_TOO_FAR_AWAY = "Perhaps they're somewhere else.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "I suppose there's time to make one little trinket, or two.",
+            EMPTY = "It's that time of the duodecennial orbital cycle again.",
+            BURNT = "Oh well, nothing to be done now.",
+        },
+
+		KITCOON_FOREST = "Oh how adorable, and conveniently pocket-sized!",
+		KITCOON_SAVANNA = "Oh how adorable, and conveniently pocket-sized!",
+		KITCOON_MARSH = "Oh how adorable, and conveniently pocket-sized!",
+		KITCOON_DECIDUOUS = "Oh how adorable, and conveniently pocket-sized!",
+		KITCOON_GRASS = "Botheration, they're so distractingly cute!",
+		KITCOON_ROCKY = "Botheration, they're so distractingly cute!",
+		KITCOON_DESERT = "Botheration, they're so distractingly cute!",
+		KITCOON_MOON = "Botheration, they're so distractingly cute!",
+		KITCOON_YOT = "Botheration, they're so distractingly cute!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Oh botheration, not you...",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="Oh, how alarming... but I'm not one to look a gift shield in the mouth.",
         TWINOFTERROR1 = "That doesn't look like any clockwork I've ever seen.",
         TWINOFTERROR2 = "That doesn't look like any clockwork I've ever seen.",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "What a clever little clockwork contraption!",
+        KITCOON_NAMETAG = "This will make it easier to remember who's who at least.",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "I don't have time to watch these kits play all day.",
+            BURNT = "Playtime is over.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "I can't keep getting distracted by those adorable antics!",
+            BURNT = "No more playing, for the time being.",
+        },
+
+		KITCOONDECOR1_KIT = "Do I really have time to fuss with this?",
+		KITCOONDECOR2_KIT = "Surely someone with more time on their hands could set it up.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

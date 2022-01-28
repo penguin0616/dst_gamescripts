@@ -109,6 +109,7 @@ local function common_fn(data)
 	inst:AddTag("carnivaldecor")
 	inst:AddTag("carnivalcannon")
     inst:AddTag("structure")
+    inst:AddTag("cattoy")
 
 	inst:SetPhysicsRadiusOverride(0.5)
 

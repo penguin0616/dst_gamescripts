@@ -222,16 +222,19 @@ CommonStates.AddIdle = function(states, funny_idle_state, anim_override, timelin
 end
 
 --------------------------------------------------------------------------
-CommonStates.AddSimpleState = function(states, name, anim, tags, finishstate, timeline)
+CommonStates.AddSimpleState = function(states, name, anim, tags, finishstate, timeline, fns)
     table.insert(states, State{
         name = name,
         tags = tags or {},
 
-        onenter = function(inst)
+        onenter = function(inst, params)
             if inst.components.locomotor ~= nil then
                 inst.components.locomotor:StopMoving()
             end
             inst.AnimState:PlayAnimation(anim)
+			if fns ~= nil and fns.onenter ~= nil then
+				fns.onenter(inst, params)
+			end
         end,
         
         timeline = timeline,
@@ -244,6 +247,8 @@ CommonStates.AddSimpleState = function(states, name, anim, tags, finishstate, ti
                 end
             end),
         },
+
+		onexit = fns ~= nil and fns.onexit or nil
     })
 end
 
@@ -253,19 +258,22 @@ local function performbufferedaction(inst)
 end
 
 --------------------------------------------------------------------------
-CommonStates.AddSimpleActionState = function(states, name, anim, time, tags, finishstate)
+CommonStates.AddSimpleActionState = function(states, name, anim, time, tags, finishstate, timeline, fns)
     table.insert(states, State{
         name = name,
         tags = tags or {},
 
-        onenter = function(inst)
+        onenter = function(inst, params)
             if inst.components.locomotor ~= nil then
                 inst.components.locomotor:StopMoving()
             end
             inst.AnimState:PlayAnimation(anim)
+			if fns ~= nil and fns.onenter ~= nil then
+				fns.onenter(inst, params)
+			end
         end,
 
-        timeline =
+        timeline = timeline or 
         {
             TimeEvent(time, performbufferedaction),
         },
@@ -278,6 +286,8 @@ CommonStates.AddSimpleActionState = function(states, name, anim, time, tags, fin
                 end
             end),
         },
+
+		onexit = fns ~= nil and fns.onexit or nil
     })
 end
 

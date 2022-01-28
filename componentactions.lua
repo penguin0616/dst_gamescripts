@@ -213,7 +213,6 @@ local COMPONENT_ACTIONS =
                         table.insert(actions, ACTIONS.ABANDON)
                     end
                 elseif inst.replica.container == nil then
-                    --V2C: @Scott: Should this always be available???
                     table.insert(actions, ACTIONS.PET)
                 end
             end
@@ -297,6 +296,26 @@ local COMPONENT_ACTIONS =
                 table.insert(actions, ACTIONS.PICKUP)
             end
         end,
+
+        kitcoon = function(inst, doer, actions, right)
+            if right then
+	            if inst.replica.follower ~= nil and inst.replica.follower:GetLeader() == doer then
+					if doer:HasTag("near_kitcoonden") and FindEntity(inst, TUNING.KITCOON_NEAR_DEN_DIST, nil, {"kitcoonden"}) ~= nil then
+	                    table.insert(actions, ACTIONS.RETURN_FOLLOWER)
+					else
+	                    table.insert(actions, ACTIONS.ABANDON)
+					end
+	            end
+			else
+                table.insert(actions, ACTIONS.PET)
+            end
+        end,
+
+		hideandseekhidingspot = function(inst, doer, actions, right)
+            if right then
+				table.insert(actions, ACTIONS.HIDEANSEEK_FIND)
+			end
+		end,
 
         lock = function(inst, doer, actions)
             if inst:HasTag("unlockable") then
@@ -1215,10 +1234,12 @@ local COMPONENT_ACTIONS =
         end,
 
         useabletargeteditem = function(inst, doer, target, actions)
-            if target ~= nil and target.prefab ~= nil
-                    and inst:HasTag(target.prefab.."_targeter")
-                    and not inst:HasTag("inuse_targeted") then
-                table.insert(actions, ACTIONS.USEITEMON)
+            if target ~= nil then
+				if (target.prefab ~= nil and inst:HasTag(target.prefab.."_targeter") and not inst:HasTag("inuse_targeted")) 
+					or (inst.UseableTargetedItem_ValidTarget ~= nil and inst.UseableTargetedItem_ValidTarget(inst, target, doer)) then
+
+					table.insert(actions, ACTIONS.USEITEMON)
+				end
             end
         end,
 

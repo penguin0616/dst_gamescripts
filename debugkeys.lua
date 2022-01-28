@@ -871,23 +871,23 @@ AddGameDebugKey(KEY_D, function()
     end
 end)
 
-AddGameDebugKey(KEY_P, function()
-    if TheInput:IsKeyDown(KEY_CTRL) then
-        local MouseCharacter = TheInput:GetWorldEntityUnderMouse()
-        MouseCharacter = MouseCharacter or DebugKeyPlayer()
-        if MouseCharacter then
-            local pinnable = MouseCharacter.components.pinnable
-            if pinnable then
-                if pinnable:IsStuck() then
-                    pinnable:Unstick()
-                else
-                    pinnable:Stick()
-                end
-            end
-        end
-    end
-    return true
-end)
+--AddGameDebugKey(KEY_P, function()
+--    if TheInput:IsKeyDown(KEY_CTRL) then
+--        local MouseCharacter = TheInput:GetWorldEntityUnderMouse()
+--        MouseCharacter = MouseCharacter or DebugKeyPlayer()
+--        if MouseCharacter then
+--            local pinnable = MouseCharacter.components.pinnable
+--            if pinnable then
+--                if pinnable:IsStuck() then
+--                    pinnable:Unstick()
+--                else
+--                    pinnable:Stick()
+--                end
+--            end
+--        end
+--    end
+--    return true
+--end)
 
 AddGameDebugKey(KEY_K, function()
     if TheInput:IsKeyDown(KEY_CTRL) then

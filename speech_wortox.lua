@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "Either I must get down, or the world must come up.",
             HASPET = "I've made my pact with a beast already.",
+			TICOON = "Oh, but one's enough, hyuyu!",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Am I locked out, or in?",
             HOSTBUSY = "Goodfeather, hm? I think I know him by another name.",
             CARNIVAL_HOST_HERE = "Now where is our feathered friend?",
-            NOCARNIVAL = "They've come and gone, were they but a dream all along?"
+            NOCARNIVAL = "They've come and gone, were they but a dream all along?",
+			EMPTY_CATCOONDEN = "No one's home, I'm all alone!",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "We'll need more friends if we want to play, hyuyu!",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "The game was denied, there's nowwhere to hide!",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "If we play any more, it's gonna be a chore.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -740,6 +745,33 @@ return{
         "You like hearing the sound of my voice almost as much as I do, hyuyu!",
         "Let's pull a prank! What do you think the mortals would do if you sprouted into a sheep?",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "The cats have run, the game's begun!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Oh, what fun, I'll help find one!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"I found a cat, but no fiddle, hyuyu!",
+		"The cat's out of the bag, hyuyu!",
+		"Your tail's a tattletale!",
+		"Always at the last place I would look!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "The last one better hide with all their might, hyuyu!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "Smile from ear to ear, the cats are all here!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "I found, we found, the cats all around!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "I'm late! I'm late! I'll lose at this rate.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "I'll have to note down those hiding spots, hyuyu.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "No furry mortal would hide far far away!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "Back to the guessing game, hyuyu.",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "And what are you doing over here?",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "He'll get us nowhere fast, hyuyu!",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "No tracks, no clue, I say we're through.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "He won't go ahead unless I keep my step, hyuyu!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Oh, is it me you're looking for?",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "We're close, closer, yet closer!",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Oh me, oh my, they passed me by!",
+	ANNOUNCE_TICOON_ABANDONED = "I did my best, now I'll rest.",
+	ANNOUNCE_TICOON_DEAD = "My guide is gone, do I carry on?",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Over here, beefalo dear!",
@@ -1608,6 +1640,8 @@ return{
         CHESSPIECE_BEEQUEEN = "Stationary majesty. Static insect.",
         CHESSPIECE_ANTLION = "An anti Ant Lion, formerly furry. Hyuyu!",
         CHESSPIECE_BEEFALO = "This beefalo is even more hard-headed than most!",
+		CHESSPIECE_KITCOON = "They'll reach the sky on high!",
+		CHESSPIECE_CATCOON = "This little guy and I don't see eye to eye, hyuyu.",
         CHESSPIECE_GUARDIANPHASE3 = "In all its selenic splendour!",
         CHESSPIECE_EYEOFTERROR = "He's gone, no matter how you look at it, hyuyu!",
         CHESSPIECE_TWINSOFTERROR = "What an eye-catching statue, hyuyu!",
@@ -4083,6 +4117,47 @@ return{
 
         BEEF_BELL = "What a strange enchantment!",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "Where all the furry mortals go.",
+            BURNT = "Just a little prank, hyuyu!",
+			PLAYING_HIDEANDSEEK = "They've gone out to play!",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "Playtime's almost over, hyuyu!",
+		},
+
+		KITCOONDEN_KIT = "They're here to play, or so they say, hyuyu!",
+
+		TICOON = 
+		{
+			GENERIC = "I've set my worries to the side, they'll be my guide!",
+			ABANDONED = "All alone, no mortal to play with.",
+			SUCCESS = "It found all the little pranksters!",
+			LOST_TRACK = "Fee-fi-fo-fum, where have they gone?",
+			NEARBY = "They too can feel a trickster's around, hyuyu!",
+			TRACKING = "Oh where, where could they be, hyuyu.",
+			TRACKING_NOT_MINE = "They're not looking for who I'm looking for.",
+			NOTHING_TO_TRACK = "No one to find, oh my, oh my.",
+			TARGET_TOO_FAR_AWAY = "They're far far away, yet here I stay.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "Such a pretty little kitty!",
+            EMPTY = "Whatever was here, disappeared!",
+            BURNT = "Well, that's that.",
+        },
+
+		KITCOON_FOREST = "They could prank, hide around, and never be found!",
+		KITCOON_SAVANNA = "Your stripes can't trick my eyes!",
+		KITCOON_MARSH = "There's no tentacle in that fur, right? Hyuyu.",
+		KITCOON_DECIDUOUS = "I prefer playing with smarter mortals.",
+		KITCOON_GRASS = "Ooo, the fingers your fur could prick, hyuyu.",
+		KITCOON_ROCKY = "Oh my friend, why the stone face?",
+		KITCOON_DESERT = "Oh kitty, what big ears you have!",
+		KITCOON_MOON = "The kit jumped over the moon, hyuyu!",
+		KITCOON_YOT = "Oh what a date, let's celebrate!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "We got off to a rocky start, didn't we? Hyuyu!",
@@ -4248,6 +4323,24 @@ return{
         SHIELDOFTERROR ="I stole the grin right off of him, hyuyu!",
         TWINOFTERROR1 = "Double double, we're in trouble!",
         TWINOFTERROR2 = "Double double, we're in trouble!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "Wind the bobbin up, pull, pull!",
+        KITCOON_NAMETAG = "To help identify who's theirs and who's mine.",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "Let it spin and wobble if it doesn't squabble.",
+            BURNT = "A burnt toy brings no fun.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "This fish will be no dish, hyuyu.",
+            BURNT = "A burnt toy brings no fun.",
+        },
+
+		KITCOONDECOR1_KIT = "To make a toy is such a joy!",
+		KITCOONDECOR2_KIT = "To make a toy is such a joy!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

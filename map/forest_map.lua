@@ -897,12 +897,16 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
     for prefab,count in pairs(double_check) do
 		print ("Checking Required Prefab " .. prefab .. " has at least " .. count .. " instances (" .. (entities[prefab] ~= nil and #entities[prefab] or 0) .. " found).")
-
+		
         if entities[prefab] == nil or #entities[prefab] < count then
-            print(string.format("PANIC: missing required prefab [%s]! Expected %d, got %d", prefab, count, entities[prefab] == nil and 0 or #entities[prefab]))
-            if SKIP_GEN_CHECKS == false then
-                return nil
-            end
+			if level.overrides[prefab] == "never" then
+				print(string.format(" - missing required prefab [%s] was disabled in the world generation options!", prefab))
+			else
+				print(string.format("PANIC: missing required prefab [%s]! Expected %d, got %d", prefab, count, entities[prefab] == nil and 0 or #entities[prefab]))
+				if SKIP_GEN_CHECKS == false then
+					return nil
+				end
+			end
         end
     end
 

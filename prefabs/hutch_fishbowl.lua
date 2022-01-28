@@ -7,10 +7,20 @@ local assets =
 
 local SPAWN_DIST = 30
 
+local function RefreshFishBowlIcon(inst)
+    local icon = inst.currentIcon or inst.fishAlive
+    local skin_name = inst:GetSkinName()
+    if skin_name ~= nil then
+        icon = string.gsub(icon, "hutch_fishbowl", skin_name)
+    end
+    inst.components.inventoryitem:ChangeImageName(icon)
+end
+
 local function FishAlive(inst, instant)
     if not inst.isFishAlive then
         inst.isFishAlive = true
-        inst.components.inventoryitem:ChangeImageName(inst.fishAlive)
+        inst.currentIcon = inst.fishAlive
+        RefreshFishBowlIcon(inst)
         if instant then
             inst.AnimState:PlayAnimation("idle_loop", true)
         else
@@ -23,7 +33,8 @@ end
 local function FishDead(inst, instant)
     if inst.isFishAlive then
         inst.isFishAlive = nil
-        inst.components.inventoryitem:ChangeImageName(inst.fishDead)
+        inst.currentIcon = inst.fishDead
+        RefreshFishBowlIcon(inst)
         if instant then
             inst.AnimState:PlayAnimation("dead", true)
         else
@@ -50,7 +61,7 @@ local function SpawnHutch(inst)
     local pt = inst:GetPosition()
     local spawn_pt = GetSpawnPoint(pt)
     if spawn_pt ~= nil then
-        local hutch = SpawnPrefab("hutch")
+        local hutch = SpawnPrefab("hutch", inst.linked_skinname, inst.skin_id )
         if hutch ~= nil then
             hutch.Physics:Teleport(spawn_pt:Get())
             hutch:FacePoint(pt:Get())
@@ -202,6 +213,8 @@ local function fn()
 
     inst.OnLoad = OnLoad
     inst.OnSave = OnSave
+
+    inst.RefreshFishBowlIcon = RefreshFishBowlIcon
 
     inst.fixtask = inst:DoTaskInTime(1, FixHutch)
 

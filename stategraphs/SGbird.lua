@@ -150,9 +150,10 @@ local states =
 
     State{
         name = "glide",
-        tags = { "idle", "flight" },
+        tags = { "idle", "flight", "notarget" },
 
         onenter = function(inst)
+			inst:AddTag("NOCLICK")
             if not inst.AnimState:IsCurrentAnimation("glide") then
                 inst.AnimState:PlayAnimation("glide", true)
             end
@@ -182,6 +183,10 @@ local states =
         ontimeout = function(inst)
             inst.sg:GoToState("glide")
         end,
+
+		onexit = function(inst)
+			inst:RemoveTag("NOCLICK")
+		end,
     },
 
     State{
@@ -224,9 +229,11 @@ local states =
 
     State{
         name = "flyaway",
-        tags = { "flight", "busy" },
+        tags = { "flight", "busy", "notarget" },
 
         onenter = function(inst)
+			inst:AddTag("NOCLICK")
+
             if inst.components.floater ~= nil then
                 inst:PushEvent("on_no_longer_landed")
             end
@@ -260,6 +267,10 @@ local states =
                 inst:Remove()
             end),
         },
+
+		onexit = function(inst)
+			inst:RemoveTag("NOCLICK")
+		end,
     },
 
     State{

@@ -72,7 +72,6 @@ SGCritterStates.AddPlayWithOtherCritter(states, events,
 	})
 SGCritterStates.AddEat(states,
         {
-            TimeEvent(5*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/eat_pre") end),
             TimeEvent(21*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/together/kittington/eat") end),
         })
 SGCritterStates.AddHungry(states,

@@ -431,6 +431,13 @@ function Builder:DoBuild(recname, pt, rotation, skin)
             return false
         end
 
+        if recipe.canbuild ~= nil then
+			local success, msg = recipe.canbuild(recipe, self.inst, pt, rotation)
+			if not success then
+				return false, msg
+			end
+		end
+
 		local is_buffered_build = self.buffered_builds[recname] ~= nil
         if is_buffered_build then
             self.buffered_builds[recname] = nil

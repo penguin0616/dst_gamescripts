@@ -366,6 +366,16 @@ local redpouch_yotb =
     end,
 }
 
+local redpouch_yot_catcoon =
+{
+    master_postinit = function(inst, setupdata)
+        inst.wet_prefix = STRINGS.WET_PREFIX.POUCH
+    end,
+    common_postinit = function(inst, setupdata)
+        inst:SetPrefabNameOverride("redpouch")
+    end,
+}
+
 local hermit_bundle_shell_loots =
 {
     singingshell_octave5 = 2,
@@ -549,6 +559,7 @@ return MakeContainer("bundle_container", "ui_bundle_2x2"),
     MakeBundle("redpouch_yotp", false, nil, nil, true, redpouch_yotp),
     MakeBundle("redpouch_yotc", false, nil, nil, true, redpouch_yotc),
     MakeBundle("redpouch_yotb", false, nil, nil, true, redpouch_yotb),
+    MakeBundle("redpouch_yot_catcoon", false, nil, nil, true, redpouch_yot_catcoon),
 	MakeBundle("yotc_seedpacket", true, nil, nil, true, yotc_seedpacket),
 	MakeBundle("yotc_seedpacket_rare", true, nil, nil, true, yotc_seedpacket_rare),
 	MakeBundle("carnival_seedpacket", true, nil, nil, true, carnival_seedpacket),

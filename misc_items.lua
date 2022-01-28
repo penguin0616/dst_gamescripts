@@ -642,6 +642,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 116,
 	},
+	loading_terraria_trailer =
+	{
+		type = "loading",
+		skin_tags = { "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 128,
+	},
 	loading_walter_trailer =
 	{
 		type = "loading",
@@ -657,6 +665,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 113,
+	},
+	loading_wanda_trailer =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 128,
 	},
 	loading_warly2_trailer =
 	{
@@ -921,6 +937,14 @@ MISC_ITEMS =
 		rarity = "Classy",
 		rarity_modifier = "Woven",
 		release_group = 54,
+	},
+	loading_wolfgang_trailer =
+	{
+		type = "loading",
+		skin_tags = { "SHORTS", "LOADING", },
+		rarity = "Classy",
+		rarity_modifier = "Woven",
+		release_group = 128,
 	},
 	loading_woodie2_trailer =
 	{
@@ -1562,6 +1586,21 @@ MISC_ITEMS =
 		display_items = {  "arrowsign_post_factory", "fence_factory", "playerportrait_bg_factory", "profileflair_factory", },
 		output_items = {  "arrowsign_post_factory", "fence_factory", "playerportrait_bg_factory", "profileflair_factory", },
 		release_group = 61,
+	},
+	pack_fantasy_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1874370,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_yotcc_bundle.xml",
+		display_tex = "yotcc_bundle.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "arrowsign_post_fantasy", "minisign_fantasy", "fence_fantasy", "batbat_fantasy", "beefalohat_fantasy", "dragonflychest_fantasy", "eyebrellahat_fantasy", "heatrock_fantasy", "mermhouse_crafted_fantasy", "glommer_fantasy", "hutch_fantasy", },
+		output_items = {  "arrowsign_post_fantasy", "minisign_fantasy", "fence_fantasy", "batbat_fantasy", "beefalohat_fantasy", "dragonflychest_fantasy", "eyebrellahat_fantasy", "heatrock_fantasy", "mermhouse_crafted_fantasy", "glommer_fantasy", "hutch_fantasy", },
+		release_group = 128,
 	},
 	pack_forge_armor =
 	{
@@ -5442,6 +5481,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 48,
 	},
+	playerportrait_bg_torchnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 128,
+	},
 	playerportrait_bg_umbrellacircus =
 	{
 		type = "playerportrait",
@@ -6851,6 +6897,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 48,
 	},
+	profileflair_torch_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 128,
+	},
 	profileflair_treasurechest_monster =
 	{
 		type = "profileflair",
@@ -7230,6 +7283,41 @@ MISC_ITEMS =
 		rarity = "Common",
 		rarity_modifier = "Woven",
 		release_group = 54,
+	},
+	purchasebox_currency =
+	{
+		type = "box",
+		skin_tags = { },
+		build_name_override = "pack_common",
+		release_group = 0,
+	},
+	purchasebox_rail_skindlc =
+	{
+		type = "box",
+		skin_tags = { },
+		build_name_override = "pack_common",
+		release_group = 0,
+	},
+	purchasebox_steam =
+	{
+		type = "box",
+		skin_tags = { },
+		build_name_override = "pack_common",
+		release_group = 0,
+	},
+	purchasebox_steam_skindlc =
+	{
+		type = "box",
+		skin_tags = { },
+		build_name_override = "pack_common",
+		release_group = 0,
+	},
+	purchasebox_tencent =
+	{
+		type = "box",
+		skin_tags = { },
+		build_name_override = "pack_common",
+		release_group = 0,
 	},
 	webber_beard_bat =
 	{

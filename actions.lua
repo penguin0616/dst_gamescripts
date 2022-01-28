@@ -407,6 +407,10 @@ ACTIONS =
 
 	CARNIVALGAME_FEED = Action({ mount_valid=true }),
 
+	-- YOT_Catcoon
+    RETURN_FOLLOWER = Action(),
+    HIDEANSEEK_FIND = Action({ rmb=true, priority=1, mount_valid=true }),
+
     -- WEBBER
     MUTATE_SPIDER = Action({priority = 2}),
     HERD_FOLLOWERS = Action({ mount_valid=true }),
@@ -718,18 +722,20 @@ end
 ACTIONS.LOOKAT.fn = function(act)
     local targ = act.target or act.invobject
 
-    if targ ~= nil and targ.components.inspectable ~= nil then
-        local desc, text_filter_context, original_author = targ.components.inspectable:GetDescription(act.doer)
-        if desc ~= nil then
-            if act.doer.components.playercontroller == nil or
-                not act.doer.components.playercontroller.directwalking then
-                act.doer.components.locomotor:Stop()
-            end
-            if act.doer.components.talker ~= nil then
-                act.doer.components.talker:Say(desc, nil, targ.components.inspectable.noanim, nil, nil, nil, text_filter_context, original_author)
-            end
-            return true
-        end
+    if targ ~= nil then
+		if targ.components.inspectable ~= nil then
+			local desc, text_filter_context, original_author = targ.components.inspectable:GetDescription(act.doer)
+			if desc ~= nil then
+				if act.doer.components.playercontroller == nil or
+					not act.doer.components.playercontroller.directwalking then
+					act.doer.components.locomotor:Stop()
+				end
+				if act.doer.components.talker ~= nil then
+					act.doer.components.talker:Say(desc, nil, targ.components.inspectable.noanim, nil, nil, nil, text_filter_context, original_author)
+				end
+				return true
+			end
+		end
     end
 end
 
@@ -2068,6 +2074,12 @@ ACTIONS.ACTIVATE.strfn = function(act)
     end
 end
 
+ACTIONS.ACTIVATE.stroverridefn = function(act)
+    if act.target.OverrideActivateVerb ~= nil then
+        return act.target:OverrideActivateVerb(act.doer)
+    end
+end
+
 ACTIONS.CAST_POCKETWATCH.strfn = function(act)
     if act.invobject ~= nil then
         return FunctionOrValue(act.invobject.GetActionVerb_CAST_POCKETWATCH, act.invobject, act.doer, act.target)
@@ -2492,20 +2504,28 @@ ACTIONS.HAIRBALL.fn = function(act)
 end
 
 ACTIONS.CATPLAYGROUND.fn = function(act)
-    if act.doer and act.doer.prefab == "catcoon" then
+    if act.doer then
         if act.target then
-			if act.target.components.poppable ~= nil then
+			if act.target.components.cattoy ~= nil then
+				act.target.components.cattoy:Play(act.doer, false)
+			elseif act.target.components.poppable ~= nil then
 				act.target.components.poppable:Pop()
-            elseif math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
+            elseif act.doer.components.combat ~= nil and math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
 				and act.target.components.combat and act.target.components.combat:CanBeAttacked(act.doer)
 				and not (act.doer.components.follower and act.doer.components.follower:IsLeaderSame(act.target))
 				and not act.target:HasTag("player") then
 
                 act.doer.components.combat:DoAttack(act.target, nil, nil, nil, 2) --2*25 dmg
-            elseif math.random() < TUNING.CATCOON_PICKUP_ITEM_CHANCE then
-				if act.target.components.inventoryitem and act.target.components.inventoryitem.canbepickedup then
+            elseif act.doer.components.inventory ~= nil and act.target.components.inventoryitem and act.target.components.inventoryitem.canbepickedup and math.random() < TUNING.CATCOON_PICKUP_ITEM_CHANCE then
+			    if act.target.components.bait ~= nil then
+					act.target:PushEvent("onstolen", { thief = act.doer })
+				elseif act.doer.components.inventory ~= nil then
+					act.doer.components.inventory:GiveItem(act.target)
+				else
 					act.target:Remove()
 				end
+			elseif act.target.components.activatable ~= nil and act.target.components.activatable:CanActivate(act.doer) and math.random() < TUNING.CATCOON_ACTIVATE_CONNECT_CHANCE then
+				act.target.components.activatable:DoActivate(act.doer)
             end
         end
         return true
@@ -2513,15 +2533,19 @@ ACTIONS.CATPLAYGROUND.fn = function(act)
 end
 
 ACTIONS.CATPLAYAIR.fn = function(act)
-    if act.doer and act.doer.prefab == "catcoon" then
-		if act.target.components.poppable ~= nil then
+    if act.doer and act.target then
+		if act.target.components.cattoy ~= nil then
+			act.target.components.cattoy:Play(act.doer, true)
+		elseif act.target.components.poppable ~= nil then
 			act.target.components.poppable:Pop()
-        elseif act.target and math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE
+        elseif act.doer.components.combat ~= nil and act.target and math.random() < TUNING.CATCOON_ATTACK_CONNECT_CHANCE
 			and act.target.components.health and act.target.components.health.maxhealth <= TUNING.PENGUIN_HEALTH -- Only bother attacking if it's a penguin or weaker
 			and act.target.components.combat and act.target.components.combat:CanBeAttacked(act.doer)
 			and not (act.doer.components.follower and act.doer.components.follower:IsLeaderSame(act.target)) then
 
             act.doer.components.combat:DoAttack(act.target, nil, nil, nil, 2) --2*25 dmg
+		elseif act.target.components.activatable ~= nil and act.target.components.activatable:CanActivate(act.doer) and math.random() < TUNING.CATCOON_ACTIVATE_CONNECT_CHANCE then
+			local ret, msg = act.target.components.activatable:DoActivate(act.doer)
         end
         act.doer.last_play_air_time = GetTime()
         return true
@@ -2701,25 +2725,61 @@ ACTIONS.BRUSH.fn = function(act)
     end
 end
 
-local ABANDON_MUST_TAGS = { "critterlab" }
+local CRITTER_MUST_TAGS = { "critterlab" }
 ACTIONS.ABANDON.fn = function(act)
-    if act.doer.components.petleash ~= nil then
+    if act.doer.components.petleash ~= nil and act.target.components.crittertraits ~= nil then
         if not (act.doer.components.builder ~= nil and act.doer.components.builder.accessible_tech_trees.ORPHANAGE > 0) then
             --we could've been in range but the pet was out of range
             local x, y, z = act.doer.Transform:GetWorldPosition()
-            if #TheSim:FindEntities(x, y, z, 10, ABANDON_MUST_TAGS) <= 0 then
+            if #TheSim:FindEntities(x, y, z, 10, CRITTER_MUST_TAGS) <= 0 then
                 return false
             end
         end
         act.doer.components.petleash:DespawnPet(act.target)
         return true
-    end
+
+	elseif act.target.components.follower ~= nil and act.target.components.follower:GetLeader() == act.doer then
+		act.target.components.follower:StopFollowing()
+		return true
+   end
 end
 
 ACTIONS.PET.fn = function(act)
-    if act.target ~= nil and act.doer.components.petleash ~= nil then
-        act.target.components.crittertraits:OnPet(act.doer)
+    if act.target ~= nil then
+		if act.doer.components.petleash ~= nil and act.target.components.crittertraits ~= nil then
+			if act.target.components.crittertraits then
+				act.target.components.crittertraits:OnPet(act.doer)
+			end
+		end
+
+		if act.target.components.kitcoon ~= nil then
+			act.target:PushEvent("on_petted", {doer = act.doer})
+		end
         return true
+    end
+end
+
+ACTIONS.RETURN_FOLLOWER.fn = function(act)
+    if act.target ~= nil and act.target.components.follower ~= nil and act.target.components.follower:GetLeader() == act.doer and act.doer:HasTag("near_kitcoonden") then
+		local x, y, z = act.target.Transform:GetWorldPosition()
+		local den = TheSim:FindEntities(x, y, z, TUNING.KITCOON_NEAR_DEN_DIST, {"kitcoonden"})[1]
+		if den ~= nil then
+			den.components.kitcoonden:AddKitcoon(act.target, act.doer)
+	        return true
+		else
+			return false
+		end
+    end
+end
+
+ACTIONS.HIDEANSEEK_FIND.fn = function(act)
+    local targ = act.target or act.invobject
+	
+    if targ ~= nil then
+		if targ.components.hideandseekhidingspot ~= nil then
+			targ.components.hideandseekhidingspot:SearchHidingSpot(act.doer)
+			return true
+		end
     end
 end
 
@@ -3194,7 +3254,13 @@ end
 
 ACTIONS.LOWER_SAIL_BOOST.fn = function(act)
 	if act.target ~= nil and act.target.components.mast ~= nil then
-		act.target.components.mast:AddSailFurler(act.doer, 10)
+        
+        local strength = 10
+        if act.doer.components.expertsailor ~= nil and act.doer.components.expertsailor:HasLowerSailStrength() then
+            strength = act.doer.components.expertsailor:GetLowerSailStrength()
+        end
+		
+        act.target.components.mast:AddSailFurler(act.doer, strength)
 		return true
 	end
 end

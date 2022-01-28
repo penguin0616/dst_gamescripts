@@ -26,7 +26,6 @@ local function onpickedfn(inst, picker)
     if picker and picker.components.sanity then
         picker.components.sanity:DoDelta(-TUNING.SANITY_TINY)
     end
-    inst:Remove()
 end
 
 local function fn()
@@ -60,6 +59,7 @@ local function fn()
     inst.components.pickable.picksound = "dontstarve/wilson/pickup_plants"
     inst.components.pickable:SetUp("petals_evil", 10)
     inst.components.pickable.onpickedfn = onpickedfn
+	inst.components.pickable.remove_when_picked = true
     inst.components.pickable.quickpick = true
     inst.components.pickable.wildfirestarter = true
 

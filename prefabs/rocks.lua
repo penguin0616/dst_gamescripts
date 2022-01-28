@@ -421,15 +421,13 @@ local function on_load_moonglass(inst, data)
 end
 
 local function rock_moon_glass()
-    local inst = baserock_fn("moonglass_rock", "moonglass_rock", "full", "rock_moonglass.png", nil, 1.0)
+    local inst = baserock_fn("moonglass_rock", "moonglass_rock", "full", "rock_moonglass.png", "moonglass", 1.0)
 
     inst:SetPrefabName("moonglass_rock")
 
     if not TheWorld.ismastersim then
         return inst
     end
-
-    inst:AddTag("moonglass")
 
     set_moonglass_type(inst, math.random(4))
 

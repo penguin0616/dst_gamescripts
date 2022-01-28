@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "I've got to get down if I'm going to do that properly.",
             HASPET = "I think Woby might get jealous if I keep collecting pets.",
+			TICOON = "One of these guys is enough to keep track of.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "I think it's locked.",
             HOSTBUSY = "Excuse me, mister...? Hm, looks like he's busy.",
             CARNIVAL_HOST_HERE = "I thought I saw him around here somewhere...",
-            NOCARNIVAL = "Aw, looks like they all left..."
+            NOCARNIVAL = "Aw, looks like they all left...",
+			EMPTY_CATCOONDEN = "It's empty? Well now I feel kind of bad...",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It would be a pretty short game, maybe I should find more first.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Uhh, I'm not sure where they could even hide around here.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Sorry kitties, I can't play with you all day!",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -191,7 +196,7 @@ return{
 --fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
-                "Wait... you're not my Carrat!",
+                "Wait... you're not my carrat!",
                 "Mine was the OTHER orange one.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
@@ -657,7 +662,7 @@ return{
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
-    ANNOUNCE_WEAK_RAT = "This Carrat doesn't look healthy...",
+    ANNOUNCE_WEAK_RAT = "This carrat doesn't look healthy...",
 
     ANNOUNCE_CARRAT_START_RACE = "READY-SET-GO!!",
 
@@ -735,6 +740,33 @@ return{
         "How are you doing today plants? Seen any new bugs lately?",
         "It's good to have someone to talk to. Thanks plants!",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Alright, I'm closing my eyes! Three... two... one...!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Can I play too? Uh... I mean, use my Pioneer tracking expertise?",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"I knew I'd find you!",
+		"There you are!",
+		"Gotcha!",
+		"That was too easy.",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "There should be one more hiding somewhere...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "I think that's all of them!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "Good job {name}, I think that's the last one!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Uh oh, I think we're almost out of time.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Darnit, they're too good at hiding!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "I don't think they'd be hiding way out here.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "I think we're getting warmer, Woby!",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Woby! Look what I found!",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "I think he knows the way!",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "It doesn't look like he's picking up any scents.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Wait up! I'm coming!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Look Woby, I think he's trying to get our attention!",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "I think he smells something nearby!",
+	ANNOUNCE_TICOON_LOST_KITCOON = "I guess he lost the scent.",
+	ANNOUNCE_TICOON_ABANDONED = "I think Woby and I can sniff them out on our own.",
+	ANNOUNCE_TICOON_DEAD = "I-it's okay Woby, he's just taking a nap! Let's keep going.",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Come here, girl! Or boy? It's hard to tell.",
@@ -1602,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "At least I'm not allergic to bees made out of stone.",
         CHESSPIECE_ANTLION = "She really shook you up, didn't she Woby?",
         CHESSPIECE_BEEFALO = "Aw don't be jealous Woby, you deserve a statue too!",
+		CHESSPIECE_KITCOON = "They're pretty cute, but not as cute as you Woby.",
+		CHESSPIECE_CATCOON = "It's not quite as exciting as a monster statue, is it?",
         CHESSPIECE_GUARDIANPHASE3 = "It's so lifelike, I feel like they're staring right at me!",
         CHESSPIECE_EYEOFTERROR = "Nothing to see here, folks! Ha ha, get it Woby?",
         CHESSPIECE_TWINSOFTERROR = "Is this one of those sculptures where the eyes follow you around the room?",
@@ -2614,7 +2648,7 @@ return{
 		PIGELITEFIGHTER3 = "He's not afraid to get his hands... or anything else dirty.", --WHITE
 		PIGELITEFIGHTER4 = "He's probably really nice once you get to know him.", --GREEN
 
-		CARRAT_GHOSTRACER = "Where can I get a shadow Carrat?",
+		CARRAT_GHOSTRACER = "Where can I get a shadow carrat?",
 
         YOTC_CARRAT_RACE_START = "Let's start this race!",
         YOTC_CARRAT_RACE_CHECKPOINT = "A good race needs some planning.",
@@ -2656,7 +2690,7 @@ return{
         },
         YOTC_CARRAT_GYM_REACTION =
         {
-            GENERIC = "By the time we're done, my Carrat will be ready for anything!",
+            GENERIC = "By the time we're done, my carrat will be ready for anything!",
             RAT = "These reflexes could save your life in the wilderness!",
             BURNT = "I... reacted too slow... to put the fire out...",
         },
@@ -2667,7 +2701,7 @@ return{
             BURNT = "Oh no!!",
         },
 
-        YOTC_CARRAT_GYM_DIRECTION_ITEM = "I'd better start training my Carrat.",
+        YOTC_CARRAT_GYM_DIRECTION_ITEM = "I'd better start training my carrat.",
         YOTC_CARRAT_GYM_SPEED_ITEM = "Do you think we should put it over there, Woby?",
         YOTC_CARRAT_GYM_STAMINA_ITEM = "I'm great at putting things together!",
         YOTC_CARRAT_GYM_REACTION_ITEM = "Maybe I'll put it over here... no, over there!",
@@ -2675,7 +2709,7 @@ return{
         YOTC_CARRAT_SCALE_ITEM = "I never knew skills could be measured by weight.",
         YOTC_CARRAT_SCALE =
         {
-            GENERIC = "Do I get a badge for having the best Carrat?",
+            GENERIC = "Do I get a badge for having the best carrat?",
             CARRAT = "He just needs some more training. We'll get there!",
             CARRAT_GOOD = "Woah, all our training paid off!",
             BURNT = "Why won't everyone just use the fire pit?!",
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "The beefalo seem to really like the sound it makes!",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "Aww, it's like a dog house for cats!",
+            BURNT = "I'm glad I taught those little guys how to stop, drop and roll!",
+			PLAYING_HIDEANDSEEK = "Don't give me any hints, Woby!",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "I need to hurry up and find them all!",
+		},
+
+		KITCOONDEN_KIT = "I built a bird house once, a cat house should be easy!",
+
+		TICOON = 
+		{
+			GENERIC = "Is that a real man-eating tiger? I thought they'd be bigger.",
+			ABANDONED = "I hope he's not too upset at me...",
+			SUCCESS = "Look, he found one!",
+			LOST_TRACK = "Maybe he doesn't know where he's going after all.",
+			NEARBY = "I think he smells something nearby!",
+			TRACKING = "Come on Woby, let's follow him!",
+			TRACKING_NOT_MINE = "Whoops, sorry! All man-eating tigers look so alike...",
+			NOTHING_TO_TRACK = "It doesn't look like he's picking up any scents.",
+			TARGET_TOO_FAR_AWAY = "Maybe we should try looking somewhere else.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "Come on Woby, let's make something!",
+            EMPTY = "I know a lot about dogs, but what do cats like?",
+            BURNT = "This is exactly why learning fire safety is so important!",
+        },
+
+		KITCOON_FOREST = "Aww, they're so cute even Woby likes them!",
+		KITCOON_SAVANNA = "Aww, they're so cute even Woby likes them!",
+		KITCOON_MARSH = "I wonder if there's a badge for kitten wrangling...",
+		KITCOON_DECIDUOUS = "I wonder if there's a badge for kitten wrangling...",
+		KITCOON_GRASS = "Hey little guy!",
+		KITCOON_ROCKY = "Hey little guy!",
+		KITCOON_DESERT = "Hmm, do you think they'd eat granola?",
+		KITCOON_MOON = "Hmm, do you think they'd eat granola?",
+		KITCOON_YOT = "Hmm, do you think they'd eat granola?",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Woah, is that a space creature?!",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="I like to think it's smiling.",
         TWINOFTERROR1 = "Somewhere, some poor giant robot is walking around completely blind...",
         TWINOFTERROR2 = "Somewhere, some poor giant robot is walking around completely blind...",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "Sorry Woby, that's for the kits to play with.",
+        KITCOON_NAMETAG = "It looks almost like yours, Woby!",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "I wonder if the kits think it's a real bird?",
+            BURNT = "I guess it was too convincing, someone tried to cook it!",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "It's fishing for kits!",
+            BURNT = "That wasn't kindling!",
+        },
+
+		KITCOONDECOR1_KIT = "Don't worry kitties, I'll put this together lickety-split!",
+		KITCOONDECOR2_KIT = "Don't worry kitties, I'll put this together lickety-split!",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

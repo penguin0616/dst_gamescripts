@@ -23,8 +23,8 @@ function Oar:Row(doer, pos)
 	end
 
 	local character_force_mult = 1
-	if doer.GetRowForceMultiplier ~= nil then
-		character_force_mult = doer:GetRowForceMultiplier()
+	if doer.components.expertsailor and doer.components.expertsailor:HasRowForceMultiplier() then
+		character_force_mult = doer.components.expertsailor:GetRowForceMultiplier()
 	end
 
 	boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.force * character_force_mult, self.max_velocity)

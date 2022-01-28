@@ -844,8 +844,6 @@ local function on_planted_prefab_picked(inst)
 	if inst._color ~= nil then
 		carrat._setcolorfn(carrat, inst._color)
 	end
-
-    inst:Remove()
 end
 
 local function on_planted_prefab_ignite(inst)
@@ -902,6 +900,7 @@ local function planted_fn()
     inst:AddComponent("pickable")
     inst.components.pickable.picksound = "dontstarve/wilson/pickup_plants"
     inst.components.pickable.onpickedfn = on_planted_prefab_picked
+	inst.components.pickable.remove_when_picked = true
     inst.components.pickable.canbepicked = true
 
     MakeSmallBurnable(inst)

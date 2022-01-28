@@ -1455,6 +1455,14 @@ function DisplayError(error)
                                                         end},
                 {text=STRINGS.UI.MAINSCREEN.MODFORUMS, nopop=true, cb = function() VisitURL("http://forums.kleientertainment.com/forum/79-dont-starve-together-beta-mods-and-tools/") end }
             }
+
+            -- Add reload save button if we're on dev
+            if BRANCH == "dev" then
+                table.insert(buttons, 1, {text=STRINGS.UI.MAINSCREEN.SCRIPTERRORRESTART, cb = function()
+                                                                                                TheSim:ResetError()
+                                                                                                c_reset()
+                                                                                            end})
+            end
         end
         SetGlobalErrorWidget(
                 STRINGS.UI.MAINSCREEN.MODFAILTITLE,
@@ -1477,6 +1485,14 @@ function DisplayError(error)
             buttons = {
                 {text=STRINGS.UI.MAINSCREEN.SCRIPTERRORQUIT, cb = function() TheSim:ForceAbort() end},
             }
+
+            -- Add reload save button if we're on dev
+            if BRANCH == "dev" then
+                table.insert(buttons, 1, {text=STRINGS.UI.MAINSCREEN.SCRIPTERRORRESTART, cb = function()
+                                                                                                TheSim:ResetError()
+                                                                                                c_reset()
+                                                                                            end})
+            end
 
             if known_error_key == nil or ERRORS[known_error_key] == nil then
                 table.insert(buttons, {text=STRINGS.UI.MAINSCREEN.ISSUE, nopop=true, cb = function() VisitURL("http://forums.kleientertainment.com/klei-bug-tracker/dont-starve-together/") end })
@@ -2025,5 +2041,11 @@ function DisplayAntiAddictionNotification( notification )
         end)
     end
 end
+
+--shell commands that are ignored
+local RCINIL = function() end
+RCITimeout = RCINIL
+RCIFileLock = RCINIL
+RCIFileUnlock = RCINIL
 
 require("dlcsupport")

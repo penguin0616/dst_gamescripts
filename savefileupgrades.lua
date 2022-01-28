@@ -1157,6 +1157,13 @@ t = {
 				FlagForRetrofitting_Forest(savedata, "retrofit_terraria_terrarium")
             end,
         },
+
+        {
+            version = 5.10, -- Catcoon De-extinction
+            fn = function(savedata)
+				FlagForRetrofitting_Forest(savedata, "retrofit_catcoonden_deextinction")
+            end,
+        },
     },
 }
 

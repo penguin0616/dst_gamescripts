@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "In this elevated position, I can't reach the ground.",
             HASPET = "One domestic creature is enough for me.",
+			TICOON = "Having two trackers at once could possibly confuse them.",
         },
 		SHAVE =
 		{
@@ -55,10 +56,14 @@ return{
         },
 		ACTIVATE =
 		{
-			LOCKED_GATE = "I appears to be locked.",
+			LOCKED_GATE = "It appears to be locked.",
             HOSTBUSY = "He seems to be attending to other matters at the moment.",
             CARNIVAL_HOST_HERE = "I believe I saw our host somewhere in this direction.",
-            NOCARNIVAL = "How disappointing, the corvids seem to have migrated elsewhere."
+            NOCARNIVAL = "How disappointing, the corvids seem to have migrated elsewhere.",
+			EMPTY_CATCOONDEN = "Unfortunately, it appears the kittens are not present.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It would seem the seekers outnumber the kittens.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "I believe there are not enough locations for the kittens to hide.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I believe I should take some time to rest.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
         READ =
         {
             GENERIC = "Other matters await.",
-            NOBIRDS = "The birds are not keen on this weather."
+            NOBIRDS = "The birds are not keen on this weather.",
         },
 
         GIVE =
@@ -735,6 +740,33 @@ return{
         "No need to rush dear, you just take your time.",
         "How are you doing today? Do you have enough water?",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "The game has commenced, I should start seeking.",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Excuse me, I will join the feline search.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Ah, there you are.",
+		"It seems I've discovered a kitten.",
+		"I could see your tail from the distance, dear.",
+		"Finding kittens is quite simple once you become accustomed to it.",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "One more kitten has been encountered.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "I found all of the missing kittens.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "We found all of the missing kittens.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "The end of the game draws closer.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "It appears we did not find them all in time.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "I am distancing myself from where the game is happening.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "The kittens should be over here, yes.",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Poor dear, are you lost?",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "I believe he has caught the kitten's scent.",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "There appears to be a clear lack of hiding evidence.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "He is awaiting my lead.",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Don't worry, dear, I'm coming.",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "He believes we're near one of the kittens.",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Someone arrived before us and found our kitten.",
+	ANNOUNCE_TICOON_ABANDONED = "It appears I will have to continue the search alone.",
+	ANNOUNCE_TICOON_DEAD = "Oh, how terrible! I suppose I'm on my own now.",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Come along now.",
@@ -1602,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "A queenly tribute to the Apis mellifera.",
         CHESSPIECE_ANTLION = "A stately statuary of the Panthera auropunctata.",
         CHESSPIECE_BEEFALO = "It captures my beefalo's likeness quite well.",
+		CHESSPIECE_KITCOON = "I should warn the children not to play too close to it.",
+		CHESSPIECE_CATCOON = "The resemblance to the Felis lybica is incredible.",
         CHESSPIECE_GUARDIANPHASE3 = "I must commend the artist for their attention to detail.",
         CHESSPIECE_EYEOFTERROR = "A trophy that doubles as a useful anatomical model.",
         CHESSPIECE_TWINSOFTERROR = "A stone rendition of a pair of mechanical marvels.",
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "Something about its tone triggers an affectionate response in beefalo.",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "A well-constructed habitation for the kittens.",
+            BURNT = "It seems the kittens have lost their residence.",
+			PLAYING_HIDEANDSEEK = "The kittens are currently attempting to hide.",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "The kittens' hiding game will come to an end soon.",
+		},
+
+		KITCOONDEN_KIT = "Materials to construct a proper kitten household.",
+
+		TICOON = 
+		{
+			GENERIC = "Quite a wise feline.",
+			ABANDONED = "He has left me to procure the kittens alone.",
+			SUCCESS = "He encountered one of the kittens.",
+			LOST_TRACK = "The kitten was found before we arrived.",
+			NEARBY = "I believe we're near.",
+			TRACKING = "He is guiding me to a kitten's hiding spot.",
+			TRACKING_NOT_MINE = "He is guiding someone else to a kitten's hiding spot.",
+			NOTHING_TO_TRACK = "There is no clear evidence left to point us towards the kitten.",
+			TARGET_TOO_FAR_AWAY = "The kittens are far enough away to hide their smell.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "A special representation of wildcats.",
+            EMPTY = "A golden offering is necessary.",
+            BURNT = "The fire was overwhelming.",
+        },
+
+		KITCOON_FOREST = "It appears to have developed a form of camouflage.",
+		KITCOON_SAVANNA = "The resemblance to a Panthera tigris is incredible.",
+		KITCOON_MARSH = "This feline has quite an uncanny appearance.",
+		KITCOON_DECIDUOUS = "Oh dear, you are quite adorable.",
+		KITCOON_GRASS = "Oh dear, have you been startled?",
+		KITCOON_ROCKY = "Hmm, their body language seems to imply annoyance.",
+		KITCOON_DESERT = "They possess large ears to facilitate hunting small desert critters.",
+		KITCOON_MOON = "A feline? From the moon? Quite fascinating...",
+		KITCOON_YOT = "Oh dear, the bell truly augments your... cuteness. Ho ho!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Our activities seem to have triggered a defense mechanism of sorts.",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="It seems better suited to offensive measures, rather than defensive as one might think.",
         TWINOFTERROR1 = "How curious, I wonder who might have constructed such a thing?",
         TWINOFTERROR2 = "How curious, I wonder who might have constructed such a thing?",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "A simple mechanism behind an entertaining toy for felines.",
+        KITCOON_NAMETAG = "Ah, it does bring back memories of my dear old cat...",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "Its movement appears to be hypnotic to the kittens.",
+            BURNT = "Gone with the fire.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "I used to have one of those back home.",
+            BURNT = "Unfortunately, it's useless now.",
+        },
+
+		KITCOONDECOR1_KIT = "Materials to construct entertaining toys for kittens.",
+		KITCOONDECOR2_KIT = "Materials to construct entertaining toys for kittens.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

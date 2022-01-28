@@ -775,7 +775,7 @@ end
 
 fns.OnNamedByWriteable = function(inst, new_name, writer)
     if inst.components.named ~= nil then
-        inst.components.named:SetName(new_name, writer ~= nil and writer.userid)
+        inst.components.named:SetName(new_name, writer ~= nil and writer.userid or nil)
     end
 end
 

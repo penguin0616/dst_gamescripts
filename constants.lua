@@ -687,8 +687,9 @@ SPECIAL_EVENTS =
     YOTP = "year_of_the_pig",
     YOTC = "year_of_the_carrat",
     YOTB = "year_of_the_beefalo",
+    YOT_CATCOON = "year_of_the_catcoon",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.WINTERS_FEAST
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.YOT_CATCOON
 
 FESTIVAL_EVENTS =
 {
@@ -703,6 +704,16 @@ PREVIOUS_FESTIVAL_EVENTS_ORDER =
     { id = FESTIVAL_EVENTS.LAVAARENA, season = 2 },
     { id = FESTIVAL_EVENTS.QUAGMIRE, season = 1 },
     { id = FESTIVAL_EVENTS.LAVAARENA, season = 1 },
+}
+
+IS_YEAR_OF_THE_SPECIAL_EVENTS =
+{
+    [SPECIAL_EVENTS.YOTG] = true,
+    [SPECIAL_EVENTS.YOTV] = true,
+    [SPECIAL_EVENTS.YOTP] = true,
+    [SPECIAL_EVENTS.YOTC] = true,
+    [SPECIAL_EVENTS.YOTB] = true,
+	[SPECIAL_EVENTS.YOT_CATCOON] = true,
 }
 
 
@@ -766,6 +777,12 @@ SPECIAL_EVENT_MUSIC =
     {
         bank = "music_frontend_yotb.fsb",
         sound = "yotb_2021/music/FE",
+    },
+
+    [SPECIAL_EVENTS.YOT_CATCOON] =
+    {
+        bank = "music_frontend_yotg.fsb",
+        sound = "dontstarve/music/music_FE_yotg",
     },
 
 	-- crow carnival
@@ -839,7 +856,7 @@ end
 ---------------------------------------------------------
 -- Checks if any of the "Year of the <creature>" events are active
 function IsAny_YearOfThe_EventActive()
-	return WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTG or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTV or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTP or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTC or WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.YOTB
+	return IS_YEAR_OF_THE_SPECIAL_EVENTS[WORLD_SPECIAL_EVENT]
 end
 
 function GetSpecialEventSkinTag()
@@ -977,6 +994,7 @@ TECH =
     PIGOFFERING_THREE = { PIGOFFERING = 3 },
     CARRATOFFERING_THREE = { CARRATOFFERING = 3 },
     BEEFOFFERING_THREE = { BEEFOFFERING = 3 },
+    CATCOONOFFERING_THREE = { CATCOONOFFERING = 3 },
     MADSCIENCE_ONE = { MADSCIENCE = 1 },
 	CARNIVAL_PRIZESHOP_ONE = { CARNIVAL_PRIZESHOP = 1 },
 	CARNIVAL_HOSTSHOP_ONE = { CARNIVAL_HOSTSHOP = 1 },
@@ -1001,6 +1019,7 @@ TECH =
     YOTP = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
     YOTC = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
     YOTB = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
+    YOT_CATCOON = { SCIENCE = 10 }, -- ApplySpecialEvent() will change this from lost to 0
 
     LOST = { MAGIC = 10, SCIENCE = 10, ANCIENT = 10 },
 

@@ -7,6 +7,8 @@ local Text = require "widgets/text"
 local Widget = require "widgets/widget"
 local SkinPresetsPopup = require "screens/redux/skinpresetspopup"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local TEMPLATES = require("widgets/redux/templates")
 
 local WardrobeScreen = Class(Screen, function(self, user_profile, character)
@@ -29,6 +31,12 @@ function WardrobeScreen:_DoInit()
     self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
 
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.WARDROBESCREEN.TITLE, ""))
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = -380, y = 170, scale = 0.75 },
+        { x = -300, y = -315, scale = 0.75 },
+        { x = 580, y = -315, scale = 0.75 },
+    } ))
 
     self.doodad_count = self.root:AddChild(TEMPLATES.DoodadCounter(TheInventory:GetCurrencyAmount()))
 	self.doodad_count:SetPosition(-550, 215)
@@ -404,6 +412,18 @@ function WardrobeScreen:OnBecomeActive()
             DisplayCharacterUnownedPopup( self.currentcharacter, self.subscreener)
         end
         self.did_once = true
+    end
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+end
+
+function WardrobeScreen:OnBecomeInactive()
+    self._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
     end
 end
 

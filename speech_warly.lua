@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "Mon dieu, that's far away.",
             HASPET = "I already have a little companion.",
+			TICOON = "Non, that's not the one I'm following.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "I'll need a key to get through.",
             HOSTBUSY = "I'll just have to come back later.",
             CARNIVAL_HOST_HERE = "Hello, monsieur? Are you here?",
-            NOCARNIVAL = "The festivities seem to be over."
+            NOCARNIVAL = "The festivities seem to be over.",
+			EMPTY_CATCOONDEN = "Ah zut, an empty cupboard.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It would be better with more petits chats, non?",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Ah, perhaps I should find a place with more hiding spots.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I'm afraid that's enough playing for one day.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -191,8 +196,8 @@ return{
 --fallback to speech_wilson.lua             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
-                "Pardonnez-moi, I mistook you for my Carrat!",
-                "Oh, je m'excuse, have you seen my Carrat around here?",
+                "Pardonnez-moi, I mistook you for my carrat!",
+                "Oh, je m'excuse, have you seen my carrat around here?",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
         },
@@ -667,7 +672,7 @@ return{
     },
     ANNOUNCE_CARRAT_ERROR_FELL_ASLEEP = "Mon dieu! Has it fallen into a food coma?",
     ANNOUNCE_CARRAT_ERROR_WALKING = "You must move faster!",
-    ANNOUNCE_CARRAT_ERROR_STUNNED = "My Carrat is frozen!",
+    ANNOUNCE_CARRAT_ERROR_STUNNED = "My carrat is frozen!",
 
     ANNOUNCE_GHOST_QUEST = "only_used_by_wendy",
 --fallback to speech_wilson.lua     ANNOUNCE_GHOST_HINT = "only_used_by_wendy",
@@ -735,6 +740,33 @@ return{
         "What a good little plant you are.",
         "How are you today, mon ami? Everything growing well?",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Three, two, one... allons-y!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Might I join in, s'il vous plait?",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Voilà!",
+		"There you are mon petit chat!",
+		"Ah, there you are!",
+		"Bonjour, I see you!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "There should only be one left.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "Et voilà! The last petit chat.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "Ah, {name} found them at last!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "The game will be finished soon.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Well, I suppose I'll just have to do better next time.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "I think I might have wandered too far...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "Hmm, they should be around here somewhere...",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Oh! Bonjour petit chat!",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Allons-y, monsieur! I'll be close behind.",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Perhaps there are no petits chats around to track.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Just a moment, I'm coming!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Oh! Do you smell something, monsieur?",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "I have a feeling we're very close.",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Ah, he seems to have lost the trail.",
+	ANNOUNCE_TICOON_ABANDONED = "I think perhaps it's time for a break. Au revoir!",
+	ANNOUNCE_TICOON_DEAD = "Oh my, that must have been his ninth life...",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Over here, my mignon filet!",
@@ -1602,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "Muse for my new honey glaze!",
         CHESSPIECE_ANTLION = "I do like her better like this.",
         CHESSPIECE_BEEFALO = "What a beautifully marbled steak.",
+		CHESSPIECE_KITCOON = "I think Mme. Wickerbottom is particularly fond of this one.",
+		CHESSPIECE_CATCOON = "At least this one won't try to sneak off with my lunch.",
         CHESSPIECE_GUARDIANPHASE3 = "A three course fight I won't soon forget.",
         CHESSPIECE_EYEOFTERROR = "Did it just blink?",
         CHESSPIECE_TWINSOFTERROR = "They weren't the most polite guests, non?",
@@ -2623,11 +2657,11 @@ return{
             GENERIC = "La fin!",
             BURNT = "Burnt to a crisp.",
             I_WON = "We've won, mon ami!",
-            SOMEONE_ELSE_WON = "{winner}'s Carrat ran quite the race! Well done!",
+            SOMEONE_ELSE_WON = "{winner}'s carrat ran quite the race! Well done!",
         },
 
 		YOTC_CARRAT_RACE_START_ITEM = "This will make a fine starting point.",
-        YOTC_CARRAT_RACE_CHECKPOINT_ITEM = "Ah, this will keep the Carrat's on course.",
+        YOTC_CARRAT_RACE_CHECKPOINT_ITEM = "Ah, this will keep the carrat's on course.",
 		YOTC_CARRAT_RACE_FINISH_ITEM = "Every race needs a finish line.",
 
 		YOTC_SEEDPACKET = "I wonder what will grow from this?",
@@ -2669,8 +2703,8 @@ return{
 
         YOTC_CARRAT_GYM_DIRECTION_ITEM = "I should find a good place to put this.",
         YOTC_CARRAT_GYM_SPEED_ITEM = "My racer will be in tip top condition in no time.",
-        YOTC_CARRAT_GYM_STAMINA_ITEM = "I'd better begin training my Carrat!",
-        YOTC_CARRAT_GYM_REACTION_ITEM = "I wonder how my Carrat will react to this...",
+        YOTC_CARRAT_GYM_STAMINA_ITEM = "I'd better begin training my carrat!",
+        YOTC_CARRAT_GYM_REACTION_ITEM = "I wonder how my carrat will react to this...",
 
         YOTC_CARRAT_SCALE_ITEM = "I hope I get a high rating.",
         YOTC_CARRAT_SCALE =
@@ -3767,7 +3801,7 @@ return{
 
         DUSTMOTH = "It seems like a gentle soul.",
 
-        DUSTMOTHDEN = "Quelle suprise! It's so clean you could eat off it!",
+        DUSTMOTHDEN = "Quelle surprise! It's so clean you could eat off it!",
 
         ARCHIVE_LOCKBOX = "Perhaps it contains an ancient recipe of some kind.",
         ARCHIVE_CENTIPEDE = "Excusez-moi, sorry to disturb you!",
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "It is not a dinner bell?",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "Bonjour! Is anyone home?",
+            BURNT = "Burnt to a crisp.",
+			PLAYING_HIDEANDSEEK = "I don't think they're hiding in there.",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "My time is almost up, where could they be?",
+		},
+
+		KITCOONDEN_KIT = "I'll whip it together tout de suite.",
+
+		TICOON = 
+		{
+			GENERIC = "He looks very well fed.",
+			ABANDONED = "Perhaps we'll try again later, non?",
+			SUCCESS = "Ah, he found something!",
+			LOST_TRACK = "What's wrong, monsieur? Did you lose the scent?",
+			NEARBY = "Hmm, I wonder if there's one nearby?",
+			TRACKING = "Something has caught his attention.",
+			TRACKING_NOT_MINE = "Oh excusez-moi, I didn't know you were preoccupied!",
+			NOTHING_TO_TRACK = "Perhaps there's nothing left to find.",
+			TARGET_TOO_FAR_AWAY = "Maybe we should try elsewhere, non?",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "What should we cook up together?",
+            EMPTY = "I should give it a little gift.",
+            BURNT = "Flame broiled.",
+        },
+
+		KITCOON_FOREST = "Bonjour petit chat!",
+		KITCOON_SAVANNA = "Bonjour petit chat!",
+		KITCOON_MARSH = "Bonjour petit chat!",
+		KITCOON_DECIDUOUS = "Bonjour petit chat!",
+		KITCOON_GRASS = "You're so sweet, I could just eat you up!",
+		KITCOON_ROCKY = "You're so sweet, I could just eat you up!",
+		KITCOON_DESERT = "You're so sweet, I could just eat you up!",
+		KITCOON_MOON = "You're so sweet, I could just eat you up!",
+		KITCOON_YOT = "You're so sweet, I could just eat you up!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "It looks rather irritated...",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="Mon dieu, it seems I have another mouth to feed...",
         TWINOFTERROR1 = "I promise, I'm not as delicious as I appear!",
         TWINOFTERROR2 = "I promise, I'm not as delicious as I appear!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "I'm afraid I don't have any clockwork cheese.",
+        KITCOON_NAMETAG = "What shall I call you, mes petits chats?",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "A plaything for les petits chats.",
+            BURNT = "Mon dieu, I knew I smelled something burning!",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "They must work up quite an appetite playing all day.",
+            BURNT = "Ah. I don't think that was meant to be cooked.",
+        },
+
+		KITCOONDECOR1_KIT = "Nearly done.",
+		KITCOONDECOR2_KIT = "Now, to put the ingredients together.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

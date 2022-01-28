@@ -98,6 +98,8 @@ local ServerListingScreen = Class(Screen, function(self, prev_screen, filters, c
 
     self.unjoinable_servers = 0
 
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
     self.root = self:AddChild(TEMPLATES.ScreenRoot("scaleroot"))
     self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.heading = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.MAINSCREEN.BROWSE))

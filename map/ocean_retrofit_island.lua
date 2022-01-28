@@ -231,7 +231,7 @@ local function TurnOfTidesRetrofitting_HermitIsland(map, savedata)
 				local top, left = candidtates[1].top, candidtates[1].left
 				local world_top, world_left = (left-topology_delta)*4 - (map_width * 0.5 * 4), (top-topology_delta)*4 - (map_height * 0.5 * 4)
 
-				local ents_to_remove = FindEntsInArea(savedata.ents, world_top - 5, world_left - 5, world_size + 10, {"boat", "malbatross", "oceanfish_shoalspawner", "chester_eyebone", "glommerflower", "klaussackkey"})
+				local ents_to_remove = FindEntsInArea(savedata.ents, world_top - 5, world_left - 5, world_size + 10, {"boat", "malbatross", "oceanfish_shoalspawner", "chester_eyebone", "glommerflower", "klaussackkey", "crabking", "oceantree", "waterplant_base"})
 				if ents_to_remove ~= nil then
 					print("   Removed " .. tostring(#ents_to_remove) .. " entities for static layout:")
 					for i = #ents_to_remove, 1, -1 do

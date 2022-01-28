@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "Even with my long arms, I still can't reach.",
             HASPET = "One pet is enough responsibility.",
+			TICOON = "I've already recruited a ticoon.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "I shall have to find the key.",
             HOSTBUSY = "Apparently he has more pressing matters to attend to.",
             CARNIVAL_HOST_HERE = "I thought I saw that feathered charlatan around here...",
-            NOCARNIVAL = "Finally. It looks like the birds have dispersed."
+            NOCARNIVAL = "Finally. It looks like the birds have dispersed.",
+			EMPTY_CATCOONDEN = "It's vacant.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It seems we are lacking in participants.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This environment is not suitable for a fair game.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Playtime is over for now.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -735,6 +740,33 @@ return{
         "Say pal, do you like magic tricks? This is the one where I talk and you grow.",
         "Here I am, chatting it up with the vegetation.",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "I suppose we shall begin this ridiculous game.",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Of course you need my help.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"A-ha! Not sneaky enough!",
+		"Found you!",
+		"You were not clever enough to best the great Maxwell!!",
+		"Your attempt to escape me has been thwarted, child!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Only one remains.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "A-ha! That was the last one! I win!!!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "I had seen it already, but {name} got to it first, I suppose.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Where are those blasted kittens!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Blast it!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "I doubt those tiny, pathetic legs would carry them this far.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "This seems much more likely an area to find the kitcoons.",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "So you're the source of that pathetic mewling. I'll have to apologize to the strongman.",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Yes, good... lead me to the kitcoons.",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Nothing??? Useless animal!",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Even a creature of your stature knows to wait for its superiors.",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Can't you see I'm busy, rodent!? ...My apologies. Where were we?",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "Ah, we must be near a kitcoon...",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Drat, someone found this kitcoon before us.",
+	ANNOUNCE_TICOON_ABANDONED = "Fine! Begone! The Great Maxwell doesn't need help for a simple child's game.",
+	ANNOUNCE_TICOON_DEAD = "That foolish creature! This may prove to be a setback...",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "And here comes my... er, \"beautiful\" assistant.",
@@ -1602,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "Does she really need a statue?",
         CHESSPIECE_ANTLION = "Is there a sinkhole I can bury this in?",
         CHESSPIECE_BEEFALO = "At least this version doesn't shed all over my poor suit.",
+		CHESSPIECE_KITCOON = "This is a rather precarious design.",
+		CHESSPIECE_CATCOON = "This animal commands respect through violence.",
         CHESSPIECE_GUARDIANPHASE3 = "How could I not have seen...",
         CHESSPIECE_EYEOFTERROR = "An eye could never best a master of illusion such as I.",
         CHESSPIECE_TWINSOFTERROR = "The most troublesome pair I've ever seen.",
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "It appears to have some kind of hypnotic effect on beefalo.",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "A house for kitcoons? Can the pitiful little things not climb trees yet?",
+            BURNT = "No place to hide anymore.",
+			PLAYING_HIDEANDSEEK = "They are not here, they are out hiding.",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "We are nearly out of time to find all of the rascals.",
+		},
+
+		KITCOONDEN_KIT = "I don't see why I need to build them a house. They need to learn to climb trees like adults.",
+
+		TICOON = 
+		{
+			GENERIC = "This high status catcoon has a talent for finding the kits. I respect him only marginally more.",
+			ABANDONED = "I didn't need his help anyway.",
+			SUCCESS = "Well done, great beast!",
+			LOST_TRACK = "Blasted, we weren't fast enough! Sniff faster, beast!",
+			NEARBY = "A-ha... there's a kitcoon afoot.",
+			TRACKING = "He seems onto something. I shall let him take the lead.",
+			TRACKING_NOT_MINE = "That ticoon is not working for me. Yet.",
+			NOTHING_TO_TRACK = "There's nothing left to find.",
+			TARGET_TOO_FAR_AWAY = "His nose may be good, but I doubt it's good enough to track that far.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "I suppose even a thief has its admirers.",
+            EMPTY = "It seems we're supposed to offer it something.",
+            BURNT = "Seems not everyone appreciates the little thieves.",
+        },
+
+		KITCOON_FOREST = "What a pathetic little creature. It's encumbered by excess fur.",
+		KITCOON_SAVANNA = "What a pathetic little creature. It's pretending to be a much more respectable beast.",
+		KITCOON_MARSH = "What a pathetic little creature. It smells of sulphur.",
+		KITCOON_DECIDUOUS = "What a pathetic little creature. It will likely grow up to pick my pockets.",
+		KITCOON_GRASS = "What a pathetic little creature. Just looking at it makes me itch.",
+		KITCOON_ROCKY = "What a pathetic little creature. It doesn't even have the grace of a catcoon.",
+		KITCOON_DESERT = "What a pathetic little creature. Those ears are ridiculous.",
+		KITCOON_MOON = "What a pathetic little creature. It requires dental work.",
+		KITCOON_YOT = "What a pathetic little creature, and in such a gaudy outfit.",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "It seems our actions have been noticed.",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="At least dealing with that monstrosity was good for something.",
         TWINOFTERROR1 = "Ah. Just what we needed, a fresh pair of eyes...",
         TWINOFTERROR2 = "Ah. Just what we needed, a fresh pair of eyes...",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "The classic game of catcoon and mechnical mouse.",
+        KITCOON_NAMETAG = "I've named so many creatures at this point, the novelty has worn off.",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "Those creatures are so feeble of mind they can't tell a real bird from a wooden one.",
+            BURNT = "Whatever will we do without it.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "At least it should keep them occupied.",
+            BURNT = "A pity.",
+        },
+
+		KITCOONDECOR1_KIT = "Surely someone else can set it up.",
+		KITCOONDECOR2_KIT = "Physical labor is what underlings are for.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

@@ -49,6 +49,10 @@ local STATE_DATA =
         customidle = "idle_wolfgang_mighty",
         tag = "mightiness_mighty",
 
+        row_force_mult = TUNING.MIGHTY_ROWER_MULT,
+        anchor_raise_speed = TUNING.MIGHTY_ANCHOR_SPEED,
+        lower_sail_strength = TUNING.MIGHTY_SAIL_STRENGTH,
+
         scale = 1.2,
         insulation = TUNING.INSULATION_SMALL,
         work_effectiveness = TUNING.MIGHTY_WORK_EFFECTIVENESS,
@@ -273,6 +277,10 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
         self.inst.components.temperature.inherentinsulation = 0
         self.inst.components.temperature.inherentsummerinsulation = 0
     end
+
+    self.inst.components.expertsailor:SetRowForceMultiplier(state_data.row_force_mult)
+    self.inst.components.expertsailor:SetAnchorRaisingSpeed(state_data.anchor_raise_speed)
+    self.inst.components.expertsailor:SetLowerSailStrength(state_data.lower_sail_strength)
 
     if state_data.work_effectiveness then
         self.inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   state_data.work_effectiveness, self.inst)

@@ -17,6 +17,8 @@ local RedeemDialog = require "screens/redeemdialog"
 local Puppet = require "widgets/skinspuppet"
 local WardrobeScreen = require "screens/redux/wardrobescreen"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 require("characterutil")
 require("skinsutils")
 
@@ -37,9 +39,23 @@ local PlayerSummaryScreen = Class(Screen, function(self, prev_screen, user_profi
 end)
 
 function PlayerSummaryScreen:DoInit()
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
     self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.PLAYERSUMMARYSCREEN.TITLE, ""))
+   
+    self:_BuildPosse()
+
+    self.bottom_root = self.root:AddChild(Widget("bottom_root"))
+    self.bottom_root:SetPosition(100, -200)
+    self.new_items = self.bottom_root:AddChild(self:_BuildItemsSummary())
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = -380, y = 50, scale = 0.75 },
+        { x = -380, y = 170, scale = 0.75 },
+        { x = -330, y = -300, scale = 0.75 },
+    } ))
 
     self.onlinestatus = self.root:AddChild(OnlineStatus(true))
 
@@ -51,14 +67,7 @@ function PlayerSummaryScreen:DoInit()
         -- Profileflair and rank are displayed on experiencebar when its visible.
         self.puppet:AlwaysHideRankBadge()
     end
-
-    self:_BuildPosse()
-
-    self.bottom_root = self.root:AddChild(Widget("bototom_root"))
-    self.bottom_root:SetPosition(100, -200)
-    self.new_items = self.bottom_root:AddChild(self:_BuildItemsSummary())
-
-
+    
     self.musicstopped = true
 
     self.menu = self:_BuildMenu()
@@ -118,12 +127,6 @@ function PlayerSummaryScreen:_BuildItemsSummary()
 			table.insert(items, item)
 		end
 
-		-- This msg will be stomped by UpdateItems!
-		local unopened_msg = new_root:AddChild(Text(CHATFONT, 25, "", UICOLOURS.WHITE))
-		unopened_msg:SetPosition(0,-240)
-		unopened_msg:SetRegionSize(width,30)
-		unopened_msg:Hide()
-
         local counter = 0
         new_root.UpdateItems = function()
 		    if self.hide_items or not TheInventory:HasDownloadedInventory() then
@@ -132,7 +135,6 @@ function PlayerSummaryScreen:_BuildItemsSummary()
 				end
 				no_items:Show()
 				no_items:SetString(STRINGS.UI.PLAYERSUMMARYSCREEN.LOADING_STUFF)
-				unopened_msg:Hide()
 
 				new_root.ScheduleRefresh()
 				return
@@ -167,12 +169,6 @@ function PlayerSummaryScreen:_BuildItemsSummary()
 			for key,count in pairs(GetMysteryBoxCounts()) do
 				box_count = box_count + count
 			end
-			if box_count > 0 then
-				unopened_msg:SetString(subfmt(STRINGS.UI.PLAYERSUMMARYSCREEN.UNOPENED_BOXES_FMT, {num_boxes = box_count}))
-				unopened_msg:Show()
-			else
-				unopened_msg:Hide()
-			end
 		end
     end
 
@@ -192,7 +188,7 @@ function PlayerSummaryScreen:_BuildItemsSummary()
 end
 
 function PlayerSummaryScreen:_BuildPosse()
-    self.posse_root = self.root:AddChild(Widget("bototom_root"))
+    self.posse_root = self.root:AddChild(Widget("posse_root"))
     self.posse_root:SetPosition(-230, 150)
     --self.posse_root:SetScale(0.8)
 
@@ -356,6 +352,10 @@ end
 function PlayerSummaryScreen:OnBecomeActive()
     PlayerSummaryScreen._base.OnBecomeActive(self)
 
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+
 	if self.last_focus_widget then
 		self.menu:RestoreFocusTo(self.last_focus_widget)
 	end
@@ -365,6 +365,14 @@ function PlayerSummaryScreen:OnBecomeActive()
     self:StartMusic()
 
     DisplayInventoryFailedPopup( self )
+end
+
+function PlayerSummaryScreen:OnBecomeInactive()
+    PlayerSummaryScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function PlayerSummaryScreen:_RefreshTitles()

@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "Grrr, can't reach!",
             HASPET = "Don't need 'nother pet, glort.",
+			TICOON = "Huh? You not right one!",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Grrr... want in!",
             HOSTBUSY = "Hey! Trying to talk to you!",
             CARNIVAL_HOST_HERE = "Fancy Birdfolk over here!",
-            NOCARNIVAL = "Huh? Where the Birdfolk go?"
+            NOCARNIVAL = "Huh? Where the Birdfolk go?",
+			EMPTY_CATCOONDEN = "Glargh... no stuff in there, where they hide it?!",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "Need more scratchy fluffies to play!",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Hmm, no good hidey spots here.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Glurgh. Bored of this game.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -722,8 +727,8 @@ return{
 
 	ANNOUNCE_FIRENETTLE_TOXIN =
 	{
-		"Ouchie! Is hot! Don't like it, florp!",
-		"Is a bad plant! Makes insides burny!",
+		"Ouchie! It hot! Don't like it, florp!",
+		"It a bad plant! Makes insides burny!",
 	},
 	ANNOUNCE_FIRENETTLE_TOXIN_DONE = "Glurgh... feel bit better now.",
 
@@ -735,6 +740,33 @@ return{
         "You gonna grow up big and tasty!",
         "Hey, you listening?",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Hide now! Me coming!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Wanna play too, florp!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Found you, florp!",
+		"Ha ha, you easy to find.",
+		"Me is best at this game!",
+		"Need to find better hidey spot than that, flort!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Is one left somewhere!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "You last one!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "{name} find last one? Glurgh... coulda done it...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Where they hiding?! Time almost up!!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "No fair! Scratchy fluffies cheat!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "Hmm, don't smell no scratchy fluffies out here.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "Smell scratchy fluffies nearby, flort!",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "You lost? Will take you home, florp!",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Hey, where you going florp?",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "What wrong? Can't find nothing?",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Coming!! Wait up, flort!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "He smell something!",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "There something nearby...",
+	ANNOUNCE_TICOON_LOST_KITCOON = "What happen? Can't smell them no more?",
+	ANNOUNCE_TICOON_ABANDONED = "You no fun anymore. Bye-bye!",
+	ANNOUNCE_TICOON_DEAD = "Don't think he gonna be helping anymore, florp.",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "HEY! Come here!!",
@@ -1599,9 +1631,11 @@ return{
         CHESSPIECE_TOADSTOOL = "No more glurp-glurping.",
         CHESSPIECE_STALKER = "Not so spooky now.",
         CHESSPIECE_KLAUS = "Can't chase me anymore!",
-        CHESSPIECE_BEEQUEEN = "That's what you get, stingy lady!",
+        CHESSPIECE_BEEQUEEN = "That what you get, stingy lady!",
         CHESSPIECE_ANTLION = "How she stay so still?",
         CHESSPIECE_BEEFALO = "It just rock, real thing better.",
+		CHESSPIECE_KITCOON = "Aww, they having a nap.",
+		CHESSPIECE_CATCOON = "It pretty good statue, has dead butterfly!",
         CHESSPIECE_GUARDIANPHASE3 = "Glorp! Oh, it not real.",
         CHESSPIECE_EYEOFTERROR = "Oh no... got dried out, glorp...",
         CHESSPIECE_TWINSOFTERROR = "Ha ha, they just rocks now!",
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "Big fuzzies really like bell.",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "It too tiny to fit inside...",
+            BURNT = "Glurp! Didn't do it!!",
+			PLAYING_HIDEANDSEEK = "Nobody hiding in there?",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "Where they go?!",
+		},
+
+		KITCOONDEN_KIT = "Building house easy! Done it lots of times, flort.",
+
+		TICOON = 
+		{
+			GENERIC = "It big squishy kitty! Hello!",
+			ABANDONED = "Maybe we play later, okay?",
+			SUCCESS = "He did good job, florp.",
+			LOST_TRACK = "His nose not so good after all.",
+			NEARBY = "Think he smell something nearby.",
+			TRACKING = "He looking for something!",
+			TRACKING_NOT_MINE = "Wait... this not the right squishy kitty.",
+			NOTHING_TO_TRACK = "Guess he not smell anything around.",
+			TARGET_TOO_FAR_AWAY = "Come on squishy kitty, wanna try somewhere else!",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "It home for shiny kitty.",
+            EMPTY = "Will find present for you, florp.",
+            BURNT = "Uh oh...",
+        },
+
+		KITCOON_FOREST = "Ha ha! It fluffy AND scratchy!",
+		KITCOON_SAVANNA = "Ha ha! It fluffy AND scratchy!",
+		KITCOON_MARSH = "You from swamp too? You best one.",
+		KITCOON_DECIDUOUS = "Ha ha! It fluffy AND scratchy!",
+		KITCOON_GRASS = "Ha ha! It fluffy AND scratchy!",
+		KITCOON_ROCKY = "It so little!",
+		KITCOON_DESERT = "It so little!",
+		KITCOON_MOON = "It so little!",
+		KITCOON_YOT = "It so little!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Glorp! Didn't do it! Didn't do it!",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="How come it allowed to bite, but me get in trouble?!",
         TWINOFTERROR1 = "M-mermfolk not scared of any Ironfolk, flort!",
         TWINOFTERROR2 = "M-mermfolk not scared of any Ironfolk, flort!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "It so fast!",
+        KITCOON_NAMETAG = "Fish necklace for little kitties.",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "Ha ha, it fun to hit!",
+            BURNT = "Awww...",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "It have little fishy on it!",
+            BURNT = "Nooo!!",
+        },
+
+		KITCOONDECOR1_KIT = "It not hard to build, florp.",
+		KITCOONDECOR2_KIT = "It need building still!",
     },
 
     DESCRIBE_GENERIC = "What that?",

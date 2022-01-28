@@ -409,7 +409,6 @@ wateringcan_clear_fn = function(inst) basic_clear_fn(inst, "wateringcan" ) end
 seedpouch_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "seedpouch" ) end
 seedpouch_clear_fn = function(inst) basic_clear_fn(inst, "seedpouch" ) end
 
-
 seafaring_prototyper_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "seafaring_prototyper" ) end
 seafaring_prototyper_clear_fn = function(inst) basic_clear_fn(inst, "seafaring_prototyper" ) end
 
@@ -418,6 +417,9 @@ tacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "tacklecontainer"
 
 supertacklecontainer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "supertacklecontainer" ) end
 supertacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "supertacklecontainer" ) end
+
+mermhouse_crafted_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "mermhouse_crafted" ) end
+mermhouse_crafted_clear_fn = function(inst) basic_clear_fn(inst, "mermhouse_crafted" ) end
 
 --------------------------------------------------------------------------
 --[[ rabbithouse skin functions ]]
@@ -639,6 +641,57 @@ end
 function chester_clear_fn(inst)
     inst:SetBuild()
 end
+
+--------------------------------------------------------------------------
+--[[ Hutch skin functions ]]
+--------------------------------------------------------------------------
+function hutch_fishbowl_init_fn(inst, build_name)
+    if not TheWorld.ismastersim then
+        return
+    end
+    basic_init_fn( inst, build_name, "hutch_fishbowl" )
+    inst:RefreshFishBowlIcon()
+
+    inst.linked_skinname = build_name
+end
+function hutch_fishbowl_clear_fn(inst)
+    basic_clear_fn(inst, "hutch_fishbowl" )
+    inst:RefreshFishBowlIcon()
+
+    inst.linked_skinname = nil
+end
+
+function hutch_init_fn(inst, build_name)
+    if not TheWorld.ismastersim then
+        return
+    end
+    inst:SetBuild()
+end
+function hutch_clear_fn(inst)
+    inst:SetBuild()
+end
+
+
+--------------------------------------------------------------------------
+--[[ Glommer skin functions ]]
+--------------------------------------------------------------------------
+function glommerflower_init_fn(inst, build_name)
+    basic_init_fn( inst, build_name, "glommer_flower" )
+    if not TheWorld.ismastersim then
+        return
+    end
+    inst:RefreshFlowerIcon()
+end
+function glommerflower_clear_fn(inst)
+    basic_clear_fn(inst, "glommer_flower" )
+    inst:RefreshFlowerIcon()
+end
+
+glommer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "glommer" ) end
+glommer_clear_fn = function(inst) basic_clear_fn(inst, "glommer" ) end
+
+
+
 
 
 --------------------------------------------------------------------------

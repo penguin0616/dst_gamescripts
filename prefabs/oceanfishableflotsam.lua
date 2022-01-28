@@ -196,7 +196,6 @@ local function OnPicked(inst, picker)
 	end
 
     SpawnPrefab("flotsam_break").Transform:SetPosition(x, y, z)
-	inst:Remove()
 	return true --This makes the inventoryitem component not actually give the flotsam to the player
 end
 
@@ -327,6 +326,7 @@ local function landfn(data)
 	inst:AddComponent("pickable")
 	inst.components.pickable.picksound = "hookline/common/ocean_flotsam/picked"
 	inst.components.pickable.onpickedfn = OnPicked
+	inst.components.pickable.remove_when_picked = true
 	inst.components.pickable.canbepicked = true
 
 	inst:AddComponent("lootdropper")

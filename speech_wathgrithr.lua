@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "I must first dismount from my mighty steed.",
             HASPET = "I can only command one beastie!",
+			TICOON = "I hath already found a guide.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Thou shalt not keep me out!",
             HOSTBUSY = "His attention lies elsewhere.",
             CARNIVAL_HOST_HERE = "Where art though, raven? Do show yourself!",
-            NOCARNIVAL = "It seems the ravens hath returned to Odin."
+            NOCARNIVAL = "It seems the ravens hath returned to Odin.",
+			EMPTY_CATCOONDEN = "Fie! There's naught to pillage!",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "This hunt will require more players.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This is not a worthy stage for our players!",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Let us reprise another time.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -333,7 +338,6 @@ return{
 --fallback to speech_wilson.lua             UNBALANCED = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             ONFIRE = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             SMOULDER = "only_used_by_wolfang",
---fallback to speech_wilson.lua             DANGER = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
@@ -693,7 +697,7 @@ return{
 	},
 
     ANNOUNCE_NOINSPIRATION = "I must warm up my voice... in the heat of battle!",
-    ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "\"You scullion! You rampallian! You fustilarian! I’ll tickle your catastrophe!\"",
+    ANNOUNCE_BATTLESONG_INSTANT_TAUNT_BUFF = "\"You scullion! You rampallian! You fustilarian! I'll tickle your catastrophe!\"",
     ANNOUNCE_BATTLESONG_INSTANT_PANIC_BUFF = "\"By the pricking of my thumbs, something wicked this way comes!\"",
 
 --fallback to speech_wilson.lua     ANNOUNCE_WANDA_YOUNGTONORMAL = "only_used_by_wanda",
@@ -736,6 +740,33 @@ return{
         "No fearsome warrior should be caught talking to plants.",
         "I should be hunting, not gardening!",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Let our glorious hunt commence!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "A hunt is always better with more warriors!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"You've been found, little beast!",
+		"You would make a fine stagehand, I hardly saw ye!",
+		"You were good, but not good enough!",
+		"You cannot escape my keen eye!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Only one remains! Victory is imminent!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "Glorious victory!!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "{name} has lead us to glorious victory!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Alas! We need to find the last of them soon!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Arrgh! The little beasties were too clever.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "Perhaps we're too far to find the little beasties.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "We have returned to the hunting grounds",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Hail, tiny beastie!",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Onward, great beast!!",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "No little beasties in this area.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Let us proceed!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "It is vying for my attention.",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "I sense there's a little beastie afoot...",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Someone was swifter than I!",
+	ANNOUNCE_TICOON_ABANDONED = "I will finish this hunt solo!",
+	ANNOUNCE_TICOON_DEAD = "My guide hath fallen, and I am left directionless!",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "To me, beastie!",
@@ -1603,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "I honor this warrior queen!",
         CHESSPIECE_ANTLION = "The artist hath captured her noble mane perfectly.",
         CHESSPIECE_BEEFALO = "A stone tribute to my faithful steed.",
+		CHESSPIECE_KITCOON = "A mighty pillar for a mighty family!",
+		CHESSPIECE_CATCOON = "You have my respect, fellow hunter.",
         CHESSPIECE_GUARDIANPHASE3 = "You fought well, Champion of Mani.",
         CHESSPIECE_EYEOFTERROR = "I shall feast my eyes upon this trophy!",
         CHESSPIECE_TWINSOFTERROR = "A battle I shan't soon forget.",
@@ -4078,6 +4111,47 @@ return{
 
         BEEF_BELL = "This bell commands loyalty from the woolen beasts.",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "A penthouse for wee beasties.",
+            BURNT = "Not great as a hideaway now.",
+			PLAYING_HIDEANDSEEK = "The wee beasties are out, let us find them!",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "We must bring them home quickly!",
+		},
+
+		KITCOONDEN_KIT = "Everything one needs to build a hideaway for tiny beasts.",
+
+		TICOON = 
+		{
+			GENERIC = "A mighty beast worthy of his crown. He will lead us to victory!",
+			ABANDONED = "Curses! We will commence this hunt without your assistance.",
+			SUCCESS = "Glory to you, mighty beast!",
+			LOST_TRACK = "We were not swift enough.",
+			NEARBY = "Do you sense the presence of a wee beast around here?",
+			TRACKING = "He's on the case!",
+			TRACKING_NOT_MINE = "He's on another's case!",
+			NOTHING_TO_TRACK = "Seems there's no beasties to be found.",
+			TARGET_TOO_FAR_AWAY = "They must be too far for him to catch the scent.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "Let the festive crafting commence!",
+            EMPTY = "Perhaps it would enjoy a feather?",
+            BURNT = "It seems someone offered it a flame. I do not think it liked it.",
+        },
+
+		KITCOON_FOREST = "A wee beastie that's particularly excellent at hiding.",
+		KITCOON_SAVANNA = "A wee beastie with the heart of a mighty beastie.",
+		KITCOON_MARSH = "A wee beastie with a weapon equipped to its tail. Ferocious!",
+		KITCOON_DECIDUOUS = "A wee beastie with a talent for mischief.",
+		KITCOON_GRASS = "A fairly flammable looking wee beastie.",
+		KITCOON_ROCKY = "A very serious wee beastie.",
+		KITCOON_DESERT = "A wee beastie with not-so-wee ears.",
+		KITCOON_MOON = "A wee beastie imbued with a third eye for finding more hiding spots.",
+		KITCOON_YOT = "A wee beastie with an excellent costume.",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Mani hath sent forth his greatest warrior to challenge me!",
@@ -4243,6 +4317,24 @@ return{
         SHIELDOFTERROR ="Why cower behind a shield when you can strike with it!",
         TWINOFTERROR1 = "Do thine worst, foul metal fiend!",
         TWINOFTERROR2 = "Do thine worst, foul metal fiend!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "T'would make for excellent target practice!",
+        KITCOON_NAMETAG = "To me, tiny beastie! I shall gift thee with a warrior's name!",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "A sparring partner for the wee beasties.",
+            BURNT = "Alas, it shall wobble no more.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "The beasties must learn to hunt!",
+            BURNT = "It seems the hunt is over.",
+        },
+
+		KITCOONDECOR1_KIT = "Fear not beasties, it will be constructed forthwith!",
+		KITCOONDECOR2_KIT = "I will construct it with the speed of Hermod!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

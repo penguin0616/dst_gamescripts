@@ -246,7 +246,6 @@ local function SpawnMissingVines(inst)
     local ents = TheSim:FindEntities(x, 0, z, MAX, VINE_TAGS)
     local num_existing_vines = ents ~= nil and #ents or 0
 
-    print("FOUND VINES", num_existing_vines)
     if num_existing_vines < TUNING.OCEANTREE_VINE_DROP_MAX+ math.random(1,2)-1  then 
 
         local num_new_vines = math.random(1,2)

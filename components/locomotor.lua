@@ -1191,43 +1191,27 @@ function LocoMotor:OnUpdate(dt)
 
     local cur_speed = self.inst.Physics:GetMotorSpeed()
     if cur_speed > 0 then
-
         if self.allow_platform_hopping and (self.bufferedaction == nil or not self.bufferedaction.action.disable_platform_hopping) then
-
             local mypos_x, mypos_y, mypos_z = self.inst.Transform:GetWorldPosition()
-
-            local destpos_x, destpos_y, destpos_z
 
             local rotation = self.inst.Transform:GetRotation() * DEGREES
             local forward_x, forward_z = math.cos(rotation), -math.sin(rotation)
 
-            local dest_dot_forward = 0
-
-            local map = TheWorld.Map
-            local my_platform = self.inst:GetCurrentPlatform()
-
-            if self.dest and self.dest:IsValid() then
-                destpos_x, destpos_y, destpos_z = self.dest:GetPoint()
-                local dest_dir_x, dest_dir_z = VecUtil_Normalize(destpos_x - mypos_x, destpos_z - mypos_z)
-                dest_dot_forward = VecUtil_Dot(dest_dir_x, dest_dir_z, forward_x, forward_z)
-                local dist = VecUtil_Length(destpos_x - mypos_x, destpos_z - mypos_z)
-                if dist <= 1.5 then
-                    local other_platform = self.dest:GetPlatform()
-                    if my_platform == other_platform then
-                        dest_dot_forward = 1
-                    end
-                end
-
-            end
-
 			local hop_distance = self:GetHopDistance(self:GetSpeedMultiplier())
 
-            local forward_angle_span = 0.1
-            if dest_dot_forward <= 1 - forward_angle_span then
+            local my_platform = self.inst:GetCurrentPlatform()
+            local other_platform = nil
+            local destpos_x, destpos_y, destpos_z
+            if self.dest and self.dest:IsValid() then
+				if my_platform == self.dest:GetPlatform() then
+				    destpos_x, destpos_y, destpos_z = self.dest:GetPoint()
+					other_platform = my_platform
+				end
+			end
+			if other_platform == nil then
                 destpos_x, destpos_z = forward_x * hop_distance + mypos_x, forward_z * hop_distance + mypos_z
-            end
-
-            local other_platform = map:GetPlatformAtPoint(destpos_x, destpos_z)
+				other_platform = TheWorld.Map:GetPlatformAtPoint(destpos_x, destpos_z)
+			end
 
             local can_hop = false
             local hop_x, hop_z, target_platform, blocked
@@ -1235,7 +1219,6 @@ function LocoMotor:OnUpdate(dt)
             if my_platform ~= other_platform and not too_early_top_hop then
                 can_hop, hop_x, hop_z, target_platform, blocked = self:ScanForPlatform(my_platform, destpos_x, destpos_z, hop_distance)
             end
-
             if not blocked then
                 if can_hop then
                     self.last_platform_visited = my_platform

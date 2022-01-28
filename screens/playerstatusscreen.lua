@@ -84,7 +84,7 @@ function PlayerStatusScreen:GetHelpText()
     local controller_id = TheInput:GetControllerID()
     local t = {}
 
-    table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_TOGGLE_PLAYER_STATUS) .. " " .. STRINGS.UI.HELP.BACK)
+    table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.CLOSE)
 
     if self.server_group ~= "" then
         table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.HELP.VIEWGROUP)

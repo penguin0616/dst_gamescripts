@@ -135,7 +135,7 @@ end
 
 local TARGET_DSQ = TARGET_DIST * TARGET_DIST
 local function KeepTargetFn(inst, target)
-    return inst.components.combat:CanTarget(target)
+    return not inst:IsInLimbo() and inst.components.combat:CanTarget(target)
         and target:GetDistanceSqToPoint(inst.components.knownlocations:GetLocation("spawnpoint")) < TARGET_DSQ
 end
 

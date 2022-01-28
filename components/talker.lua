@@ -164,7 +164,7 @@ local function sayfn(self, script, nobroadcast, colour, text_filter_context, ori
                 self.ontalkfn(self.inst, { noanim = line.noanim, message=display_message })
             end
 
-            self.inst:PushEvent("ontalk", { noanim = line.noanim })
+            self.inst:PushEvent("ontalk", { noanim = line.noanim, duration = duration })
         elseif self.widget ~= nil then
             self.widget:Hide()
         end

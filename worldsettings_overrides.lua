@@ -2840,7 +2840,7 @@ local applyoverrides_pre = {
         {
             never = {
                 KRAMPUS_THRESHOLD = -1,
-                KRAMPUS_THRESHOLD_VARIATION = 0,
+                KRAMPUS_THRESHOLD_VARIANCE = 0,
                 KRAMPUS_INCREASE_LVL1 = -1,
                 KRAMPUS_INCREASE_LVL2 = -1,
                 KRAMPUS_INCREASE_RAMP = -1,
@@ -2848,7 +2848,7 @@ local applyoverrides_pre = {
             },
             rare = {
                 KRAMPUS_THRESHOLD = 45,
-                KRAMPUS_THRESHOLD_VARIATION = 30,
+                KRAMPUS_THRESHOLD_VARIANCE = 30,
                 KRAMPUS_INCREASE_LVL1 = 75,
                 KRAMPUS_INCREASE_LVL2 = 125,
                 KRAMPUS_INCREASE_RAMP = 1,
@@ -2866,7 +2866,7 @@ local applyoverrides_pre = {
             --]]
             often = {
                 KRAMPUS_THRESHOLD = 20,
-                KRAMPUS_THRESHOLD_VARIATION = 15,
+                KRAMPUS_THRESHOLD_VARIANCE = 15,
                 KRAMPUS_INCREASE_LVL1 = 37,
                 KRAMPUS_INCREASE_LVL2 = 75,
                 KRAMPUS_INCREASE_RAMP = 3,
@@ -2874,7 +2874,7 @@ local applyoverrides_pre = {
             },
             always = {
                 KRAMPUS_THRESHOLD = 10,
-                KRAMPUS_THRESHOLD_VARIATION = 5,
+                KRAMPUS_THRESHOLD_VARIANCE = 5,
                 KRAMPUS_INCREASE_LVL1 = 25,
                 KRAMPUS_INCREASE_LVL2 = 50,
                 KRAMPUS_INCREASE_RAMP = 4,

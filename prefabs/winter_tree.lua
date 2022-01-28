@@ -287,8 +287,6 @@ local function dogifting(inst)
                     table.insert(loot, { prefab = "charcoal" })
                 end
 
-				dumptable(loot)
-
                 local items = {}
                 for i, v in ipairs(loot) do
                     local item = SpawnPrefab(v.prefab)

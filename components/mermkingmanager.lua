@@ -107,7 +107,8 @@ function MermKingManager:OnThroneDestroyed(throne)
 			candidate:PushEvent("getup")
 		end
 
-		candidate.nameoverride = nil
+		candidate.components.inspectable.nameoverride = nil
+        candidate:RemoveTag("mermprince")
 		self.inst:RemoveEventCallback("death", OnCandidateRemoved, candidate)
         self.inst:RemoveEventCallback("onremove", OnCandidateRemoved, candidate)
 		self.candidates[throne] = nil
@@ -183,7 +184,8 @@ function MermKingManager:ShouldGoToThrone(merm, throne)
 		if self:GetKing() == nil and (self:GetCandidate(throne) == nil or self:IsThroneCandidate(merm, throne)) then
 			if self:GetCandidate(throne) == nil then
 				self.candidates[throne] = merm
-				merm.nameoverride = "MERM_PRINCE"
+				merm.components.inspectable.nameoverride = "MERM_PRINCE"
+                merm:AddTag("mermprince")
                 self.inst:ListenForEvent("onremove", OnCandidateRemoved, merm)
 				self.inst:ListenForEvent("death", OnCandidateRemoved, merm)
 			end
@@ -331,7 +333,8 @@ function MermKingManager:LoadPostPass(newents, savedata)
 
 			self.candidates[throne] = candidate
 
-			candidate.nameoverride = "MERM_PRINCE"
+			candidate.components.inspectable.nameoverride = "MERM_PRINCE"
+            candidate:AddTag("mermprince")
             self.inst:ListenForEvent("onremove", OnCandidateRemoved, candidate)
 			self.inst:ListenForEvent("death", OnCandidateRemoved, candidate)
 		end

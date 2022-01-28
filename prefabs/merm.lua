@@ -472,9 +472,15 @@ local function guard_master(inst)
     end)
 end
 
+local function common_displaynamefn(inst)
+    return (inst:HasTag("mermprince") and STRINGS.NAMES.MERM_PRINCE) or nil
+end
+
 local function common_common(inst)
     inst.sounds = sounds
     inst.AnimState:SetBuild("merm_build")
+
+    inst.displaynamefn = common_displaynamefn
 end
 
 local function OnEat(inst, data)

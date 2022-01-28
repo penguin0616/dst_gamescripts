@@ -42,6 +42,11 @@ LOADING_IMAGES =
         { atlas = "images/bg_loading_yotc.xml", tex = "bg_image1.tex" },
     },
 
+    [SPECIAL_EVENTS.YOT_CATCOON] =
+    {
+        { atlas = "images/bg_loading_yotcc1.xml", tex = "bg_image1.tex" },
+    },
+
     [SPECIAL_EVENTS.NONE] =
     {
         { atlas = "images/bg_spiral_fill1.xml", tex = "bg_image1.tex", spiral = true },
@@ -177,6 +182,18 @@ local SPECIAL_EVENT_DEPS =
                 Asset("ANIM", "anim/dst_menu_carrat.zip"),
                 Asset("ANIM", "anim/dst_menu_carrat_swaps.zip"),
                 Asset("SOUND", "sound/music_frontend_yotc.fsb"),
+            },
+        },
+    },
+
+    [SPECIAL_EVENTS.YOT_CATCOON] =
+    {
+        frontend =
+        {
+            assets =
+            {
+                Asset("ANIM", "anim/dst_menu_yot_catcoon.zip"),
+                --Asset("PKGREF", "sound/music_yot_catcoon.fsb"),
             },
         },
     },

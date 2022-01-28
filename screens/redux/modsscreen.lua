@@ -6,6 +6,8 @@ local PopupDialogScreen = require "screens/redux/popupdialog"
 local TEMPLATES = require "widgets/redux/templates"
 local OnlineStatus = require "widgets/onlinestatus"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 -- numbers copied from ServerCreationScreen
 local dialog_size_x = 830
 local dialog_size_y = 555
@@ -15,11 +17,20 @@ local bottom_button_y = -310
 local ModsScreen = Class(Screen, function(self, prev_screen)
     Screen._ctor(self, "ModsScreen")
 
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
     self.dirty = false
 
     self.root = self:AddChild(TEMPLATES.ScreenRoot("root"))
     self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.MODSSCREEN.MODTITLE, ""))
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = 290, y = 284, scale = 0.75 },
+        { x = 490, y = 284, scale = 0.75 },
+        { x = -25,  y = 284, scale = 0.75 },
+        { x = 125,   y = 284, scale = 0.75 },
+    } ))
 
     self.optionspanel = self.root:AddChild(TEMPLATES.RectangleWindow(dialog_size_x, dialog_size_y))
     self.optionspanel:SetPosition(140, 0)
@@ -175,12 +186,20 @@ function ModsScreen:OnBecomeActive()
     ModsScreen._base.OnBecomeActive(self)
 
     self.mods_page:OnBecomeActive()
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
 end
 
 function ModsScreen:OnBecomeInactive()
     ModsScreen._base.OnBecomeInactive(self)
 
     self.mods_page:OnBecomeInactive()
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function ModsScreen:GetHelpText()

@@ -160,6 +160,11 @@ self:SetRegrowthForType("flower", TUNING.FLOWER_REGROWTH_TIME, "flower", functio
 self:SetRegrowthForType("rabbithole", TUNING.RABBITHOLE_REGROWTH_TIME, "rabbithole", function()
         return _worldstate.issummer and TUNING.RABBITHOLE_REGROWTH_TIME_SUMMER_MULT or TUNING.RABBITHOLE_REGROWTH_TIME_MULT
     end)
+self:SetRegrowthForType("catcoonden", TUNING.CATCOONDEN_REGROWTH_TIME, "catcoonden", function()
+        return _worldstate.isspring and TUNING.CATCOONDEN_REGROWTH_TIME_SPRING_MULT 
+				or _worldstate.isautumn and TUNING.CATCOONDEN_REGROWTH_TIME_AUTUMN_MULT
+				or 0
+    end)
 self:SetRegrowthForType("flower_cave", TUNING.FLOWER_CAVE_REGROWTH_TIME, "flower_cave", function()
         return TUNING.FLOWER_CAVE_REGROWTH_TIME_MULT
     end)

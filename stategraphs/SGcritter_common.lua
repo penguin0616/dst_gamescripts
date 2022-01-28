@@ -356,7 +356,7 @@ end
 
 --------------------------------------------------------------------------
 SGCritterStates.AddPlayWithOtherCritter = function(states, events, timeline, onexit)
-	table.insert(events, EventHandler("critterplayful", function(inst, data)
+	table.insert(events, EventHandler("start_playwithplaymate", function(inst, data)
 		local playful_delay = inst.components.crittertraits:IsDominantTrait("playful") and TUNING.CRITTER_DOMINANTTRAIT_PLAYFUL_WITHOTHER_DELAY or TUNING.CRITTER_PLAYFUL_DELAY
 
 		if inst:IsPlayful() and data.target ~= nil and data.target:IsValid()

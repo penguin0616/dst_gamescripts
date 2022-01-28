@@ -1536,6 +1536,115 @@ function PlayerProfile:SetCrowGameHighScore(score, score_version)
 end
 
 
+function PlayerProfile:GetKitSize()
+	if self:GetValue("kit_size") ~= nil then
+		return self:GetValue("kit_size")
+	end
+	return 0
+end
+function PlayerProfile:SetKitSize(size)
+	self:SetValue("kit_size", size)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitBuild()
+	if self:GetValue("kit_build") ~= nil then
+		return self:GetValue("kit_build")
+	end
+	return ""
+end
+function PlayerProfile:SetKitBuild(build)
+	self:SetValue("kit_build", build)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitLastTime()
+	if self:GetValue("kit_last_time") ~= nil then
+		return self:GetValue("kit_last_time")
+	end
+	return 0
+end
+function PlayerProfile:SetKitLastTime(last_time)
+	self:SetValue("kit_last_time", last_time)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitHunger()
+	if self:GetValue("kit_hunger") ~= nil then
+		return self:GetValue("kit_hunger")
+	end
+	return 0
+end
+function PlayerProfile:SetKitHunger(hunger)
+	self:SetValue("kit_hunger", hunger)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitHappiness()
+	if self:GetValue("kit_happiness") ~= nil then
+		return self:GetValue("kit_happiness")
+	end
+	return 0
+end
+function PlayerProfile:SetKitHappiness(happiness)
+	self:SetValue("kit_happiness", happiness)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitBirthTime()
+	if self:GetValue("kit_birth") ~= nil then
+		return self:GetValue("kit_birth")
+	end
+	return 0
+end
+function PlayerProfile:SetKitBirthTime(birth_time)
+	self:SetValue("kit_birth", birth_time)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitName()
+	if self:GetValue("kit_name") ~= nil then
+		return self:GetValue("kit_name")
+	end
+	return ""
+end
+function PlayerProfile:SetKitName(name)
+	self:SetValue("kit_name", name)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitPoops()
+	if self:GetValue("kit_poops") ~= nil then
+		return self:GetValue("kit_poops")
+	end
+	return 0
+end
+function PlayerProfile:SetKitPoops(poops)
+	self:SetValue("kit_poops", poops)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitAbandonedMessage()
+	if self:GetValue("kit_abandoned_message") ~= nil then
+		return self:GetValue("kit_abandoned_message")
+	end
+	return false
+end
+function PlayerProfile:SetKitAbandonedMessage(abandoned)
+	self:SetValue("kit_abandoned_message", abandoned)
+	self.dirty = true
+    self:Save()
+end
+
+
 function PlayerProfile:GetLanguageID()
 	if self:GetValue("language_id") ~= nil then
 		return self:GetValue("language_id")

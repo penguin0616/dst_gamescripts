@@ -19,7 +19,6 @@ self.inst = inst
 
 function self:LoadPostPass(newents, data)
     if not TheSim:FindFirstEntityWithTag("crabking_spawner") then
-        dumptable(data)
         if data.crabkingx and data.crabkingz then
             local spawner = SpawnPrefab("crabking_spawner")
             spawner.Transform:SetPosition(data.crabkingx, 0, data.crabkingz)

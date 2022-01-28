@@ -6,6 +6,8 @@ local Widget = require "widgets/widget"
 local TEMPLATES = require "widgets/redux/templates"
 local ThankYouPopup = require "screens/thankyoupopup"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local NUM_CODE_GROUPS = 5
 local DIGITS_PER_GROUP = 4
 local DIGIT_WIDTH = 21
@@ -18,6 +20,8 @@ local VALID_CHARS = [[abcdefghjklmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ1234567890
 
 local RedeemDialog = Class(Screen, function(self)
 	Screen._ctor(self, "RedeemDialog")
+
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
 
     local buttons =
     {
@@ -33,6 +37,12 @@ local RedeemDialog = Class(Screen, function(self)
 
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
     self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = -80, y = 180, scale = 0.75 },
+        { x = 180, y = 176, scale = 0.75 },
+    } ))
+
 	self.dialog = self.root:AddChild(TEMPLATES.CurlyWindow(480, 220, STRINGS.UI.REDEEMDIALOG.TITLE, buttons, nil, ""))
 
     self.proot = self.root:AddChild(Widget("proot"))
@@ -85,6 +95,18 @@ function RedeemDialog:OnBecomeActive()
     if IsNotConsole() or self.firsttime then
     	self.entrybox.textboxes[1]:SetEditing(true)
     	self.firsttime = false
+    end
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+end
+
+function RedeemDialog:OnBecomeInactive()
+    self._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
     end
 end
 

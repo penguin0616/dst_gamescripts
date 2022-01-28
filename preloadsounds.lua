@@ -155,6 +155,9 @@ local MainSounds =
 
 	"wolfgang1.fev",
 	"wolfgang1.fsb",
+
+	"yotc_2022_2.fev",
+    "yotc_2022_2.fsb",
 }
 
 function PreloadSoundList(list)

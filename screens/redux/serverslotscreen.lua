@@ -8,6 +8,8 @@ local ServerCreationScreen = require "screens/redux/servercreationscreen"
 local SaveFilterBar = require "widgets/redux/savefilterbar"
 local BansPopup = require "screens/redux/banspopup"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local dialog_size_x = 860
 local dialog_size_y = 500
 
@@ -16,9 +18,17 @@ local ServerSlotScreen = Class(Screen, function(self, prev_screen)
 
     self.slot_cache = {}
 
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
 	self.root = self:AddChild(TEMPLATES.ScreenRoot())
     self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.SERVERCREATIONSCREEN.HOST_GAME))
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        {x = -100, y = 255,},
+        {x = 290, y = 255,},
+        {x = 515, y = -255,},
+    } ))
 
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
 
@@ -27,6 +37,10 @@ local ServerSlotScreen = Class(Screen, function(self, prev_screen)
     self.detail_panel_frame = self.detail_panel_frame_parent:AddChild(TEMPLATES.RectangleWindow(dialog_size_x, dialog_size_y))
     local r,g,b = unpack(UICOLOURS.BROWN_DARK)
     self.detail_panel_frame:SetBackgroundTint(r,g,b,0.6)
+
+	self.noservers_message = self.root:AddChild(Text(CHATFONT, 26, STRINGS.UI.SERVERCREATIONSCREEN.NO_MATCHING_SERVERS, UICOLOURS.GOLD_UNIMPORTANT))
+	self.noservers_message:Hide()
+    self.noservers_message:SetPosition(0, 0)
 
 	self.server_scroll_list = self.root:AddChild(self:_BuildSaveSlotList())
     self.server_scroll_list:SetPosition(0, -26)
@@ -164,6 +178,12 @@ function ServerSlotScreen:UpdateSaveFiles(force_update)
     end
 
     self.savefilescrollitems = savefilescrollitems
+
+	if #self.savefilescrollitems == 0 then
+		self.noservers_message:Show()
+	else
+		self.noservers_message:Hide()
+	end
 
     self.server_scroll_list:SetItemsData(self.savefilescrollitems)
     self.server_scroll_list:SetPosition(0, -26)
@@ -308,12 +328,21 @@ function ServerSlotScreen:OnBecomeActive()
     self:StartUpdateSaveFiles()
     self.savefilterbar:RefreshFilterState()
     self.server_scroll_list:RefreshView()
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+
     self:Show()
 end
 
 function ServerSlotScreen:OnBecomeInactive()
     ServerSlotScreen._base.OnBecomeInactive(self)
     self:_CancelTasks()
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function ServerSlotScreen:OnDestroy()

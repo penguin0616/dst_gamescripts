@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "Not up here",
             HASPET = "Already have Care Friend",
+			TICOON = "Already have friend",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Nope. Locked",
             HOSTBUSY = "Big Tweeter busy",
             CARNIVAL_HOST_HERE = "Hello? Big Tweeter here?",
-            NOCARNIVAL = "Tweeters? Aww..."
+            NOCARNIVAL = "Tweeters? Aww...",
+			EMPTY_CATCOONDEN = "No friend inside",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "Not many friends to hide",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not many hideys for friends",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Already had fun",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -739,6 +744,33 @@ return{
         "Yes? Oh. Hmm... yes",
         "Nice to talk to other plants",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Friends hiding now",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Looking for friends too",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Found you",
+		"Peek-a-boo",
+		"Hello there",
+		"Hi hi",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Just one friend left",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "Last friend found",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "Someone found last friend",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Find friends fast",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Friends hide too good",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "Friends not hiding here",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "Going back to friends",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Friend not in hidey?",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Looking for friends?",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "No friend to find",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "He's waiting",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Should follow",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "Friend nearby",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Friend already found",
+	ANNOUNCE_TICOON_ABANDONED = "Friend left me",
+	ANNOUNCE_TICOON_DEAD = "Friend left?",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Here Shaggy Buddy!",
@@ -1606,6 +1638,8 @@ return{
         CHESSPIECE_BEEQUEEN = "No more buzz-buzz",
         CHESSPIECE_ANTLION = "Not moving",
         CHESSPIECE_BEEFALO = "Not fluffy...",
+		CHESSPIECE_KITCOON = "Not hiding?",
+		CHESSPIECE_CATCOON = "No tail swish swoosh",
         CHESSPIECE_GUARDIANPHASE3 = "Big",
         CHESSPIECE_EYEOFTERROR = "Not watching?",
         CHESSPIECE_TWINSOFTERROR = "Can't see now",
@@ -4081,6 +4115,47 @@ return{
 
         BEEF_BELL = "Ding dong",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "Where friends live",
+            BURNT = "Fire very bad",
+			PLAYING_HIDEANDSEEK = "Friends out playing",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "Hidey game ending soon",
+		},
+
+		KITCOONDEN_KIT = "Makes house for friends",
+
+		TICOON = 
+		{
+			GENERIC = "Big fur friend",
+			ABANDONED = "Please come back",
+			SUCCESS = "Friend found friend",
+			LOST_TRACK = "Someone found friend first",
+			NEARBY = "Friend near us",
+			TRACKING = "Should follow friend",
+			TRACKING_NOT_MINE = "Looking for other friend",
+			NOTHING_TO_TRACK = "Nothing to find",
+			TARGET_TOO_FAR_AWAY = "Friends are very far",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "Kitty likes box",
+            EMPTY = "Wants to play?",
+            BURNT = "Fire so evil",
+        },
+
+		KITCOON_FOREST = "Looks like friend hair",
+		KITCOON_SAVANNA = "Friend full of lines",
+		KITCOON_MARSH = "Friend is soggy",
+		KITCOON_DECIDUOUS = "Small fur friend",
+		KITCOON_GRASS = "Scared friend?",
+		KITCOON_ROCKY = "Rocky friend",
+		KITCOON_DESERT = "Hear me, friend?",
+		KITCOON_MOON = "Friend likes night ball",
+		KITCOON_YOT = "Happy friend",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "From Night Ball?",
@@ -4246,6 +4321,24 @@ return{
         SHIELDOFTERROR ="Chomp chomp!",
         TWINOFTERROR1 = "Big machine peeper!",
         TWINOFTERROR2 = "Big machine peeper!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "Squeak squeak",
+        KITCOON_NAMETAG = "For furry friends to wear",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "Tweeter likes to dance",
+            BURNT = "No! Fire took tweeter",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "Glub glub is stuck",
+            BURNT = "No! Fire took glub glub",
+        },
+
+		KITCOONDECOR1_KIT = "Makes toy for friends",
+		KITCOONDECOR2_KIT = "Makes toy for friends",
     },
 
     DESCRIBE_GENERIC = "Friend?",

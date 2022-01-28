@@ -24,6 +24,8 @@ local ObituariesPanel = require "screens/redux/panels/obituariespanel"
 local EncountersPanel = require "screens/redux/panels/encounterspanel"
 local CinematicsPanel = require "screens/redux/panels/cinematicspanel"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local TEMPLATES = require "widgets/redux/templates"
 
 local CompendiumScreen = Class(Screen, function(self, prev_screen)
@@ -36,6 +38,13 @@ local CompendiumScreen = Class(Screen, function(self, prev_screen)
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.MAINSCREEN.COMPENDIUM, ""))
 
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        {x = -525, y = 150, scale = 0.75},
+        {x = -425, y = 150, scale = 0.75},
+        {x = -475, y = 150, scale = 0.75},
+        {x = -335, y = -300, scale = 0.75},
+    } ))
 
 	self.cancel_button = self.root:AddChild(TEMPLATES.BackButton(function() self:Close() end))
     if TheInput:ControllerAttached() then
@@ -108,6 +117,18 @@ function CompendiumScreen:OnBecomeActive()
     CompendiumScreen._base.OnBecomeActive(self)
 
     self.characterdetails:Refresh()
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+end
+
+function CompendiumScreen:OnBecomeInactive()
+    CompendiumScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function CompendiumScreen:GetHelpText()

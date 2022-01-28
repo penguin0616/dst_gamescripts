@@ -26,7 +26,7 @@ function DoAction:Visit()
             action:AddFailAction(function() self:OnFail() end)
             action:AddSuccessAction(function() self:OnSucceed() end)
             self.pendingstatus = nil
-            self.inst.components.locomotor:PushAction(action, self.shouldrun)
+            self.inst.components.locomotor:PushAction(action, FunctionOrValue(self.shouldrun))
             self.action = action
             self.time = GetTime()
             self.status = RUNNING

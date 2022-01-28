@@ -248,6 +248,26 @@ local assets =
     Asset("PKGREF", "anim/dynamic/oddment_pumpkinpie.dyn"),
     Asset("DYNAMIC_ATLAS", "images/maze.xml"),
     Asset("ASSET_PKGREF", "images/maze.tex"),
+    
+    Asset("ANIM", "anim/kitcoon_nametag.zip"),   
+    Asset("ANIM", "anim/kitcoon_forest_build.zip"),
+    Asset("ANIM", "anim/kitcoon_savanna_build.zip"),
+    Asset("ANIM", "anim/kitcoon_deciduous_build.zip"),
+    Asset("ANIM", "anim/kitcoon_marsh_build.zip"),
+    Asset("ANIM", "anim/kitcoon_grass_build.zip"),
+    Asset("ANIM", "anim/kitcoon_rocky_build.zip"),
+    Asset("ANIM", "anim/kitcoon_desert_build.zip"),
+    Asset("ANIM", "anim/kitcoon_moon_build.zip"),
+    Asset("ANIM", "anim/kitcoon_yot_build.zip"), 
+    Asset("ANIM", "anim/kitcoon_basic.zip"),
+    Asset("ANIM", "anim/kitcoon_emotes.zip"),
+    Asset("ANIM", "anim/kitcoon_traits.zip"),
+    Asset("ANIM", "anim/kitcoon_jump.zip"),
+    Asset("ANIM", "anim/kitcoon_poop.zip"),
+    Asset("ANIM", "anim/kitcoon_food.zip"),
+    Asset("ANIM", "anim/kitcoon_bg.zip"),
+    Asset("IMAGE", "images/colour_cubes/day05_cc.tex"),
+    Asset("IMAGE", "images/colour_cubes/dusk03_cc.tex"),
 }
 
 --Including these here as well as global to ensure the exporter's resizing dependency works

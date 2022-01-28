@@ -234,4 +234,13 @@ function PauseScreen:OnDestroy()
 	PauseScreen._base.OnDestroy(self)
 end
 
+function PauseScreen:GetHelpText()
+	local t = {}
+	local controller_id = TheInput:GetControllerID()
+
+	table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.PAUSEMENU.CLOSE)
+
+	return table.concat(t, "  ")
+end
+
 return PauseScreen

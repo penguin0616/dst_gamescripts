@@ -1056,6 +1056,21 @@ function c_removeallwithtags(...)
     print("removed",count)
 end
 
+function c_emptyworld()
+    for k,ent in pairs(Ents) do
+        if ent.widget == nil 
+			and not ent.isplayer 
+			and ent.entity:GetParent() == nil
+			and ent.Network ~= nil
+			and not ent:HasTag("CLASSIFIED") 
+			and not ent:HasTag("INLIMBO") 
+			then
+
+            ent:Remove()
+        end
+    end
+end
+
 function c_netstats()
     local stats = TheNet:GetNetworkStatistics()
     if not stats then print("No Netstats yet") end

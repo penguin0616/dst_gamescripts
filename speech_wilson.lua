@@ -24,6 +24,7 @@ return {
         {
             MOUNTED = "I can't place that from way up here.",
             HASPET = "I've already got a pet.",
+			TICOON = "I'm too invested in my own Ticoon to follow another one.",
         },
 		SHAVE =
 		{
@@ -68,7 +69,11 @@ return {
 			LOCKED_GATE = "The gate is locked.",
             HOSTBUSY = "He seems a bit preoccupied at the moment.",
             CARNIVAL_HOST_HERE = "He's around here somewhere.",
-            NOCARNIVAL = "It looks like those birds flew the coop."
+            NOCARNIVAL = "It looks like those birds flew the coop.",
+			EMPTY_CATCOONDEN = "Drat, I thought for sure there'd be something good inside!",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It would be too easy, perhaps if there were more of these little guys...",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "There aren't a lot of places around for them to hide.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think that's enough for one day.",
 		},
         COOK =
         {
@@ -99,7 +104,7 @@ return {
         READ =
         {
             GENERIC = "only_used_by_wickerbottom",
-            NOBIRDS = "only_used_by_wickerbottom"
+            NOBIRDS = "only_used_by_wickerbottom",
         },
 
         GIVE =
@@ -201,7 +206,7 @@ return {
             NOTMINE_SPIDER = "only_used_by_webber",
             NOTMINE_YOTC =
             {
-                "You're not my Carrat.",
+                "You're not my carrat.",
                 "OW, it bit me!",
             },
 			NO_HEAVY_LIFTING = "only_used_by_wanda",
@@ -667,7 +672,7 @@ return {
 		BOOK_SILVICULTURE = "only_used_by_wurt",
 		BOOK_HORTICULTURE = "only_used_by_wurt",
     },
-    ANNOUNCE_WEAK_RAT = "This Carrat is in no shape to be training.",
+    ANNOUNCE_WEAK_RAT = "This carrat is in no shape to be training.",
 
     ANNOUNCE_CARRAT_START_RACE = "Let the experim- er, race begin!",
 
@@ -745,6 +750,33 @@ return {
         "What a nice plant you are.",
         "Plant, you are such a good listener.",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "3, 2, 1... Ready or not, here I come!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Aww, they're playing hide and seek.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Found you!",
+		"There you are.",
+		"I knew you'd be hiding there!",
+		"I see you!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Now where's that last one hiding?",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "I found the last one!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "{name} found the last one!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "These little guys must be getting impatient...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "I guess they don't want to play any more...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "They probably wouldn't hide this far away, would they?",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "The kitcoons should be nearby.",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "I knew I saw something hiding over here!",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "He's caught the scent!",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Looks like he couldn't find anything.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "I should follow him!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "He really wants me to follow him.",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "He must have found something!",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Looks like someone else found what he was looking for.",
+	ANNOUNCE_TICOON_ABANDONED = "I'll find those little guys on my own.",
+	ANNOUNCE_TICOON_DEAD = "Poor guy... Now where was he leading me?",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Come on over!",
@@ -1612,6 +1644,8 @@ return {
         CHESSPIECE_BEEQUEEN = "Very statuesque.",
         CHESSPIECE_ANTLION = "A stagn-antlion.",
         CHESSPIECE_BEEFALO = "This sculpture is pretty beefy.",
+		CHESSPIECE_KITCOON = "These ones are much easier to find.",
+		CHESSPIECE_CATCOON = "It would probably make a great scratching post.",
         CHESSPIECE_GUARDIANPHASE3 = "I much prefer it this way.",
         CHESSPIECE_EYEOFTERROR = "It's giving me a stony stare.",
         CHESSPIECE_TWINSOFTERROR = "That was a terrible night of very uncomfortable eye contact.",
@@ -2648,7 +2682,7 @@ return {
         YOTC_CARRATSHRINE =
         {
             GENERIC = "What to make...",
-            EMPTY = "Hm... what does a Carrat like to eat?",
+            EMPTY = "Hm... what does a carrat like to eat?",
             BURNT = "Smells like roasted carrots.",
         },
 
@@ -2660,34 +2694,34 @@ return {
         },
         YOTC_CARRAT_GYM_SPEED =
         {
-            GENERIC = "I need to get my Carrat up to speed.",
+            GENERIC = "I need to get my carrat up to speed.",
             RAT = "Faster... faster!",
             BURNT = "I may have overdone it.",
         },
         YOTC_CARRAT_GYM_REACTION =
         {
-            GENERIC = "Let's train those Carrat-like reflexes!",
+            GENERIC = "Let's train those carrat-like reflexes!",
             RAT = "The subject's response time is steadily improving!",
             BURNT = "A small loss to take in the pursuit of science.",
         },
         YOTC_CARRAT_GYM_STAMINA =
         {
             GENERIC = "Getting strong now!",
-            RAT = "This Carrat... will be unstoppable!!",
+            RAT = "This carrat... will be unstoppable!!",
             BURNT = "You can't stop progress! But this will delay it...",
         },
 
         YOTC_CARRAT_GYM_DIRECTION_ITEM = "I'd better get training!",
         YOTC_CARRAT_GYM_SPEED_ITEM = "I'd better get this assembled.",
-        YOTC_CARRAT_GYM_STAMINA_ITEM = "This should help improve my Carrat's stamina",
-        YOTC_CARRAT_GYM_REACTION_ITEM = "This should improve my Carrat's reaction time considerably.",
+        YOTC_CARRAT_GYM_STAMINA_ITEM = "This should help improve my carrat's stamina",
+        YOTC_CARRAT_GYM_REACTION_ITEM = "This should improve my carrat's reaction time considerably.",
 
-        YOTC_CARRAT_SCALE_ITEM = "This will help car-rate my Car-rat.",
+        YOTC_CARRAT_SCALE_ITEM = "This will help car-rate my car-rat.",
         YOTC_CARRAT_SCALE =
         {
             GENERIC = "Hopefully the scales tip in my favor.",
             CARRAT = "I suppose no matter what, it's still just a sentient vegetable.",
-            CARRAT_GOOD = "This Carrat looks ripe for racing!",
+            CARRAT_GOOD = "This carrat looks ripe for racing!",
             BURNT = "What a mess.",
         },
 
@@ -4087,6 +4121,47 @@ return {
 
         BEEF_BELL = "It makes beefalo friendly. I'm sure there's a very scientific explanation.",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "You'd have to be pretty small to fit in there.",
+            BURNT = "NOOOO!",
+			PLAYING_HIDEANDSEEK = "Now where could they be...",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "Not much time left! Where are they?!",
+		},
+
+		KITCOONDEN_KIT = "The whole kit and caboodle.",
+
+		TICOON = 
+		{
+			GENERIC = "He looks like he knows what he's doing!",
+			ABANDONED = "I'm sure I can find them on my own.",
+			SUCCESS = "Hey, he found one!",
+			LOST_TRACK = "Someone else found them first.",
+			NEARBY = "Looks like there's something nearby.",
+			TRACKING = "I should follow his lead.",
+			TRACKING_NOT_MINE = "He's leading the way for someone else.",
+			NOTHING_TO_TRACK = "It doesn't look like there's anything left to find.",
+			TARGET_TOO_FAR_AWAY = "They might be too far away for him to sniff out.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "What to make...",
+            EMPTY = "Maybe it would like a feather to play with...",
+            BURNT = "Smells like scorched fur.",
+        },
+
+		KITCOON_FOREST = "Aren't you the cutest little cat thing!",
+		KITCOON_SAVANNA = "Aren't you the cutest little cat thing!",
+		KITCOON_MARSH = "I must collect more... for research!",
+		KITCOON_DECIDUOUS = "Aren't you the cutest little cat thing!",
+		KITCOON_GRASS = "Aren't you the cutest little cat thing!",
+		KITCOON_ROCKY = "I must collect more... for research!",
+		KITCOON_DESERT = "I must collect more... for research!",
+		KITCOON_MOON = "I must collect more... for research!",
+		KITCOON_YOT = "I must collect more... for research!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "You'll pay for breaking all that science!",
@@ -4252,6 +4327,24 @@ return {
         SHIELDOFTERROR ="The best defense is a good mawfence.",
         TWINOFTERROR1 = "Maybe they're friendly? ...Maybe not.",
         TWINOFTERROR2 = "Maybe they're friendly? ...Maybe not.",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "Mice with wheels, what will science think up next?",
+        KITCOON_NAMETAG = "I should think of some names! Let's see, Wilson Jr., Wilson Jr. 2...",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "It's not a real bird, but the kits don't know that.",
+            BURNT = "Combustion!",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "Those kits are so easily distracted. Now what was I doing again?",
+            BURNT = "It went up in flames.",
+        },
+
+		KITCOONDECOR1_KIT = "It looks like there's some assembly required.",
+		KITCOONDECOR2_KIT = "It doesn't look too hard to build.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

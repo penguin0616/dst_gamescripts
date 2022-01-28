@@ -256,6 +256,10 @@ function Perishable:StartPerishing()
     self.updatetask = self.inst:DoPeriodicTask(dt, Update, self.start_dt, dt)
 end
 
+function Perishable:IsPerishing()
+    return self.updatetask ~= nil
+end
+
 function Perishable:Perish()
     if self.updatetask ~= nil then
         self.updatetask:Cancel()

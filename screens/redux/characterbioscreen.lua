@@ -10,6 +10,8 @@ local TEMPLATES = require "widgets/redux/templates"
 local OnlineStatus = require "widgets/onlinestatus"
 local WardrobeScreen = require "screens/redux/wardrobescreen"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local CharacterBio = require "widgets/redux/characterbio"
 
 local CharacterBioScreen = Class(Screen, function(self, character)
@@ -27,6 +29,13 @@ local CharacterBioScreen = Class(Screen, function(self, character)
     self.bg = self.bio:AddChild(TEMPLATES.PlainBackground())
 	self.bg:MoveToBack()
     --self.title = self.root:AddChild(TEMPLATES.ScreenTitle("CharacterBioScreen", character))
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        {x = -425, y = -110, scale=0.75},
+        {x = -475, y = -110, scale=0.75},
+        {x = -390, y = -110, scale=0.75},
+        {x = -80, y = -110, scale=0.75},
+    } ))
 
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
 
@@ -83,6 +92,22 @@ function CharacterBioScreen:GetHelpText()
 
 	return table.concat(t, "  ")
 
+end
+
+function CharacterBioScreen:OnBecomeActive()
+    CharacterBioScreen._base.OnBecomeActive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+end
+
+function CharacterBioScreen:OnBecomeInactive()
+    CharacterBioScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function CharacterBioScreen:Close(fn)

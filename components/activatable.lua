@@ -49,7 +49,11 @@ end
 function Activatable:DoActivate(doer)
     if self.OnActivate ~= nil then
         self.inactive = false
-        return self.OnActivate(self.inst, doer)
+        local success, msg = self.OnActivate(self.inst, doer)
+		if success then
+			self.inst:PushEvent("onactivated", {doer = doer})
+		end
+		return success, msg
     end
 	return nil
 end

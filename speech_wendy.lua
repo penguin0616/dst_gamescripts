@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "I can't place that from this lofty position.",
             HASPET = "I can only have one...",
+			TICOON = "The more friends you have, the shallower they are.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "I can't open it without a key.",
             HOSTBUSY = "I suppose he has more important things to do.",
             CARNIVAL_HOST_HERE = "Mr. Raven? Are you here?",
-            NOCARNIVAL = "The ravens have deserted this place... I think I'll miss them."
+            NOCARNIVAL = "The ravens have deserted this place... I think I'll miss them.",
+			EMPTY_CATCOONDEN = "Abandoned. Left to the flies.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "If we play now, they will stand no chance at winning.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "If we play now, they won't find a place to hide.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "If we play more, Abigail will get tired.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -739,6 +744,33 @@ return{
         "It must be so lonely, being stuck in the ground...",
         "Shall I stay and talk with you for a while?",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Let the games begin.",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Abigail, they're playing hide and seek. Let's go!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"A lost soul, now found.",
+		"We found them, Abigail!",
+		"Much like death, I'll always find you.",
+		"You only have yourself to blame. And your tail.",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Do you think we'll win this, Abigail?",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "We found them all, heeheehee!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "And just like that, the game is over.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Tick tock, goes the clock.",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "I wasted time, and now doth time waste me",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "No, they wouldn't have come this far...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "I return from life's edge.",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "They've lost their way. Poor thing.",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "He knows where they are, we should follow.",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Their scent lingers here no longer.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "He waits in gloom for me, I should return.",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "He would like me to follow, so I shall.",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "I don't think we're alone here.",
+	ANNOUNCE_TICOON_LOST_KITCOON = "I've arrived a moment too late. Sigh...",
+	ANNOUNCE_TICOON_ABANDONED = "This must be where we part ways. Goodbye.",
+	ANNOUNCE_TICOON_DEAD = "No, don't leave me...!",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Come now dear creature, don't be afraid.",
@@ -1606,6 +1638,8 @@ return{
         CHESSPIECE_BEEQUEEN = "She once had a sweet life.",
         CHESSPIECE_ANTLION = "Still and lifeless.",
         CHESSPIECE_BEEFALO = "Merely a cold, lifeless copy.",
+		CHESSPIECE_KITCOON = "Hubris, undoubtedly.",
+		CHESSPIECE_CATCOON = "A reminder of brighter days.",
         CHESSPIECE_GUARDIANPHASE3 = "It won't be looking down on us anymore.",
         CHESSPIECE_EYEOFTERROR = "Its stony gaze will glare for eternity.",
         CHESSPIECE_TWINSOFTERROR = "I still remember watching the light leave their eyes.",
@@ -4081,6 +4115,47 @@ return{
 
         BEEF_BELL = "Alas, not a death knell.",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "Where the wild beasts go.",
+            BURNT = "Everything ends.",
+			PLAYING_HIDEANDSEEK = "They've left me behind...",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "The sands of time are unforgiving.",
+		},
+
+		KITCOONDEN_KIT = "Oh, to be young and free of life's worries.",
+
+		TICOON = 
+		{
+			GENERIC = "He is the light I must follow.",
+			ABANDONED = "That's how it always ends. I'm alone.",
+			SUCCESS = "No one can hide from their fate forever.",
+			LOST_TRACK = "We have lost our way.",
+			NEARBY = "So close, and yet, so far.",
+			TRACKING = "May you find what you are looking for.",
+			TRACKING_NOT_MINE = "He leads me to a treasure I cannot obtain.",
+			NOTHING_TO_TRACK = "Nothing left to find but dust.",
+			TARGET_TOO_FAR_AWAY = "What we're looking for is well beyond our reach.",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "How do you know I'm mad?",
+            EMPTY = "What shall I let go to please it?",
+            BURNT = "No more.",
+        },
+
+		KITCOON_FOREST = "Small and innocent. Like I once was...",
+		KITCOON_SAVANNA = "Small and innocent. Like I once was...",
+		KITCOON_MARSH = "Small and innocent. Like I once was...",
+		KITCOON_DECIDUOUS = "Small and innocent. Like I once was...",
+		KITCOON_GRASS = "Small and innocent. Like I once was...",
+		KITCOON_ROCKY = "Small and innocent. Like I once was...",
+		KITCOON_DESERT = "Small and innocent. Like I once was...",
+		KITCOON_MOON = "Small and innocent. Like I once was...",
+		KITCOON_YOT = "Small and innocent. Like I once was...",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "We've brought on our own demise.",
@@ -4246,6 +4321,24 @@ return{
         SHIELDOFTERROR ="Nothing can truly shield you from the horrors of this cruel world.",
         TWINOFTERROR1 = "Don't worry... Abby and I will make sure you leave this world together.",
         TWINOFTERROR2 = "Don't worry... Abby and I will make sure you leave this world together.",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "The wheel is come full circle.",
+        KITCOON_NAMETAG = "It's too painful to grow attached to things.",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "This is not real poultry.",
+            BURNT = "No more enjoyment to be had.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "It tricks them with the promise of sustenance.",
+            BURNT = "Happiness is ephemeral.",
+        },
+
+		KITCOONDECOR1_KIT = "It will only build a temporary distraction.",
+		KITCOONDECOR2_KIT = "It will only build a temporary distraction.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

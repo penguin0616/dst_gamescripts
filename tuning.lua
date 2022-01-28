@@ -278,14 +278,14 @@ function Tune(overrides)
 
 		OCEANFISH_LURE_PREFERENCE =
 		{
-			SMALL_VEGGIE	= { hook = 0.25, special = 1.0, rot = 1.0, seed = 1.50, berry = 1.50, spoon = 0.00, spinnerbait = 0.00, insect = 0.00 },
-			VEGGIE			= { hook = 0.25, special = 1.0, rot = 0.5, seed = 1.50, berry = 1.50, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
-			SMALL_OMNI		= { hook = 0.25, special = 1.0, rot = 1.0, seed = 1.00, berry = 1.00, spoon = 1.00, spinnerbait = 0.00, insect = 1.00 },
-			OMNI			= { hook = 0.25, special = 1.0, rot = 0.5, seed = 0.25, berry = 1.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
-			SMALL_MEAT		= { hook = 0.25, special = 1.0, rot = 1.0, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 0.00, insect = 1.00 },
-			MEAT			= { hook = 0.25, special = 1.0, rot = 0.5, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
-            WOBSTER         = { hook = 0.25, special = 1.0, rot = 1.0, seed = 0.25, berry = 1.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
-            BERRY           = { hook = 0.25, special = 1.0, rot = 0.5, seed = 0.50, berry = 2.00, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
+			SMALL_VEGGIE	= { hook = 0.25, special = 1.00, rot = 1.00, seed = 1.50, berry = 1.50, spoon = 0.00, spinnerbait = 0.00, insect = 0.00 },
+			VEGGIE			= { hook = 0.25, special = 1.00, rot = 0.50, seed = 1.50, berry = 1.50, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
+			SMALL_OMNI		= { hook = 0.25, special = 1.00, rot = 1.00, seed = 1.00, berry = 1.00, spoon = 1.00, spinnerbait = 0.00, insect = 1.00 },
+			OMNI			= { hook = 0.25, special = 1.00, rot = 0.50, seed = 0.25, berry = 1.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
+			SMALL_MEAT		= { hook = 0.25, special = 1.00, rot = 1.00, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 0.00, insect = 1.00 },
+			MEAT			= { hook = 0.25, special = 1.00, rot = 0.50, seed = 0.00, berry = 0.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
+            WOBSTER         = { hook = 0.25, special = 1.00, rot = 1.00, seed = 0.25, berry = 1.00, spoon = 1.00, spinnerbait = 1.00, insect = 1.00 },
+            BERRY           = { hook = 0.25, special = 1.00, rot = 0.50, seed = 0.50, berry = 2.00, spoon = 0.50, spinnerbait = 0.00, insect = 0.00 },
 		},
 
         OCEANFISH_MIN_INTEREST_TO_BITE = 0.2,
@@ -1240,6 +1240,11 @@ function Tune(overrides)
 
             BEEFSHRINE = TechTree.Create({
                 BEEFOFFERING = 3,
+                PERDOFFERING = 1,
+            }),
+
+            CATCOONSHRINE = TechTree.Create({
+                CATCOONOFFERING = 3,
                 PERDOFFERING = 1,
             }),
 
@@ -2579,8 +2584,11 @@ function Tune(overrides)
 
         CATCOONDEN_MAXCHILDREN = 1,
         CATCOONDEN_REGEN_TIME = seg_time * 4,
-        CATCOONDEN_RELEASE_TIME = seg_time,
+        CATCOONDEN_RELEASE_TIME = seg_time * 0.5,
         CATCOONDEN_ENABLED = true,
+
+		CATCOONDEN_REPAIR_TIME = 15 * total_day_time,
+		CATCOONDEN_REPAIR_TIME_VAR = 5 * total_day_time,
 
         CATCOON_ATTACK_RANGE = 4,
         CATCOON_MELEE_RANGE = 3,
@@ -2605,6 +2613,12 @@ function Tune(overrides)
         MAX_HAIRBALL_NEUTRAL_INTERVAL = total_day_time,
         CATCOON_PICKUP_ITEM_CHANCE = .67,
         CATCOON_ATTACK_CONNECT_CHANCE = .25,
+		CATCOON_ACTIVATE_CONNECT_CHANCE = 0.25,
+		CATCOON_DEN_LEASH_MAX_DIST = 30,
+
+        CATCOONDEN_REGROWTH_TIME = day_time * 15,
+        CATCOONDEN_REGROWTH_TIME_SPRING_MULT = 0.5,
+        CATCOONDEN_REGROWTH_TIME_AUTUMN_MULT = 1,
 
         GRASSGEKKO_LIFE = 150,
         GRASSGEKKO_WALK_SPEED = 1, --0.5
@@ -4564,7 +4578,84 @@ function Tune(overrides)
         MINIBOATLANTERN_LIGHTTIME = total_day_time*6,
         MINIBOATLANTERN_BURNTIME = 1.7,
 
+		YOT_CATCOON_SHRINE_SYMBOLS =
+		{
+			DEFAULT = "feather01",
+			goose_feather = "goose_feather01",
+		},
+		
+        KITCOON_WALK_SPEED = 2,
+        KITCOON_RUN_SPEED = 6,
 
+		KITCOON_LOYALTY_MAX				= seg_time * 4, -- only used when the YOT_CATCOON is not activated
+		KITCOON_LOYALTY_EMOTE_CHANCE	= 0.4,
+		KITCOON_NEAR_DEN_DIST			= 10,
+
+		KITCOON_PLAY_DELAY				= 10, -- play with toys
+		KITCOON_PLAYFUL_DELAY			= 10, -- play with other kitcoons
+		KITCOON_PLAYFUL_DELAY_RAND		= 8, -- play with other kitcoons
+
+		KITCOON_NAMING_DIST = 8,
+		KITCOON_NAMING_MAX_LENGTH = 20,
+
+        KITCOON_HIDEANDSEEK_HIDETIMEOUT = 3,
+
+		KITCOONDEN_HIDEANDSEEK_MIN_KITCOONS = 3,
+		KITCOONDEN_HIDEANDSEEK_HIDING_RADIUS_MAX = 30,
+		KITCOONDEN_HIDEANDSEEK_HIDING_RADIUS_MIN_SQ = 5*5,
+		KITCOONDEN_HIDEANDSEEK_TIME_LIMIT = 60,
+
+        KITCOON_HIDING_SOUND_FREQUENCY = 10,
+		KITCOON_HIDING_OFFSET = 
+		{
+			rock1					= {-175,    0,    0},
+			rock2					= {-150,   50,    0},
+			rock_flintless			= {-150,    0,    0},
+			rock_flintless_med		= {  80,    0,    0},
+			rock_flintless_low		= {-150,    0,    0},
+			rock_moon				= {-115,   25,    0},
+			rock_moon_shell			= {-175,    0,    0},
+
+			berrybush				= {-130,    0,    0},
+			berrybush2				= {-100,   25,    0},
+			berrybush_juicy			= {-100,    0,    0},
+
+			oasis_cactus			= { -25,   20,    0},
+			cactus					= { -75,   20,    0},
+		},
+
+        TICOON_SPEED = 3.25,
+		TICOON_EMBARK_SPEED = 7,
+        TICOON_DAMAGE = 30,
+        TICOON_LIFE = 200,
+
+		KITCOON_HIDEANDSEEK_NOT_YOT_REWARDS =
+		{
+			flint					= 10,
+			cutgrass				= 10,
+			twigs					= 10,
+			petals					= 10,
+
+			acorn					= 3,
+			pinecone				= 3,
+			twiggy_nut				= 3,	-- oh, now players can get twiggy trees without them replacing saplings at world gen!
+
+			rocks					= 3,
+			petals_evil				= 3,
+			spoiled_fish_small		= 3,
+
+			feather_robin			= 3,
+			feather_crow			= 3,
+			feather_canary			= 3,
+
+			oceanfish_small_2_inv	= 1,
+			oceanfish_small_4_inv	= 1,
+
+			trinket_3				= 1,
+			trinket_6				= 1,
+			trinket_22				= 2,
+			trinket_24				= 1,
+		},
 
         CRABKING_HEALTH = 20000,
         CRABKING_HEALTH_BONUS = 3000,
@@ -5162,6 +5253,7 @@ function Tune(overrides)
         YOTB_POSTDISTANCE = 5,
 
         BEEFALO_NAMING_DIST = 12,
+		BEEFALO_NAMING_MAX_LENGTH = 50,
 
         DEERCLOPS_ATTACKS_PER_SEASON = 4,
         DEERCLOPS_ATTACKS_OFF_SEASON = false,
@@ -5623,6 +5715,8 @@ function Tune(overrides)
         MIGHTY_WORK_CHANCE = 0.99,
         MIGHTY_WORK_EFFECTIVENESS = 1.5,
         MIGHTY_ROWER_MULT = 1.33,
+        MIGHTY_ANCHOR_SPEED = 2,
+        MIGHTY_SAIL_STRENGTH = 18,
 
 		MIGHTY_HEAVY_SPEED_MULT_BONUS = 0.45,
 

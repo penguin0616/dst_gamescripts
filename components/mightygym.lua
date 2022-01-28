@@ -97,7 +97,6 @@ local MATERIAL_SOUNDS =
 local function kickoffgym(inst, owner)
     local gym = inst.components.inventoryitem:GetContainer()
     if gym then
-        dumptable(gym,1,1)
         gym.inst.components.mightygym:UnloadWeight()
     end
 end
@@ -173,13 +172,6 @@ local function checkforweightitem(item)
 end
 
 function MightyGym:UnloadWeight()
-    local inventory = self.inst.components.inventory
-    local weights = inventory:FindItems(checkforweightitem)
-    if #weights > 0 then
-        for i,weight in ipairs(weights) do
-            --weight:RemoveEventCallback("onremove", kickoffgym)
-        end
-    end
 
     self.inst.components.inventory:DropEverything()
     self.inst.AnimState:ClearOverrideSymbol("swap_item")
@@ -287,7 +279,13 @@ end
 
 local function onstopworkout(inst, data)
     inst.gym.sg:GoToState("workout_pst", data.mightiness)
-    --inst.gym.components.mightybellminigame:Stop()
+end
+
+function onremoved(player)
+    local gym = player.components.strongman and player.components.strongman.gym 
+    if gym then
+        gym.components.mightygym:CharacterExitGym(player)
+    end
 end
 
 function MightyGym:CharacterEnterGym(player)
@@ -309,8 +307,10 @@ function MightyGym:CharacterEnterGym(player)
 	player.Physics:Teleport(x, y, z)
 
     player.sg:GoToState("mighty_gym_active_pre")
+    
+    self.inst:ListenForEvent("onremove",onremoved,player)
 
-    player:ListenForEvent("stopworkout",onstopworkout)   
+    player:ListenForEvent("stopworkout",onstopworkout)
     if player.Physics ~= nil then
         MakeObstaclePhysics(player, 1)
     end
@@ -341,7 +341,10 @@ function MightyGym:CharacterEnterGym(player)
     self:StartWorkout(player)
 end
 
+
 function MightyGym:CharacterExitGym(player)
+    self.inst:RemoveEventCallback("onremove",onremoved,player)
+
     local pos = Vector3(player.Transform:GetWorldPosition())
     --BRING REAL GYM BACK
     self.inst:Show()
@@ -353,56 +356,58 @@ function MightyGym:CharacterExitGym(player)
     self.inst.AnimState:SetFinalOffset(-1)
 
     player:DoTaskInTime(FRAMES * 1, function()
+        if player:IsValid() then
 
-        local theta = self.inst.enterdirection and (self.inst.enterdirection *DEGREES)-PI or math.random() * PI * 2
-        local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
-        local teleport = false
-        
-        player.SetGymStopState(player)
-        
-        -- JUMP OUT PLAYER
-        if player.components.health:IsDead() then
-            teleport = true
-        else
-            player.AnimState:ClearOverrideBuild("mighty_gym")
-            player.AnimState:ClearOverrideBuild("fx_wolfgang")  
-            
-            player:ApplyScale("mightiness", player.components.mightiness:GetScale())
-
-            MakeCharacterPhysics(player, 75, .5)
-            if player.Physics then
-                player.Physics:SetActive(true)
-            end
-            if player.DynamicShadow ~= nil then
-                player.DynamicShadow:Enable(true)
-            end
-             
+            local theta = self.inst.enterdirection and (self.inst.enterdirection *DEGREES)-PI or math.random() * PI * 2
             local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
-            if not offset then
-                offset = Vector3(0,0,0)
-            end
-            player:FacePoint(pos.x+offset.x,0,pos.z+offset.z)
+            local teleport = false
+            
+            player.SetGymStopState(player)
 
-
-            if (player.components.freezable and player.components.freezable:IsFrozen()) or (player.components.sleeper and not player.components.sleeper:IsAsleep()) or (player.components.grogginess and player.components.grogginess.knockedout) then 
+            -- JUMP OUT PLAYER
+            if player.components.health:IsDead() then
                 teleport = true
             else
-                player.sg.statemem.dontleavegym = true -- this is pretty confusing but basically, setting this true means that the gym wont auto try to run CharcterExitGym (THIS VERY FUNCTION) again.
-                player.sg:GoToState("jumpout")
-                player.AnimState:SetTime(4*FRAMES)
-                player:DoTaskInTime(0.3,function() 
-                    local state = string.upper(player.components.mightiness:GetState())
-                    player.components.talker:Say(GetString(player, "ANNOUNCE_EXITGYM", state))
-                end)
-                player.Transform:SetPosition(pos.x,pos.y,pos.z)        
-            end    
-        end
+                player.AnimState:ClearOverrideBuild("mighty_gym")
+                player.AnimState:ClearOverrideBuild("fx_wolfgang")  
+                
+                player:ApplyScale("mightiness", player.components.mightiness:GetScale())
 
-        player.SoundEmitter:KillSound("workout_LP")
-        player.player_classified.inmightygym:set(0)
+                MakeCharacterPhysics(player, 75, .5)
+                if player.Physics then
+                    player.Physics:SetActive(true)
+                end
+                if player.DynamicShadow ~= nil then
+                    player.DynamicShadow:Enable(true)
+                end
+                 
+                local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
+                if not offset then
+                    offset = Vector3(0,0,0)
+                end
+                player:FacePoint(pos.x+offset.x,0,pos.z+offset.z)
 
-        if teleport then 
-            player.Transform:SetPosition(pos.x + offset.x, 0, pos.z + offset.z)
+
+                if (player.components.freezable and player.components.freezable:IsFrozen()) or (player.components.sleeper and not player.components.sleeper:IsAsleep()) or (player.components.grogginess and player.components.grogginess.knockedout) then 
+                    teleport = true
+                else
+                    player.sg.statemem.dontleavegym = true -- this is pretty confusing but basically, setting this true means that the gym wont auto try to run CharcterExitGym (THIS VERY FUNCTION) again.
+                    player.sg:GoToState("jumpout")
+                    player.AnimState:SetTime(4*FRAMES)
+                    player:DoTaskInTime(0.3,function() 
+                        local state = string.upper(player.components.mightiness:GetState())
+                        player.components.talker:Say(GetString(player, "ANNOUNCE_EXITGYM", state))
+                    end)
+                    player.Transform:SetPosition(pos.x,pos.y,pos.z)
+                end    
+            end
+
+            player.SoundEmitter:KillSound("workout_LP")
+            player.player_classified.inmightygym:set(0)
+
+            if teleport then 
+                player.Transform:SetPosition(pos.x + offset.x, 0, pos.z + offset.z)
+            end
         end
     end)
     self:StopWorkout()

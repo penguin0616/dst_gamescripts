@@ -181,14 +181,6 @@ local function GetCurrentMightinessState(inst)
     end
 end
 
-local function GetRowForceMultiplier(inst)
-    if  inst.components.mightiness:GetState() == "mighty" then
-        return TUNING.MIGHTY_ROWER_MULT
-    end
-
-    return 1
-end
-
 ------------------------------------------------
 
 local function bell_SetPercent(inst, val)
@@ -431,6 +423,7 @@ local function master_postinit(inst)
         inst:AddComponent("mightiness")
         inst:AddComponent("dumbbelllifter")
         inst:AddComponent("strongman")
+        inst:AddComponent("expertsailor")
 
         if inst.components.efficientuser == nil then
             inst:AddComponent("efficientuser")
@@ -443,8 +436,7 @@ local function master_postinit(inst)
 
         inst.OnLoad = onload
         inst.OnNewSpawn = onload
-
-        inst.GetRowForceMultiplier = GetRowForceMultiplier
+        
     end
 end
 

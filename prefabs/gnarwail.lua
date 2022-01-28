@@ -464,12 +464,6 @@ local function RemoveShadowOnDeath(inst, data)
     end
 end
 
-local function UpdateShadowRotation(inst)
-    if inst._water_shadow then
-        inst._water_shadow.Transform:SetRotation(inst.Transform:GetRotation())
-    end
-end
-
 local function gnarwail()
     local inst = CreateEntity()
 
@@ -565,7 +559,6 @@ local function gnarwail()
     inst._water_shadow = SpawnPrefab("gnarwail_water_shadow")
     inst._water_shadow.entity:SetParent(inst.entity)
     inst:ListenForEvent("death", RemoveShadowOnDeath)
-    inst._water_shadow_rotation_update_task = inst:DoPeriodicTask(FRAMES, UpdateShadowRotation)
 
     inst.PlayAnimation = PlayAnimation
     inst.PushAnimation = PushAnimation

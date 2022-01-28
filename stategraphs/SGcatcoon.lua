@@ -4,7 +4,7 @@ require("stategraphs/commonstates")
 
 local actionhandlers =
 {
-    ActionHandler(ACTIONS.GOHOME, "gohome"),
+    ActionHandler(ACTIONS.GOHOME, function(inst) return inst.raining and "gohome_raining" or "gohome" end),
     ActionHandler(ACTIONS.HAIRBALL, "hairball_hack"),
     ActionHandler(ACTIONS.CATPLAYGROUND, "pawgroundaction"),
     ActionHandler(ACTIONS.CATPLAYAIR, "pounceplayaction"),
@@ -14,7 +14,7 @@ local events=
 {
     CommonHandlers.OnSleep(),
     CommonHandlers.OnFreeze(),
-    CommonHandlers.OnAttacked(true),
+    CommonHandlers.OnAttacked(),
     CommonHandlers.OnDeath(),
     CommonHandlers.OnLocomote(false,true),
     CommonHandlers.OnHop(),
@@ -109,8 +109,8 @@ local states=
     },
 
     State{
-
-        name = "gohome",
+        name = "gohome_raining",
+		tags = {"busy"},
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("taunt_pre")
@@ -137,6 +137,26 @@ local states=
         },
     },
 
+    State{
+        name = "gohome",
+		tags = {"busy"},
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("action")
+            inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/catcoon/pickup")
+        end,
+
+        timeline =
+        {
+            TimeEvent(6*FRAMES, function(inst) PlayFootstep(inst) end),
+            TimeEvent(13*FRAMES, function(inst) PlayFootstep(inst) end),
+            TimeEvent(20*FRAMES, function(inst) PlayFootstep(inst) end),
+            TimeEvent(27*FRAMES, function(inst) PlayFootstep(inst) end),
+            TimeEvent(34*FRAMES, function(inst) PlayFootstep(inst) end),
+            TimeEvent(37*FRAMES, function(inst) inst:PerformBufferedAction() inst.sg:GoToState("idle") end),
+        },
+    },	
+	
 	State{
 		name = "hairball_hack",
 		tags = {"busy"},
@@ -227,21 +247,35 @@ local states=
             TimeEvent(37*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/catcoon/hairball_vomit") end),
             TimeEvent(46*FRAMES, function(inst)
                 inst.vomit = SpawnPrefab(inst:PickRandomGift(inst.numretches))
-                if inst.vomit and inst.vomit.components.inventoryitem and inst.vomit.components.inventoryitem.ondropfn then
-                    inst.vomit.components.inventoryitem.ondropfn(inst.vomit)
-                end
-				if inst.vomit.components.weighable ~= nil then
-					inst.vomit.components.weighable.prefab_override_owner = inst.prefab
+				if inst.vomit ~= nil then
+					local downvec = TheCamera:GetDownVec()
+					local face = math.atan2(downvec.z, downvec.x) * (180/math.pi)
+					local pos = inst:GetPosition() + downvec:Normalize()
+					inst.Transform:SetRotation(-face)
+
+					inst.vomit.Transform:SetPosition(pos.x, pos.y, pos.z)
+					if inst.vomit.components.inventoryitem and inst.vomit.components.inventoryitem.ondropfn then
+						inst.vomit.components.inventoryitem.ondropfn(inst.vomit)
+					end
+					if inst.vomit.components.weighable ~= nil then
+						inst.vomit.components.weighable.prefab_override_owner = inst.prefab
+					end
+
+					local cur_time = GetTime()
+
+					if IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
+						local redpouch = SpawnPrefab("redpouch_yot_catcoon")
+						local lucky_nugget = SpawnPrefab("lucky_goldnugget")
+						redpouch.components.unwrappable:WrapItems({lucky_nugget})
+						lucky_nugget:Remove()
+
+						redpouch.Transform:SetPosition(pos.x + 0.2, pos.y, pos.z + 0.1)
+					end
+
+					inst.last_hairball_time = cur_time
 				end
-                if inst.vomit then
-                    local downvec = TheCamera:GetDownVec()
-                    local face = math.atan2(downvec.z, downvec.x) * (180/math.pi)
-                    local pos = inst:GetPosition()
-                    local offset = downvec:Normalize()
-                    inst.vomit.Transform:SetPosition(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z)
-                    inst.Transform:SetRotation(-face)
-                end
-                inst.last_hairball_time = GetTime()
+
+
                 inst:PerformBufferedAction()
             end),
             TimeEvent(118*FRAMES, function(inst)
@@ -374,10 +408,6 @@ local states=
             inst.AnimState:PlayAnimation("taunt_pre")
             inst.AnimState:PushAnimation("taunt", false)
             inst.AnimState:PushAnimation("taunt_pst", false)
-        end,
-
-        onexit = function(inst)
-
         end,
 
         timeline =

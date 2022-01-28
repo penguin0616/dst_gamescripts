@@ -125,7 +125,7 @@ FrontEnd = Class(function(self, name)
 	self.topvigoverlay:Hide()
 
 	self.helptext = self.overlayroot:AddChild(Widget("HelpText"))
-	self.helptext:SetScaleMode(SCALEMODE_FIXEDPROPORTIONAL)
+	self.helptext:SetScaleMode(SCALEMODE_PROPORTIONAL)
     self.helptext:SetHAnchor(ANCHOR_MIDDLE)
     self.helptext:SetVAnchor(ANCHOR_BOTTOM)
 

@@ -48,9 +48,16 @@ end
 
 -------------------------------------------------------------------------------
 --  Play With Other Critters
-
+local PLAYMATE_NO_TAGS = {"busy"}
 local function PlayWithPlaymate(self)
-    self.inst:PushEvent("critterplayful", {target=self.playfultarget})
+    self.inst:PushEvent("start_playwithplaymate", {target=self.playfultarget})
+end
+
+local function TargetCanPlay(self, target, owner, max_dist_from_owner, is_flier)
+	return (target.IsPlayful == nil or target:IsPlayful()) 
+			and target:IsNear(owner, max_dist_from_owner) 
+			and (is_flier or target:IsOnPassablePoint())
+			and (target.components.sleeper == nil or not target.components.sleeper:IsAsleep())
 end
 
 local function FindPlaymate(self)
@@ -58,24 +65,24 @@ local function FindPlaymate(self)
 
     local is_playful = self.inst.components.crittertraits:IsDominantTrait("playful")
     local max_dist_from_owner = is_playful and MAX_DOMINANTTRAIT_PLAYFUL_KEEP_DIST_FROM_OWNER or MAX_PLAYFUL_KEEP_DIST_FROM_OWNER
+    local is_flier = self.inst:HasTag("flying")
 
     local can_play = self.inst:IsPlayful() and self.inst:IsNear(owner, max_dist_from_owner)
 
     -- Try to keep the current playmate
-    if self.playfultarget ~= nil and self.playfultarget:IsValid() and can_play then
+    if self.playfultarget ~= nil and self.playfultarget:IsValid() and can_play and TargetCanPlay(self, self.playfultarget, owner, max_dist_from_owner, is_flier) then
         return true
     end
 
     local find_dist = is_playful and MAX_DOMINANTTRAIT_PLAYFUL_FIND_DIST or MAX_PLAYFUL_FIND_DIST
 
     -- Find a new playmate
-    local we_fly = self.inst:HasTag("flying")
     self.playfultarget = can_play and
         not owner.components.locomotor:WantsToMoveForward() and
         FindEntity(self.inst, find_dist,
             function(v)
-                return (v.IsPlayful == nil or v:IsPlayful()) and v:IsNear(owner, max_dist_from_owner) and (we_fly or v:IsOnPassablePoint())
-            end, nil, nil, self.inst.playmatetags)
+                return TargetCanPlay(self, v, owner, max_dist_from_owner, is_flier)
+            end, nil, PLAYMATE_NO_TAGS, self.inst.playmatetags)
         or nil
 
     return self.playfultarget ~= nil

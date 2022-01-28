@@ -582,7 +582,7 @@ end
 
 local function TerrariumChest_Retrofitting()
 	if TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.terrariumchest == "never" then
-		print ("Retrofitting for Terraria: Terrarium Chest - Skipping due to overrides.terrariumchest")
+		print("Retrofitting for Terraria: Terrarium Chest - Skipping due to overrides.terrariumchest")
 		return
 	end
 
@@ -596,7 +596,7 @@ local function TerrariumChest_Retrofitting()
 	end
 
 	if #candidtate_nodes == 0 then
-		print ("Retrofitting for Terraria: Terrarium Chest - Failed to find any BGForest nodes!")
+		print("Retrofitting for Terraria: Terrarium Chest - Failed to find any BGForest nodes!")
 		return false
 	end
 
@@ -614,6 +614,55 @@ local function TerrariumChest_Retrofitting()
 		RetrofitNewContentPrefab(inst, "terrariumchest", 2, 4, nil, candidtate_nodes, on_add_prefab)
 	end
 
+end
+
+--------------------------------------------------------------------------
+
+local function CatcoonDen_Retrofitting()
+	if TheWorld.topology.overrides ~= nil and TheWorld.topology.overrides.catcoon == "never" then		-- catcoon == catcoonden, catcoons = catcoon
+		print("Retrofitting for Catcoon Den De-extinction: Skipping due to overrides.catcoon == never")
+		return
+	end
+
+	local min_dens = 3
+
+	-- see if we have enough catcoon dens
+	local count = 0
+	for _, ent in pairs(Ents) do
+		if ent:IsValid() and ent.prefab == "catcoonden" then
+			count = count + 1
+			if count >= min_dens then
+				print("Retrofitting for Catcoon Den De-extinction: Found enough Catcoon Dens in the world.")
+				return
+			end
+		end
+	end
+
+	-- find the deciduous biome(s)
+	local node_indices = {}
+	local candidtate_nodes = {}
+
+	for i,v in ipairs(TheWorld.topology.ids) do
+		if string.find(v, "BGDeciduous") then
+			table.insert(candidtate_nodes, TheWorld.topology.nodes[i])
+		end
+	end
+
+	if #candidtate_nodes == 0 then
+		print("Retrofitting for Catcoon Den De-extinction: Failed to find any BGDeciduous nodes!")
+		return
+	end
+
+	local deciduous_turf_fn = function(x, y, z, prefab)
+		return TheWorld.Map:GetTileAtPoint(x, y, z) == GROUND.DECIDUOUS
+	end
+
+	print("Retrofitting for Catcoon Den De-extinction: Found " .. tostring(count) .. " Catcoon Dens in the world. Adding "..tostring(min_dens - count) .. " more.")
+	for i = count, min_dens-1 do
+		if not RetrofitNewContentPrefab(inst, "catcoonden", 2, 8, deciduous_turf_fn, candidtate_nodes) then
+			RetrofitNewContentPrefab(inst, "catcoonden", 2, 4, deciduous_turf_fn, candidtate_nodes)
+		end
+	end
 end
 
 local HAS_WATERSOURCE = {"watersource"}
@@ -1171,6 +1220,13 @@ function self:OnPostInit()
 		TerrariumChest_Retrofitting()
 	end
 
+	if self.retrofit_catcoonden_deextinction then
+		-- add shoals for malbatross spawning, salt statcks and cookie citter spawners
+		print ("Retrofitting for Catcoon Den De-extinction: Checking if catcoon dens need to restored in the world.")
+		CatcoonDen_Retrofitting()
+	end
+
+
 	---------------------------------------------------------------------------
 	if self.requiresreset then
 		print ("Retrofitting: Worldgen retrofitting requires the server to save and restart to fully take effect.")
@@ -1220,6 +1276,7 @@ function self:OnLoad(data)
 		self.retrofit_nodeidtilemap_thirdpass = data.retrofit_nodeidtilemap_thirdpass or false
         self.retrofit_removeextraaltarpieces = data.retrofit_removeextraaltarpieces or false
         self.retrofit_terraria_terrarium = data.retrofit_terraria_terrarium or false
+		self.retrofit_catcoonden_deextinction = data.retrofit_catcoonden_deextinction or false
 		
     end
 end

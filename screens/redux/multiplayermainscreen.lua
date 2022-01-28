@@ -31,6 +31,8 @@ local MainMenuMotdPanel = require "widgets/redux/mainmenu_motdpanel"
 local MainMenuStatsPanel = require "widgets/redux/mainmenu_statspanel"
 local PurchasePackScreen = require "screens/redux/purchasepackscreen"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
@@ -178,6 +180,13 @@ local function MakeYOTCBanner(self, baner_root, anim)
     end
 end
 
+local function MakeYOTCatcoonBanner(self, baner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_yot_catcoon")
+    anim:GetAnimState():SetBank ("dst_menu_yot_catcoon")
+    anim:SetScale(.667)
+    anim:GetAnimState():PlayAnimation("loop", true)
+end
+
 local function MakeHallowedNightsBanner(self, baner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_halloween2")
     anim:GetAnimState():SetBank ("dst_menu_halloween2")
@@ -311,6 +320,8 @@ function MakeBanner(self)
         MakeWolfgangBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, baner_root, anim)
+	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
+        MakeYOTCatcoonBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
         MakeHallowedNightsBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
@@ -357,6 +368,10 @@ local MultiplayerMainScreen = Class(Screen, function(self, prev_screen, profile,
 
 	self.info_font = BODYTEXTFONT -- CHATFONT, FALLBACK_FONT, CHATFONT_OUTLINE
 
+    --kitcoon stuff in the UI
+	PostProcessor:SetColourCubeData( 0, "images/colour_cubes/day05_cc.tex", "images/colour_cubes/dusk03_cc.tex" )
+	PostProcessor:SetColourCubeLerp( 0, 0.05 )
+	TheSim:SetVisualAmbientColour( 0.6, 0.6, 0.6 )
 
     self.profile = profile
     self.offline = offline
@@ -448,6 +463,13 @@ function MultiplayerMainScreen:DoInit()
 
     ----------------------------------------------------------
 	-- new MOTD
+
+    local kit_puppet_positions = {
+        { x = 90.0, y = 20.0, scale = 0.75 },
+        { x = 390.0, y = 20.0, scale = 0.75 },
+    }
+    self.kit_puppet = self.fixed_root:AddChild(KitcoonPuppet( Profile, nil, kit_puppet_positions ))
+
 	if TheFrontEnd.MotdManager:IsEnabled() then
 		local motd_panel = MainMenuMotdPanel({font = self.info_font, x = 100, y = -150,
 			on_no_focusforward = self.menu,
@@ -679,7 +701,6 @@ function MultiplayerMainScreen:OnBrowseServersButton()
 end
 
 function MultiplayerMainScreen:OnPlayerSummaryButton()
-
     if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
         TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
             {
@@ -889,6 +910,10 @@ function MultiplayerMainScreen:OnBecomeActive()
 		self.motd_panel:OnBecomeActive()
 	end
 
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+
     --delay for a frame to allow the screen to finish building, then check the entity count for leaks
 	if IS_DEV_BUILD then
 		self.inst:DoTaskInTime(0, function()
@@ -903,6 +928,14 @@ function MultiplayerMainScreen:OnBecomeActive()
 			self.cached_entity_count = TheSim:GetNumberOfEntities()
 		end)
 	end
+end
+
+function MultiplayerMainScreen:OnBecomeInactive()
+    MultiplayerMainScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function MultiplayerMainScreen:FinishedFadeIn()

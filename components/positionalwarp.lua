@@ -49,15 +49,20 @@ function PositionalWarp:OnRemoveEntity()
 	self.markers = {}
 end
 
+function PositionalWarp:_MakeMarker(i, prefab)
+	if self.markers[i] ~= nil and self.markers[i]:IsValid() then
+		self.markers[i]:Remove()
+	end
+	self.markers[i] = SpawnPrefab(prefab)
+	if self.markers[i].SetMarkerViewer ~= nil then
+		self.markers[i]:SetMarkerViewer(self.inst)
+	end
+	self.markers[i]:ListenForEvent("onremove", function() self.markers[i] = nil self:_MakeMarker(i, prefab) end)
+end
+
 function PositionalWarp:SetMarker(prefab)
 	for i = 1, self.marker_cache_size do
-		if self.markers[i] ~= nil then
-			self.markers[i]:Remove()
-		end
-		self.markers[i] = SpawnPrefab(prefab)
-		if self.markers[i].SetMarkerViewer ~= nil then
-			self.markers[i]:SetMarkerViewer(self.inst)
-		end
+		self:_MakeMarker(i, prefab)
 	end
 
 	self:UpdateMarker()

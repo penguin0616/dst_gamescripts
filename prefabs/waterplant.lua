@@ -238,8 +238,8 @@ local function find_and_attack_nearby_player(inst)
 end
 
 local function on_ignited(inst, data)
-    -- Would be nice to use data.doer, but very few places seem to pass it!
-    -- So just set the closest player as a target and assume they lit us up.
+    -- When a waterplant gets set on fire, it gets upset, and attacks the closest player it can find,
+    -- irrelevant of whether they're the actual cause or not.
     find_and_attack_nearby_player(inst)
 
     inst.components.harvestable:Disable()
@@ -538,7 +538,7 @@ local function basefn()
     inst.AnimState:Hide("stage2")
     inst.AnimState:Hide("stage3")
 
-    inst:AddTag("DECOR")
+    inst:AddTag("FX")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

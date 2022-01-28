@@ -111,6 +111,7 @@ local function fn(data)
 	inst:AddTag("carnivaldecor")
 	inst:AddTag("carnivallamp")
     inst:AddTag("structure")
+    inst:AddTag("cattoyairborne")
 
     inst.entity:SetPristine()
 

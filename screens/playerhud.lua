@@ -959,7 +959,7 @@ function PlayerHud:OnControl(control, down)
             end
             return closed
         elseif control == CONTROL_TOGGLE_PLAYER_STATUS then
-            self:ShowPlayerStatusScreen()
+            self:ShowPlayerStatusScreen(true)
             return true
         end
     elseif control == CONTROL_SHOW_PLAYER_STATUS then

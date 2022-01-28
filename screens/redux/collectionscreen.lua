@@ -12,6 +12,8 @@ local Screen = require "widgets/screen"
 local Subscreener = require "screens/redux/subscreener"
 local WardrobeScreen = require "screens/redux/wardrobescreen"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local TEMPLATES = require("widgets/redux/templates")
 
 
@@ -25,8 +27,16 @@ local CollectionScreen = Class(Screen, function(self, prev_screen, user_profile)
 end)
 
 function CollectionScreen:DoInit()
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
     self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = -380, y = 170, scale = 0.75 },
+        { x = -365, y = -310, scale = 0.75 },
+        { x = 480, y = -310, scale = 0.75 },
+    } ))
 
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.COLLECTIONSCREEN.TITLE, ""))
 
@@ -161,6 +171,10 @@ function CollectionScreen:OnBecomeActive()
 
     CollectionScreen._base.OnBecomeActive(self)
 
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+
     if self.leaving then
         -- if we left, then inventory may have changed.
         self:RefreshInventory()
@@ -175,6 +189,14 @@ function CollectionScreen:OnBecomeActive()
 	end
 
     self.leaving = nil
+end
+
+function CollectionScreen:OnBecomeInactive()
+    CollectionScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function CollectionScreen:RefreshInventory(animateDoodads)

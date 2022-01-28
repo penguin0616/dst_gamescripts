@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "All our arms can't quite reach from up here.",
             HASPET = "I like the pet we've got.",
+			TICOON = "We're good with just one guide.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Aww. We want in there.",
             HOSTBUSY = "He looks pretty busy, we can come back later.",
             CARNIVAL_HOST_HERE = "We're pretty sure we saw him over here.",
-            NOCARNIVAL = "Aww, did all the birds leave?"
+            NOCARNIVAL = "Aww, did all the birds leave?",
+			EMPTY_CATCOONDEN = "No one's home...",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "It'll be more fun with more kitcoons.",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "It's okay, but maybe we can find a place with more hiding spots.",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "That was fun! Can we play again tomorrow?",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -735,6 +740,33 @@ return{
         "You are a very good plant.",
         "We're always here when you need somebody to talk to!",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Ready or not, here we come!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Let's work together to find those kitcoons!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Found you!",
+		"There you are!",
+		"We found you!",
+		"Heehee, gotcha!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "We found one more!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "That was the last one, we won!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "We did it, we found them all!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "We're almost out of time!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Aw... olly olly oxenfree!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "We don't think the kitcoons would go this far out...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "We're back in the kitcoon's playground.",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Hello! Are you lost?",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Wow! He's leading us right to the kitcoons! ...Is that cheating?",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Doesn't look like he found any clues here.",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "We should stay close to him.",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "They want to get back to finding the kitcoons.",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "We must be getting close!",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Either someone else found them, or this one is a lot tinier.",
+	ANNOUNCE_TICOON_ABANDONED = "We felt like using him was a bit like cheating anyway.",
+	ANNOUNCE_TICOON_DEAD = "Oh no... where are we supposed to go now?",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Over here, beefalo! Follow us!",
@@ -1602,6 +1634,8 @@ return{
         CHESSPIECE_BEEQUEEN = "Sweet!",
         CHESSPIECE_ANTLION = "It's so life-like the mane looks fluffy!",
         CHESSPIECE_BEEFALO = "Now we want to go for a beefalo ride!",
+		CHESSPIECE_KITCOON = "Whoah! I hope they don't fall over...",
+		CHESSPIECE_CATCOON = "We respect the butterfly hunter.",
         CHESSPIECE_GUARDIANPHASE3 = "It can't still see us... right?",
         CHESSPIECE_EYEOFTERROR = "We think we could've been friends.",
         CHESSPIECE_TWINSOFTERROR = "Now they'll always be together.",
@@ -4077,6 +4111,47 @@ return{
 
         BEEF_BELL = "The beefalo really like this bell, and whoever rings it!",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "A nice safe place for kitcoons to rest after playing.",
+            BURNT = "We hope it was evacuated...",
+			PLAYING_HIDEANDSEEK = "They're hiding...",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "We're almost out of time to find all of the babies...",
+		},
+
+		KITCOONDEN_KIT = "We can use this to build a little house for the kitcoons.",
+
+		TICOON = 
+		{
+			GENERIC = "Your majesty!",
+			ABANDONED = "We'll try our best to find them on our own.",
+			SUCCESS = "Wow! Good work, your highness!",
+			LOST_TRACK = "Aw, we weren't quick enough.",
+			NEARBY = "Is there a kit nearby, our liege?",
+			TRACKING = "He's onto something!",
+			TRACKING_NOT_MINE = "He's helping someone else right now.",
+			NOTHING_TO_TRACK = "It doesn't look like there's anything around here...",
+			TARGET_TOO_FAR_AWAY = "Maybe the kit's out of his sniffing range?",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "What a nice tribute!",
+            EMPTY = "What could we offer it? Something from a bird?",
+            BURNT = "I guess not everyone likes catcoons...",
+        },
+
+		KITCOON_FOREST = "The minister's kit is an arborous kit!",
+		KITCOON_SAVANNA = "The minister's kit is a beastly kit!",
+		KITCOON_MARSH = "The minister's kit is a comfy kit!",
+		KITCOON_DECIDUOUS = "The minister's kit is a dastardly kit!",
+		KITCOON_GRASS = "The minister's kit is an eager kit!",
+		KITCOON_ROCKY = "The minister's kit is a ferrous kit!",
+		KITCOON_DESERT = "The minister's kit is a golden kit!",
+		KITCOON_MOON = "The minister's kit is a husky kit!",
+		KITCOON_YOT = "The minister's kit is an icy kit!",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Aah! It looks mad!",
@@ -4242,6 +4317,24 @@ return{
         SHIELDOFTERROR ="Ms. Wickerbottom says we shouldn't bite.",
         TWINOFTERROR1 = "Aww, they brought a friend!",
         TWINOFTERROR2 = "Aww, they brought a friend!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "Run little mouse, run!",
+        KITCOON_NAMETAG = "We always wanted a pet!",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "We hope the kitcoons like it!",
+            BURNT = "Oh no!",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "We like watching the kitcoons play with it!",
+            BURNT = "Aww...",
+        },
+
+		KITCOONDECOR1_KIT = "We'll have it done right away!",
+		KITCOONDECOR2_KIT = "Where should we put it?",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

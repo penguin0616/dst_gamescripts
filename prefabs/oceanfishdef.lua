@@ -27,6 +27,7 @@ eel		165.16, 212.12
 7	YOT Koi 2			188.88, 238.88	+-		+-		+-									OMNI			easy-medium catch
 8   Snowy Whitefish		190.90, 270.70			++											OMNI			long pulls
 9   Berryfish		    210.50, 315.14														BERRY			easy-medium catch
+
 ]]
 
 --[[ Catching Behaviours
@@ -113,6 +114,7 @@ local LOOT = {
     POPCORN =		{ "corn_cooked" },
     ICE =			{ "fishmeat", "ice", "ice" },
     PLANTMEAT =		{ "plantmeat" },
+	MEDIUM_YOT =	{ "fishmeat", "lucky_goldnugget", "lucky_goldnugget" },
 }
 
 local PERISH = {
@@ -135,6 +137,13 @@ local COOKING_PRODUCT = {
     CORN =      "corn_cooked",
 	PLANTMEAT = "plantmeat_cooked",
 }
+
+local function MEDIUM_YOT_ONCOOKED_FN(inst, cooker, chef)
+	if inst.components.lootdropper ~= nil then
+		inst.components.lootdropper:SpawnLootPrefab("lucky_goldnugget")
+		inst.components.lootdropper:SpawnLootPrefab("lucky_goldnugget")
+	end
+end
 
 local DIET = {
 	OMNI = { caneat = { FOODGROUP.OMNI } },--, preferseating = { FOODGROUP.OMNI } },
@@ -987,6 +996,8 @@ local FISH_DEFS =
 	},	
 }
 
+-- Fish School Data
+
 local SCHOOL_VERY_COMMON		= 4
 local SCHOOL_COMMON				= 2
 local SCHOOL_UNCOMMON			= 1
@@ -1056,6 +1067,11 @@ SCHOOL_WEIGHTS[SEASONS.SUMMER][GROUND.OCEAN_SWELL].oceanfish_small_8 = SCHOOL_UN
 
 local function SpecialEventSetup()
 	if IsAny_YearOfThe_EventActive() then
+		FISH_DEFS.oceanfish_medium_6.loot = LOOT.MEDIUM_YOT
+		FISH_DEFS.oceanfish_medium_6.oncooked_fn = MEDIUM_YOT_ONCOOKED_FN
+		FISH_DEFS.oceanfish_medium_7.loot = LOOT.MEDIUM_YOT
+		FISH_DEFS.oceanfish_medium_7.oncooked_fn = MEDIUM_YOT_ONCOOKED_FN
+
 		for _, season in pairs(SCHOOL_WEIGHTS) do
 			season[GROUND.OCEAN_COASTAL].oceanfish_medium_6 = SCHOOL_UNCOMMON / 2
 			season[GROUND.OCEAN_SWELL].oceanfish_medium_6 = SCHOOL_UNCOMMON / 2

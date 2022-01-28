@@ -39,8 +39,8 @@ local function onattack(inst, owner, target)
         if fx ~= nil then
             fx.entity:SetParent(target.entity)
             fx.entity:AddFollower():FollowSymbol(target.GUID, target.components.combat.hiteffectsymbol, 0, 0, 0)
-            if fx.OnBatFXSpawned ~= nil then
-                fx:OnBatFXSpawned(inst)
+            if fx.OnFXSpawned ~= nil then
+                fx:OnFXSpawned(inst)
             end
         end
     end
@@ -178,10 +178,84 @@ local function batsfn()
 
     inst:DoTaskInTime(.5, inst.Remove)
     inst.persists = false
-    inst.OnBatFXSpawned = OnBatFXSpawned
+    inst.OnFXSpawned = OnBatFXSpawned
+
+    return inst
+end
+
+local function PlayFantasyFX(proxy)
+    if proxy.variation:value() > 0 then
+        local inst = CreateEntity()
+
+        --[[Non-networked entity]]
+        inst.entity:SetCanSleep(false)
+        inst.persists = false
+
+        inst.entity:AddTransform()
+        inst.entity:AddAnimState()
+        inst.entity:AddSoundEmitter()
+
+        --V2C: Purposely not using SetFromProxy
+        inst.Transform:SetPosition(proxy.Transform:GetWorldPosition())
+
+        inst.AnimState:SetBank("batbat_fantasy")
+        inst.AnimState:SetSkin("batbat_fantasy")
+        inst.AnimState:PlayAnimation("bat"..tostring(proxy.variation:value()))
+
+        DoFlutterSound(inst, 1)
+
+        inst:AddTag("FX")
+        inst:AddTag("NOCLICK")
+
+        inst:ListenForEvent("animover", inst.Remove)
+    end
+end
+
+local function OnFantasyFXSpawned(inst, parent)
+    if parent ~= nil then
+        if parent._fantasyfxvariations == nil then
+            parent._fantasyfxvariations = {}
+            local choices = { 1, 2, 3, 4 }
+            while #choices > 0 do
+                table.insert(parent._fantasyfxvariations, table.remove(choices, math.random(#choices)))
+            end
+        end
+        inst.variation:set(table.remove(parent._fantasyfxvariations, math.max(1, math.random(0, 2))))
+        table.insert(parent._fantasyfxvariations, inst.variation:value())
+    else
+        inst.variation:set(math.random(4))
+    end
+end
+
+local function fantasyfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddNetwork()
+
+    inst:AddTag("FX")
+    inst:AddTag("nointerpolate")
+
+    inst.variation = net_tinybyte(inst.GUID, "batbat_fantasy.variation")
+
+    --Dedicated server does not need to spawn the local fx
+    if not TheNet:IsDedicated() then
+        inst:DoTaskInTime(0, PlayFantasyFX)
+    end
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:DoTaskInTime(.5, inst.Remove)
+    inst.persists = false
+    inst.OnFXSpawned = OnFantasyFXSpawned
 
     return inst
 end
 
 return Prefab("batbat", fn, assets),
-    Prefab("batbat_bats", batsfn, assets_bats)
+    Prefab("batbat_bats", batsfn, assets_bats),
+    Prefab("batbat_fantasy_fx", fantasyfn, assets_bats)

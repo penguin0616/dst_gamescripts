@@ -14,6 +14,7 @@ return{
         {
             MOUNTED = "Hair-cow is too tall. I can't reach.",
             HASPET = "Wolfgang has animal friend already!",
+			TICOON = "Wolfgang already has good furry friend.",
         },
 		SHAVE =
 		{
@@ -58,7 +59,11 @@ return{
 			LOCKED_GATE = "Let Wolfgang in!",
             HOSTBUSY = "He is very busy bird, have carnival to run!",
             CARNIVAL_HOST_HERE = "Where is bird man? Thought he was here...",
-            NOCARNIVAL = "Looks like birds move carnival somewhere else."
+            NOCARNIVAL = "Looks like birds move carnival somewhere else.",
+			EMPTY_CATCOONDEN = "Did Wolfgang's muscles scare tiny kitties away?",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDERS = "Wolfgang plays fair, where is fun in less kitties?",
+			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Wolfgang plays fair, is nowhere for kitties to hide here!",
+			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Is enough games for Wolfgang.",
 		},
         COOK =
         {
@@ -89,7 +94,7 @@ return{
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
 --fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom"
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -332,7 +337,7 @@ return{
             NOWEIGHT = "Wolfgang needs to find something to lift!",
             UNBALANCED = "Wolfgang does not want one arm mightier than other!",
             ONFIRE = "Is good to feel burn, but not that much.",
-            SMOULDER = "Wolfgang will stomp puny fire out first.",           
+            SMOULDER = "Wolfgang will stomp puny fire out first.",
             HUNGRY = "Too hungry... can't lift with tummy grumbling...",
             FULL = "Is Wolfgang's turn for lifting now! Wait...",
         },
@@ -736,6 +741,33 @@ return{
         "You are very good plant. You make food for Wolfgang!",
         "Who is mightiest plant of all? You are!",
 	},
+
+	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Ready or not, here comes mighty Wolfgang!",
+	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Mighty Wolfgang wants to help find all tiny kitties!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	{
+		"Here, Wolfgang found kitty kitty!",
+		"Wolfgang finds tiny kitties too easy!",
+		"Phew, tiny kitty hid very well!",
+		"Ah hah! Tiny Kitty cannot hide from mighty Wolfgang!",
+	},
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_ONE_MORE = "Wolfgang is going to find you, tiny kitty!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE = "Tiny kitties now know Wolfgang is mightiest one!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND_LAST_ONE_TEAM = "We are mightier together, ha ha!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Wolfgang needs to find tiny kitties faster!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Bah! Tiny kitties bested mighty Wolfgang!",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "Wolfgang not sure if small kitty paws can walk so far...",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "Kitties are over here, Wolfgang knows it!",
+	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Why you not hiding like other kitties?",
+
+	ANNOUNCE_TICOON_START_TRACKING	= "Go on, furry friend! Wolfgang trusts you!",
+	ANNOUNCE_TICOON_NOTHING_TO_TRACK = "Oh no, furry friend found nothing!",
+	ANNOUNCE_TICOON_WAITING_FOR_LEADER = "Wolfgang should follow furry friend!",
+	ANNOUNCE_TICOON_GET_LEADER_ATTENTION = "Wolfgang thinks furry friend wants to be followed.",
+	ANNOUNCE_TICOON_NEAR_KITCOON = "Oh ho ho, we're near a kitty kitty!",
+	ANNOUNCE_TICOON_LOST_KITCOON = "Someone found what Wolfgang was looking for!",
+	ANNOUNCE_TICOON_ABANDONED = "Wolfgang will find tiny kitties himself!",
+	ANNOUNCE_TICOON_DEAD = "Furry friend is gone? Who will show Wolfgang where tiny kitties are?",
 
     -- YOTB
     ANNOUNCE_CALL_BEEF = "Come, hair-cow!",
@@ -1603,6 +1635,8 @@ return{
         CHESSPIECE_BEEQUEEN = "Mighty statue stays mighty still.",
         CHESSPIECE_ANTLION = "Wolfgang will not battle it in staring contest.",
         CHESSPIECE_BEEFALO = "Is look almost like real hair-cow.",
+		CHESSPIECE_KITCOON = "Wolfgang can lift twice as many!",
+		CHESSPIECE_CATCOON = "Ha! Is easy to find this one.",
         CHESSPIECE_GUARDIANPHASE3 = "Wolfgang glad is just statue.",
         CHESSPIECE_EYEOFTERROR = "No like the way it look at Wolfgang.",
         CHESSPIECE_TWINSOFTERROR = "Brrr, still sends chill down Wolfgang's spine.",
@@ -4078,6 +4112,47 @@ return{
 
         BEEF_BELL = "Ringy ding!",
 
+		-- YOT Catcoon
+		KITCOONDEN = 
+		{
+			GENERIC = "Is tiny home of tiny kitties.",
+            BURNT = "Is tiny kitties safe?",
+			PLAYING_HIDEANDSEEK = "Tiny kitties must be hiding somewhere.",
+			PLAYING_HIDEANDSEEK_TIME_ALMOST_UP = "Tiny kitty game will end soon, ha!",
+		},
+
+		KITCOONDEN_KIT = "Is for making strong home for tiny kitties.",
+
+		TICOON = 
+		{
+			GENERIC = "Is Wolfgang's furry friend.",
+			ABANDONED = "Wolfgang is sorry.",
+			SUCCESS = "Furry friend is doing great job!",
+			LOST_TRACK = "What you looking for, furry friend?",
+			NEARBY = "Wolfgang thinks furry friend found something!",
+			TRACKING = "Go, furry friend, help Wolfgang!",
+			TRACKING_NOT_MINE = "Oh, is wrong kitty!",
+			NOTHING_TO_TRACK = "Furry friend didn't find anything for Wolfgang.",
+			TARGET_TOO_FAR_AWAY = "Tiny kitties too far from us!",
+		},
+		
+		YOT_CATCOONSHRINE =
+        {
+            GENERIC = "Looks like tiny kitty, but shiny.",
+            EMPTY = "Is wanting little feather, Wolfgang will help!",
+            BURNT = "Poor tiny kitty.",
+        },
+
+		KITCOON_FOREST = "Is walking bush. Wait, is tiny kitty!",
+		KITCOON_SAVANNA = "AHH! Wolfgang thought tiny kitty was mean kitty!",
+		KITCOON_MARSH = "Is weird smell coming from tiny kitty?",
+		KITCOON_DECIDUOUS = "Is tiny. Good for hiding, ha ha!",
+		KITCOON_GRASS = "Ouch! Pokes Wolfgang's finger.",
+		KITCOON_ROCKY = "Is tough tiny kitty, learned from Wolfgang.",
+		KITCOON_DESERT = "Can tiny kitty hear Wolfgang from over there?",
+		KITCOON_MOON = "Is tiny kitty made of... cheese?",
+		KITCOON_YOT = "Is year of tiny kitty, yes?",
+
         -- Moon Storm
         ALTERGUARDIAN_PHASE1 = {
             GENERIC = "Ha! Wolfgang's punches are mighty enough to shatter stone!",
@@ -4243,6 +4318,24 @@ return{
         SHIELDOFTERROR ="Haha! Now big scary teeth belong to Wolfgang!",
         TWINOFTERROR1 = "Eep! Big scary metal eyes even worse!",
         TWINOFTERROR2 = "Eep! Big scary metal eyes even worse!",
+
+        -- Year of the Catcoon
+        CATTOY_MOUSE = "Eep! Oh, is not real.",
+        KITCOON_NAMETAG = "Wolfgang will give tiny kitty good, strong name!",
+
+		KITCOONDECOR1 =
+        {
+            GENERIC = "Wolfgang will punch teasing bird!",
+            BURNT = "This makes Wolfgang sad.",
+        },
+		KITCOONDECOR2 =
+        {
+            GENERIC = "Wait... is not real fish?",
+            BURNT = "This makes Wolfgang sad.",
+        },
+
+		KITCOONDECOR1_KIT = "Is to make tiny kitties happy.",
+		KITCOONDECOR2_KIT = "Is to make tiny kitties happy.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

@@ -19,6 +19,9 @@ local function fn()
 
     MakeInventoryFloatable(inst, "med", 0.05, 0.68)
 
+	inst:AddTag("cattoy")
+    inst:AddTag("birdfeather")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

@@ -4,7 +4,7 @@ local assets =
 
 local prefabs =
 {
-
+	"oceanfish_medium_2",
 }
 
 local function OnSpawnFish(inst, child)

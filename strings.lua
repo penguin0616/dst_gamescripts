@@ -564,6 +564,8 @@ STRINGS =
             TURN = "Turn",
             PICK = "Choose",
             SUMMONHOST = "Ring",
+			RANSACK = "Ransack",
+			HIDEANDSEEK = "Play Hide and Seek",
         },
         JUMPIN =
         {
@@ -603,6 +605,7 @@ STRINGS =
         {
             GENERIC = "Use On",
             BEEF_BELL = "Bond",
+            KITCOON_NAMETAG = "Name",
         },
         STOPUSINGITEM =
         {
@@ -657,6 +660,7 @@ STRINGS =
         BRUSH = "Brush",
         DANCE = "Dance",
         ABANDON = "Abandon",
+		RETURN_FOLLOWER = "Send Home",
         PET = "Pet",
         DRAW = "Draw On",
         DRAWITEM = "Draw {item}",
@@ -845,6 +849,9 @@ STRINGS =
             GENERIC = "Choose This Beefalo",
             UNMARK = "Take Back",
         },
+
+		-- YOT_Catcoon
+		HIDEANSEEK_FIND = "Investigate",
 
 		-- wanda
 		CAST_POCKETWATCH =
@@ -2065,6 +2072,8 @@ STRINGS =
         CHESSPIECE_MOON = "\"Moon\" Figure",
         CHESSPIECE_CARRAT = "Carrat Figure",
         CHESSPIECE_BEEFALO = "Beefalo Figure",
+        CHESSPIECE_KITCOON = "Kitcoon Figure",
+        CHESSPIECE_CATCOON = "Catcoon Figure",
         CHESSPIECE_MALBATROSS = "Malbatross Figure",
         CHESSPIECE_CRABKING = "Crab King Figure",
         CHESSPIECE_TOADSTOOL = "Toadstool Figure",
@@ -2096,6 +2105,8 @@ STRINGS =
         CHESSPIECE_MOON_BUILDER = "\"Moon\" Figure",
         CHESSPIECE_CARRAT_BUILDER = "Carrat Figure",
         CHESSPIECE_BEEFALO_BUILDER = "Beefalo Figure",
+        CHESSPIECE_KITCOON_BUILDER = "Kitcoon Figure",
+        CHESSPIECE_CATCOON_BUILDER = "Catcoon Figure",
         CHESSPIECE_MALBATROSS_BUILDER = "Malbatross Figure",
         CHESSPIECE_CRABKING_BUILDER = "Crab King Figure",
         CHESSPIECE_TOADSTOOL_BUILDER = "Toadstool Figure",
@@ -2113,6 +2124,8 @@ STRINGS =
         CHESSPIECE_MOON_SKETCH = "\"Moon\" Figure Sketch",
         CHESSPIECE_CARRAT_SKETCH = "Carrat Figure Sketch",
         CHESSPIECE_BEEFALO_SKETCH = "Beefalo Figure Sketch",
+        CHESSPIECE_KITCOON_SKETCH = "Kitcoon Figure Sketch",
+        CHESSPIECE_CATCOON_SKETCH = "Catcoon Figure Sketch",
         CHESSPIECE_MALBATROSS_SKETCH = "Malbatross Figure Sketch",
         CHESSPIECE_CRABKING_SKETCH = "Crab King Figure Sketch",
         CHESSPIECE_GUARDIANPHASE3_SKETCH = "Celestial Champion Figure Sketch",
@@ -2307,6 +2320,33 @@ STRINGS =
 
 		YOTC_SEEDPACKET = "Packet of Seeds",
 		YOTC_SEEDPACKET_RARE = "Premium Seed Packet",
+
+
+        YOT_CATCOONSHRINE = "Catcoon Shrine",
+        KITCOONDEN = "Kitcoon Nursery",
+        KITCOONDEN_KIT = "Kitcoon Nursery Kit",
+        CATTOY_MOUSE = "Wind-up Mouse Toy",
+
+        KITCOON_NAMETAG = "Kit Collar",
+
+		KITCOONDECOR1	= "Gobbler Wobbler",
+		KITCOONDECOR2	= "Kit Teaser",
+
+        KITCOONDECOR1_KIT = "Gobbler Wobbler Kit",
+		KITCOONDECOR2_KIT = "Kit Teaser Kit",
+
+		KITCOON_FOREST = "Kitcoon",
+		KITCOON_SAVANNA = "Kitcoon",
+		KITCOON_MARSH = "Kitcoon",
+		KITCOON_DECIDUOUS = "Kitcoon",
+		KITCOON_GRASS = "Kitcoon",
+		KITCOON_ROCKY = "Kitcoon",
+		KITCOON_DESERT = "Kitcoon",
+		KITCOON_MOON = "Kitcoon",
+		KITCOON_YOT = "Kitcoon",
+
+        TICOON = "Ticoon",
+        TICOON_BUILDER = "Ticoon",
 
         --Arena Event
         LAVAARENA_BOARLORD = "Battlemaster Pugna",
@@ -3647,6 +3687,8 @@ STRINGS =
         CHESSPIECE_MOON_BUILDER = "It's a selene figurine!",
         CHESSPIECE_CARRAT_BUILDER = "A winsome sculpture of a champion.",
         CHESSPIECE_BEEFALO_BUILDER = "A beauteous beefalo bust.",
+		CHESSPIECE_KITCOON_BUILDER = "One's true wealth is measured by their friends.",
+        CHESSPIECE_CATCOON_BUILDER = "A curious statue for a curious creature.",
         CHESSPIECE_MALBATROSS_BUILDER = "A sculpted scourge of the seas.",
         CHESSPIECE_CRABKING_BUILDER = "It looks even crabbier than you remember it.",
 		CHESSPIECE_TOADSTOOL_BUILDER = "A toad-ally authentic reproduction of the original.",
@@ -3661,8 +3703,10 @@ STRINGS =
         CHESSPIECE_BUTTERFLY_SKETCH = "A sculpture sketch of a Moon Moth.",
         CHESSPIECE_ANCHOR_SKETCH = "A sculpture sketch of an anchor.",
         CHESSPIECE_MOON_SKETCH = "A sculpture sketch of the moon itself.",
-        CHESSPIECE_CARRAT_SKETCH = "A sculpture sketch of a victorious Carrat.",
+        CHESSPIECE_CARRAT_SKETCH = "A sculpture sketch of a victorious carrat.",
         CHESSPIECE_BEEFALO_SKETCH = "A sculpture sketch of a charming beefalo.",
+        CHESSPIECE_KITCOON_SKETCH = "A sculpture sketch of a kitcoon tower.",
+        CHESSPIECE_CATCOON_SKETCH = "A sculpture sketch of a playful catcoon.",
         CHESSPIECE_MALBATROSS_SKETCH = "A sculpture sketch of the mighty Malbatross.",
         CHESSPIECE_CRABKING_SKETCH = "A sculpture sketch of the Crab King",
 
@@ -3881,14 +3925,14 @@ STRINGS =
 
 		TROPHYSCALE_FISH = "Show off your prized catch.",
 
-        YOTC_CARRATSHRINE = "Make offerings to the nimble Carrat.",
+        YOTC_CARRATSHRINE = "Make offerings to the nimble carrat.",
 
         YOTC_CARRAT_GYM_DIRECTION_ITEM = "Improve your carrat's sense of direction.",
         YOTC_CARRAT_GYM_SPEED_ITEM = "Step up your carrat's speed.",
         YOTC_CARRAT_GYM_STAMINA_ITEM = "Boost your carrat's stamina.",
         YOTC_CARRAT_GYM_REACTION_ITEM = "Accelerate your carrat's reaction time.",
 
-        YOTC_CARRAT_SCALE_ITEM = "Find out how your Carrat measures up.",
+        YOTC_CARRAT_SCALE_ITEM = "Find out how your carrat measures up.",
 
 		CARRAT = "Nimble, clever, and rich in beta carotene.",
 
@@ -3896,6 +3940,15 @@ STRINGS =
 		YOTC_SEEDPACKET_RARE = "A pack of high quality seeds.",
 
 		MINIBOATLANTERN = "It flickers with a warm glow.",
+
+        YOT_CATCOONSHRINE = "Make offerings to the elusive catcoon.",
+		KITCOONDEN_KIT = "A home for kitcoons of all stripes.",
+        TICOON_BUILDER = "Trust them to follow the scents.",
+        KITCOON_NAMETAG = "Put a name to a cute little face.",
+        CATTOY_MOUSE = "Start a game of cat and mouse.",
+
+		KITCOONDECOR1_KIT = "Feathered fun for feline friends.",
+		KITCOONDECOR2_KIT = "A delightful exercise in futility.",
 
         YOTB_BEEFALOSHRINE = "Make offerings to the steadfast beefalo.",
 
@@ -4555,7 +4608,7 @@ STRINGS =
 
 	CARNIVAL_CROWKID_DECOR_AMBIENT_NONE = {"They must still be setting up.", "Where's the party?", "Most boring Midsummer Cawnival ever.", "More like Caw-no-val.", "Looks like I got here too early...", "I'm gonna tell my friends to wait until there's more set up."},
 	CARNIVAL_CROWKID_DECOR_AMBIENT_SOME = {"Nicely set up.", "There is never enough flair.", "I've seen better Cawnivals.", "The party is just getting started!"},
-	CARNIVAL_CROWKID_DECOR_AMBIENT_LOTS = {"Wow! It's so festive!", "Best Cawnival ever!", "Last year's Cawnival was not this fancy.", "I wanna watch the games!", "Have you checked out the prize booth yet?"},
+	CARNIVAL_CROWKID_DECOR_AMBIENT_LOTS = {"Wow! It's so festive!", "Best Cawnival ever!", "Last year's Cawnival was not this fancy.", "I wanna watch the games!", "Have you checked out the Prize Booth yet?"},
 	CARNIVAL_CROWKID_DECOR_PLAYER_NONE = {"You should decorate more.", "Where are the decorations?", "It's not a Cawnival without decorations around the Tree!", "This must be your first Cawnival."},
 	CARNIVAL_CROWKID_DECOR_PLAYER_SOME = {"You're doing a pretty good job.", "I wish there were more decorations around the Cawnival Tree...", "I've seen better Cawnivals. Just saying.", "Gotta say, last year's Cawnival was better..."},
 	CARNIVAL_CROWKID_DECOR_PLAYER_LOTS = {"Wow! It's so festive!", "Nicely done.", "You must be good at these games.", "Have you tried Egg Scramble? It's my favorite game!", "I watched someone play Hubbub for Grub, and now I'm hungry...", "Have you won any prizes yet?"},
@@ -5899,6 +5952,7 @@ STRINGS.UI =
         VIEWGROUP = "View Group Page",
         SERVERACTIONS = "More Server Actions",
         CANCEL = "Cancel",
+        CLOSE = "Close",
 		CHANGE_MESSAGE = "Change Message",
     },
 
@@ -6042,6 +6096,7 @@ STRINGS.UI =
 			"Auday Hussein",
             "Jesse Blackston",
             "Jeddy Zhang",
+            "Sarig Poyyara",
         },
 
         ALTGAMES =
@@ -6302,6 +6357,7 @@ STRINGS.UI =
         MODFORUMS_NOT_AVAILABLE_YET = "Not available yet",
         MODS = "Mods",
         ACKNOWLEDGEWARNING = "Don't Show This Again.",
+        SCRIPTERRORRESTART = "Reload Save",
         SCRIPTERRORQUIT = "Exit Game",
         SCRIPTERRORMODWARNING = "This error may have occurred due to a mod you have enabled!\nYou have the following mods enabled:\n",
         TESTING = "This is the testing branch!",
@@ -7336,7 +7392,7 @@ STRINGS.UI =
             ID_NAT_TARGET_UNRESPONSIVE = "Unable to connect to the server.",
             ID_NAT_CONNECTION_TO_TARGET_LOST = "Unable to connect to the server.",
             PLATFORM_MISMATCH = "This server is incompatible with your version. Please try another server.",
-            VERSION_MISMATCH_OLD_SERVER = "This server is on an older version than you and cannot connect.",
+            VERSION_MISMATCH_OLD_SERVER = "This server is on an older version than you.",
             VERSION_MISMATCH_OLD_CLIENT = "This server is on a newer version than you. Please download the latest update to connect.",
             VERSION_MISMATCH_PUBLIC_BETA = "The server is running a public beta world. You'll need to opt into the beta to play on this server.",
             VERSION_MISMATCH_ARNBETA = "The server is running the A New Reign Beta version. You'll need to opt into the beta to play on this server.",
@@ -8027,7 +8083,7 @@ STRINGS.UI =
         CARROTS_REGROWTH = "Carrots",
         FLOWERS_REGROWTH = "Flowers",
         FLOWER_CAVE_REGROWTH = "Light Flower",
-        LIGHTFLIER_FLOWER_REGROWTH = "Lightflier Flower",
+        LIGHTFLIER_FLOWER_REGROWTH = "Lightbug Flower",
         SALTSTACK_REGROWTH = "Salt Formations",
 
         MOON_TREE = "Lune Trees",
@@ -8390,6 +8446,7 @@ STRINGS.UI =
         SORT_MOSTDAYS = "Days Played",
         SORT_DATECREATED = "Date Created",
         SEARCH = "Search",
+		NO_MATCHING_SERVERS = "No save games match your search.",
     },
 
     CLOUDSERVERCREATIONSCREEN =
@@ -9595,7 +9652,7 @@ STRINGS.UI =
 				},
 				quag_encore_tribute_coin2 =
 				{
-					TITLE = "Gather ‘Round the Sapphire",
+					TITLE = "Gather 'Round the Sapphire",
 					DESC  = "Find or earn 3 or more Sapphire Medallions in one match",
 				},
 			},
@@ -9956,7 +10013,7 @@ STRINGS.UI =
         RECIPE_TITLE = "Wanted: <rarity> Items",
         NO_RECIPES = "No offers",
 
-        BIRDS = "Birds!",
+        BIRDS = "Curiosities",
         BIRDS_TITLE_SUB = "(Curio Collector Games)",
 
         MAGICSKIN_COLLECTOR_SPEECH =
@@ -10031,7 +10088,7 @@ STRINGS.UI =
                 "Knew I shouldn't'a left the my wrappers just lyin' around... now these crows are all over my collection!",
                 "I've done witnessed a murder! And they're stealin' all my hard-earned candy wrappers!",
                 "Gimme a hand gettin' rid of these crows, will ya?",
-                "Wanna play a game? Help me pickup my wrappers and get rid of those dang crows. Doesn't that sound fun?",
+                "Wanna play a game? Help me pick up my wrappers and get rid of those dang crows. Doesn't that sound fun?",
                 "What, ya got something better to do? Help me get these crows outta here!",
             },
 
@@ -10103,6 +10160,22 @@ STRINGS.UI =
             HELP_BODY = "The Crows left a mess in the maze after last year's Cawnival. Move around the maze to pick up all of the leftover junk.",
         },
 
+        KITCOON_GAME =
+        {
+            NAME_AGE = "{name} is {age} days old.",
+            OKAY = "Okay",
+            NAME_POPUP_TITLE = "Name your Kitcoon",
+            NAME_POPUP_BODY = "Any name is great, but pick one that is meaningful to you!",
+            PLAY_WITH = "Play with {name}",
+            FEED = "Feed {name}",
+            CLEAR_POOP = "Clear Poop",
+            PICKUP_NAMETAG = "Pick up Kit Collar",
+            
+            ABANDONED_TITLE = "{name} has abandoned you.",
+            ABANDONED_BODY = "Sadly, {name} was feeling neglected. They went looking for the affection, food and tidier home that they felt they deserved.",
+
+            HELP_TITLE = "Collar Me Impressed",
+        },
 
         SNOW_GAME =
         {
@@ -10650,10 +10723,14 @@ STRINGS.UI =
                 [1002] = "Middle Mouse Button",
                 [1003] = "Mouse Scroll Up",
                 [1004] = "Mouse Scroll Down",
+                [1005] = "Mouse Button 4",
+                [1006] = "Mouse Button 5",
+				
             },
             -- Xbox360
             [2] =
             {
+                [0] = "Unknown",
                 -- Digital
                 "\238\128\143",--"DPad Up"
                 "\238\128\140",--"DPad Down"
@@ -10687,6 +10764,7 @@ STRINGS.UI =
             -- Generic
             [3] =
             {
+                [0] = "Unknown",
                 -- Digital
                 "(Button %d)",
 
@@ -10717,6 +10795,8 @@ STRINGS.UI =
             -- PS4
             [4] =
             {
+                [0] = "Unknown",
+
                 -- Digital
                 "\238\136\143",--"DPad Up",
                 "\238\136\140",--"DPad Down",
@@ -10750,6 +10830,8 @@ STRINGS.UI =
             -- Vita Remote Play
             [5] =
             {
+                [0] = "Unknown",
+
                 -- Digital
                 "\238\136\143",--"DPad Up",
                 "\238\136\140",--"DPad Down",
@@ -10783,17 +10865,23 @@ STRINGS.UI =
             -- Touch
             [6] =
             {
+                [0] = "Unknown",
+
                 "Unknown",
                 " - No Bind - ",
             },
             -- Steam
             [7] =
             {
+                [0] = "Unknown",
+
                 -- not used since steam controllers identify as xbox360 controllers
             },
             -- DualShock4 on PC
             [8] =
             {
+                [0] = "Unknown",
+
                 "\238\136\143",--"DPad Up"
                 "\238\136\140",--"DPad Down"
                 "\238\136\141",--"DPad Left",
@@ -10826,6 +10914,8 @@ STRINGS.UI =
             --Unknown
             [9] =
             {
+                [0] = "Unknown",
+
                 "Unknown",
                 " - No Bind - ",
             },
@@ -11147,6 +11237,7 @@ STRINGS.UI =
             YOTP = "Year of the Pig King",
             YOTC = "Year of the Carrat",
             YOTB = "Year of the Beefalo",
+			YOT_CATCOON = "Year of the Catcoon",
         },
     },
 
@@ -11622,6 +11713,8 @@ STRINGS.SIGNS =
         ACCEPT = "Write it!",
         RANDOM = "Random",
         FILTERING = "Validating Message...",
+
+		PROMPT_BEEFALO = "Name This Beef",
     },
 
     ADJ_NOUN_FMT = "{adjective} {noun}",
@@ -11778,6 +11871,105 @@ STRINGS.BEEFALONAMING =
         CANCEL = "Cancel",
         RANDOM = "Random",
         ACCEPT = "Done",
+    },
+}
+
+STRINGS.KITCOON_NAMING =
+{
+	MENU_PROMPT = "Give this Kitcoon a name",
+    MENU_CANCEL = "Cancel",
+    MENU_RANDOM = "Random",
+    MENU_ACCEPT = "Assign",
+
+	DEFAULT_NAME = "Kitcoon",
+
+    NAMES = -- AKA credits for all the Klei pets, past and present
+    {
+        "Shadow",
+        "Tuesday",
+		"Lilly",
+		"Charlie",
+		"Riley",
+		"Finnegan",
+		"Ellye",
+		"Lola",
+		"Teddy",
+		"Buddy",
+		"Lola",
+		"Masu",
+		"Lottie",
+		"Tobyn",
+		"Brin",
+		"Skoki",
+		"Benben",
+		"Meeko",
+		"Smokey",
+		"Ginger",
+		"Polka Mazurka",
+		"Lahmu",
+		"Basco",
+		"Lilly",
+		"Spike",
+		"Skinny",
+		"Chubby",
+		"Mikey",
+		"Packit",
+		"Giles",
+		"Brisa",
+		"Norman",
+		"Odin",
+		"Pico",
+		"Hedge",
+		"Snowy",
+		"Tuffy",
+		"Minnie",
+		"Bender",
+		"Shooty",
+		"Thumpy",
+		"Chuchu",
+		"Ivy",
+		"Sprout",
+		"Cocoa",
+		"Ruby",
+		"George",
+		"Leeloo",
+		"Gremlin",
+		"Sparkle",
+		"Astor",
+		"Luna",
+		"Mister Bojangles",
+		"Boo",
+		"Custard",
+		"Vincent",
+		"Shadow",
+		"Samantha",
+		"Toby",
+		"Socks",
+		"Boots",
+		"Chewie",
+		"Turnip",
+		"Lando", 
+		"Marlo",
+		"Andre",
+		"Mandy",
+		"Bam Bam",
+		"Bammers",
+		"Brandi",
+		"Aggie",
+		"Parsley",
+		"Nutmeg",
+		"Xiao Long Meow",
+		"Reuben",
+		"Daisy",
+		"Basil",
+		"Sammy",
+		"Thomasina",
+		"Taffy",
+		"Bibo",
+		"Tuppy",
+		"Kuma",
+		"Cherry",
+		"Siumai",
     },
 }
 

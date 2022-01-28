@@ -24,7 +24,6 @@ local YOTB_StageManager = Class(function(self, inst)
 end)
 
 local function conteststarted(stage)
-	print("CONTEST STARTED")
 	local manager = TheWorld.components.yotb_stagemanager
 	manager:OnContestBegun(stage)
 end
@@ -112,7 +111,6 @@ function YOTB_StageManager:EnableContest()
 end
 
 function YOTB_StageManager:OnContestBegun(active_stage)
-	print("BEGIN CONTEST, save stage")
 	self.active_stage = active_stage
 	--self.contest_enabled = false
 	self.contest_active = true
@@ -136,7 +134,6 @@ function YOTB_StageManager:OnContestEnded()
 end
 
 function YOTB_StageManager:GetActiveStage()
-	print("GET STAGE")
 	return self.active_stage
 end
 

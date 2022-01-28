@@ -15,6 +15,8 @@ local PopupDialogScreen = require "screens/redux/popupdialog"
 local OnlineStatus = require "widgets/onlinestatus"
 local TEMPLATES = require "widgets/redux/templates"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local controls_ui = {
     action_label_width = 375,
     action_btn_width = 250,
@@ -249,7 +251,6 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		self.options.threadedrender = Profile:GetThreadedRenderEnabled()
 	end
 
-
 	--[[if PLATFORM == "WIN32_STEAM" and not self.in_game then
 		self.options.steamcloud = TheSim:GetSetting("STEAM", "DISABLECLOUD") ~= "true"
 	end--]]
@@ -276,6 +277,12 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 	self.root = self:AddChild(TEMPLATES.ScreenRoot("GameOptions"))
     self.bg = self.root:AddChild(TEMPLATES.PlainBackground())
     self.title = self.root:AddChild(TEMPLATES.ScreenTitle(STRINGS.UI.OPTIONS.TITLE, ""))
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = -260, y = 284, scale = 0.75 },
+        { x = 260,  y = 284, scale = 0.75 },
+        { x = 50,   y = 284, scale = 0.75 },
+    } ))
 
 	self.onlinestatus = self.root:AddChild(OnlineStatus())
 
@@ -1875,6 +1882,22 @@ function OptionsScreen:UpdateResolutionsSpinner()
 			self.resolutionSpinner:Disable()
 		end
 	end
+end
+
+function OptionsScreen:OnBecomeActive()
+    OptionsScreen._base.OnBecomeActive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+end
+
+function OptionsScreen:OnBecomeInactive()
+    OptionsScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 return OptionsScreen

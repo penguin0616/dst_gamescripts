@@ -541,6 +541,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.USE_HEAVY_OBSTACLE, "dolongaction"),
     ActionHandler(ACTIONS.ADVANCE_TREE_GROWTH, "dolongaction"),
 
+    ActionHandler(ACTIONS.HIDEANSEEK_FIND, "dolongaction"),
+    ActionHandler(ACTIONS.RETURN_FOLLOWER, "dolongaction"),
+
     ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),   
 
     ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action) 

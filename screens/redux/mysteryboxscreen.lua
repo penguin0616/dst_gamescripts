@@ -9,6 +9,8 @@ local OnlineStatus = require "widgets/onlinestatus"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 local ItemBoxOpenerPopup = require "screens/redux/itemboxopenerpopup"
 
+local KitcoonPuppet = require "widgets/kitcoonpuppet"
+
 local TEMPLATES = require("widgets/redux/templates")
 
 
@@ -21,6 +23,8 @@ local MysteryBoxScreen = Class(Screen, function(self, prev_screen, user_profile)
 end)
 
 function MysteryBoxScreen:DoInit()
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
     self.root = self:AddChild(Widget("root"))
     self.root:SetVAnchor(ANCHOR_MIDDLE)
     self.root:SetHAnchor(ANCHOR_MIDDLE)
@@ -38,6 +42,11 @@ function MysteryBoxScreen:DoInit()
             TheFrontEnd:FadeBack()
         end))
     end
+
+    self.kit_puppet = self.root:AddChild(KitcoonPuppet( Profile, nil, {
+        { x = -80, y = 180, scale = 0.75 },
+        { x = 140, y = 180, scale = 0.75 },
+    } ))
 
     self.boxes_root = self:_BuildBoxesPanel()
 
@@ -193,6 +202,18 @@ function MysteryBoxScreen:OnBecomeActive()
     end
 
     self.leaving = nil
+
+    if self.kit_puppet then
+        self.kit_puppet:Enable()
+    end
+end
+
+function MysteryBoxScreen:OnBecomeInactive()
+    MysteryBoxScreen._base.OnBecomeInactive(self)
+
+    if self.kit_puppet then
+        self.kit_puppet:Disable()
+    end
 end
 
 function MysteryBoxScreen:OnControl(control, down)

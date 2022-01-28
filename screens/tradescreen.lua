@@ -1,5 +1,5 @@
 local Screen = require "widgets/screen"
-local TEMPLATES = require "widgets/templates"
+local TEMPLATES = require "widgets/redux/templates"
 local Widget = require "widgets/widget"
 local UIAnim = require "widgets/uianim"
 local UIAnimButton = require "widgets/uianimbutton"
@@ -18,6 +18,7 @@ local CrowGameScreen = require "screens/crowgamescreen"
 local SnowbirdGameScreen = require "screens/snowbirdgamescreen"
 local RedbirdGameScreen = require "screens/redbirdgamescreen"
 local CrowKidGameScreen = require "screens/crowkidgamescreen"
+local KitcoonGameScreen = require "screens/kitcoongamescreen"
 local BirdInteractScreen = require "screens/redux/birdinteractscreen"
 
 require("skinsfiltersutils")
@@ -113,17 +114,17 @@ function TradeScreen:DoInit()
     self.fixed_root:SetHAnchor(ANCHOR_MIDDLE)
     self.fixed_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-    self.panel_bg = self.fixed_root:AddChild(TEMPLATES.NoPortalBackground())
-    self.menu_bg = self.fixed_root:AddChild(TEMPLATES.LeftGradient())
+    self.panel_bg = self.fixed_root:AddChild(TEMPLATES.old.NoPortalBackground())
+    self.menu_bg = self.fixed_root:AddChild(TEMPLATES.old.LeftGradient())
 
     if not TheInput:ControllerAttached() then
-    	self.exit_button = self.fixed_root:AddChild(TEMPLATES.BackButton(function() self:Quit() end))
+    	self.exit_button = self.fixed_root:AddChild(TEMPLATES.old.BackButton(function() self:Quit() end))
 
     	self.exit_button:SetPosition(-RESOLUTION_X*.415, -RESOLUTION_Y*.505 + BACK_BUTTON_Y )
   	end
 
 	if IsNotConsole() and PLATFORM ~= "WIN32_RAIL" then
-  		self.market_button = self.fixed_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "steam.tex", "", false, false,
+  		self.market_button = self.fixed_root:AddChild(TEMPLATES.old.IconButton("images/button_icons.xml", "steam.tex", "", false, false,
     												function() VisitURL("https://steamcommunity.com/market/search?appid=322330") end
     											))
   		self.market_button:SetPosition(RESOLUTION_X*.45, -RESOLUTION_Y*.505 + BACK_BUTTON_Y)
@@ -212,6 +213,20 @@ function TradeScreen:DoInit()
 			self.innkeeper:Sleep()
 		end
 	end )
+	
+	self.kitcoon_anim = self.fixed_root:AddChild(UIAnimButton("kitcoon_nametag", "kitcoon_nametag", "idle", "idle" ))
+	self.kitcoon_anim:SetLoop("idle", true)
+	self.kitcoon_anim:SetPosition(220, 292)
+	self.kitcoon_anim:SetScale(0.5)
+	self.kitcoon_anim:SetOnClick( function()
+		if not self.quitting then
+			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/collect_resource")
+			TheFrontEnd:FadeToScreen( self, function() return KitcoonGameScreen(self.profile) end, nil )
+			self.innkeeper:Sleep()
+		end
+	end )
+	
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
 end
 
 function TradeScreen:DoInitInventoryAndMachine()
@@ -319,7 +334,7 @@ function TradeScreen:DoInitInventoryAndMachine()
 	local trade_button_text = STRINGS.UI.TRADESCREEN.TRADE
 
     -- reset button bg
-    self.resetbtn = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button",
+    self.resetbtn = self.claw_machine:AddChild(TEMPLATES.old.AnimTextButton("button",
     											{idle = "idle_red", over = "up_red", disabled = "down_red"},
     											IsConsole() and 1 or {x=1.0, y=1, z=1},
     											function()
@@ -330,7 +345,7 @@ function TradeScreen:DoInitInventoryAndMachine()
     self.resetbtn:SetPosition(-200, -540)
 
     -- trade button bg
-    self.tradebtn = self.claw_machine:AddChild(TEMPLATES.AnimTextButton("button",
+    self.tradebtn = self.claw_machine:AddChild(TEMPLATES.old.AnimTextButton("button",
     											{idle = "idle_green", over = "up_green", disabled = "down_green"},
     											1,
     											function()
@@ -537,7 +552,7 @@ function TradeScreen:FinishReset(move_items)
 
 		for i=1,MAX_TRADE_ITEMS do
 			if self.frames_single[i].name then
-				self.moving_items_list[i] = TEMPLATES.MovingItem( self.frames_single[i].name,
+				self.moving_items_list[i] = TEMPLATES.old.MovingItem( self.frames_single[i].name,
 														i,
 														self.frames_single[i]:GetWorldPosition(),
 														self.popup.scroll_list.position_marker:GetWorldPosition(),
@@ -787,7 +802,7 @@ function TradeScreen:GiveItem(item)
 	local name = GetBuildForItem(item)
 
 	-- Need to store a reference to this so we can start it moving when the player clicks
-	self.moving_gift_item = TEMPLATES.MovingItem(name, self.current_num_trade_items, self.claw_machine_bg:GetWorldPosition(),
+	self.moving_gift_item = TEMPLATES.old.MovingItem(name, self.current_num_trade_items, self.claw_machine_bg:GetWorldPosition(),
 											self.popup.scroll_list.position_marker:GetWorldPosition(), 1 * self.fixed_root:GetScale().x, .5 * self.fixed_root:GetScale().x)
 
 	table.insert(self.moving_items_list, self.moving_gift_item)
@@ -904,7 +919,7 @@ function TradeScreen:RemoveSelectedItem(number)
 		if self.frames_single[number].focus then
 			start_scale = .78
 		end
-		local moving_item = TEMPLATES.MovingItem(self.frames_single[number].name,
+		local moving_item = TEMPLATES.old.MovingItem(self.frames_single[number].name,
 													number,
 													self.frames_single[number]:GetWorldPosition(),
 													self.popup.scroll_list.position_marker:GetWorldPosition(),
@@ -945,7 +960,7 @@ function TradeScreen:StartAddSelectedItem(item, start_pos)
 		local slot = self.frames_single[empty_slot]
 		--print("Slot position is ", slot:GetPosition(), slot:GetWorldPosition())
 
-		local moving_item = TEMPLATES.MovingItem(item.item, empty_slot,
+		local moving_item = TEMPLATES.old.MovingItem(item.item, empty_slot,
 												start_pos,
 												slot:GetWorldPosition(),
 												.56 *  self.fixed_root:GetScale().x,
@@ -1438,6 +1453,7 @@ function TradeScreen:OnControl(control, down)
 					{ text=STRINGS.UI.TRADESCREEN.SNOW_GAME.HELP_TITLE, cb = function() TheFrontEnd:PopScreen(bird_interact) self.snowbird_anim.onclick() end },
 					{ text=STRINGS.UI.TRADESCREEN.REDBIRD_GAME.HELP_TITLE, cb = function() TheFrontEnd:PopScreen(bird_interact) self.redbird_anim.onclick() end },
 					{ text=STRINGS.UI.TRADESCREEN.CROWKID_GAME.HELP_TITLE, cb = function() TheFrontEnd:PopScreen(bird_interact) self.crowkid_anim.onclick() end },
+					{ text=STRINGS.UI.TRADESCREEN.KITCOON_GAME.HELP_TITLE, cb = function() TheFrontEnd:PopScreen(bird_interact) self.kitcoon_anim.onclick() end },
 				}
 			)
 			TheFrontEnd:PushScreen(bird_interact)

@@ -73,6 +73,7 @@ PREFAB_SKINS = {
 	{
 		"arrowsign_post_circus",
 		"arrowsign_post_factory",
+		"arrowsign_post_fantasy",
 	},
 	axe =
 	{
@@ -113,6 +114,7 @@ PREFAB_SKINS = {
 	},
 	batbat =
 	{
+		"batbat_fantasy",
 		"batbat_scythe",
 	},
 	bedroll_furry =
@@ -132,6 +134,7 @@ PREFAB_SKINS = {
 	},
 	beefalohat =
 	{
+		"beefalohat_fantasy",
 		"beefalohat_klaus",
 		"beefalohat_pigking",
 		"beefalohat_pigking_alt",
@@ -143,6 +146,7 @@ PREFAB_SKINS = {
 	},
 	beemine =
 	{
+		"beemine_heart",
 		"beemine_jamjar",
 	},
 	bernie_active =
@@ -308,6 +312,7 @@ PREFAB_SKINS = {
 	},
 	dragonflychest =
 	{
+		"dragonflychest_fantasy",
 		"dragonflychest_kraken",
 	},
 	dragonflyfurnace =
@@ -330,6 +335,7 @@ PREFAB_SKINS = {
 	eyebrellahat =
 	{
 		"eyebrellahat_crystal",
+		"eyebrellahat_fantasy",
 		"eyebrellahat_victorian",
 	},
 	farm_hoe =
@@ -350,6 +356,7 @@ PREFAB_SKINS = {
 	fence =
 	{
 		"fence_factory",
+		"fence_fantasy",
 		"fence_gingerbread",
 		"fence_picketbrown",
 		"fence_pickettan",
@@ -381,6 +388,7 @@ PREFAB_SKINS = {
 	fence_item =
 	{
 		"fence_factory_item",
+		"fence_fantasy_item",
 		"fence_gingerbread_item",
 		"fence_picketbrown_item",
 		"fence_pickettan_item",
@@ -438,6 +446,14 @@ PREFAB_SKINS = {
 	{
 		"glasscutter_terraprisma",
 	},
+	glommer =
+	{
+		"glommer_fantasy",
+	},
+	glommerflower =
+	{
+		"glommerflower_fantasy",
+	},
 	golden_farm_hoe =
 	{
 		"golden_farmhoe_invisible",
@@ -480,7 +496,16 @@ PREFAB_SKINS = {
 	},
 	heatrock =
 	{
+		"heatrock_fantasy",
 		"heatrock_fire",
+	},
+	hutch =
+	{
+		"hutch_fantasy",
+	},
+	hutch_fishbowl =
+	{
+		"hutch_fishbowl_fantasy",
 	},
 	icebox =
 	{
@@ -556,6 +581,10 @@ PREFAB_SKINS = {
 		"meatrack_circus",
 		"meatrack_victorian",
 	},
+	mermhouse_crafted =
+	{
+		"mermhouse_crafted_fantasy",
+	},
 	minerhat =
 	{
 		"minerhat_bonnet",
@@ -564,18 +593,21 @@ PREFAB_SKINS = {
 	},
 	minisign =
 	{
+		"minisign_fantasy",
 		"minisign_picketbrown",
 		"minisign_pickettan",
 		"minisign_picketwhite",
 	},
 	minisign_drawn =
 	{
+		"minisign_fantasy_drawn",
 		"minisign_picketbrown_drawn",
 		"minisign_pickettan_drawn",
 		"minisign_picketwhite_drawn",
 	},
 	minisign_item =
 	{
+		"minisign_fantasy_item",
 		"minisign_picketbrown_item",
 		"minisign_pickettan_item",
 		"minisign_picketwhite_item",
@@ -736,6 +768,7 @@ PREFAB_SKINS = {
 	saddle_basic =
 	{
 		"saddle_basic_yotb",
+		"saddle_basic_yotbalt",
 	},
 	saltbox =
 	{
@@ -846,6 +879,7 @@ PREFAB_SKINS = {
 	{
 		"torch_carrat",
 		"torch_carrat_alt",
+		"torch_nautical",
 		"torch_pronged",
 		"torch_rag",
 		"torch_shadow",
@@ -868,6 +902,7 @@ PREFAB_SKINS = {
 		"treasurechest_corruption",
 		"treasurechest_crimson",
 		"treasurechest_cupid",
+		"treasurechest_cupidalt",
 		"treasurechest_gingerbread",
 		"treasurechest_monster",
 		"treasurechest_posh",

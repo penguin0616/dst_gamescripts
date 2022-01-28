@@ -984,6 +984,10 @@ local function OnTimerDone(inst, data)
     end
 end
 
+local function on_cattoyplay(inst, doer, is_airborne)
+    SpawnLeafFX(inst)
+end
+
 local function onsave(inst, data)
     if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() or inst:HasTag("burnt") then
         data.burnt = true
@@ -1359,10 +1363,16 @@ local function makefn(build, stage, data)
             inst.AnimState:SetTime(math.random() * 2)
             if data == "burnt" then
                 OnBurnt(inst, true)
-            elseif POPULATING then
-                --Redo this after season is valid
-                inst:DoTaskInTime(0, OnInitSeason)
+            else
+				inst:AddComponent("cattoy")
+				inst.components.cattoy:SetOnPlay(on_cattoyplay)
+				if POPULATING then
+					--Redo this after season is valid
+					inst:DoTaskInTime(0, OnInitSeason)
+				end
             end
+
+
         end
 
         inst.OnEntitySleep = OnEntitySleep

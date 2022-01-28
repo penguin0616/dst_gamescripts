@@ -23,10 +23,12 @@ kinds["arrowsign_panel"] = kinds["homesign"]
 
 kinds["beefalo"] =
 {
-    prompt = "Name This Beef",
+    prompt = STRINGS.SIGNS.MENU.PROMPT_BEEFALO,
     animbank = "ui_board_5x3",
     animbuild = "ui_board_5x3",
     menuoffset = Vector3(6, -70, 0),
+	maxcharacters = TUNING.BEEFALO_NAMING_MAX_LENGTH,
+
 
     defaulttext = function(inst, doer)
         return subfmt(STRINGS.NAMES.BEEFALO_BUDDY_NAME, { buddy = doer.name })
@@ -58,6 +60,18 @@ writeables.makescreen = function(inst, doer)
     if doer and doer.HUD then
         return doer.HUD:ShowWriteableWidget(inst, data)
     end
+end
+
+writeables.AddLayout = function(name, layout)
+	if name ~= nil and kinds[name] == nil then
+		kinds[name] = layout
+	elseif layout ~= nil then
+		print("[Writeables Error] adding a duplicate layout "..tostring(name))
+	end
+end
+
+writeables.GetLayout = function(name)
+	return kinds[name]
 end
 
 return writeables

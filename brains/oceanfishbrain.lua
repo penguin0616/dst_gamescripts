@@ -42,7 +42,9 @@ end
 
 local WANDER_TIMES = {minwalktime=0.25, randwalktime=0.5, minwaittime=0.0, randwaittime=0.0}
 local function getWanderDist(inst)
-	return (inst.components.herdmember ~= nil and inst.components.herdmember.enabled) and 2 or 16
+	return (inst.components.herdmember ~= nil and inst.components.herdmember.enabled) and 2 
+			or inst.fish_def ~= nil and inst.fish_def.herdless_wander_dist
+			or 16
 end
 
 local function WanderTarget(inst)
@@ -51,6 +53,13 @@ local function WanderTarget(inst)
 	else
 		return inst.components.knownlocations:GetLocation("home")
 	end
+end
+
+local function getWanderData(inst)
+	if inst.fish_def ~= nil and inst.fish_def.wander_seek_dist ~= nil then
+		return {wander_dist = inst.fish_def.wander_seek_dist}
+	end
+	return nil
 end
 
 local function GetFisherPosition(inst)
@@ -198,7 +207,7 @@ function OceanFishBrain:OnStart()
 				),
 
 				FindClosest(self.inst, TUNING.OCEANFISH_SEE_CHUM_DIST, 0, { "chum" }),
-				Wander(self.inst, WanderTarget, getWanderDist(self.inst), WANDER_TIMES, getdirectionFn)
+				Wander(self.inst, WanderTarget, getWanderDist(self.inst), WANDER_TIMES, getdirectionFn, nil, nil, getWanderData(self.inst))
             }, 0.25)),
     }, 0.25)
 

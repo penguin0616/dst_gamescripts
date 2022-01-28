@@ -590,6 +590,65 @@ function d_portalfx()
 	TheWorld:PushEvent("ms_newplayercharacterspawned", { player = ThePlayer})
 end
 
+function d_walls(width, height)
+	width = math.floor(width or 10)
+	height = math.floor(height or width)
+
+	local pt = ConsoleWorldPosition()
+	local left = math.floor(pt.x - width/2)
+	local top = math.floor(pt.z + height/2)
+
+	for i = 1, height do
+		SpawnPrefab("wall_wood").Transform:SetPosition(left + 1, 0, top - i)
+		SpawnPrefab("wall_wood").Transform:SetPosition(left + width, 0, top - i)
+	end
+	for i = 2, width-1 do
+		SpawnPrefab("wall_wood").Transform:SetPosition(left + i, 0, top-1)
+		SpawnPrefab("wall_wood").Transform:SetPosition(left + i, 0, top - height)
+	end
+end
+
+-- 	hidingspot = c_select()  kitcoon = SpawnPrefab("kitcoon_deciduous") if not kitcoon.components.hideandseekhider:GoHide(hidingspot, 0) then kitcoon:Remove() end kitcoon = nil hidingspot = nil
+function d_hidekitcoon()
+	local hidingspot = ConsoleWorldEntityUnderMouse()
+	local kitcoon = SpawnPrefab("kitcoon_deciduous") 
+	if not kitcoon.components.hideandseekhider:GoHide(hidingspot, 0) then 
+		kitcoon:Remove() 
+	end 
+end
+
+function d_hidekitcoons()
+	TheWorld.components.specialeventsetup:_SetupYearOfTheCatcoon()
+end
+
+function d_allkitcoons()
+	local kitcoons =
+	{
+		"kitcoon_forest",
+		"kitcoon_savanna",
+		"kitcoon_deciduous",
+		"kitcoon_marsh",
+		"kitcoon_grass",
+		"kitcoon_rocky",
+		"kitcoon_desert",
+		"kitcoon_moon",
+		"kitcoon_yot",
+	}
+
+	_spawn_list(kitcoons, 3, function(inst) inst._first_nuzzle = false end)
+end
+
+function d_allcustomhidingspots()
+	local items = table.getkeys(TUNING.KITCOON_HIDING_OFFSET)
+	_spawn_list(items, 6, function(hidingspot)
+		local kitcoon = SpawnPrefab("kitcoon_rocky") 
+		if not kitcoon.components.hideandseekhider:GoHide(hidingspot, 0) then
+			kitcoon:Remove() 
+			hidingspot.AnimState:SetMultColour(1, 0, 0)
+		end
+	end)
+end
+
 function d_islandstart()
 	c_give("log", 12)
 	c_give("rocks", 12)
@@ -1065,6 +1124,10 @@ function d_statues(material)
 		"antlion",	
 		"minotaur",	
 		"guardianphase3",
+        "eyeofterror",
+        "twinsofterror",
+        "kitcoon",
+        "catcoon",
 	}
 
 	local material = (type(material) == "string" and table.contains(mats, material)) and material
