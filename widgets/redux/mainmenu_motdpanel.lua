@@ -213,7 +213,7 @@ function MotdPanel:OnMotdLoaded()
 
 				if w.cell_data.data.link_url == "skins" then
 					self.config.on_to_skins_cb( w.cell_data.data.filter_info )
-				else
+				elseif w.cell_data.data.link_url ~= nil then
 					VisitURL(w.cell_data.data.link_url)
 				end
 			end))
