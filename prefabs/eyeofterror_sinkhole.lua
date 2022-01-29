@@ -171,6 +171,12 @@ local function OnLoad(inst, data)
     end
 end
 
+local function OnLoadPostPass(inst, newents, data)
+    if not data.collapsed then
+        inst:Remove()
+    end
+end
+
 -------------------------------------------------------------------------------
 
 local function fn()
@@ -212,6 +218,7 @@ local function fn()
 
     inst.OnSave = OnSave
     inst.OnLoad = OnLoad
+    inst.OnLoadPostPass = OnLoadPostPass
 
     return inst
 end

@@ -121,7 +121,7 @@ local states=
         {
             TimeEvent(8*FRAMES, function(inst)
 					inst.components.combat:DoAttack()
-                    inst.components.combat.target = nil
+                    inst.components.combat:DropTarget()
 				end ),
         },
 

@@ -342,7 +342,7 @@ local renames =
 function SpawnPrefab(name, skin, skin_id, creator)
     name = string.sub(name, string.find(name, "[^/]*$"))
     name = renames[name] or name
-    if skin and not PrefabExists(skin) then
+    if skin and not IsItemId(skin) then
 		skin = nil
     end
     local guid = TheSim:SpawnPrefab(name, skin, skin_id, creator)

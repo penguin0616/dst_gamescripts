@@ -359,7 +359,7 @@ function MightyGym:CharacterExitGym(player)
         if player:IsValid() then
 
             local theta = self.inst.enterdirection and (self.inst.enterdirection *DEGREES)-PI or math.random() * PI * 2
-            local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
+            local offset = FindWalkableOffset(pos, theta, 3, 16, true, nil, nil, false, true) or Vector3(0,0,0)
             local teleport = false
             
             player.SetGymStopState(player)
@@ -381,12 +381,7 @@ function MightyGym:CharacterExitGym(player)
                     player.DynamicShadow:Enable(true)
                 end
                  
-                local offset = FindWalkableOffset(pos, theta, 3, 16, nil, nil, nil, nil, true)
-                if not offset then
-                    offset = Vector3(0,0,0)
-                end
                 player:FacePoint(pos.x+offset.x,0,pos.z+offset.z)
-
 
                 if (player.components.freezable and player.components.freezable:IsFrozen()) or (player.components.sleeper and not player.components.sleeper:IsAsleep()) or (player.components.grogginess and player.components.grogginess.knockedout) then 
                     teleport = true

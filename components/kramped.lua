@@ -141,7 +141,7 @@ local function OnForceNaughtiness(src, data)
         local playerdata = _activeplayers[data.player]
         if playerdata ~= nil then
             --Reset existing naughtiness
-            playerdata.threshold = TUNING.KRAMPUS_THRESHOLD + math.random(TUNING.KRAMPUS_THRESHOLD_VARIANCE)
+            playerdata.threshold = TUNING.KRAMPUS_THRESHOLD ~= -1 and (TUNING.KRAMPUS_THRESHOLD + math.random(TUNING.KRAMPUS_THRESHOLD_VARIANCE)) or nil
             playerdata.actions = 0
         end
 

@@ -809,6 +809,7 @@ local states =
 
                 if inst.sg.statemem.sinkhole and inst.sg.statemem.sinkhole:IsValid() then
                     inst.sg.statemem.sinkhole:PushEvent("docollapse")
+                    inst.sg.statemem.sinkhole_collapsing = true
                 else
                     local ipos = inst:GetPosition()
                     local boat = TheWorld.Map:GetPlatformAtPoint(ipos.x, ipos.z)
@@ -836,6 +837,13 @@ local states =
                 inst.sg:GoToState("taunt")
             end),
         },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.sinkhole_collapsing and
+                    (inst.sg.statemem.sinkhole ~= nil and inst.sg.statemem.sinkhole:IsValid()) then
+                inst.sg.statemem.sinkhole.components.timer:StartTimer("repair", FRAMES)
+            end
+        end,
     },
 
     State {

@@ -161,8 +161,11 @@ local function OnActivate(inst, doer)
 			far_enough = true
 		end
 
-		if far_enough and inst.persists and inst.components.hideandseekhidingspot == nil and TheWorld.Map:IsPassableAtPoint(x, y, z, false, true) then
-			table.insert(hiding_spots, ent)
+		if far_enough and inst.persists and inst.components.hideandseekhidingspot == nil then
+			local hiding_x, hiding_y, hiding_z = ent.Transform:GetWorldPosition()
+			if TheWorld.Map:IsPassableAtPoint(hiding_x, hiding_y, hiding_z, false, true) then
+				table.insert(hiding_spots, ent)
+			end
 		end
 	end
 

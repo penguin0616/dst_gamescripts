@@ -11970,6 +11970,7 @@ STRINGS.KITCOON_NAMING =
 		"Kuma",
 		"Cherry",
 		"Siumai",
+		"Kira",
     },
 }
 

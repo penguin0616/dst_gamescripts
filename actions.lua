@@ -3944,9 +3944,11 @@ ACTIONS.LIFT_GYM_SUCCEED.fn = function(act)
 end
 
 ACTIONS.LEAVE_GYM.fn = function(act)
-    local gym =  act.doer.components.strongman.gym
-    gym.components.mightygym:CharacterExitGym(act.doer)
-    return true
+    local gym = act.doer.components.strongman.gym
+	if gym ~= nil then
+		gym.components.mightygym:CharacterExitGym(act.doer)
+		return true
+	end
 end
 
 ACTIONS.UNLOAD_GYM.fn = function(act)

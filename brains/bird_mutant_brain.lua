@@ -49,8 +49,7 @@ end
 local function AttackTarget(inst)
     local target = CanBirdAttack(inst)
     if target then
-        inst.components.combat.target = target
-        inst:PushEvent("doattack")
+		inst.components.combat:TryAttack(target)
     end
 end
 

@@ -344,6 +344,7 @@ local function water_common(data)
 
     inst:AddComponent("herdmember")
     inst.components.herdmember:Enable(false)
+	inst.components.herdmember.herdprefab = "schoolherd_"..data.prefab
 
 	inst:AddComponent("weighable")
 	--inst.components.weighable.type = TROPHYSCALE_TYPES.FISH -- No need to set a weighable type, this is just here for data and will be copied over to the inventory item

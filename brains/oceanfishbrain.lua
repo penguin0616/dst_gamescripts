@@ -215,7 +215,7 @@ function OceanFishBrain:OnStart()
 end
 
 function OceanFishBrain:OnInitializationComplete()
-    self.inst.components.knownlocations:RememberLocation("home", Point(self.inst.Transform:GetWorldPosition()), true)
+    self.inst.components.knownlocations:RememberLocation("home", self.inst:GetPosition(), true)
 end
 
 return OceanFishBrain

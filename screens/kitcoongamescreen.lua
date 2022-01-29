@@ -70,8 +70,8 @@ function KitcoonGameScreen:SetupUI()
 	self.age_txt = self.fixed_root:AddChild( Text( TALKINGFONT, 30 ) )
 	self.age_txt:SetHAlign(ANCHOR_LEFT)
     self.age_txt:SetVAlign(ANCHOR_TOP)
-	self.age_txt:SetRegionSize(300, 100)
-	self.age_txt:SetPosition( -470, 290, 0 )
+	self.age_txt:SetRegionSize(800, 100)
+	self.age_txt:SetPosition( -219, 290, 0 )
 	self.age_txt:Hide()
 
 	self.default_focus = self.age_txt --for clearing the focus on the last screen

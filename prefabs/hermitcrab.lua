@@ -602,7 +602,7 @@ local function friendlevel_10_reward(inst, target, task_id)
     return createbundle(inst, gifts)
 end
 
-local ISLAND_RADIUS = 32
+local ISLAND_RADIUS = 35
 
 local friendlevelrewards = {
     friendlevel_1_reward, --1

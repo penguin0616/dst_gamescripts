@@ -7985,6 +7985,7 @@ CLOTHING =
 		symbol_hides = { "skirt", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
+		feet_cuff_size = 0,
 		release_group = 100,
 	},
 	legs_wurt_shadow =
