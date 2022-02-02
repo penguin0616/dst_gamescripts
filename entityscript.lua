@@ -262,9 +262,13 @@ function EntityScript:GetSaveRecord()
             local rx, ry, rz = x - px, y - py, z - pz
 
             --Qnan hunting
-            rx = rx ~= rx and 0 or rx
-            ry = ry ~= ry and 0 or ry
-            rz = rz ~= rz and 0 or rz
+			if rx ~= rx or ry ~= ry or rz ~= rz then
+				print("EntityScript:GetSaveRecord error saving position: ", self.prefab, rx, ry, rz, ":", x, y, z, ":", px, py, pz)
+				if CONFIGURATION ~= "PRODUCTION" then
+					error("EntityScript:GetSaveRecord qnan error")
+				end
+				rx, ry, rz = 0, 0, 0
+			end
 
             record.puid = platform.components.walkableplatform:GetUID()
 
@@ -284,9 +288,13 @@ function EntityScript:GetSaveRecord()
     local x, y, z = self.Transform:GetWorldPosition()
 
     --Qnan hunting
-    x = x ~= x and 0 or x
-    y = y ~= y and 0 or y
-    z = z ~= z and 0 or z
+	if x ~= x or y ~= y or z ~= z then
+		print("EntityScript:GetSaveRecord error saving position: ", self.prefab, x, y, z)
+		if CONFIGURATION ~= "PRODUCTION" then
+			error("EntityScript:GetSaveRecord qnan error")
+		end
+		x, y, z = 0, 0, 0
+	end
 
     record.x = x and math.floor(x*1000)/1000 or 0
     record.z = z and math.floor(z*1000)/1000 or 0

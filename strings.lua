@@ -6097,6 +6097,7 @@ STRINGS.UI =
             "Jesse Blackston",
             "Jeddy Zhang",
             "Sarig Poyyara",
+            "Yan Fisch"
         },
 
         ALTGAMES =

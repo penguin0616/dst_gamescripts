@@ -847,7 +847,9 @@ function Inventory:GiveItem(inst, slot, src_pos)
         inst.components.inventoryitem:OnPutInInventory(self.inst)
         self:SetActiveItem(inst)
         return true
-    else
+    elseif self.HandleLeftoversFn ~= nil then
+		self.HandleLeftoversFn(self.inst, inst)
+	else
         self:DropItem(inst, true, true)
     end
 end

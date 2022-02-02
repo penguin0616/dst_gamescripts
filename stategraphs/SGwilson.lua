@@ -1553,6 +1553,10 @@ local states =
             if inst.sg.mem.lifting_dumbbell ~= nil then
                 inst.sg.mem.lifting_dumbbell = nil
             end
+
+            if inst.components.mightiness then
+                inst.components.mightiness:Resume()
+            end
         end,
 
         timeline =
@@ -1577,9 +1581,9 @@ local states =
                         inst.sg:GoToState("idle")
                     end
 
-                    if inst.components.mightiness and not using_dumbbell then
-                        inst.components.mightiness:Resume()
-                    end
+                    -- if inst.components.mightiness and not using_dumbbell then
+                    --     inst.components.mightiness:Resume()
+                    -- end
                 end
             end),
         },
@@ -14418,7 +14422,9 @@ local states =
         onexit = function(inst)
             if not inst.sg.statemem.not_interrupted then
                 inst:RemoveTag("switchtoho")
-                inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
+				if inst.sg.mem.furl_target:IsValid() then
+	                inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
+				end
                 inst:RemoveTag("is_furling")
                 inst:RemoveTag("is_heaving")
             end
@@ -14451,7 +14457,7 @@ local states =
             inst.AnimState:PlayAnimation("pull_small_pre")
             inst.AnimState:PushAnimation("pull_small_loop", true)
             inst:PerformBufferedAction() -- this will clear the buffer if it's full, but you don't get here from an action anyway.
-            if inst.sg.mem.furl_target.components.mast then
+            if inst.sg.mem.furl_target:IsValid() and inst.sg.mem.furl_target.components.mast ~= nil then
                 inst.sg.mem.furl_target.components.mast:AddSailFurler(inst, 1)
                 inst.sg.statemem._onburnt = function()
                     inst.AnimState:PlayAnimation("pull_small_pst")
@@ -14464,14 +14470,16 @@ local states =
         onexit = function(inst)
             if not inst.sg.statemem.not_interrupted then
                 inst:RemoveTag("switchtoho")
-                if inst.sg.mem.furl_target.components.mast then
+                if inst.sg.mem.furl_target:IsValid() and inst.sg.mem.furl_target.components.mast then
                     inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
                 end
                 inst:RemoveTag("is_furling")
                 inst:RemoveTag("is_heaving")
             end
 
-            inst:RemoveEventCallback("onburnt", inst.sg.statemem._onburnt, inst.sg.mem.furl_target)
+			if inst.sg.statemem._onburnt ~= nil and inst.sg.mem.furl_target:IsValid() then
+	            inst:RemoveEventCallback("onburnt", inst.sg.statemem._onburnt, inst.sg.mem.furl_target)
+			end
         end,
 
         timeline =
@@ -14513,8 +14521,9 @@ local states =
         onenter = function(inst)
 
             inst:PerformBufferedAction()
-
-            inst.sg.mem.furl_target.components.mast:AddSailFurler(inst, 0)
+			if inst.sg.mem.furl_target:IsValid() then
+	            inst.sg.mem.furl_target.components.mast:AddSailFurler(inst, 0)
+			end
 
             local fail_str = GetActionFailString(inst, "LOWER_SAIL_FAIL")
             inst.components.talker:Say(fail_str)
@@ -14526,7 +14535,9 @@ local states =
 
         onexit = function(inst)
             if not inst.sg.statemem.not_interrupted then
-                inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
+				if inst.sg.mem.furl_target:IsValid() then
+	                inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
+				end
                 inst:RemoveTag("is_furling")
                 inst:RemoveTag("is_heaving")
             end

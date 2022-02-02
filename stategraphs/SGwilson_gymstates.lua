@@ -22,18 +22,27 @@ GymStates.AddGymStates = function(states, actionhandlers, events)
 
     table.insert(actionhandlers, ActionHandler(ACTIONS.LIFT_GYM_SUCCEED_PERFECT, function(inst)  
         --print("handler LIFT_GYM_SUCCEED_PERFECT") 
-        inst.sg.statemem.dontleavegym = true 
-        return "mighty_gym_success_perfect" 
+		if inst.components.strongman.gym ~= nil and inst.components.strongman.gym:IsValid() then
+			inst.sg.statemem.dontleavegym = true 
+			return "mighty_gym_success_perfect" 
+		end
+		return nil
     end) )
     table.insert(actionhandlers, ActionHandler(ACTIONS.LIFT_GYM_SUCCEED, function(inst)         
         -- print("handler LIFT_GYM_SUCCEED") 
-        inst.sg.statemem.dontleavegym = true 
-        return "mighty_gym_success" 
+		if inst.components.strongman.gym ~= nil and inst.components.strongman.gym:IsValid() then
+			inst.sg.statemem.dontleavegym = true 
+			return "mighty_gym_success" 
+		end
+		return nil
     end) )
     table.insert(actionhandlers, ActionHandler(ACTIONS.LIFT_GYM_FAIL, function(inst)            
         --print("handler LIFT_GYM_FAIL") 
-        inst.sg.statemem.dontleavegym = true 
-        return "mighty_gym_workout_fail" 
+		if inst.components.strongman.gym ~= nil and inst.components.strongman.gym:IsValid() then
+			inst.sg.statemem.dontleavegym = true 
+			return "mighty_gym_workout_fail" 
+		end
+		return nil
     end) )
 
     table.insert(states, State{

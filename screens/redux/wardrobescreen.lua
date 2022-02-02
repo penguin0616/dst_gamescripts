@@ -27,6 +27,8 @@ local WardrobeScreen = Class(Screen, function(self, user_profile, character)
 end)
 
 function WardrobeScreen:_DoInit()
+    self.letterbox = self:AddChild(TEMPLATES.old.ForegroundLetterbox())
+
     self.root = self:AddChild(TEMPLATES.ScreenRoot())
     self.bg = self.root:AddChild(TEMPLATES.BrightMenuBackground())
 

@@ -60,8 +60,8 @@ local function fn()
     inst.components.weapon:SetDamage(TUNING.MULTITOOL_DAMAGE)
     -----
     inst:AddComponent("tool")
-    inst.components.tool:SetAction(ACTIONS.CHOP, 1.33)
-    inst.components.tool:SetAction(ACTIONS.MINE, 1.33)
+    inst.components.tool:SetAction(ACTIONS.CHOP, TUNING.MULTITOOL_AXE_PICKAXE_EFFICIENCY)
+    inst.components.tool:SetAction(ACTIONS.MINE, TUNING.MULTITOOL_AXE_PICKAXE_EFFICIENCY)
     -------
     inst:AddComponent("finiteuses")
     inst.components.finiteuses:SetMaxUses(TUNING.MULTITOOL_AXE_PICKAXE_USES)

@@ -229,6 +229,15 @@ local function KeepFaceTargetFn(inst, target)
     return inst.components.follower.leader == target
 end
 
+local function GetFaceTargetNearestPlayerFn(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	return FindClosestPlayerInRange(x, y, z, START_RUN_DIST + 1, true)
+end
+
+local function KeepFaceTargetNearestPlayerFn(inst, target)
+    return GetFaceTargetNearestPlayerFn(inst) == target
+end
+
 local function SafeLightDist(inst, target)
     return (target:HasTag("player") or target:HasTag("playerlight")
             or (target.inventoryitem and target.inventoryitem:GetGrandOwner() and target.inventoryitem:GetGrandOwner():HasTag("player")))
@@ -388,7 +397,7 @@ function PigBrain:OnStart()
             ChattyNode(self.inst, "PIG_TALK_RUNAWAY_WILSON",
                 RunAway(self.inst, "player", START_RUN_DIST, STOP_RUN_DIST)),
             ChattyNode(self.inst, "PIG_TALK_LOOKATWILSON",
-                FaceEntity(self.inst, GetFaceTargetFn, KeepFaceTargetFn)),
+                FaceEntity(self.inst, GetFaceTargetNearestPlayerFn, KeepFaceTargetNearestPlayerFn)),
             Wander(self.inst, GetNoLeaderHomePos, MAX_WANDER_DIST)
         }, .5)
 

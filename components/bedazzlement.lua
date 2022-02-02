@@ -21,7 +21,10 @@ function Bedazzlement:Start()
 	self.inst.MiniMapEntity:SetIcon("spiderden_bedazzled.png")
 
 	if self.inst:GetCurrentPlatform() == nil then
-        self.inst.GroundCreepEntity:SetRadius(TUNING.SPIDERDEN_CREEP_RADIUS_BEDAZZLED)
+		-- Delaying this a frame to fix a loading issue
+		self.inst:DoTaskInTime(0, function() 
+			self.inst.GroundCreepEntity:SetRadius(TUNING.SPIDERDEN_CREEP_RADIUS_BEDAZZLED)
+		end)
     end
 
 	if self.bedazzle_task ~= nil then

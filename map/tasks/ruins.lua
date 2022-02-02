@@ -236,7 +236,7 @@ AddTask("ArchiveMaze", {
     locks={LOCKS.ARCHIVE},
     keys_given= {},
     room_tags = {"nocavein"},
-    required_prefabs = {"archive_orchestrina_main"},
+    required_prefabs = {"archive_orchestrina_main", "archive_lockbox_dispencer", "archive_lockbox_dispencer", "archive_lockbox_dispencer"},
     entrance_room = "ArchiveMazeEntrance",
     room_choices =
     {

@@ -257,6 +257,7 @@ function ConsoleScreen:DoInit()
 	self.console_edit.validrawkeys[KEY_RCTRL] = true
 	self.console_edit.validrawkeys[KEY_UP] = true
 	self.console_edit.validrawkeys[KEY_DOWN] = true
+	self.console_edit.validrawkeys[KEY_V] = true
 	self.toggle_remote_execute = false
 
 end

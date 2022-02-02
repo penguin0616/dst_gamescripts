@@ -151,6 +151,8 @@ function Tune(overrides)
         SADDLEHORN_USES = 10,
         BRUSH_USES = 75,
 
+        MULTITOOL_AXE_PICKAXE_EFFICIENCY = 4/3,
+
         JELLYBEAN_DURATION = total_day_time * .25,
         JELLYBEAN_TICK_RATE = 2,
         JELLYBEAN_TICK_VALUE = 2,
@@ -2586,7 +2588,7 @@ function Tune(overrides)
         CATCOONDEN_REGEN_TIME = seg_time * 4,
         CATCOONDEN_RELEASE_TIME = seg_time * 0.5,
         CATCOONDEN_ENABLED = true,
-
+		CATCOONDEN_INV_SIZE = 20,
 		CATCOONDEN_REPAIR_TIME = 15 * total_day_time,
 		CATCOONDEN_REPAIR_TIME_VAR = 5 * total_day_time,
 

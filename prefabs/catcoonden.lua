@@ -92,15 +92,36 @@ local function OnChildKilled(inst, child)
     end
 end
 
-local function CacheItemsAtHome(inst, child)
-	for i = 1, child.components.inventory:NumItems() do
-		local old_item = inst.components.inventory:RemoveItemBySlot(inst._cacheitems_ring_index + 1)
-		if old_item ~= nil then
-			old_item:Remove()
+
+local function OnInventoryFull(inst, leftovers)
+	if leftovers ~= nil then
+		local target_slot, target_age = nil, TheWorld.components.worldstate:GetWorldAge() + 1
+		for k, age in pairs(inst._inv_age) do
+			if age < target_age then
+				target_age = age
+				target_slot = k
+			end
 		end
-		inst.components.inventory:GiveItem(child.components.inventory:RemoveItemBySlot(i), inst._cacheitems_ring_index + 1)
-		inst._cacheitems_ring_index = (inst._cacheitems_ring_index + 1) % inst.components.inventory.maxslots
+
+		if target_slot ~= nil then
+			local inv = inst.components.inventory
+			local old_item = inv:RemoveItemBySlot(target_slot)
+			if old_item ~= nil then
+				old_item:Remove()
+			end
+			inv:GiveItem(leftovers, target_slot)
+		end
 	end
+end
+
+local function OnCachedItemAtHome(inst, data)
+	if data ~= nil and data.slot ~= nil and not POPULATING then
+		inst._inv_age[data.slot] = TheWorld.components.worldstate:GetWorldAge()
+	end
+end
+
+local function CacheItemsAtHome(inst, catcoon)
+	catcoon.components.inventory:TransferInventory(inst)
 end
 
 local function OnRansacked(inst, doer)
@@ -122,15 +143,12 @@ local function OnRansacked(inst, doer)
 		inst.components.childspawner:ReleaseAllChildren(doer)
 	end
 
-	local num_slots = inst.components.inventory.maxslots
-	local index = inst._cacheitems_ring_index
-	for i = 1, num_slots do
-		local item = inst.components.inventory:GetItemInSlot(index + 1)
+	for i = 1, inst.components.inventory.maxslots do
+		local item = inst.components.inventory:GetItemInSlot(i)
 		if item ~= nil then
 			inst.components.inventory:DropItem(item, true, true)
+			inst._inv_age[i] = 0
 			return true
-		else
-			index = (index + 1) % num_slots
 		end
 	end
 
@@ -143,17 +161,18 @@ local function onsave(inst, data)
     elseif inst.delay_end > GetTime() then
         data.delay_remaining = inst.delay_end - GetTime()
     end
-	data.cache_index = inst._cacheitems_ring_index
+	data._inv_age = inst._inv_age
 end
 
 local function onload(inst, data)
     if data ~= nil then
-		if data.cache_index then
-			inst._cacheitems_ring_index = data.cache_index
+		if data._inv_age ~= nil then
+			for i = 1, inst.components.inventory.maxslots do
+				inst._inv_age[i] = data._inv_age[i] or 0
+			end
 		end
 
 		inst.lives_left = data.lives_left or 0
-
 		if inst.lives_left <= 0 then
 			if inst.components.childspawner ~= nil then
 				inst.components.childspawner:StopRegen()
@@ -234,9 +253,14 @@ local function fn()
     end
 
     inst:AddComponent("inventory")
-    inst.components.inventory.maxslots = 20
+    inst.components.inventory.maxslots = TUNING.CATCOONDEN_INV_SIZE
+	inst.components.inventory.HandleLeftoversFn = OnInventoryFull
 	inst.CacheItemsAtHome = CacheItemsAtHome	-- after the max slots has been reached, the oldest items will be removed to make room for the new items
-	inst._cacheitems_ring_index = 0				-- 0-based index
+	inst._inv_age = {}
+	for i = 1, TUNING.CATCOONDEN_INV_SIZE do
+		inst._inv_age[i] = 0					-- initialized for retrofitting
+	end
+	inst:ListenForEvent("gotnewitem", OnCachedItemAtHome)
 
     inst.components.childspawner.canspawnfn = canspawn
     inst.components.childspawner:StartSpawning()

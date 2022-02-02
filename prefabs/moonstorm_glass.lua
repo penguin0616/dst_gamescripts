@@ -207,9 +207,9 @@ local function setanim(inst, workleft)
     end
 end
 
-local function OnWorkNub(inst, worker, workleft)
+local function OnWorkNub(inst, worker, workleft, numworks)
     if inst.glass then
-        inst.glass.components.workable:WorkedBy(worker)
+        inst.glass.components.workable:WorkedBy(worker, numworks)
         setanim(inst, workleft)
     end
 end

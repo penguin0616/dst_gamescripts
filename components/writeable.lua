@@ -8,7 +8,11 @@ local function gettext(inst, viewer)
 	local writeable = inst.components.writeable
     local text = writeable:GetText()
 	if text ~= nil then
-		return text, writeable.text_filter_context or TEXT_FILTER_CTX_CHAT, writeable.writer_netid
+		if IsXB1() then
+			return string.format('"%s"', text)
+		else
+			return text, writeable.text_filter_context or TEXT_FILTER_CTX_CHAT, writeable.writer_netid
+		end
 	end
 
     return GetDescription(viewer, inst, "UNWRITTEN")
@@ -106,7 +110,7 @@ function Writeable:SetOnWritingEndedFn(fn)
     self.onwritingended = fn
 end
 
-function Writeable:GetText(viewer)
+function Writeable:GetText()
 	if IsXB1() then
 		if self.text and self.writer_netid then
 			return "\1"..self.text.."\1"..self.writer_netid

@@ -1057,7 +1057,7 @@ function SaveGame(isshutdown, cb)
     if BRANCH == "dev" then
         patterns = {"=nan", "=-nan", "=inf", "=-inf"}
     else
-        patterns = {"=-1#.IND", "=1.#QNAN", "=1.#INF", "=-1.#INF"}
+        patterns = {"=-1.#IND", "=1.#QNAN", "=1.#INF", "=-1.#INF"}
     end
 
     local data = {}
