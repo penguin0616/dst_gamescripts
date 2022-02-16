@@ -3059,6 +3059,7 @@ STRINGS =
         MASTUPGRADE_LAMP_ITEM = "Deck Illuminator",
         MASTUPGRADE_LAMP = "Deck Illuminator",
         MASTUPGRADE_LIGHTNINGROD_ITEM = "Lightning Conductor",
+        MASTUPGRADE_LIGHTNINGROD = "Lightning Conductor",
 
         WATERPUMP = "Fire Pump",
 
@@ -10519,8 +10520,8 @@ STRINGS.UI =
             "Map Zoom In",
             "Map Zoom Out",
             "Debug Menu",
-            "Toggle Say",
-            "Toggle Whisper",
+            "Global Chat",
+            "Whisper Chat",
             "Slash Command",
             "Scoreboard",
             "Scoreboard",
@@ -10563,6 +10564,8 @@ STRINGS.UI =
             [7] = "Steam Controller",
             [8] = "PS4 Controller", --for PC/OSX/Linux
             [9] = "Unknown",
+            [10] = "Switch Controller",
+            [11] = "Steam Deck",
         },
 
         INPUTS =
@@ -10726,7 +10729,6 @@ STRINGS.UI =
                 [1004] = "Mouse Scroll Down",
                 [1005] = "Mouse Button 4",
                 [1006] = "Mouse Button 5",
-				
             },
             -- Xbox360
             [2] =
@@ -10871,7 +10873,7 @@ STRINGS.UI =
                 "Unknown",
                 " - No Bind - ",
             },
-            -- Steam
+            -- Steam Controller
             [7] =
             {
                 [0] = "Unknown",
@@ -10915,10 +10917,58 @@ STRINGS.UI =
             --Unknown
             [9] =
             {
+                "Unknown",
+                " - No Bind - ",
+            },
+            --Switch Controller
+            [10] =
+            {
                 [0] = "Unknown",
 
                 "Unknown",
                 " - No Bind - ",
+            },
+			-- Steam Deck
+            [11] =
+            {
+                [0] = "Unknown",
+
+                --[1000] = "",	-- "Left Mouse Button"
+                [1001] = "\238\136\182",	-- "Right Mouse Button" = L4
+                [1002] = "\238\136\183",	-- "Middle Mouse Button" = L5
+                [1005] = "\238\136\184",	-- "Mouse Button 4" = R4
+                [1006] = "\238\136\185",	-- "Mouse Button 5" = R5
+
+                -- Digital
+                "\238\136\173", --"DPad Up"
+                "\238\136\170", --"DPad Down"
+                "\238\136\171", --"DPad Left",
+                "\238\136\172", --"DPad Right"
+                "\238\136\162",--"Start",
+                "\238\136\163",--"Back",
+                "\238\136\164", --"Left Stick"
+                "\238\136\167", --"Right Stick"
+                "\238\136\165", --"Left Bumper",
+                "\238\136\168", --"Right Bumper"
+                "\238\136\158", --"Button A",
+                "\238\136\159", --"Button B",
+                "\238\136\160", --"Button X",
+                "\238\136\161", --"Button Y",
+
+                -- Analog
+                "\238\136\176", --"Left Thumb Left",
+                "\238\136\177", --"Left Thumb Right",
+                "\238\136\175", --"Left Thumb Down",
+                "\238\136\174", --"Left Thumb Up",
+                "\238\136\180", --"Right Thumb Left",
+                "\238\136\181", --"Right Thumb Right",
+                "\238\136\179", --"Right Thumb Down",
+                "\238\136\178", --"Right Thumb Up",
+                "\238\136\166", --"Left Trigger",
+                "\238\136\166", --"Left Trigger",
+                "\238\136\169", --"Right Trigger",
+                "\238\136\169", --"Right Trigger",
+
             },
         },
         PS4 =

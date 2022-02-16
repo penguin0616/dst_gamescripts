@@ -1,8 +1,3 @@
-
-if IsSteamDeck() then
-	return require "widgets/textedit_steamdeck"
-end
-
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 local WordPredictionWidget = require "widgets/wordpredictionwidget"
@@ -43,6 +38,8 @@ local TextEdit = Class(Text, function(self, font, size, text, colour)
     self:SetEditCursorColour(0,0,0,1)
 
     self.conversions = {} --text character transformations, see OnTextInput
+
+	self.inst:ListenForEvent("onremove", function() TheInput:AbortVirtualKeyboard(self) end)
 end)
 
 function TextEdit:DebugDraw_AddSection(dbui, panel)
@@ -86,13 +83,22 @@ function TextEdit:SetAllowNewline(allow_newline)
 	-- We have to enable the accept control when we're not editing, so that
 	-- the user can click the control to start editing, but while edting, we
 	-- don't want the enter key to stop editing.
-    self.enable_accept_control = not (self.allow_newline and self.editing)
+	self.enable_accept_control = not (self.allow_newline and self.editing)
+end
+
+function TextEdit:OnVirtualKeyboardClosed()
+	if self.editing then
+		self:SetEditing(false)
+	end
 end
 
 function TextEdit:SetEditing(editing)
     --print("TextEdit:SetEditing:", self.editing, "->", editing, self.name, self:GetString())
+	--print(debugstack())
 
     if editing and not self.editing then
+		TheInput:OpenVirtualKeyboard(self)
+
         self.editing = true
         self.editing_enter_down = false
 
@@ -264,6 +270,8 @@ function TextEdit:OnStopForceProcessTextInput()
 end
 
 function TextEdit:OnRawKey(key, down)
+--print(">>> TextEdit:OnRawKey:",key,down, KEY_ENTER, KEY_TAB)
+
 	if self.editing and self.prediction_widget ~= nil and self.prediction_widget:OnRawKey(key, down) then
 		self.editing_enter_down = false
 		return true
@@ -273,7 +281,6 @@ function TextEdit:OnRawKey(key, down)
         self.editing_enter_down = false
         return true
     end
-
     if self.editing then
         if down then
             if TheInput:IsPasteKey(key) then
@@ -301,17 +308,26 @@ function TextEdit:OnRawKey(key, down)
                     end
                 end
                 return true
+        elseif key == KEY_ENTER then
+			if self.editing_enter_down then
+               	self.editing_enter_down = false
+               	if not self.allow_newline then
+                    self:OnProcess()
+               	end
+            end
         elseif key == KEY_TAB and self.nextTextEditWidget ~= nil then
-            self.editing_enter_down = false
-            local nextWidg = self.nextTextEditWidget
-            if type(nextWidg) == "function" then
-                nextWidg = nextWidg()
-            end
-            if nextWidg ~= nil and type(nextWidg) == "table" and nextWidg.inst.TextEditWidget ~= nil then
-                self:SetEditing(false)
-                nextWidg:SetEditing(true)
-            end
-            -- self.nextTextEditWidget:OnControl(CONTROL_ACCEPT, false)
+			if not Input:ControllerAttached() then
+				self.editing_enter_down = false
+				local nextWidg = self.nextTextEditWidget
+				if type(nextWidg) == "function" then
+					nextWidg = nextWidg()
+				end
+				if nextWidg ~= nil and type(nextWidg) == "table" and nextWidg.inst.TextEditWidget ~= nil then
+					self:SetEditing(false)
+					nextWidg:SetEditing(true)
+				end
+	            -- self.nextTextEditWidget:OnControl(CONTROL_ACCEPT, false)
+			end
         else
             self.editing_enter_down = false
             self.inst.TextEditWidget:OnKeyUp(key)
@@ -346,7 +362,7 @@ function TextEdit:OnControl(control, down)
 
     if TextEdit._base.OnControl(self, control, down) then return true end
 
-    --gobble up extra controls
+    -- allow controls to be purely handled by the parent screen
     if self.editing and (control ~= CONTROL_CANCEL and control ~= CONTROL_OPEN_DEBUG_CONSOLE and control ~= CONTROL_ACCEPT) then
         return not self.pass_controls_to_screen[control]
     end
@@ -369,6 +385,11 @@ function TextEdit:OnControl(control, down)
     end
 
     return false
+end
+
+function TextEdit:OnDestroy()
+    Self:SetEditing(false)
+    TheInput:EnableDebugToggle(true)
 end
 
 function TextEdit:OnFocusMove(dir, down)

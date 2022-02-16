@@ -343,6 +343,7 @@ function SpawnPrefab(name, skin, skin_id, creator)
     name = string.sub(name, string.find(name, "[^/]*$"))
     name = renames[name] or name
     if skin and not IsItemId(skin) then
+        print("Unknown skin", skin)
 		skin = nil
     end
     local guid = TheSim:SpawnPrefab(name, skin, skin_id, creator)
@@ -1180,7 +1181,11 @@ end
 local function CheckControllers()
     local isConnected = TheInput:ControllerConnected()
     local sawPopup = Profile:SawControllerPopup()
-    if isConnected and not (sawPopup or TheNet:IsDedicated()) then
+
+	if IsSteamDeck() and not TheNet:IsDedicated() then
+		TheInputProxy:EnableInputDevice(1, true)
+        Check_Mods()
+    elseif isConnected and not (sawPopup or TheNet:IsDedicated()) then
 
         -- store previous controller enabled state so we can revert to it, then enable all controllers
         local controllers = {}

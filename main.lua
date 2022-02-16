@@ -7,7 +7,7 @@ math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6)))
 math.random()
 
 function IsConsole()
-	return (PLATFORM == "PS4") or (PLATFORM == "XBONE")
+	return PLATFORM == "PS4" or PLATFORM == "XBONE"
 end
 
 function IsNotConsole()
@@ -15,11 +15,11 @@ function IsNotConsole()
 end
 
 function IsPS4()
-	return (PLATFORM == "PS4")
+	return PLATFORM == "PS4"
 end
 
 function IsXB1()
-	return (PLATFORM == "XBONE")
+	return PLATFORM == "XBONE"
 end
 
 function IsSteam()
@@ -38,6 +38,9 @@ function IsRail()
 	return PLATFORM == "WIN32_RAIL"
 end
 
+function IsSteamDeck()
+	return IS_STEAM_DECK
+end
 
 --defines
 MAIN = 1
@@ -237,7 +240,8 @@ if TheConfig:IsEnabled("force_netbookmode") then
 end
 
 
-print ("running main.lua\n")
+print("Running main.lua\n")
+
 TheSystemService:SetStalling(true)
 
 VERBOSITY_LEVEL = VERBOSITY.ERROR

@@ -242,7 +242,7 @@ local function fn()
     -------------------
     inst:AddComponent("childspawner")
     inst.components.childspawner.childname = "catcoon"
-    inst.components.childspawner:SetRegenPeriod(10 or TUNING.CATCOONDEN_REGEN_TIME)
+    inst.components.childspawner:SetRegenPeriod(TUNING.CATCOONDEN_REGEN_TIME)
     inst.components.childspawner:SetSpawnPeriod(TUNING.CATCOONDEN_RELEASE_TIME)
     inst.components.childspawner:SetMaxChildren(TUNING.CATCOONDEN_MAXCHILDREN)
 

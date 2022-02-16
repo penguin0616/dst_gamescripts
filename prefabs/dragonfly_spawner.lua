@@ -7,7 +7,7 @@ local prefabs =
 
 local DRAGONFLY_SPAWNTIMER = "regen_dragonfly"
 
-local function OnKilled(inst)
+local function StartSpawning(inst)
     inst.components.worldsettingstimer:StartTimer(DRAGONFLY_SPAWNTIMER, TUNING.DRAGONFLY_RESPAWN_TIME)
 end
 
@@ -72,6 +72,13 @@ local function OnPreLoad(inst, data)
     end
 end
 
+local function OnLoadPostPass(inst, newents, data)
+    if inst.components.childspawner:CountChildrenOutside() + inst.components.childspawner.childreninside == 0 and
+    not inst.components.worldsettingstimer:ActiveTimerExists(DRAGONFLY_SPAWNTIMER) then
+        StartSpawning(inst)
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -84,7 +91,7 @@ local function fn()
     inst.components.childspawner.childname = "dragonfly"
     inst.components.childspawner:SetMaxChildren(1)
     inst.components.childspawner:SetSpawnPeriod(TUNING.DRAGONFLY_SPAWN_TIME, 0)
-    inst.components.childspawner.onchildkilledfn = OnKilled
+    inst.components.childspawner.onchildkilledfn = StartSpawning
     if not TUNING.SPAWN_DRAGONFLY then
         inst.components.childspawner.childreninside = 0
     end
@@ -103,6 +110,7 @@ local function fn()
     inst._onremovedragonfly = function(dragonfly) Disengage(inst, dragonfly) end
 
     inst.OnPreLoad = OnPreLoad
+    inst.OnLoadPostPass = OnLoadPostPass
 
     local function onremovepond(pond)
         inst.ponds[pond] = nil

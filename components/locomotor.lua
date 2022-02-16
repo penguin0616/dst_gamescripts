@@ -28,14 +28,12 @@ end
 function Dest:__tostring()
     return (self.inst ~= nil and ("Going to Entity: "..tostring(self.inst)))
         or (self.pt ~= nil and ("Going to Point: "..tostring(self.pt)))
-        or (self.buffered_action ~= nil and ("Going to Point: "..tostring(self.buffered_action.pos)))
+        or (self.buffered_action ~= nil and ("Going to buffered action point: "..tostring(self.buffered_action.pos)))
         or "No Dest"
 end
 
 function Dest:GetPoint()
-    if self.inst ~= nil and self.inst.components.inventoryitem ~= nil and self.inst.components.inventoryitem.owner ~= nil then
-        return self.inst.components.inventoryitem.owner.Transform:GetWorldPosition()
-    elseif self.inst ~= nil then
+    if self.inst ~= nil and self.inst:IsValid() then
         return self.inst.Transform:GetWorldPosition()
     elseif self.pt then
         return self.pt:Get()

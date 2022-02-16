@@ -853,7 +853,7 @@ function MultiplayerMainScreen:MakeSubMenu()
     local submenuitems = {}
 
     if IsSteam() or IsRail() then
-		if not IsLinux() then
+		if not IsLinux() and not IsSteamDeck() then
 			table.insert(submenuitems, {widget = TEMPLATES.IconButton("images/button_icons.xml", "folder.tex", STRINGS.UI.MAINSCREEN.SAVE_LOCATION, false, true, function() TheSim:OpenDocumentsFolder() end, {font=NEWFONT_OUTLINE})})
 		end
 

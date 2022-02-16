@@ -231,6 +231,21 @@ function Widget:GetParent()
     return self.parent
 end
 
+function Widget:GetParentScreen()
+    --check for a cached version
+    if self.parent_screen then
+        return self.parent_screen
+    end
+
+    local parent = self.parent
+    while( not parent.is_screen )
+    do
+        parent = parent:GetParent()
+    end
+    self.parent_screen = parent
+    return self.parent_screen
+end
+
 function Widget:GetChildren()
     return self.children
 end

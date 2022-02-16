@@ -17,13 +17,12 @@ local function onaccept(inst, doer, widget)
     -- print("OnAccept",inst,doer,widget)
 
     --strip leading/trailing whitespace
-    local msg = widget:GetText()
-    local processed_msg = msg:match("^%s*(.-%S)%s*$") or ""
-    if msg ~= processed_msg or #msg <= 0 then
-        widget.edit_text:SetString(processed_msg)
-        widget.edit_text:SetEditing(true)
-        return
-    end
+    local msg = TrimString(widget:GetText())
+    widget.edit_text:SetString(msg)
+	if #msg <= 0 then
+		widget.edit_text:SetEditing(true)
+		return
+	end
 
     local writeable = inst.replica.writeable
     if writeable ~= nil then
@@ -44,7 +43,9 @@ local function onmiddle(inst, doer, widget)
     --print("OnMiddle",inst,doer,widget)
 
     widget.config.middlebtn.cb(inst, doer, widget)
-    widget.edit_text:SetEditing(true)
+	if not IsConsole() and not IsSteamDeck() then
+		widget.edit_text:SetEditing(true)
+	end
 end
 
 local function oncancel(inst, doer, widget)
@@ -145,7 +146,7 @@ local WriteableWidget = Class(Screen, function(self, owner, writeable, config)
 
     for i, v in ipairs(self.buttons) do
         if v.control ~= nil then
-            self.edit_text:SetPassControlToScreen(v.control, true)
+            self.edit_text:SetIgnoreControl(v.control, true)
         end
     end
 
@@ -267,16 +268,6 @@ end
 function WriteableWidget:OnControl(control, down)
     if WriteableWidget._base.OnControl(self,control, down) then return true end
 
-    -- gjans: This makes it so that if the text box loses focus and you click
-    -- on the bg, it presses accept. Kind of weird behaviour. I'm guessing
-    -- something like it is needed for controllers, but it's not exaaaactly
-    -- this.
-    --if control == CONTROL_ACCEPT and not down then
-        --if #self.buttons >= 1 and self.buttons[#self.buttons] then
-            --self.buttons[#self.buttons].cb()
-            --return true
-        --end
-    --end
     if not down then
         for i, v in ipairs(self.buttons) do
             if control == v.control and v.cb ~= nil then

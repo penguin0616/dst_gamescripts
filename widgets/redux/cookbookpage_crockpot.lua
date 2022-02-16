@@ -133,9 +133,11 @@ local ingredient_icon_remap = {}
 ingredient_icon_remap.onion = "quagmire_onion"
 ingredient_icon_remap.tomato = "quagmire_tomato"
 ingredient_icon_remap.acorn = "acorn_cooked"
+ingredient_icon_remap.trunk = "trunk_cooked"
 
 local ingredient_name_remap = {}
 ingredient_name_remap.acorn = "acorn_cooked"
+ingredient_name_remap.trunk = "trunk_cooked"
 
 function CookbookPageCrockPot:_SetupRecipeIngredientDetails(recipes, parent, y)
 	local ingredient_size = 30
@@ -180,7 +182,7 @@ function CookbookPageCrockPot:_SetupRecipeIngredientDetails(recipes, parent, y)
 				local img = inv_item_root:AddChild(Image(img_atlas or "images/quagmire_recipebook.xml", img_atlas ~= nil and img_name or "cookbook_missing.tex"))
 				img:ScaleToSize(ingredient_size, ingredient_size)
 				img:SetPosition(backing:GetPosition())
-				img:SetHoverText(STRINGS.NAMES[string.upper(items[i])] or subfmt(STRINGS.UI.COOKBOOK.UNKNOWN_INGREDIENT_NAME, {ingredient = items[i]}))
+				img:SetHoverText(STRINGS.NAMES[string.upper(ingredient_name_remap[items[i]] or items[i])] or subfmt(STRINGS.UI.COOKBOOK.UNKNOWN_INGREDIENT_NAME, {ingredient = items[i]}))
 			end
 			index = index + 1
 		end

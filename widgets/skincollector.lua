@@ -8,7 +8,7 @@ local TEMPLATES = require "widgets/templates"
 local SPEECH_TIME = 9
 local IDLE_SPEECH_DELAY = 180
 
-local SkinCollector = Class(Widget, function(self, num_items, mini_game, start_text)
+local SkinCollector = Class(Widget, function(self, num_items, mini_game, start_text, is_birthday)
     Widget._ctor(self, "SkinCollector")
 
 	self.mini_game = mini_game
@@ -20,6 +20,10 @@ local SkinCollector = Class(Widget, function(self, num_items, mini_game, start_t
   	self.innkeeper:GetAnimState():SetBank("skin_collector")
     self.innkeeper:GetAnimState():SetBuild("skin_collector")
     self.innkeeper:GetAnimState():PlayAnimation("idle", true)
+	if not is_birthday then
+		self.innkeeper:GetAnimState():Hide("max_head_hat")
+		self.innkeeper:GetAnimState():Hide("max_torso_sash")
+	end
     self.innkeeper:SetScale(-.55, .55, .55)
     self.innkeeper:SetPosition(0, -0)
     self.innkeeper:Hide()

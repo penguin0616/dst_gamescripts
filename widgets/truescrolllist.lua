@@ -382,7 +382,10 @@ function TrueScrollList:RefreshView()
 	for i = 1,self.items_per_view do
         self.update_fn(self.context, self.widgets_to_update[i], self.items[start_index + i], start_index + i)
         if self.itemfocus and self.itemfocus == start_index + i then
-            self.widgets_to_update[i]:SetFocus()
+            --Check if we're on an active screen. Something could be on the stack in front of us and we don't want to steal focus back
+            if self:GetParentScreen() == TheFrontEnd:GetActiveScreen() then
+                self.widgets_to_update[i]:SetFocus()
+            end
         end
         --self.widgets_to_update[i]:Show()
 	end

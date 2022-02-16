@@ -11,7 +11,7 @@ local function zero_spawn_offset(inst)
     return ZERO
 end
 
-local function OnKilled(inst)
+local function StartSpawning(inst)
     inst.components.worldsettingstimer:StartTimer(CRABKING_SPAWNTIMER, TUNING.CRABKING_RESPAWN_TIME)
 end
 
@@ -32,6 +32,13 @@ local function OnPreLoad(inst, data)
     end
 end
 
+local function OnLoadPostPass(inst, newents, data)
+    if inst.components.childspawner:CountChildrenOutside() + inst.components.childspawner.childreninside == 0 and
+    not inst.components.worldsettingstimer:ActiveTimerExists(CRABKING_SPAWNTIMER) then
+        StartSpawning(inst)
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -46,7 +53,7 @@ local function fn()
     inst.components.childspawner.spawnoffscreen = true
     inst.components.childspawner:SetMaxChildren(1)
     inst.components.childspawner:SetSpawnPeriod(TUNING.CRABKING_SPAWN_TIME, 0)
-    inst.components.childspawner.onchildkilledfn = OnKilled
+    inst.components.childspawner.onchildkilledfn = StartSpawning
     if not TUNING.SPAWN_CRABKING then
         inst.components.childspawner.childreninside = 0
     end
@@ -59,6 +66,7 @@ local function fn()
     inst:ListenForEvent("timerdone", ontimerdone)
 
     inst.OnPreLoad = OnPreLoad
+    inst.OnLoadPostPass = OnLoadPostPass
 
     return inst
 end

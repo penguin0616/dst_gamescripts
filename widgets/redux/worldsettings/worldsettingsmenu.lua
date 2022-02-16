@@ -352,6 +352,17 @@ function WorldSettingsMenu:SetDataFromOptions(options)
 end
 
 --called by parent widget
+function WorldSettingsMenu:ReloadPreset()
+    local preset = self.settings and self.settings.preset or nil
+    if preset then
+        local presetdata = Levels.GetDataForID(self.levelcategory, preset)
+        if not presetdata or preset ~= presetdata.id then
+            self:LoadPreset()
+        end
+    end
+end
+
+--called by parent widget
 function WorldSettingsMenu:LoadPreset(preset)
     local gamemode = self:GetGameMode()
     local level_type = GetLevelType(gamemode)

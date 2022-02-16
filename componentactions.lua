@@ -1433,11 +1433,16 @@ local COMPONENT_ACTIONS =
         end,
 
         deployable = function(inst, doer, pos, actions, right)
-            if right and inst.replica.inventoryitem ~= nil and inst.replica.inventoryitem:CanDeploy(pos, nil, doer, (doer.components.playercontroller ~= nil and doer.components.playercontroller.deployplacer ~= nil) and doer.components.playercontroller.deployplacer.Transform:GetRotation() or 0) then
-                if inst:HasTag("tile_deploy") then
-                    table.insert(actions, ACTIONS.DEPLOY_TILEARRIVE)
-                else
-                    table.insert(actions, ACTIONS.DEPLOY)
+            if right and inst.replica.inventoryitem ~= nil then
+                if CLIENT_REQUESTED_ACTION == ACTIONS.DEPLOY_TILEARRIVE or CLIENT_REQUESTED_ACTION == ACTIONS.DEPLOY then
+                    --CanDeploy will still run before the actual deploy itself.
+                    table.insert(actions, CLIENT_REQUESTED_ACTION)
+                elseif inst.replica.inventoryitem:CanDeploy(pos, nil, doer, (doer.components.playercontroller ~= nil and doer.components.playercontroller.deployplacer ~= nil) and doer.components.playercontroller.deployplacer.Transform:GetRotation() or 0) then
+                    if inst:HasTag("tile_deploy") then
+                        table.insert(actions, ACTIONS.DEPLOY_TILEARRIVE)
+                    else
+                        table.insert(actions, ACTIONS.DEPLOY)
+                    end
                 end
             end
         end,

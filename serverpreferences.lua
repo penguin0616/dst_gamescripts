@@ -80,7 +80,7 @@ end
 function ServerPreferences:IsNameAndDescriptionHidden(server_data)
 	local server_id = MakeServerID(server_data)
 	if server_data == nil then
-		ServerPreferences:UpdateProfanityFilteredServers()
+		ServerPreferences:UpdateProfanityFilteredServer()
 	end
 	return (self.persistdata[server_id] ~= nil and self.persistdata[server_id].hidename)
 		or self.profanityservers[server_id]
@@ -107,12 +107,22 @@ end
 function ServerPreferences:UpdateProfanityFilteredServers(servers)
 	if Profile:GetProfanityFilterServerNamesEnabled() then
 		local local_user_id = TheNet:GetUserID()
-		if servers ~= nil then
-			for i, server in ipairs(servers) do
-				local server_id = MakeServerID(server)
-				if self.profanityservers[server_id] == nil and (ProfanityFilter:HasProfanity(server.name) or ProfanityFilter:HasProfanity(server.description)) then
-					self.profanityservers[server_id] = not server.owner
-				end
+		for i, server in ipairs(servers) do
+			local server_id = MakeServerID(server)
+			if self.profanityservers[server_id] == nil and (ProfanityFilter:HasProfanity(server.name) or ProfanityFilter:HasProfanity(server.description)) then
+				self.profanityservers[server_id] = not server.owner
+			end
+		end
+	end
+end
+
+function ServerPreferences:UpdateProfanityFilteredServer(server)
+	if Profile:GetProfanityFilterServerNamesEnabled() then
+		local local_user_id = TheNet:GetUserID()
+		if server ~= nil then
+			local server_id = MakeServerID(server)
+			if self.profanityservers[server_id] == nil and (ProfanityFilter:HasProfanity(server.name) or ProfanityFilter:HasProfanity(server.description)) then
+				self.profanityservers[server_id] = not server.owner
 			end
 		else
 			local name = TheNet:GetServerName()

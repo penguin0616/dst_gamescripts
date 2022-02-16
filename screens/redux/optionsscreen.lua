@@ -22,7 +22,7 @@ local controls_ui = {
     action_btn_width = 250,
     action_height = 48,
 }
-local show_graphics = PLATFORM ~= "NACL"
+local show_graphics = PLATFORM ~= "NACL" and IsNotConsole() and not IsSteamDeck() 
 
 local enableDisableOptions = { { text = STRINGS.UI.OPTIONS.DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.ENABLED, data = true } }
 local integratedbackpackOptions = { { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_ENABLED, data = true } }
@@ -729,8 +729,11 @@ function OptionsScreen:MapControl(deviceId, controlId)
     popup.OnControl = function(_, control, down) --[[self:MapControlInputHandler(control, down)]] return true end
 	TheFrontEnd:PushScreen(popup)
 
-    TheInputProxy:MapControl(deviceId, controlId)
-    self.is_mapping = true
+	-- Delaying the MapControl one frame. Done for Steam Deck, but this wont impact other systems.
+	self.inst:DoTaskInTime(0, function() 
+		TheInputProxy:MapControl(deviceId, controlId) 
+		self.is_mapping = true 
+	end)
 end
 
 function OptionsScreen:OnControlMapped(deviceId, controlId, inputId, hasChanged)
@@ -1196,23 +1199,36 @@ function OptionsScreen:_BuildGraphics()
 	self.left_spinners_graphics = {}
 	self.right_spinners_graphics = {}
 
-	table.insert( self.left_spinners_graphics, self.fullscreenSpinner )
-	table.insert( self.left_spinners_graphics, self.resolutionSpinner )
-	table.insert( self.left_spinners_graphics, self.displaySpinner )
-	table.insert( self.left_spinners_graphics, self.refreshRateSpinner )
-	table.insert( self.left_spinners_graphics, self.smallTexturesSpinner )
-	table.insert( self.left_spinners_graphics, self.netbookModeSpinner )
-	table.insert( self.left_spinners_graphics, self.texturestreamingSpinner )
+	if IsSteamDeck() then
+		table.insert( self.left_spinners_graphics, self.screenshakeSpinner )
+		table.insert( self.left_spinners_graphics, self.screenFlashSpinner )
+		table.insert( self.left_spinners_graphics, self.dynamicTreeShadowsSpinner )
 
-	if IsWin32() then
-		table.insert( self.left_spinners_graphics, self.threadedrenderSpinner )
+		table.insert( self.right_spinners_graphics, self.distortionSpinner )
+		table.insert( self.right_spinners_graphics, self.bloomSpinner )
+		table.insert( self.right_spinners_graphics, self.texturestreamingSpinner )
+		if IsWin32() then
+			table.insert( self.right_spinners_graphics, self.threadedrenderSpinner )
+		end
+	else
+		table.insert( self.left_spinners_graphics, self.fullscreenSpinner )
+		table.insert( self.left_spinners_graphics, self.resolutionSpinner )
+		table.insert( self.left_spinners_graphics, self.displaySpinner )
+		table.insert( self.left_spinners_graphics, self.refreshRateSpinner )
+		table.insert( self.left_spinners_graphics, self.smallTexturesSpinner )
+		table.insert( self.left_spinners_graphics, self.netbookModeSpinner )
+		table.insert( self.left_spinners_graphics, self.texturestreamingSpinner )
+
+		if IsWin32() then
+			table.insert( self.left_spinners_graphics, self.threadedrenderSpinner )
+		end
+
+		table.insert( self.right_spinners_graphics, self.screenshakeSpinner )
+		table.insert( self.right_spinners_graphics, self.distortionSpinner )
+		table.insert( self.right_spinners_graphics, self.bloomSpinner )
+		table.insert( self.right_spinners_graphics, self.screenFlashSpinner )
+		table.insert( self.right_spinners_graphics, self.dynamicTreeShadowsSpinner )
 	end
-
-    table.insert( self.right_spinners_graphics, self.screenshakeSpinner )
-    table.insert( self.right_spinners_graphics, self.distortionSpinner )
-    table.insert( self.right_spinners_graphics, self.bloomSpinner )
-    table.insert( self.right_spinners_graphics, self.screenFlashSpinner )
-	table.insert( self.right_spinners_graphics, self.dynamicTreeShadowsSpinner )
 
 	self.grid_graphics:UseNaturalLayout()
 	self.grid_graphics:InitSize(2, math.max(#self.left_spinners_graphics, #self.right_spinners_graphics), 440, 40)
@@ -1625,7 +1641,9 @@ function OptionsScreen:_BuildControls()
 						local device_id = self.deviceSpinner:GetSelectedData()
 						if is_valid_fn(device_id) then
 							self.is_mapping = true
-							TheInputProxy:UnMapControl(device_id, group.controlId)
+							if not TheInputProxy:UnMapControl(device_id, group.control.controller) then
+								self.is_mapping = false
+							end
 						end
 					end)
 				group.unbinding_btn:SetPosition(x - 5,0)
@@ -1674,7 +1692,9 @@ function OptionsScreen:_BuildControls()
 						if not down and control == CONTROL_MENU_MISC_2 then
 							-- Unbind the game control
                             self.is_mapping = true
-						    TheInputProxy:UnMapControl(device_id, group.control.controller)
+							if not TheInputProxy:UnMapControl(device_id, group.control.controller) then
+								self.is_mapping = false
+							end
 
 							return true
 						end

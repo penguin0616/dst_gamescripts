@@ -24,7 +24,7 @@ local DebugMenuScreen = Class(Screen, function(self)
 	self.blackoverlay:SetTint(0,0,0,.75)
 
 --	self.text = self:AddChild(Text(BODYTEXTFONT, 16, "blah"))
-	self.text = self:AddChild(Text(BODYTEXTFONT, TheSim:GetIsSplitScreen() and 32 or 16, "blah"))
+	self.text = self:AddChild(Text(BODYTEXTFONT, TheSim.GetIsSplitScreen ~= nil and TheSim:GetIsSplitScreen() and 32 or 16, "blah"))
 	self.text:SetVAlign(ANCHOR_TOP)
 	self.text:SetHAlign(ANCHOR_LEFT)
     self.text:SetVAnchor(ANCHOR_MIDDLE)
@@ -41,6 +41,7 @@ end)
 local god = false
 local map_reveal = false
 local free_craft = false
+local show_log = false
 
 function Remote_Spawn(prefab, x, y, z)
 		local fnstr = string.format('c_spawn("%s")',prefab)
@@ -170,18 +171,21 @@ function DebugMenuScreen:OnBecomeActive()
 
 	if InGamePlay() then
 		table.insert(main_options, menus.CheckBox("Toggle God Mode", function() return god end, function(val) god = val ConsoleRemote("c_godmode()") end))
+		table.insert(main_options, menus.CheckBox("Toggle Free Crafting", function() return free_craft end, function(val) free_craft = val ConsoleRemote("c_freecrafting()") end))
+		table.insert(main_options, menus.CheckBox("Toggle Log", function() return show_log end, function(val) show_log = val if show_log then TheFrontEnd:ShowConsoleLog() else TheFrontEnd:HideConsoleLog() end end ))
 		table.insert(main_options, menus.CheckBox("Toggle Reveal Map", function() return map_reveal end,
                                             function(val)
                                                 map_reveal = val
                                                 map.MiniMap:EnableFogOfWar(not map_reveal)
                                             end))
-		table.insert(main_options, menus.CheckBox("Toggle Free Crafting", function() return free_craft end, function(val) free_craft = val ConsoleRemote("c_freecrafting()") end))
 		table.insert(main_options, menus.Submenu("Teleport", teleport))
 		table.insert(main_options, menus.Submenu("Time Control", timecontrol))
 		table.insert(main_options, menus.Submenu("Weather Control", weathercontrol))
 		table.insert(main_options, menus.Submenu("Player Bars", bars))
 		table.insert(main_options, menus.Submenu("Spawn", spawn))
 		table.insert(main_options, menus.Submenu("Give Ingredients for", spawncraft))
+	else
+		table.insert(main_options, menus.CheckBox("Toggle Log", function() return show_log end, function(val) show_log = val if show_log then TheFrontEnd:ShowConsoleLog() else TheFrontEnd:HideConsoleLog() end end ))
 	end
 
 	table.insert(main_options, menus.DoAction("Grab Profile", function() TheSim:Profile() self:Close() end ))

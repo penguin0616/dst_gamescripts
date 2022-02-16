@@ -88,7 +88,9 @@ function IsRail()
 	return PLATFORM == "WIN32_RAIL"
 end
 
-
+function IsSteamDeck()
+	return IS_STEAM_DECK
+end
 
 require("stacktrace")
 

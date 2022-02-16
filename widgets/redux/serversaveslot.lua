@@ -280,9 +280,11 @@ function ServerSaveSlot:OnControl(control, down)
             self:OnDeleteButton()
             return true
         elseif control == CONTROL_MENU_MISC_2 then
-            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-            self:OpenFolder()
-            return true
+			if not IsSteamDeck() then
+				TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+				self:OpenFolder()
+	            return true
+			end
 		end
 	end
 end
@@ -293,7 +295,7 @@ function ServerSaveSlot:GetHelpText()
 
 	table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT) .. " " .. STRINGS.UI.HELP.SELECT)
     table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MAP) .. " " .. STRINGS.UI.SERVERCREATIONSCREEN.DELETE_SLOT)
-    if IsNotConsole() then
+    if IsNotConsole() and not IsSteamDeck() then
         local text = TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. subfmt(STRINGS.UI.SERVERCREATIONSCREEN.OPENSAVEFOLDER, {folder = STRINGS.UI.SERVERCREATIONSCREEN.CLUSTERSLOT})
         if IsLinux() then
             text = self.cluster_folder

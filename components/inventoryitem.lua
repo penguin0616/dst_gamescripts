@@ -127,7 +127,7 @@ function InventoryItem:SetOwner(owner)
     self.owner = owner
 end
 
-function InventoryItem:ClearOwner(owner)
+function InventoryItem:ClearOwner()
     self.owner = nil
 end
 
@@ -217,6 +217,7 @@ end
 
 function InventoryItem:OnDropped(randomdir, speedmult)
     if not self.inst:IsValid() then
+		self.owner = nil
         return
     end
 

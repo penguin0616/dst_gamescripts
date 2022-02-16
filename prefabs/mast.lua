@@ -104,7 +104,7 @@ local function lamp_turnon(inst)
         inst.components.fueled:StartConsuming()
 
         if inst._lamp == nil then
-            if inst.saved_upgraded_from_item ~= nil then
+            if inst.saved_upgraded_from_item ~= nil and inst.saved_upgraded_from_item.linked_skinname then
                 inst._lamp = SpawnPrefab("mastupgrade_lamp", inst.saved_upgraded_from_item.linked_skinname, inst.saved_upgraded_from_item.skin_id )
             else
                 inst._lamp = SpawnPrefab("mastupgrade_lamp")
@@ -150,9 +150,20 @@ end
 
 local function upgrade_lightningrod(inst, no_built_callback)
     inst._lightningrod = SpawnPrefab("mastupgrade_lightningrod")
+    if inst.saved_upgraded_from_item ~= nil and inst.saved_upgraded_from_item.linked_skinname then
+        inst._lightningrod = SpawnPrefab("mastupgrade_lightningrod", inst.saved_upgraded_from_item.linked_skinname, inst.saved_upgraded_from_item.skin_id )
+    else
+        inst._lightningrod = SpawnPrefab("mastupgrade_lightningrod")
+    end
+
     inst._lightningrod.entity:SetParent(inst.entity)
 
-    local top = SpawnPrefab("mastupgrade_lightningrod_top")
+    local top = nil
+    if inst.saved_upgraded_from_item ~= nil and inst.saved_upgraded_from_item.linked_skinname then
+        top = SpawnPrefab("mastupgrade_lightningrod_top", inst.saved_upgraded_from_item.linked_skinname .. "_top", inst.saved_upgraded_from_item.skin_id )
+    else
+        top = SpawnPrefab("mastupgrade_lightningrod_top")
+    end
     top.entity:SetParent(inst.entity)
     top.entity:AddFollower():FollowSymbol(inst.GUID, "mastupgrade_lightningrod_top", 0, 0, 0)
 
@@ -170,8 +181,10 @@ end
 
 local function OnUpgrade(inst, performer, upgraded_from_item)
     local numupgrades = inst.components.upgradeable.numupgrades
-    if numupgrades == 1 then
+    if upgraded_from_item.linked_skinname ~= nil then
         inst.saved_upgraded_from_item = { linked_skinname = upgraded_from_item.linked_skinname, skin_id = upgraded_from_item.skin_id }
+    end
+    if numupgrades == 1 then
         upgrade_lamp(inst)
     elseif numupgrades == 2 then
         upgrade_lightningrod(inst)

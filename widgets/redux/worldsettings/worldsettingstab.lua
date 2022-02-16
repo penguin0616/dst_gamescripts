@@ -406,6 +406,7 @@ end
 --called from ServerCreationScreen
 function WorldSettingsTab:RefreshOptionItems()
     for i, v in ipairs(self.worldsettings_widgets) do
+        v:ReloadPreset()
         v:RefreshOptionItems()
     end
 end

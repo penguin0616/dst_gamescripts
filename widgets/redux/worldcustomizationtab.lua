@@ -493,7 +493,6 @@ function WorldCustomizationTab:VerifyValidSeasonSettings()
 end
 
 function WorldCustomizationTab:LoadPreset(preset)
-
     local presetdata = nil
     if preset ~= nil then
         presetdata = Levels.GetDataForLevelID(preset)

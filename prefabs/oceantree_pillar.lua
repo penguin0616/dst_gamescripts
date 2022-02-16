@@ -188,7 +188,7 @@ local function Dropleaves(inst)
 end
 
 local function DropItem(inst)
-    if #inst.items_to_drop > 0 then
+    if inst.items_to_drop and #inst.items_to_drop > 0 then
         local ind = math.random(1, #inst.items_to_drop)
         local item_to_spawn = inst.items_to_drop[ind]
 
