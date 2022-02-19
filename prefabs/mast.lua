@@ -149,7 +149,6 @@ local function upgrade_lamp(inst, no_built_callback)
 end
 
 local function upgrade_lightningrod(inst, no_built_callback)
-    inst._lightningrod = SpawnPrefab("mastupgrade_lightningrod")
     if inst.saved_upgraded_from_item ~= nil and inst.saved_upgraded_from_item.linked_skinname then
         inst._lightningrod = SpawnPrefab("mastupgrade_lightningrod", inst.saved_upgraded_from_item.linked_skinname, inst.saved_upgraded_from_item.skin_id )
     else

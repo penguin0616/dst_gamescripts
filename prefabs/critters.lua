@@ -309,10 +309,10 @@ end
 -------------------------------------------------------------------------------
 
 local function kitten_master_postinit(inst, data)
-	if not IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
+	if not IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then -- this is only needed when the event is off because they have unlimited loyalty during the event.
 		inst:DoPeriodicTask(TUNING.SEG_TIME, function()
 			local perish = inst.components.perishable:GetPercent()
-			if perish > HUNGRY_PERISH_PERCENT then
+			if perish > HUNGRY_PERISH_PERCENT and inst.components.follower.leader ~= nil then
 				for v, _ in pairs(inst.components.follower.leader.components.leader.followers) do
 					if v.components.kitcoon ~= nil then
 						v.components.follower:AddLoyaltyTime(TUNING.KITCOON_LOYALTY_MAX)

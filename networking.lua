@@ -481,7 +481,7 @@ function JoinServer(server_listing, optional_password_override)
             password_prompt_screen = InputDialogScreen( STRINGS.UI.SERVERLISTINGSCREEN.PASSWORDREQUIRED,
                                             {
                                                 {
-                                                    text = STRINGS.UI.SERVERLISTINGSCREEN.OK,
+                                                    text = STRINGS.UI.SERVERLISTINGSCREEN.JOIN,
                                                     cb = function()
                                                         TheFrontEnd:PopScreen()
                                                         send_response( password_prompt_screen:GetActualString() )

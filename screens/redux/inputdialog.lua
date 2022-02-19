@@ -66,6 +66,9 @@ local InputDialogScreen = Class(Screen, function(self, title, buttons, modal, st
     self.edit_text:SetHAlign(ANCHOR_LEFT)
     self.edit_text:SetFocusedImage( self.edit_text_bg, "images/global_redux.xml", "textbox3_gold_normal.tex", "textbox3_gold_hover.tex", "textbox3_gold_focus.tex" )
 
+	self.edit_text:SetFocusChangeDir(MOVE_DOWN, self.bg)
+	self.bg:SetFocusChangeDir(MOVE_UP, self.edit_text)
+
 	self.default_focus = self.edit_text
 end)
 
@@ -118,12 +121,17 @@ function InputDialogScreen:OnControl(control, down)
         --end
     --end
 
-    if control == CONTROL_CANCEL and not down then
-        if #self.buttons > 1 and self.buttons[2] then
-            self.buttons[2].cb()
-            return true
-        end
+    if not down and #self.buttons > 1 and self.buttons[2] then
+		if control == CONTROL_CANCEL then
+			self.buttons[2].cb()
+			return true
+		elseif control == CONTROL_PAUSE then
+			self.buttons[1].cb()
+			return true
+		end
     end
+
+	
 end
 
 function InputDialogScreen:Close()
@@ -135,6 +143,10 @@ function InputDialogScreen:GetHelpText()
 	local t = {}
 	if #self.buttons > 1 and self.buttons[#self.buttons] then
         table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
+
+		if self.edit_text.focus then
+	        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_PAUSE) .. " " .. self.buttons[1].text)
+		end
     end
 	return table.concat(t, "  ")
 end
