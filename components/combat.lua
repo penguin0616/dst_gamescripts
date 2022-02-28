@@ -108,8 +108,8 @@ function Combat:RestartCooldown()
 end
 
 function Combat:SetRange(attack, hit)
-    self.attackrange = attack - 0.5
-    self.hitrange = (hit or self.attackrange) + 0.5
+    self.attackrange = attack
+    self.hitrange = (hit or self.attackrange)
 end
 
 function Combat:SetPlayerStunlock(stunlock)

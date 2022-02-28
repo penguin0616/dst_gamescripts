@@ -6524,7 +6524,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Wolfgang\nBeta Build",
+		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7159,6 +7159,8 @@ STRINGS.UI =
         CONTROLS = "Controls",
         LANGUAGES = "Languages",
         LANG_TITLE = "Language Options",
+        LANG_BODY_STEAM = "Your Steam interface is set to a language other than English, would you like to view language options?",
+        MOD_LANGUAGES_TITLE = "Steam Workshop Collections",
 		CINEMATICS = "Cinematics",
         MORE = "More",
         OPTIONS = "Options",

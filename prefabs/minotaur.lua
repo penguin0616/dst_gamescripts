@@ -523,7 +523,7 @@ local function fn()
     inst.components.combat:SetDefaultDamage(TUNING.MINOTAUR_DAMAGE)
     inst.components.combat:SetRetargetFunction(3, Retarget)
     inst.components.combat:SetKeepTargetFunction(KeepTarget)
-    inst.components.combat:SetRange(4.1)
+    inst.components.combat:SetRange(4.1-0.5,4.1+0.5)
 
     inst:AddComponent("groundpounder")
     inst.components.groundpounder.numRings = 3

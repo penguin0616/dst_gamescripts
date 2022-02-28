@@ -1296,7 +1296,7 @@ function Tune(overrides)
             }),
 
             TURFCRAFTING = TechTree.Create({
-                TURFCRAFTING = 1,
+                TURFCRAFTING = 2,
             }),
 
             SPIDERCRAFT = TechTree.Create({

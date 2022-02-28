@@ -14,6 +14,7 @@ local ScrollableList = require "widgets/scrollablelist"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 local OnlineStatus = require "widgets/onlinestatus"
 local TEMPLATES = require "widgets/redux/templates"
+local ModsScreen = require "screens/redux/modsscreen"
 
 local KitcoonPuppet = require "widgets/kitcoonpuppet"
 
@@ -219,10 +220,11 @@ local function GetDisplayModeInfo( display_id, mode_idx )
 	return w, h, hz
 end
 
-local OptionsScreen = Class(Screen, function(self, prev_screen)
+local OptionsScreen = Class(Screen, function( self, prev_screen, default_section )
 	Screen._ctor(self, "OptionsScreen")
 
     self.show_language_options = (prev_screen ~= nil and prev_screen.name == "MultiplayerMainScreen") and (IsConsole() or IsSteam())
+	self.show_mod_language_options = (prev_screen ~= nil and prev_screen.name == "MultiplayerMainScreen") and IsSteam()
 	self.show_datacollection = IsSteam() and not InGamePlay()
 
 	local graphicsOptions = TheFrontEnd:GetGraphicsOptions()
@@ -357,6 +359,10 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 
     self:_DoFocusHookups()
 	self.default_focus = self.subscreener.menu
+
+	if default_section == "LANG" then
+		self.subscreener.menu.items[1]:onclick() --index 1 should be the Languages button
+	end
 end)
 
 function OptionsScreen:_BuildMenu(subscreener)
@@ -978,26 +984,108 @@ function OptionsScreen:_BuildLangButton(region_size, button_height, lang_id)
     return langButton
 end
 
+function OptionsScreen:_BuildModLangButton(region_size, button_height, mod_data, last_item)
+    if mod_data == nil then
+		return
+	end
+	-- Use noop function to make ListItemBackground build something that's clickable.
+    local langButton = TEMPLATES.ListItemBackground(region_size, button_height, function() end)
+    langButton.move_on_click = true
+    langButton.text:SetRegionSize(region_size, 70)
+    langButton:SetTextSize(28)
+    langButton:SetFont(CHATFONT)
+    langButton:SetTextColour(UICOLOURS.GOLD_CLICKABLE)
+    langButton:SetTextFocusColour(UICOLOURS.GOLD_FOCUS)
+    langButton:SetTextSelectedColour(UICOLOURS.GOLD_FOCUS)
+    langButton:SetText(mod_data.name)
+    langButton:SetOnClick(function()
+		VisitURL(mod_data.url)
+        if not last_item then --dirty hack. The last item is always the go to support url
+			TheFrontEnd:FadeToScreen( self, function() return ModsScreen(self) end, nil )
+		end
+    end)
+
+    return langButton
+end
+
+function OptionsScreen:_BuildModLangButtonRow(region_size, button_height, language_mods, index)
+    local row = Widget("row")
+	local left = self:_BuildModLangButton(region_size, button_height, language_mods[index], #language_mods == index)
+	row:AddChild(left)
+	left:SetPosition(-region_size/2,0)
+	left.ongainfocusfn = function() self.column_in = "left" end
+
+	local right = self:_BuildModLangButton(region_size, button_height, language_mods[index+1], #language_mods == index) 
+	if right then
+		row:AddChild(right)
+		right:SetPosition(region_size/2,0)
+		right.ongainfocusfn = function() self.column_in = "right" end
+		
+		left:SetFocusChangeDir(MOVE_RIGHT, right)
+		right:SetFocusChangeDir(MOVE_LEFT, left)
+	end
+	
+	row.focus_forward = function()
+		if self.column_in == "right" and right ~= nil then
+			return right
+		end
+		return left
+	end
+
+    return row
+end
+
 -- This is the "languages" tab
 function OptionsScreen:_BuildLanguages()
-    local languagesRoot = Widget("ROOT")
+    local languagesRoot = Widget("LANG_ROOT")
 
     languagesRoot:SetPosition(0,0)
 
     local button_width = 430
     local button_height = 45
 
-    self.langtitle = languagesRoot:AddChild(BuildSectionTitle(STRINGS.UI.OPTIONS.LANG_TITLE, 200))
-    self.langtitle:SetPosition(92, 160)
+    local langtitle = languagesRoot:AddChild(BuildSectionTitle(STRINGS.UI.OPTIONS.LANG_TITLE, 200))
+    langtitle:SetPosition(92, 160)
 
-    self.langButtons = {}
+    local langButtons = {}
 
     self.lang_grid = languagesRoot:AddChild(Grid())
     self.lang_grid:SetPosition(-125, 90)
     for _,id in pairs(LOC.GetLanguages()) do
-        table.insert(self.langButtons, self:_BuildLangButton(button_width, button_height, id))
+        table.insert(langButtons, self:_BuildLangButton(button_width, button_height, id))
     end
-    self.lang_grid:FillGrid(2, button_width, button_height, self.langButtons)
+    self.lang_grid:FillGrid(2, button_width, button_height, langButtons)
+
+	if self.show_mod_language_options then
+		TheSim:QueryServer( "https://dst-translation-mods.klei.com/mods.json",
+		function( result, isSuccessful, resultCode )
+			if isSuccessful and string.len(result) > 1 and resultCode == 200 then
+				local status, language_mods = pcall( function() return json.decode(result) end )
+				if status then					
+    				local modsRoot = languagesRoot:AddChild(Widget("MOD_LANG_ROOT"))
+					modsRoot:SetPosition(0, -145)
+
+					local modLangtitle = modsRoot:AddChild(BuildSectionTitle(STRINGS.UI.OPTIONS.MOD_LANGUAGES_TITLE, 400))
+					modLangtitle:SetPosition(92, 80)
+				
+    				local mod_button_width = 410
+					local modLangButtons = {}
+					for i,_ in pairs(language_mods) do
+						if i % 2 == 1 then --evens do new rows
+							table.insert(modLangButtons, self:_BuildModLangButtonRow(mod_button_width, button_height, language_mods, i))
+						end
+					end
+
+					local list = ScrollableList(modLangButtons, button_width, 200, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, "GOLD")
+					self.mods_list = modsRoot:AddChild(list)
+					self.mods_list:SetPosition(290, -65)
+				
+					self.lang_grid:SetFocusChangeDir(MOVE_DOWN, self.mods_list)
+					modsRoot:SetFocusChangeDir(MOVE_UP, self.lang_grid)
+				end
+			end
+		end, "GET" )
+	end
 
     languagesRoot.focus_forward = self.lang_grid
 
@@ -1007,8 +1095,6 @@ end
 local function EnabledOptionsIndex(enabled)
     return enabled and 2 or 1
 end
-
-
 
 --shared section for graphics and settings
 local label_width = 200

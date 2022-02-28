@@ -596,7 +596,7 @@ local states =
         {
             EventHandler("stunned_hit", function(inst)
                 inst.AnimState:PlayAnimation("hit")
-                inst.AnimState:PushAnimation("sleep_loop",true)
+                inst.AnimState:PushAnimation("stun_loop",true)
             end),
         },
 

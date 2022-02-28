@@ -148,12 +148,16 @@ local function ServerGetSpeedMultiplier(self)
                 mult = mult * saddle.components.saddler:GetBonusSpeedMult()
             end
         else
-			if not (self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "mighty") then
-				for k, v in pairs(self.inst.components.inventory.equipslots) do
-					if v.components.equippable ~= nil then
-						mult = mult * v.components.equippable:GetWalkSpeedMult()
+			local is_mighty = self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "mighty"
+            for k, v in pairs(self.inst.components.inventory.equipslots) do
+                if v.components.equippable ~= nil then
+					local item_speed_mult = v.components.equippable:GetWalkSpeedMult()
+                    if is_mighty and item_speed_mult < 1 then
+						item_speed_mult = 1
 					end
-				end
+
+                    mult = mult * item_speed_mult
+                end
             end
         end
     end
@@ -172,14 +176,18 @@ local function ClientGetSpeedMultiplier(self)
                 mult = mult * inventoryitem:GetWalkSpeedMult()
             end
         else
-			if not self.inst:HasTag("mightiness_mighty") then
-				for k, v in pairs(inventory:GetEquips()) do
-					local inventoryitem = v.replica.inventoryitem
-					if inventoryitem ~= nil then
-						mult = mult * inventoryitem:GetWalkSpeedMult()
+			local is_mighty = self.inst:HasTag("mightiness_mighty")
+            for k, v in pairs(inventory:GetEquips()) do
+                local inventoryitem = v.replica.inventoryitem
+                if inventoryitem ~= nil then
+					local item_speed_mult = inventoryitem:GetWalkSpeedMult()
+                    if is_mighty and item_speed_mult < 1 then
+						item_speed_mult = 1
 					end
-				end
-			end
+
+                    mult = mult * item_speed_mult
+                end
+            end
         end
     end
     return mult * (self:TempGroundSpeedMultiplier() or self.groundspeedmultiplier) * self.throttle

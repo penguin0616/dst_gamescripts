@@ -1154,8 +1154,8 @@ local function ConsumeByName(inst, prefab, amount, overflow, containers)
     if containers then
         for container_inst in pairs(containers) do
             local container = container_inst.replica.container or container_inst.replica.inventory
-            if container and container ~= overflow and not container.excludefromcrafting then
-                container:ConsumeByName(prefab, amount)
+            if container and container.classified and container.classified ~= overflow and not container.excludefromcrafting then
+                container.classified:ConsumeByName(prefab, amount)
             end
         end
     end

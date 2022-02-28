@@ -76,16 +76,16 @@ Recipe2("portablecookpot_item",			{Ingredient("goldnugget", 2), Ingredient("char
 Recipe2("portableblender_item",			{Ingredient("goldnugget", 2), Ingredient("transistor", 2), Ingredient("twigs", 4)},				TECH.NONE,				{builder_tag="masterchef"})
 Recipe2("portablespicer_item",			{Ingredient("goldnugget", 2), Ingredient("cutstone", 3), Ingredient("twigs", 6)},				TECH.NONE,				{builder_tag="masterchef"})
 Recipe2("spicepack",					{Ingredient("cutgrass", 4), Ingredient("twigs", 4), Ingredient("nitre", 2)},					TECH.NONE,				{builder_tag="masterchef"})
-Recipe2("spice_garlic",					{Ingredient("garlic", 3, nil, nil, "quagmire_garlic.tex")},										TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef",numtogive = 2})
-Recipe2("spice_sugar",					{Ingredient("honey", 3)},																		TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef",numtogive = 2})
-Recipe2("spice_chili",					{Ingredient("pepper", 3)},																		TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef",numtogive = 2})
-Recipe2("spice_salt",					{Ingredient("saltrock", 3)},																	TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef",numtogive = 2})
+Recipe2("spice_garlic",					{Ingredient("garlic", 3, nil, nil, "quagmire_garlic.tex")},										TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef", numtogive = 2})
+Recipe2("spice_sugar",					{Ingredient("honey", 3)},																		TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef", numtogive = 2})
+Recipe2("spice_chili",					{Ingredient("pepper", 3)},																		TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef", numtogive = 2})
+Recipe2("spice_salt",					{Ingredient("saltrock", 3)},																	TECH.FOODPROCESSING_ONE,{builder_tag="professionalchef", numtogive = 2})
 
 -- Wurt
 Recipe2("mermhouse_crafted",			{Ingredient("boards", 4), Ingredient("cutreeds", 3), Ingredient("pondfish", 2)},				TECH.SCIENCE_ONE,		{builder_tag="merm_builder", placer="mermhouse_crafted_placer", testfn=IsMarshLand})
 Recipe2("mermthrone_construction",		{Ingredient("boards", 5), Ingredient("rope", 5)},												TECH.SCIENCE_ONE,		{builder_tag="merm_builder", placer="mermthrone_construction_placer", testfn=IsMarshLand})
 Recipe2("mermwatchtower",				{Ingredient("boards", 5), Ingredient("tentaclespots", 1), Ingredient("spear", 2)},				TECH.SCIENCE_ONE,		{builder_tag="merm_builder", placer="mermwatchtower_placer", testfn=IsMarshLand})
-Recipe2("turf_marsh",					{Ingredient("cutreeds", 1), Ingredient("spoiled_food", 2)},										TECH.NONE,				{builder_tag="merm_builder"})
+Recipe2("turf_marsh",					{Ingredient("cutreeds", 1), Ingredient("spoiled_food", 2)},										TECH.NONE,				{builder_tag="merm_builder", numtogive = 4})
 Recipe2("mermhat", 						{Ingredient("pondfish", 1), Ingredient("cutreeds", 1), Ingredient("twigs", 2)}, 				TECH.NONE,				{builder_tag="merm_builder"})
 
 -- Wendy
@@ -486,8 +486,8 @@ Recipe2("turf_fungus",						{Ingredient("cutlichen", 1), Ingredient("spore_tall"
 Recipe2("turf_fungus_red",					{Ingredient("cutlichen", 1), Ingredient("spore_medium", 1)},											TECH.TURFCRAFTING_TWO,		{numtogive=4})
 Recipe2("turf_fungus_green",				{Ingredient("cutlichen", 1), Ingredient("spore_small", 1)},												TECH.TURFCRAFTING_TWO,		{numtogive=4})
 
-Recipe2("pottedfern",						{Ingredient("foliage", 5), Ingredient("slurtle_shellpieces", 1)},										TECH.SCIENCE_TWO,			{placer="pottedfern_placer", min_spacing=0.9})
-Recipe2("succulent_potted",					{Ingredient("succulent_picked", 5), Ingredient("cutstone", 1)},											TECH.SCIENCE_TWO,			{placer="succulent_potted_placer", min_spacing=0.9})
+Recipe2("pottedfern",						{Ingredient("foliage", 2), Ingredient("slurtle_shellpieces", 1)},										TECH.SCIENCE_TWO,			{placer="pottedfern_placer", min_spacing=0.9})
+Recipe2("succulent_potted",					{Ingredient("succulent_picked", 2), Ingredient("cutstone", 1)},											TECH.SCIENCE_TWO,			{placer="succulent_potted_placer", min_spacing=0.9})
 Recipe2("ruinsrelic_plate",					{Ingredient("cutstone", 1)},																			TECH.LOST,					{placer="ruinsrelic_plate_placer", min_spacing=0.5})
 Recipe2("ruinsrelic_chipbowl",				{Ingredient("cutstone", 1)},																			TECH.LOST,					{placer="ruinsrelic_chipbowl_placer", min_spacing=0.5})
 Recipe2("ruinsrelic_bowl",					{Ingredient("cutstone", 2)},																			TECH.LOST,					{placer="ruinsrelic_bowl_placer", min_spacing=2})
