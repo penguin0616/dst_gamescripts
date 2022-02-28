@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Ah, perhaps I should find a place with more hiding spots.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I'm afraid that's enough playing for one day.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "unused_by_warly",
+			SHADOWMAGIC = "Maman used to keep a journal, before her memory went.",
+		},
         COOK =
         {
             GENERIC = "I'm not quite ready yet.",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "All of my arm strength comes from whisking egg whites.",
         DUMBBELL_GOLDEN = "All of my arm strength comes from whisking egg whites.",
+		DUMBBELL_MARBLE = "All of my arm strength comes from whisking egg whites.",
         DUMBBELL_GEM = "All of my arm strength comes from whisking egg whites.",
         POTATOSACK = "I suppose all that lifting works up quite an appetite.",
 

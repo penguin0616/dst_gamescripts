@@ -245,13 +245,11 @@ function MightyGym:StartWorkout(doer)
         self.strongman.gym = self.inst
         self.strongman.components.strongman:DoWorkout(self.inst)
         
-        local hunger_level = "LOW"
-        if self.weight > 6 then
-            hunger_level  = "HIGH"
-        elseif self.weight > 3 then
-            hunger_level =  "MED"
-        end
-        self.strongman.components.hunger.burnratemodifiers:SetModifier(self.inst, TUNING.MIGHTYGYM_WORKOUT_HUNGER[hunger_level])
+        local hunger_level = self.weight > 6 and TUNING.MIGHTYGYM_WORKOUT_HUNGER.HIGH
+							or self.weight > 3 and TUNING.MIGHTYGYM_WORKOUT_HUNGER.MED
+							or TUNING.MIGHTYGYM_WORKOUT_HUNGER.LOW
+		
+        self.strongman.components.hunger.burnratemodifiers:SetModifier(self.inst, hunger_level)
         
         self.skins = doer.components.skinner:GetClothing()
         self.inst.AnimState:AssignItemSkins(doer.userid, self.skins.base or "", self.skins.body or "", self.skins.hand or "", self.skins.legs or "", self.skins.feet or "")
@@ -298,7 +296,7 @@ function MightyGym:CharacterEnterGym(player)
     self.inst:AddTag("fireimmune")
     self.inst.enterdirection = player.Transform:GetRotation()
     -- SWAP THE PLAYER
-    player:ApplyScale("mightiness", 1)
+    player:ApplyAnimScale("mightiness", 1)
 
     player.AnimState:AddOverrideBuild("mighty_gym")
     player.AnimState:AddOverrideBuild("fx_wolfgang")
@@ -371,7 +369,7 @@ function MightyGym:CharacterExitGym(player)
                 player.AnimState:ClearOverrideBuild("mighty_gym")
                 player.AnimState:ClearOverrideBuild("fx_wolfgang")  
                 
-                player:ApplyScale("mightiness", player.components.mightiness:GetScale())
+                player:ApplyAnimScale("mightiness", player.components.mightiness:GetScale())
 
                 MakeCharacterPhysics(player, 75, .5)
                 if player.Physics then

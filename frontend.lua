@@ -737,17 +737,31 @@ function FrontEnd:Update(dt)
             self.repeat_time = self.repeat_time - dt
         elseif not (self.textProcessorWidget ~= nil) then
             self.repeat_time = REPEAT_TIME
-            if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
-                self:OnFocusMove(MOVE_LEFT, true)
-            elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
-                self:OnFocusMove(MOVE_RIGHT, true)
-            elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) then
-                self:OnFocusMove(MOVE_UP, true)
-            elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) then
-                self:OnFocusMove(MOVE_DOWN, true)
-            else
-                self.repeat_time = 0
-            end
+			if self.crafting_navigation_mode then
+				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then		-- CONTROL_INVENTORY_LEFT
+					self:OnFocusMove(MOVE_LEFT, true)
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
+					self:OnFocusMove(MOVE_RIGHT, true)
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) then
+					self:OnFocusMove(MOVE_UP, true)
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) then
+					self:OnFocusMove(MOVE_DOWN, true)
+				else
+					self.repeat_time = 0
+				end
+			else
+				if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) or TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) then		-- CONTROL_INVENTORY_LEFT
+					self:OnFocusMove(MOVE_LEFT, true)
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) or TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) then
+					self:OnFocusMove(MOVE_RIGHT, true)
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) or TheInput:IsControlPressed(CONTROL_INVENTORY_UP) then
+					self:OnFocusMove(MOVE_UP, true)
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) or TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) then
+					self:OnFocusMove(MOVE_DOWN, true)
+				else
+					self.repeat_time = 0
+				end
+			end
         end
 
         self:DoHoverFocusUpdate()
@@ -1122,6 +1136,21 @@ function FrontEnd:GetHUDScale()
     local size = Profile:GetHUDSize()
     local min_scale = .75
     local max_scale = 1.1
+
+    --testing high res displays
+    local w, h = TheSim:GetScreenSize()
+
+    local res_scale_x = math.max(1, w / 1920)
+    local res_scale_y = math.max(1, h / 1200)
+    local res_scale = math.min(res_scale_x, res_scale_y)
+
+    return easing.linear(size, min_scale, max_scale - min_scale, 10) * res_scale
+end
+
+function FrontEnd:GetCraftingMenuScale()
+    local size = Profile:GetCraftingMenuSize()
+    local min_scale = .6
+    local max_scale = 1.15
 
     --testing high res displays
     local w, h = TheSim:GetScreenSize()

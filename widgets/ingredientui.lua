@@ -9,7 +9,7 @@ local TabGroup = require "widgets/tabgroup"
 local UIAnim = require "widgets/uianim"
 local Text = require "widgets/text"
 
-local IngredientUI = Class(Widget, function(self, atlas, image, quantity, on_hand, has_enough, name, owner, recipe_type)
+local IngredientUI = Class(Widget, function(self, atlas, image, quantity, on_hand, has_enough, name, owner, recipe_type, quant_text_scale)
     Widget._ctor(self, "IngredientUI")
 
     --self:SetClickable(false)
@@ -25,6 +25,9 @@ local IngredientUI = Class(Widget, function(self, atlas, image, quantity, on_han
     if quantity ~= nil then
         self.quant = self:AddChild(Text(SMALLNUMBERFONT, JapaneseOnPS4() and 30 or 24))
         self.quant:SetPosition(7, -32, 0)
+		if quant_text_scale ~= nil then
+			self.quant:SetScale(quant_text_scale, quant_text_scale)
+		end
         if not IsCharacterIngredient(recipe_type) then
             local builder = owner ~= nil and owner.replica.builder or nil
             if builder ~= nil then

@@ -158,6 +158,9 @@ local MainSounds =
 
 	"yotc_2022_2.fev",
     "yotc_2022_2.fsb",
+
+    "ancientguardian_rework.fev",
+    "ancientguardian_rework.fsb",
 }
 
 function PreloadSoundList(list)

@@ -326,8 +326,6 @@ function MakeBanner(self)
         MakeHallowedNightsBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeWebberCawnivalBanner(self, baner_root, anim)
-	elseif true then
-        MakeWolfgangBanner(self, baner_root, anim)
 	else
         MakeDefaultBanner(self, baner_root, anim)
         --[[

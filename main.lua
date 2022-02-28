@@ -318,8 +318,12 @@ global("TheCookbook")
 TheCookbook = nil
 global("ThePlantRegistry")
 ThePlantRegistry = nil
+global("TheCraftingMenuProfile")
+TheCraftingMenuProfile = nil
 global("Lavaarena_CommunityProgression")
 Lavaarena_CommunityProgression = nil
+global("TheLoadingTips")
+TheLoadingTips = nil
 global("SaveGameIndex")
 SaveGameIndex = nil
 global("ShardGameIndex")
@@ -373,8 +377,12 @@ local function ModSafeStartup()
 	ThePlantRegistry = require("plantregistrydata")()
 	ThePlantRegistry:Load()
 	ThePlantRegistry.save_enabled = true
+	TheCraftingMenuProfile = require("craftingmenuprofile")()
+	TheCraftingMenuProfile:Load()
 	Lavaarena_CommunityProgression = require("lavaarena_communityprogression")()
 	Lavaarena_CommunityProgression:Load()
+	TheLoadingTips = require("loadingtipsdata")()
+	TheLoadingTips:Load()
 
     local FollowCamera = require("cameras/followcamera")
     TheCamera = FollowCamera()

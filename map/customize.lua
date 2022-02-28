@@ -156,15 +156,11 @@ local complexity_descriptions = {
 local specialevent_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDENEVER, data = "none" },
 	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.DEFAULT, data = "default" },
-	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.CARNIVAL, data = SPECIAL_EVENTS.CARNIVAL },
-	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.HALLOWED_NIGHTS, data = SPECIAL_EVENTS.HALLOWED_NIGHTS },
-	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.WINTERS_FEAST, data = SPECIAL_EVENTS.WINTERS_FEAST },
-	{ text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOTG, data = SPECIAL_EVENTS.YOTG },
-    { text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOTV, data = SPECIAL_EVENTS.YOTV },
-    { text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOTP, data = SPECIAL_EVENTS.YOTP },
-    { text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOTC, data = SPECIAL_EVENTS.YOTC },
-    { text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOTB, data = SPECIAL_EVENTS.YOTB },
-    { text = STRINGS.UI.SANDBOXMENU.SPECIAL_EVENTS.YOT_CATCOON, data = SPECIAL_EVENTS.YOT_CATCOON },
+}
+
+local extraevent_descriptions = {
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEDEFAULT, data = "default" },
+	{ text = STRINGS.UI.SANDBOXMENU.DETECT_ALWAYS, data = "enabled" },
 }
 
 local extrastartingitems_descriptions = {
@@ -324,6 +320,7 @@ local WORLDGEN_GROUP = {
 			["world_size"] = {value = "default", image = "world_size.tex", options_remap = {img = "blank_world.tex", atlas = "images/customisation.xml"}, desc = size_descriptions, order = 3, world={"forest", "cave"}},
 			["branching"] = {value = "default", image = "world_branching.tex", options_remap = {img = "blank_world.tex", atlas = "images/customisation.xml"}, desc = branching_descriptions, order = 4, world={"forest", "cave"}},
 			["loop"] = {value = "default", image = "world_loop.tex", options_remap = {img = "blank_world.tex", atlas = "images/customisation.xml"}, desc = loop_descriptions, order = 5, world={"forest", "cave"}},
+			["roads"] = {value = "default", image = "roads.tex", desc = yesno_descriptions, order = 6, world={"forest"}},
 			["touchstone"] = {value = "default", image = "touchstone.tex", desc = worldgen_frequency_descriptions, order = 17, world={"forest", "cave"}},
 			["boons"] = {value = "default", image = "skeletons.tex", desc = worldgen_frequency_descriptions, order = 18, world={"forest", "cave"}},
 			["cavelight"] = {value = "default", image = "cavelight.tex", desc = speed_descriptions, order = 18, world={"cave"}},
@@ -349,7 +346,6 @@ local WORLDGEN_MISC = {
 	"layout_mode",
 	"no_joining_islands",
 	"no_wormholes_to_disconnected_tiles",
-	"roads",
 	"wormhole_prefab",
 }
 
@@ -358,7 +354,7 @@ local MOD_WORLDGEN_MISC = {}
 
 local WORLDSETTINGS_GROUP = {
 	["giants"] = {
-		order = 6,
+		order = 7,
 		text = STRINGS.UI.SANDBOXMENU.CHOICEGIANTS,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -382,7 +378,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["monsters"] = {
-		order = 5,
+		order = 6,
 		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_HOSTILE_CREATURES,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -413,7 +409,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["animals"] = {
-		order= 4,
+		order= 5,
 		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_ANIMALS,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -444,7 +440,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["resources"] = {
-		order= 3,
+		order= 4,
 		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_RESOURCEREGROWTH,
 		desc = speed_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -466,7 +462,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["misc"] = {
-		order= 2,
+		order= 3,
 		text = STRINGS.UI.SANDBOXMENU.CHOICEMISC,
 		desc = nil,
 		atlas = "images/worldsettings_customization.xml",
@@ -490,7 +486,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["survivors"] = {
-		order = 1,
+		order = 2,
 		text = STRINGS.UI.SANDBOXMENU.CHOICESURVIVORS,
 		desc = nil,
 		atlas = "images/worldsettings_customization.xml",
@@ -501,6 +497,23 @@ local WORLDSETTINGS_GROUP = {
 			["dropeverythingondespawn"] = {value = "default", image = "dropeverythingondespawn.tex", desc = dropeverythingondespawn_descriptions, order = 4, masteroption = true, master_controlled = true},
 			["shadowcreatures"] = {value = "default", image = "shadowcreatures.tex", desc = frequency_descriptions, order = 5, masteroption = true, master_controlled = true},
 			["brightmarecreatures"] = {value = "default", image = "brightmarecreatures.tex", desc = frequency_descriptions, order = 5, masteroption = true, master_controlled = true},
+		}
+	},
+	["events"] = {
+		order = 1,
+		text = STRINGS.UI.SANDBOXMENU.CHOICEEVENTS,
+		desc = extraevent_descriptions,
+		atlas = "images/worldsettings_customization.xml",
+		items = {
+			["crow_carnival"] = {value = "default", image = "crowcarnival.tex", masteroption = true, master_controlled = true, order = 1},
+			["hallowed_nights"] = {value = "default", image = "hallowednights.tex", masteroption = true, master_controlled = true, order = 2},
+			["winters_feast"] = {value = "default", image = "wintersfeast.tex", masteroption = true, master_controlled = true, order = 3},
+			["year_of_the_gobbler"] = {value = "default", image = "perdshrine.tex", masteroption = true, master_controlled = true, order = 4},
+			["year_of_the_varg"] = {value = "default", image = "wargshrine.tex", masteroption = true, master_controlled = true, order = 5},
+			["year_of_the_pig"] = {value = "default", image = "pigshrine.tex", masteroption = true, master_controlled = true, order = 6},
+			["year_of_the_carrat"] = {value = "default", image = "yotc_carratshrine.tex", masteroption = true, master_controlled = true, order = 7},
+			["year_of_the_beefalo"] = {value = "default", image = "yotb_beefaloshrine.tex", masteroption = true, master_controlled = true, order = 8},
+			["year_of_the_catcoon"] = {value = "default", image = "yot_catcoonshrine.tex", masteroption = true, master_controlled = true, order = 9},
 		}
 	},
 	["global"] = {
@@ -532,6 +545,23 @@ local EXEMPT_OPTIONS = {
 	specialevent = true,
 	spawnprotection = true,
 }
+
+for k, v in pairs(SPECIAL_EVENTS) do
+	if v ~= SPECIAL_EVENTS.NONE then
+		local found = false
+		for _, group_data in pairs(WORLDSETTINGS_GROUP) do
+			for name in pairs(group_data.items) do
+				if name == v then
+					found = true
+					break
+				end
+			end
+		end
+		assert(found, "Missing customize option for special event: "..tostring(k))
+		EXEMPT_OPTIONS[v] = true
+	end
+end
+
 local WorldSettings_Overrides = require("worldsettings_overrides")
 for _, group_data in pairs(WORLDSETTINGS_GROUP) do
 	for name in pairs(group_data.items) do

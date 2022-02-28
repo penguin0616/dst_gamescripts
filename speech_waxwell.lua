@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This environment is not suitable for a fair game.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Playtime is over for now.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I have more important things to do than that.",
+			SHADOWMAGIC = "unused_by_waxwell",
+		},
         COOK =
         {
             GENERIC = "Nothing ever goes as planned.",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "I have no interest in such things.",
         DUMBBELL_GOLDEN = "It's not that impressive.",
+		DUMBBELL_MARBLE = "It's not that impressive.",
         DUMBBELL_GEM = "It's not that impressive.",
         POTATOSACK = "Potatoes are powerful things, not to be underestimated.",
 

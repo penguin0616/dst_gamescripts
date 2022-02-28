@@ -102,6 +102,7 @@ function PlantRegistryData:Save(force_save)
 	if force_save or (self.save_enabled and self.dirty) then
 		local str = DataDumper({plants = self.plants, fertilizers = self.fertilizers, pictures = self.pictures, filters = self.filters, last_selected_card = self.last_selected_card}, nil, true)
 		TheSim:SetPersistentString("plantregistry", str, false)
+		self.dirty = false
 	end
 end
 

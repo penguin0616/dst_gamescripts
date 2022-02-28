@@ -19,6 +19,7 @@ function CookbookData:Save(force_save)
 	if force_save or (self.save_enabled and self.dirty) then
 		local str = json.encode({preparedfoods = self.preparedfoods, filters = self.filters})
 		TheSim:SetPersistentString("cookbook", str, false)
+		self.dirty = false
 	end
 end
 

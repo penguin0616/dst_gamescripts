@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "I believe there are not enough locations for the kittens to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I believe I should take some time to rest.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "It would be rude of me to tamper with it.",
+			SHADOWMAGIC = "I'm not letting THAT in MY library!",
+		},
         COOK =
         {
             GENERIC = "Perhaps later. Not all old ladies enjoy cooking, you know.",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "A bit of exercise can be quite beneficial to one's health.",
         DUMBBELL_GOLDEN = "A bit of exercise can be quite beneficial to one's health.",
+		DUMBBELL_MARBLE = "A bit of exercise can be quite beneficial to one's health.",
         DUMBBELL_GEM = "A bit of exercise can be quite beneficial to one's health.",
         POTATOSACK = "He seems to have a deep fondness for tubers.",
 

@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "There's nowhere to hide around here.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think I've spent quite enough time wrangling these tiny terrors today.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "It takes too long to cook a fancy meal.",
+			SHADOWMAGIC = "Hm.",
+		},
         COOK =
         {
             GENERIC = "This is no time for cooking.",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "What a dreadfully repetitive way to spend one's time.",
         DUMBBELL_GOLDEN = "What a dreadfully repetitive way to spend one's time.",
+		DUMBBELL_MARBLE = "What a dreadfully repetitive way to spend one's time.",
         DUMBBELL_GEM = "What a dreadfully repetitive way to spend one's time.",
         POTATOSACK = "Who would want to lug this heavy thing around?",
 

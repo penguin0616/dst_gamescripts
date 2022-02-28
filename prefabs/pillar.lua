@@ -4,6 +4,13 @@ local function makeassetlist(name)
     }
 end
 
+local function doshake(inst)
+    inst.AnimState:PlayAnimation("hit")
+    inst.AnimState:PushAnimation("idle")
+
+    -- JIGGLE SOUND [AMANDA]
+end
+
 local function makefn(name, collide)
     return function()
     	local inst = CreateEntity()
@@ -11,6 +18,12 @@ local function makefn(name, collide)
     	inst.entity:AddTransform()
     	inst.entity:AddAnimState()
         inst.entity:AddNetwork()
+
+        if name == "pillar_ruins" then
+           inst.entity:AddSoundEmitter()
+           inst:AddTag("charge_barrier")
+           inst:AddTag("quake_on_charge")           
+        end
 
         if collide then
             MakeObstaclePhysics(inst, 2.35)
@@ -25,6 +38,8 @@ local function makefn(name, collide)
         if not TheWorld.ismastersim then
             return inst
         end
+
+        inst:ListenForEvent("shake", doshake)
 
         return inst
     end

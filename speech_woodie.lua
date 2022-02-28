@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not many places to hide around here, eh?",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "How aboot we do it again another day?",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I wouldn't wanna muddle it up.",
+			SHADOWMAGIC = "Trees made into... paper? How unholy!",
+		},
         COOK =
         {
             GENERIC = "That's not really in my wheelhouse, sorry.",
@@ -4292,6 +4297,7 @@ return{
 
         DUMBBELL = "Looks pretty heavy, eh?",
         DUMBBELL_GOLDEN = "I'll stick to lifting my axe.",
+		DUMBBELL_MARBLE = "I'll stick to lifting my axe.",
         DUMBBELL_GEM = "Choppin' trees is enough of a workout for me.",
         POTATOSACK = "Never know when you might need a potato, eh?",
 

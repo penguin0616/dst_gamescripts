@@ -351,8 +351,11 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
                 TheFrontEnd:PushScreen(launchingServerPopup)
             end
 
+            local save_to_cloud = Profile:GetDefaultCloudSaves()
+            local use_zip_format = Profile:GetUseZipFileForNormalSaves()
+
             -- Note: StartDedicatedServers launches both dedicated and non-dedicated servers... ~gjans
-            if not TheSystemService:StartDedicatedServers(self.save_slot, is_multi_level, cluster_info, encode_user_path, use_legacy_session_path) then
+            if not TheSystemService:StartDedicatedServers(self.save_slot, is_multi_level, cluster_info, encode_user_path, use_legacy_session_path, save_to_cloud, use_zip_format) then
                 if launchingServerPopup ~= nil then
                     launchingServerPopup:SetErrorStartingServers()
                 end

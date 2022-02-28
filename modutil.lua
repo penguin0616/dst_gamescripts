@@ -266,14 +266,14 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 
 	env.AddLocation = function(arg1, ...)
 		initprint("AddLocation", arg1.location)
-		AddModLocation(env.modname, arg1, ...)
+		AddModLocation(env.modname, arg1)
 	end
 	env.AddLevel = function(arg1, arg2, ...)
 		initprint("AddLevel", arg1, arg2.id)
 
 		arg2 = modcompatability.UpgradeModLevelFromV1toV2(env.modname, arg2)
 
-		AddModLevel(env.modname, arg1, arg2, ...)
+		AddModLevel(env.modname, arg1, arg2)
 	end
 	env.AddTaskSet = function(arg1, ...)
 		initprint("AddTaskSet", arg1)
@@ -515,6 +515,30 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		table.insert(env.postinitfns.PrefabPostInit[prefab], fn)
 	end
 
+	env.postinitfns.RecipePostInitAny = {}
+	env.AddRecipePostInitAny = function(fn)
+		initprint("AddRecipePostInitAny")
+		require("recipe")
+		table.insert(env.postinitfns.RecipePostInitAny, fn)
+		--run for all existing recipes
+		for k, v in pairs(AllRecipes) do
+			fn(v)
+		end
+	end
+
+	env.postinitfns.RecipePostInit = {}
+	env.AddRecipePostInit = function(recipename, fn)
+		initprint("AddRecipePostInit")
+		require("recipe")
+		if env.postinitfns.RecipePostInit[recipename] == nil then
+			env.postinitfns.RecipePostInit[recipename] = {}
+		end
+		table.insert(env.postinitfns.RecipePostInit[recipename], fn)
+		if AllRecipes[recipename] then
+			fn(AllRecipes[recipename])
+		end
+	end
+
 	-- the non-standard ones
 
 	env.AddBrainPostInit = function(brain, fn)
@@ -555,11 +579,43 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		RemoveDefaultCharacter(name)
 	end
 
+	env.AddRecipe2 = function(name, ingredients, tech, config, filters)
+		initprint("AddRecipe2", name)
+		require("recipe")
+		mod_protect_Recipe = false
+		local rec = Recipe2(name, ingredients, tech, config)
+		table.insert(CRAFTING_FILTERS.MODS.recipes, name)
+
+		if filters ~= nil then
+			for _, filter_name in ipairs(filters) do
+				if CRAFTING_FILTERS[filter_name] ~= nil then
+					table.insert(CRAFTING_FILTERS[filter_name].recipes, name)
+				end
+			end
+		end
+
+		mod_protect_Recipe = true
+		rec:SetModRPCID()
+		return rec
+	end
+
+	env.AddDeconstructRecipe = function(arg1, return_ingredients)
+		initprint("AddDeconstructRecipe", arg1)
+		require("recipe")
+		mod_protect_Recipe = false
+		local rec = DeconstructRecipe(arg1, return_ingredients)
+		mod_protect_Recipe = true
+		rec:SetModRPCID()
+		return rec
+	end
+
 	env.AddRecipe = function(arg1, ...)
+		print("Warning: function Recipe in modmain is deprecated, please use AddRecipe2")
 		initprint("AddRecipe", arg1)
 		require("recipe")
 		mod_protect_Recipe = false
 		local rec = Recipe(arg1, ...)
+		table.insert(CRAFTING_FILTERS.MODS.recipes, arg1)
 		mod_protect_Recipe = true
 		rec:SetModRPCID()
 		return rec
@@ -571,6 +627,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 	end
 
     env.AddRecipeTab = function( rec_str, rec_sort, rec_atlas, rec_icon, rec_owner_tag, rec_crafting_station )
+		print("Warning: function AddRecipeTab in modmain is deprecated.")
 		CUSTOM_RECIPETABS[rec_str] = { str = rec_str, sort = rec_sort, icon_atlas = rec_atlas, icon = rec_icon, owner_tag = rec_owner_tag, crafting_station = rec_crafting_station }
 		STRINGS.TABS[rec_str] = rec_str
 		return CUSTOM_RECIPETABS[rec_str]

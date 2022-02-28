@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not many hideys for friends",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Already had fun",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Not mine",
+			SHADOWMAGIC = "Nope",
+		},
         COOK =
         {
             GENERIC = "Can't cook now",
@@ -4295,6 +4300,7 @@ return{
 
         DUMBBELL = "Rocks",
         DUMBBELL_GOLDEN = "Heavy!",
+		DUMBBELL_MARBLE = "Heaaavy rocks",
         DUMBBELL_GEM = "Sparkly rocks",
         POTATOSACK = "Carry friends",
 

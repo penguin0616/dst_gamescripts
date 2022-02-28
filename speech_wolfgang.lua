@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Wolfgang plays fair, is nowhere for kitties to hide here!",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Is enough games for Wolfgang.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Warly is very nice to cook. Wolfgang will not get in way.",
+			SHADOWMAGIC = "Wolfgang is glad he cannot read!",
+		},
         COOK =
         {
             GENERIC = "Wolfgang not in cooking mood.",
@@ -4292,6 +4297,7 @@ return{
 
         DUMBBELL = "Ha! Wolfgang could lift boulders twice this size!",
         DUMBBELL_GOLDEN = "Lift! Lift to get strong!",
+		DUMBBELL_MARBLE = "Wolfgang will be strongest!",
         DUMBBELL_GEM = "Make muscles mighty!",
         POTATOSACK = "Ha! Lifting and potatoes are three of Wolfgang's favorite things!",
 

@@ -606,6 +606,15 @@ local function OnBuilderDamagedEvent(inst)
     end
 end
 
+local function OnOpenCraftingMenuEvent(inst)
+	local player = inst._parent
+    if player ~= nil and TheFocalPoint.entity:GetParent() == player then
+		if player.HUD ~= nil then
+			player.HUD:OpenCrafting()
+		end
+    end
+end
+
 local function OnInkedEvent(inst)
     if inst._parent ~= nil and TheFocalPoint.entity:GetParent() == inst._parent then
         inst._parent:PushEvent("inked")
@@ -941,8 +950,9 @@ local function RegisterNetListeners(inst)
     inst:ListenForEvent("hasinspirationbuffdirty", fns.OnHasInspirationBuffDirty)
     inst:ListenForEvent("builder.build", OnBuildEvent)
     inst:ListenForEvent("builder.damaged", OnBuilderDamagedEvent)
-    inst:ListenForEvent("inked", OnInkedEvent)
+    inst:ListenForEvent("builder.opencraftingmenu", OnOpenCraftingMenuEvent)
     inst:ListenForEvent("builder.learnrecipe", OnLearnRecipeEvent)
+    inst:ListenForEvent("inked", OnInkedEvent)
     inst:ListenForEvent("MapExplorer.learnmap", OnLearnMapEvent)
 	inst:ListenForEvent("MapSpotRevealer.revealmapspot", OnRevealMapSpotEvent)
     inst:ListenForEvent("repair.repair", OnRepairEvent)
@@ -1126,6 +1136,8 @@ local function fn()
         inst[string.lower(v).."level"] = level
     end
     inst.isfreebuildmode = net_bool(inst.GUID, "builder.freebuildmode", "recipesdirty")
+	inst.current_prototyper = net_entity(inst.GUID, "builder.current_prototyper", "current_prototyper_dirty")
+    inst.opencraftingmenuevent = net_event(inst.GUID, "builder.opencraftingmenu")
     inst.recipes = {}
     inst.bufferedbuilds = {}
     for k, v in pairs(AllRecipes) do

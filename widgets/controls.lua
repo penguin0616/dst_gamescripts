@@ -8,6 +8,7 @@ local UIAnim = require "widgets/uianim"
 local Inv = require "widgets/inventorybar"
 local Widget = require "widgets/widget"
 local CraftTabs = require "widgets/crafttabs"
+local CraftingMenu = require "widgets/redux/craftingmenu_hud"
 local HoverText = require "widgets/hoverer"
 local MapControls = require "widgets/mapcontrols"
 local ContainerWidget = require("widgets/containerwidget")
@@ -165,7 +166,10 @@ local Controls = Class(Widget, function(self, owner)
     self.hover = self:AddChild(HoverText(self.owner))
     self.hover:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-    self.crafttabs = self.left_root:AddChild(CraftTabs(self.owner, self.top_root))
+    --self.crafttabs = self.left_root:AddChild(CraftTabs(self.owner, self.top_root))
+    self.craftingmenu = self.left_root:AddChild(CraftingMenu(self.owner))
+	self.crafttabs = self.craftingmenu -- self.crafttabs is deprecated
+	
 
     if TheNet:GetIsClient() then
         --Not using topleft_root because we need to be on top of containerroot
@@ -266,10 +270,12 @@ function Controls:MakeScalingNodes()
     self.topright_root = self.topright_root:AddChild(Widget("tr_scale_root"))
     self.bottom_root = self.bottom_root:AddChild(Widget("bottom_scale_root"))
     self.top_root = self.top_root:AddChild(Widget("top_scale_root"))
-    self.left_root = self.left_root:AddChild(Widget("left_scale_root"))
+    self.crafting_root = self.left_root:AddChild(Widget("left_scale_root"))
     self.right_root = self.right_root:AddChild(Widget("right_scale_root"))
     self.bottomright_root = self.bottomright_root:AddChild(Widget("br_scale_root"))
     self.topright_over_root = self.topright_over_root:AddChild(Widget("tr_over_scale_root"))
+
+	self.left_root = self.crafting_root -- left_root is now deprecated, see self.crafting_root 
     --
 end
 
@@ -282,7 +288,7 @@ function Controls:SetHUDSize()
     self.top_root:SetScale(scale, scale, scale)
     self.right_root:SetScale(scale, scale, scale)
     self.bottomright_root:SetScale(scale, scale, scale)
-    self.left_root:SetScale(scale, scale, scale)
+    --self.left_root:SetScale(scale, scale, scale)
     self.containerroot:SetScale(scale, scale, scale)
     self.containerroot_side:SetScale(scale, scale, scale)
     self.hover:SetScale(scale, scale, scale)
@@ -293,6 +299,8 @@ function Controls:SetHUDSize()
     if self.desync ~= nil then
         self.desync:SetScale(scale, scale, scale)
     end
+
+	self.crafting_root:SetScale(TheFrontEnd:GetCraftingMenuScale())
 
     self.owner.HUD.inst:PushEvent("refreshhudsize", scale)
 end
@@ -338,7 +346,7 @@ function Controls:OnUpdate(dt)
     local shownItemIndex = nil
     local itemInActions = false     -- the item is either shown through the actionhint or the groundaction
 
-    if controller_mode and not (self.inv.open or self.crafttabs.controllercraftingopen) and self.owner:IsActionsVisible() then
+    if controller_mode and not (self.inv.open or self.craftingmenu:IsCraftingOpen()) and self.owner:IsActionsVisible() then
         local ground_l, ground_r = self.owner.components.playercontroller:GetGroundUseAction()
         local ground_cmds = {}
         local isplacing = self.owner.components.playercontroller.deployplacer ~= nil or self.owner.components.playercontroller.placer ~= nil
@@ -452,7 +460,7 @@ function Controls:OnUpdate(dt)
                 table.insert(cmds, TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HUD.UNLOCK_TARGET)
 			end
             if controller_target.quagmire_shoptab ~= nil then
-                for k, v in pairs(self.crafttabs.tabs.shown) do
+                for k, v in pairs(self.craftingmenu.tabs.shown) do
                     if k.filter == controller_target.quagmire_shoptab then
                         if v then
                             table.insert(cmds, TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_OPEN_CRAFTING).." "..STRINGS.UI.CRAFTING.TABACTION[controller_target.quagmire_shoptab.str])
@@ -664,7 +672,7 @@ function Controls:ShowCraftingAndInventory()
     if not self.craftingandinventoryshown then
         self.craftingandinventoryshown = true
         if not GetGameModeProperty("no_crafting") then
-            self.crafttabs:Show()
+            self.craftingmenu:Show()
         end
         self.inv:Show()
         self.containerroot_side:Show()
@@ -679,15 +687,8 @@ end
 function Controls:HideCraftingAndInventory()
     if self.craftingandinventoryshown then
         self.craftingandinventoryshown = false
-        if self.owner ~= nil and self.owner.HUD ~= nil then
-            if self.owner.HUD:IsControllerCraftingOpen() then
-                self.owner.HUD:CloseControllerCrafting()
-            end
-            if self.owner.HUD:IsControllerInventoryOpen() then
-                self.owner.HUD:CloseControllerInventory()
-            end
-        end
-        self.crafttabs:Hide()
+        self.craftingmenu:Close()
+        self.craftingmenu:Hide()
         self.inv:Hide()
         self.containerroot_side:Hide()
         self.item_notification:ToggleCrafting(true)

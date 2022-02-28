@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This place doesn't have a ton of hiding spots...",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "They look tired. Let's play again tomorrow!",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I'm not THAT good at cooking.",
+			SHADOWMAGIC = "Would make a great bedtime story... for nightmares!",
+		},
         COOK =
         {
             GENERIC = "I'm not too big on cooking.",
@@ -4298,6 +4303,7 @@ return{
 
         DUMBBELL = "Quit making stuff I can't burn!",
         DUMBBELL_GOLDEN = "Did he really need to make it so fancy?",
+		DUMBBELL_MARBLE = "Did he really need to make it so fancy?",
         DUMBBELL_GEM = "Did he really need to make it so fancy?",
         POTATOSACK = "I could make it a roasted potato sack, just say the word!",
 

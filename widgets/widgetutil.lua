@@ -37,21 +37,25 @@ function DoRecipeClick(owner, recipe, skin)
             end
         end
 
-        local knows = owner.replica.builder:KnowsRecipe(recipe.name)
-        local can_build = owner.replica.builder:CanBuild(recipe.name)
+        local knows = owner.replica.builder:KnowsRecipe(recipe)
+        local can_build = owner.replica.builder:HasIngredients(recipe)
 
         if not can_build and TheWorld.ismastersim then
             owner:PushEvent("cantbuild", { owner = owner, recipe = recipe })
             --You might have the materials now. Check again.
-            can_build = owner.replica.builder:CanBuild(recipe.name)
+            can_build = owner.replica.builder:HasIngredients(recipe)
         end
 
         local buffered = owner.replica.builder:IsBuildBuffered(recipe.name)
 
+		if can_build then
+			SetCraftingAutopaused(false)
+		end
+
         if knows then
             if buffered then
                 --TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-                --owner.HUD.controls.crafttabs.tabs:DeselectAll()
+                --owner.HUD.controls.craftingmenu.tabs:DeselectAll()
                 if recipe.placer == nil then
                     owner.replica.builder:MakeRecipeFromMenu(recipe, skin)
                 elseif owner.components.playercontroller ~= nil then
@@ -63,7 +67,7 @@ function DoRecipeClick(owner, recipe, skin)
                     owner.replica.builder:MakeRecipeFromMenu(recipe, skin)
                     return true
                 elseif owner.components.playercontroller ~= nil then
-                    --owner.HUD.controls.crafttabs.tabs:DeselectAll()
+                    --owner.HUD.controls.craftingmenu.tabs:DeselectAll()
                     owner.replica.builder:BufferBuild(recipe.name)
                     if not owner.replica.builder:IsBuildBuffered(recipe.name) then
                         return true
@@ -98,6 +102,8 @@ function DoRecipeClick(owner, recipe, skin)
                         TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/research_unlock")
                     end
                 end
+
+				return recipe.placer == nil -- close the crafting menu if there is a placer
             else
                 return true
             end

@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This is not a worthy stage for our players!",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Let us reprise another time.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "T'would not do to meddle with my ally's effects.",
+			SHADOWMAGIC = "A tragic tale of woe and misery!",
+		},
         COOK =
         {
             GENERIC = "Alas! Bested by cookware!",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "'Tis not just strength, but cunning that makes a warrior!",
         DUMBBELL_GOLDEN = "He hath strength, next we must work on his bravery!",
+		DUMBBELL_MARBLE = "Train well my friend, and join me in glorious battle!",
         DUMBBELL_GEM = "My friend, if you want to be fighting fit you must join me in combat!",
         POTATOSACK = "I have no use for a sack of non-meats.",
 

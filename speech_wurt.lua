@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Hmm, no good hidey spots here.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Glurgh. Bored of this game.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Fancy cooking man can do it, florpt.",
+			SHADOWMAGIC = "...Don't like stories in that book.",
+		},
         COOK =
         {
             GENERIC = "Don't wanna, glort.",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "Muscly mustache man leave rocks everywhere.",
         DUMBBELL_GOLDEN = "Muscly mustache man leave rocks everywhere.",
+		DUMBBELL_MARBLE = "Muscly mustache man leave rocks everywhere.",
         DUMBBELL_GEM = "Muscly mustache man leave rocks everywhere.",
         POTATOSACK = "Snacks! Mine!!",
 

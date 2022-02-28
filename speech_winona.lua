@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not really enough places for them to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "They look pretty tired, let's see if they wanna play again tomorrow.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I don't wanna ruin whatever Warly's working on.",
+			SHADOWMAGIC = "I don't trust that thing one bit.",
+		},
         COOK =
         {
             GENERIC = "I'm not really in a cooking mood.",
@@ -4297,6 +4302,7 @@ return{
 
         DUMBBELL = "Why not do some real work instead of just liftin' these things?",
         DUMBBELL_GOLDEN = "Awful fancy for something you just pick up and put down over and over.",
+		DUMBBELL_MARBLE = "Awful fancy for something you just pick up and put down over and over.",
         DUMBBELL_GEM = "Awful fancy for something you just pick up and put down over and over.",
         POTATOSACK = "Always nice to have a snack on hand when you're workin'.",
 

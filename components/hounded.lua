@@ -20,7 +20,7 @@ local SPAWN_DIST = 30
 
 local attack_levels =
 {
-	intro	=	{ warnduration = function() return 120 end, numspawns = function() return 2 end },
+	intro	=	{ warnduration = function() return 120 end, numspawns = function() return 1 end },
 	light	=	{ warnduration = function() return 60 end, numspawns = function() return 2 + math.random(2) end },
 	med		=	{ warnduration = function() return 45 end, numspawns = function() return 3 + math.random(3) end },
 	heavy	=	{ warnduration = function() return 30 end, numspawns = function() return 4 + math.random(3) end },
@@ -62,7 +62,7 @@ local _spawndata =
 
 		attack_levels =
 		{
-			intro 	= { warnduration = function() return 120 end, numspawns = function() return 2 end },
+			intro 	= { warnduration = function() return 120 end, numspawns = function() return 1 end },
 			light 	= { warnduration = function() return 60 end, numspawns = function() return 2 + math.random(2) end },
 			med 	= { warnduration = function() return 45 end, numspawns = function() return 3 + math.random(3) end },
 			heavy 	= { warnduration = function() return 30 end, numspawns = function() return 4 + math.random(3) end },
@@ -107,10 +107,14 @@ end
 local function CalcEscalationLevel()
 	local day = GetAveragePlayerAgeInDays()
 
-	if day < 10 then
-		_attackdelayfn = _spawndata.attack_delays.rare
+	if day < 3 then
+		_attackdelayfn = _spawndata.attack_delays.frequent
 		_attacksizefn = _spawndata.attack_levels.intro.numspawns
 		_warndurationfn = _spawndata.attack_levels.intro.warnduration
+	elseif day < 10 then
+		_attackdelayfn = _spawndata.attack_delays.rare
+		_attacksizefn = _spawndata.attack_levels.light.numspawns
+		_warndurationfn = _spawndata.attack_levels.light.warnduration
 	elseif day < 25 then
 		_attackdelayfn = _spawndata.attack_delays.rare
 		_attacksizefn = _spawndata.attack_levels.light.numspawns
@@ -344,10 +348,15 @@ local function GetSpecialSpawnChance()
     return TheWorld.state.issummer and chance * 1.5 or chance
 end
 
-local function SummonSpawn(pt)
+local function GetUpgradeSpawn()
+	return "warg"
+end
+
+local function SummonSpawn(pt, upgrade)
     local spawn_pt = GetSpawnPoint(pt)
     if spawn_pt ~= nil then
         local spawn = SpawnPrefab(
+        	(upgrade and GetUpgradeSpawn()) or
             (math.random() >= GetSpecialSpawnChance() and _spawndata.base_prefab) or
             ((TheWorld.state.iswinter or TheWorld.state.isspring) and _spawndata.winter_prefab) or
             _spawndata.summer_prefab
@@ -363,9 +372,9 @@ local function SummonSpawn(pt)
     end
 end
 
-local function ReleaseSpawn(target)
+local function ReleaseSpawn(target, upgrade)
 	if not _targetableplayers[target.GUID] or _targetableplayers[target.GUID] == "land" then
-	    local spawn = SummonSpawn(target:GetPosition())
+	    local spawn = SummonSpawn(target:GetPosition(), upgrade)
 	    if spawn ~= nil then
 	        spawn.components.combat:SuggestTarget(target)
 	        return true
@@ -622,8 +631,38 @@ function self:OnUpdate(dt)
 			spawninforec.timetonext = spawninforec.timetonext - dt
 			if next(spawninforec.players) ~= nil and spawninforec.timetonext < 0 then
 				local target = weighted_random_choice(spawninforec.players)
-				ReleaseSpawn(target)
-				spawninforec.players[target] = spawninforec.players[target] - 1
+
+				-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)
+				local upgrade = false
+				if spawninforec.players[target] >= 8 then					
+					if math.random() < 0.7 then
+						upgrade = true
+						
+					end
+				elseif spawninforec.players[target] == 7 then
+					if math.random() < 0.3 then
+						upgrade = true
+
+					end
+				elseif spawninforec.players[target] == 6 then
+					if math.random() < 0.15 then
+						upgrade = true
+
+					end
+				elseif spawninforec.players[target] == 5 then
+					if math.random() < 0.05 then
+						upgrade = true
+					end
+				end
+				
+				if upgrade then
+					spawninforec.players[target] = spawninforec.players[target] - 5
+				else
+					spawninforec.players[target] = spawninforec.players[target] - 1
+				end
+
+				ReleaseSpawn(target, upgrade)
+				
 				if spawninforec.players[target] <= 0 then
 					spawninforec.players[target] = nil
 				end

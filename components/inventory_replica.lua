@@ -316,11 +316,11 @@ function Inventory:IsFull()
     end
 end
 
-function Inventory:Has(prefab, amount)
+function Inventory:Has(prefab, amount, checkallcontainers)
     if self.inst.components.inventory ~= nil then
-        return self.inst.components.inventory:Has(prefab, amount)
+        return self.inst.components.inventory:Has(prefab, amount, checkallcontainers)
     elseif self.classified ~= nil then
-        return self.classified:Has(prefab, amount)
+        return self.classified:Has(prefab, amount, checkallcontainers)
     else
         return amount <= 0, 0
     end

@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "It's okay, but maybe we can find a place with more hiding spots.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "That was fun! Can we play again tomorrow?",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Warly gets upset when we play with his things.",
+			SHADOWMAGIC = "I don't think we should play with that...",
+		},
         COOK =
         {
             GENERIC = "I don't want to. Mom always said the kitchen was dangerous!",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "It looks so easy when Mr. Wolfgang does it...",
         DUMBBELL_GOLDEN = "It looks so easy when Mr. Wolfgang does it...",
+		DUMBBELL_MARBLE = "It looks so easy when Mr. Wolfgang does it...",
         DUMBBELL_GEM = "It looks so easy when Mr. Wolfgang does it...",
         POTATOSACK = "We peeked inside, some of them looked more like rocks than potatoes...",
 

@@ -1352,6 +1352,36 @@ local function ApplyScale(inst, source, scale)
     end
 end
 
+local function ApplyAnimScale(inst, source, scale)
+    if TheWorld.ismastersim and source ~= nil then
+        if scale ~= 1 and scale ~= nil then
+            if inst._animscalesource == nil then
+                inst._animscalesource = { [source] = scale }
+                inst.AnimState:SetScale(scale, scale, scale)
+            elseif inst._animscalesource[source] ~= scale then
+                inst._animscalesource[source] = scale
+                local scale = 1
+                for k, v in pairs(inst._animscalesource) do
+                    scale = scale * v
+                end
+                inst.AnimState:SetScale(scale, scale, scale)
+            end
+        elseif inst._animscalesource ~= nil and inst._animscalesource[source] ~= nil then
+            inst._animscalesource[source] = nil
+            if next(inst._animscalesource) == nil then
+                inst._animscalesource = nil
+                inst.AnimState:SetScale(1, 1, 1)
+            else
+                local scale = 1
+                for k, v in pairs(inst._animscalesource) do
+                    scale = scale * v
+                end
+                inst.AnimState:SetScale(scale, scale, scale)
+            end
+        end
+    end
+end
+
 --------------------------------------------------------------------------
 --V2C: Used by multiplayer_portal_moon for saving certain character traits
 --     when rerolling a new character.
@@ -2078,6 +2108,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         --Other
         inst._scalesource = nil
         inst.ApplyScale = ApplyScale
+		inst.ApplyAnimScale = ApplyAnimScale	-- use this one if you don't want to have thier speed increased
 
         if inst.starting_inventory == nil then
             inst.starting_inventory = starting_inventory

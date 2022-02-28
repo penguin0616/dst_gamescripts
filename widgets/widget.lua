@@ -78,7 +78,7 @@ function Widget:OnFocusMove(dir, down)
     end
 
     if down and self.focus_flow[dir] then
-        local dest = FunctionOrValue(self.focus_flow[dir])
+        local dest = FunctionOrValue(self.focus_flow[dir], self)
 
         -- Can we pass the focus down the chain if we are disabled/hidden?
         if dest and dest:IsVisible() and dest.enabled then
@@ -155,6 +155,12 @@ function Widget:IsEditing()
     return false
 end
 
+function Widget:CancelScaleTo(run_complete_fn)
+    if self.inst.components.uianim ~= nil then
+        self.inst.components.uianim:CancelScaleTo(run_complete_fn)
+    end
+end
+
 function Widget:ScaleTo(from, to, time, fn)
     if not self.inst.components.uianim then
         self.inst:AddComponent("uianim")
@@ -188,13 +194,18 @@ function Widget:RotateTo(from, to, time, fn, infinite)
     self.inst.components.uianim:RotateTo(from, to, time, fn, infinite)
 end
 
+function Widget:CancelTintTo(run_complete_fn)
+    if self.inst.components.uianim ~= nil then
+        self.inst.components.uianim:CancelTintTo(run_complete_fn)
+    end
+end
+
 function Widget:TintTo(from, to, time, fn)
     if not self.inst.components.uianim then
         self.inst:AddComponent("uianim")
     end
     self.inst.components.uianim:TintTo(from, to, time, fn)
 end
-
 
 function Widget:ForceStartWallUpdating()
     if IsConsole() then
@@ -544,6 +555,8 @@ end
 
 function Widget:ClearFocusDirs()
     self.focus_flow = {}
+	self.focus_flow_args = {}
+	self.next_in_tab_order = nil
 end
 
 function Widget:SetFocusChangeDir(dir, widget, ...)

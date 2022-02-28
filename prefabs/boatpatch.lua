@@ -39,7 +39,7 @@ local function fn()
 
     inst:AddComponent("repairer")
     inst.components.repairer.repairmaterial = MATERIALS.WOOD
-    inst.components.repairer.healthrepairvalue = TUNING.REPAIR_BOARDS_HEALTH
+    inst.components.repairer.healthrepairvalue = TUNING.REPAIR_LOGS_HEALTH * 2
     inst.components.repairer.boatrepairsound = "turnoftides/common/together/boat/repair_with_wood"
 
     inst:AddComponent("stackable")

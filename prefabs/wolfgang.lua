@@ -127,14 +127,64 @@ local function OnUnequip(inst, data)
     end
 end
 
-local function OnWorked(inst, data)
-    if inst:HasTag("mightiness_mighty") and data and data.target then
-        local workable = data.target.components.workable
-        if workable and workable.workleft > 0 and math.random() >= TUNING.MIGHTY_WORK_CHANCE then
-            workable.workleft = 0
-        end
+local function OnDoingWork(inst, data)
+    if data ~= nil and data.target ~= nil then
+		local workable = data.target.components.workable
+		if workable ~= nil then
+			if inst.components.mightiness:IsMighty() then
+				if workable.workleft > 0 and math.random() >= TUNING.MIGHTY_WORK_CHANCE then
+					workable.workleft = 0
+				end
+			end
+
+			local work_action = workable:GetWorkAction() 
+			if work_action ~= nil then
+				local gains = TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN[work_action.id]
+				if gains ~= nil then
+					inst.components.mightiness:DoDelta(gains)	
+				end
+			end
+		end
     end
 end
+
+local function OnTilling(inst)
+	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.TILL)	
+end
+
+local function OnRowing(inst)
+	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.ROW)	
+end
+
+local function OnSailBoost(inst)
+	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.LOWER_SAIL_BOOST)	
+end
+
+local function OnTerraform(inst)
+	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.LOWER_SAIL_BOOST)	
+end
+
+local function OnAttacked(inst, data)
+	if data ~= nil and data.original_damage ~= nil and not inst.sg:HasStateTag("powerup") then
+		local delta = -math.min(25, math.max(1, 2 * math.floor(1/15 * data.original_damage)))
+		inst.components.mightiness:DoDelta(delta)	
+		--print("OnAttacked Might Loss:", delta, data.original_damage)
+	end
+end
+
+local function OnHitOther(inst, data)
+	local target = data.target
+	if target ~= nil and data.weapon == nil or data.weapon.components.inventoryitem:IsHeldBy(inst) then
+		local delta = target:HasTag("epic") and TUNING.WOLFGANG_MIGHTINESS_ATTACK_GAIN_GIANT
+					or target:HasTag("smallcreature") and TUNING.WOLFGANG_MIGHTINESS_ATTACK_GAIN_SMALLCREATURE
+					or TUNING.WOLFGANG_MIGHTINESS_ATTACK_GAIN_DEFAULT
+
+		inst.components.mightiness:DoDelta(delta)	
+
+		--print("OnHitOther", data.target, data.weapon, delta, data.weapon == nil or data.weapon.components.inventoryitem:IsHeldBy(inst))
+	end
+end
+
 
 --------------------------------------------------------------------------
 
@@ -432,7 +482,14 @@ local function master_postinit(inst)
         inst:ListenForEvent("equip",   OnEquip)
         inst:ListenForEvent("unequip", OnUnequip)
         
-        inst:ListenForEvent("working", OnWorked)
+        inst:ListenForEvent("working", OnDoingWork)
+		inst:ListenForEvent("tilling", OnTilling)
+		inst:ListenForEvent("rowing", OnRowing)
+		inst:ListenForEvent("on_lower_sail_boost", OnSailBoost)
+		inst:ListenForEvent("onterraform", OnTerraform)
+		inst:ListenForEvent("attacked", OnAttacked)
+	    inst:ListenForEvent("onhitother", OnHitOther)
+
 
         inst.OnLoad = onload
         inst.OnNewSpawn = onload

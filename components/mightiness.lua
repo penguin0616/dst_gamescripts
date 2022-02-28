@@ -15,7 +15,11 @@ local STATE_DATA =
         tag = "mightiness_wimpy",
 
         scale = 0.9,
-        insulation = -TUNING.INSULATION_SMALL,
+        winter_insulation = -TUNING.INSULATION_TINY,
+        summer_insulation = TUNING.INSULATION_TINY,
+        work_effectiveness = TUNING.WIMPY_WORK_EFFECTIVENESS,
+
+		hunger_mult = TUNING.WIMPY_HUNGER_RATE_MULT,
     },
     
     ["normal"] = { 
@@ -33,6 +37,8 @@ local STATE_DATA =
         tag = "mightiness_normal",
 
         scale = 1,
+        winter_insulation = nil,
+        summer_insulation = nil,
     },
     
     ["mighty"] = { 
@@ -50,11 +56,13 @@ local STATE_DATA =
         tag = "mightiness_mighty",
 
         row_force_mult = TUNING.MIGHTY_ROWER_MULT,
+		row_extra_max_velocity = TUNING.MIGHTY_ROWER_EXTRA_MAX_VELOCITY,
         anchor_raise_speed = TUNING.MIGHTY_ANCHOR_SPEED,
-        lower_sail_strength = TUNING.MIGHTY_SAIL_STRENGTH,
+        lower_sail_strength = TUNING.MIGHTY_SAIL_BOOST_STRENGTH,
 
         scale = 1.2,
-        insulation = TUNING.INSULATION_SMALL,
+        winter_insulation = TUNING.INSULATION_TINY,
+        summer_insulation = -TUNING.INSULATION_TINY,
         work_effectiveness = TUNING.MIGHTY_WORK_EFFECTIVENESS,
     },
 }
@@ -74,7 +82,9 @@ local function onratescale(self, ratescale)
 end
 
 local function OnTaskTick(inst, self, period)
-    self:DoDec(period)
+	if self.drain_delay <= GetTime() then
+	    self:DoDec(period)
+	end
 end
 
 local Mightiness = Class(function(self, inst)
@@ -90,6 +100,7 @@ local Mightiness = Class(function(self, inst)
     self.ratescale = RATE_SCALE.NEUTRAL
 
     self.draining = true
+	self.drain_delay = 0	-- adds a delay after gaining might before it will start falling back down again
     self.ratemodifiers = SourceModifierList(self.inst)
 
     self.state = "normal"
@@ -107,11 +118,7 @@ nil,
 })
 
 function Mightiness:OnSetInvincible(data)
-    if data and data.invincible then
-        self:Pause()
-    else
-        self:Resume()
-    end
+	self.invincible = data and data.invincible
 end
 
 function Mightiness:OnSave()
@@ -133,6 +140,18 @@ function Mightiness:GetScale()
     return STATE_DATA[self:GetState()].scale
 end
 
+function Mightiness:IsMighty()
+	return self.state == "mighty"
+end
+
+function Mightiness:IsNormal()
+	return self.state == "normal"
+end
+
+function Mightiness:IsWimpy()
+	return self.state == "wimpy"
+end
+
 function Mightiness:LongUpdate(dt)
     self:DoDec(dt, true)
 end
@@ -149,8 +168,13 @@ function Mightiness:IsPaused()
     return not self.draining
 end
 
+function Mightiness:DelayDrain(time)
+    self.drain_delay = math.max(self.drain_delay, time + GetTime())
+end
+
 function Mightiness:GetDebugString()
-    return string.format("%2.2f / %2.2f, rate: (%2.2f * %2.2f)", self.current, self.max, self.rate, self.ratemodifiers:Get())
+	local paused = self.drain_delay > GetTime() or not self.draining or self.invincible
+    return string.format("%2.2f / %2.2f, rate: (%2.2f * %2.2f * %2.2f) Paused: %s", self.current, self.max, self.rate, self.drain_multiplier, self.ratemodifiers:Get(), paused and "true" or "false")
 end
 
 function Mightiness:SetMax(amount)
@@ -159,6 +183,11 @@ function Mightiness:SetMax(amount)
 end
 
 function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound)
+	--print("Mightiness:DoDelta", delta)
+
+	if delta >= 0 then
+		self.drain_delay = GetTime() + TUNING.WOLFGANG_MIGHTINESS_DRAIN_DELAY
+	end
 
     local old = self.current
     self.current = math.clamp(self.current + delta, 0, self.max)
@@ -190,8 +219,10 @@ function Mightiness:SetPercent(percent, force_update, delay_skin, forcesound)
 end
 
 function Mightiness:DoDec(dt, ignore_damage)
-    if self.draining then
-        self:DoDelta(-self.rate * dt * self.drain_multiplier * self.ratemodifiers:Get())
+    if self.draining and not self.invincible then
+		if not (self.inst.sg:HasStateTag("moving") and self.inst.components.inventory:EquipHasTag("dumbbell")) then
+	        self:DoDelta(-self.rate * dt * self.drain_multiplier * self.ratemodifiers:Get())
+		end
     end
 end
 
@@ -269,16 +300,14 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
     else
         self.inst.components.combat.externaldamagetakenmultipliers:RemoveModifier(self.inst)
     end
+	
+    self.inst.components.temperature.inherentinsulation = state_data.winter_insulation or 0
+    self.inst.components.temperature.inherentsummerinsulation = state_data.summer_insulation or 0
 
-    if state_data.insulation then
-        self.inst.components.temperature.inherentinsulation =  state_data.insulation
-        self.inst.components.temperature.inherentsummerinsulation =  state_data.insulation
-    else
-        self.inst.components.temperature.inherentinsulation = 0
-        self.inst.components.temperature.inherentsummerinsulation = 0
-    end
+	self.inst.components.hunger.burnrate = state_data.hunger_mult or 1
 
     self.inst.components.expertsailor:SetRowForceMultiplier(state_data.row_force_mult)
+    self.inst.components.expertsailor:SetRowExtraMaxVelocity(state_data.row_extra_max_velocity)
     self.inst.components.expertsailor:SetAnchorRaisingSpeed(state_data.anchor_raise_speed)
     self.inst.components.expertsailor:SetLowerSailStrength(state_data.lower_sail_strength)
 
@@ -300,12 +329,11 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
         self.inst.components.efficientuser:RemoveMultiplier(ACTIONS.HAMMER,  self.inst)
     end
 
+
     if not self.inst:HasTag("ingym") then
-        self.inst:ApplyScale("mightiness", state_data.scale)
+        self.inst:ApplyAnimScale("mightiness", state_data.scale)
     end
     
-    self.inst.components.locomotor:SetExternalSpeedMultiplier(self.inst, "mightiness", 1/state_data.scale)
-
     self.inst:RemoveTag(STATE_DATA[self.state].tag)
     self.inst:AddTag(state_data.tag)    
 

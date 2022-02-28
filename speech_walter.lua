@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Uhh, I'm not sure where they could even hide around here.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Sorry kitties, I can't play with you all day!",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I should probably leave that alone.",
+			SHADOWMAGIC = "Maybe you could teach me some magic tricks? I'm a quick learner!",
+		},
         COOK =
         {
             GENERIC = "If only I had some marshmallows... oh well.",
@@ -4291,6 +4296,7 @@ return{
 
         DUMBBELL = "I can do it! I just... need to get a good grip on it!",
         DUMBBELL_GOLDEN = "Uh, m-maybe I should start with something a bit lighter.",
+		DUMBBELL_MARBLE = "Oh... when he said it was made of marble, I kind of hoped he meant the tiny ones.",
         DUMBBELL_GEM = "Time to hit the gem! Get it? Because gem sounds like gym?",
         POTATOSACK = "Do you think I'd get muscles if I ate more potatoes, Woby?",
 

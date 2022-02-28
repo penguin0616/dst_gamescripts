@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "The game was denied, there's nowwhere to hide!",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "If we play any more, it's gonna be a chore.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Warly won't let me peek inside. He's no fun.",
+			SHADOWMAGIC = "I don't think he knows how to use it.",
+		},
         COOK =
         {
             GENERIC = "I'd rather snack on a soul no one's using.",
@@ -4297,6 +4302,7 @@ return{
 
         DUMBBELL = "It's neither dumb, nor a bell. Mortals are strange, indeed.",
         DUMBBELL_GOLDEN = "It's neither dumb, nor a bell. Mortals are strange, indeed.",
+		DUMBBELL_MARBLE = "Marbellous, simply marbellous!",
         DUMBBELL_GEM = "He's turned those gemstones into gymstones, hyuyu!",
         POTATOSACK = "Hyuyuyu, wouldn't it be fun to hide inside and give him a scare?",
 

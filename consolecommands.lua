@@ -103,6 +103,11 @@ end
 
 -- Restart the server to the last save file (same as c_rollback(0))
 function c_reset()
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_reset()")
+        return
+    end
+
     if not InGamePlay() then
         StartNextInstance()
     elseif TheWorld ~= nil and TheWorld.ismastersim then
@@ -114,6 +119,10 @@ end
 -- NOTE: It is not recommended to use this instead of c_regenerateworld,
 --       unless you need to regenerate only one shard in a cluster
 function c_regenerateshard(wipesettings)
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_regenerateshard()")
+        return
+    end
     local shouldpreserve = not wipesettings
     if TheWorld ~= nil and TheWorld.ismastersim then
         ShardGameIndex:Delete(
@@ -126,12 +135,23 @@ end
 -- Permanently delete all game worlds in a server cluster, regenerates new worlds afterwards
 -- NOTE: This will not work properly for any shard that is offline or in a loading state
 function c_regenerateworld()
+
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_regenerateworld()")
+        return
+    end
+
     if TheWorld ~= nil and TheWorld.ismastersim then
         TheNet:SendWorldResetRequestToServer()
     end
 end
 
 function c_save()
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_save()")
+        return
+    end
+
     if TheWorld ~= nil and TheWorld.ismastersim then
         TheWorld:PushEvent("ms_save")
     end
@@ -139,6 +159,11 @@ end
 
 -- Shutdown the application, optionally close with out saving (saves by default)
 function c_shutdown(save)
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_shutdown()")
+        return
+    end
+
     print("c_shutdown", save)
     if save == false or TheWorld == nil then
         Shutdown()
@@ -198,6 +223,11 @@ end
 
 -- Despawn a player, returning to character select screen
 function c_despawn(player)
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_despawn()")
+        return
+    end
+
     if TheWorld ~= nil and TheWorld.ismastersim then
         --V2C: need to avoid targeting c_spawned player entities
         --player = ListingOrConsolePlayer(player)
@@ -304,6 +334,11 @@ end
 
 -- Some helper shortcut functions
 function c_freecrafting()
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_freecrafting()")
+        return
+    end
+
     local player = ConsoleCommandPlayer()
 	player.components.builder:GiveAllRecipes()
 	player:PushEvent("techlevelchange")
@@ -643,6 +678,12 @@ function c_findnext(prefab, radius, inst)
 end
 
 function c_godmode(player)
+
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_godmode()")
+        return
+    end
+
     player = ListingOrConsolePlayer(player)
     if player ~= nil then
         SuUsed("c_godmode", true)
@@ -663,6 +704,11 @@ function c_godmode(player)
 end
 
 function c_supergodmode(player)
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        c_remote("c_supergodmode()")
+        return
+    end
+
     player = ListingOrConsolePlayer(player)
     if player ~= nil then
         SuUsed("c_supergodmode", true)
@@ -1080,6 +1126,29 @@ function c_netstats()
     end
 end
 
+function c_remove(entity)
+    local mouseentity = entity ~= nil and entity or TheInput:GetWorldEntityUnderMouse()
+
+    if TheWorld == nil or mouseentity == nil then
+        return
+    end    
+
+    if mouseentity ~= ConsoleCommandPlayer() then
+        if mouseentity.components.health then
+            mouseentity.components.health:Kill()
+        elseif mouseentity.Remove then
+            mouseentity:Remove()
+        end
+    end
+end
+
+function c_removeat(x, y, z)
+    local ents = TheSim:FindEntities(x,y,z, 1)
+    for i, ent in ipairs(ents) do
+        c_remove(ent)
+    end
+end
+
 function c_removeall(name)
     local count = 0
     for k,ent in pairs(Ents) do
@@ -1243,12 +1312,19 @@ end
 
 function c_repeatlastcommand()
     local history = GetConsoleHistory()
+    local localremotehistory = GetConsoleLocalRemoteHistory()
     if #history > 0 then
         if history[#history] == "c_repeatlastcommand()" then
             -- top command is this one, so we want the second last command
             history[#history] = nil
+            localremotehistory[#localremotehistory] = nil
         end
-        ExecuteConsoleCommand(history[#history])
+
+        if localremotehistory[#localremotehistory] then
+            ConsoleRemote("%s", {history[#history]})
+        else
+            ExecuteConsoleCommand(history[#history])
+        end
     end
 end
 

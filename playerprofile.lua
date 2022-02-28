@@ -20,7 +20,7 @@ local PlayerProfile = Class(function(self)
         saw_new_host_picker = false,
         install_id = os.time(),
 		play_instance = 0,
-		favorite_mods = {}
+		favorite_mods = {},
         --characterskins = {} --legacy variable, don't use it.
     }
 
@@ -31,6 +31,7 @@ local PlayerProfile = Class(function(self)
         self.persistdata.volume_sfx = 7
         self.persistdata.volume_music = 7
         self.persistdata.HUDSize = 5
+        self.persistdata.CraftingMenuSize = 5
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -47,8 +48,11 @@ local PlayerProfile = Class(function(self)
 		self.persistdata.dynamic_tree_shadows = true
 		self.persistdata.autopause = true
 		self.persistdata.consoleautopause = true
+		self.persistdata.loadingtips = 1
 		self.persistdata.hide_pause_underlay = false
         self.persistdata.profanityfilter_chat = true
+		self.persistdata.usezipfilefornormalsaves = false
+		self.persistdata.defaultcloudsaves = false
     end
 
     self.dirty = true
@@ -71,6 +75,7 @@ function PlayerProfile:Reset()
         self.persistdata.volume_sfx = 7
         self.persistdata.volume_music = 7
         self.persistdata.HUDSize = 5
+        self.persistdata.CraftingMenuSize = 5
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -87,7 +92,10 @@ function PlayerProfile:Reset()
 		self.persistdata.dynamic_tree_shadows = true
 		self.persistdata.autopause = true
 		self.persistdata.consoleautopause = true
+		self.persistdata.loadingtips = 1
 		self.persistdata.hide_pause_underlay = false
+		self.persistdata.usezipfilefornormalsaves = false
+		self.persistdata.defaultcloudsaves = true
     end
 
     --self.persistdata.starts = 0 -- save starts?
@@ -112,6 +120,7 @@ function PlayerProfile:SoftReset()
         self.persistdata.volume_sfx = 7
         self.persistdata.volume_music = 7
         self.persistdata.HUDSize = 5
+        self.persistdata.CraftingMenuSize = 5
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -524,6 +533,23 @@ function PlayerProfile:GetHUDSize()
 	end
 end
 
+function PlayerProfile:SetCraftingMenuSize(size)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("graphics", "CraftingMenuSize", tostring(size))
+	else
+		self:SetValue("CraftingMenuSize", size)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetCraftingMenuSize()
+ 	if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("graphics", "CraftingMenuSize") or 5
+	else
+		return self:GetValue("CraftingMenuSize") or 5
+	end
+end
+
 function PlayerProfile:SetDistortionEnabled(enabled)
  	if USE_SETTINGS_FILE then
 		TheSim:SetSetting("graphics", "distortion", tostring(enabled))
@@ -736,6 +762,33 @@ function PlayerProfile:SetConsoleAutopauseEnabled(enabled)
         TheSim:SetSetting("misc", "consoleautopause", tostring(enabled))
     else
         self:SetValue("consoleautopause", enabled)
+        self.dirty = true
+    end
+end
+
+function PlayerProfile:SetLoadingTipsOption(setting)
+	if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "loadingtips", tostring(setting))
+    else
+        self:SetValue("loadingtips", setting)
+        self.dirty = true
+    end
+end
+
+function PlayerProfile:SetDefaultCloudSaves(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "defaultcloudsaves", tostring(enabled))
+    else
+        self:SetValue("defaultcloudsaves", enabled)
+        self.dirty = true
+    end
+end
+
+function PlayerProfile:SetUseZipFileForNormalSaves(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "usezipfilefornormalsaves", tostring(enabled))
+    else
+        self:SetValue("usezipfilefornormalsaves", enabled)
         self.dirty = true
     end
 end
@@ -959,6 +1012,36 @@ function PlayerProfile:GetConsoleAutopauseEnabled()
 		return TheSim:GetSetting("misc", "consoleautopause") ~= "false"
     else
 		return self:GetValue("consoleautopause") ~= false
+    end
+end
+
+function PlayerProfile:GetLoadingTipsOption()
+	if TheNet:IsDedicated() then
+		return LOADING_SCREEN_TIP_OPTIONS.NONE
+	end
+
+    if USE_SETTINGS_FILE then
+		local option = TheSim:GetSetting("misc", "loadingtips") or 1
+		return tonumber(option)
+    else
+		local option = self:GetValue("loadingtips") or 1
+		return tonumber(option)
+    end
+end
+
+function PlayerProfile:GetUseZipFileForNormalSaves()
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "usezipfilefornormalsaves") == "true"
+    else
+		return self:GetValue("usezipfilefornormalsaves") == true
+    end
+end
+
+function PlayerProfile:GetDefaultCloudSaves()
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "defaultcloudsaves") == "true"
+    else
+		return self:GetValue("defaultcloudsaves") == true
     end
 end
 
@@ -1241,6 +1324,7 @@ function PlayerProfile:Set(str, callback, minimal_load)
                 self.persistdata.volume_sfx = 7
                 self.persistdata.volume_music = 7
                 self.persistdata.HUDSize = 5
+                self.persistdata.CraftingMenuSize = 5
                 self.persistdata.vibration = true
                 self.persistdata.showpassword = false
                 self.persistdata.movementprediction = true
@@ -1660,6 +1744,5 @@ function PlayerProfile:SetLanguageID(language_id, cb)
 	self.dirty = true
     self:Save(cb)
 end
-
 
 return PlayerProfile

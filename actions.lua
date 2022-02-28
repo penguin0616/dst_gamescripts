@@ -263,6 +263,7 @@ ACTIONS =
     TELEPORT = Action({ rmb=true, distance=2 }),
     RESETMINE = Action({ priority=3 }),
     ACTIVATE = Action({priority=2}),
+    OPEN_CRAFTING = Action({priority=2, distance = TUNING.RESEARCH_MACHINE_DIST - 1}),
     MURDER = Action({ priority=1, mount_valid=true }),
     HEAL = Action({ mount_valid=true }),
     INVESTIGATE = Action(),
@@ -421,9 +422,9 @@ ACTIONS =
     DISMANTLE_POCKETWATCH = Action({ mount_valid=true }),
 
     -- WOLFGANG
-    LIFT_DUMBBELL = Action({ priority = 1, mount_valid=false }),
+    LIFT_DUMBBELL = Action({ priority = 2, mount_valid=false }), -- Higher than TOSS
 
-    STOP_LIFT_DUMBBELL = Action({ priority = 1, mount_valid=false, instant = true }),
+    STOP_LIFT_DUMBBELL = Action({ priority = 2, mount_valid=false, instant = true }),
     ENTER_GYM = Action({ mount_valid=false }),    
     UNLOAD_GYM = Action({ mount_valid=false}),
 
@@ -1950,7 +1951,7 @@ end
 
 ACTIONS.TERRAFORM.fn = function(act)
     if act.invobject ~= nil and act.invobject.components.terraformer ~= nil then
-        return act.invobject.components.terraformer:Terraform(act:GetActionPoint())
+        return act.invobject.components.terraformer:Terraform(act:GetActionPoint(), act.doer)
     end
 end
 
@@ -2078,6 +2079,21 @@ ACTIONS.ACTIVATE.stroverridefn = function(act)
     if act.target.OverrideActivateVerb ~= nil then
         return act.target:OverrideActivateVerb(act.doer)
     end
+end
+
+
+ACTIONS.OPEN_CRAFTING.strfn = function(act)
+	local target = act.target
+	if target ~= nil and PROTOTYPER_DEFS[target.prefab] ~= nil then
+		return PROTOTYPER_DEFS[target.prefab].action_str
+	end
+end
+
+ACTIONS.OPEN_CRAFTING.fn = function(act)
+	if act.doer.components.builder ~= nil then
+		return act.doer.components.builder:UsePrototyper(act.target)
+	end
+	return false;
 end
 
 ACTIONS.CAST_POCKETWATCH.strfn = function(act)
@@ -3253,14 +3269,13 @@ ACTIONS.LOWER_SAIL.stroverridefn = function(act)
 end
 
 ACTIONS.LOWER_SAIL_BOOST.fn = function(act)
-	if act.target ~= nil and act.target.components.mast ~= nil then
+	if act.target ~= nil and act.target.components.mast ~= nil and act.target.components.mast.is_sail_raised then
         
-        local strength = 10
-        if act.doer.components.expertsailor ~= nil and act.doer.components.expertsailor:HasLowerSailStrength() then
-            strength = act.doer.components.expertsailor:GetLowerSailStrength()
-        end
-		
+        local strength = act.doer.components.expertsailor ~= nil and act.doer.components.expertsailor:GetLowerSailStrength() or TUNING.DEFAULT_SAIL_BOOST_STRENGTH
+
         act.target.components.mast:AddSailFurler(act.doer, strength)
+
+		act.doer:PushEvent("on_lower_sail_boost")
 		return true
 	end
 end

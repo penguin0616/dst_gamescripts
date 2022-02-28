@@ -82,7 +82,7 @@ local function OnHaunt(inst, haunter)
                 old ~= v and
                 (old == nil or old.tab == v.tab) and
                 CanBlueprintRandomRecipe(v) and
-                not haunter.components.builder:KnowsRecipe(v.name) and
+                not haunter.components.builder:KnowsRecipe(v) and
                 haunter.components.builder:CanLearn(v.name) then
                 table.insert(recipes, v)
             end
@@ -174,7 +174,7 @@ local function MakeAnyBlueprint()
         if IsRecipeValid(v.name) and CanBlueprintRandomRecipe(v) then
             local known = false
             for i, player in ipairs(allplayers) do
-                if player.components.builder:KnowsRecipe(v.name) or
+                if player.components.builder:KnowsRecipe(v) or
                     not player.components.builder:CanLearn(v.name) then
                     known = true
                     break
@@ -239,7 +239,7 @@ local function MakeAnyBlueprintFromTab(recipetab)
             if IsRecipeValid(v.name) and v.tab == recipetab and CanBlueprintRandomRecipe(v) then
                 local known = false
                 for i, player in ipairs(allplayers) do
-                    if player.components.builder:KnowsRecipe(v.name) or
+                    if player.components.builder:KnowsRecipe(v) or
                         not player.components.builder:CanLearn(v.name) then
                         known = true
                         break

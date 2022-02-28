@@ -9,7 +9,7 @@ local Terraformer = Class(function(self, inst)
 	--self.plow
 end)
 
-function Terraformer:Terraform(pt)
+function Terraformer:Terraform(pt, doer)
     local world = TheWorld
     local map = world.Map
 	local _x, _y, _z = pt:Get()
@@ -60,6 +60,10 @@ function Terraformer:Terraform(pt)
 				ent:PushEvent("collapsesoil")
 			end
 		end
+	end
+
+	if doer ~= nil then
+		doer:PushEvent("onterraform")
 	end
 
     return true

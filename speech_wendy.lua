@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "If we play now, they won't find a place to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "If we play more, Abigail will get tired.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "That belongs to Warly.",
+			SHADOWMAGIC = "Do you want me to read you a story, Abigail?",
+		},
         COOK =
         {
             GENERIC = "Oh. No one ever taught me to cook.",
@@ -4295,6 +4300,7 @@ return{
 
         DUMBBELL = "Oh. It's very heavy.",
         DUMBBELL_GOLDEN = "It's almost as heavy as my heart.",
+		DUMBBELL_MARBLE = "We all carry a great weight. His seems... a bit more literal, though.",
         DUMBBELL_GEM = "Who would choose to carry such a burden...",
         POTATOSACK = "Large enough to hold a corpse... or a few dozen potatoes.",
 

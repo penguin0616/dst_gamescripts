@@ -315,6 +315,7 @@ local function ConfigureRunState(inst)
 
     elseif inst.components.inventory:IsHeavyLifting() then
         inst.sg.statemem.heavy = true
+		inst.sg.statemem.heavy_fast = inst.components.mightiness ~= nil and inst.components.mightiness:IsMighty()
     elseif inst:HasTag("wereplayer") then
         inst.sg.statemem.iswere = true
         if inst:HasTag("weremoose") then
@@ -346,7 +347,7 @@ local function ConfigureRunState(inst)
 end
 
 local function GetRunStateAnim(inst)
-    return ((inst.sg.statemem.heavy and inst:HasTag("mightiness_mighty")) and "heavy_fast_walk")
+    return ((inst.sg.statemem.heavy and inst.sg.statemem.heavy_fast) and "heavy_walk_fast")
         or (inst.sg.statemem.heavy and "heavy_walk")
         or (inst.sg.statemem.sandstorm and "sand_walk")
         or ((inst.sg.statemem.groggy or inst.sg.statemem.moosegroggy or inst.sg.statemem.goosegroggy) and "idle_walk")
@@ -538,6 +539,7 @@ local actionhandlers =
                     )
                 or nil
         end),
+    ActionHandler(ACTIONS.OPEN_CRAFTING, "dostandingaction"),
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
             return (inst.components.rider ~= nil and inst.components.rider:IsRiding() and "dolongaction")
@@ -578,9 +580,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.BUILD,
         function(inst, action)
             local rec = GetValidRecipe(action.recipe)
-            return (rec ~= nil and rec.buildingstate)
-                or (rec ~= nil and rec.tab.shop and "give")
-                or (action.recipe == "livinglog" and inst:HasTag("plantkin") and "form_log")
+            return (rec ~= nil and rec.sg_state)
                 or (inst:HasTag("hungrybuilder") and "dohungrybuild")
                 or (inst:HasTag("fastbuilder") and "domediumaction")
                 or (inst:HasTag("slowbuilder") and "dolongestaction")
@@ -1530,7 +1530,7 @@ local states =
 
     State{
         name = "powerup",
-        tags = { "busy", "pausepredict", "nomorph" },
+        tags = { "busy", "pausepredict", "nomorph", "powerup" },
 
         onenter = function(inst)
             local x,y,z = inst.Transform:GetWorldPosition()
@@ -1539,23 +1539,8 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("powerup")
 
-            if inst.components.mightiness then
-                inst.components.mightiness:Pause()
-            end
-
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
-            end
-        end,
-
-        onexit = function(inst)
-            -- If the lifting_dumbbell is not nil at this point we got interrupted
-            if inst.sg.mem.lifting_dumbbell ~= nil then
-                inst.sg.mem.lifting_dumbbell = nil
-            end
-
-            if inst.components.mightiness then
-                inst.components.mightiness:Resume()
             end
         end,
 
@@ -1587,6 +1572,13 @@ local states =
                 end
             end),
         },
+
+        onexit = function(inst)
+            -- If the lifting_dumbbell is not nil at this point we got interrupted
+            if inst.sg.mem.lifting_dumbbell ~= nil then
+                inst.sg.mem.lifting_dumbbell = nil
+            end
+        end,
     },
 
     State{
@@ -5486,8 +5478,6 @@ local states =
         tags = { "doing", "nodangle", "lifting_dumbbell" },
 
         onenter = function(inst)
-            inst.components.mightiness:Pause()
-
             if inst.components.mightiness then
                 local state = inst.components.mightiness:GetState()
                 local loop_anim = "dumbbell_skinny_loop"
@@ -5504,7 +5494,6 @@ local states =
 
         onexit = function(inst)
             if not inst.sg.statemem.dumbbell_anim_done then
-                inst.components.mightiness:Resume()
                 inst.components.dumbbelllifter:StopLifting()
             end
         end,
@@ -7601,7 +7590,7 @@ local states =
 
             --heavy lifting
             TimeEvent(1 * FRAMES, function(inst)
-                if inst.sg.statemem.heavy then
+                if inst.sg.statemem.heavy and not inst.sg.statemem.heavy_fast then
                     PlayFootstep(inst, nil, true)
                     DoFoleySounds(inst)
                 end
@@ -7741,8 +7730,28 @@ local states =
             end),
 
             --heavy lifting
+            TimeEvent(0 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy and inst.sg.statemem.heavy_fast then
+                    DoRunSounds(inst)
+                    DoFoleySounds(inst)
+                    if inst.sg.mem.footsteps > 3 then
+                        --normally stops at > 3, but heavy needs to keep count
+                        inst.sg.mem.footsteps = inst.sg.mem.footsteps + 1
+                    end
+                end
+            end),
+            TimeEvent(9 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy and inst.sg.statemem.heavy_fast then
+                    DoRunSounds(inst)
+                    DoFoleySounds(inst)
+                    if inst.sg.mem.footsteps > 3 then
+                        --normally stops at > 3, but heavy needs to keep count
+                        inst.sg.mem.footsteps = inst.sg.mem.footsteps + 1
+                    end
+                end
+            end),
             TimeEvent(11 * FRAMES, function(inst)
-                if inst.sg.statemem.heavy then
+                if inst.sg.statemem.heavy and not inst.sg.statemem.heavy_fast then
                     DoRunSounds(inst)
                     DoFoleySounds(inst)
                     if inst.sg.mem.footsteps > 3 then
@@ -7759,7 +7768,7 @@ local states =
                 end
             end),
             TimeEvent(36 * FRAMES, function(inst)
-                if inst.sg.statemem.heavy then
+                if inst.sg.statemem.heavy and not inst.sg.statemem.heavy_fast then
                     DoRunSounds(inst)
                     DoFoleySounds(inst)
                     if inst.sg.mem.footsteps > 12 then
@@ -8579,6 +8588,9 @@ local states =
                     inst.bufferedaction.target:PushEvent("startlongaction")
                 end
             end
+			if inst.components.mightiness then
+				inst.components.mightiness:Pause()
+			end
             if not inst:PerformBufferedAction() then
                 inst.sg:GoToState("idle")
             end
@@ -8593,6 +8605,9 @@ local states =
 
         onexit = function(inst)
             inst.SoundEmitter:KillSound("make")
+			if inst.components.mightiness then
+				inst.components.mightiness:Resume()
+			end
             if inst.sg.statemem.actionmeter then
                 StopActionMeter(inst, false)
             end
@@ -14419,17 +14434,6 @@ local states =
             end),
         },
 
-        onexit = function(inst)
-            if not inst.sg.statemem.not_interrupted then
-                inst:RemoveTag("switchtoho")
-				if inst.sg.mem.furl_target:IsValid() then
-	                inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
-				end
-                inst:RemoveTag("is_furling")
-                inst:RemoveTag("is_heaving")
-            end
-        end,
-
         events =
         {
             EventHandler("animqueueover", function(inst)
@@ -14445,6 +14449,17 @@ local states =
                 inst.sg.statemem.stopfurling = true
             end),
         },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.not_interrupted then
+                inst:RemoveTag("switchtoho")
+				if inst.sg.mem.furl_target:IsValid() then
+	                inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
+				end
+                inst:RemoveTag("is_furling")
+                inst:RemoveTag("is_heaving")
+            end
+        end,
     },
 
     State{
@@ -14465,21 +14480,9 @@ local states =
                 end
                 inst:ListenForEvent("onburnt", inst.sg.statemem._onburnt, inst.sg.mem.furl_target)
             end
-        end,
-
-        onexit = function(inst)
-            if not inst.sg.statemem.not_interrupted then
-                inst:RemoveTag("switchtoho")
-                if inst.sg.mem.furl_target:IsValid() and inst.sg.mem.furl_target.components.mast then
-                    inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
-                end
-                inst:RemoveTag("is_furling")
-                inst:RemoveTag("is_heaving")
+            if inst.components.mightiness then
+                inst.components.mightiness:Pause()
             end
-
-			if inst.sg.statemem._onburnt ~= nil and inst.sg.mem.furl_target:IsValid() then
-	            inst:RemoveEventCallback("onburnt", inst.sg.statemem._onburnt, inst.sg.mem.furl_target)
-			end
         end,
 
         timeline =
@@ -14511,6 +14514,25 @@ local states =
                 inst.sg:GoToState("idle",true)
             end),
         },
+
+        onexit = function(inst)
+            if inst.components.mightiness then
+                inst.components.mightiness:Resume()
+            end
+
+            if not inst.sg.statemem.not_interrupted then
+                inst:RemoveTag("switchtoho")
+                if inst.sg.mem.furl_target:IsValid() and inst.sg.mem.furl_target.components.mast then
+                    inst.sg.mem.furl_target.components.mast:RemoveSailFurler(inst)
+                end
+                inst:RemoveTag("is_furling")
+                inst:RemoveTag("is_heaving")
+            end
+
+			if inst.sg.statemem._onburnt ~= nil and inst.sg.mem.furl_target:IsValid() then
+	            inst:RemoveEventCallback("onburnt", inst.sg.statemem._onburnt, inst.sg.mem.furl_target)
+			end
+        end,
     },
 
     State{

@@ -251,8 +251,12 @@ function EntityScript:GetSaveRecord()
         record = {
             prefab = self.prefab,
             --id = self.GUID,
-            age = self.Network:GetPlayerAge()
+            age = self.Network:GetPlayerAge(),
         }
+
+		if ThePlayer == self then
+			record.crafting_menu = TheCraftingMenuProfile:SerializeLocalClientSessionData()
+		end
 
         local platform = self:GetCurrentPlatform()
         if platform then
@@ -544,6 +548,24 @@ end
 
 function EntityScript:HasTag(tag)
     return self.entity:HasTag(tag)
+end
+
+function EntityScript:HasTags(tags)
+	for i = 1, #tags do
+		if not self.entity:HasTag(tags[i]) then
+			return false
+		end
+	end
+	return true
+end
+
+function EntityScript:HasOneOfTags(tags)
+	for i = 1, #tags do
+		if self.entity:HasTag(tags[i]) then
+			return true
+		end
+	end
+	return false
 end
 
 require("entityreplica")

@@ -75,6 +75,11 @@ return {
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "There aren't a lot of places around for them to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think that's enough for one day.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I'm not a fancy enough chef for that.",
+			SHADOWMAGIC = "That's not science.",
+		},
         COOK =
         {
             GENERIC = "I can't cook right now.",
@@ -4301,6 +4306,7 @@ return {
 
         DUMBBELL = "I usually let my mind do all the heavy lifting.",
         DUMBBELL_GOLDEN = "It's worth its weight in gold.",
+		DUMBBELL_MARBLE = "I've trained my brain to be the strongest muscle in my body.",
         DUMBBELL_GEM = "I'll conquer this weight with the power of-- ACK! My spine!!",
         POTATOSACK = "It's either filled with potato-shaped rocks or rock-shaped potatoes.",
 

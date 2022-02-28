@@ -148,15 +148,12 @@ local function ServerGetSpeedMultiplier(self)
                 mult = mult * saddle.components.saddler:GetBonusSpeedMult()
             end
         else
-            for k, v in pairs(self.inst.components.inventory.equipslots) do
-                if v.components.equippable ~= nil then
-					local item_speed_mult = v.components.equippable:GetWalkSpeedMult()
-                    if item_speed_mult > 0 and item_speed_mult < 1 and self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "mighty" then
-						item_speed_mult = math.min(1, item_speed_mult + TUNING.MIGHTY_HEAVY_SPEED_MULT_BONUS)
+			if not (self.inst.components.mightiness ~= nil and self.inst.components.mightiness:GetState() == "mighty") then
+				for k, v in pairs(self.inst.components.inventory.equipslots) do
+					if v.components.equippable ~= nil then
+						mult = mult * v.components.equippable:GetWalkSpeedMult()
 					end
-
-                    mult = mult * item_speed_mult
-                end
+				end
             end
         end
     end
@@ -175,17 +172,14 @@ local function ClientGetSpeedMultiplier(self)
                 mult = mult * inventoryitem:GetWalkSpeedMult()
             end
         else
-            for k, v in pairs(inventory:GetEquips()) do
-                local inventoryitem = v.replica.inventoryitem
-                if inventoryitem ~= nil then
-					local item_speed_mult = inventoryitem:GetWalkSpeedMult()
-                    if item_speed_mult > 0 and item_speed_mult < 1 and self.inst:HasTag("mightiness_mighty") then
-						item_speed_mult = math.min(1, item_speed_mult + TUNING.MIGHTY_HEAVY_SPEED_MULT_BONUS)
+			if not self.inst:HasTag("mightiness_mighty") then
+				for k, v in pairs(inventory:GetEquips()) do
+					local inventoryitem = v.replica.inventoryitem
+					if inventoryitem ~= nil then
+						mult = mult * inventoryitem:GetWalkSpeedMult()
 					end
-
-                    mult = mult * item_speed_mult
-                end
-            end
+				end
+			end
         end
     end
     return mult * (self:TempGroundSpeedMultiplier() or self.groundspeedmultiplier) * self.throttle
@@ -1039,7 +1033,7 @@ function LocoMotor:OnUpdate(dt)
         local destpos_x, destpos_y, destpos_z = self.dest:GetPoint()
         local mypos_x, mypos_y, mypos_z = self.inst.Transform:GetWorldPosition()
 
-        local reached_dest, invalid
+        local reached_dest, invalid, in_cooldown = nil, nil, false
         if self.bufferedaction ~= nil and
             self.bufferedaction.action == ACTIONS.ATTACK and
             self.inst.replica.combat ~= nil then
@@ -1048,7 +1042,7 @@ function LocoMotor:OnUpdate(dt)
             local run_dist = self:GetRunSpeed() * dt * .5
             reached_dest = dsq <= math.max(run_dist * run_dist, self.arrive_dist * self.arrive_dist)
 
-            reached_dest, invalid = self.inst.replica.combat:LocomotorCanAttack(reached_dest, self.bufferedaction.target)
+            reached_dest, invalid, in_cooldown = self.inst.replica.combat:LocomotorCanAttack(reached_dest, self.bufferedaction.target)
         elseif self.bufferedaction ~= nil
             and self.bufferedaction.action.customarrivecheck ~= nil then
             reached_dest, invalid = self.bufferedaction.action.customarrivecheck(self.inst, self.dest)
@@ -1060,7 +1054,9 @@ function LocoMotor:OnUpdate(dt)
 
         if invalid then
             self:Stop()
-            self:Clear()
+            if not in_cooldown then
+                self:Clear()
+            end
         elseif reached_dest then
             --Print(VERBOSITY.DEBUG, "REACH DEST")
             self.inst:PushEvent("onreachdestination", { target = self.dest.inst, pos = Point(destpos_x, destpos_y, destpos_z) })
