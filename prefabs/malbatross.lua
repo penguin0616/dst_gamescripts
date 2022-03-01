@@ -404,7 +404,6 @@ SetSharedLootTable( 'malbatross',
     {'bluegem',                             1},
     {'bluegem',                             0.3},
     {'yellowgem',                           0.05},
-	{'oceanfishingbobber_malbatross_tacklesketch',1.00},
 	{'chesspiece_malbatross_sketch',		1.00},
 
 })

@@ -1973,7 +1973,7 @@ function PlayerController:OnUpdate(dt)
     --for isenabled returning false is due to HUD blocking input.
     local isenabled, ishudblocking = self:IsEnabled()
     if not isenabled then
-		local allow_loco = (self.inst.HUD ~= nil and self.inst.HUD:IsCraftingOpen()) and not self.no_loco_when_crafting
+		local allow_loco = (self.inst.HUD ~= nil and self.inst.HUD:IsCraftingBlockingGameplay()) and not self.no_loco_when_crafting
 		if not allow_loco then
 			if self.directwalking or self.dragwalking or self.predictwalking then
 				if self.locomotor ~= nil then

@@ -116,15 +116,15 @@ Recipe2("battlesong_instant_panic",		{Ingredient("papyrus", 1), Ingredient("feat
 
 -- Walter
 Recipe2("slingshot",					{Ingredient("twigs", 1), Ingredient("mosquitosack", 2)},										TECH.NONE,				{builder_tag="pebblemaker"})
-Recipe2("walterhat", 					{Ingredient("silk", 4)}, 																		TECH.NONE,				{builder_tag="merm_builder"})
+Recipe2("walterhat", 					{Ingredient("silk", 4)}, 																		TECH.NONE,				{builder_tag="pinetreepioneer"})
 Recipe2("portabletent_item",			{Ingredient("bedroll_straw", 1), Ingredient("twigs", 4), Ingredient("rope", 2)},				TECH.SCIENCE_ONE,		{builder_tag="pinetreepioneer"})
-Recipe2("slingshotammo_rock",			{Ingredient("rocks", 1)},											   							TECH.NONE,				{builder_tag="pebblemaker"})
-Recipe2("slingshotammo_gold",			{Ingredient("goldnugget", 1)},									   								TECH.SCIENCE_ONE,		{builder_tag="pebblemaker"})
-Recipe2("slingshotammo_marble",			{Ingredient("marble", 1)},										   								TECH.SCIENCE_TWO,		{builder_tag="pebblemaker"})
-Recipe2("slingshotammo_poop",			{Ingredient("poop", 1)},											   							TECH.SCIENCE_ONE,		{builder_tag="pebblemaker"})
-Recipe2("slingshotammo_freeze",			{Ingredient("moonrocknugget", 1), Ingredient("bluegem", 1)},		   							TECH.MAGIC_TWO,			{builder_tag="pebblemaker"})
-Recipe2("slingshotammo_slow",			{Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},	   								TECH.MAGIC_THREE,		{builder_tag="pebblemaker"})
-Recipe2("slingshotammo_thulecite",		{Ingredient("thulecite_pieces", 1), Ingredient("nightmarefuel", 1)}, 							TECH.ANCIENT_TWO,		{builder_tag="pebblemaker"})
+Recipe2("slingshotammo_rock",			{Ingredient("rocks", 1)},											   							TECH.NONE,				{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, })
+Recipe2("slingshotammo_gold",			{Ingredient("goldnugget", 1)},									   								TECH.SCIENCE_ONE,		{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, })
+Recipe2("slingshotammo_marble",			{Ingredient("marble", 1)},										   								TECH.SCIENCE_TWO,		{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, })
+Recipe2("slingshotammo_poop",			{Ingredient("poop", 1)},											   							TECH.SCIENCE_ONE,		{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, })
+Recipe2("slingshotammo_freeze",			{Ingredient("moonrocknugget", 1), Ingredient("bluegem", 1)},		   							TECH.MAGIC_TWO,			{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, })
+Recipe2("slingshotammo_slow",			{Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},	   								TECH.MAGIC_THREE,		{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, })
+Recipe2("slingshotammo_thulecite",		{Ingredient("thulecite_pieces", 1), Ingredient("nightmarefuel", 1)}, 							TECH.ANCIENT_TWO,		{builder_tag="pebblemaker", numtogive = 10, no_deconstruction=true, nounlock=true})
 
 -- Wolfgang
 Recipe2("mighty_gym",					{Ingredient("boards", 4), Ingredient("cutstone", 2), Ingredient("rope", 3)},					TECH.SCIENCE_ONE,		{builder_tag="strongman", placer="mighty_gym_placer"})
@@ -143,10 +143,10 @@ Recipe2("book_tentacles",				{Ingredient("papyrus", 2), Ingredient("tentaclespot
 
 -- Maxwell
 Recipe2("waxwelljournal",				{Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2), Ingredient(CHARACTER_INGREDIENT.HEALTH, 50)},													TECH.NONE,			{builder_tag="shadowmagic"})
-Recipe2("shadowlumber_builder",			{Ingredient("nightmarefuel", 2), Ingredient("axe", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWLUMBER)},		TECH.SHADOW_TWO,	{builder_tag="shadowmagic"})
-Recipe2("shadowminer_builder",			{Ingredient("nightmarefuel", 2), Ingredient("pickaxe", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWLUMBER)},	TECH.SHADOW_TWO,	{builder_tag="shadowmagic"})
-Recipe2("shadowdigger_builder",			{Ingredient("nightmarefuel", 2), Ingredient("shovel", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWLUMBER)},	TECH.SHADOW_TWO,	{builder_tag="shadowmagic"})
-Recipe2("shadowduelist_builder",		{Ingredient("nightmarefuel", 2), Ingredient("spear", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWLUMBER)},	TECH.SHADOW_TWO,	{builder_tag="shadowmagic"})
+Recipe2("shadowlumber_builder",			{Ingredient("nightmarefuel", 2), Ingredient("axe", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWLUMBER)},		TECH.SHADOW_TWO,	{builder_tag="shadowmagic", nounlock=true})
+Recipe2("shadowminer_builder",			{Ingredient("nightmarefuel", 2), Ingredient("pickaxe", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWMINER)},	TECH.SHADOW_TWO,	{builder_tag="shadowmagic", nounlock=true})
+Recipe2("shadowdigger_builder",			{Ingredient("nightmarefuel", 2), Ingredient("shovel", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWDIGGER)},	TECH.SHADOW_TWO,	{builder_tag="shadowmagic", nounlock=true})
+Recipe2("shadowduelist_builder",		{Ingredient("nightmarefuel", 2), Ingredient("spear", 1), Ingredient(CHARACTER_INGREDIENT.MAX_SANITY, TUNING.SHADOWWAXWELL_SANITY_PENALTY.SHADOWDUELIST)},	TECH.SHADOW_TWO,	{builder_tag="shadowmagic", nounlock=true})
 
 -- Winona
 Recipe2("sewing_tape",					{Ingredient("silk", 1), Ingredient("cutgrass", 3)},												TECH.NONE,				{builder_tag="handyperson"})
@@ -301,7 +301,7 @@ Recipe2("blowdart_yellow",					{Ingredient("cutreeds", 2),Ingredient("goldnugget
 Recipe2("blowdart_sleep",					{Ingredient("cutreeds", 2),Ingredient("stinger", 1),Ingredient("feather_crow", 1)},				TECH.SCIENCE_TWO)
 Recipe2("boomerang",						{Ingredient("boards", 1),Ingredient("silk", 1),Ingredient("charcoal", 1)},						TECH.SCIENCE_TWO)
 Recipe2("staff_tornado",					{Ingredient("goose_feather", 10), Ingredient("lightninggoathorn", 1), Ingredient("gears", 1)},	TECH.SCIENCE_TWO)
-Recipe2("trident",							{Ingredient("gnarwail_horn", 3), Ingredient("kelp", 4), Ingredient("twigs", 2)},				TECH.SCIENCE_TWO)
+Recipe2("trident",							{Ingredient("gnarwail_horn", 3), Ingredient("kelp", 4), Ingredient("twigs", 2)},				TECH.LOST)
 Recipe2("firestaff",						{Ingredient("nightmarefuel", 2), Ingredient("spear", 1), Ingredient("redgem", 1)},				TECH.MAGIC_THREE)
 Recipe2("icestaff",							{Ingredient("spear", 1),Ingredient("bluegem", 1)},												TECH.MAGIC_TWO)
 
@@ -370,7 +370,7 @@ Recipe2("blue_mushroomhat",					{Ingredient("blue_cap", 6)}, 																	TE
 Recipe2("treasurechest",					{Ingredient("boards", 3)},																		TECH.SCIENCE_ONE,			{placer="treasurechest_placer",		min_spacing=1})
 Recipe2("dragonflychest",					{Ingredient("dragon_scales", 1), Ingredient("boards", 4), Ingredient("goldnugget", 10)},		TECH.SCIENCE_TWO,			{placer="dragonflychest_placer",	min_spacing=1.5})
 Recipe2("icebox",							{Ingredient("goldnugget", 2), Ingredient("gears", 1), Ingredient("cutstone", 1)},				TECH.SCIENCE_TWO,			{placer="icebox_placer",			min_spacing=1.5})
-Recipe2("saltbox",							{Ingredient("saltrock", 1), Ingredient("rocks", 2), Ingredient("nitre", 1)},					TECH.SCIENCE_TWO,			{placer="saltbox_placer",			min_spacing=1.5})
+Recipe2("saltbox",							{Ingredient("saltrock", 10), Ingredient("bluegem", 1), Ingredient("cutstone", 1)},				TECH.SCIENCE_TWO,			{placer="saltbox_placer",			min_spacing=1.5})
 
 Recipe2("winterometer",						{Ingredient("boards", 2), Ingredient("goldnugget", 2)},											TECH.SCIENCE_ONE,			{placer="winterometer_placer"})
 Recipe2("rainometer",						{Ingredient("boards", 2), Ingredient("goldnugget", 2), Ingredient("rope",2)},					TECH.SCIENCE_ONE,			{placer="rainometer_placer"})
@@ -503,18 +503,18 @@ Recipe2("ruinsrelic_table",					{Ingredient("cutstone", 1)},																			T
 Recipe2("thulecite",						{Ingredient("thulecite_pieces", 6)},																	TECH.ANCIENT_TWO,			{nounlock=true})
 Recipe2("wall_ruins_item",					{Ingredient("thulecite", 1)},																			TECH.ANCIENT_TWO,			{nounlock=true})
 Recipe2("nightmare_timepiece",				{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 2)},											TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("orangeamulet",						{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 3), Ingredient("orangegem", 1)},				TECH.ANCIENT_TWO,			{nounlock=true})
+Recipe2("orangeamulet",						{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 3), Ingredient("orangegem", 1)},				TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("yellowamulet",						{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 3), Ingredient("yellowgem", 1)},				TECH.ANCIENT_TWO,			{nounlock=true})
 Recipe2("greenamulet",						{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 3), Ingredient("greengem", 1)},				TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("orangestaff",						{Ingredient("nightmarefuel", 2), Ingredient("cane", 1), Ingredient("orangegem", 2)},					TECH.ANCIENT_TWO,			{nounlock=true})
+Recipe2("orangestaff",						{Ingredient("nightmarefuel", 2), Ingredient("cane", 1), Ingredient("orangegem", 2)},					TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("yellowstaff",						{Ingredient("nightmarefuel", 4), Ingredient("livinglog", 2), Ingredient("yellowgem", 2)},				TECH.ANCIENT_TWO,			{nounlock=true})
 Recipe2("greenstaff",						{Ingredient("nightmarefuel", 4), Ingredient("livinglog", 2), Ingredient("greengem", 2)},				TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("multitool_axe_pickaxe",			{Ingredient("goldenaxe", 1), Ingredient("goldenpickaxe", 1), Ingredient("thulecite", 2)},				TECH.ANCIENT_TWO,			{nounlock=true})
+Recipe2("multitool_axe_pickaxe",			{Ingredient("goldenaxe", 1), Ingredient("goldenpickaxe", 1), Ingredient("thulecite", 2)},				TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("nutrientsgoggleshat",				{Ingredient("plantregistryhat", 1), Ingredient("thulecite_pieces", 4), Ingredient("purplegem", 1)},		TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("ruinshat",							{Ingredient("thulecite", 4), Ingredient("nightmarefuel", 4)},											TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("armorruins",						{Ingredient("thulecite", 6), Ingredient("nightmarefuel", 4)},											TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("ruins_bat",						{Ingredient("livinglog", 3), Ingredient("thulecite", 4), Ingredient("nightmarefuel", 4)},				TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("eyeturret_item",					{Ingredient("deerclops_eyeball", 1), Ingredient("minotaurhorn", 1), Ingredient("thulecite", 5)}, 		TECH.ANCIENT_TWO,			{nounlock=true})
+Recipe2("ruinshat",							{Ingredient("thulecite", 4), Ingredient("nightmarefuel", 4)},											TECH.ANCIENT_FOUR,			{nounlock=true})
+Recipe2("armorruins",						{Ingredient("thulecite", 6), Ingredient("nightmarefuel", 4)},											TECH.ANCIENT_FOUR,			{nounlock=true})
+Recipe2("ruins_bat",						{Ingredient("livinglog", 3), Ingredient("thulecite", 4), Ingredient("nightmarefuel", 4)},				TECH.ANCIENT_FOUR,			{nounlock=true})
+Recipe2("eyeturret_item",					{Ingredient("deerclops_eyeball", 1), Ingredient("minotaurhorn", 1), Ingredient("thulecite", 5)}, 		TECH.ANCIENT_FOUR,			{nounlock=true})
 
 -- CARTOGRAPHY
 Recipe2("mapscroll",						{Ingredient("featherpencil", 1), Ingredient("papyrus", 1)}, 											TECH.CARTOGRAPHY_TWO,		{nounlock=true, actionstr="CARTOGRAPHY"})
@@ -536,8 +536,8 @@ Recipe2("multiplayer_portal_moonrock_constr_plans", {Ingredient("boards", 1), In
 ----MOON_ALTAR-----
 Recipe2("moonglassaxe",						{Ingredient("twigs", 2), Ingredient("moonglass", 3)},													TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("glasscutter",						{Ingredient("boards", 1), Ingredient("moonglass", 6)},													TECH.CELESTIAL_THREE,		{nounlock=true})
-Recipe2("turf_meteor",						{Ingredient("moonrocknugget", 1), Ingredient("moonglass", 2)},											TECH.CELESTIAL_THREE,		{nounlock=true, numtogive=6})
-Recipe2("turf_fungus_moon",					{Ingredient("moonrocknugget", 1), Ingredient("moon_cap", 3)},											TECH.CELESTIAL_THREE,		{nounlock=true, numtogive=6})
+Recipe2("turf_meteor",						{Ingredient("moonrocknugget", 1), Ingredient("moonglass", 2)},											TECH.CELESTIAL_THREE,		{nounlock=true, numtogive=4})
+Recipe2("turf_fungus_moon",					{Ingredient("moonrocknugget", 1), Ingredient("moon_cap", 2)},											TECH.CELESTIAL_THREE,		{nounlock=true, numtogive=4})
 Recipe2("bathbomb", 						{Ingredient("moon_tree_blossom", 6), Ingredient("nitre", 1)}, 											TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("chesspiece_butterfly_sketch",		{Ingredient("papyrus", 1)},																				TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("chesspiece_moon_sketch", 			{Ingredient("papyrus", 1)},																				TECH.CELESTIAL_THREE,		{nounlock=true})
@@ -578,8 +578,8 @@ Recipe2("chesspiece_catcoon_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2)
 
 -- Hermitcrab
 Recipe2("hermitshop_hermit_bundle_shells",				{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_ONE,	{nounlock = true, sg_state="give", product="hermit_bundle_shells",		image="hermit_bundle.tex"})
-Recipe2("hermitshop_winch_blueprint",					{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_ONE,	{nounlock = true, sg_state="give", product="winch_blueprint",			image="blueprint.tex"})
-Recipe2("hermitshop_turf_shellbeach_blueprint",			{Ingredient("messagebottleempty", 3)},														TECH.HERMITCRABSHOP_ONE,	{nounlock = true, sg_state="give", product="turf_shellbeach_blueprint",	image="blueprint.tex"})
+Recipe2("hermitshop_winch_blueprint",					{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_ONE,	{nounlock = true, sg_state="give", product="winch_blueprint",			image="blueprint_rare.tex"})
+Recipe2("hermitshop_turf_shellbeach_blueprint",			{Ingredient("messagebottleempty", 3)},														TECH.HERMITCRABSHOP_ONE,	{nounlock = true, sg_state="give", product="turf_shellbeach_blueprint",	image="blueprint_rare.tex"})
 Recipe2("hermitshop_oceanfishingbobber_crow",			{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_THREE,	{nounlock = true, sg_state="give", product="oceanfishingbobber_crow"})
 Recipe2("hermitshop_oceanfishingbobber_robin",			{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_THREE,	{nounlock = true, sg_state="give", product="oceanfishingbobber_robin"})
 Recipe2("hermitshop_oceanfishingbobber_robin_winter",	{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_THREE,	{nounlock = true, sg_state="give", product="oceanfishingbobber_robin_winter"})

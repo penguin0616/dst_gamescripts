@@ -424,10 +424,6 @@ local states =
                 inst.components.combat:DoAttack(inst.sg.statemem.target) 
                 inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/bite")
             end),  
-
-
-
-
         },
 
         events=
@@ -438,36 +434,59 @@ local states =
 
     State{
         name = "leap_attack_pre",
-        tags = {"attack", "canrotate", "busy","leapattack"},
+        tags = {"attack", "busy","leapattack"},
         
-        onenter = function(inst, target)
+        onenter = function(inst)
             inst.components.timer:StartTimer("leapattack_cooldown", 15)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("jump_atk_pre")
-            inst.sg.statemem.startpos = Vector3(inst.Transform:GetWorldPosition())
-            inst.sg.statemem.targetpos = Vector3(target.Transform:GetWorldPosition())
+            inst:DoTaskInTime(1,function()
+                local target = inst.components.combat.target or nil
+                if target then
+                    inst.sg.statemem.targetpos = Vector3(inst.components.combat.target.Transform:GetWorldPosition())
+                    inst:ForceFacePoint(inst.sg.statemem.targetpos)
+                else
+                    local range = 6 -- overshoot range
+                    local theta = inst.Transform:GetRotation()*DEGREES
+                    local offset = Vector3(range * math.cos( theta ), 0, -range * math.sin( theta ))            
+                    inst.sg.statemem.targetpos = Vector3(inst.sg.statemem.startpos.x + offset.x, 0, inst.sg.statemem.startpos.z + offset.z)
+                end
+            end)
             inst.sg:SetTimeout(1.5)
         end,
 
+        onexit = function(inst)
+            
+        end,
+
         ontimeout = function(inst, target)
-            inst.sg:GoToState("leap_attack",{startpos =inst.sg.statemem.startpos, targetpos =inst.sg.statemem.targetpos}) 
+            inst.sg:GoToState("leap_attack",{targetpos = inst.sg.statemem.targetpos}) 
         end,
     },
 
     State{
         name = "leap_attack",
-        tags = {"attack", "canrotate", "busy", "leapattack"},
+        tags = {"attack", "busy", "leapattack"},
         
-        onenter = function(inst, data)
+        onenter = function(inst,data)
+            inst.sg.statemem.targetpos = data.targetpos
+            
             inst.AnimState:PlayAnimation("jump_atk_loop")
             inst.components.locomotor:Stop()
 
-                    inst.sg.statemem.startpos = data.startpos
-                    inst.sg.statemem.targetpos = data.targetpos
+            inst.sg.statemem.startpos = Vector3(inst.Transform:GetWorldPosition())
 
-            inst:FacePoint(inst.sg.statemem.targetpos)
+            inst.components.combat:StartAttack()
+
+            inst:ForceFacePoint(inst.sg.statemem.targetpos)
+            
+            local range = 2
+            local theta = inst.Transform:GetRotation()*DEGREES
+            local offset = Vector3(range * math.cos( theta ), 0, -range * math.sin( theta ))            
+            local newloc = Vector3(inst.sg.statemem.targetpos.x + offset.x, 0, inst.sg.statemem.targetpos.z + offset.z)
+
             local time = inst.AnimState:GetCurrentAnimationLength()
-            local dist = math.sqrt(distsq(data.startpos.x, data.startpos.z, data.targetpos.x, data.targetpos.z))
+            local dist = math.sqrt(distsq(inst.sg.statemem.startpos.x, inst.sg.statemem.startpos.z, newloc.x, newloc.z))
             local vel = dist/time
 
             inst.sg.statemem.vel = vel
@@ -475,11 +494,8 @@ local states =
             inst.components.locomotor:EnableGroundSpeedMultiplier(false)
             inst.Physics:SetMotorVelOverride(vel,0,0)
 
-            inst.components.combat:StartAttack()
-
             inst.Physics:ClearCollisionMask()
             inst.Physics:CollidesWith(COLLISION.WORLD)
-
         end,
 
         onexit = function(inst)
@@ -516,20 +532,19 @@ local states =
         name = "leap_attack_pst",
         tags = {"busy"},
         
-        onenter = function(inst, target)
+        onenter = function(inst)
 
-                inst.components.groundpounder.numRings = 2
-                inst.components.groundpounder:GroundPound()
+            inst.components.groundpounder.numRings = 2
+            inst.components.groundpounder:GroundPound()
 
-                BounceStuff(inst)
-                --inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/groundpound")
+            BounceStuff(inst)
 
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("jump_atk_pst")
             inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/groundpound")
         end,
 
-        onexit = function(inst,target)
+        onexit = function(inst)
             inst.components.groundpounder.numRings = 3
         end,
 

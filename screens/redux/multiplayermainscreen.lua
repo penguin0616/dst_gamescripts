@@ -317,7 +317,7 @@ function MakeBanner(self)
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakeYOTCBanner(self, baner_root, anim)
+        MakeYOTCatcoonBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
@@ -1028,25 +1028,6 @@ function MultiplayerMainScreen:FinishedFadeIn()
                             Profile:SetValue("steam_language_asked", true)
                             Profile:Save()
                 
-                        end
-                    end
-                elseif IsConsole() then
-                    local interface_lang = TheNet:GetLanguageCode()
-                    if interface_lang ~= "english" then
-                        if Profile:GetValue("language_asked_"..interface_lang) ~= true then
-                            local lang_id = LANGUAGE_STEAMCODE_TO_ID[interface_lang]
-                            local locale = LOC.GetLocale(lang_id)
-                            if locale ~= nil and locale.in_console_menu then
-                                local popup_screen = PopupDialogScreen( STRINGS.PRETRANSLATED.LANGUAGES_TITLE[locale.id], STRINGS.PRETRANSLATED.LANGUAGES_BODY[locale.id],
-                                        {
-                                            { text = STRINGS.PRETRANSLATED.LANGUAGES_YES[locale.id], cb = function() Profile:SetLanguageID(lang_id, function() SimReset() end ) end },
-                                            { text = STRINGS.PRETRANSLATED.LANGUAGES_NO[locale.id], cb = function() TheFrontEnd:PopScreen() end}
-                                        }
-                                    )
-                                TheFrontEnd:PushScreen( popup_screen )
-                                Profile:SetValue("language_asked_"..interface_lang, true)
-                                Profile:Save()
-                            end
                         end
                     end
                 end

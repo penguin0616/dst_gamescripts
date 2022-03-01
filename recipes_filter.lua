@@ -127,10 +127,6 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 
 	-- Maxwell
 	"waxwelljournal",		
-	"shadowlumber_builder",	
-	"shadowminer_builder",	
-	"shadowdigger_builder",	
-	"shadowduelist_builder",
 
 	-- Winona
 	"sewing_tape",				
@@ -201,6 +197,12 @@ CRAFTING_FILTERS.SPECIAL_EVENT.recipes =
 
 CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 {
+	-- waxwelljournal
+	"shadowlumber_builder",	
+	"shadowminer_builder",	
+	"shadowdigger_builder",	
+	"shadowduelist_builder",
+
 	-- wintersfeastoven
 	"wintercooking_berrysauce",
 	"wintercooking_bibingka",

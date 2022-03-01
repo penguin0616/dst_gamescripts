@@ -105,8 +105,6 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    MakeObstaclePhysics(inst, .25)
-
     inst.MiniMapEntity:SetIcon("gravestones.png")
 
     inst:AddTag("grave")

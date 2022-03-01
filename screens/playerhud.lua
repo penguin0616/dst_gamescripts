@@ -754,7 +754,7 @@ function PlayerHud:HasInputFocus()
     --when anything else is active on top of it.
     local active_screen = TheFrontEnd:GetActiveScreen()
     return (active_screen ~= nil and active_screen ~= self)
-        or (self.controls ~= nil and (self.controls.inv.open or self:IsCraftingBlockingGameplay()))
+        or (self.controls ~= nil and (self.controls.inv.open or self:IsCraftingOpen()))
         or self.modfocus ~= nil
 end
 
@@ -787,7 +787,11 @@ function PlayerHud:IsCraftingOpen()
 end
 
 function PlayerHud:IsCraftingBlockingGameplay()
-    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen()
+    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and not self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
+end
+
+function PlayerHud:IsCraftingBlockingMovement()
+   -- return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and not self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
 end
 
 function PlayerHud:IsControllerVoteOpen()

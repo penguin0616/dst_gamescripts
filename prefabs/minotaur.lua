@@ -224,7 +224,9 @@ local function breakobjects(inst,other)
         inst:DoTaskInTime(3, ClearRecentlyCharged, other)
         SpawnPrefab("collapse_small").Transform:SetPosition(other.Transform:GetWorldPosition())
         inst.SoundEmitter:PlaySound("dontstarve/creatures/rook/explo")
-        inst.components.combat:DoAttack(other)
+        if inst.components.combat:CanTarget(other) then
+            inst.components.combat:DoAttack(other)
+        end
         return true
     end
 end
@@ -348,6 +350,7 @@ end
 
 local OBSTACLE_MUST_TAGS = {"charge_barrier"}
 
+local PILLAR_MUST_TAGS = {"quake_on_charge"}
 local function startobstacledrop(inst)
     if inst.spawnlocation then
         local dist = inst:GetDistanceSqToPoint(inst.spawnlocation)
@@ -357,19 +360,32 @@ local function startobstacledrop(inst)
 
             for i=1, math.random(3,4) do
                 local pt = nil
+                local testpt = nil
+                local count = 0
+                while testpt == nil and count < 8 do
+                    count = count + 1
+                    local theta = math.random()*2 * PI
+                    local radius = math.sqrt(math.random())*20
+                    testpt = Vector3(radius*math.cos(theta),0,radius*math.sin(theta))
+                    testpt = testpt + instpt
+                    testpt.y = 0
 
-                local theta = math.random()*2 * PI
-                local radius = math.sqrt(math.random())*20
-                local testpt = Vector3(radius*math.cos(theta),0,radius*math.sin(theta))
-                testpt = testpt + instpt
-                testpt.y = 0
-                pt = testpt
+                    if not TheWorld.Map:IsPassableAtPoint(testpt.x,0,testpt.z) then
+                        testpt = nil
+                    end
+                    if testpt then
+                        local ents = TheSim:FindEntities(testpt.x,testpt.y,testpt.z, 4, PILLAR_MUST_TAGS)
+                        if #ents > 0 then
+                            testpt = nil
+                        end
+                    end         
+                end
 
-                if pt then
+                if testpt then
                     inst:DoTaskInTime(0.3+(math.random()*2), function()
                         local obstacle = SpawnPrefab("ruins_cavein_obstacle")
                         obstacle.Transform:SetPosition(instpt.x,instpt.y,instpt.z)
-                        obstacle.fall(obstacle,Vector3(pt.x,pt.y,pt.z))
+                        obstacle.fall(obstacle,Vector3(testpt.x,testpt.y,testpt.z))
                     end)
                 end
             end
