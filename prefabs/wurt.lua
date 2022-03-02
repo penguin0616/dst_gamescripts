@@ -264,6 +264,8 @@ local function master_postinit(inst)
 
 	inst.components.locomotor:SetFasterOnGroundTile(GROUND.MARSH, true)
 
+    inst.components.builder.mashturfcrafting_bonus = 2
+
     inst:ListenForEvent("onmermkingcreated", function() RoyalUpgrade(inst) end, TheWorld)
     inst:ListenForEvent("onmermkingdestroyed", function() RoyalDowngrade(inst) end, TheWorld)
 

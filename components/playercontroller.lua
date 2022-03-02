@@ -1880,8 +1880,11 @@ function PlayerController:HandleControlPrimaryHeld()
     if (self.lastclickedaction.action == ACTIONS.ATTACK) then
         self.attack_buffer = CONTROL_ATTACK
     elseif (self.inst.sg ~= nil and self.inst.sg:HasStateTag("idle")) or self.inst:HasTag("idle") then
+        -- Repeat the last held action if the action is held
+        if self.actionholdtime and self.actionholdtime > 0 then
+            self:DoAction(self.lastheldaction)
         -- Prevent re-picking items up when dropping them while holding down the primary control button
-        if self.lastclickedaction.action ~= ACTIONS.DROP then
+        elseif self.lastclickedaction.action ~= ACTIONS.DROP then
             self:DoActionButton()
         end
     end
@@ -1973,7 +1976,7 @@ function PlayerController:OnUpdate(dt)
     --for isenabled returning false is due to HUD blocking input.
     local isenabled, ishudblocking = self:IsEnabled()
     if not isenabled then
-		local allow_loco = (self.inst.HUD ~= nil and self.inst.HUD:IsCraftingBlockingGameplay()) and not self.no_loco_when_crafting
+		local allow_loco = (self.inst.HUD == nil or not self.inst.HUD:IsCraftingBlockingGameplay()) and not self.no_loco_when_crafting
 		if not allow_loco then
 			if self.directwalking or self.dragwalking or self.predictwalking then
 				if self.locomotor ~= nil then
@@ -2365,7 +2368,7 @@ function PlayerController:OnUpdate(dt)
                 --Check for chain attacking first
                 local retarget = nil
                 local buffaction = self.inst:GetBufferedAction()
-                if buffaction and buffaction.action == ACTIONS.ATTACK then
+                if buffaction and buffaction.action == ACTIONS.ATTACK and not self.actionholding then
                     retarget = buffaction.target
                 elseif self.inst.sg ~= nil then
                     retarget = self.inst.sg.statemem.attacktarget
@@ -2387,7 +2390,6 @@ function PlayerController:OnUpdate(dt)
                         end
                     end
                 elseif self.handler ~= nil then
-				--elseif attack_control ~= CONTROL_PRIMARY and self.handler ~= nil then
                     --Check for starting a new attack
                     local isidle
                     if self.inst.sg ~= nil then
@@ -2404,6 +2406,7 @@ function PlayerController:OnUpdate(dt)
                                 self:DoAttackButton()
                             end
                         elseif not TheInput:IsControlPressed(CONTROL_PRIMARY) then
+                            print("finished action. do new action")
                             self:OnControl(attack_control, true)
                         end
                     end

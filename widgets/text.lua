@@ -235,6 +235,10 @@ function Text:SetMultilineTruncatedString_Impl(str, maxlines, maxwidth, maxchars
 	return str_fits
 end
 
+function Text:UpdateOriginalSize()
+	self.original_size = self.size
+end
+
 function Text:SetMultilineTruncatedString(str, maxlines, maxwidth, maxcharsperline, ellipses, shrink_to_fit, min_shrink_font_size)
     if str == nil or #str <= 0 then
         self.inst.TextWidget:SetString("")

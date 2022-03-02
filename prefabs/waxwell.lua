@@ -34,7 +34,9 @@ local function OnSpawnPet(inst, pet)
         pet:DoTaskInTime(0, DoEffects)
 
         if not (inst.components.health:IsDead() or inst:HasTag("playerghost")) then
-            inst.components.sanity:AddSanityPenalty(pet, TUNING.SHADOWWAXWELL_SANITY_PENALTY[string.upper(pet.prefab)])
+			if not inst.components.builder.freebuildmode then
+	            inst.components.sanity:AddSanityPenalty(pet, TUNING.SHADOWWAXWELL_SANITY_PENALTY[string.upper(pet.prefab)])
+			end
             inst:ListenForEvent("onremove", inst._onpetlost, pet)
         elseif pet._killtask == nil then
             pet._killtask = pet:DoTaskInTime(math.random(), KillPet)

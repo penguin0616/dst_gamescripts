@@ -176,6 +176,8 @@ local states =
             inst.AnimState:PlayAnimation("paw_loop", true)
             inst.sg:SetTimeout(1.5)
             inst.chargecount = 0
+
+            inst.components.timer:StartTimer("rammed", 3)
         end,
 
         timeline =
@@ -440,6 +442,7 @@ local states =
             inst.components.timer:StartTimer("leapattack_cooldown", 15)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("jump_atk_pre")
+            inst.sg.statemem.startpos = Vector3(inst.Transform:GetWorldPositon())
             inst:DoTaskInTime(1,function()
                 local target = inst.components.combat.target or nil
                 if target then
@@ -610,7 +613,7 @@ local states =
         events=
         {
             EventHandler("stunned_hit", function(inst)
-                inst.AnimState:PlayAnimation("hit")
+                inst.AnimState:PlayAnimation("stun_hit")
                 inst.AnimState:PushAnimation("stun_loop",true)
             end),
         },

@@ -31,11 +31,13 @@ function CraftingMenuDetails:OnControl(control, down)
 	return false
 end
 
-function CraftingMenuDetails:_MakeIngredientList(recipe, owner)
+function CraftingMenuDetails:_MakeIngredientList()
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
+	local owner = self.owner
     local builder = owner.replica.builder
     local inventory = owner.replica.inventory
+	local recipe = self.data.recipe
 
     local ingredient_widgets = {}
 	local ingredients_root = Widget("ingredients_root")
@@ -212,15 +214,15 @@ local hint_text =
     ["SPIDERCRAFT"] = "NEEDSSPIDERFRIENDSHIP",
 }
 
-function CraftingMenuDetails:_MakeBuildButton()
+function CraftingMenuDetails:UpdateBuildButton()
+    local builder = self.owner.replica.builder
 	local recipe = self.data.recipe
 	local meta = self.data.meta
-	
-    local builder = self.owner.replica.builder
+
+	local teaser = self.build_button_root.teaser
+	local button = self.build_button_root.button
 
     if meta.build_state == "hint" or self.hint_tech_ingredient ~= nil then
-		local teaser = Text(BODYTEXTFONT, 20)
-
         local str
         if self.hint_tech_ingredient ~= nil then
             str = STRINGS.UI.CRAFTING.NEEDSTECH[self.hint_tech_ingredient]
@@ -228,9 +230,12 @@ function CraftingMenuDetails:_MakeBuildButton()
             local prototyper_tree = self:_GetHintTextForRecipe(self.owner, recipe)
             str = STRINGS.UI.CRAFTING[hint_text[prototyper_tree] or ("NEEDS"..prototyper_tree)]
         end
+		teaser:SetSize(20)
+		teaser:UpdateOriginalSize()
         teaser:SetMultilineTruncatedString(str, 2, (self.panel_width / 2) * 0.8, nil, false, true)
-        
-		return teaser
+
+        teaser:Show()
+        button:Hide()
     else
         local buttonstr = meta.build_state == "prototype" and STRINGS.UI.CRAFTING.PROTOTYPE
 							or meta.build_state == "buffered" and STRINGS.UI.CRAFTING.PLACE
@@ -238,50 +243,19 @@ function CraftingMenuDetails:_MakeBuildButton()
 							or STRINGS.UI.CRAFTING.BUILD
 
         if TheInput:ControllerAttached() then
-			local teaser
             if meta.can_build then
-				teaser = Text(BODYTEXTFONT, 26)
+				teaser:SetSize(26)
+				teaser:UpdateOriginalSize()
 				teaser:SetMultilineTruncatedString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT).." "..buttonstr, 2, (self.panel_width / 2) * 0.8, nil, false, true)
             else
-				teaser = Text(BODYTEXTFONT, 20)
+				teaser:SetSize(20)
+				teaser:UpdateOriginalSize()
 				teaser:SetMultilineTruncatedString(STRINGS.UI.CRAFTING.NEEDSTUFF, 2, (self.panel_width / 2) * 0.8, nil, false, true)
             end
-			return teaser
+
+			teaser:Show()
+			button:Hide()
         else
-			local button = ImageButton()
-			button:SetWhileDown(function()
-				if button.recipe_held then
-					DoRecipeClick(self.owner, recipe, self.skins_spinner:GetItem())
-				end
-			end)
-			button:SetOnDown(function()
-				if button.last_recipe_click and (GetTime() - button.last_recipe_click) < 1 then
-					button.recipe_held = true
-					button.last_recipe_click = nil
-				end
-			end)
-			button:SetOnClick(function()
-				button.last_recipe_click = GetTime()
-                local skin = self.skins_spinner:GetItem()
-
-				if not button.recipe_held then
-					if not DoRecipeClick(self.owner, recipe, skin) then
-						self.owner.HUD:CloseCrafting()
-					end
-				end
-				button.recipe_held = false
-
-				if skin ~= nil then
-					Profile:SetLastUsedSkinForItem(recipe.name, skin)
-					--Profile:SetRecipeTimestamp(recipe.name, button.timestamp)									-- TODO - support the timestamp, see recipepopup
-				end
-			end)
-			button:SetPosition(320, -155, 0)
-			button:SetScale(.7,.7,.7)
-			button.image:SetScale(.45, .7)
-
-            button:SetPosition(320, -105, 0)
-
             button:SetText(buttonstr)
             if meta.can_build then
                 button:Enable()
@@ -289,10 +263,57 @@ function CraftingMenuDetails:_MakeBuildButton()
                 button:Disable()
             end
 
-			return button
+			button:Show()
+			teaser:Hide()
         end
     end
 
+end
+
+function CraftingMenuDetails:_MakeBuildButton()
+	local root = Widget("build_button_root")
+	
+	root.teaser = root:AddChild(Text(BODYTEXTFONT, 20))
+	root.teaser:Hide()
+
+	local button = root:AddChild(ImageButton())
+	button:SetWhileDown(function()
+		if button.recipe_held then
+			DoRecipeClick(self.owner, self.data.recipe, self.skins_spinner:GetItem())
+		end
+	end)
+	button:SetOnDown(function()
+		if button.last_recipe_click and (GetTime() - button.last_recipe_click) < 1 then
+			button.recipe_held = true
+			button.last_recipe_click = nil
+		end
+	end)
+	button:SetOnClick(function()
+		button.last_recipe_click = GetTime()
+        local skin = self.skins_spinner:GetItem()
+
+		if not button.recipe_held then
+			if not DoRecipeClick(self.owner, self.data.recipe, skin) then
+				self.owner.HUD:CloseCrafting()
+			end
+		end
+		button.recipe_held = false
+
+		if skin ~= nil then
+			Profile:SetLastUsedSkinForItem(self.data.recipe.name, skin)
+			--Profile:SetRecipeTimestamp(self.data.recipe.name, button.timestamp)									-- TODO - support the timestamp, see recipepopup
+		end
+	end)
+	button.OnHide = function()
+		button.recipe_held = false
+	end
+	button:SetScale(.7,.7,.7)
+	button.image:SetScale(.45, .7)
+    button:Disable()
+	button:Hide()
+	root.button = button
+
+	return root
 end
 
 function CraftingMenuDetails:Refresh()
@@ -300,11 +321,23 @@ function CraftingMenuDetails:Refresh()
 end
 
 function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
-	self:KillAllChildren()
-
 	if data == nil then
+		self.data = nil
+		self:KillAllChildren()
 		return
 	end
+
+	local recipe = data.recipe
+
+	if self.data == data then
+		self.ingredients_list:KillAllChildren()
+		self.ingredients_list:AddChild(self:_MakeIngredientList())
+		
+		self:UpdateBuildButton()
+		return
+	end
+
+	self:KillAllChildren()
 
 	self.data = data
 
@@ -316,12 +349,10 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 	local width = self.panel_width / 2
 	local title_width = self.panel_width - 60
 
-	if data.recipe.custom_craftingmenu_details_fn ~= nil then
+	if recipe.custom_craftingmenu_details_fn ~= nil then
 		-- Modders can define this on a preparedfoods definition table if they use this if they want to have their own custom display.
-		return data.recipe.custom_craftingmenu_details_fn(self, data, self, top, left)
+		return recipe.custom_craftingmenu_details_fn(self, data, self, top, left)
 	end
-
-	local recipe = data.recipe
 
 	local root_left = self:AddChild(Widget("left_root"))
 	root_left:SetPosition(-self.panel_width / 4, 0)
@@ -335,17 +366,17 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 	name:SetPosition(0, y - name_font_size/2)
 
 	-- Favorite Button
-	local is_favorite = TheCraftingMenuProfile:IsFavorite(data.recipe.name)
+	local is_favorite = TheCraftingMenuProfile:IsFavorite(recipe.name)
 	local fav_button = root_left:AddChild(ImageButton(atlas, is_favorite and "favorite_checked.tex" or "favorite_unchecked.tex", is_favorite and "favorite_checked.tex" or "favorite_unchecked.tex", nil, is_favorite and "favorite_unchecked.tex" or "favorite_checked.tex", nil, { .81, .81 }, { 0, 0 }))
     fav_button.focus_scale = {1, 1}
     fav_button.normal_scale = {.81, .81}
 	fav_button:SetPosition(-width/2 + 5, y - name_font_size/2)
 	fav_button:SetOnClick(function() 
-		if TheCraftingMenuProfile:IsFavorite(data.recipe.name) then
-			TheCraftingMenuProfile:RemoveFavorite(data.recipe.name)
+		if TheCraftingMenuProfile:IsFavorite(recipe.name) then
+			TheCraftingMenuProfile:RemoveFavorite(recipe.name)
 			fav_button:SetTextures(atlas, "favorite_unchecked.tex", "favorite_unchecked.tex", nil, "favorite_checked.tex", nil, { .81, .81 }, { 0, 0 })
 		else
-			TheCraftingMenuProfile:AddFavorite(data.recipe.name)
+			TheCraftingMenuProfile:AddFavorite(recipe.name)
 			fav_button:SetTextures(atlas, "favorite_checked.tex", "favorite_checked.tex", nil, "favorite_unchecked.tex", nil, { .81, .81 }, { 0, 0 })
 		end
 
@@ -385,40 +416,20 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 
 	-- Ingredients
 	y = y - 10
-	local ing = root_right:AddChild(self:_MakeIngredientList(recipe, self.owner))
+	self.ingredients_list = root_right:AddChild(Widget("ingredients_list"))
+	self.ingredients_list:AddChild(self:_MakeIngredientList())
 	local ing_height = 45
-	ing:SetPosition(0, y - ing_height/2 - 5)
+	self.ingredients_list:SetPosition(0, y - ing_height/2 - 5)
 	y = y - ing_height
 
 	
 	-- Build Button
 	y = y - 5
-	local build = root_right:AddChild(self:_MakeBuildButton(recipe, self.owner))
-	build:SetPosition(0, y - 60/2)
+	self.build_button_root = root_right:AddChild(Widget("build_button_root"))
+	self.build_button_root = self.build_button_root:AddChild(self:_MakeBuildButton())
+	self.build_button_root:SetPosition(0, y - 60/2)
 
-
-
---	local inventory = self.owner.replica.inventory
---	local equippedBody = inventory:GetEquippedItem(EQUIPSLOTS.BODY)
---	local showamulet = equippedBody and equippedBody.prefab == "greenamulet"
---	if showamulet then
---		local amulet = self:AddChild(Image( resolvefilepath(GetInventoryItemAtlas("greenamulet.tex")), "greenamulet.tex"))
---		amulet:SetPosition(0, -12)
---		amulet:SetScale(0.9)
---		amulet:SetTooltip(STRINGS.GREENAMULET_TOOLTIP)
---
---		local glow = amulet:AddChild(Image("images/global_redux.xml", "shop_glow.tex"))
---		glow:SetTint(.8, .8, .8, 0.4)
---		local len = 3
---		local function doscale(start) if start then glow:SetScale(0) glow:ScaleTo(0, 0.5, len/2, doscale) else glow:ScaleTo(.5, 0, len/2) end end
---		local function animate_glow() 
---			local t = math.random() * 360
---			glow:RotateTo(t, t-360, 3, animate_glow) 
---			doscale(true)
---		end
---		animate_glow()
---	end
-
+	self:UpdateBuildButton()
 end
 
 return CraftingMenuDetails

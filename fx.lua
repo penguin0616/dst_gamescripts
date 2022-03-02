@@ -2323,6 +2323,7 @@ local fx =
         sound = "ancientguardian_rework/minotaur2/blood_splurt_small",
         nofaced = true,
         fn = function(inst)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
             inst.Transform:SetTwoFaced()
         end,
     },
@@ -2335,6 +2336,7 @@ local fx =
         sound = "ancientguardian_rework/minotaur2/blood_splurt_small",
         nofaced = true,
         fn = function(inst)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
             inst.Transform:SetTwoFaced()
         end,
     },
@@ -2347,6 +2349,7 @@ local fx =
         sound = "ancientguardian_rework/minotaur2/blood_splurt_small",
         nofaced = true,
         fn = function(inst)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
             inst.Transform:SetTwoFaced()
         end,
     },        

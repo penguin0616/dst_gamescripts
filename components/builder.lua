@@ -354,6 +354,10 @@ function Builder:GetIngredients(recname)
 end
 
 function Builder:RemoveIngredients(ingredients, recname)
+	if self.freebuildmode then
+		return 
+	end
+
     for item, ents in pairs(ingredients) do
         for k,v in pairs(ents) do
             for i = 1, v do
@@ -387,6 +391,8 @@ function Builder:RemoveIngredients(ingredients, recname)
                     with how we remove max sanity. Because of that, this is not handled here.
                     Removal of sanity is actually managed by the entity that is created.
                     See maxwell's pet leash on spawn and pet on death functions for examples.
+
+					Note: Make sure you handle self.freebuildmode in this case
                 --]]
             end
         end

@@ -282,6 +282,7 @@ local prefabs =
     "shadowmeteor",
     "meteorwarning",
     "warg",
+    "warg_wave",
     "claywarg",
     "spat",
     "multiplayer_portal",
@@ -443,6 +444,7 @@ local houndspawn =
     base_prefab = "hound",
     winter_prefab = "icehound",
     summer_prefab = "firehound",
+    upgrade_spawn = "warg_wave",
 
     attack_levels =
     {
@@ -455,9 +457,11 @@ local houndspawn =
 
     attack_delays =
     {
-        rare        = function() return TUNING.TOTAL_DAY_TIME * 6, math.random() * TUNING.TOTAL_DAY_TIME * 7 end,
-        occasional  = function() return TUNING.TOTAL_DAY_TIME * 4, math.random() * TUNING.TOTAL_DAY_TIME * 7 end,
-        frequent    = function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+        intro 		= function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+        rare 		= function() return TUNING.TOTAL_DAY_TIME * 5, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+        occasional 	= function() return TUNING.TOTAL_DAY_TIME * 7, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+        frequent 	= function() return TUNING.TOTAL_DAY_TIME * 9, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+        crazy 		= function() return TUNING.TOTAL_DAY_TIME * 11, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
     },
 
     warning_speech = "ANNOUNCE_HOUNDS",

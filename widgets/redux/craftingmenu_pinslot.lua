@@ -184,7 +184,6 @@ function PinSlot:OnLoseFocus()
 	self.unpin_button:Hide()
 	self.unpin_button_bg:Hide()
 
-    self.recipe_held = false
     self:StopUpdating()
     
 	self:HideRecipe()

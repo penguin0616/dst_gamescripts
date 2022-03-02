@@ -18,22 +18,6 @@ local SourceModifierList = require("util/sourcemodifierlist")
 
 local SPAWN_DIST = 30
 
-local attack_levels =
-{
-	intro	=	{ warnduration = function() return 120 end, numspawns = function() return 1 end },
-	light	=	{ warnduration = function() return 60 end, numspawns = function() return 2 + math.random(2) end },
-	med		=	{ warnduration = function() return 45 end, numspawns = function() return 3 + math.random(3) end },
-	heavy	=	{ warnduration = function() return 30 end, numspawns = function() return 4 + math.random(3) end },
-	crazy	=	{ warnduration = function() return 30 end, numspawns = function() return 6 + math.random(4) end },
-}
-
-local attack_delays =
-{
-	rare		= function() return TUNING.TOTAL_DAY_TIME * 6, math.random() * TUNING.TOTAL_DAY_TIME * 7 end,
-	occasional	= function() return TUNING.TOTAL_DAY_TIME * 4, math.random() * TUNING.TOTAL_DAY_TIME * 7 end,
-	frequent	= function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
-}
-
 --------------------------------------------------------------------------
 --[[ Member variables ]]
 --------------------------------------------------------------------------
@@ -59,6 +43,7 @@ local _spawndata =
 		base_prefab = "hound",
 		winter_prefab = "icehound",
 		summer_prefab = "firehound",
+		upgrade_spawn = "warg_wave",
 
 		attack_levels =
 		{
@@ -69,11 +54,15 @@ local _spawndata =
 			crazy 	= { warnduration = function() return 30 end, numspawns = function() return 6 + math.random(4) end },
 		},
 
+		--attack delays actually go from shorter to longer, to account for stronger waves
+		--these names are describing the strength of the houndwave more than the duration
 		attack_delays =
 		{
-			rare 		= function() return TUNING.TOTAL_DAY_TIME * 6, math.random() * TUNING.TOTAL_DAY_TIME * 7 end,
-			occasional 	= function() return TUNING.TOTAL_DAY_TIME * 4, math.random() * TUNING.TOTAL_DAY_TIME * 7 end,
-			frequent 	= function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+			intro 		= function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+			rare 		= function() return TUNING.TOTAL_DAY_TIME * 5, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+			occasional 	= function() return TUNING.TOTAL_DAY_TIME * 7, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+			frequent 	= function() return TUNING.TOTAL_DAY_TIME * 9, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+			crazy 		= function() return TUNING.TOTAL_DAY_TIME * 11, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
 		},
 
 		warning_speech = "ANNOUNCE_HOUND",
@@ -108,13 +97,9 @@ local function CalcEscalationLevel()
 	local day = GetAveragePlayerAgeInDays()
 
 	if day < 3 then
-		_attackdelayfn = _spawndata.attack_delays.frequent
+		_attackdelayfn = _spawndata.attack_delays.intro or _spawndata.attack_delays.rare
 		_attacksizefn = _spawndata.attack_levels.intro.numspawns
 		_warndurationfn = _spawndata.attack_levels.intro.warnduration
-	elseif day < 10 then
-		_attackdelayfn = _spawndata.attack_delays.rare
-		_attacksizefn = _spawndata.attack_levels.light.numspawns
-		_warndurationfn = _spawndata.attack_levels.light.warnduration
 	elseif day < 25 then
 		_attackdelayfn = _spawndata.attack_delays.rare
 		_attacksizefn = _spawndata.attack_levels.light.numspawns
@@ -124,11 +109,11 @@ local function CalcEscalationLevel()
 		_attacksizefn = _spawndata.attack_levels.med.numspawns
 		_warndurationfn = _spawndata.attack_levels.med.warnduration
 	elseif day < 100 then
-		_attackdelayfn = _spawndata.attack_delays.occasional
+		_attackdelayfn = _spawndata.attack_delays.frequent
 		_attacksizefn = _spawndata.attack_levels.heavy.numspawns
 		_warndurationfn = _spawndata.attack_levels.heavy.warnduration
 	else
-		_attackdelayfn = _spawndata.attack_delays.frequent
+		_attackdelayfn = _spawndata.attack_delays.crazy or _spawndata.attack_delays.frequent
 		_attacksizefn = _spawndata.attack_levels.crazy.numspawns
 		_warndurationfn = _spawndata.attack_levels.crazy.warnduration
 	end
@@ -348,15 +333,11 @@ local function GetSpecialSpawnChance()
     return TheWorld.state.issummer and chance * 1.5 or chance
 end
 
-local function GetUpgradeSpawn()
-	return "warg"
-end
-
 local function SummonSpawn(pt, upgrade)
     local spawn_pt = GetSpawnPoint(pt)
     if spawn_pt ~= nil then
         local spawn = SpawnPrefab(
-        	(upgrade and GetUpgradeSpawn()) or
+        	(upgrade and _spawndata.upgrade_spawn) or
             (math.random() >= GetSpecialSpawnChance() and _spawndata.base_prefab) or
             ((TheWorld.state.iswinter or TheWorld.state.isspring) and _spawndata.winter_prefab) or
             _spawndata.summer_prefab
@@ -521,7 +502,7 @@ end
 
 function self:SpawnModeLight()
 	_spawnmode = "constant"
-	_attackdelayfn = _spawndata.attack_delays.rare
+	_attackdelayfn = _spawndata.attack_delays.frequent
 	_attacksizefn = _spawndata.attack_levels.light.numspawns
 	_warndurationfn = _spawndata.attack_levels.light.warnduration
 	PlanNextAttack()
@@ -544,7 +525,7 @@ end
 
 function self:SpawnModeHeavy()
 	_spawnmode = "constant"
-	_attackdelayfn = _spawndata.attack_delays.frequent
+	_attackdelayfn = _spawndata.attack_delays.rare
 	_attacksizefn = _spawndata.attack_levels.heavy.numspawns
 	_warndurationfn = _spawndata.attack_levels.heavy.warnduration
 	PlanNextAttack()

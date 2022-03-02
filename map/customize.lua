@@ -212,6 +212,7 @@ local descriptions = {
 	loop_descriptions = loop_descriptions,
 	complexity_descriptions = complexity_descriptions,
 	specialevent_descriptions = specialevent_descriptions,
+	extraevent_descriptions = extraevent_descriptions,
 	yesno_descriptions = yesno_descriptions,
 	extrastartingitems_descriptions = extrastartingitems_descriptions,
 	autodetect = autodetect,

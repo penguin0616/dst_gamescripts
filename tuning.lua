@@ -1297,6 +1297,7 @@ function Tune(overrides)
 
             TURFCRAFTING = TechTree.Create({
                 TURFCRAFTING = 2,
+                MASHTURFCRAFTING = 2,
             }),
 
             SPIDERCRAFT = TechTree.Create({
@@ -2656,6 +2657,10 @@ function Tune(overrides)
         WARG_TARGETRANGE = 10,
         WARG_NEARBY_PLAYERS_DIST = 30,
         WARG_BASE_HOUND_AMOUNT = 2,
+
+        WARG_WAVE_HEALTH = 600,
+        WARG_WAVE_BASE_HOUND_AMOUNT = 1,
+        WARG_WAVE_MAX_HOUND_AMOUNT = 3,
 
         SMOTHER_DAMAGE = 3,
 

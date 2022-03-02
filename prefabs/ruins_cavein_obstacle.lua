@@ -28,8 +28,6 @@ local function OnWork(inst, worker, workleft)
         local fx = SpawnPrefab("ruins_cavein_obstacle_rubble_fx")
         fx.Transform:SetPosition(pt:Get())
         fx.setsize(fx,inst.version)
-
-        -- BUSTED SOUND HERE. PLAY IT ON THE FX [AMANDA]
         fx.SoundEmitter:PlaySound("ancientguardian_rework/environment/pillar_break")        
 
         inst.components.lootdropper:DropLoot(pt)
@@ -158,7 +156,7 @@ local _endfall = function(debris)
 
     ShakeAllCameras(CAMERASHAKE.VERTICAL, .7, .02, 1.1, debris, 40)
 
-    -- HIT THE GROUND SOUND. [AMANDA]    
+    -- HIT THE GROUND SOUND. [AMANDA]
 
     local x,y,z = debris.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, 0, z, 6, nil, NO_TAGS)

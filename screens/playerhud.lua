@@ -787,11 +787,7 @@ function PlayerHud:IsCraftingOpen()
 end
 
 function PlayerHud:IsCraftingBlockingGameplay()
-    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and not self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
-end
-
-function PlayerHud:IsCraftingBlockingMovement()
-   -- return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and not self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
+    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
 end
 
 function PlayerHud:IsControllerVoteOpen()

@@ -2795,6 +2795,8 @@ return {
 			BURNT = "It's out of style now.",
 		},
 		WARG = "You might be something to reckon with, big dog.",
+        WARG_WAVE = "You might be something to reckon with, big dog.",
+        
 		WASPHIVE = "I think those bees are mad.",
 		WATERBALLOON = "What a scientific marvel!",
 		WATERMELON = "Sticky sweet.",

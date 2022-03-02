@@ -1943,6 +1943,7 @@ STRINGS =
         BELL = "Old Bell",
 
         WARG = "Varg",
+        WARG_WAVE = "Varglet",
 
         SPAT = "Ewecus",
         STEELWOOL = "Steel Wool",
@@ -7394,6 +7395,9 @@ STRINGS.UI =
         TIP_OCEANEXPLORATION = "\"What strange new islands and creatures might I encounter if I journey out to sea? I shudder to think... but curiosity has a tendency to get the better of me...\" -W",
         TIP_REVIVE = "\"We nearly lost one of our number today. In a mad daze I created... something... that managed to pull our friend back to the land of the living, but... whatever it was, I fear I cannot rightfully say it was within the realm of science...\" -W",
         TIP_COBBLEDROAD = "\"Today I was surprised to come upon a cobbled road - how did this hallmark of civilization come to be in this untamed wilderness?\" -W",
+        TIP_MERMHOUSE = "\"The Merms are fiercely territorial, and quick to defend their homes. Though I honestly can't imagine anyone else wanting to take up residence in those ram-shackle hovels...\" -M",
+        TIP_BOTTLES = "\"From time to time I've spotted bottles bobbing along the ocean currents, just out of reach from the shore. I have half a mind to construct a boat and retrieve one of them... I have a gut feeling that someone is trying to send out a message.\" -W",
+        TIP_MOONISLAND = "\"I couldn't have imagined it, I'm certain I just saw a piece of the moon break off and crash into the ocean! Perhaps my compatriots will join me in a search for it...\" -W",
 
     },
 
@@ -7404,7 +7408,7 @@ STRINGS.UI =
         TIP_WILSON_UNI = "Wilson chose the path of an independent Gentleman Scientist after finding the university environment to be too stifling for a man of his ambitions. (The enormous bill the university sent him to pay for repairs to the chemistry lab had absolutely nothing to do with this.)",
         TIP_WINONA_CHARLIE = "Growing up, Winona always looked out for her younger sister. Even now, she can't help but feel that one day she'll be able to reach out into the darkness and pull Charlie back.",
         TIP_MAXWELL_SURVIVORS = "Once the King of the Nightmare Throne, Maxwell now finds himself surviving alongside the very people he once tormented. Needless to say, it makes for a bit of an... awkward atmosphere.",
-        TIP_MAXWELL_PAST = "Maxwell (née William Carter) was once nothing more than a humble stage magician, until the discovery of a mysterious tome changed the course of his life forever.",
+        TIP_MAXWELL_PAST = "Maxwell (né William Carter) was once nothing more than a humble stage magician, until the discovery of a mysterious tome changed the course of his life forever.",
         TIP_DARKNESS_CHARLIE = "In the Constant, the darkness has a name. Have you met Charlie yet?",
         TIP_WARNING = "\"Nothing here is what it seems. If you're reading this, keep an eye on the rabbits, don't trust the statues, and don't mistake that thing hanging in the night sky for the moon...\" -W",
         TIP_WOODIE = "Even with all the steps Woodie has taken to control his were-curse, there's little that can be done on nights when the moon is at its fullest.",
@@ -7413,6 +7417,8 @@ STRINGS.UI =
         TIP_WENDY = "Nothing could ever come between Wendy and her twin sister Abigail. Some bonds transcend even death.",
         TIP_WEBBER = "Once upon a time, a little boy was swallowed up whole by a big hungry spider. Now they share everything; a body, a mind, and the name Webber.",
         TIP_WALTER = "Walter's time in the Pinetree Pioneers has made him more prepared than most for surviving in the wilderness. Unfortunately, this is undermined somewhat by his blind fascination with monsters.",
+        TIP_THEM = "\"You can't run from Them forever. Take it from me, pal.\" -M",
+        TIP_PORTALS = "\"It seems that every time we discover a doorway out of this terrible place, it just leads to more strange worlds with new horrors to endure. Still, I can't give up hope that one day we'll find a doorway that will take us home...\" -W",
 
     },
 

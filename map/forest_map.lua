@@ -422,7 +422,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 
 	ApplySpecialEvent(current_gen_params.specialevent)
 	for k, event_name in pairs(SPECIAL_EVENTS) do
-		if current_gen_params[event_name] ~= "default" then
+		if current_gen_params[event_name] == "enabled" then
 			ApplyExtraEvent(event_name)
 		end
 	end

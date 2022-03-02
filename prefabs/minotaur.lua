@@ -682,6 +682,7 @@ local function bloodfn()
     inst.AnimState:SetBank("rook_rhino_blood_big_fx")
     inst.AnimState:SetBuild("rook_rhino_blood_big_fx")
     inst.AnimState:PlayAnimation("blood_drop")
+    inst.AnimState:SetMultColour(1, 1, 1, .5)
 
     inst:AddTag("FX")
 

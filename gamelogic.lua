@@ -372,7 +372,7 @@ local function PopulateWorld(savedata, profile)
 		if savedata_overrides then
 			ApplySpecialEvent(savedata_overrides.specialevent or nil)
 			for k, event_name in pairs(SPECIAL_EVENTS) do
-				if savedata_overrides[event_name] ~= "default" then
+				if savedata_overrides[event_name] == "enabled" then
 					ApplyExtraEvent(event_name)
 				end
 			end

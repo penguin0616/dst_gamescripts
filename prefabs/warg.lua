@@ -7,6 +7,8 @@ local prefabs_basic =
     "houndstooth",
 }
 
+local prefabs_wave = prefabs_basic
+
 local prefabs_clay =
 {
     "redpouch",
@@ -66,6 +68,17 @@ SetSharedLootTable('warg',
 
     {'houndstooth',             1.00},
     {'houndstooth',             0.66},
+    {'houndstooth',             0.33},
+})
+
+SetSharedLootTable('warg_wave',
+{
+    {'monstermeat',             1.00},
+    {'monstermeat',             1.00},
+    {'monstermeat',             1.00},
+    {'monstermeat',             0.50},
+
+    {'houndstooth',             1.00},
     {'houndstooth',             0.33},
 })
 
@@ -139,13 +152,16 @@ end
 local TARGETS_MUST_TAGS = {"player"}
 local TARGETS_CANT_TAGS = {"playerghost"}
 local function NumHoundsToSpawn(inst)
-    local numHounds = TUNING.WARG_BASE_HOUND_AMOUNT
+    local numHounds = inst.base_hound_num 
 
     local pt = Vector3(inst.Transform:GetWorldPosition())
     local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, TUNING.WARG_NEARBY_PLAYERS_DIST, TARGETS_MUST_TAGS, TARGETS_CANT_TAGS)
     for i,player in ipairs(ents) do
         local playerAge = player.components.age:GetAgeInDays()
         local addHounds = math.clamp(Lerp(1, 4, playerAge/100), 1, 4)
+        if inst.spawn_fewer_hounds then
+            addHounds = math.ceil(addHounds/2)
+        end
         numHounds = numHounds + addHounds
     end
     local numFollowers = inst.components.leader:CountFollowers()
@@ -153,6 +169,10 @@ local function NumHoundsToSpawn(inst)
     num = (math.log(num)/0.4)+1 -- 0.4 is approx log(1.5)
 
     num = RoundToNearest(num, 1)
+
+    if inst.max_hound_spawns then
+        num = math.min(num,inst.max_hound_spawns)
+    end
 
     return num - numFollowers
 end
@@ -424,6 +444,11 @@ local function MakeWarg(name, bank, build, prefabs, tag)
         inst:AddTag("houndfriend")
         inst:AddTag("largecreature")
 
+        local scale = 0.75
+        if name == "warg_wave" then
+           inst.Transform:SetScale(scale,scale,scale)
+        end
+
         if tag ~= nil then
             inst:AddTag(tag)
 
@@ -452,6 +477,10 @@ local function MakeWarg(name, bank, build, prefabs, tag)
         inst.components.locomotor.runspeed = tag == "clay" and TUNING.CLAYWARG_RUNSPEED or TUNING.WARG_RUNSPEED
         inst.components.locomotor:SetShouldRun(true)
 
+        if name == "warg_wave" then
+            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * (1/scale)
+        end
+
         inst:AddComponent("combat")
         inst.components.combat:SetDefaultDamage(TUNING.WARG_DAMAGE)
         inst.components.combat:SetRange(TUNING.WARG_ATTACKRANGE)
@@ -463,8 +492,19 @@ local function MakeWarg(name, bank, build, prefabs, tag)
         inst:AddComponent("health")
         inst.components.health:SetMaxHealth(TUNING.WARG_HEALTH)
 
+        if name == "warg_wave" then
+            inst.components.health:SetMaxHealth(TUNING.WARG_WAVE_HEALTH)
+        end
+
         inst:AddComponent("lootdropper")
         inst.components.lootdropper:SetChanceLootTable(name)
+
+        inst.base_hound_num = TUNING.WARG_BASE_HOUND_AMOUNT
+        if name == "warg_wave" then
+            inst.spawn_fewer_hounds = true
+            inst.max_hound_spawns = TUNING.WARG_WAVE_MAX_HOUND_AMOUNT
+            inst.base_hound_num = TUNING.WARG_WAVE_BASE_HOUND_AMOUNT
+        end
 
         if tag == "clay" then
             inst.NumHoundsToSpawn = NoHoundsToSpawn
@@ -531,5 +571,6 @@ local function MakeWarg(name, bank, build, prefabs, tag)
 end
 
 return MakeWarg("warg", "warg", "warg_build", prefabs_basic, nil),
+    MakeWarg("warg_wave", "warg", "warg_build", prefabs_wave, nil),
     MakeWarg("claywarg", "claywarg", "claywarg", prefabs_clay, "clay"),
     MakeWarg("gingerbreadwarg", "warg", "warg_gingerbread_build", prefabs_gingerbread, "gingerbread")
