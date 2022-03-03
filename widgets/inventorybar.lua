@@ -6,7 +6,6 @@ local Widget = require "widgets/widget"
 local EquipSlot = require "widgets/equipslot"
 local ItemTile = require "widgets/itemtile"
 local Text = require "widgets/text"
-local ThreeSlice = require "widgets/threeslice"
 local HudCompass = require "widgets/hudcompass"
 
 local TEMPLATES = require "widgets/templates"

@@ -2785,6 +2785,8 @@ return{
 			BURNT = "Aww...",
 		},
 		WARG = "What big teeth he have!",
+        WARG_WAVE = "What big teeth he have!",
+        
 		WASPHIVE = "Look scary... but sweet stuff inside...",
 		WATERBALLOON = "Don't worry, won't throw at you... (hee-hee)",
 		WATERMELON = "Gimme!!",

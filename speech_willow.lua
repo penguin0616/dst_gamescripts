@@ -2792,6 +2792,8 @@ return{
 			BURNT = "Aww, the fire burned out.",
 		},
 		WARG = "You're a big mean jerk!",
+        WARG_WAVE = "You big jerk!",
+        
 		WASPHIVE = "A cone full of jerks.",
 		WATERBALLOON = "Boo! Hissss!",
 		WATERMELON = "But where's the firemelon?",

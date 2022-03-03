@@ -8,6 +8,7 @@ local Text = require "widgets/text"
 local Grid = require "widgets/grid"
 
 local PinSlot = require "widgets/redux/craftingmenu_pinslot"
+local CraftingMenuIngredients = require "widgets/redux/craftingmenu_ingredients"
 
 local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, height)
     Widget._ctor(self, "Crafting Menu Pin Bar")

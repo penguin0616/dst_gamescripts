@@ -2789,6 +2789,8 @@ return{
 			BURNT = "Now it doesn't remind me of anything.",
 		},
 		WARG = "A true bastion of evil.",
+        WARG_WAVE = "A beast of gnashing teeth and fury.",
+        
 		WASPHIVE = "They hide in their fortress of hate.",
 		WATERBALLOON = "At any moment it could pop and spill its guts.",
 		WATERMELON = "It's mostly water. What's the big deal?",

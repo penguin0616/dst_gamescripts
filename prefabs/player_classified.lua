@@ -476,6 +476,12 @@ local function OnTechTreesDirty(inst)
     end
 end
 
+fns.RefreshCrafting = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("refreshcrafting")
+    end
+end
+
 local function OnRecipesDirty(inst)
     if inst._parent ~= nil then
         inst._parent:PushEvent("unlockrecipe")
@@ -968,6 +974,8 @@ local function RegisterNetListeners(inst)
     inst:ListenForEvent("morguedirty", OnMorgueDirty)
     inst:ListenForEvent("houndwarningdirty", OnHoundWarningDirty)
 	inst:ListenForEvent("startfarmingmusicevent", fns.StartFarmingMusicEvent)
+    inst:ListenForEvent("ingredientmoddirty", fns.RefreshCrafting)
+
     OnStormLevelDirty(inst)
     OnGiftsDirty(inst)
     fns.OnYotbSkinDirty(inst)
@@ -1125,7 +1133,7 @@ local function fn()
     inst.builderdamagedevent = net_event(inst.GUID, "builder.damaged")
     inst.learnrecipeevent = net_event(inst.GUID, "builder.learnrecipe")
     inst.techtrees = deepcopy(TECH.NONE)
-    inst.ingredientmod = net_tinybyte(inst.GUID, "builder.ingredientmod")
+    inst.ingredientmod = net_tinybyte(inst.GUID, "builder.ingredientmod", "ingredientmoddirty")
     for i, v in ipairs(TechTree.BONUS_TECH) do
         local bonus = net_tinybyte(inst.GUID, "builder."..string.lower(v).."bonus")
 		inst[string.lower(v).."bonus"] = bonus

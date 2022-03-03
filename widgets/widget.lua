@@ -339,6 +339,10 @@ function Widget:GetPosition()
     return Vector3(self.inst.UITransform:GetLocalPosition())
 end
 
+function Widget:GetPositionXYZ()
+    return self.inst.UITransform:GetLocalPosition()
+end
+
 function Widget:GetWorldScale()
     return Vector3(self.inst.UITransform:GetWorldScale())
 end

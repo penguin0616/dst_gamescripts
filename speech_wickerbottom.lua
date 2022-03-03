@@ -2785,6 +2785,8 @@ return{
 			BURNT = "It used to be a wardrobe.",
 		},
 		WARG = "Domesticating this Canis will be an entertaining challenge.",
+        WARG_WAVE = "This Canis needs a lesson in manners.",
+        
 		WASPHIVE = "I had best keep my distance.",
 		WATERBALLOON = "A toy for children.",
 		WATERMELON = "Citrullus lanatus.",

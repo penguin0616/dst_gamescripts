@@ -2785,6 +2785,8 @@ return{
 			BURNT = "Dapperness is a state of mind.",
 		},
 		WARG = "The alpha!",
+        WARG_WAVE = "They're smaller than I remember... going soft on us, Charlie?",
+        
 		WASPHIVE = "That looks dangerous.",
 		WATERBALLOON = "Do you have any idea how much this suit cost?",
 		WATERMELON = "It's mostly water. Fibrous, sweet water.",

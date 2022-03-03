@@ -26,8 +26,8 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 		freecrafting = 0,
 		buffered = 1, 
 		has_ingredients = 2,
+		prototype = 2,
 		no_ingredients = 3,
-		prototype = 3,
 	}
 
 	local function sort_alpha(a, b)

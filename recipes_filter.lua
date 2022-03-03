@@ -107,11 +107,11 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"slingshotammo_thulecite",
 
 	-- Wolfgang
-	"mighty_gym",		
-	"dumbbell",			
-	"dumbbell_golden",	
-	"dumbbell_marble",	
-	"dumbbell_gem",		
+	"mighty_gym",
+	"dumbbell",
+	"dumbbell_golden",
+	"dumbbell_marble",
+	"dumbbell_gem",
 
 	-- Wickerbottom
 	"book_birds",		
@@ -155,19 +155,19 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"pocketwatch_dismantler",	
 	"pocketwatch_parts",		
 	"pocketwatch_heal",			
-	"pocketwatch_revive",		
+	"pocketwatch_revive",
 	"pocketwatch_warp",			
 	"pocketwatch_recall",		
 	"pocketwatch_portal",		
 	"pocketwatch_weapon",
 
 	-- Wes
-	"balloons_empty",	
-	"balloon",			
-	"balloonspeed",		
-	"balloonparty",		
-	"balloonvest",		
-	"balloonhat",		
+	"balloons_empty",
+	"balloon",
+	"balloonspeed",
+	"balloonparty",
+	"balloonvest",
+	"balloonhat",
 
 }
 
@@ -447,6 +447,11 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"sentryward",
 	"archive_resonator_item",
 	"reskin_tool",
+
+	"balloons_empty",
+	"spiderden_bedazzler",  
+	"spider_whistle",  		
+	"spider_repellent",  	
 }
 
 CRAFTING_FILTERS.LIGHT.recipes =
@@ -462,6 +467,7 @@ CRAFTING_FILTERS.LIGHT.recipes =
 	"molehat",
 	"lantern",
 	"nightlight",
+	"winona_spotlight",
 	"dragonflyfurnace",
 	"mushroom_light",
 	"mushroom_light2",
@@ -495,10 +501,10 @@ CRAFTING_FILTERS.REFINE.recipes =
 	"waxpaper",
 	"beeswax",
 	"marblebean",
+	"bearger_fur",
 	"nightmarefuel",
 	"purplegem",
 	"moonrockcrater",
-	"bearger_fur",
 	"malbatross_feathered_weave",
 	"refined_dust",
 }
@@ -543,6 +549,7 @@ CRAFTING_FILTERS.ARMOUR.recipes =
 	"footballhat",
 	"wathgrithrhat",
 	"cookiecutterhat",
+	"beehat",
 }
 
 CRAFTING_FILTERS.CLOTHING.recipes =
@@ -551,6 +558,8 @@ CRAFTING_FILTERS.CLOTHING.recipes =
 	"sewing_tape",
 	"mermhat",
 	"walterhat",
+	"balloonvest",
+	"balloonhat",
 	"backpack",
 	"seedpouch",
 	"piggyback",
@@ -595,6 +604,9 @@ CRAFTING_FILTERS.CLOTHING.recipes =
 CRAFTING_FILTERS.RESTORATION.recipes =
 {
 	"pocketwatch_heal",			
+	"pocketwatch_revive",
+	"spider_healer_item",
+
 	"healingsalve",
 	"bandage",
 	"tillweedsalve",
@@ -627,6 +639,7 @@ CRAFTING_FILTERS.COOKING.recipes =
 	"firepit",
 	"icebox",
 	"saltbox",
+	"dragonflyfurnace",
 
 }
 
@@ -691,6 +704,7 @@ CRAFTING_FILTERS.SEAFARING.recipes =
 	"boatpatch",
 	"oar",
 	"oar_driftwood",
+	"balloonvest",
 	"anchor_item",
 	"mast_item",
 	"mast_malbatross_item",
@@ -757,6 +771,8 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"winona_spotlight",
 	"winona_battery_low",
 	"winona_battery_high",
+	"mighty_gym",		
+	"spidereggsack", 		
 
 	"treasurechest",
 	"dragonflychest",
@@ -800,30 +816,36 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 
 CRAFTING_FILTERS.MAGIC.recipes =
 {
+	"abigail_flower",
 	"pocketwatch_weapon",
-	"firestaff",
-	"icestaff",
-	"nightsword",
+	"wereitem_goose",
+	"wereitem_beaver",
+	"wereitem_moose",
+	"waxwelljournal",		
+
 	"researchlab4",
 	"researchlab3",
-	"sentryward",
-	"reskin_tool",
-	"nightmarefuel",
-	"purplegem",
-	"armor_sanity",
-
-	"armorslurper",
+	"resurrectionstatue",
 	"panflute",
 	"onemanband",
-
-	"townportal",
-	"moondial",
-
+	"nightlight",
+	"armor_sanity",
+	"nightsword",
+	"batbat",
+	"armorslurper",
+	"purplegem",
 	"amulet",
 	"blueamulet",
 	"purpleamulet",
+	"firestaff",
+	"icestaff",
 	"telestaff",
 	"telebase",
+	"sentryward",
+	"moondial",
+	"townportal",
+	"reskin_tool",
+	"nightmarefuel",
 }
 
 CRAFTING_FILTERS.RIDING.recipes =
@@ -896,6 +918,7 @@ CRAFTING_FILTERS.RAIN.recipes =
 {
 	"rainometer",
 	"lightning_rod",
+	"balloonhat",
 	"grass_umbrella",
 	"umbrella",
 	"strawhat",

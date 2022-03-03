@@ -2791,6 +2791,8 @@ return{
 			BURNT = "So who wants to build another one?",
 		},
 		WARG = "Quite the set of chompers on that one.",
+        WARG_WAVE = "I don't think we're gonna get along.",
+        
 		WASPHIVE = "Wouldn't mess with that without good reason.",
 		WATERBALLOON = "I throw a killer curveball.",
 		WATERMELON = "We used to slice these up on hot summer days.",

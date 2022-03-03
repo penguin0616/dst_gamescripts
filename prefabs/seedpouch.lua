@@ -68,6 +68,7 @@ local function fn()
     inst.foleysound = "dontstarve/movement/foley/backpack"
 
     inst:AddTag("backpack")
+    inst:AddTag("foodpreserver")
 
     local swap_data = {bank = "seedpouch", anim = "anim"}
     MakeInventoryFloatable(inst, "med", 0.125, 0.65, nil, nil, swap_data)

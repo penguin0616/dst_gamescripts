@@ -2785,6 +2785,8 @@ return{
 			BURNT = "Poor little guys...",
 		},
 		WARG = "Are they a friend of yours, Woby?",
+        WARG_WAVE = "Look Woby, another dog for you to play with!",
+        
 		WASPHIVE = "E-everyone stay calm... we'll be on our way...",
 		WATERBALLOON = "Don't worry, I have great aim! Or maybe you should be worried...",
 		WATERMELON = "A sweet, refreshing snack!",

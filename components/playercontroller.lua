@@ -370,7 +370,7 @@ function PlayerController:IsEnabled()
     if self.classified == nil or not self.classified.iscontrollerenabled:value() then
         return false
     elseif self.inst.HUD ~= nil and self.inst.HUD:HasInputFocus() then
-        return false, true
+        return false, self.inst.HUD:IsCraftingAllowingGameplay()			-- if the player controller is disabled, only because the crafting menu is open, then allow some systems to be enabled
     end
     return true
 end
@@ -1976,7 +1976,7 @@ function PlayerController:OnUpdate(dt)
     --for isenabled returning false is due to HUD blocking input.
     local isenabled, ishudblocking = self:IsEnabled()
     if not isenabled then
-		local allow_loco = (self.inst.HUD == nil or not self.inst.HUD:IsCraftingBlockingGameplay()) and not self.no_loco_when_crafting
+		local allow_loco = isenabled or ishudblocking
 		if not allow_loco then
 			if self.directwalking or self.dragwalking or self.predictwalking then
 				if self.locomotor ~= nil then
@@ -2368,13 +2368,14 @@ function PlayerController:OnUpdate(dt)
                 --Check for chain attacking first
                 local retarget = nil
                 local buffaction = self.inst:GetBufferedAction()
-                if buffaction and buffaction.action == ACTIONS.ATTACK and not self.actionholding then
-                    retarget = buffaction.target
-                elseif self.inst.sg ~= nil then
-                    retarget = self.inst.sg.statemem.attacktarget
-                elseif self.inst.replica.combat ~= nil then
-                    retarget = self.inst.replica.combat:GetTarget()
+                if not buffaction or buffaction.action ~= ACTIONS.ATTACK or self.actionholding then
+                    if self.inst.sg ~= nil then
+                        retarget = self.inst.sg.statemem.attacktarget
+                    elseif self.inst.replica.combat ~= nil then
+                        retarget = self.inst.replica.combat:GetTarget()
+                    end
                 end
+
                 if retarget and not IsEntityDead(retarget) and CanEntitySeeTarget(self.inst, retarget) then
                     --Handle chain attacking
                     if self.inst.sg ~= nil then
@@ -2406,7 +2407,6 @@ function PlayerController:OnUpdate(dt)
                                 self:DoAttackButton()
                             end
                         elseif not TheInput:IsControlPressed(CONTROL_PRIMARY) then
-                            print("finished action. do new action")
                             self:OnControl(attack_control, true)
                         end
                     end

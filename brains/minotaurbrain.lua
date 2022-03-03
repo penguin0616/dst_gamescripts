@@ -58,6 +58,37 @@ local function ShouldGoHome(inst)
 end
 
 local PILLAR_HASTAG = {"quake_on_charge"}
+local function closetopillar(inst)
+    local x,y,z = inst.Transform:GetWorldPosition()
+      
+    local ents = TheSim:FindEntities(x,y,z, 4, PILLAR_HASTAG)
+    if #ents > 0 then
+        return true
+    end
+end
+
+local function shouldramattack(inst)
+    if inst.components.combat.target == nil then
+        return nil
+    end
+    
+    if inst.components.timer:TimerExists("rammed") and not inst.sg:HasStateTag("running") then
+        return nil
+    end
+    
+    --and (inst.sg:HasStateTag("running") or not inst.components.combat.target:IsNear(inst, 5))
+
+    if inst.sg:HasStateTag("leapattack") then
+        return nil
+    end
+    
+    if closetopillar(inst) then
+        return nil
+    end
+
+    return true
+end
+
 
 local function shouldjumpattack(inst)
     if inst.components.health:GetPercent() > 0.6 then
@@ -114,15 +145,6 @@ local function dojumpAttack(inst)
     end
 end
 
-local function closetopillar(inst)
-    local x,y,z = inst.Transform:GetWorldPosition()
-      
-    local ents = TheSim:FindEntities(x,y,z, 4, PILLAR_HASTAG)
-    if #ents > 0 then
-        return true
-    end
-end
-
 function MinotaurBrain:OnStart()
 
     local root = PriorityNode(
@@ -132,11 +154,7 @@ function MinotaurBrain:OnStart()
                 WhileNode(function() return shouldjumpattack(self.inst) end, "JumpAttack", 
                     DoAction(self.inst, function() return dojumpAttack(self.inst) end, "jump", true)),
 
-                WhileNode(function() return self.inst.components.combat.target ~= nil 
-                                    and (self.inst.sg:HasStateTag("running") or not self.inst.components.combat.target:IsNear(self.inst, 5)) 
-                                    and not self.inst.sg:HasStateTag("leapattack") 
-                                    and not closetopillar(self.inst)
-                             end, "RamAttack", 
+                WhileNode(function() return shouldramattack(self.inst)  end, "RamAttack",
                     ChaseAndRam(self.inst, MAX_CHASE_TIME, CHASE_GIVEUP_DIST, MAX_CHARGE_DIST)),
 
                 ChaseAndAttack(self.inst, 3, 10, nil, nil, true ),

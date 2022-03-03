@@ -2785,6 +2785,8 @@ return{
 			BURNT = "One less distraction, I suppose.",
 		},
 		WARG = "I guess I was bound to run into you sooner or later.",
+        WARG_WAVE = "I could have sworn they were bigger...",
+        
 		WASPHIVE = "I'd rather not be stung within an inch of my life, thank you.",
 		WATERBALLOON = "Don't think I won't throw it!",
 		WATERMELON = "Ahh, refreshing!",

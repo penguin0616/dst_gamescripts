@@ -2785,6 +2785,8 @@ return{
 			BURNT = "No use crying over burnt pelts.",
 		},
 		WARG = "Be that you, Fenrir?",
+        WARG_WAVE = "Ha! I've felled more fearsome beasts than ye!",
+        
 		WASPHIVE = "Bees of war!",
 		WATERBALLOON = "Prepare to engage in water-y battle!",
 		WATERMELON = "It makes a good sound when you hit it.",

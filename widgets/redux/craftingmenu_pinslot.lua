@@ -1,8 +1,9 @@
 local Widget = require "widgets/widget"
 local Image = require "widgets/image"
 local ImageButton = require "widgets/imagebutton"
-local RecipeTile = require "widgets/recipetile"
-local RecipePopup = require "widgets/recipepopup"
+local ThreeSlice = require "widgets/threeslice"
+
+local CraftingMenuIngredients = require "widgets/redux/craftingmenu_ingredients"
 
 require "widgets/widgetutil"
 
@@ -12,17 +13,21 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 	self.craftingmenu = craftingmenu
 	self.slot_num = slot_num
 
+
 	if pin_data ~= nil then
 		self.recipe_name = pin_data.recipe_name
 		self.skin_name = pin_data.skin_name
 	end
 
-	self:SetScale(0.6)
+	self.base_scale = 0.6
+
+	self:SetScale(self.base_scale)
 
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
 	----------------
 	self.craft_button = self:AddChild(ImageButton(atlas, "pinslot_bg.tex"))
+	self.craft_button.AllowOnControlWhenSelected = true
 	self.craft_button:SetWhileDown(function()
 		if not self.owner.HUD:IsCraftingOpen() then	
 			if self.craft_button.recipe_held then
@@ -64,6 +69,12 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 			self.craft_button.recipe_held = false
 		end
 	end)
+	self.craft_button.onselect = function()
+	    if self.craft_button.focus_scale then
+			self.craft_button.image:SetScale(self.craft_button.focus_scale[1], self.craft_button.focus_scale[2], self.craft_button.focus_scale[3])
+        end
+	end
+
 
 	self.focus_forward = self.craft_button
 
@@ -80,14 +91,51 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 	self.unpin_button:Hide()
 
 	----------------
-	self.bg = self.craft_button
-    self.item_img = self.bg.image:AddChild(Image("images/global.xml", "square.tex"))
-    self.fg = self.bg.image:AddChild(Image("images/global.xml", "square.tex"))
+	self.recipe_popup = self:AddChild(self:MakeRecipePopup())
+	self.recipe_popup:Hide()
+	self.recipe_popup:MoveToBack()
+
+	----------------
+    self.item_img = self.craft_button.image:AddChild(Image("images/global.xml", "square.tex"))
+    self.fg = self.craft_button.image:AddChild(Image("images/global.xml", "square.tex"))
 	self.fg:SetScale(0.92)
 	self.fg:Hide()
 
+	----------------
 	self:Hide()
 end)
+
+function PinSlot:MakeRecipePopup()
+	local atlas = resolvefilepath(CRAFTING_ATLAS)
+
+	local root = Widget("RecipePopupRoot")
+
+	root.max_ingredients_wide = 5
+	root._scale = 1.15 / self.base_scale
+	root.ShowPopup = function(popup_self, recipe)
+		if recipe ~= nil then
+			popup_self:Show()
+			popup_self.ingredients:SetRecipe(recipe)
+
+		    popup_self.background:ManualFlow(math.min(root.max_ingredients_wide, popup_self.ingredients.num_items), true)
+
+			local x = popup_self.background.startcap:GetPositionXYZ()
+			popup_self:SetPosition(x *popup_self._scale + 37/self.base_scale, 0)
+
+		else
+			popup_self:Hide()
+		end
+	end
+
+	root.HidePopup = function(popup_self)
+		popup_self:Hide()
+	end
+
+	root.background = root:AddChild(ThreeSlice(atlas, "popup_end.tex", "popup_short.tex"))
+	root.ingredients = root:AddChild(CraftingMenuIngredients(self.owner, root.max_ingredients_wide))
+	root:SetScale(root._scale)
+	return root
+end
 
 function PinSlot:HasRecipe()
 	return self.recipe_name ~= nil
@@ -98,9 +146,6 @@ function PinSlot:SetRecipe(recipe_name, skin_name)
 	self.skin_name = skin_name
 
 	self:Refresh()
-	if self.focus then
-		self:OnGainFocus()
-	end
 end
 
 function PinSlot:Refresh()
@@ -113,6 +158,10 @@ function PinSlot:Refresh()
 	if data ~= nil and data.recipe ~= nil and data.meta ~= nil then
 		local recipe = data.recipe
 		local meta = data.meta
+
+		if self.recipe_popup:IsVisible() then
+			self.recipe_popup:ShowPopup(recipe)
+		end
 
 		local inv_image
 		if self.skin_name ~= nil then
@@ -127,26 +176,26 @@ function PinSlot:Refresh()
 		self.item_img:SetTint(1, 1, 1, 1)
 
 		if meta.build_state == "buffered" then
-			self.bg:SetTextures(atlas, "pinslot_bg_buffered.tex")
+			self.craft_button:SetTextures(atlas, "pinslot_bg_buffered.tex", nil, nil, nil, "pinslot_bg_buffered.tex")
 			self.fg:Hide()
 		elseif meta.build_state == "prototype" then
-			self.bg:SetTextures(atlas, "pinslot_bg_prototype.tex")
+			self.craft_button:SetTextures(atlas, "pinslot_bg_prototype.tex", nil, nil, nil, "pinslot_bg_prototype.tex")
 			self.fg:SetTexture(atlas, "pinslot_fg_prototype.tex")
 			self.fg:Show()
 		elseif meta.can_build then
-			self.bg:SetTextures(atlas, "pinslot_bg.tex")
+			self.craft_button:SetTextures(atlas, "pinslot_bg.tex", nil, nil, nil, "pinslot_bg.tex")
 			self.fg:Hide()
 		elseif meta.build_state == "hint" then
-			self.bg:SetTextures(atlas, "pinslot_bg_missing_mats.tex")
+			self.craft_button:SetTextures(atlas, "pinslot_bg_missing_mats.tex", nil, nil, nil, "pinslot_bg_missing_mats.tex")
 			self.item_img:SetTint(0.7, 0.7, 0.7, 1)
 			self.fg:SetTexture(atlas, "pinslot_fg_lock.tex")
             self.fg:Show()
 		elseif meta.build_state == "no_ingredients" then
-			self.bg:SetTextures(atlas, "pinslot_bg_missing_mats.tex")
+			self.craft_button:SetTextures(atlas, "pinslot_bg_missing_mats.tex", nil, nil, nil, "pinslot_bg_missing_mats.tex")
 			self.item_img:SetTint(0.7, 0.7, 0.7, 1)
             self.fg:Hide()
 		else
-			self.bg:SetTextures(atlas, "pinslot_bg_missing_mats.tex")
+			self.craft_button:SetTextures(atlas, "pinslot_bg_missing_mats.tex", nil, nil, nil, "pinslot_bg_missing_mats.tex")
 			self.item_img:SetTint(0.7, 0.7, 0.7, 1)
 			self.fg:SetTexture(atlas, "pinslot_fg_lock.tex")
             self.fg:Show()
@@ -154,7 +203,7 @@ function PinSlot:Refresh()
 
 		self:Show()
 	else
-		self.bg:SetTextures(atlas, "pinslot_bg_missing_mats.tex")
+		self.craft_button:SetTextures(atlas, "pinslot_bg_missing_mats.tex", nil, nil, nil, "pinslot_bg_missing_mats.tex")
         self.fg:Hide()
 		self.item_img:SetTexture(atlas, "pinslot_fg_pin.tex")
 		self.item_img:ScaleToSize(item_size, item_size)
@@ -225,16 +274,22 @@ function PinSlot:Close()
 end
 
 function PinSlot:ShowRecipe()
---    if self.recipe and self.recipepopup then
---        self.recipepopup:Show()
---        self.recipepopup:SetRecipe(self.recipe, self.owner)
---    end
+	self.craft_button:Select()
+
+	if self.recipe_name ~= nil and self.recipe_popup ~= nil then
+		local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name) 
+		if recipe_data ~= nil then
+			self.recipe_popup:ShowPopup(recipe_data.recipe)
+		end
+	end
 end
 
 function PinSlot:HideRecipe()
---    if self.recipepopup then
---        self.recipepopup:Hide()
---    end
+	self.craft_button:Unselect()
+
+    if self.recipe_popup then
+        self.recipe_popup:HidePopup()
+    end
 end
 
 return PinSlot

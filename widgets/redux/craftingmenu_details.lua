@@ -9,6 +9,8 @@ local TEMPLATES = require "widgets/redux/templates"
 
 local IngredientUI = require "widgets/ingredientui"
 local SkinSelectorUI = require "widgets/redux/craftingmenu_skinselector"
+local CraftingMenuIngredients = require "widgets/redux/craftingmenu_ingredients"
+
 
 require("util")
 
@@ -29,131 +31,6 @@ function CraftingMenuDetails:OnControl(control, down)
     if CraftingMenuDetails._base.OnControl(self, control, down) then return true end
 
 	return false
-end
-
-function CraftingMenuDetails:_MakeIngredientList()
-	local atlas = resolvefilepath(CRAFTING_ATLAS)
-
-	local owner = self.owner
-    local builder = owner.replica.builder
-    local inventory = owner.replica.inventory
-	local recipe = self.data.recipe
-
-    local ingredient_widgets = {}
-	local ingredients_root = Widget("ingredients_root")
-
-	local equippedBody = inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-    local showamulet = equippedBody and equippedBody.prefab == "greenamulet"
-
-    local num = (recipe.ingredients ~= nil and #recipe.ingredients or 0)
-			    + (recipe.character_ingredients ~= nil and #recipe.character_ingredients or 0)
-				+ (recipe.tech_ingredients ~= nil and #recipe.tech_ingredients or 0)
-				+ (showamulet and 1 or 0)
-
-
-    local w = 64
-    local div = 10
-    local half_div = div * .5
-    local offset = 0 --center
-    if num > 1 then
-        offset = offset - (w *.5 + half_div) * (num - 1)
-    end
-
-	local scale = math.min(1, 4 / num)
-	ingredients_root:SetScale(scale * INGREDIENTS_SCALE)
-
-	local quant_text_scale = math.max(1, 1/(scale*1.125))
-
-    self.hint_tech_ingredient = nil
-
-    for i, v in ipairs(recipe.tech_ingredients) do
-        if v.type:sub(-9) == "_material" then
-            local has, level = builder:HasTechIngredient(v)
-            local ing = ingredients_root:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), nil, nil, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type, quant_text_scale))
-            if GetGameModeProperty("icons_use_cc") then
-                ing.ing:SetEffect("shaders/ui_cc.ksh")
-            end
-            if num > 1 and #ingredient_widgets > 0 then
-                offset = offset + half_div
-            end
-            ing:SetPosition(offset, 0)
-            offset = offset + w + half_div
-            table.insert(ingredient_widgets, ing)
-            if not has and self.hint_tech_ingredient == nil then
-                self.hint_tech_ingredient = v.type:sub(1, -10):upper()
-            end
-        end
-    end
-
-    for i, v in ipairs(recipe.ingredients) do
-        local has, num_found = inventory:Has(v.type, math.max(1, RoundBiasedUp(v.amount * builder:IngredientMod())), true)
-        local ing = ingredients_root:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), v.amount ~= 0 and v.amount or nil, num_found, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type, quant_text_scale))
-        if GetGameModeProperty("icons_use_cc") then
-            ing.ing:SetEffect("shaders/ui_cc.ksh")
-        end
-        if num > 1 and #ingredient_widgets > 0 then
-            offset = offset + half_div
-        end
-        ing:SetPosition(offset, 0)
-        offset = offset + w + half_div
-        table.insert(ingredient_widgets, ing)
-    end
-
-    for i, v in ipairs(recipe.character_ingredients) do
-        --#BDOIG - does this need to listen for deltas and change while menu is open?
-        --V2C: yes, but the entire craft tabs does. (will be added there)
-        local has, amount = builder:HasCharacterIngredient(v)
-
-		if v.type == CHARACTER_INGREDIENT.HEALTH and owner:HasTag("health_as_oldage") then
-			v = Ingredient(CHARACTER_INGREDIENT.OLDAGE, math.ceil(v.amount * TUNING.OLDAGE_HEALTH_SCALE))
-		end
-        local ing = ingredients_root:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), v.amount, amount, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type, quant_text_scale))
-        if GetGameModeProperty("icons_use_cc") then
-            ing.ing:SetEffect("shaders/ui_cc.ksh")
-        end
-        if num > 1 and #ingredient_widgets > 0 then
-            offset = offset + half_div
-        end
-        ing:SetPosition(offset, 0)
-        offset = offset + w + half_div
-        table.insert(ingredient_widgets, ing)
-    end
-
-	if showamulet then
-		local amulet_atlas, amulet_img = equippedBody.replica.inventoryitem:GetAtlas(), equippedBody.replica.inventoryitem:GetImage()
-		
-		local amulet = ingredients_root:AddChild(IngredientUI(amulet_atlas, amulet_img, 0.2, 0.2, true, STRINGS.GREENAMULET_TOOLTIP, owner, CHARACTER_INGREDIENT.MAX_HEALTH, quant_text_scale))
-		amulet:SetPosition(offset + half_div, 0)
-		table.insert(ingredient_widgets, amulet)
-
-        --for _, ing in ipairs(ingredient_widgets) do
-		--	local glow = ingredients_root:AddChild(Image(atlas, "slot_frame_select.tex"))
-		--	glow:SetTint(0.2, .8, 0.2, .75)
-		--	glow:SetScale(0.58)
-		--	glow:SetPosition(ing:GetPosition())
-		--	glow:MoveToBack()
-		--end
-
-		--local amulet = ingredients_root:AddChild(Image(amulet_atlas, amulet_img))
-		--amulet:SetPosition(offset + half_div, -4)
-		--table.insert(ingredient_widgets, amulet)
-
-        for _, ing in ipairs(ingredient_widgets) do
-			local glow = ing:AddChild(Image("images/global_redux.xml", "shop_glow.tex"))
-			glow:SetTint(.8, .8, .8, 0.4)
-			local len = 3
-			local function doscale(start) if start then glow:SetScale(0) glow:ScaleTo(0, 0.5, len/2, doscale) else glow:ScaleTo(.5, 0, len/2) end end
-			local function animate_glow() 
-				local t = math.random() * 360
-				glow:RotateTo(t, t-360, 3, animate_glow) 
-				doscale(true)
-			end
-			animate_glow()
-		end
-
-	end
-
-	return ingredients_root
 end
 
 function CraftingMenuDetails:_GetHintTextForRecipe(player, recipe)
@@ -330,9 +207,7 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 	local recipe = data.recipe
 
 	if self.data == data then
-		self.ingredients_list:KillAllChildren()
-		self.ingredients_list:AddChild(self:_MakeIngredientList())
-		
+		self.ingredients:SetRecipe(recipe)
 		self:UpdateBuildButton()
 		return
 	end
@@ -416,10 +291,9 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 
 	-- Ingredients
 	y = y - 10
-	self.ingredients_list = root_right:AddChild(Widget("ingredients_list"))
-	self.ingredients_list:AddChild(self:_MakeIngredientList())
+	self.ingredients = root_right:AddChild(CraftingMenuIngredients(self.owner, 4, recipe))
 	local ing_height = 45
-	self.ingredients_list:SetPosition(0, y - ing_height/2 - 5)
+	self.ingredients:SetPosition(0, y - ing_height/2 - 5)
 	y = y - ing_height
 
 	

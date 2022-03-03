@@ -257,6 +257,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		dynamictreeshadows = Profile:GetDynamicTreeShadowsEnabled(),
 		autopause = Profile:GetAutopauseEnabled(),
 		consoleautopause = Profile:GetConsoleAutopauseEnabled(),
+		craftingautopause = Profile:GetCraftingAutopauseEnabled(),
 		waltercamera = Profile:IsCampfireStoryCameraEnabled(),
 		loadingtips = Profile:GetLoadingTipsOption(),
 		defaultcloudsaves = Profile:GetDefaultCloudSaves(),
@@ -566,6 +567,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetDynamicTreeShadowsEnabled( self.options.dynamictreeshadows )
 	Profile:SetAutopauseEnabled( self.options.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.options.consoleautopause )
+	Profile:SetCraftingAutopauseEnabled( self.options.craftingautopause )
 	Profile:SetLoadingTipsOption( self.options.loadingtips )
 	Profile:SetCampfireStoryCameraEnabled( self.options.waltercamera )
 	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
@@ -683,6 +685,7 @@ function OptionsScreen:Apply()
 
 	Profile:SetAutopauseEnabled( self.working.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.working.consoleautopause )
+	Profile:SetCraftingAutopauseEnabled( self.working.craftingautopause )
 	Profile:SetLoadingTipsOption( self.working.loadingtips )
 	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
 	
@@ -1456,6 +1459,13 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
+	self.craftingautopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CRAFTINGAUTOPAUSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGAUTOPAUSE)
+	self.craftingautopauseSpinner.OnChanged =
+		function( _, data )
+			self.working.craftingautopause = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
 		
 	self.vibrationSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.VIBRATION, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.VIBRATION)
 	self.vibrationSpinner.OnChanged =
@@ -1611,6 +1621,7 @@ function OptionsScreen:_BuildSettings()
 	end
     table.insert( self.right_spinners, self.profanityfilterSpinner )
     table.insert( self.right_spinners, self.autopauseSpinner )
+	table.insert( self.right_spinners, self.craftingautopauseSpinner )
 	table.insert( self.right_spinners, self.loadingtipsSpinner )
 
 	if self.show_datacollection then
@@ -1840,7 +1851,7 @@ function OptionsScreen:_BuildControls()
 						local device_id = self.deviceSpinner:GetSelectedData()
 						if is_valid_fn(device_id) then
 							self.is_mapping = true
-							if not TheInputProxy:UnMapControl(device_id, group.control.controller) then
+							if not TheInputProxy:UnMapControl(device_id, group.control.keyboard) then
 								self.is_mapping = false
 							end
 						end
@@ -1859,9 +1870,8 @@ function OptionsScreen:_BuildControls()
     self.kb_controlwidgets = {}
     self.controller_controlwidgets = {}
 
-    local function is_valid_keyboard(device_id) return device_id == 0 end
-
     for i,v in ipairs(all_controls) do
+		local function is_valid_keyboard(device_id) return device_id == 0 and all_controls[i] and all_controls[i].keyboard end
         local group = BuildControlGroup(is_valid_keyboard, "keyboard", 0, all_controls[i], i)
         if group then
             group.binding_btn:SetHelpTextMessage(STRINGS.UI.CONTROLSSCREEN.CHANGEBIND)
@@ -2012,6 +2022,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.animatedHeadsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.animatedheads ) )
 	self.autopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autopause ) )
 	self.consoleautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.consoleautopause ) )
+	self.craftingautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingautopause ) )
 	self.loadingtipsSpinner:SetSelectedIndex( self.working.loadingtips or LOADING_SCREEN_TIP_OPTIONS.ALL )
 	if IsSteam() then
 		self.defaultcloudsavesSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.defaultcloudsaves ) )

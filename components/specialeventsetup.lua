@@ -252,8 +252,8 @@ function self:_SetupYearOfTheCatcoon()
 	local collected_kitcoons = { kitcoons = {} }
 	TheWorld:PushEvent("ms_collectallkitcoons", collected_kitcoons)
 	for _, kitcoon in ipairs(collected_kitcoons.kitcoons) do
-		print("[YOT Catcoon] Removing existing kitcoon '"..tostring(kitcoon).."'.")
-		kitcoon:Remove()
+		kitten_hiding_data[kitcoon.prefab] = nil
+		print("[YOT Catcoon] Using existing kitcoon '"..tostring(kitcoon).."'.")
 	end
 
 	for prefab, data in pairs(kitten_hiding_data) do
@@ -266,8 +266,6 @@ function self:_SetupYearOfTheCatcoon()
 	for kit_prefab, data in pairs(kitten_hiding_data) do
 		if data.kitcoon ~= nil then
 			self:_yotcatcoon_HideKitcoon(data, emergency_hidingspot_prefabs)
-		else
-
 		end
 	end
 

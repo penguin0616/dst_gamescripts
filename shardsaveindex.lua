@@ -187,19 +187,24 @@ function ShardSaveIndex:GetSlotGameMode(slot)
 end
 
 function ShardSaveIndex:DeleteSlot(slot, cb, save_options)
+    local function callback()
+        if not save_options and not TheNet:IsDedicated() then
+            TheNet:DeleteCluster(slot)
+        end
+
+        if cb ~= nil then
+            cb()
+        end
+    end
+
     local shardIndex = self:GetShardIndex(slot, "Master")
     self.slots[slot] = nil
     self.slot_cache[slot] = nil
+
     if shardIndex then
-        shardIndex:Delete(cb, save_options)
-    end
-
-    if not save_options and not TheNet:IsDedicated() then
-        TheNet:DeleteCluster(slot)
-    end
-
-    if not shardIndex and cb ~= nil then
-        cb()
+        shardIndex:Delete(callback, save_options)
+    else
+        callback()
     end
 end
 

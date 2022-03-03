@@ -142,10 +142,14 @@ function CraftingMenuHUD:Close()
 	self.ui_root:Disable()
 	self.craftingmenu:Disable()
 	self.pinbar:OnCraftingMenuClose()
+	self.pinbar:Disable()
 
 	TheCraftingMenuProfile:Save()
 
-	self.ui_root:MoveTo(self.ui_root:GetPosition(), self.closed_pos, .25, function() self.ui_root:Enable() end)
+	self.ui_root:MoveTo(self.ui_root:GetPosition(), self.closed_pos, .25, function()
+		self.ui_root:Enable() 
+		self.pinbar:Enable()
+	end)
 
 	TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/craft_close")
 end

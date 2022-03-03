@@ -713,12 +713,12 @@ Recipe2("wintercooking_tamales",		{Ingredient("wintersfeastfuel", 1), Ingredient
 Recipe2("wintercooking_tourtiere",		{Ingredient("wintersfeastfuel", 1), Ingredient("acorn", 1), Ingredient("pinecone", 1)},									TECH.WINTERSFEASTCOOKING_ONE,	{nounlock = true, manufactured=true, actionstr="COOK", image = "tourtiere.tex"})
 
 -- YOT Events
-Recipe2("perdshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTG,						{nounlock = true, placer="perdshrine_placer"})
-Recipe2("wargshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTV,						{nounlock = true, placer="wargshrine_placer"})
-Recipe2("pigshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTP,						{nounlock = true, placer="pigshrine_placer"})
-Recipe2("yotc_carratshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTC,						{nounlock = true, placer="yotc_carratshrine_placer"})
-Recipe2("yotb_beefaloshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTB,						{nounlock = true, placer="yotb_beefaloshrine_placer"})
-Recipe2("yot_catcoonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOT_CATCOON,				{nounlock = true, placer="yot_catcoonshrine_placer"})
+Recipe2("perdshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTG,						{placer="perdshrine_placer"})
+Recipe2("wargshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTV,						{placer="wargshrine_placer"})
+Recipe2("pigshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTP,						{placer="pigshrine_placer"})
+Recipe2("yotc_carratshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTC,						{placer="yotc_carratshrine_placer"})
+Recipe2("yotb_beefaloshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTB,						{placer="yotb_beefaloshrine_placer"})
+Recipe2("yot_catcoonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOT_CATCOON,				{placer="yot_catcoonshrine_placer"})
 
 
 ----CONSTRUCTION PLANS----

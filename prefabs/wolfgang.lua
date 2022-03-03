@@ -161,7 +161,7 @@ local function OnSailBoost(inst)
 end
 
 local function OnTerraform(inst)
-	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.LOWER_SAIL_BOOST)	
+	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.TERRAFORM)	
 end
 
 local function OnAttacked(inst, data)
