@@ -160,7 +160,7 @@ end
 
 -- When calling GetString, must pass actual instance of entity if it might be used when ghost
 -- Otherwise, handing inst.prefab directly to the function call is okay
-function GetString(inst, stringtype, modifier)
+function GetString(inst, stringtype, modifier, nil_missing)
     local character =
         type(inst) == "string"
         and inst
@@ -182,10 +182,11 @@ function GetString(inst, stringtype, modifier)
         (inst:HasTag("playerghost") and "ghost"))
         or character
 
-    return GetSpecialCharacterString(specialcharacter)
+	return GetSpecialCharacterString(specialcharacter)
         or getcharacterstring(STRINGS.CHARACTERS[character], stringtype, modifier)
         or getcharacterstring(STRINGS.CHARACTERS.GENERIC, stringtype, modifier)
-        or ("UNKNOWN STRING: "..(character or "").." "..(stringtype or "").." "..(modifier or ""))
+		or (not nil_missing and ("UNKNOWN STRING: "..(character or "").." "..(stringtype or "").." "..(modifier or "")))
+		or nil
 end
 
 function GetActionString(action, modifier)
@@ -371,8 +372,8 @@ function DamLevDist( a, b, limit )
     local b_len = b:len()
 
     --early out optimization, if the lengths are more than "limit" difference then we can return
-    if math.abs( a_len - b_len ) >= limit then
-        return limit
+    if math.abs( a_len - b_len ) > limit then
+        return math.abs( a_len - b_len )
     end
 
     --Note(Peter): does this work with unicode?
@@ -418,10 +419,27 @@ function DamLevDist( a, b, limit )
             end
         end
 
-        if low >= limit then
-            return limit
+        if low > limit then
+            return low
         end
     end
 
     return d[ id(a_len,b_len) ]
+end
+
+--use "string_search_subwords" which is the same call but in c++ so its much faster
+--preserved for modders, so people can see what this does easily.
+local search_subwords = function( search, str, sub_len, limit )
+    local str_len = string.len(str)
+
+    for i=1,str_len - sub_len + 1 do
+        local sub = str:sub( i, i + sub_len - 1 )
+
+        local dist = DamLevDist( search, sub, limit )
+        if dist <= limit then
+            return true
+        end
+    end
+
+    return false
 end

@@ -439,43 +439,6 @@ for i, v in ipairs(monsters) do
 end
 monsters = nil
 
-local houndspawn =
-{
-    base_prefab = "hound",
-    winter_prefab = "icehound",
-    summer_prefab = "firehound",
-    upgrade_spawn = "warg_wave",
-
-    attack_levels =
-    {
-        intro   = { warnduration = function() return 120 end, numspawns = function() return 2 end },
-        light   = { warnduration = function() return 60 end, numspawns = function() return 2 + math.random(2) end },
-        med     = { warnduration = function() return 45 end, numspawns = function() return 3 + math.random(3) end },
-        heavy   = { warnduration = function() return 30 end, numspawns = function() return 4 + math.random(3) end },
-        crazy   = { warnduration = function() return 30 end, numspawns = function() return 6 + math.random(4) end },
-    },
-
-    attack_delays =
-    {
-        intro 		= function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
-        rare 		= function() return TUNING.TOTAL_DAY_TIME * 5, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
-        occasional 	= function() return TUNING.TOTAL_DAY_TIME * 7, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
-        frequent 	= function() return TUNING.TOTAL_DAY_TIME * 9, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
-        crazy 		= function() return TUNING.TOTAL_DAY_TIME * 11, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
-    },
-
-    warning_speech = "ANNOUNCE_HOUNDS",
-
-    --Key = time, Value = sound prefab
-    warning_sound_thresholds =
-    {
-        { time = 30, sound =  "LVL4" },
-        { time = 60, sound =  "LVL3" },
-        { time = 90, sound =  "LVL2" },
-        { time = 500, sound = "LVL1" },
-    },
-}
-
 local function common_postinit(inst)
     --Add waves
     inst.entity:AddWaveComponent()
@@ -510,8 +473,6 @@ local function master_postinit(inst)
     inst:AddComponent("hounded")
     inst:AddComponent("schoolspawner")
     inst:AddComponent("squidspawner")
-
-    inst.components.hounded:SetSpawnData(houndspawn)
 
     inst:AddComponent("worlddeciduoustreeupdater")
     inst:AddComponent("kramped")

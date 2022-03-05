@@ -194,21 +194,21 @@ CRAFTING_FILTERS.SPECIAL_EVENT.recipes =
 CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 {
 	-- ancients
-	"thulecite",			
-	"wall_ruins_item",		
-	"nightmare_timepiece",	
+	"thulecite",
+	"wall_ruins_item",
+	"nightmare_timepiece",
 	"orangeamulet",			
-	"yellowamulet",			
-	"greenamulet",			
-	"orangestaff",			
-	"yellowstaff",			
-	"greenstaff",			
+	"yellowamulet",
+	"greenamulet",
+	"orangestaff",
+	"yellowstaff",
+	"greenstaff",
 	"multitool_axe_pickaxe",
-	"nutrientsgoggleshat",	
+	"nutrientsgoggleshat",
 	"ruinshat",				
-	"armorruins",			
-	"ruins_bat",			
-	"eyeturret_item",		
+	"armorruins",
+	"ruins_bat",
+	"eyeturret_item",
 
 	-- cartography desk
 	"mapscroll",
@@ -466,12 +466,13 @@ CRAFTING_FILTERS.LIGHT.recipes =
 	"minerhat",
 	"molehat",
 	"lantern",
+	"nightstick",
 	"nightlight",
 	"winona_spotlight",
 	"dragonflyfurnace",
 	"mushroom_light",
 	"mushroom_light2",
-	"nightstick",
+	"archive_resonator_item",
 }
 
 CRAFTING_FILTERS.PROTOTYPERS.recipes =
@@ -784,6 +785,7 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"lightning_rod",
 	"firesuppressor",
 	"moondial",
+	"archive_resonator_item",
 
 	"tent",
 	"portabletent_item",

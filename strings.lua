@@ -1421,7 +1421,7 @@ STRINGS =
         BRUSH = "Brush",
         SALTLICK = "Salt Lick",
         FROG = "Frog",
-        FISHINGROD = "Fishing Rod",
+        FISHINGROD = "Freshwater Fishing Rod",
         FISH = "Fish",
         FISH_COOKED = "Cooked Fish",
         FOSSIL_PIECE = "Fossil Fragments",
@@ -3320,8 +3320,7 @@ STRINGS =
         CRITTER_EYEOFTERROR = "Friendly Peeper",
         CRITTER_EYEOFTERROR_BUILDER = "Friendly Peeper",
 
-
-
+        BIGSHADOWTENTACLE = "Guardian Shadow Tentacle",
 
         -- WOLFGANG
         MIGHTY_GYM = "Mighty Gym",
@@ -7015,6 +7014,10 @@ STRINGS.UI =
 			crabking = "The Crab King",
 		},
 		TROPHYSCALE_UNKNOWN_OWNER = "An Unnamed Donor",
+
+		CRAFTING_PIN = "Pin",
+		CRAFTING_UNPIN = "Unpin",
+
 	},
 
 	CRAFTING_FILTERS =
@@ -7400,6 +7403,7 @@ STRINGS.UI =
         TIP_MERMHOUSE = "\"The Merms are fiercely territorial, and quick to defend their homes. Though I honestly can't imagine anyone else wanting to take up residence in those ram-shackle hovels...\" -M",
         TIP_BOTTLES = "\"From time to time I've spotted bottles bobbing along the ocean currents, just out of reach from the shore. I have half a mind to construct a boat and retrieve one of them... I have a gut feeling that someone is trying to send out a message.\" -W",
         TIP_MOONISLAND = "\"I couldn't have imagined it, I'm certain I just saw a piece of the moon break off and crash into the ocean! Perhaps my compatriots will join me in a search for it...\" -W",
+        TIP_MOONMUTATION = "\"The moon in this world seems to hold some strange power over the creatures here. It changes them...\" -W",
 
     },
 
@@ -7460,6 +7464,11 @@ STRINGS.UI =
         TIP_INVENTORY_SLOTS = "Press {inv_0}-{inv_9} to quickly use items carried in your main inventory.",
 
         --TIP_EMOTES = "Show how you really feel! Emotes and dances can be done in the text chat.",
+    },
+
+    -- Category reserved for loading screen modding
+    LOADING_SCREEN_OTHER_TIPS =
+    {
     },
 
     BOX_POPUP =

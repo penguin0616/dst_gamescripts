@@ -615,6 +615,8 @@ function PlayerHud:RefreshControllers()
             OpenContainerWidget(self, overflow.inst, overflow:IsSideWidget())
         end
     end
+
+	self.controls.craftingmenu:RefreshControllers(controller_mode)
 end
 
 function PlayerHud:ShowWriteableWidget(writeable, config)

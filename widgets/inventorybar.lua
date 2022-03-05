@@ -414,6 +414,7 @@ function Inv:Rebuild()
 
     self:SelectDefaultSlot()
     self.current_list = self.inv
+	self.pin_nav = false
     self:UpdateCursor()
 
     if self.cursor ~= nil then
@@ -466,7 +467,7 @@ function Inv:OnUpdate(dt)
 
     if self.active_slot ~= nil and not self.active_slot.inst:IsValid() then
         self:SelectDefaultSlot()
-
+		self.pin_nav = false
         self.current_list = self.inv
 
         if self.cursor ~= nil then
@@ -576,23 +577,53 @@ end
 function Inv:CursorLeft()
     if self:CursorNav(Vector3(-1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	elseif not self.open then
+        local pin = self.owner.HUD.controls.craftingmenu:SelectPin()
+		if pin then
+			self.pin_nav = true
+	        self.actionstringtime = 0
+	        self.actionstring:Hide()
+			self:SelectSlot(pin)
+		end
     end
 end
 
 function Inv:CursorRight()
+	if self.pin_nav then
+		if self.current_list ~= nil and not self.current_list[1].inst:IsValid() then
+			self.current_list = self.inv
+			--self:SelectDefaultSlot()
+		end
+	end
+
     if self:CursorNav(Vector3(1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+		self.pin_nav = false
     end
 end
 
 function Inv:CursorUp()
-    if self:CursorNav(Vector3(0,1,0)) then
+	if self.pin_nav then
+        local pin = self.active_slot:FindPinUp()
+		if pin then
+	        self.actionstringtime = 0
+	        self.actionstring:Hide()
+			self:SelectSlot(pin)
+		end
+    elseif self:CursorNav(Vector3(0,1,0)) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end
 
 function Inv:CursorDown()
-    if self:CursorNav(Vector3(0,-1,0)) then
+	if self.pin_nav then
+        local pin = self.active_slot:FindPinDown()
+		if pin then
+	        self.actionstringtime = 0
+	        self.actionstring:Hide()
+			self:SelectSlot(pin)
+		end
+    elseif self:CursorNav(Vector3(0,-1,0)) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end
@@ -705,6 +736,10 @@ function Inv:OpenControllerInventory()
 
         self.open = true
         self.force_single_drop = false --reset the flag
+
+		if self.pin_nav then
+			self:CursorRight()
+		end
 
         self:UpdateCursor()
         self:ScaleTo(self.base_scale,self.selected_scale,.2)
@@ -1010,7 +1045,9 @@ function Inv:UpdateCursor()
             self.active_slot:Highlight()
 
             self.cursor:MoveToBack()
-            self.active_slot.bgimage:MoveToBack()
+			if self.active_slot.bgimage then
+	            self.active_slot.bgimage:MoveToBack()
+			end
         end
     else
         self.cursor:Hide()

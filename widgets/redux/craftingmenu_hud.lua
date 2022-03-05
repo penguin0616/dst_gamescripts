@@ -35,6 +35,12 @@ local CraftingMenuHUD = Class(Widget, function(self, owner)
 	self.pinbar:SetPosition(0, 0)
 	self.pinbar:MoveToBack()
 
+	self.openhint = self:AddChild(Text(UIFONT, 40))
+	self.openhint:SetPosition(28, 34 + HEIGHT/2)
+	self.openhint:SetScale(0.75)
+
+	self:RefreshControllers(TheInput:ControllerAttached())
+
 	self.craftingmenu:DoFocusHookups()
 
     self:StartUpdating()
@@ -233,6 +239,17 @@ function CraftingMenuHUD:RebuildRecipes()
 	end
 end
 
+function CraftingMenuHUD:RefreshControllers(controller_mode)
+    if controller_mode then
+        self.openhint:Show()
+        self.openhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_OPEN_CRAFTING))
+    else
+        self.openhint:Hide()
+	end
+
+	self.pinbar:RefreshControllers(controller_mode)
+end
+
 function CraftingMenuHUD:OnUpdate(dt)
     if self.needtoupdate then
 		self:RebuildRecipes()
@@ -257,5 +274,10 @@ function CraftingMenuHUD:OnUpdate(dt)
 
 end
 
+
+function CraftingMenuHUD:SelectPin()
+	return self.pinbar:StartControllerNav()
+
+end
 
 return CraftingMenuHUD

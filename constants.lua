@@ -1610,7 +1610,7 @@ VIBRATION_CAMERA_SHAKE = 0
 VIBRATION_BLOOD_FLASH = 1
 VIBRATION_BLOOD_OVER = 2
 
-NUM_SKIN_PRESET_SLOTS = 10
+NUM_SKIN_PRESET_SLOTS = 25
 
 --Neither of these are used anymore, kept here only for mods.
 NUM_SAVE_SLOTS = 5
@@ -2362,14 +2362,16 @@ LOADING_SCREEN_TIP_CATEGORIES =
     SURVIVAL = 2,
     LORE = 3,
     LOADING_SCREEN = 4,
+    OTHER = 5,
 }
 
 LOADING_SCREEN_TIP_ICONS =
 {
-    CONTROLS = "icon_tooltips.tex",
-    SURVIVAL = "icon_survival.tex",
-    LORE = "icon_lore.tex",
-    LOADING_SCREEN = "icon_lore.tex",
+    CONTROLS = { atlas = "images/loading_screen_icons.xml", icon = "icon_tooltips.tex" },
+    SURVIVAL = { atlas = "images/loading_screen_icons.xml", icon = "icon_survival.tex" },
+    LORE = { atlas = "images/loading_screen_icons.xml", icon = "icon_lore.tex" },
+    LOADING_SCREEN = { atlas = "images/loading_screen_icons.xml", icon = "icon_lore.tex" },
+    OTHER = { atlas = "images/loading_screen_icons.xml", icon = "icon_survival.tex" },
 }
 
 LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_START =
@@ -2378,6 +2380,7 @@ LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_START =
     SURVIVAL = 3,
     LORE = 1,
     LOADING_SCREEN = 2,
+    OTHER = 0,
 }
 
 LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_END =
@@ -2386,6 +2389,7 @@ LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_END =
     SURVIVAL = 2,
     LORE = 4,
     LOADING_SCREEN = 3.5,
+    OTHER = 0,
 }
 
 LOADING_SCREEN_CONTROL_TIP_KEYS =

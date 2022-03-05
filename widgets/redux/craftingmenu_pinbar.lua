@@ -18,8 +18,6 @@ local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, hei
 
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
-	local tabs = {}
-	
 	self.root = self:AddChild(Widget("slot_root"))
 	self.root:SetScale(0.73)
 	self.root:SetPosition(30, 0)
@@ -28,7 +26,6 @@ local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, hei
 	local buttonsize = 64
 
 	self.pin_open = self.root:AddChild(ImageButton(atlas, "crafting_tab.tex", "crafting_tab.tex", nil, nil, nil, {1,1}, {0,0}))
-	self.pin_open.slot_num = 0
 	self.pin_open:SetPosition(24, y)
 	self.pin_open:SetScale(0.45)
 
@@ -98,9 +95,27 @@ local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, hei
 
 	local pinned_recipes = TheCraftingMenuProfile:GetPinnedRecipes()
 
+	local function FindPinUp(_pin)
+		for i = _pin.slot_num - 1, 1, -1 do
+			if self.pin_slots[i]:IsVisible() then
+				return self.pin_slots[i]
+			end
+		end
+	end
+
+	local function FindPinDown(_pin)
+		for i = (_pin.slot_num or 0) + 1, TUNING.MAX_PINNED_RECIPES do
+			if self.pin_slots[i]:IsVisible() then
+				return self.pin_slots[i]
+			end
+		end
+	end
+	
 	for i = 1, TUNING.MAX_PINNED_RECIPES do
 		local pin_slot = self.root:AddChild(PinSlot(self.owner, crafting_hud, i, pinned_recipes[i]))
 		pin_slot:SetPosition(0, y)
+		pin_slot.FindPinUp = FindPinUp
+		pin_slot.FindPinDown = FindPinDown
 		table.insert(self.pin_slots, pin_slot)
 
 		y = y - buttonsize - 16
@@ -110,31 +125,12 @@ local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, hei
 end)
 
 function CraftingMenuPinBar:DoFocusHookups()
-	local function OnFocusChangeUp(_pin)
-		for i = _pin.slot_num - 1, 0, -1 do
-			if i == 0 then
-				return self.pin_open
-			else
-				if self.pin_slots[i]:IsVisible() then
-					return self.pin_slots[i]
-				end
-			end
-		end
-	end
-	local function OnFocusChangeDown(_pin)
-		for i = _pin.slot_num + 1, TUNING.MAX_PINNED_RECIPES do
-			if self.pin_slots[i]:IsVisible() then
-				return self.pin_slots[i]
-			end
-		end
-	end
-
 	for _, pin_slot in pairs(self.pin_slots) do
-		pin_slot:SetFocusChangeDir(MOVE_UP, OnFocusChangeUp)
-		pin_slot:SetFocusChangeDir(MOVE_DOWN, OnFocusChangeDown)
+		pin_slot:SetFocusChangeDir(MOVE_UP, pin_slot.FindPinUp)
+		pin_slot:SetFocusChangeDir(MOVE_DOWN, pin_slot.FindPinDown)
 	end
 
-	self.pin_open:SetFocusChangeDir(MOVE_DOWN, OnFocusChangeDown)
+	self.pin_open:SetFocusChangeDir(MOVE_DOWN, self.pin_open.FindPinDown)
 end
 
 function CraftingMenuPinBar:ClearFocusHookups()
@@ -143,6 +139,26 @@ function CraftingMenuPinBar:ClearFocusHookups()
 	end
 
 	self.pin_open:ClearFocusDirs()
+end
+
+function CraftingMenuPinBar:RefreshControllers(controller_mode)
+	for i = 1, #self.pin_slots do
+		self.pin_slots[i]:RefreshControllers(controller_mode)
+	end
+end
+
+function CraftingMenuPinBar:StartControllerNav()
+	local target_pin = nil
+	for i = #self.pin_slots, 1, -1 do
+		if self.pin_slots[i]:IsVisible() then
+			target_pin = self.pin_slots[i]
+			break
+		end
+	end
+
+	if target_pin ~= nil then
+		return target_pin
+	end
 end
 
 function CraftingMenuPinBar:GetFirstButton()

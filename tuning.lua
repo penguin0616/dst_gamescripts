@@ -4502,6 +4502,7 @@ function Tune(overrides)
 		SCHOOL_SPAWNER_BLOCKER_LIFETIME = total_day_time,
 
 		FISH_BOX_PRESERVER_RATE = -1/3,
+		SEEDPOUCH_PRESERVER_RATE = 0.5,
 
 
         -- Wintersfeast 2019

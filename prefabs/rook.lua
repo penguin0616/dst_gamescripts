@@ -192,7 +192,7 @@ local function common_fn(build, tag)
 
     inst:DoTaskInTime(0, RememberKnownLocation)
 
-    MakeMediumBurnableCharacter(inst, "swap_fire")
+    MakeLargeBurnableCharacter(inst, "swap_fire", nil, 1.4)
     MakeMediumFreezableCharacter(inst, "innerds")
 
     inst:ListenForEvent("attacked", OnAttacked)

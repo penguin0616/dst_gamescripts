@@ -986,7 +986,7 @@ function Inventory:Equip(item, old_to_active)
     end
 end
 
-function Inventory:RemoveItem(item, wholestack)
+function Inventory:RemoveItem(item, wholestack, checkallcontainers)
     if item == nil then
         return
     end
@@ -1032,7 +1032,25 @@ function Inventory:RemoveItem(item, wholestack)
     end
 
     local overflow = self:GetOverflowContainer()
-    return overflow ~= nil and overflow:RemoveItem(item, wholestack) or item
+    local overflow_item = overflow and overflow:RemoveItem(item, wholestack)
+    if overflow_item then
+        return overflow_item
+    end
+
+    if checkallcontainers then
+        local containers = self.opencontainers
+        for container_inst in pairs(containers) do
+            local container = container_inst.components.container or container_inst.components.inventory
+            if container and container ~= overflow and not container.excludefromcrafting then
+                local container_item = container:RemoveItem(item, wholestack)
+                if container_item then
+                    return container_item
+                end
+            end
+        end
+    end
+
+    return item
 end
 
 function Inventory:GetOverflowContainer()
@@ -1172,7 +1190,7 @@ function Inventory:GetItemByName(item, amount, checkallcontainers) --Note(Peter)
                     total_num_found = total_num_found + v
                 end
             end
-            if total_num_found < amount then
+            if total_num_found >= amount then
                 break
             end
         end

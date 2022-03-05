@@ -4582,7 +4582,6 @@ local states =
         end,
 
         ontimeout = function(inst)
-            print("AT TIMEOUT")
             inst:ClearBufferedAction()
             inst.sg:GoToState("idle")
         end,

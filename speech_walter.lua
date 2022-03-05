@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "It looks like I need to find more supplies first.",
+		NO_TECH = "Um... I don't think I know how to make one of those yet...",
+		NO_STATION = "I could probably do it if I had a station with the right tools.",
+	},
+
 	ACTIONFAIL_GENERIC = "It won't work.",
 	ANNOUNCE_BOAT_LEAK = "Um. That might be a problem.",
 	ANNOUNCE_BOAT_SINK = "Better put my swimming badge to good use!",

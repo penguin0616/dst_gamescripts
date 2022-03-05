@@ -475,7 +475,7 @@ function PurchasePackPopup:SetData( iap_def )
     self.text:SetVAlign(ANCHOR_TOP)
 
     self.title:SetRegionSize(contentw, 90 )
-    self.desc:SetRegionSize(contentw,130)
+    self.desc:SetRegionSize(contentw,200)
     self.text:SetRegionSize(contentw,80)
     self.collection:SetRegionSize(contentw,40)
     self.price:SetRegionSize(contentw,80)

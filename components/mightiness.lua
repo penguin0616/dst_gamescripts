@@ -8,7 +8,6 @@ local STATE_DATA =
         sound = "wolfgang2/characters/wolfgang/wimpy",
 
         externaldamagemultiplier = 0.75,
-        externaldamagetakenmultiplier = 1.2,
         talksoundoverride = "dontstarve/characters/wolfgang/talk_small_LP", 
         hurtsoundoverride = "dontstarve/characters/wolfgang/hurt_small",
         customidle = "idle_wolfgang_skinny",
@@ -30,7 +29,6 @@ local STATE_DATA =
         sound =    {wimpy = "wolfgang2/characters/wolfgang/mighty", mighty = "wolfgang2/characters/wolfgang/wimpy"},
 
         externaldamagemultiplier = nil,
-        externaldamagetakenmultiplier = nil,
         talksoundoverride = nil,
         hurtsoundoverride = nil,
         customidle = "idle_wolfgang",
@@ -49,7 +47,6 @@ local STATE_DATA =
         sound = "wolfgang2/characters/wolfgang/mighty",
 
         externaldamagemultiplier = 2,
-        externaldamagetakenmultiplier = nil,
         talksoundoverride = "dontstarve/characters/wolfgang/talk_large_LP", 
         hurtsoundoverride = "dontstarve/characters/wolfgang/hurt_large",
         customidle = "idle_wolfgang_mighty",
@@ -295,12 +292,6 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
         self.inst.components.combat.externaldamagemultipliers:RemoveModifier(self.inst)
     end
     
-    if state_data.externaldamagetakenmultiplier ~= nil then
-        self.inst.components.combat.externaldamagetakenmultipliers:SetModifier(self.inst, state_data.externaldamagetakenmultiplier)
-    else
-        self.inst.components.combat.externaldamagetakenmultipliers:RemoveModifier(self.inst)
-    end
-	
     self.inst.components.temperature.inherentinsulation = state_data.winter_insulation or 0
     self.inst.components.temperature.inherentsummerinsulation = state_data.summer_insulation or 0
 

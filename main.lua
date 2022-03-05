@@ -381,8 +381,11 @@ local function ModSafeStartup()
 	TheCraftingMenuProfile:Load()
 	Lavaarena_CommunityProgression = require("lavaarena_communityprogression")()
 	Lavaarena_CommunityProgression:Load()
-	TheLoadingTips = require("loadingtipsdata")()
-	TheLoadingTips:Load()
+
+	if TheLoadingTips == nil then
+		TheLoadingTips = require("loadingtipsdata")()
+		TheLoadingTips:Load()
+	end
 
     local FollowCamera = require("cameras/followcamera")
     TheCamera = FollowCamera()

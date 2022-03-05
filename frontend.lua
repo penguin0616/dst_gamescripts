@@ -738,7 +738,7 @@ function FrontEnd:Update(dt)
         elseif not (self.textProcessorWidget ~= nil) then
             self.repeat_time = REPEAT_TIME
 			if self.crafting_navigation_mode then
-				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then		-- CONTROL_INVENTORY_LEFT
+				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
 					self:OnFocusMove(MOVE_LEFT, true)
 				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
 					self:OnFocusMove(MOVE_RIGHT, true)
@@ -750,13 +750,13 @@ function FrontEnd:Update(dt)
 					self.repeat_time = 0
 				end
 			else
-				if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) or TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) then		-- CONTROL_INVENTORY_LEFT
+				if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
 					self:OnFocusMove(MOVE_LEFT, true)
-				elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) or TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) then
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
 					self:OnFocusMove(MOVE_RIGHT, true)
-				elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) or TheInput:IsControlPressed(CONTROL_INVENTORY_UP) then
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) then
 					self:OnFocusMove(MOVE_UP, true)
-				elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) or TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) then
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) then
 					self:OnFocusMove(MOVE_DOWN, true)
 				else
 					self.repeat_time = 0

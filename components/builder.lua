@@ -355,13 +355,13 @@ end
 
 function Builder:RemoveIngredients(ingredients, recname)
 	if self.freebuildmode then
-		return 
+		return
 	end
 
     for item, ents in pairs(ingredients) do
         for k,v in pairs(ents) do
             for i = 1, v do
-                local item = self.inst.components.inventory:RemoveItem(k, false)
+                local item = self.inst.components.inventory:RemoveItem(k, false, true)
 
                 -- If the item we're crafting with is a container,
                 -- drop the contained items onto the ground.

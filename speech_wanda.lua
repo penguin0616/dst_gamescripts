@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Oh botheration, I'll have to pick up a few things first.",
+		NO_TECH = "I haven't quite figured that one out yet.",
+		NO_STATION = "I won't be able to make it without a proper workstation.",
+	},
+
 	ACTIONFAIL_GENERIC = "Not in this timeline.",
 	ANNOUNCE_BOAT_LEAK = "Oh no no no! T-the boat's taking on water!!",
 	ANNOUNCE_BOAT_SINK = "No, wait! I need more time!!",

@@ -358,6 +358,13 @@ return {
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "It looks like I'm missing some important components.",
+		NO_TECH = "This will need more scientific research!",
+		NO_STATION = "To the lab! Or another more suitable building station!",
+	},
+
 	ACTIONFAIL_GENERIC = "I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "We're taking on a lot of water.",
 	ANNOUNCE_BOAT_SINK = "I don't want to drown!",

@@ -2,7 +2,6 @@ local Image = require "widgets/image"
 local ImageButton = require "widgets/imagebutton"
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
-local Grid = require "widgets/grid"
 local Spinner = require "widgets/spinner"
 
 local TEMPLATES = require "widgets/redux/templates"
@@ -206,7 +205,7 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 
 	local recipe = data.recipe
 
-	if self.data == data then
+	if self.data == data and self.skins_spinner:GetItem() == skin_name then
 		self.ingredients:SetRecipe(recipe)
 		self:UpdateBuildButton()
 		return

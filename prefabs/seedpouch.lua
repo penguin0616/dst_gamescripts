@@ -68,7 +68,6 @@ local function fn()
     inst.foleysound = "dontstarve/movement/foley/backpack"
 
     inst:AddTag("backpack")
-    inst:AddTag("foodpreserver")
 
     local swap_data = {bank = "seedpouch", anim = "anim"}
     MakeInventoryFloatable(inst, "med", 0.125, 0.65, nil, nil, swap_data)
@@ -86,7 +85,6 @@ local function fn()
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BODY
-
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
 
@@ -94,6 +92,9 @@ local function fn()
     inst.components.container:WidgetSetup("seedpouch")
     inst.components.container.skipclosesnd = true
     inst.components.container.skipopensnd = true
+
+	inst:AddComponent("preserver")
+	inst.components.preserver:SetPerishRateMultiplier(TUNING.SEEDPOUCH_PRESERVER_RATE)
 
     MakeSmallBurnable(inst)
     MakeSmallPropagator(inst)

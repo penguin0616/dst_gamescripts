@@ -757,8 +757,45 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		RegisterInventoryItemAtlas(atlas, prefabname)
 	end
 
+	-- For modding loading tips
+	env.AddLoadingTip = function(stringtable, id, tipstring, controltipdata)
+		if stringtable == nil or id == nil or tipstring == nil then
+			return
+		end
+
+		-- Note: Tip needs a unique identifier string to load properly
+		stringtable[id] = tipstring
+
+		if controltipdata == nil then
+			return
+		end
+
+		LOADING_SCREEN_CONTROL_TIP_KEYS[id] = controltipdata
+	end
+
+	env.RemoveLoadingTip = function(stringtable, id)
+		if stringtable == nil or id == nil then
+			return
+		end
+
+		stringtable[id] = nil
+		LOADING_SCREEN_CONTROL_TIP_KEYS[id] = nil
+	end
+
+	-- Loading tip weights when playing the game for the first time (LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_START),
+	-- or after a certain amount of time (LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_END), based on the weights table to be modified.
+	-- For play time in between, weights are interpolated from the difference between start and end category weights.
+	env.SetLoadingTipCategoryWeights = function(weighttable, weightdata)
+		for key, weight in pairs(weightdata) do
+			weighttable[key] = weight
+		end
+	end
+
+	env.SetLoadingTipCategoryIcon = function(category, categoryatlas, categoryicon)
+		LOADING_SCREEN_TIP_ICONS[category] = { atlas = categoryatlas, icon = categoryicon }
+	end
 end
 
 return {
-			InsertPostInitFunctions = InsertPostInitFunctions,
-		}
+	InsertPostInitFunctions = InsertPostInitFunctions,
+}

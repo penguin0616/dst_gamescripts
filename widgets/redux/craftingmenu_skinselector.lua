@@ -114,7 +114,7 @@ function SkinSelector:GetItem()
         local name = self.skins_list[which - 1].item
         return name
     else
-        return self.recipe.name
+        return nil --self.recipe.name
     end
 end
 

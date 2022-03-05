@@ -65,12 +65,19 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 	self.filtered_recipes = {}
 	self.filter_buttons = {}
 
+	self.last_search_text = ""
+	self.search_text = ""
+	self.last_searched_recipes = {}
+	self.searched_recipes = {}
+	self.search_delay = 0
+	self.current_recipe_search = nil
+
 	self.frame = self.root:AddChild(self:MakeFrame(500, height, 150))
 
 	self:UpdateFilterButtons()
 
 	self:SelectFilter(CRAFTING_FILTERS.TOOLS.name, true)
-	
+
 	self.details_root:PopulateRecipeDetailPanel(self.filtered_recipes[1])
 
 
@@ -136,61 +143,29 @@ function CraftingMenuWidget:PopulateRecipeDetailPanel(recipe, skin_name)
 	self.details_root:PopulateRecipeDetailPanel(recipe, skin_name)
 end
 
-local function search_subwords(search, str, sub_len)
-    local str_len = string.len(str)
-
-    local i = 1
-    for i=i,str_len - sub_len + 1 do
-        local sub = str:sub( i, i + sub_len - 1 )
-
-        local dist = DamLevDist( search, sub, 2 )
-        if dist < 1 then
-            return true
-        end
-    end
-
-    return false
-end
-
-local function search_match(search, str)
-    search = search:gsub(" ", "")
+local function search_exact_match(search, str)
     str = str:gsub(" ", "")
 
     --Simple find in strings for multi word search
-    if string.find( str, search, 1, true ) ~= nil then
-        return true
-    end
-    local sub_len = string.len(search)
-
-    if sub_len > 3 then
-        if search_subwords( search, str, sub_len ) then return true end
-
-        --Try again with 1 fewer character
-        sub_len = sub_len - 1
-        if search_subwords( search, str, sub_len ) then return true end
-    end
-
-    return false
+	return string.find( str, search, 1, true ) ~= nil
 end
 
-local function text_filter(data, search_str)
+local function text_filter(recipe, search_str)
     if search_str == "" then
         return true
     end
 
-	local recipe = data.recipe
 	local name_upper = string.upper(recipe.name)
-	local product_upper = string.upper(recipe.product)
-    if search_match( search_str, recipe.product )
-        or search_match( search_str, STRINGS.NAMES[name_upper] or STRINGS.NAMES[product_upper])
-        or search_match( search_str, STRINGS.RECIPE_DESC[name_upper] or STRINGS.RECIPE_DESC[product_upper])
-		--or search_match( search_str, string.upper(recipe.tab.str))
-		--or search_match( search_str, STRINGS.TABS[recipe.tab.str]) 
-		then
-        return true
-    end
 
-    return false
+	local product = recipe.product
+	local product_upper = string.upper(product)
+
+	local name = STRINGS.NAMES[name_upper] or STRINGS.NAMES[product_upper]
+	local desc = STRINGS.RECIPE_DESC[name_upper] or STRINGS.RECIPE_DESC[product_upper]
+
+    return search_exact_match(search_str, string.lower(product))
+        or (name and search_exact_match(search_str, string.lower(name)))
+        or (desc and search_exact_match(search_str, string.lower(desc)))
 end
 
 function CraftingMenuWidget:ApplyFilters()
@@ -205,10 +180,9 @@ function CraftingMenuWidget:ApplyFilters()
 			end
 		end
 	else
-		local search_text = TrimString(string.lower(self.search_box.textbox:GetString()))
 		for _, data in pairs(self.crafting_hud.valid_recipes) do
 			if data.meta.build_state ~= "hide" then
-				if text_filter(data, search_text) then
+				if self:IsRecipeValidForSearch(data.recipe.name) then
 					table.insert(self.filtered_recipes, data)
 				end
 			end
@@ -310,6 +284,28 @@ function CraftingMenuWidget:Refresh()
 	self.details_root:Refresh()
 end
 
+function CraftingMenuWidget:OnUpdate(dt)
+	self.search_delay = self.search_delay - dt
+	if self.search_delay > 0 then
+		return
+	end
+
+	self.current_recipe_search = next(AllRecipes, self.current_recipe_search)
+	local processed_recipe_count = 0
+	while self.current_recipe_search and processed_recipe_count < 30 do
+		if self.searched_recipes[self.current_recipe_search] == nil then
+			self:ValidateRecipeForSearch(self.current_recipe_search)
+			processed_recipe_count = processed_recipe_count + 1
+		end
+
+		self.current_recipe_search = next(AllRecipes, self.current_recipe_search)
+	end
+
+	if self.current_recipe_search == nil then
+		self:StopUpdating()
+	end
+end
+
 function CraftingMenuWidget:OnPreOpen()
 	local builder = self.owner ~= nil and self.owner.replica.builder or nil
 	local prototyper = builder ~= nil and builder:GetCurrentPrototyper() or nil
@@ -394,6 +390,44 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	return w
 end
 
+function CraftingMenuWidget:ValidateRecipeForSearch(name)
+	local is_narrower_search = self.search_text:len() > self.last_search_text:len()
+	local is_appended_string = (is_narrower_search and search_exact_match(self.last_search_text, self.search_text)) or
+		(not is_narrower_search and search_exact_match(self.search_text, self.last_search_text)) or nil
+
+	if not is_appended_string or self.last_searched_recipes[name] == nil or is_narrower_search == self.last_searched_recipes[name] then
+		self.searched_recipes[name] = text_filter(AllRecipes[name], self.search_text)
+	else
+		self.searched_recipes[name] = self.last_searched_recipes[name]
+	end
+end
+
+function CraftingMenuWidget:IsRecipeValidForSearch(name)
+	if self.searched_recipes[name] == nil then
+		self:ValidateRecipeForSearch(name)
+	end
+
+	return self.searched_recipes[name]
+end
+
+function CraftingMenuWidget:SetSearchText(search_text)
+	search_text = TrimString(string.lower(search_text)):gsub(" ", "")
+
+	if search_text == self.last_search_text then
+		return
+	end
+
+	self.last_search_text = self.search_text
+	self.search_text = search_text
+
+	self.last_searched_recipes = self.searched_recipes
+	self.searched_recipes = {}
+
+	self:StartUpdating()
+	self.search_delay = 1
+	self.current_recipe_search = nil
+end
+
 function CraftingMenuWidget:MakeSearchBox(box_width, box_height)
     local searchbox = Widget("search")
     searchbox.textbox_root = searchbox:AddChild(TEMPLATES.StandardSingleLineTextEntry(nil, box_width, box_height))
@@ -407,6 +441,8 @@ function CraftingMenuWidget:MakeSearchBox(box_width, box_height)
     searchbox.textbox:SetTextPrompt(STRINGS.UI.SERVERCREATIONSCREEN.SEARCH, UICOLOURS.GREY)
     searchbox.textbox.prompt:SetHAlign(ANCHOR_MIDDLE)
     searchbox.textbox.OnTextInputted = function()
+		self:SetSearchText(self.search_box.textbox:GetString())
+
 		self:SelectFilter(nil, false)
     end
 
@@ -425,6 +461,7 @@ function CraftingMenuWidget:SelectFilter(name, clear_search_text)
 	end
 
 	if clear_search_text then
+		self:SetSearchText("")
 		self.search_box.textbox:SetString("")
 	end
 
@@ -433,7 +470,7 @@ function CraftingMenuWidget:SelectFilter(name, clear_search_text)
 	end
 
 	if name == self.current_filter_name and clear_search_text then
-		return;
+		return
 	end
 
 	if self.current_filter_name ~= nil and self.filter_buttons[self.current_filter_name] ~= nil then
@@ -627,19 +664,44 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 
 		----------------
 		w.cell_root = w:AddChild(ImageButton(atlas, "slot_frame.tex", "slot_frame_highlight.tex"))
-		--w.cell_root:SetFocusScale(cell_size + .05, cell_size + .05)
-		--w.cell_root:SetNormalScale(cell_size, cell_size)
 
 		w.focus_forward = w.cell_root
-        w.cell_root.ongainfocusfn = function() self.recipe_grid:OnWidgetFocus(w) end
+        w.cell_root.ongainfocusfn = function() 
+			self.recipe_grid:OnWidgetFocus(w)
+			w.cell_root.recipe_held = false
+			w.cell_root.last_recipe_click = nil
+		end
+		w.cell_root:SetWhileDown(function()
+			if w.cell_root.recipe_held then
+				DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
+			end
+		end)
+		w.cell_root:SetOnDown(function()
+			if w.cell_root.last_recipe_click and (GetTime() - w.cell_root.last_recipe_click) < 1 then
+				w.cell_root.recipe_held = true
+				w.cell_root.last_recipe_click = nil
+			end
+		end)
 		w.cell_root:SetOnClick(function()
-			local double_clicked = w.data == self.details_root.data
+			local is_current = w.data == self.details_root.data
 			self.details_root:PopulateRecipeDetailPanel(w.data)
-			if w.data.meta.build_state == "buffered" or double_clicked then
+			if w.data.meta.build_state == "buffered" then
 				if not DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem()) then
 					self.owner.HUD:CloseCrafting()
 				end
+			elseif is_current then -- clicking the item when it is already selected will trigger a build
+				if not w.cell_root.recipe_held then
+					local stay_open, error_msg = DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
+					if not stay_open then
+						self.owner.HUD:CloseCrafting()
+					end
+					if error_msg then
+						SendRPCToServer(RPC.CannotBuild, error_msg)
+					end
+				end
 			end
+			w.cell_root.last_recipe_click = GetTime()
+			w.cell_root.recipe_held = false
 		end)
 
 		----------------

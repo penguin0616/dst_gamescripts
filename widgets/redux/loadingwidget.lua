@@ -156,13 +156,15 @@ function LoadingWidget:SetEnabled(enabled)
             self:StartUpdating()
 
             -- Refresh loading tip
-            local loadingtip = TheLoadingTips:PickLoadingTip(self.selected_key)
-            if loadingtip then
-                self.loading_tip_text:SetString(loadingtip.text)
-                self.loading_tip_icon:SetTexture("images/loading_screen_icons.xml", loadingtip.icon)
+            if self.loading_tip_text ~= nil and self.loading_tip_icon ~= nil then
+                local loadingtip = TheLoadingTips:PickLoadingTip(self.selected_key)
+                if loadingtip then
+                    self.loading_tip_text:SetString(loadingtip.text)
+                    self.loading_tip_icon:SetTexture(loadingtip.atlas, loadingtip.icon)
 
-                -- Add tip to the recently shown tips list
-                TheLoadingTips:RegisterShownLoadingTip(loadingtip)
+                    -- Add tip to the recently shown tips list
+                    TheLoadingTips:RegisterShownLoadingTip(loadingtip)
+                end
             end
         end
     elseif self.is_enabled then
@@ -248,7 +250,7 @@ function LoadingWidget:OnUpdate(dt)
         --if self.tipcycledelay <= 0 then
             local loadingtip = TheLoadingTips:PickLoadingTip(self.selected_key)
             self.loading_tip_text:SetString(loadingtip.text)
-            self.loading_tip_icon:SetTexture("images/loading_screen_icons.xml", loadingtip.icon)
+            self.loading_tip_icon:SetTexture(loadingtip.atlas, loadingtip.icon)
             TheLoadingTips:RegisterShownLoadingTip(loadingtip)
 
             self.tipcycledelay = TIP_CYCLE_DELAY

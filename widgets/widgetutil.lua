@@ -20,6 +20,7 @@ function CanPrototypeRecipe(recipetree, buildertree)
 end
 
 local lastsoundtime = nil
+-- return values: "keep_crafting_menu_open", "error message"
 function DoRecipeClick(owner, recipe, skin)
     if recipe ~= nil and owner ~= nil and owner.replica.builder ~= nil then
         if skin == recipe.name then
@@ -52,7 +53,7 @@ function DoRecipeClick(owner, recipe, skin)
 			SetCraftingAutopaused(false)
 		end
 
-        if knows then
+        if knows or buffered then
             if buffered then
                 --TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
                 --owner.HUD.controls.craftingmenu.tabs:DeselectAll()
@@ -75,7 +76,7 @@ function DoRecipeClick(owner, recipe, skin)
                     owner.components.playercontroller:StartBuildPlacementMode(recipe, skin)
                 end
             else
-                return true
+                return true, "NO_INGREDIENTS"
             end
         else
             local tech_level = owner.replica.builder:GetTechTrees()
@@ -105,7 +106,7 @@ function DoRecipeClick(owner, recipe, skin)
 
 				return recipe.placer == nil -- close the crafting menu if there is a placer
             else
-                return true
+                return true, recipe.nounlock and "NO_STATION" or "NO_TECH"
             end
         end
     end

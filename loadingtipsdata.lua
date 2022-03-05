@@ -47,7 +47,8 @@ function LoadingTipsData:CleanupShownLoadingTips()
             STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_CONSOLE[key] == nil and
             STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE[key] == nil and
             STRINGS.UI.LOADING_SCREEN_SURVIVAL_TIPS[key] == nil and
-            STRINGS.UI.LOADING_SCREEN_LORE_TIPS[key] == nil then
+            STRINGS.UI.LOADING_SCREEN_LORE_TIPS[key] == nil and
+            STRINGS.UI.LOADING_SCREEN_OTHER_TIPS[key] == nil then
                 self.shownloadingtips[key] = nil
         end
     end
@@ -92,10 +93,14 @@ function LoadingTipsData:CalculateLoadingTipWeights()
     -- Lore tips
     local loretipweights = self:GenerateLoadingTipWeights(STRINGS.UI.LOADING_SCREEN_LORE_TIPS)
 
+    -- Other tips
+    local othertipweights = self:GenerateLoadingTipWeights(STRINGS.UI.LOADING_SCREEN_OTHER_TIPS)
+
     -- Loading screen-dependant tip will be generated when needed
     loadingtipweights[LOADING_SCREEN_TIP_CATEGORIES.CONTROLS] = controltipweights
     loadingtipweights[LOADING_SCREEN_TIP_CATEGORIES.SURVIVAL] = survivaltipweights
     loadingtipweights[LOADING_SCREEN_TIP_CATEGORIES.LORE] = loretipweights
+    loadingtipweights[LOADING_SCREEN_TIP_CATEGORIES.OTHER] = othertipweights
 
     return loadingtipweights
 end
@@ -126,7 +131,8 @@ function LoadingTipsData:GenerateControlTipText(tipid)
     local tipstring =
     STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS[tipid] ~= nil and STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS[tipid] or
     STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_CONSOLE[tipid] ~= nil and STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_CONSOLE[tipid] or
-    STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE[tipid] ~= nil and STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE[tipid]
+    STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE[tipid] ~= nil and STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE[tipid] or
+    STRINGS.UI.LOADING_SCREEN_OTHER_TIPS[tipid] ~= nil and STRINGS.UI.LOADING_SCREEN_OTHER_TIPS[tipid]
 
     -- Tip has no control mappings; return the text as-is
     if LOADING_SCREEN_CONTROL_TIP_KEYS[tipid] == nil then
@@ -195,7 +201,8 @@ function LoadingTipsData:PickLoadingTip(loadingscreen)
     -- Generate tip data based on the selected tip
     local tipdata = {}
     tipdata.id = selectedtipkey
-    tipdata.icon = LOADING_SCREEN_TIP_ICONS[selectedcategory]
+    tipdata.atlas = LOADING_SCREEN_TIP_ICONS[selectedcategory].atlas
+    tipdata.icon = LOADING_SCREEN_TIP_ICONS[selectedcategory].icon
 
     if LOADING_SCREEN_TIP_CATEGORIES[selectedcategory] == LOADING_SCREEN_TIP_CATEGORIES.CONTROLS then
         tipdata.text = self:GenerateControlTipText(selectedtipkey)
@@ -205,6 +212,8 @@ function LoadingTipsData:PickLoadingTip(loadingscreen)
         tipdata.text = STRINGS.UI.LOADING_SCREEN_LORE_TIPS[selectedtipkey]
     elseif LOADING_SCREEN_TIP_CATEGORIES[selectedcategory] == LOADING_SCREEN_TIP_CATEGORIES.LOADING_SCREEN then
         tipdata.text = STRINGS.SKIN_DESCRIPTIONS[selectedtipkey]
+    elseif LOADING_SCREEN_TIP_CATEGORIES[selectedcategory] == LOADING_SCREEN_TIP_CATEGORIES.OTHER then
+        tipdata.text = self:GenerateControlTipText(selectedtipkey)
     end
 
     return tipdata

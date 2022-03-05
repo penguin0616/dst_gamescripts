@@ -58,7 +58,7 @@ local _spawndata =
 		--these names are describing the strength of the houndwave more than the duration
 		attack_delays =
 		{
-			intro 		= function() return TUNING.TOTAL_DAY_TIME * 3, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
+			intro 		= function() return TUNING.TOTAL_DAY_TIME * 5, math.random() * TUNING.TOTAL_DAY_TIME * 3 end,
 			rare 		= function() return TUNING.TOTAL_DAY_TIME * 5, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
 			occasional 	= function() return TUNING.TOTAL_DAY_TIME * 7, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
 			frequent 	= function() return TUNING.TOTAL_DAY_TIME * 9, math.random() * TUNING.TOTAL_DAY_TIME * 5 end,
@@ -96,7 +96,7 @@ end
 local function CalcEscalationLevel()
 	local day = GetAveragePlayerAgeInDays()
 
-	if day < 3 then
+	if day < 8 then
 		_attackdelayfn = _spawndata.attack_delays.intro or _spawndata.attack_delays.rare
 		_attacksizefn = _spawndata.attack_levels.intro.numspawns
 		_warndurationfn = _spawndata.attack_levels.intro.warnduration
