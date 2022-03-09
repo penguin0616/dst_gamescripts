@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "We don't have enough stuff!",
+		NO_TECH = "We're not sure how to make that yet...",
+		NO_STATION = "We can't make that right now.",
+	},
+
 	ACTIONFAIL_GENERIC = "Mom told me never to do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat is crying!",
 	ANNOUNCE_BOAT_SINK = "We're too young to drown!",

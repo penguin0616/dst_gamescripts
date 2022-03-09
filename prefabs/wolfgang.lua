@@ -164,14 +164,6 @@ local function OnTerraform(inst)
 	inst.components.mightiness:DoDelta(TUNING.WOLFGANG_MIGHTINESS_WORK_GAIN.TERRAFORM)	
 end
 
-local function OnAttacked(inst, data)
-	if data ~= nil and data.original_damage ~= nil and not inst.sg:HasStateTag("powerup") then
-		local delta = -math.min(25, math.max(1, 2 * math.floor(1/15 * data.original_damage)))
-		inst.components.mightiness:DoDelta(delta)	
-		--print("OnAttacked Might Loss:", delta, data.original_damage)
-	end
-end
-
 local function OnHitOther(inst, data)
 	local target = data.target
 	if target ~= nil and data.weapon == nil or data.weapon.components.inventoryitem:IsHeldBy(inst) then
@@ -487,7 +479,6 @@ local function master_postinit(inst)
 		inst:ListenForEvent("rowing", OnRowing)
 		inst:ListenForEvent("on_lower_sail_boost", OnSailBoost)
 		inst:ListenForEvent("onterraform", OnTerraform)
-		inst:ListenForEvent("attacked", OnAttacked)
 	    inst:ListenForEvent("onhitother", OnHitOther)
 
 

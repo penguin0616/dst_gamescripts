@@ -211,6 +211,20 @@ function Combat:LocomotorCanAttack(reached_dest, target)
                             target:HasTag("birchnutdrake")
                         )
                     )
+
+        if range > 2 and self.inst:HasTag("player") then
+            local weapon = self:GetWeapon()
+            local is_ranged_weapon = weapon ~= nil and (weapon:HasTag("projectile") or weapon:HasTag("rangedweapon"))
+
+            if not is_ranged_weapon then
+                local currentpos = self.inst:GetPosition()
+                local voidtest = currentpos + ((target:GetPosition() - currentpos):Normalize() * (self:GetAttackRangeWithWeapon() / 2))
+                if TheWorld.Map:IsNotValidGroundAtPoint(voidtest:Get()) then
+                    reached_dest = false
+                end
+            end
+        end
+
         return reached_dest, not valid, in_cooldown
     else
         return reached_dest, true, false

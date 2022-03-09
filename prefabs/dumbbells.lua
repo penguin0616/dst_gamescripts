@@ -154,15 +154,19 @@ local function MakeTossable(inst)
         inst.components.complexprojectile:SetOnHit(OnThrownHit)
 		inst.components.complexprojectile.ismeleeweapon = true
     end
-
-    inst:RemoveTag("punch")
 end
 
 local function RemoveTossable(inst)
     if inst.components.complexprojectile ~= nil then
         inst:RemoveComponent("complexprojectile")
     end
+end
 
+local function MakeWeapon(inst)
+    inst:RemoveTag("punch")
+end
+
+local function MakePunch(inst)
     inst:AddTag("punch")
 end
 
@@ -173,6 +177,12 @@ local function CheckMightiness(inst, data)
             MakeTossable(dumbbell)
         else
             RemoveTossable(dumbbell)
+        end
+
+        if data.state == "wimpy" then
+            MakePunch(dumbbell)
+        else
+            MakeWeapon(dumbbell)
         end
     end
 end
@@ -210,6 +220,12 @@ local function OnPickup(inst, owner)
             MakeTossable(inst)
         else
             RemoveTossable(inst)
+        end
+
+        if owner:HasTag("mightiness_wimpy") then
+            MakePunch(inst)
+        else
+            MakeWeapon(inst)
         end
     end
 end

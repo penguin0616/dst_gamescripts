@@ -18,10 +18,11 @@ require("util")
 local INGREDIENTS_SCALE = 0.75
 
 -------------------------------------------------------------------------------------------------------
-local CraftingMenuDetails = Class(Widget, function(self, owner, panel_width, panel_height)
+local CraftingMenuDetails = Class(Widget, function(self, owner, parent_widget, panel_width, panel_height)
     Widget._ctor(self, "CraftingMenuDetails")
 
 	self.owner = owner
+	self.parent_widget = parent_widget
 	self.panel_width = panel_width
 	self.panel_height = panel_height
 end)
@@ -174,11 +175,6 @@ function CraftingMenuDetails:_MakeBuildButton()
 			end
 		end
 		button.recipe_held = false
-
-		if skin ~= nil then
-			Profile:SetLastUsedSkinForItem(self.data.recipe.name, skin)
-			--Profile:SetRecipeTimestamp(self.data.recipe.name, button.timestamp)									-- TODO - support the timestamp, see recipepopup
-		end
 	end)
 	button.OnHide = function()
 		button.recipe_held = false
@@ -193,7 +189,13 @@ function CraftingMenuDetails:_MakeBuildButton()
 end
 
 function CraftingMenuDetails:Refresh()
-	self:PopulateRecipeDetailPanel(self.data)
+	self:PopulateRecipeDetailPanel(self.data, self.skins_spinner ~= nil and self.skins_spinner:GetItem() or nil)
+end
+
+function CraftingMenuDetails:RefreshControllers(controller_mode)
+	if self.skins_spinner ~= nil then
+		self.skins_spinner:RefreshControllers(controller_mode)
+	end
 end
 
 function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
@@ -245,14 +247,17 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
     fav_button.focus_scale = {1, 1}
     fav_button.normal_scale = {.81, .81}
 	fav_button:SetPosition(-width/2 + 5, y - name_font_size/2)
-	fav_button:SetOnClick(function() 
-		if TheCraftingMenuProfile:IsFavorite(recipe.name) then
+	fav_button:SetOnClick(function()
+		local is_favorite_recipe = TheCraftingMenuProfile:IsFavorite(recipe.name)
+		if is_favorite_recipe then
 			TheCraftingMenuProfile:RemoveFavorite(recipe.name)
 			fav_button:SetTextures(atlas, "favorite_unchecked.tex", "favorite_unchecked.tex", nil, "favorite_checked.tex", nil, { .81, .81 }, { 0, 0 })
 		else
 			TheCraftingMenuProfile:AddFavorite(recipe.name)
 			fav_button:SetTextures(atlas, "favorite_checked.tex", "favorite_checked.tex", nil, "favorite_unchecked.tex", nil, { .81, .81 }, { 0, 0 })
 		end
+
+		self.parent_widget:OnFavoriteChanged(recipe.name, not is_favorite_recipe)
 
 		self.owner:PushEvent("refreshcrafting")
 	end)

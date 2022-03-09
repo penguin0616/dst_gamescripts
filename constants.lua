@@ -858,6 +858,13 @@ function GetActiveSpecialEventCount()
     return (WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.NONE and 1 or 0) + GetTableSize(WORLD_EXTRA_EVENTS)
 end
 
+function GetFirstActiveSpecialEvent()
+    if WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.NONE then
+        return WORLD_SPECIAL_EVENT
+    end
+    return next(WORLD_EXTRA_EVENTS), nil --, nil prevents the value from getting returned by next
+end
+
 function GetAllActiveEvents(special_event, extra_events)
     local all_events = {}
     if special_event then

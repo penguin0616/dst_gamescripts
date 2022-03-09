@@ -362,7 +362,7 @@ return {
 	{
 		NO_INGREDIENTS = "It looks like I'm missing some important components.",
 		NO_TECH = "This will need more scientific research!",
-		NO_STATION = "To the lab! Or another more suitable building station!",
+		NO_STATION = "I can't make it right now.",
 	},
 
 	ACTIONFAIL_GENERIC = "I can't do that.",

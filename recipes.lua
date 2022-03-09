@@ -17,8 +17,8 @@ PROTOTYPER_DEFS =
     ancient_altar				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_crafting_table.tex",	is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ANCIENT},
     ancient_altar_broken		= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_crafting_table.tex",	is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ANCIENT},
 	critterlab					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_orphanage.tex",			is_crafting_station = true,		action_str = "CRITTERS",	filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ORPHANAGE},
-	cartographydesk				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_cartography.tex",		is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CARTOGRAPHY},
-	sculptingtable				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_sculpt.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SCULPTING},
+	cartographydesk				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_cartography.tex",		is_crafting_station = true,		action_str = "CARTOGRAPHY",	filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CARTOGRAPHY},
+	sculptingtable				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_sculpt.tex",			is_crafting_station = true,		action_str = "SCULPTING",	filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SCULPTING},
 	moonrockseed				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_celestial.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CELESTIAL},
 	moon_altar					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_celestial.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CELESTIAL},
 	moon_altar_cosmic			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_celestial.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CELESTIAL},
@@ -245,7 +245,7 @@ Recipe2("pumpkin_lantern",					{Ingredient("pumpkin", 1), Ingredient("fireflies"
 Recipe2("minerhat",							{Ingredient("strawhat", 1),Ingredient("goldnugget", 1),Ingredient("fireflies", 1)},				TECH.SCIENCE_TWO)
 Recipe2("molehat",							{Ingredient("mole", 2), Ingredient("transistor", 2), Ingredient("wormlight", 1)},				TECH.SCIENCE_TWO)
 Recipe2("lantern",							{Ingredient("twigs", 3), Ingredient("rope", 2), Ingredient("lightbulb", 2)},					TECH.SCIENCE_TWO)
-Recipe2("nightlight",						{Ingredient("goldnugget", 8), Ingredient("nightmarefuel", 2),Ingredient("redgem", 1)},			TECH.MAGIC_TWO)
+Recipe2("nightlight",						{Ingredient("goldnugget", 8), Ingredient("nightmarefuel", 2),Ingredient("redgem", 1)},			TECH.MAGIC_TWO,				{placer="nightlight_placer"})
 Recipe2("dragonflyfurnace",					{Ingredient("dragon_scales", 1), Ingredient("redgem", 2), Ingredient("charcoal", 10)},			TECH.LOST,					{placer="dragonflyfurnace_placer"})
 Recipe2("mushroom_light",					{Ingredient("shroom_skin", 1), Ingredient("fertilizer", 1, nil, true)},							TECH.LOST,					{placer="mushroom_light_placer", min_spacing=1.5})
 Recipe2("mushroom_light2",					{Ingredient("shroom_skin", 1), Ingredient("fertilizer", 1, nil, true), Ingredient("boards", 1)},TECH.LOST,					{placer="mushroom_light2_placer", min_spacing=1.5})
@@ -286,7 +286,7 @@ Recipe2("refined_dust",						{Ingredient("saltrock", 1), Ingredient("rocks", 2),
 
 Recipe2("cookbook",							{Ingredient("papyrus", 1), Ingredient("carrot", 1)},											TECH.SCIENCE_ONE)
 Recipe2("cookpot",							{Ingredient("cutstone", 3), Ingredient("charcoal", 6), Ingredient("twigs", 6)},					TECH.SCIENCE_ONE,			{placer="cookpot_placer"})
-Recipe2("meatrack",							{Ingredient("twigs", 3),Ingredient("charcoal", 2), Ingredient("rope", 3)},						TECH.SCIENCE_TWO,			{placer="meatrack_placer"})
+Recipe2("meatrack",							{Ingredient("twigs", 3),Ingredient("charcoal", 2), Ingredient("rope", 3)},						TECH.SCIENCE_ONE,			{placer="meatrack_placer"})
 
 Recipe2("spear",							{Ingredient("twigs", 2), Ingredient("rope", 1), Ingredient("flint", 1) },						TECH.SCIENCE_ONE)
 Recipe2("whip",								{Ingredient("coontail", 3), Ingredient("tentaclespots", 1)},									TECH.SCIENCE_TWO)
@@ -407,7 +407,7 @@ Recipe2("anchor_item", 						{Ingredient("boards", 2), Ingredient("rope", 3), In
 Recipe2("mast_item", 						{Ingredient("boards", 3), Ingredient("rope", 3), Ingredient("silk", 8)}, 								TECH.SEAFARING_ONE)
 Recipe2("mast_malbatross_item",				{Ingredient("driftwood_log", 3), Ingredient("rope", 3), Ingredient("malbatross_feathered_weave", 4)},	TECH.SEAFARING_ONE)
 Recipe2("steeringwheel_item",				{Ingredient("boards", 2), Ingredient("rope", 1)}, 														TECH.SEAFARING_ONE)
-Recipe2("fish_box",							{Ingredient("cutstone", 1), Ingredient("rope", 3)}, 													TECH.SEAFARING_ONE,			{placer="fish_box_placer", testfn=function(pt) return TheWorld.Map:GetPlatformAtPoint(pt.x, 0, pt.z, -0.5) ~= nil end})
+Recipe2("fish_box",							{Ingredient("cutstone", 1), Ingredient("rope", 3)}, 													TECH.SEAFARING_ONE,			{placer="fish_box_placer", min_spacing=1.5, testfn=function(pt) return TheWorld.Map:GetPlatformAtPoint(pt.x, 0, pt.z, -0.5) ~= nil end})
 Recipe2("winch",							{Ingredient("boards", 2), Ingredient("cutstone", 1), Ingredient("rope", 2)},							TECH.LOST,					{placer="winch_placer", min_spacing=1.5})
 Recipe2("mastupgrade_lamp_item",			{Ingredient("boards", 1), Ingredient("rope", 2), Ingredient("flint", 4)},								TECH.SEAFARING_ONE)
 Recipe2("mastupgrade_lightningrod_item",	{Ingredient("goldnugget", 5)},																			TECH.SEAFARING_ONE)
@@ -502,7 +502,7 @@ Recipe2("ruinsrelic_table",					{Ingredient("cutstone", 1)},																			T
 
 -- ANCIENT
 Recipe2("thulecite",						{Ingredient("thulecite_pieces", 6)},																	TECH.ANCIENT_TWO,			{nounlock=true})
-Recipe2("wall_ruins_item",					{Ingredient("thulecite", 1)},																			TECH.ANCIENT_TWO,			{nounlock=true})
+Recipe2("wall_ruins_item",					{Ingredient("thulecite", 1)},																			TECH.ANCIENT_TWO,			{nounlock=true, numtogive=6})
 Recipe2("nightmare_timepiece",				{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 2)},											TECH.ANCIENT_TWO,			{nounlock=true})
 Recipe2("orangeamulet",						{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 3), Ingredient("orangegem", 1)},				TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("yellowamulet",						{Ingredient("thulecite", 2), Ingredient("nightmarefuel", 3), Ingredient("yellowgem", 1)},				TECH.ANCIENT_TWO,			{nounlock=true})
@@ -643,7 +643,7 @@ Recipe2("yotp_food3", 	                    {Ingredient("lucky_goldnugget", 4)},	
 Recipe2("yotp_food1", 	                    {Ingredient("lucky_goldnugget", 6)},																	TECH.PIGOFFERING_THREE,		{nounlock=true, actionstr="PERDOFFERING"})
 Recipe2("yotp_food2", 	                    {Ingredient("lucky_goldnugget", 1)},																	TECH.PIGOFFERING_THREE,		{nounlock=true, actionstr="PERDOFFERING"})
 
-Recipe2("firecrackers",                     {Ingredient("lucky_goldnugget", 1)},																	TECH.PERDOFFERING_ONE,		{nounlock=true, actionstr="PERDOFFERING"})
+Recipe2("firecrackers",                     {Ingredient("lucky_goldnugget", 1)},																	TECH.PERDOFFERING_ONE,		{nounlock=true, actionstr="PERDOFFERING", numtogive=3})
 Recipe2("redlantern",                       {Ingredient("lucky_goldnugget", 3)},																	TECH.PERDOFFERING_ONE,		{nounlock=true, actionstr="PERDOFFERING"})
 Recipe2("miniboatlantern",                  {Ingredient("lucky_goldnugget", 3)},																	TECH.PERDOFFERING_ONE,		{nounlock=true, actionstr="PERDOFFERING"})
 Recipe2("dragonheadhat",                    {Ingredient("lucky_goldnugget", 8)},																	TECH.PERDOFFERING_ONE,		{nounlock=true, actionstr="PERDOFFERING"})

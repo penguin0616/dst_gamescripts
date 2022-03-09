@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Dangit, I'm missing a few things.",
+		NO_TECH = "That one might take some lookin' into.",
+		NO_STATION = "I'm gonna need a proper workstation.",
+	},
+
 	ACTIONFAIL_GENERIC = "Sorry, I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "All this water is making me very anxious.",
 	ANNOUNCE_BOAT_SINK = "Hold on, Lucy!",

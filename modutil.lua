@@ -192,6 +192,22 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		end
 	end
 
+	-- Used to preload assets before they get loaded regularly; use mainly for modifying loading screen tip icons
+	-- Assets is a table list defined the same as in any prefab file and uses .tex and .xml file data
+	--[[ e.g.
+		Assets = {
+			Asset( "IMAGE", "<path to .tex file relative to the mod's folder>" ),
+			Asset( "ATLAS", "<path to .xml file relative to the mod's folder>" ),
+		}]]
+	if not isworldgen then
+		env.ReloadPreloadAssets = function()
+			initprint("ReloadPreloadAssets")
+			if env.PreloadAssets then
+				ModPreloadAssets(env.PreloadAssets, env.modname)
+			end
+		end
+	end
+
 	local Customize = require("map/customize")
 	env.AddCustomizeGroup = function(category, name, text, desc, atlas, order)
 		initprint("AddCustomizeGroup", category, name)

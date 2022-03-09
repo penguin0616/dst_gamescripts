@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I seem to be missing a thing or two.",
+		NO_TECH = "Its making is a mystery to me.",
+		NO_STATION = "No, no, this just won't do.",
+	},
+
 	ACTIONFAIL_GENERIC = "No, no, no.",
 	ANNOUNCE_BOAT_LEAK = "Now this ride's getting fun!",
 	ANNOUNCE_BOAT_SINK = "Into the drink I go, hyuyu!",

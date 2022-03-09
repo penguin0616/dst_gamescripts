@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Uuugh I need more stuff!",
+		NO_TECH = "Yeaahh, so... I haven't actually figured that one out yet.",
+		NO_STATION = "I can't make it here!",
+	},
+
 	ACTIONFAIL_GENERIC = "I can'tttttt.",
 	ANNOUNCE_BOAT_LEAK = "Gross, I hate water.",
 	ANNOUNCE_BOAT_SINK = "I'm gonna drown!!",

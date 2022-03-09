@@ -578,6 +578,8 @@ STRINGS =
 			COOKING = "Cook with",
 			READ = "Read",
 			CRITTERS = "Look in",
+			SCULPTING = "Sculpt at",
+			CARTOGRAPHY = "Draw at",
 		},
 
         JUMPIN =
@@ -7077,6 +7079,7 @@ STRINGS.UI =
 	        DEFAULT = "Default",
 	        NAME = "Alphabetical",
 		    CRAFTABLE = "Craftable",
+		    FAVORITE = "Favorite",
 		},
 	},
 
@@ -10441,10 +10444,13 @@ STRINGS.UI =
         KITCOON_GAME =
         {
             NAME_AGE = "{name} is {age} days old.",
+            HIBERNATING = "{name} is hibernating.",
             OKAY = "Okay",
             NAME_POPUP_TITLE = "Name your Kitcoon",
             NAME_POPUP_BODY = "Any name is great, but pick one that is meaningful to you!",
             PLAY_WITH = "Play with {name}",
+            WAKE = "Wake {name} from hibernation",
+            HIBERNATE = "Send {name} to hibernate",
             FEED = "Feed {name}",
             CLEAR_POOP = "Clear Poop",
             PICKUP_NAMETAG = "Pick up Kit Collar",

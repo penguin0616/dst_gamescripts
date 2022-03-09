@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I should endeavor to collect the required ingredients.",
+		NO_TECH = "This looks like an opportunity to conduct some research.",
+		NO_STATION = "I'm afraid this will require a specialized workspace.",
+	},
+
 	ACTIONFAIL_GENERIC = "It seems I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat has fallen into dangerous disrepair.",
 	ANNOUNCE_BOAT_SINK = "Goodness, we're sinking!",

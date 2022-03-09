@@ -1745,6 +1745,34 @@ function PlayerProfile:SetKitAbandonedMessage(abandoned)
     self:Save()
 end
 
+function PlayerProfile:GetKitIsHibernating()
+	if self:GetValue("kit_hibernating") ~= nil then
+		return self:GetValue("kit_hibernating")
+	end
+	return false
+end
+function PlayerProfile:SetKitIsHibernating(hibernating)
+	self:SetValue("kit_hibernating", hibernating)
+	self.dirty = true
+    self:Save()
+end
+
+function PlayerProfile:GetKitHibernationStart()
+	if self:GetValue("kit_hibernation_start_time") ~= nil then
+		return self:GetValue("kit_hibernation_start_time")
+	end
+	return 0
+end
+function PlayerProfile:SetKitHibernationStart(time)
+	self:SetValue("kit_hibernation_start_time", time)
+	self.dirty = true
+    self:Save()
+end
+
+
+
+
+
 
 function PlayerProfile:GetLanguageID()
 	if self:GetValue("language_id") ~= nil then

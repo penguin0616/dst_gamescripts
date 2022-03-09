@@ -635,8 +635,10 @@ function Combat:LocomotorCanAttack(reached_dest, target)
         return false, true, false
     end
 
+    local attackrange = self:CalcAttackRangeSq(target)
+
     reached_dest = reached_dest or
-        (self.ignorehitrange or distsq(target:GetPosition(), self.inst:GetPosition()) <= self:CalcAttackRangeSq(target))
+        (self.ignorehitrange or distsq(target:GetPosition(), self.inst:GetPosition()) <= attackrange)
 
     local in_cooldown = self:InCooldown()
 
@@ -654,6 +656,19 @@ function Combat:LocomotorCanAttack(reached_dest, target)
                         target:HasTag("birchnutdrake")
                     )
                 )
+
+    if attackrange > 2 * 2 and self.inst:HasTag("player") then
+        local weapon = self:GetWeapon()
+        local is_ranged_weapon = weapon ~= nil and (weapon:HasTag("projectile") or weapon:HasTag("rangedweapon"))
+
+        if not is_ranged_weapon then
+            local currentpos = self.inst:GetPosition()
+            local voidtest = currentpos + ((target:GetPosition() - currentpos):Normalize() * (self:GetAttackRange() / 2))
+            if TheWorld.Map:IsNotValidGroundAtPoint(voidtest:Get()) then
+                reached_dest = false
+            end
+        end
+    end
 
     return reached_dest, not valid, in_cooldown
 end

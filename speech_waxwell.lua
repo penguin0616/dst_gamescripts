@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I don't have everything I need.",
+		NO_TECH = "Don't look at me, I've never made one before in my life.",
+		NO_STATION = "I can't make that here, pal.",
+	},
+
 	ACTIONFAIL_GENERIC = "That didn't work.",
 	ANNOUNCE_BOAT_LEAK = "We've sprung a leak!",
 	ANNOUNCE_BOAT_SINK = "Oh dear.",

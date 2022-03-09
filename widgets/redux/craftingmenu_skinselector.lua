@@ -59,6 +59,8 @@ local SkinSelector = Class(Widget, function(self, recipe, owner, skin_name)
 	self.spinner.text:Hide()
     self.spinner.background:ScaleToSize(spinner_width + 2, spinner_height)
     self.spinner.background:SetPosition(0, 6)
+	self.spinner:AddControllerHints(CONTROL_INVENTORY_USEONSCENE, CONTROL_INVENTORY_USEONSELF, true)
+
 	self.spinner:SetOnChangedFn(function()
 		local which = self.spinner:GetSelectedIndex()
         if which > 1 then
@@ -95,18 +97,18 @@ local SkinSelector = Class(Widget, function(self, recipe, owner, skin_name)
     self.line_bottom:SetPosition(0, -spinner_height)
     self.line_bottom:SetTint(unpack(BROWN))
 
-    self.OnControl = function(self, control, down) self.spinner:OnControl(control, down) end
-
     self.focus_forward = self.spinner
 
 	self.spinner:SetOptions(self.skins_options)
-    local last_skin = skin_name or Profile:GetLastUsedSkinForItem(recipe.name)
-    if last_skin then
-        self.spinner:SetSelectedIndex(self:GetIndexForSkin(last_skin) or 1)
-    end
+
+	self.spinner:SetSelectedIndex(skin_name == nil and 1 or self:GetIndexForSkin(skin_name) or 1)
 
 	self.widget_height = spinner_height * SCALE
 end)
+
+function SkinSelector:RefreshControllers(controller_mode)
+	self.spinner:RefreshControllers(controller_mode)
+end
 
 function SkinSelector:GetItem()
     local which = self.spinner:GetSelectedIndex()
@@ -192,6 +194,14 @@ function SkinSelector:GetSkinOptions()
     return skin_options
 end
 
+
+function SkinSelector:OnControl(control, down)
+	if self.spinner:OnControl(control, down) then
+		return true
+	end
+
+
+end
 
 
 return SkinSelector

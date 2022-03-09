@@ -14,6 +14,8 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 	self.craftingmenu = craftingmenu
 	self.slot_num = slot_num
 
+	self.FindPinUp = nil		-- must be implemented by the owner
+	self.FindPinDown = nil		-- must be implemented by the owner
 
 	if pin_data ~= nil then
 		self.recipe_name = pin_data.recipe_name
@@ -77,19 +79,23 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 			end
 		end		
 
-		self.craft_button.last_recipe_click = GetTime()
-		self.craft_button.recipe_held = false
-		if not self.craft_button.recipe_held then
-			local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name) 
-			if recipe_data ~= nil then
+		local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name) 
+		if recipe_data ~= nil then
+			if not self.craft_button.recipe_held then
 				local stay_open, error_msg = DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name) 
 				if not stay_open then
+					self.owner:PushEvent("refreshcrafting") -- this is only really neede for free crafting
 					self.owner.HUD:CloseCrafting()
 				end
-				if error_msg then
+				if error_msg and not TheNet:IsServerPaused() then
 					SendRPCToServer(RPC.CannotBuild, error_msg)
 				end
 			end
+
+			if recipe_data.recipe.placer == nil then
+				self.craft_button.last_recipe_click = GetTime()
+			end
+			self.craft_button.recipe_held = false
 		end
 	end)
 	self.craft_button.onselect = function()

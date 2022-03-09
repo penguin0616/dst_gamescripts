@@ -35,9 +35,8 @@ local CraftingMenuHUD = Class(Widget, function(self, owner)
 	self.pinbar:SetPosition(0, 0)
 	self.pinbar:MoveToBack()
 
-	self.openhint = self:AddChild(Text(UIFONT, 40))
+	self.openhint = self:AddChild(Text(UIFONT, 30))
 	self.openhint:SetPosition(28, 34 + HEIGHT/2)
-	self.openhint:SetScale(0.75)
 
 	self:RefreshControllers(TheInput:ControllerAttached())
 
@@ -82,6 +81,11 @@ local CraftingMenuHUD = Class(Widget, function(self, owner)
         end
     end
 
+	local function InitializeCraftingMenu()
+		self:Initialize()
+	end
+
+    self.inst:ListenForEvent("playeractivated", InitializeCraftingMenu, self.owner)
     self.inst:ListenForEvent("healthdelta", UpdateRecipesForHealthIngredients, self.owner)
     self.inst:ListenForEvent("sanitydelta", UpdateRecipesForSanityIngredients, self.owner)
     self.inst:ListenForEvent("techtreechange", event_UpdateRecipes, self.owner)
@@ -177,6 +181,21 @@ function CraftingMenuHUD:PopulateRecipeDetailPanel(recipe_name, skin_name)
 	self.craftingmenu:PopulateRecipeDetailPanel(self.valid_recipes[recipe_name], skin_name)
 end
 
+function CraftingMenuHUD:Initialize()
+	self:RebuildRecipes()
+
+	self.craftingmenu:UpdateFilterButtons()
+
+	self.craftingmenu:SelectFilter(CRAFTING_FILTERS.TOOLS.name, true)
+	local data = self.craftingmenu.filtered_recipes[1]
+	self:PopulateRecipeDetailPanel(data ~= nil and data.recipe.name or nil, data ~= nil and Profile:GetLastUsedSkinForItem(data.recipe.name) or nil)
+
+	self.craftingmenu:Refresh() 
+	self.pinbar:Refresh()
+
+	self.needtoupdate = false
+end
+
 function CraftingMenuHUD:UpdateRecipes()
     self.needtoupdate = true
 end
@@ -247,6 +266,7 @@ function CraftingMenuHUD:RefreshControllers(controller_mode)
         self.openhint:Hide()
 	end
 
+	self.craftingmenu:RefreshControllers(controller_mode)
 	self.pinbar:RefreshControllers(controller_mode)
 end
 
@@ -274,6 +294,11 @@ function CraftingMenuHUD:OnUpdate(dt)
 
 end
 
+function CraftingMenuHUD:OnControl(control, down)
+    if CraftingMenuHUD._base.OnControl(self, control, down) then return true end
+
+	return false
+end
 
 function CraftingMenuHUD:SelectPin()
 	return self.pinbar:StartControllerNav()

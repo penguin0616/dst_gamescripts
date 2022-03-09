@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I must seek out more ingredients!",
+		NO_TECH = "I hath not yet discovered how to make such a thing.",
+		NO_STATION = "I fear 'tis beyond me at this time.",
+	},
+
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
 	ANNOUNCE_BOAT_LEAK = "Our vessel hath sprung a leak!",
 	ANNOUNCE_BOAT_SINK = "A Viking shalln't abandon her ship!",

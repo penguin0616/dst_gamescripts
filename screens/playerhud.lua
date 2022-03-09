@@ -671,7 +671,6 @@ function PlayerHud:SetMainCharacter(maincharacter)
                 self:GoEnlightened()
             end
         end
-        self.controls.craftingmenu:UpdateRecipes()
 
         local overflow = maincharacter.replica.inventory ~= nil and maincharacter.replica.inventory:GetOverflowContainer() or nil
         if overflow ~= nil then
@@ -789,12 +788,8 @@ function PlayerHud:IsCraftingOpen()
 end
 
 function PlayerHud:IsCraftingBlockingGameplay()
-    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
-end
-
-function PlayerHud:IsCraftingAllowingGameplay()
-	-- this is currently only used for allowing character loco but will be expanded to other actions
-    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen() and not self.controls.craftingmenu.craftingmenu.search_box.textbox.editing
+	-- deprecated
+    return false
 end
 
 function PlayerHud:IsControllerVoteOpen()
@@ -925,14 +920,31 @@ function PlayerHud:OnControl(control, down)
             return true
         end
     elseif control == CONTROL_PAUSE then
-        if not self.owner.components.playercontroller:IsAOETargeting() then
-            TheFrontEnd:PushScreen(PauseScreen())
-        elseif TheInput:ControllerAttached() then
+		if TheInput:ControllerAttached() then
             self.owner.components.playercontroller:CancelAOETargeting()
+            self:CloseCrafting()
+            if self:IsControllerInventoryOpen() then
+                self:CloseControllerInventory()
+            end
             TheFrontEnd:PushScreen(PauseScreen())
-        else
-            self.owner.components.playercontroller:CancelAOETargeting()
-        end
+		else
+			local closed = false
+			if self.owner.components.playercontroller:IsAOETargeting() then
+	            self.owner.components.playercontroller:CancelAOETargeting()
+				closed = true
+			end
+            if self:IsCraftingOpen() then
+                self:CloseCrafting()
+                closed = true
+            end
+			if self:IsPlayerAvatarPopUpOpen() then
+                self:TogglePlayerAvatarPopup()
+                closed = true
+			end
+			if not closed then
+	            TheFrontEnd:PushScreen(PauseScreen())
+			end
+		end
         return true
     elseif control == CONTROL_SERVER_PAUSE then
         SetServerPaused()
@@ -949,17 +961,6 @@ function PlayerHud:OnControl(control, down)
         if control == CONTROL_MAP then
             self.controls:ToggleMap()
             return true
-        elseif control == CONTROL_CANCEL then
-            local closed = false
-            if self:IsCraftingOpen() then
-                self:CloseCrafting()
-                closed = true
-            end
-            if self:IsControllerInventoryOpen() then
-                self:CloseControllerInventory()
-                closed = true
-            end
-            return closed
         elseif control == CONTROL_TOGGLE_PLAYER_STATUS then
             self:ShowPlayerStatusScreen(true)
             return true

@@ -13,6 +13,7 @@ local CraftingMenuDetails = require "widgets/redux/craftingmenu_details"
 require("util")
 
 -- ref: craftslot.lua, craftslots.lua, crafting.lua, recipetile.lua, recipepopup.lua
+local SortTypes = require("crafting_sorting")
 
 -------------------------------------------------------------------------------------------------------
 local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, height)
@@ -21,41 +22,12 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 	self.owner = owner
 	self.crafting_hud = crafting_hud
 
-	local build_state_sorting = 
-	{
-		freecrafting = 0,
-		buffered = 1, 
-		has_ingredients = 2,
-		prototype = 2,
-		no_ingredients = 3,
-	}
-
-	local function sort_alpha(a, b)
-		local a_name = STRINGS.NAMES[string.upper(a.recipe.name)] or STRINGS.NAMES[string.upper(a.recipe.product)] or ""
-		local b_name = STRINGS.NAMES[string.upper(b.recipe.name)] or STRINGS.NAMES[string.upper(b.recipe.product)] or ""
-		return a_name < b_name
-	end
-
+	self.sort_class = SortTypes.DefaultSort(self)
     self.sort_modes = {
-        {str = STRINGS.UI.CRAFTING_MENU.SORTING.DEFAULT, atlas = "images/button_icons2.xml", img = "sort_default.tex", fn = function(a, b)
-			if self.current_filter_name ~= nil then
-				local sort_values = FunctionOrValue(CRAFTING_FILTERS[self.current_filter_name].default_sort_values)
-				if sort_values ~= nil then
-					if (sort_values[a.recipe.name] or 99999) < (sort_values[b.recipe.name] or 99999) then
-						return true
-					end
-				end
-			end
-			return false
-		end},
-        {str = STRINGS.UI.CRAFTING_MENU.SORTING.CRAFTABLE, atlas = "images/button_icons.xml", img = "sort_rarity.tex", fn = function(a, b) 
-			local sort_a, sort_b = build_state_sorting[a.meta.build_state] or 99999, build_state_sorting[b.meta.build_state] or 99999
-			if sort_a == sort_b then
-				return self.sort_modes[1].fn(a, b)
-			end
-			return sort_a < sort_b
-		end},
-        {str = STRINGS.UI.CRAFTING_MENU.SORTING.NAME, atlas = "images/button_icons.xml", img = "sort_name.tex", fn = sort_alpha},
+        {str = STRINGS.UI.CRAFTING_MENU.SORTING.DEFAULT, atlas = "images/button_icons2.xml", img = "sort_default.tex", class = self.sort_class},
+		{str = STRINGS.UI.CRAFTING_MENU.SORTING.CRAFTABLE, atlas = "images/button_icons.xml", img = "sort_rarity.tex", class = SortTypes.CraftableSort(self, self.sort_class)},
+		{str = STRINGS.UI.CRAFTING_MENU.SORTING.FAVORITE, atlas = "images/button_icons2.xml", img = "sort_favorite.tex", class = SortTypes.FavoriteSort(self, self.sort_class)},
+        {str = STRINGS.UI.CRAFTING_MENU.SORTING.NAME, atlas = "images/button_icons.xml", img = "sort_name.tex", class = SortTypes.AlphaSort(self)},
     }
 	self.sort_mode = 1
 
@@ -76,21 +48,22 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 
 	self:UpdateFilterButtons()
 
-	self:SelectFilter(CRAFTING_FILTERS.TOOLS.name, true)
-
-	self.details_root:PopulateRecipeDetailPanel(self.filtered_recipes[1])
-
-
-	--self.panel = self.root:AddChild(CrockpotPage(owner, "cookpot"))
-	--self.focus_forward = self.panel.parent_default_focus
-	--if TheInput:ControllerAttached() then
-	--	self.panel.parent_default_focus:SetFocus()
-	--end
+	self.nav_hint = self:AddChild(Text(UIFONT, 24))
+	self.nav_hint:SetPosition(28, -28 - height/2)
 
 	self.focus_forward = self.filter_panel.filter_grid
 end)
 
 function CraftingMenuWidget:OnControl(control, down)
+	if self.crafting_hud:IsCraftingOpen() then
+		if self.details_root.skins_spinner ~= nil and not self.details_root.skins_spinner.focus then
+			if self.details_root.skins_spinner:OnControl(control, down) then return true end
+		end
+		if self.recipe_grid ~= nil and not self.recipe_grid.focus then
+			if self.recipe_grid:OnControl(control, down) then return true end
+		end
+	end
+
     if CraftingMenuWidget._base.OnControl(self, control, down) then return true end
 
 	return false
@@ -168,38 +141,26 @@ local function text_filter(recipe, search_str)
         or (desc and search_exact_match(search_str, string.lower(desc)))
 end
 
+local function IsRecipeValidForFilter(self, recipename, filter_recipes)
+	if filter_recipes then
+		return filter_recipes[recipename] ~= nil
+	end
+	return self:IsRecipeValidForSearch(recipename)
+end
+
 function CraftingMenuWidget:ApplyFilters()
 	self.filtered_recipes = {}
 
-	local filter_recipes = (self.current_filter_name ~= nil and CRAFTING_FILTERS[self.current_filter_name] ~= nil) and FunctionOrValue(CRAFTING_FILTERS[self.current_filter_name].recipes) or nil
-	if filter_recipes ~= nil then
-		for _, recipe_name in ipairs(filter_recipes) do
-			local data = self.crafting_hud.valid_recipes[recipe_name]
-			if data ~= nil and data.meta.build_state ~= "hide" then
-				table.insert(self.filtered_recipes, data)
-			end
-		end
-	else
-		for _, data in pairs(self.crafting_hud.valid_recipes) do
-			if data.meta.build_state ~= "hide" then
-				if self:IsRecipeValidForSearch(data.recipe.name) then
-					table.insert(self.filtered_recipes, data)
-				end
-			end
+	local current_filter = self.current_filter_name
+	local filter_recipes = (current_filter ~= nil and CRAFTING_FILTERS[current_filter] ~= nil) and FunctionOrValue(CRAFTING_FILTERS[current_filter].default_sort_values) or nil
+
+	for i, recipe_name in metaipairs(self.sort_class) do
+		local data = self.crafting_hud.valid_recipes[recipe_name]
+		if data and data.meta.build_state ~= "hide" and IsRecipeValidForFilter(self, recipe_name, filter_recipes) then
+			table.insert(self.filtered_recipes, data)
 		end
 	end
 
-	if self.sort_mode ~= 1 then
-		self:SortFilteredRecipes()
-	else
-		self.recipe_grid:SetItemsData(self.filtered_recipes)
-	end
-end
-
-function CraftingMenuWidget:SortFilteredRecipes()
-	if #self.filtered_recipes > 0 then
-		table.sort(self.filtered_recipes, self.sort_fn)
-	end
 	self.recipe_grid:SetItemsData(self.filtered_recipes)
 end
 
@@ -272,7 +233,6 @@ function CraftingMenuWidget:UpdateFilterButtons()
 		end
 	end
 
-
 	if self.crafting_hud.pinbar ~= nil and self.crafting_hud.pinbar.pin_open ~= nil then
 		self.crafting_hud.pinbar.pin_open:SetCraftingState(can_prototype, new_recipe_available)
 	end
@@ -280,8 +240,24 @@ end
 
 function CraftingMenuWidget:Refresh()
 	self:UpdateFilterButtons()
-	self:ApplyFilters()
+	if self.sort_class.Refresh == nil or not self.sort_class:Refresh() then
+		self.recipe_grid:RefreshView()
+	end
 	self.details_root:Refresh()
+end
+
+function CraftingMenuWidget:RefreshControllers(controller_mode)
+	self.details_root:RefreshControllers(controller_mode)
+
+    if controller_mode then
+        self.nav_hint:Show()
+        self.nav_hint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_UP).." "..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_RIGHT).." "..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_DOWN).." "..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_LEFT).."  ".."Naviation")
+
+		self.recipe_grid:OverrideControllerButtons(CONTROL_INVENTORY_EXAMINE, CONTROL_INVENTORY_DROP, true)
+    else
+        self.nav_hint:Hide()
+		self.recipe_grid:ClearOverrideControllerButtons()
+	end
 end
 
 function CraftingMenuWidget:OnUpdate(dt)
@@ -340,16 +316,17 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
 	local fill = w:AddChild(Image(atlas, "backing.tex"))
-	fill:ScaleToSize(width, height + 18)
+	fill:ScaleToSize(width + 18, height + 18)
 	fill:SetTint(1, 1, 1, 0.5)
 
 	local left = w:AddChild(Image(atlas, "side.tex"))
 	left:SetPosition(-width/2 - 8, 1)
 	left:ScaleToSize(-26, -580)
-	
+
 	local right = w:AddChild(Image(atlas, "side.tex"))
 	right:SetPosition(width/2 + 8, 1)
 	right:ScaleToSize(26, 580)
+	right:SetClickable(false)
 
 	local top = w:AddChild(Image(atlas, "top.tex"))
 	top:SetPosition(0, height/2 + 10)
@@ -361,7 +338,7 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 
 	----------------
 	self.filter_panel = w:AddChild(self:MakeFilterPanel(width, fileters_height))
-	self.filter_panel:SetPosition(-width/2 + width/2, height/2 - 20)
+	self.filter_panel:SetPosition(0, height/2 - 20)
 
 	self.recipe_grid = w:AddChild(self:MakeRecipeList(width, height - fileters_height))
 	local grid_w, grid_h = self.recipe_grid:GetScrollRegionSize()
@@ -379,7 +356,7 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 
 	----------------
 
-	self.details_root = w:AddChild(CraftingMenuDetails(self.owner, width - 20 * 2, height - 20 * 2))
+	self.details_root = w:AddChild(CraftingMenuDetails(self.owner, self, width - 20 * 2, height - 20 * 2))
 	self.details_root:SetPosition(0, height/2 - fileters_height - grid_h - 10)
 
 	----------------
@@ -391,6 +368,11 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 end
 
 function CraftingMenuWidget:ValidateRecipeForSearch(name)
+	if self.search_text == "" then
+		self.searched_recipes[name] = true
+		return
+	end
+
 	local is_narrower_search = self.search_text:len() > self.last_search_text:len()
 	local is_appended_string = (is_narrower_search and search_exact_match(self.last_search_text, self.search_text)) or
 		(not is_narrower_search and search_exact_match(self.search_text, self.last_search_text)) or nil
@@ -476,9 +458,13 @@ function CraftingMenuWidget:SelectFilter(name, clear_search_text)
 	if self.current_filter_name ~= nil and self.filter_buttons[self.current_filter_name] ~= nil then
 		self.filter_buttons[self.current_filter_name].button:Unselect()
 	end
-	
+
 	self.current_filter_name = name
 	self.filter_buttons[name].button:Select()
+
+	if self.sort_class.OnSelectFilter then
+		self.sort_class:OnSelectFilter()
+	end
 
 	self:ApplyFilters()
 end
@@ -537,8 +523,12 @@ function CraftingMenuWidget:AddSorter()
         w:SetHoverText( subfmt(STRINGS.UI.CRAFTING_MENU.SORT_MODE_FMT, { mode = self.sort_modes[sort_mode].str }) )
         w.icon:SetTexture(self.sort_modes[sort_mode].atlas, self.sort_modes[sort_mode].img )
 
-		self.sort_fn = self.sort_modes[sort_mode].fn
+		self.sort_class = self.sort_modes[sort_mode].class
 		self.sort_mode = sort_mode
+
+		if self.sort_class.OnSelected then
+			self.sort_class:OnSelected()
+		end
     end
     local function onclick()
         local sort_mode = self.sort_mode + 1
@@ -547,7 +537,7 @@ function CraftingMenuWidget:AddSorter()
         end
 
         btn:SetSortType(sort_mode)
-		self:SortFilteredRecipes()
+		self:ApplyFilters()
 		TheCraftingMenuProfile:SetSortMode(sort_mode)
     end
     btn:SetOnClick(onclick)
@@ -584,7 +574,7 @@ function CraftingMenuWidget:MakeFilterPanel(width, height)
 
 		local event_name
 		if GetActiveSpecialEventCount() == 1 then
-			event_name = STRINGS.UI.SPECIAL_EVENT_NAMES[string.upper(WORLD_SPECIAL_EVENT)]
+			event_name = STRINGS.UI.SPECIAL_EVENT_NAMES[string.upper(GetFirstActiveSpecialEvent())]
 		else
 			event_name = STRINGS.UI.SPECIAL_EVENT_NAMES.MULTIPLE_EVENTS
 		end
@@ -693,14 +683,21 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 				if not w.cell_root.recipe_held then
 					local stay_open, error_msg = DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
 					if not stay_open then
+						self.owner:PushEvent("refreshcrafting")  -- this is only really neede for free crafting
 						self.owner.HUD:CloseCrafting()
+						return
 					end
-					if error_msg then
+					if error_msg and not TheNet:IsServerPaused() then
 						SendRPCToServer(RPC.CannotBuild, error_msg)
 					end
 				end
+			else
+				self.details_root:PopulateRecipeDetailPanel(w.data, Profile:GetLastUsedSkinForItem(w.data.recipe.name))
 			end
-			w.cell_root.last_recipe_click = GetTime()
+
+			if w.data.recipe.placer == nil then
+				w.cell_root.last_recipe_click = GetTime()
+			end
 			w.cell_root.recipe_held = false
 		end)
 
@@ -712,13 +709,13 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 
 		return w
     end
-	
+
     local function ScrollWidgetSetData(context, widget, data, index)
 		widget.data = data
 
 		if data ~= nil and data.recipe ~= nil and data.meta ~= nil then
 			-- see CraftSlot:Refresh() for more details on what needs to be done here
-		
+
 			local recipe = data.recipe
 			local meta = data.meta
 
@@ -727,7 +724,7 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			local image = recipe.imagefn ~= nil and recipe.imagefn() or recipe.image
 			widget.item_img:SetTexture(recipe:GetAtlas(), image, image ~= recipe.image and recipe.image or nil)
 			widget.item_img:ScaleToSize(item_size, item_size)
-			
+
 			widget.item_img:SetTint(1, 1, 1, 1)
 
 			if meta.build_state == "buffered" then
@@ -748,7 +745,7 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			else
 				widget.bg:SetTexture(atlas, "slot_bg_missing_mats.tex")
 				widget.item_img:SetTint(0.7, 0.7, 0.7, 1)
-                
+
 				--widget.fg:SetTexture(atlas, "slot_fg_missing_mats.tex")
                 widget.fg:Hide()
 			end
@@ -778,10 +775,10 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 
 	grid.up_button:SetTextures(atlas, "scrollbar_arrow_up.tex", "scrollbar_arrow_up_hl.tex")
     grid.up_button:SetScale(0.4)
-	
+
 	grid.down_button:SetTextures(atlas, "scrollbar_arrow_down.tex", "scrollbar_arrow_down_hl.tex")
     grid.down_button:SetScale(0.4)
-	
+
 	grid.scroll_bar_line:SetTexture(atlas, "scrollbar_bar.tex")
     grid.scroll_bar_line:ScaleToSize(11, grid.scrollbar_height - 15)
 
@@ -789,13 +786,15 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 	grid.position_marker.image:SetTexture(atlas, "scrollbar_handle.tex")
     grid.position_marker:SetScale(.3)
 
+	grid.custom_focus_check = function() return self.focus end
+
 	return grid
 end
 
+function CraftingMenuWidget:OnFavoriteChanged(recipe_name, is_favorite_recipe)
+	if self.sort_class.OnFavoriteChanged then
+		self.sort_class:OnFavoriteChanged(recipe_name, is_favorite_recipe)
+	end
+end
 
 return CraftingMenuWidget
-
-
-
-
-

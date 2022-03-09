@@ -657,6 +657,7 @@ CRAFTING_FILTERS.GARDENING.recipes =
 	"compostwrap",
 	"compostingbin",
 	"plantregistryhat",
+	"onemanband",
 	"seedpouch",
 	"mushroom_farm",
 	"beebox",
@@ -672,6 +673,7 @@ CRAFTING_FILTERS.FISHING.recipes =
 
 	"fishingrod",
 	"oceanfishingrod",
+	"fish_box",
 
 	"oceanfishingbobber_ball",
 	"oceanfishingbobber_oval",
@@ -876,6 +878,7 @@ CRAFTING_FILTERS.WINTER.recipes =
 	"winterhat",
 	"catcoonhat",
 	"beargervest",
+	"raincoat",
 	"tent",
 
 	"winterometer",
@@ -904,7 +907,9 @@ CRAFTING_FILTERS.SUMMER.recipes =
 	"icehat",
 	"eyebrellahat",
 
-	"raincoat",
+	"goggleshat",
+	"deserthat",
+
 	"reflectivevest",
 	"hawaiianshirt",
 

@@ -265,6 +265,7 @@ local assets =
     Asset("ANIM", "anim/kitcoon_jump.zip"),
     Asset("ANIM", "anim/kitcoon_poop.zip"),
     Asset("ANIM", "anim/kitcoon_food.zip"),
+    Asset("ANIM", "anim/kitcoon_pouch.zip"),
     Asset("ANIM", "anim/kitcoon_bg.zip"),
     Asset("IMAGE", "images/colour_cubes/day05_cc.tex"),
     Asset("IMAGE", "images/colour_cubes/dusk03_cc.tex"),

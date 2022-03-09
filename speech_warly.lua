@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Ah non, I'm missing some ingredients!",
+		NO_TECH = "I don't know the recipe for that one yet.",
+		NO_STATION = "If I had a station with the right tools I could cook that right up...",
+	},
+
 	ACTIONFAIL_GENERIC = "I cannot do that.",
 	ANNOUNCE_BOAT_LEAK = "Mon dieu! She is sinking!",
 	ANNOUNCE_BOAT_SINK = "I don't want to be brined!",

@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I'm always lacking something, aren't I...",
+		NO_TECH = "I don't know how. I'm sorry.",
+		NO_STATION = "I can't.",
+	},
+
 	ACTIONFAIL_GENERIC = "I can't do anything right.",
 	ANNOUNCE_BOAT_LEAK = "Our boat weeps salty tears.",
 	ANNOUNCE_BOAT_SINK = "Here I come, Ophelia.",

@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Is no good, Wolfgang doesn't have enough!",
+		NO_TECH = "Hmm, is tricky. Wolfgang should learn how to make.",
+		NO_STATION = "Wolfgang will need right working-place!",
+	},
+
 	ACTIONFAIL_GENERIC = "I am not mighty enough to do that.",
 	ANNOUNCE_BOAT_LEAK = "Drippy drops is come through boat!",
 	ANNOUNCE_BOAT_SINK = "Wolfgang cannot swim!",

@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Don't got stuff for that!",
+		NO_TECH = "Glurgh... don't know how to make...",
+		NO_STATION = "Can't make it right now, florp.",
+	},
+
 	ACTIONFAIL_GENERIC = "Grrr... can't do it, florpt.",
 	ANNOUNCE_BOAT_LEAK = "Boat getting wetter!",
 	ANNOUNCE_BOAT_SINK = "Boat too wet!",

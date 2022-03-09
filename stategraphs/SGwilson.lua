@@ -1175,7 +1175,8 @@ local events =
         function(inst)
             if not inst.sg:HasStateTag("dead") then
                 if inst.sg:HasStateTag("lifting_dumbbell") then
-                    inst.sg.mem.lifting_dumbbell = inst.components.dumbbelllifter.dumbbell
+                    inst.sg.mem.lifting_dumbbell = true
+                    inst.components.dumbbelllifter:StopLifting()
                 end
 
                 inst.sg:GoToState("powerup")
@@ -1557,14 +1558,17 @@ local states =
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
 
-                    local using_dumbbell = inst.sg.mem.lifting_dumbbell and inst.sg.mem.lifting_dumbbell:IsValid()
-                    if using_dumbbell then
-                        inst.components.dumbbelllifter:StartLifting(inst.sg.mem.lifting_dumbbell)
+                    if inst.sg.mem.lifting_dumbbell then
                         inst.sg.mem.lifting_dumbbell = nil
-                        inst.sg:GoToState("use_dumbbell_pre")
-                    else
-                        inst.sg:GoToState("idle")
+
+                        local equippedTool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+                        if equippedTool and equippedTool.components.mightydumbbell then
+                            inst.components.dumbbelllifter:StartLifting(equippedTool)
+                            inst.sg:GoToState("use_dumbbell_pre")
+                            return
+                        end
                     end
+                    inst.sg:GoToState("idle")
 
                     -- if inst.components.mightiness and not using_dumbbell then
                     --     inst.components.mightiness:Resume()
@@ -1575,7 +1579,7 @@ local states =
 
         onexit = function(inst)
             -- If the lifting_dumbbell is not nil at this point we got interrupted
-            if inst.sg.mem.lifting_dumbbell ~= nil then
+            if inst.sg.mem.lifting_dumbbell then
                 inst.sg.mem.lifting_dumbbell = nil
             end
         end,

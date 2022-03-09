@@ -27,14 +27,17 @@ local function OnWork(inst, worker, workleft)
         
         local fx = SpawnPrefab("ruins_cavein_obstacle_rubble_fx")
         fx.Transform:SetPosition(pt:Get())
-        fx.setsize(fx,inst.version)
-        fx.SoundEmitter:PlaySound("ancientguardian_rework/environment/pillar_break")        
 
+        if inst.version and (inst.version == 1 or inst.version == 3 ) then
+            inst.AnimState:PlayAnimation("break_big")
+        else
+            inst.AnimState:PlayAnimation("break_small")
+        end                    
+        fx.SoundEmitter:PlaySound("ancientguardian_rework/environment/pillar_break")        
+        
         inst.components.lootdropper:DropLoot(pt)
 
-		if not inst.doNotRemoveOnWorkDone then
-	        inst:Remove()
-		end
+        inst:ListenForEvent("animover", function() ErodeAway(inst) end)
     end
 end
 
@@ -327,14 +330,6 @@ local function fn()
     return inst
 end
 
-local function setsize(inst,version)
-    if version and (version == 1 or version == 3 ) then
-        inst.AnimState:PlayAnimation("break_big")
-    else
-        inst.AnimState:PlayAnimation("break_small")
-    end
-end
-
 local function rubblefn(bank, build, anim, icon, tag, multcolour)
     local inst = CreateEntity()
 
@@ -354,8 +349,6 @@ local function rubblefn(bank, build, anim, icon, tag, multcolour)
     if not TheWorld.ismastersim then
         return inst
     end
-
-    inst.setsize = setsize
 
     inst.persists = false
 

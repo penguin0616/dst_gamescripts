@@ -87,8 +87,6 @@ local PlayerController = Class(function(self, inst)
     self.startdragtime = nil
     self.isclientcontrollerattached = false
 
-	 self.no_loco_when_crafting = nil -- this is for mod support to prevent movement while the crafting menu is open (to allow the crafting menu to use the left stick)
-
     self.mousetimeout = 10
     self.time_direct_walking = 0
 
@@ -366,11 +364,12 @@ function PlayerController:SetCanUseMap(val)
     end
 end
 
+-- returns: enable/disable, "a hud element is up, but still allow for limited gameplay to happen"
 function PlayerController:IsEnabled()
     if self.classified == nil or not self.classified.iscontrollerenabled:value() then
         return false
     elseif self.inst.HUD ~= nil and self.inst.HUD:HasInputFocus() then
-        return false, self.inst.HUD:IsCraftingAllowingGameplay()			-- if the player controller is disabled, only because the crafting menu is open, then allow some systems to be enabled
+		return false, self.inst.HUD:IsCraftingOpen() and TheFrontEnd.textProcessorWidget == nil
     end
     return true
 end
@@ -463,9 +462,27 @@ function PlayerController:OnControl(control, down)
 		end
 	end
 
-    if not self:IsEnabled() or IsPaused() then
-        return
-    elseif control == CONTROL_PRIMARY then
+	if IsPaused() then
+		return
+	end
+
+    local isenabled, ishudblocking = self:IsEnabled()
+	if not isenabled and not ishudblocking then
+		return
+	end	
+	
+	-- actions that can be done while the crafting menu is open go in here
+	if isenabled or ishudblocking then
+		if control == CONTROL_ACTION then
+			self:DoActionButton()
+		end
+	end
+
+	if not isenabled then
+		return
+	end
+	
+    if control == CONTROL_PRIMARY then
         self:OnLeftClick(down)
     elseif control == CONTROL_SECONDARY then
         self:OnRightClick(down)
@@ -478,8 +495,6 @@ function PlayerController:OnControl(control, down)
 		self:ControllerTargetLock(false)
     elseif control == CONTROL_INSPECT then
         self:DoInspectButton()
-    elseif control == CONTROL_ACTION then
-        self:DoActionButton()
     elseif control == CONTROL_ATTACK then
         if self.ismastersim then
             self.attack_buffer = CONTROL_ATTACK
@@ -1523,13 +1538,22 @@ local CATCHABLE_TAGS = { "catchable" }
 local PINNED_TAGS = { "pinned" }
 local CORPSE_TAGS = { "corpse" }
 function PlayerController:GetActionButtonAction(force_target)
+    local isenabled, ishudblocking = self:IsEnabled()
+
     --Don't want to spam the action button before the server actually starts the buffered action
     --Also check if playercontroller is enabled
     --Also check if force_target is still valid
     if (not self.ismastersim and (self.remote_controls[CONTROL_ACTION] or 0) > 0) or
-        not self:IsEnabled() or
+        (not isenabled and not ishudblocking) or
         self:IsBusy() or
         (force_target ~= nil and (not force_target.entity:IsVisible() or force_target:HasTag("INLIMBO") or force_target:HasTag("NOCLICK"))) then
+
+
+    --if (not self.ismastersim and (self.remote_controls[CONTROL_ACTION] or 0) > 0) or
+    --    not self:IsEnabled() or
+    --    self:IsBusy() or
+    --    (force_target ~= nil and (not force_target.entity:IsVisible() or force_target:HasTag("INLIMBO") or force_target:HasTag("NOCLICK"))) then
+
         --"DECOR" should never change, should be safe to skip that check
         return
 
@@ -1927,15 +1951,7 @@ end
 
 function PlayerController:OnWallUpdate(dt)
     if self.handler then
-        local isenabled, ishudblocking = self:IsEnabled()
-        if not isenabled then
-            if not ishudblocking and self.inst.HUD ~= nil and self.inst.HUD:IsVisible() and not self.inst.HUD:HasInputFocus() then
-                self:DoCameraControl()
-            end
-            return
-        else
-            self:DoCameraControl()
-        end
+        self:DoCameraControl()
     end
 end
 
@@ -1972,13 +1988,12 @@ function PlayerController:OnUpdate(dt)
         TheFrontEnd:LockFocus(false)
     end
 
-    --ishudblocking set to true lets us know that the only reason
-    --for isenabled returning false is due to HUD blocking input.
+    --ishudblocking set to true lets us know that the only reason for isenabled returning false is due to HUD wanting to handle some input.
     local isenabled, ishudblocking = self:IsEnabled()
     if not isenabled then
 		local allow_loco = isenabled or ishudblocking
 		if not allow_loco then
-			if self.directwalking or self.dragwalking or self.predictwalking then
+			if self.directwalking or self.dragwalking then
 				if self.locomotor ~= nil then
 					self.locomotor:Stop()
 					self.locomotor:Clear()
@@ -1989,9 +2004,6 @@ function PlayerController:OnUpdate(dt)
 				if not self.ismastersim then
 					self:RemoteStopWalking()
 				end
-			elseif not ishudblocking and self.locomotor ~= nil and self.locomotor.bufferedaction ~= nil then
-				self.locomotor:Stop()
-				self.locomotor:Clear()
 			end
 		end
 
@@ -2025,7 +2037,7 @@ function PlayerController:OnUpdate(dt)
             self:RemoteStopAllControls()
 
             --Other than HUD blocking, we would've been enabled otherwise
-            if ishudblocking and not self:IsBusy() then
+            if not self:IsBusy() then
                 self:DoPredictWalking(dt)
             end
         end
@@ -2146,6 +2158,9 @@ function PlayerController:OnUpdate(dt)
 
 				local placer_name = placer_item.replica.inventoryitem:GetDeployPlacerName()
 				local placer_skin = placer_item.AnimState:GetSkinBuild() --hack that relies on the build name to match the linked skinname
+                if placer_skin == "" then
+                    placer_skin = nil
+                end
 				if self.deployplacer ~= nil and (self.deployplacer.prefab ~= placer_name or (self.deployplacer.skinname or "") ~= placer_skin) then
 					self:CancelDeployPlacement()
 				end
@@ -2309,7 +2324,8 @@ function PlayerController:OnUpdate(dt)
         end
     end
 
-    if not isenabled then
+    if not isenabled and not ishudblocking then
+		print("early out", isenabled, ishudblocking)
 		return
 	end
 
@@ -2338,6 +2354,12 @@ function PlayerController:OnUpdate(dt)
             end
         end
     end
+
+    if not isenabled then
+		--print("early out 2")
+		return
+	end
+
     if self.ismastersim and self.handler == nil and not self.inst.sg.mem.localchainattack then
         if self.inst.sg.statemem.chainattack_cb ~= nil then
             if self.locomotor ~= nil and self.locomotor.bufferedaction ~= nil and self.locomotor.bufferedaction.action == ACTIONS.CASTAOE then
@@ -3222,18 +3244,18 @@ function PlayerController:DoDirectWalking(dt)
 end
 
 --------------------------------------------------------------------------
+local ROT_REPEAT = .25
+local ZOOM_REPEAT = .1
 
 function PlayerController:DoCameraControl()
-    if not TheCamera:CanControl()
-        or (self.inst.HUD ~= nil and
-            self.inst.HUD:IsCraftingOpen()) then
-        --Check crafting again because this time
-        --we block even with mouse crafting open
+	if not TheCamera:CanControl() then
         return
     end
 
-    local ROT_REPEAT = .25
-    local ZOOM_REPEAT = .1
+    local isenabled, ishudblocking = self:IsEnabled()
+    if not isenabled and not ishudblocking then
+		return
+    end
 
     local time = GetStaticTime()
 

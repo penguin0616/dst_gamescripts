@@ -689,7 +689,7 @@ function Builder:HasIngredients(recipe)
 end
 
 function Builder:CanBuild(recipe_name) -- deprecated
-	return self:HasIngredients(GetValidRecipe(recipe))
+	return self:HasIngredients(GetValidRecipe(recipe_name))
 end
 
 function Builder:CanLearn(recname)

@@ -532,6 +532,15 @@ function Inv:OffsetCursor(offset, val, minval, maxval, slot_is_valid_fn)
     return val
 end
 
+function Inv:PinBarNav(select_pin)
+	if select_pin ~= nil then
+		self.pin_nav = true
+		self.actionstringtime = 0
+		self.actionstring:Hide()
+		self:SelectSlot(select_pin)
+	end
+end
+
 function Inv:GetInventoryLists(same_container_only)
     if same_container_only then
         local lists = {self.current_list}
@@ -563,13 +572,16 @@ function Inv:CursorNav(dir, same_container_only)
 
     if self.active_slot and not self.active_slot.inst:IsValid() then
         self.current_list = self.inv
-        return self:SelectDefaultSlot()
+		self.pin_nav = false
+        self:SelectDefaultSlot()
+		return true
     end
 
     local lists = self:GetInventoryLists(same_container_only)
     local slot, list = self:GetClosestWidget(lists, self.active_slot:GetWorldPosition(), dir)
     if slot and list then
         self.current_list = list
+		self.pin_nav = false
         return self:SelectSlot(slot)
     end
 end
@@ -578,13 +590,7 @@ function Inv:CursorLeft()
     if self:CursorNav(Vector3(-1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 	elseif not self.open then
-        local pin = self.owner.HUD.controls.craftingmenu:SelectPin()
-		if pin then
-			self.pin_nav = true
-	        self.actionstringtime = 0
-	        self.actionstring:Hide()
-			self:SelectSlot(pin)
-		end
+		self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
     end
 end
 
@@ -592,38 +598,42 @@ function Inv:CursorRight()
 	if self.pin_nav then
 		if self.current_list ~= nil and not self.current_list[1].inst:IsValid() then
 			self.current_list = self.inv
-			--self:SelectDefaultSlot()
 		end
 	end
 
     if self:CursorNav(Vector3(1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-		self.pin_nav = false
     end
 end
 
 function Inv:CursorUp()
 	if self.pin_nav then
-        local pin = self.active_slot:FindPinUp()
-		if pin then
-	        self.actionstringtime = 0
-	        self.actionstring:Hide()
-			self:SelectSlot(pin)
+		self:PinBarNav(self.active_slot:FindPinUp())
+    else
+		if self:CursorNav(Vector3(0,1,0)) then
+			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+		elseif self.current_list == self.inv then
+			-- go into the pin bar if there are no other open containers above the inventory bar
+			self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
 		end
-    elseif self:CursorNav(Vector3(0,1,0)) then
-        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end
 
 function Inv:CursorDown()
-	if self.pin_nav then
-        local pin = self.active_slot:FindPinDown()
-		if pin then
-	        self.actionstringtime = 0
-	        self.actionstring:Hide()
-			self:SelectSlot(pin)
+	local pin_nav = self.pin_nav
+	if pin_nav then
+		local next_pin = self.active_slot:FindPinDown()
+		if next_pin then
+			self:PinBarNav(next_pin)
+		else
+			pin_nav = false
+			if self.current_list ~= nil and not self.current_list[1].inst:IsValid() then
+				self.current_list = self.inv
+			end
 		end
-    elseif self:CursorNav(Vector3(0,-1,0)) then
+    end
+	
+	if not pin_nav and self:CursorNav(Vector3(0,-1,0)) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end

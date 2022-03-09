@@ -348,6 +348,13 @@ return{
         },
     },
 
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Looks like I need some parts.",
+		NO_TECH = "Can't say I ever learned how to make one of those.",
+		NO_STATION = "I'll be needing a station made for this kinda work.",
+	},
+
 	ACTIONFAIL_GENERIC = "I sure gummed the works there.",
 	ANNOUNCE_BOAT_LEAK = "We gotta repair this ol'girl!",
 	ANNOUNCE_BOAT_SINK = "We're goin' down!",

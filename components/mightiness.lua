@@ -89,9 +89,6 @@ local Mightiness = Class(function(self, inst)
     self.max = TUNING.MIGHTINESS_MAX
     self.current = self.max/2
 
-    self.wimpy_threshold = 30 
-    self.mighty_threshold = 60
-
     self.rate = TUNING.MIGHTINESS_DRAIN_RATE
     self.drain_multiplier = TUNING.MIGHTINESS_DRAIN_MULT_NORMAL
     self.ratescale = RATE_SCALE.NEUTRAL
@@ -119,7 +116,7 @@ function Mightiness:OnSetInvincible(data)
 end
 
 function Mightiness:OnSave()
-    return self.current ~= self.max and { mightiness = self.current } or nil
+    return { mightiness = self.current } or nil
 end
 
 function Mightiness:OnLoad(data)
@@ -183,7 +180,7 @@ function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound)
 	--print("Mightiness:DoDelta", delta)
 
 	if delta >= 0 then
-		self.drain_delay = GetTime() + TUNING.WOLFGANG_MIGHTINESS_DRAIN_DELAY
+		self:DelayDrain(TUNING.WOLFGANG_MIGHTINESS_DRAIN_DELAY)
 	end
 
     local old = self.current
@@ -217,7 +214,9 @@ end
 
 function Mightiness:DoDec(dt, ignore_damage)
     if self.draining and not self.invincible then
-		if not (self.inst.sg:HasStateTag("moving") and self.inst.components.inventory:EquipHasTag("dumbbell")) then
+		if self.inst.sg:HasStateTag("moving") and self.inst.components.inventory:EquipHasTag("dumbbell") then
+            self:DelayDrain(2)
+        else
 	        self:DoDelta(-self.rate * dt * self.drain_multiplier * self.ratemodifiers:Get())
 		end
     end

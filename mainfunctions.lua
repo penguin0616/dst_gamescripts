@@ -210,6 +210,39 @@ function ModReloadFrontEndAssets(assets, modname)
     end
 end
 
+local MOD_PRELOAD_PREFABS = {}
+function ModUnloadPreloadAssets(modname)
+    if modname == nil then
+        TheSim:UnloadPrefabs(MOD_PRELOAD_PREFABS)
+        TheSim:UnregisterPrefabs(MOD_PRELOAD_PREFABS)
+        MOD_PRELOAD_PREFABS = {}
+    else
+        local prefab = {table.removearrayvalue(MOD_PRELOAD_PREFABS, "MODPRELOAD_"..modname)}
+        if not IsTableEmpty(prefab) then
+            TheSim:UnloadPrefabs(prefab)
+            TheSim:UnregisterPrefabs(prefab)
+        end
+    end
+end
+
+function ModPreloadAssets(assets, modname)
+    assert(KnownModIndex:DoesModExistAnyVersion(modname), "modname "..modname.." must refer to a valid mod!")
+    if assets then
+        ModUnloadPreloadAssets(modname)
+
+        assets = shallowcopy(assets) --make a copy so that changes to the table in the mod code don't do anything funky
+
+        for i, v in ipairs(assets) do
+            local modroot = MODS_ROOT..modname.."/"
+            resolvefilepath_soft(v.file, nil, modroot)
+        end
+        local prefab = Prefab("MODPRELOAD_"..modname, nil, assets, nil)
+        table.insert(MOD_PRELOAD_PREFABS, prefab.name)
+        RegisterSinglePrefab(prefab)
+        TheSim:LoadPrefabs({prefab.name})
+    end
+end
+
 function RegisterAchievements(achievements)
     for i, achievement in ipairs(achievements) do
         --print ("Registering achievement:", achievement.name, achievement.id.steam, achievement.id.psn)
@@ -782,7 +815,6 @@ function SetCraftingAutopaused(autopause)
     craftingautopause = autopause
     DoAutopause()
 end
-
 
 local consoleautopausecount = 0
 function SetConsoleAutopaused(autopause)
