@@ -174,17 +174,24 @@ function CraftableSort:BuildCraftableTable()
 	return buffered_changed or craftable_changed or uncraftable_changed
 end
 
+function CraftableSort:OnFavoriteChanged(recipe_name, is_favorite_recipe)
+	self.defaultsort:OnFavoriteChanged(recipe_name, is_favorite_recipe)
+end
+
 function CraftableSort:Refresh()
 	local changed = self:BuildCraftableTable()
-	if changed then
+	local defaultsort = self.defaultsort:Refresh()
+
+	if changed and not defaultsort then
 		self.widget:ApplyFilters()
 		return true
 	end
 
-	return false
+	return defaultsort or false
 end
 
 function CraftableSort:OnSelected()
+	self.defaultsort:Refresh()
 	self:ClearSortTables()
 	self:BuildCraftableTable()
 end
@@ -327,6 +334,8 @@ function FavoriteSort:BuildFavoriteTable()
 end
 
 function FavoriteSort:OnFavoriteChanged(recipe_name, is_favorite_recipe)
+	self.defaultsort:OnFavoriteChanged(recipe_name, is_favorite_recipe)
+
 	local unsorted = self.defaultsort:GetUnsorted()
 
     if is_favorite_recipe then
@@ -361,20 +370,23 @@ function FavoriteSort:OnFavoriteChanged(recipe_name, is_favorite_recipe)
         end
     end
 
-    self.fullupdate = true
+    self.defaultsort.fullupdate = true
 end
 
 function FavoriteSort:Refresh()
-	if self.fullupdate then
-        self.fullupdate = nil
-		self.widget:ApplyFilters()
-		return true
+	if self.defaultsort.fullupdate then
+		self.favorite_sorted = nil
+		self.favorite_unsorted = nil
+		self.nonfavorite_sorted = nil
+		self.nonfavorite_unsorted = nil
 	end
 
-	return false
+	return self.defaultsort:Refresh()
 end
 
 function FavoriteSort:OnSelected()
+	self.defaultsort:OnSelected()
+
     self:ClearSortTables()
     self:BuildFavoriteTable()
 end

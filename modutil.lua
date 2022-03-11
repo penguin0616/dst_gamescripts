@@ -595,20 +595,44 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		RemoveDefaultCharacter(name)
 	end
 
-	env.AddRecipe2 = function(name, ingredients, tech, config, filters)
+	-- data: see PROTOTYPER_DEFS in recipes.lua for examples
+	env.AddPrototyperDef = function(prototyper_prefab, data)
+		initprint("AddPrototyperDef", prototyper_prefab)
+		require("recipe")
+		if prototyper_prefab ~= nil then
+			PROTOTYPER_DEFS[prototyper_prefab] = data
+		end
+	end
+
+	env.AddRecipeToFilter = function(recipe_name, filter_name)
+		local filter = CRAFTING_FILTERS[filter_name]
+		if filter ~= nil and filter.default_sort_values[recipe_name] == nil then
+			table.insert(filter.recipes, recipe_name)
+			filter.default_sort_values[recipe_name] = #filter.recipes
+		end
+	end
+
+	-- filters = {"TOOLS", "LIGHT"}
+	env.AddRecipe2 = function(name, ingredients, tech, config, filters, filter_sort_order)
 		initprint("AddRecipe2", name)
 		require("recipe")
 		mod_protect_Recipe = false
 		local rec = Recipe2(name, ingredients, tech, config)
-		table.insert(CRAFTING_FILTERS.MODS.recipes, name)
 
-		if filters ~= nil then
-			for _, filter_name in ipairs(filters) do
-				if CRAFTING_FILTERS[filter_name] ~= nil then
-					table.insert(CRAFTING_FILTERS[filter_name].recipes, name)
+		if not rec.is_deconstruction_recipe then
+			if rec.nounlock then
+				env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
+			else
+				env.AddRecipeToFilter(name, CRAFTING_FILTERS.MODS.name)
+			end
+
+			if filters ~= nil then
+				for _, filter_name in ipairs(filters) do
+					env.AddRecipeToFilter(name, filter_name)
 				end
 			end
 		end
+
 
 		mod_protect_Recipe = true
 		rec:SetModRPCID()
@@ -626,12 +650,21 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 	end
 
 	env.AddRecipe = function(arg1, ...)
-		print("Warning: function Recipe in modmain is deprecated, please use AddRecipe2")
+		print("Warning: function AddRecipe in modmain is deprecated, please use AddRecipe2. Recipe name:", arg1)
 		initprint("AddRecipe", arg1)
 		require("recipe")
 		mod_protect_Recipe = false
 		local rec = Recipe(arg1, ...)
-		table.insert(CRAFTING_FILTERS.MODS.recipes, arg1)
+
+		-- unfortunately recipes added using the old system will not support the crafting_station filter as the prototyper is not able to retrofit into a crafting station
+		--if rec.nounlock and rec.tab ~= nil and rec.tab.crafting_station then
+		--	env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
+		--end
+
+		if not rec.is_deconstruction_recipe then
+			env.AddRecipeToFilter(arg1, CRAFTING_FILTERS.MODS.name)
+		end
+
 		mod_protect_Recipe = true
 		rec:SetModRPCID()
 		return rec

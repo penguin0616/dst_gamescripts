@@ -37,6 +37,9 @@ local _timetonextwarningsound = 0
 local _announcewarningsoundinterval = 4
 local _pausesources = SourceModifierList(inst, false, SourceModifierList.boolean)
 
+local _spawnwintervariant = true
+local _spawnsummervariant = true
+
 --Configure this data using hounded:SetSpawnData
 local _spawndata =
 	{
@@ -351,15 +354,29 @@ local function GetSpecialSpawnChance()
     return TheWorld.state.issummer and chance * 1.5 or chance
 end
 
+local function GetSpawnPrefab(upgrade)
+	if upgrade and _spawndata.upgrade_spawn then
+		return _spawndata.upgrade_spawn
+	end
+
+	local do_seasonal_spawn = math.random() >= GetSpecialSpawnChance()
+
+	if do_seasonal_spawn then
+		if _spawnwintervariant and (TheWorld.state.iswinter or TheWorld.state.isspring) then
+			return _spawndata.winter_prefab
+		end
+		if _spawnsummervariant and (TheWorld.state.issummer or TheWorld.state.isautumn) then
+			return _spawndata.summer_prefab
+		end
+	end
+
+	return _spawndata.base_prefab
+end
+
 local function SummonSpawn(pt, upgrade)
     local spawn_pt = GetSpawnPoint(pt, upgrade)
     if spawn_pt ~= nil then
-        local spawn = SpawnPrefab(
-        	(upgrade and _spawndata.upgrade_spawn) or
-            (math.random() >= GetSpecialSpawnChance() and _spawndata.base_prefab) or
-            ((TheWorld.state.iswinter or TheWorld.state.isspring) and _spawndata.winter_prefab) or
-            _spawndata.summer_prefab
-        )
+        local spawn = SpawnPrefab(GetSpawnPrefab(upgrade))
         if spawn ~= nil then
             spawn.Physics:Teleport(spawn_pt:Get())
             spawn:FacePoint(pt)
@@ -555,6 +572,22 @@ local function SetDifficulty(src, difficulty)
 	end
 end
 
+local function SetSummerVariant(src, enabled)
+	if enabled == "never" then
+		self:SetSummerVariant(false)
+	elseif enabled == "default" then
+		self:SetSummerVariant(true)
+	end
+end
+
+local function SetWinterVariant(src, enabled)
+	if enabled == "never" then
+		self:SetWinterVariant(false)
+	elseif enabled == "default" then
+		self:SetWinterVariant(true)
+	end
+end
+
 --------------------------------------------------------------------------
 --[[ Initialization ]]
 --------------------------------------------------------------------------
@@ -572,6 +605,8 @@ inst:ListenForEvent("pausehounded", OnPauseHounded)
 inst:ListenForEvent("unpausehounded", OnUnpauseHounded)
 
 inst:ListenForEvent("hounded_setdifficulty", SetDifficulty)
+inst:ListenForEvent("hounded_setsummervariant", SetSummerVariant)
+inst:ListenForEvent("hounded_setwintervariant", SetWinterVariant)
 
 self.inst:StartUpdatingComponent(self)
 PlanNextAttack()
@@ -599,6 +634,14 @@ end
 --------------------------------------------------------------------------
 --[[ Public member functions ]]
 --------------------------------------------------------------------------
+
+function self:SetSummerVariant(enabled)
+	_spawnsummervariant = enabled
+end
+
+function self:SetWinterVariant(enabled)
+	_spawnwintervariant = enabled
+end
 
 function self:SpawnModeNever()
 	_spawnmode = "never"
@@ -716,7 +759,7 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 		local target = weighted_random_choice(spawninforec.players)
 
 		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)
-		local upgrade = ShouldUpgrade(spawninforec.players[target])
+		local upgrade = _spawndata.upgrade_spawn and ShouldUpgrade(spawninforec.players[target])
 
 		if upgrade then
 			spawninforec.players[target] = spawninforec.players[target] - 5

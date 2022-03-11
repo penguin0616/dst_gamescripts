@@ -306,6 +306,16 @@ local function OnEyeFlamesDirty(inst)
     end
 end
 
+local function OnWargWaveSave(inst, data)
+    data.max_hound_spawns = inst.max_hound_spawns
+end
+
+local function OnWargWavePreLoad(inst, data)--, newents)
+    if data ~= nil and data.reanimated then
+        inst.max_hound_spawns = data.max_hound_spawns
+    end
+end
+
 local function OnClaySave(inst, data)
     data.reanimated = not inst.sg:HasStateTag("statue") or nil
 end
@@ -483,7 +493,9 @@ local function MakeWarg(name, bank, build, prefabs, tag)
 
         inst:AddComponent("combat")
         inst.components.combat:SetDefaultDamage(TUNING.WARG_DAMAGE)
-        inst.components.combat:SetRange(TUNING.WARG_ATTACKRANGE)
+        if name ~= "warg_wave" then
+            inst.components.combat:SetRange(TUNING.WARG_ATTACKRANGE)
+        end
         inst.components.combat:SetAttackPeriod(TUNING.WARG_ATTACKPERIOD)
         inst.components.combat:SetRetargetFunction(1, RetargetFn)
         inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
@@ -536,6 +548,11 @@ local function MakeWarg(name, bank, build, prefabs, tag)
 
             inst.NumHoundsToSpawn = NumHoundsToSpawn
 			inst.LaunchGooIcing = NoGooIcing
+
+            if name == "warg_wave" then
+                inst.OnSave = OnWargWaveSave
+                inst.OnPreLoad = OnWargWavePreLoad
+            end
 
             inst.sounds = sounds
 

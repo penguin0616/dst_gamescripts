@@ -572,15 +572,15 @@ CRAFTING_FILTERS.CLOTHING.recipes =
 	"umbrella",
 	"featherfan",
 	"flowerhat",
+	"goggleshat",
+	"kelphat",
 	"strawhat",
 	"tophat",
 	"rainhat",
 	"earmuffshat",
-	"beefalohat",
-	"winterhat",
 	"catcoonhat",
-	"kelphat",
-	"goggleshat",
+	"winterhat",
+	"beefalohat",
 	"deserthat",
 	"moonstorm_goggleshat",
 	"watermelonhat",
@@ -865,20 +865,22 @@ CRAFTING_FILTERS.RIDING.recipes =
 
 CRAFTING_FILTERS.WINTER.recipes =
 {
-	"sweatervest",
-	"trunkvest_summer",
-	"trunkvest_winter",
 	"campfire",
 	"firepit",
 	"dragonflyfurnace",
-
 	"heatrock",
-	"earmuffshat",
-	"beefalohat",
-	"winterhat",
-	"catcoonhat",
-	"beargervest",
+
+	"sweatervest",
 	"raincoat",
+	"trunkvest_summer",
+	"trunkvest_winter",
+	"beargervest",
+
+	"earmuffshat",
+	"catcoonhat",
+	"winterhat",
+	"beefalohat",
+
 	"tent",
 
 	"winterometer",
@@ -886,9 +888,6 @@ CRAFTING_FILTERS.WINTER.recipes =
 
 CRAFTING_FILTERS.SUMMER.recipes =
 {
-	"winterometer",
-	"rainometer",
-	"firesuppressor",
 	"coldfire",
 	"coldfirepit",
 	"heatrock",
@@ -900,39 +899,44 @@ CRAFTING_FILTERS.SUMMER.recipes =
 	"umbrella",
 	"featherfan",
 
+	"reflectivevest",
+	"hawaiianshirt",
+
 	"strawhat",
-	"tophat",
-	"rainhat",
+	"plantregistryhat",
+	"red_mushroomhat",
+	"green_mushroomhat",
+	"blue_mushroomhat",
 	"watermelonhat",
+	"deserthat",
 	"icehat",
 	"eyebrellahat",
 
-	"goggleshat",
-	"deserthat",
-
-	"reflectivevest",
-	"hawaiianshirt",
+	"firesuppressor",
 
 	"siestahut",
 	"waterballoon",
 
-	"red_mushroomhat",
-	"green_mushroomhat",
-	"blue_mushroomhat",
+	"winterometer",
+	"rainometer",
 }
 
 CRAFTING_FILTERS.RAIN.recipes =
 {
-	"rainometer",
-	"lightning_rod",
-	"balloonhat",
 	"grass_umbrella",
 	"umbrella",
-	"strawhat",
-	"tophat",
-	"rainhat",
 	"raincoat",
+	"balloonhat",
+	"strawhat",
+	"beehat",
+	"tophat",
+	"minerhat",
+	"cookiecutterhat",
+	"rainhat",
 	"eyebrellahat",
+
+	"lightning_rod",
+	"rainometer",
 }
 
 CRAFTING_FILTERS.DECOR.recipes =

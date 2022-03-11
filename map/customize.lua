@@ -475,7 +475,9 @@ local WORLDSETTINGS_GROUP = {
 			["meteorshowers"] = {value = "default", image = "meteor.tex", desc = frequency_descriptions, world={"forest"}},
 			["hunt"] = {value = "default", image = "tracks.tex", desc = frequency_descriptions, world={"forest"}},
 			["alternatehunt"] = {value = "default", image = "alternatehunt.tex", desc = frequency_descriptions, world={"forest"}},
-			["hounds"] = {value = "default", image = "houndattacks.tex", desc = frequency_descriptions, world={"forest"}},
+			["hounds"] = {value = "default", image = "houndattacks.tex", desc = frequency_descriptions, world={"forest"}, order = 1},
+			["winterhounds"] = {value = "default", image = "winterhounds.tex", desc = yesno_descriptions, world={"forest"}, order = 2},
+			["summerhounds"] = {value = "default", image = "summerhounds.tex", desc = yesno_descriptions, world={"forest"}, order = 3},
 
 			["weather"] = {value = "default", image = "rain.tex", desc = frequency_descriptions, world={"forest", "cave"}},
 

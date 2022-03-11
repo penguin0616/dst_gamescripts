@@ -37,6 +37,8 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 	self.filtered_recipes = {}
 	self.filter_buttons = {}
 
+	self.last_recipe_state = {}
+
 	self.last_search_text = ""
 	self.search_text = ""
 	self.last_searched_recipes = {}
@@ -46,7 +48,9 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 
 	self.frame = self.root:AddChild(self:MakeFrame(500, height, 150))
 
-	self:UpdateFilterButtons()
+	if self:UpdateFilterButtons() then
+		self:ApplyFilters()
+	end
 
 	self.nav_hint = self:AddChild(Text(UIFONT, 24))
 	self.nav_hint:SetPosition(28, -28 - height/2)
@@ -236,12 +240,28 @@ function CraftingMenuWidget:UpdateFilterButtons()
 	if self.crafting_hud.pinbar ~= nil and self.crafting_hud.pinbar.pin_open ~= nil then
 		self.crafting_hud.pinbar.pin_open:SetCraftingState(can_prototype, new_recipe_available)
 	end
+
+	local rebuild_details_list = false
+	for recipe_name, data in pairs(self.crafting_hud.valid_recipes) do
+		local last_state = self.last_recipe_state[recipe_name] or "hide"
+		local new_state = data.meta.build_state
+		if not rebuild_details_list and ((last_state == "hide" and new_state ~= "hide") or (last_state ~= "hide" and new_state == "hide")) then
+			rebuild_details_list = true
+		end
+		self.last_recipe_state[recipe_name] = new_state
+	end
+
+	return rebuild_details_list
 end
 
 function CraftingMenuWidget:Refresh()
-	self:UpdateFilterButtons()
+	local rebuild_details_list = self:UpdateFilterButtons()
 	if self.sort_class.Refresh == nil or not self.sort_class:Refresh() then
-		self.recipe_grid:RefreshView()
+		if rebuild_details_list then
+			self:ApplyFilters()
+		else
+			self.recipe_grid:RefreshView()
+		end
 	end
 	self.details_root:Refresh()
 end
@@ -674,13 +694,8 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 		end)
 		w.cell_root:SetOnClick(function()
 			local is_current = w.data == self.details_root.data
-			self.details_root:PopulateRecipeDetailPanel(w.data)
-			if w.data.meta.build_state == "buffered" then
-				if not DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem()) then
-					self.owner.HUD:CloseCrafting()
-				end
-			elseif is_current then -- clicking the item when it is already selected will trigger a build
-				if not w.cell_root.recipe_held then
+			if is_current then -- clicking the item when it is already selected will trigger a build
+				if not w.cell_root.recipe_held or self.owner.replica.builder:IsBuildBuffered(w.data.recipe.name) then
 					local stay_open, error_msg = DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
 					if not stay_open then
 						self.owner:PushEvent("refreshcrafting")  -- this is only really neede for free crafting

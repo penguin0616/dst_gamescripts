@@ -236,7 +236,12 @@ local function OnZoom(inst, data)
 end
 
 local function OnContinueFromPause()
-    ThePlayer.components.playercontroller:ToggleController(TheInput:ControllerAttached())
+	local self = ThePlayer.components.playercontroller
+    self:ToggleController(TheInput:ControllerAttached())
+
+	-- this caches if the camera zooming is using the same physical controls as the scroll bar scrolling
+	self.zoomin_same_as_scrollup = TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ZOOM_IN) == TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SCROLLBACK)
+	self.zoomout_same_as_scrolldown = TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ZOOM_OUT) == TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SCROLLFWD)
 end
 
 local function OnDeactivateWorld()
@@ -475,6 +480,12 @@ function PlayerController:OnControl(control, down)
 	if isenabled or ishudblocking then
 		if control == CONTROL_ACTION then
 			self:DoActionButton()
+		elseif control == CONTROL_ATTACK then
+			if self.ismastersim then
+				self.attack_buffer = CONTROL_ATTACK
+			else
+				self:DoAttackButton()
+			end
 		end
 	end
 
@@ -495,12 +506,6 @@ function PlayerController:OnControl(control, down)
 		self:ControllerTargetLock(false)
     elseif control == CONTROL_INSPECT then
         self:DoInspectButton()
-    elseif control == CONTROL_ATTACK then
-        if self.ismastersim then
-            self.attack_buffer = CONTROL_ATTACK
-        else
-            self:DoAttackButton()
-        end
     elseif control == CONTROL_CONTROLLER_ALTACTION then
         self:DoControllerAltActionButton()
     elseif control == CONTROL_CONTROLLER_ACTION then
@@ -1901,11 +1906,11 @@ function PlayerController:HandleControlPrimaryHeld()
     end
 
     -- We're finished the current action. If we're holding down the primary control button, look for a new action nearby to perform
-    if (self.lastclickedaction.action == ACTIONS.ATTACK) then
-        self.attack_buffer = CONTROL_ATTACK
-    elseif (self.inst.sg ~= nil and self.inst.sg:HasStateTag("idle")) or self.inst:HasTag("idle") then
+    if (self.inst.sg ~= nil and self.inst.sg:HasStateTag("idle")) or self.inst:HasTag("idle") then
         -- Repeat the last held action if the action is held
-        if self.actionholdtime and self.actionholdtime > 0 then
+        if (self.lastclickedaction.action == ACTIONS.ATTACK) then
+            self.attack_buffer = CONTROL_ATTACK
+        elseif self.actionholdtime and self.actionholdtime > 0 then
             self:DoAction(self.lastheldaction)
         -- Prevent re-picking items up when dropping them while holding down the primary control button
         elseif self.lastclickedaction.action ~= ACTIONS.DROP then
@@ -1956,6 +1961,8 @@ function PlayerController:OnWallUpdate(dt)
 end
 
 function PlayerController:OnUpdate(dt)
+    local isenabled, ishudblocking = self:IsEnabled()
+
     self.predictionsent = false
 
 	if self:IsControllerTargetingModifierDown() and self.controller_targeting_lock_timer then
@@ -1975,11 +1982,11 @@ function PlayerController:OnUpdate(dt)
 		end
     end
 
-    if self.actionholding and not (self:IsEnabled() and IsAnyActionHoldButtonHeld()) then
+    if self.actionholding and not (isenabled and IsAnyActionHoldButtonHeld()) then
         self:ClearActionHold()
     end
 
-    if self.draggingonground and not (self:IsEnabled() and TheInput:IsControlPressed(CONTROL_PRIMARY)) then
+    if self.draggingonground and not (isenabled and TheInput:IsControlPressed(CONTROL_PRIMARY)) then
         if self.locomotor ~= nil then
             self.locomotor:Stop()
         end
@@ -1989,9 +1996,8 @@ function PlayerController:OnUpdate(dt)
     end
 
     --ishudblocking set to true lets us know that the only reason for isenabled returning false is due to HUD wanting to handle some input.
-    local isenabled, ishudblocking = self:IsEnabled()
     if not isenabled then
-		local allow_loco = isenabled or ishudblocking
+		local allow_loco = ishudblocking
 		if not allow_loco then
 			if self.directwalking or self.dragwalking then
 				if self.locomotor ~= nil then
@@ -2042,42 +2048,43 @@ function PlayerController:OnUpdate(dt)
             end
         end
 
-        self.attack_buffer = nil
-        self.controller_attack_override = nil
-        self.bufferedcastaoe = nil
+		self.controller_attack_override = nil
+		self.bufferedcastaoe = nil
 
 		if not allow_loco then
-            return
+			self.attack_buffer = nil
 		end
-    else
+    end
+
+	--Attack controls are buffered and handled here in the update
+	if self.attack_buffer ~= nil then
+		if self.attack_buffer == CONTROL_ATTACK then
+			self:DoAttackButton()
+		elseif self.attack_buffer == CONTROL_CONTROLLER_ATTACK then
+			self:DoControllerAttackButton()
+		else
+			if self.attack_buffer._predictpos then
+				self.attack_buffer:SetActionPoint(self:GetRemotePredictPosition() or self.inst:GetPosition())
+			end
+			if self.attack_buffer._controller then
+				if self.attack_buffer.target == nil then
+					self.controller_attack_override = self:IsControlPressed(CONTROL_CONTROLLER_ATTACK) and self.attack_buffer or nil
+				end
+				self:DoAction(self.attack_buffer)
+			else
+				self.locomotor:PushAction(self.attack_buffer, true)
+			end
+		end
+		self.attack_buffer = nil
+	end
+
+    if isenabled then
 		--Restore cached placer
 		if self.placer_cached ~= nil then
 			if self.inst.replica.inventory:IsVisible() then
 				self:StartBuildPlacementMode(unpack(self.placer_cached))
 			end
 			self.placer_cached = nil
-		end
-
-		--Attack controls are buffered and handled here in the update
-		if self.attack_buffer ~= nil then
-			if self.attack_buffer == CONTROL_ATTACK then
-				self:DoAttackButton()
-			elseif self.attack_buffer == CONTROL_CONTROLLER_ATTACK then
-				self:DoControllerAttackButton()
-			else
-				if self.attack_buffer._predictpos then
-					self.attack_buffer:SetActionPoint(self:GetRemotePredictPosition() or self.inst:GetPosition())
-				end
-				if self.attack_buffer._controller then
-					if self.attack_buffer.target == nil then
-						self.controller_attack_override = self:IsControlPressed(CONTROL_CONTROLLER_ATTACK) and self.attack_buffer or nil
-					end
-					self:DoAction(self.attack_buffer)
-				else
-					self.locomotor:PushAction(self.attack_buffer, true)
-				end
-			end
-			self.attack_buffer = nil
 		end
 
 		if self.handler ~= nil then
@@ -2161,7 +2168,7 @@ function PlayerController:OnUpdate(dt)
                 if placer_skin == "" then
                     placer_skin = nil
                 end
-				if self.deployplacer ~= nil and (self.deployplacer.prefab ~= placer_name or (self.deployplacer.skinname or "") ~= placer_skin) then
+                if self.deployplacer ~= nil and (self.deployplacer.prefab ~= placer_name or self.deployplacer.skinname ~= placer_skin) then
 					self:CancelDeployPlacement()
 				end
 				if self.deployplacer == nil then
@@ -2289,6 +2296,10 @@ function PlayerController:OnUpdate(dt)
 
     self:DoPredictHopping(dt)
 
+	if not isenabled and not ishudblocking then
+		return
+	end
+
     --NOTE: isbusy is used further below as well
     local isbusy = self:IsBusy()
 	if isbusy and self.inst.sg ~= nil and self.inst:HasTag("jumping") then
@@ -2324,11 +2335,6 @@ function PlayerController:OnUpdate(dt)
         end
     end
 
-    if not isenabled and not ishudblocking then
-		print("early out", isenabled, ishudblocking)
-		return
-	end
-
     --do automagic control repeats
     if self.handler ~= nil then
         local isidle = self.inst:HasTag("idle")
@@ -2354,11 +2360,6 @@ function PlayerController:OnUpdate(dt)
             end
         end
     end
-
-    if not isenabled then
-		--print("early out 2")
-		return
-	end
 
     if self.ismastersim and self.handler == nil and not self.inst.sg.mem.localchainattack then
         if self.inst.sg.statemem.chainattack_cb ~= nil then
@@ -3269,15 +3270,19 @@ function PlayerController:DoCameraControl()
         end
     end
 
-    if self.lastzoomtime == nil or time - self.lastzoomtime > ZOOM_REPEAT then
-        if TheInput:IsControlPressed(CONTROL_ZOOM_IN) then
-            TheCamera:ZoomIn()
-            self.lastzoomtime = time
-        elseif TheInput:IsControlPressed(CONTROL_ZOOM_OUT) then
-            TheCamera:ZoomOut()
-            self.lastzoomtime = time
-        end
-    end
+	if self.lastzoomtime == nil or time - self.lastzoomtime > ZOOM_REPEAT then
+		if TheInput:IsControlPressed(CONTROL_ZOOM_IN) then
+			if not self.zoomin_same_as_scrollup or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.craftingmenu.focus) then
+				TheCamera:ZoomIn()
+				self.lastzoomtime = time
+			end
+		elseif TheInput:IsControlPressed(CONTROL_ZOOM_OUT) then
+			if not self.zoomout_same_as_scrolldown or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.craftingmenu.focus) then
+				TheCamera:ZoomOut()
+				self.lastzoomtime = time
+			end
+		end
+	end
 end
 
 local function IsWalkButtonDown()

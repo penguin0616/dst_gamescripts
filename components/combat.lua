@@ -664,7 +664,7 @@ function Combat:LocomotorCanAttack(reached_dest, target)
         if not is_ranged_weapon then
             local currentpos = self.inst:GetPosition()
             local voidtest = currentpos + ((target:GetPosition() - currentpos):Normalize() * (self:GetAttackRange() / 2))
-            if TheWorld.Map:IsNotValidGroundAtPoint(voidtest:Get()) then
+            if TheWorld.Map:IsNotValidGroundAtPoint(voidtest:Get()) and not TheWorld.Map:IsNotValidGroundAtPoint(target.Transform:GetWorldPosition()) then
                 reached_dest = false
             end
         end

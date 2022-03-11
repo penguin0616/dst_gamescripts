@@ -2650,7 +2650,7 @@ function Tune(overrides)
         WARG_HEALTH = 600 * 3, --harder for multiplayer
         WARG_DAMAGE = 50,
         WARG_ATTACKPERIOD = 3,
-        WARG_ATTACKRANGE = 5,
+        WARG_ATTACKRANGE = 4,
         WARG_FOLLOWERS = 6,
         WARG_SUMMONPERIOD = 15,
         WARG_MAXHELPERS = 10,

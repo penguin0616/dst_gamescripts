@@ -346,7 +346,7 @@ Recipe2("beefalohat", 						{Ingredient("beefalowool", 8),Ingredient("horn", 1)}
 Recipe2("winterhat", 						{Ingredient("beefalowool", 4),Ingredient("silk", 4)}, 											TECH.SCIENCE_TWO)
 Recipe2("catcoonhat", 						{Ingredient("coontail", 1), Ingredient("silk", 4)}, 											TECH.SCIENCE_TWO)
 Recipe2("kelphat", 							{Ingredient("kelp", 12)},																		TECH.NONE)
-Recipe2("goggleshat", 						{Ingredient("goldnugget", 1), Ingredient("pigskin", 1)}, 										TECH.LOST)
+Recipe2("goggleshat", 						{Ingredient("goldnugget", 1), Ingredient("pigskin", 1)}, 										TECH.SCIENCE_ONE)
 Recipe2("deserthat", 						{Ingredient("goggleshat", 1), Ingredient("pigskin", 1)}, 										TECH.LOST)
 Recipe2("moonstorm_goggleshat", 			{Ingredient("moonglass", 2),Ingredient("potato", 1)}, 											TECH.LOST)
 Recipe2("watermelonhat", 					{Ingredient("watermelon", 1), Ingredient("twigs", 3)}, 											TECH.SCIENCE_ONE)
