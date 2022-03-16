@@ -18,10 +18,8 @@ local CraftingMenuHUD = Class(Widget, function(self, owner)
 	self.valid_recipes = {}
 	self:RebuildRecipes()
 
-	self.craftingmenu_scale = 1
-
 	self.closed_pos = Vector3(0, 0, 0)
-	self.opened_pos = Vector3(530, 0, 0) * self.craftingmenu_scale
+	self.opened_pos = Vector3(530, 0, 0)
 
 
 	self.ui_root = self:AddChild(Widget("craftingmenu_root"))
@@ -115,8 +113,6 @@ function CraftingMenuHUD:Open()
 	self.is_open = true
 	TheFrontEnd.crafting_navigation_mode = true
 
-	self.delay_autoclose = true
-
 	self.ui_root:SetPosition(self.closed_pos.x, self.closed_pos.y, self.closed_pos.z)
 	self.ui_root:Disable()
 
@@ -125,6 +121,8 @@ function CraftingMenuHUD:Open()
 	self.pinbar:OnCraftingMenuOpen()
 	self.pinbar:Disable()
 	self.ui_root:MoveTo(self.closed_pos, self.opened_pos, .25, function() 
+	    TheFrontEnd:StopTrackingMouse()
+
 		self.ui_root:Enable() 
 		self.craftingmenu:Enable()
 		self.pinbar:Enable()
@@ -184,13 +182,8 @@ end
 function CraftingMenuHUD:Initialize()
 	self:RebuildRecipes()
 
-	self.craftingmenu:UpdateFilterButtons()
+	self.craftingmenu:Initialize()
 
-	self.craftingmenu:SelectFilter(CRAFTING_FILTERS.TOOLS.name, true)
-	local data = self.craftingmenu.filtered_recipes[1]
-	self:PopulateRecipeDetailPanel(data ~= nil and data.recipe.name or nil, data ~= nil and Profile:GetLastUsedSkinForItem(data.recipe.name) or nil)
-
-	self.craftingmenu:Refresh() 
 	self.pinbar:Refresh()
 
 	self.needtoupdate = false
@@ -279,19 +272,6 @@ function CraftingMenuHUD:OnUpdate(dt)
 
 		self.needtoupdate = false
     end
-
-    -- close the crafting menu if the mouse moves too far away from it
-    if self.craftingmenu:IsEnabled() and not self.preventautoclose then
-		local x_precent = (TheInput:GetScreenPosition().x / TheSim:GetScreenSize()) / TheFrontEnd:GetCraftingMenuScale()
-		if self.delay_autoclose then
-			self.delay_autoclose = x_precent > 0.45	-- require the player to mouse into the menu a little before turning auto close on. This is to handle when the mouse is on the righthand side of the screen when the crafting menu is opened.
-		else
-			if x_precent > 0.50 then
-				self.owner.HUD:CloseCrafting()
-			end
-		end
-    end
-
 end
 
 function CraftingMenuHUD:OnControl(control, down)

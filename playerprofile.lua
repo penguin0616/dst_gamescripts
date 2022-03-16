@@ -775,6 +775,16 @@ function PlayerProfile:SetCraftingAutopauseEnabled(enabled)
     end
 end
 
+function PlayerProfile:GetCraftingAutopauseEnabled()
+	-- Default to false if this value hasn't been created yet
+
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "craftingautopause") == "true"
+    else
+		return self:GetValue("craftingautopause") == true
+    end
+end
+
 function PlayerProfile:SetLoadingTipsOption(setting)
 	if USE_SETTINGS_FILE then
         TheSim:SetSetting("misc", "loadingtips", tostring(setting))
@@ -1021,14 +1031,6 @@ function PlayerProfile:GetConsoleAutopauseEnabled()
 		return TheSim:GetSetting("misc", "consoleautopause") ~= "false"
     else
 		return self:GetValue("consoleautopause") ~= false
-    end
-end
-
-function PlayerProfile:GetCraftingAutopauseEnabled()
-    if USE_SETTINGS_FILE then
-		return TheSim:GetSetting("misc", "craftingautopause") ~= "false"
-    else
-		return self:GetValue("craftingautopause") ~= false
     end
 end
 

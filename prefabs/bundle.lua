@@ -490,13 +490,7 @@ local wetpouch =
         trinket_8 = 1, -- plug
         trinket_9 = 1, -- buttons
         trinket_26 = .1, -- potatocup
-        TOOLS_blueprint = .05,
-        LIGHT_blueprint = .05,
-        SURVIVAL_blueprint = .05,
-        FARM_blueprint = .05,
-        SCIENCE_blueprint = .05,
-        REFINE_blueprint = .05,
-        DRESS_blueprint = .05,
+        blueprint = 0.5,
     },
 
     UpdateLootBlueprint = function(loottable, doer)

@@ -597,6 +597,10 @@ end
 
 function PlayerHud:RefreshControllers()
     local controller_mode = TheInput:ControllerAttached()
+	if controller_mode then
+	    TheFrontEnd:StopTrackingMouse()
+	end
+
 	local integrated_backpack = controller_mode or Profile:GetIntegratedBackpack()
     if self.controls.inv.controller_build ~= controller_mode or self.controls.inv.integrated_backpack ~= integrated_backpack then
         self.controls.inv.rebuild_pending = true
@@ -755,7 +759,8 @@ function PlayerHud:HasInputFocus()
     --when anything else is active on top of it.
     local active_screen = TheFrontEnd:GetActiveScreen()
     return (active_screen ~= nil and active_screen ~= self)
-        or (self.controls ~= nil and (self.controls.inv.open or self:IsCraftingOpen()))
+		or TheFrontEnd.textProcessorWidget ~= nil
+        or (self.controls ~= nil and (self.controls.inv.open or (self:IsCraftingOpen() and TheInput:ControllerAttached())))
         or self.modfocus ~= nil
 end
 

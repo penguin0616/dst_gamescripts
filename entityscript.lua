@@ -1444,6 +1444,7 @@ function EntityScript:PerformBufferedAction()
 
         local success, reason = self.bufferedaction:Do()
         if success then
+            self:PushEvent("actionsucceeded", { action = self.bufferedaction })
             self.bufferedaction = nil
             return true
         end

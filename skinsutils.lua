@@ -1813,3 +1813,52 @@ function GetSkinModeFromBuild(player)
 
 	return nil
 end
+
+
+function GetBoxPopupLayoutDetails( num_item_types )
+	local columns = 3
+	local resize_root = nil
+	local resize_root_small = nil
+	local resize_root_small_higher = nil
+
+	-- Decide how many columns there should be
+	if num_item_types == 1 then
+		columns = 1
+	elseif num_item_types == 2 or num_item_types == 4 then
+		columns = 2
+	elseif num_item_types == 3 or num_item_types == 6 then
+		columns = 3
+	elseif num_item_types == 7 or num_item_types == 8 then
+		columns = 4
+	elseif num_item_types == 5 or num_item_types == 10 or num_item_types == 9 then
+		columns = 5
+	elseif num_item_types == 13 then
+		columns = 5
+		resize_root = true
+	elseif num_item_types == 12 or num_item_types == 11 then
+		columns = 6
+	elseif num_item_types == 16 or num_item_types == 17 or num_item_types == 18 then
+		columns = 6
+		resize_root = true
+	elseif num_item_types == 19 then
+		columns = 7
+		resize_root = true
+	elseif num_item_types == 22 or num_item_types == 24 then
+		columns = 8
+		resize_root_small = true
+	elseif num_item_types == 31 or num_item_types == 35 then
+		columns = 9
+		resize_root_small = true
+	elseif num_item_types == 38 then
+		columns = 10
+		resize_root_small = true
+	elseif num_item_types == 41 then
+		columns = 10
+		resize_root_small_higher = true
+	else
+		columns = 10
+		resize_root_small_higher = true
+		print("Warning: Found an unexpected number of items in a box.", num_item_types)
+	end
+	return columns, resize_root, resize_root_small, resize_root_small_higher
+end

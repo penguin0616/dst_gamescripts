@@ -113,7 +113,7 @@ local events =
             or inst.sg:HasStateTag("caninterrupt")
             or inst.sg:HasStateTag("frozen")) then    
                 inst.sg:GoToState("hit")
-        elseif inst.sg:HasStateTag("busy") and inst.sg:HasStateTag("stunned") and not inst.AnimState:IsCurrentAnimation("hit") then
+        elseif inst.sg:HasStateTag("stunned") then
             inst:PushEvent("stunned_hit")
         end
     end),
@@ -484,7 +484,7 @@ local states =
             
             local range = 2
             local theta = inst.Transform:GetRotation()*DEGREES
-            local offset = Vector3(range * math.cos( theta ), 0, -range * math.sin( theta ))            
+            local offset = Vector3(range * math.cos( theta ), 0, -range * math.sin( theta ))
             local newloc = Vector3(inst.sg.statemem.targetpos.x + offset.x, 0, inst.sg.statemem.targetpos.z + offset.z)
 
             local time = inst.AnimState:GetCurrentAnimationLength()
@@ -522,7 +522,7 @@ local states =
                 if inst.jumpland(inst) then
                     inst.sg:GoToState("leap_attack_pst")
                     inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/groundpound")
-                else                       
+                else
                     inst.sg:GoToState("stun",{land_stun=true})
                 end
             end),
@@ -535,12 +535,6 @@ local states =
         tags = {"busy"},
         
         onenter = function(inst)
-
-            inst.components.groundpounder.numRings = 2
-            inst.components.groundpounder:GroundPound()
-
-            BounceStuff(inst)
-
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("jump_atk_pst")
             inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/groundpound")
@@ -563,63 +557,65 @@ local states =
         onenter = function(inst, data)
             inst.components.locomotor:Stop()
             if data and data.land_stun then
-                inst.sg.statemem.timing = 13
                 inst.AnimState:PlayAnimation("stun_jump_pre")
             else
-                inst.sg.statemem.timing = 20
+                inst.sg.statemem.playlandsound = true
                 inst.AnimState:PlayAnimation("stun_pre")
             end
-            inst.AnimState:PushAnimation("stun_loop",true)
-            --inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/recover")
-
             local stuntime = math.max(1.5,Remap(inst.chargecount,0, 1, 0, 6 ) )
-            inst.sg:SetTimeout(stuntime)
+            inst.components.timer:StartTimer("endstun", stuntime)
         end,
 
         timeline=
         { 
-            -- THIS IS A SOUND THAT PLAYS FOR JUST TEH STUN_PRE
             TimeEvent(11*FRAMES, function(inst) 
-                if inst.sg.statemem.timing == 20 then
+                if inst.sg.statemem.playlandsound then
                     inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/step")
-                end
-             end),             
-
-            -- THIS STARTS PLAYING A SOUND AT 8 FRAMES INTO THE stun_loop AFTER stun_jump_pre, AND THEN 8 FRAMES IN EVERY TIME IT REPLAYS
-            TimeEvent(21*FRAMES, function(inst) 
-                if inst.sg.statemem.timing == 13 then
-                    inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/recover")
-                    --inst.timedsound = inst:DoPeriodicTask(inst.AnimState:GetCurrentAnimationTime(),function() inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/recover") end)
-                end
-             end), 
-
-            -- THIS STARTS PLAYING A SOUND AT 8 FRAMES INTO THE stun_loop AFTER stun_pre, AND THEN 8 FRAMES IN EVERY TIME IT REPLAYS
-            TimeEvent(28*FRAMES, function(inst)
-                if inst.sg.statemem.timing == 20 then
-                    inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/recover")
-                    --inst.timedsound = inst:DoPeriodicTask(inst.AnimState:GetCurrentAnimationTime(),function() inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/recover") end)
                 end
              end), 
         },
 
-        onexit = function(inst)
-            if inst.timedsound then
-                inst.timedsound:Cancel()
-                inst.timedsound = nil
-            end
+        events=
+        {
+            EventHandler("stunned_hit", function(inst) inst.sg:GoToState("stun_hit") end),
+            EventHandler("animover", function(inst) inst.sg:GoToState("stun_loop") end),
+        },    
+    },
+
+    State{
+        name = "stun_loop",
+        tags = {"busy","stunned"},
+        
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("stun_loop")
+        end,
+        
+        timeline=
+        { 
+            TimeEvent(8*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/recover")
+             end), 
+        },
+
+        events=
+        {
+            EventHandler("stunned_hit", function(inst) inst.sg:GoToState("stun_hit") end),
+            EventHandler("animover", function(inst) inst.sg:GoToState("stun_loop") end),
+        },
+    },
+
+    State{
+        name = "stun_hit",
+        tags = {"busy","stunned"},
+        
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("stun_hit")
         end,
 
         events=
         {
-            EventHandler("stunned_hit", function(inst)
-                inst.AnimState:PlayAnimation("stun_hit")
-                inst.AnimState:PushAnimation("stun_loop",true)
-            end),
+            EventHandler("animover", function(inst) inst.sg:GoToState("stun_loop") end),
         },
-
-        ontimeout = function(inst)
-            inst.sg:GoToState("stun_pst")
-        end,        
     },
 
     State{
@@ -662,8 +658,10 @@ CommonStates.AddWalkStates(states,
         TimeEvent(7 * FRAMES, function(inst)
             inst.components.locomotor:WalkForward()
         end),
+        TimeEvent(18 * FRAMES, function(inst)
+            inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/walk")
+        end),
         TimeEvent(20 * FRAMES, function(inst)
-            inst.SoundEmitter:PlaySound("ancientguardian_rework/minotaur2/step")
             ShakeAllCameras(CAMERA.VERTICAL, .5, .05, .1, inst, 40)
             inst.Physics:Stop()
         end),

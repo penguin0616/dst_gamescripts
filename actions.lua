@@ -182,6 +182,8 @@ Action = Class(function(self, data, instant, rmb, distance, ghost_valid, ghost_e
 	self.theme_music = data.theme_music
 	self.theme_music_fn = data.theme_music_fn -- client side function
     self.pre_action_cb = data.pre_action_cb -- runs and client and server
+    self.invalid_hold_action = data.invalid_hold_action
+    self.recalculate_held_action = data.recalculate_held_action -- For hold to place things on the map that can't be interacted with after placing
 end)
 
 -- NOTE: High priority is intended to be a shortcut flag for actions that we expect to always dominate if they are available.
@@ -209,14 +211,14 @@ ACTIONS =
     COOK = Action({ priority=1, mount_valid=true }),
     FILL = Action(),
     FILL_OCEAN = Action({ is_relative_to_platform=true, extra_arrive_dist=ExtraDropDist }),
-    DRY = Action(),
+    DRY = Action({ invalid_hold_action = true }),
     ADDFUEL = Action({ mount_valid=true, paused_valid=true }),
     ADDWETFUEL = Action({ mount_valid=true, paused_valid=true }),
     LIGHT = Action({ priority=-4 }),
     EXTINGUISH = Action({ priority=0 }),
     LOOKAT = Action({ priority=-3, instant=true, ghost_valid=true, mount_valid=true, encumbered_valid=true }),
     TALKTO = Action({ priority=3, instant=true, mount_valid=true, encumbered_valid=true }),
-    WALKTO = Action({ priority=-4, ghost_valid=true, mount_valid=true, encumbered_valid=true }),
+    WALKTO = Action({ priority=-4, ghost_valid=true, mount_valid=true, encumbered_valid=true, invalid_hold_action = true }),
     INTERACT_WITH = Action({ distance=1.5, mount_valid=true }),
     BAIT = Action(),
     CHECKTRAP = Action({ priority=2, mount_valid=true }),
@@ -236,8 +238,8 @@ ACTIONS =
     SHAVE = Action({ mount_valid=true }),
     STORE = Action(),
     RUMMAGE = Action({ priority=-1, mount_valid=true }),
-    DEPLOY = Action({distance=1.1, extra_arrive_dist=ExtraDeployDist}),
-    DEPLOY_TILEARRIVE = Action({customarrivecheck=CheckTileWithinRange, theme_music = "farming"}), -- Note: If this is used for non-farming in the future, this would need to be swapped to theme_music_fn
+    DEPLOY = Action({distance=1.1, extra_arrive_dist=ExtraDeployDist, invalid_hold_action = true }),
+    DEPLOY_TILEARRIVE = Action({customarrivecheck=CheckTileWithinRange, invalid_hold_action = true, theme_music = "farming"}), -- Note: If this is used for non-farming in the future, this would need to be swapped to theme_music_fn
     PLAY = Action({ mount_valid=true }),
     CREATE = Action(),
     JOIN = Action(),
@@ -258,7 +260,7 @@ ACTIONS =
     MANUALEXTINGUISH = Action({ priority=1 }),
     LAYEGG = Action(),
     HAMMER = Action({ priority=3 }),
-    TERRAFORM = Action({ tile_placer="gridplacer" }),
+    TERRAFORM = Action({ tile_placer="gridplacer", recalculate_held_action = true }),
     JUMPIN = Action({ ghost_valid=true, encumbered_valid=true }),
     TELEPORT = Action({ rmb=true, distance=2 }),
     RESETMINE = Action({ priority=3 }),
@@ -379,9 +381,9 @@ ACTIONS =
     SET_HEADING = Action({distance=9999, do_not_locomote=true}),
     STOP_STEERING_BOAT = Action({instant=true}),
     CAST_NET = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=12, mount_valid=true, disable_platform_hopping=true }),
-    ROW_FAIL = Action({customarrivecheck=function() return true end, disable_platform_hopping=true, skip_locomotor_facing=true}),
-    ROW = Action({priority=3, customarrivecheck=CheckRowRange, is_relative_to_platform=true, disable_platform_hopping=true}),
-    ROW_CONTROLLER = Action({priority=3, is_relative_to_platform=true, disable_platform_hopping=true, do_not_locomote=true}),
+    ROW_FAIL = Action({customarrivecheck=function() return true end, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true}),
+    ROW = Action({priority=3, customarrivecheck=CheckRowRange, is_relative_to_platform=true, disable_platform_hopping=true, invalid_hold_action = true}),
+    ROW_CONTROLLER = Action({priority=3, is_relative_to_platform=true, disable_platform_hopping=true, do_not_locomote=true, invalid_hold_action = true}),
     BOARDPLATFORM = Action({ customarrivecheck=CheckIsOnPlatform }),
     OCEAN_TOSS = Action({priority=3, rmb=true, customarrivecheck=CheckOceanFishingCastRange, is_relative_to_platform=true, disable_platform_hopping=true}),
     UNPATCH = Action({ distance=0.5 }),
@@ -430,9 +432,9 @@ ACTIONS =
 
     -- Minigame actions:
     LEAVE_GYM = Action({ mount_valid=false, instant = true }),
-    LIFT_GYM_SUCCEED_PERFECT = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true }),
-    LIFT_GYM_SUCCEED = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true }),
-    LIFT_GYM_FAIL = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true }),    
+    LIFT_GYM_SUCCEED_PERFECT = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true }),
+    LIFT_GYM_SUCCEED = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true }),
+    LIFT_GYM_FAIL = Action({ do_not_locomote=true, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true }),    
 }
 
 ACTIONS_BY_ACTION_CODE = {}

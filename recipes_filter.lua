@@ -1,10 +1,10 @@
 
 local function GetCharacterAtlas(owner)
-    return owner ~= nil and (owner.prefab == "wanda" and "images/hud2.xml" or softresolvefilepath("images/avatars/self_inspect_".. owner.prefab.. ".xml")) or "images/hud.xml"
+    return resolvefilepath("images/avatars.xml")
 end
 
 local function GetCharacterImage(owner)
-    return owner ~= nil and ("self_inspect_".. owner.prefab ..".tex") or "self_inspect_mod1.tex"
+    return owner ~= nil and ("avatar_".. owner.prefab ..".tex") or "self_inspect_mod.tex"
 end
 
 local function GetCraftingMenuAtlas()

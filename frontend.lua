@@ -641,6 +641,8 @@ function FrontEnd:Update(dt)
         ProbeReload(TheInput:IsKeyDown(KEY_F6))
     end
 
+	local controller = TheInput:ControllerAttached()
+
 	if self.saving_indicator ~= nil and self.saving_indicator.shown then
 		if self.save_indicator_fade then
 			local alpha = 1
@@ -738,13 +740,13 @@ function FrontEnd:Update(dt)
         elseif not (self.textProcessorWidget ~= nil) then
             self.repeat_time = REPEAT_TIME
 			if self.crafting_navigation_mode then
-				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) then -- or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
+				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)) then
 					self:OnFocusMove(MOVE_LEFT, true)
-				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) then --or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT)) then
 					self:OnFocusMove(MOVE_RIGHT, true)
-				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) then --or TheInput:IsControlPressed(CONTROL_FOCUS_UP) then
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_UP)) then
 					self:OnFocusMove(MOVE_UP, true)
-				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) then --or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) then
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_DOWN)) then
 					self:OnFocusMove(MOVE_DOWN, true)
 				else
 					self.repeat_time = 0
@@ -825,7 +827,7 @@ function FrontEnd:Update(dt)
 	end
 
 	self.helptext:Hide()
-	if TheInput:ControllerAttached()
+	if controller
         and self:GetFadeLevel() < 1
 		and not self.crafting_navigation_mode
         and not (self.fadedir == FADE_OUT and self.fade_type ~= "black") then

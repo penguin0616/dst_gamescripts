@@ -359,7 +359,7 @@ local function GetSpawnPrefab(upgrade)
 		return _spawndata.upgrade_spawn
 	end
 
-	local do_seasonal_spawn = math.random() >= GetSpecialSpawnChance()
+	local do_seasonal_spawn = math.random() < GetSpecialSpawnChance()
 
 	if do_seasonal_spawn then
 		if _spawnwintervariant and (TheWorld.state.iswinter or TheWorld.state.isspring) then
@@ -492,7 +492,7 @@ local function SavePlayerSpawnInfo(player, savedata, isworldsave)
 		if not isworldsave then
 			_delayedplayerspawninfo[player] = nil
 		end
-	elseif _targetableplayers[player.GUID] then
+	elseif _warning or _timetoattack < 0 or _spawninfo ~= nil then
 		GenerateSaveDataFromSpawnInfo(player, savedata)
 		if not isworldsave then
 			RemovePendingSpawns(player)

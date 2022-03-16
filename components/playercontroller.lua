@@ -16,6 +16,19 @@ local function OnPlayerDeactivated(inst)
     inst.components.playercontroller:Deactivate()
 end
 
+local function OnActionSucceeded(inst, action)
+    -- For held primary, secondary actions where a new position is needed (e.g. terraforming), update the new position
+    local lastheldaction = inst.components.playercontroller.lastheldaction
+    if lastheldaction and lastheldaction.action.recalculate_held_action then
+        inst.components.playercontroller.LMBaction, inst.components.playercontroller.RMBaction = inst.components.playeractionpicker:DoGetMouseActions()
+        if TheInput:IsControlPressed(CONTROL_PRIMARY) then
+            inst.components.playercontroller.lastheldaction = inst.components.playercontroller:GetLeftMouseAction()
+        elseif TheInput:IsControlPressed(CONTROL_SECONDARY) then
+            inst.components.playercontroller.lastheldaction = inst.components.playercontroller:GetRightMouseAction()
+        end
+    end
+end
+
 local function GetWorldControllerVector()
     local xdir = TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)
     local ydir = TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)
@@ -136,6 +149,8 @@ local PlayerController = Class(function(self, inst)
 
     inst:ListenForEvent("playeractivated", OnPlayerActivated)
     inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
+
+    inst:ListenForEvent("actionsucceeded", OnActionSucceeded)
 end)
 
 --------------------------------------------------------------------------
@@ -146,6 +161,7 @@ function PlayerController:OnRemoveFromEntity()
     end
     self.inst:RemoveEventCallback("playeractivated", OnPlayerActivated)
     self.inst:RemoveEventCallback("playerdeactivated", OnPlayerDeactivated)
+    self.inst:RemoveEventCallback("actionsucceeded", OnActionSucceeded)
     self:Deactivate()
     if self.classified ~= nil then
         if self.ismastersim then
@@ -1681,7 +1697,8 @@ function PlayerController:GetActionButtonAction(force_target)
             for i, v in ipairs(ents) do
                 if v ~= self.inst and v.entity:IsVisible() and CanEntitySeeTarget(self.inst, v) then
                     local action = GetPickupAction(self, v, tool)
-                    if action ~= nil then
+                    -- If we're holding the action button down, only do the action if it's the same as the original clicked action
+                    if action ~= nil and not (self.actionholding and action ~= self.lastclickedaction.action) then
                         return BufferedAction(self.inst, v, action, action ~= ACTIONS.SMOTHER and tool or nil)
                     end
                 end
@@ -2423,7 +2440,7 @@ function PlayerController:OnUpdate(dt)
                     end
                     if isidle then
                         -- Check for primary control button held down in order to attack other nearby monsters
-                        if attack_control == CONTROL_PRIMARY and self.actionholding then
+                        if attack_control == CONTROL_PRIMARY and self.actionholding and self.lastclickedaction and self.lastclickedaction.action == ACTIONS.ATTACK then
                             if self.ismastersim then
                                 self.attack_buffer = CONTROL_ATTACK
                             else
@@ -3309,17 +3326,6 @@ function PlayerController:OnLeftUp()
     end
 end
 
-local INVALIDHOLDACTIONS = {
-    [ACTIONS.WALKTO] = true,
-    [ACTIONS.ROW] = true,
-    [ACTIONS.ROW_FAIL] = true,
-    [ACTIONS.ROW] = true,
-    [ACTIONS.ROW_CONTROLLER] = true,
-    [ACTIONS.LIFT_GYM_SUCCEED_PERFECT] = true,
-    [ACTIONS.LIFT_GYM_SUCCEED] = true,
-    [ACTIONS.LIFT_GYM_FAIL] = true,
-}
-
 function PlayerController:DoAction(buffaction)
     --Check if the action is actually valid.
     --Cached LMB/RMB actions can become invalid.
@@ -3363,7 +3369,7 @@ function PlayerController:DoAction(buffaction)
 
     self:DoActionAutoEquip(buffaction)
 
-    if not buffaction.action.instant and not INVALIDHOLDACTIONS[buffaction.action] and buffaction:IsValid() then
+    if not buffaction.action.instant and not buffaction.action.invalid_hold_action and buffaction:IsValid() then
         self.lastheldaction = buffaction
     else
         self.actionholdtime = nil
@@ -3599,8 +3605,12 @@ function PlayerController:OnRightClick(down)
 
     local act = self:GetRightMouseAction()
     if act == nil then
-        self.inst.replica.inventory:ReturnActiveItem()
-        self:TryAOETargeting()
+		if self.inst.HUD ~= nil and self.inst.HUD:IsCraftingOpen() then
+			self.inst.HUD:CloseCrafting()
+		else
+			self.inst.replica.inventory:ReturnActiveItem()
+			self:TryAOETargeting()
+		end
     else
         if self.reticule ~= nil and self.reticule.reticule ~= nil then
             self.reticule:PingReticuleAt(act:GetActionPoint())

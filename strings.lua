@@ -4551,7 +4551,7 @@ STRINGS =
     --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
     PIG_TALK_FOLLOWWILSON = { "YOU FRIEND", "I LOVE FRIEND", "YOU IS GOOD", "I FOLLOW!" },
     PIG_TALK_FIND_LIGHT = { "SCARY", "NO LIKE DARK", "WHERE IS SUN?", "STAY NEAR FIRE", "FIRE IS GOOD" },
-    PIG_TALK_LOOKATWILSON = { "WHO ARE YOU?", "YOU NOT PIG", "UGLY MONKEY PERSON", "YOU HAS MEAT?" },
+    PIG_TALK_LOOKATWILSON = { "WHO ARE YOU?", "YOU NOT PIG", "YOU HAS MEAT?" },
     PIG_TALK_RUNAWAY_WILSON = { "TOO CLOSE!", "STAY AWAY!", "YOU BACK OFF!", "THAT MY SPACE." },
     PIG_TALK_FIGHT = { "I KILL NOW!", "YOU GO SMASH!", "RAAAWR!" },
     PIG_TALK_RUN_FROM_SPIDER = { "SPIDER BAD!", "NO LIKE SPIDER!", "SCARY SPIDER!" },
@@ -7081,6 +7081,7 @@ STRINGS.UI =
 		    CRAFTABLE = "Craftable",
 		    FAVORITE = "Favorite",
 		},
+		SEARCH = "Search",
 	},
 
     ACCOUNT =
@@ -8685,6 +8686,9 @@ STRINGS.UI =
         FAILED_CONVERT_DIALOG_FMT = "Failed to convert world to {type} save, please try again later.",
         CONVERT_LOCAL = "local",
         CONVERT_CLOUD = "cloud",
+        SAVE_TYPE = "Save Type:",
+        SAVE_TYPE_LOCAL = "Local Save",
+        SAVE_TYPE_CLOUD = "Steam Cloud Save", --steam is our only cloud save platform for now, so this is fine.
         SLOT = "Server Slot",
         SURE = "Are you sure?",
         SERVERDAY = "Day", --deprecated, left here for mods to use
@@ -10138,6 +10142,7 @@ STRINGS.UI =
         PURCHASE_BTN = "Buy Now",
         PURCHASE_GIFT = "Gift to a Friend",
         PURCHASE_CLOSE = "Close",
+        PURCHASE_VIEW_CONTENTS = "View Contents",
 
 		GIFT_RECEIVED_TITLE = "You got a chest!",
 		GIFT_RECEIVED_BODY = "Open it to receive your curios.",

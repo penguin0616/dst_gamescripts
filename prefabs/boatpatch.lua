@@ -48,11 +48,11 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst:AddComponent("inspectable")
 
-    MakeSmallBurnable(inst, TUNING.LARGE_BURNTIME)
+    MakeSmallBurnable(inst, TUNING.MED_BURNTIME)
     MakeSmallPropagator(inst)
 
     inst:AddComponent("fuel")
-    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
+    inst.components.fuel.fuelvalue = TUNING.MED_FUEL * 2 -- 2x logs
 
     MakeHauntableLaunch(inst)
 

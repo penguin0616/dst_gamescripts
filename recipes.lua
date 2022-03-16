@@ -224,7 +224,7 @@ Recipe2("miniflare",						{Ingredient("twigs", 1), Ingredient("cutgrass", 1), In
 Recipe2("compass",							{Ingredient("goldnugget", 1), Ingredient("flint", 1)},											TECH.NONE)
 Recipe2("sentryward",						{Ingredient("purplemooneye", 1), Ingredient("compass", 1), Ingredient("boards", 2)},			TECH.MAGIC_TWO,				{placer="sentryward_placer", min_spacing=1.5})
 Recipe2("featherpencil",					{Ingredient("twigs", 1), Ingredient("charcoal", 1), Ingredient("feather_crow", 1)}, 			TECH.SCIENCE_ONE)
-Recipe2("reskin_tool",						{Ingredient("livinglog", 3), Ingredient("petals_evil", 6)},										TECH.MAGIC_THREE)
+Recipe2("reskin_tool",						{Ingredient("twigs", 1), Ingredient("petals", 4)},												TECH.SCIENCE_TWO)
 Recipe2("archive_resonator_item",			{Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)},									TECH.LOST)
 
 
@@ -245,7 +245,7 @@ Recipe2("pumpkin_lantern",					{Ingredient("pumpkin", 1), Ingredient("fireflies"
 Recipe2("minerhat",							{Ingredient("strawhat", 1),Ingredient("goldnugget", 1),Ingredient("fireflies", 1)},				TECH.SCIENCE_TWO)
 Recipe2("molehat",							{Ingredient("mole", 2), Ingredient("transistor", 2), Ingredient("wormlight", 1)},				TECH.SCIENCE_TWO)
 Recipe2("lantern",							{Ingredient("twigs", 3), Ingredient("rope", 2), Ingredient("lightbulb", 2)},					TECH.SCIENCE_TWO)
-Recipe2("nightlight",						{Ingredient("goldnugget", 8), Ingredient("nightmarefuel", 2),Ingredient("redgem", 1)},			TECH.MAGIC_TWO,				{placer="nightlight_placer"})
+Recipe2("nightlight",						{Ingredient("goldnugget", 8), Ingredient("nightmarefuel", 2), Ingredient("redgem", 1)},			TECH.MAGIC_TWO,				{placer="nightlight_placer"})
 Recipe2("dragonflyfurnace",					{Ingredient("dragon_scales", 1), Ingredient("redgem", 2), Ingredient("charcoal", 10)},			TECH.LOST,					{placer="dragonflyfurnace_placer"})
 Recipe2("mushroom_light",					{Ingredient("shroom_skin", 1), Ingredient("fertilizer", 1, nil, true)},							TECH.LOST,					{placer="mushroom_light_placer", min_spacing=1.5})
 Recipe2("mushroom_light2",					{Ingredient("shroom_skin", 1), Ingredient("fertilizer", 1, nil, true), Ingredient("boards", 1)},TECH.LOST,					{placer="mushroom_light2_placer", min_spacing=1.5})
@@ -345,7 +345,7 @@ Recipe2("earmuffshat", 						{Ingredient("rabbit", 2), Ingredient("twigs",1)}, 	
 Recipe2("beefalohat", 						{Ingredient("beefalowool", 8),Ingredient("horn", 1)}, 											TECH.SCIENCE_ONE)
 Recipe2("winterhat", 						{Ingredient("beefalowool", 4),Ingredient("silk", 4)}, 											TECH.SCIENCE_TWO)
 Recipe2("catcoonhat", 						{Ingredient("coontail", 1), Ingredient("silk", 4)}, 											TECH.SCIENCE_TWO)
-Recipe2("kelphat", 							{Ingredient("kelp", 12)},																		TECH.NONE)
+Recipe2("kelphat", 							{Ingredient("kelp", 6)},																		TECH.NONE)
 Recipe2("goggleshat", 						{Ingredient("goldnugget", 1), Ingredient("pigskin", 1)}, 										TECH.SCIENCE_ONE)
 Recipe2("deserthat", 						{Ingredient("goggleshat", 1), Ingredient("pigskin", 1)}, 										TECH.LOST)
 Recipe2("moonstorm_goggleshat", 			{Ingredient("moonglass", 2),Ingredient("potato", 1)}, 											TECH.LOST)
@@ -399,7 +399,7 @@ Recipe2("wall_wood_item",					{Ingredient("boards", 2), Ingredient("rope", 1)},	
 Recipe2("wall_stone_item",					{Ingredient("cutstone", 2)},																			TECH.SCIENCE_TWO,			{numtogive=6})
 Recipe2("wall_moonrock_item",				{Ingredient("moonrocknugget", 4)},																		TECH.SCIENCE_TWO,			{numtogive=4})
 
-Recipe2("boat_item", 						{Ingredient("log", 16)},																				TECH.NONE)
+Recipe2("boat_item", 						{Ingredient("boards", 4)},																				TECH.SEAFARING_ONE)
 Recipe2("boatpatch", 						{Ingredient("log", 2), Ingredient("stinger", 1)}, 														TECH.NONE)
 Recipe2("oar", 								{Ingredient("log", 1)}, 																				TECH.NONE)
 Recipe2("oar_driftwood", 					{Ingredient("driftwood_log", 1)}, 																		TECH.NONE)

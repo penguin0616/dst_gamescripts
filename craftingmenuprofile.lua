@@ -8,7 +8,7 @@ local CraftingMenuProfile = Class(function(self)
 
 	self.pinned_recipes = {} -- Warning! this array may have holes in it, never use ipairs on this
 
-	self:DeserializeLocalClientSessionData({pinned_recipes = TUNING.DEFAULT_PINNED_RECIPES})
+	self:MakeDefaultPinnedRecipes()
 
 	self.sort_mode = nil
 
@@ -98,6 +98,14 @@ end
 
 function CraftingMenuProfile:GetPinnedRecipes()
 	return self.pinned_recipes
+end
+
+function CraftingMenuProfile:MakeDefaultPinnedRecipes()
+	self.pinned_recipes = {}
+	for _, v in pairs(TUNING.DEFAULT_PINNED_RECIPES) do
+		--table.insert(self.pinned_recipes, {recipe_name = v, skin_name = Profile:GetLastUsedSkinForItem(v)}) -- this felt odd, I'll have to keep thinking about it some more...
+		table.insert(self.pinned_recipes, {recipe_name = v})
+	end
 end
 
 function CraftingMenuProfile:DeserializeLocalClientSessionData(data)

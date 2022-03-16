@@ -58,6 +58,16 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 	self.focus_forward = self.filter_panel.filter_grid
 end)
 
+function CraftingMenuWidget:Initialize()
+	self:UpdateFilterButtons()
+
+	self:SelectFilter(CRAFTING_FILTERS.TOOLS.name, true)
+	local data = self.filtered_recipes[1]
+	self:PopulateRecipeDetailPanel(data, data ~= nil and Profile:GetLastUsedSkinForItem(data.recipe.name) or nil)
+
+	self:Refresh() 
+end
+
 function CraftingMenuWidget:OnControl(control, down)
 	if self.crafting_hud:IsCraftingOpen() then
 		if self.details_root.skins_spinner ~= nil and not self.details_root.skins_spinner.focus then
@@ -73,47 +83,62 @@ function CraftingMenuWidget:OnControl(control, down)
 	return false
 end
 
-function CraftingMenuWidget:DoFocusHookups()
-	self.filter_panel:SetFocusChangeDir(MOVE_UP, self.favorites_filter)
-	self.filter_panel:SetFocusChangeDir(MOVE_DOWN, self.recipe_grid)
-	self.filter_panel:SetFocusChangeDir(MOVE_RIGHT, self.crafting_hud.pinbar)
 
-	self.recipe_grid:SetFocusChangeDir(MOVE_UP, self.filter_panel)
-	self.recipe_grid:SetFocusChangeDir(MOVE_RIGHT, function() return self.crafting_hud.pinbar:GetFirstButton() end)
+function GetClosestWidget(list, active_widget, dir_x, dir_y)
+    local closest = nil
+    local closest_score = nil
 
-	self.crafting_hud.pinbar:SetFocusChangeDir(MOVE_LEFT, function() if self.crafting_hud:IsCraftingOpen() then return #self.recipe_grid.items > 0 and self.recipe_grid or self.filter_panel end end)
-
-
-	self.favorites_filter:SetFocusChangeDir(MOVE_RIGHT, function() return self.special_event_filter ~= nil and self.special_event_filter
-																			or self.crafting_station_filter:IsVisible() and self.crafting_station_filter 
-																			or self.search_box
-														end)
-	self.favorites_filter:SetFocusChangeDir(MOVE_DOWN, self.filter_panel)
-
-	if self.special_event_filter ~= nil then
-		self.special_event_filter:SetFocusChangeDir(MOVE_LEFT, self.favorites_filter)
-		self.special_event_filter:SetFocusChangeDir(MOVE_RIGHT, function() return self.crafting_station_filter:IsVisible() and self.crafting_station_filter or self.search_box end)
-		self.special_event_filter:SetFocusChangeDir(MOVE_DOWN, self.filter_panel)
+	if active_widget ~= nil then
+		local x, y = active_widget.inst.UITransform:GetWorldPosition()
+		for k,v in pairs(list) do
+			if v ~= active_widget and v:IsVisible() and v:IsEnabled() then
+				local vx, vy = v.inst.UITransform:GetWorldPosition()
+				local local_dir_x, local_dir_y = vx-x, vy-y
+				if VecUtil_Dot(local_dir_x, local_dir_y, dir_x, dir_y) > 0 then
+					local score = local_dir_x * local_dir_x + local_dir_y * local_dir_y
+					if not closest or score < closest_score then
+						closest = v
+						closest_score = score
+					end
+				end
+			end
+		end
 	end
 
-	self.crafting_station_filter:SetFocusChangeDir(MOVE_LEFT, function() return self.special_event_filter ~= nil and self.special_event_filter or self.favorites_filter end)
-	self.crafting_station_filter:SetFocusChangeDir(MOVE_RIGHT, self.search_box)
-	self.crafting_station_filter:SetFocusChangeDir(MOVE_DOWN, self.filter_panel)
+    return closest, closest_score
+end
 
-	self.search_box:SetFocusChangeDir(MOVE_LEFT, function() return self.crafting_station_filter:IsVisible() and self.crafting_station_filter 
-																			or self.special_event_filter ~= nil and self.special_event_filter
-																			or self.favorites_filter
-														end)
-	self.search_box:SetFocusChangeDir(MOVE_RIGHT, function() return self.mods_filter:IsVisible() and self.mods_filter or self.sort_button end)
-	self.search_box:SetFocusChangeDir(MOVE_DOWN, self.filter_panel)
 
-	self.mods_filter:SetFocusChangeDir(MOVE_LEFT, self.search_box)
-	self.mods_filter:SetFocusChangeDir(MOVE_RIGHT, self.sort_button)
-	self.mods_filter:SetFocusChangeDir(MOVE_DOWN, self.filter_panel)
 
-	self.sort_button:SetFocusChangeDir(MOVE_LEFT, function() return self.mods_filter:IsVisible() and self.mods_filter or self.search_box end)
-	self.sort_button:SetFocusChangeDir(MOVE_RIGHT, function() return self.crafting_hud.pinbar:GetFirstButton() end)
-	self.sort_button:SetFocusChangeDir(MOVE_DOWN, self.filter_panel)
+function CraftingMenuWidget:DoFocusHookups()
+	-- GetFocusChild() GetDeepestFocus()
+
+	self.filter_panel:SetFocusChangeDir(MOVE_UP,	function(w) return GetClosestWidget(self.top_row_widgets, w.filter_grid:GetFocusChild(), 0, 1) or self.top_row_widgets[1] end)
+	self.filter_panel:SetFocusChangeDir(MOVE_DOWN,	function(w) return GetClosestWidget(self.recipe_grid.widgets_to_update, w.filter_grid:GetFocusChild(), 0, -1) or self.recipe_grid end)
+	self.filter_panel:SetFocusChangeDir(MOVE_RIGHT, function(w) return GetClosestWidget(self.crafting_hud.pinbar.pin_slots, w.filter_grid:GetFocusChild(), 1, 0) or self.crafting_hud.pinbar:GetFirstButton() end)
+
+	self.recipe_grid:SetFocusChangeDir(MOVE_UP,		function(w) return GetClosestWidget(self.filter_buttons, w.widgets_to_update[w.focused_widget_index], 0, 1) or self.filter_panel end)
+	self.recipe_grid:SetFocusChangeDir(MOVE_RIGHT,	function(w) return GetClosestWidget(self.crafting_hud.pinbar.pin_slots, w.widgets_to_update[w.focused_widget_index], 1, 0) or self.crafting_hud.pinbar:GetFirstButton() end)
+
+	self.crafting_hud.pinbar:SetFocusChangeDir(MOVE_LEFT, function(w)
+		if self.crafting_hud:IsCraftingOpen() then
+			local grid_widget, grid_closest = GetClosestWidget(self.recipe_grid.widgets_to_update, w.root:GetFocusChild(), -1, 0)
+			local filter_widget, filter_closest = GetClosestWidget(self.filter_buttons, w.root:GetFocusChild(), -1, 0)
+			if grid_widget ~= nil and filter_widget ~= nil then
+				return grid_closest < filter_closest and grid_widget or filter_widget
+			end
+			return grid_widget or filter_widget or self.filter_panel 
+		end
+	end)
+
+	local top_row_focus_down = function(w) return GetClosestWidget(self.filter_buttons, w, 0, -1) end
+	local top_row_focus_left = function(w) return GetClosestWidget(self.top_row_widgets, w, -1, 0) end
+	local top_row_focus_right = function(w) return GetClosestWidget(self.top_row_widgets, w, 1, 0) end
+	for _, trw in ipairs(self.top_row_widgets) do
+		trw:SetFocusChangeDir(MOVE_DOWN, top_row_focus_down)
+		trw:SetFocusChangeDir(MOVE_LEFT, top_row_focus_left)
+		trw:SetFocusChangeDir(MOVE_RIGHT, top_row_focus_right)
+	end
 end
 
 function CraftingMenuWidget:PopulateRecipeDetailPanel(recipe, skin_name)
@@ -172,13 +197,13 @@ function CraftingMenuWidget:UpdateFilterButtons()
 	local builder = self.owner ~= nil and self.owner.replica.builder or nil
 	if builder ~= nil then
 		if builder:IsFreeBuildMode() then
-			self.crafting_station_filter.button:SetHoverText(STRINGS.UI.CRAFTING_FILTERS.CRAFTING_STATION)
+			self.crafting_station_filter:SetHoverText(STRINGS.UI.CRAFTING_FILTERS.CRAFTING_STATION)
 			self.crafting_station_filter:Show()
 		else
 			local prototyper = builder:GetCurrentPrototyper()
 			local crafting_station_def = prototyper ~= nil and PROTOTYPER_DEFS[prototyper.prefab] or nil
 			if crafting_station_def ~= nil and crafting_station_def.is_crafting_station then
-				self.crafting_station_filter.button:SetHoverText(crafting_station_def.filter_text)
+				self.crafting_station_filter:SetHoverText(crafting_station_def.filter_text)
 				self.crafting_station_filter.filter_img:SetTexture(crafting_station_def.icon_atlas, crafting_station_def.icon_image)
 				self.crafting_station_filter.filter_img:ScaleToSize(54, 54)
 				self.crafting_station_filter:Show()
@@ -307,7 +332,6 @@ function CraftingMenuWidget:OnPreOpen()
 	local prototyper = builder ~= nil and builder:GetCurrentPrototyper() or nil
 	local prototyper_def = prototyper ~= nil and PROTOTYPER_DEFS[prototyper.prefab] or nil
 	if prototyper_def ~= nil and prototyper_def.is_crafting_station then
-		self.is_at_crafting_station = true
 		if self.pre_crafting_station_filter == nil then
 			self.pre_crafting_station_filter = self.current_filter_name
 		end
@@ -432,6 +456,8 @@ end
 
 function CraftingMenuWidget:MakeSearchBox(box_width, box_height)
     local searchbox = Widget("search")
+	searchbox:SetHoverText(STRINGS.UI.CRAFTING_MENU.SEARCH, {offset_y = 30, attach_to_parent = self })
+
     searchbox.textbox_root = searchbox:AddChild(TEMPLATES.StandardSingleLineTextEntry(nil, box_width, box_height))
     searchbox.textbox = searchbox.textbox_root.textbox
     searchbox.textbox:SetTextLengthLimit(200)
@@ -503,7 +529,7 @@ function CraftingMenuWidget:MakeFilterButton(filter_def, button_size)
 	button:SetOnSelect(function()
 		self.search_box.textbox.prompt:SetString(STRINGS.UI.CRAFTING_FILTERS[filter_def.name])
 	end)
-	button:SetHoverText(STRINGS.UI.CRAFTING_FILTERS[filter_def.name], {offset_y = 30})
+	w:SetHoverText(STRINGS.UI.CRAFTING_FILTERS[filter_def.name], {offset_y = 30, attach_to_parent = self })
 
 	w.focus_forward = button
 
@@ -540,7 +566,7 @@ function CraftingMenuWidget:AddSorter()
 			sort_mode = 1
 		end
 
-        w:SetHoverText( subfmt(STRINGS.UI.CRAFTING_MENU.SORT_MODE_FMT, { mode = self.sort_modes[sort_mode].str }) )
+        w:SetHoverText( subfmt(STRINGS.UI.CRAFTING_MENU.SORT_MODE_FMT, { mode = self.sort_modes[sort_mode].str}) )
         w.icon:SetTexture(self.sort_modes[sort_mode].atlas, self.sort_modes[sort_mode].img )
 
 		self.sort_class = self.sort_modes[sort_mode].class
@@ -562,6 +588,8 @@ function CraftingMenuWidget:AddSorter()
     end
     btn:SetOnClick(onclick)
 
+	btn:SetHoverText( subfmt(STRINGS.UI.CRAFTING_MENU.SORT_MODE_FMT, { mode = self.sort_modes[1].str}), {offset_y = 30, attach_to_parent = self})
+
 	btn:SetSortType(TheCraftingMenuProfile:GetSortMode())
 
     return btn
@@ -577,6 +605,8 @@ function CraftingMenuWidget:MakeFilterPanel(width, height)
 
     local w = Widget("FilterPanel")
 
+	self.top_row_widgets = {}
+
 	local y = -2
 
 	-- favorites filter button
@@ -584,6 +614,7 @@ function CraftingMenuWidget:MakeFilterPanel(width, height)
 	favorites_filter:SetPosition(grid_left, y)
 	self.filter_buttons[CRAFTING_FILTERS.FAVORITES.name] = favorites_filter
 	self.favorites_filter = favorites_filter
+	table.insert(self.top_row_widgets, favorites_filter)
 
 	-- special_event_filter
 	local event_layout = IsAnySpecialEventActive()
@@ -598,11 +629,12 @@ function CraftingMenuWidget:MakeFilterPanel(width, height)
 		else
 			event_name = STRINGS.UI.SPECIAL_EVENT_NAMES.MULTIPLE_EVENTS
 		end
-		special_event_filter.button:SetHoverText(event_name or "")
+		special_event_filter:SetHoverText(event_name or "")
 		--special_event_filter.filter_img:SetTexture(crafting_station_def.filter_atlas, crafting_station_def.filter_image)
 		--special_event_filter.filter_img:ScaleToSize(54, 54)
 
 		self.special_event_filter = special_event_filter
+		table.insert(self.top_row_widgets, special_event_filter)
 	end
 
 	-- favorites filter button
@@ -610,20 +642,24 @@ function CraftingMenuWidget:MakeFilterPanel(width, height)
 	filter_station:SetPosition(grid_left + grid_button_space + (event_layout and grid_button_space or 0), y)
 	self.filter_buttons[CRAFTING_FILTERS.CRAFTING_STATION.name] = filter_station
 	self.crafting_station_filter = filter_station
+	table.insert(self.top_row_widgets, filter_station)
 
 	-- search bar
     self.search_box = w:AddChild(self:MakeSearchBox(grid_button_space * (event_layout and 5 or 6.5), 40))
 	self.search_box:SetPosition(0, y)
+	table.insert(self.top_row_widgets, self.search_box)
 
 	-- modded items filter button
 	local filter_mods = w:AddChild(self:MakeFilterButton(CRAFTING_FILTERS.MODS, button_size))
 	filter_mods:SetPosition(grid_left + grid_button_space * 9, y)
 	self.filter_buttons[CRAFTING_FILTERS.MODS.name] = filter_mods
 	self.mods_filter = filter_mods
+	table.insert(self.top_row_widgets, filter_mods)
 
 	-- sort button
 	self.sort_button = w:AddChild(self:AddSorter())
 	self.sort_button:SetPosition(grid_left + grid_button_space * 10, y)
+	table.insert(self.top_row_widgets, self.sort_button)
 
 	y = y - button_size / 2
 

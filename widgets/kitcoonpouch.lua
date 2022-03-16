@@ -19,28 +19,19 @@ local KitcoonPouch = Class(Widget, function(self)
         self.animstate:PlayAnimation("empty", true)
     end
     self.onclick = function()
-        if Profile:GetKitIsHibernating() then
-            --end the hibernation
-            Profile:SetKitIsHibernating(false)
+        if Profile:GetKitBuild() ~= "" then
+            if Profile:GetKitIsHibernating() then
+                --end the hibernation
+                Profile:SetKitIsHibernating(false)
 
-            self.kit:WakeFromHibernation()
-            self.animstate:PlayAnimation("empty", true)
-        else
-            Profile:SetKitIsHibernating(true)
-            
-            self.kit:GoToHibernation( function() self.animstate:PlayAnimation("sleep_loop", true) end ) 
-        end
-        --[[if self.animstate:IsCurrentAnimation("idle") then
-            local ok = self.kit:TryQueueEat()
-            if ok then
-                self.animstate:PlayAnimation("use")
-                self.animstate:PushAnimation("idle", true)
+                self.kit:WakeFromHibernation()
+                self.animstate:PlayAnimation("empty", true)
+            else
+                Profile:SetKitIsHibernating(true)
                 
-                TheFrontEnd:GetSound():PlaySound("yotc_2022_1/kitpet/foodbag")
-
-                staticScheduler:ExecuteInTime(0.6, function() self.kit:Eat() end)
+                self.kit:GoToHibernation( function() self.animstate:PlayAnimation("sleep_loop", true) end ) 
             end
-        end]]
+        end
     end
 
     self.anim:SetScale(.3)

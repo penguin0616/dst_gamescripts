@@ -221,12 +221,6 @@ local function breakobjects(inst,other)
         and other.components.workable.action ~= ACTIONS.NET then
         other.components.workable:Destroy(inst)
     elseif other.components.health ~= nil and not other.components.health:IsDead() then
-        inst:DoTaskInTime(3, ClearRecentlyCharged, other)
-        SpawnPrefab("collapse_small").Transform:SetPosition(other.Transform:GetWorldPosition())
-        inst.SoundEmitter:PlaySound("dontstarve/creatures/rook/explo")
-        if inst.components.combat:CanTarget(other) then
-            inst.components.combat:DoAttack(other)
-        end
         return true
     end
 end
@@ -480,6 +474,15 @@ local function OnLoadPostPass(inst, newents, data)
     end
 end
 
+local function checkstunend(inst)
+    if inst.AnimState:IsCurrentAnimation("stun_jump_pre") or
+        inst.AnimState:IsCurrentAnimation("stun_pre") or
+        inst.AnimState:IsCurrentAnimation("stun_loop") or
+        inst.AnimState:IsCurrentAnimation("stun_hit") then
+        inst.sg:GoToState("stun_pst")
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -542,7 +545,7 @@ local function fn()
     inst.components.combat:SetRange(4.1-0.5,4.1+0.5)
 
     inst:AddComponent("groundpounder")
-    inst.components.groundpounder.numRings = 3
+    inst.components.groundpounder.numRings = 2
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.MINOTAUR_HEALTH)
@@ -552,6 +555,7 @@ local function fn()
     inst.components.lootdropper:SetChanceLootTable('minotaur')
 
     inst:AddComponent("timer")
+    inst:ListenForEvent("timerdone", checkstunend)
 
     inst:AddComponent("inspectable")
     inst:AddComponent("knownlocations")
