@@ -474,12 +474,17 @@ local function OnLoadPostPass(inst, newents, data)
     end
 end
 
-local function checkstunend(inst)
-    if inst.AnimState:IsCurrentAnimation("stun_jump_pre") or
-        inst.AnimState:IsCurrentAnimation("stun_pre") or
-        inst.AnimState:IsCurrentAnimation("stun_loop") or
-        inst.AnimState:IsCurrentAnimation("stun_hit") then
-        inst.sg:GoToState("stun_pst")
+local function checkstunend(inst, data)
+    if data ~= nil then
+        if data.name == "endstun" then
+            inst:RestartBrain()
+            if inst.AnimState:IsCurrentAnimation("stun_jump_pre") or
+                inst.AnimState:IsCurrentAnimation("stun_pre") or
+                inst.AnimState:IsCurrentAnimation("stun_loop") or
+                inst.AnimState:IsCurrentAnimation("stun_hit") then
+                inst.sg:GoToState("stun_pst")
+            end
+        end
     end
 end
 
@@ -502,7 +507,9 @@ local function fn()
     inst.DynamicShadow:SetSize(5, 3)
     inst.Transform:SetFourFaced()
 
-    MakeCharacterPhysics(inst, 100, 2.2)
+    inst.physicsradius = 2.2
+
+    MakeCharacterPhysics(inst, 100, inst.physicsradius)
     inst.Physics:SetCapsule(2, 4) --2.2
 
     inst.AnimState:SetBank("rook")

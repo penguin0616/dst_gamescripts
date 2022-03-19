@@ -2792,7 +2792,7 @@ return{
 			BURNT = "We had some nice things in there.",
 		},
 		WARG = "Leader of the pack.",
-        WARG_WAVE = "I won't be put on the menu today!",
+        WARGLET = "I won't be put on the menu today!",
         
 		WASPHIVE = "Not your average bees.",
 		WATERBALLOON = "A balloon, filled with water? What a funny idea.",

@@ -994,6 +994,7 @@ PREFABFILES = {
   "wardrobe",
   "warg",
   "warg_gooicing",
+  "warglet",
   "wargshrine",
   "warly",
   "warningshadow",

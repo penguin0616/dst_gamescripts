@@ -2793,7 +2793,7 @@ return{
 			BURNT = "Box all gone.",
 		},
 		WARG = "Big puppy!",
-        WARG_WAVE = "Is bad dog!",
+        WARGLET = "Is bad dog!",
         
 		WASPHIVE = "Mind says no. Muscles say yes!",
 		WATERBALLOON = "Is very squishy-wobbly!",

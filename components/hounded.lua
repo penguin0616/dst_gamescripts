@@ -46,7 +46,7 @@ local _spawndata =
 		base_prefab = "hound",
 		winter_prefab = "icehound",
 		summer_prefab = "firehound",
-		upgrade_spawn = "warg_wave",
+		upgrade_spawn = "warglet",
 
 		attack_levels =
 		{
@@ -313,8 +313,8 @@ local function NoHoles(pt)
     return not TheWorld.Map:IsPointNearHole(pt)
 end
 
-local function GetSpawnPoint(pt, force_land)
-	if TheWorld.has_ocean and not force_land then
+local function GetSpawnPoint(pt)
+	if TheWorld.has_ocean then
 		local function OceanSpawnPoint(offset)
 			local x = pt.x + offset.x
 			local y = pt.y + offset.y
@@ -374,7 +374,7 @@ local function GetSpawnPrefab(upgrade)
 end
 
 local function SummonSpawn(pt, upgrade)
-    local spawn_pt = GetSpawnPoint(pt, upgrade)
+    local spawn_pt = GetSpawnPoint(pt)
     if spawn_pt ~= nil then
         local spawn = SpawnPrefab(GetSpawnPrefab(upgrade))
         if spawn ~= nil then

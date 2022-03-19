@@ -2793,7 +2793,7 @@ return{
 			BURNT = "Not so useful now, eh?",
 		},
 		WARG = "That thing could pull a sled by its lonesome.",
-        WARG_WAVE = "Think you can mess with me, eh?",
+        WARGLET = "Think you can mess with me, eh?",
         
 		WASPHIVE = "Why are those bees so angry?",
 		WATERBALLOON = "Could be fun times lobbin' these around.",

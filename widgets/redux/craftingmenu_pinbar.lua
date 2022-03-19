@@ -14,30 +14,32 @@ local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, hei
     Widget._ctor(self, "Crafting Menu Pin Bar")
 
 	self.owner = owner
-	self.crafing_hud = crafting_hud
+	self.crafting_hud = crafting_hud
+
+	local is_left = crafting_hud.is_left_aligned
 
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
 	self.root = self:AddChild(Widget("slot_root"))
 	self.root:SetScale(0.73)
-	self.root:SetPosition(30, 0)
+	self.root:SetPosition(is_left and 30 or -30, 0)
 
 	local y = 368
 	local buttonsize = 64
 
 	self.pin_open = self.root:AddChild(ImageButton(atlas, "crafting_tab.tex", "crafting_tab.tex", nil, nil, nil, {1,1}, {0,0}))
-	self.pin_open:SetPosition(24, y)
-	self.pin_open:SetScale(0.45)
+	self.pin_open:SetPosition(is_left and 24 or -24, y)
+	self.pin_open:SetScale(is_left and 0.45 or -.45, .45)
 
 	self.pin_open.glow = self.pin_open.image:AddChild(Image("images/global_redux.xml", "shop_glow.tex"))
 	self.pin_open.glow:SetTint(.8, .8, .8, 0.4)
 	self.pin_open.glow:Hide()
 	self.pin_open.icon = self.pin_open.image:AddChild(Image(PROTOTYPER_DEFS.none.icon_atlas, PROTOTYPER_DEFS.none.icon_image))
-	self.pin_open.icon:SetScale(0.75)
 	self.pin_open.icon:SetPosition(-12, 0)
+	self.pin_open.icon:SetScale(is_left and 0.75 or -0.75, 0.75)
 	self.pin_open.prototype = self.pin_open.image:AddChild(Image(atlas, "pinslot_fg_prototype.tex"))
-	self.pin_open.prototype:SetScale(1.5)
 	self.pin_open.prototype:SetPosition(-20, 0)
+	self.pin_open.prototype:SetScale(1.5)
 	self.pin_open.prototype:Hide()
 
 	local function animate_glow(initial) 
@@ -169,6 +171,21 @@ function CraftingMenuPinBar:GetFirstButton()
 	end
 end
 
+function CraftingMenuPinBar:FindFirstUnpinnedSlot()
+	for i = 1, TUNING.MAX_PINNED_RECIPES do
+		if not self.pin_slots[i]:HasRecipe() then
+			return self.pin_slots[i]
+		end
+	end
+end
+
+function CraftingMenuPinBar:GetFocusSlot()
+	for i = 1, TUNING.MAX_PINNED_RECIPES do
+		if self.pin_slots[i].focus then
+			return self.pin_slots[i], i
+		end
+	end
+end
 
 function CraftingMenuPinBar:Refresh()
 	local atlas = resolvefilepath(CRAFTING_ATLAS)

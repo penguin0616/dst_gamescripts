@@ -432,15 +432,17 @@ local function ApplyEvent(event)
 end
 
 function ApplySpecialEvent(event)
-    if event == nil or event == "default" then
+    if event == nil then
         return
     end
 
-    WORLD_SPECIAL_EVENT = event
-    print("Overriding World Event to: " .. tostring(event))
+    if event ~= "default" then
+        WORLD_SPECIAL_EVENT = event
+        print("Overriding World Event to: " .. tostring(event))
+    end
 
     --LOST tech level when event is not active
-    ApplyEvent(event)
+    ApplyEvent(WORLD_SPECIAL_EVENT)
 end
 
 function ApplyExtraEvent(event)

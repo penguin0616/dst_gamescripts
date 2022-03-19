@@ -172,7 +172,7 @@ FrontEnd = Class(function(self, name)
     self.subtitle:SetHAnchor(ANCHOR_MIDDLE)
 	self.overlayroot:AddChild(self.subtitle)
 
-    if PLATFORM == "PS4" then
+    if IsConsole() then
         self.saving_indicator = UIAnim()
         self.saving_indicator:GetAnimState():SetBank("saving_indicator")
         self.saving_indicator:GetAnimState():SetBuild("saving_indicator")
@@ -190,7 +190,9 @@ FrontEnd = Class(function(self, name)
 	self.gameinterface = CreateEntity("GameInterface")
 	self.gameinterface.entity:AddSoundEmitter()
 	self.gameinterface.entity:AddGraphicsOptions()
-	self.gameinterface.entity:AddTwitchOptions()
+	if IsNotConsole() then
+		self.gameinterface.entity:AddTwitchOptions()
+	end
 	self.gameinterface.entity:AddAccountManager()
 
 	TheInput:AddKeyHandler(function(key, down) self:OnRawKey(key, down) end )
@@ -737,7 +739,25 @@ function FrontEnd:Update(dt)
         --skip while editing a text box
         if self.repeat_time > dt then
             self.repeat_time = self.repeat_time - dt
-        elseif not (self.textProcessorWidget ~= nil) then
+
+			if self.crafting_navigation_mode then
+				if not (   TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_LEFT))
+						or TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT))
+						or TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_UP))
+						or TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_DOWN)) ) then
+
+            		self.repeat_time = 0
+				end
+			else
+				if not (   TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)
+            			or TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT)
+            			or TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP)
+            			or TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) ) then
+
+            		self.repeat_time = 0
+				end
+			end
+		elseif not (self.textProcessorWidget ~= nil) then
             self.repeat_time = REPEAT_TIME
 			if self.crafting_navigation_mode then
 				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)) then

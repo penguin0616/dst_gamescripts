@@ -91,7 +91,7 @@ function GetClosestWidget(list, active_widget, dir_x, dir_y)
 	if active_widget ~= nil then
 		local x, y = active_widget.inst.UITransform:GetWorldPosition()
 		for k,v in pairs(list) do
-			if v ~= active_widget and v:IsVisible() and v:IsEnabled() then
+			if v ~= active_widget and v:IsVisible() and v:IsEnabled() and (v.IsFullyInView == nil or v:IsFullyInView()) then
 				local vx, vy = v.inst.UITransform:GetWorldPosition()
 				local local_dir_x, local_dir_y = vx-x, vy-y
 				if VecUtil_Dot(local_dir_x, local_dir_y, dir_x, dir_y) > 0 then
@@ -111,23 +111,23 @@ end
 
 
 function CraftingMenuWidget:DoFocusHookups()
-	-- GetFocusChild() GetDeepestFocus()
+	local is_left = self.crafting_hud.is_left_aligned
 
-	self.filter_panel:SetFocusChangeDir(MOVE_UP,	function(w) return GetClosestWidget(self.top_row_widgets, w.filter_grid:GetFocusChild(), 0, 1) or self.top_row_widgets[1] end)
-	self.filter_panel:SetFocusChangeDir(MOVE_DOWN,	function(w) return GetClosestWidget(self.recipe_grid.widgets_to_update, w.filter_grid:GetFocusChild(), 0, -1) or self.recipe_grid end)
-	self.filter_panel:SetFocusChangeDir(MOVE_RIGHT, function(w) return GetClosestWidget(self.crafting_hud.pinbar.pin_slots, w.filter_grid:GetFocusChild(), 1, 0) or self.crafting_hud.pinbar:GetFirstButton() end)
+	self.filter_panel.filter_grid:SetFocusChangeDir(MOVE_UP,								function(w) return GetClosestWidget(self.top_row_widgets, w:GetFocusChild(), 0, 1) end)
+	self.filter_panel.filter_grid:SetFocusChangeDir(MOVE_DOWN,								function(w) return GetClosestWidget(self.recipe_grid.widgets_to_update, w:GetFocusChild(), 0, -1) end)
+	self.filter_panel.filter_grid:SetFocusChangeDir(is_left and MOVE_RIGHT or MOVE_LEFT,	function(w) return GetClosestWidget(self.crafting_hud.pinbar.pin_slots, w:GetFocusChild(), is_left and 1 or -1, 0) or self.crafting_hud.pinbar:GetFirstButton() end)
 
-	self.recipe_grid:SetFocusChangeDir(MOVE_UP,		function(w) return GetClosestWidget(self.filter_buttons, w.widgets_to_update[w.focused_widget_index], 0, 1) or self.filter_panel end)
-	self.recipe_grid:SetFocusChangeDir(MOVE_RIGHT,	function(w) return GetClosestWidget(self.crafting_hud.pinbar.pin_slots, w.widgets_to_update[w.focused_widget_index], 1, 0) or self.crafting_hud.pinbar:GetFirstButton() end)
+	self.recipe_grid:SetFocusChangeDir(MOVE_UP,								function(w) return GetClosestWidget(self.filter_buttons, w.widgets_to_update[w.focused_widget_index], 0, 1) or self.filter_panel.filter_grid end)
+	self.recipe_grid:SetFocusChangeDir(is_left and MOVE_RIGHT or MOVE_LEFT,	function(w) return GetClosestWidget(self.crafting_hud.pinbar.pin_slots, w.widgets_to_update[w.focused_widget_index], is_left and 1 or -1, 0) or self.crafting_hud.pinbar:GetFirstButton() end)
 
-	self.crafting_hud.pinbar:SetFocusChangeDir(MOVE_LEFT, function(w)
+	self.crafting_hud.pinbar:SetFocusChangeDir(is_left and MOVE_LEFT or MOVE_RIGHT, function(w)
 		if self.crafting_hud:IsCraftingOpen() then
-			local grid_widget, grid_closest = GetClosestWidget(self.recipe_grid.widgets_to_update, w.root:GetFocusChild(), -1, 0)
-			local filter_widget, filter_closest = GetClosestWidget(self.filter_buttons, w.root:GetFocusChild(), -1, 0)
+			local grid_widget, grid_closest = GetClosestWidget(self.recipe_grid.widgets_to_update, w.root:GetFocusChild(), is_left and -1 or 1, 0)
+			local filter_widget, filter_closest = GetClosestWidget(self.filter_buttons, w.root:GetFocusChild(), is_left and -1 or 1, 0)
 			if grid_widget ~= nil and filter_widget ~= nil then
 				return grid_closest < filter_closest and grid_widget or filter_widget
 			end
-			return grid_widget or filter_widget or self.filter_panel 
+			return grid_widget or filter_widget or nil 
 		end
 	end)
 
@@ -190,7 +190,13 @@ function CraftingMenuWidget:ApplyFilters()
 		end
 	end
 
-	self.recipe_grid:SetItemsData(self.filtered_recipes)
+	if self.crafting_hud:IsCraftingOpen() then
+		self:UpdateRecipeGrid(self.focus and not TheFrontEnd.tracking_mouse)
+		--self.recipe_grid:ResetScroll()
+		--self.recipe_grid:SetItemsData(self.filtered_recipes)
+	else
+		self.recipe_grid.dirty = true
+	end
 end
 
 function CraftingMenuWidget:UpdateFilterButtons()
@@ -327,7 +333,41 @@ function CraftingMenuWidget:OnUpdate(dt)
 	end
 end
 
-function CraftingMenuWidget:OnPreOpen()
+function CraftingMenuWidget:UpdateRecipeGrid(set_focus)
+	local prev_focus_data = self.details_root.data
+	local prev_focus_skin = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil
+
+	self.recipe_grid:ResetScroll()
+	self.recipe_grid:SetItemsData(self.filtered_recipes)
+	self.recipe_grid.dirty = false
+
+	if prev_focus_data then
+		local grid_index = self.recipe_grid:FindDataIndex(prev_focus_data)
+
+		if grid_index ~= nil then
+			self.recipe_grid:ScrollToDataIndex(grid_index)
+			if set_focus then
+				self.recipe_grid:ForceItemFocus(grid_index)
+				if prev_focus_skin ~= nil then
+					self.details_root.skins_spinner:SelectSkin(prev_focus_skin)
+				end
+			end
+		else
+			if set_focus and #self.recipe_grid.items > 0 then
+				self.recipe_grid:ForceItemFocus(1)
+			end
+		end
+	else
+		self.details_root:PopulateRecipeDetailPanel(nil, nil)
+	end
+end
+
+function CraftingMenuWidget:OnCraftingMenuOpen(set_focus)
+	local prev_focus_data = self.details_root.data
+	if self.recipe_grid.dirty then
+		self:UpdateRecipeGrid(set_focus)
+	end
+
 	local builder = self.owner ~= nil and self.owner.replica.builder or nil
 	local prototyper = builder ~= nil and builder:GetCurrentPrototyper() or nil
 	local prototyper_def = prototyper ~= nil and PROTOTYPER_DEFS[prototyper.prefab] or nil
@@ -340,8 +380,29 @@ function CraftingMenuWidget:OnPreOpen()
 		if self.pre_crafting_station_filter ~= nil then
 			self:SelectFilter(self.pre_crafting_station_filter, true)
 			self.pre_crafting_station_filter = nil
+		else
+			if set_focus then
+				if prev_focus_data then
+					local grid_index = self.recipe_grid:FindDataIndex(prev_focus_data)
+
+					if grid_index ~= nil then
+						self.recipe_grid:ScrollToDataIndex(grid_index)
+						self.recipe_grid:ForceItemFocus(grid_index)
+					else
+						if #self.recipe_grid.items > 0 then
+							self.recipe_grid:ForceItemFocus(1)
+						end
+					end
+				else
+					self.filter_buttons[self.current_filter_name]:SetFocus()
+					self.details_root:PopulateRecipeDetailPanel(nil, nil)
+				end
+			end
+
+			--self.filter_buttons[self.current_filter_name]
 		end
 	end
+
 end
 
 function CraftingMenuWidget:GetHelpText()
@@ -387,7 +448,6 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	self.recipe_grid = w:AddChild(self:MakeRecipeList(width, height - fileters_height))
 	local grid_w, grid_h = self.recipe_grid:GetScrollRegionSize()
 	self.recipe_grid:SetPosition(-2, height/2 - fileters_height - grid_h/2)
-
 	----------------
 
 	self.itemlist_split = w:AddChild(Image(atlas, "horizontal_bar.tex"))
@@ -505,14 +565,20 @@ function CraftingMenuWidget:SelectFilter(name, clear_search_text)
 		self.filter_buttons[self.current_filter_name].button:Unselect()
 	end
 
-	self.current_filter_name = name
 	self.filter_buttons[name].button:Select()
 
-	if self.sort_class.OnSelectFilter then
-		self.sort_class:OnSelectFilter()
+	local filter_changed = self.current_filter_name ~= name
+	if filter_changed then
+		self.current_filter_name = name
+
+		if self.sort_class.OnSelectFilter then
+			self.sort_class:OnSelectFilter()
+		end
 	end
 
-	self:ApplyFilters()
+	if filter_changed or not clear_search_text then
+		self:ApplyFilters()
+	end
 end
 
 function CraftingMenuWidget:MakeFilterButton(filter_def, button_size)
@@ -692,6 +758,12 @@ function CraftingMenuWidget:MakeFilterPanel(width, height)
 	w.filter_grid = filter_grid
 	w.focus_forward = filter_grid
 
+	w:SetOnGainFocus(function()
+		if TheInput:ControllerAttached() then
+			self:PopulateRecipeDetailPanel(nil, nil)
+		end
+	end)
+
 	return w
 end
 
@@ -716,6 +788,10 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			self.recipe_grid:OnWidgetFocus(w)
 			w.cell_root.recipe_held = false
 			w.cell_root.last_recipe_click = nil
+
+			if TheInput:ControllerAttached() then
+				self.details_root:PopulateRecipeDetailPanel(w.data, Profile:GetLastUsedSkinForItem(w.data.recipe.name))
+			end
 		end
 		w.cell_root:SetWhileDown(function()
 			if w.cell_root.recipe_held then
@@ -751,6 +827,40 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			end
 			w.cell_root.recipe_held = false
 		end)
+		w.cell_root.OnControl = function(_self, control, down)
+			if ImageButton.OnControl(_self, control, down) then return true end
+
+			if not _self.focus then
+				return false
+			end
+
+			if down and not _self.down then
+				if control == CONTROL_MENU_MISC_1 then
+					if self.crafting_hud.pinbar ~= nil then
+						local slot = self.crafting_hud.pinbar:FindFirstUnpinnedSlot()
+						if slot ~= nil then
+							slot:SetFocus()
+							slot.craft_button:OnControl(control, down)
+							return true
+						else
+							slot = self.crafting_hud.pinbar:GetFirstButton()
+							if slot ~= nil then
+								TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+								slot:SetFocus()
+								return true
+							end
+						end
+					end
+				elseif control == CONTROL_MENU_MISC_2 then
+					local fav_button = self.details_root.fav_button
+					if fav_button ~= nil and fav_button.onclick ~= nil then
+						TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+						fav_button.onclick()
+						return true
+					end
+				end
+			end
+		end
 
 		----------------
 		w.bg = w.cell_root:AddChild(Image(atlas, "slot_bg.tex"))

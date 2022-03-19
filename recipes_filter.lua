@@ -848,7 +848,6 @@ CRAFTING_FILTERS.MAGIC.recipes =
 	"sentryward",
 	"moondial",
 	"townportal",
-	"reskin_tool",
 	"nightmarefuel",
 }
 
@@ -950,6 +949,9 @@ CRAFTING_FILTERS.DECOR.recipes =
 	"homesign",
 	"arrowsign_post",
 	"minisign_item",
+	"pottedfern",
+	"succulent_potted",
+	"endtable",
 	"wardrobe",
 	"beefalo_groomer",
 	"trophyscale_fish",
@@ -978,8 +980,6 @@ CRAFTING_FILTERS.DECOR.recipes =
 	"turf_fungus_red",
 	"turf_fungus_green",
 
-	"pottedfern",
-	"succulent_potted",
 	"ruinsrelic_plate",
 	"ruinsrelic_chipbowl",
 	"ruinsrelic_bowl",

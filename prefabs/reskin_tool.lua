@@ -10,16 +10,6 @@ local prefabs =
     "tornado",
 }
 
-local function FuelTaken(inst, taker)
-    if taker ~= nil and taker.SoundEmitter ~= nil then
-        taker.SoundEmitter:PlaySound("dontstarve/creatures/leif/livinglog_burn")
-    end
-end
-
-local function onignite(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/creatures/leif/livinglog_burn")
-end
-
 local reskin_fx_info =
 {
 	abigail = { offset = 1.3, scale = 1.3 },
@@ -250,13 +240,10 @@ local function tool_fn()
 
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.MED_FUEL
-    inst.components.fuel:SetOnTakenFn(FuelTaken)
 
     MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
     MakeSmallPropagator(inst)
     MakeHauntableLaunchAndIgnite(inst)
-
-    inst:ListenForEvent("onignite", onignite)
 
     inst._cached_reskinname = {}
 

@@ -71,17 +71,6 @@ SetSharedLootTable('warg',
     {'houndstooth',             0.33},
 })
 
-SetSharedLootTable('warg_wave',
-{
-    {'monstermeat',             1.00},
-    {'monstermeat',             1.00},
-    {'monstermeat',             1.00},
-    {'monstermeat',             0.50},
-
-    {'houndstooth',             1.00},
-    {'houndstooth',             0.33},
-})
-
 SetSharedLootTable('claywarg',
 {
     {'redpouch',                1.00},
@@ -306,16 +295,6 @@ local function OnEyeFlamesDirty(inst)
     end
 end
 
-local function OnWargWaveSave(inst, data)
-    data.max_hound_spawns = inst.max_hound_spawns
-end
-
-local function OnWargWavePreLoad(inst, data)--, newents)
-    if data ~= nil and data.reanimated then
-        inst.max_hound_spawns = data.max_hound_spawns
-    end
-end
-
 local function OnClaySave(inst, data)
     data.reanimated = not inst.sg:HasStateTag("statue") or nil
 end
@@ -454,11 +433,6 @@ local function MakeWarg(name, bank, build, prefabs, tag)
         inst:AddTag("houndfriend")
         inst:AddTag("largecreature")
 
-        local scale = 0.75
-        if name == "warg_wave" then
-           inst.Transform:SetScale(scale,scale,scale)
-        end
-
         if tag ~= nil then
             inst:AddTag(tag)
 
@@ -487,15 +461,9 @@ local function MakeWarg(name, bank, build, prefabs, tag)
         inst.components.locomotor.runspeed = tag == "clay" and TUNING.CLAYWARG_RUNSPEED or TUNING.WARG_RUNSPEED
         inst.components.locomotor:SetShouldRun(true)
 
-        if name == "warg_wave" then
-            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED * (1/scale)
-        end
-
         inst:AddComponent("combat")
         inst.components.combat:SetDefaultDamage(TUNING.WARG_DAMAGE)
-        if name ~= "warg_wave" then
-            inst.components.combat:SetRange(TUNING.WARG_ATTACKRANGE)
-        end
+        inst.components.combat:SetRange(TUNING.WARG_ATTACKRANGE)
         inst.components.combat:SetAttackPeriod(TUNING.WARG_ATTACKPERIOD)
         inst.components.combat:SetRetargetFunction(1, RetargetFn)
         inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
@@ -504,19 +472,10 @@ local function MakeWarg(name, bank, build, prefabs, tag)
         inst:AddComponent("health")
         inst.components.health:SetMaxHealth(TUNING.WARG_HEALTH)
 
-        if name == "warg_wave" then
-            inst.components.health:SetMaxHealth(TUNING.WARG_WAVE_HEALTH)
-        end
-
         inst:AddComponent("lootdropper")
         inst.components.lootdropper:SetChanceLootTable(name)
 
         inst.base_hound_num = TUNING.WARG_BASE_HOUND_AMOUNT
-        if name == "warg_wave" then
-            inst.spawn_fewer_hounds = true
-            inst.max_hound_spawns = TUNING.WARG_WAVE_MAX_HOUND_AMOUNT
-            inst.base_hound_num = TUNING.WARG_WAVE_BASE_HOUND_AMOUNT
-        end
 
         if tag == "clay" then
             inst.NumHoundsToSpawn = NoHoundsToSpawn
@@ -548,11 +507,6 @@ local function MakeWarg(name, bank, build, prefabs, tag)
 
             inst.NumHoundsToSpawn = NumHoundsToSpawn
 			inst.LaunchGooIcing = NoGooIcing
-
-            if name == "warg_wave" then
-                inst.OnSave = OnWargWaveSave
-                inst.OnPreLoad = OnWargWavePreLoad
-            end
 
             inst.sounds = sounds
 
@@ -588,6 +542,5 @@ local function MakeWarg(name, bank, build, prefabs, tag)
 end
 
 return MakeWarg("warg", "warg", "warg_build", prefabs_basic, nil),
-    MakeWarg("warg_wave", "warg", "warg_build", prefabs_wave, nil),
     MakeWarg("claywarg", "claywarg", "claywarg", prefabs_clay, "clay"),
     MakeWarg("gingerbreadwarg", "warg", "warg_gingerbread_build", prefabs_gingerbread, "gingerbread")

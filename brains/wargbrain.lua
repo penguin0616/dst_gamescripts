@@ -43,7 +43,7 @@ function WargBrain:OnStart()
             IfNode(function() return CanSpawnChild(self.inst) end, "needs follower",
                 ActionNode(function()
                     if not IsEntityDead(self.inst) then
-                        self.inst.sg:GoToState("howl")
+                        self.inst.sg:GoToState("howl",true)
                         return SUCCESS
                     end
                     return FAILED

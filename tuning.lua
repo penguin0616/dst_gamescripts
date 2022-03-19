@@ -2658,9 +2658,9 @@ function Tune(overrides)
         WARG_NEARBY_PLAYERS_DIST = 30,
         WARG_BASE_HOUND_AMOUNT = 2,
 
-        WARG_WAVE_HEALTH = 600,
-        WARG_WAVE_BASE_HOUND_AMOUNT = 1,
-        WARG_WAVE_MAX_HOUND_AMOUNT = 3,
+        WARGLET_HEALTH = 600,
+        WARGLET_BASE_HOUND_AMOUNT = 1,
+        WARGLET_MAX_HOUND_AMOUNT = 3,
 
         SMOTHER_DAMAGE = 3,
 
@@ -3719,7 +3719,7 @@ function Tune(overrides)
                     DAMAGE = wilson_attack*.8,
 					ROW_FAIL_WEAR = 6,
                     ATTACKWEAR = 6,
-                    USES = 600,
+                    USES = 1500,
                     MAX_VELOCITY = 5,
                 },
             },

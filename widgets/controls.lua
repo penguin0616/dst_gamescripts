@@ -1,3 +1,8 @@
+
+if not IsConsole() then
+	require "splitscreenutils_pc"
+end
+
 local Screen = require "widgets/screen"
 local Button = require "widgets/button"
 local AnimButton = require "widgets/animbutton"
@@ -36,6 +41,8 @@ local TeamStatusBars = require("widgets/teamstatusbars")
 local Controls = Class(Widget, function(self, owner)
     Widget._ctor(self, "Controls")
     self.owner = owner
+
+	local is_player1 = IsGameInstance(Instances.Player1)
 
     self._scrnw, self._scrnh = TheSim:GetScreenSize()
 
@@ -167,10 +174,12 @@ local Controls = Class(Widget, function(self, owner)
     self.hover = self:AddChild(HoverText(self.owner))
     self.hover:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-    --self.crafttabs = self.left_root:AddChild(CraftTabs(self.owner, self.top_root))
-    self.craftingmenu = self.left_root:AddChild(CraftingMenu(self.owner))
+	if is_player1 then
+	    self.craftingmenu = self.left_root:AddChild(CraftingMenu(self.owner, true))
+	else
+	    self.craftingmenu = self.right_root:AddChild(CraftingMenu(self.owner, false))
+	end
 	self.crafttabs = self.craftingmenu -- self.crafttabs is deprecated
-	
 
     if TheNet:GetIsClient() then
         --Not using topleft_root because we need to be on top of containerroot

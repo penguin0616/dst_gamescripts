@@ -119,6 +119,7 @@ local events =
     end),
     
     EventHandler("doattack", function(inst)
+
         if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
             inst.sg:GoToState(inst.sg:HasStateTag("running") and "runningattack" or "attack")
         end
@@ -438,20 +439,23 @@ local states =
         tags = {"attack", "busy","leapattack"},
         
         onenter = function(inst)
+            inst.hasrammed = true
             inst.components.timer:StartTimer("leapattack_cooldown", 15)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("jump_atk_pre")
             inst.sg.statemem.startpos = Vector3(inst.Transform:GetWorldPosition())
             inst:DoTaskInTime(1,function()
-                local target = inst.components.combat.target or nil
-                if target then
-                    inst.sg.statemem.targetpos = Vector3(inst.components.combat.target.Transform:GetWorldPosition())
-                    inst:ForceFacePoint(inst.sg.statemem.targetpos)
-                else
-                    local range = 6 -- overshoot range
-                    local theta = inst.Transform:GetRotation()*DEGREES
-                    local offset = Vector3(range * math.cos( theta ), 0, -range * math.sin( theta ))            
-                    inst.sg.statemem.targetpos = Vector3(inst.sg.statemem.startpos.x + offset.x, 0, inst.sg.statemem.startpos.z + offset.z)
+                if inst:IsValid() and not inst.components.health:IsDead() and inst.sg and inst.sg:HasStateTag("leapattack") then
+                    local target = inst.components.combat.target or nil
+                    if target then
+                        inst.sg.statemem.targetpos = Vector3(inst.components.combat.target.Transform:GetWorldPosition())
+                        inst:ForceFacePoint(inst.sg.statemem.targetpos)
+                    else
+                        local range = 6 -- overshoot range
+                        local theta = inst.Transform:GetRotation()*DEGREES
+                        local offset = Vector3(range * math.cos( theta ), 0, -range * math.sin( theta ))            
+                        inst.sg.statemem.targetpos = Vector3(inst.sg.statemem.startpos.x + offset.x, 0, inst.sg.statemem.startpos.z + offset.z)
+                    end
                 end
             end)
             inst.sg:SetTimeout(1.5)
@@ -564,6 +568,7 @@ local states =
             end
             local stuntime = math.max(1.5,Remap(inst.chargecount,0, 1, 0, 6 ) )
             inst.components.timer:StartTimer("endstun", stuntime)
+            inst:StopBrain()
         end,
 
         timeline=

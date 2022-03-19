@@ -60,6 +60,10 @@ local TrueScrollList = Class(Widget, function(self, context, create_widgets_fn, 
 
 	self.items_per_view = #self.widgets_to_update
 
+	for i = 1, #self.widgets_to_update do
+		 self.widgets_to_update[i].IsFullyInView = function() return self:IsItemFullyVisible(i) end
+	end
+
    	--self.repeat_time = (TheInput:ControllerAttached() and SCROLL_REPEAT_TIME) or MOUSE_SCROLL_REPEAT_TIME
 
     self.current_scroll_pos = 1
@@ -352,16 +356,21 @@ function TrueScrollList:Scroll(scroll_step)
 	self.target_scroll_pos = self.target_scroll_pos + scroll_step
 end
 
--- Snaps scroll to put the item with input index at the top of the
--- view (if possible).
--- If self.end_offset < 1, the last set of items will have a partially-visible
--- item above the input index. (Search allow_bottom_empty_row.)
+-- Snaps scroll to put the item with input index at the top of the view (if possible).
 function TrueScrollList:ScrollToDataIndex(index)
-	local target = index
-    self.current_scroll_pos = target
-    self.target_scroll_pos = target
+   	local target_row = Clamp(math.ceil(index/self.widgets_per_row) - self.visible_rows + 1, 1, self.end_pos)
+
+    self.current_scroll_pos = target_row
+    self.target_scroll_pos = target_row
     self:RefreshView()
 end
+
+function TrueScrollList:ScrollToScrollPos(target_row)
+    self.current_scroll_pos = target_row
+    self.target_scroll_pos = target_row
+    self:RefreshView()
+end
+
 
 -- Scrolls so the input widget is at the top of the list (if possible).
 -- Maintains the current amount of offset (so if the top widget is half
@@ -373,6 +382,17 @@ function TrueScrollList:ScrollToWidgetIndex(index)
     self.current_scroll_pos = target
 	self.target_scroll_pos = target
     self:RefreshView()
+end
+
+function TrueScrollList:FindDataIndex(target_data)
+	if target_data ~= nil then
+		for i = 1, #self.items do
+			if self.items[i] == target_data then
+				return i
+			end
+		end
+	end
+	return nil
 end
 
 function TrueScrollList:OnWidgetFocus(focused_widget)
@@ -461,6 +481,13 @@ function TrueScrollList:ForceItemFocus(itemindex)
         self:SetFocus()
     end
     self.itemfocus = itemindex
+end
+
+function TrueScrollList:IsItemFullyVisible(itemindex)
+	local item_row = math.ceil(itemindex / self.widgets_per_row)
+    local first_fully_visible_row = math.ceil(self.target_scroll_pos - math.floor(self.target_scroll_pos)) + 1
+
+	return item_row >= first_fully_visible_row and item_row <= (first_fully_visible_row + self.visible_rows - 1)
 end
 
 function TrueScrollList:GetNextWidget(dir)

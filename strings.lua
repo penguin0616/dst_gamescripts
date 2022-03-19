@@ -1945,7 +1945,7 @@ STRINGS =
         BELL = "Old Bell",
 
         WARG = "Varg",
-        WARG_WAVE = "Varglet",
+        WARGLET = "Varglet",
 
         SPAT = "Ewecus",
         STEELWOOL = "Steel Wool",

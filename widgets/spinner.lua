@@ -483,8 +483,7 @@ function Spinner:SetSelectedIndex( idx )
 	self.updating = false
 end
 
-function Spinner:SetSelected(data, force)
-
+function Spinner:SetSelected(data)
 	for k,v in pairs(self.options) do
 		if v.data == data then
 			local oldSelection = self.selectedIndex

@@ -138,7 +138,7 @@ local function droponother(inst,other)
     elseif other.components.health ~= nil and not other.components.health:IsDead() then
         local dist = inst:GetDistanceSqToInst(other)
         if dist < 3*3 then
-            other.components.health:DoDelta(TUNING.RUINS_CAVEIN_OBSTACLE_FALL_DAMAGE)        
+            other.components.health:DoDelta(-TUNING.RUINS_CAVEIN_OBSTACLE_FALL_DAMAGE)
         end
     end
 end

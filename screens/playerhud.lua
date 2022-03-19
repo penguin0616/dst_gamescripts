@@ -856,7 +856,6 @@ function PlayerHud:OpenCrafting()
 		if self:IsControllerInventoryOpen() then
 			self:CloseControllerInventory()
 		end
-        self.controls.inv:Disable()
 
 		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_open")
 		self.controls.craftingmenu:Open()
@@ -870,8 +869,6 @@ function PlayerHud:CloseCrafting()
     if self:IsCraftingOpen() then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_close")
 	    self.controls.craftingmenu:Close()
-
-		self.controls.inv:Enable()
 
 		self.controls.item_notification:ToggleController(false)
 		self.controls.yotb_notification:ToggleController(false)

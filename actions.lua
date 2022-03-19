@@ -183,7 +183,6 @@ Action = Class(function(self, data, instant, rmb, distance, ghost_valid, ghost_e
 	self.theme_music_fn = data.theme_music_fn -- client side function
     self.pre_action_cb = data.pre_action_cb -- runs and client and server
     self.invalid_hold_action = data.invalid_hold_action
-    self.recalculate_held_action = data.recalculate_held_action -- For hold to place things on the map that can't be interacted with after placing
 end)
 
 -- NOTE: High priority is intended to be a shortcut flag for actions that we expect to always dominate if they are available.
@@ -203,7 +202,7 @@ ACTIONS =
     PICKUP = Action({ priority=1, extra_arrive_dist=ExtraPickupRange, mount_valid=true }),
     MINE = Action(),
     DIG = Action({ rmb=true }),
-    GIVE = Action({ mount_valid=true, canforce=true, rangecheckfn=DefaultRangeCheck }),
+    GIVE = Action({ mount_valid=true, canforce=true, rangecheckfn=DefaultRangeCheck, invalid_hold_action = true }),
     GIVETOPLAYER = Action({ priority=3, canforce=true, rangecheckfn=DefaultRangeCheck }),
     GIVEALLTOPLAYER = Action({ priority=3, canforce=true, rangecheckfn=DefaultRangeCheck }),
     FEEDPLAYER = Action({ priority=3, rmb=true, canforce=true, rangecheckfn=DefaultRangeCheck }),
@@ -260,7 +259,7 @@ ACTIONS =
     MANUALEXTINGUISH = Action({ priority=1 }),
     LAYEGG = Action(),
     HAMMER = Action({ priority=3 }),
-    TERRAFORM = Action({ tile_placer="gridplacer", recalculate_held_action = true }),
+    TERRAFORM = Action({ tile_placer="gridplacer", invalid_hold_action = true }),
     JUMPIN = Action({ ghost_valid=true, encumbered_valid=true }),
     TELEPORT = Action({ rmb=true, distance=2 }),
     RESETMINE = Action({ priority=3 }),

@@ -72,11 +72,15 @@ local function shouldramattack(inst)
         return nil
     end
     
+    if inst.hasrammed and inst.components.combat.target:IsNear(inst, inst.physicsradius + inst.components.combat.attackrange) then
+        inst.hasrammed = nil
+        BufferedAction(inst, inst.components.combat.target, ACTIONS.ATTACK, nil, nil, nil, .2)
+        return nil
+    end
+
     if inst.components.timer:TimerExists("rammed") and not inst.sg:HasStateTag("running") then
         return nil
     end
-    
-    --and (inst.sg:HasStateTag("running") or not inst.components.combat.target:IsNear(inst, 5))
 
     if inst.sg:HasStateTag("leapattack") then
         return nil

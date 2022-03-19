@@ -2792,7 +2792,7 @@ return{
 			BURNT = "We can't hide in there any more.",
 		},
 		WARG = "I don't think that puppy is very happy.",
-        WARG_WAVE = "N-nice puppy...",
+        WARGLET = "N-nice puppy...",
         
 		WASPHIVE = "Sounds like anger!",
 		WATERBALLOON = "We have to be gentle with our claws if we try to hold it!",

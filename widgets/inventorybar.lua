@@ -448,6 +448,10 @@ function Inv:OnUpdate(dt)
         self:Refresh()
     end
 
+	if self.owner.HUD:IsCraftingOpen() then
+		return
+	end
+
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --if self.open and TheInput:ControllerAttached() then
@@ -587,22 +591,32 @@ function Inv:CursorNav(dir, same_container_only)
 end
 
 function Inv:CursorLeft()
+	if self.pin_nav and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		local k, slot = next(self.current_list or {})
+		if slot == nil or not slot.inst:IsValid() then
+			self.current_list = self.equip
+		end
+	end
+
     if self:CursorNav(Vector3(-1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-	elseif not self.open then
+	elseif not self.open and self.owner.HUD.controls.craftingmenu.is_left_aligned then
 		self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
     end
 end
 
 function Inv:CursorRight()
-	if self.pin_nav then
-		if self.current_list ~= nil and not self.current_list[1].inst:IsValid() then
+	if self.pin_nav and self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		local k, slot = next(self.current_list or {})
+		if slot == nil or not slot.inst:IsValid() then
 			self.current_list = self.inv
 		end
 	end
 
     if self:CursorNav(Vector3(1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	elseif not self.open and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
     end
 end
 
@@ -612,7 +626,7 @@ function Inv:CursorUp()
     else
 		if self:CursorNav(Vector3(0,1,0)) then
 			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-		elseif not self.open and self.current_list == self.inv then
+		elseif not self.open and (self.current_list == self.inv or self.current_list == self.equip) then
 			-- go into the pin bar if there are no other open containers above the inventory bar
 			self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
 		end
@@ -627,8 +641,9 @@ function Inv:CursorDown()
 			self:PinBarNav(next_pin)
 		else
 			pin_nav = false
-			if self.current_list ~= nil and not self.current_list[1].inst:IsValid() then
-				self.current_list = self.inv
+			local k, slot = next(self.current_list or {})
+			if slot == nil or not slot.inst:IsValid() then
+				self.current_list = self.owner.HUD.controls.craftingmenu.is_left_aligned and self.inv or self.equip
 			end
 		end
     end

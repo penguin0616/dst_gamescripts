@@ -28,8 +28,12 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
+	local is_left = craftingmenu.is_left_aligned
+
 	----------------
 	self.craft_button = self:AddChild(ImageButton(atlas, "pinslot_bg.tex"))
+	self.craft_button:SetNormalScale(is_left and 1 or -1, 1)
+	self.craft_button:SetFocusScale(is_left and 1.2 or -1.2, 1.2)
 	self.craft_button.AllowOnControlWhenSelected = true
     self.craft_button.ongainfocusfn = function() 
 		self.craft_button.recipe_held = false
@@ -51,7 +55,6 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 		if self.owner.HUD:IsCraftingOpen() then
 			if self.unpin_button.focus then
 				self:SetRecipe(nil, nil)
-				TheCraftingMenuProfile:SetPinnedRecipe(self.slot_num, nil, nil)
 				return
 
 			elseif self.recipe_name ~= nil then
@@ -70,12 +73,13 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 					return
 				end
 			else
-				local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
-				if recipe_name ~= nil then
-					self:SetRecipe(recipe_name, skin_name)
-					TheCraftingMenuProfile:SetPinnedRecipe(self.slot_num, recipe_name, skin_name)
+				if not TheInput:ControllerAttached() then
+					local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
+					if recipe_name ~= nil then
+						self:SetRecipe(recipe_name, skin_name)
+					end
+					return
 				end
-				return
 			end
 		end		
 
@@ -105,16 +109,30 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 	end
 	self.craft_button.OnControl = function(_self, control, down)
 		if ImageButton.OnControl(_self, control, down) then return true end
-
 		if self.focus and down and not _self.down then
-			if control == CONTROL_MENU_MISC_1 then
-				if TheInput:ControllerAttached() and self.owner.HUD:IsCraftingOpen() then
-					if down and not _self.down then
+			if TheInput:ControllerAttached() and self.owner.HUD:IsCraftingOpen() then
+				if control == CONTROL_MENU_MISC_1 then
+					if self.recipe_name ~= nil then
 						self:SetRecipe(nil, nil)
-						TheCraftingMenuProfile:SetPinnedRecipe(self.slot_num, nil, nil)
 						TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 						return true
+					else
+						local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
+						if recipe_name ~= nil then
+							self:SetRecipe(recipe_name, skin_name)
+							TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+							return true
+						end
 					end
+				else
+					local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
+					if self.recipe_name ~= nil and self.recipe_name == recipe_name then
+						if self.craftingmenu.craftingmenu.details_root.skins_spinner:OnControl(control, down) then 
+							self:SetRecipe(self.craftingmenu:GetCurrentRecipeName())
+							return true 
+						end
+					end
+
 				end
 			end
 		end
@@ -137,13 +155,16 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 	local r_size = 400
 	self.unpin_controllerhint = self.craft_button.image:AddChild(Text(UIFONT, 32/self.base_scale))
 	self.unpin_controllerhint:SetPosition(r_size/2 + 58, 0)
-	self.unpin_controllerhint:SetHAlign(ANCHOR_LEFT)
+	self.unpin_controllerhint:SetHAlign(is_left and ANCHOR_LEFT or ANCHOR_RIGHT)
 	self.unpin_controllerhint:SetRegionSize(r_size, 32/self.base_scale)
+	if not is_left then
+		self.unpin_controllerhint:SetScale(-1, 1)
+	end
 	self.unpin_controllerhint:Hide()
 
 
 	----------------
-	self.recipe_popup = self:AddChild(self:MakeRecipePopup())
+	self.recipe_popup = self:AddChild(self:MakeRecipePopup(is_left))
 	self.recipe_popup:Hide()
 	self.recipe_popup:MoveToBack()
 
@@ -167,13 +188,13 @@ function PinSlot:DeHighlight()
 	self:ClearFocus()
 end
 
-function PinSlot:MakeRecipePopup()
+function PinSlot:MakeRecipePopup(is_left)
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
 	local root = Widget("RecipePopupRoot")
 
 	root.max_ingredients_wide = 5
-	root._scale = 1.15 / self.base_scale
+	root._scale = 1.2 / self.base_scale
 	root.ShowPopup = function(popup_self, recipe)
 		if recipe ~= nil then
 			popup_self:Show()
@@ -182,10 +203,12 @@ function PinSlot:MakeRecipePopup()
 		    popup_self.background:ManualFlow(math.min(root.max_ingredients_wide, popup_self.ingredients.num_items), true)
 
 			local x = popup_self.background.startcap:GetPositionXYZ()
-			popup_self:SetPosition(x *popup_self._scale + 37/self.base_scale, 0)
 
-			local end_x = popup_self.background.startcap:GetPositionXYZ()
-			popup_self.openhint:SetPosition(x *popup_self._scale * 0.5 + 14, 0)
+			local popup_x = x *popup_self._scale + 37/self.base_scale
+			popup_self:SetPosition(is_left and popup_x or -popup_x, 0)
+
+			local hint_x = x * popup_self._scale * 0.5 + 6/self.base_scale
+			popup_self.openhint:SetPosition(is_left and hint_x or -hint_x, 0)
 		else
 			popup_self:Hide()
 		end
@@ -213,6 +236,8 @@ function PinSlot:SetRecipe(recipe_name, skin_name)
 	self.recipe_name = recipe_name
 	self.skin_name = skin_name
 
+	TheCraftingMenuProfile:SetPinnedRecipe(self.slot_num, recipe_name, skin_name)
+
 	self:Refresh()
 	self:OnGainFocus()
 end
@@ -220,6 +245,7 @@ end
 function PinSlot:Refresh()
 	local data = self.craftingmenu:GetRecipeState(self.recipe_name) 
 
+	local is_left = self.craftingmenu.is_left_aligned
 	local item_size = 80
 
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
@@ -238,10 +264,10 @@ function PinSlot:Refresh()
 		else
 			inv_image = recipe.imagefn ~= nil and recipe.imagefn() or recipe.image
 		end
-		local inv_atlas = GetInventoryItemAtlas(inv_image)
+		local inv_atlas = recipe:GetAtlas()
 
 		self.item_img:SetTexture(inv_atlas, inv_image or "default.tex", "default.tex")
-		self.item_img:ScaleToSize(item_size, item_size)
+		self.item_img:ScaleToSize(is_left and item_size or -item_size, item_size)
 		self.item_img:SetTint(1, 1, 1, 1)
 
 		if meta.build_state == "buffered" then
@@ -280,7 +306,7 @@ function PinSlot:Refresh()
 		self.craft_button:SetTextures(atlas, "pinslot_bg_missing_mats.tex", nil, nil, nil, "pinslot_bg_missing_mats.tex")
         self.fg:Hide()
 		self.item_img:SetTexture(atlas, "pinslot_fg_pin.tex")
-		self.item_img:ScaleToSize(item_size, item_size)
+		self.item_img:ScaleToSize(is_left and item_size or -item_size, item_size)
 
 		self.craft_button:SetHelpTextMessage(STRINGS.UI.HUD.CRAFTING_PIN)
 	end
@@ -294,11 +320,7 @@ function PinSlot:OnGainFocus()
 		if TheInput:ControllerAttached() then
 			self.unpin_button_bg:Show()
 			self.unpin_controllerhint:Show()
-			if self.recipe_name ~= nil then
-				self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.HUD.CRAFTING_UNPIN)
-			else
-				self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.CRAFTING_PIN)
-			end
+			self:SetUnpinControllerHintString()
 
 			local data = self.craftingmenu:GetRecipeState(self.recipe_name) 
 			local details_recipe_name, details_skin_name = self.craftingmenu:GetCurrentRecipeName()
@@ -347,6 +369,14 @@ function PinSlot:OnUpdate(dt)
     end
 end
 
+function PinSlot:SetUnpinControllerHintString()
+	if self.craftingmenu.is_left_aligned then 
+		self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1) .. " " .. (self.recipe_name ~= nil and STRINGS.UI.HUD.CRAFTING_UNPIN or STRINGS.UI.HUD.CRAFTING_PIN))
+	else
+		self.unpin_controllerhint:SetString((self.recipe_name ~= nil and STRINGS.UI.HUD.CRAFTING_UNPIN or STRINGS.UI.HUD.CRAFTING_PIN) .. " " .. TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1))
+	end
+end
+
 function PinSlot:RefreshControllers(controller_mode)
 	if controller_mode then
 		if self.owner.HUD:IsCraftingOpen() then
@@ -359,16 +389,12 @@ function PinSlot:RefreshControllers(controller_mode)
 				self.unpin_button_bg:Show()
 				self.unpin_controllerhint:Show()
 			end
-			if self.recipe_name ~= nil then
-				self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.HUD.CRAFTING_UNPIN)
-			else
-				self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT) .. " " .. STRINGS.UI.HUD.CRAFTING_PIN)
-			end
+			self:SetUnpinControllerHintString()
 		else
-			self.craft_button:SetControl(CONTROL_INVENTORY_USEONSCENE)
+			self.craft_button:SetControl(CONTROL_INVENTORY_DROP)
 
 			self.recipe_popup.openhint:Show()
-			self.recipe_popup.openhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_USEONSCENE))
+			self.recipe_popup.openhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_DROP))
 			self.unpin_controllerhint:Hide()
 		end
     else

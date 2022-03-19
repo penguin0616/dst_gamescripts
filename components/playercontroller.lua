@@ -16,19 +16,6 @@ local function OnPlayerDeactivated(inst)
     inst.components.playercontroller:Deactivate()
 end
 
-local function OnActionSucceeded(inst, action)
-    -- For held primary, secondary actions where a new position is needed (e.g. terraforming), update the new position
-    local lastheldaction = inst.components.playercontroller.lastheldaction
-    if lastheldaction and lastheldaction.action.recalculate_held_action then
-        inst.components.playercontroller.LMBaction, inst.components.playercontroller.RMBaction = inst.components.playeractionpicker:DoGetMouseActions()
-        if TheInput:IsControlPressed(CONTROL_PRIMARY) then
-            inst.components.playercontroller.lastheldaction = inst.components.playercontroller:GetLeftMouseAction()
-        elseif TheInput:IsControlPressed(CONTROL_SECONDARY) then
-            inst.components.playercontroller.lastheldaction = inst.components.playercontroller:GetRightMouseAction()
-        end
-    end
-end
-
 local function GetWorldControllerVector()
     local xdir = TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)
     local ydir = TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)
@@ -149,8 +136,6 @@ local PlayerController = Class(function(self, inst)
 
     inst:ListenForEvent("playeractivated", OnPlayerActivated)
     inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
-
-    inst:ListenForEvent("actionsucceeded", OnActionSucceeded)
 end)
 
 --------------------------------------------------------------------------
@@ -161,7 +146,6 @@ function PlayerController:OnRemoveFromEntity()
     end
     self.inst:RemoveEventCallback("playeractivated", OnPlayerActivated)
     self.inst:RemoveEventCallback("playerdeactivated", OnPlayerDeactivated)
-    self.inst:RemoveEventCallback("actionsucceeded", OnActionSucceeded)
     self:Deactivate()
     if self.classified ~= nil then
         if self.ismastersim then

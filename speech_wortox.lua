@@ -2798,7 +2798,7 @@ return{
 			BURNT = "The fashion dimension has been sealed off.",
 		},
 		WARG = "I'll not be a feast for that beast!",
-        WARG_WAVE = "You wouldn't want to eat me, imps give terrible indigestion!",
+        WARGLET = "You wouldn't want to eat me, imps give terrible indigestion!",
         
 		WASPHIVE = "Do I want to start some mischief?",
 		WATERBALLOON = "You'd never see me coming!",

@@ -93,7 +93,12 @@ function CraftingMenuProfile:RemoveFavorite(recipe_name)
 end
 
 function CraftingMenuProfile:SetPinnedRecipe(slot, recipe_name, skin_name)
-	self.pinned_recipes[slot] = {recipe_name = recipe_name, skin_name = skin_name}
+	if self.pinned_recipes[slot] ~= nil then
+		self.pinned_recipes[slot].recipe_name = recipe_name
+		self.pinned_recipes[slot].skin_name = skin_name
+	else
+		self.pinned_recipes[slot] = {recipe_name = recipe_name, skin_name = skin_name}
+	end
 end
 
 function CraftingMenuProfile:GetPinnedRecipes()

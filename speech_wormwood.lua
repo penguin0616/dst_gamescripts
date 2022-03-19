@@ -2796,7 +2796,7 @@ return{
 			BURNT = "Fire bad",
 		},
 		WARG = "Big Bad Woofer",
-        WARG_WAVE = "Big Bad Woofer",
+        WARGLET = "Big Bad Woofer",
         
 		WASPHIVE = "Bad Buzz home",
 		WATERBALLOON = "Water Booper",

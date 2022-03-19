@@ -282,7 +282,7 @@ local prefabs =
     "shadowmeteor",
     "meteorwarning",
     "warg",
-    "warg_wave",
+    "warglet",
     "claywarg",
     "spat",
     "multiplayer_portal",

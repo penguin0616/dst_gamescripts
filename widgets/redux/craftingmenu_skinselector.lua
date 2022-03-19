@@ -130,6 +130,10 @@ function SkinSelector:GetIndexForSkin(skin)
     return 1
 end
 
+function SkinSelector:SelectSkin(skin_name)
+	self.spinner:SetSelectedIndex(skin_name == nil and 1 or self:GetIndexForSkin(skin_name) or 1)
+end
+
 function SkinSelector:GetSkinsList()
     if not self.timestamp then self.timestamp = -10000 end
 

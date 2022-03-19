@@ -124,13 +124,14 @@ function CraftingMenuDetails:UpdateBuildButton()
 				teaser:SetSize(26)
 				teaser:UpdateOriginalSize()
 				teaser:SetMultilineTruncatedString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT).." "..buttonstr, 2, (self.panel_width / 2) * 0.8, nil, false, true)
+				teaser:Show()
             else
 				teaser:SetSize(20)
 				teaser:UpdateOriginalSize()
 				teaser:SetMultilineTruncatedString(STRINGS.UI.CRAFTING.NEEDSTUFF, 2, (self.panel_width / 2) * 0.8, nil, false, true)
+				teaser:Show()
             end
 
-			teaser:Show()
 			button:Hide()
         else
             button:SetText(buttonstr)
@@ -201,6 +202,12 @@ end
 function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 	if data == nil then
 		self.data = nil
+
+		self.build_button_root = nil
+		self.ingredients = nil
+		self.skins_spinner = nil
+		self.fav_button = nil
+
 		self:KillAllChildren()
 		return
 	end
@@ -261,6 +268,7 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 
 		self.owner:PushEvent("refreshcrafting")
 	end)
+	self.fav_button = fav_button
 
 	y = y - name_font_size
 
