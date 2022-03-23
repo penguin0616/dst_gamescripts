@@ -216,5 +216,12 @@ function CraftingMenuPinBar:OnCraftingMenuClose()
 	self:ClearFocusHookups()
 end
 
+function CraftingMenuPinBar:RefreshCraftingHelpText(controller_id)
+	local slot = self:GetFocusSlot()
+	if slot ~= nil then
+		return slot:RefreshCraftingHelpText(controller_id)
+	end
+	return ""
+end
 
 return CraftingMenuPinBar

@@ -86,6 +86,7 @@ local all_controls =
 
     -- inventory
     {name=CONTROL_OPEN_CRAFTING, keyboard=CONTROL_OPEN_CRAFTING, controller=CONTROL_OPEN_CRAFTING},
+    {name=CONTROL_SEARCH_CRAFTING, keyboard=CONTROL_SEARCH_CRAFTING, controller=nil},
     {name=CONTROL_OPEN_INVENTORY, keyboard=nil, controller=CONTROL_OPEN_INVENTORY},
     {name=CONTROL_INVENTORY_UP, keyboard=nil, controller=CONTROL_INVENTORY_UP},
     {name=CONTROL_INVENTORY_DOWN, keyboard=nil, controller=CONTROL_INVENTORY_DOWN},
@@ -258,6 +259,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		autopause = Profile:GetAutopauseEnabled(),
 		consoleautopause = Profile:GetConsoleAutopauseEnabled(),
 		craftingautopause = Profile:GetCraftingAutopauseEnabled(),
+		craftingmenubufferedbuildautoclose = Profile:GetCraftingMenuBufferedBuildAutoClose(),
 		waltercamera = Profile:IsCampfireStoryCameraEnabled(),
 		loadingtips = Profile:GetLoadingTipsOption(),
 		defaultcloudsaves = Profile:GetDefaultCloudSaves(),
@@ -567,6 +569,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetDynamicTreeShadowsEnabled( self.options.dynamictreeshadows )
 	Profile:SetAutopauseEnabled( self.options.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.options.consoleautopause )
+	Profile:SetCraftingMenuBufferedBuildAutoClose( self.options.craftingmenubufferedbuildautoclose )
 	Profile:SetCraftingAutopauseEnabled( self.options.craftingautopause )
 	Profile:SetLoadingTipsOption( self.options.loadingtips )
 	Profile:SetCampfireStoryCameraEnabled( self.options.waltercamera )
@@ -686,6 +689,7 @@ function OptionsScreen:Apply()
 	Profile:SetAutopauseEnabled( self.working.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.working.consoleautopause )
 	Profile:SetCraftingAutopauseEnabled( self.working.craftingautopause )
+	Profile:SetCraftingMenuBufferedBuildAutoClose( self.working.craftingmenubufferedbuildautoclose )
 	Profile:SetLoadingTipsOption( self.working.loadingtips )
 	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
 	
@@ -1466,7 +1470,7 @@ function OptionsScreen:_BuildSettings()
 			--self:Apply()
 			self:UpdateMenu()
 		end
-		
+	
 	self.vibrationSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.VIBRATION, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.VIBRATION)
 	self.vibrationSpinner.OnChanged =
 		function( _, data )
@@ -1716,6 +1720,14 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
+	self.craftingmenubufferedbuildautocloseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE)
+	self.craftingmenubufferedbuildautocloseSpinner.OnChanged =
+		function( _, data )
+			self.working.craftingmenubufferedbuildautoclose = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
 	if IsSteam() then
 		self.defaultcloudsavesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DEFAULTCLOUDSAVES, steamCloudLocalOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DEFAULTCLOUDSAVES)
 		self.defaultcloudsavesSpinner.OnChanged =
@@ -1739,6 +1751,7 @@ function OptionsScreen:_BuildAdvancedSettings()
     table.insert( self.right_spinners, self.automodsSpinner )
 	table.insert( self.right_spinners, self.animatedHeadsSpinner )
 	table.insert( self.right_spinners, self.consoleautopauseSpinner )
+	table.insert( self.right_spinners, self.craftingmenubufferedbuildautocloseSpinner )
 
 	self.grid_advanced:UseNaturalLayout()
 	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
@@ -2023,6 +2036,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.autopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autopause ) )
 	self.consoleautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.consoleautopause ) )
 	self.craftingautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingautopause ) )
+	self.craftingmenubufferedbuildautocloseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingmenubufferedbuildautoclose ) )
 	self.loadingtipsSpinner:SetSelectedIndex( self.working.loadingtips or LOADING_SCREEN_TIP_OPTIONS.ALL )
 	if IsSteam() then
 		self.defaultcloudsavesSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.defaultcloudsaves ) )

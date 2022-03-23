@@ -605,6 +605,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 	end
 
 	env.AddRecipeToFilter = function(recipe_name, filter_name)
+		initprint("AddRecipeToFilter", recipe_name, filter_name)
 		local filter = CRAFTING_FILTERS[filter_name]
 		if filter ~= nil and filter.default_sort_values[recipe_name] == nil then
 			table.insert(filter.recipes, recipe_name)
@@ -612,15 +613,24 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		end
 	end
 
+	env.RemoveRecipeFromFilter = function(recipe_name, filter_name)
+		initprint("RemoveRecipeFromFilter", recipe_name, filter_name)
+		local filter = CRAFTING_FILTERS[filter_name]
+		if filter ~= nil and filter.default_sort_values[recipe_name] ~= nil then
+			table.removearrayvalue(filter.recipes, recipe_name)
+			filter.default_sort_values = table.invert(filter.recipes)
+		end
+	end
+
 	-- filters = {"TOOLS", "LIGHT"}
-	env.AddRecipe2 = function(name, ingredients, tech, config, filters, filter_sort_order)
+	env.AddRecipe2 = function(name, ingredients, tech, config, filters)
 		initprint("AddRecipe2", name)
 		require("recipe")
 		mod_protect_Recipe = false
 		local rec = Recipe2(name, ingredients, tech, config)
 
 		if not rec.is_deconstruction_recipe then
-			if rec.nounlock then
+			if config.nounlock then
 				env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
 			else
 				env.AddRecipeToFilter(name, CRAFTING_FILTERS.MODS.name)
@@ -639,11 +649,37 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		return rec
 	end
 
-	env.AddDeconstructRecipe = function(arg1, return_ingredients)
-		initprint("AddDeconstructRecipe", arg1)
+	env.AddCharacterRecipe = function(name, ingredients, tech, config, extra_filters)
+		initprint("AddCharacterRecipe", name)
 		require("recipe")
 		mod_protect_Recipe = false
-		local rec = DeconstructRecipe(arg1, return_ingredients)
+
+		local rec = Recipe2(name, ingredients, tech, config)
+
+		if config ~= nil and config.builder_tag ~= nil then
+			env.AddRecipeToFilter(name, CRAFTING_FILTERS.CHARACTER.name)
+		else
+			initprint("Warning: AddCharacterRecipe called for recipe "..name.." without a builder_tag. This recipe will be added to the mods filter instead of the character filter.")
+			env.AddRecipeToFilter(name, CRAFTING_FILTERS.MODS.name)
+		end
+
+		if extra_filters ~= nil then
+			for _, filter_name in ipairs(extra_filters) do
+				env.AddRecipeToFilter(name, filter_name)
+			end
+		end
+
+
+		mod_protect_Recipe = true
+		rec:SetModRPCID()
+		return rec
+	end
+
+	env.AddDeconstructRecipe = function(name, return_ingredients)
+		initprint("AddDeconstructRecipe", name)
+		require("recipe")
+		mod_protect_Recipe = false
+		local rec = DeconstructRecipe(name, return_ingredients)
 		mod_protect_Recipe = true
 		rec:SetModRPCID()
 		return rec
@@ -661,7 +697,10 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		--	env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
 		--end
 
-		if not rec.is_deconstruction_recipe then
+
+		if rec.builder_tag ~= nil then
+			env.AddRecipeToFilter(arg1, CRAFTING_FILTERS.CHARACTER.name)
+		elseif not rec.is_deconstruction_recipe then
 			env.AddRecipeToFilter(arg1, CRAFTING_FILTERS.MODS.name)
 		end
 

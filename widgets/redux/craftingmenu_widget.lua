@@ -52,9 +52,6 @@ local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, hei
 		self:ApplyFilters()
 	end
 
-	self.nav_hint = self:AddChild(Text(UIFONT, 24))
-	self.nav_hint:SetPosition(28, -28 - height/2)
-
 	self.focus_forward = self.filter_panel.filter_grid
 end)
 
@@ -66,6 +63,14 @@ function CraftingMenuWidget:Initialize()
 	self:PopulateRecipeDetailPanel(data, data ~= nil and Profile:GetLastUsedSkinForItem(data.recipe.name) or nil)
 
 	self:Refresh() 
+end
+
+function CraftingMenuWidget:StartSearching(clear_text)
+	if clear_text then
+		self:SetSearchText("")
+		self.search_box.textbox:SetString("")
+	end
+	self.search_box.textbox:SetEditing(true)
 end
 
 function CraftingMenuWidget:OnControl(control, down)
@@ -285,13 +290,16 @@ function CraftingMenuWidget:UpdateFilterButtons()
 	return rebuild_details_list
 end
 
-function CraftingMenuWidget:Refresh()
+function CraftingMenuWidget:Refresh(tech_tree_changed)
 	local rebuild_details_list = self:UpdateFilterButtons()
 	if self.sort_class.Refresh == nil or not self.sort_class:Refresh() then
 		if rebuild_details_list then
 			self:ApplyFilters()
 		else
 			self.recipe_grid:RefreshView()
+		end
+		if self.crafting_hud:IsCraftingOpen() and tech_tree_changed then
+			self:OnCraftingMenuOpen(true)
 		end
 	end
 	self.details_root:Refresh()
@@ -301,14 +309,25 @@ function CraftingMenuWidget:RefreshControllers(controller_mode)
 	self.details_root:RefreshControllers(controller_mode)
 
     if controller_mode then
-        self.nav_hint:Show()
-        self.nav_hint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_UP).." "..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_RIGHT).." "..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_DOWN).." "..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_INVENTORY_LEFT).."  ".."Naviation")
-
 		self.recipe_grid:OverrideControllerButtons(CONTROL_INVENTORY_EXAMINE, CONTROL_INVENTORY_DROP, true)
     else
-        self.nav_hint:Hide()
 		self.recipe_grid:ClearOverrideControllerButtons()
 	end
+end
+
+function CraftingMenuWidget:RefreshCraftingHelpText(controller_id)
+	if self.recipe_grid.focus then
+		local hint_text = TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1).." "..STRINGS.UI.CRAFTING_MENU.PIN
+
+		local recipe_name = self.details_root.data ~= nil and self.details_root.data.recipe.name or nil
+		if recipe_name then
+			hint_text = hint_text .. "  " .. TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2).." "..(TheCraftingMenuProfile:IsFavorite(recipe_name) and STRINGS.UI.CRAFTING_MENU.FAVORITE_REMOVE or STRINGS.UI.CRAFTING_MENU.FAVORITE_ADD)
+		end
+		return hint_text
+	elseif self.filter_panel.focus then
+		return TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT).." "..STRINGS.UI.HUD.SELECT
+	end
+	return ""
 end
 
 function CraftingMenuWidget:OnUpdate(dt)
@@ -337,9 +356,17 @@ function CraftingMenuWidget:UpdateRecipeGrid(set_focus)
 	local prev_focus_data = self.details_root.data
 	local prev_focus_skin = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil
 
+	if #self.filtered_recipes == 0 then
+		self.no_recipes_msg:Show()
+	else
+		self.no_recipes_msg:Hide()
+	end
+
 	self.recipe_grid:ResetScroll()
 	self.recipe_grid:SetItemsData(self.filtered_recipes)
 	self.recipe_grid.dirty = false
+
+	--print("UpdateRecipeGrid", prev_focus_data ~= nil and prev_focus_data.recipe.name or "<none>", prev_focus_skin, self.recipe_grid:FindDataIndex(prev_focus_data))
 
 	if prev_focus_data then
 		local grid_index = self.recipe_grid:FindDataIndex(prev_focus_data)
@@ -354,7 +381,9 @@ function CraftingMenuWidget:UpdateRecipeGrid(set_focus)
 			end
 		else
 			if set_focus and #self.recipe_grid.items > 0 then
-				self.recipe_grid:ForceItemFocus(1)
+				if not TheFrontEnd.tracking_mouse then
+					self.recipe_grid:ForceItemFocus(1)
+				end
 			end
 		end
 	else
@@ -363,57 +392,98 @@ function CraftingMenuWidget:UpdateRecipeGrid(set_focus)
 end
 
 function CraftingMenuWidget:OnCraftingMenuOpen(set_focus)
-	local prev_focus_data = self.details_root.data
-	if self.recipe_grid.dirty then
-		self:UpdateRecipeGrid(set_focus)
-	end
+	local filter = nil
+	local recipe_data = nil
+	local skin_name = nil
 
 	local builder = self.owner ~= nil and self.owner.replica.builder or nil
 	local prototyper = builder ~= nil and builder:GetCurrentPrototyper() or nil
-	local prototyper_def = prototyper ~= nil and PROTOTYPER_DEFS[prototyper.prefab] or nil
-	if prototyper_def ~= nil and prototyper_def.is_crafting_station then
-		if self.pre_crafting_station_filter == nil then
-			self.pre_crafting_station_filter = self.current_filter_name
-		end
-		self:SelectFilter(CRAFTING_FILTERS.CRAFTING_STATION.name, true)
-	else
-		if self.pre_crafting_station_filter ~= nil then
-			self:SelectFilter(self.pre_crafting_station_filter, true)
-			self.pre_crafting_station_filter = nil
-		else
-			if set_focus then
-				if prev_focus_data then
-					local grid_index = self.recipe_grid:FindDataIndex(prev_focus_data)
-
-					if grid_index ~= nil then
-						self.recipe_grid:ScrollToDataIndex(grid_index)
-						self.recipe_grid:ForceItemFocus(grid_index)
-					else
-						if #self.recipe_grid.items > 0 then
-							self.recipe_grid:ForceItemFocus(1)
-						end
-					end
-				else
-					self.filter_buttons[self.current_filter_name]:SetFocus()
-					self.details_root:PopulateRecipeDetailPanel(nil, nil)
-				end
+	local at_crafting_station = prototyper ~= nil and PROTOTYPER_DEFS[prototyper.prefab] ~= nil and PROTOTYPER_DEFS[prototyper.prefab].is_crafting_station
+	if at_crafting_station then
+		if self.current_filter_name ~= CRAFTING_FILTERS.CRAFTING_STATION.name then
+			if self.pre_station_selection == nil then
+				self.pre_station_selection = 
+				{
+					filter = self.details_root.from_filter_name, --self.current_filter_name,
+					data = self.details_root.data,
+					skin_name = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil,
+				}
+			--print(" caching self.pre_station_selection", self.pre_station_selection.filter, self.pre_station_selection.data ~= nil and self.pre_station_selection.data.recipe.name, self.pre_station_selection.skin_name)
 			end
 
-			--self.filter_buttons[self.current_filter_name]
+			filter = CRAFTING_FILTERS.CRAFTING_STATION.name
+			--recipe_data = nil
+			--recipe_data = nil
+		else
+			filter = CRAFTING_FILTERS.CRAFTING_STATION.name
+			recipe_data = self.details_root.data
+			skin_name = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil
+		end
+	else
+		if self.pre_station_selection ~= nil then
+			filter = self.pre_station_selection.filter
+			recipe_data = self.pre_station_selection.data
+			skin_name = self.pre_station_selection.skin_name
+			--print(" using self.pre_station_selection", filter, recipe_data ~= nil and recipe_data.recipe.name, skin_name)
+
+			self.pre_station_selection = nil
+		else
+			filter = self.details_root.from_filter_name -- nil
+			recipe_data = self.details_root.data
+			skin_name = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil
 		end
 	end
 
+	--print("OnCraftingMenuOpen", self.recipe_grid.dirty, set_focus, filter, recipe_data ~= nil and recipe_data.recipe.name or nil, skin_name)
+
+	self:SelectFilter(filter or CRAFTING_FILTERS.TOOLS.name, filter ~= CRAFTING_FILTERS.EVERYTHING.name)
+	if self.recipe_grid.dirty then
+		self:UpdateRecipeGrid(false)
+	end
+	if set_focus then
+		if recipe_data then
+			local grid_index = self.recipe_grid:FindDataIndex(recipe_data)
+			if grid_index ~= nil then
+				self.recipe_grid:ScrollToDataIndex(grid_index)
+				if not TheFrontEnd.tracking_mouse then
+					self.recipe_grid:ForceItemFocus(grid_index)
+				end
+				self:PopulateRecipeDetailPanel(recipe_data, skin_name or Profile:GetLastUsedSkinForItem(recipe_data.recipe.name) or nil)
+			else
+				if #self.recipe_grid.items > 0 then
+					if not TheFrontEnd.tracking_mouse then
+						self.recipe_grid:ForceItemFocus(1)
+					end
+					if at_crafting_station then
+						local data = self.filtered_recipes[1]
+						self:PopulateRecipeDetailPanel(data, data ~= nil and Profile:GetLastUsedSkinForItem(data.recipe.name) or nil)
+					elseif not TheInput:ControllerAttached() then
+						self:PopulateRecipeDetailPanel(recipe_data, skin_name or Profile:GetLastUsedSkinForItem(recipe_data.recipe.name) or nil)
+					end
+				else
+					if not TheInput:ControllerAttached() then
+						self.details_root:PopulateRecipeDetailPanel(nil, nil)
+					end
+				end
+			end
+		else
+			self.filter_buttons[self.current_filter_name]:SetFocus()
+			if #self.recipe_grid.items > 0 then
+				if not TheFrontEnd.tracking_mouse then
+					self.recipe_grid:ForceItemFocus(1)
+				end
+				if not TheInput:ControllerAttached() then
+					local data = self.filtered_recipes[1]
+					self:PopulateRecipeDetailPanel(data, data ~= nil and Profile:GetLastUsedSkinForItem(data.recipe.name) or nil)
+				end
+			else
+				if not TheInput:ControllerAttached() then
+					self.details_root:PopulateRecipeDetailPanel(nil, nil)
+				end
+			end
+		end
+	end
 end
-
-function CraftingMenuWidget:GetHelpText()
-    local controller_id = TheInput:GetControllerID()
-    local t = {}
-
---    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_OPEN_CRAFTING).."/"..TheInput:GetLocalizedControl(controller_id, CONTROL_OPEN_INVENTORY).. " " .. STRINGS.UI.HELP.CHANGE_TAB)
-
-    return table.concat(t, "  ")
-end
-
 
 function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	local w = Widget("crafting_menu_frame")
@@ -448,6 +518,11 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	self.recipe_grid = w:AddChild(self:MakeRecipeList(width, height - fileters_height))
 	local grid_w, grid_h = self.recipe_grid:GetScrollRegionSize()
 	self.recipe_grid:SetPosition(-2, height/2 - fileters_height - grid_h/2)
+	
+	self.no_recipes_msg = w:AddChild(Text(UIFONT, 30, STRINGS.UI.CRAFTING_MENU.NO_ITEMS, UICOLOURS.GOLD_UNIMPORTANT))
+	self.no_recipes_msg:SetPosition(-2, height/2 - fileters_height - grid_h/2)
+	self.no_recipes_msg:Hide()
+
 	----------------
 
 	self.itemlist_split = w:AddChild(Image(atlas, "horizontal_bar.tex"))
@@ -544,8 +619,10 @@ function CraftingMenuWidget:MakeSearchBox(box_width, box_height)
 end
 
 function CraftingMenuWidget:SelectFilter(name, clear_search_text)
+	--print("SelectFilter", name, clear_search_text, self.current_filter_name)
+
 	if name ~= CRAFTING_FILTERS.CRAFTING_STATION.name then
-		self.pre_crafting_station_filter = nil
+		self.pre_station_selection = nil
 	end
 
 	if clear_search_text then
@@ -593,7 +670,7 @@ function CraftingMenuWidget:MakeFilterButton(filter_def, button_size)
 		self:SelectFilter(filter_def.name, true)
 	end)
 	button:SetOnSelect(function()
-		self.search_box.textbox.prompt:SetString(STRINGS.UI.CRAFTING_FILTERS[filter_def.name])
+		self.search_box.textbox.prompt:SetString(w.hovertext.string)
 	end)
 	w:SetHoverText(STRINGS.UI.CRAFTING_FILTERS[filter_def.name], {offset_y = 30, attach_to_parent = self })
 
@@ -790,7 +867,7 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			w.cell_root.last_recipe_click = nil
 
 			if TheInput:ControllerAttached() then
-				self.details_root:PopulateRecipeDetailPanel(w.data, Profile:GetLastUsedSkinForItem(w.data.recipe.name))
+				self.details_root:PopulateRecipeDetailPanel(w.data, w.data ~= nil and Profile:GetLastUsedSkinForItem(w.data.recipe.name) or nil)
 			end
 		end
 		w.cell_root:SetWhileDown(function()
@@ -807,12 +884,16 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 		w.cell_root:SetOnClick(function()
 			local is_current = w.data == self.details_root.data
 			if is_current then -- clicking the item when it is already selected will trigger a build
-				if not w.cell_root.recipe_held or self.owner.replica.builder:IsBuildBuffered(w.data.recipe.name) then
+				local already_buffered = self.owner.replica.builder:IsBuildBuffered(w.data.recipe.name)
+				if not w.cell_root.recipe_held or already_buffered then
 					local stay_open, error_msg = DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
 					if not stay_open then
 						self.owner:PushEvent("refreshcrafting")  -- this is only really neede for free crafting
-						self.owner.HUD:CloseCrafting()
-						return
+
+						if already_buffered or Profile:GetCraftingMenuBufferedBuildAutoClose() then
+							self.owner.HUD:CloseCrafting()
+							return
+						end
 					end
 					if error_msg and not TheNet:IsServerPaused() then
 						SendRPCToServer(RPC.CannotBuild, error_msg)
@@ -872,10 +953,13 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
     end
 
     local function ScrollWidgetSetData(context, widget, data, index)
-		widget.data = data
-
 		if data ~= nil and data.recipe ~= nil and data.meta ~= nil then
-			-- see CraftSlot:Refresh() for more details on what needs to be done here
+			if widget.data ~= nil then
+				if widget.data.recipe ~= data.recipe then
+					widget.cell_root.recipe_held = false
+					widget.cell_root.last_recipe_click = nil
+				end
+			end
 
 			local recipe = data.recipe
 			local meta = data.meta
@@ -916,6 +1000,8 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			widget:Disable()
 			widget.cell_root:Hide()
 		end
+
+		widget.data = data
     end
 
 

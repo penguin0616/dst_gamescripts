@@ -449,6 +449,7 @@ function Inv:OnUpdate(dt)
     end
 
 	if self.owner.HUD:IsCraftingOpen() then
+        self.actionstring:Hide()
 		return
 	end
 
@@ -574,7 +575,7 @@ function Inv:CursorNav(dir, same_container_only)
         self.actionstring:Show()
     end
 
-    if self.active_slot and not self.active_slot.inst:IsValid() then
+    if self.active_slot == nil or not self.active_slot.inst:IsValid() or self.current_list == nil or self.current_list[1] == nil or not self.current_list[1].inst:IsValid() then
         self.current_list = self.inv
 		self.pin_nav = false
         self:SelectDefaultSlot()
@@ -600,7 +601,7 @@ function Inv:CursorLeft()
 
     if self:CursorNav(Vector3(-1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-	elseif not self.open and self.owner.HUD.controls.craftingmenu.is_left_aligned then
+	elseif not self.open and not self.pin_nav and self.owner.HUD.controls.craftingmenu.is_left_aligned then
 		self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
     end
 end
@@ -615,7 +616,7 @@ function Inv:CursorRight()
 
     if self:CursorNav(Vector3(1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-	elseif not self.open and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
+	elseif not self.open and not self.pin_nav and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
 		self:PinBarNav(self.owner.HUD.controls.craftingmenu:SelectPin())
     end
 end

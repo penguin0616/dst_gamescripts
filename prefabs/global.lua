@@ -194,6 +194,8 @@ local assets =
     Asset("IMAGE", "images/crafting_menu.tex"),
     Asset("ATLAS", "images/crafting_menu_icons.xml"),
     Asset("IMAGE", "images/crafting_menu_icons.tex"),
+    Asset("ATLAS", "images/crafting_menu_avatars.xml"),
+    Asset("IMAGE", "images/crafting_menu_avatars.tex"),
 
     Asset("DYNAMIC_ATLAS", "images/options.xml"),
     Asset("PKGREF", "images/options.tex"),

@@ -422,6 +422,7 @@ local function GenerateSaveDataFromDelayedSpawnInfo(player, savedata, delayedspa
 		_warnduration = delayedspawninfo._warnduration,
 		_timetonextwarningsound = delayedspawninfo._timetonextwarningsound,
 		_announcewarningsoundinterval = delayedspawninfo._announcewarningsoundinterval,
+		_targetstatus =  _targetableplayers[player.GUID]
 	}
 	if delayedspawninfo._spawninfo then
 		local spawninforec = delayedspawninfo._spawninfo
@@ -466,8 +467,11 @@ local function LoadSaveDataFromMissingSpawnInfo(player, missingspawninfo)
 		_timetonextwarningsound = missingspawninfo._timetonextwarningsound,
 		_announcewarningsoundinterval = missingspawninfo._announcewarningsoundinterval,
 	}
+	if missingspawninfo._targetstatus then
+		_targetableplayers[player.GUID] = missingspawninfo._targetstatus
+	end
 	if missingspawninfo._spawninfo then
-		local spawninforec = missingspawninfo._spawninfo[1]
+		local spawninforec = missingspawninfo._spawninfo
 		_delayedplayerspawninfo[player]._spawninfo =
 		{
 			{

@@ -202,7 +202,7 @@ ACTIONS =
     PICKUP = Action({ priority=1, extra_arrive_dist=ExtraPickupRange, mount_valid=true }),
     MINE = Action(),
     DIG = Action({ rmb=true }),
-    GIVE = Action({ mount_valid=true, canforce=true, rangecheckfn=DefaultRangeCheck, invalid_hold_action = true }),
+    GIVE = Action({ mount_valid=true, canforce=true, rangecheckfn=DefaultRangeCheck }),
     GIVETOPLAYER = Action({ priority=3, canforce=true, rangecheckfn=DefaultRangeCheck }),
     GIVEALLTOPLAYER = Action({ priority=3, canforce=true, rangecheckfn=DefaultRangeCheck }),
     FEEDPLAYER = Action({ priority=3, rmb=true, canforce=true, rangecheckfn=DefaultRangeCheck }),
@@ -261,9 +261,9 @@ ACTIONS =
     HAMMER = Action({ priority=3 }),
     TERRAFORM = Action({ tile_placer="gridplacer", invalid_hold_action = true }),
     JUMPIN = Action({ ghost_valid=true, encumbered_valid=true }),
-    TELEPORT = Action({ rmb=true, distance=2 }),
+    TELEPORT = Action({ rmb=true, distance=2, invalid_hold_action = true }),
     RESETMINE = Action({ priority=3 }),
-    ACTIVATE = Action({priority=2}),
+    ACTIVATE = Action({ priority=2, invalid_hold_action = true }),
     OPEN_CRAFTING = Action({priority=2, distance = TUNING.RESEARCH_MACHINE_DIST - 1}),
     MURDER = Action({ priority=1, mount_valid=true }),
     HEAL = Action({ mount_valid=true }),
@@ -280,9 +280,9 @@ ACTIONS =
     STOPUSINGITEM = Action({ priority=1 }),
     TAKEITEM = Action(),
     MAKEBALLOON = Action({ mount_valid=true }),
-    CASTSPELL = Action({ priority=-1, rmb=true, distance=20, mount_valid=true }),
+    CASTSPELL = Action({ priority=-1, rmb=true, distance=20, mount_valid=true, invalid_hold_action = true }),
 	CAST_POCKETWATCH = Action({ priority=-1, rmb=true, mount_valid=true }), -- to actually use the mounted action, the pocket watch will need the pocketwatch_mountedcast tag
-    BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true }),
+    BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true, invalid_hold_action = true }),
     COMBINESTACK = Action({ mount_valid=true, extra_arrive_dist=ExtraPickupRange }),
     TOGGLE_DEPLOY_MODE = Action({ priority=HIGH_ACTION_PRIORITY, instant=true }),
     SUMMONGUARDIAN = Action({ rmb=false, distance=5 }),
@@ -321,13 +321,13 @@ ACTIONS =
     NUZZLE = Action(),
     WRITE = Action(),
     ATTUNE = Action(),
-    REMOTERESURRECT = Action({ rmb=false, ghost_valid=true, ghost_exclusive=true }),
-    REVIVE_CORPSE = Action({ rmb=false, actionmeter=true }),
+    REMOTERESURRECT = Action({ rmb=false, ghost_valid=true, ghost_exclusive=true, invalid_hold_action = true }),
+    REVIVE_CORPSE = Action({ rmb=false, actionmeter=true, invalid_hold_action = true }),
     MIGRATE = Action({ rmb=false, encumbered_valid=true, ghost_valid=true }),
     MOUNT = Action({ priority=1, rmb=true, encumbered_valid=true }),
     DISMOUNT = Action({ priority=1, instant=true, rmb=true, mount_valid=true, encumbered_valid=true }),
-    SADDLE = Action({ priority=1 }),
-    UNSADDLE = Action({ priority=3, rmb=false }),
+    SADDLE = Action({ priority=1, invalid_hold_action = true }),
+    UNSADDLE = Action({ priority=3, rmb=false, invalid_hold_action = true }),
     BRUSH = Action({ priority=3, rmb=false }),
     ABANDON = Action({ rmb=true }),
     PET = Action(),
@@ -364,20 +364,20 @@ ACTIONS =
     WATER_TOSS = Action({ priority=3, rmb=true, customarrivecheck=CheckOceanFishingCastRange, is_relative_to_platform=true, disable_platform_hopping=true}),
 
     -- boats
-    RAISE_SAIL = Action({ distance=1.25 }),
-    LOWER_SAIL = Action({ distance=1.25 }),
-    LOWER_SAIL_BOOST = Action({ distance=1.25 }),
-    LOWER_SAIL_FAIL = Action({ distance=1.25, do_not_locomote=true }),
-    RAISE_ANCHOR = Action({ distance=2.5 }),
-    LOWER_ANCHOR = Action({ distance=2.5 }),
-    EXTEND_PLANK = Action({ distance=2.5 }),
-    RETRACT_PLANK = Action({ distance=2.5 }),
+    RAISE_SAIL = Action({ distance=1.25, invalid_hold_action = true }),
+    LOWER_SAIL = Action({ distance=1.25, invalid_hold_action = true }),
+    LOWER_SAIL_BOOST = Action({ distance=1.25, invalid_hold_action = true }),
+    LOWER_SAIL_FAIL = Action({ distance=1.25, do_not_locomote=true, invalid_hold_action = true }),
+    RAISE_ANCHOR = Action({ distance=2.5, invalid_hold_action = true }),
+    LOWER_ANCHOR = Action({ distance=2.5, invalid_hold_action = true }),
+    EXTEND_PLANK = Action({ distance=2.5, invalid_hold_action = true }),
+    RETRACT_PLANK = Action({ distance=2.5, invalid_hold_action = true }),
     ABANDON_SHIP = Action({ distance=2.5, priority=4 }),
-    MOUNT_PLANK = Action({ distance=0.5 }),
-    DISMOUNT_PLANK = Action({ distance=2.5 }),
-    REPAIR_LEAK = Action({ distance=2.5 }),
-    STEER_BOAT = Action({ distance=0.1 }),
-    SET_HEADING = Action({distance=9999, do_not_locomote=true}),
+    MOUNT_PLANK = Action({ distance=0.5, invalid_hold_action = true }),
+    DISMOUNT_PLANK = Action({ distance=2.5, invalid_hold_action = true }),
+    REPAIR_LEAK = Action({ distance=2.5, invalid_hold_action = true }),
+    STEER_BOAT = Action({ distance=0.1, invalid_hold_action = true }),
+    SET_HEADING = Action({distance=9999, do_not_locomote=true, invalid_hold_action = true}),
     STOP_STEERING_BOAT = Action({instant=true}),
     CAST_NET = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=12, mount_valid=true, disable_platform_hopping=true }),
     ROW_FAIL = Action({customarrivecheck=function() return true end, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true}),
@@ -407,7 +407,7 @@ ACTIONS =
     YOTB_STARTCONTEST = Action(),
     YOTB_UNLOCKSKIN = Action(),
 
-	CARNIVALGAME_FEED = Action({ mount_valid=true }),
+	CARNIVALGAME_FEED = Action({ mount_valid=true, invalid_hold_action = true }),
 
 	-- YOT_Catcoon
     RETURN_FOLLOWER = Action(),
@@ -423,7 +423,7 @@ ACTIONS =
     DISMANTLE_POCKETWATCH = Action({ mount_valid=true }),
 
     -- WOLFGANG
-    LIFT_DUMBBELL = Action({ priority = 2, mount_valid=false }), -- Higher than TOSS
+    LIFT_DUMBBELL = Action({ priority = 2, mount_valid=false, invalid_hold_action = true }), -- Higher than TOSS
 
     STOP_LIFT_DUMBBELL = Action({ priority = 2, mount_valid=false, instant = true }),
     ENTER_GYM = Action({ mount_valid=false }),    
@@ -1443,7 +1443,7 @@ ACTIONS.ADDFUEL.fn = function(act)
     if act.doer.components.inventory then
         local fuel = act.doer.components.inventory:RemoveItem(act.invobject)
         if fuel then
-            if act.target.components.fueled:TakeFuelItem(fuel, act.doer) then
+            if act.target.components.fueled and act.target.components.fueled:TakeFuelItem(fuel, act.doer) then
                 return true
             else
                 --print("False")
@@ -1452,20 +1452,7 @@ ACTIONS.ADDFUEL.fn = function(act)
         end
     end
 end
-
-ACTIONS.ADDWETFUEL.fn = function(act)
-    if act.doer.components.inventory then
-        local fuel = act.doer.components.inventory:RemoveItem(act.invobject)
-        if fuel then
-            if act.target.components.fueled:TakeFuelItem(fuel, act.doer) then
-                return true
-            else
-                -- print("False")
-                act.doer.components.inventory:GiveItem(fuel)
-            end
-        end
-    end
-end
+ACTIONS.ADDWETFUEL.fn = ACTIONS.ADDFUEL.fn
 
 ACTIONS.GIVE.strfn = function(act)
     return act.target ~= nil

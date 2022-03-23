@@ -280,7 +280,7 @@ function TrueScrollList:SetItemsData(items)
 	if self.end_pos < 1 then self.end_pos = 1 end --clamp a tiny item set to be at the start position
 
     local focused_item_index = self.focused_widget_index + self.displayed_start_index
-    if #self.items > 0 and not self.items[focused_item_index] then
+    if self.focus and #self.items > 0 and not self.items[focused_item_index] then
         --print("We filtered out the selected icon, so we need to move the focus back to the start otherwise controller input will be stuck")
         self.widgets_to_update[1]:SetFocus()
     end

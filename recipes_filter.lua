@@ -1,10 +1,24 @@
 
 local function GetCharacterAtlas(owner)
-    return resolvefilepath("images/avatars.xml")
+	-- mod character avatars for the crafting menu should be placed in "/images/crafting_menu_avatars/avatar_<name>.xml" with image "avatar_<name>.tex"
+	-- if the mod character does not have a specific crafting menu icon, then it will fallback to "/images/avatars/avatar_<name>.xml" with image "avatar_<name>.tex"
+	-- these paths will also respect being redirected via MOD_CRAFTING_AVATAR_LOCATIONS or MOD_AVATAR_LOCATIONS
+
+	local atlas_name = nil
+	if owner ~= nil and table.contains(MODCHARACTERLIST, owner.prefab) then
+        atlas_name = (MOD_CRAFTING_AVATAR_LOCATIONS[owner.prefab] or MOD_CRAFTING_AVATAR_LOCATIONS.Default) .. "avatar_" .. owner.prefab .. ".xml"
+	    if softresolvefilepath(atlas_name) == nil then
+			atlas_name = (MOD_AVATAR_LOCATIONS[owner.prefab] or MOD_AVATAR_LOCATIONS.Default) .. "avatar_" .. owner.prefab .. ".xml"
+		end
+	else
+		atlas_name = resolvefilepath("images/crafting_menu_avatars.xml")
+    end
+	
+    return atlas_name
 end
 
 local function GetCharacterImage(owner)
-    return owner ~= nil and ("avatar_".. owner.prefab ..".tex") or "self_inspect_mod.tex"
+	return owner ~= nil and ("avatar_".. owner.prefab ..".tex") or "avatar_mod.tex"
 end
 
 local function GetCraftingMenuAtlas()
@@ -477,8 +491,6 @@ CRAFTING_FILTERS.LIGHT.recipes =
 
 CRAFTING_FILTERS.PROTOTYPERS.recipes =
 {
-	"madscience_lab",
-	"wintersfeastoven",
 	"researchlab",
 	"researchlab2",
 	"seafaring_prototyper",
@@ -488,6 +500,15 @@ CRAFTING_FILTERS.PROTOTYPERS.recipes =
 	"researchlab3",
 	"sculptingtable",
 	"turfcraftingstation",
+
+	"madscience_lab",
+	"wintersfeastoven",
+	"perdshrine",			
+	"wargshrine",			
+	"pigshrine",			
+	"yotc_carratshrine",	
+	"yotb_beefaloshrine",	
+	"yot_catcoonshrine",	
 }
 
 CRAFTING_FILTERS.REFINE.recipes =
@@ -514,6 +535,7 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 {
 	"pocketwatch_weapon",
 	"slingshot",
+	"winona_catapult",
 	"spear",
 	"spear_wathgrithr",
 	"boomerang",
@@ -640,6 +662,7 @@ CRAFTING_FILTERS.COOKING.recipes =
 	"firepit",
 	"icebox",
 	"saltbox",
+	"icepack",
 	"dragonflyfurnace",
 
 }
@@ -860,6 +883,7 @@ CRAFTING_FILTERS.RIDING.recipes =
 	"saddle_basic",
 	"saddle_war",
 	"saddle_race",
+	"beefalo_groomer",
 }
 
 CRAFTING_FILTERS.WINTER.recipes =
@@ -912,9 +936,13 @@ CRAFTING_FILTERS.SUMMER.recipes =
 	"eyebrellahat",
 
 	"firesuppressor",
+	"turf_dragonfly",
 
 	"siestahut",
+
 	"waterballoon",
+	"wateringcan",
+	"premiumwateringcan",
 
 	"winterometer",
 	"rainometer",

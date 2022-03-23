@@ -7016,10 +7016,6 @@ STRINGS.UI =
 			crabking = "The Crab King",
 		},
 		TROPHYSCALE_UNKNOWN_OWNER = "An Unnamed Donor",
-
-		CRAFTING_PIN = "Pin",
-		CRAFTING_UNPIN = "Unpin",
-
 	},
 
 	CRAFTING_FILTERS =
@@ -7082,6 +7078,14 @@ STRINGS.UI =
 		    FAVORITE = "Favorite",
 		},
 		SEARCH = "Search",
+
+		NAVIGATION = "Navigation",
+		PIN = "Pin",
+		UNPIN = "Unpin",
+
+		FAVORITE_ADD = "Add Favorite",
+		FAVORITE_REMOVE = "Remove Favorite",
+		NO_ITEMS = "No items match the current filter.",
 	},
 
     ACCOUNT =
@@ -7214,9 +7218,10 @@ STRINGS.UI =
         WALTERCAMERA = "Campfire Camera:",
         BOATCAMERA = "Seafaring Camera:",
         BACKPACKMODE = "Backpack Layout:",
-        AUTOPAUSE = "Auto-pause:",
-        CONSOLEAUTOPAUSE = "Console Auto-pause:",
-        CRAFTINGAUTOPAUSE = "Crafting Auto-pause:",
+        AUTOPAUSE = "Auto-Pause:",
+        CONSOLEAUTOPAUSE = "Console Auto-Pause:",
+        CRAFTINGAUTOPAUSE = "Crafting Auto-Pause:",
+		CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Crafting Auto-Close",
         DEFAULTCLOUDSAVES = "Default Save Type:",
 		INTEGRATEDBACKPACK_DISABLED = "Separated",
 		INTEGRATEDBACKPACK_ENABLED = "Integrated",
@@ -7294,6 +7299,7 @@ STRINGS.UI =
             SERVER_NAME_PROFANITY_FILTER = "Filter out the profanity when browsing the server list. Filtered servers will have their names displayed as \"This server name has been filtered\" and can still be joined.",
             AUTOPAUSE = "When you are the only player in the world, this will pause the game while you are in the ingame menus, crafting, or viewing the cookbook or plant registry. If there are other players in the world, only the server admin will have permissions to pause the game.",
             CRAFTINGAUTOPAUSE = "When you are the only player in the world, this will pause the game while the crafting menu is open.",
+			CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Closes the crafting menu when building a structure that is placed in the world.",
             DATACOLLECTION = "We collect metrics and telemetry on Don't Starve Together, including how long and how often you play. This information helps us troubleshoot the game, provide rewards, and improve your experience. Refer to https://www.klei.com/privacy-policy for more information.",
             LOADING_TIPS = "Learn more about the lore and the gameplay of Don't Starve while your world loads.",
 			TARGETLOCKING = "Focus on one target at a time.",
@@ -7375,7 +7381,7 @@ STRINGS.UI =
 		CHECK_SHOP = "Updating the shop",
 		CHECK_EVENT = "Catching up on current events",
 		CHECK_DAILY_GIFT = "Checking for daily gifts",
-		CHECK_COOKBOOK = "Updating cookbook",
+		CHECK_KEYVALUESTORES = "Grabbing profile details",
 		CHECK_INVENTORY = "Updating inventory",
     },
 
@@ -7389,7 +7395,7 @@ STRINGS.UI =
         TIP_CAVES = "\"I finally worked up the courage to explore the underground caverns. To my surprise, I found there was ample light provided by a most curious glowing plant that seems to grow naturally throughout the cave system. I've harvested some bulbs for further study.\" -W",
         TIP_PIG_AND_MONSTERS = "\"The Pig men seem to harbor a deep dislike for the Constant's more monstrous denizens, attacking them on sight. While I personally can't blame them, it does pose a bit of a problem for some of my compatriots...\" -W",
         TIP_TREEGUARD = "\"Could've sworn I saw one of the trees movin' when I was out choppin' firewood... must've been a trick of the light.\" -W",
-        TIP_RUN_AWAY = "\"It turns out that Koalephants are a bit hardier than I expected. I (quite sensibly) decided to take a... strategic retreat until I'm better prepared.\" -W",
+        TIP_RUN_AWAY = "\"It turns out that Koalefants are a bit hardier than I expected. I (quite sensibly) decided to take a... strategic retreat until I'm better prepared.\" -W",
         TIP_CHARCOAL = "\"You know what they say, you can't get charcoal without burning down a few trees!\" -W",
         TIP_HEAT = "\"Blast this heat! Where's a nice, chilled drink when you need it?\" -M",
         TIP_WETNESS = "\"The rain is proving to be a greater hindrance than I first anticipated. As if being soaked to the bone isn't dreadful enough, my tools keep slipping from my hands when I try to make use of them!\" -W",
@@ -10792,7 +10798,7 @@ STRINGS.UI =
             "Debug Log",
             "Debug Render",
             "Open Inventory",
-            "Open Crafting",
+            "Open Crafting Menu",
             "Inv Left",
             "Inv Right",
             "Inv Up",
@@ -10820,6 +10826,7 @@ STRINGS.UI =
             "Menu Misc 4", --controller
             "Inspect Self",
             "Pause Server",
+			"Search Crafting Menu",
         },
 
         DEVICE_TITLE = "Controls",

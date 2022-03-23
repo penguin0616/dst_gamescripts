@@ -42,6 +42,9 @@ local CraftingMenuHUD = Class(Widget, function(self, owner, is_left_aligned)
 	self.openhint = self:AddChild(Text(UIFONT, 30))
 	self.openhint:SetPosition(is_left_aligned and 28 or -28, 34 + HEIGHT/2)
 
+	self.nav_hint = self.craftingmenu:AddChild(Text(BODYTEXTFONT, 26))
+	self.nav_hint:SetPosition(0, -28 - HEIGHT/2)
+
 	self:RefreshControllers(TheInput:ControllerAttached())
 
 	self.craftingmenu:DoFocusHookups()
@@ -51,6 +54,11 @@ local CraftingMenuHUD = Class(Widget, function(self, owner, is_left_aligned)
     local function event_UpdateRecipes()
         self:UpdateRecipes()
     end
+
+	local function UpdateRecipesForTechTreeChange()
+		self.tech_tree_changed = true
+        self:UpdateRecipes()
+	end
 
     local last_health_seg = nil
     local last_health_penalty_seg = nil
@@ -92,7 +100,7 @@ local CraftingMenuHUD = Class(Widget, function(self, owner, is_left_aligned)
     self.inst:ListenForEvent("playeractivated", InitializeCraftingMenu, self.owner)
     self.inst:ListenForEvent("healthdelta", UpdateRecipesForHealthIngredients, self.owner)
     self.inst:ListenForEvent("sanitydelta", UpdateRecipesForSanityIngredients, self.owner)
-    self.inst:ListenForEvent("techtreechange", event_UpdateRecipes, self.owner)
+    self.inst:ListenForEvent("techtreechange", UpdateRecipesForTechTreeChange, self.owner)
     self.inst:ListenForEvent("itemget", event_UpdateRecipes, self.owner)
     self.inst:ListenForEvent("itemlose", event_UpdateRecipes, self.owner)
     self.inst:ListenForEvent("newactiveitem", event_UpdateRecipes, self.owner)
@@ -111,7 +119,7 @@ function CraftingMenuHUD:IsCraftingOpen()
     return self.is_open
 end
 
-function CraftingMenuHUD:Open()
+function CraftingMenuHUD:Open(search)
 	if self:IsCraftingOpen() then
 		return 
 	end
@@ -123,10 +131,17 @@ function CraftingMenuHUD:Open()
 	self.craftingmenu:Enable()
 	self.pinbar:Enable()
 
-	self.open_focus = nil
-	if TheInput:ControllerAttached() then
-		if self.pinbar.focus then
-			self.open_focus = self.pinbar:GetFocusSlot()
+	self:RefreshCraftingHelpText()
+
+	if search then
+		self.open_focus = self.craftingmenu.search_box
+		self.craftingmenu:StartSearching(true)
+	else
+		self.open_focus = nil
+		if TheInput:ControllerAttached() then
+			if self.pinbar.focus then
+				self.open_focus = self.pinbar:GetFocusSlot()
+			end
 		end
 	end
 
@@ -138,7 +153,7 @@ function CraftingMenuHUD:Open()
 	self.craftingmenu:OnCraftingMenuOpen(self.open_focus == nil)
 	self.pinbar:OnCraftingMenuOpen()
 
-	if not self.focus then
+	if not self.focus and not TheFrontEnd.tracking_mouse then
 		self.craftingmenu:SetFocus()
 	end
 
@@ -162,6 +177,7 @@ function CraftingMenuHUD:Close()
 
 	self.is_open = false
 	TheFrontEnd.crafting_navigation_mode = false
+	self.nav_hint:Hide()
 
     SetCraftingAutopaused(false)
 
@@ -205,6 +221,7 @@ function CraftingMenuHUD:Initialize()
 	self.pinbar:Refresh()
 
 	self.needtoupdate = false
+	self.tech_tree_changed = false
 end
 
 function CraftingMenuHUD:UpdateRecipes()
@@ -285,11 +302,34 @@ function CraftingMenuHUD:OnUpdate(dt)
     if self.needtoupdate then
 		self:RebuildRecipes()
 
-		self.craftingmenu:Refresh() 
+		self.craftingmenu:Refresh(self.tech_tree_changed) 
 		self.pinbar:Refresh()
 
 		self.needtoupdate = false
+		self.tech_tree_changed = false
     end
+	
+	self:RefreshCraftingHelpText()
+end
+
+function CraftingMenuHUD:RefreshCraftingHelpText()
+	if self.is_open then
+		if TheInput:ControllerAttached() then
+			local controller_id = TheInput:GetControllerID()
+
+			local hint_text = TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_UP).." "..TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_RIGHT).." "..TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_DOWN).." "..TheInput:GetLocalizedControl(controller_id, CONTROL_INVENTORY_LEFT).." "..STRINGS.UI.CRAFTING_MENU.NAVIGATION
+			if self.craftingmenu.focus then
+				hint_text = hint_text .. "  " .. self.craftingmenu:RefreshCraftingHelpText(TheInput:GetControllerID())
+			elseif self.pinbar.focus then
+				hint_text = hint_text .. "  " .. self.pinbar:RefreshCraftingHelpText(TheInput:GetControllerID())
+			end
+
+			self.nav_hint:SetString(hint_text)
+			self.nav_hint:Show()
+		else
+			self.nav_hint:Hide()
+		end
+	end
 end
 
 function CraftingMenuHUD:OnControl(control, down)

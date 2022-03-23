@@ -91,7 +91,11 @@ local hint_text =
     ["SPIDERCRAFT"] = "NEEDSSPIDERFRIENDSHIP",
 }
 
-function CraftingMenuDetails:UpdateBuildButton()
+function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
+	if self.data == nil then
+		return
+	end
+
     local builder = self.owner.replica.builder
 	local recipe = self.data.recipe
 	local meta = self.data.meta
@@ -121,10 +125,14 @@ function CraftingMenuDetails:UpdateBuildButton()
 
         if TheInput:ControllerAttached() then
             if meta.can_build then
-				teaser:SetSize(26)
-				teaser:UpdateOriginalSize()
-				teaser:SetMultilineTruncatedString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT).." "..buttonstr, 2, (self.panel_width / 2) * 0.8, nil, false, true)
-				teaser:Show()
+				if from_pin_slot ~= nil and (from_pin_slot.recipe_name ~= recipe.name or self.skins_spinner:GetItem() ~= from_pin_slot.skin_name) then
+					teaser:Hide()
+				else
+					teaser:SetSize(26)
+					teaser:UpdateOriginalSize()
+					teaser:SetMultilineTruncatedString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT).." "..buttonstr, 2, (self.panel_width / 2) * 0.8, nil, false, true)
+					teaser:Show()
+				end
             else
 				teaser:SetSize(20)
 				teaser:UpdateOriginalSize()
@@ -171,7 +179,9 @@ function CraftingMenuDetails:_MakeBuildButton()
         local skin = self.skins_spinner:GetItem()
 
 		if not button.recipe_held then
-			if not DoRecipeClick(self.owner, self.data.recipe, skin) then
+			local already_buffered = self.owner.replica.builder:IsBuildBuffered(self.data.recipe.name)
+			local stay_open = DoRecipeClick(self.owner, self.data.recipe, skin)
+			if not stay_open and (already_buffered or Profile:GetCraftingMenuBufferedBuildAutoClose()) then
 				self.owner.HUD:CloseCrafting()
 			end
 		end
@@ -207,6 +217,8 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 		self.ingredients = nil
 		self.skins_spinner = nil
 		self.fav_button = nil
+		self.from_filter_name = self.parent_widget.current_filter_name
+		--print("PopulateRecipeDetailPanel", self.parent_widget.current_filter_name, data ~= nil and data.recipe.name or nil, skin_name)
 
 		self:KillAllChildren()
 		return
@@ -219,6 +231,9 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 		self:UpdateBuildButton()
 		return
 	end
+
+	self.from_filter_name = self.parent_widget.current_filter_name
+	--print("PopulateRecipeDetailPanel", self.parent_widget.current_filter_name, data ~= nil and data.recipe.name or nil, skin_name)
 
 	self:KillAllChildren()
 

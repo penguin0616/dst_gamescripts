@@ -63,7 +63,7 @@ end
 function CookbookData:ApplyOnlineProfileData()
 	if not self.synced and not (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) and TheInventory:HasDownloadedInventory() then
 		self.preparedfoods = self.preparedfoods or {}
-		for k, v in pairs(TheInventory:GetLocalCookbook()) do
+		for k, v in pairs(TheInventory:GetLocalCookBook()) do
 			self.preparedfoods[k] = DecodeCookbookEntry(v)
 		end
 		self.synced = true
@@ -117,7 +117,7 @@ function CookbookData:LearnFoodStats(product)
 
 	if updated and self.save_enabled then
 		if not cooking.IsModCookerFood(product) and not TheNet:IsDedicated() then
-			TheInventory:SetCookbookValue(product, EncodeCookbookEntry(preparedfood))
+			TheInventory:SetCookBookValue(product, EncodeCookbookEntry(preparedfood))
 		end
 		self:Save(true)
 	end
@@ -180,7 +180,7 @@ function CookbookData:AddRecipe(product, ingredients)
 
 	if updated and self.save_enabled then
 		if not cooking.IsModCookerFood(product) and not TheNet:IsDedicated() then
-			TheInventory:SetCookbookValue(product, EncodeCookbookEntry(preparedfood))
+			TheInventory:SetCookBookValue(product, EncodeCookbookEntry(preparedfood))
 		end
 		self:Save(true)
 	end

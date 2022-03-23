@@ -30,7 +30,7 @@ local spinner_font = {font=UIFONT, size=26}
 
 local SCALE = 0.85
 
-local FORCE_NEWTAG = true
+local FORCE_NEWTAG = false
 
 local SkinSelector = Class(Widget, function(self, recipe, owner, skin_name)
     Widget._ctor(self, "Crafting Menu Skins Selector")
@@ -189,7 +189,7 @@ function SkinSelector:GetSkinOptions()
                 text = text_name,
                 data = nil,
                 colour = colour,
-                new_indicator = new_indicator,
+                --new_indicator = new_indicator, -- disabling the new indicator, for now, because it never really quite worked right...
                 image = {GetInventoryItemAtlas(image_name), image_name or "default.tex", "default.tex"},
             })
         end

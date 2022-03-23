@@ -1,6 +1,8 @@
 require "util"
 local TechTree = require("techtree")
 
+local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
+
 PI = 3.14159
 PI2 = PI*2
 DEGREES = PI/180
@@ -170,6 +172,7 @@ CONTROL_MENU_MISC_4 = 71  -- R
 CONTROL_INSPECT_SELF = 72 -- Keyboard self inspect [I]
 
 CONTROL_SERVER_PAUSE = 73
+CONTROL_SEARCH_CRAFTING = 74
 
 CONTROL_CUSTOM_START = 100
 
@@ -689,7 +692,7 @@ SPECIAL_EVENTS =
     YOTB = "year_of_the_beefalo",
     YOT_CATCOON = "year_of_the_catcoon",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.YOT_CATCOON
+WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.YOT_CATCOON or SPECIAL_EVENTS.NONE
 WORLD_EXTRA_EVENTS = {}
 
 FESTIVAL_EVENTS =
@@ -2245,9 +2248,8 @@ INVENTORY_PROGRESS =
 	CHECK_EVENT = 2,
 	CHECK_DLC = 3,
 	CHECK_DAILY_GIFT = 4,
-	CHECK_COOKBOOK = 5,
-	CHECK_PLANTREGISTRY = 6,
-	CHECK_INVENTORY = 7,
+	CHECK_KEYVALUESTORES = 5,
+	CHECK_INVENTORY = 6,
 }
 
 CURRENT_BETA = 1 -- set to 0 if there is no beta. Note: release builds wont use this so only staging and dev really care

@@ -280,37 +280,39 @@ function Controls:MakeScalingNodes()
     self.topright_root = self.topright_root:AddChild(Widget("tr_scale_root"))
     self.bottom_root = self.bottom_root:AddChild(Widget("bottom_scale_root"))
     self.top_root = self.top_root:AddChild(Widget("top_scale_root"))
-    self.crafting_root = self.left_root:AddChild(Widget("left_scale_root"))
+    self.left_root = self.left_root:AddChild(Widget("left_scale_root"))
     self.right_root = self.right_root:AddChild(Widget("right_scale_root"))
     self.bottomright_root = self.bottomright_root:AddChild(Widget("br_scale_root"))
     self.topright_over_root = self.topright_over_root:AddChild(Widget("tr_over_scale_root"))
-
-	self.left_root = self.crafting_root -- left_root is now deprecated, see self.crafting_root 
-    --
 end
 
 function Controls:SetHUDSize()
     local scale = TheFrontEnd:GetHUDScale()
+	local crafting_scale = TheFrontEnd:GetCraftingMenuScale()
 
-    self.topleft_root:SetScale(scale, scale, scale)
-    self.topright_root:SetScale(scale, scale, scale)
-    self.bottom_root:SetScale(scale, scale, scale)
-    self.top_root:SetScale(scale, scale, scale)
-    self.right_root:SetScale(scale, scale, scale)
-    self.bottomright_root:SetScale(scale, scale, scale)
-    --self.left_root:SetScale(scale, scale, scale)
-    self.containerroot:SetScale(scale, scale, scale)
-    self.containerroot_side:SetScale(scale, scale, scale)
-    self.hover:SetScale(scale, scale, scale)
-    self.topright_over_root:SetScale(scale, scale, scale)
+    self.topleft_root:SetScale(scale)
+    self.topright_root:SetScale(scale)
+    self.bottom_root:SetScale(scale)
+    self.top_root:SetScale(scale)
+    self.bottomright_root:SetScale(scale)
+    self.containerroot:SetScale(scale)
+    self.containerroot_side:SetScale(scale)
+    self.hover:SetScale(scale)
+    self.topright_over_root:SetScale(scale)
 
-    self.mousefollow:SetScale(scale, scale, scale)
+    self.mousefollow:SetScale(scale)
 
     if self.desync ~= nil then
-        self.desync:SetScale(scale, scale, scale)
+        self.desync:SetScale(scale)
     end
 
-	self.crafting_root:SetScale(TheFrontEnd:GetCraftingMenuScale())
+	if IsGameInstance(Instances.Player1) then
+		self.left_root:SetScale(crafting_scale)
+	    self.right_root:SetScale(scale)
+	else
+		self.left_root:SetScale(scale)
+	    self.right_root:SetScale(crafting_scale)
+	end
 
     self.owner.HUD.inst:PushEvent("refreshhudsize", scale)
 end

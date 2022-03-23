@@ -38,11 +38,17 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
     self.craft_button.ongainfocusfn = function() 
 		self.craft_button.recipe_held = false
 		self.craft_button.last_recipe_click = nil
+
+		if self.craftingmenu:IsCraftingOpen() and TheInput:ControllerAttached() then
+			self.craftingmenu.craftingmenu.details_root:UpdateBuildButton(self)
+		end
 	end
 	self.craft_button:SetWhileDown(function()
 		if self.craft_button.recipe_held then
 			local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name) 
-			DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name)
+			if recipe_data ~= nil then
+				DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name)
+			end
 		end
 	end)
 	self.craft_button:SetOnDown(function()
@@ -52,7 +58,7 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 		end
 	end)
 	self.craft_button:SetOnClick(function()
-		if self.owner.HUD:IsCraftingOpen() then
+		if self.craftingmenu:IsCraftingOpen() then
 			if self.unpin_button.focus then
 				self:SetRecipe(nil, nil)
 				return
@@ -86,10 +92,14 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 		local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name) 
 		if recipe_data ~= nil then
 			if not self.craft_button.recipe_held then
+				local already_buffered = self.owner.replica.builder:IsBuildBuffered(recipe_data.recipe.name)
 				local stay_open, error_msg = DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name) 
 				if not stay_open then
 					self.owner:PushEvent("refreshcrafting") -- this is only really neede for free crafting
-					self.owner.HUD:CloseCrafting()
+
+					if already_buffered or Profile:GetCraftingMenuBufferedBuildAutoClose() then
+						self.owner.HUD:CloseCrafting()
+					end
 				end
 				if error_msg and not TheNet:IsServerPaused() then
 					SendRPCToServer(RPC.CannotBuild, error_msg)
@@ -110,16 +120,18 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 	self.craft_button.OnControl = function(_self, control, down)
 		if ImageButton.OnControl(_self, control, down) then return true end
 		if self.focus and down and not _self.down then
-			if TheInput:ControllerAttached() and self.owner.HUD:IsCraftingOpen() then
+			if TheInput:ControllerAttached() and self.craftingmenu:IsCraftingOpen() then
 				if control == CONTROL_MENU_MISC_1 then
 					if self.recipe_name ~= nil then
 						self:SetRecipe(nil, nil)
+						self.craftingmenu.craftingmenu.details_root:UpdateBuildButton(self)
 						TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 						return true
 					else
 						local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
 						if recipe_name ~= nil then
 							self:SetRecipe(recipe_name, skin_name)
+							self.craftingmenu.craftingmenu.details_root:UpdateBuildButton(self)
 							TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 							return true
 						end
@@ -128,7 +140,9 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 					local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
 					if self.recipe_name ~= nil and self.recipe_name == recipe_name then
 						if self.craftingmenu.craftingmenu.details_root.skins_spinner:OnControl(control, down) then 
-							self:SetRecipe(self.craftingmenu:GetCurrentRecipeName())
+							recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
+							self:SetRecipe(recipe_name, skin_name)
+							self.craftingmenu.craftingmenu.details_root:UpdateBuildButton(self)
 							return true 
 						end
 					end
@@ -308,7 +322,7 @@ function PinSlot:Refresh()
 		self.item_img:SetTexture(atlas, "pinslot_fg_pin.tex")
 		self.item_img:ScaleToSize(is_left and item_size or -item_size, item_size)
 
-		self.craft_button:SetHelpTextMessage(STRINGS.UI.HUD.CRAFTING_PIN)
+		self.craft_button:SetHelpTextMessage(STRINGS.UI.CRAFTING_MENU.PIN)
 	end
 	
 end
@@ -316,7 +330,7 @@ end
 function PinSlot:OnGainFocus()
     PinSlot._base.OnGainFocus(self)
     
-	if self.owner.HUD:IsCraftingOpen() then
+	if self.craftingmenu:IsCraftingOpen() then
 		if TheInput:ControllerAttached() then
 			self.unpin_button_bg:Show()
 			self.unpin_controllerhint:Show()
@@ -371,17 +385,16 @@ end
 
 function PinSlot:SetUnpinControllerHintString()
 	if self.craftingmenu.is_left_aligned then 
-		self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1) .. " " .. (self.recipe_name ~= nil and STRINGS.UI.HUD.CRAFTING_UNPIN or STRINGS.UI.HUD.CRAFTING_PIN))
+		self.unpin_controllerhint:SetString(TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1) .. " " .. (self.recipe_name ~= nil and STRINGS.UI.CRAFTING_MENU.UNPIN or STRINGS.UI.CRAFTING_MENU.PIN))
 	else
-		self.unpin_controllerhint:SetString((self.recipe_name ~= nil and STRINGS.UI.HUD.CRAFTING_UNPIN or STRINGS.UI.HUD.CRAFTING_PIN) .. " " .. TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1))
+		self.unpin_controllerhint:SetString((self.recipe_name ~= nil and STRINGS.UI.CRAFTING_MENU.UNPIN or STRINGS.UI.CRAFTING_MENU.PIN) .. " " .. TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_MENU_MISC_1))
 	end
 end
 
 function PinSlot:RefreshControllers(controller_mode)
 	if controller_mode then
-		if self.owner.HUD:IsCraftingOpen() then
+		if self.craftingmenu:IsCraftingOpen() then
 			self.craft_button:SetControl(CONTROL_ACCEPT)
-			--self.craft_button:SetHelpTextMessage(self.recipe_name ~= nil and STRINGS.UI.HUD.SELECT or STRINGS.UI.HUD.CRAFTING_PIN)
 
 			self.recipe_popup.openhint:Hide()
 			self.unpin_button:Hide()
@@ -401,7 +414,7 @@ function PinSlot:RefreshControllers(controller_mode)
 		self.craft_button:SetControl(CONTROL_PRIMARY)
         self.recipe_popup.openhint:Hide()
 
-		if self.owner.HUD:IsCraftingOpen() then
+		if self.craftingmenu:IsCraftingOpen() then
 			if self.recipe_name ~= nil and self.focus then
 				self.unpin_button_bg:Show()
 				self.unpin_button:Show()
@@ -454,6 +467,18 @@ function PinSlot:HideRecipe()
     if self.recipe_popup then
         self.recipe_popup:HidePopup()
     end
+end
+
+function PinSlot:RefreshCraftingHelpText(controller_id)
+	local hint_text = ""
+	if self.recipe_name ~= nil then
+		local recipe_name, skin_name = self.craftingmenu:GetCurrentRecipeName()
+		if recipe_name == nil or self.recipe_name ~= recipe_name or self.skin_name ~= skin_name then
+			hint_text = TheInput:GetLocalizedControl(controller_id, CONTROL_ACCEPT).." "..STRINGS.UI.HUD.SELECT
+		end
+	end
+
+	return hint_text
 end
 
 return PinSlot

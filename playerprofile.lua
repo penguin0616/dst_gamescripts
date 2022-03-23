@@ -785,6 +785,25 @@ function PlayerProfile:GetCraftingAutopauseEnabled()
     end
 end
 
+function PlayerProfile:SetCraftingMenuBufferedBuildAutoClose(enabled)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "craftingmenu_bufferedbuild_autoclose", tostring(enabled))
+	else
+		self:SetValue("craftingmenu_bufferedbuild_autoclose", enabled)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetCraftingMenuBufferedBuildAutoClose()
+    -- default to true
+    if USE_SETTINGS_FILE then
+        return TheSim:GetSetting("misc", "craftingmenu_bufferedbuild_autoclose") ~= "false" 
+    else
+        return self:GetValue("craftingmenu_bufferedbuild_autoclose") ~= false
+    end
+end
+
+
 function PlayerProfile:SetLoadingTipsOption(setting)
 	if USE_SETTINGS_FILE then
         TheSim:SetSetting("misc", "loadingtips", tostring(setting))

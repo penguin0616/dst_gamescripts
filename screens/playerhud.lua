@@ -851,14 +851,14 @@ function PlayerHud:IsPlayerAvatarPopUpOpen()
         and self.playeravatarpopup.inst:IsValid()
 end
 
-function PlayerHud:OpenCrafting()
+function PlayerHud:OpenCrafting(search)
 	if not self:IsCraftingOpen() and not GetGameModeProperty("no_crafting") then
 		if self:IsControllerInventoryOpen() then
 			self:CloseControllerInventory()
 		end
 
 		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/craft_open")
-		self.controls.craftingmenu:Open()
+		self.controls.craftingmenu:Open(search)
 
 		self.controls.item_notification:ToggleController(true)
 		self.controls.yotb_notification:ToggleController(true)
@@ -983,6 +983,18 @@ function PlayerHud:OnControl(control, down)
                 return true
             end
         end
+    elseif control == CONTROL_SEARCH_CRAFTING then
+		if not GetGameModeProperty("no_crafting") then
+            local inventory = self.owner.replica.inventory
+            if inventory ~= nil and inventory:IsVisible() then
+				if not self:IsCraftingOpen() then
+					self:OpenCrafting(true)
+				else
+					self.controls.craftingmenu.craftingmenu:StartSearching(true)
+				end
+				return true
+            end
+		end
     elseif control == CONTROL_OPEN_INVENTORY then
         if self:IsControllerInventoryOpen() then
             self:CloseControllerInventory()
