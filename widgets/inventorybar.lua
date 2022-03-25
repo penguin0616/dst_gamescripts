@@ -575,7 +575,9 @@ function Inv:CursorNav(dir, same_container_only)
         self.actionstring:Show()
     end
 
-    if self.active_slot == nil or not self.active_slot.inst:IsValid() or self.current_list == nil or self.current_list[1] == nil or not self.current_list[1].inst:IsValid() then
+	local _, current_list_first_slot = next(self.current_list)
+
+    if self.active_slot == nil or not self.active_slot.inst:IsValid() or self.current_list == nil or current_list_first_slot == nil or not current_list_first_slot.inst:IsValid() then
         self.current_list = self.inv
 		self.pin_nav = false
         self:SelectDefaultSlot()

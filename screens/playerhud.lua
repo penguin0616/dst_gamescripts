@@ -788,6 +788,10 @@ function PlayerHud:IsControllerInventoryOpen()
     return self.controls ~= nil and self.controls.inv.open
 end
 
+function PlayerHud:IsControllerCraftingOpen() -- deprecated - please switch to using IsCraftingOpen() or playercontroller:IsEnabled()
+    return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen()
+end
+
 function PlayerHud:IsCraftingOpen()
     return self.controls ~= nil and self.controls.craftingmenu:IsCraftingOpen()
 end

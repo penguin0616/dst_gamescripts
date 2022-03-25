@@ -1225,7 +1225,7 @@ local function CheckControllers()
 	if IsSteamDeck() and not TheNet:IsDedicated() then
 		TheInputProxy:EnableInputDevice(1, true)
         Check_Mods()
-    elseif isConnected and not (sawPopup or TheNet:IsDedicated()) then
+    elseif RUN_GLOBAL_INIT and isConnected and not (sawPopup or TheNet:IsDedicated()) then
 
         -- store previous controller enabled state so we can revert to it, then enable all controllers
         local controllers = {}

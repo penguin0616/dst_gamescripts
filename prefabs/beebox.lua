@@ -157,7 +157,7 @@ local function TryStartSleepGrowing(inst)
     if CanStartGrowing(inst) then
         inst.components.harvestable:SetGrowTime(TUNING.BEEBOX_HONEY_TIME)
         inst.components.harvestable:StartGrowing()
-    else
+    elseif inst.components.harvestable then
         inst.components.harvestable:PauseGrowing()
     end
 end

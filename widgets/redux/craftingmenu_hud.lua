@@ -248,16 +248,18 @@ function CraftingMenuHUD:RebuildRecipes()
 				--meta.can_build = true/false
 				--meta.build_state = string
 
+				local is_build_tag_restructed = not builder:CanLearn(recipe.name) -- canlearn is "not build tag restricted"
+
 				if knows_recipe or should_hint_recipe or freecrafting then --Knows enough to see it
 				--and (self.filter == nil or self.filter(recipe.name, builder, nil)) -- Has no filter or passes the filter in place
 
-					if builder:IsBuildBuffered(recipe.name) then
+					if builder:IsBuildBuffered(recipe.name) and not is_build_tag_restructed then
 						meta.can_build = true
 						meta.build_state = "buffered"
 					elseif freecrafting then
 						meta.can_build = true
 						meta.build_state = "freecrafting"
-					elseif not builder:CanLearn(recipe.name) then	-- canlearn is "not build tag restricted"
+					elseif is_build_tag_restructed then
 						meta.can_build = false
 						meta.build_state = "hide"
 					elseif knows_recipe then

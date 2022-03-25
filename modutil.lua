@@ -630,7 +630,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		local rec = Recipe2(name, ingredients, tech, config)
 
 		if not rec.is_deconstruction_recipe then
-			if config.nounlock then
+			if config ~= nil and config.nounlock then
 				env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
 			else
 				env.AddRecipeToFilter(name, CRAFTING_FILTERS.MODS.name)
