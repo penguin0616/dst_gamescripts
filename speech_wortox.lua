@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "The game was denied, there's nowwhere to hide!",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "If we play any more, it's gonna be a chore.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Warly won't let me peek inside. He's no fun.",
+			SHADOWMAGIC = "I don't think he knows how to use it.",
+		},
         COOK =
         {
             GENERIC = "I'd rather snack on a soul no one's using.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I seem to be missing a thing or two.",
+		NO_TECH = "Its making is a mystery to me.",
+		NO_STATION = "No, no, this just won't do.",
+	},
 
 	ACTIONFAIL_GENERIC = "No, no, no.",
 	ANNOUNCE_BOAT_LEAK = "Now this ride's getting fun!",
@@ -2786,6 +2798,8 @@ return{
 			BURNT = "The fashion dimension has been sealed off.",
 		},
 		WARG = "I'll not be a feast for that beast!",
+        WARGLET = "You wouldn't want to eat me, imps give terrible indigestion!",
+        
 		WASPHIVE = "Do I want to start some mischief?",
 		WATERBALLOON = "You'd never see me coming!",
 		WATERMELON = "I do not want it.",
@@ -4297,6 +4311,7 @@ return{
 
         DUMBBELL = "It's neither dumb, nor a bell. Mortals are strange, indeed.",
         DUMBBELL_GOLDEN = "It's neither dumb, nor a bell. Mortals are strange, indeed.",
+		DUMBBELL_MARBLE = "Marbellous, simply marbellous!",
         DUMBBELL_GEM = "He's turned those gemstones into gymstones, hyuyu!",
         POTATOSACK = "Hyuyuyu, wouldn't it be fun to hide inside and give him a scare?",
 

@@ -22,6 +22,7 @@ local function tryspawn(inst)
         end
 
         local obj = inst.components.objectspawner:SpawnObject(inst.spawnprefab)
+        obj.spawnlocation = Vector3(x, y, z)
         obj.Transform:SetPosition(x, y, z)
   		if inst.onrespawnfn ~= nil then
 			inst.onrespawnfn(obj, inst)

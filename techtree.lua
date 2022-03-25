@@ -26,6 +26,7 @@ local AVAILABLE_TECH =
 	"WINTERSFEASTCOOKING",
     "HERMITCRABSHOP",
     "TURFCRAFTING",
+	"MASHTURFCRAFTING",
     "SPIDERCRAFT",
 }
 
@@ -36,6 +37,7 @@ local BONUS_TECH =
     "MAGIC",
 	"SEAFARING",
     "ANCIENT",
+	"MASHTURFCRAFTING",
 }
 
 local function Create(t)

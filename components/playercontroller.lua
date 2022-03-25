@@ -236,7 +236,12 @@ local function OnZoom(inst, data)
 end
 
 local function OnContinueFromPause()
-    ThePlayer.components.playercontroller:ToggleController(TheInput:ControllerAttached())
+	local self = ThePlayer.components.playercontroller
+    self:ToggleController(TheInput:ControllerAttached())
+
+	-- this caches if the camera zooming is using the same physical controls as the scroll bar scrolling
+	self.zoomin_same_as_scrollup = TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ZOOM_IN) == TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SCROLLBACK)
+	self.zoomout_same_as_scrolldown = TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ZOOM_OUT) == TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SCROLLFWD)
 end
 
 local function OnDeactivateWorld()
@@ -364,11 +369,12 @@ function PlayerController:SetCanUseMap(val)
     end
 end
 
+-- returns: enable/disable, "a hud element is up, but still allow for limited gameplay to happen"
 function PlayerController:IsEnabled()
     if self.classified == nil or not self.classified.iscontrollerenabled:value() then
         return false
     elseif self.inst.HUD ~= nil and self.inst.HUD:HasInputFocus() then
-        return false, true
+		return false, self.inst.HUD:IsCraftingOpen() and TheFrontEnd.textProcessorWidget == nil
     end
     return true
 end
@@ -461,9 +467,33 @@ function PlayerController:OnControl(control, down)
 		end
 	end
 
-    if not self:IsEnabled() or IsPaused() then
-        return
-    elseif control == CONTROL_PRIMARY then
+	if IsPaused() then
+		return
+	end
+
+    local isenabled, ishudblocking = self:IsEnabled()
+	if not isenabled and not ishudblocking then
+		return
+	end	
+	
+	-- actions that can be done while the crafting menu is open go in here
+	if isenabled or ishudblocking then
+		if control == CONTROL_ACTION then
+			self:DoActionButton()
+		elseif control == CONTROL_ATTACK then
+			if self.ismastersim then
+				self.attack_buffer = CONTROL_ATTACK
+			else
+				self:DoAttackButton()
+			end
+		end
+	end
+
+	if not isenabled then
+		return
+	end
+	
+    if control == CONTROL_PRIMARY then
         self:OnLeftClick(down)
     elseif control == CONTROL_SECONDARY then
         self:OnRightClick(down)
@@ -476,14 +506,6 @@ function PlayerController:OnControl(control, down)
 		self:ControllerTargetLock(false)
     elseif control == CONTROL_INSPECT then
         self:DoInspectButton()
-    elseif control == CONTROL_ACTION then
-        self:DoActionButton()
-    elseif control == CONTROL_ATTACK then
-        if self.ismastersim then
-            self.attack_buffer = CONTROL_ATTACK
-        else
-            self:DoAttackButton()
-        end
     elseif control == CONTROL_CONTROLLER_ALTACTION then
         self:DoControllerAltActionButton()
     elseif control == CONTROL_CONTROLLER_ACTION then
@@ -1521,13 +1543,22 @@ local CATCHABLE_TAGS = { "catchable" }
 local PINNED_TAGS = { "pinned" }
 local CORPSE_TAGS = { "corpse" }
 function PlayerController:GetActionButtonAction(force_target)
+    local isenabled, ishudblocking = self:IsEnabled()
+
     --Don't want to spam the action button before the server actually starts the buffered action
     --Also check if playercontroller is enabled
     --Also check if force_target is still valid
     if (not self.ismastersim and (self.remote_controls[CONTROL_ACTION] or 0) > 0) or
-        not self:IsEnabled() or
+        (not isenabled and not ishudblocking) or
         self:IsBusy() or
         (force_target ~= nil and (not force_target.entity:IsVisible() or force_target:HasTag("INLIMBO") or force_target:HasTag("NOCLICK"))) then
+
+
+    --if (not self.ismastersim and (self.remote_controls[CONTROL_ACTION] or 0) > 0) or
+    --    not self:IsEnabled() or
+    --    self:IsBusy() or
+    --    (force_target ~= nil and (not force_target.entity:IsVisible() or force_target:HasTag("INLIMBO") or force_target:HasTag("NOCLICK"))) then
+
         --"DECOR" should never change, should be safe to skip that check
         return
 
@@ -1650,7 +1681,8 @@ function PlayerController:GetActionButtonAction(force_target)
             for i, v in ipairs(ents) do
                 if v ~= self.inst and v.entity:IsVisible() and CanEntitySeeTarget(self.inst, v) then
                     local action = GetPickupAction(self, v, tool)
-                    if action ~= nil then
+                    -- If we're holding the action button down, only do the action if it's the same as the original clicked action
+                    if action ~= nil and not (self.actionholding and action ~= self.lastclickedaction.action) then
                         return BufferedAction(self.inst, v, action, action ~= ACTIONS.SMOTHER and tool or nil)
                     end
                 end
@@ -1820,10 +1852,10 @@ function PlayerController:DoResurrectButton()
     elseif self.ismastersim then
         self.locomotor:PushAction(buffaction, true)
     elseif self.locomotor == nil then
-        self:RemoteResurrectButton(buffaction)
+        self:RemoteResurrectButton()
     elseif self:CanLocomote() then
         buffaction.preview_cb = function()
-            self:RemoteResurrectButton(buffaction)
+            self:RemoteResurrectButton()
         end
         self.locomotor:PreviewAction(buffaction, true)
     end
@@ -1848,7 +1880,7 @@ function PlayerController:UsingMouse()
     return not TheInput:ControllerAttached()
 end
 
-function PlayerController:ClearActionHold()
+function PlayerController:ClearActionHold(down)
     self.actionholding = false
     self.actionholdtime = nil
     self.lastheldaction = nil
@@ -1856,6 +1888,11 @@ function PlayerController:ClearActionHold()
     self.actionrepeatfunction = nil
     if not self.ismastersim then
         SendRPCToServer(RPC.ClearActionHold)
+    end
+
+    -- Referenced in entityscript.lua
+    if not down then
+        self.heldactionfailed = nil
     end
 end
 
@@ -1869,6 +1906,25 @@ local function IsAnyActionHoldButtonHeld()
     return false
 end
 
+function PlayerController:HandleControlPrimaryHeld()
+    if self.lastclickedaction == nil then
+        return
+    end
+
+    -- We're finished the current action. If we're holding down the primary control button, look for a new action nearby to perform
+    if (self.inst.sg ~= nil and self.inst.sg:HasStateTag("idle")) or self.inst:HasTag("idle") then
+        -- Repeat the last held action if the action is held
+        if (self.lastclickedaction.action == ACTIONS.ATTACK) then
+            self.attack_buffer = CONTROL_ATTACK
+        elseif self.actionholdtime and self.actionholdtime > 0 then
+            self:DoAction(self.lastheldaction)
+        -- Prevent re-picking items up when dropping them while holding down the primary control button
+        elseif self.lastclickedaction.action ~= ACTIONS.DROP then
+            self:DoActionButton()
+        end
+    end
+end
+
 function PlayerController:RepeatHeldAction()
     if not self.ismastersim then
         if self.actionrepeatfunction and (self.lastheldactiontime == nil or GetTime() - self.lastheldactiontime < 1) then
@@ -1878,6 +1934,9 @@ function PlayerController:RepeatHeldAction()
                 self:actionrepeatfunction()
             end
         else
+            if TheInput:IsControlPressed(CONTROL_PRIMARY) then
+                self:HandleControlPrimaryHeld()
+            end
             SendRPCToServer(RPC.RepeatHeldAction)
         end
     else
@@ -1893,6 +1952,8 @@ function PlayerController:RepeatHeldAction()
                 self.heldactioncooldown = INVENTORY_ACTIONHOLD_REPEAT_COOLDOWN
                 self:actionrepeatfunction()
             end
+        elseif TheInput:IsControlPressed(CONTROL_PRIMARY) then
+            self:HandleControlPrimaryHeld()
         else
             self:ClearActionHold()
         end
@@ -1901,19 +1962,13 @@ end
 
 function PlayerController:OnWallUpdate(dt)
     if self.handler then
-        local isenabled, ishudblocking = self:IsEnabled()
-        if not isenabled then
-            if not ishudblocking and self.inst.HUD ~= nil and self.inst.HUD:IsVisible() and not self.inst.HUD:HasInputFocus() then
-                self:DoCameraControl()
-            end
-            return
-        else
-            self:DoCameraControl()
-        end
+        self:DoCameraControl()
     end
 end
 
 function PlayerController:OnUpdate(dt)
+    local isenabled, ishudblocking = self:IsEnabled()
+
     self.predictionsent = false
 
 	if self:IsControllerTargetingModifierDown() and self.controller_targeting_lock_timer then
@@ -1933,11 +1988,11 @@ function PlayerController:OnUpdate(dt)
 		end
     end
 
-    if self.actionholding and not (self:IsEnabled() and IsAnyActionHoldButtonHeld()) then
+    if self.actionholding and not (isenabled and IsAnyActionHoldButtonHeld()) then
         self:ClearActionHold()
     end
 
-    if self.draggingonground and not (self:IsEnabled() and TheInput:IsControlPressed(CONTROL_PRIMARY)) then
+    if self.draggingonground and not (isenabled and TheInput:IsControlPressed(CONTROL_PRIMARY)) then
         if self.locomotor ~= nil then
             self.locomotor:Stop()
         end
@@ -1946,25 +2001,23 @@ function PlayerController:OnUpdate(dt)
         TheFrontEnd:LockFocus(false)
     end
 
-    --ishudblocking set to true lets us know that the only reason
-    --for isenabled returning false is due to HUD blocking input.
-    local isenabled, ishudblocking = self:IsEnabled()
+    --ishudblocking set to true lets us know that the only reason for isenabled returning false is due to HUD wanting to handle some input.
     if not isenabled then
-        if self.directwalking or self.dragwalking or self.predictwalking then
-            if self.locomotor ~= nil then
-                self.locomotor:Stop()
-                self.locomotor:Clear()
-            end
-            self.directwalking = false
-            self.dragwalking = false
-            self.predictwalking = false
-            if not self.ismastersim then
-                self:RemoteStopWalking()
-            end
-        elseif not ishudblocking and self.locomotor ~= nil and self.locomotor.bufferedaction ~= nil then
-            self.locomotor:Stop()
-            self.locomotor:Clear()
-        end
+		local allow_loco = ishudblocking
+		if not allow_loco then
+			if self.directwalking or self.dragwalking then
+				if self.locomotor ~= nil then
+					self.locomotor:Stop()
+					self.locomotor:Clear()
+				end
+				self.directwalking = false
+				self.dragwalking = false
+				self.predictwalking = false
+				if not self.ismastersim then
+					self:RemoteStopWalking()
+				end
+			end
+		end
 
         if self.handler ~= nil then
             self:CancelPlacement(true)
@@ -1996,251 +2049,262 @@ function PlayerController:OnUpdate(dt)
             self:RemoteStopAllControls()
 
             --Other than HUD blocking, we would've been enabled otherwise
-            if ishudblocking and not self:IsBusy() then
+            if not self:IsBusy() then
                 self:DoPredictWalking(dt)
             end
         end
 
-        self.attack_buffer = nil
-        self.controller_attack_override = nil
-        self.bufferedcastaoe = nil
-        return
+		self.controller_attack_override = nil
+		self.bufferedcastaoe = nil
+
+		if not allow_loco then
+			self.attack_buffer = nil
+		end
     end
 
-    --Restore cached placer
-    if self.placer_cached ~= nil then
-        if self.inst.replica.inventory:IsVisible() then
-            self:StartBuildPlacementMode(unpack(self.placer_cached))
-        end
-        self.placer_cached = nil
-    end
+	--Attack controls are buffered and handled here in the update
+	if self.attack_buffer ~= nil then
+		if self.attack_buffer == CONTROL_ATTACK then
+			self:DoAttackButton()
+		elseif self.attack_buffer == CONTROL_CONTROLLER_ATTACK then
+			self:DoControllerAttackButton()
+		else
+			if self.attack_buffer._predictpos then
+				self.attack_buffer:SetActionPoint(self:GetRemotePredictPosition() or self.inst:GetPosition())
+			end
+			if self.attack_buffer._controller then
+				if self.attack_buffer.target == nil then
+					self.controller_attack_override = self:IsControlPressed(CONTROL_CONTROLLER_ATTACK) and self.attack_buffer or nil
+				end
+				self:DoAction(self.attack_buffer)
+			else
+				self.locomotor:PushAction(self.attack_buffer, true)
+			end
+		end
+		self.attack_buffer = nil
+	end
 
-    --Attack controls are buffered and handled here in the update
-    if self.attack_buffer ~= nil then
-        if self.attack_buffer == CONTROL_ATTACK then
-            self:DoAttackButton()
-        elseif self.attack_buffer == CONTROL_CONTROLLER_ATTACK then
-            self:DoControllerAttackButton()
-        else
-            if self.attack_buffer._predictpos then
-                self.attack_buffer:SetActionPoint(self:GetRemotePredictPosition() or self.inst:GetPosition())
-            end
-            if self.attack_buffer._controller then
-                if self.attack_buffer.target == nil then
-                    self.controller_attack_override = self:IsControlPressed(CONTROL_CONTROLLER_ATTACK) and self.attack_buffer or nil
+    if isenabled then
+		--Restore cached placer
+		if self.placer_cached ~= nil then
+			if self.inst.replica.inventory:IsVisible() then
+				self:StartBuildPlacementMode(unpack(self.placer_cached))
+			end
+			self.placer_cached = nil
+		end
+
+		if self.handler ~= nil then
+			local controller_mode = TheInput:ControllerAttached()
+			local new_highlight = nil
+			if not self.inst:IsActionsVisible() then
+				--Don't highlight when actions are hidden
+			elseif controller_mode then
+				self.LMBaction, self.RMBaction = nil, nil
+				self:UpdateControllerTargets(dt)
+				new_highlight = self.controller_target
+			else
+				self.controller_target = nil
+				self.controller_attack_target = nil
+				self.controller_attack_target_ally_cd = nil
+				self.LMBaction, self.RMBaction = self.inst.components.playeractionpicker:DoGetMouseActions()
+
+				--If an action has a target, highlight the target.
+				--If an action has no target and no pos, then it should
+				--be an inventory action where doer is ourself and we are
+				--targeting ourself, so highlight ourself
+				new_highlight =
+					(self.LMBaction ~= nil
+					and (self.LMBaction.target
+						or (self.LMBaction.pos == nil and
+							self.LMBaction.doer == self.inst and
+							self.inst))) or
+					(self.RMBaction ~= nil
+					and (self.RMBaction.target
+						or (self.RMBaction.pos == nil and
+							self.RMBaction.doer == self.inst and
+							self.inst))) or
+					nil
+			end
+
+			local new_highlight_guy = new_highlight ~= nil and new_highlight.highlightforward or new_highlight
+			if new_highlight_guy ~= self.highlight_guy then
+				if self.highlight_guy ~= nil and self.highlight_guy:IsValid() and self.highlight_guy.components.highlight ~= nil then
+					self.highlight_guy.components.highlight:UnHighlight()
+				end
+				self.highlight_guy = new_highlight_guy
+			end
+
+			if new_highlight_guy ~= nil and new_highlight_guy:IsValid() then
+				if new_highlight_guy.components.highlight == nil then
+					new_highlight_guy:AddComponent("highlight")
+				end
+
+				if not self.inst.shownothightlight then
+					--V2C: check tags on the original, not the forwarded
+					if new_highlight:HasTag("burnt") then
+						new_highlight_guy.components.highlight:Highlight(.5, .5, .5)
+					else
+						new_highlight_guy.components.highlight:Highlight()
+					end
+				end
+			else
+				self.highlight_guy = nil
+			end
+
+			if self.reticule ~= nil and not (controller_mode or self.reticule.mouseenabled) then
+				self.reticule:DestroyReticule()
+				self.reticule = nil
+			end
+
+			if self.placer ~= nil and self.placer_recipe ~= nil and
+				not (self.inst.replica.builder ~= nil and self.inst.replica.builder:IsBuildBuffered(self.placer_recipe.name)) then
+				self:CancelPlacement()
+			end
+
+			local placer_item = controller_mode and self:GetCursorInventoryObject() or self.inst.replica.inventory:GetActiveItem()
+			--show deploy placer
+			if self.deploy_mode and
+				self.placer == nil and
+				placer_item ~= nil and
+				placer_item.replica.inventoryitem ~= nil and
+				placer_item.replica.inventoryitem:IsDeployable(self.inst) then
+
+				local placer_name = placer_item.replica.inventoryitem:GetDeployPlacerName()
+				local placer_skin = placer_item.AnimState:GetSkinBuild() --hack that relies on the build name to match the linked skinname
+                if placer_skin == "" then
+                    placer_skin = nil
                 end
-                self:DoAction(self.attack_buffer)
-            else
-                self.locomotor:PushAction(self.attack_buffer, true)
-            end
-        end
-        self.attack_buffer = nil
-    end
+                if self.deployplacer ~= nil and (self.deployplacer.prefab ~= placer_name or self.deployplacer.skinname ~= placer_skin) then
+					self:CancelDeployPlacement()
+				end
+				if self.deployplacer == nil then
+					self.deployplacer = SpawnPrefab(placer_name, placer_skin, nil, self.inst.userid )
+					if self.deployplacer ~= nil then
+						self.deployplacer.components.placer:SetBuilder(self.inst, nil, placer_item)
+						self.deployplacer.components.placer.testfn = function(pt)
+							local mouseover = TheInput:GetWorldEntityUnderMouse()
+							return placer_item:IsValid() and
+								placer_item.replica.inventoryitem ~= nil and
+								placer_item.replica.inventoryitem:CanDeploy(pt, mouseover, self.inst, self.deployplacer.Transform:GetRotation()),
+								(mouseover ~= nil and not mouseover:HasTag("walkableplatform")) or TheInput:GetHUDEntityUnderMouse() ~= nil
+						end
+						self.deployplacer.components.placer:OnUpdate(0) --so that our position is accurate on the first frame
+					end
+				end
+			else
+				self:CancelDeployPlacement()
+			end
 
-    if self.handler ~= nil then
-        local controller_mode = TheInput:ControllerAttached()
-        local new_highlight = nil
-        if not self.inst:IsActionsVisible() then
-            --Don't highlight when actions are hidden
-        elseif controller_mode then
-            self.LMBaction, self.RMBaction = nil, nil
-            self:UpdateControllerTargets(dt)
-            new_highlight = self.controller_target
-        else
-            self.controller_target = nil
-            self.controller_attack_target = nil
-            self.controller_attack_target_ally_cd = nil
-            self.LMBaction, self.RMBaction = self.inst.components.playeractionpicker:DoGetMouseActions()
+			local terraform = false
+			local hidespecialactionreticule = false
+			local terraform_action = nil
+			if controller_mode then
+				local lmb, rmb = self:GetGroundUseAction()
+				if rmb ~= nil then
+					terraform = rmb.action.tile_placer ~= nil
+					terraform_action = rmb.action
+					hidespecialactionreticule = self.reticule ~= nil and self.reticule.inst == self.inst
+				else
+					if self.controller_target ~= nil then
+						lmb, rmb = self:GetSceneItemControllerAction(self.controller_target)
+					end
+					if rmb ~= nil then
+						hidespecialactionreticule = true
+					else
+						local rider = self.inst.replica.rider
+						hidespecialactionreticule = rider ~= nil and rider:IsRiding() or not self:HasGroundUseSpecialAction(true)
+					end
+				end
+			else
+				local rmb = self:GetRightMouseAction()
+				if rmb ~= nil then
+					terraform = rmb.action.tile_placer ~= nil and (rmb.action.show_tile_placer_fn == nil or rmb.action.show_tile_placer_fn(self:GetRightMouseAction()))
+					terraform_action = rmb.action
+				end
+			end
 
-            --If an action has a target, highlight the target.
-            --If an action has no target and no pos, then it should
-            --be an inventory action where doer is ourself and we are
-            --targeting ourself, so highlight ourself
-            new_highlight =
-                (self.LMBaction ~= nil
-                and (self.LMBaction.target
-                    or (self.LMBaction.pos == nil and
-                        self.LMBaction.doer == self.inst and
-                        self.inst))) or
-                (self.RMBaction ~= nil
-                and (self.RMBaction.target
-                    or (self.RMBaction.pos == nil and
-                        self.RMBaction.doer == self.inst and
-                        self.inst))) or
-                nil
-        end
+			--show right action reticule
+			if self.placer == nil and self.deployplacer == nil then
+				if terraform then
+					if self.terraformer == nil then
+						self.terraformer = SpawnPrefab(terraform_action.tile_placer)
+						if self.terraformer ~= nil and self.terraformer.components.placer ~= nil then
+							self.terraformer.components.placer:SetBuilder(self.inst)
+							self.terraformer.components.placer:OnUpdate(0)
+						end
+					end
+				elseif self.terraformer ~= nil then
+					self.terraformer:Remove()
+					self.terraformer = nil
+				end
 
-        local new_highlight_guy = new_highlight ~= nil and new_highlight.highlightforward or new_highlight
-        if new_highlight_guy ~= self.highlight_guy then
-            if self.highlight_guy ~= nil and self.highlight_guy:IsValid() and self.highlight_guy.components.highlight ~= nil then
-                self.highlight_guy.components.highlight:UnHighlight()
-            end
-            self.highlight_guy = new_highlight_guy
-        end
+				if self.reticule ~= nil and self.reticule.reticule ~= nil then
+					if hidespecialactionreticule or self.reticule:ShouldHide() then
+						self.reticule.reticule:Hide()
+					else
+						self.reticule.reticule:Show()
+					end
+				end
+			else
+				if self.terraformer ~= nil then
+					self.terraformer:Remove()
+					self.terraformer = nil
+				end
 
-        if new_highlight_guy ~= nil and new_highlight_guy:IsValid() then
-            if new_highlight_guy.components.highlight == nil then
-                new_highlight_guy:AddComponent("highlight")
-            end
+				if self.reticule ~= nil and self.reticule.reticule ~= nil then
+					self.reticule.reticule:Hide()
+				end
+			end
 
-            if not self.inst.shownothightlight then
-                --V2C: check tags on the original, not the forwarded
-                if new_highlight:HasTag("burnt") then
-                    new_highlight_guy.components.highlight:Highlight(.5, .5, .5)
-                else
-                    new_highlight_guy.components.highlight:Highlight()
-                end
-            end
-        else
-            self.highlight_guy = nil
-        end
+			if not self.actionholding and self.actionholdtime and IsAnyActionHoldButtonHeld() then
+				if GetTime() - self.actionholdtime > START_DRAG_TIME then
+					self.actionholding = true
+				end
+			end
 
-        if self.reticule ~= nil and not (controller_mode or self.reticule.mouseenabled) then
-            self.reticule:DestroyReticule()
-            self.reticule = nil
-        end
+			if not self.draggingonground and self.startdragtime ~= nil and TheInput:IsControlPressed(CONTROL_PRIMARY) then
+				local now = GetTime()
+				if now - self.startdragtime > START_DRAG_TIME then
+					TheFrontEnd:LockFocus(true)
+					self.draggingonground = true
+				end
+			end
 
-        if self.placer ~= nil and self.placer_recipe ~= nil and
-            not (self.inst.replica.builder ~= nil and self.inst.replica.builder:IsBuildBuffered(self.placer_recipe.name)) then
-            self:CancelPlacement()
-        end
+			if TheFrontEnd:GetFocusWidget() ~= self.inst.HUD then
+				if self.draggingonground then
+					self.draggingonground = false
+					self.startdragtime = nil
 
-        local placer_item = controller_mode and self:GetCursorInventoryObject() or self.inst.replica.inventory:GetActiveItem()
-        --show deploy placer
-        if self.deploy_mode and
-            self.placer == nil and
-            placer_item ~= nil and
-            placer_item.replica.inventoryitem ~= nil and
-            placer_item.replica.inventoryitem:IsDeployable(self.inst) then
+					TheFrontEnd:LockFocus(false)
 
-            local placer_name = placer_item.replica.inventoryitem:GetDeployPlacerName()
-            local placer_skin = placer_item.AnimState:GetSkinBuild() --hack that relies on the build name to match the linked skinname
-            if self.deployplacer ~= nil and (self.deployplacer.prefab ~= placer_name or (self.deployplacer.skinname or "") ~= placer_skin) then
-                self:CancelDeployPlacement()
-            end
-            if self.deployplacer == nil then
-                self.deployplacer = SpawnPrefab(placer_name, placer_skin, nil, self.inst.userid )
-                if self.deployplacer ~= nil then
-                    self.deployplacer.components.placer:SetBuilder(self.inst, nil, placer_item)
-                    self.deployplacer.components.placer.testfn = function(pt)
-                        local mouseover = TheInput:GetWorldEntityUnderMouse()
-                        return placer_item:IsValid() and
-                            placer_item.replica.inventoryitem ~= nil and
-                            placer_item.replica.inventoryitem:CanDeploy(pt, mouseover, self.inst, self.deployplacer.Transform:GetRotation()),
-                            (mouseover ~= nil and not mouseover:HasTag("walkableplatform")) or TheInput:GetHUDEntityUnderMouse() ~= nil
-                    end
-                    self.deployplacer.components.placer:OnUpdate(0) --so that our position is accurate on the first frame
-                end
-            end
-        else
-            self:CancelDeployPlacement()
-        end
+					if self:CanLocomote() then
+						self.locomotor:Stop()
+					end
+				elseif self.actionholding then
+					self:ClearActionHold()
+				end
+			end
+		elseif self.ismastersim and self.inst:HasTag("nopredict") and self.remote_vector.y >= 3 then
+			self.remote_vector.y = 0
+		end
 
-        local terraform = false
-        local hidespecialactionreticule = false
-        local terraform_action = nil
-        if controller_mode then
-            local lmb, rmb = self:GetGroundUseAction()
-            if rmb ~= nil then
-                terraform = rmb.action.tile_placer ~= nil
-                terraform_action = rmb.action
-                hidespecialactionreticule = self.reticule ~= nil and self.reticule.inst == self.inst
-            else
-                if self.controller_target ~= nil then
-                    lmb, rmb = self:GetSceneItemControllerAction(self.controller_target)
-                end
-                if rmb ~= nil then
-                    hidespecialactionreticule = true
-                else
-                    local rider = self.inst.replica.rider
-                    hidespecialactionreticule = rider ~= nil and rider:IsRiding() or not self:HasGroundUseSpecialAction(true)
-                end
-            end
-        else
-            local rmb = self:GetRightMouseAction()
-            if rmb ~= nil then
-                terraform = rmb.action.tile_placer ~= nil and (rmb.action.show_tile_placer_fn == nil or rmb.action.show_tile_placer_fn(self:GetRightMouseAction()))
-                terraform_action = rmb.action
-            end
-        end
+		self:CooldownHeldAction(dt)
+		if self.actionholding then
+			self:RepeatHeldAction()
+		end
 
-        --show right action reticule
-        if self.placer == nil and self.deployplacer == nil then
-            if terraform then
-                if self.terraformer == nil then
-                    self.terraformer = SpawnPrefab(terraform_action.tile_placer)
-                    if self.terraformer ~= nil and self.terraformer.components.placer ~= nil then
-                        self.terraformer.components.placer:SetBuilder(self.inst)
-                        self.terraformer.components.placer:OnUpdate(0)
-                    end
-                end
-            elseif self.terraformer ~= nil then
-                self.terraformer:Remove()
-                self.terraformer = nil
-            end
-
-            if self.reticule ~= nil and self.reticule.reticule ~= nil then
-                if hidespecialactionreticule or self.reticule:ShouldHide() then
-                    self.reticule.reticule:Hide()
-                else
-                    self.reticule.reticule:Show()
-                end
-            end
-        else
-            if self.terraformer ~= nil then
-                self.terraformer:Remove()
-                self.terraformer = nil
-            end
-
-            if self.reticule ~= nil and self.reticule.reticule ~= nil then
-                self.reticule.reticule:Hide()
-            end
-        end
-
-        if not self.actionholding and self.actionholdtime and IsAnyActionHoldButtonHeld() then
-            if GetTime() - self.actionholdtime > START_DRAG_TIME then
-                self.actionholding = true
-            end
-        end
-
-        if not self.draggingonground and self.startdragtime ~= nil and TheInput:IsControlPressed(CONTROL_PRIMARY) then
-            local now = GetTime()
-            if now - self.startdragtime > START_DRAG_TIME then
-                TheFrontEnd:LockFocus(true)
-                self.draggingonground = true
-            end
-        end
-
-        if TheFrontEnd:GetFocusWidget() ~= self.inst.HUD then
-            if self.draggingonground then
-                self.draggingonground = false
-                self.startdragtime = nil
-
-                TheFrontEnd:LockFocus(false)
-
-                if self:CanLocomote() then
-                    self.locomotor:Stop()
-                end
-            elseif self.actionholding then
-                self:ClearActionHold()
-            end
-        end
-    elseif self.ismastersim and self.inst:HasTag("nopredict") and self.remote_vector.y >= 3 then
-        self.remote_vector.y = 0
-    end
-
-    self:CooldownHeldAction(dt)
-    if self.actionholding then
-        self:RepeatHeldAction()
-    end
-
-    if self.controller_attack_override ~= nil and
-        not (self.locomotor.bufferedaction == self.controller_attack_override and
-            self:IsControlPressed(CONTROL_CONTROLLER_ATTACK)) then
-        self.controller_attack_override = nil
-    end
+		if self.controller_attack_override ~= nil and
+			not (self.locomotor.bufferedaction == self.controller_attack_override and
+				self:IsControlPressed(CONTROL_CONTROLLER_ATTACK)) then
+			self.controller_attack_override = nil
+		end
+	end
 
     self:DoPredictHopping(dt)
+
+	if not isenabled and not ishudblocking then
+		return
+	end
 
     --NOTE: isbusy is used further below as well
     local isbusy = self:IsBusy()
@@ -2302,6 +2366,7 @@ function PlayerController:OnUpdate(dt)
             end
         end
     end
+
     if self.ismastersim and self.handler == nil and not self.inst.sg.mem.localchainattack then
         if self.inst.sg.statemem.chainattack_cb ~= nil then
             if self.locomotor ~= nil and self.locomotor.bufferedaction ~= nil and self.locomotor.bufferedaction.action == ACTIONS.CASTAOE then
@@ -2322,7 +2387,7 @@ function PlayerController:OnUpdate(dt)
         else
             attack_control = not self.inst:HasTag("attack")
         end
-        if attack_control then
+        if attack_control and (self.inst.replica.combat == nil or not self.inst.replica.combat:InCooldown()) then
             attack_control = (self.handler == nil or not IsPaused())
                 and ((self:IsControlPressed(CONTROL_ATTACK) and CONTROL_ATTACK) or
                     (self:IsControlPressed(CONTROL_PRIMARY) and CONTROL_PRIMARY) or
@@ -2331,11 +2396,15 @@ function PlayerController:OnUpdate(dt)
             if attack_control ~= nil then
                 --Check for chain attacking first
                 local retarget = nil
-                if self.inst.sg ~= nil then
-                    retarget = self.inst.sg.statemem.attacktarget
-                elseif self.inst.replica.combat ~= nil then
-                    retarget = self.inst.replica.combat:GetTarget()
+                local buffaction = self.inst:GetBufferedAction()
+                if not buffaction or buffaction.action ~= ACTIONS.ATTACK or self.actionholding then
+                    if self.inst.sg ~= nil then
+                        retarget = self.inst.sg.statemem.attacktarget
+                    elseif self.inst.replica.combat ~= nil then
+                        retarget = self.inst.replica.combat:GetTarget()
+                    end
                 end
+
                 if retarget and not IsEntityDead(retarget) and CanEntitySeeTarget(self.inst, retarget) then
                     --Handle chain attacking
                     if self.inst.sg ~= nil then
@@ -2350,7 +2419,7 @@ function PlayerController:OnUpdate(dt)
                             self:DoControllerAttackButton(retarget)
                         end
                     end
-                elseif attack_control ~= CONTROL_PRIMARY and self.handler ~= nil then
+                elseif self.handler ~= nil then
                     --Check for starting a new attack
                     local isidle
                     if self.inst.sg ~= nil then
@@ -2359,7 +2428,16 @@ function PlayerController:OnUpdate(dt)
                         isidle = self.inst:HasTag("idle")
                     end
                     if isidle then
-                        self:OnControl(attack_control, true)
+                        -- Check for primary control button held down in order to attack other nearby monsters
+                        if attack_control == CONTROL_PRIMARY and self.actionholding and self.lastclickedaction and self.lastclickedaction.action == ACTIONS.ATTACK then
+                            if self.ismastersim then
+                                self.attack_buffer = CONTROL_ATTACK
+                            else
+                                self:DoAttackButton()
+                            end
+                        elseif not TheInput:IsControlPressed(CONTROL_PRIMARY) and (self.lastheldaction == nil or self.lastheldaction.action == ACTIONS.ATTACK) then
+                            self:OnControl(attack_control, true)
+                        end
                     end
                 end
             end
@@ -3173,18 +3251,18 @@ function PlayerController:DoDirectWalking(dt)
 end
 
 --------------------------------------------------------------------------
+local ROT_REPEAT = .25
+local ZOOM_REPEAT = .1
 
 function PlayerController:DoCameraControl()
-    if not TheCamera:CanControl()
-        or (self.inst.HUD ~= nil and
-            self.inst.HUD:IsCraftingOpen()) then
-        --Check crafting again because this time
-        --we block even with mouse crafting open
+	if not TheCamera:CanControl() then
         return
     end
 
-    local ROT_REPEAT = .25
-    local ZOOM_REPEAT = .1
+    local isenabled, ishudblocking = self:IsEnabled()
+    if not isenabled and not ishudblocking then
+		return
+    end
 
     local time = GetStaticTime()
 
@@ -3198,15 +3276,19 @@ function PlayerController:DoCameraControl()
         end
     end
 
-    if self.lastzoomtime == nil or time - self.lastzoomtime > ZOOM_REPEAT then
-        if TheInput:IsControlPressed(CONTROL_ZOOM_IN) then
-            TheCamera:ZoomIn()
-            self.lastzoomtime = time
-        elseif TheInput:IsControlPressed(CONTROL_ZOOM_OUT) then
-            TheCamera:ZoomOut()
-            self.lastzoomtime = time
-        end
-    end
+	if self.lastzoomtime == nil or time - self.lastzoomtime > ZOOM_REPEAT then
+		if TheInput:IsControlPressed(CONTROL_ZOOM_IN) then
+			if not self.zoomin_same_as_scrollup or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.craftingmenu.focus) then
+				TheCamera:ZoomIn()
+				self.lastzoomtime = time
+			end
+		elseif TheInput:IsControlPressed(CONTROL_ZOOM_OUT) then
+			if not self.zoomout_same_as_scrolldown or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.craftingmenu.focus) then
+				TheCamera:ZoomOut()
+				self.lastzoomtime = time
+			end
+		end
+	end
 end
 
 local function IsWalkButtonDown()
@@ -3232,17 +3314,6 @@ function PlayerController:OnLeftUp()
         self:RemoteStopControl(CONTROL_PRIMARY)
     end
 end
-
-local INVALIDHOLDACTIONS = {
-    [ACTIONS.WALKTO] = true,
-    [ACTIONS.ROW] = true,
-    [ACTIONS.ROW_FAIL] = true,
-    [ACTIONS.ROW] = true,
-    [ACTIONS.ROW_CONTROLLER] = true,
-    [ACTIONS.LIFT_GYM_SUCCEED_PERFECT] = true,
-    [ACTIONS.LIFT_GYM_SUCCEED] = true,
-    [ACTIONS.LIFT_GYM_FAIL] = true,
-}
 
 function PlayerController:DoAction(buffaction)
     --Check if the action is actually valid.
@@ -3287,7 +3358,7 @@ function PlayerController:DoAction(buffaction)
 
     self:DoActionAutoEquip(buffaction)
 
-    if not buffaction.action.instant and not INVALIDHOLDACTIONS[buffaction.action] and buffaction:IsValid() then
+    if not buffaction.action.instant and not buffaction.action.invalid_hold_action and buffaction:IsValid() then
         self.lastheldaction = buffaction
     else
         self.actionholdtime = nil
@@ -3335,7 +3406,7 @@ function PlayerController:OnLeftClick(down)
         return
     end
 
-    self:ClearActionHold()
+    self:ClearActionHold(down)
 
     self.startdragtime = nil
 
@@ -3435,6 +3506,9 @@ function PlayerController:OnLeftClick(down)
     end
 
     self:DoAction(act)
+
+    -- Save the last clicked action so we can refer to it later for holding down CONTROL_PRIMARY actions
+    self.lastclickedaction = act
 end
 
 function PlayerController:OnRemoteLeftClick(actioncode, position, target, isreleased, controlmodscode, noforce, mod_name)
@@ -3502,7 +3576,7 @@ function PlayerController:OnRightClick(down)
         return
     end
 
-    self:ClearActionHold()
+    self:ClearActionHold(down)
 
     self.startdragtime = nil
 
@@ -3520,8 +3594,12 @@ function PlayerController:OnRightClick(down)
 
     local act = self:GetRightMouseAction()
     if act == nil then
-        self.inst.replica.inventory:ReturnActiveItem()
-        self:TryAOETargeting()
+		if self.inst.HUD ~= nil and self.inst.HUD:IsCraftingOpen() then
+			self.inst.HUD:CloseCrafting()
+		else
+			self.inst.replica.inventory:ReturnActiveItem()
+			self:TryAOETargeting()
+		end
     else
         if self.reticule ~= nil and self.reticule.reticule ~= nil then
             self.reticule:PingReticuleAt(act:GetActionPoint())

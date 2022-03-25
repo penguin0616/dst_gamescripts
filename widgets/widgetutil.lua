@@ -20,6 +20,7 @@ function CanPrototypeRecipe(recipetree, buildertree)
 end
 
 local lastsoundtime = nil
+-- return values: "keep_crafting_menu_open", "error message"
 function DoRecipeClick(owner, recipe, skin)
     if recipe ~= nil and owner ~= nil and owner.replica.builder ~= nil then
         if skin == recipe.name then
@@ -37,33 +38,39 @@ function DoRecipeClick(owner, recipe, skin)
             end
         end
 
-        local knows = owner.replica.builder:KnowsRecipe(recipe.name)
-        local can_build = owner.replica.builder:CanBuild(recipe.name)
+        local knows = owner.replica.builder:KnowsRecipe(recipe)
+        local has_ingredients = owner.replica.builder:HasIngredients(recipe)
 
-        if not can_build and TheWorld.ismastersim then
+        if not has_ingredients and TheWorld.ismastersim then
             owner:PushEvent("cantbuild", { owner = owner, recipe = recipe })
             --You might have the materials now. Check again.
-            can_build = owner.replica.builder:CanBuild(recipe.name)
+            has_ingredients = owner.replica.builder:HasIngredients(recipe)
         end
 
         local buffered = owner.replica.builder:IsBuildBuffered(recipe.name)
 
-        if knows then
+        if knows or buffered then
             if buffered then
                 --TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-                --owner.HUD.controls.crafttabs.tabs:DeselectAll()
+                --owner.HUD.controls.craftingmenu.tabs:DeselectAll()
+				SetCraftingAutopaused(false)
+				Profile:SetLastUsedSkinForItem(recipe.name, skin)
+
                 if recipe.placer == nil then
                     owner.replica.builder:MakeRecipeFromMenu(recipe, skin)
                 elseif owner.components.playercontroller ~= nil then
                     owner.components.playercontroller:StartBuildPlacementMode(recipe, skin)
                 end
-            elseif can_build then
+            elseif has_ingredients then
                 --TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+				SetCraftingAutopaused(false)
+				Profile:SetLastUsedSkinForItem(recipe.name, skin)
+
                 if recipe.placer == nil then
                     owner.replica.builder:MakeRecipeFromMenu(recipe, skin)
                     return true
                 elseif owner.components.playercontroller ~= nil then
-                    --owner.HUD.controls.crafttabs.tabs:DeselectAll()
+                    --owner.HUD.controls.craftingmenu.tabs:DeselectAll()
                     owner.replica.builder:BufferBuild(recipe.name)
                     if not owner.replica.builder:IsBuildBuffered(recipe.name) then
                         return true
@@ -71,11 +78,14 @@ function DoRecipeClick(owner, recipe, skin)
                     owner.components.playercontroller:StartBuildPlacementMode(recipe, skin)
                 end
             else
-                return true
+                return true, "NO_INGREDIENTS"
             end
         else
             local tech_level = owner.replica.builder:GetTechTrees()
-            if can_build and CanPrototypeRecipe(recipe.level, tech_level) then
+            if has_ingredients and CanPrototypeRecipe(recipe.level, tech_level) then
+				SetCraftingAutopaused(false)
+				Profile:SetLastUsedSkinForItem(recipe.name, skin)
+
                 if recipe.placer == nil then
                     owner.replica.builder:MakeRecipeFromMenu(recipe, skin)
                     if recipe.nounlock then
@@ -98,8 +108,10 @@ function DoRecipeClick(owner, recipe, skin)
                         TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/research_unlock")
                     end
                 end
+
+				return recipe.placer == nil -- close the crafting menu if there is a placer
             else
-                return true
+                return true, recipe.nounlock and "NO_STATION" or "NO_TECH"
             end
         end
     end

@@ -132,10 +132,12 @@ local states =
             local locus_point = Vector3(inst.Transform:GetWorldPosition())
 
             inst:Remove()
-            SpawnFragment(locus_point, "boards",  2.75,  0, 0.5, ignitefragments)
-            SpawnFragment(locus_point, "boards",  0.25,  0, -2.8, ignitefragments)
-            SpawnFragment(locus_point, "boards", -2.5,   0, -0.25, ignitefragments)
-            SpawnFragment(locus_point, "boards", -0.95,  0, 0.75, ignitefragments)
+			local num_loot = 3
+			for i = 1, num_loot do
+				local r = math.sqrt(math.random())*2 + 1.5
+				local t = i * PI2/num_loot + math.random() * (PI2/(num_loot * .5))
+	            SpawnFragment(locus_point, "boards",  math.cos(t) * r,  0, math.sin(t) * r, ignitefragments)
+			end
         end,
     },
 }

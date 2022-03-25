@@ -9,10 +9,15 @@ local function onfreebuildmode(self, freebuildmode)
     self.inst.replica.builder:SetIsFreeBuildMode(freebuildmode)
 end
 
+local function on_current_prototyper(self, current_prototyper)
+	self.inst.replica.builder:SetCurrentPrototyper(current_prototyper)
+end
+
 local function metafn()
 	local t =	{
 		ingredientmod = oningredientmod,
 		freebuildmode = onfreebuildmode,
+		current_prototyper = on_current_prototyper,
 	}
     for i, v in ipairs(TechTree.BONUS_TECH) do
         t[string.lower(v).."_bonus"] = function(self, bonus) self.inst.replica.builder:SetTechBonus(string.lower(v), bonus) end
@@ -140,7 +145,25 @@ end
 local PROTOTYPER_TAGS = { "prototyper" }
 function Builder:EvaluateTechTrees()
     local pos = self.inst:GetPosition()
-    local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, TUNING.RESEARCH_MACHINE_DIST, PROTOTYPER_TAGS, self.exclude_tags)
+
+    local ents
+	if self.override_current_prototyper then
+		if self.override_current_prototyper:IsValid() 
+			and self.override_current_prototyper:HasTags(PROTOTYPER_TAGS) 
+			and not self.override_current_prototyper:HasOneOfTags(self.exclude_tags)
+			and (self.override_current_prototyper.components.prototyper.restrictedtag == nil or self.inst:HasTag(self.override_current_prototyper.components.prototyper.restrictedtag))
+			and self.inst:IsNear(self.override_current_prototyper, TUNING.RESEARCH_MACHINE_DIST)
+			then
+
+			ents = {self.override_current_prototyper}
+		else
+			self.override_current_prototyper = nil
+		end
+	end
+	
+	if ents == nil then
+		ents = TheSim:FindEntities(pos.x, pos.y, pos.z, TUNING.RESEARCH_MACHINE_DIST, PROTOTYPER_TAGS, self.exclude_tags)
+	end
 
     local old_accessible_tech_trees = deepcopy(self.accessible_tech_trees or TECH.NONE)
     local old_station_recipes = self.station_recipes
@@ -245,6 +268,33 @@ function Builder:EvaluateTechTrees()
         self.inst:PushEvent("techtreechange", { level = self.accessible_tech_trees })
         self.inst.replica.builder:SetTechTrees(self.accessible_tech_trees)
     end
+
+	if self.override_current_prototyper ~= nil then
+		if self.override_current_prototyper ~= self.current_prototyper then
+			self.override_current_prototyper = nil
+		elseif self.override_current_prototyper ~= old_prototyper then
+			self.inst.replica.builder:OpenCraftingMenu()
+		end
+	end
+end
+
+function Builder:UsePrototyper(prototyper)
+	if prototyper ~= nil then
+		if not prototyper:HasTags(PROTOTYPER_TAGS) 
+			or prototyper:HasOneOfTags(self.exclude_tags)
+			or (prototyper.components.prototyper.restrictedtag ~= nil and not self.inst:HasTag(prototyper.components.prototyper.restrictedtag))
+			then
+
+			local fail_str = prototyper.components.prototyper.restrictedtag
+			return false, fail_str ~= nil and string.upper(fail_str) or nil
+		end
+	end
+
+	self.override_current_prototyper = prototyper
+	if prototyper ~= nil and prototyper == self.current_prototyper then
+		self.inst.replica.builder:OpenCraftingMenu()
+	end
+	return true
 end
 
 function Builder:AddRecipe(recname)
@@ -295,7 +345,7 @@ function Builder:GetIngredients(recname)
         for k,v in pairs(recipe.ingredients) do
 			if v.amount > 0 then
 				local amt = math.max(1, RoundBiasedUp(v.amount * self.ingredientmod))
-				local items = self.inst.components.inventory:GetItemByName(v.type, amt)
+				local items = self.inst.components.inventory:GetItemByName(v.type, amt, true)
 				ingredients[v.type] = items
 			end
         end
@@ -304,10 +354,14 @@ function Builder:GetIngredients(recname)
 end
 
 function Builder:RemoveIngredients(ingredients, recname)
+	if self.freebuildmode then
+		return
+	end
+
     for item, ents in pairs(ingredients) do
         for k,v in pairs(ents) do
             for i = 1, v do
-                local item = self.inst.components.inventory:RemoveItem(k, false)
+                local item = self.inst.components.inventory:RemoveItem(k, false, true)
 
                 -- If the item we're crafting with is a container,
                 -- drop the contained items onto the ground.
@@ -337,6 +391,8 @@ function Builder:RemoveIngredients(ingredients, recname)
                     with how we remove max sanity. Because of that, this is not handled here.
                     Removal of sanity is actually managed by the entity that is created.
                     See maxwell's pet leash on spawn and pet on death functions for examples.
+
+					Note: Make sure you handle self.freebuildmode in this case
                 --]]
             end
         end
@@ -383,7 +439,7 @@ end
 function Builder:MakeRecipe(recipe, pt, rot, skin, onsuccess)
     if recipe ~= nil then
         self.inst:PushEvent("makerecipe", { recipe = recipe })
-        if self:IsBuildBuffered(recipe.name) or self:CanBuild(recipe.name) then
+        if self:IsBuildBuffered(recipe.name) or self:HasIngredients(recipe) then
             self.inst.components.locomotor:Stop()
             local buffaction = BufferedAction(self.inst, nil, ACTIONS.BUILD, nil, pt or self.inst:GetPosition(), recipe.name, recipe.build_distance, nil, rot)
             buffaction.skin = skin
@@ -410,7 +466,7 @@ end
 
 function Builder:DoBuild(recname, pt, rotation, skin)
     local recipe = GetValidRecipe(recname)
-    if recipe ~= nil and (self:IsBuildBuffered(recname) or self:CanBuild(recname)) then
+    if recipe ~= nil and (self:IsBuildBuffered(recname) or self:HasIngredients(recipe)) then
         if recipe.placer ~= nil and
             self.inst.components.rider ~= nil and
             self.inst.components.rider:IsRiding() then
@@ -421,7 +477,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                 self.inst.components.petleash:HasPetWithTag("critter")
             ) then
             return false, "HASPET"
-        elseif recipe.tab.manufacturing_station and (
+        elseif recipe.manufactured and (
                 self.current_prototyper == nil or
                 not self.current_prototyper:IsValid() or
                 self.current_prototyper.components.prototyper == nil or
@@ -455,12 +511,12 @@ function Builder:DoBuild(recname, pt, rotation, skin)
 
         self.inst:PushEvent("refreshcrafting")
 
-        if recipe.tab.manufacturing_station then
+		if recipe.manufactured then
 			local materials = self:GetIngredients(recname)
 			self:RemoveIngredients(materials, recname)
-            -- its up to the prototyper to implement onactivate and handle spawning the prefab
-            return true
-        end
+			   -- its up to the prototyper to implement onactivate and handle spawning the prefab
+		   return true
+		end
 
         local prod = SpawnPrefab(recipe.product, recipe.chooseskin or skin, nil, self.inst.userid) or nil
         if prod ~= nil then
@@ -578,46 +634,62 @@ function Builder:DoBuild(recname, pt, rotation, skin)
     end
 end
 
-function Builder:KnowsRecipe(recname)
-    local recipe = GetValidRecipe(recname)
-    if recipe == nil then
-        return false
-    end
-    local has_tech = true
-    if not self.freebuildmode then
-        for i, v in ipairs(TechTree.AVAILABLE_TECH) do
-            if recipe.level[v] > (self[string.lower(v).."_bonus"] or 0) then
-                has_tech = false
-                break
-            end
-        end
-    end
-    return (has_tech or table.contains(self.recipes, recname) or self.station_recipes[recname]) and
-        (recipe.builder_tag == nil or self.inst:HasTag(recipe.builder_tag))
-end
+function Builder:KnowsRecipe(recipe)
+    if type(recipe) == "string" then
+		recipe = GetValidRecipe(recipe)
+	end
 
-function Builder:CanBuild(recname)
-    local recipe = GetValidRecipe(recname)
     if recipe == nil then
         return false
-    elseif not self.freebuildmode then
-        for i, v in ipairs(recipe.ingredients) do
-            if not self.inst.components.inventory:Has(v.type, math.max(1, RoundBiasedUp(v.amount * self.ingredientmod))) then
-                return false
-            end
-        end
     end
-    for i, v in ipairs(recipe.character_ingredients) do
-        if not self:HasCharacterIngredient(v) then
-            return false
-        end
-    end
-    for i, v in ipairs(recipe.tech_ingredients) do
-        if not self:HasTechIngredient(v) then
+	if self.freebuildmode then
+		return true
+	elseif recipe.builder_tag ~= nil and not self.inst:HasTag(recipe.builder_tag) then -- builder_tag cehck is require due to character swapping
+		return false
+	elseif self.station_recipes[recipe.name] or table.contains(self.recipes, recipe.name) then
+		return true
+	end
+
+    local has_tech = true
+    for i, v in ipairs(TechTree.AVAILABLE_TECH) do
+        if recipe.level[v] > (self[string.lower(v).."_bonus"] or 0) then
             return false
         end
     end
     return true
+end
+
+function Builder:HasIngredients(recipe)
+    if type(recipe) == "string" then 
+		recipe = GetValidRecipe(recipe)
+	end
+	if recipe ~= nil then
+		if self.freebuildmode then
+			return true
+		end
+		for i, v in ipairs(recipe.ingredients) do
+            if not self.inst.components.inventory:Has(v.type, math.max(1, RoundBiasedUp(v.amount * self.ingredientmod)), true) then
+				return false
+			end
+		end
+		for i, v in ipairs(recipe.character_ingredients) do
+			if not self:HasCharacterIngredient(v) then
+				return false
+			end
+		end
+		for i, v in ipairs(recipe.tech_ingredients) do
+			if not self:HasTechIngredient(v) then
+				return false
+			end
+		end
+		return true
+	end
+
+	return false
+end
+
+function Builder:CanBuild(recipe_name) -- deprecated, use HasIngredients instead
+	return self:HasIngredients(GetValidRecipe(recipe_name))
 end
 
 function Builder:CanLearn(recname)
@@ -639,8 +711,8 @@ end
 
 function Builder:MakeRecipeFromMenu(recipe, skin)
     if recipe.placer == nil then
-        if self:KnowsRecipe(recipe.name) then
-            if self:IsBuildBuffered(recipe.name) or self:CanBuild(recipe.name) then
+        if self:KnowsRecipe(recipe) then
+            if self:IsBuildBuffered(recipe.name) or self:HasIngredients(recipe) then
                 self:MakeRecipe(recipe, nil, nil,
                     ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                     function()
@@ -661,7 +733,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
             end
         elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and
             self:CanLearn(recipe.name) and
-            self:CanBuild(recipe.name) then
+            self:HasIngredients(recipe) then
             self:MakeRecipe(recipe, nil, nil,
                 ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                 function()
@@ -675,7 +747,7 @@ end
 
 function Builder:MakeRecipeAtPoint(recipe, pt, rot, skin)
     if recipe.placer ~= nil and
-        self:KnowsRecipe(recipe.name) and
+        self:KnowsRecipe(recipe) and
         self:IsBuildBuffered(recipe.name) and
         TheWorld.Map:CanDeployRecipeAtPoint(pt, recipe, rot) then
         self:MakeRecipe(recipe, pt, rot, skin)
@@ -684,8 +756,8 @@ end
 
 function Builder:BufferBuild(recname)
     local recipe = GetValidRecipe(recname)
-    if recipe ~= nil and recipe.placer ~= nil and not self:IsBuildBuffered(recname) and self:CanBuild(recname) then
-        if self:KnowsRecipe(recname) then
+    if recipe ~= nil and recipe.placer ~= nil and not self:IsBuildBuffered(recname) and self:HasIngredients(recipe) then
+        if self:KnowsRecipe(recipe) then
             if self.freebuildmode then
                 --V2C: free-build should still trigger prototyping
                 if not table.contains(self.recipes, recname) and CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) then

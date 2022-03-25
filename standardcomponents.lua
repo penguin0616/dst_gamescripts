@@ -146,6 +146,7 @@ function MakeMediumBurnable(inst, time, offset, structure, sym)
     end
 end
 
+
 function MakeLargeBurnable(inst, time, offset, structure, sym)
     inst:AddComponent("burnable")
     inst.components.burnable:SetFXLevel(4)
@@ -219,12 +220,12 @@ function MakeMediumBurnableCharacter(inst, sym, offset)
     inst.components.propagator.acceptsheat = false
 end
 
-function MakeLargeBurnableCharacter(inst, sym, offset)
+function MakeLargeBurnableCharacter(inst, sym, offset, scale)
     inst:AddComponent("burnable")
     inst.components.burnable:SetFXLevel(3)
     inst.components.burnable.canlight = false
     inst.components.burnable:SetBurnTime(10)
-    inst.components.burnable:AddBurnFX(burnfx.character, offset or Vector3(0, 0, 1), sym)
+    inst.components.burnable:AddBurnFX(burnfx.character, offset or Vector3(0, 0, 1), sym, nil, scale)
     MakeLargePropagator(inst)
     inst.components.propagator.acceptsheat = false
 end

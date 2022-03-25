@@ -827,6 +827,20 @@ local RPC_HANDLERS =
         end
     end,
 
+	CannotBuild = function(player, reason)
+        if not checkstring(reason) then
+            printinvalid("CannotBuild", player)
+            return
+        end
+		local str = GetString(player, "ANNOUNCE_CANNOT_BUILD", reason, true)
+		if str ~= nil then
+			local talker = player.components.talker
+			if talker ~= nil then
+				talker:Say(str)
+			end
+		end
+	end,
+
     WakeUp = function(player)
         local playercontroller = player.components.playercontroller
         if playercontroller ~= nil and

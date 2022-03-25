@@ -210,6 +210,39 @@ function ModReloadFrontEndAssets(assets, modname)
     end
 end
 
+local MOD_PRELOAD_PREFABS = {}
+function ModUnloadPreloadAssets(modname)
+    if modname == nil then
+        TheSim:UnloadPrefabs(MOD_PRELOAD_PREFABS)
+        TheSim:UnregisterPrefabs(MOD_PRELOAD_PREFABS)
+        MOD_PRELOAD_PREFABS = {}
+    else
+        local prefab = {table.removearrayvalue(MOD_PRELOAD_PREFABS, "MODPRELOAD_"..modname)}
+        if not IsTableEmpty(prefab) then
+            TheSim:UnloadPrefabs(prefab)
+            TheSim:UnregisterPrefabs(prefab)
+        end
+    end
+end
+
+function ModPreloadAssets(assets, modname)
+    assert(KnownModIndex:DoesModExistAnyVersion(modname), "modname "..modname.." must refer to a valid mod!")
+    if assets then
+        ModUnloadPreloadAssets(modname)
+
+        assets = shallowcopy(assets) --make a copy so that changes to the table in the mod code don't do anything funky
+
+        for i, v in ipairs(assets) do
+            local modroot = MODS_ROOT..modname.."/"
+            resolvefilepath_soft(v.file, nil, modroot)
+        end
+        local prefab = Prefab("MODPRELOAD_"..modname, nil, assets, nil)
+        table.insert(MOD_PRELOAD_PREFABS, prefab.name)
+        RegisterSinglePrefab(prefab)
+        TheSim:LoadPrefabs({prefab.name})
+    end
+end
+
 function RegisterAchievements(achievements)
     for i, achievement in ipairs(achievements) do
         --print ("Registering achievement:", achievement.name, achievement.id.steam, achievement.id.psn)
@@ -777,6 +810,12 @@ function SetAutopaused(autopause)
     DoAutopause()
 end
 
+local craftingautopause = false
+function SetCraftingAutopaused(autopause)
+    craftingautopause = autopause
+    DoAutopause()
+end
+
 local consoleautopausecount = 0
 function SetConsoleAutopaused(autopause)
     consoleautopausecount = consoleautopausecount + (autopause and 1 or -1)
@@ -785,9 +824,10 @@ end
 
 function DoAutopause()
     TheNet:SetAutopaused(
-        ((autopausecount > 0 and Profile:GetAutopauseEnabled()) or
-        (consoleautopausecount > 0 and Profile:GetConsoleAutopauseEnabled()))
-        and not TheFrontEnd:IsControlsDisabled()
+        ((autopausecount > 0 and Profile:GetAutopauseEnabled()) 
+         or (craftingautopause and Profile:GetCraftingAutopauseEnabled())
+         or (consoleautopausecount > 0 and Profile:GetConsoleAutopauseEnabled())
+		) and not TheFrontEnd:IsControlsDisabled()
     )
 end
 
@@ -1313,7 +1353,6 @@ function DoLoadingPortal(cb)
 
 	--No portal anymore, just fade to "white". Maybe we want to swipe fade to the loading screen?
 	TheFrontEnd:Fade(FADE_OUT, SCREEN_FADE_TIME, cb, nil, nil, "white")
-	return
 end
 
 -- This is for joining a game: once we're done downloading the map, we load it and simreset
@@ -1364,6 +1403,7 @@ function ForceAssetReset()
     Settings.current_asset_set = "FORCERESET"
     Settings.current_world_asset = nil
     Settings.current_world_specialevent = nil
+    Settings.current_world_extraevents = nil
 end
 
 function SimReset(instanceparameters)
@@ -1375,6 +1415,7 @@ function SimReset(instanceparameters)
     instanceparameters.last_asset_set = Settings.current_asset_set
     instanceparameters.last_world_asset = Settings.current_world_asset
     instanceparameters.last_world_specialevent = Settings.current_world_specialevent
+    instanceparameters.last_world_extraevents = Settings.current_world_extraevents
     instanceparameters.loaded_characters = Settings.loaded_characters
     instanceparameters.loaded_mods = ModManager:GetUnloadPrefabsData()
     if Settings.current_asset_set == "BACKEND" then
@@ -1400,7 +1441,7 @@ function RequestShutdown()
     end
 
     if TheNet:GetIsHosting() then
-        TheSystemService:StopDedicatedServers()
+        TheSystemService:StopDedicatedServers(not IsDynamicCloudShutdown)
     end
 
     Shutdown()
@@ -1545,7 +1586,7 @@ local function postsavefn()
     EnableAllMenuDLC()
 
     if TheNet:GetIsHosting() then
-        TheSystemService:StopDedicatedServers()
+        TheSystemService:StopDedicatedServers(not IsDynamicCloudShutdown)
     end
 
     StartNextInstance()
@@ -1581,6 +1622,18 @@ function DoRestart(save)
         ShowLoading()
         TheFrontEnd:Fade(FADE_OUT, 1, save and savefn or postsavefn)
     end
+end
+
+IsDynamicCloudShutdown = false
+
+--these are currently unused, they will be used on Steam Dynamic Cloud Syncing is eventually enabled.
+function OnDynamicCloudSyncReload()
+    TheNet:SendWorldRollbackRequestToServer(0)
+end
+
+function OnDynamicCloudSyncDelete()
+    IsDynamicCloudShutdown = true
+    DoRestart(false)
 end
 
 local screen_fade_time = .25
@@ -1622,7 +1675,7 @@ end
 function OnDemoTimeout()
 	print("Demo timed out")
 	if not IsMigrating() then
-		TheSystemService:StopDedicatedServers()
+		TheSystemService:StopDedicatedServers(not IsDynamicCloudShutdown)
 	end
 	if ThePlayer ~= nil then
 		SerializeUserSession(ThePlayer)
@@ -1642,7 +1695,7 @@ function OnNetworkDisconnect( message, should_reset, force_immediate_reset, deta
     end
 
     if not IsMigrating() then
-        TheSystemService:StopDedicatedServers()
+        TheSystemService:StopDedicatedServers(not IsDynamicCloudShutdown)
     end
 
     local accounts_link = nil
@@ -1816,6 +1869,20 @@ function ResumeRequestLoadComplete(success)
         TheFrontEnd:PushScreen(LobbyScreen(Profile, OnUserPickedCharacter, false))
         TheFrontEnd:Fade(FADE_IN, 1, nil, nil, nil, "white")
         TheWorld:PushEvent("entercharacterselect")
+	else
+		local session_file = TheNet:GetLocalClientUserSessionFile()
+        if session_file then
+            print("Loading Local Client Session Data from:", session_file)
+
+            TheNet:DeserializeUserSession(session_file, function(success, str)
+                if success and str ~= nil and #str > 0 then
+                    local playerdata = ParseUserSessionData(str)
+                    if playerdata ~= nil and playerdata.crafting_menu ~= nil then
+                        TheCraftingMenuProfile:DeserializeLocalClientSessionData(playerdata.crafting_menu)
+                    end
+                end
+            end)
+        end
     end
 end
 
@@ -1870,6 +1937,10 @@ function RestoreSnapshotUserSession(sessionid, userid)
                                 end
                             end
                         end
+						if playerdata.crafting_menu ~= nil then
+							TheCraftingMenuProfile:DeserializeLocalClientSessionData(playerdata.crafting_menu)
+						end
+
                         return player.player_classified ~= nil and player.player_classified.entity or nil
                     end
                 end

@@ -164,8 +164,23 @@ function ServerCreationScreen:GetGameMode()
 	return self.server_settings_tab:GetGameMode()
 end
 
-function ServerCreationScreen:SetDataOnTabs()
+function ServerCreationScreen:UpdateSaveSlot(new_save_slot)
+    self.save_slot = new_save_slot
 
+	if self.mods_enabled then
+        self.mods_tab:UpdateSaveSlot(self.save_slot) --needs to happen before server_settings_tab:SetDataForSlot
+    end
+
+    self.server_settings_tab:UpdateSaveSlot(self.save_slot)
+
+    for i,tab in ipairs(self.world_tabs) do
+        tab:UpdateSaveSlot(self.save_slot)
+    end
+
+    self.snapshot_tab:UpdateSaveSlot(self.save_slot)
+end
+
+function ServerCreationScreen:SetDataOnTabs()
 	if self.mods_enabled then
         self.mods_tab:SetDataForSlot(self.save_slot) --needs to happen before server_settings_tab:SetDataForSlot
     end
@@ -351,8 +366,11 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
                 TheFrontEnd:PushScreen(launchingServerPopup)
             end
 
+            local save_to_cloud = self.save_slot > CLOUD_SAVES_SAVE_OFFSET
+            local use_zip_format = Profile:GetUseZipFileForNormalSaves()
+
             -- Note: StartDedicatedServers launches both dedicated and non-dedicated servers... ~gjans
-            if not TheSystemService:StartDedicatedServers(self.save_slot, is_multi_level, cluster_info, encode_user_path, use_legacy_session_path) then
+            if not TheSystemService:StartDedicatedServers(self.save_slot, is_multi_level, cluster_info, encode_user_path, use_legacy_session_path, save_to_cloud, use_zip_format) then
                 if launchingServerPopup ~= nil then
                     launchingServerPopup:SetErrorStartingServers()
                 end

@@ -189,10 +189,12 @@ PREFAB_SKINS = {
 	},
 	bundle =
 	{
+		"bundle_gothic",
 		"bundle_vintage",
 	},
 	bundlewrap =
 	{
+		"bundlewrap_gothic",
 		"bundlewrap_vintage",
 	},
 	campfire =
@@ -230,6 +232,7 @@ PREFAB_SKINS = {
 	coldfirepit =
 	{
 		"coldfirepit_flower",
+		"coldfirepit_gothic",
 		"coldfirepit_teeth",
 	},
 	cookpot =
@@ -329,6 +332,7 @@ PREFAB_SKINS = {
 	{
 		"endtable_carpet",
 		"endtable_cawnival",
+		"endtable_cawnival_alt",
 		"endtable_dragonfly",
 		"endtable_vintage",
 	},
@@ -358,6 +362,7 @@ PREFAB_SKINS = {
 		"fence_factory",
 		"fence_fantasy",
 		"fence_gingerbread",
+		"fence_gothic",
 		"fence_picketbrown",
 		"fence_pickettan",
 		"fence_picketwhite",
@@ -368,6 +373,7 @@ PREFAB_SKINS = {
 	fence_gate =
 	{
 		"fence_gate_gingerbread",
+		"fence_gate_gothic",
 		"fence_gate_picketbrown",
 		"fence_gate_pickettan",
 		"fence_gate_picketwhite",
@@ -378,6 +384,7 @@ PREFAB_SKINS = {
 	fence_gate_item =
 	{
 		"fencegate_gingerbread_item",
+		"fencegate_gothic_item",
 		"fencegate_picketbrown_item",
 		"fencegate_pickettan_item",
 		"fencegate_picketwhite_item",
@@ -390,6 +397,7 @@ PREFAB_SKINS = {
 		"fence_factory_item",
 		"fence_fantasy_item",
 		"fence_gingerbread_item",
+		"fence_gothic_item",
 		"fence_picketbrown_item",
 		"fence_pickettan_item",
 		"fence_picketwhite_item",
@@ -533,7 +541,10 @@ PREFAB_SKINS = {
 	{
 		"lantern_crystal",
 		"lantern_flower",
+		"lantern_flower_alt",
+		"lantern_gothic",
 		"lantern_mummy",
+		"lantern_mummy_alt",
 		"lantern_tesla",
 		"lantern_winter",
 		"lantern_winter_alt",
@@ -544,6 +555,7 @@ PREFAB_SKINS = {
 	},
 	lightning_rod =
 	{
+		"lightning_rod_gothic",
 		"lightning_rod_nautical",
 		"lightning_rod_robot",
 	},
@@ -558,13 +570,17 @@ PREFAB_SKINS = {
 	mast =
 	{
 		"mast_crabking",
+		"mast_crabking_alt",
 		"mast_nautical",
 		"mast_rose",
+		"mast_rose_alt",
 	},
 	mast_item =
 	{
+		"mast_crabking_alt_item",
 		"mast_crabking_item",
 		"mast_nautical_item",
+		"mast_rose_alt_item",
 		"mast_rose_item",
 	},
 	mastupgrade_lamp =
@@ -574,6 +590,18 @@ PREFAB_SKINS = {
 	mastupgrade_lamp_item =
 	{
 		"mastupgradelamp_item_nautical",
+	},
+	mastupgrade_lightningrod =
+	{
+		"mastupgrade_lightningrod_nautical",
+	},
+	mastupgrade_lightningrod_item =
+	{
+		"mastupgrade_lightningrod_item_nautical",
+	},
+	mastupgrade_lightningrod_top =
+	{
+		"mastupgrade_lightningrod_nautical_top",
 	},
 	meatrack =
 	{
@@ -644,6 +672,7 @@ PREFAB_SKINS = {
 	{
 		"oceanfishingrod_hotline",
 		"oceanfishingrod_ice",
+		"oceanfishingrod_ice_alt",
 	},
 	opalstaff =
 	{
@@ -670,6 +699,7 @@ PREFAB_SKINS = {
 		"pickaxe_northern",
 		"pickaxe_reavershark",
 		"pickaxe_scythe",
+		"pickaxe_scythe_alt",
 		"pickaxe_victorian",
 	},
 	piggyback =
@@ -680,6 +710,7 @@ PREFAB_SKINS = {
 	pighouse =
 	{
 		"pighouse_cabin",
+		"pighouse_gothic",
 		"pighouse_logcabin",
 	},
 	pitchfork =
@@ -708,12 +739,14 @@ PREFAB_SKINS = {
 	},
 	researchlab =
 	{
+		"researchlab_gothic",
 		"researchlab_green",
 	},
 	researchlab2 =
 	{
 		"researchlab2_alchemytable",
 		"researchlab2_crystal",
+		"researchlab2_gothic",
 		"researchlab2_pod",
 	},
 	researchlab3 =
@@ -776,6 +809,10 @@ PREFAB_SKINS = {
 		"saltbox_shaker",
 		"saltbox_victorian",
 	},
+	sculptingtable =
+	{
+		"sculptingtable_gothic",
+	},
 	seafaring_prototyper =
 	{
 		"seafaring_prototyper_lighthouse",
@@ -816,6 +853,7 @@ PREFAB_SKINS = {
 	{
 		"stagehand_carpet",
 		"stagehand_cawnival",
+		"stagehand_cawnival_alt",
 		"stagehand_dragonfly",
 		"stagehand_vintage",
 	},
@@ -931,21 +969,27 @@ PREFAB_SKINS = {
 	wall_ruins =
 	{
 		"wall_ruins_thulecite",
+		"wall_ruins_thulecite_alt",
 		"wall_ruins_victorian",
 	},
 	wall_ruins_item =
 	{
+		"wall_ruins_thulecite_alt_item",
 		"wall_ruins_thuleciteitem",
 		"wall_ruins_victorianitem",
 	},
 	wall_stone =
 	{
 		"wall_stone_ancient",
+		"wall_stone_ancient_alt",
+		"wall_stone_gothic",
 		"wall_stone_victorian",
 	},
 	wall_stone_item =
 	{
+		"wall_stone_ancient_alt_item",
 		"wall_stone_ancientitem",
+		"wall_stone_gothicitem",
 		"wall_stone_victorianitem",
 	},
 	walrushat =
@@ -993,6 +1037,7 @@ PREFAB_SKINS = {
 	{
 		"wardrobe_armoire",
 		"wardrobe_crystal",
+		"wardrobe_gothic",
 		"wardrobe_heart",
 		"wardrobe_yule",
 	},

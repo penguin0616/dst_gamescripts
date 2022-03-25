@@ -214,6 +214,14 @@ local prefabs =
 	-- summer carnival
 	"carnival_host",
 
+	-- deprecated bird tacklesketch
+	"oceanfishingbobber_malbatross_tacklesketch",
+	"oceanfishingbobber_goose_tacklesketch",
+	"oceanfishingbobber_crow_tacklesketch",
+	"oceanfishingbobber_robin_tacklesketch",
+	"oceanfishingbobber_robin_winter_tacklesketch",
+	"oceanfishingbobber_canary_tacklesketch",
+
 	-- Farming
 	"slow_farmplot", -- deprecated but still used in old worlds and mods
     "fast_farmplot", -- deprecated but still used in old worlds and mods

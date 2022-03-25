@@ -55,6 +55,10 @@ local function SpawnHound(inst)
     local hounded = TheWorld.components.hounded
     if hounded ~= nil then
         local num = inst:NumHoundsToSpawn()
+        if inst.max_hound_spawns then
+            num = math.min(num,inst.max_hound_spawns)
+            inst.max_hound_spawns = inst.max_hound_spawns - num
+        end
         local pt = inst:GetPosition()
         for i = 1, num do
             local hound = hounded:SummonSpawn(pt)

@@ -192,6 +192,22 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		end
 	end
 
+	-- Used to preload assets before they get loaded regularly; use mainly for modifying loading screen tip icons
+	-- Assets is a table list defined the same as in any prefab file and uses .tex and .xml file data
+	--[[ e.g.
+		Assets = {
+			Asset( "IMAGE", "<path to .tex file relative to the mod's folder>" ),
+			Asset( "ATLAS", "<path to .xml file relative to the mod's folder>" ),
+		}]]
+	if not isworldgen then
+		env.ReloadPreloadAssets = function()
+			initprint("ReloadPreloadAssets")
+			if env.PreloadAssets then
+				ModPreloadAssets(env.PreloadAssets, env.modname)
+			end
+		end
+	end
+
 	local Customize = require("map/customize")
 	env.AddCustomizeGroup = function(category, name, text, desc, atlas, order)
 		initprint("AddCustomizeGroup", category, name)
@@ -266,14 +282,14 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 
 	env.AddLocation = function(arg1, ...)
 		initprint("AddLocation", arg1.location)
-		AddModLocation(env.modname, arg1, ...)
+		AddModLocation(env.modname, arg1)
 	end
 	env.AddLevel = function(arg1, arg2, ...)
 		initprint("AddLevel", arg1, arg2.id)
 
 		arg2 = modcompatability.UpgradeModLevelFromV1toV2(env.modname, arg2)
 
-		AddModLevel(env.modname, arg1, arg2, ...)
+		AddModLevel(env.modname, arg1, arg2)
 	end
 	env.AddTaskSet = function(arg1, ...)
 		initprint("AddTaskSet", arg1)
@@ -515,6 +531,30 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		table.insert(env.postinitfns.PrefabPostInit[prefab], fn)
 	end
 
+	env.postinitfns.RecipePostInitAny = {}
+	env.AddRecipePostInitAny = function(fn)
+		initprint("AddRecipePostInitAny")
+		require("recipe")
+		table.insert(env.postinitfns.RecipePostInitAny, fn)
+		--run for all existing recipes
+		for k, v in pairs(AllRecipes) do
+			fn(v)
+		end
+	end
+
+	env.postinitfns.RecipePostInit = {}
+	env.AddRecipePostInit = function(recipename, fn)
+		initprint("AddRecipePostInit")
+		require("recipe")
+		if env.postinitfns.RecipePostInit[recipename] == nil then
+			env.postinitfns.RecipePostInit[recipename] = {}
+		end
+		table.insert(env.postinitfns.RecipePostInit[recipename], fn)
+		if AllRecipes[recipename] then
+			fn(AllRecipes[recipename])
+		end
+	end
+
 	-- the non-standard ones
 
 	env.AddBrainPostInit = function(brain, fn)
@@ -555,11 +595,115 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		RemoveDefaultCharacter(name)
 	end
 
+	-- data: see PROTOTYPER_DEFS in recipes.lua for examples
+	env.AddPrototyperDef = function(prototyper_prefab, data)
+		initprint("AddPrototyperDef", prototyper_prefab)
+		require("recipe")
+		if prototyper_prefab ~= nil then
+			PROTOTYPER_DEFS[prototyper_prefab] = data
+		end
+	end
+
+	env.AddRecipeToFilter = function(recipe_name, filter_name)
+		initprint("AddRecipeToFilter", recipe_name, filter_name)
+		local filter = CRAFTING_FILTERS[filter_name]
+		if filter ~= nil and filter.default_sort_values[recipe_name] == nil then
+			table.insert(filter.recipes, recipe_name)
+			filter.default_sort_values[recipe_name] = #filter.recipes
+		end
+	end
+
+	env.RemoveRecipeFromFilter = function(recipe_name, filter_name)
+		initprint("RemoveRecipeFromFilter", recipe_name, filter_name)
+		local filter = CRAFTING_FILTERS[filter_name]
+		if filter ~= nil and filter.default_sort_values[recipe_name] ~= nil then
+			table.removearrayvalue(filter.recipes, recipe_name)
+			filter.default_sort_values = table.invert(filter.recipes)
+		end
+	end
+
+	-- filters = {"TOOLS", "LIGHT"}
+	env.AddRecipe2 = function(name, ingredients, tech, config, filters)
+		initprint("AddRecipe2", name)
+		require("recipe")
+		mod_protect_Recipe = false
+		local rec = Recipe2(name, ingredients, tech, config)
+
+		if not rec.is_deconstruction_recipe then
+			if config.nounlock then
+				env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
+			else
+				env.AddRecipeToFilter(name, CRAFTING_FILTERS.MODS.name)
+			end
+
+			if filters ~= nil then
+				for _, filter_name in ipairs(filters) do
+					env.AddRecipeToFilter(name, filter_name)
+				end
+			end
+		end
+
+
+		mod_protect_Recipe = true
+		rec:SetModRPCID()
+		return rec
+	end
+
+	env.AddCharacterRecipe = function(name, ingredients, tech, config, extra_filters)
+		initprint("AddCharacterRecipe", name)
+		require("recipe")
+		mod_protect_Recipe = false
+
+		local rec = Recipe2(name, ingredients, tech, config)
+
+		if config ~= nil and config.builder_tag ~= nil then
+			env.AddRecipeToFilter(name, CRAFTING_FILTERS.CHARACTER.name)
+		else
+			initprint("Warning: AddCharacterRecipe called for recipe "..name.." without a builder_tag. This recipe will be added to the mods filter instead of the character filter.")
+			env.AddRecipeToFilter(name, CRAFTING_FILTERS.MODS.name)
+		end
+
+		if extra_filters ~= nil then
+			for _, filter_name in ipairs(extra_filters) do
+				env.AddRecipeToFilter(name, filter_name)
+			end
+		end
+
+
+		mod_protect_Recipe = true
+		rec:SetModRPCID()
+		return rec
+	end
+
+	env.AddDeconstructRecipe = function(name, return_ingredients)
+		initprint("AddDeconstructRecipe", name)
+		require("recipe")
+		mod_protect_Recipe = false
+		local rec = DeconstructRecipe(name, return_ingredients)
+		mod_protect_Recipe = true
+		rec:SetModRPCID()
+		return rec
+	end
+
 	env.AddRecipe = function(arg1, ...)
+		print("Warning: function AddRecipe in modmain is deprecated, please use AddRecipe2. Recipe name:", arg1)
 		initprint("AddRecipe", arg1)
 		require("recipe")
 		mod_protect_Recipe = false
 		local rec = Recipe(arg1, ...)
+
+		-- unfortunately recipes added using the old system will not support the crafting_station filter as the prototyper is not able to retrofit into a crafting station
+		--if rec.nounlock and rec.tab ~= nil and rec.tab.crafting_station then
+		--	env.AddRecipeToFilter(name, CRAFTING_FILTERS.CRAFTING_STATION.name)
+		--end
+
+
+		if rec.builder_tag ~= nil then
+			env.AddRecipeToFilter(arg1, CRAFTING_FILTERS.CHARACTER.name)
+		elseif not rec.is_deconstruction_recipe then
+			env.AddRecipeToFilter(arg1, CRAFTING_FILTERS.MODS.name)
+		end
+
 		mod_protect_Recipe = true
 		rec:SetModRPCID()
 		return rec
@@ -571,6 +715,7 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 	end
 
     env.AddRecipeTab = function( rec_str, rec_sort, rec_atlas, rec_icon, rec_owner_tag, rec_crafting_station )
+		print("Warning: function AddRecipeTab in modmain is deprecated.")
 		CUSTOM_RECIPETABS[rec_str] = { str = rec_str, sort = rec_sort, icon_atlas = rec_atlas, icon = rec_icon, owner_tag = rec_owner_tag, crafting_station = rec_crafting_station }
 		STRINGS.TABS[rec_str] = rec_str
 		return CUSTOM_RECIPETABS[rec_str]
@@ -700,8 +845,45 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		RegisterInventoryItemAtlas(atlas, prefabname)
 	end
 
+	-- For modding loading tips
+	env.AddLoadingTip = function(stringtable, id, tipstring, controltipdata)
+		if stringtable == nil or id == nil or tipstring == nil then
+			return
+		end
+
+		-- Note: Tip needs a unique identifier string to load properly
+		stringtable[id] = tipstring
+
+		if controltipdata == nil then
+			return
+		end
+
+		LOADING_SCREEN_CONTROL_TIP_KEYS[id] = controltipdata
+	end
+
+	env.RemoveLoadingTip = function(stringtable, id)
+		if stringtable == nil or id == nil then
+			return
+		end
+
+		stringtable[id] = nil
+		LOADING_SCREEN_CONTROL_TIP_KEYS[id] = nil
+	end
+
+	-- Loading tip weights when playing the game for the first time (LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_START),
+	-- or after a certain amount of time (LOADING_SCREEN_TIP_CATEGORY_WEIGHTS_END), based on the weights table to be modified.
+	-- For play time in between, weights are interpolated from the difference between start and end category weights.
+	env.SetLoadingTipCategoryWeights = function(weighttable, weightdata)
+		for key, weight in pairs(weightdata) do
+			weighttable[key] = weight
+		end
+	end
+
+	env.SetLoadingTipCategoryIcon = function(category, categoryatlas, categoryicon)
+		LOADING_SCREEN_TIP_ICONS[category] = { atlas = categoryatlas, icon = categoryicon }
+	end
 end
 
 return {
-			InsertPostInitFunctions = InsertPostInitFunctions,
-		}
+	InsertPostInitFunctions = InsertPostInitFunctions,
+}

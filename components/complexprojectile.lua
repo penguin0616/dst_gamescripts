@@ -18,6 +18,8 @@ local ComplexProjectile = Class(function(self, inst)
 
     self.usehigharc = true
 
+	--self.ismeleeweapon = false -- setting to true allows for melee attacks on left lick and toss on right click
+
     --NOTE: projectile and complexprojectile components are mutually
     --      exclusive because they share this tag!
     --V2C: Recommended to explicitly add tag to prefab pristine state

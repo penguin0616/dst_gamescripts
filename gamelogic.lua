@@ -145,7 +145,7 @@ local function KeepAlive()
 end
 
 function ShowLoading()
-	if global_loading_widget then
+	if global_loading_widget and not TheNet:IsDedicated() then
 		global_loading_widget:SetEnabled(true)
 	end
 end
@@ -175,7 +175,14 @@ local function LoadAssets(asset_set, savedata)
 	assert(asset_set)
 	Settings.current_asset_set = asset_set
     Settings.current_world_asset = savedata ~= nil and savedata.map.prefab or nil
-    Settings.current_world_specialevent = savedata ~= nil and (savedata.map.topology ~= nil and savedata.map.topology.overrides ~= nil and savedata.map.topology.overrides.specialevent ~= "default" and savedata.map.topology.overrides.specialevent or WORLD_SPECIAL_EVENT) or nil
+
+	local savedata_overrides = savedata and savedata.map.topology and savedata.map.topology.overrides or nil
+
+    Settings.current_world_specialevent = savedata and (savedata_overrides and savedata_overrides.specialevent ~= "default" and savedata_overrides.specialevent or WORLD_SPECIAL_EVENT) or nil
+	Settings.current_world_extraevents = {}
+
+	local last_world_allevents = GetAllActiveEvents(Settings.last_world_specialevent, Settings.last_world_extraevents)
+	local current_world_allevents = GetAllActiveEvents(Settings.current_world_specialevent, Settings.current_world_extraevents)
 
 	RECIPE_PREFABS = {}
 	for k,v in pairs(AllRecipes) do
@@ -209,9 +216,10 @@ local function LoadAssets(asset_set, savedata)
 				TheSim:UnloadPrefabs(RECIPE_PREFABS)
                 --V2C: Replaced by Settings.last_world_asset
                 --TheSim:UnloadPrefabs(BACKEND_PREFABS)
-                if Settings.last_world_specialevent ~= nil then
-                    TheSim:UnloadPrefabs({ Settings.last_world_specialevent.."_event_backend" })
-                end
+
+				for special_event in pairs(last_world_allevents) do
+					TheSim:UnloadPrefabs({ special_event.."_event_backend" })
+				end
                 TheSim:UnloadPrefabs(FESTIVAL_EVENT_BACKEND_PREFABS)
                 if Settings.last_world_asset ~= nil then
                     TheSim:UnloadPrefabs({ Settings.last_world_asset })
@@ -262,14 +270,17 @@ local function LoadAssets(asset_set, savedata)
                 LoadPrefabFile("prefabs/audio_test_prefab")
             end
 
-            if Settings.last_world_specialevent ~= Settings.current_world_specialevent then
-				if Settings.current_world_specialevent then
-					TheSim:LoadPrefabs({ Settings.current_world_specialevent })
+			for special_event in pairs(current_world_allevents) do
+				if not last_world_allevents[special_event] then
+					TheSim:LoadPrefabs({ special_event.."_event_backend" })
 				end
-				if Settings.last_world_specialevent then
-					TheSim:UnloadPrefabs({ Settings.last_world_specialevent })
+			end
+
+			for special_event in pairs(last_world_allevents) do
+				if not current_world_allevents[special_event] then
+					TheSim:UnloadPrefabs({ special_event.."_event_backend" })
 				end
-            end
+			end
 
             if Settings.last_world_asset ~= Settings.current_world_asset then
 				if Settings.current_world_asset then
@@ -307,9 +318,12 @@ local function LoadAssets(asset_set, savedata)
 			TheSystemService:SetStalling(true)
             --V2C: Replaced by Settings.current_world_asset
             --TheSim:LoadPrefabs(BACKEND_PREFABS)
-            if Settings.current_world_specialevent ~= nil then
-                TheSim:LoadPrefabs({ Settings.current_world_specialevent.."_event_backend" })
-            end
+
+
+			for special_event in pairs(current_world_allevents) do
+				TheSim:LoadPrefabs({ special_event.."_event_backend" })
+			end
+
             TheSim:LoadPrefabs(FESTIVAL_EVENT_BACKEND_PREFABS)
             if Settings.current_world_asset ~= nil then
                 TheSim:LoadPrefabs({ Settings.current_world_asset })
@@ -330,6 +344,7 @@ local function LoadAssets(asset_set, savedata)
 	Settings.last_asset_set = Settings.current_asset_set
     Settings.last_world_asset = Settings.current_world_asset
     Settings.last_world_specialevent = Settings.current_world_specialevent
+	Settings.last_world_extraevents = Settings.current_world_extraevents
 end
 
 function GetTimePlaying()
@@ -352,7 +367,16 @@ local function PopulateWorld(savedata, profile)
     Print(VERBOSITY.DEBUG, "PopulateWorld")
     Print(VERBOSITY.DEBUG, "[Instantiating objects...]")
     if savedata ~= nil then
-		ApplySpecialEvent(savedata.map.topology.overrides and savedata.map.topology.overrides.specialevent or nil)
+		local savedata_overrides = savedata.map.topology.overrides
+
+		if savedata_overrides then
+			ApplySpecialEvent(savedata_overrides.specialevent or nil)
+			for k, event_name in pairs(SPECIAL_EVENTS) do
+				if savedata_overrides[event_name] == "enabled" then
+					ApplyExtraEvent(event_name)
+				end
+			end
+		end
 
 		if savedata.map.topology.overrides and not IsTableEmpty(savedata.map.topology.overrides) then
 			for name, override in pairs(WorldSettings_Overrides.Pre) do

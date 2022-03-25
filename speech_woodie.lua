@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not many places to hide around here, eh?",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "How aboot we do it again another day?",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I wouldn't wanna muddle it up.",
+			SHADOWMAGIC = "Trees made into... paper? How unholy!",
+		},
         COOK =
         {
             GENERIC = "That's not really in my wheelhouse, sorry.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Dangit, I'm missing a few things.",
+		NO_TECH = "That one might take some lookin' into.",
+		NO_STATION = "I'm gonna need a proper workstation.",
+	},
 
 	ACTIONFAIL_GENERIC = "Sorry, I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "All this water is making me very anxious.",
@@ -2781,6 +2793,8 @@ return{
 			BURNT = "Not so useful now, eh?",
 		},
 		WARG = "That thing could pull a sled by its lonesome.",
+        WARGLET = "Think you can mess with me, eh?",
+        
 		WASPHIVE = "Why are those bees so angry?",
 		WATERBALLOON = "Could be fun times lobbin' these around.",
 		WATERMELON = "How can it be both water and melon?",
@@ -4292,6 +4306,7 @@ return{
 
         DUMBBELL = "Looks pretty heavy, eh?",
         DUMBBELL_GOLDEN = "I'll stick to lifting my axe.",
+		DUMBBELL_MARBLE = "I'll stick to lifting my axe.",
         DUMBBELL_GEM = "Choppin' trees is enough of a workout for me.",
         POTATOSACK = "Never know when you might need a potato, eh?",
 

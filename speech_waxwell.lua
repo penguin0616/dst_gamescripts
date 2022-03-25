@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This environment is not suitable for a fair game.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Playtime is over for now.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I have more important things to do than that.",
+			SHADOWMAGIC = "unused_by_waxwell",
+		},
         COOK =
         {
             GENERIC = "Nothing ever goes as planned.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I don't have everything I need.",
+		NO_TECH = "Don't look at me, I've never made one before in my life.",
+		NO_STATION = "I can't make that here, pal.",
+	},
 
 	ACTIONFAIL_GENERIC = "That didn't work.",
 	ANNOUNCE_BOAT_LEAK = "We've sprung a leak!",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "Dapperness is a state of mind.",
 		},
 		WARG = "The alpha!",
+        WARGLET = "They're smaller than I remember... going soft on us, Charlie?",
+        
 		WASPHIVE = "That looks dangerous.",
 		WATERBALLOON = "Do you have any idea how much this suit cost?",
 		WATERMELON = "It's mostly water. Fibrous, sweet water.",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "I have no interest in such things.",
         DUMBBELL_GOLDEN = "It's not that impressive.",
+		DUMBBELL_MARBLE = "It's not that impressive.",
         DUMBBELL_GEM = "It's not that impressive.",
         POTATOSACK = "Potatoes are powerful things, not to be underestimated.",
 

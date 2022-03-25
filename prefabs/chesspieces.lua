@@ -29,7 +29,7 @@ local PIECES =
     },
     {name="dragonfly",		moonevent=false,    gymweight=4},
     {name="clayhound",		moonevent=false,    gymweight=3},
-    {name="claywarg",   moonevent=false,    gymweight=3},
+    {name="claywarg",		moonevent=false,    gymweight=3},
     {name="butterfly",		moonevent=false,    gymweight=3},
     {name="anchor",			moonevent=false,    gymweight=3},
     {name="moon",			moonevent=false,    gymweight=4},

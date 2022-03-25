@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Hmm, no good hidey spots here.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Glurgh. Bored of this game.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Fancy cooking man can do it, florpt.",
+			SHADOWMAGIC = "...Don't like stories in that book.",
+		},
         COOK =
         {
             GENERIC = "Don't wanna, glort.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Don't got stuff for that!",
+		NO_TECH = "Glurgh... don't know how to make...",
+		NO_STATION = "Can't make it right now, florp.",
+	},
 
 	ACTIONFAIL_GENERIC = "Grrr... can't do it, florpt.",
 	ANNOUNCE_BOAT_LEAK = "Boat getting wetter!",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "Aww...",
 		},
 		WARG = "What big teeth he have!",
+        WARGLET = "What big teeth he have!",
+        
 		WASPHIVE = "Look scary... but sweet stuff inside...",
 		WATERBALLOON = "Don't worry, won't throw at you... (hee-hee)",
 		WATERMELON = "Gimme!!",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "Muscly mustache man leave rocks everywhere.",
         DUMBBELL_GOLDEN = "Muscly mustache man leave rocks everywhere.",
+		DUMBBELL_MARBLE = "Muscly mustache man leave rocks everywhere.",
         DUMBBELL_GEM = "Muscly mustache man leave rocks everywhere.",
         POTATOSACK = "Snacks! Mine!!",
 

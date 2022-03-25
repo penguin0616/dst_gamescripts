@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "There's nowhere to hide around here.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think I've spent quite enough time wrangling these tiny terrors today.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "It takes too long to cook a fancy meal.",
+			SHADOWMAGIC = "Hm.",
+		},
         COOK =
         {
             GENERIC = "This is no time for cooking.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Oh botheration, I'll have to pick up a few things first.",
+		NO_TECH = "I haven't quite figured that one out yet.",
+		NO_STATION = "I won't be able to make it without a proper workstation.",
+	},
 
 	ACTIONFAIL_GENERIC = "Not in this timeline.",
 	ANNOUNCE_BOAT_LEAK = "Oh no no no! T-the boat's taking on water!!",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "One less distraction, I suppose.",
 		},
 		WARG = "I guess I was bound to run into you sooner or later.",
+        WARGLET = "I could have sworn they were bigger...",
+        
 		WASPHIVE = "I'd rather not be stung within an inch of my life, thank you.",
 		WATERBALLOON = "Don't think I won't throw it!",
 		WATERMELON = "Ahh, refreshing!",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "What a dreadfully repetitive way to spend one's time.",
         DUMBBELL_GOLDEN = "What a dreadfully repetitive way to spend one's time.",
+		DUMBBELL_MARBLE = "What a dreadfully repetitive way to spend one's time.",
         DUMBBELL_GEM = "What a dreadfully repetitive way to spend one's time.",
         POTATOSACK = "Who would want to lug this heavy thing around?",
 

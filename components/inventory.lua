@@ -986,7 +986,7 @@ function Inventory:Equip(item, old_to_active)
     end
 end
 
-function Inventory:RemoveItem(item, wholestack)
+function Inventory:RemoveItem(item, wholestack, checkallcontainers)
     if item == nil then
         return
     end
@@ -1032,7 +1032,25 @@ function Inventory:RemoveItem(item, wholestack)
     end
 
     local overflow = self:GetOverflowContainer()
-    return overflow ~= nil and overflow:RemoveItem(item, wholestack) or item
+    local overflow_item = overflow and overflow:RemoveItem(item, wholestack)
+    if overflow_item then
+        return overflow_item
+    end
+
+    if checkallcontainers then
+        local containers = self.opencontainers
+        for container_inst in pairs(containers) do
+            local container = container_inst.components.container or container_inst.components.inventory
+            if container and container ~= overflow and not container.excludefromcrafting then
+                local container_item = container:RemoveItem(item, wholestack)
+                if container_item then
+                    return container_item
+                end
+            end
+        end
+    end
+
+    return item
 end
 
 function Inventory:GetOverflowContainer()
@@ -1045,7 +1063,7 @@ function Inventory:GetOverflowContainer()
         or nil
 end
 
-function Inventory:Has(item, amount) --Note(Peter): We don't care about v.skinname for inventory Has requests.
+function Inventory:Has(item, amount, checkallcontainers) --Note(Peter): We don't care about v.skinname for inventory Has requests.
     local num_found = 0
     for k, v in pairs(self.itemslots) do
         if v and v.prefab == item then
@@ -1069,6 +1087,18 @@ function Inventory:Has(item, amount) --Note(Peter): We don't care about v.skinna
     if overflow ~= nil then
         local overflow_enough, overflow_found = overflow:Has(item, amount)
         num_found = num_found + overflow_found
+    end
+
+    if checkallcontainers then
+        local containers = self.opencontainers
+
+        for container_inst in pairs(containers) do
+            local container = container_inst.components.container or container_inst.components.inventory
+            if container and container ~= overflow and not container.excludefromcrafting then
+                local container_enough, container_found = container:Has(item, amount)
+                num_found = num_found + container_found
+            end
+        end
     end
 
     return num_found >= amount, num_found
@@ -1103,7 +1133,7 @@ function Inventory:HasItemWithTag(tag, amount)
     return num_found >= amount, num_found
 end
 
-function Inventory:GetItemByName(item, amount) --Note(Peter): We don't care about v.skinname for inventory GetItemByName requests.
+function Inventory:GetItemByName(item, amount, checkallcontainers) --Note(Peter): We don't care about v.skinname for inventory GetItemByName requests.
     local total_num_found = 0
     local items = {}
 
@@ -1144,6 +1174,25 @@ function Inventory:GetItemByName(item, amount) --Note(Peter): We don't care abou
         local overflow_items = overflow:GetItemByName(item, (amount - total_num_found))
         for k,v in pairs(overflow_items) do
             items[k] = v
+            total_num_found = total_num_found + v
+        end
+    end
+
+    if checkallcontainers and total_num_found < amount then
+        local containers = self.opencontainers
+
+        for container_inst in pairs(containers) do
+            local container = container_inst.components.container or container_inst.components.inventory
+            if container and container ~= overflow and not container.excludefromcrafting then
+                local container_items = container:GetItemByName(item, (amount - total_num_found))
+                for k,v in pairs(container_items) do
+                    items[k] = v
+                    total_num_found = total_num_found + v
+                end
+            end
+            if total_num_found >= amount then
+                break
+            end
         end
     end
 

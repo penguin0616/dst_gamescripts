@@ -172,7 +172,7 @@ FrontEnd = Class(function(self, name)
     self.subtitle:SetHAnchor(ANCHOR_MIDDLE)
 	self.overlayroot:AddChild(self.subtitle)
 
-    if PLATFORM == "PS4" then
+    if IsConsole() then
         self.saving_indicator = UIAnim()
         self.saving_indicator:GetAnimState():SetBank("saving_indicator")
         self.saving_indicator:GetAnimState():SetBuild("saving_indicator")
@@ -190,7 +190,9 @@ FrontEnd = Class(function(self, name)
 	self.gameinterface = CreateEntity("GameInterface")
 	self.gameinterface.entity:AddSoundEmitter()
 	self.gameinterface.entity:AddGraphicsOptions()
-	self.gameinterface.entity:AddTwitchOptions()
+	if IsNotConsole() then
+		self.gameinterface.entity:AddTwitchOptions()
+	end
 	self.gameinterface.entity:AddAccountManager()
 
 	TheInput:AddKeyHandler(function(key, down) self:OnRawKey(key, down) end )
@@ -641,6 +643,8 @@ function FrontEnd:Update(dt)
         ProbeReload(TheInput:IsKeyDown(KEY_F6))
     end
 
+	local controller = TheInput:ControllerAttached()
+
 	if self.saving_indicator ~= nil and self.saving_indicator.shown then
 		if self.save_indicator_fade then
 			local alpha = 1
@@ -735,19 +739,51 @@ function FrontEnd:Update(dt)
         --skip while editing a text box
         if self.repeat_time > dt then
             self.repeat_time = self.repeat_time - dt
-        elseif not (self.textProcessorWidget ~= nil) then
+
+			if self.crafting_navigation_mode then
+				if not (   TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_LEFT))
+						or TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT))
+						or TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_UP))
+						or TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_DOWN)) ) then
+
+            		self.repeat_time = 0
+				end
+			else
+				if not (   TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)
+            			or TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT)
+            			or TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP)
+            			or TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) ) then
+
+            		self.repeat_time = 0
+				end
+			end
+		elseif not (self.textProcessorWidget ~= nil) then
             self.repeat_time = REPEAT_TIME
-            if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
-                self:OnFocusMove(MOVE_LEFT, true)
-            elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
-                self:OnFocusMove(MOVE_RIGHT, true)
-            elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) then
-                self:OnFocusMove(MOVE_UP, true)
-            elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) then
-                self:OnFocusMove(MOVE_DOWN, true)
-            else
-                self.repeat_time = 0
-            end
+			if self.crafting_navigation_mode then
+				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)) then
+					self:OnFocusMove(MOVE_LEFT, true)
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT)) then
+					self:OnFocusMove(MOVE_RIGHT, true)
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_UP)) then
+					self:OnFocusMove(MOVE_UP, true)
+				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_DOWN)) then
+					self:OnFocusMove(MOVE_DOWN, true)
+				else
+					self.repeat_time = 0
+				end
+			else
+				if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
+					self:OnFocusMove(MOVE_LEFT, true)
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
+					self:OnFocusMove(MOVE_RIGHT, true)
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) or TheInput:IsControlPressed(CONTROL_FOCUS_UP) then
+					self:OnFocusMove(MOVE_UP, true)
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) then
+					self:OnFocusMove(MOVE_DOWN, true)
+				else
+					self.repeat_time = 0
+				end
+			end
         end
 
         self:DoHoverFocusUpdate()
@@ -811,9 +847,10 @@ function FrontEnd:Update(dt)
 	end
 
 	self.helptext:Hide()
-	if TheInput:ControllerAttached() and
-        self:GetFadeLevel() < 1 and
-        not (self.fadedir == FADE_OUT and self.fade_type ~= "black") then
+	if controller
+        and self:GetFadeLevel() < 1
+		and not self.crafting_navigation_mode
+        and not (self.fadedir == FADE_OUT and self.fade_type ~= "black") then
 		local str = self:GetHelpText()
 		if str ~= "" then
 			self.helptext:Show()
@@ -1122,6 +1159,21 @@ function FrontEnd:GetHUDScale()
     local size = Profile:GetHUDSize()
     local min_scale = .75
     local max_scale = 1.1
+
+    --testing high res displays
+    local w, h = TheSim:GetScreenSize()
+
+    local res_scale_x = math.max(1, w / 1920)
+    local res_scale_y = math.max(1, h / 1200)
+    local res_scale = math.min(res_scale_x, res_scale_y)
+
+    return easing.linear(size, min_scale, max_scale - min_scale, 10) * res_scale
+end
+
+function FrontEnd:GetCraftingMenuScale()
+    local size = Profile:GetCraftingMenuSize()
+    local min_scale = .6
+    local max_scale = 1.15
 
     --testing high res displays
     local w, h = TheSim:GetScreenSize()

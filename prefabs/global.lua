@@ -77,6 +77,9 @@ local assets =
 
     Asset("SOUNDPACKAGE", "sound/yotc_2022_1.fev"),
     Asset("FILE", "sound/yotc_2022_1.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/ancientguardian_rework.fev"),
+    Asset("FILE", "sound/ancientguardian_rework.fsb"),
     
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods
@@ -186,6 +189,13 @@ local assets =
 
     Asset("ATLAS", "images/plantregistry.xml"),
     Asset("IMAGE", "images/plantregistry.tex"),
+
+    Asset("ATLAS", "images/crafting_menu.xml"),
+    Asset("IMAGE", "images/crafting_menu.tex"),
+    Asset("ATLAS", "images/crafting_menu_icons.xml"),
+    Asset("IMAGE", "images/crafting_menu_icons.tex"),
+    Asset("ATLAS", "images/crafting_menu_avatars.xml"),
+    Asset("IMAGE", "images/crafting_menu_avatars.tex"),
 
     Asset("DYNAMIC_ATLAS", "images/options.xml"),
     Asset("PKGREF", "images/options.tex"),
@@ -366,6 +376,12 @@ local assets =
 
     Asset("ATLAS", "images/servericons.xml"),
     Asset("IMAGE", "images/servericons.tex"),
+
+    -- Loading screen
+    Asset("ATLAS", "images/loading_screen.xml"),
+    Asset("IMAGE", "images/loading_screen.tex"),
+    Asset("ATLAS", "images/loading_screen_icons.xml"),
+    Asset("IMAGE", "images/loading_screen_icons.tex"),
 
     --Wardrobe previewing
     Asset("ANIM", "anim/player_ghost_withhat.zip"),

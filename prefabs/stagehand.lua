@@ -107,6 +107,8 @@ local function fn()
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.walkspeed = 8
+	inst.components.locomotor:SetTriggersCreep(false)
+    inst.components.locomotor.pathcaps = { ignorecreep = true }
     inst.sounds = sounds
 
     inst.CanStandUp = CanStandUp

@@ -251,8 +251,12 @@ function EntityScript:GetSaveRecord()
         record = {
             prefab = self.prefab,
             --id = self.GUID,
-            age = self.Network:GetPlayerAge()
+            age = self.Network:GetPlayerAge(),
         }
+
+		if ThePlayer == self then
+			record.crafting_menu = TheCraftingMenuProfile:SerializeLocalClientSessionData()
+		end
 
         local platform = self:GetCurrentPlatform()
         if platform then
@@ -544,6 +548,24 @@ end
 
 function EntityScript:HasTag(tag)
     return self.entity:HasTag(tag)
+end
+
+function EntityScript:HasTags(tags)
+	for i = 1, #tags do
+		if not self.entity:HasTag(tags[i]) then
+			return false
+		end
+	end
+	return true
+end
+
+function EntityScript:HasOneOfTags(tags)
+	for i = 1, #tags do
+		if self.entity:HasTag(tags[i]) then
+			return true
+		end
+	end
+	return false
 end
 
 require("entityreplica")
@@ -1415,6 +1437,17 @@ function EntityScript:PerformBufferedAction()
 
         self:PushEvent("performaction", { action = self.bufferedaction })
 
+        -- Prevent fail action event from repeating on the same target if we're holding down the action button
+        local playercontroller = self.components.playercontroller
+        if playercontroller then
+            if not playercontroller.actionholding and playercontroller.heldactionfailed ~= nil then
+                playercontroller.heldactionfailed = nil
+            elseif playercontroller.heldactionfailed ~= nil then
+                self.bufferedaction = nil
+                return false
+            end
+        end
+
 		local action_theme_music = self:HasTag("player") and (self.bufferedaction.action.theme_music or (self.bufferedaction.action.theme_music_fn ~= nil and self.bufferedaction.action.theme_music_fn(self.bufferedaction)))
 		if action_theme_music then
 			self:PushEvent("play_theme_music", {theme = action_theme_music})
@@ -1427,6 +1460,11 @@ function EntityScript:PerformBufferedAction()
         end
 
         self:PushEvent("actionfailed", { action = self.bufferedaction, reason = reason })
+
+        if playercontroller and playercontroller.actionholding then
+            playercontroller.heldactionfailed = true
+        end
+
         self.bufferedaction:Fail()
         self.bufferedaction = nil
     end

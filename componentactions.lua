@@ -269,6 +269,12 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+		prototyper = function(inst, doer, actions, right)
+			if not right then
+                table.insert(actions, ACTIONS.OPEN_CRAFTING)
+			end
+		end,
+
         fertilizerresearchable = function(inst, doer, actions, right)
             if right then
                 PlantRegistryResearch(inst, doer, actions)
@@ -1426,9 +1432,7 @@ local COMPONENT_ACTIONS =
             if right and not TheWorld.Map:IsGroundTargetBlocked(pos) 
 				and (inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer)) then
 
-                if not inst:HasTag("dumbbell") or doer:HasTag("mightiness_mighty") then
-                    table.insert(actions, ACTIONS.TOSS)
-                end
+                table.insert(actions, ACTIONS.TOSS)
             end
         end,
 
@@ -1581,9 +1585,7 @@ local COMPONENT_ACTIONS =
                 not TheWorld.Map:IsGroundTargetBlocked(target:GetPosition()) and
 				(inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer)) then
                 
-                if not inst:HasTag("dumbbell") or doer:HasTag("mightiness_mighty") then
-                    table.insert(actions, ACTIONS.TOSS)
-                end
+                table.insert(actions, ACTIONS.TOSS)
             end
         end,
 
@@ -1634,6 +1636,16 @@ local COMPONENT_ACTIONS =
         lighter = function(inst, doer, target, actions, right)
             if right and target:HasTag("canlight") and not ((target:HasTag("fueldepleted") and not target:HasTag("burnableignorefuel")) or target:HasTag("INLIMBO")) then
                 table.insert(actions, ACTIONS.LIGHT)
+            end
+        end,
+
+        mightydumbbell = function(inst, doer, target, actions, right)
+            if right and doer == target then
+                if inst:HasTag("lifting") then
+                    table.insert(actions, ACTIONS.STOP_LIFT_DUMBBELL)
+                else
+                    table.insert(actions, ACTIONS.LIFT_DUMBBELL)
+                end
             end
         end,
 
@@ -2078,7 +2090,7 @@ local COMPONENT_ACTIONS =
         end,
 
         mightydumbbell = function(inst, doer, actions)
-            if doer:HasTag("player") and doer:HasTag("strongman") and 
+            if doer:HasTag("strongman") and 
               (inst.replica.equippable ~= nil and inst.replica.equippable:IsEquipped()) then
                 if inst:HasTag("lifting") then
                     table.insert(actions, ACTIONS.STOP_LIFT_DUMBBELL)

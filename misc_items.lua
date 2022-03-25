@@ -1800,6 +1800,21 @@ MISC_ITEMS =
 		output_items = {  "wx78_gladiator", "body_wx78_gladiator", "feet_wx78_gladiator", "hand_wx78_gladiator", "legs_wx78_gladiator", },
 		release_group = 34,
 	},
+	pack_gothic_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 1899050,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_gothic_items.xml",
+		display_tex = "gothic_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wall_stone_gothic", "coldfirepit_gothic", "fence_gothic", "fence_gate_gothic", "lightning_rod_gothic", "pighouse_gothic", "researchlab2_gothic", "researchlab_gothic", "wardrobe_gothic", "lantern_gothic", "bundle_gothic", "sculptingtable_gothic", },
+		output_items = {  "wall_stone_gothic", "coldfirepit_gothic", "fence_gothic", "fence_gate_gothic", "lightning_rod_gothic", "pighouse_gothic", "researchlab2_gothic", "researchlab_gothic", "wardrobe_gothic", "lantern_gothic", "bundle_gothic", "sculptingtable_gothic", },
+		release_group = 129,
+	},
 	pack_hallowed_all =
 	{
 		type = "purchase",
@@ -5210,6 +5225,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 125,
 	},
+	playerportrait_bg_mastupgradelightningrodnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 129,
+	},
 	playerportrait_bg_messylab =
 	{
 		type = "playerportrait",
@@ -6214,6 +6236,13 @@ MISC_ITEMS =
 		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 125,
+	},
+	profileflair_mastupgradelightningrod_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 129,
 	},
 	profileflair_merm =
 	{

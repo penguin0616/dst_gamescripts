@@ -103,6 +103,8 @@ function Tune(overrides)
 
 		DEFAULT_CHARACTER_HEALTH = wilson_health,
 
+		BASE_SURVIVOR_ATTACK = wilson_attack,
+
         WILSON_HEALTH = wilson_health,
         WILSON_ATTACK_PERIOD = wilson_attack_period,
         WILSON_HUNGER = wilson_hunger, --stomach size
@@ -979,7 +981,7 @@ function Tune(overrides)
         DEERCLOPS_DAMAGE_PLAYER_PERCENT = .5,
         DEERCLOPS_ATTACK_PERIOD = 4,
         DEERCLOPS_ATTACK_RANGE = 8,
-        DEERCLOPS_AOE_RANGE = 6,
+        DEERCLOPS_AOE_RANGE = 12,-- 6,
         DEERCLOPS_AOE_SCALE = 0.8,
         DEERCLOPS_LOSE_TARGET_PERIOD = 60,
 
@@ -1100,6 +1102,8 @@ function Tune(overrides)
         TENTACLE_PILLAR_ARM_STOPATTACK_DIST = 5,
         TENTACLE_PILLAR_ARM_HEALTH = 20,
         TENTACLE_PILLAR_ARM_EMERGE_TIME = seg_time * 12,
+
+        BIG_TENTACLE_DAMAGE = 60,
 
         EYEPLANT_DAMAGE = 20,
         EYEPLANT_HEALTH = 30,
@@ -1292,7 +1296,8 @@ function Tune(overrides)
             }),
 
             TURFCRAFTING = TechTree.Create({
-                TURFCRAFTING = 1,
+                TURFCRAFTING = 2,
+                MASHTURFCRAFTING = 2,
             }),
 
             SPIDERCRAFT = TechTree.Create({
@@ -1871,7 +1876,7 @@ function Tune(overrides)
         REPAIR_THULECITE_PIECES_HEALTH = 100/6,
 
         REPAIR_BOARDS_HEALTH = 50,
-        REPAIR_LOGS_HEALTH = 25/4,
+        REPAIR_LOGS_HEALTH = 50/4,
         REPAIR_STICK_HEALTH = 13,
         REPAIR_CUTGRASS_HEALTH = 13,
         REPAIR_TREEGROWTH_HEALTH = 20,
@@ -2645,13 +2650,17 @@ function Tune(overrides)
         WARG_HEALTH = 600 * 3, --harder for multiplayer
         WARG_DAMAGE = 50,
         WARG_ATTACKPERIOD = 3,
-        WARG_ATTACKRANGE = 5,
+        WARG_ATTACKRANGE = 4,
         WARG_FOLLOWERS = 6,
         WARG_SUMMONPERIOD = 15,
         WARG_MAXHELPERS = 10,
         WARG_TARGETRANGE = 10,
         WARG_NEARBY_PLAYERS_DIST = 30,
         WARG_BASE_HOUND_AMOUNT = 2,
+
+        WARGLET_HEALTH = 600,
+        WARGLET_BASE_HOUND_AMOUNT = 1,
+        WARGLET_MAX_HOUND_AMOUNT = 3,
 
         SMOTHER_DAMAGE = 3,
 
@@ -3124,6 +3133,9 @@ function Tune(overrides)
                 WANDA = {}, -- TODO
 			},
 		},
+
+		MAX_PINNED_RECIPES = 9,
+		DEFAULT_PINNED_RECIPES = {"torch", "campfire", "axe", "pickaxe", "researchlab"},
 
 		DROP_EVERYTHING_ON_DESPAWN = false,
 
@@ -3707,7 +3719,7 @@ function Tune(overrides)
                     DAMAGE = wilson_attack*.8,
 					ROW_FAIL_WEAR = 6,
                     ATTACKWEAR = 6,
-                    USES = 600,
+                    USES = 1500,
                     MAX_VELOCITY = 5,
                 },
             },
@@ -4490,6 +4502,7 @@ function Tune(overrides)
 		SCHOOL_SPAWNER_BLOCKER_LIFETIME = total_day_time,
 
 		FISH_BOX_PRESERVER_RATE = -1/3,
+		SEEDPOUCH_PRESERVER_RATE = 0.5,
 
 
         -- Wintersfeast 2019
@@ -5687,40 +5700,67 @@ function Tune(overrides)
         
         -- Wolfgang
         MIGHTINESS_MAX = 100,
-        MIGHTINESS_DRAIN_RATE = 33/total_day_time,
+        MIGHTINESS_DRAIN_RATE = 0.2, -- per second
 
-        MIGHTINESS_DRAIN_MULT_SLOW = 0.9,
+        MIGHTINESS_DRAIN_MULT_SLOW = 0.5,
         MIGHTINESS_DRAIN_MULT_NORMAL = 1,
-        MIGHTINESS_DRAIN_MULT_FAST = 3,
-        MIGHTINESS_DRAIN_MULT_FASTEST = 6,
-        MIGHTINESS_DRAIN_MULT_STARVING = 12,
+        MIGHTINESS_DRAIN_MULT_FAST = 2,
+        MIGHTINESS_DRAIN_MULT_FASTEST = 3,
+        MIGHTINESS_DRAIN_MULT_STARVING = 8,
 
         WIMPY_THRESHOLD = 25,
         MIGHTY_THRESHOLD = 75,
 
-        DUMBBELL_CONSUMPTION = 1,
-        DUMBBELL_GOLDEN_CONSUMPTION = 0.5,
-        DUMBBELL_GEM_CONSUMPTION = 0.5,
+        DUMBBELL_CONSUMPTION_ROCK = 0.8,
+        DUMBBELL_CONSUMPTION_GOLD = 0.5,
+        DUMBBELL_CONSUMPTION_MARBLE = 0.3,
+        DUMBBELL_CONSUMPTION_GEM = 0.2,
 
-        DUMBBELL_ATTACK_CONSUMPTION = 10,
-        DUMBBELL_GOLDEN_ATTACK_CONSUMPTION = 5,
-        DUMBBELL_GEM_ATTACK_CONSUMPTION = 5,
+        DUMBBELL_DAMAGE_ROCK = wilson_attack*.5,
+        DUMBBELL_DAMAGE_GOLD = wilson_attack*.8,
+        DUMBBELL_DAMAGE_MARBLE = wilson_attack,
+        DUMBBELL_DAMAGE_GEM = wilson_attack * 1.25,
 
-        DUMBBELL_EFFICIENCY_LOW = 0.3125,
-        DUMBBELL_EFFICIENCY_MED = 0.9375,
-        DUMBBELL_EFFICIENCY_HIGH = 1.875,
-        
-        DUMBBELL_DAMAGE = 27,
-        DUMBBELL_GOLDEN_DAMAGE = 40,
-        DUMBBELL_GEM_DAMAGE = 59,
+		-- Dumbbells are custom made tools (designed by Wolfgang for Wolfgang), not something to be tossed about...
+		DUMBBELL_ATTACK_CONSUMPTION_MULT = 2,
+		DUMBBELL_THROWN_CONSUMPTION_MULT = 10,
+
+		DUMBBELL_SLOW_MARBEL = 0.9,
+
+        DUMBBELL_EFFICIENCY_LOW = 1.5,
+        DUMBBELL_EFFICIENCY_MED = 3.0,
+        DUMBBELL_EFFICIENCY_HIGH = 5.0,
+		DUMBBELL_EFFICIENCY_ATTCK_SCALE = 0.5,
+
+		WOLFGANG_MIGHTINESS_WORK_GAIN = 
+		{
+			CHOP = 0.5,				-- ~0.4s
+			MINE = 1.0,				-- ~0.4s
+			HAMMER = 0.25,			-- ~0.4s -- please dont hammer down other people's bases...
+			DIG = 2,
+			ROW = 0.5,				-- ~0.4s without lag
+			LOWER_SAIL_BOOST = 2,
+			TILL = 1,				-- ~1.1s
+			TERRAFORM = 1.5,
+		},
+
+		WOLFGANG_MIGHTINESS_ATTACK_GAIN_GIANT = 1,
+		WOLFGANG_MIGHTINESS_ATTACK_GAIN_SMALLCREATURE = 0.25,
+		WOLFGANG_MIGHTINESS_ATTACK_GAIN_DEFAULT = 0.5,
+
+		WOLFGANG_MIGHTINESS_DRAIN_DELAY = 4,
+
+        WIMPY_WORK_EFFECTIVENESS = 0.75,
+		WIMPY_HUNGER_RATE_MULT = 0.75,
 
         MIGHTY_WORK_CHANCE = 0.99,
         MIGHTY_WORK_EFFECTIVENESS = 1.5,
         MIGHTY_ROWER_MULT = 1.33,
+		MIGHTY_ROWER_EXTRA_MAX_VELOCITY = 0.5,
         MIGHTY_ANCHOR_SPEED = 2,
-        MIGHTY_SAIL_STRENGTH = 18,
+        MIGHTY_SAIL_BOOST_STRENGTH = 18,
 
-		MIGHTY_HEAVY_SPEED_MULT_BONUS = 0.45,
+		DEFAULT_SAIL_BOOST_STRENGTH = 10,
 
         WOLFGANG_SANITY_DRAIN = 1.1,
         WOLFGANG_SANITY_NIGHT_DRAIN = 1.25,
@@ -5765,16 +5805,18 @@ function Tune(overrides)
 
         MIGHTYGYM_WORKOUT_HUNGER = {
             LOW = 4,
-            MED = 12,
-            HIGH = 28,
+            MED = 11,
+            HIGH = 22,
         },
 
         GYM_RATE = {
             -- rate in number of hits to reach 100 mightiness
-            LOW = 100/60,
-            MED = 100/30,
-            HIGH = 100/15,     
+            LOW = 100/25,
+            MED = 100/15,
+            HIGH = 100/10,
         },
+
+        RUINS_CAVEIN_OBSTACLE_FALL_DAMAGE = 40,
     }
 
     TUNING_MODIFIERS = {}

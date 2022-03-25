@@ -14,6 +14,7 @@ local ScrollableList = require "widgets/scrollablelist"
 local PopupDialogScreen = require "screens/redux/popupdialog"
 local OnlineStatus = require "widgets/onlinestatus"
 local TEMPLATES = require "widgets/redux/templates"
+local ModsScreen = require "screens/redux/modsscreen"
 
 local KitcoonPuppet = require "widgets/kitcoonpuppet"
 
@@ -25,8 +26,18 @@ local controls_ui = {
 local show_graphics = PLATFORM ~= "NACL" and IsNotConsole() and not IsSteamDeck() 
 
 local enableDisableOptions = { { text = STRINGS.UI.OPTIONS.DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.ENABLED, data = true } }
+local steamCloudLocalOptions = { { text = STRINGS.UI.OPTIONS.LOCAL_SAVES, data = false }, { text = STRINGS.UI.OPTIONS.STEAM_CLOUD_SAVES, data = true } }
 local integratedbackpackOptions = { { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_ENABLED, data = true } }
 local enableScreenFlashOptions = { { text = STRINGS.UI.OPTIONS.DEFAULT, data = 1 }, { text = STRINGS.UI.OPTIONS.DIM, data = 2 } , { text = STRINGS.UI.OPTIONS.DIMMEST, data = 3 } }
+
+local loadingtipsOptions =
+{
+	{ text = STRINGS.UI.OPTIONS.LOADING_TIPS_SHOW_ALL, data = LOADING_SCREEN_TIP_OPTIONS.ALL },
+	{ text = STRINGS.UI.OPTIONS.LOADING_TIPS_TIPS_ONLY, data = LOADING_SCREEN_TIP_OPTIONS.TIPS_ONLY },
+	{ text = STRINGS.UI.OPTIONS.LOADING_TIPS_LORE_ONLY, data = LOADING_SCREEN_TIP_OPTIONS.LORE_ONLY },
+	{ text = STRINGS.UI.OPTIONS.LOADING_TIPS_SHOW_NONE, data = LOADING_SCREEN_TIP_OPTIONS.NONE },
+}
+
 local function FindEnableScreenFlashOptionsIndex(value)
     for i = 1, #enableScreenFlashOptions do
 		if enableScreenFlashOptions[i].data == value then
@@ -75,6 +86,9 @@ local all_controls =
 
     -- inventory
     {name=CONTROL_OPEN_CRAFTING, keyboard=CONTROL_OPEN_CRAFTING, controller=CONTROL_OPEN_CRAFTING},
+    {name=CONTROL_CRAFTING_MODIFIER, keyboard=CONTROL_CRAFTING_MODIFIER, controller=nil},
+    --{name=CONTROL_CRAFTING_PINLEFT, keyboard=CONTROL_CRAFTING_PINLEFT, controller=nil},			-- WIP
+    --{name=CONTROL_CRAFTING_PINRIGHT, keyboard=CONTROL_CRAFTING_PINRIGHT, controller=nil},			-- WIP
     {name=CONTROL_OPEN_INVENTORY, keyboard=nil, controller=CONTROL_OPEN_INVENTORY},
     {name=CONTROL_INVENTORY_UP, keyboard=nil, controller=CONTROL_INVENTORY_UP},
     {name=CONTROL_INVENTORY_DOWN, keyboard=nil, controller=CONTROL_INVENTORY_DOWN},
@@ -209,10 +223,11 @@ local function GetDisplayModeInfo( display_id, mode_idx )
 	return w, h, hz
 end
 
-local OptionsScreen = Class(Screen, function(self, prev_screen)
+local OptionsScreen = Class(Screen, function( self, prev_screen, default_section )
 	Screen._ctor(self, "OptionsScreen")
 
     self.show_language_options = (prev_screen ~= nil and prev_screen.name == "MultiplayerMainScreen") and (IsConsole() or IsSteam())
+	self.show_mod_language_options = (prev_screen ~= nil and prev_screen.name == "MultiplayerMainScreen") and IsSteam()
 	self.show_datacollection = IsSteam() and not InGamePlay()
 
 	local graphicsOptions = TheFrontEnd:GetGraphicsOptions()
@@ -227,6 +242,7 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		distortion = PostProcessor:IsDistortionEnabled(),
 		screenshake = Profile:IsScreenShakeEnabled(),
 		hudSize = Profile:GetHUDSize(),
+		craftingmenusize = Profile:GetCraftingMenuSize(),
 		netbookmode = TheSim:IsNetbookMode(),
 		vibration = Profile:GetVibrationEnabled(),
 		showpassword = Profile:GetShowPasswordEnabled(),
@@ -244,7 +260,11 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 		dynamictreeshadows = Profile:GetDynamicTreeShadowsEnabled(),
 		autopause = Profile:GetAutopauseEnabled(),
 		consoleautopause = Profile:GetConsoleAutopauseEnabled(),
+		craftingautopause = Profile:GetCraftingAutopauseEnabled(),
+		craftingmenubufferedbuildautoclose = Profile:GetCraftingMenuBufferedBuildAutoClose(),
 		waltercamera = Profile:IsCampfireStoryCameraEnabled(),
+		loadingtips = Profile:GetLoadingTipsOption(),
+		defaultcloudsaves = Profile:GetDefaultCloudSaves(),
 	}
 
 	if IsWin32() then
@@ -298,7 +318,6 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
     self.panel_root = self.dialog:AddChild(Widget("panel_root"))
     self.panel_root:SetPosition(-90, 55)
 
-
 	self:DoInit()
 
     local menu_items = {
@@ -345,18 +364,22 @@ local OptionsScreen = Class(Screen, function(self, prev_screen)
 
     self:_DoFocusHookups()
 	self.default_focus = self.subscreener.menu
+
+	if default_section == "LANG" then
+		self.subscreener.menu.items[1]:onclick() --index 1 should be the Languages button
+	end
 end)
 
 function OptionsScreen:_BuildMenu(subscreener)
     self.tooltip = self.root:AddChild(TEMPLATES.ScreenTooltip())
 
-	local settings_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.SETTINGS, "settings", STRINGS.UI.OPTIONS.TOOLTIP_SETTINGS, self.tooltip)
-	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIP_GRAPHICS, self.tooltip)
-	local advanced_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.ADVANCED, "advanced", STRINGS.UI.OPTIONS.TOOLTIP_ADVANCED, self.tooltip)
-	local controls_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.CONTROLS, "controls", STRINGS.UI.OPTIONS.TOOLTIP_CONTROLS, self.tooltip)
+	local settings_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.SETTINGS, "settings", STRINGS.UI.OPTIONS.TOOLTIPS.SETTINGS, self.tooltip)
+	local graphics_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.GRAPHICS, "graphics", STRINGS.UI.OPTIONS.TOOLTIPS.GRAPHICS, self.tooltip)
+	local advanced_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.ADVANCED, "advanced", STRINGS.UI.OPTIONS.TOOLTIPS.ADVANCED, self.tooltip)
+	local controls_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.CONTROLS, "controls", STRINGS.UI.OPTIONS.TOOLTIPS.CONTROLS, self.tooltip)
 	local languages_button = nil
     if self.show_language_options then
-        languages_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.LANGUAGES, "languages", STRINGS.UI.OPTIONS.TOOLTIP_LANGUAGES, self.tooltip)
+        languages_button = subscreener:MenuButton(STRINGS.UI.OPTIONS.LANGUAGES, "languages", STRINGS.UI.OPTIONS.TOOLTIPS.LANGUAGES, self.tooltip)
     end
 
     local menu_items = {
@@ -531,6 +554,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetWathgrithrFontEnabled( self.options.wathgrithrfont )
 	Profile:SetBoatCameraEnabled( self.options.boatcamera )
 	Profile:SetHUDSize( self.options.hudSize )
+	Profile:SetCraftingMenuSize( self.options.craftingmenusize )
 	Profile:SetScreenFlash( self.options.screenflash )
 	Profile:SetVibrationEnabled( self.options.vibration )
 	Profile:SetShowPasswordEnabled( self.options.showpassword )
@@ -547,7 +571,11 @@ function OptionsScreen:Save(cb)
 	Profile:SetDynamicTreeShadowsEnabled( self.options.dynamictreeshadows )
 	Profile:SetAutopauseEnabled( self.options.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.options.consoleautopause )
+	Profile:SetCraftingMenuBufferedBuildAutoClose( self.options.craftingmenubufferedbuildautoclose )
+	Profile:SetCraftingAutopauseEnabled( self.options.craftingautopause )
+	Profile:SetLoadingTipsOption( self.options.loadingtips )
 	Profile:SetCampfireStoryCameraEnabled( self.options.waltercamera )
+	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
 
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.options.integratedbackpack )
@@ -662,6 +690,11 @@ function OptionsScreen:Apply()
 
 	Profile:SetAutopauseEnabled( self.working.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.working.consoleautopause )
+	Profile:SetCraftingAutopauseEnabled( self.working.craftingautopause )
+	Profile:SetCraftingMenuBufferedBuildAutoClose( self.working.craftingmenubufferedbuildautoclose )
+	Profile:SetLoadingTipsOption( self.working.loadingtips )
+	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
+	
 	DoAutopause()
 	local pausescreen = TheFrontEnd:GetOpenScreenOfType("PauseScreen")
 	if pausescreen ~= nil then pausescreen:BuildMenu() end
@@ -960,26 +993,108 @@ function OptionsScreen:_BuildLangButton(region_size, button_height, lang_id)
     return langButton
 end
 
+function OptionsScreen:_BuildModLangButton(region_size, button_height, mod_data, last_item)
+    if mod_data == nil then
+		return
+	end
+	-- Use noop function to make ListItemBackground build something that's clickable.
+    local langButton = TEMPLATES.ListItemBackground(region_size, button_height, function() end)
+    langButton.move_on_click = true
+    langButton.text:SetRegionSize(region_size, 70)
+    langButton:SetTextSize(28)
+    langButton:SetFont(CHATFONT)
+    langButton:SetTextColour(UICOLOURS.GOLD_CLICKABLE)
+    langButton:SetTextFocusColour(UICOLOURS.GOLD_FOCUS)
+    langButton:SetTextSelectedColour(UICOLOURS.GOLD_FOCUS)
+    langButton:SetText(mod_data.name)
+    langButton:SetOnClick(function()
+		VisitURL(mod_data.url)
+        if not last_item then --dirty hack. The last item is always the go to support url
+			TheFrontEnd:FadeToScreen( self, function() return ModsScreen(self) end, nil )
+		end
+    end)
+
+    return langButton
+end
+
+function OptionsScreen:_BuildModLangButtonRow(region_size, button_height, language_mods, index)
+    local row = Widget("row")
+	local left = self:_BuildModLangButton(region_size, button_height, language_mods[index], #language_mods == index)
+	row:AddChild(left)
+	left:SetPosition(-region_size/2,0)
+	left.ongainfocusfn = function() self.column_in = "left" end
+
+	local right = self:_BuildModLangButton(region_size, button_height, language_mods[index+1], #language_mods == index) 
+	if right then
+		row:AddChild(right)
+		right:SetPosition(region_size/2,0)
+		right.ongainfocusfn = function() self.column_in = "right" end
+		
+		left:SetFocusChangeDir(MOVE_RIGHT, right)
+		right:SetFocusChangeDir(MOVE_LEFT, left)
+	end
+	
+	row.focus_forward = function()
+		if self.column_in == "right" and right ~= nil then
+			return right
+		end
+		return left
+	end
+
+    return row
+end
+
 -- This is the "languages" tab
 function OptionsScreen:_BuildLanguages()
-    local languagesRoot = Widget("ROOT")
+    local languagesRoot = Widget("LANG_ROOT")
 
     languagesRoot:SetPosition(0,0)
 
     local button_width = 430
     local button_height = 45
 
-    self.langtitle = languagesRoot:AddChild(BuildSectionTitle(STRINGS.UI.OPTIONS.LANG_TITLE, 200))
-    self.langtitle:SetPosition(92, 160)
+    local langtitle = languagesRoot:AddChild(BuildSectionTitle(STRINGS.UI.OPTIONS.LANG_TITLE, 200))
+    langtitle:SetPosition(92, 160)
 
-    self.langButtons = {}
+    local langButtons = {}
 
     self.lang_grid = languagesRoot:AddChild(Grid())
     self.lang_grid:SetPosition(-125, 90)
     for _,id in pairs(LOC.GetLanguages()) do
-        table.insert(self.langButtons, self:_BuildLangButton(button_width, button_height, id))
+        table.insert(langButtons, self:_BuildLangButton(button_width, button_height, id))
     end
-    self.lang_grid:FillGrid(2, button_width, button_height, self.langButtons)
+    self.lang_grid:FillGrid(2, button_width, button_height, langButtons)
+
+	if self.show_mod_language_options then
+		TheSim:QueryServer( "https://dst-translation-mods.klei.com/mods.json",
+		function( result, isSuccessful, resultCode )
+			if isSuccessful and string.len(result) > 1 and resultCode == 200 then
+				local status, language_mods = pcall( function() return json.decode(result) end )
+				if status then					
+    				local modsRoot = languagesRoot:AddChild(Widget("MOD_LANG_ROOT"))
+					modsRoot:SetPosition(0, -145)
+
+					local modLangtitle = modsRoot:AddChild(BuildSectionTitle(STRINGS.UI.OPTIONS.MOD_LANGUAGES_TITLE, 400))
+					modLangtitle:SetPosition(92, 80)
+				
+    				local mod_button_width = 410
+					local modLangButtons = {}
+					for i,_ in pairs(language_mods) do
+						if i % 2 == 1 then --evens do new rows
+							table.insert(modLangButtons, self:_BuildModLangButtonRow(mod_button_width, button_height, language_mods, i))
+						end
+					end
+
+					local list = ScrollableList(modLangButtons, button_width, 200, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, "GOLD")
+					self.mods_list = modsRoot:AddChild(list)
+					self.mods_list:SetPosition(290, -65)
+				
+					self.lang_grid:SetFocusChangeDir(MOVE_DOWN, self.mods_list)
+					modsRoot:SetFocusChangeDir(MOVE_UP, self.lang_grid)
+				end
+			end
+		end, "GET" )
+	end
 
     languagesRoot.focus_forward = self.lang_grid
 
@@ -989,8 +1104,6 @@ end
 local function EnabledOptionsIndex(enabled)
     return enabled and 2 or 1
 end
-
-
 
 --shared section for graphics and settings
 local label_width = 200
@@ -1007,31 +1120,74 @@ local function AddListItemBackground(w)
 	w.bg:SetPosition(-40,0)
 	w.bg:MoveToBack()
 end
-
-local function CreateTextSpinner(labeltext, spinnerdata)
-	local w = TEMPLATES.LabelSpinner(labeltext, spinnerdata, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge)
+local function CreateTextSpinner(labeltext, spinnerdata, tooltip_text)
+	local w = TEMPLATES.LabelSpinner(labeltext, spinnerdata, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge, nil, nil, tooltip_text)
 	AddListItemBackground(w)
 	return w.spinner
 end
 
-local function CreateNumericSpinner(labeltext, min, max)
-	local w = TEMPLATES.LabelNumericSpinner(labeltext, min, max, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge)
+local function CreateNumericSpinner(labeltext, min, max, tooltip_text)
+	local w = TEMPLATES.LabelNumericSpinner(labeltext, min, max, label_width, spinner_width, spinner_height, space_between, nil, nil, narrow_field_nudge, tooltip_text)
 	AddListItemBackground(w)
 	return w.spinner
 end
 
-local function CreateCheckBox(labeltext, onclicked, checked )
-	local w = TEMPLATES.OptionsLabelCheckbox(onclicked, labeltext, checked, label_width, spinner_width, spinner_height, spinner_height + 15, space_between, CHATFONT, nil, narrow_field_nudge)
+local function CreateCheckBox(labeltext, onclicked, checked, tooltip_text)
+	local w = TEMPLATES.OptionsLabelCheckbox(onclicked, labeltext, checked, label_width, spinner_width, spinner_height, spinner_height + 15, space_between, CHATFONT, nil, narrow_field_nudge, tooltip_text)
 	AddListItemBackground(w)
 	return w.button
 end
 
+local function AddSpinnerTooltip(widget, tooltip, tooltipdivider)
+	tooltipdivider:Hide()
+	local function ongainfocus(is_enabled)
+		if tooltip ~= nil and widget.tooltip_text ~= nil then
+			tooltip:SetString(widget.tooltip_text)
+			tooltipdivider:Show()
+		end
+	end
+	
+	local function onlosefocus(is_enabled)
+		if widget.parent and not widget.parent.focus then
+			tooltip:SetString("")
+			tooltipdivider:Hide()
+		end
+	end
+
+	widget.bg.ongainfocus = ongainfocus
+
+	if widget.spinner then
+		widget.spinner.ongainfocusfn = ongainfocus
+	elseif widget.button then -- Handles the data collection checkbox option
+		widget.button.ongainfocus = ongainfocus
+	end
+
+	widget.bg.onlosefocus = onlosefocus
+
+	if widget.spinner then
+		widget.spinner.onlosefocusfn = onlosefocus
+	elseif widget.button then -- Handles the data collection checkbox option
+		widget.button.ongainfocus = ongainfocus
+	end
+
+end
+
+local function MakeSpinnerTooltip(root)
+	local spinner_tooltip = root:AddChild(Text(CHATFONT, 25, ""))
+	spinner_tooltip:SetPosition(90, -275)
+	spinner_tooltip:SetHAlign(ANCHOR_LEFT)
+	spinner_tooltip:SetVAlign(ANCHOR_TOP)
+	spinner_tooltip:SetRegionSize(800, 80)
+	spinner_tooltip:EnableWordWrap(true)
+	return spinner_tooltip
+end
+
 -- This is the "graphics" tab
 function OptionsScreen:_BuildGraphics()
-	local graphicssroot = Widget("ROOT")
+	local graphicsroot = Widget("ROOT")
 
 	-- NOTE: if we add more options, they should be made scrollable. Look at customization screen for an example.
-    self.grid_graphics = graphicssroot:AddChild(Grid())
+    self.grid_graphics = graphicsroot:AddChild(Grid())
     self.grid_graphics:SetPosition(-90, 184, 0)
 
 
@@ -1044,7 +1200,7 @@ function OptionsScreen:_BuildGraphics()
 	if show_graphics then
 		local gOpts = TheFrontEnd:GetGraphicsOptions()
 
-		self.fullscreenSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.FULLSCREEN, enableDisableOptions)
+		self.fullscreenSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.FULLSCREEN, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.FULLSCREEN)
 		self.fullscreenSpinner.OnChanged =
 			function( _, data )
 				self.working.fullscreen = data
@@ -1058,7 +1214,7 @@ function OptionsScreen:_BuildGraphics()
 		end
 
 		local valid_displays = GetDisplays()
-		self.displaySpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISPLAY, valid_displays)
+		self.displaySpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISPLAY, valid_displays, STRINGS.UI.OPTIONS.TOOLTIPS.DISPLAY)
 		self.displaySpinner.OnChanged =
 			function( _, data )
 				self.working.display = data
@@ -1068,7 +1224,7 @@ function OptionsScreen:_BuildGraphics()
 			end
 
 		local refresh_rates = GetRefreshRates( self.working.display, self.working.mode_idx )
-		self.refreshRateSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.REFRESHRATE, refresh_rates)
+		self.refreshRateSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.REFRESHRATE, refresh_rates, STRINGS.UI.OPTIONS.TOOLTIPS.REFRESHRATE)
 		self.refreshRateSpinner.OnChanged =
 			function( _, data )
 				self.working.refreshrate = data
@@ -1076,7 +1232,7 @@ function OptionsScreen:_BuildGraphics()
 			end
 
 		local modes = GetDisplayModes( self.working.display )
-		self.resolutionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.RESOLUTION, modes)
+		self.resolutionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.RESOLUTION, modes, STRINGS.UI.OPTIONS.TOOLTIPS.RESOLUTION)
 		self.resolutionSpinner.OnChanged =
 			function( _, data )
 				self.working.mode_idx = data.idx
@@ -1084,7 +1240,7 @@ function OptionsScreen:_BuildGraphics()
 				self:UpdateMenu()
 			end
 
-		self.netbookModeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NETBOOKMODE, enableDisableOptions)
+		self.netbookModeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.NETBOOKMODE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.NETBOOKMODE)
 		self.netbookModeSpinner.OnChanged =
 			function( _, data )
 				self.working.netbookmode = data
@@ -1092,7 +1248,7 @@ function OptionsScreen:_BuildGraphics()
 				self:UpdateMenu()
 			end
 
-		self.smallTexturesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SMALLTEXTURES, enableDisableOptions)
+		self.smallTexturesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SMALLTEXTURES, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SMALLTEXTURES)
 		self.smallTexturesSpinner.OnChanged =
 			function( _, data )
 				self.working.smalltextures = data
@@ -1102,7 +1258,7 @@ function OptionsScreen:_BuildGraphics()
 
 	end
 
-	self.bloomSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BLOOM, enableDisableOptions)
+	self.bloomSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BLOOM, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.BLOOM)
 	self.bloomSpinner.OnChanged =
 		function( _, data )
 			self.working.bloom = data
@@ -1110,7 +1266,7 @@ function OptionsScreen:_BuildGraphics()
 			self:UpdateMenu()
 		end
 
-	self.distortionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISTORTION, enableDisableOptions)
+	self.distortionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DISTORTION, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DISTORTION)
 	self.distortionSpinner.OnChanged =
 		function( _, data )
 			self.working.distortion = data
@@ -1118,7 +1274,7 @@ function OptionsScreen:_BuildGraphics()
 			self:UpdateMenu()
 		end
 
-	self.screenshakeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREENSHAKE, enableDisableOptions)
+	self.screenshakeSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREENSHAKE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SCREENSHAKE)
 	self.screenshakeSpinner.OnChanged =
 		function( _, data )
 			self.working.screenshake = data
@@ -1126,7 +1282,7 @@ function OptionsScreen:_BuildGraphics()
 			self:UpdateMenu()
 		end
 
-	self.screenFlashSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREEN_FLASH_INTENSITY, enableScreenFlashOptions)
+	self.screenFlashSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SCREEN_FLASH_INTENSITY, enableScreenFlashOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SCREEN_FLASH_INTENSITY)
 	self.screenFlashSpinner.OnChanged =
 		function( _, data )
 			self.working.screenflash = data
@@ -1134,7 +1290,7 @@ function OptionsScreen:_BuildGraphics()
 			self:UpdateMenu()
 		end
 
-	self.texturestreamingSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.TEXTURESTREAMING, enableDisableOptions)
+	self.texturestreamingSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.TEXTURESTREAMING, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.TEXTURESTREAMING)
 	self.texturestreamingSpinner.OnChanged =
 		function( spinner, data )
 			--print(v,data)
@@ -1161,7 +1317,7 @@ function OptionsScreen:_BuildGraphics()
 		end
 
 	if IsWin32() then
-		self.threadedrenderSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.THREADEDRENDER, enableDisableOptions)
+		self.threadedrenderSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.THREADEDRENDER, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.THREADEDRENDER)
 		self.threadedrenderSpinner.OnChanged =
 			function( spinner, data )
 				--print(v,data)
@@ -1188,7 +1344,7 @@ function OptionsScreen:_BuildGraphics()
 			end
 	end
 
-	self.dynamicTreeShadowsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DYNAMIC_TREE_SHADOWS, enableDisableOptions)
+	self.dynamicTreeShadowsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DYNAMIC_TREE_SHADOWS, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DYNAMIC_TREE_SHADOWS)
 	self.dynamicTreeShadowsSpinner.OnChanged =
 		function( _, data )
 			self.working.dynamictreeshadows = data
@@ -1233,17 +1389,24 @@ function OptionsScreen:_BuildGraphics()
 	self.grid_graphics:UseNaturalLayout()
 	self.grid_graphics:InitSize(2, math.max(#self.left_spinners_graphics, #self.right_spinners_graphics), 440, 40)
 
+	local spinner_tooltip = MakeSpinnerTooltip(graphicsroot)
+
+	local spinner_tooltip_divider = graphicsroot:AddChild(Image("images/global_redux.xml", "item_divider.tex"))
+	spinner_tooltip_divider:SetPosition(90, -225)
+
     -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
 	for k,v in ipairs(self.left_spinners_graphics) do
 		self.grid_graphics:AddItem(v.parent, 1, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
 	end
 
 	for k,v in ipairs(self.right_spinners_graphics) do
 		self.grid_graphics:AddItem(v.parent, 2, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
 	end
 
-    graphicssroot.focus_forward = self.grid_graphics
-    return graphicssroot
+    graphicsroot.focus_forward = self.grid_graphics
+    return graphicsroot
 end
 
 -- This is the "settings" tab
@@ -1254,7 +1417,7 @@ function OptionsScreen:_BuildSettings()
     -- at customization screen for an example.
     self.grid = settingsroot:AddChild(Grid())
     self.grid:SetPosition(-90, 184, 0)
-
+	self.settings_tooltip = settingsroot:AddChild(TEMPLATES.ScreenTooltip())
 
 	--------------
 	--------------
@@ -1262,7 +1425,7 @@ function OptionsScreen:_BuildSettings()
 	--------------
 	--------------
 
-	self.fxVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.FX, 0, 10)
+	self.fxVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.FX, 0, 10, STRINGS.UI.OPTIONS.TOOLTIPS.FX)
 	self.fxVolume.OnChanged =
 		function( _, data )
 			self.working.fxvolume = data
@@ -1270,7 +1433,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.musicVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.MUSIC, 0, 10)
+	self.musicVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.MUSIC, 0, 10, STRINGS.UI.OPTIONS.TOOLTIPS.MUSIC)
 	self.musicVolume.OnChanged =
 		function( _, data )
 			self.working.musicvolume = data
@@ -1278,7 +1441,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.ambientVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.AMBIENT, 0, 10)
+	self.ambientVolume = CreateNumericSpinner(STRINGS.UI.OPTIONS.AMBIENT, 0, 10, STRINGS.UI.OPTIONS.TOOLTIPS.AMBIENT)
 	self.ambientVolume.OnChanged =
 		function( _, data )
 			self.working.ambientvolume = data
@@ -1286,7 +1449,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.hudSize = CreateNumericSpinner(STRINGS.UI.OPTIONS.HUDSIZE, 0, 10)
+	self.hudSize = CreateNumericSpinner(STRINGS.UI.OPTIONS.HUDSIZE, 0, 10, STRINGS.UI.OPTIONS.TOOLTIPS.HUDSIZE)
 	self.hudSize.OnChanged =
 		function( _, data )
 			self.working.hudSize = data
@@ -1294,7 +1457,23 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.vibrationSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.VIBRATION, enableDisableOptions)
+	self.craftingmenusize = CreateNumericSpinner(STRINGS.UI.OPTIONS.CRAFTINGMENUSIZE, 0, 10, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGMENUSIZE)
+	self.craftingmenusize.OnChanged =
+		function( _, data )
+			self.working.craftingmenusize = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.craftingautopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CRAFTINGAUTOPAUSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGAUTOPAUSE)
+	self.craftingautopauseSpinner.OnChanged =
+		function( _, data )
+			self.working.craftingautopause = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+	
+	self.vibrationSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.VIBRATION, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.VIBRATION)
 	self.vibrationSpinner.OnChanged =
 		function( _, data )
 			self.working.vibration = data
@@ -1302,7 +1481,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.passwordSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SHOWPASSWORD, enableDisableOptions)
+	self.passwordSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SHOWPASSWORD, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SHOWPASSWORD)
 	self.passwordSpinner.OnChanged =
 		function( _, data )
 			self.working.showpassword = data
@@ -1310,7 +1489,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.profanityfilterSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_FILTER, enableDisableOptions)
+	self.profanityfilterSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_FILTER, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SERVER_NAME_PROFANITY_FILTER)
 	self.profanityfilterSpinner.OnChanged =
 		function( _, data )
 			self.working.profanityfilterservernames = data
@@ -1318,7 +1497,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.profanityfilterchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_CHAT_FILTER, enableDisableOptions)
+	self.profanityfilterchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_CHAT_FILTER, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SERVER_NAME_PROFANITY_CHAT_FILTER)
 	self.profanityfilterchatSpinner.OnChanged =
 		function( _, data )
 			self.working.profanityfilterchat = data
@@ -1326,7 +1505,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.boatcameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BOATCAMERA, enableDisableOptions)
+	self.boatcameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BOATCAMERA, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.BOATCAMERA)
 	self.boatcameraSpinner.OnChanged =
 		function( _, data )
 			self.working.boatcamera = data
@@ -1334,7 +1513,7 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.integratedbackpackSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BACKPACKMODE, integratedbackpackOptions)
+	self.integratedbackpackSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BACKPACKMODE, integratedbackpackOptions, STRINGS.UI.OPTIONS.TOOLTIPS.BACKPACKMODE)
 	self.integratedbackpackSpinner.OnChanged =
 		function( _, data )
 			self.working.integratedbackpack = data
@@ -1375,10 +1554,10 @@ function OptionsScreen:_BuildSettings()
 
 				return not opt_in -- bit of a hack to keep the check box looking the same as it was. This works because toggling the value will reset the sim.
 			end,
-			TheSim:GetDataCollectionSetting())
+			TheSim:GetDataCollectionSetting(), STRINGS.UI.OPTIONS.TOOLTIPS.DATACOLLECTION)
 	end
 
-	self.deviceSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.INPUT, self.devices)
+	self.deviceSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.INPUT, self.devices, STRINGS.UI.OPTIONS.TOOLTIPS.INPUT)
 	self.deviceSpinner.OnChanged =
 		function( _, data )
             for i, v in ipairs(self.devices) do
@@ -1406,18 +1585,25 @@ function OptionsScreen:_BuildSettings()
 		end
 
 
-	self.autologinSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOLOGIN, enableDisableOptions)
+	self.autologinSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOLOGIN, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.AUTOLOGIN)
 	self.autologinSpinner.OnChanged =
 		function( _, data )
 			self.working.autologin = data
 			self:UpdateMenu()
 		end
 		
-	self.autopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOPAUSE, enableDisableOptions)
+	self.autopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOPAUSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.AUTOPAUSE)
 	self.autopauseSpinner.OnChanged =
 		function( _, data )
 			self.working.autopause = data
 			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	self.loadingtipsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.LOADING_TIPS, loadingtipsOptions, STRINGS.UI.OPTIONS.TOOLTIPS.LOADING_TIPS)
+	self.loadingtipsSpinner.OnChanged =
+		function( _, data )
+			self.working.loadingtips = data
 			self:UpdateMenu()
 		end
 
@@ -1430,6 +1616,7 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.left_spinners, self.musicVolume )
     table.insert( self.left_spinners, self.ambientVolume )
     table.insert( self.left_spinners, self.hudSize )
+    table.insert( self.left_spinners, self.craftingmenusize )
 	table.insert( self.left_spinners, self.autologinSpinner )
 
     table.insert( self.right_spinners, self.passwordSpinner )
@@ -1440,6 +1627,8 @@ function OptionsScreen:_BuildSettings()
 	end
     table.insert( self.right_spinners, self.profanityfilterSpinner )
     table.insert( self.right_spinners, self.autopauseSpinner )
+	table.insert( self.right_spinners, self.craftingautopauseSpinner )
+	table.insert( self.right_spinners, self.loadingtipsSpinner )
 
 	if self.show_datacollection then
 		table.insert( self.right_spinners, self.datacollectionCheckbox)
@@ -1448,13 +1637,20 @@ function OptionsScreen:_BuildSettings()
 	self.grid:UseNaturalLayout()
 	self.grid:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
 
+	local spinner_tooltip = MakeSpinnerTooltip(settingsroot)
+
+	local spinner_tooltip_divider = settingsroot:AddChild(Image("images/global_redux.xml", "item_divider.tex"))
+	spinner_tooltip_divider:SetPosition(90, -225)
+
     -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
 	for k,v in ipairs(self.left_spinners) do
 		self.grid:AddItem(v.parent, 1, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
 	end
 
 	for k,v in ipairs(self.right_spinners) do
 		self.grid:AddItem(v.parent, 2, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
 	end
 
     settingsroot.focus_forward = self.grid
@@ -1477,7 +1673,7 @@ function OptionsScreen:_BuildAdvancedSettings()
 	--------------
 	-------------
 
-	self.wathgrithrfontSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WATHGRITHRFONT, enableDisableOptions)
+	self.wathgrithrfontSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WATHGRITHRFONT, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.WATHGRITHRFONT)
 	self.wathgrithrfontSpinner.OnChanged =
 		function( _, data )
 			self.working.wathgrithrfont = data
@@ -1485,7 +1681,7 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
-	self.waltercameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WALTERCAMERA, enableDisableOptions)
+	self.waltercameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.WALTERCAMERA, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.WALTERCAMERA)
 	self.waltercameraSpinner.OnChanged =
 		function( _, data )
 			self.working.waltercamera = data
@@ -1497,28 +1693,28 @@ function OptionsScreen:_BuildAdvancedSettings()
         {
             { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_DISABLED, data = false },
             { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_ENABLED, data = true },
-        })
+        }, STRINGS.UI.OPTIONS.TOOLTIPS.MOVEMENTPREDICTION)
     self.movementpredictionSpinner.OnChanged =
         function(_, data)
             self.working.movementprediction = data
             self:UpdateMenu()
         end
 
-	self.automodsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOMODS, enableDisableOptions)
+	self.automodsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.AUTOMODS, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.AUTOMODS)
 	self.automodsSpinner.OnChanged =
 		function( _, data )
 			self.working.automods = data
 			self:UpdateMenu()
 		end
 
-	self.animatedHeadsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.ANIMATED_HEADS, enableDisableOptions)
+	self.animatedHeadsSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.ANIMATED_HEADS, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.ANIMATED_HEADS)
 		self.animatedHeadsSpinner.OnChanged =
 			function( _, data )
 				self.working.animatedheads = data
 				self:UpdateMenu()
 			end
 
-	self.consoleautopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CONSOLEAUTOPAUSE, enableDisableOptions)
+	self.consoleautopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CONSOLEAUTOPAUSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CONSOLEAUTOPAUSE)
 	self.consoleautopauseSpinner.OnChanged =
 		function( _, data )
 			self.working.consoleautopause = data
@@ -1526,27 +1722,56 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
+	self.craftingmenubufferedbuildautocloseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE)
+	self.craftingmenubufferedbuildautocloseSpinner.OnChanged =
+		function( _, data )
+			self.working.craftingmenubufferedbuildautoclose = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+	if IsSteam() then
+		self.defaultcloudsavesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DEFAULTCLOUDSAVES, steamCloudLocalOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DEFAULTCLOUDSAVES)
+		self.defaultcloudsavesSpinner.OnChanged =
+			function( _, data )
+				self.working.defaultcloudsaves = data
+				--self:Apply()
+				self:UpdateMenu()
+			end
+	end
+
 	self.left_spinners = {}
 	self.right_spinners = {}
 
     table.insert( self.left_spinners, self.movementpredictionSpinner )
     table.insert( self.left_spinners, self.wathgrithrfontSpinner)
 	table.insert( self.left_spinners, self.waltercameraSpinner)
+	if IsSteam() then
+		table.insert( self.left_spinners, self.defaultcloudsavesSpinner )
+	end
 
     table.insert( self.right_spinners, self.automodsSpinner )
 	table.insert( self.right_spinners, self.animatedHeadsSpinner )
 	table.insert( self.right_spinners, self.consoleautopauseSpinner )
+	table.insert( self.right_spinners, self.craftingmenubufferedbuildautocloseSpinner )
 
 	self.grid_advanced:UseNaturalLayout()
 	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
 
+	local spinner_tooltip = MakeSpinnerTooltip(advancedsettingsroot)
+
+	local spinner_tooltip_divider = advancedsettingsroot:AddChild(Image("images/global_redux.xml", "item_divider.tex"))
+	spinner_tooltip_divider:SetPosition(90, -225)
+
     -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
 	for k,v in ipairs(self.left_spinners) do
 		self.grid_advanced:AddItem(v.parent, 1, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
 	end
 
 	for k,v in ipairs(self.right_spinners) do
 		self.grid_advanced:AddItem(v.parent, 2, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
 	end
 
     advancedsettingsroot.focus_forward = self.grid_advanced
@@ -1641,7 +1866,7 @@ function OptionsScreen:_BuildControls()
 						local device_id = self.deviceSpinner:GetSelectedData()
 						if is_valid_fn(device_id) then
 							self.is_mapping = true
-							if not TheInputProxy:UnMapControl(device_id, group.control.controller) then
+							if not TheInputProxy:UnMapControl(device_id, group.control.keyboard) then
 								self.is_mapping = false
 							end
 						end
@@ -1660,9 +1885,8 @@ function OptionsScreen:_BuildControls()
     self.kb_controlwidgets = {}
     self.controller_controlwidgets = {}
 
-    local function is_valid_keyboard(device_id) return device_id == 0 end
-
     for i,v in ipairs(all_controls) do
+		local function is_valid_keyboard(device_id) return device_id == 0 and all_controls[i] and all_controls[i].keyboard end
         local group = BuildControlGroup(is_valid_keyboard, "keyboard", 0, all_controls[i], i)
         if group then
             group.binding_btn:SetHelpTextMessage(STRINGS.UI.CONTROLSSCREEN.CHANGEBIND)
@@ -1787,6 +2011,7 @@ function OptionsScreen:InitializeSpinners(first)
 	end
 
 	self.hudSize:SetSelectedIndex( self.working.hudSize or 5)
+	self.craftingmenusize:SetSelectedIndex( self.working.craftingmenusize or 5)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )
@@ -1812,6 +2037,12 @@ function OptionsScreen:InitializeSpinners(first)
 	self.animatedHeadsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.animatedheads ) )
 	self.autopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.autopause ) )
 	self.consoleautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.consoleautopause ) )
+	self.craftingautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingautopause ) )
+	self.craftingmenubufferedbuildautocloseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingmenubufferedbuildautoclose ) )
+	self.loadingtipsSpinner:SetSelectedIndex( self.working.loadingtips or LOADING_SCREEN_TIP_OPTIONS.ALL )
+	if IsSteam() then
+		self.defaultcloudsavesSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.defaultcloudsaves ) )
+	end
 
 	if first then
 		-- Add the bg change when non-init value for all spinners

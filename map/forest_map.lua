@@ -421,6 +421,11 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
     end
 
 	ApplySpecialEvent(current_gen_params.specialevent)
+	for k, event_name in pairs(SPECIAL_EVENTS) do
+		if current_gen_params[event_name] == "enabled" then
+			ApplyExtraEvent(event_name)
+		end
+	end
 
     local min_size = 350
     if current_gen_params.world_size ~= nil then
@@ -500,7 +505,7 @@ local function Generate(prefab, map_width, map_height, tasks, level, level_type)
 		end
 	end
 
-	if prefab ~= "cave" then
+	if (current_gen_params.roads == nil or current_gen_params.roads ~= "never") and prefab ~= "cave" then
 	    WorldSim:SetRoadParameters(
 			ROAD_PARAMETERS.NUM_SUBDIVISIONS_PER_SEGMENT,
 			ROAD_PARAMETERS.MIN_WIDTH, ROAD_PARAMETERS.MAX_WIDTH,

@@ -37,8 +37,6 @@ local function OceanTreeLeafFxFallUpdate(inst)
     inst.Transform:SetPosition(x, y - inst.fall_speed * FRAMES, z)
 end
 
-
-
 local fx =
 {
     {
@@ -2315,7 +2313,46 @@ local fx =
             inst.AnimState:SetMultColour(1,1,0,1)
             inst.AnimState:SetFinalOffset(1)
         end,
-    },                
+    },
+
+    {
+        name = "minotaur_blood1",
+        bank = "rook_rhino_blood_fx",
+        build = "rook_rhino_blood_fx",
+        anim = "blood1",
+        sound = "ancientguardian_rework/minotaur2/blood_splurt_small",
+        nofaced = true,
+        fn = function(inst)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
+            inst.Transform:SetTwoFaced()
+        end,
+    },
+
+    {
+        name = "minotaur_blood2",
+        bank = "rook_rhino_blood_fx",
+        build = "rook_rhino_blood_fx",
+        anim = "blood2",
+        sound = "ancientguardian_rework/minotaur2/blood_splurt_small",
+        nofaced = true,
+        fn = function(inst)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
+            inst.Transform:SetTwoFaced()
+        end,
+    },
+
+    {
+        name = "minotaur_blood3",
+        bank = "rook_rhino_blood_fx",
+        build = "rook_rhino_blood_fx",
+        anim = "blood3",
+        sound = "ancientguardian_rework/minotaur2/blood_splurt_small",
+        nofaced = true,
+        fn = function(inst)
+            inst.AnimState:SetMultColour(1, 1, 1, .5)
+            inst.Transform:SetTwoFaced()
+        end,
+    },        
 }
 
 for cratersteamindex = 1, 4 do

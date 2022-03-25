@@ -4686,6 +4686,7 @@ CLOTHING =
 		symbol_overrides = { "foot", },
 		rarity = "Classy",
 		rarity_modifier = "Woven",
+		feet_cuff_size = 3,
 		release_group = 82,
 	},
 	feet_waxwell_gladiator =
@@ -6253,7 +6254,7 @@ CLOTHING =
 		type = "hand",
 		skin_tags = { "YULE", "CLOTHING_HAND", "CLOTHING", },
 		symbol_overrides = { "hand", },
-		symbol_overrides_by_character = { default = { hand = "hand_wilson", },walter = { hand = "hand_walter", },wanda = { hand = "hand_wanda", },warly = { hand = "hand_warly", },webber = { hand = "hand_webber", },wormwood = { hand = "hand_wormwood", },wortox = { hand = "hand_wortox", },wurt = { hand = "hand_wurt", },wx78 = { hand = "hand_wx78", },},
+		symbol_overrides_by_character = { default = { hand = "hand_wilson", },walter = { hand = "hand_walter", },wanda = { hand = "hand_wanda", },warly = { hand = "hand_warly", },waxwell = { hand = "hand_waxwell", },webber = { hand = "hand_webber", },wormwood = { hand = "hand_wormwood", },wortox = { hand = "hand_wortox", },wurt = { hand = "hand_wurt", },wx78 = { hand = "hand_wx78", },},
 		symbol_in_base_hides = { "arm_lower_cuff", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
@@ -7613,7 +7614,7 @@ CLOTHING =
 		symbol_hides = { "skirt", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",
-		legs_cuff_size = 2,
+		legs_cuff_size = 5,
 		release_group = 40,
 	},
 	legs_winona_victorian =

@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Uhh, I'm not sure where they could even hide around here.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Sorry kitties, I can't play with you all day!",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I should probably leave that alone.",
+			SHADOWMAGIC = "Maybe you could teach me some magic tricks? I'm a quick learner!",
+		},
         COOK =
         {
             GENERIC = "If only I had some marshmallows... oh well.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "It looks like I need to find more supplies first.",
+		NO_TECH = "Um... I don't think I know how to make one of those yet...",
+		NO_STATION = "I could probably do it if I had a station with the right tools.",
+	},
 
 	ACTIONFAIL_GENERIC = "It won't work.",
 	ANNOUNCE_BOAT_LEAK = "Um. That might be a problem.",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "Poor little guys...",
 		},
 		WARG = "Are they a friend of yours, Woby?",
+        WARGLET = "Look Woby, another dog for you to play with!",
+        
 		WASPHIVE = "E-everyone stay calm... we'll be on our way...",
 		WATERBALLOON = "Don't worry, I have great aim! Or maybe you should be worried...",
 		WATERMELON = "A sweet, refreshing snack!",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "I can do it! I just... need to get a good grip on it!",
         DUMBBELL_GOLDEN = "Uh, m-maybe I should start with something a bit lighter.",
+		DUMBBELL_MARBLE = "Oh... when he said it was made of marble, I kind of hoped he meant the tiny ones.",
         DUMBBELL_GEM = "Time to hit the gem! Get it? Because gem sounds like gym?",
         POTATOSACK = "Do you think I'd get muscles if I ate more potatoes, Woby?",
 

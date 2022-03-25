@@ -154,7 +154,7 @@ function Sanity:RecalculatePenalty()
         penalty = penalty + v
     end
 
-    penalty = math.max(penalty, -self.max)
+    penalty = math.min(penalty, 1-(5/self.max)) -- players cannot go lower than 5 max sanity. The sanity_penalties penalty will actually go beyond, so they will still have to remove enough sanity_penalties to get back above the 5 max sanity cap
 
     self.penalty = penalty
 

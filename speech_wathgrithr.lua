@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This is not a worthy stage for our players!",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Let us reprise another time.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "T'would not do to meddle with my ally's effects.",
+			SHADOWMAGIC = "A tragic tale of woe and misery!",
+		},
         COOK =
         {
             GENERIC = "Alas! Bested by cookware!",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I must seek out more ingredients!",
+		NO_TECH = "I hath not yet discovered how to make such a thing.",
+		NO_STATION = "I fear 'tis beyond me at this time.",
+	},
 
 	ACTIONFAIL_GENERIC = "If I can't do it, it can't be done!",
 	ANNOUNCE_BOAT_LEAK = "Our vessel hath sprung a leak!",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "No use crying over burnt pelts.",
 		},
 		WARG = "Be that you, Fenrir?",
+        WARGLET = "Ha! I've felled more fearsome beasts than ye!",
+        
 		WASPHIVE = "Bees of war!",
 		WATERBALLOON = "Prepare to engage in water-y battle!",
 		WATERMELON = "It makes a good sound when you hit it.",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "'Tis not just strength, but cunning that makes a warrior!",
         DUMBBELL_GOLDEN = "He hath strength, next we must work on his bravery!",
+		DUMBBELL_MARBLE = "Train well my friend, and join me in glorious battle!",
         DUMBBELL_GEM = "My friend, if you want to be fighting fit you must join me in combat!",
         POTATOSACK = "I have no use for a sack of non-meats.",
 

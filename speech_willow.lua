@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "This place doesn't have a ton of hiding spots...",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "They look tired. Let's play again tomorrow!",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I'm not THAT good at cooking.",
+			SHADOWMAGIC = "Would make a great bedtime story... for nightmares!",
+		},
         COOK =
         {
             GENERIC = "I'm not too big on cooking.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Uuugh I need more stuff!",
+		NO_TECH = "Yeaahh, so... I haven't actually figured that one out yet.",
+		NO_STATION = "I can't make it here!",
+	},
 
 	ACTIONFAIL_GENERIC = "I can'tttttt.",
 	ANNOUNCE_BOAT_LEAK = "Gross, I hate water.",
@@ -2787,6 +2799,8 @@ return{
 			BURNT = "Aww, the fire burned out.",
 		},
 		WARG = "You're a big mean jerk!",
+        WARGLET = "You big jerk!",
+        
 		WASPHIVE = "A cone full of jerks.",
 		WATERBALLOON = "Boo! Hissss!",
 		WATERMELON = "But where's the firemelon?",
@@ -4298,6 +4312,7 @@ return{
 
         DUMBBELL = "Quit making stuff I can't burn!",
         DUMBBELL_GOLDEN = "Did he really need to make it so fancy?",
+		DUMBBELL_MARBLE = "Did he really need to make it so fancy?",
         DUMBBELL_GEM = "Did he really need to make it so fancy?",
         POTATOSACK = "I could make it a roasted potato sack, just say the word!",
 

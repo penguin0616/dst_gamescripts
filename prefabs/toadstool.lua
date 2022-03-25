@@ -348,7 +348,7 @@ local function SproutLaunch(inst, launcher, basespeed)
 end
 
 local MUSHROOMSPROUT_BLOCKER_TAGS = { "_inventoryitem", "playerskeleton", "quickpick", "DIG_workable", "NOBLOCK", "FX", "INLIMBO", "DECOR" }
-local MUSHROOMSPROUT_BREAK_ONEOF_TAGS = { "playerskeleton", "DIG_workable" }
+local MUSHROOMSPROUT_BREAK_ONEOF_TAGS = { "playerskeleton", "DIG_workable", "soil" }
 local MUSHROOMSPROUT_TOSS_MUST_TAGS = { "_inventoryitem" }
 local MUSHROOMSPROUT_TOSS_CANT_TAGS = { "locomotor", "INLIMBO" }
 local MUSHROOMSPROUT_TOSSFLOWERS_MUST_TAGS = { "quickpick", "pickable" }
@@ -376,10 +376,14 @@ local function DoMushroomSprout(inst, angles)
         if offset ~= nil then
             pt.x = pt.x + offset.x
             pt.z = pt.z + offset.z
-            if #TheSim:FindEntities(pt.x, 0, pt.z, min_spacing, nil, MUSHROOMSPROUT_BLOCKER_TAGS) <= 0 then
+            if TheSim:CountEntities(pt.x, 0, pt.z, min_spacing, nil, MUSHROOMSPROUT_BLOCKER_TAGS) <= 0 then
                 --destroy skeletons and diggables
                 for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, 1.2, nil, nil, MUSHROOMSPROUT_BREAK_ONEOF_TAGS)) do
-                    v.components.workable:Destroy(inst)
+                    if v.components.workable then
+                        v.components.workable:Destroy(inst)
+                    else
+                        v:PushEvent("collapsesoil")
+                    end
                 end
 
                 local totoss = TheSim:FindEntities(pt.x, 0, pt.z, 1, MUSHROOMSPROUT_TOSS_MUST_TAGS, MUSHROOMSPROUT_TOSS_CANT_TAGS)

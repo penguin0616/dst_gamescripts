@@ -2891,6 +2891,16 @@ local applyoverrides_post = {
             TheWorld:PushEvent("hounded_setdifficulty", difficulty)
         end
     end,
+    summerhounds = function(difficulty)
+        if TheWorld:HasTag("forest") then
+            TheWorld:PushEvent("hounded_setsummervariant", difficulty)
+        end
+    end,
+    winterhounds = function(difficulty)
+        if TheWorld:HasTag("forest") then
+            TheWorld:PushEvent("hounded_setwintervariant", difficulty)
+        end
+    end,
     wormattacks = function(difficulty)
         if TheWorld:HasTag("cave") then
             TheWorld:PushEvent("hounded_setdifficulty", difficulty)

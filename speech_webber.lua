@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "It's okay, but maybe we can find a place with more hiding spots.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "That was fun! Can we play again tomorrow?",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Warly gets upset when we play with his things.",
+			SHADOWMAGIC = "I don't think we should play with that...",
+		},
         COOK =
         {
             GENERIC = "I don't want to. Mom always said the kitchen was dangerous!",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "We don't have enough stuff!",
+		NO_TECH = "We're not sure how to make that yet...",
+		NO_STATION = "We can't make that right now.",
+	},
 
 	ACTIONFAIL_GENERIC = "Mom told me never to do that.",
 	ANNOUNCE_BOAT_LEAK = "The boat is crying!",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "We can't hide in there any more.",
 		},
 		WARG = "I don't think that puppy is very happy.",
+        WARGLET = "N-nice puppy...",
+        
 		WASPHIVE = "Sounds like anger!",
 		WATERBALLOON = "We have to be gentle with our claws if we try to hold it!",
 		WATERMELON = "Looks tasty!",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "It looks so easy when Mr. Wolfgang does it...",
         DUMBBELL_GOLDEN = "It looks so easy when Mr. Wolfgang does it...",
+		DUMBBELL_MARBLE = "It looks so easy when Mr. Wolfgang does it...",
         DUMBBELL_GEM = "It looks so easy when Mr. Wolfgang does it...",
         POTATOSACK = "We peeked inside, some of them looked more like rocks than potatoes...",
 

@@ -317,7 +317,7 @@ function MakeBanner(self)
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakeWolfgangBanner(self, baner_root, anim)
+        MakeYOTCatcoonBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
@@ -326,8 +326,6 @@ function MakeBanner(self)
         MakeHallowedNightsBanner(self, baner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeWebberCawnivalBanner(self, baner_root, anim)
-	elseif true then
-        MakeWolfgangBanner(self, baner_root, anim)
 	else
         MakeDefaultBanner(self, baner_root, anim)
         --[[
@@ -737,8 +735,8 @@ function MultiplayerMainScreen:OnQuickJoinServersButton()
 end
 
 
-function MultiplayerMainScreen:Settings()
-    self:_FadeToScreen(OptionsScreen, {self})
+function MultiplayerMainScreen:Settings( default_section )
+    self:_FadeToScreen(OptionsScreen, {default_section})
 end
 
 function MultiplayerMainScreen:OnModsButton()
@@ -1015,34 +1013,21 @@ function MultiplayerMainScreen:FinishedFadeIn()
                 local thankyou_popup = ThankYouPopup(items)
                 TheFrontEnd:PushScreen(thankyou_popup)
             else
-                if IsConsole() or IsSteam() then
-                    --Make sure we only do one mainscreen popup at a time
-                    --Do language assistance popup
+                --Make sure we only do one mainscreen popup at a time, do language assistance popups
+                if IsSteam() then
                     local interface_lang = TheNet:GetLanguageCode()
                     if interface_lang ~= "english" then
-                        if Profile:GetValue("language_asked_"..interface_lang) ~= true then
-                            local lang_id = LANGUAGE_STEAMCODE_TO_ID[interface_lang]
-                            local locale = LOC.GetLocale(lang_id)
-                            if locale ~= nil then
-                                local show_dialog = false
-                                if IsConsole() then
-                                    show_dialog = locale.in_console_menu
-                                elseif IsSteam() then
-                                    show_dialog = locale.in_steam_menu
-                                end
-
-                                if show_dialog then
-                                    local popup_screen = PopupDialogScreen( STRINGS.PRETRANSLATED.LANGUAGES_TITLE[locale.id], STRINGS.PRETRANSLATED.LANGUAGES_BODY[locale.id],
-                                            {
-                                                { text = STRINGS.PRETRANSLATED.LANGUAGES_YES[locale.id], cb = function() Profile:SetLanguageID(lang_id, function() SimReset() end ) end },
-                                                { text = STRINGS.PRETRANSLATED.LANGUAGES_NO[locale.id], cb = function() TheFrontEnd:PopScreen() end}
-                                            }
-                                        )
-                                    TheFrontEnd:PushScreen( popup_screen )
-                                    Profile:SetValue("language_asked_"..interface_lang, true)
-                                    Profile:Save()
-                                end
-                            end
+                        if Profile:GetValue("steam_language_asked") ~= true then
+                            local popup_screen = PopupDialogScreen( STRINGS.UI.OPTIONS.LANG_TITLE, STRINGS.UI.OPTIONS.LANG_BODY_STEAM,
+                                    {
+                                        {text=STRINGS.UI.OPTIONS.YES, cb = function() TheFrontEnd:PopScreen() self:Settings("LANG") end },
+                                        {text=STRINGS.UI.OPTIONS.NO, cb = function() TheFrontEnd:PopScreen() end}
+                                    }
+                                )                
+                            TheFrontEnd:PushScreen( popup_screen )
+                            Profile:SetValue("steam_language_asked", true)
+                            Profile:Save()
+                
                         end
                     end
                 end

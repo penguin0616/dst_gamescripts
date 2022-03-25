@@ -1139,3 +1139,21 @@ function d_statues(material)
 	end
 	_spawn_list(items, 5)
 end
+
+function d_craftingstations()
+	local prefabs = {}
+	for k, _ in pairs(PROTOTYPER_DEFS) do
+		table.insert(prefabs, k)
+	end
+	_spawn_list(prefabs, 6)
+end
+
+function d_removeentitywithnetworkid(networkid, x, y, z)
+    local ents = TheSim:FindEntities(x,y,z, 1)
+    for i, ent in ipairs(ents) do
+        if ent and ent.Network and ent.Network:GetNetworkID() == networkid then
+            c_remove(ent)
+            return
+        end
+    end
+end

@@ -6,7 +6,6 @@ local Widget = require "widgets/widget"
 local EquipSlot = require "widgets/equipslot"
 local ItemTile = require "widgets/itemtile"
 local Text = require "widgets/text"
-local ThreeSlice = require "widgets/threeslice"
 local HudCompass = require "widgets/hudcompass"
 
 local TEMPLATES = require "widgets/templates"
@@ -415,6 +414,7 @@ function Inv:Rebuild()
 
     self:SelectDefaultSlot()
     self.current_list = self.inv
+	self.pin_nav = false
     self:UpdateCursor()
 
     if self.cursor ~= nil then
@@ -448,6 +448,11 @@ function Inv:OnUpdate(dt)
         self:Refresh()
     end
 
+	if self.owner.HUD:IsCraftingOpen() then
+        self.actionstring:Hide()
+		return
+	end
+
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --if self.open and TheInput:ControllerAttached() then
@@ -467,7 +472,7 @@ function Inv:OnUpdate(dt)
 
     if self.active_slot ~= nil and not self.active_slot.inst:IsValid() then
         self:SelectDefaultSlot()
-
+		self.pin_nav = false
         self.current_list = self.inv
 
         if self.cursor ~= nil then
@@ -532,6 +537,15 @@ function Inv:OffsetCursor(offset, val, minval, maxval, slot_is_valid_fn)
     return val
 end
 
+function Inv:PinBarNav(select_pin)
+	if select_pin ~= nil then
+		self.pin_nav = true
+		self.actionstringtime = 0
+		self.actionstring:Hide()
+		self:SelectSlot(select_pin)
+	end
+end
+
 function Inv:GetInventoryLists(same_container_only)
     if same_container_only then
         local lists = {self.current_list}
@@ -561,39 +575,81 @@ function Inv:CursorNav(dir, same_container_only)
         self.actionstring:Show()
     end
 
-    if self.active_slot and not self.active_slot.inst:IsValid() then
+    if self.active_slot == nil or not self.active_slot.inst:IsValid() or self.current_list == nil or self.current_list[1] == nil or not self.current_list[1].inst:IsValid() then
         self.current_list = self.inv
-        return self:SelectDefaultSlot()
+		self.pin_nav = false
+        self:SelectDefaultSlot()
+		return true
     end
 
     local lists = self:GetInventoryLists(same_container_only)
     local slot, list = self:GetClosestWidget(lists, self.active_slot:GetWorldPosition(), dir)
     if slot and list then
         self.current_list = list
+		self.pin_nav = false
         return self:SelectSlot(slot)
     end
 end
 
 function Inv:CursorLeft()
+	if self.pin_nav and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		local k, slot = next(self.current_list or {})
+		if slot == nil or not slot.inst:IsValid() then
+			self.current_list = self.equip
+		end
+	end
+
     if self:CursorNav(Vector3(-1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	elseif not self.open and not self.pin_nav and self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin())
     end
 end
 
 function Inv:CursorRight()
+	if self.pin_nav and self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		local k, slot = next(self.current_list or {})
+		if slot == nil or not slot.inst:IsValid() then
+			self.current_list = self.inv
+		end
+	end
+
     if self:CursorNav(Vector3(1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	elseif not self.open and not self.pin_nav and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
+		self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin())
     end
 end
 
 function Inv:CursorUp()
-    if self:CursorNav(Vector3(0,1,0)) then
-        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	if self.pin_nav then
+		self:PinBarNav(self.active_slot:FindPinUp())
+    else
+		if self:CursorNav(Vector3(0,1,0)) then
+			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+		elseif not self.open and (self.current_list == self.inv or self.current_list == self.equip) then
+			-- go into the pin bar if there are no other open containers above the inventory bar
+			self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin())
+		end
     end
 end
 
 function Inv:CursorDown()
-    if self:CursorNav(Vector3(0,-1,0)) then
+	local pin_nav = self.pin_nav
+	if pin_nav then
+		local next_pin = self.active_slot:FindPinDown()
+		if next_pin then
+			self:PinBarNav(next_pin)
+		else
+			pin_nav = false
+			local k, slot = next(self.current_list or {})
+			if slot == nil or not slot.inst:IsValid() then
+				self.current_list = self.owner.HUD.controls.craftingmenu.is_left_aligned and self.inv or self.equip
+			end
+		end
+    end
+	
+	if not pin_nav and self:CursorNav(Vector3(0,-1,0)) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end
@@ -706,6 +762,10 @@ function Inv:OpenControllerInventory()
 
         self.open = true
         self.force_single_drop = false --reset the flag
+
+		if self.pin_nav then
+			self:CursorRight()
+		end
 
         self:UpdateCursor()
         self:ScaleTo(self.base_scale,self.selected_scale,.2)
@@ -1011,7 +1071,9 @@ function Inv:UpdateCursor()
             self.active_slot:Highlight()
 
             self.cursor:MoveToBack()
-            self.active_slot.bgimage:MoveToBack()
+			if self.active_slot.bgimage then
+	            self.active_slot.bgimage:MoveToBack()
+			end
         end
     else
         self.cursor:Hide()

@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Ah, perhaps I should find a place with more hiding spots.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I'm afraid that's enough playing for one day.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "unused_by_warly",
+			SHADOWMAGIC = "Maman used to keep a journal, before her memory went.",
+		},
         COOK =
         {
             GENERIC = "I'm not quite ready yet.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Ah non, I'm missing some ingredients!",
+		NO_TECH = "I don't know the recipe for that one yet.",
+		NO_STATION = "If I had a station with the right tools I could cook that right up...",
+	},
 
 	ACTIONFAIL_GENERIC = "I cannot do that.",
 	ANNOUNCE_BOAT_LEAK = "Mon dieu! She is sinking!",
@@ -2780,6 +2792,8 @@ return{
 			BURNT = "We had some nice things in there.",
 		},
 		WARG = "Leader of the pack.",
+        WARGLET = "I won't be put on the menu today!",
+        
 		WASPHIVE = "Not your average bees.",
 		WATERBALLOON = "A balloon, filled with water? What a funny idea.",
 		WATERMELON = "Despite its name, it is mostly filled with deliciousness!",
@@ -4291,6 +4305,7 @@ return{
 
         DUMBBELL = "All of my arm strength comes from whisking egg whites.",
         DUMBBELL_GOLDEN = "All of my arm strength comes from whisking egg whites.",
+		DUMBBELL_MARBLE = "All of my arm strength comes from whisking egg whites.",
         DUMBBELL_GEM = "All of my arm strength comes from whisking egg whites.",
         POTATOSACK = "I suppose all that lifting works up quite an appetite.",
 

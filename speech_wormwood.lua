@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not many hideys for friends",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Already had fun",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Not mine",
+			SHADOWMAGIC = "Nope",
+		},
         COOK =
         {
             GENERIC = "Can't cook now",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Hmm. Need things",
+		NO_TECH = "Don't know how",
+		NO_STATION = "Can't",
+	},
 
 	ACTIONFAIL_GENERIC = "Nope",
 	ANNOUNCE_BOAT_LEAK = "Water! Water coming!",
@@ -2784,6 +2796,8 @@ return{
 			BURNT = "Fire bad",
 		},
 		WARG = "Big Bad Woofer",
+        WARGLET = "Big Bad Woofer",
+        
 		WASPHIVE = "Bad Buzz home",
 		WATERBALLOON = "Water Booper",
 		WATERMELON = "Watery Sweet belly stuff",
@@ -4295,6 +4309,7 @@ return{
 
         DUMBBELL = "Rocks",
         DUMBBELL_GOLDEN = "Heavy!",
+		DUMBBELL_MARBLE = "Heaaavy rocks",
         DUMBBELL_GEM = "Sparkly rocks",
         POTATOSACK = "Carry friends",
 

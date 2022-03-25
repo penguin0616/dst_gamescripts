@@ -66,6 +66,7 @@ local function ConfigureRunState(inst)
 
     elseif inst.replica.inventory:IsHeavyLifting() then
         inst.sg.statemem.heavy = true
+		inst.sg.statemem.heavy_fast = inst:HasTag("mightiness_mighty")
     elseif inst:HasTag("wereplayer") then
         inst.sg.statemem.iswere = true
         if inst:HasTag("weremoose") then
@@ -97,7 +98,8 @@ local function ConfigureRunState(inst)
 end
 
 local function GetRunStateAnim(inst)
-    return (inst.sg.statemem.heavy and "heavy_walk")
+    return ((inst.sg.statemem.heavy and inst.sg.statemem.heavy_fast) and "heavy_walk_fast")
+		or (inst.sg.statemem.heavy and "heavy_walk")
         or (inst.sg.statemem.sandstorm and "sand_walk")
         or ((inst.sg.statemem.groggy or inst.sg.statemem.moosegroggy or inst.sg.statemem.goosegroggy) and "idle_walk")
         or (inst.sg.statemem.careful and "careful_walk")
@@ -221,6 +223,7 @@ local actionhandlers =
                 or (action.target:HasTag("quickactivation") and "doshortaction")
                 or "dolongaction"
         end),
+    ActionHandler(ACTIONS.OPEN_CRAFTING, "dostandingaction"),
     ActionHandler(ACTIONS.PICK,
         function(inst, action)
             return (inst.replica.rider ~= nil and inst.replica.rider:IsRiding() and "dolongaction")
@@ -249,9 +252,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.BUILD,
         function(inst, action)
             local rec = GetValidRecipe(action.recipe)
-            return (rec ~= nil and rec.buildingstate)
-                or (rec ~= nil and rec.tab.shop and "give")
-                or (action.recipe == "livinglog" and inst:HasTag("plantkin") and "form_log")
+            return (rec ~= nil and rec.sg_state)
                 or (inst:HasTag("hungrybuilder") and "dohungrybuild")
                 or (inst:HasTag("fastbuilder") and "domediumaction")
                 or (inst:HasTag("slowbuilder") and "dolongestaction")
@@ -695,7 +696,7 @@ local states =
 
             --heavy lifting
             TimeEvent(1 * FRAMES, function(inst)
-                if inst.sg.statemem.heavy then
+                if inst.sg.statemem.heavy and not inst.sg.statemem.heavy_fast then
                     PlayFootstep(inst, nil, true)
                     DoFoleySounds(inst)
                 end
@@ -833,8 +834,20 @@ local states =
             end),
 
             --heavy lifting
+            TimeEvent(0 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy and inst.sg.statemem.heavy_fast then
+                    DoRunSounds(inst)
+                    DoFoleySounds(inst)
+                end
+            end),
+            TimeEvent(9 * FRAMES, function(inst)
+                if inst.sg.statemem.heavy and inst.sg.statemem.heavy_fast then
+                    DoRunSounds(inst)
+                    DoFoleySounds(inst)
+                end
+            end),
             TimeEvent(11 * FRAMES, function(inst)
-                if inst.sg.statemem.heavy or
+                if (inst.sg.statemem.heavy and not inst.sg.statemem.heavy_fast) or
                     inst.sg.statemem.sandstorm or
                     inst.sg.statemem.careful then
                     DoRunSounds(inst)
@@ -845,7 +858,7 @@ local states =
                 end
             end),
             TimeEvent(36 * FRAMES, function(inst)
-                if inst.sg.statemem.heavy or
+                if (inst.sg.statemem.heavy and not inst.sg.statemem.heavy_fast) or
                     inst.sg.statemem.sandstorm or
                     inst.sg.statemem.careful then
                     DoRunSounds(inst)
@@ -4569,7 +4582,6 @@ local states =
         end,
 
         ontimeout = function(inst)
-            print("AT TIMEOUT")
             inst:ClearBufferedAction()
             inst.sg:GoToState("idle")
         end,

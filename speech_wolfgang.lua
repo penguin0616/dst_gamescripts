@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Wolfgang plays fair, is nowhere for kitties to hide here!",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "Is enough games for Wolfgang.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "Warly is very nice to cook. Wolfgang will not get in way.",
+			SHADOWMAGIC = "Wolfgang is glad he cannot read!",
+		},
         COOK =
         {
             GENERIC = "Wolfgang not in cooking mood.",
@@ -342,6 +347,13 @@ return{
             FULL = "Is Wolfgang's turn for lifting now! Wait...",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Is no good, Wolfgang doesn't have enough!",
+		NO_TECH = "Hmm, is tricky. Wolfgang should learn how to make.",
+		NO_STATION = "Wolfgang will need right working-place!",
+	},
 
 	ACTIONFAIL_GENERIC = "I am not mighty enough to do that.",
 	ANNOUNCE_BOAT_LEAK = "Drippy drops is come through boat!",
@@ -2781,6 +2793,8 @@ return{
 			BURNT = "Box all gone.",
 		},
 		WARG = "Big puppy!",
+        WARGLET = "Is bad dog!",
+        
 		WASPHIVE = "Mind says no. Muscles say yes!",
 		WATERBALLOON = "Is very squishy-wobbly!",
 		WATERMELON = "So many seeds.",
@@ -4292,6 +4306,7 @@ return{
 
         DUMBBELL = "Ha! Wolfgang could lift boulders twice this size!",
         DUMBBELL_GOLDEN = "Lift! Lift to get strong!",
+		DUMBBELL_MARBLE = "Wolfgang will be strongest!",
         DUMBBELL_GEM = "Make muscles mighty!",
         POTATOSACK = "Ha! Lifting and potatoes are three of Wolfgang's favorite things!",
 

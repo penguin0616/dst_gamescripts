@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Not really enough places for them to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "They look pretty tired, let's see if they wanna play again tomorrow.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I don't wanna ruin whatever Warly's working on.",
+			SHADOWMAGIC = "I don't trust that thing one bit.",
+		},
         COOK =
         {
             GENERIC = "I'm not really in a cooking mood.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "Looks like I need some parts.",
+		NO_TECH = "Can't say I ever learned how to make one of those.",
+		NO_STATION = "I'll be needing a station made for this kinda work.",
+	},
 
 	ACTIONFAIL_GENERIC = "I sure gummed the works there.",
 	ANNOUNCE_BOAT_LEAK = "We gotta repair this ol'girl!",
@@ -2786,6 +2798,8 @@ return{
 			BURNT = "So who wants to build another one?",
 		},
 		WARG = "Quite the set of chompers on that one.",
+        WARGLET = "I don't think we're gonna get along.",
+        
 		WASPHIVE = "Wouldn't mess with that without good reason.",
 		WATERBALLOON = "I throw a killer curveball.",
 		WATERMELON = "We used to slice these up on hot summer days.",
@@ -4297,6 +4311,7 @@ return{
 
         DUMBBELL = "Why not do some real work instead of just liftin' these things?",
         DUMBBELL_GOLDEN = "Awful fancy for something you just pick up and put down over and over.",
+		DUMBBELL_MARBLE = "Awful fancy for something you just pick up and put down over and over.",
         DUMBBELL_GEM = "Awful fancy for something you just pick up and put down over and over.",
         POTATOSACK = "Always nice to have a snack on hand when you're workin'.",
 

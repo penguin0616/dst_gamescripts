@@ -224,7 +224,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "May 7" },
             { title = "Favorite Food", desc = "Spicy Chili" },
-            { title = "From the Ashes", desc = "Willow always regarded being brought to The Constant as a new beginning. It allowed her to leave everything behind, after all. Even as a child, Willow seemed to possess a knack for attracting bad luck. Orphaned at a young age and forced to live in a children's home with cruel caregivers, she soon found her nights plagued by shadowy visions of terrible creatures... creatures that could only be held at bay by her faithful teddy bear Bernie. But when Bernie was taken away as punishment for what her caregivers saw as unfit behavior, Willow was left to fend for herself when the shadows came for her. That's when she learned that nothing holds back the darkness like a roaring flame. Nothing is more comforting than watching your troubles light up and crumble to ash...\nIt wouldn't be the last time Willow burned it all down to start anew." },
+            { title = "From the Ashes", desc = "Willow always regarded being brought to The Constant as a new beginning. It allowed her to leave everything behind, after all. Orphaned at a young age and forced to live in a children's home with cruel caregivers, she found her nights plagued by shadowy visions of terrible creatures... creatures that could only be held at bay by her faithful teddy bear Bernie. But when Bernie was taken away as punishment for what her caregivers saw as unfit behavior, Willow was left to fend for herself when the shadows came for her. That's when she learned that nothing holds back the darkness like a roaring flame. Nothing is more comforting than watching your troubles light up and crumble to ash...\nIt wouldn't be the last time Willow burned it all down to start anew." },
 		},
         wendy =
 		{
@@ -567,6 +567,21 @@ STRINGS =
 			RANSACK = "Ransack",
 			HIDEANDSEEK = "Play Hide and Seek",
         },
+
+		OPEN_CRAFTING =
+		{
+			GENERIC = "Research at",
+			OFFERING = "Make offering at",
+			TRADE = "Trade with",
+			EXPERIEMENT = "Brew with",
+			USE = "Use",
+			COOKING = "Cook with",
+			READ = "Read",
+			CRITTERS = "Look in",
+			SCULPTING = "Sculpt at",
+			CARTOGRAPHY = "Draw at",
+		},
+
         JUMPIN =
         {
             GENERIC = "Jump In",
@@ -1408,7 +1423,7 @@ STRINGS =
         BRUSH = "Brush",
         SALTLICK = "Salt Lick",
         FROG = "Frog",
-        FISHINGROD = "Fishing Rod",
+        FISHINGROD = "Freshwater Fishing Rod",
         FISH = "Fish",
         FISH_COOKED = "Cooked Fish",
         FOSSIL_PIECE = "Fossil Fragments",
@@ -1930,6 +1945,7 @@ STRINGS =
         BELL = "Old Bell",
 
         WARG = "Varg",
+        WARGLET = "Varglet",
 
         SPAT = "Ewecus",
         STEELWOOL = "Steel Wool",
@@ -3306,15 +3322,17 @@ STRINGS =
         CRITTER_EYEOFTERROR = "Friendly Peeper",
         CRITTER_EYEOFTERROR_BUILDER = "Friendly Peeper",
 
-
-
+        BIGSHADOWTENTACLE = "Guardian Shadow Tentacle",
 
         -- WOLFGANG
         MIGHTY_GYM = "Mighty Gym",
         DUMBBELL = "Dumbbell",
         DUMBBELL_GOLDEN = "Golden Dumbbell",
+		DUMBBELL_MARBLE = "Marbell",
         DUMBBELL_GEM = "Gembell",
         POTATOSACK = "Potato Sack",
+
+        RUINS_CAVEIN_OBSTACLE = "Blocky Ruins",        
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4045,6 +4063,7 @@ STRINGS =
         MIGHTY_GYM = "Bring on the brawn!",
         DUMBBELL = "Sticks and stones make muscles honed.",
         DUMBBELL_GOLDEN = "The gold standard of weightlifting.",
+        DUMBBELL_MARBLE = "A quick way to a chiseled physique.",
         DUMBBELL_GEM = "Polish every facet of your workout.",
         POTATOSACK = "A potato's natural habitat.",
 
@@ -4532,7 +4551,7 @@ STRINGS =
     --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
     PIG_TALK_FOLLOWWILSON = { "YOU FRIEND", "I LOVE FRIEND", "YOU IS GOOD", "I FOLLOW!" },
     PIG_TALK_FIND_LIGHT = { "SCARY", "NO LIKE DARK", "WHERE IS SUN?", "STAY NEAR FIRE", "FIRE IS GOOD" },
-    PIG_TALK_LOOKATWILSON = { "WHO ARE YOU?", "YOU NOT PIG", "UGLY MONKEY PERSON", "YOU HAS MEAT?" },
+    PIG_TALK_LOOKATWILSON = { "WHO ARE YOU?", "YOU NOT PIG", "YOU HAS MEAT?" },
     PIG_TALK_RUNAWAY_WILSON = { "TOO CLOSE!", "STAY AWAY!", "YOU BACK OFF!", "THAT MY SPACE." },
     PIG_TALK_FIGHT = { "I KILL NOW!", "YOU GO SMASH!", "RAAAWR!" },
     PIG_TALK_RUN_FROM_SPIDER = { "SPIDER BAD!", "NO LIKE SPIDER!", "SCARY SPIDER!" },
@@ -5246,6 +5265,7 @@ STRINGS =
 		BALLOONOMANCY = "Balloonomancy",
         STRONGMAN = "Strongman",
     },
+
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
 
     -- YOTB Judge
@@ -5996,6 +6016,14 @@ STRINGS.UI =
 		RECIPEACTION =
 		{
             SOCKET = "Socket",
+            CARTOGRAPHY = "Scribe",
+            SCULPTING = "Create",
+            ORPHANAGE = "Adopt",
+            PERDOFFERING = "Offer",
+			CARNIVAL_PRIZESHOP = "Purchase",
+            CARNIVAL_HOSTSHOP = "Purchase",
+			MADSCIENCE = "Mix",
+			COOK = "Cook",
 		},
         TABNEEDSTUFF =
         {
@@ -6006,6 +6034,7 @@ STRINGS.UI =
             QUAGMIRE_TRADER_MUM = "Earn coins to trade!",
             QUAGMIRE_TRADER_KID = "Earn coins to trade!",
         },
+		-- based on TUNING.PROTOTYPER_TREES
         NEEDSTUFF = "Find ingredients \nto craft!",
         NEEDSCIENCEMACHINE = "Use a science machine to build a prototype!",
         NEEDALCHEMYENGINE = "Use an alchemy engine to build a prototype!",
@@ -6019,6 +6048,8 @@ STRINGS.UI =
         },
         NEEDCARNIVAL_HOSTSHOP_PLAZA = "Purchase the Cawnival Sapling to unlock!",
         NEEDSSPIDERFRIENDSHIP = "Make friends with spiders to learn a recipe!",
+        NEEDSFISHING = "Use a Tackle Receptacle to build a prototype!",
+        NEEDSSEAFARING_STATION = "Use a Think Tank to build a prototype!",
         CANTRESEARCH = "Some things are unknowable.",
         DEFAULT = "Classic",
     },
@@ -6495,7 +6526,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Wolfgang\nBeta Build",
+		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -6987,6 +7018,76 @@ STRINGS.UI =
 		TROPHYSCALE_UNKNOWN_OWNER = "An Unnamed Donor",
 	},
 
+	CRAFTING_FILTERS =
+	{
+		FAVORITES = "Favorites",
+		CRAFTING_STATION = "All Crafting Stations",
+		SPECIAL_EVENT = "Special Event",
+		MODS = "Modded Items",
+		CHARACTER = "Character Items",
+		TOOLS = "Tools",
+		LIGHT = "Light Sources",
+		PROTOTYPERS = "Prototypers & Stations",
+		REFINE = "Refined Materials",
+		WEAPONS = "Weapons",
+		ARMOUR = "Armour",
+		CLOTHING = "Clothing",
+		RESTORATION = "Healing",
+		MAGIC = "Shadow Magic",	
+		DECOR = "Decorations",
+		STRUCTURES = "Structures",
+		CONTAINERS = "Storage Solutions",
+		COOKING = "Cooking",
+		GARDENING = "Food & Gardening",	
+		FISHING = "Fishing",
+		SEAFARING = "Seafaring",
+		RIDING = "Beefalo Riding",
+		WINTER = "Winter Items",
+		SUMMER = "Summer Items",
+		RAIN = "Rain Gear",
+		EVERYTHING = "Everything",
+	},
+
+	CRAFTING_STATION_FILTERS = 
+	{
+        ANCIENT = "Ancient Pseudoscience",
+        ORPHANAGE = "Critters",
+        CARTOGRAPHY = "Cartography",
+        SCULPTING = "Sculptures",
+		CELESTIAL = "Celestial",
+        HERMITCRABSHOP = "Bottle Exchange",
+
+        SHADOW = "Codex Umbra",
+        FOODPROCESSING = "Seasonings",
+
+		CARNIVAL_HOSTSHOP = "Cawnival Creation",
+		CARNIVAL_PRIZESHOP = "Trinket Trove",
+		WINTERSFEASTCOOKING = "Winter's Feast Cooking",
+		MADSCIENCE = "Mad Science",
+        YOT_SHRINE_DOFFERING = "Offerings",
+	},
+
+	CRAFTING_MENU =
+	{
+        SORT_MODE_FMT = "Sort Mode: {mode}",
+		SORTING =
+		{
+	        DEFAULT = "Default",
+	        NAME = "Alphabetical",
+		    CRAFTABLE = "Craftable",
+		    FAVORITE = "Favorite",
+		},
+		SEARCH = "Search",
+
+		NAVIGATION = "Navigation",
+		PIN = "Pin",
+		UNPIN = "Unpin",
+
+		FAVORITE_ADD = "Add Favorite",
+		FAVORITE_REMOVE = "Remove Favorite",
+		NO_ITEMS = "No items match the current filter.",
+	},
+
     ACCOUNT =
     {
         LOGIN = "Login",
@@ -7070,16 +7171,10 @@ STRINGS.UI =
         CONTROLS = "Controls",
         LANGUAGES = "Languages",
         LANG_TITLE = "Language Options",
+        LANG_BODY_STEAM = "Your Steam interface is set to a language other than English, would you like to view language options?",
+        MOD_LANGUAGES_TITLE = "Steam Workshop Collections",
 		CINEMATICS = "Cinematics",
         MORE = "More",
-        TOOLTIP_GRAPHICS = "Modify the graphics settings",
-        TOOLTIP_SETTINGS = "Modify features of the game and user interface",
-        TOOLTIP_ADVANCED = "Modify advanced features of the game and user interface",
-        TOOLTIP_CONTROLS = "Rebind which input does which in-game action",
-        TOOLTIP_LANGUAGES = "Select display language",
-		TOOLTIP_CONTROLS_CONSOLE = "Check which control does which in-game action",
-		TOOLTIP_MORE = "View additional options",
-		TOOLTIP_CINEMATICS = "Sit back and watch a video",
         OPTIONS = "Options",
         BACK = "Back",
         YES = "Yes",
@@ -7111,17 +7206,23 @@ STRINGS.UI =
         NETBOOKMODE = "Netbook Mode:",
         ENABLED = "Enabled",
         DISABLED = "Disabled",
+        STEAM_CLOUD_SAVES = "Steam Cloud",
+        LOCAL_SAVES = "Local Files",
         FX = "Sound FX Volume:",
         MUSIC = "Music Volume:",
         AMBIENT = "Ambient Volume:",
         HUDSIZE = "HUD Size:",
+		CRAFTINGMENUSIZE = "Crafting Menu Size:",
         VIBRATION = "Vibration:",
         WATHGRITHRFONT = "Wigfrid's Umlauts:",
         WALTERCAMERA = "Campfire Camera:",
         BOATCAMERA = "Seafaring Camera:",
         BACKPACKMODE = "Backpack Layout:",
-        AUTOPAUSE = "Auto-pause:",
-        CONSOLEAUTOPAUSE = "Console Auto-pause:",
+        AUTOPAUSE = "Auto-Pause:",
+        CONSOLEAUTOPAUSE = "Console Auto-Pause:",
+        CRAFTINGAUTOPAUSE = "Crafting Auto-Pause:",
+		CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Crafting Auto-Close",
+        DEFAULTCLOUDSAVES = "Default Save Type:",
 		INTEGRATEDBACKPACK_DISABLED = "Separated",
 		INTEGRATEDBACKPACK_ENABLED = "Integrated",
         DATACOLLECTION = "Data Collection:",
@@ -7129,7 +7230,7 @@ STRINGS.UI =
         MOVEMENTPREDICTION_ENABLED = "Predictive",
         MOVEMENTPREDICTION_DISABLED = "None",
 		TARGETLOCKING = "Target Locking:",
-        TEXTURESTREAMING = "Texture Streaming",
+        TEXTURESTREAMING = "Texture Streaming:",
         THREADEDRENDER = "Threaded Render:",
 		SCREEN_FLASH_INTENSITY = "Screen Flashes:",
         DYNAMIC_TREE_SHADOWS = "Canopy Shadows:",
@@ -7164,6 +7265,71 @@ STRINGS.UI =
 		INTRO_MOVIE = "Intro Movie",
 		CREDITS = "Credits",
 		VIDEO_CHANNEL = "More Klei Videos",
+
+        LOADING_TIPS = "Loading Tips",
+        LOADING_TIPS_SHOW_ALL = "All",
+        LOADING_TIPS_SHOW_NONE = "None",
+        LOADING_TIPS_TIPS_ONLY = "Tips Only",
+        LOADING_TIPS_LORE_ONLY = "Lore Only",
+
+        TOOLTIPS =
+        {
+            GRAPHICS = "Modify the graphics settings",
+            SETTINGS = "Modify features of the game and user interface",
+            ADVANCED = "Modify advanced features of the game and user interface",
+            CONTROLS = "Rebind which input does which in-game action",
+            LANGUAGES = "Select display language",
+            CONTROLS_CONSOLE = "Check which control does which in-game action",
+            MORE = "View additional options",
+            CINEMATICS = "Sit back and watch a video",
+
+            -- Settings
+            INPUT = "Controller or Keyboard? Play Don't Starve Together your way.",
+            VIBRATION = "Make your controller rumble at key gameplay moments.",
+            FX = "Change how loud things are in the world.",
+            MUSIC = "Tone up or down the musical fanfare in your adventures.",
+            AMBIENT = "The environment makes noise too, luckily you can control how loudly it does.",
+            HUDSIZE = "Customize the size of your Heads Up Display.",
+			CRAFTINGMENUSIZE = "Customize the size of the crafting menu.",
+            AUTOLOGIN = "Log into your Klei account automatically when booting up Don't Starve Together.",
+            SHOWPASSWORD = "Show or hide your passwords.",
+            BOATCAMERA = "Allows the camera to focus on your boat while sailing.",
+            BACKPACKMODE = "Change how the contents of the backpack are displayed. Integrated with the inventory bar or separated at the side of the screen.",
+            SERVER_NAME_PROFANITY_CHAT_FILTER = "Use Steam's chat filters. This can be configured in Steam's setting in the section In-Game under Chat Filtering.",
+            SERVER_NAME_PROFANITY_FILTER = "Filter out the profanity when browsing the server list. Filtered servers will have their names displayed as \"This server name has been filtered\" and can still be joined.",
+            AUTOPAUSE = "When you are the only player in the world, this will pause the game while you are in the ingame menus, crafting, or viewing the cookbook or plant registry. If there are other players in the world, only the server admin will have permissions to pause the game.",
+            CRAFTINGAUTOPAUSE = "When you are the only player in the world, this will pause the game while the crafting menu is open.",
+			CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Closes the crafting menu when building a structure that is placed in the world.",
+            DATACOLLECTION = "We collect metrics and telemetry on Don't Starve Together, including how long and how often you play. This information helps us troubleshoot the game, provide rewards, and improve your experience. Refer to https://www.klei.com/privacy-policy for more information.",
+            LOADING_TIPS = "Learn more about the lore and the gameplay of Don't Starve while your world loads.",
+			TARGETLOCKING = "Focus on one target at a time.",
+
+            -- Graphics
+            FULLSCREEN = "Fill your screen with Don't Starve Together.",
+            RESOLUTION = "Change the game screen resolution. (Fullscreen only)",
+            DISPLAY = "Got multiple screens? We've got you covered, choose where the game window goes when playing the game. (Fullscreen only)",
+            REFRESHRATE = "Customize how many times per second the game screen refreshes. (Fullscreen only)",
+            SMALLTEXTURES = "Reduces texture quality for better performance. (Only recommended for min-spec computers)",
+            NETBOOKMODE = "Reduces the game's update frequency. (Only recommended for min-spec computers)",
+            TEXTURESTREAMING = "Reduces the memory overhead for textures. Enabling this should improve performance.",
+            THREADEDRENDER = "Renders the game on a different core. Enabling this should improve performance.",
+            SCREENSHAKE = "Keep your camera static or allow it to shake freely in moments of high intensity.",
+            DISTORTION = "Allows you to turn off screen distortions in the game, especially notable during moments of insanity.",
+            BLOOM = "Increases the visual intensity of lights.",
+            SCREEN_FLASH_INTENSITY = "Control the intensity of screen flashes during explosions and lightning strikes.",
+            DYNAMIC_TREE_SHADOWS = "Renders the ground shadow while under a canopy.",
+			DISPLAYAREA = "Maximize the screen size on your display.",
+
+            -- Advanced
+            MOVEMENTPREDICTION = "Allows the game to predict your movements to compensate for any possible lag.",
+            WATHGRITHRFONT = "Replaces Wigfrid's o's with ö's when she speaks.",
+            WALTERCAMERA = "Allows the camera to focus on Walter while he tells campfire stories.",
+            AUTOMODS = "Keep up to date with the mods of all the servers you join.",
+            ANIMATED_HEADS = "Animates the survivor's heads in the menus.",
+            CONSOLEAUTOPAUSE = "Allows the server to auto-pause while the console screen is open.",
+            DEFAULTCLOUDSAVES = "Chooses whether new saves will be stored in the cloud or not by default."
+        },
+
     },
 
 	COMPENDIUM =
@@ -7215,8 +7381,104 @@ STRINGS.UI =
 		CHECK_SHOP = "Updating the shop",
 		CHECK_EVENT = "Catching up on current events",
 		CHECK_DAILY_GIFT = "Checking for daily gifts",
-		CHECK_COOKBOOK = "Updating cookbook",
+		CHECK_KEYVALUESTORES = "Grabbing profile details",
 		CHECK_INVENTORY = "Updating inventory",
+    },
+
+    LOADING_SCREEN_SURVIVAL_TIPS =
+    {
+        --TEST_TIP1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        TIP_DIRT_PILE = "\"I stumbled upon a rather suspicious mound of dirt... perhaps it was left by a creature of some sort? This may require further investigation...\" -W",
+        TIP_SCIENCE_MACHINE = "\"I find myself returning more and more frequently to my magnificent science machine, busying myself with prototyping new tools to aid in our survival. After all, I must do something to keep myself sane in this strange place...\" -W",
+        TIP_SANITY = "\"I fear I may no longer be able to trust my own eyes. I've been catching glimpses of strange shadowy forms at the edges of my vision with increasing frequency... surely they can't really be there?\" -W",
+        TIP_DARKNESS = "\"They say the Shadow Queen herself comes at night to snatch up anyone foolish enough to wander in the dark...\" -W",
+        TIP_CAVES = "\"I finally worked up the courage to explore the underground caverns. To my surprise, I found there was ample light provided by a most curious glowing plant that seems to grow naturally throughout the cave system. I've harvested some bulbs for further study.\" -W",
+        TIP_PIG_AND_MONSTERS = "\"The Pig men seem to harbor a deep dislike for the Constant's more monstrous denizens, attacking them on sight. While I personally can't blame them, it does pose a bit of a problem for some of my compatriots...\" -W",
+        TIP_TREEGUARD = "\"Could've sworn I saw one of the trees movin' when I was out choppin' firewood... must've been a trick of the light.\" -W",
+        TIP_RUN_AWAY = "\"It turns out that Koalefants are a bit hardier than I expected. I (quite sensibly) decided to take a... strategic retreat until I'm better prepared.\" -W",
+        TIP_CHARCOAL = "\"You know what they say, you can't get charcoal without burning down a few trees!\" -W",
+        TIP_HEAT = "\"Blast this heat! Where's a nice, chilled drink when you need it?\" -M",
+        TIP_WETNESS = "\"The rain is proving to be a greater hindrance than I first anticipated. As if being soaked to the bone isn't dreadful enough, my tools keep slipping from my hands when I try to make use of them!\" -W",
+        TIP_COMPASS = "\"I experimented with making a rudimentary compass and discovered that this place does in fact seem to have a magnetic North. Curiously, it also pointed out the positions of my fellow camp mates who, as it turned out, had already crafted similar compasses of their own.\" -W",
+        TIP_FLARE = "\"A flare was sent up from the forest last night. I know I should have set out immediately to help, but... well... I suppose I hesitated too long by the comforting glow of my campfire, and before I knew it the flare had faded from view. I do hope whoever it was is alright...\" -W",
+        TIP_GARDENEERHAT = "\"I've finally perfected my design for an ingenious (if I do say so myself) device that stores important garden-based knowledge. Certain naysayers might point out that it looks like nothing more than an overturned flowerpot worn on the head... some people simply don't have an eye for science.\" -W",
+        TIP_COOKBOOK = "\"Once I've perfected a recipe, I find it helpful to write it down. Luckily, I've been able to cobble together a rough cookbook for just such a thing out of some spare pieces of parchment. Now my mind is free to worry about more immediate things...\" -W",
+        TIP_NEWRECIPES = "\"Recipes are useful, but a true chef knows the importance of experimenting with new ingredients and flavors, and this world certainly provides an abundance of unusual things to choose from.\" -W",
+        TIP_REPLANTING = "\"The bushes I replanted by the camp are looking sickly... I suspect they'll require some extra care before they can produce any berries again.\" -W",
+        TIP_NAUGHTINESS = "\"We shouldn't hurt things that don't hurt us. If we're mean, bad old Mr. Krampus will come...\" -W",
+        TIP_BERRYLURE = "\"Last time I baited my hook with berries I caught more fish than I could carry, but when I tried today? Barely a nibble! Guess the berry trick only works on some of 'em.\" -W",
+        TIP_OCEANEXPLORATION = "\"What strange new islands and creatures might I encounter if I journey out to sea? I shudder to think... but curiosity has a tendency to get the better of me...\" -W",
+        TIP_REVIVE = "\"We nearly lost one of our number today. In a mad daze I created... something... that managed to pull our friend back to the land of the living, but... whatever it was, I fear I cannot rightfully say it was within the realm of science...\" -W",
+        TIP_COBBLEDROAD = "\"Today I was surprised to come upon a cobbled road - how did this hallmark of civilization come to be in this untamed wilderness?\" -W",
+        TIP_MERMHOUSE = "\"The Merms are fiercely territorial, and quick to defend their homes. Though I honestly can't imagine anyone else wanting to take up residence in those ram-shackle hovels...\" -M",
+        TIP_BOTTLES = "\"From time to time I've spotted bottles bobbing along the ocean currents, just out of reach from the shore. I have half a mind to construct a boat and retrieve one of them... I have a gut feeling that someone is trying to send out a message.\" -W",
+        TIP_MOONISLAND = "\"I couldn't have imagined it, I'm certain I just saw a piece of the moon break off and crash into the ocean! Perhaps my compatriots will join me in a search for it...\" -W",
+        TIP_MOONMUTATION = "\"The moon in this world seems to hold some strange power over the creatures here. It changes them...\" -W",
+
+    },
+
+    LOADING_SCREEN_LORE_TIPS =
+    {
+        --TEST_TIP2 = "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.",
+        TIP_TIME = "Time moves differently in the Constant. Instead of a monotonous forward march, seconds and eternities seem to throw caution to the wind and do-si-do backwards and forwards as they please.",
+        TIP_WILSON_UNI = "Wilson chose the path of an independent Gentleman Scientist after finding the university environment to be too stifling for a man of his ambitions. (The enormous bill the university sent him to pay for repairs to the chemistry lab had absolutely nothing to do with this.)",
+        TIP_WINONA_CHARLIE = "Growing up, Winona always looked out for her younger sister. Even now, she can't help but feel that one day she'll be able to reach out into the darkness and pull Charlie back.",
+        TIP_MAXWELL_SURVIVORS = "Once the King of the Nightmare Throne, Maxwell now finds himself surviving alongside the very people he once tormented. Needless to say, it makes for a bit of an... awkward atmosphere.",
+        TIP_MAXWELL_PAST = "Maxwell (né William Carter) was once nothing more than a humble stage magician, until the discovery of a mysterious tome changed the course of his life forever.",
+        TIP_DARKNESS_CHARLIE = "In the Constant, the darkness has a name. Have you met Charlie yet?",
+        TIP_WARNING = "\"Nothing here is what it seems. If you're reading this, keep an eye on the rabbits, don't trust the statues, and don't mistake that thing hanging in the night sky for the moon...\" -W",
+        TIP_WOODIE = "Even with all the steps Woodie has taken to control his were-curse, there's little that can be done on nights when the moon is at its fullest.",
+        TIP_WILLOW = "Nothing brings Willow more comfort than snuggling her faithful teddy bear Bernie, and committing a playful bit of arson.",
+        TIP_WICKERBOTTOM = "Wickerbottom is of the firm belief that the pen is mightier than the sword. Words hold great power when used correctly.",
+        TIP_WENDY = "Nothing could ever come between Wendy and her twin sister Abigail. Some bonds transcend even death.",
+        TIP_WEBBER = "Once upon a time, a little boy was swallowed up whole by a big hungry spider. Now they share everything; a body, a mind, and the name Webber.",
+        TIP_WALTER = "Walter's time in the Pinetree Pioneers has made him more prepared than most for surviving in the wilderness. Unfortunately, this is undermined somewhat by his blind fascination with monsters.",
+        TIP_THEM = "\"You can't run from Them forever. Take it from me, pal.\" -M",
+        TIP_PORTALS = "\"It seems that every time we discover a doorway out of this terrible place, it just leads to more strange worlds with new horrors to endure. Still, I can't give up hope that one day we'll find a doorway that will take us home...\" -W",
+
+    },
+
+    LOADING_SCREEN_CONTROL_TIPS =
+    {
+        TIP_HOLD_INSPECT = "Hold {inspect} to inspect the world around you.",
+        TIP_HOLD_ACTION = "Hold {action} to automatically pick up nearby items and perform actions. Just make sure you're holding the right tool for the job!",
+        TIP_ROTATE_CAMERA = "Press {rotateleft} & {rotateright} to rotate your view of the world.",
+        TIP_SHOW_MAP = "Press {map} to take a quick glance at your map.",
+        TIP_PLAYER_STATUS = "Keep tabs on your fellow Survivors by pressing the {playerstatus} key.",
+
+        TIP_ENDLESS_MODE = "When creating a new world, switch the Game Mode to Endless to allow you and your friends to revive themselves at the Florid Postern.",
+        TIP_DISABLE_TIPS = "Is your mind already bursting with secret knowledge? You can turn off Loading Tips anytime in the Options menu.",
+        TIP_ROLLBACK = "Server hosts can roll back one day or regenerate the world by accessing the Server Commands menu in the Pause Screen.",
+        TIP_DICEVOTE = "Access the Server Commands menu from the Pause Screen to start votes or roll a dice.",
+        TIP_WORLDGEN = "Meddle with World Gen settings in the Options menu to shape a world to your liking.",
+        TIP_VIGNETTES = "Customize your loading screens in the Vignette section of the Curio Cabinet if you're looking for a little change of scenery.",
+
+        -- This tip needed for non-binded controls fallback tip string
+        TIP_BIND_CONTROLS = "Play with Controls Settings in the Options Menu to fit your control needs.",
+    },
+
+    LOADING_SCREEN_CONTROL_TIPS_CONSOLE =
+    {
+        --TIP_CONSOLE = "This is a console tip!",
+    },
+
+    LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE =
+    {
+        TIP_FORCE_ATTACK = "Hold {modifier} + {attack} to attack anything that looks at you sideways, even friends.",
+        TIP_ATTACK = "Hold {attack} to attack enemies.",
+        TIP_HOLD_MOUSE = "Hold down {primary} to automatically harvest nearby items or attack, whatever suits your fancy!",
+        TIP_HALF_STACK = "Hold {modifier} and {primary} on stacks of items in your inventory to quickly grab half the stack.",
+        TIP_DROP_ITEMS = "Hold {modifier} and {secondary} to quick drop items from your inventory.",
+        TIP_INSPECT_SELF = "Press {inspectself} to take a look at which item and character skins you are using.",
+        TIP_CHAT = "Press {chat} to talk to other players. If you wish to speak privately, press {whisper} to whisper to someone.",
+        TIP_INVENTORY_SLOTS = "Press {inv_0}-{inv_9} to quickly use items carried in your main inventory.",
+
+        --TIP_EMOTES = "Show how you really feel! Emotes and dances can be done in the text chat.",
+    },
+
+    -- Category reserved for loading screen modding
+    LOADING_SCREEN_OTHER_TIPS =
+    {
     },
 
     BOX_POPUP =
@@ -7933,6 +8195,7 @@ STRINGS.UI =
         WORLD_SIZE = "World Size",
         BRANCHING = "Branches",
         LOOP = "Loops",
+		ROADS = "Roads",
         AUTUMN = "Autumn",
         WINTER = "Winter",
         SPRING = "Spring",
@@ -7946,6 +8209,16 @@ STRINGS.UI =
         TOUCHSTONE = "Touch Stones",
         BOONS = "Failed Survivors",
         SPECIALEVENT = "Events",
+
+        CROW_CARNIVAL = "Midsummer Cawnival",
+        HALLOWED_NIGHTS = "Hallowed Nights",
+        WINTERS_FEAST = "Winter's Feast",
+        YEAR_OF_THE_GOBBLER = "Year of the Gobbler",
+        YEAR_OF_THE_VARG = "Year of the Varg",
+        YEAR_OF_THE_PIG = "Year of the Pig King",
+        YEAR_OF_THE_CARRAT = "Year of the Carrat",
+        YEAR_OF_THE_BEEFALO = "Year of the Beefalo",
+		YEAR_OF_THE_CATCOON = "Year of the Catcoon",
 
         PREFABSWAPS = "Changing Resources",
         PREFABSWAPS_START = "Starting Resource Variety",
@@ -7996,6 +8269,8 @@ STRINGS.UI =
         SPIDERS = "Spider Dens",
         CAVE_SPIDERS = "Spilagmites",
         HOUNDS = "Hound Attacks",
+        WINTERHOUNDS = "Ice Hound Waves",
+        SUMMERHOUNDS = "Fire Hound Waves",
         HOUNDMOUND = "Hound Mounds",
         MERMS = "Merms",
         TENTACLES = "Tentacles",
@@ -8234,6 +8509,7 @@ STRINGS.UI =
         CLAN_CLOSED_ICON_HOVER = "Private Group Server (Your Group)",
         PVP_ICON_HOVER = "PvP",
         MODS_ICON_HOVER = "Modded",
+        CLOUD_SAVE_HOVER = "Cloud Save",
         FILTER_RESET = "Reset Filters",
         MODS_HIDDEN_MISMATCH = "Unable to retrieve mod list due to a version mismatch.",
         MODS_HIDDEN_LAN = "The mods list isn't visible over LAN.\nWhy not scooch over and ask your friend?",
@@ -8335,7 +8611,8 @@ STRINGS.UI =
         CANCEL = "Cancel",
         ADMIN = "Manage Server",
         MANAGE_ACCOUNT = "Account",
-        DELETE_SLOT = "Delete Server",
+        MANAGE_SLOT = "Manage World",
+        DELETE_SLOT = "Delete World",
         WORLD = "World",
         FORESTWORLD = "Forest World",
         CAVEWORLD = "Cave World",
@@ -8405,6 +8682,19 @@ STRINGS.UI =
         NEWGAME_FMT = "{name}'s World",
         CREATENEWGAME = "Create New World",
         DELETE = "Delete",
+        CLONE = "Duplicate World",
+        NAME_DUPLICATE_SLOT = "Duplicate World Name:",
+        COPY_OF_SLOT_NAME = "Copy of {worldname}",
+        CONVERTCLOUDTOLOCAL = "Convert To Local Save",
+        CONVERTLOCALTOCLOUD = "Convert To Cloud Save",
+        FAILED_COPYORCONVERT_TITLE = "Error",
+        FAILED_COPY_DIALOG = "Failed to duplicate world, please try again later.",
+        FAILED_CONVERT_DIALOG_FMT = "Failed to convert world to {type} save, please try again later.",
+        CONVERT_LOCAL = "local",
+        CONVERT_CLOUD = "cloud",
+        SAVE_TYPE = "Save Type:",
+        SAVE_TYPE_LOCAL = "Local Save",
+        SAVE_TYPE_CLOUD = "Steam Cloud Save", --steam is our only cloud save platform for now, so this is fine.
         SLOT = "Server Slot",
         SURE = "Are you sure?",
         SERVERDAY = "Day", --deprecated, left here for mods to use
@@ -8441,7 +8731,8 @@ STRINGS.UI =
         UGC_BLOCKED_DESCRIPTION_POSTFIX = "'s World\" with a blank description.",
         UGC_BLOCKED_DESCRIPTION_PREFIX_SPLITSCREEN = "Use of user-generated media is not allowed for the signed in accounts.\nOnline players will see your server name as \"",
         OFFLINE_WORLD = "Offline",
-        OPENSAVEFOLDER = "Open {folder}",
+        MANAGE_TEXT = "Local world files are available at:\nSAVEDATA:/{folder}/",
+        OPENSAVEFOLDER = "Open World Folder",
         CLUSTERSLOT = "Save Folder",
         SORT_MODE_FMT = "Sort Mode: {mode}",
         SORT_LASTPLAYED = "Last Played",
@@ -9857,6 +10148,7 @@ STRINGS.UI =
         PURCHASE_BTN = "Buy Now",
         PURCHASE_GIFT = "Gift to a Friend",
         PURCHASE_CLOSE = "Close",
+        PURCHASE_VIEW_CONTENTS = "View Contents",
 
 		GIFT_RECEIVED_TITLE = "You got a chest!",
 		GIFT_RECEIVED_BODY = "Open it to receive your curios.",
@@ -10165,10 +10457,13 @@ STRINGS.UI =
         KITCOON_GAME =
         {
             NAME_AGE = "{name} is {age} days old.",
+            HIBERNATING = "{name} is hibernating.",
             OKAY = "Okay",
             NAME_POPUP_TITLE = "Name your Kitcoon",
             NAME_POPUP_BODY = "Any name is great, but pick one that is meaningful to you!",
             PLAY_WITH = "Play with {name}",
+            WAKE = "Wake {name} from hibernation",
+            HIBERNATE = "Send {name} to hibernate",
             FEED = "Feed {name}",
             CLEAR_POOP = "Clear Poop",
             PICKUP_NAMETAG = "Pick up Kit Collar",
@@ -10503,7 +10798,7 @@ STRINGS.UI =
             "Debug Log",
             "Debug Render",
             "Open Inventory",
-            "Open Crafting",
+            "Open Crafting Menu",
             "Inv Left",
             "Inv Right",
             "Inv Up",
@@ -10531,6 +10826,9 @@ STRINGS.UI =
             "Menu Misc 4", --controller
             "Inspect Self",
             "Pause Server",
+			"Crafting Menu (mod)",
+			"Pinned Recipes Page Left",
+			"Pinned Recipes Page Right",
         },
 
         DEVICE_TITLE = "Controls",
@@ -11151,6 +11449,7 @@ STRINGS.UI =
         CHOICEAMTDAY = "Amount of Day",
         CHOICEMISC = "World",
         CHOICEGLOBAL = "Global",
+        CHOICEEVENTS = "Events",
         CHOICESURVIVORS = "Survivors",
         CHOICEGIANTS = "Giants",
 
@@ -11282,7 +11581,7 @@ STRINGS.UI =
             DEFAULT = "Auto",
             CARNIVAL = "Midsummer Cawnival",
             HALLOWED_NIGHTS = "Hallowed Nights",
-            WINTERS_FEAST = "Winters Feast",
+            WINTERS_FEAST = "Winter's Feast",
             YOTG = "Year of the Gobbler",
             YOTV = "Year of the Varg",
             YOTP = "Year of the Pig King",
@@ -11290,6 +11589,20 @@ STRINGS.UI =
             YOTB = "Year of the Beefalo",
 			YOT_CATCOON = "Year of the Catcoon",
         },
+    },
+
+	SPECIAL_EVENT_NAMES =
+    {
+        MULTIPLE_EVENTS = "Special Events",
+        CROW_CARNIVAL = "Midsummer Cawnival",
+        HALLOWED_NIGHTS = "Hallowed Nights",
+        WINTERS_FEAST = "Winter's Feast",
+        YEAR_OF_THE_GOBBLER = "Year of the Gobbler",
+        YEAR_OF_THE_VARG = "Year of the Varg",
+        YEAR_OF_THE_PIG = "Year of the Pig King",
+        YEAR_OF_THE_CARRAT = "Year of the Carrat",
+        YEAR_OF_THE_BEEFALO = "Year of the Beefalo",
+		YEAR_OF_THE_CATCOON = "Year of the Catcoon",
     },
 
     SAVELOAD =

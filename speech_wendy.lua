@@ -65,6 +65,11 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "If we play now, they won't find a place to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "If we play more, Abigail will get tired.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "That belongs to Warly.",
+			SHADOWMAGIC = "Do you want me to read you a story, Abigail?",
+		},
         COOK =
         {
             GENERIC = "Oh. No one ever taught me to cook.",
@@ -342,6 +347,13 @@ return{
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "I'm always lacking something, aren't I...",
+		NO_TECH = "I don't know how. I'm sorry.",
+		NO_STATION = "I can't.",
+	},
 
 	ACTIONFAIL_GENERIC = "I can't do anything right.",
 	ANNOUNCE_BOAT_LEAK = "Our boat weeps salty tears.",
@@ -2784,6 +2796,8 @@ return{
 			BURNT = "Now it doesn't remind me of anything.",
 		},
 		WARG = "A true bastion of evil.",
+        WARGLET = "A beast of gnashing teeth and fury.",
+        
 		WASPHIVE = "They hide in their fortress of hate.",
 		WATERBALLOON = "At any moment it could pop and spill its guts.",
 		WATERMELON = "It's mostly water. What's the big deal?",
@@ -4295,6 +4309,7 @@ return{
 
         DUMBBELL = "Oh. It's very heavy.",
         DUMBBELL_GOLDEN = "It's almost as heavy as my heart.",
+		DUMBBELL_MARBLE = "We all carry a great weight. His seems... a bit more literal, though.",
         DUMBBELL_GEM = "Who would choose to carry such a burden...",
         POTATOSACK = "Large enough to hold a corpse... or a few dozen potatoes.",
 

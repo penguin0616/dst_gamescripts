@@ -420,21 +420,41 @@ function ErodeCB(inst, erode_time, cb, restore)
     end)
 end
 
-function ApplySpecialEvent(event)
-    if event ~= nil and event ~= "default" then
-        WORLD_SPECIAL_EVENT = event
-		print("Overriding World Event to: " .. tostring(event))
-    end
-
-    --LOST tech level when event is not active
+local function ApplyEvent(event)
     for k, v in pairs(SPECIAL_EVENTS) do
-        if v ~= SPECIAL_EVENTS.NONE then
+        if v == event and v ~= SPECIAL_EVENTS.NONE then
             local tech = TECH[k]
             if tech ~= nil then
-                tech.SCIENCE = v == WORLD_SPECIAL_EVENT and 0 or 10
+                tech.SCIENCE = 0
             end
         end
     end
+end
+
+function ApplySpecialEvent(event)
+    if event == nil then
+        return
+    end
+
+    if event ~= "default" then
+        WORLD_SPECIAL_EVENT = event
+        print("Overriding World Event to: " .. tostring(event))
+    end
+
+    --LOST tech level when event is not active
+    ApplyEvent(WORLD_SPECIAL_EVENT)
+end
+
+function ApplyExtraEvent(event)
+    if event == nil or event == "default" or event == SPECIAL_EVENTS.NONE then
+        return
+    end
+
+    WORLD_EXTRA_EVENTS[event] = true
+    print("Adding extra World Event: " .. tostring(event))
+
+    --LOST tech level when event is not active
+    ApplyEvent(event)
 end
 
 local inventoryItemAtlasLookup = {}

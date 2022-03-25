@@ -307,6 +307,10 @@ local function OnWorkFinished(inst, worker)
     end
     inst.components.lootdropper:DropLoot()
     inst.components.inventory:DropEverything(true)
+
+    local fx = SpawnPrefab("collapse_small")
+    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    fx:SetMaterial("metal")
     inst:Remove()
 end
 

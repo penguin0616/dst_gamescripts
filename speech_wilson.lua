@@ -75,6 +75,11 @@ return {
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "There aren't a lot of places around for them to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I think that's enough for one day.",
 		},
+		OPEN_CRAFTING = 
+		{
+            PROFESSIONALCHEF = "I'm not a fancy enough chef for that.",
+			SHADOWMAGIC = "That's not science.",
+		},
         COOK =
         {
             GENERIC = "I can't cook right now.",
@@ -352,6 +357,13 @@ return {
             FULL = "only_used_by_wolfang",
         },
     },
+
+	ANNOUNCE_CANNOT_BUILD =
+	{
+		NO_INGREDIENTS = "It looks like I'm missing some important components.",
+		NO_TECH = "This will need more scientific research!",
+		NO_STATION = "I can't make it right now.",
+	},
 
 	ACTIONFAIL_GENERIC = "I can't do that.",
 	ANNOUNCE_BOAT_LEAK = "We're taking on a lot of water.",
@@ -2790,6 +2802,8 @@ return {
 			BURNT = "It's out of style now.",
 		},
 		WARG = "You might be something to reckon with, big dog.",
+        WARGLET = "It's going to be one of those days...",
+        
 		WASPHIVE = "I think those bees are mad.",
 		WATERBALLOON = "What a scientific marvel!",
 		WATERMELON = "Sticky sweet.",
@@ -4301,6 +4315,7 @@ return {
 
         DUMBBELL = "I usually let my mind do all the heavy lifting.",
         DUMBBELL_GOLDEN = "It's worth its weight in gold.",
+		DUMBBELL_MARBLE = "I've trained my brain to be the strongest muscle in my body.",
         DUMBBELL_GEM = "I'll conquer this weight with the power of-- ACK! My spine!!",
         POTATOSACK = "It's either filled with potato-shaped rocks or rock-shaped potatoes.",
 
