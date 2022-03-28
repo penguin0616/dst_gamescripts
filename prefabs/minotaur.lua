@@ -437,7 +437,7 @@ end
 local function OnChangeToObstacle(inst)
 
     inst.Physics:SetMass(100)
-    inst.Physics:SetCollisionGroup(COLLISION.CHARACTERS)
+    inst.Physics:SetCollisionGroup(COLLISION.GIANTS)
     inst.Physics:ClearCollisionMask()
     inst.Physics:CollidesWith(COLLISION.WORLD)
     inst.Physics:CollidesWith(COLLISION.OBSTACLES)
@@ -509,8 +509,9 @@ local function fn()
 
     inst.physicsradius = 2.2
 
-    MakeCharacterPhysics(inst, 100, inst.physicsradius)
-    inst.Physics:SetCapsule(2, 4) --2.2
+    MakeGiantCharacterPhysics(inst, 1000, inst.physicsradius)
+    inst.Physics:SetCapsule(1.75, 4) -- update inst.maxradius if you change this
+	inst:SetPhysicsRadiusOverride(2.2)
 
     inst.AnimState:SetBank("rook")
     inst.AnimState:SetBuild("rook_rhino")
@@ -582,7 +583,7 @@ local function fn()
     inst:ListenForEvent("death", OnDeath)
    -- inst:ListenForEvent("collision_stun", OnCollisionStun)
 
-    inst.maxradius = 2.2
+    inst.maxradius = 1.75
         
 
     inst.SpawnShadowFX = SpawnShadowFX

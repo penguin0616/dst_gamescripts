@@ -427,8 +427,6 @@ function DamLevDist( a, b, limit )
     return d[ id(a_len,b_len) ]
 end
 
---use "string_search_subwords" which is the same call but in c++ so its much faster
---preserved for modders, so people can see what this does easily.
 local search_subwords = function( search, str, sub_len, limit )
     local str_len = string.len(str)
 
@@ -442,4 +440,13 @@ local search_subwords = function( search, str, sub_len, limit )
     end
 
     return false
+end
+
+function do_search_subwords(...)
+    --BAH it crashes on OSX :(
+    if PLATFORM == "OSX_STEAM" then
+        return search_subwords(...)
+    else
+        return string_search_subwords(...)
+    end
 end

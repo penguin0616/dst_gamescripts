@@ -1496,6 +1496,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_slurtle_armor.zip"),
         Asset("ANIM", "anim/player_staff.zip"),
         Asset("ANIM", "anim/player_cointoss.zip"),
+        Asset("ANIM", "anim/player_spooked.zip"),
         Asset("ANIM", "anim/player_hit_darkness.zip"),
         Asset("ANIM", "anim/player_hit_spike.zip"),
         Asset("ANIM", "anim/player_lunge.zip"),
@@ -1621,6 +1622,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         "superjump_fx",
 		"washashore_puddle_fx",
 		"spawnprotectionbuff",
+        "battreefx",
 
         -- Player specific classified prefabs
         "player_classified",

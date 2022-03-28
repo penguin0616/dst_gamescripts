@@ -677,8 +677,8 @@ Recipe2("carnivalgame_feedchicks_kit",		{Ingredient("goldnugget", 1), Ingredient
 Recipe2("carnivalgame_herding_kit",			{Ingredient("goldnugget", 1), Ingredient("seeds", 3)},													TECH.CARNIVAL_HOSTSHOP_THREE,		{nounlock=true, no_deconstruction=true, actionstr="CARNIVAL_HOSTSHOP", sg_state="give"})
 
 -- HALLOWED_NIGHTS
-Recipe2("madscience_lab",				{Ingredient("cutstone", 2), Ingredient("transistor", 2)},																TECH.HALLOWED_NIGHTS,			{placer="madscience_lab_placer"})
-Recipe2("candybag",						{Ingredient("cutgrass", 6)},																							TECH.HALLOWED_NIGHTS)
+Recipe2("madscience_lab",				{Ingredient("cutstone", 2), Ingredient("transistor", 2)},																TECH.HALLOWED_NIGHTS,			{placer="madscience_lab_placer", hint_msg = "NEEDSHALLOWED_NIGHTS"})
+Recipe2("candybag",						{Ingredient("cutgrass", 6)},																							TECH.HALLOWED_NIGHTS,			{hint_msg = "NEEDSHALLOWED_NIGHTS"})
 Recipe2("halloween_experiment_bravery", {Ingredient("froglegs", 1), Ingredient("goldnugget", 1), Ingredient(CHARACTER_INGREDIENT.SANITY, 10)},					TECH.MADSCIENCE_ONE,			{nounlock = true, manufactured=true, actionstr="MADSCIENCE", image ="halloweenpotion_bravery_small.tex"})
 Recipe2("halloween_experiment_health", 	{Ingredient("mosquito", 1), Ingredient("red_cap", 1), Ingredient(CHARACTER_INGREDIENT.SANITY, 10)},						TECH.MADSCIENCE_ONE,			{nounlock = true, manufactured=true, actionstr="MADSCIENCE", image ="halloweenpotion_health_small.tex"})
 Recipe2("halloween_experiment_sanity", 	{Ingredient("crow", 1), Ingredient("petals_evil", 1), Ingredient(CHARACTER_INGREDIENT.SANITY, 10)},						TECH.MADSCIENCE_ONE,			{nounlock = true, manufactured=true, actionstr="MADSCIENCE", image ="halloweenpotion_sanity_small.tex"})
@@ -687,10 +687,10 @@ Recipe2("halloween_experiment_moon", 	{Ingredient("moonbutterflywings", 1), Ingr
 Recipe2("halloween_experiment_root", 	{Ingredient("batwing", 1), Ingredient("livinglog", 1), Ingredient(CHARACTER_INGREDIENT.SANITY, 20)},					TECH.MADSCIENCE_ONE,			{nounlock = true, manufactured=true, actionstr="MADSCIENCE", image ="livingtree_root.tex"})
 
 -- WINTERSFEAST
-Recipe2("wintersfeastoven",				{Ingredient("cutstone", 1), Ingredient("marble", 1), Ingredient("log", 1)},												TECH.WINTERS_FEAST,				{placer="wintersfeastoven_placer"})
-Recipe2("table_winters_feast",			{Ingredient("boards", 1), Ingredient("beefalowool", 1)},																TECH.WINTERS_FEAST,				{placer="table_winters_feast_placer", min_spacing=2.8, testfn = function(pt) return TheWorld.Map:GetPlatformAtPoint(pt.x, 0, pt.z, 0.5) == nil end})
-Recipe2("winter_treestand",				{Ingredient("poop", 2), Ingredient("boards", 1)},																		TECH.WINTERS_FEAST,				{placer="winter_treestand_placer" })
-Recipe2("giftwrap",						{Ingredient("papyrus", 1), Ingredient("petals", 1)},																	TECH.WINTERS_FEAST,				{numtogive=4})
+Recipe2("wintersfeastoven",				{Ingredient("cutstone", 1), Ingredient("marble", 1), Ingredient("log", 1)},												TECH.WINTERS_FEAST,				{placer="wintersfeastoven_placer", hint_msg = "NEEDSWINTERS_FEAST"})
+Recipe2("table_winters_feast",			{Ingredient("boards", 1), Ingredient("beefalowool", 1)},																TECH.WINTERS_FEAST,				{placer="table_winters_feast_placer", hint_msg = "NEEDSWINTERS_FEAST", min_spacing=2.8, testfn = function(pt) return TheWorld.Map:GetPlatformAtPoint(pt.x, 0, pt.z, 0.5) == nil end})
+Recipe2("winter_treestand",				{Ingredient("poop", 2), Ingredient("boards", 1)},																		TECH.WINTERS_FEAST,				{placer="winter_treestand_placer", hint_msg = "NEEDSWINTERS_FEAST" })
+Recipe2("giftwrap",						{Ingredient("papyrus", 1), Ingredient("petals", 1)},																	TECH.WINTERS_FEAST,				{numtogive=4, hint_msg = "NEEDSWINTERS_FEAST"})
 
 -- WINTERSFEAST oven
 Recipe2("wintercooking_berrysauce",		{Ingredient("wintersfeastfuel", 1), Ingredient("mosquitosack", 2)},														TECH.WINTERSFEASTCOOKING_ONE,	{nounlock = true, manufactured=true, actionstr="COOK", image = "berrysauce.tex"})
@@ -713,12 +713,12 @@ Recipe2("wintercooking_tamales",		{Ingredient("wintersfeastfuel", 1), Ingredient
 Recipe2("wintercooking_tourtiere",		{Ingredient("wintersfeastfuel", 1), Ingredient("acorn", 1), Ingredient("pinecone", 1)},									TECH.WINTERSFEASTCOOKING_ONE,	{nounlock = true, manufactured=true, actionstr="COOK", image = "tourtiere.tex"})
 
 -- YOT Events
-Recipe2("perdshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTG,						{placer="perdshrine_placer"})
-Recipe2("wargshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTV,						{placer="wargshrine_placer"})
-Recipe2("pigshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTP,						{placer="pigshrine_placer"})
-Recipe2("yotc_carratshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTC,						{placer="yotc_carratshrine_placer"})
-Recipe2("yotb_beefaloshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTB,						{placer="yotb_beefaloshrine_placer"})
-Recipe2("yot_catcoonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOT_CATCOON,				{placer="yot_catcoonshrine_placer"})
+Recipe2("perdshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTG,						{placer="perdshrine_placer", hint_msg = "NEEDSYOTG"})
+Recipe2("wargshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTV,						{placer="wargshrine_placer", hint_msg = "NEEDSYOTV"})
+Recipe2("pigshrine",					{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTP,						{placer="pigshrine_placer", hint_msg = "NEEDSYOTP"})
+Recipe2("yotc_carratshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTC,						{placer="yotc_carratshrine_placer", hint_msg = "NEEDSYOTC"})
+Recipe2("yotb_beefaloshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOTB,						{placer="yotb_beefaloshrine_placer", hint_msg = "NEEDSYOTB"})
+Recipe2("yot_catcoonshrine",			{Ingredient("goldnugget", 4), Ingredient("boards", 2)},																	TECH.YOT_CATCOON,				{placer="yot_catcoonshrine_placer", hint_msg = "NEEDSYOTCATCOON"})
 
 
 ----CONSTRUCTION PLANS----

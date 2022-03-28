@@ -104,6 +104,11 @@ local Mightiness = Class(function(self, inst)
 
     self.inst:ListenForEvent("hungerdelta", function(_, data) self:OnHungerDelta(data) end)
     self.inst:ListenForEvent("invincibletoggle", function(_, data) self:OnSetInvincible(data) end)
+
+	
+	self.inst:ListenForEvent("mounted", function(s) s:ApplyAnimScale("mightiness", 1) end)
+	self.inst:ListenForEvent("dismounted", function(s) s:ApplyAnimScale("mightiness", s.components.mightiness:GetScale()) end)
+
 end,
 nil,
 {
@@ -320,7 +325,7 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
     end
 
 
-    if not self.inst:HasTag("ingym") then
+    if not self.inst:HasTag("ingym") and not self.inst.components.rider:IsRiding() then
         self.inst:ApplyAnimScale("mightiness", state_data.scale)
     end
     

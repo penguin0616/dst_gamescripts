@@ -1682,7 +1682,7 @@ function PlayerController:GetActionButtonAction(force_target)
                 if v ~= self.inst and v.entity:IsVisible() and CanEntitySeeTarget(self.inst, v) then
                     local action = GetPickupAction(self, v, tool)
                     -- If we're holding the action button down, only do the action if it's the same as the original clicked action
-                    if action ~= nil and not (self.actionholding and action ~= self.lastclickedaction.action) then
+                    if action ~= nil and (self.lastclickedaction == nil or not (self.actionholding and action ~= self.lastclickedaction.action)) then
                         return BufferedAction(self.inst, v, action, action ~= ACTIONS.SMOTHER and tool or nil)
                     end
                 end
@@ -2435,7 +2435,7 @@ function PlayerController:OnUpdate(dt)
                             else
                                 self:DoAttackButton()
                             end
-                        elseif not TheInput:IsControlPressed(CONTROL_PRIMARY) and (self.lastheldaction == nil or self.lastheldaction.action == ACTIONS.ATTACK) then
+                        elseif attack_control ~= CONTROL_PRIMARY and (attack_control ~= CONTROL_ATTACK or buffaction == nil) then
                             self:OnControl(attack_control, true)
                         end
                     end

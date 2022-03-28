@@ -1145,16 +1145,16 @@ local events =
     end),
 
     EventHandler("ontalk", function(inst, data)
-        if inst.sg:HasStateTag("idle") and not inst.sg:HasStateTag("notalking") then
-            if not inst:HasTag("mime") then
-                inst.sg:GoToState("talk", data.noanim)
-            elseif not inst.components.inventory:IsHeavyLifting() then
-                --Don't do it even if mounted!
-                inst.sg:GoToState("mime")
-            end
+		if inst.sg:HasStateTag("idle") and not inst.sg:HasStateTag("notalking") then
+			if not inst:HasTag("mime") then
+				inst.sg:GoToState("talk", data.noanim)
+			elseif not inst.components.inventory:IsHeavyLifting() then
+				--Don't do it even if mounted!
+				inst.sg:GoToState("mime")
+			end
 		elseif data.duration ~= nil and not data.noanim then
 			inst.sg.mem.queuetalk_timeout = data.duration + GetTime()
-        end
+		end
     end),
 
     EventHandler("powerup_wurt",
@@ -2405,13 +2405,15 @@ local states =
 			if inst.sg.mem.queuetalk_timeout ~= nil then
 				local raminging_talk_time = inst.sg.mem.queuetalk_timeout - GetTime()
 				inst.sg.mem.queuetalk_timeout = nil
-				if raminging_talk_time > 0.75 then
-					if not inst:HasTag("mime") then
-						inst.sg:GoToState("talk")
-						return
-					elseif not inst.components.inventory:IsHeavyLifting() then
-						inst.sg:GoToState("mime")
-						return
+				if not inst:HasTag("ignoretalking") then
+					if raminging_talk_time > 0.75 then
+						if not inst:HasTag("mime") then
+							inst.sg:GoToState("talk")
+							return
+						elseif not inst.components.inventory:IsHeavyLifting() then
+							inst.sg:GoToState("mime")
+							return
+						end
 					end
 				end
 			end

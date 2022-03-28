@@ -347,7 +347,7 @@ local function builderonbuilt(inst, builder)
     if prototyper ~= nil and prototyper.CreateItem ~= nil then
         prototyper:CreateItem("chesspiece_"..PIECES[inst.pieceid].name)
     else
-        local piece = SpawnPrefab("chesspiece_"..PIECES[inst.pieceid].name)
+        local piece = SpawnPrefab("chesspiece_"..PIECES[inst.pieceid].name.."_marble")
         piece.Transform:SetPosition(builder.Transform:GetWorldPosition())
     end
 

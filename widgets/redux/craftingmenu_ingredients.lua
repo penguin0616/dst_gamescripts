@@ -77,7 +77,7 @@ function CraftingMenuIngredients:SetRecipe(recipe)
             ing:SetPosition(offset, 0)
             offset = offset + w + half_div
             table.insert(ingredient_widgets, ing)
-            if not has and self.hint_tech_ingredient == nil then
+            if not has and self.hint_tech_ingredient == nil and not builder:IsFreeBuildMode() then
                 self.hint_tech_ingredient = v.type:sub(1, -10):upper()
             end
         end

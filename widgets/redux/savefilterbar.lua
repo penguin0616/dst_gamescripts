@@ -86,10 +86,10 @@ local search_match = function( search, str )
     local sub_len = string.len(search)
 
     if sub_len > 3 then
-        if string_search_subwords( search, str, sub_len, 1 ) then return true end
+        if do_search_subwords( search, str, sub_len, 1 ) then return true end
 
         --Try again with 1 fewer character
-        if string_search_subwords( search, str, sub_len - 1, 1 ) then return true end
+        if do_search_subwords( search, str, sub_len - 1, 1 ) then return true end
     end
 
     return false

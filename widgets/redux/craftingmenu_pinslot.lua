@@ -287,7 +287,7 @@ function PinSlot:Refresh()
 		if meta.build_state == "buffered" then
 			self.craft_button:SetTextures(atlas, "pinslot_bg_buffered.tex", nil, nil, nil, "pinslot_bg_buffered.tex")
 			self.fg:Hide()
-		elseif meta.build_state == "prototype" then
+		elseif meta.build_state == "prototype" and meta.can_build then
 			self.craft_button:SetTextures(atlas, "pinslot_bg_prototype.tex", nil, nil, nil, "pinslot_bg_prototype.tex")
 			self.fg:SetTexture(atlas, "pinslot_fg_prototype.tex")
 			self.fg:Show()

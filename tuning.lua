@@ -4602,7 +4602,7 @@ function Tune(overrides)
         KITCOON_WALK_SPEED = 2,
         KITCOON_RUN_SPEED = 6,
 
-		KITCOON_LOYALTY_MAX				= seg_time * 4, -- only used when the YOT_CATCOON is not activated
+		KITCOON_LOYALTY_MAX				= seg_time * 4, -- DEPRECATED
 		KITCOON_LOYALTY_EMOTE_CHANCE	= 0.4,
 		KITCOON_NEAR_DEN_DIST			= 10,
 
@@ -5761,6 +5761,8 @@ function Tune(overrides)
         MIGHTY_SAIL_BOOST_STRENGTH = 18,
 
 		DEFAULT_SAIL_BOOST_STRENGTH = 10,
+
+		MIGHTY_HEAVY_SPEED_MULT_BONUS = 0.45, -- DEPRECATED
 
         WOLFGANG_SANITY_DRAIN = 1.1,
         WOLFGANG_SANITY_NIGHT_DRAIN = 1.25,

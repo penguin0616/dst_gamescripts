@@ -267,7 +267,7 @@ function CraftingMenuHUD:RebuildRecipes()
 						meta.build_state = meta.can_build and "has_ingredients" or "no_ingredients"
 					elseif CanPrototypeRecipe(recipe.level, tech_trees) then
 						meta.can_build = builder:HasIngredients(recipe)
-						meta.build_state = meta.can_build and (recipe.nounlock and "has_ingredients" or "prototype") or "no_ingredients"
+						meta.build_state = recipe.nounlock and (meta.can_build and "has_ingredients" or "no_ingredients") or "prototype"
 					elseif recipe.nounlock then
 						meta.can_build = false
 						meta.build_state = "hide"
@@ -340,8 +340,32 @@ function CraftingMenuHUD:OnControl(control, down)
 	return false
 end
 
-function CraftingMenuHUD:InvNavToPin()
-	return self.pinbar:StartControllerNav()
+function GetClosestWidget(list, active_widget, dir_x, dir_y)
+    local closest = nil
+    local closest_score = nil
+
+	if active_widget ~= nil then
+		local x, y = active_widget.inst.UITransform:GetWorldPosition()
+		for k,v in pairs(list) do
+			if v ~= active_widget and v:IsVisible() then
+				local vx, vy = v.inst.UITransform:GetWorldPosition()
+				local local_dir_x, local_dir_y = vx-x, vy-y
+				if VecUtil_Dot(local_dir_x, local_dir_y, dir_x, dir_y) > 0 then
+					local score = local_dir_x * local_dir_x + local_dir_y * local_dir_y
+					if not closest or score < closest_score then
+						closest = v
+						closest_score = score
+					end
+				end
+			end
+		end
+	end
+
+    return closest, closest_score
+end
+
+function CraftingMenuHUD:InvNavToPin(inv_widget, dir_x, dir_y)
+	return GetClosestWidget(self.pinbar.pin_slots, inv_widget, dir_x, dir_y)
 end
 
 function CraftingMenuHUD:SelectPin(pin_slot)

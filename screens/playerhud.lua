@@ -59,7 +59,7 @@ local PlayerHud = Class(Screen, function(self)
     self.playeravatarpopup = nil
     self.recentgifts = nil
     self.recentgiftstask = nil
-
+	
     self.inst:ListenForEvent("continuefrompause", function() self:RefreshControllers() end, TheWorld)
     self.inst:ListenForEvent("endofmatch", function(world, data) self:ShowEndOfMatchPopup(data) end, TheWorld)
 
@@ -595,7 +595,7 @@ function PlayerHud:ClearRecentGifts()
     self.recentgifts = nil
 end
 
-function PlayerHud:RefreshControllers()
+function PlayerHud:RefreshControllers() -- this is really the event handler for "continuefrompause"
     local controller_mode = TheInput:ControllerAttached()
 	if controller_mode then
 	    TheFrontEnd:StopTrackingMouse()
@@ -621,6 +621,12 @@ function PlayerHud:RefreshControllers()
     end
 
 	self.controls.craftingmenu:RefreshControllers(controller_mode)
+	
+	if self._CraftingHintAllRecipesEnabled ~= Profile:GetCraftingHintAllRecipesEnabled() then
+		self.owner:PushEvent("refreshcrafting")
+		self._CraftingHintAllRecipesEnabled = Profile:GetCraftingHintAllRecipesEnabled()
+	end
+
 end
 
 function PlayerHud:ShowWriteableWidget(writeable, config)
@@ -660,6 +666,8 @@ function PlayerHud:SetMainCharacter(maincharacter)
     if maincharacter then
         maincharacter.HUD = self
         self.owner = maincharacter
+
+		self._CraftingHintAllRecipesEnabled = Profile:GetCraftingHintAllRecipesEnabled() -- cache the value so we can refresh the crafting menu with it changes
 
         self:CreateOverlays(self.owner)
         self.controls = self.root:AddChild(Controls(self.owner))
@@ -967,6 +975,14 @@ function PlayerHud:OnControl(control, down)
         if control == CONTROL_MAP then
             self.controls:ToggleMap()
             return true
+        elseif control == CONTROL_CANCEL then
+            if self:IsCraftingOpen() then
+                self:CloseCrafting()
+                return true
+            elseif self:IsControllerInventoryOpen() then
+                self:CloseControllerInventory()
+                return true
+            end
         elseif control == CONTROL_TOGGLE_PLAYER_STATUS then
             self:ShowPlayerStatusScreen(true)
             return true

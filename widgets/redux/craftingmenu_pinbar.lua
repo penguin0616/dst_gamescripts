@@ -149,7 +149,7 @@ function CraftingMenuPinBar:RefreshControllers(controller_mode)
 	end
 end
 
-function CraftingMenuPinBar:StartControllerNav()
+function CraftingMenuPinBar:StartControllerNav() -- GetBottomMostButton
 	local target_pin = nil
 	for i = #self.pin_slots, 1, -1 do
 		if self.pin_slots[i]:IsVisible() then

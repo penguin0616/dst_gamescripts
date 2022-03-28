@@ -4,6 +4,8 @@ local Widget = require "widgets/widget"
 local MapControls = require "widgets/mapcontrols"
 local HudCompass = require "widgets/hudcompass"
 
+local REPEAT_TIME = 0.15
+
 local MapScreen = Class(Screen, function(self, owner)
     self.owner = owner
     Screen._ctor(self, "MapScreen")
@@ -84,7 +86,7 @@ function MapScreen:OnUpdate(dt)
             self.minimap:OnZoomOut()
         end
 
-        self.repeat_time = .025
+        self.repeat_time = REPEAT_TIME * 0.5
     else
         self.repeat_time = self.repeat_time - dt
     end
@@ -164,10 +166,11 @@ function MapScreen:OnControl(control, down)
         ThePlayer.components.playercontroller:RotRight()
     elseif control == CONTROL_MAP_ZOOM_IN then
         self.minimap:OnZoomIn()
-        self.repeat_time = .025
+		print("REPEAT_TIME", REPEAT_TIME)
+        self.repeat_time = REPEAT_TIME
     elseif control == CONTROL_MAP_ZOOM_OUT then
         self.minimap:OnZoomOut()
-        self.repeat_time = .025
+        self.repeat_time = REPEAT_TIME
     else
         return false
     end

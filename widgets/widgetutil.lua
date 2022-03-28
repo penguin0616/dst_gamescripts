@@ -1,5 +1,9 @@
 
 function ShouldHintRecipe(recipetree, buildertree)
+	if Profile:GetCraftingHintAllRecipesEnabled() then
+		return true;
+	end
+
     for k, v in pairs(recipetree) do
         local v1 = buildertree[tostring(k)]
         if v ~= nil and v1 ~= nil and v > v1 + 1 then

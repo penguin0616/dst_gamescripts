@@ -26,6 +26,7 @@ local controls_ui = {
 local show_graphics = PLATFORM ~= "NACL" and IsNotConsole() and not IsSteamDeck() 
 
 local enableDisableOptions = { { text = STRINGS.UI.OPTIONS.DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.ENABLED, data = true } }
+local craftingHintOptions = { { text = STRINGS.UI.OPTIONS.DEFAULT, data = false }, { text = STRINGS.UI.OPTIONS.CRAFTING_HINTALL_ENABLED, data = true } }
 local steamCloudLocalOptions = { { text = STRINGS.UI.OPTIONS.LOCAL_SAVES, data = false }, { text = STRINGS.UI.OPTIONS.STEAM_CLOUD_SAVES, data = true } }
 local integratedbackpackOptions = { { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_ENABLED, data = true } }
 local enableScreenFlashOptions = { { text = STRINGS.UI.OPTIONS.DEFAULT, data = 1 }, { text = STRINGS.UI.OPTIONS.DIM, data = 2 } , { text = STRINGS.UI.OPTIONS.DIMMEST, data = 3 } }
@@ -262,6 +263,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		consoleautopause = Profile:GetConsoleAutopauseEnabled(),
 		craftingautopause = Profile:GetCraftingAutopauseEnabled(),
 		craftingmenubufferedbuildautoclose = Profile:GetCraftingMenuBufferedBuildAutoClose(),
+		craftinghintallrecipes = Profile:GetCraftingHintAllRecipesEnabled(),
 		waltercamera = Profile:IsCampfireStoryCameraEnabled(),
 		loadingtips = Profile:GetLoadingTipsOption(),
 		defaultcloudsaves = Profile:GetDefaultCloudSaves(),
@@ -572,6 +574,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetAutopauseEnabled( self.options.autopause )
 	Profile:SetConsoleAutopauseEnabled( self.options.consoleautopause )
 	Profile:SetCraftingMenuBufferedBuildAutoClose( self.options.craftingmenubufferedbuildautoclose )
+	Profile:SetCraftingHintAllRecipesEnabled( self.options.craftinghintallrecipes )
 	Profile:SetCraftingAutopauseEnabled( self.options.craftingautopause )
 	Profile:SetLoadingTipsOption( self.options.loadingtips )
 	Profile:SetCampfireStoryCameraEnabled( self.options.waltercamera )
@@ -692,6 +695,7 @@ function OptionsScreen:Apply()
 	Profile:SetConsoleAutopauseEnabled( self.working.consoleautopause )
 	Profile:SetCraftingAutopauseEnabled( self.working.craftingautopause )
 	Profile:SetCraftingMenuBufferedBuildAutoClose( self.working.craftingmenubufferedbuildautoclose )
+	Profile:SetCraftingHintAllRecipesEnabled( self.working.craftinghintallrecipes )
 	Profile:SetLoadingTipsOption( self.working.loadingtips )
 	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
 	
@@ -1730,6 +1734,14 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
+	self.craftinghintallrecipesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CRAFTINGHINTALLRECIPES, craftingHintOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGHINTALLRECIPES)
+	self.craftinghintallrecipesSpinner.OnChanged =
+		function( _, data )
+			self.working.craftinghintallrecipes = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
 	if IsSteam() then
 		self.defaultcloudsavesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DEFAULTCLOUDSAVES, steamCloudLocalOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DEFAULTCLOUDSAVES)
 		self.defaultcloudsavesSpinner.OnChanged =
@@ -1754,7 +1766,8 @@ function OptionsScreen:_BuildAdvancedSettings()
 	table.insert( self.right_spinners, self.animatedHeadsSpinner )
 	table.insert( self.right_spinners, self.consoleautopauseSpinner )
 	table.insert( self.right_spinners, self.craftingmenubufferedbuildautocloseSpinner )
-
+	table.insert( self.right_spinners, self.craftinghintallrecipesSpinner )
+	
 	self.grid_advanced:UseNaturalLayout()
 	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
 
@@ -2039,6 +2052,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.consoleautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.consoleautopause ) )
 	self.craftingautopauseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingautopause ) )
 	self.craftingmenubufferedbuildautocloseSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftingmenubufferedbuildautoclose ) )
+	self.craftinghintallrecipesSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.craftinghintallrecipes ) )
 	self.loadingtipsSpinner:SetSelectedIndex( self.working.loadingtips or LOADING_SCREEN_TIP_OPTIONS.ALL )
 	if IsSteam() then
 		self.defaultcloudsavesSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.defaultcloudsaves ) )

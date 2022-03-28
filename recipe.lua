@@ -131,6 +131,7 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
 	self.dropitem      = more_data.dropitem
 
 	self.actionstr     = more_data.actionstr
+	self.hint_msg      = more_data.hint_msg
 
 	self.manufactured = more_data.manufactured -- if true, then it is up to the crafting station to handle creating the item, not the builder component
 

@@ -1601,7 +1601,7 @@ function orangestaff_clear_fn(inst)
     inst:RemoveEventCallback("unequipped", cane_unequipped)
     inst:RemoveEventCallback("onremove", cane_unequipped)
 
-    inst.components.blinkstaff:SetFX(nil, nil)
+    inst.components.blinkstaff:SetFX("sand_puff_large_front", "sand_puff_large_back")
     inst.components.blinkstaff:ResetSoundFX()
 end
 

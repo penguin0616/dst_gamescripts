@@ -50,7 +50,8 @@ local function DoSpawnIceSpike(inst, x, z)
             if ent ~= inst then
                 targets[ent.GUID] = true
                 if inst.components.combat:CanTarget(ent) and not ent.deerclopsattacked then
-                    ent.components.combat:GetAttacked(inst, TUNING.DEERCLOPS_DAMAGE*TUNING.DEERCLOPS_AOE_SCALE )
+                    local damage  = (TUNING.DEERCLOPS_DAMAGE*TUNING.DEERCLOPS_AOE_SCALE) * (ent:HasTag("player") and inst.components.combat.playerdamagepercent and inst.components.combat.playerdamagepercent or 1)
+                    ent.components.combat:GetAttacked(inst, damage )
                 end
                 ent.deerclopsattacked = true
                 ent:DoTaskInTime(ICESPAWNTIME +0.03,function() ent.deerclopsattacked = nil end)

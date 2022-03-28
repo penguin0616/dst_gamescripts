@@ -162,7 +162,7 @@ STRINGS =
         wurt = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         walter = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         wanda = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
-        random = "\nSelect a random character",
+        random = "\nSelect a random survivor",
     },
 
     QUAGMIRE_CHARACTER_DESCRIPTIONS =
@@ -187,7 +187,7 @@ STRINGS =
         wurt = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         walter = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         wanda = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
-        random = "\nSelect a random character",
+        random = "\nSelect a random survivor",
     },
 
     CHARACTER_ABOUTME =
@@ -6034,23 +6034,53 @@ STRINGS.UI =
             QUAGMIRE_TRADER_MUM = "Earn coins to trade!",
             QUAGMIRE_TRADER_KID = "Earn coins to trade!",
         },
+		NEEDSCHARACTER = "Another survivor knows how to craft this.",
 		-- based on TUNING.PROTOTYPER_TREES
         NEEDSTUFF = "Find ingredients \nto craft!",
-        NEEDSCIENCEMACHINE = "Use a science machine to build a prototype!",
-        NEEDALCHEMYENGINE = "Use an alchemy engine to build a prototype!",
-        NEEDSHADOWMANIPULATOR = "Use a shadow manipulator to build a prototype!",
+        NEEDSTUFF_PROTOTYPE = "Find ingredients \nto prototype!",
+        NEEDSCIENCEMACHINE = "Use a Science Machine to build a prototype!",
+        NEEDALCHEMYENGINE = "Use an Alchemy Engine to build a prototype!",
+        NEEDSHADOWMANIPULATOR = "Use a Shadow Manipulator to build a prototype!",
         NEEDPRESTIHATITATOR = "Use a Prestihatitator to build a prototype!",
-        NEEDSANCIENT_FOUR = "It seems that this altar is not fully functional!",
+		NEEDSANCIENTALTAR_LOW = "Find an ancient structure to craft this at.",
+        NEEDSANCIENT_FOUR = "Find a fully intact ancient structure to craft this at.",
         NEEDSTECH =
         {
-            SCULPTING = "Put stone on the wheel to create a Sculpting Block!",
-
+            SCULPTING = "Put refined stone on the wheel to create a sculpture!",
         },
         NEEDCARNIVAL_HOSTSHOP_PLAZA = "Purchase the Cawnival Sapling to unlock!",
         NEEDSSPIDERFRIENDSHIP = "Make friends with spiders to learn a recipe!",
         NEEDSFISHING = "Use a Tackle Receptacle to build a prototype!",
+        NEEDSTURFCRAFTING = "Use a Terra Firma Tamper to build a prototype!",
+        NEEDSCRITTERLAB = "Find the Rock Den to adopt this!",
         NEEDSSEAFARING_STATION = "Use a Think Tank to build a prototype!",
-        CANTRESEARCH = "Some things are unknowable.",
+        NEEDSFOODPROCESSING = "Make a Portable Grinding Mill to get cooking!",
+        NEEDSHERMITCRABSHOP_L1 = "Find someone friendly enough to make this trade!",
+        NEEDSHERMITCRABSHOP_L2 = "Find someone friendly enough to make this trade!",
+        NEEDSHERMITCRABSHOP_L3 = "Find someone friendly enough to make this trade!",
+        NEEDSHERMITCRABSHOP_L4 = "Find someone friendly enough to make this trade!",
+
+		NEEDSYOTG = "Available during Year of the Gobbler!",
+		NEEDSYOTV = "Available during Year of the Varg!",
+		NEEDSYOTP = "Available during Year of the Pig King!",
+		NEEDSYOTC = "Available during Year of the Carrat!",
+		NEEDSYOTB = "Available during Year of the Beefalo!",
+		NEEDSYOTCATCOON = "Available during Year of the Catcoon!",
+		NEEDSHALLOWED_NIGHTS = "Available during Hallowed Nights!",
+		NEEDSWINTERS_FEAST = "Available during Winter's Feast!",
+
+        NEEDSPERDSHRINE = "Make an offering at the Gobbler Shrine!",
+        NEEDSWARGSHRINE = "Make an offering at the Varg Shrine!",
+        NEEDSPIGSHRINE = "Make an offering at the Pig Shrine!",
+        NEEDSBEEFSHRINE = "Make an offering at the Beefalo Shrine!",
+        NEEDSCATCOONSHRINE = "Make an offering at the Catcoon Shrine!",
+        NEEDSMADSCIENCE = "Brew at the Mad Scientist Lab!",
+		NEEDSWINTERSFEASTCOOKING = "Cook this festive meal in the Masonry Oven!",
+        NEEDSCARNIVAL_PRIZESHOP = "Purcase at the Cawnival's Prize Booth!",
+        NEEDSCARNIVAL_HOSTSHOP_WANDER = "Find Corvus Goodfeather during the Cawnival!",
+        NEEDSCARNIVAL_HOSTSHOP_PLAZA = "Decorate a Cawnival Tree during the Cawnival!",
+
+        CANTRESEARCH = "Some things must be discovered on your own.",
         DEFAULT = "Classic",
     },
 
@@ -7024,7 +7054,7 @@ STRINGS.UI =
 		CRAFTING_STATION = "All Crafting Stations",
 		SPECIAL_EVENT = "Special Event",
 		MODS = "Modded Items",
-		CHARACTER = "Character Items",
+		CHARACTER = "Survivor Items",
 		TOOLS = "Tools",
 		LIGHT = "Light Sources",
 		PROTOTYPERS = "Prototypers & Stations",
@@ -7146,7 +7176,7 @@ STRINGS.UI =
         AGE_DAYS = "Days",
         CLOSE = "Close",
         STEAM = "View Profile",
-        CHOOSING = "is choosing their character",
+        CHOOSING = "is choosing their survivor",
     },
 
     DRESSUP_AVATAR =
@@ -7182,6 +7212,7 @@ STRINGS.UI =
         NO = "No",
 		DIM = "Dim",
 		DIMMEST = "Dimmest",
+		CRAFTING_HINTALL_ENABLED = "All Recipes",
         BACKTITLE = "Lose Changes?",
         BACKBODY = "Do you want to throw out your changes?",
         BACKTITLE_PS4 = "Wait!",
@@ -7221,7 +7252,8 @@ STRINGS.UI =
         AUTOPAUSE = "Auto-Pause:",
         CONSOLEAUTOPAUSE = "Console Auto-Pause:",
         CRAFTINGAUTOPAUSE = "Crafting Auto-Pause:",
-		CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Crafting Auto-Close",
+		CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Crafting Auto-Close:",
+		CRAFTINGHINTALLRECIPES = "Crafting Preview:",
         DEFAULTCLOUDSAVES = "Default Save Type:",
 		INTEGRATEDBACKPACK_DISABLED = "Separated",
 		INTEGRATEDBACKPACK_ENABLED = "Integrated",
@@ -7300,6 +7332,7 @@ STRINGS.UI =
             AUTOPAUSE = "When you are the only player in the world, this will pause the game while you are in the ingame menus, crafting, or viewing the cookbook or plant registry. If there are other players in the world, only the server admin will have permissions to pause the game.",
             CRAFTINGAUTOPAUSE = "When you are the only player in the world, this will pause the game while the crafting menu is open.",
 			CRAFTINGMENUBUFFEREDBUILDAUTOCLOSE = "Closes the crafting menu when building a structure that is placed in the world.",
+			CRAFTINGHINTALLRECIPES = "Preview the next available research tier or show all locked recipes.",
             DATACOLLECTION = "We collect metrics and telemetry on Don't Starve Together, including how long and how often you play. This information helps us troubleshoot the game, provide rewards, and improve your experience. Refer to https://www.klei.com/privacy-policy for more information.",
             LOADING_TIPS = "Learn more about the lore and the gameplay of Don't Starve while your world loads.",
 			TARGETLOCKING = "Focus on one target at a time.",
@@ -7444,7 +7477,6 @@ STRINGS.UI =
         TIP_HOLD_ACTION = "Hold {action} to automatically pick up nearby items and perform actions. Just make sure you're holding the right tool for the job!",
         TIP_ROTATE_CAMERA = "Press {rotateleft} & {rotateright} to rotate your view of the world.",
         TIP_SHOW_MAP = "Press {map} to take a quick glance at your map.",
-        TIP_PLAYER_STATUS = "Keep tabs on your fellow Survivors by pressing the {playerstatus} key.",
 
         TIP_ENDLESS_MODE = "When creating a new world, switch the Game Mode to Endless to allow you and your friends to revive themselves at the Florid Postern.",
         TIP_DISABLE_TIPS = "Is your mind already bursting with secret knowledge? You can turn off Loading Tips anytime in the Options menu.",
@@ -7452,9 +7484,6 @@ STRINGS.UI =
         TIP_DICEVOTE = "Access the Server Commands menu from the Pause Screen to start votes or roll a dice.",
         TIP_WORLDGEN = "Meddle with World Gen settings in the Options menu to shape a world to your liking.",
         TIP_VIGNETTES = "Customize your loading screens in the Vignette section of the Curio Cabinet if you're looking for a little change of scenery.",
-
-        -- This tip needed for non-binded controls fallback tip string
-        TIP_BIND_CONTROLS = "Play with Controls Settings in the Options Menu to fit your control needs.",
     },
 
     LOADING_SCREEN_CONTROL_TIPS_CONSOLE =
@@ -7472,8 +7501,11 @@ STRINGS.UI =
         TIP_INSPECT_SELF = "Press {inspectself} to take a look at which item and character skins you are using.",
         TIP_CHAT = "Press {chat} to talk to other players. If you wish to speak privately, press {whisper} to whisper to someone.",
         TIP_INVENTORY_SLOTS = "Press {inv_0}-{inv_9} to quickly use items carried in your main inventory.",
-
+        TIP_PLAYER_STATUS = "Keep tabs on your fellow Survivors by pressing the {playerstatus} key.",
         --TIP_EMOTES = "Show how you really feel! Emotes and dances can be done in the text chat.",
+
+        -- This tip needed for non-binded controls fallback tip string
+        TIP_BIND_CONTROLS = "Play with Controls Settings in the Options Menu to fit your control needs.",
     },
 
     -- Category reserved for loading screen modding
@@ -8839,14 +8871,14 @@ STRINGS.UI =
         SKINS_FEET = "FEET",
         SKINS_RANDOM = "Random Item",
         SKINS_PREVIOUS = "Previously Worn Item",
-        RANDOMCHAR_BUTTONHINT = "Random Character",
+        RANDOMCHAR_BUTTONHINT = "Random Survivor",
         INVITE_FRIEND = "Invite Friend",
         CUSTOMIZE = "Customize Your Character",
         CUSTOMIZE_SCARECROW = "Customize Your Scarecrow",
         COMING = "Coming Soon!",
         OFFLINE = "Not Available Offline",
         LOADOUT_TITLE = "{name}'s Loadout",
-        SELECTION_TITLE = "Character Select",
+        SELECTION_TITLE = "Survivor Select",
         WAITING_FOR_PLAYERS_TITLE = "Waiting For Other Players",
         EMPTY_SLOT = "Available Slot",
         READY = "Ready!",
@@ -9287,7 +9319,7 @@ STRINGS.UI =
 				nodeaths_uniqueteam =
 				{
 				   TITLE = "Survival of the Mis-Fittest",
-				   DESC  = "Play on a team with 6 unique characters and win without any teammates dying",
+				   DESC  = "Play on a team with 6 unique survivors and win without any teammates dying",
 				},
 				wintime_30 =
 				{
@@ -10723,10 +10755,10 @@ STRINGS.UI =
         OK = "OK",
         PLAYER_NAME = "Player",
         PLAYER_CHAR = "Face",
-        PLAYER_CHAR_PS4 = "Character",
+        PLAYER_CHAR_PS4 = "Survivor",
         SERVER_NAME = "Server",
         DECEASED = "Deceased",
-        DECEASED_PS4 = "Character",
+        DECEASED_PS4 = "Survivor",
         CAUSE = "Cause of Death",
         MODE = "World",
         MODE_PS4 = "Date",
@@ -11354,7 +11386,7 @@ STRINGS.UI =
 	DATACOLLECTION_LOGIN =
 	{
 		TITLE = "Offline Mode",
-		BODY = "We require the collection of user data to provide online services. Players who disable data collection will only have access to play in offline mode.\n\nCharacters and worlds from online games will be unavailable.\n\nData Collection settings can be modified in the Options menu.",
+		BODY = "We require the collection of user data to provide online services. Players who disable data collection will only have access to play in offline mode.\n\nSurvivors and worlds from online games will be unavailable.\n\nData Collection settings can be modified in the Options menu.",
 		CONTINUE = "Continue",
 	},
 

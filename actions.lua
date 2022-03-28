@@ -249,7 +249,7 @@ ACTIONS =
     REEL = Action({ instant=true, invalid_hold_action = true }),
     OCEAN_FISHING_POND = Action({ invalid_hold_action = true }),
     OCEAN_FISHING_CAST = Action({priority=3, rmb=true, customarrivecheck=CheckOceanFishingCastRange, is_relative_to_platform=true, disable_platform_hopping=true, invalid_hold_action = true}),
-    OCEAN_FISHING_REEL = Action({priority=5, rmb=true, do_not_locomote=true, silent_fail = true, invalid_hold_action = true }),
+    OCEAN_FISHING_REEL = Action({priority=5, rmb=true, do_not_locomote=true, silent_fail = true }),
     OCEAN_FISHING_STOP = Action({instant=true, invalid_hold_action = true}),
     OCEAN_FISHING_CATCH = Action({priority=6, instant=true, invalid_hold_action = true}),
     CHANGE_TACKLE = Action({priority=3, rmb=true, instant=true, mount_valid=true, invalid_hold_action = true}), -- this is now a generic "put item into the container of the equipped hand item"

@@ -145,11 +145,11 @@ function LoadingTipsData:GenerateControlTipText(tipid)
 
     -- If the control tip buttons aren't bound to anything, try to fallback to keyboard bindings.
     -- If that still fails, return generic binding controls tip
-    if not self:IsControlTipBound(controllerid, tipid) then
+    if not IsConsole() and not self:IsControlTipBound(controllerid, tipid) then
         if controllerid ~= 0 and self:IsControlTipBound(0, tipid) then
             controllerid = 0
         else
-            return STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS.TIP_BIND_CONTROLS
+            return STRINGS.UI.LOADING_SCREEN_CONTROL_TIPS_NOT_CONSOLE.TIP_BIND_CONTROLS
         end
     end
 

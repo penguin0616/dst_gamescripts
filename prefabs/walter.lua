@@ -278,7 +278,7 @@ end
 -------------------------------------------------------------------------------
 
 local function CampfireStory_OnNotNight(inst, isnight)
-	if not isnight and inst.storyteller:IsValid() and inst.storyteller.components.storyteller ~= nil then
+	if not isnight and inst.storyteller ~= nil and inst.storyteller:IsValid() and inst.storyteller.components.storyteller ~= nil then
 		inst.storyteller.components.storyteller:AbortStory(GetString(inst.storyteller, "ANNOUNCE_STORYTELLING_ABORT_NOT_NIGHT"))
 	end
 end

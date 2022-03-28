@@ -803,6 +803,24 @@ function PlayerProfile:GetCraftingMenuBufferedBuildAutoClose()
     end
 end
 
+function PlayerProfile:SetCraftingHintAllRecipesEnabled(enabled)
+    if USE_SETTINGS_FILE then
+        TheSim:SetSetting("misc", "craftinghintallrecipes", tostring(enabled))
+    else
+        self:SetValue("craftinghintallrecipes", enabled)
+        self.dirty = true
+    end
+end
+
+function PlayerProfile:GetCraftingHintAllRecipesEnabled()
+	-- Default to false if this value hasn't been created yet
+
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "craftinghintallrecipes") == "true"
+    else
+		return self:GetValue("craftinghintallrecipes") == true
+    end
+end
 
 function PlayerProfile:SetLoadingTipsOption(setting)
 	if USE_SETTINGS_FILE then

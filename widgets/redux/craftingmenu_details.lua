@@ -53,7 +53,7 @@ function CraftingMenuDetails:_GetHintTextForRecipe(player, recipe)
     if #validmachines > 0 then
         if #validmachines == 1 then
             --There's only once machine is valid. Return that one.
-            return validmachines[1].TREE
+            return "NEEDS"..validmachines[1].TREE
         end
 
         --There's more than one machine that gives the valid tech level! We have to find the "lowest" one (taking bonus into account).
@@ -74,21 +74,20 @@ function CraftingMenuDetails:_GetHintTextForRecipe(player, recipe)
 
         table.sort(validmachines, function(a,b) return (a.SCORE) > (b.SCORE) end)
 
-        return validmachines[1].TREE
+        return "NEEDS"..validmachines[1].TREE
     end
 
-    return "CANTRESEARCH"
+    return recipe.hint_msg or "CANTRESEARCH"
 end
 
 local hint_text =
 {
-    ["SCIENCEMACHINE"] = "NEEDSCIENCEMACHINE",
-    ["ALCHEMYMACHINE"] = "NEEDALCHEMYENGINE",
-    ["SHADOWMANIPULATOR"] = "NEEDSHADOWMANIPULATOR",
-    ["PRESTIHATITATOR"] = "NEEDPRESTIHATITATOR",
-    ["CANTRESEARCH"] = "CANTRESEARCH",
-    ["ANCIENTALTAR_HIGH"] = "NEEDSANCIENT_FOUR",
-    ["SPIDERCRAFT"] = "NEEDSSPIDERFRIENDSHIP",
+    ["NEEDSSCIENCEMACHINE"] = "NEEDSCIENCEMACHINE",
+    ["NEEDSALCHEMYMACHINE"] = "NEEDALCHEMYENGINE",
+    ["NEEDSSHADOWMANIPULATOR"] = "NEEDSHADOWMANIPULATOR",
+    ["NEEDSPRESTIHATITATOR"] = "NEEDPRESTIHATITATOR",
+    ["NEEDSANCIENTALTAR_HIGH"] = "NEEDSANCIENT_FOUR",
+    ["NEEDSSPIDERCRAFT"] = "NEEDSSPIDERFRIENDSHIP",
 }
 
 function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
@@ -103,13 +102,15 @@ function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
 	local teaser = self.build_button_root.teaser
 	local button = self.build_button_root.button
 
-    if meta.build_state == "hint" or self.hint_tech_ingredient ~= nil then
+    if meta.build_state == "hint" or meta.build_state == "hide" or self.ingredients.hint_tech_ingredient ~= nil then
         local str
-        if self.hint_tech_ingredient ~= nil then
-            str = STRINGS.UI.CRAFTING.NEEDSTECH[self.hint_tech_ingredient]
+		if self.ingredients.hint_tech_ingredient ~= nil then
+			str = STRINGS.UI.CRAFTING.NEEDSTECH[self.ingredients.hint_tech_ingredient]
+		elseif not builder:CanLearn(recipe.name) then
+            str = STRINGS.UI.CRAFTING.NEEDSCHARACTER
 		else
             local prototyper_tree = self:_GetHintTextForRecipe(self.owner, recipe)
-            str = STRINGS.UI.CRAFTING[hint_text[prototyper_tree] or ("NEEDS"..prototyper_tree)]
+            str = STRINGS.UI.CRAFTING[hint_text[prototyper_tree] or prototyper_tree]
         end
 		teaser:SetSize(20)
 		teaser:UpdateOriginalSize()
@@ -136,7 +137,7 @@ function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
             else
 				teaser:SetSize(20)
 				teaser:UpdateOriginalSize()
-				teaser:SetMultilineTruncatedString(STRINGS.UI.CRAFTING.NEEDSTUFF, 2, (self.panel_width / 2) * 0.8, nil, false, true)
+				teaser:SetMultilineTruncatedString(meta.build_state == "prototype" and STRINGS.UI.CRAFTING.NEEDSTUFF_PROTOTYPE or STRINGS.UI.CRAFTING.NEEDSTUFF, 2, (self.panel_width / 2) * 0.8, nil, false, true)
 				teaser:Show()
             end
 

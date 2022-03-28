@@ -75,17 +75,6 @@ local SPECIAL_EVENT_DEPS =
                 Asset("PKGREF", "anim/dst_menu_grotto.zip"),
             },
         },
-        backend =
-        {
-            assets =
-            {
-                Asset("ANIM", "anim/player_spooked.zip"),
-            },
-            prefabs =
-            {
-                "battreefx",
-            },
-        },
     },
 
     [SPECIAL_EVENTS.WINTERS_FEAST] =

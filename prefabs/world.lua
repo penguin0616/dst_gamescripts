@@ -39,6 +39,11 @@ local assets =
     Asset("DYNAMIC_ATLAS", "images/bg_spiral_anim_overlay.xml"),
     Asset("PKGREF", "images/bg_spiral_anim_overlay.tex"),
 
+	Asset("INV_IMAGE", "equip_slot_body_hud"),
+	Asset("INV_IMAGE", "equip_slot_head_hud"),
+	Asset("INV_IMAGE", "equip_slot_hud"),
+
+	Asset("IMAGE", "images/waterfall_mask.tex"),
 
 	Asset("IMAGE", "images/waterfall_mask.tex"),
 	Asset("IMAGE", "levels/textures/waterfall_noise1.tex"),
