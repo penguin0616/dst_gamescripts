@@ -32,6 +32,9 @@ local PlayerProfile = Class(function(self)
         self.persistdata.volume_music = 7
         self.persistdata.HUDSize = 5
         self.persistdata.CraftingMenuSize = 5
+        self.persistdata.CraftingMenuNumPinPages = 3
+        self.persistdata.craftingmenusensitivity = 12
+        self.persistdata.inventorysensitivity = 16
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -76,6 +79,9 @@ function PlayerProfile:Reset()
         self.persistdata.volume_music = 7
         self.persistdata.HUDSize = 5
         self.persistdata.CraftingMenuSize = 5
+        self.persistdata.CraftingMenuNumPinPages = 3
+        self.persistdata.craftingmenusensitivity = 12
+        self.persistdata.inventorysensitivity = 16
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -121,6 +127,9 @@ function PlayerProfile:SoftReset()
         self.persistdata.volume_music = 7
         self.persistdata.HUDSize = 5
         self.persistdata.CraftingMenuSize = 5
+        self.persistdata.CraftingMenuNumPinPages = 3
+        self.persistdata.craftingmenusensitivity = 12
+        self.persistdata.inventorysensitivity = 16
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -547,6 +556,57 @@ function PlayerProfile:GetCraftingMenuSize()
 		return TheSim:GetSetting("graphics", "CraftingMenuSize") or 5
 	else
 		return self:GetValue("CraftingMenuSize") or 5
+	end
+end
+
+function PlayerProfile:SetCraftingMenuNumPinPages(size)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "CraftingMenuNumPinPages", tostring(size))
+	else
+		self:SetValue("CraftingMenuNumPinPages", size)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetCraftingNumPinnedPages()
+ 	if USE_SETTINGS_FILE then
+		return tonumber(TheSim:GetSetting("misc", "CraftingMenuNumPinPages") or 3)
+	else
+		return tonumber(self:GetValue("CraftingMenuNumPinPages") or 3)
+	end
+end
+
+function PlayerProfile:SetCraftingMenuSensitivity(sensitivity)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "craftingmenusensitivity", tostring(sensitivity))
+	else
+		self:SetValue("craftingmenusensitivity", sensitivity)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetCraftingMenuSensitivity()
+ 	if USE_SETTINGS_FILE then
+		return tonumber(TheSim:GetSetting("misc", "craftingmenusensitivity") or 12)
+	else
+		return tonumber(self:GetValue("craftingmenusensitivity") or 12)
+	end
+end
+
+function PlayerProfile:SetInventorySensitivity(sensitivity)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "inventorysensitivity", tostring(sensitivity))
+	else
+		self:SetValue("inventorysensitivity", sensitivity)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetInventorySensitivity()
+ 	if USE_SETTINGS_FILE then
+		return tonumber(TheSim:GetSetting("misc", "inventorysensitivity") or 16)
+	else
+		return tonumber(self:GetValue("inventorysensitivity") or 16)
 	end
 end
 
@@ -1381,6 +1441,9 @@ function PlayerProfile:Set(str, callback, minimal_load)
                 self.persistdata.volume_music = 7
                 self.persistdata.HUDSize = 5
                 self.persistdata.CraftingMenuSize = 5
+                self.persistdata.CraftingMenuNumPinPages = 3
+				self.persistdata.craftingmenusensitivity = 12
+				self.persistdata.inventorysensitivity = 16
                 self.persistdata.vibration = true
                 self.persistdata.showpassword = false
                 self.persistdata.movementprediction = true

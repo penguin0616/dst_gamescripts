@@ -335,12 +335,12 @@ function CraftingMenuHUD:RefreshCraftingHelpText()
 end
 
 function CraftingMenuHUD:OnControl(control, down)
-    if CraftingMenuHUD._base.OnControl(self, control, down) then return true end
+	if CraftingMenuHUD._base.OnControl(self, control, down) then return true end
 
 	return false
 end
 
-function GetClosestWidget(list, active_widget, dir_x, dir_y)
+local function GetClosestWidget(list, active_widget, dir_x, dir_y)
     local closest = nil
     local closest_score = nil
 
@@ -365,7 +365,7 @@ function GetClosestWidget(list, active_widget, dir_x, dir_y)
 end
 
 function CraftingMenuHUD:InvNavToPin(inv_widget, dir_x, dir_y)
-	return GetClosestWidget(self.pinbar.pin_slots, inv_widget, dir_x, dir_y)
+	return GetClosestWidget(self.pinbar.pin_slots, inv_widget, dir_x, dir_y) or self.pinbar.page_spinner
 end
 
 function CraftingMenuHUD:SelectPin(pin_slot)

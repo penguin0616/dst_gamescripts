@@ -289,8 +289,6 @@ local function GetWaveAmounts()
 end
 
 local function GetDelayedPlayerWaveAmounts(player, data)
-	data._spawninfo = {}
-
 	local attackdelaybase = _attackdelayfn()
 	local playerAge = player.components.age:GetAge()
 
@@ -298,15 +296,13 @@ local function GetDelayedPlayerWaveAmounts(player, data)
 	-- if we have lived shorter than the minimum wave delay then don't spawn hounds to us
 	local spawnsToRelease = playerAge >= attackdelaybase and CalcPlayerAttackSize(player) or 0
 
-	if spawnsToRelease > 0 then
-		data._spawninfo = {}
-		table.insert(data._spawninfo,
-		{
-			players = {[player] = spawnsToRelease}, --tracks the number of spawns for this player
-			timetonext = 0,
-			averageplayerage = playerAge,
-		})
-	end
+	data._spawninfo = {}
+	table.insert(data._spawninfo,
+	{
+		players = {[player] = spawnsToRelease}, --tracks the number of spawns for this player
+		timetonext = 0,
+		averageplayerage = playerAge,
+	})
 end
 
 local function NoHoles(pt)
@@ -759,6 +755,13 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 	spawninforec.timetonext = spawninforec.timetonext - dt
 	if next(spawninforec.players) ~= nil and spawninforec.timetonext < 0 then
 		local target = weighted_random_choice(spawninforec.players)
+
+		if spawninforec.players[target] <= 0 then
+			spawninforec.players[target] = nil
+			if next(spawninforec.players) == nil then
+				table.insert(groupsdone, 1, i)
+			end
+		end
 
 		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)
 		local upgrade = _spawndata.upgrade_spawn and ShouldUpgrade(spawninforec.players[target])

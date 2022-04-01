@@ -99,6 +99,7 @@ local SkinSelector = Class(Widget, function(self, recipe, owner, skin_name)
 
     self.focus_forward = self.spinner
 
+	self.spinner:SetWrapEnabled(#self.skins_options > 1)
 	self.spinner:SetOptions(self.skins_options)
 
 	self.spinner:SetSelectedIndex(skin_name == nil and 1 or self:GetIndexForSkin(skin_name) or 1)

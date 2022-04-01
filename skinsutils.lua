@@ -1508,6 +1508,52 @@ function BuildListOfSelectedItems(user_profile, item_type)
     return image_keys
 end
 
+function GetNextOwnedSkin(prefab, cur_skin)
+	local new_skin = nil
+	local skin_list = PREFAB_SKINS[prefab]
+	if skin_list ~= nil then
+		local found = 0
+		if cur_skin ~= nil then
+			for i = 1, #skin_list do
+				if skin_list[i] == cur_skin then
+					found = i
+					break
+				end
+			end
+		end
+		for i = found + 1, #skin_list do
+			if TheInventory:CheckOwnership(skin_list[i]) then
+				new_skin = skin_list[i]
+				break
+			end
+		end
+	end
+	return new_skin
+end
+
+function GetPrevOwnedSkin(prefab, cur_skin)
+	local new_skin = nil
+	local skin_list = PREFAB_SKINS[prefab]
+	if skin_list ~= nil then
+		local found = #skin_list + 1
+		if cur_skin ~= nil then
+			for i = #skin_list, 1, -1 do
+				if skin_list[i] == cur_skin then
+					found = i
+					break
+				end
+			end
+		end
+		for i = found - 1, 1, -1 do
+			if TheInventory:CheckOwnership(skin_list[i]) then
+				new_skin = skin_list[i]
+				break
+			end
+		end
+	end
+	return new_skin
+end
+
 function GetMostRecentlySelectedItem(user_profile, item_type)
     return user_profile:GetCustomizationItemState(item_type, "last_item_key")
 end

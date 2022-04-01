@@ -135,7 +135,7 @@ Recipe2("dumbbell_gem",					{Ingredient("thulecite", 2), Ingredient("purplegem",
 
 -- Wickerbottom
 Recipe2("book_birds",					{Ingredient("papyrus", 2), Ingredient("bird_egg", 2)},											TECH.NONE,				{builder_tag="bookbuilder"})
-Recipe2("book_horticulture",			{Ingredient("papyrus", 2), Ingredient("seeds", 5)},												TECH.SCIENCE_ONE,		{builder_tag="bookbuilder"})
+Recipe2("book_horticulture",			{Ingredient("papyrus", 2), Ingredient("seeds", 5), Ingredient("poop", 5)},						TECH.SCIENCE_ONE,		{builder_tag="bookbuilder"})
 Recipe2("book_silviculture",			{Ingredient("papyrus", 2), Ingredient("livinglog", 1)},											TECH.SCIENCE_THREE,		{builder_tag="bookbuilder"})
 Recipe2("book_sleep",					{Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2)},										TECH.MAGIC_TWO,			{builder_tag="bookbuilder"})
 Recipe2("book_brimstone",				{Ingredient("papyrus", 2), Ingredient("redgem", 1)},											TECH.MAGIC_THREE,		{builder_tag="bookbuilder"})
@@ -263,7 +263,7 @@ Recipe2("plantregistryhat",					{Ingredient("fertilizer", 1), Ingredient("seeds"
 Recipe2("mushroom_farm",					{Ingredient("spoiled_food", 8),Ingredient("poop", 5),Ingredient("livinglog", 2)},				TECH.SCIENCE_TWO,			{placer="mushroom_farm_placer"})
 Recipe2("beebox",							{Ingredient("boards", 2),Ingredient("honeycomb", 1),Ingredient("bee", 4)},						TECH.SCIENCE_TWO,			{placer="beebox_placer"})
 Recipe2("trap",								{Ingredient("twigs", 2),Ingredient("cutgrass", 6)},												TECH.NONE)
-Recipe2("birdtrap",							{Ingredient("twigs", 3),Ingredient("silk", 4)},													TECH.NONE)
+Recipe2("birdtrap",							{Ingredient("twigs", 3),Ingredient("silk", 4)},													TECH.SCIENCE_ONE)
 Recipe2("birdcage",							{Ingredient("papyrus", 2), Ingredient("goldnugget", 6), Ingredient("seeds", 2)},				TECH.SCIENCE_TWO,			{placer="birdcage_placer"})
 
 Recipe2("heatrock",							{Ingredient("rocks", 10),Ingredient("pickaxe", 1), Ingredient("flint", 3)},						TECH.SCIENCE_TWO)

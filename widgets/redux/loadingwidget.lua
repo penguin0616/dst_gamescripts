@@ -164,6 +164,12 @@ function LoadingWidget:SetEnabled(enabled)
 
                     -- Add tip to the recently shown tips list
                     TheLoadingTips:RegisterShownLoadingTip(loadingtip)
+                else
+                    if self.loading_tip_text and self.loading_tip_text:GetString() == nil then
+                        self.loading_tip_root:Hide()
+                        self.loading_tip_text:Hide()
+                        self.loading_tip_icon:Hide()
+                    end
                 end
             end
         end
@@ -249,9 +255,11 @@ function LoadingWidget:OnUpdate(dt)
         if self.tipcycledelay <= 0 and (TheInput:IsControlPressed(CONTROL_PRIMARY) or TheInput:IsControlPressed(CONTROL_ACTION)) then
         --if self.tipcycledelay <= 0 then
             local loadingtip = TheLoadingTips:PickLoadingTip(self.selected_key)
-            self.loading_tip_text:SetString(loadingtip.text)
-            self.loading_tip_icon:SetTexture(loadingtip.atlas, loadingtip.icon)
-            TheLoadingTips:RegisterShownLoadingTip(loadingtip)
+            if loadingtip then
+                self.loading_tip_text:SetString(loadingtip.text)
+                self.loading_tip_icon:SetTexture(loadingtip.atlas, loadingtip.icon)
+                TheLoadingTips:RegisterShownLoadingTip(loadingtip)
+            end
 
             self.tipcycledelay = TIP_CYCLE_DELAY
         end

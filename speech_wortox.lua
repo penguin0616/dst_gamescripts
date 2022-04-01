@@ -3558,7 +3558,7 @@ return{
 
         SUNKENCHEST =
         {
-            GENERIC = "I fear it's only a shell of it's former self.",
+            GENERIC = "I fear it's only a shell of its former self.",
             LOCKED = "We need a key for this gift from the sea!",
         },
 

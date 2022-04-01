@@ -601,6 +601,8 @@ function PlayerHud:RefreshControllers() -- this is really the event handler for 
 	    TheFrontEnd:StopTrackingMouse()
 	end
 
+	TheFrontEnd:UpdateRepeatDelays()
+
 	local integrated_backpack = controller_mode or Profile:GetIntegratedBackpack()
     if self.controls.inv.controller_build ~= controller_mode or self.controls.inv.integrated_backpack ~= integrated_backpack then
         self.controls.inv.rebuild_pending = true
@@ -960,6 +962,16 @@ function PlayerHud:OnControl(control, down)
 			end
 		end
         return true
+	elseif control == CONTROL_CRAFTING_PINLEFT then
+		if self.controls ~= nil and self.controls.craftingmenu ~= nil and self.controls.craftingmenu.pinbar ~= nil then
+			self.controls.craftingmenu.pinbar:GoToNextPage()
+			return true
+		end
+	elseif control == CONTROL_CRAFTING_PINRIGHT then
+		if self.controls ~= nil and self.controls.craftingmenu ~= nil and self.controls.craftingmenu.pinbar ~= nil then
+			self.controls.craftingmenu.pinbar:GoToPrevPage()
+			return true
+		end
     elseif control == CONTROL_SERVER_PAUSE then
         SetServerPaused()
         return true
@@ -1042,6 +1054,19 @@ function PlayerHud:OnControl(control, down)
 					self.owner.replica.inventory:UseItemFromInvTile(item)
 				end
 			end
+            return true
+        end
+    elseif control >= CONTROL_INV_11 and control <= CONTROL_INV_15 then
+        -- Inventory hotkeys part two.
+        local inventory = self.owner.replica.inventory
+        if inventory ~= nil and inventory:IsVisible() then
+			local hot_key_num = control - CONTROL_INV_11 + 11
+
+            -- No crafting menu pins!
+			local item = inventory:GetItemInSlot(hot_key_num)
+            if item ~= nil then
+                self.owner.replica.inventory:UseItemFromInvTile(item)
+            end
             return true
         end
     end

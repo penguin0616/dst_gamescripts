@@ -40,7 +40,7 @@ local events =
                     inst.components.combat:SetTarget(nil)
                 end
                 if not inst.sg:HasStateTag("howling") then
-                    inst.sg:GoToState("howl", 2)
+                    inst.sg:GoToState("howl", {count =2} )
                 end
             end
         end
@@ -237,7 +237,7 @@ local states =
 
         onenter = function(inst, norepeat)
             if inst:HasTag("clay") then
-                inst.sg:GoToState("howl", norepeat and -1 or 0)
+                inst.sg:GoToState("howl", {count = norepeat and -1 or 0})
             else
                 inst.Physics:Stop()
                 inst.AnimState:PlayAnimation("taunt")
@@ -270,10 +270,10 @@ local states =
         onenter = function(inst, data)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("howl")
-            if data == true then
+            if data.howl == true then
                 inst.sg.statemem.spawnhounds = true
             else
-                inst.sg.statemem.count = data or 0
+                inst.sg.statemem.count = data.count or 0
             end
         end,
 
@@ -296,9 +296,9 @@ local states =
                 if inst.sg.statemem.spawnhounds then
                     inst.sg:GoToState("idle")
                 elseif inst.sg.statemem.count > 0 then
-                    inst.sg:GoToState("howl", inst.sg.statemem.count > 1 and inst.sg.statemem.count - 1 or -1)
-                elseif inst.sg.statemem.count == 0 and math.random() < .333 then
-                    inst.sg:GoToState("howl", inst.components.follower.leader ~= nil and inst.components.follower.leader:HasTag("player") and -1 or 0)
+                    inst.sg:GoToState("howl", {count= inst.sg.statemem.count > 1 and inst.sg.statemem.count - 1 or -1})
+                elseif inst.sg.statemem.count == 0 and math.random() < 0.333 then
+                    inst.sg:GoToState("howl", {count= inst.components.follower.leader ~= nil and inst.components.follower.leader:HasTag("player") and -1 or 0 })
                 else
                     inst.sg:GoToState("idle")
                 end

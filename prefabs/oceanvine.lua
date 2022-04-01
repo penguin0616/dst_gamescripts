@@ -252,7 +252,7 @@ local function fall(inst)
         inst:ListenForEvent("animover", function() inst:Remove() end)
     end
     inst:DoTaskInTime(19*FRAMES, function() 
-        if inst.components.pickable:CanBePicked() then
+        if inst.components.pickable ~= nil and inst.components.pickable:CanBePicked() then
             local point = inst:GetPosition()
             inst.components.pickable:MakeEmpty()
             local product = SpawnPrefab(inst.components.pickable.product)

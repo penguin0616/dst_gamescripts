@@ -88,8 +88,8 @@ local all_controls =
     -- inventory
     {name=CONTROL_OPEN_CRAFTING, keyboard=CONTROL_OPEN_CRAFTING, controller=CONTROL_OPEN_CRAFTING},
     {name=CONTROL_CRAFTING_MODIFIER, keyboard=CONTROL_CRAFTING_MODIFIER, controller=nil},
-    --{name=CONTROL_CRAFTING_PINLEFT, keyboard=CONTROL_CRAFTING_PINLEFT, controller=nil},			-- WIP
-    --{name=CONTROL_CRAFTING_PINRIGHT, keyboard=CONTROL_CRAFTING_PINRIGHT, controller=nil},			-- WIP
+    {name=CONTROL_CRAFTING_PINLEFT, keyboard=CONTROL_CRAFTING_PINLEFT, controller=nil},			-- WIP
+    {name=CONTROL_CRAFTING_PINRIGHT, keyboard=CONTROL_CRAFTING_PINRIGHT, controller=nil},			-- WIP
     {name=CONTROL_OPEN_INVENTORY, keyboard=nil, controller=CONTROL_OPEN_INVENTORY},
     {name=CONTROL_INVENTORY_UP, keyboard=nil, controller=CONTROL_INVENTORY_UP},
     {name=CONTROL_INVENTORY_DOWN, keyboard=nil, controller=CONTROL_INVENTORY_DOWN},
@@ -116,6 +116,11 @@ local all_controls =
     {name=CONTROL_INV_8, keyboard=CONTROL_INV_8, controller=nil},
     {name=CONTROL_INV_9, keyboard=CONTROL_INV_9, controller=nil},
     {name=CONTROL_INV_10, keyboard=CONTROL_INV_10, controller=nil},
+    {name=CONTROL_INV_11, keyboard=CONTROL_INV_11, controller=nil},
+    {name=CONTROL_INV_12, keyboard=CONTROL_INV_12, controller=nil},
+    {name=CONTROL_INV_13, keyboard=CONTROL_INV_13, controller=nil},
+    {name=CONTROL_INV_14, keyboard=CONTROL_INV_14, controller=nil},
+    {name=CONTROL_INV_15, keyboard=CONTROL_INV_15, controller=nil},
 
     -- menu
     {name=CONTROL_ACCEPT, keyboard=CONTROL_ACCEPT, controller=CONTROL_ACCEPT},
@@ -244,6 +249,9 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		screenshake = Profile:IsScreenShakeEnabled(),
 		hudSize = Profile:GetHUDSize(),
 		craftingmenusize = Profile:GetCraftingMenuSize(),
+		craftingmenunumpinpages = Profile:GetCraftingNumPinnedPages(),
+		craftingmenusensitivity = Profile:GetCraftingMenuSensitivity(),
+		inventorysensitivity = Profile:GetInventorySensitivity(),
 		netbookmode = TheSim:IsNetbookMode(),
 		vibration = Profile:GetVibrationEnabled(),
 		showpassword = Profile:GetShowPasswordEnabled(),
@@ -557,6 +565,9 @@ function OptionsScreen:Save(cb)
 	Profile:SetBoatCameraEnabled( self.options.boatcamera )
 	Profile:SetHUDSize( self.options.hudSize )
 	Profile:SetCraftingMenuSize( self.options.craftingmenusize )
+	Profile:SetCraftingMenuNumPinPages( self.options.craftingmenunumpinpages )
+	Profile:SetCraftingMenuSensitivity( self.options.craftingmenusensitivity )
+	Profile:SetInventorySensitivity( self.options.inventorysensitivity )
 	Profile:SetScreenFlash( self.options.screenflash )
 	Profile:SetVibrationEnabled( self.options.vibration )
 	Profile:SetShowPasswordEnabled( self.options.showpassword )
@@ -1469,6 +1480,14 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
+	self.craftingmenunumpinpagesSpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.CRAFTINGMENUNUMPINPAGES, 2, 9, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGMENUNUMPINPAGES)
+	self.craftingmenunumpinpagesSpinner.OnChanged =
+		function( _, data )
+			self.working.craftingmenunumpinpages = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
 	self.craftingautopauseSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.CRAFTINGAUTOPAUSE, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGAUTOPAUSE)
 	self.craftingautopauseSpinner.OnChanged =
 		function( _, data )
@@ -1621,6 +1640,7 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.left_spinners, self.ambientVolume )
     table.insert( self.left_spinners, self.hudSize )
     table.insert( self.left_spinners, self.craftingmenusize )
+	table.insert( self.left_spinners, self.loadingtipsSpinner )
 	table.insert( self.left_spinners, self.autologinSpinner )
 
     table.insert( self.right_spinners, self.passwordSpinner )
@@ -1632,8 +1652,8 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.right_spinners, self.profanityfilterSpinner )
     table.insert( self.right_spinners, self.autopauseSpinner )
 	table.insert( self.right_spinners, self.craftingautopauseSpinner )
-	table.insert( self.right_spinners, self.loadingtipsSpinner )
-
+	table.insert( self.right_spinners, self.craftingmenunumpinpagesSpinner )
+	
 	if self.show_datacollection then
 		table.insert( self.right_spinners, self.datacollectionCheckbox)
 	end
@@ -1742,6 +1762,21 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
+	self.craftingmenusensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.CRAFTINGMENUSENSITIVITY, 0, 20, STRINGS.UI.OPTIONS.TOOLTIPS.CRAFTINGMENUSENSITIVITY)
+	self.craftingmenusensitivitySpinner.OnChanged =
+		function( _, data )
+			self.working.craftingmenusensitivity = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+	self.inventorysensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.INVENTORYSENSITIVITY, 0, 20, STRINGS.UI.OPTIONS.TOOLTIPS.INVENTORYSENSITIVITY)
+	self.inventorysensitivitySpinner.OnChanged =
+		function( _, data )
+			self.working.inventorysensitivity = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+		
 	if IsSteam() then
 		self.defaultcloudsavesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DEFAULTCLOUDSAVES, steamCloudLocalOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DEFAULTCLOUDSAVES)
 		self.defaultcloudsavesSpinner.OnChanged =
@@ -1755,18 +1790,20 @@ function OptionsScreen:_BuildAdvancedSettings()
 	self.left_spinners = {}
 	self.right_spinners = {}
 
-    table.insert( self.left_spinners, self.movementpredictionSpinner )
-    table.insert( self.left_spinners, self.wathgrithrfontSpinner)
-	table.insert( self.left_spinners, self.waltercameraSpinner)
 	if IsSteam() then
 		table.insert( self.left_spinners, self.defaultcloudsavesSpinner )
 	end
+    table.insert( self.left_spinners, self.movementpredictionSpinner )
+    table.insert( self.left_spinners, self.automodsSpinner )
+	table.insert( self.left_spinners, self.animatedHeadsSpinner )
+    table.insert( self.left_spinners, self.wathgrithrfontSpinner)
+	table.insert( self.left_spinners, self.waltercameraSpinner)
 
-    table.insert( self.right_spinners, self.automodsSpinner )
-	table.insert( self.right_spinners, self.animatedHeadsSpinner )
 	table.insert( self.right_spinners, self.consoleautopauseSpinner )
 	table.insert( self.right_spinners, self.craftingmenubufferedbuildautocloseSpinner )
 	table.insert( self.right_spinners, self.craftinghintallrecipesSpinner )
+	table.insert( self.right_spinners, self.craftingmenusensitivitySpinner )
+	table.insert( self.right_spinners, self.inventorysensitivitySpinner )
 	
 	self.grid_advanced:UseNaturalLayout()
 	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
@@ -2025,6 +2062,9 @@ function OptionsScreen:InitializeSpinners(first)
 
 	self.hudSize:SetSelectedIndex( self.working.hudSize or 5)
 	self.craftingmenusize:SetSelectedIndex( self.working.craftingmenusize or 5)
+	self.craftingmenunumpinpagesSpinner:SetSelectedIndex( self.working.craftingmenunumpinpages or 3)
+	self.craftingmenusensitivitySpinner:SetSelectedIndex( self.working.craftingmenusensitivity or 12)
+	self.inventorysensitivitySpinner:SetSelectedIndex( self.working.inventorysensitivity or 16)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )

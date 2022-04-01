@@ -88,8 +88,7 @@ function CraftingMenuWidget:OnControl(control, down)
 	return false
 end
 
-
-function GetClosestWidget(list, active_widget, dir_x, dir_y)
+local function GetClosestWidget(list, active_widget, dir_x, dir_y)
     local closest = nil
     local closest_score = nil
 
@@ -112,8 +111,6 @@ function GetClosestWidget(list, active_widget, dir_x, dir_y)
 
     return closest, closest_score
 end
-
-
 
 function CraftingMenuWidget:DoFocusHookups()
 	local is_left = self.crafting_hud.is_left_aligned
@@ -273,8 +270,8 @@ function CraftingMenuWidget:UpdateFilterButtons()
 		end
 	end
 
-	if self.crafting_hud.pinbar ~= nil and self.crafting_hud.pinbar.pin_open ~= nil then
-		self.crafting_hud.pinbar.pin_open:SetCraftingState(can_prototype, new_recipe_available)
+	if self.crafting_hud.pinbar ~= nil and self.crafting_hud.pinbar.open_menu_button ~= nil then
+		self.crafting_hud.pinbar.open_menu_button:SetCraftingState(can_prototype, new_recipe_available)
 	end
 
 	local rebuild_details_list = false
@@ -491,7 +488,7 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
 	local fill = w:AddChild(Image(atlas, "backing.tex"))
-	fill:ScaleToSize(width + 18, height + 18)
+	fill:ScaleToSize(width + 10, height + 18)
 	fill:SetTint(1, 1, 1, 0.5)
 
 	local left = w:AddChild(Image(atlas, "side.tex"))
@@ -510,6 +507,7 @@ function CraftingMenuWidget:MakeFrame(width, height, fileters_height)
 	local bottom = w:AddChild(Image(atlas, "bottom.tex"))
 	bottom:SetPosition(0, -height/2 - 8)
 	bottom:ScaleToSize(534, 38)
+	bottom:SetClickable(false)
 
 	----------------
 	self.filter_panel = w:AddChild(self:MakeFilterPanel(width, fileters_height))
@@ -987,7 +985,7 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 				widget.item_img:SetTint(0.7, 0.7, 0.7, 1)
 				widget.fg:SetTexture(atlas, "slot_fg_lock.tex")
                 widget.fg:Show()
-			elseif meta.build_state == "no_ingredients" then
+			elseif meta.build_state == "no_ingredients" or meta.build_state == "prototype" then
 				widget.bg:SetTexture(atlas, "slot_bg_missing_mats.tex")
 				widget.item_img:SetTint(0.7, 0.7, 0.7, 1)
                 widget.fg:Hide()

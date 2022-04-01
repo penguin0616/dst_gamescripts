@@ -3462,7 +3462,7 @@ return{
 		OCEANFISH_SMALL_4 = "You know, sometimes catching smaller fish is the real challenge.",
 		OCEANFISH_SMALL_5 = "Careful the fins don't get stuck in your teeth.",
 		OCEANFISH_SMALL_6 = "It smells like dead leaves.",
-		OCEANFISH_SMALL_7 = "Hey little buddy! Get it, because it's got a bud on it's head?",
+		OCEANFISH_SMALL_7 = "Hey little buddy! Get it, because it's got a bud on its head?",
 		OCEANFISH_SMALL_8 = "Keep it away from anything flammable!",
         OCEANFISH_SMALL_9 = "Hey! It's rude to spit at people!",
 

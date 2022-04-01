@@ -34,7 +34,7 @@ local sounds =
     hurt = "dontstarve/creatures/hound/hurt",
 }
 
-SetSharedLootTable('WARGLET',
+SetSharedLootTable('warglet',
 {
     {'monstermeat',             1.00},
     {'monstermeat',             1.00},
@@ -326,7 +326,7 @@ local function fncommon()
     inst.components.combat:SetHurtSound(inst.sounds.hurt)
 
     inst:AddComponent("lootdropper")
-    inst.components.lootdropper:SetChanceLootTable('hound')
+    inst.components.lootdropper:SetChanceLootTable('warglet')
 
     inst:AddComponent("inspectable")
 

@@ -1066,6 +1066,10 @@ function SendRPCToShard(code, ...)
     TheNet:SendRPCToShard(code, ...)
 end
 
+local RPC_QUEUE_RATE_LIMIT = 20 -- Per logic tick.
+local RPC_QUEUE_RATE_LIMIT_PER_MOD = 5 -- +this for every mod RPC added.
+local RPC_Queue_Limiter = {}
+local RPC_Queue_Warned = {}
 local RPC_Queue = {}
 local RPC_Timeline = {}
 
@@ -1078,11 +1082,25 @@ local RPC_Shard_Timeline = {}
 function HandleRPC(sender, tick, code, data)
     local fn = RPC_HANDLERS[code]
     if fn ~= nil then
-        if (USERID_RPCS[fn] or type(sender) == "table") then
+        local senderistable = type(sender) == "table"
+        if USERID_RPCS[fn] or senderistable then
+            local userid = senderistable and sender.userid or nil
+
             if USERID_RPCS[fn] then
-                sender = (type(sender) == "table" and sender.userid) or sender
+                sender = userid or sender
             end
-            table.insert(RPC_Queue, { fn, sender, data, tick })
+
+            local limit = RPC_Queue_Limiter[sender] or 0
+            if limit < RPC_QUEUE_RATE_LIMIT then
+                RPC_Queue_Limiter[sender] = limit + 1
+                table.insert(RPC_Queue, { fn, sender, data, tick })
+            else
+                 -- This user is sending way too much for normal activity so take note of it.
+                if not RPC_Queue_Warned[sender] then
+                    RPC_Queue_Warned[sender] = true
+                    print("Rate limiting RPCs from", sender, userid, "last one being ID", tostring(code))
+                end
+            end
         else
             print("Invalid RPC sender: expected player, got userid")
         end
@@ -1111,50 +1129,74 @@ function HandleShardRPC(sender, tick, code, data)
 end
 
 function HandleRPCQueue()
-    local i = 1
-    while i <= #RPC_Queue do
-        local fn, sender, data, tick = unpack(RPC_Queue[i])
+    local RPC_Queue_new = {}
+    local RPC_Queue_len = #RPC_Queue
+    for i = 1, RPC_Queue_len do
+        local rpcdata = RPC_Queue[i]
+        local fn, sender, data, tick = unpack(rpcdata)
+
+        local limit = (RPC_Queue_Limiter[sender] or 1) - 1
+        if limit == 0 then
+            RPC_Queue_Limiter[sender] = nil
+            RPC_Queue_Warned[sender] = nil
+        else
+            RPC_Queue_Limiter[sender] = limit
+        end
 
         if type(sender) == "table" and not sender:IsValid() then
-            table.remove(RPC_Queue, i)
+            -- Ignore.
         elseif RPC_Timeline[sender] == nil or RPC_Timeline[sender] == tick then
-            table.remove(RPC_Queue, i)
+            -- Invoke.
             if TheNet:CallRPC(fn, sender, data) then
                 RPC_Timeline[sender] = tick
             end
         else
+            -- Pending.
+            table.insert(RPC_Queue_new, rpcdata)
             RPC_Timeline[sender] = 0
-            i = i + 1
         end
     end
-    i = 1
-    while i <= #RPC_Client_Queue do
-        local fn, data, tick = unpack(RPC_Client_Queue[i])
+    RPC_Queue = RPC_Queue_new
+
+    local RPC_Client_Queue_new = {}
+    local RPC_Client_Queue_len = #RPC_Client_Queue
+    for i = 1, RPC_Client_Queue_len do
+        local rpcdata = RPC_Client_Queue[i]
+        local fn, data, tick = unpack(rpcdata)
+
         if RPC_Client_Timeline == nil or RPC_Client_Timeline == tick then
-            table.remove(RPC_Client_Queue, i)
+            -- Invoke.
             if TheNet:CallClientRPC(fn, data) then
                 RPC_Client_Timeline = tick
             end
         else
+            -- Pending.
+            table.insert(RPC_Client_Queue_new, rpcdata)
             RPC_Client_Timeline = 0
-            i = i + 1
         end
     end
-    i = 1
-    while i <= #RPC_Shard_Queue do
-        local fn, sender, data, tick = unpack(RPC_Shard_Queue[i])
+    RPC_Client_Queue = RPC_Client_Queue_new
+
+    local RPC_Shard_Queue_new = {}
+    local RPC_Shard_Queue_len = #RPC_Shard_Queue
+    for i = 1, RPC_Shard_Queue_len do
+        local rpcdata = RPC_Shard_Queue[i]
+        local fn, sender, data, tick = unpack(rpcdata)
+
         if not Shard_IsWorldAvailable(tostring(sender)) and tostring(sender) ~= TheShard:GetShardId() then
-            table.remove(RPC_Shard_Queue, i)
+            -- Ignore.
         elseif RPC_Shard_Timeline[sender] == nil or RPC_Shard_Timeline[sender] == tick then
-            table.remove(RPC_Shard_Queue, i)
+            -- Invoke.
             if TheNet:CallShardRPC(fn, sender, data) then
                 RPC_Shard_Timeline[sender] = tick
             end
         else
+            -- Pending.
+            table.insert(RPC_Shard_Queue_new, rpcdata)
             RPC_Shard_Timeline[sender] = 0
-            i = i + 1
         end
     end
+    RPC_Shard_Queue = RPC_Shard_Queue_new
 end
 
 function TickRPCQueue()
@@ -1206,6 +1248,8 @@ function AddModRPCHandler(namespace, name, fn)
     MOD_RPC[namespace][name] = { namespace = namespace, id = #MOD_RPC_HANDLERS[namespace] }
 
     setmetadata(MOD_RPC[namespace][name])
+
+    RPC_QUEUE_RATE_LIMIT = RPC_QUEUE_RATE_LIMIT + RPC_QUEUE_RATE_LIMIT_PER_MOD
 end
 
 function AddClientModRPCHandler(namespace, name, fn)
@@ -1257,11 +1301,25 @@ function HandleModRPC(sender, tick, namespace, code, data)
     if MOD_RPC_HANDLERS[namespace] ~= nil then
         local fn = MOD_RPC_HANDLERS[namespace][code]
         if fn ~= nil then
-            if (USERID_RPCS[fn] or type(sender) == "table") then
+            local senderistable = type(sender) == "table"
+            if USERID_RPCS[fn] or senderistable then
+                local userid = senderistable and sender.userid or nil
+
                 if USERID_RPCS[fn] then
-                    sender = (type(sender) == "table" and sender.userid) or sender
+                    sender = userid or sender
                 end
-                table.insert(RPC_Queue, { fn, sender, data, tick })
+
+                local limit = RPC_Queue_Limiter[sender] or 0
+                if limit < RPC_QUEUE_RATE_LIMIT then
+                    RPC_Queue_Limiter[sender] = limit + 1
+                    table.insert(RPC_Queue, { fn, sender, data, tick })
+                else
+                     -- This user is sending way too much for normal activity so take note of it.
+                    if not RPC_Queue_Warned[sender] then
+                        RPC_Queue_Warned[sender] = true
+                        print("Rate limiting RPCs from [MOD]", sender, userid, "last one being ID", tostring(code), "of namespace", tostring(namespace))
+                    end
+                end
             else
                 print("Invalid RPC sender: expected player, got userid")
             end

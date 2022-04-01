@@ -254,9 +254,9 @@ function EntityScript:GetSaveRecord()
             age = self.Network:GetPlayerAge(),
         }
 
-		if ThePlayer == self then
-			record.crafting_menu = TheCraftingMenuProfile:SerializeLocalClientSessionData()
-		end
+		--if ThePlayer == self then
+		--	record.crafting_menu = TheCraftingMenuProfile:SerializeLocalClientSessionData()
+		--end
 
         local platform = self:GetCurrentPlatform()
         if platform then

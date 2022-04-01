@@ -267,6 +267,7 @@ local function onsave(inst, data)
     elseif inst._lightningrod ~= nil then
         data.lightningrod = true
         data.lightningrod_chargeleft = inst._lightningrod.chargeleft
+        data.saved_upgraded_from_item = inst.saved_upgraded_from_item
     end
 end
 
@@ -298,6 +299,7 @@ local function onload(inst, data)
                 lamp_turnon(inst)
             end
         elseif data.lightningrod ~= nil then
+            inst.saved_upgraded_from_item = data.saved_upgraded_from_item
             upgrade_lightningrod(inst, true)
             if data.lightningrod_chargeleft ~= nil and data.lightningrod_chargeleft > 0 then
                 inst._lightningrod:_setchargedfn(data.lightningrod_chargeleft)

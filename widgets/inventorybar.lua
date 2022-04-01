@@ -78,6 +78,7 @@ local Inv = Class(Widget, function(self, owner)
     self.cursortile = nil
 
     self.repeat_time = .2
+	self.reps = 0
 
     --this is for the keyboard / controller inventory controls
     self.actionstring = self.root:AddChild(Widget("actionstring"))
@@ -328,7 +329,6 @@ local function RebuildLayout(self, inventory, overflow, do_integrated_backpack, 
 
     if hadbackpack and self.backpack == nil then
         self:SelectDefaultSlot()
-        self.current_list = self.inv
     end
 
     if self.bg.Flow ~= nil then
@@ -413,8 +413,6 @@ function Inv:Rebuild()
     self.actionstring:MoveToFront()
 
     self:SelectDefaultSlot()
-    self.current_list = self.inv
-	self.pin_nav = false
     self:UpdateCursor()
 
     if self.cursor ~= nil then
@@ -423,6 +421,16 @@ function Inv:Rebuild()
 
     self.rebuild_pending = nil
     self.rebuild_snapping = nil
+end
+
+function Inv:RefreshRepeatDelay(control)
+	if self.reps <= 1 then
+		self.repeat_time = TheFrontEnd.inventory_repeat_base
+	elseif self.reps >= 3 and Input:GetAnalogControlValue(control) > 0.95 then
+		self.repeat_time = TheFrontEnd.inventory_repeat_ninja
+	else
+		self.repeat_time = TheFrontEnd.inventory_repeat_fast
+	end
 end
 
 function Inv:OnUpdate(dt)
@@ -472,8 +480,6 @@ function Inv:OnUpdate(dt)
 
     if self.active_slot ~= nil and not self.active_slot.inst:IsValid() then
         self:SelectDefaultSlot()
-		self.pin_nav = false
-        self.current_list = self.inv
 
         if self.cursor ~= nil then
             self.cursor:Kill()
@@ -486,29 +492,48 @@ function Inv:OnUpdate(dt)
     if self.shown then
         --this is intentionally unaware of focus
         if self.repeat_time <= 0 then
-            if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (self.open and TheInput:IsControlPressed(CONTROL_MOVE_LEFT)) then
-                self:CursorLeft()
-            elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or (self.open and TheInput:IsControlPressed(CONTROL_MOVE_RIGHT)) then
-                self:CursorRight()
-            elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or (self.open and TheInput:IsControlPressed(CONTROL_MOVE_UP)) then
-                self:CursorUp()
-            elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (self.open and TheInput:IsControlPressed(CONTROL_MOVE_DOWN)) then
-                self:CursorDown()
-            else
-                self.repeat_time = 0
-                self.reps = 0
-                return
-            end
-
             self.reps = self.reps and (self.reps + 1) or 1
 
-            if self.reps <= 1 then
-                self.repeat_time = 5/30
-            elseif self.reps < 4 then
-                self.repeat_time = 2/30
-            else
-                self.repeat_time = 1/30
-            end
+			if self.open then
+				if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) then
+					self:RefreshRepeatDelay(CONTROL_MOVE_LEFT)
+	                self:CursorLeft()
+					return
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) then
+					self:RefreshRepeatDelay(CONTROL_MOVE_RIGHT)
+					self:CursorRight()
+					return
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_UP) then
+					self:RefreshRepeatDelay(CONTROL_MOVE_UP)
+					self:CursorUp()
+					return
+				elseif TheInput:IsControlPressed(CONTROL_MOVE_DOWN) then
+					self:RefreshRepeatDelay(CONTROL_MOVE_DOWN)
+					self:CursorDown()
+					return
+				end
+			end
+
+			if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) then
+				self:RefreshRepeatDelay(CONTROL_INVENTORY_LEFT)
+				self:CursorLeft()
+				return
+			elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) then
+				self:RefreshRepeatDelay(CONTROL_INVENTORY_RIGHT)
+				self:CursorRight()
+				return
+			elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) then
+				self:RefreshRepeatDelay(CONTROL_INVENTORY_UP)
+				self:CursorUp()
+				return
+			elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) then
+				self:RefreshRepeatDelay(CONTROL_INVENTORY_DOWN)
+				self:CursorDown()
+				return
+			end
+
+			self.repeat_time = 0
+			self.reps = 0
         end
     end
 end
@@ -539,10 +564,10 @@ end
 
 function Inv:PinBarNav(select_pin)
 	if select_pin ~= nil then
-		self.pin_nav = true
 		self.actionstringtime = 0
 		self.actionstring:Hide()
 		self:SelectSlot(select_pin)
+		return true
 	end
 end
 
@@ -579,7 +604,6 @@ function Inv:CursorNav(dir, same_container_only)
 
     if self.active_slot == nil or not self.active_slot.inst:IsValid() or self.current_list == nil or current_list_first_slot == nil or not current_list_first_slot.inst:IsValid() then
         self.current_list = self.inv
-		self.pin_nav = false
         self:SelectDefaultSlot()
 		return true
     end
@@ -588,7 +612,6 @@ function Inv:CursorNav(dir, same_container_only)
     local slot, list = self:GetClosestWidget(lists, self.active_slot:GetWorldPosition(), dir)
     if slot and list then
         self.current_list = list
-		self.pin_nav = false
         return self:SelectSlot(slot)
     end
 end
@@ -603,8 +626,12 @@ function Inv:CursorLeft()
 
     if self:CursorNav(Vector3(-1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-	elseif not self.open and not self.pin_nav and self.owner.HUD.controls.craftingmenu.is_left_aligned then
-		self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin(self.active_slot, -1, 0))
+	elseif not self.open and not self.pin_nav and self.owner.HUD.controls.craftingmenu.is_left_aligned and self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin(self.active_slot, -1, 0)) then
+        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	elseif self.reps == 1 and (self.current_list == self.inv or self.current_list == self.equip or self.pin_nav) then
+		self.current_list = self.equip[self.equipslotinfo[#self.equipslotinfo].slot] and self.equip or self.inv
+	    self:SelectSlot(self.equip[self.equipslotinfo[#self.equipslotinfo].slot] or self.inv[#self.inv])
+		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end
 
@@ -618,8 +645,11 @@ function Inv:CursorRight()
 
     if self:CursorNav(Vector3(1,0,0), true) then
         TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-	elseif not self.open and not self.pin_nav and not self.owner.HUD.controls.craftingmenu.is_left_aligned then
-		self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin(self.active_slot, 1, 0))
+	elseif not self.open and not self.pin_nav and not self.owner.HUD.controls.craftingmenu.is_left_aligned and self:PinBarNav(self.owner.HUD.controls.craftingmenu:InvNavToPin(self.active_slot, 1, 0)) then
+        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	elseif self.reps == 1 and (self.current_list == self.inv or self.current_list == self.equip or self.pin_nav) then
+		self:SelectDefaultSlot()
+		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
     end
 end
 
@@ -1017,13 +1047,22 @@ function Inv:SelectSlot(slot)
         if self.active_slot and self.active_slot ~= slot then
             self.active_slot:DeHighlight()
         end
+
+		if self.pin_nav and not slot.in_pinbar then
+			self.pin_nav = false
+			self.owner.HUD.controls.craftingmenu:ClearFocus()
+		elseif slot.in_pinbar then
+			self.pin_nav = true
+		end
+
         self.active_slot = slot
         return true
     end
 end
 
 function Inv:SelectDefaultSlot()
-    self:SelectSlot(self.inv[1] or self.equip[self.equipslotinfo[1].slot])
+    self.current_list = self.inv[1] and self.inv or self.equip
+	self:SelectSlot(self.inv[1] or self.equip[self.equipslotinfo[1].slot])
 end
 
 function Inv:UpdateCursor()
@@ -1067,7 +1106,10 @@ function Inv:UpdateCursor()
             self.cursor:MoveToBack()
             self.active_slot.tile.spoilage:MoveToBack()
             self.active_slot.tile.bg:MoveToBack()
-        else
+        elseif self.active_slot.hide_cursor then
+			self.cursor:Hide()
+            self.active_slot:Highlight()
+		else
             self.cursor:Show()
             self.active_slot:AddChild(self.cursor)
             self.active_slot:Highlight()

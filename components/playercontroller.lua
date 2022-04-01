@@ -3278,12 +3278,12 @@ function PlayerController:DoCameraControl()
 
 	if self.lastzoomtime == nil or time - self.lastzoomtime > ZOOM_REPEAT then
 		if TheInput:IsControlPressed(CONTROL_ZOOM_IN) then
-			if not self.zoomin_same_as_scrollup or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.craftingmenu.focus) then
+			if not self.zoomin_same_as_scrollup or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.focus) then
 				TheCamera:ZoomIn()
 				self.lastzoomtime = time
 			end
 		elseif TheInput:IsControlPressed(CONTROL_ZOOM_OUT) then
-			if not self.zoomout_same_as_scrolldown or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.craftingmenu.focus) then
+			if not self.zoomout_same_as_scrolldown or (self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil and not self.inst.HUD.controls.craftingmenu.focus) then
 				TheCamera:ZoomOut()
 				self.lastzoomtime = time
 			end

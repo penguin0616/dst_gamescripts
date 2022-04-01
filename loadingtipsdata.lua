@@ -118,7 +118,10 @@ end
 
 function LoadingTipsData:IsControlTipBound(controllerid, tipid)
     for key, control in pairs(LOADING_SCREEN_CONTROL_TIP_KEYS[tipid]) do
-        local controlstring = TheInput:GetLocalizedControl(controllerid, control)
+        local controltocheck = TheInput:ControllerAttached() and LOADING_SCREEN_CONTROLLER_ID_LOOKUP[control] or control
+        local controlstring = TheInput:GetLocalizedControl(controllerid, controltocheck)
+
+        -- Check for no control bind
         if controlstring == STRINGS.UI.CONTROLSSCREEN.INPUTS[9][2] then
             return false
         end
@@ -154,7 +157,8 @@ function LoadingTipsData:GenerateControlTipText(tipid)
     end
 
     for key, control in pairs(LOADING_SCREEN_CONTROL_TIP_KEYS[tipid]) do
-        local controlstring = TheInput:GetLocalizedControl(controllerid, control)
+        local controltocheck = TheInput:ControllerAttached() and LOADING_SCREEN_CONTROLLER_ID_LOOKUP[control] or control
+        local controlstring = TheInput:GetLocalizedControl(controllerid, controltocheck)
         controlslist[key] = controlstring
     end
     tipstring = subfmt(tipstring, controlslist)
@@ -195,8 +199,13 @@ function LoadingTipsData:PickLoadingTip(loadingscreen)
     local selectedcategory = weighted_random_choice(availablecategories)
 
     local selectedtipkey = LOADING_SCREEN_TIP_CATEGORIES[selectedcategory] ~= LOADING_SCREEN_TIP_CATEGORIES.LOADING_SCREEN and
-                            weighted_random_choice(self.loadingtipweights[LOADING_SCREEN_TIP_CATEGORIES[selectedcategory]]) or
+                            weighted_random_choice(self.loadingtipweights[LOADING_SCREEN_TIP_CATEGORIES[selectedcategory]] or {}) or
                             loadingscreen
+
+    -- To handle the case where there are no tips at all
+    if selectedtipkey == nil then
+        return nil
+    end
 
     -- Generate tip data based on the selected tip
     local tipdata = {}

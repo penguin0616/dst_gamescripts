@@ -807,6 +807,12 @@ end
 
 --same as above, but catches infinite loops
 function RunInSandboxSafeCatchInfiniteLoops(untrusted_code, error_handler)
+    if DEBUGGER_ENABLED then
+        --The debugger makes use of debug.sethook, so it conflicts with this function
+        --We'll rely on the debugger to catch infinite loops instead, so in this case, just fallback
+        return RunInSandboxSafe(untrusted_code, error_handler)
+    end
+
 	if untrusted_code:byte(1) == 27 then return nil, "binary bytecode prohibited" end
 	local untrusted_function, message = loadstring(untrusted_code)
 	if not untrusted_function then return nil, message end

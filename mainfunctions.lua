@@ -985,6 +985,8 @@ function SaveGame(isshutdown, cb)
         return
     end
 
+    TheNet:StartWorldSave()
+
     local save = {}
 	local savedata_entities = {}
 
@@ -1139,7 +1141,13 @@ function SaveGame(isshutdown, cb)
         TheNet:IncrementSnapshot()
         local function onupdateoverrides()
             local function onsaved()
-                ShardGameIndex:WriteTimeFile(cb)
+                local function onwritetimefile()
+                    TheNet:EndWorldSave()
+                    if cb ~= nil then
+                        cb()
+                    end
+                end
+                ShardGameIndex:WriteTimeFile(onwritetimefile)
             end
             ShardGameIndex:Save(onsaved)
         end
@@ -1869,6 +1877,7 @@ function ResumeRequestLoadComplete(success)
         TheFrontEnd:PushScreen(LobbyScreen(Profile, OnUserPickedCharacter, false))
         TheFrontEnd:Fade(FADE_IN, 1, nil, nil, nil, "white")
         TheWorld:PushEvent("entercharacterselect")
+--[[
 	else
 		local session_file = TheNet:GetLocalClientUserSessionFile()
         if session_file then
@@ -1883,6 +1892,7 @@ function ResumeRequestLoadComplete(success)
                 end
             end)
         end
+]]
     end
 end
 
@@ -1890,6 +1900,7 @@ end
 function ParseUserSessionData(data)
     local success, playerdata = RunInSandboxSafe(data)
     if success and playerdata ~= nil then
+        print(playerdata, playerdata.prefab)
         --Here we can do some validation on data and/or prefab if we want
         --e.g. Resuming a mod character without the mod loaded?
         return playerdata, playerdata.prefab
@@ -1937,9 +1948,9 @@ function RestoreSnapshotUserSession(sessionid, userid)
                                 end
                             end
                         end
-						if playerdata.crafting_menu ~= nil then
-							TheCraftingMenuProfile:DeserializeLocalClientSessionData(playerdata.crafting_menu)
-						end
+						--if playerdata.crafting_menu ~= nil then
+						--	TheCraftingMenuProfile:DeserializeLocalClientSessionData(playerdata.crafting_menu)
+						--end
 
                         return player.player_classified ~= nil and player.player_classified.entity or nil
                     end

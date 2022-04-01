@@ -199,7 +199,11 @@ FrontEnd = Class(function(self, name)
 	TheInput:AddTextInputHandler(function(text) self:OnTextInput(text) end )
 
 	self.tracking_mouse = true
+
+	self:UpdateRepeatDelays() -- crafting menu and inventory navigation
+
 	self.repeat_time = -1
+	self.repeat_reps = 0
     self.scroll_repeat_time = -1
     self.spinner_repeat_time = -1
 
@@ -634,6 +638,16 @@ function FrontEnd:UpdateConsoleOutput()
    	self.consoletext:SetString(consolestr)
 end
 
+function FrontEnd:_RefreshRepeatDelay(control)
+	if self.repeat_reps <= 1 then
+		self.repeat_time = self.crafting_repeat_base
+	elseif self.repeat_reps >= 3 and Input:GetAnalogControlValue(control) > 0.95 then
+		self.repeat_time = self.crafting_repeat_ninja
+	else
+		self.repeat_time = self.crafting_repeat_fast
+	end
+end
+
 function FrontEnd:Update(dt)
     if DEBUGGER_ENABLED then
         Debuggee.poll()
@@ -747,6 +761,7 @@ function FrontEnd:Update(dt)
 						or TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_DOWN)) ) then
 
             		self.repeat_time = 0
+					self.repeat_reps = 0
 				end
 			else
 				if not (   TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)
@@ -755,23 +770,32 @@ function FrontEnd:Update(dt)
             			or TheInput:IsControlPressed(CONTROL_MOVE_DOWN) or TheInput:IsControlPressed(CONTROL_FOCUS_DOWN) ) then
 
             		self.repeat_time = 0
+					self.repeat_reps = 0
 				end
 			end
 		elseif not (self.textProcessorWidget ~= nil) then
-            self.repeat_time = REPEAT_TIME
+            self.repeat_reps = self.repeat_reps and (self.repeat_reps + 1) or 1
+
 			if self.crafting_navigation_mode then
 				if TheInput:IsControlPressed(CONTROL_INVENTORY_LEFT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_LEFT)) then
+					self:_RefreshRepeatDelay(CONTROL_INVENTORY_LEFT)
 					self:OnFocusMove(MOVE_LEFT, true)
 				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_RIGHT) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT)) then
+					self:_RefreshRepeatDelay(CONTROL_INVENTORY_RIGHT)
 					self:OnFocusMove(MOVE_RIGHT, true)
 				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_UP) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_UP)) then
+					self:_RefreshRepeatDelay(CONTROL_INVENTORY_UP)
 					self:OnFocusMove(MOVE_UP, true)
 				elseif TheInput:IsControlPressed(CONTROL_INVENTORY_DOWN) or (not controller and TheInput:IsControlPressed(CONTROL_FOCUS_DOWN)) then
+					self:_RefreshRepeatDelay(CONTROL_INVENTORY_DOWN)
 					self:OnFocusMove(MOVE_DOWN, true)
 				else
 					self.repeat_time = 0
+					self.repeat_reps = 0
 				end
 			else
+				self.repeat_time = REPEAT_TIME
+
 				if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) or TheInput:IsControlPressed(CONTROL_FOCUS_LEFT) then
 					self:OnFocusMove(MOVE_LEFT, true)
 				elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT) or TheInput:IsControlPressed(CONTROL_FOCUS_RIGHT) then
@@ -782,6 +806,7 @@ function FrontEnd:Update(dt)
 					self:OnFocusMove(MOVE_DOWN, true)
 				else
 					self.repeat_time = 0
+					self.repeat_reps = 0
 				end
 			end
         end
@@ -1183,6 +1208,21 @@ function FrontEnd:GetCraftingMenuScale()
     local res_scale = math.min(res_scale_x, res_scale_y)
 
     return easing.linear(size, min_scale, max_scale - min_scale, 10) * res_scale
+end
+
+function FrontEnd:UpdateRepeatDelays()
+	local craft_sensitivity = Profile:GetCraftingMenuSensitivity()
+	self.crafting_repeat_base = easing.linear(20-craft_sensitivity, .11, .4 - .11, 20)
+	self.crafting_repeat_fast = self.crafting_repeat_base * 0.4
+	self.crafting_repeat_ninja = self.crafting_repeat_base * 0.2
+
+	local inv_sensitivity = Profile:GetInventorySensitivity()
+	self.inventory_repeat_base = easing.linear(20-inv_sensitivity, .11, .4 - .11, 20)
+	self.inventory_repeat_fast = self.inventory_repeat_base * 0.4
+	self.inventory_repeat_ninja = self.inventory_repeat_base * 0.2
+
+	--print("UpdateRepeatDelays crafting  ", craft_sensitivity, self.crafting_repeat_base, self.crafting_repeat_fast, self.crafting_repeat_ninja)
+	--print("                   inventory ", inv_sensitivity, self.inventory_repeat_base, self.inventory_repeat_fast, self.inventory_repeat_ninja)
 end
 
 function FrontEnd:OnMouseButton(button, down, x, y)

@@ -812,16 +812,34 @@ end)
 
 AddGameDebugKey(KEY_KP_PLUS, function()
     local MainCharacter = DebugKeyPlayer()
-    if MainCharacter ~= nil then
+
+    if TheWorld ~= nil and not TheWorld.ismastersim then
         if TheInput:IsKeyDown(KEY_CTRL) then
-			if TheInput:IsKeyDown(KEY_SHIFT) then
-				MainCharacter.components.health:DoDelta(50, nil, "debug_key")
-				c_sethunger(1)
-				c_sethealth(1)
-				c_setsanity(1)
-			else
-				MainCharacter.components.sanity:DoDelta(5)
-			end
+            if TheInput:IsKeyDown(KEY_SHIFT) then
+                ConsoleRemote("ThePlayer.components.health:DoDelta(%d)", {50})
+                ConsoleRemote("c_sethunger(%d)", {1})
+                ConsoleRemote("c_sethealth(%d)", {1})
+                ConsoleRemote("c_setsanity(%d)", {1})
+            else
+                ConsoleRemote("ThePlayer.components.sanity:DoDelta(%d)", {5})
+            end
+        elseif TheInput:IsKeyDown(KEY_SHIFT) then
+            ConsoleRemote("ThePlayer.components.hunger:DoDelta(%d)", {25})
+        elseif TheInput:IsKeyDown(KEY_ALT) then
+            ConsoleRemote("ThePlayer.components.sanity:DoDelta(%d)", {25})
+        else
+            ConsoleRemote("ThePlayer.components.health:DoDelta(%d)", {25})
+        end
+    elseif MainCharacter ~= nil then
+        if TheInput:IsKeyDown(KEY_CTRL) then
+            if TheInput:IsKeyDown(KEY_SHIFT) then
+                MainCharacter.components.health:DoDelta(50, nil, "debug_key")
+                c_sethunger(1)
+                c_sethealth(1)
+                c_setsanity(1)
+            else
+                MainCharacter.components.sanity:DoDelta(5)
+            end
         elseif TheInput:IsKeyDown(KEY_SHIFT) then
             MainCharacter.components.hunger:DoDelta(25)
         elseif TheInput:IsKeyDown(KEY_ALT) then
@@ -835,7 +853,19 @@ end)
 
 AddGameDebugKey(KEY_KP_MINUS, function()
     local MainCharacter = DebugKeyPlayer()
-    if MainCharacter and TheWorld.ismastersim then
+    if TheWorld ~= nil and not TheWorld.ismastersim then
+        if TheInput:IsKeyDown(KEY_CTRL) then
+            --ConsoleRemote("ThePlayer.components.temperature:DoDelta(%d)", {-10})
+            --ConsoleRemote("TheSim:SetTimeScale(%d)", {TheSim:GetTimeScale() - .25})
+            ConsoleRemote("ThePlayer.components.sanity:DoDelta(%d)", {-5})
+        elseif TheInput:IsKeyDown(KEY_SHIFT) then
+            ConsoleRemote("ThePlayer.components.hunger:DoDelta(%d)", {-25})
+        elseif TheInput:IsKeyDown(KEY_ALT) then
+            ConsoleRemote("ThePlayer.components.sanity:SetPercent(%d)", {0})
+        else
+            ConsoleRemote("ThePlayer.components.health:DoDelta(%d)", {-25})
+        end
+    elseif MainCharacter ~= nil then
         if TheInput:IsKeyDown(KEY_CTRL) then
             --MainCharacter.components.temperature:DoDelta(-10)
             --TheSim:SetTimeScale(TheSim:GetTimeScale() - .25)
@@ -1118,7 +1148,11 @@ end)
 
 AddGameDebugKey(KEY_S, function()
     if TheInput:IsKeyDown(KEY_CTRL) then
-        TheWorld:PushEvent("ms_save")
+        if TheWorld and not TheWorld.ismastersim then
+            ConsoleRemote("c_save()")
+        else
+            TheWorld:PushEvent("ms_save")
+        end
         return true
     end
 end)
