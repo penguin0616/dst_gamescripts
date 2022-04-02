@@ -1900,7 +1900,7 @@ end
 function ParseUserSessionData(data)
     local success, playerdata = RunInSandboxSafe(data)
     if success and playerdata ~= nil then
-        print(playerdata, playerdata.prefab)
+        --print(playerdata, playerdata.prefab)
         --Here we can do some validation on data and/or prefab if we want
         --e.g. Resuming a mod character without the mod loaded?
         return playerdata, playerdata.prefab

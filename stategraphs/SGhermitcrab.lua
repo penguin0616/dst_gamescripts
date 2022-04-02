@@ -853,7 +853,6 @@ local states =
                 local players = TheSim:FindEntities(x,y,z, TUNING.HERMITCRAB.DANCE_RANGE, PLAYER_TAGS)
 
                 for i,player in pairs(players)do
-                    print(player.prefab)
                     if player.sg and player.sg:HasStateTag("dancing") then
                         dancing = true
                         break

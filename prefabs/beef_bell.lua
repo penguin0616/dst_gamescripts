@@ -18,7 +18,16 @@ local function on_player_despawned(inst)
         local fx = SpawnPrefab("spawn_fx_medium")
         fx.Transform:SetPosition(beef.Transform:GetWorldPosition())
 
-        beef:PushEvent("despawn")
+		if not beef.components.health:IsDead() then
+			if beef.components.rideable ~= nil then
+				beef.components.rideable.canride = false
+			end
+			if beef.components.health ~= nil then
+				beef.components.health:SetInvincible(true)
+			end
+
+	        beef:PushEvent("despawn")
+		end
     end
 end
 

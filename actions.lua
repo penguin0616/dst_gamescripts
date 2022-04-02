@@ -2684,6 +2684,8 @@ ACTIONS.MOUNT.fn = function(act)
         return false, "INUSE"
     elseif act.target:HasTag("dogrider_only") and act.doer:HasTag("dogrider") and act.target._playerlink ~= act.doer then
         return false
+	elseif act.target:HasTag("busy") then
+		return false
     end
 
     act.doer.components.rider:Mount(act.target)

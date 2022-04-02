@@ -240,30 +240,32 @@ function CraftingMenuWidget:UpdateFilterButtons()
 
 	for name, button in pairs(self.filter_buttons) do
 		if button.filter_def.recipes ~= nil then 
-			local state = nil
+			local has_buffered = false
+			local has_prototypeable = false
 			local num_can_build = 0
 			for _, recipe_name in pairs(FunctionOrValue(button.filter_def.recipes)) do
 				local data = self.crafting_hud.valid_recipes[recipe_name]
-				if data ~= nil and data.meta.can_build then
-					num_can_build = num_can_build + 1
-					if data.meta.build_state == "prototype" then
-						state = "prototype"
-						can_prototype = true
-					else
-						state = "can_build"
+				if data ~= nil then
+					if data.meta.can_build then
+						num_can_build = num_can_build + 1
+						if data.meta.build_state == "prototype" then
+							has_prototypeable = true
+							can_prototype = true
+						elseif data.meta.build_state == "buffered" then
+							has_buffered = true
+						end
 					end
 				end
 			end
-			if button.state ~= state then
-				button.bg:SetTexture(atlas, (state ~= nil and "filterslot_bg_highlight.tex" or "filterslot_bg.tex"))
-				if state == "prototype" then
-					button.prototype_icon:Show()
-				else
-					button.prototype_icon:Hide()
-				end
-				button.state = state
+
+			button.bg:SetTexture(atlas, has_buffered and "filterslot_bg_buffered.tex" or num_can_build > 0 and "filterslot_bg_highlight.tex" or "filterslot_bg.tex")
+			if has_prototypeable then
+				button.prototype_icon:Show()
+			else
+				button.prototype_icon:Hide()
 			end
-			if state ~= "prototype" and button.num_can_build == nil or num_can_build > button.num_can_build then
+
+			if button.num_can_build == nil or num_can_build > button.num_can_build then
 				new_recipe_available = true
 			end
 			button.num_can_build = num_can_build

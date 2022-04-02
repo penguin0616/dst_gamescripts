@@ -151,7 +151,7 @@ local states =
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("howl")
             inst.SoundEmitter:PlaySound(inst.sounds.howl)
-            inst.sg.statemem.count = data.count
+            inst.sg.statemem.count = data and data.count or nil
         end,
 
         timeline =

@@ -74,7 +74,7 @@ local events=
         end
     end),
     EventHandler("despawn", function(inst, data)
-        if not inst.sg:HasStateTag("busy") then
+        if not inst.components.health:IsDead() then
             inst.sg:GoToState("despawn")
         end
     end),
@@ -352,7 +352,7 @@ local states=
 
     State{
         name = "matingcall",
-        tags = {},
+        tags = {"busy"},
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("mating_taunt1")
@@ -854,11 +854,19 @@ local states=
         tags = {"busy", "notinterupt"},
 
         onenter = function(inst, pushanim)
+			print("despawn enter", inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("idle_loop", true)
+			if inst.components.rideable == nil then
+				inst.components.rideable.canride = false
+			end
+			if inst.components.health == nil then
+				inst.components.health:SetInvincible(true)
+			end
         end,
 
         onexit = function(inst)
+			print("despawn exit", inst)
             inst:DoTaskInTime(0, inst.Remove)
         end,
     },

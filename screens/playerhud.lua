@@ -964,12 +964,12 @@ function PlayerHud:OnControl(control, down)
         return true
 	elseif control == CONTROL_CRAFTING_PINLEFT then
 		if self.controls ~= nil and self.controls.craftingmenu ~= nil and self.controls.craftingmenu.pinbar ~= nil then
-			self.controls.craftingmenu.pinbar:GoToNextPage()
+			self.controls.craftingmenu.pinbar:GoToPrevPage()
 			return true
 		end
 	elseif control == CONTROL_CRAFTING_PINRIGHT then
 		if self.controls ~= nil and self.controls.craftingmenu ~= nil and self.controls.craftingmenu.pinbar ~= nil then
-			self.controls.craftingmenu.pinbar:GoToPrevPage()
+			self.controls.craftingmenu.pinbar:GoToNextPage()
 			return true
 		end
     elseif control == CONTROL_SERVER_PAUSE then

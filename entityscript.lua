@@ -1491,10 +1491,8 @@ function EntityScript:Remove()
         self.parent:RemoveChild(self)
     end
 
-    if self.platformfollowers then
-        for k,v in pairs(self.platformfollowers) do
-            k.platform = nil
-        end
+    if self.platform then
+        self.platform:RemovePlatformFollower(self)
     end
 
     OnRemoveEntity(self.GUID)
@@ -1541,6 +1539,12 @@ function EntityScript:Remove()
         for k,v in pairs(self.children) do
             k.parent = nil
             k:Remove()
+        end
+    end
+
+    if self.platformfollowers then
+        for k,v in pairs(self.platformfollowers) do
+            k.platform = nil
         end
     end
 

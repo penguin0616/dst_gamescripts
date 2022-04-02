@@ -423,7 +423,7 @@ local function GenerateSaveDataFromDelayedSpawnInfo(player, savedata, delayedspa
 	if delayedspawninfo._spawninfo then
 		local spawninforec = delayedspawninfo._spawninfo
 		savedata[player.userid]._spawninfo = {
-			count = spawninforec.players[player],
+			count = spawninforec.players and spawninforec.players[player] or 0,
 			timetonext = spawninforec.timetonext,
 			averageplayerage = spawninforec.averageplayerage,
 		}
@@ -761,6 +761,7 @@ local function HandleSpawnInfoRec(dt, i, spawninforec, groupsdone)
 			if next(spawninforec.players) == nil then
 				table.insert(groupsdone, 1, i)
 			end
+			return
 		end
 
 		-- TEST IF GROUPS IF HOUNDS SHOULD BE TURNED INTO A VARG (or other)

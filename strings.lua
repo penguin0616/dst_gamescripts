@@ -6076,7 +6076,7 @@ STRINGS.UI =
         NEEDSCATCOONSHRINE = "Make an offering at the Catcoon Shrine!",
         NEEDSMADSCIENCE = "Brew at the Mad Scientist Lab!",
 		NEEDSWINTERSFEASTCOOKING = "Cook this festive meal in the Masonry Oven!",
-        NEEDSCARNIVAL_PRIZESHOP = "Purcase at the Cawnival's Prize Booth!",
+        NEEDSCARNIVAL_PRIZESHOP = "Purchase at the Cawnival's Prize Booth!",
         NEEDSCARNIVAL_HOSTSHOP_WANDER = "Find Corvus Goodfeather during the Cawnival!",
         NEEDSCARNIVAL_HOSTSHOP_PLAZA = "Decorate a Cawnival Tree during the Cawnival!",
 
