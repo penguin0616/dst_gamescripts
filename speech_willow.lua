@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I'll ride it when it settles down.",
             INUSE = "They beat me to the hairy beast. Maybe it's for the best.",
+			SLEEPING = "Oh good you're awake, now let's get going!",
         },
         SADDLE =
         {

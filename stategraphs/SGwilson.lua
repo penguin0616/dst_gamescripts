@@ -10202,12 +10202,7 @@ local states =
         {
             TimeEvent(88 * FRAMES, function(inst)
                 inst.DynamicShadow:Enable(true)
-                if inst.CustomSetSkinMode ~= nil then
-                    inst:CustomSetSkinMode(inst.overrideskinmode or "normal_skin")
-                else
-                    inst.AnimState:SetBank("wilson")
-                    inst.components.skinner:SetSkinMode(inst.overrideskinmode or "normal_skin")
-                end
+                inst:ApplySkinOverrides()
                 inst.AnimState:PlayAnimation("transform_end")
                 -- inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_use_bloodpump")
                 inst.sg:RemoveStateTag("ghostbuild")
@@ -10236,12 +10231,7 @@ local states =
         onexit = function(inst)
             --In case of interruptions
             inst.DynamicShadow:Enable(true)
-            if inst.CustomSetSkinMode ~= nil then
-                inst:CustomSetSkinMode(inst.overrideskinmode or "normal_skin")
-            else
-                inst.AnimState:SetBank("wilson")
-                inst.components.skinner:SetSkinMode(inst.overrideskinmode or "normal_skin")
-            end
+            inst:ApplySkinOverrides()
             inst.components.bloomer:PopBloom("playerghostbloom")
             inst.AnimState:SetLightOverride(0)
             if inst.sg:HasStateTag("ghostbuild") then

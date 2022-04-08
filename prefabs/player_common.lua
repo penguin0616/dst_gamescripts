@@ -1383,6 +1383,17 @@ local function ApplyAnimScale(inst, source, scale)
 end
 
 --------------------------------------------------------------------------
+-- (NOTES)JBK: Used to apply overrides to skins for states on things like Wurt.
+local function ApplySkinOverrides(inst)
+    if inst.CustomSetSkinMode ~= nil then
+        inst:CustomSetSkinMode(inst.overrideskinmode or "normal_skin", inst.overrideskinmodebuild)
+    else
+        inst.AnimState:SetBank("wilson")
+        inst.components.skinner:SetSkinMode(inst.overrideskinmode or "normal_skin", inst.overrideskinmodebuild)
+    end
+end
+
+--------------------------------------------------------------------------
 --V2C: Used by multiplayer_portal_moon for saving certain character traits
 --     when rerolling a new character.
 local function SaveForReroll(inst)
@@ -1899,6 +1910,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:RemoveTag("_moisture")
         inst:RemoveTag("_sheltered")
         inst:RemoveTag("_rider")
+
+        -- Setting this here in case some component wants to modify skins.
+        inst.ApplySkinOverrides = ApplySkinOverrides
 
         --No bit ops support, but in this case, + results in same as |
         inst.Network:RemoveUserFlag(

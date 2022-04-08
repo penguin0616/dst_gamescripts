@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "They look mad...",
             INUSE = "Let me on, florpt!",
+			SLEEPING = "WAKE UP, BIG FUZZY!",
         },
         SADDLE =
         {
@@ -1285,7 +1286,7 @@ return{
             GENERIC = "Short and stumpy.",
             BLOOM = "Floaty lights!",
         },
-        MUSHTREE_TALL_WEBBED = "This one claimed by Spiderfolk",
+        MUSHTREE_TALL_WEBBED = "This one claimed by Spiderfolk.",
         SPORE_TALL =
         {
             GENERIC = "Pretty!",
@@ -1317,7 +1318,7 @@ return{
         SPIDERHOLE = "Spiderfolk hole!",
         SPIDERHOLE_ROCK = "All webby...",
         STALAGMITE = "Cave rock.",
-        STALAGMITE_TALL = "Big cave rock",
+        STALAGMITE_TALL = "Big cave rock.",
 
         TURF_CARPETFLOOR = "Fuzzy ground.",
         TURF_CHECKERFLOOR = "Ground bit.",
@@ -2577,7 +2578,7 @@ return{
         HALLOWEENCANDY_4 = "Didn't know Spiderfolk could be tasty!",
         HALLOWEENCANDY_5 = "Will eat you in one bite, florp!",
         HALLOWEENCANDY_6 = "Taste good to me, florp.",
-        HALLOWEENCANDY_7 = "Can eat yours if you don't want them, florp",
+        HALLOWEENCANDY_7 = "Can eat yours if you don't want them, florp.",
         HALLOWEENCANDY_8 = "Yummy yum!",
         HALLOWEENCANDY_9 = "Even better than normal worm!",
         HALLOWEENCANDY_10 = "Mmm, taste like swamp!",
@@ -3656,7 +3657,7 @@ return{
         GLOWBERRYMOUSSE = "Oooh, it glowing!!",
         VOLTGOATJELLY = "Ooooooh, it jiggly!",
         NIGHTMAREPIE = "Hee-hee, it has funny face.",
-        BONESOUP = "Don't want it, florp",
+        BONESOUP = "Don't want it, florp.",
         MASHEDPOTATOES = "Mushy mash!",
         POTATOSOUFFLE = "Wha-? This potato!!",
         MOQUECA = "There fish inside!",

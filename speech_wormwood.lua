@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "Too much fighting!",
             INUSE = "Someone else's",
+			SLEEPING = "Upsie daisies!",
         },
         SADDLE =
         {

@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "It's too angry!",
             INUSE = "We didn't climb into the saddle in time!",
+			SLEEPING = "Oops, were you sleeping?",
         },
         SADDLE =
         {

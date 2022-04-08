@@ -41,6 +41,8 @@ local function UpdateStats(inst, maxhealth, maxhunger, maxsanity)
 end
 
 local function RoyalUpgrade(inst, silent)
+    inst.overrideskinmode = "powerup"
+    inst.overrideskinmodebuild = "wurt_stage2"
 
     UpdateStats(inst, TUNING.WURT_HEALTH_KINGBONUS, TUNING.WURT_HUNGER_KINGBONUS, TUNING.WURT_SANITY_KINGBONUS)
 
@@ -53,6 +55,8 @@ local function RoyalUpgrade(inst, silent)
 end
 
 local function RoyalDowngrade(inst, silent)
+    inst.overrideskinmode = nil
+    inst.overrideskinmodebuild = nil
 
     UpdateStats(inst, TUNING.WURT_HEALTH, TUNING.WURT_HUNGER, TUNING.WURT_SANITY)
 
@@ -195,14 +199,6 @@ local function OnPreLoad(inst, data)
     end
 end
 
-local function OnRespawn(inst)
-    if TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager:HasKing() then
-        inst.overrideskinmode = "powerup"
-    else
-        inst.overrideskinmode = nil
-    end
-end
-
 local function CLIENT_Wurt_HostileTest(inst, target)
     return (target:HasTag("hostile") or target:HasTag("pig"))
         and not target:HasTag("merm") and not target:HasTag("manrabbit")
@@ -268,8 +264,6 @@ local function master_postinit(inst)
 
     inst:ListenForEvent("onmermkingcreated", function() RoyalUpgrade(inst) end, TheWorld)
     inst:ListenForEvent("onmermkingdestroyed", function() RoyalDowngrade(inst) end, TheWorld)
-
-    inst:ListenForEvent("ms_respawnedfromghost", OnRespawn)
 
     inst.peruse_brimstone = peruse_brimstone
     inst.peruse_birds = peruse_birds

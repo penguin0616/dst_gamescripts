@@ -345,7 +345,7 @@ function Builder:GetIngredients(recname)
         for k,v in pairs(recipe.ingredients) do
 			if v.amount > 0 then
 				local amt = math.max(1, RoundBiasedUp(v.amount * self.ingredientmod))
-				local items = self.inst.components.inventory:GetItemByName(v.type, amt, true)
+				local items = self.inst.components.inventory:GetCraftingIngredient(v.type, amt)
 				ingredients[v.type] = items
 			end
         end

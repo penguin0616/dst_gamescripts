@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I'LL RIDE IT LATER. RIGHT NOW IT FIGHTS FOR MY AMUSEMENT",
             INUSE = "ERROR: MOUNT IN USE",
+			SLEEPING = "SLEEP MODE DISABLED",
         },
         SADDLE =
         {

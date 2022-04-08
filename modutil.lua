@@ -604,6 +604,45 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		end
 	end
 
+	env.AddRecipeFilter = function(filter_def, index)
+		-- filter_def.name: This is the filter's id and will need the string added to STRINGS.UI.CRAFTING_FILTERS[name]
+		-- filter_def.atlas: atlas for the icon,  can be a string or function
+		-- filter_def.image: icon to show in the crafting menu, can be a string or function
+		-- filter_def.image_size: (optional) custom image sizing 
+		-- filter_def.custom_pos: (optional) This will not be added to the grid of filters
+		-- filter_def.recipes: !This is not supported! Create the filter and then pass in the filter to AddRecipe2() or AddRecipeToFilter()
+
+		if filter_def == nil or filter_def.name == nil then
+			initprint("Error: AddRecipeFilter called with bad data.")
+			return
+		end
+
+		filter_def.name = string.upper(filter_def.name)
+
+		local name = filter_def.name
+
+		if filter_def.atlas == nil then
+			initprint("Error: AddRecipeFilter "..name.." requires 'atlas'.")
+			return
+		end
+		if filter_def.image == nil then
+			initprint("Error: AddRecipeFilter "..name.." requires 'image'.")
+			return
+		end
+
+		initprint("AddRecipeFilter", name)
+
+		filter_def.recipes = {}
+		filter_def.default_sort_values = {}
+
+		if index ~= nil then
+			table.insert(CRAFTING_FILTER_DEFS, index, filter_def)
+		else
+			table.insert(CRAFTING_FILTER_DEFS, filter_def)
+		end
+		CRAFTING_FILTERS[name] = filter_def
+	end
+
 	env.AddRecipeToFilter = function(recipe_name, filter_name)
 		initprint("AddRecipeToFilter", recipe_name, filter_name)
 		local filter = CRAFTING_FILTERS[filter_name]

@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "Perhaps I should take a step back.",
             INUSE = "Once again the seat of power is stolen from me!",
+			SLEEPING = "Get up, you lazy beast.",
         },
         SADDLE =
         {

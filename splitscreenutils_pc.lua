@@ -21,3 +21,7 @@ Instances = {
 function IsGameInstance( instance_id )
 	return instance_id == Instances.Player1
 end
+
+function IsSplitScreen()
+	return false
+end

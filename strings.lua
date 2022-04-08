@@ -5996,6 +5996,8 @@ STRINGS.UI =
         BUILD = "Build",
         PROTOTYPE = "Prototype",
         RESEARCH = "Research",
+		CRAFT_INGREDIENT = "Craft Ingredient",
+		PROTOTYPE_INGREDIENT = "Prototype Ingredient",
         GAMEPAUSED = "Unpause the game to craft this.",
         TABACTION =
         {
@@ -6753,7 +6755,7 @@ STRINGS.UI =
 		ONLINE_DATA_USER_OFFLINE = "Login to retrieve online cookbook data.",
 		ONLINE_DATA_DOWNLOAD_FAILED = "Failed to sync online cookbook data.",
 
-		UNKNOWN_INGREDIENT_NAME = "Unknown Ingredent '{ingredient}'",
+		UNKNOWN_INGREDIENT_NAME = "Unknown Ingredient '{ingredient}'",
 		UNKNOWN_FOOD_NAME = "Unknown '{food}'",
 
 		LOCKED_RECIPE =
@@ -11063,13 +11065,13 @@ STRINGS.UI =
                 [402] = "Shift", -- KEY_SHIFT
 
                 -- Mouse controls
-                [1000] = "Left Mouse Button",
-                [1001] = "Right Mouse Button",
-                [1002] = "Middle Mouse Button",
-                [1003] = "Mouse Scroll Up",
-                [1004] = "Mouse Scroll Down",
-                [1005] = "Mouse Button 4",
-                [1006] = "Mouse Button 5",
+                [1000] = "\238\132\128", --"Left Mouse Button",
+                [1001] = "\238\132\129", --"Right Mouse Button",
+                [1002] = "\238\132\130", --"Middle Mouse Button",
+                [1003] = "\238\132\133", --"Mouse Scroll Up",
+                [1004] = "\238\132\134", --"Mouse Scroll Down",
+                [1005] = "\238\132\131", --"Mouse Button 4",
+                [1006] = "\238\132\132", --"Mouse Button 5",
             },
             -- Xbox360
             [2] =

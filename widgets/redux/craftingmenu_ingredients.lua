@@ -12,11 +12,14 @@ require("util")
 local INGREDIENTS_SCALE = 0.75
 
 -------------------------------------------------------------------------------------------------------
-local CraftingMenuIngredients = Class(Widget, function(self, owner, max_ingredients_wide, recipe)
+local CraftingMenuIngredients = Class(Widget, function(self, owner, max_ingredients_wide, recipe, extra_quantity_scale)
     Widget._ctor(self, "CraftingMenuIngredients")
 
 	self.owner = owner
 	self.max_ingredients_wide = max_ingredients_wide
+	self.extra_quantity_scale = extra_quantity_scale
+
+	self.ingredient_widgets = {}
 	if recipe ~= nil then
 		self:SetRecipe(recipe)
 	end
@@ -35,7 +38,7 @@ function CraftingMenuIngredients:SetRecipe(recipe)
     local builder = owner.replica.builder
     local inventory = owner.replica.inventory
 
-    local ingredient_widgets = {}
+    self.ingredient_widgets = {}
 	local root = self:AddChild(Widget("root"))
 
 	local equippedBody = inventory:GetEquippedItem(EQUIPSLOTS.BODY)
@@ -61,6 +64,9 @@ function CraftingMenuIngredients:SetRecipe(recipe)
 	root:SetScale(scale * INGREDIENTS_SCALE)
 
 	local quant_text_scale = math.max(1, 1/(scale*1.125))
+	if self.extra_quantity_scale ~= nil then
+		quant_text_scale = quant_text_scale * self.extra_quantity_scale
+	end
 
     self.hint_tech_ingredient = nil
 
@@ -68,33 +74,39 @@ function CraftingMenuIngredients:SetRecipe(recipe)
         if v.type:sub(-9) == "_material" then
             local has, level = builder:HasTechIngredient(v)
             local ing = root:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), nil, nil, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type, quant_text_scale))
+
             if GetGameModeProperty("icons_use_cc") then
                 ing.ing:SetEffect("shaders/ui_cc.ksh")
             end
-            if num > 1 and #ingredient_widgets > 0 then
+            if num > 1 and #self.ingredient_widgets > 0 then
                 offset = offset + half_div
             end
             ing:SetPosition(offset, 0)
             offset = offset + w + half_div
-            table.insert(ingredient_widgets, ing)
+            table.insert(self.ingredient_widgets, ing)
             if not has and self.hint_tech_ingredient == nil and not builder:IsFreeBuildMode() then
                 self.hint_tech_ingredient = v.type:sub(1, -10):upper()
             end
         end
     end
 
+	local recipe_data = (self.owner.HUD.controls ~= nil and self.owner.HUD.controls.craftingmenu ~= nil) and owner.HUD.controls.craftingmenu:GetRecipeState(recipe.name) or nil
+	local allow_ingredient_crafting = self.hint_tech_ingredient == nil and recipe_data ~= nil and recipe_data.meta.build_state ~= "hint" and recipe_data.meta.build_state ~= "hide"
+
     for i, v in ipairs(recipe.ingredients) do
         local has, num_found = inventory:Has(v.type, math.max(1, RoundBiasedUp(v.amount * builder:IngredientMod())), true)
-        local ing = root:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), v.amount ~= 0 and v.amount or nil, num_found, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type, quant_text_scale))
+		local ingredient_recipe_data = allow_ingredient_crafting and owner.HUD.controls.craftingmenu:GetRecipeState(v.type) or nil
+
+        local ing = root:AddChild(IngredientUI(v:GetAtlas(), v:GetImage(), v.amount ~= 0 and v.amount or nil, num_found, has, STRINGS.NAMES[string.upper(v.type)], owner, v.type, quant_text_scale, ingredient_recipe_data))
         if GetGameModeProperty("icons_use_cc") then
             ing.ing:SetEffect("shaders/ui_cc.ksh")
         end
-        if num > 1 and #ingredient_widgets > 0 then
+        if num > 1 and #self.ingredient_widgets > 0 then
             offset = offset + half_div
         end
         ing:SetPosition(offset, 0)
         offset = offset + w + half_div
-        table.insert(ingredient_widgets, ing)
+        table.insert(self.ingredient_widgets, ing)
     end
 
     for i, v in ipairs(recipe.character_ingredients) do
@@ -109,12 +121,12 @@ function CraftingMenuIngredients:SetRecipe(recipe)
         if GetGameModeProperty("icons_use_cc") then
             ing.ing:SetEffect("shaders/ui_cc.ksh")
         end
-        if num > 1 and #ingredient_widgets > 0 then
+        if num > 1 and #self.ingredient_widgets > 0 then
             offset = offset + half_div
         end
         ing:SetPosition(offset, 0)
         offset = offset + w + half_div
-        table.insert(ingredient_widgets, ing)
+        table.insert(self.ingredient_widgets, ing)
     end
 
 	if showamulet then
@@ -122,9 +134,9 @@ function CraftingMenuIngredients:SetRecipe(recipe)
 		
 		local amulet = root:AddChild(IngredientUI(amulet_atlas, amulet_img, 0.2, 0.2, true, STRINGS.GREENAMULET_TOOLTIP, owner, CHARACTER_INGREDIENT.MAX_HEALTH, quant_text_scale))
 		amulet:SetPosition(offset + half_div, 0)
-		table.insert(ingredient_widgets, amulet)
+		table.insert(self.ingredient_widgets, amulet)
 
-        for _, ing in ipairs(ingredient_widgets) do
+        for _, ing in ipairs(self.ingredient_widgets) do
 			local glow = ing:AddChild(Image("images/global_redux.xml", "shop_glow.tex"))
 			glow:SetTint(.8, .8, .8, 0.4)
 			local len = 3

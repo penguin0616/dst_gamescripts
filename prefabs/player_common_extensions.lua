@@ -280,7 +280,7 @@ local function DoActualRez(inst, source, item)
     if source ~= nil then
         inst.DynamicShadow:Enable(true)
         inst.AnimState:SetBank("wilson")
-        inst.components.skinner:SetSkinMode("normal_skin") -- restore skin
+        inst.ApplySkinOverrides(inst) -- restore skin
         inst.components.bloomer:PopBloom("playerghostbloom")
         inst.AnimState:SetLightOverride(0)
 
@@ -305,7 +305,7 @@ local function DoActualRez(inst, source, item)
 		if item ~= nil and (item.prefab == "pocketwatch_revive" or item.prefab == "pocketwatch_revive_reviver") then
 			inst.DynamicShadow:Enable(true)
 			inst.AnimState:SetBank("wilson")
-			inst.components.skinner:SetSkinMode("normal_skin") -- restore skin
+			inst.ApplySkinOverrides(inst) -- restore skin
 			inst.components.bloomer:PopBloom("playerghostbloom")
 			inst.AnimState:SetLightOverride(0)
 

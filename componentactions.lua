@@ -426,7 +426,7 @@ local COMPONENT_ACTIONS =
             if right and inst:HasTag("rideable") and
 
                not inst:HasTag("hitched") and
-               not inst:HasTag("busy") and
+               (not inst:HasTag("busy") or inst:HasTag("sleeping")) and
                (not inst:HasTag("dogrider_only") or
                (inst:HasTag("dogrider_only") and doer:HasTag("dogrider"))) then
 

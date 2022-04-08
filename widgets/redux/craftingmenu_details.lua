@@ -23,6 +23,7 @@ local CraftingMenuDetails = Class(Widget, function(self, owner, parent_widget, p
 
 	self.owner = owner
 	self.parent_widget = parent_widget
+	self.crafting_hud = parent_widget.crafting_hud
 	self.panel_width = panel_width
 	self.panel_height = panel_height
 end)
@@ -91,6 +92,8 @@ local hint_text =
 }
 
 function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
+	self.first_sub_ingredient_to_craft = nil
+
 	if self.data == nil then
 		return
 	end
@@ -119,7 +122,19 @@ function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
         teaser:Show()
         button:Hide()
     else
-        local buttonstr = meta.build_state == "prototype" and STRINGS.UI.CRAFTING.PROTOTYPE
+		if not meta.can_build and recipe.ingredients ~= nil then
+			for i, v in ipairs(self.ingredients.ingredient_widgets) do
+				local data = v.ingredient_recipe
+				if data ~= nil and data.meta.can_build and not v.has_enough then
+					self.first_sub_ingredient_to_craft = data
+					break
+				end
+			end
+		end
+
+        local buttonstr = (self.first_sub_ingredient_to_craft ~= nil and self.first_sub_ingredient_to_craft.meta.build_state == "prototype") and STRINGS.UI.CRAFTING.PROTOTYPE_INGREDIENT
+							or self.first_sub_ingredient_to_craft ~= nil and STRINGS.UI.CRAFTING.CRAFT_INGREDIENT
+							or meta.build_state == "prototype" and STRINGS.UI.CRAFTING.PROTOTYPE
 							or meta.build_state == "buffered" and STRINGS.UI.CRAFTING.PLACE
 							or recipe.actionstr ~= nil and STRINGS.UI.CRAFTING.RECIPEACTION[recipe.actionstr]
 							or STRINGS.UI.CRAFTING.BUILD
@@ -137,14 +152,19 @@ function CraftingMenuDetails:UpdateBuildButton(from_pin_slot)
             else
 				teaser:SetSize(20)
 				teaser:UpdateOriginalSize()
-				teaser:SetMultilineTruncatedString(meta.build_state == "prototype" and STRINGS.UI.CRAFTING.NEEDSTUFF_PROTOTYPE or STRINGS.UI.CRAFTING.NEEDSTUFF, 2, (self.panel_width / 2) * 0.8, nil, false, true)
+				teaser:SetMultilineTruncatedString(self.first_sub_ingredient_to_craft ~= nil and (TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_ACCEPT).."  "..buttonstr) 
+													or meta.build_state == "prototype" and STRINGS.UI.CRAFTING.NEEDSTUFF_PROTOTYPE
+													or STRINGS.UI.CRAFTING.NEEDSTUFF
+													, 2, (self.panel_width / 2) * 0.8, nil, false, true)
 				teaser:Show()
             end
 
 			button:Hide()
         else
             button:SetText(buttonstr)
-            if meta.can_build then
+			local w, h = button.text:GetRegionSize()
+			button.image:ScaleToSize(Clamp(w + 50, 145, 300), 65)
+            if meta.can_build or self.first_sub_ingredient_to_craft then
                 button:Enable()
             else
                 button:Disable()
@@ -166,7 +186,11 @@ function CraftingMenuDetails:_MakeBuildButton()
 	local button = root:AddChild(ImageButton())
 	button:SetWhileDown(function()
 		if button.recipe_held then
-			DoRecipeClick(self.owner, self.data.recipe, self.skins_spinner:GetItem())
+			if self.first_sub_ingredient_to_craft ~= nil then
+				DoRecipeClick(self.owner, self.first_sub_ingredient_to_craft.recipe)
+			else
+				DoRecipeClick(self.owner, self.data.recipe, self.skins_spinner:GetItem())
+			end
 		end
 	end)
 	button:SetOnDown(function()
@@ -181,7 +205,13 @@ function CraftingMenuDetails:_MakeBuildButton()
 
 		if not button.recipe_held then
 			local already_buffered = self.owner.replica.builder:IsBuildBuffered(self.data.recipe.name)
-			local stay_open = DoRecipeClick(self.owner, self.data.recipe, skin)
+			local stay_open
+			if self.first_sub_ingredient_to_craft ~= nil then
+				DoRecipeClick(self.owner, self.first_sub_ingredient_to_craft.recipe)
+				stay_open = true
+			else
+				stay_open = DoRecipeClick(self.owner, self.data.recipe, skin)
+			end
 			if not stay_open and (already_buffered or Profile:GetCraftingMenuBufferedBuildAutoClose()) then
 				self.owner.HUD:CloseCrafting()
 			end
@@ -192,7 +222,6 @@ function CraftingMenuDetails:_MakeBuildButton()
 		button.recipe_held = false
 	end
 	button:SetScale(.7,.7,.7)
-	button.image:SetScale(.45, .7)
     button:Disable()
 	button:Hide()
 	root.button = button
@@ -331,6 +360,7 @@ function CraftingMenuDetails:PopulateRecipeDetailPanel(data, skin_name)
 	self.build_button_root = self.build_button_root:AddChild(self:_MakeBuildButton())
 	self.build_button_root:SetPosition(0, y - 60/2)
 
+	self.ingredients:MoveToFront()
 	self:UpdateBuildButton()
 end
 

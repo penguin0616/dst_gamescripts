@@ -48,7 +48,12 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 		if self.craft_button.recipe_held then
 			local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name) 
 			if recipe_data ~= nil then
-				DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name)
+				local craft_ingredient = self:FindSubIngredientToCraft(recipe_data)
+				if craft_ingredient ~= nil then
+					DoRecipeClick(self.owner, craft_ingredient)
+				else
+					DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name)
+				end
 			end
 		end
 	end)
@@ -92,8 +97,17 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 		if recipe_data ~= nil then
 			if not self.craft_button.recipe_held then
 				local already_buffered = self.owner.replica.builder:IsBuildBuffered(recipe_data.recipe.name)
-				local stay_open, error_msg = DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name) 
-				if not stay_open then
+
+				local craft_ingredient = self:FindSubIngredientToCraft(recipe_data)
+				local stay_open, error_msg
+				if craft_ingredient ~= nil then
+					stay_open, error_msg = DoRecipeClick(self.owner, craft_ingredient)
+					stay_open = true
+				else
+					stay_open, error_msg = DoRecipeClick(self.owner, recipe_data.recipe, self.skin_name) 
+				end
+
+ 				if not stay_open then
 					self.owner:PushEvent("refreshcrafting") -- this is only really neede for free crafting
 
 					if already_buffered or Profile:GetCraftingMenuBufferedBuildAutoClose() then
@@ -103,11 +117,12 @@ local PinSlot = Class(Widget, function(self, owner, craftingmenu, slot_num, pin_
 				if error_msg and not TheNet:IsServerPaused() then
 					SendRPCToServer(RPC.CannotBuild, error_msg)
 				end
+
+				if stay_open and not already_buffered then
+					self.craft_button.last_recipe_click = GetTime()
+				end
 			end
 
-			if recipe_data.recipe.placer == nil then
-				self.craft_button.last_recipe_click = GetTime()
-			end
 			self.craft_button.recipe_held = false
 		end
 	end)
@@ -249,15 +264,20 @@ function PinSlot:MakeRecipePopup(is_left)
 	local atlas = resolvefilepath(CRAFTING_ATLAS)
 
 	local root = Widget("RecipePopupRoot")
-
+	root.owner = self.owner
 	root.max_ingredients_wide = 5
 	root._scale = 1.2 / self.base_scale
+
 	root.ShowPopup = function(popup_self, recipe)
 		if recipe ~= nil then
 			popup_self:Show()
-			popup_self.ingredients:SetRecipe(recipe)
 
-		    popup_self.background:ManualFlow(math.min(root.max_ingredients_wide, popup_self.ingredients.num_items), true)
+			if popup_self.ingredients ~= nil then
+				popup_self.ingredients:Kill()
+			end
+			popup_self.ingredients = root:AddChild(CraftingMenuIngredients(popup_self.owner, popup_self.max_ingredients_wide, recipe, 1.1))
+
+		    popup_self.background:ManualFlow(math.min(popup_self.max_ingredients_wide, popup_self.ingredients.num_items), true)
 
 			local x = popup_self.background.startcap:GetPositionXYZ()
 
@@ -272,11 +292,14 @@ function PinSlot:MakeRecipePopup(is_left)
 	end
 
 	root.HidePopup = function(popup_self)
+		if popup_self.ingredients ~= nil then
+			popup_self.ingredients:Kill()
+			popup_self.ingredients = nil
+		end
 		popup_self:Hide()
 	end
 
 	root.background = root:AddChild(ThreeSlice(atlas, "popup_end.tex", "popup_short.tex"))
-	root.ingredients = root:AddChild(CraftingMenuIngredients(self.owner, root.max_ingredients_wide))
 
 	root.openhint = root:AddChild(Text(UIFONT, 32))
 
@@ -311,6 +334,7 @@ function PinSlot:OnPageChanged(data)
 			self:Show()
 		else
 			self:Hide()
+			self.recipe_popup:HidePopup()
 		end
 	end
 	self:Refresh()
@@ -338,7 +362,7 @@ function PinSlot:Refresh()
 		else
 			inv_image = recipe.imagefn ~= nil and recipe.imagefn() or recipe.image
 		end
-		local inv_atlas = recipe:GetAtlas()
+		local inv_atlas = GetInventoryItemAtlas(inv_image, true) or recipe:GetAtlas()
 
 		self.item_img:SetTexture(inv_atlas, inv_image or "default.tex", "default.tex")
 		self.item_img:ScaleToSize(is_left and item_size or -item_size, item_size)
@@ -438,7 +462,12 @@ function PinSlot:OnUpdate(dt)
     if self.down and self.recipe_held then
 		local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name)
 		if recipe_data ~= nil then
-	        DoRecipeClick(self.owner, recipe_data, self.skin_name)
+			local craft_ingredient = self:FindSubIngredientToCraft(recipe_data)
+			if craft_ingredient ~= nil then
+				DoRecipeClick(self.owner, craft_ingredient)
+			else
+		        DoRecipeClick(self.owner, recipe_data, self.skin_name)
+			end
 		end
     end
 end
@@ -507,6 +536,23 @@ end
 
 function PinSlot:Close()
 	--self:Show()
+end
+
+function PinSlot:FindSubIngredientToCraft(recipe_data)
+	if recipe_data ~= nil and self.recipe_popup ~= nil and not recipe_data.meta.can_build and recipe_data.meta.build_state ~= "hint" and recipe_data.meta.build_state ~= "hide" then
+		if self.recipe_popup.ingredients ~= nil then
+			for i, v in ipairs(self.recipe_popup.ingredients.ingredient_widgets) do
+				local ing_data = v.ingredient_recipe
+				if ing_data ~= nil and ing_data.meta.can_build and not v.has_enough then
+					return ing_data.recipe
+				end
+			end
+		elseif self.craftingmenu:IsCraftingOpen() then
+			return self.craftingmenu.craftingmenu.details_root.first_sub_ingredient_to_craft ~= nil and self.craftingmenu.craftingmenu.details_root.first_sub_ingredient_to_craft.recipe or nil
+		end
+	end
+
+	return nil
 end
 
 function PinSlot:ShowRecipe()

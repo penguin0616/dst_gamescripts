@@ -3136,6 +3136,7 @@ function Tune(overrides)
 
 		MAX_PINNED_RECIPES = 9,
 		DEFAULT_PINNED_RECIPES = {"torch", "campfire", "axe", "pickaxe", "researchlab"},
+		DEFAULT_PINNED_RECIPES_2 = {"rope", "boards", "cutstone", "transistor", "papyrus"},
 
 		DROP_EVERYTHING_ON_DESPAWN = false,
 

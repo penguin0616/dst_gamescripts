@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I cannot ride it now! Hair-cow is proving itself in battle!",
             INUSE = "Hair-cow is occupied by another.",
+			SLEEPING = "Is time for waking, hair-cow!",
         },
         SADDLE =
         {

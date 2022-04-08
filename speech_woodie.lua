@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I should wait for the dust to settle, eh?",
             INUSE = "Maybe I can find a caribou to ride instead.",
+			SLEEPING = "Sorry there bud, time to get moving.",
         },
         SADDLE =
         {

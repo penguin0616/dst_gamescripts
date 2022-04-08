@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I'll only ride it if it's the victor.",
             INUSE = "I'll need to be faster than that in battle!",
+			SLEEPING = "Rise, beastie! We ride!",
         },
         SADDLE =
         {

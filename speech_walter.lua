@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "Hey, calm down! Let me on!",
             INUSE = "I guess this seat's occupied.",
+			SLEEPING = "Sorry to wake you, but could you give me a ride?",
         },
         SADDLE =
         {

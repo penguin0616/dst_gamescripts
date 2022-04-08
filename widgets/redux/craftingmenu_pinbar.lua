@@ -131,6 +131,10 @@ local CraftingMenuPinBar = Class(Widget, function(self, owner, crafting_hud, hei
 				return self.pin_slots[i]
 			end
 		end
+
+		if self.crafting_hud:IsCraftingOpen() and TheInput:ControllerAttached() then
+			return self.page_spinner
+		end
 	end
 
 	local function FindPinDown(_pin)

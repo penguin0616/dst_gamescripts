@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I'll wait for it to calm down...",
             INUSE = "I'll have to be quicker to the saddle next time.",
+			SLEEPING = "It feels so cruel to wake it from its dreams...",
         },
         SADDLE =
         {

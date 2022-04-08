@@ -183,6 +183,7 @@ return {
         {
             TARGETINCOMBAT = "I know better than to bother an angry beefalo!",
             INUSE = "Someone beat me to the saddle!",
+			SLEEPING = "Time to wake up!",
         },
         SADDLE =
         {

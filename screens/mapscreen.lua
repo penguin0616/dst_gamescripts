@@ -166,7 +166,6 @@ function MapScreen:OnControl(control, down)
         ThePlayer.components.playercontroller:RotRight()
     elseif control == CONTROL_MAP_ZOOM_IN then
         self.minimap:OnZoomIn()
-		print("REPEAT_TIME", REPEAT_TIME)
         self.repeat_time = REPEAT_TIME
     elseif control == CONTROL_MAP_ZOOM_OUT then
         self.minimap:OnZoomOut()

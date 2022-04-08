@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "It would be ill-advised to approach that scuffle.",
             INUSE = "Patience is required. I can ride this beefalo later.",
+			SLEEPING = "Up now, I require your services.",
         },
         SADDLE =
         {

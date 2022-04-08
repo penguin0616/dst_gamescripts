@@ -1199,6 +1199,69 @@ function Inventory:GetItemByName(item, amount, checkallcontainers) --Note(Peter)
     return items
 end
 
+local function crafting_priority_fn(a, b)
+    if a.stacksize == b.stacksize then
+        return a.slot < b.slot
+    end
+    return a.stacksize < b.stacksize --smaller stacks first
+end
+
+function Inventory:GetCraftingIngredient(item, amount)
+    local overflow = self:GetOverflowContainer()
+    local crafting_items = {}
+    local total_num_found = 0
+
+    for container_inst in pairs(self.opencontainers) do
+        local container = container_inst.components.container or container_inst.components.inventory
+        if container and container ~= overflow and not container.excludefromcrafting then
+            for k, v in pairs(container:GetCraftingIngredient(item, amount - total_num_found, true)) do
+                crafting_items[k] = v
+                total_num_found = total_num_found + v
+            end
+        end
+        if total_num_found >= amount then
+            return crafting_items
+        end
+    end
+
+    local items = {}
+    for i = 1, self.maxslots do
+        local v = self.itemslots[i]
+        if v and v.prefab == item then
+            table.insert(items, {
+                item = v,
+                stacksize = GetStackSize(v),
+                slot = i,
+            })
+        end
+    end
+    table.sort(items, crafting_priority_fn)
+    for i, v in ipairs(items) do
+        local stacksize = math.min(v.stacksize, amount - total_num_found)
+        crafting_items[v.item] = stacksize
+        total_num_found = total_num_found + stacksize
+        if total_num_found >= amount then
+            return crafting_items
+        end
+    end
+
+    if overflow then
+        for k,v in pairs(overflow:GetCraftingIngredient(item, amount - total_num_found)) do
+            crafting_items[k] = v
+            total_num_found = total_num_found + v
+        end
+        if total_num_found >= amount then
+            return crafting_items
+        end
+    end
+
+    if self.activeitem and self.activeitem.prefab == item then
+        crafting_items[self.activeitem] = math.min(GetStackSize(self.activeitem), amount - total_num_found)
+    end
+
+    return crafting_items
+end
+
 local function tryconsume(self, v, amount)
     if v.components.stackable == nil then
         self:RemoveItem(v):Remove()

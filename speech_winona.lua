@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "It's a bit preoccupied.",
             INUSE = "Only one to a beef, hey?",
+			SLEEPING = "Up and at 'em, big guy!",
         },
         SADDLE =
         {

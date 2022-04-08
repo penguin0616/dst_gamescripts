@@ -303,26 +303,26 @@ function ItemTile:GetDescriptionString()
             if not (self.item.replica.equippable ~= nil and self.item.replica.equippable:IsEquipped()) then
                 --self.namedisp:SetHAlign(ANCHOR_LEFT)
                 if TheInput:IsControlPressed(CONTROL_FORCE_INSPECT) then
-                    str = str.."\n"..STRINGS.LMB..": "..STRINGS.INSPECTMOD
+                    str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..STRINGS.INSPECTMOD
                 elseif TheInput:IsControlPressed(CONTROL_FORCE_TRADE) and not self.item.replica.inventoryitem:CanOnlyGoInPocket() then
                     if next(player.replica.inventory:GetOpenContainers()) ~= nil then
-                        str = str.."\n"..STRINGS.LMB..": "..((TheInput:IsControlPressed(CONTROL_FORCE_STACK) and self.item.replica.stackable ~= nil) and (STRINGS.STACKMOD.." "..STRINGS.TRADEMOD) or STRINGS.TRADEMOD)
+                        str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..((TheInput:IsControlPressed(CONTROL_FORCE_STACK) and self.item.replica.stackable ~= nil) and (STRINGS.STACKMOD.." "..STRINGS.TRADEMOD) or STRINGS.TRADEMOD)
                     end
                 elseif TheInput:IsControlPressed(CONTROL_FORCE_STACK) and self.item.replica.stackable ~= nil then
-                    str = str.."\n"..STRINGS.LMB..": "..STRINGS.STACKMOD
+                    str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..STRINGS.STACKMOD
                 end
             end
 
             local actions = actionpicker:GetInventoryActions(self.item)
             if #actions > 0 then
-                str = str.."\n"..STRINGS.RMB..": "..actions[1]:GetActionString()
+                str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SECONDARY)..": "..actions[1]:GetActionString()
             end
         elseif active_item:IsValid() then
             if not (self.item.replica.equippable ~= nil and self.item.replica.equippable:IsEquipped()) then
                 if active_item.replica.stackable ~= nil and active_item.prefab == self.item.prefab and active_item.AnimState:GetSkinBuild() == self.item.AnimState:GetSkinBuild() then --active_item.skinname == self.item.skinname (this does not work on clients, so we're going to use the AnimState hack instead)
-                    str = str.."\n"..STRINGS.LMB..": "..STRINGS.UI.HUD.PUT
+                    str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..STRINGS.UI.HUD.PUT
                 else
-                    str = str.."\n"..STRINGS.LMB..": "..STRINGS.UI.HUD.SWAP
+                    str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY)..": "..STRINGS.UI.HUD.SWAP
                 end
             end
 
@@ -331,7 +331,7 @@ function ItemTile:GetDescriptionString()
 
             local actions = actionpicker:GetUseItemActions(self.item, active_item, true)
             if #actions > 0 then
-                str = str.."\n"..STRINGS.RMB..": "..actions[1]:GetActionString()
+                str = str.."\n"..TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SECONDARY)..": "..actions[1]:GetActionString()
             end
         end
     end

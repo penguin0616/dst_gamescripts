@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "Mon dieu. It's busy just now.",
             INUSE = "Oh. It must belong to someone else.",
+			SLEEPING = "Excusez-moi, but perhaps you can nap later?",
         },
         SADDLE =
         {

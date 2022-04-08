@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "I will not meet my end trampled beneath the hooves of an angry beefalo!",
             INUSE = "Oh botheration. I was going to use that, you know!",
+			SLEEPING = "Wake up! There are places to go, things to be done!",
         },
         SADDLE =
         {

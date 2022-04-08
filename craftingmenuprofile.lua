@@ -162,13 +162,15 @@ function CraftingMenuProfile:PrevPage()
 end
 
 function CraftingMenuProfile:MakeDefaultPinnedRecipes()
-	self.pinned_recipes = {}
-	for _, v in pairs(TUNING.DEFAULT_PINNED_RECIPES) do
-		table.insert(self.pinned_recipes, {recipe_name = v})
+	self.pinned_pages = {{}, {}}
+	for _, v in ipairs(TUNING.DEFAULT_PINNED_RECIPES) do
+		table.insert(self.pinned_pages[1], {recipe_name = v})
+	end
+	for _, v in ipairs(TUNING.DEFAULT_PINNED_RECIPES_2) do
+		table.insert(self.pinned_pages[2], {recipe_name = v})
 	end
 
-	self.pinned_pages = {}
-	table.insert(self.pinned_pages, self.pinned_recipes)
+	self.pinned_recipes = self.pinned_pages[1]
 	self.pinned_page = 1
 end
 

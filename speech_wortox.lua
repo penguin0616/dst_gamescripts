@@ -173,6 +173,7 @@ return{
         {
             TARGETINCOMBAT = "Its focus is elsewhere.",
             INUSE = "It has made a pact with another.",
+			SLEEPING = "It's had its forty winks, methinks.",
         },
         SADDLE =
         {

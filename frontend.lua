@@ -1199,6 +1199,10 @@ function FrontEnd:GetCraftingMenuScale()
     local size = Profile:GetCraftingMenuSize()
     local min_scale = .6
     local max_scale = 1.15
+	if IsSplitScreen() then
+		min_scale = 1.0
+		max_scale = 1.92
+	end
 
     --testing high res displays
     local w, h = TheSim:GetScreenSize()
