@@ -729,14 +729,14 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
                         end
                     end
                 )
-            end
-        elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
-			self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
-				function()
-					self:ActivateCurrentResearchMachine(recipe)
-					self:UnlockRecipe(recipe.name)
-				end
-			)
+			elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
+				self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
+					function()
+						self:ActivateCurrentResearchMachine(recipe)
+						self:UnlockRecipe(recipe.name)
+					end
+				)
+			end
         end
 	else
 		for i, ing in ipairs(recipe.ingredients) do
