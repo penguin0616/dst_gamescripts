@@ -36,15 +36,14 @@ local CraftingMenuHUD = Class(Widget, function(self, owner, is_left_aligned)
 	self.craftingmenu:SetPosition(is_left_aligned and -255 or 255, 0)
 	self.craftingmenu:Disable()
 
+	self.nav_hint = self.craftingmenu.nav_hint
+
 	self.pinbar = self.ui_root:AddChild(CraftingMenuPinBar(owner, self, HEIGHT))
 	self.pinbar:SetPosition(0, 0)
 	self.pinbar:MoveToBack()
 
 	self.openhint = self:AddChild(Text(UIFONT, 30))
 	self.openhint:SetPosition(is_left_aligned and 28 or -28, 34 + HEIGHT/2 + y_offset)
-
-	self.nav_hint = self.craftingmenu:AddChild(Text(BODYTEXTFONT, 26))
-	self.nav_hint:SetPosition(0, -28 - HEIGHT/2)
 
 	self:RefreshControllers(TheInput:ControllerAttached())
 
@@ -223,6 +222,10 @@ function CraftingMenuHUD:Initialize()
 
 	self.needtoupdate = false
 	self.tech_tree_changed = false
+end
+
+function CraftingMenuHUD:NeedsToUpdate()
+	return self.needtoupdate
 end
 
 function CraftingMenuHUD:UpdateRecipes()

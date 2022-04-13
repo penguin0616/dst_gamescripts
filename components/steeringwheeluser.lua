@@ -66,6 +66,7 @@ function SteeringWheelUser:SetSteeringWheel(steering_wheel)
 		if self.boat ~= nil then
 			local dir_x, dir_z = self.boat.components.boatphysics:GetRudderDirection()
 			self.boat.components.boatphysics:SetTargetRudderDirection(dir_x, dir_z)
+			self.boat = nil
 		end
 	end
 end

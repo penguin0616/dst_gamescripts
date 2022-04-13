@@ -420,14 +420,23 @@ function CraftingMenuWidget:OnCraftingMenuOpen(set_focus)
 		end
 	else
 		if self.pre_station_selection ~= nil then
-			filter = self.pre_station_selection.filter
-			recipe_data = self.pre_station_selection.data
-			skin_name = self.pre_station_selection.skin_name
-			--print(" using self.pre_station_selection", filter, recipe_data ~= nil and recipe_data.recipe.name, skin_name)
-
+			if self.details_root.from_filter_name ~= CRAFTING_FILTERS.CRAFTING_STATION.name then
+				filter = self.details_root.from_filter_name
+				recipe_data = self.details_root.data
+				skin_name = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil
+			else
+				filter = self.pre_station_selection.filter
+				recipe_data = self.pre_station_selection.data
+				skin_name = self.pre_station_selection.skin_name
+			end
+				--print(" using self.pre_station_selection", filter, recipe_data ~= nil and recipe_data.recipe.name, skin_name)
 			self.pre_station_selection = nil
 		elseif not self.crafting_hud:IsCraftingOpen() then
-			filter = self.details_root.from_filter_name -- nil
+			if TheInput:ControllerAttached() then
+				filter = self.details_root.from_filter_name -- nil
+			else
+				filter = nil
+			end
 			recipe_data = self.details_root.data
 			skin_name = self.details_root.skins_spinner ~= nil and self.details_root.skins_spinner:GetItem() or nil
 		end
@@ -479,7 +488,6 @@ function CraftingMenuWidget:MakeFrame(width, height)
 
 	self.filter_panel = w:AddChild(self:MakeFilterPanel(width))
 	local filters_height = self.filter_panel.panel_height --147
-	print("height", height)
 
 	height = height + math.max(filters_height - 147, 0)
 
@@ -531,6 +539,9 @@ function CraftingMenuWidget:MakeFrame(width, height)
 
 	self.details_root = w:AddChild(CraftingMenuDetails(self.owner, self, width - 20 * 2, height - 20 * 2))
 	self.details_root:SetPosition(0, height/2 - filters_height - grid_h - 10)
+
+	self.nav_hint = w:AddChild(Text(BODYTEXTFONT, 26))
+	self.nav_hint:SetPosition(0, - height/2 - 30)
 
 	----------------
 
@@ -616,7 +627,7 @@ function CraftingMenuWidget:SelectFilter(name, clear_search_text)
 	--print("SelectFilter", name, clear_search_text, self.current_filter_name)
 
 	if name ~= CRAFTING_FILTERS.CRAFTING_STATION.name then
-		self.pre_station_selection = nil
+		--self.pre_station_selection = nil
 	end
 
 	if clear_search_text then
@@ -870,11 +881,7 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 		end
 		w.cell_root:SetWhileDown(function()
 			if w.cell_root.recipe_held then
-				if self.details_root.first_sub_ingredient_to_craft ~= nil then
-					DoRecipeClick(self.owner, self.details_root.first_sub_ingredient_to_craft.recipe)
-				else
-					DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
-				end
+				DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
 			end
 		end)
 		w.cell_root:SetOnDown(function()
@@ -888,13 +895,7 @@ function CraftingMenuWidget:MakeRecipeList(width, height)
 			if is_current then -- clicking the item when it is already selected will trigger a build
 				local already_buffered = self.owner.replica.builder:IsBuildBuffered(w.data.recipe.name)
 				if not w.cell_root.recipe_held or already_buffered then
-					local stay_open, error_msg
-					if self.details_root.first_sub_ingredient_to_craft ~= nil then
-						stay_open, error_msg = DoRecipeClick(self.owner, self.details_root.first_sub_ingredient_to_craft.recipe)
-						stay_open = true
-					else
-						stay_open, error_msg = DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
-					end
+					local stay_open, error_msg = DoRecipeClick(self.owner, w.data.recipe, self.details_root.skins_spinner:GetItem())
 					if not stay_open then
 						self.owner:PushEvent("refreshcrafting")  -- this is only really neede for free crafting
 

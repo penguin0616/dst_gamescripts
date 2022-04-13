@@ -7,7 +7,7 @@ math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6)))
 math.random()
 
 function IsConsole()
-	return PLATFORM == "PS4" or PLATFORM == "XBONE"
+	return PLATFORM == "PS4" or PLATFORM == "XBONE" or PLATFORM == "SWITCH"
 end
 
 function IsNotConsole()

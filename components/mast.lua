@@ -38,8 +38,9 @@ local Mast = Class(function(self, inst)
 
     self:SetRudder(SpawnPrefab("rudder"))
 
-    self.inst:DoTaskInTime(0, function()
+    self._setup_boat_task = self.inst:DoTaskInTime(0, function()
         self:SetBoat(self.inst:GetCurrentPlatform())
+		self._setup_boat_task = nil
     end)
 end,
 nil,
@@ -47,6 +48,12 @@ nil,
     is_sail_raised = on_is_sail_raised,
     is_sail_transitioning = on_is_sail_transitioning,
 })
+
+function Mast:OnRemoveFromEntity()
+	if self._setup_boat_task ~= nil then
+		self._setup_boat_task:Cancel()
+	end
+end
 
 function Mast:OnRemoveEntity()
 	local mast_sinking

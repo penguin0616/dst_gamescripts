@@ -710,11 +710,10 @@ end
 --------------------------------------------------------------------------
 
 function Builder:MakeRecipeFromMenu(recipe, skin)
-    if recipe.placer == nil then
-        if self:KnowsRecipe(recipe) then
-            if self:IsBuildBuffered(recipe.name) or self:HasIngredients(recipe) then
-                self:MakeRecipe(recipe, nil, nil,
-                    ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
+    if self:HasIngredients(recipe) then
+		if recipe.placer == nil then
+			if self:KnowsRecipe(recipe) then
+                self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                     function()
                         if self.freebuildmode then
                             --V2C: free-build should still trigger prototyping
@@ -731,17 +730,46 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
                     end
                 )
             end
-        elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and
-            self:CanLearn(recipe.name) and
-            self:HasIngredients(recipe) then
-            self:MakeRecipe(recipe, nil, nil,
-                ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
-                function()
-                    self:ActivateCurrentResearchMachine(recipe)
-                    self:UnlockRecipe(recipe.name)
-                end
-            )
+        elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
+			self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
+				function()
+					self:ActivateCurrentResearchMachine(recipe)
+					self:UnlockRecipe(recipe.name)
+				end
+			)
         end
+	else
+		for i, ing in ipairs(recipe.ingredients) do
+			local ing_recipe = GetValidRecipe(ing.type)
+			if ing_recipe ~= nil and not self.inst.components.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * self.ingredientmod)), true) and self:HasIngredients(ing_recipe) then
+				if self:KnowsRecipe(ing_recipe) then
+					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
+						function()
+							if self.freebuildmode then
+								--V2C: free-build should still trigger prototyping
+								if not table.contains(self.recipes, ing_recipe.name) and CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) then
+									self:ActivateCurrentResearchMachine(ing_recipe)
+								end
+							elseif not ing_recipe.nounlock then
+								--V2C: for recipes known through tech bonus, still
+								--     want to unlock in case we reroll characters
+								self:AddRecipe(ing_recipe.name)
+							else
+								self:ActivateCurrentResearchMachine(ing_recipe)
+							end
+						end
+					)
+				elseif CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) and self:CanLearn(ing_recipe.name) then
+					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
+						function()
+							self:ActivateCurrentResearchMachine(ing_recipe)
+							self:UnlockRecipe(ing_recipe.name)
+						end
+					)
+				end
+			end
+		end
+
     end
 end
 

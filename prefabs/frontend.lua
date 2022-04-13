@@ -292,18 +292,32 @@ if IsConsole() then
 	    table.insert(assets, Asset("ATLAS", "images/ui_ps4.xml"))
 	    table.insert(assets, Asset("IMAGE", "images/ui_ps4.tex"))
 	end
-end
 
-if IsPS4() then
-    table.insert(assets, Asset("ATLAS", "images/ps4.xml"))
-    table.insert(assets, Asset("IMAGE", "images/ps4.tex"))
-    table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
-    table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
-elseif IsXB1() then
-    table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
-    table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
-    table.insert(assets, Asset("ATLAS", "images/blit.xml"))
-    table.insert(assets, Asset("IMAGE", "images/blit.tex"))
+	if IsPS4() then
+		table.insert(assets, Asset("ATLAS", "images/ps4.xml"))
+		table.insert(assets, Asset("IMAGE", "images/ps4.tex"))
+		table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
+		table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
+	elseif IsXB1() then
+		table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
+		table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
+		table.insert(assets, Asset("ATLAS", "images/blit.xml"))
+		table.insert(assets, Asset("IMAGE", "images/blit.tex"))
+	elseif IsSWITCH() then
+		table.insert(assets, Asset("ATLAS", "images/nx_controllers.xml"))
+		table.insert(assets, Asset("IMAGE", "images/nx_controllers.tex"))
+		table.insert(assets, Asset("ATLAS", "images/nx.xml"))
+		table.insert(assets, Asset("IMAGE", "images/nx.tex"))
+	else
+		assert(0) -- Add platform
+	end
+elseif BRANCH == "dev" then
+	table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
+	table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
+	table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
+	table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
+	--table.insert(assets, Asset("ATLAS", "images/nx_controllers.xml"))
+	--table.insert(assets, Asset("IMAGE", "images/nx_controllers.tex"))
 end
 
 if PLATFORM == "WIN32_RAIL" then

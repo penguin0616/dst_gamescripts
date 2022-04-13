@@ -50,8 +50,8 @@ local function DoSpawnIceSpike(inst, x, z)
             if ent ~= inst then
                 targets[ent.GUID] = true
                 if inst.components.combat:CanTarget(ent) and not ent.deerclopsattacked then
-                    local damage  = (TUNING.DEERCLOPS_DAMAGE*TUNING.DEERCLOPS_AOE_SCALE) * (ent:HasTag("player") and inst.components.combat.playerdamagepercent and inst.components.combat.playerdamagepercent or 1)
-                    ent.components.combat:GetAttacked(inst, damage )
+					inst.components.combat:DoAttack(ent)
+					inst._icespikeshit = true
                 end
                 ent.deerclopsattacked = true
                 ent:DoTaskInTime(ICESPAWNTIME +0.03,function() ent.deerclopsattacked = nil end)
@@ -59,6 +59,17 @@ local function DoSpawnIceSpike(inst, x, z)
         end
     end
     return targets
+end
+
+local function CheckForIceSpikesMiss(inst)
+	if inst._icespikeshit_task ~= nil then
+		inst._icespikeshit_task:Cancel()
+		inst._icespikeshit_task = nil
+	end
+
+	if not inst._icespikeshit then
+        inst:PushEvent("onmissother") -- for ChaseAndAttack
+	end
 end
 
 local function SpawnIceFx(inst, target)
@@ -87,7 +98,13 @@ local function SpawnIceFx(inst, target)
         local radius = 2 * math.random() +1
         local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
         inst:DoTaskInTime(math.random() * ICESPAWNTIME, DoSpawnIceSpike, x+offset.x, z+offset.z)
-    end  
+    end 
+
+	inst._icespikeshit = false
+	if inst._icespikeshit_task ~= nil then
+		inst._icespikeshit_task:Cancel()
+	end
+	inst._icespikeshit_task = inst:DoTaskInTime(ICESPAWNTIME + FRAMES, CheckForIceSpikesMiss)
 end
 
 local function SpawnLaser(inst)

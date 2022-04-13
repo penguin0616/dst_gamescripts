@@ -7215,6 +7215,7 @@ STRINGS.UI =
 		DIM = "Dim",
 		DIMMEST = "Dimmest",
 		CRAFTING_HINTALL_ENABLED = "All Recipes",
+		INVERT = "Inverted",
         BACKTITLE = "Lose Changes?",
         BACKBODY = "Do you want to throw out your changes?",
         BACKTITLE_PS4 = "Wait!",
@@ -7271,6 +7272,7 @@ STRINGS.UI =
         THREADEDRENDER = "Threaded Render:",
 		SCREEN_FLASH_INTENSITY = "Screen Flashes:",
         DYNAMIC_TREE_SHADOWS = "Canopy Shadows:",
+		INVERTCAMERAROTATION = "Camera Rotation",
         RESTART_TEXTURE_STREAMING_TITLE = "Restart Required",
         RESTART_TEXTURE_STREAMING_BODY = "For Texture Streaming changes to take effect, you will have to exit and restart the game.",
         RESTART_THREADED_RENDER_TITLE = "Restart Required",
@@ -7360,6 +7362,7 @@ STRINGS.UI =
             SCREEN_FLASH_INTENSITY = "Control the intensity of screen flashes during explosions and lightning strikes.",
             DYNAMIC_TREE_SHADOWS = "Renders the ground shadow while under a canopy.",
 			DISPLAYAREA = "Maximize the screen size on your display.",
+			INVERTCAMERAROTATION = "Flips the camera rotation direction.",
 
             -- Advanced
             MOVEMENTPREDICTION = "Allows the game to predict your movements to compensate for any possible lag.",

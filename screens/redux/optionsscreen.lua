@@ -18,6 +18,11 @@ local ModsScreen = require "screens/redux/modsscreen"
 
 local KitcoonPuppet = require "widgets/kitcoonpuppet"
 
+local DEVICE_DUALSHOCK4 = 2
+local DEVICE_VITA = 3
+local DEVICE_XBONE = 7
+local DEVICE_SWITCH = 8
+
 local controls_ui = {
     action_label_width = 375,
     action_btn_width = 250,
@@ -25,7 +30,18 @@ local controls_ui = {
 }
 local show_graphics = PLATFORM ~= "NACL" and IsNotConsole() and not IsSteamDeck() 
 
+local dev_test_platform = PLATFORM --"XBONE"
+local PLATFORM_LAYOUT = (BRANCH == "dev" and PLATFORM == "WIN32_STEAM") and dev_test_platform or PLATFORM
+local IsConsoleLayout = (BRANCH == "dev" and PLATFORM == "WIN32_STEAM") 
+	and function ()
+		return dev_test_platform == "PS4" or dev_test_platform == "XBONE" or dev_test_platform == "SWITCH"
+	end
+	or function ()
+		return IsConsole()
+	end
+
 local enableDisableOptions = { { text = STRINGS.UI.OPTIONS.DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.ENABLED, data = true } }
+local invertDisableOptions = { { text = STRINGS.UI.OPTIONS.DEFAULT, data = false }, { text = STRINGS.UI.OPTIONS.INVERT, data = true } }
 local craftingHintOptions = { { text = STRINGS.UI.OPTIONS.DEFAULT, data = false }, { text = STRINGS.UI.OPTIONS.CRAFTING_HINTALL_ENABLED, data = true } }
 local steamCloudLocalOptions = { { text = STRINGS.UI.OPTIONS.LOCAL_SAVES, data = false }, { text = STRINGS.UI.OPTIONS.STEAM_CLOUD_SAVES, data = true } }
 local integratedbackpackOptions = { { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_DISABLED, data = false }, { text = STRINGS.UI.OPTIONS.INTEGRATEDBACKPACK_ENABLED, data = true } }
@@ -243,7 +259,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		musicvolume = TheMixer:GetLevel( "set_music" ) * 10,
 		ambientvolume = TheMixer:GetLevel( "set_ambience" ) * 10,
 		bloom = PostProcessor:IsBloomEnabled(),
-		smalltextures = graphicsOptions:IsSmallTexturesMode(),
+		smalltextures = graphicsOptions:GetSmallTexturesModeSettingValue(),
 		screenflash = Profile:GetScreenFlash(),
 		distortion = PostProcessor:IsDistortionEnabled(),
 		screenshake = Profile:IsScreenShakeEnabled(),
@@ -263,6 +279,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		animatedheads = Profile:GetAnimatedHeadsEnabled(),
 		wathgrithrfont = Profile:IsWathgrithrFontEnabled(),
 		boatcamera = Profile:IsBoatCameraEnabled(),
+		InvertCameraRotation = Profile:GetInvertCameraRotation(),
 		integratedbackpack = Profile:GetIntegratedBackpack(),
         lang_id = Profile:GetLanguageID(),
 		texturestreaming = Profile:GetTextureStreamingEnabled(),
@@ -335,8 +352,12 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
             settings = self.panel_root:AddChild(self:_BuildSettings()),
             graphics = self.panel_root:AddChild(self:_BuildGraphics()),
             advanced = self.panel_root:AddChild(self:_BuildAdvancedSettings()),
-            controls = self.panel_root:AddChild(self:_BuildControls()),
         }
+	if IsConsoleLayout() then	
+        menu_items["controls"] = self.panel_root:AddChild(self:_BuildController())
+	else
+        menu_items["controls"] = self.panel_root:AddChild(self:_BuildControls())
+	end
     if self.show_language_options then
         menu_items["languages"] = self.panel_root:AddChild(self:_BuildLanguages())
     end
@@ -351,22 +372,24 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 
 	-------------------------------------------------------
 	-- Must get done AFTER InitializeSpinners()
-    self._deviceSaved = self.deviceSpinner:GetSelectedData()
-    if self._deviceSaved ~= 0 then
-        self.kb_controllist:Hide()
-        self.active_list = self.controller_controllist
-        self.active_list:Show()
-    else
-        self.controller_controllist:Hide()
-        self.active_list = self.kb_controllist
-        self.active_list:Show()
-    end
-    self.controls_header:SetString(self.deviceSpinner:GetSelectedText())
+	if not IsConsoleLayout() then
+		self._deviceSaved = self.deviceSpinner:GetSelectedData()
+		if self._deviceSaved ~= 0 then
+			self.kb_controllist:Hide()
+			self.active_list = self.controller_controllist
+			self.active_list:Show()
+		else
+			self.controller_controllist:Hide()
+			self.active_list = self.kb_controllist
+			self.active_list:Show()
+		end
+		self.controls_header:SetString(self.deviceSpinner:GetSelectedText())
 
-	self:LoadCurrentControls()
+		self:LoadCurrentControls()
 
-	self.controls_horizontal_line:MoveToFront()
-	self.controls_vertical_line:MoveToFront()
+		self.controls_horizontal_line:MoveToFront()
+		self.controls_vertical_line:MoveToFront()
+	end
 
 	---------------------------------------------------
 
@@ -514,7 +537,6 @@ function OptionsScreen:ConfirmApply( )
 		  	{
 		  		text = STRINGS.UI.OPTIONS.ACCEPT,
 		  		cb = function()
-					self:Apply()
 					self:Save(function()
 						self:Close(function() TheFrontEnd:PopScreen() end)
 					end)
@@ -563,6 +585,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetScreenShakeEnabled( self.options.screenshake )
 	Profile:SetWathgrithrFontEnabled( self.options.wathgrithrfont )
 	Profile:SetBoatCameraEnabled( self.options.boatcamera )
+	Profile:SetInvertCameraRotation( self.options.InvertCameraRotation )
 	Profile:SetHUDSize( self.options.hudSize )
 	Profile:SetCraftingMenuSize( self.options.craftingmenusize )
 	Profile:SetCraftingMenuNumPinPages( self.options.craftingmenunumpinpages )
@@ -594,6 +617,8 @@ function OptionsScreen:Save(cb)
 	if self.integratedbackpackSpinner:IsEnabled() then
 		Profile:SetIntegratedBackpack( self.options.integratedbackpack )
 	end
+
+	self:Apply()
 
 	Profile:Save( function() if cb then cb() end end)
 end
@@ -656,7 +681,6 @@ function OptionsScreen:ConfirmGraphicsChanges(fn)
 			  { { text = STRINGS.UI.OPTIONS.ACCEPT, cb =
 					function()
 
-						self:Apply()
 						self:Save(
 							function()
 								self.applying = false
@@ -698,6 +722,7 @@ function OptionsScreen:Apply()
 	Profile:SetWathgrithrFontEnabled( self.working.wathgrithrfont )
 	Profile:SetCampfireStoryCameraEnabled( self.working.waltercamera )
 	Profile:SetBoatCameraEnabled( self.working.boatcamera )
+	Profile:SetInvertCameraRotation( self.working.InvertCameraRotation )
 	TheSim:SetNetbookMode(self.working.netbookmode)
 
 	EnableShadeRenderer( self.working.dynamictreeshadows )
@@ -882,6 +907,10 @@ end
 
 function OptionsScreen:RefreshControls()
 
+	if IsConsoleLayout() then
+		return
+	end
+
 	local focus = self:GetDeepestFocus()
 	local old_idx = focus and focus.idx
 
@@ -939,8 +968,10 @@ function OptionsScreen:_DoFocusHookups()
 
     self.grid:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
     self.grid_graphics:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
-    self.controller_controllist:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
-    self.kb_controllist:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
+    if not IsConsoleLayout() then
+		self.controller_controllist:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
+		self.kb_controllist:SetFocusChangeDir(MOVE_RIGHT, self.action_menu)
+	end
 
     self.action_menu:SetFocusChangeDir(MOVE_LEFT, self.subscreener.menu)
     self.action_menu:SetFocusChangeDir(MOVE_UP, torightcol)
@@ -1315,6 +1346,17 @@ function OptionsScreen:_BuildGraphics()
 					{text=STRINGS.UI.OPTIONS.OK,     cb = function()
 																self.shownTextureStreamingWarning = true
 																self.working.texturestreaming = data
+
+																if self.smallTexturesSpinner ~= nil and APP_ARCHITECTURE == "x32" then
+																	if self.working.texturestreaming == false then
+																		self.smallTexturesSpinner:Disable()
+																		self.smallTexturesSpinner:UpdateText(STRINGS.UI.OPTIONS.ENABLED)
+																	else
+																		self.smallTexturesSpinner:Enable()
+																		self.smallTexturesSpinner:SetSelectedIndex(self.smallTexturesSpinner.selectedIndex)
+																	end
+																end
+
 																TheFrontEnd:PopScreen()
 																self:UpdateMenu()
 															end },
@@ -1327,6 +1369,17 @@ function OptionsScreen:_BuildGraphics()
 				}))
 			else
 				self.working.texturestreaming = data
+
+				if self.smallTexturesSpinner ~= nil and APP_ARCHITECTURE == "x32" then
+					if self.working.texturestreaming == false then
+						self.smallTexturesSpinner:Disable()
+						self.smallTexturesSpinner:UpdateText(STRINGS.UI.OPTIONS.ENABLED)
+					else
+						self.smallTexturesSpinner:Enable()
+						self.smallTexturesSpinner:SetSelectedIndex(self.smallTexturesSpinner.selectedIndex)
+					end
+				end
+
 				self:UpdateMenu()	-- not needed but meh
 			end
 		end
@@ -1828,6 +1881,234 @@ function OptionsScreen:_BuildAdvancedSettings()
     return advancedsettingsroot
 end
 
+function OptionsScreen:_PopulateLayout(root,device)
+    local layout = root:AddChild(Widget("layout"))
+    local image = nil
+	local LEFT_SIDE = -415
+	local RIGHT_SIDE = 415
+	local LEFT_SIDE_VITA = -415
+	local RIGHT_SIDE_VITA = 420
+	local LABEL_WIDTH = 320
+	local LABEL_HEIGHT = 50
+	local font_size = LANGUAGE.RUSSIAN == LOC.GetLanguage() and 30 or 26
+	local CONTROLLER_IMAGES = {
+	    [DEVICE_DUALSHOCK4] = "controls_image_ds4.tex",
+	    [DEVICE_VITA] = "controls_image_vita.tex",
+	    [DEVICE_XBONE] = "controls_image_xb1.tex",
+	    [DEVICE_SWITCH] = "controls_image_nx.tex",            
+	}
+	local LABELS = {
+	    [DEVICE_DUALSHOCK4] = {
+	        { x = 20,        y = 275,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.TOUCHPAD },
+	        { x = 80,        y = 275,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.PS4.OPTIONS },
+
+	        { x = LEFT_SIDE, y = 255,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L2 },
+	        { x = LEFT_SIDE, y = 155,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L1 },
+
+	        { x = LEFT_SIDE, y = 55,   anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_UP },
+	        { x = LEFT_SIDE, y = 15,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_LEFT },
+	        { x = LEFT_SIDE, y = -20,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_BOTTOM },
+	        { x = LEFT_SIDE, y = -65, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_RIGHT, multiline=true },
+
+	        { x = LEFT_SIDE, y = -210, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.LSTICK },
+	--        { x = LEFT_SIDE, y = -170, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L3 },
+
+	        { x = RIGHT_SIDE, y = 255,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R2 },
+	        { x = RIGHT_SIDE, y = 155,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R1 },
+
+	        { x = RIGHT_SIDE, y = 65,   anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.TRIANGLE },
+	        { x = RIGHT_SIDE, y = 20,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.CIRCLE },
+	        { x = RIGHT_SIDE, y = -20,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.CROSS },
+	        { x = RIGHT_SIDE, y = -65, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.SQUARE },
+
+	        { x = RIGHT_SIDE, y = -210, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.RSTICK },
+	        { x = RIGHT_SIDE, y = -165, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R3 },
+	    },
+	    [DEVICE_VITA] = {
+	        { x = 28,              y =  190, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.TOUCHPAD },
+	        { x = RIGHT_SIDE_VITA, y = -135, anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.OPTIONS },
+
+	        { x = LEFT_SIDE_VITA,  y = 230,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.L1 },
+	--        { x = LEFT_SIDE_VITA,  y =-208,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.L3 },
+	        { x = LEFT_SIDE_VITA,  y = 180,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.L2 },
+
+	        { x = LEFT_SIDE_VITA,  y = 60,   anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.DPAD_UP },
+	        { x = LEFT_SIDE_VITA,  y =  5,   anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.DPAD_LEFT },
+	        { x = LEFT_SIDE_VITA,  y = -35,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.DPAD_BOTTOM },
+	        { x = LEFT_SIDE_VITA,  y = 100,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.DPAD_RIGHT },
+
+	        { x = LEFT_SIDE_VITA,  y = -85,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.VITA.LSTICK },
+
+	        { x = RIGHT_SIDE_VITA, y = 230,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.R1 },
+	        { x = RIGHT_SIDE_VITA, y =-208,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.R3, multiline=true },
+	        { x = RIGHT_SIDE_VITA, y = 180,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.R2 },
+
+	        { x = RIGHT_SIDE_VITA, y =  55,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.TRIANGLE },
+	        { x = RIGHT_SIDE_VITA, y =  10,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.CIRCLE },
+	        { x = RIGHT_SIDE_VITA, y = -35,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.CROSS },
+	        { x = RIGHT_SIDE_VITA, y =  95,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.SQUARE },
+
+	        { x = RIGHT_SIDE_VITA, y = -88, anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.VITA.RSTICK },
+	    },
+	    [DEVICE_XBONE] = {
+	        { x = -20,        y = 275,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.TOUCHPAD },
+	        { x = 30,        y = 275,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.PS4.OPTIONS },
+
+	        { x = LEFT_SIDE, y = 255,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L2 },
+	        { x = LEFT_SIDE, y = 205,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L1 },
+
+	        { x = LEFT_SIDE, y = 30,   anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_UP },
+	        { x = LEFT_SIDE, y = -7,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_LEFT },
+	        { x = LEFT_SIDE, y = -42,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_BOTTOM },
+	        { x = LEFT_SIDE, y = -90, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_RIGHT },
+
+	        { x = LEFT_SIDE, y = 100, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.LSTICK },
+	        --{ x = LEFT_SIDE, y = 100, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L3 },
+
+	        { x = RIGHT_SIDE, y = 255,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R2 },
+	        { x = RIGHT_SIDE, y = 205,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R1 },
+
+	        { x = RIGHT_SIDE, y = 140,   anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.TRIANGLE },
+	        { x = RIGHT_SIDE, y = 100,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.CIRCLE },
+	        { x = RIGHT_SIDE, y = 55,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.CROSS },
+	        { x = RIGHT_SIDE, y = 0, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.SQUARE },
+
+	        { x = RIGHT_SIDE, y = -185, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.RSTICK },
+	        { x = RIGHT_SIDE, y = -130, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R3 },
+	    },
+	    [DEVICE_SWITCH] = {
+	        { x = -20,        y = 275,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.TOUCHPAD },
+	        { x = 30,        y = 275,  anchor = ANCHOR_LEFT,  text = STRINGS.UI.CONTROLSSCREEN.PS4.OPTIONS },
+	        { x = LEFT_SIDE, y = 255,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L2 },
+	        { x = LEFT_SIDE, y = 205,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L1 },
+	        { x = LEFT_SIDE, y = 30,   anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_UP },
+	        { x = LEFT_SIDE, y = -7,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_LEFT },
+	        { x = LEFT_SIDE, y = -42,  anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_BOTTOM },
+	        { x = LEFT_SIDE, y = -90, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.DPAD_RIGHT },
+	        { x = LEFT_SIDE, y = 100, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.LSTICK },
+	        --{ x = LEFT_SIDE, y = 100, anchor = ANCHOR_RIGHT, text = STRINGS.UI.CONTROLSSCREEN.PS4.L3 },
+	        { x = RIGHT_SIDE, y = 255,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R2 },
+	        { x = RIGHT_SIDE, y = 205,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R1 },
+	        { x = RIGHT_SIDE, y = 140,   anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.TRIANGLE },
+	        { x = RIGHT_SIDE, y = 100,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.CIRCLE },
+	        { x = RIGHT_SIDE, y = 55,  anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.CROSS },
+	        { x = RIGHT_SIDE, y = 0, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.SQUARE },
+	        { x = RIGHT_SIDE, y = -185, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.RSTICK },
+	        { x = RIGHT_SIDE, y = -130, anchor = ANCHOR_LEFT, text = STRINGS.UI.CONTROLSSCREEN.PS4.R3 },
+	    }
+	}
+    if PLATFORM_LAYOUT == "XBONE" then
+        image = layout:AddChild( Image( "images/xb1_controllers.xml", CONTROLLER_IMAGES[device] ) )
+    elseif PLATFORM_LAYOUT == "SWITCH" then
+        image = layout:AddChild( Image( "images/nx_controllers.xml", CONTROLLER_IMAGES[device] ) )
+    elseif PLATFORM_LAYOUT == "PS4" then
+        image = layout:AddChild( Image( "images/ps4_controllers.xml", CONTROLLER_IMAGES[device] ) )
+    end
+    image:SetPosition( 12,0,0 )
+    for _, v in pairs(LABELS[device]) do
+        local label
+        if JapaneseOnPS4() then
+            label = layout:AddChild(Text(HEADERFONT, font_size * 0.7))
+        else
+            label = layout:AddChild(Text(HEADERFONT, font_size))
+        end
+        label:SetString(v.text)
+        label:SetRegionSize( LABEL_WIDTH, v.multiline and (LABEL_HEIGHT * 2) or LABEL_HEIGHT )
+        label:SetHAlign(v.anchor)
+		label:EnableWordWrap(true)
+		label:SetColour(UICOLOURS.GOLD)
+        if v.anchor == ANCHOR_RIGHT then
+            label:SetPosition(v.x - LABEL_WIDTH/2 - 8, v.y, 0)
+        else
+            label:SetPosition(v.x + LABEL_WIDTH/2, v.y, 0)
+        end
+    end
+    return layout
+end
+
+-- This is the "controller" tab for console
+function OptionsScreen:_BuildController()
+    local controlsroot = Widget("ROOT")
+	
+	self.layouts = {}
+	if PLATFORM_LAYOUT == "PS4" then -- TODO vita?
+	    self.layouts[DEVICE_DUALSHOCK4] = self:_PopulateLayout(controlsroot,DEVICE_DUALSHOCK4)
+	    self.layouts[DEVICE_DUALSHOCK4]:Hide()
+	    self.layouts[DEVICE_DUALSHOCK4]:SetPosition(65,-50,0)
+	    self.layouts[DEVICE_DUALSHOCK4]:SetScale(0.6)
+
+	    self.layouts[DEVICE_VITA] = self:_PopulateLayout(controlsroot,DEVICE_VITA)
+	    self.layouts[DEVICE_VITA]:Hide()
+	    self.layouts[DEVICE_VITA]:SetPosition(65,-40,0)
+		self.layouts[DEVICE_VITA]:SetScale(0.6)
+	end
+
+	if PLATFORM_LAYOUT == "XBONE" then
+	    self.layouts[DEVICE_XBONE] = self:_PopulateLayout(controlsroot,DEVICE_XBONE)
+	    self.layouts[DEVICE_XBONE]:Hide()
+	    self.layouts[DEVICE_XBONE]:SetPosition(65,-50,0)
+	    self.layouts[DEVICE_XBONE]:SetScale(0.6)
+	end
+
+	if PLATFORM_LAYOUT == "SWITCH" then
+	    self.layouts[DEVICE_SWITCH] = self:_PopulateLayout(controlsroot,DEVICE_SWITCH)
+	    self.layouts[DEVICE_SWITCH]:Hide()
+	    self.layouts[DEVICE_SWITCH]:SetPosition(65,-50,0)
+	    self.layouts[DEVICE_SWITCH]:SetScale(0.6)
+	end
+    local device = nil
+	if PLATFORM_LAYOUT == "PS4" then
+		device = TheInputProxy:GetInputDeviceType(0) == DEVICE_VITA and DEVICE_VITA or DEVICE_DUALSHOCK4
+	elseif PLATFORM_LAYOUT == "XBONE" then
+    	device = DEVICE_XBONE
+    elseif PLATFORM_LAYOUT == "SWITCH" then
+    	device = DEVICE_SWITCH
+    end
+    self.device = device
+    self.layouts[device]:Show()
+
+	-- Options
+
+	self.InvertCameraRotationSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.INVERTCAMERAROTATION, invertDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.INVERTCAMERAROTATION)
+	self.InvertCameraRotationSpinner.OnChanged =
+		function( _, data )
+			self.working.InvertCameraRotation = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
+
+	self.left_spinners = {}
+	table.insert( self.left_spinners, self.InvertCameraRotationSpinner )
+	
+	self.grid_controller = controlsroot:AddChild(Grid())
+	self.grid_controller:UseNaturalLayout()
+	--self.grid_controller:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
+    --self.grid_controller:SetPosition(-90, 184)
+	self.grid_controller:InitSize(1, #self.left_spinners, 440, 40)
+    self.grid_controller:SetPosition(120, 184)
+
+	local spinner_tooltip = MakeSpinnerTooltip(controlsroot)
+
+	local spinner_tooltip_divider = controlsroot:AddChild(Image("images/global_redux.xml", "item_divider.tex"))
+	spinner_tooltip_divider:SetPosition(90, -225)
+
+    -- Ugh. Using parent because the spinner lists contain a child of a composite widget.
+	for k,v in ipairs(self.left_spinners) do
+		self.grid_controller:AddItem(v.parent, 1, k)
+		AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
+	end
+
+	--for k,v in ipairs(self.right_spinners) do
+	--	self.grid_controller:AddItem(v.parent, 2, k)
+	--	AddSpinnerTooltip(v.parent, spinner_tooltip, spinner_tooltip_divider)
+	--end
+
+    controlsroot.focus_forward = self.grid_controller
+
+
+    return controlsroot
+end
 
 -- This is the "controls" tab
 function OptionsScreen:_BuildControls()
@@ -2037,6 +2318,11 @@ function OptionsScreen:InitializeSpinners(first)
 		self:UpdateRefreshRatesSpinner()
 		self.smallTexturesSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.smalltextures ) )
 		self.netbookModeSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.netbookmode ) )
+
+		if APP_ARCHITECTURE == "x32" and not self.working.texturestreaming then
+			self.smallTexturesSpinner:UpdateText(STRINGS.UI.OPTIONS.ENABLED)
+			self.smallTexturesSpinner:Disable()
+		end
 	end
 
 	--[[if PLATFORM == "WIN32_STEAM" and not self.in_game then
@@ -2078,6 +2364,9 @@ function OptionsScreen:InitializeSpinners(first)
 	self.texturestreamingSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.texturestreaming ) )
 	if IsWin32() then
 		self.threadedrenderSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.threadedrender ) )
+	end
+	if IsConsoleLayout() then
+		self.InvertCameraRotationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.InvertCameraRotation ) )
 	end
 	self.dynamicTreeShadowsSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.dynamictreeshadows ) )
 

@@ -186,11 +186,7 @@ function CraftingMenuDetails:_MakeBuildButton()
 	local button = root:AddChild(ImageButton())
 	button:SetWhileDown(function()
 		if button.recipe_held then
-			if self.first_sub_ingredient_to_craft ~= nil then
-				DoRecipeClick(self.owner, self.first_sub_ingredient_to_craft.recipe)
-			else
-				DoRecipeClick(self.owner, self.data.recipe, self.skins_spinner:GetItem())
-			end
+			DoRecipeClick(self.owner, self.data.recipe, self.skins_spinner:GetItem())
 		end
 	end)
 	button:SetOnDown(function()
@@ -205,13 +201,7 @@ function CraftingMenuDetails:_MakeBuildButton()
 
 		if not button.recipe_held then
 			local already_buffered = self.owner.replica.builder:IsBuildBuffered(self.data.recipe.name)
-			local stay_open
-			if self.first_sub_ingredient_to_craft ~= nil then
-				DoRecipeClick(self.owner, self.first_sub_ingredient_to_craft.recipe)
-				stay_open = true
-			else
-				stay_open = DoRecipeClick(self.owner, self.data.recipe, skin)
-			end
+			local stay_open = DoRecipeClick(self.owner, self.data.recipe, skin)
 			if not stay_open and (already_buffered or Profile:GetCraftingMenuBufferedBuildAutoClose()) then
 				self.owner.HUD:CloseCrafting()
 			end

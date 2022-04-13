@@ -40,6 +40,7 @@ local PlayerProfile = Class(function(self)
         self.persistdata.showpassword = false
         self.persistdata.movementprediction = true
         self.persistdata.wathgrithrfont = true
+		self.persistdata.InvertCameraRotation = false
         self.persistdata.screenshake = true
         self.persistdata.warneddifficultyrog = false
         self.persistdata.controller_popup = false
@@ -87,6 +88,7 @@ function PlayerProfile:Reset()
         self.persistdata.showpassword = false
         self.persistdata.movementprediction = true
         self.persistdata.wathgrithrfont = true
+		self.persistdata.InvertCameraRotation = false
         self.persistdata.screenshake = true
         self.persistdata.warneddifficultyrog = false
         self.persistdata.controller_popup = false
@@ -135,6 +137,7 @@ function PlayerProfile:SoftReset()
         self.persistdata.showpassword = false
         self.persistdata.movementprediction = true
         self.persistdata.wathgrithrfont = true
+		self.persistdata.InvertCameraRotation = false
         self.persistdata.screenshake = true
         self.persistdata.warneddifficultyrog = false
         self.persistdata.controller_popup = false
@@ -675,6 +678,24 @@ function PlayerProfile:IsWathgrithrFontEnabled()
 			return true -- Default to true this value hasn't been created yet
 		end
 	end
+end
+
+function PlayerProfile:SetInvertCameraRotation(enabled) -- console only
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "InvertCameraRotation", tostring(enabled))
+	else
+		self:SetValue("InvertCameraRotation", enabled)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetInvertCameraRotation() -- console only
+	-- default to false
+    if USE_SETTINGS_FILE then
+		return TheSim:GetSetting("misc", "InvertCameraRotation") == "true"
+    else
+		return self:GetValue("InvertCameraRotation") == true
+    end
 end
 
 function PlayerProfile:SetBoatCameraEnabled(enabled)

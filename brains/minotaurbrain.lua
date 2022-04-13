@@ -161,7 +161,7 @@ function MinotaurBrain:OnStart()
                 WhileNode(function() return shouldramattack(self.inst)  end, "RamAttack",
                     ChaseAndRam(self.inst, MAX_CHASE_TIME, CHASE_GIVEUP_DIST, MAX_CHARGE_DIST)),
 
-                ChaseAndAttack(self.inst, 3, 10, nil, nil, true ),
+                ChaseAndAttack(self.inst, 3, 30, nil, nil, true ),
 
                 WhileNode(function() return self.inst.components.combat.target ~= nil and self.inst.components.combat:InCooldown() end, "Rest",
                     StandStill(self.inst)),

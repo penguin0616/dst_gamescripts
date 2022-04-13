@@ -484,7 +484,7 @@ function PlayerController:OnControl(control, down)
 			if self.ismastersim then
 				self.attack_buffer = CONTROL_ATTACK
 			else
-				self:DoAttackButton()
+                self:DoAttackButton()
 			end
 		end
 	end
@@ -1318,7 +1318,7 @@ function PlayerController:GetAttackTarget(force_attack, force_target, isretarget
         return
     end
 
-    if isretarget and combat:CanHitTarget(force_target) and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
+    if isretarget and (combat:CanHitTarget(force_target) or TheInput:IsControlPressed(CONTROL_PRIMARY)) and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
         return force_target
     end
 
@@ -1382,6 +1382,11 @@ function PlayerController:DoAttackButton(retarget)
     --if retarget == nil and self:IsAOETargeting() then
     --    return
     --end
+
+    -- To handle cases where we click-held to attack, set the forced target to prevent unexpected retargeting due to hold to auto-target attacks
+    if TheInput:IsControlPressed(CONTROL_PRIMARY) and retarget ~= self.lastheldaction then
+        retarget = self.lastheldaction and self.lastheldaction.target or nil
+    end
 
     local force_attack = TheInput:IsControlPressed(CONTROL_FORCE_ATTACK)
     local target = self:GetAttackTarget(force_attack, retarget, retarget ~= nil)
@@ -2429,7 +2434,7 @@ function PlayerController:OnUpdate(dt)
                     end
                     if isidle then
                         -- Check for primary control button held down in order to attack other nearby monsters
-                        if attack_control == CONTROL_PRIMARY and self.actionholding and self.lastclickedaction and self.lastclickedaction.action == ACTIONS.ATTACK then
+                        if attack_control == CONTROL_PRIMARY and TheInput:IsControlPressed(CONTROL_PRIMARY) and self.lastclickedaction and self.lastclickedaction.action == ACTIONS.ATTACK then
                             if self.ismastersim then
                                 self.attack_buffer = CONTROL_ATTACK
                             else
@@ -3265,12 +3270,13 @@ function PlayerController:DoCameraControl()
     end
 
     local time = GetStaticTime()
+	local invert_rotation = Profile:GetInvertCameraRotation()
 
     if not self:IsControllerTargetingModifierDown() and (self.lastrottime == nil or time - self.lastrottime > ROT_REPEAT) then
-        if TheInput:IsControlPressed(CONTROL_ROTATE_LEFT) then
+        if TheInput:IsControlPressed(invert_rotation and CONTROL_ROTATE_RIGHT or CONTROL_ROTATE_LEFT) then
             self:RotLeft()
             self.lastrottime = time
-        elseif TheInput:IsControlPressed(CONTROL_ROTATE_RIGHT) then
+        elseif TheInput:IsControlPressed(invert_rotation and CONTROL_ROTATE_LEFT or CONTROL_ROTATE_RIGHT) then
             self:RotRight()
             self.lastrottime = time
         end
