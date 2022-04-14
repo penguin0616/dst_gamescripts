@@ -406,6 +406,13 @@ function c_setmightiness(n)
     end
 end
 
+function c_addelectricity(n)
+    local player = ConsoleCommandPlayer()
+    if player ~= nil and player.components.upgrademoduleowner ~= nil then
+        player.components.upgrademoduleowner:AddCharge(n)
+    end
+end
+
 function c_setwereness(n)
     local player = ConsoleCommandPlayer()
     if player ~= nil and player.components.wereness ~= nil and not player:HasTag("playerghost") then

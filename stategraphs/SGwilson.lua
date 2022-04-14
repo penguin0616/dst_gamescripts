@@ -922,6 +922,12 @@ local actionhandlers =
             return "use_dumbbell_pre"
         end
     end),
+
+    ActionHandler(ACTIONS.APPLYMODULE, "applyupgrademodule"),
+    ActionHandler(ACTIONS.APPLYMODULE_FAIL, "applyupgrademodule_fail"),
+    ActionHandler(ACTIONS.REMOVEMODULES, "removeupgrademodules"),
+    ActionHandler(ACTIONS.REMOVEMODULES_FAIL, "removeupgrademodules_fail"),
+    ActionHandler(ACTIONS.CHARGE_FROM, "doshortaction"),
 }
 
 local events =
@@ -2643,6 +2649,24 @@ local states =
                 inst.SoundEmitter:PlaySound("wes/characters/wes/pop_idle")
             end),
         },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State {
+        name = "wx78_funnyidle",
+        tags = {"idle", "canrotate", "nodangle"},
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("idle_wx")
+        end,
 
         events =
         {
@@ -8086,6 +8110,11 @@ local states =
                 -- you can still sleep if your hunger will bottom out, but not absolutely
                 or (inst.components.hunger.current < TUNING.CALORIES_MED and "ANNOUNCE_NOHUNGERSLEEP")
                 or nil
+
+            if failreason == nil and inst.components.sleepingbaguser ~= nil then
+                local _, sleepingbagfailreason = inst.components.sleepingbaguser:ShouldSleep()
+                failreason = sleepingbagfailreason
+            end
 
             if failreason ~= nil then
                 inst:PushEvent("performaction", { action = inst.bufferedaction })
@@ -15056,6 +15085,113 @@ local states =
                 end
             end),
 		}
+    },
+
+    --------------------------------------------------------------------------
+    -- WX78 Rework
+    State {
+        name = "applyupgrademodule",
+        tags = { "busy", "doing", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("upgrade")
+            inst.SoundEmitter:PlaySound("WX_rework/module/insert")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle", true)
+                end
+            end),
+        },
+
+        timeline =
+        {
+            TimeEvent(33*FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+            TimeEvent(45*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+                inst.sg:RemoveStateTag("nointerrupt")
+            end),
+        },
+    },
+
+    State{
+        name = "applyupgrademodule_fail",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst:PerformBufferedAction()
+
+            inst.sg:GoToState("idle")
+            inst.components.talker:Say(GetActionFailString(inst, "APPLYMODULE", "NOTENOUGHSLOTS"))
+        end,
+    },
+
+    State {
+        name = "removeupgrademodules",
+        tags = { "busy", "doing", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+
+            inst.AnimState:PlayAnimation("useitem_pre")
+            inst.AnimState:PushAnimation("downgrade", false)
+            inst.AnimState:PushAnimation("useitem_pst", false)
+            inst.SoundEmitter:PlaySound("WX_rework/module/remove")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle", true)
+                end
+            end),
+        },
+
+        timeline =
+        {
+            TimeEvent(8*FRAMES, function(inst) -- length of "useitem_pre"
+				inst.AnimState:Show("ARM_normal")
+            end),
+            TimeEvent(27*FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+            TimeEvent(38*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+                inst.sg:RemoveStateTag("nointerrupt")
+            end),
+            TimeEvent(48*FRAMES, function(inst) -- length of "downgrade" + length of "useitem_pre"
+                if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                    inst.AnimState:Show("ARM_carry")
+                    inst.AnimState:Hide("ARM_normal")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                inst.AnimState:Show("ARM_carry")
+                inst.AnimState:Hide("ARM_normal")
+            end
+        end,
+    },
+
+    State{
+        name = "removeupgrademodules_fail",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst:PerformBufferedAction()
+
+            inst.sg:GoToState("idle")
+            inst.components.talker:Say(GetActionFailString(inst, "REMOVEMODULES", "NO_MODULES"))
+        end,
     },
 }
 

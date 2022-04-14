@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "It won't pay any attention to me...",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "I'm not tired yet.",
 	ANNOUNCE_NOHUNGERSLEEP = "My stomach is as empty as my heart. I can't sleep now.",
 	ANNOUNCE_NOSLEEPONFIRE = "That'd be quite the way to go out.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "I can't sleep if I'm not surrounded by darkness.",
 	ANNOUNCE_NODANGERSIESTA = "I couldn't possibly nap. Death is nigh.",
 	ANNOUNCE_NONIGHTSIESTA = "I'd really rather be in a tent.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I'd really rather be in a tent.",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Those foods weren't meant to be together.",
@@ -4355,6 +4380,33 @@ return{
 
 		KITCOONDECOR1_KIT = "It will only build a temporary distraction.",
 		KITCOONDECOR2_KIT = "It will only build a temporary distraction.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MAXSANITY = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MOVESPEED = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MOVESPEED2 = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_HEAT = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_NIGHTVISION = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_COLD = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_TASER = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_LIGHT = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MAXHUNGER = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MUSIC = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_BEE = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MAXHEALTH2 = "It looks so fragile... hopefully no tragic accidents befall it.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Oh. Hello.",
+            HUNTING = "It's too busy to bother with me.",
+            SCANNING = "It's too busy to bother with me.",
+        },
+
+        WX78_SCANNER_ITEM = "Dead to the world.",
+        WX78_MODULEREMOVER = "What must it be like, to lose a piece of oneself and feel nothing?",
+
+        SCANDATA = "If I'm lucky, it might just bore me to death.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

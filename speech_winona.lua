@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "I just thought the lil guy could use a polish.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "No way I'm falling asleep here.",
 	ANNOUNCE_NOHUNGERSLEEP = "Not without supper first.",
 	ANNOUNCE_NOSLEEPONFIRE = "That's NOT fine.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Hey WX, mind turning the light down?",
 	ANNOUNCE_NODANGERSIESTA = "But I'm in danger!",
 	ANNOUNCE_NONIGHTSIESTA = "I'd rather sleep than nap.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Sleeping down here ain't a bright idea.",
@@ -619,6 +640,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "The ingredients didn't assemble right.",
@@ -4357,6 +4382,33 @@ return{
 
 		KITCOONDECOR1_KIT = "I've always been a do-it-yourself kinda gal.",
 		KITCOONDECOR2_KIT = "All it needs now is a bit of elbow grease.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "WX, you gotta stop leavin' this stuff lying around!",
+        WX78MODULE_MAXSANITY = "WX, you gotta stop leavin' this stuff lying around!",
+        WX78MODULE_MOVESPEED = "They've really gotta start takin' better care of themselves.",
+        WX78MODULE_MOVESPEED2 = "They've really gotta start takin' better care of themselves.",
+        WX78MODULE_HEAT = "Hey WX, if you're needin' a charge, just let me know!",
+        WX78MODULE_NIGHTVISION = "Hey WX, if you're needin' a charge, just let me know!",
+        WX78MODULE_COLD = "WX, you gotta stop leavin' this stuff lying around!",
+        WX78MODULE_TASER = "They've really gotta start takin' better care of themselves.",
+        WX78MODULE_LIGHT = "Hey WX, if you're needin' a charge, just let me know!",
+        WX78MODULE_MAXHUNGER = "WX, you gotta stop leavin' this stuff lying around!",
+        WX78MODULE_MUSIC = "Hey WX, if you're needin' a charge, just let me know!",
+        WX78MODULE_BEE = "They've really gotta start takin' better care of themselves.",
+        WX78MODULE_MAXHEALTH2 = "Hey WX, if you're needin' a charge, just let me know!",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Keepin' busy, Jimmy?",
+            HUNTING = "Keepin' busy, Jimmy?",
+            SCANNING = "Keepin' busy, Jimmy?",
+        },
+
+        WX78_SCANNER_ITEM = "Must be on break.",
+        WX78_MODULEREMOVER = "Sheesh, they could just ask for my help!",
+
+        SCANDATA = "Yeesh, this stuff would make ol' Wickerbottom's writing seem flowery.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

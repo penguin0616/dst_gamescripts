@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "I respect thine loyalty to our metal warrior, scout.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "I'll not rest yet.",
 	ANNOUNCE_NOHUNGERSLEEP = "I'll starve overnight! Feast first.",
 	ANNOUNCE_NOSLEEPONFIRE = "I'll not sleep in the flames.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "'Tis too bright for sleep!",
 	ANNOUNCE_NODANGERSIESTA = "Battle is upon us, there'll be no rest!",
 	ANNOUNCE_NONIGHTSIESTA = "No napping in the moonlight.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "This doesn't feel like the time for a nap.",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "T'were not meant to be a meal.",
@@ -4351,6 +4376,33 @@ return{
 
 		KITCOONDECOR1_KIT = "Fear not beasties, it will be constructed forthwith!",
 		KITCOONDECOR2_KIT = "I will construct it with the speed of Hermod!",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "These boons shall empower our metal warrior.",
+        WX78MODULE_MAXSANITY = "These boons shall empower our metal warrior.",
+        WX78MODULE_MOVESPEED = "These boons shall empower our metal warrior.",
+        WX78MODULE_MOVESPEED2 = "These boons shall empower our metal warrior.",
+        WX78MODULE_HEAT = "These boons shall empower our metal warrior.",
+        WX78MODULE_NIGHTVISION = "These boons shall empower our metal warrior.",
+        WX78MODULE_COLD = "These boons shall empower our metal warrior.",
+        WX78MODULE_TASER = "These boons shall empower our metal warrior.",
+        WX78MODULE_LIGHT = "These boons shall empower our metal warrior.",
+        WX78MODULE_MAXHUNGER = "These boons shall empower our metal warrior.",
+        WX78MODULE_MUSIC = "These boons shall empower our metal warrior.",
+        WX78MODULE_BEE = "These boons shall empower our metal warrior.",
+        WX78MODULE_MAXHEALTH2 = "These boons shall empower our metal warrior.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Hail, wee metal scout!",
+            HUNTING = "Aha! Thou art on the hunt!",
+            SCANNING = "Thou hast the prey in thine sights.",
+        },
+
+        WX78_SCANNER_ITEM = "Rest well, noble scout.",
+        WX78_MODULEREMOVER = "I trust my ally knows what they are doing.",
+
+        SCANDATA = "The metal scout's report!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

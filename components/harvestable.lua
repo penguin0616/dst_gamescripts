@@ -23,6 +23,8 @@ local Harvestable = Class(function(self, inst)
     self.maxproduce = 1
 
     self.enabled = true
+
+    --self.can_harvest_fn = nil
 end,
 nil,
 {
@@ -62,6 +64,10 @@ end
 
 function Harvestable:CanBeHarvested()
     return self.enabled and self.produce > 0
+end
+
+function Harvestable:SetCanHarvestFn(fn)
+    self.can_harvest_fn = fn
 end
 
 function Harvestable:Disable()
@@ -155,6 +161,13 @@ end
 
 function Harvestable:Harvest(picker)
     if self:CanBeHarvested() then
+        if self.can_harvest_fn ~= nil then
+            local can_harvest, fail_reason = self.can_harvest_fn(self.inst, picker)
+            if not can_harvest then
+                return false, fail_reason
+            end
+        end
+
         local produce = self.produce
         self.produce = 0
 

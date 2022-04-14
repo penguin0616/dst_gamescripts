@@ -23,6 +23,7 @@ local UIClock = require "widgets/uiclock"
 local MapScreen = require "screens/mapscreen"
 local FollowText = require "widgets/followtext"
 local StatusDisplays = require "widgets/statusdisplays"
+local SecondaryStatusDisplays = require "widgets/secondarystatusdisplays"
 local Lavaarena_StatusDisplays = require "widgets/statusdisplays_lavaarena"
 local Quagmire_StatusDisplays = require "widgets/statusdisplays_quagmire"
 local Quagmire_StatusCravingDisplay = require "widgets/statusdisplays_quagmire_cravings"
@@ -42,6 +43,7 @@ local Controls = Class(Widget, function(self, owner)
     Widget._ctor(self, "Controls")
     self.owner = owner
 
+	local is_splitscreen = IsSplitScreen()
 	local is_player1 = IsGameInstance(Instances.Player1)
 
     self._scrnw, self._scrnh = TheSim:GetScreenSize()
@@ -97,26 +99,84 @@ local Controls = Class(Widget, function(self, owner)
     self.sidepanel:SetScale(1,1,1)
     self.sidepanel:SetPosition(-80, -60, 0)
 
-    self.votedialog = self.topright_root:AddChild(VoteDialog(self.owner))
-    self.votedialog:SetPosition(-330, 0, 0)
+    if is_splitscreen then
+        if is_player1 then
+            if TheNet:GetServerGameMode() == "lavaarena" then
+                self.status = self.bottom_root:AddChild(Lavaarena_StatusDisplays(self.owner))
+                self.status:SetPosition(-180,105,0)
+                --self.status:SetScale(1.8)
+                self.teamstatus = self.topleft_root:AddChild(TeamStatusBars(self.owner))
+            elseif TheNet:GetServerGameMode() == "quagmire" then
+                self.status = self.bottom_root:AddChild(Quagmire_StatusDisplays(self.owner))
+                --self.status:SetScale(1.4)
+                self.quagmire_hangriness = self.top_root:AddChild(Quagmire_StatusCravingDisplay(self.owner))
+                self.quagmire_hangriness.inst:DoPeriodicTask(.5, function() self.quagmire_hangriness:UpdateStatus() end, 0)
+                self.quagmire_notifications = self.right_root:AddChild(Quagmire_NotificationWidget(self.owner))
 
-    if TheNet:GetServerGameMode() == "lavaarena" then
-        self.status = self.bottom_root:AddChild(Lavaarena_StatusDisplays(self.owner))
-        self.teamstatus = self.topleft_root:AddChild(TeamStatusBars(self.owner))
-    elseif TheNet:GetServerGameMode() == "quagmire" then
-        self.status = self.bottom_root:AddChild(Quagmire_StatusDisplays(self.owner))
-		self.quagmire_hangriness = self.top_root:AddChild(Quagmire_StatusCravingDisplay(self.owner))
-		self.quagmire_notifications = self.right_root:AddChild(Quagmire_NotificationWidget(self.owner))
-		self.quagmire_notifications:SetPosition(0, 200)
-		self.containerroot:MoveToFront() -- so safes ui opens on top of hangriness meter
+                self.containerroot:MoveToFront() -- so safes ui opens on top of hangriness meter
+            else
+                self.status = self.topleft_root:AddChild(StatusDisplays(self.owner))
+                self.status:SetPosition(120,-100,0)
+                --self.status:SetScale(1.4)
+
+                self.secondary_status = self.topright_root:AddChild(SecondaryStatusDisplays(self.owner))
+                self.secondary_status:SetPosition(-120,-100,0)
+                --self.secondary_status:SetScale(1.4)
+            end
+
+            self.votedialog = self.topright_root:AddChild(VoteDialog(self.owner))
+            self.votedialog:SetPosition(-350, 0, 0)
+        else
+            if TheNet:GetServerGameMode() == "lavaarena" then
+                self.status = self.bottom_root:AddChild(Lavaarena_StatusDisplays(self.owner))
+                self.status:SetPosition(-180,105,0)	
+                --self.status:SetScale(1.8)
+                self.teamstatus = self.topright_root:AddChild(TeamStatusBars(self.owner))
+            elseif TheNet:GetServerGameMode() == "quagmire" then
+                self.status = self.bottom_root:AddChild(Quagmire_StatusDisplays(self.owner))
+                --self.status:SetScale(1.4)
+                self.quagmire_hangriness = self.top_root:AddChild(Quagmire_StatusCravingDisplay(self.owner))
+                self.quagmire_notifications = self.right_root:AddChild(Quagmire_NotificationWidget(self.owner))
+
+                self.containerroot:MoveToFront() -- so safes ui opens on top of hangriness meter
+            else
+                self.status = self.topright_root:AddChild(StatusDisplays(self.owner))
+                self.status:SetPosition(-120,-100,0)
+                --self.status:SetScale(1.4)
+
+                self.secondary_status = self.topleft_root:AddChild(SecondaryStatusDisplays(self.owner))
+                self.secondary_status:SetPosition(120,-100,0)
+                --self.secondary_status:SetScale(1.4)
+            end
+            
+            self.votedialog = self.topleft_root:AddChild(VoteDialog(self.owner))
+            self.votedialog:SetPosition(350, 0, 0)
+        end
     else
-        self.status = self.sidepanel:AddChild(StatusDisplays(self.owner))
-        self.status:SetPosition(0,-110,0)
+        if TheNet:GetServerGameMode() == "lavaarena" then
+            self.status = self.bottom_root:AddChild(Lavaarena_StatusDisplays(self.owner))
+            self.teamstatus = self.topleft_root:AddChild(TeamStatusBars(self.owner))
+        elseif TheNet:GetServerGameMode() == "quagmire" then
+            self.status = self.bottom_root:AddChild(Quagmire_StatusDisplays(self.owner))
+            self.quagmire_hangriness = self.top_root:AddChild(Quagmire_StatusCravingDisplay(self.owner))
+            self.quagmire_notifications = self.right_root:AddChild(Quagmire_NotificationWidget(self.owner))
+            self.quagmire_notifications:SetPosition(0, 200)
+            self.containerroot:MoveToFront() -- so safes ui opens on top of hangriness meter
+        else
+            self.status = self.sidepanel:AddChild(StatusDisplays(self.owner))
+            self.status:SetPosition(0,-110,0)
 
-		self.clock = self.sidepanel:AddChild(UIClock(self.owner))
-		if self.clock:IsCaveClock() then
-			self.clock.inst:DoSimPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
-		end
+            self.secondary_status = self.sidepanel:AddChild(SecondaryStatusDisplays(self.owner))
+            self.secondary_status:SetPosition(0,-110,0)
+
+            self.clock = self.sidepanel:AddChild(UIClock(self.owner))
+            if self.clock:IsCaveClock() then
+                self.clock.inst:DoSimPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
+            end
+        end
+
+        self.votedialog = self.topright_root:AddChild(VoteDialog(self.owner))
+        self.votedialog:SetPosition(-330, 0, 0)
     end
 
     local twitch_options = TheFrontEnd:GetTwitchOptions()
@@ -207,12 +267,18 @@ function Controls:ShowStatusNumbers()
     if self.teamstatus ~= nil then
         self.teamstatus:ShowStatusNumbers()
     end
+    if self.secondary_status ~= nil then
+        self.secondary_status:ShowStatusNumbers()
+    end
 end
 
 function Controls:HideStatusNumbers()
     self.status:HideStatusNumbers()
     if self.teamstatus ~= nil then
         self.teamstatus:HideStatusNumbers()
+    end
+    if self.secondary_status ~= nil then
+        self.secondary_status:HideStatusNumbers()
     end
 end
 

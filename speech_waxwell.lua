@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Hmph. It's not worth my time.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "Sleeping now would mess up my sleep schedule!",
 	ANNOUNCE_NOHUNGERSLEEP = "I'm too hungry. I can't sleep.",
 	ANNOUNCE_NOSLEEPONFIRE = "That might not be the best idea.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Oh for... would you turn that blasted light off?!",
 	ANNOUNCE_NODANGERSIESTA = "They're hot on my heels!",
 	ANNOUNCE_NONIGHTSIESTA = "It's sleep time, not siesta time.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "It's a bit creepy out for that.",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "This combination of food was ill-advised.",
@@ -4351,6 +4376,33 @@ return{
 
 		KITCOONDECOR1_KIT = "Surely someone else can set it up.",
 		KITCOONDECOR2_KIT = "Physical labor is what underlings are for.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "That robot needs to pull themselves together.",
+        WX78MODULE_MAXSANITY = "That robot needs to pull themselves together.",
+        WX78MODULE_MOVESPEED = "That robot needs to pull themselves together.",
+        WX78MODULE_MOVESPEED2 = "That robot needs to pull themselves together.",
+        WX78MODULE_HEAT = "That robot needs to pull themselves together.",
+        WX78MODULE_NIGHTVISION = "That robot needs to pull themselves together.",
+        WX78MODULE_COLD = "That robot needs to pull themselves together.",
+        WX78MODULE_TASER = "That robot needs to pull themselves together.",
+        WX78MODULE_LIGHT = "That robot needs to pull themselves together.",
+        WX78MODULE_MAXHUNGER = "That robot needs to pull themselves together.",
+        WX78MODULE_MUSIC = "That robot needs to pull themselves together.",
+        WX78MODULE_BEE = "That robot needs to pull themselves together.",
+        WX78MODULE_MAXHEALTH2 = "That robot needs to pull themselves together.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="I feel like it's watching me...",
+            HUNTING = "Where does it think it's going?",
+            SCANNING = "Hmph. Good luck unraveling the mysteries of my creations.",
+        },
+
+        WX78_SCANNER_ITEM = "Something about it is just so temptingly kickable.",
+        WX78_MODULEREMOVER = "Nerves of steel, that one.",
+
+        SCANDATA = "Well... fine. I suppose that sums it all up, more or less.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

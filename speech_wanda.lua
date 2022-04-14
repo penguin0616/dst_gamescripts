@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Fine then, keep your secrets to yourself!",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "I don't have time to waste on sleeping right now.",
 	ANNOUNCE_NOHUNGERSLEEP = "I need to find something to eat first, quickly.",
 	ANNOUNCE_NOSLEEPONFIRE = "It might be hard to sleep while I'm being roasted alive.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Botheration... it's too bright to sleep while that automaton's about.",
 	ANNOUNCE_NODANGERSIESTA = "There's more important things to worry about at the moment!",
 	ANNOUNCE_NONIGHTSIESTA = "Now is not the time for a siesta.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I'll take a break when I'm on the surface where it's safe...er.",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Those ingredients didn't make anything.",
@@ -4351,6 +4376,33 @@ return{
 
 		KITCOONDECOR1_KIT = "Do I really have time to fuss with this?",
 		KITCOONDECOR2_KIT = "Surely someone with more time on their hands could set it up.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MAXSANITY = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MOVESPEED = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MOVESPEED2 = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_HEAT = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_NIGHTVISION = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_COLD = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_TASER = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_LIGHT = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MAXHUNGER = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MUSIC = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_BEE = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MAXHEALTH2 = "Aha! I was wondering when they'd started making these.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Please buzz around elsewhere, you're distracting me!",
+            HUNTING = "Please buzz around elsewhere, you're distracting me!",
+            SCANNING = "Please buzz around elsewhere, you're distracting me!",
+        },
+
+        WX78_SCANNER_ITEM = "It's biding its time.",
+        WX78_MODULEREMOVER = "Did the automaton make off with one of my tools?",
+
+        SCANDATA = "It's of no use to me, I won't waste time reading it.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

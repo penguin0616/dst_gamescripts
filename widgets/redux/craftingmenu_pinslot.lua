@@ -498,6 +498,11 @@ end
 
 function PinSlot:OnCraftingMenuOpen()
 	local controller = TheInput:ControllerAttached()
+
+    if self.recipe_popup then
+        self.recipe_popup:HidePopup()
+    end
+
 	self:RefreshControllers(controller, true)
 	self:Show()
 

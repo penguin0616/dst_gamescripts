@@ -249,7 +249,7 @@ STRINGS =
 		{
             { title = "Buildday", desc = "November 28" },
             { title = "Favorite Food", desc = "Butter Muffin" },
-			{ title = "Their Past...", desc = "Is yet to be revealed." },
+			{ title = "Disconnect", desc = "WX-78 was the result of an unorthodox experiment helmed by { [LoadEmpathyModLibraryExW().......ERROR_DATA_PATH_NOT_FOUND] } and Robert Wagstaff. The experiment turned out to be a [RESOUNDING SUCCESS], but Wagstaff was [A SHORT-SIGHTED FOOL, AFRAID OF PROGRESS] and decided to put a stop to further tests. Adamant that the process that created them could still be perfected, WX refused to give up, continuing their experiments in secret. When Wagstaff finally discovered what they had been doing, there was a heated argument and01110100 01101111 01101111 00100000 01101100 01100001 01110100 01100101 00100000 01110100 01101111 01101111 00100000 01101100 01100001 01110100 01100101 00100000 01110100 01101111 01101111 00100000 01101100 01100001 01110100 01100101" },
 		},
         wickerbottom =
 		{
@@ -566,6 +566,7 @@ STRINGS =
             SUMMONHOST = "Ring",
 			RANSACK = "Ransack",
 			HIDEANDSEEK = "Play Hide and Seek",
+            DEACTIVATE = "Deactivate",
         },
 
 		OPEN_CRAFTING =
@@ -897,6 +898,10 @@ STRINGS =
         LIFT_GYM_SUCCEED_PERFECT = "Lift",
         LIFT_GYM_SUCCEED = "Lift",
         LIFT_GYM_FAIL = "Lift",
+
+        APPLYMODULE = "Plug In",
+        REMOVEMODULES = "Unplug",
+        CHARGE_FROM = "Charge At",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -3332,7 +3337,28 @@ STRINGS =
         DUMBBELL_GEM = "Gembell",
         POTATOSACK = "Potato Sack",
 
-        RUINS_CAVEIN_OBSTACLE = "Blocky Ruins",        
+        RUINS_CAVEIN_OBSTACLE = "Blocky Ruins",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Hardy Circuit",
+        WX78MODULE_MAXSANITY = "Super-Processing Circuit",
+        WX78MODULE_MOVESPEED = "Acceleration Circuit",
+        WX78MODULE_MOVESPEED2 = "Acceleration Circuit 2.0",
+        WX78MODULE_HEAT = "Thermal Circuit",
+        WX78MODULE_NIGHTVISION = "Optoelectronic Circuit",
+        WX78MODULE_COLD = "Refrigerant Circuit",
+        WX78MODULE_TASER = "Electrification Circuit",
+        WX78MODULE_LIGHT = "Illumination Circuit",
+        WX78MODULE_MAXHUNGER = "Gastroexpansion Circuit",
+        WX78MODULE_MUSIC = "Chorusbox Circuit",
+        WX78MODULE_BEE = "Dronemaster Circuit",
+        WX78MODULE_MAXHEALTH2 = "Hardy Circuit 2.0",
+
+        SCANDATA = "Bio Data",
+
+        WX78_SCANNER = "Bio Scanalyzer",
+        WX78_SCANNER_ITEM = "Bio Scanalyzer",
+        WX78_MODULEREMOVER = "Circuit Extractor",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4066,6 +4092,23 @@ STRINGS =
         DUMBBELL_MARBLE = "A quick way to a chiseled physique.",
         DUMBBELL_GEM = "Polish every facet of your workout.",
         POTATOSACK = "A potato's natural habitat.",
+
+        -- WX-78
+        WX78_MODULEREMOVER = "Success comes to those who really a-ply themselves.",
+        WX78_SCANNER_ITEM = "It never hurts to have a backup scan.",
+        WX78MODULE_MAXHEALTH = "Make your robotic body a bit more robust.",
+        WX78MODULE_MAXSANITY = "Extra processing power to ease your mechanical mind.",
+        WX78MODULE_MOVESPEED = "A hastily designed speed booster. It could use some improvement.",
+        WX78MODULE_MOVESPEED2 = "A perfected speed booster to kick your engine into high gear.",
+        WX78MODULE_HEAT = "Things are about to get heated.",
+        WX78MODULE_NIGHTVISION = "Recalibrate your optic sensors for night vision.",
+        WX78MODULE_COLD = "Turn your chassis into a portable freezer.",
+        WX78MODULE_TASER = "Anyone who messes with you will be in for a shock.",
+        WX78MODULE_LIGHT = "Light up a room with your presence.",
+        WX78MODULE_MAXHUNGER = "Hollow legs, engage.",
+        WX78MODULE_MUSIC = "Every machine needs a tune-up now and then.",
+        WX78MODULE_BEE = "Show your brain and body who's in charge.",
+        WX78MODULE_MAXHEALTH2 = "Make your robotic body much more robust.",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -5264,6 +5307,7 @@ STRINGS =
         TURFCRAFTING = "Landscaping",
 		BALLOONOMANCY = "Balloonomancy",
         STRONGMAN = "Strongman",
+        ROBOTMODULECRAFT = "Circuitry",
     },
 
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
@@ -6061,6 +6105,7 @@ STRINGS.UI =
         NEEDSHERMITCRABSHOP_L2 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L3 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L4 = "Find someone friendly enough to make this trade!",
+        NEEDSCREATURESCANNING = "Scan living creatures to collect data!",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",
@@ -6558,7 +6603,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
+		MAINBANNER_BETA_TITLE = "WX-78 Refresh\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 

@@ -364,6 +364,9 @@ dragonflychest_clear_fn = function(inst) basic_clear_fn(inst, "dragonfly_chest" 
 wardrobe_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "wardrobe" ) end
 wardrobe_clear_fn = function(inst) basic_clear_fn(inst, "wardrobe" ) end
 
+fish_box_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "fish_box" ) end
+fish_box_clear_fn = function(inst) basic_clear_fn(inst, "fish_box" ) end
+
 sculptingtable_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "sculpting_station" ) end
 sculptingtable_clear_fn = function(inst) basic_clear_fn(inst, "sculpting_station" ) end
 

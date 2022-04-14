@@ -2352,7 +2352,25 @@ local fx =
             inst.AnimState:SetMultColour(1, 1, 1, .5)
             inst.Transform:SetTwoFaced()
         end,
-    },        
+    },
+
+    {
+        name = "wx78_heat_steam",
+        bank = "wx_fx",
+        build = "wx_fx",
+        anim = "steam",
+    },
+    {
+        name = "wx78_musicbox_fx",
+        bank = "wx_fx",
+        build = "wx_fx",
+        anim = "music1",
+        nofaced = true,
+        fn = function(inst)
+            inst.AnimState:PlayAnimation("music"..math.random(1, 4))
+            inst.AnimState:SetFinalOffset(1)
+        end,
+    },
 }
 
 for cratersteamindex = 1, 4 do

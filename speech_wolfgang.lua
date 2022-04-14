@@ -347,6 +347,26 @@ return{
             HUNGRY = "Too hungry... can't lift with tummy grumbling...",
             FULL = "Is Wolfgang's turn for lifting now! Wait...",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Wolfgang thinks it only speaks robot.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -476,6 +496,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "Is creepy in cave.",
 	ANNOUNCE_NOHUNGERSLEEP = "Wolfgang say never sleep with empty stomach.",
 	ANNOUNCE_NOSLEEPONFIRE = "Is too hot for sleeping.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Wolfgang can't sleep with bright light!",
 	ANNOUNCE_NODANGERSIESTA = "I prefer fighting to napping!",
 	ANNOUNCE_NONIGHTSIESTA = "Wolfgang have principles against siesta at night.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Wolfgang is tense. Too tense to relax.",
@@ -614,6 +635,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "That was not good recipe!",
@@ -4352,6 +4377,33 @@ return{
 
 		KITCOONDECOR1_KIT = "Is to make tiny kitties happy.",
 		KITCOONDECOR2_KIT = "Is to make tiny kitties happy.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Is robot snacks, yes?",
+        WX78MODULE_MAXSANITY = "Is robot snacks, yes?",
+        WX78MODULE_MOVESPEED = "Is robot snacks, yes?",
+        WX78MODULE_MOVESPEED2 = "Is robot snacks, yes?",
+        WX78MODULE_HEAT = "Is robot snacks, yes?",
+        WX78MODULE_NIGHTVISION = "Is robot snacks, yes?",
+        WX78MODULE_COLD = "Is robot snacks, yes?",
+        WX78MODULE_TASER = "Is robot snacks, yes?",
+        WX78MODULE_LIGHT = "Is robot snacks, yes?",
+        WX78MODULE_MAXHUNGER = "Is robot snacks, yes?",
+        WX78MODULE_MUSIC = "Is robot snacks, yes?",
+        WX78MODULE_BEE = "Is robot snacks, yes?",
+        WX78MODULE_MAXHEALTH2 = "Is robot snacks, yes?",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Wolfgang's muscles too mighty for scanning, would break tiny metal brain!",
+            HUNTING = "Wolfgang's muscles too mighty for scanning, would break tiny metal brain!",
+            SCANNING = "Wolfgang's muscles too mighty for scanning, would break tiny metal brain!",
+        },
+
+        WX78_SCANNER_ITEM = "It sleeps now.",
+        WX78_MODULEREMOVER = "Is funny robot thing.",
+
+        SCANDATA = "Is tiny boring paper.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

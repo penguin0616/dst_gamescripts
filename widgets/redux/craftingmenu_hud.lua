@@ -93,6 +93,23 @@ local CraftingMenuHUD = Class(Widget, function(self, owner, is_left_aligned)
         end
     end
 
+    local function OnLearnNewRecipe(owner,data)
+    	local pos = Vector3(ThePlayer.Transform:GetWorldPosition())
+    	local recipename = data.recipe
+        if pos ~= nil and AllRecipes[recipename] then
+        	local recipe = AllRecipes[recipename]
+        	local slot = self.craftingmenu  -- TEMP FOR NOW.. JUST FOR A POSITION 
+            local dest_pos = self.pinbar.open_menu_button:GetWorldPosition()
+						
+            local im = Image(recipe:GetAtlas(), recipe.image)
+            im:MoveTo(Vector3(TheSim:GetScreenPos(pos:Get())), dest_pos, 1, function() 
+					im:MoveTo(dest_pos, slot:GetWorldPosition(), 1, function()
+            			im:Kill()
+            		end)
+            	end)
+        end	
+	end
+
 	local function InitializeCraftingMenu()
 		self:Initialize()
 	end
@@ -108,6 +125,8 @@ local CraftingMenuHUD = Class(Widget, function(self, owner, is_left_aligned)
     self.inst:ListenForEvent("unlockrecipe", event_UpdateRecipes, self.owner)
     self.inst:ListenForEvent("refreshcrafting", event_UpdateRecipes, self.owner)
     self.inst:ListenForEvent("refreshinventory", event_UpdateRecipes, self.owner)
+    self.inst:ListenForEvent("LearnBuilderRecipe", OnLearnNewRecipe, self.owner)
+
     if TheWorld then
         self.inst:ListenForEvent("serverpauseddirty", event_UpdateRecipes, TheWorld)
     end

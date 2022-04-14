@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Not very talkative, eh?",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -476,6 +496,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "I'm not feelin' too restful right now.",
 	ANNOUNCE_NOHUNGERSLEEP = "My belly is too empty to fall asleep.",
 	ANNOUNCE_NOSLEEPONFIRE = "Not sure that's entirely safe.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Hey bud, I can't sleep when it's as bright as daylight.",
 	ANNOUNCE_NODANGERSIESTA = "Can't siesta, something's chasing me.",
 	ANNOUNCE_NONIGHTSIESTA = "I prefer to siesta between chopping sessions, not at night.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I prefer to siesta between chopping sessions, not at night.",
@@ -614,6 +635,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Guess those ingredients don't go together.",
@@ -4352,6 +4377,33 @@ return{
 
 		KITCOONDECOR1_KIT = "I don't know aboot this one...",
 		KITCOONDECOR2_KIT = "I bet those kits would love a toy to play with.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Some fancy robot bits.",
+        WX78MODULE_MAXSANITY = "Some fancy robot bits.",
+        WX78MODULE_MOVESPEED = "Some fancy robot bits.",
+        WX78MODULE_MOVESPEED2 = "Some fancy robot bits.",
+        WX78MODULE_HEAT = "Some fancy robot bits.",
+        WX78MODULE_NIGHTVISION = "Some fancy robot bits.",
+        WX78MODULE_COLD = "Some fancy robot bits.",
+        WX78MODULE_TASER = "Some fancy robot bits.",
+        WX78MODULE_LIGHT = "Some fancy robot bits.",
+        WX78MODULE_MAXHUNGER = "Some fancy robot bits.",
+        WX78MODULE_MUSIC = "Some fancy robot bits.",
+        WX78MODULE_BEE = "Some fancy robot bits.",
+        WX78MODULE_MAXHEALTH2 = "Some fancy robot bits.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Whew... almost mistook you for a bird, little fella.",
+            HUNTING = "Whew... almost mistook you for a bird, little fella.",
+            SCANNING = "Whew... almost mistook you for a bird, little fella.",
+        },
+
+        WX78_SCANNER_ITEM = "Catching some zeds.",
+        WX78_MODULEREMOVER = "Guess that's one way to do it.",
+
+        SCANDATA = "Doesn't seem right to boil nature down to just a bunch of facts and figures.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

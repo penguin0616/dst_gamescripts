@@ -30,6 +30,24 @@ function d_allmutators()
     c_give("mutator_water")
 end
 
+function d_allcircuits()
+    local module_defs = require("wx78_moduledefs").module_definitions
+
+    local pt = ConsoleWorldPosition()
+    local spacing, num_wide = 2, math.ceil(math.sqrt(#module_defs))
+
+    for y = 0, num_wide - 1 do
+        for x = 0, num_wide - 1 do
+            local def = module_defs[(y*num_wide) + x + 1]
+            local circuit = SpawnPrefab("wx78module_"..def.name)
+            if circuit ~= nil then
+                local spacing_vec = Vector3(x * spacing, 0, y * spacing)
+                circuit.Transform:SetPosition((pt + spacing_vec):Get())
+            end
+        end
+    end
+end
+
 function d_allheavy()
 	local heavy_objs = {
 		"cavein_boulder",
