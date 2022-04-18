@@ -328,7 +328,7 @@ end
 local LIGHT_MODULE_DATA =
 {
     name = "light",
-    slots = 5,
+    slots = 4,
     activatefn = light_activate,
     deactivatefn = light_deactivate,
 }
@@ -446,6 +446,7 @@ local MUSIC_MODULE_DATA =
 table.insert(module_definitions, MUSIC_MODULE_DATA)
 
 AddCreatureScanDataDefinition("crabking", "music", 8)
+AddCreatureScanDataDefinition("hermitcrab", "music", 4)
 
 ---------------------------------------------------------------
 local function bee_tick(wx, inst)

@@ -67,7 +67,7 @@ end
 ---------------------------------------------------------------------------------------------------
 -- The proximity scanning template is used by both the inventoryitem and prop version of the scanner.
 
-local SCAN_CAN = {"animal", "largecreature", "monster", "smallcreature"}
+local SCAN_CAN = {"animal", "character", "largecreature", "monster", "smallcreature"}
 local SCAN_CANT = {"DECOR", "FX", "INLIMBO", "NOCLICK"}
 local function proximityscan(inst, dt)
     local owner = inst:OwnerFn()

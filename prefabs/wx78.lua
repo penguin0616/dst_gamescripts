@@ -354,7 +354,7 @@ local function OnDeath(inst)
     inst.components.upgrademoduleowner:SetChargeLevel(0)
 
     if inst._gears_eaten > 0 then
-        local dropgears = math.random(math.floor(inst.level / 3), math.ceil(inst.level / 2))
+        local dropgears = math.random(math.floor(inst._gears_eaten / 3), math.ceil(inst._gears_eaten / 2))
         if dropgears > 0 then
             local x, y, z = inst.Transform:GetWorldPosition()
             for i = 1, dropgears do

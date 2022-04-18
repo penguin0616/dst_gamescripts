@@ -157,7 +157,7 @@ end
 
 local BATTERY_COST = TUNING.WINONA_BATTERY_LOW_MAX_FUEL_TIME * 0.9
 local function CanBeUsedAsBattery(inst, user)
-    if inst.components.fueled ~= nil and inst.components.fueled.currentfuel <= BATTERY_COST then
+    if inst.components.fueled ~= nil and inst.components.fueled.currentfuel >= BATTERY_COST then
         return true
     else
         return false, "NOT_ENOUGH_CHARGE"

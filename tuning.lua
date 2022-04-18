@@ -5866,7 +5866,7 @@ function Tune(overrides)
 
         WX78_TASERDAMAGE = 30,
 
-        WX78_LIGHT_BASERADIUS = 3.5,
+        WX78_LIGHT_BASERADIUS = 4.0,
 
         WX78_MUSIC_TENDRANGE = 12,
         WX78_MUSIC_UPDATERATE = 144*FRAMES,

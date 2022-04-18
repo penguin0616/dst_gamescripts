@@ -475,11 +475,19 @@ function PlayerController:OnControl(control, down)
 	if not isenabled and not ishudblocking then
 		return
 	end	
-	
+
 	-- actions that can be done while the crafting menu is open go in here
 	if isenabled or ishudblocking then
+        -- Priortize attacking over actions if both are bound to the same button/pressed at the exact same time
 		if control == CONTROL_ACTION then
-			self:DoActionButton()
+            local didattack = false
+            if TheInput:IsControlPressed(CONTROL_ATTACK) then
+                didattack = self:DoAttackButton()
+            end
+            if not didattack then
+                self:DoActionButton()
+            end
+
 		elseif control == CONTROL_ATTACK then
 			if self.ismastersim then
 				self.attack_buffer = CONTROL_ATTACK
@@ -492,7 +500,7 @@ function PlayerController:OnControl(control, down)
 	if not isenabled then
 		return
 	end
-	
+
     if control == CONTROL_PRIMARY then
         self:OnLeftClick(down)
     elseif control == CONTROL_SECONDARY then
@@ -1398,7 +1406,7 @@ function PlayerController:DoAttackButton(retarget)
             self.remote_controls[CONTROL_ATTACK] == nil then
             self:RemoteAttackButton()
         end
-        return --no target
+        return false --no target
     end
 
     if self.ismastersim then
@@ -1412,6 +1420,8 @@ function PlayerController:DoAttackButton(retarget)
         end
         self.locomotor:PreviewAction(buffaction, true)
     end
+
+    return true
 end
 
 function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
@@ -2364,7 +2374,12 @@ function PlayerController:OnUpdate(dt)
         end
         if isidle then
             if TheInput:IsControlPressed(CONTROL_ACTION) then
-                self:OnControl(CONTROL_ACTION, true)
+                -- Priortize attacking over actions if both are bound to the same button/pressed at the exact same time
+                if TheInput:IsControlPressed(CONTROL_ATTACK) and self.locomotor.bufferedaction and self.locomotor.bufferedaction.action == ACTIONS.ATTACK then
+                    self:OnControl(CONTROL_ATTACK, true)
+                else
+                    self:OnControl(CONTROL_ACTION, true)
+                end
             elseif TheInput:IsControlPressed(CONTROL_CONTROLLER_ACTION)
                 and not self:IsDoingOrWorking() then
                 self:OnControl(CONTROL_CONTROLLER_ACTION, true)
