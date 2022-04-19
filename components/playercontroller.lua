@@ -3364,6 +3364,10 @@ function PlayerController:DoAction(buffaction)
             self.inst.sg:HasStateTag("idle")) then
         --The "not" bit is in case we are stuck waiting for server
         --to act but it never does
+
+        -- We need to re-check the duplicate action to see if it has changed, e.g. a tree was cut down, so don't try and chop it
+        currentbuffaction.ispreviewing = false
+        self.lastheldaction = nil
         return
     end
 

@@ -365,7 +365,7 @@ local function OnDeath(inst)
     inst.components.upgrademoduleowner:SetChargeLevel(0)
 
     if inst._gears_eaten > 0 then
-        local dropgears = math.min(inst._gears_eaten, TUNING.STACK_SIZE_SMALLITEM)
+        local dropgears = math.random(math.floor(inst._gears_eaten / 3), math.ceil(inst._gears_eaten / 2))
         local x, y, z = inst.Transform:GetWorldPosition()
         for i = 1, dropgears do
             local gear = SpawnPrefab("gears")
