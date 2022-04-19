@@ -450,7 +450,7 @@ function PinSlot:OnUpdate(dt)
     if self.down and self.recipe_held then
 		local recipe_data = self.craftingmenu:GetRecipeState(self.recipe_name)
 		if recipe_data ~= nil then
-	        DoRecipeClick(self.owner, recipe_data.data, self.skin_name, self:FindSubIngredientToCraft(recipe_data))
+	        DoRecipeClick(self.owner, recipe_data.data, self.skin_name)
 		end
     end
 end
@@ -498,6 +498,11 @@ end
 
 function PinSlot:OnCraftingMenuOpen()
 	local controller = TheInput:ControllerAttached()
+
+    if self.recipe_popup then
+        self.recipe_popup:HidePopup()
+    end
+
 	self:RefreshControllers(controller, true)
 	self:Show()
 

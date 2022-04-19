@@ -186,16 +186,6 @@ local function OnNewState(inst, data)
     end
 end
 
-local function areahitcheck(target,inst)
-    local x,y,z = target.Transform:GetWorldPosition()
-    local angle = inst:GetAngleToPoint(x, y, z)
-    local diff =  math.abs(inst.Transform:GetRotation() - angle)
-    if diff > 180 then
-        diff = 360 - diff
-    end
-    return diff <= inst.components.combat.AOEarc 
-end
-
 local loot = {"meat", "meat", "meat", "meat", "meat", "meat", "meat", "meat", "deerclops_eyeball", "chesspiece_deerclops_sketch"}
 
 local function fn()
@@ -273,8 +263,6 @@ local function fn()
     inst.components.combat:SetDefaultDamage(TUNING.DEERCLOPS_DAMAGE)
     inst.components.combat.playerdamagepercent = TUNING.DEERCLOPS_DAMAGE_PLAYER_PERCENT
     inst.components.combat:SetRange(TUNING.DEERCLOPS_ATTACK_RANGE)
-    inst.components.combat:SetAreaDamage(TUNING.DEERCLOPS_AOE_RANGE, TUNING.DEERCLOPS_AOE_SCALE, areahitcheck)
-    inst.components.combat.AOEarc = 35
     inst.components.combat.hiteffectsymbol = "deerclops_body"
     inst.components.combat:SetAttackPeriod(TUNING.DEERCLOPS_ATTACK_PERIOD)
     inst.components.combat:SetRetargetFunction(1, RetargetFn)

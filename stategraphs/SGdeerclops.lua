@@ -41,24 +41,22 @@ local AREA_EXCLUDE_TAGS = { "INLIMBO", "notarget", "noattack", "flight", "invisi
 local ICESPAWNTIME =  0.25
     
 local function DoSpawnIceSpike(inst, x, z)
-    local targets = {}
     SpawnPrefab("icespike_fx_"..tostring(math.random(1, 4))).Transform:SetPosition(x, 0, z)
 
     local ents = TheSim:FindEntities(x,0,z,1.5,AREAATTACK_MUST_TAGS,AREA_EXCLUDE_TAGS)
     if #ents > 0 then
         for i,ent in ipairs(ents)do
             if ent ~= inst then
-                targets[ent.GUID] = true
-                if inst.components.combat:CanTarget(ent) and not ent.deerclopsattacked then
+                if not inst._icespikeshit_targets[ent.GUID] and inst.components.combat:CanTarget(ent) and not ent.deerclopsattacked then
 					inst.components.combat:DoAttack(ent)
 					inst._icespikeshit = true
+	                inst._icespikeshit_targets[ent.GUID] = true
                 end
                 ent.deerclopsattacked = true
                 ent:DoTaskInTime(ICESPAWNTIME +0.03,function() ent.deerclopsattacked = nil end)
             end
         end
     end
-    return targets
 end
 
 local function CheckForIceSpikesMiss(inst)
@@ -73,12 +71,16 @@ local function CheckForIceSpikesMiss(inst)
 end
 
 local function SpawnIceFx(inst, target)
+	inst._icespikeshit_targets = {}
+
+	local AOEarc = 35
+
     local x, y, z = inst.Transform:GetWorldPosition()
     local angle = inst.Transform:GetRotation()
 
     local num = 3
     for i=1,num do
-        local newarc = 180 - inst.components.combat.AOEarc
+        local newarc = 180 - AOEarc
         local theta =  inst.Transform:GetRotation()*DEGREES
         local radius = TUNING.DEERCLOPS_ATTACK_RANGE - ( (TUNING.DEERCLOPS_ATTACK_RANGE/num)*i )
         local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
@@ -86,14 +88,14 @@ local function SpawnIceFx(inst, target)
     end
 
     for i=math.random(12,17),1,-1 do
-        local theta =  ( angle + math.random(inst.components.combat.AOEarc *2) - inst.components.combat.AOEarc ) * DEGREES
+        local theta =  ( angle + math.random(AOEarc *2) - AOEarc ) * DEGREES
         local radius = TUNING.DEERCLOPS_ATTACK_RANGE * math.sqrt(math.random())
         local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
         inst:DoTaskInTime(math.random() * ICESPAWNTIME, DoSpawnIceSpike, x+offset.x, z+offset.z)
     end
 
     for i=math.random(5,8),1,-1 do
-        local newarc = 180 - inst.components.combat.AOEarc
+        local newarc = 180 - AOEarc
         local theta =  ( angle -180 + math.random(newarc *2) - newarc ) * DEGREES
         local radius = 2 * math.random() +1
         local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
