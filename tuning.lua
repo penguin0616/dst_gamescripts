@@ -111,6 +111,7 @@ function Tune(overrides)
         WILSON_HUNGER_RATE = calories_per_day/total_day_time, --calories burnt per day
         WILSON_SANITY = wilson_sanity,
 
+        -- WX78 Refresh: WX78 min and max health variables kept for backwards compatibility & mods
         WX78_MIN_HEALTH = 150,
         WX78_MIN_HUNGER = 150, -- 100 For pax we are increasing this.  Hungers out too easily.
         WX78_MIN_SANITY = 150,
@@ -119,9 +120,9 @@ function Tune(overrides)
         WX78_MAX_HUNGER = 200,
         WX78_MAX_SANITY = 300,
 
-        WX78_HEALTH = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_HEALTH
-        WX78_HUNGER = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_HUNGER
-        WX78_SANITY = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_SANITY
+        WX78_HEALTH = 150,
+        WX78_HUNGER = 150,
+        WX78_SANITY = 150,
 
         HAMMER_LOOT_PERCENT = .5,
         BURNT_HAMMER_LOOT_PERCENT = .25,
@@ -4153,8 +4154,8 @@ function Tune(overrides)
         MERM_GUARD_SHARE_TARGET_DIST = 60,
         MERM_GUARD_MAX_TARGET_SHARES = 8,
 
-        MERM_GUARD_LOYALTY_MAXTIME = 3 * total_day_time,
-        MERM_GUARD_LOYALTY_PER_HUNGER = total_day_time/25,
+        MERM_GUARD_LOYALTY_MAXTIME = 5 * total_day_time,
+        MERM_GUARD_LOYALTY_PER_HUNGER = total_day_time/15,
         MERM_GUARD_FOLLOWER_COUNT = 5,
         MERM_GUARD_FOLLOWER_RADIUS = 16,
 
@@ -4163,7 +4164,7 @@ function Tune(overrides)
         MERM_KING_HEALTH_REGEN = 2,
         MERM_KING_HUNGER = 200,
         MERM_KING_HUNGER_KILL_TIME = total_day_time * 2,
-        MERM_KING_HUNGER_RATE = 200 / (total_day_time * 4),
+        MERM_KING_HUNGER_RATE = 200 / (total_day_time * 8),
 
         PUNY_MERM_HEALTH = 200,
         PUNY_MERM_DAMAGE = 20,
@@ -5894,7 +5895,7 @@ function Tune(overrides)
 
         -- Wurt QoL/AI
         -- Default fallbacks for follower brain AI distances.
-        FOLLOWER_HELP_LEADERDIST = 12,
+        FOLLOWER_HELP_LEADERDIST = 18,
         FOLLOWER_HELP_FINDDIST = 6,
     }
 

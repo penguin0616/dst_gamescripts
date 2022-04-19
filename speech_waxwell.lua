@@ -4388,7 +4388,7 @@ return{
         WX78MODULE_TASER = "That robot needs to pull themselves together.",
         WX78MODULE_LIGHT = "That robot needs to pull themselves together.",
         WX78MODULE_MAXHUNGER = "That robot needs to pull themselves together.",
-        WX78MODULE_MUSIC = "That robot needs to pull themselves together.",
+        WX78MODULE_MUSIC = "They wouldn't...",
         WX78MODULE_BEE = "That robot needs to pull themselves together.",
         WX78MODULE_MAXHEALTH2 = "That robot needs to pull themselves together.",
 

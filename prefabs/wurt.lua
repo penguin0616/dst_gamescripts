@@ -202,6 +202,7 @@ end
 local function CLIENT_Wurt_HostileTest(inst, target)
     return (target:HasTag("hostile") or target:HasTag("pig"))
         and not target:HasTag("merm") and not target:HasTag("manrabbit")
+        and not target:HasTag("frog")
 end
 
 local function common_postinit(inst)

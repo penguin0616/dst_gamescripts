@@ -1921,6 +1921,7 @@ local function MakeHat(name)
         end
 
         inst.components.equippable.dapperness = -TUNING.DAPPERNESS_TINY
+        inst.components.equippable.flipdapperonmerms = true
         inst.components.equippable:SetOnEquip(batnose_equip)
         inst.components.equippable:SetOnUnequip(batnose_unequip)
         inst.components.equippable.restrictedtag = "usesvegetarianequipment"

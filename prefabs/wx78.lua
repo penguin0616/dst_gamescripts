@@ -208,6 +208,11 @@ local function OnLoad(inst, data)
         if data.gears_eaten ~= nil then
             inst._gears_eaten = data.gears_eaten
         end
+
+        -- Compatability with pre-refresh WX saves
+        if data.level ~= nil then
+            inst._gears_eaten = (inst._gears_eaten or 0) + data.level
+        end
     end
 end
 
@@ -281,6 +286,15 @@ local function stop_moisturetracking(inst)
 end
 
 local function moisturetrack_update(inst)
+    if inst.components.moisture:GetMoisture() > TUNING.WX78_MINACCEPTABLEMOISTURE then
+        -- The update will loop until it is stopped by going under the acceptable moisture level.
+        initiate_moisture_update(inst)
+    end
+
+    if inst:HasTag("moistureimmunity") then
+        return
+    end
+
     inst._moisture_steps = inst._moisture_steps + 1
 
     local x, y, z = inst.Transform:GetWorldPosition()
@@ -297,9 +311,6 @@ local function moisturetrack_update(inst)
 
         inst.sg:GoToState("hit")
     end
-
-    -- The update will loop until it is stopped.
-    initiate_moisture_update(inst)
 
     -- Send a message for the UI.
     inst:PushEvent("do_robot_spark")
@@ -354,27 +365,27 @@ local function OnDeath(inst)
     inst.components.upgrademoduleowner:SetChargeLevel(0)
 
     if inst._gears_eaten > 0 then
-        local dropgears = math.random(math.floor(inst._gears_eaten / 3), math.ceil(inst._gears_eaten / 2))
-        if dropgears > 0 then
-            local x, y, z = inst.Transform:GetWorldPosition()
-            for i = 1, dropgears do
-                local gear = SpawnPrefab("gears")
-                if gear ~= nil then
-                    if gear.Physics ~= nil then
-                        local speed = 2 + math.random()
-                        local angle = math.random() * 2 * PI
-                        gear.Physics:Teleport(x, y + 1, z)
-                        gear.Physics:SetVel(speed * math.cos(angle), speed * 3, speed * math.sin(angle))
-                    else
-                        gear.Transform:SetPosition(x, y, z)
-                    end
+        local dropgears = math.min(inst._gears_eaten, TUNING.STACK_SIZE_SMALLITEM)
+        local x, y, z = inst.Transform:GetWorldPosition()
+        for i = 1, dropgears do
+            local gear = SpawnPrefab("gears")
+            if gear ~= nil then
+                if gear.Physics ~= nil then
+                    local speed = 2 + math.random()
+                    local angle = math.random() * 2 * PI
+                    gear.Physics:Teleport(x, y + 1, z)
+                    gear.Physics:SetVel(speed * math.cos(angle), speed * 3, speed * math.sin(angle))
+                else
+                    gear.Transform:SetPosition(x, y, z)
+                end
 
-                    if gear.components.propagator ~= nil then
-                        gear.components.propagator:Delay(5)
-                    end
+                if gear.components.propagator ~= nil then
+                    gear.components.propagator:Delay(5)
                 end
             end
         end
+
+        inst._gears_eaten = 0
     end
 end
 
@@ -384,6 +395,8 @@ local function OnEat(inst, food)
     if food ~= nil and food.components.edible ~= nil
             and food.components.edible.foodtype == FOODTYPE.GEARS then
         inst._gears_eaten = inst._gears_eaten + 1
+
+        inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
     end
 end
 
@@ -471,9 +484,12 @@ end
 
 ----------------------------------------------------------------------------------------
 
-local function CanSleepInBagFn(inst, bed)
-    local num_light_modules = inst.components.upgrademoduleowner:GetModuleTypeCount("light")
-    return num_light_modules == 0, "ANNOUNCE_NOSLEEPHASPERMANENTLIGHT"
+local function CanSleepInBagFn(wx, bed)
+    if wx._light_modules == nil or wx._light_modules == 0 then
+        return true
+    else
+        return false, "ANNOUNCE_NOSLEEPHASPERMANENTLIGHT"
+    end
 end
 
 ----------------------------------------------------------------------------------------
@@ -557,6 +573,11 @@ local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
 	inst.customidlestate = "wx78_funnyidle"
+
+    ----------------------------------------------------------------
+    inst.components.health:SetMaxHealth(TUNING.WX78_HEALTH)
+    inst.components.hunger:SetMax(TUNING.WX78_HUNGER)
+    inst.components.sanity:SetMax(TUNING.WX78_SANITY)
 
     ----------------------------------------------------------------
     inst._gears_eaten = 0

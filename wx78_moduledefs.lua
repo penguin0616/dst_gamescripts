@@ -25,11 +25,13 @@ local function maxhealth_change(inst, wx, amount)
 
         wx.components.health:SetMaxHealth(wx.components.health.maxhealth + amount)
 
-        wx.components.health:SetPercent(current_health_percent, false, inst)
+        wx.components.health:SetPercent(current_health_percent)
 
-        -- We want to force a badge pulse, but also maintain the health percent as much as we can.
-        local badgedelta = (amount > 0 and 0.01) or -0.01
-        wx.components.health:DoDelta(badgedelta, false, inst, true)
+        if not wx.components.health:IsDead() then
+            -- We want to force a badge pulse, but also maintain the health percent as much as we can.
+            local badgedelta = (amount > 0 and 0.01) or -0.01
+            wx.components.health:DoDelta(badgedelta, false, nil, true)
+        end
     end
 end
 
@@ -84,7 +86,10 @@ local MAXSANITY_MODULE_DATA =
 table.insert(module_definitions, MAXSANITY_MODULE_DATA)
 
 AddCreatureScanDataDefinition("crawlinghorror", "maxsanity", 3)
+AddCreatureScanDataDefinition("crawlingnightmare", "maxsanity", 6)
 AddCreatureScanDataDefinition("terrorbeak", "maxsanity", 3)
+AddCreatureScanDataDefinition("nightmarebeak", "maxsanity", 6)
+AddCreatureScanDataDefinition("oceanhorror", "maxsanity", 3)
 
 ---------------------------------------------------------------
 local function movespeed_activate(inst, wx)
@@ -130,6 +135,7 @@ local EXTRA_DRYRATE = 0.1
 local function heat_activate(inst, wx)
     -- A higher mintemp means that it's harder to freeze.
     wx.components.temperature.mintemp = wx.components.temperature.mintemp + TUNING.WX78_MINTEMPCHANGEPERMODULE
+    wx.components.temperature.maxtemp = wx.components.temperature.maxtemp + TUNING.WX78_MINTEMPCHANGEPERMODULE
 
     wx.components.moisture.maxDryingRate = wx.components.moisture.maxDryingRate + EXTRA_DRYRATE
     wx.components.moisture.baseDryingRate = wx.components.moisture.baseDryingRate + EXTRA_DRYRATE
@@ -141,6 +147,7 @@ end
 
 local function heat_deactivate(inst, wx)
     wx.components.temperature.mintemp = wx.components.temperature.mintemp - TUNING.WX78_MINTEMPCHANGEPERMODULE
+    wx.components.temperature.maxtemp = wx.components.temperature.maxtemp - TUNING.WX78_MINTEMPCHANGEPERMODULE
 
     wx.components.moisture.maxDryingRate = wx.components.moisture.maxDryingRate - EXTRA_DRYRATE
     wx.components.moisture.baseDryingRate = wx.components.moisture.baseDryingRate - EXTRA_DRYRATE
@@ -159,11 +166,12 @@ local HEAT_MODULE_DATA =
 }
 table.insert(module_definitions, HEAT_MODULE_DATA)
 
+AddCreatureScanDataDefinition("firehound", "heat", 4)
 AddCreatureScanDataDefinition("dragonfly", "heat", 10)
 
 ---------------------------------------------------------------
-local function nightvision_onday(wx, isday)
-    wx:SetForcedNightVision(not isday)
+local function nightvision_onworldstateupdate(wx)
+    wx:SetForcedNightVision(TheWorld.state.isnight and not TheWorld.state.isfullmoon)
 end
 
 local function nightvision_activate(inst, wx)
@@ -173,8 +181,9 @@ local function nightvision_activate(inst, wx)
         if TheWorld:HasTag("cave") then
             wx:SetForcedNightVision(true)
         else
-            wx:WatchWorldState("isday", nightvision_onday)
-            nightvision_onday(wx, TheWorld.state.isday)
+            wx:WatchWorldState("isnight", nightvision_onworldstateupdate)
+            wx:WatchWorldState("isfullmoon", nightvision_onworldstateupdate)
+            nightvision_onworldstateupdate(wx)
         end
     end
 end
@@ -186,7 +195,8 @@ local function nightvision_deactivate(inst, wx)
         if TheWorld:HasTag("cave") then
             wx:SetForcedNightVision(false)
         else
-            wx:StopWatchingWorldState("isday", nightvision_onday)
+            wx:StopWatchingWorldState("isnight", nightvision_onworldstateupdate)
+            wx:StopWatchingWorldState("isfullmoon", nightvision_onworldstateupdate)
             wx:SetForcedNightVision(false)
         end
     end
@@ -205,7 +215,8 @@ AddCreatureScanDataDefinition("mole", "nightvision", 4)
 
 ---------------------------------------------------------------
 local function cold_activate(inst, wx)
-    -- A lower mintemp means it's harder to overheat.
+    -- A lower maxtemp means it's harder to overheat.
+    wx.components.temperature.maxtemp = wx.components.temperature.maxtemp - TUNING.WX78_MINTEMPCHANGEPERMODULE
     wx.components.temperature.mintemp = wx.components.temperature.mintemp - TUNING.WX78_MINTEMPCHANGEPERMODULE
 
     if wx.AddTemperatureModuleLeaning ~= nil then
@@ -214,6 +225,7 @@ local function cold_activate(inst, wx)
 end
 
 local function cold_deactivate(inst, wx)
+    wx.components.temperature.maxtemp = wx.components.temperature.maxtemp + TUNING.WX78_MINTEMPCHANGEPERMODULE
     wx.components.temperature.mintemp = wx.components.temperature.mintemp + TUNING.WX78_MINTEMPCHANGEPERMODULE
 
     if wx.AddTemperatureModuleLeaning ~= nil then
@@ -230,6 +242,7 @@ local COLD_MODULE_DATA =
 }
 table.insert(module_definitions, COLD_MODULE_DATA)
 
+AddCreatureScanDataDefinition("icehound", "cold", 4)
 AddCreatureScanDataDefinition("deerclops", "cold", 10)
 
 ---------------------------------------------------------------

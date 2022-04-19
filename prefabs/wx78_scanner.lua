@@ -762,6 +762,7 @@ local function scannerfn()
     inst.DynamicShadow:SetSize(1.2, 0.75)
 
     inst:AddTag("companion")
+    inst:AddTag("NOBLOCK")
     inst:AddTag("scarytoprey")
 
     inst.AnimState:SetBank("scanner")
@@ -808,6 +809,8 @@ local function scannerfn()
 
     -------------------------------------------------------------------
     inst:AddComponent("locomotor")
+    inst.components.locomotor:EnableGroundSpeedMultiplier(false)
+    inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { allowocean = true, ignorecreep = true }
 
     -------------------------------------------------------------------

@@ -14,9 +14,9 @@ local prefabs =
 local loot =
 {
     "pondfish",
-    "pondfish",
-    "pondfish",
     "froglegs",
+    "kelp",
+    "kelp",
     "kelp",
     "kelp",
 }
@@ -88,10 +88,13 @@ local function TradeItem(inst)
 
     local selected_index = math.random(1, #inst.trading_items)
     local selected_item = inst.trading_items[selected_index]
-    local filler_min = 2
-    local filler_max = 4
 
-    local reward_count = math.random(selected_item.min_count, selected_item.max_count)
+    local isabigheavyfish = item.components.weighable and item.components.weighable:GetWeightPercent() >= TUNING.WEIGHABLE_HEAVY_WEIGHT_PERCENT or false
+    local bigheavyreward = isabigheavyfish and math.random(1, 2) or 0
+
+    local filler_min = 2 -- Not biasing minimum for filler.
+    local filler_max = 4 + bigheavyreward
+    local reward_count = math.random(selected_item.min_count, selected_item.max_count) + bigheavyreward
 
     for k = 1, reward_count do
         local reward_item = SpawnPrefab(selected_item.prefabs[math.random(1, #selected_item.prefabs)])
@@ -115,7 +118,7 @@ local function TradeItem(inst)
             end
         end
 
-        local amt = math.random(goldmin, goldmax)
+        local amt = math.random(goldmin, goldmax) + bigheavyreward
         for i = 1, amt do
             local reward_item = SpawnPrefab(goldprefab)
             reward_item.Transform:SetPosition(x, y, z)
