@@ -18,6 +18,30 @@ end
 
 -----------------------------------------------------------------------------------------
 
+local function ReturnToPlayerAfterFinishedScan(inst)
+    if not inst._donescanning then
+        return nil
+    end
+
+    local leader = (inst.components.follower ~= nil and inst.components.follower.leader)
+    if not leader then
+        inst:OnReturnedAfterSuccessfulScan()
+        return
+    end
+
+    local act = BufferedAction(inst, nil, ACTIONS.WALKTO, nil, GetLeaderPosition(inst))
+    if act then
+        local on_finished = function()
+            inst:OnReturnedAfterSuccessfulScan()
+        end
+        act:AddSuccessAction(on_finished)
+        act:AddFailAction(on_finished)
+    end
+    return act
+end
+
+-----------------------------------------------------------------------------------------
+
 local TARGET_FOLLOW, MAX_TARGET_FOLLOW = 0.1, 2.0
 
 -- If the scantarget's physics radius pushes our dist above this, clamp to this.
@@ -55,21 +79,26 @@ end
 
 function WX78ScannerBrain:OnStart()
     local root = PriorityNode({
-        WhileNode(function() return GetScanTarget(self.inst) == nil end, "No Scan Target",
-            LoopNode{
-                DoAction(self.inst, self.inst.TryFindTarget, "Try To Scan Something", false, 3),
-                ConditionWaitNode(function() return self.inst:GetBufferedAction() == nil end),
-            }
-        ),
-        WhileNode(function() return GetScanTarget(self.inst) ~= nil end, "Has Scan Target",
+        WhileNode(function() return not self.inst.sg:HasStateTag("scanned") end, "While Not Finished",
             PriorityNode({
-                Leash(self.inst, GetScanTargetLocation, GetMaxScanFollowDistance, GetTargetScanFollowDistance),
-                FaceEntity(self.inst, GetScanTarget, KeepFacingScanTarget),
-            }, 1)
-        ),
+                DoAction(self.inst, ReturnToPlayerAfterFinishedScan),
+                WhileNode(function() return GetScanTarget(self.inst) == nil end, "No Scan Target",
+                    LoopNode{
+                        DoAction(self.inst, self.inst.TryFindTarget, "Try To Scan Something", false, 3),
+                        ConditionWaitNode(function() return self.inst:GetBufferedAction() == nil end),
+                    }
+                ),
+                WhileNode(function() return GetScanTarget(self.inst) ~= nil end, "Has Scan Target",
+                    PriorityNode({
+                        Leash(self.inst, GetScanTargetLocation, GetMaxScanFollowDistance, GetTargetScanFollowDistance),
+                        FaceEntity(self.inst, GetScanTarget, KeepFacingScanTarget),
+                    }, 1)
+                ),
 
-        Leash(self.inst, GetLeaderPosition, 3, 1.5),
-        StandStill(self.inst),
+                Leash(self.inst, GetLeaderPosition, 3, 1.5),
+                StandStill(self.inst),
+            }, 1)
+        )
     }, 1)
 
     self.bt = BT(self.inst, root)

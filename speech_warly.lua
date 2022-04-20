@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "It seems vaguely potato shaped... or perhaps I'm just hungry.",
+        WX78_SCANNER_SUCCEEDED = "Voilà, it is done!",
+
         WX78_MODULEREMOVER = "Ah, I believe this utensil belongs to our metal friend.",
 
         SCANDATA = "What is this they're cooking up?",

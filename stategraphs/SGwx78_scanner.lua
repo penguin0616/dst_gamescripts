@@ -73,11 +73,15 @@ local states =
 
     State {
         name = "turn_off",
-        tags = {"busy","scanned"},
+        tags = {"busy", "scanned"},
 
         onenter = function(inst, data)
-            if data and data.changetoitem then
-                inst.sg.statemem.changetoitem = true
+            if data then
+                if data.changetoitem then
+                    inst.sg.statemem.changetoitem = true
+                elseif data.changetosuccess then
+                    inst.sg.statemem.changetosuccess = true
+                end
             end
 
             if inst.DoTurnOff then
@@ -106,9 +110,17 @@ local states =
             EventHandler("animover", function(inst)
                 if inst.sg.statemem.changetoitem then
                     local scanner_item = SpawnPrefab("wx78_scanner_item")
-                    local x,y,z = inst.Transform:GetWorldPosition()
-                    scanner_item.Transform:SetPosition(x,y,z)
+                    scanner_item.Transform:SetPosition(inst.Transform:GetWorldPosition())
+                    scanner_item.Transform:SetRotation(inst.Transform:GetRotation())
+
                     inst:Remove()
+
+                elseif inst.sg.statemem.changetosuccess then
+                    local success_item = SpawnPrefab("wx78_scanner_succeeded")
+                    success_item:SetUpFromScanner(inst)
+
+                    inst:Remove()
+
                 else
                     inst.sg:GoToState("turn_off_idle")
                     inst.sg.statemem.going_to_idle = true
@@ -131,18 +143,6 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("turn_off_idle", true)
-
-            if inst.components.harvestable:CanBeHarvested() then
-                inst.sg.statemem.flashon = false
-                inst.sg.statemem.flashtask = inst:DoPeriodicTask(15*FRAMES, function(inst2)
-                    if inst2.sg.statemem.flashon then
-                        inst2.AnimState:Hide("top_light")
-                    else
-                        inst2.AnimState:Show("top_light")
-                    end
-                    inst2.sg.statemem.flashon = not inst2.sg.statemem.flashon
-                end)
-            end
 
             inst:stoploopingsound()
         end,
@@ -189,7 +189,7 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("turn_off")
+                inst.sg:GoToState("turn_off", {changetosuccess = true})
             end),
         },
     },  

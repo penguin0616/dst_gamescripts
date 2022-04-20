@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Rest well, noble scout.",
+        WX78_SCANNER_SUCCEEDED = "Metal warrior! The scout's report is complete!",
+
         WX78_MODULEREMOVER = "I trust my ally knows what they are doing.",
 
         SCANDATA = "The metal scout's report!",

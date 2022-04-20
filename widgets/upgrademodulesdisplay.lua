@@ -19,10 +19,13 @@ local UpgradeModulesDisplay = Class(Widget, function(self, owner, reversed)
     self.energy_level = TUNING.WX78_MAXELECTRICCHARGE
     self.slots_in_use = 0
 
+    local scale = 0.7
     if IsGameInstance(Instances.Player2) then
-        self:SetScale(-1, 1, 1)
+        self.reversed = true
+        self:SetScale(-scale, scale, scale)
     else
-        self:SetScale(1, 1, 1)
+        self.reversed = false
+        self:SetScale(scale, scale, scale)
     end
 
     self.battery_frame = self:AddChild(UIAnim())
@@ -83,7 +86,7 @@ function UpgradeModulesDisplay:UpdateChipCharges(plugging_in)
 
         if charge < 0 and not chip._power_hidden then
             if not plugging_in then
-                chip:GetAnimState():PlayAnimation("chip_off")
+                chip:GetAnimState():PlayAnimation((self.reversed and "chip_off_reverse") or "chip_off")
                 chip:HookCallback("animover", function(chip_ui_inst)
                     chip:GetAnimState():Hide("plug_on")
                     chip:UnhookCallback("animover")
@@ -101,7 +104,7 @@ function UpgradeModulesDisplay:UpdateChipCharges(plugging_in)
 
             chip:GetAnimState():Show("plug_on")
             if not plugging_in then
-                chip:GetAnimState():PlayAnimation("chip_on")
+                chip:GetAnimState():PlayAnimation((self.reversed and "chip_on_reverse") or "chip_on")
             end
             chip._power_hidden = false
 
@@ -174,8 +177,8 @@ function UpgradeModulesDisplay:OnModuleAdded(moduledefinition_index)
     local new_chip = self.chip_objectpool[self.chip_poolindex]
     self.chip_poolindex = self.chip_poolindex + 1
 
-    new_chip:GetAnimState():PlayAnimation("plug")
-    new_chip:GetAnimState():PushAnimation("chip_idle")
+    new_chip:GetAnimState():PlayAnimation((self.reversed and "plug_reverse") or "plug")
+    new_chip:GetAnimState():PushAnimation((self.reversed and "chip_idle_reverse") or "chip_idle")
 
     new_chip:GetAnimState():OverrideSymbol("movespeed2_chip", "status_wx", modname.."_chip")
 
@@ -221,7 +224,7 @@ function UpgradeModulesDisplay:PopAllModules()
                 falling_chip:UnhookCallback("animover")
             end)
 
-            falling_chip:GetAnimState():PlayAnimation("chip_fall")
+            falling_chip:GetAnimState():PlayAnimation((self.reversed and "chip_fall_reverse") or "chip_fall")
         end
     end
 

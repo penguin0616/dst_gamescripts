@@ -830,7 +830,7 @@ function Inventory:GiveItem(inst, slot, src_pos)
         end
 
         return slot
-    elseif overflow ~= nil and overflow:GiveItem(inst, nil, src_pos) then
+    elseif overflow ~= nil and overflow:GiveItem(inst, nil, src_pos, false) then
         return true
     end
 

@@ -4401,6 +4401,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "It sleeps now.",
+        WX78_SCANNER_SUCCEEDED = "Funny machine is winking at Wolfgang?",
+
         WX78_MODULEREMOVER = "Is funny robot thing.",
 
         SCANDATA = "Is tiny boring paper.",

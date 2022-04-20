@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Something about it is just so temptingly kickable.",
+        WX78_SCANNER_SUCCEEDED = "That constant blinking light is testing my patience.",
+
         WX78_MODULEREMOVER = "Nerves of steel, that one.",
 
         SCANDATA = "Well... fine. I suppose that sums it all up, more or less.",

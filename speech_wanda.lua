@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "It's biding its time.",
+        WX78_SCANNER_SUCCEEDED = "I suppose you have nothing better to do than wait around?",
+
         WX78_MODULEREMOVER = "Did the automaton make off with one of my tools?",
 
         SCANDATA = "It's of no use to me, I won't waste time reading it.",

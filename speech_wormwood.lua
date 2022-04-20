@@ -4404,6 +4404,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Little friend of robot friend",
+        WX78_SCANNER_SUCCEEDED = "Blinky blink",
+
         WX78_MODULEREMOVER = "Robot friend fixer",
 
         SCANDATA = "Hmm!",

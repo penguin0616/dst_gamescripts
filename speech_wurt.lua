@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Bug? No? Hmm...",
+        WX78_SCANNER_SUCCEEDED = "Why it all blinky?",
+
         WX78_MODULEREMOVER = "Haha! Ironfolk weird.",
 
         SCANDATA = "Glurgh... can Wicker-lady read it?",

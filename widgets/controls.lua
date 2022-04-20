@@ -169,7 +169,7 @@ local Controls = Class(Widget, function(self, owner)
             self.secondary_status = self.sidepanel:AddChild(SecondaryStatusDisplays(self.owner))
             self.secondary_status:SetPosition(0,-110,0)
 
-            self.clock = self.sidepanel:AddChild(UIClock(self.owner))
+            self.clock = self.sidepanel:AddChild(UIClock())
             if self.clock:IsCaveClock() then
                 self.clock.inst:DoSimPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
             end
@@ -226,6 +226,14 @@ local Controls = Class(Widget, function(self, owner)
     self.containerroot_side:SetMaxPropUpscale(MAX_HUD_SCALE)
     self.containerroot_side = self.containerroot_side:AddChild(Widget("contaierroot_side"))
     self.containerroot_side:Hide()
+
+    if not is_splitscreen then
+        -- This assumes that splitscreen means console; consoles are forced to use
+        -- the integrated backpack, so the side widget shouldn't cause issues there.
+        if owner:HasTag("upgrademoduleowner") then
+            --self.containerroot_side:SetPosition(-120, 0, 0)
+        end
+    end
 
     self.mousefollow = self:AddChild(Widget("follower"))
     self.mousefollow:FollowMouse(true)

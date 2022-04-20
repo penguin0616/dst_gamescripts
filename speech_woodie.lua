@@ -4401,6 +4401,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Catching some zeds.",
+        WX78_SCANNER_SUCCEEDED = "Trying to get someone's attention, eh?",
+
         WX78_MODULEREMOVER = "Guess that's one way to do it.",
 
         SCANDATA = "Doesn't seem right to boil nature down to just a bunch of facts and figures.",

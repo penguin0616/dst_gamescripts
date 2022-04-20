@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Is your name really Jimmy?",
+        WX78_SCANNER_SUCCEEDED = "WX! We think Jimmy's trying to get your attention!",
+
         WX78_MODULEREMOVER = "We're not sure that's safe...",
 
         SCANDATA = "Wow, it learned all that just by looking really hard?",

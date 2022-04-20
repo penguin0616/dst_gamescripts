@@ -4410,6 +4410,8 @@ return {
         },
 
         WX78_SCANNER_ITEM = "I wonder if it dreams about scanning sheep.",
+        WX78_SCANNER_SUCCEEDED = "It's got the look of someone eager to show their work.",
+
         WX78_MODULEREMOVER = "Obviously a very delicate and complicated scientific instrument.",
 
         SCANDATA = "Smells like fresh research.",

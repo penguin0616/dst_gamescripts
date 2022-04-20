@@ -4406,6 +4406,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "The tiny tin terror's tuckered out!",
+        WX78_SCANNER_SUCCEEDED = "It's done its toil, now our friend must collect the spoils.",
+
         WX78_MODULEREMOVER = "It'll work in a pinch, hyuyu!",
 
         SCANDATA = "Hyuyuyu, I think our friend has some tricks up those tin sleeves!",

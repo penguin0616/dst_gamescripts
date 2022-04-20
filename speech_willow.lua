@@ -4407,6 +4407,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Heh... how mad do you think WX would get if I painted a mustache on it?",
+        WX78_SCANNER_SUCCEEDED = "What are you waiting for, a pat on the head?",
+
         WX78_MODULEREMOVER = "Let me try... hold still, WX!",
 
         SCANDATA = "Looks like dumb science stuff for nerds.",

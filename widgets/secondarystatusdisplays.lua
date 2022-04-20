@@ -75,7 +75,7 @@ function SecondaryStatusDisplays:AddModuleOwnerDisplay()
         self:SetUpgradeModuleEnergyLevel(self.owner:GetEnergyLevel(), 0)
         self:ModulesDirty(self.owner:GetModulesData())
 
-        self.upgrademodulesdisplay:SetPosition(self.column1, -250, 0)
+        self.upgrademodulesdisplay:SetPosition(self.column1, -120, 0)
     end
 end
 

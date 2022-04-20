@@ -4404,6 +4404,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Dead to the world.",
+        WX78_SCANNER_SUCCEEDED = "Poor little machine. Is nobody paying attention to you?",
+
         WX78_MODULEREMOVER = "What must it be like, to lose a piece of oneself and feel nothing?",
 
         SCANDATA = "If I'm lucky, it might just bore me to death.",

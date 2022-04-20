@@ -19,6 +19,7 @@ local item_prefabs =
 local scanner_prefabs =
 {
     "wx78_scanner_fx",
+    "wx78_scanner_succeeded",
 }
 
 local GetCreatureScanData = require("wx78_moduledefs").GetCreatureScanDataDefinition
@@ -194,6 +195,8 @@ local function itemfn()
 
     MakeInventoryPhysics(inst)
 
+    inst.Transform:SetTwoFaced()
+
     inst.MiniMapEntity:SetIcon("wx78_scanner_item.png")
 
     inst.AnimState:SetBank("scanner")
@@ -211,9 +214,6 @@ local function itemfn()
     if not TheWorld.ismastersim then
         return inst
     end
-
-    -------------------------------------------------------------------
-    inst:AddComponent("locomotor")
 
     -------------------------------------------------------------------
     inst:AddComponent("inspectable")
@@ -264,14 +264,6 @@ local function StartProximityScan(inst)
     if not inst._turned_off then
         inst.components.updatelooper:AddOnUpdateFn(proximityscan)
     end
-end
-
----------------------------------------------------------------------------------------------------
-
-local function on_hammered(inst, worker)
-    SpawnPrefab("wx78_scanner_item").Transform:SetPosition(inst.Transform:GetWorldPosition())
-
-    inst:Remove()
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -473,18 +465,18 @@ local function OnSuccessfulScan(inst)
     if target ~= nil then
         local target_scandata = GetCreatureScanData(target.prefab)
         if target_scandata ~= nil then
-            inst._schematic_to_drop = "wx78module_"..target_scandata.module
+            inst._module_recipe_to_teach = "wx78module_"..target_scandata.module
         end
-        inst.components.harvestable.produce = 1
-        inst.components.workable:SetWorkable(true)
-
         inst._scanned_prefab = target.prefab
 
         inst:RemoveEventCallback("onremove", inst._OnScanTargetRemoved, target)
         inst.components.entitytracker:ForgetEntity("scantarget")
     end
-
+    
     inst:StopAllScanning("succeed")
+end
+
+local function OnReturnedAfterSuccessfulScan(inst)
     inst.sg:GoToState("scan_success")
 end
 
@@ -598,32 +590,17 @@ end
 ---------------------------------------------------------------------------------------------------------------
 -- HELPER FUNCTIONS
 
-local function OnTeach(inst, learner)
-    learner:PushEvent("learnrecipe", { teacher = inst, recipe = inst.components.teacher.recipe })
-end
-
-local function on_harvested(inst, picker, produce)
-    if picker ~= nil and picker.components.inventory ~= nil then
-        if inst._schematic_to_drop ~= nil then
-            inst.components.teacher:SetRecipe(inst._schematic_to_drop)
-            inst.components.teacher:Teach(picker)
-            inst._schematic_to_drop = nil
-        end
-
-        local scanner_item = SpawnPrefab("wx78_scanner_item")
-        if scanner_item ~= nil then
-            picker.components.inventory:GiveItem(scanner_item)
-            inst:Remove()
-        end
-    end
-end
-
-local function on_timer_done(inst, data)
+local function on_scanner_timer_done(inst, data)
     if data.name == "startproximityscan" then
         StartProximityScan(inst)
     elseif data.name == TOP_LIGHT_FLASH_TIMERNAME then
         top_light_flash(inst)
     end
+end
+
+local function CanDoerActivate(inst, doer)
+    return inst.components.follower == nil or inst.components.follower.leader == nil
+        or inst.components.follower.leader == doer
 end
 
 local function OnActivateFn(inst)
@@ -653,14 +630,6 @@ local function IsInRangeOfPlayer(inst)
         end
 
         return false
-    end
-end
-
-local function can_harvest(inst, doer)
-    if doer == nil or doer.components.upgrademoduleowner == nil then
-        return false, "DOER_ISNT_MODULE_OWNER"
-    else
-        return true, nil
     end
 end
 
@@ -700,8 +669,8 @@ end
 -- SAVE/LOAD
 
 local function on_scanner_save(inst, data)
-    if inst._schematic_to_drop then
-        data.schematic = inst._schematic_to_drop
+    if inst._module_recipe_to_teach then
+        data.schematic = inst._module_recipe_to_teach
     end
 
     if inst._turned_off then
@@ -714,14 +683,19 @@ local function on_scanner_save(inst, data)
 end
 
 local function on_scanner_load(inst, data)
-    inst._schematic_to_drop = data.schematic
-    inst._scanned_prefab = data.scanned_prefab
+    if data ~= nil then
+        inst._module_recipe_to_teach = data.schematic
+        inst._scanned_prefab = data.scanned_prefab
 
-    if data.turned_off then
-        inst:DoTurnOff()
-
-        inst.sg:GoToState("turn_off_idle")
-        inst.components.workable:SetWorkable(true)
+        if data.turned_off then
+            local turnoff_data = {}
+            if inst._module_recipe_to_teach ~= nil then
+                turnoff_data.changetosuccess = true
+            else
+                turnoff_data.changetoitem = true
+            end
+            inst.sg:GoToState("turn_off", turnoff_data)
+        end
     end
 end
 
@@ -795,15 +769,6 @@ local function scannerfn()
     inst.components.follower.OnChangedLeader = OnChangedLeader
 
     -------------------------------------------------------------------
-    inst:AddComponent("teacher")
-    inst.components.teacher.onteach = OnTeach
-
-    -------------------------------------------------------------------
-    inst:AddComponent("harvestable")
-    inst.components.harvestable:SetOnHarvestFn(on_harvested)
-    inst.components.harvestable:SetCanHarvestFn(can_harvest)
-
-    -------------------------------------------------------------------
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = GetStatus
 
@@ -812,12 +777,14 @@ local function scannerfn()
     inst.components.locomotor:EnableGroundSpeedMultiplier(false)
     inst.components.locomotor:SetTriggersCreep(false)
     inst.components.locomotor.pathcaps = { allowocean = true, ignorecreep = true }
+    inst.components.locomotor.walkspeed = 4.25
 
     -------------------------------------------------------------------
     inst:AddComponent("timer")
 
     -------------------------------------------------------------------
     inst:AddComponent("activatable")
+    inst.components.activatable.CanActivateFn = CanDoerActivate
     inst.components.activatable.OnActivate = OnActivateFn
     inst.components.activatable.quickaction = true
     inst.components.activatable.forcerightclickaction = true
@@ -827,14 +794,7 @@ local function scannerfn()
     inst:AddComponent("updatelooper")
 
     -------------------------------------------------------------------
-    inst:AddComponent("workable")
-    inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
-    inst.components.workable:SetWorkLeft(3)
-    inst.components.workable:SetOnFinishCallback(on_hammered)
-    inst.components.workable:SetWorkable(false)
-
-    -------------------------------------------------------------------
-    inst:ListenForEvent("timerdone", on_timer_done)
+    inst:ListenForEvent("timerdone", on_scanner_timer_done)
     inst:ListenForEvent("onremove", stop_looping_sound)
 
     -------------------------------------------------------------------
@@ -851,6 +811,7 @@ local function scannerfn()
     inst.IsInRangeOfPlayer = IsInRangeOfPlayer
     inst.OnSuccessfulScan = OnSuccessfulScan
     inst.OnScanFailed = OnScanFailed
+    inst.OnReturnedAfterSuccessfulScan = OnReturnedAfterSuccessfulScan
 
     inst.OwnerFn = scanner_owner_fn
     inst.LoopFn = scanner_loop_fn
@@ -874,6 +835,166 @@ local function scannerfn()
     inst.OnLoad = on_scanner_load
 
     inst.components.timer:StartTimer("startproximityscan", 0)
+
+    return inst
+end
+
+-----------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------
+-- Prefab for the "succeeded and waiting to be harvested" state
+
+local SUCCEEDED_FLASH_TIMERNAME = "onsucceeded_flashtick"
+local SUCCEEDED_ONSPAWN_TIMERNAME = "onsucceeded_onspawn"
+local SUCCEEDED_TIMEOUT_TIMERNAME = "onsucceeded_timeout"
+
+local function OnTeach(inst, learner)
+    learner:PushEvent("learnrecipe", { teacher = inst, recipe = inst.components.teacher.recipe })
+end
+
+local function on_harvested(inst, picker, produce)
+    if picker ~= nil and picker.components.inventory ~= nil then
+        if inst._module_recipe ~= nil then
+            inst.components.teacher:SetRecipe(inst._module_recipe)
+            inst._module_recipe = nil
+
+            inst.components.teacher:Teach(picker)
+        end
+
+        local scanner_item = SpawnPrefab("wx78_scanner_item")
+        if scanner_item ~= nil then
+            picker.components.inventory:GiveItem(scanner_item)
+
+            inst:Remove()
+        end
+    end
+end
+
+local function can_harvest(inst, doer)
+    if doer == nil or doer.components.upgrademoduleowner == nil then
+        return false, "DOER_ISNT_MODULE_OWNER"
+    else
+        return true, nil
+    end
+end
+
+local function SetUpFromScanner(inst, scanner)
+    inst.Transform:SetPosition(scanner.Transform:GetWorldPosition())
+    inst.Transform:SetRotation(scanner.Transform:GetRotation())
+    inst._module_recipe = scanner._module_recipe_to_teach
+end
+
+local function on_succeeded_save(inst, data)
+    if inst._module_recipe then
+        data.module_recipe = inst._module_recipe
+    end
+end
+
+local function on_succeeded_load(inst, data)
+    if data ~= nil then
+        inst._module_recipe = data.module_recipe
+    end
+end
+
+local function do_flash_tick(inst)
+    inst._flash = not inst._flash
+
+    if inst._flash then
+        inst.AnimState:Show("top_light")
+    else
+        inst.AnimState:Hide("top_light")
+    end
+
+    -- This flash loops indefinitely.
+    inst.components.timer:StartTimer(SUCCEEDED_FLASH_TIMERNAME, 15*FRAMES)
+end
+
+local function on_succeeded_spawned(inst)
+    inst:PushEvent("on_landed")
+end
+
+local function on_succeeded_timeout(inst)
+    -- If we weren't harvested within our timeout, revert to our pure item state.
+    -- This is so that worlds will not become cluttered with successful scanners
+    -- that other players cannot interact with.
+    inst._module_recipe = nil
+
+    local scanner_item = SpawnPrefab("wx78_scanner_item")
+    scanner_item.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    scanner_item.Transform:SetRotation(inst.Transform:GetRotation())
+
+    inst:Remove()
+end
+
+local function on_succeeded_timer_done(inst, data)
+    if data.name == SUCCEEDED_FLASH_TIMERNAME then
+        do_flash_tick(inst)
+    elseif data.name == SUCCEEDED_ONSPAWN_TIMERNAME then
+        on_succeeded_spawned(inst)
+    elseif data.name == SUCCEEDED_TIMEOUT_TIMERNAME then
+        on_succeeded_timeout(inst)
+    end
+end
+
+local function scannersucceededfn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddMiniMapEntity()
+    inst.entity:AddNetwork()
+
+    MakeInventoryPhysics(inst)
+
+    inst.Transform:SetTwoFaced()
+
+    inst.MiniMapEntity:SetIcon("wx78_scanner_item.png")
+
+    inst.AnimState:SetBank("scanner")
+    inst.AnimState:SetBuild("wx_scanner")
+    inst.AnimState:PlayAnimation("turn_off_idle")
+
+    inst.AnimState:Hide("top_light")
+    inst.AnimState:Hide("bottom_light")
+
+    MakeInventoryFloatable(inst, nil, 0.15, ITEM_FLOATER_SCALE)
+
+    inst.entity:SetPristine()
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    -------------------------------------------------------------------
+    inst:AddComponent("inspectable")
+
+    -------------------------------------------------------------------
+    inst:AddComponent("teacher")
+    inst.components.teacher.onteach = OnTeach
+
+    -------------------------------------------------------------------
+    inst:AddComponent("harvestable")
+    inst.components.harvestable:SetOnHarvestFn(on_harvested)
+    inst.components.harvestable:SetCanHarvestFn(can_harvest)
+    inst.components.harvestable.produce = 1
+
+    -------------------------------------------------------------------
+    inst:AddComponent("timer")
+    inst:ListenForEvent("timerdone", on_succeeded_timer_done)
+
+    -------------------------------------------------------------------
+    --inst._module_recipe = nil
+
+    -------------------------------------------------------------------
+    inst.SetUpFromScanner = SetUpFromScanner
+    inst.OnSave = on_succeeded_save
+    inst.OnLoad = on_succeeded_load
+
+    -------------------------------------------------------------------
+    inst._flash = true
+    inst.components.timer:StartTimer(SUCCEEDED_FLASH_TIMERNAME, 15*FRAMES)
+
+    inst.components.timer:StartTimer(SUCCEEDED_ONSPAWN_TIMERNAME, 0)
+
+    inst.components.timer:StartTimer(SUCCEEDED_TIMEOUT_TIMERNAME, TUNING.WX78_SCANNER_TIMEOUT)
 
     return inst
 end
@@ -915,4 +1036,5 @@ end
 return Prefab("wx78_scanner_item", itemfn, assets, item_prefabs),
     MakePlacer("wx78_scanner_item_placer", "scanner", "wx_scanner", "turn_off_idle"),
     Prefab("wx78_scanner", scannerfn, assets, scanner_prefabs),
+    Prefab("wx78_scanner_succeeded", scannersucceededfn, assets),
     Prefab("wx78_scanner_fx", scanfx_fn, assets)

@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "I guess it's taking a nap.",
+        WX78_SCANNER_SUCCEEDED = "What is it boy? Do you have something to show WX?",
+
         WX78_MODULEREMOVER = "Should I start carrying something like this in my first aid kit?",
 
         SCANDATA = "Neat! Wanna scan me next?",

@@ -295,11 +295,7 @@ local StatusDisplays = Class(Widget, function(self, owner)
     if owner:HasTag("upgrademoduleowner") then
         -- Not adding the display here, but we need to move some stuff around in single player.
         if not is_splitscreen then
-            --self.moisturemeter:SetPosition(self.column1, -40, 0)
-            --self.moisturemeter:SetPosition(self.column1, -120, 0)
-
-            --self.boatmeter:SetPosition(self.column5, 20, 0)
-            --self.moisturemeter:SetPosition(self.column1, -40, 0)
+            self.moisturemeter:SetPosition(self.column1, -120, 0)
         end
     end
 end)

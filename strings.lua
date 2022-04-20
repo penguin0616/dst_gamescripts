@@ -121,7 +121,7 @@ STRINGS =
         willow = "*Has a fondness for fire, but hates the cold \n*Protected by her cuddly bear, Bernie\n*Has a reliable lighter",
         wendy = "*Is haunted by her twin sister \n*Feels comfortable in the dark \n*Dabbles in Ectoherbology \n*Doesn't hit very hard",
         wolfgang = "*Works hard to grow mighty \n*Becomes wimpy without regular exercise \n*Can carry heavy objects with ease \n*Is afraid of monsters and the dark",
-        wx78 = "*Not a picky eater \n*Is charged by lightning, but damaged by water \n*Can upgrade with gears",
+        wx78 = "*Can upgrade with circuits \n*Not a picky eater \n*Is charged by lightning, but damaged by water",
         wickerbottom = "*Knows many things \n*Self-publishes books \n*Suffers from insomnia \n*Has a delicate stomach",
         wes = "*Can't talk \n*Practices balloonomancy \n*Is not a skilled fighter or worker \n*Has trouble staying alive",
         waxwell = "*Is dapper, but frail \n*Can split his mind into pieces \n*Was once the king of the world",
@@ -3358,6 +3358,7 @@ STRINGS =
 
         WX78_SCANNER = "Bio Scanalyzer",
         WX78_SCANNER_ITEM = "Bio Scanalyzer",
+        WX78_SCANNER_SUCCEEDED = "Bio Scanalyzer",
         WX78_MODULEREMOVER = "Circuit Extractor",
 	},
 
@@ -5956,6 +5957,50 @@ STRINGS.CROWNAMES =
     "Demetrius",
     "Hermia",
     "Becca",
+}
+
+STRINGS.MERMNAMES =
+{
+    -- Swamp.
+    "Flargle",
+    "Flop",
+    "Flot",
+    "Flugh",
+    "Flupt",
+    "Flurgle",
+    "Fopt",
+    "Furp",
+    "Furt",
+    "Glogh",
+    "Glop",
+    "Glot",
+    "Glugh",
+    "Glup",
+    "Glurp",
+    "Glurt",
+    "Glurble",
+    "Gogh",
+    "Gop",
+    "Gopt",
+    "Gorp",
+    "Gort",
+    "Gugh",
+    "Gup",
+    "Gupt",
+    "Gurble",
+    "Gurp",
+    "Gurt",
+    -- Not swamp.
+    "Audrey",
+    "Jeffrey",
+    "Johnny",
+    "Isabella",
+    "Madeline",
+    "Michael",
+    "Penelope",
+    "Sarah",
+    "Simon",
+    "Trevor",
 }
 
 STRINGS.UI =

@@ -5893,6 +5893,8 @@ function Tune(overrides)
         WX78_SCANNER_RANGE = 7,
         WX78_SCANNER_PLAYER_PROX = 7,
 
+        WX78_SCANNER_TIMEOUT = total_day_time,
+
         -- Wurt QoL/AI
         -- Default fallbacks for follower brain AI distances.
         FOLLOWER_HELP_LEADERDIST = 18,

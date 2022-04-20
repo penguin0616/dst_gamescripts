@@ -4406,6 +4406,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "Must be on break.",
+        WX78_SCANNER_SUCCEEDED = "He's signalling his supervisor.",
+
         WX78_MODULEREMOVER = "Sheesh, they could just ask for my help!",
 
         SCANDATA = "Yeesh, this stuff would make ol' Wickerbottom's writing seem flowery.",

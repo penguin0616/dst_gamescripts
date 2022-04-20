@@ -3365,9 +3365,15 @@ function PlayerController:DoAction(buffaction)
         --The "not" bit is in case we are stuck waiting for server
         --to act but it never does
 
-        -- We need to re-check the duplicate action to see if it has changed, e.g. a tree was cut down, so don't try and chop it
+        -- We need to re-check the buffered action to see if it's still valid, e.g. a tree was cut down, so don't try and chop it
         currentbuffaction.ispreviewing = false
-        self.lastheldaction = nil
+        if buffaction.target and not buffaction.target:IsActionValid(buffaction.action) then
+            if TheInput:IsControlPressed(CONTROL_PRIMARY) then
+                self.lastheldaction = self:GetLeftMouseAction()
+            elseif TheInput:IsControlPressed(CONTROL_SECONDARY) then
+                self.lastheldaction = self:GetRightMouseAction()
+            end
+        end
         return
     end
 

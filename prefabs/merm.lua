@@ -291,6 +291,11 @@ local function OnGetItemFromPlayer(inst, giver, item)
 
             inst.components.follower.maxfollowtime = loyalty_max
             inst.components.follower:AddLoyaltyTime(loyalty_time)
+
+            if item:HasTag("fish") then
+                DoCheer(inst)
+            end
+
             hiremoremerms = true
         end
 
@@ -540,11 +545,17 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit)
             common_postinit(inst)
         end
 
+        -- Sneak these into pristine state for optimization.
+        inst:AddTag("_named")
+
         inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then
             return inst
         end
+
+        -- Remove these tags so that they can be added properly when replicating components below.
+        inst:RemoveTag("_named")
 
         inst.DoCheer = DoCheer
         inst.DoDisapproval = DoDisapproval
@@ -592,6 +603,10 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit)
 
         MakeMediumBurnableCharacter(inst, "pig_torso")
         MakeMediumFreezableCharacter(inst, "pig_torso")
+
+        inst:AddComponent("named")
+        inst.components.named.possiblenames = STRINGS.MERMNAMES
+        inst.components.named:PickNewName()
 
         inst:ListenForEvent("timerdone", OnTimerDone)
         inst:ListenForEvent("attacked", OnAttacked)

@@ -4400,6 +4400,8 @@ return{
         },
 
         WX78_SCANNER_ITEM = "It appears to be dormant, for the moment.",
+        WX78_SCANNER_SUCCEEDED = "It's finished compiling some more research, I believe.",
+
         WX78_MODULEREMOVER = "Do be careful with that, dear.",
 
         SCANDATA = "An incredibly thorough analysis. Well done!",
