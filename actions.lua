@@ -2051,7 +2051,7 @@ ACTIONS.RESETMINE.fn = function(act)
 end
 
 ACTIONS.ACTIVATE.fn = function(act)
-    if act.target.components.activatable ~= nil and act.target.components.activatable:CanActivate(act.doer) then
+    if act.target.components.activatable ~= nil and (act.target.components.burnable == nil or not (act.target.components.burnable:IsSmoldering() or act.target.components.burnable:IsBurning())) and act.target.components.activatable:CanActivate(act.doer) then
         local success, msg = act.target.components.activatable:DoActivate(act.doer)
         return (success ~= false), msg -- note: for legacy reasons, nil will be true
     end
@@ -2684,11 +2684,6 @@ ACTIONS.MOUNT.fn = function(act)
         return false, "INUSE"
     elseif act.target:HasTag("dogrider_only") and act.doer:HasTag("dogrider") and act.target._playerlink ~= act.doer then
         return false
-	elseif act.target.components.sleeper ~= nil and act.target.components.sleeper.isasleep then
-		act.target.components.sleeper:WakeUp()
-		return false, "SLEEPING"
-	elseif act.target:HasTag("busy") then
-		return false
     end
 
     act.doer.components.rider:Mount(act.target)

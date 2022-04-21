@@ -43,6 +43,12 @@ local function onload(inst, data)
     end
 end
 
+local function OnLoadPostPass(inst)
+	if inst.resetruins then
+		tryspawn(inst)
+	end
+end
+
 local function MakeFn(obj, onrespawnfn, data)
 	local fn = function()
 		local inst = CreateEntity()
@@ -65,6 +71,7 @@ local function MakeFn(obj, onrespawnfn, data)
 
 		inst.OnSave = onsave
 		inst.OnLoad = onload
+		inst.OnLoadPostPass = OnLoadPostPass
 
 		inst.listenforprefabsawp = data ~= nil and data.listenforprefabsawp or nil
 
