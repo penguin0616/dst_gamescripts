@@ -2825,6 +2825,20 @@ MISC_ITEMS =
 		legacy_popup_category = "ONI",
 		release_group = 76,
 	},
+	pack_retro_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 2,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_retro_items.xml",
+		display_tex = "retro_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "lightning_rod_retro", "researchlab_retro", "lantern_retro", },
+		output_items = {  "lightning_rod_retro", "researchlab_retro", "lantern_retro", },
+		release_group = 130,
+	},
 	pack_rog_gift =
 	{
 		type = "purchase",
@@ -4526,6 +4540,85 @@ MISC_ITEMS =
 		output_items = {  "wurt_shadow", "body_wurt_shadow", "hand_wurt_shadow", "legs_wurt_shadow", },
 		release_group = 78,
 	},
+	pack_wx78_deluxe =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_wx78_deluxe.xml",
+		display_tex = "wx78_deluxe.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wx78_retro", "wx78_formalp", "wx78_survivorp", "wx78_shadowp", "wx78_rosep", },
+		output_items = {  "wx78_retro", "body_wx78_retro", "hand_wx78_retro", "legs_wx78_retro", "wx78_formalp", "body_wx78_formalp", "wx78_survivorp", "body_wx78_survivorp", "wx78_shadowp", "body_wx78_shadowp", "wx78_rosep", "body_wx78_rosep", },
+		release_group = 130,
+	},
+	pack_wx78_formal =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 105,
+		build_name_override = "wx78_formal",
+		display_atlas = "bigportraits/wx78_formal.xml",
+		display_tex = "wx78_formal_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wx78_formalp", "body_wx78_formalp", },
+		output_items = {  "wx78_formalp", "body_wx78_formalp", },
+		release_group = 130,
+	},
+	pack_wx78_retro =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 105,
+		build_name_override = "wx78_retro",
+		display_atlas = "bigportraits/wx78_retro.xml",
+		display_tex = "wx78_retro_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wx78_retro", "body_wx78_retro", "hand_wx78_retro", "legs_wx78_retro", },
+		output_items = {  "wx78_retro", "body_wx78_retro", "hand_wx78_retro", "legs_wx78_retro", },
+		release_group = 130,
+	},
+	pack_wx78_rose =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 105,
+		build_name_override = "wx78_rose",
+		display_atlas = "bigportraits/wx78_rose.xml",
+		display_tex = "wx78_rose_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wx78_rosep", "body_wx78_rosep", },
+		output_items = {  "wx78_rosep", "body_wx78_rosep", },
+		release_group = 130,
+	},
+	pack_wx78_shadow =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 105,
+		build_name_override = "wx78_shadow",
+		display_atlas = "bigportraits/wx78_shadow.xml",
+		display_tex = "wx78_shadow_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wx78_shadowp", "body_wx78_shadowp", },
+		output_items = {  "wx78_shadowp", "body_wx78_shadowp", },
+		release_group = 130,
+	},
+	pack_wx78_survivor =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 105,
+		build_name_override = "wx78_survivor",
+		display_atlas = "bigportraits/wx78_survivor.xml",
+		display_tex = "wx78_survivor_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wx78_survivorp", "body_wx78_survivorp", },
+		output_items = {  "wx78_survivorp", "body_wx78_survivorp", },
+		release_group = 130,
+	},
 	pack_yotc_builders =
 	{
 		type = "purchase",
@@ -5009,6 +5102,13 @@ MISC_ITEMS =
 		skin_tags = { "CIRCUS", "PLAYERPORTRAIT", },
 		rarity = "Loyal",
 		release_group = 60,
+	},
+	playerportrait_bg_fishboxnautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 130,
 	},
 	playerportrait_bg_flames =
 	{
@@ -5907,6 +6007,13 @@ MISC_ITEMS =
 		skin_tags = { "CIRCUS", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 60,
+	},
+	profileflair_fishbox_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 130,
 	},
 	profileflair_food_berrytart =
 	{

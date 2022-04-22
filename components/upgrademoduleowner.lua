@@ -86,21 +86,21 @@ end
 
 -------------------------------------------------------------------------------------
 
-function UpgradeModuleOwner:UpdateActivatedModules()
+function UpgradeModuleOwner:UpdateActivatedModules(isloading)
     local remaining_charge = self.charge_level
     for _, module in ipairs(self.modules) do
         remaining_charge = remaining_charge - module.components.upgrademodule.slots
         if remaining_charge < 0 then
             module.components.upgrademodule:TryDeactivate()
         else
-            module.components.upgrademodule:TryActivate()
+            module.components.upgrademodule:TryActivate(isloading)
         end
     end
 end
 
 -------------------------------------------------------------------------------------
 
-function UpgradeModuleOwner:PushModule(module)
+function UpgradeModuleOwner:PushModule(module, isloading)
     table.insert(self.modules, module)
 
     module.components.upgrademodule:SetTarget(self.inst)
@@ -109,7 +109,7 @@ function UpgradeModuleOwner:PushModule(module)
     module:RemoveFromScene()
     module.Transform:SetPosition(0, 0, 0)
 
-    self:UpdateActivatedModules()
+    self:UpdateActivatedModules(isloading)
 
     if self.onmoduleadded then
         self.onmoduleadded(self.inst, module)
@@ -230,7 +230,7 @@ function UpgradeModuleOwner:OnLoad(data, newents)
         for _, module_record in ipairs(data.modules) do
             local module = SpawnSaveRecord(module_record, newents)
             if module ~= nil then
-                self:PushModule(module)
+                self:PushModule(module, true)
             end
         end
     end

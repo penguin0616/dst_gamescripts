@@ -834,6 +834,9 @@ local function scannerfn()
     inst.OnSave = on_scanner_save
     inst.OnLoad = on_scanner_load
 
+    -------------------------------------------------------------------
+    MakeHauntable(inst)
+
     inst.components.timer:StartTimer("startproximityscan", 0)
 
     return inst
@@ -987,6 +990,9 @@ local function scannersucceededfn()
     inst.SetUpFromScanner = SetUpFromScanner
     inst.OnSave = on_succeeded_save
     inst.OnLoad = on_succeeded_load
+
+    -------------------------------------------------------------------
+    MakeHauntable(inst)
 
     -------------------------------------------------------------------
     inst._flash = true

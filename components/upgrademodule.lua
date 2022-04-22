@@ -18,12 +18,12 @@ function UpgradeModule:SetTarget(target)
 end
 
 --Should only be called by the upgrademoduleowner component
-function UpgradeModule:TryActivate()
+function UpgradeModule:TryActivate(isloading)
     if not self.activated then
         self.activated = true
 
         if self.onactivatedfn ~= nil then
-            self.onactivatedfn(self.inst, self.target)
+            self.onactivatedfn(self.inst, self.target, isloading)
         end
     end
 end

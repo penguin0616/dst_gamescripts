@@ -152,19 +152,10 @@ local function SetForcedNightVision(inst, nightvision_on)
     end
 end
 
-local function OnSmallHealthRegenDirty(inst)
-    if inst._smallhealthregen_activated:value() then
-        inst:PushEvent("startsmallhealthregen", inst)
-    else
-        inst:PushEvent("stopsmallhealthregen", inst)
-    end
-end
-
 local function OnPlayerDeactivated(inst)
     inst:RemoveEventCallback("onremove", OnPlayerDeactivated)
     if not TheNet:IsDedicated() then
         inst:RemoveEventCallback("forced_nightvision_dirty", OnForcedNightVisionDirty)
-        inst:RemoveEventCallback("smallhealthregen_dirty", OnSmallHealthRegenDirty)
     end
 end
 
@@ -173,8 +164,6 @@ local function OnPlayerActivated(inst)
     if not TheNet:IsDedicated() then
         inst:ListenForEvent("forced_nightvision_dirty", OnForcedNightVisionDirty)
         OnForcedNightVisionDirty(inst)
-
-        inst:ListenForEvent("smallhealthregen_dirty", OnSmallHealthRegenDirty)
     end
 end
 
@@ -218,11 +207,37 @@ local function OnLoad(inst, data)
         if data.level ~= nil then
             inst._gears_eaten = (inst._gears_eaten or 0) + data.level
         end
+
+        -- WX-78 needs to manually save/load health, hunger, and sanity, in case their maxes
+        -- were modified by upgrade circuits, because those components only save current,
+        -- and that gets overridden by the default max values during construction.
+        -- So, if we wait to re-apply them in our OnLoad, we will have them properly
+        -- (as entity OnLoad runs after component OnLoads)
+        if data._wx78_health then
+            inst.components.health:SetCurrentHealth(data._wx78_health)
+        end
+
+        if data._wx78_sanity then
+            inst.components.sanity.current = data._wx78_sanity
+        end
+
+        if data._wx78_hunger then
+            inst.components.hunger.current = data._wx78_hunger
+        end
     end
 end
 
 local function OnSave(inst, data)
     data.gears_eaten = inst._gears_eaten
+
+    -- WX-78 needs to manually save/load health, hunger, and sanity, in case their maxes
+    -- were modified by upgrade circuits, because those components only save current,
+    -- and that gets overridden by the default max values during construction.
+    -- So, if we wait to re-apply them in our OnLoad, we will have them properly
+    -- (as entity OnLoad runs after component OnLoads)
+    data._wx78_health = inst.components.health.currenthealth
+    data._wx78_sanity = inst.components.sanity.current
+    data._wx78_hunger = inst.components.hunger.current
 end
 
 ----------------------------------------------------------------------------------------
@@ -576,7 +591,6 @@ local function common_postinit(inst)
         end
 
         inst._forced_nightvision = net_bool(inst.GUID, "wx78.forced_nightvision", "forced_nightvision_dirty")
-        inst._smallhealthregen_activated = net_bool(inst.GUID, "wx78.smallhealthregen_activated", "smallhealthregen_dirty")
         inst:ListenForEvent("playeractivated", OnPlayerActivated)
         inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
     end

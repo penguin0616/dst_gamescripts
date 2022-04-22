@@ -2387,6 +2387,16 @@ table.insert(prefs, CreatePrefabSkin("firesuppressor_robot",
 	release_group = 80,
 }))
 
+table.insert(prefs, CreatePrefabSkin("fishbox_nautical",
+{
+	base_prefab = "fish_box",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) fish_box_init_fn(inst, "fishbox_nautical") end,
+	skin_tags = { "FISHBOX", "NAUTICAL", "CRAFTABLE", },
+	release_group = 130,
+}))
+
 table.insert(prefs, CreatePrefabSkin("flowerhat_crown",
 {
 	base_prefab = "flowerhat",
@@ -3220,6 +3230,17 @@ table.insert(prefs, CreatePrefabSkin("lantern_mummy_alt",
 	release_group = 129,
 }))
 
+table.insert(prefs, CreatePrefabSkin("lantern_retro",
+{
+	base_prefab = "lantern",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) lantern_init_fn(inst, "lantern_retro") end,
+	skin_tags = { "RETRO", "LANTERN", "CRAFTABLE", },
+	release_group = 130,
+}))
+
 table.insert(prefs, CreatePrefabSkin("lantern_tesla",
 {
 	base_prefab = "lantern",
@@ -3290,6 +3311,17 @@ table.insert(prefs, CreatePrefabSkin("lightning_rod_nautical",
 	init_fn = function(inst) lightning_rod_init_fn(inst, "lightning_rod_nautical") end,
 	skin_tags = { "LIGHTNING_ROD", "NAUTICAL", "CRAFTABLE", },
 	release_group = 115,
+}))
+
+table.insert(prefs, CreatePrefabSkin("lightning_rod_retro",
+{
+	base_prefab = "lightning_rod",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) lightning_rod_init_fn(inst, "lightning_rod_retro") end,
+	skin_tags = { "LIGHTNING_ROD", "RETRO", "CRAFTABLE", },
+	release_group = 130,
 }))
 
 table.insert(prefs, CreatePrefabSkin("lightning_rod_robot",
@@ -4603,6 +4635,17 @@ table.insert(prefs, CreatePrefabSkin("researchlab_green",
 	init_fn = function(inst) researchlab_init_fn(inst, "researchlab_green") end,
 	skin_tags = { "SCIENCEMACHINE", "HALLOWED", "CRAFTABLE", },
 	release_group = 106,
+}))
+
+table.insert(prefs, CreatePrefabSkin("researchlab_retro",
+{
+	base_prefab = "researchlab",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) researchlab_init_fn(inst, "researchlab_retro") end,
+	skin_tags = { "SCIENCEMACHINE", "RETRO", "CRAFTABLE", },
+	release_group = 130,
 }))
 
 table.insert(prefs, CreatePrefabSkin("reskin_tool_brush",
@@ -6257,6 +6300,16 @@ table.insert(prefs, CreatePrefabSkin("wardrobe_heart",
 	init_fn = function(inst) wardrobe_init_fn(inst, "wardrobe_heart") end,
 	skin_tags = { "WARDROBE", "YOTP", "CRAFTABLE", },
 	release_group = 56,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wardrobe_vine",
+{
+	base_prefab = "wardrobe",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) wardrobe_init_fn(inst, "wardrobe_vine") end,
+	skin_tags = { "WARDROBE", "CRAFTABLE", },
+	release_group = 130,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wardrobe_yule",
@@ -9927,13 +9980,28 @@ table.insert(prefs, CreatePrefabSkin("wx78_formal",
 {
 	base_prefab = "wx78",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "FORMAL", "BASE", "WX78", },
 	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_formal", },
 	has_alternate_for_body = { "wx78_formal", },
 	feet_cuff_size = { wx78_formal = 3, },
 	marketable = true,
 	release_group = 2,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wx78_formalp",
+{
+	base_prefab = "wx78",
+	type = "base",
+	build_name_override = "wx78_formal",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "FORMAL", "BASE", "WX78", },
+	bigportrait_anim = { build = "bigportraits/wx78_formal.xml", symbol = "wx78_formal_oval.tex"},
+	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_formal", },
+	has_alternate_for_body = { "wx78_formal", },
+	feet_cuff_size = { wx78_formal = 3, },
+	release_group = 130,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wx78_gladiator",
@@ -10005,6 +10073,20 @@ table.insert(prefs, CreatePrefabSkin("wx78_none",
 	release_group = 0,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wx78_retro",
+{
+	base_prefab = "wx78",
+	type = "base",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "RETRO", "BASE", "WX78", },
+	bigportrait_anim = { build = "bigportraits/wx78_retro.xml", symbol = "wx78_retro_oval.tex"},
+	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_retro", },
+	has_alternate_for_body = { "wx78_retro", },
+	feet_cuff_size = { wx78_retro = 3, },
+	release_group = 130,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wx78_rhinorook",
 {
 	base_prefab = "wx78",
@@ -10051,7 +10133,7 @@ table.insert(prefs, CreatePrefabSkin("wx78_rose",
 {
 	base_prefab = "wx78",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "ROSE", "BASE", "WX78", },
 	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_rose", },
 	has_alternate_for_body = { "wx78_rose", },
@@ -10060,11 +10142,26 @@ table.insert(prefs, CreatePrefabSkin("wx78_rose",
 	release_group = 10,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wx78_rosep",
+{
+	base_prefab = "wx78",
+	type = "base",
+	build_name_override = "wx78_rose",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "ROSE", "BASE", "WX78", },
+	bigportrait_anim = { build = "bigportraits/wx78_rose.xml", symbol = "wx78_rose_oval.tex"},
+	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_rose", },
+	has_alternate_for_body = { "wx78_rose", },
+	feet_cuff_size = { wx78_rose = 3, },
+	release_group = 130,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wx78_shadow",
 {
 	base_prefab = "wx78",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "SHADOW", "BASE", "WX78", },
 	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_shadow", },
 	has_alternate_for_body = { "wx78_shadow", },
@@ -10072,16 +10169,44 @@ table.insert(prefs, CreatePrefabSkin("wx78_shadow",
 	release_group = 6,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wx78_shadowp",
+{
+	base_prefab = "wx78",
+	type = "base",
+	build_name_override = "wx78_shadow",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "SHADOW", "BASE", "WX78", },
+	bigportrait_anim = { build = "bigportraits/wx78_shadow.xml", symbol = "wx78_shadow_oval.tex"},
+	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_shadow", },
+	has_alternate_for_body = { "wx78_shadow", },
+	release_group = 130,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wx78_survivor",
 {
 	base_prefab = "wx78",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "SURVIVOR", "BASE", "WX78", },
 	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_survivor", },
 	has_alternate_for_body = { "wx78_survivor", },
 	marketable = true,
 	release_group = 4,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wx78_survivorp",
+{
+	base_prefab = "wx78",
+	type = "base",
+	build_name_override = "wx78_survivor",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "SURVIVOR", "BASE", "WX78", },
+	bigportrait_anim = { build = "bigportraits/wx78_survivor.xml", symbol = "wx78_survivor_oval.tex"},
+	skins = { ghost_skin = "ghost_wx78_build", normal_skin = "wx78_survivor", },
+	has_alternate_for_body = { "wx78_survivor", },
+	release_group = 130,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wx78_victorian",

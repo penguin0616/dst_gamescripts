@@ -121,7 +121,7 @@ function Tune(overrides)
         WX78_MAX_SANITY = 300,
 
         WX78_HEALTH = 125,
-        WX78_HUNGER = 130,
+        WX78_HUNGER = 125,
         WX78_SANITY = 150,
 
         HAMMER_LOOT_PERCENT = .5,
@@ -3995,8 +3995,8 @@ function Tune(overrides)
         WORMWOOD_BURN_TIME = 4.3,
         WORMWOOD_FIRE_DAMAGE = 1.25,
         ARMORBRAMBLE_DMG = wilson_attack/1.5,
-        ARMORBRAMBLE_ABSORPTION = .65*multiplayer_armor_absorption_modifier,
-        ARMORBRAMBLE = wilson_health*2.5*multiplayer_armor_durability_modifier,
+        ARMORBRAMBLE_ABSORPTION = .8*multiplayer_armor_absorption_modifier,
+        ARMORBRAMBLE = wilson_health*5*multiplayer_armor_durability_modifier,
         TRAP_BRAMBLE_USES = 10,
         TRAP_BRAMBLE_DAMAGE = 40,
         TRAP_BRAMBLE_RADIUS = 2.5,
@@ -5854,9 +5854,9 @@ function Tune(overrides)
         WX78_MAXSANITY_BOOST = 100,
         WX78_MAXSANITY_DAPPERNESS = 100/(day_time*10),
 
-        WX78_MAXHUNGER1_BOOST = 30,
+        WX78_MAXHUNGER1_BOOST = 40,
 
-        WX78_MAXHUNGER_BOOST = 75,
+        WX78_MAXHUNGER_BOOST = 100,
         WX78_MAXHUNGER_SLOWPERCENT = 0.80,
 
         WX78_MOVESPEED_CHIPBOOSTS = {0.00, 0.25, 0.40, 0.50}, -- Set so that speed circuits give diminishing returns.
@@ -5876,7 +5876,7 @@ function Tune(overrides)
         WX78_LIGHT_EXTRARADIUS = 1.5,
 
         WX78_MUSIC_TENDRANGE = 12,
-        WX78_MUSIC_AURADSQ = 16,
+        WX78_MUSIC_AURADSQ = 256,
         WX78_MUSIC_UPDATERATE = 144*FRAMES,
         WX78_MUSIC_DAPPERNESS = 100/(day_time*4.5),
         WX78_MUSIC_SANITYAURA = 100/(day_time*4.5),

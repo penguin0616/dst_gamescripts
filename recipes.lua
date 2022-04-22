@@ -171,7 +171,7 @@ Recipe2("mutator_water",  				{Ingredient("monstermeat", 2), Ingredient("silk", 
 
 -- Wormwood
 Recipe2("livinglog", 					{Ingredient(CHARACTER_INGREDIENT.HEALTH, 20)},													TECH.NONE,				{builder_tag="plantkin", sg_state="form_log"})
-Recipe2("armor_bramble",				{Ingredient("livinglog", 2), Ingredient("boneshard", 4)},										TECH.NONE,				{builder_tag="plantkin"})
+Recipe2("armor_bramble",				{Ingredient("livinglog", 2), Ingredient("stinger", 4)},											TECH.NONE,				{builder_tag="plantkin"})
 Recipe2("trap_bramble",					{Ingredient("livinglog", 1), Ingredient("stinger", 1)},											TECH.NONE,				{builder_tag="plantkin"})
 Recipe2("compostwrap",					{Ingredient("poop", 5), Ingredient("spoiled_food", 2), Ingredient("nitre", 1)}, 				TECH.NONE,				{builder_tag="plantkin"})
 

@@ -160,10 +160,10 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"mutator_water",  		
 
 	-- Wormwood
+	"compostwrap",
 	"livinglog",
 	"armor_bramble",
 	"trap_bramble",
-	"compostwrap",
 
 	-- Wanda
 	"pocketwatch_dismantler",	

@@ -19,15 +19,15 @@ local function GetCreatureScanDataDefinition(prefab_name)
 end
 
 ---------------------------------------------------------------
-local function maxhealth_change(inst, wx, amount)
+local function maxhealth_change(inst, wx, amount, isloading)
     if wx.components.health ~= nil then
         local current_health_percent = wx.components.health:GetPercent()
 
-        wx.components.health:SetMaxHealth(wx.components.health.maxhealth + amount)
+        wx.components.health.maxhealth = wx.components.health.maxhealth + amount
 
-        wx.components.health:SetPercent(current_health_percent)
+        if not isloading then
+            wx.components.health:SetPercent(current_health_percent)
 
-        if not wx.components.health:IsDead() then
             -- We want to force a badge pulse, but also maintain the health percent as much as we can.
             local badgedelta = (amount > 0 and 0.01) or -0.01
             wx.components.health:DoDelta(badgedelta, false, nil, true)
@@ -35,8 +35,8 @@ local function maxhealth_change(inst, wx, amount)
     end
 end
 
-local function maxhealth_activate(inst, wx)
-    maxhealth_change(inst, wx, TUNING.WX78_MAXHEALTH_BOOST)
+local function maxhealth_activate(inst, wx, isloading)
+    maxhealth_change(inst, wx, TUNING.WX78_MAXHEALTH_BOOST, isloading)
 end
 
 local function maxhealth_deactivate(inst, wx)
@@ -56,18 +56,22 @@ table.insert(module_definitions, MAXHEALTH_MODULE_DATA)
 AddCreatureScanDataDefinition("spider", "maxhealth", 2)
 
 ---------------------------------------------------------------
-local function maxsanity1_activate(inst, wx)
+local function maxsanity1_activate(inst, wx, isloading)
     if wx.components.sanity ~= nil then
         local current_sanity_percent = wx.components.sanity:GetPercent()
+
         wx.components.sanity:SetMax(wx.components.sanity.max + TUNING.WX78_MAXSANITY1_BOOST)
-        wx.components.sanity:SetPercent(current_sanity_percent, false)
+
+        if not isloading then
+            wx.components.sanity:SetPercent(current_sanity_percent, false)
+        end
     end
 end
 
 local function maxsanity1_deactivate(inst, wx)
     if wx.components.sanity ~= nil then
         local current_sanity_percent = wx.components.sanity:GetPercent()
-        wx.components.sanity:SetMax(wx.components.sanity.max + TUNING.WX78_MAXSANITY1_BOOST)
+        wx.components.sanity:SetMax(wx.components.sanity.max - TUNING.WX78_MAXSANITY1_BOOST)
         wx.components.sanity:SetPercent(current_sanity_percent, false)
     end
 end
@@ -84,13 +88,16 @@ table.insert(module_definitions, MAXSANITY1_MODULE_DATA)
 AddCreatureScanDataDefinition("butterfly", "maxsanity1", 1)
 
 ---------------------------------------------------------------
-local function maxsanity_activate(inst, wx)
+local function maxsanity_activate(inst, wx, isloading)
     if wx.components.sanity ~= nil then
         local current_sanity_percent = wx.components.sanity:GetPercent()
 
         wx.components.sanity.dapperness = wx.components.sanity.dapperness + TUNING.WX78_MAXSANITY_DAPPERNESS
         wx.components.sanity:SetMax(wx.components.sanity.max + TUNING.WX78_MAXSANITY_BOOST)
-        wx.components.sanity:SetPercent(current_sanity_percent, false)
+
+        if not isloading then
+            wx.components.sanity:SetPercent(current_sanity_percent, false)
+        end
     end
 end
 
@@ -392,12 +399,15 @@ AddCreatureScanDataDefinition("worm", "light", 6)
 AddCreatureScanDataDefinition("lightflier", "light", 6)
 
 ---------------------------------------------------------------
-local function maxhunger_activate(inst, wx)
+local function maxhunger_activate(inst, wx, isloading)
     if wx.components.hunger ~= nil then
         local current_hunger_percent = wx.components.hunger:GetPercent()
 
         wx.components.hunger:SetMax(wx.components.hunger.max + TUNING.WX78_MAXHUNGER_BOOST)
-        wx.components.hunger:SetPercent(current_hunger_percent, false)
+
+        if not isloading then
+            wx.components.hunger:SetPercent(current_hunger_percent, false)
+        end
 
         -- Tie it to the module instance so we don't have to think too much about removing them.
         wx.components.hunger.burnratemodifiers:SetModifier(inst, TUNING.WX78_MAXHUNGER_SLOWPERCENT)
@@ -428,12 +438,15 @@ AddCreatureScanDataDefinition("bearger", "maxhunger", 6)
 AddCreatureScanDataDefinition("slurper", "maxhunger", 3)
 
 ---------------------------------------------------------------
-local function maxhunger1_activate(inst, wx)
+local function maxhunger1_activate(inst, wx, isloading)
     if wx.components.hunger ~= nil then
         local current_hunger_percent = wx.components.hunger:GetPercent()
 
         wx.components.hunger:SetMax(wx.components.hunger.max + TUNING.WX78_MAXHUNGER1_BOOST)
-        wx.components.hunger:SetPercent(current_hunger_percent, false)
+
+        if not isloading then
+            wx.components.hunger:SetPercent(current_hunger_percent, false)
+        end
     end
 end
 
@@ -491,9 +504,9 @@ local function music_activate(inst, wx)
             wx:AddComponent("sanityaura")
             wx.components.sanityaura.aurafn = music_sanityaura_fn
             wx.components.sanityaura.fallofffn = music_sanityfalloff_fn
-        end
 
-        wx.components.sanityaura.max_distsq = (wx._music_modules * TUNING.WX78_MUSIC_AURADSQ) * (wx._music_modules * TUNING.WX78_MUSIC_AURADSQ)
+            wx.components.sanityaura.max_distsq = TUNING.WX78_MUSIC_AURADSQ
+        end
 
         if wx._tending_update == nil then
             wx._tending_update = wx:DoPeriodicTask(TUNING.WX78_MUSIC_UPDATERATE, music_update_fn, 1)
@@ -544,11 +557,11 @@ AddCreatureScanDataDefinition("hermitcrab", "music", 4)
 local function bee_tick(wx, inst)
     if wx._bee_modcount and wx._bee_modcount > 0 and wx.components.inventory ~= nil then
         local health_tick = wx._bee_modcount * TUNING.WX78_BEE_HEALTHPERTICK
-        wx.components.health:DoDelta(health_tick, true, inst, true)
+        wx.components.health:DoDelta(health_tick, false, inst, true)
     end
 end
 
-local function bee_activate(inst, wx)
+local function bee_activate(inst, wx, isloading)
     wx._bee_modcount = (wx._bee_modcount or 0) + 1
 
     if wx._bee_modcount == 1 then
@@ -556,11 +569,9 @@ local function bee_activate(inst, wx)
             wx._bee_regentask:Cancel()
         end
         wx._bee_regentask = wx:DoPeriodicTask(TUNING.WX78_BEE_TICKPERIOD, bee_tick, nil, inst)
-
-        wx._smallhealthregen_activated:set(true)
     end
 
-    maxsanity_activate(inst, wx)
+    maxsanity_activate(inst, wx, isloading)
 end
 
 local function bee_deactivate(inst, wx)
@@ -571,8 +582,6 @@ local function bee_deactivate(inst, wx)
             wx._bee_regentask:Cancel()
             wx._bee_regentask = nil
         end
-
-        wx._smallhealthregen_activated:set(false)
     end
 
     maxsanity_deactivate(inst, wx)
@@ -592,9 +601,9 @@ AddCreatureScanDataDefinition("beequeen", "bee", 10)
 ---------------------------------------------------------------
 -- We calculate the boost locally becuase it's slightly nicer
 -- if mods want to change the tuning values.
-local function maxhealth2_activate(inst, wx)
+local function maxhealth2_activate(inst, wx, isloading)
     local maxhealth2_boost = TUNING.WX78_MAXHEALTH_BOOST * TUNING.WX78_MAXHEALTH2_MULT
-    maxhealth_change(inst, wx, maxhealth2_boost)
+    maxhealth_change(inst, wx, maxhealth2_boost, isloading)
 end
 
 local function maxhealth2_deactivate(inst, wx)
