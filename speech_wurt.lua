@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Crunchy.",
+        WX78MODULE_MAXSANITY1 = "Crunchy.",
         WX78MODULE_MAXSANITY = "Crunchy.",
         WX78MODULE_MOVESPEED = "Crunchy.",
         WX78MODULE_MOVESPEED2 = "Crunchy.",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "Crunchy.",
         WX78MODULE_TASER = "Crunchy.",
         WX78MODULE_LIGHT = "Crunchy.",
+        WX78MODULE_MAXHUNGER1 = "Crunchy.",
         WX78MODULE_MAXHUNGER = "Crunchy.",
         WX78MODULE_MUSIC = "Crunchy.",
         WX78MODULE_BEE = "Crunchy.",

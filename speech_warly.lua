@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXSANITY1 = "They give our metal friend a little extra zest, non?",
         WX78MODULE_MAXSANITY = "They give our metal friend a little extra zest, non?",
         WX78MODULE_MOVESPEED = "They give our metal friend a little extra zest, non?",
         WX78MODULE_MOVESPEED2 = "They give our metal friend a little extra zest, non?",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "They give our metal friend a little extra zest, non?",
         WX78MODULE_TASER = "They give our metal friend a little extra zest, non?",
         WX78MODULE_LIGHT = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXHUNGER1 = "They give our metal friend a little extra zest, non?",
         WX78MODULE_MAXHUNGER = "They give our metal friend a little extra zest, non?",
         WX78MODULE_MUSIC = "They give our metal friend a little extra zest, non?",
         WX78MODULE_BEE = "They give our metal friend a little extra zest, non?",

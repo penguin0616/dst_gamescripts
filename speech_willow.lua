@@ -4386,6 +4386,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXSANITY1 = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_MAXSANITY = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_MOVESPEED = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_MOVESPEED2 = "Hey WX, when are you gonna install a flamethrower?",
@@ -4394,6 +4395,7 @@ return{
         WX78MODULE_COLD = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_TASER = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_LIGHT = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXHUNGER1 = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_MAXHUNGER = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_MUSIC = "Hey WX, when are you gonna install a flamethrower?",
         WX78MODULE_BEE = "Hey WX, when are you gonna install a flamethrower?",

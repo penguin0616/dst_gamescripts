@@ -4380,6 +4380,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Is robot snacks, yes?",
+        WX78MODULE_MAXSANITY1 = "Is robot snacks, yes?",
         WX78MODULE_MAXSANITY = "Is robot snacks, yes?",
         WX78MODULE_MOVESPEED = "Is robot snacks, yes?",
         WX78MODULE_MOVESPEED2 = "Is robot snacks, yes?",
@@ -4388,6 +4389,7 @@ return{
         WX78MODULE_COLD = "Is robot snacks, yes?",
         WX78MODULE_TASER = "Is robot snacks, yes?",
         WX78MODULE_LIGHT = "Is robot snacks, yes?",
+        WX78MODULE_MAXHUNGER1 = "Is robot snacks, yes?",
         WX78MODULE_MAXHUNGER = "Is robot snacks, yes?",
         WX78MODULE_MUSIC = "Is robot snacks, yes?",
         WX78MODULE_BEE = "Is robot snacks, yes?",

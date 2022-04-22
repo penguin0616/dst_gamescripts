@@ -2058,7 +2058,7 @@ ACTIONS.RESETMINE.fn = function(act)
 end
 
 ACTIONS.ACTIVATE.fn = function(act)
-    if act.target.components.activatable ~= nil and act.target.components.activatable:CanActivate(act.doer) then
+    if act.target.components.activatable ~= nil and (act.target.components.burnable == nil or not (act.target.components.burnable:IsSmoldering() or act.target.components.burnable:IsBurning())) and act.target.components.activatable:CanActivate(act.doer) then
         local success, msg = act.target.components.activatable:DoActivate(act.doer)
         return (success ~= false), msg -- note: for legacy reasons, nil will be true
     end
@@ -2691,11 +2691,6 @@ ACTIONS.MOUNT.fn = function(act)
         return false, "INUSE"
     elseif act.target:HasTag("dogrider_only") and act.doer:HasTag("dogrider") and act.target._playerlink ~= act.doer then
         return false
-	elseif act.target.components.sleeper ~= nil and act.target.components.sleeper.isasleep then
-		act.target.components.sleeper:WakeUp()
-		return false, "SLEEPING"
-	elseif act.target:HasTag("busy") then
-		return false
     end
 
     act.doer.components.rider:Mount(act.target)
@@ -4003,12 +3998,11 @@ ACTIONS.REMOVEMODULES.fn = function(act)
     if (act.invobject ~= nil and act.invobject.components.upgrademoduleremover ~= nil)
             and (act.doer ~= nil and act.doer.components.upgrademoduleowner ~= nil) then
         if act.doer.components.upgrademoduleowner:NumModules() > 0 then
-            local energy_cost = act.doer.components.upgrademoduleowner:ModuleEnergyCost()
-
-            -- Popping the modules first saves us some activate/deactivate updates.
-            act.doer.components.upgrademoduleowner:PopAllModules()
-
-            act.doer.components.upgrademoduleowner:AddCharge(-energy_cost)
+            
+            local energy_cost = act.doer.components.upgrademoduleowner:PopOneModule()
+            if energy_cost ~= 0 then
+                act.doer.components.upgrademoduleowner:AddCharge(-energy_cost)
+            end
 
             return true
         else

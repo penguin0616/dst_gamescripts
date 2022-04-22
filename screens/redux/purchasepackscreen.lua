@@ -583,6 +583,28 @@ end
 
 
 PurchasePackScreen = Class(Screen, function(self, prev_screen, profile, filter_info)
+    
+    TheSim:QueryServer( "https://items.kleientertainment.com/iap/dst/GetShopEpoch",
+		function(result, isSuccessful, resultCode)
+			if isSuccessful and resultCode == 200 then
+                local res = json.decode(result)
+                if res.Time ~= nil then
+                    if math.abs(res.Time - os.time()) > 60 then
+                        print("Shop epoch time is offset!!!", res.Time - os.time())
+
+                        local warning = PopupDialogScreen(STRINGS.UI.PURCHASEPACKSCREEN.SHOP_EPOCH_WRONG_TITLE, STRINGS.UI.PURCHASEPACKSCREEN.SHOP_EPOCH_WRONG_BODY,
+                        {
+                            {text=STRINGS.UI.PURCHASEPACKSCREEN.OK, cb = function()
+                                TheFrontEnd:PopScreen()
+                            end },
+                        }, nil, "big" )
+                        TheFrontEnd:PushScreen( warning )
+                    end
+                end
+            end
+		end,
+		"POST")
+
 
     self.prev_screen = prev_screen
 

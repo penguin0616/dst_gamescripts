@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXSANITY1 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_MAXSANITY = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_MOVESPEED = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_MOVESPEED2 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_TASER = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_LIGHT = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXHUNGER1 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_MAXHUNGER = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_MUSIC = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_BEE = "They dislike organics, but don't seem opposed to taking inspiration from them.",

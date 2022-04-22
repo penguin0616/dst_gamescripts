@@ -186,9 +186,11 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	-- WX78
 	"wx78module_maxhealth",
     "wx78module_maxhealth2",
+    "wx78module_maxsanity1",
 	"wx78module_maxsanity",
     "wx78module_bee",
     "wx78module_music",
+    "wx78module_maxhunger1",
     "wx78module_maxhunger",
 	"wx78module_movespeed",
 	"wx78module_movespeed2",

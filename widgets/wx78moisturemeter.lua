@@ -2,7 +2,7 @@ local UIAnim = require "widgets/uianim"
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 
-local BADMOISTURE_PERCENT = 0.2
+local BADMOISTURE_PERCENT = TUNING.WX78_MINACCEPTABLEMOISTURE / 100
 
 local WX78MoistureMeter = Class(Widget, function(self, owner)
     Widget._ctor(self, "WX78MoistureMeter")

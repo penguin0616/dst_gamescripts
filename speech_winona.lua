@@ -4385,6 +4385,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "WX, you gotta stop leavin' this stuff lying around!",
+        WX78MODULE_MAXSANITY1 = "WX, you gotta stop leavin' this stuff lying around!",
         WX78MODULE_MAXSANITY = "WX, you gotta stop leavin' this stuff lying around!",
         WX78MODULE_MOVESPEED = "They've really gotta start takin' better care of themselves.",
         WX78MODULE_MOVESPEED2 = "They've really gotta start takin' better care of themselves.",
@@ -4393,6 +4394,7 @@ return{
         WX78MODULE_COLD = "WX, you gotta stop leavin' this stuff lying around!",
         WX78MODULE_TASER = "They've really gotta start takin' better care of themselves.",
         WX78MODULE_LIGHT = "Hey WX, if you're needin' a charge, just let me know!",
+        WX78MODULE_MAXHUNGER1 = "WX, you gotta stop leavin' this stuff lying around!",
         WX78MODULE_MAXHUNGER = "WX, you gotta stop leavin' this stuff lying around!",
         WX78MODULE_MUSIC = "Hey WX, if you're needin' a charge, just let me know!",
         WX78MODULE_BEE = "They've really gotta start takin' better care of themselves.",

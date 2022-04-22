@@ -4383,6 +4383,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Beep boops",
+        WX78MODULE_MAXSANITY1 = "Beep boops",
         WX78MODULE_MAXSANITY = "Beep boops",
         WX78MODULE_MOVESPEED = "Beep boops",
         WX78MODULE_MOVESPEED2 = "Beep boops",
@@ -4391,6 +4392,7 @@ return{
         WX78MODULE_COLD = "Beep boops",
         WX78MODULE_TASER = "Beep boops",
         WX78MODULE_LIGHT = "Beep boops",
+        WX78MODULE_MAXHUNGER1 = "Beep boops",
         WX78MODULE_MAXHUNGER = "Beep boops",
         WX78MODULE_MUSIC = "Beep boops",
         WX78MODULE_BEE = "Beep boops",

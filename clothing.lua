@@ -1322,9 +1322,9 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "YULE", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper", "torso", },
+		symbol_overrides = { "arm_lower", "arm_upper", "torso", "arm_upper_skin", },
 		symbol_overrides_old = { skirt = "skirt_old", torso = "torso_old", torso_pelvis = "torso_pelvis_old", },
-		symbol_hides = { "skirt", "arm_upper_skin", },
+		symbol_hides = { "skirt", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -2719,8 +2719,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "YULE", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper", "skirt", "torso", "torso_pelvis", },
-		symbol_hides = { "arm_upper_skin", },
+		symbol_overrides = { "arm_lower", "arm_upper", "arm_upper_skin", "skirt", "torso", "torso_pelvis", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",

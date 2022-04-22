@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MAXSANITY1 = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_MAXSANITY = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_MOVESPEED = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_MOVESPEED2 = "Aha! I was wondering when they'd started making these.",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_TASER = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_LIGHT = "Aha! I was wondering when they'd started making these.",
+        WX78MODULE_MAXHUNGER1 = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_MAXHUNGER = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_MUSIC = "Aha! I was wondering when they'd started making these.",
         WX78MODULE_BEE = "Aha! I was wondering when they'd started making these.",

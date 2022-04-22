@@ -58,7 +58,7 @@ function UpgradeModuleOwner:GetModuleTypeCount(moduletype)
     return count
 end
 
-function UpgradeModuleOwner:ModuleEnergyCost()
+function UpgradeModuleOwner:UsedSlotCount()
     local cost = 0
 
     for _, module in ipairs(self.modules) do
@@ -118,11 +118,11 @@ function UpgradeModuleOwner:PushModule(module)
     self._last_upgrade_time = GetTime()
 end
 
-function UpgradeModuleOwner:PopModule()
+function UpgradeModuleOwner:PopModule(index)
     local top_module = nil
 
     if #self.modules > 0 then
-        top_module = table.remove(self.modules, 1)
+        top_module = table.remove(self.modules, index)
 
         self.inst:RemoveChild(top_module)
         top_module:ReturnToScene()
@@ -148,13 +148,35 @@ end
 function UpgradeModuleOwner:PopAllModules()
     if #self.modules > 0 then
         while #self.modules > 0 do
-            self:PopModule()
+            self:PopModule(1)
         end
 
         if self.onallmodulespopped then
             self.onallmodulespopped(self.inst)
         end
     end
+end
+
+function UpgradeModuleOwner:PopOneModule()
+    local energy_cost = 0
+
+    if #self.modules > 0 then
+        local pre_remove_slotcount = self:UsedSlotCount()
+
+        local popped_module = self:PopModule()
+
+        -- If the module we just popped was charged, return that charge
+        -- as the cost of this removal.
+        if pre_remove_slotcount <= self.charge_level then
+            energy_cost = popped_module.components.upgrademodule.slots
+        end
+
+        if self.ononemodulepopped then
+            self.ononemodulepopped(self.inst, popped_module)
+        end
+    end
+
+    return energy_cost
 end
 
 -------------------------------------------------------------------------------------

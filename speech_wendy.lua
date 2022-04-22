@@ -4383,6 +4383,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MAXSANITY1 = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_MAXSANITY = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_MOVESPEED = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_MOVESPEED2 = "It looks so fragile... hopefully no tragic accidents befall it.",
@@ -4391,6 +4392,7 @@ return{
         WX78MODULE_COLD = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_TASER = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_LIGHT = "It looks so fragile... hopefully no tragic accidents befall it.",
+        WX78MODULE_MAXHUNGER1 = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_MAXHUNGER = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_MUSIC = "It looks so fragile... hopefully no tragic accidents befall it.",
         WX78MODULE_BEE = "It looks so fragile... hopefully no tragic accidents befall it.",

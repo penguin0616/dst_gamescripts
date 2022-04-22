@@ -4385,6 +4385,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXSANITY1 = "Are you the brightest bulb of the bunch?",
         WX78MODULE_MAXSANITY = "Are you the brightest bulb of the bunch?",
         WX78MODULE_MOVESPEED = "Are you the brightest bulb of the bunch?",
         WX78MODULE_MOVESPEED2 = "Are you the brightest bulb of the bunch?",
@@ -4393,6 +4394,7 @@ return{
         WX78MODULE_COLD = "Are you the brightest bulb of the bunch?",
         WX78MODULE_TASER = "Are you the brightest bulb of the bunch?",
         WX78MODULE_LIGHT = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXHUNGER1 = "Are you the brightest bulb of the bunch?",
         WX78MODULE_MAXHUNGER = "Are you the brightest bulb of the bunch?",
         WX78MODULE_MUSIC = "Are you the brightest bulb of the bunch?",
         WX78MODULE_BEE = "Are you the brightest bulb of the bunch?",

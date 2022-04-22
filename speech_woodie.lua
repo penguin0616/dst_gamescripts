@@ -4380,6 +4380,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Some fancy robot bits.",
+        WX78MODULE_MAXSANITY1 = "Some fancy robot bits.",
         WX78MODULE_MAXSANITY = "Some fancy robot bits.",
         WX78MODULE_MOVESPEED = "Some fancy robot bits.",
         WX78MODULE_MOVESPEED2 = "Some fancy robot bits.",
@@ -4388,6 +4389,7 @@ return{
         WX78MODULE_COLD = "Some fancy robot bits.",
         WX78MODULE_TASER = "Some fancy robot bits.",
         WX78MODULE_LIGHT = "Some fancy robot bits.",
+        WX78MODULE_MAXHUNGER1 = "Some fancy robot bits.",
         WX78MODULE_MAXHUNGER = "Some fancy robot bits.",
         WX78MODULE_MUSIC = "Some fancy robot bits.",
         WX78MODULE_BEE = "Some fancy robot bits.",

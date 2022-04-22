@@ -35,7 +35,9 @@ local function fn()
     inst:AddComponent("inspectable")
 
     ------------------------------------------------------------------
-    MakeHauntableLaunch(inst)
+    MakeSmallBurnable(inst)
+    MakeSmallPropagator(inst)
+    MakeHauntableLaunchAndIgnite(inst)
 
     return inst
 end

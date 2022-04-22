@@ -65,6 +65,11 @@ local function get_plugged_module_indexes(inst)
         table.insert(upgrademodule_defindexes, module._netid)
     end
 
+    -- Fill out the rest of the table with 0s
+    while #upgrademodule_defindexes < TUNING.WX78_MAXELECTRICCHARGE do
+        table.insert(upgrademodule_defindexes, 0)
+    end
+
     return upgrademodule_defindexes
 end
 
@@ -301,9 +306,7 @@ local function moisturetrack_update(inst)
     SpawnPrefab("sparks").Transform:SetPosition(x, y + 1 + math.random() * 1.5, z)
 
     if inst._moisture_steps >= TUNING.WX78_MOISTURESTEPTRIGGER then
-        if inst.components.upgrademoduleowner:IsChargeEmpty() then
-            inst.components.health:DoDelta(TUNING.WX78_MOISTUREUPDATERATE*TUNING.WX78_MOISTURE_DRYING_DAMAGE, false, "water")
-        end
+        inst.components.health:DoDelta(TUNING.WX78_MOISTUREUPDATERATE*TUNING.WX78_MOISTURE_DRYING_DAMAGE, false, "water")
         inst.components.upgrademoduleowner:AddCharge(-1)
         inst._moisture_steps = 0
 
@@ -392,11 +395,27 @@ end
 ----------------------------------------------------------------------------------------
 
 local function OnEat(inst, food)
-    if food ~= nil and food.components.edible ~= nil
-            and food.components.edible.foodtype == FOODTYPE.GEARS then
-        inst._gears_eaten = inst._gears_eaten + 1
+    if food ~= nil and food.components.edible ~= nil then
+        if food.components.edible.foodtype == FOODTYPE.GEARS then
+            inst._gears_eaten = inst._gears_eaten + 1
 
-        inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+            inst.SoundEmitter:PlaySound("dontstarve/characters/wx78/levelup")
+        end
+    end
+
+    local charge_amount = TUNING.WX78_CHARGING_FOODS[food.prefab]
+    if charge_amount ~= nil then
+        inst.components.upgrademoduleowner:AddCharge(charge_amount)
+    end
+end
+
+----------------------------------------------------------------------------------------
+
+local function OnFrozen(inst)
+    SpawnPrefab("wx78_big_spark"):AlignToTarget(inst)
+    
+    if not inst.components.upgrademoduleowner:IsChargeEmpty() then
+        inst.components.upgrademoduleowner:AddCharge(-TUNING.WX78_FROZEN_CHARGELOSS)
     end
 end
 
@@ -423,6 +442,16 @@ local function OnUpgradeModuleRemoved(inst, moduleent)
         if moduleent.components.inventoryitem ~= nil and inst.components.inventory ~= nil then
             inst.components.inventory:GiveItem(moduleent, nil, inst:GetPosition())
         end
+    end
+end
+
+local function OnOneUpgradeModulePopped(inst, moduleent)
+    inst:PushEvent("upgrademodulesdirty", get_plugged_module_indexes(inst))
+    if inst.player_classified ~= nil then
+        -- This is a callback of the remove, so our current NumModules should be
+        -- 1 lower than the index of the module that was just removed.
+        local top_module_index = inst.components.upgrademoduleowner:NumModules() + 1
+        inst.player_classified.upgrademodules[top_module_index]:set(0)
     end
 end
 
@@ -594,9 +623,15 @@ local function master_postinit(inst)
     end
 
     ----------------------------------------------------------------
+    if inst.components.freezable ~= nil then
+        inst.components.freezable.onfreezefn = OnFrozen
+    end
+
+    ----------------------------------------------------------------
     inst:AddComponent("upgrademoduleowner")
     inst.components.upgrademoduleowner.onmoduleadded = OnUpgradeModuleAdded
     inst.components.upgrademoduleowner.onmoduleremoved = OnUpgradeModuleRemoved
+    inst.components.upgrademoduleowner.ononemodulepopped = OnOneUpgradeModulePopped
     inst.components.upgrademoduleowner.onallmodulespopped = OnAllUpgradeModulesRemoved
     inst.components.upgrademoduleowner.canupgradefn = CanUseUpgradeModule
     inst.components.upgrademoduleowner:SetChargeLevel(3)

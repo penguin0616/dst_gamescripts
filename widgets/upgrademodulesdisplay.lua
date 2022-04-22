@@ -203,10 +203,33 @@ function UpgradeModulesDisplay:OnModulesDirty(modules_table)
                 TheFrontEnd:GetSound():PlaySound("WX_rework/tube/HUD_in")
                 first = false
             end
+        elseif module_index == 0 and i == (self.chip_poolindex - 1) then
+            self:PopOneModule()
+
+            if first then
+                TheFrontEnd:GetSound():PlaySound("WX_rework/tube/HUD_out")
+                first = false
+            end
         end
     end
 
     self:UpdateChipCharges(true)
+end
+
+function UpgradeModulesDisplay:PopOneModule()
+    local falling_chip = self.chip_objectpool[self.chip_poolindex - 1]
+
+    self.chip_poolindex = self.chip_poolindex - 1
+    self.slots_in_use = self.slots_in_use - falling_chip._used_modslots
+
+    falling_chip:HookCallback("animover", function(ui_inst)
+        falling_chip:GetAnimState():Hide("plug_on")
+        falling_chip._power_hidden = true
+        falling_chip:Hide()
+        falling_chip:UnhookCallback("animover")
+    end)
+
+    falling_chip:GetAnimState():PlayAnimation((self.reversed and "chip_fall_reverse") or "chip_fall")
 end
 
 function UpgradeModulesDisplay:PopAllModules()

@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXSANITY1 = "Huh. Is that what robot insides look like?",
         WX78MODULE_MAXSANITY = "Huh. Is that what robot insides look like?",
         WX78MODULE_MOVESPEED = "Huh. Is that what robot insides look like?",
         WX78MODULE_MOVESPEED2 = "Huh. Is that what robot insides look like?",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "Huh. Is that what robot insides look like?",
         WX78MODULE_TASER = "Huh. Is that what robot insides look like?",
         WX78MODULE_LIGHT = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXHUNGER1 = "Huh. Is that what robot insides look like?",
         WX78MODULE_MAXHUNGER = "Huh. Is that what robot insides look like?",
         WX78MODULE_MUSIC = "Huh. Is that what robot insides look like?",
         WX78MODULE_BEE = "Huh. Is that what robot insides look like?",

@@ -120,8 +120,8 @@ function Tune(overrides)
         WX78_MAX_HUNGER = 200,
         WX78_MAX_SANITY = 300,
 
-        WX78_HEALTH = 150,
-        WX78_HUNGER = 150,
+        WX78_HEALTH = 125,
+        WX78_HUNGER = 130,
         WX78_SANITY = 150,
 
         HAMMER_LOOT_PERCENT = .5,
@@ -5839,22 +5839,27 @@ function Tune(overrides)
 
         -- WX78 Refresh
         WX78_MAXELECTRICCHARGE = 6,
-        WX78_MINACCEPTABLEMOISTURE = 20,
-        WX78_MOISTUREUPDATERATE = 60, -- Frames count
-        WX78_MOISTURESTEPTRIGGER = 10, -- How many updates there are before a discharge
+        WX78_MINACCEPTABLEMOISTURE = 15,
+        WX78_MOISTUREUPDATERATE = 30, -- Frames count
+        WX78_MOISTURESTEPTRIGGER = 4, -- How many updates there are before a discharge
         WX78_HUNGRYCHARGEDRAIN_TICKTIME = 300 * FRAMES,
         WX78_CHARGE_REGENTIME = 3*seg_time,
+        WX78_FROZEN_CHARGELOSS = 2,
         WX78_MODULE_USES = 4,
 
         WX78_MAXHEALTH_BOOST = 50,
 
-        WX78_MAXSANITY_BOOST = 75,
-        WX78_MAXSANITY_DAPPERNESS = 100/(day_time*10), -- DAPPERNESS_SMALL
+        WX78_MAXSANITY1_BOOST = 40,
+
+        WX78_MAXSANITY_BOOST = 100,
+        WX78_MAXSANITY_DAPPERNESS = 100/(day_time*10),
+
+        WX78_MAXHUNGER1_BOOST = 30,
 
         WX78_MAXHUNGER_BOOST = 75,
-        WX78_MAXHUNGER_SLOWPERCENT = 0.85,
+        WX78_MAXHUNGER_SLOWPERCENT = 0.80,
 
-        WX78_MOVESPEED_CHIPBOOSTS = {0.00, 0.25, 0.40, 0.50}, -- Set so that speed circuits give diminishing returns, to incentivize other combinations.
+        WX78_MOVESPEED_CHIPBOOSTS = {0.00, 0.25, 0.40, 0.50}, -- Set so that speed circuits give diminishing returns.
 
         WX78_HEATERTEMPPERMODULE = 25,
         WX78_MINTEMPCHANGEPERMODULE = 20,
@@ -5865,19 +5870,26 @@ function Tune(overrides)
         WX78_PERISH_COLDRATE = 0.75,
         WX78_PERISH_HOTRATE = 1.25,
 
-        WX78_TASERDAMAGE = 30,
+        WX78_TASERDAMAGE = 20,
 
-        WX78_LIGHT_BASERADIUS = 4.0,
+        WX78_LIGHT_BASERADIUS = 3.5,
+        WX78_LIGHT_EXTRARADIUS = 1.5,
 
         WX78_MUSIC_TENDRANGE = 12,
+        WX78_MUSIC_AURADSQ = 16,
         WX78_MUSIC_UPDATERATE = 144*FRAMES,
-        WX78_MUSIC_DAPPERNESS = 100/(day_time*7),
-        WX78_MUSIC_SANITYAURA = 100/(day_time*7),
+        WX78_MUSIC_DAPPERNESS = 100/(day_time*4.5),
+        WX78_MUSIC_SANITYAURA = 100/(day_time*4.5),
 
-        WX78_BEE_TICKPERIOD = seg_time/2,
-        WX78_BEE_HEALTHPERTICK = 1.0,
+        WX78_BEE_TICKPERIOD = seg_time,
+        WX78_BEE_HEALTHPERTICK = 5.0,
 
         WX78_MAXHEALTH2_MULT = 3.0, -- A multiplier on WX78_MAXHEALTH_BOOST
+
+        WX78_CHARGING_FOODS = {
+            voltgoatjelly = 1,
+            goatmilk = 1,
+        },
 
         WX78_SCANNER_SCANPERIOD = 10,
         WX78_SCANNER_MODULETARGETSCANTIME = 10,

@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "Robot guts! Neat!",
+        WX78MODULE_MAXSANITY1 = "Robot guts! Neat!",
         WX78MODULE_MAXSANITY = "Robot guts! Neat!",
         WX78MODULE_MOVESPEED = "Robot guts! Neat!",
         WX78MODULE_MOVESPEED2 = "Robot guts! Neat!",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "Robot guts! Neat!",
         WX78MODULE_TASER = "Robot guts! Neat!",
         WX78MODULE_LIGHT = "Robot guts! Neat!",
+        WX78MODULE_MAXHUNGER1 = "Robot guts! Neat!",
         WX78MODULE_MAXHUNGER = "Robot guts! Neat!",
         WX78MODULE_MUSIC = "Robot guts! Neat!",
         WX78MODULE_BEE = "Robot guts! Neat!",

@@ -4389,6 +4389,7 @@ return {
 
         -- WX78
         WX78MODULE_MAXHEALTH = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXSANITY1 = "So much science packed into one tiny gizmo.",
         WX78MODULE_MAXSANITY = "So much science packed into one tiny gizmo.",
         WX78MODULE_MOVESPEED = "So much science packed into one tiny gizmo.",
         WX78MODULE_MOVESPEED2 = "So much science packed into one tiny gizmo.",
@@ -4397,6 +4398,7 @@ return {
         WX78MODULE_COLD = "So much science packed into one tiny gizmo.",
         WX78MODULE_TASER = "So much science packed into one tiny gizmo.",
         WX78MODULE_LIGHT = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXHUNGER1 = "So much science packed into one tiny gizmo.",
         WX78MODULE_MAXHUNGER = "So much science packed into one tiny gizmo.",
         WX78MODULE_MUSIC = "So much science packed into one tiny gizmo.",
         WX78MODULE_BEE = "So much science packed into one tiny gizmo.",

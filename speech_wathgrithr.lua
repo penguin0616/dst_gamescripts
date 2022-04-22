@@ -794,7 +794,7 @@ return{
 	ANNOUNCE_KITCOON_HIDANDSEEK_TIME_ALMOST_UP = "Alas! We need to find the last of them soon!",
 	ANNOUNCE_KITCOON_HIDANDSEEK_LOSEGAME = "Arrgh! The little beasties were too clever.",
 	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR = "Perhaps we're too far to find the little beasties.",
-	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "We have returned to the hunting grounds",
+	ANNOUNCE_KITCOON_HIDANDSEEK_TOOFAR_RETURN = "We have returned to the hunting grounds.",
 	ANNOUNCE_KITCOON_FOUND_IN_THE_WILD = "Hail, tiny beastie!",
 
 	ANNOUNCE_TICOON_START_TRACKING	= "Onward, great beast!!",
@@ -4379,6 +4379,7 @@ return{
 
         -- WX78
         WX78MODULE_MAXHEALTH = "These boons shall empower our metal warrior.",
+        WX78MODULE_MAXSANITY1 = "These boons shall empower our metal warrior.",
         WX78MODULE_MAXSANITY = "These boons shall empower our metal warrior.",
         WX78MODULE_MOVESPEED = "These boons shall empower our metal warrior.",
         WX78MODULE_MOVESPEED2 = "These boons shall empower our metal warrior.",
@@ -4387,6 +4388,7 @@ return{
         WX78MODULE_COLD = "These boons shall empower our metal warrior.",
         WX78MODULE_TASER = "These boons shall empower our metal warrior.",
         WX78MODULE_LIGHT = "These boons shall empower our metal warrior.",
+        WX78MODULE_MAXHUNGER1 = "These boons shall empower our metal warrior.",
         WX78MODULE_MAXHUNGER = "These boons shall empower our metal warrior.",
         WX78MODULE_MUSIC = "These boons shall empower our metal warrior.",
         WX78MODULE_BEE = "These boons shall empower our metal warrior.",

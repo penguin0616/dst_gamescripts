@@ -53,7 +53,35 @@ local MAXHEALTH_MODULE_DATA =
 }
 table.insert(module_definitions, MAXHEALTH_MODULE_DATA)
 
-AddCreatureScanDataDefinition("butterfly", "maxhealth", 1)
+AddCreatureScanDataDefinition("spider", "maxhealth", 2)
+
+---------------------------------------------------------------
+local function maxsanity1_activate(inst, wx)
+    if wx.components.sanity ~= nil then
+        local current_sanity_percent = wx.components.sanity:GetPercent()
+        wx.components.sanity:SetMax(wx.components.sanity.max + TUNING.WX78_MAXSANITY1_BOOST)
+        wx.components.sanity:SetPercent(current_sanity_percent, false)
+    end
+end
+
+local function maxsanity1_deactivate(inst, wx)
+    if wx.components.sanity ~= nil then
+        local current_sanity_percent = wx.components.sanity:GetPercent()
+        wx.components.sanity:SetMax(wx.components.sanity.max + TUNING.WX78_MAXSANITY1_BOOST)
+        wx.components.sanity:SetPercent(current_sanity_percent, false)
+    end
+end
+
+local MAXSANITY1_MODULE_DATA =
+{
+    name = "maxsanity1",
+    slots = 1,
+    activatefn = maxsanity1_activate,
+    deactivatefn = maxsanity1_deactivate,
+}
+table.insert(module_definitions, MAXSANITY1_MODULE_DATA)
+
+AddCreatureScanDataDefinition("butterfly", "maxsanity1", 1)
 
 ---------------------------------------------------------------
 local function maxsanity_activate(inst, wx)
@@ -263,7 +291,19 @@ local function taser_onblockedorattacked(wx, data, inst)
                 ) then
 
             SpawnPrefab("electrichitsparks"):AlignToTarget(data.attacker, wx, true)
-            data.attacker.components.combat:GetAttacked(wx, TUNING.WX78_TASERDAMAGE, nil, "electric")
+
+            local damage_mult = 1
+            if not (data.attacker:HasTag("electricdamageimmune") or
+                    (data.attacker.components.inventory ~= nil and data.attacker.components.inventory:IsInsulated())) then
+                damage_mult = TUNING.ELECTRIC_DAMAGE_MULT
+
+                local wetness_mult = (data.attacker.components.moisture ~= nil and data.attacker.components.moisture:GetMoisturePercent())
+                    or (data.attacker:GetIsWet() and 1)
+                    or 0
+                damage_mult = damage_mult + wetness_mult
+            end
+
+            data.attacker.components.combat:GetAttacked(wx, damage_mult * TUNING.WX78_TASERDAMAGE, nil, "electric")
         end
     end
 end
@@ -310,7 +350,7 @@ local LIGHT_R, LIGHT_G, LIGHT_B = 235 / 255, 121 / 255, 12 / 255
 local function light_activate(inst, wx)
     wx._light_modules = (wx._light_modules or 0) + 1
 
-    wx.Light:SetRadius(TUNING.WX78_LIGHT_BASERADIUS + (wx._light_modules - 1) * 0.5)
+    wx.Light:SetRadius(TUNING.WX78_LIGHT_BASERADIUS + (wx._light_modules - 1) * TUNING.WX78_LIGHT_EXTRARADIUS)
     
     -- If we had 0 before, set up the light properties.
     if wx._light_modules == 1 then
@@ -334,14 +374,14 @@ local function light_deactivate(inst, wx)
 
         wx.Light:Enable(false)
     else
-        wx.Light:SetRadius(3 + (wx._light_modules - 1) * 0.5)
+        wx.Light:SetRadius(TUNING.WX78_LIGHT_BASERADIUS + (wx._light_modules - 1) * TUNING.WX78_LIGHT_EXTRARADIUS)
     end
 end
 
 local LIGHT_MODULE_DATA =
 {
     name = "light",
-    slots = 4,
+    slots = 3,
     activatefn = light_activate,
     deactivatefn = light_deactivate,
 }
@@ -385,12 +425,46 @@ local MAXHUNGER_MODULE_DATA =
 table.insert(module_definitions, MAXHUNGER_MODULE_DATA)
 
 AddCreatureScanDataDefinition("bearger", "maxhunger", 6)
-AddCreatureScanDataDefinition("slurper", "maxhunger", 4)
+AddCreatureScanDataDefinition("slurper", "maxhunger", 3)
+
+---------------------------------------------------------------
+local function maxhunger1_activate(inst, wx)
+    if wx.components.hunger ~= nil then
+        local current_hunger_percent = wx.components.hunger:GetPercent()
+
+        wx.components.hunger:SetMax(wx.components.hunger.max + TUNING.WX78_MAXHUNGER1_BOOST)
+        wx.components.hunger:SetPercent(current_hunger_percent, false)
+    end
+end
+
+local function maxhunger1_deactivate(inst, wx)
+    if wx.components.hunger ~= nil then
+        local current_hunger_percent = wx.components.hunger:GetPercent()
+
+        wx.components.hunger:SetMax(wx.components.hunger.max - TUNING.WX78_MAXHUNGER1_BOOST)
+        wx.components.hunger:SetPercent(current_hunger_percent, false)
+    end
+end
+
+local MAXHUNGER1_MODULE_DATA =
+{
+    name = "maxhunger1",
+    slots = 1,
+    activatefn = maxhunger1_activate,
+    deactivatefn = maxhunger1_deactivate,
+}
+table.insert(module_definitions, MAXHUNGER1_MODULE_DATA)
+
+AddCreatureScanDataDefinition("hound", "maxhunger1", 2)
 
 ---------------------------------------------------------------
 local function music_sanityaura_fn(wx, observer)
     local num_modules = wx._music_modules or 1
     return TUNING.WX78_MUSIC_SANITYAURA * num_modules
+end
+
+local function music_sanityfalloff_fn(inst, observer, distsq)
+    return 1
 end
 
 local MUSIC_TENDINGTAGS_MUST = {"farm_plant"}
@@ -416,7 +490,10 @@ local function music_activate(inst, wx)
         if wx.components.sanityaura == nil then
             wx:AddComponent("sanityaura")
             wx.components.sanityaura.aurafn = music_sanityaura_fn
+            wx.components.sanityaura.fallofffn = music_sanityfalloff_fn
         end
+
+        wx.components.sanityaura.max_distsq = (wx._music_modules * TUNING.WX78_MUSIC_AURADSQ) * (wx._music_modules * TUNING.WX78_MUSIC_AURADSQ)
 
         if wx._tending_update == nil then
             wx._tending_update = wx:DoPeriodicTask(TUNING.WX78_MUSIC_UPDATERATE, music_update_fn, 1)
@@ -432,6 +509,8 @@ local function music_deactivate(inst, wx)
     wx._music_modules = math.max(0, wx._music_modules - 1)
 
     wx.components.sanity.dapperness = wx.components.sanity.dapperness - TUNING.WX78_MUSIC_DAPPERNESS
+
+    wx.components.sanityaura.max_distsq = (wx._music_modules * TUNING.WX78_MUSIC_TENDRANGE) * (wx._music_modules * TUNING.WX78_MUSIC_TENDRANGE)
 
     if wx._music_modules == 0 then
         wx:RemoveComponent("sanityaura")
