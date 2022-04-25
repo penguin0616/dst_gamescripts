@@ -1,5 +1,6 @@
 local MakePlayerCharacter = require("prefabs/player_common")
 local WX78MoistureMeter = require("widgets/wx78moisturemeter")
+local easing = require("easing")
 
 local assets =
 {
@@ -306,7 +307,8 @@ local function stop_moisturetracking(inst)
 end
 
 local function moisturetrack_update(inst)
-    if inst.components.moisture:GetMoisture() > TUNING.WX78_MINACCEPTABLEMOISTURE then
+    local current_moisture = inst.components.moisture:GetMoisture()
+    if current_moisture > TUNING.WX78_MINACCEPTABLEMOISTURE then
         -- The update will loop until it is stopped by going under the acceptable moisture level.
         initiate_moisture_update(inst)
     end
@@ -321,7 +323,15 @@ local function moisturetrack_update(inst)
     SpawnPrefab("sparks").Transform:SetPosition(x, y + 1 + math.random() * 1.5, z)
 
     if inst._moisture_steps >= TUNING.WX78_MOISTURESTEPTRIGGER then
-        inst.components.health:DoDelta(TUNING.WX78_MOISTUREUPDATERATE*TUNING.WX78_MOISTURE_DRYING_DAMAGE, false, "water")
+        local damage_per_second = easing.inSine(
+                current_moisture - TUNING.WX78_MINACCEPTABLEMOISTURE,
+                TUNING.WX78_MIN_MOISTURE_DAMAGE,
+                TUNING.WX78_PERCENT_MOISTURE_DAMAGE,
+                inst.components.moisture:GetMaxMoisture() - TUNING.WX78_MINACCEPTABLEMOISTURE
+        )
+        local seconds_per_update = TUNING.WX78_MOISTUREUPDATERATE / 30
+
+        inst.components.health:DoDelta(inst._moisture_steps * seconds_per_update * damage_per_second, false, "water")
         inst.components.upgrademoduleowner:AddCharge(-1)
         inst._moisture_steps = 0
 
@@ -374,13 +384,18 @@ local function OnBecameRobot(inst)
 end
 
 local function OnBecameGhost(inst)
-    inst.components.timer:StopTimer(CHARGEREGEN_TIMERNAME)
     stop_moisturetracking(inst)
+    inst.components.timer:StopTimer(HUNGERDRAIN_TIMERNAME)
+    inst.components.timer:StopTimer(CHARGEREGEN_TIMERNAME)
 end
 
 local function OnDeath(inst)
     inst.components.upgrademoduleowner:PopAllModules()
     inst.components.upgrademoduleowner:SetChargeLevel(0)
+
+    stop_moisturetracking(inst)
+    inst.components.timer:StopTimer(HUNGERDRAIN_TIMERNAME)
+    inst.components.timer:StopTimer(CHARGEREGEN_TIMERNAME)
 
     if inst._gears_eaten > 0 then
         local dropgears = math.random(math.floor(inst._gears_eaten / 3), math.ceil(inst._gears_eaten / 2))

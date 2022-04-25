@@ -732,6 +732,7 @@ local function scannerfn()
     inst.Transform:SetFourFaced()
 
     inst.MiniMapEntity:SetIcon("wx78_scanner_item.png")
+    inst.MiniMapEntity:SetCanUseCache(false)
 
     inst.DynamicShadow:SetSize(1.2, 0.75)
 

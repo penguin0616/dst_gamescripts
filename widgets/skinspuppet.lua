@@ -20,7 +20,8 @@ local player_emotes_to_choose = {
 	wes = "idle_wes",
 	webber = "idle_webber",
 	wanda = "idle_wanda",
-	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" }
+	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" },
+    wx78 = "idle_wx",
 }
 
 local emote_min_time = 6

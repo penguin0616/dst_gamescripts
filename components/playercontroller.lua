@@ -1424,7 +1424,7 @@ function PlayerController:DoAttackButton(retarget)
     return true
 end
 
-function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
+function PlayerController:OnRemoteAttackButton(target, force_attack, noforce, isprimaryheld)
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         --Check if target is valid, otherwise make
         --it nil so that we still attack and miss.
@@ -1434,7 +1434,9 @@ function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
                     self:OnRemoteAttackButton(target, force_attack)
                 end
             else
-                target = self:GetAttackTarget(force_attack, target, target == self.inst.sg.statemem.attacktarget)
+                -- If we're holding down mouse after clicking on a target, force attack it
+                local isforceattack = isprimaryheld or target == self.inst.sg.statemem.attacktarget
+                target = self:GetAttackTarget(force_attack, target, isforceattack)
                 self.attack_buffer = BufferedAction(self.inst, target, ACTIONS.ATTACK, nil, nil, nil, nil, true)
                 self.attack_buffer._predictpos = true
             end
@@ -1450,7 +1452,9 @@ end
 
 function PlayerController:RemoteAttackButton(target, force_attack)
     if self.locomotor ~= nil then
-        SendRPCToServer(RPC.AttackButton, target, force_attack)
+        -- If we're holding down the primary button, tell the server to retarget
+        local isprimaryheld = TheInput:IsControlPressed(CONTROL_PRIMARY)
+        SendRPCToServer(RPC.AttackButton, target, force_attack, false, isprimaryheld)
     elseif target ~= nil then
         self.remote_controls[CONTROL_ATTACK] = BUTTON_REPEAT_COOLDOWN
         SendRPCToServer(RPC.AttackButton, target, force_attack, true)
@@ -1932,7 +1936,22 @@ function PlayerController:HandleControlPrimaryHeld()
         -- Repeat the last held action if the action is held
         if (self.lastclickedaction.action == ACTIONS.ATTACK) then
             self.attack_buffer = CONTROL_ATTACK
+        -- Do the last clicked action if we're holding down primary and it's still valid
+        elseif TheInput:IsControlPressed(CONTROL_PRIMARY) and self.lastclickedaction ~= self.lastheldedaction and
+                self.lastclickedaction.target:IsActionValid(self.lastclickedaction.action) then
+print("------------")
+print("1941: Do clicked HELD ACTION")
+print(self.lastheldaction)
+print(self.lastclickedaction)
+print("-------------")
+            self:DoAction(self.lastclickedaction)
         elseif self.actionholdtime and self.actionholdtime > 0 then
+print("*************")
+print("1944: DO HELD ACTION")
+print(TheInput:IsControlPressed(CONTROL_PRIMARY))
+print(self.lastheldaction)
+print(self.lastclickedaction)
+print("************")
             self:DoAction(self.lastheldaction)
         -- Prevent re-picking items up when dropping them while holding down the primary control button
         elseif self.lastclickedaction.action ~= ACTIONS.DROP then
@@ -3369,9 +3388,19 @@ function PlayerController:DoAction(buffaction)
         currentbuffaction.ispreviewing = false
         if buffaction.target and not buffaction.target:IsActionValid(buffaction.action) then
             if TheInput:IsControlPressed(CONTROL_PRIMARY) then
-                self.lastheldaction = self:GetLeftMouseAction()
-            elseif TheInput:IsControlPressed(CONTROL_SECONDARY) then
-                self.lastheldaction = self:GetRightMouseAction()
+                local newaction = self:GetLeftMouseAction()
+print("***************")
+print("3387 new action")
+print(self.lastclickedaction)
+print(newaction)
+                if self.lastclickedaction and newaction and newaction.action == self.lastclickedaction.action then
+print("3404: set lastheldaction to GetLeftMouseAction()")
+                    self.lastheldaction = newaction
+                elseif not self.ismastersim then
+print("3407: set lastheldaction to nil")
+                    self.lastheldaction = nil
+                end
+print("***************")
             end
         end
         return

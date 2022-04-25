@@ -479,10 +479,17 @@ local function OnEntitySleepMerm(inst)
     inst.runhometask = inst:DoTaskInTime(hometraveltime, OnRanHome)
 end
 
-local function OnLoseLoyalty(inst, data)
+local function OnMarkForTeleport(inst, data)
     if data and data.leader then
         -- Lost loyalty with a leader, mark home for magic poofing during off-screen "traveling" when going to entitysleep.
         inst.wantstoteleport = true
+    end
+end
+
+local function OnUnmarkForTeleport(inst, data)
+    if data and data.leader then
+        -- Gain loyalty with a leader, remove mark home for magic poofing during off-screen "traveling" when going to entitysleep.
+        inst.wantstoteleport = nil
     end
 end
 
@@ -580,6 +587,8 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit)
         inst.components.foodaffinity:AddPrefabAffinity  ("durian_cooked", 1) -- prevents the negative stats
 
         inst:AddComponent("health")
+        inst.components.health:StartRegen(TUNING.MERM_HEALTH_REGEN_AMOUNT, TUNING.MERM_HEALTH_REGEN_PERIOD)
+
         inst:AddComponent("combat")
         inst.components.combat.GetBattleCryString = battlecry
         inst.components.combat.hiteffectsymbol = "pig_torso"
@@ -613,7 +622,11 @@ local function MakeMerm(name, assets, prefabs, common_postinit, master_postinit)
         inst:ListenForEvent("suggest_tree_target", SuggestTreeTarget)
         inst:ListenForEvent("entitysleep", OnEntitySleepMerm)
         inst:ListenForEvent("entitywake", CancelRunHomeTask)
-        inst:ListenForEvent("loseloyalty", OnLoseLoyalty)
+        -- NOTES(JBK): The following events are not mutually exclusive such that `gainloyalty` can also fire off when `startfollowing` does.
+        inst:ListenForEvent("loseloyalty", OnMarkForTeleport)
+        inst:ListenForEvent("stopfollowing", OnMarkForTeleport)
+        inst:ListenForEvent("gainloyalty", OnUnmarkForTeleport)
+        inst:ListenForEvent("startfollowing", OnUnmarkForTeleport)
 
         if master_postinit ~= nil then
             master_postinit(inst)

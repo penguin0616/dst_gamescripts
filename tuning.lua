@@ -2407,10 +2407,6 @@ function Tune(overrides)
         LIGHTER_ATTACK_IGNITE_PERCENT = .5,
         LIGHTER_DAMAGE = wilson_attack*.5,
         WILLOW_LIGHTFIRE_SANITY_THRESH = .5,
-        WX78_RAIN_HURT_RATE = 1,
-        WX78_MIN_MOISTURE_DAMAGE= -.1,
-        WX78_MAX_MOISTURE_DAMAGE = -.5,
-        WX78_MOISTURE_DRYING_DAMAGE = -.3,
 
         WOLFGANG_HUNGER = 200,
         WOLFGANG_START_HUNGER = 200,
@@ -4121,6 +4117,8 @@ function Tune(overrides)
 
         MERM_DAMAGE = 30,
         MERM_HEALTH = 250 * 2, -- harder for multiplayer
+        MERM_HEALTH_REGEN_PERIOD = 10,
+        MERM_HEALTH_REGEN_AMOUNT = (10 * (250 * 2)) / (total_day_time * 2), -- 2 days to recover to full to promote keeping Merms versus letting them die for the 4 day cooldown on houses.
         MERM_ATTACK_PERIOD = 3,
         MERM_RUN_SPEED = 8,
         MERM_WALK_SPEED = 3,
@@ -5840,12 +5838,19 @@ function Tune(overrides)
         -- WX78 Refresh
         WX78_MAXELECTRICCHARGE = 6,
         WX78_MINACCEPTABLEMOISTURE = 15,
-        WX78_MOISTUREUPDATERATE = 30, -- Frames count
-        WX78_MOISTURESTEPTRIGGER = 4, -- How many updates there are before a discharge
         WX78_HUNGRYCHARGEDRAIN_TICKTIME = 300 * FRAMES,
         WX78_CHARGE_REGENTIME = 3*seg_time,
         WX78_FROZEN_CHARGELOSS = 2,
         WX78_MODULE_USES = 4,
+
+        WX78_RAIN_HURT_RATE = 1,            -- DEPRECATED
+        WX78_MAX_MOISTURE_DAMAGE = -.5,     -- DEPRECATED
+        WX78_MOISTURE_DRYING_DAMAGE = -.3,  -- DEPRECATED
+
+        WX78_MOISTUREUPDATERATE = 30, -- Frames count
+        WX78_MOISTURESTEPTRIGGER = 5, -- How many updates there are before a discharge
+        WX78_MIN_MOISTURE_DAMAGE = -0.60,     -- Damage per second
+        WX78_PERCENT_MOISTURE_DAMAGE = -1.2,
 
         WX78_MAXHEALTH_BOOST = 50,
 
