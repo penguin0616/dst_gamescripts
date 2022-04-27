@@ -127,16 +127,17 @@ local RPC_HANDLERS =
         end
     end,
 
-    AttackButton = function(player, target, forceattack, noforce)
+    AttackButton = function(player, target, forceattack, noforce, isprimaryheld)
         if not (optentity(target) and
                 optbool(forceattack) and
-                optbool(noforce)) then
+                optbool(noforce) and
+                optbool(isprimaryheld)) then
             printinvalid("AttackButton", player)
             return
         end
         local playercontroller = player.components.playercontroller
         if playercontroller ~= nil then
-            playercontroller:OnRemoteAttackButton(target, forceattack, noforce)
+            playercontroller:OnRemoteAttackButton(target, forceattack, noforce, isprimaryheld)
         end
     end,
 

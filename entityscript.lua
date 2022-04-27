@@ -1461,7 +1461,8 @@ function EntityScript:PerformBufferedAction()
 
         self:PushEvent("actionfailed", { action = self.bufferedaction, reason = reason })
 
-        if playercontroller and playercontroller.actionholding then
+        -- Set heldactionfailed for actions that will always fail as long as the action is held, to prevent fail message spam (for non-nil fail reasons, e.g. 'BUSY', they can eventually succeed, so don't set heldactionfailed)
+        if playercontroller and playercontroller.actionholding and reason == nil then
             playercontroller.heldactionfailed = true
         end
 
