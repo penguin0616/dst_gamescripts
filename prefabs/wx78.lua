@@ -442,10 +442,12 @@ end
 ----------------------------------------------------------------------------------------
 
 local function OnFrozen(inst)
-    SpawnPrefab("wx78_big_spark"):AlignToTarget(inst)
-    
-    if not inst.components.upgrademoduleowner:IsChargeEmpty() then
-        inst.components.upgrademoduleowner:AddCharge(-TUNING.WX78_FROZEN_CHARGELOSS)
+    if inst.components.freezable == nil or not inst.components.freezable:IsFrozen() then
+        SpawnPrefab("wx78_big_spark"):AlignToTarget(inst)
+
+        if not inst.components.upgrademoduleowner:IsChargeEmpty() then
+            inst.components.upgrademoduleowner:AddCharge(-TUNING.WX78_FROZEN_CHARGELOSS)
+        end
     end
 end
 

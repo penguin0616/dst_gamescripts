@@ -4129,7 +4129,7 @@ function Tune(overrides)
         MERM_SHARE_TARGET_DIST = 40,
         MERM_MAX_TARGET_SHARES = 5,
 
-        MERM_LOW_LOYALTY_WARNING_PERCENT = 0.05,
+        MERM_LOW_LOYALTY_WARNING_PERCENT = 0.07,
         MERM_LOYALTY_MAXTIME_KINGBONUS = 2 * total_day_time,
         MERM_LOYALTY_PER_HUNGER_KINGBONUS = total_day_time/33,
 
@@ -5893,6 +5893,10 @@ function Tune(overrides)
 
         WX78_CHARGING_FOODS = {
             voltgoatjelly = 1,
+            voltgoatjelly_spice_chili = 1,
+            voltgoatjelly_spice_garlic = 1,
+            voltgoatjelly_spice_sugar = 1,
+            voltgoatjelly_spice_salt = 1,
             goatmilk = 1,
         },
 

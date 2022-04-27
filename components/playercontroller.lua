@@ -1939,19 +1939,19 @@ function PlayerController:HandleControlPrimaryHeld()
         -- Do the last clicked action if we're holding down primary and it's still valid
         elseif TheInput:IsControlPressed(CONTROL_PRIMARY) and self.lastclickedaction ~= self.lastheldedaction and
                 self.lastclickedaction.target:IsActionValid(self.lastclickedaction.action) then
-print("------------")
+--[[print("------------")
 print("1941: Do clicked HELD ACTION")
 print(self.lastheldaction)
 print(self.lastclickedaction)
-print("-------------")
+print("-------------")]]
             self:DoAction(self.lastclickedaction)
         elseif self.actionholdtime and self.actionholdtime > 0 then
-print("*************")
+--[[print("*************")
 print("1944: DO HELD ACTION")
 print(TheInput:IsControlPressed(CONTROL_PRIMARY))
 print(self.lastheldaction)
 print(self.lastclickedaction)
-print("************")
+print("************")]]
             self:DoAction(self.lastheldaction)
         -- Prevent re-picking items up when dropping them while holding down the primary control button
         elseif self.lastclickedaction.action ~= ACTIONS.DROP then
@@ -2437,7 +2437,7 @@ function PlayerController:OnUpdate(dt)
                 --Check for chain attacking first
                 local retarget = nil
                 local buffaction = self.inst:GetBufferedAction()
-                if not buffaction or buffaction.action ~= ACTIONS.ATTACK or self.actionholding then
+                if (not self.ismastersim and not buffaction) or (buffaction and buffaction.action ~= ACTIONS.ATTACK) or self.actionholding then
                     if self.inst.sg ~= nil then
                         retarget = self.inst.sg.statemem.attacktarget
                     elseif self.inst.replica.combat ~= nil then
@@ -3385,22 +3385,22 @@ function PlayerController:DoAction(buffaction)
         --to act but it never does
 
         -- We need to re-check the buffered action to see if it's still valid, e.g. a tree was cut down, so don't try and chop it
-        currentbuffaction.ispreviewing = false
         if buffaction.target and not buffaction.target:IsActionValid(buffaction.action) then
+            currentbuffaction.ispreviewing = false
             if TheInput:IsControlPressed(CONTROL_PRIMARY) then
                 local newaction = self:GetLeftMouseAction()
-print("***************")
+--[[print("***************")
 print("3387 new action")
 print(self.lastclickedaction)
-print(newaction)
+print(newaction)]]
                 if self.lastclickedaction and newaction and newaction.action == self.lastclickedaction.action then
-print("3404: set lastheldaction to GetLeftMouseAction()")
+--print("3404: set lastheldaction to GetLeftMouseAction()")
                     self.lastheldaction = newaction
                 elseif not self.ismastersim then
-print("3407: set lastheldaction to nil")
+--print("3407: set lastheldaction to nil")
                     self.lastheldaction = nil
                 end
-print("***************")
+--print("***************")
             end
         end
         return
