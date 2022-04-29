@@ -1945,7 +1945,7 @@ print(self.lastheldaction)
 print(self.lastclickedaction)
 print("-------------")]]
             self:DoAction(self.lastclickedaction)
-        elseif self.actionholdtime and self.actionholdtime > 0 then
+        elseif self.actionholdtime and self.actionholdtime > 0 and self.lastheldaction and self.lastheldaction.target:IsActionValid(self.lastheldaction.action) then
 --[[print("*************")
 print("1944: DO HELD ACTION")
 print(TheInput:IsControlPressed(CONTROL_PRIMARY))
@@ -2437,7 +2437,7 @@ function PlayerController:OnUpdate(dt)
                 --Check for chain attacking first
                 local retarget = nil
                 local buffaction = self.inst:GetBufferedAction()
-                if (not self.ismastersim and not buffaction) or (buffaction and buffaction.action ~= ACTIONS.ATTACK) or self.actionholding then
+                if (attack_control == CONTROL_PRIMARY and not self.ismastersim and not buffaction) or (buffaction and buffaction.action ~= ACTIONS.ATTACK) or self.actionholding then
                     if self.inst.sg ~= nil then
                         retarget = self.inst.sg.statemem.attacktarget
                     elseif self.inst.replica.combat ~= nil then
