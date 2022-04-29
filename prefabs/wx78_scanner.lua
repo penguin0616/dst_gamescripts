@@ -521,40 +521,42 @@ local function OnShowRingFXDirty(inst)
         inst.prox_range = nil
     elseif show_ring_fx_value == 1 then
         if inst.prox_range == nil then
-            inst.prox_range = CreateRingFX(inst)
+            inst.prox_range = CreateRingFX()
         end
         inst:AddChild(inst.prox_range)
 
         inst.prox_range.AnimState:SetAddColour(0, 0.5, 0.2, 1)
     elseif show_ring_fx_value == 2 then
-        -- Make a new ring if we have to, but, if our stored one is good,
-        -- detach it from the scanner so it fades in-place.
-        if inst.prox_range == nil or not inst.prox_range:IsValid() then
-            inst.prox_range = CreateRingFX(inst)
-        else
-            inst:RemoveChild(inst.prox_range)
+        local fail_prox_range = CreateRingFX()
+
+        if inst.prox_range ~= nil and inst.prox_range:IsValid() then
+            fail_prox_range.Transform:SetRotation(inst.prox_range.Transform:GetRotation())
+
+            inst.prox_range:Remove()
+            inst.prox_range = nil
         end
 
-        inst.prox_range.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        fail_prox_range.Transform:SetPosition(inst.Transform:GetWorldPosition())
 
-        inst.prox_range.components.fader:Fade(1, 0, 1,
+        fail_prox_range.components.fader:Fade(1, 0, 1,
             function(alphaval, fx)
                 fx.AnimState:SetMultColour(alphaval, alphaval, alphaval, alphaval)
                 fx.AnimState:SetAddColour(0.5*alphaval, 0.1*alphaval, 0.1*alphaval, alphaval)
             end,
             function(fx, alphaval)
-                if inst.prox_range ~= nil then
-                    inst.prox_range:Remove()
-                    inst.prox_range = nil
-                end
+                fx:Remove()
             end
         )
 
         inst._showringfx:set_local(0)
     elseif show_ring_fx_value == 3 then
+        local matched_rotation = 0
+        
         -- Since we're going to make multiple rings here,
         -- just kill our stored one and make 3 new ones. They're frame delayed anyway.
         if inst.prox_range ~= nil and inst.prox_range:IsValid() then
+            matched_rotation = inst.prox_range.Transform:GetRotation()
+
             inst.prox_range:Remove()
         end
         inst.prox_range = nil
@@ -563,6 +565,7 @@ local function OnShowRingFXDirty(inst)
             inst:DoTaskInTime(i*0.15,function()
                 local prox_range = CreateRingFX()
                 prox_range.Transform:SetPosition(inst.Transform:GetWorldPosition())
+                prox_range.Transform:SetRotation(matched_rotation)
                 prox_range.AnimState:SetAddColour(0, 0.5, 0.2, 1)
 
                 prox_range.components.fader:Fade(1 - (i*0.4), 0, 1,

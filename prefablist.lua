@@ -956,6 +956,7 @@ PREFABFILES = {
   "torchfire",
   "torchfire_carrat",
   "torchfire_nautical",
+  "torchfire_pillar",
   "torchfire_pronged",
   "torchfire_rag",
   "torchfire_shadow",

@@ -359,7 +359,11 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
                         end
                     end,
                     function()
-                        OnNetworkDisconnect("ID_DST_DEDICATED_SERVER_STARTUP_FAILED", false, false)
+						if IsSteam() then
+	                        OnNetworkDisconnect("ID_DST_DEDICATED_SERVER_STARTUP_FAILED", false, false, {help_button = {text=STRINGS.UI.MAINSCREEN.GETHELP, cb = function() VisitURL("https://support.klei.com/hc/en-us/articles/4407489414548") end}})
+						else
+	                        OnNetworkDisconnect("ID_DST_DEDICATED_SERVER_STARTUP_FAILED", false, false)
+						end
                         TheSystemService:StopDedicatedServers()
                     end)
 

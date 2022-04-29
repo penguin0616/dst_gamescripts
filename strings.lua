@@ -6255,7 +6255,10 @@ STRINGS.UI =
             "Jesse Blackston",
             "Jeddy Zhang",
             "Sarig Poyyara",
-            "Yan Fisch"
+            "Yan Fisch",
+            "Marcus Lo",
+            "Jordan Krahn",
+			"Daniel MacGregor",
         },
 
         ALTGAMES =

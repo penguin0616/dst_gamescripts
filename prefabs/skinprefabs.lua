@@ -2242,10 +2242,42 @@ table.insert(prefs, CreatePrefabSkin("firepit_hole",
 {
 	base_prefab = "firepit",
 	type = "item",
-	rarity = "Loyal",
+	rarity = "Timeless",
 	init_fn = function(inst) firepit_init_fn(inst, "firepit_hole", Vector3(0, 26, 0)) end,
 	skin_tags = { "FIREPIT", "CRAFTABLE", },
 	release_group = 5,
+}))
+
+table.insert(prefs, CreatePrefabSkin("firepit_hole_alt",
+{
+	base_prefab = "firepit",
+	type = "item",
+	build_name_override = "firepit_hole",
+	rarity = "Loyal",
+	init_fn = function(inst) firepit_init_fn(inst, "firepit_hole", Vector3(0, 26, 0)) end,
+	skin_tags = { "FIREPIT", "CRAFTABLE", },
+	release_group = 131,
+}))
+
+table.insert(prefs, CreatePrefabSkin("firepit_kiln",
+{
+	base_prefab = "firepit",
+	type = "item",
+	rarity = "Timeless",
+	init_fn = function(inst) firepit_init_fn(inst, "firepit_kiln", Vector3(0, -36, 0)) end,
+	skin_tags = { "FIREPIT", "CRAFTABLE", },
+	release_group = 10,
+}))
+
+table.insert(prefs, CreatePrefabSkin("firepit_kiln_alt",
+{
+	base_prefab = "firepit",
+	type = "item",
+	build_name_override = "firepit_kiln",
+	rarity = "Loyal",
+	init_fn = function(inst) firepit_init_fn(inst, "firepit_kiln", Vector3(0, -36, 0)) end,
+	skin_tags = { "FIREPIT", "CRAFTABLE", },
+	release_group = 131,
 }))
 
 table.insert(prefs, CreatePrefabSkin("firepit_lava",
@@ -5413,6 +5445,31 @@ table.insert(prefs, CreatePrefabSkin("torch_nautical",
 	skin_tags = { "TORCH", "NAUTICAL", "CRAFTABLE", },
 	fx_prefab = { "torchfire_nautical", },
 	release_group = 128,
+}))
+
+table.insert(prefs, CreatePrefabSkin("torch_pillar",
+{
+	base_prefab = "torch",
+	type = "item",
+	rarity = "Timeless",
+	prefabs = { "torchfire_pillar", },
+	init_fn = function(inst) torch_init_fn(inst, "torch_pillar") end,
+	skin_tags = { "TORCH", "CRAFTABLE", },
+	fx_prefab = { "torchfire_pillar", },
+	release_group = 10,
+}))
+
+table.insert(prefs, CreatePrefabSkin("torch_pillar_alt",
+{
+	base_prefab = "torch",
+	type = "item",
+	build_name_override = "torch_pillar",
+	rarity = "Loyal",
+	prefabs = { "torchfire_pillar", },
+	init_fn = function(inst) torch_init_fn(inst, "torch_pillar") end,
+	skin_tags = { "TORCH", "CRAFTABLE", },
+	fx_prefab = { "torchfire_pillar", },
+	release_group = 131,
 }))
 
 table.insert(prefs, CreatePrefabSkin("torch_pronged",
