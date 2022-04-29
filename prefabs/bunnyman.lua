@@ -297,7 +297,6 @@ local function fn()
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetLootSetupFn(LootSetupFunction)
-    LootSetupFunction(inst.components.lootdropper)
 
     ------------------------------------------
 

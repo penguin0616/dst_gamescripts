@@ -389,11 +389,11 @@ function Health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, i
 
     local old_percent = self:GetPercent()
     self:SetVal(self.currenthealth + amount, cause, afflicter)
-    local new_percent = self:GetPercent()
 
     self.inst:PushEvent("healthdelta", { oldpercent = old_percent, newpercent = self:GetPercent(), overtime = overtime, cause = cause, afflicter = afflicter, amount = amount })
 
     if self.ondelta ~= nil then
+        -- Re-call GetPercent on the slight chance that "healthdelta" changed it.
         self.ondelta(self.inst, old_percent, self:GetPercent(), overtime, cause, afflicter, amount)
     end
     return amount

@@ -111,6 +111,7 @@ function Tune(overrides)
         WILSON_HUNGER_RATE = calories_per_day/total_day_time, --calories burnt per day
         WILSON_SANITY = wilson_sanity,
 
+        -- WX78 Refresh: WX78 min and max health variables kept for backwards compatibility & mods
         WX78_MIN_HEALTH = 150,
         WX78_MIN_HUNGER = 150, -- 100 For pax we are increasing this.  Hungers out too easily.
         WX78_MIN_SANITY = 150,
@@ -119,9 +120,9 @@ function Tune(overrides)
         WX78_MAX_HUNGER = 200,
         WX78_MAX_SANITY = 300,
 
-        WX78_HEALTH = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_HEALTH
-        WX78_HUNGER = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_HUNGER
-        WX78_SANITY = 150, -- this is used for the character descriptions, gameplay uses WX78_MIN_SANITY
+        WX78_HEALTH = 125,
+        WX78_HUNGER = 125,
+        WX78_SANITY = 150,
 
         HAMMER_LOOT_PERCENT = .5,
         BURNT_HAMMER_LOOT_PERCENT = .25,
@@ -1303,6 +1304,10 @@ function Tune(overrides)
             SPIDERCRAFT = TechTree.Create({
                 SPIDERCRAFT = 1,
             }),
+
+            ROBOTMODULECRAFT = TechTree.Create({
+                ROBOTMODULECRAFT = 1,
+            }),
 		},
 
         RABBIT_HEALTH = 25 * multiplayer_attack_modifier,
@@ -2402,10 +2407,6 @@ function Tune(overrides)
         LIGHTER_ATTACK_IGNITE_PERCENT = .5,
         LIGHTER_DAMAGE = wilson_attack*.5,
         WILLOW_LIGHTFIRE_SANITY_THRESH = .5,
-        WX78_RAIN_HURT_RATE = 1,
-        WX78_MIN_MOISTURE_DAMAGE= -.1,
-        WX78_MAX_MOISTURE_DAMAGE = -.5,
-        WX78_MOISTURE_DRYING_DAMAGE = -.3,
 
         WOLFGANG_HUNGER = 200,
         WOLFGANG_START_HUNGER = 200,
@@ -2808,6 +2809,7 @@ function Tune(overrides)
         RABBITHOLE_REGROWTH_TIME = total_day_time * 5,
         FLOWER_CAVE_REGROWTH_TIME = total_day_time * 5,
         FLOWER_CAVE_REGROWTH_TIME_MULT = 1,
+        REEDS_REGROWTH_TIME = total_day_time * 5,
 
         EVERGREEN_REGROWTH = {
             OFFSPRING_TIME = total_day_time * 5,
@@ -3074,7 +3076,7 @@ function Tune(overrides)
 				WILLOW = {"lighter", "bernie_inactive"},
 				WENDY = {"abigail_flower"},
 				WOLFGANG = {"dumbbell"},
-				WX78 = {},
+				WX78 = {"wx78_scanner_item", "wx78_moduleremover"},
 				WICKERBOTTOM = {"papyrus", "papyrus"},
 				WES = {"balloons_empty"},
 				WAXWELL = {"waxwelljournal", "nightmarefuel", "nightmarefuel", "nightmarefuel", "nightmarefuel", "nightmarefuel", "nightmarefuel"},
@@ -3989,8 +3991,8 @@ function Tune(overrides)
         WORMWOOD_BURN_TIME = 4.3,
         WORMWOOD_FIRE_DAMAGE = 1.25,
         ARMORBRAMBLE_DMG = wilson_attack/1.5,
-        ARMORBRAMBLE_ABSORPTION = .65*multiplayer_armor_absorption_modifier,
-        ARMORBRAMBLE = wilson_health*2.5*multiplayer_armor_durability_modifier,
+        ARMORBRAMBLE_ABSORPTION = .8*multiplayer_armor_absorption_modifier,
+        ARMORBRAMBLE = wilson_health*5*multiplayer_armor_durability_modifier,
         TRAP_BRAMBLE_USES = 10,
         TRAP_BRAMBLE_DAMAGE = 40,
         TRAP_BRAMBLE_RADIUS = 2.5,
@@ -4115,6 +4117,8 @@ function Tune(overrides)
 
         MERM_DAMAGE = 30,
         MERM_HEALTH = 250 * 2, -- harder for multiplayer
+        MERM_HEALTH_REGEN_PERIOD = 10,
+        MERM_HEALTH_REGEN_AMOUNT = (10 * (250 * 2)) / (total_day_time * 2), -- 2 days to recover to full to promote keeping Merms versus letting them die for the 4 day cooldown on houses.
         MERM_ATTACK_PERIOD = 3,
         MERM_RUN_SPEED = 8,
         MERM_WALK_SPEED = 3,
@@ -4122,15 +4126,20 @@ function Tune(overrides)
         MERM_DEFEND_DIST = 30,
 		MERM_MAX_STUN_LOCKS = 2,
 
-        MERM_LOYALTY_MAXTIME = 3 * total_day_time,
-        MERM_LOYALTY_PER_HUNGER = total_day_time/25,
         MERM_SHARE_TARGET_DIST = 40,
         MERM_MAX_TARGET_SHARES = 5,
 
-        MERM_DAMAGE_KINGBONUS = 40,
-        MERM_HEALTH_KINGBONUS = 560,
+        MERM_LOW_LOYALTY_WARNING_PERCENT = 0.07,
         MERM_LOYALTY_MAXTIME_KINGBONUS = 2 * total_day_time,
         MERM_LOYALTY_PER_HUNGER_KINGBONUS = total_day_time/33,
+
+        MERM_LOYALTY_MAXTIME = 3 * total_day_time,
+        MERM_LOYALTY_PER_HUNGER = total_day_time/25,
+        MERM_FOLLOWER_COUNT = 2,
+        MERM_FOLLOWER_RADIUS = 8,
+
+        MERM_DAMAGE_KINGBONUS = 40,
+        MERM_HEALTH_KINGBONUS = 560,
 
         MERM_GUARD_DAMAGE = 50,
         MERM_GUARD_HEALTH = 660,
@@ -4143,15 +4152,17 @@ function Tune(overrides)
         MERM_GUARD_SHARE_TARGET_DIST = 60,
         MERM_GUARD_MAX_TARGET_SHARES = 8,
 
-        MERM_GUARD_LOYALTY_MAXTIME = 3 * total_day_time,
-        MERM_GUARD_LOYALTY_PER_HUNGER = total_day_time/25,
+        MERM_GUARD_LOYALTY_MAXTIME = 5 * total_day_time,
+        MERM_GUARD_LOYALTY_PER_HUNGER = total_day_time/15,
+        MERM_GUARD_FOLLOWER_COUNT = 5,
+        MERM_GUARD_FOLLOWER_RADIUS = 16,
 
         MERM_KING_HEALTH = 1000,
         MERM_KING_HEALTH_REGEN_PERIOD = 1,
         MERM_KING_HEALTH_REGEN = 2,
         MERM_KING_HUNGER = 200,
         MERM_KING_HUNGER_KILL_TIME = total_day_time * 2,
-        MERM_KING_HUNGER_RATE = 200 / (total_day_time * 4),
+        MERM_KING_HUNGER_RATE = 200 / (total_day_time * 8),
 
         PUNY_MERM_HEALTH = 200,
         PUNY_MERM_DAMAGE = 20,
@@ -5301,6 +5312,9 @@ function Tune(overrides)
         RABBITHOLE_REGROWTH_TIME_MULT = 0,
         RABBITHOLE_REGROWTH_TIME_SUMMER_MULT = 1,
 
+        REEDS_REGROWTH_TIME_MULT = 0,
+        REEDS_REGROWTH_TIME_SPRING_MULT = 1,
+
         PIGHOUSE_SPAWN_TIME = total_day_time * 4,
         PIGHOUSE_ENABLED = true,
         RABBITHOUSE_SPAWN_TIME = total_day_time,
@@ -5820,6 +5834,92 @@ function Tune(overrides)
         },
 
         RUINS_CAVEIN_OBSTACLE_FALL_DAMAGE = 40,
+
+        -- WX78 Refresh
+        WX78_MAXELECTRICCHARGE = 6,
+        WX78_MINACCEPTABLEMOISTURE = 15,
+        WX78_HUNGRYCHARGEDRAIN_TICKTIME = 300 * FRAMES,
+        WX78_CHARGE_REGENTIME = 3*seg_time,
+        WX78_FROZEN_CHARGELOSS = 2,
+        WX78_MODULE_USES = 4,
+
+        WX78_RAIN_HURT_RATE = 1,            -- DEPRECATED
+        WX78_MAX_MOISTURE_DAMAGE = -.5,     -- DEPRECATED
+        WX78_MOISTURE_DRYING_DAMAGE = -.3,  -- DEPRECATED
+
+        WX78_MOISTUREUPDATERATE = 30, -- Frames count
+        WX78_MOISTURESTEPTRIGGER = 5, -- How many updates there are before a discharge
+        WX78_MIN_MOISTURE_DAMAGE = -0.60,     -- Damage per second
+        WX78_PERCENT_MOISTURE_DAMAGE = -1.2,
+
+        WX78_MAXHEALTH_BOOST = 50,
+
+        WX78_MAXSANITY1_BOOST = 40,
+
+        WX78_MAXSANITY_BOOST = 100,
+        WX78_MAXSANITY_DAPPERNESS = 100/(day_time*10),
+
+        WX78_MAXHUNGER1_BOOST = 40,
+
+        WX78_MAXHUNGER_BOOST = 100,
+        WX78_MAXHUNGER_SLOWPERCENT = 0.80,
+
+        WX78_MOVESPEED_CHIPBOOSTS = {0.00, 0.25, 0.40, 0.50}, -- Set so that speed circuits give diminishing returns.
+
+        WX78_HEATERTEMPPERMODULE = 25,
+        WX78_MINTEMPCHANGEPERMODULE = 20,
+
+        WX78_COLD_ICEMOISTURE = 94, -- Kind of 95; the moisture badge presentation makes this work better.
+        WX78_COLD_ICECOUNT = 2,
+
+        WX78_PERISH_COLDRATE = 0.75,
+        WX78_PERISH_HOTRATE = 1.25,
+
+        WX78_TASERDAMAGE = 20,
+
+        WX78_LIGHT_BASERADIUS = 3.5,
+        WX78_LIGHT_EXTRARADIUS = 1.5,
+
+        WX78_MUSIC_TENDRANGE = 12,
+        WX78_MUSIC_AURADSQ = 256,
+        WX78_MUSIC_UPDATERATE = 144*FRAMES,
+        WX78_MUSIC_DAPPERNESS = 100/(day_time*4.5),
+        WX78_MUSIC_SANITYAURA = 100/(day_time*4.5),
+
+        WX78_BEE_TICKPERIOD = seg_time,
+        WX78_BEE_HEALTHPERTICK = 5.0,
+
+        WX78_MAXHEALTH2_MULT = 3.0, -- A multiplier on WX78_MAXHEALTH_BOOST
+
+        WX78_CHARGING_FOODS = {
+            voltgoatjelly = 1,
+            voltgoatjelly_spice_chili = 1,
+            voltgoatjelly_spice_garlic = 1,
+            voltgoatjelly_spice_sugar = 1,
+            voltgoatjelly_spice_salt = 1,
+            goatmilk = 1,
+        },
+
+        WX78_SCANNER_SCANPERIOD = 10,
+        WX78_SCANNER_MODULETARGETSCANTIME = 10,
+        WX78_SCANNER_MODULETARGETSCANTIME_EPIC = 20,
+
+        WX78_SCANNER_DISTANCES =
+        {
+            {maxdist=10, describe="hot", pingtime=1},
+            {maxdist=15, describe="warmer", pingtime=2},
+        },
+        WX78_SCANNER_SCANDIST = 4.0,
+
+        WX78_SCANNER_RANGE = 7,
+        WX78_SCANNER_PLAYER_PROX = 7,
+
+        WX78_SCANNER_TIMEOUT = total_day_time,
+
+        -- Wurt QoL/AI
+        -- Default fallbacks for follower brain AI distances.
+        FOLLOWER_HELP_LEADERDIST = 18,
+        FOLLOWER_HELP_FINDDIST = 6,
     }
 
     TUNING_MODIFIERS = {}

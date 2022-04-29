@@ -121,7 +121,7 @@ STRINGS =
         willow = "*Has a fondness for fire, but hates the cold \n*Protected by her cuddly bear, Bernie\n*Has a reliable lighter",
         wendy = "*Is haunted by her twin sister \n*Feels comfortable in the dark \n*Dabbles in Ectoherbology \n*Doesn't hit very hard",
         wolfgang = "*Works hard to grow mighty \n*Becomes wimpy without regular exercise \n*Can carry heavy objects with ease \n*Is afraid of monsters and the dark",
-        wx78 = "*Not a picky eater \n*Is charged by lightning, but damaged by water \n*Can upgrade with gears",
+        wx78 = "*Can upgrade with circuits \n*Not a picky eater \n*Is charged by lightning, but damaged by water",
         wickerbottom = "*Knows many things \n*Self-publishes books \n*Suffers from insomnia \n*Has a delicate stomach",
         wes = "*Can't talk \n*Practices balloonomancy \n*Is not a skilled fighter or worker \n*Has trouble staying alive",
         waxwell = "*Is dapper, but frail \n*Can split his mind into pieces \n*Was once the king of the world",
@@ -249,7 +249,7 @@ STRINGS =
 		{
             { title = "Buildday", desc = "November 28" },
             { title = "Favorite Food", desc = "Butter Muffin" },
-			{ title = "Their Past...", desc = "Is yet to be revealed." },
+			{ title = "Disconnect", desc = "WX-78 was the result of an unorthodox experiment helmed by { [LoadEmpathyModLibraryExW().......ERROR_DATA_PATH_NOT_FOUND] } and Robert Wagstaff. The experiment turned out to be a [RESOUNDING SUCCESS], but Wagstaff was [A SHORT-SIGHTED FOOL, AFRAID OF PROGRESS] and decided to put a stop to further tests. Adamant that the process that created them could still be perfected, WX refused to give up, continuing their experiments in secret. When Wagstaff finally discovered what they had been doing, there was a heated argument and01110100 01101111 01101111 00100000 01101100 01100001 01110100 01100101 00100000 01110100 01101111 01101111 00100000 01101100 01100001 01110100 01100101 00100000 01110100 01101111 01101111 00100000 01101100 01100001 01110100 01100101" },
 		},
         wickerbottom =
 		{
@@ -343,7 +343,7 @@ STRINGS =
         wendy = "Slim",
         woodie = "Slim",
         wolfgang = "Grim",
-        wx78 = "Slim",
+        wx78 = "Grim",
         wickerbottom = "Grim",
         wes = "None",
         waxwell = "Grim",
@@ -355,7 +355,7 @@ STRINGS =
         warly = "Grim",
         wurt = "Slim",
         walter = "Slim",
-        wanda = "Slim",
+        wanda = "Grim",
         random = "Unknown",
         default = "Unknown",
     },
@@ -566,6 +566,7 @@ STRINGS =
             SUMMONHOST = "Ring",
 			RANSACK = "Ransack",
 			HIDEANDSEEK = "Play Hide and Seek",
+            DEACTIVATE = "Deactivate",
         },
 
 		OPEN_CRAFTING =
@@ -897,6 +898,10 @@ STRINGS =
         LIFT_GYM_SUCCEED_PERFECT = "Lift",
         LIFT_GYM_SUCCEED = "Lift",
         LIFT_GYM_FAIL = "Lift",
+
+        APPLYMODULE = "Plug In",
+        REMOVEMODULES = "Unplug",
+        CHARGE_FROM = "Charge At",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -3332,7 +3337,31 @@ STRINGS =
         DUMBBELL_GEM = "Gembell",
         POTATOSACK = "Potato Sack",
 
-        RUINS_CAVEIN_OBSTACLE = "Blocky Ruins",        
+        RUINS_CAVEIN_OBSTACLE = "Blocky Ruins",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Hardy Circuit",
+        WX78MODULE_MAXSANITY1 = "Processing Circuit",
+        WX78MODULE_MAXSANITY = "Super-Processing Circuit",
+        WX78MODULE_MOVESPEED = "Acceleration Circuit",
+        WX78MODULE_MOVESPEED2 = "Super-Acceleration Circuit",
+        WX78MODULE_HEAT = "Thermal Circuit",
+        WX78MODULE_NIGHTVISION = "Optoelectronic Circuit",
+        WX78MODULE_COLD = "Refrigerant Circuit",
+        WX78MODULE_TASER = "Electrification Circuit",
+        WX78MODULE_LIGHT = "Illumination Circuit",
+        WX78MODULE_MAXHUNGER1 = "Gastrogain Circuit",
+        WX78MODULE_MAXHUNGER = "Super-Gastrogain Circuit",
+        WX78MODULE_MUSIC = "Chorusbox Circuit",
+        WX78MODULE_BEE = "Beanbooster Circuit",
+        WX78MODULE_MAXHEALTH2 = "Super-Hardy Circuit",
+
+        SCANDATA = "Bio Data",
+
+        WX78_SCANNER = "Bio Scanalyzer",
+        WX78_SCANNER_ITEM = "Bio Scanalyzer",
+        WX78_SCANNER_SUCCEEDED = "Bio Scanalyzer",
+        WX78_MODULEREMOVER = "Circuit Extractor",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4066,6 +4095,25 @@ STRINGS =
         DUMBBELL_MARBLE = "A quick way to a chiseled physique.",
         DUMBBELL_GEM = "Polish every facet of your workout.",
         POTATOSACK = "A potato's natural habitat.",
+
+        -- WX-78
+        WX78_MODULEREMOVER = "Success comes to those who really a-ply themselves.",
+        WX78_SCANNER_ITEM = "It never hurts to have a backup scan.",
+        WX78MODULE_MAXHEALTH = "Make your robotic body a bit more robust.",
+        WX78MODULE_MAXSANITY1 = "A little extra processing power helps to ease the mechanical mind.",
+        WX78MODULE_MAXSANITY = "A big boost of processing power will really get those gears turning.",
+        WX78MODULE_MOVESPEED = "A hastily designed speed booster. It could use some improvement.",
+        WX78MODULE_MOVESPEED2 = "A perfected speed booster to kick your engine into high gear.",
+        WX78MODULE_HEAT = "Things are about to get heated.",
+        WX78MODULE_NIGHTVISION = "Recalibrate your optic sensors for night vision.",
+        WX78MODULE_COLD = "Turn your chassis into a portable freezer.",
+        WX78MODULE_TASER = "Anyone who messes with you will be in for a shock.",
+        WX78MODULE_LIGHT = "Light up a room with your presence.",
+        WX78MODULE_MAXHUNGER1 = "Add a bit of room to your fuel tank.",
+        WX78MODULE_MAXHUNGER = "Capable of containing even the most insatiable automaton's appetite.",
+        WX78MODULE_MUSIC = "Every machine needs a tune-up now and then.",
+        WX78MODULE_BEE = "Get your brain and body buzzing with powerful potential!",
+        WX78MODULE_MAXHEALTH2 = "Make your robotic body much more robust.",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -5264,6 +5312,7 @@ STRINGS =
         TURFCRAFTING = "Landscaping",
 		BALLOONOMANCY = "Balloonomancy",
         STRONGMAN = "Strongman",
+        ROBOTMODULECRAFT = "Circuitry",
     },
 
     GREENAMULET_TOOLTIP = "Reduced Material Cost",
@@ -5914,6 +5963,50 @@ STRINGS.CROWNAMES =
     "Becca",
 }
 
+STRINGS.MERMNAMES =
+{
+    -- Swamp.
+    "Flargle",
+    "Flop",
+    "Flot",
+    "Flugh",
+    "Flupt",
+    "Flurgle",
+    "Fopt",
+    "Furp",
+    "Furt",
+    "Glogh",
+    "Glop",
+    "Glot",
+    "Glugh",
+    "Glup",
+    "Glurp",
+    "Glurt",
+    "Glurble",
+    "Gogh",
+    "Gop",
+    "Gopt",
+    "Gorp",
+    "Gort",
+    "Gugh",
+    "Gup",
+    "Gupt",
+    "Gurble",
+    "Gurp",
+    "Gurt",
+    -- Not swamp.
+    "Audrey",
+    "Jeffrey",
+    "Johnny",
+    "Isabella",
+    "Madeline",
+    "Michael",
+    "Penelope",
+    "Sarah",
+    "Simon",
+    "Trevor",
+}
+
 STRINGS.UI =
 {
 	TIME_FORMAT =
@@ -6061,6 +6154,7 @@ STRINGS.UI =
         NEEDSHERMITCRABSHOP_L2 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L3 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L4 = "Find someone friendly enough to make this trade!",
+        NEEDSCREATURESCANNING = "Scan living creatures to collect data!",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",
@@ -6558,7 +6652,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "March QoL\nBeta Build",
+		MAINBANNER_BETA_TITLE = "WX-78 Refresh\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -10227,6 +10321,8 @@ STRINGS.UI =
         VIRTUAL_IAP_CONFIRM_TITLE = "Confirm Purchase",
         VIRTUAL_IAP_CONFIRM_BODY = "Are you sure you would like to spend {cost} Bolts on the {chest_name}?",
 
+        SHOP_EPOCH_WRONG_TITLE = "Incorrect System Time",
+        SHOP_EPOCH_WRONG_BODY = "It looks like your date and time is incorrect. Perhaps you've been time travelling in another game?\n\nPlease verify your system date and time before purchasing.",
 
         CURRENCY_NEEDED = "You require {currency_needed} Bolts for the {chest_name}",
         CURRENCY_OK = "You have the required Bolts for the {chest_name}",

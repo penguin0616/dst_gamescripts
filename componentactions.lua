@@ -112,7 +112,7 @@ local COMPONENT_ACTIONS =
     {
         activatable = function(inst, doer, actions, right)
             if inst:HasTag("inactive") then
-				if right or inst.replica.inventoryitem == nil then
+				if right or (inst.replica.inventoryitem == nil and not inst:HasTag("activatable_forceright")) then
 					if not inst:HasTag("smolder") and not inst:HasTag("fire") then
 		                table.insert(actions, ACTIONS.ACTIVATE)
 					end
@@ -127,6 +127,12 @@ local COMPONENT_ACTIONS =
                 elseif inst:HasTag("anchor_raised") then
                     table.insert(actions, ACTIONS.LOWER_ANCHOR)
                 end
+            end
+        end,
+
+        battery = function(inst, doer, actions)
+            if inst:HasTag("battery") and doer:HasTag("batteryuser") then
+                table.insert(actions, ACTIONS.CHARGE_FROM)
             end
         end,
 
@@ -2053,6 +2059,30 @@ local COMPONENT_ACTIONS =
         unwrappable = function(inst, doer, actions, right)
             if doer.replica.inventory:GetActiveItem() ~= inst and inst:HasTag("unwrappable") then
                 table.insert(actions, ACTIONS.UNWRAP)
+            end
+        end,
+
+        upgrademodule = function(inst, doer, actions, right)
+            if doer:HasTag("upgrademoduleowner") then
+                local success = doer.CanUpgradeWithModule == nil or doer:CanUpgradeWithModule(inst)
+
+                if success then
+                    table.insert(actions, ACTIONS.APPLYMODULE)
+                else
+                    table.insert(actions, ACTIONS.APPLYMODULE_FAIL)
+                end
+            end
+        end,
+
+        upgrademoduleremover = function(inst, doer, actions, right)
+            if doer:HasTag("upgrademoduleowner") then
+                local success = doer.CanRemoveModules == nil or doer:CanRemoveModules()
+
+                if success then
+                    table.insert(actions, ACTIONS.REMOVEMODULES)
+                else
+                    table.insert(actions, ACTIONS.REMOVEMODULES_FAIL)
+                end
             end
         end,
 

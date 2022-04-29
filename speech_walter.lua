@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "I was trying to scratch behind his ears... but I don't think he has any.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "I can't sleep now!",
 	ANNOUNCE_NOHUNGERSLEEP = "I can't sleep on an empty stomach...",
 	ANNOUNCE_NOSLEEPONFIRE = "Um... that's on fire.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Um, WX? Could you maybe turn the light down a bit?",
 	ANNOUNCE_NODANGERSIESTA = "This isn't the best time for a siesta.",
 	ANNOUNCE_NONIGHTSIESTA = "I'd rather just go to bed.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I can't rest now! There's too much to look at down here!",
@@ -613,6 +634,10 @@ return{
 	{
         "To be continued...",
 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Huh. I thought that would go alright together.",
@@ -4351,6 +4376,37 @@ return{
 
 		KITCOONDECOR1_KIT = "Don't worry kitties, I'll put this together lickety-split!",
 		KITCOONDECOR2_KIT = "Don't worry kitties, I'll put this together lickety-split!",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Robot guts! Neat!",
+        WX78MODULE_MAXSANITY1 = "Robot guts! Neat!",
+        WX78MODULE_MAXSANITY = "Robot guts! Neat!",
+        WX78MODULE_MOVESPEED = "Robot guts! Neat!",
+        WX78MODULE_MOVESPEED2 = "Robot guts! Neat!",
+        WX78MODULE_HEAT = "Robot guts! Neat!",
+        WX78MODULE_NIGHTVISION = "Robot guts! Neat!",
+        WX78MODULE_COLD = "Robot guts! Neat!",
+        WX78MODULE_TASER = "Robot guts! Neat!",
+        WX78MODULE_LIGHT = "Robot guts! Neat!",
+        WX78MODULE_MAXHUNGER1 = "Robot guts! Neat!",
+        WX78MODULE_MAXHUNGER = "Robot guts! Neat!",
+        WX78MODULE_MUSIC = "Robot guts! Neat!",
+        WX78MODULE_BEE = "Robot guts! Neat!",
+        WX78MODULE_MAXHEALTH2 = "Robot guts! Neat!",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Aww, who's a good little robot?",
+            HUNTING = "Aww, who's a good little robot?",
+            SCANNING = "Aww, who's a good little robot?",
+        },
+
+        WX78_SCANNER_ITEM = "I guess it's taking a nap.",
+        WX78_SCANNER_SUCCEEDED = "What is it boy? Do you have something to show WX?",
+
+        WX78_MODULEREMOVER = "Should I start carrying something like this in my first aid kit?",
+
+        SCANDATA = "Neat! Wanna scan me next?",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

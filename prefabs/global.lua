@@ -80,6 +80,9 @@ local assets =
 
     Asset("SOUNDPACKAGE", "sound/ancientguardian_rework.fev"),
     Asset("FILE", "sound/ancientguardian_rework.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/WX_rework.fev"),
+    Asset("FILE", "sound/WX_rework.fsb"),
     
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods

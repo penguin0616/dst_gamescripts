@@ -779,6 +779,7 @@ end
 local function SetGhostMode(inst, isghost)
     TheWorld:PushEvent("enabledynamicmusic", not isghost)
     inst.HUD.controls.status:SetGhostMode(isghost)
+    inst.HUD.controls.secondary_status:SetGhostMode(isghost)
     if inst.components.revivablecorpse == nil then
         if isghost then
             TheMixer:PushMix("death")

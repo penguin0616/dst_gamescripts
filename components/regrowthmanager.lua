@@ -177,6 +177,9 @@ self:SetRegrowthForType("flower_cave_triple", TUNING.FLOWER_CAVE_REGROWTH_TIME, 
 self:SetRegrowthForType("lightflier_flower", TUNING.LIGHTFLIER_FLOWER_REGROWTH_TIME, "lightflier_flower", function()
         return TUNING.LIGHTFLIER_FLOWER_REGROWTH_TIME_MULT
     end)
+self:SetRegrowthForType("reeds", TUNING.REEDS_REGROWTH_TIME, "reeds", function()
+        return _worldstate.isspring and TUNING.REEDS_REGROWTH_TIME_SPRING_MULT or TUNING.REEDS_REGROWTH_TIME_MULT
+    end)
 
 --------------------------------------------------------------------------
 --[[ Update ]]

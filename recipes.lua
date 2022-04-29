@@ -171,7 +171,7 @@ Recipe2("mutator_water",  				{Ingredient("monstermeat", 2), Ingredient("silk", 
 
 -- Wormwood
 Recipe2("livinglog", 					{Ingredient(CHARACTER_INGREDIENT.HEALTH, 20)},													TECH.NONE,				{builder_tag="plantkin", sg_state="form_log"})
-Recipe2("armor_bramble",				{Ingredient("livinglog", 2), Ingredient("boneshard", 4)},										TECH.NONE,				{builder_tag="plantkin"})
+Recipe2("armor_bramble",				{Ingredient("livinglog", 2), Ingredient("stinger", 4)},											TECH.NONE,				{builder_tag="plantkin"})
 Recipe2("trap_bramble",					{Ingredient("livinglog", 1), Ingredient("stinger", 1)},											TECH.NONE,				{builder_tag="plantkin"})
 Recipe2("compostwrap",					{Ingredient("poop", 5), Ingredient("spoiled_food", 2), Ingredient("nitre", 1)}, 				TECH.NONE,				{builder_tag="plantkin"})
 
@@ -496,7 +496,24 @@ Recipe2("ruinsrelic_vase",					{Ingredient("cutstone", 2)},																			TE
 Recipe2("ruinsrelic_chair",					{Ingredient("cutstone", 1)},																			TECH.LOST,					{placer="ruinsrelic_chair_placer", min_spacing=2})
 Recipe2("ruinsrelic_table",					{Ingredient("cutstone", 1)},																			TECH.LOST,					{placer="ruinsrelic_table_placer"})
 
-
+-- WX78 Items
+Recipe2("wx78module_maxhealth",				{Ingredient("scandata", 2), Ingredient("spidergland", 1)},													TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_maxhealth2",			{Ingredient("scandata", 4), Ingredient("spidergland", 2), Ingredient("wx78module_maxhealth", 1)},			TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_maxsanity1",			{Ingredient("scandata", 1), Ingredient("petals", 1)},														TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_maxsanity",				{Ingredient("scandata", 3), Ingredient("nightmarefuel", 1), Ingredient("wx78module_maxsanity1", 1)},		TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_bee",					{Ingredient("scandata", 8), Ingredient("royal_jelly", 1), Ingredient("wx78module_maxsanity", 1)},			TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_music",					{Ingredient("scandata", 4), Ingredient("singingshell_octave3", 1, nil, nil, "singingshell_octave3_3.tex")},	TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_maxhunger1",			{Ingredient("scandata", 2), Ingredient("houndstooth", 1)},													TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_maxhunger",				{Ingredient("scandata", 3), Ingredient("slurper_pelt", 1), Ingredient("wx78module_maxhunger1", 1)},			TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_movespeed",				{Ingredient("scandata", 2), Ingredient("rabbit", 1)},														TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_movespeed2",			{Ingredient("scandata", 6), Ingredient("gears", 1), Ingredient("wx78module_movespeed", 1)},					TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_heat",					{Ingredient("scandata", 4), Ingredient("redgem", 1)},														TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_cold",					{Ingredient("scandata", 4), Ingredient("bluegem", 1)},														TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_taser",					{Ingredient("scandata", 5), Ingredient("goatmilk", 1)},														TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_nightvision",			{Ingredient("scandata", 4), Ingredient("mole", 1), Ingredient("fireflies", 1)},								TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78module_light",					{Ingredient("scandata", 6), Ingredient("lightbulb", 1)},													TECH.ROBOTMODULECRAFT_ONE,	{builder_tag="upgrademoduleowner"})
+Recipe2("wx78_moduleremover",				{Ingredient("twigs", 2), Ingredient("rocks", 2)},															TECH.NONE,					{builder_tag="upgrademoduleowner"})
+Recipe2("wx78_scanner_item",				{Ingredient("transistor", 1), Ingredient("silk", 1)},														TECH.NONE,					{builder_tag="upgrademoduleowner"})
 
 ------------------------------- CRAFTING STATIONS -------------------------------
 

@@ -357,6 +357,26 @@ return {
             HUNGRY = "only_used_by_wolfang",
             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "It doesn't seem interested in a scientific discussion.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -485,6 +505,7 @@ return {
 	ANNOUNCE_NODAYSLEEP_CAVE = "I'm not tired.",
 	ANNOUNCE_NOHUNGERSLEEP = "I'm too hungry to sleep, my growling tummy will keep me up!",
 	ANNOUNCE_NOSLEEPONFIRE = "I don't exactly have a burning desire to sleep in that.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "only_used_by_wx78",
 	ANNOUNCE_NODANGERSIESTA = "It's too dangerous to siesta right now!",
 	ANNOUNCE_NONIGHTSIESTA = "Night is for sleeping, not taking siestas.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I don't think I could really relax down here.",
@@ -623,6 +644,10 @@ return {
 	{
         "only_used_by_walter",
 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+    ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Those ingredients didn't make anything.",
@@ -4361,6 +4386,37 @@ return {
 
 		KITCOONDECOR1_KIT = "It looks like there's some assembly required.",
 		KITCOONDECOR2_KIT = "It doesn't look too hard to build.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXSANITY1 = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXSANITY = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MOVESPEED = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MOVESPEED2 = "So much science packed into one tiny gizmo.",
+        WX78MODULE_HEAT = "So much science packed into one tiny gizmo.",
+        WX78MODULE_NIGHTVISION = "So much science packed into one tiny gizmo.",
+        WX78MODULE_COLD = "So much science packed into one tiny gizmo.",
+        WX78MODULE_TASER = "So much science packed into one tiny gizmo.",
+        WX78MODULE_LIGHT = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXHUNGER1 = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXHUNGER = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MUSIC = "So much science packed into one tiny gizmo.",
+        WX78MODULE_BEE = "So much science packed into one tiny gizmo.",
+        WX78MODULE_MAXHEALTH2 = "So much science packed into one tiny gizmo.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="WX-78 really puts a piece of themselves into their work.",
+            HUNTING = "Get that data!",
+            SCANNING = "Seems like it's found something.",
+        },
+
+        WX78_SCANNER_ITEM = "I wonder if it dreams about scanning sheep.",
+        WX78_SCANNER_SUCCEEDED = "It's got the look of someone eager to show their work.",
+
+        WX78_MODULEREMOVER = "Obviously a very delicate and complicated scientific instrument.",
+
+        SCANDATA = "Smells like fresh research.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

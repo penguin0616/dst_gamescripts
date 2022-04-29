@@ -45,8 +45,8 @@ local function PlayBannerSound(inst, self, sound)
     end
 end
 
-local function MakeWaterloggedBanner(self, baner_root, anim)
-    local anim_bg = baner_root:AddChild(UIAnim())
+local function MakeWaterloggedBanner(self, banner_root, anim)
+    local anim_bg = banner_root:AddChild(UIAnim())
     anim_bg:GetAnimState():SetBuild("dst_menu_waterlogged")
     anim_bg:GetAnimState():SetBank("dst_menu_waterlogged")
     anim_bg:SetScale(0.667)
@@ -54,7 +54,7 @@ local function MakeWaterloggedBanner(self, baner_root, anim)
     anim_bg:MoveToBack()
 end
 
-local function MakeMoonstormBanner(self, baner_root, anim)
+local function MakeMoonstormBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_moonstorm_background")
     anim:GetAnimState():SetBank ("dst_menu_moonstorm_background")
     anim:GetAnimState():PlayAnimation("loop_w1", true)
@@ -64,7 +64,7 @@ local function MakeMoonstormBanner(self, baner_root, anim)
     end)
 
 
-    local anim_wrench = baner_root:AddChild(UIAnim())
+    local anim_wrench = banner_root:AddChild(UIAnim())
     anim_wrench:GetAnimState():SetBuild("dst_menu_moonstorm_wrench")
     anim_wrench:GetAnimState():SetBank ("dst_menu_moonstorm_wrench")
     anim_wrench:GetAnimState():PlayAnimation("loop_w1", false)
@@ -83,7 +83,7 @@ local function MakeMoonstormBanner(self, baner_root, anim)
     end)
 
 
-    local anim_wagstaff = baner_root:AddChild(UIAnim())
+    local anim_wagstaff = banner_root:AddChild(UIAnim())
     anim_wagstaff:GetAnimState():SetBuild("dst_menu_moonstorm_wagstaff")
     anim_wagstaff:GetAnimState():SetBank ("dst_menu_moonstorm_wagstaff")
     anim_wagstaff:GetAnimState():PlayAnimation("loop_w2", true)
@@ -137,7 +137,7 @@ local function MakeMoonstormBanner(self, baner_root, anim)
     anim_wagstaff.inst:DoTaskInTime(1.5 + wagstaff_invisible_time_min * math.random() + wagstaff_invisible_time_variance * math.random(), holo_fade_in)
 
 
-    local anim_foreground = baner_root:AddChild(UIAnim())
+    local anim_foreground = banner_root:AddChild(UIAnim())
     anim_foreground:GetAnimState():SetBuild("dst_menu_moonstorm_foreground")
     anim_foreground:GetAnimState():SetBank ("dst_menu_moonstorm_foreground")
     anim_foreground:GetAnimState():PlayAnimation("loop_w"..math.random(3), true)
@@ -147,8 +147,8 @@ local function MakeMoonstormBanner(self, baner_root, anim)
     end)
 end
 
-local function MakeYOTCBanner(self, baner_root, anim)
-    local anim_bg = baner_root:AddChild(UIAnim())
+local function MakeYOTCBanner(self, banner_root, anim)
+    local anim_bg = banner_root:AddChild(UIAnim())
     anim_bg:GetAnimState():SetBuild("dst_menu_carrat_bg")
     anim_bg:GetAnimState():SetBank("dst_carrat_bg")
     anim_bg:SetScale(0.7)
@@ -180,64 +180,64 @@ local function MakeYOTCBanner(self, baner_root, anim)
     end
 end
 
-local function MakeYOTCatcoonBanner(self, baner_root, anim)
+local function MakeYOTCatcoonBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_yot_catcoon")
     anim:GetAnimState():SetBank ("dst_menu_yot_catcoon")
     anim:SetScale(.667)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
-local function MakeHallowedNightsBanner(self, baner_root, anim)
+local function MakeHallowedNightsBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_halloween2")
     anim:GetAnimState():SetBank ("dst_menu_halloween2")
     anim:SetScale(.667)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
-local function MakeCawnivalBanner(self, baner_root, anim)
+local function MakeCawnivalBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_carnival")
     anim:GetAnimState():SetBank ("dst_menu_carnival")
     anim:SetScale(.667)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
-local function MakeWebberCawnivalBanner(self, baner_root, anim)
+local function MakeWebberCawnivalBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_webber_carnival")
     anim:GetAnimState():SetBank ("dst_menu_webber")
     anim:SetScale(.667)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
-local function MakeWesV1Banner(self, baner_root, anim)
+local function MakeWesV1Banner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_wes")
     anim:GetAnimState():SetBank("dst_menu_wes")
     anim:GetAnimState():PlayAnimation("loop", true)
     anim:SetScale(.667)
 end
 
-local function MakeWesV2Banner(self, baner_root, anim)
+local function MakeWesV2Banner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_wes2")
     anim:GetAnimState():SetBank ("dst_menu_wes2")
     anim:SetScale(.667)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
-local function MakeWendyBanner(self, baner_root, anim)
+local function MakeWendyBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_wendy")
     anim:GetAnimState():SetBank("dst_menu_wendy")
     anim:GetAnimState():PlayAnimation("loop", true)
     anim:SetScale(.667)
 end
 
-local function MakeWebberBanner(self, baner_root, anim)
+local function MakeWebberBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_webber")
     anim:GetAnimState():SetBank ("dst_menu_webber")
     anim:SetScale(.667)
     anim:GetAnimState():PlayAnimation("loop", true)
 end
 
-local function MakeWandaBanner(self, baner_root, anim)
-    local anim_bg = baner_root:AddChild(UIAnim())
+local function MakeWandaBanner(self, banner_root, anim)
+    local anim_bg = banner_root:AddChild(UIAnim())
     anim_bg:GetAnimState():SetBuild("dst_menu_wanda")
     anim_bg:GetAnimState():SetBank("dst_menu_wanda")
     anim_bg:SetScale(0.667)
@@ -269,11 +269,18 @@ local function MakeWolfgangBanner(self, banner_root, anim)
     anim:SetScale(.667)
 end
 
-local function MakeDefaultBanner(self, baner_root, anim)
-	local banner_height = 350
-	baner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
+local function MakeWX78Banner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wx")
+    anim:GetAnimState():SetBank("dst_menu_wx")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
 
-    local anim_bg = baner_root:AddChild(UIAnim())
+local function MakeDefaultBanner(self, banner_root, anim)
+	local banner_height = 350
+	banner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
+
+    local anim_bg = banner_root:AddChild(UIAnim())
     anim_bg:GetAnimState():SetBuild("dst_menu_v2_bg")
     anim_bg:GetAnimState():SetBank("dst_menu_v2_bg")
     anim:SetScale(.667)
@@ -311,29 +318,30 @@ end
 function MakeBanner(self)
 	local title_str = nil
 
-	local baner_root = Widget("banner_root")
-	baner_root:SetPosition(0, 0)
-	local anim = baner_root:AddChild(UIAnim())
+	local banner_root = Widget("banner_root")
+	banner_root:SetPosition(0, 0)
+	local anim = banner_root:AddChild(UIAnim())
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakeYOTCatcoonBanner(self, baner_root, anim)
+        MakeWX78Banner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
-        MakeYOTCBanner(self, baner_root, anim)
+        MakeYOTCBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
-        MakeYOTCatcoonBanner(self, baner_root, anim)
+        MakeYOTCatcoonBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
-        MakeHallowedNightsBanner(self, baner_root, anim)
+        MakeHallowedNightsBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
-        MakeWebberCawnivalBanner(self, baner_root, anim)
+        MakeWebberCawnivalBanner(self, banner_root, anim)
 	else
-        MakeDefaultBanner(self, baner_root, anim)
+        --MakeDefaultBanner(self, banner_root, anim)
+        MakeWX78Banner(self, banner_root, anim)
         --[[
 		local cur_time = os.time()
 		if cur_time <= 1585810740 and (not IsConsole() or cur_time >= 1585759200) then -- 9:40am to 11:59pm PDT
-            MakeWesV1Banner(self, baner_root, anim)
+            MakeWesV1Banner(self, banner_root, anim)
 		else
-            MakeWendyBanner(self, baner_root, anim)
+            MakeWendyBanner(self, banner_root, anim)
         end
         ]]
 	end
@@ -345,12 +353,12 @@ function MakeBanner(self)
 			local text_width = 880
 
 			local font_size = 22
-			local title = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.HIGHLIGHT_GOLD))
+			local title = banner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.HIGHLIGHT_GOLD))
 			title:SetRegionSize(text_width, 2*(font_size + 2))
 			title:SetHAlign(ANCHOR_RIGHT)
 			title:SetPosition(x, y + 4)
 
-			local shadow = baner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.BLACK))
+			local shadow = banner_root:AddChild(Text(self.info_font, font_size, title_str, UICOLOURS.BLACK))
 			shadow:SetRegionSize(text_width, 2*(font_size + 2))
 			shadow:SetHAlign(ANCHOR_RIGHT)
 			shadow:SetPosition(x + 1.5, y - 1.5)
@@ -358,7 +366,45 @@ function MakeBanner(self)
 		end
 	end
 
-	return baner_root
+	return banner_root
+end
+
+--------------------------------------------------------------------------------
+
+local function MakeWX78BannerFront(self, banner_front, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wx")
+    anim:GetAnimState():SetBank("dst_menu_wx")
+    anim:GetAnimState():PlayAnimation("loop_top", true)
+    anim:SetScale(0.667)
+end
+
+-- For drawing things in front of the MOTD panels
+local function MakeBannerFront(self)
+    if IS_BETA then
+        local banner_front = Widget("banner_front")
+        banner_front:SetPosition(0, 0)
+        local anim = banner_front:AddChild(UIAnim())
+
+        MakeWX78BannerFront(self, banner_front, anim)
+
+        return banner_front
+    elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
+        return nil
+    elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
+        return nil
+    elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
+        return nil
+    elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
+        return nil
+    else
+        local banner_front = Widget("banner_front")
+        banner_front:SetPosition(0, 0)
+        local anim = banner_front:AddChild(UIAnim())
+
+        MakeWX78BannerFront(self, banner_front, anim)
+        
+        return banner_front
+    end
 end
 
 local MultiplayerMainScreen = Class(Screen, function(self, prev_screen, profile, offline, session_data)
@@ -488,6 +534,13 @@ function MultiplayerMainScreen:DoInit()
 		end
     end
 
+    ----------------------------------------------------------
+
+    local banner_front = MakeBannerFront(self)
+    if banner_front ~= nil then
+        self.banner_front = self.fixed_root:AddChild(banner_front)
+        self.banner_front:MoveToFront()
+    end
 
     ----------------------------------------------------------
 

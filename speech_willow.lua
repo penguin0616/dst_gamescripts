@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Ha! Scan THAT!",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -477,6 +497,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "Too spooky down here to sleep.",
 	ANNOUNCE_NOHUNGERSLEEP = "My tummy is grumbling, I can't sleep!",
 	ANNOUNCE_NOSLEEPONFIRE = "It's just the collapsing that concerns me.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "It's kind of hard to sleep with a robot glowing in my face.",
 	ANNOUNCE_NODANGERSIESTA = "It's not time for a siesta, it's time for fighting!",
 	ANNOUNCE_NONIGHTSIESTA = "I couldn't get comfortable there.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I'd really rather be inside.",
@@ -620,6 +641,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Okay, so that didn't work.",
@@ -4358,6 +4383,37 @@ return{
 
 		KITCOONDECOR1_KIT = "The kitcoons are waiting for their toys!",
 		KITCOONDECOR2_KIT = "Alright, where's a good spot to put it...",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXSANITY1 = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXSANITY = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MOVESPEED = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MOVESPEED2 = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_HEAT = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_NIGHTVISION = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_COLD = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_TASER = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_LIGHT = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXHUNGER1 = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXHUNGER = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MUSIC = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_BEE = "Hey WX, when are you gonna install a flamethrower?",
+        WX78MODULE_MAXHEALTH2 = "Hey WX, when are you gonna install a flamethrower?",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="I can't decide if it's cute or creepy.",
+            HUNTING = "I can't decide if it's cute or creepy.",
+            SCANNING = "I can't decide if it's cute or creepy.",
+        },
+
+        WX78_SCANNER_ITEM = "Heh... how mad do you think WX would get if I painted a mustache on it?",
+        WX78_SCANNER_SUCCEEDED = "What are you waiting for, a pat on the head?",
+
+        WX78_MODULEREMOVER = "Let me try... hold still, WX!",
+
+        SCANDATA = "Looks like dumb science stuff for nerds.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

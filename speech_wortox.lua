@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "The tin gnat is not keen to chat.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "An imp must stay on guard when underground.",
 	ANNOUNCE_NOHUNGERSLEEP = "I'm too soul-famished to sleep.",
 	ANNOUNCE_NOSLEEPONFIRE = "I'd prefer not to singe my fur.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "It's far too bright to sleep tonight.",
 	ANNOUNCE_NODANGERSIESTA = "Why sleep when there's fun afoot?",
 	ANNOUNCE_NONIGHTSIESTA = "No honorable imp would siesta at night.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "An imp must stay on guard when underground.",
@@ -618,6 +639,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "That was nothing! Nothing!",
@@ -4357,6 +4382,37 @@ return{
 
 		KITCOONDECOR1_KIT = "To make a toy is such a joy!",
 		KITCOONDECOR2_KIT = "To make a toy is such a joy!",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXSANITY1 = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXSANITY = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MOVESPEED = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MOVESPEED2 = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_HEAT = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_NIGHTVISION = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_COLD = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_TASER = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_LIGHT = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXHUNGER1 = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXHUNGER = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MUSIC = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_BEE = "Are you the brightest bulb of the bunch?",
+        WX78MODULE_MAXHEALTH2 = "Are you the brightest bulb of the bunch?",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="My my, how the tin flies!",
+            HUNTING = "My my, how the tin flies!",
+            SCANNING = "My my, how the tin flies!",
+        },
+
+        WX78_SCANNER_ITEM = "The tiny tin terror's tuckered out!",
+        WX78_SCANNER_SUCCEEDED = "It's done its toil, now our friend must collect the spoils.",
+
+        WX78_MODULEREMOVER = "It'll work in a pinch, hyuyu!",
+
+        SCANDATA = "Hyuyuyu, I think our friend has some tricks up those tin sleeves!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -305,6 +305,8 @@ function Sanity:DoDelta(delta, overtime)
 	end
 
     self.inst:PushEvent("sanitydelta", { oldpercent = self._oldpercent, newpercent = self:GetPercent(), overtime = overtime, sanitymode = self.mode })
+
+    -- Re-call GetPercent on the slight chance that "sanitydelta" changed it.
     self._oldpercent = self:GetPercent()
 
     if self:IsSane() ~= self._oldissane then

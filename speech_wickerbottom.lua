@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "As I thought, I'm unable to glean any information from it.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "These caves don't make it any easier to sleep.",
 	ANNOUNCE_NOHUNGERSLEEP = "I can barely sleep even when I'm not starving!",
 	ANNOUNCE_NOSLEEPONFIRE = "Even if I could sleep, these temperatures are highly unsafe.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "No need to turn the light off dear, I won't be able to sleep either way.",
 	ANNOUNCE_NODANGERSIESTA = "I can't lie down when I'm in danger!",
 	ANNOUNCE_NONIGHTSIESTA = "I can't sleep, no matter where I lie down.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "I couldn't possibly relax in these caves.",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "That was not a viable recipe.",
@@ -4351,6 +4376,37 @@ return{
 
 		KITCOONDECOR1_KIT = "Materials to construct entertaining toys for kittens.",
 		KITCOONDECOR2_KIT = "Materials to construct entertaining toys for kittens.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXSANITY1 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXSANITY = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MOVESPEED = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MOVESPEED2 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_HEAT = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_NIGHTVISION = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_COLD = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_TASER = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_LIGHT = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXHUNGER1 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXHUNGER = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MUSIC = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_BEE = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+        WX78MODULE_MAXHEALTH2 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="I suspect our resident handywoman might have assisted with its construction.",
+            HUNTING = "It appears to be searching for a suitable specimen to analyze.",
+            SCANNING = "It seems to be collecting data from that specimen.",
+        },
+
+        WX78_SCANNER_ITEM = "It appears to be dormant, for the moment.",
+        WX78_SCANNER_SUCCEEDED = "It's finished compiling some more research, I believe.",
+
+        WX78_MODULEREMOVER = "Do be careful with that, dear.",
+
+        SCANDATA = "An incredibly thorough analysis. Well done!",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

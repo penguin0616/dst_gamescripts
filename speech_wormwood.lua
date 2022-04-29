@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Shy?",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "Can't",
 	ANNOUNCE_NOHUNGERSLEEP = "Too hungry",
 	ANNOUNCE_NOSLEEPONFIRE = "Burning!",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Bright, robot friend! Bright!!",
 	ANNOUNCE_NODANGERSIESTA = "Too dangerous",
 	ANNOUNCE_NONIGHTSIESTA = "Can't. It's nighttime",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Not in caves",
@@ -617,6 +638,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Oops. Not good belly stuff",
@@ -4355,6 +4380,37 @@ return{
 
 		KITCOONDECOR1_KIT = "Makes toy for friends",
 		KITCOONDECOR2_KIT = "Makes toy for friends",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Beep boops",
+        WX78MODULE_MAXSANITY1 = "Beep boops",
+        WX78MODULE_MAXSANITY = "Beep boops",
+        WX78MODULE_MOVESPEED = "Beep boops",
+        WX78MODULE_MOVESPEED2 = "Beep boops",
+        WX78MODULE_HEAT = "Beep boops",
+        WX78MODULE_NIGHTVISION = "Beep boops",
+        WX78MODULE_COLD = "Beep boops",
+        WX78MODULE_TASER = "Beep boops",
+        WX78MODULE_LIGHT = "Beep boops",
+        WX78MODULE_MAXHUNGER1 = "Beep boops",
+        WX78MODULE_MAXHUNGER = "Beep boops",
+        WX78MODULE_MUSIC = "Beep boops",
+        WX78MODULE_BEE = "Beep boops",
+        WX78MODULE_MAXHEALTH2 = "Beep boops",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Little friend of robot friend",
+            HUNTING = "Little friend of robot friend",
+            SCANNING = "Little friend of robot friend",
+        },
+
+        WX78_SCANNER_ITEM = "Little friend of robot friend",
+        WX78_SCANNER_SUCCEEDED = "Blinky blink",
+
+        WX78_MODULEREMOVER = "Robot friend fixer",
+
+        SCANDATA = "Hmm!",
     },
 
     DESCRIBE_GENERIC = "Friend?",

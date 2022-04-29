@@ -75,6 +75,34 @@ local events=
 local states=
 {
     State{
+        name = "funnyidle",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+
+            -- NOTES(JBK): Making merms less expressive than other followers but keeping core information expressed.
+            if inst.components.follower and inst.components.follower:GetLeader() ~= nil and inst.components.follower:GetLoyaltyPercent() < TUNING.MERM_LOW_LOYALTY_WARNING_PERCENT then
+                inst.AnimState:PlayAnimation("hungry")
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/hungry")
+            elseif inst:HasTag("guard") then
+                inst.AnimState:PlayAnimation("idle_angry")
+            elseif inst.components.combat:HasTarget() then
+                inst.AnimState:PlayAnimation("idle_angry")
+            else
+                inst.sg:GoToState("idle") -- Not a comedian.
+            end
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
+
+    State{
         name = "idle_sit",
         tags = { "idle", "sitting" },
 
@@ -345,6 +373,23 @@ local states=
     },
 
     State{
+        name = "disapproval",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("idle_scared")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
+            end),
+        },
+    },
+
+    State{
         name = "win_yotb",
         tags = { "busy" },
 
@@ -403,7 +448,7 @@ CommonStates.AddCombatStates(states,
     },
 })
 
-CommonStates.AddIdle(states)
+CommonStates.AddIdle(states, "funnyidle")
 CommonStates.AddSimpleActionState(states, "gohome", "pig_pickup", 4*FRAMES, {"busy"})
 CommonStates.AddSimpleState(states, "refuse", "pig_reject", { "busy" })
 CommonStates.AddFrozenStates(states)

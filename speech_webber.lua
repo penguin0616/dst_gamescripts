@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "We don't think Jimmy wants to play.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "We're not ready for bed.",
 	ANNOUNCE_NOHUNGERSLEEP = "Our tummy is rumbling, we can't sleep.",
 	ANNOUNCE_NOSLEEPONFIRE = "Mum always said \"Don't sleep in a burning building.\"",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "We can't sleep with such a bright nightlight...",
 	ANNOUNCE_NODANGERSIESTA = "Can't nap with monsters nearby!",
 	ANNOUNCE_NONIGHTSIESTA = "We can't take a nap, it's nighttime!",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "No naps til daybreak!",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Oh no! That wasn't a recipe!",
@@ -4351,6 +4376,37 @@ return{
 
 		KITCOONDECOR1_KIT = "We'll have it done right away!",
 		KITCOONDECOR2_KIT = "Where should we put it?",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXSANITY1 = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXSANITY = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MOVESPEED = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MOVESPEED2 = "Huh. Is that what robot insides look like?",
+        WX78MODULE_HEAT = "Huh. Is that what robot insides look like?",
+        WX78MODULE_NIGHTVISION = "Huh. Is that what robot insides look like?",
+        WX78MODULE_COLD = "Huh. Is that what robot insides look like?",
+        WX78MODULE_TASER = "Huh. Is that what robot insides look like?",
+        WX78MODULE_LIGHT = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXHUNGER1 = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXHUNGER = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MUSIC = "Huh. Is that what robot insides look like?",
+        WX78MODULE_BEE = "Huh. Is that what robot insides look like?",
+        WX78MODULE_MAXHEALTH2 = "Huh. Is that what robot insides look like?",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Watch out for our webs when you're flying!",
+            HUNTING = "Watch out for our webs when you're flying!",
+            SCANNING = "Watch out for our webs when you're flying!",
+        },
+
+        WX78_SCANNER_ITEM = "Is your name really Jimmy?",
+        WX78_SCANNER_SUCCEEDED = "WX! We think Jimmy's trying to get your attention!",
+
+        WX78_MODULEREMOVER = "We're not sure that's safe...",
+
+        SCANDATA = "Wow, it learned all that just by looking really hard?",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

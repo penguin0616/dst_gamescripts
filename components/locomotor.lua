@@ -1143,10 +1143,17 @@ function LocoMotor:OnUpdate(dt)
                     --Print(VERBOSITY.DEBUG, string.format("CURRENT STEP %d/%d - %s", self.path.currentstep, #self.path.steps, tostring(steppos)))
 
                     local step_distsq = distsq(mypos_x, mypos_z, steppos_x, steppos_z)
+
+                    local maxsteps = #self.path.steps
+                    if self.path.currentstep < maxsteps then -- Add tolerance to step points that aren't the final destination.
+                        local physdiameter = self.inst:GetPhysicsRadius(0)*2
+                        step_distsq = step_distsq - physdiameter * physdiameter
+                    end
+
                     if step_distsq <= (self.arrive_step_dist)*(self.arrive_step_dist) then
                         self.path.currentstep = self.path.currentstep + 1
 
-                        if self.path.currentstep < #self.path.steps then
+                        if self.path.currentstep < maxsteps then
                             step = self.path.steps[self.path.currentstep]
                             steppos_x, steppos_y, steppos_z = step.x, step.y, step.z
 

@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "I do not think I'm the one it wants to talk to.",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "I'm not tired.",
 	ANNOUNCE_NOHUNGERSLEEP = "My hunger trumps my exhaustion.",
 	ANNOUNCE_NOSLEEPONFIRE = "I think not! That's a hotbed for danger!",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "I can still see the light from our metal friend when I close my eyes...",
 	ANNOUNCE_NODANGERSIESTA = "This is no time to close my eyes!",
 	ANNOUNCE_NONIGHTSIESTA = "Siesta in the dark? I think not.",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "This does not strike me as a relaxing place for siesta.",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "As a chef, I am quite embarrassed.",
@@ -4351,6 +4376,37 @@ return{
 
 		KITCOONDECOR1_KIT = "Nearly done.",
 		KITCOONDECOR2_KIT = "Now, to put the ingredients together.",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXSANITY1 = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXSANITY = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MOVESPEED = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MOVESPEED2 = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_HEAT = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_NIGHTVISION = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_COLD = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_TASER = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_LIGHT = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXHUNGER1 = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXHUNGER = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MUSIC = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_BEE = "They give our metal friend a little extra zest, non?",
+        WX78MODULE_MAXHEALTH2 = "They give our metal friend a little extra zest, non?",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="It seems vaguely potato shaped... or perhaps I'm just hungry.",
+            HUNTING = "It seems vaguely potato shaped... or perhaps I'm just hungry.",
+            SCANNING = "It seems vaguely potato shaped... or perhaps I'm just hungry.",
+        },
+
+        WX78_SCANNER_ITEM = "It seems vaguely potato shaped... or perhaps I'm just hungry.",
+        WX78_SCANNER_SUCCEEDED = "Voilà, it is done!",
+
+        WX78_MODULEREMOVER = "Ah, I believe this utensil belongs to our metal friend.",
+
+        SCANDATA = "What is this they're cooking up?",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

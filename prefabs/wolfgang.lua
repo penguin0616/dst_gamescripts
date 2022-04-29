@@ -226,7 +226,7 @@ end
 ------------------------------------------------
 
 local function bell_SetPercent(inst, val)
-    val = val or isnt.bell_percent
+    val = val or inst.bell_percent
 
     if inst.bell ~= nil then
         inst.bell.AnimState:SetPercent("meter_move", val)

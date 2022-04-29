@@ -364,6 +364,9 @@ dragonflychest_clear_fn = function(inst) basic_clear_fn(inst, "dragonfly_chest" 
 wardrobe_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "wardrobe" ) end
 wardrobe_clear_fn = function(inst) basic_clear_fn(inst, "wardrobe" ) end
 
+fish_box_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "fish_box" ) end
+fish_box_clear_fn = function(inst) basic_clear_fn(inst, "fish_box" ) end
+
 sculptingtable_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "sculpting_station" ) end
 sculptingtable_clear_fn = function(inst) basic_clear_fn(inst, "sculpting_station" ) end
 
@@ -1249,6 +1252,18 @@ function fence_gate_clear_fn(inst)
 end
 
 
+--------------------------------------------------------------------------
+--[[ Plank skin functions ]]
+--------------------------------------------------------------------------
+function walkingplank_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "boat_plank_build")
+end
+function walkingplank_clear_fn(inst, build_name)
+    inst.AnimState:SetBuild("boat_plank_build")
+end
 
 --------------------------------------------------------------------------
 --[[ Mast skin functions ]]
@@ -1257,13 +1272,6 @@ function mast_item_init_fn(inst, build_name)
     inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
     inst.AnimState:SetSkin(build_name, "seafarer_mast") --same hack is used here by the deployable code in player controller
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
-end
-function mast_init_fn(inst, build_name)
-    if inst.components.placer == nil and not TheWorld.ismastersim then
-        return
-    end
-    inst.AnimState:SetSkin(build_name, "boat_mast2_wip")
-    inst.components.inventoryitem:ChangeImageName()
 end
 function mast_item_clear_fn(inst, build_name)
     inst.linked_skinname = nil
@@ -1277,6 +1285,29 @@ function mast_init_fn(inst, build_name)
 end
 function mast_clear_fn(inst, build_name)
     inst.AnimState:SetBuild("boat_mast2_wip")
+end
+
+
+--------------------------------------------------------------------------
+--[[ Mast Malbatross skin functions ]] 
+--------------------------------------------------------------------------
+function mast_malbatross_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "seafarer_mast_malbatross") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function mast_malbatross_item_clear_fn(inst, build_name)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("seafarer_mast_malbatross")
+end
+function mast_malbatross_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "boat_mast_malbatross_build")
+end
+function mast_malbatross_clear_fn(inst, build_name)
+    inst.AnimState:SetBuild("boat_mast_malbatross_build")
 end
 
 

@@ -347,6 +347,26 @@ return{
 --fallback to speech_wilson.lua             HUNGRY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua             FULL = "only_used_by_wolfang",
         },
+
+        APPLYMODULE =
+        {
+            COOLDOWN = "only_used_by_wx78",
+            NOTENOUGHSLOTS = "only_used_by_wx78",
+        },
+        REMOVEMODULES =
+        {
+            NO_MODULES = "only_used_by_wx78",
+        },
+        CHARGE_FROM =
+        {
+            NOT_ENOUGH_CHARGE = "only_used_by_wx78",
+            CHARGE_FULL = "only_used_by_wx78",
+        },
+
+        HARVEST =
+        {
+            DOER_ISNT_MODULE_OWNER = "Glurph. You boring!",
+        },
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -475,6 +495,7 @@ return{
 	ANNOUNCE_NODAYSLEEP_CAVE = "Not sleepy, florp.",
 	ANNOUNCE_NOHUNGERSLEEP = "Need food, then sleepy-time.",
 	ANNOUNCE_NOSLEEPONFIRE = "Not gonna sleep there, glort.",
+    ANNOUNCE_NOSLEEPHASPERMANENTLIGHT = "Glurgh... IRONFOLK TOO BRIGHT.",
 	ANNOUNCE_NODANGERSIESTA = "Too scary for nap!",
 	ANNOUNCE_NONIGHTSIESTA = "Don't want nap, want bedtime!",
 	ANNOUNCE_NONIGHTSIESTA_CAVE = "Glurp... too scary in here...",
@@ -613,6 +634,10 @@ return{
 --fallback to speech_wilson.lua 	{
 --fallback to speech_wilson.lua         "only_used_by_walter",
 --fallback to speech_wilson.lua 	},
+
+    -- wx specific
+    ANNOUNCE_WX_SCANNER_NEW_FOUND = "only_used_by_wx78",
+--fallback to speech_wilson.lua     ANNOUNCE_WX_SCANNER_FOUND_NO_DATA = "only_used_by_wx78",
 
     --quagmire event
     QUAGMIRE_ANNOUNCE_NOTRECIPE = "Glurgh, that not gonna taste good together.",
@@ -4351,6 +4376,37 @@ return{
 
 		KITCOONDECOR1_KIT = "It not hard to build, florp.",
 		KITCOONDECOR2_KIT = "It need building still!",
+
+        -- WX78
+        WX78MODULE_MAXHEALTH = "Crunchy.",
+        WX78MODULE_MAXSANITY1 = "Crunchy.",
+        WX78MODULE_MAXSANITY = "Crunchy.",
+        WX78MODULE_MOVESPEED = "Crunchy.",
+        WX78MODULE_MOVESPEED2 = "Crunchy.",
+        WX78MODULE_HEAT = "Crunchy.",
+        WX78MODULE_NIGHTVISION = "Crunchy.",
+        WX78MODULE_COLD = "Crunchy.",
+        WX78MODULE_TASER = "Crunchy.",
+        WX78MODULE_LIGHT = "Crunchy.",
+        WX78MODULE_MAXHUNGER1 = "Crunchy.",
+        WX78MODULE_MAXHUNGER = "Crunchy.",
+        WX78MODULE_MUSIC = "Crunchy.",
+        WX78MODULE_BEE = "Crunchy.",
+        WX78MODULE_MAXHEALTH2 = "Crunchy.",
+
+        WX78_SCANNER = 
+        {
+            GENERIC ="Bug? No? Hmm...",
+            HUNTING = "Bug? No? Hmm...",
+            SCANNING = "Bug? No? Hmm...",
+        },
+
+        WX78_SCANNER_ITEM = "Bug? No? Hmm...",
+        WX78_SCANNER_SUCCEEDED = "Why it all blinky?",
+
+        WX78_MODULEREMOVER = "Haha! Ironfolk weird.",
+
+        SCANDATA = "Glurgh... can Wicker-lady read it?",
     },
 
     DESCRIBE_GENERIC = "What that?",

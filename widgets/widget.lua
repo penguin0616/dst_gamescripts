@@ -396,6 +396,13 @@ function Widget:HookCallback(event, fn)
     self.inst:ListenForEvent(event, fn)
 end
 
+function Widget:UnhookCallback(event)
+    if self.callbacks[event] then
+        self.inst:RemoveEventCallback(event, self.callbacks[event])
+        self.callbacks[event] = nil
+    end
+end
+
 function Widget:SetVAnchor(anchor)
     self.inst.UITransform:SetVAnchor(anchor)
 end

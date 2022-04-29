@@ -120,7 +120,8 @@ local function OnConsumeHealthCost(parent)
     parent.player_classified.builderdamagedevent:push()
 end
 
-local function OnLearnRecipeSuccess(parent)
+local function OnLearnRecipeSuccess(parent, data)
+    SendRPCToClient(CLIENT_RPC.LearnBuilderRecipe, parent.userid, data.recipe)
     parent.player_classified.learnrecipeevent:push()
 end
 
@@ -421,6 +422,48 @@ local function OnMightinessDirty(inst)
         inst._parent:PushEvent("mightinessdelta", data)
     end
 end
+
+-- WX78 Upgrade Module UI functions ------------------------------------------
+
+fns.OnEnergyLevelDirty = function(inst)
+    if inst._parent ~= nil then
+        local energylevel = inst.currentenergylevel:value()
+        local data =
+        {
+            old_level = inst._oldcurrentenergylevel,
+            new_level = energylevel,
+        }
+
+        inst._oldcurrentenergylevel = energylevel
+
+        inst._parent:PushEvent("energylevelupdate", data)
+    end
+end
+
+fns.OnUIRobotSparks = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("do_robot_spark")
+    end
+end
+
+fns.OnUpgradeModulesListDirty = function(inst)
+    if inst._parent ~= nil then
+        local module1 = inst.upgrademodules[1]:value()
+        local module2 = inst.upgrademodules[2]:value()
+        local module3 = inst.upgrademodules[3]:value()
+        local module4 = inst.upgrademodules[4]:value()
+        local module5 = inst.upgrademodules[5]:value()
+        local module6 = inst.upgrademodules[6]:value()
+
+        if module1 == 0 and module2 == 0 and module3 == 0 and module4 == 0 and module5 == 0 and module6 == 0 then
+            inst._parent:PushEvent("upgrademoduleowner_popallmodules")
+        else
+            inst._parent:PushEvent("upgrademodulesdirty", {module1, module2, module3, module4, module5, module6})
+        end
+    end
+end
+
+------------------------------------------------------------------------------
 
 local function OnMoistureDirty(inst)
     if inst._parent ~= nil then
@@ -919,6 +962,9 @@ local function RegisterNetListeners(inst)
 		inst:ListenForEvent("inspirationsong2dirty", function(_inst) fns.OnInspirationSongsDirty(_inst, 2) end)
 		inst:ListenForEvent("inspirationsong3dirty", function(_inst) fns.OnInspirationSongsDirty(_inst, 3) end)
         inst:ListenForEvent("mightinessdirty", OnMightinessDirty)
+        inst:ListenForEvent("upgrademoduleenergyupdate", fns.OnEnergyLevelDirty)
+        inst:ListenForEvent("upgrademoduleslistdirty", fns.OnUpgradeModulesListDirty)
+        inst:ListenForEvent("uirobotsparksevent", fns.OnUIRobotSparks)
         inst:ListenForEvent("temperaturedirty", OnTemperatureDirty)
         inst:ListenForEvent("moisturedirty", OnMoistureDirty)
         inst:ListenForEvent("techtreesdirty", OnTechTreesDirty)
@@ -933,6 +979,7 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("playercamerashake", OnPlayerCameraShake)
         inst:ListenForEvent("playerscreenflashdirty", OnPlayerScreenFlashDirty)
         inst:ListenForEvent("attunedresurrectordirty", OnAttunedResurrectorDirty)
+        
         
 
         OnIsTakingFireDamageDirty(inst)
@@ -1063,6 +1110,22 @@ local function fn()
     inst.gym_bell_start = net_event(inst.GUID, "gym_bell_start")
     inst.currentmightiness = net_byte(inst.GUID, "mightiness.current", "mightinessdirty")
     inst.mightinessratescale = net_tinybyte(inst.GUID, "mightiness.ratescale")
+
+    -- Upgrade Module Owner
+    inst.uirobotsparksevent = net_event(inst.GUID, "uirobotsparksevent")
+
+    inst._oldcurrentenergylevel = 0
+    inst.currentenergylevel = net_smallbyte(inst.GUID, "upgrademodules.currentenergylevel", "upgrademoduleenergyupdate")
+
+    inst.upgrademodules =
+    {
+        net_smallbyte(inst.GUID, "upgrademodules.mods1", "upgrademoduleslistdirty"),
+        net_smallbyte(inst.GUID, "upgrademodules.mods2", "upgrademoduleslistdirty"),
+        net_smallbyte(inst.GUID, "upgrademodules.mods3", "upgrademoduleslistdirty"),
+        net_smallbyte(inst.GUID, "upgrademodules.mods4", "upgrademoduleslistdirty"),
+        net_smallbyte(inst.GUID, "upgrademodules.mods5", "upgrademoduleslistdirty"),
+        net_smallbyte(inst.GUID, "upgrademodules.mods6", "upgrademoduleslistdirty"),
+    }
 
 	-- oldager
     inst.oldager_yearpercent = net_float(inst.GUID, "oldager.yearpercent")

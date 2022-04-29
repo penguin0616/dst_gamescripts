@@ -18,15 +18,6 @@ local MIN_FOLLOW_DIST     = 1
 local TARGET_FOLLOW_DIST  = 5
 local MAX_FOLLOW_DIST     = 9
 
-local SEE_TREE_DIST       = 15
-local KEEP_CHOPPING_DIST  = 10
-
-local SEE_ROCK_DIST       = 15
-local KEEP_MINING_DIST    = 10
-
-local SEE_HAMMER_DIST     = 15
-local KEEP_HAMMERING_DIST = 10
-
 local SEE_THRONE_DISTANCE = 50
 
 local FACETIME_BASE       = 2
@@ -59,104 +50,6 @@ local function KeepFaceTargetFn(inst, target)
     return keepface
 end
 
------------------------------------------------------------------------------------------------
--- Chop
-local CHOP_TAGS = { "CHOP_workable" }
-
-local function IsDeciduousTreeMonster(guy)
-    return guy.monster and guy.prefab == "deciduoustree"
-end
-
-local function FindDeciduousTreeMonster(inst)
-    return FindEntity(inst, SEE_TREE_DIST / 3, IsDeciduousTreeMonster, CHOP_TAGS)
-end
-
-local function KeepChoppingAction(inst)
-    return inst.tree_target ~= nil
-        or (inst.components.follower.leader ~= nil and
-            inst:IsNear(inst.components.follower.leader, KEEP_CHOPPING_DIST))
-        or FindDeciduousTreeMonster(inst) ~= nil
-end
-
-local function StartChoppingCondition(inst)
-    return inst.tree_target ~= nil
-        or (inst.components.follower.leader ~= nil and
-            inst.components.follower.leader.sg ~= nil and
-            inst.components.follower.leader.sg:HasStateTag("chopping"))
-        or FindDeciduousTreeMonster(inst) ~= nil
-end
-
-local function FindTreeToChopAction(inst)
-    local target = FindEntity(inst, SEE_TREE_DIST, nil, CHOP_TAGS)
-    if target ~= nil then
-        if inst.tree_target ~= nil then
-            target = inst.tree_target
-            inst.tree_target = nil
-        else
-            target = FindDeciduousTreeMonster(inst) or target
-        end
-
-        return BufferedAction(inst, target, ACTIONS.CHOP)
-    end
-end
--------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------
--- Mine
-
-local function KeepMiningAction(inst)
-    local keep_mining = (inst.components.follower.leader ~= nil and
-            inst:IsNear(inst.components.follower.leader, KEEP_MINING_DIST))
-
-    return keep_mining
-end
-
-local function StartMiningCondition(inst)
-    local mine_condition = (inst.components.follower.leader ~= nil and
-            inst.components.follower.leader.sg ~= nil and
-            inst.components.follower.leader.sg:HasStateTag("mining"))
-
-    return mine_condition
-end
-
-local MINE_TAGS = { "MINE_workable" }
-local function FindRockToMineAction(inst)
-    local target = FindEntity(inst, SEE_ROCK_DIST, nil, MINE_TAGS)
-    if target ~= nil then
-        return BufferedAction(inst, target, ACTIONS.MINE)
-    end
-end
-
-------------------------------------------------------------------------------
-
-
-------------------------------------------------------------------------------
--- Hammer
-
-local function KeepHammeringAction(inst)
-    local keep_hammering = (inst.components.follower.leader ~= nil and
-            inst:IsNear(inst.components.follower.leader, KEEP_HAMMERING_DIST))
-
-    return keep_hammering
-end
-
-local function StartHammeringCondition(inst)
-    local hammer_condition = (inst.components.follower.leader ~= nil and
-            inst.components.follower.leader.sg ~= nil and
-            inst.components.follower.leader.sg:HasStateTag("hammering"))
-
-    return hammer_condition
-end
-
-local HAMMER_TAGS = { "HAMMER_workable" }
-local function FindHammerTargetAction(inst)
-    local target = FindEntity(inst, SEE_HAMMER_DIST, nil, HAMMER_TAGS)
-    if target ~= nil then
-        return BufferedAction(inst, target, ACTIONS.HAMMER)
-    end
-end
-
-------------------------------------------------------------------------------
 
 local EATFOOD_MUST_TAGS = { "edible_VEGGIE" }
 local EATFOOD_CANOT_TAGS = { "INLIMBO" }
@@ -170,7 +63,7 @@ local function EatFoodAction(inst)
     if inst.components.inventory ~= nil and inst.components.eater ~= nil then
         target = inst.components.inventory:FindItem(function(item) return inst.components.eater:CanEat(item) end)
     end
-    if target == nil then
+    if target == nil and inst.components.follower.leader == nil then
         target = FindEntity(inst, SEE_FOOD_DIST, function(item) return inst.components.eater:CanEat(item) end, EATFOOD_MUST_TAGS, EATFOOD_CANOT_TAGS)
         --check for scary things near the food
         if target ~= nil and (GetClosestInstWithTag(SCARY_TAGS, target, SEE_PLAYER_DIST) ~= nil or not target:IsOnValidGround()) then  -- NOTE this ValidGround check should be removed if merms start swimming
@@ -331,15 +224,15 @@ function MermBrain:OnStart()
                 ),
             }, .25)),
 
-        IfThenDoWhileNode(function() return StartChoppingCondition(self.inst) end, function() return KeepChoppingAction(self.inst) end, "chop",
-	        LoopNode{
-	            ChattyNode(self.inst, "MERM_TALK_HELP_CHOP_WOOD",
-	                DoAction(self.inst, FindTreeToChopAction ))}),
+        BrainCommon.NodeAssistLeaderDoAction(self, {
+            action = "CHOP", -- Required.
+            chatterstring = "MERM_TALK_HELP_CHOP_WOOD",
+        }),
 
-        IfThenDoWhileNode(function() return StartMiningCondition(self.inst) end, function() return KeepMiningAction(self.inst) end, "mine",
-            LoopNode{
-                ChattyNode(self.inst, "MERM_TALK_HELP_MINE_ROCK",
-                    DoAction(self.inst, FindRockToMineAction ))}),
+        BrainCommon.NodeAssistLeaderDoAction(self, {
+            action = "MINE", -- Required.
+            chatterstring = "MERM_TALK_HELP_MINE_ROCK",
+        }),
 
         ChattyNode(self.inst, "MERM_TALK_FOLLOWWILSON",
 		  Follow(self.inst, function() return self.inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST)),
