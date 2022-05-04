@@ -1310,7 +1310,7 @@ function PlayerController:GetAttackTarget(force_attack, force_target, isretarget
         return
     end
 
-    if isretarget and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
+    if isretarget and force_target and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
         return force_target
     end
 
