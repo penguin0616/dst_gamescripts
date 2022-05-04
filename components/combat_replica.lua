@@ -195,10 +195,7 @@ function Combat:LocomotorCanAttack(reached_dest, target)
         local range = math.max(0, target:GetPhysicsRadius(0) + self:GetAttackRangeWithWeapon() - .5)
         reached_dest = reached_dest or distsq(target:GetPosition(), self.inst:GetPosition()) <= range * range
 
-        local in_cooldown = self:InCooldown()
-
         local valid = self.classified.canattack:value()
-            and not in_cooldown
             and (   self.inst.sg == nil or
                     not self.inst.sg:HasStateTag("busy") or
                     self.inst.sg:HasStateTag("hit")
@@ -225,7 +222,7 @@ function Combat:LocomotorCanAttack(reached_dest, target)
             end
         end
 
-        return reached_dest, not valid, in_cooldown
+        return reached_dest, not valid, self:InCooldown()
     else
         return reached_dest, true, false
     end

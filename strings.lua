@@ -6258,7 +6258,16 @@ STRINGS.UI =
             "Yan Fisch",
             "Marcus Lo",
             "Jordan Krahn",
-			"Daniel MacGregor",
+            "Daniel MacGregor",
+            "Anita Ho",
+            "Janis Osenenko",
+            "Dave Downes",
+            "Sun Chung",
+            "Andrea Alcaraz",
+            "Ian Bartolo",
+            "Emmett Hall",
+            "Margaret Lu",
+            "Kial Natale",
         },
 
         ALTGAMES =
@@ -11379,8 +11388,8 @@ STRINGS.UI =
                 [0] = "Unknown",
 
                 --[1000] = "",	-- "Left Mouse Button"
-                [1001] = "\238\136\182",	-- "Right Mouse Button" = L4
-                [1002] = "\238\136\183",	-- "Middle Mouse Button" = L5
+                [1003] = "\238\136\182",	-- "Right Mouse Button" = L4
+                [1004] = "\238\136\183",	-- "Middle Mouse Button" = L5
                 [1005] = "\238\136\184",	-- "Mouse Button 4" = R4
                 [1006] = "\238\136\185",	-- "Mouse Button 5" = R5
 

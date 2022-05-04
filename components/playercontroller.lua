@@ -1310,16 +1310,16 @@ function PlayerController:GetAttackTarget(force_attack, force_target, isretarget
         return
     end
 
+    if isretarget and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
+        return force_target
+    end
+
     if self.inst.sg ~= nil then
         if self.inst.sg:HasStateTag("attack") then
             return
         end
     elseif self.inst:HasTag("attack") then
         return
-    end
-
-    if isretarget and combat:CanHitTarget(force_target) and not IsEntityDead(force_target) and CanEntitySeeTarget(self.inst, force_target) then
-        return force_target
     end
 
     local x, y, z = self.inst.Transform:GetWorldPosition()
@@ -1384,7 +1384,7 @@ function PlayerController:DoAttackButton(retarget)
     --end
 
     local force_attack = TheInput:IsControlPressed(CONTROL_FORCE_ATTACK)
-    local target = self:GetAttackTarget(force_attack, retarget, retarget ~= nil)
+    local target = self:GetAttackTarget(force_attack, retarget, retarget ~= self:GetCombatTarget())
 
     if target == nil then
         --Still need to let the server know our attack button is down
@@ -1419,7 +1419,7 @@ function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
                     self:OnRemoteAttackButton(target, force_attack)
                 end
             else
-                target = self:GetAttackTarget(force_attack, target, target == self.inst.sg.statemem.attacktarget)
+                target = self:GetAttackTarget(force_attack, target, target ~= self:GetCombatTarget())
                 self.attack_buffer = BufferedAction(self.inst, target, ACTIONS.ATTACK, nil, nil, nil, nil, true)
                 self.attack_buffer._predictpos = true
             end
@@ -1928,6 +1928,21 @@ function PlayerController:OnWallUpdate(dt)
     end
 end
 
+function PlayerController:GetCombatRetarget()
+    if self.inst.sg then
+        return self.inst.sg.statemem.retarget
+    elseif self.inst.replica.combat then
+        return self.inst.replica.combat:GetTarget()
+    end
+end
+
+function PlayerController:GetCombatTarget()
+    if self.inst.sg then
+        return self.inst.sg.statemem.attacktarget
+    end
+    return nil
+end
+
 function PlayerController:OnUpdate(dt)
     local isenabled, ishudblocking = self:IsEnabled()
     self.predictionsent = false
@@ -2344,8 +2359,10 @@ function PlayerController:OnUpdate(dt)
         and not (self.directwalking or isbusy)
         and not (self.locomotor ~= nil and self.locomotor.bufferedaction ~= nil and self.locomotor.bufferedaction.action == ACTIONS.CASTAOE) then
         local attack_control = false
+        local currenttarget = self:GetCombatTarget()
+        local retarget = self:GetCombatRetarget()
         if self.inst.sg ~= nil then
-            attack_control = not self.inst.sg:HasStateTag("attack")
+            attack_control = not self.inst.sg:HasStateTag("attack") or currenttarget ~= retarget
         else
             attack_control = not self.inst:HasTag("attack")
         end
@@ -2356,18 +2373,11 @@ function PlayerController:OnUpdate(dt)
                     (self:IsControlPressed(CONTROL_CONTROLLER_ATTACK) and not self:IsAOETargeting() and CONTROL_CONTROLLER_ATTACK))
                 or nil
             if attack_control ~= nil then
-                --Check for chain attacking first
-                local retarget = nil
-                if self.inst.sg ~= nil then
-                    retarget = self.inst.sg.statemem.attacktarget
-                elseif self.inst.replica.combat ~= nil then
-                    retarget = self.inst.replica.combat:GetTarget()
-                end
                 if retarget and not IsEntityDead(retarget) and CanEntitySeeTarget(self.inst, retarget) then
                     --Handle chain attacking
                     if self.inst.sg ~= nil then
                         if self.handler == nil then
-                            retarget = self:GetAttackTarget(false, retarget, true)
+                            retarget = self:GetAttackTarget(false, retarget, retarget ~= currenttarget)
                             if retarget ~= nil then
                                 self.locomotor:PushAction(BufferedAction(self.inst, retarget, ACTIONS.ATTACK), true)
                             end
@@ -3295,6 +3305,10 @@ function PlayerController:DoAction(buffaction)
         return
     end
 
+    if buffaction.action == ACTIONS.ATTACK and self.inst.sg then
+        self.inst.sg.statemem.retarget = buffaction.target
+    end
+
     if self.handler ~= nil and buffaction.target ~= nil then
         local highlight_guy = buffaction.target.highlightforward or buffaction.target
         if highlight_guy.components.highlight == nil then
@@ -3410,6 +3424,7 @@ function PlayerController:OnLeftClick(down)
         end
     elseif act.action == ACTIONS.ATTACK then
         if self.inst.sg ~= nil then
+            self.inst.sg.statemem.retarget = act.target
             if self.inst.sg:HasStateTag("attack") and act.target == self.inst.replica.combat:GetTarget() then
                 return
             end

@@ -3215,7 +3215,8 @@ local states =
             if buffaction ~= nil then
 				if buffaction.target ~= nil and buffaction.target:IsValid() then
 					inst:ForceFacePoint(buffaction.target:GetPosition())
-	                inst.sg.statemem.attacktarget = buffaction.target -- this is to allow repeat shooting at the same target
+	                inst.sg.statemem.attacktarget = buffaction.target
+                    inst.sg.statemem.retarget = buffaction.target
 				end
 
                 inst:PerformPreviewBufferedAction()
@@ -3503,6 +3504,7 @@ local states =
                 if buffaction.target ~= nil and buffaction.target:IsValid() then
                     inst:FacePoint(buffaction.target:GetPosition())
                     inst.sg.statemem.attacktarget = buffaction.target
+                    inst.sg.statemem.retarget = buffaction.target
                 end
             end
 
@@ -3648,6 +3650,7 @@ local states =
                 if buffaction.target ~= nil and buffaction.target:IsValid() then
                     inst:FacePoint(buffaction.target:GetPosition())
                     inst.sg.statemem.attacktarget = buffaction.target
+                    inst.sg.statemem.retarget = buffaction.target
                 end
             end
         end,
@@ -3714,6 +3717,7 @@ local states =
                 if buffaction.target ~= nil and buffaction.target:IsValid() then
                     inst:FacePoint(buffaction.target:GetPosition())
                     inst.sg.statemem.attacktarget = buffaction.target
+                    inst.sg.statemem.retarget = buffaction.target
                 end
             end
 

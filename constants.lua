@@ -987,7 +987,8 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_FE"
+    --"dontstarve/music/music_FE"
+    "dontstarve/music/music_FE_WX"
     --"dontstarve/music/music_moonstorm_FE"
     --"dontstarve/music/music_FE_webber"
     --"dontstarve/music/music_FE_wanda"

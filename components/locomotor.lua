@@ -1062,10 +1062,10 @@ function LocoMotor:OnUpdate(dt)
 
         if invalid then
             self:Stop()
-            if not in_cooldown then
-                self:Clear()
-            end
+            self:Clear()
         elseif reached_dest then
+        	--I think this is fine? we might need to make OnUpdateFinish() function that we can run to finish up the OnUpdate so we don't duplicate code
+            if in_cooldown then return end
             --Print(VERBOSITY.DEBUG, "REACH DEST")
             self.inst:PushEvent("onreachdestination", { target = self.dest.inst, pos = Point(destpos_x, destpos_y, destpos_z) })
             if self.atdestfn ~= nil then
@@ -1255,7 +1255,6 @@ function LocoMotor:OnUpdate(dt)
             if (not can_hop and my_platform == nil and target_platform == nil and not self.inst.sg:HasStateTag("jumping")) and self.inst.components.drownable ~= nil and self.inst.components.drownable:ShouldDrown() then
                 self.inst:PushEvent("onsink")
             end
-
         else
             local speed_mult = self:GetSpeedMultiplier()
             local desired_speed = self.isrunning and self:RunSpeed() or self.walkspeed

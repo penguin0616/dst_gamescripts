@@ -2411,8 +2411,8 @@ local states =
 			if inst.sg.mem.queuetalk_timeout ~= nil then
 				local raminging_talk_time = inst.sg.mem.queuetalk_timeout - GetTime()
 				inst.sg.mem.queuetalk_timeout = nil
-				if not inst:HasTag("ignoretalking") then
-					if raminging_talk_time > 0.75 then
+				if not inst:HasTag("ignoretalking") and not pushanim then
+					if raminging_talk_time > 1 then
 						if not inst:HasTag("mime") then
 							inst.sg:GoToState("talk")
 							return
@@ -4516,13 +4516,12 @@ local states =
             inst:ClearBufferedAction()
 
             if inst.components.rider:IsRiding() then
-                inst.sg.statemem.talking = true
-                inst.AnimState:PlayAnimation("dial_loop")
                 DoTalkSound(inst)
-                inst.sg:SetTimeout(1.5 + math.random() * .5)
+                inst.AnimState:PlayAnimation("dial_loop")
             else
+                DoTalkSound(inst)
                 inst.AnimState:PlayAnimation(inst.components.inventory:IsHeavyLifting() and "heavy_refuseeat" or "refuseeat")
-                inst.sg:SetTimeout(22 * FRAMES)
+				inst.sg:SetTimeout(60 * FRAMES)
             end
 
             if inst.components.playercontroller ~= nil then
@@ -4533,16 +4532,23 @@ local states =
         timeline =
         {
             TimeEvent(22 * FRAMES, function(inst)
-                if inst.sg.statemem.talking then
-                    inst.sg:RemoveStateTag("busy")
-                    inst.sg:RemoveStateTag("pausepredict")
-                end
+                inst.sg:RemoveStateTag("busy")
+                inst.sg:RemoveStateTag("pausepredict")
             end),
         },
 
         ontimeout = function(inst)
-            inst.sg:GoToState("idle", true)
+			StopTalkSound(inst)
         end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
 
         onexit = StopTalkSound,
     },
@@ -7045,6 +7051,7 @@ local states =
             if target ~= nil and target:IsValid() then
                 inst:FacePoint(target.Transform:GetWorldPosition())
                 inst.sg.statemem.attacktarget = target
+                inst.sg.statemem.retarget = target
             end
 
             if (equip ~= nil and equip.projectiledelay or 0) > 0 then
@@ -7143,6 +7150,7 @@ local states =
             if target ~= nil and target:IsValid() then
                 inst:FacePoint(target.Transform:GetWorldPosition())
                 inst.sg.statemem.attacktarget = target
+                inst.sg.statemem.retarget = target
             end
         end,
 
@@ -7393,6 +7401,7 @@ local states =
                 if target:IsValid() then
                     inst:FacePoint(target:GetPosition())
                     inst.sg.statemem.attacktarget = target
+                    inst.sg.statemem.retarget = target
                 end
             end
         end,
@@ -12000,7 +12009,8 @@ local states =
             local target = buffaction ~= nil and buffaction.target or nil
             if target ~= nil and target:IsValid() then
 	            inst:ForceFacePoint(target.Transform:GetWorldPosition())
-	            inst.sg.statemem.attacktarget = target -- this is to allow repeat shooting at the same target
+	            inst.sg.statemem.attacktarget = target
+                inst.sg.statemem.retarget = target
 			end
 
 			inst.sg.statemem.abouttoattack = true
