@@ -6258,7 +6258,18 @@ STRINGS.UI =
             "Yan Fisch",
             "Marcus Lo",
             "Jordan Krahn",
-			"Daniel MacGregor",
+            "Daniel MacGregor",
+            "Anita Ho",
+            "Janis Osenenko",
+            "Dave Downes",
+            "Sun Chung",
+            "Andrea Alcaraz",
+            "Ian Bartolo",
+            "Emmett Hall",
+            "Margaret Lu",
+            "Kial Natale",
+            "Daniel Yu",
+            "Elaine Chen"
         },
 
         ALTGAMES =
@@ -7987,9 +7998,11 @@ STRINGS.UI =
     {
         WHISPER = "whisper:",
         SAY = "say:",
+		STEAMDECK_MSG_PROMPT = "Message:",
         WHISPER_DESIGNATOR = "[W]",
         HELP_WHISPER = "Whisper",
         HELP_SAY = "Say",
+		HELP_OPEN_VIRTUAL_KEYBOARD = "Open Keyboard",
     },
 
     USERCOMMANDS =
@@ -11378,12 +11391,6 @@ STRINGS.UI =
             {
                 [0] = "Unknown",
 
-                --[1000] = "",	-- "Left Mouse Button"
-                [1001] = "\238\136\182",	-- "Right Mouse Button" = L4
-                [1002] = "\238\136\183",	-- "Middle Mouse Button" = L5
-                [1005] = "\238\136\184",	-- "Mouse Button 4" = R4
-                [1006] = "\238\136\185",	-- "Mouse Button 5" = R5
-
                 -- Digital
                 "\238\136\173", --"DPad Up"
                 "\238\136\170", --"DPad Down"
@@ -11413,6 +11420,17 @@ STRINGS.UI =
                 "\238\136\166", --"Left Trigger",
                 "\238\136\169", --"Right Trigger",
                 "\238\136\169", --"Right Trigger",
+
+                --[1000] = "",	-- "Left Mouse Button"
+                --[1003] = "\238\136\182",	-- "Right Mouse Button" = L4
+                --[1004] = "\238\136\183",	-- "Middle Mouse Button" = L5
+                --[1005] = "\238\136\184",	-- "Mouse Button 4" = R4
+                --[1006] = "\238\136\185",	-- "Mouse Button 5" = R5
+
+                [282] = "\238\136\182",	-- "F1" = L4
+                [283] = "\238\136\183",	-- "F2" = L5
+                [284] = "\238\136\184",	-- "Mouse Button 4" = R4
+                [285] = "\238\136\185",	-- "Mouse Button 5" = R5
 
             },
         },

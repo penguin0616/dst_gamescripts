@@ -2531,7 +2531,6 @@ local states =
 
             if target ~= nil and target:IsValid() then
                 inst:FacePoint(target.Transform:GetWorldPosition())
-                inst.sg.statemem.attacktarget = target
             end
         end,
 
@@ -2581,7 +2580,6 @@ local states =
 
             if target ~= nil and target:IsValid() then
                 inst:FacePoint(target.Transform:GetWorldPosition())
-                inst.sg.statemem.attacktarget = target
             end
         end,
 

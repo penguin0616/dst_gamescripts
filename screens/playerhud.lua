@@ -998,6 +998,17 @@ function PlayerHud:OnControl(control, down)
         elseif control == CONTROL_TOGGLE_PLAYER_STATUS then
             self:ShowPlayerStatusScreen(true)
             return true
+		elseif control == CONTROL_TOGGLE_SAY then
+			TheFrontEnd:PushScreen(ChatInputScreen(false))
+			return true
+		elseif control == CONTROL_TOGGLE_WHISPER then
+			TheFrontEnd:PushScreen(ChatInputScreen(true))
+			return true
+		elseif control == CONTROL_TOGGLE_SLASH_COMMAND then
+			local chat_input_screen = ChatInputScreen(false)
+			chat_input_screen.chat_edit:SetString("/")
+			TheFrontEnd:PushScreen(chat_input_screen)
+			return true
         end
     elseif control == CONTROL_SHOW_PLAYER_STATUS then
         if not self:IsPlayerAvatarPopUpOpen() or self.playeravatarpopup.settled then
@@ -1029,17 +1040,6 @@ function PlayerHud:OnControl(control, down)
             self:OpenControllerInventory()
             return true
         end
-    elseif control == CONTROL_TOGGLE_SAY then
-        TheFrontEnd:PushScreen(ChatInputScreen(false))
-        return true
-    elseif control == CONTROL_TOGGLE_WHISPER then
-        TheFrontEnd:PushScreen(ChatInputScreen(true))
-        return true
-    elseif control == CONTROL_TOGGLE_SLASH_COMMAND then
-        local chat_input_screen = ChatInputScreen(false)
-        chat_input_screen.chat_edit:SetString("/")
-        TheFrontEnd:PushScreen(chat_input_screen)
-        return true
     elseif control >= CONTROL_INV_1 and control <= CONTROL_INV_10 then
         --inventory hotkeys
         local inventory = self.owner.replica.inventory

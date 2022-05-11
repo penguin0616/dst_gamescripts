@@ -26,6 +26,27 @@ local function resolvefaderate(x)
         or INTENSITY * FRAMES / ((32 - x) / 31 - .75)
 end
 
+local function cancelworktask(inst)
+    if inst._disableworktask ~= nil then
+        inst._disableworktask:Cancel()
+        inst._disableworktask = nil
+    end
+end
+
+local function disableworkcb(inst)
+    inst.components.workable:SetWorkable(false)
+end
+
+local function disablework(inst)
+    cancelworktask(inst)
+    inst._disableworktask = inst:DoTaskInTime(1.5 + math.random(), disableworkcb)
+end
+
+local function enablework(inst)
+    cancelworktask(inst)
+    inst.components.workable:SetWorkable(true)
+end
+
 local function updatefade(inst, rate)
     inst._fadeval:set_local(math.clamp(inst._fadeval:value() + rate, 0, INTENSITY))
 
@@ -39,7 +60,7 @@ local function updatefade(inst, rate)
         inst._fadetask = nil
         if inst._fadeval:value() <= 0 and TheWorld.ismastersim then
             inst:AddTag("NOCLICK")
-            inst.components.workable:SetWorkable(false)
+            disablework(inst)
             inst.Light:Enable(false)
         end
     end
@@ -50,7 +71,7 @@ local function fadein(inst)
     if not ismastersim or resolvefaderate(inst._faderate:value()) <= 0 then
         if ismastersim then
             inst:RemoveTag("NOCLICK")
-            inst.components.workable:SetWorkable(true)
+            enablework(inst)
             inst.Light:Enable(true)
             inst.AnimState:PlayAnimation("swarm_pre")
             inst.AnimState:PushAnimation("swarm_loop", true)

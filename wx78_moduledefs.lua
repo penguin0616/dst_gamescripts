@@ -86,6 +86,7 @@ local MAXSANITY1_MODULE_DATA =
 table.insert(module_definitions, MAXSANITY1_MODULE_DATA)
 
 AddCreatureScanDataDefinition("butterfly", "maxsanity1", 1)
+AddCreatureScanDataDefinition("moonbutterfly", "maxsanity1", 1)
 
 ---------------------------------------------------------------
 local function maxsanity_activate(inst, wx, isloading)

@@ -640,10 +640,7 @@ function Combat:LocomotorCanAttack(reached_dest, target)
     reached_dest = reached_dest or
         (self.ignorehitrange or distsq(target:GetPosition(), self.inst:GetPosition()) <= attackrange)
 
-    local in_cooldown = self:InCooldown()
-
     local valid = self.canattack
-        and not in_cooldown
         and (   self.inst.sg == nil or
                 not self.inst.sg:HasStateTag("busy") or
                 self.inst.sg:HasStateTag("hit")
@@ -670,7 +667,7 @@ function Combat:LocomotorCanAttack(reached_dest, target)
         end
     end
 
-    return reached_dest, not valid, in_cooldown
+    return reached_dest, not valid, self:InCooldown()
 end
 
 function Combat:TryAttack(target)

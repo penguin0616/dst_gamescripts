@@ -777,6 +777,11 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		TheSim:RemapSoundEvent(name, new_name)
 	end
 
+	env.RemoveRemapSoundEvent = function(name) -- Convenience wrapper.
+		initprint("RemoveRemapSoundEvent", name)
+		TheSim:RemapSoundEvent(name) -- Other second parameter values may be nil / "" / the first parameter.
+	end
+
 	env.AddReplicableComponent = function(name)
 		initprint("AddReplicableComponent", name)
 		AddReplicableComponent(name)

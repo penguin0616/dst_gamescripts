@@ -94,7 +94,20 @@ function SimBreakPoint()
     end
 end
 
+function DoDebugMouse(button, down,x,y)
+	-- delcaring this here so that it doesn't crash on steam deck, look farther down for the real fucntion
+end
+
+function DoReload()
+    dofile("scripts/reload.lua")
+end
+
 -------------------------------------DEBUG KEYS
+
+if IsSteamDeck() then
+	return
+end
+
 
 local currentlySelected
 global("c_ent")
@@ -1503,10 +1516,6 @@ function DoDebugMouse(button, down,x,y)
         DebugLMB(x,y)
     end
 
-end
-
-function DoReload()
-    dofile("scripts/reload.lua")
 end
 
 ---------------------------------------------------
