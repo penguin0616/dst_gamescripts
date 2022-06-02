@@ -1176,7 +1176,7 @@ local COMPONENT_ACTIONS =
         end,
 
         summoningitem = function(inst, doer, target, actions, right)
-			if not target.inlimbo and target.replica.follower ~= nil and target.replica.follower:GetLeader() == doer and doer:HasTag("ghostfriend_summoned") then
+			if not target.inlimbo and target.replica.follower ~= nil and target.replica.follower:GetLeader() == doer and doer:HasTag("ghostfriend_summoned") and target:HasTag("abigail") then
 				table.insert(actions, ACTIONS.CASTUNSUMMON)
 			end
         end,

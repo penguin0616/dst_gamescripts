@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Just you wait, I'm more spry than I look!",
 
+		CARNIVALGAME_SHOOTING_KIT = "At least they're quick to assemble.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "The mechanism won't work without a token.",
+			PLAYING = "My timing is impeccable, it's my aim that could use some work...",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "It leads down into the game's inner workings.",
+			PLAYING = "Could they not be a bit bigger?",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "The mechanism won't work without a token.",
+			PLAYING = "Buttons are so much more efficient than levers.",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "At least they're quick to assemble.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "The mechanism won't work without a token.",
+			PLAYING = "It's so wonderfully efficient!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "At least they're quick to assemble.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "The mechanism won't work without a token.",
+			PLAYING = "I'm not sure that there's any actual skill involved here.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "At least they're quick to assemble.",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "Ah... I feel a bit better already.",
 		CARNIVALDECOR_PLANT_KIT = "A pocket-sized tree? I'm intrigued.",
 		CARNIVALDECOR_PLANT = "I guess some trees can be interesting to look at after all.",
+		CARNIVALDECOR_BANNER_KIT = "Oh, I suppose I have a moment or two to spare.",
+		CARNIVALDECOR_BANNER = "It's quite mesmerizing to watch.",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "I feel as though I've seen it a few times before.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "I couldn't help it, I looked ahead and took a peek...",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "I couldn't help it, I looked ahead and took a peek...",
 
         CARNIVAL_BALL = "A colorful child's toy.", --unimplemented
 		CARNIVAL_SEEDPACKET = "A little snack to keep in my pocket.",

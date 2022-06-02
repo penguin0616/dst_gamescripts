@@ -125,6 +125,8 @@ local MainSounds =
 
 	"summerevent.fev",
 	"summerevent.fsb",
+	"summerevent2022.fev",
+	"summerevent2022.fsb",
 	"summerevent_music.fsb",
 
 	"webber2.fev",

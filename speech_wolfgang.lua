@@ -4045,6 +4045,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Come back egg!",
 
+		CARNIVALGAME_SHOOTING_KIT = "Ah... reminds Wolfgang of circus days.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "Is needing token first.",
+			PLAYING = "Wolfgang will help mighty bird mama protect nest!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "Little bird door.",
+			PLAYING = "Wolfgang does not like bugs.",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "Is needing token first.",
+			PLAYING = "Is button for punching!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "Ah... reminds Wolfgang of circus days.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "Is needing token first.",
+			PLAYING = "Haha! Wolfgang is master of spinny wheel game!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "Ah... reminds Wolfgang of circus days.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "Is needing token first.",
+			PLAYING = "Is cheating to pick up machine and shake little ball into right place?",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "Don't worry birdies, Wolfgang will build it!",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4073,6 +4105,8 @@ return{
 		CARNIVALDECOR_LAMP = "Makes tiny, pretty light.",
 		CARNIVALDECOR_PLANT_KIT = "Ha! Is tiny and easy to make.",
 		CARNIVALDECOR_PLANT = "Wolfgang could snap trunk like toothpick!",
+		CARNIVALDECOR_BANNER_KIT = "Ha! Is tiny and easy to make.",
+		CARNIVALDECOR_BANNER = "Is catching light? Wolfgang hopes it will share.",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4081,6 +4115,7 @@ return{
 			GENERIC = "Ah, is tiny statue!",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "What is in tiny secret box?",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "What is in tiny secret box?",
 
         CARNIVAL_BALL = "Reminds Wolfgang of childhood.", --unimplemented
 		CARNIVAL_SEEDPACKET = "Bird snack.",

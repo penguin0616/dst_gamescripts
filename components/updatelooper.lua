@@ -21,10 +21,12 @@ function UpdateLooper:AddOnUpdateFn(fn)
 end
 
 function UpdateLooper:RemoveOnUpdateFn(fn)
-    if not self.OnUpdatesToRemove then
-        self.OnUpdatesToRemove = {}
-    end
-    table.insert(self.OnUpdatesToRemove,fn)
+	if #self.onupdatefns > 0 then
+		if not self.OnUpdatesToRemove then
+			self.OnUpdatesToRemove = {}
+		end
+		table.insert(self.OnUpdatesToRemove,fn)
+	end
 end
 
 function UpdateLooper:AddLongUpdateFn(fn)
@@ -32,10 +34,12 @@ function UpdateLooper:AddLongUpdateFn(fn)
 end
 
 function UpdateLooper:RemoveLongUpdateFn(fn)
-    if not self.OnLongUpdatesToRemove then
-        self.OnLongUpdatesToRemove = {}
-    end
-    table.insert(self.OnLongUpdatesToRemove,fn)
+	if #self.longupdatefns > 0 then
+		if not self.OnLongUpdatesToRemove then
+			self.OnLongUpdatesToRemove = {}
+		end
+		table.insert(self.OnLongUpdatesToRemove,fn)
+	end
 end
 
 function UpdateLooper:OnUpdate(dt)
@@ -77,10 +81,12 @@ function UpdateLooper:AddOnWallUpdateFn(fn)
 end
 
 function UpdateLooper:RemoveOnWallUpdateFn(fn)
-    if not self.OnWallUpdatesToRemove then
-        self.OnWallUpdatesToRemove = {}
-    end
-    table.insert(self.OnWallUpdatesToRemove,fn)
+	if #self.onwallupdatefns > 0 then
+		if not self.OnWallUpdatesToRemove then
+			self.OnWallUpdatesToRemove = {}
+		end
+		table.insert(self.OnWallUpdatesToRemove, fn)
+	end
 end
 
 function UpdateLooper:OnWallUpdate(dt)

@@ -4048,6 +4048,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "You can't outrun the inevitable.",
 
+		CARNIVALGAME_SHOOTING_KIT = "Can I... help set up the carnival?",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "I think... I'd like to try to play...",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "It's a little door.",
+			PLAYING = "They were created only to suffer.",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "What a pretty button.",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "Can I... help set up the carnival?",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "Oh... I think I'm doing... well?",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "Can I... help set up the carnival?",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "It wants something first... something shiny.",
+			PLAYING = "The outcome is as unpredictable as life itself.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "I wonder what kind of prizes they have...",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4076,6 +4108,8 @@ return{
 		CARNIVALDECOR_LAMP = "It can't hold back the darkness forever.",
 		CARNIVALDECOR_PLANT_KIT = "I suppose I should try to be useful...",
 		CARNIVALDECOR_PLANT = "A small reminder of... a nice day.",
+		CARNIVALDECOR_BANNER_KIT = "I suppose I should try to be useful...",
+		CARNIVALDECOR_BANNER = "Such a simple thing, but somehow watching it makes my heart lighter.",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4084,6 +4118,7 @@ return{
 			GENERIC = "Oh. It's a little wooden statue.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "What secrets does it hide?",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "What secrets does it hide?",
 
         CARNIVAL_BALL = "Won't you play with me, Abigail?", --unimplemented
 		CARNIVAL_SEEDPACKET = "It tastes like disappointment.",

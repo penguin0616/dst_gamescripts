@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Try to flee all you want, you will not escape me!",
 
+		CARNIVALGAME_SHOOTING_KIT = "It will be built with utmost speed.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "It requires a token to prove my worthiness.",
+			PLAYING = "A test of marksmanship!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "'Tis not a door for a warrior of my size.",
+			PLAYING = "Prepare to be slain!",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "It requires a token to prove my worthiness.",
+			PLAYING = "Fire at will!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "It will be built with utmost speed.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "It requires a token to prove my worthiness.",
+			PLAYING = "All of the spoils without the challenge.",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "It will be built with utmost speed.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "It requires a token to prove my worthiness.",
+			PLAYING = "The little ball must be possessed by some mischievous spirit.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "I must construct it before my efforts can be rewarded.",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "It hath a feeling of magic about it.",
 		CARNIVALDECOR_PLANT_KIT = "It shall be done at once.",
 		CARNIVALDECOR_PLANT = "What use is a tree of such small stature?",
+		CARNIVALDECOR_BANNER_KIT = "It shall be done at once.",
+		CARNIVALDECOR_BANNER = "Alas, 'tis naught but fool's gold.",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "A wooden idol to remind me of this day!",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "A box of mystery.",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "A box of mystery.",
 
         CARNIVAL_BALL = "This may be useful for testing my companions' reflexes.", --unimplemented
 		CARNIVAL_SEEDPACKET = "'Tis food for birds, not Vikings.",

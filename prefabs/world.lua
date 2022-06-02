@@ -7,8 +7,6 @@ local assets =
     Asset("SOUND", "sound/sanity.fsb"),
     Asset("SOUND", "sound/amb_stream.fsb"),
     Asset("SHADER", "shaders/uifade.ksh"),
-    -- Asset("ATLAS", "images/selectscreen_portraits.xml"), -- Not currently used, but likely to come back
-    -- Asset("IMAGE", "images/selectscreen_portraits.tex"), -- Not currently used, but likely to come back
     Asset("DYNAMIC_ATLAS", "bigportraits/locked.xml"),
     Asset("PKGREF", "bigportraits/locked.tex"),
 

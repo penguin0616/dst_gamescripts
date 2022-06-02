@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Go to the center, please!",
 
+		CARNIVALGAME_SHOOTING_KIT = "I'll have that up in a jiffy!",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "I think it wants me to give it a token.",
+			PLAYING = "All that slingshot practice should come in handy!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "I'd sure love to see what's down there.",
+			PLAYING = "I wonder what kind of bug that is?",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "I think it wants me to give it a token.",
+			PLAYING = "I just need to hit it at the right time...",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "I'll have that up in a jiffy!",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "I think it wants me to give it a token.",
+			PLAYING = "It almost feels too easy.",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "I'll have that up in a jiffy!",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "I think it wants me to give it a token.",
+			PLAYING = "I saw a marble game once back home, I always wanted to try it!",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "I'll have this set up right away!",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "Do you think it's powered by magic?",
 		CARNIVALDECOR_PLANT_KIT = "I'll have that up in a jiffy!",
 		CARNIVALDECOR_PLANT = "I'm going to take good care of it!",
+		CARNIVALDECOR_BANNER_KIT = "I'll have that up in a jiffy!",
+		CARNIVALDECOR_BANNER = "Wait a minute... I think it's made with cardboard and foil!",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "Neat! I love collecting things!",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "The suspense is killing me!",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "The suspense is killing me!",
 
         CARNIVAL_BALL = "Get the ball Woby! Uh... I guess we'll work on that later.", --unimplemented
 		CARNIVAL_SEEDPACKET = "I guess it's sort of like trail mix. Sort of.",

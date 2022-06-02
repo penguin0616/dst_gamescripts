@@ -1184,6 +1184,21 @@ MISC_ITEMS =
 		output_items = {  "farm_hoe_rustic", "wateringcan_rustic", "seedpouch_rustic", },
 		release_group = 120,
 	},
+	pack_cawnival_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		steam_dlc_id = 2007370,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_cawnival_items.xml",
+		display_tex = "cawnival_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "mushroom_light2_cawnival", "reflectivevest_cawnival", "siestahut_cawnival", "walrushat_cawnival", "bundle_cawnival", "bushhat_cawnival", "hivehat_cawnival", },
+		output_items = {  "mushroom_light2_cawnival", "reflectivevest_cawnival", "siestahut_cawnival", "walrushat_cawnival", "bundle_cawnival", "bushhat_cawnival", "hivehat_cawnival", },
+		release_group = 132,
+	},
 	pack_character_wanda =
 	{
 		type = "purchase",
@@ -4913,6 +4928,13 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 43,
 	},
+	playerportrait_bg_anchornautical =
+	{
+		type = "playerportrait",
+		skin_tags = { "NAUTICAL", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 132,
+	},
 	playerportrait_bg_arrowsignpostcircus =
 	{
 		type = "playerportrait",
@@ -5773,6 +5795,13 @@ MISC_ITEMS =
 		rarity = "Common",
 		rarity_modifier = "Woven",
 		release_group = 32,
+	},
+	profileflair_anchor_nautical =
+	{
+		type = "profileflair",
+		skin_tags = { "NAUTICAL", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 132,
 	},
 	profileflair_arrowsignpost_circus =
 	{

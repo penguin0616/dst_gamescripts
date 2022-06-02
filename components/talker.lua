@@ -60,7 +60,7 @@ function Talker:MakeChatter()
         self.chatter =
         {
             strtbl = net_string(self.inst.GUID, "talker.chatter.strtbl", "chatterdirty"),
-            strid = net_tinybyte(self.inst.GUID, "talker.chatter.strid", "chatterdirty"),
+            strid = net_smallbyte(self.inst.GUID, "talker.chatter.strid", "chatterdirty"),
             strtime = net_tinybyte(self.inst.GUID, "talker.chatter.strtime"),
             forcetext = net_bool(self.inst.GUID, "talker.chatter.forcetext"),
         }

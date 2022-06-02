@@ -26,6 +26,7 @@ local function OnWork(inst, worker, workleft)
         local pt = inst:GetPosition()
         
         local fx = SpawnPrefab("ruins_cavein_obstacle_rubble_fx")
+        fx.AnimState:SetMultColour(inst.AnimState:GetMultColour())
         fx.Transform:SetPosition(pt:Get())
 
         if inst.version and (inst.version == 1 or inst.version == 3 ) then

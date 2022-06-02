@@ -35,8 +35,8 @@ end
 
 --------------------------------------------------------------------------
 
-local function IsValidVictim(victim)
-    return wortox_soul_common.HasSoul(victim) and victim.components.health:IsDead()
+local function IsValidVictim(victim, explosive)
+    return wortox_soul_common.HasSoul(victim) and (victim.components.health:IsDead() or explosive)
 end
 
 local function OnRestoreSoul(victim)
@@ -81,7 +81,7 @@ local function OnEntityDropLoot(inst, data)
         victim:IsValid() and
         (   victim == inst or
             (   not inst.components.health:IsDead() and
-                IsValidVictim(victim) and
+                IsValidVictim(victim, data.explosive) and
                 inst:IsNear(victim, TUNING.WORTOX_SOULEXTRACT_RANGE)
             )
         ) then
@@ -92,7 +92,8 @@ local function OnEntityDropLoot(inst, data)
 end
 
 local function OnEntityDeath(inst, data)
-    if data.inst ~= nil and data.inst.components.lootdropper == nil then
+    -- NOTES(JBK): Explosive entities do not drop loot.
+    if data.inst ~= nil and (data.inst.components.lootdropper == nil or data.explosive) then
         OnEntityDropLoot(inst, data)
     end
 end

@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Grrr, no run away egg!",
 
+		CARNIVALGAME_SHOOTING_KIT = "It not look so hard to make, flort.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "Won't play without shiny thing...",
+			PLAYING = "Never seen Birdfolk do that before.",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "Where that go, florp?",
+			PLAYING = "Hee-hee, bugs go smash!",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "Won't play without shiny thing...",
+			PLAYING = "It mine!! Me press button!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "It not look so hard to make, flort.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "Won't play without shiny thing...",
+			PLAYING = "Mermfolk really good at games.",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "It not look so hard to make, flort.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "Won't play without shiny thing...",
+			PLAYING = "Not allowed to take little ball? But it look fun to play with!",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "Want prizes!",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "How little light ball float like that?",
 		CARNIVALDECOR_PLANT_KIT = "Where put little tree?",
 		CARNIVALDECOR_PLANT = "How tree stay so small?",
+		CARNIVALDECOR_BANNER_KIT = "Gonna build it real good, florp!",
+		CARNIVALDECOR_BANNER = "So shinyyyy...",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "Can eat it? No? Aww...",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Open up!",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Open up!",
 
         CARNIVAL_BALL = "Mine!! Hee-hee-hee!", --unimplemented
 		CARNIVAL_SEEDPACKET = "Mmmm, crunchy snack.",

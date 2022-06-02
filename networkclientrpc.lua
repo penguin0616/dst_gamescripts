@@ -564,7 +564,7 @@ local RPC_HANDLERS =
         local inventory = player.components.inventory
         if inventory ~= nil then
             if container == nil then
-                inventory:SwapOneOfActiveItemWithSlot(slot)
+                --inventory:SwapOneOfActiveItemWithSlot(slot) -- TODO: Make this!
             else
                 container = container.components.container
                 if container ~= nil and container:IsOpenedBy(player) then

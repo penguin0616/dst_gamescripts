@@ -274,6 +274,12 @@ armor_sanity_clear_fn = function(inst) basic_clear_fn(inst, "armor_sanity" ) end
 armorskeleton_init_fn =  function(inst, build_name) basic_init_fn( inst, build_name, "armor_skeleton" ) end
 armorskeleton_clear_fn = function(inst) basic_clear_fn(inst, "armor_skeleton" ) end
 
+reflectivevest_init_fn =  function(inst, build_name) basic_init_fn( inst, build_name, "torso_reflective" ) end
+reflectivevest_clear_fn = function(inst) basic_clear_fn(inst, "torso_reflective" ) end
+
+hivehat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_hive" ) end
+hivehat_clear_fn = function(inst) basic_clear_fn(inst, "hat_hive" ) end
+
 tophat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_top" ) end
 tophat_clear_fn = function(inst) basic_clear_fn(inst, "hat_top" ) end
 
@@ -491,6 +497,86 @@ wormhole_clear_fn = function(inst)
     basic_clear_fn(inst, "teleporter_worm_build" )
     inst.MiniMapEntity:SetIcon("wormhole.png")
 end
+
+
+
+--------------------------------------------------------------------------
+--[[ siesta hut skin functions ]]
+--------------------------------------------------------------------------
+siestahut_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "siesta_canopy" )
+
+    if not inst.components.placer then
+        local skin_fx = SKIN_FX_PREFAB[build_name] --build_name is prefab name for siesta hut
+        if skin_fx ~= nil then
+            inst.vfx_fx = skin_fx[1] ~= nil and skin_fx[1]:len() > 0 and skin_fx[1] or nil
+            if inst.vfx_fx ~= nil then
+                inst:DoTaskInTime( 1 + math.random() * 1.2, function()
+                    inst._vfx_fx_inst = SpawnPrefab(inst.vfx_fx)
+                    inst._vfx_fx_inst.entity:AddFollower()
+                    inst._vfx_fx_inst.entity:SetParent(inst.entity)
+                    inst._vfx_fx_inst.Follower:FollowSymbol(inst.GUID, "siesta_canopy_shadow", -125, -75, 0)
+                end)
+            end
+        end
+    end
+end
+siestahut_clear_fn = function(inst)
+    basic_clear_fn(inst, "siesta_canopy" )
+
+    if inst._vfx_fx_inst ~= nil then
+        inst._vfx_fx_inst:Remove()
+        inst._vfx_fx_inst = nil
+    end
+end
+
+
+--------------------------------------------------------------------------
+--[[ bushhat skin functions ]]
+--------------------------------------------------------------------------
+local function bushhat_equipped(inst, data)
+    if inst.vfx_fx ~= nil then
+        if inst._vfx_fx_inst == nil then
+            inst._vfx_fx_inst = SpawnPrefab(inst.vfx_fx)
+            inst._vfx_fx_inst.entity:AddFollower()
+            inst._vfx_fx_inst.entity:SetParent(data.owner.entity)
+            inst._vfx_fx_inst.Follower:FollowSymbol(data.owner.GUID, "swap_hat", 0, -55, 0)
+        end
+    end
+end
+
+local function bushhat_unequipped(inst, owner)
+    if inst._vfx_fx_inst ~= nil then
+        inst._vfx_fx_inst:Remove()
+        inst._vfx_fx_inst = nil
+    end
+end
+
+function bushhat_init_fn(inst, build_name)
+    if not TheWorld.ismastersim then
+        return
+    end
+
+    basic_init_fn( inst, build_name, "hat_bush" )
+
+    local skin_fx = SKIN_FX_PREFAB[build_name] --build_name is prefab name for bushhat
+    if skin_fx ~= nil then
+        inst.vfx_fx = skin_fx[1] ~= nil and skin_fx[1]:len() > 0 and skin_fx[1] or nil
+        if inst.vfx_fx ~= nil then
+            inst:ListenForEvent("equipped", bushhat_equipped)
+            inst:ListenForEvent("unequipped", bushhat_unequipped)
+            inst:ListenForEvent("onremove", bushhat_unequipped)
+        end
+    end
+end
+function bushhat_clear_fn(inst)
+    basic_clear_fn(inst, "hat_bush" )
+
+    inst:RemoveEventCallback("equipped", bushhat_equipped)
+    inst:RemoveEventCallback("unequipped", bushhat_unequipped)
+    inst:RemoveEventCallback("onremove", bushhat_unequipped)
+end
+
 
 --------------------------------------------------------------------------
 --[[ Lureplant skin functions ]]
@@ -1052,6 +1138,28 @@ function minisign_clear_fn(inst)
     inst.AnimState:SetBuild("sign_mini")
 end
 
+--------------------------------------------------------------------------
+--[[ boat skin functions ]]
+--------------------------------------------------------------------------
+function boat_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "seafarer_boat") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function boat_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("seafarer_boat")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function boat_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "boat_test")
+end
+function boat_clear_fn(inst)
+    inst.AnimState:SetBuild("boat_test")
+end
 
 --------------------------------------------------------------------------
 --[[ steeringwheel skin functions ]]
@@ -1076,6 +1184,29 @@ function steeringwheel_clear_fn(inst)
     inst.AnimState:SetBuild("boat_wheel")
 end
 
+
+--------------------------------------------------------------------------
+--[[ anchor skin functions ]]
+--------------------------------------------------------------------------
+function anchor_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "seafarer_anchor") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function anchor_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("seafarer_anchor")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function anchor_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "boat_anchor")
+end
+function anchor_clear_fn(inst)
+    inst.AnimState:SetBuild("boat_anchor")
+end
 
 --------------------------------------------------------------------------
 --[[ mastupgrade_lamp skin functions ]]

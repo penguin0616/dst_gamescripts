@@ -4054,6 +4054,38 @@ return {
 		},
 		CARNIVALGAME_HERDING_CHICK = "Come back here!",
 
+		CARNIVALGAME_SHOOTING_KIT = "This really is a pop-up carnival.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "It won't let me play until I give it something shiny.",
+			PLAYING = "I could calculate the trajectory, but it involves a lot of complicated numbers and squiggles.",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "It's a little trapdoor.",
+			PLAYING = "That target's really starting to bug me.",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "It won't let me play until I give it something shiny.",
+			PLAYING = "Science compels me to press that big shiny button!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "This really is a pop-up carnival.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "It won't let me play until I give it something shiny.",
+			PLAYING = "It turns out that spinning your wheels is actually very productive.",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "This really is a pop-up carnival.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "It won't let me play until I give it something shiny.",
+			PLAYING = "Physics don't always work the same way twice.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "The real prize is the booth we made along the way.",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4082,6 +4114,8 @@ return {
 		CARNIVALDECOR_LAMP = "It's powered by whimsy.",
 		CARNIVALDECOR_PLANT_KIT = "Maybe it's a boxwood?",
 		CARNIVALDECOR_PLANT = "Either it's small, or I'm gigantic.",
+		CARNIVALDECOR_BANNER_KIT = "I have to build it myself? I should have known there'd be a catch.",
+		CARNIVALDECOR_BANNER = "I think all these shiny decorations reflect well on me.",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4090,6 +4124,7 @@ return {
 			GENERIC = "I seem to be getting a lot of these...",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "The thrill of discovery!",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "The thrill of discovery!",
 
         CARNIVAL_BALL = "It's genius in its simplicity.", --unimplemented
 		CARNIVAL_SEEDPACKET = "I was feeling a bit peckish.",

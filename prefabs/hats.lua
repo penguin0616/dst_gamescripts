@@ -757,7 +757,14 @@ local function MakeHat(name)
     end
 
     local function bush_onequip(inst, owner)
-        owner.AnimState:OverrideSymbol("swap_hat", fname, "swap_hat")
+        local skin_build = inst:GetSkinBuild()
+        if skin_build ~= nil then
+            owner:PushEvent("equipskinneditem", inst:GetSkinName())
+            owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, "swap_hat", inst.GUID, fname)
+        else
+            owner.AnimState:OverrideSymbol("swap_hat", fname, "swap_hat")
+        end
+
         owner.AnimState:Show("HAT")
         owner.AnimState:Show("HAIR_HAT")
         owner.AnimState:Hide("HAIR_NOHAT")
@@ -777,6 +784,10 @@ local function MakeHat(name)
 
     local function bush_onunequip(inst, owner)
         owner.AnimState:ClearOverrideSymbol("swap_hat")
+        local skin_build = inst:GetSkinBuild()
+        if skin_build ~= nil then
+            owner:PushEvent("unequipskinneditem", inst:GetSkinName())
+        end
 
         owner.AnimState:Hide("HAT")
         owner.AnimState:Hide("HAIR_HAT")

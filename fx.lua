@@ -1995,6 +1995,13 @@ local fx =
         fn = FinalOffset1,
     },
     {
+        name = "carnivalgame_shooting_projectile_fx",
+        bank = "carnivalgame_shooting_projectile",
+        build = "carnivalgame_shooting_projectile",
+        anim = "fx1",
+        sound = "summerevent/cannon/fire3",
+    },
+    {
         name = "alterguardian_spike_breakfx",
         bank = "alterguardian_spike",
         build = "alterguardian_spike",

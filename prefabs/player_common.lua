@@ -1384,7 +1384,7 @@ local function ApplyAnimScale(inst, source, scale)
 end
 
 --------------------------------------------------------------------------
--- (NOTES)JBK: Used to apply overrides to skins for states on things like Wurt.
+-- NOTES(JBK): Used to apply overrides to skins for states on things like Wurt.
 local function ApplySkinOverrides(inst)
     if inst.CustomSetSkinMode ~= nil then
         inst:CustomSetSkinMode(inst.overrideskinmode or "normal_skin", inst.overrideskinmodebuild)

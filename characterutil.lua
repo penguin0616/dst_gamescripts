@@ -116,7 +116,7 @@ function GetKilledByFromMorgueRow(data)
     local killed_by =
         (data.killed_by == "nil" and (data.character == "waxwell" and "charlie" or "darkness")) or
         (data.killed_by == "unknown" and "shenanigans") or
-        (data.killed_by == "moose" and (math.random() < .5 and "moose1" or "moose2")) or
+        (data.killed_by == "moose" and ((data.morgue_random or math.random()) < .5 and "moose1" or "moose2")) or
         data.killed_by
 
     killed_by = STRINGS.NAMES[string.upper(killed_by)] or STRINGS.NAMES.SHENANIGANS

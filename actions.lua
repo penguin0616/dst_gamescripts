@@ -1447,7 +1447,7 @@ ACTIONS.DRY.fn = function(act)
 end
 
 ACTIONS.ADDFUEL.fn = function(act)
-    if act.doer.components.inventory then
+    if act.doer.components.inventory and act.invobject then
         local fuel = act.doer.components.inventory:RemoveItem(act.invobject)
         if fuel then
             if act.target.components.fueled and act.target.components.fueled:TakeFuelItem(fuel, act.doer) then
@@ -1457,6 +1457,10 @@ ACTIONS.ADDFUEL.fn = function(act)
                 act.doer.components.inventory:GiveItem(fuel)
             end
         end
+	elseif act.doer.components.fueler then
+        if act.target.components.fueled and act.target.components.fueled:TakeFuelItem(nil, act.doer) then
+            return true
+		end
     end
 end
 ACTIONS.ADDWETFUEL.fn = ACTIONS.ADDFUEL.fn
@@ -3078,21 +3082,32 @@ ACTIONS.APPLYPRESERVATIVE.fn = function(act)
 	end
 end
 
-ACTIONS.COMPARE_WEIGHABLE.fn = function(act)
-    local weighable = nil
+local function COMPARE_WEIGHABLE_TEST(target, weighable)
+    for _, v in pairs(TROPHYSCALE_TYPES) do
+        if target:HasTag("trophyscale_"..v) and weighable:HasTag("weighable_"..v) then
+            return true
+        end
+    end
+    return false
+end
 
-    local equipped = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-    if equipped ~= nil and equipped:HasTag("heavy") then
-        weighable = equipped
-    else
-        weighable = act.invobject
+ACTIONS.COMPARE_WEIGHABLE.fn = function(act)
+    local weighable = act.invobject
+
+    if weighable == nil then
+        local equipped = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+        if equipped ~= nil and equipped:HasTag("heavy") then
+            weighable = equipped
+        end
     end
 
 	if act.target ~= nil and weighable ~= nil and
+        weighable.components.weighable ~= nil and
 		act.target.components.trophyscale ~= nil and
 		act.target.components.trophyscale.accepts_items and
 		not act.target:HasTag("fire") and
-		not act.target:HasTag("burnt") then
+		not act.target:HasTag("burnt") and
+        COMPARE_WEIGHABLE_TEST(act.target, weighable) then
 
 		return act.target.components.trophyscale:Compare(weighable, act.doer)
 	end

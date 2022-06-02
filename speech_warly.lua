@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Over here, s'il vous plait!",
 
+		CARNIVALGAME_SHOOTING_KIT = "I'll have it whipped up in no time at all.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "I should feed it something shiny.",
+			PLAYING = "A test of my timing skills, non?",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "A door, tres petite.",
+			PLAYING = "Stay out of the nest... and my soup!",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "I should feed it something shiny.",
+			PLAYING = "Shall I press it now? Or... now?",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "I'll have it whipped up in no time at all.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "I should feed it something shiny.",
+			PLAYING = "I'm quite good at this one!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "I'll have it whipped up in no time at all.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "I should feed it something shiny.",
+			PLAYING = "Oh my, it's a good thing that isn't a real egg.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "All the ingredients are together, now let's get cooking!",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "How pleasant!",
 		CARNIVALDECOR_PLANT_KIT = "I'll have it whipped up in no time at all.",
 		CARNIVALDECOR_PLANT = "Perhaps it will attract normal sized crows?",
+		CARNIVALDECOR_BANNER_KIT = "I'll have it whipped up in no time at all.",
+		CARNIVALDECOR_BANNER = "It adds a lovely atmosphere, non?",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "What a charming figurine.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "I wonder what could be inside?",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "I wonder what could be inside?",
 
         CARNIVAL_BALL = "Perhaps I'll toss it around with the children.", --unimplemented
 		CARNIVAL_SEEDPACKET = "They could use a bit of seasoning.",

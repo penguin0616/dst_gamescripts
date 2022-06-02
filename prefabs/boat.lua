@@ -423,7 +423,7 @@ local function boat_item_collision_fn()
 end
 
 local function ondeploy(inst, pt, deployer)
-    local boat = SpawnPrefab("boat")
+    local boat = SpawnPrefab("boat", inst.linked_skinname, inst.skin_id )
     if boat ~= nil then
         boat.Physics:SetCollides(false)
         boat.Physics:Teleport(pt.x, 0, pt.z)

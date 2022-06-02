@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Come back, eggy!",
 
+		CARNIVALGAME_SHOOTING_KIT = "We can help the birds set up.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "It'll let us play if we give it something shiny.",
+			PLAYING = "Watch out for the baby bird!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "It's a little bird door.",
+			PLAYING = "Are the bugs the bad guys?",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "It'll let us play if we give it something shiny.",
+			PLAYING = "We wanna press the big button!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "We can help the birds set up.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "It'll let us play if we give it something shiny.",
+			PLAYING = "We're winning!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "We can help the birds set up.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "It'll let us play if we give it something shiny.",
+			PLAYING = "We could watch the little ball bounce around all day.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "We can't wait to see what kind of prizes they have!",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "Night lights make the dark a little less scary.",
 		CARNIVALDECOR_PLANT_KIT = "We can put it together!",
 		CARNIVALDECOR_PLANT = "This tree is so small!",
+		CARNIVALDECOR_BANNER_KIT = "We can put it together!",
+		CARNIVALDECOR_BANNER = "Crows sure like shiny things, don't they?",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "It's a little wooden statue.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "We can't wait to see what's inside!",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "We can't wait to see what's inside!",
 
         CARNIVAL_BALL = "We wanna play with it!", --unimplemented
 		CARNIVAL_SEEDPACKET = "We should've gotten the popcorn instead...",

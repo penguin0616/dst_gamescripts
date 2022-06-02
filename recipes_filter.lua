@@ -424,24 +424,29 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"carnival_vest_b",				
 	"carnival_vest_c",				
 	"carnivaldecor_figure_kit",		
+	"carnivaldecor_figure_kit_season2",		
 	"carnivalcannon_confetti_kit",	
 	"carnivalcannon_sparkle_kit",	
 	"carnivalcannon_streamer_kit",	
-	"carnivaldecor_plant_kit",		
+	"carnivaldecor_plant_kit",
+	"carnivaldecor_banner_kit",
 	"carnivaldecor_eggride1_kit",	
 	"carnivaldecor_eggride2_kit",	
 	"carnivaldecor_eggride3_kit",	
+	"carnivaldecor_eggride4_kit",	
 	"carnivaldecor_lamp_kit",		
 	
 	--- summer carnival host
-	"carnival_plaza_kit",			
-	"carnival_prizebooth_kit",		
-	"carnival_gametoken",			
-	"carnival_gametoken_multiple",	
-	"carnivalgame_memory_kit",		
-	"carnivalgame_feedchicks_kit",	
-	"carnivalgame_herding_kit",		
-
+	"carnival_plaza_kit",
+	"carnival_prizebooth_kit",
+	"carnival_gametoken",
+	"carnival_gametoken_multiple",
+	"carnivalgame_memory_kit",
+	"carnivalgame_feedchicks_kit",
+	"carnivalgame_herding_kit",
+	"carnivalgame_shooting_kit",
+	"carnivalgame_wheelspin_kit",
+	"carnivalgame_puckdrop_kit",
 }
 
 

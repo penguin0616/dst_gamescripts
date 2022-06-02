@@ -567,6 +567,8 @@ STRINGS =
 			RANSACK = "Ransack",
 			HIDEANDSEEK = "Play Hide and Seek",
             DEACTIVATE = "Deactivate",
+			BUTTON = "Press",
+			WHEELSPIN_STOP = "Press",
         },
 
 		OPEN_CRAFTING =
@@ -2218,19 +2220,34 @@ STRINGS =
 		CARNIVALGAME_HERDING_KIT = "Egg Scramble Kit",
 		CARNIVALGAME_HERDING_STATION = "Egg Scramble",
 		CARNIVALGAME_HERDING_CHICK = "Scrambling Egg",
+        CARNIVALGAME_SHOOTING_KIT = "Nest Defender Kit",
+		CARNIVALGAME_SHOOTING_STATION = "Nest Defender",
+        CARNIVALGAME_SHOOTING_BUTTON = "Button",
+        CARNIVALGAME_SHOOTING_BUTTON_OFF = "Nest Defender",
+		CARNIVALGAME_SHOOTING_TARGET = "Target",
+		CARNIVALGAME_SHOOTING_TARGET_OFF = "Trapdoor",
+		CARNIVALGAME_WHEELSPIN_KIT = "Cuckoo Spinwheel Kit",
+		CARNIVALGAME_WHEELSPIN_STATION = "Cuckoo Spinwheel",
+		CARNIVALGAME_PUCKDROP_KIT = "Birdhouse Ball Drop Kit",
+		CARNIVALGAME_PUCKDROP_STATION = "Birdhouse Ball Drop",
 
 		CARNIVALDECOR_PLANT = "Miniature Tree",
 		CARNIVALDECOR_PLANT_KIT = "Miniature Tree Kit",
+		CARNIVALDECOR_BANNER = "Light Catcher",
+		CARNIVALDECOR_BANNER_KIT = "Light Catcher Kit",
 		CARNIVALDECOR_FIGURE_RARE = "Rare Cawnival Statuette",
 		CARNIVALDECOR_FIGURE_UNCOMMON = "Uncommon Cawnival Statuette",
 		CARNIVALDECOR_FIGURE_COMMON = "Common Cawnival Statuette",
-		CARNIVALDECOR_FIGURE_KIT = "Mystery Box",
+		CARNIVALDECOR_FIGURE_KIT = "Green Mystery Box",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Gold Mystery Box",
 		CARNIVALDECOR_EGGRIDE1 = "Mini Ferris Wheel",
 		CARNIVALDECOR_EGGRIDE1_KIT = "Mini Ferris Wheel Kit",
 		CARNIVALDECOR_EGGRIDE2 = "Mini Swing Carousel",
 		CARNIVALDECOR_EGGRIDE2_KIT = "Mini Swing Carousel Kit",
 		CARNIVALDECOR_EGGRIDE3 = "Mini Pendulum Ride",
 		CARNIVALDECOR_EGGRIDE3_KIT = "Mini Pendulum Ride Kit",
+		CARNIVALDECOR_EGGRIDE4 = "Mini Tower Drop",
+		CARNIVALDECOR_EGGRIDE4_KIT = "Mini Tower Drop Kit",
 		CARNIVALDECOR_LAMP = "Midsummer Night Light",
 		CARNIVALDECOR_LAMP_KIT = "Midsummer Night Light Kit",
 		CARNIVALCANNON_CONFETTI = "Confetti Cannon",
@@ -3784,13 +3801,19 @@ STRINGS =
 		CARNIVALGAME_FEEDCHICKS_KIT = "Let them eat grubs!",
 		CARNIVALGAME_MEMORY_KIT = "Count your eggs before they hatch.",
 		CARNIVALGAME_HERDING_KIT = "Whisk back runaway eggs.",
+        CARNIVALGAME_SHOOTING_KIT = "Keep pests from bugging the nest.",
+		CARNIVALGAME_WHEELSPIN_KIT = "Spinning and winning in equal measure.",
+		CARNIVALGAME_PUCKDROP_KIT = "Bounce the ball safely to its nest.",
 
 		CARNIVALDECOR_PLANT_KIT = "A little piece of the Cawnival.",
+		CARNIVALDECOR_BANNER_KIT = "Take a shine to some bauble-strung branches.",
 		CARNIVALDECOR_EGGRIDE1_KIT = "A cracking addition to your decor.",
 		CARNIVALDECOR_EGGRIDE2_KIT = "Pint-sized eggcitement!",
 		CARNIVALDECOR_EGGRIDE3_KIT = "Get in the swing of summer fun!",
+		CARNIVALDECOR_EGGRIDE4_KIT = "The new height of Cawnival decor.",
 		CARNIVALDECOR_LAMP_KIT = "A dreamy light for summer nights.",
-		CARNIVALDECOR_FIGURE_KIT = "What could be inside?",
+		CARNIVALDECOR_FIGURE_KIT = "What could be inside this mysterious green box?",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "What could be inside this mysterious gold box?",
 		CARNIVALCANNON_CONFETTI_KIT = "Start things off with a bang!",
 		CARNIVALCANNON_SPARKLE_KIT = "Add some sparkle to your surroundings.",
 		CARNIVALCANNON_STREAMER_KIT = "Create an explosion... of fun!",
@@ -4277,7 +4300,7 @@ STRINGS =
     --ITEM DESCRIPTIONS
     DESCRIBE_NULL = "MISSING DESCRIPTION STRING",
 
-    --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
+    --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     MERM_TALK_FOLLOWWILSON   = {{"Will come with you.", "Flort glut."}, {"Make Mermfolk strong!", "Blut gloppy Glurtsu!"}, {"You help Mermfolk!", "Glut Glurtsu flopt!"}, {"You okay.", "Florpy flort."}},
     MERM_TALK_HELP_CHOP_WOOD = {{"Will come with you.", "Flort glut."}, {"Make Mermfolk strong!", "Blut gloppy Glurtsu!"}, {"Chop, choppy, chop!", "Grop, groppy, grop!"}, {"Work hard, florp!", "Glort blut, florp!"}},
     MERM_TALK_HELP_MINE_ROCK = {{"Will come with you.", "Flort glut."}, {"Make Mermfolk strong!", "Blut gloppy Glurtsu!"}, {"Break rock, easy!", "Wult wop, florty flort!"}, {"Work hard, florp!", "Glort blut, florp!"}},
@@ -4596,7 +4619,7 @@ STRINGS =
     HERMITCRAB_WANT_HOUSE = {"I could really use some help fixing up my house..."},
     HERMITCRAB_GIVE_PEARL = {"If you find my sweetie on your travels...","Could you... give him that pearl?","He'll recognize it."},
 
-    --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
+    --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     PIG_TALK_FOLLOWWILSON = { "YOU FRIEND", "I LOVE FRIEND", "YOU IS GOOD", "I FOLLOW!" },
     PIG_TALK_FIND_LIGHT = { "SCARY", "NO LIKE DARK", "WHERE IS SUN?", "STAY NEAR FIRE", "FIRE IS GOOD" },
     PIG_TALK_LOOKATWILSON = { "WHO ARE YOU?", "YOU NOT PIG", "YOU HAS MEAT?" },
@@ -4659,7 +4682,7 @@ STRINGS =
     PIG_TALK_CONTEST_OOOH = {"OOOH","WOW","IS BEAUTY"},
     PIG_TALK_CONTEST_PANIC = {"MUST CHOOSE!","CHOICE HARD!"},
 
-    --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
+    --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     RABBIT_BATTLECRY = { "HOP!", "KILL!", "DIE!" },
     RABBIT_MEAT_BATTLECRY = { "MEAT!", "UNCLEAN!", "MURDERER!", "REVENGE!", "MONSTER!" },
     RABBIT_GIVEUP = { "DONE.", "LATER." },
@@ -4670,25 +4693,34 @@ STRINGS =
     RABBIT_PANICHAUNT = { "SCARED!", "AAAH!!", "OHH!", "GHOST!" },
     RABBIT_PANICBOSS = { "RUN!", "AHHH!", "IT MAD", "EHHH!" },
 
-    --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
+    --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     STALKER_BATTLECRY = { "Huurgh...", "...(growl)...", "...gruuuugh...", "Hrrgh...", "...grraaugh...", "...(rumble)...", "...gruh..." },
     STALKER_PLAYER_BATTLECRY = { "Huurgh...", "...gruuuugh...", "...grraaugh...", "...(gurgle)...", "...(crunch)...", "...Y-yy...", "...W-wwh..." },
 
 	CARNIVAL_CROWKID_DECOR_AMBIENT_NONE = {"They must still be setting up.", "Where's the party?", "Most boring Midsummer Cawnival ever.", "More like Caw-no-val.", "Looks like I got here too early...", "I'm gonna tell my friends to wait until there's more set up."},
-	CARNIVAL_CROWKID_DECOR_AMBIENT_SOME = {"Nicely set up.", "There is never enough flair.", "I've seen better Cawnivals.", "The party is just getting started!"},
+	CARNIVAL_CROWKID_DECOR_AMBIENT_SOME = {"Nicely set up.", "It's alright... but it could use some flair.", "I've seen better Cawnivals.", "The party is just getting started!"},
 	CARNIVAL_CROWKID_DECOR_AMBIENT_LOTS = {"Wow! It's so festive!", "Best Cawnival ever!", "Last year's Cawnival was not this fancy.", "I wanna watch the games!", "Have you checked out the Prize Booth yet?"},
 	CARNIVAL_CROWKID_DECOR_PLAYER_NONE = {"You should decorate more.", "Where are the decorations?", "It's not a Cawnival without decorations around the Tree!", "This must be your first Cawnival."},
 	CARNIVAL_CROWKID_DECOR_PLAYER_SOME = {"You're doing a pretty good job.", "I wish there were more decorations around the Cawnival Tree...", "I've seen better Cawnivals. Just saying.", "Gotta say, last year's Cawnival was better..."},
 	CARNIVAL_CROWKID_DECOR_PLAYER_LOTS = {"Wow! It's so festive!", "Nicely done.", "You must be good at these games.", "Have you tried Egg Scramble? It's my favorite game!", "I watched someone play Hubbub for Grub, and now I'm hungry...", "Have you won any prizes yet?"},
+	CARNIVAL_CROWKID_DECOR_AMBIENT_NONE_SNACK = {"All this Cawnival fun is making me peckish.", "Those snacks look so good...\nI'm sure they wouldn't mind if I snuck a bite...", "I'm starving after that long trip."},
+	CARNIVAL_CROWKID_DECOR_AMBIENT_SOME_SNACK = {"What a fun place, nobody chases us away!", "Who was that, with the red fur? He seemed kinda familiar.", "I hope we can have the Cawnival here again next year."},
+	CARNIVAL_CROWKID_DECOR_AMBIENT_LOTS_SNACK = {"If I eat anymore, I'm gonna pop.\nHmm, pop... popcorn... mmmmm...", "Do you think they're trying to fatten us up and eat us?\nNaw... they don't look that clever.", "We're lucky that Corvus found this place."},
+	CARNIVAL_CROWKID_DECOR_PLAYER_NONE_SNACK = {"Hey, mind sharing your snacks?", "Where are we from? Oh you know, here and there...", "You stay here all year?\nWow, not having wings must be tough."},
+	CARNIVAL_CROWKID_DECOR_PLAYER_SOME_SNACK = {"So where do YOU come from? Just curious!", "I can't believe you'd never seen a Cawnival before we came!\nYou sure were missing out.", "You're pretty weird. Has anyone told you that?"},
+	CARNIVAL_CROWKID_DECOR_PLAYER_LOTS_SNACK = {"It's nice to rest our wings a little.\nWe usually can't stay in one place too long.", "Have you seen the lady that watches the Cawnival at night?\nSquawck about creepy.", "Are you having fun? I sure am!"},
+	CARNIVAL_CROWKID_CAMPFIRE = {"Did you hear that?\nYou don't think we were followed, do you?", "This sure is cozy.", "It's nice to warm your talons by the fire.", "There's been a mysterious murder here...\nAnd with any luck, we'll be back again next year! Cah-cah-cah!", "I wonder why the featherfree creatures are so scared of the dark?", "Does anyone have some corn?"},
 	CARNIVAL_CROWKID_SCARED = {"Caaah!", "Time to take off!", "The feathers are flying!", "No thanks!", "I'm outta here!", "Scatter!!"},
 	CARNIVAL_CROWKID_GAME_GOTO = {"Ooooh someone's playing!", "Let's watch the featherfree creature play!", "Look, someone's about to play!", "I love watching these games!", "Oooh, that game's my favorite!"},
-	CARNIVAL_CROWKID_OTHERGAME_GOTO = {"What kind of game is that?", "Are the featherless creatures fighting? I want to watch!"},
-
+	CARNIVAL_CROWKID_OTHERGAME_GOTO = {"What kind of game is that?", "Are the featherfree creatures fighting? I want to watch!"},
+	CARNIVAL_CROWKID_ACCEPTGIFT = {"You're just giving this to me? Thanks!", "Wow, I didn't even have to steal it- I mean, thanks!", "They just give you stuff around here? Neat!"},
+	CARNIVAL_CROWKID_REFUSEGIFT = {"Oh... wow... um, that's okay, you keep it.", "Aw, wouldn't ya know it, I'm actually allergic to that exact thing.", "No thanks, I don't want it."},
+	CARNIVAL_CROWKID_HASGIFT = {"What's with all the presents? This is starting to feel suspicious...", "Thanks, but I've already got something!", "Sorry, busy. Maybe try someone else."},
 
 	CARNIVAL_HOST_SELL_PLAZA = {"Yes, yes! The centerpiece must be set!", "The Cawnival cannot begin until the Tree is planted!"},
-	CARNIVAL_HOST_ANNOUNCE_CARNIVAL = {"Yes, yes! This place will do nicely!", "A perfect spot for my famous, fantabulous, (fiscally fruitful) Cawnival!", "You there! How would you like to be a part of something spectacular?!", "It is I, a merry wanderer with feathers black as night!", "I've been known by many names, but you may call me Corvus Goodfeather!", "\"Not yet mid-summer\", you say? Well my friend, the early bird gets the worm!"},
+	CARNIVAL_HOST_ANNOUNCE_CARNIVAL = {"Yes, yes! It's that most wonderful time of year again!", "I, the great Goodfeather, have graciously decided to return with my wondrous Cawnival!", "You there! How would you like to be a part of something spectacular?!", "It is I, a merry wanderer with feathers black as night!", "I've been known by many names, but you may call me Corvus Goodfeather!", "\"Not yet mid-summer\", you say? Well my friend, the early bird gets the worm!", "Oh lucky, lucky you, to be a stop on our flight of fancy!", "Be merry, for good old Goodfeather has returned with his spectacular Cawnival!", "Last year was so profitable- er, FUN, that we just couldn't stay away!"},
 
-	CARNIVAL_HOST_SELL_GENERIC = {"Look here, I have such wonderful games for you to play!", "A Cawnival is not complete without some fun and games."},
+	CARNIVAL_HOST_SELL_GENERIC = {"Look here, I have such wonderful games for you to play!", "A Cawnival is not complete without some fun and games.",},
 	CARNIVAL_HOST_ANNOUNCE_GENERIC = {"The Cawnival is underway!", "Welcome, welcome, one and all!", "Buy your tokens here!", "Enjoy the Cawnival!", "Why not purchase a lovely miniature to set under the Tree?", "The games look fun, don't they? Why not purchase a token or twelve?", "Win tickets, trade tickets for fabulous prizes!", "Take a glance at the Prize Booth, friends! We have spectacular trinkets from far and wide!", "\"Not yet mid-summer\", you say? Well my friend, the early bird gets the worm!"},
 	CARNIVAL_HOST_GAME_CHEER = {"Yes, yes! You're a natural!", "You've got a good grasp of the game, I see!", "Such an excellent performance! I do hope you purchase more tokens to show us again!"},
 	CARNIVAL_HOST_GAME_BORED = {"Oh, I think you nearly scored a point that time!", "Have you never played a Cawnival game before?", "Better luck next time, perhaps?"},
@@ -4696,7 +4728,7 @@ STRINGS =
 	CARNIVAL_HOST_GAME_END_BORED = {"Too bad. Better luck next time!", "I have plenty more tokens to sell if you'd like to try again!"},
 	CARNIVAL_HOST_OTHERGAME_TALK = {"What is this game?", "What an odd game. Not nearly as fun as the ones we have at the Cawnival!", "I'm not familiar with the rules..."},
 
-    --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
+    --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     STALKER_ATRIUM_BATTLECRY =
     {
         "A pity.",
@@ -5118,7 +5150,7 @@ STRINGS =
     },
 
     -- gameplay done
-    --NOTE: Limit to 7 strings per table! (Using net_tinybyte for NPC chatter)
+    --NOTE: Limit to 63 strings per table! (Using net_smallbyte for NPC chatter)
     SWAMPIG_TALK_TO_WILSON =
     {
         "KIND ELDER SICK. NEED REST",

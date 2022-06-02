@@ -4050,6 +4050,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "I'm gonna getcha!",
 
+		CARNIVALGAME_SHOOTING_KIT = "Gotta work before you can play.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "Looks like I just need a token to play.",
+			PLAYING = "I pride myself on being a straight-shooter! Ha!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "Looks like a tripping hazard to me.",
+			PLAYING = "Time for some pest control.",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "Looks like I just need a token to play.",
+			PLAYING = "None of the buttons back at the factory were this fancy.",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "Gotta work before you can play.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "Looks like I just need a token to play.",
+			PLAYING = "Well would ya look at that, I'm winning!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "Gotta work before you can play.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "Looks like I just need a token to play.",
+			PLAYING = "That little ball's got a mind of its own.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "A job well done is its own reward, but gettin' a prize is even better!",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4078,6 +4110,8 @@ return{
 		CARNIVALDECOR_LAMP = "A bit delicate lookin' for my taste, but at least it works.",
 		CARNIVALDECOR_PLANT_KIT = "I'll have that set up in a jiffy.",
 		CARNIVALDECOR_PLANT = "You can't exactly hang a swing from it, but it's pretty enough.",
+		CARNIVALDECOR_BANNER_KIT = "Shouldn't take long to build.",
+		CARNIVALDECOR_BANNER = "It really fancies the place up, doesn't it?",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4086,6 +4120,7 @@ return{
 			GENERIC = "I'm not really one for knickknacks.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Alright, I gotta know what's inside...",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Alright, I gotta know what's inside...",
 
         CARNIVAL_BALL = "You can't beat a good old rubber ball.", --unimplemented
 		CARNIVAL_SEEDPACKET = "Looks like a bag of bird food.",

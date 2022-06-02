@@ -4051,6 +4051,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Hey! Get back here!",
 
+		CARNIVALGAME_SHOOTING_KIT = "Aw come on, I've got to set it up myself?",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "I've uh... never actually been to a carnival before. Do I give it something?",
+			PLAYING = "Ooh, games where you get to hit something are my favorite!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "A little door to nowhere special.",
+			PLAYING = "Think fast, bugs!",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "I've uh... never actually been to a carnival before. Do I give it something?",
+			PLAYING = "Fire! Fire!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "Aw come on, I've got to set it up myself?",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "I've uh... never actually been to a carnival before. Do I give it something?",
+			PLAYING = "Wow, I'm great at this game!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "Aw come on, I've got to set it up myself?",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "I've uh... never actually been to a carnival before. Do I give it something?",
+			PLAYING = "Bounce that way! No, THAT way!!",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "Uuuugh, one more thing to build.",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4079,6 +4111,8 @@ return{
 		CARNIVALDECOR_LAMP = "It makes light, but no fire. Creepy.",
 		CARNIVALDECOR_PLANT_KIT = "Can somebody else put it together for me?",
 		CARNIVALDECOR_PLANT = "Guess this tree never got its growth spurt.",
+		CARNIVALDECOR_BANNER_KIT = "Can somebody else put it together for me?",
+		CARNIVALDECOR_BANNER = "Oh yeah, that'll catch the firelight nicely!",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4087,6 +4121,7 @@ return{
 			GENERIC = "Aww, it's so cute and flammable!",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Ooooh what's in the box?",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Ooooh what's in the box?",
 
         CARNIVAL_BALL = "Think fast, Maxwell!", --unimplemented
 		CARNIVAL_SEEDPACKET = "Ugh, bird food.",

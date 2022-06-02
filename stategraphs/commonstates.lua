@@ -792,6 +792,7 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
             EventHandler("done_embark_movement", function(inst)
 				if not inst.AnimState:IsCurrentAnimation("jump_loop") then
 					inst.AnimState:PlayAnimation(anims.loop or "jump_loop", false)
+					inst.components.amphibiouscreature:OnExitOcean()
 				end
 				inst.sg.statemem.embarked = true
             end),
@@ -803,6 +804,8 @@ CommonStates.AddAmphibiousCreatureHopStates = function(states, config, anims, ti
 						end
 					end
 					inst.AnimState:PlayAnimation(anims.loop or "jump_loop", false)
+
+					inst.components.amphibiouscreature:OnExitOcean()
 				end
             end),
         },

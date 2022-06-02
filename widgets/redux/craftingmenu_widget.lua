@@ -15,6 +15,8 @@ require("util")
 -- ref: craftslot.lua, craftslots.lua, crafting.lua, recipetile.lua, recipepopup.lua
 local SortTypes = require("crafting_sorting")
 
+local SEARCH_BOX_HEIGHT = 40
+
 -------------------------------------------------------------------------------------------------------
 local CraftingMenuWidget = Class(Widget, function(self, owner, crafting_hud, height)
     Widget._ctor(self, "CraftingMenuWidget")
@@ -203,6 +205,32 @@ function CraftingMenuWidget:ApplyFilters()
 	end
 end
 
+function CraftingMenuWidget:UpdateEventButtonLayout()
+	local is_event_layout = self.event_layout
+	self.event_layout = self.special_event_filter.num_can_build ~= nil and self.special_event_filter.num_can_build > 0 or self.special_event_filter.has_unlocked or false
+
+	if is_event_layout ~= self.event_layout then
+		if self.event_layout then
+			self.special_event_filter:Show()
+			self.special_event_filter:SetHoverText(GetActiveSpecialEventCount() == 1 and STRINGS.UI.SPECIAL_EVENT_NAMES[string.upper(GetFirstActiveSpecialEvent())] or STRINGS.UI.SPECIAL_EVENT_NAMES.MULTIPLE_EVENTS)
+
+			local pt = self.crafting_station_filter:GetPosition()
+			self.crafting_station_filter:SetPosition(self.grid_left + self.grid_button_space + (self.event_layout and self.grid_button_space or 0), pt.y)
+
+			self.search_box.textbox_root.textbox_bg:ScaleToSize(self.grid_button_space * 5, SEARCH_BOX_HEIGHT)
+			self.search_box.textbox_root.textbox:SetRegionSize(self.grid_button_space * 5 - 30, SEARCH_BOX_HEIGHT)
+		else
+			self.special_event_filter:Hide()
+
+			local pt = self.crafting_station_filter:GetPosition()
+			self.crafting_station_filter:SetPosition(self.grid_left + self.grid_button_space, pt.y)
+
+			self.search_box.textbox_root.textbox_bg:ScaleToSize(self.grid_button_space * 6.5, SEARCH_BOX_HEIGHT)
+			self.search_box.textbox_root.textbox:SetRegionSize(self.grid_button_space * 6.5 - 30, SEARCH_BOX_HEIGHT)
+		end
+	end
+end
+
 function CraftingMenuWidget:UpdateFilterButtons()
 	local builder = self.owner ~= nil and self.owner.replica.builder or nil
 	if builder ~= nil then
@@ -242,6 +270,7 @@ function CraftingMenuWidget:UpdateFilterButtons()
 		if button.filter_def.recipes ~= nil then 
 			local has_buffered = false
 			local has_prototypeable = false
+			local has_unlocked = false
 			local num_can_build = 0
 			for _, recipe_name in pairs(FunctionOrValue(button.filter_def.recipes)) do
 				local data = self.crafting_hud.valid_recipes[recipe_name]
@@ -254,6 +283,8 @@ function CraftingMenuWidget:UpdateFilterButtons()
 						elseif data.meta.build_state == "buffered" then
 							has_buffered = true
 						end
+					elseif data.meta.build_state == "no_ingredients" then
+						has_unlocked = true
 					end
 				end
 			end
@@ -269,12 +300,15 @@ function CraftingMenuWidget:UpdateFilterButtons()
 				new_recipe_available = true
 			end
 			button.num_can_build = num_can_build
+			button.has_unlocked = has_unlocked
 		end
 	end
 
 	if self.crafting_hud.pinbar ~= nil and self.crafting_hud.pinbar.open_menu_button ~= nil then
 		self.crafting_hud.pinbar.open_menu_button:SetCraftingState(can_prototype, new_recipe_available)
 	end
+
+	self:UpdateEventButtonLayout()
 
 	local rebuild_details_list = false
 	for recipe_name, data in pairs(self.crafting_hud.valid_recipes) do
@@ -743,13 +777,15 @@ function CraftingMenuWidget:AddSorter()
     return btn
 end
 
-
 function CraftingMenuWidget:MakeFilterPanel(width)
 	width = width - 40
 	local button_size = 38
 	local grid_button_space = button_size + 5
 	local grid_buttons_wide = math.floor(width/(button_size + 1))
 	local grid_left = -grid_button_space * grid_buttons_wide/2 + grid_button_space/2
+
+	self.grid_button_space = grid_button_space
+	self.grid_left = grid_left
 
     local w = Widget("FilterPanel")
 
@@ -764,36 +800,25 @@ function CraftingMenuWidget:MakeFilterPanel(width)
 	self.favorites_filter = favorites_filter
 	table.insert(self.top_row_widgets, favorites_filter)
 
+	self.event_layout = IsAnySpecialEventActive()
+
 	-- special_event_filter
-	local event_layout = IsAnySpecialEventActive()
-	if event_layout then
-		local special_event_filter = w:AddChild(self:MakeFilterButton(CRAFTING_FILTERS.SPECIAL_EVENT, button_size))
-		special_event_filter:SetPosition(grid_left + grid_button_space, y)
-		self.filter_buttons[CRAFTING_FILTERS.SPECIAL_EVENT.name] = special_event_filter
-
-		local event_name
-		if GetActiveSpecialEventCount() == 1 then
-			event_name = STRINGS.UI.SPECIAL_EVENT_NAMES[string.upper(GetFirstActiveSpecialEvent())]
-		else
-			event_name = STRINGS.UI.SPECIAL_EVENT_NAMES.MULTIPLE_EVENTS
-		end
-		special_event_filter:SetHoverText(event_name or "")
-		--special_event_filter.filter_img:SetTexture(crafting_station_def.filter_atlas, crafting_station_def.filter_image)
-		--special_event_filter.filter_img:ScaleToSize(54, 54)
-
-		self.special_event_filter = special_event_filter
-		table.insert(self.top_row_widgets, special_event_filter)
-	end
+	local special_event_filter = w:AddChild(self:MakeFilterButton(CRAFTING_FILTERS.SPECIAL_EVENT, button_size))
+	special_event_filter:SetPosition(grid_left + grid_button_space, y)
+	self.filter_buttons[CRAFTING_FILTERS.SPECIAL_EVENT.name] = special_event_filter
+	special_event_filter:Hide()
+	self.special_event_filter = special_event_filter
+	table.insert(self.top_row_widgets, special_event_filter)
 
 	-- favorites filter button
 	local filter_station = w:AddChild(self:MakeFilterButton(CRAFTING_FILTERS.CRAFTING_STATION, button_size))
-	filter_station:SetPosition(grid_left + grid_button_space + (event_layout and grid_button_space or 0), y)
+	filter_station:SetPosition(grid_left + grid_button_space, y)
 	self.filter_buttons[CRAFTING_FILTERS.CRAFTING_STATION.name] = filter_station
 	self.crafting_station_filter = filter_station
 	table.insert(self.top_row_widgets, filter_station)
 
 	-- search bar
-    self.search_box = w:AddChild(self:MakeSearchBox(grid_button_space * (event_layout and 5 or 6.5), 40))
+    self.search_box = w:AddChild(self:MakeSearchBox(grid_button_space * 6.5, SEARCH_BOX_HEIGHT))
 	self.search_box:SetPosition(0, y)
 	table.insert(self.top_row_widgets, self.search_box)
 
@@ -810,6 +835,8 @@ function CraftingMenuWidget:MakeFilterPanel(width)
 	table.insert(self.top_row_widgets, self.sort_button)
 
 	y = y - button_size / 2
+
+	self:UpdateEventButtonLayout()
 
 	-- Divider
 	y = y - 5

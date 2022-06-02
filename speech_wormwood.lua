@@ -4048,6 +4048,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Over here!",
 
+		CARNIVALGAME_SHOOTING_KIT = "Tweeter games!",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "Needs shiny",
+			PLAYING = "Protect tweeters!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "Hello? Hiding?",
+			PLAYING = "Bad bugs",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "Needs shiny",
+			PLAYING = "Pew pew!",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "Tweeter games!",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "Needs shiny",
+			PLAYING = "Spinny spin!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "Tweeter games!",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "Needs shiny",
+			PLAYING = "Plunk plunk plop",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "Make house for Tweeter treasure",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4076,6 +4108,8 @@ return{
 		CARNIVALDECOR_LAMP = "Friend make nice glowy light",
 		CARNIVALDECOR_PLANT_KIT = "Find nice place for friend",
 		CARNIVALDECOR_PLANT = "Short friend",
+		CARNIVALDECOR_BANNER_KIT = "Prize!",
+		CARNIVALDECOR_BANNER = "Friend holding treasure",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4084,6 +4118,7 @@ return{
 			GENERIC = "Ooooh",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Surprise",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Surprise",
 
         CARNIVAL_BALL = "Bouncy bounce", --unimplemented
 		CARNIVAL_SEEDPACKET = "Thanks Tweeters!",

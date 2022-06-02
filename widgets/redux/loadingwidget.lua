@@ -1,5 +1,6 @@
 local Image = require "widgets/image"
 local Widget = require "widgets/widget"
+local Text = require "widgets/text"
 local ShadowedText = require "widgets/redux/shadowedtext"
 local TEMPLATES = require "widgets/redux/templates"
 
@@ -96,7 +97,7 @@ local LoadingWidget = Class(Widget, function(self, session_random_index)
         self.loading_tip_icon:SetPosition(RESOLUTION_X * 0.05 , RESOLUTION_Y * 0.1)
 
         -- Loading tip text
-        self.loading_tip_text = self:AddChild(ShadowedText(CHATFONT_OUTLINE, 25))
+        self.loading_tip_text = self:AddChild(Text(CHATFONT_OUTLINE, 25))
         self.loading_tip_text:SetRegionSize(RESOLUTION_X * 0.6, 120)
         self.loading_tip_text:SetPosition(RESOLUTION_X * 0.4, RESOLUTION_Y * 0.1)
         self.loading_tip_text:SetHAlign(ANCHOR_LEFT)

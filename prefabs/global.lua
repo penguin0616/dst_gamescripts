@@ -40,7 +40,10 @@ local assets =
 
     Asset("SOUNDPACKAGE", "sound/summerevent.fev"),
     Asset("FILE", "sound/summerevent.fsb"),
+    Asset("SOUNDPACKAGE", "sound/summerevent2022.fev"),
+    Asset("FILE", "sound/summerevent2022.fsb"),
     Asset("FILE", "sound/summerevent_music.fsb"),
+
 
     Asset("SOUNDPACKAGE", "sound/webber2.fev"),
     Asset("FILE", "sound/webber2.fsb"),
@@ -451,10 +454,6 @@ for _,char in ipairs(official_characters) do
 
     table.insert(assets, Asset("DYNAMIC_ATLAS", "images/names_gold_cn_"..char..".xml"))
     table.insert(assets, Asset("PKGREF", "images/names_gold_cn_"..char..".tex"))
-
-
-    --table.insert(assets, Asset("IMAGE", "images/selectscreen_portraits/"..char..".tex")) -- Not currently used, but likely to come back
-    --table.insert(assets, Asset("IMAGE", "images/selectscreen_portraits/"..char.."_silho.tex")) -- Not currently used, but likely to come back
 end
 
 --Skin assets

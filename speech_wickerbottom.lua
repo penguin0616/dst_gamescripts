@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Go on now, scoot!",
 
+		CARNIVALGAME_SHOOTING_KIT = "It appears simple enough to construct.",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "I believe it requires a form of currency to start.",
+			PLAYING = "One's timing must be precise to win.",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "Part of the mechanism for the game, I'd imagine.",
+			PLAYING = "It appears the object is to hit the insects while sparing the birds.",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "I believe it requires a form of currency to start.",
+			PLAYING = "This appears to trigger the firing mechanism.",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "It appears simple enough to construct.",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "I believe it requires a form of currency to start.",
+			PLAYING = "Curious. It seems that it's designed to be impossible to lose.",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "It appears simple enough to construct.",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "I believe it requires a form of currency to start.",
+			PLAYING = "A game of odds and probability.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "It appears simple enough to construct.",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "It has a most curious light source.",
 		CARNIVALDECOR_PLANT_KIT = "I wouldn't mind a bit of gardening.",
 		CARNIVALDECOR_PLANT = "It's so soothing to care for a small tree.",
+		CARNIVALDECOR_BANNER_KIT = "I should be able to assemble it easily enough.",
+		CARNIVALDECOR_BANNER = "It doesn't actually \"catch\" the light of course, but merely reflects it.",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "It would look lovely in a little curio cabinet, don't you think?",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "How intriguing! I wonder what's inside?",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "How intriguing! I wonder what's inside?",
 
         CARNIVAL_BALL = "I don't want to see anyone playing with this near any breakables.", --unimplemented
 		CARNIVAL_SEEDPACKET = "A bit of extra fiber added to one's diet never hurts.",

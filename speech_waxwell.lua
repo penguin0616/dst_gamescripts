@@ -4044,6 +4044,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Get back here, you blasted contraption!",
 
+		CARNIVALGAME_SHOOTING_KIT = "I suppose I'm expected to set this up myself?",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "It requires payment.",
+			PLAYING = "Another mindless diversion.",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "What are they hiding down there...",
+			PLAYING = "I'm certain it's rigged.",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "It requires payment.",
+			PLAYING = "Well, I suppose a bit of destruction might be relaxing.",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "I suppose I'm expected to set this up myself?",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "It requires payment.",
+			PLAYING = "A meaningless victory.",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "I suppose I'm expected to set this up myself?",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "It requires payment.",
+			PLAYING = "I imagine some people might find this amusing.",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "Must I do everything around here?",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4072,6 +4104,8 @@ return{
 		CARNIVALDECOR_LAMP = "A paltry light source. But it will do.",
 		CARNIVALDECOR_PLANT_KIT = "There's no end to the work around here, it seems.",
 		CARNIVALDECOR_PLANT = "At least it's small and somewhat manageable.",
+		CARNIVALDECOR_BANNER_KIT = "There's no end to the work around here, it seems.",
+		CARNIVALDECOR_BANNER = "Oh good. Wouldn't want anyone thinking we've got taste around here, would we?",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4080,6 +4114,7 @@ return{
 			GENERIC = "One more thing to clutter the ground.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Curiosity always seems to get the better of me.",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Curiosity always seems to get the better of me.",
 
         CARNIVAL_BALL = "How novel.", --unimplemented
 		CARNIVAL_SEEDPACKET = "About as pleasant as you'd expect.",

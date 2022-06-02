@@ -4050,6 +4050,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "To the center, if you please.",
 
+		CARNIVALGAME_SHOOTING_KIT = "We're almost ready for the fun to begin!",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "Allow me to propose a trade: one shiny trinket to play your game.",
+			PLAYING = "For this merry game, squashing bugs is the aim.",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "A small trap door is set in the floor.",
+			PLAYING = "I can't rest until I finish those pests!",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "Allow me to propose a trade: one shiny trinket to play your game.",
+			PLAYING = "Hyuyuyu! What does it do?",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "We're almost ready for the fun to begin!",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "Allow me to propose a trade: one shiny trinket to play your game.",
+			PLAYING = "It's easy to win, just give it a spin!",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "We're almost ready for the fun to begin!",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "Allow me to propose a trade: one shiny trinket to play your game.",
+			PLAYING = "There goes the ball, where will it fall?",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "What kind of goodies will it have, I wonder?",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4078,6 +4110,8 @@ return{
 		CARNIVALDECOR_LAMP = "A fairy light to glow in the night.",
 		CARNIVALDECOR_PLANT_KIT = "Nearly there.",
 		CARNIVALDECOR_PLANT = "We can take a small bit of the Cawnival wherever we go.",
+		CARNIVALDECOR_BANNER_KIT = "Nearly there.",
+		CARNIVALDECOR_BANNER = "Is that the glint of fairy gold?",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4086,6 +4120,7 @@ return{
 			GENERIC = "Mortals do love their trinkets.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "Hyuyu, how very mysterious!",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "Hyuyu, how very mysterious!",
 
         CARNIVAL_BALL = "It goes quite nicely with my fur!", --unimplemented
 		CARNIVAL_SEEDPACKET = "I'm sure they won't be offended if I dump these on the ground.",

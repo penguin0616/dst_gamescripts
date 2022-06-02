@@ -2,6 +2,7 @@
 
 local SKIN_GIFT_TYPES =
 {
+	anchor_nautical = "TWITCH_DROP",
 	arrowsign_post_circus = "TWITCH_DROP",
 	beebox_crystal = "TWITCH_DROP",
 	beefalohat_klaus = "TWITCH_DROP",
@@ -37,6 +38,7 @@ local SKIN_GIFT_TYPES =
 	pack_oni_gift = "ONI",
 	pack_rog_gift = "ROG",
 	pack_sw_gift = "SW",
+	playerportrait_bg_anchornautical = "TWITCH_DROP",
 	playerportrait_bg_arrowsignpostcircus = "TWITCH_DROP",
 	playerportrait_bg_beeboxcrystal = "TWITCH_DROP",
 	playerportrait_bg_beefalohatklaus = "TWITCH_DROP",
@@ -79,6 +81,7 @@ local SKIN_GIFT_TYPES =
 	playerportrait_bg_wardrobecrystal = "TWITCH_DROP",
 	playerportrait_bg_wardrobeyule = "TWITCH_DROP",
 	playerportrait_bg_winterometercircus = "TWITCH_DROP",
+	profileflair_anchor_nautical = "TWITCH_DROP",
 	profileflair_arrowsignpost_circus = "TWITCH_DROP",
 	profileflair_beebox_crystal = "TWITCH_DROP",
 	profileflair_beefalohat_klaus = "TWITCH_DROP",

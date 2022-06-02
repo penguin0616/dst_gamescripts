@@ -28,6 +28,14 @@ PREFAB_SKINS = {
 		"amulet_red_heart",
 		"amulet_red_occulteye",
 	},
+	anchor =
+	{
+		"anchor_nautical",
+	},
+	anchor_item =
+	{
+		"anchor_nautical_item",
+	},
 	armor_sanity =
 	{
 		"armor_sanity_curve",
@@ -189,13 +197,19 @@ PREFAB_SKINS = {
 	},
 	bundle =
 	{
+		"bundle_cawnival",
 		"bundle_gothic",
 		"bundle_vintage",
 	},
 	bundlewrap =
 	{
+		"bundlewrap_cawnival",
 		"bundlewrap_gothic",
 		"bundlewrap_vintage",
+	},
+	bushhat =
+	{
+		"bushhat_cawnival",
 	},
 	campfire =
 	{
@@ -514,6 +528,10 @@ PREFAB_SKINS = {
 		"heatrock_fantasy",
 		"heatrock_fire",
 	},
+	hivehat =
+	{
+		"hivehat_cawnival",
+	},
 	hutch =
 	{
 		"hutch_fantasy",
@@ -660,6 +678,7 @@ PREFAB_SKINS = {
 	},
 	mushroom_light2 =
 	{
+		"mushroom_light2_cawnival",
 		"mushroom_light2_lily",
 		"mushroom_light2_victorian",
 	},
@@ -745,6 +764,10 @@ PREFAB_SKINS = {
 	{
 		"razor_scissors",
 		"razor_straight",
+	},
+	reflectivevest =
+	{
+		"reflectivevest_cawnival",
 	},
 	researchlab =
 	{
@@ -838,6 +861,10 @@ PREFAB_SKINS = {
 		"shovel_northern",
 		"shovel_victorian",
 	},
+	siestahut =
+	{
+		"siestahut_cawnival",
+	},
 	skeletonhat =
 	{
 		"skeletonhat_shadowhelmet",
@@ -873,7 +900,7 @@ PREFAB_SKINS = {
 	},
 	steeringwheel_item =
 	{
-		"steeringwheel_item_nautical",
+		"steeringwheel_nautical_item",
 	},
 	strawhat =
 	{
@@ -1007,6 +1034,7 @@ PREFAB_SKINS = {
 	walrushat =
 	{
 		"walrushat_blue",
+		"walrushat_cawnival",
 	},
 	walter =
 	{

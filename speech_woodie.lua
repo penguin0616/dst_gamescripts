@@ -4045,6 +4045,38 @@ return{
 		},
 		CARNIVALGAME_HERDING_CHICK = "Get back here, you hoser!",
 
+		CARNIVALGAME_SHOOTING_KIT = "Those good-for-nothing birds can't even set up their own carnival?",
+		CARNIVALGAME_SHOOTING_STATION =
+		{
+			GENERIC = "You want somethin' shiny? How aboot my shiny axe!",
+			PLAYING = "Defend a nest? Of birds?!",
+		},
+		CARNIVALGAME_SHOOTING_TARGET =
+		{
+			GENERIC = "What kinda horrible bird secrets are they hiding down there...",
+			PLAYING = "I'm supposed to hit the one that looks like a bird, right?",
+		},
+
+		CARNIVALGAME_SHOOTING_BUTTON =
+		{
+			GENERIC = "You want somethin' shiny? How aboot my shiny axe!",
+			PLAYING = "It's gotta be a trap... you can't trust anything made by birds.",
+		},
+
+		CARNIVALGAME_WHEELSPIN_KIT = "Those good-for-nothing birds can't even set up their own carnival?",
+		CARNIVALGAME_WHEELSPIN_STATION =
+		{
+			GENERIC = "You want somethin' shiny? How aboot my shiny axe!",
+			PLAYING = "It's too easy... what's the catch, eh?",
+		},
+
+		CARNIVALGAME_PUCKDROP_KIT = "Those good-for-nothing birds can't even set up their own carnival?",
+		CARNIVALGAME_PUCKDROP_STATION =
+		{
+			GENERIC = "You want somethin' shiny? How aboot my shiny axe!",
+			PLAYING = "They're trying to distract us, I'm sure those birds are plotting something...",
+		},
+
 		CARNIVAL_PRIZEBOOTH_KIT = "I'm only setting this up out of curiosity.",
 		CARNIVAL_PRIZEBOOTH =
 		{
@@ -4073,6 +4105,8 @@ return{
 		CARNIVALDECOR_LAMP = "Alright I admit, this one's pretty nice.",
 		CARNIVALDECOR_PLANT_KIT = "Might as well get it set up, eh?",
 		CARNIVALDECOR_PLANT = "This better not attract any smaller birds...",
+		CARNIVALDECOR_BANNER_KIT = "Maybe I've been overreactin'. A little decoration won't do any harm, eh?",
+		CARNIVALDECOR_BANNER = "Argh, it flashed the sun in my eyes! Curse you, birds!!",
 
 		CARNIVALDECOR_FIGURE =
 		{
@@ -4081,6 +4115,7 @@ return{
 			GENERIC = "Those birds are mockin' me, I just know it.",
 		},
 		CARNIVALDECOR_FIGURE_KIT = "I can't stop wondering what's inside...",
+		CARNIVALDECOR_FIGURE_KIT_SEASON2 = "I can't stop wondering what's inside...",
 
         CARNIVAL_BALL = "Would've preferred a hockey puck, but this'll work.", --unimplemented
 		CARNIVAL_SEEDPACKET = "Hmph. Bird food.",

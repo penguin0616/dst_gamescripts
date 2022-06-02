@@ -71,6 +71,8 @@ function Explosive:OnBurnt()
     end
 
     if self.inst.components.health ~= nil then
+        -- NOTES(JBK): Make sure to keep the events fired up to date with the health component.
+        world:PushEvent("entity_death", { inst = self.inst, explosive = true, })
         self.inst:PushEvent("death")
     end
 
