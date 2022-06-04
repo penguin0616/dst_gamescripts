@@ -434,7 +434,7 @@ local function station_NewObject(inst, obj)
 		if inst._picked_enemies[target] then
 			inst._picked_enemies[target] = nil
 
-			inst:ScorePoints(inst, nil, inst.add_friendly_target and 2 or 1)
+			inst:ScorePoints()
 
 			if next(inst._picked_enemies) == nil then
 				DoEndOfRound(inst, true)

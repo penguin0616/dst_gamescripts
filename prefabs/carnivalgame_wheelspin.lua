@@ -72,20 +72,10 @@ local function CreateFlooring(parent)
 	CreateFloorPart(parent, "carnivalgame_wheelspin_floor", "idle", "place")
 end
 
-local function show_hands(inst)
-	inst._hand_inner:Show()
-	inst._hand_outer:Show()
-	inst:RemoveEventCallback("animover", show_hands)
-end
-
 local function OnBuilt(inst)
 	inst.AnimState:PlayAnimation("place", false)
 	inst.AnimState:PushAnimation("idle_off", true)
 	inst.SoundEmitter:PlaySound("summerevent2022/carnivalgame_wheelspin/place")
-
-	inst._hand_inner:Hide()
-	inst._hand_outer:Hide()
-	inst:ListenForEvent("animover", show_hands)
 end
 
 local function OnActivateGame(inst)
@@ -96,77 +86,59 @@ end
 
 local SLOWDOWN_TIME = 3.2
 
+local function calc_score(angle)
+	angle = angle - math.floor(angle)
+
+	local cell_arc = 1 / #prizes
+	local cell = math.floor((angle + 0.5*cell_arc) * #prizes) + 1
+	if cell > #prizes then
+		cell = 1
+	end
+
+	--print("Hand Score:", prizes[cell] or 0, cell, angle, ((angle + 0.5*cell_arc) * #prizes) + 1, math.floor((angle + 0.5*cell_arc) * #prizes) + 1) 
+
+	return prizes[cell] or 1
+end
+
 local function StartSlowdown(inst)
 	if inst._inactive_timeout ~= nil then
 		inst._inactive_timeout:Cancel()
 		inst._inactive_timeout = nil
 
-		inst.components.minigame:RecordExcitement()
+		local hand_inner_delay_time = (0.75 + math.random() * 1.5)
+		local hand_outer_delay_time = (0.75 + math.random() * 1.5)
 
-		inst._hand_inner.slowdown_delay = 0.75 + math.random() * 1.5
-		inst._hand_outer.slowdown_delay = 0.75 + math.random() * 1.5
-		inst._hand_inner.end_time = inst._hand_inner.slowdown_delay + SLOWDOWN_TIME + GetTime()
-		inst._hand_outer.end_time = inst._hand_outer.slowdown_delay + SLOWDOWN_TIME + GetTime()
-		inst._hand_inner.is_slowing = false
-		inst._hand_outer.is_slowing = false
+		inst._hand_inner_state.slowdown_task = inst:DoTaskInTime(hand_inner_delay_time, function(_, state)
+			state.slowdown_task = nil
+			state.end_angle:set_local(0)
+			state.end_angle:set(3 + math.random()) -- it will take SLOWDOWN_TIME seconds to reach this %angle
 
-		inst._hand_inner.slowdown_task = inst._hand_inner:DoPeriodicTask(0, function(hand)
-			local remaining = hand.end_time - GetTime()
-			if remaining < SLOWDOWN_TIME then
-				if not hand.is_slowing then
-					hand.is_slowing = true
-					inst.SoundEmitter:KillSound("loop_inner")
-					inst.SoundEmitter:PlaySound("summerevent2022/carnivalgame_wheelspin/spinning_inner_slowdown")
-				end
+			inst._minigame_score = inst._minigame_score + calc_score(state.end_angle:value())
 
-				local mult = easing.outQuad(hand.end_time - GetTime(), 0, MAX_SPIN_SPEED, SLOWDOWN_TIME)
-				if mult < 0 then
-					mult = 0
-					hand.slowdown_task:Cancel()
-					hand.slowdown_task = nil
+			inst.SoundEmitter:KillSound("loop_inner")
+			inst.SoundEmitter:PlaySound("summerevent2022/carnivalgame_wheelspin/spinning_inner_slowdown")
+		end, inst._hand_inner_state)
 
-					inst._minigame_score = inst._minigame_score + hand:GetPrizeScore()
-					inst.components.minigame:RecordExcitement()
-				end
-				hand.AnimState:SetDeltaTimeMultiplier(mult)
-			end
-		end)
+		inst._hand_outer_state.slowdown_task = inst:DoTaskInTime(hand_outer_delay_time, function(_, state)
+			state.slowdown_task = nil
+			state.end_angle:set_local(0)
+			state.end_angle:set(3 + math.random()) -- it will take SLOWDOWN_TIME seconds to reach this %angle
 
-		inst._hand_outer.slowdown_task = inst._hand_outer:DoPeriodicTask(0, function(hand)
-			local remaining = hand.end_time - GetTime()
-			if remaining < SLOWDOWN_TIME then
-				if not hand.is_slowing then
-					hand.is_slowing = true
-					inst.SoundEmitter:KillSound("loop_outer")
-				    inst.SoundEmitter:PlaySound("summerevent2022/carnivalgame_wheelspin/spinning_outer_slowdown")
-				end
+			inst._minigame_score = inst._minigame_score + calc_score(state.end_angle:value())
 
-				local mult = easing.outQuad(hand.end_time - GetTime(), 0, MAX_SPIN_SPEED, SLOWDOWN_TIME)
-				if mult <= 0 then
-					mult = 0
-					hand.slowdown_task:Cancel()
-					hand.slowdown_task = nil
-
-					inst._minigame_score = inst._minigame_score + hand:GetPrizeScore()
-					inst.components.minigame:RecordExcitement()
-				end
-				hand.AnimState:SetDeltaTimeMultiplier(mult)
-			end
-		end)
-			inst.SoundEmitter:KillSound("on_loop")
-			--inst.SoundEmitter:PlaySound("summerevent2022/carnivalgame_wheelspin/spinning_slowdown")
+			inst.SoundEmitter:KillSound("loop_outer")
+		    inst.SoundEmitter:PlaySound("summerevent2022/carnivalgame_wheelspin/spinning_outer_slowdown")
+		end, inst._hand_outer_state)
 
 		-- recalculate the end time 
-		inst.minigame_endtime = GetTime() + math.max(inst._hand_inner.slowdown_delay, inst._hand_outer.slowdown_delay) + SLOWDOWN_TIME + 0.1
+		inst.minigame_endtime = GetTime() + SLOWDOWN_TIME + math.max(hand_inner_delay_time, hand_outer_delay_time) + 0.5
 		inst.components.minigame:RecordExcitement()
 	end
 end
 
 local function OnStartPlaying(inst)
 	inst.components.activatable.inactive = true
-
-	inst._hand_inner.AnimState:SetDeltaTimeMultiplier(MAX_SPIN_SPEED)
-	inst._hand_outer.AnimState:SetDeltaTimeMultiplier(MAX_SPIN_SPEED)
+	inst._game_playing:set(true)
 
 	inst._inactive_timeout = inst:DoTaskInTime(TUNING.CARNIVALGAME_WHEELSPIN_INACTIVE_TIMEOUT, StartSlowdown)
 
@@ -180,6 +152,7 @@ end
 
 local function OnStopPlaying(inst)
 	inst.components.activatable.inactive = false
+	inst._game_playing:set(false)
 
 	if inst._inactive_timeout ~= nil then
 		inst._inactive_timeout:Cancel()
@@ -209,17 +182,19 @@ local function SpawnRewards(inst)
 end
 
 local function OnDeactivateGame(inst)
-	inst._hand_inner.AnimState:SetDeltaTimeMultiplier(0)
-	if inst._hand_inner.slowdown_task ~= nil then
-		inst._hand_inner.slowdown_task:Cancel()
-		inst._hand_inner.slowdown_task = nil
+	inst._game_playing:set(false)
+	
+	if inst._hand_inner_state.slowdown_task ~= nil then
+		inst._hand_inner_state.slowdown_task:Cancel()
+		inst._hand_inner_state.slowdown_task = nil
 	end
+	inst._hand_inner_state.end_angle:set_local(0)
 
-	inst._hand_outer.AnimState:SetDeltaTimeMultiplier(0)
-	if inst._hand_outer.slowdown_task ~= nil then
-		inst._hand_outer.slowdown_task:Cancel()
-		inst._hand_outer.slowdown_task = nil
+	if inst._hand_outer_state.slowdown_task ~= nil then
+		inst._hand_outer_state.slowdown_task:Cancel()
+		inst._hand_outer_state.slowdown_task = nil
 	end
+	inst._hand_outer_state.end_angle:set_local(0)
 
 	if inst._inactive_timeout ~= nil then
 		inst._inactive_timeout:Cancel()
@@ -257,6 +232,49 @@ function GetActivateVerb(inst)
 	return "WHEELSPIN_STOP"
 end
 
+local function client_slowdown_hand_fn(hand, station)
+	local t = GetTime() - hand._start_time
+
+	if t >= SLOWDOWN_TIME then
+		hand.slowdown_task:Cancel()
+		hand.slowdown_task = nil
+		hand.AnimState:SetTime(hand._end_animtime)
+	else
+		local angle = easing.outQuad(t, 0, hand._end_animtime - hand._start_animtime, SLOWDOWN_TIME)
+		hand.AnimState:SetTime(hand._start_animtime + angle)
+	end
+
+end
+
+local function client_update_hand(inst, hand, _end_angle)
+	local end_angle = _end_angle:value()
+
+
+	if end_angle > 0 then
+		hand.AnimState:Pause()
+		hand._start_animtime = (hand.AnimState:GetCurrentAnimationTime() % hand.AnimState:GetCurrentAnimationLength()) + FRAMES*0.5
+		hand._end_animtime = (end_angle * hand.AnimState:GetCurrentAnimationLength())
+		hand._start_time = GetTime()
+
+		--print("client_update_hand", end_angle, hand._start_animtime, hand._end_animtime, hand._start_time, hand.AnimState:GetCurrentAnimationTime(), hand.AnimState:GetCurrentAnimationLength())
+
+		hand.slowdown_task = hand:DoPeriodicTask(0, client_slowdown_hand_fn, 0, inst)
+		client_slowdown_hand_fn(hand, inst)
+	end
+end
+
+local function client_game_playing_changed(inst)
+	local playing = inst._game_playing:value()
+
+	if playing then
+		inst._hand_inner.AnimState:Resume()
+		inst._hand_outer.AnimState:Resume()
+	else
+		inst._hand_inner.AnimState:Pause()
+		inst._hand_outer.AnimState:Pause()
+	end
+end
+
 local function station_common_postinit(inst)
 	inst.MiniMapEntity:SetIcon("carnivalgame_wheelspin_station.png")
 
@@ -271,7 +289,31 @@ local function station_common_postinit(inst)
 
     inst.highlightchildren = {}
 
+    inst._hand_inner_state = { end_angle = net_float(inst.GUID, "_hand_inner_state.end_angle", "_hand_inner_state_end_angle") }
+    inst._hand_outer_state = { end_angle = net_float(inst.GUID, "_hand_outer_state.end_angle", "_hand_outer_state_end_angle") }
+
+	inst._game_playing = net_bool(inst.GUID, "carnivalgame_wheelspin._game_playing", "carnivalgame_wheelspin_game_playing") -- 0 = placing, 1 = idle, 2 = spinning
+
 	if not TheNet:IsDedicated() then
+		inst._hand_inner = SpawnPrefab("carnivalgame_wheelspin_hand_inner")
+		inst._hand_inner.entity:SetParent(inst.entity)
+		inst._hand_inner.entity:AddFollower()
+		inst._hand_inner.Follower:FollowSymbol(inst.GUID, "spinner_root", 0, 0, 0)
+		inst:ListenForEvent("onremove", function() table.removearrayvalue(inst.highlightchildren, inst._hand_inner) inst._hand_inner = nil end, inst._hand_inner)
+		table.insert(inst.highlightchildren, inst._hand_inner)
+
+		inst._hand_outer = SpawnPrefab("carnivalgame_wheelspin_hand_outer")
+		inst._hand_outer.entity:SetParent(inst.entity)
+		inst._hand_outer.entity:AddFollower()
+		inst._hand_outer.Follower:FollowSymbol(inst.GUID, "spinner_root", 0, 0, 0)
+		inst:ListenForEvent("onremove", function()table.removearrayvalue(inst.highlightchildren, inst._hand_outer)  inst._hand_outer = nil end, inst._hand_outer)
+		table.insert(inst.highlightchildren, inst._hand_outer)
+
+
+		inst:ListenForEvent("_hand_inner_state_end_angle", function(i) client_update_hand(i, i._hand_inner, i._hand_inner_state.end_angle) end)
+		inst:ListenForEvent("_hand_outer_state_end_angle", function(i) client_update_hand(i, i._hand_outer, i._hand_outer_state.end_angle) end)
+		inst:ListenForEvent("carnivalgame_wheelspin_game_playing", client_game_playing_changed)
+
 		CreateFlooring(inst, true)
 	end
 end
@@ -306,24 +348,6 @@ local function station_master_postinit(inst)
 	inst.RemoveGameItems = RemoveGameItems
 	inst.OnRemoveGame = OnRemoveGame
 
-	inst._hand_inner = SpawnPrefab("carnivalgame_wheelspin_hand_inner")
-	inst._hand_inner.entity:SetParent(inst.entity)
-	inst._hand_inner.entity:AddFollower()
-	inst._hand_inner.Follower:FollowSymbol(inst.GUID, "spinner_root", 0, 0, 0)
-	inst._hand_inner.AnimState:PlayAnimation("spin", true)
-	inst._hand_inner.AnimState:SetDeltaTimeMultiplier(0)
-	inst:ListenForEvent("onremove", function() table.removearrayvalue(inst.highlightchildren, inst._hand_inner) inst._hand_inner = nil end, inst._hand_inner)
-	table.insert(inst.highlightchildren, inst._hand_inner)
-
-	inst._hand_outer = SpawnPrefab("carnivalgame_wheelspin_hand_outer")
-	inst._hand_outer.entity:SetParent(inst.entity)
-	inst._hand_outer.entity:AddFollower()
-	inst._hand_outer.Follower:FollowSymbol(inst.GUID, "spinner_root", 0, 0, 0)
-	inst._hand_outer.AnimState:PlayAnimation("spin2", true)
-	inst._hand_outer.AnimState:SetDeltaTimeMultiplier(0)
-	inst:ListenForEvent("onremove", function()table.removearrayvalue(inst.highlightchildren, inst._hand_outer)  inst._hand_outer = nil end, inst._hand_outer)
-	table.insert(inst.highlightchildren, inst._hand_outer)
-
 	inst:ListenForEvent("onbuilt", OnBuilt)
 end
 
@@ -341,53 +365,30 @@ local deployable_data =
 	end,
 }
 
-local function hand_GetPrizeScore(inst)
-	local current_frame = math.floor((inst.AnimState:GetCurrentAnimationTime() % inst.AnimState:GetCurrentAnimationLength()) / FRAMES) + 1
-	local angle = current_frame * FRAMES / inst.AnimState:GetCurrentAnimationLength()
-
-	local cell_arc = 1 / #prizes
-	local cell = math.floor((angle + 0.5*cell_arc) * #prizes) + 1
-	if cell > #prizes then
-		cell = 1
-	end
-
-	--print("Hand Score:", inst, prizes[cell] or 0, cell, current_frame, angle, ((angle + 0.5*cell_arc) * #prizes) + 1, math.floor((angle + 0.5*cell_arc) * #prizes) + 1) 
-
-	return prizes[cell] or 1
-end
-
-local function OnHandReplicated(inst)
-    local parent = inst.entity:GetParent()
-    if parent ~= nil then
-        table.insert(parent.highlightchildren, inst)
-    end
-end
-
 local function hand_inner_fn()
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
-	inst.entity:AddNetwork()
 
 	inst.AnimState:SetBank("carnivalgame_wheelspin_station")
 	inst.AnimState:SetBuild("carnivalgame_wheelspin_station")
-	inst.AnimState:PlayAnimation("spin")
+	inst.AnimState:PlayAnimation("spin", true)
 	inst.AnimState:SetFinalOffset(1)
-	
+	inst.AnimState:SetDeltaTimeMultiplier(MAX_SPIN_SPEED)
+	inst.AnimState:Pause()
+
+
 	inst:AddTag("NOCLICK")
 	inst:AddTag("DECOR")
 
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
-        inst.OnEntityReplicated = OnHandReplicated
-
 		return inst
 	end
 
 	inst.persists = false
-	inst.GetPrizeScore = hand_GetPrizeScore
 
     return inst
 end
@@ -397,12 +398,12 @@ local function hand_outer_fn()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
-	inst.entity:AddNetwork()
 
 	inst.AnimState:SetBank("carnivalgame_wheelspin_station")
 	inst.AnimState:SetBuild("carnivalgame_wheelspin_station")
-	inst.AnimState:PlayAnimation("spin")
-	inst.AnimState:SetFinalOffset(1)
+	inst.AnimState:PlayAnimation("spin2", true)
+	inst.AnimState:SetDeltaTimeMultiplier(MAX_SPIN_SPEED)
+	inst.AnimState:Pause()
 	
 	inst:AddTag("NOCLICK")
 	inst:AddTag("DECOR")
@@ -410,13 +411,10 @@ local function hand_outer_fn()
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
-        inst.OnEntityReplicated = OnHandReplicated
-
 		return inst
 	end
 
 	inst.persists = false
-	inst.GetPrizeScore = hand_GetPrizeScore
 
     return inst
 end

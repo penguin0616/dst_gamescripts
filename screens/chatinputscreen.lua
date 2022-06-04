@@ -212,14 +212,10 @@ function ChatInputScreen:DoInit()
 		self.black:SetTint(0, 0, 0, .5)
 	end
 
-	self.screen_root = self:AddChild(Widget("chat_queue_root"))
+	self.screen_root = self:AddChild(Widget("screen_root"))
     self.screen_root:SetScaleMode(SCALEMODE_PROPORTIONAL)
     self.screen_root:SetHAnchor(ANCHOR_MIDDLE)
     self.screen_root:SetVAnchor(ANCHOR_BOTTOM)
-
-    self.chat_queue_root = self.screen_root:AddChild(Widget(""))
-    self.chat_queue_root:SetPosition(-90,765,0)
-    self.networkchatqueue = self.chat_queue_root:AddChild(ScrollableChatQueue())
 
     self.root = self.screen_root:AddChild(Widget(""))
     self.root:SetPosition(45.2, 100, 0)
@@ -260,13 +256,18 @@ function ChatInputScreen:DoInit()
     self.chat_edit:EnableScrollEditWindow(false)
 
 	self.chat_edit:SetForceEdit(true)
-    self.chat_edit.OnStopForceEdit = function() self:Close() end
+	self.chat_edit.OnStopForceEdit = function() if not self.chat_queue_root.focus then self:Close() end end
+
 
     self.chat_edit:EnableWordPrediction({width = 800, mode=Profile:GetChatAutocompleteMode()})
     self.chat_edit:AddWordPredictionDictionary(Emoji.GetWordPredictionDictionary())
     self.chat_edit:AddWordPredictionDictionary(UserCommands.GetEmotesWordPredictionDictionary())
 
     self.chat_edit:SetString("")
+
+    self.chat_queue_root = self.screen_root:AddChild(Widget("chat_queue_root"))
+    self.chat_queue_root:SetPosition(-90,765,0)
+    self.networkchatqueue = self.chat_queue_root:AddChild(ScrollableChatQueue())
 
 	if is_steam_deck then
 		self.default_focus = self.chat_edit

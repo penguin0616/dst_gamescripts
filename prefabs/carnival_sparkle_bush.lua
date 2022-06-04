@@ -22,7 +22,6 @@ local function PlayAnim(proxy, anim, scale, flip)
     inst.AnimState:SetBuild("carnival_sparkle_bush")
     local scale = 0.75
     inst.AnimState:SetScale(scale, scale)
-    --inst.AnimState:SetMultColour(1, 1, 1, .5)
     inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetFinalOffset(1)
     
@@ -42,23 +41,16 @@ local function fn()
     inst.entity:AddNetwork()
 
     inst:AddTag("FX")
-    --inst:AddTag("shadowtrail") maybe don't care to track this
-
-    --Dedicated server does not need to spawn the local fx
-    if not TheNet:IsDedicated() then
-        inst._complete = false
-    end
 
     inst.entity:SetPristine()
 
-    if not TheWorld.ismastersim then
-        return inst
+    inst.persists = false
+    
+    --Dedicated server does not need to spawn the local fx
+    if not TheNet:IsDedicated() then
+        inst:DoTaskInTime(0, PlayAnim) --before or after pristine?
     end
 
-    inst.persists = false
-    inst:DoTaskInTime(0, PlayAnim)
-    inst:DoTaskInTime(.5, DisableNetwork) --do we need this?
-    
     return inst
 end
 

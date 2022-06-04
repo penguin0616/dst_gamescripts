@@ -68,7 +68,7 @@ end
 
 local function GetAmbientChatterLines(inst)
 	local home = inst.components.homeseeker ~= nil and inst.components.homeseeker.home
-	if home ~= nil then
+	if home then
 		local rank = home.components.carnivaldecorranker ~= nil and home.components.carnivaldecorranker.rank or 0
 		local lines = rank <= 1 and (inst.has_snack and STRINGS.CARNIVAL_CROWKID_DECOR_AMBIENT_NONE_SNACK or STRINGS.CARNIVAL_CROWKID_DECOR_AMBIENT_NONE)
 						or rank == TUNING.CARNIVAL_DECOR_RANK_MAX and (inst.has_snack and STRINGS.CARNIVAL_CROWKID_DECOR_AMBIENT_LOTS_SNACK or STRINGS.CARNIVAL_CROWKID_DECOR_AMBIENT_LOTS)
