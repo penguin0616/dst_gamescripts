@@ -35,6 +35,7 @@ local PlayerProfile = Class(function(self)
         self.persistdata.CraftingMenuNumPinPages = 3
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
+		self.persistdata.minimapzoomsensitivity = 15
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -83,6 +84,7 @@ function PlayerProfile:Reset()
         self.persistdata.CraftingMenuNumPinPages = 3
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
+		self.persistdata.minimapzoomsensitivity = 15
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -132,6 +134,7 @@ function PlayerProfile:SoftReset()
         self.persistdata.CraftingMenuNumPinPages = 3
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
+		self.persistdata.minimapzoomsensitivity = 15
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -613,6 +616,23 @@ function PlayerProfile:GetInventorySensitivity()
 	end
 end
 
+function PlayerProfile:SetMiniMapZoomSensitivity(sensitivity)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "minimapzoomsensitivity", tostring(sensitivity))
+	else
+		self:SetValue("minimapzoomsensitivity", sensitivity)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:GetMiniMapZoomSensitivity()
+ 	if USE_SETTINGS_FILE then
+		return tonumber(TheSim:GetSetting("misc", "minimapzoomsensitivity") or 15)
+	else
+		return tonumber(self:GetValue("minimapzoomsensitivity") or 15)
+	end
+end
+
 function PlayerProfile:SetDistortionEnabled(enabled)
  	if USE_SETTINGS_FILE then
 		TheSim:SetSetting("graphics", "distortion", tostring(enabled))
@@ -739,6 +759,24 @@ function PlayerProfile:IsCampfireStoryCameraEnabled()
  		return TheSim:GetSetting("misc", "campfirestorycamera") ~= "false"
 	else
 		return self:GetValue("campfirestorycamera") ~= false
+	end
+end
+
+function PlayerProfile:SetMinimapZoomCursorEnabled(enabled)
+ 	if USE_SETTINGS_FILE then
+		TheSim:SetSetting("misc", "minimapzoomcursor", tostring(enabled))
+	else
+		self:SetValue("minimapzoomcursor", enabled)
+		self.dirty = true
+	end
+end
+
+function PlayerProfile:IsMinimapZoomCursorFollowing()
+	-- Default to true if this value hasn't been created yet
+ 	if USE_SETTINGS_FILE then
+ 		return TheSim:GetSetting("misc", "minimapzoomcursor") ~= "false"
+	else
+		return self:GetValue("minimapzoomcursor") ~= false
 	end
 end
 
@@ -1465,6 +1503,7 @@ function PlayerProfile:Set(str, callback, minimal_load)
                 self.persistdata.CraftingMenuNumPinPages = 3
 				self.persistdata.craftingmenusensitivity = 12
 				self.persistdata.inventorysensitivity = 16
+				self.persistdata.minimapzoomsensitivity = 15
                 self.persistdata.vibration = true
                 self.persistdata.showpassword = false
                 self.persistdata.movementprediction = true

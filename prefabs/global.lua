@@ -86,6 +86,11 @@ local assets =
 
     Asset("SOUNDPACKAGE", "sound/WX_rework.fev"),
     Asset("FILE", "sound/WX_rework.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/monkeyisland.fev"),
+    Asset("FILE", "sound/monkeyisland.fsb"),
+    Asset("FILE", "sound/monkeyisland_music.fsb"),
+    Asset("FILE", "sound/monkeyisland_amb.fsb"),
     
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods
@@ -359,6 +364,8 @@ local assets =
     Asset("IMAGE", "images/inventoryimages1.tex"),
     Asset("ATLAS", "images/inventoryimages2.xml"),
     Asset("IMAGE", "images/inventoryimages2.tex"),
+    Asset("ATLAS", "images/inventoryimages3.xml"),
+    Asset("IMAGE", "images/inventoryimages3.tex"),
 
     Asset("ATLAS", "images/hud.xml"),
     Asset("IMAGE", "images/hud.tex"),
@@ -439,10 +446,7 @@ for i, font in ipairs( FONTS ) do
     table.insert( assets, Asset( "FONT", font.filename ) )
 end
 
--- Add all the characters by name
--- GetOfficialCharacterList doesn't exist in the pipeline.
-local official_characters = GetOfficialCharacterList and GetOfficialCharacterList() or DST_CHARACTERLIST
-for _,char in ipairs(official_characters) do
+for _,char in ipairs(DST_CHARACTERLIST) do
     table.insert(assets, Asset("DYNAMIC_ATLAS", "bigportraits/"..char..".xml"))
     table.insert(assets, Asset("PKGREF", "bigportraits/"..char..".tex"))
 

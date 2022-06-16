@@ -267,7 +267,7 @@ function PlantRegistryData:TakeOversizedPicture(plant, weight, player, beardskin
 		return
 	end
 
-	if not table.contains(GetOfficialCharacterList(), player.prefab) then
+	if not table.contains(DST_CHARACTERLIST, player.prefab) then
 		--modded characters pose too many complications, sorry.
 		return false
 	end

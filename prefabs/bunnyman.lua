@@ -153,6 +153,7 @@ local function NormalRetargetFn(inst)
                 function(guy)
                     return inst.components.combat:CanTarget(guy)
                         and (guy:HasTag("monster")
+                            or guy:HasTag("wonkey")
                             or (guy.components.inventory ~= nil and
                                 guy:IsNear(inst, TUNING.BUNNYMAN_SEE_MEAT_DIST) and
                                 guy.components.inventory:FindItem(is_meat) ~= nil))

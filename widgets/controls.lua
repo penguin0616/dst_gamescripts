@@ -267,6 +267,12 @@ local Controls = Class(Widget, function(self, owner)
 
     self:SetHUDSize()
 
+    self.inst:ListenForEvent("finishseamlessplayerswap", function()
+        if self.owner.replica.inventory:IsVisible() then
+            self:ShowCraftingAndInventory()
+        end
+    end, self.owner)
+
     self:StartUpdating()
 end)
 

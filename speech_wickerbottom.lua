@@ -65,7 +65,7 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "I believe there are not enough locations for the kittens to hide.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I believe I should take some time to rest.",
 		},
-		OPEN_CRAFTING = 
+		OPEN_CRAFTING =
 		{
             PROFESSIONALCHEF = "It would be rude of me to tamper with it.",
 			SHADOWMAGIC = "I'm not letting THAT in MY library!",
@@ -133,6 +133,8 @@ return{
             SPIDERNOHAT = "There simply isn't enough room for that.",
             TERRARIUM_REFUSE = "Perhaps I should make another attempt with something else.",
             TERRARIUM_COOLDOWN = "Oh that won't do, the intended arborous recipient appears to be missing.",
+            NOTAMONKEY = "I believe they're trying to communicate.",
+            QUEENBUSY = "She is occupied with other matters at the moment.",
         },
         GIVETOPLAYER =
         {
@@ -190,6 +192,8 @@ return{
 
 			--MapSpotRevealer/messagebottle
 			MESSAGEBOTTLEMANAGER_NOT_FOUND = "It's much too dark to make any sense of this.",--Likely trying to read messagebottle treasure map in caves
+
+            STASH_MAP_NOT_FOUND = "The apes seem to have neglected to mark any particular sites on this map.",-- Likely trying to read stash map  in world without stash
         },
         WRAPBUNDLE =
         {
@@ -322,11 +326,11 @@ return{
 --fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
 --fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
         },
-        UPGRADE = 
+        UPGRADE =
         {
 --fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
         },
-		CAST_POCKETWATCH = 
+		CAST_POCKETWATCH =
 		{
 --fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
 --fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
@@ -781,7 +785,7 @@ return{
 
 	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "The game has commenced, I should start seeking.",
 	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Excuse me, I will join the feline search.",
-	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND =
 	{
 		"Ah, there you are.",
 		"It seems I've discovered a kitten.",
@@ -815,6 +819,12 @@ return{
     ANNOUNCE_EYEOFTERROR_ARRIVE = "Something from outside our dimension is trying to come in.",
     ANNOUNCE_EYEOFTERROR_FLYBACK = "This ocular creature seems rather persistent.",
     ANNOUNCE_EYEOFTERROR_FLYAWAY = "I suppose the daylight gives it a migraine.",
+
+    -- PIRATES
+    ANNOUNCE_CANT_ESCAPE_CURSE = "I just can't seem to put it down...",
+    ANNOUNCE_MONKEY_CURSE_1 = "What an unusual sensation.",
+
+    ANNOUNCE_PIRATES_ARRIVE = "Oh dear, it's those troublemakers playing their loud music again...",
 
 	BATTLECRY =
 	{
@@ -1074,6 +1084,16 @@ return{
             REVIVER = "I appreciate you taking the time, dear.",
             GHOST = "Oh dear, even after all the precautions you took?",
             FIRESTARTER = "Surely you have the foresight to know that's unwise, don't you?",
+        },
+
+        WONKEY =
+        {
+            GENERIC = "It displays a higher level of intelligence than I'd expect from an ape.",
+            ATTACKER = "Oh my, perhaps it's not as intelligent as I first thought.",
+            MURDERER = "That wild animal must be dealt with!",
+            REVIVER = "The creature seems rather attached to us. I wonder why?",
+            GHOST = "Oh dear... I'm quite inclined to help it.", 
+            FIRESTARTER = "I don't believe it's quite evolved enough to handle fire.",  
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -1375,6 +1395,8 @@ return{
 		TURF_DRAGONFLY = "This substance is imbued with a sort of natural fire deterrent.",
 
         TURF_SHELLBEACH = "The ground. You step on it.",
+
+        TURF_MONKEY_GROUND = "The ground. You step on it.",
 
 		POWCAKE = "The crowning achievement of the agricultural-industrial complex.",
         CAVE_ENTRANCE = "The placement of that rock looks intentional.",
@@ -2819,7 +2841,7 @@ return{
 		},
 		WARG = "Domesticating this Canis will be an entertaining challenge.",
         WARGLET = "This Canis needs a lesson in manners.",
-        
+
 		WASPHIVE = "I had best keep my distance.",
 		WATERBALLOON = "A toy for children.",
 		WATERMELON = "Citrullus lanatus.",
@@ -3387,6 +3409,7 @@ return{
             BURNT = "How irresponsible.",
         },
         BOAT_ITEM = "It will allow us to go on the water.",
+        BOAT_GRASS_ITEM = "Its durability is questionable, but it will do for now.",
         STEERINGWHEEL_ITEM = "A necessity should we want to steer our boat.",
         ANCHOR_ITEM = "It will allow us to create an anchor for our ships.",
         MAST_ITEM = "A tool for harnessing the wind's power.",
@@ -4187,7 +4210,7 @@ return{
         BEEF_BELL = "Something about its tone triggers an affectionate response in beefalo.",
 
 		-- YOT Catcoon
-		KITCOONDEN = 
+		KITCOONDEN =
 		{
 			GENERIC = "A well-constructed habitation for the kittens.",
             BURNT = "It seems the kittens have lost their residence.",
@@ -4197,7 +4220,7 @@ return{
 
 		KITCOONDEN_KIT = "Materials to construct a proper kitten household.",
 
-		TICOON = 
+		TICOON =
 		{
 			GENERIC = "Quite a wise feline.",
 			ABANDONED = "He has left me to procure the kittens alone.",
@@ -4209,7 +4232,7 @@ return{
 			NOTHING_TO_TRACK = "There is no clear evidence left to point us towards the kitten.",
 			TARGET_TOO_FAR_AWAY = "The kittens are far enough away to hide their smell.",
 		},
-		
+
 		YOT_CATCOONSHRINE =
         {
             GENERIC = "A special representation of wildcats.",
@@ -4314,7 +4337,7 @@ return{
         POCKETWATCH_PARTS = "It appears these pieces of clockwork have been infused with shadow fuel.",
         POCKETWATCH_DISMANTLER = "These tools are specialized for clockmaking.",
 
-        POCKETWATCH_PORTAL_ENTRANCE = 
+        POCKETWATCH_PORTAL_ENTRANCE =
 		{
 			GENERIC = "Magic triggered by a clockwork mechanism, how fascinating!",
 			DIFFERENTSHARD = "Magic triggered by a clockwork mechanism, how fascinating!",
@@ -4328,7 +4351,7 @@ return{
         WATERTREE_ROOT = "I suggest we avoid hitting those with our boat.",
 
         OCEANTREE_PILLAR = "I was able to recreate the growth conditions, but not to the extent of the original.",
-        
+
         OCEANVINE = "These vines seem to enjoy a symbiotic relationship with the tree.",
         FIG = "I do enjoy a nice ripe fig.",
         FIG_COOKED = "Cooking it brings out more of the flavor.",
@@ -4358,7 +4381,7 @@ return{
         },
 
         -- Wolfgang
-        MIGHTY_GYM = 
+        MIGHTY_GYM =
         {
             GENERIC = "Do be careful not to overexert yourself, dear.",
             BURNT = "I'd suggest looking elsewhere for a place to exercise.",
@@ -4371,7 +4394,7 @@ return{
         POTATOSACK = "He seems to have a deep fondness for tubers.",
 
 
-        TERRARIUMCHEST = 
+        TERRARIUMCHEST =
 		{
 			GENERIC = "I wonder how it came to be here.",
 			BURNT = "Oh dear...",
@@ -4429,7 +4452,7 @@ return{
         WX78MODULE_BEE = "They dislike organics, but don't seem opposed to taking inspiration from them.",
         WX78MODULE_MAXHEALTH2 = "They dislike organics, but don't seem opposed to taking inspiration from them.",
 
-        WX78_SCANNER = 
+        WX78_SCANNER =
         {
             GENERIC ="I suspect our resident handywoman might have assisted with its construction.",
             HUNTING = "It appears to be searching for a suitable specimen to analyze.",
@@ -4442,6 +4465,78 @@ return{
         WX78_MODULEREMOVER = "Do be careful with that, dear.",
 
         SCANDATA = "An incredibly thorough analysis. Well done!",
+
+        -- Pirates
+        BOAT_ROTATOR = "It allows me to rotate the deck, while maintaining our heading.",
+        BOAT_ROTATOR_KIT = "It should improve the boat's maneuverability.",
+        BOAT_BUMPER_KELP = "A thick barrier of Nereocystis luetkeana.",
+        BOAT_BUMPER_KELP_KIT = "It would be wise to equip the boat with a protective barrier.",
+        BOAT_BUMPER_SHELL = "A thick barrier of mollusks.",
+        BOAT_BUMPER_SHELL_KIT = "It would be wise to equip the boat with a protective barrier.",
+        BOAT_CANNON = {
+            GENERIC = "A highly effective weapon in nautical combat.",
+            AMMOLOADED = "It is not a plaything.",
+        },
+        BOAT_CANNON_KIT = "A necessary precaution, unfortunately.",
+        CANNONBALL_ROCK_ITEM = "A suitable projectile for a cannon.",
+
+        OCEAN_TRAWLER = {
+            GENERIC = "This will make collecting fish much more expedient.",
+            LOWERED = "Patience is a virtue.",
+            CAUGHT = "A successful catch.",
+            ESCAPED = "Oh dear, it looks like my catch escaped before I could return.",
+            FIXED = "The damage has been mended.",
+        },
+        OCEAN_TRAWLER_KIT = "It's just a simple matter of assembling the pieces.",
+
+        BOAT_MAGNET =
+        {
+            GENERIC = "Its design is rather eccentric, but the theory is sound.",
+            ACTIVATED = "The strong magnetic force will pull my ship toward its target.",
+        },
+        BOAT_MAGNET_KIT = "I will have to speak with him about the run-on sentences in his directions later.",
+
+        BOAT_MAGNET_BEACON =
+        {
+            GENERIC = "It will attract large electromagnets, but only once activated.",
+            ACTIVATED = "The magnetic beacon has been activated.",
+        },
+        DOCK_KIT = "Some essential materials for constructing a wharf.",
+        DOCK_WOODPOSTS_ITEM = "Unnecessary for a floating dock, but they do have a pleasant appearance.",
+
+        MONKEYHUT = "Despite their affinity with the ocean, the apes still seem to prefer sleeping in trees.",
+        POWDER_MONKEY = "Such deplorable manners! You need a good talking to!",
+        PRIME_MATE = "What odd coloration. A form of aposematism, perhaps?",
+		LIGHTCRAB = "Their translucent shells allow the bioluminescence of their bodies to shine through.",
+        CUTLESS = "It may be a suitable plaything for the children, if they behave themselves.",
+        CURSED_MONKEY_TOKEN = "Primitive jewelry.",
+        OAR_MONKEY = "It appears to be a symbol of status aboard the apes' ship.",
+        BANANABUSH = "The fruit is remarkably similar to the subterranean strain.",
+        DUG_BANANABUSH = "The fruit is remarkably similar to our own subterranean strain.",
+        PALMCONETREE = "It appears to be from the family Arecaceae, yet possesses some coniferous characteristics.",
+        PALMCONE_SEED = "It can't begin growing until it's been planted, dear.",
+        PALMCONE_SAPLING = "It has not yet fully matured.",
+        PALMCONE_SCALE = "A segment of the tree's natural armor.",
+        MONKEYTAIL = "A variation of the common Typha latifolia, perhaps?",
+        DUG_MONKEYTAIL = "A variation of the common Typha latifolia, perhaps?",
+
+        MONKEY_MEDIUMHAT = "Suitable headwear for one who spends time at sea.",
+        MONKEY_SMALLHAT = "It could use a thorough washing.",
+        POLLY_ROGERSHAT = "A bit ostentatious for my taste.",
+        POLLY_ROGERS = "Please squawk with your inside voice, dear.",
+
+        MONKEYISLAND_PORTAL = "It appears to be leaking into this world.",
+        MONKEYISLAND_PORTAL_DEBRIS = "I highly doubt the apes I encountered are intelligent enough to have constructed it.",
+        MONKEYQUEEN = "How interesting, the apes seem to have a matriarchal society.",
+        MONKEYPILLAR = "These appear to be supporting the throne.",
+        PIRATE_FLAG_POLE = "Oh dear. That does not bode well.",
+
+        BLACKFLAG = "Historically, pirates also sailed under red or white flags.",
+        PIRATE_STASH = "That appears to be the location indicated on the map.",
+        STASH_MAP = "The penmanship is messy, but legible.",
+
+
+        BANANAJUICE = "Ah, I was in need of some refreshment.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

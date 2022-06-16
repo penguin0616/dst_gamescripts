@@ -268,6 +268,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		craftingmenunumpinpages = Profile:GetCraftingNumPinnedPages(),
 		craftingmenusensitivity = Profile:GetCraftingMenuSensitivity(),
 		inventorysensitivity = Profile:GetInventorySensitivity(),
+		minimapzoomsensitivity = Profile:GetMiniMapZoomSensitivity(),
 		netbookmode = TheSim:IsNetbookMode(),
 		vibration = Profile:GetVibrationEnabled(),
 		showpassword = Profile:GetShowPasswordEnabled(),
@@ -290,6 +291,7 @@ local OptionsScreen = Class(Screen, function( self, prev_screen, default_section
 		craftingmenubufferedbuildautoclose = Profile:GetCraftingMenuBufferedBuildAutoClose(),
 		craftinghintallrecipes = Profile:GetCraftingHintAllRecipesEnabled(),
 		waltercamera = Profile:IsCampfireStoryCameraEnabled(),
+		minimapzoomcursor = Profile:IsMinimapZoomCursorFollowing(),
 		loadingtips = Profile:GetLoadingTipsOption(),
 		defaultcloudsaves = Profile:GetDefaultCloudSaves(),
 	}
@@ -591,6 +593,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetCraftingMenuNumPinPages( self.options.craftingmenunumpinpages )
 	Profile:SetCraftingMenuSensitivity( self.options.craftingmenusensitivity )
 	Profile:SetInventorySensitivity( self.options.inventorysensitivity )
+	Profile:SetMiniMapZoomSensitivity( self.options.minimapzoomsensitivity )
 	Profile:SetScreenFlash( self.options.screenflash )
 	Profile:SetVibrationEnabled( self.options.vibration )
 	Profile:SetShowPasswordEnabled( self.options.showpassword )
@@ -612,6 +615,7 @@ function OptionsScreen:Save(cb)
 	Profile:SetCraftingAutopauseEnabled( self.options.craftingautopause )
 	Profile:SetLoadingTipsOption( self.options.loadingtips )
 	Profile:SetCampfireStoryCameraEnabled( self.options.waltercamera )
+	Profile:SetMinimapZoomCursorEnabled( self.options.minimapzoomcursor )
 	Profile:SetDefaultCloudSaves( self.options.defaultcloudsaves )
 
 	if self.integratedbackpackSpinner:IsEnabled() then
@@ -721,6 +725,7 @@ function OptionsScreen:Apply()
 	Profile:SetScreenShakeEnabled( self.working.screenshake )
 	Profile:SetWathgrithrFontEnabled( self.working.wathgrithrfont )
 	Profile:SetCampfireStoryCameraEnabled( self.working.waltercamera )
+	Profile:SetMinimapZoomCursorEnabled( self.working.minimapzoomcursor )
 	Profile:SetBoatCameraEnabled( self.working.boatcamera )
 	Profile:SetInvertCameraRotation( self.working.InvertCameraRotation )
 	TheSim:SetNetbookMode(self.working.netbookmode)
@@ -1766,6 +1771,14 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
+	self.minimapzoomcursorSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMCURSOR, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMCURSOR)
+	self.minimapzoomcursorSpinner.OnChanged =
+		function( _, data )
+			self.working.minimapzoomcursor = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
     self.movementpredictionSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.MOVEMENTPREDICTION,
         {
             { text = STRINGS.UI.OPTIONS.MOVEMENTPREDICTION_DISABLED, data = false },
@@ -1829,7 +1842,15 @@ function OptionsScreen:_BuildAdvancedSettings()
 			--self:Apply()
 			self:UpdateMenu()
 		end
-		
+
+	self.minimapzoomsensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMSENSITIVITY, 5, 30, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMSENSITIVITY)
+	self.minimapzoomsensitivitySpinner.OnChanged =
+		function( _, data )
+			self.working.minimapzoomsensitivity = data
+			--self:Apply()
+			self:UpdateMenu()
+		end
+
 	if IsSteam() then
 		self.defaultcloudsavesSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.DEFAULTCLOUDSAVES, steamCloudLocalOptions, STRINGS.UI.OPTIONS.TOOLTIPS.DEFAULTCLOUDSAVES)
 		self.defaultcloudsavesSpinner.OnChanged =
@@ -1857,6 +1878,8 @@ function OptionsScreen:_BuildAdvancedSettings()
 	table.insert( self.right_spinners, self.craftinghintallrecipesSpinner )
 	table.insert( self.right_spinners, self.craftingmenusensitivitySpinner )
 	table.insert( self.right_spinners, self.inventorysensitivitySpinner )
+	table.insert( self.right_spinners, self.minimapzoomcursorSpinner )
+	table.insert( self.right_spinners, self.minimapzoomsensitivitySpinner )
 	
 	self.grid_advanced:UseNaturalLayout()
 	self.grid_advanced:InitSize(2, math.max(#self.left_spinners, #self.right_spinners), 440, 40)
@@ -2351,6 +2374,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.craftingmenunumpinpagesSpinner:SetSelectedIndex( self.working.craftingmenunumpinpages or 3)
 	self.craftingmenusensitivitySpinner:SetSelectedIndex( self.working.craftingmenusensitivity or 12)
 	self.inventorysensitivitySpinner:SetSelectedIndex( self.working.inventorysensitivity or 16)
+	self.minimapzoomsensitivitySpinner:SetSelectedIndex( self.working.minimapzoomsensitivity or 15)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )
@@ -2359,6 +2383,7 @@ function OptionsScreen:InitializeSpinners(first)
     self.movementpredictionSpinner:SetSelectedIndex(EnabledOptionsIndex(self.working.movementprediction))
 	self.wathgrithrfontSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.wathgrithrfont ) )
 	self.waltercameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.waltercamera ) )
+	self.minimapzoomcursorSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.minimapzoomcursor ) )
 	self.boatcameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.boatcamera ) )
 	self.integratedbackpackSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.integratedbackpack ) )
 	self.texturestreamingSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.texturestreaming ) )

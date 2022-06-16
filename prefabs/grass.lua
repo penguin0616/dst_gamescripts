@@ -300,5 +300,5 @@ local function grasspart_fn()
 end
 
 return grass("grass", 0),
-    grass("depleted_grass", 1),
-    Prefab("grasspartfx", grasspart_fn, grasspart_assets)
+       grass("depleted_grass", 1),
+       Prefab("grasspartfx", grasspart_fn, grasspart_assets)

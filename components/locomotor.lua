@@ -7,8 +7,6 @@ local STATUS_CALCULATING = 0
 local STATUS_FOUNDPATH = 1
 local STATUS_NOPATH = 2
 
-local NO_ISLAND = 127
-
 local ARRIVE_STEP = .15
 
 local INVALID_PLATFORM_ID = "INVALID PLATFORM"
@@ -253,6 +251,7 @@ local LocoMotor = Class(function(self, inst)
     self.lastpos = {}
     self.slowmultiplier = 0.6
     self.fastmultiplier = 1.3
+    self.timemoving = 0
 
     self.groundspeedmultiplier = 1.0
     self.enablegroundspeedmultiplier = true
@@ -448,7 +447,7 @@ function LocoMotor:UpdateGroundSpeedMultiplier()
 
         local current_ground_tile = TheWorld.Map:GetTileAtPoint(x, 0, z)
         self.groundspeedmultiplier = (self:IsFasterOnGroundTile(current_ground_tile) or 
-                                     (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or current_ground_tile == GROUND.ROAD)) or
+                                     (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or current_ground_tile == WORLD_TILES.ROAD)) or
                                      (self:FasterOnCreep() and oncreep))
 									 and self.fastmultiplier 
 									 or 1
@@ -772,6 +771,7 @@ function LocoMotor:Stop(sgparams)
         --Let stategraph handle stopping physics
         --self.inst.Physics:Stop()
     else
+        self.timemoving = 0
         self:StopMoving()
     end
 
@@ -1013,6 +1013,7 @@ function LocoMotor:OnUpdate(dt)
         Print(VERBOSITY.DEBUG, "OnUpdate INVALID", self.inst.prefab)
         self:ResetPath()
         self:StopUpdatingInternal()
+        self.timemoving = 0
         return
     end
 
@@ -1189,6 +1190,10 @@ function LocoMotor:OnUpdate(dt)
         should_locomote =
             (not is_moving ~= not self.wantstomoveforward) or
             (is_moving and (not is_running ~= not self.wantstorun))
+
+        if is_moving or is_running then    
+            self.timemoving = self.timemoving + dt
+        end
     end
 
     if should_locomote then
@@ -1196,6 +1201,7 @@ function LocoMotor:OnUpdate(dt)
     elseif not self.wantstomoveforward and not self:WaitingForPathSearch() then
         self:ResetPath()
         self:StopUpdatingInternal()
+        self.timemoving = 0
     end
 
     local cur_speed = self.inst.Physics:GetMotorSpeed()
@@ -1329,14 +1335,7 @@ function LocoMotor:FindPath()
 
         --Print(VERBOSITY.DEBUG, string.format("CHECK LOS for [%s] %s -> %s", self.inst.prefab, tostring(p0), tostring(p1)))
 
-        local isle0 = ground.Map:GetIslandAtPoint(p0:Get())
-        local isle1 = ground.Map:GetIslandAtPoint(p1:Get())
-        --print("Islands: ", isle0, isle1)
-
-        if isle0 ~= NO_ISLAND and isle1 ~= NO_ISLAND and isle0 ~= isle1 then
-            --print("NO PATH (different islands)", isle0, isle1)
-            self:ResetPath()
-        elseif ground.Pathfinder:IsClear(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, self.pathcaps) then
+        if ground.Pathfinder:IsClear(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, self.pathcaps) then
             --print("HAS LOS")
             self:ResetPath()
         else

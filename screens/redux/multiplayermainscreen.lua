@@ -36,7 +36,7 @@ local KitcoonPuppet = require "widgets/kitcoonpuppet"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" or BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -276,6 +276,13 @@ local function MakeWX78Banner(self, banner_root, anim)
     anim:SetScale(.667)
 end
 
+local function MakePiratesBanner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_pirates")
+    anim:GetAnimState():SetBank("dst_menu_pirates")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
+
 local function MakeDefaultBanner(self, banner_root, anim)
 	local banner_height = 350
 	banner_root:SetPosition(0, RESOLUTION_Y / 2 - banner_height / 2 + 1 ) -- positioning for when we had the top banner art
@@ -301,6 +308,7 @@ local function MakeDefaultBanner(self, banner_root, anim)
         "creature_hound",
         "creature_malbatross",
     }
+
     for _,v in pairs(creatures) do
         anim:GetAnimState():Hide(v)
     end
@@ -324,7 +332,7 @@ function MakeBanner(self)
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakeWX78Banner(self, banner_root, anim)
+        MakePiratesBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
@@ -335,7 +343,8 @@ function MakeBanner(self)
         MakeCawnivalBanner(self, banner_root, anim)
 	else
         --MakeDefaultBanner(self, banner_root, anim)
-        MakeWX78Banner(self, banner_root, anim)
+        MakePiratesBanner(self, banner_root, anim)
+        --MakeWX78Banner(self, banner_root, anim)
         --[[
 		local cur_time = os.time()
 		if cur_time <= 1585810740 and (not IsConsole() or cur_time >= 1585759200) then -- 9:40am to 11:59pm PDT
@@ -381,6 +390,7 @@ end
 -- For drawing things in front of the MOTD panels
 local function MakeBannerFront(self)
     if IS_BETA then
+        --[[
         local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         local anim = banner_front:AddChild(UIAnim())
@@ -388,6 +398,7 @@ local function MakeBannerFront(self)
         MakeWX78BannerFront(self, banner_front, anim)
 
         return banner_front
+        ]]
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         return nil
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
@@ -397,6 +408,7 @@ local function MakeBannerFront(self)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         return nil
     else
+        --[[
         local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         local anim = banner_front:AddChild(UIAnim())
@@ -404,6 +416,7 @@ local function MakeBannerFront(self)
         MakeWX78BannerFront(self, banner_front, anim)
         
         return banner_front
+        ]]
     end
 end
 
@@ -1076,7 +1089,7 @@ function MultiplayerMainScreen:FinishedFadeIn()
                                         {text=STRINGS.UI.OPTIONS.YES, cb = function() TheFrontEnd:PopScreen() self:Settings("LANG") end },
                                         {text=STRINGS.UI.OPTIONS.NO, cb = function() TheFrontEnd:PopScreen() end}
                                     }
-                                )                
+                                )
                             TheFrontEnd:PushScreen( popup_screen )
                             Profile:SetValue("steam_language_asked", true)
                             Profile:Save()

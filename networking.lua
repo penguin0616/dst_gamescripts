@@ -251,9 +251,28 @@ function SpawnNewPlayerOnServerFromSim(player_guid, skin_base, clothing_body, cl
             player.OnNewSpawn = nil
         end
         TheWorld.components.playerspawner:SpawnAtNextLocation(TheWorld, player)
+        SerializeUserSession(player, true)        
+    end
+end
+
+--TheNet:SpawnSeamlessPlayerReplacement(userid, prefab_name, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+function SpawnSeamlessPlayerReplacement(player_guid, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+    local player = Ents[player_guid]
+    if player ~= nil then
+        local skinner = player.components.skinner
+        skinner:SetClothing(clothing_body)
+        skinner:SetClothing(clothing_hand)
+        skinner:SetClothing(clothing_legs)
+        skinner:SetClothing(clothing_feet)
+        skinner:SetSkinName(skin_base)
+        skinner:SetSkinMode("normal_skin")
+
+        TheWorld:PushEvent("ms_seamlesscharacterspawned", player)
+
         SerializeUserSession(player, true)
     end
 end
+
 
 function RequestedLobbyCharacter(userid, prefab_name, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
 	TheWorld:PushEvent("ms_requestedlobbycharacter", {userid=userid, prefab_name=prefab_name, skin_base=skin_base, clothing_body=clothing_body, clothing_hand=clothing_hand, clothing_legs=clothing_legs, clothing_feet=clothing_feet})

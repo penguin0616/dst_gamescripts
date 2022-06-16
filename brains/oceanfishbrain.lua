@@ -82,7 +82,7 @@ local function GetFoodTargetPos(inst)
 end
 
 local FINDFOOD_CANT_TAGS = {"planted", "INLIMBO"}
-local FINDFOOD_ONEOF_TAGS = {"fishinghook"}
+local FINDFOOD_ONEOF_TAGS = {"fishinghook", "oceantrawler"}
 local function FindFoodAction(inst)
 	if GetFoodTarget(inst) == nil then
 		local target = FindEntity(inst, SEE_LURE_OR_FOOD_DIST, function(food)
@@ -91,6 +91,10 @@ local function FindFoodAction(inst)
 									and TheWorld.Map:IsOceanAtPoint(food.Transform:GetWorldPosition())
 									and not food.components.oceanfishinghook:HasLostInterest(inst)
 									and food.components.oceanfishinghook:TestInterest(inst)
+							elseif food:HasTag("oceantrawler") then
+								return food.components.oceantrawler ~= nil
+									and food.components.oceantrawler:IsLowered()
+									and food.components.oceantrawler:GetBait(inst.prefab) ~= nil
 							end
 							return inst:IsNear(food, SEE_FOOD_DIST) and TheWorld.Map:IsOceanAtPoint(food.Transform:GetWorldPosition())
 						end,

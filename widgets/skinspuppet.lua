@@ -264,7 +264,7 @@ function SkinsPuppet:SetCharacter(character)
 	self.animstate:SetBuild(character)
 end
 
-function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change_emote, skinmode)
+function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change_emote, skinmode, monkey_curse)
 	--[[
 		For mod character support, skinmode should be a table in the format of:
 
@@ -304,7 +304,7 @@ function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change
 			base_build = "ghost_" .. prefabname .. "_build"
 		end
 	end
-	SetSkinsOnAnim( self.animstate, prefabname, base_build, clothing_names, skinmode.type)
+	SetSkinsOnAnim( self.animstate, prefabname, base_build, clothing_names, monkey_curse, skinmode.type)
 
 
 	local previousbank = self.currentanimbank

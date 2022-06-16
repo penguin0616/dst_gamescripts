@@ -326,6 +326,10 @@ function EntityScript:Show()
     self.entity:Show(false)
 end
 
+function EntityScript:IsOnWater()
+    return not self:GetCurrentPlatform() and not TheWorld.Map:IsVisualGroundAtPoint(self.Transform:GetWorldPosition())
+end
+
 function EntityScript:IsInLimbo()
     --V2C: faster than checking tag, but only valid on mastersim
     return self.inlimbo
@@ -1622,7 +1626,7 @@ function EntityScript:GetCurrentTileType()
     local actual_tile = map:GetTile(tx, ty)
 
     if actual_tile ~= nil and tilecenter_x ~= nil and tilecenter_z ~= nil then
-        if actual_tile >= GROUND.UNDERGROUND then
+        if not TileGroupManager:IsLandTile(actual_tile) then
             local xpercent = (tilecenter_x - ptx) / TILE_SCALE + .25
             local ypercent = (tilecenter_z - ptz) / TILE_SCALE + .25
 

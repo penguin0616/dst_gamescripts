@@ -14,11 +14,12 @@ require("util")
 require("networking")
 require("stringutil")
 
-local LoadoutSelect = Class(Widget, function(self, user_profile, character, initial_skintype, hide_item_skinner)
+local LoadoutSelect = Class(Widget, function(self, user_profile, character, initial_skintype, hide_item_skinner, monkey_curse)
     Widget._ctor(self, "LoadoutSelect")
     self.user_profile = user_profile
 
     self.currentcharacter = character
+    self.monkey_curse = monkey_curse
 
     self.show_puppet = self.currentcharacter ~= "random"
     self.have_base_option = table.contains(DST_CHARACTERLIST, self.currentcharacter)
@@ -444,7 +445,7 @@ function LoadoutSelect:_ApplySkins(skins, skip_change_emote)
 
     self:_SetPortrait()
     if self.show_puppet then
-		self.puppet:SetSkins(self.currentcharacter, skins.base, skins, skip_change_emote, self.selected_skinmode)
+		self.puppet:SetSkins(self.currentcharacter, skins.base, skins, skip_change_emote, self.selected_skinmode, self.monkey_curse)
     end
 end
 

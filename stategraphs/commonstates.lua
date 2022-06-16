@@ -936,6 +936,8 @@ CommonStates.AddSleepStates = function(states, timelines, fns)
 
         onenter = onentersleeping,
 
+        onexit = fns and fns.onsleepexit or nil,
+
         timeline = timelines ~= nil and timelines.sleeptimeline or nil,
 
         events =
@@ -1126,7 +1128,7 @@ CommonStates.AddCombatStates = function(states, timelines, anims, fns)
             if inst.components.locomotor ~= nil then
                 inst.components.locomotor:StopMoving()
             end
-            inst.AnimState:PlayAnimation(anims ~= nil and anims.attack or "atk")
+            inst.AnimState:PlayAnimation(anims ~= nil and anims.attack or (fns and fns.attackanimfn and fns.attackanimfn(inst)) or "atk")
             inst.components.combat:StartAttack()
 
             --V2C: Cached to force the target to be the same one later in the timeline

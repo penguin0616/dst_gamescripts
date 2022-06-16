@@ -72,7 +72,7 @@ end
 function GetCharacterAvatarTextureLocation(character)
     local avatar_location = "images/avatars.xml"
     -- Random isn't a real character, but we treat it like one for display purposes.
-    if character == "random" or table.contains(GetOfficialCharacterList(), character) then
+    if character == "random" or table.contains(DST_CHARACTERLIST, character) then
         -- Normal flow. Nothing special.
     elseif table.contains(MODCHARACTERLIST, character) then
         local mod_location = MOD_AVATAR_LOCATIONS[character] or MOD_AVATAR_LOCATIONS["Default"]

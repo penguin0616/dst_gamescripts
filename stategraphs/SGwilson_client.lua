@@ -428,6 +428,13 @@ local actionhandlers =
     ActionHandler(ACTIONS.RAISE_ANCHOR, "dolongaction"),
     ActionHandler(ACTIONS.LOWER_ANCHOR, "dolongaction"),
     ActionHandler(ACTIONS.STEER_BOAT, "steer_boat_idle_pre"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_CLOCKWISE, "doshortaction"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_COUNTERCLOCKWISE, "doshortaction"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_STOP, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_ACTIVATE, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_DEACTIVATE, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_BEACON_TURN_ON, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_BEACON_TURN_OFF, "doshortaction"),
     ActionHandler(ACTIONS.REPAIR_LEAK, "dolongaction"),
     ActionHandler(ACTIONS.SET_HEADING, function(inst, action) inst:PerformPreviewBufferedAction() end),
     ActionHandler(ACTIONS.CAST_NET, "doshortaction"),
@@ -439,6 +446,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.ABANDON_SHIP, "abandon_ship"),
     ActionHandler(ACTIONS.MOUNT_PLANK, "mount_plank"),
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_LOWER, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_RAISE, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_FIX, "dolongaction"),
 
     ActionHandler(ACTIONS.UNWRAP,
         function(inst, action)
@@ -528,7 +538,7 @@ local actionhandlers =
             return "dolongaction"
         end
     end),
-    
+
     ActionHandler(ACTIONS.STOPUSINGITEM, "dolongaction"),
 
     ActionHandler(ACTIONS.YOTB_STARTCONTEST, "doshortaction"),
@@ -545,15 +555,15 @@ local actionhandlers =
     ActionHandler(ACTIONS.HIDEANSEEK_FIND, "dolongaction"),
     ActionHandler(ACTIONS.RETURN_FOLLOWER, "dolongaction"),
 
-    ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),   
+    ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),
 
-    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action) 
+    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action)
         if inst:HasTag("liftingdumbbell") then
             return "use_dumbbell_pst"
         else
             return "use_dumbbell_pre"
         end
-    end), 
+    end),
 
     ActionHandler(ACTIONS.ENTER_GYM, "give"),
     ActionHandler(ACTIONS.LIFT_GYM_FAIL, "mighty_gym_lift"),
@@ -775,6 +785,9 @@ local states =
 
         onupdate = function(inst)
             inst.components.locomotor:RunForward()
+            if inst:HasTag("wonkey") and inst._monkeyrun:value() then
+                inst.sg:GoToState("run_monkey_start")
+            end
         end,
 
         timeline =
@@ -1026,6 +1039,93 @@ local states =
             end),
         },
     },
+
+
+    State{
+        name = "run_monkey_start",
+        tags = {"moving", "running", "canrotate", "monkey"},
+
+        onenter = function(inst)
+            inst.Transform:SetSixFaced()
+            inst.components.locomotor:RunForward()
+            inst.AnimState:PlayAnimation("run_monkey_pre")
+        end,
+
+        onupdate = function(inst)
+            if not inst._monkeyrun:value() then
+                inst.sg:GoToState("run")
+            end
+        end,
+
+        onexit = function(inst)
+            inst.Transform:SetFourFaced()
+        end,
+
+        events=
+        {
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("run_monkey")
+            end ),
+        },
+    },
+
+    State{
+        name = "run_monkey",
+        tags = {"moving", "running", "canrotate", "monkey"},
+
+        onenter = function(inst)
+            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_SPEED_BONUS
+
+            inst.Transform:SetSixFaced()
+            inst.components.locomotor:RunForward()
+            inst.AnimState:PlayAnimation("run_monkey_loop")
+
+            if inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                inst.AnimState:Show("TAIL_carry")
+                inst.AnimState:Hide("TAIL_normal")
+            end
+        end,
+
+        onexit = function(inst)
+            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_WALK_SPEED_PENALTY
+            inst.Transform:SetFourFaced()
+            inst.AnimState:Hide("TAIL_carry")
+            inst.AnimState:Show("TAIL_normal")
+        end,
+
+        timeline =
+        {
+            TimeEvent(4*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+            TimeEvent(5*FRAMES, function(inst) PlayFootstep(inst, 0.5) DoFolyeSounds(inst) end),
+            TimeEvent(10*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+            TimeEvent(11*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+        },
+
+        onupdate = function(inst)
+            inst.components.locomotor:RunForward()
+
+            if not inst._monkeyrun:value() then
+                inst.sg:GoToState("run")
+            end
+        end,
+
+        events=
+        {
+            EventHandler("animover", function(inst) inst.sg:GoToState("run_monkey") end),
+
+            EventHandler("equip", function(inst)
+                inst.AnimState:Show("TAIL_carry")
+                inst.AnimState:Hide("TAIL_normal")
+            end),
+
+            EventHandler("unequip", function(inst)
+                inst.AnimState:Hide("TAIL_carry")
+                inst.AnimState:Show("TAIL_normal")
+            end),
+            
+        },
+    },
+
 
     State{
         name = "previewaction",
@@ -1579,7 +1679,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             if inst.GetCurrentMightinessState then
                 local state = inst:GetCurrentMightinessState()
                 if state == "wimpy" then
@@ -1621,7 +1721,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             if inst.GetCurrentMightinessState then
                 local state = inst:GetCurrentMightinessState()
                 if state == "wimpy" then
@@ -1663,7 +1763,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             if inst.GetCurrentMightinessState then
                 local state = inst:GetCurrentMightinessState()
                 if state == "wimpy" then
@@ -3567,7 +3667,7 @@ local states =
                     inst.sg:RemoveStateTag("abouttoattack")
                 end
             end),
-            TimeEvent(17*FRAMES, function(inst) 
+            TimeEvent(17*FRAMES, function(inst)
 				if inst.sg.statemem.ispocketwatch then
                     inst.SoundEmitter:PlaySound(inst.sg.statemem.ispocketwatch_fueled and "wanda2/characters/wanda/watch/weapon/pst_shadow" or "wanda2/characters/wanda/watch/weapon/pst")
                 end
@@ -4279,8 +4379,8 @@ local states =
 
         onexit = function(inst)
             inst.entity:SetIsPredictingMovement(true)
-        end,        
-    }, 
+        end,
+    },
     --------------------------------------------------------------------------
 
     State{

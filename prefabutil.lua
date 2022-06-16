@@ -130,7 +130,7 @@ function MakeDeployableKitItem(name, prefab_to_deploy, bank, build, anim, assets
         if deployable_data.deployspacing ~= nil then
 			inst.components.deployable:SetDeploySpacing(deployable_data.deployspacing)
 		end
-		
+
 		if burnable.fuelvalue ~= nil then
 			inst:AddComponent("fuel")
 			inst.components.fuel.fuelvalue = burnable.fuelvalue

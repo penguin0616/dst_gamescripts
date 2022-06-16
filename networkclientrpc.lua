@@ -388,7 +388,6 @@ local RPC_HANDLERS =
         end
     end,
 
-
     StopWalking = function(player)
         local playercontroller = player.components.playercontroller
         if playercontroller ~= nil then

@@ -961,7 +961,9 @@ end
 local function build_type_options(initial_item_key)
     local type_options = { { text = STRINGS.UI.PURCHASEPACKSCREEN.FILTER_ALL, data = "ALL" }, { text = STRINGS.UI.PURCHASEPACKSCREEN.FILTER_ITEMS, data = "ITEMS" }  }
     for _,character in pairs(DST_CHARACTERLIST) do
-        table.insert( type_options, { text = STRINGS.NAMES[string.upper(character)], data = character } )
+        if character ~= "wonkey" then --no wonkey skins in packs... yet??? maybe one day???
+            table.insert( type_options, { text = STRINGS.NAMES[string.upper(character)], data = character } )
+        end
     end
 
     if initial_item_key ~= nil then

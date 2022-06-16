@@ -1423,6 +1423,33 @@ function FrontEnd:ToggleImgui(node)
     end
 end
 
+
+function FrontEnd:IsDebugPanelOpen( nodename )
+	if not CAN_USE_DBUI then
+		return false
+	end
+
+    for i, panel in ipairs(self.debug_panels) do
+        if panel:GetNode().NodeName == nodename then
+            return true
+        end
+    end
+    return false
+end
+
+function FrontEnd:CloseDebugPanel( nodename )
+	if not CAN_USE_DBUI then
+		return
+	end
+
+    for i, panel in ipairs(self.debug_panels) do
+        if panel:GetNode().NodeName == nodename then
+            panel:OnClose()
+            table.remove( self.debug_panels, i )
+        end
+    end
+end
+
 function FrontEnd:CreateDebugPanel( node )
 	if not CAN_USE_DBUI then
 		return

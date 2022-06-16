@@ -353,9 +353,76 @@ local function InsertPostInitFunctions(env, isworldgen, isfrontend)
 		AddClassPostConstruct(package, fn)
 	end
 
-	--env.AddTile = function( tile_name, texture_name, noise_texture, runsound, walksound, snowsound, mudsound, flashpoint_modifier )
-	--	AddTile( env.modname, tile_name, texture_name, noise_texture, runsound, walksound, snowsound, mudsound, flashpoint_modifier )
-	--end
+	local TileManager = require("tilemanager")
+	env.RegisterTileRange = function(range_name, range_start, range_end)
+		initprint("RegisterTileRange", range_name)
+		mod_protect_TileManager = false
+		TileManager.RegisterTileRange(range_name, range_start, range_end)
+		mod_protect_TileManager = true
+	end
+
+	env.AddTile = function(tile_name, tile_range, tile_data, ground_tile_def, minimap_tile_def, turf_def)
+		initprint("AddTile", tile_name)
+		mod_protect_TileManager = false
+		TileManager.AddTile(
+			tile_name,
+			tile_range,
+			tile_data,
+			ground_tile_def,
+			minimap_tile_def,
+			turf_def
+		)
+		mod_protect_TileManager = true
+	end
+
+	env.ChangeTileRenderOrder = function(tile_id, target_tile_id, moveafter)
+		initprint("ChangeTileRenderOrder", tile_id)
+		mod_protect_TileManager = false
+		TileManager.ChangeTileRenderOrder(tile_id, target_tile_id, moveafter)
+		mod_protect_TileManager = true
+	end
+
+	env.SetTileProperty = function(tile_id, propertyname, value)
+		initprint("SetTileProperty", tile_id)
+		mod_protect_TileManager = false
+		TileManager.SetTileProperty(tile_id, propertyname, value)
+		mod_protect_TileManager = true
+	end
+
+	env.ChangeMiniMapTileRenderOrder = function(tile_id, target_tile_id, moveafter)
+		initprint("ChangeMiniMapTileRenderOrder", tile_id)
+		mod_protect_TileManager = false
+		TileManager.ChangeMiniMapTileRenderOrder(tile_id, target_tile_id, moveafter)
+		mod_protect_TileManager = true
+	end
+
+	env.SetMiniMapTileProperty = function(tile_id, propertyname, value)
+		initprint("SetMiniMapTileProperty", tile_id)
+		mod_protect_TileManager = false
+		TileManager.SetMiniMapTileProperty(tile_id, propertyname, value)
+		mod_protect_TileManager = true
+	end
+
+	env.AddFalloffTexture = function(falloff_id, falloff_def)
+		initprint("AddFalloffTexture", falloff_id)
+		mod_protect_TileManager = false
+		TileManager.AddFalloffTexture(falloff_id, falloff_def)
+		mod_protect_TileManager = true
+	end
+
+	env.ChangeFalloffRenderOrder = function(falloff_id, falloff_id_id, moveafter)
+		initprint("ChangeFalloffRenderOrder", falloff_id)
+		mod_protect_TileManager = false
+		TileManager.ChangeFalloffRenderOrder(falloff_id, falloff_id_id, moveafter)
+		mod_protect_TileManager = true
+	end
+
+	env.SetFalloffProperty = function(falloff_id, propertyname, value)
+		initprint("SetFalloffProperty", falloff_id)
+		mod_protect_TileManager = false
+		TileManager.SetFalloffProperty(falloff_id, propertyname, value)
+		mod_protect_TileManager = true
+	end
 
 	env.ReleaseID = ReleaseID.IDs
 	env.CurrentRelease = CurrentRelease

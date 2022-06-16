@@ -209,7 +209,7 @@ local function main_fn()
     MakeLargePropagator(inst)
 
     inst:AddComponent("terraformer")
-    inst.components.terraformer.turf = GROUND.FARMING_SOIL
+    inst.components.terraformer.turf = WORLD_TILES.FARMING_SOIL
 	inst.components.terraformer.onterraformfn = OnTerraform
 	inst.components.terraformer.plow = true
 
@@ -241,7 +241,7 @@ end
 
 local function can_plow_tile(inst, pt, mouseover, deployer)
 	local x, z = pt.x, pt.z
-	if not TheWorld.Map:CanPlantAtPoint(x, 0, z) or TheWorld.Map:GetTileAtPoint(x, 0, z) == GROUND.FARMING_SOIL then
+	if not TheWorld.Map:CanPlantAtPoint(x, 0, z) or TheWorld.Map:GetTileAtPoint(x, 0, z) == WORLD_TILES.FARMING_SOIL then
 		return false
 	end
 

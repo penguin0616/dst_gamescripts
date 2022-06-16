@@ -42,11 +42,13 @@ function CookieCutterDrill:FinishDrilling()
 		if self.inst.components.eater ~= nil then
 			self.inst.components.eater.lasteattime = GetTime()
 		end
-
         if self.leak_damage and boat.components.hullhealth then
             boat.components.health:DoDelta(self.leak_damage, false, self.inst)
         end
-
+        if boat.material == "grass" then
+			SpawnPrefab("splash_green_small").Transform:SetPosition(pt.x,0,pt.z)
+			boat.components.health:DoDelta(-TUNING.COOKIECUTTER.DRILL_DAMAGE, false, self.inst)
+        end
 		boat:PushEvent("spawnnewboatleak", {pt = pt, leak_size = "med_leak", playsoundfx = true})
 	end
 end

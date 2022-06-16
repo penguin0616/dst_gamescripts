@@ -298,7 +298,7 @@ local function master_postinit(inst)
         inst.components.eater:SetDiet({ FOODGROUP.VEGETARIAN }, { FOODGROUP.VEGETARIAN })
     end
 
-	inst.components.locomotor:SetFasterOnGroundTile(GROUND.MARSH, true)
+	inst.components.locomotor:SetFasterOnGroundTile(WORLD_TILES.MARSH, true)
 
     inst.components.builder.mashturfcrafting_bonus = 2
 

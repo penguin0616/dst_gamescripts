@@ -86,7 +86,7 @@ local PlayerController = Class(function(self, inst)
     self.startdragtestpos = nil
     self.startdragtime = nil
     self.isclientcontrollerattached = false
-	 
+
     self.mousetimeout = 10
     self.time_direct_walking = 0
 
@@ -474,8 +474,8 @@ function PlayerController:OnControl(control, down)
     local isenabled, ishudblocking = self:IsEnabled()
 	if not isenabled and not ishudblocking then
 		return
-	end	
-	
+	end
+
 	-- actions that can be done while the crafting menu is open go in here
 	if isenabled or ishudblocking then
 		if control == CONTROL_ACTION then
@@ -492,7 +492,7 @@ function PlayerController:OnControl(control, down)
 	if not isenabled then
 		return
 	end
-	
+
     if control == CONTROL_PRIMARY then
         self:OnLeftClick(down)
     elseif control == CONTROL_SECONDARY then
@@ -1543,7 +1543,7 @@ local PINNED_TAGS = { "pinned" }
 local CORPSE_TAGS = { "corpse" }
 function PlayerController:GetActionButtonAction(force_target)
     local isenabled, ishudblocking = self:IsEnabled()
-	
+
     --Don't want to spam the action button before the server actually starts the buffered action
     --Also check if playercontroller is enabled
     --Also check if force_target is still valid
@@ -1691,7 +1691,7 @@ function PlayerController:DoActionButton()
     --if self:IsAOETargeting() then
     --    return
     --end
-    if self.placer == nil then        
+    if self.placer == nil then
         local buffaction = self:GetActionButtonAction()
         if buffaction ~= nil then
             if buffaction.action.pre_action_cb ~= nil then
@@ -2163,7 +2163,7 @@ function PlayerController:OnUpdate(dt)
 							return placer_item:IsValid() and
 								placer_item.replica.inventoryitem ~= nil and
 								placer_item.replica.inventoryitem:CanDeploy(pt, mouseover, self.inst, self.deployplacer.Transform:GetRotation()),
-								(mouseover ~= nil and not mouseover:HasTag("walkableplatform")) or TheInput:GetHUDEntityUnderMouse() ~= nil
+								(mouseover ~= nil and not mouseover:HasTag("walkableplatform") and not mouseover:HasTag("ignoremouseover")) or TheInput:GetHUDEntityUnderMouse() ~= nil
 						end
 						self.deployplacer.components.placer:OnUpdate(0) --so that our position is accurate on the first frame
 					end
@@ -2294,7 +2294,7 @@ function PlayerController:OnUpdate(dt)
         self:DoDragWalking(dt) then
         self.bufferedcastaoe = nil
     else
-        if not self.inst:HasTag("steeringboat") then
+        if not (self.inst:HasTag("steeringboat") or self.inst:HasTag("rotatingboat")) then
             if self.wassteering then
                 -- end reticule
                 local boat = self.inst:GetCurrentPlatform()
@@ -2313,7 +2313,10 @@ function PlayerController:OnUpdate(dt)
                 end
             end
             self.wassteering = true
-            self:DoBoatSteering(dt)
+
+            if self.inst:HasTag("steeringboat") then
+                self:DoBoatSteering(dt)
+            end
 
         end
     end

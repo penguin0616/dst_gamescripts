@@ -28,7 +28,12 @@ local CharacterSelect = Class(Widget, function(self, owner, character_widget_cto
 end)
 
 function CharacterSelect:_BuildCharactersList(additionalCharacters)
-    local active_characters = ExceptionArrays(GetActiveCharacterList(), MODCHARACTEREXCEPTIONS_DST)
+    local active_characters = ""
+    if self.owner.name == "CharacterDetailsPanel" then --hack for the compendium, refactor this into a function call on the owner if we need to extend
+        active_characters = ExceptionArrays(GetFEVisibleCharacterList(), MODCHARACTEREXCEPTIONS_DST)
+    else
+        active_characters = ExceptionArrays(GetSelectableCharacterList(), MODCHARACTEREXCEPTIONS_DST)
+    end
 
     local characters = {}
     for _,hero in ipairs(active_characters) do

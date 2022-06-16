@@ -1275,7 +1275,7 @@ end
 
 function TEMPLATES.CharacterSpinner(onchanged_fn, puppet, user_profile)
     local hero_data = {}
-    for i,hero in ipairs(GetActiveCharacterList()) do
+    for i,hero in ipairs(GetFEVisibleCharacterList()) do
         table.insert(hero_data, {
                 text = STRINGS.CHARACTER_NAMES[hero] or "",
                 colour = nil,

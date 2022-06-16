@@ -26,10 +26,15 @@ function Hull:SetPlank(obj)
     self.plank = obj
 end
 
-function Hull:SetBoatLip(obj)
+function Hull:SetBoatLip(obj,scale)
 	self.boat_lip = obj
 	self.inst:AddPlatformFollower(obj)
 	self:AttachEntityToBoat(obj, 0, 0)
+
+	self.boat_lip:AddTag("ignoremouseover")
+	if scale then
+		self.boat_lip.AnimState:SetScale(scale,scale,scale)
+	end
 end
 
 function Hull:SetRadius(radius)

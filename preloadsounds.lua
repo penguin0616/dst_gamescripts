@@ -166,6 +166,14 @@ local MainSounds =
 
     "WX_rework.fev",
     "WX_rework.fsb",
+
+    "monkeyisland.fev",
+    "monkeyisland.fsb",
+    "monkeyisland_amb.fsb",
+    "monkeyisland_music.fsb",
+
+    "summerevent2022.fev",
+    "summerevent2022.fsb",
 }
 
 function PreloadSoundList(list)

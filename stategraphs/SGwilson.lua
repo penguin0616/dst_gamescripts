@@ -778,6 +778,13 @@ local actionhandlers =
     ActionHandler(ACTIONS.STEER_BOAT, "steer_boat_idle_pre"),
     ActionHandler(ACTIONS.STOP_STEERING_BOAT, "stop_steering"),
     ActionHandler(ACTIONS.SET_HEADING, "steer_boat_turning"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_CLOCKWISE, "doshortaction"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_COUNTERCLOCKWISE, "doshortaction"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_STOP, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_ACTIVATE, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_DEACTIVATE, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_BEACON_TURN_ON, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_BEACON_TURN_OFF, "doshortaction"),
     ActionHandler(ACTIONS.ROW_FAIL, "row_fail"),
     ActionHandler(ACTIONS.ROW, "row"),
     ActionHandler(ACTIONS.ROW_CONTROLLER, "row"),
@@ -787,6 +794,12 @@ local actionhandlers =
     ActionHandler(ACTIONS.MOUNT_PLANK, "mount_plank"),
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
     ActionHandler(ACTIONS.CAST_NET, "cast_net"),
+    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_SHOOT, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_LOWER, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_RAISE, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_FIX, "dolongaction"),
+
     ActionHandler(ACTIONS.UNWRAP,
         function(inst, action)
             return inst:HasTag("quagmire_fasthands") and "domediumaction" or "dolongaction"
@@ -900,7 +913,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.CARNIVAL_HOST_SUMMON, "give"),
 
     ActionHandler(ACTIONS.MUTATE_SPIDER, "give"),
-    
+
     ActionHandler(ACTIONS.HERD_FOLLOWERS, "herd_followers"),
     ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
     ActionHandler(ACTIONS.REPEL, "repel_followers"),
@@ -915,7 +928,7 @@ local actionhandlers =
 
     ActionHandler(ACTIONS.UNLOAD_GYM, "doshortaction"),
 
-    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action) 
+    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action)
         if inst.components.dumbbelllifter:IsLifting(action.invobject) then
             return "use_dumbbell_pst"
         else
@@ -939,10 +952,10 @@ local events =
 
         local is_moving = inst.sg:HasStateTag("moving")
         local should_move = inst.components.locomotor:WantsToMoveForward()
-        
+
         if inst:HasTag("ingym") then
             inst.sg.statemem.dontleavegym = true
-            local gym = inst.components.strongman.gym 
+            local gym = inst.components.strongman.gym
             if gym then
                 gym.components.mightygym:CharacterExitGym(inst)
             end
@@ -1383,7 +1396,7 @@ local events =
 			and (inst.components.health == nil or not inst.components.health:IsDead())
             and (data.beaver or not inst:HasTag("beaver"))
             and (data.moose or not inst:HasTag("weremoose"))
-            and (data.goose or not inst:HasTag("weregoose")) 
+            and (data.goose or not inst:HasTag("weregoose"))
 			then
 
             inst.sg:GoToState("hideandseek_counting", (data and data.timeout) or nil)
@@ -5466,7 +5479,7 @@ local states =
                 elseif state == "mighty" then
                     pre_anim = "dumbbell_mighty_pre"
                 end
-                
+
                 inst.AnimState:PlayAnimation(pre_anim)
             end
         end,
@@ -5479,12 +5492,12 @@ local states =
         end,
 
         timeline = {
-            TimeEvent(FRAMES * 10, function(inst) 
+            TimeEvent(FRAMES * 10, function(inst)
                 if inst.components.mightiness then
                     local state = inst.components.mightiness:GetState()
                     if state == "wimpy" or state == "normal" then
                         inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
-                    end 
+                    end
                 end
             end),
         },
@@ -5517,7 +5530,7 @@ local states =
             if inst.components.mightiness then
                 local state = inst.components.mightiness:GetState()
                 local loop_anim = "dumbbell_skinny_loop"
-                
+
                 if state == "normal" then
                     loop_anim = "dumbbell_normal_loop"
                 elseif state == "mighty" then
@@ -5536,33 +5549,33 @@ local states =
 
         timeline = {
 
-            TimeEvent(FRAMES * 7, function(inst) 
+            TimeEvent(FRAMES * 7, function(inst)
                 if inst.components.mightiness then
                     local state = inst.components.mightiness:GetState()
-                    
+
                     if state == "mighty" then
-                        inst.SoundEmitter:PlaySound("wolfgang1/dumbbell/twirl") 
+                        inst.SoundEmitter:PlaySound("wolfgang1/dumbbell/twirl")
                     end
                 end
             end),
 
-            
-            TimeEvent(FRAMES * 3, function(inst) 
+
+            TimeEvent(FRAMES * 3, function(inst)
                 if inst.components.mightiness then
                     local state = inst.components.mightiness:GetState()
-                    
+
                     if state == "mighty" then
-                        inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt") 
+                        inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
                     end
                 end
             end),
 
-            TimeEvent(FRAMES * 12, function(inst) 
+            TimeEvent(FRAMES * 12, function(inst)
                 if inst.components.mightiness then
                     local state = inst.components.mightiness:GetState()
                     if state == "wimpy" or state == "normal" then
                         inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
-                    end 
+                    end
                 end
             end),
         },
@@ -5579,7 +5592,7 @@ local states =
 
             EventHandler("animover", function(inst)
                 inst.sg.statemem.dumbbell_anim_done = true
-                
+
                 if inst.sg.statemem.queue_stop or
                    inst.components.dumbbelllifter.dumbbell == nil then
                     inst.sg:GoToState("use_dumbbell_pst")
@@ -5600,7 +5613,7 @@ local states =
             if inst.components.mightiness then
                 inst.sg.statemem.mightiness = inst.components.mightiness:GetState()
                 local pst_anim = "dumbbell_skinny_pst"
-                
+
                 if inst.sg.statemem.mightiness == "normal" then
                     pst_anim = "dumbbell_normal_pst"
                 elseif inst.sg.statemem.mightiness == "mighty" then
@@ -5612,19 +5625,19 @@ local states =
         end,
 
         timeline = {
-            TimeEvent(FRAMES * 1, function(inst) 
+            TimeEvent(FRAMES * 1, function(inst)
                 if inst.components.mightiness then
                     if inst.sg.statemem.mightiness == "wimpy" then
                         inst.SoundEmitter:PlaySound("wolfgang2/characters/wolfgang/grunt")
-                    end 
+                    end
                 end
             end),
 
-            TimeEvent(FRAMES * 10, function(inst) 
+            TimeEvent(FRAMES * 10, function(inst)
                 if inst.components.mightiness then
                     if inst.sg.statemem.mightiness == "wimpy" then
                         inst.SoundEmitter:PlaySound("wolfgang2/common/dumbel_drop")
-                    end 
+                    end
                 end
             end),
         },
@@ -5805,7 +5818,7 @@ local states =
                     inst:PerformBufferedAction()
                 end
             end),
-            TimeEvent(17*FRAMES, function(inst) 
+            TimeEvent(17*FRAMES, function(inst)
 				if inst.sg.statemem.ispocketwatch then
                     inst.SoundEmitter:PlaySound(inst.sg.statemem.ispocketwatch_fueled and "wanda2/characters/wanda/watch/weapon/pst_shadow" or "wanda2/characters/wanda/watch/weapon/pst")
                 end
@@ -7308,7 +7321,7 @@ local states =
                 -- **** ANIMATION WARNING ****
 
                 --  THIS ANIMATION LAYERS THE LANTERN GLOW UNDER THE ARM IN THE UP POSITION SO CANNOT BE USED IN STANDARD LANTERN GLOW ANIMATIONS.
-                
+
                 inst.AnimState:PlayAnimation("toolpunch")
                 inst.sg.statemem.istoolpunch = true
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, inst.sg.statemem.attackvol, true)
@@ -7460,7 +7473,7 @@ local states =
                     inst.sg:RemoveStateTag("abouttoattack")
                 end
             end),
-            TimeEvent(17*FRAMES, function(inst) 
+            TimeEvent(17*FRAMES, function(inst)
 				if inst.sg.statemem.ispocketwatch then
                     inst.SoundEmitter:PlaySound(inst.sg.statemem.ispocketwatch_fueled and "wanda2/characters/wanda/watch/weapon/pst_shadow" or "wanda2/characters/wanda/watch/weapon/pst")
                 end
@@ -7701,6 +7714,22 @@ local states =
 
         onupdate = function(inst)
             inst.components.locomotor:RunForward()
+
+            if inst:HasTag("wonkey") and inst.components.locomotor.timemoving >= TUNING.WONKEY_TIME_TO_RUN -0.5 and not inst.components.rider:IsRiding() then
+                inst._monkeyrun:set(true)
+            end
+
+            if inst:HasTag("wonkey") and inst.components.locomotor.timemoving >= TUNING.WONKEY_TIME_TO_RUN and not inst.components.rider:IsRiding() then             
+                inst.sg.statemem.stillmonkeyrun = true
+                inst.sg:GoToState("run_monkey_start")
+            end
+
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.stillmonkeyrun then
+                if inst:HasTag("wonkey") then inst._monkeyrun:set(false) end
+            end
         end,
 
         timeline =
@@ -7928,6 +7957,7 @@ local states =
             EventHandler("gogglevision", function(inst, data)
                 if data.enabled then
                     if inst.sg.statemem.sandstorm then
+                        inst.sg.statemem.stillmonkeyrun = true
                         inst.sg:GoToState("run")
                     end
                 elseif not (inst.sg.statemem.riding or
@@ -7935,12 +7965,14 @@ local states =
                             inst.sg.statemem.iswere or
                             inst.sg.statemem.sandstorm or
                             inst:GetStormLevel() < TUNING.SANDSTORM_FULL_LEVEL) then
+                    inst.sg.statemem.stillmonkeyrun = true
                     inst.sg:GoToState("run")
                 end
             end),
             EventHandler("sandstormlevel", function(inst, data)
                 if data.level < TUNING.SANDSTORM_FULL_LEVEL then
                     if inst.sg.statemem.sandstorm then
+                        inst.sg.statemem.stillmonkeyrun = true
                         inst.sg:GoToState("run")
                     end
                 elseif not (inst.sg.statemem.riding or
@@ -7948,12 +7980,14 @@ local states =
                             inst.sg.statemem.iswere or
                             inst.sg.statemem.sandstorm or
                             inst.components.playervision:HasGoggleVision()) then
+                    inst.sg.statemem.stillmonkeyrun = true
                     inst.sg:GoToState("run")
                 end
             end),
             EventHandler("carefulwalking", function(inst, data)
                 if not data.careful then
                     if inst.sg.statemem.careful then
+                        inst.sg.statemem.stillmonkeyrun = true
                         inst.sg:GoToState("run")
                     end
                 elseif not (inst.sg.statemem.riding or
@@ -7962,12 +7996,14 @@ local states =
                             inst.sg.statemem.groggy or
                             inst.sg.statemem.careful or
                             inst.sg.statemem.iswere) then
+                    inst.sg.statemem.stillmonkeyrun = true
                     inst.sg:GoToState("run")
                 end
             end),
         },
 
         ontimeout = function(inst)
+            inst.sg.statemem.stillmonkeyrun = true
             inst.sg:GoToState("run")
         end,
     },
@@ -8008,6 +8044,95 @@ local states =
                 if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
                 end
+            end),
+        },
+    },
+
+    State{
+        name = "run_monkey_start",
+        tags = {"moving", "running", "canrotate", "monkey", "autopredict"},
+
+        onenter = function(inst)
+            inst._monkeyrun:set(true)
+            inst.Transform:SetSixFaced()
+            inst.components.locomotor:RunForward()
+            inst.AnimState:PlayAnimation("run_monkey_pre")
+            --inst.SoundEmitter:PlaySound("dontstarve_DLC002/characters/wilbur/walktorun", "walktorun") TODO SOUND
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.stillrunning then
+                inst.Transform:SetFourFaced()
+                inst._monkeyrun:set(false)
+            end
+        end,
+
+        events=
+        {
+            EventHandler("animover", function(inst)
+                inst.sg.statemem.stillrunning = true
+                inst.sg:GoToState("run_monkey")
+            end ),
+        },
+    },
+
+    State{
+        name = "run_monkey",
+        tags = {"moving", "running", "canrotate", "monkey", "autopredict"},
+
+        onenter = function(inst)
+            inst._monkeyrun:set(true)
+            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_SPEED_BONUS
+            inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * TUNING.WONKEY_RUN_HUNGER_RATE_MULT)
+            inst.Transform:SetSixFaced()
+            inst.components.locomotor:RunForward()
+            inst.AnimState:PlayAnimation("run_monkey_loop")
+
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                inst.AnimState:Show("TAIL_carry")
+                inst.AnimState:Hide("TAIL_normal")
+            end
+        end,
+
+        onexit = function(inst)
+            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_WALK_SPEED_PENALTY
+            inst.components.hunger:SetRate( TUNING.WILSON_HUNGER_RATE )
+            inst.Transform:SetFourFaced()
+            inst.AnimState:Hide("TAIL_carry")
+            inst.AnimState:Show("TAIL_normal")
+
+            if not inst.sg.statemem.stillrunning then
+                inst._monkeyrun:set(false)
+            end
+        end,
+
+        timeline =
+        {
+            TimeEvent(4*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+            TimeEvent(5*FRAMES, function(inst) PlayFootstep(inst, 0.5) DoFoleySounds(inst) end),
+            TimeEvent(10*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+            TimeEvent(11*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+        },
+
+        onupdate = function(inst)
+            inst.components.locomotor:RunForward()
+        end,
+
+        events=
+        {
+            EventHandler("animover", function(inst)
+                inst.sg.statemem.stillrunning = true
+                inst.sg:GoToState("run_monkey") 
+            end),
+
+            EventHandler("equip", function(inst)
+                inst.AnimState:Show("TAIL_carry")
+                inst.AnimState:Hide("TAIL_normal")
+            end),
+
+            EventHandler("unequip", function(inst)
+                inst.AnimState:Hide("TAIL_carry")
+                inst.AnimState:Show("TAIL_normal")
             end),
         },
     },
@@ -8509,10 +8634,17 @@ local states =
             inst.components.locomotor:Stop()
             inst:ClearBufferedAction()
 
-            if spike ~= nil then
+            local anim = "short"
+
+            if spike ~= nil and type(spike) == "list" then
                 inst:ForceFacePoint(spike.Transform:GetWorldPosition())
+                if spike.spikesize then
+                    anim = spike.spikesize
+                end
+            else
+                anim = spike
             end
-            inst.AnimState:PlayAnimation("hit_spike_"..(spike ~= nil and spike.spikesize or "short"))
+            inst.AnimState:PlayAnimation("hit_spike_"..anim)
 
             inst.SoundEmitter:PlaySound("dontstarve/wilson/hit")
             DoHurtSound(inst)
@@ -10313,7 +10445,7 @@ local states =
 				inst.SoundEmitter:PlaySound("wanda1/wanda/rewindtime_rebirth")
             end),
         },
-		
+
 		events =
         {
             EventHandler("animover", function(inst)
@@ -13602,7 +13734,7 @@ local states =
 			end
         end,
 
-		timeline = 
+		timeline =
 		{
             TimeEvent(8 * FRAMES, function(inst)
 				inst.AnimState:Show("ARM_normal")
@@ -13816,9 +13948,9 @@ local states =
 
         timeline =
         {
-            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/recall") 
+            TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/recall")
             end),
-            
+
             TimeEvent(3 * FRAMES, function(inst)
                 inst.DynamicShadow:Enable(true)
                 ToggleOnPhysics(inst)
@@ -13916,7 +14048,7 @@ local states =
 				inst.sg:GoToState("pocketwatch_portal_fallout")
 				return
 			end
-		
+
             inst.components.locomotor:Stop()
 			ForceStopHeavyLifting(inst)
 			StartTeleporting(inst)
@@ -13930,11 +14062,11 @@ local states =
 
         timeline =
         {
-            TimeEvent(16 * FRAMES, function(inst) 
+            TimeEvent(16 * FRAMES, function(inst)
 				inst:Show() -- hidden by StartTeleporting
             end),
 
-            TimeEvent(17 * FRAMES, function(inst) 
+            TimeEvent(17 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("wanda1/wanda/jump_whoosh")
             end),
 
@@ -13991,7 +14123,7 @@ local states =
 
         timeline =
         {
-            TimeEvent(16 * FRAMES, function(inst) 
+            TimeEvent(16 * FRAMES, function(inst)
 				inst:Show() -- hidden by StartTeleporting
             end),
 
@@ -15024,7 +15156,7 @@ local states =
             inst.AnimState:PushAnimation("useitem_pst", false)
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(26 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/woodie/goose/death_voice") end),
             TimeEvent(26 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber1/spiderwhistle/blow",nil,.8) end),
@@ -15052,7 +15184,7 @@ local states =
             inst.AnimState:PushAnimation("useitem_pst", false)
         end,
 
-        timeline = 
+        timeline =
         {
             TimeEvent(15 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber2/common/spider_repellent") end),
             TimeEvent(17 * FRAMES, function(inst) inst:PerformBufferedAction() end),
@@ -15202,6 +15334,128 @@ local states =
             inst.sg:GoToState("idle")
             inst.components.talker:Say(GetActionFailString(inst, "REMOVEMODULES", "NO_MODULES"))
         end,
+    },
+
+    ---------------------------------------------------------------------------
+    -- monkey
+
+    State{
+        name = "changetomonkey",
+        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt" },
+
+        onenter = function(inst)
+            ClearStatusAilments(inst)
+            ForceStopHeavyLifting(inst)
+            inst.Physics:Stop()
+            inst.components.inventory:Close()
+            inst:PushEvent("ms_closepopups")
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:RemotePausePrediction()
+                inst.components.playercontroller:Enable(false)
+            end
+
+            inst.AnimState:AddOverrideBuild("player_monkey_change")
+
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("cursed_pre")
+
+            SpawnPrefab("monkey_cursed_pre_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst:ChangeToMonkey()
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(true)
+            end
+        end,
+    },
+
+    State{
+        name = "changetomonkey_pst",
+        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt"  },
+
+        onenter = function(inst)
+            inst.AnimState:AddOverrideBuild("player_monkey_change")
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("cursed_pst")
+
+            SpawnPrefab("monkey_cursed_pst_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end,
+
+        timeline =
+        {
+            TimeEvent(20*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("nointerrupt")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "changefrommonkey",
+        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("deform_pre")
+
+            SpawnPrefab("monkey_deform_pre_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst:ChangeFromMonkey()
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "changefrommonkey_pst",
+        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.AnimState:ClearOverrideBuild("player_monkey_change")
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("deform_pst")
+
+            SpawnPrefab("monkey_deform_pst_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        end,
+
+        timeline =
+        {
+            TimeEvent(20*FRAMES, function(inst)
+                inst.sg:RemoveStateTag("nointerrupt")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
     },
 }
 

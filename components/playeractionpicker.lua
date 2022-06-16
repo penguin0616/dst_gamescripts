@@ -133,13 +133,14 @@ function PlayerActionPicker:GetUseItemActions(target, useitem, right)
 end
 
 function PlayerActionPicker:GetSteeringActions(inst, pos, right)
-    if not self.inst:HasTag("steeringboat") then return nil end
-
-    if right then
-        return self:SortActionList({ ACTIONS.STOP_STEERING_BOAT }, pos)
-    else
-        if not TheInput:ControllerAttached() then
-            return self:SortActionList({ ACTIONS.SET_HEADING }, pos)
+    -- Boat steering
+    if self.inst:HasTag("steeringboat") then
+        if right then
+            return self:SortActionList({ ACTIONS.STOP_STEERING_BOAT }, pos)
+        else
+            if not TheInput:ControllerAttached() then
+                return self:SortActionList({ ACTIONS.SET_HEADING }, pos)
+            end
         end
     end
 
@@ -234,7 +235,7 @@ function PlayerActionPicker:GetLeftClickActions(position, target)
         if useitem:IsValid() then
             if target == self.inst then
                 actions = self:GetInventoryActions(useitem)
-            elseif target ~= nil  and not target:HasTag("walkableplatform") then
+            elseif target ~= nil and not target:HasTag("walkableplatform") and not target:HasTag("ignoremouseover") then
                 actions = self:GetUseItemActions(target, useitem)
             else
                 actions = self:GetPointActions(position, useitem)
@@ -315,7 +316,7 @@ function PlayerActionPicker:GetRightClickActions(position, target)
         if useitem:IsValid() then
             if target == self.inst then
                 actions = self:GetInventoryActions(useitem, true)
-            elseif target ~= nil and (not target:HasTag("walkableplatform") or (useitem:HasTag("repairer") and not useitem:HasTag("deployable"))) then
+            elseif target ~= nil and ((not target:HasTag("walkableplatform") and not target:HasTag("ignoremouseover")) or (useitem:HasTag("repairer") and not useitem:HasTag("deployable"))) then
                 actions = self:GetUseItemActions(target, useitem, true)
             else
                 actions = self:GetPointActions(position, useitem, true)
@@ -380,6 +381,7 @@ function PlayerActionPicker:DoGetMouseActions(position, target)
                 for i, v in ipairs(lmbs) do
                     if (v.action == ACTIONS.DROP and self.inst:GetDistanceSqToPoint(position:Get()) < 16) or
                         v.action == ACTIONS.SET_HEADING then
+
                         lmb = v
                     end
                 end

@@ -17,15 +17,15 @@ local MAX_TRAIL = 32
 local TRAIL_TICK_TIME = 40
 local VALID_TILES = table.invert(
 {
-    GROUND.DIRT,
-    GROUND.SAVANNA,
-    GROUND.GRASS,
-    GROUND.FOREST,
-    GROUND.MARSH,
-    GROUND.CAVE,
-    GROUND.FUNGUS,
-    GROUND.SINKHOLE,
-    GROUND.MUD,
+    WORLD_TILES.DIRT,
+    WORLD_TILES.SAVANNA,
+    WORLD_TILES.GRASS,
+    WORLD_TILES.FOREST,
+    WORLD_TILES.MARSH,
+    WORLD_TILES.CAVE,
+    WORLD_TILES.FUNGUS,
+    WORLD_TILES.SINKHOLE,
+    WORLD_TILES.MUD,
 })
 
 --------------------------------------------------------------------------

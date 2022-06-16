@@ -60,7 +60,7 @@ local function placegoffgrids(inst, radiusMax, prefab,tags)
     end
 
     local tile = GetWorld().Map:GetTileAtPoint(x,y,z)
-    if  tile == GROUND.DEEPRAINFOREST then
+    if  tile == WORLD_TILES.DEEPRAINFOREST then
     	local plant = SpawnPrefab(prefab)
     	plant.Transform:SetPosition(x,y,z) 
     	plant.spawnpatch = inst

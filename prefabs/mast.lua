@@ -3,6 +3,7 @@ local assets =
     Asset("ANIM", "anim/boat_mast2_wip.zip"),
     Asset("INV_IMAGE", "mast_item"),
     Asset("ANIM", "anim/seafarer_mast.zip"),
+    Asset("MINIMAP_IMAGE", "mast"),
 }
 
 local malbatross_assets =
@@ -13,6 +14,7 @@ local malbatross_assets =
     Asset("ANIM", "anim/boat_mast_malbatross_build.zip"),
 
     Asset("ANIM", "anim/seafarer_mast_malbatross.zip"), -- item
+    Asset("MINIMAP_IMAGE", "mast_malbatross"),
 }
 
 local upgrade_assets =
@@ -314,6 +316,7 @@ local function fn_pre(inst)
     inst.entity:AddLight()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
+    inst.entity:AddMiniMapEntity()
     MakeObstaclePhysics(inst, .2)
 
     inst.Light:Enable(false)
@@ -372,6 +375,8 @@ local function fn()
     inst.AnimState:SetBuild("boat_mast2_wip")
     inst.AnimState:PlayAnimation("closed")
 
+    inst.MiniMapEntity:SetIcon("mast.png")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -396,6 +401,8 @@ local function malbatrossfn()
     inst.AnimState:SetBank("mast_malbatross")
     inst.AnimState:SetBuild("boat_mast_malbatross_build")
     inst.AnimState:PlayAnimation("closed")
+
+    inst.MiniMapEntity:SetIcon("mast_malbatross.png")
 
     inst.entity:SetPristine()
 

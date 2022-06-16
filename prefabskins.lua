@@ -1391,6 +1391,10 @@ PREFAB_SKINS = {
 		"wolfgang_wolfman",
 		"wolfgang_wrestler",
 	},
+	wonkey =
+	{
+		"wonkey_none",
+	},
 	woodie =
 	{
 		"woodie_combatant",

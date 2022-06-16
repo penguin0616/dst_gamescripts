@@ -63,17 +63,13 @@ end
 
 function Map:IsAboveGroundAtPoint(x, y, z, allow_water)
     local tile = self:GetTileAtPoint(x, y, z)
-    local valid_water_tile = (allow_water == true) and tile >= GROUND.OCEAN_START and tile <= GROUND.OCEAN_END
-    return (tile < GROUND.UNDERGROUND or valid_water_tile) and
-        tile ~= GROUND.IMPASSABLE and
-        tile ~= GROUND.INVALID
+    local valid_water_tile = (allow_water == true) and TileGroupManager:IsOceanTile(tile)
+    return valid_water_tile or TileGroupManager:IsLandTile(tile)
 end
 
 function Map:IsOceanTileAtPoint(x, y, z)
     local tile = self:GetTileAtPoint(x, y, z)
-    return tile >= GROUND.OCEAN_START and tile <= GROUND.OCEAN_END and
-        tile ~= GROUND.IMPASSABLE and
-        tile ~= GROUND.INVALID
+    return TileGroupManager:IsOceanTile(tile)
 end
 
 function Map:IsOceanAtPoint(x, y, z, allow_boats)
@@ -84,17 +80,14 @@ end
 
 function Map:IsValidTileAtPoint(x, y, z)
     local tile = self:GetTileAtPoint(x, y, z)
-    return tile ~= GROUND.IMPASSABLE and tile ~= GROUND.INVALID
+    return not TileGroupManager:IsInvalidTile(tile)
 end
 
 local TERRAFORMBLOCKER_TAGS = { "terraformblocker" }
 local TERRAFORMBLOCKER_IGNORE_TAGS = { "INLIMBO" }
 function Map:CanTerraformAtPoint(x, y, z)
     local tile = self:GetTileAtPoint(x, y, z)
-    if tile == GROUND.DIRT or
-        tile >= GROUND.UNDERGROUND or
-        tile == GROUND.IMPASSABLE or
-        tile == GROUND.INVALID then
+    if TERRAFORM_IMMUNE[tile] or not TileGroupManager:IsLandTile(tile) then
         return false
     elseif TERRAFORM_EXTRA_SPACING > 0 then
         for i, v in ipairs(TheSim:FindEntities(x, 0, z, TERRAFORM_EXTRA_SPACING, TERRAFORMBLOCKER_TAGS, TERRAFORMBLOCKER_IGNORE_TAGS)) do
@@ -123,18 +116,17 @@ function Map:CanPlowAtPoint(x, y, z)
 end
 
 function Map:CanPlaceTurfAtPoint(x, y, z)
-    return self:GetTileAtPoint(x, y, z) == GROUND.DIRT
+    return self:GetTileAtPoint(x, y, z) == WORLD_TILES.DIRT
 end
 
 function Map:CanPlantAtPoint(x, y, z)
     local tile = self:GetTileAtPoint(x, y, z)
-    return tile ~= GROUND.ROCKY and
-        tile ~= GROUND.ROAD and
-        tile ~= GROUND.UNDERROCK and
-        tile < GROUND.UNDERGROUND and
-        tile ~= GROUND.IMPASSABLE and
-        tile ~= GROUND.INVALID and
-        not GROUND_FLOORING[tile]
+
+    if not TileGroupManager:IsLandTile(tile) then
+        return false
+    end
+
+    return not GROUND_HARD[tile]
 end
 
 local FIND_SOIL_MUST_TAGS = { "soil" }
@@ -146,7 +138,7 @@ function Map:CollapseSoilAtPoint(x, y, z)
 end
 
 function Map:IsFarmableSoilAtPoint(x, y, z)
-    return self:GetTileAtPoint(x, y, z) == GROUND.FARMING_SOIL
+    return self:GetTileAtPoint(x, y, z) == WORLD_TILES.FARMING_SOIL
 end
 
 local DEPLOY_IGNORE_TAGS = { "NOBLOCK", "player", "FX", "INLIMBO", "DECOR", "WALKABLEPLATFORM" }
@@ -233,7 +225,7 @@ end
 
 function Map:CanDeployAtPointInWater(pt, inst, mouseover, data)
     local tile = self:GetTileAtPoint(pt.x, pt.y, pt.z)
-    if tile == GROUND.IMPASSABLE or tile == GROUND.INVALID then
+    if TileGroupManager:IsInvalidTile(tile) then
         return false
     end
 
@@ -257,7 +249,7 @@ end
 
 function Map:CanDeployMastAtPoint(pt, inst, mouseover)
     local tile = self:GetTileAtPoint(pt.x, pt.y, pt.z)
-    if tile == GROUND.IMPASSABLE or tile == GROUND.INVALID then
+    if TileGroupManager:IsInvalidTile(tile) then
         return false
     end
 
@@ -275,7 +267,7 @@ end
 
 function Map:CanPlacePrefabFilteredAtPoint(x, y, z, prefab)
     local tile = self:GetTileAtPoint(x, y, z)
-    if tile == GROUND.INVALID or tile == GROUND.IMPASSABLE then
+    if TileGroupManager:IsInvalidTile(tile) then
         return false
     end
 
@@ -309,22 +301,36 @@ function Map:CanDeployRecipeAtPoint(pt, recipe, rot)
 end
 
 function Map:IsSurroundedByWater(x, y, z, radius)
-    -- TheSim:ProfilerPush("isSurroundedByWater")
+    radius = radius + 1 --add 1 to radius for map overhang, way cheaper than doing an IsVisualGround test
+    local num_edge_points = math.ceil((radius*2) / 4) - 1
 
-    for i = -radius, radius, 1 do
-        if self:IsVisualGroundAtPoint(x - radius, y, z + i) or self:IsVisualGroundAtPoint(x + radius, y, z + i)
-			or not self:IsValidTileAtPoint(x - radius, y, z + i) or not self:IsValidTileAtPoint(x + radius, y, z + i) then
-            return false
+    --test the corners first
+    if not self:IsOceanTileAtPoint(x + radius, y, z + radius) then return false end
+    if not self:IsOceanTileAtPoint(x - radius, y, z + radius) then return false end
+    if not self:IsOceanTileAtPoint(x + radius, y, z - radius) then return false end
+    if not self:IsOceanTileAtPoint(x - radius, y, z - radius) then return false end
+
+    --if the radius is less than 1(2 after the +1), it won't have any edges to test and we can end the testing here.
+    if num_edge_points == 0 then return true end
+
+    local dist = (radius*2) / (num_edge_points + 1)
+    --test the edges next
+    for i = 1, num_edge_points do
+        local idist = dist * i
+        if not self:IsOceanTileAtPoint(x - radius + idist, y, z + radius) then return false end
+        if not self:IsOceanTileAtPoint(x - radius + idist, y, z - radius) then return false end
+        if not self:IsOceanTileAtPoint(x - radius, y, z - radius + idist) then return false end
+        if not self:IsOceanTileAtPoint(x + radius, y, z - radius + idist) then return false end
+    end
+
+    --test interior points last
+    for i = 1, num_edge_points do
+        local idist = dist * i
+        for j = 1, num_edge_points do
+            local jdist = dist * j
+            if not self:IsOceanTileAtPoint(x - radius + idist, y, z - radius + jdist) then return false end
         end
     end
-    for i = -(radius - 1), radius - 1, 1 do
-        if self:IsVisualGroundAtPoint(x + i, y, z -radius) or self:IsVisualGroundAtPoint(x + i, y, z + radius)
-			or not self:IsValidTileAtPoint(x + i, y, z -radius) or not self:IsValidTileAtPoint(x + i, y, z + radius) then
-            return false
-        end
-    end
-
-    -- TheSim:ProfilerPop()
     return true
 end
 
@@ -414,7 +420,7 @@ function Map:NodeAtPointHasTag(x, y, z, tag)
 end
 
 local function FindVisualNodeAtPoint_TestArea(map, pt_x, pt_z, on_land, r)
-	local best = {tile_type = GROUND.INVALID, render_layer = -1}
+	local best = {tile_type = WORLD_TILES.INVALID, render_layer = -1}
 	for _z = -1, 1 do
 		for _x = -1, 1 do
 			local x, z = pt_x + _x*r, pt_z + _z*r
@@ -433,7 +439,7 @@ local function FindVisualNodeAtPoint_TestArea(map, pt_x, pt_z, on_land, r)
 		end
 	end
 
-	return best.tile_type ~= GROUND.INVALID and best or nil
+	return best.tile_type ~= WORLD_TILES.INVALID and best or nil
 end
 
 -- !! NOTE: This function is fairly expensive!

@@ -301,9 +301,9 @@ function c_tile()
     s = s..string.format("world[%f,%f,%f] tile[%d,%d] ", mx,my,mz, tx,ty)
 
     local tile = map:GetTileAtPoint(ConsoleWorldPosition():Get())
-    for k,v in pairs(GROUND) do
+    for k, v in pairs(WORLD_TILES) do
         if v == tile then
-            s = s..string.format("ground[%s] ", k)
+            s = s..string.format("world_tiles[%s] ", k)
             break
         end
     end
@@ -1142,7 +1142,11 @@ function c_remove(entity)
 
     if mouseentity ~= ConsoleCommandPlayer() then
         if mouseentity.components.health then
-            mouseentity.components.health:Kill()
+            if mouseentity.components.health.currenthealth > 0 then
+                mouseentity.components.health:Kill()
+            else
+                mouseentity:Remove()
+            end
         elseif mouseentity.Remove then
             mouseentity:Remove()
         end
@@ -1362,6 +1366,8 @@ function c_makeboat()
 	inst.Transform:SetPosition(x, y, z)
 	inst = SpawnPrefab("steeringwheel")
 	inst.Transform:SetPosition(x + 3.25, y, z)
+    inst = SpawnPrefab("boat_rotator")
+	inst.Transform:SetPosition(x - 2.25, y, z)
 	inst = SpawnPrefab("anchor")
 	inst.Transform:SetPosition(x + 2.25, y, z + 2.25)
 
@@ -1498,6 +1504,23 @@ function c_makeboatspiral()
 			end
 		end
     end
+end
+
+function c_boatcollision()
+    -- Debug boat collision only works when the player is standing on it
+    if ThePlayer ~= nil then
+        local boat = ThePlayer:GetCurrentPlatform()
+        if boat ~= nil and boat.components.boatring ~= nil then
+            local x, y, z = ConsoleWorldPosition():Get()
+            local collidedbumper = boat.components.boatring:GetBumperAtPoint(x, z)
+            if collidedbumper ~= nil then
+                collidedbumper.components.health:DoDelta(-TUNING.BOAT.MAX_HULL_HEALTH_DAMAGE)
+                collidedbumper:PushEvent("boatcollision")
+                return
+            end
+        end
+    end
+
 end
 
 function c_autoteleportplayers()

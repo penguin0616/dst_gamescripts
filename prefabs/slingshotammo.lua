@@ -50,7 +50,7 @@ local function NoHoles(pt)
 end
 
 local function SpawnShadowTentacle(target, pt, starting_angle)
-    local offset = FindWalkableOffset(pt, starting_angle, 2, 3, false, true, NoHoles)
+    local offset = FindWalkableOffset(pt, starting_angle, 2, 3, false, true, NoHoles, false, true)
     if offset ~= nil then
         local tentacle = SpawnPrefab("shadowtentacle")
         if tentacle ~= nil then

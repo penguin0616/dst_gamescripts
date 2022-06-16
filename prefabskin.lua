@@ -277,6 +277,12 @@ armorskeleton_clear_fn = function(inst) basic_clear_fn(inst, "armor_skeleton" ) 
 reflectivevest_init_fn =  function(inst, build_name) basic_init_fn( inst, build_name, "torso_reflective" ) end
 reflectivevest_clear_fn = function(inst) basic_clear_fn(inst, "torso_reflective" ) end
 
+monkey_mediumhat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_monkey_medium" ) end
+monkey_mediumhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_monkey_medium" ) end
+
+monkey_smallhat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_monkey_small" ) end
+monkey_smallhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_monkey_small" ) end
+
 hivehat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_hive" ) end
 hivehat_clear_fn = function(inst) basic_clear_fn(inst, "hat_hive" ) end
 

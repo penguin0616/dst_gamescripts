@@ -110,6 +110,7 @@ local Inv = Class(Widget, function(self, owner)
     self.inst:ListenForEvent("refresh_integrated_container", function() self:RefreshIntegratedContainer() end, self.owner)
     self.inst:ListenForEvent("onplacershown", function() self:OnPlacerChanged(true) end, self.owner)
     self.inst:ListenForEvent("onplacerhidden", function() self:OnPlacerChanged(false) end, self.owner)
+    self.inst:ListenForEvent("finishseamlessplayerswap", function () if self.rebuild_pending then self:Rebuild() self:Refresh() end end, self.owner)
 
     self.root:SetPosition(self.in_pos)
     self:StartUpdating()
@@ -447,7 +448,7 @@ function Inv:OnUpdate(dt)
         self.hint_update_check = HINT_UPDATE_INTERVAL
     end
 
-    if not ThePlayer.HUD.shown or ThePlayer.HUD ~= TheFrontEnd:GetActiveScreen() then
+    if not self.owner.HUD.shown or self.owner.HUD ~= TheFrontEnd:GetActiveScreen() then
         return
     end
 

@@ -9366,6 +9366,17 @@ table.insert(prefs, CreatePrefabSkin("wolfgang_wrestler",
 	release_group = 56,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wonkey_none",
+{
+	base_prefab = "wonkey",
+	type = "base",
+	build_name_override = "wonkey",
+	rarity = "Character",
+	skin_tags = { "BASE", },
+	skins = { ghost_skin = "ghost_wonkey_build", normal_skin = "wonkey", },
+	release_group = 133,
+}))
+
 table.insert(prefs, CreatePrefabSkin("woodie_combatant",
 {
 	base_prefab = "woodie",

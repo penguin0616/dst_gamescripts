@@ -1020,7 +1020,6 @@ function SaveGame(isshutdown, cb)
     --save out the map
     save.map =
     {
-        revealed = "",
         tiles = "",
         roads = Roads,
     }
@@ -1031,6 +1030,8 @@ function SaveGame(isshutdown, cb)
     if ground ~= nil then
         save.map.prefab = ground.worldprefab
         save.map.tiles = ground.Map:GetStringEncode()
+        save.map.world_tile_map = GetWorldTileMap()
+        save.map.tiledata = ground.Map:GetDataStringEncode()
         save.map.nav = ground.Map:GetNavStringEncode()
         save.map.nodeidtilemap = ground.Map:GetNodeIdTileMapStringEncode()
         save.map.width, save.map.height = ground.Map:GetSize()

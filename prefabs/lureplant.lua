@@ -17,22 +17,22 @@ local brain = require "brains/lureplantbrain"
 
 local VALID_TILE_TYPES =
 {
-    [GROUND.DIRT] = true,
-    [GROUND.SAVANNA] = true,
-    [GROUND.GRASS] = true,
-    [GROUND.FOREST] = true,
-    [GROUND.MARSH] = true,
+    [WORLD_TILES.DIRT] = true,
+    [WORLD_TILES.SAVANNA] = true,
+    [WORLD_TILES.GRASS] = true,
+    [WORLD_TILES.FOREST] = true,
+    [WORLD_TILES.MARSH] = true,
 
     -- CAVES
-    [GROUND.CAVE] = true,
-    [GROUND.FUNGUS] = true,
-    [GROUND.SINKHOLE] = true,
-    [GROUND.MUD] = true,
-    [GROUND.FUNGUSRED] = true,
-    [GROUND.FUNGUSGREEN] = true,
+    [WORLD_TILES.CAVE] = true,
+    [WORLD_TILES.FUNGUS] = true,
+    [WORLD_TILES.SINKHOLE] = true,
+    [WORLD_TILES.MUD] = true,
+    [WORLD_TILES.FUNGUSRED] = true,
+    [WORLD_TILES.FUNGUSGREEN] = true,
 
     --EXPANDED FLOOR TILES
-    [GROUND.DECIDUOUS] = true,
+    [WORLD_TILES.DECIDUOUS] = true,
 }
 
 function adjustIdleSound(inst, vol)

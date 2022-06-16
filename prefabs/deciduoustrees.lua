@@ -588,7 +588,7 @@ local function chop_down_tree(inst, chopper)
     else
         inst.AnimState:PlayAnimation(inst.anims.fallright)
         if inst.components.growable ~= nil and inst.components.growable.stage == 3 and inst.leaf_state == "colorful" then
-            inst.components.lootdropper:SpawnLootPrefab("acorn", pt - TheCamera:GetRightVec())
+            inst.components.lootdropper:SpawnLootPrefab("acorn", pt + TheCamera:GetRightVec())
         end
         inst.components.lootdropper:DropLoot(pt + TheCamera:GetRightVec())
     end

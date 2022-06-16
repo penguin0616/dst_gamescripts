@@ -532,6 +532,10 @@ function Inventory:DropItem(item, wholestack, randomdir, pos)
         dropped.prevcontainer = nil
         dropped.prevslot = nil
 
+        if dropped:HasTag("personal_possession") then
+            dropped:RemoveTag("personal_possession")
+        end
+
         self.inst:PushEvent("dropitem", { item = dropped })
     end
 
@@ -1354,7 +1358,7 @@ function Inventory:DropEverything(ondeath, keepequip)
 
     for k = 1, self.maxslots do
         local v = self.itemslots[k]
-        if v ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) then
+        if v ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) and not v.components.curseditem then
             self:DropItem(v, true, true)
         end
     end
@@ -1953,6 +1957,10 @@ end
 
 function Inventory:IsWaterproof()
     return self:GetWaterproofness() >= 1
+end
+
+function Inventory:TransferComponent(newinst)
+    self:TransferInventory(newinst)
 end
 
 return Inventory

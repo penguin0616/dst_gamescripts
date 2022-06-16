@@ -18,6 +18,7 @@ require "emotes"
 
 require "map/ocean_gen" -- for retrofitting the ocean tiles
 
+
 local EquipSlot = require("equipslotutil")
 local GroundTiles = require("worldtiledefs")
 local Stats = require("stats")
@@ -360,6 +361,33 @@ local replace =
     ["cave_stairs"] = "cave_entrance",
 }
 
+local function TryGetGemCoreTileData(savedata)
+	local old_ground
+	local function LoadGemCoreTileData(load_success, str)
+		if load_success and #str > 0 then
+			local GemCoreTileData = loadstring(str)()
+
+			local idx = TheNet:GetCurrentSnapshot()
+			while idx > 1 do
+				if GemCoreTileData[idx] ~= nil then
+					old_ground = GemCoreTileData[idx]
+					break
+				end
+				idx = idx - 1
+			end
+		end
+	end
+
+	local path = "session/"..savedata.meta.session_identifier.."/GemCoreTileData"
+	if not TheNet:IsDedicated() and not ShardGameIndex:GetServerData().use_legacy_session_path then
+		TheSim:GetPersistentStringInClusterSlot(ShardGameIndex:GetSlot(), "Master", path, LoadGemCoreTileData)
+    else
+		TheSim:GetPersistentString(path, LoadGemCoreTileData)
+    end
+
+	return old_ground
+end
+
 POPULATING = false
 local function PopulateWorld(savedata, profile)
     POPULATING = true
@@ -474,29 +502,59 @@ local function PopulateWorld(savedata, profile)
 			map:SetMinimapOceanMaskBlurParameters(minimap_ocean_tuning.MASK_BLUR_SIZE, minimap_ocean_tuning.MASK_BLUR_PASS_COUNT)
         end
 
-		-- remove the LOOP_BLANK_SUB before we do anything else
-        for i=#savedata.map.topology.ids,1, -1 do
-            local name = savedata.map.topology.ids[i]
-            if string.find(name, "LOOP_BLANK_SUB") ~= nil then
-                table.remove(savedata.map.topology.ids, i)
-                table.remove(savedata.map.topology.nodes, i)
-                for eid=#savedata.map.topology.edges,1,-1 do
-                    if savedata.map.topology.edges[eid].n1 == i or savedata.map.topology.edges[eid].n2 == i then
-                        table.remove(savedata.map.topology.edges, eid)
-                    end
-                end
-            end
-        end
-
         --this was spawned by the level file. kinda lame - we should just do everything from in here.
         map:SetSize(savedata.map.width, savedata.map.height)
+		world:PushEvent("worldmapsetsize", { width = savedata.map.width, height = savedata.map.height, })
 		if savedata.map.width > 1024 and savedata.map.height > 1024 then
 			--increase this by as little as possible!
 			--this number creates a series of small regions that is used to help cull out objects that aren't on screen.
 			--the larger this number is, the larger those regions, and the more wasted time rendering objects that are offscreen.
 			TheSim:UpdateRenderExtents(math.max(savedata.map.width, savedata.map.height) * TILE_SCALE)
 		end
-		map:SetFromString(savedata.map.tiles)
+
+		if world.ismastersim then
+			if not savedata.map.tiledata then
+				map:SetFromStringLegacy(savedata.map.tiles)
+			else
+				map:SetFromString(savedata.map.tiles)
+				map:SetMapDataFromString(savedata.map.tiledata)
+			end
+
+			local tile_id_conversion_map = {}
+			if savedata.map.world_tile_map then
+				local world_tile_map = savedata.map.world_tile_map
+				for name, id in pairs(GetWorldTileMap()) do
+					local previous_id = world_tile_map[name]
+					if previous_id and previous_id ~= id then
+						tile_id_conversion_map[previous_id] = id
+					end
+				end
+			else
+				--try and load GemCore's tile history if it exists, it will be more accurate than old_static_id
+				local gemcore_old_ground = TryGetGemCoreTileData(savedata)
+				if gemcore_old_ground then
+					for name, id in pairs(GetWorldTileMap()) do
+						local previous_id = gemcore_old_ground[name]
+						if previous_id and previous_id ~= id then
+							tile_id_conversion_map[previous_id] = id
+						end
+					end
+				else
+					for name, id in pairs(GetWorldTileMap()) do
+						local tile_info = GetTileInfo(id)
+						if tile_info and tile_info.old_static_id ~= nil and tile_info.old_static_id ~= id then
+							tile_id_conversion_map[tile_info.old_static_id] = id
+						end
+					end
+				end
+			end
+			map:DoDynamicTileConversion(tile_id_conversion_map)
+
+			world.tile_id_conversion_map = tile_id_conversion_map
+		elseif savedata.map.tiledata then
+			map:SetMapDataFromString(savedata.map.tiledata)
+		end
+
 		map:SetNodeIdTileMapFromString(savedata.map.nodeidtilemap)
         map:ResetVisited()
 
@@ -507,25 +565,20 @@ local function PopulateWorld(savedata, profile)
 			retrofiting.DoRetrofitting(savedata, world.Map)
 		end
 
-        if savedata.map.prefab == "cave" then
-            TheFrontEnd:GetGraphicsOptions():DisableStencil()
-            TheFrontEnd:GetGraphicsOptions():DisableLightMapComponent()
-            -- TheFrontEnd:GetGraphicsOptions():EnableStencil()
-            -- TheFrontEnd:GetGraphicsOptions():EnableLightMapComponent()
-            world.Map:Finalize(1)
-        else
-            TheFrontEnd:GetGraphicsOptions():DisableStencil()
-            TheFrontEnd:GetGraphicsOptions():DisableLightMapComponent()
-            world.Map:Finalize(0)
-        end
+		TheFrontEnd:GetGraphicsOptions():DisableStencil()
+		TheFrontEnd:GetGraphicsOptions():DisableLightMapComponent()
+		world:CreateTilePhysics()
+		map:Finalize()
 
-        if savedata.map.nav then
-            print("Loading Nav Grid")
-            world.Map:SetNavSize(savedata.map.width, savedata.map.height)
-            world.Map:SetNavFromString(savedata.map.nav)
-         else
-            print("No Nav Grid")
-        end
+		if world.ismastersim then
+			if savedata.map.nav then
+				print("Loading Nav Grid")
+				map:SetNavSize(savedata.map.width, savedata.map.height)
+				map:SetNavFromString(savedata.map.nav)
+			else
+				print("No Nav Grid")
+			end
+		end
 
         world.hideminimap = savedata.map.hideminimap
         world.topology = savedata.map.topology
@@ -540,10 +593,6 @@ local function PopulateWorld(savedata, profile)
         for i,node in ipairs(world.topology.nodes) do
             local story = world.topology.ids[i]
             -- guard for old saves
-            local story_depth = nil
-            if world.topology.story_depths then
-                story_depth = world.topology.story_depths[i]
-            end
             if story ~= "START" then
                 story = string.sub(story, 1, string.find(story,":")-1)
             end
@@ -705,7 +754,18 @@ local function ActivateWorld()
     end
 end
 
-local function OnPlayerActivated(world)
+local function OnPlayerActivated(world, player)
+	if player.isseamlessswaptarget then
+		if player.prefab == "wonkey" then
+			local kv = TheInventory:GetLocalGenericKV()
+			if kv.wonkey_played ~= "played" then
+				TheInventory:SetGenericKVValue( "wonkey_played", "played" )
+			end
+		end
+
+		return
+	end
+
     if not world.isdeactivated then
         start_game_time = GetTime()
         TheInput:CacheController()
@@ -739,12 +799,60 @@ end
 local function OnPlayerDeactivated(world, player)
     if not world.isdeactivated then
         TheInput:ClearCachedController()
-        TheFrontEnd:ClearScreens()
-        TheFrontEnd:SetFadeLevel(1)
-        TheMixer:PopMix("normal")
-        SetPause(true)
-        SendResumeRequestToServer(world, 2)
+		if not player.isseamlessswapsource then
+			TheFrontEnd:ClearScreens()
+			TheFrontEnd:SetFadeLevel(1)
+			TheMixer:PopMix("normal")
+			SetPause(true)
+        	SendResumeRequestToServer(world, 2)
+		end
     end
+end
+
+--Generate a server friendly version of the map
+local server_file = "server_temp"..DEFAULT_SERVER_SAVE_FILE
+local COMPRESS_SERVER_SAVE_FILE = true
+local function WriteServerSaveTempFile(savedata)
+    if not TheNet:GetIsServer() then
+		return
+	end
+	-- Setup appropriate folders for saving session data
+	TheNet:BeginSession(savedata.meta.session_identifier)
+
+	local ent_ref = savedata.ents
+	local snapshot_ref = savedata.snapshot
+	local map_adj_ref = savedata.map.adj
+	local map_generated_ref = savedata.map.generated
+	local map_world_tile_map_ref = savedata.map.world_tile_map
+	local map_persistdata_ref = savedata.map.persistdata
+	local map_nav = savedata.map.nav
+	local map_tiles = savedata.map.tiles
+	local meta_seed = savedata.meta.seed
+	local world_network_ref = savedata.world_network
+	savedata.ents = {}
+	savedata.snapshot = nil
+	savedata.map.adj = nil
+	savedata.map.generated = nil
+	savedata.map.world_tile_map = nil
+	savedata.map.persistdata = nil
+	savedata.map.nav = nil
+	savedata.map.tiles = ""
+	savedata.meta.seed = ""
+	savedata.world_network = nil
+
+	print("saving to "..server_file)
+	TheSim:SetPersistentString(server_file, DataDumper(savedata, nil, COMPRESS_SERVER_SAVE_FILE), COMPRESS_SERVER_SAVE_FILE, nil)
+
+	savedata.ents = ent_ref
+	savedata.snapshot = snapshot_ref
+	savedata.map.adj = map_adj_ref
+	savedata.map.generated = map_generated_ref
+	savedata.map.world_tile_map = map_world_tile_map_ref
+	savedata.map.persistdata = map_persistdata_ref
+	savedata.map.nav = map_nav
+	savedata.map.tiles = map_tiles
+	savedata.meta.seed = meta_seed
+	savedata.world_network = world_network_ref
 end
 
 --OK, we have our savedata and a profile. Instatiate everything and start the game!
@@ -762,16 +870,11 @@ local function DoInitGame(savedata, profile)
 
 	assert(savedata.map.topology, "Map topology missing from savedata on load")
 	assert(savedata.map.topology.ids, "Topology entity ids are missing from savedata on load")
-	--assert(savedata.map.topology.story_depths, "Topology story_depths are missing from savedata on load")
 	assert(savedata.map.topology.colours, "Topology colours are missing from savedata on load")
 	assert(savedata.map.topology.edges, "Topology edges are missing from savedata on load")
 	assert(savedata.map.topology.nodes, "Topology nodes are missing from savedata on load")
 	assert(savedata.map.topology.level_type, "Topology level type is missing from savedata on load")
 	assert(savedata.map.topology.overrides, "Topology overrides is missing from savedata on load")
-
-    -- #deleteme: gjans: New data added to worldgen 2015/06/23, uncomment this assert in September or something
-	--assert(savedata.map.generated, "Original generation data missing from savedata on load")
-	--assert(savedata.map.generated.densities, "Generated prefab densities missing from savedata on load")
 
 	assert(savedata.ents, "Entities missing from savedata on load")
 
@@ -782,6 +885,20 @@ local function DoInitGame(savedata, profile)
 		end
 	end
 	savedata.map.topology.overrides.original = nil
+
+	-- remove the LOOP_BLANK_SUB before we do anything else
+	for i = #savedata.map.topology.ids, 1, -1 do
+		local name = savedata.map.topology.ids[i]
+		if string.find(name, "LOOP_BLANK_SUB") ~= nil then
+			table.remove(savedata.map.topology.ids, i)
+			table.remove(savedata.map.topology.nodes, i)
+			for eid = #savedata.map.topology.edges, 1, -1 do
+				if savedata.map.topology.edges[eid].n1 == i or savedata.map.topology.edges[eid].n2 == i then
+					table.remove(savedata.map.topology.edges, eid)
+				end
+			end
+		end
+	end
 
 	if savedata.map.roads then
 		Roads = savedata.map.roads
@@ -833,28 +950,7 @@ local function DoInitGame(savedata, profile)
 		RoadManager:GenerateQuadTree()
 	end
 
-	-- Generate a server friendly version of the map
-    if TheNet:GetIsServer() then
-    	-- todo markl
-		-- Make it so the paths used here come directly from the engine
-
-		-- Setup appropriate folders for saving session data
-		TheNet:BeginSession(savedata.meta.session_identifier)
-
-   		local ent_ref = savedata.ents
-        local snapshot_ref = savedata.snapshot
-		-- local node_ref = savedata.nodes
-		savedata.ents = {}
-        savedata.snapshot = nil
-		local COMPRESSED = true
-
-		local data = DataDumper(savedata, nil, COMPRESSED)
-        local server_file = "server_temp"..DEFAULT_SERVER_SAVE_FILE
-		print("saving to "..server_file)
-		local insz, outsz = TheSim:SetPersistentString(server_file, data, COMPRESSED, nil)
-		savedata.ents = ent_ref
-        savedata.snapshot = snapshot_ref
-	end
+	WriteServerSaveTempFile(savedata)
 
     --some lame explicit loads
 	Print(VERBOSITY.DEBUG, "DoInitGame Loading prefabs...")

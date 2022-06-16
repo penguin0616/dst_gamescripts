@@ -54,6 +54,13 @@ local function horn_retreat(horn_inst, horn_broken, leak_size)
         leak.components.boatleak:SetState(leak_size, true)
 
         table.insert(boat.components.hullhealth.leak_indicators_dynamic, leak)
+
+        if boat.material == "grass" then
+            local fx = SpawnPrefab("fx_grass_boat_fluff")
+            local x,y,z = horn_inst.Transform:GetWorldPosition()
+            fx.Transform:SetPosition(x,y,z) 
+            boat.components.health:DoDelta(-TUNING.GNARWAIL.HORN_BOAT_DAMAGE, false, horn_inst)
+        end
     end
 
     -- If this was spawned legitimately, it should have a gnarwail it was sourced from. So, we need to try to resurface it.
@@ -87,11 +94,13 @@ local function EndHornAttack(horn_inst)
     horn_inst.AnimState:PushAnimation("attack_stage_2_retreat", false)
     horn_inst:ListenForEvent("animqueueover", HornAttack_AnimOver)
 
-    horn_inst:DoTaskInTime(7*FRAMES, function(i) i.SoundEmitter:PlaySound("turnoftides/common/together/boat/thunk") end)
-    horn_inst:DoTaskInTime(14*FRAMES, function(i) i.SoundEmitter:PlaySound("turnoftides/common/together/boat/damage") end)
-    horn_inst:DoTaskInTime(16*FRAMES, function(i) i.SoundEmitter:PlaySound("turnoftides/common/together/boat/thunk") end)
+    local boat = horn_inst:GetCurrentPlatform()
+
+    horn_inst:DoTaskInTime(7*FRAMES, function(i) i.SoundEmitter:PlaySound(boat.sounds.thunk) end)
+    horn_inst:DoTaskInTime(14*FRAMES, function(i) i.SoundEmitter:PlaySound(boat.sounds.damage) end)
+    horn_inst:DoTaskInTime(16*FRAMES, function(i) i.SoundEmitter:PlaySound(boat.sounds.thunk) end)
     horn_inst:DoTaskInTime(19*FRAMES, function(i) i.SoundEmitter:PlaySound("turnoftides/common/together/water/splash/jump_small") end)
-    horn_inst:DoTaskInTime(25*FRAMES, function(i) i.SoundEmitter:PlaySound("turnoftides/common/together/boat/thunk") end)
+    horn_inst:DoTaskInTime(25*FRAMES, function(i) i.SoundEmitter:PlaySound(boat.sounds.thunk) end)
 
     horn_inst._horn_attack_ending = true
     horn_inst:RemoveEventCallback("attacked", OnHornHit)

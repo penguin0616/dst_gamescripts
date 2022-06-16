@@ -1,13 +1,11 @@
 
 
 function IsOceanTile(tile)
-	return tile >= GROUND.OCEAN_START and tile <= GROUND.OCEAN_END
+	return TileGroupManager:IsOceanTile(tile)
 end
 
 function IsLandTile(tile)
-	return tile < GROUND.UNDERGROUND and
-        tile ~= GROUND.IMPASSABLE and
-        tile ~= GROUND.INVALID
+    return TileGroupManager:IsLandTile(tile)
 end
 
 local WAVE_SPAWN_DISTANCE = 1.5
@@ -208,7 +206,6 @@ function CanProbablyReachTargetFromShore(inst, target, max_distance)
 end
 
 function TintByOceanTile(inst)
-    local GroundTiles = require("worldtiledefs")
     inst:DoTaskInTime(0,function(inst)
         local pos = inst:GetPosition()
         local tile = TheWorld.Map:GetTileAtPoint(pos.x, pos.y, pos.z)

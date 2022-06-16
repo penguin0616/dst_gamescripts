@@ -262,58 +262,76 @@ WINDOW_KEY_BINDINGS =
         binding = { key = KEY_P, SHIFT=true },
         name = "Prefabs",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugPrefabs() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugPrefabs.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugPrefabs() )
+            end
         end
     },
     {
         binding = { key = KEY_A, SHIFT=true },
         name = "Audio",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugAudio() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugAudio.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugAudio() )
+            end
         end
     },
     {
         binding = { key = KEY_W, SHIFT=true },
         name = "UI",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugWidget() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugWidget.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugWidget() )
+            end
         end
     },
     {
         name = "Entity",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugEntity() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugEntity.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugEntity() )
+            end
         end
     },
     {
         name = "Player",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugPlayer() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugPlayer.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugPlayer() )
+            end
         end
     },
     {
         name = "Weather",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugWeather() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugWeather.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugWeather() )
+            end
         end
     },
     {
         binding = { key = KEY_S, SHIFT=true, ALT=true },
         name = "Skins",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugSkins() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugSkins.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugSkins() )
+            end
         end
     },
     {
         name = "Input",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugInput() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugInput.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugInput() )
+            end
         end
     },
     {
         name = "Character Examine Strings",
         fn = function()
-            TheFrontEnd:CreateDebugPanel( DebugNodes.DebugStrings() )            
+            if not TheFrontEnd:IsDebugPanelOpen(DebugNodes.DebugStrings.NodeName) then
+                TheFrontEnd:CreateDebugPanel( DebugNodes.DebugStrings() )
+            end
         end
     },
 }
@@ -392,6 +410,34 @@ AddGameDebugKey(KEY_I, function()
     elseif TheInput:IsKeyDown(KEY_SHIFT) then
         d_c_spawn("researchlab")
         return true
+    end
+end)
+
+
+AddGameDebugKey(KEY_B, function()
+    if TheInput:IsKeyDown(KEY_CTRL) and not TheInput:IsKeyDown(KEY_SHIFT) then
+        local pos = Vector3(ConsoleWorldPosition():Get())
+        local boat = TheWorld.Map:GetPlatformAtPoint(pos.x,pos.z)
+        if boat then
+            boat:PushEvent("spawnnewboatleak", {pt = pos, leak_size = "med_leak", playsoundfx = true})
+        end
+    elseif TheInput:IsKeyDown(KEY_SHIFT) then
+        local pos = Vector3(ConsoleWorldPosition():Get())
+        local bumpers = TheSim:FindEntities(pos.x, pos.y, pos.z, 1, {"boatbumper"})
+        for i, bumper in ipairs(bumpers) do
+            local health = bumper.components.health.maxhealth
+            if TheInput:IsKeyDown(KEY_CTRL) then
+                bumper.components.health:DoDelta(health * 0.2)
+            else
+                bumper:PushEvent("boatcollision")
+                bumper.components.health:DoDelta(-health * 0.2)
+            end
+        end
+
+    elseif TheInput:IsKeyDown(KEY_ALT) then
+        if TheWorld.components.piratespawner then
+            TheWorld.components.piratespawner:SpawnPirates(TheInput:GetWorldPosition())
+        end
     end
 end)
 
@@ -918,6 +964,7 @@ AddGameDebugKey(KEY_T, function()
                 else
                     player.Physics:Teleport(x, 0, y)
                 end
+                topscreen.minimap.minimap:ResetOffset()
             else
                 if TheWorld ~= nil and not TheWorld.ismastersim then
                     local x, y, z = ConsoleWorldPosition():Get()
@@ -966,7 +1013,16 @@ AddGameDebugKey(KEY_G, function()
 end)
 
 AddGameDebugKey(KEY_D, function()
-    if TheInput:IsKeyDown(KEY_CTRL) then
+    if TheInput:IsKeyDown(KEY_SHIFT) then
+        local pos = TheInput:GetWorldPosition()
+        local x, y = TheWorld.Map:GetTileCoordsAtPoint(pos:Get())
+        local original_tile = TheWorld.Map:GetTileAtPoint(pos:Get())
+
+        --if original_tile == WORLD_TILES.MONKEY_DOCK or original_tile == WORLD_TILES.OCEAN_COASTAL or original_tile == WORLD_TILES.OCEAN_COASTAL_SHORE then
+            local is_dock = original_tile == WORLD_TILES.MONKEY_DOCK
+            TheWorld.Map:SetTile(x, y, is_dock and WORLD_TILES.OCEAN_COASTAL or WORLD_TILES.MONKEY_DOCK)
+        --end
+    elseif TheInput:IsKeyDown(KEY_CTRL) then
         local MouseCharacter = TheInput:GetWorldEntityUnderMouse()
         if MouseCharacter and MouseCharacter.components.diseaseable ~= nil then
             MouseCharacter.components.diseaseable:Disease()
@@ -995,6 +1051,8 @@ end)
 AddGameDebugKey(KEY_K, function()
     if TheInput:IsKeyDown(KEY_CTRL) then
         d_c_remove()
+    elseif TheInput:IsKeyDown(KEY_ALT) then
+        c_gonext("monkeyhut")
     end
     return true
 end)
@@ -1012,9 +1070,7 @@ AddGlobalDebugKey(KEY_L, function()
 			global_loading_widget:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
 			TheFrontEnd:SetFadeLevel(1)
-            if not TheNet:IsDedicated() then
-			    global_loading_widget:SetEnabled(true)
-            end
+			global_loading_widget:SetEnabled(true)
 		end
 	else
 	    if not ThePlayer then
@@ -1031,8 +1087,6 @@ AddGlobalDebugKey(KEY_L, function()
 
 			return
 		end
-
-		local GROUND_NAMES = table.invert(GROUND)
 
 		local x, _, z = pt:Get()
 		local k = 4
@@ -1322,8 +1376,6 @@ AddGameDebugKey(KEY_I, function()
     return true
 end)
 
-local GROUND_LOOKUP = table.invert(GROUND)
-
 AddGameDebugKey(KEY_5, function()
 	if TheWorld.components.farming_manager then
 		local pos = TheInput:GetWorldPosition()
@@ -1410,18 +1462,16 @@ AddGameDebugKey(KEY_0, function()
         local pos = TheInput:GetWorldPosition()
         local x, y = TheWorld.Map:GetTileCoordsAtPoint(pos:Get())
         local original_tile = TheWorld.Map:GetTileAtPoint(pos:Get())
-        print("Original tile", GROUND_LOOKUP[original_tile])
+        print("Original tile", INVERTED_WORLD_TILES[original_tile])
         local tile = original_tile+1
-        while GROUND_LOOKUP[tile] == nil do
+        while INVERTED_WORLD_TILES[tile] == nil do
             if tile > 255 then
                 tile = 0
             end
             tile = tile + 1
         end
-        print("Changing tile to "..GROUND_LOOKUP[tile])
+        print("Changing tile to "..INVERTED_WORLD_TILES[tile])
         TheWorld.Map:SetTile(x, y, tile)
-        TheWorld.Map:RebuildLayer(original_tile,x,y)
-        TheWorld.Map:RebuildLayer(tile,x,y)
     end
 end)
 
@@ -1430,18 +1480,16 @@ AddGameDebugKey(KEY_9, function()
         local pos = TheInput:GetWorldPosition()
         local x, y = TheWorld.Map:GetTileCoordsAtPoint(pos:Get())
         local original_tile = TheWorld.Map:GetTileAtPoint(pos:Get())
-        print("Original tile", GROUND_LOOKUP[original_tile])
+        print("Original tile", INVERTED_WORLD_TILES[original_tile])
         local tile = original_tile-1
-        while GROUND_LOOKUP[tile] == nil do
+        while INVERTED_WORLD_TILES[tile] == nil do
             if tile < 1 then
                 tile = 255
             end
             tile = tile - 1
         end
-        print("Changing tile to "..GROUND_LOOKUP[tile])
+        print("Changing tile to "..INVERTED_WORLD_TILES[tile])
         TheWorld.Map:SetTile(x, y, tile)
-        TheWorld.Map:RebuildLayer(original_tile,x,y)
-        TheWorld.Map:RebuildLayer(tile,x,y)
     else
         if not ThePlayer.shownothightlight then
             ThePlayer.shownothightlight = true

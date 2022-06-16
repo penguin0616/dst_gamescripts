@@ -478,6 +478,11 @@ function Sanity:Recalc(dt)
     self:DoDelta(self.rate * dt, true)
 end
 
+function Sanity:TransferComponent(newinst)
+    local newcomponent = newinst.components.sanity
+    newcomponent:SetPercent(self:GetPercent())
+end
+
 Sanity.LongUpdate = Sanity.OnUpdate
 
 return Sanity

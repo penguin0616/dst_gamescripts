@@ -191,6 +191,15 @@ local wormspawn =
     },
 }
 
+local function tile_physics_init(inst)
+    inst.Map:AddTileCollisionSet(
+        COLLISION.LAND_OCEAN_LIMITS,
+        TileGroups.ImpassableTiles, true,
+        TileGroups.ImpassableTiles, false,
+        0.25, 64
+    )
+end
+
 local function common_postinit(inst)
     --Initialize lua components
     inst:AddComponent("ambientlighting")
@@ -255,4 +264,4 @@ local function master_postinit(inst)
     return inst
 end
 
-return MakeWorld("cave", prefabs, assets, common_postinit, master_postinit, { "cave" })
+return MakeWorld("cave", prefabs, assets, common_postinit, master_postinit, { "cave" }, {tile_physics_init = tile_physics_init})
