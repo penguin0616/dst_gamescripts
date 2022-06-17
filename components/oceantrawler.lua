@@ -22,7 +22,7 @@ local OceanTrawler = Class(function(self, inst)
     self.nearbytrawlerrange = 16 -- Nearby trawlers affect the chance to collect fish while sleeping
     self.checkperiod = .75 -- How often to check for fish when not sleeping
     self.catchfishchance = 0.125 -- The chance to catch a fish when entity awake
-    self.sleepcheckperiod = 3--TUNING.SEG_TIME -- Check once every segment time
+    self.sleepcheckperiod = TUNING.SEG_TIME -- Check once every segment time
     self.sleepcatchfishchance = 0.0625 -- Catch on average 1 fish per day (1 / 16 segments per day)
     self.baitcatchfishmodifier = 2 -- If bait is in the trawler, the modifer applied to the catch chance
 

@@ -143,7 +143,9 @@ local function EncodePlantRegistryStages(stages)
 end
 
 function PlantRegistryData:ApplyOnlineProfileData()
-	if not self.synced and not (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) and TheInventory:HasDownloadedInventory() then
+	if not self.synced and
+		(TheInventory:HasSupportForOfflineSkins() or not (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode())) and
+		TheInventory:HasDownloadedInventory() then
 		self.plants = self.plants or {}
 		self.fertilizers = self.fertilizers or {}
 		self.pictures = self.pictures or {}

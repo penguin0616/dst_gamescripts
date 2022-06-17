@@ -676,7 +676,6 @@ local function ActivatePlayer(inst)
         local oldplayer = ThePlayer
         ThePlayer = inst
         oldplayer.player_classified.MapExplorer:DeactivateLocalMiniMap()
-        oldplayer:Remove()
 
         ActivateHUD(inst)
 
@@ -901,6 +900,9 @@ function fns.SeamlessPlayerSwap(inst)
     inst.userid = ""
     if inst.components.playercontroller ~= nil then
         RemovePlayerComponents(inst)
+    end
+    if TheWorld.ismastersim then
+        inst:DoStaticTaskInTime(3*FRAMES, inst.Remove)
     end
 end
 

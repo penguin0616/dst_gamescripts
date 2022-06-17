@@ -93,6 +93,10 @@ local function ontimerdone(inst, data)
     end
 end
 
+local function ontalk(inst, script)
+    inst.SoundEmitter:PlaySound("monkeyisland/monkeyqueen/speak")
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -125,6 +129,7 @@ local function fn()
     inst.components.talker.font = TALKINGFONT
     inst.components.talker.offset = Vector3(0, -1200, 0)
     inst.components.talker:MakeChatter()
+    inst.components.talker.ontalk = ontalk
 
     inst.speech_override_fn = speech_override_fn    
 

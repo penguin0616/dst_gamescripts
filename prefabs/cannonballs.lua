@@ -22,6 +22,10 @@ local SPEED_XZ = 4
 local SPEED_Y = 16
 local ANGLE_VARIANCE = 20
 local function launch_away(inst, position, use_variant_angle)
+    if inst.Physics == nil then
+        return
+    end
+
     -- Launch outwards from impact point. Calculate angle from position, with some variance
     local ix, iy, iz = inst.Transform:GetWorldPosition()
     inst.Physics:Teleport(ix, iy + INITIAL_LAUNCH_HEIGHT, iz)

@@ -343,6 +343,7 @@ local function ConfigureRunState(inst)
         inst.sg.statemem.careful = true
     else
         inst.sg.statemem.normal = true
+        inst.sg.statemem.normalwonkey = inst:HasTag("wonkey") or nil
     end
 end
 
@@ -7713,23 +7714,11 @@ local states =
         end,
 
         onupdate = function(inst)
-            inst.components.locomotor:RunForward()
-
-            if inst:HasTag("wonkey") and inst.components.locomotor.timemoving >= TUNING.WONKEY_TIME_TO_RUN -0.5 and not inst.components.rider:IsRiding() then
-                inst._monkeyrun:set(true)
-            end
-
-            if inst:HasTag("wonkey") and inst.components.locomotor.timemoving >= TUNING.WONKEY_TIME_TO_RUN and not inst.components.rider:IsRiding() then             
-                inst.sg.statemem.stillmonkeyrun = true
+            if inst.sg.statemem.normalwonkey and inst.components.locomotor.timemoving >= TUNING.WONKEY_TIME_TO_RUN then
                 inst.sg:GoToState("run_monkey_start")
+                return
             end
-
-        end,
-
-        onexit = function(inst)
-            if not inst.sg.statemem.stillmonkeyrun then
-                if inst:HasTag("wonkey") then inst._monkeyrun:set(false) end
-            end
+            inst.components.locomotor:RunForward()
         end,
 
         timeline =
@@ -7957,7 +7946,6 @@ local states =
             EventHandler("gogglevision", function(inst, data)
                 if data.enabled then
                     if inst.sg.statemem.sandstorm then
-                        inst.sg.statemem.stillmonkeyrun = true
                         inst.sg:GoToState("run")
                     end
                 elseif not (inst.sg.statemem.riding or
@@ -7965,14 +7953,12 @@ local states =
                             inst.sg.statemem.iswere or
                             inst.sg.statemem.sandstorm or
                             inst:GetStormLevel() < TUNING.SANDSTORM_FULL_LEVEL) then
-                    inst.sg.statemem.stillmonkeyrun = true
                     inst.sg:GoToState("run")
                 end
             end),
             EventHandler("sandstormlevel", function(inst, data)
                 if data.level < TUNING.SANDSTORM_FULL_LEVEL then
                     if inst.sg.statemem.sandstorm then
-                        inst.sg.statemem.stillmonkeyrun = true
                         inst.sg:GoToState("run")
                     end
                 elseif not (inst.sg.statemem.riding or
@@ -7980,14 +7966,12 @@ local states =
                             inst.sg.statemem.iswere or
                             inst.sg.statemem.sandstorm or
                             inst.components.playervision:HasGoggleVision()) then
-                    inst.sg.statemem.stillmonkeyrun = true
                     inst.sg:GoToState("run")
                 end
             end),
             EventHandler("carefulwalking", function(inst, data)
                 if not data.careful then
                     if inst.sg.statemem.careful then
-                        inst.sg.statemem.stillmonkeyrun = true
                         inst.sg:GoToState("run")
                     end
                 elseif not (inst.sg.statemem.riding or
@@ -7996,14 +7980,12 @@ local states =
                             inst.sg.statemem.groggy or
                             inst.sg.statemem.careful or
                             inst.sg.statemem.iswere) then
-                    inst.sg.statemem.stillmonkeyrun = true
                     inst.sg:GoToState("run")
                 end
             end),
         },
 
         ontimeout = function(inst)
-            inst.sg.statemem.stillmonkeyrun = true
             inst.sg:GoToState("run")
         end,
     },
@@ -8053,27 +8035,45 @@ local states =
         tags = {"moving", "running", "canrotate", "monkey", "autopredict"},
 
         onenter = function(inst)
-            inst._monkeyrun:set(true)
+            ConfigureRunState(inst)
+            if not inst.sg.statemem.normalwonkey then
+                inst.sg:GoToState("run")
+                return
+            end
             inst.Transform:SetSixFaced()
             inst.components.locomotor:RunForward()
             inst.AnimState:PlayAnimation("run_monkey_pre")
             --inst.SoundEmitter:PlaySound("dontstarve_DLC002/characters/wilbur/walktorun", "walktorun") TODO SOUND
         end,
 
+        events =
+        {
+            EventHandler("gogglevision", function(inst, data)
+                if not data.enabled and inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("sandstormlevel", function(inst, data)
+                if data.level >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("carefulwalking", function(inst, data)
+                if data.careful then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("animover", function(inst)
+                inst.sg.statemem.monkeyrunning = true
+                inst.sg:GoToState("run_monkey")
+            end),
+        },
+
         onexit = function(inst)
-            if not inst.sg.statemem.stillrunning then
+            if not inst.sg.statemem.monkeyrunning then
                 inst.Transform:SetFourFaced()
-                inst._monkeyrun:set(false)
             end
         end,
-
-        events=
-        {
-            EventHandler("animover", function(inst)
-                inst.sg.statemem.stillrunning = true
-                inst.sg:GoToState("run_monkey")
-            end ),
-        },
     },
 
     State{
@@ -8081,29 +8081,22 @@ local states =
         tags = {"moving", "running", "canrotate", "monkey", "autopredict"},
 
         onenter = function(inst)
-            inst._monkeyrun:set(true)
+            ConfigureRunState(inst)
+            if not inst.sg.statemem.normalwonkey then
+                inst.sg:GoToState("run")
+                return
+            end
             inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_SPEED_BONUS
             inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * TUNING.WONKEY_RUN_HUNGER_RATE_MULT)
             inst.Transform:SetSixFaced()
             inst.components.locomotor:RunForward()
-            inst.AnimState:PlayAnimation("run_monkey_loop")
 
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Show("TAIL_carry")
-                inst.AnimState:Hide("TAIL_normal")
+            if not inst.AnimState:IsCurrentAnimation("run_monkey_loop") then
+                inst.AnimState:PlayAnimation("run_monkey_loop", true)
             end
-        end,
 
-        onexit = function(inst)
-            inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_WALK_SPEED_PENALTY
-            inst.components.hunger:SetRate( TUNING.WILSON_HUNGER_RATE )
-            inst.Transform:SetFourFaced()
-            inst.AnimState:Hide("TAIL_carry")
-            inst.AnimState:Show("TAIL_normal")
-
-            if not inst.sg.statemem.stillrunning then
-                inst._monkeyrun:set(false)
-            end
+            --V2C: adding half a frame time so it rounds up
+            inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + .5 * FRAMES)
         end,
 
         timeline =
@@ -8118,23 +8111,37 @@ local states =
             inst.components.locomotor:RunForward()
         end,
 
-        events=
+        events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg.statemem.stillrunning = true
-                inst.sg:GoToState("run_monkey") 
+            EventHandler("gogglevision", function(inst, data)
+                if not data.enabled and inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL then
+                    inst.sg:GoToState("run")
+                end
             end),
-
-            EventHandler("equip", function(inst)
-                inst.AnimState:Show("TAIL_carry")
-                inst.AnimState:Hide("TAIL_normal")
+            EventHandler("sandstormlevel", function(inst, data)
+                if data.level >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+                    inst.sg:GoToState("run")
+                end
             end),
-
-            EventHandler("unequip", function(inst)
-                inst.AnimState:Hide("TAIL_carry")
-                inst.AnimState:Show("TAIL_normal")
+            EventHandler("carefulwalking", function(inst, data)
+                if data.careful then
+                    inst.sg:GoToState("run")
+                end
             end),
         },
+
+        ontimeout = function(inst)
+            inst.sg.statemem.monkeyrunning = true
+            inst.sg:GoToState("run_monkey")
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.monkeyrunning then
+                inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_WALK_SPEED_PENALTY
+                inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE)
+                inst.Transform:SetFourFaced()
+            end
+        end,
     },
 
     State{

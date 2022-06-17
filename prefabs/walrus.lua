@@ -98,6 +98,7 @@ local function EquipBlowdart(inst)
         blowdart.persists = false
         blowdart.components.inventoryitem:SetOnDroppedFn(inst.Remove)
         blowdart:AddComponent("equippable")
+        blowdart:AddTag("nosteal")
 
         inst.components.inventory:Equip(blowdart)
     end

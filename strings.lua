@@ -9005,6 +9005,8 @@ STRINGS.UI =
         OFFLINEMODETITLE = "Offline Mode",
         OFFLINEMODEBODYCREATE = "Are you sure you want to create an offline world? This is a limited mode where only players on your Local Area Network can join. Players will not be able to receive or use Collection Items in this world.",
         OFFLINEMODEBODYRESUME = "You are resuming an offline world. Only users on your Local Area Network will be able to join this world. Players will not be able to receive or use Collection Items in this world.",
+        OFFLINEMODEBODYCREATE_CANSKIN = "Are you sure you want to create an offline world? This is a limited mode where only players on your Local Area Network can join.",
+        OFFLINEMODEBODYRESUME_CANSKIN = "You are resuming an offline world. Only users on your Local Area Network will be able to join this world.",
         FULLSLOTSTITLE = "No Slots Available",
         FULLSLOTSBODY = "All of your server slots are currently full. You must either select a slot to load from, or delete a slot and start a new world.",
         OK = "OK",
@@ -9262,6 +9264,7 @@ STRINGS.UI =
         OK = "OK",
 		NOW_OFFLINE_TITLE = "Network Connection Lost",
 		NOW_OFFLINE_BODY = "You are now in offline mode.\nYour item collection is not available in offline mode.\nPlease check your connection and log in again.",
+        NOW_OFFLINE_BODY_CANSKIN = "You are now in offline mode.\nPlease check your connection and log in again.",
     },
 
     FESTIVALEVENTSCREEN =
@@ -10325,6 +10328,15 @@ STRINGS.UI =
         FAILED_INVENTORY_NO = "No",
 
         GET_INVENTORY = "Downloading Item Collection",
+
+        FAILED_NOLOGIN_TITLE = "Authentication Required",
+        FAILED_NOLOGIN_BODY = "Unfortunately you will need to login to continue viewing this panel, would you like to try to login again?",
+        FAILED_NOLOGIN_YES = "Yes",
+        FAILED_NOLOGIN_NO = "No",
+
+        FAILED_NOPERMISSIONS_TITLE = "Permissions Required",
+        FAILED_NOPERMISSIONS_BODY = "Unfortunately you will need to login to continue viewing this panel, but you do not allow data collection which is required to login.\n\nData Collection settings can be modified in the Options menu.",
+        FAILED_NOPERMISSIONS_NOCHOICE = "I understand",
     },
 
     BEARDSCREEN =
@@ -10618,6 +10630,8 @@ STRINGS.UI =
         WARNING = "You won't be able to wear an item if you give your last one away! Do you really want to trade these items?",
         SERVER_ERROR_TITLE = "Error Trading Items",
         SERVER_ERROR_BODY = "There was an error trading your items. Please login again to refresh your account inventory.",
+        SORRY = "Sorry",
+        OFFLINE = "The Trade Inn is not available in offline mode.",
         OK = "OK",
         SPECIALS_TITLE = "Specials",
         SPECIALS = "Specials",

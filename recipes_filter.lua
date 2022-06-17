@@ -801,6 +801,8 @@ CRAFTING_FILTERS.SEAFARING.recipes =
 	"boat_cannon_kit",
 	"cannonball_rock_item",
 
+	"ocean_trawler_kit",
+
 	"mastupgrade_lamp_item",
 	"mastupgrade_lightningrod_item",
 

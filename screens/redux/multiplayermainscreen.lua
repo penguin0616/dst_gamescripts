@@ -440,7 +440,7 @@ local MultiplayerMainScreen = Class(Screen, function(self, prev_screen, profile,
 end)
 
 function MultiplayerMainScreen:GotoShop( filter_info )
-	if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
+	if not TheInventory:HasSupportForOfflineSkins() and (TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) then
 		TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
 			{
 				{text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
@@ -457,7 +457,7 @@ end
 
 function MultiplayerMainScreen:getStatsPanel()
     return MainMenuStatsPanel({store_cb = function()
-        if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
+        if not TheInventory:HasSupportForOfflineSkins() and (TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) then
             TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
                 {
                     {text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
@@ -540,7 +540,7 @@ function MultiplayerMainScreen:DoInit()
 	end
 
     if IsAnyFestivalEventActive() then
-        if not TheFrontEnd:GetIsOfflineMode() then
+        if TheInventory:HasSupportForOfflineSkins() or not TheFrontEnd:GetIsOfflineMode() then
 			self.userprogress = self.fixed_root:AddChild(TEMPLATES.UserProgress(function()
 				self:OnPlayerSummaryButton()
 			end))
@@ -680,7 +680,7 @@ function MultiplayerMainScreen:_GoToFestfivalEventScreen(fadeout_cb)
 end
 
 function MultiplayerMainScreen:OnFestivalEventButton()
-    if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
+    if not TheInventory:HasSupportForOfflineSkins() and (TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) then
         TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_TITLE, STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_BODY[WORLD_FESTIVAL_EVENT],
             {
                 {text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()
@@ -765,7 +765,7 @@ function MultiplayerMainScreen:OnBrowseServersButton()
 end
 
 function MultiplayerMainScreen:OnPlayerSummaryButton()
-    if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
+    if not TheInventory:HasSupportForOfflineSkins() and (TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) then
         TheFrontEnd:PushScreen(PopupDialogScreen(STRINGS.UI.MAINSCREEN.OFFLINE, STRINGS.UI.MAINSCREEN.ITEMCOLLECTION_DISABLE,
             {
                 {text=STRINGS.UI.FESTIVALEVENTSCREEN.OFFLINE_POPUP_LOGIN, cb = function()

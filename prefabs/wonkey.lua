@@ -23,20 +23,19 @@ end
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
 local function common_postinit(inst)
-
     inst:AddTag("wonkey")
     inst:AddTag("monkey")
-
-    inst._monkeyrun =  net_bool(inst.GUID, "wonkey.monkeyrun", "monkeyrundirty")
-    inst._monkeyrun:set(false)
 end
 
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
-    inst.components.foodaffinity:AddPrefabAffinity("bananapop", TUNING.AFFINITY_15_CALORIES_MED)
+
+
+    inst.components.foodaffinity:AddPrefabAffinity("cave_banana", TUNING.AFFINITY_15_CALORIES_SMALL)
 
     inst.customidleanim = "idle_wonkey"
+    inst.talker_path_override = "monkeyisland/characters/"
 
     inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_WALK_SPEED_PENALTY
 

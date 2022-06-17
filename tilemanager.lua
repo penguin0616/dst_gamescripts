@@ -194,29 +194,29 @@ end
 
 local function ChangeTileRenderOrder(tile_id, target_tile_id, moveafter)
     assert(mod_protect_TileManager == false, "Calling ChangeTileRenderOrder directly is not allowed")
-    ChangeRenderOrder(tiles.ground, tile_id, target_tile_id, moveafter)
+    ChangeRenderOrder(GroundTiles.ground, tile_id, target_tile_id, moveafter)
 end
 
 local function SetTileProperty(tile_id, propertyname, value)
     assert(mod_protect_TileManager == false, "Calling SetTileProperty directly is not allowed")
-    SetProperty(tiles.ground, tile_id, propertyname, value)
+    SetProperty(GroundTiles.ground, tile_id, propertyname, value)
 end
 
 local function ChangeMiniMapTileRenderOrder(tile_id, target_tile_id, moveafter)
     assert(mod_protect_TileManager == false, "Calling ChangeMiniMapTileRenderOrder directly is not allowed")
-    ChangeRenderOrder(tiles.minimap, tile_id, target_tile_id, moveafter)
+    ChangeRenderOrder(GroundTiles.minimap, tile_id, target_tile_id, moveafter)
 end
 
 local function SetMiniMapTileProperty(tile_id, propertyname, value)
     assert(mod_protect_TileManager == false, "Calling SetMiniMapTileProperty directly is not allowed")
-    SetProperty(tiles.minimap, tile_id, propertyname, value)
+    SetProperty(GroundTiles.minimap, tile_id, propertyname, value)
 end
 
 local function ValidateFalloffDef(falloff_def)
     assert(falloff_def.name, "falloff_def must contain a name")
     assert(falloff_def.noise_texture, "falloff_def must contain a noise_texture")
 
-    if not rawget(_G, "lfs") then
+    if not rawget(_G, "lfs") then --don't do these asserts when being called from exportprefabs.lua
         assert(falloff_def.should_have_falloff, "falloff_def must contain should_have_falloff")
         assert(falloff_def.should_have_falloff_result ~= nil, "falloff_def must contain should_have_falloff_result")
         assert(falloff_def.neighbor_needs_falloff, "falloff_def must contain neighbor_needs_falloff")
@@ -241,12 +241,12 @@ end
 
 local function ChangeFalloffRenderOrder(falloff_id, target_falloff_id, moveafter)
     assert(mod_protect_TileManager == false, "Calling ChangeFalloffRenderOrder directly is not allowed")
-    ChangeRenderOrder(tiles.falloff, falloff_id, target_falloff_id, moveafter)
+    ChangeRenderOrder(GroundTiles.falloff, falloff_id, target_falloff_id, moveafter)
 end
 
 local function SetFalloffProperty(falloff_id, propertyname, value)
     assert(mod_protect_TileManager == false, "Calling SetFalloffProperty directly is not allowed")
-    SetProperty(tiles.falloff, falloff_id, propertyname, value)
+    SetProperty(GroundTiles.falloff, falloff_id, propertyname, value)
 end
 
 local function ValidateGroundCreepDef(groundcreep_def)
@@ -269,11 +269,11 @@ local function AddGroundCreep(groundcreep_id, groundcreep_def)
 end
 
 local function ChangeGroundCreepRenderOrder(groundcreep_id, target_groundcreep_id, moveafter)
-    ChangeRenderOrder(tiles.creep, groundcreep_id, target_groundcreep_id, moveafter)
+    ChangeRenderOrder(GroundTiles.creep, groundcreep_id, target_groundcreep_id, moveafter)
 end
 
 local function SetGroundCreepProperty(groundcreep_id, propertyname, value)
-    SetProperty(tiles.creep, groundcreep_id, propertyname, value)
+    SetProperty(GroundTiles.creep, groundcreep_id, propertyname, value)
 end
 
 return {

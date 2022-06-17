@@ -88,7 +88,13 @@ local function ClientRunSpeed(self)
     if mount ~= nil then
         return rider:GetMountRunSpeed()
     end
-    return self.inst.player_classified ~= nil and self.inst.player_classified.runspeed:value() or self.runspeed
+    if self.inst.player_classified ~= nil then
+        if self.predictrunspeed ~= nil and self.inst:HasTag("autopredict") then
+            return self.predictrunspeed
+        end
+        return self.inst.player_classified.runspeed:value()
+    end
+    return self.runspeed
 end
 
 local function ServerFasterOnRoad(self)
@@ -274,6 +280,7 @@ local LocoMotor = Class(function(self, inst)
     self.faster_on_tiles = {}
 
     --self.isupdating = nil
+    --self.predictrunspeed = nil
 end,
 nil,
 {

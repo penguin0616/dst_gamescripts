@@ -2299,8 +2299,9 @@ INVENTORY_PROGRESS =
 	CHECK_EVENT = 2,
 	CHECK_DLC = 3,
 	CHECK_DAILY_GIFT = 4,
-	CHECK_KEYVALUESTORES = 5,
-	CHECK_INVENTORY = 6,
+	CHECK_PENDINGKEYVALUESTORES = 5,
+	CHECK_KEYVALUESTORES = 6,
+	CHECK_INVENTORY = 7,
 }
 
 CURRENT_BETA = 1 -- set to 0 if there is no beta. Note: release builds wont use this so only staging and dev really care

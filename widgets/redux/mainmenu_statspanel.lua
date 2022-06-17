@@ -144,7 +144,7 @@ function MainMenuStatsPanel:BuildItemsSummary(width)
     no_items:SetRegionSize(width,30)
     no_items:Hide()
 
-	if TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode() then
+	if not TheInventory:HasSupportForOfflineSkins() and (TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) then
 		no_items:SetString(STRINGS.UI.PLAYERSUMMARYSCREEN.OFFLINE_NO_ITEMS)
 	    no_items:Show()
 

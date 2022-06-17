@@ -4,15 +4,26 @@ local assets =
     Asset("MINIMAP_IMAGE", "pirate_stash"),
 }
 
+local function fling_loot(loot)
+    Launch(loot, loot, 2)
+end
+
+local MAX_LOOTFLING_DELAY = 0.8
 local function stash_dug(inst)
+    local inst_pos = inst:GetPosition()
+
     local fx = SpawnPrefab("collapse_small")
-    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    fx.Transform:SetPosition(inst_pos:Get())
+
     inst:Hide()
-    for i,loot in ipairs(inst.loot)do
+    for i,loot in ipairs(inst.loot) do
         loot:ReturnToScene()
-        inst:DoTaskInTime(math.random()*0.8, function() inst.components.lootdropper:FlingItem(loot) end)
+        loot.Transform:SetPosition(inst_pos:Get())
+        loot:DoTaskInTime(MAX_LOOTFLING_DELAY * math.random(), fling_loot)
     end
-    inst:DoTaskInTime(1, function() inst:Remove() end)
+
+    -- Ensure that the remove happens after all of our loot gets flung.
+    inst:DoTaskInTime(MAX_LOOTFLING_DELAY + 0.2, inst.Remove)
 end
 
 
@@ -61,8 +72,6 @@ local function fn()
     inst.components.workable:SetWorkAction(ACTIONS.DIG)
     inst.components.workable:SetWorkLeft(1)
     inst.components.workable:SetOnWorkCallback(stash_dug)
-
-    inst:AddComponent("lootdropper")
 
     inst:ListenForEvent("onremove", function()
         if TheWorld.components.piratespawner then

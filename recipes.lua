@@ -764,6 +764,7 @@ Recipe("boat_rotator",    {Ingredient("boards", 2), Ingredient("rope", 1), Ingre
 Recipe("boat_bumper_kelp", {Ingredient("kelp", 3), Ingredient("cutgrass", 3)}, nil, TECH.LOST, nil, nil, true)
 Recipe("boat_bumper_shell", {Ingredient("slurtle_shellpieces", 3), Ingredient("rope", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("boat_cannon",     {Ingredient("boards", 2), Ingredient("rope", 1), Ingredient("nitre", 2)}, nil, TECH.LOST, nil, nil, true)
+Recipe2("ocean_trawler_kit",			{Ingredient("boards", 2), Ingredient("rope", 2), Ingredient("silk", 6)}, 								TECH.SEAFARING_ONE)
 Recipe("dock_woodposts",                {Ingredient("log", 2)},                            nil, TECH.LOST, nil, nil, true)
 Recipe2("turf_monkey_ground",		{Ingredient("rocks", 1), Ingredient("marble", 1)},													TECH.LOST,		{numtogive = 4})
 Recipe("anchor", 		  {Ingredient("boards", 2), Ingredient("rope", 3), Ingredient("cutstone", 3)}, nil, TECH.LOST, nil, nil, true)
@@ -888,6 +889,7 @@ DeconstructRecipe("kitcoondecor2",					{Ingredient("lucky_goldnugget", 12)})
 DeconstructRecipe("kitcoonden",						{Ingredient("lucky_goldnugget", 1)})
 DeconstructRecipe("potatosack",						{Ingredient("cutgrass", 2), Ingredient("rocks", 3)})
 DeconstructRecipe("minisign",						{Ingredient("boards", 1)})
+DeconstructRecipe("ocean_trawler",   				{Ingredient("boards", 2), Ingredient("rope", 2), Ingredient("silk", 6)})
 
 -- Loot drops
 DeconstructRecipe("archive_resonator",				{Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)})

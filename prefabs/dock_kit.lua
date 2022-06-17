@@ -30,7 +30,9 @@ local function CLIENT_CanDeployDockKit(inst, pt, mouseover, deployer, rotation)
             local center_pt = Vector3(TheWorld.Map:GetTileCenterPoint(tx, ty))
             return found_adjacent_safetile and TheWorld.Map:CanDeployAtPointInWater(center_pt, inst, mouseover,
             {
-                land = -1.8, boat = 2.2, radius = DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT],
+                land = 0.0,
+                radius = 0.0,
+                boat = (DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT] + 0.8), -- "boat" is used for all prefabs
             })
         end
     end
@@ -91,7 +93,6 @@ local function fn()
     -------------------------------------------------------
     inst:AddComponent("deployable")
     inst.components.deployable:SetDeployMode(DEPLOYMODE.CUSTOM)
-    --inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT)
     inst.components.deployable:SetUseGridPlacer(true)
     inst.components.deployable.ondeploy = on_deploy
 

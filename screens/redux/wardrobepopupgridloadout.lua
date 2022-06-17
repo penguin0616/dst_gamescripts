@@ -85,7 +85,7 @@ local GridWardrobePopupScreen = Class(Screen, function(self, owner_player, profi
 	self.loadout = self.proot:AddChild(LoadoutSelect(profile, self.owner_player.prefab, starting_skintype, true, monkey_curse))
 	self.loadout:SetDefaultMenuOption()
 
-    local offline = not TheNet:IsOnlineMode()
+    local offline = not TheInventory:HasSupportForOfflineSkins() and not TheNet:IsOnlineMode()
 
 	local buttons = {}
 	if offline then
@@ -189,7 +189,7 @@ function GridWardrobePopupScreen:Close()
 	local skins = self.loadout.selected_skins
 
     local data = {}
-    if TheNet:IsOnlineMode() then
+    if TheInventory:HasSupportForOfflineSkins() or TheNet:IsOnlineMode() then
 		data = skins
     end
 

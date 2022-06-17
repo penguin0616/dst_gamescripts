@@ -531,6 +531,10 @@ function self:OnUpdate(dt)
 
     local mindist = math.huge
 
+    if not self.queen then
+        return
+    end
+    
     for i, v in ipairs(_activeplayers) do
         if not v.components.health:IsDead() and not TheWorld.Map:IsVisualGroundAtPoint(v.Transform:GetWorldPosition()) then
             if not _lasttic_players[v] then

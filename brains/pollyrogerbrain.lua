@@ -68,7 +68,7 @@ local function GiveAction(inst)
 
     local item = inst.components.inventory:GetItemInSlot(1)
    
-    return leader ~= nil and item ~= nil and BufferedAction(inst, leader, ACTIONS.GIVE, item ) or nil
+    return leader ~= nil and item ~= nil and BufferedAction(inst, leader, ACTIONS.GIVEALLTOPLAYER, item ) or nil
 end
 
 local function closetoleader(inst)

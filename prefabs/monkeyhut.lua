@@ -135,6 +135,11 @@ local function onburntup(inst)
     inst.AnimState:PlayAnimation("burnt")
 
     inst:RemoveTag("shelter")
+
+    if inst._window ~= nil then
+        inst._window:Remove()
+        inst._window = nil
+    end
 end
 
 local function LightsOff(inst)

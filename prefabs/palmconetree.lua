@@ -488,7 +488,7 @@ local function on_load(inst, data)
         make_stump(inst)
         inst.AnimState:PlayAnimation(anims[inst.size].stump)
     elseif is_burnt then
-        on_tree_burnt_immediate_helper(inst, true)
+        tree_burnt_immediate_helper(inst, true)
     else
         sway(inst)
     end

@@ -457,9 +457,9 @@ function ServerCreationScreen:Create(warnedOffline, warnedDisabledMods, warnedOu
     if warnedOffline ~= true and not self.server_settings_tab:GetOnlineMode() then
         local offline_mode_body = ""
         if not ShardSaveGameIndex:IsSlotEmpty(self.save_slot) then
-            offline_mode_body = STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODEBODYRESUME
+            offline_mode_body = TheInventory:HasSupportForOfflineSkins() and STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODEBODYRESUME_CANSKIN or STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODEBODYRESUME
         else
-            offline_mode_body = STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODEBODYCREATE
+            offline_mode_body = TheInventory:HasSupportForOfflineSkins() and STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODEBODYCREATE_CANSKIN or STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODEBODYCREATE
         end
 
         local confirm_offline_popup = PopupDialogScreen(STRINGS.UI.SERVERCREATIONSCREEN.OFFLINEMODETITLE, offline_mode_body,

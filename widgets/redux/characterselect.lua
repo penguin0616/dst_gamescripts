@@ -35,9 +35,10 @@ function CharacterSelect:_BuildCharactersList(additionalCharacters)
         active_characters = ExceptionArrays(GetSelectableCharacterList(), MODCHARACTEREXCEPTIONS_DST)
     end
 
+    local online = TheInventory:HasSupportForOfflineSkins() or TheNet:IsOnlineMode()
     local characters = {}
     for _,hero in ipairs(active_characters) do
-        if TheNet:IsOnlineMode() or not IsRestrictedCharacter( hero ) then
+        if online or not IsRestrictedCharacter( hero ) then
             table.insert(characters, hero)
         end
     end
