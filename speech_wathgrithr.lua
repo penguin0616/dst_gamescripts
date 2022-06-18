@@ -823,6 +823,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Fie! The cursed thing won't leave me!",
     ANNOUNCE_MONKEY_CURSE_1 = "What foul magic is this?",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "I've been bewitched!!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Thank Odin, the curse hath been lifted.",
 
     ANNOUNCE_PIRATES_ARRIVE = "A ship approaches! Prepare for battle!",
 

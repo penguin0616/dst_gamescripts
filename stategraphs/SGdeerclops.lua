@@ -179,6 +179,7 @@ local events =
     CommonHandlers.OnFreeze(),
     CommonHandlers.OnAttacked(),
     CommonHandlers.OnDeath(),
+    CommonHandlers.OnSink(),
 
     EventHandler("doattack", function(inst, data)
         if inst.components.health ~= nil and not inst.components.health:IsDead()
@@ -578,5 +579,6 @@ CommonStates.AddSleepStates(states,
     end,
 })
 CommonStates.AddFrozenStates(states)
+CommonStates.AddSinkAndWashAsoreStates(states)
 
 return StateGraph("deerclops", states, events, "idle", actionhandlers)

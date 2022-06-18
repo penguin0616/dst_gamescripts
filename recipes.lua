@@ -765,6 +765,8 @@ Recipe("boat_bumper_kelp", {Ingredient("kelp", 3), Ingredient("cutgrass", 3)}, n
 Recipe("boat_bumper_shell", {Ingredient("slurtle_shellpieces", 3), Ingredient("rope", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("boat_cannon",     {Ingredient("boards", 2), Ingredient("rope", 1), Ingredient("nitre", 2)}, nil, TECH.LOST, nil, nil, true)
 Recipe2("ocean_trawler_kit",			{Ingredient("boards", 2), Ingredient("rope", 2), Ingredient("silk", 6)}, 								TECH.SEAFARING_ONE)
+Recipe2("boat_magnet_kit",	{Ingredient("boards", 2), Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)}, 		TECH.SEAFARING_ONE)
+Recipe2("boat_magnet_beacon",	{Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)}, 					TECH.SEAFARING_ONE)
 Recipe("dock_woodposts",                {Ingredient("log", 2)},                            nil, TECH.LOST, nil, nil, true)
 Recipe2("turf_monkey_ground",		{Ingredient("rocks", 1), Ingredient("marble", 1)},													TECH.LOST,		{numtogive = 4})
 Recipe("anchor", 		  {Ingredient("boards", 2), Ingredient("rope", 3), Ingredient("cutstone", 3)}, nil, TECH.LOST, nil, nil, true)
@@ -890,7 +892,7 @@ DeconstructRecipe("kitcoonden",						{Ingredient("lucky_goldnugget", 1)})
 DeconstructRecipe("potatosack",						{Ingredient("cutgrass", 2), Ingredient("rocks", 3)})
 DeconstructRecipe("minisign",						{Ingredient("boards", 1)})
 DeconstructRecipe("ocean_trawler",   				{Ingredient("boards", 2), Ingredient("rope", 2), Ingredient("silk", 6)})
-
+DeconstructRecipe("boat_magnet",  					{Ingredient("boards", 2), Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)})
 -- Loot drops
 DeconstructRecipe("archive_resonator",				{Ingredient("moonrocknugget", 1), Ingredient("thulecite", 1)})
 DeconstructRecipe("alterguardianhat",				{Ingredient("alterguardianhatshard", 5)})
@@ -907,9 +909,6 @@ DeconstructRecipe("oar_monkey",						{Ingredient("log", 1), Ingredient("palmcone
 DeconstructRecipe("slow_farmplot",					{Ingredient("cutgrass", 8), Ingredient("poop", 4), Ingredient("log", 4)})
 DeconstructRecipe("fast_farmplot",					{Ingredient("cutgrass", 10), Ingredient("poop", 6),Ingredient("rocks", 4)})
 DeconstructRecipe("book_gardening",					{Ingredient("papyrus", 2), Ingredient("seeds", 1), Ingredient("poop", 1)})
-
-
-
 
 require("recipes_filter")
 -- verify that all recipes are placed in at least one filter group

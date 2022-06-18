@@ -824,6 +824,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Aaaah! Spooky beads came back to Wolfgang!",
     ANNOUNCE_MONKEY_CURSE_1 = "Hmm... there is something... not right...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "No! Wolfgang should at least be mighty gorilla!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Ah. Back to mighty self.",
 
     ANNOUNCE_PIRATES_ARRIVE = "Someone is music making?",
 

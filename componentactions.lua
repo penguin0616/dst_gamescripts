@@ -478,7 +478,7 @@ local COMPONENT_ACTIONS =
 
         boatrotator = function(inst, doer, actions, right)
             local boat = inst:GetCurrentPlatform()
-            if boat and boat:HasTag("boat") and boat.components.boatringdata and not inst:HasTag("fire") then
+            if boat and boat:HasTag("boat") and boat.components.boatringdata and not inst:HasTag("fire") and not inst:HasTag("burnt") then
                 if boat.components.boatringdata:IsRotating() then
                     table.insert(actions, ACTIONS.ROTATE_BOAT_STOP)
                 elseif right then
@@ -491,7 +491,7 @@ local COMPONENT_ACTIONS =
 
         boatmagnet = function(inst, doer, actions, right)
             local boat = inst:GetCurrentPlatform()
-            if not inst:HasTag("fire") then
+            if not inst:HasTag("fire") and not inst:HasTag("burnt") then
                 if not inst:HasTag("paired") then
                     table.insert(actions, ACTIONS.BOAT_MAGNET_ACTIVATE)
                 else
@@ -501,7 +501,7 @@ local COMPONENT_ACTIONS =
         end,
 
         boatmagnetbeacon = function(inst, doer, actions, right)
-            if right and inst:HasTag("paired") then
+            if right and inst:HasTag("paired") and not inst:HasTag("burnt") then
                 if inst:HasTag("turnedoff") then
                     table.insert(actions, ACTIONS.BOAT_MAGNET_BEACON_TURN_ON)
                 else
@@ -511,13 +511,13 @@ local COMPONENT_ACTIONS =
         end,
 
         boatcannon = function(inst, doer, actions)
-            if not inst:HasTag("fire") and inst:HasTag("ammoloaded") then
+            if not inst:HasTag("fire") and inst:HasTag("ammoloaded") and not inst:HasTag("burnt") then
                 table.insert(actions, ACTIONS.BOAT_CANNON_SHOOT)
             end
         end,
 
         oceantrawler = function(inst, doer, actions, right)
-            if not inst:HasTag("fire") and inst:HasTag("oceantrawler") then
+            if not inst:HasTag("fire") and not inst:HasTag("burnt") then
                 if right then
                     if inst:HasTag("trawler_lowered") then
                         table.insert(actions, ACTIONS.OCEAN_TRAWLER_RAISE)

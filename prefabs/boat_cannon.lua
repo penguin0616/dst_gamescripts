@@ -96,6 +96,7 @@ local function onload(inst, data)
         -- Show/hide anim flap depending on if ammo is loaded or not
         if data.loadedammo ~= nil then
             inst.AnimState:HideSymbol("cannon_flap_up")
+            inst:AddTag("ammoloaded")
         else
             inst.AnimState:HideSymbol("cannon_flap_down")
         end

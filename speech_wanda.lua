@@ -823,6 +823,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Why can't I seem to...? Oh no...",
     ANNOUNCE_MONKEY_CURSE_1 = "And so it begins...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Oh botheration! I don't have time to monkey about!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Finally! I was starting to think I'd never return to normal!",
 
     ANNOUNCE_PIRATES_ARRIVE = "Botheration! I can hear their catchy music getting closer!",
 

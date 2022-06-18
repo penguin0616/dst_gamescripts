@@ -827,6 +827,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "No... maybe I won't put it down after all...",
     ANNOUNCE_MONKEY_CURSE_1 = "I feel... strange...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Don't laugh at me Abigail! It's not funny!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "I never imagined being glad to be myself...",
 
     ANNOUNCE_PIRATES_ARRIVE = "Nowhere to run... they're here.",
 

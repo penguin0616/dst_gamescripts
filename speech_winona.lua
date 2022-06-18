@@ -829,6 +829,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "I'm not one for knickknacks, but for some reason I just can't let 'em go...",
     ANNOUNCE_MONKEY_CURSE_1 = "Uuurgh, I don't feel so good...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "I guess now I'm a real grease monkey. Ha...",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "That was more than enough monkeying around for me.",
 
     ANNOUNCE_PIRATES_ARRIVE = "Sounds like someone's about to throw a monkey wrench in the works...",
 

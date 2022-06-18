@@ -313,10 +313,10 @@ if IsConsole() then
 		assert(0) -- Add platform
 	end
 elseif BRANCH == "dev" then
-	table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
-	table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
-	table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
-	table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
+	--table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
+	--table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
+	--table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
+	--table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
 	--table.insert(assets, Asset("ATLAS", "images/nx_controllers.xml"))
 	--table.insert(assets, Asset("IMAGE", "images/nx_controllers.tex"))
 end

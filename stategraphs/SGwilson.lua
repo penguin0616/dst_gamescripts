@@ -777,7 +777,11 @@ local actionhandlers =
     ActionHandler(ACTIONS.LOWER_ANCHOR, "doshortaction"),
     ActionHandler(ACTIONS.REPAIR_LEAK, "dolongaction"),
     ActionHandler(ACTIONS.STEER_BOAT, "steer_boat_idle_pre"),
-    ActionHandler(ACTIONS.STOP_STEERING_BOAT, "stop_steering"),
+    ActionHandler(ACTIONS.STOP_STEERING_BOAT,
+        function(inst, action)
+            inst.sg.statemem.steering = true
+            return "stop_steering"
+        end),
     ActionHandler(ACTIONS.SET_HEADING, "steer_boat_turning"),
     ActionHandler(ACTIONS.ROTATE_BOAT_CLOCKWISE, "doshortaction"),
     ActionHandler(ACTIONS.ROTATE_BOAT_COUNTERCLOCKWISE, "doshortaction"),
@@ -1106,6 +1110,7 @@ local events =
     EventHandler("set_heading",
         function(inst)
             if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead() or inst.sg:HasStateTag("is_turning_wheel")) then
+                inst.sg.statemem.steering = true
                 inst.sg:GoToState("steer_boat_turning", true)
             end
         end),
@@ -8040,7 +8045,7 @@ local states =
                 inst.sg:GoToState("run")
                 return
             end
-            inst.Transform:SetSixFaced()
+            inst.Transform:SetPredictedSixFaced()
             inst.components.locomotor:RunForward()
             inst.AnimState:PlayAnimation("run_monkey_pre")
             --inst.SoundEmitter:PlaySound("dontstarve_DLC002/characters/wilbur/walktorun", "walktorun") TODO SOUND
@@ -8071,7 +8076,7 @@ local states =
 
         onexit = function(inst)
             if not inst.sg.statemem.monkeyrunning then
-                inst.Transform:SetFourFaced()
+                inst.Transform:ClearPredictedFacingModel()
             end
         end,
     },
@@ -8088,7 +8093,7 @@ local states =
             end
             inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_SPEED_BONUS
             inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE * TUNING.WONKEY_RUN_HUNGER_RATE_MULT)
-            inst.Transform:SetSixFaced()
+            inst.Transform:SetPredictedSixFaced()
             inst.components.locomotor:RunForward()
 
             if not inst.AnimState:IsCurrentAnimation("run_monkey_loop") then
@@ -8139,7 +8144,7 @@ local states =
             if not inst.sg.statemem.monkeyrunning then
                 inst.components.locomotor.runspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_WALK_SPEED_PENALTY
                 inst.components.hunger:SetRate(TUNING.WILSON_HUNGER_RATE)
-                inst.Transform:SetFourFaced()
+                inst.Transform:ClearPredictedFacingModel()
             end
         end,
     },
@@ -8817,6 +8822,7 @@ local states =
         {
             EventHandler("animqueueover", function(inst)
                 if inst:PerformBufferedAction() then
+                    inst.sg.statemem.steering = true
                     inst.sg:GoToState("steer_boat_idle_loop", true)
                 else
                     inst.sg:GoToState("idle")
@@ -8828,7 +8834,9 @@ local states =
         },
 
         onexit = function(inst)
-            inst.Transform:SetFourFaced()
+            if not inst.sg.statemem.steering then
+                inst.Transform:SetFourFaced()
+            end
         end,
     },
 
@@ -8845,7 +8853,9 @@ local states =
         end,
 
         onexit = function(inst)
-            inst.Transform:SetFourFaced()
+            if not inst.sg.statemem.steering then
+                inst.Transform:SetFourFaced()
+            end
         end,
 
         events =
@@ -8880,6 +8890,7 @@ local states =
         events =
         {
             EventHandler("playerstopturning", function(inst)
+                inst.sg.statemem.steering = true
                 inst.sg:GoToState("steer_boat_turning_pst")
             end),
             EventHandler("stop_steering_boat", function(inst)
@@ -8888,7 +8899,9 @@ local states =
         },
 
         onexit = function(inst)
-            inst.Transform:SetFourFaced()
+            if not inst.sg.statemem.steering then
+                inst.Transform:SetFourFaced()
+            end
             inst.SoundEmitter:KillSound("turn")
         end,
     },
@@ -8907,12 +8920,15 @@ local states =
         end,
 
         onexit = function(inst)
-            inst.Transform:SetFourFaced()
+            if not inst.sg.statemem.steering then
+                inst.Transform:SetFourFaced()
+            end
         end,
 
         events =
         {
             EventHandler("animover", function(inst)
+                inst.sg.statemem.steering = true
                 inst.sg:GoToState("steer_boat_idle_loop")
             end),
             EventHandler("stop_steering_boat", function(inst)
@@ -8923,7 +8939,6 @@ local states =
 
    State{
         name = "stop_steering",
-        tags = { },
 
         onenter = function(inst)
             inst.Transform:SetNoFaced()
@@ -8936,8 +8951,8 @@ local states =
 
         events =
         {
-            EventHandler("animqueueover", function(inst)
-                inst.sg:GoToState("idle", true)
+            EventHandler("animover", function(inst)
+                inst.sg:GoToState("idle")
             end),
         }
     },
@@ -15400,6 +15415,11 @@ local states =
 
         timeline =
         {
+
+            TimeEvent(15*FRAMES, function(inst)
+                inst.components.talker:Say(GetString(inst, "ANNOUNCE_MONKEY_CURSE_CHANGE"))
+            end),
+
             TimeEvent(20*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("nointerrupt")
             end),
@@ -15450,6 +15470,10 @@ local states =
 
         timeline =
         {
+            TimeEvent(15*FRAMES, function(inst)
+                inst.components.talker:Say(GetString(inst, "ANNOUNCE_MONKEY_CURSE_CHANGEBACK"))
+            end),
+            
             TimeEvent(20*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("nointerrupt")
             end),

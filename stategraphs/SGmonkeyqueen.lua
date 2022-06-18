@@ -118,7 +118,7 @@ local states =
 
                         local curse = SpawnPrefab("cursed_monkey_token_prop")
                         curse.Transform:SetPosition(giver.Transform:GetWorldPosition())
-                        curse:RemoveComponent("invenotyitem")
+                        curse:RemoveComponent("inventoryitem")
                         curse:RemoveComponent("curseditem")
                         curse.target = inst
                     end

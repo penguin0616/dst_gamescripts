@@ -444,8 +444,8 @@ function Temperature:TransferComponent(newinst)
 
     newcomponent:SetTemperature(self.current)
     local duration = nil
-    if self.bellytask then        
-        duration = self.inst:TimeRemainingInTask(self.bellytask.taskinfo)
+    if self.bellytask then
+        duration = GetTaskRemaining(self.bellytask)
     end
     if duration then
         newcomponent:SetTemperatureInBelly(self.bellytemperaturedelta,duration)

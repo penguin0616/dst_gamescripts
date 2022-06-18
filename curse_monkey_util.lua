@@ -115,7 +115,7 @@ local function docurse(owner, numitems)
         end
         if numitems > 0 and not owner.monkeyfeet then
 
-            owner:DoTaskInTime(1, function()    owner.components.talker:Say(GetString(owner, "ANNOUNCE_MONKEY_CURSE_1")) end)
+            owner:DoTaskInTime(1, function() if owner.prefab ~= "wonkey"  then owner.components.talker:Say(GetString(owner, "ANNOUNCE_MONKEY_CURSE_1")) end end)
 
             print("========= PARTIAL MONKEY 1")
             owner.monkeyfeet = true

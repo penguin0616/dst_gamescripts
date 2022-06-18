@@ -810,6 +810,9 @@ CRAFTING_FILTERS.SEAFARING.recipes =
 	"winch",
 	"waterpump",
 
+	"boat_magnet_kit",
+	"boat_magnet_beacon",	
+
     "dock_kit",
     "dock_woodposts_item",
 

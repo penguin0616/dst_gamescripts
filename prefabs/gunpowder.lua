@@ -20,13 +20,7 @@ end
 
 local function OnExplodeFn(inst)
     inst.SoundEmitter:KillSound("hiss")
-
-    local x, y, z = inst.Transform:GetWorldPosition()
-    SpawnPrefab("explode_small").Transform:SetPosition(x, y, z)
-
-    if TheWorld.components.dockmanager ~= nil then
-        TheWorld.components.dockmanager:DamageDockAtPoint(x, y, z, TUNING.GUNPOWDER_DAMAGE)
-    end
+    SpawnPrefab("explode_small").Transform:SetPosition(inst.Transform:GetWorldPosition())
 end
 
 local function OnPutInInv(inst, owner)

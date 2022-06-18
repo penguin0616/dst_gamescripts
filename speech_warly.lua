@@ -823,6 +823,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "What is this? It keeps returning to me!",
     ANNOUNCE_MONKEY_CURSE_1 = "I'm beginning to feel a bit unwell...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Mon dieu, I've become a monkey!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "I don't think I'll be cooking with bananas for a while...",
 
     ANNOUNCE_PIRATES_ARRIVE = "Oh, zut alors...",
 

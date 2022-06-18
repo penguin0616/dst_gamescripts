@@ -17,6 +17,7 @@ local prefabs =
     "palmcone_leaf_fx_short",
     "palmcone_leaf_fx_tall",
     "palmcone_scale",
+    "palmcone_seed",
 }
 
 local function makeanims(stage)
@@ -62,8 +63,10 @@ SetSharedLootTable("palmconetree_tall",
 {
     {"log", 1.0},
     {"log", 1.0},
+    {"log", 1.0},
     {"palmcone_scale", 1.0},
     {"palmcone_scale", 1.0},
+    {"palmcone_seed", 1.0},
 })
 
 SetSharedLootTable("palmconetree_burnt",
@@ -287,7 +290,7 @@ local function set_short(inst)
         inst.components.workable:SetWorkLeft(TUNING.PALMCONETREE_CHOPS_SMALL)
     end
     set_short_burnable(inst)
-    inst.components.lootdropper:SetChanceLootTable("moontree_small")
+    inst.components.lootdropper:SetChanceLootTable("palmconetree_small")
     inst:AddTag("shelter")
 
     sway(inst)

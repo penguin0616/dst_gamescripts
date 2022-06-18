@@ -248,6 +248,10 @@ local function fn()
 
     ------------------------------------------
 
+    inst:AddComponent("drownable")
+
+    ------------------------------------------
+
     inst:WatchWorldState("isspring", OnSpringChange)
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("entitysleep", OnEntitySleep)

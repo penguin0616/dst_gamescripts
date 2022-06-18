@@ -194,6 +194,12 @@ function ValidateSpawnPrefabRequest(user_id, prefab_name, skin_base, clothing_bo
     local valid_chars = ExceptionArrays(DST_CHARACTERLIST, MODCHARACTEREXCEPTIONS_DST)
     local in_valid_char_list = table.contains(valid_chars, prefab_name)
 
+    if prefab_name == "wonkey" and TheWorld.components.piratespawner and not TheWorld.components.piratespawner.PermittedToWonkey[user_id] then
+        -- NOTES(JBK): This is not assertion level of importance but it is administrative note worthy level to know someone tried breaking things.
+        in_valid_char_list = false
+        print("[WERR] Player with ID ", user_id, "tried spawning as Wonkey without having permissions to do so!")
+    end
+
     local validated_prefab = prefab_name
     local validated_skin_base = nil
     local validated_clothing_body = nil

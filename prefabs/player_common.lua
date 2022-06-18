@@ -1828,7 +1828,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
     local function ChangeToMonkey(inst)
         if TheWorld.components.piratespawner then
+            TheWorld.components.piratespawner.PermittedToWonkey[inst.userid] = true
             TheWorld.components.piratespawner:DoMonkeyChange(inst, false)
+            TheWorld.components.piratespawner.PermittedToWonkey[inst.userid] = nil
         end
     end
 

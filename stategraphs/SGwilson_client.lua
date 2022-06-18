@@ -1053,7 +1053,7 @@ local states =
                 inst.sg:GoToState("run")
                 return
             end
-            inst.Transform:SetSixFaced()
+            inst.Transform:SetPredictedSixFaced()
             inst.components.locomotor:RunForward()
             inst.AnimState:PlayAnimation("run_monkey_pre")
         end,
@@ -1083,7 +1083,7 @@ local states =
 
         onexit = function(inst)
             if not inst.sg.statemem.monkeyrunning then
-                inst.Transform:SetFourFaced()
+                inst.Transform:ClearPredictedFacingModel()
             end
         end,
     },
@@ -1099,7 +1099,7 @@ local states =
                 return
             end
             inst.components.locomotor.predictrunspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_SPEED_BONUS
-            inst.Transform:SetSixFaced()
+            inst.Transform:SetPredictedSixFaced()
             inst.components.locomotor:RunForward()
 
             if not inst.AnimState:IsCurrentAnimation("run_monkey_loop") then
@@ -1149,7 +1149,7 @@ local states =
         onexit = function(inst)
             if not inst.sg.statemem.monkeyrunning then
                 inst.components.locomotor.predictrunspeed = nil
-                inst.Transform:SetFourFaced()
+                inst.Transform:ClearPredictedFacingModel()
             end
         end,
     },
@@ -2532,7 +2532,7 @@ local states =
 
         onenter = function(inst, snap)
             inst.components.locomotor:Stop()
-            inst.Transform:SetNoFaced()
+            inst.Transform:SetPredictedNoFaced()
             inst.AnimState:PlayAnimation("steer_idle_pre")
             inst.AnimState:PushAnimation("steer_lag", false)
             inst:PerformPreviewBufferedAction()
@@ -2546,15 +2546,17 @@ local states =
                     inst.sg:GoToState("idle", "noanim")
                 end
             elseif inst.bufferedaction == nil then
-                inst.Transform:SetFourFaced()
                 inst.sg:GoToState("idle")
             end
         end,
 
         ontimeout = function(inst)
             inst:ClearBufferedAction()
-            inst.Transform:SetFourFaced()
             inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            inst.Transform:ClearPredictedFacingModel()
         end,
     },
 

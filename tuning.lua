@@ -3752,8 +3752,8 @@ function Tune(overrides)
 
                 MONKEY =
                 {
-                    FORCE = 0.4,
-                    DAMAGE = wilson_attack,
+                    FORCE = 0.6,
+                    DAMAGE = wilson_attack*1.5,
                     ROW_FAIL_WEAR = 25,
                     ATTACKWEAR = 5,
                     USES = 500,
@@ -5451,8 +5451,8 @@ function Tune(overrides)
         GNARWAIL_SPAWN_CHANCE = 0.075,
         GNARWAIL_TEST_RADIUS = 100,
 
-        OCEAN_TRAWLER_HEALTH = 100,
         OCEAN_TRAWLER_SPAWN_FISH_MODIFIER = 2,
+        OCEAN_TRAWLER_LOWERED_PERISH_RATE = 0.1,
 
         SQUID_TEST_RADIUS = 80,
         SQUID_MAX_FISH = 10,
@@ -6025,7 +6025,7 @@ function Tune(overrides)
 
         MONKEYISLAND_PORTAL_SPEWTIME = 15.0,
         MONKEYISLAND_PORTAL_ENABLED = true,
-        MONKEYISLAND_PORTAL_MAXLOOT = 5,
+        MONKEYISLAND_PORTAL_MAXLOOT = 10,
         MONKEYISLAND_PORTAL_LOOTMAXDST = 80,
         MONKEYISLAND_PORTAL_BANANABUSHWEIGHT = 5.0,
         MONKEYISLAND_PORTAL_LIGHTCRABWEIGHT = 2.0,
@@ -6109,6 +6109,10 @@ function Tune(overrides)
         CANNONBALL_SPLASH_RADIUS = 3,
         CANNONBALL_SPLASH_DAMAGE_PERCENT = 0.6,
         CANNONBALL_PASS_THROUGH_TIME_BUFFER = 1,
+
+        MONKEY_CURSE_LEVEL_1 = 0,
+        MONKEY_CURSE_LEVEL_2 = 2,
+        MONKEY_CURSE_LEVEL_3 = 5,
     }
 
     TUNING_MODIFIERS = {}

@@ -41,10 +41,12 @@ local function master_postinit(inst)
 
     inst:DoTaskInTime(0,function() 
             if TheWorld.components.piratespawner then
-                if TheWorld.components.piratespawner.SwapData[inst.userid].oldprefab == "wes" then
+                local swapdata = TheWorld.components.piratespawner.SwapData[inst.userid]
+                local oldprefab = swapdata and swapdata.oldprefab or nil
+                if oldprefab == "wes" then
                     inst:AddTag("mime")
                 end
-                inst.components.talker.speechproxy = TheWorld.components.piratespawner.SwapData[inst.userid] and TheWorld.components.piratespawner.SwapData[inst.userid].oldprefab
+                inst.components.talker.speechproxy = oldprefab
             end
         end)
 

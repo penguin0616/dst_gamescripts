@@ -444,6 +444,10 @@ local function fn()
 
     ------------------------------------------
 
+    inst:AddComponent("drownable")
+
+    ------------------------------------------
+
     inst:WatchWorldState("season", OnSeasonChange)
     OnSeasonChange(inst, TheWorld.state.season)
 

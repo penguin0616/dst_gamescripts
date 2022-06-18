@@ -828,6 +828,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Oh dear, I really should have known better.",
     ANNOUNCE_MONKEY_CURSE_1 = "As curses go, it could be worse.",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Hyuyu you've made a monkey out of me!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "All's well that ends spells.",
 
     ANNOUNCE_PIRATES_ARRIVE = "Something scurvy this way comes.",
 

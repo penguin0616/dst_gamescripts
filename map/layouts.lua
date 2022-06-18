@@ -69,7 +69,8 @@ local function monkeyisland_prefabs_area(area, data)
     table.insert(prefabs, "palmconetree_normal")
     table.insert(prefabs, "monkeytail")
 
-    for _ = 1, math.random(2, 4) do
+    table.insert(prefabs, "lightcrab")
+    if math.random() > 0.5 then
         table.insert(prefabs, "lightcrab")
     end
 
@@ -1045,7 +1046,8 @@ local ExampleLayout =
                 table.insert(prefabs, "palmconetree_normal")
                 table.insert(prefabs, "monkeytail")
 
-                for _ = 1, math.random(2, 4) do
+                table.insert(prefabs, "lightcrab")
+                if math.random() > 0.5 then
                     table.insert(prefabs, "lightcrab")
                 end
 

@@ -335,6 +335,7 @@ local function fn()
     inst:ListenForEvent("itemget", OnGotItem)
     --inst:ListenForEvent("abandon_ship", OnAbandonShip)
     inst:ListenForEvent("player_changed_to_monkey", onmonkeychange, TheWorld)
+    inst:ListenForEvent("player_changed_from_monkey", onmonkeychange, TheWorld) -- NOTES(JBK): Useful for the player animation stun.
 
     MakeHauntablePanic(inst)
 

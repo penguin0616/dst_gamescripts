@@ -830,6 +830,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Wait, what's this doing back in my pocket? Didn't I just...?",
     ANNOUNCE_MONKEY_CURSE_1 = "Brrr, what was that? I just got goosebumps.",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "What the... HEY! I don't want to be a monkey!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Ugh, I still feel itchy all over...",
 
     ANNOUNCE_PIRATES_ARRIVE = "Uh, that sound's getting closer...",
 

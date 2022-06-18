@@ -108,6 +108,10 @@ function OceanTrawler:Lower()
     self.inst.sg:GoToState("lower")
     self.inst.MiniMapEntity:SetIcon("ocean_trawler_down.png")
 
+    if self.inst.components.preserver then
+        self.inst.components.preserver:SetPerishRateMultiplier(TUNING.OCEAN_TRAWLER_LOWERED_PERISH_RATE)
+    end
+
     if self.inst.components.container then
         self.inst.components.container:Close()
     end
@@ -202,6 +206,10 @@ function OceanTrawler:Raise()
     self.lowered = false
     self.inst.sg:GoToState("raise")
     self.inst.MiniMapEntity:SetIcon("ocean_trawler.png")
+
+    if self.inst.components.preserver then
+        self.inst.components.preserver:SetPerishRateMultiplier(1)
+    end
 
     self:ReleaseOverflowFish()
 

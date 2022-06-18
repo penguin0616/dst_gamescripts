@@ -25,6 +25,7 @@ local prefabs =
 }
 
 local PORTALLOOT_TIMER_NAME = "spawnportalloot_tick"
+local PORTALEVENT_TIMER_NAME = "doportalevent"
 
 -- We weight in some FX loot here as well, for some presentation and
 -- to break up the spawn of objects with behaviour.
@@ -34,7 +35,7 @@ local PORTAL_LOOT_PREFABS =
     dug_bananabush                      = "MONKEYISLAND_PORTAL_BANANABUSHWEIGHT",
     dug_monkeytail                      = "MONKEYISLAND_PORTAL_MONKEYTAILWEIGHT",
 	lightcrab                           = "MONKEYISLAND_PORTAL_LIGHTCRABWEIGHT",
-    monkeyisland_portal_fxloot          = 20.0,
+    monkeyisland_portal_fxloot          = 10.0,
     palmcone_seed                       = "MONKEYISLAND_PORTAL_PALMCONE_SEEDWEIGHT",
     powder_monkey                       = "MONKEYISLAND_PORTAL_POWDERMONKEYWEIGHT",
     rocks                               = 5.0,
@@ -103,6 +104,7 @@ local function cleanup_outofscope_loot(inst)
     for i = #inst._loot, 1, -1 do
         local loot = inst._loot[i]
         if loot == nil or not loot:IsValid()
+                or loot:IsInLimbo()
                 or not inst:IsNear(loot, TUNING.MONKEYISLAND_PORTAL_LOOTMAXDST) then
             table.remove(inst._loot, i)
         end
@@ -110,26 +112,9 @@ local function cleanup_outofscope_loot(inst)
 end
 
 local VERTICAL_FLING_OFFSET = Vector3(0, 4, 0)
-local function spawn_real_loot(inst)
+local function fling_portal_loot(inst, loot_to_drop)
     local portal_pos = inst:GetPosition()
     local fling_pos = portal_pos + VERTICAL_FLING_OFFSET
-
-    -- Rebuild the table here each time in case the tuning variables change.
-    local loot_to_test = {}
-    for loot_prefab_to_test, chance in pairs(PORTAL_LOOT_PREFABS) do
-        if type(chance) == "string" then
-            chance = TUNING[chance]
-        end
-        loot_to_test[loot_prefab_to_test] = chance
-    end
-    local loot_prefab = weighted_random_choice(loot_to_test)
-
-    local loot_to_drop = SpawnPrefab(loot_prefab)
-    if loot_to_drop == nil then
-        return nil
-    end
-
-    table.insert(inst._loot, loot_to_drop)
 
     if loot_to_drop.components.embarker == nil then
         inst.components.lootdropper:FlingItem(loot_to_drop, fling_pos)
@@ -146,6 +131,24 @@ local function spawn_real_loot(inst)
 
         loot_to_drop.components.locomotor:StartHopping(portal_pos.x, portal_pos.z)
     end
+end
+
+local function spawn_real_loot(inst)
+    -- Rebuild the table here each time in case the tuning variables change.
+    local loot_to_test = {}
+    for loot_prefab_to_test, chance in pairs(PORTAL_LOOT_PREFABS) do
+        loot_to_test[loot_prefab_to_test] = (type(chance) == "string" and TUNING[chance]) or chance
+    end
+    local loot_prefab = weighted_random_choice(loot_to_test)
+
+    local loot_to_drop = SpawnPrefab(loot_prefab)
+    if loot_to_drop == nil then
+        return nil
+    end
+
+    table.insert(inst._loot, loot_to_drop)
+
+    fling_portal_loot(inst, loot_to_drop)
 
     return loot_to_drop
 end
@@ -184,6 +187,106 @@ local function try_portal_spawn(inst)
         inst.SoundEmitter:PlaySound("dontstarve/common/deathpoof")
         attach_light_fx(loot_to_drop)
     end
+end
+
+--------------------------------------------------------------------------------
+
+local function on_cycles_changed(inst, cycles)
+    if TUNING.MONKEYISLAND_PORTAL_ENABLED and
+            not inst.components.timer:TimerExists(PORTALEVENT_TIMER_NAME) then
+        inst.components.timer:StartTimer(PORTALEVENT_TIMER_NAME, TUNING.TOTAL_DAY_TIME / 2)
+    end
+end
+
+local function spawn_event_loot(inst, loot_prefab)
+    local loot = SpawnPrefab(loot_prefab)
+
+    if loot ~= nil then
+        fling_portal_loot(inst, loot)
+
+        inst.SoundEmitter:PlaySound("dontstarve/common/deathpoof")
+        attach_light_fx(loot)
+    end
+end
+
+local function enable_trading(inst)
+    inst._event_is_busy = false
+end
+
+local function do_portal_event(inst)
+    if not TUNING.MONKEYISLAND_PORTAL_ENABLED then
+        return
+    end
+
+    local do_event = false
+    local px, py, pz = inst.Transform:GetWorldPosition()
+    for _, player in ipairs(AllPlayers) do
+        if player:GetDistanceSqToPoint(px, py, pz) < 400 then
+            do_event = true
+            break
+        end
+    end
+    if not do_event then
+        return
+    end
+
+    local portal_event_spawns = {
+        "cutgrass",
+        "cutgrass",
+        "dug_bananabush",
+        "dug_monkeytail",
+        "palmcone_seed",
+        "palmcone_seed",
+        "powder_monkey",
+        "rocks",
+        "rocks",
+        "twigs",
+        "twigs",
+    }
+    shuffleArray(portal_event_spawns)
+
+    inst._event_is_busy = true
+
+    -- Being explicit that we want to reference i after the loop, so we can
+    -- identify when all of the event objects have finished spawning.
+    local i = 1
+    while i <= #portal_event_spawns do
+        inst:DoTaskInTime(10*(i+1)*FRAMES, spawn_event_loot, portal_event_spawns[i])
+        i = i + 1
+    end
+
+    inst:DoTaskInTime(10*(i+2)*FRAMES, enable_trading)
+
+    -- If the event was triggered in a non-timer way, clear the timer
+    -- so we don't do it again until the next day.
+    if inst.components.timer:TimerExists(PORTALEVENT_TIMER_NAME) then
+        inst.components.timer:StopTimer(PORTALEVENT_TIMER_NAME)
+    end
+end
+
+--------------------------------------------------------------------------------
+local EVENT_TRIGGER_TIME = 3
+local function portal_on_near(inst, player)
+    -- If we're waiting on an event timer, try to fire it sooner.
+    local time_left = inst.components.timer:GetTimeLeft(PORTALEVENT_TIMER_NAME)
+    if time_left ~= nil and time_left > EVENT_TRIGGER_TIME then
+        inst.components.timer:SetTimeLeft(PORTALEVENT_TIMER_NAME, EVENT_TRIGGER_TIME)
+    end
+end
+
+--------------------------------------------------------------------------------
+local function able_to_accept_trade_test(inst, item, giver)
+    if inst._event_is_busy then
+        return false, "BUSY"
+    elseif not item:HasTag("moonstorm_spark") then
+        return false, "GENERIC"
+    else
+        return true
+    end
+end
+
+local function on_accept_item(inst, giver, item)
+    do_portal_event(inst)
 end
 
 --------------------------------------------------------------------------------
@@ -231,6 +334,8 @@ local function on_timer_done(inst, data)
             -- The portal loot timer is repeating!
             inst.components.timer:StartTimer(PORTALLOOT_TIMER_NAME, TUNING.MONKEYISLAND_PORTAL_SPEWTIME)
         end
+    elseif data.name == PORTALEVENT_TIMER_NAME then
+        do_portal_event(inst)
     end
 end
 
@@ -268,6 +373,7 @@ local function fn()
     end
 
     inst._loot = {}
+    inst._event_is_busy = false
 
     ----------------------------------------------------------
     inst:AddComponent("inspectable")
@@ -277,6 +383,16 @@ local function fn()
     inst.components.lootdropper.min_speed = 4
     inst.components.lootdropper.max_speed = 6
     inst.components.lootdropper.y_speed_variance = 2
+
+    ----------------------------------------------------------
+    inst:AddComponent("playerprox")
+    inst.components.playerprox:SetDist(10, 15)
+    inst.components.playerprox:SetOnPlayerNear(portal_on_near)
+
+    ----------------------------------------------------------
+    inst:AddComponent("trader")
+    inst.components.trader:SetAbleToAcceptTest(able_to_accept_trade_test)
+    inst.components.trader.onaccept = on_accept_item
 
     ----------------------------------------------------------
     inst:AddComponent("timer")
@@ -289,6 +405,8 @@ local function fn()
         inst.components.timer:StartTimer(PORTALLOOT_TIMER_NAME, TUNING.MONKEYISLAND_PORTAL_SPEWTIME)
     end
 
+    inst:WatchWorldState("cycles", on_cycles_changed)
+
     ----------------------------------------------------------
     inst.OnSave = on_portal_save
     inst.OnLoadPostPass = on_portal_loadpostpass
@@ -296,10 +414,10 @@ local function fn()
     inst.OnEntityWake = on_portal_wake
 
 	inst.Test = try_portal_spawn
+    inst._TestPortalEvent = do_portal_event
 
     return inst
 end
-
 
 return Prefab("monkeyisland_portal", fn, assets, prefabs),
     Prefab("monkeyisland_portal_lootfollowfx", followfx_fn, fx_assets)

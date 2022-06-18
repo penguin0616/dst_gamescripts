@@ -58,6 +58,26 @@ local function onhammered(inst, worker)
     ondeath(inst)
 end
 
+local function onburnt(inst)
+
+    -- Cook fish in the trawler
+    local pos = inst:GetPosition()
+    for i = 1, inst.components.container:GetNumSlots() do
+        local item = inst.components.container:GetItemInSlot(i)
+        if item ~= nil and item.components.lootdropper ~= nil then
+            local loot = item.components.lootdropper:GenerateLoot()
+            for k, v in pairs(loot) do
+                local loot = SpawnPrefab(v)
+                if loot ~= nil then
+                    loot.Transform:SetPosition(pos:Get())
+                end
+            end
+        end
+    end
+
+    DefaultBurntStructureFn(inst)
+end
+
 local function onhit(inst, hitter)
     inst.sg:GoToState("hit")
 end
@@ -88,17 +108,17 @@ local function fn()
     inst.entity:AddMiniMapEntity() -- Also set minimap icon in components.oceantrawler:OnLoad() & when raising/lowering
     inst.entity:AddNetwork()
 
-    
+
     inst.AnimState:AddOverrideBuild("splash_water_rot")
 
     inst.MiniMapEntity:SetIcon("ocean_trawler.png")
 
     inst:AddTag("oceantrawler")
 
-    inst:SetPhysicsRadiusOverride(1.75)
+    inst:SetPhysicsRadiusOverride(1.1)
 
     MakeInventoryPhysics(inst)
-    MakeWaterObstaclePhysics(inst, 1.8, 2, 0.75)
+    MakeWaterObstaclePhysics(inst, 1.15, 2, 0.75)
 
     inst.AnimState:SetBank("ocean_trawler")
     inst.AnimState:SetBuild("ocean_trawler")
@@ -132,15 +152,10 @@ local function fn()
 
     inst:AddComponent("lootdropper")
 
-    inst:AddComponent("combat")
-    inst.components.combat.onhitfn = onhit
-
-    inst:AddComponent("health")
-    inst.components.health:SetMaxHealth(TUNING.OCEAN_TRAWLER_HEALTH)
-    inst.components.health.nofadeout = true
-    inst.components.health.canheal = false
-
     inst:ListenForEvent("death", ondeath)
+
+    inst:AddComponent("preserver")
+    inst.components.preserver:SetPerishRateMultiplier(1)
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)
@@ -153,6 +168,8 @@ local function fn()
 
     MakeLargeBurnable(inst)
     MakeLargePropagator(inst)
+    inst.components.burnable:SetOnBurntFn(onburnt)
+
     MakeHauntableWork(inst)
 
     inst.OnSave = onsave
@@ -166,5 +183,5 @@ local function fn()
 end
 
 return Prefab("ocean_trawler", fn, assets),
-        MakeDeployableKitItem("ocean_trawler_kit", "ocean_trawler", "ocean_trawler", "ocean_trawler", "kit", assets, nil, {"ocean_trawler"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.WATER, deployspacing = DEPLOYSPACING.LESS }, nil),
+        MakeDeployableKitItem("ocean_trawler_kit", "ocean_trawler", "ocean_trawler", "ocean_trawler", "kit", assets, {size = "med"}, {"ocean_trawler"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.WATER, deployspacing = DEPLOYSPACING.MEDIUM }, nil),
         MakePlacer("ocean_trawler_kit_placer", "ocean_trawler", "ocean_trawler", "idle", false, false, false, nil, nil, nil, nil)

@@ -444,7 +444,7 @@ function BoatPhysics:ApplySailForce(dt, sail_force, cur_velocity, max_velocity)
 end
 
 function BoatPhysics:ApplyMagnetForce(dt, magnet_force, magnet_direction, cur_velocity, max_velocity)
-    local force = VecUtil_Length(magnet_force.x, magnet_force.y)
+    local force = VecUtil_Length(magnet_force.x, magnet_force.z)
     if force > 0 and cur_velocity < max_velocity then
         local velocity_length = force * dt
         local mag_x, mag_z = VecUtil_NormalizeNoNaN(magnet_direction.x, magnet_direction.z)

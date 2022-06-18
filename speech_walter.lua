@@ -823,6 +823,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Huh... maybe I don't want to drop it after all.",
     ANNOUNCE_MONKEY_CURSE_1 = "All of a sudden I can't stop thinking about bananas...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Uhh, something really weird is happening!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Woby, c'mere girl! It's okay, I'm me again!",
 
     ANNOUNCE_PIRATES_ARRIVE = "What's that music? Did someone bring a radio?",
 

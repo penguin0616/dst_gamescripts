@@ -184,6 +184,7 @@ end
 
 --Public
 self.inst = inst
+self.PermittedToWonkey = {} -- NOTES(JBK): This is a lock and key to stop cases of users manually requesting the form in normal game play.
 
 --Private
 local _activeplayers = {}
@@ -322,11 +323,11 @@ local function OnPlayerReplaced(src, newplayer)
 
     if player.prefab ~= "wonkey" and newplayer.prefab == "wonkey" then
         newplayer.sg:GoToState("changetomonkey_pst")
+        TheWorld:PushEvent("player_changed_to_monkey", {player=newplayer})
     elseif player.prefab == "wonkey" and newplayer.prefab ~= "wonkey" then
         newplayer.sg:GoToState("changefrommonkey_pst")
+        TheWorld:PushEvent("player_changed_from_monkey", {player=newplayer})
     end
-
-    TheWorld:PushEvent("player_changed_to_monkey", {player=newplayer})
 end
 
 --------------------------------------------------------------------------

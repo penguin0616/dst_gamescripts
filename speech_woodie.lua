@@ -824,6 +824,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "It's stickin' to me like tree sap!",
     ANNOUNCE_MONKEY_CURSE_1 = "Uh-oh. This is a familiar feelin'...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Why does this kinda thing keep happening to me?",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Whew. Next time I'm turning into something normal, like a moose.",
 
     ANNOUNCE_PIRATES_ARRIVE = "Hang on Lucy, it sounds like we've got company.",
 

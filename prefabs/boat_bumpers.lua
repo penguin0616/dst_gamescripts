@@ -174,8 +174,6 @@ function MakeBumperType(data)
         if boat ~= nil then
 
             SnapToBoatEdge(inst, data.pos)
-            inst.boat = boat
-
             boat.components.boatring:AddBumper(inst)
         end
 
@@ -215,8 +213,10 @@ function MakeBumperType(data)
 
     local function ondeath(inst)
         -- Remove bumper from list of boat bumpers
-        if inst.boat ~= nil then
-            inst.boat.components.boatring:RemoveBumper(inst)
+        local pos = inst:GetPosition()
+        local boat = TheWorld.Map:GetPlatformAtPoint(pos.x, pos.z)
+        if boat ~= nil and boat.components.boatring ~= nil then
+            boat.components.boatring:RemoveBumper(inst)
         end
     end
 
@@ -239,6 +239,7 @@ function MakeBumperType(data)
         inst:AddTag("boatbumper")
         inst:AddTag("mustforceattack")
         inst:AddTag("noauradamage")
+        inst:AddTag("walkableplatform")
 
         inst.AnimState:SetBank("boat_bumper")
         inst.AnimState:SetBuild(buildname)
@@ -324,7 +325,7 @@ function MakeBumperType(data)
     end
 
     return Prefab("boat_bumper_"..data.name, fn, assets, prefabs),
-        MakeDeployableKitItem("boat_bumper_"..data.name.."_kit", "boat_bumper_"..data.name, "boat_bumper", buildname, "idle", assets, nil, {"boat_accessory"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.CUSTOM, deployspacing = DEPLOYSPACING.MEDIUM, custom_candeploy_fn = CanDeployAtBoatEdge }, TUNING.STACK_SIZE_MEDITEM),
+        MakeDeployableKitItem("boat_bumper_"..data.name.."_kit", "boat_bumper_"..data.name, "boat_bumper", buildname, "idle", assets, {size = "med"}, {"boat_accessory"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.CUSTOM, deployspacing = DEPLOYSPACING.MEDIUM, custom_candeploy_fn = CanDeployAtBoatEdge }, TUNING.STACK_SIZE_MEDITEM),
         MakePlacer("boat_bumper_"..data.name.."_kit_placer", "boat_bumper", buildname, "idle_1", false, false, false, nil, nil, "eight", setup_boat_placer)
 end
 

@@ -233,8 +233,6 @@ end
 
 local IGNORE_DOCK_DROWNING_ONREMOVE_TAGS = { "ignorewalkableplatforms", "ignorewalkableplatformdrowning", "activeprojectile", "flying", "FX", "DECOR", "INLIMBO" }
 function self:DestroyDockAtPoint(x, y, z, dont_toss_loot)
-
-
     local tile_x, tile_y = _map:GetTileCoordsAtPoint(x, y, z)
     local tile = _map:GetTile(tile_x, tile_y)
     if tile ~= WORLD_TILES.MONKEY_DOCK then
@@ -258,6 +256,13 @@ function self:DestroyDockAtPoint(x, y, z, dont_toss_loot)
             old_tile = WORLD_TILES.OCEAN_COASTAL
         end
     end
+
+    _map:SetTile(tile_x, tile_y, old_tile)
+
+    local grid_index = _is_root_grid:GetIndex(tile_x, tile_y)
+    _is_root_grid:SetDataAtIndex(grid_index, nil)
+    _marked_for_delete_grid:SetDataAtIndex(grid_index, nil)
+    _dock_health_grid:SetDataAtIndex(grid_index, nil)
 
     -- If we're swapping to an ocean tile, do like a broken boat would do and deal with everything in our tile bounds
     if IsOceanTile(old_tile) then
@@ -283,13 +288,6 @@ function self:DestroyDockAtPoint(x, y, z, dont_toss_loot)
             end
         end
     end
-
-    _map:SetTile(tile_x, tile_y, old_tile)
-
-    local grid_index = _is_root_grid:GetIndex(tile_x, tile_y)
-    _is_root_grid:SetDataAtIndex(grid_index, nil)
-    _marked_for_delete_grid:SetDataAtIndex(grid_index, nil)
-    _dock_health_grid:SetDataAtIndex(grid_index, nil)
 
     -- Now collect all of the adjacent tiles (that have graph data) and check if
     -- they've been disconnected and need to break too.

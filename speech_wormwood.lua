@@ -827,6 +827,8 @@ return{
     -- PIRATES
     ANNOUNCE_CANT_ESCAPE_CURSE = "Want to keep the pretty danglies",
     ANNOUNCE_MONKEY_CURSE_1 = "This feeling new... don't know if good...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Huh? Hairy?",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Was fun!",
 
     ANNOUNCE_PIRATES_ARRIVE = "Hmm? Funny sounds coming...",
 

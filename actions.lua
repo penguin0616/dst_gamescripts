@@ -3492,7 +3492,7 @@ ACTIONS.BOAT_MAGNET_BEACON_TURN_OFF.fn = function(act)
 end
 
 ACTIONS.BOAT_CANNON_LOAD_AMMO.fn = function(act)
-    if act.target.components.boatcannon ~= nil and act.doer.components.inventory ~= nil then
+    if act.target.components.boatcannon ~= nil and not act.target.components.boatcannon:IsAmmoLoaded() and act.doer.components.inventory ~= nil then
         local ammo = act.doer.components.inventory:RemoveItem(act.invobject)
         if ammo then
             if act.target.components.boatcannon:LoadAmmo(ammo) then

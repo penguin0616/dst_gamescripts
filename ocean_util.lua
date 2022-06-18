@@ -68,7 +68,8 @@ function FindLandBetweenPoints(p0x, p0y, p1x, p1y)
 
     local e = 0;
     for i = 0, dx+dy - 1 do
-	    if IsLandTile(map:GetTileAtPoint(p0x, 0, p0y)) then
+        local tile_at_point = map:GetTileAtPoint(p0x, 0, p0y)
+        if tile_at_point ~= WORLD_TILES.MONKEY_DOCK and IsLandTile(tile_at_point) then
 			return map:GetTileCenterPoint(p0x, 0, p0y)
 		end
 

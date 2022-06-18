@@ -2325,7 +2325,7 @@ local applyoverrides_pre = {
             often = {
                 MONKEYISLAND_PORTAL_SPEWTIME = 10.0,
             },
-            alwaus = {
+            always = {
                 MONKEYISLAND_PORTAL_SPEWTIME = 5.0,
             },
         }

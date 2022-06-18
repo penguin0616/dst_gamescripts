@@ -149,11 +149,8 @@ local function OnUpdateProjectile(inst)
     local targets = TheSim:FindEntities(x, 0, z, CANNONBALL_RADIUS, nil, nil, MUST_ONE_OF_TAGS) -- Set y to zero to look for objects on the ground
     for i, target in ipairs(targets) do
 
-        -- Ignore hitting bumpers on the same boat as the cannon while flying through the air
-        local attackerplatform = inst.components.complexprojectile.attacker:GetCurrentPlatform() or nil
-        local targetplatform = target ~= nil and target:GetCurrentPlatform() or nil
-
-        if target ~= nil and target ~= inst.components.complexprojectile.attacker and (not target:HasTag("boatbumper") or attackerplatform ~= targetplatform) then
+        -- Ignore hitting bumpers while flying through the air
+        if target ~= nil and target ~= inst.components.complexprojectile.attacker and not target:HasTag("boatbumper") then
             -- Do damage to entities with health
             if target.components.combat and GetTime() - target.components.combat.lastwasattackedtime > CANNONBALL_PASS_THROUGH_TIME_BUFFER then
                 target.components.combat:GetAttacked(inst, CANNONBALL_DAMAGE, nil)
