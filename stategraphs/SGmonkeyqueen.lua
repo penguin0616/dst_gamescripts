@@ -34,7 +34,15 @@ local states =
         tags = {"busy"},
         onenter = function(inst, data)
             inst.components.talker:Say(STRINGS["MONKEY_QUEEN_BANANAS"][math.random(1,#STRINGS["MONKEY_QUEEN_BANANAS"])])
-            inst.AnimState:OverrideSymbol("swap_item", "cave_banana", "cave_banana01")
+
+            if data and data.item then
+                if data.item.prefab == "cave_banana" then
+                    inst.AnimState:OverrideSymbol("swap_item", "cave_banana", "cave_banana01")
+                elseif data.item.prefab == "cave_banana_cooked" then
+                    inst.AnimState:OverrideSymbol("swap_item", "cave_banana", "cave_banana02")
+                end            
+            end
+            
             inst.AnimState:PlayAnimation("receive_item")
 
             inst.SoundEmitter:PlaySound("monkeyisland/monkeyqueen/receive_item")

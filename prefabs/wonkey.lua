@@ -25,6 +25,7 @@ prefabs = FlattenTree({ prefabs, start_inv }, true)
 local function common_postinit(inst)
     inst:AddTag("wonkey")
     inst:AddTag("monkey")
+    inst.AnimState:AddOverrideBuild("player_idles_wonkey")
 end
 
 local function master_postinit(inst)

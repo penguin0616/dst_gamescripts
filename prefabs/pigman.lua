@@ -214,7 +214,7 @@ local function NormalRetargetFn(inst)
 		table.insert(exclude_tags, "player") -- prevent spectators from auto-targeting webber
 	end
 
-    local oneof_tags = {"monster","wonkey"}
+    local oneof_tags = {"monster","wonkey","pirate"}
     if not inst:HasTag("merm") then
         table.insert(oneof_tags, "merm")
     end

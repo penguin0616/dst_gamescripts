@@ -22,7 +22,6 @@ local prefabs =
 }
 
 local brain = require "brains/powdermonkeybrain"
-local brain_test = require "brains/powdermonkeybrain_test"
 
 SetSharedLootTable('powdermonkey',
 {
@@ -152,7 +151,7 @@ local function OnDeath(inst,data)
 end
 
 local function OnGotItem(inst,data)
-    if data.item and data.item.prefab == "cave_banana" then
+    if data.item and (data.item.prefab == "cave_banana" or data.item.prefab == "cave_banana_cooked") then
         inst:PushEvent("victory",{item = data.item, say = STRINGS["MONKEY_BATTLECRY_VICTORY"][math.random(1,#STRINGS["MONKEY_BATTLECRY_VICTORY"])]})
     end
 end

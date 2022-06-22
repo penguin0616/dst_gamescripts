@@ -2499,6 +2499,17 @@ local fx =
         build = "fx_dock_crackleandpop",
         anim = "crackle",
         sound = "turnoftides/common/together/boat/creak",
+        fn = function(inst)
+            inst.entity:AddSoundEmitter()
+            inst.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/creak")
+            inst:DoTaskInTime(2*FRAMES, function(i) i.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity=0.1}) end)
+            inst:DoTaskInTime(14*FRAMES, function(i) i.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity=0.1}) end)
+            inst:DoTaskInTime(25*FRAMES, function(i) i.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity=0.1}) end)
+            inst:DoTaskInTime(29*FRAMES, function(i) i.SoundEmitter:PlaySound("turnoftides/common/together/boat/creak") end)
+            inst:DoTaskInTime(33*FRAMES, function(i) i.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity=0.2}) end)
+            inst:DoTaskInTime(45*FRAMES, function(i) i.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity=0.2}) end)
+            inst:DoTaskInTime(52*FRAMES, function(i) i.SoundEmitter:PlaySoundWithParams("turnoftides/common/together/boat/damage", {intensity=0.3}) end)
+        end,
     },
     {
         name = "fx_dock_pop",

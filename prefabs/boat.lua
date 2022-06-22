@@ -47,6 +47,7 @@ local prefabs =
     "boat_grass_player_collision",
     "boat_grass_item_collision",
     "walkingplank",
+    "walkingplank_grass",
 
     "boat_rotator",
     "boat_cannon",
@@ -402,7 +403,7 @@ local function create_common_pre(inst, bank, build, radius, max_health, item_col
     return inst
 end
 
-local function create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+local function create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip, plank_prefab)
 
     inst.Physics:SetDontRemoveOnSleep(true)
     inst.item_collision_prefab = item_collision_prefab
@@ -415,7 +416,7 @@ local function create_master_pst(inst, bank, build, radius, max_health, item_col
     inst.components.hull:SetRadius(radius)
     inst.components.hull:SetBoatLip(SpawnPrefab(boatlip),scale)
 
-    local walking_plank = SpawnPrefab("walkingplank")
+    local walking_plank = SpawnPrefab(plank_prefab or "walkingplank")
     local edge_offset = -0.05
     inst.components.hull:AttachEntityToBoat(walking_plank, 0, radius + edge_offset, true)
     inst.components.hull:SetPlank(walking_plank)
@@ -670,6 +671,7 @@ local function grass_fn()
     local item_collision_prefab = "boat_grass_item_collision"
     local scale = 0.75
     local boatlip = "boatlip_grass"
+    local plank_prefab = "walkingplank_grass"
 
     inst = create_common_pre(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
 
@@ -689,7 +691,7 @@ local function grass_fn()
         return inst
     end
 
-    inst = create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+    inst = create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip, plank_prefab)
 
 	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak_Grass)
 
@@ -885,4 +887,3 @@ return Prefab("boat", wood_fn, wood_assets, prefabs),
        MakePlacer("boat_item_placer", "boat_01", "boat_test", "idle_full", true, false, false, nil, nil, nil, nil, 6),
        Prefab("boat_grass_item", grass_item_fn, grass_item_assets, grass_item_prefabs),
        MakePlacer("boat_grass_item_placer", "boat_grass", "boat_grass", "idle_full", true, false, false, 0.75, nil, nil, nil, 6)
-

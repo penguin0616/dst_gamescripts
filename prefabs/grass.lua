@@ -235,8 +235,8 @@ local function grass(name, stage)
         inst.components.pickable.onpickedfn = onpickedfn
         inst.components.pickable.makeemptyfn = makeemptyfn
         inst.components.pickable.makebarrenfn = makebarrenfn
-        inst.components.pickable.max_cycles = 20
-        inst.components.pickable.cycles_left = 20
+        inst.components.pickable.max_cycles = TUNING.GRASS_CYCLES
+        inst.components.pickable.cycles_left = TUNING.GRASS_CYCLES
         inst.components.pickable.ontransplantfn = ontransplantfn
 
         inst:AddComponent("witherable")

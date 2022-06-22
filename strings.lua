@@ -2798,6 +2798,7 @@ STRINGS =
         STEERINGWHEEL_ITEM = "Steering Wheel Kit",
         ANCHOR = "Anchor",
         WALKINGPLANK = "Plank",
+        WALKINGPLANK_GRASS = "Plank",
         ANCHOR_ITEM = "Anchor Kit",
         BOATPATCH = "Boat Patch",
         DRIFTWOOD_TREE = "Driftwood",

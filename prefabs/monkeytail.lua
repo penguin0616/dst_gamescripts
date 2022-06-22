@@ -3,18 +3,25 @@ local assets =
     Asset("ANIM", "anim/grass.zip"),
     Asset("ANIM", "anim/reeds_monkeytails.zip"),
     Asset("SOUND", "sound/common.fsb"),
-    Asset("MINIMAP_IMAGE", "monkeytails"),
 }
 
 local prefabs =
 {
     "cutreeds",
+	"dug_monkeytail",
 }
 
-local function onpickedfn(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
-    inst.AnimState:PlayAnimation("picking")
-    inst.AnimState:PushAnimation("picked")
+local function dig_up(inst, worker)
+    if inst.components.pickable ~= nil and inst.components.lootdropper ~= nil then
+        local withered = inst.components.witherable ~= nil and inst.components.witherable:IsWithered()
+
+        if inst.components.pickable:CanBePicked() then
+            inst.components.lootdropper:SpawnLootPrefab(inst.components.pickable.product)
+        end
+
+        inst.components.lootdropper:SpawnLootPrefab(withered and "cutreeds" or "dug_monkeytail")
+    end
+    inst:Remove()
 end
 
 local function onregenfn(inst)
@@ -23,15 +30,39 @@ local function onregenfn(inst)
 end
 
 local function makeemptyfn(inst)
-    inst.AnimState:PlayAnimation("picked")
+    if not POPULATING and
+        (   inst.components.witherable ~= nil and
+            inst.components.witherable:IsWithered() or
+            inst.AnimState:IsCurrentAnimation("idle_dead")
+        ) then
+        inst.AnimState:PlayAnimation("dead_to_empty")
+        inst.AnimState:PushAnimation("picked", false)
+    else
+        inst.AnimState:PlayAnimation("picked")
+    end
 end
 
 local function makebarrenfn(inst, wasempty)
-    if not POPULATING and inst.components.witherable ~= nil and inst.components.witherable:IsWithered() then
-        inst.AnimState:PlayAnimation((wasempty and "empty_to_dead") or "full_to_dead")
+    if not POPULATING and
+        (   inst.components.witherable ~= nil and
+            inst.components.witherable:IsWithered()
+        ) then
+        inst.AnimState:PlayAnimation(wasempty and "empty_to_dead" or "full_to_dead")
         inst.AnimState:PushAnimation("idle_dead", false)
     else
         inst.AnimState:PlayAnimation("idle_dead")
+    end
+end
+
+local function onpickedfn(inst)
+    inst.SoundEmitter:PlaySound("dontstarve/wilson/pickup_reeds")
+    inst.AnimState:PlayAnimation("picking")
+
+    if inst.components.pickable:IsBarren() then
+        inst.AnimState:PushAnimation("empty_to_dead")
+        inst.AnimState:PushAnimation("idle_dead", false)
+    else
+        inst.AnimState:PushAnimation("picked", false)
     end
 end
 
@@ -77,14 +108,16 @@ local function fn()
     inst.components.pickable.onregenfn = onregenfn
     inst.components.pickable.onpickedfn = onpickedfn
     inst.components.pickable.makeemptyfn = makeemptyfn
-
     inst.components.pickable.makebarrenfn = makebarrenfn
-    inst.components.pickable.max_cycles = 20
-    inst.components.pickable.cycles_left = 20
+    inst.components.pickable.max_cycles = TUNING.MONKEYTAIL_CYCLES + (TUNING.MONKEYTAIL_CYCLES_VAR <= 1 and TUNING.MONKEYTAIL_CYCLES_VAR or math.random(TUNING.MONKEYTAIL_CYCLES_VAR))
+    inst.components.pickable.cycles_left = inst.components.pickable.max_cycles
     inst.components.pickable.ontransplantfn = ontransplantfn
 
     ------------------------------------------------------------------------
     inst:AddComponent("witherable")
+
+    ------------------------------------------------------------------------
+    inst:AddComponent("lootdropper")
 
     ------------------------------------------------------------------------
     inst:AddComponent("inspectable")
@@ -92,6 +125,14 @@ local function fn()
     ------------------------------------------------------------------------
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.SMALL_FUEL
+
+
+	if not GetGameModeProperty("disable_transplanting") then
+		inst:AddComponent("workable")
+		inst.components.workable:SetWorkAction(ACTIONS.DIG)
+		inst.components.workable:SetOnFinishCallback(dig_up)
+		inst.components.workable:SetWorkLeft(1)
+	end
 
     ------------------------------------------------------------------------
     MakeSmallBurnable(inst, TUNING.SMALL_FUEL)

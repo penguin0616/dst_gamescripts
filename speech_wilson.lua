@@ -3492,6 +3492,7 @@ return {
         GNARWAIL_HORN = "Gnarly!",
 
         WALKINGPLANK = "Couldn't we have just made a lifeboat?",
+        WALKINGPLANK_GRASS = "Couldn't we have just made a lifeboat?",
         OAR = "Manual ship acceleration.",
 		OAR_DRIFTWOOD = "Manual ship acceleration.",
 

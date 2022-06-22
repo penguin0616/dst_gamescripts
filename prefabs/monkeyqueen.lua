@@ -17,7 +17,7 @@ local function is_monkey_curse_item(item)
 end
 
 local function on_accept_item(inst, giver, item)
-    inst.sg:GoToState("getitem",{giver=giver}) 
+    inst.sg:GoToState("getitem",{giver=giver, item=item})
     item:Remove()
 end
 

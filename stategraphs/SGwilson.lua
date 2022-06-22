@@ -8662,7 +8662,7 @@ local states =
 
             local anim = "short"
 
-            if spike ~= nil and type(spike) == "list" then
+            if spike ~= nil and type(spike) == "table" then
                 inst:ForceFacePoint(spike.Transform:GetWorldPosition())
                 if spike.spikesize then
                     anim = spike.spikesize

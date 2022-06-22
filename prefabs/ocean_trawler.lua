@@ -85,9 +85,10 @@ end
 local function GetStatus(inst, viewer)
     local oceantrawler = inst.components.oceantrawler
     if oceantrawler then
-        if oceantrawler.lowered and not oceantrawler.fishescaped then
+        local escaped = oceantrawler:HasFishEscaped()
+        if oceantrawler:IsLowered() and not escaped then
             return "LOWERED"
-        elseif oceantrawler.fishescaped then
+        elseif escaped then
             return "ESCAPED"
         elseif oceantrawler:HasCaughtItem() then
             return "CAUGHT"
@@ -97,6 +98,11 @@ local function GetStatus(inst, viewer)
     else
         return "GENERIC"
     end
+end
+
+local function FishPreserverRate(inst, item)
+    local oceantrawler = inst.components.oceantrawler
+    return oceantrawler and oceantrawler:IsLowered() and (item ~= nil and item:HasTag("fish")) and TUNING.OCEAN_TRAWLER_LOWERED_PERISH_RATE or nil
 end
 
 local function fn()
@@ -115,7 +121,7 @@ local function fn()
 
     inst:AddTag("oceantrawler")
 
-    inst:SetPhysicsRadiusOverride(1.75)
+    inst:SetPhysicsRadiusOverride(2.2)
 
     MakeInventoryPhysics(inst)
     MakeWaterObstaclePhysics(inst, 1.15, 2, 0.75)
@@ -155,7 +161,7 @@ local function fn()
     inst:ListenForEvent("death", ondeath)
 
     inst:AddComponent("preserver")
-    inst.components.preserver:SetPerishRateMultiplier(1)
+    inst.components.preserver:SetPerishRateMultiplier(FishPreserverRate)
 
     inst:AddComponent("workable")
     inst.components.workable:SetWorkAction(ACTIONS.HAMMER)

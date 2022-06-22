@@ -6,11 +6,20 @@ local function onactive(self, active)
     end
 end
 
+local function CopyCursedFields(from, to)
+    -- NOTES(JBK): Keep these up to date until handling of cursed items is better for stackables.
+    to.active = from.active
+    to.cursed_target = from.cursed_target
+    to.target = from.target
+end
+
 local Curseditem = Class(function(self, inst)
     self.inst = inst
+
     self.active = true
     self.cursed_target = nil
     self.target = nil
+    self.CopyCursedFields = CopyCursedFields -- NTOES(JBK) Keep the fields above up to date with this function.
 
     self.inst:ListenForEvent("onpickup", function(item,data)
             self:Given(item, data)
@@ -115,7 +124,7 @@ function Curseditem:Given(item, data)
         if not self.inst:HasTag("applied_curse") then
             data.owner.components.cursable:ApplyCurse(self.inst)
         else 
-            if not data.skipspeech then
+            if not item.skipspeech then
                 data.owner:DoTaskInTime(0.5,function()
                     if self.inst ~= data.owner.components.inventory.activeitem then
                         data.owner.components.talker:Say(GetString(data.owner, "ANNOUNCE_CANT_ESCAPE_CURSE"))

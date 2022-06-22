@@ -417,7 +417,7 @@ Recipe2("chesspiece_anchor_sketch",			{Ingredient("papyrus", 1)},															
 Recipe2("boat_rotator_kit",					{Ingredient("boards", 2), Ingredient("rope", 1), Ingredient("gears", 1)},								TECH.SEAFARING_ONE)
 Recipe2("boat_bumper_kelp_kit",				{Ingredient("kelp", 3), Ingredient("cutgrass", 3)}, 													TECH.NONE)
 Recipe2("boat_bumper_shell_kit",			{Ingredient("slurtle_shellpieces", 3), Ingredient("rope", 1)}, 											TECH.SEAFARING_ONE)
-Recipe2("boat_cannon_kit",					{Ingredient("palmcone_scale", 4), Ingredient("rope", 1), Ingredient("charcoal", 4)},						TECH.LOST)
+Recipe2("boat_cannon_kit",					{Ingredient("palmcone_scale", 4), Ingredient("rope", 1), Ingredient("charcoal", 4)},					TECH.LOST)
 Recipe2("cannonball_rock_item",				{Ingredient("cutstone", 2),Ingredient("gunpowder", 1)},											 		TECH.LOST,					{numtogive=4})
 
 Recipe2("dock_kit",							{Ingredient("boards", 4), Ingredient("cutstone", 1), Ingredient("stinger", 2), Ingredient("palmcone_scale", 1)},		TECH.LOST, 	{numtogive=4})
@@ -763,7 +763,7 @@ Recipe("steeringwheel",   {Ingredient("boards", 2), Ingredient("rope", 1)}, nil,
 Recipe("boat_rotator",    {Ingredient("boards", 2), Ingredient("rope", 1), Ingredient("gears", 1)}, nil, TECH.LOST, nil, nil, true)
 Recipe("boat_bumper_kelp", {Ingredient("kelp", 3), Ingredient("cutgrass", 3)}, nil, TECH.LOST, nil, nil, true)
 Recipe("boat_bumper_shell", {Ingredient("slurtle_shellpieces", 3), Ingredient("rope", 1)}, nil, TECH.LOST, nil, nil, true)
-Recipe("boat_cannon",     {Ingredient("boards", 2), Ingredient("rope", 1), Ingredient("nitre", 2)}, nil, TECH.LOST, nil, nil, true)
+Recipe("boat_cannon",     {Ingredient("palmcone_scale", 4), Ingredient("rope", 1), Ingredient("charcoal", 4)}, nil, TECH.LOST, nil, nil, true)
 Recipe2("ocean_trawler_kit",			{Ingredient("boards", 2), Ingredient("rope", 2), Ingredient("silk", 6)}, 								TECH.SEAFARING_ONE)
 Recipe2("boat_magnet_kit",	{Ingredient("boards", 2), Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)}, 		TECH.SEAFARING_ONE)
 Recipe2("boat_magnet_beacon",	{Ingredient("cutstone", 2), Ingredient("transistor", 1), Ingredient("trinket_6", 1)}, 					TECH.SEAFARING_ONE)

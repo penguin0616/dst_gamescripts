@@ -68,9 +68,15 @@ local function GetFisherPosition(inst)
 end
 
 local function GetFoodTarget(inst)
-	if inst.food_target ~= nil then
-		if inst.food_target:IsValid() and not inst.food_target:HasTag("INLIMBO") and TheWorld.Map:IsOceanAtPoint(inst.food_target.Transform:GetWorldPosition())  then
-			return inst.food_target
+	local ft = inst.food_target
+	if ft ~= nil then
+		if ft:IsValid() and not ft:HasTag("INLIMBO") and TheWorld.Map:IsOceanAtPoint(ft.Transform:GetWorldPosition()) then
+			if not ft:HasTag("oceantrawler") then
+				return ft
+			end
+			if ft.components.oceantrawler and ft.components.oceantrawler:IsLowered() then
+				return ft
+			end
 		end
 		inst.food_target = nil
 	end

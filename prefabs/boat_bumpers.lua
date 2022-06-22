@@ -85,17 +85,20 @@ local function ValidRepairFn(inst)
     return true
 end
 
-local function IsPointOnBoatEdge(pt, inst)
-    local boat = TheWorld.Map:GetPlatformAtPoint(pt.x,pt.z)
-
-    -- If we're not standing on a boat, try to get the closest boat position via FindEntities()
+local function CanDeployAtBoatEdge(inst, pt, mouseover, deployer, rot)
+    local boat = mouseover ~= nil and mouseover:HasTag("boat") and mouseover or nil
     if boat == nil then
-        local BOAT_MUST_TAGS = { "boat" }
-        local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.BOAT.RADIUS, BOAT_MUST_TAGS)
-        if #boats <= 0 then
-            return false
+        boat = TheWorld.Map:GetPlatformAtPoint(pt.x,pt.z)
+
+        -- If we're not standing on a boat, try to get the closest boat position via FindEntities()
+        if boat == nil or not boat:HasTag("boat") then
+            local BOAT_MUST_TAGS = { "boat" }
+            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.BOAT.RADIUS, BOAT_MUST_TAGS)
+            if #boats <= 0 then
+                return false
+            end
+            boat = GetClosest(inst, boats)
         end
-        boat = GetClosest(inst, boats)
     end
 
     -- Check the outside rim to see if no objects are there
@@ -105,35 +108,7 @@ local function IsPointOnBoatEdge(pt, inst)
     local boatangle = boat.Transform:GetRotation()
 
     local snap_point = GetCircleEdgeSnapTransform(boatsegments, radius, boatpos, pt, boatangle)
-    return boat ~= nil and boat:HasTag("boat")
-        and TheWorld.Map:IsDeployPointClear(snap_point, inst, inst.replica.inventoryitem ~= nil and inst.replica.inventoryitem:DeploySpacingRadius() or DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT])
-end
-
-local function CanDeployAtBoatEdge(inst, pt, mouseover, deployer, rot)
-    return ((mouseover ~= nil and mouseover:HasTag("boat")) or IsPointOnBoatEdge(pt, inst))
-end
-
-local function SnapToBoatEdge(inst, override_pt)
-    local pt = override_pt or inst:GetPosition()
-    local boat = TheWorld.Map:GetPlatformAtPoint(pt.x,pt.z)
-
-    if boat == nil then
-        return
-    end
-
-    local boatpos = boat:GetPosition()
-    local radius = boat.components.boatringdata and boat.components.boatringdata:GetRadius() - 0.1 or 0
-    local boatsegments = boat.components.boatringdata and boat.components.boatringdata:GetNumSegments() or 0
-    local boatangle = boat.Transform:GetRotation()
-
-    local snap_point, snap_angle = GetCircleEdgeSnapTransform(boatsegments, radius, boatpos, pt, boatangle)
-    if snap_point ~= nil then
-        inst.Transform:SetPosition(snap_point.x, 0, snap_point.z)
-        inst.Transform:SetRotation(-snap_angle + 90) -- Need to offset snap_angle here to make the object show in the correct orientation
-    else
-        -- point is outside of radius; set original position
-        inst.Transform:SetPosition(pt:Get())
-    end
+    return TheWorld.Map:CanDeployWalkablePeripheralAtPoint(snap_point, inst)
 end
 
 function MakeBumperType(data)
@@ -239,7 +214,7 @@ function MakeBumperType(data)
         inst:AddTag("boatbumper")
         inst:AddTag("mustforceattack")
         inst:AddTag("noauradamage")
-        inst:AddTag("walkableplatform")
+        inst:AddTag("walkableperipheral")
 
         inst.AnimState:SetBank("boat_bumper")
         inst.AnimState:SetBuild(buildname)
@@ -322,6 +297,7 @@ function MakeBumperType(data)
         inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
         inst.AnimState:SetLayer(LAYER_WORLD_BACKGROUND)
         inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT_BUMPERS)
+        inst.AnimState:SetFinalOffset(1)
     end
 
     return Prefab("boat_bumper_"..data.name, fn, assets, prefabs),

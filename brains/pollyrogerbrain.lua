@@ -91,7 +91,7 @@ function PollyRogerBrain:OnStart()
     PriorityNode(
     {
 
-        WhileNode( function() return not self.inst.sg:HasStateTag("busy") and not self.inst.flyaway end, "NO BRAIN WHEN BUSY",
+        WhileNode( function() return not self.inst.sg:HasStateTag("busy") end, "NO BRAIN WHEN BUSY",
             PriorityNode({
                 WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
                 WhileNode( function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),

@@ -16,31 +16,26 @@ local events=
 				inst.sg:GoToState("death", data)
 			end),
     EventHandler("flyaway", function(inst, data)
-                if not inst.sg:HasStateTag("busy") then
+                if not inst.components.health:IsDead() then
                     inst.sg:GoToState("flyaway")
                 end
             end),    
     EventHandler("locomote", function(inst)
-                local is_moving = inst.sg:HasStateTag("moving")
-                local is_running = inst.sg:HasStateTag("running")
-                local is_idling = inst.sg:HasStateTag("idle")
-                local should_move = inst.components.locomotor:WantsToMoveForward() and not inst.sg:HasStateTag("busy")
-                local should_run = inst.components.locomotor:WantsToRun() and not inst.sg:HasStateTag("busy")
-                       
-                if is_moving and not should_move then
-                    inst.sg:GoToState("walk_stop", inst.sg:HasStateTag("ground"))
-                elseif not is_moving and should_move then
-                    inst.sg:GoToState("walk_start", inst.sg:HasStateTag("ground"))
+                if not inst.sg:HasStateTag("busy") then
+                    local is_moving = inst.sg:HasStateTag("moving")
+                    local is_running = inst.sg:HasStateTag("running")
+                    local is_idling = inst.sg:HasStateTag("idle")
+                    local should_move = inst.components.locomotor:WantsToMoveForward() 
+                    local should_run = inst.components.locomotor:WantsToRun()
+                           
+                    if is_moving and not should_move then
+                        inst.sg:GoToState("walk_stop", inst.sg:HasStateTag("ground"))
+                    elseif not is_moving and should_move then
+                        inst.sg:GoToState("walk_start", inst.sg:HasStateTag("ground"))
+                    end
                 end
             end),
 }
-
-local function flyawaytest(inst)
-    if inst.flyaway then
-        inst:ClearBufferedAction()
-        inst.sg:GoToState("flyaway")
-    end
-end
 
 local states=
 {
@@ -53,9 +48,7 @@ local states=
             inst.AnimState:PlayAnimation("idle", true)
             inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/flap_lp", "fly_lp")
 
-
             inst.sg:SetTimeout(1 + math.random())
-            flyawaytest(inst)
         end,
 
         ontimeout = function(inst)
@@ -127,7 +120,6 @@ local states=
                 inst.AnimState:PlayAnimation("idle_ground", true)
             end
             inst.sg:SetTimeout(1 + math.random())
-            flyawaytest(inst)
         end,
 
         ontimeout = function(inst)
@@ -282,13 +274,15 @@ local states=
         tags = { "flight", "busy", "notarget" , "flyaway" },
 
         onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst:ClearBufferedAction()
+
             inst.readytogather = nil
             inst:AddTag("NOCLICK")
-            inst.components.locomotor:StopMoving()
             if inst.components.floater ~= nil then
                 inst:PushEvent("on_no_longer_landed")
             end
-            inst.Physics:Stop()
+
             inst.sg:SetTimeout(.1 + math.random() * .2)
             inst.sg.statemem.vert = math.random() < .5
 
@@ -297,6 +291,10 @@ local states=
 
             inst.AnimState:PlayAnimation(inst.sg.statemem.vert and "takeoff_vertical_pre" or "takeoff_diagonal_pre")
             inst.SoundEmitter:KillSound("fly_lp")
+
+            if inst.components.inventory ~= nil then
+                inst.components.inventory:DropEverything()
+            end
         end,
 
         ontimeout = function(inst)
@@ -385,7 +383,6 @@ local states=
             else
                 inst.AnimState:PlayAnimation("walk_pre")
             end
-            flyawaytest(inst)
         end,
 
         events =
@@ -409,7 +406,7 @@ local states=
                 inst.components.locomotor:WalkForward()
             end
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
-            flyawaytest(inst)
+ 
         end,
 
         events =
@@ -432,7 +429,6 @@ local states=
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("walk_pst")
             --inst.SoundEmitter:KillSound("fly_lp")
-            flyawaytest(inst)
         end,
 
         events =

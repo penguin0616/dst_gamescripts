@@ -24,6 +24,7 @@ function Thief:StealItem(victim, itemtosteal, attack)
             if self.onstolen then
                 self.onstolen(self.inst, victim, item)
             end
+            victim:PushEvent("onitemstolen", { item = item, thief = self.inst, })
         end
     elseif victim.components.container then
         local item = itemtosteal or victim.components.container:FindItem(function(item) return not item:HasTag("nosteal") end)
@@ -38,6 +39,7 @@ function Thief:StealItem(victim, itemtosteal, attack)
         if self.onstolen then
             self.onstolen(self.inst, victim, item)
         end
+        victim:PushEvent("onitemstolen", { item = item, thief = self.inst, })
     end
 end
 

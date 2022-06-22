@@ -170,8 +170,7 @@ function SkinsPuppet:DoIdleEmote()
 				self.override_build = "player_idles_wanda"
 				self.animstate:AddOverrideBuild(self.override_build)
 			elseif self.prefabname == "wonkey" then
-				self.override_build = "player_idles_wonkey"
-				self.animstate:AddOverrideBuild(self.override_build)
+				-- Do no special handling.
 			end
 
 			if self.prefabname == "wormwood" and not self.animstate:CompareSymbolBuilds("hand", "hand_idle_wormwood") then

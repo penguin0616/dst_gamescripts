@@ -488,8 +488,8 @@ end
 function RemoveEntity(guid)
     local inst = Ents[guid]
     if inst then
-        --for seamless player swapping, the player despawning is handled locally for the client that is actually swapping
-        if inst.isseamlessswapsource and not TheNet:IsDedicated() then
+        --certain things(like seamless player swapping) need to delay the despawning on a local client until they have ran their own code.
+        if (inst.delayclientdespawn and not TheNet:IsDedicated()) then
             return
         end
         inst:Remove()

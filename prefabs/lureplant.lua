@@ -126,6 +126,13 @@ local function OnPicked(inst)
     inst.hibernatetask = inst:DoTaskInTime(TUNING.LUREPLANT_HIBERNATE_TIME, WakeUp)
 end
 
+local function OnPotentiallyPicked(inst, data)
+    local item = data and data.item or nil
+    if item and item:HasTag("lureplant_bait") then
+        OnPicked(inst)
+    end
+end
+
 local function FreshSpawn(inst)
     inst.components.shelf.cantakeitem = false
     if inst.task ~= nil then
@@ -349,6 +356,7 @@ local function fn()
 
     inst:AddComponent("shelf")
     inst.components.shelf.ontakeitemfn = OnPicked
+    inst:ListenForEvent("onitemstolen", OnPotentiallyPicked)
 
     inst:AddComponent("inventory")
 

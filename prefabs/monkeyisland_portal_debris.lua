@@ -7,12 +7,14 @@ local prefabs =
 {
     "cutstone",
     "gears",
+    "trinket_6", --Frazzled Wires
 }
 
 local loot =
 {
     "cutstone",
     "gears",
+    "trinket_6", --Frazzled Wires
 }
 
 local function OnHammered(inst, worker)

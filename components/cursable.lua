@@ -15,11 +15,8 @@ function Cursable:ApplyCurse(item,curse)
 		end
 	end
 
+	self.curses[curse] = (self.curses[curse] or 0) + num
 	if curse == "MONKEY" then
-		if not self.curses[curse] then
-			self.curses[curse] = 0
-		end
-		self.curses[curse] = self.curses[curse] + num
 		curse_monkey.docurse(self.inst, self.curses[curse])
 	end
 
@@ -92,7 +89,7 @@ function Cursable:ForceOntoOwner(item)
         	
         	-- first look for incomplete stack
         	if item.components.stackable then
-	        	local test_items =self.inst.components.inventory:FindItems(function(itemtest) return itemtest.prefab == item.prefab end)
+	        	local test_items =self.inst.components.inventory:FindItems(function(itemtest) return itemtest.prefab == item.prefab and itemtest ~= self.activeitem end)
 	        	for i,stack in ipairs(test_items)do
 	        		if not stack.components.stackable:IsFull() then
 	        			drop = false
@@ -103,7 +100,7 @@ function Cursable:ForceOntoOwner(item)
 
         	if drop then
             	-- make space
-            	local test_item =self.inst.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") end)
+            	local test_item =self.inst.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= self.activeitem end)
             	self.inst.components.inventory:DropItem(test_item, true, true)
         	end
         end

@@ -237,6 +237,9 @@ function PlayerActionPicker:GetLeftClickActions(position, target)
                 actions = self:GetInventoryActions(useitem)
             elseif target ~= nil and not target:HasTag("walkableplatform") and not target:HasTag("ignoremouseover") then
                 actions = self:GetUseItemActions(target, useitem)
+                if #actions == 0 and target:HasTag("walkableperipheral") then
+                    actions = self:GetPointActions(position, useitem)
+                end
             else
                 actions = self:GetPointActions(position, useitem)
             end
@@ -318,6 +321,9 @@ function PlayerActionPicker:GetRightClickActions(position, target)
                 actions = self:GetInventoryActions(useitem, true)
             elseif target ~= nil and ((not target:HasTag("walkableplatform") and not target:HasTag("ignoremouseover")) or (useitem:HasTag("repairer") and not useitem:HasTag("deployable"))) then
                 actions = self:GetUseItemActions(target, useitem, true)
+                if #actions == 0 and target:HasTag("walkableperipheral") then
+                    actions = self:GetPointActions(position, useitem, true)
+                end
             else
                 actions = self:GetPointActions(position, useitem, true)
             end
@@ -335,12 +341,17 @@ function PlayerActionPicker:GetRightClickActions(position, target)
 
         if actions == nil or #actions == 0 then
             actions = self:GetSceneActions(target, true)
+            if (#actions == 0 or (#actions == 1 and actions[1].action == ACTIONS.LOOKAT)) and target:HasTag("walkableperipheral") then
+                if equipitem ~= nil and equipitem:IsValid() and (ispassable or equipitem:HasTag("allow_action_on_impassable") or (equipitem.components.aoetargeting ~= nil and equipitem.components.aoetargeting.alwaysvalid and equipitem.components.aoetargeting:IsEnabled())) then
+                    actions = self:GetPointActions(position, equipitem, true)
+                end
+            end
         end
     elseif equipitem ~= nil and equipitem:IsValid() and (ispassable or equipitem:HasTag("allow_action_on_impassable") or (equipitem.components.aoetargeting ~= nil and equipitem.components.aoetargeting.alwaysvalid and equipitem.components.aoetargeting:IsEnabled())) then
         actions = self:GetPointActions(position, equipitem, true)
     end
 
-    if (actions == nil or #actions <= 0) and (target == nil or target:HasTag("walkableplatform")) and ispassable then
+    if (actions == nil or #actions <= 0) and (target == nil or target:HasTag("walkableplatform") or target:HasTag("walkableperipheral")) and ispassable then
         actions = self:GetPointSpecialActions(position, useitem, true)
     end
 

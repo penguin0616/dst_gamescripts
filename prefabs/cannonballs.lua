@@ -3,10 +3,6 @@ local cannonball_assets =
     Asset("ANIM", "anim/cannonball_rock.zip"),
 }
 
-local cannonball_prefabs =
-{
-}
-
 -- TODO: Move these to tuning.lua!
 local CANNONBALL_RADIUS = TUNING.CANNONBALL_RADIUS
 local CANNONBALL_DAMAGE = TUNING.CANNONBALL_DAMAGE
@@ -271,7 +267,7 @@ local function cannonball_item_fn()
 
     inst.AnimState:SetBank("cannonball_rock")
     inst.AnimState:SetBuild("cannonball_rock")
-    inst.AnimState:PlayAnimation("spin_loop")
+    inst.AnimState:PlayAnimation("idle")
 
     inst.entity:AddTag("boatcannon_ammo")
 
@@ -286,10 +282,13 @@ local function cannonball_item_fn()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem:SetSinks(true)
+
     inst:AddComponent("stackable")
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_MEDITEM
 
     return inst
 end
 
-return Prefab("cannonball_rock", cannonball_fn, cannonball_assets, cannonball_prefabs),
+return Prefab("cannonball_rock", cannonball_fn, cannonball_assets),
         Prefab("cannonball_rock_item", cannonball_item_fn, cannonball_assets)

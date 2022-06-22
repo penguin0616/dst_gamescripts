@@ -897,6 +897,9 @@ end
 
 function fns.SeamlessPlayerSwap(inst)
     inst.isseamlessswapsource = true
+    --delay the client despawn for these two entities
+    inst.delayclientdespawn = true
+    inst.player_classified.delayclientdespawn = true
     inst.name = nil
     inst.userid = ""
     if inst.components.playercontroller ~= nil then

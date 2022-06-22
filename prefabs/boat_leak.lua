@@ -12,7 +12,7 @@ local function onsprungleak(inst)
         inst.components.hauntable.cooldown = TUNING.HAUNT_COOLDOWN_SMALL
         inst.components.hauntable.hauntvalue = TUNING.HAUNT_TINY
 	end
-
+    inst:RemoveTag("NOCLICK")
 	inst:RemoveTag("NOBLOCK")
 end
 
@@ -23,6 +23,7 @@ local function onrepairedleak(inst)
         inst:RemoveComponent("hauntable")
 	end
 
+    inst:AddTag("NOCLICK")
 	inst:AddTag("NOBLOCK")
 end
 

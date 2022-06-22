@@ -19,6 +19,8 @@ local Placer = Class(function(self, inst)
 
     self.override_build_point_fn = nil
     self.override_testfn = nil
+
+    self.BOAT_MUST_TAGS = { "boat" } --probably don't want static, but still cached per placer at least
 end)
 
 function Placer:SetBuilder(builder, recipe, invobject)
@@ -45,7 +47,8 @@ function Placer:GetDeployAction()
 end
 
 function Placer:OnUpdate(dt)
-    local rotating_from_boat_center = false
+    local rotating_from_boat_center
+    local hide_if_cannot_build
 
     if ThePlayer == nil then
         return
@@ -56,14 +59,17 @@ function Placer:OnUpdate(dt)
         elseif self.snap_to_meters then
             self.inst.Transform:SetPosition(math.floor(pt.x) + .5, 0, math.floor(pt.z) + .5)
         elseif self.snap_to_boat_edge then
-            local BOAT_MUST_TAGS = { "boat" }
-            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.BOAT.RADIUS, BOAT_MUST_TAGS)
+            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.BOAT.RADIUS, self.BOAT_MUST_TAGS)
             local boat = GetClosest(self.inst, boats)
 
             if boat then
                 SnapToBoatEdge(self.inst, pt)
+                if self.inst:GetDistanceSqToPoint(pt) > 1 then
+                    hide_if_cannot_build = true
+                end
             else
                 self.inst.Transform:SetPosition(pt:Get())
+                hide_if_cannot_build = true
             end
         else
             self.inst.Transform:SetPosition(pt:Get())
@@ -85,11 +91,13 @@ function Placer:OnUpdate(dt)
         local x, y, z = ThePlayer.entity:LocalToWorldSpace(self.offset, 0, 0)
         self.inst.Transform:SetPosition(math.floor(x) + .5, 0, math.floor(z) + .5)
     elseif self.snap_to_boat_edge then
+        local x, y, z = ThePlayer.entity:LocalToWorldSpace(self.offset, 0, 0)
         local boat = ThePlayer:GetCurrentPlatform()
         if boat and boat:HasTag("boat") then
-            local x, y, z = ThePlayer.entity:LocalToWorldSpace(self.offset, 0, 0)
+            SnapToBoatEdge(self.inst, Vector3(x, 0, z))
+        else
+            self.inst.Transform:SetPosition(x, 0, z)
         end
-        self.inst.Transform:SetPosition(TheWorld.Map:GetTileCenterPoint(ThePlayer.entity:LocalToWorldSpace(0, 0, 0)))
     elseif self.onground then
         --V2C: this will keep ground orientation accurate and smooth,
         --     but unfortunately position will be choppy compared to parenting
@@ -131,6 +139,10 @@ function Placer:OnUpdate(dt)
     else
         self.can_build = true
         self.mouse_blocked = false
+    end
+
+    if hide_if_cannot_build and not self.can_build then
+        self.mouse_blocked = true
     end
 
     if self.builder ~= nil and was_mouse_blocked ~= self.mouse_blocked and self.hide_inv_icon then

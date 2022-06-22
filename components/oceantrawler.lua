@@ -108,11 +108,8 @@ function OceanTrawler:Lower()
     self.inst.sg:GoToState("lower")
     self.inst.MiniMapEntity:SetIcon("ocean_trawler_down.png")
 
-    if self.inst.components.preserver then
-        self.inst.components.preserver:SetPerishRateMultiplier(TUNING.OCEAN_TRAWLER_LOWERED_PERISH_RATE)
-    end
-
     if self.inst.components.container then
+        self.inst.components.container.canbeopened = false
         self.inst.components.container:Close()
     end
 
@@ -135,20 +132,17 @@ function OceanTrawler:GetBait(eater)
         return nil
     end
 
-    for k,v in pairs(container.slots) do
-        if v and not v:HasTag("oceanfish") and v.components.edible ~= nil then
-            local foodtype = v.components.edible.foodtype
-            for i, foodgroup in ipairs(fishdiet.caneat) do
-                -- caneat is a food type
-                if foodgroup == foodtype then
-                    return v
-                elseif foodgroup.types ~= nil then
-                    -- caneat is a food group
-                    for j, type in ipairs(foodgroup.types) do
-                        if type == foodtype then
-                            return v
+    for _, item in pairs(container.slots) do
+        if item ~= nil and item.components.edible ~= nil then -- TODO(JBK): This is a very similar version of eater component's TestFood. Make this function more generic and global?
+            for _, v in ipairs(fishdiet.caneat) do
+                if type(v) == "table" then
+                    for _, v2 in ipairs(v.types) do
+                        if item:HasTag("edible_"..v2) then
+                            return item
                         end
                     end
+                elseif item:HasTag("edible_"..v) then
+                    return item
                 end
             end
         end
@@ -207,8 +201,8 @@ function OceanTrawler:Raise()
     self.inst.sg:GoToState("raise")
     self.inst.MiniMapEntity:SetIcon("ocean_trawler.png")
 
-    if self.inst.components.preserver then
-        self.inst.components.preserver:SetPerishRateMultiplier(1)
+    if self.inst.components.container then
+        self.inst.components.container.canbeopened = true
     end
 
     self:ReleaseOverflowFish()

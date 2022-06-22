@@ -852,13 +852,23 @@ function Inventory:GiveItem(inst, slot, src_pos)
         not inst.components.inventoryitem.canonlygoinpocket and
         not (self.inst.components.playercontroller ~= nil and
             self.inst.components.playercontroller.isclientcontrollerattached) then
+
         inst.components.inventoryitem:OnPutInInventory(self.inst)
         self:SetActiveItem(inst)
         return true
     elseif self.HandleLeftoversFn ~= nil then
 		self.HandleLeftoversFn(self.inst, inst)
 	else
-        self:DropItem(inst, true, true)
+        if self.activeitem and self.activeitem ~= inst and
+            self.activeitem.components.stackable and
+            inst.components.stackable and
+            self.activeitem.prefab == inst.prefab and
+            not self.activeitem.components.stackable:IsFull()
+            then
+            self.activeitem.components.stackable:Put(inst, Vector3(inst.Transform:GetWorldPosition()))
+        else
+            self:DropItem(inst, true, true)
+        end
     end
 end
 

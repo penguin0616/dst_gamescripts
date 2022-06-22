@@ -267,19 +267,22 @@ function self:DestroyDockAtPoint(x, y, z, dont_toss_loot)
     -- If we're swapping to an ocean tile, do like a broken boat would do and deal with everything in our tile bounds
     if IsOceanTile(old_tile) then
         -- Behaviour pulled from walkableplatform's onremove/DestroyObjectsOnPlatform response.
-        local entities_on_tile = _map:GetEntitiesOnTileAtPoint(x, y, z)
+        local tile_radius_plus_overhang = (TILE_SCALE / 2) + 1.0 + 0.2
+        local entities_near_dock = TheSim:FindEntities(x, 0, z, tile_radius_plus_overhang, nil, IGNORE_DOCK_DROWNING_ONREMOVE_TAGS)
 
         local shore_point = nil
-        for _, ent in ipairs(entities_on_tile) do
+        for _, ent in ipairs(entities_near_dock) do
             local has_drownable = (ent.components.drownable ~= nil)
-            if has_drownable then
+            if has_drownable and shore_point == nil then
                 shore_point = Vector3(FindRandomPointOnShoreFromOcean(x, y, z))
             end
             ent:PushEvent("onsink", {boat = nil, shore_pt = shore_point})
 
+            -- We're testing the overhang, so we need to verify that anything we find isn't
+            -- still on some adjacent dock or land tile after we remove ourself.
             if ent ~= inst and not has_drownable and ent.entity:GetParent() == nil
                     and ent.components.amphibiouscreature == nil
-                    and not ent:HasOneOfTags(IGNORE_DOCK_DROWNING_ONREMOVE_TAGS) then
+                    and not _map:IsVisualGroundAtPoint(ent.Transform:GetWorldPosition()) then
                 if ent.components.inventoryitem ~= nil then
                     ent.components.inventoryitem:SetLanded(false, true)
                 else
@@ -335,11 +338,17 @@ function self:QueueDestroyForDockAtPoint(x, y, z, dont_toss_loot)
             or WORLD_TILES.OCEAN_COASTAL
         if IsOceanTile(tile_at_point) then
             -- Behaviour pulled from walkableplatform's onremove/DestroyObjectsOnPlatform response.
-            local entities_on_tile = _map:GetEntitiesOnTileAtPoint(x, y, z)
-            for _, ent in ipairs(entities_on_tile) do
-                ent:PushEvent("abandon_ship")
-                if ent:HasTag("player") then
-                    ent:PushEvent("onpresink")
+            local tile_radius_plus_overhang = (TILE_SCALE / 2) + 1.0 + 0.2
+            local entities_near_dock = TheSim:FindEntities(x, 0, z, tile_radius_plus_overhang, nil, IGNORE_DOCK_DROWNING_ONREMOVE_TAGS)
+
+            for _, ent in ipairs(entities_near_dock) do
+                -- Only push these events on prefabs that are actually standing on docks.
+                -- We use the VisualGround test because we're accounting for tile overhang.
+                if _map:IsVisualGroundAtPoint(ent.Transform:GetWorldPosition()) then
+                    ent:PushEvent("abandon_ship")
+                    if ent:HasTag("player") then
+                        ent:PushEvent("onpresink")
+                    end
                 end
             end
         end
@@ -361,8 +370,9 @@ function self:DamageDockAtTile(tx, ty, damage)
     local tile_index = _dock_health_grid:GetIndex(tx, ty)
     local current_tile_health = _dock_health_grid:GetDataAtIndex(tile_index)
     local dx, dy, dz = _map:GetTileCenterPoint(tx,ty)
-    if current_tile_health == nil then
-        -- There's no data so, as far as we know, there's no dock here.
+    if current_tile_health == nil or current_tile_health == 0 then
+        -- Exit early if there's no data (meaning no dock), or the tile was
+        -- already damaged to its breaking point before this.
         return nil
     else
         -- We don't technically need this set here, but if somebody wants to inspect
@@ -379,32 +389,6 @@ function self:DamageDockAtTile(tx, ty, damage)
         return new_health
     end
 end
---[[
-function self:DamageDockAtIndex(tile_index, damage)
-    
-    local current_tile_health = _dock_health_grid:GetDataAtIndex(tile_index)
-    local dx, dy, dz = _map:GetTileCenterPoint(tile_index)
-
-    if current_tile_health == nil then
-        -- There's no data so, as far as we know, there's no dock here.
-        return nil
-    else
-
-        -- We don't technically need this set here, but if somebody wants to inspect
-        -- health and test for 0 elsewhere, it's useful to have an accurate representation.
-        local new_health = math.max(0, current_tile_health - damage)
-        _dock_health_grid:SetDataAtIndex(tile_index, new_health)
-
-        self:SpawnDamagePrefab(tile_index,new_health)
-
-        if new_health <= 0 then
-            self:QueueDestroyForDockAtPoint(dx, dy, dz)
-        end
-
-        return new_health
-    end
-end
-]]
 
 function self:GetCoordsFromIndex(index)
     local z = math.modf(index/WIDTH)

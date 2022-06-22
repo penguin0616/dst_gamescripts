@@ -30,7 +30,16 @@ local trading_items =
     { prefabs = { "cutreeds" },      min_count = 1, max_count = 2, reset = false, add_filler = true,  },
 
     {
-        prefabs = { "trinket_12", "trinket_1", "trinket_25", "trinket_17", "trinket_4" }, -- Good team play, poor solo play.
+        prefabs = { -- These trinkets are generally good for team play, but tend to be poor for solo play.
+            -- Theme
+            "trinket_12", -- Dessicated Tentacle
+            "trinket_25", -- Air Unfreshener
+            -- Team
+            "trinket_1", -- Melted Marbles
+            -- Fishing
+            "trinket_17", -- Bent Spork
+            "trinket_8", -- Rubber Bung
+        },
         min_count = 1, max_count = 1, reset = false, add_filler = true,
     },
 

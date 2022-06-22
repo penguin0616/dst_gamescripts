@@ -81,7 +81,7 @@ function CrewMember:Row()
         if boat_physics == nil then return end
 
         local can_Stop = false
-        if platform.components.boatcrew.target then
+        if platform.components.boatcrew and platform.components.boatcrew.target then
             local target_boat_physics = platform.components.boatcrew.target.components.boatphysics
             local target_vector = Vector3(target_boat_physics.velocity_x,0,target_boat_physics.velocity_z)
             local local_vector = Vector3(boat_physics.velocity_x,0,boat_physics.velocity_z)
@@ -106,14 +106,14 @@ function CrewMember:Row()
                direction = "away"
             end
 
-        elseif platform.components.boatcrew.target and platform.components.boatcrew.target:IsValid() and platform:GetDistanceSqToInst(platform.components.boatcrew.target) < 10*10 and can_Stop then                        
+        elseif platform.components.boatcrew and platform.components.boatcrew.target and platform.components.boatcrew.target:IsValid() and platform:GetDistanceSqToInst(platform.components.boatcrew.target) < 10*10 and can_Stop then                        
             direction = "stop"
         end
 
-        local row_dir_x, row_dir_z = self.boat.components.boatcrew:GetHeadingNormal()
+        local row_dir_x, row_dir_z = self.boat.components.boatcrew and self.boat.components.boatcrew:GetHeadingNormal() or nil
         if not row_dir_x or not row_dir_z then
             local pos = Vector3(self.boat.Transform:GetWorldPosition())
-            local doer_x, doer_y, doer_z = self.inst.Transform:GetWorldPosition()        
+            local doer_x, doer_y, doer_z = self.inst.Transform:GetWorldPosition()
             row_dir_x, row_dir_z = VecUtil_Normalize(pos.x - doer_x, pos.z - doer_z)
         end
 

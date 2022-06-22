@@ -104,7 +104,7 @@ local states =
     State{
 
         name = "action",
-        tags = {"busy", "action"},
+        tags = {"busy", "action", "caninterrupt"},
         onenter = function(inst, playanim)
             if inst:GetBufferedAction().target and inst:GetBufferedAction().target.components.boatcannon then
                 local cannon = inst:GetBufferedAction().target
@@ -146,7 +146,7 @@ local states =
 
     State{
         name = "hammer",
-        tags = {"busy", "action"},
+        tags = {"busy", "action", "caninterrupt"},
         onenter = function(inst, playanim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("atk")
@@ -174,7 +174,7 @@ local states =
     State{
 
         name = "empty",
-        tags = {"busy"},
+        tags = {"busy", "caninterrupt"},
         onenter = function(inst, playanim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("unequipped_atk")
@@ -199,7 +199,7 @@ local states =
 
     State{
         name = "victory",
-        tags = {"busy"},
+        tags = {"busy", "caninterrupt"},
         onenter = function(inst, data)
             inst.Physics:Stop()
 
@@ -209,8 +209,12 @@ local states =
                 inst.sg.statemem.say = data.say
             end
 
-            if data and data.item and data.item.prefab == "cave_banana" then
-                inst.AnimState:OverrideSymbol("swap_item", "cave_banana", "cave_banana01")
+            if data and data.item then
+                if data.item.prefab == "cave_banana" then
+                    inst.AnimState:OverrideSymbol("swap_item", "cave_banana", "cave_banana01")
+                elseif data.item.prefab == "cave_banana_cooked" then
+                    inst.AnimState:OverrideSymbol("swap_item", "cave_banana", "cave_banana02")
+                end
                 inst.AnimState:PlayAnimation("action_victory_pre")
 
                 inst.SoundEmitter:PlaySound("monkeyisland/powdermonkey/victory_pre")
@@ -224,12 +228,16 @@ local states =
             EventHandler("animover", function (inst)
                 inst.sg:GoToState("victory_pst", {say = inst.sg.statemem.say} )
             end),
+          --[[  EventHandler("onattacked", function (inst)
+                inst.sg:GoToState("hit")
+            end),
+            ]]
         }
     },
 
     State{
         name = "victory_pst",
-        tags = {"busy"},
+        tags = {"busy", "caninterrupt"},
         onenter = function(inst, data)
             inst.Physics:Stop()
 
@@ -302,7 +310,7 @@ local states =
 
     State{
         name = "taunt",
-        tags = {"busy"},
+        tags = {"busy", "caninterrupt"},
 
         onenter = function(inst, data)
             inst.Physics:Stop()
@@ -334,7 +342,7 @@ local states =
 
     State{
         name = "row",
-        tags = {"busy"},
+        tags = {"busy", "caninterrupt"},
         onenter = function(inst, playanim)
             local boat = inst:GetCurrentPlatform()
             if boat then

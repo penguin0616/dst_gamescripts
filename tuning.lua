@@ -1615,6 +1615,11 @@ function Tune(overrides)
 
         REEDS_REGROW_TIME = total_day_time*3,
 
+		MONKEYTAIL_CYCLES = 4,
+		MONKEYTAIL_CYCLES_VAR = 3,
+
+		GRASS_CYCLES = 20,
+
         BIRD_LEAVINGS_CHANCE = 0.2,
         CROW_LEAVINGS_CHANCE = 0.3333,
         BIRD_TRAP_CHANCE = 0.025,

@@ -415,9 +415,9 @@ ACTIONS =
     BOAT_CANNON_LOAD_AMMO = Action({ mount_valid=true, paused_valid=true }),
     BOAT_CANNON_SHOOT = Action(),
 
-    OCEAN_TRAWLER_LOWER = Action({ distance=3.5, rmb=true }),
-    OCEAN_TRAWLER_RAISE = Action({ distance=3.5, rmb=true }),
-    OCEAN_TRAWLER_FIX = Action({ distance=3.5 }),
+    OCEAN_TRAWLER_LOWER = Action({ distance=2.8, rmb=true }),
+    OCEAN_TRAWLER_RAISE = Action({ distance=2.8, rmb=true }),
+    OCEAN_TRAWLER_FIX = Action({ distance=2.8 }),
 
     EMPTY_CONTAINER = Action(),
 

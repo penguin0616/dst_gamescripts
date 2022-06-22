@@ -1849,7 +1849,7 @@ local function MakeHat(name)
 
         if inst.polly then
             inst.polly.flyaway = true
-            inst:ClearBufferedAction()
+            inst.polly:PushEvent("flyaway")
         end
         --update_polly_hat_art(inst)
     end 

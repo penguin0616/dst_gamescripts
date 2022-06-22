@@ -2164,7 +2164,7 @@ function PlayerController:OnUpdate(dt)
 							return placer_item:IsValid() and
 								placer_item.replica.inventoryitem ~= nil and
 								placer_item.replica.inventoryitem:CanDeploy(pt, mouseover, self.inst, self.deployplacer.Transform:GetRotation()),
-								(mouseover ~= nil and not mouseover:HasTag("walkableplatform") and not mouseover:HasTag("ignoremouseover")) or TheInput:GetHUDEntityUnderMouse() ~= nil
+								(mouseover ~= nil and not mouseover:HasTag("walkableplatform") and not mouseover:HasTag("walkableperipheral") and not mouseover:HasTag("ignoremouseover")) or TheInput:GetHUDEntityUnderMouse() ~= nil
 						end
 						self.deployplacer.components.placer:OnUpdate(0) --so that our position is accurate on the first frame
 					end

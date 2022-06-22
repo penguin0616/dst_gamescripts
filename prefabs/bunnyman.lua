@@ -144,7 +144,7 @@ local function is_meat(item)
 end
 
 local RETARGET_MUST_TAGS = { "_combat", "_health" }
-local RETARGET_ONEOF_TAGS = { "monster", "player" }
+local RETARGET_ONEOF_TAGS = { "monster", "player", "pirate"}
 local function NormalRetargetFn(inst)
     return not inst:IsInLimbo()
         and FindEntity(

@@ -96,7 +96,7 @@ local function fn()
 
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(TUNING.LIGHTCRAB_HEALTH)
-    inst.components.health.murdersound = "dontstarve/rabbit/scream_short"
+    inst.components.health.murdersound = "monkeyisland/lightcrab/hit"
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper.numrandomloot = 1
