@@ -153,12 +153,32 @@ local function OnSpawnNewBoatLeak(inst, data)
 		table.insert(inst.components.hullhealth.leak_indicators_dynamic, leak)
 
 		if inst.components.walkableplatform ~= nil then
-            inst.components.walkableplatform:AddEntityToPlatform(leak)
-            for k in pairs(inst.components.walkableplatform:GetPlayersOnPlatform()) do
-	            if k:IsValid() then
-	                k:PushEvent("on_standing_on_new_leak")
-	            end
-            end
+			inst.components.walkableplatform:AddEntityToPlatform(leak)
+			for k in pairs(inst.components.walkableplatform:GetPlayersOnPlatform()) do
+				if k:IsValid() then
+					k:PushEvent("on_standing_on_new_leak")
+				end
+			end
+		end
+
+		if data.playsoundfx then
+			inst.SoundEmitter:PlaySoundWithParams(inst.sounds.damage, { intensity = 0.8 })
+		end
+	end
+end
+
+local function OnSpawnNewBoatLeak_Grass(inst, data)
+	if data ~= nil and data.pt ~= nil then
+		local leak_x, leak_y, leak_z = data.pt:Get()
+
+        if inst.material == "grass" then
+            SpawnPrefab("fx_grass_boat_fluff").Transform:SetPosition(leak_x, 0, leak_z) 
+			SpawnPrefab("splash_green_small").Transform:SetPosition(leak_x, 0, leak_z)
+        end
+
+		local damage = TUNING.BOAT.GRASSBOAT_LEAK_DAMAGE[data.leak_size]
+		if damage ~= nil then
+	        inst.components.health:DoDelta(-damage)
 		end
 
 		if data.playsoundfx then
@@ -382,7 +402,7 @@ local function create_common_pre(inst, bank, build, radius, max_health, item_col
     return inst
 end
 
-local function create_common_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+local function create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
 
     inst.Physics:SetDontRemoveOnSleep(true)
     inst.item_collision_prefab = item_collision_prefab
@@ -438,8 +458,6 @@ local function create_common_pst(inst, bank, build, radius, max_health, item_col
 	inst.components.hull:AttachEntityToBoat(burnable_locator, 0, -2.5, true)
 
     inst:SetStateGraph("SGboat")
-
-	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak)
 
     inst.StopBoatPhysics = StopBoatPhysics
     inst.StartBoatPhysics = StartBoatPhysics
@@ -614,8 +632,9 @@ local function wood_fn()
         return inst
     end
 
-    inst = create_common_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+    inst = create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
 
+	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak)
     inst.boat_crackle = "fx_boat_crackle"
 
     inst.sinkloot = function()
@@ -670,7 +689,9 @@ local function grass_fn()
         return inst
     end
 
-    inst = create_common_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+    inst = create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+
+	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak_Grass)
 
     inst.components.hullhealth:SetSelfDegrading(5)
     inst.components.hullhealth.degradefx = "degrade_fx_grass"
@@ -724,8 +745,9 @@ local function pirate_fn()
         return inst
     end
 
-    inst = create_common_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
+    inst = create_master_pst(inst, bank, build, radius, max_health, item_collision_prefab, scale, boatlip)
 
+	inst:ListenForEvent("spawnnewboatleak", OnSpawnNewBoatLeak)
     inst.boat_crackle = "fx_boat_crackle"
 
     inst.sinkloot = function()

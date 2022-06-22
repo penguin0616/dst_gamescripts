@@ -22,6 +22,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.HARVEST, "action"),
     ActionHandler(ACTIONS.EAT, "eat"),
     ActionHandler(ACTIONS.ROW, "row"),
+    ActionHandler(ACTIONS.EMPTY_CONTAINER, "empty"),
+
+
 
     ActionHandler(ACTIONS.LOWER_ANCHOR, "action"),
     ActionHandler(ACTIONS.RAISE_SAIL, "action"),
@@ -147,7 +150,6 @@ local states =
         onenter = function(inst, playanim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("atk")
-           -- inst.SoundEmitter:PlaySound("dontstarve/wilson/make_trap", "make")
         end,
         onexit = function(inst)
         end,
@@ -167,6 +169,33 @@ local states =
             end),
         }
     },
+
+
+    State{
+
+        name = "empty",
+        tags = {"busy"},
+        onenter = function(inst, playanim)
+            inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("unequipped_atk")
+        end,
+
+        timeline =
+        {
+            TimeEvent(15*FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/hit")
+                inst:PerformBufferedAction()
+            end)
+        },
+
+        events=
+        {
+            EventHandler("animover", function (inst)
+                inst.sg:GoToState("idle")
+            end),
+        }
+    },
+
 
     State{
         name = "victory",

@@ -86,7 +86,6 @@ local function fn()
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM
 
     inst:AddComponent("inspectable")
-    inst:AddComponent("tradable")
 
     inst:AddComponent("curseditem")
     inst.components.curseditem.curse = "MONKEY"

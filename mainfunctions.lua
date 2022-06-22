@@ -488,6 +488,10 @@ end
 function RemoveEntity(guid)
     local inst = Ents[guid]
     if inst then
+        --for seamless player swapping, the player despawning is handled locally for the client that is actually swapping
+        if inst.isseamlessswapsource and not TheNet:IsDedicated() then
+            return
+        end
         inst:Remove()
     end
 end
@@ -749,7 +753,19 @@ function OnServerPauseDirty(pause, autopause, gameautopause, source)
 end
 
 function ReplicateEntity(guid)
-    Ents[guid]:ReplicateEntity()
+    local inst = Ents[guid]
+
+    local _ThePlayer
+    if inst.isseamlessswaptarget then
+        _ThePlayer = ThePlayer
+        ThePlayer = inst
+    end
+
+    inst:ReplicateEntity()
+
+    if _ThePlayer then
+        ThePlayer = _ThePlayer
+    end
 end
 
 ------------------------------

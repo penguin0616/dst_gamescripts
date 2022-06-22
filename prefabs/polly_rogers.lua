@@ -59,6 +59,7 @@ local function fn()
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.walkspeed = TUNING.POLLY_ROGERS_WALK_SPEED
     inst.components.locomotor.runspeed = TUNING.POLLY_ROGERS_RUN_SPEED
+    inst.components.locomotor:SetTriggersCreep(false)
     inst:SetStateGraph("SGpolly_rogers")
 
     inst:SetBrain(brain)

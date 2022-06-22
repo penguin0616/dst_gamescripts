@@ -265,6 +265,37 @@ function Map:CanDeployMastAtPoint(pt, inst, mouseover)
         and self:IsDeployPointClear(pt, nil, inst.replica.inventoryitem:DeploySpacingRadius())
 end
 
+local function IsDockNearOtherOnOcean(other, pt, min_spacing_sq)
+    --FindEntities range check is <=, but we want <
+    local min_spacing_sq_resolved = (other.deploy_extra_spacing ~= nil and math.max(other.deploy_extra_spacing * other.deploy_extra_spacing, min_spacing_sq))
+        or min_spacing_sq
+    local ox, oy, oz = other.Transform:GetWorldPosition()
+    return distsq(pt.x, pt.z, ox, oz) < min_spacing_sq_resolved
+        and not TheWorld.Map:IsVisualGroundAtPoint(ox, oy, oz)  -- Throw out any tests for anything that's not in the ocean.
+end
+
+function Map:CanDeployDockAtPoint(pt, inst, mouseover)
+    local tile = self:GetTileAtPoint(pt.x, pt.y, pt.z)
+    if TileGroupManager:IsInvalidTile(tile) or not TileGroupManager:IsOceanTile(tile) then
+        return false
+    end
+
+    -- TILE_SCALE is the dimension of a tile; 1.0 is the approximate overhang, but we overestimate for safety.
+    local min_distance_from_entities = (TILE_SCALE/2) + 1.2
+    local min_distance_from_boat = min_distance_from_entities + TUNING.MAX_WALKABLE_PLATFORM_RADIUS
+
+    local boat_entities = TheSim:FindEntities(pt.x, 0, pt.z, min_distance_from_boat, WALKABLE_PLATFORM_TAGS)
+    for _, v in ipairs(boat_entities) do
+        if v.components.walkableplatform ~= nil and
+                math.sqrt(v:GetDistanceSqToPoint(pt.x, 0, pt.z)) <= (v.components.walkableplatform.platform_radius + min_distance_from_entities) then
+            return false
+        end
+    end
+
+    return (mouseover == nil or mouseover:HasTag("player"))
+        and self:IsDeployPointClear(pt, nil, min_distance_from_entities, nil, IsDockNearOtherOnOcean)
+end
+
 function Map:CanPlacePrefabFilteredAtPoint(x, y, z, prefab)
     local tile = self:GetTileAtPoint(x, y, z)
     if TileGroupManager:IsInvalidTile(tile) then

@@ -676,6 +676,7 @@ local function ActivatePlayer(inst)
         local oldplayer = ThePlayer
         ThePlayer = inst
         oldplayer.player_classified.MapExplorer:DeactivateLocalMiniMap()
+        oldplayer:Remove()
 
         ActivateHUD(inst)
 
@@ -901,8 +902,8 @@ function fns.SeamlessPlayerSwap(inst)
     if inst.components.playercontroller ~= nil then
         RemovePlayerComponents(inst)
     end
-    if TheWorld.ismastersim then
-        inst:DoStaticTaskInTime(3*FRAMES, inst.Remove)
+    if TheNet:IsDedicated() then
+        inst:DoStaticTaskInTime(0, inst.Remove)
     end
 end
 
@@ -1828,9 +1829,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
     local function ChangeToMonkey(inst)
         if TheWorld.components.piratespawner then
-            TheWorld.components.piratespawner.PermittedToWonkey[inst.userid] = true
             TheWorld.components.piratespawner:DoMonkeyChange(inst, false)
-            TheWorld.components.piratespawner.PermittedToWonkey[inst.userid] = nil
         end
     end
 

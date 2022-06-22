@@ -34,7 +34,7 @@ local MapScreen = Class(Screen, function(self, owner)
 
     self.zoom_to_cursor = Profile:IsMinimapZoomCursorFollowing()
     self.zoom_target = self.minimap:GetZoom()
-    self.zoomsensitivity = 10
+    self.zoomsensitivity = 20
 
     SetAutopaused(true)
 end)

@@ -1042,7 +1042,8 @@ TileManager.AddTile(
         noise_texture="mini_carpet_noise"
     },
     {
-        name = "carpetfloor",
+        name = "carpetfloor", -- Inventory item
+        anim = "carpet", -- Ground item
     }
 )
 

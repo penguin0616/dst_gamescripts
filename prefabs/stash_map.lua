@@ -41,7 +41,9 @@ local function fn()
 
     inst:AddComponent("mapspotrevealer")
     inst.components.mapspotrevealer:SetGetTargetFn(getrevealtargetpos)
-    inst.components.mapspotrevealer.postreveal = function(inst) inst:Remove() end
+    inst.components.mapspotrevealer.postreveal = function(inst) 
+        inst.components.stackable:Get():Remove()
+    end
 
     inst:AddComponent("stackable")
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM

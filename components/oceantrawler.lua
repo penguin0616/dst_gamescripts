@@ -383,7 +383,7 @@ local function CheckTrappable(inst)
 end
 
 local OCEAN_FISH_TAGS = { "oceanfish" }
-local TRAP_NO_TAGS = { "INLIMBO", "untrappable" }
+local TRAP_NO_TAGS = { "INLIMBO", "untrappable", "_inventoryitem" }
 function OceanTrawler:OnUpdate(dt)
     local container = self.inst.components.container
     if self.lowered and not self.fishescaped and container then

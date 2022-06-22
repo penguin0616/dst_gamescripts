@@ -782,8 +782,8 @@ CRAFTING_FILTERS.FISHING.recipes =
 
 CRAFTING_FILTERS.SEAFARING.recipes =
 {
-	"boat_grass_item",
 	"seafaring_prototyper",
+	"boat_grass_item",
 	"boat_item",
 	"boatpatch",
 	"oar",

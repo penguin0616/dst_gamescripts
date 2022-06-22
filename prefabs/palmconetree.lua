@@ -2,6 +2,7 @@ local assets = {
     Asset("ANIM", "anim/palmcone_short.zip"),
     Asset("ANIM", "anim/palmcone_normal.zip"),
     Asset("ANIM", "anim/palmcone_tall.zip"),
+    Asset("ANIM", "anim/palmcone_build.zip"),
 
     Asset("MINIMAP_IMAGE", "palmcone_tree"),
     Asset("MINIMAP_IMAGE", "palmcone_tree_burnt"),
@@ -285,7 +286,6 @@ end
 
 local function set_short(inst)
     inst.size = SHORT
-    inst.AnimState:SetBuild("palmcone_short")
     if inst.components.workable then
         inst.components.workable:SetWorkLeft(TUNING.PALMCONETREE_CHOPS_SMALL)
     end
@@ -332,7 +332,6 @@ end
 
 local function set_normal(inst)
     inst.size = NORMAL
-    inst.AnimState:SetBuild("palmcone_normal")
     if inst.components.workable then
         inst.components.workable:SetWorkLeft(TUNING.PALMCONETREE_CHOPS_NORMAL)
     end
@@ -378,7 +377,6 @@ end
 
 local function set_tall(inst)
     inst.size = TALL
-    inst.AnimState:SetBuild("palmcone_tall")
     if inst.components.workable then
         inst.components.workable:SetWorkLeft(TUNING.PALMCONETREE_CHOPS_TALL)
     end
@@ -544,7 +542,7 @@ local function on_wake(inst)
     end
 end
 
-local function tree(name, build, stage, data)
+local function tree(name, stage, data)
     local function fn()
         local inst = CreateEntity()
 
@@ -564,7 +562,7 @@ local function tree(name, build, stage, data)
         inst:AddTag("shelter")
 
         inst.AnimState:SetBank("palmTree")
-        inst.AnimState:SetBuild(build)
+        inst.AnimState:SetBuild("palmcone_build")
         inst:SetPrefabName("palmconetree")
         inst:AddTag("palmconetree") -- for plantregrowth
 
@@ -647,7 +645,7 @@ local function tree(name, build, stage, data)
     return Prefab(name, fn, assets, prefabs)
 end
 
-return  tree("palmconetree", "palmcone_normal", 0),
-        tree("palmconetree_short", "palmcone_short", 1),
-        tree("palmconetree_normal", "palmcone_normal", 2),
-        tree("palmconetree_tall", "palmcone_tall", 3)
+return  tree("palmconetree", 0),
+        tree("palmconetree_short", 1),
+        tree("palmconetree_normal", 2),
+        tree("palmconetree_tall", 3)

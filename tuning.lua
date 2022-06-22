@@ -3718,6 +3718,11 @@ function Tune(overrides)
                 RADIUS = 3,
             },
 
+			GRASSBOAT_LEAK_DAMAGE = { 
+				small_leak = 15,
+				med_leak = 30,
+			},
+
             OARS =
             {
                 BASIC =

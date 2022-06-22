@@ -23,7 +23,9 @@ local function stash_dug(inst)
     end
 
     -- Ensure that the remove happens after all of our loot gets flung.
-    inst:DoTaskInTime(MAX_LOOTFLING_DELAY + 0.2, inst.Remove)
+    inst:DoTaskInTime(MAX_LOOTFLING_DELAY + 0.2, function()
+        inst:Remove()
+    end)
 end
 
 

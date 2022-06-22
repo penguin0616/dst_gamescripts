@@ -115,7 +115,7 @@ local function fn()
 
     inst:AddTag("oceantrawler")
 
-    inst:SetPhysicsRadiusOverride(1.1)
+    inst:SetPhysicsRadiusOverride(1.75)
 
     MakeInventoryPhysics(inst)
     MakeWaterObstaclePhysics(inst, 1.15, 2, 0.75)

@@ -153,5 +153,5 @@ return Prefab("pinecone_sapling", sapling_fn("pinecone", "idle_planted", "evergr
     Prefab("twiggy_nut_sapling", sapling_fn("twiggy_nut", "idle_planted", "twiggy_short", "twiggytree"),  twiggy_nut_assets, twiggy_nut_prefabs),
     Prefab("marblebean_sapling", sapling_fn("marblebean", "idle_planted", "marbleshrub_short", "marbleshrub", true, {"marblebean"}),  marblebean_assets, marblebean_prefabs),
     Prefab("moonbutterfly_sapling", sapling_fn("baby_moon_tree", "idle", "moon_tree_short", "moon_tree"), moonbutterfly_assets, moonbutterfly_prefabs),
-    Prefab("palmcone_sapling", sapling_fn("palmcone_seed", "idle_planted", "palcometree_short", "palmconetree"), palmcone_assets, palmcone_prefabs)
+    Prefab("palmcone_sapling", sapling_fn("palmcone_seed", "idle_planted", "palmconetree_short", "palmconetree"), palmcone_assets, palmcone_prefabs)
 

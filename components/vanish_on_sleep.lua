@@ -18,7 +18,7 @@ function Vanish_on_sleep:OnUpdate(dt)
 	local outofrange = true
 
 	local x,y,z = self.inst.Transform:GetWorldPosition()
-	local player = FindClosestPlayer(x, y, z, true)
+	local player = FindClosestPlayer(x, y, z)
 	if player then
 		if self.inst:GetDistanceSqToInst(player) < 60*60 then
 			outofrange = false

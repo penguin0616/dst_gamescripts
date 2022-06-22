@@ -252,8 +252,9 @@ end
 
 local function OnReachDestination(inst)
     if inst.sg:HasStateTag("moving") then
+        local self = inst.components.playercontroller
         local x, y, z = inst.Transform:GetWorldPosition()
-        inst.components.playercontroller:RemotePredictWalking(x, z)
+        self:RemotePredictWalking(x, z, self.locomotor:GetTimeMoving() == 0)
     end
 end
 
@@ -2853,11 +2854,14 @@ function PlayerController:OnRemoteDragWalking(x, z)
     end
 end
 
-function PlayerController:OnRemotePredictWalking(x, z, isdirectwalking)
+function PlayerController:OnRemotePredictWalking(x, z, isdirectwalking, isstart)
     if self.ismastersim and self:IsEnabled() and self.handler == nil then
         self.remote_vector.x = x
         self.remote_vector.y = isdirectwalking and 3 or 4
         self.remote_vector.z = z
+        if isstart then
+            self.locomotor:RestartPredictMoveTimer()
+        end
     end
 end
 
@@ -2946,11 +2950,11 @@ function PlayerController:RemoteDragWalking(x, z)
     end
 end
 
-function PlayerController:RemotePredictWalking(x, z)
+function PlayerController:RemotePredictWalking(x, z, isstart)
     local y = self.directwalking and 3 or 4
     if self.remote_vector.x ~= x or self.remote_vector.z ~= z or (self.remote_vector.y ~= y and self.remote_vector.y ~= 0) then
 		local platform, pos_x, pos_z = self:GetPlatformRelativePosition(x, z)
-        SendRPCToServer(RPC.PredictWalking, pos_x, pos_z, self.directwalking, platform, platform ~= nil)
+        SendRPCToServer(RPC.PredictWalking, pos_x, pos_z, self.directwalking, isstart, platform, platform ~= nil)
         self.remote_vector.x = x
         self.remote_vector.y = y
         self.remote_vector.z = z
@@ -3068,7 +3072,7 @@ function PlayerController:DoPredictWalking(dt)
         if self:CanLocomote() then
             if self.inst.sg:HasStateTag("moving") then
                 if x ~= nil and y ~= nil and z ~= nil then
-                    self:RemotePredictWalking(x, z)
+                    self:RemotePredictWalking(x, z, self.locomotor:GetTimeMoving() == 0)
                 end
             end
         end
@@ -3099,7 +3103,9 @@ function PlayerController:DoDragWalking(dt)
         self.directwalking = false
         self.dragwalking = true
         self.predictwalking = false
-        if not self.ismastersim and self.locomotor == nil then
+        if self.ismastersim then
+            self.locomotor:CancelPredictMoveTimer() --remote drag walking, means client is not predicting
+        elseif self.locomotor == nil then
             self:RemoteDragWalking(pt.x, pt.z)
         end
         return true
@@ -3186,8 +3192,11 @@ function PlayerController:DoDirectWalking(dt)
             if self.locomotor == nil then
                 self:RemoteDirectWalking(dir.x, dir.z)
             end
-        elseif self.time_direct_walking > .2 and not self.inst.sg:HasStateTag("attack") then
-            self.inst.components.combat:SetTarget(nil)
+        else
+            self.locomotor:CancelPredictMoveTimer() --remote direct walking, means client is not predicting
+            if self.time_direct_walking > .2 and not self.inst.sg:HasStateTag("attack") then
+                self.inst.components.combat:SetTarget(nil)
+            end
         end
     elseif self.predictwalking then
         if self.locomotor.bufferedaction == nil then

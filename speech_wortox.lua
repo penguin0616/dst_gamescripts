@@ -4533,7 +4533,7 @@ return{
         POLLY_ROGERSHAT = "A jaunty feather makes a hat look better.",
         POLLY_ROGERS = "What spell compels her to help?",
 
-        MONKEYISLAND_PORTAL = "Poor mortals, they have so much trouble traveling from plane to plane!.",
+        MONKEYISLAND_PORTAL = "Poor mortals, they have so much trouble traveling from plane to plane!",
         MONKEYISLAND_PORTAL_DEBRIS = "Hyuyuyu, someone's been up to some mischief!",
         MONKEYQUEEN = "Her kingdom for a swing!",
         MONKEYPILLAR = "Are these the pillars of monkey society?",

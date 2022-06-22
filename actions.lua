@@ -419,6 +419,8 @@ ACTIONS =
     OCEAN_TRAWLER_RAISE = Action({ distance=3.5, rmb=true }),
     OCEAN_TRAWLER_FIX = Action({ distance=3.5 }),
 
+    EMPTY_CONTAINER = Action(),
+
     CARNIVAL_HOST_SUMMON = Action(),
 
     -- YOTB
@@ -631,6 +633,16 @@ ACTIONS.PICKUP.fn = function(act)
         end
 
         act.doer.components.inventory:GiveItem(act.target, nil, act.target:GetPosition())
+        return true
+    end
+end
+
+ACTIONS.EMPTY_CONTAINER.fn = function(act)
+    if act.target.components.container ~= nil and act.target.components.workable ~= nil then
+            if act.target.components.workable.onwork then
+                act.target.components.workable.onwork(act.target, act.doer)
+            end
+        --act.target.components.container:DropEverything()
         return true
     end
 end

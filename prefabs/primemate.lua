@@ -24,6 +24,7 @@ local prefabs =
     "pirate_stash",
     "monkey_mediumhat",
     "stash_map",
+    "cursed_monkey_token",
 }
 
 local brain = require "brains/primematebrain"
@@ -328,6 +329,11 @@ local function ontalk(inst, script)
     inst.SoundEmitter:PlaySound("monkeyisland/primemate/speak")
 end
 
+local function OnDeath(inst,data)
+    local item = SpawnPrefab("cursed_monkey_token")
+    inst.components.inventory:DropItem(item, nil, true)
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -437,6 +443,7 @@ local function fn()
     inst:ListenForEvent("onpickupitem", OnPickup)
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("abandon_ship", OnAbandonShip)
+    inst:ListenForEvent("death", OnDeath)
 
     MakeHauntablePanic(inst)
 

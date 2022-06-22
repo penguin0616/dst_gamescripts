@@ -336,10 +336,11 @@ local RPC_HANDLERS =
         end
     end,
 
-    PredictWalking = function(player, x, z, isdirectwalking, platform, platform_relative)
+    PredictWalking = function(player, x, z, isdirectwalking, isstart, platform, platform_relative)
         if not (checknumber(x) and
                 checknumber(z) and
                 checkbool(isdirectwalking) and
+                checkbool(isstart) and
 				optentity(platform) and
 				checkbool(platform_relative)) then
             printinvalid("PredictWalking", player)
@@ -351,7 +352,7 @@ local RPC_HANDLERS =
 			x, z = ConvertPlatformRelativePositionToAbsolutePosition(x, z, platform, platform_relative)
 			if x ~= nil then
 				if IsPointInRange(player, x, z) then
-					playercontroller:OnRemotePredictWalking(x, z, isdirectwalking)
+					playercontroller:OnRemotePredictWalking(x, z, isdirectwalking, isstart)
 				else
 					print("Remote predict walking out of range")
 				end

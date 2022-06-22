@@ -366,6 +366,7 @@ local function fn()
     inst.Light:Enable(true)
 
     inst:AddTag("ignorewalkableplatforms")
+    inst:AddTag("NOBLOCK")
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then

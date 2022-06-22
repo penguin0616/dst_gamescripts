@@ -30,6 +30,7 @@ local controls_ui = {
 }
 local show_graphics = PLATFORM ~= "NACL" and IsNotConsole() and not IsSteamDeck() 
 
+--Note(Peter) if you want to change dev_test_platform to another platform, you will need to uncomment the matching images in frontend.lua, look for dev_test_platform
 local dev_test_platform = PLATFORM --"XBONE"
 local PLATFORM_LAYOUT = (BRANCH == "dev" and PLATFORM == "WIN32_STEAM") and dev_test_platform or PLATFORM
 local IsConsoleLayout = (BRANCH == "dev" and PLATFORM == "WIN32_STEAM") 
@@ -1843,7 +1844,7 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
-	self.minimapzoomsensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMSENSITIVITY, 5, 30, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMSENSITIVITY)
+	self.minimapzoomsensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMSENSITIVITY, 5, 60, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMSENSITIVITY)
 	self.minimapzoomsensitivitySpinner.OnChanged =
 		function( _, data )
 			self.working.minimapzoomsensitivity = data
@@ -2374,7 +2375,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.craftingmenunumpinpagesSpinner:SetSelectedIndex( self.working.craftingmenunumpinpages or 3)
 	self.craftingmenusensitivitySpinner:SetSelectedIndex( self.working.craftingmenusensitivity or 12)
 	self.inventorysensitivitySpinner:SetSelectedIndex( self.working.inventorysensitivity or 16)
-	self.minimapzoomsensitivitySpinner:SetSelectedIndex( self.working.minimapzoomsensitivity or 15)
+	self.minimapzoomsensitivitySpinner:SetSelectedIndex( self.working.minimapzoomsensitivity or 20)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )

@@ -149,12 +149,13 @@ local states =
         tags = { "busy" },
 
         onenter = function(inst)
-            inst.AnimState:PlayAnimation("pull_pst")
+            inst.AnimState:PlayAnimation("pull_pst", false)
+            inst.AnimState:PushAnimation("fail", false)
         end,
 
         events =
         {
-            EventHandler("animover", function(inst)
+            EventHandler("animqueueover", function(inst)
                 inst.sg:GoToState("idle")
             end),
         },

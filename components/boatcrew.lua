@@ -190,20 +190,21 @@ function Boatcrew:SetRemoveMemberFn(fn)
     self.removemember = fn
 end
 
-local function removecaptain(captain)    
+local function removecaptain(captain)
     local bc = captain.components.crewmember.boat and captain.components.crewmember.boat.components.boatcrew or nil
     if bc then
-        bc.inst:RemoveEventCallback("onremove",removecaptain,captain)    
-        bc.captain = nil
+        TheWorld.components.piratespawner:RemoveShipData(bc.inst)
+        bc.inst:RemoveComponent("vanish_on_sleep")
+        bc.inst:RemoveComponent("boatcrew")
     end
 end
 
 function Boatcrew:SetCaptain(captain)
     if self.captain then
-        self.inst:RemoveEventCallback("onremove",removecaptain,self.captain)
+        self.captain:RemoveEventCallback("onremove",removecaptain)
     end
     self.captain = captain
-    self.inst:ListenForEvent("onremove",removecaptain,self.captain)
+    self.captain:ListenForEvent("onremove",removecaptain)
 end
 
 function Boatcrew:AddMember(inst, setcaptain)

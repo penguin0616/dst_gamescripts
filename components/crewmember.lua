@@ -15,7 +15,7 @@ local CrewMember = Class(function(self, inst)
     self.boat = nil
 
     self.max_velocity = 4
-    self.row_force = 1
+    self.force = 1
 end,
 nil,
 {
@@ -128,7 +128,7 @@ function CrewMember:Row()
 
         row_dir_x, row_dir_z = VecUtil_Normalize(row_dir_x, row_dir_z)
 
-        boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.row_force , self.max_velocity)
+        boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.force , self.max_velocity)
     end
 end
 

@@ -19,7 +19,7 @@ local AVOID_MONSTER_DIST = 3
 local AVOID_MONSTER_STOP = 6
 
 local PICKUP_MUST_HAVE = { "_inventoryitem" }
-local PICKUP_MUST_NOT_HAVE = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive", "spider" ,"trap" }
+local PICKUP_MUST_NOT_HAVE = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive", "spider" ,"trap", "irreplaceable" }
 
 local MATCH_MIN_FOLLOW_DIST = 2
 local MATCH_TARGET_FOLLOW_DIST = 2

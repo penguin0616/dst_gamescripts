@@ -7627,6 +7627,10 @@ local states =
 
         onenter = function(inst)
             ConfigureRunState(inst)
+            if inst.sg.statemem.normalwonkey and inst.components.locomotor:GetTimeMoving() >= TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run_monkey") --most likely resuming prediction after running into obstacle
+                return
+            end
             inst.components.locomotor:RunForward()
             inst.AnimState:PlayAnimation(GetRunStateAnim(inst).."_pre")
             --goose footsteps should always be light
@@ -7719,7 +7723,7 @@ local states =
         end,
 
         onupdate = function(inst)
-            if inst.sg.statemem.normalwonkey and inst.components.locomotor.timemoving >= TUNING.WONKEY_TIME_TO_RUN then
+            if inst.sg.statemem.normalwonkey and inst.components.locomotor:GetTimeMoving() >= TUNING.WONKEY_TIME_TO_RUN then
                 inst.sg:GoToState("run_monkey_start")
                 return
             end
@@ -8051,6 +8055,12 @@ local states =
             --inst.SoundEmitter:PlaySound("dontstarve_DLC002/characters/wilbur/walktorun", "walktorun") TODO SOUND
         end,
 
+        onupdate = function(inst)
+            if inst.components.locomotor:GetTimeMoving() < TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run")
+            end
+        end,
+
         events =
         {
             EventHandler("gogglevision", function(inst, data)
@@ -8113,6 +8123,10 @@ local states =
         },
 
         onupdate = function(inst)
+            if inst.components.locomotor:GetTimeMoving() < TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run")
+                return
+            end
             inst.components.locomotor:RunForward()
         end,
 

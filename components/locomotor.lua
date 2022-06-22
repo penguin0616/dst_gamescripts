@@ -257,7 +257,8 @@ local LocoMotor = Class(function(self, inst)
     self.lastpos = {}
     self.slowmultiplier = 0.6
     self.fastmultiplier = 1.3
-    self.timemoving = 0
+    self.movestarttime = nil
+    --self.predictmovestarttime = nil
 
     self.groundspeedmultiplier = 1.0
     self.enablegroundspeedmultiplier = true
@@ -318,6 +319,19 @@ function LocoMotor:OnRemoveFromEntity()
 			self.inst:RemoveTag("turfrunner_"..tostring(ground_tile))
 		end
     end
+end
+
+function LocoMotor:GetTimeMoving()
+    local starttime = self.predictmovestarttime or self.movestarttime
+    return starttime ~= nil and GetTime() - starttime or 0
+end
+
+function LocoMotor:RestartPredictMoveTimer()
+    self.predictmovestarttime = GetTime()
+end
+
+function LocoMotor:CancelPredictMoveTimer()
+    self.predictmovestarttime = nil
 end
 
 function LocoMotor:StopMoving()
@@ -681,6 +695,8 @@ function LocoMotor:GoToEntity(target, bufferedaction, run)
     self.dest = Dest(target)
     self.throttle = 1
 
+    self:CancelPredictMoveTimer() --if we reach here, means client is not predicting
+
     self:SetBufferedAction(bufferedaction)
     self.wantstomoveforward = true
 
@@ -720,8 +736,9 @@ end
 --V2C: Added overridedest for additional network controller support
 function LocoMotor:GoToPoint(pt, bufferedaction, run, overridedest)
     self.dest = Dest(overridedest, pt, bufferedaction)
-
     self.throttle = 1
+
+    self:CancelPredictMoveTimer() --if we reach here, means client is not predicting
 
     self.arrive_dist =
         bufferedaction ~= nil
@@ -778,7 +795,7 @@ function LocoMotor:Stop(sgparams)
         --Let stategraph handle stopping physics
         --self.inst.Physics:Stop()
     else
-        self.timemoving = 0
+        self.movestarttime = nil
         self:StopMoving()
     end
 
@@ -1020,7 +1037,7 @@ function LocoMotor:OnUpdate(dt)
         Print(VERBOSITY.DEBUG, "OnUpdate INVALID", self.inst.prefab)
         self:ResetPath()
         self:StopUpdatingInternal()
-        self.timemoving = 0
+        self.movestarttime = nil
         return
     end
 
@@ -1198,8 +1215,8 @@ function LocoMotor:OnUpdate(dt)
             (not is_moving ~= not self.wantstomoveforward) or
             (is_moving and (not is_running ~= not self.wantstorun))
 
-        if is_moving or is_running then    
-            self.timemoving = self.timemoving + dt
+        if self.movestarttime == nil and (is_moving or is_running) then
+            self.movestarttime = GetTime()
         end
     end
 
@@ -1208,7 +1225,7 @@ function LocoMotor:OnUpdate(dt)
     elseif not self.wantstomoveforward and not self:WaitingForPathSearch() then
         self:ResetPath()
         self:StopUpdatingInternal()
-        self.timemoving = 0
+        self.movestarttime = nil
     end
 
     local cur_speed = self.inst.Physics:GetMotorSpeed()

@@ -22,6 +22,7 @@ local player_emotes_to_choose = {
 	wanda = "idle_wanda",
 	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" },
     wx78 = "idle_wx",
+	wonkey = "idle_wonkey",
 }
 
 local emote_min_time = 6
@@ -167,6 +168,9 @@ function SkinsPuppet:DoIdleEmote()
 				self.animstate:AddOverrideBuild(self.override_build)
 			elseif self.prefabname == "wanda" then
 				self.override_build = "player_idles_wanda"
+				self.animstate:AddOverrideBuild(self.override_build)
+			elseif self.prefabname == "wonkey" then
+				self.override_build = "player_idles_wonkey"
 				self.animstate:AddOverrideBuild(self.override_build)
 			end
 

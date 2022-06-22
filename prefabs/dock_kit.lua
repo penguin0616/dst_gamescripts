@@ -28,12 +28,7 @@ local function CLIENT_CanDeployDockKit(inst, pt, mouseover, deployer, rotation)
 
         if found_adjacent_safetile then
             local center_pt = Vector3(TheWorld.Map:GetTileCenterPoint(tx, ty))
-            return found_adjacent_safetile and TheWorld.Map:CanDeployAtPointInWater(center_pt, inst, mouseover,
-            {
-                land = 0.0,
-                radius = 0.0,
-                boat = (DEPLOYSPACING_RADIUS[DEPLOYSPACING.DEFAULT] + 0.8), -- "boat" is used for all prefabs
-            })
+            return found_adjacent_safetile and TheWorld.Map:CanDeployDockAtPoint(center_pt, inst, mouseover)
         end
     end
 

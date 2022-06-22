@@ -23,6 +23,7 @@ local function stashloot(inst)
         local stash = ps:GetCurrentStash()
         if inst.components.inventoryitem then
             if not inst:HasTag("personal_possession") then
+                inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
                 table.insert(stash.loot,inst)
                 inst:RemoveFromScene()
             else
@@ -33,7 +34,9 @@ local function stashloot(inst)
 
                 if not v:HasTag("personal_possession") then
                     local item = inst.components.inventory:RemoveItemBySlot(k)
+                    item.Transform:SetPosition(stash.Transform:GetWorldPosition())
                     table.insert(stash.loot,item)
+                    --item:RemoveFromScene()
                 else
                     v:Remove()
                 end
@@ -50,10 +53,17 @@ local function setpirateboat(boat)
     boat.components.vanish_on_sleep.vanishfn = function(inst)
         --local ents = boat.components.walkableplatform:GetEntitiesOnPlatform()
         local x,y,z = inst.Transform:GetWorldPosition()
+        -- STASH PASS
         local ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius)
+        for i=#ents,1,-1 do            
+            stashloot(ents[i])                    
+        end
+
+        ents = nil
+        -- REMOVE EVERYTHING
+        ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius)   
         for i=#ents,1,-1 do
-            stashloot(ents[i])
-            ents[i]:Remove()
+            ents[i]:Remove()                    
         end
     end
 end
@@ -201,19 +211,16 @@ local _current_stash = nil
 local zones ={
     { -- INNER
         max = TUNING.PIRATESPAWNER.INNER.MAX,
-        maxtime = TUNING.PIRATESPAWNER.INNER.TIME,
         chance = TUNING.PIRATESPAWNER.INNER.CHANCE,
         weight = TUNING.PIRATESPAWNER.INNER.WEIGHT,
     },
     { -- MID
         max = TUNING.PIRATESPAWNER.MID.MAX,
-        maxtime = TUNING.PIRATESPAWNER.MID.TIME,
         chance = TUNING.PIRATESPAWNER.MID.CHANCE,
         weight = TUNING.PIRATESPAWNER.MID.WEIGHT,
     },
     { -- OUTTER
         max = TUNING.PIRATESPAWNER.OUTTER.MAX,
-        maxtime = TUNING.PIRATESPAWNER.OUTTER.TIME,
         chance = TUNING.PIRATESPAWNER.OUTTER.CHANCE,
         weight = TUNING.PIRATESPAWNER.OUTTER.WEIGHT,
     },
@@ -394,6 +401,7 @@ function self:StashLoot(ent)
 end
 
 local function generateloot(stash)
+    
     local function additem(name)
         local item = SpawnPrefab(name)
         item.Transform:SetPosition(stash.Transform:GetWorldPosition())
@@ -403,14 +411,28 @@ local function generateloot(stash)
 
     local lootlist = {}
 
-    for i=1,3 do
-        if math.random() < 0.3 then
+    for i=1,math.random(2,4) do
+        table.insert(lootlist,"palmcone_scale")
+    end
+
+    for i=1,math.random(2,4) do
+        table.insert(lootlist,"cave_banana")
+    end
+
+    if math.random() < 0.3 then
+        for i=1,math.random(2,4) do
+            table.insert(lootlist,"treegrowthsolution")
+        end
+    end
+
+    if math.random() < 0.3 then
+        for i=1,math.random(2,4) do
             table.insert(lootlist,"goldnugget")
         end
     end
 
     if math.random() < 0.5 then
-        for i=3,6 do
+        for i=1,math.random(3,6) do
             if math.random() < 0.3 then
                 table.insert(lootlist,"meat_dried")
             end
@@ -418,26 +440,25 @@ local function generateloot(stash)
     end
 
     if math.random() < 0.5 then
-        for i=1,3 do
-            if math.random() < 0.3 then
-                table.insert(lootlist,"bananajuice")
-            end
+        for i=1,math.random(1,3) do
+            table.insert(lootlist,"bananajuice")
         end  
     end
 
     if math.random() < 0.2 then
         if math.random() < 0.2 then
-            table.insert(lootlist,"shovel")
-        else
             table.insert(lootlist,"goldenshovel")
+        else
+            table.insert(lootlist,"shovel")
         end
     end
 
     if math.random() < 0.5 then
-        table.insert(lootlist,"pirate_flag_pole_blueprint")    
+        table.insert(lootlist,"pirate_flag_pole_blueprint")
     end
+
     if math.random() < 0.5 then
-        table.insert(lootlist,"polly_rogershat_blueprint")    
+        table.insert(lootlist,"polly_rogershat_blueprint")
     end
 
 
@@ -523,7 +544,9 @@ function self:DoMonkeyChange(player, returnFromMonkey)
     else
         self.SwapData[player.userid].skin_base = skin_base
     end
+    TheWorld.components.piratespawner.PermittedToWonkey[player.userid] = not returnFromMonkey
     TheNet:SpawnSeamlessPlayerReplacement(player.userid, prefab, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+    TheWorld.components.piratespawner.PermittedToWonkey[player.userid] = nil
 end
 
 local GRACETIME = 10
@@ -685,6 +708,11 @@ function self:OnSave()
     data.playerdata = self._savedata
     data.swapdata = self.SwapData
 
+    if _current_stash then
+        data.currentstash = _current_stash.GUID
+        table.insert(ents, _current_stash.GUID)
+    end
+
     return data,ents
 end
 
@@ -728,6 +756,9 @@ function self:LoadPostPass(newents, savedata)
             end
             self:SaveShipData(shipdata)
         end
+    end
+    if savedata and savedata.currentstash then
+        _current_stash = newents[savedata.currentstash].entity
     end
 end
 

@@ -5,7 +5,7 @@ local Oar = Class(function(self, inst)
 	self.fail_wetness = 9
 
 	self.max_velocity = TUNING.BOAT.MAX_FORCE_VELOCITY
-	self.row_force = 0.4
+	self.force = 0.4
 end)
 
 function Oar:Row(doer, pos)
@@ -26,7 +26,7 @@ function Oar:Row(doer, pos)
 	local character_force_mult = doer.components.expertsailor ~= nil and doer.components.expertsailor:GetRowForceMultiplier() or 1
 	local character_extra_max_velocity = doer.components.expertsailor ~= nil and doer.components.expertsailor:GetRowExtraMaxVelocity() or 0
 
-	boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.row_force * character_force_mult, self.max_velocity + character_extra_max_velocity)
+	boat_physics:ApplyRowForce(row_dir_x, row_dir_z, self.force * character_force_mult, self.max_velocity + character_extra_max_velocity)
 
 	doer:PushEvent("rowing")
 

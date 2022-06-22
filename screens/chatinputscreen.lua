@@ -217,6 +217,10 @@ function ChatInputScreen:DoInit()
     self.screen_root:SetHAnchor(ANCHOR_MIDDLE)
     self.screen_root:SetVAnchor(ANCHOR_BOTTOM)
 
+    self.chat_queue_root = self.screen_root:AddChild(Widget("chat_queue_root"))
+    self.chat_queue_root:SetPosition(-90,765,0)
+    self.networkchatqueue = self.chat_queue_root:AddChild(ScrollableChatQueue())
+
     self.root = self.screen_root:AddChild(Widget(""))
     self.root:SetPosition(45.2, 100, 0)
 
@@ -264,10 +268,6 @@ function ChatInputScreen:DoInit()
     self.chat_edit:AddWordPredictionDictionary(UserCommands.GetEmotesWordPredictionDictionary())
 
     self.chat_edit:SetString("")
-
-    self.chat_queue_root = self.screen_root:AddChild(Widget("chat_queue_root"))
-    self.chat_queue_root:SetPosition(-90,765,0)
-    self.networkchatqueue = self.chat_queue_root:AddChild(ScrollableChatQueue())
 
 	if is_steam_deck then
 		self.default_focus = self.chat_edit

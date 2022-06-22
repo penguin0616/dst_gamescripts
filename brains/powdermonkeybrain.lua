@@ -147,7 +147,7 @@ local function anchorcheck(ent)
 end
 
 local function chestcheck(ent)
-    if ent:HasTag("chest") then
+    if ent:HasTag("chest") and (not ent.components.container or not ent.components.container:IsEmpty()) then
         return true
     end
 end
@@ -177,7 +177,7 @@ local function Dotinker(inst)
                 local ent = ents[i]
                 local keep = false
 
-                if mastcheck(ent) or anchorcheck(ent) or reversemastcheck(ent) or chestcheck(ent) then
+                if mastcheck(ent) or anchorcheck(ent) or reversemastcheck(ent) then
                     keep = true
                 end
 
@@ -204,11 +204,8 @@ local function Dotinker(inst)
             end
             if reversemastcheck(target) then
                 return BufferedAction(inst, target, ACTIONS.RAISE_SAIL)
-            end        
-            if mastcheck(target) then
-                return BufferedAction(inst, target, ACTIONS.HAMMER)
             end
-            if chestcheck(target) then
+            if mastcheck(target) then
                 return BufferedAction(inst, target, ACTIONS.HAMMER)
             end
         end
@@ -218,11 +215,13 @@ local function Dotinker(inst)
 end
 
 local ITEM_MUST = {"_inventoryitem"}
-local ITEM_MUSTNOT = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive", "spider", "nosteal" }
+local ITEM_MUSTNOT = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive", "spider", "nosteal", "irreplaceable" }
 
 local RETARGET_MUST_TAGS = { "_combat" }
 local RETARGET_CANT_TAGS = { "playerghost" }
 local RETARGET_ONEOF_TAGS = { "character", "monster" }
+
+local CHEST_MUST_HAVE = {"chest"}
 
 local function shouldsteal(inst)
 
@@ -239,7 +238,7 @@ local function shouldsteal(inst)
         return nil
     end
 
-    local boattarget = inst.components.crewmember and inst.components.crewmember.boat and inst.components.crewmember.boat.components.boatcrew.target
+    local boattarget = inst.components.crewmember and inst.components.crewmember.boat and inst.components.crewmember.boat.components.boatcrew and inst.components.crewmember.boat.components.boatcrew.target or nil
 
     if (inst:GetCurrentPlatform() and inst.components.crewmember and inst:GetCurrentPlatform() == inst.components.crewmember.boat ) and not boattarget then
         return nil
@@ -282,7 +281,45 @@ local function shouldsteal(inst)
         return BufferedAction(inst, inst.itemtosteal, ACTIONS.PICKUP)
         --return true
     else
-        -- NOTING TO PICK UP.. LOOK FOR LOOTABLE TARGET
+
+        -- NOTING TO PICK UP.. 
+
+        -- LOOK FOR A CHEST TO BUST
+        local bc = inst.components.crewmember and inst.components.crewmember.boat and inst.components.crewmember.boat.components.boatcrew or nil
+        if bc then
+            local target = nil
+            local x,y,z = inst.Transform:GetWorldPosition()
+            local ents = TheSim:FindEntities(x, y, z, 10, CHEST_MUST_HAVE)
+            if #ents > 0 then
+                for i=#ents,1,-1 do
+
+                    local ent = ents[i]
+                    local keep = false
+
+                    if chestcheck(ent) then
+                        keep = true
+                    end
+
+                    if not bc or (bc:checktinkertarget(ent) and keep == true) then
+                        keep = false
+                    end
+
+                    if not keep then
+                        table.remove(ents,i)
+                    end
+                end
+            end
+
+            if #ents > 0 then
+                target = ents[1]
+            end
+
+            if target and chestcheck(target) then
+                return BufferedAction(inst, target, ACTIONS.EMPTY_CONTAINER)
+            end
+        end
+        -- LOOK FOR SOMEONE TO PUNCH
+
         if TheWorld.components.piratespawner and TheWorld.components.piratespawner.queen and TheWorld.components.piratespawner.queen.components.timer:TimerExists("right_of_passage") then
             inst.nothingtosteal = true
             return nil

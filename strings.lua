@@ -933,6 +933,8 @@ STRINGS =
         OCEAN_TRAWLER_LOWER = "Lower",
         OCEAN_TRAWLER_RAISE = "Raise",
         OCEAN_TRAWLER_FIX = "Fix",
+
+        EMPTY_CONTAINER = "Empty",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
