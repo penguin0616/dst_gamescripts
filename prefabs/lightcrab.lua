@@ -5,7 +5,7 @@ local assets =
 
 local prefabs =
 {
-    "smallmeat",
+    "fishmeat_small",
     "lightbulb",
     "slurtle_shellpieces",
 }
@@ -91,7 +91,7 @@ local function fn()
     inst.components.inventoryitem:SetSinks(true)
 
     inst:AddComponent("cookable")
-    inst.components.cookable.product = "cookedsmallmeat"
+    inst.components.cookable.product = "fishmeat_small_cooked"
     inst.components.cookable:SetOnCookedFn(OnCookedFn)
 
     inst:AddComponent("health")
@@ -100,7 +100,7 @@ local function fn()
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper.numrandomloot = 1
-	inst.components.lootdropper:AddRandomLoot("smallmeat", .25)
+	inst.components.lootdropper:AddRandomLoot("fishmeat_small", .25)
 	inst.components.lootdropper:AddRandomLoot("lightbulb", .25)			-- since we do not have a "small lightbulb", a low chance will have to suffice
 	inst.components.lootdropper:AddRandomLoot("slurtle_shellpieces", .5)
 

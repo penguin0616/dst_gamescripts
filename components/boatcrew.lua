@@ -29,6 +29,7 @@ local Boatcrew = Class(function(self, inst)
 
     self.heading = nil
     self.target = nil
+    self.flee = nil
 
     self.status = "hunting"
 --math.random() * 2 + 6
@@ -278,7 +279,7 @@ end
 
 function Boatcrew:OnUpdate()
 
-    if self.target and (self:TestForLootToSteal() ~= true or self:TestForVictory()) then
+    if self.target and (self:TestForLootToSteal() ~= true or self:TestForVictory() or self.flee ) then 
         self.status = "retreat"
     elseif self.target then
         self.status = "assault"

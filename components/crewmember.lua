@@ -97,7 +97,7 @@ function CrewMember:Row()
         if bc.status == "retreat" then
 
             local allthere = true
-            for member in pairs(self.boat.components.boatcrew.members)do
+            for member in pairs(self.boat.components.boatcrew.members) do
                 if member:GetCurrentPlatform() ~= self.inst.components.crewmember.boat then
                     allthere = false
                 end
@@ -110,7 +110,12 @@ function CrewMember:Row()
             direction = "stop"
         end
 
-        local row_dir_x, row_dir_z = self.boat.components.boatcrew and self.boat.components.boatcrew:GetHeadingNormal() or nil
+        local row_dir_x, row_dir_z = nil, nil
+        
+        if self.boat.components.boatcrew then
+            row_dir_x, row_dir_z = self.boat.components.boatcrew:GetHeadingNormal()
+        end
+            
         if not row_dir_x or not row_dir_z then
             local pos = Vector3(self.boat.Transform:GetWorldPosition())
             local doer_x, doer_y, doer_z = self.inst.Transform:GetWorldPosition()

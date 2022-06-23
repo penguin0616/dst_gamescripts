@@ -19,7 +19,7 @@ local Curseditem = Class(function(self, inst)
     self.active = true
     self.cursed_target = nil
     self.target = nil
-    self.CopyCursedFields = CopyCursedFields -- NTOES(JBK) Keep the fields above up to date with this function.
+    self.CopyCursedFields = CopyCursedFields -- NOTES(JBK) Keep the fields above up to date with this function.
 
     self.inst:ListenForEvent("onpickup", function(item,data)
             self:Given(item, data)

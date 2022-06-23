@@ -133,7 +133,7 @@ function OceanTrawler:GetBait(eater)
     end
 
     for _, item in pairs(container.slots) do
-        if item ~= nil and item.components.edible ~= nil then -- TODO(JBK): This is a very similar version of eater component's TestFood. Make this function more generic and global?
+        if item ~= nil and item.components.edible ~= nil and not item:HasTag("oceanfish") then -- TODO(JBK): This is a very similar version of eater component's TestFood. Make this function more generic and global?
             for _, v in ipairs(fishdiet.caneat) do
                 if type(v) == "table" then
                     for _, v2 in ipairs(v.types) do

@@ -36,10 +36,6 @@ local function onhealthchange(inst, old_percent, new_percent)
     end
 end
 
-local function keeptargetfn()
-    return false
-end
-
 local function onsave(inst, data)
     if inst:HasTag("burnt") or (inst.components.burnable ~= nil and inst.components.burnable:IsBurning()) then
         data.burnt = true
@@ -245,10 +241,6 @@ function MakeBumperType(data)
         inst.components.repairable.onrepaired = onrepaired
         inst.components.repairable.testvalidrepairfn = ValidRepairFn
 
-        inst:AddComponent("combat")
-        inst.components.combat:SetKeepTargetFunction(keeptargetfn)
-        inst.components.combat.onhitfn = onhit
-
         inst:ListenForEvent("onbuilt", onbuilt)
         inst:ListenForEvent("boatcollision", onhit)
         inst:ListenForEvent("death", ondeath)
@@ -302,7 +294,7 @@ function MakeBumperType(data)
 
     return Prefab("boat_bumper_"..data.name, fn, assets, prefabs),
         MakeDeployableKitItem("boat_bumper_"..data.name.."_kit", "boat_bumper_"..data.name, "boat_bumper", buildname, "idle", assets, {size = "med"}, {"boat_accessory"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.CUSTOM, deployspacing = DEPLOYSPACING.MEDIUM, custom_candeploy_fn = CanDeployAtBoatEdge }, TUNING.STACK_SIZE_MEDITEM),
-        MakePlacer("boat_bumper_"..data.name.."_kit_placer", "boat_bumper", buildname, "idle_1", false, false, false, nil, nil, "eight", setup_boat_placer)
+        MakePlacer("boat_bumper_"..data.name.."_kit_placer", "boat_bumper", buildname, "idle_1", false, false, false, nil, nil, nil--[[NoFaced]], setup_boat_placer)
 end
 
 local boatbumperprefabs = {}

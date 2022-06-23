@@ -2,6 +2,7 @@ local assets =
 {
     Asset("ANIM", "anim/ocean_trawler.zip"),
     Asset("ANIM", "anim/splash_water_rot.zip"),
+    Asset("ANIM", "anim/swimming_ripple.zip"),
     Asset("MINIMAP_IMAGE", "ocean_trawler_down")
 }
 
@@ -114,8 +115,10 @@ local function fn()
     inst.entity:AddMiniMapEntity() -- Also set minimap icon in components.oceantrawler:OnLoad() & when raising/lowering
     inst.entity:AddNetwork()
 
-
     inst.AnimState:AddOverrideBuild("splash_water_rot")
+    inst.AnimState:OverrideSymbol("water_fx_ripple", "swimming_ripple", "water_fx_ripple")
+    inst.AnimState:OverrideSymbol("water_fx_blue", "swimming_ripple", "water_fx_blue")
+    inst.AnimState:OverrideSymbol("water_fx_shadow", "swimming_ripple", "water_fx_shadow")
 
     inst.MiniMapEntity:SetIcon("ocean_trawler.png")
 

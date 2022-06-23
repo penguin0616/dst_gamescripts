@@ -45,6 +45,17 @@ local function stashloot(inst)
     end
 end
 
+local function hitbycannon(boat,data)
+    if data.cause == "cannonball" then
+        if boat.components.boatcrew then
+            boat.components.boatcrew.flee = true
+            for k, v in pairs(boat.components.boatcrew.members) do
+                k:DoTaskInTime(math.random()* 0.3 + 0.2 , function()  if k and not k.components.health:IsDead() then k:PushEvent("victory",{say=STRINGS["MONKEY_TALK_RETREAT"][math.random(1,#STRINGS["MONKEY_TALK_RETREAT"])]} ) end  end)             
+            end
+        end
+    end
+end
+
 local function setpirateboat(boat)
 
     boat:AddComponent("boatcrew")
@@ -66,6 +77,7 @@ local function setpirateboat(boat)
             ents[i]:Remove()                    
         end
     end
+    boat:ListenForEvent("spawnnewboatleak", hitbycannon)    
 end
 
 local function forgetmonkey(monkey)
@@ -164,7 +176,7 @@ local function spawnpirateship(pt)
         cutless:AddTag("personal_possession")
         monkey.components.inventory:GiveItem(cutless)
         monkey.components.inventory:Equip(cutless)
-        
+
 
         local hat = SpawnPrefab("monkey_smallhat")
         hat:AddTag("personal_possession")
@@ -175,7 +187,7 @@ local function spawnpirateship(pt)
     local players = FindPlayersInRange(pt.x, pt.y, pt.z,  RANGE, true)
     for i,player in ipairs(players)do
         player.components.talker:Say(  GetString(player, "ANNOUNCE_PIRATES_ARRIVE") )
-        player.SoundEmitter:PlaySound("dontstarve/creatures/deerclops/taunt_howl")
+        player.SoundEmitter:PlaySound("monkeyisland/primemate/announce")
     end
 
     return shipdata

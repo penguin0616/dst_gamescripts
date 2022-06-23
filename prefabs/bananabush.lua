@@ -128,6 +128,9 @@ end
 
 local function OnRegen(inst)
     inst.components.growable:Resume()
+    if inst.components.growable.stage < 4 then
+        inst.components.growable:SetStage(4)
+    end
 end
 
 local function fn()
