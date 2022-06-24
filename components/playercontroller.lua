@@ -2295,7 +2295,8 @@ function PlayerController:OnUpdate(dt)
         self:DoDragWalking(dt) then
         self.bufferedcastaoe = nil
     else
-        if not (self.inst:HasTag("steeringboat") or self.inst:HasTag("rotatingboat")) then
+        local aimingcannon = self.inst.components.boatcannonuser ~= nil and self.inst.components.boatcannonuser:GetCannon() ~= nil
+        if not (aimingcannon or self.inst:HasTag("steeringboat") or self.inst:HasTag("rotatingboat")) then
             if self.wassteering then
                 -- end reticule
                 local boat = self.inst:GetCurrentPlatform()
@@ -2305,6 +2306,8 @@ function PlayerController:OnUpdate(dt)
                 self.wassteering = nil
             end
             self:DoDirectWalking(dt)
+        elseif aimingcannon then
+
         else
             if not self.wassteering then
                 -- start reticule

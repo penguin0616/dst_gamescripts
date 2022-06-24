@@ -105,7 +105,11 @@ function Inventory:TransferInventory(receiver)
     end
 
     for k,v in pairs(self.equipslots) do
-       inv:GiveItem(self:Unequip(k)) 
+		if inv.equipslots ~= nil then
+			inv:Equip(self:Unequip(k)) 
+		else
+			inv:GiveItem(self:Unequip(k)) 
+		end
     end
 end
 

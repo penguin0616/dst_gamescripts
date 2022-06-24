@@ -3483,6 +3483,7 @@ return{
         GNARWAIL_HORN = "Will make good pokey spear!",
 
         WALKINGPLANK = "Maybe Wolfgang go for dip.",
+        WALKINGPLANK_GRASS = "Maybe Wolfgang go for dip.",
         OAR = "Wolfgang will be mighty rower!",
 		OAR_DRIFTWOOD = "Oar feels so light in Wolfgang's mighty hands!",
 
@@ -4507,7 +4508,11 @@ return{
         DOCK_KIT = "Wolfgang will build mighty dock, worthy of boat!",
         DOCK_WOODPOSTS_ITEM = "Posts make dock even stronger!",
 
-        MONKEYHUT = "Is monkey house for monkeys.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Is monkey house for monkeys.",
+            BURNT = "Is burnt monkey house.",
+        },
         POWDER_MONKEY = "Ha! Silly monkey forget leg day.",
         PRIME_MATE = "No monkey steals from Wolfgang!",
 		LIGHTCRAB = "Eep! Wolfgang doesn't like the creepy crawlies!",

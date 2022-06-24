@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "If they're not using it anymore, might as well keep it.",
 
         WALKINGPLANK = "Oh, I'm good at diving! I got a badge for it!",
+        WALKINGPLANK_GRASS = "Oh, I'm good at diving! I got a badge for it!",
         OAR = "I used to go canoing with my Pinetree Pioneer troop.",
 		OAR_DRIFTWOOD = "I used to go canoing with my Pinetree Pioneer troop.",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "Neat, I can build a dock for my boat!",
         DOCK_WOODPOSTS_ITEM = "Some posts will make the dock look even more... dock-y.",
 
-        MONKEYHUT = "Neat, a tree fort!",
+        MONKEYHUT = 
+        {
+            GENERIC = "Neat, a tree fort!",
+            BURNT = "Something tells me they never learned about fire safety.",
+        },
         POWDER_MONKEY = "Maybe they're pirates cursed to be monkeys! Or monkeys cursed to be pirates...",
         PRIME_MATE = "Arr, matey! Did I say that right?",
 		LIGHTCRAB = "What kind of crab is that?",

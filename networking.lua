@@ -188,16 +188,16 @@ function VerifySpawnNewPlayerOnServerRequest(user_id)
 	return true
 end
 
-function ValidateSpawnPrefabRequest(user_id, prefab_name, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+function ValidateSpawnPrefabRequest(user_id, prefab_name, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet, allow_seamlessswap_characters)
     local in_mod_char_list = table.contains(MODCHARACTERLIST, prefab_name)
 
     local valid_chars = ExceptionArrays(DST_CHARACTERLIST, MODCHARACTEREXCEPTIONS_DST)
     local in_valid_char_list = table.contains(valid_chars, prefab_name)
 
-    if prefab_name == "wonkey" and TheWorld.components.piratespawner and not TheWorld.components.piratespawner.PermittedToWonkey[user_id] then
+    if table.contains(SEAMLESSSWAP_CHARACTERLIST, prefab_name) and not allow_seamlessswap_characters then
         -- NOTES(JBK): This is not assertion level of importance but it is administrative note worthy level to know someone tried breaking things.
         in_valid_char_list = false
-        print("[WERR] Player with ID ", user_id, "tried spawning as Wonkey without having permissions to do so!")
+        print(string.format("[WERR] Player with ID %s tried spawning as %s without having permissions to do so!", user_id or "?", prefab_name or "?"))
     end
 
     local validated_prefab = prefab_name
@@ -262,7 +262,7 @@ function SpawnNewPlayerOnServerFromSim(player_guid, skin_base, clothing_body, cl
 end
 
 --TheNet:SpawnSeamlessPlayerReplacement(userid, prefab_name, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
-function SpawnSeamlessPlayerReplacement(player_guid, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
+function SpawnSeamlessPlayerReplacementFromSim(player_guid, old_player_guid, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
     local player = Ents[player_guid]
     if player ~= nil then
         local skinner = player.components.skinner
@@ -272,6 +272,10 @@ function SpawnSeamlessPlayerReplacement(player_guid, skin_base, clothing_body, c
         skinner:SetClothing(clothing_feet)
         skinner:SetSkinName(skin_base)
         skinner:SetSkinMode("normal_skin")
+
+		if player.components.seamlessplayerswapper then
+			player.components.seamlessplayerswapper:OnSeamlessCharacterSwap(old_player_guid ~= nil and Ents[old_player_guid] or nil)
+		end
 
         TheWorld:PushEvent("ms_seamlesscharacterspawned", player)
 

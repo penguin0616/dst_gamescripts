@@ -110,6 +110,12 @@ local Inv = Class(Widget, function(self, owner)
     self.inst:ListenForEvent("refresh_integrated_container", function() self:RefreshIntegratedContainer() end, self.owner)
     self.inst:ListenForEvent("onplacershown", function() self:OnPlacerChanged(true) end, self.owner)
     self.inst:ListenForEvent("onplacerhidden", function() self:OnPlacerChanged(false) end, self.owner)
+
+    --NOTE: this is triggered on the swap SOURCE. we need to stop updates because
+    --      playercontroller component is removed first, entity remove is delayed.
+    self.inst:ListenForEvent("seamlessplayerswap", function() self:StopUpdating() end, self.owner)
+
+    --NOTE: this is triggered on the swap TARGET.
     self.inst:ListenForEvent("finishseamlessplayerswap", function () if self.rebuild_pending then self:Rebuild() self:Refresh() end end, self.owner)
 
     self.root:SetPosition(self.in_pos)

@@ -591,6 +591,11 @@ function ChildSpawner:TrySpawnEmergencyChild()
 end
 
 function ChildSpawner:GoHome( child )
+    if self.gohomevalidatefn then
+        if not self.gohomevalidatefn(self.inst) then
+            return false
+        end
+    end
     if self.childrenoutside[child] then
         self.inst:PushEvent("childgoinghome", {child = child})
         child:PushEvent("goinghome", {home = self.inst})

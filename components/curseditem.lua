@@ -35,6 +35,33 @@ nil,
     active = onactive,
 })
 
+function Curseditem:checkplayersinventoryforspace(player)
+    local space = true
+
+    if player.components.inventory:IsFull() then
+
+        -- first look for incomplete stack
+        space = false 
+        if self.inst.components.stackable then
+            local test_items = player.components.inventory:FindItems(function(itemtest) return itemtest.prefab == self.inst.prefab end)
+            for i,stack in ipairs(test_items)do
+                if stack.components.stackable and not stack.components.stackable:IsFull() then
+                    space  = true
+                    break
+                end
+            end
+        end
+        if not space then
+        -- look item to drop
+            local test_item = player.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= player.components.inventory.activeitem and itemtest.components.inventoryitem.owner == player end)
+            if test_item then
+                space = true
+            end
+        end 
+    end
+    return space
+end
+
 function Curseditem:lookforplayer() 
     if self.inst.findplayertask then
         self.inst.findplayertask:Cancel()
@@ -44,6 +71,11 @@ function Curseditem:lookforplayer()
     self.inst.findplayertask = self.inst:DoPeriodicTask(1,function()
         local x,y,z = self.inst.Transform:GetWorldPosition()
         local player = FindClosestPlayerInRangeSq(x,y,z,10*10,true)
+
+        if player and not self:checkplayersinventoryforspace(player)  then
+            player = nil
+        end
+
         if player and player.components.cursable and player.components.cursable:IsCursable(self.inst) then
             if self.inst.findplayertask then
                 self.inst.findplayertask:Cancel()
@@ -80,7 +112,7 @@ function Curseditem:OnUpdate(dt)
             return
         end
     end
-    if self.target and self.target:IsValid() and (not self.target.components.health or not self.target.components.health:IsDead()) and self.target.components.cursable and self.target.components.cursable:IsCursable(self.inst) then
+    if self.target and self.target:IsValid() and (not self.target.components.health or not self.target.components.health:IsDead()) and self.target.components.cursable and self.target.components.cursable:IsCursable(self.inst) and self:checkplayersinventoryforspace(self.target) then
         local dist = self.inst:GetDistanceSqToInst(self.target)
         if dist < ATTACHDIST*ATTACHDIST then
             self.target.components.cursable:ForceOntoOwner(self.inst)
@@ -121,6 +153,7 @@ end
 function Curseditem:Given(item, data) 
     self.target = nil
     if data.owner and data.owner.components.cursable then
+
         if not self.inst:HasTag("applied_curse") then
             data.owner.components.cursable:ApplyCurse(self.inst)
         else 
@@ -132,32 +165,8 @@ function Curseditem:Given(item, data)
                 end)
             end
         end
-    end
-end
---[[
-function Curseditem:SetCursefn(fn)
-    self.cursefn = fn
-end
 
-function Curseditem:SetRemovecursefn(fn)
-    self.removecursefn = fn
-end
-
-function Curseditem:PerformCurse(data)
-    if data.owner and data.owner.components.cursable then
-        data.owner.components.cursable:ApplyCurse(self.inst)
-        self.cursed_target = data.owner
     end
 end
 
-
-function Curseditem:RemoveCurse(player)
-    print("+++ RemoveCurse",player,self.cursed_target)
-
-    if data.owner and data.owner.components.cursable then
-        data.owner.components.cursable:RemoveCurse(self.inst)
-    end
-
-end
-]]
 return Curseditem

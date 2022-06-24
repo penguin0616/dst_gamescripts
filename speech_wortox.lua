@@ -3488,6 +3488,7 @@ return{
         GNARWAIL_HORN = "It makes a compelling point, hyuyu!",
 
         WALKINGPLANK = "It's just a last resort, worrywart!",
+        WALKINGPLANK_GRASS = "It's just a last resort, worrywart!",
         OAR = "I'll splash all my friends with this!",
 		OAR_DRIFTWOOD = "It's an oar, for shore!",
 
@@ -4512,7 +4513,11 @@ return{
         DOCK_KIT = "It would a-pier I have some work to do.",
         DOCK_WOODPOSTS_ITEM = "I'll fix it in post, hyuyu!",
 
-        MONKEYHUT = "Knock knock! Won't you let me in?",
+        MONKEYHUT = 
+        {
+            GENERIC = "Knock knock! Won't you let me in?",
+            BURNT = "It looks like I missed all the fun!",
+        },
         POWDER_MONKEY = "Be careful not to take things too far, little thief.",
         PRIME_MATE = "Monkey sea, monkey do.",
 		LIGHTCRAB = "They're brighter than the monkeys at least.",

@@ -928,7 +928,10 @@ STRINGS =
         BOAT_MAGNET_BEACON_TURN_OFF = "Turn Off",
 
         BOAT_CANNON_LOAD_AMMO = "Load Ammo",
+        BOAT_CANNON_LOAD_AMMO_QUICK = "Load Ammo",
         BOAT_CANNON_SHOOT = "Shoot",
+        BOAT_CANNON_START_AIMING = "Aim",
+        BOAT_CANNON_STOP_AIMING = "Stop Aiming",
 
         OCEAN_TRAWLER_LOWER = "Lower",
         OCEAN_TRAWLER_RAISE = "Raise",

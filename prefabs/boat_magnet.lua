@@ -92,8 +92,6 @@ local function fn()
     inst:AddComponent("inspectable")
     inst.components.inspectable.getstatus = getstatus
 
-    inst:AddComponent("entitytracker")
-
     inst:AddComponent("boatmagnet")
 
     inst:AddComponent("lootdropper")

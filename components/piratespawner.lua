@@ -16,6 +16,14 @@ local SourceModifierList = require("util/sourcemodifierlist")
 --[[ Constants ]]
 --------------------------------------------------------------------------
 
+local function processloot(inst,stash)
+    inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
+    table.insert(stash.loot,inst)
+    if inst.components.perishable then
+        inst.components.perishable:StopPerishing()
+    end
+end
+
 local function stashloot(inst)
 
     local ps = TheWorld.components.piratespawner
@@ -23,8 +31,7 @@ local function stashloot(inst)
         local stash = ps:GetCurrentStash()
         if inst.components.inventoryitem then
             if not inst:HasTag("personal_possession") then
-                inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
-                table.insert(stash.loot,inst)
+                processloot(inst,stash)
                 inst:RemoveFromScene()
             else
                 inst:Remove()
@@ -34,9 +41,7 @@ local function stashloot(inst)
 
                 if not v:HasTag("personal_possession") then
                     local item = inst.components.inventory:RemoveItemBySlot(k)
-                    item.Transform:SetPosition(stash.Transform:GetWorldPosition())
-                    table.insert(stash.loot,item)
-                    --item:RemoveFromScene()
+                    processloot(item,stash)
                 else
                     v:Remove()
                 end
@@ -206,7 +211,6 @@ end
 
 --Public
 self.inst = inst
-self.PermittedToWonkey = {} -- NOTES(JBK): This is a lock and key to stop cases of users manually requesting the form in normal game play.
 
 --Private
 local _activeplayers = {}
@@ -241,9 +245,6 @@ local _nextpiratechance = getnextmonkeytime()
 local _lasttic_players = {}
 
 self.shipdatas = {}
-
-self.SwapData = {}
-self._savedata = {}
 
 self.queen = nil
 
@@ -328,26 +329,6 @@ local function OnPlayerLeft(src, player)
     end
 end
 
-local function OnPlayerReplaced(src, newplayer)
-    assert(self.SwapData,"No SwapData present")
-    assert(self.SwapData[newplayer.userid],"No SwapData for current userid")
-
-    local player = self.SwapData[newplayer.userid].oldplayer
-    player:SwapAllCharacteristics(newplayer, self.SwapData[newplayer.userid].equippedslots or nil,self.SwapData[newplayer.userid].activeitem or nil )
-
-    newplayer:LoadForReroll(self._savedata[newplayer.userid]) -- apply the saved stuff from the old player
-    self._savedata[newplayer.userid] = nil
-
-    self.SwapData[newplayer.userid] = {oldprefab = player.prefab, skin_base = self.SwapData[newplayer.userid].skin_base, skin_base_monkey = self.SwapData[newplayer.userid].skin_base_monkey  }
-
-    if player.prefab ~= "wonkey" and newplayer.prefab == "wonkey" then
-        newplayer.sg:GoToState("changetomonkey_pst")
-        TheWorld:PushEvent("player_changed_to_monkey", {player=newplayer})
-    elseif player.prefab == "wonkey" and newplayer.prefab ~= "wonkey" then
-        newplayer.sg:GoToState("changefrommonkey_pst")
-        TheWorld:PushEvent("player_changed_from_monkey", {player=newplayer})
-    end
-end
 
 --------------------------------------------------------------------------
 --[[ Initialization ]]
@@ -361,8 +342,6 @@ end
 --Register events
 inst:ListenForEvent("ms_playerjoined", OnPlayerJoined)
 inst:ListenForEvent("ms_playerleft", OnPlayerLeft)
-
-inst:ListenForEvent("ms_seamlesscharacterspawned", OnPlayerReplaced)
 
 --------------------------------------------------------------------------
 --[[ Post initialization ]]
@@ -503,63 +482,6 @@ function self:SpawnPirates(pt)
 end
 
 --self.ScheduleSpawn = ScheduleSpawn
-
-function self:DoMonkeyChange(player, returnFromMonkey)
-    --assert(self.SwapData[player.userid],"No Swapdata for userid")
-    assert(not returnFromMonkey or self.SwapData[player.userid].oldprefab,"No SwapData of old prefab to return to")
-    
-    local prefab = "wonkey"
-
-    if returnFromMonkey then
-        prefab = self.SwapData[player.userid].oldprefab
-    end
-
-    local equippedslots = {}
-    if player.components.inventory then
-        for k,v in pairs(player.components.inventory.equipslots) do
-            table.insert(equippedslots,v)
-        end
-    end
-
-    local ents = player.components.inventory:FindItems(function(item) return item:HasTag("cursed") end)
-    for i,ent in ipairs(ents)do
-        ent:RemoveTag("applied_curse")
-        ent.components.curseditem.cursed_target = nil
-        ent:StopUpdatingComponent(ent.components.curseditem)
-    end
-
-    player:PushEvent("ms_playerreroll") -- remove stuff the old character might have had in the world.
-    self._savedata[player.userid] = player:SaveForReroll() -- save some stuff.
-    --self.SwapData[player.userid] = {oldplayer = player, equippedslots = equippedslots, activeitem = player.components.inventory.activeitem, clothing_body = clothing_body}
-    if player.components.inventory.activeitem then
-        player.components.inventory:DropActiveItem()
-    end
- 
-    local clothing = player.components.skinner:GetClothing()
-    local skin_base = clothing.base
-
-    if returnFromMonkey then
-        skin_base = self.SwapData[player.userid] and self.SwapData[player.userid].skin_base or skin_base
-    else
-        skin_base = self.SwapData[player.userid] and self.SwapData[player.userid].skin_base_monkey or skin_base
-    end
-
-    local clothing_body = clothing.body
-    local clothing_hand = clothing.hand
-    local clothing_legs = clothing.legs
-    local clothing_feet = clothing.feet
-    
-    self.SwapData[player.userid] = {oldplayer = player, equippedslots = equippedslots, activeitem = player.components.inventory.activeitem}
-    
-    if returnFromMonkey then    
-        self.SwapData[player.userid].skin_base_monkey = skin_base
-    else
-        self.SwapData[player.userid].skin_base = skin_base
-    end
-    TheWorld.components.piratespawner.PermittedToWonkey[player.userid] = not returnFromMonkey
-    TheNet:SpawnSeamlessPlayerReplacement(player.userid, prefab, skin_base, clothing_body, clothing_hand, clothing_legs, clothing_feet)
-    TheWorld.components.piratespawner.PermittedToWonkey[player.userid] = nil
-end
 
 local GRACETIME = 10
 
@@ -717,9 +639,6 @@ function self:OnSave()
     end
     data._scheduledtask = GetTaskRemaining(_scheduledtask)
 
-    data.playerdata = self._savedata
-    data.swapdata = self.SwapData
-
     if _current_stash then
         data.currentstash = _current_stash.GUID
         table.insert(ents, _current_stash.GUID)
@@ -731,12 +650,6 @@ end
 function self:OnLoad(data)
     _maxpirates = data.maxpirates or TUNING.PIRATE_SPAWN_MAX
     _nextpiratechance = data.nextpiratechance or getnextmonkeytime()
-    if data.playerdata then
-        self._savedata = data.playerdata
-    end
-    if data.swapdata then
-        self.SwapData = data.swapdata
-    end
 end
 
 function self:LoadPostPass(newents, savedata)

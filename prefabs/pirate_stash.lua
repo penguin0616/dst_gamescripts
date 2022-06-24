@@ -20,6 +20,10 @@ local function stash_dug(inst)
         loot:ReturnToScene()
         loot.Transform:SetPosition(inst_pos:Get())
         loot:DoTaskInTime(MAX_LOOTFLING_DELAY * math.random(), fling_loot)
+
+        if loot.components.perishable then
+            loot.components.perishable:StartPerishing()
+        end
     end
 
     -- Ensure that the remove happens after all of our loot gets flung.
@@ -45,6 +49,9 @@ local function OnLoadPostPass(inst, ents, data)
                 ents[k].entity.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 ents[k].entity:RemoveFromScene()
                 table.insert(inst.loot,ents[k].entity)
+                if ents[k].entity.components.perishable then
+                    ents[k].entity.components.perishable:StopPerishing()
+                end
             end
         end
     end

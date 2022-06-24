@@ -413,7 +413,10 @@ ACTIONS =
     BOAT_MAGNET_BEACON_TURN_OFF = Action({ rmb = true, priority=3 }),
 
     BOAT_CANNON_LOAD_AMMO = Action({ mount_valid=true, paused_valid=true }),
-    BOAT_CANNON_SHOOT = Action(),
+    BOAT_CANNON_LOAD_AMMO_QUICK = Action({rmb=true, priority=3}),
+    BOAT_CANNON_START_AIMING = Action(),
+    BOAT_CANNON_SHOOT = Action({distance=9999, do_not_locomote=true}),
+    BOAT_CANNON_STOP_AIMING = Action({instant=true}),
 
     OCEAN_TRAWLER_LOWER = Action({ distance=2.8, rmb=true }),
     OCEAN_TRAWLER_RAISE = Action({ distance=2.8, rmb=true }),
@@ -600,6 +603,9 @@ ACTIONS.PICKUP.fn = function(act)
         if (act.target:HasTag("spider") and act.doer:HasTag("spiderwhisperer")) and
            (act.target.components.follower.leader ~= nil and act.target.components.follower.leader ~= act.doer) then
             return false, "NOTMINE_SPIDER"
+        end
+        if act.target.components.curseditem and not act.target.components.curseditem:checkplayersinventoryforspace(act.doer) then
+            return false, "FULL_OF_CURSES"
         end
 
         if act.target.components.inventory ~= nil and act.target:HasTag("drop_inventory_onpickup") then
@@ -3507,7 +3513,8 @@ ACTIONS.BOAT_CANNON_LOAD_AMMO.fn = function(act)
     if act.target.components.boatcannon ~= nil and not act.target.components.boatcannon:IsAmmoLoaded() and act.doer.components.inventory ~= nil then
         local ammo = act.doer.components.inventory:RemoveItem(act.invobject)
         if ammo then
-            if act.target.components.boatcannon:LoadAmmo(ammo) then
+            if act.target.components.boatcannon:LoadAmmo(ammo, act.doer, true) then
+                act.doer.components.talker:Say(GetDescription(act.doer, act.target, "AMMOLOADED"))
                 return true
             else
                 act.doer.components.inventory:GiveItem(ammo)
@@ -3517,9 +3524,61 @@ ACTIONS.BOAT_CANNON_LOAD_AMMO.fn = function(act)
     return true
 end
 
+ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK.fn = function(act)
+    if act.target.components.boatcannon ~= nil and not act.target.components.boatcannon:IsAmmoLoaded() and act.doer.components.inventory ~= nil then
+        local ammo = act.doer.components.inventory:FindItem(function(item)
+            return item:HasTag("boatcannon_ammo")
+        end)
+
+        if ammo ~= nil and act.target.components.boatcannon:LoadAmmo(ammo, act.doer, false) then
+            act.doer.components.inventory:RemoveItem(ammo, false, true)
+            act.doer.components.talker:Say(GetDescription(act.doer, act.target, "AMMOLOADED"))
+            return true
+        elseif act.doer.components.talker ~= nil then
+            act.doer.components.talker:Say(GetDescription(act.doer, act.target, "GENERIC"))
+        end
+	end
+    return true
+end
+
+ACTIONS.BOAT_CANNON_START_AIMING.fn = function(act)
+    if act.target ~= nil
+		and (act.target.components.boatcannon ~= nil and act.target.components.boatcannon.operator == nil)
+		and (act.target.components.burnable ~= nil and not act.target.components.burnable:IsBurning())
+		and act.doer.components.boatcannonuser ~= nil then
+
+		act.doer.components.boatcannonuser:SetCannon(act.target)
+		return true
+	end
+end
+
 ACTIONS.BOAT_CANNON_SHOOT.fn = function(act)
-    if act.target.components.boatcannon ~= nil then
-        act.target.sg:GoToState("shoot")
+    local boatcannonuser = act.doer.components.boatcannonuser
+    if boatcannonuser ~= nil then
+        local cannon = boatcannonuser:GetCannon()
+        if cannon ~= nil then
+            local pos = act:GetActionPoint()
+            if pos ~= nil then
+                cannon:FacePoint(pos)
+            end
+            cannon.sg:GoToState("shoot")
+            boatcannonuser:SetCannon(nil)
+            if act.doer.sg ~= nil and act.doer.sg:HasStateTag("is_using_cannon") then
+                act.doer.sg:GoToState("aim_cannon_pst")
+            end
+        end
+    else
+        local cannon = act.target
+        if cannon ~= nil then
+            cannon.sg:GoToState("shoot")
+        end
+    end
+    return true
+end
+
+ACTIONS.BOAT_CANNON_STOP_AIMING.fn = function(act)
+	if act.doer.components.boatcannonuser ~= nil then
+	    act.doer.components.boatcannonuser:SetCannon(nil)
 	end
     return true
 end

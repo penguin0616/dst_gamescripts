@@ -674,13 +674,14 @@ local function ActivatePlayer(inst)
         UnregisterHUD(ThePlayer)
 
         local oldplayer = ThePlayer
+        local oldprefab = oldplayer.prefab
         ThePlayer = inst
         oldplayer.player_classified.MapExplorer:DeactivateLocalMiniMap()
         oldplayer:Remove()
 
         ActivateHUD(inst)
 
-        inst:PushEvent("finishseamlessplayerswap")
+        inst:PushEvent("finishseamlessplayerswap" , {oldprefab=oldprefab })
     end
     inst.activatetask = nil
 
@@ -895,23 +896,42 @@ local function OnSetOwner(inst)
     end
 end
 
-function fns.SeamlessPlayerSwap(inst)
+function fns.CommonSeamlessPlayerSwap(inst)
     inst.isseamlessswapsource = true
-    --delay the client despawn for these two entities
-    inst.delayclientdespawn = true
-    inst.player_classified.delayclientdespawn = true
     inst.name = nil
     inst.userid = ""
     if inst.components.playercontroller ~= nil then
         RemovePlayerComponents(inst)
     end
-    if TheNet:IsDedicated() then
+    inst:PushEvent("seamlessplayerswap")
+end
+
+function fns.CommonSeamlessPlayerSwapTarget(inst)
+    inst:PushEvent("seamlessplayerswaptarget")
+end
+
+function fns.LocalSeamlessPlayerSwap(inst)
+    fns.CommonSeamlessPlayerSwap(inst)
+    --delay the client despawn for these two entities
+    inst.delayclientdespawn = true
+    inst.player_classified.delayclientdespawn = true
+end
+
+function fns.LocalSeamlessPlayerSwapTarget(inst)
+    fns.CommonSeamlessPlayerSwapTarget(inst)
+    inst.isseamlessswaptarget = true
+end
+
+function fns.MasterSeamlessPlayerSwap(inst)
+    fns.CommonSeamlessPlayerSwap(inst)
+    --despawn the player if they aren't the local player (local player despawning is handled later in the swap)
+    if inst ~= ThePlayer then
         inst:DoStaticTaskInTime(0, inst.Remove)
     end
 end
 
-function fns.SeamlessPlayerSwapTarget(inst)
-    inst.isseamlessswaptarget = true
+function fns.MasterSeamlessPlayerSwapTarget(inst)
+    fns.CommonSeamlessPlayerSwapTarget(inst)
 end
 
 local function AttachClassified(inst, classified)
@@ -1450,7 +1470,7 @@ local function SaveForReroll(inst)
 
     local curses = {}
     dumptable(inst.components.inventory.itemslots)
-    inst.components.inventory:ForEachItem(function(thing) 
+    inst.components.inventory:ForEachItem(function(thing)
         print("thing",thing.prefab)
         if thing.components.curseditem then
             if not curses[thing.prefab] then
@@ -1467,7 +1487,8 @@ local function SaveForReroll(inst)
         builder = inst.components.builder ~= nil and inst.components.builder:OnSave() or nil,
         petleash = inst.components.petleash ~= nil and inst.components.petleash:OnSave() or nil,
         maps = inst.player_classified ~= nil and inst.player_classified.MapExplorer ~= nil and inst.player_classified.MapExplorer:RecordAllMaps() or nil,
-        curses = curses
+		seamlessplayerswapper = inst.components.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper:OnSave() or nil,
+        curses = curses,
     }
     return next(data) ~= nil and data or nil
 end
@@ -1486,8 +1507,11 @@ local function LoadForReroll(inst, data)
     if data.maps ~= nil and inst.player_classified ~= nil and inst.player_classified.MapExplorer ~= nil then
         inst.player_classified.MapExplorer:LearnAllMaps(data.maps)
     end
+	if data.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper ~= nil then
+        inst.components.seamlessplayerswapper:OnLoad(data.seamlessplayerswapper)
+	end
 
-    if data.curses then 
+    if data.curses then
         for curse,num in pairs(data.curses)do
             for i=1,num do
                 local item = SpawnPrefab(curse)
@@ -1801,28 +1825,16 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
     end
 
     --MONKEY
-    fns.SwapAllCharacteristics = function(inst, newinst, equippeditems, activeitem)
+    fns.SwapAllCharacteristics = function(inst, newinst)
         for i,component in pairs(inst.components)do
             if component.TransferComponent then
                 component:TransferComponent(newinst)
             end
         end
 
-        if equippeditems then
-            for k,v in ipairs( equippeditems )do
-                newinst:DoTaskInTime(0,function()
-                    newinst.components.inventory:Equip(v)
-                end)
-            end
-        end
+		local activeitem = inst.components.inventory:GetActiveItem()
         if activeitem then
-            activeitem.components.inventoryitem:OnPutInInventory(newinst)
-            newinst.components.inventory:SetActiveItem(activeitem)
-        end
-
-        local ents = newinst.components.inventory:FindItems(function(item) return item:HasTag("cursed") end)
-        for i,ent in ipairs(ents)do
-            ent:StartUpdatingComponent(ent.components.curseditem)
+			newinst.components.inventory:GiveActiveItem(activeitem)
         end
 
         inst.Physics:SetActive(false)
@@ -1831,20 +1843,30 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
     end
 
     local function ChangeToMonkey(inst)
-        if TheWorld.components.piratespawner then
-            TheWorld.components.piratespawner:DoMonkeyChange(inst, false)
+        if inst.components.seamlessplayerswapper then
+            inst.components.seamlessplayerswapper:DoMonkeyChange()
         end
     end
 
     local function ChangeBackFromMonkey(inst)
-        if TheWorld.components.piratespawner then
-            TheWorld.components.piratespawner:DoMonkeyChange(inst, true)
+        if inst.components.seamlessplayerswapper then
+            inst.components.seamlessplayerswapper:SwapBackToMainCharacter()
         end
     end
 
     local function OnPirateMusicStateDirty(inst)
         if ThePlayer ~= nil then -- inst._piratemusicstate:value() and
             ThePlayer:PushEvent("playpiratesmusic")
+        end
+    end
+
+    local function onfinishseamlessplayerswap(inst,data)
+        if TheFrontEnd ~= nil then
+            if inst.prefab == "wonkey" then
+                TheFocalPoint.SoundEmitter:PlaySound("monkeyisland/wonkycurse/transform_music")
+            elseif data.oldprefab == "wonkey" then
+                TheFocalPoint.SoundEmitter:PlaySound("monkeyisland/wonkycurse/detransform_music")
+            end
         end
     end
 
@@ -1953,8 +1975,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst.jointask = inst:DoTaskInTime(0, OnPlayerJoined)
         inst:ListenForEvent("setowner", OnSetOwner)
-        inst:ListenForEvent("seamlessplayerswap", fns.SeamlessPlayerSwap)
-        inst:ListenForEvent("seamlessplayerswaptarget", fns.SeamlessPlayerSwapTarget)
+        inst:ListenForEvent("local_seamlessplayerswap", fns.LocalSeamlessPlayerSwap)
+        inst:ListenForEvent("local_seamlessplayerswaptarget", fns.LocalSeamlessPlayerSwapTarget)
+        inst:ListenForEvent("master_seamlessplayerswap", fns.MasterSeamlessPlayerSwap)
+        inst:ListenForEvent("master_seamlessplayerswaptarget", fns.MasterSeamlessPlayerSwapTarget)
 
         inst:AddComponent("talker")
         inst.components.talker:SetOffsetFn(GetTalkerOffset)
@@ -1978,6 +2002,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("plantregistryupdater")
 
         inst:AddComponent("walkableplatformplayer")
+        inst:AddComponent("boatcannonuser")
 
 		if TheNet:GetServerGameMode() == "lavaarena" then
             inst:AddComponent("healthsyncer")
@@ -2030,6 +2055,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:ListenForEvent("sharksounddirty", OnSharkSound)
         inst:ListenForEvent("underleafcanopydirty", OnUnderLeafCanopy)
+
+        inst:ListenForEvent("finishseamlessplayerswap", onfinishseamlessplayerswap)
 
 
         inst._piratemusicstate = net_bool(inst.GUID, "player.piratemusicstate", "piratemusicstatedirty")
@@ -2093,6 +2120,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
         ex_fns.ConfigurePlayerLocomotor(inst)
 
+		inst:AddComponent("seamlessplayerswapper")
 
         inst:AddComponent("combat")
         inst.components.combat:SetDefaultDamage(TUNING.UNARMED_DAMAGE)
@@ -2314,7 +2342,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:ListenForEvent("onchangecanopyzone", OnChangeCanopyZone)
 
 
-        
+
 --[[
         inst:ListenForEvent("stormlevel", function(owner, data)
             if data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0 then

@@ -11,6 +11,7 @@ local prefabs =
 {
     "cannonball_rock",
     "collapse_small",
+    "cannon_aim_range_fx",
 }
 
 local function onhammered(inst, worker)
@@ -136,7 +137,7 @@ local function ongivenitem(inst, giver, item)
         return
     end
 
-    inst.components.boatcannon:LoadAmmo(item)
+    inst.components.boatcannon:LoadAmmo(item, giver)
 end
 
 local function onburnt(inst)
@@ -144,6 +145,99 @@ local function onburnt(inst)
 end
 
 --------------------------------------------------------------------------
+-- The distance that a cannonball travels when it hits the ground
+local function CalculateShotRange()
+	local vel = TUNING.CANNONBALLS.ROCK.SPEED
+	local angle = 30 * DEGREES -- Same as complexprojectile not enough speed to reach endPos angle (fix this later?)
+	local g = -TUNING.CANNONBALLS.ROCK.GRAVITY
+	local height = TUNING.BOAT.BOATCANNON.PROJECTILE_INITIAL_HEIGHT
+
+	return vel * math.cos(angle) * (vel * math.sin(angle) + math.sqrt(math.pow(vel * math.sin(angle), 2) + 2 * g * height)) / g
+end
+
+local RANGE = CalculateShotRange()
+
+local function ClampReticulePos(inst, pos, newx, newz)
+    -- Check if direction held is within the cannon's firing arc
+    local px, py, pz = ThePlayer.Transform:GetWorldPosition()
+    local base_aim_angle = 180 - GetAngleFromBoat(inst, px, pz) / DEGREES
+    local base_aim_facing = Vector3(math.cos(-base_aim_angle / RADIANS), 0 , math.sin(-base_aim_angle / RADIANS))
+    local withinangle = IsWithinAngle(inst:GetPosition(), base_aim_facing, TUNING.BOAT.BOATCANNON.AIM_ANGLE_WIDTH, pos - Vector3(newx, 0, newz))
+    if not withinangle then
+        --[[if IsWithinAngle(inst:GetPosition(), base_aim_facing, TUNING.BOAT.BOATCANNON.AIM_ANGLE_WIDTH, pos - Vector3(-newx, 0, -newz)) then
+            newx = -newx
+            newz = -newz
+        else]]
+            -- Return the closest min/max allowable angle to the controller's facing angle
+            local minangle = base_aim_angle - TUNING.BOAT.BOATCANNON.AIM_ANGLE_WIDTH / 2 * RADIANS
+            local minanglepos = Vector3(pos.x + math.cos(-minangle / RADIANS) * RANGE, 0 , pos.z + math.sin(-minangle / RADIANS) * RANGE)
+            local maxangle = base_aim_angle + TUNING.BOAT.BOATCANNON.AIM_ANGLE_WIDTH / 2 * RADIANS
+            local maxanglepos = Vector3(pos.x + math.cos(-maxangle / RADIANS) * RANGE, 0 , pos.z + math.sin(-maxangle / RADIANS) * RANGE)
+
+            local facingpos = Vector3(pos.x + newx * RANGE, 0, pos.z + newz * RANGE)
+            local dist_to_min = VecUtil_Dist(facingpos.x, facingpos.z, minanglepos.x, minanglepos.z)
+            local dist_to_max = VecUtil_Dist(facingpos.x, facingpos.z, maxanglepos.x, maxanglepos.z)
+
+            facingpos = dist_to_min < dist_to_max and maxanglepos or minanglepos
+            return facingpos
+        --end
+    end
+
+    pos.x = pos.x - (newx * RANGE)
+    pos.z = pos.z - (newz * RANGE)
+    return pos
+end
+
+local function reticule_mouse_target_function(inst, mousepos)
+    if mousepos == nil then
+        return nil
+    end
+
+    local pos = Vector3(inst.Transform:GetWorldPosition())
+    local dir = pos - mousepos
+    if dir.x ~= 0 or dir.z ~= 0 then
+        dir = dir:GetNormalized()
+        return ClampReticulePos(inst, pos, dir.x, dir.z)
+    end
+
+    return Vector3(inst.entity:LocalToWorldSpace(RANGE, 0, 0))
+end
+
+local function reticule_target_function(inst)
+    if ThePlayer and ThePlayer.components.playercontroller ~= nil and ThePlayer.components.playercontroller.isclientcontrollerattached then
+        local pos = Vector3(inst.Transform:GetWorldPosition())
+
+        local dir = Vector3()
+        dir.x = TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)
+        dir.y = 0
+        dir.z = TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)
+        local deadzone = .3
+
+        if math.abs(dir.x) >= deadzone or math.abs(dir.z) >= deadzone then
+            dir = dir:GetNormalized()
+
+            local Camangle = TheCamera:GetHeading()/180
+            local theta = -PI *(0.5 - Camangle)
+
+            local newx = dir.x * math.cos(theta) - dir.z *math.sin(theta)
+            local newz = dir.x * math.sin(theta) + dir.z *math.cos(theta)
+
+            return ClampReticulePos(inst, pos, newx, newz)
+        end
+    end
+
+    return Vector3(inst.entity:LocalToWorldSpace(RANGE, 0, 0))
+end
+
+
+local function onlit(inst)
+    if inst:HasTag("ammoloaded") then
+        inst.sg:GoToState("shoot")
+        if inst.components.boatcannon.operator and inst.components.boatcannon.operator.components.boatcannonuser then
+            inst.components.boatcannon.operator.components.boatcannonuser:SetCannon(nil)
+        end
+    end
+end
 
 local function fn()
     local inst = CreateEntity()
@@ -163,6 +257,13 @@ local function fn()
 
     inst:AddTag("boatcannon")
     inst.Transform:SetEightFaced()
+
+    inst:AddComponent("reticule")
+    inst.components.reticule.mouseenabled = true
+    inst.components.reticule.mousetargetfn = reticule_mouse_target_function
+    inst.components.reticule.targetfn = reticule_target_function
+    --inst.components.reticule.ease = true
+    inst.components.reticule.ispassableatallpoints = true
 
     inst.entity:SetPristine()
 
@@ -204,6 +305,7 @@ local function fn()
     inst.OnRemoveEntity = OnRemoveEntity
 
     inst:AddComponent("boatcannon")
+    inst:ListenForEvent("onignite", onlit)
 
     MakeHauntableWork(inst)
 

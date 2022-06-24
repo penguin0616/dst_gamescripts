@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "A gnarwail's \"horn\" is actually a tooth, you know.",
 
         WALKINGPLANK = "A dangerous escape route for one stranded at sea.",
+        WALKINGPLANK_GRASS = "A dangerous escape route for one stranded at sea.",
         OAR = "One and two, and one and two!",
 		OAR_DRIFTWOOD = "A much more efficient, lighter design.",
 
@@ -4476,7 +4477,7 @@ return{
         BOAT_BUMPER_SHELL = "A thick barrier of mollusks.",
         BOAT_BUMPER_SHELL_KIT = "It would be wise to equip the boat with a protective barrier.",
         BOAT_CANNON = {
-            GENERIC = "A highly effective weapon in nautical combat.",
+            GENERIC = "A highly effective weapon in nautical combat, when properly loaded.",
             AMMOLOADED = "It is not a plaything.",
         },
         BOAT_CANNON_KIT = "A necessary precaution, unfortunately.",
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "Some essential materials for constructing a wharf.",
         DOCK_WOODPOSTS_ITEM = "Unnecessary for a floating dock, but they do have a pleasant appearance.",
 
-        MONKEYHUT = "Despite their affinity with the ocean, the apes still seem to prefer sleeping in trees.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Despite their affinity with the ocean, the apes still seem to prefer sleeping in trees.",
+            BURNT = "I suppose all that thievery leaves little time to organize a fire brigade.",
+        },
         POWDER_MONKEY = "Such deplorable manners! You need a good talking to!",
         PRIME_MATE = "What odd coloration. A form of aposematism, perhaps?",
 		LIGHTCRAB = "Their translucent shells allow the bioluminescence of their bodies to shine through.",

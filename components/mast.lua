@@ -52,6 +52,7 @@ nil,
 function Mast:OnRemoveFromEntity()
 	if self._setup_boat_task ~= nil then
 		self._setup_boat_task:Cancel()
+        self._setup_boat_task = nil
 	end
 end
 

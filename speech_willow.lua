@@ -3489,6 +3489,7 @@ return{
         GNARWAIL_HORN = "Ha ha, cool.",
 
         WALKINGPLANK = "So, who're we gonna make walk it?",
+        WALKINGPLANK_GRASS = "So, who're we gonna make walk it?",
         OAR = "Rowing's dumb. Why don't we just use a sail?",
 		OAR_DRIFTWOOD = "Ugh. Can it be someone else's turn to row?",
 
@@ -4513,7 +4514,11 @@ return{
         DOCK_KIT = "It'll be nice to cover up the water with some nice, flammable wood.",
         DOCK_WOODPOSTS_ITEM = "More fuel for the fi- I mean decoration for the dock!",
 
-        MONKEYHUT = "Ugh, nobody ever lets me into their tree forts.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Ugh, nobody ever lets me into their tree forts.",
+            BURNT = "Heh. This is probably why nobody lets me into their tree forts.",
+        },
         POWDER_MONKEY = "Hey! Hands off my stuff!",
         PRIME_MATE = "I don't like the way he swings that paddle around.",
 		LIGHTCRAB = "It's like there's a little fire burning inside.",

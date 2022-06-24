@@ -411,6 +411,29 @@ TileManager.AddTile(
 )
 
 TileManager.AddTile(
+    "MONKEY_GROUND",
+    TileRanges.LAND,
+    {ground_name = "Pirate Beach"},
+    {
+        name="cave",
+        noise_texture="ground_noise_monkeyisland",
+        runsound="turnoftides/movement/run_pebblebeach",
+        walksound="turnoftides/movement/run_pebblebeach",
+        snowsound="dontstarve/movement/run_ice",
+        mudsound="dontstarve/movement/run_mud",
+    },
+    {
+        name="map_edge",
+        noise_texture="mini_pebblebeach"
+    },
+    {
+        name = "monkey_ground",
+        anim = "monkey_ground",
+        bank_build = "turf_monkey_ground",
+    }
+)
+
+TileManager.AddTile(
     "SHELLBEACH",
     TileRanges.LAND,
     {ground_name = "Shell Beach", old_static_id = GROUND.SHELLBEACH},
@@ -595,7 +618,8 @@ TileManager.AddTile(
         noise_texture="mini_desert_dirt_noise"
     },
     {
-        name = "desertdirt",
+        name = "desertdirt", -- Inventory item
+        anim = "dirt", -- Ground item
     }
 )
 
@@ -744,7 +768,8 @@ TileManager.AddTile(
         noise_texture="mini_rock_noise"
     },
     {
-        name = "underrock",
+        name = "underrock", -- Inventory item
+        anim = "rock", -- Ground item
     }
 )
 
@@ -910,29 +935,6 @@ TileManager.AddTile(
 )
 
 TileManager.AddTile(
-    "MONKEY_GROUND",
-    TileRanges.LAND,
-    {ground_name = "Pirate Beach"},
-    {
-        name="cave",
-        noise_texture="ground_noise_monkeyisland",
-        runsound="turnoftides/movement/run_pebblebeach",
-        walksound="turnoftides/movement/run_pebblebeach",
-        snowsound="dontstarve/movement/run_ice",
-        mudsound="dontstarve/movement/run_mud",
-    },
-    {
-        name="map_edge",
-        noise_texture="mini_pebblebeach"
-    },
-    {
-        name = "monkey_ground",
-        anim = "monkey_ground",
-        bank_build = "turf_monkey_ground",
-    }
-)
-
-TileManager.AddTile(
     "MONKEY_DOCK",
     TileRanges.LAND,
     {ground_name = "Docks"},
@@ -1019,7 +1021,8 @@ TileManager.AddTile(
         noise_texture="mini_checker_noise"
     },
     {
-        name = "checkerfloor",
+        name = "checkerfloor", -- Inventory item
+        anim = "checker", -- Ground item
     }
 )
 

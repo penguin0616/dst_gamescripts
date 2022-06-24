@@ -35,6 +35,7 @@ function SteeringWheelUser:SetSteeringWheel(steering_wheel)
         self.inst:RemoveEventCallback("onremove", self.wheel_remove_callback, prev_steering_wheel)
 
 		if steering_wheel == nil and self.inst.sg:HasStateTag("is_using_steering_wheel") then
+			self.inst.sg.statemem.steering = true
 			self.inst.sg:GoToState("stop_steering")
 		end
 

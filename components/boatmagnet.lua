@@ -2,7 +2,7 @@ local BoatMagnet = Class(function(self, inst)
     self.inst = inst
 	self.boat = nil
     self.beacon = nil
-    self.prev_guid = nil
+    self.magnet_guid = nil
 
     self.canpairwithfn = function(beacon)
             if beacon == nil or beacon.components.boatmagnetbeacon == nil then
@@ -48,25 +48,25 @@ end)
 
 function BoatMagnet:OnSave()
     local data = {
-        prev_guid = self.inst.GUID,
+        magnet_guid = self.inst.GUID,
     }
     return data
 end
 
-function BoatMagnet:LoadPostPass(newents, data)
-    self.inst:ListenForEvent("oninvboatbeaconloaded", self.OnInventoryBeaconLoaded, TheWorld)
-
+function BoatMagnet:OnLoad(data)
     if data == nil then
         return
     end
 
-    self.prev_guid = data.prev_guid
+    self.magnet_guid = data.magnet_guid or data.prev_guid -- NOTES(JBK): 'prev_guid' is for beta worlds that might have this old vague name.
 end
 
 function BoatMagnet:OnRemoveFromEntity()
 	if self._setup_boat_task ~= nil then
 		self._setup_boat_task:Cancel()
+        self._setup_boat_task = nil
 	end
+    self:UnpairWithBeacon() -- Handles event listeners.
 end
 
 function BoatMagnet:OnRemoveEntity()
@@ -134,7 +134,6 @@ function BoatMagnet:PairWithBeacon(beacon)
 
     self.beacon = beacon
     beacon.components.boatmagnetbeacon:PairWithMagnet(self.inst)
-    self.inst.components.entitytracker:TrackEntity(self.inst.prefab, self.inst) -- Need to track itself for handling save/load on beacons in a player's inventory
 
     self.inst:ListenForEvent("onremove", self.OnBeaconRemoved, beacon)
     self.inst:ListenForEvent("death", self.OnBeaconDeath, beacon)
@@ -153,16 +152,20 @@ function BoatMagnet:PairWithBeacon(beacon)
 end
 
 function BoatMagnet:UnpairWithBeacon()
-    self.inst:RemoveEventCallback("onremove", self.OnBoatRemoved, self.beacon)
-    self.inst:RemoveEventCallback("death", self.OnBoatDeath, self.beacon)
+    if self.beacon == nil then
+        return
+    end
+
+    self.inst:RemoveEventCallback("onremove", self.OnBeaconRemoved, self.beacon)
+    self.inst:RemoveEventCallback("death", self.OnBeaconDeath, self.beacon)
     self.inst:RemoveEventCallback("onturnon", self.OnBeaconTurnedOn, self.beacon)
     self.inst:RemoveEventCallback("onturnoff", self.OnBeaconTurnedOff, self.beacon)
 
-    if self.beacon ~= nil and self.beacon.components.boatmagnetbeacon ~= nil then
+    if self.beacon.components.boatmagnetbeacon ~= nil then
         self.beacon.components.boatmagnetbeacon:UnpairWithMagnet()
-        self.inst.components.entitytracker:ForgetEntity(self.inst.prefab)
-        self.beacon = nil
     end
+
+    self.beacon = nil
 
     self.inst:StopUpdatingComponent(self)
 

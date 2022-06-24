@@ -30,6 +30,13 @@ local GiftItemToast = Class(Widget, function(self, owner)
         end
     end, self.owner)
 
+    --NOTE: this is triggered on the swap SOURCE. we need to stop updates because
+    --      playercontroller component is removed first, entity remove is delayed.
+    self.inst:ListenForEvent("seamlessplayerswap", function()
+        self:StopUpdating()
+    end, self.owner)
+
+    --NOTE: this is triggered on the swap TARGET.
     self.inst:ListenForEvent("finishseamlessplayerswap", function(player, data)
         self.do_instant = true
         self.inst:DoTaskInTime(0, function() self.do_instant = false end)

@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "Who ever heard of a whale with a horn?",
 
         WALKINGPLANK = "Well that's ominous.",
+        WALKINGPLANK_GRASS = "Well that's ominous.",
         OAR = "Wouldn't a sail be much faster?",
 		OAR_DRIFTWOOD = "Wouldn't a sail be much faster?",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "Can't someone with more time on their hands set it up?",
         DOCK_WOODPOSTS_ITEM = "Are you supposed to place the support posts before or after? Oh well.",
 
-        MONKEYHUT = "I prefer living solidly on the ground, thank you.",
+        MONKEYHUT = 
+        {
+            GENERIC = "I prefer living solidly on the ground, thank you.",
+            BURNT = "What a shame. Anyway...",
+        },
         POWDER_MONKEY = "Here to make a nuisance of yourself, are you?",
         PRIME_MATE = "He seems to think he's in charge.",
 		LIGHTCRAB = "I'm thankful for any speck of light around here.",

@@ -43,8 +43,8 @@ local function uncurse(owner, num)
             hit(owner)
         end
     else
-        if not owner.components.timer or not owner.components.timer:TimerExists("mokeycursehit") then
-            owner.components.timer:StartTimer("mokeycursehit", 1)
+        if not owner.components.timer or not owner.components.timer:TimerExists("monkeycursehit") then
+            owner.components.timer:StartTimer("monkeycursehit", 1)
             hit(owner)
         end
         if num <= 0 then
@@ -56,7 +56,6 @@ local function uncurse(owner, num)
             owner:RemoveTag("MONKEY_CURSE_2")
             owner:RemoveTag("MONKEY_CURSE_3")
         elseif num <= 2 then
-            print("========= PARTIAL MONKEY 1")
             owner.monkeyfeet = true
             owner.monkeyhands = nil
             owner.monkeytail = nil
@@ -65,7 +64,6 @@ local function uncurse(owner, num)
             owner:RemoveTag("MONKEY_CURSE_2")
             owner:RemoveTag("MONKEY_CURSE_3")
         elseif num <=5 then
-            print("========= PARTIAL MONKEY 2")
             owner.monkeyfeet = true
             owner.monkeyhands = true
             owner.monkeytail = nil
@@ -74,7 +72,6 @@ local function uncurse(owner, num)
             owner:AddTag("MONKEY_CURSE_2")
             owner:RemoveTag("MONKEY_CURSE_3")
         else
-            print("========= PARTIAL MONKEY 3")
             owner.monkeyfeet = true
             owner.monkeyhands = true
             owner.monkeytail = true
@@ -94,7 +91,6 @@ local function docurse(owner, numitems)
     end
 
     if numitems >= TUNING.STACK_SIZE_LARGEITEM and not owner:HasTag("wonkey") then
-        print("========= TOTAL MONKEY!!!!!!!!!!!!!!!!!!")
         if not owner.trycursetask then
             owner.trycursetask = owner:DoPeriodicTask(0.1, function()
                     if owner.components.rider ~= nil and owner.components.rider:IsRiding() then
@@ -109,28 +105,24 @@ local function docurse(owner, numitems)
                 end)
         end
     else
-        if not owner.components.timer or not owner.components.timer:TimerExists("mokeycursehit") then
-            owner.components.timer:StartTimer("mokeycursehit", 1)
+        if not owner.components.timer or not owner.components.timer:TimerExists("monkeycursehit") then
+            owner.components.timer:StartTimer("monkeycursehit", 1)
             owner.sg:GoToState("hit")
         end
         if numitems > 0 and not owner.monkeyfeet then
 
             owner:DoTaskInTime(1, function() if owner.prefab ~= "wonkey"  then owner.components.talker:Say(GetString(owner, "ANNOUNCE_MONKEY_CURSE_1")) end end)
-
-            print("========= PARTIAL MONKEY 1")
             owner.monkeyfeet = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_1")
             owner:AddTag("MONKEY_CURSE_1")
         end
         if numitems > 2 and not owner.monkeyhands then
-            print("========= PARTIAL MONKEY 2")
             owner.monkeyhands = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_2")
             owner:RemoveTag("MONKEY_CURSE_1")
             owner:AddTag("MONKEY_CURSE_2")
         end
         if numitems > 5 and not owner.monkeytail then
-            print("========= PARTIAL MONKEY 3")
             owner.monkeytail = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_3")
             owner:RemoveTag("MONKEY_CURSE_2")

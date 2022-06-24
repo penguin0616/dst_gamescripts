@@ -94,7 +94,7 @@ function CrewMember:Row()
         end
 
         local direction = "toward"
-        if bc.status == "retreat" then
+        if bc and bc.status == "retreat" then
 
             local allthere = true
             for member in pairs(self.boat.components.boatcrew.members) do

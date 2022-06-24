@@ -447,6 +447,10 @@ local actionhandlers =
     ActionHandler(ACTIONS.ABANDON_SHIP, "abandon_ship"),
     ActionHandler(ACTIONS.MOUNT_PLANK, "mount_plank"),
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_START_AIMING, "aim_cannon_pre"),
+    ActionHandler(ACTIONS.BOAT_CANNON_SHOOT, function(inst, action) inst:PerformPreviewBufferedAction() end),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_LOWER, "doshortaction"),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_RAISE, "doshortaction"),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_FIX, "dolongaction"),
@@ -693,7 +697,7 @@ local states =
         onenter = function(inst)
             ConfigureRunState(inst)
             if inst.sg.statemem.normalwonkey and inst.components.locomotor:GetTimeMoving() >= TUNING.WONKEY_TIME_TO_RUN then
-                inst.sg:GoToState("run_monkey") --resuming? unlikely on client, but just to mirror server sg
+                inst.sg:GoToState("run_monkey") --resuming after brief stop from changing directions
                 return
             end
             inst.components.locomotor:RunForward()
@@ -2549,6 +2553,39 @@ local states =
             inst.Transform:SetPredictedNoFaced()
             inst.AnimState:PlayAnimation("steer_idle_pre")
             inst.AnimState:PushAnimation("steer_lag", false)
+            inst:PerformPreviewBufferedAction()
+
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            inst.Transform:ClearPredictedFacingModel()
+        end,
+    },
+
+    State{
+        name = "aim_cannon_pre",
+        tags = { "is_using_cannon", "doing" },
+
+        onenter = function(inst, snap)
+            inst.components.locomotor:Stop()
+            --inst.Transform:SetPredictedNoFaced()
+            inst.AnimState:PlayAnimation("give")
             inst:PerformPreviewBufferedAction()
 
             inst.sg:SetTimeout(TIMEOUT)

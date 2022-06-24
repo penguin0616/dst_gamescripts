@@ -1579,13 +1579,15 @@ function OptionsScreen:_BuildSettings()
 			self:UpdateMenu()
 		end
 
-	self.profanityfilterchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_CHAT_FILTER, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SERVER_NAME_PROFANITY_CHAT_FILTER)
-	self.profanityfilterchatSpinner.OnChanged =
-		function( _, data )
-			self.working.profanityfilterchat = data
-			--self:Apply()
-			self:UpdateMenu()
-		end
+	if not TheSim:IsSteamChinaClient() then
+		self.profanityfilterchatSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.SERVER_NAME_PROFANITY_CHAT_FILTER, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.SERVER_NAME_PROFANITY_CHAT_FILTER)
+		self.profanityfilterchatSpinner.OnChanged =
+			function( _, data )
+				self.working.profanityfilterchat = data
+				--self:Apply()
+				self:UpdateMenu()
+			end
+	end
 
 	self.boatcameraSpinner = CreateTextSpinner(STRINGS.UI.OPTIONS.BOATCAMERA, enableDisableOptions, STRINGS.UI.OPTIONS.TOOLTIPS.BOATCAMERA)
 	self.boatcameraSpinner.OnChanged =
@@ -1705,7 +1707,7 @@ function OptionsScreen:_BuildSettings()
     table.insert( self.right_spinners, self.passwordSpinner )
     table.insert( self.right_spinners, self.boatcameraSpinner )
     table.insert( self.right_spinners, self.integratedbackpackSpinner )
-	if IsSteam() then
+	if IsSteam() and not TheSim:IsSteamChinaClient() then
 	    table.insert( self.right_spinners, self.profanityfilterchatSpinner )
 	end
     table.insert( self.right_spinners, self.profanityfilterSpinner )
@@ -2380,7 +2382,9 @@ function OptionsScreen:InitializeSpinners(first)
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )
 	self.profanityfilterSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterservernames ) )
-	self.profanityfilterchatSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterchat ) )
+	if not TheSim:IsSteamChinaClient() then
+		self.profanityfilterchatSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.profanityfilterchat ) )
+	end
     self.movementpredictionSpinner:SetSelectedIndex(EnabledOptionsIndex(self.working.movementprediction))
 	self.wathgrithrfontSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.wathgrithrfont ) )
 	self.waltercameraSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.waltercamera ) )

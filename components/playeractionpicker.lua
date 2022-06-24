@@ -147,6 +147,26 @@ function PlayerActionPicker:GetSteeringActions(inst, pos, right)
     return nil
 end
 
+function PlayerActionPicker:GetCannonAimActions(inst, pos, right)
+    local boatcannonuser = self.inst.components.boatcannonuser
+    if boatcannonuser ~= nil and boatcannonuser:GetCannon() ~= nil then
+        if right then
+            return self:SortActionList({ ACTIONS.BOAT_CANNON_STOP_AIMING }, pos)
+        else
+            if inst == ThePlayer then
+                pos = boatcannonuser:GetAimPos()
+            else
+                --need to clamp it for clients
+            end
+            if pos ~= nil then
+                return self:SortActionList({ ACTIONS.BOAT_CANNON_SHOOT }, pos)
+            end
+        end
+    end
+
+    return nil
+end
+
 function PlayerActionPicker:GetPointActions(pos, useitem, right)
     local actions = {}
 
@@ -230,6 +250,11 @@ function PlayerActionPicker:GetLeftClickActions(position, target)
         return steering_actions
     end
 
+    local cannon_aim_actions = self:GetCannonAimActions(self.inst, position, false)
+    if cannon_aim_actions ~= nil then
+        return cannon_aim_actions
+    end
+
     --if we're specifically using an item, see if we can use it on the target entity
     if useitem ~= nil then
         if useitem:IsValid() then
@@ -304,6 +329,11 @@ function PlayerActionPicker:GetRightClickActions(position, target)
     if steering_actions ~= nil then
         --self.disable_right_click = true
         return steering_actions
+    end
+
+    local cannon_aim_actions = self:GetCannonAimActions(self.inst, position, true)
+    if cannon_aim_actions ~= nil then
+        return cannon_aim_actions
     end
 
     local actions = nil
@@ -391,7 +421,8 @@ function PlayerActionPicker:DoGetMouseActions(position, target)
                 local lmbs = self:GetLeftClickActions(position)
                 for i, v in ipairs(lmbs) do
                     if (v.action == ACTIONS.DROP and self.inst:GetDistanceSqToPoint(position:Get()) < 16) or
-                        v.action == ACTIONS.SET_HEADING then
+                        v.action == ACTIONS.SET_HEADING or
+                        v.action == ACTIONS.BOAT_CANNON_SHOOT then
 
                         lmb = v
                     end
@@ -399,7 +430,8 @@ function PlayerActionPicker:DoGetMouseActions(position, target)
 
                 local rmbs = self:GetRightClickActions(position)
                 for i, v in ipairs(rmbs) do
-                    if (v.action == ACTIONS.STOP_STEERING_BOAT) then
+                    if (v.action == ACTIONS.STOP_STEERING_BOAT) or
+                        v.action == ACTIONS.BOAT_CANNON_STOP_AIMING then
                         rmb = v
                     end
                 end

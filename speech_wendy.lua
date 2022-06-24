@@ -3486,6 +3486,7 @@ return{
         GNARWAIL_HORN = "It's so sharp...",
 
         WALKINGPLANK = "That would be too easy.",
+        WALKINGPLANK_GRASS = "That would be too easy.",
         OAR = "I'd prefer to be stranded at sea.",
 		OAR_DRIFTWOOD = "Just when it thought it had escaped the ocean...",
 
@@ -4510,7 +4511,11 @@ return{
         DOCK_KIT = "I will build it, but no one will come.",
         DOCK_WOODPOSTS_ITEM = "What would be the point?",
 
-        MONKEYHUT = "I never cared for climbing trees, no matter how many times Abby prodded me.",
+        MONKEYHUT = 
+        {
+            GENERIC = "I never cared for climbing trees, no matter how many times Abby prodded me.",
+            BURNT = "Charred remains are all that's left.",
+        },
         POWDER_MONKEY = "What more can be taken from me?",
         PRIME_MATE = "What it must be like to live unburdened by intelligence?",
 		LIGHTCRAB = "Their shells look like glass... I wonder if they shatter like glass too.",

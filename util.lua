@@ -1681,8 +1681,8 @@ function FunctionOrValue(func_or_val, ...)
 end
 
 function ApplyLocalWordFilter(text, text_filter_context, net_id)
-	if text_filter_context == TEXT_FILTER_CTX_CHAT											-- we are only filtering chat at the moment
-		and Profile:GetProfanityFilterChatEnabled()
+	if text_filter_context ~= TEXT_FILTER_CTX_GAME --We filter everything but game strings
+		and (Profile:GetProfanityFilterChatEnabled() or TheSim:IsSteamChinaClient())
 		then
 
 		text = TheSim:ApplyLocalWordFilter(text, text_filter_context, net_id) or text

@@ -157,6 +157,7 @@ PREFABFILES = {
   "cane_harlequin_fx",
   "cane_sharp_fx",
   "cane_victorian_fx",
+  "cannon_aim_range_fx",
   "cannonballs",
   "carnival_cannons",
   "carnival_crowkid",

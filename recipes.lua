@@ -426,7 +426,7 @@ Recipe2("dock_woodposts_item",				{Ingredient("log", 2)},																					TE
 Recipe2("pirate_flag_pole",					{Ingredient("blackflag", 1), Ingredient("log", 2)},														TECH.LOST, 					{placer="pirate_flag_pole_placer"})
 
 Recipe2("fishingrod",						{Ingredient("twigs", 2), Ingredient("silk", 2)},														TECH.SCIENCE_ONE)
-Recipe2("oceanfishingrod",					{Ingredient("boards", 1), Ingredient("silk", 6)},														TECH.SCIENCE_ONE)
+Recipe2("oceanfishingrod",					{Ingredient("boards", 1), Ingredient("silk", 3)},														TECH.SCIENCE_ONE)
 Recipe2("pocket_scale",						{Ingredient("log", 1), Ingredient("cutstone", 1), Ingredient("goldnugget", 1)}, 						TECH.SCIENCE_ONE)
 
 Recipe2("oceanfishingbobber_ball",			{Ingredient("log", 1)},																					TECH.FISHING_ONE)
@@ -615,16 +615,16 @@ Recipe2("hermitshop_oceanfishingbobber_robin",			{Ingredient("messagebottleempty
 Recipe2("hermitshop_oceanfishingbobber_robin_winter",	{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_THREE,	{nounlock = true, sg_state="give", product="oceanfishingbobber_robin_winter"})
 Recipe2("hermitshop_oceanfishingbobber_canary",			{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_THREE,	{nounlock = true, sg_state="give", product="oceanfishingbobber_canary"})
 Recipe2("hermitshop_tacklecontainer",					{Ingredient("messagebottleempty", 3)},														TECH.HERMITCRABSHOP_THREE,	{nounlock = true, sg_state="give", product="tacklecontainer"})
-Recipe2("hermitshop_oceanfishinglure_hermit_rain",		{Ingredient("messagebottleempty", 2)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_rain"})
-Recipe2("hermitshop_oceanfishinglure_hermit_snow",		{Ingredient("messagebottleempty", 2)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_snow"})
-Recipe2("hermitshop_oceanfishinglure_hermit_drowsy",	{Ingredient("messagebottleempty", 2)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_drowsy"})
-Recipe2("hermitshop_oceanfishinglure_hermit_heavy",		{Ingredient("messagebottleempty", 2)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_heavy"})
-Recipe2("hermitshop_oceanfishingbobber_goose",			{Ingredient("messagebottleempty", 3)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="oceanfishingbobber_goose"})
-Recipe2("hermitshop_oceanfishingbobber_malbatross",		{Ingredient("messagebottleempty", 3)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="oceanfishingbobber_malbatross"})
-Recipe2("hermitshop_chum",								{Ingredient("messagebottleempty", 3)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="chum",						image="chum.tex"})
-Recipe2("hermitshop_supertacklecontainer",				{Ingredient("messagebottleempty", 8)},														TECH.LOST,					{nounlock = true, sg_state="give", product="supertacklecontainer"})
-Recipe2("hermitshop_winter_ornament_boss_hermithouse",	{Ingredient("messagebottleempty", 8)},														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_hermithouse"})
-Recipe2("hermitshop_winter_ornament_boss_pearl",		{Ingredient("messagebottleempty", 12)}, 													TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_pearl"})
+Recipe2("hermitshop_oceanfishinglure_hermit_rain",		{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_rain"})
+Recipe2("hermitshop_oceanfishinglure_hermit_snow",		{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_snow"})
+Recipe2("hermitshop_oceanfishinglure_hermit_drowsy",	{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_drowsy"})
+Recipe2("hermitshop_oceanfishinglure_hermit_heavy",		{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_FIVE,	{nounlock = true, sg_state="give", product="oceanfishinglure_hermit_heavy"})
+Recipe2("hermitshop_oceanfishingbobber_goose",			{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="oceanfishingbobber_goose"})
+Recipe2("hermitshop_oceanfishingbobber_malbatross",		{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="oceanfishingbobber_malbatross"})
+Recipe2("hermitshop_chum",								{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_SEVEN,	{nounlock = true, sg_state="give", product="chum",						image="chum.tex"})
+Recipe2("hermitshop_supertacklecontainer",				{Ingredient("messagebottleempty", 6)},														TECH.LOST,					{nounlock = true, sg_state="give", product="supertacklecontainer"})
+Recipe2("hermitshop_winter_ornament_boss_hermithouse",	{Ingredient("messagebottleempty", 4)},														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_hermithouse"})
+Recipe2("hermitshop_winter_ornament_boss_pearl",		{Ingredient("messagebottleempty", 8)}, 														TECH.LOST,					{nounlock = true, sg_state="give", product="winter_ornament_boss_pearl"})
 
 
 

@@ -170,6 +170,11 @@ local function LightsOn(inst)
     end
 end
 
+local function getstatus(inst)
+    return (inst:HasTag("burnt") and "BURNT")
+        or nil
+end
+
 local function OnIsNight(inst, isnight)
     if isnight then
         StopSpawning(inst)
@@ -246,6 +251,15 @@ local function OnUpdateWindow(window, hut)
     end
 end
 
+local function gohomevalidatefn(inst)
+    if inst.components.burnable ~= nil and inst.components.burnable:IsBurning() then
+        return false
+    end
+    if inst:HasTag("burnt") then
+        return false
+    end
+    return true
+end
 --------------------------------------------------------------------------------
 
 local function fn()
@@ -312,11 +326,13 @@ local function fn()
 
     -----------------------------------------------------------
     inst:AddComponent("inspectable")
+    inst.components.inspectable.getstatus = getstatus
 
     -----------------------------------------------------------
     inst:AddComponent("childspawner")
     inst.components.childspawner.childname = "powder_monkey"
     inst.components.childspawner:SetSpawnedFn(OnSpawned)
+    inst.components.childspawner.gohomevalidatefn = gohomevalidatefn
     inst.components.childspawner:SetGoHomeFn(OnGoHome)
 
     inst.components.childspawner:SetRegenPeriod(TUNING.MONKEYHUT_REGEN_TIME)

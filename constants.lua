@@ -371,6 +371,12 @@ DST_CHARACTERLIST =
     "wonkey", --hidden internal char
 }
 
+-- This is used for seamless swap characters only and can not spawn in as these characters.
+SEAMLESSSWAP_CHARACTERLIST =
+{
+    "wonkey",
+}
+
 CHARACTER_VIDEOS =
 {
 	wilson = {"https://bit.ly/3w9VYcN"},
@@ -393,6 +399,14 @@ CHARACTER_VIDEOS =
 	wanda = {"https://klei.gg/dst-wanda-short"},
 }
 
+PLAYER_SWAP_TRANSITIONS = 
+{
+	wonkey = 
+	{
+		transfrom_state = "changetomonkey_pst",
+		restore_state = "changefrommonkey_pst",
+	},
+}
 
 require("prefabskins")
 require("clothing")

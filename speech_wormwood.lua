@@ -3486,6 +3486,7 @@ return{
         GNARWAIL_HORN = "Sharp!",
 
         WALKINGPLANK = "Splashy jump spot",
+        WALKINGPLANK_GRASS = "Splashy jump spot",
         OAR = "Friend helps push water",
 		OAR_DRIFTWOOD = "Friend helps push water fast!",
 
@@ -4510,7 +4511,11 @@ return{
         DOCK_KIT = "Makes home for Floaties",
         DOCK_WOODPOSTS_ITEM = "Plant friends on dock.",
 
-        MONKEYHUT = "Cheeky house",
+        MONKEYHUT = 
+        {
+            GENERIC = "Cheeky house",
+            BURNT = "Poor Cheekies",
+        },
         POWDER_MONKEY = "Mean Cheeky!",
         PRIME_MATE = "Big Cheeky... scary!",
 		LIGHTCRAB = "Glowy crawly",

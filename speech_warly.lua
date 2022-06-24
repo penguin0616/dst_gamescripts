@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "I was nearly run through with that thing!",
 
         WALKINGPLANK = "That doesn't look safe.",
+        WALKINGPLANK_GRASS = "That doesn't look safe.",
         OAR = "A paddle.",
 		OAR_DRIFTWOOD = "A nice, light paddle.",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "Everything one might need to whip up a dock.",
         DOCK_WOODPOSTS_ITEM = "My dock needs a bit of garnish.",
 
-        MONKEYHUT = "Those monkeys seem to be enjoying the high life out here, non?",
+        MONKEYHUT = 
+        {
+            GENERIC = "Those monkeys seem to be enjoying the high life out here, non?",
+            BURNT = "It actually gives off a rather pleasant aroma of roasted bananas...",
+        },
         POWDER_MONKEY = "J'accuse! You are no honest sailor!",
         PRIME_MATE = "You should teach your crew better manners, monsieur.",
 		LIGHTCRAB = "Glowing shellfish... just imagine how beautiful it would look on a plate!",

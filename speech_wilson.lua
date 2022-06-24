@@ -220,6 +220,7 @@ return {
                 "OW, it bit me!",
             },
 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I'm not touching that.", --[[TODO]]
         },
         SLAUGHTER =
         {
@@ -4487,7 +4488,7 @@ return {
         BOAT_BUMPER_SHELL = "It gives the boat a little shellf defence.",
         BOAT_BUMPER_SHELL_KIT = "A soon-to-be boat bumper.",
         BOAT_CANNON = {
-            GENERIC = "I should load load it with something.",
+            GENERIC = "I should load it with something.",
             AMMOLOADED = "The cannon is ready to fire!",
         },
         BOAT_CANNON_KIT = "It's not a cannon yet, but it will be.",
@@ -4517,7 +4518,11 @@ return {
         DOCK_KIT = "Everything I need to build a dock for my boat.",
         DOCK_WOODPOSTS_ITEM = "Aha! I thought the dock was missing something.",
 
-        MONKEYHUT = "Treehouses are terribly flammable places to conduct experiments.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Treehouses are terribly flammable places to conduct experiments.",
+            BURNT = "Like I said!",
+        },
         POWDER_MONKEY = "Don't you dare monkey around with my boat!",
         PRIME_MATE = "A nice hat is always a clear indicator of who's in charge.",
 		LIGHTCRAB = "It's bioluminous!",

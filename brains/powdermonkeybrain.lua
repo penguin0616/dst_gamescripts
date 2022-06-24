@@ -639,7 +639,9 @@ function PowderMonkeyBrain:OnStart()
     {
 
         WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),
-        WhileNode( function() return self.inst.components.health.takingfiredamage end, "OnFire", Panic(self.inst)),
+        WhileNode( function() return self.inst.components.health.takingfiredamage or 
+                                     (self.inst.components.homeseeker ~= nil and self.inst.components.homeseeker.home and self.inst.components.homeseeker.home.components.burnable and self.inst.components.homeseeker.home.components.burnable:IsBurning()) 
+                                 end, "OnFire", Panic(self.inst)),
 
         ChattyNode(self.inst, "MONKEY_TALK_ABANDON",
             DoAction(self.inst, DoAbandon, "abandon", true )),

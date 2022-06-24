@@ -62,10 +62,6 @@ function Cursable:IsCursable(item)
 	if not self.inst.components.inventory:IsFull() then
 		return true
 	else
-		local test_item =self.inst.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") end)
-		if test_item then
-			return true
-		end
 
     	if item.components.stackable then
         	local test_items =self.inst.components.inventory:FindItems(function(itemtest) return itemtest.prefab == item.prefab end)
@@ -75,6 +71,11 @@ function Cursable:IsCursable(item)
         		end
         	end
     	end
+
+		local test_item =self.inst.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= self.inst.components.inventory.activeitem and itemtest.components.inventoryitem.owner == self.inst  end)
+		if test_item then
+			return true
+		end
 	end
 end
 
@@ -89,9 +90,9 @@ function Cursable:ForceOntoOwner(item)
         	
         	-- first look for incomplete stack
         	if item.components.stackable then
-	        	local test_items =self.inst.components.inventory:FindItems(function(itemtest) return itemtest.prefab == item.prefab and itemtest ~= self.activeitem end)
+	        	local test_items =self.inst.components.inventory:FindItems(function(itemtest) return itemtest.prefab == item.prefab  end) --and itemtest ~= self.inst.components.inventory.activeitem
 	        	for i,stack in ipairs(test_items)do
-	        		if not stack.components.stackable:IsFull() then
+	        		if stack.components.stackable and not stack.components.stackable:IsFull() then
 	        			drop = false
 	        			break
 	        		end
@@ -100,7 +101,7 @@ function Cursable:ForceOntoOwner(item)
 
         	if drop then
             	-- make space
-            	local test_item =self.inst.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= self.activeitem end)
+            	local test_item =self.inst.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= self.inst.components.inventory.activeitem and itemtest.components.inventoryitem.owner == self.inst end)
             	self.inst.components.inventory:DropItem(test_item, true, true)
         	end
         end

@@ -777,11 +777,6 @@ local actionhandlers =
     ActionHandler(ACTIONS.LOWER_ANCHOR, "doshortaction"),
     ActionHandler(ACTIONS.REPAIR_LEAK, "dolongaction"),
     ActionHandler(ACTIONS.STEER_BOAT, "steer_boat_idle_pre"),
-    ActionHandler(ACTIONS.STOP_STEERING_BOAT,
-        function(inst, action)
-            inst.sg.statemem.steering = true
-            return "stop_steering"
-        end),
     ActionHandler(ACTIONS.SET_HEADING, "steer_boat_turning"),
     ActionHandler(ACTIONS.ROTATE_BOAT_CLOCKWISE, "doshortaction"),
     ActionHandler(ACTIONS.ROTATE_BOAT_COUNTERCLOCKWISE, "doshortaction"),
@@ -800,7 +795,13 @@ local actionhandlers =
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
     ActionHandler(ACTIONS.CAST_NET, "cast_net"),
     ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO, "doshortaction"),
-    ActionHandler(ACTIONS.BOAT_CANNON_SHOOT, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_START_AIMING, "aim_cannon_pre"),
+    ActionHandler(ACTIONS.BOAT_CANNON_SHOOT,
+        function(inst)
+            inst.sg.statemem.aiming = true
+            return "shoot_cannon"
+        end),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_LOWER, "doshortaction"),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_RAISE, "doshortaction"),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_FIX, "dolongaction"),
@@ -7628,7 +7629,7 @@ local states =
         onenter = function(inst)
             ConfigureRunState(inst)
             if inst.sg.statemem.normalwonkey and inst.components.locomotor:GetTimeMoving() >= TUNING.WONKEY_TIME_TO_RUN then
-                inst.sg:GoToState("run_monkey") --most likely resuming prediction after running into obstacle
+                inst.sg:GoToState("run_monkey") --resuming after brief stop from changing directions, or resuming prediction after running into obstacle
                 return
             end
             inst.components.locomotor:RunForward()
@@ -8969,6 +8970,77 @@ local states =
                 inst.sg:GoToState("idle")
             end),
         }
+    },
+
+    State{
+        name = "aim_cannon_pre",
+        tags = { "is_using_cannon", "doing" },
+
+        onenter = function(inst, skip_pre)
+            inst.AnimState:PlayAnimation("give")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    if inst:PerformBufferedAction() then
+                        --inst.sg.statemem.aiming = true
+                        --inst.sg:GoToState("aim_cannon_idle_loop")
+                    else
+                        inst.sg:GoToState("idle")
+                    end
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.aiming then
+                inst.components.boatcannonuser:SetCannon(nil)
+            end
+        end,
+    },
+
+    State{
+        name = "shoot_cannon",
+        tags = { "doing" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("give_pst")
+            inst:PerformBufferedAction()
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.aiming then
+                inst.components.boatcannonuser:SetCannon(nil)
+            end
+        end,
+    },
+
+    State{
+        name = "aim_cannon_pst",
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("give_pst")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
     },
 
     State{
@@ -15487,7 +15559,7 @@ local states =
             TimeEvent(15*FRAMES, function(inst)
                 inst.components.talker:Say(GetString(inst, "ANNOUNCE_MONKEY_CURSE_CHANGEBACK"))
             end),
-            
+
             TimeEvent(20*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("nointerrupt")
             end),

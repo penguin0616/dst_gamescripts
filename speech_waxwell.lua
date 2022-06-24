@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "Impressive.",
 
         WALKINGPLANK = "Jumping off would ruin what's left of my suit.",
+        WALKINGPLANK_GRASS = "Jumping off would ruin what's left of my suit.",
         OAR = "I have no desire to toil like a common sailor.",
 		OAR_DRIFTWOOD = "Hmph. I've never been one for manual lab-oar.",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "So I'm to be a dock builder now, am I?",
         DOCK_WOODPOSTS_ITEM = "Do I look like a common laborer to you?",
 
-        MONKEYHUT = "This place is infested with those miscreants.",
+        MONKEYHUT = 
+        {
+            GENERIC = "This place is infested with those monkey miscreants.",
+            BURNT = "They've been smoked out.",
+        },
         POWDER_MONKEY = "You're not one of mine... where did you come from?!",
         PRIME_MATE = "They'll put anyone in charge nowadays.",
 		LIGHTCRAB = "Oh good. The island is crawling with vermin.",

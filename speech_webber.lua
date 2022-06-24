@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "Maybe it's magic?",
 
         WALKINGPLANK = "It's the least fun diving board.",
+        WALKINGPLANK_GRASS = "It's the least fun diving board.",
         OAR = "More legs means faster rowing!",
 		OAR_DRIFTWOOD = "Rowing is kinda fun!",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "We've decided we're going to be a dock spider now.",
         DOCK_WOODPOSTS_ITEM = "We almost forgot the posts!",
 
-        MONKEYHUT = "We don't want to play in those jerks' tree house! Even if it does look like fun...",
+        MONKEYHUT = 
+        {
+            GENERIC = "We don't want to play in those jerks' tree house! Even if it does look like fun...",
+            BURNT = "That's what happens when you don't play nice!",
+        },
         POWDER_MONKEY = "Hey, Ms. Wickerbottom says we shouldn't take things that don't belong to us!",
         PRIME_MATE = "He's a big bully!",
 		LIGHTCRAB = "Aww don't be shy, we're friendly!",

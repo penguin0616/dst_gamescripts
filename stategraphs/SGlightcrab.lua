@@ -45,9 +45,7 @@ local states=
                     inst.SoundEmitter:KillSound("walk_loop")
                     inst.SoundEmitter:KillSound("run_loop")
 	                inst.AnimState:PlayAnimation("idle")
-
 				end
-
             end
         end,
 
@@ -221,9 +219,16 @@ nil, nil, nil,
 
 CommonStates.AddSleepStates(states)
 CommonStates.AddFrozenStates(states)
-CommonStates.AddSimpleState(states, "idle2", "idle2", {"canrotate"})
-CommonStates.AddSimpleState(states, "idle3", "idle3", {"canrotate"})
-
+CommonStates.AddSimpleState(states, "idle2", "idle2", {"canrotate"},nil,nil,{
+    onenter = function(inst)
+        inst.SoundEmitter:PlaySound("monkeyisland/lightcrab/idle2")
+    end,
+})
+CommonStates.AddSimpleState(states, "idle3", "idle3", {"canrotate"},nil,nil,{
+    onenter = function(inst)
+        inst.SoundEmitter:PlaySound("monkeyisland/lightcrab/idle3")
+    end,
+})
 
 
 return StateGraph("lightcrab", states, events, "idle", actionhandlers)

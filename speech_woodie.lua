@@ -3483,6 +3483,7 @@ return{
         GNARWAIL_HORN = "Never saw a horn on a fish before.",
 
         WALKINGPLANK = "Hopefully we don't have to abandon ship.",
+        WALKINGPLANK_GRASS = "Hopefully we don't have to abandon ship.",
         OAR = "I wouldn't mind taking the boat out on the lake today.",
 		OAR_DRIFTWOOD = "Nice day for rowin', eh?.",
 
@@ -4507,7 +4508,11 @@ return{
         DOCK_KIT = "I can see it now, the whole ocean covered in beautiful timber...",
         DOCK_WOODPOSTS_ITEM = "Looking at 'em is making me hungry.",
 
-        MONKEYHUT = "Huh. I wonder what it might be like to live in a tree.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Huh. I wonder what it might be like to live in a tree.",
+            BURNT = "Eh... maybe living in a tree ain't all it's cracked up to be.",
+        },
         POWDER_MONKEY = "I don't think they're here to say a polite \"hello\".",
         PRIME_MATE = "What a hoser.",
 		LIGHTCRAB = "The little fella's just minding its own business.",

@@ -64,7 +64,8 @@ local function OnHit(inst, attacker, target)
     -- Hit a boat? Cause a leak!
     if target ~= nil and target:HasTag("boat") then
         local hitpos = inst:GetPosition()
-        target:PushEvent("spawnnewboatleak", { pt = hitpos, leak_size = "med_leak", playsoundfx = true, cause ="cannonball" })        
+        target:PushEvent("spawnnewboatleak", { pt = hitpos, leak_size = "med_leak", playsoundfx = true, cause ="cannonball" })
+        target.components.health:DoDelta(-TUNING.CANNONBALL_DAMAGE/2)
     end
 
     -- Look for stuff on the ocean/ground and launch them
@@ -246,9 +247,8 @@ local function cannonball_fn()
 
     inst.persists = false
 
-    inst.components.complexprojectile:SetHorizontalSpeed(15)
-    inst.components.complexprojectile:SetGravity(-25)
-    inst.components.complexprojectile:SetLaunchOffset(Vector3(0, 0.5, 0))
+    inst.components.complexprojectile:SetHorizontalSpeed(TUNING.CANNONBALLS.ROCK.SPEED)
+    inst.components.complexprojectile:SetGravity(TUNING.CANNONBALLS.ROCK.GRAVITY)
     inst.components.complexprojectile:SetOnHit(OnHit)
     inst.components.complexprojectile:SetOnUpdate(OnUpdateProjectile)
 

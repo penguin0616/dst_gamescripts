@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "Ha ha! Mine now!",
 
         WALKINGPLANK = "Jumpy board!",
+        WALKINGPLANK_GRASS = "Jumpy board!",
         OAR = "Make boat go!",
 		OAR_DRIFTWOOD = "Make boat go!",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "Will build nice sleeping spot for boat.",
         DOCK_WOODPOSTS_ITEM = "Would look better with Pigman head on top, but still okay.",
 
-        MONKEYHUT = "Mermfolk houses better, florp.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Mermfolk houses better, florp.",
+            BURNT = "Didn't do it! Found it like this!",
+        },
         POWDER_MONKEY = "HEY!! That stuff MINE!",
         PRIME_MATE = "You not look like regular monkey, florp...",
 		LIGHTCRAB = "Ooooh, how it so glowy inside? Gotta crack open shell and find out.",

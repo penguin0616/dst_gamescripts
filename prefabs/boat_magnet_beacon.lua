@@ -60,20 +60,6 @@ local function getstatus(inst, viewer)
     end
 end
 
-local function OnPickedUp(inst)
-    local beaconcmp = inst.components.boatmagnetbeacon
-    if beaconcmp then
-        beaconcmp:SetIsPickedUp(true)
-    end
-end
-
-local function OnDropped(inst)
-    local beaconcmp = inst.components.boatmagnetbeacon
-    if beaconcmp then
-        beaconcmp:SetIsPickedUp(false)
-    end
-end
-
 local function fn()
     local inst = CreateEntity()
 
@@ -101,10 +87,6 @@ local function fn()
     inst.components.inspectable.getstatus = getstatus
 
     inst:AddComponent("inventoryitem")
-    inst:ListenForEvent("onpickup", OnPickedUp)
-    inst:ListenForEvent("ondropped", OnDropped)
-
-    inst:AddComponent("entitytracker")
 
     inst:AddComponent("boatmagnetbeacon")
 

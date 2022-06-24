@@ -9,7 +9,7 @@ local states =
         tags = { "idle" },
 
         onenter = function(inst)
-            if inst.components.boatmagnet:PairedBeacon() ~= nil then
+            if inst.components.boatmagnet and inst.components.boatmagnet:PairedBeacon() ~= nil then
                 inst.AnimState:PlayAnimation("idle_activated", true)
             else
                 inst.AnimState:PlayAnimation("idle", true)
@@ -150,7 +150,9 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("pull_pst", false)
-            inst.AnimState:PushAnimation("fail", false)
+            if inst.components.boatmagnet and inst.components.boatmagnet:PairedBeacon() == nil then
+                inst.AnimState:PushAnimation("fail", false)
+            end
         end,
 
         events =

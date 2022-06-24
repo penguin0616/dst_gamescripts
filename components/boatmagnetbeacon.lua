@@ -1,32 +1,72 @@
+local function OnPickup(inst, data)
+    local self = inst.components.boatmagnetbeacon
+    self:SetIsPickedUp(true)
+end
+
+local function OnDropped(inst, data)
+    local self = inst.components.boatmagnetbeacon
+    self:SetIsPickedUp(false)
+end
+
+local MAGNET_MUST_TAGS = {"boatmagnet"}
+local MAGNET_MUST_NOT_TAGS = {"paired"}
+local function SetupBoatTask(inst)
+    local self = inst.components.boatmagnetbeacon
+    if self == nil then
+        return
+    end
+
+    self:SetBoat(inst:GetCurrentPlatform())
+
+    if self.magnet_guid then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local magnets = TheSim:FindEntities(x, y, z, TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE, MAGNET_MUST_TAGS, MAGNET_MUST_NOT_TAGS)
+        local magnet = nil
+        for _, v in ipairs(magnets) do
+            if v.components.boatmagnet and v.components.boatmagnet.magnet_guid == self.magnet_guid then
+                magnet = v
+                break
+            end
+        end
+        if magnet then -- Already know it has the component from above.
+            magnet.components.boatmagnet:PairWithBeacon(inst)
+            self.magnet = magnet
+            self.magnet_guid = magnet.GUID
+        else
+            self.magnet = nil
+            self.magnet_guid = nil
+        end
+    end
+
+    self._setup_boat_task = nil
+end
+
 local BoatMagnetBeacon = Class(function(self, inst)
     self.inst = inst
 	self.boat = nil
     self.magnet = nil
+    self.magnet_guid = nil
     self.turnedoff = false
     self.ispickedup = false
-    self.prev_guid = nil
-    self.hasloaded = false
 
-	self.OnBoatRemoved = function() self.boat = nil end
+    self.OnBoatRemoved = function() self.boat = nil end
     self.OnBoatDeath = function() self:OnDeath() end
 
     self.OnMagnetRemoved = function()
         self:UnpairWithMagnet()
     end
 
-	self._setup_boat_task = self.inst:DoTaskInTime(0, function()
-        self:SetBoat(self.inst:GetCurrentPlatform())
-		self._setup_boat_task = nil
-    end)
+	self._setup_boat_task = self.inst:DoTaskInTime(0, SetupBoatTask)
+
+    self.inst:ListenForEvent("onpickup", OnPickup)
+    self.inst:ListenForEvent("ondropped", OnDropped)
 end)
 
 function BoatMagnetBeacon:OnSave()
     local data = {
         turnedoff = self.turnedoff,
         ispickedup = self.ispickedup,
-        prev_guid = self.magnet ~= nil and self.magnet.GUID or self.prev_guid,
-
-        hasloaded = self.hasloaded,
+        magnet_guid = self.magnet_guid,
     }
     return data
 end
@@ -38,37 +78,23 @@ function BoatMagnetBeacon:OnLoad(data)
 
     self.turnedoff = data.turnedoff
     self.ispickedup = data.ispickedup
-    self.prev_guid = data.prev_guid
-
-    self.hasloaded = data.hasloaded
-
-    if self.ispickedup then
-        -- Hack to prevent beacons in inventory from connecting to the boat twice on load (not sure why this happens...)
-        if not self.hasloaded then
-            self.hasloaded = true
-        else
-            TheWorld:PushEvent("oninvboatbeaconloaded", { guid = data.prev_guid, inst = self.inst } )
-            self.hasloaded = false
-        end
-    end
+    self.magnet_guid = data.magnet_guid or data.prev_guid -- NOTES(JBK): 'prev_guid' is for beta worlds that might have this old vague name.
 
     if self.turnedoff then
+        self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon")
         self.inst:AddTag("turnedoff")
+    else
+        self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon_on")
     end
 end
 
-function BoatMagnetBeacon:LoadPostPass(newents, data)
-    if not self.ispickedup then
-        local magnet = self.inst.components.entitytracker and self.inst.components.entitytracker:GetEntity("boat_magnet") or nil
-        if magnet ~= nil and magnet.components.boatmagnet ~= nil then
-            magnet.components.boatmagnet:PairWithBeacon(self.inst)
-        end
-    end
-end
 function BoatMagnetBeacon:OnRemoveFromEntity()
 	if self._setup_boat_task ~= nil then
 		self._setup_boat_task:Cancel()
+        self._setup_boat_task = nil
 	end
+    self.inst:RemoveEventCallback("onpickup", OnPickup)
+    self.inst:RemoveEventCallback("ondropped", OnDropped)
 end
 
 function BoatMagnetBeacon:OnRemoveEntity()
@@ -78,25 +104,14 @@ function BoatMagnetBeacon:OnRemoveEntity()
 end
 
 function BoatMagnetBeacon:GetBoat()
-    -- If not placed on a boat, check to see if the entity carrying it is on a boat
-    local owner = self.inst.entity:GetParent()
-    if owner == nil then
-        local boat = self.inst:GetCurrentPlatform()
-        if boat and boat:HasTag("boat") then
-            self.boat = boat -- Update the boat if it's different from what's saved
-            return boat
-        else
-            return nil
-        end
-    end
-
-    local boat = owner:GetCurrentPlatform()
+    -- Get the carrying thing first, or the owner entity instance if it is not carried.
+    local boat = (self.inst.entity:GetParent() or self.inst):GetCurrentPlatform()
     if boat and boat:HasTag("boat") then
-        return boat
+        self.boat = boat
+    else
+        self.boat = nil
     end
-
-    self.boat = nil -- Update the boat if it's different from what's saved
-    return nil
+    return self.boat
 end
 
 function BoatMagnetBeacon:SetBoat(boat)
@@ -127,39 +142,32 @@ function BoatMagnetBeacon:PairedMagnet()
 end
 
 function BoatMagnetBeacon:PairWithMagnet(magnet)
+    if self.magnet or not magnet then
+        return
+    end
+
     self.magnet = magnet
-    if magnet ~= nil then
-        self.inst.components.entitytracker:TrackEntity(magnet.prefab, magnet)
-    end
+    self.magnet_guid = self.magnet.GUID
 
-    self.inst:ListenForEvent("onremove", self.OnMagnetRemoved, magnet)
-    self.inst:ListenForEvent("death", self.OnMagnetRemoved, magnet)
+    self.inst:ListenForEvent("onremove", self.OnMagnetRemoved, self.magnet)
+    self.inst:ListenForEvent("death", self.OnMagnetRemoved, self.magnet)
 
-    if self.turnedoff then
-        self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon")
-        self.inst:AddTag("turnedoff")
-    else
-        self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon_on")
-    end
-    self.inst.sg:GoToState("activate")
-
+    self:TurnOnBeacon()
     self.inst:AddTag("paired")
 end
 
 function BoatMagnetBeacon:UnpairWithMagnet()
-    if self.magnet ~= nil then
-        self.inst.components.entitytracker:ForgetEntity(self.magnet.prefab)
+    if not self.magnet then
+        return
     end
 
     self.inst:RemoveEventCallback("onremove", self.OnMagnetRemoved, self.magnet)
     self.inst:RemoveEventCallback("death", self.OnMagnetRemoved, self.magnet)
 
     self.magnet = nil
-    self.turnedoff = false
-    self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon")
-    self.inst.sg:GoToState("deactivate")
+    self.magnet_guid = nil
 
-    self.inst:RemoveTag("turnedoff")
+    self:TurnOffBeacon()
     self.inst:RemoveTag("paired")
 end
 

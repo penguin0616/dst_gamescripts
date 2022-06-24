@@ -3482,6 +3482,7 @@ return{
         GNARWAIL_HORN = "A fine horn, indeed!",
 
         WALKINGPLANK = "I shall never abandon my vessel!",
+        WALKINGPLANK_GRASS = "I shall never abandon my vessel!",
         OAR = "The Norseman's way to sail!",
 		OAR_DRIFTWOOD = "Back to the sea!",
 
@@ -4506,7 +4507,11 @@ return{
         DOCK_KIT = "I shall make a harbor worthy of my vessel.",
         DOCK_WOODPOSTS_ITEM = "'Tis little more than set-dressing.",
 
-        MONKEYHUT = "Hark! We have found the raiders' fortress!",
+        MONKEYHUT = 
+        {
+            GENERIC = "Hark! We have found the raiders' fortress!",
+            BURNT = "Burned to the ground!",
+        },
         POWDER_MONKEY = "Raiders! Attaaaaaack!!",
         PRIME_MATE = "Art thou the captain of this ship? Then you shall go down with it!",
 		LIGHTCRAB = "Its glow is most welcome.",

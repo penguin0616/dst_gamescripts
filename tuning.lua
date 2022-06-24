@@ -3723,7 +3723,7 @@ function Tune(overrides)
                 RADIUS = 3,
             },
 
-			GRASSBOAT_LEAK_DAMAGE = { 
+			GRASSBOAT_LEAK_DAMAGE = {
 				small_leak = 15,
 				med_leak = 30,
 			},
@@ -3818,7 +3818,9 @@ function Tune(overrides)
 
             BOATCANNON =
             {
-                POWER = 5,
+                RANGE = 20,
+                PROJECTILE_INITIAL_HEIGHT = 1.1,
+                AIM_ANGLE_WIDTH = 90 / RADIANS, -- must be in radians
             },
 
             BOAT_MAGNET =
@@ -3831,6 +3833,15 @@ function Tune(overrides)
 
                 MAGNET_FORCE = 0.6,
                 MAX_VELOCITY = 2.5,
+            },
+        },
+
+        CANNONBALLS =
+        {
+            ROCK =
+            {
+                SPEED = 20,
+                GRAVITY = -40,
             },
         },
 

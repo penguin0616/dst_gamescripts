@@ -3488,6 +3488,7 @@ return{
         GNARWAIL_HORN = "I'm sure I can use this for somethin.",
 
         WALKINGPLANK = "That thing don't look stable.",
+        WALKINGPLANK_GRASS = "That thing don't look stable.",
         OAR = "Remember, back straight, move those arms!",
 		OAR_DRIFTWOOD = "Catch my drift? Ha!",
 
@@ -4512,7 +4513,11 @@ return{
         DOCK_KIT = "Leave the dock buildin' to me.",
         DOCK_WOODPOSTS_ITEM = "I don't like seeing \"spare\" parts lyin' around...",
 
-        MONKEYHUT = "Looks pretty rickety to me.",
+        MONKEYHUT = 
+        {
+            GENERIC = "Looks pretty rickety to me.",
+            BURNT = "I don't think it was up to code.",
+        },
         POWDER_MONKEY = "He looks like he wants to start some trouble.",
         PRIME_MATE = "Yeesh, what an ugly mug.",
 		LIGHTCRAB = "I guess crabs can glow now, huh?",

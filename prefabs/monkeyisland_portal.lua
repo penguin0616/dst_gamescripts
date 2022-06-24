@@ -25,7 +25,10 @@ local prefabs =
 }
 
 local PORTALLOOT_TIMER_NAME = "spawnportalloot_tick"
-local PORTALEVENT_TIMER_NAME = "doportalevent"
+local STARTEVENT_TIMER_NAME = "startportalevent"
+local FIREEVENT_TIMER_NAME = "fireportalevent"
+
+local FIREEVENT_TIME = 3
 
 -- We weight in some FX loot here as well, for some presentation and
 -- to break up the spawn of objects with behaviour.
@@ -117,6 +120,7 @@ local function fling_portal_loot(inst, loot_to_drop)
     local fling_pos = portal_pos + VERTICAL_FLING_OFFSET
 
     if loot_to_drop.components.embarker == nil then
+        inst.SoundEmitter:PlaySound("monkeyisland/portal/spit_item")
         inst.components.lootdropper:FlingItem(loot_to_drop, fling_pos)
 		if loot_to_drop.sg ~= nil then
 			loot_to_drop.sg:GoToState("portal_spawn")
@@ -193,8 +197,8 @@ end
 
 local function on_cycles_changed(inst, cycles)
     if TUNING.MONKEYISLAND_PORTAL_ENABLED and
-            not inst.components.timer:TimerExists(PORTALEVENT_TIMER_NAME) then
-        inst.components.timer:StartTimer(PORTALEVENT_TIMER_NAME, TUNING.TOTAL_DAY_TIME / 2)
+            not inst.components.timer:TimerExists(STARTEVENT_TIMER_NAME) then
+        inst.components.timer:StartTimer(STARTEVENT_TIMER_NAME, TUNING.TOTAL_DAY_TIME / 2)
     end
 end
 
@@ -213,7 +217,34 @@ local function enable_trading(inst)
     inst._event_is_busy = false
 end
 
-local function do_portal_event(inst)
+local function fire_portal_event(inst)
+    local portal_event_spawns = {
+        "cutgrass",
+        "cutgrass",
+        "dug_bananabush",
+        "dug_monkeytail",
+        "palmcone_seed",
+        "palmcone_seed",
+        "powder_monkey",
+        "rocks",
+        "rocks",
+        "twigs",
+        "twigs",
+    }
+    shuffleArray(portal_event_spawns)
+
+    -- Being explicit that we want to reference i after the loop, so we can
+    -- identify when all of the event objects have finished spawning.
+    local i = 1
+    while i <= #portal_event_spawns do
+        inst:DoTaskInTime(10*(i+1)*FRAMES, spawn_event_loot, portal_event_spawns[i])
+        i = i + 1
+    end
+
+    inst:DoTaskInTime(10*(i+2)*FRAMES, enable_trading)
+end
+
+local function start_portal_event(inst)
     if not TUNING.MONKEYISLAND_PORTAL_ENABLED then
         return
     end
@@ -230,47 +261,25 @@ local function do_portal_event(inst)
         return
     end
 
-    local portal_event_spawns = {
-        "cutgrass",
-        "cutgrass",
-        "dug_bananabush",
-        "dug_monkeytail",
-        "palmcone_seed",
-        "palmcone_seed",
-        "powder_monkey",
-        "rocks",
-        "rocks",
-        "twigs",
-        "twigs",
-    }
-    shuffleArray(portal_event_spawns)
-
     inst._event_is_busy = true
-
-    -- Being explicit that we want to reference i after the loop, so we can
-    -- identify when all of the event objects have finished spawning.
-    local i = 1
-    while i <= #portal_event_spawns do
-        inst:DoTaskInTime(10*(i+1)*FRAMES, spawn_event_loot, portal_event_spawns[i])
-        i = i + 1
-    end
-
-    inst:DoTaskInTime(10*(i+2)*FRAMES, enable_trading)
 
     -- If the event was triggered in a non-timer way, clear the timer
     -- so we don't do it again until the next day.
-    if inst.components.timer:TimerExists(PORTALEVENT_TIMER_NAME) then
-        inst.components.timer:StopTimer(PORTALEVENT_TIMER_NAME)
+    if inst.components.timer:TimerExists(STARTEVENT_TIMER_NAME) then
+        inst.components.timer:StopTimer(STARTEVENT_TIMER_NAME)
     end
+
+    inst.SoundEmitter:PlaySound("grotto/creatures/centipede/spawn") -- TODO this is a placeholder sound
+    inst.components.timer:StartTimer(FIREEVENT_TIMER_NAME, FIREEVENT_TIME)
 end
 
 --------------------------------------------------------------------------------
 local EVENT_TRIGGER_TIME = 3
 local function portal_on_near(inst, player)
     -- If we're waiting on an event timer, try to fire it sooner.
-    local time_left = inst.components.timer:GetTimeLeft(PORTALEVENT_TIMER_NAME)
+    local time_left = inst.components.timer:GetTimeLeft(STARTEVENT_TIMER_NAME)
     if time_left ~= nil and time_left > EVENT_TRIGGER_TIME then
-        inst.components.timer:SetTimeLeft(PORTALEVENT_TIMER_NAME, EVENT_TRIGGER_TIME)
+        inst.components.timer:SetTimeLeft(STARTEVENT_TIMER_NAME, EVENT_TRIGGER_TIME)
     end
 end
 
@@ -286,7 +295,7 @@ local function able_to_accept_trade_test(inst, item, giver)
 end
 
 local function on_accept_item(inst, giver, item)
-    do_portal_event(inst)
+    start_portal_event(inst)
 end
 
 --------------------------------------------------------------------------------
@@ -334,8 +343,10 @@ local function on_timer_done(inst, data)
             -- The portal loot timer is repeating!
             inst.components.timer:StartTimer(PORTALLOOT_TIMER_NAME, TUNING.MONKEYISLAND_PORTAL_SPEWTIME)
         end
-    elseif data.name == PORTALEVENT_TIMER_NAME then
-        do_portal_event(inst)
+    elseif data.name == STARTEVENT_TIMER_NAME then
+        start_portal_event(inst)
+    elseif data.name == FIREEVENT_TIMER_NAME then
+        fire_portal_event(inst)
     end
 end
 
@@ -408,6 +419,8 @@ local function fn()
 
     inst:WatchWorldState("cycles", on_cycles_changed)
 
+    inst.SoundEmitter:PlayingSound("monkeyisland/portal/idle_lp","loop")
+
     ----------------------------------------------------------
     inst.OnSave = on_portal_save
     inst.OnLoadPostPass = on_portal_loadpostpass
@@ -415,7 +428,7 @@ local function fn()
     inst.OnEntityWake = on_portal_wake
 
 	inst.Test = try_portal_spawn
-    inst._TestPortalEvent = do_portal_event
+    inst._TestPortalEvent = start_portal_event
 
     return inst
 end
