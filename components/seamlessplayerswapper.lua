@@ -59,6 +59,7 @@ function SeamlessPlayerSwapper:OnSeamlessCharacterSwap(old_player)
 	self.main_data.mime = old_player:HasTag("mime")
 
 	self:PostTransformSetup()
+	new_player:PushEvent("ms_playerseamlessswaped") -- Add post fixup stuff special character traits normally would get for OnNewSpawn but without items.
 
 	if PLAYER_SWAP_TRANSITIONS[new_player.prefab] then
 		new_player.sg:GoToState(PLAYER_SWAP_TRANSITIONS[new_player.prefab].transfrom_state)

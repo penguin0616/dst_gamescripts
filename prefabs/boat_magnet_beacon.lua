@@ -77,6 +77,8 @@ local function fn()
 
 	inst:SetPhysicsRadiusOverride(0.25)
 
+    MakeInventoryFloatable(inst)
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

@@ -36,29 +36,42 @@ nil,
 })
 
 function Curseditem:checkplayersinventoryforspace(player)
-    local space = true
+    local space = false
 
-    if player.components.inventory:IsFull() then
+    local invcmp = player.components.inventory
+    local freeslots = 0
+    for i = 1, invcmp.maxslots do
+        if not invcmp.itemslots[i] then
+            freeslots = freeslots + 1
+        end
+    end
+    local activeiscursed = invcmp.activeitem and invcmp.activeitem.prefab == self.inst.prefab
+    if activeiscursed then
+        freeslots = freeslots - 1
+    end
 
-        -- first look for incomplete stack
-        space = false 
+    if freeslots <= 0 then
+        -- Inventory is full, check for partial stacks.
         if self.inst.components.stackable then
-            local test_items = player.components.inventory:FindItems(function(itemtest) return itemtest.prefab == self.inst.prefab end)
-            for i,stack in ipairs(test_items)do
+            local test_items = invcmp:FindItems(function(itemtest) return itemtest.prefab == self.inst.prefab end)
+            for _, stack in ipairs(test_items) do
                 if stack.components.stackable and not stack.components.stackable:IsFull() then
                     space  = true
                     break
                 end
             end
         end
-        if not space then
-        -- look item to drop
-            local test_item = player.components.inventory:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= player.components.inventory.activeitem and itemtest.components.inventoryitem.owner == player end)
+        if not space and not activeiscursed then
+            -- look item to drop
+            local test_item = invcmp:FindItem(function(itemtest) return not itemtest:HasTag("nosteal") and itemtest ~= invcmp.activeitem and itemtest.components.inventoryitem.owner == player end)
             if test_item then
                 space = true
             end
-        end 
+        end
+    else
+        space = true
     end
+
     return space
 end
 

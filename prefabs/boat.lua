@@ -774,7 +774,18 @@ local function pirate_fn()
     return inst
 end
 
+function CLIENT_CanDeployBoat(inst, pt, mouseover, deployer, rotation)
+    return TheWorld.Map:CanDeployBoatAtPointInWater(pt, inst, mouseover,
+    {
+        boat_radius = inst._boat_radius,
+        boat_extra_spacing = 0.2,
+        min_distance_from_land = 0.2,
+    })
+end
+
 local function common_item_fn_pre(inst)
+    inst._custom_candeploy_fn = CLIENT_CanDeployBoat
+    inst._boat_radius = TUNING.BOAT.RADIUS
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
@@ -795,16 +806,13 @@ local function common_item_fn_pre(inst)
 end
 
 local function common_item_fn_pst(inst)
-
     inst:AddComponent("deployable")
     inst.components.deployable.ondeploy = ondeploy
     inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.LARGE)
-    inst.components.deployable:SetDeployMode(DEPLOYMODE.WATER)
+    inst.components.deployable:SetDeployMode(DEPLOYMODE.CUSTOM)
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
-
-    --inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.NONE)
 
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
@@ -838,6 +846,7 @@ local function grass_item_fn()
     local inst = CreateEntity()
 
     inst = common_item_fn_pre(inst)
+    inst._boat_radius = TUNING.BOAT.GRASS_BOAT.RADIUS
 
     inst.AnimState:SetBank("seafarer_boat")
     inst.AnimState:SetBuild("boat_grass_item")
@@ -851,7 +860,6 @@ local function grass_item_fn()
     end
 
     inst = common_item_fn_pst(inst)
-
     inst.components.deployable:SetDeploySpacing(DEPLOYSPACING.PLACER_DEFAULT)
 
     return inst

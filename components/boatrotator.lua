@@ -2,8 +2,6 @@ local BoatRotator = Class(function(self, inst)
     self.inst = inst
 	self.boat = nil
 
-    self.inst:AddTag("boatrotator")
-
 	self.OnBoatRemoved = function() self.boat = nil end
     self.OnBoatDeath = function() self:OnDeath() end
 

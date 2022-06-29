@@ -145,7 +145,9 @@ BrainCommon.PanicWhenScared = PanicWhenScared
 -- Actions: MINE, CHOP
 
 local MINE_TAGS = { "MINE_workable" }
+local MINE_CANT_TAGS = { "carnivalgame_part" }
 local CHOP_TAGS = { "CHOP_workable" }
+local CHOP_CANT_TAGS = { "carnivalgame_part" }
 
 local function IsDeciduousTreeMonster(guy)
     return guy.monster and guy.prefab == "deciduoustree"
@@ -168,10 +170,10 @@ local AssistLeaderDefaults = {
                     inst:IsNear(inst.components.follower.leader, leaderdist)
         end,
         FindNew = function(inst, leaderdist, finddist)
-            local target = FindEntity(inst, finddist, nil, MINE_TAGS)
+            local target = FindEntity(inst, finddist, nil, MINE_TAGS, MINE_CANT_TAGS)
 
             if target == nil and inst.components.follower.leader ~= nil then
-                target = FindEntity(inst.components.follower.leader, finddist, nil, MINE_TAGS)
+                target = FindEntity(inst.components.follower.leader, finddist, nil, MINE_TAGS, MINE_CANT_TAGS)
             end
 
             if target ~= nil then
@@ -194,10 +196,10 @@ local AssistLeaderDefaults = {
                 or FindDeciduousTreeMonster(inst, finddist) ~= nil
         end,
         FindNew = function(inst, leaderdist, finddist)
-            local target = FindEntity(inst, finddist, nil, CHOP_TAGS)
+            local target = FindEntity(inst, finddist, nil, CHOP_TAGS, CHOP_CANT_TAGS)
 
             if target == nil and inst.components.follower.leader ~= nil then
-                target = FindEntity(inst.components.follower.leader, finddist, nil, CHOP_TAGS)
+                target = FindEntity(inst.components.follower.leader, finddist, nil, CHOP_TAGS, CHOP_CANT_TAGS)
             end
 
             if target ~= nil then

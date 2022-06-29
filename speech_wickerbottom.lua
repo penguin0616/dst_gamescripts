@@ -210,6 +210,7 @@ return{
                 "My glasses need a good cleaning, that's clearly not my Daucus carota rattus!",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I think it would be best to leave it be.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "Oh my, perhaps it's not as intelligent as I first thought.",
             MURDERER = "That wild animal must be dealt with!",
             REVIVER = "The creature seems rather attached to us. I wonder why?",
-            GHOST = "Oh dear... I'm quite inclined to help it.", 
-            FIRESTARTER = "I don't believe it's quite evolved enough to handle fire.",  
+            GHOST = "Oh dear... I'm quite inclined to help it.",
+            FIRESTARTER = "I don't believe it's quite evolved enough to handle fire.",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "A highly effective weapon in nautical combat, when properly loaded.",
             AMMOLOADED = "It is not a plaything.",
+            NOAMMO = "There's still the small matter of ammunition, dear...",
         },
         BOAT_CANNON_KIT = "A necessary precaution, unfortunately.",
         CANNONBALL_ROCK_ITEM = "A suitable projectile for a cannon.",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "Some essential materials for constructing a wharf.",
         DOCK_WOODPOSTS_ITEM = "Unnecessary for a floating dock, but they do have a pleasant appearance.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Despite their affinity with the ocean, the apes still seem to prefer sleeping in trees.",
             BURNT = "I suppose all that thievery leaves little time to organize a fire brigade.",

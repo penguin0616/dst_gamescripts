@@ -39,7 +39,7 @@ local function onload(inst, data)
 end
 
 local function place(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/common/place_structure_wood")
+    inst.SoundEmitter:PlaySound("monkeyisland/dock/post_place")
     
     inst.AnimState:PlayAnimation("place"..inst._post_id)
     inst.AnimState:PushAnimation("idle"..inst._post_id)

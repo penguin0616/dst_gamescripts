@@ -795,7 +795,6 @@ local actionhandlers =
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
     ActionHandler(ACTIONS.CAST_NET, "cast_net"),
     ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO, "doshortaction"),
-    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK, "doshortaction"),
     ActionHandler(ACTIONS.BOAT_CANNON_START_AIMING, "aim_cannon_pre"),
     ActionHandler(ACTIONS.BOAT_CANNON_SHOOT,
         function(inst)
@@ -8835,12 +8834,14 @@ local states =
 
         events =
         {
-            EventHandler("animqueueover", function(inst)
-                if inst:PerformBufferedAction() then
-                    inst.sg.statemem.steering = true
-                    inst.sg:GoToState("steer_boat_idle_loop", true)
-                else
-                    inst.sg:GoToState("idle")
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    if inst:PerformBufferedAction() then
+                        inst.sg.statemem.steering = true
+                        inst.sg:GoToState("steer_boat_idle_loop", true)
+                    else
+                        inst.sg:GoToState("idle")
+                    end
                 end
             end),
             EventHandler("stop_steering_boat", function(inst)
@@ -8930,7 +8931,7 @@ local states =
             if inst.components.steeringwheeluser.should_play_left_turn_anim then
                 inst.AnimState:PlayAnimation("steer_left_pst", false)
             else
-               inst.AnimState:PlayAnimation("steer_right_pst", false)
+                inst.AnimState:PlayAnimation("steer_right_pst", false)
             end
         end,
 
@@ -8943,8 +8944,10 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg.statemem.steering = true
-                inst.sg:GoToState("steer_boat_idle_loop")
+                if inst.AnimState:AnimDone() then
+                    inst.sg.statemem.steering = true
+                    inst.sg:GoToState("steer_boat_idle_loop")
+                end
             end),
             EventHandler("stop_steering_boat", function(inst)
                 inst.sg:GoToState("idle")
@@ -8954,11 +8957,20 @@ local states =
 
    State{
         name = "stop_steering",
+        tags = { "busy" },
 
         onenter = function(inst)
             inst.Transform:SetNoFaced()
             inst.AnimState:PlayAnimation("steer_idle_pst")
         end,
+
+        timeline =
+        {
+            TimeEvent(5 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+                inst.Transform:SetFourFaced()
+            end),
+        },
 
         onexit = function(inst)
             inst.Transform:SetFourFaced()
@@ -8967,7 +8979,9 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
             end),
         }
     },
@@ -8976,17 +8990,25 @@ local states =
         name = "aim_cannon_pre",
         tags = { "is_using_cannon", "doing" },
 
-        onenter = function(inst, skip_pre)
-            inst.AnimState:PlayAnimation("give")
+        onenter = function(inst)
+            inst.Transform:SetEightFaced()
+            inst.AnimState:PlayAnimation("aim_cannon_pre")
         end,
+
+        timeline =
+        {
+            TimeEvent(5 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
 
         events =
         {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    if inst:PerformBufferedAction() then
-                        --inst.sg.statemem.aiming = true
-                        --inst.sg:GoToState("aim_cannon_idle_loop")
+                    if inst.components.boatcannonuser ~= nil and inst.components.boatcannonuser:GetCannon() ~= nil then
+                        inst.sg.statemem.aiming = true
+                        inst.sg:GoToState("aim_cannon_idle")
                     else
                         inst.sg:GoToState("idle")
                     end
@@ -8997,18 +9019,44 @@ local states =
         onexit = function(inst)
             if not inst.sg.statemem.aiming then
                 inst.components.boatcannonuser:SetCannon(nil)
+                inst.Transform:SetFourFaced()
+            end
+        end,
+    },
+
+    State{
+        name = "aim_cannon_idle",
+        tags = { "is_using_cannon", "doing" },
+
+        onenter = function(inst)
+            inst.Transform:SetEightFaced()
+            inst.AnimState:PlayAnimation("aim_cannon_loop", true)
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.aiming then
+                inst.components.boatcannonuser:SetCannon(nil)
+                inst.Transform:SetFourFaced()
             end
         end,
     },
 
     State{
         name = "shoot_cannon",
-        tags = { "doing" },
+        tags = { "doing", "busy" },
 
         onenter = function(inst)
-            inst.AnimState:PlayAnimation("give_pst")
+            inst.Transform:SetEightFaced()
+            inst.AnimState:PlayAnimation("shoot_cannon")
             inst:PerformBufferedAction()
         end,
+
+        timeline =
+        {
+            TimeEvent(13 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+        },
 
         events =
         {
@@ -9022,6 +9070,7 @@ local states =
         onexit = function(inst)
             if not inst.sg.statemem.aiming then
                 inst.components.boatcannonuser:SetCannon(nil)
+                inst.Transform:SetFourFaced()
             end
         end,
     },
@@ -9030,7 +9079,7 @@ local states =
         name = "aim_cannon_pst",
 
         onenter = function(inst)
-            inst.AnimState:PlayAnimation("give_pst")
+            inst.AnimState:PlayAnimation("aim_cannon_pst")
         end,
 
         events =

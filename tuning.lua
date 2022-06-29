@@ -1615,9 +1615,6 @@ function Tune(overrides)
 
         REEDS_REGROW_TIME = total_day_time*3,
 
-		MONKEYTAIL_CYCLES = 4,
-		MONKEYTAIL_CYCLES_VAR = 3,
-
 		GRASS_CYCLES = 20,
 
         BIRD_LEAVINGS_CHANCE = 0.2,
@@ -3826,8 +3823,6 @@ function Tune(overrides)
             BOAT_MAGNET =
             {
                 PAIR_RADIUS = 24, -- Radius distance to look for beacons to pair with
-                MIN_CARRY_DISTANCE = 6, -- Minimum radius from the entity carrying the beacon to the boat magnet
-                MIN_DISTANCE = 9, -- Minimum radius from the center of the magnet boat to the beacon
                 MAX_DISTANCE = 48, -- Lose connection with the beacon when beyond this distance from the center of the boat to the beacon
                 CATCH_UP_SPEED = 0.5, -- Extra velocity given to the magnet's boat in order to catch up with the beacon
 
@@ -6088,11 +6083,16 @@ function Tune(overrides)
         PALMCONETREE_CHOPS_NORMAL = 10,
         PALMCONETREE_CHOPS_TALL = 15,
 
+		MONKEYTAIL_CYCLES = 4,
+		MONKEYTAIL_CYCLES_VAR = 3,
+
+        BANANABUSH_CYCLES = 4,
+        BANANABUSH_CYCLES_VAR = 3,
+
         LIGHTCRAB_WALK_SPEED = 1,
         LIGHTCRAB_RUN_SPEED = 6.1,
 		LIGHTCRAB_HEALTH = 25 * multiplayer_attack_modifier,
         LIGHTCRAB_PERISH_TIME = total_day_time * 5,
-
 
         MONKEY_MEDIUM_HAT_PERISHTIME = total_day_time*6,
         POLLY_ROGERS_HAT_PERISHTIME = total_day_time*6,
@@ -6126,9 +6126,9 @@ function Tune(overrides)
         MONKEY_QUEEN_GRACE_TIME = total_day_time/2,
 
         CANNONBALL_RADIUS = 0.5,
-        CANNONBALL_DAMAGE = 100,
+        CANNONBALL_DAMAGE = 200,
         CANNONBALL_SPLASH_RADIUS = 3,
-        CANNONBALL_SPLASH_DAMAGE_PERCENT = 0.6,
+        CANNONBALL_SPLASH_DAMAGE_PERCENT = 0.6, -- Calculateed as a percent of CANNONBALL_DAMAGE
         CANNONBALL_PASS_THROUGH_TIME_BUFFER = 1,
 
         MONKEY_CURSE_LEVEL_1 = 0,

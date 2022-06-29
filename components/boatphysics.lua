@@ -251,6 +251,10 @@ function BoatPhysics:OnDeath()
     self.inst.SoundEmitter:KillSound("boat_movement")
 end
 
+function BoatPhysics:GetMoveDirection()
+    return Vector3(self.velocity_x, 0, self.velocity_z)
+end
+
 function BoatPhysics:GetVelocity()
     return math.sqrt(self.velocity_x * self.velocity_x + self.velocity_z * self.velocity_z)
 end

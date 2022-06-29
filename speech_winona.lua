@@ -210,6 +210,7 @@ return{
                 "Have you seen my racer around here?",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I'll be keepin' my distance.",
         },
         SLAUGHTER =
         {
@@ -1100,8 +1101,8 @@ return{
             ATTACKER = "Yeesh, calm down there fella!",
             MURDERER = "Yikes, guess yer a wild animal after all.",
             REVIVER = "You're a helpful monkey aren'tcha?",
-            GHOST = "Got yourself in quite the mess now didn'tcha?", 
-            FIRESTARTER = "How'd that monkey manage to start a fire?!",  
+            GHOST = "Got yourself in quite the mess now didn'tcha?",
+            FIRESTARTER = "How'd that monkey manage to start a fire?!",
         },
 
         MIGRATION_PORTAL =
@@ -4485,6 +4486,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "It won't do much good if it's not loaded.",
             AMMOLOADED = "All you sea critters better think twice about messing with my boat!",
+            NOAMMO = "I won't be able to do much without some cannonballs.",
         },
         BOAT_CANNON_KIT = "I'll get 'er firin' ready in no time.",
         CANNONBALL_ROCK_ITEM = "Better load this in the cannon.",
@@ -4513,7 +4515,7 @@ return{
         DOCK_KIT = "Leave the dock buildin' to me.",
         DOCK_WOODPOSTS_ITEM = "I don't like seeing \"spare\" parts lyin' around...",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Looks pretty rickety to me.",
             BURNT = "I don't think it was up to code.",

@@ -210,6 +210,7 @@ return{
                 "Wolfgang's leggy carrot look completely different!",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "Wolfgang won't fall for monkey trick... again!",
         },
         SLAUGHTER =
         {
@@ -1095,8 +1096,8 @@ return{
             ATTACKER = "Is angry monkey!",
             MURDERER = "Wolfgang will stop this monkey business, for good!",
             REVIVER = "Ah. Monkey is friend, yes?",
-            GHOST = "Poor monkey.", 
-            FIRESTARTER = "Is exactly why we stop having monkeys in circus!",  
+            GHOST = "Poor monkey.",
+            FIRESTARTER = "Is exactly why we stop having monkeys in circus!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4480,6 +4481,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "Cannon is empty, but still very scary looking!",
             AMMOLOADED = "Is ready for firing!",
+            NOAMMO = "Ah. Wolfgang forgot cannonballs.",
         },
         BOAT_CANNON_KIT = "Wolfgang will make mighty cannon for ship.",
         CANNONBALL_ROCK_ITEM = "Do not worry, Wolfgang will carry.",
@@ -4508,7 +4510,7 @@ return{
         DOCK_KIT = "Wolfgang will build mighty dock, worthy of boat!",
         DOCK_WOODPOSTS_ITEM = "Posts make dock even stronger!",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Is monkey house for monkeys.",
             BURNT = "Is burnt monkey house.",

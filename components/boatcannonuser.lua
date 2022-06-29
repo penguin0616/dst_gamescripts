@@ -8,6 +8,7 @@ local BoatCannonUser = Class(function(self, inst)
 	--Local aiming variables (DO NOT USE IN SERVER CODE)
 	self.aim_range_fx = nil
 	self.aiming_cannon = nil
+	self.task = nil
 
 	--Network variables
 	self._cannon = net_entity(inst.GUID, "boatcannonuser._cannon", "cannondirty")
@@ -40,6 +41,25 @@ function BoatCannonUser:GetAimPos()
 	return self.aimingcannon ~= nil and self.aimingcannon.components.reticule ~= nil and self.aimingcannon.components.reticule.targetpos or nil
 end
 
+function BoatCannonUser:GetReticule()
+	return self.aimingcannon ~= nil and self.aimingcannon.components.reticule or nil
+end
+
+local function DoStartAiming(inst, self, cannon)
+	self.task = nil
+
+	if not cannon:IsValid() then
+		return
+	end
+
+	if cannon.components.reticule ~= nil then
+		cannon.components.reticule:CreateReticule()
+	end
+
+	self.aim_range_fx = SpawnPrefab("cannon_aim_range_fx")
+	self.aim_range_fx.entity:SetParent(cannon.entity)
+end
+
 function BoatCannonUser:OnCannonChanged()
 	--Only show aiming for local player
 	if self.inst ~= ThePlayer then
@@ -49,31 +69,23 @@ function BoatCannonUser:OnCannonChanged()
 	local cannon = self._cannon:value()
 
 	if self.aimingcannon ~= nil then
-		if cannon == nil then
-			self.inst:StopWallUpdatingComponent(self)
-		end
+		if self.task ~= nil then
+			self.task:Cancel()
+			self.task = nil
+		else
+			self.aim_range_fx:Remove()
+			self.aim_range_fx = nil
 
-		self.aim_range_fx:Remove()
-		self.aim_range_fx = nil
-
-		if self.aimingcannon.components.reticule ~= nil then
-			self.aimingcannon.components.reticule:DestroyReticule()
+			if self.aimingcannon.components.reticule ~= nil then
+				self.aimingcannon.components.reticule:DestroyReticule()
+			end
 		end
 	end
 
 	if cannon ~= nil then
 		print("Start aiming", cannon)
-
-		if self.aimingcannon == nil then
-			self.inst:StartWallUpdatingComponent(self)
-		end
-
-		if cannon.components.reticule ~= nil then
-			cannon.components.reticule:CreateReticule()
-		end
-
-		self.aim_range_fx = SpawnPrefab("cannon_aim_range_fx")
-		self.aim_range_fx.entity:SetParent(cannon.entity)
+		--Delay to wait make sure cannon rotation gets set first
+		self.task = self.inst:DoTaskInTime(0, DoStartAiming, self, cannon)
 	else
 		print("Stop aiming cannon")
 	end
@@ -81,7 +93,7 @@ function BoatCannonUser:OnCannonChanged()
 	self.aimingcannon = cannon
 end
 
-function BoatCannonUser:OnWallUpdate(dt)
+--[[function BoatCannonUser:OnWallUpdate(dt)
 	-- Point towards the action point
 	local cannon = self._cannon:value()
 	local base_aim_angle = CalculateBaseAimAngle(self.inst, cannon)
@@ -99,7 +111,7 @@ function BoatCannonUser:OnWallUpdate(dt)
 	local actualangle = cannon.Transform:GetRotation()
 	local angledelta = actualangle - base_aim_angle
 	self.aim_range_fx.Transform:SetRotation(-angledelta)
-end
+end]]
 
 --------------------------------------------------------------------------
 --Master Sim

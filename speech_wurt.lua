@@ -210,6 +210,7 @@ return{
                 "That one already have owner.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "Nuh-uh, don't want no more stinky monkey bead thing!",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "Hey!! Monkey not allowed to hit!",
             MURDERER = "Grrr, you a bad monkey! Go away!",
             REVIVER = "Thanks, monkey!",
-            GHOST = "Oh no! Did monkey eat bad fruit?", 
-            FIRESTARTER = "Monkey shouldn't play with fire, flort!",  
+            GHOST = "Oh no! Did monkey eat bad fruit?",
+            FIRESTARTER = "Monkey shouldn't play with fire, flort!",
         },
 
         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "It not ready yet!",
             AMMOLOADED = "Wanna play, wanna play!",
+            NOAMMO = "Glurgh... forget to bring cannon rocks...",
         },
         BOAT_CANNON_KIT = "Buildy bits for boat stuff.",
         CANNONBALL_ROCK_ITEM = "Thought we not allowed to throw rocks?",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "Will build nice sleeping spot for boat.",
         DOCK_WOODPOSTS_ITEM = "Would look better with Pigman head on top, but still okay.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Mermfolk houses better, florp.",
             BURNT = "Didn't do it! Found it like this!",

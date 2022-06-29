@@ -76,8 +76,10 @@ local BANANABUSH_GROWTH_STAGES = {
 }
 
 local function OnDig(inst, worker)
-    if inst.components.pickable ~= nil and inst.components.lootdropper ~= nil then 
-        if inst.components.pickable:IsBarren() then
+    if inst.components.pickable ~= nil and inst.components.lootdropper ~= nil then
+        local withered = inst.components.witherable ~= nil and inst.components.witherable:IsWithered()
+
+        if withered or inst.components.pickable:IsBarren() then
             inst.components.lootdropper:SpawnLootPrefab("twigs")
             inst.components.lootdropper:SpawnLootPrefab("twigs")
         else
@@ -100,6 +102,7 @@ local function OnPicked(inst, picker)
             inst.AnimState:PlayAnimation("idle_to_dead")
             inst.AnimState:PushAnimation("dead", false)
             inst.components.growable:StopGrowing()
+            inst.components.growable.magicgrowable = false
         else
             inst.AnimState:PlayAnimation("picked")
             inst.AnimState:PushAnimation("idle_empty")
@@ -110,26 +113,36 @@ local function OnPicked(inst, picker)
 end
 
 local function OnTransplant(inst)
-    inst.components.growable:SetStage(1)
-    inst.components.growable:StopGrowing()
-    inst.AnimState:PlayAnimation("dead")
     inst.components.pickable:MakeBarren()
 end
 
 local function MakeEmpty(inst)
-    if inst.AnimState:IsCurrentAnimation("dead") then
-        inst.AnimState:PlayAnimation("dead_to_idle")
-        inst.AnimState:PushAnimation("idle_empty")
+    if not POPULATING then
+        inst.components.growable:SetStage(1)
         inst.components.growable:StartGrowing()
-    else
-        set_empty(inst)
+        inst.components.growable.magicgrowable = true
     end
+end
+
+local function MakeBarren(inst, wasempty)
+    inst.components.growable:SetStage(1)
+    inst.components.growable:StopGrowing()
+    inst.components.growable.magicgrowable = false
+
+    inst.AnimState:PlayAnimation("dead")
 end
 
 local function OnRegen(inst)
     inst.components.growable:Resume()
     if inst.components.growable.stage < 4 then
         inst.components.growable:SetStage(4)
+    end
+end
+
+local function on_load(inst, data)
+    if data ~= nil and inst.components.witherable:IsWithered() then
+        -- To trigger pickable not regenerating.
+        inst.components.witherable:ForceWither()
     end
 end
 
@@ -162,12 +175,18 @@ local function fn()
     --------------------------------------------------------------------------
     inst:AddComponent("pickable")
     inst.components.pickable.picksound = "dontstarve/wilson/harvest_berries"
+
+    local variance_cycles = (TUNING.MONKEYTAIL_CYCLES_VAR <= 1 and TUNING.MONKEYTAIL_CYCLES_VAR)
+        or math.random(TUNING.MONKEYTAIL_CYCLES_VAR)
+    inst.components.pickable.max_cycles = TUNING.MONKEYTAIL_CYCLES + variance_cycles
+    inst.components.pickable.cycles_left = inst.components.pickable.max_cycles
+
     inst.components.pickable.onpickedfn = OnPicked
-    inst.components.pickable:SetUp("cave_banana", TUNING.BERRY_REGROW_TIME)
+    inst.components.pickable:SetUp("cave_banana")
     inst.components.pickable.ontransplantfn = OnTransplant
     inst.components.pickable:SetMakeEmptyFn(MakeEmpty)
+    inst.components.pickable:SetMakeBarrenFn(MakeBarren)
     inst.components.pickable:SetOnRegenFn(OnRegen)
-    inst.components.pickable:MakeEmpty()
 
     --------------------------------------------------------------------------
     inst:AddComponent("growable")
@@ -176,6 +195,7 @@ local function fn()
     inst.components.growable.loopstages = false
     inst.components.growable.springgrowth = true
     inst.components.growable:StartGrowing()
+    inst.components.growable.magicgrowable = true
 
     --------------------------------------------------------------------------
     if not GetGameModeProperty("disable_transplanting") then
@@ -192,6 +212,9 @@ local function fn()
     inst:AddComponent("inspectable")
 
     --------------------------------------------------------------------------
+    inst:AddComponent("witherable")
+
+    --------------------------------------------------------------------------
     MakeSnowCovered(inst)
     MakeNoGrowInWinter(inst)
 
@@ -201,6 +224,9 @@ local function fn()
 
     --------------------------------------------------------------------------
     MakeHauntableIgnite(inst)
+
+    --------------------------------------------------------------------------
+    inst.OnLoad = on_load
 
     return inst
 end

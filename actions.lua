@@ -381,7 +381,7 @@ ACTIONS =
     REPAIR_LEAK = Action({ distance=2.5 }),
     STEER_BOAT = Action({ distance=0.1 }),
     SET_HEADING = Action({distance=9999, do_not_locomote=true}),
-    STOP_STEERING_BOAT = Action({instant=true}),
+    STOP_STEERING_BOAT = Action({ instant = true }),
     CAST_NET = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=12, mount_valid=true, disable_platform_hopping=true }),
     ROW_FAIL = Action({customarrivecheck=function() return true end, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true}),
     ROW = Action({priority=3, customarrivecheck=CheckRowRange, is_relative_to_platform=true, disable_platform_hopping=true, invalid_hold_action = true}),
@@ -412,9 +412,8 @@ ACTIONS =
     BOAT_MAGNET_BEACON_TURN_ON = Action({ rmb = true, priority=3 }),
     BOAT_MAGNET_BEACON_TURN_OFF = Action({ rmb = true, priority=3 }),
 
-    BOAT_CANNON_LOAD_AMMO = Action({ mount_valid=true, paused_valid=true }),
-    BOAT_CANNON_LOAD_AMMO_QUICK = Action({rmb=true, priority=3}),
-    BOAT_CANNON_START_AIMING = Action(),
+    BOAT_CANNON_LOAD_AMMO = Action({ distance=1.4, mount_valid=true, paused_valid=true, rmb=true, priority=3 }),
+    BOAT_CANNON_START_AIMING = Action({ distance=1.4 }),
     BOAT_CANNON_SHOOT = Action({distance=9999, do_not_locomote=true}),
     BOAT_CANNON_STOP_AIMING = Action({instant=true}),
 
@@ -510,9 +509,11 @@ ACTIONS.EAT.fn = function(act)
 end
 
 ACTIONS.STEAL.fn = function(act)
-    local owner = act.target.components.inventoryitem ~= nil and act.target.components.inventoryitem.owner or nil
+    local owner = act.target.components.inventory ~= nil and act.target or act.target.components.inventoryitem ~= nil and act.target.components.inventoryitem.owner or nil
+    local target = act.target.components.inventory == nil and act.target or nil
+
     if owner ~= nil then
-        return act.doer.components.thief:StealItem(owner, act.target, act.attack == true)
+        return act.doer.components.thief:StealItem(owner, target, act.attack == true)
     elseif act.target.components.dryer ~= nil then
         return act.target.components.dryer:DropItem()
     end
@@ -3511,31 +3512,24 @@ end
 
 ACTIONS.BOAT_CANNON_LOAD_AMMO.fn = function(act)
     if act.target.components.boatcannon ~= nil and not act.target.components.boatcannon:IsAmmoLoaded() and act.doer.components.inventory ~= nil then
-        local ammo = act.doer.components.inventory:RemoveItem(act.invobject)
-        if ammo then
-            if act.target.components.boatcannon:LoadAmmo(ammo, act.doer, true) then
-                act.doer.components.talker:Say(GetDescription(act.doer, act.target, "AMMOLOADED"))
-                return true
-            else
-                act.doer.components.inventory:GiveItem(ammo)
-            end
-        end
-	end
-    return true
-end
 
-ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK.fn = function(act)
-    if act.target.components.boatcannon ~= nil and not act.target.components.boatcannon:IsAmmoLoaded() and act.doer.components.inventory ~= nil then
-        local ammo = act.doer.components.inventory:FindItem(function(item)
-            return item:HasTag("boatcannon_ammo")
-        end)
+        local activeitem = act.doer.components.inventory:GetActiveItem()
+        local ammo = activeitem
+
+        -- Not holding an item, so we must be right-clicking to reload.
+        if activeitem == nil then
+            ammo = act.doer.components.inventory:FindItem(function(item)
+                return item:HasTag("boatcannon_ammo")
+            end)
+        end
 
         if ammo ~= nil and act.target.components.boatcannon:LoadAmmo(ammo, act.doer, false) then
             act.doer.components.inventory:RemoveItem(ammo, false, true)
             act.doer.components.talker:Say(GetDescription(act.doer, act.target, "AMMOLOADED"))
+
             return true
-        elseif act.doer.components.talker ~= nil then
-            act.doer.components.talker:Say(GetDescription(act.doer, act.target, "GENERIC"))
+        elseif act.doer.components.talker ~= nil and activeitem == nil then
+            act.doer.components.talker:Say(GetDescription(act.doer, act.target, "NOAMMO"))
         end
 	end
     return true

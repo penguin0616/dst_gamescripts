@@ -128,6 +128,99 @@ local function setcrewmember(monkey,boat)
     boat.components.boatcrew:AddMember(monkey)
 end
 
+
+local LIFESPAN = {	base = TUNING.TOTAL_DAY_TIME *3,
+					varriance = TUNING.TOTAL_DAY_TIME }
+
+
+
+--------------------------------------------------------------------------
+--[[ Member variables ]]
+--------------------------------------------------------------------------
+
+--Public
+self.inst = inst
+
+--Private
+local _activeplayers = {}
+local _scheduledtask = nil
+local _worldstate = TheWorld.state
+local _map = TheWorld.Map
+local _minspawndelay = TUNING.PIRATE_SPAWN_DELAY.min
+local _maxspawndelay = TUNING.PIRATE_SPAWN_DELAY.max
+local _updating = false
+local _maxpirates = 1
+local _timescale = 1
+local _current_stash = nil
+
+local zones ={
+    { -- INNER
+        max = TUNING.PIRATESPAWNER.INNER.MAX,
+        chance = TUNING.PIRATESPAWNER.INNER.CHANCE,
+        weight = TUNING.PIRATESPAWNER.INNER.WEIGHT,
+    },
+    { -- MID
+        max = TUNING.PIRATESPAWNER.MID.MAX,
+        chance = TUNING.PIRATESPAWNER.MID.CHANCE,
+        weight = TUNING.PIRATESPAWNER.MID.WEIGHT,
+    },
+    { -- OUTTER
+        max = TUNING.PIRATESPAWNER.OUTTER.MAX,
+        chance = TUNING.PIRATESPAWNER.OUTTER.CHANCE,
+        weight = TUNING.PIRATESPAWNER.OUTTER.WEIGHT,
+    },
+}
+
+local function GetAveragePlayerAgeInDays()
+    local sum = 0
+    for i, v in ipairs(_activeplayers) do
+        sum = sum + v.components.age:GetAgeInDays()
+    end
+    return sum > 0 and sum / #_activeplayers or 0
+end
+
+local function getnextmonkeytime()    
+    local days = GetAveragePlayerAgeInDays()
+    local mult = 1
+    if days < 10 then
+        mult = 0.6
+    elseif days < 20 then
+        mult = 0.4
+    elseif days < 40 then
+        mult = 0.2
+    elseif days < 80 then
+        mult = 0.1
+    else
+        mult = 0
+    end
+    print("base",TUNING.PIRATESPAWNER_BASEPIRATECHANCE*mult)
+    print("add",(1-mult) * TUNING.PIRATESPAWNER_BASEPIRATECHANCE)
+    return (TUNING.PIRATESPAWNER_BASEPIRATECHANCE*mult) + (math.random() *  (1-mult) * TUNING.PIRATESPAWNER_BASEPIRATECHANCE )
+end
+
+local _nextpiratechance = getnextmonkeytime()
+local _lasttic_players = {}
+
+
+self.shipdatas = {}
+
+self.queen = nil
+
+self.inst:DoTaskInTime(0,function()
+    for k,v in pairs(Ents) do
+        if v.prefab == "monkeyqueen" then
+            self.queen = v
+            self.inst:ListenForEvent("onremove", function() self.queen = nil end, self.queen)
+            break
+        end
+    end
+
+    if TUNING.PIRATE_RAIDS_ENABLED and self.queen then
+        self.inst:StartUpdatingComponent(self)
+    end
+end)
+
+
 local RANGE = 40 -- distance from player to spawn the flotsam.  should be 5 more than wanted
 local SHORTRANGE = 5 -- radius that must be clear for flotsam to appear
 
@@ -169,7 +262,20 @@ local function spawnpirateship(pt)
     captain.components.inventory:GiveItem(map)
 
     --SPAWN MONKEYS
-    local monkeys = 4
+    --SPAWN MONKEYS
+    local day = GetAveragePlayerAgeInDays()
+    local monkeys = 1
+
+    if day < 15 then
+        monkeys = 2+ (math.random() < 0.7 and 1 or 0)
+    elseif day < 30 then
+        monkeys = 2+ (math.random() < 0.7 and 1 or 0) + (math.random() < 0.3 and 1 or 0)
+    elseif day < 60 then
+        monkeys = 3+ (math.random() < 0.7 and 1 or 0) + (math.random() < 0.3 and 1 or 0)
+    else
+        monkeys = 4+ (math.random() < 0.7 and 1 or 0)    
+    end
+
     shipdata.crew = {}
     for i=1,monkeys do
         local monkey = SpawnPrefab("powder_monkey")
@@ -191,76 +297,17 @@ local function spawnpirateship(pt)
 
     local players = FindPlayersInRange(pt.x, pt.y, pt.z,  RANGE, true)
     for i,player in ipairs(players)do
-        player.components.talker:Say(  GetString(player, "ANNOUNCE_PIRATES_ARRIVE") )
+        player:DoTaskInTime(0.6, 
+            function() 
+                if player:IsValid() and not player.components.health:IsDead() then 
+                    player.components.talker:Say(  GetString(player, "ANNOUNCE_PIRATES_ARRIVE") ) 
+                end
+            end)
         player.SoundEmitter:PlaySound("monkeyisland/primemate/announce")
     end
 
     return shipdata
 end
-
-local LIFESPAN = {	base = TUNING.TOTAL_DAY_TIME *3,
-					varriance = TUNING.TOTAL_DAY_TIME }
-
-
-local function getnextmonkeytime()
-    return math.random() * TUNING.PIRATESPAWNER_BASEPIRATECHANCE
-end
---------------------------------------------------------------------------
---[[ Member variables ]]
---------------------------------------------------------------------------
-
---Public
-self.inst = inst
-
---Private
-local _activeplayers = {}
-local _scheduledtask = nil
-local _worldstate = TheWorld.state
-local _map = TheWorld.Map
-local _minspawndelay = TUNING.PIRATE_SPAWN_DELAY.min
-local _maxspawndelay = TUNING.PIRATE_SPAWN_DELAY.max
-local _updating = false
-local _maxpirates = 1
-local _timescale = 1
-local _current_stash = nil
-
-local zones ={
-    { -- INNER
-        max = TUNING.PIRATESPAWNER.INNER.MAX,
-        chance = TUNING.PIRATESPAWNER.INNER.CHANCE,
-        weight = TUNING.PIRATESPAWNER.INNER.WEIGHT,
-    },
-    { -- MID
-        max = TUNING.PIRATESPAWNER.MID.MAX,
-        chance = TUNING.PIRATESPAWNER.MID.CHANCE,
-        weight = TUNING.PIRATESPAWNER.MID.WEIGHT,
-    },
-    { -- OUTTER
-        max = TUNING.PIRATESPAWNER.OUTTER.MAX,
-        chance = TUNING.PIRATESPAWNER.OUTTER.CHANCE,
-        weight = TUNING.PIRATESPAWNER.OUTTER.WEIGHT,
-    },
-}
-local _nextpiratechance = getnextmonkeytime()
-local _lasttic_players = {}
-
-self.shipdatas = {}
-
-self.queen = nil
-
-self.inst:DoTaskInTime(0,function()
-    for k,v in pairs(Ents) do
-        if v.prefab == "monkeyqueen" then
-            self.queen = v
-            self.inst:ListenForEvent("onremove", function() self.queen = nil end, self.queen)
-            break
-        end
-    end
-
-    if TUNING.PIRATE_RAIDS_ENABLED and self.queen then
-        self.inst:StartUpdatingComponent(self)
-    end
-end)
 
 --------------------------------------------------------------------------
 --[[ Private member functions ]]
@@ -399,6 +446,8 @@ local function generateloot(stash)
         item:RemoveFromScene()
         table.insert(stash.loot,item)
     end
+
+    local day = GetAveragePlayerAgeInDays()
 
     local lootlist = {}
 
@@ -582,6 +631,12 @@ function self:OnUpdate(dt)
             v.piratesnear = nil
         end
     end
+end
+
+
+function self:LongUpdate(dt)
+
+    self:OnUpdate(dt)
 end
 
 --------------------------------------------------------------------------

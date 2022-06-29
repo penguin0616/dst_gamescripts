@@ -93,7 +93,7 @@ end
 
 function ComplexProjectile:Launch(targetPos, attacker, owningweapon)
     local pos = self.inst:GetPosition()
-    self.owningweapon = owningweapon or self
+    self.owningweapon = owningweapon or self.inst
     self.attacker = attacker
 
 	self.inst:ForceFacePoint(targetPos:Get())

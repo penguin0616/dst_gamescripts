@@ -140,7 +140,15 @@ local function ongivenitem(inst, giver, item)
     inst.components.boatcannon:LoadAmmo(item, giver)
 end
 
+local function CancelOperator(inst)
+    local operator = inst.components.boatcannon.operator
+    if operator ~= nil and operator.components.boatcannonuser ~= nil then
+        operator.components.boatcannonuser:SetCannon(nil)
+    end
+end
+
 local function onburnt(inst)
+    CancelOperator(inst)
 	DefaultBurntStructureFn(inst)
 end
 
@@ -159,8 +167,10 @@ local RANGE = CalculateShotRange()
 
 local function ClampReticulePos(inst, pos, newx, newz)
     -- Check if direction held is within the cannon's firing arc
-    local px, py, pz = ThePlayer.Transform:GetWorldPosition()
-    local base_aim_angle = 180 - GetAngleFromBoat(inst, px, pz) / DEGREES
+    --local px, py, pz = ThePlayer.Transform:GetWorldPosition()
+    --local base_aim_angle = 180 - GetAngleFromBoat(inst, px, pz) / DEGREES
+    --V2C: just use our rotation for now because the vector to player is not smooth over the network on a rotating platform
+    local base_aim_angle = inst.Transform:GetRotation()
     local base_aim_facing = Vector3(math.cos(-base_aim_angle / RADIANS), 0 , math.sin(-base_aim_angle / RADIANS))
     local withinangle = IsWithinAngle(inst:GetPosition(), base_aim_facing, TUNING.BOAT.BOATCANNON.AIM_ANGLE_WIDTH, pos - Vector3(newx, 0, newz))
     if not withinangle then
@@ -213,9 +223,17 @@ local function reticule_target_function(inst)
         dir.z = TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)
         local deadzone = .3
 
+        local reticule = inst.components.reticule.reticule
         if math.abs(dir.x) >= deadzone or math.abs(dir.z) >= deadzone then
             dir = dir:GetNormalized()
+            if reticule ~= nil then
+                reticule._lastdir = dir
+            end
+        else
+            dir = reticule ~= nil and reticule._lastdir or nil
+        end
 
+        if dir ~= nil then
             local Camangle = TheCamera:GetHeading()/180
             local theta = -PI *(0.5 - Camangle)
 
@@ -233,9 +251,7 @@ end
 local function onlit(inst)
     if inst:HasTag("ammoloaded") then
         inst.sg:GoToState("shoot")
-        if inst.components.boatcannon.operator and inst.components.boatcannon.operator.components.boatcannonuser then
-            inst.components.boatcannon.operator.components.boatcannonuser:SetCannon(nil)
-        end
+        CancelOperator(inst)
     end
 end
 

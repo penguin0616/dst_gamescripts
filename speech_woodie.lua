@@ -210,6 +210,7 @@ return{
                 "Why don't you scurry back to your owner, eh?",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "How many more curses do I need, eh?",
         },
         SLAUGHTER =
         {
@@ -1095,8 +1096,8 @@ return{
             ATTACKER = "Someone oughta teach that monkey some manners.",
             MURDERER = "That chimp's on the choppin' block!",
             REVIVER = "There's a good heart hiding under all that fur, I can tell.",
-            GHOST = "Bad day, eh?", 
-            FIRESTARTER = "That ape's playin' with fire!",  
+            GHOST = "Bad day, eh?",
+            FIRESTARTER = "That ape's playin' with fire!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4480,6 +4481,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "Looks like it could do some damage... if it was actually loaded.",
             AMMOLOADED = "There's a big seabird out there I'd love to introduce you to.",
+            NOAMMO = "I can't just load it with any old thing, eh?",
         },
         BOAT_CANNON_KIT = "That cannon won't build itself, eh?",
         CANNONBALL_ROCK_ITEM = "I sure wouldn't want one of these fired at my boat.",
@@ -4508,7 +4510,7 @@ return{
         DOCK_KIT = "I can see it now, the whole ocean covered in beautiful timber...",
         DOCK_WOODPOSTS_ITEM = "Looking at 'em is making me hungry.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Huh. I wonder what it might be like to live in a tree.",
             BURNT = "Eh... maybe living in a tree ain't all it's cracked up to be.",

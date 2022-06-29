@@ -210,6 +210,7 @@ return{
                 "Oh botheration, I think I grabbed the wrong carrat.",
             },
 			NO_HEAVY_LIFTING = "I might be able to manage it... if I was just a bit younger.",
+            FULL_OF_CURSES = "It won't fool me this time.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "You stop that, right this minute!",
             MURDERER = "Whoever they were is gone, the beast has taken hold!",
             REVIVER = "At least their heart's still in the right place.",
-            GHOST = "Even death can't lift the curse?", 
-            FIRESTARTER = "I know you must be frustrated, but that won't solve anything!",  
+            GHOST = "Even death can't lift the curse?",
+            FIRESTARTER = "I know you must be frustrated, but that won't solve anything!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "I could have sworn I loaded that cannon... maybe it hasn't happened yet.",
             AMMOLOADED = "It never hurts to take precautions.",
+            NOAMMO = "Next time I'll remember to bring cannonballs.",
         },
         BOAT_CANNON_KIT = "I'd better get that on my boat sooner rather than later.",
         CANNONBALL_ROCK_ITEM = "Pretty self-explanitory, really.",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "Can't someone with more time on their hands set it up?",
         DOCK_WOODPOSTS_ITEM = "Are you supposed to place the support posts before or after? Oh well.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "I prefer living solidly on the ground, thank you.",
             BURNT = "What a shame. Anyway...",

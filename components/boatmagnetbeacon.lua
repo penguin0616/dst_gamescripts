@@ -80,7 +80,9 @@ function BoatMagnetBeacon:OnLoad(data)
     self.ispickedup = data.ispickedup
     self.magnet_guid = data.magnet_guid or data.prev_guid -- NOTES(JBK): 'prev_guid' is for beta worlds that might have this old vague name.
 
-    if self.turnedoff then
+    if self.boat == nil then
+        self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon")
+    elseif self.turnedoff then
         self.inst.components.inventoryitem:ChangeImageName("boat_magnet_beacon")
         self.inst:AddTag("turnedoff")
     else

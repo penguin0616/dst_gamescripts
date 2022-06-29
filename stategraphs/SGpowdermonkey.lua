@@ -15,7 +15,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.GOHOME, "action"),
     ActionHandler(ACTIONS.PICKUP, "action"),
     ActionHandler(ACTIONS.GIVE, "action"),
-    ActionHandler(ACTIONS.STEAL, "action"),
+    ActionHandler(ACTIONS.STEAL, "steal"),
     ActionHandler(ACTIONS.PICK, "action"),
     ActionHandler(ACTIONS.ATTACK, "attack"),
     ActionHandler(ACTIONS.BOAT_CANNON_SHOOT, "action"),
@@ -23,8 +23,6 @@ local actionhandlers =
     ActionHandler(ACTIONS.EAT, "eat"),
     ActionHandler(ACTIONS.ROW, "row"),
     ActionHandler(ACTIONS.EMPTY_CONTAINER, "empty"),
-
-
 
     ActionHandler(ACTIONS.LOWER_ANCHOR, "action"),
     ActionHandler(ACTIONS.RAISE_SAIL, "action"),
@@ -455,6 +453,29 @@ local states =
             end),
         },
     },
+
+    State{
+        name = "steal",
+        tags = {"busy","caninterrupt"},
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("unequipped_atk")
+        end,
+
+        timeline =
+        {
+            TimeEvent(14*FRAMES, function(inst)
+                inst:PerformBufferedAction()
+                inst.SoundEmitter:PlaySound("monkeyisland/powdermonkey/attack_unarmed")
+            end),
+        },
+
+        events=
+        {
+            EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
+        },
+    },
+
 
     State{
         name = "dive_pst_land",

@@ -448,7 +448,6 @@ local actionhandlers =
     ActionHandler(ACTIONS.MOUNT_PLANK, "mount_plank"),
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
     ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO, "doshortaction"),
-    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK, "doshortaction"),
     ActionHandler(ACTIONS.BOAT_CANNON_START_AIMING, "aim_cannon_pre"),
     ActionHandler(ACTIONS.BOAT_CANNON_SHOOT, function(inst, action) inst:PerformPreviewBufferedAction() end),
     ActionHandler(ACTIONS.OCEAN_TRAWLER_LOWER, "doshortaction"),
@@ -2584,8 +2583,9 @@ local states =
 
         onenter = function(inst, snap)
             inst.components.locomotor:Stop()
-            --inst.Transform:SetPredictedNoFaced()
-            inst.AnimState:PlayAnimation("give")
+            inst.Transform:SetPredictedEightFaced()
+            inst.AnimState:PlayAnimation("aim_cannon_pre")
+            inst.AnimState:PushAnimation("aim_cannon_loop", true)
             inst:PerformPreviewBufferedAction()
 
             inst.sg:SetTimeout(TIMEOUT)

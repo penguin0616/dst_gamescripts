@@ -210,6 +210,7 @@ return{
                 "Where is your master, veggie beast?",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "'Tis not a treasure worth taking.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "Thou hast revealed thine true nature, beast!",
             MURDERER = "Foul beast! The hunt is on!",
             REVIVER = "Thou art a most noble creature.",
-            GHOST = "It seems you have not fared well, beastie.", 
-            FIRESTARTER = "Monkey trickery!",  
+            GHOST = "It seems you have not fared well, beastie.",
+            FIRESTARTER = "Monkey trickery!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "Load the cannons!",
             AMMOLOADED = "Ready for battle!",
+            NOAMMO = "Woe! There is nary a cannonball in sight!",
         },
         BOAT_CANNON_KIT = "We must be prepared for a battle at sea.",
         CANNONBALL_ROCK_ITEM = "Woe to any fool who doth attack my ship!",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "I shall make a harbor worthy of my vessel.",
         DOCK_WOODPOSTS_ITEM = "'Tis little more than set-dressing.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Hark! We have found the raiders' fortress!",
             BURNT = "Burned to the ground!",

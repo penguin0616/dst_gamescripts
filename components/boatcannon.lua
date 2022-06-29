@@ -75,10 +75,10 @@ function BoatCannon:LoadAmmo(ammo, giver, removeammo)
 	self.inst.sg:GoToState("load")
 
 	-- Return the item the giver is holding back into their inventory
-	if giver ~= nil and giver.components.inventory ~= nil then
+	--[[if giver ~= nil and giver.components.inventory ~= nil then
 		local item = giver.components.inventory:GetActiveItem()
 		giver.components.inventory:ReturnActiveActionItem(item)
-	end
+	end]]
 
 	if removeammo then
 		ammo:Remove()

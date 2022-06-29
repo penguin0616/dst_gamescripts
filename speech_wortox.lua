@@ -210,6 +210,7 @@ return{
                 "This soul is already bound to someone else.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I've had enough of this monkey stuff.",
         },
         SLAUGHTER =
         {
@@ -1099,8 +1100,8 @@ return{
             ATTACKER = "It looks like the curse has brought out your worst.",
             MURDERER = "Now now, I think chimps and imps should get along!",
             REVIVER = "The day is saved, with the ape's aid.",
-            GHOST = "I wonder if monkey souls are banana-flavored?", 
-            FIRESTARTER = "What a marvelously mischievous monkey.",  
+            GHOST = "I wonder if monkey souls are banana-flavored?",
+            FIRESTARTER = "What a marvelously mischievous monkey.",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4483,8 +4484,9 @@ return{
         BOAT_BUMPER_SHELL = "We shell be well protected, hyuyu!",
         BOAT_BUMPER_SHELL_KIT = "But idle hands are such good playthings!",
         BOAT_CANNON = {
-            GENERIC = "Cannon, can off!",
+            GENERIC = "Rounded stones are required for this cannon to fire.",
             AMMOLOADED = "Ready to fire, but decidedly unready to brimstone.",
+            NOAMMO = "This cannon cannot fire.",
         },
         BOAT_CANNON_KIT = "I'll build it quick, then put it on the ship.",
         CANNONBALL_ROCK_ITEM = "Oh what a sinking feeling it brings!",
@@ -4513,7 +4515,7 @@ return{
         DOCK_KIT = "It would a-pier I have some work to do.",
         DOCK_WOODPOSTS_ITEM = "I'll fix it in post, hyuyu!",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Knock knock! Won't you let me in?",
             BURNT = "It looks like I missed all the fun!",

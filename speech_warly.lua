@@ -210,6 +210,7 @@ return{
                 "Oh, je m'excuse, have you seen my carrat around here?",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "Perhaps I'll just leave that alone.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "Perhaps it's not so friendly after all...",
             MURDERER = "Mon dieu! The monkey is on a rampage!",
             REVIVER = "Thank you for your help, mon... key.",
-            GHOST = "That monkey has looked better.", 
-            FIRESTARTER = "Le singe...",  
+            GHOST = "That monkey has looked better.",
+            FIRESTARTER = "Le singe...",
         },
 
         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "Its belly is empty.",
             AMMOLOADED = "Is it too much to hope for a peaceful voyage?",
+            NOAMMO = "Ah zut! I have nothing to fill its belly.",
         },
         BOAT_CANNON_KIT = "All the ingredients needed for a fresh cannon.",
         CANNONBALL_ROCK_ITEM = "I hope it won't be needed.",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "Everything one might need to whip up a dock.",
         DOCK_WOODPOSTS_ITEM = "My dock needs a bit of garnish.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Those monkeys seem to be enjoying the high life out here, non?",
             BURNT = "It actually gives off a rather pleasant aroma of roasted bananas...",

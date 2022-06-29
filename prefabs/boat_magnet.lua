@@ -39,7 +39,7 @@ local function onburnt(inst)
 end
 
 local function onbuilt(inst)
-    inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/steering_wheel/place")
+    inst.SoundEmitter:PlaySound("monkeyisland/autopilot/magnet_place")
     inst.sg:GoToState("place")
 end
 
@@ -63,6 +63,8 @@ local function getstatus(inst, viewer)
         return "GENERIC"
     end
 end
+
+
 
 local function fn()
     local inst = CreateEntity()

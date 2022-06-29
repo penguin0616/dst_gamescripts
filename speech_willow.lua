@@ -210,6 +210,7 @@ return{
                 "Mine is the little orange one, with whiskers.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I'm not going near that thing!",
         },
         SLAUGHTER =
         {
@@ -1101,8 +1102,8 @@ return{
             ATTACKER = "Careful, I think it's rabid!",
             MURDERER = "That thing's dangerous! Burn it!",
             REVIVER = "You're pretty smart for a stinky monkey.",
-            GHOST = "What happened? Did you fall out of a tree?", 
-            FIRESTARTER = "Heh. Good monkey.",  
+            GHOST = "What happened? Did you fall out of a tree?",
+            FIRESTARTER = "Heh. Good monkey.",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4486,6 +4487,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "It isn't loaded? Booooring.",
             AMMOLOADED = "The only fun part of sailing is getting to fire the cannon.",
+            NOAMMO = "Darn it, I'm out... hey Wes, you always wanted to try being a human cannonball right?",
         },
         BOAT_CANNON_KIT = "If I build it, I get to fire it.",
         CANNONBALL_ROCK_ITEM = "Okay, but I still think fireballs would be better.",
@@ -4514,7 +4516,7 @@ return{
         DOCK_KIT = "It'll be nice to cover up the water with some nice, flammable wood.",
         DOCK_WOODPOSTS_ITEM = "More fuel for the fi- I mean decoration for the dock!",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Ugh, nobody ever lets me into their tree forts.",
             BURNT = "Heh. This is probably why nobody lets me into their tree forts.",

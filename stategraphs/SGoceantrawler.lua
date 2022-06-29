@@ -190,7 +190,7 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("overload_pst")
+                inst.sg:GoToState("overload_pst1")
             end),
         },
     },

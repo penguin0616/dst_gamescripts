@@ -23,31 +23,29 @@ function Cursable:ApplyCurse(item,curse)
 	item:AddTag("applied_curse")
 end
 
-function Cursable:RemoveCurse(curse,numofitems)
+function Cursable:RemoveCurse(curse, numofitems)
 
-	for i=1,numofitems do
-		local tag = nil
-
-		if curse == "MONKEY" then
-			tag = "monkey_token"
-		end
-
-		local item = self.inst.components.inventory:FindItem(function(testitem)
+	local tag = nil
+	if curse == "MONKEY" then
+		tag = "monkey_token"
+	end
+	if tag then
+		local function finditem(testitem)
 			return testitem:HasTag(tag)
-		end)
+		end
+		for i = 1, numofitems do
+			local item = self.inst.components.inventory:FindItem(finditem)
 
-		if item then
-			self.inst.components.inventory:ConsumeByName(item.prefab, 1)
-			self.curses[curse] = self.curses[curse] -1
-    	end
-    end
-
-	if self.curses[curse] then
-		if curse == "MONKEY" then
-			if self.curses[curse] then
-				curse_monkey.uncurse(self.inst, self.curses[curse])
+			if item then
+				self.inst.components.inventory:ConsumeByName(item.prefab, 1)
 			end
 		end
+	end
+
+	self.curses[curse] = math.max(0, (self.curses[curse] or 0) - numofitems)
+
+	if curse == "MONKEY" then
+		curse_monkey.uncurse(self.inst, self.curses[curse])
 	end
 end
 

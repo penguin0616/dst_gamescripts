@@ -658,13 +658,21 @@ function PlayerController:DoControllerActionButton()
         obj = self:GetControllerTarget()
         if obj ~= nil then
             act = self:GetSceneItemControllerAction(obj)
+            if act ~= nil and act.action == ACTIONS.BOAT_CANNON_SHOOT then
+                obj = nil --meh.. reusing obj =P
+                local boatcannonuser = self.inst.components.boatcannonuser
+                local reticule = boatcannonuser ~= nil and boatcannonuser:GetReticule() or nil
+                if reticule ~= nil then
+                    reticule:PingReticuleAt(act:GetActionPoint())
+                end
+            end
         end
-		if act == nil then
-			act = self:GetGroundUseSpecialAction(nil, false)
-			if act ~= nil then
-				isspecial = true
-			end
-		end
+        if act == nil then
+            act = self:GetGroundUseSpecialAction(nil, false)
+            if act ~= nil then
+                isspecial = true
+            end
+        end
     end
 
     if act == nil then
@@ -758,7 +766,12 @@ function PlayerController:OnRemoteControllerActionButtonPoint(actioncode, positi
         if isspecial then
 			lmb = self:GetGroundUseSpecialAction(position, false)
 		else
-			lmb, rmb = self:GetGroundUseAction(position)
+            local cannon = self.inst.components.boatcannonuser ~= nil and self.inst.components.boatcannonuser:GetCannon() or nil
+            if cannon ~= nil then
+                lmb = self.inst.components.playeractionpicker:GetLeftClickActions(position, cannon)[1]
+            else
+                lmb, rmb = self:GetGroundUseAction(position)
+            end
 		end
         ClearClientRequestedAction()
         if isreleased then
@@ -3446,15 +3459,23 @@ function PlayerController:OnLeftClick(down)
         elseif self.inst:HasTag("attack") and act.target == self.inst.replica.combat:GetTarget() then
             return
         end
-    elseif act.action == ACTIONS.LOOKAT and act.target ~= nil and self.inst.HUD ~= nil then
-        if act.target.components.playeravatardata ~= nil then
-            local client_obj = act.target.components.playeravatardata:GetData()
-            if client_obj ~= nil then
-                client_obj.inst = act.target
-                self.inst.HUD:TogglePlayerAvatarPopup(client_obj.name, client_obj, true)
+    elseif act.action == ACTIONS.LOOKAT then
+        if act.target ~= nil and self.inst.HUD ~= nil then
+            if act.target.components.playeravatardata ~= nil then
+                local client_obj = act.target.components.playeravatardata:GetData()
+                if client_obj ~= nil then
+                    client_obj.inst = act.target
+                    self.inst.HUD:TogglePlayerAvatarPopup(client_obj.name, client_obj, true)
+                end
+            elseif act.target.quagmire_shoptab ~= nil then
+                self.inst:PushEvent("quagmire_shoptab", act.target.quagmire_shoptab)
             end
-        elseif act.target.quagmire_shoptab ~= nil then
-            self.inst:PushEvent("quagmire_shoptab", act.target.quagmire_shoptab)
+        end
+    elseif act.action == ACTIONS.BOAT_CANNON_SHOOT then
+        local boatcannonuser = self.inst.components.boatcannonuser
+        local reticule = boatcannonuser ~= nil and boatcannonuser:GetReticule() or nil
+        if reticule ~= nil then
+            reticule:PingReticuleAt(act:GetActionPoint())
         end
     end
 
@@ -3462,7 +3483,9 @@ function PlayerController:OnLeftClick(down)
         self.inst.components.combat:SetTarget(nil)
     else
         local mouseover, platform, pos_x, pos_z
-        if act.action == ACTIONS.CASTAOE then
+        if act.action == ACTIONS.CASTAOE or
+            act.action == ACTIONS.BOAT_CANNON_SHOOT then
+            --These actions use reticule position
 			platform = act.pos.walkable_platform
 			pos_x = act.pos.local_pt.x
 			pos_z = act.pos.local_pt.z

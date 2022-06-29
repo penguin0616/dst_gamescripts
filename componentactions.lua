@@ -511,11 +511,11 @@ local COMPONENT_ACTIONS =
         end,
 
         boatcannon = function(inst, doer, actions, right)
-            if not inst:HasTag("occupied") and not inst:HasTag("fire") then
+            if not inst:HasTag("occupied") and not inst:HasTag("fire") and not inst:HasTag("burnt") then
                 if inst:HasTag("ammoloaded") then
                     table.insert(actions, ACTIONS.BOAT_CANNON_START_AIMING)
                 elseif right then
-                    table.insert(actions, ACTIONS.BOAT_CANNON_LOAD_AMMO_QUICK)
+                    table.insert(actions, ACTIONS.BOAT_CANNON_LOAD_AMMO)
                 end
             end
         end,
@@ -1063,7 +1063,7 @@ local COMPONENT_ACTIONS =
                     table.insert(actions, ACTIONS.GIVE)
                 elseif inst.prefab == "reviver" and target:HasTag("ghost") then
                     table.insert(actions, ACTIONS.GIVE)
-                elseif target:HasTag("boatcannon") and not target:HasTag("burnt") and inst:HasTag("boatcannon_ammo") and not target:HasTag("ammoloaded") then
+                elseif target:HasTag("boatcannon") and not target:HasTag("burnt") and not target:HasTag("fire") and inst:HasTag("boatcannon_ammo") and not target:HasTag("ammoloaded") then
                     table.insert(actions, ACTIONS.BOAT_CANNON_LOAD_AMMO)
                 end
             end

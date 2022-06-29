@@ -210,6 +210,7 @@ return{
                 "Its allegiance lies elsewhere.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I will not fall for that again.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "That ape is a menace.",
             MURDERER = "It's high time I put that creature down.",
             REVIVER = "At least the ape appears to be well trained.",
-            GHOST = "What a shame.", 
-            FIRESTARTER = "Who allowed the ape to play with fire?!",  
+            GHOST = "What a shame.",
+            FIRESTARTER = "Who allowed the ape to play with fire?!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "It's useless if it isn't loaded.",
             AMMOLOADED = "Don't test me.",
+            NOAMMO = "Tragically, I can't just summon cannonballs out of thin air.",
         },
         BOAT_CANNON_KIT = "Fine. I suppose the task of building it is left to me.",
         CANNONBALL_ROCK_ITEM = "That looks heavy. Someone should load it into the cannon.",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "So I'm to be a dock builder now, am I?",
         DOCK_WOODPOSTS_ITEM = "Do I look like a common laborer to you?",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "This place is infested with those monkey miscreants.",
             BURNT = "They've been smoked out.",

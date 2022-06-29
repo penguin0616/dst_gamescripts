@@ -97,6 +97,9 @@ function MakeDeployableKitItem(name, prefab_to_deploy, bank, build, anim, assets
         if deployable_data.custom_candeploy_fn ~= nil then
             inst._custom_candeploy_fn = deployable_data.custom_candeploy_fn
         end
+        if deployable_data.usedeployspacingasoffset ~= nil then
+            inst:AddTag("usedeployspacingasoffset")
+        end
 
 		inst.entity:SetPristine()
 

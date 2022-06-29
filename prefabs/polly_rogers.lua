@@ -38,6 +38,7 @@ local function fn()
     inst:AddTag("prey")
     inst:AddTag("bird")
     inst:AddTag("smallcreature")
+    inst:AddTag("untrappable")
     inst:AddTag("flying")
     inst:AddTag("ignorewalkableplatformdrowning")
 

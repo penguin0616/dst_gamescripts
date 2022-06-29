@@ -210,6 +210,7 @@ return{
                 "I shouldn't take what isn't mine.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I've endured enough curses.",
         },
         SLAUGHTER =
         {
@@ -1098,8 +1099,8 @@ return{
             ATTACKER = "I think I know why the other monkeys cast you out.",
             MURDERER = "I think it's time Abigail and I put an end to your games... for good.",
             REVIVER = "What a strange creature you are.",
-            GHOST = "Now you and Abigail can play together.", 
-            FIRESTARTER = "Monkeys shouldn't play with fire.",  
+            GHOST = "Now you and Abigail can play together.",
+            FIRESTARTER = "Monkeys shouldn't play with fire.",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4483,6 +4484,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "It's empty inside...",
             AMMOLOADED = "What irreparable damage will it cause?",
+            NOAMMO = "I have nothing that can fill the void... of this empty cannon.",
         },
         BOAT_CANNON_KIT = "A creation of destruction.",
         CANNONBALL_ROCK_ITEM = "I must carry this weight... to the cannon, at least.",
@@ -4511,7 +4513,7 @@ return{
         DOCK_KIT = "I will build it, but no one will come.",
         DOCK_WOODPOSTS_ITEM = "What would be the point?",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "I never cared for climbing trees, no matter how many times Abby prodded me.",
             BURNT = "Charred remains are all that's left.",
@@ -4543,7 +4545,7 @@ return{
         PIRATE_FLAG_POLE = "Those monkeys have no imagination. I've seen more macabre children's drawings.",
 
         BLACKFLAG = "Black, like a mourning shroud.",
-        PIRATE_STASH = "Oh... did I... find the treaure?",
+        PIRATE_STASH = "Oh... did I... find the treasure?",
         STASH_MAP = "No map will lead me to what my heart seeks.",
 
 

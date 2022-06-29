@@ -842,7 +842,7 @@ local function RemovePlayerComponents(inst)
     inst:RemoveComponent("playercontroller")
     inst:RemoveComponent("playervoter")
     inst:RemoveComponent("playermetrics")
-    TheWorld:RemoveEventCallback("serverpauseddirty", inst._serverpauseddirtyfn, inst)
+    inst:RemoveEventCallback("serverpauseddirty", inst._serverpauseddirtyfn, TheWorld)
     inst._serverpauseddirtyfn = nil
 end
 
@@ -865,7 +865,7 @@ local function OnSetOwner(inst)
             inst:AddComponent("playermetrics")
             inst.components.playeractionpicker:PushActionFilter(PlayerActionFilter, -99)
             inst._serverpauseddirtyfn = function() ex_fns.OnWorldPaused(inst) end
-            TheWorld:ListenForEvent("serverpauseddirty", inst._serverpauseddirtyfn, inst)
+            inst:ListenForEvent("serverpauseddirty", inst._serverpauseddirtyfn, TheWorld)
             ex_fns.OnWorldPaused(inst)
         end
     elseif inst.components.playercontroller ~= nil then
@@ -1471,7 +1471,7 @@ local function SaveForReroll(inst)
     local curses = {}
     dumptable(inst.components.inventory.itemslots)
     inst.components.inventory:ForEachItem(function(thing)
-        print("thing",thing.prefab)
+        --print("thing",thing.prefab)
         if thing.components.curseditem then
             if not curses[thing.prefab] then
                 curses[thing.prefab] = 0
@@ -1494,7 +1494,7 @@ local function SaveForReroll(inst)
 end
 
 local function LoadForReroll(inst, data)
-    print("LOADING FOR REROLL")
+    --print("LOADING FOR REROLL")
     if data.age ~= nil and inst.components.age ~= nil then
         inst.components.age:OnLoad(data.age)
     end
@@ -1581,6 +1581,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_actions_farming.zip"),
         Asset("ANIM", "anim/player_actions_cowbell.zip"),
         Asset("ANIM", "anim/player_actions_reversedeath.zip"),
+        Asset("ANIM", "anim/player_actions_cannon.zip"),
 
         Asset("ANIM", "anim/player_boat.zip"),
         Asset("ANIM", "anim/player_boat_plank.zip"),

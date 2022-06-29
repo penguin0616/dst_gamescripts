@@ -210,6 +210,7 @@ return{
                 "They all look kind of similar...",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "We think we've had enough of these bracelets.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "Hey, that was mean!",
             MURDERER = "We don't think we should play with that monkey anymore.",
             REVIVER = "We knew you were a nice monkey!",
-            GHOST = "Don't worry, we'll make you all better!", 
-            FIRESTARTER = "No, we're not supposed to play with fire!",  
+            GHOST = "Don't worry, we'll make you all better!",
+            FIRESTARTER = "No, we're not supposed to play with fire!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "Ms. Wickerbottom said we could play with it as long as there's no cannonballs inside.",
             AMMOLOADED = "We know we shouldn't play with it, but Willow says it's so much fun...",
+            NOAMMO = "Oh, we forgot to bring the cannonballs!",
         },
         BOAT_CANNON_KIT = "If we build it, can we play with it?",
         CANNONBALL_ROCK_ITEM = "Mr. Wolfgang says to lift with your legs, and we've got lots!",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "We've decided we're going to be a dock spider now.",
         DOCK_WOODPOSTS_ITEM = "We almost forgot the posts!",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "We don't want to play in those jerks' tree house! Even if it does look like fun...",
             BURNT = "That's what happens when you don't play nice!",

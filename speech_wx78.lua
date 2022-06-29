@@ -210,6 +210,7 @@ return{
                 "ERROR: INCORRECT CARRAT",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "IT WILL NOT FOOL ME AGAIN",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "THE PRIMATES ARE FIGHTING. I LAUGH AT THE ABSURDITY",
             MURDERER = "WONDERFUL. IT HAS LEARNED TO KILL",
             REVIVER = "YOUR WORK HAS BEEN NOTED, LESSER PRIMATE",
-            GHOST = "HAHAHA YOU LOOK RIDICULOUS", 
-            FIRESTARTER = "I ALMOST LIKE THEM",  
+            GHOST = "HAHAHA YOU LOOK RIDICULOUS",
+            FIRESTARTER = "I ALMOST LIKE THEM",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "REQUIRES AMMUNITION",
             AMMOLOADED = "IT MAKES THE HORRIBLE BOAT SLIGHTLY BETTER",
+            NOAMMO = "ERROR: CANNONBALLS NOT FOUND",
         },
         BOAT_CANNON_KIT = "IT WILL BE BUILT FOR VIOLENCE",
         CANNONBALL_ROCK_ITEM = "AMMUNITION ACQUIRED",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "I HAVE TRIUMPHED OVER THE OCEAN",
         DOCK_WOODPOSTS_ITEM = "IT SERVES NO PURPOSE, BUT DEAD TREES ARE PLEASING TO THE OPTICAL SENSORS",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "THEY THINK THEY CAN LOOK DOWN ON ME?!",
             BURNT = "TRY LOOKING DOWN ON ME NOW, FLESHSACKS",

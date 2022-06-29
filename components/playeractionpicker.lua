@@ -155,12 +155,11 @@ function PlayerActionPicker:GetCannonAimActions(inst, pos, right)
         else
             if inst == ThePlayer then
                 pos = boatcannonuser:GetAimPos()
-            else
-                --need to clamp it for clients
+                if pos == nil then
+                    return nil
+                end
             end
-            if pos ~= nil then
-                return self:SortActionList({ ACTIONS.BOAT_CANNON_SHOOT }, pos)
-            end
+            return self:SortActionList({ ACTIONS.BOAT_CANNON_SHOOT }, pos)
         end
     end
 

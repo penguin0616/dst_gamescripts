@@ -55,6 +55,7 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("search_pre")
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/magnet_search_pre") 
         end,
 
         events =
@@ -71,6 +72,11 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("search_loop")
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/beacon_search","search_loop")
+        end,
+
+        onexit = function(inst)
+            inst.SoundEmitter:KillSound("search_loop")
         end,
 
         events =
@@ -93,6 +99,7 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("success")
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/paired")
         end,
 
         events =
@@ -109,6 +116,7 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("fail")
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/pair_failed")
         end,
 
         events =
@@ -125,7 +133,13 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("pull_pre")
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/magnet_lp_start", "pull_loop_start")
+            
         end,
+
+        onexit = function(inst)
+            inst.SoundEmitter:KillSound("pull_loop_start")
+        end,        
 
         events =
         {
@@ -141,6 +155,11 @@ local states =
 
         onenter = function(inst)
             inst.AnimState:PlayAnimation("pull", true)
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/magnet_lp","pull_loop")
+        end,
+
+        onexit = function(inst)
+            inst.SoundEmitter:KillSound("pull_loop")
         end,
     },
 
@@ -153,6 +172,7 @@ local states =
             if inst.components.boatmagnet and inst.components.boatmagnet:PairedBeacon() == nil then
                 inst.AnimState:PushAnimation("fail", false)
             end
+            inst.SoundEmitter:PlaySound("monkeyisland/autopilot/magnet_lp_end")
         end,
 
         events =

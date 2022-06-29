@@ -404,9 +404,9 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
             local tile_id, layer_properties = unpack(data)
             local handle = MapLayerManager:CreateRenderLayer(
                 tile_id, --embedded map array value
-                layer_properties.atlas,
-                layer_properties.texture_name,
-                layer_properties.noise_texture
+                layer_properties.atlas or resolvefilepath(GroundAtlas(layer_properties.name)),
+                layer_properties.texture_name or resolvefilepath(GroundImage(layer_properties.name)),
+                resolvefilepath(layer_properties.noise_texture)
             )
 			layer_properties._render_layer = i
 

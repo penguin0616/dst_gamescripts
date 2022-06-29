@@ -449,6 +449,17 @@ local function OnRanHome(inst)
 
         local home = inst.components.homeseeker and inst.components.homeseeker:GetHome() or nil
         if home ~= nil and home.components.childspawner ~= nil then
+            local invcmp = inst.components.inventory
+            if invcmp then
+                -- Drop equips only and place them around home!
+                local x, y, z = home.Transform:GetWorldPosition()
+                local homeradius = home:GetPhysicsRadius(1) + 1
+                for _, v in pairs(invcmp.equipslots) do
+                    local angle = math.random() * 2 * PI
+                    local pos = Vector3(x + math.cos(angle) * homeradius, 0, z - math.sin(angle) * homeradius)
+                    invcmp:DropItem(v, true, true, pos)
+                end
+            end
             home.components.childspawner:GoHome(inst)
         end
     end

@@ -187,10 +187,51 @@ function BoatMagnet:GetFollowTarget()
 end
 
 function BoatMagnet:CalcMaxVelocity()
-    if self.beacon == nil or self.beacon.components.boatmagnetbeacon == nil then
+    if self.beacon == nil or self.beacon.components.boatmagnetbeacon == nil or self.boat == nil then
         return 0
     end
-    return not self.beacon.components.boatmagnetbeacon:IsTurnedOff() and TUNING.BOAT.BOAT_MAGNET.MAX_VELOCITY + TUNING.BOAT.BOAT_MAGNET.CATCH_UP_SPEED or 0
+
+    -- Beyond a set distance, apply an exponential rate for catch-up speed, otherwise match the speed of the beacon its following
+    local direction, distance = self:CalcMagnetDirection()
+
+    local followtarget = self:GetFollowTarget()
+    if followtarget == nil then
+        return 0
+    end
+
+    local beaconboat = self.beacon.components.boatmagnetbeacon:GetBoat()
+
+    local beaconspeed = beaconboat == nil and followtarget.components.locomotor and math.min(followtarget.components.locomotor:GetRunSpeed(), TUNING.BOAT.MAX_VELOCITY)
+                        or (beaconboat ~= nil and math.min(beaconboat.components.boatphysics:GetVelocity(), TUNING.BOAT.MAX_FORCE_VELOCITY))
+                        or 0
+
+    local mindistance = self.boat.components.hull ~= nil and self.boat.components.hull:GetRadius() or 1
+    if beaconboat ~= nil and beaconboat.components.hull ~= nil then
+        mindistance = mindistance + beaconboat.components.hull:GetRadius()
+    end
+
+    -- If the beacon boat is turning, reduce max speed to prevent drifting while turning
+    local magnetboatdirection = self.boat.components.boatphysics:GetMoveDirection()
+    local beaconboatdirection = beaconboat == nil and followtarget.components.locomotor and Vector3(followtarget.Physics:GetVelocity())
+                            or (beaconboat ~= nil and beaconboat.components.boatphysics:GetMoveDirection())
+                            or Vector3(0, 0, 0)
+    local boatspeed = self.boat.components.boatphysics:GetVelocity()
+
+    local magnetdir_x, magnetdir_z = VecUtil_NormalizeNoNaN(magnetboatdirection.x, magnetboatdirection.z)
+    local beacondir_x, beacondir_z = VecUtil_NormalizeNoNaN(beaconboatdirection.x, beaconboatdirection.z)
+
+    local turnspeedmodifier = boatspeed > 0 and beaconspeed > 0 and math.max(VecUtil_Dot(magnetdir_x, magnetdir_z, beacondir_x, beacondir_z), 0) or 1
+    local maxdistance = TUNING.BOAT.BOAT_MAGNET.MAX_DISTANCE / 2
+
+    if not self.beacon.components.boatmagnetbeacon:IsTurnedOff() then
+        if distance > mindistance then
+            local base = math.pow(TUNING.BOAT.BOAT_MAGNET.MAX_VELOCITY + TUNING.BOAT.BOAT_MAGNET.CATCH_UP_SPEED, 1 / maxdistance)
+            return beaconspeed + (math.pow(base, distance - mindistance) - 1) * turnspeedmodifier
+        else
+            return beaconspeed * turnspeedmodifier
+        end
+    end
+    return 0
 end
 
 function BoatMagnet:CalcMagnetDirection()

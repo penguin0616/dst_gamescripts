@@ -324,13 +324,13 @@ local function shouldsteal(inst)
             inst.nothingtosteal = true
             return nil
         end
-
+--[[
         local equipped = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
         if not equipped or not equipped.prefab == "cutless" then
             inst.nothingtosteal = true
             return nil
         end
-
+]]
         if not inst.components.combat.target then
             local target = FindEntity(
                     inst,
@@ -378,7 +378,7 @@ local function shouldsteal(inst)
                     RETARGET_ONEOF_TAGS
                 )
             if target then
-                return BufferedAction(inst, target, ACTIONS.ATTACK)
+                return BufferedAction(inst, target, ACTIONS.STEAL)
             else
                 inst.nothingtosteal = true
             end    

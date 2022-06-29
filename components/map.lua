@@ -202,6 +202,28 @@ function Map:IsDeployPointClear(pt, inst, min_spacing, min_spacing_sq_fn, near_o
     return true
 end
 
+local function IsNearOther2(other, pt, object_size)
+    --FindEntities range check is <=, but we want <
+    object_size = object_size + (other.deploy_extra_spacing or 0)
+    return other:GetDistanceSqToPoint(pt.x, 0, pt.z) < object_size * object_size
+end
+
+--this is very similiar to IsDeployPointClear, but does the math a bit better, and DEPLOY_EXTRA_SPACING now works a lot better.
+function Map:IsDeployPointClear2(pt, inst, object_size, object_size_fn, near_other_fn, check_player, custom_ignore_tags)
+    local entities_radius = object_size + DEPLOY_EXTRA_SPACING
+    near_other_fn = near_other_fn or IsNearOther2
+    for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, entities_radius, nil, (custom_ignore_tags ~= nil and custom_ignore_tags) or (check_player and DEPLOY_IGNORE_TAGS_NOPLAYER) or DEPLOY_IGNORE_TAGS)) do
+        if v ~= inst and
+            v.entity:IsVisible() and
+            v.components.placer == nil and
+            v.entity:GetParent() == nil and
+            near_other_fn(v, pt, object_size_fn and object_size_fn(v) or object_size) then
+            return false
+        end
+    end
+    return true
+end
+
 function Map:CanDeployAtPoint(pt, inst, mouseover)
     local x,y,z = pt:Get()
     return (mouseover == nil or mouseover:HasTag("player") or mouseover:HasTag("walkableplatform") or mouseover:HasTag("walkableperipheral"))
@@ -306,6 +328,29 @@ function Map:CanDeployDockAtPoint(pt, inst, mouseover)
 
     return (mouseover == nil or mouseover:HasTag("player"))
         and self:IsDeployPointClear(pt, nil, min_distance_from_entities, nil, IsDockNearOtherOnOcean)
+end
+
+
+function Map:CanDeployBoatAtPointInWater(pt, inst, mouseover, data)
+    local tile = self:GetTileAtPoint(pt.x, pt.y, pt.z)
+    if TileGroupManager:IsInvalidTile(tile) then
+        return false
+    end
+
+    local boat_radius = data.boat_radius
+    local boat_extra_spacing = data.boat_extra_spacing
+    local min_distance_from_land = data.min_distance_from_land
+
+    local entities = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS + boat_radius + boat_extra_spacing, WALKABLE_PLATFORM_TAGS)
+    for i, v in ipairs(entities) do
+        if v.components.walkableplatform and math.sqrt(v:GetDistanceSqToPoint(pt.x, 0, pt.z)) <= (v.components.walkableplatform.platform_radius + boat_radius + boat_extra_spacing) then
+            return false
+        end
+    end
+
+    return (mouseover == nil or mouseover:HasTag("player"))
+        and self:IsDeployPointClear2(pt, nil, boat_radius + boat_extra_spacing)
+        and self:IsSurroundedByWater(pt.x, pt.y, pt.z, boat_radius + min_distance_from_land)
 end
 
 function Map:CanPlacePrefabFilteredAtPoint(x, y, z, prefab)

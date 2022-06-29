@@ -347,6 +347,12 @@ function OceanTrawler:SimulateCatchFish()
                     end
                 end
             end
+            UpdateFishNetAnim(self.inst)
+            local data = {}
+            if container:IsEmpty() then
+                data.empty = true
+            end
+            self.inst.sg:GoToState("catch", data)
         end
     end
 end

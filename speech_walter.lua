@@ -210,6 +210,7 @@ return{
                 "Mine was the OTHER orange one.",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "I really shouldn't pick up things that don't belong to me.",
         },
         SLAUGHTER =
         {
@@ -1094,8 +1095,8 @@ return{
             ATTACKER = "I don't think that monkey's friendly.",
             MURDERER = "Killer monkey!!",
             REVIVER = "This is why you should always be kind to animals.",
-            GHOST = "Somehow a monkey ghost just isn't as spooky.", 
-            FIRESTARTER = "Who gave the monkey a torch?",  
+            GHOST = "Somehow a monkey ghost just isn't as spooky.",
+            FIRESTARTER = "Who gave the monkey a torch?",
         },
 
         MIGRATION_PORTAL =
@@ -4479,6 +4480,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "I'll load the cannonball!",
             AMMOLOADED = "It's kind of like a giant slingshot, if you think about it.",
+            NOAMMO = "I forgot the cannonballs! This won't make me lose points toward my badge, right?",
         },
         BOAT_CANNON_KIT = "I've got all the supplies I need to build a cannon.",
         CANNONBALL_ROCK_ITEM = "That goes in the cannon.",
@@ -4507,7 +4509,7 @@ return{
         DOCK_KIT = "Neat, I can build a dock for my boat!",
         DOCK_WOODPOSTS_ITEM = "Some posts will make the dock look even more... dock-y.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Neat, a tree fort!",
             BURNT = "Something tells me they never learned about fire safety.",

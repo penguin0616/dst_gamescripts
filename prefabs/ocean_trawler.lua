@@ -125,6 +125,7 @@ local function fn()
     inst:AddTag("oceantrawler")
 
     inst:SetPhysicsRadiusOverride(2.2)
+    inst:SetDeployExtraSpacing(1.15)
 
     MakeInventoryPhysics(inst)
     MakeWaterObstaclePhysics(inst, 1.15, 2, 0.75)
@@ -192,5 +193,5 @@ local function fn()
 end
 
 return Prefab("ocean_trawler", fn, assets),
-        MakeDeployableKitItem("ocean_trawler_kit", "ocean_trawler", "ocean_trawler", "ocean_trawler", "kit", assets, {size = "med"}, {"ocean_trawler"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.WATER, deployspacing = DEPLOYSPACING.MEDIUM }, nil),
-        MakePlacer("ocean_trawler_kit_placer", "ocean_trawler", "ocean_trawler", "idle", false, false, false, nil, nil, nil, nil)
+        MakeDeployableKitItem("ocean_trawler_kit", "ocean_trawler", "ocean_trawler", "ocean_trawler", "kit", assets, {size = "med"}, {"ocean_trawler"}, {fuelvalue = TUNING.LARGE_FUEL}, { deploymode = DEPLOYMODE.WATER, deployspacing = DEPLOYSPACING.MEDIUM, usedeployspacingasoffset = true, }, nil),
+        MakePlacer("ocean_trawler_kit_placer", "ocean_trawler", "ocean_trawler", "idle", false, false, false, nil, nil, nil, nil, 2.8)

@@ -174,6 +174,12 @@ local function OnDespawn(inst)
     end
 end
 
+local function OnReroll(inst)
+    if inst.woby ~= nil then
+		inst.woby:OnPlayerLinkDespawn(true)
+    end
+end
+
 local function OnSave(inst, data)
 	data.woby = inst.woby ~= nil and inst.woby:GetSaveRecord() or nil
 end
@@ -271,6 +277,7 @@ local function master_postinit(inst)
 	inst.OnSave = OnSave
 	inst.OnLoad = OnLoad
     inst.OnDespawn = OnDespawn
+    inst:ListenForEvent("ms_playerreroll", OnReroll)
 	inst:ListenForEvent("onremove", OnRemoveEntity)
 
 end

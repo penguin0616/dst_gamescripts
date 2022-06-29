@@ -106,7 +106,12 @@ function Inventory:TransferInventory(receiver)
 
     for k,v in pairs(self.equipslots) do
 		if inv.equipslots ~= nil then
-			inv:Equip(self:Unequip(k)) 
+            local equip = self:Unequip(k)
+            if equip and equip.components.equippable and equip.components.equippable:IsRestricted(receiver) then
+                inv:GiveItem(equip) 
+            else
+                inv:Equip(equip)
+            end
 		else
 			inv:GiveItem(self:Unequip(k)) 
 		end

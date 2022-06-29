@@ -210,6 +210,7 @@ return{
                 "Not friend",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "Already got lots. Save for someone else?",
         },
         SLAUGHTER =
         {
@@ -1098,8 +1099,8 @@ return{
             ATTACKER = "Why this one so mean?",
             MURDERER = "That Cheeky is very bad!",
             REVIVER = "You help friend! Thank you",
-            GHOST = "Cheeky is floaty now", 
-            FIRESTARTER = "No! Fire bad, Cheeky!",  
+            GHOST = "Cheeky is floaty now",
+            FIRESTARTER = "No! Fire bad, Cheeky!",
         },
 
         MIGRATION_PORTAL =
@@ -4483,6 +4484,7 @@ return{
         BOAT_CANNON = {
             GENERIC = "Empty",
             AMMOLOADED = "Boom!",
+            NOAMMO = "Oops! Forgot rocks",
         },
         BOAT_CANNON_KIT = "Things for Boom maker",
         CANNONBALL_ROCK_ITEM = "Rock big, good for go boom",
@@ -4511,7 +4513,7 @@ return{
         DOCK_KIT = "Makes home for Floaties",
         DOCK_WOODPOSTS_ITEM = "Plant friends on dock.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Cheeky house",
             BURNT = "Poor Cheekies",

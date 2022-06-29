@@ -53,11 +53,15 @@ local states =
         events = 
         {
             EventHandler("animover", function(inst) 
-                local ents = nil
+                local takemonkeycurse = false
                 if inst.sg.statemem.giver then
-                    ents = inst.sg.statemem.giver.components.inventory:FindItems(function(item) return item:HasTag("cursed") end)
+                    if inst.sg.statemem.giver.components.cursable and (inst.sg.statemem.giver.components.cursable.curses.MONKEY or 0) > 0 then
+                        takemonkeycurse = true
+                    elseif inst.sg.statemem.giver:HasTag("wonkey") then -- NOTES(JBK): This only is true if the player gets into an invalid state, saves and reloads the save.
+                        takemonkeycurse = true
+                    end
                 end
-                if ents and #ents > 0 then
+                if takemonkeycurse then
                     inst.sg:GoToState("removecurse", {giver = inst.sg.statemem.giver})
                 else 
                     if inst.sg.statemem.giver:HasTag("player") then

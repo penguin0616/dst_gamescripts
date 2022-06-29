@@ -47,6 +47,7 @@ local function PickUpAction(inst)
                 if  not ent.components.inventoryitem or
                     not ent.components.inventoryitem.canbepickedup or
                     not ent.components.inventoryitem.cangoincontainer or
+                    (ent.components.bait and ent.components.bait.trap) or
                     ent.components.inventoryitem:IsHeld() or
                     leader.components.inventory:CanAcceptCount(ent, 1) <= 0 then
                 
@@ -81,7 +82,6 @@ local function closetoleader(inst)
     end
 end
 
-
 local PollyRogerBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
 end)
@@ -90,7 +90,6 @@ function PollyRogerBrain:OnStart()
     local root =
     PriorityNode(
     {
-
         WhileNode( function() return not self.inst.sg:HasStateTag("busy") end, "NO BRAIN WHEN BUSY",
             PriorityNode({
                 WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted", Panic(self.inst)),

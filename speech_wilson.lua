@@ -220,7 +220,7 @@ return {
                 "OW, it bit me!",
             },
 			NO_HEAVY_LIFTING = "only_used_by_wanda",
-            FULL_OF_CURSES = "I'm not touching that.", --[[TODO]]
+            FULL_OF_CURSES = "I'm not touching that.",
         },
         SLAUGHTER =
         {
@@ -1105,8 +1105,8 @@ return {
             ATTACKER = "Hey, stop monkeying around!",
             MURDERER = "They've gone ape!",
             REVIVER = "My life has been saved... by a monkey?",
-            GHOST = "That's one spooky monkey.", 
-            FIRESTARTER = "I wonder if this is how the dinosaurs felt.",  
+            GHOST = "That's one spooky monkey.",
+            FIRESTARTER = "I wonder if this is how the dinosaurs felt.",
         },
 
         MIGRATION_PORTAL =
@@ -4490,6 +4490,7 @@ return {
         BOAT_CANNON = {
             GENERIC = "I should load it with something.",
             AMMOLOADED = "The cannon is ready to fire!",
+            NOAMMO = "I didn't forget the cannonballs, I'm just letting the anticipation build.",
         },
         BOAT_CANNON_KIT = "It's not a cannon yet, but it will be.",
         CANNONBALL_ROCK_ITEM = "This will fit into a cannon perfectly.",
@@ -4518,7 +4519,7 @@ return {
         DOCK_KIT = "Everything I need to build a dock for my boat.",
         DOCK_WOODPOSTS_ITEM = "Aha! I thought the dock was missing something.",
 
-        MONKEYHUT = 
+        MONKEYHUT =
         {
             GENERIC = "Treehouses are terribly flammable places to conduct experiments.",
             BURNT = "Like I said!",
