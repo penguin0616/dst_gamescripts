@@ -4,7 +4,9 @@ local Widget = require "widgets/widget"
 local MapControls = require "widgets/mapcontrols"
 local HudCompass = require "widgets/hudcompass"
 
-local REPEAT_TIME = 0.15
+-- NOTES(JBK): These constants are from MiniMapRenderer ZOOM_CLAMP_MIN and ZOOM_CLAMP_MAX
+local ZOOM_CLAMP_MIN = 1
+local ZOOM_CLAMP_MAX = 20
 
 local MapScreen = Class(Screen, function(self, owner)
     self.owner = owner
@@ -30,7 +32,9 @@ local MapScreen = Class(Screen, function(self, owner)
     self.hudcompass = self.bottomright_root:AddChild(HudCompass(self.owner, false))
     self.hudcompass:SetPosition(-160,70,0)
 
-    self.repeat_time = 0
+    self.zoom_to_cursor = Profile:IsMinimapZoomCursorFollowing()
+    self.zoom_target = self.minimap:GetZoom()
+    self.zoomsensitivity = 20
 
     SetAutopaused(true)
 end)
@@ -53,6 +57,14 @@ function MapScreen:OnBecomeActive()
         TheWorld.minimap.MiniMap:ToggleVisibility()
     end
     self.minimap:UpdateTexture()
+
+    if TheInput:ControllerAttached() then
+        self.minimap.centerreticle:Show()
+    else
+        self.minimap.centerreticle:Hide()
+    end
+
+    self.zoomsensitivity = Profile:GetMiniMapZoomSensitivity()
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --SetPause(true)
@@ -64,31 +76,58 @@ function MapScreen:OnDestroy()
 	MapScreen._base.OnDestroy(self)
 end
 
+function MapScreen:GetZoomOffset(scaler)
+    -- NOTES(JBK): The magic constant 9 comes from the scaler in MiniMapRenderer ZOOM_MODIFIER.
+    local zoomfactor = 9 * self.minimap:GetZoom() / scaler
+    local x, y = self:GetCursorPosition()
+    local w, h = TheSim:GetScreenSize()
+    x = x * w / zoomfactor
+    y = y * h / zoomfactor
+    return x, y
+end
+
+function MapScreen:DoZoomIn(negativedelta)
+    negativedelta = negativedelta or -0.1
+    -- Run the function always, conditionally do offset fixup.
+    if self.minimap:OnZoomIn(negativedelta) and self.zoom_to_cursor then
+        local x, y = self:GetZoomOffset(-negativedelta)
+        self.minimap:Offset(-x, -y)
+    end
+end
+
+function MapScreen:DoZoomOut(positivedelta)
+    positivedelta = positivedelta or 0.1
+    -- Run the function always, conditionally do offset fixup.
+    if self.minimap:OnZoomOut(positivedelta) and self.zoom_to_cursor then
+        local x, y = self:GetZoomOffset(positivedelta)
+        self.minimap:Offset(x, y)
+    end
+end
+
 function MapScreen:OnUpdate(dt)
-    local s = -100 -- now per second, not per repeat
+    local s = -100 * dt -- now per second, not per repeat
 
-    if TheInput:IsControlPressed(CONTROL_MOVE_LEFT) then
-        self.minimap:Offset(-s * dt, 0)
-    elseif TheInput:IsControlPressed(CONTROL_MOVE_RIGHT)then
-        self.minimap:Offset(s * dt, 0)
+    -- NOTES(JBK): Controllers apply smooth analog input so use it for more precision with joysticks.
+    local xdir = TheInput:GetAnalogControlValue(CONTROL_MOVE_RIGHT) - TheInput:GetAnalogControlValue(CONTROL_MOVE_LEFT)
+    local ydir = TheInput:GetAnalogControlValue(CONTROL_MOVE_UP) - TheInput:GetAnalogControlValue(CONTROL_MOVE_DOWN)
+    local xmag = xdir * xdir + ydir * ydir
+    local deadzonesq = 0.3 * 0.3 -- TODO(JBK): Global controller deadzone setting.
+    if xmag >= deadzonesq then
+        self.minimap:Offset(xdir * s, ydir * s)
     end
 
-    if TheInput:IsControlPressed(CONTROL_MOVE_DOWN)then
-        self.minimap:Offset(0, -s * dt)
-    elseif TheInput:IsControlPressed(CONTROL_MOVE_UP)then
-        self.minimap:Offset(0, s * dt)
-    end
-
-    if self.repeat_time <= 0 then
-        if TheInput:IsControlPressed(CONTROL_MAP_ZOOM_IN ) then
-            self.minimap:OnZoomIn()
-        elseif TheInput:IsControlPressed(CONTROL_MAP_ZOOM_OUT ) then
-            self.minimap:OnZoomOut()
+    -- NOTES(JBK): In order to change digital to analog without causing issues engine side with prior binds we emulate it.
+    local indir = TheInput:IsControlPressed(CONTROL_MAP_ZOOM_IN) and -1 or 0
+    local outdir = TheInput:IsControlPressed(CONTROL_MAP_ZOOM_OUT) and 1 or 0
+    self.zoom_target = math.clamp(self.zoom_target + self.zoomsensitivity * (indir + outdir) * dt, ZOOM_CLAMP_MIN, ZOOM_CLAMP_MAX)
+    local zoom_delta = self.zoom_target - self.minimap:GetZoom()
+    if math.abs(zoom_delta) > 0.1 then -- Floats.
+        zoom_delta = zoom_delta * 0.4 -- Arbitrarily picked for the decay time, done here after the threshold check.
+        if zoom_delta < 0 then
+            self:DoZoomIn(zoom_delta)
+        elseif zoom_delta > 0 then
+            self:DoZoomOut(zoom_delta)
         end
-
-        self.repeat_time = REPEAT_TIME * 0.5
-    else
-        self.repeat_time = self.repeat_time - dt
     end
 end
 
@@ -148,6 +187,27 @@ function MapScreen:WidgetPosToMapPos(widgetpos)
     )
 end
 
+function MapScreen:GetCursorPosition()
+    -- This function uses the origin at the center of the screen.
+    -- Outputs are normalized from -1 to 1 on both axii.
+    local x, y
+    if TheInput:ControllerAttached() then
+        x, y = 0, 0 -- Controller users do not have a cursor to control so center it.
+    else
+        x, y = TheSim:GetPosition()
+        local w, h = TheSim:GetScreenSize()
+        x = 2 * x / w - 1
+        y = 2 * y / h - 1
+    end
+    return x, y
+end
+
+function MapScreen:GetWorldPositionAtCursor()
+    local x, y = self:GetCursorPosition()
+    x, y = self.minimap:MapPosToWorldPos(x, y, 0)
+    return x, 0, y -- Coordinate conversion from minimap widget to world.
+end
+
 function MapScreen:OnControl(control, down)
     if MapScreen._base.OnControl(self, control, down) then return true end
 
@@ -164,12 +224,10 @@ function MapScreen:OnControl(control, down)
         ThePlayer.components.playercontroller:RotLeft()
     elseif control == CONTROL_ROTATE_RIGHT and ThePlayer and ThePlayer.components.playercontroller then
         ThePlayer.components.playercontroller:RotRight()
-    elseif control == CONTROL_MAP_ZOOM_IN then
-        self.minimap:OnZoomIn()
-        self.repeat_time = REPEAT_TIME
+    elseif control == CONTROL_MAP_ZOOM_IN then -- NOTES(JBK): Keep these here for mods but modify their value to do nothing with new code.
+        self:DoZoomIn(0)
     elseif control == CONTROL_MAP_ZOOM_OUT then
-        self.minimap:OnZoomOut()
-        self.repeat_time = REPEAT_TIME
+        self:DoZoomOut(0)
     else
         return false
     end

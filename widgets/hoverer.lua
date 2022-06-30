@@ -28,7 +28,7 @@ local HoverText = Class(Widget, function(self, owner)
 end)
 
 function HoverText:OnUpdate()
-    if self.owner.components == nil or not self.owner.components.playercontroller:UsingMouse() then
+    if self.owner.components.playercontroller == nil or not self.owner.components.playercontroller:UsingMouse() then
         if self.shown then
             self:Hide()
         end
@@ -57,6 +57,10 @@ function HoverText:OnUpdate()
         if lmb ~= nil then
             local overriden
             str, overriden = lmb:GetActionString()
+
+            if lmb.action.show_primary_input_left then
+                str = TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_PRIMARY) .. " " .. str
+            end
 
             if colour == nil then
                 if lmb.target ~= nil then
@@ -90,7 +94,9 @@ function HoverText:OnUpdate()
         local aoetargeting = self.owner.components.playercontroller:IsAOETargeting()
         local rmb = self.owner.components.playercontroller:GetRightMouseAction()
         if rmb ~= nil then
-            if rmb.action ~= ACTIONS.CASTAOE then
+            if rmb.action.show_secondary_input_right then
+                secondarystr = rmb:GetActionString() .. " " .. TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SECONDARY)
+            elseif rmb.action ~= ACTIONS.CASTAOE then
                 secondarystr = TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_SECONDARY)..": "..rmb:GetActionString()
             elseif aoetargeting and str == nil then
                 str = rmb:GetActionString()

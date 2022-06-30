@@ -80,7 +80,8 @@ local function FindInvaderFn(guy, inst)
            not ((TheWorld.components.mermkingmanager and TheWorld.components.mermkingmanager:HasKing())) and
            not (leader and leader:HasTag("player")) and
            not (leader_guy and (leader_guy:HasTag("merm")) and
-           not guy:HasTag("pig"))
+           not guy:HasTag("pig") and
+           not guy:HasTag("wonkey"))
 end
 
 local function RetargetFn(inst)
@@ -270,8 +271,6 @@ local function OnGetItemFromPlayer(inst, giver, item)
         local loyalty_max = isguard and TUNING.MERM_GUARD_LOYALTY_MAXTIME or TUNING.MERM_LOYALTY_MAXTIME
         local loyalty_per_hunger = isguard and TUNING.MERM_GUARD_LOYALTY_PER_HUNGER or TUNING.MERM_LOYALTY_PER_HUNGER
 
-        local loyalty_time = item.components.edible:GetHunger() * loyalty_per_hunger
-
         local loyalty_radius = isguard and TUNING.MERM_GUARD_FOLLOWER_RADIUS or TUNING.MERM_FOLLOWER_RADIUS
         local loyalty_count = isguard and TUNING.MERM_GUARD_FOLLOWER_COUNT or TUNING.MERM_FOLLOWER_COUNT
 
@@ -280,6 +279,8 @@ local function OnGetItemFromPlayer(inst, giver, item)
             loyalty_max = loyalty_max + TUNING.MERM_LOYALTY_MAXTIME_KINGBONUS
             loyalty_per_hunger = loyalty_per_hunger + TUNING.MERM_LOYALTY_PER_HUNGER_KINGBONUS
         end
+
+        local loyalty_time = item.components.edible:GetHunger() * loyalty_per_hunger
 
         local hiremoremerms = false
         if inst.components.combat:TargetIs(giver) then
@@ -448,6 +449,17 @@ local function OnRanHome(inst)
 
         local home = inst.components.homeseeker and inst.components.homeseeker:GetHome() or nil
         if home ~= nil and home.components.childspawner ~= nil then
+            local invcmp = inst.components.inventory
+            if invcmp then
+                -- Drop equips only and place them around home!
+                local x, y, z = home.Transform:GetWorldPosition()
+                local homeradius = home:GetPhysicsRadius(1) + 1
+                for _, v in pairs(invcmp.equipslots) do
+                    local angle = math.random() * 2 * PI
+                    local pos = Vector3(x + math.cos(angle) * homeradius, 0, z - math.sin(angle) * homeradius)
+                    invcmp:DropItem(v, true, true, pos)
+                end
+            end
             home.components.childspawner:GoHome(inst)
         end
     end

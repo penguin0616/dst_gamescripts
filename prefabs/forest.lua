@@ -323,6 +323,7 @@ local prefabs =
 	-- ocean
     "antchovies_group",
     "boat",
+    "boat_grass",
 	"bullkelp_beachedroot",
 	"bullkelp_plant",
 	"cookiecutter",
@@ -355,6 +356,7 @@ local prefabs =
     "waveyjones",
     "shark",
     "oceanhorror",
+    "ocean_trawler",
 
     -- moon island
 	"gestalt",
@@ -418,6 +420,28 @@ local prefabs =
     -- Terraria
     "eyeofterror",
     "terrarium",
+
+    -- Pirates
+    "powder_monkey",
+    "prime_mate",
+    "monkeyisland_center",
+    "monkeyisland_direction",
+    "monkeyisland_dockgen_safeareacenter",
+    "monkeyisland_portal",
+    "monkeyqueen",
+    "monkeypillar",
+    "palmconetree",
+    "palmconetree_short",
+    "palmconetree_normal",
+    "palmconetree_tall",
+    "pirate_flag_pole",
+    "bananabush",
+    "monkeytail",
+    "dock_tile_registrator",
+	"lightcrab",
+    "dock_woodposts",
+    "fx_dock_crackle",
+    "fx_dock_pop",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")
@@ -438,6 +462,22 @@ for i, v in ipairs(monsters) do
     end
 end
 monsters = nil
+
+
+local function tile_physics_init(inst)
+    inst.Map:AddTileCollisionSet(
+        COLLISION.LAND_OCEAN_LIMITS,
+        TileGroups.LandTiles, false,
+        TileGroups.LandTiles, true,
+        0.25, 64
+    )
+    inst.Map:AddTileCollisionSet(
+        COLLISION.GROUND,
+        TileGroups.ImpassableTiles, true,
+        TileGroups.ImpassableTiles, false,
+        0.25, 128
+    )
+end
 
 local function common_postinit(inst)
     --Add waves
@@ -462,7 +502,8 @@ local function common_postinit(inst)
         inst:AddComponent("hallucinations")
         inst:AddComponent("wavemanager")
         inst:AddComponent("moonstormlightningmanager")
-        inst.Map:SetTransparentOcean(true)
+        inst.Map:AlwaysDrawWaves(false)
+        inst.Map:DoOceanRender(true)
     end
 end
 
@@ -473,6 +514,7 @@ local function master_postinit(inst)
     inst:AddComponent("hounded")
     inst:AddComponent("schoolspawner")
     inst:AddComponent("squidspawner")
+    inst:AddComponent("piratespawner")
 
     inst:AddComponent("worlddeciduoustreeupdater")
     inst:AddComponent("kramped")
@@ -528,4 +570,4 @@ local function master_postinit(inst)
     end
 end
 
-return MakeWorld("forest", prefabs, assets, common_postinit, master_postinit, {"forest"})
+return MakeWorld("forest", prefabs, assets, common_postinit, master_postinit, {"forest"}, {tile_physics_init = tile_physics_init})

@@ -33,8 +33,13 @@ function Explosive:OnBurnt()
     local totaldamage = self.explosivedamage * stacksize
 
     local x, y, z = self.inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, self.explosiverange, nil, BURNT_CANT_TAGS)
 
+    local world = TheWorld
+    if world.components.dockmanager ~= nil then
+        world.components.dockmanager:DamageDockAtPoint(x, y, z, totaldamage)
+    end
+
+    local ents = TheSim:FindEntities(x, y, z, self.explosiverange, nil, BURNT_CANT_TAGS)
     for i, v in ipairs(ents) do
         if v ~= self.inst and v:IsValid() and not v:IsInLimbo() then
             if v.components.workable ~= nil and v.components.workable:CanBeWorked() then
@@ -65,7 +70,6 @@ function Explosive:OnBurnt()
         end
     end
 
-    local world = TheWorld
     for i = 1, stacksize do
         world:PushEvent("explosion", { damage = self.explosivedamage })
     end

@@ -22,6 +22,7 @@ local player_emotes_to_choose = {
 	wanda = "idle_wanda",
 	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" },
     wx78 = "idle_wx",
+	wonkey = "idle_wonkey",
 }
 
 local emote_min_time = 6
@@ -168,6 +169,8 @@ function SkinsPuppet:DoIdleEmote()
 			elseif self.prefabname == "wanda" then
 				self.override_build = "player_idles_wanda"
 				self.animstate:AddOverrideBuild(self.override_build)
+			elseif self.prefabname == "wonkey" then
+				-- Do no special handling.
 			end
 
 			if self.prefabname == "wormwood" and not self.animstate:CompareSymbolBuilds("hand", "hand_idle_wormwood") then
@@ -264,7 +267,7 @@ function SkinsPuppet:SetCharacter(character)
 	self.animstate:SetBuild(character)
 end
 
-function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change_emote, skinmode)
+function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change_emote, skinmode, monkey_curse)
 	--[[
 		For mod character support, skinmode should be a table in the format of:
 
@@ -304,7 +307,7 @@ function SkinsPuppet:SetSkins(prefabname, base_item, clothing_names, skip_change
 			base_build = "ghost_" .. prefabname .. "_build"
 		end
 	end
-	SetSkinsOnAnim( self.animstate, prefabname, base_build, clothing_names, skinmode.type)
+	SetSkinsOnAnim( self.animstate, prefabname, base_build, clothing_names, monkey_curse, skinmode.type)
 
 
 	local previousbank = self.currentanimbank

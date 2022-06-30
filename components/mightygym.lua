@@ -236,7 +236,7 @@ end
 
 function MightyGym:SetSkinModeOnGym(doer, skin_mode)
     local base_skin = self.skin_base_data[skin_mode] or doer.prefab
-    SetSkinsOnAnim( self.inst.AnimState, doer.prefab, base_skin, self.skins, skin_mode )
+    SetSkinsOnAnim( self.inst.AnimState, doer.prefab, base_skin, self.skins, self.monkey_curse, skin_mode )
 end
 
 function MightyGym:StartWorkout(doer)
@@ -252,6 +252,7 @@ function MightyGym:StartWorkout(doer)
         self.strongman.components.hunger.burnratemodifiers:SetModifier(self.inst, hunger_level)
         
         self.skins = doer.components.skinner:GetClothing()
+        self.monkey_curse = doer.components.skinner:GetMonkeyCurse()
         self.inst.AnimState:AssignItemSkins(doer.userid, self.skins.base or "", self.skins.body or "", self.skins.hand or "", self.skins.legs or "", self.skins.feet or "")
         
         self.skin_base_data = {}

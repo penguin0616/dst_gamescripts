@@ -64,6 +64,7 @@ STRINGS =
         wurt = "Wurt",
         walter = "Walter",
         wanda = "Wanda",
+        wonkey = "Wonkey",
         unknown = "The Unknown",
         random = "Random",
     },
@@ -89,6 +90,7 @@ STRINGS =
         wurt = "\"Mermfolk known for hos-per-tality, florp.\"",
         walter = "\"A Pinetree Pioneer is always prepared!\"",
         wanda = "\"Time! I just need more time!\"",
+        wonkey = "\"Ook OOK!\"",
         random = "Anybody could be under that hat.",
     },
 
@@ -112,6 +114,7 @@ STRINGS =
         wurt = "The Half-Pint",
         walter = "The Fearless",
         wanda = "The Timekeeper",
+        wonkey = "The Accursed",
     },
 
     -- Use GetCharacterDescription from stringutil -- it handles variants!
@@ -137,6 +140,7 @@ STRINGS =
         wurt = "*At home in the swamp \n*Has big plans for Merm-kind \n*Is a vegetarian",
         walter = "*Not afraid of anything, except getting hurt \n*Good with a slingshot \n*Has a four-legged friend \n*Allergic to bees \n*Has no interest in fashion",
         wanda = "*Has excellent time management skills \n*Only as old as she feels \n*In a constant race against the clock",
+        wonkey = "*Whoever they were, they're a monkey now",
         random = "Anybody could be under that hat",
     },
 
@@ -162,6 +166,7 @@ STRINGS =
         wurt = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         walter = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         wanda = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
+        wonkey = "PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         random = "\nSelect a random survivor",
     },
 
@@ -187,6 +192,7 @@ STRINGS =
         wurt = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         walter = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         wanda = "*PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
+        wonkey = "PLACEHOLDER\n\n\n\nExpertise:\nPLACEHOLDER",
         random = "\nSelect a random survivor",
     },
 
@@ -210,6 +216,7 @@ STRINGS =
         wurt = "Wurt is a curious young Merm trying to expand her horizons... as long as those horizons don't extend into Pig territory.",
         walter = "Walter is an odd but cheerful boy, whose ability to assess danger leaves something to be desired.",
         wanda = "Wanda is a skilled clockmaker who will stop at nothing to outrun her future.",
+        wonkey = "This poor soul has fallen victim to the curse of the dreaded Moon Quay pirates.",
     },
 
 	CHARACTER_BIOS =
@@ -323,6 +330,10 @@ STRINGS =
             { title = "Favorite Food", desc = "Taffy" },
             { title = "Long Shadows", desc = "An enigmatic woman of... well, fluctuating age, Wanda was torn from the world she knew after accidentally creating a fracture in time and space, pulling her from her own timeline into the land of the Constant. Though she avoids divulging many details of her past with the other Survivors, she seems to have an odd familiarity with them, as though she's run into them before... or perhaps, later?" },
 		},
+        wonkey =
+		{
+		    { title = "Favorite Food", desc = "Bananas" },
+     	},
 	},
 
 	CHARACTER_DETAILS =
@@ -356,6 +367,7 @@ STRINGS =
         wurt = "Slim",
         walter = "Slim",
         wanda = "Grim",
+        wonkey = "Unknown",
         random = "Unknown",
         default = "Unknown",
     },
@@ -904,6 +916,27 @@ STRINGS =
         APPLYMODULE = "Plug In",
         REMOVEMODULES = "Unplug",
         CHARGE_FROM = "Charge At",
+
+        -- Pirates
+        ROTATE_BOAT_CLOCKWISE = "Rotate Starboard",
+        ROTATE_BOAT_COUNTERCLOCKWISE = "Rotate Port",
+        ROTATE_BOAT_STOP = "Stop Rotating",
+
+        BOAT_MAGNET_ACTIVATE = "Pair",
+        BOAT_MAGNET_DEACTIVATE = "Unpair",
+        BOAT_MAGNET_BEACON_TURN_ON = "Turn On",
+        BOAT_MAGNET_BEACON_TURN_OFF = "Turn Off",
+
+        BOAT_CANNON_LOAD_AMMO = "Load Ammo",
+        BOAT_CANNON_SHOOT = "Shoot",
+        BOAT_CANNON_START_AIMING = "Aim",
+        BOAT_CANNON_STOP_AIMING = "Stop Aiming",
+
+        OCEAN_TRAWLER_LOWER = "Lower",
+        OCEAN_TRAWLER_RAISE = "Raise",
+        OCEAN_TRAWLER_FIX = "Fix",
+
+        EMPTY_CONTAINER = "Empty",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -1188,6 +1221,7 @@ STRINGS =
         TURF_MUD = "Mud Turf",
         TURF_DESERTDIRT = "Sandy Turf",
         TURF_DECIDUOUS = "Deciduous Turf",
+        TURF_MONKEY_GROUND = "Moon Quay Beach Turf",
 
         COOKPOT = "Crock Pot",
         DUG_GRASS = "Grass Tuft",
@@ -1350,6 +1384,7 @@ STRINGS =
         WURT = "Wurt",
         WALTER = "Walter",
         WANDA = "Wanda",
+        WONKEY = "Wonkey",
 
         PIGKING = "Pig King",
         STRAWHAT = "Straw Hat",
@@ -1775,7 +1810,7 @@ STRINGS =
         CAVE_FERN = "Fern",
         FOLIAGE = "Foliage",
         CAVE_BANANA_TREE = "Cave Banana Tree",
-        CAVE_BANANA = "Cave Banana",
+        CAVE_BANANA = "Banana",
         CAVE_BANANA_COOKED = "Cooked Banana",
         ROCKY = "Rock Lobster",
         MONKEY = "Splumonkey",
@@ -2741,7 +2776,10 @@ STRINGS =
 
 		-- new content
         BOAT = "Boat",
+        BOAT_GRASS = "Grass Raft",
+        BOAT_PIRATE = "Pirate Sloop",
         BOAT_ITEM = "Boat Kit",
+        BOAT_GRASS_ITEM = "Grass Raft Kit",
         BOATFRAGMENT03 = "Boat Fragment",
         BOATFRAGMENT04 = "Boat Fragment",
         BOATFRAGMENT05 = "Boat Fragment",
@@ -2762,6 +2800,7 @@ STRINGS =
         STEERINGWHEEL_ITEM = "Steering Wheel Kit",
         ANCHOR = "Anchor",
         WALKINGPLANK = "Plank",
+        WALKINGPLANK_GRASS = "Plank",
         ANCHOR_ITEM = "Anchor Kit",
         BOATPATCH = "Boat Patch",
         DRIFTWOOD_TREE = "Driftwood",
@@ -3317,7 +3356,7 @@ STRINGS =
         MUTATOR_WATER = "Strider Switcherdoodle",
         OCEANVINE_COCOON = "Sea Strider Nest",
         OCEANVINE_COCOON_BURNT = "Sea Strider Nest",
-        
+
         TREEGROWTHSOLUTION = "Tree Jam",
 
         FIGATONI = "Figatoni",
@@ -3379,6 +3418,60 @@ STRINGS =
         WX78_SCANNER_ITEM = "Bio Scanalyzer",
         WX78_SCANNER_SUCCEEDED = "Bio Scanalyzer",
         WX78_MODULEREMOVER = "Circuit Extractor",
+
+        -- Pirates
+        BOAT_ROTATOR = "Rudder",
+        BOAT_ROTATOR_KIT = "Rudder Kit",
+        BOAT_MAGNET = "Nautopilot",
+        BOAT_MAGNET_KIT = "Nautopilot Kit",
+        BOAT_MAGNET_BEACON = "Nautopilot Beacon",
+        BOAT_BUMPER_KELP = "Kelp Bumper",
+        BOAT_BUMPER_KELP_KIT = "Kelp Bumper Kit",
+        BOAT_BUMPER_SHELL = "Shell Bumper",
+        BOAT_BUMPER_SHELL_KIT = "Shell Bumper Kit",
+        BOAT_CANNON = "Cannon",
+        BOAT_CANNON_KIT = "Cannon Kit",
+        CANNONBALL_ROCK = "Cannonball",
+        CANNONBALL_ROCK_ITEM = "Cannonball",
+
+        OCEAN_TRAWLER = "Ocean Trawler",
+        OCEAN_TRAWLER_KIT = "Ocean Trawler Kit",
+
+        DOCK_KIT = "Dock Kit",
+        DOCK_WOODPOSTS_ITEM = "Dock Piling",
+
+        MONKEYHUT = "Monkey Hut",
+        POWDER_MONKEY = "Powder Monkey",
+        PRIME_MATE = "Prime Mate",
+		LIGHTCRAB = "Crustashine",
+        CUTLESS = "Cutless",
+        CURSED_MONKEY_TOKEN = "Accursed Trinket",
+        OAR_MONKEY = "Battle Paddle",
+        BANANABUSH = "Banana Bush",
+        DUG_BANANABUSH = "Banana Bush",
+        PALMCONETREE = "Palmcone Tree",
+        PALMCONE_SEED = "Palmcone Sprout",
+        PALMCONE_SAPLING = "Palmcone Sapling",
+        PALMCONE_SCALE = "Palmcone Scale",
+        MONKEYTAIL = "Monkeytails",
+        DUG_MONKEYTAIL = "Monkeytails",
+
+        MONKEY_MEDIUMHAT = "Captain's Tricorn",
+        MONKEY_SMALLHAT = "Pirate's Bandana",
+        POLLY_ROGERSHAT = "Polly Roger's Hat",
+        POLLY_ROGERS = "Polly Roger",
+
+        MONKEYISLAND_PORTAL = "Unnatural Portal",
+        MONKEYISLAND_PORTAL_DEBRIS = "Broken Machinery",
+        MONKEYQUEEN = "Queen of Moon Quay",
+        MONKEYPILLAR = "Monkey Bar",
+        PIRATE_FLAG_POLE = "Moon Quay Pirate Banner",
+
+        BLACKFLAG = "Black Flag",
+        PIRATE_STASH = "X",
+        STASH_MAP = "Pirate Map",
+
+        BANANAJUICE = "Banana Shake",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3484,7 +3577,7 @@ STRINGS =
         BUNDLEWRAP = "Part and parcel to bundling your stuff.",
         BACKPACK = "Carry more stuff.",
         PIGGYBACK = "Carries a lot, but slows you down.",
-        ICEPACK = "Small capacity, but keeps stuff fresh.",
+        ICEPACK = "Keeps stuff fresh.",
         UMBRELLA = "Keep the sun and rain at bay!",
         RESEARCHLAB2 = "Unlock even more crafting recipes!",
         RESEARCHLAB3 = "Is this even science anymore?",
@@ -3927,6 +4020,7 @@ STRINGS =
         ANCHOR = "Boat brakes.",
         STEERINGWHEEL = "It's wheely important to have one.",
         BOAT_ITEM = "Let the seas be your domain.",
+        BOAT_GRASS_ITEM = "Fun for a quick weekend getaway.",
         MAST = "Sail away, sail away.",
         ANCHOR_ITEM = "Boat brakes.", -- DEPRECATED, keeping for posterity's sake
         STEERINGWHEEL_ITEM = "It's wheely important to have one.", -- DEPRECATED, keeping for posterity's sake
@@ -4062,6 +4156,8 @@ STRINGS =
         TURF_SINKHOLE = "A chunk of wet, muddy grass.",
         TURF_MUD = "A patch of muddy ground.",
 
+        TURF_MONKEY_GROUND = "A patch of sand, with a faint scent of bananas.",
+
 		-- FARMING
 		FARM_PLOW_ITEM = "Plow a plot for your plants.",
 		FARM_HOE = "Till soil for crop seeds.",
@@ -4100,7 +4196,7 @@ STRINGS =
         MUTATOR_MOON = "Its recipient will be over the moon!",
         MUTATOR_HEALER = "Extra grainy, so it has to be healthy!",
         SPIDER_WHISTLE = "Call your creepy crawly friends.",
-        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",        
+        SPIDERDEN_BEDAZZLER = "A nice home makes for a nice disposition.",
         SPIDER_REPELLENT = "Let your friends know you need some space.",
         SPIDER_HEALER_ITEM = "Gross, gooey, and good for you!",
 
@@ -4110,7 +4206,7 @@ STRINGS =
 
 		-- Terraria
         CRITTER_EYEOFTERROR_BUILDER = "Summon a friendly ocular companion.",
-        
+
         -- WOLFGANG
         MIGHTY_GYM = "Bring on the brawn!",
         DUMBBELL = "Sticks and stones make muscles honed.",
@@ -4137,6 +4233,20 @@ STRINGS =
         WX78MODULE_MUSIC = "Every machine needs a tune-up now and then.",
         WX78MODULE_BEE = "Get your brain and body buzzing with powerful potential!",
         WX78MODULE_MAXHEALTH2 = "Make your robotic body much more robust.",
+
+        -- Pirates
+        POLLY_ROGERSHAT = "This hat comes with a feathered friend.",
+        PIRATE_FLAG_POLE = "Ape the monkey marauders with a pirate flag of your own.",
+        DOCK_KIT = "Get ready for your pier review.",
+        DOCK_WOODPOSTS_ITEM = "Nothing says \"structurally sound\" like adding some posts as an afterthought.",
+        BOAT_ROTATOR_KIT = "Row, row, rotate your boat.",
+        BOAT_MAGNET_KIT = "Your personality isn't the only thing that's magnetic.",
+        BOAT_MAGNET_BEACON = "Draw in any comically oversized magnets that might be nearby.",
+        BOAT_BUMPER_KELP_KIT = "Protect your boat - with kelp!",
+        BOAT_BUMPER_SHELL_KIT = "Protect your boat - with shells!",
+        BOAT_CANNON_KIT = "It blows the competition out of the water.",
+        CANNONBALL_ROCK_ITEM = "It's sure to make a splash.",
+        OCEAN_TRAWLER_KIT = "There's plenty of fish in the sea.",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -5709,6 +5819,33 @@ STRINGS =
 
     TWINS_COMING = "This is going to be a terrible night...",
     TWINS_TARGET = "The Twins turn their gaze toward {player_name}",
+
+    -- PIRATES
+    MONKEY_TALK_ABANDON = {"INTO THE BLUE.","CURSES!","CANNON BALL!", "ABANDON SHIP!"},
+    MONKEY_TALK_ATTACK = {"HAND IT OVER!","AVAST YE, LAND LUBBER!","SCURVY DOG!"},
+    MONKEY_TALK_STEAL = {"ME BOOTY!","ARRR!","LOOT!"},
+    MONKEY_TALK_RETREAT = {"WE GO!","MAKE HASTE!","ANCHOR AWEIGH!"},
+    MONKEY_TALK_FIRECANNON = {"AVAST YE!","FEED THE FISH!","FIRE ON DECK!","SCUTTLE YE SELF!","TO THE DEPTHS WITH YE!"},
+
+    MONKEY_MONKEY_BATTLECRY = {"MUTINY!","AVAST, BILGE RAT!","KEELHAUL YA!"},
+    MONKEY_STUFF_BATTLECRY = {"HAND IT OVER!","GIVE UP THE GOODS!","ARRR, THAT LOOT'S MINE!"},
+    MONKEY_BATTLECRY = {"LAND LUBBER!","SCURVY DOG!","FEED THE FISH!","GET YER FLOGGIN'!"},
+    MONKEY_BATTLECRY_VICTORY = {"YAR! BENT GOLD!", "VICTORY TASTES SWEET!"},
+    MONKEY_BATTLECRY_VICTORY_CHEER = {"YO HO!"},
+    MONKEY_BATTLECRY_TIME_UP = {"TIME UP!","PARLAY OVER!"},
+
+    MONKEY_COMMAND = {"TO ARMS!","HANG 'EM FROM THE YARD ARM!","AVAST, ME SEA MONKEYS!","PIRATES OF MOON QUAY, TO BATTLE!"},
+
+    MONKEY_QUEEN_BANANAS = {"OOH, BENT GOLD.", "FABULOUS QUALITY.", "YOU'VE DONE WELL.",},
+    MONKEY_QUEEN_REMOVE_CURSE = {"YOU WOULD RETURN SUCH A GIFT? SUIT YOURSELF.", "YOU WISH TO RETURN TO THAT HIDEOUS FORM? VERY WELL.", "I CAN'T FATHOM WHY YOU'D GIVE IT UP, BUT I'LL HONOR OUR ACCORD."},
+    MONKEY_QUEEN_HAPPY = {"YOUR OFFERING PLEASES ME.", "THE GREAT SKY BANANA SMILES THIS DAY."},
+    MONKEY_QUEEN_WAKE = {"WHAT'S ALL THE FUSS NOW?", "SPEAK. BUT MAKE IT QUICK."},
+
+    GIBERISH_PRE = {"buhrg","grog","krog","gruhrd","blorg","glog","snurg","dulg"},
+    GIBERISH_PST = {"le","lor","ed","end"},
+
+    MONKEY_SPEECH_PRE = {"Ooo","Eee","Oee"},
+    MONKEY_SPEECH_PST = {"ki","k"},
 }
 
 STRINGS.BUNNYMANNAMES =
@@ -6698,7 +6835,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "WX-78 Refresh\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Curse of Moon Quay\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7205,12 +7342,12 @@ STRINGS.UI =
 		ARMOUR = "Armour",
 		CLOTHING = "Clothing",
 		RESTORATION = "Healing",
-		MAGIC = "Shadow Magic",	
+		MAGIC = "Shadow Magic",
 		DECOR = "Decorations",
 		STRUCTURES = "Structures",
 		CONTAINERS = "Storage Solutions",
 		COOKING = "Cooking",
-		GARDENING = "Food & Gardening",	
+		GARDENING = "Food & Gardening",
 		FISHING = "Fishing",
 		SEAFARING = "Seafaring",
 		RIDING = "Beefalo Riding",
@@ -7220,7 +7357,7 @@ STRINGS.UI =
 		EVERYTHING = "Everything",
 	},
 
-	CRAFTING_STATION_FILTERS = 
+	CRAFTING_STATION_FILTERS =
 	{
         ANCIENT = "Ancient Pseudoscience",
         ORPHANAGE = "Critters",
@@ -7340,6 +7477,7 @@ STRINGS.UI =
         GRAPHICS = "Graphics",
         SETTINGS = "Settings",
         ADVANCED = "Advanced",
+		HUD = "HUD",
         CONTROLS = "Controls",
         LANGUAGES = "Languages",
         LANG_TITLE = "Language Options",
@@ -7390,6 +7528,8 @@ STRINGS.UI =
 		CRAFTINGMENUNUMPINPAGES = "Crafting Pin Pages:",
 		CRAFTINGMENUSENSITIVITY = "Crafting Sensitivity:",
 		INVENTORYSENSITIVITY = "Inventory Sensitivity:",
+        MINIMAPZOOMSENSITIVITY = "Zoom Sensitivity:",
+        MINIMAPZOOMCURSOR = "Zoom Cursor Focus:",
         VIBRATION = "Vibration:",
         WATHGRITHRFONT = "Wigfrid's Umlauts:",
         WALTERCAMERA = "Campfire Camera:",
@@ -7456,6 +7596,7 @@ STRINGS.UI =
             GRAPHICS = "Modify the graphics settings",
             SETTINGS = "Modify features of the game and user interface",
             ADVANCED = "Modify advanced features of the game and user interface",
+			HUD = "Modify features of the user interface",
             CONTROLS = "Rebind which input does which in-game action",
             LANGUAGES = "Select display language",
             CONTROLS_CONSOLE = "Check which control does which in-game action",
@@ -7473,6 +7614,8 @@ STRINGS.UI =
 			CRAFTINGMENUNUMPINPAGES = "Set how many pages of pinned recipes you would like to cycle through.",
 			CRAFTINGMENUSENSITIVITY = "Adjust the input sensitivity while navigating through the crafting menu.",
 			INVENTORYSENSITIVITY = "Adjust the input sensitivity while navigating through the inventory.",
+            MINIMAPZOOMSENSITIVITY = "Adjust the input sensitivity while zooming in and out on the minimap.",
+            MINIMAPZOOMCURSOR = "Zooming on the minimap will focus where the cursor is located.",
             AUTOLOGIN = "Log into your Klei account automatically when booting up Don't Starve Together.",
             SHOWPASSWORD = "Show or hide your passwords.",
             BOATCAMERA = "Allows the camera to focus on your boat while sailing.",
@@ -7512,7 +7655,7 @@ STRINGS.UI =
             ANIMATED_HEADS = "Animates the survivor's heads in the menus.",
             CONSOLEAUTOPAUSE = "Allows the server to auto-pause while the console screen is open.",
             DEFAULTCLOUDSAVES = "Chooses whether new saves will be stored in the cloud or not by default."
-        },
+    },
 
     },
 
@@ -8484,7 +8627,7 @@ STRINGS.UI =
         FERN = "Cave Ferns",
         FLOWER_CAVE = "Light Flowers",
         WORMLIGHTS = "Glow Berries",
-        BANANA = "Cave Bananas",
+        BANANA = "Bananas",
         LICHEN = "Lichen",
         EARTHQUAKES = "Earthquakes",
         CAVELIGHT = "Sinkhole Lights",
@@ -8543,6 +8686,8 @@ STRINGS.UI =
         MOON_TREE_REGROWTH = "Lune Trees",
         MUSHTREE_MOON_REGROWTH = "Lunar Mushtrees",
         CARROTS_REGROWTH = "Carrots",
+        REEDS_REGROWTH = "Reeds",
+        CACTUS_REGROWTH = "Cacti",
         FLOWERS_REGROWTH = "Flowers",
         FLOWER_CAVE_REGROWTH = "Light Flower",
         LIGHTFLIER_FLOWER_REGROWTH = "Lightbug Flower",
@@ -8568,6 +8713,17 @@ STRINGS.UI =
 
 		EYEOFTERROR = "Eye of Terror",
 		TERRARIUMCHEST = "Terrarium",
+
+        PALMCONETREE = "Palmcone Tree",
+        PALMCONETREE_REGROWTH = "Palmcone Tree",
+        PIRATERAIDS = "Moon Quay Pirates",
+
+        PORTAL_SPAWNRATE = "Portal Activity",
+        BANANABUSH_PORTALRATE = "Banana Bushes",
+        LIGHTCRAB_PORTALRATE = "Crustashines",
+        MONKEYTAIL_PORTALRATE = "Monkeytails",
+        PALMCONE_SEED_PORTALRATE = "Palmcone Sprouts",
+        POWDER_MONKEY_PORTALRATE = "Powder Monkeys",
 
 		-- End of world customization strings
     },
@@ -8856,6 +9012,8 @@ STRINGS.UI =
         OFFLINEMODETITLE = "Offline Mode",
         OFFLINEMODEBODYCREATE = "Are you sure you want to create an offline world? This is a limited mode where only players on your Local Area Network can join. Players will not be able to receive or use Collection Items in this world.",
         OFFLINEMODEBODYRESUME = "You are resuming an offline world. Only users on your Local Area Network will be able to join this world. Players will not be able to receive or use Collection Items in this world.",
+        OFFLINEMODEBODYCREATE_CANSKIN = "Are you sure you want to create an offline world? This is a limited mode where only players on your Local Area Network can join.",
+        OFFLINEMODEBODYRESUME_CANSKIN = "You are resuming an offline world. Only users on your Local Area Network will be able to join this world.",
         FULLSLOTSTITLE = "No Slots Available",
         FULLSLOTSBODY = "All of your server slots are currently full. You must either select a slot to load from, or delete a slot and start a new world.",
         OK = "OK",
@@ -9049,7 +9207,7 @@ STRINGS.UI =
     {
         TITLE = "Clothing Presets",
     },
-    
+
     ITEM_SKIN_DEFAULTS =
     {
         TITLE = "Curios for Starting Items",
@@ -9113,6 +9271,7 @@ STRINGS.UI =
         OK = "OK",
 		NOW_OFFLINE_TITLE = "Network Connection Lost",
 		NOW_OFFLINE_BODY = "You are now in offline mode.\nYour item collection is not available in offline mode.\nPlease check your connection and log in again.",
+        NOW_OFFLINE_BODY_CANSKIN = "You are now in offline mode.\nPlease check your connection and log in again.",
     },
 
     FESTIVALEVENTSCREEN =
@@ -10176,6 +10335,15 @@ STRINGS.UI =
         FAILED_INVENTORY_NO = "No",
 
         GET_INVENTORY = "Downloading Item Collection",
+
+        FAILED_NOLOGIN_TITLE = "Authentication Required",
+        FAILED_NOLOGIN_BODY = "Unfortunately you will need to login to continue viewing this panel, would you like to try to login again?",
+        FAILED_NOLOGIN_YES = "Yes",
+        FAILED_NOLOGIN_NO = "No",
+
+        FAILED_NOPERMISSIONS_TITLE = "Permissions Required",
+        FAILED_NOPERMISSIONS_BODY = "Unfortunately you will need to login to continue viewing this panel, but you do not allow data collection which is required to login.\n\nData Collection settings can be modified in the Options menu.",
+        FAILED_NOPERMISSIONS_NOCHOICE = "I understand",
     },
 
     BEARDSCREEN =
@@ -10312,7 +10480,7 @@ STRINGS.UI =
         PURCHASE_WARNING_DESC = "You already own all the items in this chest. Would you like to purchase it anyway?",
         PURCHASE_WARNING_OK = "Continue Purchase",
         PURCHASE_WARNING_CANCEL = "Never mind!",
-        
+
         GO_TO_SALES = "View Sales!",
 
         PACK_SAVINGS = "-{savings}%",
@@ -10469,6 +10637,8 @@ STRINGS.UI =
         WARNING = "You won't be able to wear an item if you give your last one away! Do you really want to trade these items?",
         SERVER_ERROR_TITLE = "Error Trading Items",
         SERVER_ERROR_BODY = "There was an error trading your items. Please login again to refresh your account inventory.",
+        SORRY = "Sorry",
+        OFFLINE = "The Trade Inn is not available in offline mode.",
         OK = "OK",
         SPECIALS_TITLE = "Specials",
         SPECIALS = "Specials",
@@ -10654,7 +10824,7 @@ STRINGS.UI =
             FEED = "Feed {name}",
             CLEAR_POOP = "Clear Poop",
             PICKUP_NAMETAG = "Pick up Kit Collar",
-            
+
             ABANDONED_TITLE = "{name} has abandoned you.",
             ABANDONED_BODY = "Sadly, {name} was feeling neglected. They went looking for the affection, food and tidier home that they felt they deserved.",
 
@@ -11651,6 +11821,7 @@ STRINGS.UI =
         CHOICEGIANTS = "Giants",
 
         WORLDSETTINGS_RESOURCEREGROWTH = "Resource Regrowth",
+        WORLDSETTINGS_PORTALRESOURCES = "Unnatural Portal Resources",
         WORLDSETTINGS_ANIMALS = "Creatures",
         WORLDSETTINGS_HOSTILE_CREATURES = "Hostile Creatures",
 
@@ -12509,7 +12680,7 @@ STRINGS.KITCOON_NAMING =
 		"Boots",
 		"Chewie",
 		"Turnip",
-		"Lando", 
+		"Lando",
 		"Marlo",
 		"Andre",
 		"Mandy",

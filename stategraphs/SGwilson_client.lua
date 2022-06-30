@@ -94,6 +94,7 @@ local function ConfigureRunState(inst)
         inst.sg.statemem.careful = true
     else
         inst.sg.statemem.normal = true
+        inst.sg.statemem.normalwonkey = inst:HasTag("wonkey") or nil
     end
 end
 
@@ -428,6 +429,13 @@ local actionhandlers =
     ActionHandler(ACTIONS.RAISE_ANCHOR, "dolongaction"),
     ActionHandler(ACTIONS.LOWER_ANCHOR, "dolongaction"),
     ActionHandler(ACTIONS.STEER_BOAT, "steer_boat_idle_pre"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_CLOCKWISE, "doshortaction"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_COUNTERCLOCKWISE, "doshortaction"),
+    ActionHandler(ACTIONS.ROTATE_BOAT_STOP, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_ACTIVATE, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_DEACTIVATE, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_BEACON_TURN_ON, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_MAGNET_BEACON_TURN_OFF, "doshortaction"),
     ActionHandler(ACTIONS.REPAIR_LEAK, "dolongaction"),
     ActionHandler(ACTIONS.SET_HEADING, function(inst, action) inst:PerformPreviewBufferedAction() end),
     ActionHandler(ACTIONS.CAST_NET, "doshortaction"),
@@ -439,6 +447,12 @@ local actionhandlers =
     ActionHandler(ACTIONS.ABANDON_SHIP, "abandon_ship"),
     ActionHandler(ACTIONS.MOUNT_PLANK, "mount_plank"),
     ActionHandler(ACTIONS.DISMOUNT_PLANK, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_LOAD_AMMO, "doshortaction"),
+    ActionHandler(ACTIONS.BOAT_CANNON_START_AIMING, "aim_cannon_pre"),
+    ActionHandler(ACTIONS.BOAT_CANNON_SHOOT, function(inst, action) inst:PerformPreviewBufferedAction() end),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_LOWER, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_RAISE, "doshortaction"),
+    ActionHandler(ACTIONS.OCEAN_TRAWLER_FIX, "dolongaction"),
 
     ActionHandler(ACTIONS.UNWRAP,
         function(inst, action)
@@ -528,7 +542,7 @@ local actionhandlers =
             return "dolongaction"
         end
     end),
-    
+
     ActionHandler(ACTIONS.STOPUSINGITEM, "dolongaction"),
 
     ActionHandler(ACTIONS.YOTB_STARTCONTEST, "doshortaction"),
@@ -545,15 +559,15 @@ local actionhandlers =
     ActionHandler(ACTIONS.HIDEANSEEK_FIND, "dolongaction"),
     ActionHandler(ACTIONS.RETURN_FOLLOWER, "dolongaction"),
 
-    ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),   
+    ActionHandler(ACTIONS.DISMANTLE_POCKETWATCH, "dolongaction"),
 
-    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action) 
+    ActionHandler(ACTIONS.LIFT_DUMBBELL, function(inst, action)
         if inst:HasTag("liftingdumbbell") then
             return "use_dumbbell_pst"
         else
             return "use_dumbbell_pre"
         end
-    end), 
+    end),
 
     ActionHandler(ACTIONS.ENTER_GYM, "give"),
     ActionHandler(ACTIONS.LIFT_GYM_FAIL, "mighty_gym_lift"),
@@ -681,6 +695,10 @@ local states =
 
         onenter = function(inst)
             ConfigureRunState(inst)
+            if inst.sg.statemem.normalwonkey and inst.components.locomotor:GetTimeMoving() >= TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run_monkey") --resuming after brief stop from changing directions
+                return
+            end
             inst.components.locomotor:RunForward()
             inst.AnimState:PlayAnimation(GetRunStateAnim(inst).."_pre")
             --goose footsteps should always be light
@@ -774,6 +792,10 @@ local states =
         end,
 
         onupdate = function(inst)
+            if inst.sg.statemem.normalwonkey and inst.components.locomotor:GetTimeMoving() >= TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run_monkey_start")
+                return
+            end
             inst.components.locomotor:RunForward()
         end,
 
@@ -1025,6 +1047,128 @@ local states =
                 end
             end),
         },
+    },
+
+
+    State{
+        name = "run_monkey_start",
+        tags = {"moving", "running", "canrotate", "monkey"},
+
+        onenter = function(inst)
+            ConfigureRunState(inst)
+            if not inst.sg.statemem.normalwonkey then
+                inst.sg:GoToState("run")
+                return
+            end
+            inst.Transform:SetPredictedSixFaced()
+            inst.components.locomotor:RunForward()
+            inst.AnimState:PlayAnimation("run_monkey_pre")
+        end,
+
+        onupdate = function(inst)
+            if inst.components.locomotor:GetTimeMoving() < TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run")
+            end
+        end,
+
+        events =
+        {
+            EventHandler("gogglevision", function(inst, data)
+                if not data.enabled and inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("sandstormlevel", function(inst, data)
+                if data.level >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("carefulwalking", function(inst, data)
+                if data.careful then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("animover", function(inst)
+                inst.sg.statemem.monkeyrunning = true
+                inst.sg:GoToState("run_monkey")
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.monkeyrunning then
+                inst.Transform:ClearPredictedFacingModel()
+            end
+        end,
+    },
+
+    State{
+        name = "run_monkey",
+        tags = {"moving", "running", "canrotate", "monkey"},
+
+        onenter = function(inst)
+            ConfigureRunState(inst)
+            if not inst.sg.statemem.normalwonkey then
+                inst.sg:GoToState("run")
+                return
+            end
+            inst.components.locomotor.predictrunspeed = TUNING.WILSON_RUN_SPEED + TUNING.WONKEY_SPEED_BONUS
+            inst.Transform:SetPredictedSixFaced()
+            inst.components.locomotor:RunForward()
+
+            if not inst.AnimState:IsCurrentAnimation("run_monkey_loop") then
+                inst.AnimState:PlayAnimation("run_monkey_loop", true)
+            end
+
+            --V2C: adding half a frame time so it rounds up
+            inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + .5 * FRAMES)
+        end,
+
+        timeline =
+        {
+            TimeEvent(4*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+            TimeEvent(5*FRAMES, function(inst) PlayFootstep(inst, 0.5) DoFoleySounds(inst) end),
+            TimeEvent(10*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+            TimeEvent(11*FRAMES, function(inst) PlayFootstep(inst, 0.5) end),
+        },
+
+        onupdate = function(inst)
+            if inst.components.locomotor:GetTimeMoving() < TUNING.WONKEY_TIME_TO_RUN then
+                inst.sg:GoToState("run")
+                return
+            end
+            inst.components.locomotor:RunForward()
+        end,
+
+        events =
+        {
+            EventHandler("gogglevision", function(inst, data)
+                if not data.enabled and inst:GetStormLevel() >= TUNING.SANDSTORM_FULL_LEVEL then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("sandstormlevel", function(inst, data)
+                if data.level >= TUNING.SANDSTORM_FULL_LEVEL and not inst.components.playervision:HasGoggleVision() then
+                    inst.sg:GoToState("run")
+                end
+            end),
+            EventHandler("carefulwalking", function(inst, data)
+                if data.careful then
+                    inst.sg:GoToState("run")
+                end
+            end),
+        },
+
+        ontimeout = function(inst)
+            inst.sg.statemem.monkeyrunning = true
+            inst.sg:GoToState("run_monkey")
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.monkeyrunning then
+                inst.components.locomotor.predictrunspeed = nil
+                inst.Transform:ClearPredictedFacingModel()
+            end
+        end,
     },
 
     State{
@@ -1579,7 +1723,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             if inst.GetCurrentMightinessState then
                 local state = inst:GetCurrentMightinessState()
                 if state == "wimpy" then
@@ -1621,7 +1765,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             if inst.GetCurrentMightinessState then
                 local state = inst:GetCurrentMightinessState()
                 if state == "wimpy" then
@@ -1663,7 +1807,7 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            
+
             if inst.GetCurrentMightinessState then
                 local state = inst:GetCurrentMightinessState()
                 if state == "wimpy" then
@@ -2405,7 +2549,7 @@ local states =
 
         onenter = function(inst, snap)
             inst.components.locomotor:Stop()
-            inst.Transform:SetNoFaced()
+            inst.Transform:SetPredictedNoFaced()
             inst.AnimState:PlayAnimation("steer_idle_pre")
             inst.AnimState:PushAnimation("steer_lag", false)
             inst:PerformPreviewBufferedAction()
@@ -2419,15 +2563,51 @@ local states =
                     inst.sg:GoToState("idle", "noanim")
                 end
             elseif inst.bufferedaction == nil then
-                inst.Transform:SetFourFaced()
                 inst.sg:GoToState("idle")
             end
         end,
 
         ontimeout = function(inst)
             inst:ClearBufferedAction()
-            inst.Transform:SetFourFaced()
             inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            inst.Transform:ClearPredictedFacingModel()
+        end,
+    },
+
+    State{
+        name = "aim_cannon_pre",
+        tags = { "is_using_cannon", "doing" },
+
+        onenter = function(inst, snap)
+            inst.components.locomotor:Stop()
+            inst.Transform:SetPredictedEightFaced()
+            inst.AnimState:PlayAnimation("aim_cannon_pre")
+            inst.AnimState:PushAnimation("aim_cannon_loop", true)
+            inst:PerformPreviewBufferedAction()
+
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.sg:GoToState("idle")
+        end,
+
+        onexit = function(inst)
+            inst.Transform:ClearPredictedFacingModel()
         end,
     },
 
@@ -3567,7 +3747,7 @@ local states =
                     inst.sg:RemoveStateTag("abouttoattack")
                 end
             end),
-            TimeEvent(17*FRAMES, function(inst) 
+            TimeEvent(17*FRAMES, function(inst)
 				if inst.sg.statemem.ispocketwatch then
                     inst.SoundEmitter:PlaySound(inst.sg.statemem.ispocketwatch_fueled and "wanda2/characters/wanda/watch/weapon/pst_shadow" or "wanda2/characters/wanda/watch/weapon/pst")
                 end
@@ -4279,8 +4459,8 @@ local states =
 
         onexit = function(inst)
             inst.entity:SetIsPredictingMovement(true)
-        end,        
-    }, 
+        end,
+    },
     --------------------------------------------------------------------------
 
     State{

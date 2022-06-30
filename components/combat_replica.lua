@@ -385,6 +385,7 @@ function Combat:CanBeAttacked(attacker)
     if self.inst:HasTag("playerghost") or
         self.inst:HasTag("noattack") or
         self.inst:HasTag("flight") or
+        (attacker:HasTag("player") and self.inst:HasTag("noplayertarget") ) or
         self.inst:HasTag("invisible") then
         --Can't be attacked by anyone
         return false

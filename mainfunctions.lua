@@ -488,6 +488,10 @@ end
 function RemoveEntity(guid)
     local inst = Ents[guid]
     if inst then
+        --certain things(like seamless player swapping) need to delay the despawning on a local client until they have ran their own code.
+        if (inst.delayclientdespawn and not TheNet:IsDedicated()) then
+            return
+        end
         inst:Remove()
     end
 end
@@ -749,7 +753,19 @@ function OnServerPauseDirty(pause, autopause, gameautopause, source)
 end
 
 function ReplicateEntity(guid)
-    Ents[guid]:ReplicateEntity()
+    local inst = Ents[guid]
+
+    local _ThePlayer
+    if inst.isseamlessswaptarget then
+        _ThePlayer = ThePlayer
+        ThePlayer = inst
+    end
+
+    inst:ReplicateEntity()
+
+    if _ThePlayer then
+        ThePlayer = _ThePlayer
+    end
 end
 
 ------------------------------
@@ -1020,7 +1036,6 @@ function SaveGame(isshutdown, cb)
     --save out the map
     save.map =
     {
-        revealed = "",
         tiles = "",
         roads = Roads,
     }
@@ -1031,6 +1046,8 @@ function SaveGame(isshutdown, cb)
     if ground ~= nil then
         save.map.prefab = ground.worldprefab
         save.map.tiles = ground.Map:GetStringEncode()
+        save.map.world_tile_map = GetWorldTileMap()
+        save.map.tiledata = ground.Map:GetDataStringEncode()
         save.map.nav = ground.Map:GetNavStringEncode()
         save.map.nodeidtilemap = ground.Map:GetNodeIdTileMapStringEncode()
         save.map.width, save.map.height = ground.Map:GetSize()

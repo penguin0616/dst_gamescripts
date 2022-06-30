@@ -54,7 +54,7 @@ local function IsNearLeader(inst, dist)
     return leader ~= nil and inst:IsNear(leader, dist)
 end
 
-local TOWORK_CANT_TAGS = { "fire", "smolder", "event_trigger", "INLIMBO", "NOCLICK" }
+local TOWORK_CANT_TAGS = { "fire", "smolder", "event_trigger", "INLIMBO", "NOCLICK", "carnivalgame_part" }
 local function FindEntityToWorkAction(inst, action, addtltags)
     local leader = GetLeader(inst)
     if leader ~= nil then

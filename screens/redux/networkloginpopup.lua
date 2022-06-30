@@ -58,7 +58,10 @@ function NetworkLoginPopup:OnLogin(forceOffline)
 		self.logged = true
 	    self:Disable()
 	    self:StopUpdating()
-	    if forceOffline then TheFrontEnd:GetAccountManager():CancelLogin() end
+	    if forceOffline then
+			TheInventory:CancelGetAllItems()
+			TheFrontEnd:GetAccountManager():CancelLogin()
+		end
 	    self.onLogin_cb(forceOffline)
 	end
 end
@@ -66,6 +69,7 @@ end
 function NetworkLoginPopup:OnCancel()
     -- Ignore base implementation and do it all ourself.
     self:Disable()
+	TheInventory:CancelGetAllItems()
 	TheFrontEnd:GetAccountManager():CancelLogin()
 	TheFrontEnd:PopScreen()
 	self.onCancel_cb()

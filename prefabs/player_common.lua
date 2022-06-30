@@ -299,7 +299,7 @@ local function OnGetItem(inst, giver, item)
 
         inst.components.health:DeltaPenalty(TUNING.REVIVE_HEALTH_PENALTY)
         giver.components.sanity:DoDelta(TUNING.REVIVE_OTHER_SANITY_BONUS)
-    elseif item ~= nil then
+    elseif item ~= nil and giver.components.age ~= nil then
 		if giver.components.age:GetAgeInDays() >= TUNING.ACHIEVEMENT_HELPOUT_GIVER_MIN_AGE and inst.components.age:GetAgeInDays() <= TUNING.ACHIEVEMENT_HELPOUT_RECEIVER_MAX_AGE then
 			AwardPlayerAchievement("helping_hand", giver)
 		end
@@ -425,7 +425,7 @@ local function OnPickSomething(inst, data)
     end
 end
 
-local function OnDropItem(inst)
+local function OnDropItem(inst,data)
     --Others can hear this
     inst.SoundEmitter:PlaySound("dontstarve/common/dropGeneric")
 end
@@ -506,12 +506,12 @@ fns.OnChangeArea = function(inst, area)
 end
 
 fns.OnAlterNight = function(inst)
-	local enable_lunacy = TheWorld.state.isnight and TheWorld.state.isalterawake  
+	local enable_lunacy = TheWorld.state.isnight and TheWorld.state.isalterawake
 	inst.components.sanity:EnableLunacy(enable_lunacy, "alter_night")
 end
 
 fns.OnStormLevelChanged = function(inst, data)
-	local in_moonstorm = data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0   
+	local in_moonstorm = data ~= nil and data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0
 	inst.components.sanity:EnableLunacy(in_moonstorm, "moon_storm")
 end
 
@@ -641,7 +641,48 @@ local function DeactivateHUD(inst)
     inst.HUD = nil
 end
 
+local function DeactivatePlayer(inst)
+    if inst.activatetask ~= nil then
+        inst.activatetask:Cancel()
+        inst.activatetask = nil
+        return
+    end
+
+    if inst == ThePlayer and not TheWorld.ismastersim then
+        -- For now, clients save their local minimap reveal cache
+        -- and we need to trigger this here as well as on network
+        -- disconnect.  On migration, we will hit this code first
+        -- whereas normally we will hit the one in disconnection.
+        SerializeUserSession(inst)
+    end
+    inst:PushEvent("playerdeactivated")
+    TheWorld:PushEvent("playerdeactivated", inst)
+    inst.isseamlessswapsource = nil
+end
+
+local function UnregisterHUD(inst)
+    UnregisterActivePlayerEventListeners(inst)
+    RemoveActivePlayerComponents(inst)
+    DeactivatePlayer(inst)
+    DeactivateHUD(inst)
+end
+
 local function ActivatePlayer(inst)
+    if ThePlayer.isseamlessswapsource then
+        assert(inst.isseamlessswaptarget, "new player isn't the seamless swap target")
+
+        UnregisterHUD(ThePlayer)
+
+        local oldplayer = ThePlayer
+        local oldprefab = oldplayer.prefab
+        ThePlayer = inst
+        oldplayer.player_classified.MapExplorer:DeactivateLocalMiniMap()
+        oldplayer:Remove()
+
+        ActivateHUD(inst)
+
+        inst:PushEvent("finishseamlessplayerswap" , {oldprefab=oldprefab })
+    end
     inst.activatetask = nil
 
     TheWorld.minimap.MiniMap:DrawForgottenFogOfWar(true)
@@ -661,25 +702,7 @@ local function ActivatePlayer(inst)
         -- easier to find the server to rejoin in case of a crash.
         SerializeUserSession(inst)
     end
-end
-
-local function DeactivatePlayer(inst)
-    if inst.activatetask ~= nil then
-        inst.activatetask:Cancel()
-        inst.activatetask = nil
-        return
-    end
-
-    if inst == ThePlayer and not TheWorld.ismastersim then
-        -- For now, clients save their local minimap reveal cache
-        -- and we need to trigger this here as well as on network
-        -- disconnect.  On migration, we will hit this code first
-        -- whereas normally we will hit the one in disconnection.
-        SerializeUserSession(inst)
-    end
-
-    inst:PushEvent("playerdeactivated")
-    TheWorld:PushEvent("playerdeactivated", inst)
+    inst.isseamlessswaptarget = nil
 end
 
 --------------------------------------------------------------------------
@@ -812,6 +835,17 @@ local function SetGhostMode(inst, isghost)
     end
 end
 
+local function RemovePlayerComponents(inst)
+    EnableMovementPrediction(inst, false)
+    fns.EnableBoatCamera(inst, false)
+    inst:RemoveComponent("playeractionpicker")
+    inst:RemoveComponent("playercontroller")
+    inst:RemoveComponent("playervoter")
+    inst:RemoveComponent("playermetrics")
+    inst:RemoveEventCallback("serverpauseddirty", inst._serverpauseddirtyfn, TheWorld)
+    inst._serverpauseddirtyfn = nil
+end
+
 local function OnSetOwner(inst)
     inst.name = inst.Network:GetClientName()
     inst.userid = inst.Network:GetUserID()
@@ -830,20 +864,19 @@ local function OnSetOwner(inst)
             inst:AddComponent("playervoter")
             inst:AddComponent("playermetrics")
             inst.components.playeractionpicker:PushActionFilter(PlayerActionFilter, -99)
-            TheWorld:ListenForEvent("serverpauseddirty", function() ex_fns.OnWorldPaused(inst) end)
+            inst._serverpauseddirtyfn = function() ex_fns.OnWorldPaused(inst) end
+            inst:ListenForEvent("serverpauseddirty", inst._serverpauseddirtyfn, TheWorld)
             ex_fns.OnWorldPaused(inst)
         end
     elseif inst.components.playercontroller ~= nil then
-        inst:RemoveComponent("playeractionpicker")
-        inst:RemoveComponent("playercontroller")
-        inst:RemoveComponent("playervoter")
-        inst:RemoveComponent("playermetrics")
-        DisableMovementPrediction(inst)
+        RemovePlayerComponents(inst)
     end
 
     if inst == ThePlayer then
         if inst.HUD == nil then
-            ActivateHUD(inst)
+            if not inst.isseamlessswaptarget then
+                ActivateHUD(inst)
+            end
             AddActivePlayerComponents(inst)
             RegisterActivePlayerEventListeners(inst)
             inst.activatetask = inst:DoStaticTaskInTime(0, ActivatePlayer)
@@ -859,11 +892,46 @@ local function OnSetOwner(inst)
             end
         end
     elseif inst.HUD ~= nil then
-        UnregisterActivePlayerEventListeners(inst)
-        RemoveActivePlayerComponents(inst)
-        DeactivateHUD(inst)
-        DeactivatePlayer(inst)
+        UnregisterHUD(inst)
     end
+end
+
+function fns.CommonSeamlessPlayerSwap(inst)
+    inst.isseamlessswapsource = true
+    inst.name = nil
+    inst.userid = ""
+    if inst.components.playercontroller ~= nil then
+        RemovePlayerComponents(inst)
+    end
+    inst:PushEvent("seamlessplayerswap")
+end
+
+function fns.CommonSeamlessPlayerSwapTarget(inst)
+    inst:PushEvent("seamlessplayerswaptarget")
+end
+
+function fns.LocalSeamlessPlayerSwap(inst)
+    fns.CommonSeamlessPlayerSwap(inst)
+    --delay the client despawn for these two entities
+    inst.delayclientdespawn = true
+    inst.player_classified.delayclientdespawn = true
+end
+
+function fns.LocalSeamlessPlayerSwapTarget(inst)
+    fns.CommonSeamlessPlayerSwapTarget(inst)
+    inst.isseamlessswaptarget = true
+end
+
+function fns.MasterSeamlessPlayerSwap(inst)
+    fns.CommonSeamlessPlayerSwap(inst)
+    --despawn the player if they aren't the local player (local player despawning is handled later in the swap)
+    if inst ~= ThePlayer then
+        inst:DoStaticTaskInTime(0, inst.Remove)
+    end
+end
+
+function fns.MasterSeamlessPlayerSwapTarget(inst)
+    fns.CommonSeamlessPlayerSwapTarget(inst)
 end
 
 local function AttachClassified(inst, classified)
@@ -1399,17 +1467,34 @@ end
 --     when rerolling a new character.
 local function SaveForReroll(inst)
     --NOTE: ignoring returned refs, should be ok
+
+    local curses = {}
+    --dumptable(inst.components.inventory.itemslots)
+    inst.components.inventory:ForEachItem(function(thing)
+        --print("thing",thing.prefab)
+        if thing.components.curseditem then
+            if not curses[thing.prefab] then
+                curses[thing.prefab] = 0
+            end
+            curses[thing.prefab] = curses[thing.prefab] + (thing.components.stackable and thing.components.stackable:StackSize() or 1 )
+            thing:Remove()
+        end
+    end)
+
     local data =
     {
         age = inst.components.age ~= nil and inst.components.age:OnSave() or nil,
         builder = inst.components.builder ~= nil and inst.components.builder:OnSave() or nil,
         petleash = inst.components.petleash ~= nil and inst.components.petleash:OnSave() or nil,
         maps = inst.player_classified ~= nil and inst.player_classified.MapExplorer ~= nil and inst.player_classified.MapExplorer:RecordAllMaps() or nil,
+		seamlessplayerswapper = inst.components.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper:OnSave() or nil,
+        curses = curses,
     }
     return next(data) ~= nil and data or nil
 end
 
 local function LoadForReroll(inst, data)
+    --print("LOADING FOR REROLL")
     if data.age ~= nil and inst.components.age ~= nil then
         inst.components.age:OnLoad(data.age)
     end
@@ -1421,6 +1506,18 @@ local function LoadForReroll(inst, data)
     end
     if data.maps ~= nil and inst.player_classified ~= nil and inst.player_classified.MapExplorer ~= nil then
         inst.player_classified.MapExplorer:LearnAllMaps(data.maps)
+    end
+	if data.seamlessplayerswapper ~= nil and inst.components.seamlessplayerswapper ~= nil then
+        inst.components.seamlessplayerswapper:OnLoad(data.seamlessplayerswapper)
+	end
+
+    if data.curses then
+        for curse,num in pairs(data.curses)do
+            for i=1,num do
+                local item = SpawnPrefab(curse)
+                inst.components.inventory:GiveItem(item)
+            end
+        end
     end
 end
 
@@ -1484,6 +1581,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_actions_farming.zip"),
         Asset("ANIM", "anim/player_actions_cowbell.zip"),
         Asset("ANIM", "anim/player_actions_reversedeath.zip"),
+        Asset("ANIM", "anim/player_actions_cannon.zip"),
 
         Asset("ANIM", "anim/player_boat.zip"),
         Asset("ANIM", "anim/player_boat_plank.zip"),
@@ -1600,7 +1698,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("ANIM", "anim/player_mount_strum.zip"),
 
         Asset("ANIM", "anim/player_mighty_gym.zip"),
-        Asset("ANIM", "anim/mighty_gym.zip"),        
+        Asset("ANIM", "anim/mighty_gym.zip"),
+
+        Asset("ANIM", "anim/player_monkey_change.zip"),
+        Asset("ANIM", "anim/player_monkey_run.zip"),
 
         Asset("INV_IMAGE", "skull_"..name),
 
@@ -1639,6 +1740,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         -- Player specific classified prefabs
         "player_classified",
         "inventory_classified",
+        "wonkey",
     }
 
     if starting_inventory ~= nil or customprefabs ~= nil then
@@ -1693,6 +1795,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.ShakeCamera = ShakeCamera
         inst.SetGhostMode = SetGhostMode
         inst.IsActionsVisible = IsActionsVisible
+        inst.CanSeeTileOnMiniMap = ex_fns.CanSeeTileOnMiniMap
+        inst.CanSeePointOnMiniMap = ex_fns.CanSeePointOnMiniMap
 	end
 
     local max_range = TUNING.MAX_INDICATOR_RANGE * 1.5
@@ -1707,11 +1811,59 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
     end
 
     local function OnUnderLeafCanopy(inst)
-        
+
     end
 
     local function OnChangeCanopyZone(inst, underleaves)
         inst._underleafcanopy:set(underleaves)
+    end
+
+
+    local function OnResetBeard(inst,ismonkey)
+        if inst.components.beard then
+            inst.components.beard.bits = ismonkey and 0 or 3
+        end
+    end
+
+    --MONKEY
+    fns.SwapAllCharacteristics = function(inst, newinst)
+        for i,component in pairs(inst.components)do
+            if component.TransferComponent then
+                component:TransferComponent(newinst)
+            end
+        end
+
+        inst.Physics:SetActive(false)
+        newinst.Transform:SetPosition(inst.Transform:GetWorldPosition())
+        inst:Hide()
+    end
+
+    local function ChangeToMonkey(inst)
+        if inst.components.seamlessplayerswapper then
+            inst.components.seamlessplayerswapper:DoMonkeyChange()
+        end
+    end
+
+    local function ChangeBackFromMonkey(inst)
+        if inst.components.seamlessplayerswapper then
+            inst.components.seamlessplayerswapper:SwapBackToMainCharacter()
+        end
+    end
+
+    local function OnPirateMusicStateDirty(inst)
+        if ThePlayer ~= nil then -- inst._piratemusicstate:value() and
+            ThePlayer:PushEvent("playpiratesmusic")
+        end
+    end
+
+    local function onfinishseamlessplayerswap(inst,data)
+        if TheFrontEnd ~= nil then
+            if inst.prefab == "wonkey" then
+                TheFocalPoint.SoundEmitter:PlaySound("monkeyisland/wonkycurse/transform_music")
+            elseif data.oldprefab == "wonkey" then
+                TheFocalPoint.SoundEmitter:PlaySound("monkeyisland/wonkycurse/detransform_music")
+            end
+        end
     end
 
     local function fn()
@@ -1819,6 +1971,10 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst.jointask = inst:DoTaskInTime(0, OnPlayerJoined)
         inst:ListenForEvent("setowner", OnSetOwner)
+        inst:ListenForEvent("local_seamlessplayerswap", fns.LocalSeamlessPlayerSwap)
+        inst:ListenForEvent("local_seamlessplayerswaptarget", fns.LocalSeamlessPlayerSwapTarget)
+        inst:ListenForEvent("master_seamlessplayerswap", fns.MasterSeamlessPlayerSwap)
+        inst:ListenForEvent("master_seamlessplayerswaptarget", fns.MasterSeamlessPlayerSwapTarget)
 
         inst:AddComponent("talker")
         inst.components.talker:SetOffsetFn(GetTalkerOffset)
@@ -1842,6 +1998,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("plantregistryupdater")
 
         inst:AddComponent("walkableplatformplayer")
+        inst:AddComponent("boatcannonuser")
 
 		if TheNet:GetServerGameMode() == "lavaarena" then
             inst:AddComponent("healthsyncer")
@@ -1892,8 +2049,18 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             inst.components.hudindicatable:SetShouldTrackFunction(ShouldTrackfn)
         end
 
-        inst:ListenForEvent("sharksounddirty", OnSharkSound)  
-        inst:ListenForEvent("underleafcanopydirty", OnUnderLeafCanopy)        
+        inst:ListenForEvent("sharksounddirty", OnSharkSound)
+        inst:ListenForEvent("underleafcanopydirty", OnUnderLeafCanopy)
+
+        inst:ListenForEvent("finishseamlessplayerswap", onfinishseamlessplayerswap)
+
+
+        inst._piratemusicstate = net_bool(inst.GUID, "player.piratemusicstate", "piratemusicstatedirty")
+        inst._piratemusicstate:set(false)
+
+
+
+        inst:ListenForEvent("piratemusicstatedirty", OnPirateMusicStateDirty)
 
         inst.entity:SetPristine()
         if not TheWorld.ismastersim then
@@ -1949,6 +2116,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
         ex_fns.ConfigurePlayerLocomotor(inst)
 
+		inst:AddComponent("seamlessplayerswapper")
 
         inst:AddComponent("combat")
         inst.components.combat:SetDefaultDamage(TUNING.UNARMED_DAMAGE)
@@ -2096,6 +2264,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst:AddComponent("timer")
 
+        inst:AddComponent("cursable")
+
         inst:AddInherentAction(ACTIONS.PICK)
         inst:AddInherentAction(ACTIONS.SLEEPIN)
         inst:AddInherentAction(ACTIONS.CHANGEIN)
@@ -2121,6 +2291,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.IsNearDanger = fns.IsNearDanger
         inst.SetGymStartState = fns.SetGymStartState
         inst.SetGymStopState = fns.SetGymStopState
+        inst.SwapAllCharacteristics = fns.SwapAllCharacteristics
 
         --Other
         inst._scalesource = nil
@@ -2152,6 +2323,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.OnNewSpawn = OnNewSpawn
         inst.OnDespawn = OnDespawn
 
+        inst.ChangeToMonkey = ChangeToMonkey
+        inst.ChangeFromMonkey = ChangeBackFromMonkey
+
 		fns.OnAlterNight(inst)
 
         --V2C: used by multiplayer_portal_moon
@@ -2162,6 +2336,9 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst:ListenForEvent("stopfiredamage", OnStopFireDamage)
         inst:ListenForEvent("burnt", OnBurntHands)
         inst:ListenForEvent("onchangecanopyzone", OnChangeCanopyZone)
+
+
+
 --[[
         inst:ListenForEvent("stormlevel", function(owner, data)
             if data.stormtype == STORM_TYPES.MOONSTORM and data.level > 0 then

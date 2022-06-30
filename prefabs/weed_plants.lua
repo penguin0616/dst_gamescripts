@@ -67,7 +67,7 @@ local function dig_up(inst, worker)
 		end
 	end
 
-	if TheWorld.Map:GetTileAtPoint(x, y, z) == GROUND.FARMING_SOIL then
+	if TheWorld.Map:GetTileAtPoint(x, y, z) == WORLD_TILES.FARMING_SOIL then
 		local soil = SpawnPrefab("farm_soil")
 		soil.Transform:SetPosition(x, y, z)
 		soil:PushEvent("breaksoil")

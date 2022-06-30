@@ -1073,6 +1073,8 @@ local function MakeHat(name)
     end
 
     local function balloon_custom_init(inst)
+        inst.entity:AddSoundEmitter() -- NOTES(JBK): Needed for damage dealing attacks that play sounds on the victim from health combat components.
+
         --waterproofer (from waterproofer component) added to pristine state for optimization
         inst:AddTag("waterproofer")
 
@@ -1781,6 +1783,228 @@ local function MakeHat(name)
         return inst
     end
 
+    --------------------- POLLY ROGERS
+
+
+    local function update_polly_hat_art(inst)
+        inst.AnimState:PlayAnimation(inst.defaultanim)
+        if inst.components.equippable:IsEquipped() then
+            local skin_build = inst:GetSkinBuild()
+            local symbol = "swap_hat"
+            inst.components.inventoryitem:ChangeImageName("polly_rogershat")
+            local animname = "anim"
+
+            if not inst.components.spawner.child or inst.components.spawner.child.components.health:IsDead() then
+                inst.components.inventoryitem:ChangeImageName("polly_rogershat2")
+                symbol = "swap_hat2"
+                animname = "anim_dead"
+            end
+            local owner = inst.components.inventoryitem.owner
+            if skin_build ~= nil then
+                owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, symbol, inst.GUID, fname)
+            else
+                owner.AnimState:OverrideSymbol("swap_hat", fname, symbol)
+            end
+            inst.AnimState:PlayAnimation(animname)
+        end
+    end
+
+    local function pollyremoved(inst)
+        inst:RemoveEventCallback("onremoved", pollyremoved ,inst.polly)
+        inst.polly = nil        
+    end
+
+    local function polly_rogers_custom_init(inst)
+
+    end
+
+    local function test_polly_spawn(inst)
+        if not inst.polly and not inst.components.spawner:IsSpawnPending() then
+            inst.components.spawner:ReleaseChild()
+        end
+    end
+
+    local function polly_rogers_equip(inst,owner)
+        _onequip(inst, owner)
+        inst:DoTaskInTime(0,function()
+            inst.worn = true
+            test_polly_spawn(inst)
+
+            inst.polly = inst.components.spawner.child
+            if inst.polly then
+                inst.polly.components.follower:SetLeader(owner)
+                inst.polly.flyaway = nil
+            end
+            update_polly_hat_art(inst)
+        end)
+    end
+
+    local function polly_rogers_unequip(inst,owner)
+        _onunequip(inst, owner)
+        inst.worn = nil
+        if inst.pollytask then
+            inst.pollytask:Cancel()
+            inst.pollytask = nil
+        end
+
+        if inst.polly then
+            inst.polly.flyaway = true
+            inst.polly:PushEvent("flyaway")
+        end
+        --update_polly_hat_art(inst)
+    end 
+
+    local function getpollyspawnlocation(inst)
+        local owner = inst.components.inventoryitem and inst.components.inventoryitem.owner or inst
+        local pos = Vector3(owner.Transform:GetWorldPosition())
+        local offset = nil
+        local count = 0
+        while offset == nil and count < 12 do
+            offset = FindWalkableOffset(pos, math.random()*2*PI, math.random() * 5, 12, false, false, nil, false, true)
+            count = count + 1
+        end
+
+        if offset then
+            return pos.x+offset.x,15,pos.z+offset.z
+        end
+    end
+
+    local function polly_rogers_onoccupied(inst,child)
+        inst.polly = nil
+        child.components.follower:StopFollowing()
+    end
+
+    local function polly_rogers_onvacate(inst, child)
+
+        if not inst.worn then
+            inst.components.spawner:GoHome(child)
+            return
+        end
+               
+        local owner = inst.components.inventoryitem and inst.components.inventoryitem.owner or nil
+        if owner then
+            child.sg:GoToState("glide")
+            child.Transform:SetRotation(math.random() * 180)
+            child.components.locomotor:StopMoving()
+            child.hat = inst
+            inst:ListenForEvent("onremoved", pollyremoved ,inst.polly)
+        end
+    end
+
+
+    local function updatepolly(spawner,polly)
+        update_polly_hat_art(spawner)
+    end
+
+    local function polly_rogers()
+        local inst = simple(polly_rogers_custom_init)
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.72)
+
+        inst.defaultanim = "anim"
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst:AddComponent("fueled")
+        inst.components.fueled.fueltype = FUELTYPE.USAGE
+        inst.components.fueled:InitializeFuelLevel(TUNING.POLLY_ROGERS_HAT_PERISHTIME)
+        inst.components.fueled:SetDepletedFn(--[[generic_perish]]inst.Remove)
+
+        inst.components.equippable:SetOnEquip(polly_rogers_equip)
+        inst.components.equippable:SetOnUnequip(polly_rogers_unequip)
+
+
+        inst:AddComponent("spawner")
+        inst.components.spawner:Configure("polly_rogers", TUNING.POLLY_ROGERS_SPAWN_TIME)
+        inst.components.spawner.onvacate = polly_rogers_onvacate
+        inst.components.spawner.onoccupied = polly_rogers_onoccupied
+        inst.components.spawner.overridespawnlocation = getpollyspawnlocation
+        inst.components.spawner:CancelSpawning()
+        inst.components.spawner.onkilledfn = updatepolly
+        inst.components.spawner.onspawnedfn = updatepolly
+
+        inst:DoTaskInTime(0,function() update_polly_hat_art(inst) end)
+
+        return inst
+    end
+
+    ---------------------- MONEY SMALL
+    local function monkey_small_custom_init(inst)
+
+    end
+
+
+    local function monkey_small_equip(inst,owner)
+        _onequip(inst, owner)
+        owner:AddTag("master_crewman")
+    end
+
+    local function monkey_small_unequip(inst,owner)
+        _onunequip(inst, owner)
+        owner:RemoveTag("master_crewman")
+    end    
+
+
+    local function monkey_small()
+        local inst = simple(monkey_small_custom_init)
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.72)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst:AddComponent("fueled")
+        inst.components.fueled.fueltype = FUELTYPE.USAGE
+        inst.components.fueled:InitializeFuelLevel(TUNING.MONKEY_MEDIUM_HAT_PERISHTIME)
+        inst.components.fueled:SetDepletedFn(--[[generic_perish]]inst.Remove)
+
+        inst.components.equippable:SetOnEquip(monkey_small_equip)
+        inst.components.equippable:SetOnUnequip(monkey_small_unequip)
+
+        return inst
+    end
+
+    ---------------------- MONEY MEDIUM
+    local function monkey_medium_custom_init(inst)
+
+    end
+
+    local function monkey_medium_equip(inst,owner)
+        _onequip(inst, owner)
+        owner:AddTag("boat_health_buffer")
+    end
+
+    local function monkey_medium_unequip(inst,owner)
+        _onunequip(inst, owner)
+        owner:RemoveTag("boat_health_buffer")
+    end    
+
+    local function monkey_medium()
+        local inst = simple(monkey_medium_custom_init)
+
+        inst.components.floater:SetSize("med")
+        inst.components.floater:SetScale(0.72)
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst:AddComponent("fueled")
+        inst.components.fueled.fueltype = FUELTYPE.USAGE
+        inst.components.fueled:InitializeFuelLevel(TUNING.MONKEY_MEDIUM_HAT_PERISHTIME)
+        inst.components.fueled:SetDepletedFn(--[[generic_perish]]inst.Remove)        
+
+        inst.components.equippable:SetOnEquip(monkey_medium_equip)
+        inst.components.equippable:SetOnUnequip(monkey_medium_unequip)
+
+        return inst
+    end
+
     local function skeleton_onequip(inst, owner)
         _onequip(inst, owner)
         if owner.components.sanity ~= nil then
@@ -2383,6 +2607,14 @@ local function MakeHat(name)
         }
         table.insert(assets, Asset("ANIM", "anim/ui_alterguardianhat_1x6.zip"))
         fn = alterguardian
+    elseif name == "monkey_medium" then
+        fn = monkey_medium
+    elseif name == "monkey_small" then
+        fn = monkey_small
+    elseif name == "polly_rogers" then        
+        prefabs = {"polly_rogers",}
+        table.insert(assets, Asset("INV_IMAGE", "polly_rogershat2"))
+        fn = polly_rogers
 	elseif name == "eyemask" then
         fn = eyemask
     end
@@ -2482,5 +2714,10 @@ return  MakeHat("straw"),
         MakeHat("balloon"),
         MakeHat("alterguardian"),
         MakeHat("eyemask"),
+
+        MakeHat("monkey_medium"),
+        MakeHat("monkey_small"),
+        MakeHat("polly_rogers"),
+
         Prefab("minerhatlight", minerhatlightfn),
         Prefab("alterguardianhatlight", alterguardianhatlightfn)

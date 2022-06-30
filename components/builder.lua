@@ -282,10 +282,10 @@ function Builder:UsePrototyper(prototyper)
 	if prototyper ~= nil then
 		if not prototyper:HasTags(PROTOTYPER_TAGS) 
 			or prototyper:HasOneOfTags(self.exclude_tags)
-			or (prototyper.components.prototyper.restrictedtag ~= nil and not self.inst:HasTag(prototyper.components.prototyper.restrictedtag))
+			or (prototyper.components.prototyper ~= nil and prototyper.components.prototyper.restrictedtag ~= nil and not self.inst:HasTag(prototyper.components.prototyper.restrictedtag))
 			then
 
-			local fail_str = prototyper.components.prototyper.restrictedtag
+			local fail_str = prototyper.components.prototyper and prototyper.components.prototyper.restrictedtag or nil
 			return false, fail_str ~= nil and string.upper(fail_str) or nil
 		end
 	end
@@ -500,7 +500,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
             self.inst.replica.builder:SetIsBuildBuffered(recname, false)
         end
 
-        if self.inst:HasTag("hungrybuilder") and not self.inst.sg:HasStateTag("slowaction") then
+        if self.inst:HasTag("hungrybuilder") and not self.inst.sg:HasStateTag("slowaction") and not self.inst.sg:HasStateTag("giving") then
             local t = GetTime()
             if self.last_hungry_build == nil or t > self.last_hungry_build + TUNING.HUNGRY_BUILDER_RESET_TIME then
                 self.inst.components.hunger:DoDelta(TUNING.HUNGRY_BUILDER_DELTA)

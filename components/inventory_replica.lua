@@ -282,7 +282,7 @@ end
 function Inventory:GetOpenContainers()
     if self.inst.components.inventory ~= nil then
         return self.inst.components.inventory.opencontainers
-    elseif self.inst.HUD ~= nil then
+    elseif self.inst.HUD ~= nil and self.inst.HUD.controls ~= nil then
         local containers = {}
         for k, v in pairs(self.inst.HUD.controls.containers) do
             if v ~= nil and v.inst.entity:IsVisible() and k:IsValid() then

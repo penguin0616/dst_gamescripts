@@ -9,7 +9,7 @@ require "map/room_functions"
 -- Red mush forest
 AddRoom("RedMushForest", {
     colour={r=0.8,g=0.1,b=0.1,a=0.9},
-    value = GROUND.FUNGUSRED,
+    value = WORLD_TILES.FUNGUSRED,
     tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = .3,
@@ -33,7 +33,7 @@ AddRoom("RedMushForest", {
 -- Spider mush forest
 AddRoom("RedSpiderForest", {
     colour={r=0.8,g=0.1,b=0.4,a=0.9},
-    value = GROUND.FUNGUSRED,
+    value = WORLD_TILES.FUNGUSRED,
     tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = .3,
@@ -57,7 +57,7 @@ AddRoom("RedSpiderForest", {
 -- Pillar Red Mush Meadow
 AddRoom("RedMushPillars", {
     colour={r=0.8,g=0.1,b=0.4,a=0.9},
-    value = GROUND.FUNGUSRED,
+    value = WORLD_TILES.FUNGUSRED,
     tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = .15,
@@ -81,7 +81,7 @@ AddRoom("RedMushPillars", {
 -- Stalagmite Forest
 AddRoom("StalagmiteForest", {
     colour={r=0.8,g=0.1,b=0.1,a=0.9},
-    value = GROUND.FUNGUSRED,
+    value = WORLD_TILES.FUNGUSRED,
     tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = .3,
@@ -105,7 +105,7 @@ AddRoom("StalagmiteForest", {
 -- Spillagmite meadow
 AddRoom("SpillagmiteMeadow", {
     colour={r=0.8,g=0.1,b=0.1,a=0.9},
-    value = GROUND.FUNGUSRED,
+    value = WORLD_TILES.FUNGUSRED,
     tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = .15,
@@ -128,7 +128,7 @@ AddRoom("SpillagmiteMeadow", {
 
 local bgredmush = {
     colour={r=0.8,g=0.1,b=0.1,a=0.9},
-    value = GROUND.FUNGUSRED,
+    value = WORLD_TILES.FUNGUSRED,
     tags = {"Hutch_Fishbowl"},
     contents =  {
         distributepercent = .3,

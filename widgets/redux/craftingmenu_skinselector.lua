@@ -176,7 +176,7 @@ function SkinSelector:GetSkinOptions()
 
     local recipe_timestamp = Profile:GetRecipeTimestamp(self.recipe.product)
     --print(self.recipe.product, "Recipe timestamp is ", recipe_timestamp)
-    if self.skins_list ~= nil and self.recipe.chooseskin == nil and TheNet:IsOnlineMode() then
+    if self.skins_list ~= nil and self.recipe.chooseskin == nil and (TheInventory:HasSupportForOfflineSkins() or TheNet:IsOnlineMode()) then
         for which = 1, #self.skins_list do
             local item = self.skins_list[which].item
 

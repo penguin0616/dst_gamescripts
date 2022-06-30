@@ -65,7 +65,7 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "Ah, perhaps I should find a place with more hiding spots.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "I'm afraid that's enough playing for one day.",
 		},
-		OPEN_CRAFTING = 
+		OPEN_CRAFTING =
 		{
             PROFESSIONALCHEF = "unused_by_warly",
 			SHADOWMAGIC = "Maman used to keep a journal, before her memory went.",
@@ -133,6 +133,8 @@ return{
             SPIDERNOHAT = "I'm afraid that's a bit of a tight squeeze.",
             TERRARIUM_REFUSE = "That doesn't seem to suit its tastes.",
             TERRARIUM_COOLDOWN = "Doesn't look like it's taking, maybe I should try again later.",
+            NOTAMONKEY = "Excusez-moi, I'm afraid we have a bit of a language barrier.",
+            QUEENBUSY = "Pardonnez-moi, I can see you are busy.",
         },
         GIVETOPLAYER =
         {
@@ -190,6 +192,8 @@ return{
 
 			--MapSpotRevealer/messagebottle
 			MESSAGEBOTTLEMANAGER_NOT_FOUND = "I think that can wait until I'm back outside.",--Likely trying to read messagebottle treasure map in caves
+
+            STASH_MAP_NOT_FOUND = "Ah. It seems they forgot to mark the hiding place.",-- Likely trying to read stash map  in world without stash
         },
         WRAPBUNDLE =
         {
@@ -206,6 +210,7 @@ return{
                 "Oh, je m'excuse, have you seen my carrat around here?",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "Perhaps I'll just leave that alone.",
         },
         SLAUGHTER =
         {
@@ -322,11 +327,11 @@ return{
 --fallback to speech_wilson.lua             FROZEN = "only_used_by_webber",
 --fallback to speech_wilson.lua             ALREADY_BEDAZZLED = "only_used_by_webber",
         },
-        UPGRADE = 
+        UPGRADE =
         {
 --fallback to speech_wilson.lua             BEDAZZLED = "only_used_by_webber",
         },
-		CAST_POCKETWATCH = 
+		CAST_POCKETWATCH =
 		{
 --fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
 --fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
@@ -781,7 +786,7 @@ return{
 
 	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Three, two, one... allons-y!",
 	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Might I join in, s'il vous plait?",
-	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND =
 	{
 		"Voilà!",
 		"There you are mon petit chat!",
@@ -815,6 +820,14 @@ return{
     ANNOUNCE_EYEOFTERROR_ARRIVE = "Why do I suddenly feel such a sinking feeling in my stomach...",
     ANNOUNCE_EYEOFTERROR_FLYBACK = "Ah, it's back! Not going out without a fight, it seems.",
     ANNOUNCE_EYEOFTERROR_FLYAWAY = "Leaving before breakfast?",
+
+    -- PIRATES
+    ANNOUNCE_CANT_ESCAPE_CURSE = "What is this? It keeps returning to me!",
+    ANNOUNCE_MONKEY_CURSE_1 = "I'm beginning to feel a bit unwell...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "Mon dieu, I've become a monkey!",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "I don't think I'll be cooking with bananas for a while...",
+
+    ANNOUNCE_PIRATES_ARRIVE = "Oh, zut alors...",
 
 	BATTLECRY =
 	{
@@ -1074,6 +1087,16 @@ return{
             REVIVER = "I knew Mme. %s would come in my time of need.",
             GHOST = "Let's get you back on your feet, Mme. %s!",
             FIRESTARTER = "Is there... a reason you're setting fires, Mme. %s?",
+        },
+
+        WONKEY =
+        {
+            GENERIC = "Ah, this one seems friendly.",
+            ATTACKER = "Perhaps it's not so friendly after all...",
+            MURDERER = "Mon dieu! The monkey is on a rampage!",
+            REVIVER = "Thank you for your help, mon... key.",
+            GHOST = "That monkey has looked better.",
+            FIRESTARTER = "Le singe...",
         },
 
         MIGRATION_PORTAL =
@@ -1375,6 +1398,8 @@ return{
 		TURF_DRAGONFLY = "It's like an ingredient for the ground.",
 
         TURF_SHELLBEACH = "It's like an ingredient for the ground.",
+
+        TURF_MONKEY_GROUND = "It's like an ingredient for the ground.",
 
 		POWCAKE = "I would not feed this to my worst enemies. Or would I...",
         CAVE_ENTRANCE = "I wonder what is underneath that?",
@@ -2819,7 +2844,7 @@ return{
 		},
 		WARG = "Leader of the pack.",
         WARGLET = "I won't be put on the menu today!",
-        
+
 		WASPHIVE = "Not your average bees.",
 		WATERBALLOON = "A balloon, filled with water? What a funny idea.",
 		WATERMELON = "Despite its name, it is mostly filled with deliciousness!",
@@ -3387,6 +3412,7 @@ return{
             BURNT = "It's all gone up in smoke.",
         },
         BOAT_ITEM = "Allons-y out to sea!",
+        BOAT_GRASS_ITEM = "It won't go far, but we must start somewhere, non?",
         STEERINGWHEEL_ITEM = "We can't set sail without this.",
         ANCHOR_ITEM = "Looks like a recipe for an anchor.",
         MAST_ITEM = "An important ingredient for any sailboat.",
@@ -3457,6 +3483,7 @@ return{
         GNARWAIL_HORN = "I was nearly run through with that thing!",
 
         WALKINGPLANK = "That doesn't look safe.",
+        WALKINGPLANK_GRASS = "That doesn't look safe.",
         OAR = "A paddle.",
 		OAR_DRIFTWOOD = "A nice, light paddle.",
 
@@ -4187,7 +4214,7 @@ return{
         BEEF_BELL = "It is not a dinner bell?",
 
 		-- YOT Catcoon
-		KITCOONDEN = 
+		KITCOONDEN =
 		{
 			GENERIC = "Bonjour! Is anyone home?",
             BURNT = "Burnt to a crisp.",
@@ -4197,7 +4224,7 @@ return{
 
 		KITCOONDEN_KIT = "I'll whip it together tout de suite.",
 
-		TICOON = 
+		TICOON =
 		{
 			GENERIC = "He looks very well fed.",
 			ABANDONED = "Perhaps we'll try again later, non?",
@@ -4209,7 +4236,7 @@ return{
 			NOTHING_TO_TRACK = "Perhaps there's nothing left to find.",
 			TARGET_TOO_FAR_AWAY = "Maybe we should try elsewhere, non?",
 		},
-		
+
 		YOT_CATCOONSHRINE =
         {
             GENERIC = "What should we cook up together?",
@@ -4314,7 +4341,7 @@ return{
         POCKETWATCH_PARTS = "This is what goes into the watches, non?",
         POCKETWATCH_DISMANTLER = "Oh, Mme. Wanda left her tools!",
 
-        POCKETWATCH_PORTAL_ENTRANCE = 
+        POCKETWATCH_PORTAL_ENTRANCE =
 		{
 			GENERIC = "Must I... really go in?",
 			DIFFERENTSHARD = "Must I... really go in?",
@@ -4328,7 +4355,7 @@ return{
         WATERTREE_ROOT = "A lonely tree root.",
 
         OCEANTREE_PILLAR = "A large souvenir from our travels at sea.",
-        
+
         OCEANVINE = "Sigh. Another grapeless vine.",
         FIG = "You would be delicious in a tart.",
         FIG_COOKED = "It could use a bit of honey, perhaps some cinnamon and nutmeg...",
@@ -4358,7 +4385,7 @@ return{
         },
 
         -- Wolfgang
-        MIGHTY_GYM = 
+        MIGHTY_GYM =
         {
             GENERIC = "I think perhaps I'll stick to cooking.",
             BURNT = "I think he might have overdone it.",
@@ -4371,7 +4398,7 @@ return{
         POTATOSACK = "I suppose all that lifting works up quite an appetite.",
 
 
-        TERRARIUMCHEST = 
+        TERRARIUMCHEST =
 		{
 			GENERIC = "It doesn't look quite so strange now, non?",
 			BURNT = "C'est fini.",
@@ -4429,7 +4456,7 @@ return{
         WX78MODULE_BEE = "They give our metal friend a little extra zest, non?",
         WX78MODULE_MAXHEALTH2 = "They give our metal friend a little extra zest, non?",
 
-        WX78_SCANNER = 
+        WX78_SCANNER =
         {
             GENERIC ="It seems vaguely potato shaped... or perhaps I'm just hungry.",
             HUNTING = "It seems vaguely potato shaped... or perhaps I'm just hungry.",
@@ -4442,6 +4469,83 @@ return{
         WX78_MODULEREMOVER = "Ah, I believe this utensil belongs to our metal friend.",
 
         SCANDATA = "What is this they're cooking up?",
+
+        -- Pirates
+        BOAT_ROTATOR = "It might be about time to turn it over.",
+        BOAT_ROTATOR_KIT = "Aha! I thought my boat was missing something!",
+        BOAT_BUMPER_KELP = "A helpful bit of garnish for the boat, non?",
+        BOAT_BUMPER_KELP_KIT = "I will feel a bit safer with an extra layer wrapped around my boat.",
+        BOAT_BUMPER_SHELL = "I've given my boat a crunchy outer shell.",
+        BOAT_BUMPER_SHELL_KIT = "I will feel a bit safer with an extra layer wrapped around my boat.",
+        BOAT_CANNON = {
+            GENERIC = "Its belly is empty.",
+            AMMOLOADED = "Is it too much to hope for a peaceful voyage?",
+            NOAMMO = "Ah zut! I have nothing to fill its belly.",
+        },
+        BOAT_CANNON_KIT = "All the ingredients needed for a fresh cannon.",
+        CANNONBALL_ROCK_ITEM = "I hope it won't be needed.",
+
+        OCEAN_TRAWLER = {
+            GENERIC = "I prefer cooking fish to catching them.",
+            LOWERED = "I can already smell my fish dinner simmering in butter sauce.",
+            CAUGHT = "Ah, fresh seafood!",
+            ESCAPED = "It looks like there will be no fish for dinner tonight.",
+            FIXED = "Ah, bon! It is fixed.",
+        },
+        OCEAN_TRAWLER_KIT = "I will net us a feast!",
+
+        BOAT_MAGNET =
+        {
+            GENERIC = "All that is left to do is turn it on.",
+            ACTIVATED = "Ah, bon! It will take care of the sailing for me.",
+        },
+        BOAT_MAGNET_KIT = "I will follow monsieur Higgsbury's recipe as best I can.",
+
+        BOAT_MAGNET_BEACON =
+        {
+            GENERIC = "What a strange little machine.",
+            ACTIVATED = "That means it's working, non?",
+        },
+        DOCK_KIT = "Everything one might need to whip up a dock.",
+        DOCK_WOODPOSTS_ITEM = "My dock needs a bit of garnish.",
+
+        MONKEYHUT =
+        {
+            GENERIC = "Those monkeys seem to be enjoying the high life out here, non?",
+            BURNT = "It actually gives off a rather pleasant aroma of roasted bananas...",
+        },
+        POWDER_MONKEY = "J'accuse! You are no honest sailor!",
+        PRIME_MATE = "You should teach your crew better manners, monsieur.",
+		LIGHTCRAB = "Glowing shellfish... just imagine how beautiful it would look on a plate!",
+        CUTLESS = "That is not a sword, it's a toothpick!",
+        CURSED_MONKEY_TOKEN = "It gives me a strange, bad feeling...",
+        OAR_MONKEY = "It cuts through water and foes like butter!",
+        BANANABUSH = "Ah, I've stumbled on some fresh bananas!",
+        DUG_BANANABUSH = "Ah, I've stumbled on some fresh bananas!",
+        PALMCONETREE = "C'est dommage, it's not a fruit-bearing tree.",
+        PALMCONE_SEED = "It has only just begun to grow.",
+        PALMCONE_SAPLING = "Just a petite bébé.",
+        PALMCONE_SCALE = "It would make a fine serving plate.",
+        MONKEYTAIL = "I would suggest not eating those.",
+        DUG_MONKEYTAIL = "I would suggest not eating those.",
+
+        MONKEY_MEDIUMHAT = "Je suis le capitaine!",
+        MONKEY_SMALLHAT = "It makes me look like a seasoned seafarer, non?",
+        POLLY_ROGERSHAT = "What a fine chapeau!",
+        POLLY_ROGERS = "Je m'excuse, I did not bring any crackers.",
+
+        MONKEYISLAND_PORTAL = "Even if I could get through, I don't think it will take me back to maman.",
+        MONKEYISLAND_PORTAL_DEBRIS = "These metal bits seem rather out of place.",
+        MONKEYQUEEN = "Bonjour, madame!",
+        MONKEYPILLAR = "They're tall enough to skewer the clouds!",
+        PIRATE_FLAG_POLE = "Mon dieu! Pirates!",
+
+        BLACKFLAG = "I don't know how comfortable I feel sailing under a pirate flag...",
+        PIRATE_STASH = "Et voila, the treasure!",
+        STASH_MAP = "Ah, it looks like this will lead me to some treasure!",
+
+
+        BANANAJUICE = "I would have added a pinch of cinnamon.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

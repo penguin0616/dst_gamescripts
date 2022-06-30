@@ -123,6 +123,11 @@ local function OnDespawn(inst)
     end
 end
 
+local function OnReroll(inst)
+	-- This is its own function in case OnDespawn above changes that requires workarounds for seamlessswap to not interfere.
+    OnDespawn(inst)
+end
+
 local function ondeath(inst)
 	inst.components.ghostlybond:Recall()
 	inst.components.ghostlybond:PauseBonding()
@@ -260,9 +265,10 @@ local function master_postinit(inst)
 
         inst.components.combat.damagemultiplier = TUNING.WENDY_DAMAGE_MULT
 
-        inst.OnDespawn = OnDespawn
         inst.OnSave = OnSave
         inst.OnLoad = OnLoad
+        inst.OnDespawn = OnDespawn
+		inst:ListenForEvent("ms_playerreroll", OnReroll)
     end
 end
 

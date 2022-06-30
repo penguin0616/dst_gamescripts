@@ -8,7 +8,7 @@ require "map/room_functions"
 -- Spillagmite Forest
 AddRoom("SpillagmiteForest", {
     colour={r=0.4,g=0.4,b=0.4,a=0.9},
-    value = GROUND.UNDERROCK,
+    value = WORLD_TILES.UNDERROCK,
     tags = {"Hutch_Fishbowl"},
     type = NODE_TYPE.Room,
     contents =  {
@@ -28,7 +28,7 @@ AddRoom("SpillagmiteForest", {
 -- Dropper Canyon
 AddRoom("DropperCanyon", {
     colour={r=0.4,g=0.4,b=0.4,a=0.9},
-    value = GROUND.UNDERROCK,
+    value = WORLD_TILES.UNDERROCK,
     tags = {"Hutch_Fishbowl"},
     type = NODE_TYPE.Room,
     contents =  {
@@ -51,7 +51,7 @@ AddRoom("DropperCanyon", {
 -- Stalagmites and Lights
 AddRoom("StalagmitesAndLights", {
     colour={r=0.4,g=0.4,b=0.4,a=0.9},
-    value = GROUND.UNDERROCK,
+    value = WORLD_TILES.UNDERROCK,
     tags = {"Hutch_Fishbowl"},
     type = NODE_TYPE.Room,
     contents =  {
@@ -74,7 +74,7 @@ AddRoom("StalagmitesAndLights", {
 -- Spiders and Bats
 AddRoom("SpidersAndBats", {
     colour={r=0.4,g=0.4,b=0.4,a=0.9},
-    value = GROUND.UNDERROCK,
+    value = WORLD_TILES.UNDERROCK,
     tags = {"Hutch_Fishbowl"},
     type = NODE_TYPE.Room,
     contents =  {
@@ -95,7 +95,7 @@ AddRoom("SpidersAndBats", {
 -- Thulecite debris
 AddRoom("ThuleciteDebris", {
     colour={r=0.4,g=0.4,b=0.4,a=0.9},
-    value = GROUND.UNDERROCK,
+    value = WORLD_TILES.UNDERROCK,
     tags = {"Hutch_Fishbowl"},
     type = NODE_TYPE.Room,
     contents =  {
@@ -117,7 +117,7 @@ AddRoom("ThuleciteDebris", {
 
 local bgspillagmite = {
     colour={r=0.4,g=0.4,b=0.4,a=0.9},
-    value = GROUND.UNDERROCK,
+    value = WORLD_TILES.UNDERROCK,
     tags = {"Hutch_Fishbowl"},
     type = NODE_TYPE.Room,
     contents =  {

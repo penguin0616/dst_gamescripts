@@ -105,8 +105,19 @@ function Inventory:TransferInventory(receiver)
     end
 
     for k,v in pairs(self.equipslots) do
-       inv:GiveItem(self:Unequip(k)) 
+		if inv.equipslots ~= nil then
+            local equip = self:Unequip(k)
+            if equip and equip.components.equippable and equip.components.equippable:IsRestricted(receiver) then
+                inv:GiveItem(equip) 
+            else
+                inv:Equip(equip)
+            end
+		else
+			inv:GiveItem(self:Unequip(k)) 
+		end
     end
+
+    receiver.components.inventory:GiveActiveItem(self:GetActiveItem())
 end
 
 function Inventory:OnSave()
@@ -532,6 +543,10 @@ function Inventory:DropItem(item, wholestack, randomdir, pos)
         dropped.prevcontainer = nil
         dropped.prevslot = nil
 
+        if dropped:HasTag("personal_possession") then
+            dropped:RemoveTag("personal_possession")
+        end
+
         self.inst:PushEvent("dropitem", { item = dropped })
     end
 
@@ -848,13 +863,23 @@ function Inventory:GiveItem(inst, slot, src_pos)
         not inst.components.inventoryitem.canonlygoinpocket and
         not (self.inst.components.playercontroller ~= nil and
             self.inst.components.playercontroller.isclientcontrollerattached) then
+
         inst.components.inventoryitem:OnPutInInventory(self.inst)
         self:SetActiveItem(inst)
         return true
     elseif self.HandleLeftoversFn ~= nil then
 		self.HandleLeftoversFn(self.inst, inst)
 	else
-        self:DropItem(inst, true, true)
+        if self.activeitem and self.activeitem ~= inst and
+            self.activeitem.components.stackable and
+            inst.components.stackable and
+            self.activeitem.prefab == inst.prefab and
+            not self.activeitem.components.stackable:IsFull()
+            then
+            self.activeitem.components.stackable:Put(inst, Vector3(inst.Transform:GetWorldPosition()))
+        else
+            self:DropItem(inst, true, true)
+        end
     end
 end
 
@@ -1354,7 +1379,7 @@ function Inventory:DropEverything(ondeath, keepequip)
 
     for k = 1, self.maxslots do
         local v = self.itemslots[k]
-        if v ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) then
+        if v ~= nil and not (ondeath and v.components.inventoryitem.keepondeath) and not v.components.curseditem then
             self:DropItem(v, true, true)
         end
     end
@@ -1953,6 +1978,10 @@ end
 
 function Inventory:IsWaterproof()
     return self:GetWaterproofness() >= 1
+end
+
+function Inventory:TransferComponent(newinst)
+    self:TransferInventory(newinst)
 end
 
 return Inventory

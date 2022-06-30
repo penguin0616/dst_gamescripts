@@ -267,6 +267,19 @@ local Controls = Class(Widget, function(self, owner)
 
     self:SetHUDSize()
 
+    --NOTE: this is triggered on the swap SOURCE. we need to stop updates because
+    --      playercontroller component is removed first, entity remove is delayed.
+    self.inst:ListenForEvent("seamlessplayerswap", function()
+        self:StopUpdating()
+    end, self.owner)
+
+    --NOTE: this is triggered on the swap TARGET.
+    self.inst:ListenForEvent("finishseamlessplayerswap", function()
+        if self.owner.replica.inventory:IsVisible() then
+            self:ShowCraftingAndInventory()
+        end
+    end, self.owner)
+
     self:StartUpdating()
 end)
 

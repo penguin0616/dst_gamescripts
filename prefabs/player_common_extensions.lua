@@ -798,6 +798,15 @@ local function OnTakeOversizedPicture(inst, data)
     end
 end
 
+local function CanSeeTileOnMiniMap(inst, tx, ty)
+    return inst.player_classified.MapExplorer:IsTileSeeable(tx, ty)
+end
+
+local function CanSeePointOnMiniMap(inst, px, py, pz) -- Convenience wrapper.
+    local tx, ty = TheWorld.Map:GetTileXYAtPoint(px, py, pz)
+    return inst.player_classified.MapExplorer:IsTileSeeable(tx, ty)
+end
+
 return
 {
     ShouldKnockout              = ShouldKnockout,
@@ -820,4 +829,6 @@ return
     OnLearnFertilizer           = OnLearnFertilizer,
     OnTakeOversizedPicture      = OnTakeOversizedPicture,
 	GivePlayerStartingItems		= GivePlayerStartingItems,
+    CanSeeTileOnMiniMap         = CanSeeTileOnMiniMap,
+    CanSeePointOnMiniMap        = CanSeePointOnMiniMap,
 }

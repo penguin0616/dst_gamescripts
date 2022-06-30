@@ -1,5 +1,3 @@
-local GroundTiles = require("worldtiledefs")
-
 local FarmTiller = Class(function(self, inst)
     self.inst = inst
 end)

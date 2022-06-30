@@ -65,7 +65,7 @@ return{
 			KITCOON_HIDEANDSEEK_NOT_ENOUGH_HIDING_SPOTS = "It's okay, but maybe we can find a place with more hiding spots.",
 			KITCOON_HIDEANDSEEK_ONE_GAME_PER_DAY = "That was fun! Can we play again tomorrow?",
 		},
-		OPEN_CRAFTING = 
+		OPEN_CRAFTING =
 		{
             PROFESSIONALCHEF = "Warly gets upset when we play with his things.",
 			SHADOWMAGIC = "I don't think we should play with that...",
@@ -133,6 +133,8 @@ return{
             SPIDERNOHAT = "There's not enough room, we don't want to squish them by accident!",
             TERRARIUM_REFUSE = "Maybe we can give it something else?",
             TERRARIUM_COOLDOWN = "Let's wait for the little tree to come back first!",
+            NOTAMONKEY = "Sorry, neither of us speak monkey.",
+            QUEENBUSY = "She looks pretty busy... maybe we'll just wait.",
         },
         GIVETOPLAYER =
         {
@@ -190,6 +192,8 @@ return{
 
 			--MapSpotRevealer/messagebottle
 			MESSAGEBOTTLEMANAGER_NOT_FOUND = "We should wait until we get outside.",--Likely trying to read messagebottle treasure map in caves
+
+            STASH_MAP_NOT_FOUND = "Hey... there's no \"X\" on this map!",-- Likely trying to read stash map  in world without stash
         },
         WRAPBUNDLE =
         {
@@ -206,6 +210,7 @@ return{
                 "They all look kind of similar...",
             },
 --fallback to speech_wilson.lua 			NO_HEAVY_LIFTING = "only_used_by_wanda",
+            FULL_OF_CURSES = "We think we've had enough of these bracelets.",
         },
         SLAUGHTER =
         {
@@ -322,11 +327,11 @@ return{
             FROZEN = "Hmm it might be hard to get our decorations to stick to ice...",
             ALREADY_BEDAZZLED = "We think we already decorated it pretty good.",
         },
-        UPGRADE = 
+        UPGRADE =
         {
             BEDAZZLED = "But we made it look so nice! Let's keep it the way it is.",
         },
-		CAST_POCKETWATCH = 
+		CAST_POCKETWATCH =
 		{
 --fallback to speech_wilson.lua 			GENERIC = "only_used_by_wanda",
 --fallback to speech_wilson.lua 			REVIVE_FAILED = "only_used_by_wanda",
@@ -781,7 +786,7 @@ return{
 
 	ANNOUNCE_KITCOON_HIDEANDSEEK_START = "Ready or not, here we come!",
 	ANNOUNCE_KITCOON_HIDEANDSEEK_JOIN = "Let's work together to find those kitcoons!",
-	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND = 
+	ANNOUNCE_KITCOON_HIDANDSEEK_FOUND =
 	{
 		"Found you!",
 		"There you are!",
@@ -815,6 +820,14 @@ return{
     ANNOUNCE_EYEOFTERROR_ARRIVE = "Why do we feel like we're being watched?",
     ANNOUNCE_EYEOFTERROR_FLYBACK = "Coming back to play some more?",
     ANNOUNCE_EYEOFTERROR_FLYAWAY = "It doesn't want to play anymore.",
+
+    -- PIRATES
+    ANNOUNCE_CANT_ESCAPE_CURSE = "Oh... maybe we don't want to throw it away after all.",
+    ANNOUNCE_MONKEY_CURSE_1 = "We feel weird... weirder than usual...",
+    ANNOUNCE_MONKEY_CURSE_CHANGE = "What? How...? Now we're really confused...",
+    ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "We're us again!",
+
+    ANNOUNCE_PIRATES_ARRIVE = "Uh oh... we're not sure we like the sound of that.",
 
 	BATTLECRY =
 	{
@@ -1074,6 +1087,16 @@ return{
             REVIVER = "Thanks %s! We hope it didn't take up too much of your time...",
             GHOST = "Uh oh, %s needs help!",
             FIRESTARTER = "Stop it, %s! You're gonna get in trouble!",
+        },
+
+        WONKEY =
+        {
+            GENERIC = "Hi Monkey!",
+            ATTACKER = "Hey, that was mean!",
+            MURDERER = "We don't think we should play with that monkey anymore.",
+            REVIVER = "We knew you were a nice monkey!",
+            GHOST = "Don't worry, we'll make you all better!",
+            FIRESTARTER = "No, we're not supposed to play with fire!",
         },
 
 --fallback to speech_wilson.lua         MIGRATION_PORTAL =
@@ -1375,6 +1398,8 @@ return{
 		TURF_DRAGONFLY = "Warm and cozy ground!",
 
         TURF_SHELLBEACH = "Some ground that we dug up.",
+
+        TURF_MONKEY_GROUND = "It kinda smells like bananas!",
 
 		POWCAKE = "Mum never let me have these.",
         CAVE_ENTRANCE = "It's plugged up.",
@@ -2819,7 +2844,7 @@ return{
 		},
 		WARG = "I don't think that puppy is very happy.",
         WARGLET = "N-nice puppy...",
-        
+
 		WASPHIVE = "Sounds like anger!",
 		WATERBALLOON = "We have to be gentle with our claws if we try to hold it!",
 		WATERMELON = "Looks tasty!",
@@ -3387,6 +3412,7 @@ return{
             BURNT = "Fire is very dangerous.",
         },
         BOAT_ITEM = "That's for building a boat.",
+        BOAT_GRASS_ITEM = "Weaving a grass boat probably isn't much harder than weaving webs.",
         STEERINGWHEEL_ITEM = "That's for making a steering wheel.",
         ANCHOR_ITEM = "That's for making an anchor.",
         MAST_ITEM = "That's for building a mast.",
@@ -3457,6 +3483,7 @@ return{
         GNARWAIL_HORN = "Maybe it's magic?",
 
         WALKINGPLANK = "It's the least fun diving board.",
+        WALKINGPLANK_GRASS = "It's the least fun diving board.",
         OAR = "More legs means faster rowing!",
 		OAR_DRIFTWOOD = "Rowing is kinda fun!",
 
@@ -4187,7 +4214,7 @@ return{
         BEEF_BELL = "The beefalo really like this bell, and whoever rings it!",
 
 		-- YOT Catcoon
-		KITCOONDEN = 
+		KITCOONDEN =
 		{
 			GENERIC = "A nice safe place for kitcoons to rest after playing.",
             BURNT = "We hope it was evacuated...",
@@ -4197,7 +4224,7 @@ return{
 
 		KITCOONDEN_KIT = "We can use this to build a little house for the kitcoons.",
 
-		TICOON = 
+		TICOON =
 		{
 			GENERIC = "Your majesty!",
 			ABANDONED = "We'll try our best to find them on our own.",
@@ -4209,7 +4236,7 @@ return{
 			NOTHING_TO_TRACK = "It doesn't look like there's anything around here...",
 			TARGET_TOO_FAR_AWAY = "Maybe the kit's out of his sniffing range?",
 		},
-		
+
 		YOT_CATCOONSHRINE =
         {
             GENERIC = "What a nice tribute!",
@@ -4314,7 +4341,7 @@ return{
         POCKETWATCH_PARTS = "Little clock bits.",
         POCKETWATCH_DISMANTLER = "Can we play with your tools, Ms. Wanda? We'll be careful!",
 
-        POCKETWATCH_PORTAL_ENTRANCE = 
+        POCKETWATCH_PORTAL_ENTRANCE =
 		{
 			GENERIC = "It looks a bit scary...",
 			DIFFERENTSHARD = "It looks a bit scary...",
@@ -4328,7 +4355,7 @@ return{
         WATERTREE_ROOT = "Tree toesies.",
 
         OCEANTREE_PILLAR = "Now we have our own big tree!",
-        
+
         OCEANVINE = "Maybe we could use that for a swing!",
         FIG = "This fruit is kinda weird, but tasty!",
         FIG_COOKED = "Now it's hot fruit.",
@@ -4358,7 +4385,7 @@ return{
         },
 
         -- Wolfgang
-        MIGHTY_GYM = 
+        MIGHTY_GYM =
         {
             GENERIC = "Can we try, Mr. Wolfgang? We've got extra arms to lift with!",
             BURNT = "Uh oh... Mr. Wolfgang won't be very happy...",
@@ -4371,7 +4398,7 @@ return{
         POTATOSACK = "We peeked inside, some of them looked more like rocks than potatoes...",
 
 
-        TERRARIUMCHEST = 
+        TERRARIUMCHEST =
 		{
 			GENERIC = "We didn't find any toys inside.",
 			BURNT = "Aww, it was such a pretty chest.",
@@ -4429,7 +4456,7 @@ return{
         WX78MODULE_BEE = "Huh. Is that what robot insides look like?",
         WX78MODULE_MAXHEALTH2 = "Huh. Is that what robot insides look like?",
 
-        WX78_SCANNER = 
+        WX78_SCANNER =
         {
             GENERIC ="Watch out for our webs when you're flying!",
             HUNTING = "Watch out for our webs when you're flying!",
@@ -4442,6 +4469,83 @@ return{
         WX78_MODULEREMOVER = "We're not sure that's safe...",
 
         SCANDATA = "Wow, it learned all that just by looking really hard?",
+
+        -- Pirates
+        BOAT_ROTATOR = "We can turn the boat like a merry-go-round!",
+        BOAT_ROTATOR_KIT = "We're good at spinning things!",
+        BOAT_BUMPER_KELP = "It keeps the boat from getting hurt.",
+        BOAT_BUMPER_KELP_KIT = "Now we can play bumper boats!",
+        BOAT_BUMPER_SHELL = "It keeps the boat from getting hurt.",
+        BOAT_BUMPER_SHELL_KIT = "Now we can play bumper boats!",
+        BOAT_CANNON = {
+            GENERIC = "Ms. Wickerbottom said we could play with it as long as there's no cannonballs inside.",
+            AMMOLOADED = "We know we shouldn't play with it, but Willow says it's so much fun...",
+            NOAMMO = "Oh, we forgot to bring the cannonballs!",
+        },
+        BOAT_CANNON_KIT = "If we build it, can we play with it?",
+        CANNONBALL_ROCK_ITEM = "Mr. Wolfgang says to lift with your legs, and we've got lots!",
+
+        OCEAN_TRAWLER = {
+            GENERIC = "It's like a web for catching fish!",
+            LOWERED = "We hope it catches lots of fish.",
+            CAUGHT = "Look at all those fish!",
+            ESCAPED = "Awww, they got away...",
+            FIXED = "All fixed!",
+        },
+        OCEAN_TRAWLER_KIT = "We can build it all by ourselves.",
+
+        BOAT_MAGNET =
+        {
+            GENERIC = "We didn't know magnets grew that big!",
+            ACTIVATED = "Wheee!",
+        },
+        BOAT_MAGNET_KIT = "Now how did Mr. Wilson say those pieces went together...?",
+
+        BOAT_MAGNET_BEACON =
+        {
+            GENERIC = "What a funny little machine.",
+            ACTIVATED = "It's blinking! That's good, right?",
+        },
+        DOCK_KIT = "We've decided we're going to be a dock spider now.",
+        DOCK_WOODPOSTS_ITEM = "We almost forgot the posts!",
+
+        MONKEYHUT =
+        {
+            GENERIC = "We don't want to play in those jerks' tree house! Even if it does look like fun...",
+            BURNT = "That's what happens when you don't play nice!",
+        },
+        POWDER_MONKEY = "Hey, Ms. Wickerbottom says we shouldn't take things that don't belong to us!",
+        PRIME_MATE = "He's a big bully!",
+		LIGHTCRAB = "Aww don't be shy, we're friendly!",
+        CUTLESS = "Does anyone wanna play pirates with us?",
+        CURSED_MONKEY_TOKEN = "Maybe it's a monkey friendship bracelet?",
+        OAR_MONKEY = "Please don't squash us!",
+        BANANABUSH = "We didn't know bananas could grow outside!",
+        DUG_BANANABUSH = "We didn't know bananas could grow outside!",
+        PALMCONETREE = "It looks hard to climb.",
+        PALMCONE_SEED = "Aww, it's a baby tree!",
+        PALMCONE_SAPLING = "It hasn't grown up yet.",
+        PALMCONE_SCALE = "Can we use it for arts and crafts?",
+        MONKEYTAIL = "Fuzzy!",
+        DUG_MONKEYTAIL = "Fuzzy!",
+
+        MONKEY_MEDIUMHAT = "Wearing a fancy hat definitely makes you better at sailing.",
+        MONKEY_SMALLHAT = "It's a bit itchy.",
+        POLLY_ROGERSHAT = "We're the famous pirate Webbeard! Arr!",
+        POLLY_ROGERS = "She's our friend!",
+
+        MONKEYISLAND_PORTAL = "It doesn't look like it can take us home.",
+        MONKEYISLAND_PORTAL_DEBRIS = "What's that metal stuff?",
+        MONKEYQUEEN = "She looks pretty important.",
+        MONKEYPILLAR = "How far up does it go?",
+        PIRATE_FLAG_POLE = "It's a pirate flag!",
+
+        BLACKFLAG = "We drew a scary skull on it! But we used black ink...",
+        PIRATE_STASH = "We found the treasure!",
+        STASH_MAP = "It's a real treasure map!",
+
+
+        BANANAJUICE = "Mmmm, cold and banana-y.",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

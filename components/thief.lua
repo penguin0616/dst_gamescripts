@@ -9,7 +9,9 @@ function Thief:SetOnStolenFn(fn)
 end
 
 function Thief:StealItem(victim, itemtosteal, attack)
-    if victim.components.inventory ~= nil and victim.components.inventory.isopen then
+
+    if victim.components.inventory ~= nil and victim:IsValid() then -- and victim.components.inventory.isopen 
+    
         local item = itemtosteal or victim.components.inventory:FindItem(function(item) return not item:HasTag("nosteal") end)
 
         if attack then
@@ -22,6 +24,7 @@ function Thief:StealItem(victim, itemtosteal, attack)
             if self.onstolen then
                 self.onstolen(self.inst, victim, item)
             end
+            victim:PushEvent("onitemstolen", { item = item, thief = self.inst, })
         end
     elseif victim.components.container then
         local item = itemtosteal or victim.components.container:FindItem(function(item) return not item:HasTag("nosteal") end)
@@ -36,6 +39,7 @@ function Thief:StealItem(victim, itemtosteal, attack)
         if self.onstolen then
             self.onstolen(self.inst, victim, item)
         end
+        victim:PushEvent("onitemstolen", { item = item, thief = self.inst, })
     end
 end
 

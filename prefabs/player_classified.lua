@@ -918,6 +918,18 @@ end
 
 --------------------------------------------------------------------------
 
+fns.FinishSeamlessPlayerSwap = function(inst)
+    OnStormLevelDirty(inst)
+    OnGiftsDirty(inst)
+    fns.OnYotbSkinDirty(inst)
+    OnMountHurtDirty(inst)
+    OnGhostModeDirty(inst)
+    OnPlayerHUDDirty(inst)
+    OnPlayerCameraDirty(inst)
+end
+
+--------------------------------------------------------------------------
+
 local function RegisterNetListeners(inst)
     if TheWorld.ismastersim then
         inst._parent = inst.entity:GetParent()
@@ -1031,6 +1043,8 @@ local function RegisterNetListeners(inst)
     OnPlayerHUDDirty(inst)
     OnPlayerCameraDirty(inst)
 
+    --finishseamlessplayerswap will be able to retrigger all the instant events if the initialization happened in the "wrong"" order.
+    inst:ListenForEvent("finishseamlessplayerswap", fns.FinishSeamlessPlayerSwap, inst._parent)
     --Fade is initialized by OnPlayerActivated in gamelogic.lua
 end
 

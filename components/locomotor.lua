@@ -7,9 +7,9 @@ local STATUS_CALCULATING = 0
 local STATUS_FOUNDPATH = 1
 local STATUS_NOPATH = 2
 
-local NO_ISLAND = 127
-
 local ARRIVE_STEP = .15
+
+local MOVE_TIMER_STOP_THRESHOLD = .1 --seconds
 
 local INVALID_PLATFORM_ID = "INVALID PLATFORM"
 
@@ -90,7 +90,13 @@ local function ClientRunSpeed(self)
     if mount ~= nil then
         return rider:GetMountRunSpeed()
     end
-    return self.inst.player_classified ~= nil and self.inst.player_classified.runspeed:value() or self.runspeed
+    if self.inst.player_classified ~= nil then
+        if self.predictrunspeed ~= nil and self.inst:HasTag("autopredict") then
+            return self.predictrunspeed
+        end
+        return self.inst.player_classified.runspeed:value()
+    end
+    return self.runspeed
 end
 
 local function ServerFasterOnRoad(self)
@@ -253,6 +259,9 @@ local LocoMotor = Class(function(self, inst)
     self.lastpos = {}
     self.slowmultiplier = 0.6
     self.fastmultiplier = 1.3
+    self.movestarttime = -1
+    self.movestoptime = -1
+    --self.predictmovestarttime = nil
 
     self.groundspeedmultiplier = 1.0
     self.enablegroundspeedmultiplier = true
@@ -275,6 +284,7 @@ local LocoMotor = Class(function(self, inst)
     self.faster_on_tiles = {}
 
     --self.isupdating = nil
+    --self.predictrunspeed = nil
 end,
 nil,
 {
@@ -312,6 +322,41 @@ function LocoMotor:OnRemoveFromEntity()
 			self.inst:RemoveTag("turfrunner_"..tostring(ground_tile))
 		end
     end
+end
+
+function LocoMotor:GetTimeMoving()
+    local t = GetTime()
+    if self.predictmovestarttime ~= nil then
+        return t - self.predictmovestarttime
+    elseif self.movestoptime ~= nil and t - self.movestoptime >= MOVE_TIMER_STOP_THRESHOLD then
+        --stopped longer than threshold
+        return 0
+    end
+    return t - self.movestarttime
+end
+
+function LocoMotor:StartMoveTimerInternal()
+    if self.movestoptime ~= nil then
+        local t = GetTime()
+        if t - self.movestoptime >= MOVE_TIMER_STOP_THRESHOLD then
+            self.movestarttime = t
+        end
+        self.movestoptime = nil
+    end
+end
+
+function LocoMotor:StopMoveTimerInternal()
+    if self.movestoptime == nil then
+        self.movestoptime = GetTime()
+    end
+end
+
+function LocoMotor:RestartPredictMoveTimer()
+    self.predictmovestarttime = GetTime()
+end
+
+function LocoMotor:CancelPredictMoveTimer()
+    self.predictmovestarttime = nil
 end
 
 function LocoMotor:StopMoving()
@@ -448,7 +493,7 @@ function LocoMotor:UpdateGroundSpeedMultiplier()
 
         local current_ground_tile = TheWorld.Map:GetTileAtPoint(x, 0, z)
         self.groundspeedmultiplier = (self:IsFasterOnGroundTile(current_ground_tile) or 
-                                     (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or current_ground_tile == GROUND.ROAD)) or
+                                     (self:FasterOnRoad() and ((RoadManager ~= nil and RoadManager:IsOnRoad(x, 0, z)) or current_ground_tile == WORLD_TILES.ROAD)) or
                                      (self:FasterOnCreep() and oncreep))
 									 and self.fastmultiplier 
 									 or 1
@@ -675,6 +720,8 @@ function LocoMotor:GoToEntity(target, bufferedaction, run)
     self.dest = Dest(target)
     self.throttle = 1
 
+    self:CancelPredictMoveTimer() --if we reach here, means client is not predicting
+
     self:SetBufferedAction(bufferedaction)
     self.wantstomoveforward = true
 
@@ -714,8 +761,9 @@ end
 --V2C: Added overridedest for additional network controller support
 function LocoMotor:GoToPoint(pt, bufferedaction, run, overridedest)
     self.dest = Dest(overridedest, pt, bufferedaction)
-
     self.throttle = 1
+
+    self:CancelPredictMoveTimer() --if we reach here, means client is not predicting
 
     self.arrive_dist =
         bufferedaction ~= nil
@@ -772,6 +820,7 @@ function LocoMotor:Stop(sgparams)
         --Let stategraph handle stopping physics
         --self.inst.Physics:Stop()
     else
+        self:StopMoveTimerInternal()
         self:StopMoving()
     end
 
@@ -1013,6 +1062,7 @@ function LocoMotor:OnUpdate(dt)
         Print(VERBOSITY.DEBUG, "OnUpdate INVALID", self.inst.prefab)
         self:ResetPath()
         self:StopUpdatingInternal()
+        self:StopMoveTimerInternal()
         return
     end
 
@@ -1189,6 +1239,10 @@ function LocoMotor:OnUpdate(dt)
         should_locomote =
             (not is_moving ~= not self.wantstomoveforward) or
             (is_moving and (not is_running ~= not self.wantstorun))
+
+        if is_moving or is_running then
+            self:StartMoveTimerInternal()
+        end
     end
 
     if should_locomote then
@@ -1196,6 +1250,7 @@ function LocoMotor:OnUpdate(dt)
     elseif not self.wantstomoveforward and not self:WaitingForPathSearch() then
         self:ResetPath()
         self:StopUpdatingInternal()
+        self:StopMoveTimerInternal()
     end
 
     local cur_speed = self.inst.Physics:GetMotorSpeed()
@@ -1329,14 +1384,7 @@ function LocoMotor:FindPath()
 
         --Print(VERBOSITY.DEBUG, string.format("CHECK LOS for [%s] %s -> %s", self.inst.prefab, tostring(p0), tostring(p1)))
 
-        local isle0 = ground.Map:GetIslandAtPoint(p0:Get())
-        local isle1 = ground.Map:GetIslandAtPoint(p1:Get())
-        --print("Islands: ", isle0, isle1)
-
-        if isle0 ~= NO_ISLAND and isle1 ~= NO_ISLAND and isle0 ~= isle1 then
-            --print("NO PATH (different islands)", isle0, isle1)
-            self:ResetPath()
-        elseif ground.Pathfinder:IsClear(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, self.pathcaps) then
+        if ground.Pathfinder:IsClear(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, self.pathcaps) then
             --print("HAS LOS")
             self:ResetPath()
         else

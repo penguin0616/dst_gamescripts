@@ -195,7 +195,6 @@ local function fn()
 
 	inst:AddComponent("cookiecutterdrill")
 	inst.components.cookiecutterdrill.drill_duration = TUNING.COOKIECUTTER.DRILL_TIME
-	inst.components.cookiecutterdrill.drill_damage = -TUNING.COOKIECUTTER.DRILL_DAMAGE
 
 	inst:SetStateGraph("SGcookiecutter")
     inst:SetBrain(brain)

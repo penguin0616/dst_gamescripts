@@ -64,6 +64,11 @@ function FiniteUses:OnUsedAsItem(action, doer, target)
 		if doer ~= nil and doer:IsValid() and doer.components.efficientuser ~= nil then
 			uses = uses * (doer.components.efficientuser:GetMultiplier(action) or 1)
 		end
+
+        if self.modifyuseconsumption then
+            uses = self.modifyuseconsumption(uses, action, doer, target)
+        end
+
         self:Use(uses)
     end
 end

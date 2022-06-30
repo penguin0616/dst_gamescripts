@@ -307,6 +307,7 @@ local WORLDGEN_GROUP = {
 			["cave_ponds"] = {value = "default", image = "ponds.tex", world={"cave"}},
 			["ocean_bullkelp"] = {value = "default", image = "ocean_bullkelp.tex", world = {"forest"}},
 			["ocean_seastack"] = {value = "ocean_default", image = "ocean_seastack.tex", desc = ocean_worldgen_frequency_descriptions, world = {"forest"}},
+            ["palmconetree"] = {value = "default", image = "palmconetree.tex", world = {"forest"}},
 		}
 	},
 	["misc"] = {
@@ -355,7 +356,7 @@ local MOD_WORLDGEN_MISC = {}
 
 local WORLDSETTINGS_GROUP = {
 	["giants"] = {
-		order = 7,
+		order = 8,
 		text = STRINGS.UI.SANDBOXMENU.CHOICEGIANTS,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -379,7 +380,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["monsters"] = {
-		order = 6,
+		order = 7,
 		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_HOSTILE_CREATURES,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -396,6 +397,7 @@ local WORLDSETTINGS_GROUP = {
 			["moon_spider"] = {value = "default", image = "moon_spider.tex", world={"forest"}},
 			["walrus_setting"] = {value = "default", image = "mactusk.tex", world={"forest"}},
 			["cookiecutters"] = {value = "default", image = "cookiecutters.tex", world={"forest"}},
+            ["pirateraids"] = {value = "default", image = "pirateattacks.tex", world={"forest"}},
 
 			["merms"] = {value = "default", image = "merms.tex", world={"forest", "cave"}},
 			["spiders_setting"] = {value = "default", image = "spiders.tex", world={"forest", "cave"}},
@@ -410,7 +412,7 @@ local WORLDSETTINGS_GROUP = {
 		}
 	},
 	["animals"] = {
-		order= 5,
+		order= 6,
 		text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_ANIMALS,
 		desc = frequency_descriptions,
 		atlas = "images/worldsettings_customization.xml",
@@ -454,7 +456,10 @@ local WORLDSETTINGS_GROUP = {
 			["moon_tree_regrowth"] = {value = "default", image = "moon_tree.tex", world={"forest"}},
 			["flowers_regrowth"] = {value = "default", image = "flowers.tex", world={"forest"}},
 			["carrots_regrowth"] = {value = "default", image = "carrots.tex", world={"forest"}},
+			["reeds_regrowth"] = {value = "default", image = "reeds.tex", world={"forest"}},
+			["cactus_regrowth"] = {value = "default", image = "cactus.tex", world={"forest"}},
 			["saltstack_regrowth"] = {value = "default", image = "saltstack.tex", world={"forest"}},
+            ["palmconetree_regrowth"] = {value = "default", image = "palmconetree.tex", world={"forest"}},
 
 			["flower_cave_regrowth"] = {value = "default", image = "flower_cave.tex", world={"cave"}},
 			["lightflier_flower_regrowth"] = {value = "default", image = "lightflier_flower.tex", world={"cave"}},
@@ -462,6 +467,21 @@ local WORLDSETTINGS_GROUP = {
 			["mushtree_moon_regrowth"] = {value = "default", image = "mushtree_moon.tex", world={"cave"}},
 		}
 	},
+    ["portal_resources"] = {
+        order = 5,
+        text = STRINGS.UI.SANDBOXMENU.WORLDSETTINGS_PORTALRESOURCES,
+        desc = frequency_descriptions,
+        atlas = "images/worldsettings_customization.xml",
+        items = {
+            ["portal_spawnrate"] = {value = "default", image = "monkeyportal.tex", world = {"forest"}},
+
+            ["bananabush_portalrate"] = {value = "default", image = "bananabush.tex", world = {"forest"}},
+            ["lightcrab_portalrate"] = {value = "default", image = "lightcrab.tex", world = {"forest"}},
+            ["monkeytail_portalrate"] = {value = "default", image = "monkeytail.tex", world = {"forest"}},
+            ["palmcone_seed_portalrate"] = {value = "default", image = "palmcone_seed.tex", world = {"forest"}},
+            ["powder_monkey_portalrate"] = {value = "default", image = "powder_monkey.tex", world = {"forest"}},
+        },
+    },
 	["misc"] = {
 		order= 3,
 		text = STRINGS.UI.SANDBOXMENU.CHOICEMISC,

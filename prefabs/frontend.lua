@@ -132,6 +132,7 @@ local assets =
     Asset("ANIM", "anim/player_idles_webber.zip"),
     Asset("ANIM", "anim/player_idles_wanda.zip"),
     Asset("ANIM", "anim/player_idles_wx.zip"),
+    Asset("ANIM", "anim/player_idles_wonkey.zip"),
     Asset("ANIM", "anim/bernie_build.zip"),
     Asset("ANIM", "anim/swap_lucy_axe.zip"),
 
@@ -312,14 +313,16 @@ if IsConsole() then
 	else
 		assert(0) -- Add platform
 	end
-elseif BRANCH == "dev" then
-	table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
-	table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
-	table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
-	table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
-	--table.insert(assets, Asset("ATLAS", "images/nx_controllers.xml"))
-	--table.insert(assets, Asset("IMAGE", "images/nx_controllers.tex"))
 end
+
+--Uncomment whichever platfor you need for testing dev_test_platform in optionsscreen.lua
+--table.insert(assets, Asset("ATLAS", "images/ps4_controllers.xml"))
+--table.insert(assets, Asset("IMAGE", "images/ps4_controllers.tex"))
+--table.insert(assets, Asset("ATLAS", "images/xb1_controllers.xml"))
+--table.insert(assets, Asset("IMAGE", "images/xb1_controllers.tex"))
+--table.insert(assets, Asset("ATLAS", "images/nx_controllers.xml"))
+--table.insert(assets, Asset("IMAGE", "images/nx_controllers.tex"))
+
 
 if PLATFORM == "WIN32_RAIL" then
     table.insert(assets, Asset("DYNAMIC_ATLAS", "images/rail.xml") )

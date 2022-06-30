@@ -61,7 +61,9 @@ local function EncodeCookbookEntry(entry)
 end
 
 function CookbookData:ApplyOnlineProfileData()
-	if not self.synced and not (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) and TheInventory:HasDownloadedInventory() then
+	if not self.synced and
+		(TheInventory:HasSupportForOfflineSkins() or not (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode())) and
+		TheInventory:HasDownloadedInventory() then
 		self.preparedfoods = self.preparedfoods or {}
 		for k, v in pairs(TheInventory:GetLocalCookBook()) do
 			self.preparedfoods[k] = DecodeCookbookEntry(v)

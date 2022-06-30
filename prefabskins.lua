@@ -179,6 +179,16 @@ PREFAB_SKINS = {
 		"birdcage_pirate",
 		"birdcage_romantic",
 	},
+	boat =
+	{
+		"boat_nautical",
+		"boat_wagstaff",
+	},
+	boat_item =
+	{
+		"boat_nautical_item",
+		"boat_wagstaff_item",
+	},
 	book_brimstone =
 	{
 		"book_brimstone_gilded",
@@ -304,6 +314,7 @@ PREFAB_SKINS = {
 	critter_perdling =
 	{
 		"perdling_pelican",
+		"perdling_pollyrogers",
 		"perdling_puffin",
 		"perdling_rooster",
 		"perdling_winter",
@@ -311,6 +322,7 @@ PREFAB_SKINS = {
 	critter_perdling_builder =
 	{
 		"perdling_pelican_builder",
+		"perdling_pollyrogers_builder",
 		"perdling_puffin_builder",
 		"perdling_rooster_builder",
 		"perdling_winter_builder",
@@ -610,6 +622,14 @@ PREFAB_SKINS = {
 		"mast_rose_alt_item",
 		"mast_rose_item",
 	},
+	mast_malbatross =
+	{
+		"mast_malbatross_wagstaff",
+	},
+	mast_malbatross_item =
+	{
+		"mast_malbatross_wagstaff_item",
+	},
 	mastupgrade_lamp =
 	{
 		"mastupgradelamp_nautical",
@@ -666,6 +686,16 @@ PREFAB_SKINS = {
 		"minisign_picketbrown_item",
 		"minisign_pickettan_item",
 		"minisign_picketwhite_item",
+	},
+	monkey_mediumhat =
+	{
+		"monkeyhatmedium_blue",
+		"monkeyhatmedium_red",
+	},
+	monkey_smallhat =
+	{
+		"monkeyhatsmall_beads",
+		"monkeyhatsmall_belt",
 	},
 	multitool_axe_pickaxe =
 	{
@@ -897,10 +927,12 @@ PREFAB_SKINS = {
 	steeringwheel =
 	{
 		"steeringwheel_nautical",
+		"steeringwheel_wagstaff",
 	},
 	steeringwheel_item =
 	{
 		"steeringwheel_nautical_item",
+		"steeringwheel_wagstaff_item",
 	},
 	strawhat =
 	{
@@ -996,6 +1028,10 @@ PREFAB_SKINS = {
 		"umbrella_heart",
 		"umbrella_parasol",
 		"umbrella_spider",
+	},
+	walkingplank =
+	{
+		"walkingplank_wagstaff",
 	},
 	wall_moonrock =
 	{
@@ -1093,6 +1129,7 @@ PREFAB_SKINS = {
 		"warly_ice",
 		"warly_nature",
 		"warly_none",
+		"warly_pirate",
 		"warly_rose",
 		"warly_victorian",
 	},
@@ -1102,6 +1139,7 @@ PREFAB_SKINS = {
 	},
 	watermelonhat =
 	{
+		"watermelonhat_banana",
 		"watermelonhat_pumpkin",
 	},
 	wathgrithr =
@@ -1117,6 +1155,7 @@ PREFAB_SKINS = {
 		"wathgrithr_magma",
 		"wathgrithr_nature",
 		"wathgrithr_none",
+		"wathgrithr_pirate",
 		"wathgrithr_rose",
 		"wathgrithr_rosep",
 		"wathgrithr_scarecrow",
@@ -1233,6 +1272,7 @@ PREFAB_SKINS = {
 		"wes_mandrake_p",
 		"wes_nature",
 		"wes_none",
+		"wes_pirate",
 		"wes_rose",
 		"wes_rosep",
 		"wes_shadow",
@@ -1281,6 +1321,7 @@ PREFAB_SKINS = {
 		"willow_ice",
 		"willow_magma",
 		"willow_none",
+		"willow_pirate",
 		"willow_rose",
 		"willow_rosep",
 		"willow_shadow",
@@ -1341,6 +1382,7 @@ PREFAB_SKINS = {
 		"winona_magma",
 		"winona_nature",
 		"winona_none",
+		"winona_pirate",
 		"winona_rose",
 		"winona_rosep",
 		"winona_shadow",
@@ -1377,6 +1419,7 @@ PREFAB_SKINS = {
 		"wolfgang_magma",
 		"wolfgang_nature",
 		"wolfgang_none",
+		"wolfgang_pirate",
 		"wolfgang_rose",
 		"wolfgang_rosep",
 		"wolfgang_shadow",
@@ -1391,6 +1434,10 @@ PREFAB_SKINS = {
 		"wolfgang_wolfman",
 		"wolfgang_wrestler",
 	},
+	wonkey =
+	{
+		"wonkey_none",
+	},
 	woodie =
 	{
 		"woodie_combatant",
@@ -1403,6 +1450,7 @@ PREFAB_SKINS = {
 		"woodie_magma",
 		"woodie_nature",
 		"woodie_none",
+		"woodie_pirate",
 		"woodie_rose",
 		"woodie_rosep",
 		"woodie_shadow",
@@ -1447,6 +1495,7 @@ PREFAB_SKINS = {
 		"wortox_noeyeddeer_p",
 		"wortox_none",
 		"wortox_original",
+		"wortox_pirate",
 		"wortox_survivor",
 		"wortox_victorian",
 	},
@@ -1455,6 +1504,7 @@ PREFAB_SKINS = {
 		"wurt_cave",
 		"wurt_formal",
 		"wurt_none",
+		"wurt_pirate",
 		"wurt_rose",
 		"wurt_shadow",
 		"wurt_squid",

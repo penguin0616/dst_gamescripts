@@ -287,6 +287,11 @@ local function fn()
 
     inst:AddComponent("inspectable")
     inst.components.inspectable:RecordViews()
+
+    ------------------------------------------
+
+    inst:AddComponent("drownable")
+
     ------------------------------------------
     inst:AddComponent("knownlocations")
     inst:SetBrain(brain)

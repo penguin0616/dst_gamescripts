@@ -400,4 +400,18 @@ function Health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, i
     return amount
 end
 
+function Health:TransferComponent(newinst)
+    local newcomponent = newinst.components.health
+    newcomponent:SetPercent(self:GetPercent())
+
+    newcomponent.takingfiredamage = self.takingfiredamage
+    if newcomponent.takingfiredamage then
+        newcomponent.takingfiredamagestarttime = self.takingfiredamagestarttime
+        newcomponent.takingfiredamagelow = self.takingfiredamagelow
+        newcomponent.inst:StartUpdatingComponent(self)
+        newcomponent.inst:PushEvent("startfiredamage", { low = newcomponent.takingfiredamagelow })
+    end
+    newcomponent.lastfiredamagetime = self.lastfiredamagetime
+end
+
 return Health

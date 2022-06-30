@@ -241,6 +241,9 @@ local prefabs =
 	"kitcoon_desert",
 	"kitcoon_moon",
 	"kitcoon_yot",
+
+    -- Pirates
+    "monkeyhut",
 }
 
 for k, v in pairs(require("prefabs/farm_plant_defs").PLANT_DEFS) do
@@ -320,6 +323,25 @@ local function OnRemoveEntity(inst)
     TheFocalPoint = nil
 end
 
+local function CreateTilePhysics(inst)
+    if inst.tile_physics_init ~= nil then
+        inst:tile_physics_init()
+    else
+        inst.Map:AddTileCollisionSet(
+            COLLISION.LAND_OCEAN_LIMITS,
+            TileGroups.LandTiles, false,
+            TileGroups.LandTiles, true,
+            0.25, 64
+        )
+        inst.Map:AddTileCollisionSet(
+            inst.has_ocean and COLLISION.GROUND or COLLISION.LAND_OCEAN_LIMITS,
+            TileGroups.ImpassableTiles, true,
+            TileGroups.ImpassableTiles, false,
+            0.25, 128
+        )
+    end
+end
+
 --------------------------------------------------------------------------
 
 function MakeWorld(name, customprefabs, customassets, common_postinit, master_postinit, tags, custom_data)
@@ -371,24 +393,24 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         inst.entity:AddGroundCreep()
         inst.entity:AddSoundEmitter()
 
+        inst.tile_physics_init = custom_data.tile_physics_init
+
         if custom_data.common_preinit ~= nil then
             custom_data.common_preinit(inst)
         end
 
         --Initialize map
         for i, data in ipairs(GroundTiles.ground) do
-			data[2]._render_layer = i
-
-            local tile_type, props = unpack(data)
-            local layer_name = props.name
+            local tile_id, layer_properties = unpack(data)
             local handle = MapLayerManager:CreateRenderLayer(
-                tile_type, --embedded map array value
-                resolvefilepath(GroundAtlas(layer_name)),
-                resolvefilepath(GroundImage(layer_name)),
-                resolvefilepath(props.noise_texture)
+                tile_id, --embedded map array value
+                layer_properties.atlas or resolvefilepath(GroundAtlas(layer_properties.name)),
+                layer_properties.texture_name or resolvefilepath(GroundImage(layer_properties.name)),
+                resolvefilepath(layer_properties.noise_texture)
             )
+			layer_properties._render_layer = i
 
-            local colors = data[2].colors
+            local colors = layer_properties.colors
             if colors ~= nil then
 				local primary_color = colors.primary_color
                 MapLayerManager:SetPrimaryColor(handle, primary_color[1] / 255, primary_color[2] / 255, primary_color[3] / 255, primary_color[4] / 255)
@@ -407,26 +429,33 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         end
 
         for i, data in ipairs(GroundTiles.creep) do
-            local tile_type, props = unpack(data)
+            local tile_id, layer_properties = unpack(data)
             local handle = MapLayerManager:CreateRenderLayer(
-                tile_type,
-                resolvefilepath(GroundAtlas(props.name)),
-                resolvefilepath(GroundImage(props.name)),
-                resolvefilepath(props.noise_texture)
+                tile_id,
+                layer_properties.atlas,
+                layer_properties.texture_name,
+                layer_properties.noise_texture
             )
             inst.GroundCreep:AddRenderLayer(handle)
         end
 
-        local underground_layer = GroundTiles.underground[1][2]
-        local underground_handle = MapLayerManager:CreateRenderLayer(
-            GROUND.UNDERGROUND,
-            resolvefilepath(GroundAtlas(underground_layer.name)),
-            resolvefilepath(GroundImage(underground_layer.name)),
-            resolvefilepath(underground_layer.noise_texture)
-        )
-        inst.Map:SetUndergroundRenderLayer(underground_handle)
+        for i, data in ipairs(GroundTiles.falloff) do
+            local tile_id, layer_properties = unpack(data)
+            local handle = MapLayerManager:CreateRenderLayer(
+                tile_id,
+                layer_properties.atlas,
+                layer_properties.texture_name,
+                layer_properties.noise_texture
+            )
 
-        inst.Map:SetImpassableType(GROUND.IMPASSABLE)
+            inst.Map:AddFalloffTexture(
+                handle,
+                layer_properties.should_have_falloff,
+                layer_properties.should_have_falloff_result,
+                layer_properties.neighbor_needs_falloff,
+                layer_properties.neighbor_needs_falloff_result
+            )
+        end
 
         --Initialize lua world state
         inst:AddComponent("worldstate")
@@ -438,6 +467,7 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
         --Public member functions
         inst.PostInit = PostInit
         inst.OnRemoveEntity = OnRemoveEntity
+        inst.CreateTilePhysics = CreateTilePhysics
 
         --Initialize minimap
         inst.minimap = SpawnPrefab("minimap")
@@ -470,10 +500,14 @@ function MakeWorld(name, customprefabs, customassets, common_postinit, master_po
 
         inst:AddComponent("klaussackloot")
 
+        inst:AddComponent("undertile")
+
         inst:AddComponent("worldsettingstimer")
         inst:AddComponent("timer")
 
         inst:AddComponent("farming_manager")
+
+        inst:AddComponent("dockmanager")
 
         inst:AddComponent("playerspawner")
 

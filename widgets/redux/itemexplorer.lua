@@ -595,8 +595,11 @@ function ItemExplorer:RefreshItems(new_item_filter_fn)
             if w.data.item_key then
                 if prev_target_key[w.data.item_key] then
                     -- Double click to preserve selection state.
+                    -- NOTES(JBK): Ignore the allowing of selecting nil to workaround menus popping up back and forth.
+                    self.ignore_selection_allow_nil = true
                     w:onclick()
                     w:onclick()
+                    self.ignore_selection_allow_nil = nil
                     break
                 end
             end
@@ -609,7 +612,7 @@ function ItemExplorer:_OnClickWidget(item_widget)
     local was_active = self.last_interaction_target and item_data.is_active -- Not having a highlight means first click and no prior active state.
 
     -- if no selection type, then ignore is_active.
-    if self.scroll_list.context.selection_type and item_data.is_owned and (self.scroll_list.context.selection_type ~= "single" or not item_data.is_active) then
+    if self.scroll_list.context.selection_type and item_data.is_owned and (self.scroll_list.context.selection_type ~= "single" or not item_data.is_active) and not self.ignore_selection_allow_nil then
         self:_SetItemActiveFlag(item_data, not item_data.is_active)
     end
 
@@ -662,7 +665,7 @@ function ItemExplorer:_UpdateClickedWidget(item_widget, was_active)
                     prev_data.widget:UpdateSelectionState()
 				end
             end
-        elseif was_active and self.selection_allow_nil then
+        elseif was_active and self.selection_allow_nil and not self.ignore_selection_allow_nil then
             -- Just one thing is selected and it was already selected, turn it off.
             self:_SetItemActiveFlag(item_widget.data, false)
         end

@@ -1016,6 +1016,34 @@ function params.pocketwatch.itemtestfn(container, item, slot)
 end
 
 --------------------------------------------------------------------------
+--[[ ocean_trawler ]]
+--------------------------------------------------------------------------
+
+params.ocean_trawler =
+{
+    widget =
+    {
+        slotpos =
+        {
+            Vector3(0, 100, 0),
+            Vector3(0, 20, 0),
+            Vector3(0, -60, 0),
+            Vector3(0, -140, 0),
+        },
+        animbank = "ui_cookpot_1x4",
+        animbuild = "ui_cookpot_1x4",
+        pos = Vector3(200, 0, 0),
+        side_align_tip = 100,
+    },
+    acceptsstacks = false,
+    type = "cooker",
+}
+
+function params.ocean_trawler.itemtestfn(container, item, slot)
+    return item:HasTag("cookable") or item:HasTag("oceanfish")
+end
+
+--------------------------------------------------------------------------
 --[[ quagmire_pot ]]
 --------------------------------------------------------------------------
 
