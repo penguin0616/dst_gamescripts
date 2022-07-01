@@ -233,7 +233,7 @@ local function OnEntityReplicated(inst)
                 inst._parent.replica[v]:AttachClassified(inst)
             end
         end
-        for i, v in ipairs({ "playercontroller", "playervoter" }) do
+        for i, v in ipairs({ "playercontroller", "playervoter", "boatcannonuser" }) do
             if inst._parent.components[v] ~= nil then
                 inst._parent.components[v]:AttachClassified(inst)
             end
@@ -632,6 +632,12 @@ local function OnAttunedResurrectorDirty(inst)
     end
 end
 
+fns.OnCannonDirty = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("aimingcannonchanged", inst.cannon:value())
+    end
+end
+
 --------------------------------------------------------------------------
 --Common interface
 --------------------------------------------------------------------------
@@ -991,8 +997,7 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("playercamerashake", OnPlayerCameraShake)
         inst:ListenForEvent("playerscreenflashdirty", OnPlayerScreenFlashDirty)
         inst:ListenForEvent("attunedresurrectordirty", OnAttunedResurrectorDirty)
-        
-        
+        inst:ListenForEvent("cannondirty", fns.OnCannonDirty)
 
         OnIsTakingFireDamageDirty(inst)
         OnTemperatureDirty(inst)
@@ -1292,6 +1297,9 @@ local function fn()
 
     --CarefulWalking variables
     inst.iscarefulwalking = net_bool(inst.GUID, "carefulwalking.careful", "iscarefulwalkingdirty")
+
+    --BoatCannonUser variables
+    inst.cannon = net_entity(inst.GUID, "boatcannonuser.cannon", "cannondirty")
 
     --Morgue variables
     inst.isdeathbypk = net_bool(inst.GUID, "morgue.isdeathbypk", "morguedirty")

@@ -300,7 +300,7 @@ TileManager.AddTile(
     {ground_name = "Gorge Citystone", old_static_id = GROUND.QUAGMIRE_CITYSTONE},
     {
         name = "cave",
-        noise_texture = "quagmire_gateway_noise",
+        noise_texture = "quagmire_citystone_noise",
         runsound="dontstarve/movement/run_dirt",
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
@@ -318,7 +318,7 @@ TileManager.AddTile(
     {ground_name = "Gorge Park Grass", old_static_id = GROUND.QUAGMIRE_PARKFIELD},
     {
         name = "deciduous",
-        noise_texture = "quagmire_gateway_noise",
+        noise_texture = "quagmire_parkfield_noise",
         runsound="dontstarve/movement/run_carpet",
         walksound="dontstarve/movement/walk_carpet",
         snowsound="dontstarve/movement/run_snow",
@@ -336,7 +336,7 @@ TileManager.AddTile(
     {ground_name = "Gorge Park Path", old_static_id = GROUND.QUAGMIRE_PARKSTONE},
     {
         name = "cave",
-        noise_texture = "quagmire_gateway_noise",
+        noise_texture = "quagmire_parkstone_noise",
         runsound="dontstarve/movement/run_dirt",
         walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
@@ -354,7 +354,7 @@ TileManager.AddTile(
     {ground_name = "Gorge Peat Forest", old_static_id = GROUND.QUAGMIRE_PEATFOREST},
     {
         name = "grass2",
-        noise_texture = "quagmire_gateway_noise",
+        noise_texture = "quagmire_peatforest_noise",
         runsound="dontstarve/movement/rrun_marsh",
         walksound="dontstarve/movement/walk_marsh",
         snowsound="dontstarve/movement/run_ice",

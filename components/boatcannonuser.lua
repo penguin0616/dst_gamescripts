@@ -1,29 +1,47 @@
-local function OnCannonDirty(inst)
-	inst.components.boatcannonuser:OnCannonChanged()
+local function OnAimingCannonChanged(inst, cannon)
+	inst.components.boatcannonuser:OnCannonChanged(cannon)
 end
 
 local BoatCannonUser = Class(function(self, inst)
 	self.inst = inst
+
+	--cache variables
+	self.ismastersim = TheWorld.ismastersim
 
 	--Local aiming variables (DO NOT USE IN SERVER CODE)
 	self.aim_range_fx = nil
 	self.aiming_cannon = nil
 	self.task = nil
 
-	--Network variables
-	self._cannon = net_entity(inst.GUID, "boatcannonuser._cannon", "cannondirty")
-
-	if TheWorld.ismastersim then
+	if self.ismastersim then
 		--Server only
 		self.cannon_remove_callback = function()
-			self._cannon:set(nil)
+			self.classified.cannon:set(nil)
 			self:CancelAimingStateInternal()
 		end
 	else
 		--Client only
-		inst:ListenForEvent("cannondirty", OnCannonDirty)
+		if self.classified == nil and inst.player_classified ~= nil then
+			self:AttachClassified(inst.player_classified)
+		end
+		inst:ListenForEvent("aimingcannonchanged", OnAimingCannonChanged)
 	end
 end)
+
+--------------------------------------------------------------------------
+--Client only
+
+function BoatCannonUser:AttachClassified(classified)
+	self.classified = classified
+	self.ondetachclassified = function() self:DetachClassified() end
+	self.inst:ListenForEvent("onremove", self.ondetachclassified, classified)
+end
+
+function BoatCannonUser:DetachClassified()
+	self.classified = nil
+	self.ondetachclassified = nil
+	self:OnCannonChanged(nil)
+end
 
 --------------------------------------------------------------------------
 --Client & Server
@@ -34,7 +52,7 @@ local function CalculateBaseAimAngle(inst, cannon)
 end
 
 function BoatCannonUser:GetCannon()
-	return self._cannon:value()
+	return self.classified ~= nil and self.classified.cannon:value() or nil
 end
 
 function BoatCannonUser:GetAimPos()
@@ -57,16 +75,19 @@ local function DoStartAiming(inst, self, cannon)
 	end
 
 	self.aim_range_fx = SpawnPrefab("cannon_aoe_range_fx")
-	self.aim_range_fx.entity:SetParent(cannon.entity)
+	self.aim_range_fx.Transform:SetPosition(cannon.Transform:GetWorldPosition())
+	self.aim_range_fx.Transform:SetRotation(cannon.Transform:GetRotation())
+	local platform = cannon.entity:GetPlatform()
+	if platform ~= nil then
+		platform:AddPlatformFollower(self.aim_range_fx)
+	end
 end
 
-function BoatCannonUser:OnCannonChanged()
+function BoatCannonUser:OnCannonChanged(cannon)
 	--Only show aiming for local player
 	if self.inst ~= ThePlayer then
 		return
 	end
-
-	local cannon = self._cannon:value()
 
 	if self.aimingcannon ~= nil then
 		if self.task ~= nil then
@@ -86,7 +107,7 @@ function BoatCannonUser:OnCannonChanged()
 		print("Start aiming", cannon)
 		--Delay to wait make sure cannon rotation gets set first
 		self.task = self.inst:DoTaskInTime(0, DoStartAiming, self, cannon)
-	else
+	elseif self.aimingcannon ~= nil then
 		print("Stop aiming cannon")
 	end
 
@@ -95,7 +116,7 @@ end
 
 --[[function BoatCannonUser:OnWallUpdate(dt)
 	-- Point towards the action point
-	local cannon = self._cannon:value()
+	local cannon = self.aimingcannon
 	local base_aim_angle = CalculateBaseAimAngle(self.inst, cannon)
 	--local base_aim_facing = Vector3(math.cos(-base_aim_angle * DEGREES), 0 , math.sin(-base_aim_angle * DEGREES))
 
@@ -116,14 +137,19 @@ end]]
 --------------------------------------------------------------------------
 --Master Sim
 
+function BoatCannonUser:SetClassified(classified)
+	assert(self.ismastersim)
+	self.classified = classified
+end
+
 function BoatCannonUser:SetCannon(cannon)
-	assert(TheWorld.ismastersim)
-	if self._cannon:value() == cannon then
+	assert(self.ismastersim)
+	local prev_cannon = self.classified.cannon:value()
+	if prev_cannon == cannon then
 		return
 	end
 
-	local prev_cannon = self._cannon:value()
-	self._cannon:set(cannon)
+	self.classified.cannon:set(cannon)
 
 	if prev_cannon ~= nil then
 		self.inst:RemoveEventCallback("onremove", self.cannon_remove_callback, prev_cannon)
@@ -147,11 +173,11 @@ function BoatCannonUser:SetCannon(cannon)
 		cannon.Transform:SetRotation(CalculateBaseAimAngle(self.inst, cannon))
 	end
 
-	self:OnCannonChanged()
+	self:OnCannonChanged(cannon)
 end
 
 function BoatCannonUser:CancelAimingStateInternal()
-	assert(TheWorld.ismastersim)
+	assert(self.ismastersim)
 	if self.inst.sg:HasStateTag("is_using_cannon") then
 		self.inst.sg:GoToState("aim_cannon_pst")
 	end

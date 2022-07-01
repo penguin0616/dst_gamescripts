@@ -255,6 +255,7 @@ local function shouldsteal(inst)
             if  not ent.components.inventoryitem or
                 not ent.components.inventoryitem.canbepickedup or
                 not ent.components.inventoryitem.cangoincontainer or
+                ent.components.sentientaxe or
                 ent.components.inventoryitem:IsHeld() then
                 table.remove(ents,i)
             end

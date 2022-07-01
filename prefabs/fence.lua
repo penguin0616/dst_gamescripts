@@ -276,7 +276,7 @@ end
 
 local function OnIsPathFindingDirty(inst)
     if inst._ispathfinding:value() then
-        if inst._pfpos == nil then
+        if inst._pfpos == nil and inst:GetCurrentPlatform() == nil then
             inst._pfpos = inst:GetPosition()
             TheWorld.Pathfinder:AddWall(inst._pfpos:Get())
         end

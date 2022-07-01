@@ -1341,6 +1341,29 @@ function wall_stone_clear_fn(inst)
 end
 
 --------------------------------------------------------------------------
+--[[ wall_wood skin functions ]]
+--------------------------------------------------------------------------
+function wall_wood_item_init_fn(inst, build_name)
+    inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
+    inst.AnimState:SetSkin(build_name, "wall_wood") --same hack is used here by the deployable code in player controller
+    inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
+end
+function wall_wood_item_clear_fn(inst)
+    inst.linked_skinname = nil
+    inst.AnimState:SetBuild("wall_wood")
+    inst.components.inventoryitem:ChangeImageName()
+end
+function wall_wood_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "wall_wood")
+end
+function wall_wood_clear_fn(inst)
+    inst.AnimState:SetBuild("wall_wood")
+end
+
+--------------------------------------------------------------------------
 --[[ Fence skin functions ]]
 --------------------------------------------------------------------------
 function fence_item_init_fn(inst, build_name)

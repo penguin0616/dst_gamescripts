@@ -17,16 +17,21 @@ local SourceModifierList = require("util/sourcemodifierlist")
 --------------------------------------------------------------------------
 
 local function processloot(inst,stash)
-    inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
-    table.insert(stash.loot,inst)
-    if inst.components.perishable then
-        inst.components.perishable:StopPerishing()
-    end
-    if inst.onstashed then
-        inst:onstashed()
+    if inst:HasTag("personal_possession") then
+        inst:Remove()
+    else
+        inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
+        table.insert(stash.loot,inst)
+        if inst.components.perishable then
+            inst.components.perishable:StopPerishing()
+        end
+        if inst.onstashed then
+            inst:onstashed()
+        end
+        
+        inst:RemoveFromScene()
     end
 end
-
 
 --DropEverything
 local function stashloot(inst)
@@ -35,21 +40,27 @@ local function stashloot(inst)
     if ps then
         local stash = ps:GetCurrentStash()
         if inst.components.inventoryitem then
-            if not inst:HasTag("personal_possession") then
-                processloot(inst,stash)
-                inst:RemoveFromScene()
-            else
-                inst:Remove()
-            end 
+            processloot(inst,stash)
         elseif inst.components.inventory then
-            for k,v in pairs(inst.components.inventory.itemslots) do
 
-                if not v:HasTag("personal_possession") then
-                    local item = inst.components.inventory:RemoveItemBySlot(k)
-                    processloot(item,stash)
-                else
-                    v:Remove()
-                end
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) then
+                local item = inst.components.inventory:DropItem(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY))
+                --local item = inst.components.inventory:Unequip(EQUIPSLOTS.BODY)
+                processloot(item,stash)
+            end
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                local item = inst.components.inventory:DropItem(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS))
+                --local item = inst.components.inventory:Unequip(EQUIPSLOTS.HANDS)
+                processloot(item,stash)
+            end
+            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) then
+                local item = inst.components.inventory:DropItem(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD))
+                --local item = inst.components.inventory:Unequip(EQUIPSLOTS.HEAD)
+                processloot(item,stash)
+            end
+
+            for k,v in pairs(inst.components.inventory.itemslots) do
+                processloot(v,stash)                
             end
         end
     end
@@ -736,7 +747,7 @@ function self:LoadPostPass(newents, savedata)
                 end
             end
             if v.captain then
-                local captain = newents[v.captain].entity
+                local captain = newents[v.captain] and newents[v.captain].entity or nil
                 
                 if captain then
                     shipdata.captain = captain

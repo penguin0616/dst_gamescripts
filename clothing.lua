@@ -1410,7 +1410,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "PIRATE", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper", "arm_upper_skin", "torso", "torso_pelvis", },
+		symbol_overrides = { "arm_lower", "arm_upper", "arm_upper_skin", "torso", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -8313,7 +8313,7 @@ CLOTHING =
 		symbol_overrides = { "leg", "tail", "torso_pelvis", },
 		symbol_overrides_powerup = { leg = "leg_powerup", nub = "nub_powerup", tail = "tail_powerup", torso_pelvis = "torso_pelvis_powerup", },
 		symbol_hides = { "skirt", "foot", },
-		rarity = "Classy",
+		rarity = "Spiffy",
 		rarity_modifier = "Woven",
 		has_nub = true,
 		release_group = 133,

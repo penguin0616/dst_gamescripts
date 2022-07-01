@@ -2093,6 +2093,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.player_classified = SpawnPrefab("player_classified")
         inst.player_classified.entity:SetParent(inst.entity)
 
+        inst.components.boatcannonuser:SetClassified(inst.player_classified)
+
         inst:ListenForEvent("death", ex_fns.OnPlayerDeath)
         if inst.ghostenabled then
             --Ghost events (Edit stategraph to push makeplayerghost instead of makeplayerdead to enter ghost state)
