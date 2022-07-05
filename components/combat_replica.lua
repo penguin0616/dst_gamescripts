@@ -385,7 +385,6 @@ function Combat:CanBeAttacked(attacker)
     if self.inst:HasTag("playerghost") or
         self.inst:HasTag("noattack") or
         self.inst:HasTag("flight") or
-        (attacker and attacker:HasTag("player") and self.inst:HasTag("noplayertarget") ) or
         self.inst:HasTag("invisible") then
         --Can't be attacked by anyone
         return false
@@ -396,6 +395,9 @@ function Combat:CanBeAttacked(attacker)
                 attacker:HasTag("birchnutroot") or
                 attacker:HasTag("birchnut")) then
             --Birchnut check
+            return false
+        elseif self.inst:HasTag("noplayertarget") and attacker:HasTag("player") then
+            --Can't be attacked by players
             return false
         elseif attacker ~= self.inst and self.inst:HasTag("player") then
             --Player target check

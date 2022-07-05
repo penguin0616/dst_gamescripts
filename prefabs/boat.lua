@@ -606,6 +606,13 @@ end
 local function ondeploy(inst, pt, deployer)
     local boat = SpawnPrefab(inst.deploy_product, inst.linked_skinname, inst.skin_id )
     if boat ~= nil then
+        if boat.skinname ~= nil and boat.components.hull ~= nil then
+            if boat.components.hull.plank.prefab == "walkingplank" then
+                local plank_skinname = "walkingplank" .. string.sub(boat.skinname, 5)
+                TheSim:ReskinEntity( boat.components.hull.plank.GUID, nil, plank_skinname, boat.skin_id )
+            end
+        end
+        
         boat.Physics:SetCollides(false)
         boat.Physics:Teleport(pt.x, 0, pt.z)
         boat.Physics:SetCollides(true)

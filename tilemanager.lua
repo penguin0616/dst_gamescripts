@@ -119,6 +119,8 @@ local function ValidateTurfDef(turf_def)
 
     turf_def.anim = turf_def.anim or turf_def.name
     turf_def.bank_build = turf_def.bank_build or "turf"
+    -- NOTES(JBK): Do not validate the following parameters these are for mods and they allow finer control over turf generation in turfs.lua.
+    -- bank_override, build_override, animzip_override, inv_override
 end
 
 allow_existing_GROUND_entry = false

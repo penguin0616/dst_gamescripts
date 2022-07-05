@@ -18,7 +18,7 @@ local function getanimthreshold(inst, percent)
 end
 
 local function onhealthchange(inst, old_percent, new_percent)
-    if inst.sg:HasStateTag("dead") then
+    if inst == nil or not inst:IsValid() or inst.sg:HasStateTag("dead") then
         return
     end
 

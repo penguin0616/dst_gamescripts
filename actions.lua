@@ -3523,8 +3523,9 @@ ACTIONS.BOAT_CANNON_LOAD_AMMO.fn = function(act)
             end)
         end
 
-        if ammo ~= nil and act.target.components.boatcannon:LoadAmmo(ammo, act.doer, false) then
-            act.doer.components.inventory:RemoveItem(ammo, false, true)
+        if ammo ~= nil and act.target.components.boatcannon:LoadAmmo(ammo, act.doer) then
+            local removeditem = act.doer.components.inventory:RemoveItem(ammo, false, true)
+            removeditem:Remove()
             act.doer.components.talker:Say(GetDescription(act.doer, act.target, "AMMOLOADED"))
 
             return true

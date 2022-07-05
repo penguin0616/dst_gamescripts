@@ -8253,7 +8253,7 @@ CLOTHING =
 	{
 		type = "legs",
 		skin_tags = { "PIRATE", "CLOTHING_LEGS", "CLOTHING", },
-		symbol_overrides = { "torso_pelvis", "foot", "leg", },
+		symbol_overrides = { "torso_pelvis", "foot", "leg", "tail", },
 		symbol_hides = { "skirt", },
 		rarity = "Spiffy",
 		rarity_modifier = "Woven",

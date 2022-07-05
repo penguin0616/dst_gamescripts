@@ -6134,6 +6134,13 @@ function Tune(overrides)
         MONKEY_CURSE_LEVEL_1 = 0,
         MONKEY_CURSE_LEVEL_2 = 2,
         MONKEY_CURSE_LEVEL_3 = 5,
+
+        MONKEY_TOKEN_COUNTS = {
+            LEVEL_1 = 0,
+            LEVEL_2 = 2,
+            LEVEL_3 = 5,
+            LEVEL_4 = 10,
+        },
     }
 
     TUNING_MODIFIERS = {}

@@ -3620,8 +3620,6 @@ local skin_assets =
 	Asset("PKGREF", "anim/dynamic/umbrella_parasol.dyn"),
 	Asset("DYNAMIC_ANIM", "anim/dynamic/umbrella_spider.zip"),
 	Asset("PKGREF", "anim/dynamic/umbrella_spider.dyn"),
-	Asset("DYNAMIC_ANIM", "anim/dynamic/walkingplank_wagstaff.zip"),
-	Asset("PKGREF", "anim/dynamic/walkingplank_wagstaff.dyn"),
 	Asset("DYNAMIC_ANIM", "anim/dynamic/wall_moonrock_victorian.zip"),
 	Asset("PKGREF", "anim/dynamic/wall_moonrock_victorian.dyn"),
 	Asset("DYNAMIC_ANIM", "anim/dynamic/wall_ruins_thulecite.zip"),

@@ -90,10 +90,12 @@ function BoatRing:GetBumperAtPoint(x, z)
 
         local segmentwidth = (boatsegments > 0 and 360 / boatsegments or 360) / RADIANS
         local testpos = Vector3(x, 0, z)
-        if IsWithinAngle(boatposition, forward, segmentwidth, testpos) then
+        if bumper:IsValid() and IsWithinAngle(boatposition, forward, segmentwidth, testpos) then
             return bumper
         end
     end
+
+    return nil
 end
 
 function BoatRing:OnDeath()

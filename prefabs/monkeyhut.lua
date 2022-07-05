@@ -70,6 +70,7 @@ local function give_child_gear(child, gear_prefab)
     gear:AddTag("personal_possession")
     child.components.inventory:GiveItem(gear)
     child.components.inventory:Equip(gear)
+
 end
 
 local function OnSpawned(inst, child)

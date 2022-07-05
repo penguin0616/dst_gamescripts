@@ -42,7 +42,6 @@ function HullHealth:GetDamageMult(cat)
 		for i,ent in ipairs(ents)do
 			if ent:GetCurrentPlatform() and ent:GetCurrentPlatform() == self.inst then
 				if ent:HasTag("boat_health_buffer") then
-					print("found defence")
 					if cat == "degradedamage" then
 						mult = 2
 						break

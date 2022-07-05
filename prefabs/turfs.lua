@@ -25,8 +25,8 @@ local function make_turf(tile, data)
 
         MakeInventoryPhysics(inst)
 
-        inst.AnimState:SetBank(data.bank_build)
-        inst.AnimState:SetBuild(data.bank_build)
+        inst.AnimState:SetBank(data.bank_override or data.bank_build)
+        inst.AnimState:SetBuild(data.build_override or data.bank_build)
         inst.AnimState:PlayAnimation(data.anim)
 
         inst:AddTag("groundtile")
@@ -65,8 +65,8 @@ local function make_turf(tile, data)
 
     local assets =
     {
-        Asset("ANIM", "anim/"..data.bank_build..".zip"),
-        Asset("INV_IMAGE", "turf_"..data.name)
+        Asset("ANIM", "anim/"..(data.animzip_override or data.bank_build)..".zip"),
+        Asset("INV_IMAGE", "turf_"..(data.invicon_override or data.name))
     }
     return Prefab("turf_"..data.name, fn, assets, prefabs)
 end

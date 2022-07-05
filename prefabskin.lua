@@ -1167,6 +1167,21 @@ function boat_clear_fn(inst)
     inst.AnimState:SetBuild("boat_test")
 end
 
+
+--------------------------------------------------------------------------
+--[[ Plank skin functions ]]
+--------------------------------------------------------------------------
+function walkingplank_init_fn(inst, build_name)
+    if inst.components.placer == nil and not TheWorld.ismastersim then
+        return
+    end
+    inst.AnimState:SetSkin(build_name, "boat_plank_build")
+end
+function walkingplank_clear_fn(inst, build_name)
+    inst.AnimState:SetBuild("boat_plank_build")
+end
+
+
 --------------------------------------------------------------------------
 --[[ steeringwheel skin functions ]]
 --------------------------------------------------------------------------
@@ -1409,20 +1424,6 @@ end
 function fence_gate_clear_fn(inst)
     inst.dooranim.skin_id = nil
     inst.dooranim.AnimState:SetBuild("fence_gate")
-end
-
-
---------------------------------------------------------------------------
---[[ Plank skin functions ]]
---------------------------------------------------------------------------
-function walkingplank_init_fn(inst, build_name)
-    if inst.components.placer == nil and not TheWorld.ismastersim then
-        return
-    end
-    inst.AnimState:SetSkin(build_name, "boat_plank_build")
-end
-function walkingplank_clear_fn(inst, build_name)
-    inst.AnimState:SetBuild("boat_plank_build")
 end
 
 --------------------------------------------------------------------------

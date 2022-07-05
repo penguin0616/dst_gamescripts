@@ -3560,8 +3560,8 @@ MISC_ITEMS =
 		display_atlas = "images/iap_images_wagstaffboat_items.xml",
 		display_tex = "wagstaffboat_items.tex",
 		box_build = "box_shop_plain",
-		display_items = {  "mast_malbatross_wagstaff", "walkingplank_wagstaff", "boat_wagstaff", "steeringwheel_wagstaff", },
-		output_items = {  "mast_malbatross_wagstaff", "walkingplank_wagstaff", "boat_wagstaff", "steeringwheel_wagstaff", },
+		display_items = {  "mast_malbatross_wagstaff", "boat_wagstaff", "steeringwheel_wagstaff", },
+		output_items = {  "mast_malbatross_wagstaff", "boat_wagstaff", "steeringwheel_wagstaff", },
 		release_group = 133,
 	},
 	pack_walter_deluxe =

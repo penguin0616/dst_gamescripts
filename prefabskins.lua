@@ -1031,6 +1031,7 @@ PREFAB_SKINS = {
 	},
 	walkingplank =
 	{
+		"walkingplank_nautical",
 		"walkingplank_wagstaff",
 	},
 	wall_moonrock =

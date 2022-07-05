@@ -3438,6 +3438,7 @@ STRINGS =
         OCEAN_TRAWLER_KIT = "Ocean Trawler Kit",
 
         DOCK_KIT = "Dock Kit",
+        DOCK_WOODPOSTS = "Dock Piling",
         DOCK_WOODPOSTS_ITEM = "Dock Piling",
 
         MONKEYHUT = "Monkey Hut",

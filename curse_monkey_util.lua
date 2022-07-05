@@ -90,7 +90,7 @@ local function docurse(owner, numitems)
         owner:AddChild(fx)
     end
 
-    if numitems >= TUNING.STACK_SIZE_LARGEITEM and not owner:HasTag("wonkey") then
+    if numitems >= TUNING.MONKEY_TOKEN_COUNTS.LEVEL_4 and not owner:HasTag("wonkey") then
         if not owner.trycursetask then
             owner.trycursetask = owner:DoPeriodicTask(0.1, function()
                     if owner.components.rider ~= nil and owner.components.rider:IsRiding() then
@@ -109,20 +109,20 @@ local function docurse(owner, numitems)
             owner.components.timer:StartTimer("monkeycursehit", 1)
             owner.sg:GoToState("hit")
         end
-        if numitems > 0 and not owner.monkeyfeet then
+        if numitems > TUNING.MONKEY_TOKEN_COUNTS.LEVEL_1 and not owner.monkeyfeet then
 
             owner:DoTaskInTime(1, function() if owner.prefab ~= "wonkey"  then owner.components.talker:Say(GetString(owner, "ANNOUNCE_MONKEY_CURSE_1")) end end)
             owner.monkeyfeet = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_1")
             owner:AddTag("MONKEY_CURSE_1")
         end
-        if numitems > 2 and not owner.monkeyhands then
+        if numitems > TUNING.MONKEY_TOKEN_COUNTS.LEVEL_2 and not owner.monkeyhands then
             owner.monkeyhands = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_2")
             owner:RemoveTag("MONKEY_CURSE_1")
             owner:AddTag("MONKEY_CURSE_2")
         end
-        if numitems > 5 and not owner.monkeytail then
+        if numitems > TUNING.MONKEY_TOKEN_COUNTS.LEVEL_3 and not owner.monkeytail then
             owner.monkeytail = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_3")
             owner:RemoveTag("MONKEY_CURSE_2")

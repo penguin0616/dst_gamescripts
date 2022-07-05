@@ -371,6 +371,10 @@ function EntityScript:RemoveFromScene()
 end
 
 function EntityScript:ReturnToScene()
+    if not self:IsValid() then
+        print("[ERROR] Calling ReturnToScene on an invalid entity!", self.prefab) -- Keep this for debug logs to come.
+    end
+
     self.entity:RemoveTag("INLIMBO")
     self.entity:SetInLimbo(false)
     self.inlimbo = false

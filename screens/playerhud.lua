@@ -985,6 +985,14 @@ function PlayerHud:OnControl(control, down)
         return true
     elseif not down then
         if control == CONTROL_MAP then
+            if not self:IsMapScreenOpen() then
+                if self:IsCraftingOpen() then
+                    self:CloseCrafting()
+                end
+                if self:IsControllerInventoryOpen() then
+                    self:CloseControllerInventory()
+                end
+            end
             self.controls:ToggleMap()
             return true
         elseif control == CONTROL_CANCEL and TheInput:ControllerAttached() then

@@ -64,7 +64,7 @@ function BoatCannon:IsAmmoLoaded()
 	return self.inst:HasTag("ammoloaded")
 end
 
-function BoatCannon:LoadAmmo(ammo, giver, removeammo)
+function BoatCannon:LoadAmmo(ammo, giver)
 
 	if ammo == nil or not ammo:HasTag("boatcannon_ammo") or not ammo.projectileprefab then
 		return false
@@ -80,9 +80,6 @@ function BoatCannon:LoadAmmo(ammo, giver, removeammo)
 		giver.components.inventory:ReturnActiveActionItem(item)
 	end]]
 
-	if removeammo then
-		ammo:Remove()
-	end
 	return true
 end
 

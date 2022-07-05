@@ -16,57 +16,52 @@ local SourceModifierList = require("util/sourcemodifierlist")
 --[[ Constants ]]
 --------------------------------------------------------------------------
 
-local function processloot(inst,stash)
+local function processloot(inst, stash)
     if inst:HasTag("personal_possession") then
         inst:Remove()
-    else
-        inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
-        table.insert(stash.loot,inst)
-        if inst.components.perishable then
-            inst.components.perishable:StopPerishing()
-        end
-        if inst.onstashed then
-            inst:onstashed()
-        end
-        
-        inst:RemoveFromScene()
+        return
     end
+
+    -- Pirate Stash Crash Debugging
+    print("Stashing:", inst, inst.prefab, inst:IsValid())
+    -- Pirate Stash Crash Debugging
+
+    inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
+    table.insert(stash.loot, inst)
+    if inst.components.perishable then
+        inst.components.perishable:StopPerishing()
+    end
+
+    if inst.onstashed then
+        inst:onstashed()
+    end
+
+    inst:RemoveFromScene()
 end
 
---DropEverything
 local function stashloot(inst)
-
     local ps = TheWorld.components.piratespawner
-    if ps then
-        local stash = ps:GetCurrentStash()
-        if inst.components.inventoryitem then
-            processloot(inst,stash)
-        elseif inst.components.inventory then
+    if not ps then
+        return
+    end
 
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) then
-                local item = inst.components.inventory:DropItem(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY))
-                --local item = inst.components.inventory:Unequip(EQUIPSLOTS.BODY)
-                processloot(item,stash)
-            end
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                local item = inst.components.inventory:DropItem(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS))
-                --local item = inst.components.inventory:Unequip(EQUIPSLOTS.HANDS)
-                processloot(item,stash)
-            end
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) then
-                local item = inst.components.inventory:DropItem(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD))
-                --local item = inst.components.inventory:Unequip(EQUIPSLOTS.HEAD)
-                processloot(item,stash)
-            end
-
-            for k,v in pairs(inst.components.inventory.itemslots) do
-                processloot(v,stash)                
+    local stash = ps:GetCurrentStash()
+    if inst.components.inventoryitem then
+        processloot(inst,stash)
+    elseif inst.components.inventory then
+        local function checkitem(item)
+            if item and item:HasTag("personal_possession") then
+                item:Remove()
+            elseif item then 
+                inst.components.inventory:DropItem(item, true)
+                processloot(item, stash)
             end
         end
+        inst.components.inventory:ForEachItem(checkitem)
     end
 end
 
-local function hitbycannon(boat,data)
+local function hitbycannon(boat, data)
     if data.cause == "cannonball" then
         if boat.components.boatcrew then
             boat.components.boatcrew.flee = true
@@ -77,6 +72,8 @@ local function hitbycannon(boat,data)
     end
 end
 
+local CANT_TAGS = {"INLIMBO"}
+
 local function setpirateboat(boat)
 
     boat:AddComponent("boatcrew")
@@ -85,27 +82,32 @@ local function setpirateboat(boat)
     boat.components.vanish_on_sleep.vanishfn = function(inst)
         --local ents = boat.components.walkableplatform:GetEntitiesOnPlatform()
         local x,y,z = inst.Transform:GetWorldPosition()
-        -- STASH PASS
-        local ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius)
-        for i=#ents,1,-1 do
-            if ents[i].components.container then
-                ents[i].components.container:DropEverything(Vector3(x,y,z))
+
+        -- Drop items out of containers first.
+        local ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius, nil, CANT_TAGS)
+        for _, ent in ipairs(ents) do
+            --print("Drop:", ent)
+            if ent.components.container then
+                ent.components.container:DropEverything(Vector3(x,y,z))
             end
         end
 
-        local ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius)
-        for i=#ents,1,-1 do
-            stashloot(ents[i])
+        -- Try to stash what can be stashed.
+        ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius, nil, CANT_TAGS)
+        for _, ent in ipairs(ents) do
+            --print("Stash:", ent)
+            stashloot(ent)
         end
 
-        ents = nil
-        -- REMOVE EVERYTHING
+        -- Remove anything that's left.
         ents = TheSim:FindEntities(x,y,z, inst.components.walkableplatform.platform_radius)
-        for i=#ents,1,-1 do
-            if ents[i].health then 
-                ents[i].health:Kill()
+        for _, ent in ipairs(ents) do
+            if ent.components.health then
+                --print("Kill:", ent)
+                ent.components.health:Kill()
             else
-                ents[i]:Remove()
+                --print("Remove:", ent)
+                ent:Remove()
             end
         end
     end
@@ -363,7 +365,7 @@ local function GetSpawnPoint(platform)
 end
 
 local function SpawnPiratesForPlayer(player)
-    print("SPAWNING PIRATED FOR PLAYER",player.GUID)
+    --print("SPAWNING PIRATED FOR PLAYER",player.GUID)
 
     local spawnedPirates = false
     local boat =  player:GetCurrentPlatform()

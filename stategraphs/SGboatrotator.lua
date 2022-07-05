@@ -30,7 +30,7 @@ local states =
         events =
         {
             EventHandler("animover", function(inst)
-                if inst.sg.mem.direction ~= 0 then
+                if inst.sg.mem.direction and inst.sg.mem.direction ~= 0 then
                     inst.sg:GoToState("on")
                 else
                     inst.sg:GoToState("idle")
