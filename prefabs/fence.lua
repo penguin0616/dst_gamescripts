@@ -95,9 +95,8 @@ local function SetIsSwingRight(inst, is_swing_right)
     OnDoorStateDirty(inst)
 end
 
-local function FindPairedDoor(inst)
+local function GetPairedDoor(inst, rot)
     local x, y, z = inst.Transform:GetWorldPosition()
-    local rot = inst.Transform:GetRotation()
 
     local swingright = IsSwingRight(inst)
     local search_dist = IsNarrow(inst) and 1 or 1.4
@@ -108,8 +107,24 @@ local function FindPairedDoor(inst)
     search_x = x + (swingright and search_x or -search_x)
     search_y = z + (swingright and -search_y or search_y)
 
-    local other_door = TheSim:FindEntities(search_x,0,search_y, 0.25, FINDDOOR_MUST_TAGS)[1]
+    local paired_door = TheSim:FindEntities(search_x,0,search_y, 0.5, FINDDOOR_MUST_TAGS)[1]
+    return paired_door
+end
+
+local function FindPairedDoor(inst)
+
+    local rot = inst.Transform:GetRotation()
+    local other_door = GetPairedDoor(inst, rot)
+
+    -- On a boat and didn't find anything? Try again, but taking boat rotation into account
+    local boat = inst:GetCurrentPlatform()
+    if other_door == nil and boat and boat:HasTag("boat") then
+        local boat_rotation = boat.Transform:GetRotation()
+        other_door = GetPairedDoor(inst, rot - boat_rotation)
+    end
+
     if other_door then
+        local swingright = IsSwingRight(inst)
         local opposite_swing = swingright ~= IsSwingRight(other_door)
         local opposite_rotation = inst.Transform:GetRotation() ~= other_door.Transform:GetRotation()
         return (opposite_swing ~= opposite_rotation) and other_door or nil
@@ -130,7 +145,7 @@ local function ApplyDoorOffset(inst)
 end
 
 local function SetOrientation(inst, rotation)
-    rotation = CalcFacingAngle(rotation)
+    --rotation = CalcFacingAngle(rotation)
 
     inst.Transform:SetRotation(rotation)
 
@@ -437,13 +452,16 @@ local function onload(inst, data)
         end
 
         local rotation = 0
+        inst.loaded_rotation_enum = 0
         if data.rotation ~= nil then
             -- very old style of save data. updates save data to v2 format, safe to remove this when we go out of the beta branch
             rotation = data.rotation - 90
+            inst.loaded_rotation_enum = CalcRotationEnum(rotation)
         elseif data.rot ~= nil then
             rotation = data.rot*45
+            inst.loaded_rotation_enum = data.rot
         end
-        SetOrientation(inst, rotation)
+        --SetOrientation(inst, rotation)
 
         if data.isopen then
             OpenDoor(inst, true)
@@ -451,6 +469,30 @@ local function onload(inst, data)
             GetAnimState(inst):PlayAnimation(GetAnimName(inst, "idle"))
         end
     end
+end
+
+local function onloadpostpass(inst)
+
+    inst:DoTaskInTime(0, function(inst)
+        -- If fences are placed on rotated boats, we need to account for the boat's rotation
+        local boat = inst:GetCurrentPlatform()
+        if boat and boat:HasTag("boat") then
+            local fence_rotation = inst.Transform:GetRotation()
+            local boat_rotation = boat.Transform:GetRotation()
+
+            if fence_rotation < 0 then
+                fence_rotation = 360 + fence_rotation
+            end
+
+            local fence_rotation_enum = inst.loaded_rotation_enum
+            local boat_rot_enum = CalcRotationEnum(boat_rotation)
+
+            local base_rotation_enum = fence_rotation_enum - boat_rot_enum
+            SetOrientation(inst, base_rotation_enum * 45 + boat_rotation)
+
+            inst.loaded_rotation_enum = nil
+        end
+    end)
 end
 
 local function MakeWall(name, anims, isdoor, klaussackkeyid)
@@ -588,6 +630,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
 
         inst.OnSave = onsave
         inst.OnLoad = onload
+        inst.OnLoadPostPass = onloadpostpass
 
         return inst
     end

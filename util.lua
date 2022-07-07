@@ -1447,14 +1447,12 @@ function GetCircleEdgeSnapTransform(segments, radius, base_pt, pt, angle)
     return snap_point, snap_angle
 end
 
-function SnapToBoatEdge(inst, override_pt)
-    local pt = override_pt or inst:GetPosition()
-    local boat = TheWorld.Map:GetPlatformAtPoint(pt.x,pt.z)
-
+function SnapToBoatEdge(inst, boat, override_pt)
     if boat == nil then
         return
     end
 
+    local pt = override_pt or inst:GetPosition()
     local boatpos = boat:GetPosition()
     local radius = boat.components.boatringdata and boat.components.boatringdata:GetRadius() - 0.1 or 0
     local boatsegments = boat.components.boatringdata and boat.components.boatringdata:GetNumSegments() or 0

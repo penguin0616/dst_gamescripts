@@ -1372,6 +1372,10 @@ function Inventory:DropEverythingWithTag(tag)
 end
 
 function Inventory:DropEverything(ondeath, keepequip)
+    if self.inst:HasTag("player") and not GetGameModeProperty("ghost_enabled") and not GetGameModeProperty("revivable_corpse") then
+        -- NOTES(JBK): This is for items like Wanda's watches that normally stick inside the inventory but Wilderness mode will force the player to reroll so drop everything.
+        ondeath = false
+    end
     if self.activeitem ~= nil and not (ondeath and self.activeitem.components.inventoryitem.keepondeath) then
         self:DropItem(self.activeitem)
         self:SetActiveItem(nil)

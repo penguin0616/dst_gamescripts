@@ -23,7 +23,7 @@ function Cursable:ApplyCurse(item,curse)
 	item:AddTag("applied_curse")
 end
 
-function Cursable:RemoveCurse(curse, numofitems)
+function Cursable:RemoveCurse(curse, numofitems, dropitems)
 
 	local tag = nil
 	if curse == "MONKEY" then
@@ -37,6 +37,11 @@ function Cursable:RemoveCurse(curse, numofitems)
 			local item = self.inst.components.inventory:FindItem(finditem)
 
 			if item then
+				if dropitems then
+					local newcurse = SpawnPrefab(item.prefab)
+					newcurse.Transform:SetPosition(self.inst.Transform:GetWorldPosition())
+					newcurse.components.inventoryitem:OnDropped(true)
+				end
 				self.inst.components.inventory:ConsumeByName(item.prefab, 1)
 			end
 		end
@@ -113,6 +118,15 @@ function Cursable:ForceOntoOwner(item)
         	pos = Vector3(item.Transform:GetWorldPosition())
         end
      	self.inst.components.inventory:GiveItem(item, nil, pos)
+    end
+end
+
+function Cursable:Died()
+    local curses =  self.inst.components.inventory:FindItems(function(thing) return thing.components.curseditem end)
+    for i, curse in ipairs(curses) do
+        local cursedtype = curse.components.curseditem.curse
+        local num = curse.components.stackable and curse.components.stackable:StackSize() or 1
+        self:RemoveCurse(cursedtype,num,true)
     end
 end
 

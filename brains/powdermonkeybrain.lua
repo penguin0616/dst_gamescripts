@@ -555,7 +555,7 @@ local function stashhomeloot(inst)
     end
 
     local item = inst.components.inventory:FindItem(function(item) 
-            return not item:HasTag("personal_possession") and item.prefab ~= "cave_banana" and item.prefab ~= "cave_banana"
+            return not item:HasTag("personal_possession") and item.prefab ~= "cave_banana" and item.prefab ~= "cave_banana_cooked"
         end)
     if item then
         return BufferedAction(inst, home, ACTIONS.GOHOME)

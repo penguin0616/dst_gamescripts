@@ -35,7 +35,7 @@ local PlayerProfile = Class(function(self)
         self.persistdata.CraftingMenuNumPinPages = 3
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
-		self.persistdata.minimapzoomsensitivity = 20
+		self.persistdata.minimapzoomsensitivity = 15
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -84,7 +84,7 @@ function PlayerProfile:Reset()
         self.persistdata.CraftingMenuNumPinPages = 3
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
-		self.persistdata.minimapzoomsensitivity = 20
+		self.persistdata.minimapzoomsensitivity = 15
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -134,7 +134,7 @@ function PlayerProfile:SoftReset()
         self.persistdata.CraftingMenuNumPinPages = 3
         self.persistdata.craftingmenusensitivity = 12
         self.persistdata.inventorysensitivity = 16
-		self.persistdata.minimapzoomsensitivity = 20
+		self.persistdata.minimapzoomsensitivity = 15
         self.persistdata.screenflash = 1
         self.persistdata.vibration = true
         self.persistdata.showpassword = false
@@ -627,9 +627,9 @@ end
 
 function PlayerProfile:GetMiniMapZoomSensitivity()
  	if USE_SETTINGS_FILE then
-		return tonumber(TheSim:GetSetting("misc", "minimapzoomsensitivity") or 20)
+		return tonumber(TheSim:GetSetting("misc", "minimapzoomsensitivity") or 15)
 	else
-		return tonumber(self:GetValue("minimapzoomsensitivity") or 20)
+		return tonumber(self:GetValue("minimapzoomsensitivity") or 15)
 	end
 end
 
@@ -1503,7 +1503,7 @@ function PlayerProfile:Set(str, callback, minimal_load)
                 self.persistdata.CraftingMenuNumPinPages = 3
 				self.persistdata.craftingmenusensitivity = 12
 				self.persistdata.inventorysensitivity = 16
-				self.persistdata.minimapzoomsensitivity = 20
+				self.persistdata.minimapzoomsensitivity = 15
                 self.persistdata.vibration = true
                 self.persistdata.showpassword = false
                 self.persistdata.movementprediction = true

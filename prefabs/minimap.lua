@@ -49,9 +49,9 @@ local function fn()
         inst.MiniMap:AddRenderLayer(
             MapLayerManager:CreateRenderLayer(
                 tile_id,
-                layer_properties.atlas,
-                layer_properties.texture_name,
-                layer_properties.noise_texture
+                layer_properties.atlas or resolvefilepath(GroundAtlas(layer_properties.name)),
+                layer_properties.texture_name or resolvefilepath(GroundImage(layer_properties.name)),
+                resolvefilepath(layer_properties.noise_texture)
             )
         )
     end

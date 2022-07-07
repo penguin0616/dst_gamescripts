@@ -1846,7 +1846,7 @@ function OptionsScreen:_BuildAdvancedSettings()
 			self:UpdateMenu()
 		end
 
-	self.minimapzoomsensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMSENSITIVITY, 5, 60, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMSENSITIVITY)
+	self.minimapzoomsensitivitySpinner = CreateNumericSpinner(STRINGS.UI.OPTIONS.MINIMAPZOOMSENSITIVITY, 5, 30, STRINGS.UI.OPTIONS.TOOLTIPS.MINIMAPZOOMSENSITIVITY)
 	self.minimapzoomsensitivitySpinner.OnChanged =
 		function( _, data )
 			self.working.minimapzoomsensitivity = data
@@ -2377,7 +2377,7 @@ function OptionsScreen:InitializeSpinners(first)
 	self.craftingmenunumpinpagesSpinner:SetSelectedIndex( self.working.craftingmenunumpinpages or 3)
 	self.craftingmenusensitivitySpinner:SetSelectedIndex( self.working.craftingmenusensitivity or 12)
 	self.inventorysensitivitySpinner:SetSelectedIndex( self.working.inventorysensitivity or 16)
-	self.minimapzoomsensitivitySpinner:SetSelectedIndex( self.working.minimapzoomsensitivity or 20)
+	self.minimapzoomsensitivitySpinner:SetSelectedIndex( self.working.minimapzoomsensitivity or 15)
 	self.screenFlashSpinner:SetSelectedIndex( FindEnableScreenFlashOptionsIndex( self.working.screenflash ) )
 	self.vibrationSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.vibration ) )
 	self.passwordSpinner:SetSelectedIndex( EnabledOptionsIndex( self.working.showpassword ) )

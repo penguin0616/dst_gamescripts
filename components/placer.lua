@@ -63,7 +63,7 @@ function Placer:OnUpdate(dt)
             local boat = GetClosest(self.inst, boats)
 
             if boat then
-                SnapToBoatEdge(self.inst, pt)
+                SnapToBoatEdge(self.inst, boat, pt)
                 if self.inst:GetDistanceSqToPoint(pt) > 1 then
                     hide_if_cannot_build = true
                 end
@@ -94,7 +94,7 @@ function Placer:OnUpdate(dt)
         local x, y, z = ThePlayer.entity:LocalToWorldSpace(self.offset, 0, 0)
         local boat = ThePlayer:GetCurrentPlatform()
         if boat and boat:HasTag("boat") then
-            SnapToBoatEdge(self.inst, Vector3(x, 0, z))
+            SnapToBoatEdge(self.inst, boat, Vector3(x, 0, z))
         else
             self.inst.Transform:SetPosition(x, 0, z)
         end

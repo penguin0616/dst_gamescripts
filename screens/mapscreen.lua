@@ -34,7 +34,9 @@ local MapScreen = Class(Screen, function(self, owner)
 
     self.zoom_to_cursor = Profile:IsMinimapZoomCursorFollowing()
     self.zoom_target = self.minimap:GetZoom()
-    self.zoomsensitivity = 20
+    self.zoom_old = self.zoom_target
+    self.zoom_target_time = 0
+    self.zoomsensitivity = 15
 
     SetAutopaused(true)
 end)
@@ -119,10 +121,21 @@ function MapScreen:OnUpdate(dt)
     -- NOTES(JBK): In order to change digital to analog without causing issues engine side with prior binds we emulate it.
     local indir = TheInput:IsControlPressed(CONTROL_MAP_ZOOM_IN) and -1 or 0
     local outdir = TheInput:IsControlPressed(CONTROL_MAP_ZOOM_OUT) and 1 or 0
-    self.zoom_target = math.clamp(self.zoom_target + self.zoomsensitivity * (indir + outdir) * dt, ZOOM_CLAMP_MIN, ZOOM_CLAMP_MAX)
-    local zoom_delta = self.zoom_target - self.minimap:GetZoom()
-    if math.abs(zoom_delta) > 0.1 then -- Floats.
-        zoom_delta = zoom_delta * 0.4 -- Arbitrarily picked for the decay time, done here after the threshold check.
+    local inoutdir = indir + outdir
+    local TIMETOZOOM = 0.1
+    if inoutdir ~= 0 then
+        self.zoom_target_time = TIMETOZOOM -- How much time remaining to get to the desired target.
+        local exponential_factor = 1 / 60
+        if not TheInput:ControllerAttached() then -- Controllers don't need this extra speed boosts with how digital inputs are handled.
+            exponential_factor = exponential_factor * self.zoom_target
+        end
+        self.zoom_target = math.clamp(self.zoom_target + self.zoomsensitivity * inoutdir * exponential_factor, ZOOM_CLAMP_MIN, ZOOM_CLAMP_MAX)
+        self.zoom_old = self.minimap:GetZoom()
+    end
+    if self.zoom_target_time > 0 then
+        self.zoom_target_time = math.max(0, self.zoom_target_time - dt)
+        local zoom_desired = Lerp(self.zoom_old, self.zoom_target, 1.0 - self.zoom_target_time / TIMETOZOOM)
+        local zoom_delta = zoom_desired - self.minimap:GetZoom()
         if zoom_delta < 0 then
             self:DoZoomIn(zoom_delta)
         elseif zoom_delta > 0 then

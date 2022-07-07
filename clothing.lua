@@ -3850,8 +3850,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "PIRATE", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper", "torso", },
-		symbol_in_base_hides = { "arm_upper_skin", },
+		symbol_overrides = { "arm_lower", "arm_upper", "arm_upper_skin", "torso", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -8259,7 +8258,6 @@ CLOTHING =
 		rarity_modifier = "Woven",
 		legs_cuff_size = 3,
 		feet_cuff_size = 3,
-		has_leg_boot = true,
 		release_group = 133,
 	},
 	legs_wortox_survivor =

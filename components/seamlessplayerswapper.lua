@@ -60,7 +60,9 @@ function SeamlessPlayerSwapper:OnSeamlessCharacterSwap(old_player)
 	self:PostTransformSetup()
 	new_player:PushEvent("ms_playerseamlessswaped") -- Add post fixup stuff special character traits normally would get for OnNewSpawn but without items.
 
-	if PLAYER_SWAP_TRANSITIONS[new_player.prefab] then
+	if new_player.components.health:IsDead() then
+		new_player.sg:GoToState("seamlessplayerswap_death")
+	elseif PLAYER_SWAP_TRANSITIONS[new_player.prefab] then
 		new_player.sg:GoToState(PLAYER_SWAP_TRANSITIONS[new_player.prefab].transfrom_state)
 	elseif PLAYER_SWAP_TRANSITIONS[old_player.prefab] then
 		new_player.sg:GoToState(PLAYER_SWAP_TRANSITIONS[old_player.prefab].restore_state)

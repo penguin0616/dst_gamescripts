@@ -32,6 +32,17 @@ local function stash_dug(inst)
     end)
 end
 
+local function stashloot(inst, item)
+    item.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    item:RemoveFromScene()
+    table.insert(inst.loot,item)
+    if item.components.perishable then
+        item.components.perishable:StopPerishing()
+    end
+    if inst.onstashed then
+        inst:onstashed()
+    end
+end
 
 local function OnSave(inst, data)
     data.loot = {}
@@ -46,12 +57,7 @@ local function OnLoadPostPass(inst, ents, data)
     if data and data.loot then
         for i,k in ipairs(data.loot) do
             if ents[k] and ents[k].entity then
-                ents[k].entity.Transform:SetPosition(inst.Transform:GetWorldPosition())
-                ents[k].entity:RemoveFromScene()
-                table.insert(inst.loot,ents[k].entity)
-                if ents[k].entity.components.perishable then
-                    ents[k].entity.components.perishable:StopPerishing()
-                end
+                stashloot(inst, ents[k].entity)
             end
         end
     end
@@ -89,6 +95,7 @@ local function fn()
     end)
 
     inst.loot = {}
+    inst.stashloot = stashloot
   
     inst.OnSave = OnSave
     inst.OnLoadPostPass = OnLoadPostPass

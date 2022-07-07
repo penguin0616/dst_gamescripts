@@ -21,22 +21,9 @@ local function processloot(inst, stash)
         inst:Remove()
         return
     end
-
     -- Pirate Stash Crash Debugging
     print("Stashing:", inst, inst.prefab, inst:IsValid())
-    -- Pirate Stash Crash Debugging
-
-    inst.Transform:SetPosition(stash.Transform:GetWorldPosition())
-    table.insert(stash.loot, inst)
-    if inst.components.perishable then
-        inst.components.perishable:StopPerishing()
-    end
-
-    if inst.onstashed then
-        inst:onstashed()
-    end
-
-    inst:RemoveFromScene()
+    stash:stashloot(inst)
 end
 
 local function stashloot(inst)
@@ -471,9 +458,7 @@ local function generateloot(stash)
     
     local function additem(name)
         local item = SpawnPrefab(name)
-        item.Transform:SetPosition(stash.Transform:GetWorldPosition())
-        item:RemoveFromScene()
-        table.insert(stash.loot,item)
+        stashloot(item)
     end
 
     local day = GetAveragePlayerAgeInDays()

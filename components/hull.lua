@@ -52,12 +52,6 @@ function Hull:OnDeployed()
     self.plank:DoTaskInTime(1.25, function() self.plank:Show() self.plank.AnimState:PlayAnimation("plank_place") end)
 end
 
-function Hull:ApplyPlankSkinData(data)
-	if data.plank_skinname ~= nil then
-		TheSim:ReskinEntity( self.plank.GUID, nil, data.plank_skinname, data.plank_skin_name )
-	end
-end
-
 function Hull:OnSave()
 	local save_data = {}
 	if self.plank ~= nil then
@@ -67,7 +61,9 @@ function Hull:OnSave()
 end
 
 function Hull:OnLoad(data)	
-    self:ApplyPlankSkinData(data)
+    if data.plank_skinname ~= nil then
+		TheSim:ReskinEntity( self.plank.GUID, nil, data.plank_skinname, data.plank_skin_name )
+	end
 end
 
 return Hull

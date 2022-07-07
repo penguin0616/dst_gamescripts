@@ -924,7 +924,10 @@ end
 
 --------------------------------------------------------------------------
 
-fns.FinishSeamlessPlayerSwap = function(inst)
+fns.FinishSeamlessPlayerSwap = function(parent)
+    local inst = parent.player_classified
+    inst:RemoveEventCallback("finishseamlessplayerswap", fns.FinishSeamlessPlayerSwap, parent)
+
     OnStormLevelDirty(inst)
     OnGiftsDirty(inst)
     fns.OnYotbSkinDirty(inst)

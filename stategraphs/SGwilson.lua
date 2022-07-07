@@ -497,7 +497,7 @@ local actionhandlers =
             return inst:HasTag("pyromaniac") and "domediumaction" or "dolongaction"
         end),
     ActionHandler(ACTIONS.TRAVEL, "doshortaction"),
-    ActionHandler(ACTIONS.LIGHT, "give"),
+    ActionHandler(ACTIONS.LIGHT, "catchonfire"),
     ActionHandler(ACTIONS.UNLOCK, "give"),
     ActionHandler(ACTIONS.USEKLAUSSACKKEY,
         function(inst)
@@ -2393,12 +2393,42 @@ local states =
                         inst.AnimState:Hide("swap_arm_carry")
                     elseif inst.components.revivablecorpse ~= nil then
                         inst.sg:GoToState("corpse")
+                    elseif inst.ghostenabled then
+                        inst.components.cursable:Died()
+                        if inst:HasTag("wonkey") then
+                            inst:ChangeFromMonkey()
+                        else
+                            inst:PushEvent("makeplayerghost", { skeleton = TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition()) }) -- if we are not on valid ground then don't drop a skeleton
+                        end
                     else
-                        inst:PushEvent(inst.ghostenabled and "makeplayerghost" or "playerdied", { skeleton = TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition()) }) -- if we are not on valid ground then don't drop a skeleton
+                        inst:PushEvent("playerdied", { skeleton = TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition()) }) -- if we are not on valid ground then don't drop a skeleton
                     end
                 end
             end),
         },
+    },
+
+    State{
+        name = "seamlessplayerswap_death",
+        tags = { "busy", "dead", "noattack", "nopredict", "nomorph", "nodangle" },
+
+        onenter = function(inst)
+            if inst.components.revivablecorpse ~= nil then
+                inst.sg:GoToState("corpse")
+            elseif inst.ghostenabled then
+                inst:PushEvent("makeplayerghost", { skeleton = TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition()) }) -- if we are not on valid ground then don't drop a skeleton
+            else
+                inst.AnimState:SetPercent(inst.deathanimoverride or "death", 1)
+                inst:PushEvent("playerdied", { skeleton = TheWorld.Map:IsPassableAtPoint(inst.Transform:GetWorldPosition()) }) -- if we are not on valid ground then don't drop a skeleton
+            end
+        end,
+
+        onexit = function(inst)
+            --You should never leave this state once you enter it!
+            if inst.components.revivablecorpse == nil then
+                assert(false, "Left death state.")
+            end
+        end,
     },
 
     State{
@@ -6276,8 +6306,6 @@ local states =
             else
                 inst.AnimState:OverrideSymbol("pan_flute01", "pan_flute", "pan_flute01")
             end
-            inst.AnimState:Hide("ARM_carry")
-            inst.AnimState:Show("ARM_normal")
             inst.components.inventory:ReturnActiveActionItem(inv_obj)
         end,
 
@@ -6306,10 +6334,6 @@ local states =
 
         onexit = function(inst)
             inst.SoundEmitter:KillSound("flute")
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
         end,
     },
 
@@ -6322,8 +6346,6 @@ local states =
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
             inst.AnimState:PushAnimation("horn", false)
             inst.AnimState:OverrideSymbol("horn01", "horn", "horn01")
-            --inst.AnimState:Hide("ARM_carry")
-            inst.AnimState:Show("ARM_normal")
             inst.components.inventory:ReturnActiveActionItem(inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil)
         end,
 
@@ -6346,13 +6368,6 @@ local states =
                 end
             end),
         },
-
-        onexit = function(inst)
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
-        end,
     },
 
     State{
@@ -6361,10 +6376,9 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            inst.AnimState:PlayAnimation("bell")
+            inst.AnimState:PlayAnimation("action_uniqueitem_pre")
+            inst.AnimState:PushAnimation("bell", false)
             inst.AnimState:OverrideSymbol("bell01", "bell", "bell01")
-            --inst.AnimState:Hide("ARM_carry")
-            inst.AnimState:Show("ARM_normal")
             inst.components.inventory:ReturnActiveActionItem(inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil)
         end,
 
@@ -6381,19 +6395,12 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
+            EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
                 end
             end),
         },
-
-        onexit = function(inst)
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
-        end,
     },
 
     State{
@@ -6405,8 +6412,6 @@ local states =
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
             inst.AnimState:PushAnimation("whistle", false)
             inst.AnimState:OverrideSymbol("hound_whistle01", "houndwhistle", "hound_whistle01")
-            --inst.AnimState:Hide("ARM_carry")
-            inst.AnimState:Show("ARM_normal")
             inst.components.inventory:ReturnActiveActionItem(inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil)
         end,
 
@@ -6429,13 +6434,6 @@ local states =
                 end
             end),
         },
-
-        onexit = function(inst)
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
-        end,
     },
 
     State{
@@ -6483,7 +6481,6 @@ local states =
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
             inst.AnimState:PushAnimation("cowbell", false)
             inst.AnimState:OverrideSymbol("cbell", "cowbell", "cbell")
-            inst.AnimState:Show("ARM_normal")
 
             local invitem = (inst.bufferedaction ~= nil and inst.bufferedaction.invobject) or nil
             inst.components.inventory:ReturnActiveActionItem(invitem)
@@ -6504,8 +6501,6 @@ local states =
             TimeEvent(46*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
             TimeEvent(56*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
             TimeEvent(67*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-
-
         },
 
         events =
@@ -6516,13 +6511,6 @@ local states =
                 end
             end),
         },
-
-        onexit = function(inst)
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
-        end,
     },
 
     State{
@@ -6897,8 +6885,6 @@ local states =
             --inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
             --inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
             --inst.AnimState:OverrideSymbol("book_open_pages", "player_actions_uniqueitem", "book_open_pages")
-            --inst.AnimState:Hide("ARM_carry")
-            inst.AnimState:Show("ARM_normal")
 
             local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
             if book ~= nil then
@@ -6980,11 +6966,6 @@ local states =
         },
 
         onexit = function(inst)
-            local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-            if item ~= nil and not item:HasTag("book") then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
             if inst.sg.statemem.skinned then
                 inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
                 inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
@@ -8256,6 +8237,33 @@ local states =
     },
 
     State{
+        name = "catchonfire",
+        tags = { "igniting" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("light_fire")
+            inst.AnimState:PushAnimation("light_fire_pst", false)
+        end,
+
+        timeline =
+        {
+            TimeEvent(13 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
         name = "bedroll",
         tags = { "bedroll", "busy", "nomorph" },
 
@@ -8288,8 +8296,14 @@ local states =
 
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
             inst.AnimState:PushAnimation("bedroll", false)
-
             SetSleeperSleepState(inst)
+
+            --Hack since we've already temp unequipped hand items at this point
+            --but we want to show the correct arms for action_uniqueitem_pre
+            if inst._sleepinghandsitem ~= nil then
+                inst.AnimState:Show("ARM_carry")
+                inst.AnimState:Hide("ARM_normal")
+            end
         end,
 
         timeline =
@@ -8335,6 +8349,10 @@ local states =
         },
 
         onexit = function(inst)
+            if not inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
+                inst.AnimState:Hide("ARM_carry")
+                inst.AnimState:Show("ARM_normal")
+            end
             if inst.sleepingbag ~= nil then
                 --Interrupted while we are "sleeping"
                 inst.sleepingbag.components.sleepingbag:DoWakeUp(true)
@@ -9053,7 +9071,7 @@ local states =
 
         timeline =
         {
-            TimeEvent(10 * FRAMES, function(inst)
+            TimeEvent(8 * FRAMES, function(inst)
                 inst.Transform:SetFourFaced()
             end),
             TimeEvent(13 * FRAMES, function(inst)
@@ -13034,7 +13052,6 @@ local states =
             else
                 inst.AnimState:OverrideSymbol( "fan01", "fan", src_symbol )
             end
-            inst.AnimState:Show("ARM_normal")
             inst.components.inventory:ReturnActiveActionItem(invobject)
         end,
 
@@ -13070,13 +13087,6 @@ local states =
                 end
             end),
         },
-
-        onexit = function(inst)
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Show("ARM_carry")
-                inst.AnimState:Hide("ARM_normal")
-            end
-        end,
     },
 
     State{

@@ -31,14 +31,20 @@ end
 local function uncurse(owner, num)
 
     local function hit(player)
-        player.sg:GoToState("hit_spike","med")
-        local fx = SpawnPrefab("monkey_de_morphin_fx")
-        player:AddChild(fx)
+        if not player.sg:HasStateTag("dead") then
+            player.sg:GoToState("hit_spike","med")
+            local fx = SpawnPrefab("monkey_de_morphin_fx")
+            player:AddChild(fx)
+        end
     end
 
     if owner:HasTag("wonkey") then
         if num <= 0 then
-            owner.sg:GoToState("changefrommonkey")
+            --should be checking "nomorph"... but that probably isn't supported
+            --correctly if a state change is forced here in this way.
+            if not owner.sg:HasStateTag("dead") then
+                owner.sg:GoToState("changefrommonkey")
+            end
         else
             hit(owner)
         end

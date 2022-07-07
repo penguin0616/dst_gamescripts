@@ -183,7 +183,7 @@ local actionhandlers =
             return inst:HasTag("pyromaniac") and "domediumaction" or "dolongaction"
         end),
     ActionHandler(ACTIONS.TRAVEL, "doshortaction"),
-    ActionHandler(ACTIONS.LIGHT, "give"),
+    ActionHandler(ACTIONS.LIGHT, "catchonfire"),
     ActionHandler(ACTIONS.UNLOCK, "give"),
     ActionHandler(ACTIONS.USEKLAUSSACKKEY,
         function(inst)
@@ -1684,6 +1684,38 @@ local states =
         ontimeout = function(inst)
             inst:ClearBufferedAction()
             inst.AnimState:PlayAnimation("give_pst")
+            inst.sg:GoToState("idle", true)
+        end,
+    },
+
+    State{
+        name = "catchonfire",
+        tags = { "igniting" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            if not inst:HasTag("igniting") then
+                inst.AnimState:PlayAnimation("light_fire")
+            end
+
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        onupdate = function(inst)
+            if inst:HasTag("igniting") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.AnimState:PlayAnimation("light_fire_pst")
+                inst.sg:GoToState("idle", true)
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.AnimState:PlayAnimation("light_fire_pst")
             inst.sg:GoToState("idle", true)
         end,
     },

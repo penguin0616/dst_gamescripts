@@ -190,8 +190,13 @@ local function common_fn(bank, build, anim, tag, isinventoryitem)
         inst.Physics:SetCollides(false) -- The cannonball hitting targets will be handled in OnUpdateProjectile() with FindEntities()
 
         if not TheNet:IsDedicated() then
-            inst:AddComponent("groundshadowhandler")
-            inst.components.groundshadowhandler:SetSize(1, 0.5)
+            -- Delay adding the ground shadow to prevent it from momentarily appearing at (0,0,0)
+            inst:DoTaskInTime(0, function(inst)
+                inst:AddComponent("groundshadowhandler")
+                local x, y, z = inst.Transform:GetWorldPosition()
+                inst.components.groundshadowhandler.ground_shadow.Transform:SetPosition(x, 0, z)
+                inst.components.groundshadowhandler:SetSize(1, 0.5)
+            end)
         end
     end
 

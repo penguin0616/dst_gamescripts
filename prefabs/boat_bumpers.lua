@@ -143,8 +143,7 @@ function MakeBumperType(data)
         end
 
         if boat ~= nil then
-
-            SnapToBoatEdge(inst, data.pos)
+            SnapToBoatEdge(inst, boat, data.pos)
             boat.components.boatring:AddBumper(inst)
         end
 
