@@ -89,7 +89,7 @@ function Curseditem:lookforplayer()
             player = nil
         end
 
-        if player and player.components.cursable and player.components.cursable:IsCursable(self.inst) then
+        if player and player.components.cursable and player.components.cursable:IsCursable(self.inst) and not player.components.debuffable:HasDebuff("spawnprotectionbuff") then
             if self.inst.findplayertask then
                 self.inst.findplayertask:Cancel()
                 self.inst.findplayertask = nil

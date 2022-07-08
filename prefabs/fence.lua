@@ -461,7 +461,7 @@ local function onload(inst, data)
             rotation = data.rot*45
             inst.loaded_rotation_enum = data.rot
         end
-        --SetOrientation(inst, rotation)
+        SetOrientation(inst, rotation)
 
         if data.isopen then
             OpenDoor(inst, true)

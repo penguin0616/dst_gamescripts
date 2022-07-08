@@ -8432,4 +8432,9 @@ for _,v in pairs(CLOTHING) do
 			HIDE_SYMBOLS[sym] = true
 		end
 	end
+	if v.symbol_in_base_hides then
+		for _,sym in pairs(v.symbol_in_base_hides) do
+			HIDE_SYMBOLS[sym] = true
+		end
+	end
 end
