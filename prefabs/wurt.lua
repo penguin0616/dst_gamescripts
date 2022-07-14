@@ -152,31 +152,6 @@ local function FishPreserverRate(inst, item)
 	return (item ~= nil and item:HasTag("fish")) and TUNING.WURT_FISH_PRESERVER_RATE or nil
 end
 
--- PERUSE BOOKS
-local function peruse_brimstone(inst)
-    inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
-end
-local function peruse_birds(inst)
-    inst.components.sanity:DoDelta(TUNING.SANITY_HUGE)
-end
-local function peruse_tentacles(inst)
-    inst.components.sanity:DoDelta(TUNING.SANITY_HUGE)
-end
-local function peruse_sleep(inst)
-    inst.components.sanity:DoDelta(TUNING.SANITY_LARGE)
-end
-local function peruse_gardening(inst)
-    inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
-end
-local function peruse_horticulture(inst)
-    inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
-end
-local function peruse_silviculture(inst)
-    inst.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
-end
-
-
-
 local function OnSave(inst, data)
     data.health_percent = inst.health_percent or inst.components.health:GetPercent()
     data.sanity_percent = inst.sanity_percent or inst.components.sanity:GetPercent()
@@ -213,7 +188,6 @@ local function common_postinit(inst)
     inst:AddTag("merm_builder")
     inst:AddTag("wet")
     inst:AddTag("stronggrip")
-    inst:AddTag("aspiring_bookworm")
 
     inst.customidleanim = "idle_wurt"
 
@@ -269,6 +243,7 @@ local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
     inst:AddComponent("reader")
+    inst.components.reader:SetAspiringBookworm(true)
 
 	inst.components.sanity.no_moisture_penalty = true
 
@@ -306,14 +281,6 @@ local function master_postinit(inst)
     inst:ListenForEvent("onmermkingdestroyed", function() RoyalDowngrade(inst) end, TheWorld)
     inst:ListenForEvent("onattacked", OnAttacked)
     inst:ListenForEvent("murdered", OnMurdered)
-
-    inst.peruse_brimstone = peruse_brimstone
-    inst.peruse_birds = peruse_birds
-    inst.peruse_tentacles = peruse_tentacles
-    inst.peruse_sleep = peruse_sleep
-    inst.peruse_gardening = peruse_gardening
-	inst.peruse_horticulture = peruse_horticulture
-	inst.peruse_silviculture = peruse_silviculture
 
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad

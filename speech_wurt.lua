@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,19 @@ return{
         BOOK_GARDENING = "So many hard words...",
 		BOOK_SILVICULTURE = "Is whole story about trees? Me know about trees!",
 		BOOK_HORTICULTURE = "So many hard words...",
+
+        BOOK_FISH = "Is best book! Has fishies in it!",
+        BOOK_FIRE = "Ohhh, it about fire stuff!",
+        BOOK_WEB = "Hey Webby-boy! Me learning all the Spiderfolk secrets!",
+        BOOK_TEMPERATURE = "The... m-measure of th... theer-mole energy...",
+        BOOK_LIGHT = "Heeyyy, these words different!",
+        BOOK_RAIN = "Can tell rain what to do? Wanna try!!",
+        BOOK_MOON = "Huh. Moon actually kinda boring.",
+        BOOK_BEES = "Aww... no honey inside...",
+
+        BOOK_HORTICULTURE_UPGRADED = "M-maybe will find easier book...",
+        BOOK_RESEARCH_STATION = "Words so tiny... how read this?!",
+        BOOK_LIGHT_UPGRADED = "There more than one kind of words to learn?! Glurgh...",
     },
     ANNOUNCE_WEAK_RAT = "It not look so good...",
 
@@ -900,6 +914,7 @@ return{
         BERNIE_ACTIVE = "Wanna play with it!",
         BERNIE_BIG = "Fun toy, flurp!",
 
+        BOOKSTATION = "Glurgh. Why put books up so high?!",
         BOOK_BIRDS = "Read this one, Wicker-lady!",
         BOOK_TENTACLES = "Remind me of home, florp.",
         BOOK_GARDENING = "A... appled...? (Sigh)",
@@ -907,6 +922,21 @@ return{
 		BOOK_HORTICULTURE = "What does bridge have to do with plants, florp?",
         BOOK_SLEEP = "Want bedtime story!",
         BOOK_BRIMSTONE = "Where Wicker-lady? Want to know what happen next!",
+
+        BOOK_FISH = "Tell me fishy story!",
+        BOOK_FIRE = "What this one about?",
+        BOOK_WEB = "It about Spiderfolk? Why no book about Mermfolk?!",
+        BOOK_TEMPERATURE = "Tem... per... atoor?",
+        BOOK_LIGHT = "Huh? What that say?",
+        BOOK_RAIN = "What a ritual?",
+        BOOK_MOON = "Oooh, moon stuff!",
+        BOOK_BEES = "Wicker-lady! Wanna read about honey! ...Please.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Extra-ended? It look more like extra added.",
+        BOOK_RESEARCH_STATION = "Glurp... that one look extra full of words...",
+        BOOK_LIGHT_UPGRADED = "Oooh, this look fancy.",
+
+        FIREPEN = "Wicker-lady say no touch. But maybe she not looking...",
 
         PLAYER =
         {

@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -709,6 +710,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Time has nearly run out for this would-be racer.",
 
@@ -905,6 +917,7 @@ return{
         BERNIE_ACTIVE = "Good sir, are you aware you've no soul?",
         BERNIE_BIG = "It's grown to new heights to win all our fights!",
 
+        BOOKSTATION = "Her entire collection for our inspection.",
         BOOK_BIRDS = "Humans share their knowledge so freely.",
         BOOK_TENTACLES = "Imps don't disseminate precious knowledge so carelessly.",
         BOOK_GARDENING = "Secret knowledge of vegetables.",
@@ -912,6 +925,21 @@ return{
 		BOOK_HORTICULTURE = "Secret knowledge of vegetables.",
         BOOK_SLEEP = "Knowledge is power. Literally.",
         BOOK_BRIMSTONE = "Who would leave such precious knowledge lying here?",
+
+        BOOK_FISH = "This one's a bit fishy.",
+        BOOK_FIRE = "We've no use for tomes from where I roam.",
+        BOOK_WEB = "Oh what a tangled web we read.",
+        BOOK_TEMPERATURE = "Hyuyuyu, mortals have such funny ideas.",
+        BOOK_LIGHT = "Shall I sit and read for a spell?",
+        BOOK_RAIN = "Mortals can take the fun out of anything.",
+        BOOK_MOON = "Hyuyuyu how cute! The mortals think they can hold sway over the moon!",
+        BOOK_BEES = "I think I'll beekeeping my distance, hyuyu!",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Always something to learn where gardens are concerned.",
+        BOOK_RESEARCH_STATION = "So much knowledge, and none of it forbidden!",
+        BOOK_LIGHT_UPGRADED = "It's quite heavy for a light book, hyuyu!",
+
+        FIREPEN = "Hyuyuyu, the old flaming pen prank!",
 
         PLAYER =
         {

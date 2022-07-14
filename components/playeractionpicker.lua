@@ -166,10 +166,9 @@ function PlayerActionPicker:GetCannonAimActions(inst, pos, right)
     return nil
 end
 
-function PlayerActionPicker:GetPointActions(pos, useitem, right)
+function PlayerActionPicker:GetPointActions(pos, useitem, target, right)
     local actions = {}
-
-    useitem:CollectActions("POINT", self.inst, pos, actions, right)
+    useitem:CollectActions("POINT", self.inst, pos, actions, target, right)
 
     local sorted_acts = self:SortActionList(actions, pos, useitem)
 
@@ -262,10 +261,10 @@ function PlayerActionPicker:GetLeftClickActions(position, target)
             elseif target ~= nil and not target:HasTag("walkableplatform") and not target:HasTag("ignoremouseover") then
                 actions = self:GetUseItemActions(target, useitem)
                 if #actions == 0 and target:HasTag("walkableperipheral") then
-                    actions = self:GetPointActions(position, useitem)
+                    actions = self:GetPointActions(position, useitem, target)
                 end
             else
-                actions = self:GetPointActions(position, useitem)
+                actions = self:GetPointActions(position, useitem, target)
             end
         end
     elseif target ~= nil and target ~= self.inst then
@@ -292,7 +291,7 @@ function PlayerActionPicker:GetLeftClickActions(position, target)
     if actions == nil and target == nil and ispassable then
         if equipitem ~= nil and equipitem:IsValid() then
             --can we use our equipped item at the point?
-            actions = self:GetPointActions(position, equipitem)
+            actions = self:GetPointActions(position, equipitem, target)
             --this is to make it so you don't auto-drop equipped items when you left click the ground. kinda ugly.
             if actions ~= nil then
                 for i, v in ipairs(actions) do
@@ -351,10 +350,10 @@ function PlayerActionPicker:GetRightClickActions(position, target)
             elseif target ~= nil and ((not target:HasTag("walkableplatform") and not target:HasTag("ignoremouseover")) or (useitem:HasTag("repairer") and not useitem:HasTag("deployable"))) then
                 actions = self:GetUseItemActions(target, useitem, true)
                 if #actions == 0 and target:HasTag("walkableperipheral") then
-                    actions = self:GetPointActions(position, useitem, true)
+                    actions = self:GetPointActions(position, useitem, target, true)
                 end
             else
-                actions = self:GetPointActions(position, useitem, true)
+                actions = self:GetPointActions(position, useitem, target, true)
             end
         end
     elseif target ~= nil and not target:HasTag("walkableplatform") then
@@ -372,12 +371,12 @@ function PlayerActionPicker:GetRightClickActions(position, target)
             actions = self:GetSceneActions(target, true)
             if (#actions == 0 or (#actions == 1 and actions[1].action == ACTIONS.LOOKAT)) and target:HasTag("walkableperipheral") then
                 if equipitem ~= nil and equipitem:IsValid() and (ispassable or equipitem:HasTag("allow_action_on_impassable") or (equipitem.components.aoetargeting ~= nil and equipitem.components.aoetargeting.alwaysvalid and equipitem.components.aoetargeting:IsEnabled())) then
-                    actions = self:GetPointActions(position, equipitem, true)
+                    actions = self:GetPointActions(position, equipitem, target, true)
                 end
             end
         end
     elseif equipitem ~= nil and equipitem:IsValid() and (ispassable or equipitem:HasTag("allow_action_on_impassable") or (equipitem.components.aoetargeting ~= nil and equipitem.components.aoetargeting.alwaysvalid and equipitem.components.aoetargeting:IsEnabled())) then
-        actions = self:GetPointActions(position, equipitem, true)
+        actions = self:GetPointActions(position, equipitem, target, true)
     end
 
     if (actions == nil or #actions <= 0) and (target == nil or target:HasTag("walkableplatform") or target:HasTag("walkableperipheral")) and ispassable then

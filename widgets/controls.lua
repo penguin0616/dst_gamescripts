@@ -117,11 +117,16 @@ local Controls = Class(Widget, function(self, owner)
             else
                 self.status = self.topleft_root:AddChild(StatusDisplays(self.owner))
                 self.status:SetPosition(120,-100,0)
-                --self.status:SetScale(1.4)
+                self.status:SetScale(1.4)
 
                 self.secondary_status = self.topright_root:AddChild(SecondaryStatusDisplays(self.owner))
-                self.secondary_status:SetPosition(-120,-100,0)
-                --self.secondary_status:SetScale(1.4)
+                self.secondary_status:SetPosition(-160,-250,0)
+                self.secondary_status:SetScale(2.2)
+
+				self.clock = self.sidepanel:AddChild(UIClock())
+				if self.clock:IsCaveClock() then
+					self.clock.inst:DoSimPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
+				end
             end
 
             self.votedialog = self.topright_root:AddChild(VoteDialog(self.owner))
@@ -142,11 +147,16 @@ local Controls = Class(Widget, function(self, owner)
             else
                 self.status = self.topright_root:AddChild(StatusDisplays(self.owner))
                 self.status:SetPosition(-120,-100,0)
-                --self.status:SetScale(1.4)
+                self.status:SetScale(1.4)
 
                 self.secondary_status = self.topleft_root:AddChild(SecondaryStatusDisplays(self.owner))
-                self.secondary_status:SetPosition(120,-100,0)
-                --self.secondary_status:SetScale(1.4)
+                self.secondary_status:SetPosition(160,-250,0)
+                self.secondary_status:SetScale(2.2)
+
+				self.clock = self.sidepanel:AddChild(UIClock())
+				if self.clock:IsCaveClock() then
+					self.clock.inst:DoSimPeriodicTask(.5, function() self.clock:UpdateCaveClock(self.owner) end, 0)
+				end
             end
             
             self.votedialog = self.topleft_root:AddChild(VoteDialog(self.owner))
@@ -725,7 +735,7 @@ end
 function Controls:FocusMapOnWorldPosition(mapscreen, worldx, worldz)
 	if mapscreen == nil or mapscreen.minimap == nil then return nil end
 
-	while mapscreen.minimap.minimap:GetZoom() > 1 do mapscreen.minimap:OnZoomIn() end
+    mapscreen:SetZoom(1)
 
 	local player_x, player_y, player_z = self.owner.Transform:GetWorldPosition()
 	local dx, dy = worldx - player_x, worldz - player_z

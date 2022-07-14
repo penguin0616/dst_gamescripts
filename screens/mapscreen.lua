@@ -3,6 +3,7 @@ local MapWidget = require("widgets/mapwidget")
 local Widget = require "widgets/widget"
 local MapControls = require "widgets/mapcontrols"
 local HudCompass = require "widgets/hudcompass"
+local HoverText = require("widgets/hoverer")
 
 -- NOTES(JBK): These constants are from MiniMapRenderer ZOOM_CLAMP_MIN and ZOOM_CLAMP_MAX
 local ZOOM_CLAMP_MIN = 1
@@ -29,6 +30,9 @@ local MapScreen = Class(Screen, function(self, owner)
         self.mapcontrols.pauseBtn:Hide()
     end
 
+    self.hover = self:AddChild(HoverText(self.owner))
+    self.hover:SetScaleMode(SCALEMODE_PROPORTIONAL)
+
     self.hudcompass = self.bottomright_root:AddChild(HudCompass(self.owner, false))
     self.hudcompass:SetPosition(-160,70,0)
 
@@ -47,6 +51,10 @@ function MapScreen:OnBecomeInactive()
     if TheWorld.minimap.MiniMap:IsVisible() then
         TheWorld.minimap.MiniMap:ToggleVisibility()
     end
+    self.hover:Hide()
+    if self.owner.HUD and self.owner.HUD.controls and self.owner.HUD.controls.hover then
+        self.owner.HUD.controls.hover.forcehide = nil
+    end
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --SetPause(false)
@@ -60,10 +68,18 @@ function MapScreen:OnBecomeActive()
     end
     self.minimap:UpdateTexture()
 
+    if self.owner.HUD and self.owner.HUD.controls and self.owner.HUD.controls.hover then
+        self.owner.HUD.controls.hover.forcehide = true
+        self.owner.HUD.controls.hover:Hide()
+    end
     if TheInput:ControllerAttached() then
+        self.hover:Hide()
         self.minimap.centerreticle:Show()
     else
         self.minimap.centerreticle:Hide()
+        self.hover:Show()
+        local scale = TheFrontEnd:GetHUDScale()
+        self.hover:SetScale(scale)
     end
 
     self.zoomsensitivity = Profile:GetMiniMapZoomSensitivity()
@@ -106,6 +122,28 @@ function MapScreen:DoZoomOut(positivedelta)
     end
 end
 
+function MapScreen:SetZoom(zoom_target)
+    self.zoom_target = zoom_target
+    self.zoom_old = zoom_target
+    self.zoom_target_time = 0
+    -- NOTES(JBK): Do deltas to be more mod compliant that expect deltas in OnZoomIn and OnZoomOut functions.
+    local deltazoom = zoom_target - self.minimap:GetZoom()
+    if deltazoom < 0 then
+    	self.minimap:OnZoomIn(deltazoom)
+    elseif deltazoom > 0 then
+        self.minimap:OnZoomOut(deltazoom)
+    end
+end
+
+function MapScreen:UpdateMapActions(x, y, z)
+    if ThePlayer and ThePlayer.components.playeractionpicker and ThePlayer.components.playercontroller then
+        local pc = ThePlayer.components.playercontroller
+        pc.LMBaction, pc.RMBaction = pc:GetMapActions(Vector3(x, y, z))
+        return pc.LMBaction, pc.RMBaction
+    end
+    return nil, nil
+end
+
 function MapScreen:OnUpdate(dt)
     local s = -100 * dt -- now per second, not per repeat
 
@@ -142,6 +180,9 @@ function MapScreen:OnUpdate(dt)
             self:DoZoomOut(zoom_delta)
         end
     end
+
+    local x, y, z = self:GetWorldPositionAtCursor()
+    self:UpdateMapActions(x, y, z)
 end
 
 --[[ EXAMPLE of map coordinate functions
@@ -233,14 +274,22 @@ function MapScreen:OnControl(control, down)
         return false
     end
 
-    if control == CONTROL_ROTATE_LEFT and ThePlayer and ThePlayer.components.playercontroller then
-        ThePlayer.components.playercontroller:RotLeft()
-    elseif control == CONTROL_ROTATE_RIGHT and ThePlayer and ThePlayer.components.playercontroller then
-        ThePlayer.components.playercontroller:RotRight()
+    local pc = ThePlayer and ThePlayer.components.playercontroller
+
+    if pc and control == CONTROL_ROTATE_LEFT then
+        pc:RotLeft()
+    elseif pc and control == CONTROL_ROTATE_RIGHT then
+        pc:RotRight()
     elseif control == CONTROL_MAP_ZOOM_IN then -- NOTES(JBK): Keep these here for mods but modify their value to do nothing with new code.
         self:DoZoomIn(0)
     elseif control == CONTROL_MAP_ZOOM_OUT then
         self:DoZoomOut(0)
+    elseif pc and (control == CONTROL_SECONDARY or control == CONTROL_CONTROLLER_ATTACK) then
+        local x, y, z = self:GetWorldPositionAtCursor()
+        local _, RMBaction = self:UpdateMapActions(x, y, z)
+        if RMBaction then
+            pc:OnMapAction(RMBaction.action.code, Vector3(x, y, z))
+        end
     else
         return false
     end
@@ -256,6 +305,10 @@ function MapScreen:GetHelpText()
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MAP_ZOOM_IN) .. " " .. STRINGS.UI.HELP.ZOOM_IN)
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MAP_ZOOM_OUT) .. " " .. STRINGS.UI.HELP.ZOOM_OUT)
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
+    local pc = ThePlayer and ThePlayer.components.playercontroller
+    if pc.RMBaction then
+        table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ATTACK) .. " " .. pc.RMBaction:GetActionString())
+    end
 
     return table.concat(t, "  ")
 end

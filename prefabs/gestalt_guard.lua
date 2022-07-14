@@ -15,7 +15,7 @@ local brain = require "brains/brightmare_gestaltguardbrain"
 
 local function SetHeadAlpha(inst, a)
 	if inst.blobhead then
-		inst.blobhead.AnimState:SetMultColour(a, a, a, a)
+		inst.blobhead.AnimState:SetMultColour(1, 1, 1, a)
 	end
 end
 

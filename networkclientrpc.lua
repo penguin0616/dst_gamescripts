@@ -931,6 +931,20 @@ local RPC_HANDLERS =
             ChatHistory:SendChatHistory(player.userid, last_message_hash, first_message_hash)
         end
     end,
+
+    -- NOTES(JBK): OnMap RPCs are always world relative.
+    DoActionOnMap = function(player, action, x, z)
+        if not (checknumber(action) and
+                checknumber(x) and
+                checknumber(z)) then
+            printinvalid("DoActionOnMap PARAMS", player)
+            return
+        end
+        local pc = player.components.playercontroller
+        if pc then
+            pc:OnMapAction(action, Vector3(x, 0, z))
+        end
+    end,
 }
 
 RPC = {}
@@ -1004,6 +1018,13 @@ local CLIENT_RPC_HANDLERS =
 
     LearnBuilderRecipe = function(product)
         ThePlayer:PushEvent("LearnBuilderRecipe",{recipe=product})
+    end,
+
+    ResetMinimapOffset = function()
+        local topscreen = TheFrontEnd and TheFrontEnd:GetActiveScreen() or nil
+        if topscreen and topscreen.minimap then
+            topscreen.minimap.minimap:ResetOffset()
+        end
     end,
 }
 

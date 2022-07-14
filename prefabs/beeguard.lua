@@ -85,12 +85,24 @@ local function CheckFocusTarget(inst)
 end
 
 local function RetargetFn(inst)
-    local focustarget = CheckFocusTarget(inst)
-    if focustarget ~= nil then
-        return focustarget, not inst.components.combat:TargetIs(focustarget)
+    local commander = inst.components.entitytracker:GetEntity("queen")
+    if commander ~= nil and commander:HasTag("player") then
+
+        local ix, iy, iz = inst.Transform:GetWorldPosition()
+        local entities_near_me = TheSim:FindEntities(
+            ix, iy, iz, TUNING.ABIGAIL_DEFENSIVE_MAX_FOLLOW,
+            { "_combat", "_health" }, { "INLIMBO", "noauradamage", "bee" }, { "monster", "prey" }
+        )
+
+        return entities_near_me[1] or nil
+    else
+        local focustarget = CheckFocusTarget(inst)
+        if focustarget ~= nil then
+            return focustarget, not inst.components.combat:TargetIs(focustarget)
+        end
+        local player, distsq = inst:GetNearestPlayer()
+        return (distsq ~= nil and distsq < 225) and player or nil
     end
-    local player, distsq = inst:GetNearestPlayer()
-    return distsq ~= nil and distsq < 225 and player or nil
 end
 
 local function KeepTargetFn(inst, target)
@@ -110,6 +122,11 @@ local function CanShareTarget(dude)
 end
 
 local function OnAttacked(inst, data)
+    local commander = inst.components.entitytracker:GetEntity("queen")
+    if data.attacker == commander then
+        return
+    end
+
     inst.components.combat:SetTarget(CheckFocusTarget(inst) or data.attacker)
     inst.components.combat:ShareTarget(data.attacker, 20, CanShareTarget, 6)
 end
@@ -211,6 +228,22 @@ local function OnLostCommander(inst, data)
     end
 end
 
+local function OnNewTarget(inst, data)
+    inst:DoTaskInTime(0, function() 
+        local commander = inst.components.entitytracker:GetEntity("queen")
+        local target = data.target
+        
+        if target ~= nil and commander ~= nil and commander:HasTag("player") and target:HasTag("beequeen") then
+            target.components.commander:AddSoldier(inst)
+            if target.components.combat:HasTarget() then
+                inst.components.combat:SetTarget(target.components.combat.target)
+            else
+                inst.components.combat:SetTarget(commander)
+            end
+        end
+    end)
+end
+
 --------------------------------------------------------------------------
 
 local function fn()
@@ -275,10 +308,10 @@ local function fn()
     inst:AddComponent("combat")
     inst.components.combat:SetDefaultDamage(TUNING.BEEGUARD_DAMAGE)
     inst.components.combat:SetAttackPeriod(TUNING.BEEGUARD_ATTACK_PERIOD)
-    inst.components.combat.playerdamagepercent = .5
     inst.components.combat:SetRange(TUNING.BEEGUARD_ATTACK_RANGE)
     inst.components.combat:SetRetargetFunction(2, RetargetFn)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
+    inst.components.combat.playerdamagepercent = .5
     inst.components.combat.battlecryenabled = false
     inst.components.combat.hiteffectsymbol = "mane"
     inst.components.combat.bonusdamagefn = bonus_damage_via_allergy
@@ -302,6 +335,7 @@ local function fn()
     inst:ListenForEvent("lostcommander", OnLostCommander)
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("onattackother", OnAttackOther)
+    inst:ListenForEvent("newcombattarget", OnNewTarget)
 
     inst.buzzing = true
     inst.sounds = normalsounds

@@ -1874,7 +1874,7 @@ local function lantern_off(inst)
             fx._lastpos = fx._lastpos or fx:GetPosition()
             fx.entity:SetParent(nil)
             if fx.Follower ~= nil then
-                fx.Follower:FollowSymbol(0, "", 0, 0, 0)
+                fx.Follower:StopFollowing()
             end
             fx.Transform:SetPosition(fx._lastpos:Get())
             fx:KillFX()

@@ -123,29 +123,31 @@ local states =
         events = 
         {
             EventHandler("animover", function(inst)
-                if inst.sg.statemem.giver then
-                    local giver = inst.sg.statemem.giver
-                    if giver.components.inventory ~= nil and giver.components.cursable then
-                        giver.components.cursable:RemoveCurse("MONKEY",4)
-
-                        local curse = SpawnPrefab("cursed_monkey_token_prop")
-                        curse.Transform:SetPosition(giver.Transform:GetWorldPosition())
-                        curse:RemoveComponent("inventoryitem")
-                        curse:RemoveComponent("curseditem")
-                        curse.target = inst
-                    end
-
-                    local curses =  giver.components.inventory:FindItems(function(thing) return thing:HasTag("monkey_token") end)
-
-                    if #curses >= 0 then
-                        inst.right_of_passage = true
-                        if inst.components.timer:TimerExists("right_of_passage") then
-                            inst.components.timer:SetTimeLeft("right_of_passage", TUNING.MONKEY_QUEEN_GRACE_TIME) -- TUNING.TOTAL_DAY_TIME/2 )
-                        else
-                            inst.components.timer:StartTimer("right_of_passage", TUNING.MONKEY_QUEEN_GRACE_TIME) -- TUNING.TOTAL_DAY_TIME/2
+                -- NOTES(JBK): This handler must spawn a prop even if the original giver no longer exists to get out of the removecurse_channel state.
+                local curseprop = SpawnPrefab("cursed_monkey_token_prop")
+                curseprop:RemoveComponent("inventoryitem")
+                curseprop:RemoveComponent("curseditem")
+                local giver = inst.sg.statemem.giver
+                if giver and giver:IsValid() then
+                    curseprop.Transform:SetPosition(giver.Transform:GetWorldPosition())
+                    if giver.components.inventory then
+                        if giver.components.cursable then
+                            giver.components.cursable:RemoveCurse("MONKEY", 4)
+                        end
+                        local curses =  giver.components.inventory:FindItems(function(thing) return thing:HasTag("monkey_token") end)
+                        if #curses >= 0 then
+                            inst.right_of_passage = true
+                            if inst.components.timer:TimerExists("right_of_passage") then
+                                inst.components.timer:SetTimeLeft("right_of_passage", TUNING.MONKEY_QUEEN_GRACE_TIME) -- TUNING.TOTAL_DAY_TIME/2 )
+                            else
+                                inst.components.timer:StartTimer("right_of_passage", TUNING.MONKEY_QUEEN_GRACE_TIME) -- TUNING.TOTAL_DAY_TIME/2
+                            end
                         end
                     end
+                else
+                    curseprop.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 end
+                curseprop.target = inst -- Set after SetPosition in case .target becomes something that has a function callback.
                 inst.sg:GoToState("removecurse_channel")
             end)
         },

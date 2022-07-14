@@ -128,12 +128,26 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"dumbbell_gem",
 
 	-- Wickerbottom
-	"book_birds",
+	"bookstation",
+	"book_birds",	
 	"book_horticulture",
 	"book_silviculture",
-	"book_sleep",
-	"book_brimstone",
+	"book_sleep",		
+	"book_brimstone",	
 	"book_tentacles",
+	
+	"book_fish",
+	"book_fire",
+	"book_web",
+	"book_temperature",
+	"book_light",
+	"book_rain",
+	"book_moon",
+	"book_bees",
+	"book_research_station",
+	
+	"book_horticulture_upgraded",
+	"book_light_upgraded",
 
 	-- Maxwell
 	"waxwelljournal",

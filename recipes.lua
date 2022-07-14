@@ -13,6 +13,7 @@ PROTOTYPER_DEFS =
 	seafaring_prototyper		= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_seafaring.tex",			is_crafting_station = false},
 	tacklestation				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_fishing.tex",			is_crafting_station = false},
 	turfcraftingstation			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_turfcrafting.tex",		is_crafting_station = false},
+	bookstation					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_books.tex",				is_crafting_station = false,	action_str = "STUDY"},
 
     ancient_altar				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_crafting_table.tex",	is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ANCIENT},
     ancient_altar_broken		= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_crafting_table.tex",	is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.ANCIENT},
@@ -33,6 +34,7 @@ PROTOTYPER_DEFS =
 	wintersfeastoven			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_feast_oven.tex",		is_crafting_station = true,		action_str = "COOKING",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.WINTERSFEASTCOOKING},
 	madscience_lab				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_madscience_lab.tex",	is_crafting_station = true,		action_str = "EXPERIEMENT",	filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.MADSCIENCE},
 	perdshrine					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_perd_offering.tex",		is_crafting_station = true,		action_str = "OFFERING",	filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.YOT_SHRINE_DOFFERING},
+
 }
 PROTOTYPER_DEFS.wargshrine = PROTOTYPER_DEFS.perdshrine
 PROTOTYPER_DEFS.pigshrine = PROTOTYPER_DEFS.perdshrine
@@ -134,12 +136,29 @@ Recipe2("dumbbell_marble",				{Ingredient("marble", 4), Ingredient("twigs", 1)},
 Recipe2("dumbbell_gem",					{Ingredient("thulecite", 2), Ingredient("purplegem", 1), Ingredient("twigs", 1)},				TECH.NONE,				{builder_tag="strongman"})
 
 -- Wickerbottom
-Recipe2("book_birds",					{Ingredient("papyrus", 2), Ingredient("bird_egg", 2)},											TECH.NONE,				{builder_tag="bookbuilder"})
-Recipe2("book_horticulture",			{Ingredient("papyrus", 2), Ingredient("seeds", 5), Ingredient("poop", 5)},						TECH.SCIENCE_ONE,		{builder_tag="bookbuilder"})
-Recipe2("book_silviculture",			{Ingredient("papyrus", 2), Ingredient("livinglog", 1)},											TECH.SCIENCE_THREE,		{builder_tag="bookbuilder"})
-Recipe2("book_sleep",					{Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2)},										TECH.MAGIC_TWO,			{builder_tag="bookbuilder"})
-Recipe2("book_brimstone",				{Ingredient("papyrus", 2), Ingredient("redgem", 1)},											TECH.MAGIC_THREE,		{builder_tag="bookbuilder"})
-Recipe2("book_tentacles",				{Ingredient("papyrus", 2), Ingredient("tentaclespots", 1)},										TECH.SCIENCE_THREE,		{builder_tag="bookbuilder"})
+Recipe2("bookstation", {Ingredient("boards", 4), Ingredient("featherpencil", 1), Ingredient("goldnugget", 4), Ingredient("papyrus", 4)}, TECH.NONE, {builder_tag="bookbuilder", placer="bookstation_placer"})
+
+Recipe2("book_horticulture", 	 	  {Ingredient("papyrus", 2), Ingredient("seeds", 5), Ingredient("poop", 5)}, TECH.SCIENCE_ONE,   {builder_tag="bookbuilder"})
+Recipe2("book_horticulture_upgraded", {Ingredient("book_horticulture", 1), Ingredient("featherpencil", 1), Ingredient("papyrus", 2)}, TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_silviculture", 	 	  {Ingredient("papyrus", 2), Ingredient("livinglog", 1)},  TECH.SCIENCE_THREE, {builder_tag="bookbuilder"})
+Recipe2("book_research_station", 	  {Ingredient("papyrus", 2), Ingredient("transistor", 1)}, TECH.NONE, 		  {builder_tag="bookbuilder"})
+
+Recipe2("book_birds",		 	 {Ingredient("papyrus", 2), Ingredient("bird_egg", 2)}, TECH.NONE, {builder_tag="bookbuilder"})
+Recipe2("book_fish",			 {Ingredient("papyrus", 2), Ingredient("oceanfishingrod", 1), Ingredient("oceanfishingbobber_ball", 2)}, TECH.NONE, {builder_tag="bookbuilder"})
+Recipe2("book_bees", 			 {Ingredient("papyrus", 2), Ingredient("stinger", 8), Ingredient("honey", 4)}, 					TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+
+Recipe2("book_sleep",		 	 {Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2)},  TECH.MAGIC_TWO,	  {builder_tag="bookbuilder"})
+Recipe2("book_brimstone",	 	 {Ingredient("papyrus", 2), Ingredient("redgem", 1)},		  TECH.MAGIC_THREE,   {builder_tag="bookbuilder"})
+Recipe2("book_fire",			 {Ingredient("book_brimstone", 1), Ingredient("featherpencil", 1), Ingredient("papyrus", 2)}, TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+
+Recipe2("book_tentacles",	 	 {Ingredient("papyrus", 2), Ingredient("tentaclespots", 1)},					   TECH.SCIENCE_THREE, {builder_tag="bookbuilder"})
+Recipe2("book_web", 			 {Ingredient("papyrus", 2), Ingredient("spidergland", 2), Ingredient("silk", 6)},  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+
+Recipe2("book_moon", 			 {Ingredient("papyrus", 2),    Ingredient("moonrocknugget", 2)}, 						  	  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_light",			 {Ingredient("papyrus", 2),    Ingredient("lightbulb", 1), 	   Ingredient("fireflies", 1)},   TECH.NONE, 	  	  {builder_tag="bookbuilder"})
+Recipe2("book_light_upgraded",	 {Ingredient("book_light", 1), Ingredient("featherpencil", 1), Ingredient("papyrus", 2)}, 	  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_rain", 			 {Ingredient("papyrus", 2),    Ingredient("umbrella", 1), 	   Ingredient("wateringcan", 1)}, TECH.NONE, 	  	  {builder_tag="bookbuilder"})
+Recipe2("book_temperature", 	 {Ingredient("papyrus", 2),    Ingredient("heatrock", 1)}, 							 	      TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
 -- Maxwell
 Recipe2("waxwelljournal",				{Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2), Ingredient(CHARACTER_INGREDIENT.HEALTH, 50)},													TECH.NONE,			{builder_tag="shadowmagic"})
@@ -156,18 +175,18 @@ Recipe2("winona_battery_low",			{Ingredient("sewing_tape", 1), Ingredient("log",
 Recipe2("winona_battery_high",			{Ingredient("sewing_tape", 1), Ingredient("boards", 2), Ingredient("transistor", 2)},			TECH.NONE,				{builder_tag="handyperson", placer="winona_battery_high_placer"})
 
 -- Webber
-Recipe2("spidereggsack", 				{Ingredient("silk", 12), Ingredient("spidergland", 4), Ingredient("papyrus", 3)},				TECH.NONE,				{builder_tag="spiderwhisperer"})
-Recipe2("spiderden_bedazzler",			{Ingredient("silk", 1), Ingredient("papyrus", 1), Ingredient("boards", 2) },					TECH.NONE,				{builder_tag="spiderwhisperer"})
-Recipe2("spider_whistle",  				{Ingredient("silk", 3), Ingredient("twigs", 2) }, 												TECH.NONE,				{builder_tag="spiderwhisperer"})
-Recipe2("spider_repellent",  			{Ingredient("boards", 2), Ingredient("goldnugget", 2), Ingredient("rope", 1) }, 				TECH.NONE,				{builder_tag="spiderwhisperer"})
-Recipe2("spider_healer_item",  			{Ingredient("honey", 2), Ingredient("ash",  2), Ingredient("silk", 2) }, 						TECH.NONE,				{builder_tag="spiderwhisperer"})
-Recipe2("mutator_warrior", 				{Ingredient("monstermeat", 2), Ingredient("silk", 1), Ingredient("pigskin", 1) },				TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
-Recipe2("mutator_dropper", 				{Ingredient("monstermeat", 1), Ingredient("silk", 1), Ingredient("manrabbit_tail", 1)},			TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
-Recipe2("mutator_hider",	  			{Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("cutstone", 2)},				TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
-Recipe2("mutator_spitter", 				{Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("nitre", 4)},					TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
-Recipe2("mutator_moon",	  				{Ingredient("monstermeat", 2), Ingredient("silk", 3), Ingredient("moonglass", 2)},				TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
-Recipe2("mutator_healer",  				{Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("honey", 2)},					TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
-Recipe2("mutator_water",  				{Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("fig", 2)},					TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("spidereggsack", 				{Ingredient("silk", 12),  Ingredient("spidergland", 4), Ingredient("papyrus", 3)},		TECH.NONE,				{builder_tag="spiderwhisperer"})
+Recipe2("spiderden_bedazzler",			{Ingredient("silk", 1),   Ingredient("papyrus", 1), Ingredient("boards", 2) },			TECH.NONE,				{builder_tag="spiderwhisperer"})
+Recipe2("spider_whistle",  				{Ingredient("silk", 3),   Ingredient("twigs", 2) }, 									TECH.NONE,				{builder_tag="spiderwhisperer"})
+Recipe2("spider_repellent",  			{Ingredient("boards", 2), Ingredient("goldnugget", 2), Ingredient("rope", 1) }, 		TECH.NONE,				{builder_tag="spiderwhisperer"})
+Recipe2("spider_healer_item",  			{Ingredient("honey", 2),  Ingredient("ash",  2), Ingredient("silk", 2) }, 				TECH.NONE,				{builder_tag="spiderwhisperer"})
+Recipe2("mutator_warrior", 				{Ingredient("monstermeat", 2), Ingredient("silk", 1), Ingredient("pigskin", 1) },		TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("mutator_dropper", 				{Ingredient("monstermeat", 1), Ingredient("silk", 1), Ingredient("manrabbit_tail", 1)},	TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("mutator_hider",	  			{Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("cutstone", 2)},		TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("mutator_spitter", 				{Ingredient("monstermeat", 1), Ingredient("silk", 2), Ingredient("nitre", 4)},			TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("mutator_moon",	  				{Ingredient("monstermeat", 2), Ingredient("silk", 3), Ingredient("moonglass", 2)},		TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("mutator_healer",  				{Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("honey", 2)},			TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
+Recipe2("mutator_water",  				{Ingredient("monstermeat", 2), Ingredient("silk", 2), Ingredient("fig", 2)},			TECH.SPIDERCRAFT_ONE,	{builder_tag="spiderwhisperer"})
 
 -- Wormwood
 Recipe2("livinglog", 					{Ingredient(CHARACTER_INGREDIENT.HEALTH, 20)},													TECH.NONE,				{builder_tag="plantkin", sg_state="form_log"})

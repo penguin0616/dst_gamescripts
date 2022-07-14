@@ -12,8 +12,9 @@ local function DoHeal(inst)
             table.insert(targets, v)
         end
     end
-    if #targets > 0 then
-        local amt = TUNING.HEALING_MED - math.min(8, #targets) + 1
+    local targetscount = #targets
+    if targetscount > 0 then
+        local amt = TUNING.HEALING_MED - math.min(8, targetscount) + 1
         for i, v in ipairs(targets) do
             --always heal, but don't stack visual fx
             v.components.health:DoDelta(amt, nil, inst.prefab)
@@ -22,6 +23,12 @@ local function DoHeal(inst)
                 local fx = SpawnPrefab("wortox_soul_heal_fx")
                 fx.entity:AddFollower():FollowSymbol(v.GUID, v.components.combat.hiteffectsymbol, 0, -50, 0)
                 fx:Setup(v)
+            end
+            -- NOTES(JBK): If the target is another "soulstealer" give some sanity even when they did not drop the soul.
+            if v.components.sanity and v:HasTag("soulstealer") then
+                if v._souloverloadtask == nil then
+                    v.components.sanity:DoDelta(TUNING.SANITY_TINY * 0.5)
+                end
             end
         end
     end

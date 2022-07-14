@@ -189,6 +189,8 @@ function Tune(overrides)
         FISHING_MINWAIT = 2,
         FISHING_MAXWAIT = 20,
 
+        OVERRIDE_ROW_ACTION_DISTANCE = 2.2, -- Same as SetPhysicsRadiusOverride in ocean_trawler
+
 		OCEAN_FISHING =
 		{
 			MAX_CAST_DIST = 16,
@@ -684,6 +686,7 @@ function Tune(overrides)
 
         HUNGRY_BUILDER_DELTA = -5,
         HUNGRY_BUILDER_RESET_TIME = seg_time * 2,
+        HUNGRY_BUILDER_RESET_DISTANCE_SQ = 4 * 4, -- A tile distance.
 
         GRUEDAMAGE = wilson_health*.667,
 
@@ -1307,6 +1310,12 @@ function Tune(overrides)
 
             ROBOTMODULECRAFT = TechTree.Create({
                 ROBOTMODULECRAFT = 1,
+            }),
+
+            BOOKCRAFT = TechTree.Create({
+                BOOKCRAFT = 1,
+                SCIENCE = 2,
+                MAGIC = 1,
             }),
 		},
 
@@ -2324,7 +2333,7 @@ function Tune(overrides)
         BEEQUEEN_FOCUSTARGET_CD = { 0, 0, 20, 16 },
         BEEQUEEN_FOCUSTARGET_RANGE = 20,
 
-        BEEQUEEN_HONEYTRAIL_SPEED_PENALTY = .4,
+        BEEQUEEN_HONEYTRAIL_SPEED_PENALTY = 0.4,
 
         BEEGUARD_HEALTH = 180,
         BEEGUARD_DAMAGE = 30,
@@ -2465,12 +2474,12 @@ function Tune(overrides)
 		WAXWELL_HUNGER = wilson_hunger,
         WAXWELL_SANITY = wilson_sanity,
 
-        WICKERBOTTOM_HEALTH = wilson_health,
+        WICKERBOTTOM_HEALTH = 125,
         WICKERBOTTOM_HUNGER = wilson_hunger,
         WICKERBOTTOM_SANITY = 250,
-        WICKERBOTTOM_STALE_FOOD_HUNGER = .333,
-        WICKERBOTTOM_SPOILED_FOOD_HUNGER = .167,
-        WICKERBOTTOM_STALE_FOOD_HEALTH = .25,
+        WICKERBOTTOM_STALE_FOOD_HUNGER = 0.333,
+        WICKERBOTTOM_STALE_FOOD_HEALTH = 0,
+        WICKERBOTTOM_SPOILED_FOOD_HUNGER = 0.167,
         WICKERBOTTOM_SPOILED_FOOD_HEALTH = 0,
 
 		WALTER_HEALTH = 130,
@@ -4062,6 +4071,8 @@ function Tune(overrides)
         WORTOX_SOULEXTRACT_RANGE = 20, --die within this range of wortox to spawn soul
         WORTOX_SOULSTEALER_RANGE = 8, --souls fly towards wortox when he walks within this range
         WORTOX_SOULHEAL_RANGE = 8,
+        WORTOX_FREEHOP_HOPSPERSOUL = 2, -- Amount of hops per soul in a given time frame. Maximum value is clamped to freesoulhops in player_classified.
+        WORTOX_FREEHOP_TIMELIMIT = 5, -- Amount of seconds to use up free hops per hop.
 
         --Wormwood
 		WORMWOOD_HEALTH = wilson_health,
@@ -4382,6 +4393,8 @@ function Tune(overrides)
 		WALTERHAT_SANITY_DAMAGE_PROTECTION = .5,
 
 		WALTER_STARTING_WOBY = "wobysmall",
+        WALTER_WOBYBUCK_DAMAGE_MAX = 8, -- If greater than or equal to this value Walter is bucked off of Woby.
+        WALTER_WOBYBUCK_DECAY_TIME = 5, -- Seconds needed to clear health threshold from taking damage.
 
         WOBY_BIG_HUNGER = 50,
         WOBY_BIG_HUNGER_RATE = 50/(total_day_time * 2.5),
@@ -6141,6 +6154,32 @@ function Tune(overrides)
             LEVEL_3 = 5,
             LEVEL_4 = 10,
         },
+
+        -- WICKERBOTTOM
+        BOOKSTATION_RESTORE_TIME = seg_time,
+        BOOKSTATION_RESTORE_AMOUNT = 0.01,
+        BOOKSTATION_BONUS_RANGE = 12,
+        BOOKSTATION_WICKER_BONUS = 2,
+
+        BOOK_FIRE_RADIUS = 12,
+        FIREPEN_MAXUSES = 10,
+
+        BOOK_RESEARCH_STATION_RADIUS = 16,
+
+        BOOK_TEMPERATURE_RADIUS = 16,
+        BOOK_TEMPERATURE_AMOUNT = 35,
+
+        BOOK_BEES_AMOUNT = 3,
+        BOOK_FISH_AMOUNT = 3,
+
+        BOOK_GARDENING_UPGRADED_MAX_TARGETS = 15,
+
+        BOOK_WEB_GROUND_DURATION = total_day_time/16,
+        BOOK_WEB_GROUND_RADIUS = 4,
+        BOOK_WEB_GROUND_SPEED_PENALTY = 0.4,
+
+        BOOK_USES_SMALL = 3,
+        BOOK_USES_LARGE = 5,
     }
 
     TUNING_MODIFIERS = {}

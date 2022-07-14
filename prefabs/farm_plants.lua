@@ -585,12 +585,21 @@ local function domagicgrowthfn(inst)
 			TheWorld.components.farming_manager:AddSoilMoistureAtPoint(x, y, z, drink)
 		end
 
+		
+		local magic_tending = inst.magic_tending
+		
 		inst.components.growable:DoGrowth()
 		if inst.grew_into ~= nil then
 			inst = inst.grew_into
 		end
+
+		if magic_tending and inst.components.farmplanttendable then
+			inst.components.farmplanttendable:TendTo()
+			inst.magic_tending = true
+		end
+
 		if inst:IsValid() and inst.components.pickable == nil then
-			inst:DoTaskInTime(0.5 + math.random() + 0.25, RepeatMagicGrowth)	-- we need a new function so that seeds grow into a weeds, it will call the right function
+			inst:DoTaskInTime(3 + math.random(), RepeatMagicGrowth)	-- we need a new function so that seeds grow into a weeds, it will call the right function
 		end
 		return true
 	end

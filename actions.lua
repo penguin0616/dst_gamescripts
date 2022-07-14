@@ -124,8 +124,17 @@ local function ExtraPourWaterDist(doer, dest, bufferedaction)
     return 1.5
 end
 
+local function ArriveAnywhere()
+    return true
+end
+
 global("CLIENT_REQUESTED_ACTION")
 CLIENT_REQUESTED_ACTION = nil
+
+-- NOTES(JBK): This is used to translate normal actions the player could do in the game but done on the map instead.
+--             The amount of actions will be limited with how limiting the map itself is.
+global("ACTIONS_MAP_REMAP")
+ACTIONS_MAP_REMAP = {}
 
 function SetClientRequestedAction(actioncode, mod_name)
     if mod_name then
@@ -186,6 +195,8 @@ Action = Class(function(self, data, instant, rmb, distance, ghost_valid, ghost_e
 
     self.show_primary_input_left = data.show_primary_input_left
     self.show_secondary_input_right = data.show_secondary_input_right
+
+    self.map_action = data.map_action -- Should only be handled from the map and has action translations.
 end)
 
 -- NOTE: High priority is intended to be a shortcut flag for actions that we expect to always dominate if they are available.
@@ -286,6 +297,7 @@ ACTIONS =
     CASTSPELL = Action({ priority=-1, rmb=true, distance=20, mount_valid=true }),
 	CAST_POCKETWATCH = Action({ priority=-1, rmb=true, mount_valid=true }), -- to actually use the mounted action, the pocket watch will need the pocketwatch_mountedcast tag
     BLINK = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=36, mount_valid=true }),
+    BLINK_MAP = Action({ priority=HIGH_ACTION_PRIORITY, customarrivecheck=ArriveAnywhere, rmb=true, mount_valid=true, map_action=true, }),
     COMBINESTACK = Action({ mount_valid=true, extra_arrive_dist=ExtraPickupRange }),
     TOGGLE_DEPLOY_MODE = Action({ priority=HIGH_ACTION_PRIORITY, instant=true }),
     SUMMONGUARDIAN = Action({ rmb=false, distance=5 }),
@@ -383,7 +395,7 @@ ACTIONS =
     SET_HEADING = Action({distance=9999, do_not_locomote=true}),
     STOP_STEERING_BOAT = Action({ instant = true }),
     CAST_NET = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, distance=12, mount_valid=true, disable_platform_hopping=true }),
-    ROW_FAIL = Action({customarrivecheck=function() return true end, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true}),
+    ROW_FAIL = Action({customarrivecheck=ArriveAnywhere, disable_platform_hopping=true, skip_locomotor_facing=true, invalid_hold_action = true}),
     ROW = Action({priority=3, customarrivecheck=CheckRowRange, is_relative_to_platform=true, disable_platform_hopping=true, invalid_hold_action = true}),
     ROW_CONTROLLER = Action({priority=3, is_relative_to_platform=true, disable_platform_hopping=true, do_not_locomote=true, invalid_hold_action = true}),
     BOARDPLATFORM = Action({ customarrivecheck=CheckIsOnPlatform }),
@@ -790,7 +802,8 @@ ACTIONS.READ.fn = function(act)
     local targ = act.target or act.invobject
     if targ ~= nil and act.doer ~= nil then
 		if targ.components.book ~= nil and act.doer.components.reader ~= nil then
-	        return act.doer.components.reader:Read(targ)
+            local success, reason = act.doer.components.reader:Read(targ)
+	        return success, reason
 		elseif targ.components.simplebook ~= nil then
 			targ.components.simplebook:Read(act.doer)
 			return true
@@ -2369,6 +2382,15 @@ ACTIONS.CASTSPELL.fn = function(act)
     end
 end
 
+local function TryToSoulhop(act, act_pos, consumeall)
+    return act.doer ~= nil
+    and act.doer.sg ~= nil
+    and act.doer.sg.currentstate.name == "portal_jumpin_pre"
+    and act_pos ~= nil
+    and act.doer.TryToPortalHop ~= nil
+    and act.doer:TryToPortalHop(act.distancecount, consumeall)
+end
+
 ACTIONS.BLINK.strfn = function(act)
     return act.invobject == nil and act.doer ~= nil and act.doer:HasTag("soulstealer") and "SOUL" or nil
 end
@@ -2379,16 +2401,41 @@ ACTIONS.BLINK.fn = function(act)
         if act.invobject.components.blinkstaff ~= nil then
             return act.invobject.components.blinkstaff:Blink(act_pos, act.doer)
         end
-    elseif act.doer ~= nil
-        and act.doer.sg ~= nil
-        and act.doer.sg.currentstate.name == "portal_jumpin_pre"
-        and act_pos ~= nil
-        and act.doer.components.inventory ~= nil
-        and act.doer.components.inventory:Has("wortox_soul", 1) then
-        act.doer.components.inventory:ConsumeByName("wortox_soul", 1)
+    elseif TryToSoulhop(act, act_pos) then
         act.doer.sg:GoToState("portal_jumpin", act_pos)
         return true
     end
+end
+
+ACTIONS.BLINK_MAP.stroverridefn = function(act)
+    return act.invobject == nil and act.doer ~= nil and act.doer:HasTag("soulstealer") and subfmt(STRINGS.ACTIONS.BLINK_MAP.SOUL, { souls = act.distancecount, }) or nil
+end
+
+local function ActionCanMapSoulhop(act)
+    if act.invobject == nil and act.doer and act.doer.CanSoulhop then
+        return act.doer:CanSoulhop(act.distancecount)
+    end
+    return false
+end
+
+ACTIONS.BLINK_MAP.fn = function(act)
+    -- NOTES(JBK): This only supports soul hopping for now due to the theoretical infinite range.
+	local act_pos = act:GetActionPoint()
+    if ActionCanMapSoulhop(act) and TryToSoulhop(act, act_pos, true) then
+        act.doer.sg:GoToState("portal_jumpin", act_pos)
+        return true
+    end
+end
+
+ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
+    local dist = act.pos:GetPosition():Dist(targetpos)
+    local act_remap = BufferedAction(act.doer, nil, ACTIONS.BLINK_MAP, act.invobject, targetpos)
+    local dist_mod = ((act.doer and act.doer._freesoulhop_counter or 0) * (TUNING.WORTOX_FREEHOP_HOPSPERSOUL - 1)) * act.distance
+    act_remap.distancecount = math.max(math.ceil((dist + dist_mod) / (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL)), 1)
+    if not ActionCanMapSoulhop(act_remap) then
+        return nil
+    end
+    return act_remap
 end
 
 ACTIONS.CASTSUMMON.fn = function(act)

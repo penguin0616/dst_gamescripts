@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Poor thing, I think it's gotten stale.",
 
@@ -900,6 +912,7 @@ return{
         BERNIE_ACTIVE = "How incredible that this isn't even the strangest thing I've seen.",
         BERNIE_BIG = "I could've sworn you were smaller...",
 
+        BOOKSTATION = "As if I have time to sit and read!",
         BOOK_BIRDS = "Time and birds sure do fly.",
         BOOK_TENTACLES = "It's enough having to deal with them in person, why read about them too?",
         BOOK_GARDENING = "Do I even want to know how long the unabridged version was?",
@@ -907,6 +920,21 @@ return{
 		BOOK_HORTICULTURE = "Say Wickerbottom, do you dabble in temporal magic as well?",
         BOOK_SLEEP = "Not to critique the writing, but that nearly put me to sleep.",
         BOOK_BRIMSTONE = "Hmph. Not if I can help it.",
+
+        BOOK_FISH = "Fishing is already time-consuming enough, I'm not reading a book too!",
+        BOOK_FIRE = "No time to read, we're burning daylight!",
+        BOOK_WEB = "Ha! Was this written by a spider? I won't let my guard down that easily.",
+        BOOK_TEMPERATURE = "I won't spend my time and energy reading all that.",
+        BOOK_LIGHT = "You know, this one might actually be worthwhile.",
+        BOOK_RAIN = "Rituals, hm? The old girl's got some tricks up her sleeve.",
+        BOOK_MOON = "Do we really want to tamper with the moon? Oh, who am I to talk?",
+        BOOK_BEES = "I don't care for bees and I don't care to read about them.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Goodness, it's even thicker than the last one.",
+        BOOK_RESEARCH_STATION = "I'll admit it's quite efficient to have everything in one book.",
+        BOOK_LIGHT_UPGRADED = "Let's keep this one close at hand, shall we?",
+
+        FIREPEN = "She should really warn people about borrowing her pens.",
 
         PLAYER =
         {

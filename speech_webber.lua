@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "We don't think it can race anymore...",
 
@@ -900,6 +912,7 @@ return{
         BERNIE_ACTIVE = "That teddy bear is moving!",
         BERNIE_BIG = "It's creepy and cute at the same time!!",
 
+        BOOKSTATION = "We helped make the doily!",
         BOOK_BIRDS = "This one has pictures!",
         BOOK_TENTACLES = "Why are the pages all slimy?",
         BOOK_GARDENING = "Why should we read about flowers when we can pick them?",
@@ -907,6 +920,21 @@ return{
 		BOOK_HORTICULTURE = "Reading about veggies is almost as bad as eating them!",
         BOOK_SLEEP = "It's... beddy-bye time...",
         BOOK_BRIMSTONE = "We don't like how that one ends!",
+
+        BOOK_FISH = "Will reading really make us better at fishing?",
+        BOOK_FIRE = "Willow keeps trying to burn it... we thought she'd like it!",
+        BOOK_WEB = "Why would anyone be afraid of spiders?",
+        BOOK_TEMPERATURE = "Not too hot, not too cold, just right! Have we heard this story before?",
+        BOOK_LIGHT = "Ms. Wickerbottom, could you make a nightlight for us?",
+        BOOK_RAIN = "\"One of the simplest ways to invite rain is to kill a-\" oh...",
+        BOOK_MOON = "We try not to think about the moon too much...",
+        BOOK_BEES = "We thought we heard it buzzing!",
+        
+        BOOK_HORTICULTURE_UPGRADED = "It'll take us forever to read that!",
+        BOOK_RESEARCH_STATION = "Seeing someone pick up a heavy book makes us nervous, somehow...",
+        BOOK_LIGHT_UPGRADED = "It makes the brightest nightlight we've ever seen!",
+
+        FIREPEN = "How dangerous could a pen really be?",
 
         PLAYER =
         {

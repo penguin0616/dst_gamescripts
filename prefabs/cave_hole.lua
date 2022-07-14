@@ -90,6 +90,96 @@ local function CreateSurfaceAnim()
     return inst
 end
 
+local function build_hole_collision_mesh(radius, height)
+    local radius = 2.75
+    local height = 6
+    local segment_count = 16
+    local segment_span = math.pi * 2 / segment_count
+
+    local triangles = {}
+    local y0 = 0
+    local y1 = height
+
+    for segment_idx = 0, segment_count do
+
+        local angle = segment_idx * segment_span
+        local angle0 = angle - segment_span / 2
+        local angle1 = angle + segment_span / 2
+
+        local x0 = math.cos(angle0) * radius
+        local z0 = math.sin(angle0) * radius
+
+        local x1 = math.cos(angle1) * radius
+        local z1 = math.sin(angle1) * radius
+
+        table.insert(triangles, x0)
+        table.insert(triangles, y0)
+        table.insert(triangles, z0)
+
+        table.insert(triangles, x0)
+        table.insert(triangles, y1)
+        table.insert(triangles, z0)
+
+        table.insert(triangles, x1)
+        table.insert(triangles, y0)
+        table.insert(triangles, z1)
+
+        table.insert(triangles, x1)
+        table.insert(triangles, y0)
+        table.insert(triangles, z1)
+
+        table.insert(triangles, x0)
+        table.insert(triangles, y1)
+        table.insert(triangles, z0)
+
+        table.insert(triangles, x1)
+        table.insert(triangles, y1)
+        table.insert(triangles, z1)
+    end
+
+    segment_count = 8
+    radius = 1.5
+    segment_span = math.pi * 2 / segment_count
+    for segment_idx = 0, segment_count do
+
+        local angle = segment_idx * segment_span
+        local angle0 = angle - segment_span / 2
+        local angle1 = angle + segment_span / 2
+
+        local x0 = math.cos(angle0) * radius
+        local z0 = math.sin(angle0) * radius
+
+        local x1 = math.cos(angle1) * radius
+        local z1 = math.sin(angle1) * radius
+
+        table.insert(triangles, x0)
+        table.insert(triangles, y0)
+        table.insert(triangles, z0)
+
+        table.insert(triangles, x0)
+        table.insert(triangles, y1)
+        table.insert(triangles, z0)
+
+        table.insert(triangles, x1)
+        table.insert(triangles, y0)
+        table.insert(triangles, z1)
+
+        table.insert(triangles, x1)
+        table.insert(triangles, y0)
+        table.insert(triangles, z1)
+
+        table.insert(triangles, x0)
+        table.insert(triangles, y1)
+        table.insert(triangles, z0)
+
+        table.insert(triangles, x1)
+        table.insert(triangles, y1)
+        table.insert(triangles, z1)
+    end
+
+	return triangles
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -99,8 +189,9 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    inst:AddTag("groundhole")
+    --inst:AddTag("groundhole") -- TODO(JBK): Fix this.
     inst:AddTag("blocker")
+    --inst:AddTag("blinkfocus") -- TODO(JBK): Implement this.
 
     inst.entity:AddPhysics()
     inst.Physics:SetMass(0)
@@ -109,7 +200,8 @@ local function fn()
     inst.Physics:CollidesWith(COLLISION.ITEMS)
     inst.Physics:CollidesWith(COLLISION.CHARACTERS)
     inst.Physics:CollidesWith(COLLISION.GIANTS)
-    inst.Physics:SetCylinder(2.75, 6)
+    inst.Physics:SetTriangleMesh(build_hole_collision_mesh())
+    --inst.Physics:SetCylinder(2.75, 6)
 
     inst.AnimState:SetBank("cave_hole")
     inst.AnimState:SetBuild("cave_hole")

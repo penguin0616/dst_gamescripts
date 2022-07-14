@@ -3,6 +3,17 @@ require("stategraphs/commonstates")
 local ATTACK_PROP_MUST_TAGS = { "_combat" }
 local ATTACK_PROP_CANT_TAGS = { "flying", "shadow", "ghost", "FX", "NOCLICK", "DECOR", "INLIMBO", "playerghost" }
 
+local BOOK_LAYERS =
+{
+    "FX_tentacles",
+    "FX_fish",
+    "FX_plants",
+    "FX_plants_big",
+    "FX_plants_small",
+    "FX_lightning",
+    "FX_roots",
+}
+
 local function DoEquipmentFoleySounds(inst)
     for k, v in pairs(inst.components.inventory.equipslots) do
         if v.foleysound ~= nil then
@@ -709,6 +720,10 @@ local actionhandlers =
                 or "pocketwatch_cast"
         end),
     ActionHandler(ACTIONS.BLINK,
+        function(inst, action)
+            return action.invobject == nil and inst:HasTag("soulstealer") and "portal_jumpin_pre" or "quicktele"
+        end),
+    ActionHandler(ACTIONS.BLINK_MAP,
         function(inst, action)
             return action.invobject == nil and inst:HasTag("soulstealer") and "portal_jumpin_pre" or "quicktele"
         end),
@@ -5450,7 +5465,7 @@ local states =
                             inst.sg.mem.hungryslowbuildtalktime = t + GetRandomMinMax(4, 8)
                             inst.components.talker:Say(GetString(inst, "ANNOUNCE_HUNGRY_SLOWBUILD"))
                         end
-                    else
+                    elseif inst.sg.mem.dohungryfastbuildtalk then
                         inst.sg.mem.hungryslowbuildtalktime = nil
                         if inst.sg.mem.hungryfastbuildtalktime == nil or inst.sg.mem.hungryfastbuildtalktime + 10 < t then
                             inst.sg.mem.hungryfastbuildtalktime = t + GetRandomMinMax(4, 6)
@@ -6888,13 +6903,57 @@ local states =
 
             local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
             if book ~= nil then
+                if book.def ~= nil then 
+                    if book.def.layer ~= nil then
+                        if type(book.def.layer) == "table" then
+                            for i, v in ipairs(BOOK_LAYERS) do
+                                if table.contains(book.def.layer, v) then
+                                    inst.AnimState:Show(v)
+                                else
+                                    inst.AnimState:Hide(v)
+                                end
+                            end
+                        else
+                            for i, v in ipairs(BOOK_LAYERS) do
+                                if book.def.layer == v then
+                                    inst.AnimState:Show(v)
+                                else
+                                    inst.AnimState:Hide(v)
+                                end
+                            end
+                        end
+
+                        inst.sg.statemem.book_layer = book.def.layer
+                    end
+
+                    if book.def.layer_sound ~= nil then
+                        --track and manage via soundtask and sound name (even though it is not a loop)
+                        --so we can handle interruptions to this state
+                        local frame = book.def.layer_sound.frame or 0
+                        if frame > 0 then
+                            inst.sg.statemem.soundtask = inst:DoTaskInTime(frame * FRAMES, function(inst)
+                                inst.sg.statemem.soundtask = nil
+                                inst.SoundEmitter:KillSound("book_layer_sound")
+                                inst.SoundEmitter:PlaySound(book.def.layer_sound.sound, "book_layer_sound")
+                            end)
+                        else
+                            inst.SoundEmitter:KillSound("book_layer_sound")
+                            inst.SoundEmitter:PlaySound(book.def.layer_sound.sound, "book_layer_sound")
+                        end
+                    end
+                end
+
                 inst.components.inventory:ReturnActiveActionItem(book)
                 local skin_build = book:GetSkinBuild()
                 if skin_build ~= nil then
                     inst.sg.statemem.skinned = true
-                    inst.AnimState:OverrideItemSkinSymbol("book_open", skin_build, "book_open", book.GUID, "player_actions_uniqueitem")
-                    inst.AnimState:OverrideItemSkinSymbol("book_closed", skin_build, "book_closed", book.GUID, "player_actions_uniqueitem")
+                    inst.AnimState:OverrideItemSkinSymbol("book_open",       skin_build, "book_open",       book.GUID, "player_actions_uniqueitem")
+                    inst.AnimState:OverrideItemSkinSymbol("book_closed",     skin_build, "book_closed",     book.GUID, "player_actions_uniqueitem")
                     inst.AnimState:OverrideItemSkinSymbol("book_open_pages", skin_build, "book_open_pages", book.GUID, "player_actions_uniqueitem")
+                else
+                    inst.AnimState:OverrideSymbol("book_closed",     "swap_books", book.prefab .. "_closed")
+                    inst.AnimState:OverrideSymbol("book_open",       "swap_books", book.prefab .. "_open")
+                    inst.AnimState:OverrideSymbol("book_open_pages", "swap_books", book.prefab .. "_open_pages")
                 end
 
                 --should be same as the buffered action item
@@ -6943,11 +7002,17 @@ local states =
                     end
                     inst.sg.statemem.targetfx = nil
                 end
-                inst.sg.statemem.book_fx = nil --Don't cancel anymore
+                
                 if not inst.sg.statemem.isaoe then
                     inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
-                    inst:PerformBufferedAction()
+                    if not inst:PerformBufferedAction() then
+                        if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
+                            inst.sg.statemem.book_fx:PushEvent("fail_fx")
+                        end
+                    end
                 end
+
+                inst.sg.statemem.book_fx = nil --Don't cancel anymore
             end),
             TimeEvent(65 * FRAMES, function(inst)
                 if inst.sg.statemem.isaoe then
@@ -6976,6 +7041,20 @@ local states =
             end
             if inst.sg.statemem.targetfx ~= nil and inst.sg.statemem.targetfx:IsValid() then
                 OnRemoveCleanupTargetFX(inst)
+            end
+            if inst.sg.statemem.book_layer ~= nil then
+                if type(inst.sg.statemem.book_layer) == "table" then
+                    for i, v in ipairs(inst.sg.statemem.book_layer) do
+                        inst.AnimState:Hide(v)
+                    end
+                else
+                    inst.AnimState:Hide(inst.sg.statemem.book_layer)
+                end
+            end
+            if inst.sg.statemem.soundtask ~= nil then
+                inst.sg.statemem.soundtask:Cancel()
+            elseif inst.SoundEmitter:PlayingSound("book_layer_sound") then
+                inst.SoundEmitter:SetVolume("book_layer_sound", .5)
             end
         end,
     },
@@ -7281,6 +7360,7 @@ local states =
                             inst.sg.statemem.projectilesound =
                                 (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                                 (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                                (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                                 "dontstarve/wilson/attack_weapon"
                         elseif inst.sg.statemem.projectiledelay <= 0 then
                             inst.sg.statemem.projectiledelay = nil
@@ -7290,6 +7370,7 @@ local states =
                         inst.SoundEmitter:PlaySound(
                             (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                             (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                            (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                             "dontstarve/wilson/attack_weapon",
                             nil, nil, true
                         )
@@ -7354,6 +7435,7 @@ local states =
                         inst.sg.statemem.projectilesound =
                             (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                             (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                            (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                             "dontstarve/wilson/attack_weapon"
                     elseif inst.sg.statemem.projectiledelay <= 0 then
                         inst.sg.statemem.projectiledelay = nil
@@ -7364,6 +7446,7 @@ local states =
                         (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                         (equip:HasTag("shadow") and "dontstarve/wilson/attack_nightsword") or
                         (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                        (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                         "dontstarve/wilson/attack_weapon",
                         nil, nil, true
                     )
@@ -11908,7 +11991,7 @@ local states =
                     data.weapon.components.aoeweapon_leap ~= nil and
                     inst.AnimState:IsCurrentAnimation("superjump") then
                     inst.AnimState:PlayAnimation("superjump_land")
-                    inst.AnimState:SetMultColour(.4, .4, .4, .4)
+                    inst.AnimState:SetMultColour(1, 1, 1, .4)
                     inst.sg.statemem.targetpos = data.targetpos
                     inst.sg.statemem.flash = 0
                     if not inst.sg.statemem.isphysicstoggle then
@@ -11936,11 +12019,11 @@ local states =
         {
             TimeEvent(FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_weapon")
-                inst.AnimState:SetMultColour(.7, .7, .7, .7)
+                inst.AnimState:SetMultColour(1, 1, 1, .7)
                 inst.components.colouradder:PushColour("superjump", .1, .1, 0, 0)
             end),
             TimeEvent(2 * FRAMES, function(inst)
-                inst.AnimState:SetMultColour(.9, .9, .9, .9)
+                inst.AnimState:SetMultColour(1, 1, 1, .9)
                 inst.components.colouradder:PushColour("superjump", .2, .2, 0, 0)
             end),
             TimeEvent(3 * FRAMES, function(inst)
@@ -14429,6 +14512,7 @@ local states =
             ToggleOffPhysics(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("wortox_portal_jumpout")
+            inst:ResetMinimapOffset()
             if dest ~= nil then
                 inst.Physics:Teleport(dest:Get())
             else

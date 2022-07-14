@@ -95,12 +95,20 @@ return{
 		{
 			WRONGGEAR = "I won't use my good fishing rod in this stagnant pond.",
 		},
-        --wickerbottom specific action
---fallback to speech_wilson.lua         READ =
---fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua         },
+        
+        READ =
+        {
+            GENERIC = "I must deal with this first.",
+            NOBIRDS = "There are plenty of birds here already.",
+            NOWATERNEARBY = "I can't just conjure up fish without water.",
+            TOOMANYBIRDS =    "There are plenty of birds here already.",
+            WAYTOOMANYBIRDS = "I must wait before I summon the birds again.",
+            NOFIRES = "For once, nothing is on fire.",
+            NOSILVICULTURE = "Making invisible trees grow? Now that'd be a trick.",
+            NOHORTICULTURE = "There's nothing worth growing here.",
+            NOTENTACLEGROUND = "Tentacles are ill-suited to this place.",
+            NOSLEEPTARGETS = "Nobody wants a bedtime story from the bogeyman, is that it?",
+        },
 
         GIVE =
         {
@@ -388,10 +396,6 @@ return{
 	ANNOUNCE_PICK_DISEASE_WARNING = "How putrid!", --removed
 	ANNOUNCE_ADVENTUREFAIL = "I of all people should be able to do this.",
     ANNOUNCE_MOUNT_LOWHEALTH = "Say, pal, you don't look so good.",
-
-    --waxwell and wickerbottom specific strings
-    ANNOUNCE_TOOMANYBIRDS = "There are plenty of birds here already.",
-    ANNOUNCE_WAYTOOMANYBIRDS = "I must wait before I summon the birds again.",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +708,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "The creature is past its prime.",
 
@@ -829,6 +844,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "I don't like the sound of that...",
 
+    ANNOUNCE_BOOK_MOON_DAYTIME = "We'll know if it worked once night falls.",
+
 	BATTLECRY =
 	{
 		GENERIC = "To arms!",
@@ -900,6 +917,7 @@ return{
         BERNIE_ACTIVE = "Just what am I looking at here?",
         BERNIE_BIG = "How truly unnerving.",
 
+        BOOKSTATION = "She thinks she can choose what knowledge is shared and what gets hidden away?",
         BOOK_BIRDS = "What a wasteful misuse of magic.",
         BOOK_TENTACLES = "What horrors shall be summoned from the depths?",
         BOOK_GARDENING = "It's not wise to toy with forces beyond your comprehension.",
@@ -907,6 +925,21 @@ return{
 		BOOK_HORTICULTURE = "Hopefully this version is less wordy.",
         BOOK_SLEEP = "I haven't had a real sleep in... ages.",
         BOOK_BRIMSTONE = "I've had enough fire and brimstone for one eternity.",
+
+        BOOK_FISH = "I suppose I'll eat for a lifetime, then? Somehow I doubt it.",
+        BOOK_FIRE = "Ah. Based on the librarian's own observations, I take it?",
+        BOOK_WEB = "As if spiders are what you should be worried about here.",
+        BOOK_TEMPERATURE = "I'm always cool and collected.",
+        BOOK_LIGHT = "Taking some inspiration from the Codex, are we? I'm flattered.",
+        BOOK_RAIN = "What's a ritual without a little showmanship? Surely a prop or two?",
+        BOOK_MOON = "We've come this far, no point in stopping our meddling now.",
+        BOOK_BEES = "Perhaps now the bees will serve me.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Hopefully this will mean less time relegated to the garden.",
+        BOOK_RESEARCH_STATION = "Hmph. It doesn't hold a candle to the secret knowledge I possess.",
+        BOOK_LIGHT_UPGRADED = "Now she's just showing off.",
+
+        FIREPEN = "Words hold power. Pens too, apparently.",
 
         PLAYER =
         {

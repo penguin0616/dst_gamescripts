@@ -212,7 +212,7 @@ local function OnDeath(inst, data)
 end
 
 local function OnAlphaChanged(inst, alpha, most_alpha)
-    inst._ripples.AnimState:OverrideMultColour(alpha, alpha, alpha, alpha)
+    inst._ripples.AnimState:OverrideMultColour(1, 1, 1, alpha)
 end
 
 local function OnAttackOther(inst)

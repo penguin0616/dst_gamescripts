@@ -84,7 +84,7 @@ local function followfx_fn()
 
     inst.AnimState:SetFinalOffset(1)
     inst.AnimState:SetScale(0.65, 0.65)
-    inst.AnimState:SetMultColour(0.4, 0.4, 0.4, 0.4)
+    inst.AnimState:SetMultColour(1, 1, 1, 0.4)
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
     inst.AnimState:SetLightOverride(LOOT_LIGHT_OVERRIDE_AMOUNT)
 

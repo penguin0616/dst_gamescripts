@@ -531,8 +531,8 @@ local function build_boat_collision_mesh(radius, height)
 	return triangles
 end
 
-local PLAYER_COLLISION_MESH = build_boat_collision_mesh(4.1, 3)
-local ITEM_COLLISION_MESH = build_boat_collision_mesh(4.2, 3)
+--local PLAYER_COLLISION_MESH = build_boat_collision_mesh(4.1, 3)
+--local ITEM_COLLISION_MESH = build_boat_collision_mesh(4.2, 3)
 
 local function boat_player_collision_template(radius)
     local inst = CreateEntity()

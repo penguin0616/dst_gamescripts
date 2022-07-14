@@ -100,24 +100,35 @@ function Inventory:TransferInventory(receiver)
 
     local inv = receiver.components.inventory
 
+    -- NOTES(JBK): Weapons that are given to specific entities to use have the "nosteal" tag but also do not persist.
+    --             The tag can not be used because of Wanda watches for this TransferInventory function to work.
+    --             The restriction that specific entities that have these unique weapons must also make them not persist.
     for k,v in pairs(self.itemslots) do
-        inv:GiveItem(self:RemoveItemBySlot(k))
+        local item = self:RemoveItemBySlot(k)
+        if item and item.persists then
+            inv:GiveItem(item)
+        end
     end
 
     for k,v in pairs(self.equipslots) do
-		if inv.equipslots ~= nil then
-            local equip = self:Unequip(k)
-            if equip and equip.components.equippable and equip.components.equippable:IsRestricted(receiver) then
-                inv:GiveItem(equip) 
+        local equip = self:Unequip(k)
+        if equip and equip.persists then
+            if inv.equipslots ~= nil then
+                if equip.components.equippable and equip.components.equippable:IsRestricted(receiver) then
+                    inv:GiveItem(equip) 
+                else
+                    inv:Equip(equip)
+                end
             else
-                inv:Equip(equip)
+                inv:GiveItem(equip) 
             end
-		else
-			inv:GiveItem(self:Unequip(k)) 
-		end
+        end
     end
 
-    receiver.components.inventory:GiveActiveItem(self:GetActiveItem())
+    local activeitem = self:GetActiveItem()
+    if activeitem and activeitem.persists then
+        receiver.components.inventory:GiveActiveItem(activeitem)
+    end
 end
 
 function Inventory:OnSave()
@@ -1160,6 +1171,29 @@ function Inventory:HasItemWithTag(tag, amount)
     end
 
     return num_found >= amount, num_found
+end
+
+function Inventory:GetItemsWithTag(tag)
+    local items = {}
+    for k, v in pairs(self.itemslots) do
+        if v and v:HasTag(tag) then
+            table.insert(items, v)
+        end
+    end
+
+    if self.activeitem and self.activeitem:HasTag(tag) then
+        table.inset(items, self.active_item)
+    end
+
+    local overflow = self:GetOverflowContainer()
+    if overflow ~= nil then
+        local overflow_items = overflow:GetItemsWithTag(tag)
+        for _, item in ipairs(overflow_items) do
+            table.insert(items, item)
+        end
+    end
+
+    return items
 end
 
 function Inventory:GetItemByName(item, amount, checkallcontainers) --Note(Peter): We don't care about v.skinname for inventory GetItemByName requests.

@@ -99,7 +99,7 @@ local function GetPairedDoor(inst, rot)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     local swingright = IsSwingRight(inst)
-    local search_dist = IsNarrow(inst) and 1 or 1.4
+    local search_dist = IsNarrow(inst) and 1.2 or 1.6
 
     local search_x = -math.sin(rot / RADIANS) * search_dist
     local search_y = math.cos(rot / RADIANS) * search_dist
@@ -107,7 +107,7 @@ local function GetPairedDoor(inst, rot)
     search_x = x + (swingright and search_x or -search_x)
     search_y = z + (swingright and -search_y or search_y)
 
-    local paired_door = TheSim:FindEntities(search_x,0,search_y, 0.5, FINDDOOR_MUST_TAGS)[1]
+    local paired_door = TheSim:FindEntities(search_x,0,search_y, 0.75, FINDDOOR_MUST_TAGS)[1]
     return paired_door
 end
 

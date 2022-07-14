@@ -595,6 +595,7 @@ STRINGS =
 			CRITTERS = "Look in",
 			SCULPTING = "Sculpt at",
 			CARTOGRAPHY = "Draw at",
+            STUDY = "Study at"
 		},
 
         JUMPIN =
@@ -664,6 +665,10 @@ STRINGS =
         {
             GENERIC = "Telepoof",
             SOUL = "Soul Hop",
+        },
+        BLINK_MAP =
+        {
+            SOUL = "Soul Hop({souls})",
         },
         COMBINESTACK = "Combine Stack",
         BURY = "Bury",
@@ -974,6 +979,9 @@ STRINGS =
         NONE = "Nothing",
 
         LUCY = "Lucy the Axe",
+        
+        BOOKSTATION = "Bookcase",
+
         BOOK_BIRDS = "Birds of the World",
         BOOK_TENTACLES = "On Tentacles",
         BOOK_GARDENING = "Applied Horticulture",
@@ -981,6 +989,21 @@ STRINGS =
 		BOOK_HORTICULTURE = "Horticulture, Abridged",
         BOOK_SLEEP = "Sleepytime Stories",
         BOOK_BRIMSTONE = "The End is Nigh!",
+
+        BOOK_FISH = "The Angler's Survival Guide",
+        BOOK_FIRE = "Pyrokinetics Explained",
+        BOOK_WEB = "Overcoming Arachnophobia",
+        BOOK_TEMPERATURE = "Tempering Temperatures",
+        BOOK_LIGHT = "Lux Aeterna",
+        BOOK_RAIN = "Practical Rain Rituals",
+        BOOK_MOON = "Lunar Grimoire",
+        BOOK_BEES = "Apicultural Notes",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Horticulture, Expanded",
+        BOOK_RESEARCH_STATION = "The Everything Encyclopedia",
+        BOOK_LIGHT_UPGRADED = "Lux Aeterna Redux",
+
+        FIREPEN = "Fiery Pen",
 
         ANCIENT_ALTAR ="Ancient Pseudoscience Station",
         ANCIENT_ALTAR_BROKEN ="Broken Ancient Pseudoscience Station",
@@ -3517,6 +3540,8 @@ STRINGS =
 
     RECIPE_DESC =
     {
+        BOOKSTATION = "All books must be arranged using the Dewey Decimal System.",
+
         BOOK_BIRDS = "1000 species: habits, habitats, and calls.",
         BOOK_TENTACLES = "Let's learn about our subterranean friends!",
         BOOK_GARDENING = "On the care and feeding of plants.",
@@ -3524,6 +3549,21 @@ STRINGS =
 		BOOK_HORTICULTURE = "On the care and feeding of crops.",
         BOOK_SLEEP = "Soothing tales to send you off to dreamland.",
         BOOK_BRIMSTONE = "The world will end in fire and tribulation!",
+
+        BOOK_FISH = "Fishing, made easy!",
+        BOOK_FIRE = "Use these simple techniques to defuse any fiery situation.",
+        BOOK_WEB = "You don't know someone until you walk a mile in their webs.",
+        BOOK_TEMPERATURE = "Keep your personal climate under control with these easy steps.",
+        BOOK_LIGHT = "An illuminating read.",
+        BOOK_RAIN = "Save it for a rainy day, whenever you decide that will be.",
+        BOOK_MOON = "Summon the power of the moon.",
+        BOOK_BEES = "Learn the ABC's of beekeeping.",
+
+        BOOK_HORTICULTURE_UPGRADED = "Expert analysis on advanced crop care.",
+        BOOK_RESEARCH_STATION = "A complete guide to everything from A to Z.",
+        BOOK_LIGHT_UPGRADED = "This complete edition far outshines its predecessor.",
+
+        FIREPEN = "Keep those rambunctious flames penned in.",
 
         CARTOGRAPHYDESK = "Show everyone exactly where you've been.",
         COMPASS = "Points the way north.",
@@ -6325,6 +6365,7 @@ STRINGS.UI =
         NEEDSHERMITCRABSHOP_L3 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L4 = "Find someone friendly enough to make this trade!",
         NEEDSCREATURESCANNING = "Scan living creatures to collect data!",
+        NEEDSBOOKSTATION = "Build a bookcase to craft your books.",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",

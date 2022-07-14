@@ -35,7 +35,7 @@ end
 
 local function SetHeadAlpha(inst, alpha)
     if inst.blobhead ~= nil and inst.blobhead:IsValid() then
-        inst.blobhead.AnimState:SetMultColour(alpha, alpha, alpha, alpha)
+        inst.blobhead.AnimState:SetMultColour(1, 1, 1, alpha)
     end
 end
 
@@ -213,7 +213,7 @@ local function commonfn(buildbank, headdata, tags, common_postinit, master_posti
     inst.AnimState:PlayAnimation("emerge")
 
 	local colour_mult = TUNING.GESTALT_COMBAT_TRANSPERENCY
-	inst.AnimState:SetMultColour(colour_mult, colour_mult, colour_mult, colour_mult)
+	inst.AnimState:SetMultColour(1, 1, 1, colour_mult)
 
     inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 

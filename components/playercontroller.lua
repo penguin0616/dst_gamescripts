@@ -3654,6 +3654,62 @@ function PlayerController:OnRemoteRightClick(actioncode, position, target, rotat
     end
 end
 
+function PlayerController:RemapMapAction(act, position)
+    local act_remap = nil
+    if act and ACTIONS_MAP_REMAP[act.action.code] then
+        local px, py, pz = position:Get()
+        if self.inst:CanSeePointOnMiniMap(px, py, pz) and TheWorld.Map:IsVisualGroundAtPoint(px, py, pz) then
+            act_remap = ACTIONS_MAP_REMAP[act.action.code](act, Vector3(px, py, pz))
+        end
+    end
+    return act_remap
+end
+
+function PlayerController:GetMapActions(position)
+    -- NOTES(JBK): In order to not interface with the playercontroller too harshly and keep that isolated from this system here
+    --             it is better to get what the player could do at their location as a quick check to make sure the actions done
+    --             here will not interfere with actions done without the map up.
+    local LMBaction, RMBaction = nil, nil
+
+    local pos = self.inst:GetPosition()
+
+    local lmbact = self.inst.components.playeractionpicker:GetLeftClickActions(pos)[1]
+    LMBaction = self:RemapMapAction(lmbact, position)
+
+    local rmbact = self.inst.components.playeractionpicker:GetRightClickActions(pos)[1]
+    RMBaction = self:RemapMapAction(rmbact, position)
+
+    return LMBaction, RMBaction
+end
+
+function PlayerController:OnMapAction(actioncode, position)
+    local act = ACTIONS_BY_ACTION_CODE[actioncode]
+    if act == nil or not act.map_action then
+        return
+    end
+
+    if self.ismastersim then
+        local LMBaction, RMBaction = self:GetMapActions(position)
+        if act.rmb then
+            if RMBaction then
+                self.locomotor:PushAction(RMBaction, true)
+            end
+        else
+            if LMBaction then
+                self.locomotor:PushAction(LMBaction, true)
+            end
+        end
+    elseif self.locomotor == nil then
+        SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z)
+    elseif self:CanLocomote() then
+        local _, RMBaction = self:GetMapActions(position)
+        RMBaction.preview_cb = function()
+            SendRPCToServer(RPC.DoActionOnMap, actioncode, position.x, position.z)
+        end
+        self.locomotor:PreviewAction(RMBaction, true)
+    end
+end
+
 function PlayerController:GetLeftMouseAction()
     return self.LMBaction
 end
@@ -3719,8 +3775,8 @@ function PlayerController:GetGroundUseAction(position)
                 )
             ) then
             local isaoetargeting = islocal and self:IsAOETargeting()
-            local lmb = not isaoetargeting and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, false)[1] or nil
-            local rmb = (not islocal or isaoetargeting or equipitem.components.aoetargeting == nil or not equipitem.components.aoetargeting:IsEnabled()) and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, true)[1] or nil
+            local lmb = not isaoetargeting and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, nil, false)[1] or nil
+            local rmb = (not islocal or isaoetargeting or equipitem.components.aoetargeting == nil or not equipitem.components.aoetargeting:IsEnabled()) and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, nil, true)[1] or nil
             if lmb ~= nil then
                 if lmb.action == ACTIONS.DROP then
                     lmb = nil

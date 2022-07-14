@@ -16,8 +16,12 @@ local SourceModifierList = require("util/sourcemodifierlist")
 --[[ Constants ]]
 --------------------------------------------------------------------------
 
+local function shouldremoveitem(inst)
+    return inst:HasTag("personal_possession") or inst:HasTag("cursed")
+end
+
 local function processloot(inst, stash)
-    if inst:HasTag("personal_possession") then
+    if shouldremoveitem(inst) then
         inst:Remove()
         return
     end
@@ -37,11 +41,13 @@ local function stashloot(inst)
         processloot(inst,stash)
     elseif inst.components.inventory then
         local function checkitem(item)
-            if item and item:HasTag("personal_possession") then
-                item:Remove()
-            elseif item then 
-                inst.components.inventory:DropItem(item, true)
-                processloot(item, stash)
+            if item then
+                if shouldremoveitem(item) then
+                    item:Remove()
+                else
+                    inst.components.inventory:DropItem(item, true)
+                    processloot(item, stash)
+                end
             end
         end
         inst.components.inventory:ForEachItem(checkitem)

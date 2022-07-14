@@ -22,7 +22,7 @@ local DEFAULT_PERIOD = CalculatePeriod(DEFAULT_DURATION, DEFAULT_START, DEFAULT_
 
 local function PushAlpha(inst)
     local alpha = FadeToAlpha(inst._fade:value())
-    inst.AnimState:OverrideMultColour(alpha, alpha, alpha, alpha)
+    inst.AnimState:OverrideMultColour(1, 1, 1, alpha)
 end
 
 local function UpdateFade(inst)

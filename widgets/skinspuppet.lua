@@ -23,6 +23,7 @@ local player_emotes_to_choose = {
 	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" },
     wx78 = "idle_wx",
 	wonkey = "idle_wonkey",
+	wickerbottom = "idle_wickerbottom",
 }
 
 local emote_min_time = 6

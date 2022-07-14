@@ -3,6 +3,7 @@ local FiniteUses = Class(function(self, inst)
     self.total = 100
     self.current = 100
     self.consumption = {}
+    self.ignorecombatdurabilityloss = false
 end)
 
 function FiniteUses:OnRemoveFromEntity()
@@ -56,6 +57,14 @@ end
 
 function FiniteUses:Use(num)
     self:SetUses(self.current - (num or 1))
+end
+
+function FiniteUses:IgnoresCombatDurabilityLoss()
+    return self.ignorecombatdurabilityloss
+end
+
+function FiniteUses:SetIgnoreCombatDurabilityLoss(value)
+    self.ignorecombatdurabilityloss = value
 end
 
 function FiniteUses:OnUsedAsItem(action, doer, target)

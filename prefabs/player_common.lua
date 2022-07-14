@@ -1314,6 +1314,12 @@ fns.ShowPopUp = function(inst, popup, show, ...)
     end
 end
 
+fns.ResetMinimapOffset = function(inst) -- NOTES(JBK): Please use this only when necessary.
+    if TheWorld.ismastersim and inst.userid then
+        SendRPCToClient(CLIENT_RPC.ResetMinimapOffset, inst.userid)
+    end
+end
+
 local function SetCameraDistance(inst, distance)
     if TheWorld.ismastersim then
         inst.player_classified.cameradistance:set(distance or 0)
@@ -2281,6 +2287,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.ShowActions = ShowActions
         inst.ShowHUD = ShowHUD
         inst.ShowPopUp = fns.ShowPopUp
+        inst.ResetMinimapOffset = fns.ResetMinimapOffset
         inst.SetCameraDistance = SetCameraDistance
         inst.SetCameraZoomed = SetCameraZoomed
         inst.SnapCamera = SnapCamera

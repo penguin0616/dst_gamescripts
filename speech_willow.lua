@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -711,6 +712,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "That thing's looking kinda rough.",
 
@@ -907,6 +919,7 @@ return{
         BERNIE_ACTIVE = "Help me, Bernie!",
         BERNIE_BIG = "GET'EM, BERNIE!!",
 
+        BOOKSTATION = "Hey, uh... what library did Ms. Wickerbottom work at, anyway?",
         BOOK_BIRDS = "Less reading, more burning!",
         BOOK_TENTACLES = "Looks like kindling to me!",
         BOOK_GARDENING = "Ughh, who cares?",
@@ -914,6 +927,21 @@ return{
 		BOOK_HORTICULTURE = "Ughh, who cares?",
         BOOK_SLEEP = "Bo-oring!",
         BOOK_BRIMSTONE = "That's my favorite book!",
+
+        BOOK_FISH = "The only thing more boring than fishing is reading about fishing.",
+        BOOK_FIRE = "You see something, you set it on fire. I don't need a book to teach me that!",
+        BOOK_WEB = "Ew, who wants to read a book about spiders?",
+        BOOK_TEMPERATURE = "Yaaaawwwn.",
+        BOOK_LIGHT = "Wow, another book I'll never read!",
+        BOOK_RAIN = "Ugh, I hate rain!",
+        BOOK_MOON = "Another dumb book about whatever.",
+        BOOK_BEES = "\"Rule one: don't set beehives on fire\"? This book's stupid!",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Nice and thick, that should burn for a good while.",
+        BOOK_RESEARCH_STATION = "How would everything even fit in there?",
+        BOOK_LIGHT_UPGRADED = "Stop trying to get me to read!",
+
+        FIREPEN = "Hey, I'm feeling really inspired to write!",
 
         PLAYER =
         {
@@ -3489,8 +3517,8 @@ return{
         },
         GNARWAIL_HORN = "Ha ha, cool.",
 
-        WALKINGPLANK = "So, who're we gonna make walk it?",
-        WALKINGPLANK_GRASS = "So, who're we gonna make walk it?",
+        WALKINGPLANK = "So, who are we gonna make walk it?",
+        WALKINGPLANK_GRASS = "So, who are we gonna make walk it?",
         OAR = "Rowing's dumb. Why don't we just use a sail?",
 		OAR_DRIFTWOOD = "Ugh. Can it be someone else's turn to row?",
 

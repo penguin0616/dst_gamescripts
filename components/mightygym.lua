@@ -70,7 +70,6 @@ local GLASS_SOUND = "wolfgang1/mightygym/moonglass_place"
 local VEGGIE_SOUND = "wolfgang1/mightygym/vegetable_place"
 local POTATOSACK_SOUND = "wolfgang1/mightygym/sack_place"
 
--- TODO: veggies and chesspieces
 local MATERIAL_SOUNDS =
 {
     --Rock

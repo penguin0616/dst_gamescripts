@@ -21,6 +21,7 @@ local function metafn()
 	}
     for i, v in ipairs(TechTree.BONUS_TECH) do
         t[string.lower(v).."_bonus"] = function(self, bonus) self.inst.replica.builder:SetTechBonus(string.lower(v), bonus) end
+        t[string.lower(v).."_tempbonus"] = function(self, bonus) self.inst.replica.builder:SetTempTechBonus(string.lower(v), (bonus or 0)) end
     end
 	return t
 end
@@ -40,6 +41,7 @@ local Builder = Class(function(self, inst)
     end
     self.ingredientmod = 1
     --self.last_hungry_build = nil
+    --self.last_hungry_build_pt = nil
 
     self.freebuildmode = false
 
@@ -69,13 +71,20 @@ function Builder:ActivateCurrentResearchMachine(recipe)
     end
 end
 
+local function CheckHungryDistance(inst, last_hungry_build_pt)
+    return inst:GetDistanceSqToPoint(last_hungry_build_pt) > TUNING.HUNGRY_BUILDER_RESET_DISTANCE_SQ
+end
+
 function Builder:OnSave()
     local hungrytime = self.last_hungry_build ~= nil and math.ceil(GetTime() - self.last_hungry_build) or math.huge
+    hungrytime = hungrytime < TUNING.HUNGRY_BUILDER_RESET_TIME and hungrytime or nil
+    local hungrypt = self.last_hungry_build_pt and not CheckHungryDistance(self.inst, self.last_hungry_build_pt) and {x=self.last_hungry_build_pt.x, y=self.last_hungry_build_pt.y, z=self.last_hungry_build_pt.z} or nil
     return
     {
         buffered_builds = self.buffered_builds,
         recipes = self.recipes,
-        hungrytime = hungrytime < TUNING.HUNGRY_BUILDER_RESET_TIME and hungrytime or nil,
+        hungrytime = hungrytime,
+        hungrypt = hungrypt,
     }
 end
 
@@ -99,6 +108,9 @@ function Builder:OnLoad(data)
 
     if data.hungrytime ~= nil then
         self.last_hungry_build = GetTime() - data.hungrytime
+    end
+    if data.hungrypt then
+        self.last_hungry_build_pt = Point(data.hungrypt.x, data.hungrypt.y, data.hungrypt.z)
     end
 end
 
@@ -138,8 +150,50 @@ function Builder:GetTechBonuses()
 	local bonus = {}
     for i, v in ipairs(TechTree.BONUS_TECH) do
         bonus[v] = self[string.lower(v).."_bonus"] or nil
+        
+        local tempbonus = self[string.lower(v).."_tempbonus"]
+        if tempbonus ~= nil then
+            if bonus[v] ~= nil then
+                bonus[v] = bonus[v] + tempbonus
+            else
+                bonus[v] = tempbonus
+            end
+        end
     end
+
 	return bonus
+end
+
+function Builder:GiveTempTechBonus(tech)
+    
+    for k, v in pairs(tech) do
+        self[string.lower(k).."_tempbonus"] = v
+    end
+
+    if self.temptechbonus_count ~= nil then
+        self.temptechbonus_count = self.temptechbonus_count + 1
+    else
+        self.temptechbonus_count = 1
+    end
+
+end
+
+function Builder:ClearTempTechBonuses(rec)
+    if self:KnowsRecipe(rec.name, true) or CanPrototypeRecipe(rec.level, self.accessible_tech_trees_no_temp) then
+        return
+    end
+
+    self.temptechbonus_count = self.temptechbonus_count - 1
+    if self.temptechbonus_count < 1 then
+        for i, v in ipairs(TechTree.BONUS_TECH) do
+            if self[string.lower(v).."_tempbonus"] ~= nil then
+                self[string.lower(v).."_tempbonus"] = nil
+            end
+        end
+
+        self.temptechbonus_count = nil
+    end
+
 end
 
 local PROTOTYPER_TAGS = { "prototyper" }
@@ -212,13 +266,18 @@ function Builder:EvaluateTechTrees()
     end
 
     --add any character specific bonuses to your current tech levels.
+    self.accessible_tech_trees_no_temp = deepcopy(self.accessible_tech_trees)
     if not prototyper_active then
         for i, v in ipairs(TechTree.AVAILABLE_TECH) do
-            self.accessible_tech_trees[v] = self[string.lower(v).."_bonus"] or 0
+            self.accessible_tech_trees_no_temp[v] = (self[string.lower(v).."_bonus"] or 0)
+            self.accessible_tech_trees[v] = (self[string.lower(v).."_tempbonus"] or 0) + (self[string.lower(v).."_bonus"] or 0)
         end
     else
 		for i, v in ipairs(TechTree.BONUS_TECH) do
-			self.accessible_tech_trees[v] = self.accessible_tech_trees[v] + (self[string.lower(v).."_bonus"] or 0)
+            self.accessible_tech_trees_no_temp[v] = self.accessible_tech_trees_no_temp[v] + (self[string.lower(v).."_bonus"] or 0)
+			self.accessible_tech_trees[v] = self.accessible_tech_trees[v] + 
+                                            (self[string.lower(v).."_tempbonus"] or 0) + 
+                                            (self[string.lower(v).."_bonus"] or 0)
 		end
 	end
 
@@ -502,11 +561,17 @@ function Builder:DoBuild(recname, pt, rotation, skin)
 
         if self.inst:HasTag("hungrybuilder") and not self.inst.sg:HasStateTag("slowaction") and not self.inst.sg:HasStateTag("giving") then
             local t = GetTime()
-            if self.last_hungry_build == nil or t > self.last_hungry_build + TUNING.HUNGRY_BUILDER_RESET_TIME then
+            local hasTimeExpired = self.last_hungry_build == nil or t > self.last_hungry_build + TUNING.HUNGRY_BUILDER_RESET_TIME
+            local hasPlayerMoved = self.last_hungry_build_pt == nil or CheckHungryDistance(self.inst, self.last_hungry_build_pt)
+            if hasTimeExpired and hasPlayerMoved then
+                self.inst.sg.mem.dohungryfastbuildtalk = true
                 self.inst.components.hunger:DoDelta(TUNING.HUNGRY_BUILDER_DELTA)
                 self.inst:PushEvent("hungrybuild")
+            else
+                self.inst.sg.mem.dohungryfastbuildtalk = nil
             end
             self.last_hungry_build = t
+            self.last_hungry_build_pt = self.inst:GetPosition()
         end
 
         self.inst:PushEvent("refreshcrafting")
@@ -634,7 +699,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
     end
 end
 
-function Builder:KnowsRecipe(recipe)
+function Builder:KnowsRecipe(recipe, ignore_tempbonus)
     if type(recipe) == "string" then
 		recipe = GetValidRecipe(recipe)
 	end
@@ -652,10 +717,17 @@ function Builder:KnowsRecipe(recipe)
 
     local has_tech = true
     for i, v in ipairs(TechTree.AVAILABLE_TECH) do
-        if recipe.level[v] > (self[string.lower(v).."_bonus"] or 0) then
-            return false
+        if ignore_tempbonus then
+            if recipe.level[v] > (self[string.lower(v).."_bonus"] or 0) then
+                return false
+            end
+        else
+            if recipe.level[v] > ((self[string.lower(v).."_bonus"] or 0) + (self[string.lower(v).."_tempbonus"] or 0)) then
+                return false
+            end
         end
     end
+
     return true
 end
 
@@ -715,6 +787,8 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 			if self:KnowsRecipe(recipe) then
                 self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                     function()
+                        self:ClearTempTechBonuses(recipe)
+
                         if self.freebuildmode then
                             --V2C: free-build should still trigger prototyping
                             if not table.contains(self.recipes, recipe.name) and CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) then
@@ -727,11 +801,13 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 						else
 							self:ActivateCurrentResearchMachine(recipe)
                         end
+
                     end
                 )
 			elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
 				self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
 					function()
+                        self:ClearTempTechBonuses(recipe)
 						self:ActivateCurrentResearchMachine(recipe)
 						self:UnlockRecipe(recipe.name)
 					end
@@ -745,6 +821,8 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 				if self:KnowsRecipe(ing_recipe) then
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
+                            self:ClearTempTechBonuses(recipe)
+
 							if self.freebuildmode then
 								--V2C: free-build should still trigger prototyping
 								if not table.contains(self.recipes, ing_recipe.name) and CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) then
@@ -762,6 +840,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 				elseif CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) and self:CanLearn(ing_recipe.name) then
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
+                            self:ClearTempTechBonuses(recipe)
 							self:ActivateCurrentResearchMachine(ing_recipe)
 							self:UnlockRecipe(ing_recipe.name)
 						end

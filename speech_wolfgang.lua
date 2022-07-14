@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
     ANNOUNCE_NORMALTOMIGHTY = "I AM MIGHTY!",
@@ -705,6 +706,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Is too weak for race.",
 
@@ -901,6 +913,7 @@ return{
         BERNIE_ACTIVE = "Is so brave!",
         BERNIE_BIG = "Oh no! Wolfgang has shrunken!",
 
+        BOOKSTATION = "Makes brainlady happy, Wolfgang will protect it!",
         BOOK_BIRDS = "Book is for the birds!",
         BOOK_TENTACLES = "Wolfgang wants many foes to fight!",
         BOOK_GARDENING = "Wolfgang rather grow muscle than flowers.",
@@ -908,6 +921,21 @@ return{
 		BOOK_HORTICULTURE = "Little book makes food grow for Wolfgang.",
         BOOK_SLEEP = "Wolfgang's eyes feel heavy like dumbbells.",
         BOOK_BRIMSTONE = "Tiny book scares Wolfgang!",
+
+        BOOK_FISH = "Pictures of fish make Wolfgang's belly rumble.",
+        BOOK_FIRE = "Wolfgang hopes is not explained in more big words...",
+        BOOK_WEB = "Eep!!",
+        BOOK_TEMPERATURE = "But Wolfgang needs to feel the burn!",
+        BOOK_LIGHT = "Wolfgang likes the book light.",
+        BOOK_RAIN = "Wolfgang will keep umbrella, just in case.",
+        BOOK_MOON = "Wolfgang doesn't need book to know where moon is.",
+        BOOK_BEES = "Is true, Wolfgang does not know much of ape culture.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Will thicker book grow thicker vegetables?",
+        BOOK_RESEARCH_STATION = "Hmm, is heavy book, maybe good for lifting.",
+        BOOK_LIGHT_UPGRADED = "Wolfgang is starting to find liking for books.",
+
+        FIREPEN = "Wolfgang does not want to write with that pen!",
 
         PLAYER =
         {

@@ -365,6 +365,10 @@ local actionhandlers =
         function(inst, action)
             return action.invobject == nil and inst:HasTag("soulstealer") and "portal_jumpin_pre" or "quicktele"
         end),
+    ActionHandler(ACTIONS.BLINK_MAP,
+        function(inst, action)
+            return action.invobject == nil and inst:HasTag("soulstealer") and "portal_jumpin_pre" or "quicktele"
+        end),
     ActionHandler(ACTIONS.CASTSUMMON,
         function(inst, action)
             return action.invobject ~= nil and action.invobject:HasTag("abigail_flower") and "summon_abigail" or "castspell"
@@ -3579,6 +3583,7 @@ local states =
                             inst.sg.statemem.projectilesound =
                                 (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                                 (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                                (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                                 "dontstarve/wilson/attack_weapon"
                         elseif inst.sg.statemem.projectiledelay <= 0 then
                             inst.sg.statemem.projectiledelay = nil
@@ -3588,6 +3593,7 @@ local states =
                         inst.SoundEmitter:PlaySound(
                             (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                             (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                            (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                             "dontstarve/wilson/attack_weapon",
                             nil, nil, true
                         )
@@ -3658,6 +3664,7 @@ local states =
                         inst.sg.statemem.projectilesound =
                             (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                             (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                            (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                             "dontstarve/wilson/attack_weapon"
                     elseif inst.sg.statemem.projectiledelay <= 0 then
                         inst.sg.statemem.projectiledelay = nil
@@ -3668,6 +3675,7 @@ local states =
                         (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                         (equip:HasTag("shadow") and "dontstarve/wilson/attack_nightsword") or
                         (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                        (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                         "dontstarve/wilson/attack_weapon",
                         nil, nil, true
                     )

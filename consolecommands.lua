@@ -91,6 +91,21 @@ function c_mermthrone()
     c_spawn("merm")
 end
 
+function c_allbooks()
+    local books = 
+    {
+        "book_birds", "book_horticulture", "book_silviculture", "book_sleep", 
+        "book_brimstone", "book_tentacles", "book_fish", "book_fire", "book_web", 
+        "book_temperature", "book_light", "book_rain", "book_moon", "book_bees", 
+        "book_research_station", "book_horticulture_upgraded", 
+        "book_light_upgraded"
+    }
+
+
+    for _,v in ipairs(books) do
+        c_give(v)
+    end
+end
 -- * Roll back *count* number of saves (default 1)
 -- * c_rollback() or c_rollback(1) will roll back to the
 --   last save file, if it's been longer than 30 seconds
@@ -1111,12 +1126,12 @@ end
 
 function c_emptyworld()
     for k,ent in pairs(Ents) do
-        if ent.widget == nil 
-			and not ent.isplayer 
+        if ent.widget == nil
+			and not ent.isplayer
 			and ent.entity:GetParent() == nil
 			and ent.Network ~= nil
-			and not ent:HasTag("CLASSIFIED") 
-			and not ent:HasTag("INLIMBO") 
+			and not ent:HasTag("CLASSIFIED")
+			and not ent:HasTag("INLIMBO")
 			then
 
             ent:Remove()
@@ -1138,7 +1153,7 @@ function c_remove(entity)
 
     if TheWorld == nil or mouseentity == nil then
         return
-    end    
+    end
 
     if mouseentity ~= ConsoleCommandPlayer() then
         if mouseentity.components.health then
@@ -1845,6 +1860,38 @@ function c_guitartab(songdata, overrides, dont_spawn_shells)
 	end
 
 	return ret
+end
+
+function c_setrotation(angle)
+    local mouseentity = TheInput:GetWorldEntityUnderMouse() or c_sel()
+
+    if TheWorld == nil or mouseentity == nil then
+        return
+    end
+
+    mouseentity.Transform:SetRotation(angle or 0)
+end
+
+function c_rotatecw(delta)
+    local mouseentity = TheInput:GetWorldEntityUnderMouse() or c_sel()
+
+    if TheWorld == nil or mouseentity == nil then
+        return
+    end
+
+    local angle = mouseentity.Transform:GetRotation()
+    mouseentity.Transform:SetRotation(angle + (delta or 45))
+end
+
+function c_rotateccw(delta)
+    local mouseentity = TheInput:GetWorldEntityUnderMouse() or c_sel()
+
+    if TheWorld == nil or mouseentity == nil then
+        return
+    end
+
+    local angle = mouseentity.Transform:GetRotation()
+    mouseentity.Transform:SetRotation(angle - (delta or 45))
 end
 
 -- ========================================

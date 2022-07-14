@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "THIS ORGANIC IS NEARLY EXPIRED",
 
@@ -900,6 +912,7 @@ return{
         BERNIE_ACTIVE = "HANG IN THERE, BEAR!",
         BERNIE_BIG = "IT FIGHTS FOR MY MINION, AND THEREFORE FOR ME",
 
+        BOOKSTATION = "AN ARCHAIC DATA REPOSITORY",
         BOOK_BIRDS = "UPLOADING AVIAN FACTOIDS TO DATABASE...",
         BOOK_TENTACLES = "IT SUMMONS THE FLESH WOBBLERS",
         BOOK_GARDENING = "A USELESS TOME ON PLANT CULTIVATION",
@@ -907,6 +920,21 @@ return{
 		BOOK_HORTICULTURE = "A USELESS TOME ON PLANT CULTIVATION",
         BOOK_SLEEP = "POWERING DOown...",
         BOOK_BRIMSTONE = "A BOOK OF DESTRUCTION. EXCELLENT",
+
+        BOOK_FISH = "SUMMON FORTH THE SWIMMING MEAT",
+        BOOK_FIRE = "IT ELIMINATES FIREWALLS",
+        BOOK_WEB = "I DO NOT FEAR SPIDERS, THE SPIDERS SHOULD FEAR ME",
+        BOOK_TEMPERATURE = "THERMAL REGULATION DIRECTIVES",
+        BOOK_LIGHT = "LIGHT SOURCE: UNKNOWN",
+        BOOK_RAIN = "HOW HATEFUL",
+        BOOK_MOON = "GIVE ME YOUR SECRETS, MOON",
+        BOOK_BEES = "TO SUBJUGATE THE BEES MORE COMPLETELY",
+        
+        BOOK_HORTICULTURE_UPGRADED = "PLANTS ARE BEST WHEN THEY'RE DEAD",
+        BOOK_RESEARCH_STATION = "THE FLESHLINGS HAVE TO RECORD ALL THEIR DATA ON PAPER. PATHETIC",
+        BOOK_LIGHT_UPGRADED = "AMPLIFIED LIGHT SOURCE",
+
+        FIREPEN = "IT COULD BE DANGEROUS IN THE WRONG HANDS. I WILL TAKE IT",
 
         PLAYER =
         {

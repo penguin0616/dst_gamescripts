@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "The wee beast is on death's door.",
 
@@ -900,6 +912,7 @@ return{
         BERNIE_ACTIVE = "What a brave beast!",
         BERNIE_BIG = "The beast hath been imbued with a fighting spirit!",
 
+        BOOKSTATION = "A trove of wisdom.",
         BOOK_BIRDS = "To rule the skies!",
         BOOK_TENTACLES = "Knowledge grants great power!",
         BOOK_GARDENING = "But can it tend the garden of mine soul?",
@@ -907,6 +920,21 @@ return{
 		BOOK_HORTICULTURE = "But can it tend the garden of mine soul?",
         BOOK_SLEEP = "Where's the drama? The suspense?",
         BOOK_BRIMSTONE = "This tome is brimming with Hel's fire!",
+
+        BOOK_FISH = "Secret tactics for capturing the sea meats!",
+        BOOK_FIRE = "A tome to combat the most fiery tempest!",
+        BOOK_WEB = "Sometimes we may learn from the enemy.",
+        BOOK_TEMPERATURE = "I need only the heat of battle!",
+        BOOK_LIGHT = "A beacon of knowledge.",
+        BOOK_RAIN = "It speaks of ways to appease Freyr.",
+        BOOK_MOON = "We call upon the power of Mani!",
+        BOOK_BEES = "Our elder has been watching the wee speared creatures closely.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "The knowledge within shall grant us bountiful harvests.",
+        BOOK_RESEARCH_STATION = "A tome filled with great wisdom.",
+        BOOK_LIGHT_UPGRADED = "A blinding beacon of knowledge!",
+
+        FIREPEN = "I sense a burning power within.",
 
         PLAYER =
         {

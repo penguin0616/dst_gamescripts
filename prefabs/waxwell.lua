@@ -4,6 +4,7 @@ local assets =
 {
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("SOUND", "sound/maxwell.fsb"),
+    Asset("ANIM", "anim/swap_books.zip"),
 }
 
 local prefabs =
@@ -85,6 +86,15 @@ local function common_postinit(inst)
 
     --reader (from reader component) added to pristine state for optimization
     inst:AddTag("reader")
+
+    --layers used by "book" state, added to pristine state for optimization
+    inst.AnimState:Hide("FX_tentacles")
+    inst.AnimState:Hide("FX_fish")
+    inst.AnimState:Hide("FX_plants")
+    inst.AnimState:Hide("FX_plants_big")
+    inst.AnimState:Hide("FX_plants_small")
+    inst.AnimState:Hide("FX_lightning")
+    inst.AnimState:Hide("FX_roots")
 end
 
 local function master_postinit(inst)

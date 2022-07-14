@@ -408,8 +408,8 @@ function Health:TransferComponent(newinst)
     if newcomponent.takingfiredamage then
         newcomponent.takingfiredamagestarttime = self.takingfiredamagestarttime
         newcomponent.takingfiredamagelow = self.takingfiredamagelow
-        newcomponent.inst:StartUpdatingComponent(self)
-        newcomponent.inst:PushEvent("startfiredamage", { low = newcomponent.takingfiredamagelow })
+        newinst:StartUpdatingComponent(newcomponent)
+        newinst:PushEvent("startfiredamage", { low = newcomponent.takingfiredamagelow })
     end
     newcomponent.lastfiredamagetime = self.lastfiredamagetime
 end

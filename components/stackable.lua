@@ -82,6 +82,13 @@ function Stackable:Get(num)
             end
         end
 
+        if instance.components.rechargeable ~= nil and self.inst.components.rechargeable ~= nil then
+            if not self.inst.components.rechargeable:IsCharged() then
+                instance.components.rechargeable:SetChargeTime(self.inst.components.rechargeable:GetChargeTime())
+                instance.components.rechargeable:SetCharge(self.inst.components.rechargeable:GetCharge())
+            end
+        end
+
         if instance.components.inventoryitem ~= nil and self.inst.components.inventoryitem ~= nil then
             if self.inst.components.inventoryitem.owner then
                 instance.components.inventoryitem:OnPutInInventory(self.inst.components.inventoryitem.owner)

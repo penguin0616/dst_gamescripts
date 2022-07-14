@@ -463,6 +463,14 @@ fns.OnUpgradeModulesListDirty = function(inst)
     end
 end
 
+-- Wortox free soulhops ------------------------------------------------------
+
+fns.OnFreeSoulhopsDirty = function(inst)
+    if inst._parent ~= nil then
+        inst._parent:PushEvent("freesoulhopschanged", {current = inst.freesoulhops:value()})
+    end
+end
+
 ------------------------------------------------------------------------------
 
 local function OnMoistureDirty(inst)
@@ -986,6 +994,7 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("upgrademoduleenergyupdate", fns.OnEnergyLevelDirty)
         inst:ListenForEvent("upgrademoduleslistdirty", fns.OnUpgradeModulesListDirty)
         inst:ListenForEvent("uirobotsparksevent", fns.OnUIRobotSparks)
+        inst:ListenForEvent("freesoulhopsdirty", fns.OnFreeSoulhopsDirty)
         inst:ListenForEvent("temperaturedirty", OnTemperatureDirty)
         inst:ListenForEvent("moisturedirty", OnMoistureDirty)
         inst:ListenForEvent("techtreesdirty", OnTechTreesDirty)
@@ -1149,6 +1158,10 @@ local function fn()
         net_smallbyte(inst.GUID, "upgrademodules.mods6", "upgrademoduleslistdirty"),
     }
 
+    -- Wortox Soulhop free counter
+    inst.freesoulhops = net_tinybyte(inst.GUID, "freesoulhops", "freesoulhopsdirty")
+    inst.freesoulhops:set(0)
+
 	-- oldager
     inst.oldager_yearpercent = net_float(inst.GUID, "oldager.yearpercent")
     inst.oldager_rate = net_smallbyte(inst.GUID, "oldager.rate") -- use the Get and Set functions because this value is a signed value incoded into an unsigned net_var
@@ -1222,6 +1235,8 @@ local function fn()
     for i, v in ipairs(TechTree.BONUS_TECH) do
         local bonus = net_tinybyte(inst.GUID, "builder."..string.lower(v).."bonus")
 		inst[string.lower(v).."bonus"] = bonus
+        local tempbonus = net_tinybyte(inst.GUID, "builder."..string.lower(v).."tempbonus")
+		inst[string.lower(v).."tempbonus"] = tempbonus
     end
     for i, v in ipairs(TechTree.AVAILABLE_TECH) do
         local level = net_tinybyte(inst.GUID, "builder.accessible_tech_trees."..v, "techtreesdirty")

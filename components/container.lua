@@ -541,6 +541,17 @@ function Container:HasItemWithTag(tag, amount)
     return num_found >= amount, num_found
 end
 
+function Container:HasItemWithTag(tag, amount)
+    local items = {}
+    for k,v in pairs(self.slots) do
+        if v and v:HasTag(tag) then
+            table.insert(items, v)
+        end
+    end
+
+    return items
+end
+
 function Container:GetItemByName(item, amount)
     local total_num_found = 0
     local items = {}

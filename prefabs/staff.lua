@@ -909,7 +909,8 @@ local function green()
 end
 
 local function orange()
-    local inst = commonfn("orange", { "nopunch" }, true)
+    --weapon (from weapon component) added to pristine state for optimization
+    local inst = commonfn("orange", { "weapon" }, true)
 
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = blinkstaff_reticuletargetfn
@@ -926,10 +927,14 @@ local function orange()
     inst.components.blinkstaff:SetFX("sand_puff_large_front", "sand_puff_large_back")
     inst.components.blinkstaff.onblinkfn = onblink
 
+    inst:AddComponent("weapon")
+    inst.components.weapon:SetDamage(TUNING.CANE_DAMAGE) -- NOTES(JBK): This item is created from a cane it should do cane damage.
+
     inst.components.equippable.walkspeedmult = TUNING.CANE_SPEED_MULT
 
     inst.components.finiteuses:SetMaxUses(TUNING.ORANGESTAFF_USES)
     inst.components.finiteuses:SetUses(TUNING.ORANGESTAFF_USES)
+    inst.components.finiteuses:SetIgnoreCombatDurabilityLoss(true)
 
     MakeHauntableLaunch(inst)
     AddHauntableCustomReaction(inst, onhauntorange, true, false, true)

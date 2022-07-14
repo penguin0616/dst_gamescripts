@@ -219,10 +219,19 @@ local function OnReroll(inst)
     DropSouls(inst, souls, count)
 end
 
+local function ClearSoulOverloadTask(inst)
+    inst._souloverloadtask = nil
+end
+
 local function CheckSoulsAdded(inst)
     inst._checksoulstask = nil
     local souls, count = GetSouls(inst)
     if count > TUNING.WORTOX_MAX_SOULS then
+        if inst._souloverloadtask then
+            inst._souloverloadtask:Cancel()
+            inst._souloverloadtask = nil
+        end
+        inst._souloverloadtask = inst:DoTaskInTime(1.2, ClearSoulOverloadTask) -- NOTES(JBK): This is >1.1 max keep it in sync with "[WST]"
         --convert count to drop count
         count = count - math.floor(TUNING.WORTOX_MAX_SOULS / 2) + math.random(0, 2) - 1
         DropSouls(inst, souls, count)
@@ -302,12 +311,19 @@ local function ReticuleTargetFn(inst)
     return pos
 end
 
-local function GetPointSpecialActions(inst, pos, useitem, right)
-    if right and useitem == nil and inst.replica.inventory:Has("wortox_soul", 1) then
+local function CanSoulhop(inst, souls)
+    if inst.replica.inventory:Has("wortox_soul", souls or 1) then
         local rider = inst.replica.rider
         if rider == nil or not rider:IsRiding() then
-            return { ACTIONS.BLINK }
+            return true
         end
+    end
+    return false
+end
+
+local function GetPointSpecialActions(inst, pos, useitem, right)
+    if right and useitem == nil and inst.CanSoulhop and inst:CanSoulhop() then
+        return { ACTIONS.BLINK }
     end
     return {}
 end
@@ -321,7 +337,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnEatSoul(inst, soul)
-    inst.components.hunger:DoDelta(TUNING.CALORIES_MEDSMALL)
+    inst.components.hunger:DoDelta(TUNING.CALORIES_MED)
     inst.components.sanity:DoDelta(-TUNING.SANITY_TINY)
     if inst._checksoulstask ~= nil then
         inst._checksoulstask:Cancel()
@@ -334,6 +350,79 @@ local function OnSoulHop(inst)
         inst._checksoulstask:Cancel()
     end
     inst._checksoulstask = inst:DoTaskInTime(.5, CheckSoulsRemovedAfterAnim, "wortox_portal_jumpout")
+end
+
+local function PutSoulOnCooldown(item)
+    if not IsSoul(item) then
+        return
+    end
+
+    if item.components.rechargeable ~= nil then
+        item.components.rechargeable:Discharge(TUNING.WORTOX_FREEHOP_TIMELIMIT)
+    end
+end
+
+local function RemoveSoulCooldown(item)
+    if not IsSoul(item) then
+        return
+    end
+
+    if item.components.rechargeable ~= nil then
+        item.components.rechargeable:SetPercent(1)
+    end
+end
+
+local function SetNetvar(inst)
+    if inst.player_classified ~= nil then
+        assert(inst._freesoulhop_counter >= 0 and inst._freesoulhop_counter <= 7, "Player _freesoulhop_counter out of range: "..tostring(inst._freesoulhop_counter))
+        inst.player_classified.freesoulhops:set(inst._freesoulhop_counter)
+    end
+end
+
+local function ClearSoulhopCounter(inst)
+    inst._freesoulhop_counter = 0
+    inst._soulhop_cost = 0
+    SetNetvar(inst)
+end
+
+local function FinishPortalHop(inst)
+    if inst._freesoulhop_counter > 0 then
+        if inst.components.inventory ~= nil then
+            inst.components.inventory:ConsumeByName("wortox_soul", math.max(math.ceil(inst._soulhop_cost), 1))
+        end
+        ClearSoulhopCounter(inst)
+    end
+end
+
+local function TryToPortalHop(inst, souls, consumeall)
+    local invcmp = inst.components.inventory
+    if invcmp == nil then
+        return false
+    end
+
+    souls = souls or 1
+    local _, soulscount = GetSouls(inst)
+    if soulscount < souls then
+        return false
+    end
+
+    inst._freesoulhop_counter = inst._freesoulhop_counter + souls
+    inst._soulhop_cost = inst._soulhop_cost + souls
+
+    if not consumeall and inst._freesoulhop_counter < TUNING.WORTOX_FREEHOP_HOPSPERSOUL then
+        inst._soulhop_cost = inst._soulhop_cost - souls -- Make it free.
+        invcmp:ForEachItem(PutSoulOnCooldown)
+    else
+        invcmp:ForEachItem(RemoveSoulCooldown)
+        inst:FinishPortalHop()
+    end
+    SetNetvar(inst)
+
+    return true
+end
+
+local function OnFreesoulhopsChanged(inst, data)
+    inst._freesoulhop_counter = data and data.current or 0
 end
 
 --------------------------------------------------------------------------
@@ -352,6 +441,7 @@ local function common_postinit(inst)
     --souleater (from souleater component) added to pristine state for optimization
     inst:AddTag("souleater")
 
+    inst.CanSoulhop = CanSoulhop
     inst:ListenForEvent("setowner", OnSetOwner)
 
     inst:AddComponent("reticule")
@@ -359,9 +449,33 @@ local function common_postinit(inst)
     inst.components.reticule.ease = true
 
     inst.HostileTest = CLIENT_Wortox_HostileTest
+    if not TheWorld.ismastersim then
+        inst:ListenForEvent("freesoulhopschanged", OnFreesoulhopsChanged)
+    end
+end
+
+local function OnSave(inst, data)
+    data.freehops = inst._freesoulhop_counter
+    data.soulhopcost = inst._soulhop_cost
+end
+
+local function OnLoad(inst, data)
+    if data == nil then
+        return
+    end
+
+    inst._freesoulhop_counter = data.freehops or 0
+    inst._soulhop_cost = data.soulhopcost or 0
+    inst:DoTaskInTime(0, SetNetvar)
 end
 
 local function master_postinit(inst)
+    ClearSoulhopCounter(inst)
+    inst.OnSave = OnSave
+    inst.OnLoad = OnLoad
+    inst.TryToPortalHop = TryToPortalHop
+    inst.FinishPortalHop = FinishPortalHop
+
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
     inst.customidleanim = "idle_wortox"

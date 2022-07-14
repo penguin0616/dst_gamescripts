@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "This carrat doesn't look healthy...",
 
@@ -900,6 +912,7 @@ return{
         BERNIE_ACTIVE = "Woah! Is your bear haunted? Cursed?",
         BERNIE_BIG = "If you play with fire, you're gonna get Bernie'd. Heh...",
 
+        BOOKSTATION = "If you read the books out loud it's almost like listening to a radio play.",
         BOOK_BIRDS = "I don't want to brag... but I do have a badge in birdwatching.",
         BOOK_TENTACLES = "Oooh, this reminds me of a radio play where a ship gets eaten by a giant squid!",
         BOOK_GARDENING = "I already have my gardening badge.",
@@ -907,6 +920,21 @@ return{
 		BOOK_HORTICULTURE = "I already have my gardening badge.",
         BOOK_SLEEP = "My idea of a bedtime story has a lot more monsters in it...",
         BOOK_BRIMSTONE = "Wendy already spoiled the ending for me...",
+
+        BOOK_FISH = "Fishing is a reel-y important part of wilderness survival. Get it? Reel-y?",
+        BOOK_FIRE = "There's a lot of good fire safety tips in here! Um... has Willow read it?",
+        BOOK_WEB = "Maybe I should give this book to Mr. Wolfgang.",
+        BOOK_TEMPERATURE = "I hope it works on Woby, I worry about her in the summer with all that fur...",
+        BOOK_LIGHT = "Sounds pretty mysterious!",
+        BOOK_RAIN = "I wonder what impractical rain rituals look like?",
+        BOOK_MOON = "Aww, it doesn't even mention aliens!",
+        BOOK_BEES = "There aren't real bees inside, right? Heh, no, that would be silly.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Maybe I can get another gardening badge?",
+        BOOK_RESEARCH_STATION = "It's almost as useful as my Pinetree Pioneer handbook.",
+        BOOK_LIGHT_UPGRADED = "This one sounds extra mysterious.",
+
+        FIREPEN = "I had no idea writing was so dangerous.",
 
         PLAYER =
         {

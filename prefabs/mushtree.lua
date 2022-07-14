@@ -314,6 +314,17 @@ local function workcallback(inst, worker, workleft)
     --V2C: different anims are played in workfinishcallback if workleft <= 0
 end
 
+local function domagicgrowth(inst, doer)
+    local last_stage = #inst.components.growable.stages
+    
+    if inst.components.growable.stage < last_stage - 1 then
+        inst.components.growable:DoGrowth()
+        inst:DoTaskInTime(math.random(), domagicgrowth)
+    else
+        inst.components.growable:StartGrowing()
+    end
+end
+
 local function maketree(name, data, state)
     local function bloom_tree(inst, instant)
         if inst._changetask ~= nil then
@@ -499,6 +510,9 @@ local function maketree(name, data, state)
         inst.components.growable:SetStage(math.random(3))
         inst.components.growable.loopstages = true
         inst.components.growable.growonly = true
+        inst.components.growable.domagicgrowthfn = domagicgrowth
+        inst.components.growable.magicgrowable = true
+        
         inst.components.growable:StartGrowing()
 
         inst:AddComponent("plantregrowth")

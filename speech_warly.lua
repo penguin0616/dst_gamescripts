@@ -392,6 +392,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -704,6 +705,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Quel dommage, I think it's gone off.",
 
@@ -900,6 +912,7 @@ return{
         BERNIE_ACTIVE = "What a silly fellow.",
         BERNIE_BIG = "Tres géant!",
 
+        BOOKSTATION = "Mme. Wickerbottom looks so happy organizing her books.",
         BOOK_BIRDS = "I had hoped it was a poultry cookbook.",
         BOOK_TENTACLES = "I don't see any recipes in this at all.",
         BOOK_GARDENING = "Maybe Mme. Wickerbottom would be interested in starting a herb garden.",
@@ -907,6 +920,21 @@ return{
 		BOOK_HORTICULTURE = "Maybe Mme. Wickerbottom would be interested in starting a herb garden.",
         BOOK_SLEEP = "It's tradition to nap after a good meal.",
         BOOK_BRIMSTONE = "I don't think that's my forte.",
+
+        BOOK_FISH = "Sadly, it doesn't include any seafood recipes.",
+        BOOK_FIRE = "That reminds me, I should make some flame-grilled skewers for dinner.",
+        BOOK_WEB = "Aside from the petit monsieur, I don't think spiders and I will ever get along.",
+        BOOK_TEMPERATURE = "A consistent temperature is very important for cooking.",
+        BOOK_LIGHT = "I'm more familiar with au gratin than latin.",
+        BOOK_RAIN = "Rainy days are good for reading.",
+        BOOK_MOON = "The moon here is a bit less romantic than the one back home.",
+        BOOK_BEES = "I'm more interested in honey than the bees.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "I'm more interested in preparing vegetables after they're grown.",
+        BOOK_RESEARCH_STATION = "Mme. Wickerbottom could cook up just about anything with that.",
+        BOOK_LIGHT_UPGRADED = "It looks incredibly dense, I thought it'd be more light and airy.",
+
+        FIREPEN = "I wonder if anyone has ever cooked with a flaming pen?",
 
         PLAYER =
         {
@@ -1186,7 +1214,7 @@ return{
         MOONDIAL =
         {
 			GENERIC = "I hope the birds get to enjoy it, too.",
-			NIGHT_NEW = "The new moon's arrive.",
+			NIGHT_NEW = "The new moon's arrived.",
 			NIGHT_WAX = "The moon is waxing.",
 			NIGHT_FULL = "The full moon's arrived.",
 			NIGHT_WANE = "The moon is waning.",
