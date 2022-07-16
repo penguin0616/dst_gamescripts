@@ -161,7 +161,7 @@ local COMPONENT_ACTIONS =
         end,
 
         book = function(inst, doer, actions)
-            if doer:HasTag("reader") then
+            if doer:HasTag("reader") and not inst:HasTag("fire") and not inst:HasTag("smolder") then
                 table.insert(actions, ACTIONS.READ)
             end
         end,

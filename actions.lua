@@ -2431,7 +2431,7 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
     local dist = act.pos:GetPosition():Dist(targetpos)
     local act_remap = BufferedAction(act.doer, nil, ACTIONS.BLINK_MAP, act.invobject, targetpos)
     local dist_mod = ((act.doer and act.doer._freesoulhop_counter or 0) * (TUNING.WORTOX_FREEHOP_HOPSPERSOUL - 1)) * act.distance
-    act_remap.distancecount = math.max(math.ceil((dist + dist_mod) / (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL)), 1)
+    act_remap.distancecount = math.max(math.ceil((dist + dist_mod) / (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL * TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)), 1)
     if not ActionCanMapSoulhop(act_remap) then
         return nil
     end

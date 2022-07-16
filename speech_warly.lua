@@ -925,7 +925,7 @@ return{
         BOOK_FIRE = "That reminds me, I should make some flame-grilled skewers for dinner.",
         BOOK_WEB = "Aside from the petit monsieur, I don't think spiders and I will ever get along.",
         BOOK_TEMPERATURE = "A consistent temperature is very important for cooking.",
-        BOOK_LIGHT = "I'm more familiar with au gratin than latin.",
+        BOOK_LIGHT = "I'm more familiar with au gratin than Latin.",
         BOOK_RAIN = "Rainy days are good for reading.",
         BOOK_MOON = "The moon here is a bit less romantic than the one back home.",
         BOOK_BEES = "I'm more interested in honey than the bees.",

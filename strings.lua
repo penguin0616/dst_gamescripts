@@ -1494,6 +1494,7 @@ STRINGS =
         FOSSIL_PIECE = "Fossil Fragments",
         FOSSIL_STALKER = "Odd Skeleton",
         FOSSILSPIKE = "Fossil Cage",
+        FOSSILSPIKE2 = "Fossil Spike",
         STALKER = "Reanimated Skeleton",
         STALKER_ATRIUM = "Ancient Fuelweaver",
         STALKER_MINION = "Woven Shadow",
@@ -6877,7 +6878,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Curse of Moon Quay\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Wickerbottom\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 

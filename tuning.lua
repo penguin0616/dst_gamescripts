@@ -111,6 +111,12 @@ function Tune(overrides)
         WILSON_HUNGER_RATE = calories_per_day/total_day_time, --calories burnt per day
         WILSON_SANITY = wilson_sanity,
 
+        -- Controller specific tuning values.
+        CONTROLLER_DEADZONE_RADIUS = 0.3, -- TODO(JBK): Hook this up.
+        CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN = 4,
+        CONTROLLER_BLINKFOCUS_DISTANCE = 8,
+        CONTROLLER_BLINKFOCUS_ANGLE = 30, -- Angle is for both sides of the facing direction so cone total size is double this value.
+
         -- WX78 Refresh: WX78 min and max health variables kept for backwards compatibility & mods
         WX78_MIN_HEALTH = 150,
         WX78_MIN_HUNGER = 150, -- 100 For pax we are increasing this.  Hungers out too easily.
@@ -4071,8 +4077,11 @@ function Tune(overrides)
         WORTOX_SOULEXTRACT_RANGE = 20, --die within this range of wortox to spawn soul
         WORTOX_SOULSTEALER_RANGE = 8, --souls fly towards wortox when he walks within this range
         WORTOX_SOULHEAL_RANGE = 8,
+        WORTOX_SOULHEAL_LOSS_PER_PLAYER = 2, -- Amount of health value lost per additional target being healed.
+        WORTOX_SOULHEAL_MINIMUM_HEAL = 5, -- Each souls must heal at least this much.
         WORTOX_FREEHOP_HOPSPERSOUL = 2, -- Amount of hops per soul in a given time frame. Maximum value is clamped to freesoulhops in player_classified.
         WORTOX_FREEHOP_TIMELIMIT = 5, -- Amount of seconds to use up free hops per hop.
+        WORTOX_MAPHOP_DISTANCE_SCALER = 0.8, -- Perfectly placed blink teleports on a linear path to every part on the map is not realistic.
 
         --Wormwood
 		WORMWOOD_HEALTH = wilson_health,

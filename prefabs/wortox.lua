@@ -286,9 +286,25 @@ local function NoHoles(pt)
     return not TheWorld.Map:IsGroundTargetBlocked(pt)
 end
 
+local BLINKFOCUS_MUST_TAGS = { "blinkfocus" }
+
 local function ReticuleTargetFn(inst)
-    local rotation = inst.Transform:GetRotation() * DEGREES
+    local rotation = inst.Transform:GetRotation()
     local pos = inst:GetPosition()
+
+    local ents = TheSim:FindEntities(pos.x, pos.y, pos.z, TUNING.CONTROLLER_BLINKFOCUS_DISTANCE, BLINKFOCUS_MUST_TAGS)
+    for _, v in ipairs(ents) do
+        local epos = v:GetPosition()
+        if distsq(pos, epos) > TUNING.CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN then
+            local angletoepos = inst:GetAngleToPoint(epos)
+            local angleto = math.abs(anglediff(rotation, angletoepos))
+            if angleto < TUNING.CONTROLLER_BLINKFOCUS_ANGLE then
+                return epos
+            end
+        end
+    end
+    rotation = rotation * DEGREES
+
     pos.y = 0
     for r = 13, 4, -.5 do
         local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, NoHoles)
@@ -322,7 +338,7 @@ local function CanSoulhop(inst, souls)
 end
 
 local function GetPointSpecialActions(inst, pos, useitem, right)
-    if right and useitem == nil and inst.CanSoulhop and inst:CanSoulhop() then
+    if right and useitem == nil and NoHoles(pos) and inst.CanSoulhop and inst:CanSoulhop() then
         return { ACTIONS.BLINK }
     end
     return {}

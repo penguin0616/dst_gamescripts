@@ -164,6 +164,10 @@ local function sayfn(self, script, nobroadcast, colour, text_filter_context, ori
 
             if self.widget ~= nil then
 				--print("talker sayfn:", original_author, text_filter_context, display_message)
+                if text_filter_context == nil or text_filter_context == TEXT_FILTER_CTX_UNKNOWN then
+                    -- NOTES(JBK): Assume the text comes from the game if not specified.
+                    text_filter_context = TEXT_FILTER_CTX_GAME
+                end
 		        local filtered_message = display_message ~= nil and ApplyLocalWordFilter(display_message, text_filter_context, original_author_netid) or display_message
                 self.widget.text:SetString(filtered_message)
             end

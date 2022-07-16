@@ -183,7 +183,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_HUGE,
         peruse_sanity = TUNING.SANITY_HUGE,
         layer = "FX_tentacles",
-        layer_sound = { frame = 10, sound = "wickerbottom_rework/book_spells/tentacles" } ,
+        layer_sound = { frame = 30, sound = "wickerbottom_rework/book_spells/tentacles" },
         fn = function(inst, reader)
             local pt = reader:GetPosition()
             local numtentacles = 3
@@ -429,6 +429,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_HUGE,
         layer = "FX_plants_big",
+        layer_sound = { frame = 30, sound = "wickerbottom_rework/book_spells/upgraded_horticulture" },
         fn = function(inst, reader)
             
             local spell = SpawnPrefab("book_horticulture_spell")
@@ -451,6 +452,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
         layer = "FX_roots",
+        layer_sound = { frame = 25, sound = "wickerbottom_rework/book_spells/silviculture" },
         fn = function(inst, reader)
 
             local x, y, z = reader.Transform:GetWorldPosition()
@@ -495,6 +497,11 @@ local book_defs =
         fx = "fx_book_fish",
         layer = "FX_fish",
         fn = function(inst, reader)
+            local schoolspawner = TheWorld.components.schoolspawner
+            if schoolspawner == nil then
+                return false, "NOWATERNEARBY"
+            end
+
             local FISH_SPAWN_OFFSET = 10
             local x, y, z = reader.Transform:GetWorldPosition()
             local delta_theta = PI2 / 18
@@ -504,11 +511,11 @@ local book_defs =
                 local theta = math.random() * 2 * PI
                 local failed_attempts = 0
                 local max_failed_attempts = 36
-    
+
                 while failed_attempts < max_failed_attempts do
                     local spawn_offset = Vector3(math.random(1,3), 0, math.random(1,3))
                     local spawn_point = Vector3(x + math.cos(theta) * FISH_SPAWN_OFFSET, 0, z + math.sin(theta) * FISH_SPAWN_OFFSET)
-                    local num_fish_spawned = TheWorld.components.schoolspawner:SpawnSchool(spawn_point, nil, spawn_offset)
+                    local num_fish_spawned = schoolspawner:SpawnSchool(spawn_point, nil, spawn_offset)
 
                     if num_fish_spawned == nil or num_fish_spawned == 0 then
                         theta = theta + delta_theta
@@ -564,16 +571,23 @@ local book_defs =
                 end
                 
                 local equipped_item = reader.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-
-                if equipped_item ~= nil and equipped_item:HasTag("firepen") and equipped_item.components.finiteuses.current < equipped_item.components.finiteuses.total then
-                    equipped_item.components.finiteuses:SetUses(equipped_item.components.finiteuses.current + fire_count)
+                if equipped_item ~= nil and equipped_item:HasTag("firepen") then
+                    
+                    local current = equipped_item.components.finiteuses.current
+                    local total = equipped_item.components.finiteuses.total
+                    if current < total then
+                        equipped_item.components.finiteuses:SetUses(math.min(current + fire_count, total))
+                    end
+                
                 elseif reader.components.inventory:HasItemWithTag("firepen", 1) then
                     local items = reader.components.inventory:GetItemsWithTag("firepen")
                     local success = false
                     
                     for _, item in ipairs(items) do
-                        if item.components.finiteuses.current < item.components.finiteuses.total then
-                            item.components.finiteuses:SetUses(item.components.finiteuses.current + fire_count)
+                        local total = item.components.finiteuses.total
+                        local current = item.components.finiteuses.current
+                        if current < total then
+                            item.components.finiteuses:SetUses(math.min(current + fire_count, total))
                             success = true
                             break
                         end
@@ -581,12 +595,12 @@ local book_defs =
 
                     if not success then
                         local firepen = SpawnPrefab("firepen")
-                        firepen.components.finiteuses:SetUses(fire_count)
+                        firepen.components.finiteuses:SetUses(math.min(fire_count, firepen.components.finiteuses.total))
                         reader.components.inventory:GiveItem(firepen)
                     end
                 else
                     local firepen = SpawnPrefab("firepen")
-                    firepen.components.finiteuses:SetUses(fire_count)
+                    firepen.components.finiteuses:SetUses(math.min(fire_count, firepen.components.finiteuses.total))
                     reader.components.inventory:GiveItem(firepen)
                 end
             else
@@ -814,6 +828,8 @@ local book_defs =
                             ents[1].components.commander:AddSoldier(bee)
                         else
                             reader.components.commander:AddSoldier(bee)
+                            bee:AddComponent("follower")
+                            bee.components.follower:SetLeader(reader)
                         end
 
                     end)

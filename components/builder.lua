@@ -79,12 +79,17 @@ function Builder:OnSave()
     local hungrytime = self.last_hungry_build ~= nil and math.ceil(GetTime() - self.last_hungry_build) or math.huge
     hungrytime = hungrytime < TUNING.HUNGRY_BUILDER_RESET_TIME and hungrytime or nil
     local hungrypt = self.last_hungry_build_pt and not CheckHungryDistance(self.inst, self.last_hungry_build_pt) and {x=self.last_hungry_build_pt.x, y=self.last_hungry_build_pt.y, z=self.last_hungry_build_pt.z} or nil
+
+    local tempbonuses = self:GetTempTechBonuses()
+
     return
     {
         buffered_builds = self.buffered_builds,
         recipes = self.recipes,
         hungrytime = hungrytime,
         hungrypt = hungrypt,
+        tempbonuses = tempbonuses,
+        temptechbonus_count = self.temptechbonus_count,
     }
 end
 
@@ -111,6 +116,11 @@ function Builder:OnLoad(data)
     end
     if data.hungrypt then
         self.last_hungry_build_pt = Point(data.hungrypt.x, data.hungrypt.y, data.hungrypt.z)
+    end
+
+    if data.tempbonuses then
+        self:GiveTempTechBonus(data.tempbonuses)
+        self.temptechbonus_count = data.temptechbonus_count
     end
 end
 
@@ -158,6 +168,19 @@ function Builder:GetTechBonuses()
             else
                 bonus[v] = tempbonus
             end
+        end
+    end
+
+	return bonus
+end
+
+function Builder:GetTempTechBonuses()
+    local bonus = {}
+    for i, v in ipairs(TechTree.BONUS_TECH) do
+        
+        local tempbonus = self[string.lower(v).."_tempbonus"]
+        if tempbonus ~= nil then
+            bonus[v] = tempbonus
         end
     end
 

@@ -235,6 +235,10 @@ local function OnNewTarget(inst, data)
         
         if target ~= nil and commander ~= nil and commander:HasTag("player") and target:HasTag("beequeen") then
             target.components.commander:AddSoldier(inst)
+            
+            inst.components.follower:StopFollowing()
+            inst:RemoveComponent("follower")
+            
             if target.components.combat:HasTarget() then
                 inst.components.combat:SetTarget(target.components.combat.target)
             else

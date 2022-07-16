@@ -163,8 +163,12 @@ end
 function Map:IsPointNearHole(pt, range)
     range = range or .5
     for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, DEPLOY_EXTRA_SPACING + range, HOLE_TAGS)) do
-        local radius = v:GetPhysicsRadius(0) + range
-        if v:GetDistanceSqToPoint(pt) < radius * radius then
+        local radius = (v._groundhole_outerradius or v:GetPhysicsRadius(0)) + (v._groundhole_rangeoverride or range)
+        local distsq = v:GetDistanceSqToPoint(pt)
+        if distsq < radius * radius then
+            if v._groundhole_innerradius and distsq < v._groundhole_innerradius * v._groundhole_innerradius then
+                return false
+            end
             return true
         end
     end
@@ -174,8 +178,12 @@ end
 function Map:IsGroundTargetBlocked(pt, range)
     range = range or .5
     for i, v in ipairs(TheSim:FindEntities(pt.x, 0, pt.z, math.max(DEPLOY_EXTRA_SPACING, MAX_GROUND_TARGET_BLOCKER_RADIUS) + range, nil, nil, BLOCKED_ONEOF_TAGS)) do
-        local radius = (v.ground_target_blocker_radius or v:GetPhysicsRadius(0)) + range
-        if v:GetDistanceSqToPoint(pt.x, 0, pt.z) < radius * radius then
+        local radius = (v.ground_target_blocker_radius or v._groundhole_outerradius or v:GetPhysicsRadius(0)) + (v._groundhole_rangeoverride or range)
+        local distsq = v:GetDistanceSqToPoint(pt.x, 0, pt.z)
+        if distsq < radius * radius then
+            if v._groundhole_innerradius and distsq < v._groundhole_innerradius * v._groundhole_innerradius then
+                return false
+            end
             return true
         end
     end

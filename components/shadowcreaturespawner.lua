@@ -96,9 +96,6 @@ local function SpawnOceanShadowCreature(player)
 end
 
 function self:SpawnShadowCreature(player, params)
-
-    print ("SPAWNING SHADOW CREATURE")
-
     params = params or _players[player]
 
     local x, y, z = player.Transform:GetWorldPosition()

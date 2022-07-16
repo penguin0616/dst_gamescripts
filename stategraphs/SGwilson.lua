@@ -15595,7 +15595,7 @@ local states =
 
     State{
         name = "changetomonkey",
-        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt" },
+        tags = { "busy", "nopredict", "transform", "nomorph", "nointerrupt" },
 
         onenter = function(inst)
             ClearStatusAilments(inst)
@@ -15621,12 +15621,15 @@ local states =
         {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
+                    inst.sg:AddStateTag("noattack")
+                    inst.components.health:SetInvincible(false)
                     inst:ChangeToMonkey()
                 end
             end),
         },
 
         onexit = function(inst)
+            assert(not inst.sg:HasStateTag("noattack"), "Left changetomonkey state.")
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
             end

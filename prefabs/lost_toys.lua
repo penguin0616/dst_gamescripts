@@ -65,7 +65,7 @@ local function MakeTrinket(num)
         inst.AnimState:SetBank("trinkets")
         inst.AnimState:SetBuild("trinkets")
         inst.AnimState:PlayAnimation(tostring(num))
-        inst.AnimState:SetMultColour(table.unpack(MIN_FADE_COLOUR))
+        inst.AnimState:SetMultColour(unpack(MIN_FADE_COLOUR))
         inst.AnimState:SetHaunted(true)
 
         -- Lost toys are permanently haunted.

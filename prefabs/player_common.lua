@@ -668,6 +668,8 @@ local function UnregisterHUD(inst)
 end
 
 local function ActivatePlayer(inst)
+    inst.activatetask = nil
+
     if ThePlayer.isseamlessswapsource then
         assert(inst.isseamlessswaptarget, "new player isn't the seamless swap target")
 
@@ -677,13 +679,18 @@ local function ActivatePlayer(inst)
         local oldprefab = oldplayer.prefab
         ThePlayer = inst
         oldplayer.player_classified.MapExplorer:DeactivateLocalMiniMap()
-        oldplayer:Remove()
+
+        if oldplayer.delayclientdespawn_attempted then
+            oldplayer:Remove()
+        else
+            oldplayer.delayclientdespawn = nil
+            oldplayer.player_classified.delayclientdespawn = nil
+        end
 
         ActivateHUD(inst)
 
         inst:PushEvent("finishseamlessplayerswap" , {oldprefab=oldprefab })
     end
-    inst.activatetask = nil
 
     TheWorld.minimap.MiniMap:DrawForgottenFogOfWar(true)
     if inst.player_classified ~= nil then
@@ -897,7 +904,6 @@ local function OnSetOwner(inst)
 end
 
 function fns.CommonSeamlessPlayerSwap(inst)
-    inst.isseamlessswapsource = true
     inst.name = nil
     inst.userid = ""
     if inst.components.playercontroller ~= nil then
@@ -912,22 +918,34 @@ end
 
 function fns.LocalSeamlessPlayerSwap(inst)
     fns.CommonSeamlessPlayerSwap(inst)
+    inst.isseamlessswapsource = true --this flag is for local activated player only
+
     --delay the client despawn for these two entities
     inst.delayclientdespawn = true
     inst.player_classified.delayclientdespawn = true
+
+    if TheWorld.ismastersim then
+        --if we're also the host, just mark it as already attempted to remove
+        inst.delayclientdespawn_attempted = true
+    end
 end
 
 function fns.LocalSeamlessPlayerSwapTarget(inst)
     fns.CommonSeamlessPlayerSwapTarget(inst)
-    inst.isseamlessswaptarget = true
+    inst.isseamlessswaptarget = true --this flag is for local activated player only
 end
 
 function fns.MasterSeamlessPlayerSwap(inst)
     fns.CommonSeamlessPlayerSwap(inst)
-    --despawn the player if they aren't the local player (local player despawning is handled later in the swap)
-    if inst ~= ThePlayer then
-        inst:DoStaticTaskInTime(0, inst.Remove)
-    end
+
+    --make sure the player is not removed on the same network tick as the new spawn
+    --this guarantees the client will receive the new player spawn first
+    local network_tick = TheNet:GetNetUpdates()
+    inst:DoStaticPeriodicTask(0, function(inst)
+        if TheNet:GetNetUpdates() ~= network_tick then
+            inst:Remove()
+        end
+    end)
 end
 
 function fns.MasterSeamlessPlayerSwapTarget(inst)
@@ -1839,9 +1857,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             end
         end
 
-        inst.Physics:SetActive(false)
-        newinst.Transform:SetPosition(inst.Transform:GetWorldPosition())
-        inst:Hide()
+        newinst.Physics:Teleport(inst.Transform:GetWorldPosition())
     end
 
     local function ChangeToMonkey(inst)

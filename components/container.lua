@@ -541,7 +541,7 @@ function Container:HasItemWithTag(tag, amount)
     return num_found >= amount, num_found
 end
 
-function Container:HasItemWithTag(tag, amount)
+function Container:GetItemsWithTag(tag)
     local items = {}
     for k,v in pairs(self.slots) do
         if v and v:HasTag(tag) then

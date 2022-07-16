@@ -205,6 +205,12 @@ local function common_postinit(inst)
 		end
 	end
 
+    --reader (from reader component) added to pristine state for optimization
+    inst:AddTag("reader")
+
+    --aspiring_bookworm (from reader component) added to pristine state for optimization
+    inst:AddTag("aspiring_bookworm")
+
     inst.HostileTest = CLIENT_Wurt_HostileTest
 end
 

@@ -90,8 +90,11 @@ local function CreateSurfaceAnim()
     return inst
 end
 
+local OUTER_RADIUS = 2.75
+local INNER_RADIUS = 1.5
+
 local function build_hole_collision_mesh(radius, height)
-    local radius = 2.75
+    local radius = OUTER_RADIUS
     local height = 6
     local segment_count = 16
     local segment_span = math.pi * 2 / segment_count
@@ -189,9 +192,12 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    --inst:AddTag("groundhole") -- TODO(JBK): Fix this.
+    inst:AddTag("groundhole")
+    inst._groundhole_innerradius = INNER_RADIUS
+    inst._groundhole_outerradius = OUTER_RADIUS
+    inst._groundhole_rangeoverride = 0
     inst:AddTag("blocker")
-    --inst:AddTag("blinkfocus") -- TODO(JBK): Implement this.
+    inst:AddTag("blinkfocus")
 
     inst.entity:AddPhysics()
     inst.Physics:SetMass(0)
@@ -201,7 +207,6 @@ local function fn()
     inst.Physics:CollidesWith(COLLISION.CHARACTERS)
     inst.Physics:CollidesWith(COLLISION.GIANTS)
     inst.Physics:SetTriangleMesh(build_hole_collision_mesh())
-    --inst.Physics:SetCylinder(2.75, 6)
 
     inst.AnimState:SetBank("cave_hole")
     inst.AnimState:SetBuild("cave_hole")
