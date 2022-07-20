@@ -188,7 +188,6 @@ function Builder:GetTempTechBonuses()
 end
 
 function Builder:GiveTempTechBonus(tech)
-    
     for k, v in pairs(tech) do
         self[string.lower(k).."_tempbonus"] = v
     end
@@ -198,11 +197,12 @@ function Builder:GiveTempTechBonus(tech)
     else
         self.temptechbonus_count = 1
     end
-
 end
 
-function Builder:ClearTempTechBonuses(rec)
-    if self:KnowsRecipe(rec.name, true) or CanPrototypeRecipe(rec.level, self.accessible_tech_trees_no_temp) then
+function Builder:ConsumeTempTechBonuses()
+	if self.temptechbonus_count == nil then
+		--we should NOT reach here normally; only assert in dev branch though!
+		assert(BRANCH ~= "dev")
         return
     end
 
@@ -216,7 +216,6 @@ function Builder:ClearTempTechBonuses(rec)
 
         self.temptechbonus_count = nil
     end
-
 end
 
 local PROTOTYPER_TAGS = { "prototyper" }
@@ -808,9 +807,14 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
     if self:HasIngredients(recipe) then
 		if recipe.placer == nil then
 			if self:KnowsRecipe(recipe) then
+				--Need to determine this NOW before calling async MakeRecipe
+				local usingtempbonus = not self:KnowsRecipe(recipe, true)
+
                 self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                     function()
-                        self:ClearTempTechBonuses(recipe)
+						if usingtempbonus then
+							self:ConsumeTempTechBonuses()
+						end
 
                         if self.freebuildmode then
                             --V2C: free-build should still trigger prototyping
@@ -828,9 +832,14 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
                     end
                 )
 			elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
+				--Need to determine this NOW before calling async MakeRecipe
+				local usingtempbonus = not CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp)
+
 				self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
 					function()
-                        self:ClearTempTechBonuses(recipe)
+						if usingtempbonus then
+							self:ConsumeTempTechBonuses()
+						end
 						self:ActivateCurrentResearchMachine(recipe)
 						self:UnlockRecipe(recipe.name)
 					end
@@ -842,9 +851,14 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 			local ing_recipe = GetValidRecipe(ing.type)
 			if ing_recipe ~= nil and not self.inst.components.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * self.ingredientmod)), true) and self:HasIngredients(ing_recipe) then
 				if self:KnowsRecipe(ing_recipe) then
+					--Need to determine this NOW before calling async MakeRecipe
+					local usingtempbonus = not self:KnowsRecipe(ing_recipe, true)
+
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
-                            self:ClearTempTechBonuses(recipe)
+							if usingtempbonus then
+								self:ConsumeTempTechBonuses()
+							end
 
 							if self.freebuildmode then
 								--V2C: free-build should still trigger prototyping
@@ -861,9 +875,14 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 						end
 					)
 				elseif CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) and self:CanLearn(ing_recipe.name) then
+					--Need to determine this NOW before calling async MakeRecipe
+					local usingtempbonus = not CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees_no_temp)
+
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
-                            self:ClearTempTechBonuses(recipe)
+							if usingtempbonus then
+								self:ConsumeTempTechBonuses()
+							end
 							self:ActivateCurrentResearchMachine(ing_recipe)
 							self:UnlockRecipe(ing_recipe.name)
 						end
@@ -888,6 +907,10 @@ function Builder:BufferBuild(recname)
     local recipe = GetValidRecipe(recname)
     if recipe ~= nil and recipe.placer ~= nil and not self:IsBuildBuffered(recname) and self:HasIngredients(recipe) then
         if self:KnowsRecipe(recipe) then
+			if not self:KnowsRecipe(recipe, true) then
+				self:ConsumeTempTechBonuses()
+			end
+
             if self.freebuildmode then
                 --V2C: free-build should still trigger prototyping
                 if not table.contains(self.recipes, recname) and CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) then
@@ -901,11 +924,14 @@ function Builder:BufferBuild(recname)
                 self:AddRecipe(recname)
             end
         elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recname) then
-                self:ActivateCurrentResearchMachine(recipe)
-                self:UnlockRecipe(recname)
-            else
-                return
-            end
+			if not CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp) then
+				self:ConsumeTempTechBonuses()
+			end
+			self:ActivateCurrentResearchMachine(recipe)
+			self:UnlockRecipe(recname)
+		else
+			return
+		end
 
         local materials = self:GetIngredients(recname)
         self:RemoveIngredients(materials, recname)

@@ -1,21 +1,33 @@
-local Reader = Class(function(self, inst)
-    self.inst = inst
-
-    inst:AddTag("reader")
-end)
-
-function Reader:OnRemoveFromEntity()
-    self.inst:RemoveTag("reader")
-end
-
-function Reader:SetAspiringBookworm(bookworm)
+local function onaspiringbookworm(self, bookworm)
 	if bookworm then
 		self.inst:AddTag("aspiring_bookworm")
 	else
 		self.inst:RemoveTag("aspiring_bookworm")
 	end
+end
 
+local Reader = Class(function(self, inst)
+    self.inst = inst
+    --self.aspiring_bookworm = nil
+
+    inst:AddTag("reader")
+end,
+nil,
+{
+	aspiring_bookworm = onaspiringbookworm,
+})
+
+function Reader:OnRemoveFromEntity()
+    self.inst:RemoveTag("reader")
+    self.inst:RemoveTag("aspiring_bookworm")
+end
+
+function Reader:SetAspiringBookworm(bookworm)
 	self.aspiring_bookworm = bookworm
+end
+
+function Reader:IsAspiringBookworm()
+	return self.aspiring_bookworm or false
 end
 
 function Reader:SetOnReadFn(fn)

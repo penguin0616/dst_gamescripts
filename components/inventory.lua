@@ -887,7 +887,8 @@ function Inventory:GiveItem(inst, slot, src_pos)
             self.activeitem.prefab == inst.prefab and
             not self.activeitem.components.stackable:IsFull()
             then
-            self.activeitem.components.stackable:Put(inst, Vector3(inst.Transform:GetWorldPosition()))
+            self.activeitem.components.stackable:Put(inst, Vector3(self.inst.Transform:GetWorldPosition()))
+            self.inst:PushEvent("gotnewitem", { item = inst, toactiveitem = true, })
         else
             self:DropItem(inst, true, true)
         end

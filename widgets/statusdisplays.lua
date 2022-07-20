@@ -175,10 +175,29 @@ local function UpdateRezButton(inst, self, enable)
     end
 end
 
+local function OnFinishSeamlessPlayerSwap(owner)
+    local self = owner.HUD.controls.status
+    self.inst:RemoveEventCallback("finishseamlessplayerswap", OnFinishSeamlessPlayerSwap, owner)
+
+    if self.modetask ~= nil then
+        self.modetask:Cancel()
+        self.modetask = nil
+    end
+    if self.isghostmode then
+        OnSetGhostMode(self.inst, self)
+    else
+        OnSetPlayerMode(self.inst, self)
+    end
+end
+
 local StatusDisplays = Class(Widget, function(self, owner)
     Widget._ctor(self, "Status")
     self:UpdateWhilePaused(false)
     self.owner = owner
+
+    if owner.isseamlessswaptarget then
+        self.inst:ListenForEvent("finishseamlessplayerswap", OnFinishSeamlessPlayerSwap, owner)
+    end
 
     local is_splitscreen = IsSplitScreen()
     if is_splitscreen and IsGameInstance(Instances.Player1) then

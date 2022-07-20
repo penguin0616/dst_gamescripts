@@ -2392,7 +2392,7 @@ local function TryToSoulhop(act, act_pos, consumeall)
 end
 
 ACTIONS.BLINK.strfn = function(act)
-    return act.invobject == nil and act.doer ~= nil and act.doer:HasTag("soulstealer") and "SOUL" or nil
+    return act.invobject == nil and act.doer ~= nil and act.doer:HasTag("soulstealer") and ((act.doer._freesoulhop_counter or 0) > 0 and "FREESOUL" or "SOUL") or nil
 end
 
 ACTIONS.BLINK.fn = function(act)
@@ -2402,7 +2402,7 @@ ACTIONS.BLINK.fn = function(act)
             return act.invobject.components.blinkstaff:Blink(act_pos, act.doer)
         end
     elseif TryToSoulhop(act, act_pos) then
-        act.doer.sg:GoToState("portal_jumpin", act_pos)
+        act.doer.sg:GoToState("portal_jumpin", {dest = act_pos,})
         return true
     end
 end
@@ -2422,7 +2422,7 @@ ACTIONS.BLINK_MAP.fn = function(act)
     -- NOTES(JBK): This only supports soul hopping for now due to the theoretical infinite range.
 	local act_pos = act:GetActionPoint()
     if ActionCanMapSoulhop(act) and TryToSoulhop(act, act_pos, true) then
-        act.doer.sg:GoToState("portal_jumpin", act_pos)
+        act.doer.sg:GoToState("portal_jumpin", {dest = act_pos, from_map = true,})
         return true
     end
 end
@@ -2431,7 +2431,12 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
     local dist = act.pos:GetPosition():Dist(targetpos)
     local act_remap = BufferedAction(act.doer, nil, ACTIONS.BLINK_MAP, act.invobject, targetpos)
     local dist_mod = ((act.doer and act.doer._freesoulhop_counter or 0) * (TUNING.WORTOX_FREEHOP_HOPSPERSOUL - 1)) * act.distance
-    act_remap.distancecount = math.max(math.ceil((dist + dist_mod) / (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL * TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)), 1)
+    local dist_perhop = (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL * TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)
+    local dist_souls = (dist + dist_mod) / dist_perhop
+    act_remap.maxsouls = TUNING.WORTOX_MAX_SOULS
+    act_remap.distanceperhop = dist_perhop
+    act_remap.distancefloat = dist_souls
+    act_remap.distancecount = math.clamp(math.ceil(dist_souls), 1, act_remap.maxsouls)
     if not ActionCanMapSoulhop(act_remap) then
         return nil
     end

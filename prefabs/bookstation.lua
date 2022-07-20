@@ -54,7 +54,11 @@ end
 
 local function onturnon(inst)
     if inst._activetask == nil and not inst:HasTag("burnt") then
-        inst.AnimState:PlayAnimation("proximity_loop", true)
+        if inst.AnimState:IsCurrentAnimation("place") then
+            inst.AnimState:PushAnimation("proximity_loop", true)
+        else
+            inst.AnimState:PlayAnimation("proximity_loop", true)
+        end
         inst.SoundEmitter:KillSound("idlesound")
     end
 end
@@ -122,7 +126,7 @@ local function RestoreBooks(inst)
     local players = FindPlayersInRange(x, y, z, TUNING.BOOKSTATION_BONUS_RANGE, true)
 
     for _, player in ipairs(players) do
-        if player:HasTag("wickerbottom") then
+        if player:HasTag("bookbuilder") then
             wicker_bonus = TUNING.BOOKSTATION_WICKER_BONUS
             break
         end

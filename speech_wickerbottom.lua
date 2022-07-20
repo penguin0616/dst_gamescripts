@@ -108,6 +108,8 @@ return{
             NOHORTICULTURE = "There are no crops to cultivate.",
             NOTENTACLEGROUND = "The tentacles would be unable to break the surface here.",
             NOSLEEPTARGETS = "I don't see anyone in need of a bedtime story.",
+            TOOMANYBEES = "That would be a rather excessive amount of bees, dear.",
+            NOMOONINCAVES = "The moon can't be affected from this subterranean location.",
         },
 
         GIVE =
@@ -1628,7 +1630,7 @@ return{
 		BONESHARD = "Remnants of a life well lived.",
 		BONESTEW = "Not quite how mum used to make, but it smells superb!",
 		BUGNET = "The tool of entomologists.",
-		BUSHHAT = "Camouflage",
+		BUSHHAT = "Camouflage.",
 		BUTTER = "Lepidopterous lipids?",
 		BUTTERFLY =
 		{

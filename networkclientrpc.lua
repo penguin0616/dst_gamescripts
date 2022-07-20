@@ -1025,7 +1025,6 @@ local CLIENT_RPC_HANDLERS =
         if topscreen and topscreen.minimap then
             topscreen.minimap.minimap:ResetOffset()
         end
-        TheCamera:Snap()
     end,
 }
 

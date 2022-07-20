@@ -665,6 +665,7 @@ STRINGS =
         {
             GENERIC = "Telepoof",
             SOUL = "Soul Hop",
+            FREESOUL = "Soul Echo",
         },
         BLINK_MAP =
         {

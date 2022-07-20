@@ -409,7 +409,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnGotNewItem(inst, data)
-    if data.slot ~= nil or data.eslot ~= nil then
+    if data.slot ~= nil or data.eslot ~= nil or data.toactiveitem ~= nil then
         TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/collect_resource")
     end
 end
@@ -637,6 +637,9 @@ end
 
 local function DeactivateHUD(inst)
     TheCamera:SetOnUpdateFn(nil)
+    if inst.HUD and inst.HUD:IsMapScreenOpen() then
+        TheFrontEnd:PopScreen()
+    end
     TheFrontEnd:PopScreen(inst.HUD)
     inst.HUD = nil
 end
@@ -673,6 +676,10 @@ local function ActivatePlayer(inst)
     if ThePlayer.isseamlessswapsource then
         assert(inst.isseamlessswaptarget, "new player isn't the seamless swap target")
 
+        --we probably zoomed in during transformation
+        --prevent snap when swapping huds, so we can zoom back out naturally 
+        TheCamera:LockDistance(true)
+
         UnregisterHUD(ThePlayer)
 
         local oldplayer = ThePlayer
@@ -703,6 +710,8 @@ local function ActivatePlayer(inst)
 
     inst:PushEvent("playeractivated")
     TheWorld:PushEvent("playeractivated", inst)
+
+    TheCamera:LockDistance(false)
 
     if inst == ThePlayer and not TheWorld.ismastersim then
         -- Clients save locally as soon as they spawn in, so it is

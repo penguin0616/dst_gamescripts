@@ -110,6 +110,13 @@ local function onload(inst, data)
     end
 end
 
+local function onloadpostpass(inst, newents, data)
+    if inst.components.savedrotation then
+        local savedrotation = data ~= nil and data.savedrotation ~= nil and data.savedrotation.rotation or 0
+        inst.components.savedrotation:ApplyPostPassRotation(savedrotation)
+    end
+end
+
 local function onbuilt(inst, data)
     inst.sg:GoToState("place")
 
@@ -324,6 +331,7 @@ local function fn()
 
     inst.OnSave = onsave
     inst.OnLoad = onload
+    inst.OnLoadPostPass = onloadpostpass
     inst.OnEntitySleep = OnEntitySleep
     inst.OnRemoveEntity = OnRemoveEntity
 

@@ -4081,7 +4081,7 @@ function Tune(overrides)
         WORTOX_SOULHEAL_MINIMUM_HEAL = 5, -- Each souls must heal at least this much.
         WORTOX_FREEHOP_HOPSPERSOUL = 2, -- Amount of hops per soul in a given time frame. Maximum value is clamped to freesoulhops in player_classified.
         WORTOX_FREEHOP_TIMELIMIT = 5, -- Amount of seconds to use up free hops per hop.
-        WORTOX_MAPHOP_DISTANCE_SCALER = 0.8, -- Perfectly placed blink teleports on a linear path to every part on the map is not realistic.
+        WORTOX_MAPHOP_DISTANCE_SCALER = 0.9, -- Perfectly placed blink teleports on a linear path to every part on the map is not realistic.
 
         --Wormwood
 		WORMWOOD_HEALTH = wilson_health,
@@ -6189,6 +6189,8 @@ function Tune(overrides)
 
         BOOK_USES_SMALL = 3,
         BOOK_USES_LARGE = 5,
+
+        BOOK_MAX_GRUMBLE_BEES = 9,
     }
 
     TUNING_MODIFIERS = {}

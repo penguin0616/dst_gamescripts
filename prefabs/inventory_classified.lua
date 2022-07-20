@@ -395,6 +395,12 @@ local function OnStackItemDirty(inst, item)
                         break
                     end
                 end
+                if data.eslot == nil then
+                    if item == inst._activeitem then
+                        data.toactiveitem = true
+                        inst._parent:PushEvent("gotnewitem", data)
+                    end
+                end
             end
         end
     end

@@ -42,8 +42,6 @@ local states=
 					inst.sg:GoToState("idle"..r)
 					return
 				else
-                    inst.SoundEmitter:KillSound("walk_loop")
-                    inst.SoundEmitter:KillSound("run_loop")
 	                inst.AnimState:PlayAnimation("idle")
 				end
             end
@@ -63,8 +61,6 @@ local states=
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("idle3", false)
             inst.AnimState:PushAnimation("eat", false)
-            inst.SoundEmitter:KillSound("walk_loop")
-            inst.SoundEmitter:KillSound("run_loop")
         end,
 
         events=
@@ -90,8 +86,6 @@ local states=
             inst.Physics:Stop()
             RemovePhysicsColliders(inst)
 			inst.Light:Enable(false)
-            inst.SoundEmitter:KillSound("walk_loop")
-            inst.SoundEmitter:KillSound("run_loop")
 
             inst.AnimState:PlayAnimation("death")
             inst.SoundEmitter:PlaySound("monkeyisland/lightcrab/death")
@@ -153,8 +147,6 @@ local states=
             inst.Physics:Stop()
 			inst:ClearBufferedAction()
             inst.AnimState:PlayAnimation("stunned_loop", true)
-            inst.SoundEmitter:KillSound("walk_loop")
-            inst.SoundEmitter:KillSound("run_loop")
             inst.sg:SetTimeout(1)
         end,
 
@@ -168,8 +160,6 @@ local states=
         onenter = function(inst)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("hit")
-            inst.SoundEmitter:KillSound("walk_loop")
-            inst.SoundEmitter:KillSound("run_loop")
             inst.SoundEmitter:PlaySound("monkeyisland/lightcrab/hit")
         end,
 
@@ -181,40 +171,71 @@ local states=
 
 }
 
-CommonStates.AddWalkStates(states,
-{
-    starttimeline =
-    {
-		-- todo: sound effects
-    },
+--These sound loops start instantly, but use a delayed task to stop, so that we can request to "stop" the
+--sound when exiting any of these states, without causing the loop to restart if we immediately re-enter
+--another state that wants to play the same sound again.
+local function StartSoundLoop(inst, soundpath, soundname)
+    local taskname = soundname.."_task"
+    if inst.sg.statemem[taskname] ~= nil then
+        inst.sg.statemem[taskname]:Cancel()
+        inst.sg.statemem[taskname] = nil
+    end
+    if not inst.SoundEmitter:PlayingSound(soundname) then
+        inst.SoundEmitter:PlaySound(soundpath, soundname)
+    end
+end
 
-    walktimeline =
-    {
-    TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("monkeyisland/lightcrab/walk", "walk_loop") end),
-    },
-},
-nil, nil, nil,
+local function _DoStopSoundLoop(inst, soundname, taskname)
+    inst.sg.statemem[taskname] = nil
+    inst.SoundEmitter:KillSound(soundname)
+end
+
+local function StopSoundLoop(inst, soundname)
+    local taskname = soundname.."_task"
+    if inst.sg.statemem[taskname] == nil and inst.SoundEmitter:PlayingSound(soundname) then
+        inst.sg.statemem[taskname] = inst:DoTaskInTime(0, _DoStopSoundLoop, soundname, taskname)
+    end
+end
+
+local function StartWalkSound(inst)
+    StartSoundLoop(inst, "monkeyisland/lightcrab/walk", "walk_loop")
+end
+
+local function StopWalkSound(inst)
+    StopSoundLoop(inst, "walk_loop")
+end
+
+local function StartRunSound(inst)
+    StartSoundLoop(inst, "monkeyisland/lightcrab/run", "run_loop")
+end
+
+local function StopRunSound(inst)
+    StopSoundLoop(inst, "run_loop")
+end
+
+CommonStates.AddWalkStates(states,
+nil, nil, nil, nil,
 {
-    endonexit = function(inst)
-    inst.SoundEmitter:KillSound("walk_loop")
-    end,
+    startonenter = StartWalkSound,
+    startonexit = StopWalkSound,
+
+    walkonenter = StartWalkSound,
+    walkonexit = StopWalkSound,
+
+    endonenter = StartWalkSound,
+    endonexit = StopWalkSound,
 })
 CommonStates.AddRunStates(states,
+nil, nil, nil, nil,
 {
-    starttimeline =
-    {
-        -- todo: sound effects
-    },
-    runtimeline =
-    {
-    TimeEvent(0*FRAMES, function(inst) inst.SoundEmitter:PlaySound("monkeyisland/lightcrab/run", "run_loop") end),
-    },
-},
-nil, nil, nil,
-{
-    endonexit = function(inst)
-        inst.SoundEmitter:KillSound("run_loop")
-    end,
+    startonenter = StartRunSound,
+    startonexit = StopRunSound,
+
+    runonenter = StartRunSound,
+    runonexit = StopRunSound,
+
+    endonenter = StartRunSound,
+    endonexit = StopRunSound,
 })
 
 CommonStates.AddSleepStates(states)

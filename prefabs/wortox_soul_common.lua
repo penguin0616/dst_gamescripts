@@ -9,7 +9,7 @@ local function DoHeal(inst)
             v.entity:IsVisible() and
             v:GetDistanceSqToPoint(x, y, z) < TUNING.WORTOX_SOULHEAL_RANGE * TUNING.WORTOX_SOULHEAL_RANGE then
             -- NOTES(JBK): If the target is hurt put them on the list to do heals.
-            if v.components.health:IsHurt() then
+            if v.components.health:IsHurt() and not v:HasTag("health_as_oldage") then -- Wanda tag.
                 table.insert(healtargets, v)
                 healtargetscount = healtargetscount + 1
             end

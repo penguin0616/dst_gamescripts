@@ -52,7 +52,7 @@ local GARDENING_CANT_TAGS = { "pickable", "stump", "withered", "barren", "INLIMB
 local SILVICULTURE_ONEOF_TAGS = { "leif", "silviculture", "tree", "winter_tree" }
 local SILVICULTURE_CANT_TAGS = { "player", "FX", "pickable", "stump", "withered", "barren", "INLIMBO" }
 
-local HORTICULTURE_ONEOF_TAGS = { "plant" }
+local HORTICULTURE_ONEOF_TAGS = { "plant", "lichen", "oceanvine" }
 local HORTICULTURE_CANT_TAGS = { "player", "FX", "leif", "pickable", "stump", "withered", "barren", "INLIMBO", "silviculture", "tree", "winter_tree" }
 
 local function MaximizePlant(inst)
@@ -769,6 +769,11 @@ local book_defs =
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx = "fx_book_moon",
         fn = function(inst, reader)
+
+            if TheWorld:HasTag("cave") then
+                return false, "NOMOONINCAVES"
+            end
+
             TheWorld:PushEvent("ms_setmoonphase", {moonphase = "full"})
 
             if not TheWorld.state.isnight then
@@ -801,6 +806,8 @@ local book_defs =
                         reader.components.commander:ShareTargetToAllSoldiers(data.target)
                     end
                 end)
+            elseif reader.components.commander:GetNumSoldiers() >= TUNING.BOOK_MAX_GRUMBLE_BEES then
+                return false, "TOOMANYBEES"
             end
 
             local x, y, z = reader.Transform:GetWorldPosition()

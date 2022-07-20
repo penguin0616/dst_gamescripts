@@ -44,6 +44,13 @@ local function onload(inst, data)
     end
 end
 
+local function onloadpostpass(inst, newents, data)
+    if inst.components.savedrotation then
+        local savedrotation = data ~= nil and data.savedrotation ~= nil and data.savedrotation.rotation or 0
+        inst.components.savedrotation:ApplyPostPassRotation(savedrotation)
+    end
+end
+
 local function onbuilt(inst)
     inst.SoundEmitter:PlaySound("dontstarve/common/sign_craft")
 end
@@ -102,6 +109,7 @@ local function fn()
     MakeSmallPropagator(inst)
     inst.OnSave = onsave
     inst.OnLoad = onload
+    inst.OnLoadPostPass = onloadpostpass
 
     MakeHauntableWork(inst)
     inst:ListenForEvent("onbuilt", onbuilt)

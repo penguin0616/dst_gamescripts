@@ -521,9 +521,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.REPAIR, "dolongaction"),
     ActionHandler(ACTIONS.READ,
         function(inst, action)
-            return	(action.invobject ~= nil and action.invobject.components.simplebook ~= nil) and "cookbook_open"
-					or inst:HasTag("aspiring_bookworm") and "book_peruse"
-					or "book"
+            return (action.invobject ~= nil and action.invobject.components.simplebook ~= nil and "cookbook_open")
+				or (inst.components.reader ~= nil and inst.components.reader:IsAspiringBookworm() and "book_peruse")
+				or "book"
         end),
     ActionHandler(ACTIONS.MAKEBALLOON, "makeballoon"),
     ActionHandler(ACTIONS.DEPLOY, "doshortaction"),
@@ -1424,6 +1424,32 @@ local events =
         end
     end),
 
+    EventHandler("monkeycursehit", function(inst, data)
+        if data == nil or not data.uncurse then
+            --receiving curse
+            if not (inst.sg:HasStateTag("nointerrupt") or
+                    inst.sg:HasStateTag("nomorph") or
+                    inst.sg:HasStateTag("silentmorph") or
+                    inst.components.health:IsDead()) then
+                local t = GetTime()
+                if t > (inst.sg.mem.lastcursehittime or -math.huge) + 1 then
+                    inst.sg.mem.lastcursehittime = t
+                    inst.sg:GoToState("hit")
+                end
+            end
+        else
+            --removing curse
+            if not (inst.sg:HasStateTag("nointerrupt") or
+                    inst.components.health:IsDead()) then
+                local t = GetTime()
+                if t > (inst.sg.mem.lastcursehittime or -math.huge) + 1 or inst:HasTag("wonkey") then
+                    inst.sg.mem.lastcursehittime = t
+                    inst.sg:GoToState("hit_spike", "med")
+                end
+            end
+        end
+    end),
+
     CommonHandlers.OnHop(),
 }
 
@@ -1724,11 +1750,11 @@ local states =
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
                 inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
             end
 
             if inst.components.rider:IsRiding() then
                 inst.sg.statemem.data = data
-                ForceStopHeavyLifting(inst)
                 inst.AnimState:PlayAnimation("fall_off")
                 inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
             else
@@ -1755,6 +1781,7 @@ local states =
                     inst.components.inventory:Open()
                 end
                 if inst.components.playercontroller ~= nil then
+                    inst.components.playercontroller:EnableMapControls(true)
                     inst.components.playercontroller:Enable(true)
                 end
             end
@@ -1813,6 +1840,7 @@ local states =
                 end
             end
             if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:EnableMapControls(true)
                 inst.components.playercontroller:Enable(true)
             end
         end,
@@ -1834,6 +1862,7 @@ local states =
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
                 inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
             end
 
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + 23 * FRAMES)
@@ -1877,6 +1906,7 @@ local states =
                 end
             end
             if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:EnableMapControls(true)
                 inst.components.playercontroller:Enable(true)
             end
         end,
@@ -1961,6 +1991,7 @@ local states =
                 inst.AnimState:ClearOverrideSymbol(v)
             end
             if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:EnableMapControls(true)
                 inst.components.playercontroller:Enable(true)
             end
         end,
@@ -1988,6 +2019,7 @@ local states =
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
                 inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
             end
         end,
 
@@ -2046,6 +2078,7 @@ local states =
                 inst.AnimState:ClearOverrideSymbol(v)
             end
             if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:EnableMapControls(true)
                 inst.components.playercontroller:Enable(true)
             end
         end,
@@ -2093,6 +2126,7 @@ local states =
             end
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
+                inst.components.playercontroller:EnableMapControls(true)
             end
         end,
     },
@@ -2113,6 +2147,7 @@ local states =
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:RemotePausePrediction()
                 inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
             end
 
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + 18 * FRAMES)
@@ -2156,6 +2191,7 @@ local states =
             end
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
+                inst.components.playercontroller:EnableMapControls(true)
             end
         end,
     },
@@ -6946,7 +6982,6 @@ local states =
                 inst.components.inventory:ReturnActiveActionItem(book)
                 local skin_build = book:GetSkinBuild()
                 if skin_build ~= nil then
-                    inst.sg.statemem.skinned = true
                     inst.AnimState:OverrideItemSkinSymbol("book_open",       skin_build, "book_open",       book.GUID, "player_actions_uniqueitem")
                     inst.AnimState:OverrideItemSkinSymbol("book_closed",     skin_build, "book_closed",     book.GUID, "player_actions_uniqueitem")
                     inst.AnimState:OverrideItemSkinSymbol("book_open_pages", skin_build, "book_open_pages", book.GUID, "player_actions_uniqueitem")
@@ -6955,6 +6990,7 @@ local states =
                     inst.AnimState:OverrideSymbol("book_open",       "swap_books", book.prefab .. "_open")
                     inst.AnimState:OverrideSymbol("book_open_pages", "swap_books", book.prefab .. "_open_pages")
                 end
+                inst.sg.statemem.symbolsoverridden = true
 
                 --should be same as the buffered action item
                 if book.components.aoetargeting ~= nil and book == inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
@@ -7031,7 +7067,7 @@ local states =
         },
 
         onexit = function(inst)
-            if inst.sg.statemem.skinned then
+            if inst.sg.statemem.symbolsoverridden then
                 inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
                 inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
                 inst.AnimState:OverrideSymbol("book_open_pages", "player_actions_uniqueitem", "book_open_pages")
@@ -9944,6 +9980,10 @@ local states =
             inst.AnimState:PlayAnimation("bucked")
 
             if data ~= nil then
+                if data.disablecollision then
+                    ToggleOffPhysics(inst)
+                    inst.Physics:CollidesWith(COLLISION.WORLD)
+                end
                 if data.propsmashed then
                     local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
                     local pos
@@ -10023,6 +10063,9 @@ local states =
         },
 
         onexit = function(inst)
+            if inst.sg.statemem.isphysicstoggle then
+                ToggleOnPhysics(inst)
+            end
             if inst.sg.statemem.speed ~= nil then
                 inst.Physics:Stop()
             end
@@ -14446,12 +14489,14 @@ local states =
         name = "portal_jumpin",
         tags = { "busy", "pausepredict", "nodangle", "nomorph" },
 
-        onenter = function(inst, dest)
+        onenter = function(inst, data)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("wortox_portal_jumpin")
             local x, y, z = inst.Transform:GetWorldPosition()
             SpawnPrefab("wortox_portal_jumpin_fx").Transform:SetPosition(x, y, z)
             inst.sg:SetTimeout(11 * FRAMES)
+            inst.sg.statemem.from_map = data and data.from_map or nil
+            local dest = data and data.dest or nil
             if dest ~= nil then
                 inst.sg.statemem.dest = dest
                 inst:ForceFacePoint(dest:Get())
@@ -14492,7 +14537,7 @@ local states =
 
         ontimeout = function(inst)
             inst.sg.statemem.portaljumping = true
-            inst.sg:GoToState("portal_jumpout", inst.sg.statemem.dest)
+            inst.sg:GoToState("portal_jumpout", {dest = inst.sg.statemem.dest, from_map = inst.sg.statemem.from_map})
         end,
 
         onexit = function(inst)
@@ -14508,11 +14553,15 @@ local states =
         name = "portal_jumpout",
         tags = { "busy", "nopredict", "nomorph", "noattack", "nointerrupt" },
 
-        onenter = function(inst, dest)
+        onenter = function(inst, data)
             ToggleOffPhysics(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("wortox_portal_jumpout")
             inst:ResetMinimapOffset()
+            if data and data.from_map then
+                inst:SnapCamera()
+            end
+            local dest = data and data.dest or nil
             if dest ~= nil then
                 inst.Physics:Teleport(dest:Get())
             else
@@ -15594,24 +15643,75 @@ local states =
     -- monkey
 
     State{
+        name = "monkeychanger_pre",
+        tags = { "busy", "pausepredict", "dismounting", "transform", "nomorph", "nointerrupt" },
+
+        onenter = function(inst, tomonkey)
+            ClearStatusAilments(inst)
+            ForceStopHeavyLifting(inst)
+            inst.Physics:Stop()
+            inst.components.inventory:Close(true) --true to keep activeitem over seamless player swap
+            inst:PushEvent("ms_closepopups")
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:RemotePausePrediction()
+                inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
+            end
+
+            if inst.components.rider:IsRiding() then
+                inst.sg.statemem.tomonkey = tomonkey
+                inst.AnimState:PlayAnimation("fall_off")
+                inst.SoundEmitter:PlaySound("dontstarve/beefalo/saddle/dismount")
+            else
+                inst.sg.statemem.transforming = true
+                inst.sg:GoToState(tomonkey and "changetomonkey" or "changefrommonkey")
+            end
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.components.rider:ActualDismount()
+                    inst.sg.statemem.transforming = true
+                    inst.sg:GoToState(inst.sg.statemem.tomonkey and "changetomonkey" or "changefrommonkey")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.transforming then
+                inst.components.rider:ActualDismount()
+                if not inst.components.health:IsDead() then
+                    inst.components.inventory:Open()
+                end
+                if inst.components.playercontroller ~= nil then
+                    inst.components.playercontroller:EnableMapControls(true)
+                    inst.components.playercontroller:Enable(true)
+                end
+            end
+        end,
+    },
+
+    State{
         name = "changetomonkey",
         tags = { "busy", "nopredict", "transform", "nomorph", "nointerrupt" },
 
         onenter = function(inst)
             ClearStatusAilments(inst)
             ForceStopHeavyLifting(inst)
+            inst:SetCameraDistance(14)
             inst.Physics:Stop()
-            --inst.components.inventory:Close() -- NOTES(JBK): This makes active item go back into the inventory but this is for seamlessswapping so inventory animations are not to be played!
+            inst.components.inventory:Close(true) --true to keep activeitem over seamless player swap
             inst:PushEvent("ms_closepopups")
 
             if inst.components.playercontroller ~= nil then
-                inst.components.playercontroller:RemotePausePrediction()
                 inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
             end
 
             inst.AnimState:AddOverrideBuild("player_monkey_change")
-
-            inst.Physics:Stop()
             inst.AnimState:PlayAnimation("cursed_pre")
 
             SpawnPrefab("monkey_cursed_pre_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -15622,7 +15722,7 @@ local states =
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst.sg:AddStateTag("noattack")
-                    inst.components.health:SetInvincible(false)
+                    inst.components.health:SetInvincible(true)
                     inst:ChangeToMonkey()
                 end
             end),
@@ -15631,14 +15731,16 @@ local states =
         onexit = function(inst)
             assert(not inst.sg:HasStateTag("noattack"), "Left changetomonkey state.")
             if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:EnableMapControls(true)
                 inst.components.playercontroller:Enable(true)
             end
+            inst:SetCameraDistance()
         end,
     },
 
     State{
         name = "changetomonkey_pst",
-        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt"  },
+        tags = { "busy", "nopredict", "transform", "nomorph", "nointerrupt" },
 
         onenter = function(inst)
             inst.AnimState:AddOverrideBuild("player_monkey_change")
@@ -15672,10 +15774,22 @@ local states =
 
     State{
         name = "changefrommonkey",
-        tags = { "busy","nopredict", "transform", "nomorph", "nointerrupt" },
+        tags = { "busy", "nopredict", "transform", "nomorph", "nointerrupt" },
 
         onenter = function(inst)
+            ClearStatusAilments(inst)
+            ForceStopHeavyLifting(inst)
+            inst:SetCameraDistance(14)
+            inst.Physics:Stop()
             inst.components.locomotor:Stop()
+            inst.components.inventory:Close(true) --true to keep activeitem over seamless player swap
+            inst:PushEvent("ms_closepopups")
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+                inst.components.playercontroller:EnableMapControls(false)
+            end
+
             inst.AnimState:PlayAnimation("deform_pre")
 
             SpawnPrefab("monkey_deform_pre_fx").Transform:SetPosition(inst.Transform:GetWorldPosition())
@@ -15685,10 +15799,21 @@ local states =
         {
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
+                    inst.sg:AddStateTag("noattack")
+                    inst.components.health:SetInvincible(true)
                     inst:ChangeFromMonkey()
                 end
             end),
         },
+
+        onexit = function(inst)
+            assert(not inst.sg:HasStateTag("noattack"), "Left changetomonkey state.")
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:EnableMapControls(true)
+                inst.components.playercontroller:Enable(true)
+            end
+            inst:SetCameraDistance()
+        end,
     },
 
     State{

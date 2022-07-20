@@ -43,8 +43,11 @@ local function OnRestoreSoul(victim)
     victim.nosoultask = nil
 end
 
-local function SpawnSoulAt(x, y, z, victim)
+local function SpawnSoulAt(x, y, z, victim, marksource)
     local fx = SpawnPrefab("wortox_soul_spawn")
+    if marksource then
+        fx._soulsource = victim and victim._soulsource or nil
+    end
     fx.Transform:SetPosition(x, y, z)
     fx:Setup(victim)
 end
@@ -54,11 +57,11 @@ local function SpawnSoulsAt(victim, numsouls)
     if numsouls == 2 then
         local theta = math.random() * 2 * PI
         local radius = .4 + math.random() * .1
-        SpawnSoulAt(x + math.cos(theta) * radius, 0, z - math.sin(theta) * radius, victim)
+        SpawnSoulAt(x + math.cos(theta) * radius, 0, z - math.sin(theta) * radius, victim, true)
         theta = GetRandomWithVariance(theta + PI, PI / 15)
-        SpawnSoulAt(x + math.cos(theta) * radius, 0, z - math.sin(theta) * radius, victim)
+        SpawnSoulAt(x + math.cos(theta) * radius, 0, z - math.sin(theta) * radius, victim, false) -- NOTES(JBK): Only one guarantee.
     else
-        SpawnSoulAt(x, y, z, victim)
+        SpawnSoulAt(x, y, z, victim, true)
         if numsouls > 1 then
             numsouls = numsouls - 1
             local theta0 = math.random() * 2 * PI
@@ -68,7 +71,7 @@ local function SpawnSoulsAt(victim, numsouls)
             for i = 1, numsouls do
                 theta = GetRandomWithVariance(theta0 + dtheta * i, thetavar)
                 radius = 1.6 + math.random() * .4
-                SpawnSoulAt(x + math.cos(theta) * radius, 0, z - math.sin(theta) * radius, victim)
+                SpawnSoulAt(x + math.cos(theta) * radius, 0, z - math.sin(theta) * radius, victim, false) -- NOTES(JBK): Only one guarantee.
             end
         end
     end
@@ -92,9 +95,11 @@ local function OnEntityDropLoot(inst, data)
 end
 
 local function OnEntityDeath(inst, data)
-    -- NOTES(JBK): Explosive entities do not drop loot.
-    if data.inst ~= nil and (data.inst.components.lootdropper == nil or data.explosive) then
-        OnEntityDropLoot(inst, data)
+    if data.inst ~= nil then
+        data.inst._soulsource = data.afflicter -- Mark the victim.
+        if (data.inst.components.lootdropper == nil or data.explosive) then -- NOTES(JBK): Explosive entities do not drop loot.
+            OnEntityDropLoot(inst, data)
+        end
     end
 end
 
@@ -457,6 +462,7 @@ local function common_postinit(inst)
     --souleater (from souleater component) added to pristine state for optimization
     inst:AddTag("souleater")
 
+    inst._freesoulhop_counter = 0
     inst.CanSoulhop = CanSoulhop
     inst:ListenForEvent("setowner", OnSetOwner)
 

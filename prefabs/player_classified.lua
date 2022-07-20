@@ -932,21 +932,6 @@ end
 
 --------------------------------------------------------------------------
 
-fns.FinishSeamlessPlayerSwap = function(parent)
-    local inst = parent.player_classified
-    inst:RemoveEventCallback("finishseamlessplayerswap", fns.FinishSeamlessPlayerSwap, parent)
-
-    OnStormLevelDirty(inst)
-    OnGiftsDirty(inst)
-    fns.OnYotbSkinDirty(inst)
-    OnMountHurtDirty(inst)
-    OnGhostModeDirty(inst)
-    OnPlayerHUDDirty(inst)
-    OnPlayerCameraDirty(inst)
-end
-
---------------------------------------------------------------------------
-
 local function RegisterNetListeners(inst)
     if TheWorld.ismastersim then
         inst._parent = inst.entity:GetParent()
@@ -1010,20 +995,6 @@ local function RegisterNetListeners(inst)
         inst:ListenForEvent("playerscreenflashdirty", OnPlayerScreenFlashDirty)
         inst:ListenForEvent("attunedresurrectordirty", OnAttunedResurrectorDirty)
         inst:ListenForEvent("cannondirty", fns.OnCannonDirty)
-
-        OnIsTakingFireDamageDirty(inst)
-        OnTemperatureDirty(inst)
-        OnTechTreesDirty(inst)
-        if inst._parent ~= nil then
-            inst._oldhealthpercent = inst.maxhealth:value() > 0 and inst.currenthealth:value() / inst.maxhealth:value() or 0
-            inst._oldhungerpercent = inst.maxhunger:value() > 0 and inst.currenthunger:value() / inst.maxhunger:value() or 0
-            inst._oldsanitypercent = inst.maxsanity:value() > 0 and inst.currentsanity:value() / inst.maxsanity:value() or 0
-            inst._oldwerenesspercent = inst.currentwereness:value() * .01
-            inst._oldinspirationpercent = inst.currentinspiration:value() * .01
-            inst._oldmightinesspercent = inst.currentmightiness:value() * .01
-            inst._oldmoisture = inst.moisture:value()
-            UpdateAnimOverrideSanity(inst._parent)
-        end
     end
 
     inst:ListenForEvent("gym_bell_start", fns.OnGymBellStart)
@@ -1052,6 +1023,32 @@ local function RegisterNetListeners(inst)
 	inst:ListenForEvent("startfarmingmusicevent", fns.StartFarmingMusicEvent)
     inst:ListenForEvent("ingredientmoddirty", fns.RefreshCrafting)
 
+    fns.OnInitialDirtyStates(inst)
+
+    if inst._parent.isseamlessswaptarget then
+        --finishseamlessplayerswap will be able to retrigger all the instant events if the initialization happened in the "wrong"" order.
+        inst:ListenForEvent("finishseamlessplayerswap", fns.FinishSeamlessPlayerSwap, inst._parent)
+        --Fade is initialized by OnPlayerActivated in gamelogic.lua
+    end
+end
+
+function fns.OnInitialDirtyStates(inst)
+    if not TheWorld.ismastersim then
+        OnIsTakingFireDamageDirty(inst)
+        OnTemperatureDirty(inst)
+        OnTechTreesDirty(inst)
+        if inst._parent ~= nil then
+            inst._oldhealthpercent = inst.maxhealth:value() > 0 and inst.currenthealth:value() / inst.maxhealth:value() or 0
+            inst._oldhungerpercent = inst.maxhunger:value() > 0 and inst.currenthunger:value() / inst.maxhunger:value() or 0
+            inst._oldsanitypercent = inst.maxsanity:value() > 0 and inst.currentsanity:value() / inst.maxsanity:value() or 0
+            inst._oldwerenesspercent = inst.currentwereness:value() * .01
+            inst._oldinspirationpercent = inst.currentinspiration:value() * .01
+            inst._oldmightinesspercent = inst.currentmightiness:value() * .01
+            inst._oldmoisture = inst.moisture:value()
+            UpdateAnimOverrideSanity(inst._parent)
+        end
+    end
+
     OnStormLevelDirty(inst)
     OnGiftsDirty(inst)
     fns.OnYotbSkinDirty(inst)
@@ -1059,10 +1056,12 @@ local function RegisterNetListeners(inst)
     OnGhostModeDirty(inst)
     OnPlayerHUDDirty(inst)
     OnPlayerCameraDirty(inst)
+end
 
-    --finishseamlessplayerswap will be able to retrigger all the instant events if the initialization happened in the "wrong"" order.
-    inst:ListenForEvent("finishseamlessplayerswap", fns.FinishSeamlessPlayerSwap, inst._parent)
-    --Fade is initialized by OnPlayerActivated in gamelogic.lua
+fns.FinishSeamlessPlayerSwap = function(parent)
+    local inst = parent.player_classified
+    inst:RemoveEventCallback("finishseamlessplayerswap", fns.FinishSeamlessPlayerSwap, parent)
+    fns.OnInitialDirtyStates(inst)
 end
 
 --------------------------------------------------------------------------

@@ -89,7 +89,7 @@ local function CanDeployAtBoatEdge(inst, pt, mouseover, deployer, rot)
         -- If we're not standing on a boat, try to get the closest boat position via FindEntities()
         if boat == nil or not boat:HasTag("boat") then
             local BOAT_MUST_TAGS = { "boat" }
-            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.BOAT.RADIUS, BOAT_MUST_TAGS)
+            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS, BOAT_MUST_TAGS)
             if #boats <= 0 then
                 return false
             end
@@ -125,25 +125,25 @@ function MakeBumperType(data)
         "collapse_small",
     }
 
-    local function onbuilt(inst, data) -- builder, pos, rot, deployable
-        if data == nil then
+    local function onbuilt(inst, builddata) -- builder, pos, rot, deployable
+        if builddata == nil then
             return
         end
 
         inst.sg:GoToState("place")
-        local boat = TheWorld.Map:GetPlatformAtPoint(data.pos.x, data.pos.z)
+        local boat = TheWorld.Map:GetPlatformAtPoint(builddata.pos.x, builddata.pos.z)
 
         -- If clicked point isn't on a boat, try to get the closest boat via FindEntities()
         if boat == nil then
             local BOAT_MUST_TAGS = { "boat" }
-            local boats = TheSim:FindEntities(data.pos.x, 0, data.pos.z, TUNING.BOAT.RADIUS, BOAT_MUST_TAGS)
+            local boats = TheSim:FindEntities(builddata.pos.x, 0, builddata.pos.z, TUNING.BOAT.RADIUS, BOAT_MUST_TAGS)
             if boats ~= nil then
                 boat = GetClosest(inst, boats)
             end
         end
 
         if boat ~= nil then
-            SnapToBoatEdge(inst, boat, data.pos)
+            SnapToBoatEdge(inst, boat, builddata.pos)
             boat.components.boatring:AddBumper(inst)
         end
 
@@ -300,7 +300,7 @@ local boatbumperprefabs = {}
 
 local boatbumperdata =
 {
-    { name = "kelp",     material = MATERIALS.KELP,   tags = { "kelp" },      loot = "kelp",                  maxloots = 2, maxhealth = TUNING.BOAT.BUMPERS.KELP.HEALTH,     flammable = true, buildsound = "dontstarve/common/place_structure_wood"  },
+    { name = "kelp",     material = MATERIALS.KELP,   tags = { "kelp" },      loot = "kelp",                  maxloots = 2, maxhealth = TUNING.BOAT.BUMPERS.KELP.HEALTH,     flammable = true, buildsound = "dontstarve/common/place_structure_straw"  },
     { name = "shell",    material = MATERIALS.SHELL,  tags = { "shell" },     loot = "slurtle_shellpieces",   maxloots = 2, maxhealth = TUNING.BOAT.BUMPERS.SHELL.HEALTH,    flammable = true, buildsound = "dontstarve/common/place_structure_stone"  },
 }
 for i, v in ipairs(boatbumperdata) do

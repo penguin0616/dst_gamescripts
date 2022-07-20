@@ -498,8 +498,8 @@ CommonStates.AddWalkStates = function(states, timelines, anims, softstop, delays
         tags = { "canrotate" },
 
         onenter = function(inst)
-			if fns ~= nil and fns.exitonenter ~= nil then
-				fns.exitonenter(inst)
+			if fns ~= nil and fns.endonenter ~= nil then
+				fns.endonenter(inst)
 			end
             inst.components.locomotor:StopMoving()
             if softstop == true or (type(softstop) == "function" and softstop(inst)) then

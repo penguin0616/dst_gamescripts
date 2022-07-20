@@ -41,9 +41,30 @@ local MapScreen = Class(Screen, function(self, owner)
     self.zoom_old = self.zoom_target
     self.zoom_target_time = 0
     self.zoomsensitivity = 15
+    self.decorationdata = {}
+    local decorationroot = self.minimap:AddChild(Widget("decor_root"))
+    decorationroot:SetHAnchor(ANCHOR_MIDDLE)
+    decorationroot:SetVAnchor(ANCHOR_MIDDLE)
+    self.decorationrootlmb = decorationroot:AddChild(Widget("decorlmb_root"))
+    self.decorationrootrmb = decorationroot:AddChild(Widget("decorrmb_root"))
 
     SetAutopaused(true)
 end)
+
+function MapScreen:RemoveLMBDecorations()
+    self.decorationdata.lmbents = nil
+    self.decorationrootlmb:KillAllChildren()
+end
+
+function MapScreen:RemoveRMBDecorations()
+    self.decorationdata.rmbents = nil
+    self.decorationrootrmb:KillAllChildren()
+end
+
+function MapScreen:RemoveDecorations()
+    self:RemoveLMBDecorations()
+    self:RemoveRMBDecorations()
+end
 
 function MapScreen:OnBecomeInactive()
     MapScreen._base.OnBecomeInactive(self)
@@ -55,6 +76,8 @@ function MapScreen:OnBecomeInactive()
     if self.owner.HUD and self.owner.HUD.controls and self.owner.HUD.controls.hover then
         self.owner.HUD.controls.hover.forcehide = nil
     end
+
+    self:RemoveDecorations()
     --V2C: Don't set pause in multiplayer, all it does is change the
     --     audio settings, which we don't want to do now
     --SetPause(false)
@@ -89,6 +112,7 @@ function MapScreen:OnBecomeActive()
 end
 
 function MapScreen:OnDestroy()
+    self:RemoveDecorations()
     SetAutopaused(false)
 
 	MapScreen._base.OnDestroy(self)
@@ -105,6 +129,7 @@ function MapScreen:GetZoomOffset(scaler)
 end
 
 function MapScreen:DoZoomIn(negativedelta)
+    self.decorationdata.dirty = true
     negativedelta = negativedelta or -0.1
     -- Run the function always, conditionally do offset fixup.
     if self.minimap:OnZoomIn(negativedelta) and self.zoom_to_cursor then
@@ -114,6 +139,7 @@ function MapScreen:DoZoomIn(negativedelta)
 end
 
 function MapScreen:DoZoomOut(positivedelta)
+    self.decorationdata.dirty = true
     positivedelta = positivedelta or 0.1
     -- Run the function always, conditionally do offset fixup.
     if self.minimap:OnZoomOut(positivedelta) and self.zoom_to_cursor then
@@ -142,6 +168,107 @@ function MapScreen:UpdateMapActions(x, y, z)
         return pc.LMBaction, pc.RMBaction
     end
     return nil, nil
+end
+
+function MapScreen:ProcessLMBDecorations(lmb, fresh)
+    if fresh then
+        self.decorationdata.lmbents = {}
+    end
+    -- Nothing yet!
+end
+
+function MapScreen:ProcessRMBDecorations(rmb, fresh)
+    if fresh then
+        self.decorationdata.rmbents = {}
+    end
+    if rmb.action == ACTIONS.BLINK_MAP then
+        local decor1, decor2
+        if fresh then
+            local image = "wortox_soul.tex"
+            local atlas = GetInventoryItemAtlas(image)
+            decor1 = self.decorationrootrmb:AddChild(Image(atlas, image))
+            decor2 = self.decorationrootrmb:AddChild(Image(atlas, image))
+            self.decorationdata.rmbents[1] = decor1
+            self.decorationdata.rmbents[2] = decor2
+        else
+            decor1 = self.decorationdata.rmbents[1]
+            decor2 = self.decorationdata.rmbents[2]
+        end
+        local rmb_pos = rmb:GetActionPoint()
+        local px, py, pz = 0, 0, 0
+        if rmb.doer then
+            px, py, pz = rmb.doer.Transform:GetWorldPosition()
+        end
+        local dx, dz = rmb_pos.x - px, rmb_pos.z - pz
+        local dist = math.sqrt(dx * dx + dz * dz)
+        local zoomscale = 0.75 / self.minimap:GetZoom()
+        local alphascaler = math.clamp(rmb.distancecount - rmb.distancefloat, 0, 1)
+        local alphascale1 = alphascaler * 3 - 2
+        local alphascale2 = 1 - alphascaler
+        local w, h = TheSim:GetScreenSize()
+        w, h = w * 0.5, h * 0.5
+        -- TODO(JBK): Clean this up.
+        if dist < rmb.distanceperhop then
+            decor1:Hide()
+            decor2:Show()
+            local r = rmb.distancecount * rmb.distanceperhop / dist
+            local ndx, ndz = dx * r + px, dz * r + pz
+            local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
+            decor2:SetPosition(x * w, y * h)
+            decor2:SetTint(1, 1, 1, alphascale2)
+            decor2:SetScale(zoomscale, zoomscale, 1)
+        elseif dist < rmb.distanceperhop * (rmb.maxsouls - 1) then
+            decor1:Show()
+            decor2:Show()
+            local r = (rmb.distancecount - 1) * rmb.distanceperhop / dist
+            local ndx, ndz = dx * r + px, dz * r + pz
+            local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
+            decor1:SetPosition(x * w, y * h)
+            decor1:SetTint(1, 1, 1, alphascale1)
+            decor1:SetScale(zoomscale, zoomscale, 1)
+            r = rmb.distancecount * rmb.distanceperhop / dist
+            ndx, ndz = dx * r + px, dz * r + pz
+            x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
+            decor2:SetPosition(x * w, y * h)
+            decor2:SetTint(1, 1, 1, alphascale2)
+            decor2:SetScale(zoomscale, zoomscale, 1)
+        else
+            decor1:Show()
+            decor2:Hide()
+            local r = (rmb.distancecount - 1) * rmb.distanceperhop / dist
+            local ndx, ndz = dx * r + px, dz * r + pz
+            local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
+            decor1:SetPosition(x * w, y * h)
+            decor1:SetTint(1, 1, 1, alphascale1)
+            decor1:SetScale(zoomscale, zoomscale, 1)
+        end
+    end
+end
+
+function MapScreen:UpdateMapActionsDecorations(x, y, z, LMBaction, RMBaction)
+    local lmb = LMBaction and LMBaction.action or nil
+    local rmb = RMBaction and RMBaction.action or nil
+    local dd = self.decorationdata
+    if dd.dirty or dd.x ~= x or dd.y ~= y or dd.z ~= z or dd.lmb ~= lmb or dd.rmb ~= rmb then
+        dd.dirty = nil
+        dd.x, dd.y, dd.z = x, y, z
+        local lmbfresh = dd.lmb ~= lmb
+        if lmbfresh then
+            self:RemoveLMBDecorations()
+            dd.lmb = lmb
+        end
+        if lmb and lmb.map_action then
+            self:ProcessLMBDecorations(LMBaction, lmbfresh)
+        end
+        local rmbfresh = dd.rmb ~= rmb
+        if rmbfresh then
+            self:RemoveRMBDecorations()
+            dd.rmb = rmb
+        end
+        if rmb and rmb.map_action then
+            self:ProcessRMBDecorations(RMBaction, rmbfresh)
+        end
+    end
 end
 
 function MapScreen:OnUpdate(dt)
@@ -182,63 +309,8 @@ function MapScreen:OnUpdate(dt)
     end
 
     local x, y, z = self:GetWorldPositionAtCursor()
-    self:UpdateMapActions(x, y, z)
-end
-
---[[ EXAMPLE of map coordinate functions
-function MapScreen:NearestEntToCursor()
-    local closestent = nil
-    local closest = nil
-    for ent,_ in pairs(someentities) do
-        local ex,ey,ez = ent.Transform:GetWorldPosition()
-        local entpos = self:MapPosToWidgetPos( Vector3(self.minimap:WorldPosToMapPos(ex,ez,0)) )
-        local mousepos = self:ScreenPosToWidgetPos( TheInput:GetScreenPosition() )
-        local delta = mousepos - entpos
-
-        local length = delta:Length()
-        if length < 30 then
-            if closest == nil or length < closest then
-                closestent = ent
-                closest = length
-            end
-        end
-    end
-
-    if closestent ~= nil then
-        local ex,ey,ez = closestent.Transform:GetWorldPosition()
-        local entpos = self:MapPosToWidgetPos( Vector3(self.minimap:WorldPosToMapPos(ex,ez,0)) )
-
-        self.hovertext:SetPosition(entpos:Get())
-        self.hovertext:Show()
-    else
-        self.hovertext:Hide()
-    end
-end
-]]
-
-function MapScreen:MapPosToWidgetPos(mappos)
-    return Vector3(
-        mappos.x * RESOLUTION_X/2,
-        mappos.y * RESOLUTION_Y/2,
-        0
-    )
-end
-
-function MapScreen:ScreenPosToWidgetPos(screenpos)
-    local w, h = TheSim:GetScreenSize()
-    return Vector3(
-        screenpos.x / w * RESOLUTION_X - RESOLUTION_X/2,
-        screenpos.y / h * RESOLUTION_Y - RESOLUTION_Y/2,
-        0
-    )
-end
-
-function MapScreen:WidgetPosToMapPos(widgetpos)
-    return Vector3(
-        widgetpos.x / (RESOLUTION_X/2),
-        widgetpos.y / (RESOLUTION_Y/2),
-        0
-    )
+    local LMBaction, RMBaction = self:UpdateMapActions(x, y, z)
+    self:UpdateMapActionsDecorations(x, y, z, LMBaction, RMBaction)
 end
 
 function MapScreen:GetCursorPosition()
@@ -311,6 +383,65 @@ function MapScreen:GetHelpText()
     end
 
     return table.concat(t, "  ")
+end
+
+
+-- NOTES(JBK): These functions are not accurate and need fixed to do proper scaling calculations relative to window size and not internal render size.
+
+--[[ EXAMPLE of map coordinate functions
+function MapScreen:NearestEntToCursor()
+    local closestent = nil
+    local closest = nil
+    for ent,_ in pairs(someentities) do
+        local ex,ey,ez = ent.Transform:GetWorldPosition()
+        local entpos = self:MapPosToWidgetPos( Vector3(self.minimap:WorldPosToMapPos(ex,ez,0)) )
+        local mousepos = self:ScreenPosToWidgetPos( TheInput:GetScreenPosition() )
+        local delta = mousepos - entpos
+
+        local length = delta:Length()
+        if length < 30 then
+            if closest == nil or length < closest then
+                closestent = ent
+                closest = length
+            end
+        end
+    end
+
+    if closestent ~= nil then
+        local ex,ey,ez = closestent.Transform:GetWorldPosition()
+        local entpos = self:MapPosToWidgetPos( Vector3(self.minimap:WorldPosToMapPos(ex,ez,0)) )
+
+        self.hovertext:SetPosition(entpos:Get())
+        self.hovertext:Show()
+    else
+        self.hovertext:Hide()
+    end
+end
+]]
+
+function MapScreen:MapPosToWidgetPos(mappos)
+    return Vector3(
+        mappos.x * RESOLUTION_X/2,
+        mappos.y * RESOLUTION_Y/2,
+        0
+    )
+end
+
+function MapScreen:ScreenPosToWidgetPos(screenpos)
+    local w, h = TheSim:GetScreenSize()
+    return Vector3(
+        screenpos.x / w * RESOLUTION_X - RESOLUTION_X/2,
+        screenpos.y / h * RESOLUTION_Y - RESOLUTION_Y/2,
+        0
+    )
+end
+
+function MapScreen:WidgetPosToMapPos(widgetpos)
+    return Vector3(
+        widgetpos.x / (RESOLUTION_X/2),
+        widgetpos.y / (RESOLUTION_Y/2),
+        0
+    )
 end
 
 return MapScreen

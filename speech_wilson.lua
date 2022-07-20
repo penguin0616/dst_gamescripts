@@ -118,6 +118,8 @@ return {
             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+            TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+            NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
         },
 
         GIVE =

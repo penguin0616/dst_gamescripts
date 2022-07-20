@@ -395,24 +395,18 @@ local function MakeWX78BannerFront(self, banner_front, anim)
     anim:SetScale(0.667)
 end
 
-local function MakeWickerbottomBannerFront(self, banner_front, anim)
-    anim:GetAnimState():SetBuild("dst_menu_wickerbottom")
-    anim:GetAnimState():SetBank ("dst_menu_wickerbottom")
-    anim:GetAnimState():PlayAnimation("loop_top", true)
-    anim:SetScale(0.667)
-end
-
 -- For drawing things in front of the MOTD panels
 local function MakeBannerFront(self)
     if IS_BETA then
         
-        local banner_front = Widget("banner_front")
+        --[[local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         local anim = banner_front:AddChild(UIAnim())
 
         MakeWickerbottomBannerFront(self, banner_front, anim)
 
-        return banner_front
+        return banner_front]]
+        return nil
         
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         return nil
@@ -423,13 +417,14 @@ local function MakeBannerFront(self)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         return nil
     else
-        local banner_front = Widget("banner_front")
+        --[[local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         local anim = banner_front:AddChild(UIAnim())
 
         MakeWickerbottomBannerFront(self, banner_front, anim)
         
-        return banner_front
+        return banner_front]]
+        return nil
     end
 end
 

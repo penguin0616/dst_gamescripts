@@ -491,6 +491,22 @@ local fx =
         tintalpha = 0.6,
     },
     {
+        name = "cavehole_flick_warn",
+        bank = "attune_fx",
+        build = "attune_fx",
+        anim = "attune_in",
+        tint = Vector3(0, 0, 0),
+        tintalpha = 0.8,
+    },
+    {
+        name = "cavehole_flick",
+        bank = "statue_ruins_fx",
+        build = "statue_ruins_fx",
+        anim = "transform_nightmare",
+        sound = "dontstarve/maxwell/shadowmax_despawn",
+        tintalpha = 0.8,
+    },
+    {
         name = "mole_move_fx",
         bank = "mole_fx",
         build = "mole_move_fx",

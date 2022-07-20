@@ -545,7 +545,7 @@ end
 local function domagicgrowth(inst, doer)
     local last_stage = #inst.components.growable.stages
     
-    if inst.components.growable.stage < last_stage - 1 then
+    if inst.components.growable.stage < last_stage then
         inst.components.growable:DoGrowth()
         inst:DoTaskInTime(math.random(), domagicgrowth)
     else
