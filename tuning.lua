@@ -6178,19 +6178,23 @@ function Tune(overrides)
         BOOK_TEMPERATURE_RADIUS = 16,
         BOOK_TEMPERATURE_AMOUNT = 35,
 
-        BOOK_BEES_AMOUNT = 3,
+        BOOK_BEES_AMOUNT = 2,
+        BOOK_BEES_MAX_ATTACK_RANGE = 5,
+        BOOK_BEES_MAX_TIME_TO_LINGER = 5 * 60, -- 5 minutes!
+        BOOK_MAX_GRUMBLE_BEES = 16,
+
         BOOK_FISH_AMOUNT = 3,
 
         BOOK_GARDENING_UPGRADED_MAX_TARGETS = 15,
 
-        BOOK_WEB_GROUND_DURATION = total_day_time/16,
-        BOOK_WEB_GROUND_RADIUS = 4,
-        BOOK_WEB_GROUND_SPEED_PENALTY = 0.4,
+        BOOK_WEB_GROUND_DURATION = total_day_time/4,
+        BOOK_WEB_GROUND_RADIUS = 6,
+        BOOK_WEB_GROUND_SPEED_PENALTY = 0.25,
 
         BOOK_USES_SMALL = 3,
         BOOK_USES_LARGE = 5,
 
-        BOOK_MAX_GRUMBLE_BEES = 9,
+        MAXWELL_READING_SANITY_MULT = 2.5,
     }
 
     TUNING_MODIFIERS = {}

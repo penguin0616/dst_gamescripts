@@ -11,10 +11,9 @@ local function OnEntitySleep(inst)
     inst.SoundEmitter:KillSound("loop")
 end
 
--- TODO: make into a shrinking light
 local function SetDuration(inst, duration)
     inst.duration = duration
-    inst:DoTaskInTime(duration, inst.Remove)
+    inst.kill_task = inst:DoTaskInTime(duration, inst.Remove)
 end
 
 local function FadeOut(inst)
@@ -31,6 +30,17 @@ local function FadeOut(inst)
     end)
 
     --inst:DoTaskInTime(7 * FRAMES, inst.Remove)
+end
+
+local function onsave(inst, data)
+    local time_remaining = GetTaskRemaining(inst.kill_task)
+    data.time_remaining = time_remaining
+end
+
+local function onload(inst, data)
+    if data and data.time_remaining then
+        inst:SetDuration(data.time_remaining)
+    end
 end
 
 local function fn()
@@ -68,8 +78,8 @@ local function fn()
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
 
-    --TODO: save the duration
-    --inst.persists = false
+    inst.OnSave = onsave
+    inst.OnLoad = onload
 
     inst.SetDuration = SetDuration
     inst.FadeOut = FadeOut

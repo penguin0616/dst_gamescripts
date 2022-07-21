@@ -238,6 +238,17 @@ local function on_load(inst, data)
     end
 end
 
+local function domagicgrowth(inst, doer)
+    local last_stage = #inst.components.growable.stages - 1
+    
+    if inst.components.growable.stage < last_stage then
+        inst.components.growable:DoGrowth()
+        inst:DoTaskInTime(math.random(), domagicgrowth)
+    else
+        inst.components.growable:StartGrowing()
+    end
+end
+
 local function rock_avocado_bush()
     local inst = CreateEntity()
 
@@ -306,6 +317,7 @@ local function rock_avocado_bush()
     inst.components.growable.loopstages = true
     inst.components.growable.springgrowth = true
     inst.components.growable.magicgrowable = true
+    inst.components.growable.domagicgrowthfn = domagicgrowth
     inst.components.growable:SetStage(math.random(1, 4))
     inst.components.growable:StartGrowing()
 

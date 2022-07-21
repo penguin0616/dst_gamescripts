@@ -244,6 +244,9 @@ oceanfishingrod_clear_fn = function(inst) basic_clear_fn(inst, "fishingrod_ocean
 amulet_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "amulets" ) end
 amulet_clear_fn = function(inst) basic_clear_fn(inst, "amulets" ) end
 
+yellowamulet_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "amulets" ) end
+yellowamulet_clear_fn = function(inst) basic_clear_fn(inst, "amulets" ) end
+
 book_brimstone_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "books" ) end
 book_brimstone_clear_fn = function(inst) basic_clear_fn(inst, "books" ) end
 
@@ -1110,31 +1113,42 @@ end
 --------------------------------------------------------------------------
 --[[ Mini Sign skin functions ]]
 --------------------------------------------------------------------------
-function minisign_item_init_fn(inst, build_name)
+function minisign_item_init_fn(inst, build_name, anim_bank)
     inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
     inst.AnimState:SetSkin(build_name, "sign_mini") --same hack is used here by the deployable code in player controller
+    if anim_bank ~= nil then
+        inst.AnimState:SetBank(anim_bank)
+    end
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 end
 function minisign_item_clear_fn(inst)
     inst.linked_skinname = nil
     inst.AnimState:SetBuild("sign_mini")
+    inst.AnimState:SetBank("sign_mini")
     inst.components.inventoryitem:ChangeImageName()
 end
-function minisign_drawn_init_fn(inst, build_name)
+function minisign_drawn_init_fn(inst, build_name, anim_bank)
     inst.linked_skinname = build_name --hack that relies on the build name to match the linked skinname
     inst.AnimState:SetSkin(build_name, "sign_mini") --same hack is used here by the deployable code in player controller
+    if anim_bank ~= nil then
+        inst.AnimState:SetBank(anim_bank)
+    end
     inst.components.inventoryitem:ChangeImageName(inst:GetSkinName())
 end
 function minisign_drawn_clear_fn(inst)
     inst.linked_skinname = nil
     inst.AnimState:SetBuild("sign_mini")
+    inst.AnimState:SetBank("sign_mini")
     inst.components.inventoryitem:ChangeImageName()
 end
-function minisign_init_fn(inst, build_name)
+function minisign_init_fn(inst, build_name, anim_bank)
     if inst.components.placer == nil and not TheWorld.ismastersim then
         return
     end
     inst.AnimState:SetSkin(build_name, "sign_mini")
+    if anim_bank ~= nil then
+        inst.AnimState:SetBank(anim_bank)
+    end
     inst.linked_skinname = build_name.."_item" --hack that relies on the build name to match the linked skinname, plus addition for the _item
     inst.linked_skinname_drawn = build_name.."_drawn" --hack that relies on the build name to match the linked skinname, plus addition for the _item
 end
@@ -1142,6 +1156,7 @@ function minisign_clear_fn(inst)
     inst.linked_skinname = nil
     inst.linked_skinname_drawn = nil
     inst.AnimState:SetBuild("sign_mini")
+    inst.AnimState:SetBank("sign_mini")
 end
 
 --------------------------------------------------------------------------

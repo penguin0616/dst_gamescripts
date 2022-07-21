@@ -707,7 +707,7 @@ return{
 		BOOK_HORTICULTURE = "So many hard words...",
 
         BOOK_FISH = "Is best book! Has fishies in it!",
-        BOOK_FIRE = "Ohhh, it about fire stuff!",
+        BOOK_FIRE = "Glurp, fire scary!",
         BOOK_WEB = "Hey Webby-boy! Me learning all the Spiderfolk secrets!",
         BOOK_TEMPERATURE = "The... m-measure of th... theer-mole energy...",
         BOOK_LIGHT = "Heeyyy, these words different!",
@@ -716,7 +716,7 @@ return{
         BOOK_BEES = "Aww... no honey inside...",
 
         BOOK_HORTICULTURE_UPGRADED = "M-maybe will find easier book...",
-        BOOK_RESEARCH_STATION = "Words so tiny... how read this?!",
+        BOOK_RESEARCH_STATION = "It really hard to read, but feel smart holding it, florp!",
         BOOK_LIGHT_UPGRADED = "There more than one kind of words to learn?! Glurgh...",
     },
     ANNOUNCE_WEAK_RAT = "It not look so good...",

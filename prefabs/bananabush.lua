@@ -146,6 +146,17 @@ local function on_load(inst, data)
     end
 end
 
+local function domagicgrowth(inst, doer)
+    local last_stage = #inst.components.growable.stages
+    
+    if inst.components.growable.stage < last_stage then
+        inst.components.growable:DoGrowth()
+        inst:DoTaskInTime(math.random(), domagicgrowth)
+    else
+        inst.components.growable:StartGrowing()
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -187,6 +198,7 @@ local function fn()
     inst.components.pickable:SetMakeEmptyFn(MakeEmpty)
     inst.components.pickable:SetMakeBarrenFn(MakeBarren)
     inst.components.pickable:SetOnRegenFn(OnRegen)
+    inst.components.pickable.canbepicked = false
 
     --------------------------------------------------------------------------
     inst:AddComponent("growable")
@@ -196,6 +208,7 @@ local function fn()
     inst.components.growable.springgrowth = true
     inst.components.growable:StartGrowing()
     inst.components.growable.magicgrowable = true
+    inst.components.growable.domagicgrowthfn = domagicgrowth
 
     --------------------------------------------------------------------------
     if not GetGameModeProperty("disable_transplanting") then

@@ -25,10 +25,6 @@ local function customidleanimfn(inst)
     return inst.AnimState:CompareSymbolBuilds("hand", "hand_wickerbottom") and "idle_wickerbottom" or nil
 end
 
-local function KnockOutTest(inst)
-    return false
-end
-
 local function common_postinit(inst)
     inst:AddTag("insomniac")
     inst:AddTag("bookbuilder")
@@ -57,6 +53,14 @@ local function OnReadFn(inst, book)
     end
 end
 
+local function KnockOutTest(inst)
+    return false
+end
+
+local function OnRespawnedFromGhost(inst)
+    inst.components.grogginess:SetKnockOutTest(KnockOutTest)
+end
+
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
@@ -80,7 +84,8 @@ local function master_postinit(inst)
 
     inst.components.builder.science_bonus = 1
 
-    inst.components.grogginess:SetKnockOutTest(KnockOutTest)
+    inst:ListenForEvent("ms_respawnedfromghost", OnRespawnedFromGhost)
+    OnRespawnedFromGhost(inst)
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/wickerbottom").master_postinit(inst)

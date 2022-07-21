@@ -808,6 +808,17 @@ local function AddWinterTree(treetype)
         end
     end
 
+    local function domagicgrowth(inst, doer)
+        local last_stage = #inst.components.growable.stages
+        
+        if inst.components.growable.stage < last_stage then
+            inst.components.growable:DoGrowth()
+            inst:DoTaskInTime(math.random(), domagicgrowth)
+        else
+            inst.components.growable:StartGrowing()
+        end
+    end
+
     local function fn()
         local inst = CreateEntity()
 
@@ -858,6 +869,7 @@ local function AddWinterTree(treetype)
 
         inst:AddComponent("growable")
         inst.components.growable.stages = GROWTH_STAGES
+        inst.components.growable.domagicgrowthfn = domagicgrowth
 
         inst:AddComponent("lootdropper")
         inst.components.lootdropper:SetLootSetupFn(lootsetfn)

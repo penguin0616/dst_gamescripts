@@ -7,28 +7,25 @@ local assets =
 local SLOWDOWN_MUST_TAGS = { "locomotor" }
 local SLOWDOWN_CANT_TAGS = { "player", "flying", "playerghost", "INLIMBO" }
 
-local function OnUpdate(inst, x, y, z, rad)
+local function OnUpdate(inst, x, y, z)
     for i, v in ipairs(TheSim:FindEntities(x, y, z, TUNING.BOOK_WEB_GROUND_RADIUS, SLOWDOWN_MUST_TAGS, SLOWDOWN_CANT_TAGS)) do
         local is_follower = v.components.follower ~= nil and v.components.follower.leader ~= nil and v.components.follower.leader:HasTag("player")
         if v.components.locomotor ~= nil and not is_follower then
-            v.components.locomotor:PushTempGroundSpeedMultiplier(TUNING.BEEQUEEN_HONEYTRAIL_SPEED_PENALTY, WORLD_TILES.MUD)
+            v.components.locomotor:PushTempGroundSpeedMultiplier(TUNING.BOOK_WEB_GROUND_SPEED_PENALTY, WORLD_TILES.MUD)
         end
     end
 end
 
-local function OnInit(inst, scale)
+local function OnInit(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
-    if scale == nil then
-        scale = inst.Transform:GetScale()
-    end
 
     if inst.tast ~= nil then
         inst.task:Cancel()
         inst.task = nil
     end
     
-    inst.task = inst:DoPeriodicTask(0, OnUpdate, nil, x, y, z, scale)
-    OnUpdate(inst, x, y, z, scale)
+    inst.task = inst:DoPeriodicTask(0, OnUpdate, nil, x, y, z)
+    OnUpdate(inst, x, y, z)
 end
 
 local function Despawn(inst)
@@ -40,6 +37,7 @@ local function fn()
     local inst = CreateEntity()
     inst.entity:AddTransform()
     inst.Transform:SetRotation(math.random(1, 360))
+    inst.Transform:SetScale(1.25, 1.25, 1.25)
 
     inst.entity:AddAnimState()
     inst.entity:AddSoundEmitter()

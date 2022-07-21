@@ -2434,6 +2434,7 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
     local dist_perhop = (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL * TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)
     local dist_souls = (dist + dist_mod) / dist_perhop
     act_remap.maxsouls = TUNING.WORTOX_MAX_SOULS
+    act_remap.distancemod = dist_mod
     act_remap.distanceperhop = dist_perhop
     act_remap.distancefloat = dist_souls
     act_remap.distancecount = math.clamp(math.ceil(dist_souls), 1, act_remap.maxsouls)

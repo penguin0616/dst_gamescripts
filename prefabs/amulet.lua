@@ -174,7 +174,13 @@ end
 
 ---YELLOW
 local function onequip_yellow(inst, owner)
-    owner.AnimState:OverrideSymbol("swap_body", "torso_amulets", "yellowamulet")
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("equipskinneditem", inst:GetSkinName())
+        owner.AnimState:OverrideItemSkinSymbol("swap_body", skin_build, "swap_body", inst.GUID, "torso_amulets")
+    else
+        owner.AnimState:OverrideSymbol("swap_body", "torso_amulets", "yellowamulet")
+    end
 
     if inst.components.fueled ~= nil then
         inst.components.fueled:StartConsuming()
@@ -209,6 +215,11 @@ local function onunequip_yellow(inst, owner)
     end
 
     owner.AnimState:ClearOverrideSymbol("swap_body")
+
+    local skin_build = inst:GetSkinBuild()
+    if skin_build ~= nil then
+        owner:PushEvent("unequipskinneditem", inst:GetSkinName())
+    end
 
     if inst.components.fueled ~= nil then
         inst.components.fueled:StopConsuming()

@@ -4,6 +4,7 @@ local Widget = require "widgets/widget"
 local MapControls = require "widgets/mapcontrols"
 local HudCompass = require "widgets/hudcompass"
 local HoverText = require("widgets/hoverer")
+local Text = require("widgets/text")
 
 -- NOTES(JBK): These constants are from MiniMapRenderer ZOOM_CLAMP_MIN and ZOOM_CLAMP_MAX
 local ZOOM_CLAMP_MIN = 1
@@ -187,7 +188,9 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
             local image = "wortox_soul.tex"
             local atlas = GetInventoryItemAtlas(image)
             decor1 = self.decorationrootrmb:AddChild(Image(atlas, image))
+            decor1.text = decor1:AddChild(Text(NUMBERFONT, 42))
             decor2 = self.decorationrootrmb:AddChild(Image(atlas, image))
+            decor2.text = decor2:AddChild(Text(NUMBERFONT, 42))
             self.decorationdata.rmbents[1] = decor1
             self.decorationdata.rmbents[2] = decor2
         else
@@ -203,44 +206,54 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
         local dist = math.sqrt(dx * dx + dz * dz)
         local zoomscale = 0.75 / self.minimap:GetZoom()
         local alphascaler = math.clamp(rmb.distancecount - rmb.distancefloat, 0, 1)
-        local alphascale1 = alphascaler * 3 - 2
-        local alphascale2 = 1 - alphascaler
+        local alphascale1 = alphascaler * 5 - 4
+        local alphascale2 = (1 - alphascaler) * 3 - 2
         local w, h = TheSim:GetScreenSize()
         w, h = w * 0.5, h * 0.5
         -- TODO(JBK): Clean this up.
-        if dist < rmb.distanceperhop then
+        -- With the math the alphascale# no two icons will be present at any time now so this can simplify further.
+        -- Keeping the blob here for now in case this needs to change more.
+        if dist < rmb.distanceperhop - rmb.distancemod then
             decor1:Hide()
             decor2:Show()
-            local r = rmb.distancecount * rmb.distanceperhop / dist
+            local r = (rmb.distancecount * rmb.distanceperhop - rmb.distancemod) / dist
             local ndx, ndz = dx * r + px, dz * r + pz
             local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
             decor2:SetPosition(x * w, y * h)
-            decor2:SetTint(1, 1, 1, alphascale2)
+            decor2:SetTint(alphascale2, alphascale2, alphascale2, alphascale2)
             decor2:SetScale(zoomscale, zoomscale, 1)
-        elseif dist < rmb.distanceperhop * (rmb.maxsouls - 1) then
+            decor2.text:SetString(tostring(rmb.distancecount + 1))
+            decor2.text:SetColour(alphascale2, alphascale2, alphascale2, alphascale2)
+        elseif dist < (rmb.distanceperhop - rmb.distancemod) * (rmb.maxsouls - 1) then
             decor1:Show()
             decor2:Show()
-            local r = (rmb.distancecount - 1) * rmb.distanceperhop / dist
+            local r = ((rmb.distancecount - 1) * rmb.distanceperhop - rmb.distancemod) / dist
             local ndx, ndz = dx * r + px, dz * r + pz
             local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
             decor1:SetPosition(x * w, y * h)
-            decor1:SetTint(1, 1, 1, alphascale1)
+            decor1:SetTint(alphascale1, alphascale1, alphascale1, alphascale1)
             decor1:SetScale(zoomscale, zoomscale, 1)
-            r = rmb.distancecount * rmb.distanceperhop / dist
+            decor1.text:SetString(tostring(rmb.distancecount))
+            decor1.text:SetColour(alphascale1, alphascale1, alphascale1, alphascale1)
+            r = (rmb.distancecount * rmb.distanceperhop - rmb.distancemod) / dist
             ndx, ndz = dx * r + px, dz * r + pz
             x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
             decor2:SetPosition(x * w, y * h)
-            decor2:SetTint(1, 1, 1, alphascale2)
+            decor2:SetTint(alphascale2, alphascale2, alphascale2, alphascale2)
             decor2:SetScale(zoomscale, zoomscale, 1)
+            decor2.text:SetString(tostring(rmb.distancecount + 1))
+            decor2.text:SetColour(alphascale2, alphascale2, alphascale2, alphascale2)
         else
             decor1:Show()
             decor2:Hide()
-            local r = (rmb.distancecount - 1) * rmb.distanceperhop / dist
+            local r = ((rmb.distancecount - 1) * rmb.distanceperhop - rmb.distancemod) / dist
             local ndx, ndz = dx * r + px, dz * r + pz
             local x, y = self.minimap:WorldPosToMapPos(ndx, ndz, 0)
             decor1:SetPosition(x * w, y * h)
-            decor1:SetTint(1, 1, 1, alphascale1)
+            decor1:SetTint(alphascale1, alphascale1, alphascale1, alphascale1)
             decor1:SetScale(zoomscale, zoomscale, 1)
+            decor1.text:SetString(tostring(rmb.distancecount))
+            decor1.text:SetColour(alphascale1, alphascale1, alphascale1, alphascale1)
         end
     end
 end
@@ -377,8 +390,8 @@ function MapScreen:GetHelpText()
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MAP_ZOOM_IN) .. " " .. STRINGS.UI.HELP.ZOOM_IN)
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_MAP_ZOOM_OUT) .. " " .. STRINGS.UI.HELP.ZOOM_OUT)
     table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CANCEL) .. " " .. STRINGS.UI.HELP.BACK)
-    local pc = ThePlayer and ThePlayer.components.playercontroller
-    if pc.RMBaction then
+    local pc = ThePlayer and ThePlayer.components.playercontroller or nil
+    if pc and pc.RMBaction then
         table.insert(t,  TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ATTACK) .. " " .. pc.RMBaction:GetActionString())
     end
 

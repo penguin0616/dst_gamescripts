@@ -30,6 +30,15 @@ function Reader:IsAspiringBookworm()
 	return self.aspiring_bookworm or false
 end
 
+function Reader:SetSanityPenaltyMultiplier(mult)
+	self.sanity_mult = mult
+end
+
+function Reader:GetSanityPenaltyMultiplier()
+	return self.sanity_mult or 1
+end
+
+
 function Reader:SetOnReadFn(fn)
 	self.onread = fn
 end

@@ -32,7 +32,11 @@ function fns.IsNearDanger(inst, hounded_ok)
     return FindEntity(inst, 10,
         function(target)
             return (target.components.combat ~= nil and target.components.combat.target == inst)
-                or ((target:HasTag("monster") or (not nopigdanger and target:HasTag("pig"))) and
+                or (
+                    (
+                        target:HasTag("monster") and (target.components.follower == nil or target.components.follower:GetLeader() == nil or not target.components.follower:GetLeader():HasTag("player"))
+                        or (not nopigdanger and target:HasTag("pig"))
+                    ) and
                     not target:HasTag("player") and
                     not (nospiderdanger and target:HasTag("spider")) and
                     not (inst.components.sanity:IsSane() and target:HasTag("shadowcreature")))
@@ -1830,6 +1834,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.IsActionsVisible = IsActionsVisible
         inst.CanSeeTileOnMiniMap = ex_fns.CanSeeTileOnMiniMap
         inst.CanSeePointOnMiniMap = ex_fns.CanSeePointOnMiniMap
+        inst.MakeGenericCommander = ex_fns.MakeGenericCommander
 	end
 
     local max_range = TUNING.MAX_INDICATOR_RANGE * 1.5

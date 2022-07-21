@@ -144,7 +144,7 @@ Recipe2("book_silviculture", 	 	  {Ingredient("papyrus", 2), Ingredient("livingl
 Recipe2("book_research_station", 	  {Ingredient("papyrus", 2), Ingredient("transistor", 1)}, TECH.NONE, 		  {builder_tag="bookbuilder"})
 
 Recipe2("book_birds",		 	 {Ingredient("papyrus", 2), Ingredient("bird_egg", 2)}, TECH.NONE, {builder_tag="bookbuilder"})
-Recipe2("book_fish",			 {Ingredient("papyrus", 2), Ingredient("oceanfishingrod", 1), Ingredient("oceanfishingbobber_ball", 2)}, TECH.NONE, {builder_tag="bookbuilder"})
+Recipe2("book_fish",			 {Ingredient("papyrus", 2), Ingredient("oceanfishingbobber_ball", 2)}, TECH.NONE, {builder_tag="bookbuilder"})
 Recipe2("book_bees", 			 {Ingredient("papyrus", 2), Ingredient("stinger", 8), Ingredient("honey", 4)}, 					TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
 Recipe2("book_sleep",		 	 {Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2)},  TECH.MAGIC_TWO,	  {builder_tag="bookbuilder"})
@@ -154,11 +154,11 @@ Recipe2("book_fire",			 {Ingredient("book_brimstone", 1), Ingredient("featherpen
 Recipe2("book_tentacles",	 	 {Ingredient("papyrus", 2), Ingredient("tentaclespots", 1)},					   TECH.SCIENCE_THREE, {builder_tag="bookbuilder"})
 Recipe2("book_web", 			 {Ingredient("papyrus", 2), Ingredient("spidergland", 2), Ingredient("silk", 6)},  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
-Recipe2("book_moon", 			 {Ingredient("papyrus", 2),    Ingredient("moonrocknugget", 2)}, 						  	  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
-Recipe2("book_light",			 {Ingredient("papyrus", 2),    Ingredient("lightbulb", 1), 	   Ingredient("fireflies", 1)},   TECH.NONE, 	  	  {builder_tag="bookbuilder"})
-Recipe2("book_light_upgraded",	 {Ingredient("book_light", 1), Ingredient("featherpencil", 1), Ingredient("papyrus", 2)}, 	  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
-Recipe2("book_rain", 			 {Ingredient("papyrus", 2),    Ingredient("umbrella", 1), 	   Ingredient("wateringcan", 1)}, TECH.NONE, 	  	  {builder_tag="bookbuilder"})
-Recipe2("book_temperature", 	 {Ingredient("papyrus", 2),    Ingredient("heatrock", 1)}, 							 	      TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_moon", 			 {Ingredient("papyrus", 2),    Ingredient("opalpreciousgem", 1), Ingredient("moonbutterflywings", 2) }, TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_light",			 {Ingredient("papyrus", 2),    Ingredient("lightbulb", 2) },   											TECH.NONE, 	  	  	{builder_tag="bookbuilder"})
+Recipe2("book_light_upgraded",	 {Ingredient("book_light", 1), Ingredient("featherpencil", 1),   Ingredient("papyrus", 2)}, 	  		TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_rain", 			 {Ingredient("papyrus", 2),    Ingredient("umbrella", 1), 	     Ingredient("wateringcan", 1)}, 		TECH.NONE, 	  	  	{builder_tag="bookbuilder"})
+Recipe2("book_temperature", 	 {Ingredient("papyrus", 2),    Ingredient("heatrock", 1)}, 							 	      			TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
 -- Maxwell
 Recipe2("waxwelljournal",				{Ingredient("papyrus", 2), Ingredient("nightmarefuel", 2), Ingredient(CHARACTER_INGREDIENT.HEALTH, 50)},													TECH.NONE,			{builder_tag="shadowmagic"})

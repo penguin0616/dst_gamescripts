@@ -88,6 +88,23 @@ local function trygrowth(inst, maximize)
         MaximizePlant(inst)
     end
 
+    if inst.components.growable ~= nil then
+        -- If we're a tree and not a stump, or we've explicitly allowed magic growth, do the growth.
+        if inst.components.growable.magicgrowable or ((inst:HasTag("tree") or inst:HasTag("winter_tree")) and not inst:HasTag("stump")) then
+            if inst.components.growable.domagicgrowthfn ~= nil then
+                if maximize ~= nil then -- The upgraded horticulture book has a delayed start to make sure the plants get tended to first
+                    inst:DoTaskInTime(2, function() inst.components.growable:DoMagicGrowth() end)
+                else
+                    inst.components.growable:DoMagicGrowth()
+                end
+
+                return true
+            else
+                return inst.components.growable:DoGrowth()
+            end
+        end
+    end
+
     if inst.components.pickable ~= nil then
         if inst.components.pickable:CanBePicked() and inst.components.pickable.caninteractwith then
             return false
@@ -104,22 +121,6 @@ local function trygrowth(inst, maximize)
 		end
     end
 
-    if inst.components.growable ~= nil then
-        -- If we're a tree and not a stump, or we've explicitly allowed magic growth, do the growth.
-        if inst.components.growable.magicgrowable or ((inst:HasTag("tree") or inst:HasTag("winter_tree")) and not inst:HasTag("stump")) then
-			if inst.components.growable.domagicgrowthfn ~= nil then
-                if maximize ~= nil then -- The upgraded horticulture book has a delayed start to make sure the plants get tended to first
-                    inst:DoTaskInTime(2, function() inst.components.growable:DoMagicGrowth() end)
-                else
-                    inst.components.growable:DoMagicGrowth()
-                end
-
-				return true
-			else
-	            return inst.components.growable:DoGrowth()
-			end
-        end
-    end
 
     if inst.components.harvestable ~= nil and inst.components.harvestable:CanBeHarvested() and inst:HasTag("mushroom_farm") then
         if inst.components.harvestable:Grow() then
@@ -623,7 +624,7 @@ local book_defs =
         name = "book_web",
         uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_LARGE,
-        peruse_sanity = -TUNING.SANITY_LARGE,
+        peruse_sanity = TUNING.SANITY_LARGE,
         fn = function(inst, reader)
             local x, y, z = reader.Transform:GetWorldPosition()
             local ground_web = SpawnPrefab("book_web_ground")
@@ -651,7 +652,7 @@ local book_defs =
             
             for _, player in pairs(players) do
                 player.components.temperature:SetTemperature(TUNING.BOOK_TEMPERATURE_AMOUNT)
-                player.components.moisture:ForceDry(true)
+                player.components.moisture:SetMoistureLevel(0)
 
                 if player ~= reader then
                     local fx = SpawnPrefab("fx_book_temperature")
@@ -798,15 +799,9 @@ local book_defs =
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx = "fx_book_bees",
         fn = function(inst, reader)
+            reader:MakeGenericCommander()
 
-            if reader.components.commander == nil then
-                reader:AddComponent("commander")
-                reader:ListenForEvent("onattackother", function(inst, data) 
-                    if data and data.target then
-                        reader.components.commander:ShareTargetToAllSoldiers(data.target)
-                    end
-                end)
-            elseif reader.components.commander:GetNumSoldiers() >= TUNING.BOOK_MAX_GRUMBLE_BEES then
+            if reader.components.commander:GetNumSoldiers() >= TUNING.BOOK_MAX_GRUMBLE_BEES then
                 return false, "TOOMANYBEES"
             end
 
@@ -817,7 +812,7 @@ local book_defs =
             
             for i=1,TUNING.BOOK_BEES_AMOUNT do
                 reader:DoTaskInTime(i * 0.075, function() 
-                    local pos_x,pos_y,pos_z = x + radius * math.cos( i*delta_theta ), 0, z - radius * math.sin( i*delta_theta )
+                    local pos_x, pos_y, pos_z = x + radius * math.cos(i * delta_theta), 0, z - radius * math.sin(i * delta_theta)
 
                     reader:DoTaskInTime(0.1 * i, function() 
                         local fx = SpawnPrefab("fx_book_bees")
@@ -825,20 +820,18 @@ local book_defs =
                     end)
                     
                     reader:DoTaskInTime(0.15 * i, function()
+                        local queen = TheSim:FindEntities(x, y, z, 16, {"beequeen"})[1] or nil
+
                         local bee = SpawnPrefab("beeguard")
-                        bee.Transform:SetPosition(pos_x,pos_y,pos_z)
-
-                        SpawnPrefab("bee_poof_big").Transform:SetPosition(pos_x,pos_y,pos_z)
-
-                        local ents = TheSim:FindEntities(x, y, z, 16, {"beequeen"})
-                        if #ents > 0 then
-                            ents[1].components.commander:AddSoldier(bee)
+                        bee.Transform:SetPosition(pos_x, pos_y, pos_z)
+                        if queen then
+                            queen.components.commander:AddSoldier(bee)
                         else
                             reader.components.commander:AddSoldier(bee)
                             bee:AddComponent("follower")
                             bee.components.follower:SetLeader(reader)
                         end
-
+                        SpawnPrefab("bee_poof_big").Transform:SetPosition(pos_x, pos_y, pos_z)
                     end)
                 end)
             end

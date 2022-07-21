@@ -101,6 +101,7 @@ local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
     inst:AddComponent("reader")
+    inst.components.reader:SetSanityPenaltyMultiplier(TUNING.MAXWELL_READING_SANITY_MULT)
 
     if inst.components.petleash ~= nil then
         inst._OnSpawnPet = inst.components.petleash.onspawnfn

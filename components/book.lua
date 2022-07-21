@@ -58,7 +58,7 @@ function Book:OnRead(reader)
 			fx.Transform:SetPosition(reader.Transform:GetWorldPosition())
 		end
 
-		reader.components.sanity:DoDelta(self.read_sanity or 0)
+		reader.components.sanity:DoDelta( (self.read_sanity or 0) * reader.components.reader:GetSanityPenaltyMultiplier() )
 	end
 
 	return success, reason
