@@ -176,6 +176,8 @@ function SkinsPuppet:DoIdleEmote()
 
 			if self.prefabname == "wormwood" and not self.animstate:CompareSymbolBuilds("hand", "hand_idle_wormwood") then
 				--don't do player anim
+			elseif self.prefabname == "wickerbottom" and not self.animstate:CompareSymbolBuilds("hand", "hand_wickerbottom") then
+				--don't do player anim
 			else
 				local emote_anim = nil
 				if self.prefabname == "wolfgang" then

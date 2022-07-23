@@ -6935,7 +6935,6 @@ local states =
             --Moved to player_common because these symbols are never cleared
             --inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
             --inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
-            --inst.AnimState:OverrideSymbol("book_open_pages", "player_actions_uniqueitem", "book_open_pages")
 
             local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
             if book ~= nil then
@@ -6980,17 +6979,19 @@ local states =
                 end
 
                 inst.components.inventory:ReturnActiveActionItem(book)
+
+                local swap_build = book.swap_build
+                local swap_prefix = book.swap_prefix or "book"
                 local skin_build = book:GetSkinBuild()
                 if skin_build ~= nil then
-                    inst.AnimState:OverrideItemSkinSymbol("book_open",       skin_build, "book_open",       book.GUID, "player_actions_uniqueitem")
-                    inst.AnimState:OverrideItemSkinSymbol("book_closed",     skin_build, "book_closed",     book.GUID, "player_actions_uniqueitem")
-                    inst.AnimState:OverrideItemSkinSymbol("book_open_pages", skin_build, "book_open_pages", book.GUID, "player_actions_uniqueitem")
-                else
-                    inst.AnimState:OverrideSymbol("book_closed",     "swap_books", book.prefab .. "_closed")
-                    inst.AnimState:OverrideSymbol("book_open",       "swap_books", book.prefab .. "_open")
-                    inst.AnimState:OverrideSymbol("book_open_pages", "swap_books", book.prefab .. "_open_pages")
+                    inst.AnimState:OverrideItemSkinSymbol("book_open", skin_build, "book_open", book.GUID, swap_build or "player_actions_uniqueitem", swap_prefix.."_open")
+                    inst.AnimState:OverrideItemSkinSymbol("book_closed", skin_build, "book_closed", book.GUID, swap_build or "player_actions_uniqueitem", swap_prefix.."_closed")
+                    inst.sg.statemem.symbolsoverridden = true
+                elseif swap_build ~= nil then
+                    inst.AnimState:OverrideSymbol("book_open", swap_build, swap_prefix.."_open")
+                    inst.AnimState:OverrideSymbol("book_closed", swap_build, swap_prefix.."_closed")
+                    inst.sg.statemem.symbolsoverridden = true
                 end
-                inst.sg.statemem.symbolsoverridden = true
 
                 --should be same as the buffered action item
                 if book.components.aoetargeting ~= nil and book == inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
@@ -7070,7 +7071,6 @@ local states =
             if inst.sg.statemem.symbolsoverridden then
                 inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
                 inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
-                inst.AnimState:OverrideSymbol("book_open_pages", "player_actions_uniqueitem", "book_open_pages")
             end
             if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
                 inst.sg.statemem.book_fx:Remove()
@@ -7103,13 +7103,29 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
             inst.AnimState:PushAnimation("peruse", false)
-			inst.AnimState:Show("ARM_normal")
-            inst.components.inventory:ReturnActiveActionItem(inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil)
+            --V2C: NOTE that these are now used in onexit to clear skinned symbols
+            --Moved to player_common because these symbols are never cleared
+            --inst.AnimState:OverrideSymbol("book_peruse", "wurt_peruse", "book_peruse")
+
+            local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
+            if book ~= nil then
+                inst.components.inventory:ReturnActiveActionItem(book)
+
+                local swap_build = book.swap_build
+                local swap_prefix = book.swap_prefix or "book"
+                local skin_build = book:GetSkinBuild()
+                if skin_build ~= nil then
+                    inst.AnimState:OverrideItemSkinSymbol("book_peruse", skin_build, "book_peruse", book.GUID, swap_build or "wurt_peruse", swap_prefix.."_peruse")
+                    inst.sg.statemem.symbolsoverridden = true
+                elseif swap_build ~= nil then
+                    inst.AnimState:OverrideSymbol("book_peruse", swap_build, swap_prefix.."_peruse")
+                    inst.sg.statemem.symbolsoverridden = true
+                end
+            end
         end,
 
         timeline =
         {
-
             TimeEvent(25 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/common/use_book")
             end),
@@ -7124,18 +7140,17 @@ local states =
         {
             EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil and "item_out" or "idle")
+                    inst.sg:GoToState("idle")
                 end
             end),
         },
 
         onexit = function(inst)
-            if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                inst.AnimState:Hide("ARM_normal")
+            if inst.sg.statemem.symbolsoverridden then
+                inst.AnimState:OverrideSymbol("book_peruse", "wurt_peruse", "book_peruse")
             end
         end,
     },
-
 
     State{
         name = "blowdart",
@@ -14564,6 +14579,9 @@ local states =
             local dest = data and data.dest or nil
             if dest ~= nil then
                 inst.Physics:Teleport(dest:Get())
+                if TheWorld and TheWorld.components.walkableplatformmanager then -- NOTES(JBK): Workaround for teleporting too far causing the client to lose sync.
+                    TheWorld.components.walkableplatformmanager:PostUpdate(0)
+                end
             else
                 dest = inst:GetPosition()
             end

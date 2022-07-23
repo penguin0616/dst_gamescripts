@@ -110,6 +110,7 @@ return{
             NOSLEEPTARGETS = "Nobody wants a bedtime story from the bogeyman, is that it?",
             TOOMANYBEES = "There's such a thing as too many bees, pal.",
             NOMOONINCAVES = "Its power can't reach the \"moon\" from here.",
+            ALREADYFULLMOON = "For once, magic is not needed.",
         },
 
         GIVE =

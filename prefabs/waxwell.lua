@@ -76,6 +76,12 @@ local function OnReroll(inst)
     end
 end
 
+local function OnReadFn(inst, book)
+    if inst.components.sanity:IsInsane() then
+        TheWorld.components.shadowcreaturespawner:SpawnShadowCreature(inst)
+    end
+end
+
 local function common_postinit(inst)
     inst:AddTag("shadowmagic")
     inst:AddTag("dappereffects")
@@ -102,6 +108,7 @@ local function master_postinit(inst)
 
     inst:AddComponent("reader")
     inst.components.reader:SetSanityPenaltyMultiplier(TUNING.MAXWELL_READING_SANITY_MULT)
+    inst.components.reader:SetOnReadFn(OnReadFn)
 
     if inst.components.petleash ~= nil then
         inst._OnSpawnPet = inst.components.petleash.onspawnfn

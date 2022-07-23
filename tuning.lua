@@ -4073,6 +4073,8 @@ function Tune(overrides)
         WORTOX_SANITY = 150,
         WORTOX_SANITY_AURA_MULT = .5,
         WORTOX_MAX_SOULS = 20,
+        WORTOX_WISECRACKER_TOOMANY = 0.8,
+        WORTOX_WISECRACKER_TOOFEW = 0.2,
         WORTOX_FOOD_MULT = .5,
         WORTOX_SOULEXTRACT_RANGE = 20, --die within this range of wortox to spawn soul
         WORTOX_SOULSTEALER_RANGE = 8, --souls fly towards wortox when he walks within this range

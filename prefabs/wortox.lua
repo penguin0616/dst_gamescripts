@@ -242,8 +242,8 @@ local function CheckSoulsAdded(inst)
         DropSouls(inst, souls, count)
         inst.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
         inst:PushEvent("souloverload")
-    elseif count > TUNING.WORTOX_MAX_SOULS * .8 then
-        inst:PushEvent("soultoomany")
+    elseif count > TUNING.WORTOX_MAX_SOULS * TUNING.WORTOX_WISECRACKER_TOOMANY then
+        inst:PushEvent("soultoomany") -- This event is not used elsewhere outside of wisecracker.
     end
 end
 
@@ -252,11 +252,11 @@ local function CheckSoulsRemoved(inst)
     local count = 0
     for i, v in ipairs(inst.components.inventory:FindItems(IsSoul)) do
         count = count + GetStackSize(v)
-        if count >= TUNING.WORTOX_MAX_SOULS * .2 then
+        if count >= TUNING.WORTOX_MAX_SOULS * TUNING.WORTOX_WISECRACKER_TOOFEW then
             return
         end
     end
-    inst:PushEvent(count > 0 and "soultoofew" or "soulempty")
+    inst:PushEvent(count > 0 and "soultoofew" or "soulempty") -- These events are not used elsewhere outside of wisecracker.
 end
 
 local function CheckSoulsRemovedAfterAnim(inst, anim)

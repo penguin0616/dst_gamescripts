@@ -1871,6 +1871,15 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             end
         end
 
+        if inst.components.health:IsDead() then
+            newinst.deathclientobj = inst.deathclientobj ~= nil and TheNet:GetClientTableForUser(newinst.userid) or nil
+            newinst.deathcause = inst.deathcause
+            newinst.deathpkname = inst.deathpkname
+            newinst.deathbypet = inst.deathbypet
+            newinst.last_death_position = inst.last_death_position
+            newinst.last_death_shardid = inst.last_death_shardid
+        end
+
         newinst.Physics:Teleport(inst.Transform:GetWorldPosition())
     end
 

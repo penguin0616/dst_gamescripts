@@ -110,6 +110,7 @@ return{
             NOSLEEPTARGETS = "I don't see anyone in need of a bedtime story.",
             TOOMANYBEES = "That would be a rather excessive amount of bees, dear.",
             NOMOONINCAVES = "The moon can't be affected from this subterranean location.",
+            ALREADYFULLMOON = "I'm afraid that would be quite redundant.",
         },
 
         GIVE =

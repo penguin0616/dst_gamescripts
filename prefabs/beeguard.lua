@@ -129,6 +129,9 @@ local FRIENDLYBEES_MUST_ONE = { "monster", "prey" }
 local FRIENDLYBEES_PVP = nil
 local function RetargetFn(inst)
     if inst:IsFriendly() then
+        if inst:GetQueen() == nil then -- NOTES(JBK): A friendly bee must wait for its queen to take action.
+            return nil
+        end
         local pvpon = TheNet:GetPVPEnabled()
         if FRIENDLYBEES_PVP ~= pvpon then
             if pvpon then
@@ -330,6 +333,10 @@ local function FocusTarget(inst, target)
     end
 end
 
+local function BeeSort(a, b) -- Better than assumption!
+    return a.GUID < b.GUID
+end
+
 local function OnGotCommander(inst, data)
     local queen = inst:GetQueen()
     if queen ~= data.commander then
@@ -343,8 +350,18 @@ local function OnGotCommander(inst, data)
             inst:MakeHostile()
         end
 
-        local angle = -inst.Transform:GetRotation() * DEGREES
-        inst.components.knownlocations:RememberLocation("queenoffset", Vector3(TUNING.BEEGUARD_GUARD_RANGE * math.cos(angle), 0, TUNING.BEEGUARD_GUARD_RANGE * math.sin(angle)), false)
+        local allbeeguards = data.commander.components.commander:GetAllSoldiers("beeguard")
+        local totalbeeguards = #allbeeguards
+        if totalbeeguards > 0 then
+            table.sort(allbeeguards, BeeSort)
+            local radius = TUNING.BEEGUARD_GUARD_RANGE
+            for i, v in ipairs(allbeeguards) do
+                local angle = PI2 * (i - math.random()) / totalbeeguards
+                local radiusoffset = math.random() * 2 - 1 + 2 * (i % 2)
+                local offset = Vector3((radius + radiusoffset) * math.cos(angle), 0, (radius + radiusoffset) * math.sin(angle))
+                v.components.knownlocations:RememberLocation("queenoffset", offset, false)
+            end
+        end
     end
 end
 
@@ -366,8 +383,6 @@ local function OnNewTarget(inst, data)
         
         if target ~= nil and commander ~= nil and commander:HasTag("player") and target:HasTag("beequeen") then
             target.components.commander:AddSoldier(inst)
-            inst:AddTag("hostile")
-            inst:RemoveTag("NOBLOCK")
             
             inst.components.follower:StopFollowing()
             inst:RemoveComponent("follower")

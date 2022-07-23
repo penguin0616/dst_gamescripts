@@ -356,6 +356,11 @@ end
 
 local function domagicgrowthfn(inst)
 	if inst:IsValid() and inst.components.growable:IsGrowing() then
+
+		if not inst:HasTag("magicgrowth") then
+			inst:AddTag("magicgrowth")
+		end
+
 		if inst.components.farmsoildrinker ~= nil then
 			local remaining_time = inst.components.growable.targettime - GetTime()
 			local drink = remaining_time * inst.components.farmsoildrinker:GetMoistureRate()
@@ -374,6 +379,9 @@ local function domagicgrowthfn(inst)
 
 		if inst.components.pickable == nil then
 			inst:DoTaskInTime(3 + math.random(), domagicgrowthfn)
+		else
+			inst:RemoveTag("magicgrowth")
+			inst.magic_tending = nil
 		end
 		
 		return true

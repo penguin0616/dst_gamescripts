@@ -44,6 +44,20 @@ function Harvestable:SetUp(product, max, time, onharvest, ongrow)
     self:StartGrowing()
 end
 
+function Harvestable:SetDoMagicGrowthFn(fn)
+    self.domagicgrowthfn = fn
+end
+
+function Harvestable:IsMagicGrowable()
+    return self.domagicgrowthfn ~= nil
+end
+
+function Harvestable:DoMagicGrowth(doer)
+    if self.domagicgrowthfn ~= nil then
+        self.domagicgrowthfn(self.inst, doer)
+    end
+end
+
 function Harvestable:SetOnGrowFn(fn)
     self.ongrowfn = fn
 end

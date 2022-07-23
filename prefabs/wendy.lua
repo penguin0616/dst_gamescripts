@@ -76,8 +76,8 @@ local function OnPlayerActivated(inst)
 		inst:ListenForEvent("onremove", OnPlayerDeactivated)
 		if not TheWorld.ismastersim then
 			inst:ListenForEvent("_bondleveldirty", OnBondLevelDirty)
-			OnBondLevelDirty(inst)
 		end
+		OnBondLevelDirty(inst)
 	end
 end
 

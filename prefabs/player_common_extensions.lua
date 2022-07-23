@@ -808,7 +808,7 @@ local function CanSeePointOnMiniMap(inst, px, py, pz) -- Convenience wrapper.
 end
 
 local function GenericCommander_OnAttackOther(inst, data)
-    if data and data.target then
+    if data and data.target and data.target ~= inst then
         inst.components.commander:ShareTargetToAllSoldiers(data.target)
     end
 end

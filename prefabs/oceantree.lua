@@ -559,17 +559,6 @@ local function OnEntityWake(inst)
     end
 end
 
-local function domagicgrowth(inst, doer)
-    local last_stage = #inst.components.growable.stages
-    
-    if inst.components.growable.stage < last_stage then
-        inst.components.growable:DoGrowth()
-        inst:DoTaskInTime(math.random(), domagicgrowth)
-    else
-        inst.components.growable:StartGrowing()
-    end
-end
-
 local function tree(name, stage, data)
     local function fn()
         local inst = CreateEntity()
@@ -650,9 +639,11 @@ local function tree(name, stage, data)
         inst.components.growable:SetStage(stage)
         inst.components.growable.loopstages = true
         inst.components.growable.springgrowth = true
-        inst.components.growable.domagicgrowthfn = domagicgrowth
         inst.components.growable.magicgrowable = true
         inst.components.growable:StartGrowing()
+
+        inst:AddComponent("simplemagicgrower")
+        inst.components.simplemagicgrower:SetLastStage(#inst.components.growable.stages)
 
         ---------------------
 

@@ -234,8 +234,9 @@ local states =
         tags = {"sleeping"},
         onenter = function(inst,data)
             inst.AnimState:PlayAnimation("sleep_loop")
-            inst.SoundEmitter:PlaySound("monkeyisland/monkeyqueen/sleep_lp","sleep_lp")
-            
+            if not inst.SoundEmitter:PlayingSound("sleep_lp") then
+                inst.SoundEmitter:PlaySound("monkeyisland/monkeyqueen/sleep_lp","sleep_lp")
+            end
         end,
 
         onexit = function(inst,data)

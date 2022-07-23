@@ -50,10 +50,10 @@ local SLEEPTARGET_CANT_TAGS = { "playerghost", "FX", "DECOR", "INLIMBO" }
 local GARDENING_CANT_TAGS = { "pickable", "stump", "withered", "barren", "INLIMBO" }
 
 local SILVICULTURE_ONEOF_TAGS = { "leif", "silviculture", "tree", "winter_tree" }
-local SILVICULTURE_CANT_TAGS = { "player", "FX", "pickable", "stump", "withered", "barren", "INLIMBO" }
+local SILVICULTURE_CANT_TAGS = { "magicgrowth", "player", "FX", "pickable", "stump", "withered", "barren", "INLIMBO" }
 
-local HORTICULTURE_ONEOF_TAGS = { "plant", "lichen", "oceanvine" }
-local HORTICULTURE_CANT_TAGS = { "player", "FX", "leif", "pickable", "stump", "withered", "barren", "INLIMBO", "silviculture", "tree", "winter_tree" }
+local HORTICULTURE_ONEOF_TAGS = { "plant", "lichen", "oceanvine", "mushroom_farm", "kelp" }
+local HORTICULTURE_CANT_TAGS = { "magicgrowth", "player", "FX", "leif", "pickable", "stump", "withered", "barren", "INLIMBO", "silviculture", "tree", "winter_tree" }
 
 local function MaximizePlant(inst)
     if inst.components.farmplantstress ~= nil then
@@ -91,7 +91,10 @@ local function trygrowth(inst, maximize)
     if inst.components.growable ~= nil then
         -- If we're a tree and not a stump, or we've explicitly allowed magic growth, do the growth.
         if inst.components.growable.magicgrowable or ((inst:HasTag("tree") or inst:HasTag("winter_tree")) and not inst:HasTag("stump")) then
-            if inst.components.growable.domagicgrowthfn ~= nil then
+            if inst.components.simplemagicgrower ~= nil then
+                inst.components.simplemagicgrower:StartGrowing()
+                return true
+            elseif inst.components.growable.domagicgrowthfn ~= nil then
                 if maximize ~= nil then -- The upgraded horticulture book has a delayed start to make sure the plants get tended to first
                     inst:DoTaskInTime(2, function() inst.components.growable:DoMagicGrowth() end)
                 else
@@ -121,11 +124,16 @@ local function trygrowth(inst, maximize)
 		end
     end
 
-
     if inst.components.harvestable ~= nil and inst.components.harvestable:CanBeHarvested() and inst:HasTag("mushroom_farm") then
-        if inst.components.harvestable:Grow() then
-			return true
-		end
+        if inst.components.harvestable:IsMagicGrowable() then
+            inst.components.harvestable:DoMagicGrowth()
+            return true
+        else
+            if inst.components.harvestable:Grow() then
+                return true
+            end
+        end
+
     end
 
 	return false
@@ -773,6 +781,8 @@ local book_defs =
 
             if TheWorld:HasTag("cave") then
                 return false, "NOMOONINCAVES"
+            elseif TheWorld.state.moonphase == "full" then
+                return false, "ALREADYFULLMOON"
             end
 
             TheWorld:PushEvent("ms_setmoonphase", {moonphase = "full"})
@@ -801,18 +811,20 @@ local book_defs =
         fn = function(inst, reader)
             reader:MakeGenericCommander()
 
-            if reader.components.commander:GetNumSoldiers() >= TUNING.BOOK_MAX_GRUMBLE_BEES then
+            local beescount = TUNING.BOOK_BEES_AMOUNT
+
+            if reader.components.commander:GetNumSoldiers("beeguard") + beescount > TUNING.BOOK_MAX_GRUMBLE_BEES then
                 return false, "TOOMANYBEES"
             end
 
             local x, y, z = reader.Transform:GetWorldPosition()
             
-            local radius = 4
-            local delta_theta = PI2 / TUNING.BOOK_BEES_AMOUNT
+            local radius = TUNING.BEEGUARD_GUARD_RANGE * 0.5
+            local delta_theta = PI2 / beescount
             
-            for i=1,TUNING.BOOK_BEES_AMOUNT do
+            for i = 1, beescount do
                 reader:DoTaskInTime(i * 0.075, function() 
-                    local pos_x, pos_y, pos_z = x + radius * math.cos(i * delta_theta), 0, z - radius * math.sin(i * delta_theta)
+                    local pos_x, pos_y, pos_z = x + radius * math.cos((i-1) * delta_theta), 0, z + radius * math.sin((i-1) * delta_theta)
 
                     reader:DoTaskInTime(0.1 * i, function() 
                         local fx = SpawnPrefab("fx_book_bees")
@@ -907,6 +919,8 @@ local function MakeBook(def)
         -----------------------------------
 
         inst.def = def
+        inst.swap_build = "swap_books"
+        inst.swap_prefix = def.name
 
         inst:AddComponent("inspectable")
         inst:AddComponent("book")

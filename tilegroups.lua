@@ -33,7 +33,7 @@ function TileGroupManager__index:IsImpassableTile(tile)
         return true
     end
 
-    if (tile >= WORLD_TILES_IMPASSABLE_START and tile <= LEGACY_WORLD_TILES_IMPASSABLE_END) then
+    if (tile >= WORLD_TILES_IMPASSABLE_START and tile <= WORLD_TILES_IMPASSABLE_END) then
         return true
     end
 

@@ -150,6 +150,8 @@ function ConsoleScreen:Run()
 	if fnstr ~= "" then
 		table.insert( CONSOLE_HISTORY, fnstr )
 		table.insert( CONSOLE_LOCALREMOTE_HISTORY, self.toggle_remote_execute )
+
+		ConsoleScreenSettings:AddLastExecutedCommand(fnstr, self.toggle_remote_execute)
 	end
 
 	if self.toggle_remote_execute then
@@ -174,6 +176,8 @@ local function DoRun(inst, self)
     if TheFrontEnd.consoletext.closeonrun then
         TheFrontEnd:HideConsoleLog()
     end
+
+	ConsoleScreenSettings:Save()
 end
 
 function ConsoleScreen:OnTextEntered()
@@ -275,6 +279,14 @@ function ConsoleScreen:DoInit()
 	self.console_edit.validrawkeys[KEY_V] = true
 	self.toggle_remote_execute = false
 
+	-- Load saved last entered console commands
+	if CONSOLE_HISTORY and #CONSOLE_HISTORY <= 0 then
+		shallowcopy(ConsoleScreenSettings:GetConsoleHistory(), CONSOLE_HISTORY)
+	end
+
+	if CONSOLE_LOCALREMOTE_HISTORY and #CONSOLE_LOCALREMOTE_HISTORY <= 0 then
+		shallowcopy(ConsoleScreenSettings:GetConsoleLocalRemoteHistory(), CONSOLE_LOCALREMOTE_HISTORY)
+	end
 end
 
 return ConsoleScreen
