@@ -130,7 +130,11 @@ local function FindPairedDoor(inst)
     if other_door then
         local swingright = IsSwingRight(inst)
         local opposite_swing = swingright ~= IsSwingRight(other_door)
-        local opposite_rotation = inst.Transform:GetRotation() ~= other_door.Transform:GetRotation()
+
+        -- Round rotating angles to three decimal places to avoid imprecision when comparing the door rotations
+        local door_rotation = math.floor(inst.Transform:GetRotation() * 1000) / 1000
+        local other_rotation = math.floor(other_door.Transform:GetRotation() * 1000) / 1000
+        local opposite_rotation = door_rotation ~= other_rotation
         return (opposite_swing ~= opposite_rotation) and other_door or nil
     end
 

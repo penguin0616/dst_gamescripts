@@ -597,6 +597,7 @@ return {
     ANNOUNCE_REVIVED_FROM_CORPSE = "Much better, thank-you.",
 
     ANNOUNCE_FLARE_SEEN = "I wonder who set that flare?",
+    ANNOUNCE_MEGA_FLARE_SEEN = "That flash is gonna bring trouble.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Uh-oh. Sea monsters!",
 
     --willow specific
@@ -3430,6 +3431,7 @@ return {
         ICEBERG_MELTED = "It's completely melted.", --unimplemented
 
         MINIFLARE = "I can light it to let everyone know I'm here.",
+        MEGAFLARE = "It will let everything know I'm here. Everything.",
 
 		MOON_FISSURE =
 		{
@@ -4597,6 +4599,8 @@ return {
 
 
         BANANAJUICE = "Makes me feel a bit rogueish.",
+
+        FENCE_ROTATOR = "Enguard! Re-post!",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

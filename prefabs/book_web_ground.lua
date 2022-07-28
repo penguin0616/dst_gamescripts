@@ -19,13 +19,13 @@ end
 local function OnInit(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
 
-    if inst.tast ~= nil then
+    if inst.task ~= nil then
         inst.task:Cancel()
-        inst.task = nil
     end
-    
     inst.task = inst:DoPeriodicTask(0, OnUpdate, nil, x, y, z)
     OnUpdate(inst, x, y, z)
+
+    inst.SoundEmitter:PlaySound("wickerbottom_rework/book_spells/web")
 end
 
 local function Despawn(inst)
@@ -60,7 +60,6 @@ local function fn()
     end
 
     inst:DoTaskInTime(TUNING.BOOK_WEB_GROUND_DURATION, Despawn)
-    inst.SoundEmitter:PlaySound("wickerbottom_rework/book_spells/web")
     inst.persists = false
     inst:DoTaskInTime(0, OnInit)
 

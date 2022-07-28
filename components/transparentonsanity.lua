@@ -27,6 +27,14 @@ local TransparentOnSanity = Class(function(self, inst)
 end)
 
 function TransparentOnSanity:OnUpdate(dt)
+    self:DoUpdate(dt, false)
+end
+
+function TransparentOnSanity:ForceUpdate()
+    self:DoUpdate(0, true)
+end
+
+function TransparentOnSanity:DoUpdate(dt, force)
     local player = ThePlayer
     if player == nil then
         self.target_alpha = 0
@@ -40,7 +48,10 @@ function TransparentOnSanity:OnUpdate(dt)
             (1 + self.osc_amp * (math.sin(self.offset * self.osc_speed) - 1)) --variance
     end
 
-    if self.alpha ~= self.target_alpha then
+    if force then
+        self.alpha = self.target_alpha
+        PushAlpha(self, self.alpha, self.most_alpha)
+    elseif self.alpha ~= self.target_alpha then
         self.alpha = self.alpha > self.target_alpha and
             math.max(self.target_alpha, self.alpha - dt) or
             math.min(self.target_alpha, self.alpha + dt)

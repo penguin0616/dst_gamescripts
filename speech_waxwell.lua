@@ -95,15 +95,15 @@ return{
 		{
 			WRONGGEAR = "I won't use my good fishing rod in this stagnant pond.",
 		},
-        
+        --wickerbottom specific action
         READ =
         {
             GENERIC = "I must deal with this first.",
             NOBIRDS = "There are plenty of birds here already.",
             NOWATERNEARBY = "I can't just conjure up fish without water.",
-            TOOMANYBIRDS =    "There are plenty of birds here already.",
+            TOOMANYBIRDS = "There are plenty of birds here already.",
             WAYTOOMANYBIRDS = "I must wait before I summon the birds again.",
-            NOFIRES = "For once, nothing is on fire.",
+            NOFIRES =       "For once, nothing is on fire.",
             NOSILVICULTURE = "Making invisible trees grow? Now that'd be a trick.",
             NOHORTICULTURE = "There's nothing worth growing here.",
             NOTENTACLEGROUND = "Tentacles are ill-suited to this place.",
@@ -400,6 +400,11 @@ return{
 	ANNOUNCE_ADVENTUREFAIL = "I of all people should be able to do this.",
     ANNOUNCE_MOUNT_LOWHEALTH = "Say, pal, you don't look so good.",
 
+    --waxwell and wickerbottom specific strings
+--fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
@@ -582,6 +587,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "That was simply undignified.",
 
     ANNOUNCE_FLARE_SEEN = "Am I supposed to come running every time I spot a flare?",
+    ANNOUNCE_MEGA_FLARE_SEEN = "That flare's going to send some poor fool into a world of trouble.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "We're in for some trouble.",
 
     --willow specific
@@ -3415,6 +3421,7 @@ return{
         ICEBERG_MELTED = "It's melted.", --unimplemented
 
         MINIFLARE = "For those with a flare for the dramatic.",
+        MEGAFLARE = "I'd have to be foolish or desperate to use that.",
 
 		MOON_FISSURE =
 		{
@@ -4582,6 +4589,8 @@ return{
 
 
         BANANAJUICE = "It doesn't do much for my refined palate.",
+
+        FENCE_ROTATOR = "What insidious magic. It draws power from eye rolls and groans.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

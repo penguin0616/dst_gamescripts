@@ -2675,6 +2675,17 @@ local fx =
             end, 0.75)
         end
     },
+
+    {
+        name =  "fence_rotator_fx",
+        bank =  "fence_rotator_fx",
+        build = "fence_rotator_fx",
+        anim =  "idle",
+        sound = "dontstarve/common/deathpoof",
+        fn = function(inst)
+            inst.AnimState:SetSortOrder(0)
+        end
+    },
 }
 
 for cratersteamindex = 1, 4 do

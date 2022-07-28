@@ -78,6 +78,7 @@ local function fn()
 
     inst:AddTag("structure")
     inst:AddTag("sign")
+    inst:AddTag("directionsign")
 
     --Sneak these into pristine state for optimization
     inst:AddTag("_writeable")

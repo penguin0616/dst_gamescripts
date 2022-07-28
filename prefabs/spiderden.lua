@@ -114,7 +114,6 @@ local function onsleep(inst, sleeper)
 end
 
 local function AddSleepingBag(inst)
-    
     if inst.components.sleepingbag == nil then
         inst:AddComponent("sleepingbag")
     end
@@ -129,6 +128,14 @@ local function AddSleepingBag(inst)
     inst.components.sleepingbag:SetTemperatureTickFn(temperaturetick)
 
     inst:AddTag("tent")
+end
+
+local function RemoveSleepingBag(inst)
+    if inst.components.sleepingbag ~= nil then
+        inst.components.sleepingbag:DoWakeUp()
+        inst:RemoveComponent("sleepingbag")
+        inst:RemoveTag("tent")
+    end
 end
 
 local function SetStage(inst, stage, skip_anim)
@@ -281,6 +288,7 @@ local function AttemptMakeQueen(inst)
     local num_dens = #ents
 
     inst.components.growable:SetStage(1)
+    RemoveSleepingBag(inst)
 
     inst.AnimState:PlayAnimation("cocoon_large_burst")
     inst.AnimState:PushAnimation("cocoon_large_burst_pst")
@@ -616,9 +624,7 @@ local function CanShave(inst, shaver, shaving_implement)
 end
 
 local function OnShaved(inst, shaver, shaving_implement)
-
     local stage = inst.data.stage
-
     if stage == 1 then
         -- Should we release all children instead?
         SpawnDefenders(inst, shaver)
@@ -628,10 +634,8 @@ local function OnShaved(inst, shaver, shaving_implement)
         inst.shaving = true
         local downgraded_stage = stage - 1
 
-        if downgraded_stage < 3 and inst.components.sleepingbag then
-            inst.components.sleepingbag:DoWakeUp()
-            inst:RemoveComponent("sleepingbag")
-            inst:RemoveTag("tent")
+        if downgraded_stage < 3 then
+            RemoveSleepingBag(inst)
         end
 
         inst.components.growable:SetStage(downgraded_stage)

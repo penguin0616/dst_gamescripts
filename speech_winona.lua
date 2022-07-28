@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "I'm back on the clock!",
 
     ANNOUNCE_FLARE_SEEN = "A flare! Hold on, I'm comin'!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Looks like someone's fixin' for a fight.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Woah, that's a bigg'un!",
 
     --willow specific
@@ -846,6 +857,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "That was more than enough monkeying around for me.",
 
     ANNOUNCE_PIRATES_ARRIVE = "Sounds like someone's about to throw a monkey wrench in the works...",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3413,6 +3426,7 @@ return{
         ICEBERG_MELTED = "It's just a lil ice cube now.", --unimplemented
 
         MINIFLARE = "Safety in numbers, hey?",
+        MEGAFLARE = "If I'm gonna start somethin', I'd better be ready to finish it.",
 
 		MOON_FISSURE =
 		{
@@ -4580,6 +4594,8 @@ return{
 
 
         BANANAJUICE = "Would ya look at that, you can juice 'em too!",
+
+        FENCE_ROTATOR = "There's a right tool for every job.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

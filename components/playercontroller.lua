@@ -3658,7 +3658,7 @@ function PlayerController:RemapMapAction(act, position)
     local act_remap = nil
     if act and ACTIONS_MAP_REMAP[act.action.code] then
         local px, py, pz = position:Get()
-        if self.inst:CanSeePointOnMiniMap(px, py, pz) and TheWorld.Map:IsVisualGroundAtPoint(px, py, pz) then
+        if self.inst:CanSeePointOnMiniMap(px, py, pz) then
             act_remap = ACTIONS_MAP_REMAP[act.action.code](act, Vector3(px, py, pz))
         end
     end
@@ -3775,8 +3775,8 @@ function PlayerController:GetGroundUseAction(position)
                 )
             ) then
             local isaoetargeting = islocal and self:IsAOETargeting()
-            local lmb = not isaoetargeting and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, nil, false)[1] or nil
-            local rmb = (not islocal or isaoetargeting or equipitem.components.aoetargeting == nil or not equipitem.components.aoetargeting:IsEnabled()) and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, nil, true)[1] or nil
+            local lmb = not isaoetargeting and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, false, nil)[1] or nil
+            local rmb = (not islocal or isaoetargeting or equipitem.components.aoetargeting == nil or not equipitem.components.aoetargeting:IsEnabled()) and self.inst.components.playeractionpicker:GetPointActions(position, equipitem, true, nil)[1] or nil
             if lmb ~= nil then
                 if lmb.action == ACTIONS.DROP then
                     lmb = nil

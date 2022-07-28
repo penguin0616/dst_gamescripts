@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "I am restored!",
 
     ANNOUNCE_FLARE_SEEN = "My allies beckon me!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "That light in the sky... 'tis a challenge to all who see it!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "A gargantuan foe approaches!",
 
     --willow specific
@@ -840,6 +851,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Thank Odin, the curse hath been lifted.",
 
     ANNOUNCE_PIRATES_ARRIVE = "A ship approaches! Prepare for battle!",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3407,6 +3420,7 @@ return{
         ICEBERG_MELTED = "Twas no match for this great heat.", --unimplemented
 
         MINIFLARE = "Never split thy party!",
+        MEGAFLARE = "I fear no enemy. Let them come!",
 
 		MOON_FISSURE =
 		{
@@ -4574,6 +4588,8 @@ return{
 
 
         BANANAJUICE = "Monkey slop.",
+
+        FENCE_ROTATOR = "I'd take a proper blade at my side over this overgrown sewing needle.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

@@ -159,6 +159,7 @@ function Tune(overrides)
         RUINS_BAT_USES = 200,
         SADDLEHORN_USES = 10,
         BRUSH_USES = 75,
+        FENCE_ROTATOR_USES = 200,
 
         MULTITOOL_AXE_PICKAXE_EFFICIENCY = 4/3,
 
@@ -345,6 +346,7 @@ function Tune(overrides)
         SADDLEHORN_DAMAGE = wilson_attack*.5,
         BRUSH_DAMAGE = wilson_attack*.8,
         OAR_DAMAGE = wilson_attack*.5,
+        FENCE_ROTATOR_DAMAGE = wilson_attack,
 
         SADDLE_BASIC_BONUS_DAMAGE = 0,
         SADDLE_WAR_BONUS_DAMAGE = 16,
@@ -2120,6 +2122,7 @@ function Tune(overrides)
         EXPLOSIVE_MAX_RESIST_DAMAGE = 8000,
         EXPLOSIVE_RESIST_DECAY_TIME = 8,
         EXPLOSIVE_RESIST_DECAY_DELAY = 2,
+        EXPLOSIVE_MAX_WORKABLE_INVENTORYITEMS = 20, -- Used to limit how many workable inventory items a player may have this work on in one frame.
 
         RESURRECT_HEALTH = 50,
 
@@ -3378,7 +3381,7 @@ function Tune(overrides)
             HEIGHT = 0.5,
             RIPE_CHANCE = 0.65,
             SEED_CHANCE = 0.01,
-            MAX_SPAWNS = 10,
+            MAX_SPAWNS = 10, -- NOTES(JBK): Deprecated, kept around for mods.
         },
         ROCK_FRUIT_SPROUT_GROWTIME = 5*day_time,
         ROCK_FRUIT_REGROW =
@@ -6131,7 +6134,7 @@ function Tune(overrides)
             INNER = {
                 MAX = 300,
                 CHANCE = 0.2,
-                WEIGHT = 4,
+                WEIGHT = 6,
             },
             MID = {
                 MAX = 600,
@@ -6197,6 +6200,10 @@ function Tune(overrides)
         BOOK_USES_LARGE = 5,
 
         MAXWELL_READING_SANITY_MULT = 2.5,
+
+        BOOK_MAX_SHADOWCREATURES = 16,
+
+        FENCE_DEFAULT_ROTATION = 45,
     }
 
     TUNING_MODIFIERS = {}

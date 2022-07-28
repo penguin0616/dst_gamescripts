@@ -1404,6 +1404,21 @@ function c_makeboat()
 	inst = SpawnPrefab("oceanfishingrod")
 	inst.Transform:SetPosition(x - 3.25, y, z + 1.25)
 
+    inst = SpawnPrefab("boat_bumper_kelp_kit")
+    inst.Transform:SetPosition(x - 1, y, z - 3)
+	inst.components.stackable:SetStackSize(8)
+    inst = SpawnPrefab("boat_bumper_shell_kit")
+    inst.Transform:SetPosition(x - 1, y, z - 1.5)
+	inst.components.stackable:SetStackSize(8)
+
+    inst = SpawnPrefab("mastupgrade_lamp_item")
+    inst.Transform:SetPosition(x - 2, y, z - 1.5)
+
+    inst = SpawnPrefab("boat_cannon_kit")
+    inst.Transform:SetPosition(x - 1, y, z + 3)
+    inst = SpawnPrefab("cannonball_rock_item")
+    inst.Transform:SetPosition(x, y, z + 3)
+	inst.components.stackable:SetStackSize(20)
 end
 
 function c_makecrabboat()

@@ -850,7 +850,7 @@ function FrontEnd:Update(dt)
 			self.imgui_is_running = false
 
     	end
-    	
+
         --self.widget_editor:Update(dt)
         --self.entity_editor:Update(dt)
     end
@@ -980,6 +980,10 @@ end
 
 function FrontEnd:HideConsoleLog()
 	self.consoletext:Hide()
+end
+
+function FrontEnd:SetConsoleLogPosition(x, y, z)
+    self.consoletext:SetPosition(x, y, z)
 end
 
 function FrontEnd:DoFadeIn(time_to_take)

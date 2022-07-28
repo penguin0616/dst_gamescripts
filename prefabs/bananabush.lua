@@ -108,6 +108,7 @@ local function OnPicked(inst, picker)
             inst.AnimState:PushAnimation("idle_empty")
 
             inst.components.growable:SetStage(1)
+            inst.components.growable:StartGrowing()
         end
     end
 end

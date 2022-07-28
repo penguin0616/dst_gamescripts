@@ -70,18 +70,16 @@ end
 function MapScreen:OnBecomeInactive()
     MapScreen._base.OnBecomeInactive(self)
 
-    if TheWorld.minimap.MiniMap:IsVisible() then
-        TheWorld.minimap.MiniMap:ToggleVisibility()
-    end
+    --NOTE: this could be due to a screen pushed on top of us (e.g. consolescreen)
+    --      handle closing the map screen in OnDestroy
+
+    self.hover.forcehide = true
     self.hover:Hide()
-    if self.owner.HUD and self.owner.HUD.controls and self.owner.HUD.controls.hover then
-        self.owner.HUD.controls.hover.forcehide = nil
-    end
+    self.minimap.centerreticle:Hide()
 
     self:RemoveDecorations()
-    --V2C: Don't set pause in multiplayer, all it does is change the
-    --     audio settings, which we don't want to do now
-    --SetPause(false)
+    self.decorationdata.lmb = nil
+    self.decorationdata.rmb = nil
 end
 
 function MapScreen:OnBecomeActive()
@@ -96,6 +94,7 @@ function MapScreen:OnBecomeActive()
         self.owner.HUD.controls.hover.forcehide = true
         self.owner.HUD.controls.hover:Hide()
     end
+    self.hover.forcehide = nil
     if TheInput:ControllerAttached() then
         self.hover:Hide()
         self.minimap.centerreticle:Show()
@@ -113,7 +112,19 @@ function MapScreen:OnBecomeActive()
 end
 
 function MapScreen:OnDestroy()
+    if TheWorld.minimap.MiniMap:IsVisible() then
+        TheWorld.minimap.MiniMap:ToggleVisibility()
+    end
+    self.hover:Hide()
+    if self.owner.HUD and self.owner.HUD.controls and self.owner.HUD.controls.hover then
+        self.owner.HUD.controls.hover.forcehide = nil
+    end
+
     self:RemoveDecorations()
+
+    --V2C: Don't set pause in multiplayer, all it does is change the
+    --     audio settings, which we don't want to do now
+    --SetPause(false)
     SetAutopaused(false)
 
 	MapScreen._base.OnDestroy(self)
@@ -183,7 +194,7 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
         self.decorationdata.rmbents = {}
     end
     if rmb.action == ACTIONS.BLINK_MAP then
-        local decor1, decor2
+        local decor1, decor2, decor3
         if fresh then
             local image = "wortox_soul.tex"
             local atlas = GetInventoryItemAtlas(image)
@@ -191,11 +202,15 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
             decor1.text = decor1:AddChild(Text(NUMBERFONT, 42))
             decor2 = self.decorationrootrmb:AddChild(Image(atlas, image))
             decor2.text = decor2:AddChild(Text(NUMBERFONT, 42))
+            decor3 = self.decorationrootrmb:AddChild(Image(atlas, image))
+            decor3.text = decor3:AddChild(Text(NUMBERFONT, 42))
             self.decorationdata.rmbents[1] = decor1
             self.decorationdata.rmbents[2] = decor2
+            self.decorationdata.rmbents[3] = decor3
         else
             decor1 = self.decorationdata.rmbents[1]
             decor2 = self.decorationdata.rmbents[2]
+            decor3 = self.decorationdata.rmbents[3]
         end
         local rmb_pos = rmb:GetActionPoint()
         local px, py, pz = 0, 0, 0
@@ -213,7 +228,19 @@ function MapScreen:ProcessRMBDecorations(rmb, fresh)
         -- TODO(JBK): Clean this up.
         -- With the math the alphascale# no two icons will be present at any time now so this can simplify further.
         -- Keeping the blob here for now in case this needs to change more.
-        if dist < rmb.distanceperhop - rmb.distancemod then
+        if rmb.aimassisted then
+            decor3:Show()
+            local x, y = self.minimap:WorldPosToMapPos(rmb_pos.x, rmb_pos.z, 0)
+            decor3:SetPosition(x * w, y * h)
+            decor3:SetScale(zoomscale, zoomscale, 1)
+            decor3.text:SetString(tostring(rmb.distancecount))
+        else
+            decor3:Hide()
+        end
+        if dist < 0.1 then
+            decor1:Hide()
+            decor2:Hide()
+        elseif dist < rmb.distanceperhop - rmb.distancemod then
             decor1:Hide()
             decor2:Show()
             local r = (rmb.distancecount * rmb.distanceperhop - rmb.distancemod) / dist

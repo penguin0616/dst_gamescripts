@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "All better!",
 
     ANNOUNCE_FLARE_SEEN = "Oh, someone's calling us to come over.",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Uh-oh, that bright light's attracting a lot of attention...",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Don't eat us!",
 
     --willow specific
@@ -841,6 +852,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Uh oh... we're not sure we like the sound of that.",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "En garde!",
@@ -959,8 +972,8 @@ return{
             GENERIC = "Hi %s! Have you been working out?",
             ATTACKER = "Hey %s, you look upset about something.",
             MURDERER = "You're just a big bully!",
-            REVIVER = "%s's nice! I wish he'd stop messing up our head fur, though.",
-            GHOST = "I'm sure you're the strongest ghost. Let's get a heart though.",
+            REVIVER = "%s's nice! We wish he'd stop messing up our head fur, though.",
+            GHOST = "We're sure you're the strongest ghost. Let's get a heart though.",
             FIRESTARTER = "%s, no!! Fire can hurt you!",
         },
         WAXWELL =
@@ -993,7 +1006,7 @@ return{
         WENDY =
         {
             GENERIC = "Hi %s! Let's play, okay?",
-            ATTACKER = "Are you angry at me, %s?",
+            ATTACKER = "Are you angry at us, %s?",
             MURDERER = "We're taking my friendship bracelet back!",
             REVIVER = "%s always plays nice with ghosts.",
             GHOST = "Don't worry! Our spider friends will help bring you back!",
@@ -1007,12 +1020,12 @@ return{
             REVIVER = "%s is gruff, but nice.",
             GHOST = "Wanna go heart-hunting with us, %s?",
             BEAVER = "%s's being gnawghty.",
-            BEAVERGHOST = "Can I pet your ears or will our claws swish through?",
+            BEAVERGHOST = "Can we pet your ears or will our claws swish through?",
             MOOSE = "Woah! Would you give us a ride on your back, %s?",
-            MOOSEGHOST = "I wonder if we'll be able to find a heart big enough for you?",
+            MOOSEGHOST = "Will we be able to find a heart big enough for you?",
             GOOSE = "Are you here to tell us nursery rhymes?",
             GOOSEGHOST = "Don't worry, we'll get you back to normal! Er, normal-ish.",
-            FIRESTARTER = "Um. I think you lit a fire, %s.",
+            FIRESTARTER = "Um. We think you lit a fire, %s.",
         },
         WICKERBOTTOM =
         {
@@ -1056,7 +1069,7 @@ return{
             ATTACKER = "Don't do hits, %s!",
             MURDERER = "Murderer! We didn't wanna have to do this!",
             REVIVER = "%s keeps us all together.",
-            GHOST = "Aw, I'm sorry that happened to you, %s.",
+            GHOST = "Aw, we're sorry that happened to you, %s.",
             FIRESTARTER = "Don't light fires, %s!",
         },
         WORTOX =
@@ -1070,12 +1083,12 @@ return{
         },
         WORMWOOD =
         {
-            GENERIC = "Hey, it's my good friend, %s!",
+            GENERIC = "Hey, it's our good friend, %s!",
             ATTACKER = "Hey, %s! Friends don't hit friends!",
             MURDERER = "Wickerbottom says we can't be friends anymore!",
             REVIVER = "%s is really rooting for us!",
             GHOST = "Poor %s! He died of loneliness!",
-            FIRESTARTER = "I don't think it's safe for you to be around fire.",
+            FIRESTARTER = "We don't think it's safe for you to be around fire.",
         },
         WARLY =
         {
@@ -1093,8 +1106,8 @@ return{
             ATTACKER = "Hey, stop it! No hitting!",
             MURDERER = "Why would you do that, %s?",
             REVIVER = "Whew, thanks %s!",
-            GHOST = "Don't worry! I'm sure there's a heart around here somewhere!",
-            FIRESTARTER = "I... don't think that's allowed...",
+            GHOST = "Don't worry! We're sure there's a heart around here somewhere!",
+            FIRESTARTER = "We... don't think that's allowed...",
         },
 
         WALTER =
@@ -3407,6 +3420,7 @@ return{
         ICEBERG_MELTED = "We guess it's too hot out.", --unimplemented
 
         MINIFLARE = "Just in case someone's lost and lonely.",
+        MEGAFLARE = "Ms. Wickerbottom says we shouldn't pick fights...",
 
 		MOON_FISSURE =
 		{
@@ -4574,6 +4588,8 @@ return{
 
 
         BANANAJUICE = "Mmmm, cold and banana-y.",
+
+        FENCE_ROTATOR = "We're allowed to hit fence posts with it, just not too hard.",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

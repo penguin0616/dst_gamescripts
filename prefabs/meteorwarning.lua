@@ -53,6 +53,10 @@ local function startshadow(inst, time, starttint, endtint)
     end
 end
 
+local function PlayMeteorSound(inst)
+    inst.SoundEmitter:PlaySound("dontstarve/common/meteor_spawn")
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -86,7 +90,7 @@ local function fn()
         return inst
     end
 
-    inst.SoundEmitter:PlaySound("dontstarve/common/meteor_spawn")
+    inst:DoTaskInTime(0, PlayMeteorSound)
 
     inst.startfn = startshadow
 

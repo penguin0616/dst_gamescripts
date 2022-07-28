@@ -65,7 +65,7 @@ end
 local function removefood(inst, target)
 	if inst._removefood ~= nil then
 		inst.foodtoeat = nil
-		inst:RemoveEventCallback("onremoved", inst._removefood, target)
+		inst:RemoveEventCallback("onremove", inst._removefood, target)
 		inst:RemoveEventCallback("onpickup", inst._removefood, target)
 		inst._removefood = nil
 	end
@@ -84,7 +84,7 @@ local function isfoodnearby(inst)
 		if target then
 			inst.foodtoeat = target
 			inst._removefood = function() removefood(inst, target) end
-			inst:ListenForEvent("onremoved", inst._removefood, target)
+			inst:ListenForEvent("onremove", inst._removefood, target)
 			inst:ListenForEvent("onpickup", inst._removefood, target)
 
 			return BufferedAction(inst, target, ACTIONS.EAT)

@@ -100,6 +100,16 @@ return{
         {
             GENERIC = "only_used_by_wickerbottom",
             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "F-for a moment, I thought I was done for...",
 
     ANNOUNCE_FLARE_SEEN = "Was that a flare? I'd better hurry and see what's going on!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "What are they doing?! That flare will draw everything right to them!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "I don't like the looks of that shadow...",
 
     --willow specific
@@ -840,6 +851,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Finally! I was starting to think I'd never return to normal!",
 
     ANNOUNCE_PIRATES_ARRIVE = "Botheration! I can hear their catchy music getting closer!",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3407,6 +3420,7 @@ return{
         ICEBERG_MELTED = "It's completely melted.", --unimplemented
 
         MINIFLARE = "It'll show everyone where I am, when I am is another story.",
+        MEGAFLARE = "I'm not too keen on drawing unwanted attention.",
 
 		MOON_FISSURE =
 		{
@@ -4574,6 +4588,8 @@ return{
 
 
         BANANAJUICE = "I suppose I can spare a moment to enjoy a sip or two.",
+
+        FENCE_ROTATOR = "I appreciate specialized tools. Especially when I can still hit things with them.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

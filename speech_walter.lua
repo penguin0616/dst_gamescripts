@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Aaah... I don't want to do that again.",
 
     ANNOUNCE_FLARE_SEEN = "A signal! We should follow it!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Wow, it's hard to miss a signal that bright!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Is that a real sea monster?",
 
     --willow specific
@@ -840,6 +851,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Woby, c'mere girl! It's okay, I'm me again!",
 
     ANNOUNCE_PIRATES_ARRIVE = "What's that music? Did someone bring a radio?",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3407,6 +3420,7 @@ return{
         ICEBERG_MELTED = "Woby likes to roll in puddles.", --unimplemented
 
         MINIFLARE = "It's a signal, only to be used in an emergency.",
+        MEGAFLARE = "We don't want anyone feeling left out, right Woby?",
 
 		MOON_FISSURE =
 		{
@@ -4574,6 +4588,8 @@ return{
 
 
         BANANAJUICE = "Mmm, it's even better than the ones they made at the malted shop!",
+
+        FENCE_ROTATOR = "Huh. I didn't know people used swords to fix their fences.",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

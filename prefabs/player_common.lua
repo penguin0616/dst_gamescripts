@@ -768,6 +768,7 @@ local function EnableMovementPrediction(inst, enable)
                     (inst.player_classified ~= nil and inst.player_classified.isghostmode:value()) or
                     (inst.player_classified == nil and inst:HasTag("playerghost"))
 
+                inst.Physics:Stop()
                 inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
                 if isghost then
                     ex_fns.ConfigureGhostLocomotor(inst)
@@ -800,6 +801,7 @@ local function EnableMovementPrediction(inst, enable)
                 inst.components.playercontroller.locomotor = nil
             end
             inst:RemoveComponent("locomotor")
+            inst.Physics:Stop()
             print("Movement prediction disabled")
             --This is unfortunate but it doesn't seem like you can send an rpc on the first
             --frame when a character is spawned

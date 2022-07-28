@@ -553,8 +553,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.CARNIVAL_HOST_SUMMON, "give"),
 
     ActionHandler(ACTIONS.MUTATE_SPIDER, "give"),
-    ActionHandler(ACTIONS.HERD_FOLLOWERS, "use_inventory_item"),
-    ActionHandler(ACTIONS.REPEL, "use_inventory_item"),
+    ActionHandler(ACTIONS.HERD_FOLLOWERS, "use_inventory_item_busy"),
+    ActionHandler(ACTIONS.REPEL, "use_inventory_item_busy"),
     ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
     ActionHandler(ACTIONS.UNLOAD_WINCH, "give"),
     ActionHandler(ACTIONS.USE_HEAVY_OBSTACLE, "dolongaction"),
@@ -583,6 +583,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.REMOVEMODULES, "use_inventory_item_busy"),
     ActionHandler(ACTIONS.REMOVEMODULES_FAIL, "removeupgrademodules_fail"),
     ActionHandler(ACTIONS.CHARGE_FROM, "doshortaction"),
+
+    ActionHandler(ACTIONS.ROTATE_FENCE, "attack_prop_pre"),
 }
 
 local events =
@@ -3709,6 +3711,12 @@ local states =
                 )
                 if cooldown > 0 then
                     cooldown = math.max(cooldown, 15 * FRAMES)
+                end
+            elseif equip ~= nil and equip:HasTag("jab") then
+                inst.AnimState:PlayAnimation("spearjab", false)
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, nil, true)
+                if cooldown > 0 then
+                    cooldown = math.max(cooldown, 21 * FRAMES)
                 end
             else
                 inst.AnimState:PlayAnimation("punch")

@@ -375,6 +375,7 @@ function Container:Open(doer)
 
         if doer.HUD ~= nil then
             doer.HUD:OpenContainer(self.inst, self:IsSideWidget())
+            doer:PushEvent("refreshcrafting")
             if self:IsSideWidget() then
                 TheFocalPoint.SoundEmitter:PlaySound(self.inst.open_skin_sound or "dontstarve/wilson/backpack_open")
             else
@@ -418,6 +419,7 @@ function Container:Close(doer)
 
         if doer.HUD ~= nil then
             doer.HUD:CloseContainer(self.inst, self:IsSideWidget())
+            doer:PushEvent("refreshcrafting")
             if self:IsSideWidget() then
                 TheFocalPoint.SoundEmitter:PlaySound("dontstarve/wilson/backpack_close")
             else

@@ -793,6 +793,11 @@ function Builder:CanLearn(recname)
             self.inst:HasTag(recipe.builder_tag))
 end
 
+function Builder:RequiresTempBonus(recipe)
+	return not self:KnowsRecipe(recipe, true)
+		and not CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp)
+end
+
 function Builder:LongUpdate(dt)
     if self.last_hungry_build ~= nil then
         self.last_hungry_build = self.last_hungry_build - dt
@@ -808,7 +813,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 		if recipe.placer == nil then
 			if self:KnowsRecipe(recipe) then
 				--Need to determine this NOW before calling async MakeRecipe
-				local usingtempbonus = not self:KnowsRecipe(recipe, true)
+				local usingtempbonus = self:RequiresTempBonus(recipe)
 
                 self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                     function()
@@ -833,7 +838,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
                 )
 			elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
 				--Need to determine this NOW before calling async MakeRecipe
-				local usingtempbonus = not CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp)
+				local usingtempbonus = self:RequiresTempBonus(recipe)
 
 				self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
 					function()
@@ -852,7 +857,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 			if ing_recipe ~= nil and not self.inst.components.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * self.ingredientmod)), true) and self:HasIngredients(ing_recipe) then
 				if self:KnowsRecipe(ing_recipe) then
 					--Need to determine this NOW before calling async MakeRecipe
-					local usingtempbonus = not self:KnowsRecipe(ing_recipe, true)
+					local usingtempbonus = self:RequiresTempBonus(ing_recipe)
 
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
@@ -876,7 +881,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 					)
 				elseif CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) and self:CanLearn(ing_recipe.name) then
 					--Need to determine this NOW before calling async MakeRecipe
-					local usingtempbonus = not CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees_no_temp)
+					local usingtempbonus = self:RequiresTempBonus(ing_recipe)
 
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
@@ -907,7 +912,7 @@ function Builder:BufferBuild(recname)
     local recipe = GetValidRecipe(recname)
     if recipe ~= nil and recipe.placer ~= nil and not self:IsBuildBuffered(recname) and self:HasIngredients(recipe) then
         if self:KnowsRecipe(recipe) then
-			if not self:KnowsRecipe(recipe, true) then
+			if self:RequiresTempBonus(recipe) then
 				self:ConsumeTempTechBonuses()
 			end
 
@@ -924,7 +929,7 @@ function Builder:BufferBuild(recname)
                 self:AddRecipe(recname)
             end
         elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recname) then
-			if not CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp) then
+			if self:RequiresTempBonus(recipe) then
 				self:ConsumeTempTechBonuses()
 			end
 			self:ActivateCurrentResearchMachine(recipe)

@@ -267,7 +267,7 @@ function self:DestroyDockAtPoint(x, y, z, dont_toss_loot)
     -- If we're swapping to an ocean tile, do like a broken boat would do and deal with everything in our tile bounds
     if IsOceanTile(old_tile) then
         -- Behaviour pulled from walkableplatform's onremove/DestroyObjectsOnPlatform response.
-        local tile_radius_plus_overhang = (TILE_SCALE / 2) + 1.0 + 0.2
+        local tile_radius_plus_overhang = ((TILE_SCALE / 2) + 1.0) * 1.4142
         local entities_near_dock = TheSim:FindEntities(x, 0, z, tile_radius_plus_overhang, nil, IGNORE_DOCK_DROWNING_ONREMOVE_TAGS)
 
         local shore_point = nil
@@ -338,7 +338,7 @@ function self:QueueDestroyForDockAtPoint(x, y, z, dont_toss_loot)
             or WORLD_TILES.OCEAN_COASTAL
         if IsOceanTile(tile_at_point) then
             -- Behaviour pulled from walkableplatform's onremove/DestroyObjectsOnPlatform response.
-            local tile_radius_plus_overhang = (TILE_SCALE / 2) + 1.0 + 0.2
+            local tile_radius_plus_overhang = ((TILE_SCALE / 2) + 1.0) * 1.4142
             local entities_near_dock = TheSim:FindEntities(x, 0, z, tile_radius_plus_overhang, nil, IGNORE_DOCK_DROWNING_ONREMOVE_TAGS)
 
             for _, ent in ipairs(entities_near_dock) do

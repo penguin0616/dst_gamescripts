@@ -103,7 +103,7 @@ return{
             NOWATERNEARBY = "Fish may only be summoned in close proximity to a body of water.",
             TOOMANYBIRDS = "It doesn't work as well with this many birds around.",
             WAYTOOMANYBIRDS = "The sky is out of birds for now.",
-            NOFIRES = "Thankfully, there are no fires to put out.",
+            NOFIRES =       "Thankfully, there are no fires to put out.",
             NOSILVICULTURE = "There are no arboreal subjects to focus on.",
             NOHORTICULTURE = "There are no crops to cultivate.",
             NOTENTACLEGROUND = "The tentacles would be unable to break the surface here.",
@@ -400,6 +400,11 @@ return{
 	ANNOUNCE_ADVENTUREFAIL = "We must learn from our failures.",
     ANNOUNCE_MOUNT_LOWHEALTH = "My mount requires attention of the medical variety.",
 
+    --waxwell and wickerbottom specific strings
+--fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",
@@ -582,6 +587,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Oof! Back on my feet!",
 
     ANNOUNCE_FLARE_SEEN = "Someone's fired a flare.",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Oh my. Someone is looking to initiate a conflict.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "The megafauna have set their eyes on us.",
 
     --willow specific
@@ -3415,6 +3421,7 @@ return{
         ICEBERG_MELTED = "From dangerous solid to harmless liquid. Thank-you, heat.", --unimplemented
 
         MINIFLARE = "It's safer for everyone to stick together.",
+        MEGAFLARE = "I can lure adversaries to a place of my choosing.",
 
 		MOON_FISSURE =
 		{
@@ -4582,6 +4589,8 @@ return{
 
 
         BANANAJUICE = "Ah, I was in need of some refreshment.",
+
+        FENCE_ROTATOR = "Sometimes sharpness is necessary to keep things aligned and orderly.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

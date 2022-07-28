@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "The imp returns!",
 
     ANNOUNCE_FLARE_SEEN = "One of my friends is inviting me to play!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "An open invitation! Who knows what might drop by?",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Hyuyu, something's come to play!",
 
     --willow specific
@@ -845,6 +856,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "All's well that ends spells.",
 
     ANNOUNCE_PIRATES_ARRIVE = "Something scurvy this way comes.",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3413,6 +3426,7 @@ return{
         ICEBERG_MELTED = "Teeny tiny, drippy droppy iceberg.", --unimplemented
 
         MINIFLARE = "Mortals get lost sometimes, hyuyu.",
+        MEGAFLARE = "Hyuyuyu, this might get interesting!",
 
 		MOON_FISSURE =
 		{
@@ -4580,6 +4594,8 @@ return{
 
 
         BANANAJUICE = "Mortals will eat bananas in just about any form.",
+
+        FENCE_ROTATOR = "A sword against fences... we've all lost our senses!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

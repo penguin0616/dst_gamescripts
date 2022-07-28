@@ -4,6 +4,7 @@ local Image = require "widgets/image"
 local TextEdit = require "widgets/textedit"
 local Text = require "widgets/text"
 local Widget = require "widgets/widget"
+local ConsoleHistoryWidget = require "widgets/consolehistorywidget"
 
 -- fix syntax highlighting due to above list: "'
 
@@ -116,6 +117,10 @@ function ConsoleScreen:OnRawKeyHandler(key, down)
 			end
 			self.console_edit:SetString( CONSOLE_HISTORY[ self.history_idx ] )
 			self:ToggleRemoteExecute( CONSOLE_LOCALREMOTE_HISTORY[self.history_idx] )
+			if BRANCH == "dev" then
+				self.console_history:Show(CONSOLE_HISTORY, self.history_idx)
+			end
+			self.console_edit.inst:PushEvent("onconsolehistoryupdated")
 		end
 	elseif key == KEY_DOWN then
 		local len = #CONSOLE_HISTORY
@@ -124,10 +129,15 @@ function ConsoleScreen:OnRawKeyHandler(key, down)
 				if self.history_idx == len then
 					self.console_edit:SetString( "" )
 					self:ToggleRemoteExecute( true )
+					self.history_idx = len + 1
 				else
 					self.history_idx = math.min( len, self.history_idx + 1 )
 					self.console_edit:SetString( CONSOLE_HISTORY[ self.history_idx ] )
 					self:ToggleRemoteExecute( CONSOLE_LOCALREMOTE_HISTORY[self.history_idx] )
+					if BRANCH == "dev" then
+						self.console_history:Show(CONSOLE_HISTORY, self.history_idx)
+					end
+					self.console_edit.inst:PushEvent("onconsolehistoryupdated")
 				end
 			end
 		end
@@ -278,6 +288,14 @@ function ConsoleScreen:DoInit()
 	self.console_edit.validrawkeys[KEY_DOWN] = true
 	self.console_edit.validrawkeys[KEY_V] = true
 	self.toggle_remote_execute = false
+
+	if BRANCH == "dev" then
+		-- Setup console history display
+		self.console_history = self.console_edit:AddChild(ConsoleHistoryWidget(self.console_edit, 800, Profile:GetConsoleAutocompleteMode()))
+		local sx, sy = self.console_edit:GetRegionSize()
+		self.console_history:SetPosition(-sx * 0.5, sy * 0.5 + 5)
+		self.console_history:Hide()
+	end
 
 	-- Load saved last entered console commands
 	if CONSOLE_HISTORY and #CONSOLE_HISTORY <= 0 then

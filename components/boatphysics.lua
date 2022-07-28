@@ -120,7 +120,9 @@ local function OnCollide(inst, other, world_position_on_a_x, world_position_on_a
         end
 
         local shake_percent = math.min(math.abs(hit_dot_velocity) * speed / TUNING.BOAT.MAX_ALLOWED_VELOCITY, 1)
-        inst.SoundEmitter:PlaySoundWithParams(inst.sounds.damage, { intensity = shake_percent })
+        if inst.sounds ~= nil then
+            inst.SoundEmitter:PlaySoundWithParams(inst.sounds.damage, { intensity = shake_percent })
+        end
 
         ShakeAllCamerasOnPlatform(CAMERASHAKE.FULL, destroyed_other and 1.5 or 0.7, 0.02, (destroyed_other and 0.45 or 0.15) * shake_percent, inst)
 

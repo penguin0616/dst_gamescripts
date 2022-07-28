@@ -943,6 +943,8 @@ STRINGS =
         OCEAN_TRAWLER_FIX = "Fix",
 
         EMPTY_CONTAINER = "Empty",
+
+        ROTATE_FENCE = "Rotate",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -980,7 +982,7 @@ STRINGS =
         NONE = "Nothing",
 
         LUCY = "Lucy the Axe",
-        
+
         BOOKSTATION = "Bookcase",
 
         BOOK_BIRDS = "Birds of the World",
@@ -999,7 +1001,7 @@ STRINGS =
         BOOK_RAIN = "Practical Rain Rituals",
         BOOK_MOON = "Lunar Grimoire",
         BOOK_BEES = "Apicultural Notes",
-        
+
         BOOK_HORTICULTURE_UPGRADED = "Horticulture, Expanded",
         BOOK_RESEARCH_STATION = "The Everything Encyclopedia",
         BOOK_LIGHT_UPGRADED = "Lux Aeterna Redux",
@@ -2891,6 +2893,7 @@ STRINGS =
         ICEBERG_MELTED = "Melted Iceberg",
 
         MINIFLARE = "Flare",
+        MEGAFLARE = "Hostile Flare",
 
 		GESTALT = "Gestalt",
 		GESTALT_GUARD = "Greater Gestalt",
@@ -3498,6 +3501,8 @@ STRINGS =
         STASH_MAP = "Pirate Map",
 
         BANANAJUICE = "Banana Shake",
+
+        FENCE_ROTATOR = "Fencing Sword",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3865,6 +3870,7 @@ STRINGS =
         MOON_SKETCH = "Look upon the face of the moon.",
 
         MINIFLARE = "Light the way for your trusted friends.",
+        MEGAFLARE = "Light a beacon for your enemies.",
 
 		SEAFARING_PROTOTYPER = "Science at sea.",
 
@@ -4290,6 +4296,8 @@ STRINGS =
         BOAT_CANNON_KIT = "It blows the competition out of the water.",
         CANNONBALL_ROCK_ITEM = "It's sure to make a splash.",
         OCEAN_TRAWLER_KIT = "There's plenty of fish in the sea.",
+
+        FENCE_ROTATOR = "A sword, used for fencing.",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -7111,6 +7119,7 @@ STRINGS.UI =
 
 		PERISH_RATE_TITLE = "Spoils",
 		PERISH_NEVER = "Never",
+        PERISH_VERY_QUICKLY = "Very Quickly",
 		PERISH_QUICKLY = "Quickly",
 		PERISH_AVERAGE = "Average",
 		PERISH_SLOWLY = "Slowly",
@@ -7775,7 +7784,7 @@ STRINGS.UI =
         TIP_GARDENEERHAT = "\"I've finally perfected my design for an ingenious (if I do say so myself) device that stores important garden-based knowledge. Certain naysayers might point out that it looks like nothing more than an overturned flowerpot worn on the head... some people simply don't have an eye for science.\" -W",
         TIP_COOKBOOK = "\"Once I've perfected a recipe, I find it helpful to write it down. Luckily, I've been able to cobble together a rough cookbook for just such a thing out of some spare pieces of parchment. Now my mind is free to worry about more immediate things...\" -W",
         TIP_NEWRECIPES = "\"Recipes are useful, but a true chef knows the importance of experimenting with new ingredients and flavors, and this world certainly provides an abundance of unusual things to choose from.\" -W",
-        TIP_REPLANTING = "\"The bushes I replanted by the camp are looking sickly... I suspect they'll require some extra care before they can produce any berries again.\" -W",
+        TIP_REPLANTING = "\"The bushes I replanted by the camp are looking malnourished... I suspect they'll require some extra care before they can produce any berries again.\" -W",
         TIP_NAUGHTINESS = "\"We shouldn't hurt things that don't hurt us. If we're mean, bad old Mr. Krampus will come...\" -W",
         TIP_BERRYLURE = "\"Last time I baited my hook with berries I caught more fish than I could carry, but when I tried today? Barely a nibble! Guess the berry trick only works on some of 'em.\" -W",
         TIP_OCEANEXPLORATION = "\"What strange new islands and creatures might I encounter if I journey out to sea? I shudder to think... but curiosity has a tendency to get the better of me...\" -W",
@@ -8113,9 +8122,13 @@ STRINGS.UI =
         SELFPAUSED_TEXT = "You have paused the game.",
     },
 
-	WORDPREDICTIONWIDET =
+	WORDPREDICTIONWIDGET =
 	{
 		DISMISS = "Dismiss",
+        PREV = "Scroll Left",
+        NEXT = "Scroll Right",
+        MINIMIZE = "Minimize",
+        EXPAND = "Expand",
 	},
 
     PLAYERSTATUSSCREEN =

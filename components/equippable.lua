@@ -106,7 +106,10 @@ function Equippable:GetWalkSpeedMult()
 end
 
 function Equippable:IsRestricted(target)
-    return self.restrictedtag ~= nil and self.restrictedtag:len() > 0 and not target:HasTag(self.restrictedtag)
+    return self.restrictedtag ~= nil
+        and self.restrictedtag:len() > 0
+        and not target:HasTag(self.restrictedtag)
+        and target:HasTag("player") --restricted tags only apply to players
 end
 
 function Equippable:GetDapperness(owner, ignore_wetness)

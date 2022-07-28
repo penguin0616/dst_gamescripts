@@ -1788,30 +1788,29 @@ local function MakeHat(name)
 
     local function update_polly_hat_art(inst)
         inst.AnimState:PlayAnimation(inst.defaultanim)
+        local deadpolly = not inst.components.spawner.child or inst.components.spawner.child.components.health:IsDead()
+        if deadpolly then
+            inst.components.inventoryitem:ChangeImageName("polly_rogershat2")
+            inst.AnimState:PlayAnimation("anim_dead")
+        else
+            inst.components.inventoryitem:ChangeImageName("polly_rogershat")
+            inst.AnimState:PlayAnimation("anim")
+        end
         if inst.components.equippable:IsEquipped() then
             local skin_build = inst:GetSkinBuild()
-            local symbol = "swap_hat"
-            inst.components.inventoryitem:ChangeImageName("polly_rogershat")
-            local animname = "anim"
-
-            if not inst.components.spawner.child or inst.components.spawner.child.components.health:IsDead() then
-                inst.components.inventoryitem:ChangeImageName("polly_rogershat2")
-                symbol = "swap_hat2"
-                animname = "anim_dead"
-            end
+            local symbol = deadpolly and "swap_hat2" or "swap_hat"
             local owner = inst.components.inventoryitem.owner
             if skin_build ~= nil then
                 owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, symbol, inst.GUID, fname)
             else
                 owner.AnimState:OverrideSymbol("swap_hat", fname, symbol)
             end
-            inst.AnimState:PlayAnimation(animname)
         end
     end
 
     local function pollyremoved(inst)
-        inst:RemoveEventCallback("onremoved", pollyremoved ,inst.polly)
-        inst.polly = nil        
+        inst:RemoveEventCallback("onremove", pollyremoved, inst.polly)
+        inst.polly = nil
     end
 
     local function polly_rogers_custom_init(inst)
@@ -1887,7 +1886,7 @@ local function MakeHat(name)
             child.Transform:SetRotation(math.random() * 180)
             child.components.locomotor:StopMoving()
             child.hat = inst
-            inst:ListenForEvent("onremoved", pollyremoved ,inst.polly)
+            inst:ListenForEvent("onremove", pollyremoved, inst.polly)
         end
     end
 
@@ -2378,7 +2377,7 @@ local function MakeHat(name)
 	end
 
 	local function alterguardian_onsanitydelta(inst, owner)
-		local sanity = owner.components.sanity ~= nil and owner.components.sanity:GetPercent() or 0
+		local sanity = owner.components.sanity ~= nil and owner.components.sanity:GetPercentWithPenalty() or 0
 		if sanity > TUNING.SANITY_BECOME_ENLIGHTENED_THRESH then
 			alterguardian_activate(inst, owner)
 		else

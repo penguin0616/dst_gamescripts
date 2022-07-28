@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "G-glurp... that was scary.",
 
     ANNOUNCE_FLARE_SEEN = "Fire in sky??",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Grrr... what that big scary fire in sky?!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Someone coming?",
 
     --willow specific
@@ -712,8 +723,6 @@ return{
         BOOK_TEMPERATURE = "The... m-measure of th... theer-mole energy...",
         BOOK_LIGHT = "Heeyyy, these words different!",
         BOOK_RAIN = "Can tell rain what to do? Wanna try!!",
-        BOOK_MOON = "Huh. Moon actually kinda boring.",
-        BOOK_BEES = "Aww... no honey inside...",
 
         BOOK_HORTICULTURE_UPGRADED = "M-maybe will find easier book...",
         BOOK_RESEARCH_STATION = "It really hard to read, but feel smart holding it, florp!",
@@ -842,6 +851,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Yay!! Not ugly anymore, florp!",
 
     ANNOUNCE_PIRATES_ARRIVE = "Sound like somebody having fun over there! Wanna see!",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3409,6 +3420,7 @@ return{
         ICEBERG_MELTED = "All melty!", --unimplemented
 
         MINIFLARE = "Sparky!",
+        MEGAFLARE = "Make big angry sparks in sky.",
 
 		MOON_FISSURE =
 		{
@@ -4576,6 +4588,8 @@ return{
 
 
         BANANAJUICE = "It sweet and slurpy, florp!",
+
+        FENCE_ROTATOR = "Spinny pokey stick!",
     },
 
     DESCRIBE_GENERIC = "What that?",

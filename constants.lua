@@ -13,6 +13,8 @@ TILE_SCALE = 4
 RESOLUTION_X = 1280
 RESOLUTION_Y = 720
 
+PLAYER_REVEAL_RADIUS = 30.0 -- NOTES(JBK): Keep in sync with MiniMapRenderer.cpp!
+
 MAX_FE_SCALE = 3 --Default if you don't call SetMaxPropUpscale
 MAX_HUD_SCALE = 1.25
 

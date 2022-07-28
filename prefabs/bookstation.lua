@@ -89,7 +89,7 @@ local function onactivate(inst)
         inst.AnimState:PlayAnimation("craft")
         inst.AnimState:PushAnimation("idle", true)
         if not inst.SoundEmitter:PlayingSound("sound") then
-            --inst.SoundEmitter:PlaySound("dontstarve/common/researchmachine_"..soundprefix.."_run", "sound")
+            inst.SoundEmitter:PlaySound("wickerbottom_rework/bookstation/craft", "sound")
         end
         inst._activecount = inst._activecount + 1
         inst:DoTaskInTime(1.5, doonact)--, soundprefix)
@@ -103,7 +103,7 @@ end
 local function onbuilt(inst, data)
     inst.AnimState:PlayAnimation("place")
     inst.AnimState:PushAnimation("idle", false)
-    --inst.SoundEmitter:PlaySound("dontstarve/common/researchmachine_"..soundprefix.."_place")
+    inst.SoundEmitter:PlaySound("wickerbottom_rework/bookstation/place")
 end
 
 local function onopen(inst)

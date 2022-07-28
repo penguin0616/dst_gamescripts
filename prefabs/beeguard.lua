@@ -78,6 +78,7 @@ local function MakeFriendly(inst, userid)
         inst._friendid = userid
         inst:RemoveTag("hostile")
         inst:AddTag("NOBLOCK")
+        inst:AddTag("companion")
     end
 end
 
@@ -86,6 +87,7 @@ local function MakeHostile(inst)
         inst._friendid = nil
         inst:AddTag("hostile")
         inst:RemoveTag("NOBLOCK")
+        inst:RemoveTag("companion")
     end
 end
 
@@ -124,7 +126,7 @@ local function CheckFocusTarget(inst)
 end
 
 local FRIENDLYBEES_MUST = { "_combat", "_health" }
-local FRIENDLYBEES_CANT = { "INLIMBO", "noauradamage", "bee" }
+local FRIENDLYBEES_CANT = { "INLIMBO", "noauradamage", "bee", "companion" }
 local FRIENDLYBEES_MUST_ONE = { "monster", "prey" }
 local FRIENDLYBEES_PVP = nil
 local function RetargetFn(inst)
@@ -268,9 +270,6 @@ local function Flee(inst)
 end
 
 local function StartFindingPlayerQueenTasks(inst)
-    if not inst:IsFriendly() then
-        return
-    end
     if inst._fleetask then
         inst._fleetask:Cancel()
         inst._fleetask = nil
@@ -278,6 +277,9 @@ local function StartFindingPlayerQueenTasks(inst)
     if inst._findqueentask then
         inst._findqueentask:Cancel()
         inst._findqueentask = nil
+    end
+    if not inst:IsFriendly() then
+        return
     end
     inst._findqueentask = inst:DoPeriodicTask(1 + math.random(), TryToFindQueen)
     inst._fleetask = inst:DoTaskInTime(TUNING.BOOK_BEES_MAX_TIME_TO_LINGER, Flee)
@@ -376,24 +378,28 @@ local function OnLostCommander(inst, data)
     end
 end
 
-local function OnNewTarget(inst, data)
-    inst:DoTaskInTime(0, function() 
-        local commander = inst:GetQueen()
-        local target = data.target
+local function CheckBeeQueen(inst, data)
+    local commander = inst:GetQueen()
+    local target = data.target
+    
+    if target ~= nil and commander ~= nil and commander:HasTag("player") and target:HasTag("beequeen") then
+        inst:MakeHostile()
+        commander.components.commander:RemoveSoldier(inst)
+        target.components.commander:AddSoldier(inst)
         
-        if target ~= nil and commander ~= nil and commander:HasTag("player") and target:HasTag("beequeen") then
-            target.components.commander:AddSoldier(inst)
-            
-            inst.components.follower:StopFollowing()
-            inst:RemoveComponent("follower")
-            
-            if target.components.combat:HasTarget() then
-                inst.components.combat:SetTarget(target.components.combat.target)
-            else
-                inst.components.combat:SetTarget(commander)
-            end
+        inst.components.follower:StopFollowing()
+        inst:RemoveComponent("follower")
+        
+        if target.components.combat:HasTarget() then
+            inst.components.combat:SetTarget(target.components.combat.target)
+        else
+            inst.components.combat:SetTarget(commander)
         end
-    end)
+    end
+end
+
+local function OnNewTarget(inst, data)
+    inst:DoTaskInTime(0, CheckBeeQueen, data)
 end
 
 --------------------------------------------------------------------------

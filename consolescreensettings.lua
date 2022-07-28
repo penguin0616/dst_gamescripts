@@ -44,6 +44,15 @@ function ConsoleScreenSettings:AddLastExecutedCommand(command_str, toggle_remote
 	self.dirty = true
 end
 
+function ConsoleScreenSettings:IsWordPredictionWidgetExpanded()
+	return self.persistdata["expanded"] or false
+end
+
+function ConsoleScreenSettings:SetWordPredictionWidgetExpanded(value)
+	self.persistdata["expanded"] = value
+	self.dirty = true
+end
+
 ----------------------------
 
 function ConsoleScreenSettings:GetSaveName()

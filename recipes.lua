@@ -136,7 +136,7 @@ Recipe2("dumbbell_marble",				{Ingredient("marble", 4), Ingredient("twigs", 1)},
 Recipe2("dumbbell_gem",					{Ingredient("thulecite", 2), Ingredient("purplegem", 1), Ingredient("twigs", 1)},				TECH.NONE,				{builder_tag="strongman"})
 
 -- Wickerbottom
-Recipe2("bookstation", {Ingredient("boards", 4), Ingredient("featherpencil", 1), Ingredient("goldnugget", 4), Ingredient("papyrus", 4)}, TECH.NONE, {builder_tag="bookbuilder", placer="bookstation_placer"})
+Recipe2("bookstation", {Ingredient("livinglog", 4), Ingredient("papyrus", 4), Ingredient("featherpencil", 1)}, TECH.NONE, {builder_tag="bookbuilder", placer="bookstation_placer"})
 
 Recipe2("book_horticulture", 	 	  {Ingredient("papyrus", 2), Ingredient("seeds", 5), Ingredient("poop", 5)}, TECH.SCIENCE_ONE,   {builder_tag="bookbuilder"})
 Recipe2("book_horticulture_upgraded", {Ingredient("book_horticulture", 1), Ingredient("featherpencil", 1), Ingredient("papyrus", 2)}, TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
@@ -151,13 +151,13 @@ Recipe2("book_sleep",		 	 {Ingredient("papyrus", 2), Ingredient("nightmarefuel",
 Recipe2("book_brimstone",	 	 {Ingredient("papyrus", 2), Ingredient("redgem", 1)},		  TECH.MAGIC_THREE,   {builder_tag="bookbuilder"})
 Recipe2("book_fire",			 {Ingredient("book_brimstone", 1), Ingredient("featherpencil", 1), Ingredient("papyrus", 2)}, TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
-Recipe2("book_tentacles",	 	 {Ingredient("papyrus", 2), Ingredient("tentaclespots", 1)},					   TECH.SCIENCE_THREE, {builder_tag="bookbuilder"})
-Recipe2("book_web", 			 {Ingredient("papyrus", 2), Ingredient("spidergland", 2), Ingredient("silk", 6)},  TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
+Recipe2("book_tentacles",	 	 {Ingredient("papyrus", 2), Ingredient("tentaclespots", 1)}, TECH.SCIENCE_THREE, {builder_tag="bookbuilder"})
+Recipe2("book_web", 			 {Ingredient("papyrus", 2), Ingredient("silk", 8)},  		 TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
 Recipe2("book_moon", 			 {Ingredient("papyrus", 2),    Ingredient("opalpreciousgem", 1), Ingredient("moonbutterflywings", 2) }, TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 Recipe2("book_light",			 {Ingredient("papyrus", 2),    Ingredient("lightbulb", 2) },   											TECH.NONE, 	  	  	{builder_tag="bookbuilder"})
 Recipe2("book_light_upgraded",	 {Ingredient("book_light", 1), Ingredient("featherpencil", 1),   Ingredient("papyrus", 2)}, 	  		TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
-Recipe2("book_rain", 			 {Ingredient("papyrus", 2),    Ingredient("umbrella", 1), 	     Ingredient("wateringcan", 1)}, 		TECH.NONE, 	  	  	{builder_tag="bookbuilder"})
+Recipe2("book_rain", 			 {Ingredient("papyrus", 2),    Ingredient("goose_feather", 2)}, 		TECH.NONE, 	  	  	{builder_tag="bookbuilder"})
 Recipe2("book_temperature", 	 {Ingredient("papyrus", 2),    Ingredient("heatrock", 1)}, 							 	      			TECH.BOOKCRAFT_ONE, {builder_tag="bookbuilder"})
 
 -- Maxwell
@@ -238,6 +238,7 @@ Recipe2("hammer",							{Ingredient("twigs", 3),Ingredient("rocks", 3), Ingredie
 Recipe2("pitchfork",						{Ingredient("twigs", 2),Ingredient("flint", 2)},												TECH.SCIENCE_ONE)
 Recipe2("razor",							{Ingredient("twigs", 2), Ingredient("flint", 2)},												TECH.SCIENCE_ONE)
 Recipe2("miniflare",						{Ingredient("twigs", 1), Ingredient("cutgrass", 1), Ingredient("nitre", 1)},					TECH.NONE)
+Recipe2("megaflare",						{Ingredient("miniflare", 3), Ingredient("glommerfuel", 1)},										TECH.NONE)
 Recipe2("compass",							{Ingredient("goldnugget", 1), Ingredient("flint", 1)},											TECH.NONE)
 Recipe2("sentryward",						{Ingredient("purplemooneye", 1), Ingredient("compass", 1), Ingredient("boards", 2)},			TECH.MAGIC_TWO,				{placer="sentryward_placer", min_spacing=1.5})
 Recipe2("featherpencil",					{Ingredient("twigs", 1), Ingredient("charcoal", 1), Ingredient("feather_crow", 1)}, 			TECH.SCIENCE_ONE)
@@ -417,6 +418,8 @@ Recipe2("fence_item",						{Ingredient("twigs", 3), Ingredient("rope", 1)},					
 Recipe2("wall_wood_item",					{Ingredient("boards", 2), Ingredient("rope", 1)},														TECH.SCIENCE_ONE,			{numtogive=8})
 Recipe2("wall_stone_item",					{Ingredient("cutstone", 2)},																			TECH.SCIENCE_TWO,			{numtogive=6})
 Recipe2("wall_moonrock_item",				{Ingredient("moonrocknugget", 4)},																		TECH.SCIENCE_TWO,			{numtogive=4})
+
+Recipe2("fence_rotator",					{Ingredient("spear", 1), Ingredient("flint", 2) },														TECH.SCIENCE_TWO)
 
 Recipe2("boat_item", 						{Ingredient("boards", 4)},																				TECH.SEAFARING_ONE)
 Recipe2("boat_grass_item", 					{Ingredient("cutgrass", 8),Ingredient("twigs", 2)},														TECH.NONE)

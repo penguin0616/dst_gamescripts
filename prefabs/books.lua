@@ -96,6 +96,7 @@ local function trygrowth(inst, maximize)
                 return true
             elseif inst.components.growable.domagicgrowthfn ~= nil then
                 if maximize ~= nil then -- The upgraded horticulture book has a delayed start to make sure the plants get tended to first
+                    inst:AddTag("magicgrowth")
                     inst:DoTaskInTime(2, function() inst.components.growable:DoMagicGrowth() end)
                 else
                     inst.components.growable:DoMagicGrowth()
@@ -376,6 +377,7 @@ local book_defs =
                 reader.peruse_sleep(reader)
             end
             reader.components.talker:Say(GetString(reader, "ANNOUNCE_READ_BOOK","BOOK_SLEEP"))
+            inst.SoundEmitter:PlaySound("wickerbottom_rework/book_spells/sleep")
             return true
         end,
     },
@@ -650,7 +652,7 @@ local book_defs =
 
     {
         name = "book_temperature",
-        uses = TUNING.BOOK_USES_SMALL,
+        uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = TUNING.SANITY_LARGE,
         fx = "fx_book_temperature",

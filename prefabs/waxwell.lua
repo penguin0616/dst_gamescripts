@@ -76,9 +76,17 @@ local function OnReroll(inst)
     end
 end
 
+local SHADOWCREATURE_MUST_TAGS = { "shadowcreature", "_combat", "locomotor" }
+local SHADOWCREATURE_CANT_TAGS = { "INLIMBO", "notaunt" }
 local function OnReadFn(inst, book)
     if inst.components.sanity:IsInsane() then
-        TheWorld.components.shadowcreaturespawner:SpawnShadowCreature(inst)
+        
+        local x,y,z = inst.Transform:GetWorldPosition()
+        local ents = TheSim:FindEntities(x, y, z, 16, SHADOWCREATURE_MUST_TAGS, SHADOWCREATURE_CANT_TAGS)
+
+        if #ents < TUNING.BOOK_MAX_SHADOWCREATURES then
+            TheWorld.components.shadowcreaturespawner:SpawnShadowCreature(inst)
+        end
     end
 end
 

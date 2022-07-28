@@ -28,7 +28,7 @@ local function CanCraftIngredient(owner, ing, tech_level)
 	return ing_recipe ~= nil
 		and not owner.replica.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * owner.replica.builder:IngredientMod())), true)
 		and (	owner.replica.builder:KnowsRecipe(ing_recipe) or
-				(CanPrototypeRecipe(ing_recipe.level, tech_level) and owner.replica.builder:CanLearn(ing_recipe))
+				(CanPrototypeRecipe(ing_recipe.level, tech_level) and owner.replica.builder:CanLearn(ing.type))
 			)
 		and owner.replica.builder:HasIngredients(ing_recipe)
 end

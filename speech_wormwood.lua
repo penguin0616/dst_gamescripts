@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -576,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Thank you!",
 
     ANNOUNCE_FLARE_SEEN = "See friend make pretty light.",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Look out friend! Bad things coming!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Water friend?",
 
     --willow specific
@@ -844,6 +855,8 @@ return{
     ANNOUNCE_MONKEY_CURSE_CHANGEBACK = "Was fun!",
 
     ANNOUNCE_PIRATES_ARRIVE = "Hmm? Funny sounds coming...",
+
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
 
 	BATTLECRY =
 	{
@@ -3411,6 +3424,7 @@ return{
         ICEBERG_MELTED = "Oh. Water now", --unimplemented
 
         MINIFLARE = "Makes pretty lights",
+        MEGAFLARE = "Makes big angry light",
 
 		MOON_FISSURE =
 		{
@@ -4578,6 +4592,8 @@ return{
 
 
         BANANAJUICE = "Sweet friend water",
+
+        FENCE_ROTATOR = "Not nice to hit friends",
     },
 
     DESCRIBE_GENERIC = "Friend?",

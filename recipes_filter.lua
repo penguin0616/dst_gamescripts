@@ -485,6 +485,7 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"sewing_kit",
 	"sewing_tape",
 	"miniflare",
+	"megaflare",
 	"wateringcan",
 	"premiumwateringcan",
 	"fishingrod",
@@ -602,6 +603,7 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"waterballoon",
 	"boat_cannon_kit",
 	"cannonball_rock_item",
+	"fence_rotator",
 }
 
 CRAFTING_FILTERS.ARMOUR.recipes =
@@ -801,7 +803,7 @@ CRAFTING_FILTERS.SEAFARING.recipes =
 	"waterpump",
 
 	"boat_magnet_kit",
-	"boat_magnet_beacon",	
+	"boat_magnet_beacon",
 
     "dock_kit",
     "dock_woodposts_item",
