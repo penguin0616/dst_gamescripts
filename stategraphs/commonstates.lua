@@ -1866,3 +1866,28 @@ CommonStates.AddSinkAndWashAsoreStates = function(states, anims, timelines, fns)
         end,
 	})
 end
+
+--------------------------------------------------------------------------
+
+function PlayMiningFX(inst, target, nosound)
+    if target ~= nil and target:IsValid() then
+        local frozen = target:HasTag("frozen")
+        local moonglass = target:HasTag("moonglass")
+        if target.Transform ~= nil then
+            SpawnPrefab(
+                (frozen and "mining_ice_fx") or
+                (moonglass and "mining_moonglass_fx") or
+                "mining_fx"
+            ).Transform:SetPosition(target.Transform:GetWorldPosition())
+        end
+        if not nosound and inst.SoundEmitter ~= nil then
+            inst.SoundEmitter:PlaySound(
+                (frozen and "dontstarve_DLC001/common/iceboulder_hit") or
+                (moonglass and "turnoftides/common/together/moon_glass/mine") or
+                "dontstarve/wilson/use_pick_rock"
+            )
+        end
+    end
+end
+
+--------------------------------------------------------------------------

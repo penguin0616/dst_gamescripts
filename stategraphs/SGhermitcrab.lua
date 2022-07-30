@@ -1247,16 +1247,7 @@ local states =
         {
             TimeEvent(7 * FRAMES, function(inst)
                 if inst.sg.statemem.action ~= nil then
-                    local target = inst.sg.statemem.action.target
-                    if target ~= nil and target:IsValid() then
-                        local frozen = target:HasTag("frozen")
-                        local moonglass = target:HasTag("moonglass")
-                        if target.Transform ~= nil then
-                            local mine_fx = (frozen and "mining_ice_fx") or (moonglass and "mining_moonglass_fx") or "mining_fx"
-                            SpawnPrefab(mine_fx).Transform:SetPosition(target.Transform:GetWorldPosition())
-                        end
-                        inst.SoundEmitter:PlaySound((frozen and "dontstarve_DLC001/common/iceboulder_hit") or (moonglass and "turnoftides/common/together/moon_glass/mine") or "dontstarve/wilson/use_pick_rock")
-                    end
+                    PlayMiningFX(inst, inst.sg.statemem.action.target)
                 end
                 inst:PerformBufferedAction()
             end),

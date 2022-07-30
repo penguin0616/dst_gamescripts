@@ -358,6 +358,9 @@ mushroom_light2_clear_fn = function(inst) basic_clear_fn(inst, "mushroom_light2"
 tent_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "tent" ) end
 tent_clear_fn = function(inst) basic_clear_fn(inst, "tent" ) end
 
+critterlab_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "critterlab" ) end
+critterlab_clear_fn = function(inst) basic_clear_fn(inst, "critterlab" ) end
+
 rainometer_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "rain_meter" ) end
 rainometer_clear_fn = function(inst) basic_clear_fn(inst, "rain_meter" ) end
 
@@ -442,6 +445,16 @@ supertacklecontainer_clear_fn = function(inst) basic_clear_fn(inst, "supertackle
 mermhouse_crafted_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "mermhouse_crafted" ) end
 mermhouse_crafted_clear_fn = function(inst) basic_clear_fn(inst, "mermhouse_crafted" ) end
 
+
+resurrectionstone_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "resurrection_stone" ) end
+resurrectionstone_clear_fn = function(inst) basic_clear_fn(inst, "resurrection_stone" ) end
+
+sanityrock_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "blocker_sanity" ) end
+sanityrock_clear_fn = function(inst) basic_clear_fn(inst, "blocker_sanity" ) end
+
+insanityrock_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "blocker_sanity" ) end
+insanityrock_clear_fn = function(inst) basic_clear_fn(inst, "blocker_sanity" ) end
+
 --------------------------------------------------------------------------
 --[[ rabbithouse skin functions ]]
 --------------------------------------------------------------------------
@@ -508,6 +521,41 @@ wormhole_clear_fn = function(inst)
 end
 
 
+--------------------------------------------------------------------------
+--[[ cave skin functions ]]
+--------------------------------------------------------------------------
+cave_entrance_init_fn = function(inst, build_name)
+    inst.linked_skinname = build_name  --hack that relies on the build name to match the linked skinname --string.gsub(build_name, "cave_entrance_", "cave_entrance_open_")
+    basic_init_fn( inst, build_name, "cave_entrance" )
+end
+cave_entrance_clear_fn = function(inst)
+    inst.linked_skinname = nil
+    basic_clear_fn(inst, "cave_entrance" )
+end
+cave_entrance_open_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "cave_entrance" )
+end
+cave_entrance_open_clear_fn = function(inst)
+    basic_clear_fn(inst, "cave_entrance" )
+end
+cave_exit_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "cave_exit" )
+end
+cave_exit_clear_fn = function(inst)
+    basic_clear_fn(inst, "cave_exit" )
+end
+
+--------------------------------------------------------------------------
+--[[ gravestone skin functions ]]
+--------------------------------------------------------------------------
+gravestone_init_fn = function(inst, build_name)
+    basic_init_fn( inst, build_name, "gravestones" )
+    inst.AnimState:PlayAnimation("grave1")
+end
+gravestone_clear_fn = function(inst)
+    basic_clear_fn(inst, "gravestones" )
+    inst.AnimState:PlayAnimation("grave" .. inst.random_stone_choice)
+end
 
 --------------------------------------------------------------------------
 --[[ siesta hut skin functions ]]

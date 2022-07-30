@@ -2681,10 +2681,8 @@ local fx =
         bank =  "fence_rotator_fx",
         build = "fence_rotator_fx",
         anim =  "idle",
-        sound = "dontstarve/common/deathpoof",
-        fn = function(inst)
-            inst.AnimState:SetSortOrder(0)
-        end
+        sound = "wickerbottom_rework/fence_rotator/use",
+        fn = FinalOffset1,
     },
 }
 

@@ -962,7 +962,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.REMOVEMODULES_FAIL, "removeupgrademodules_fail"),
     ActionHandler(ACTIONS.CHARGE_FROM, "doshortaction"),
 
-    ActionHandler(ACTIONS.ROTATE_FENCE, "attack_prop_pre"),
+    ActionHandler(ACTIONS.ROTATE_FENCE, "doswipeaction"),
 }
 
 local events =
@@ -3354,16 +3354,7 @@ local states =
         {
             TimeEvent(7 * FRAMES, function(inst)
                 if inst.sg.statemem.action ~= nil then
-                    local target = inst.sg.statemem.action.target
-                    if target ~= nil and target:IsValid() then
-                        local frozen = target:HasTag("frozen")
-                        local moonglass = target:HasTag("moonglass")
-                        if target.Transform ~= nil then
-                            local mine_fx = (frozen and "mining_ice_fx") or (moonglass and "mining_moonglass_fx") or "mining_fx"
-                            SpawnPrefab(mine_fx).Transform:SetPosition(target.Transform:GetWorldPosition())
-                        end
-                        inst.SoundEmitter:PlaySound((frozen and "dontstarve_DLC001/common/iceboulder_hit") or (moonglass and "turnoftides/common/together/moon_glass/mine") or "dontstarve/wilson/use_pick_rock")
-                    end
+                    PlayMiningFX(inst, inst.sg.statemem.action.target)
                 end
                 inst:PerformBufferedAction()
             end),
@@ -3495,8 +3486,7 @@ local states =
                     local target = inst.sg.statemem.action.target
                     if target ~= nil and target:IsValid() then
                         if inst.sg.statemem.action.action == ACTIONS.MINE then
-                            SpawnPrefab("mining_fx").Transform:SetPosition(target.Transform:GetWorldPosition())
-                            inst.SoundEmitter:PlaySound(target:HasTag("frozen") and "dontstarve_DLC001/common/iceboulder_hit" or "dontstarve/wilson/use_pick_rock")
+                            PlayMiningFX(inst, target)
                         elseif inst.sg.statemem.action.action == ACTIONS.HAMMER then
                             inst.sg.statemem.rmb = true
                             inst.SoundEmitter:PlaySound("dontstarve/wilson/hit")
@@ -5841,13 +5831,18 @@ local states =
 				inst.sg.statemem.ispocketwatch = true
 				cooldown = 19 * FRAMES
                 if equip:HasTag("shadow_item") then
-	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre_shadow", nil, nil, true)
+                    inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre_shadow")
 					inst.AnimState:Show("pocketwatch_weapon_fx")
 					inst.sg.statemem.ispocketwatch_fueled = true
                 else
-	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre", nil, nil, true)
+                    inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre")
 					inst.AnimState:Hide("pocketwatch_weapon_fx")
                 end
+            elseif equip ~= nil and equip:HasTag("jab") then
+                inst.AnimState:PlayAnimation("spearjab_pre")
+                inst.AnimState:PushAnimation("spearjab", false)
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh")
+                cooldown = 21 * FRAMES
             elseif equip ~= nil and equip.components.weapon ~= nil and not equip:HasTag("punch") then
                 inst.AnimState:PlayAnimation("atk_pre")
                 inst.AnimState:PushAnimation("atk", false)
@@ -5923,6 +5918,58 @@ local states =
         {
             EventHandler("equip", function(inst) inst.sg:GoToState("idle") end),
             EventHandler("unequip", function(inst) inst.sg:GoToState("idle") end),
+        },
+
+        onexit = function(inst)
+            if inst.bufferedaction == inst.sg.statemem.action and
+            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
+                inst:ClearBufferedAction()
+            end
+        end,
+    },
+
+    State{
+        name = "doswipeaction",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("atk_prop_pre")
+            inst.AnimState:PushAnimation("atk_prop", false)
+
+            local buffaction = inst:GetBufferedAction()
+            local target = buffaction ~= nil and buffaction.target or nil
+            if target ~= nil and target:IsValid() then
+                inst:ForceFacePoint(target.Transform:GetWorldPosition())
+            end
+            inst.sg.statemem.action = buffaction
+        end,
+
+        timeline =
+        {
+            TimeEvent(5 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(6 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh")
+            end),
+            TimeEvent(7 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+            TimeEvent(19 * FRAMES, function(inst)
+                inst.sg:GoToState("idle", true)
+            end),
+        },
+
+        events =
+        {
+            EventHandler("equip", function(inst) inst.sg:GoToState("idle") end),
+            EventHandler("unequip", function(inst) inst.sg:GoToState("idle") end),
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
         },
 
         onexit = function(inst)
@@ -7477,7 +7524,8 @@ local states =
                 inst.sg.statemem.ischop = true
                 cooldown = math.max(cooldown, 11 * FRAMES)
             elseif equip ~= nil and equip:HasTag("jab") then
-                inst.AnimState:PlayAnimation("spearjab")
+                inst.AnimState:PlayAnimation("spearjab_pre")
+                inst.AnimState:PushAnimation("spearjab", false)
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, nil, true)
                 cooldown = math.max(cooldown, 21 * FRAMES)
             elseif equip ~= nil and equip.components.weapon ~= nil and not equip:HasTag("punch") then

@@ -1,4 +1,4 @@
-local MAX_SAVED_COMMANDS = 10
+local MAX_SAVED_COMMANDS = 20
 
 ConsoleScreenSettings = Class(function(self)
     self.persistdata = {}

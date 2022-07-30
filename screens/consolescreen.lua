@@ -118,7 +118,7 @@ function ConsoleScreen:OnRawKeyHandler(key, down)
 			self.console_edit:SetString( CONSOLE_HISTORY[ self.history_idx ] )
 			self:ToggleRemoteExecute( CONSOLE_LOCALREMOTE_HISTORY[self.history_idx] )
 			if BRANCH == "dev" then
-				self.console_history:Show(CONSOLE_HISTORY, self.history_idx)
+				self.console_history:Show(CONSOLE_HISTORY, CONSOLE_LOCALREMOTE_HISTORY, self.history_idx)
 			end
 			self.console_edit.inst:PushEvent("onconsolehistoryupdated")
 		end
@@ -135,7 +135,7 @@ function ConsoleScreen:OnRawKeyHandler(key, down)
 					self.console_edit:SetString( CONSOLE_HISTORY[ self.history_idx ] )
 					self:ToggleRemoteExecute( CONSOLE_LOCALREMOTE_HISTORY[self.history_idx] )
 					if BRANCH == "dev" then
-						self.console_history:Show(CONSOLE_HISTORY, self.history_idx)
+						self.console_history:Show(CONSOLE_HISTORY, CONSOLE_LOCALREMOTE_HISTORY, self.history_idx)
 					end
 					self.console_edit.inst:PushEvent("onconsolehistoryupdated")
 				end
@@ -191,6 +191,15 @@ local function DoRun(inst, self)
 end
 
 function ConsoleScreen:OnTextEntered()
+	if BRANCH == "dev" then
+		if self.console_history:IsVisible() then
+			self.console_history:Hide()
+			self.console_edit:SetFocus()
+			self.console_edit:SetEditing(true)
+			return
+		end
+	end
+
     if self.runtask ~= nil then
         self.runtask:Cancel()
 	end
@@ -291,7 +300,7 @@ function ConsoleScreen:DoInit()
 
 	if BRANCH == "dev" then
 		-- Setup console history display
-		self.console_history = self.console_edit:AddChild(ConsoleHistoryWidget(self.console_edit, 800, Profile:GetConsoleAutocompleteMode()))
+		self.console_history = self.console_edit:AddChild(ConsoleHistoryWidget(self.console_edit, self.console_remote_execute, 800, Profile:GetConsoleAutocompleteMode()))
 		local sx, sy = self.console_edit:GetRegionSize()
 		self.console_history:SetPosition(-sx * 0.5, sy * 0.5 + 5)
 		self.console_history:Hide()
@@ -305,6 +314,17 @@ function ConsoleScreen:DoInit()
 	if CONSOLE_LOCALREMOTE_HISTORY and #CONSOLE_LOCALREMOTE_HISTORY <= 0 then
 		shallowcopy(ConsoleScreenSettings:GetConsoleLocalRemoteHistory(), CONSOLE_LOCALREMOTE_HISTORY)
 	end
+
+	local function onhistoryupdated(inst, index)
+		if index == nil then
+			return
+		end
+		self.history_idx = index
+		self.console_edit:SetString( CONSOLE_HISTORY[ self.history_idx ] )
+		self:ToggleRemoteExecute( CONSOLE_LOCALREMOTE_HISTORY[ self.history_idx ] )
+	end
+
+	self.console_edit.inst:ListenForEvent("onhistoryupdated", onhistoryupdated)
 end
 
 return ConsoleScreen

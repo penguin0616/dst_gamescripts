@@ -33,6 +33,10 @@ local function SetupHudIndicator(inst) -- client code
 	inst:ListenForEvent("onremove", RemoveHudIndicator)
 end
 
+local function ClearCooldown(inst)
+    inst._megaflarecooldown = nil
+end
+
 local function show_flare_hud(inst)
     -- While we don't access the HUD directly, we're trying to send a HUD event,
     -- so if the HUD isn't there we don't need to do any work.
@@ -56,7 +60,10 @@ local function show_flare_hud(inst)
                         TUNING.MINIFLARE.BASE_VOLUME + (1 - Remap(sq_dist_to_flare, near_audio_gate_distsq, far_audio_gate_distsq, 0, 1)) * (1-TUNING.MINIFLARE.BASE_VOLUME)
                     )
                 or 1.0
-        inst.SoundEmitter:PlaySound("turnoftides/common/together/miniflare/explode", nil, volume)
+            if ThePlayer._megaflarecooldown == nil then
+            inst.SoundEmitter:PlaySound("wickerbottom_rework/megaflare/explode", nil, volume)
+            ThePlayer._megaflarecooldown = ThePlayer:DoTaskInTime(0.1, ClearCooldown)
+            end
     end
 end
 

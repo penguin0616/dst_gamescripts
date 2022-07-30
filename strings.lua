@@ -262,7 +262,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "December 6" },
             { title = "Favorite Food", desc = "Surf 'n' Turf" },
-			{ title = "Her Past...", desc = "Is yet to be revealed." },
+			{ title = "One For the Books", desc = "When people meet Ms. Wickerbottom, most assume that what you see is what you get. She certainly looks every bit the typical librarian that she claims to be, as at home amongst the bookstacks as any creature in their native habitat. Nobody would raise an eyebrow at such a person being well-versed in a wide range of subjects. Who would spare a second thought if, upon further inquiry, her knowledge rivaled that of experts? And obviously, no one would think of questioning what a librarian might be involved in after hours, when the library doors are closed to the public..." },
 		},
         wes =
 		{

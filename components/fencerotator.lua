@@ -8,7 +8,11 @@ function FenceRotator:Rotate(target, delta)
     end
 
     local angle = target.Transform:GetRotation()
-    target.Transform:SetRotation(angle + (delta or TUNING.FENCE_DEFAULT_ROTATION))
+    if target.SetOrientation ~= nil then
+        target.SetOrientation(target, angle + (delta or TUNING.FENCE_DEFAULT_ROTATION))
+    else
+        target.Transform:SetRotation(angle + (delta or TUNING.FENCE_DEFAULT_ROTATION))
+    end
 
     self.inst:PushEvent("fencerotated")
 

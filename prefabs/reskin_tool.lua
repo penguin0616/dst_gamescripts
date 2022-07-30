@@ -152,6 +152,14 @@ local function spellCB(tool, target, pos)
                     if other ~= nil then
                         TheSim:ReskinEntity( other.GUID, other.skinname, cached_skin, nil, userid )
                     end
+                elseif string.find( target.prefab, "cave_" ) ~= nil then
+                    if target.components.worldmigrator:IsLinked() and Shard_IsWorldAvailable(target.components.worldmigrator.linkedWorld) then
+                        local skin_theme = ""
+                        if target.skinname ~= nil then
+                            skin_theme = string.sub( target.skinname, string.len(target.prefab) + 2 )
+                        end
+                        SendRPCToShard(SHARD_RPC.ReskinWorldMigrator, target.components.worldmigrator.linkedWorld, target.components.worldmigrator.id, skin_theme, userid)
+                    end
                 end
             end
         end

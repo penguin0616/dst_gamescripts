@@ -4527,7 +4527,7 @@ return{
         BOAT_BUMPER_SHELL_KIT = "But idle hands are such good playthings!",
         BOAT_CANNON = {
             GENERIC = "Rounded stones are required for this cannon to fire.",
-            AMMOLOADED = "Ready to fire, but decidedly unready to brimstone.",
+            AMMOLOADED = "Ready to fire and brimstone!",
             NOAMMO = "This cannon cannot fire.",
         },
         BOAT_CANNON_KIT = "I'll build it quick, then put it on the ship.",

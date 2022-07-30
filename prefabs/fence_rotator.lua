@@ -1,7 +1,6 @@
 local assets =
 {
     Asset("ANIM", "anim/fence_rotator.zip"),
-    Asset("ANIM", "anim/fence_rotator_fx.zip"),
 }
 
 local prefabs =
@@ -58,6 +57,8 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst.components.floater:SetBankSwapOnFloat(true, -9, { sym_build = "fence_rotator", sym_name = "swap_fence_rotator" })
 
     inst:AddComponent("finiteuses")
     inst.components.finiteuses:SetMaxUses(TUNING.FENCE_ROTATOR_USES)

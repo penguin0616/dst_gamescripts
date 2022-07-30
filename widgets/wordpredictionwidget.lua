@@ -14,6 +14,17 @@ local PADDING = 10
 
 local MAX_ROWS = 5
 
+-- Override functions for the scroll arrows; we want them to eat clicks to avoid closing the entire widget when reaching the beginning/end
+local function EnableButton(inst)
+	inst:SetImageNormalColour(UICOLOURS.GOLD)
+	inst.button_enabled = true
+end
+
+local function DisableButton(inst)
+	inst:SetImageNormalColour(UICOLOURS.GREY)
+	inst.button_enabled = false
+end
+
 local WordPredictionWidget = Class(Widget, function(self, text_edit, max_width, mode)
     Widget._ctor(self, "WordPredictionWidget")
 
@@ -62,33 +73,43 @@ local WordPredictionWidget = Class(Widget, function(self, text_edit, max_width, 
 
 	self.scrollleft_btn = root:AddChild(ImageButton("images/ui.xml", "arrow2_left.tex"))
 	self.scrollleft_btn:SetOnClick(function()
+		if not self.scrollleft_btn.button_enabled then
+			return
+		end
 		self.start_index = self.start_index - 1
 		if self.start_index <= 1 then
-			self.scrollleft_btn:Hide()
+			self.scrollleft_btn:DisableButton()
 		end
 		self:RefreshPredictions()
 	end)
 	self.scrollleft_btn:SetNormalScale(0.3)
 	self.scrollleft_btn:SetFocusScale(0.4)
-	self.scrollleft_btn:SetImageNormalColour(UICOLOURS.GREY)
+	self.scrollleft_btn:SetImageNormalColour(UICOLOURS.GOLD)
 	self.scrollleft_btn:SetImageFocusColour(UICOLOURS.WHITE)
 	self.scrollleft_btn:SetPosition(-60, 0)
 	self.scrollleft_btn:SetHoverText(STRINGS.UI.WORDPREDICTIONWIDGET.PREV)
-	self.scrollleft_btn:Hide()
+	self.scrollleft_btn.EnableButton = EnableButton
+	self.scrollleft_btn.DisableButton = DisableButton
+	self.scrollleft_btn:DisableButton()
 
 	self.scrollright_btn = root:AddChild(ImageButton("images/ui.xml", "arrow2_right.tex"))
 	self.scrollright_btn:SetOnClick(function()
+		if not self.scrollright_btn.button_enabled then
+			return
+		end
 		self.start_index = self.start_index + 1
-		self.scrollleft_btn:Show()
+		self.scrollleft_btn:EnableButton()
 		self:RefreshPredictions()
 	end)
 	self.scrollright_btn:SetNormalScale(0.3)
 	self.scrollright_btn:SetFocusScale(0.4)
-	self.scrollright_btn:SetImageNormalColour(UICOLOURS.GREY)
+	self.scrollright_btn:SetImageNormalColour(UICOLOURS.GOLD)
 	self.scrollright_btn:SetImageFocusColour(UICOLOURS.WHITE)
 	self.scrollright_btn:SetPosition(-30, 0)
 	self.scrollright_btn:SetHoverText(STRINGS.UI.WORDPREDICTIONWIDGET.NEXT)
-	self.scrollright_btn:Hide()
+	self.scrollright_btn.EnableButton = EnableButton
+	self.scrollright_btn.DisableButton = DisableButton
+	self.scrollright_btn:DisableButton()
 
 	local function Expand()
 		self.expanded = not self.expanded
@@ -108,7 +129,7 @@ local WordPredictionWidget = Class(Widget, function(self, text_edit, max_width, 
 	self.expand_btn:SetOnClick(Expand)
 	self.expand_btn:SetNormalScale(0.3)
 	self.expand_btn:SetFocusScale(0.4)
-	self.expand_btn:SetImageNormalColour(UICOLOURS.GREY)
+	self.expand_btn:SetImageNormalColour(UICOLOURS.GOLD)
 	self.expand_btn:SetImageFocusColour(UICOLOURS.WHITE)
 	self.expand_btn:SetPosition(self.max_width + PADDING, 0)
 	self.expand_btn:SetHoverText(STRINGS.UI.WORDPREDICTIONWIDGET.EXPAND)
@@ -211,8 +232,8 @@ function WordPredictionWidget:RefreshPredictions(reset)
 
 	if reset then
 		self.start_index = 1
-		self.scrollleft_btn:Hide()
-		self.scrollright_btn:Hide()
+		self.scrollleft_btn:DisableButton()
+		self.scrollright_btn:DisableButton()
 	end
 
 	if self.word_predictor.prediction ~= nil then
@@ -281,7 +302,8 @@ function WordPredictionWidget:RefreshPredictions(reset)
 						offset_y = offset_y + backing_height
 						btn:SetPosition(sx * 0.5 + offset_x, offset_y)
 					else
-						self.scrollright_btn:Show()
+						self.scrollright_btn:EnableButton()
+						--self.scrollright_btn:SetImageNormalColour(UICOLOURS.GOLD)
 						btn:Kill()
 						break
 					end
@@ -297,7 +319,7 @@ function WordPredictionWidget:RefreshPredictions(reset)
 				end
 
 				if i == #prediction.matches then
-					self.scrollright_btn:Hide()
+					self.scrollright_btn:DisableButton()
 				end
 			end
 		end
@@ -309,8 +331,11 @@ function WordPredictionWidget:RefreshPredictions(reset)
 		end
 
 		self.backing:SetSize(backing_width, backing_height * num_rows)
-		self.backing:SetPosition(-5, backing_height * (num_rows - 1) * 0.5)
-		TheFrontEnd:SetConsoleLogPosition(0, (backing_height + self.sizey) * (num_rows - 1), 0)
+		local pos = backing_height * (num_rows - 1)
+		self.backing:SetPosition(-5, pos * 0.5)
+
+		local scale = self.backing:GetScale()
+		TheFrontEnd:SetConsoleLogPosition(0, pos * scale.y + PADDING, 0)
 	else
 		self:Hide()
 		self:Disable()

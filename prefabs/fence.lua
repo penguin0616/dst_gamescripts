@@ -556,6 +556,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         inst.Physics:SetDontRemoveOnSleep(true)
 
         inst:AddTag("wall")
+        inst:AddTag("fence")
         inst:AddTag("alignwall")
         inst:AddTag("noauradamage")
 
@@ -660,6 +661,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         inst.OnSave = onsave
         inst.OnLoad = onload
         inst.OnLoadPostPass = onloadpostpass
+        inst.SetOrientation = SetOrientation
 
         return inst
     end

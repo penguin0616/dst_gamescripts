@@ -1051,6 +1051,17 @@ end
 --these rpc's don't need special verification because server<->server communication is already trusted.
 local SHARD_RPC_HANDLERS =
 {
+    ReskinWorldMigrator = function(shardid, migrator, skin_theme, userid)
+        for i,v in ipairs(ShardPortals) do
+            if v.components.worldmigrator.id == migrator then
+                local skinname = nil
+                if skin_theme ~= "" then
+                    skinname = v.prefab.."_"..skin_theme
+                end
+                TheSim:ReskinEntity( v.GUID, v.skinname, skinname, nil, userid )
+            end
+        end
+    end,
 }
 
 SHARD_RPC = {}

@@ -584,7 +584,7 @@ local actionhandlers =
     ActionHandler(ACTIONS.REMOVEMODULES_FAIL, "removeupgrademodules_fail"),
     ActionHandler(ACTIONS.CHARGE_FROM, "doshortaction"),
 
-    ActionHandler(ACTIONS.ROTATE_FENCE, "attack_prop_pre"),
+    ActionHandler(ACTIONS.ROTATE_FENCE, "doswipeaction"),
 }
 
 local events =
@@ -2305,13 +2305,9 @@ local states =
 				inst.AnimState:PlayAnimation("pocketwatch_atk_pre" )
 				inst.AnimState:PushAnimation("pocketwatch_atk_lag", false)
 				inst.sg.statemem.ispocketwatch = true
-                if equip:HasTag("shadow_item") then
-	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre_shadow", nil, nil, true)
-					inst.AnimState:Show("pocketwatch_weapon_fx")
-                else
-	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre", nil, nil, true)
-					inst.AnimState:Hide("pocketwatch_weapon_fx")
-                end
+            elseif equip ~= nil and equip:HasTag("jab") then
+                inst.AnimState:PlayAnimation("spearjab_pre")
+                inst.AnimState:PushAnimation("spearjab_lag", false)
             elseif equip ~= nil and
                 equip.replica.inventoryitem ~= nil and
                 equip.replica.inventoryitem:IsWeapon() and
@@ -2361,6 +2357,41 @@ local states =
                 if inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch then
                     inst.sg:RemoveStateTag("busy")
                 end
+            end),
+        },
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.sg:GoToState("idle")
+        end,
+    },
+
+    State{
+        name = "doswipeaction",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("atk_prop_pre")
+            inst.AnimState:PushAnimation("atk_prop_lag", false)
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        timeline =
+        {
+            TimeEvent(5 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
             end),
         },
 
@@ -3651,6 +3682,13 @@ local states =
                 inst.AnimState:PushAnimation("woodie_chop_loop", false)
                 inst.sg.statemem.ischop = true
                 cooldown = math.max(cooldown, 11 * FRAMES)
+            elseif equip ~= nil and equip:HasTag("jab") then
+                inst.AnimState:PlayAnimation("spearjab_pre")
+                inst.AnimState:PushAnimation("spearjab", false)
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, nil, true)
+                if cooldown > 0 then
+                    cooldown = math.max(cooldown, 21 * FRAMES)
+                end
             elseif equip ~= nil and
                 equip.replica.inventoryitem ~= nil and
                 equip.replica.inventoryitem:IsWeapon() and
@@ -3711,12 +3749,6 @@ local states =
                 )
                 if cooldown > 0 then
                     cooldown = math.max(cooldown, 15 * FRAMES)
-                end
-            elseif equip ~= nil and equip:HasTag("jab") then
-                inst.AnimState:PlayAnimation("spearjab", false)
-                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, nil, true)
-                if cooldown > 0 then
-                    cooldown = math.max(cooldown, 21 * FRAMES)
                 end
             else
                 inst.AnimState:PlayAnimation("punch")

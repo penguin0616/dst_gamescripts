@@ -84,13 +84,13 @@ end
 local function UpdateCampOccupied(inst)
     if inst.data.occupied then
         if not TheWorld.state.iswinter then
-            for k,v in pairs(inst.data.children) do
+            for k in pairs(inst.data.children) do
                 if k:IsValid() and not k:IsAsleep() then
                     -- don't go away while there are children alive in the world
                     return
                 end
             end
-            for k,v in pairs(inst.data.children) do
+            for k in pairs(inst.data.children) do
                 k:Remove()
             end
             inst.data.children = {}
@@ -101,15 +101,28 @@ local function UpdateCampOccupied(inst)
     end
 end
 
+local function StopTrackingMember(inst, member)
+    local callbacks = inst.data.children[member]
+    if callbacks ~= nil then
+        inst:RemoveEventCallback("death", callbacks.onmemberkilled, member)
+        inst:RemoveEventCallback("onremove", callbacks.onmemberkilled, member)
+        inst:RemoveEventCallback("newcombattarget", callbacks.onmembernewtarget, member)
+        inst:RemoveEventCallback("despawnedfromhaunt", callbacks.ondespawnedfromhaunt, member)
+        inst:RemoveEventCallback("detachchild", callbacks.ondetachchild, member)
+
+        inst.data.children[member] = nil
+    end
+end
+
 local function RemoveMember(inst, member)
-    inst.data.children[member] = nil
+    StopTrackingMember(inst, member)
 
     if inst:IsAsleep() then
         UpdateCampOccupied(inst)
     end
 end
 
-local function OnMemberKilled(inst, member, data)
+local function OnMemberKilled(inst, member)
     if inst.components.worldsettingstimer:ActiveTimerExists(member.prefab) then
         inst.components.worldsettingstimer:StopTimer(member.prefab)
     end
@@ -121,34 +134,34 @@ end
 
 local OnMemberNewTarget -- forward declaration
 local DespawnedFromHaunt
-local DetachChild
 
 local function TrackMember(inst, member)
-    inst.data.children[member] = true
-    inst:ListenForEvent("death", function(...) OnMemberKilled(inst, ...) end, member)
-    inst:ListenForEvent("newcombattarget", function(...) OnMemberNewTarget(inst, ...) end, member)
-    inst:ListenForEvent("despawnedfromhaunt", function(member, data) DespawnedFromHaunt(inst,member,data) end, member)
-    inst:ListenForEvent("detachchild", function(member) DetachChild(inst, member) end, member)
+    if inst.data.children[member] == nil then
+        local callbacks =
+        {
+            onmemberkilled = function(member) OnMemberKilled(inst, member) end,
+            onmembernewtarget = function(member, data) OnMemberNewTarget(inst, member, data) end,
+            ondespawnedfromhaunt = function(member, data) DespawnedFromHaunt(inst, member, data) end,
+            ondetachchild = function(member) RemoveMember(inst, member) end,
+        }
+        inst.data.children[member] = callbacks
 
-    if not member.components.homeseeker then
+        inst:ListenForEvent("death", callbacks.onmemberkilled, member)
+        inst:ListenForEvent("onremove", callbacks.onmemberkilled, member)
+        inst:ListenForEvent("newcombattarget", callbacks.onmembernewtarget, member)
+        inst:ListenForEvent("despawnedfromhaunt", callbacks.ondespawnedfromhaunt, member)
+        inst:ListenForEvent("detachchild", callbacks.ondetachchild, member)
+    end
+
+    if member.components.homeseeker == nil then
         member:AddComponent("homeseeker")
     end
     member.components.homeseeker:SetHome(inst)
 end
 
-DetachChild = function(inst, oldchild)
-    inst.data.children[oldchild] = nil
-
-    if inst:IsAsleep() then
-        UpdateCampOccupied(inst)
-    end
-end
-
 DespawnedFromHaunt = function(inst, oldchild, data)
-    local newchild = data.newPrefab
-
-    inst.data.children[oldchild] = nil
-    TrackMember(inst, newchild)
+    StopTrackingMember(inst, oldchild)
+    TrackMember(inst, data.newPrefab)
 
     if inst:IsAsleep() then
         UpdateCampOccupied(inst)
@@ -164,7 +177,7 @@ local function SpawnMember(inst, prefab)
 end
 
 local function GetMember(inst, prefab)
-    for k,v in pairs(inst.data.children) do
+    for k in pairs(inst.data.children) do
         if k.prefab == prefab then
             return k
         end
@@ -173,7 +186,7 @@ end
 
 local function GetMembers(inst, prefab)
     local members = {}
-    for k,v in pairs(inst.data.children) do
+    for k in pairs(inst.data.children) do
         if k.prefab == prefab then
             table.insert(members, k)
         end
@@ -284,7 +297,7 @@ end
 local function OnSave(inst, data)
     data.children = {}
 
-    for k,v in pairs(inst.data.children) do
+    for k in pairs(inst.data.children) do
         table.insert(data.children, k.GUID)
     end
 
@@ -298,7 +311,6 @@ local function OnSave(inst, data)
 end
 
 local function OnLoad(inst, data)
-
     if data then
     --children loaded by OnLoadPostPass
         if data.occupied ~= nil then
@@ -339,7 +351,7 @@ local function OnMegaFlare(inst, data)
 
             -- ARE THE HUNTERS ENGAGED ALREADY?
             if inst.data.children then
-                for k,v in pairs(inst.data.children) do
+                for k in pairs(inst.data.children) do
                     if k:IsValid() then
                         party_active = true
 
@@ -388,7 +400,7 @@ local function OnMegaFlare(inst, data)
 
             -- SPAWN THEM IN
             if party_active and spawnpoint and not engaged and math.random() < 0.6 then
-                for k,v in pairs(inst.data.children) do
+                for k in pairs(inst.data.children) do
                     local players = FindPlayersInRange(spawnpoint.x,spawnpoint.y,spawnpoint.z, 40)
                     k.Transform:SetPosition(spawnpoint.x,spawnpoint.y,spawnpoint.z)
                     k.components.combat:SuggestTarget(players[1])
