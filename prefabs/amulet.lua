@@ -115,47 +115,37 @@ local function onunequip_green(inst, owner)
 end
 
 ---ORANGE
-local ORANGE_PICKUP_MUST_TAGS = { "_inventoryitem" }
-local ORANGE_PICKUP_CANT_TAGS = { "INLIMBO", "NOCLICK", "knockbackdelayinteraction", "catchable", "fire", "minesprung", "mineactive", "spider", "cursed", "paired" }
 local function pickup(inst, owner)
-    if owner == nil or owner.components.inventory == nil then
+    local item = FindPickupableItem(owner, TUNING.ORANGEAMULET_RANGE, false)
+    if item == nil then
         return
     end
-    local x, y, z = owner.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.ORANGEAMULET_RANGE, ORANGE_PICKUP_MUST_TAGS, ORANGE_PICKUP_CANT_TAGS)
-    local ba = owner:GetBufferedAction()
-    for i, v in ipairs(ents) do
-        if v.components.inventoryitem ~= nil and
-            v.components.inventoryitem.canbepickedup and
-            v.components.inventoryitem.cangoincontainer and
-            not v.components.inventoryitem:IsHeld() and
-            owner.components.inventory:CanAcceptCount(v, 1) > 0 and
-            (ba == nil or ba.action ~= ACTIONS.PICKUP or ba.target ~= v) then
 
-            if owner.components.minigame_participator ~= nil then
-                local minigame = owner.components.minigame_participator:GetMinigame()
-                if minigame ~= nil then
-                    minigame:PushEvent("pickupcheat", { cheater = owner, item = v })
-                end
-            end
+    local didpickup = false
+    if item.components.trap ~= nil then
+        item.components.trap:Harvest(owner)
+        didpickup = true
+    end
 
-            --Amulet will only ever pick up items one at a time. Even from stacks.
-            SpawnPrefab("sand_puff").Transform:SetPosition(v.Transform:GetWorldPosition())
-
-            inst.components.finiteuses:Use(1)
-
-            local v_pos = v:GetPosition()
-            if v.components.stackable ~= nil then
-                v = v.components.stackable:Get()
-            end
-
-            if v.components.trap ~= nil and v.components.trap:IsSprung() then
-                v.components.trap:Harvest(owner)
-            else
-                owner.components.inventory:GiveItem(v, nil, v_pos)
-            end
-            return
+    if owner.components.minigame_participator ~= nil then
+        local minigame = owner.components.minigame_participator:GetMinigame()
+        if minigame ~= nil then
+            minigame:PushEvent("pickupcheat", { cheater = owner, item = item })
         end
+    end
+
+    --Amulet will only ever pick up items one at a time. Even from stacks.
+    SpawnPrefab("sand_puff").Transform:SetPosition(item.Transform:GetWorldPosition())
+
+    inst.components.finiteuses:Use(1)
+
+    if not didpickup then
+        local item_pos = item:GetPosition()
+        if item.components.stackable ~= nil then
+            item = item.components.stackable:Get()
+        end
+
+        owner.components.inventory:GiveItem(item, nil, item_pos)
     end
 end
 

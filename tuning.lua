@@ -6128,6 +6128,7 @@ function Tune(overrides)
         POLLY_ROGERS_RUN_SPEED= 10,
         POLLY_ROGERS_MAX_HEALTH= 50,
         POLLY_ROGERS_SPAWN_TIME = total_day_time * 1,
+        POLLY_ROGERS_RANGE = 15,
 
         PIRATESPAWNER_BASEPIRATECHANCE = 5*day_time,
         PIRATESPAWNER = {

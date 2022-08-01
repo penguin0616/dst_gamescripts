@@ -3,8 +3,10 @@ require("stategraphs/commonstates")
 local actionhandlers =
 {
     ActionHandler(ACTIONS.GIVE, "give"),
-    ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),    
+    ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),
+    ActionHandler(ACTIONS.DROP, "give"),
     ActionHandler(ACTIONS.PICKUP, "take"),
+    ActionHandler(ACTIONS.CHECKTRAP, "take"),
 }
 
 local events=

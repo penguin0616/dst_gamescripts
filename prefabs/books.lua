@@ -577,7 +577,8 @@ local book_defs =
                             fire_count = fire_count + 0.5
                         end
 
-                        fire.components.burnable:Extinguish()
+                        -- Extinguish smoldering/fire and reset the propagator to a heat of .2
+                        fire.components.burnable:Extinguish(true, 0)
                     end
                 end
                 

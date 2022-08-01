@@ -582,6 +582,16 @@ function Inventory:GetItemInSlot(slot)
     return self.itemslots[slot]
 end
 
+function Inventory:GetFirstItemInAnySlot()
+    for k = 1, self.maxslots do
+        local item = self.itemslots[k]
+        if item then
+            return item
+        end
+    end
+    return nil
+end
+
 function Inventory:IsFull()
     for k = 1, self.maxslots do
         if not self.itemslots[k] then

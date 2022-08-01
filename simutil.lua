@@ -324,6 +324,44 @@ function FindSwimmableOffset(position, start_angle, radius, attempts, check_los,
             end)
 end
 
+local PICKUP_MUST_TAGS = { "_inventoryitem" }
+local PICKUP_CANT_TAGS = {
+    "INLIMBO", "NOCLICK", "irreplaceable", "knockbackdelayinteraction",
+    "minesprung", "mineactive", "catchable",
+    "fire", "spider", "cursed", "paired", "bundle"
+}
+-- This function looks for an item on the ground that could be ACTIONS.PICKUP (or ACTIONS.CHECKTRAP if a trap) by the owner and subsequently put into the owner's inventory.
+function FindPickupableItem(owner, radius, furthestfirst)
+    if owner == nil or owner.components.inventory == nil then
+        return nil
+    end
+    local ba = owner:GetBufferedAction()
+    local x, y, z = owner.Transform:GetWorldPosition()
+    local ents = TheSim:FindEntities(x, y, z, radius, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
+    local istart, iend, idiff = 1, #ents, 1
+    if furthestfirst then
+        istart, iend, idiff = iend, istart, -1
+    end
+    for i = istart, iend, idiff do
+        local v = ents[i]
+        if v.components.container == nil and -- Containers are most likely sorted and placed by the player do not pick them up.
+            v.components.bundlemaker == nil and -- Bundle creators are aesthetically placed do not pick them up.
+            v.components.inventoryitem ~= nil and
+            v.components.inventoryitem.canbepickedup and
+            v.components.inventoryitem.cangoincontainer and
+            not v.components.inventoryitem:IsHeld() and
+            (v.components.bait == nil or v.components.bait.trap == nil) and -- Do not steal baits.
+            owner.components.inventory:CanAcceptCount(v, 1) > 0 and -- TODO(JBK): This is not correct for traps but they do not have real prefabs made yet to check against.
+            (ba == nil or (ba.action ~= ACTIONS.PICKUP and ba.action ~= ACTIONS.CHECKTRAP) or ba.target ~= v) then
+            -- Only interact with traps that have something in it to take.
+            if v.components.trap == nil or v.components.trap:IsSprung() and v.components.trap:HasLoot() then
+                return v
+            end
+        end
+    end
+    return nil
+end
+
 local function _CanEntitySeeInDark(inst)
     if inst.components.playervision ~= nil then
         --component available on clients as well,
