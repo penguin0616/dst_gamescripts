@@ -3,8 +3,10 @@ require("stategraphs/commonstates")
 local actionhandlers =
 {
     ActionHandler(ACTIONS.GIVE, "give"),
-    ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),    
+    ActionHandler(ACTIONS.GIVEALLTOPLAYER, "give"),
+    ActionHandler(ACTIONS.DROP, "give"),
     ActionHandler(ACTIONS.PICKUP, "take"),
+    ActionHandler(ACTIONS.CHECKTRAP, "take"),
 }
 
 local events=
@@ -43,23 +45,23 @@ local states=
     State{
         name = "idle",
         tags = {"idle", "canrotate"},
-        onenter = function(inst, pushanim)
-
+        onenter = function(inst)
             inst.AnimState:PlayAnimation("idle", true)
-            inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/flap_lp", "fly_lp")
+            if not inst.SoundEmitter:PlayingSound("fly_lp") then
+                inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/flap_lp", "fly_lp")
+            end
 
-            inst.sg:SetTimeout(1 + math.random())
+            --inst.sg:SetTimeout(1 + math.random())
         end,
 
-        ontimeout = function(inst)
-        local x,y,z = inst.Transform:GetWorldPosition()
-
+        --[[ontimeout = function(inst)
+            local x,y,z = inst.Transform:GetWorldPosition()
             if TheWorld.Map:IsVisualGroundAtPoint(x,y,z) or TheWorld.Map:GetPlatformAtPoint(x,z) then
                 --inst.SoundEmitter:KillSound("fly_lp")
             else
                 inst.sg:GoToState("idle")
             end
-        end,
+        end,]]
     },
 
     State{
@@ -78,10 +80,12 @@ local states=
 
         events=
         {
-            EventHandler("animover", function (inst, data)
-                inst.sg:GoToState("idle") 
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle") 
+                end
             end),
-        }
+        },
     },
 
     State{
@@ -100,10 +104,12 @@ local states=
 
         events=
         {
-            EventHandler("animover", function (inst, data)
-                inst.sg:GoToState("idle")
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
             end),
-        }
+        },
     },    
 
     State{
@@ -116,26 +122,28 @@ local states=
                     inst.AnimState:PlayAnimation(pushanim)
                 end
                 inst.AnimState:PushAnimation("idle_ground", true)
-            else
+            elseif not inst.AnimState:IsCurrentAnimation("idle_ground") then
                 inst.AnimState:PlayAnimation("idle_ground", true)
             end
             inst.sg:SetTimeout(1 + math.random())
         end,
 
         ontimeout = function(inst)
+            inst.sg.statemem.stayonground = true
             local r = math.random()
-
-                inst.sg:GoToState(
-                    (r < .5 and "idle_ground") or
-                    (r < .6 and "switch") or
-                    (r < .7 and "peck") or
-                    (r < .8 and "hop") or
-                    "caw"
-                )
+            inst.sg:GoToState(
+                (r < .5 and "idle_ground") or
+                (r < .6 and "switch") or
+                (r < .7 and "peck") or
+                (r < .8 and "hop") or
+                "caw"
+            )
         end,
 
         onexit = function(inst)
-            inst:AddTag("flying")
+            if not inst.sg.statemem.stayonground then
+                inst:AddTag("flying")
+            end
         end,
     },
 
@@ -147,14 +155,21 @@ local states=
             inst.AnimState:PlayAnimation("peck")
         end,
 
-        onexit = function(inst)
-            inst:AddTag("flying")
-        end,
-
-        events=
+        events =
         {
-            EventHandler("animover", function (inst, data) inst.sg:GoToState("idle_ground") end),
-        }
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg.statemem.stayonground = true
+                    inst.sg:GoToState("idle_ground")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.stayonground then
+                inst:AddTag("flying")
+            end
+        end,
     },
 
     State{
@@ -166,15 +181,22 @@ local states=
             inst.AnimState:PlayAnimation("switch")
         end,
 
-        onexit = function(inst)
-            inst:AddTag("flying")
-        end,
-
-        events=
+        events =
         {
-            EventHandler("animover", function (inst, data) inst.sg:GoToState("idle_ground") end),
-        }
-    },    
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg.statemem.stayonground = true
+                    inst.sg:GoToState("idle_ground")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.stayonground then
+                inst:AddTag("flying")
+            end
+        end,
+    },
 
     State{
         name = "hop",
@@ -198,16 +220,21 @@ local states=
             end),
         },
 
-        onexit = function(inst)
-            inst:AddTag("flying")
-        end,
-
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle_ground")
+                if inst.AnimState:AnimDone() then
+                    inst.sg.statemem.stayonground = true
+                    inst.sg:GoToState("idle_ground")
+                end
             end),
         },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.stayonground then
+                inst:AddTag("flying")
+            end
+        end,
     },
 
     State{
@@ -223,12 +250,15 @@ local states=
             inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/caw")
         end,
 
-        onexit = function(inst)
-            inst:AddTag("flying")
+        ontimeout = function(inst)
+            inst.sg.statemem.stayonground = true
+            inst.sg:GoToState(math.random() < .5 and "caw" or "idle_ground")
         end,
 
-        ontimeout = function(inst)
-            inst.sg:GoToState(math.random() < .5 and "caw" or "idle_ground")
+        onexit = function(inst)
+            if not inst.sg.statemem.stayonground then
+                inst:AddTag("flying")
+            end
         end,
     },
 
@@ -242,16 +272,21 @@ local states=
             inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/hit")
         end,
 
-        onexit = function(inst)
-            inst:AddTag("flying")
-        end,
-
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle_ground")
+                if not inst.AnimState:AnimDone() then
+                    inst.sg.statemem.stayonground = true
+                    inst.sg:GoToState("idle_ground")
+                end
             end),
         },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.stayonground then
+                inst:AddTag("flying")
+            end
+        end,
     },
 
     State{
@@ -270,7 +305,6 @@ local states=
         end,
     },
 
-
     State{
         name = "flyaway",
         tags = { "flight", "busy", "notarget" , "flyaway" },
@@ -285,36 +319,37 @@ local states=
                 inst:PushEvent("on_no_longer_landed")
             end
 
-            inst.sg:SetTimeout(.1 + math.random() * .2)
-            inst.sg.statemem.vert = math.random() < .5
-
             inst.DynamicShadow:Enable(false)
             inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/takeoff")
 
-            inst.AnimState:PlayAnimation(inst.sg.statemem.vert and "takeoff_vertical_pre" or "takeoff_diagonal_pre")
+            if math.random() < 0.5 then
+                inst.sg.statemem.vert = true
+                inst.AnimState:PlayAnimation("takeoff_vertical_pre")
+                inst.AnimState:PushAnimation("takeoff_vertical_loop", true)
+            else
+                inst.AnimState:PlayAnimation("takeoff_diagonal_pre")
+                inst.AnimState:PushAnimation("takeoff_diagonal_loop", true)
+            end
             inst.SoundEmitter:KillSound("fly_lp")
 
             if inst.components.inventory ~= nil then
                 inst.components.inventory:DropEverything()
             end
+
+            inst.sg:SetTimeout(.1 + math.random() * .2)
         end,
 
         ontimeout = function(inst)
             if inst.sg.statemem.vert then
-                inst.AnimState:PushAnimation("takeoff_vertical_loop", true)
                 inst.Physics:SetMotorVel(math.random() * 4 - 2, math.random() * 5 + 15, math.random() * 4 - 2)
-                inst.SoundEmitter:KillSound("fly_lp")
             else
-                inst.AnimState:PushAnimation("takeoff_diagonal_loop", true)
-                inst.Physics:SetMotorVel(math.random() * 8 + 8, math.random() * 5 + 15,math.random() * 4 - 2)
-                inst.SoundEmitter:KillSound("fly_lp")
+                inst.Physics:SetMotorVel(math.random() * 8 + 8, math.random() * 5 + 15, math.random() * 4 - 2)
             end
         end,
 
         timeline =
         {
             TimeEvent(2, function(inst)
-
                 if inst.flyaway then
                     if inst.hat then
                         inst.hat.components.spawner:GoHome(inst)
@@ -347,11 +382,18 @@ local states=
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 
             inst.Physics:SetMotorVel(0, math.random() * 10 - 20, 0)
-            inst.SoundEmitter:PlaySound(inst.sounds.flyin)
         end,
 
-        onupdate = function(inst)
+        timeline =
+        {
+            TimeEvent(1 * FRAMES, function(inst)
+                if inst.components.inventoryitem == nil or not inst.components.inventoryitem:IsHeld() then
+                    inst.SoundEmitter:PlaySound(inst.sounds.flyin)
+                end
+            end),
+        },
 
+        onupdate = function(inst)
             local x, y, z = inst.Transform:GetWorldPosition()
 
             if y < 2 then
@@ -390,7 +432,9 @@ local states=
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("walk")
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("walk")
+                end
             end),
         },
     },
@@ -399,35 +443,31 @@ local states=
         name = "walk",
         tags = { "moving", "canrotate" },
 
-        onenter = function(inst, fromground)
-            inst.AnimState:PlayAnimation("walk_loop")
-            inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/flap_lp", "fly_lp")
+        onenter = function(inst)
+            if not inst.AnimState:IsCurrentAnimation("walk_loop") then
+                inst.AnimState:PlayAnimation("walk_loop", true)
+            end
+            if not inst.SoundEmitter:PlayingSound("fly_lp") then
+                inst.SoundEmitter:PlaySound("monkeyisland/pollyroger/flap_lp", "fly_lp")
+            end
             if inst.components.locomotor:WantsToRun() then
                 inst.components.locomotor:RunForward()
             else
                 inst.components.locomotor:WalkForward()
             end
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
- 
         end,
-
-        events =
-        {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("walk")
-            end),
-        },
 
         ontimeout = function(inst)
             inst.sg:GoToState("walk")
-        end,  
-    },  
+        end,
+    },
 
     State{
         name = "walk_stop",
         tags = { "canrotate" },
 
-        onenter = function(inst, fromground)
+        onenter = function(inst)
             inst.components.locomotor:StopMoving()
             inst.AnimState:PlayAnimation("walk_pst")
             --inst.SoundEmitter:KillSound("fly_lp")
@@ -436,10 +476,12 @@ local states=
         events =
         {
             EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
             end),
         },
-    },  
+    },
 }
 CommonStates.AddSleepStates(states)
 CommonStates.AddFrozenStates(states)

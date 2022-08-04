@@ -108,6 +108,14 @@ local function ontalk(inst, script)
     inst.SoundEmitter:PlaySound("monkeyisland/monkeyqueen/speak")
 end
 
+local function OnEntitySleep(inst)
+    inst.SoundEmitter:KillSound("loop")
+end
+
+local function OnEntityWake(inst)
+    inst.SoundEmitter:PlaySound("monkeyisland/amb/island_amb_monkeys", "loop")
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -166,9 +174,10 @@ local function fn()
 
     inst:AddComponent("timer")
 
-    inst.SoundEmitter:PlaySound("monkeyisland/amb/island_amb_monkeys","loop")
-
     inst:ListenForEvent("timerdone", ontimerdone)
+
+    inst.OnEntitySleep = OnEntitySleep
+    inst.OnEntityWake = OnEntityWake
 
     return inst
 end

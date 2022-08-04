@@ -59,7 +59,7 @@ function Placer:OnUpdate(dt)
         elseif self.snap_to_meters then
             self.inst.Transform:SetPosition(math.floor(pt.x) + .5, 0, math.floor(pt.z) + .5)
         elseif self.snap_to_boat_edge then
-            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.BOAT.RADIUS, self.BOAT_MUST_TAGS)
+            local boats = TheSim:FindEntities(pt.x, 0, pt.z, TUNING.MAX_WALKABLE_PLATFORM_RADIUS, self.BOAT_MUST_TAGS)
             local boat = GetClosest(self.inst, boats)
 
             if boat then

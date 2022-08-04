@@ -309,6 +309,9 @@ local function rock_avocado_bush()
     inst.components.growable:SetStage(math.random(1, 4))
     inst.components.growable:StartGrowing()
 
+    inst:AddComponent("simplemagicgrower")
+    inst.components.simplemagicgrower:SetLastStage(#inst.components.growable.stages - 1)
+
     inst.OnSave = on_save
     inst.OnLoad = on_load
 

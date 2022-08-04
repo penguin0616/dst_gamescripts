@@ -76,6 +76,11 @@ local ItemTile = Class(Widget, function(self, invitem)
         self.recharge = self:AddChild(UIAnim())
         self.recharge:GetAnimState():SetBank("recharge_meter")
         self.recharge:GetAnimState():SetBuild("recharge_meter")
+        if self.item:HasTag("rechargeable_bonus") then
+            self.recharge:GetAnimState():SetMultColour(0, 0.3, 0, 0.8) -- 'Bonus while' with GREEN colour.
+        else
+            self.recharge:GetAnimState():SetMultColour(0, 0, 0.4, 0.64) -- 'Cooldown until' with BLUE colour.
+        end
         self.recharge:GetAnimState():AnimateWhilePaused(false)
         self.recharge:SetClickable(false)
     end

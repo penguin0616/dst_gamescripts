@@ -123,6 +123,7 @@ local function fn()
     inst.MiniMapEntity:SetIcon("ocean_trawler.png")
 
     inst:AddTag("oceantrawler")
+    inst:AddTag("overriderowaction")
 
     inst:SetPhysicsRadiusOverride(2.2)
     inst:SetDeployExtraSpacing(1.15)

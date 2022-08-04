@@ -91,6 +91,10 @@ local assets =
     Asset("FILE", "sound/monkeyisland.fsb"),
     Asset("FILE", "sound/monkeyisland_music.fsb"),
     Asset("FILE", "sound/monkeyisland_amb.fsb"),
+
+    Asset("SOUNDPACKAGE", "sound/wickerbottom_rework.fev"),
+    Asset("FILE", "sound/wickerbottom_rework.fsb"),
+    --Asset("FILE", "sound/wickerbottom_rework_music.fsb"),
     
     Asset("FILE", "sound/wilton.fsb"),         -- Legacy sound that can be used in mods
     Asset("FILE", "sound/winnie.fsb"),         -- Legacy sound that can be used in mods
@@ -408,6 +412,7 @@ local assets =
     Asset("ANIM", "anim/player_idles_wolfgang.zip"),
     Asset("ANIM", "anim/player_idles_wolfgang_skinny.zip"),
     Asset("ANIM", "anim/player_idles_wolfgang_mighty.zip"),
+    Asset("ANIM", "anim/player_idles_wickerbottom.zip"),
 
     Asset("DYNAMIC_ANIM", "anim/dynamic/body_default1.zip"),
     Asset("DYNAMIC_ANIM", "anim/dynamic/hand_default1.zip"),

@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -575,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Thank-you...",
 
     ANNOUNCE_FLARE_SEEN = "Someone just shot a flare...",
+    ANNOUNCE_MEGA_FLARE_SEEN = "The poor soul who shot that flare... they've sealed their own fate.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Death casts its black shadow upon us.",
 
     --willow specific
@@ -704,6 +716,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "The poor creature is too far gone.",
 
@@ -833,6 +856,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Nowhere to run... they're here.",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Death will find you!",
@@ -904,6 +929,7 @@ return{
         BERNIE_ACTIVE = "It dances to forget the pain.",
         BERNIE_BIG = "Wow... What a big stuffy.",
 
+        BOOKSTATION = "How I miss my poetry books.",
         BOOK_BIRDS = "Will it teach me to fly away from here?",
         BOOK_TENTACLES = "Does this world need more beasts?",
         BOOK_GARDENING = "Imagine, a rolling field of red flowers...",
@@ -911,6 +937,21 @@ return{
 		BOOK_HORTICULTURE = "I'm not very good at keeping things alive.",
         BOOK_SLEEP = "Does it impart an eternal slumber?",
         BOOK_BRIMSTONE = "The tome to end it all...",
+
+        BOOK_FISH = "Poor fish, so easily murdered.",
+        BOOK_FIRE = "What if we let this world fall to ash?",
+        BOOK_WEB = "I'm not afraid of spiders.",
+        BOOK_TEMPERATURE = "What does it matter? I'll always feel cold inside.",
+        BOOK_LIGHT = "It won't save us from the darkness forever.",
+        BOOK_RAIN = "Oh... I suppose I was hoping it might involve more candles and chanting.",
+        BOOK_MOON = "Let the moon turn its cold gaze on us once again.",
+        BOOK_BEES = "Bees live such short, unremarkable lives.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "We help the plants grow, only to cull them in their prime.",
+        BOOK_RESEARCH_STATION = "It looks so... boring...",
+        BOOK_LIGHT_UPGRADED = "The brighter the light, the deeper the shadows...",
+
+        FIREPEN = "Father had one very similar. I doubt it ever started a fire, though.",
 
         PLAYER =
         {
@@ -3383,6 +3424,7 @@ return{
         ICEBERG_MELTED = "It melted down a bit.", --unimplemented
 
         MINIFLARE = "Why? No one will come.",
+        MEGAFLARE = "I could just let the monsters come for me...",
 
 		MOON_FISSURE =
 		{
@@ -4550,6 +4592,8 @@ return{
 
 
         BANANAJUICE = "I... like it.",
+
+        FENCE_ROTATOR = "Disorderly fences need to be brought into line.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

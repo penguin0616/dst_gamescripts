@@ -577,6 +577,10 @@ local function domagicgrowthfn(inst)
 	if inst:IsValid() and inst.components.growable:IsGrowing() then
 		inst.no_oversized = true
 
+		if not inst:HasTag("magicgrowth") then
+			inst:AddTag("magicgrowth")
+		end
+
 		if inst.components.farmsoildrinker ~= nil then
 			local remaining_time = inst.components.growable.targettime - GetTime()
 			local drink = remaining_time * inst.components.farmsoildrinker:GetMoistureRate()
@@ -584,14 +588,26 @@ local function domagicgrowthfn(inst)
 			local x, y, z = inst.Transform:GetWorldPosition()
 			TheWorld.components.farming_manager:AddSoilMoistureAtPoint(x, y, z, drink)
 		end
-
+		
+		local magic_tending = inst.magic_tending
+		
 		inst.components.growable:DoGrowth()
 		if inst.grew_into ~= nil then
 			inst = inst.grew_into
 		end
-		if inst:IsValid() and inst.components.pickable == nil then
-			inst:DoTaskInTime(0.5 + math.random() + 0.25, RepeatMagicGrowth)	-- we need a new function so that seeds grow into a weeds, it will call the right function
+
+		if magic_tending and inst.components.farmplanttendable then
+			inst.components.farmplanttendable:TendTo()
+			inst.magic_tending = true
 		end
+
+		if inst:IsValid() and inst.components.pickable == nil then
+			inst:DoTaskInTime(3 + math.random(), RepeatMagicGrowth)	-- we need a new function so that seeds grow into a weeds, it will call the right function
+		else
+			inst:RemoveTag("magicgrowth")
+			inst.magic_tending = nil
+		end
+
 		return true
 	end
 

@@ -2954,6 +2954,20 @@ MISC_ITEMS =
 		legacy_popup_category = "ONI",
 		release_group = 76,
 	},
+	pack_ornate_items =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 2,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_wickerbottom_items.xml",
+		display_tex = "wickerbottom_items.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "amulet_yellow_ornate", "minisign_ornate", "wall_wood_ornate", },
+		output_items = {  "amulet_yellow_ornate", "minisign_ornate", "wall_wood_ornate", },
+		release_group = 134,
+	},
 	pack_pirate_all =
 	{
 		type = "purchase",
@@ -4159,6 +4173,85 @@ MISC_ITEMS =
 		display_items = {  "wes_survivorp", "body_wes_survivorp", },
 		output_items = {  "wes_survivorp", "body_wes_survivorp", },
 		release_group = 116,
+	},
+	pack_wickerbottom_deluxe =
+	{
+		type = "purchase",
+		skin_tags = { },
+		featured_pack = true,
+		display_order = 1,
+		build_name_override = "pack_common",
+		display_atlas = "images/iap_images_wickerbottom_deluxe.xml",
+		display_tex = "wickerbottom_deluxe.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wickerbottom_ornate", "wickerbottom_formalp", "wickerbottom_survivorp", "wickerbottom_shadowp", "wickerbottom_rosep", },
+		output_items = {  "wickerbottom_ornate", "body_wickerbottom_ornate", "feet_wickerbottom_ornate", "hand_wickerbottom_ornate", "wickerbottom_formalp", "body_wickerbottom_formalp", "feet_formal_highheelp_white_pure", "wickerbottom_survivorp", "body_wickerbottom_survivorp", "wickerbottom_shadowp", "body_wickerbottom_shadowp", "wickerbottom_rosep", "body_wickerbottom_rosep", },
+		release_group = 134,
+	},
+	pack_wickerbottom_formal =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 106,
+		build_name_override = "wickerbottom_formal",
+		display_atlas = "bigportraits/wickerbottom_formal.xml",
+		display_tex = "wickerbottom_formal_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wickerbottom_formalp", "body_wickerbottom_formalp", "feet_formal_highheelp_white_pure", },
+		output_items = {  "wickerbottom_formalp", "body_wickerbottom_formalp", "feet_formal_highheelp_white_pure", },
+		release_group = 134,
+	},
+	pack_wickerbottom_ornate =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 106,
+		build_name_override = "wickerbottom_ornate",
+		display_atlas = "bigportraits/wickerbottom_ornate.xml",
+		display_tex = "wickerbottom_ornate_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wickerbottom_ornate", "body_wickerbottom_ornate", "feet_wickerbottom_ornate", "hand_wickerbottom_ornate", },
+		output_items = {  "wickerbottom_ornate", "body_wickerbottom_ornate", "feet_wickerbottom_ornate", "hand_wickerbottom_ornate", },
+		release_group = 134,
+	},
+	pack_wickerbottom_rose =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 106,
+		build_name_override = "wickerbottom_rose",
+		display_atlas = "bigportraits/wickerbottom_rose.xml",
+		display_tex = "wickerbottom_rose_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wickerbottom_rosep", "body_wickerbottom_rosep", },
+		output_items = {  "wickerbottom_rosep", "body_wickerbottom_rosep", },
+		release_group = 134,
+	},
+	pack_wickerbottom_shadow =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 106,
+		build_name_override = "wickerbottom_shadow",
+		display_atlas = "bigportraits/wickerbottom_shadow.xml",
+		display_tex = "wickerbottom_shadow_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wickerbottom_shadowp", "body_wickerbottom_shadowp", },
+		output_items = {  "wickerbottom_shadowp", "body_wickerbottom_shadowp", },
+		release_group = 134,
+	},
+	pack_wickerbottom_survivor =
+	{
+		type = "purchase",
+		skin_tags = { },
+		display_order = 106,
+		build_name_override = "wickerbottom_survivor",
+		display_atlas = "bigportraits/wickerbottom_survivor.xml",
+		display_tex = "wickerbottom_survivor_oval.tex",
+		box_build = "box_shop_plain",
+		display_items = {  "wickerbottom_survivorp", "body_wickerbottom_survivorp", },
+		output_items = {  "wickerbottom_survivorp", "body_wickerbottom_survivorp", },
+		release_group = 134,
 	},
 	pack_willow_deluxe =
 	{
@@ -5516,6 +5609,13 @@ MISC_ITEMS =
 		rarity = "Loyal",
 		release_group = 65,
 	},
+	playerportrait_bg_hivehatan =
+	{
+		type = "playerportrait",
+		skin_tags = { "ARTNOUVEAU", "PLAYERPORTRAIT", },
+		rarity = "Loyal",
+		release_group = 134,
+	},
 	playerportrait_bg_iceboxcrystal =
 	{
 		type = "playerportrait",
@@ -6532,6 +6632,13 @@ MISC_ITEMS =
 		skin_tags = { "CRYSTAL", "PROFILEFLAIR", },
 		rarity = "Loyal",
 		release_group = 65,
+	},
+	profileflair_hivehat_an =
+	{
+		type = "profileflair",
+		skin_tags = { "ARTNOUVEAU", "PROFILEFLAIR", },
+		rarity = "Loyal",
+		release_group = 134,
 	},
 	profileflair_hound =
 	{

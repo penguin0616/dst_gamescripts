@@ -807,6 +807,19 @@ local function CanSeePointOnMiniMap(inst, px, py, pz) -- Convenience wrapper.
     return inst.player_classified.MapExplorer:IsTileSeeable(tx, ty)
 end
 
+local function GenericCommander_OnAttackOther(inst, data)
+    if data and data.target and data.target ~= inst then
+        inst.components.commander:ShareTargetToAllSoldiers(data.target)
+    end
+end
+
+local function MakeGenericCommander(inst)
+    if inst.components.commander == nil then
+        inst:AddComponent("commander")
+        inst:ListenForEvent("onattackother", GenericCommander_OnAttackOther)
+    end
+end
+
 return
 {
     ShouldKnockout              = ShouldKnockout,
@@ -831,4 +844,5 @@ return
 	GivePlayerStartingItems		= GivePlayerStartingItems,
     CanSeeTileOnMiniMap         = CanSeeTileOnMiniMap,
     CanSeePointOnMiniMap        = CanSeePointOnMiniMap,
+    MakeGenericCommander        = MakeGenericCommander,
 }

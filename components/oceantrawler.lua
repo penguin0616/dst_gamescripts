@@ -253,12 +253,14 @@ local function ProcessFishOverflow(self, container, was_sleeping)
                 end
             end
 
-            container:RemoveAllItems()
-
             self.inst.sg:GoToState("overload")
-        else
-            container:RemoveAllItems()
         end
+
+        local fishToRemove = container:RemoveAllItems()
+        for i, fish in ipairs(fishToRemove) do
+            fish:Remove()
+        end
+
         self.overflowfish = {}
         self.inst:AddTag("trawler_fish_escaped")
         self.fishescaped = true

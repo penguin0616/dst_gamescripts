@@ -39,11 +39,25 @@ function Explosive:OnBurnt()
         world.components.dockmanager:DamageDockAtPoint(x, y, z, totaldamage)
     end
 
+    local workablecount = TUNING.EXPLOSIVE_MAX_WORKABLE_INVENTORYITEMS
     local ents = TheSim:FindEntities(x, y, z, self.explosiverange, nil, BURNT_CANT_TAGS)
     for i, v in ipairs(ents) do
         if v ~= self.inst and v:IsValid() and not v:IsInLimbo() then
             if v.components.workable ~= nil and v.components.workable:CanBeWorked() then
-                v.components.workable:WorkedBy(self.inst, self.buildingdamage * stacksize)
+                -- NOTES(JBK): Stackable inventory items can be placed down 1 by 1 making this a convenience to players to not have to drop them down 1 by 1 first for maximum potential output.
+                local workdamage = self.buildingdamage * stacksize
+                local dowork = true
+                if v.components.inventoryitem ~= nil then
+                    if workablecount > 0 then
+                        workablecount = workablecount - 1
+                        workdamage = workdamage * (v.components.stackable ~= nil and v.components.stackable:StackSize() or 1)
+                    else
+                        dowork = false
+                    end
+                end
+                if dowork then
+                    v.components.workable:WorkedBy(self.inst, workdamage)
+                end
             end
 
             --Recheck valid after work

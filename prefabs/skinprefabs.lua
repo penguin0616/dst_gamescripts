@@ -179,6 +179,17 @@ table.insert(prefs, CreatePrefabSkin("amulet_red_occulteye",
 	release_group = 32,
 }))
 
+table.insert(prefs, CreatePrefabSkin("amulet_yellow_ornate",
+{
+	base_prefab = "yellowamulet",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) yellowamulet_init_fn(inst, "amulet_yellow_ornate") end,
+	skin_tags = { "AMULET_YELLOW", "ORNATE", "CRAFTABLE", },
+	release_group = 134,
+}))
+
 table.insert(prefs, CreatePrefabSkin("anchor_nautical",
 {
 	base_prefab = "anchor",
@@ -3054,6 +3065,16 @@ table.insert(prefs, CreatePrefabSkin("heatrock_fire",
 	release_group = 65,
 }))
 
+table.insert(prefs, CreatePrefabSkin("hivehat_an",
+{
+	base_prefab = "hivehat",
+	type = "item",
+	rarity = "Loyal",
+	init_fn = function(inst) hivehat_init_fn(inst, "hivehat_an") end,
+	skin_tags = { "HIVEHAT", "ARTNOUVEAU", "CRAFTABLE", },
+	release_group = 134,
+}))
+
 table.insert(prefs, CreatePrefabSkin("hivehat_cawnival",
 {
 	base_prefab = "hivehat",
@@ -3747,7 +3768,7 @@ table.insert(prefs, CreatePrefabSkin("minisign_fantasy",
 	type = "item",
 	rarity = "Elegant",
 	rarity_modifier = "Woven",
-	init_fn = function(inst) minisign_init_fn(inst, "minisign_fantasy") end,
+	init_fn = function(inst) minisign_init_fn(inst, "minisign_fantasy", "sign_mini_fantasy" ) end,
 	skin_tags = { "FANTASY", "MINISIGN", "CRAFTABLE", },
 	release_group = 128,
 }))
@@ -3759,7 +3780,7 @@ table.insert(prefs, CreatePrefabSkin("minisign_fantasy_drawn",
 	build_name_override = "minisign_fantasy",
 	rarity = "Elegant",
 	rarity_modifier = "Woven",
-	init_fn = function(inst) minisign_drawn_init_fn(inst, "minisign_fantasy") end,
+	init_fn = function(inst) minisign_drawn_init_fn(inst, "minisign_fantasy", "sign_mini_fantasy" ) end,
 	skin_tags = { },
 	release_group = 128,
 }))
@@ -3771,9 +3792,44 @@ table.insert(prefs, CreatePrefabSkin("minisign_fantasy_item",
 	build_name_override = "minisign_fantasy",
 	rarity = "Elegant",
 	rarity_modifier = "Woven",
-	init_fn = function(inst) minisign_item_init_fn(inst, "minisign_fantasy") end,
+	init_fn = function(inst) minisign_item_init_fn(inst, "minisign_fantasy", "sign_mini_fantasy" ) end,
 	skin_tags = { },
 	release_group = 128,
+}))
+
+table.insert(prefs, CreatePrefabSkin("minisign_ornate",
+{
+	base_prefab = "minisign",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) minisign_init_fn(inst, "minisign_ornate", "sign_mini_ornate" ) end,
+	skin_tags = { "ORNATE", "MINISIGN", "CRAFTABLE", },
+	release_group = 134,
+}))
+
+table.insert(prefs, CreatePrefabSkin("minisign_ornate_drawn",
+{
+	base_prefab = "minisign_drawn",
+	type = "item",
+	build_name_override = "minisign_ornate",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) minisign_drawn_init_fn(inst, "minisign_ornate", "sign_mini_ornate" ) end,
+	skin_tags = { },
+	release_group = 134,
+}))
+
+table.insert(prefs, CreatePrefabSkin("minisign_ornate_item",
+{
+	base_prefab = "minisign_item",
+	type = "item",
+	build_name_override = "minisign_ornate",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) minisign_item_init_fn(inst, "minisign_ornate", "sign_mini_ornate" ) end,
+	skin_tags = { },
+	release_group = 134,
 }))
 
 table.insert(prefs, CreatePrefabSkin("minisign_picketbrown",
@@ -6236,6 +6292,29 @@ table.insert(prefs, CreatePrefabSkin("wall_stone_victorianitem",
 	release_group = 113,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wall_wood_ornate",
+{
+	base_prefab = "wall_wood",
+	type = "item",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wall_wood_init_fn(inst, "wall_wood_ornate") end,
+	skin_tags = { "WALL_WOOD", "ORNATE", "CRAFTABLE", },
+	release_group = 134,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wall_wood_ornateitem",
+{
+	base_prefab = "wall_wood_item",
+	type = "item",
+	build_name_override = "wall_wood_ornate",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	init_fn = function(inst) wall_wood_item_init_fn(inst, "wall_wood_ornate") end,
+	skin_tags = { },
+	release_group = 134,
+}))
+
 table.insert(prefs, CreatePrefabSkin("walrushat_blue",
 {
 	base_prefab = "walrushat",
@@ -8270,7 +8349,7 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_formal",
 {
 	base_prefab = "wickerbottom",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "FORMAL", "BASE", "WICKERBOTTOM", },
 	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_formal", },
 	torso_tuck_builds = { "wickerbottom_formal", },
@@ -8279,6 +8358,23 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_formal",
 	feet_cuff_size = { wickerbottom_formal = 3, },
 	marketable = true,
 	release_group = 2,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wickerbottom_formalp",
+{
+	base_prefab = "wickerbottom",
+	type = "base",
+	build_name_override = "wickerbottom_formal",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "FORMAL", "BASE", "WICKERBOTTOM", },
+	bigportrait_anim = { build = "bigportraits/wickerbottom_formal.xml", symbol = "wickerbottom_formal_oval.tex"},
+	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_formal", },
+	torso_tuck_builds = { "wickerbottom_formal", },
+	has_alternate_for_body = { "wickerbottom_formal", },
+	has_alternate_for_skirt = { "wickerbottom_formal", },
+	feet_cuff_size = { wickerbottom_formal = 3, },
+	release_group = 134,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wickerbottom_gladiator",
@@ -8391,11 +8487,27 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_none",
 	release_group = 0,
 }))
 
-table.insert(prefs, CreatePrefabSkin("wickerbottom_rose",
+table.insert(prefs, CreatePrefabSkin("wickerbottom_ornate",
 {
 	base_prefab = "wickerbottom",
 	type = "base",
 	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "ORNATE", "BASE", "WICKERBOTTOM", },
+	bigportrait_anim = { build = "bigportraits/wickerbottom_ornate.xml", symbol = "wickerbottom_ornate_oval.tex"},
+	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_ornate", },
+	torso_tuck_builds = { "wickerbottom_ornate", },
+	has_alternate_for_body = { "wickerbottom_ornate", },
+	has_alternate_for_skirt = { "wickerbottom_ornate", },
+	feet_cuff_size = { wickerbottom_ornate = 3, },
+	release_group = 134,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wickerbottom_rose",
+{
+	base_prefab = "wickerbottom",
+	type = "base",
+	rarity = "HeirloomElegant",
 	skin_tags = { "ROSE", "BASE", "WICKERBOTTOM", },
 	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_rose", },
 	torso_tuck_builds = { "wickerbottom_rose", },
@@ -8406,11 +8518,28 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_rose",
 	release_group = 10,
 }))
 
+table.insert(prefs, CreatePrefabSkin("wickerbottom_rosep",
+{
+	base_prefab = "wickerbottom",
+	type = "base",
+	build_name_override = "wickerbottom_rose",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "ROSE", "BASE", "WICKERBOTTOM", },
+	bigportrait_anim = { build = "bigportraits/wickerbottom_rose.xml", symbol = "wickerbottom_rose_oval.tex"},
+	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_rose", },
+	torso_tuck_builds = { "wickerbottom_rose", },
+	has_alternate_for_body = { "wickerbottom_rose", },
+	has_alternate_for_skirt = { "wickerbottom_rose", },
+	feet_cuff_size = { wickerbottom_rose = 3, },
+	release_group = 134,
+}))
+
 table.insert(prefs, CreatePrefabSkin("wickerbottom_shadow",
 {
 	base_prefab = "wickerbottom",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "SHADOW", "BASE", "WICKERBOTTOM", },
 	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_shadow", },
 	torso_tuck_builds = { "wickerbottom_shadow", },
@@ -8419,6 +8548,23 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_shadow",
 	feet_cuff_size = { wickerbottom_shadow = 3, },
 	marketable = true,
 	release_group = 6,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wickerbottom_shadowp",
+{
+	base_prefab = "wickerbottom",
+	type = "base",
+	build_name_override = "wickerbottom_shadow",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "SHADOW", "BASE", "WICKERBOTTOM", },
+	bigportrait_anim = { build = "bigportraits/wickerbottom_shadow.xml", symbol = "wickerbottom_shadow_oval.tex"},
+	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_shadow", },
+	torso_tuck_builds = { "wickerbottom_shadow", },
+	has_alternate_for_body = { "wickerbottom_shadow", },
+	has_alternate_for_skirt = { "wickerbottom_shadow", },
+	feet_cuff_size = { wickerbottom_shadow = 3, },
+	release_group = 134,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wickerbottom_spiderwitch",
@@ -8441,7 +8587,7 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_survivor",
 {
 	base_prefab = "wickerbottom",
 	type = "base",
-	rarity = "Elegant",
+	rarity = "HeirloomElegant",
 	skin_tags = { "SURVIVOR", "BASE", "WICKERBOTTOM", },
 	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_survivor", },
 	torso_tuck_builds = { "wickerbottom_survivor", },
@@ -8449,6 +8595,22 @@ table.insert(prefs, CreatePrefabSkin("wickerbottom_survivor",
 	has_alternate_for_skirt = { "wickerbottom_survivor", },
 	marketable = true,
 	release_group = 4,
+}))
+
+table.insert(prefs, CreatePrefabSkin("wickerbottom_survivorp",
+{
+	base_prefab = "wickerbottom",
+	type = "base",
+	build_name_override = "wickerbottom_survivor",
+	rarity = "Elegant",
+	rarity_modifier = "Woven",
+	skin_tags = { "SURVIVOR", "BASE", "WICKERBOTTOM", },
+	bigportrait_anim = { build = "bigportraits/wickerbottom_survivor.xml", symbol = "wickerbottom_survivor_oval.tex"},
+	skins = { ghost_skin = "ghost_wickerbottom_build", normal_skin = "wickerbottom_survivor", },
+	torso_tuck_builds = { "wickerbottom_survivor", },
+	has_alternate_for_body = { "wickerbottom_survivor", },
+	has_alternate_for_skirt = { "wickerbottom_survivor", },
+	release_group = 134,
 }))
 
 table.insert(prefs, CreatePrefabSkin("wickerbottom_victorian",

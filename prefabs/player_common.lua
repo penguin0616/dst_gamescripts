@@ -32,7 +32,11 @@ function fns.IsNearDanger(inst, hounded_ok)
     return FindEntity(inst, 10,
         function(target)
             return (target.components.combat ~= nil and target.components.combat.target == inst)
-                or ((target:HasTag("monster") or (not nopigdanger and target:HasTag("pig"))) and
+                or (
+                    (
+                        target:HasTag("monster") and (target.components.follower == nil or target.components.follower:GetLeader() == nil or not target.components.follower:GetLeader():HasTag("player"))
+                        or (not nopigdanger and target:HasTag("pig"))
+                    ) and
                     not target:HasTag("player") and
                     not (nospiderdanger and target:HasTag("spider")) and
                     not (inst.components.sanity:IsSane() and target:HasTag("shadowcreature")))
@@ -409,7 +413,7 @@ end
 --------------------------------------------------------------------------
 
 local function OnGotNewItem(inst, data)
-    if data.slot ~= nil or data.eslot ~= nil then
+    if data.slot ~= nil or data.eslot ~= nil or data.toactiveitem ~= nil then
         TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/collect_resource")
     end
 end
@@ -637,6 +641,9 @@ end
 
 local function DeactivateHUD(inst)
     TheCamera:SetOnUpdateFn(nil)
+    if inst.HUD and inst.HUD:IsMapScreenOpen() then
+        TheFrontEnd:PopScreen()
+    end
     TheFrontEnd:PopScreen(inst.HUD)
     inst.HUD = nil
 end
@@ -668,8 +675,14 @@ local function UnregisterHUD(inst)
 end
 
 local function ActivatePlayer(inst)
+    inst.activatetask = nil
+
     if ThePlayer.isseamlessswapsource then
         assert(inst.isseamlessswaptarget, "new player isn't the seamless swap target")
+
+        --we probably zoomed in during transformation
+        --prevent snap when swapping huds, so we can zoom back out naturally 
+        TheCamera:LockDistance(true)
 
         UnregisterHUD(ThePlayer)
 
@@ -677,13 +690,18 @@ local function ActivatePlayer(inst)
         local oldprefab = oldplayer.prefab
         ThePlayer = inst
         oldplayer.player_classified.MapExplorer:DeactivateLocalMiniMap()
-        oldplayer:Remove()
+
+        if oldplayer.delayclientdespawn_attempted then
+            oldplayer:Remove()
+        else
+            oldplayer.delayclientdespawn = nil
+            oldplayer.player_classified.delayclientdespawn = nil
+        end
 
         ActivateHUD(inst)
 
         inst:PushEvent("finishseamlessplayerswap" , {oldprefab=oldprefab })
     end
-    inst.activatetask = nil
 
     TheWorld.minimap.MiniMap:DrawForgottenFogOfWar(true)
     if inst.player_classified ~= nil then
@@ -696,6 +714,8 @@ local function ActivatePlayer(inst)
 
     inst:PushEvent("playeractivated")
     TheWorld:PushEvent("playeractivated", inst)
+
+    TheCamera:LockDistance(false)
 
     if inst == ThePlayer and not TheWorld.ismastersim then
         -- Clients save locally as soon as they spawn in, so it is
@@ -748,6 +768,7 @@ local function EnableMovementPrediction(inst, enable)
                     (inst.player_classified ~= nil and inst.player_classified.isghostmode:value()) or
                     (inst.player_classified == nil and inst:HasTag("playerghost"))
 
+                inst.Physics:Stop()
                 inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
                 if isghost then
                     ex_fns.ConfigureGhostLocomotor(inst)
@@ -780,6 +801,7 @@ local function EnableMovementPrediction(inst, enable)
                 inst.components.playercontroller.locomotor = nil
             end
             inst:RemoveComponent("locomotor")
+            inst.Physics:Stop()
             print("Movement prediction disabled")
             --This is unfortunate but it doesn't seem like you can send an rpc on the first
             --frame when a character is spawned
@@ -897,7 +919,6 @@ local function OnSetOwner(inst)
 end
 
 function fns.CommonSeamlessPlayerSwap(inst)
-    inst.isseamlessswapsource = true
     inst.name = nil
     inst.userid = ""
     if inst.components.playercontroller ~= nil then
@@ -912,22 +933,34 @@ end
 
 function fns.LocalSeamlessPlayerSwap(inst)
     fns.CommonSeamlessPlayerSwap(inst)
+    inst.isseamlessswapsource = true --this flag is for local activated player only
+
     --delay the client despawn for these two entities
     inst.delayclientdespawn = true
     inst.player_classified.delayclientdespawn = true
+
+    if TheWorld.ismastersim then
+        --if we're also the host, just mark it as already attempted to remove
+        inst.delayclientdespawn_attempted = true
+    end
 end
 
 function fns.LocalSeamlessPlayerSwapTarget(inst)
     fns.CommonSeamlessPlayerSwapTarget(inst)
-    inst.isseamlessswaptarget = true
+    inst.isseamlessswaptarget = true --this flag is for local activated player only
 end
 
 function fns.MasterSeamlessPlayerSwap(inst)
     fns.CommonSeamlessPlayerSwap(inst)
-    --despawn the player if they aren't the local player (local player despawning is handled later in the swap)
-    if inst ~= ThePlayer then
-        inst:DoStaticTaskInTime(0, inst.Remove)
-    end
+
+    --make sure the player is not removed on the same network tick as the new spawn
+    --this guarantees the client will receive the new player spawn first
+    local network_tick = TheNet:GetNetUpdates()
+    inst:DoStaticPeriodicTask(0, function(inst)
+        if TheNet:GetNetUpdates() ~= network_tick then
+            inst:Remove()
+        end
+    end)
 end
 
 function fns.MasterSeamlessPlayerSwapTarget(inst)
@@ -1311,6 +1344,12 @@ end
 fns.ShowPopUp = function(inst, popup, show, ...)
     if TheWorld.ismastersim and inst.userid then
         SendRPCToClient(CLIENT_RPC.ShowPopup, inst.userid, popup.code, popup.mod_name, show, ...)
+    end
+end
+
+fns.ResetMinimapOffset = function(inst) -- NOTES(JBK): Please use this only when necessary.
+    if TheWorld.ismastersim and inst.userid then
+        SendRPCToClient(CLIENT_RPC.ResetMinimapOffset, inst.userid)
     end
 end
 
@@ -1797,6 +1836,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.IsActionsVisible = IsActionsVisible
         inst.CanSeeTileOnMiniMap = ex_fns.CanSeeTileOnMiniMap
         inst.CanSeePointOnMiniMap = ex_fns.CanSeePointOnMiniMap
+        inst.MakeGenericCommander = ex_fns.MakeGenericCommander
 	end
 
     local max_range = TUNING.MAX_INDICATOR_RANGE * 1.5
@@ -1833,9 +1873,16 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
             end
         end
 
-        inst.Physics:SetActive(false)
-        newinst.Transform:SetPosition(inst.Transform:GetWorldPosition())
-        inst:Hide()
+        if inst.components.health:IsDead() then
+            newinst.deathclientobj = inst.deathclientobj ~= nil and TheNet:GetClientTableForUser(newinst.userid) or nil
+            newinst.deathcause = inst.deathcause
+            newinst.deathpkname = inst.deathpkname
+            newinst.deathbypet = inst.deathbypet
+            newinst.last_death_position = inst.last_death_position
+            newinst.last_death_shardid = inst.last_death_shardid
+        end
+
+        newinst.Physics:Teleport(inst.Transform:GetWorldPosition())
     end
 
     local function ChangeToMonkey(inst)
@@ -2281,6 +2328,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.ShowActions = ShowActions
         inst.ShowHUD = ShowHUD
         inst.ShowPopUp = fns.ShowPopUp
+        inst.ResetMinimapOffset = fns.ResetMinimapOffset
         inst.SetCameraDistance = SetCameraDistance
         inst.SetCameraZoomed = SetCameraZoomed
         inst.SnapCamera = SnapCamera

@@ -262,7 +262,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "December 6" },
             { title = "Favorite Food", desc = "Surf 'n' Turf" },
-			{ title = "Her Past...", desc = "Is yet to be revealed." },
+			{ title = "One For the Books", desc = "When people meet Ms. Wickerbottom, most assume that what you see is what you get. She certainly looks every bit the typical librarian that she claims to be, as at home amongst the bookstacks as any creature in their native habitat. Nobody would raise an eyebrow at such a person being well-versed in a wide range of subjects. Who would spare a second thought if, upon further inquiry, her knowledge rivaled that of experts? And obviously, no one would think of questioning what a librarian might be involved in after hours, when the library doors are closed to the public..." },
 		},
         wes =
 		{
@@ -595,6 +595,7 @@ STRINGS =
 			CRITTERS = "Look in",
 			SCULPTING = "Sculpt at",
 			CARTOGRAPHY = "Draw at",
+            STUDY = "Study at"
 		},
 
         JUMPIN =
@@ -664,6 +665,11 @@ STRINGS =
         {
             GENERIC = "Telepoof",
             SOUL = "Soul Hop",
+            FREESOUL = "Soul Echo",
+        },
+        BLINK_MAP =
+        {
+            SOUL = "Soul Hop({souls})",
         },
         COMBINESTACK = "Combine Stack",
         BURY = "Bury",
@@ -937,6 +943,8 @@ STRINGS =
         OCEAN_TRAWLER_FIX = "Fix",
 
         EMPTY_CONTAINER = "Empty",
+
+        ROTATE_FENCE = "Rotate",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -974,6 +982,9 @@ STRINGS =
         NONE = "Nothing",
 
         LUCY = "Lucy the Axe",
+
+        BOOKSTATION = "Bookcase",
+
         BOOK_BIRDS = "Birds of the World",
         BOOK_TENTACLES = "On Tentacles",
         BOOK_GARDENING = "Applied Horticulture",
@@ -981,6 +992,21 @@ STRINGS =
 		BOOK_HORTICULTURE = "Horticulture, Abridged",
         BOOK_SLEEP = "Sleepytime Stories",
         BOOK_BRIMSTONE = "The End is Nigh!",
+
+        BOOK_FISH = "The Angler's Survival Guide",
+        BOOK_FIRE = "Pyrokinetics Explained",
+        BOOK_WEB = "Overcoming Arachnophobia",
+        BOOK_TEMPERATURE = "Tempering Temperatures",
+        BOOK_LIGHT = "Lux Aeterna",
+        BOOK_RAIN = "Practical Rain Rituals",
+        BOOK_MOON = "Lunar Grimoire",
+        BOOK_BEES = "Apicultural Notes",
+
+        BOOK_HORTICULTURE_UPGRADED = "Horticulture, Expanded",
+        BOOK_RESEARCH_STATION = "The Everything Encyclopedia",
+        BOOK_LIGHT_UPGRADED = "Lux Aeterna Redux",
+
+        FIREPEN = "Fiery Pen",
 
         ANCIENT_ALTAR ="Ancient Pseudoscience Station",
         ANCIENT_ALTAR_BROKEN ="Broken Ancient Pseudoscience Station",
@@ -1471,6 +1497,7 @@ STRINGS =
         FOSSIL_PIECE = "Fossil Fragments",
         FOSSIL_STALKER = "Odd Skeleton",
         FOSSILSPIKE = "Fossil Cage",
+        FOSSILSPIKE2 = "Fossil Spike",
         STALKER = "Reanimated Skeleton",
         STALKER_ATRIUM = "Ancient Fuelweaver",
         STALKER_MINION = "Woven Shadow",
@@ -2866,6 +2893,7 @@ STRINGS =
         ICEBERG_MELTED = "Melted Iceberg",
 
         MINIFLARE = "Flare",
+        MEGAFLARE = "Hostile Flare",
 
 		GESTALT = "Gestalt",
 		GESTALT_GUARD = "Greater Gestalt",
@@ -3473,6 +3501,8 @@ STRINGS =
         STASH_MAP = "Pirate Map",
 
         BANANAJUICE = "Banana Shake",
+
+        FENCE_ROTATOR = "Fencing Sword",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3517,6 +3547,8 @@ STRINGS =
 
     RECIPE_DESC =
     {
+        BOOKSTATION = "All books must be arranged using the Dewey Decimal System.",
+
         BOOK_BIRDS = "1000 species: habits, habitats, and calls.",
         BOOK_TENTACLES = "Let's learn about our subterranean friends!",
         BOOK_GARDENING = "On the care and feeding of plants.",
@@ -3524,6 +3556,21 @@ STRINGS =
 		BOOK_HORTICULTURE = "On the care and feeding of crops.",
         BOOK_SLEEP = "Soothing tales to send you off to dreamland.",
         BOOK_BRIMSTONE = "The world will end in fire and tribulation!",
+
+        BOOK_FISH = "Fishing, made easy!",
+        BOOK_FIRE = "Use these simple techniques to defuse any fiery situation.",
+        BOOK_WEB = "You don't know someone until you walk a mile in their webs.",
+        BOOK_TEMPERATURE = "Keep your personal climate under control with these easy steps.",
+        BOOK_LIGHT = "An illuminating read.",
+        BOOK_RAIN = "Save it for a rainy day, whenever you decide that will be.",
+        BOOK_MOON = "Summon the power of the moon.",
+        BOOK_BEES = "Learn the ABC's of beekeeping.",
+
+        BOOK_HORTICULTURE_UPGRADED = "Expert analysis on advanced crop care.",
+        BOOK_RESEARCH_STATION = "A complete guide to everything from A to Z.",
+        BOOK_LIGHT_UPGRADED = "This complete edition far outshines its predecessor.",
+
+        FIREPEN = "Keep those rambunctious flames penned in.",
 
         CARTOGRAPHYDESK = "Show everyone exactly where you've been.",
         COMPASS = "Points the way north.",
@@ -3823,6 +3870,7 @@ STRINGS =
         MOON_SKETCH = "Look upon the face of the moon.",
 
         MINIFLARE = "Light the way for your trusted friends.",
+        MEGAFLARE = "Light a beacon for your enemies.",
 
 		SEAFARING_PROTOTYPER = "Science at sea.",
 
@@ -4248,6 +4296,8 @@ STRINGS =
         BOAT_CANNON_KIT = "It blows the competition out of the water.",
         CANNONBALL_ROCK_ITEM = "It's sure to make a splash.",
         OCEAN_TRAWLER_KIT = "There's plenty of fish in the sea.",
+
+        FENCE_ROTATOR = "A sword, used for fencing.",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -6325,6 +6375,7 @@ STRINGS.UI =
         NEEDSHERMITCRABSHOP_L3 = "Find someone friendly enough to make this trade!",
         NEEDSHERMITCRABSHOP_L4 = "Find someone friendly enough to make this trade!",
         NEEDSCREATURESCANNING = "Scan living creatures to collect data!",
+        NEEDSBOOKSTATION = "Build a bookcase to craft your books.",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",
@@ -6836,7 +6887,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Curse of Moon Quay\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Wickerbottom\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7068,6 +7119,7 @@ STRINGS.UI =
 
 		PERISH_RATE_TITLE = "Spoils",
 		PERISH_NEVER = "Never",
+        PERISH_VERY_QUICKLY = "Very Quickly",
 		PERISH_QUICKLY = "Quickly",
 		PERISH_AVERAGE = "Average",
 		PERISH_SLOWLY = "Slowly",
@@ -7732,7 +7784,7 @@ STRINGS.UI =
         TIP_GARDENEERHAT = "\"I've finally perfected my design for an ingenious (if I do say so myself) device that stores important garden-based knowledge. Certain naysayers might point out that it looks like nothing more than an overturned flowerpot worn on the head... some people simply don't have an eye for science.\" -W",
         TIP_COOKBOOK = "\"Once I've perfected a recipe, I find it helpful to write it down. Luckily, I've been able to cobble together a rough cookbook for just such a thing out of some spare pieces of parchment. Now my mind is free to worry about more immediate things...\" -W",
         TIP_NEWRECIPES = "\"Recipes are useful, but a true chef knows the importance of experimenting with new ingredients and flavors, and this world certainly provides an abundance of unusual things to choose from.\" -W",
-        TIP_REPLANTING = "\"The bushes I replanted by the camp are looking sickly... I suspect they'll require some extra care before they can produce any berries again.\" -W",
+        TIP_REPLANTING = "\"The bushes I replanted by the camp are looking malnourished... I suspect they'll require some extra care before they can produce any berries again.\" -W",
         TIP_NAUGHTINESS = "\"We shouldn't hurt things that don't hurt us. If we're mean, bad old Mr. Krampus will come...\" -W",
         TIP_BERRYLURE = "\"Last time I baited my hook with berries I caught more fish than I could carry, but when I tried today? Barely a nibble! Guess the berry trick only works on some of 'em.\" -W",
         TIP_OCEANEXPLORATION = "\"What strange new islands and creatures might I encounter if I journey out to sea? I shudder to think... but curiosity has a tendency to get the better of me...\" -W",
@@ -8070,9 +8122,13 @@ STRINGS.UI =
         SELFPAUSED_TEXT = "You have paused the game.",
     },
 
-	WORDPREDICTIONWIDET =
+	WORDPREDICTIONWIDGET =
 	{
 		DISMISS = "Dismiss",
+        PREV = "Scroll Left",
+        NEXT = "Scroll Right",
+        MINIMIZE = "Minimize",
+        EXPAND = "Expand",
 	},
 
     PLAYERSTATUSSCREEN =

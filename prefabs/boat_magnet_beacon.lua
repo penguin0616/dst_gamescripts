@@ -58,6 +58,8 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
+    MakeInventoryPhysics(inst)
+
     inst.AnimState:SetBank("boat_magnet_beacon")
     inst.AnimState:SetBuild("boat_magnet_beacon")
 	inst.AnimState:SetFinalOffset(1)

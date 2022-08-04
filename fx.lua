@@ -491,6 +491,22 @@ local fx =
         tintalpha = 0.6,
     },
     {
+        name = "cavehole_flick_warn",
+        bank = "attune_fx",
+        build = "attune_fx",
+        anim = "attune_in",
+        tint = Vector3(0, 0, 0),
+        tintalpha = 0.8,
+    },
+    {
+        name = "cavehole_flick",
+        bank = "statue_ruins_fx",
+        build = "statue_ruins_fx",
+        anim = "transform_nightmare",
+        sound = "dontstarve/maxwell/shadowmax_despawn",
+        tintalpha = 0.8,
+    },
+    {
         name = "mole_move_fx",
         bank = "mole_fx",
         build = "mole_move_fx",
@@ -2419,7 +2435,6 @@ local fx =
         bank = "boat_grass",
         build = "boat_grass",
         anim = "erode",
-        animqueue = true,
         fn = function(inst)
             inst.AnimState:SetScale(0.75,0.75,0.75)
             inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT)
@@ -2434,17 +2449,18 @@ local fx =
         bank = "boat_grass",
         build = "boat_grass",
         anim = "erode_water",
-        animqueue = true,
         fn = function(inst)
             inst.AnimState:SetScale(0.75,0.75,0.75)
             inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT)
             inst.AnimState:SetFinalOffset(1)
             inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
             inst.AnimState:SetLayer(LAYER_BACKGROUND)
-            inst.alpha = 1
-            inst:DoPeriodicTask(1/30*FRAMES, function(i)
-                inst.alpha = math.max(0,inst.alpha - (1/30))
-               inst.AnimState:SetMultColour(inst.alpha,inst.alpha,inst.alpha,inst.alpha)
+            local length = 18
+            local alpha = 1
+            local delta = 1 / length
+            local task = inst:DoPeriodicTask(0, function(inst)
+                alpha = math.max(0, alpha - delta)
+                inst.AnimState:SetMultColour(1, 1, 1, alpha)
             end)
         end,
         nofaced = true,
@@ -2544,6 +2560,129 @@ local fx =
         bank = "palmcone_leaf_fx_short",
         build = "palmcone_leaf_fx_short",
         anim = "chop",
+    },
+
+    {
+        name =  "fx_book_moon",
+        bank =  "fx_book_moon",
+        build = "fx_book_moon",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/moon",
+    },
+
+    {
+        name =  "fx_book_research_station",
+        bank =  "fx_book_research_station",
+        build = "fx_book_research_station",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/researchstation",
+    },
+
+    {
+        name =  "fx_book_temperature",
+        bank =  "fx_book_temperature",
+        build = "fx_book_temperature",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/temp",
+    },
+
+    {
+        name =  "fx_book_bees",
+        bank =  "fx_book_bees",
+        build = "fx_book_bees",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/bees",
+    },
+
+    {
+        name =  "fx_book_fire",
+        bank =  "fx_book_fire",
+        build = "fx_book_fire",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/fire",
+    },
+
+    {
+        name =  "fx_book_light",
+        bank =  "fx_book_light",
+        build = "fx_book_light",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/light",
+    },
+
+    {
+        name =  "fx_book_light_upgraded",
+        bank =  "fx_book_light_upgraded",
+        build = "fx_book_light_upgraded",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/light_upgrade",
+    },
+
+    {
+        name =  "fx_book_birds",
+        bank =  "fx_book_birds",
+        build = "fx_book_birds",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/birds"
+    },
+
+    {
+        name =  "fx_book_sleep",
+        bank =  "fx_book_sleep",
+        build = "fx_book_sleep",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/sleep"
+    },
+
+    {
+        name =  "fx_book_silviculture",
+        bank =  "fx_book_silviculturesmall",
+        build = "fx_book_silviculturesmall",
+        anim =  "play_fx1",
+    },
+
+    {
+        name =  "fx_book_silviculture_2",
+        bank =  "fx_book_silviculturesmall",
+        build = "fx_book_silviculturesmall",
+        anim =  "play_fx2",
+    },
+
+    {
+        name =  "fx_book_rain",
+        bank =  "fx_book_rain",
+        build = "fx_book_rain",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/rain",
+    },
+
+    {
+        name =  "fx_book_fish",
+        bank =  "fx_book_fish",
+        build = "fx_book_fish",
+        anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/fish",
+        fn = function(inst)
+            GroundOrientation(inst)
+            --inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+            inst.AnimState:SetSortOrder(ANIM_SORT_ORDER.OCEAN_BOAT_BUMPERS)
+            local length = 30
+            local alpha = 1
+            local delta = 1 / length
+            inst:DoPeriodicTask(0, function(i)
+                alpha = math.max(0, alpha - delta)
+                inst.AnimState:SetMultColour(1, 1, 1, alpha)
+            end, 0.75)
+        end
+    },
+
+    {
+        name =  "fence_rotator_fx",
+        bank =  "fence_rotator_fx",
+        build = "fence_rotator_fx",
+        anim =  "idle",
+        sound = "wickerbottom_rework/fence_rotator/use",
+        fn = FinalOffset1,
     },
 }
 

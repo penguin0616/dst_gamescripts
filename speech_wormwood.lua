@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -575,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Thank you!",
 
     ANNOUNCE_FLARE_SEEN = "See friend make pretty light.",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Look out friend! Bad things coming!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Water friend?",
 
     --willow specific
@@ -708,6 +720,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Tired",
 
@@ -833,6 +856,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Hmm? Funny sounds coming...",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Attack!",
@@ -904,6 +929,7 @@ return{
         BERNIE_ACTIVE = "Yay! Squishy Friend can play!",
         BERNIE_BIG = "Big Squishy Friend!",
 
+        BOOKSTATION = "Book house",
         BOOK_BIRDS = "Pretty pictures",
         BOOK_TENTACLES = "About Scary Arms",
         BOOK_GARDENING = "This one's nice",
@@ -911,6 +937,21 @@ return{
 		BOOK_HORTICULTURE = "This one's nice",
         BOOK_SLEEP = "(yawn)",
         BOOK_BRIMSTONE = "Fire!",
+
+        BOOK_FISH = "Has Glub Glubs",
+        BOOK_FIRE = "Fire?",
+        BOOK_WEB = "Leggy Bug story",
+        BOOK_TEMPERATURE = "Warm? Cool? Hmm...",
+        BOOK_LIGHT = "Glowy",
+        BOOK_RAIN = "Friends will like that",
+        BOOK_MOON = "About Night Ball",
+        BOOK_BEES = "Buzzy book",
+        
+        BOOK_HORTICULTURE_UPGRADED = "More friend stories",
+        BOOK_RESEARCH_STATION = "Everything? Oooh...",
+        BOOK_LIGHT_UPGRADED = "Really really bright!",
+
+        FIREPEN = "Ouch! Hot!",
 
         PLAYER =
         {
@@ -1178,7 +1219,7 @@ return{
 		},
         WETPAPER = "Soppy paper",
         WETPOUCH = "Soppy pocket",
-        MOONROCK_PIECES = "From Night ball?",
+        MOONROCK_PIECES = "From Night Ball?",
         MOONBASE =
         {
             GENERIC = "Does it work?",
@@ -3383,6 +3424,7 @@ return{
         ICEBERG_MELTED = "Oh. Water now", --unimplemented
 
         MINIFLARE = "Makes pretty lights",
+        MEGAFLARE = "Makes big angry light",
 
 		MOON_FISSURE =
 		{
@@ -3887,7 +3929,7 @@ return{
             BURNT = "Oh",
         },
 
-        ARCHIVE_MOON_STATUE = "Friends of night ball",
+        ARCHIVE_MOON_STATUE = "Friends of Night Ball",
         ARCHIVE_RUNE_STATUE =
         {
             LINE_1 = "Skritch scratches",
@@ -4255,7 +4297,7 @@ return{
 		KITCOON_GRASS = "Scared friend?",
 		KITCOON_ROCKY = "Rocky friend",
 		KITCOON_DESERT = "Hear me, friend?",
-		KITCOON_MOON = "Friend likes night ball",
+		KITCOON_MOON = "Friend likes Night Ball",
 		KITCOON_YOT = "Happy friend",
 
         -- Moon Storm
@@ -4550,6 +4592,8 @@ return{
 
 
         BANANAJUICE = "Sweet friend water",
+
+        FENCE_ROTATOR = "Not nice to hit friends",
     },
 
     DESCRIBE_GENERIC = "Friend?",

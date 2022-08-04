@@ -26,17 +26,30 @@ local prefabs =
 }
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
+local THREATS_CANT = { "bedazzled", "INLIMBO", "FX", "NOCLICK", "DECOR" }
+local THREATS_MUSTONE = { "epic", "monster" }
+local THREATS_PVP = nil
+
 local function GetThreatCount(inst)
+    local pvpon = TheNet:GetPVPEnabled()
+    if pvpon ~= THREATS_PVP then
+        if pvpon then
+            table.removearrayvalue(THREATS_CANT, "player")
+        else
+            table.insert(THREATS_CANT, "player")
+        end
+        THREATS_PVP = pvpon
+    end
     local monster_count = 0
     local epic_count = 0
 
     local x, y, z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, TUNING.WOLFGANG_SANITY_RANGE, nil, { "bedazzled", "INLIMBO", "FX", "NOCLICK", "DECOR" }, { "monster", "epic" })
+    local ents = TheSim:FindEntities(x, y, z, TUNING.WOLFGANG_SANITY_RANGE, nil, THREATS_CANT, THREATS_MUSTONE)
 
     for k, v in pairs(ents) do
         if v:HasTag("epic") then
             epic_count = epic_count + 1
-        elseif v:HasTag("monster") then
+        else -- elseif v:HasTag("monster") then -- NOTES(JBK): Use commented one if THREATS_MUSTONE has more and remove this note.
             monster_count = monster_count + 1
         end
     end
@@ -46,17 +59,14 @@ end
 
 local function CheckForPlayers(inst)
     local monster_count, epic_count = GetThreatCount(inst)
-    
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local players = FindPlayersInRange(x, y, z, TUNING.WOLFGANG_SANITY_RANGE, true)
-    
-    local player_count = #players
-    player_count = player_count - 1 -- Subtract Wolfgang himself
-    
-    local PVP_enabled = TheNet:GetPVPEnabled()
 
     local follower_count = inst.components.leader:CountFollowers()
-    if not PVP_enabled then
+    local player_count = 0
+    if not THREATS_PVP then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local players = FindPlayersInRange(x, y, z, TUNING.WOLFGANG_SANITY_RANGE, true)
+        player_count = #players - 1 -- Subtract Wolfgang himself
+
         for k, v in pairs(players) do
             if v ~= inst then
                 follower_count = follower_count + v.components.leader:CountFollowers()

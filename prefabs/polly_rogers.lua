@@ -43,6 +43,7 @@ local function fn()
     inst:AddTag("noplayertarget")
     inst:AddTag("flying")
     inst:AddTag("ignorewalkableplatformdrowning")
+    inst:AddTag("NOBLOCK")
 
     inst.sounds =
     {

@@ -365,6 +365,10 @@ local actionhandlers =
         function(inst, action)
             return action.invobject == nil and inst:HasTag("soulstealer") and "portal_jumpin_pre" or "quicktele"
         end),
+    ActionHandler(ACTIONS.BLINK_MAP,
+        function(inst, action)
+            return action.invobject == nil and inst:HasTag("soulstealer") and "portal_jumpin_pre" or "quicktele"
+        end),
     ActionHandler(ACTIONS.CASTSUMMON,
         function(inst, action)
             return action.invobject ~= nil and action.invobject:HasTag("abigail_flower") and "summon_abigail" or "castspell"
@@ -549,8 +553,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.CARNIVAL_HOST_SUMMON, "give"),
 
     ActionHandler(ACTIONS.MUTATE_SPIDER, "give"),
-    ActionHandler(ACTIONS.HERD_FOLLOWERS, "use_inventory_item"),
-    ActionHandler(ACTIONS.REPEL, "use_inventory_item"),
+    ActionHandler(ACTIONS.HERD_FOLLOWERS, "use_inventory_item_busy"),
+    ActionHandler(ACTIONS.REPEL, "use_inventory_item_busy"),
     ActionHandler(ACTIONS.BEDAZZLE, "dolongaction"),
     ActionHandler(ACTIONS.UNLOAD_WINCH, "give"),
     ActionHandler(ACTIONS.USE_HEAVY_OBSTACLE, "dolongaction"),
@@ -579,6 +583,8 @@ local actionhandlers =
     ActionHandler(ACTIONS.REMOVEMODULES, "use_inventory_item_busy"),
     ActionHandler(ACTIONS.REMOVEMODULES_FAIL, "removeupgrademodules_fail"),
     ActionHandler(ACTIONS.CHARGE_FROM, "doshortaction"),
+
+    ActionHandler(ACTIONS.ROTATE_FENCE, "doswipeaction"),
 }
 
 local events =
@@ -2299,13 +2305,9 @@ local states =
 				inst.AnimState:PlayAnimation("pocketwatch_atk_pre" )
 				inst.AnimState:PushAnimation("pocketwatch_atk_lag", false)
 				inst.sg.statemem.ispocketwatch = true
-                if equip:HasTag("shadow_item") then
-	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre_shadow", nil, nil, true)
-					inst.AnimState:Show("pocketwatch_weapon_fx")
-                else
-	                inst.SoundEmitter:PlaySound("wanda2/characters/wanda/watch/weapon/pre", nil, nil, true)
-					inst.AnimState:Hide("pocketwatch_weapon_fx")
-                end
+            elseif equip ~= nil and equip:HasTag("jab") then
+                inst.AnimState:PlayAnimation("spearjab_pre")
+                inst.AnimState:PushAnimation("spearjab_lag", false)
             elseif equip ~= nil and
                 equip.replica.inventoryitem ~= nil and
                 equip.replica.inventoryitem:IsWeapon() and
@@ -2355,6 +2357,41 @@ local states =
                 if inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch then
                     inst.sg:RemoveStateTag("busy")
                 end
+            end),
+        },
+
+        onupdate = function(inst)
+            if inst:HasTag("doing") then
+                if inst.entity:FlattenMovementPrediction() then
+                    inst.sg:GoToState("idle", "noanim")
+                end
+            elseif inst.bufferedaction == nil then
+                inst.sg:GoToState("idle")
+            end
+        end,
+
+        ontimeout = function(inst)
+            inst:ClearBufferedAction()
+            inst.sg:GoToState("idle")
+        end,
+    },
+
+    State{
+        name = "doswipeaction",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("atk_prop_pre")
+            inst.AnimState:PushAnimation("atk_prop_lag", false)
+            inst:PerformPreviewBufferedAction()
+            inst.sg:SetTimeout(TIMEOUT)
+        end,
+
+        timeline =
+        {
+            TimeEvent(5 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
             end),
         },
 
@@ -3579,6 +3616,7 @@ local states =
                             inst.sg.statemem.projectilesound =
                                 (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                                 (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                                (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                                 "dontstarve/wilson/attack_weapon"
                         elseif inst.sg.statemem.projectiledelay <= 0 then
                             inst.sg.statemem.projectiledelay = nil
@@ -3588,6 +3626,7 @@ local states =
                         inst.SoundEmitter:PlaySound(
                             (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                             (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                            (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                             "dontstarve/wilson/attack_weapon",
                             nil, nil, true
                         )
@@ -3643,6 +3682,13 @@ local states =
                 inst.AnimState:PushAnimation("woodie_chop_loop", false)
                 inst.sg.statemem.ischop = true
                 cooldown = math.max(cooldown, 11 * FRAMES)
+            elseif equip ~= nil and equip:HasTag("jab") then
+                inst.AnimState:PlayAnimation("spearjab_pre")
+                inst.AnimState:PushAnimation("spearjab", false)
+                inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh", nil, nil, true)
+                if cooldown > 0 then
+                    cooldown = math.max(cooldown, 21 * FRAMES)
+                end
             elseif equip ~= nil and
                 equip.replica.inventoryitem ~= nil and
                 equip.replica.inventoryitem:IsWeapon() and
@@ -3658,6 +3704,7 @@ local states =
                         inst.sg.statemem.projectilesound =
                             (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                             (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                            (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                             "dontstarve/wilson/attack_weapon"
                     elseif inst.sg.statemem.projectiledelay <= 0 then
                         inst.sg.statemem.projectiledelay = nil
@@ -3668,6 +3715,7 @@ local states =
                         (equip:HasTag("icestaff") and "dontstarve/wilson/attack_icestaff") or
                         (equip:HasTag("shadow") and "dontstarve/wilson/attack_nightsword") or
                         (equip:HasTag("firestaff") and "dontstarve/wilson/attack_firestaff") or
+                        (equip:HasTag("firepen") and "wickerbottom_rework/firepen/launch") or
                         "dontstarve/wilson/attack_weapon",
                         nil, nil, true
                     )

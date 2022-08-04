@@ -489,7 +489,8 @@ function RemoveEntity(guid)
     local inst = Ents[guid]
     if inst then
         --certain things(like seamless player swapping) need to delay the despawning on a local client until they have ran their own code.
-        if (inst.delayclientdespawn and not TheNet:IsDedicated()) then
+        if inst.delayclientdespawn then
+            inst.delayclientdespawn_attempted = true
             return
         end
         inst:Remove()

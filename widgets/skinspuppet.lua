@@ -23,6 +23,7 @@ local player_emotes_to_choose = {
 	wolfgang = { wimpy_skin = "idle_wolfgang_skinny", normal_skin = "idle_wolfgang", mighty_skin = "idle_wolfgang_mighty" },
     wx78 = "idle_wx",
 	wonkey = "idle_wonkey",
+	wickerbottom = "idle_wickerbottom",
 }
 
 local emote_min_time = 6
@@ -174,6 +175,8 @@ function SkinsPuppet:DoIdleEmote()
 			end
 
 			if self.prefabname == "wormwood" and not self.animstate:CompareSymbolBuilds("hand", "hand_idle_wormwood") then
+				--don't do player anim
+			elseif self.prefabname == "wickerbottom" and not self.animstate:CompareSymbolBuilds("hand", "hand_wickerbottom") then
 				--don't do player anim
 			else
 				local emote_anim = nil

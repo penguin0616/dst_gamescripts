@@ -104,6 +104,18 @@ local function EquipBlowdart(inst)
     end
 end
 
+local function OnSave(inst, data)
+    data.flare_summoned = inst:HasTag("flare_summoned")
+end
+
+local function OnLoad(inst, data)
+    if data then
+        if data.flare_summoned then
+            inst:AddTag("flare_summoned")
+        end
+    end
+end
+
 local function create_common(build, scale, tag)
     local inst = CreateEntity()
 
@@ -183,6 +195,9 @@ local function create_common(build, scale, tag)
     inst.OnEntitySleep = OnEntitySleep
 
     inst:DoTaskInTime(1, EquipBlowdart)
+
+    inst.OnSave = OnSave
+    inst.OnLoad = OnLoad
 
     return inst
 end

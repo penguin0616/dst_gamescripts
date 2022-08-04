@@ -442,6 +442,8 @@ local prefabs =
     "dock_woodposts",
     "fx_dock_crackle",
     "fx_dock_pop",
+
+    "fence_rotator",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")

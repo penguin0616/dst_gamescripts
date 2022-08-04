@@ -146,6 +146,9 @@ end
 
 local DEFAULT_SHARE_TARGET_MUST_TAGS = { "_combat" }
 function Combat:ShareTarget(target, range, fn, maxnum, musttags)
+    if target and target._doesnotdrawaggro then
+        return
+    end
     if maxnum <= 0 then
         return
     end

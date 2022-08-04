@@ -858,6 +858,10 @@ local function AddWinterTree(treetype)
 
         inst:AddComponent("growable")
         inst.components.growable.stages = GROWTH_STAGES
+        inst.components.growable.magicgrowable = true
+
+        inst:AddComponent("simplemagicgrower")
+        inst.components.simplemagicgrower:SetLastStage(#inst.components.growable.stages)
 
         inst:AddComponent("lootdropper")
         inst.components.lootdropper:SetLootSetupFn(lootsetfn)

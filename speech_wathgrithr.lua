@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -575,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "I am restored!",
 
     ANNOUNCE_FLARE_SEEN = "My allies beckon me!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "That light in the sky... 'tis a challenge to all who see it!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "A gargantuan foe approaches!",
 
     --willow specific
@@ -704,6 +716,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "The wee beast is on death's door.",
 
@@ -829,6 +852,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "A ship approaches! Prepare for battle!",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Valhalla awaits!",
@@ -900,6 +925,7 @@ return{
         BERNIE_ACTIVE = "What a brave beast!",
         BERNIE_BIG = "The beast hath been imbued with a fighting spirit!",
 
+        BOOKSTATION = "A trove of wisdom.",
         BOOK_BIRDS = "To rule the skies!",
         BOOK_TENTACLES = "Knowledge grants great power!",
         BOOK_GARDENING = "But can it tend the garden of mine soul?",
@@ -907,6 +933,21 @@ return{
 		BOOK_HORTICULTURE = "But can it tend the garden of mine soul?",
         BOOK_SLEEP = "Where's the drama? The suspense?",
         BOOK_BRIMSTONE = "This tome is brimming with Hel's fire!",
+
+        BOOK_FISH = "Secret tactics for capturing the sea meats!",
+        BOOK_FIRE = "A tome to combat the most fiery tempest!",
+        BOOK_WEB = "Sometimes we may learn from the enemy.",
+        BOOK_TEMPERATURE = "I need only the heat of battle!",
+        BOOK_LIGHT = "A beacon of knowledge.",
+        BOOK_RAIN = "It speaks of ways to appease Freyr.",
+        BOOK_MOON = "We call upon the power of Mani!",
+        BOOK_BEES = "Our elder has been watching the wee speared creatures closely.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "The knowledge within shall grant us bountiful harvests.",
+        BOOK_RESEARCH_STATION = "A tome filled with great wisdom.",
+        BOOK_LIGHT_UPGRADED = "A blinding beacon of knowledge!",
+
+        FIREPEN = "I sense a burning power within.",
 
         PLAYER =
         {
@@ -3379,6 +3420,7 @@ return{
         ICEBERG_MELTED = "Twas no match for this great heat.", --unimplemented
 
         MINIFLARE = "Never split thy party!",
+        MEGAFLARE = "I fear no enemy. Let them come!",
 
 		MOON_FISSURE =
 		{
@@ -4546,6 +4588,8 @@ return{
 
 
         BANANAJUICE = "Monkey slop.",
+
+        FENCE_ROTATOR = "I'd take a proper blade at my side over this overgrown sewing needle.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

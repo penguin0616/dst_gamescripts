@@ -1340,7 +1340,18 @@ function Inv:UpdatePosition()
     self.autoanchor:SetPosition(0, self:IsVisible() and (self.root:GetPosition().y - 10) or 0)
 end
 
-Inv.OnShow = Inv.UpdatePosition
-Inv.OnHide = Inv.UpdatePosition
+function Inv:OnShow()
+    self:UpdatePosition()
+    if self.hovertile ~= nil then
+        self.hovertile:Show()
+    end
+end
+
+function Inv:OnHide()
+    self:UpdatePosition()
+    if self.hovertile ~= nil then
+        self.hovertile:Hide()
+    end
+end
 
 return Inv

@@ -23,6 +23,16 @@ function CanPrototypeRecipe(recipetree, buildertree)
     return true
 end
 
+local function CanCraftIngredient(owner, ing, tech_level)
+	local ing_recipe = GetValidRecipe(ing.type)
+	return ing_recipe ~= nil
+		and not owner.replica.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * owner.replica.builder:IngredientMod())), true)
+		and (	owner.replica.builder:KnowsRecipe(ing_recipe) or
+				(CanPrototypeRecipe(ing_recipe.level, tech_level) and owner.replica.builder:CanLearn(ing.type))
+			)
+		and owner.replica.builder:HasIngredients(ing_recipe)
+end
+
 local lastsoundtime = nil
 -- return values: "keep_crafting_menu_open", "error message"
 function DoRecipeClick(owner, recipe, skin)
@@ -80,12 +90,10 @@ function DoRecipeClick(owner, recipe, skin)
                     owner.components.playercontroller:StartBuildPlacementMode(recipe, skin)
                 end
 			else
+				-- check if we can craft sub ingredients
 				local tech_level = owner.replica.builder:GetTechTrees()
 				for i, ing in ipairs(recipe.ingredients) do
-					local ing_recipe = GetValidRecipe(ing.type)
-					if ing_recipe ~= nil
-						and not owner.replica.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * owner.replica.builder:IngredientMod())), true)
-						and (owner.replica.builder:KnowsRecipe(ing_recipe) or CanPrototypeRecipe(ing_recipe.level, tech_level)) and owner.replica.builder:HasIngredients(ing_recipe) then
+					if CanCraftIngredient(owner, ing, tech_level) then
 						owner.replica.builder:MakeRecipeFromMenu(recipe, skin) -- tell the server to build the current recipe, not the ingredient
 						return true
 					end
@@ -127,10 +135,7 @@ function DoRecipeClick(owner, recipe, skin)
 				else
 					-- check if we can craft sub ingredients
 					for i, ing in ipairs(recipe.ingredients) do
-						local ing_recipe = GetValidRecipe(ing.type)
-						if ing_recipe ~= nil
-							and not owner.replica.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * owner.replica.builder:IngredientMod())), true)
-							and (owner.replica.builder:KnowsRecipe(ing_recipe) or CanPrototypeRecipe(ing_recipe.level, tech_level)) and owner.replica.builder:HasIngredients(ing_recipe) then
+						if CanCraftIngredient(owner, ing, tech_level) then
 							owner.replica.builder:MakeRecipeFromMenu(recipe, skin) -- tell the server to build the current recipe, not the ingredient
 							return true
 						end

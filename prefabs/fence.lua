@@ -22,6 +22,10 @@ local function IsNarrow(inst)
     return CalcRotationEnum(inst.Transform:GetRotation()) % 2 == 0
 end
 
+local function IsEnumNarrow(enum)
+    return enum % 2 == 0
+end
+
 local function IsSwingRight(inst)
     if inst._isswingright ~= nil then
         return inst._isswingright:value()
@@ -99,7 +103,7 @@ local function GetPairedDoor(inst, rot)
     local x, y, z = inst.Transform:GetWorldPosition()
 
     local swingright = IsSwingRight(inst)
-    local search_dist = IsNarrow(inst) and 1 or 1.4
+    local search_dist = IsNarrow(inst) and 1.2 or 1.6
 
     local search_x = -math.sin(rot / RADIANS) * search_dist
     local search_y = math.cos(rot / RADIANS) * search_dist
@@ -107,7 +111,7 @@ local function GetPairedDoor(inst, rot)
     search_x = x + (swingright and search_x or -search_x)
     search_y = z + (swingright and -search_y or search_y)
 
-    local paired_door = TheSim:FindEntities(search_x,0,search_y, 0.5, FINDDOOR_MUST_TAGS)[1]
+    local paired_door = TheSim:FindEntities(search_x,0,search_y, 0.75, FINDDOOR_MUST_TAGS)[1]
     return paired_door
 end
 
@@ -126,7 +130,11 @@ local function FindPairedDoor(inst)
     if other_door then
         local swingright = IsSwingRight(inst)
         local opposite_swing = swingright ~= IsSwingRight(other_door)
-        local opposite_rotation = inst.Transform:GetRotation() ~= other_door.Transform:GetRotation()
+
+        -- Round rotating angles to three decimal places to avoid imprecision when comparing the door rotations
+        local door_rotation = math.floor(inst.Transform:GetRotation() * 1000) / 1000
+        local other_rotation = math.floor(other_door.Transform:GetRotation() * 1000) / 1000
+        local opposite_rotation = door_rotation ~= other_rotation
         return (opposite_swing ~= opposite_rotation) and other_door or nil
     end
 
@@ -144,14 +152,20 @@ local function ApplyDoorOffset(inst)
     SetOffset(inst, inst.offsetdoor and 0.45 or 0)
 end
 
-local function SetOrientation(inst, rotation)
+local function SetOrientation(inst, rotation, rotation_enum)
     --rotation = CalcFacingAngle(rotation)
 
     inst.Transform:SetRotation(rotation)
 
     if inst.anims.narrow then
+        local is_narrow = false
+        if rotation_enum ~= nil then
+            is_narrow = IsEnumNarrow(rotation_enum)
+        else
+            is_narrow = IsNarrow(inst)
+        end
 
-        if IsNarrow(inst) then
+        if is_narrow then
             if not inst.bank_narrow_set then
                 inst.bank_narrow_set = true
                 inst.bank_wide_set = nil
@@ -431,8 +445,16 @@ end
 -------------------------------------------------------------------------------
 
 local function onsave(inst, data)
-    local rot = CalcRotationEnum(inst.Transform:GetRotation())
-    data.rot = rot > 0 and rot or nil
+
+    -- If we're on a boat, save boat rotation value in its own value separate from the standard rotation data
+    local boat = inst:GetCurrentPlatform()
+    if boat and boat:HasTag("boat") then
+        data.boatrotation = inst.Transform:GetRotation()
+    else
+        local rot = CalcRotationEnum(inst.Transform:GetRotation())
+        data.rot = rot > 0 and rot or nil
+    end
+
     data.offsetdoor = inst.offsetdoor
     data.swingright = inst._isswingright ~= nil and inst._isswingright:value() or nil
     data.isopen = inst._isopen ~= nil and inst._isopen:value() or nil
@@ -471,26 +493,33 @@ local function onload(inst, data)
     end
 end
 
-local function onloadpostpass(inst)
+local function onloadpostpass(inst, newents, data)
 
     inst:DoTaskInTime(0, function(inst)
         -- If fences are placed on rotated boats, we need to account for the boat's rotation
-        local boat = inst:GetCurrentPlatform()
-        if boat and boat:HasTag("boat") then
-            local fence_rotation = inst.Transform:GetRotation()
-            local boat_rotation = boat.Transform:GetRotation()
+        if data.boatrotation ~= nil then
+            -- New method for loading rotation on boats; set the orientation directly
+            local rot_enum = CalcRotationEnum(inst.Transform:GetRotation())
+            SetOrientation(inst, data.boatrotation, rot_enum)
+        else
+            -- Old method for loading rotation on boats
+            local boat = inst:GetCurrentPlatform()
+            if boat and boat:HasTag("boat") then
+                local fence_rotation = inst.Transform:GetRotation()
+                local boat_rotation = boat.Transform:GetRotation()
 
-            if fence_rotation < 0 then
-                fence_rotation = 360 + fence_rotation
+                if fence_rotation < 0 then
+                    fence_rotation = 360 + fence_rotation
+                end
+
+                local fence_rotation_enum = inst.loaded_rotation_enum
+                local boat_rot_enum = CalcRotationEnum(boat_rotation)
+
+                local base_rotation_enum = fence_rotation_enum - boat_rot_enum
+                SetOrientation(inst, base_rotation_enum * 45 + boat_rotation)
+
+                inst.loaded_rotation_enum = nil
             end
-
-            local fence_rotation_enum = inst.loaded_rotation_enum
-            local boat_rot_enum = CalcRotationEnum(boat_rotation)
-
-            local base_rotation_enum = fence_rotation_enum - boat_rot_enum
-            SetOrientation(inst, base_rotation_enum * 45 + boat_rotation)
-
-            inst.loaded_rotation_enum = nil
         end
     end)
 end
@@ -527,6 +556,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         inst.Physics:SetDontRemoveOnSleep(true)
 
         inst:AddTag("wall")
+        inst:AddTag("fence")
         inst:AddTag("alignwall")
         inst:AddTag("noauradamage")
 
@@ -631,6 +661,7 @@ local function MakeWall(name, anims, isdoor, klaussackkeyid)
         inst.OnSave = onsave
         inst.OnLoad = onload
         inst.OnLoadPostPass = onloadpostpass
+        inst.SetOrientation = SetOrientation
 
         return inst
     end

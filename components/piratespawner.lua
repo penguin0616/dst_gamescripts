@@ -16,8 +16,12 @@ local SourceModifierList = require("util/sourcemodifierlist")
 --[[ Constants ]]
 --------------------------------------------------------------------------
 
+local function shouldremoveitem(inst)
+    return inst:HasTag("personal_possession") or inst:HasTag("cursed")
+end
+
 local function processloot(inst, stash)
-    if inst:HasTag("personal_possession") then
+    if shouldremoveitem(inst) then
         inst:Remove()
         return
     end
@@ -37,11 +41,13 @@ local function stashloot(inst)
         processloot(inst,stash)
     elseif inst.components.inventory then
         local function checkitem(item)
-            if item and item:HasTag("personal_possession") then
-                item:Remove()
-            elseif item then 
-                inst.components.inventory:DropItem(item, true)
-                processloot(item, stash)
+            if item then
+                if shouldremoveitem(item) then
+                    item:Remove()
+                else
+                    inst.components.inventory:DropItem(item, true)
+                    processloot(item, stash)
+                end
             end
         end
         inst.components.inventory:ForEachItem(checkitem)
@@ -194,6 +200,7 @@ local function GetAveragePlayerAgeInDays()
     end
     return sum > 0 and sum / #_activeplayers or 0
 end
+
 
 local function getnextmonkeytime()
     local days = GetAveragePlayerAgeInDays()
@@ -369,6 +376,42 @@ local function SpawnPiratesForPlayer(player)
 
     return spawnedPirates
 end
+
+local MUST_BOAT = {"boat"}
+
+local function onmegaflaredetonation(world,data)
+    if data.sourcept and not TheWorld.Map:IsVisualGroundAtPoint(data.sourcept.x,data.sourcept.y,data.sourcept.z) then
+        if math.random() < 0.6 then
+            self.inst:DoTaskInTime(5 + (math.random()* 20),
+                function()
+
+                    local ents = TheSim:FindEntities(data.sourcept.x, data.sourcept.y, data.sourcept.z, 40, MUST_BOAT)
+                    local pirates = false
+                    for i, ent in ipairs(ents)do
+                        if ent and ent.components.boatcrew then
+                            pirates = true
+                            break
+                        end
+                    end
+                    if not pirates then
+                        local players = FindPlayersInRange(data.sourcept.x, data.sourcept.y, data.sourcept.z, 35)
+
+                        if #players > 0 then
+                            for i, player in ipairs(players) do
+                                if player:GetCurrentPlatform() then
+                                    SpawnPiratesForPlayer(player)
+                                    break
+                                end
+                            end
+                        end
+                    end
+
+                end)
+        end
+    end
+end
+
+self.inst:ListenForEvent("megaflare_detonated",onmegaflaredetonation,TheWorld)
 
 --------------------------------------------------------------------------
 --[[ Private event handlers ]]

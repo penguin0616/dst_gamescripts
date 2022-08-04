@@ -128,12 +128,26 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"dumbbell_gem",
 
 	-- Wickerbottom
-	"book_birds",
+	"bookstation",
+	"book_birds",	
 	"book_horticulture",
 	"book_silviculture",
-	"book_sleep",
-	"book_brimstone",
+	"book_sleep",		
+	"book_brimstone",	
 	"book_tentacles",
+	
+	"book_fish",
+	"book_fire",
+	"book_web",
+	"book_temperature",
+	"book_light",
+	"book_rain",
+	"book_moon",
+	"book_bees",
+	"book_research_station",
+	
+	"book_horticulture_upgraded",
+	"book_light_upgraded",
 
 	-- Maxwell
 	"waxwelljournal",
@@ -471,6 +485,7 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"sewing_kit",
 	"sewing_tape",
 	"miniflare",
+	"megaflare",
 	"wateringcan",
 	"premiumwateringcan",
 	"fishingrod",
@@ -588,6 +603,7 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"waterballoon",
 	"boat_cannon_kit",
 	"cannonball_rock_item",
+	"fence_rotator",
 }
 
 CRAFTING_FILTERS.ARMOUR.recipes =
@@ -787,7 +803,7 @@ CRAFTING_FILTERS.SEAFARING.recipes =
 	"waterpump",
 
 	"boat_magnet_kit",
-	"boat_magnet_beacon",	
+	"boat_magnet_beacon",
 
     "dock_kit",
     "dock_woodposts_item",

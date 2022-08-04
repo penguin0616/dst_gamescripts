@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -576,6 +587,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Lucy'll never let me live that down.",
 
     ANNOUNCE_FLARE_SEEN = "I should go check out that flare, eh?",
+    ANNOUNCE_MEGA_FLARE_SEEN = "I hope whoever sent that flare is ready for what's comin'.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Watch out, something's coming!",
 
     --willow specific
@@ -705,6 +717,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "That one's not looking so good.",
 
@@ -830,6 +853,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Hang on Lucy, it sounds like we've got company.",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Get over here, eh!",
@@ -901,6 +926,7 @@ return{
         BERNIE_ACTIVE = "I guess I should be used to weird stuff by now.",
         BERNIE_BIG = "Hm. Yep. Just another day.",
 
+        BOOKSTATION = "Nice bit of woodworking there.",
         BOOK_BIRDS = "I already know more than enough aboot those things.",
         BOOK_TENTACLES = "They don't have tentacles in Canada.",
         BOOK_GARDENING = "Does it grow trees?",
@@ -908,6 +934,21 @@ return{
 		BOOK_HORTICULTURE = "That's a lot of readin'... you sure it's the shorter version?",
         BOOK_SLEEP = "The perfect book for a full moon.",
         BOOK_BRIMSTONE = "I know better than to mess with that, eh.",
+
+        BOOK_FISH = "Is there a chapter on ice fishing?",
+        BOOK_FIRE = "My first instinct when I see a fire isn't to crack open a book.",
+        BOOK_WEB = "I deal with spiders enough, I don't need to read aboot them too!",
+        BOOK_TEMPERATURE = "I'm alright with the cold, but summers ain't fun under all this hair.",
+        BOOK_LIGHT = "Must be one of 'em book lights.",
+        BOOK_RAIN = "Could've really used this when I was livin' on the West Coast.",
+        BOOK_MOON = "I'm getting goosebumps just lookin' at it.",
+        BOOK_BEES = "There's a whole book on the little buzzers, eh?",
+        
+        BOOK_HORTICULTURE_UPGRADED = "They sure gotta make gardening complicated, eh?",
+        BOOK_RESEARCH_STATION = "Eh, at the very least it'd make a good doorstop.",
+        BOOK_LIGHT_UPGRADED = "I guess this is her idea of some light reading.",
+
+        FIREPEN = "Keep it away from the trees!",
 
         PLAYER =
         {
@@ -3380,6 +3421,7 @@ return{
         ICEBERG_MELTED = "It's looking a bit drippy.", --unimplemented
 
         MINIFLARE = "Just needs a light.",
+        MEGAFLARE = "That'll definitely get someone... or something's attention.",
 
 		MOON_FISSURE =
 		{
@@ -4547,6 +4589,8 @@ return{
 
 
         BANANAJUICE = "Feels almost like being on vacation, eh?",
+
+        FENCE_ROTATOR = "Sometimes you've gotta show a fence who's boss, eh?",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

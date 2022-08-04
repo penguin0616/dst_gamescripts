@@ -13,6 +13,8 @@ TILE_SCALE = 4
 RESOLUTION_X = 1280
 RESOLUTION_Y = 720
 
+PLAYER_REVEAL_RADIUS = 30.0 -- NOTES(JBK): Keep in sync with MiniMapRenderer.cpp!
+
 MAX_FE_SCALE = 3 --Default if you don't call SetMaxPropUpscale
 MAX_HUD_SCALE = 1.25
 
@@ -1033,13 +1035,15 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
+    "dontstarve/music/music_FE_wickerbottom"
     --"dontstarve/music/music_FE"
-    "dontstarve/music/music_FE_pirates"
+    --"dontstarve/music/music_FE_pirates"
     --"dontstarve/music/music_FE_WX"
     --"dontstarve/music/music__moonstorm_FE"
     --"dontstarve/music/musicFE_webber"
     --"dontstarve/music/music_FE_wanda"
     --"terraria1/common/music_main_eot"
+
 
 ---------------------------------------------------------
 NUM_HALLOWEENCANDY = 14
@@ -1122,6 +1126,7 @@ TECH =
     SPIDERCRAFT_ONE = { SPIDERCRAFT = 1 },
 
     ROBOTMODULECRAFT_ONE = { ROBOTMODULECRAFT = 1 },
+    BOOKCRAFT_ONE = { BOOKCRAFT = 1 },
 }
 
 -- See cell_data.h

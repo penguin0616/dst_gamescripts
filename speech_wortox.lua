@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -575,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "The imp returns!",
 
     ANNOUNCE_FLARE_SEEN = "One of my friends is inviting me to play!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "An open invitation! Who knows what might drop by?",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Hyuyu, something's come to play!",
 
     --willow specific
@@ -709,6 +721,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Time has nearly run out for this would-be racer.",
 
@@ -834,6 +857,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Something scurvy this way comes.",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Let's have some fun.",
@@ -905,6 +930,7 @@ return{
         BERNIE_ACTIVE = "Good sir, are you aware you've no soul?",
         BERNIE_BIG = "It's grown to new heights to win all our fights!",
 
+        BOOKSTATION = "Her entire collection for our inspection.",
         BOOK_BIRDS = "Humans share their knowledge so freely.",
         BOOK_TENTACLES = "Imps don't disseminate precious knowledge so carelessly.",
         BOOK_GARDENING = "Secret knowledge of vegetables.",
@@ -912,6 +938,21 @@ return{
 		BOOK_HORTICULTURE = "Secret knowledge of vegetables.",
         BOOK_SLEEP = "Knowledge is power. Literally.",
         BOOK_BRIMSTONE = "Who would leave such precious knowledge lying here?",
+
+        BOOK_FISH = "This one's a bit fishy.",
+        BOOK_FIRE = "We've no use for tomes from where I roam.",
+        BOOK_WEB = "Oh what a tangled web we read.",
+        BOOK_TEMPERATURE = "Hyuyuyu, mortals have such funny ideas.",
+        BOOK_LIGHT = "Shall I sit and read for a spell?",
+        BOOK_RAIN = "Mortals can take the fun out of anything.",
+        BOOK_MOON = "Hyuyuyu how cute! The mortals think they can hold sway over the moon!",
+        BOOK_BEES = "I think I'll beekeeping my distance, hyuyu!",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Always something to learn where gardens are concerned.",
+        BOOK_RESEARCH_STATION = "So much knowledge, and none of it forbidden!",
+        BOOK_LIGHT_UPGRADED = "It's quite heavy for a light book, hyuyu!",
+
+        FIREPEN = "Hyuyuyu, the old flaming pen prank!",
 
         PLAYER =
         {
@@ -3385,6 +3426,7 @@ return{
         ICEBERG_MELTED = "Teeny tiny, drippy droppy iceberg.", --unimplemented
 
         MINIFLARE = "Mortals get lost sometimes, hyuyu.",
+        MEGAFLARE = "Hyuyuyu, this might get interesting!",
 
 		MOON_FISSURE =
 		{
@@ -4485,7 +4527,7 @@ return{
         BOAT_BUMPER_SHELL_KIT = "But idle hands are such good playthings!",
         BOAT_CANNON = {
             GENERIC = "Rounded stones are required for this cannon to fire.",
-            AMMOLOADED = "Ready to fire, but decidedly unready to brimstone.",
+            AMMOLOADED = "Ready to fire and brimstone!",
             NOAMMO = "This cannon cannot fire.",
         },
         BOAT_CANNON_KIT = "I'll build it quick, then put it on the ship.",
@@ -4552,6 +4594,8 @@ return{
 
 
         BANANAJUICE = "Mortals will eat bananas in just about any form.",
+
+        FENCE_ROTATOR = "A sword against fences... we've all lost our senses!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

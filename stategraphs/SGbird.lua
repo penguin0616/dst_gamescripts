@@ -160,8 +160,16 @@ local states =
             inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 
             inst.Physics:SetMotorVel(0, math.random() * 10 - 20, 0)
-            inst.SoundEmitter:PlaySound(inst.sounds.flyin)
         end,
+
+        timeline =
+        {
+            TimeEvent(1 * FRAMES, function(inst)
+                if inst.components.inventoryitem == nil or not inst.components.inventoryitem:IsHeld() then
+                    inst.SoundEmitter:PlaySound(inst.sounds.flyin)
+                end
+            end),
+        },
 
         onupdate = function(inst)
             local x, y, z = inst.Transform:GetWorldPosition()

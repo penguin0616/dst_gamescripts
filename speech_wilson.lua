@@ -108,8 +108,19 @@ return {
         --wickerbottom specific action
         READ =
         {
-            GENERIC = "only_used_by_wickerbottom",
-            NOBIRDS = "only_used_by_wickerbottom",
+            GENERIC = "only_used_by_waxwell_and_wicker",
+            NOBIRDS = "only_used_by_waxwell_and_wicker",
+            NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+            TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+            WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+            NOFIRES =       "only_used_by_waxwell_and_wicker",
+            NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+            NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+            NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+            NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+            TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+            NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
+            ALREADYFULLMOON = "only_used_by_waxwell_and_wicker",
         },
 
         GIVE =
@@ -402,6 +413,7 @@ return {
     --waxwell and wickerbottom specific strings
     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+    ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -585,6 +597,7 @@ return {
     ANNOUNCE_REVIVED_FROM_CORPSE = "Much better, thank-you.",
 
     ANNOUNCE_FLARE_SEEN = "I wonder who set that flare?",
+    ANNOUNCE_MEGA_FLARE_SEEN = "That flash is gonna bring trouble.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Uh-oh. Sea monsters!",
 
     --willow specific
@@ -714,6 +727,17 @@ return {
         BOOK_GARDENING = "only_used_by_wurt",
 		BOOK_SILVICULTURE = "only_used_by_wurt",
 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+        BOOK_FISH = "only_used_by_wurt",
+        BOOK_FIRE = "only_used_by_wurt",
+        BOOK_WEB = "only_used_by_wurt",
+        BOOK_TEMPERATURE = "only_used_by_wurt",
+        BOOK_LIGHT = "only_used_by_wurt",
+        BOOK_RAIN = "only_used_by_wurt",
+
+        BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+        BOOK_RESEARCH_STATION = "only_used_by_wurt",
+        BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "This carrat is in no shape to be training.",
 
@@ -839,6 +863,8 @@ return {
 
     ANNOUNCE_PIRATES_ARRIVE = "That shanty can only mean one thing...",
 
+    ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Go for the eyes!",
@@ -910,6 +936,7 @@ return {
         BERNIE_ACTIVE = "That teddy bear is moving around. Interesting.",
         BERNIE_BIG = "Remind me not to get on Willow's bad side.",
 
+        BOOKSTATION = "Why study when I can experiment?",
         BOOK_BIRDS = "No point studying when I can just wing it.",
         BOOK_TENTACLES = "Someone'll get suckered into reading this.",
         BOOK_GARDENING = "I see no farm in reading that.",
@@ -917,6 +944,21 @@ return {
 		BOOK_HORTICULTURE = "I see no farm in reading that.",
         BOOK_SLEEP = "Strange, it's just 500 pages of telegraph codes.",
         BOOK_BRIMSTONE = "The beginning was dull, but got better near the end.",
+
+        BOOK_FISH = "It didn't really hook me.",
+        BOOK_FIRE = "I don't feel any burning need to read it.",
+        BOOK_WEB = "I'm not scared of spiders! I'm not!",
+        BOOK_TEMPERATURE = "My thoughts on it are only lukewarm.",
+        BOOK_LIGHT = "Whoever wrote this must've been pretty bright.",
+        BOOK_RAIN = "That doesn't sound very scientific.",
+        BOOK_MOON = "All this interest in the moon is probably just a phase.",
+        BOOK_BEES = "I don't get all the buzz around this one.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "It's about as exciting as watching grass grow.",
+        BOOK_RESEARCH_STATION = "Wickerbottom likes to do everything by the book.",
+        BOOK_LIGHT_UPGRADED = "Brilliant!",
+
+        FIREPEN = "Strike while the pen's hot!",
 
         PLAYER =
         {
@@ -3389,6 +3431,7 @@ return {
         ICEBERG_MELTED = "It's completely melted.", --unimplemented
 
         MINIFLARE = "I can light it to let everyone know I'm here.",
+        MEGAFLARE = "It will let everything know I'm here. Everything.",
 
 		MOON_FISSURE =
 		{
@@ -4556,6 +4599,8 @@ return {
 
 
         BANANAJUICE = "Makes me feel a bit rogueish.",
+
+        FENCE_ROTATOR = "Enguard! Re-post!",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

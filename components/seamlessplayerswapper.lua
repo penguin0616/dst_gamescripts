@@ -55,6 +55,13 @@ function SeamlessPlayerSwapper:OnSeamlessCharacterSwap(old_player)
 	new_player:LoadForReroll(old_player:SaveForReroll()) -- apply the saved stuff from the old player
 	old_player:SwapAllCharacteristics(new_player)
 
+	--disable the old player entity
+	old_player.Physics:SetActive(false)
+	old_player:Hide()
+	old_player.DynamicShadow:Enable(false)
+	old_player.MiniMapEntity:SetEnabled(false)
+	old_player.Network:SetClassifiedTarget(new_player)
+
 	self.main_data.mime = old_player:HasTag("mime")
 
 	self:PostTransformSetup()

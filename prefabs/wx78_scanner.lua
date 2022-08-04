@@ -525,7 +525,7 @@ local function OnShowRingFXDirty(inst)
         end
         inst:AddChild(inst.prox_range)
 
-        inst.prox_range.AnimState:SetAddColour(0, 0.5, 0.2, 1)
+        inst.prox_range.AnimState:SetAddColour(0, 0.5, 0.2, 0)
     elseif show_ring_fx_value == 2 then
         local fail_prox_range = CreateRingFX()
 
@@ -540,8 +540,8 @@ local function OnShowRingFXDirty(inst)
 
         fail_prox_range.components.fader:Fade(1, 0, 1,
             function(alphaval, fx)
-                fx.AnimState:SetMultColour(alphaval, alphaval, alphaval, alphaval)
-                fx.AnimState:SetAddColour(0.5*alphaval, 0.1*alphaval, 0.1*alphaval, alphaval)
+                fx.AnimState:SetMultColour(1, 1, 1, alphaval)
+                fx.AnimState:SetAddColour(0.5*alphaval, 0.1*alphaval, 0.1*alphaval, 0)
             end,
             function(fx, alphaval)
                 fx:Remove()
@@ -566,12 +566,12 @@ local function OnShowRingFXDirty(inst)
                 local prox_range = CreateRingFX()
                 prox_range.Transform:SetPosition(inst.Transform:GetWorldPosition())
                 prox_range.Transform:SetRotation(matched_rotation)
-                prox_range.AnimState:SetAddColour(0, 0.5, 0.2, 1)
+                prox_range.AnimState:SetAddColour(0, 0.5, 0.2, 0)
 
                 prox_range.components.fader:Fade(1 - (i*0.4), 0, 1,
                     function(alphaval, fx)
-                        fx.AnimState:SetMultColour(alphaval, alphaval, alphaval, alphaval)
-                        fx.AnimState:SetAddColour(0, 0.5*alphaval, 0.2*alphaval, alphaval)
+                        fx.AnimState:SetMultColour(1, 1, 1, alphaval)
+                        fx.AnimState:SetAddColour(0, 0.5*alphaval, 0.2*alphaval, 0)
                     end,
                     function(fx, alphaval)
                         fx:Remove()

@@ -100,6 +100,17 @@ return{
         {
             GENERIC = "Other matters await.",
             NOBIRDS = "The birds are not keen on this weather.",
+            NOWATERNEARBY = "Fish may only be summoned in close proximity to a body of water.",
+            TOOMANYBIRDS = "It doesn't work as well with this many birds around.",
+            WAYTOOMANYBIRDS = "The sky is out of birds for now.",
+            NOFIRES =       "Thankfully, there are no fires to put out.",
+            NOSILVICULTURE = "There are no arboreal subjects to focus on.",
+            NOHORTICULTURE = "There are no crops to cultivate.",
+            NOTENTACLEGROUND = "The tentacles would be unable to break the surface here.",
+            NOSLEEPTARGETS = "I don't see anyone in need of a bedtime story.",
+            TOOMANYBEES = "That would be a rather excessive amount of bees, dear.",
+            NOMOONINCAVES = "The moon can't be affected from this subterranean location.",
+            ALREADYFULLMOON = "I'm afraid that would be quite redundant.",
         },
 
         GIVE =
@@ -390,8 +401,9 @@ return{
     ANNOUNCE_MOUNT_LOWHEALTH = "My mount requires attention of the medical variety.",
 
     --waxwell and wickerbottom specific strings
-    ANNOUNCE_TOOMANYBIRDS = "It doesn't work as well with this many birds around.",
-    ANNOUNCE_WAYTOOMANYBIRDS = "The sky is out of birds for now.",
+--fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -575,6 +587,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Oof! Back on my feet!",
 
     ANNOUNCE_FLARE_SEEN = "Someone's fired a flare.",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Oh my. Someone is looking to initiate a conflict.",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "The megafauna have set their eyes on us.",
 
     --willow specific
@@ -704,6 +717,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "I'm afraid it's in no condition to race.",
 
@@ -829,6 +853,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Oh dear, it's those troublemakers playing their loud music again...",
 
+    ANNOUNCE_BOOK_MOON_DAYTIME = "We won't be able to view the effects until this evening.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Combat!",
@@ -900,6 +926,7 @@ return{
         BERNIE_ACTIVE = "That teddy bear seems to be animated somehow.",
         BERNIE_BIG = "As whimsical as it is befuddling.",
 
+        BOOKSTATION = "Eager minds should always have access to a library.",
         BOOK_BIRDS = "The expurgated version, but it has my favorite: Megascops kennicottii.",
         BOOK_TENTACLES = "Hard to put this one down. It's gripping, frankly.",
         BOOK_GARDENING = "Dead plants tied together to help me aid living plants.",
@@ -907,6 +934,21 @@ return{
 		BOOK_HORTICULTURE = "Only my best tricks for bringing a garden to fruition.",
         BOOK_SLEEP = "Warm milk in book form.",
         BOOK_BRIMSTONE = "What could possibly go wrong?",
+
+        BOOK_FISH = "It starts with a rather compelling hook.",
+        BOOK_FIRE = "Even misfortune offers opportunities to learn. Past mistakes shall not be repeated.",
+        BOOK_WEB = "Arachnids are crucial parts of a healthy ecosystem, after all.",
+        BOOK_TEMPERATURE = "You must be mindful of your thermal equilibrium.",
+        BOOK_LIGHT = "I like to do a bit of light reading in the evening.",
+        BOOK_RAIN = "A succinct guide, without any extraneous fluff.",
+        BOOK_MOON = "Investigating the ancient archives proved to be quite educational.",
+        BOOK_BEES = "I've grown rather fond of beekeeping.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Mankind has cultivated crops for centuries, and there's still more to learn.",
+        BOOK_RESEARCH_STATION = "It took some effort to distill everything down into a single volume.",
+        BOOK_LIGHT_UPGRADED = "I've given it a glowing review.",
+
+        FIREPEN = "A firestorm can be unleashed with but a few strokes of a writer's pen.",
 
         PLAYER =
         {
@@ -1595,7 +1637,7 @@ return{
 		BONESHARD = "Remnants of a life well lived.",
 		BONESTEW = "Not quite how mum used to make, but it smells superb!",
 		BUGNET = "The tool of entomologists.",
-		BUSHHAT = "Camouflage",
+		BUSHHAT = "Camouflage.",
 		BUTTER = "Lepidopterous lipids?",
 		BUTTERFLY =
 		{
@@ -3379,6 +3421,7 @@ return{
         ICEBERG_MELTED = "From dangerous solid to harmless liquid. Thank-you, heat.", --unimplemented
 
         MINIFLARE = "It's safer for everyone to stick together.",
+        MEGAFLARE = "I can lure adversaries to a place of my choosing.",
 
 		MOON_FISSURE =
 		{
@@ -4546,6 +4589,8 @@ return{
 
 
         BANANAJUICE = "Ah, I was in need of some refreshment.",
+
+        FENCE_ROTATOR = "Sometimes sharpness is necessary to keep things aligned and orderly.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

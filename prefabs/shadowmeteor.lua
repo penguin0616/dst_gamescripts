@@ -276,7 +276,7 @@ local function SetSize(inst, sz, mod)
     inst.striketask = inst:DoTaskInTime(warntime, dostrike)
 
     inst.warnshadow.entity:SetParent(inst.entity)
-    inst.warnshadow.startfn(inst.warnshadow, warntime, .33, 1)
+    inst.warnshadow:startfn(warntime, .33, 1)
 end
 
 local function AutoSize(inst)

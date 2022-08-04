@@ -30,6 +30,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
+    inst:AddTag("globalmapicon")
     inst:AddTag("CLASSIFIED")
 
     inst.MiniMapEntity:SetCanUseCache(false)

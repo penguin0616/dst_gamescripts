@@ -180,7 +180,6 @@ params.yotb_sewingmachine =
 }
 
 function params.yotb_sewingmachine.itemtestfn(container, item, slot)
-    --TODO: check if we actually accept the item
     return item:HasTag("yotb_pattern_fragment")
 end
 
@@ -1041,6 +1040,34 @@ params.ocean_trawler =
 
 function params.ocean_trawler.itemtestfn(container, item, slot)
     return item:HasTag("cookable") or item:HasTag("oceanfish")
+end
+
+--------------------------------------------------------------------------
+--[[ bookstation ]]
+--------------------------------------------------------------------------
+
+params.bookstation =
+{
+    widget =
+    {
+        slotpos = {},
+        animbank = "ui_bookstation_4x5",
+        animbuild = "ui_bookstation_4x5",
+        pos = Vector3(0, 280, 0),
+        side_align_tip = 160,
+    },
+    type = "chest",
+}
+
+for y = 0, 4 do
+    table.insert(params.bookstation.widget.slotpos, Vector3(-114      , (-77 * y) + 37 - (y * 2), 0))
+    table.insert(params.bookstation.widget.slotpos, Vector3(-114 + 75 , (-77 * y) + 37 - (y * 2), 0))
+    table.insert(params.bookstation.widget.slotpos, Vector3(-114 + 150, (-77 * y) + 37 - (y * 2), 0))
+    table.insert(params.bookstation.widget.slotpos, Vector3(-114 + 225, (-77 * y) + 37 - (y * 2), 0))
+end
+
+function params.bookstation.itemtestfn(container, item, slot)
+    return item:HasTag("bookcabinet_item")
 end
 
 --------------------------------------------------------------------------

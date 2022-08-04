@@ -639,7 +639,11 @@ local function tree(name, stage, data)
         inst.components.growable:SetStage(stage)
         inst.components.growable.loopstages = true
         inst.components.growable.springgrowth = true
+        inst.components.growable.magicgrowable = true
         inst.components.growable:StartGrowing()
+
+        inst:AddComponent("simplemagicgrower")
+        inst.components.simplemagicgrower:SetLastStage(#inst.components.growable.stages)
 
         ---------------------
 

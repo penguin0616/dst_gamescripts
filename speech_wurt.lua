@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
@@ -575,6 +586,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "G-glurp... that was scary.",
 
     ANNOUNCE_FLARE_SEEN = "Fire in sky??",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Grrr... what that big scary fire in sky?!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Someone coming?",
 
     --willow specific
@@ -704,6 +716,19 @@ return{
         BOOK_GARDENING = "So many hard words...",
 		BOOK_SILVICULTURE = "Is whole story about trees? Me know about trees!",
 		BOOK_HORTICULTURE = "So many hard words...",
+
+        BOOK_FISH = "Is best book! Has fishies in it!",
+        BOOK_FIRE = "Glurp, fire scary!",
+        BOOK_WEB = "Hey Webby-boy! Me learning all the Spiderfolk secrets!",
+        BOOK_TEMPERATURE = "The... m-measure of th... theer-mole energy...",
+        BOOK_LIGHT = "Heeyyy, these words different!",
+        BOOK_RAIN = "Can tell rain what to do? Wanna try!!",
+        BOOK_MOON = "Huh. Moon actually kinda boring.",
+        BOOK_BEES = "Aww... no honey inside...",
+
+        BOOK_HORTICULTURE_UPGRADED = "M-maybe will find easier book...",
+        BOOK_RESEARCH_STATION = "It really hard to read, but feel smart holding it, florp!",
+        BOOK_LIGHT_UPGRADED = "There more than one kind of words to learn?! Glurgh...",
     },
     ANNOUNCE_WEAK_RAT = "It not look so good...",
 
@@ -829,6 +854,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Sound like somebody having fun over there! Wanna see!",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "Not scared of you, florp!",
@@ -900,6 +927,7 @@ return{
         BERNIE_ACTIVE = "Wanna play with it!",
         BERNIE_BIG = "Fun toy, flurp!",
 
+        BOOKSTATION = "Glurgh. Why put books up so high?!",
         BOOK_BIRDS = "Read this one, Wicker-lady!",
         BOOK_TENTACLES = "Remind me of home, florp.",
         BOOK_GARDENING = "A... appled...? (Sigh)",
@@ -907,6 +935,21 @@ return{
 		BOOK_HORTICULTURE = "What does bridge have to do with plants, florp?",
         BOOK_SLEEP = "Want bedtime story!",
         BOOK_BRIMSTONE = "Where Wicker-lady? Want to know what happen next!",
+
+        BOOK_FISH = "Tell me fishy story!",
+        BOOK_FIRE = "What this one about?",
+        BOOK_WEB = "It about Spiderfolk? Why no book about Mermfolk?!",
+        BOOK_TEMPERATURE = "Tem... per... atoor?",
+        BOOK_LIGHT = "Huh? What that say?",
+        BOOK_RAIN = "What a ritual?",
+        BOOK_MOON = "Oooh, moon stuff!",
+        BOOK_BEES = "Wicker-lady! Wanna read about honey! ...Please.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Extra-ended? It look more like extra added.",
+        BOOK_RESEARCH_STATION = "Glurp... that one look extra full of words...",
+        BOOK_LIGHT_UPGRADED = "Oooh, this look fancy.",
+
+        FIREPEN = "Wicker-lady say no touch. But maybe she not looking...",
 
         PLAYER =
         {
@@ -3379,6 +3422,7 @@ return{
         ICEBERG_MELTED = "All melty!", --unimplemented
 
         MINIFLARE = "Sparky!",
+        MEGAFLARE = "Make big angry sparks in sky.",
 
 		MOON_FISSURE =
 		{
@@ -4546,6 +4590,8 @@ return{
 
 
         BANANAJUICE = "It sweet and slurpy, florp!",
+
+        FENCE_ROTATOR = "Spinny pokey stick!",
     },
 
     DESCRIBE_GENERIC = "What that?",

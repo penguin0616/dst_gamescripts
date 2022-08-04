@@ -765,11 +765,15 @@ local RPC_HANDLERS =
     end,
 
     MovementPredictionEnabled = function(player)
+        player.components.locomotor:Stop()
         player.components.locomotor:SetAllowPlatformHopping(false)
+        player.components.playercontroller:ResetRemoteController()
     end,
 
     MovementPredictionDisabled = function(player)
+        player.components.locomotor:Stop()
         player.components.locomotor:SetAllowPlatformHopping(true)
+        player.components.playercontroller:ResetRemoteController()
     end,
 
     Hop = function(player, hopper, hop_x, hop_z, other_platform)
@@ -931,6 +935,20 @@ local RPC_HANDLERS =
             ChatHistory:SendChatHistory(player.userid, last_message_hash, first_message_hash)
         end
     end,
+
+    -- NOTES(JBK): OnMap RPCs are always world relative.
+    DoActionOnMap = function(player, action, x, z)
+        if not (checknumber(action) and
+                checknumber(x) and
+                checknumber(z)) then
+            printinvalid("DoActionOnMap PARAMS", player)
+            return
+        end
+        local pc = player.components.playercontroller
+        if pc then
+            pc:OnMapAction(action, Vector3(x, 0, z))
+        end
+    end,
 }
 
 RPC = {}
@@ -1005,6 +1023,13 @@ local CLIENT_RPC_HANDLERS =
     LearnBuilderRecipe = function(product)
         ThePlayer:PushEvent("LearnBuilderRecipe",{recipe=product})
     end,
+
+    ResetMinimapOffset = function()
+        local topscreen = TheFrontEnd and TheFrontEnd:GetActiveScreen() or nil
+        if topscreen and topscreen.minimap then
+            topscreen.minimap.minimap:ResetOffset()
+        end
+    end,
 }
 
 CLIENT_RPC = {}
@@ -1026,6 +1051,17 @@ end
 --these rpc's don't need special verification because server<->server communication is already trusted.
 local SHARD_RPC_HANDLERS =
 {
+    ReskinWorldMigrator = function(shardid, migrator, skin_theme, skin_id, sessionid)
+        for i,v in ipairs(ShardPortals) do
+            if v.components.worldmigrator.id == migrator then
+                local skinname = nil
+                if skin_theme ~= "" then
+                    skinname = v.prefab.."_"..skin_theme
+                end
+                TheSim:ReskinEntity( v.GUID, v.skinname, skinname, skin_id, nil, sessionid )
+            end
+        end
+    end,
 }
 
 SHARD_RPC = {}

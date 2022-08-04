@@ -16,6 +16,8 @@ require "usercommands"
 require "builtinusercommands"
 require "emotes"
 
+require "consolescreensettings"
+
 require "map/ocean_gen" -- for retrofitting the ocean tiles
 
 
@@ -1295,6 +1297,7 @@ Morgue = PlayerDeaths()
 PlayerHistory = PlayerHistory()
 ServerPreferences = ServerPreferences()
 ProfanityFilter = ProfanityFilter()
+ConsoleScreenSettings = ConsoleScreenSettings()
 CustomPresetManager = CustomPresets()
 CustomPresetManager:Load()
 
@@ -1311,6 +1314,8 @@ if DEBUGGER_ENABLED then
     local startResult, breakerType = Debuggee.start()
     print('Debuggee start ->', startResult, breakerType )
 end
+
+ConsoleScreenSettings:Load( function() end )
 
 Print(VERBOSITY.DEBUG, "[Loading profile and save index]")
 Profile:Load( function()

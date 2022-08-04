@@ -111,6 +111,12 @@ function Tune(overrides)
         WILSON_HUNGER_RATE = calories_per_day/total_day_time, --calories burnt per day
         WILSON_SANITY = wilson_sanity,
 
+        -- Controller specific tuning values.
+        CONTROLLER_DEADZONE_RADIUS = 0.3, -- TODO(JBK): Hook this up.
+        CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN = 4,
+        CONTROLLER_BLINKFOCUS_DISTANCE = 8,
+        CONTROLLER_BLINKFOCUS_ANGLE = 30, -- Angle is for both sides of the facing direction so cone total size is double this value.
+
         -- WX78 Refresh: WX78 min and max health variables kept for backwards compatibility & mods
         WX78_MIN_HEALTH = 150,
         WX78_MIN_HUNGER = 150, -- 100 For pax we are increasing this.  Hungers out too easily.
@@ -153,6 +159,7 @@ function Tune(overrides)
         RUINS_BAT_USES = 200,
         SADDLEHORN_USES = 10,
         BRUSH_USES = 75,
+        FENCE_ROTATOR_USES = 200,
 
         MULTITOOL_AXE_PICKAXE_EFFICIENCY = 4/3,
 
@@ -188,6 +195,8 @@ function Tune(overrides)
 
         FISHING_MINWAIT = 2,
         FISHING_MAXWAIT = 20,
+
+        OVERRIDE_ROW_ACTION_DISTANCE = 2.2, -- Same as SetPhysicsRadiusOverride in ocean_trawler
 
 		OCEAN_FISHING =
 		{
@@ -337,6 +346,7 @@ function Tune(overrides)
         SADDLEHORN_DAMAGE = wilson_attack*.5,
         BRUSH_DAMAGE = wilson_attack*.8,
         OAR_DAMAGE = wilson_attack*.5,
+        FENCE_ROTATOR_DAMAGE = wilson_attack,
 
         SADDLE_BASIC_BONUS_DAMAGE = 0,
         SADDLE_WAR_BONUS_DAMAGE = 16,
@@ -684,6 +694,7 @@ function Tune(overrides)
 
         HUNGRY_BUILDER_DELTA = -5,
         HUNGRY_BUILDER_RESET_TIME = seg_time * 2,
+        HUNGRY_BUILDER_RESET_DISTANCE_SQ = 4 * 4, -- A tile distance.
 
         GRUEDAMAGE = wilson_health*.667,
 
@@ -1307,6 +1318,12 @@ function Tune(overrides)
 
             ROBOTMODULECRAFT = TechTree.Create({
                 ROBOTMODULECRAFT = 1,
+            }),
+
+            BOOKCRAFT = TechTree.Create({
+                BOOKCRAFT = 1,
+                SCIENCE = 2,
+                MAGIC = 1,
             }),
 		},
 
@@ -2105,6 +2122,7 @@ function Tune(overrides)
         EXPLOSIVE_MAX_RESIST_DAMAGE = 8000,
         EXPLOSIVE_RESIST_DECAY_TIME = 8,
         EXPLOSIVE_RESIST_DECAY_DELAY = 2,
+        EXPLOSIVE_MAX_WORKABLE_INVENTORYITEMS = 20, -- Used to limit how many workable inventory items a player may have this work on in one frame.
 
         RESURRECT_HEALTH = 50,
 
@@ -2324,7 +2342,7 @@ function Tune(overrides)
         BEEQUEEN_FOCUSTARGET_CD = { 0, 0, 20, 16 },
         BEEQUEEN_FOCUSTARGET_RANGE = 20,
 
-        BEEQUEEN_HONEYTRAIL_SPEED_PENALTY = .4,
+        BEEQUEEN_HONEYTRAIL_SPEED_PENALTY = 0.4,
 
         BEEGUARD_HEALTH = 180,
         BEEGUARD_DAMAGE = 30,
@@ -2465,12 +2483,12 @@ function Tune(overrides)
 		WAXWELL_HUNGER = wilson_hunger,
         WAXWELL_SANITY = wilson_sanity,
 
-        WICKERBOTTOM_HEALTH = wilson_health,
+        WICKERBOTTOM_HEALTH = 125,
         WICKERBOTTOM_HUNGER = wilson_hunger,
         WICKERBOTTOM_SANITY = 250,
-        WICKERBOTTOM_STALE_FOOD_HUNGER = .333,
-        WICKERBOTTOM_SPOILED_FOOD_HUNGER = .167,
-        WICKERBOTTOM_STALE_FOOD_HEALTH = .25,
+        WICKERBOTTOM_STALE_FOOD_HUNGER = 0.333,
+        WICKERBOTTOM_STALE_FOOD_HEALTH = 0,
+        WICKERBOTTOM_SPOILED_FOOD_HUNGER = 0.167,
         WICKERBOTTOM_SPOILED_FOOD_HEALTH = 0,
 
 		WALTER_HEALTH = 130,
@@ -3363,7 +3381,7 @@ function Tune(overrides)
             HEIGHT = 0.5,
             RIPE_CHANCE = 0.65,
             SEED_CHANCE = 0.01,
-            MAX_SPAWNS = 10,
+            MAX_SPAWNS = 10, -- NOTES(JBK): Deprecated, kept around for mods.
         },
         ROCK_FRUIT_SPROUT_GROWTIME = 5*day_time,
         ROCK_FRUIT_REGROW =
@@ -4058,10 +4076,17 @@ function Tune(overrides)
         WORTOX_SANITY = 150,
         WORTOX_SANITY_AURA_MULT = .5,
         WORTOX_MAX_SOULS = 20,
+        WORTOX_WISECRACKER_TOOMANY = 0.8,
+        WORTOX_WISECRACKER_TOOFEW = 0.2,
         WORTOX_FOOD_MULT = .5,
         WORTOX_SOULEXTRACT_RANGE = 20, --die within this range of wortox to spawn soul
         WORTOX_SOULSTEALER_RANGE = 8, --souls fly towards wortox when he walks within this range
         WORTOX_SOULHEAL_RANGE = 8,
+        WORTOX_SOULHEAL_LOSS_PER_PLAYER = 2, -- Amount of health value lost per additional target being healed.
+        WORTOX_SOULHEAL_MINIMUM_HEAL = 5, -- Each souls must heal at least this much.
+        WORTOX_FREEHOP_HOPSPERSOUL = 2, -- Amount of hops per soul in a given time frame. Maximum value is clamped to freesoulhops in player_classified.
+        WORTOX_FREEHOP_TIMELIMIT = 5, -- Amount of seconds to use up free hops per hop.
+        WORTOX_MAPHOP_DISTANCE_SCALER = 0.9, -- Perfectly placed blink teleports on a linear path to every part on the map is not realistic.
 
         --Wormwood
 		WORMWOOD_HEALTH = wilson_health,
@@ -4382,6 +4407,8 @@ function Tune(overrides)
 		WALTERHAT_SANITY_DAMAGE_PROTECTION = .5,
 
 		WALTER_STARTING_WOBY = "wobysmall",
+        WALTER_WOBYBUCK_DAMAGE_MAX = 8, -- If greater than or equal to this value Walter is bucked off of Woby.
+        WALTER_WOBYBUCK_DECAY_TIME = 5, -- Seconds needed to clear health threshold from taking damage.
 
         WOBY_BIG_HUNGER = 50,
         WOBY_BIG_HUNGER_RATE = 50/(total_day_time * 2.5),
@@ -6101,13 +6128,14 @@ function Tune(overrides)
         POLLY_ROGERS_RUN_SPEED= 10,
         POLLY_ROGERS_MAX_HEALTH= 50,
         POLLY_ROGERS_SPAWN_TIME = total_day_time * 1,
+        POLLY_ROGERS_RANGE = 15,
 
         PIRATESPAWNER_BASEPIRATECHANCE = 5*day_time,
         PIRATESPAWNER = {
             INNER = {
                 MAX = 300,
                 CHANCE = 0.2,
-                WEIGHT = 4,
+                WEIGHT = 6,
             },
             MID = {
                 MAX = 600,
@@ -6141,6 +6169,42 @@ function Tune(overrides)
             LEVEL_3 = 5,
             LEVEL_4 = 10,
         },
+
+        -- WICKERBOTTOM
+        BOOKSTATION_RESTORE_TIME = seg_time,
+        BOOKSTATION_RESTORE_AMOUNT = 0.01,
+        BOOKSTATION_BONUS_RANGE = 12,
+        BOOKSTATION_WICKER_BONUS = 2,
+
+        BOOK_FIRE_RADIUS = 16,
+        FIREPEN_MAXUSES = 10,
+
+        BOOK_RESEARCH_STATION_RADIUS = 16,
+
+        BOOK_TEMPERATURE_RADIUS = 16,
+        BOOK_TEMPERATURE_AMOUNT = 35,
+
+        BOOK_BEES_AMOUNT = 2,
+        BOOK_BEES_MAX_ATTACK_RANGE = 5,
+        BOOK_BEES_MAX_TIME_TO_LINGER = 5 * 60, -- 5 minutes!
+        BOOK_MAX_GRUMBLE_BEES = 16,
+
+        BOOK_FISH_AMOUNT = 3,
+
+        BOOK_GARDENING_UPGRADED_MAX_TARGETS = 15,
+
+        BOOK_WEB_GROUND_DURATION = total_day_time/4,
+        BOOK_WEB_GROUND_RADIUS = 6,
+        BOOK_WEB_GROUND_SPEED_PENALTY = 0.25,
+
+        BOOK_USES_SMALL = 3,
+        BOOK_USES_LARGE = 5,
+
+        MAXWELL_READING_SANITY_MULT = 2.5,
+
+        BOOK_MAX_SHADOWCREATURES = 16,
+
+        FENCE_DEFAULT_ROTATION = 45,
     }
 
     TUNING_MODIFIERS = {}

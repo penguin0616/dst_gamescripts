@@ -100,6 +100,30 @@ local function GetFishingAction(doer, fishing_target)
 	return nil
 end
 
+local function CheckRowOverride(doer, target)
+    -- If near an object with the 'overriderowaction' tag (e.g. ocean trawler), the object's actions supersede this.
+    if target ~= nil then
+        local doer_pos = doer:GetPosition()
+        local boat = TheWorld.Map:GetPlatformAtPoint(doer_pos.x, doer_pos.z)
+        if boat == nil then
+            return false
+        end
+
+        local target_pos = target:GetPosition()
+        local dist_to_target = VecUtil_Dist(target_pos.x, target_pos.z, doer_pos.x, doer_pos.z)
+        local boat_pos = boat:GetPosition()
+        local dist_to_boat = VecUtil_Dist(target_pos.x, target_pos.z, boat_pos.x, boat_pos.z)
+        local boatradius = boat.components.boatringdata and boat.components.boatringdata:GetRadius() or 0
+        local boat_dist_to_target = dist_to_boat - boatradius
+
+        if target:HasTag("overriderowaction") and math.min(dist_to_target, boat_dist_to_target) < TUNING.OVERRIDE_ROW_ACTION_DISTANCE then
+            return true
+        end
+    end
+
+    return false
+end
+
 -- SCENE		using an object in the world
 -- USEITEM		using an inventory item on an object in the world
 -- POINT		using an inventory item on a point in the world
@@ -137,7 +161,7 @@ local COMPONENT_ACTIONS =
         end,
 
         book = function(inst, doer, actions)
-            if doer:HasTag("reader") then
+            if doer:HasTag("reader") and not inst:HasTag("fire") and not inst:HasTag("smolder") then
                 table.insert(actions, ACTIONS.READ)
             end
         end,
@@ -490,7 +514,6 @@ local COMPONENT_ACTIONS =
         end,
 
         boatmagnet = function(inst, doer, actions, right)
-            local boat = inst:GetCurrentPlatform()
             if not inst:HasTag("fire") and not inst:HasTag("burnt") then
                 if not inst:HasTag("paired") then
                     table.insert(actions, ACTIONS.BOAT_MAGNET_ACTIVATE)
@@ -765,7 +788,6 @@ local COMPONENT_ACTIONS =
                 not inst:HasTag("hasstrongman") then
 
                 if right and inst:HasTag("loaded") then
-                    -- TODO: unload gym action
                     table.insert(actions, ACTIONS.UNLOAD_GYM)
                 else
                     table.insert(actions, ACTIONS.ENTER_GYM)
@@ -1489,16 +1511,16 @@ local COMPONENT_ACTIONS =
         end,
     },
 
-    POINT = --args: inst, doer, pos, actions, right
+    POINT = --args: inst, doer, pos, actions, right, target
     {
-        blinkstaff = function(inst, doer, pos, actions, right)
+        blinkstaff = function(inst, doer, pos, actions, right, target)
             local x,y,z = pos:Get()
             if right and (TheWorld.Map:IsAboveGroundAtPoint(x,y,z) or TheWorld.Map:GetPlatformAtPoint(x,z) ~= nil) and not TheWorld.Map:IsGroundTargetBlocked(pos) and not doer:HasTag("steeringboat") and not doer:HasTag("rotatingboat") then
                 table.insert(actions, ACTIONS.BLINK)
             end
         end,
 
-        complexprojectile = function(inst, doer, pos, actions, right)
+        complexprojectile = function(inst, doer, pos, actions, right, target)
             if right and not TheWorld.Map:IsGroundTargetBlocked(pos)
 				and (inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer)) then
 
@@ -1506,7 +1528,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        deployable = function(inst, doer, pos, actions, right)
+        deployable = function(inst, doer, pos, actions, right, target)
             if right and inst.replica.inventoryitem ~= nil then
                 if CLIENT_REQUESTED_ACTION == ACTIONS.DEPLOY_TILEARRIVE or CLIENT_REQUESTED_ACTION == ACTIONS.DEPLOY then
                     --CanDeploy will still run before the actual deploy itself.
@@ -1521,31 +1543,32 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        fishingnet = function(inst, doer, pos, actions, right)
+        fishingnet = function(inst, doer, pos, actions, right, target)
             if right and CanCastFishingNetAtPoint(doer, pos.x, pos.z) then
                 table.insert(actions, ACTIONS.CAST_NET)
             end
         end,
 
-        fishingrod = function(inst, doer, pos, actions, right)
+        fishingrod = function(inst, doer, pos, actions, right, target)
 			if right and CanCastFishingNetAtPoint(doer, pos.x, pos.z) then
 				table.insert(actions, ACTIONS.FISH_OCEAN)
 			end
         end,
 
-        inventoryitem = function(inst, doer, pos, actions, right)
+        inventoryitem = function(inst, doer, pos, actions, right, target)
             if not right and inst.replica.inventoryitem:IsHeldBy(doer) then
                 table.insert(actions, ACTIONS.DROP)
             end
         end,
 
-        oar = function(inst, doer, pos, actions, right)
-            if right then
+        oar = function(inst, doer, pos, actions, right, target)
+            local override = CheckRowOverride(doer, target)
+            if right and not override then
                 Row(inst, doer, pos, actions)
             end
         end,
 
-		oceanfishingrod = function(inst, doer, pos, actions, right)
+		oceanfishingrod = function(inst, doer, pos, actions, right, target)
             if right then
 				local rod = inst.replica.oceanfishingrod
 				if rod ~= nil then
@@ -1564,7 +1587,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-		oceanthrowable = function(inst, doer, pos, actions, right)
+		oceanthrowable = function(inst, doer, pos, actions, right, target)
             if right then
                 if CanCastFishingNetAtPoint(doer, pos.x, pos.z) then
                     table.insert(actions, ACTIONS.OCEAN_TOSS)
@@ -1572,7 +1595,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-		spellcaster = function(inst, doer, pos, actions, right)
+		spellcaster = function(inst, doer, pos, actions, right, target)
             if right then
                 local cast_on_water = inst:HasTag("castonpointwater")
                 if inst:HasTag("castonpoint") then
@@ -1589,7 +1612,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        terraformer = function(inst, doer, pos, actions, right)
+        terraformer = function(inst, doer, pos, actions, right, target)
             if right and
                 ((inst:HasTag("plow") and TheWorld.Map:CanPlowAtPoint(pos:Get())) or
                 (not inst:HasTag("plow") and TheWorld.Map:CanTerraformAtPoint(pos:Get()))) then
@@ -1597,7 +1620,7 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        aoespell = function(inst, doer, pos, actions, right)
+        aoespell = function(inst, doer, pos, actions, right, target)
             if right and
                 (   inst.components.aoetargeting == nil or inst.components.aoetargeting:IsEnabled()
                 ) and
@@ -1608,25 +1631,25 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-        farmtiller = function(inst, doer, pos, actions, right)
+        farmtiller = function(inst, doer, pos, actions, right, target)
             if right and TheWorld.Map:CanTillSoilAtPoint(pos.x, pos.y, pos.z) then
                 table.insert(actions, ACTIONS.TILL)
             end
         end,
 
-        quagmire_tiller = function(inst, doer, pos, actions, right)
+        quagmire_tiller = function(inst, doer, pos, actions, right, target)
             if right and TheWorld.Map:CanTillSoilAtPoint(pos) then
                 table.insert(actions, ACTIONS.TILL)
             end
         end,
 
-        wateryprotection = function(inst, doer, pos, actions, right)
+        wateryprotection = function(inst, doer, pos, actions, right, target)
             if right and TheWorld.Map:GetTileAtPoint(pos:Get()) == WORLD_TILES.FARMING_SOIL then
                 table.insert(actions, ACTIONS.POUR_WATER_GROUNDTILE)
             end
         end,
 
-        fillable = function(inst, doer, pos, actions, right)
+        fillable = function(inst, doer, pos, actions, right, target)
             if inst:HasTag("fillable_showoceanaction") and TheWorld.Map:IsOceanAtPoint(pos.x, 0, pos.z) then
                 table.insert(actions, ACTIONS.FILL_OCEAN)
             end
@@ -1720,7 +1743,8 @@ local COMPONENT_ACTIONS =
         end,
 
         oar = function(inst, doer, target, actions, right)
-            if right then
+            local override = CheckRowOverride(doer, target)
+            if right and not override then
                 --Only the keyboard/mouse needs the ability to arbitrarily click on scene objects to row.
                 --The controller does not and if you allow it to, it will sometimes show the wrong ground hint text.
                 if not doer.components.playercontroller.isclientcontrollerattached then
@@ -1825,6 +1849,14 @@ local COMPONENT_ACTIONS =
         fillable = function(inst, doer, target, actions, right)
             if right and target:HasTag("watersource") then
                 table.insert(actions, ACTIONS.FILL)
+            end
+        end,
+
+        fencerotator = function(inst, doer, target, actions, right)
+            if (target:HasTag("fence") or target:HasTag("directionsign")) and not inst:HasTag("fire") and not inst:HasTag("burnt") then
+                if right then
+                    table.insert(actions, ACTIONS.ROTATE_FENCE)
+                end
             end
         end,
     },

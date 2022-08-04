@@ -34,7 +34,11 @@ function HoverText:OnUpdate()
         end
         return
     elseif not self.shown then
-        self:Show()
+        if not self.forcehide then
+            self:Show()
+        else
+            return
+        end
     end
 
     local str = nil

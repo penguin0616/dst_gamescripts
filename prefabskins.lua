@@ -542,6 +542,7 @@ PREFAB_SKINS = {
 	},
 	hivehat =
 	{
+		"hivehat_an",
 		"hivehat_cawnival",
 	},
 	hutch =
@@ -669,6 +670,7 @@ PREFAB_SKINS = {
 	minisign =
 	{
 		"minisign_fantasy",
+		"minisign_ornate",
 		"minisign_picketbrown",
 		"minisign_pickettan",
 		"minisign_picketwhite",
@@ -676,6 +678,7 @@ PREFAB_SKINS = {
 	minisign_drawn =
 	{
 		"minisign_fantasy_drawn",
+		"minisign_ornate_drawn",
 		"minisign_picketbrown_drawn",
 		"minisign_pickettan_drawn",
 		"minisign_picketwhite_drawn",
@@ -683,6 +686,7 @@ PREFAB_SKINS = {
 	minisign_item =
 	{
 		"minisign_fantasy_item",
+		"minisign_ornate_item",
 		"minisign_picketbrown_item",
 		"minisign_pickettan_item",
 		"minisign_picketwhite_item",
@@ -1068,6 +1072,14 @@ PREFAB_SKINS = {
 		"wall_stone_gothicitem",
 		"wall_stone_victorianitem",
 	},
+	wall_wood =
+	{
+		"wall_wood_ornate",
+	},
+	wall_wood_item =
+	{
+		"wall_wood_ornateitem",
+	},
 	walrushat =
 	{
 		"walrushat_blue",
@@ -1293,6 +1305,7 @@ PREFAB_SKINS = {
 		"wickerbottom_combatant",
 		"wickerbottom_cook",
 		"wickerbottom_formal",
+		"wickerbottom_formalp",
 		"wickerbottom_gladiator",
 		"wickerbottom_ice",
 		"wickerbottom_lightninggoat",
@@ -1300,10 +1313,14 @@ PREFAB_SKINS = {
 		"wickerbottom_lightninggoat_p",
 		"wickerbottom_magma",
 		"wickerbottom_none",
+		"wickerbottom_ornate",
 		"wickerbottom_rose",
+		"wickerbottom_rosep",
 		"wickerbottom_shadow",
+		"wickerbottom_shadowp",
 		"wickerbottom_spiderwitch",
 		"wickerbottom_survivor",
+		"wickerbottom_survivorp",
 		"wickerbottom_victorian",
 		"wickerbottom_yule",
 	},
@@ -1540,6 +1557,10 @@ PREFAB_SKINS = {
 		"wx78_wip",
 		"wx78_wrestler",
 		"wx78_yule",
+	},
+	yellowamulet =
+	{
+		"amulet_yellow_ornate",
 	},
 	yellowstaff =
 	{

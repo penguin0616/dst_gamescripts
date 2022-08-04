@@ -174,6 +174,9 @@ local MainSounds =
 
     "summerevent2022.fev",
     "summerevent2022.fsb",
+
+    "wickerbottom_rework.fev",
+    "wickerbottom_rework.fsb",
 }
 
 function PreloadSoundList(list)

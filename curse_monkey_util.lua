@@ -1,58 +1,45 @@
 -- inst in this context is the cursed object
 
-local function canchange(owner)
-    if owner.sg:HasStateTag("nomorph") then
-        return false
+local function trytransform(owner, towonkey)
+    if owner.sg:HasStateTag("nomorph") or
+        owner.sg:HasStateTag("silentmorph") or
+        owner.sg:HasStateTag("busy") or
+        owner.sg:HasStateTag("pinned") or
+        owner.sg:HasStateTag("dead") then
+        --delay transform
+        return
+    elseif towonkey and (
+            owner:HasTag("weregoose") or
+            owner:HasTag("weremoose") or
+            owner:HasTag("beaver")
+        ) then
+        --don't transform if woodie is in "were"form
+        return
     end
 
-    if owner.sg:HasStateTag("busy") then
-        return false
-    end
+    --Don't cancel the task, so it'll automatically retry if transformation states get interrupted
+    --owner._trymonkeychangetask:Cancel()
+    --owner._trymonkeychangetask = nil
+    owner.sg:GoToState("monkeychanger_pre", towonkey)
+end
 
-    if owner.sg:HasStateTag("pinned") then
-        return false
+local function tryannounce(owner)
+    owner._trymonkeyannouncetask = nil
+    if owner.entity:IsVisible() then
+        owner.components.talker:Say(GetString(owner, "ANNOUNCE_MONKEY_CURSE_1"))
     end
-
-    if owner:HasTag("weregoose") then
-        return false
-    end
-
-    if owner:HasTag("weremoose") then
-        return false
-    end    
-    
-    if owner:HasTag("beaver") then
-        return false
-    end
-
-    return true
 end
 
 local function uncurse(owner, num)
-
-    local function hit(player)
-        if not player.sg:HasStateTag("dead") then
-            player.sg:GoToState("hit_spike","med")
-            local fx = SpawnPrefab("monkey_de_morphin_fx")
-            player:AddChild(fx)
-        end
-    end
+    SpawnPrefab("monkey_de_morphin_fx").entity:SetParent(owner.entity)
 
     if owner:HasTag("wonkey") then
-        if num <= 0 then
-            --should be checking "nomorph"... but that probably isn't supported
-            --correctly if a state change is forced here in this way.
-            if not owner.sg:HasStateTag("dead") then
-                owner.sg:GoToState("changefrommonkey")
-            end
-        else
-            hit(owner)
+        if num > 0 then
+            owner:PushEvent("monkeycursehit", { uncurse = true })
+        elseif owner._trymonkeychangetask == nil then
+            owner._trymonkeychangetask = owner:DoPeriodicTask(.1, trytransform, 0, false)
         end
     else
-        if not owner.components.timer or not owner.components.timer:TimerExists("monkeycursehit") then
-            owner.components.timer:StartTimer("monkeycursehit", 1)
-            hit(owner)
-        end
         if num <= 0 then
             owner.monkeyfeet = nil
             owner.monkeyhands = nil
@@ -86,38 +73,25 @@ local function uncurse(owner, num)
             owner:RemoveTag("MONKEY_CURSE_2")
             owner:AddTag("MONKEY_CURSE_3")
         end  
+
+        owner:PushEvent("monkeycursehit", { uncurse = true })
     end
 end
 
 local function docurse(owner, numitems)
+    SpawnPrefab("monkey_morphin_power_players_fx").entity:SetParent(owner.entity)
 
-    if owner then
-        local fx = SpawnPrefab("monkey_morphin_power_players_fx")
-        owner:AddChild(fx)
-    end
+    local iswonkey = owner:HasTag("wonkey")
 
-    if numitems >= TUNING.MONKEY_TOKEN_COUNTS.LEVEL_4 and not owner:HasTag("wonkey") then
-        if not owner.trycursetask then
-            owner.trycursetask = owner:DoPeriodicTask(0.1, function()
-                    if owner.components.rider ~= nil and owner.components.rider:IsRiding() then
-                        owner.components.rider:Dismount()
-                    elseif canchange(owner) then
-                        if owner.trycursetask then
-                            owner.trycursetask:Cancel()
-                            owner.trycursetask = nil
-                        end
-                        owner.sg:GoToState("changetomonkey")
-                    end
-                end)
+    if not iswonkey and numitems >= TUNING.MONKEY_TOKEN_COUNTS.LEVEL_4 then
+        if owner._trymonkeychangetask == nil then
+            owner._trymonkeychangetask = owner:DoPeriodicTask(.1, trytransform, 0, true)
         end
     else
-        if not owner.components.timer or not owner.components.timer:TimerExists("monkeycursehit") then
-            owner.components.timer:StartTimer("monkeycursehit", 1)
-            owner.sg:GoToState("hit")
-        end
         if numitems > TUNING.MONKEY_TOKEN_COUNTS.LEVEL_1 and not owner.monkeyfeet then
-
-            owner:DoTaskInTime(1, function() if owner.prefab ~= "wonkey"  then owner.components.talker:Say(GetString(owner, "ANNOUNCE_MONKEY_CURSE_1")) end end)
+            if not iswonkey and owner._trymonkeyannouncetask == nil then
+                owner._trymonkeyannouncetask = owner:DoTaskInTime(1, tryannounce)
+            end
             owner.monkeyfeet = true
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_1")
             owner:AddTag("MONKEY_CURSE_1")
@@ -133,7 +107,9 @@ local function docurse(owner, numitems)
             owner.components.skinner:SetMonkeyCurse("MONKEY_CURSE_3")
             owner:RemoveTag("MONKEY_CURSE_2")
             owner:AddTag("MONKEY_CURSE_3")
-        end        
+        end
+
+        owner:PushEvent("monkeycursehit", { uncurse = false })
     end
 end
 

@@ -4,6 +4,7 @@ local assets =
 {
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("SOUND", "sound/maxwell.fsb"),
+    Asset("ANIM", "anim/swap_books.zip"),
 }
 
 local prefabs =
@@ -75,6 +76,20 @@ local function OnReroll(inst)
     end
 end
 
+local SHADOWCREATURE_MUST_TAGS = { "shadowcreature", "_combat", "locomotor" }
+local SHADOWCREATURE_CANT_TAGS = { "INLIMBO", "notaunt" }
+local function OnReadFn(inst, book)
+    if inst.components.sanity:IsInsane() then
+        
+        local x,y,z = inst.Transform:GetWorldPosition()
+        local ents = TheSim:FindEntities(x, y, z, 16, SHADOWCREATURE_MUST_TAGS, SHADOWCREATURE_CANT_TAGS)
+
+        if #ents < TUNING.BOOK_MAX_SHADOWCREATURES then
+            TheWorld.components.shadowcreaturespawner:SpawnShadowCreature(inst)
+        end
+    end
+end
+
 local function common_postinit(inst)
     inst:AddTag("shadowmagic")
     inst:AddTag("dappereffects")
@@ -85,12 +100,23 @@ local function common_postinit(inst)
 
     --reader (from reader component) added to pristine state for optimization
     inst:AddTag("reader")
+
+    --layers used by "book" state, added to pristine state for optimization
+    inst.AnimState:Hide("FX_tentacles")
+    inst.AnimState:Hide("FX_fish")
+    inst.AnimState:Hide("FX_plants")
+    inst.AnimState:Hide("FX_plants_big")
+    inst.AnimState:Hide("FX_plants_small")
+    inst.AnimState:Hide("FX_lightning")
+    inst.AnimState:Hide("FX_roots")
 end
 
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
     inst:AddComponent("reader")
+    inst.components.reader:SetSanityPenaltyMultiplier(TUNING.MAXWELL_READING_SANITY_MULT)
+    inst.components.reader:SetOnReadFn(OnReadFn)
 
     if inst.components.petleash ~= nil then
         inst._OnSpawnPet = inst.components.petleash.onspawnfn

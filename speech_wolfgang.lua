@@ -98,8 +98,18 @@ return{
         --wickerbottom specific action
 --fallback to speech_wilson.lua         READ =
 --fallback to speech_wilson.lua         {
---fallback to speech_wilson.lua             GENERIC = "only_used_by_wickerbottom",
---fallback to speech_wilson.lua             NOBIRDS = "only_used_by_wickerbottom",
+--fallback to speech_wilson.lua             GENERIC = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOFIRES =       "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSILVICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOHORTICULTURE = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOTENTACLEGROUND = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOSLEEPTARGETS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             TOOMANYBEES = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua             NOMOONINCAVES = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua         },
 
         GIVE =
@@ -392,6 +402,7 @@ return{
     --waxwell and wickerbottom specific strings
 --fallback to speech_wilson.lua     ANNOUNCE_TOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
+--fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
     --wolfgang specific
     ANNOUNCE_NORMALTOMIGHTY = "I AM MIGHTY!",
@@ -576,6 +587,7 @@ return{
     ANNOUNCE_REVIVED_FROM_CORPSE = "Thank-you, friend!",
 
     ANNOUNCE_FLARE_SEEN = "Sky fire! Wolfgang is coming, dear friend!",
+    ANNOUNCE_MEGA_FLARE_SEEN = "Who set such bright sky fire? Will call monsters!",
     ANNOUNCE_OCEAN_SILHOUETTE_INCOMING = "Wolfgang does not like scary shadow!",
 
     --willow specific
@@ -705,6 +717,17 @@ return{
 --fallback to speech_wilson.lua         BOOK_GARDENING = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_SILVICULTURE = "only_used_by_wurt",
 --fallback to speech_wilson.lua 		BOOK_HORTICULTURE = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_FISH = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_FIRE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_WEB = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_TEMPERATURE = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RAIN = "only_used_by_wurt",
+
+--fallback to speech_wilson.lua         BOOK_HORTICULTURE_UPGRADED = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_RESEARCH_STATION = "only_used_by_wurt",
+--fallback to speech_wilson.lua         BOOK_LIGHT_UPGRADED = "only_used_by_wurt",
     },
     ANNOUNCE_WEAK_RAT = "Is too weak for race.",
 
@@ -830,6 +853,8 @@ return{
 
     ANNOUNCE_PIRATES_ARRIVE = "Someone is music making?",
 
+--fallback to speech_wilson.lua     ANNOUNCE_BOOK_MOON_DAYTIME = "only_used_by_waxwell_and_wicker",
+
 	BATTLECRY =
 	{
 		GENERIC = "I will punch you!",
@@ -901,6 +926,7 @@ return{
         BERNIE_ACTIVE = "Is so brave!",
         BERNIE_BIG = "Oh no! Wolfgang has shrunken!",
 
+        BOOKSTATION = "Makes brainlady happy, Wolfgang will protect it!",
         BOOK_BIRDS = "Book is for the birds!",
         BOOK_TENTACLES = "Wolfgang wants many foes to fight!",
         BOOK_GARDENING = "Wolfgang rather grow muscle than flowers.",
@@ -908,6 +934,21 @@ return{
 		BOOK_HORTICULTURE = "Little book makes food grow for Wolfgang.",
         BOOK_SLEEP = "Wolfgang's eyes feel heavy like dumbbells.",
         BOOK_BRIMSTONE = "Tiny book scares Wolfgang!",
+
+        BOOK_FISH = "Pictures of fish make Wolfgang's belly rumble.",
+        BOOK_FIRE = "Wolfgang hopes is not explained in more big words...",
+        BOOK_WEB = "Eep!!",
+        BOOK_TEMPERATURE = "But Wolfgang needs to feel the burn!",
+        BOOK_LIGHT = "Wolfgang likes the book light.",
+        BOOK_RAIN = "Wolfgang will keep umbrella, just in case.",
+        BOOK_MOON = "Wolfgang doesn't need book to know where moon is.",
+        BOOK_BEES = "Is true, Wolfgang does not know much of ape culture.",
+        
+        BOOK_HORTICULTURE_UPGRADED = "Will thicker book grow thicker vegetables?",
+        BOOK_RESEARCH_STATION = "Hmm, is heavy book, maybe good for lifting.",
+        BOOK_LIGHT_UPGRADED = "Wolfgang is starting to find liking for books.",
+
+        FIREPEN = "Wolfgang does not want to write with that pen!",
 
         PLAYER =
         {
@@ -3380,6 +3421,7 @@ return{
         ICEBERG_MELTED = "Is all melty!", --unimplemented
 
         MINIFLARE = "Is tiny sky boom!",
+        MEGAFLARE = "Wolfgang will be careful with that one.",
 
 		MOON_FISSURE =
 		{
@@ -4547,6 +4589,8 @@ return{
 
 
         BANANAJUICE = "Wolfgang would like more monkey drink.",
+
+        FENCE_ROTATOR = "Is sword for fences? Very strange.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

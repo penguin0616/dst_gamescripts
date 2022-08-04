@@ -1090,7 +1090,8 @@ AddGlobalDebugKey(KEY_L, function()
 
 		local x, _, z = pt:Get()
 		local k = 4
-		local str = "\n"
+        local tx, tz = TheWorld.Map:GetTileCoordsAtPoint(x, 0, z)
+		local str = tostring(tx) .. ", " .. tostring(tz) .. "\n"
 		local name_space = 20
 		local target_tile = 34
 		local valid = nil
@@ -1103,7 +1104,7 @@ AddGlobalDebugKey(KEY_L, function()
 					valid = true
 				end
 
-				str = str .. tostring(GROUND_NAMES[tile])
+				str = str .. tostring(GROUND_NAMES[tile]) .. "(" .. tostring(tile) .. ")"
 				for i = #(GROUND_NAMES[tile]), name_space, 1 do
 					str = str .. " "
 				end

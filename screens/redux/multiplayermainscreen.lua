@@ -89,7 +89,7 @@ local function MakeMoonstormBanner(self, banner_root, anim)
     anim_wagstaff:GetAnimState():PlayAnimation("loop_w2", true)
     anim_wagstaff:SetScale(.667)
     anim_wagstaff:GetAnimState():SetErosionParams(1, 0, -1.0)
-    anim_wagstaff:GetAnimState():SetMultColour(0.9, 0.9, 0.9, 0.9)
+    anim_wagstaff:GetAnimState():SetMultColour(1, 1, 1, 0.9)
 
     local wagstaff_erosion_min = 0.02 -- Not 0 so there's always a little bit of influence on the alpha from the lines
     local wagstaff_erosion_max = 1.2 -- Overshoots 1.2 to get more stable alpha lines when close to fully faded out
@@ -276,6 +276,13 @@ local function MakeWX78Banner(self, banner_root, anim)
     anim:SetScale(.667)
 end
 
+local function MakeWickerbottomBanner(self, banner_root, anim)
+    anim:GetAnimState():SetBuild("dst_menu_wickerbottom")
+    anim:GetAnimState():SetBank ("dst_menu_wickerbottom")
+    anim:GetAnimState():PlayAnimation("loop", true)
+    anim:SetScale(.667)
+end
+
 local function MakePiratesBanner(self, banner_root, anim)
     anim:GetAnimState():SetBuild("dst_menu_pirates")
     anim:GetAnimState():SetBank("dst_menu_pirates")
@@ -332,7 +339,7 @@ function MakeBanner(self)
 
 	if IS_BETA then
 		title_str = STRINGS.UI.MAINSCREEN.MAINBANNER_BETA_TITLE
-        MakePiratesBanner(self, banner_root, anim)
+        MakeWickerbottomBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         MakeYOTCBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
@@ -342,8 +349,9 @@ function MakeBanner(self)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeCawnivalBanner(self, banner_root, anim)
 	else
+        MakeWickerbottomBanner(self, banner_root, anim)
         --MakeDefaultBanner(self, banner_root, anim)
-        MakePiratesBanner(self, banner_root, anim)
+        --MakePiratesBanner(self, banner_root, anim)
         --MakeWX78Banner(self, banner_root, anim)
         --[[
 		local cur_time = os.time()
@@ -390,15 +398,16 @@ end
 -- For drawing things in front of the MOTD panels
 local function MakeBannerFront(self)
     if IS_BETA then
-        --[[
-        local banner_front = Widget("banner_front")
+        
+        --[[local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         local anim = banner_front:AddChild(UIAnim())
 
-        MakeWX78BannerFront(self, banner_front, anim)
+        MakeWickerbottomBannerFront(self, banner_front, anim)
 
-        return banner_front
-        ]]
+        return banner_front]]
+        return nil
+        
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOTC) then
         return nil
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
@@ -408,15 +417,14 @@ local function MakeBannerFront(self)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         return nil
     else
-        --[[
-        local banner_front = Widget("banner_front")
+        --[[local banner_front = Widget("banner_front")
         banner_front:SetPosition(0, 0)
         local anim = banner_front:AddChild(UIAnim())
 
-        MakeWX78BannerFront(self, banner_front, anim)
+        MakeWickerbottomBannerFront(self, banner_front, anim)
         
-        return banner_front
-        ]]
+        return banner_front]]
+        return nil
     end
 end
 

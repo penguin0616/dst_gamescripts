@@ -81,6 +81,8 @@ ITEM_DISPLAY_BLACKLIST =
 	minerhat_floppy = true,
 	minisign_fantasy_drawn = true,
 	minisign_fantasy_item = true,
+	minisign_ornate_drawn = true,
+	minisign_ornate_item = true,
 	minisign_picketbrown_drawn = true,
 	minisign_picketbrown_item = true,
 	minisign_pickettan_drawn = true,
@@ -137,5 +139,6 @@ ITEM_DISPLAY_BLACKLIST =
 	wall_stone_ancientitem = true,
 	wall_stone_gothicitem = true,
 	wall_stone_victorianitem = true,
+	wall_wood_ornateitem = true,
 }
 
