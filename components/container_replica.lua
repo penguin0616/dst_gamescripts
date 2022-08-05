@@ -390,7 +390,7 @@ function Container:Open(doer)
         elseif not self._isopen then
             doer.HUD:OpenContainer(self.inst, self:IsSideWidget())
             if self:IsSideWidget() then
-                TheFocalPoint.SoundEmitter:PlaySound(self.inst.open_skin_sound or "dontstarve/wilson/backpack_open")
+                TheFocalPoint.SoundEmitter:PlaySound(SKIN_SOUND_FX[self.inst.AnimState:GetSkinBuild()] or "dontstarve/wilson/backpack_open")
             end
             self._isopen = true
         end

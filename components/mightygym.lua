@@ -59,7 +59,7 @@ function MightyGym:CheckForWeight()
     for i=1, 2 do
         local item = inventory:GetItemInSlot(i)
         if item then
-            self.inst.AnimState:OverrideSymbol(slot_ids[i], item.components.symbolswapdata.build, item.components.symbolswapdata.symbol)
+            self:SetWeightSymbol(item, i)
             self.inst:AddTag("loaded")
         end
     end    
@@ -105,6 +105,25 @@ function MightyGym:SwapWeight(item,swapitem)
     self.inst.components.mightygym:LoadWeight(swapitem, slot)
 end
 
+function MightyGym:SetWeightSymbol(weight, slot)
+    if weight.components.symbolswapdata ~= nil then
+        if weight.components.symbolswapdata.is_skinned then
+            self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[slot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
+        else
+            self.inst.sg:GoToState("place_weight",{slot=slot})
+            self.inst.AnimState:OverrideSymbol(slot_ids[slot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
+        end
+        if self.strongman then
+            if weight.components.symbolswapdata.is_skinned then
+                self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[slot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
+            else
+                self.strongman.AnimState:OverrideSymbol(slot_ids[slot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
+            end
+        end
+    end
+
+end
+
 function MightyGym:LoadWeight(weight, slot)
     local inventory = self.inst.components.inventory
     local selectedslot = nil
@@ -123,22 +142,8 @@ function MightyGym:LoadWeight(weight, slot)
         end
     end
 
-    if weight.components.symbolswapdata ~= nil then
-        if weight.components.symbolswapdata.is_skinned then
-            self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
-        else
-            self.inst.sg:GoToState("place_weight",{slot=selectedslot})
-            self.inst.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
-        end
-        if self.strongman then
-            if weight.components.symbolswapdata.is_skinned then
-                self.inst.AnimState:OverrideItemSkinSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol, weight.GUID, "swap_cavein_boulder" ) --default should never be used
-            else
-                self.strongman.AnimState:OverrideSymbol(slot_ids[selectedslot], weight.components.symbolswapdata.build, weight.components.symbolswapdata.symbol)
-            end
-        end
-    end
-
+    self:SetWeightSymbol(weight, selectedslot)
+    
     self.inst:AddTag("loaded")
 
     local sound = POTATOSACK_SOUND

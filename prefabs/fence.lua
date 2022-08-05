@@ -494,6 +494,10 @@ local function onload(inst, data)
 end
 
 local function onloadpostpass(inst, newents, data)
+    if data == nil then
+        --Don't crash on mods placing fences in worldgen
+    	return
+    end
 
     inst:DoTaskInTime(0, function(inst)
         -- If fences are placed on rotated boats, we need to account for the boat's rotation

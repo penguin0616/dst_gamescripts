@@ -43,8 +43,7 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
 
-    --inst:AddTag("FX")
-    
+    inst:AddTag("NOCLICK")
 
     inst.AnimState:SetBank ("fx_book_web")
     inst.AnimState:SetBuild("fx_book_web")

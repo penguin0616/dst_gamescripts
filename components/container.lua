@@ -377,7 +377,7 @@ function Container:Open(doer)
             doer.HUD:OpenContainer(self.inst, self:IsSideWidget())
             doer:PushEvent("refreshcrafting")
             if self:IsSideWidget() then
-                TheFocalPoint.SoundEmitter:PlaySound(self.inst.open_skin_sound or "dontstarve/wilson/backpack_open")
+                TheFocalPoint.SoundEmitter:PlaySound(SKIN_SOUND_FX[self.inst.AnimState:GetSkinBuild()] or "dontstarve/wilson/backpack_open")
             else
                 if not self.skipopensnd then
                     TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/Together_HUD/container_open")

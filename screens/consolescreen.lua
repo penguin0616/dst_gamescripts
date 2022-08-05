@@ -284,7 +284,25 @@ function ConsoleScreen:DoInit()
 	self.console_edit:EnableWordPrediction({width = 1000, mode=Profile:GetConsoleAutocompleteMode()})
 	self.console_edit:AddWordPredictionDictionary({words = prefab_names, delim = '"', postfix='"', skip_pre_delim_check=true})
 	self.console_edit:AddWordPredictionDictionary({words = prefab_names, delim = "'", postfix="'", skip_pre_delim_check=true})
-	local prediction_command = {"setmightiness", "spawn", "save", "gonext", "give", "mat", "list", "findnext", "countprefabs", "selectnear", "removeall", "shutdown", "regenerateworld", "reset", "despawn", "godmode", "supergodmode", "armor", "makeboat", "makeboatspiral", "autoteleportplayers", "gatherplayers", "dumpentities", "freecrafting", "selectnext", "sounddebug" }
+	local prediction_command = {
+		"addelectricity", "allbooks", "announce", "armor", "armour", "autoteleportplayers",
+		"boatcollision",
+		"cancelmaintaintasks", "connect", "countallprefabs", "countprefabs", "counttagged",
+		"debugshards", "despawn", "doscenario", "dump", "dumpentities", "dumpseasons", "dumpworldstate",
+		"emptyworld",
+		"find", "findnext", "findtag", "forcecrash", "freecrafting",
+		"gatherplayers", "getmaxplayers", "getnumplayers", "give", "giveingredients", "goadventuring", "godmode", "gonext", "goto", "gotoroom", "groundtype", "guitartab",
+		"inst",
+		"knownassert",
+		"list", "listallplayers", "listplayers", "listtag",
+		"maintainall", "maintainhealth", "maintainhunger", "maintainmoisture", "maintainsanity", "maintaintemperature", "makeboat", "makeboatspiral", "makecrabboat", "makeinvisible", "mat", "mermking", "mermthrone", "migrateto", "migrationportal", "move",
+		"netstats",
+		"pos", "printpos", "printtextureinfo",
+		"regenerateshard", "regenerateworld", "remote", "remove", "removeall", "removeallwithtags", "removeat", "repeatlastcommand", "reregisterportals", "reset", "rollback", "rotateccw", "rotatecw",
+		"save", "searchprefabs", "sel", "sel_health", "select", "selectnear", "selectnext", "sethealth", "sethunger", "setinspiration", "setmightiness", "setminhealth", "setmoisture", "setrotation", "setsanity", "settemperature", "setwereness", "shellsfromtable", "shutdown", "simphase", "skip", "sounddebug", "sounddebugui", "spawn", "speedmult", "speedup", "startinggear", "startvote", "stopvote", "summonbearger", "summondeerclops", "summonmalbatross", "supergodmode",
+		"teleport", "tile",
+		"worldstatedebug",
+	}
 	self.console_edit:AddWordPredictionDictionary({words = prediction_command, delim = "c_", num_chars = 0})
 
 	self.console_edit:SetForceEdit(true)

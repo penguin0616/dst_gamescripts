@@ -3,17 +3,6 @@ require("stategraphs/commonstates")
 local ATTACK_PROP_MUST_TAGS = { "_combat" }
 local ATTACK_PROP_CANT_TAGS = { "flying", "shadow", "ghost", "FX", "NOCLICK", "DECOR", "INLIMBO", "playerghost" }
 
-local BOOK_LAYERS =
-{
-    "FX_tentacles",
-    "FX_fish",
-    "FX_plants",
-    "FX_plants_big",
-    "FX_plants_small",
-    "FX_lightning",
-    "FX_roots",
-}
-
 local function DoEquipmentFoleySounds(inst)
     for k, v in pairs(inst.components.inventory.equipslots) do
         if v.foleysound ~= nil then
@@ -6979,7 +6968,9 @@ local states =
         onenter = function(inst)
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("action_uniqueitem_pre")
-            inst.AnimState:PushAnimation("book", false)
+            --NOTE: "book" anim played in "animover" handler now
+            --inst.AnimState:PushAnimation("book", false)
+
             --V2C: NOTE that these are now used in onexit to clear skinned symbols
             --Moved to player_common because these symbols are never cleared
             --inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
@@ -6988,27 +6979,8 @@ local states =
             local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
             if book ~= nil then
                 if book.def ~= nil then 
-                    if book.def.layer ~= nil then
-                        if type(book.def.layer) == "table" then
-                            for i, v in ipairs(BOOK_LAYERS) do
-                                if table.contains(book.def.layer, v) then
-                                    inst.AnimState:Show(v)
-                                else
-                                    inst.AnimState:Hide(v)
-                                end
-                            end
-                        else
-                            for i, v in ipairs(BOOK_LAYERS) do
-                                if book.def.layer == v then
-                                    inst.AnimState:Show(v)
-                                else
-                                    inst.AnimState:Hide(v)
-                                end
-                            end
-                        end
-
-                        inst.sg.statemem.book_layer = book.def.layer
-                    end
+                    inst.sg.statemem.fx_over_prefab = book.def.fx_over_prefab
+                    inst.sg.statemem.fx_under_prefab = book.def.fx_under_prefab
 
                     if book.def.layer_sound ~= nil then
                         --track and manage via soundtask and sound name (even though it is not a loop)
@@ -7109,9 +7081,23 @@ local states =
 
         events =
         {
-            EventHandler("animqueueover", function(inst)
+            EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
+                    if inst.AnimState:IsCurrentAnimation("book") then
+                        inst.sg:GoToState("idle")
+                    else
+                        inst.AnimState:PlayAnimation("book")
+                        if inst.sg.statemem.fx_over_prefab ~= nil then
+                            inst.sg.statemem.fx_over = SpawnPrefab(inst.sg.statemem.fx_over_prefab)
+                            inst.sg.statemem.fx_over.entity:SetParent(inst.entity)
+                            inst.sg.statemem.fx_over.Follower:FollowSymbol(inst.GUID, "swap_book_fx_over", 0, 0, 0, true)
+                        end
+                        if inst.sg.statemem.fx_under_prefab ~= nil then
+                            inst.sg.statemem.fx_under = SpawnPrefab(inst.sg.statemem.fx_under_prefab)
+                            inst.sg.statemem.fx_under.entity:SetParent(inst.entity)
+                            inst.sg.statemem.fx_under.Follower:FollowSymbol(inst.GUID, "swap_book_fx_under", 0, 0, 0, true)
+                        end
+                    end
                 end
             end),
         },
@@ -7124,17 +7110,14 @@ local states =
             if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
                 inst.sg.statemem.book_fx:Remove()
             end
+            if inst.sg.statemem.fx_over ~= nil and inst.sg.statemem.fx_over:IsValid() then
+                inst.sg.statemem.fx_over:Remove()
+            end
+            if inst.sg.statemem.fx_under ~= nil and inst.sg.statemem.fx_under:IsValid() then
+                inst.sg.statemem.fx_under:Remove()
+            end
             if inst.sg.statemem.targetfx ~= nil and inst.sg.statemem.targetfx:IsValid() then
                 OnRemoveCleanupTargetFX(inst)
-            end
-            if inst.sg.statemem.book_layer ~= nil then
-                if type(inst.sg.statemem.book_layer) == "table" then
-                    for i, v in ipairs(inst.sg.statemem.book_layer) do
-                        inst.AnimState:Hide(v)
-                    end
-                else
-                    inst.AnimState:Hide(inst.sg.statemem.book_layer)
-                end
             end
             if inst.sg.statemem.soundtask ~= nil then
                 inst.sg.statemem.soundtask:Cancel()
@@ -14303,6 +14286,9 @@ local states =
 
             if data.warpback_data ~= nil then
                 inst.Physics:Teleport(data.warpback_data.dest_x, data.warpback_data.dest_y, data.warpback_data.dest_z)
+                if TheWorld and TheWorld.components.walkableplatformmanager then -- NOTES(JBK): Workaround for teleporting too far causing the client to lose sync.
+                    TheWorld.components.walkableplatformmanager:PostUpdate(0)
+                end
             end
             inst:PushEvent("onwarpback", data.warpback_data)
 

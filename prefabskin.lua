@@ -57,14 +57,8 @@ end
 backpack_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "swap_backpack" ) end
 backpack_clear_fn = function(inst) basic_clear_fn(inst, "swap_backpack" ) end
 
-krampus_sack_init_fn = function(inst, build_name)
-    basic_init_fn( inst, build_name, "swap_krampus_sack" )
-    inst.open_skin_sound = SKIN_SOUND_FX[inst:GetSkinName()]
-end
-krampus_sack_clear_fn = function(inst)
-    basic_clear_fn(inst, "swap_krampus_sack" )
-    inst.open_skin_sound = nil
-end
+krampus_sack_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "swap_krampus_sack" ) end
+krampus_sack_clear_fn = function(inst) basic_clear_fn(inst, "swap_krampus_sack" ) end
 
 piggyback_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "swap_piggyback" ) end
 piggyback_clear_fn = function(inst) basic_clear_fn(inst, "swap_piggyback" ) end

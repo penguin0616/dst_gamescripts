@@ -2635,20 +2635,6 @@ local fx =
     },
 
     {
-        name =  "fx_book_silviculture",
-        bank =  "fx_book_silviculturesmall",
-        build = "fx_book_silviculturesmall",
-        anim =  "play_fx1",
-    },
-
-    {
-        name =  "fx_book_silviculture_2",
-        bank =  "fx_book_silviculturesmall",
-        build = "fx_book_silviculturesmall",
-        anim =  "play_fx2",
-    },
-
-    {
         name =  "fx_book_rain",
         bank =  "fx_book_rain",
         build = "fx_book_rain",

@@ -2,44 +2,12 @@ local assets =
 {
     Asset("ANIM", "anim/books.zip"),
     Asset("ANIM", "anim/books2.zip"),
-
-    Asset("ANIM", "anim/fx_book_fish.zip"),
-    Asset("ANIM", "anim/fx_book_moon.zip"),
-    Asset("ANIM", "anim/fx_book_bees.zip"),
-    Asset("ANIM", "anim/fx_book_fire.zip"),
-    Asset("ANIM", "anim/fx_book_rain.zip"),
-    Asset("ANIM", "anim/fx_book_light.zip"),
-    Asset("ANIM", "anim/fx_book_birds.zip"),
-    Asset("ANIM", "anim/fx_book_sleep.zip"),
-    Asset("ANIM", "anim/fx_book_temperature.zip"),
-    Asset("ANIM", "anim/fx_book_light_upgraded.zip"),
-    Asset("ANIM", "anim/fx_book_research_station.zip"),
-    Asset("ANIM", "anim/fx_book_silviculturesmall.zip"),
     --Asset("SOUND", "sound/common.fsb"),
 }
 
-local prefabs = -- this should really be broken up per book...
+local assets_fx =
 {
-    "firepen",
-    "tentacle",
-    "booklight",
-    "splash_ocean",
-    "book_web_ground",
-	"book_horticulture_spell",
-
-    "fx_book_fish",
-    "fx_book_moon",
-    "fx_book_bees",
-    "fx_book_fire",
-    "fx_book_rain",
-    "fx_book_light",
-    "fx_book_birds",
-    "fx_book_sleep",
-    "fx_book_temperature",
-    "fx_book_silviculture",
-    "fx_book_silviculture_2",
-    "fx_book_light_upgraded",
-    "fx_book_research_station",
+    Asset("ANIM", "anim/fx_books.zip"),
 }
 
 local TENTACLES_BLOCKED_CANT_TAGS = { "INLIMBO", "FX" }
@@ -192,8 +160,13 @@ local book_defs =
         uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_HUGE,
         peruse_sanity = TUNING.SANITY_HUGE,
-        layer = "FX_tentacles",
+        fx_under = "tentacles",
         layer_sound = { frame = 30, sound = "wickerbottom_rework/book_spells/tentacles" },
+        deps =
+        {
+            "tentacle",
+            "splash_ocean",
+        },
         fn = function(inst, reader)
             local pt = reader:GetPosition()
             local numtentacles = 3
@@ -304,7 +277,7 @@ local book_defs =
         uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
-        layer = "FX_lightning",
+        fx_over = "lightning",
         fn = function(inst, reader)
             local pt = reader:GetPosition()
             local num_lightnings = 16
@@ -417,7 +390,8 @@ local book_defs =
         uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
-        layer = "FX_plants_small",
+        fx_under = "plants_small",
+        deps = { "book_horticulture_spell" },
         fn = function(inst, reader)
 
             local spell = SpawnPrefab("book_horticulture_spell")
@@ -439,8 +413,9 @@ local book_defs =
         uses = TUNING.BOOK_USES_SMALL,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_HUGE,
-        layer = "FX_plants_big",
+        fx_under = "plants_big",
         layer_sound = { frame = 30, sound = "wickerbottom_rework/book_spells/upgraded_horticulture" },
+        deps = { "book_horticulture_spell" },
         fn = function(inst, reader)
             
             local spell = SpawnPrefab("book_horticulture_spell")
@@ -462,7 +437,7 @@ local book_defs =
         uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
-        layer = "FX_roots",
+        fx_under = "roots",
         layer_sound = { frame = 25, sound = "wickerbottom_rework/book_spells/silviculture" },
         fn = function(inst, reader)
 
@@ -506,7 +481,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = TUNING.SANITY_HUGE,
         fx = "fx_book_fish",
-        layer = "FX_fish",
+        fx_under = "fish",
         fn = function(inst, reader)
             local schoolspawner = TheWorld.components.schoolspawner
             if schoolspawner == nil then
@@ -562,6 +537,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx = "fx_book_fire",
+        deps = { "firepen" },
         fn = function(inst, reader)
             local x, y, z = reader.Transform:GetWorldPosition()
             local fires = TheSim:FindEntities(x, y, z, TUNING.BOOK_FIRE_RADIUS, nil, {"INLIMBO", "lighter"}, {"fire", "smolder"})
@@ -636,6 +612,7 @@ local book_defs =
         uses = TUNING.BOOK_USES_LARGE,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = TUNING.SANITY_LARGE,
+        deps = { "book_web_ground" },
         fn = function(inst, reader)
             local x, y, z = reader.Transform:GetWorldPosition()
             local ground_web = SpawnPrefab("book_web_ground")
@@ -695,6 +672,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = TUNING.SANITY_LARGE,
         fx = "fx_book_light",
+        deps = { "booklight" },
         fn = function(inst, reader)
             TheWorld:PushEvent("ms_forcequake")
             local x, y, z = reader.Transform:GetWorldPosition()
@@ -720,6 +698,7 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = TUNING.SANITY_HUGE,
         fx = "fx_book_light_upgraded",
+        deps = { "booklight" },
         fn = function(inst, reader)
             TheWorld:PushEvent("ms_forcequake")
             local x, y, z = reader.Transform:GetWorldPosition()
@@ -811,6 +790,11 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx = "fx_book_bees",
+        deps =
+        {
+            "beeguard",
+            "bee_poof_big",
+        },
         fn = function(inst, reader)
             reader:MakeGenericCommander()
 
@@ -868,6 +852,7 @@ local book_defs =
         uses = TUNING.BOOK_USES_SMALL,
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = TUNING.SANITY_LARGE,
+        deps = { "fx_book_research_station" },
         fn = function(inst, reader)
             
             local x, y, z = reader.Transform:GetWorldPosition()
@@ -894,6 +879,26 @@ local book_defs =
 }
 
 local function MakeBook(def)
+    local prefabs
+    if def.deps ~= nil then
+        prefabs = {}
+        for i, v in ipairs(def.deps) do
+            table.insert(prefabs, v)
+        end
+    end
+    if def.fx ~= nil then
+        prefabs = prefabs or {}
+        table.insert(prefabs, def.fx)
+    end
+    if def.fx_over ~= nil then
+        prefabs = prefabs or {}
+        table.insert(prefabs, "fx_"..def.fx_over.."_over_book")
+    end
+    if def.fx_under ~= nil then
+        prefabs = prefabs or {}
+        table.insert(prefabs, "fx_"..def.fx_under.."_under_book")
+    end
+
     local function fn()
         local inst = CreateEntity()
 
@@ -955,6 +960,38 @@ local function MakeBook(def)
     return Prefab(def.name, fn, assets, prefabs)
 end
 
+local function MakeFX(name, anim)
+    local function fn()
+        local inst = CreateEntity()
+
+        inst.entity:AddTransform()
+        inst.entity:AddAnimState()
+        inst.entity:AddFollower()
+        inst.entity:AddNetwork()
+
+        inst:AddTag("FX")
+
+        inst.Transform:SetFourFaced() --match player
+
+        inst.AnimState:SetBank("fx_books")
+        inst.AnimState:SetBuild("fx_books")
+        inst.AnimState:PlayAnimation(anim)
+
+        inst.entity:SetPristine()
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst:ListenForEvent("animover", inst.Remove)
+        inst.persists = false
+
+        return inst
+    end
+
+    return Prefab(name, fn, assets_fx)
+end
+
 local function book_horticulture_spell_fn()
 	local inst = CreateEntity()
 
@@ -978,9 +1015,17 @@ local function book_horticulture_spell_fn()
 	return inst
 end
 
-local books = { Prefab("book_horticulture_spell", book_horticulture_spell_fn) }
+local ret = { Prefab("book_horticulture_spell", book_horticulture_spell_fn) }
 for i, v in ipairs(book_defs) do
-    table.insert(books, MakeBook(v))
+    table.insert(ret, MakeBook(v))
+    if v.fx_over ~= nil then
+        v.fx_over_prefab = "fx_"..v.fx_over.."_over_book"
+        table.insert(ret, MakeFX(v.fx_over_prefab, v.fx_over))
+    end
+    if v.fx_under ~= nil then
+        v.fx_under_prefab = "fx_"..v.fx_under.."_under_book"
+        table.insert(ret, MakeFX(v.fx_under_prefab, v.fx_under))
+    end
 end
 book_defs = nil
-return unpack(books)
+return unpack(ret)

@@ -16,7 +16,9 @@ local function onhammered(inst, worker)
         inst.components.burnable:Extinguish()
     end
 
-    inst.components.container:DropEverything()
+    if inst.components.container ~= nil then
+        inst.components.container:DropEverything()
+    end
 
     inst.components.lootdropper:DropLoot()
     local fx = SpawnPrefab("collapse_small")
