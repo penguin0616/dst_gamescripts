@@ -926,7 +926,11 @@ return{
         BERNIE_ACTIVE = "Just what am I looking at here?",
         BERNIE_BIG = "How truly unnerving.",
 
-        BOOKSTATION = "She thinks she can choose what knowledge is shared and what gets hidden away?",
+		BOOKSTATION =
+		{
+			GENERIC = "She thinks she can choose what knowledge is shared and what gets hidden away?",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "What a wasteful misuse of magic.",
         BOOK_TENTACLES = "What horrors shall be summoned from the depths?",
         BOOK_GARDENING = "It's not wise to toy with forces beyond your comprehension.",

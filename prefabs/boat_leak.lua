@@ -29,7 +29,9 @@ end
 
 local function checkforleakimmune(inst)
     local boat = inst:GetCurrentPlatform()
-    if boat and boat.components.hullhealth.leakproof then
+    if boat == nil or boat.components.hullhealth.leakproof then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        print("Warning: A boat leak tried to spawn on land or a leakproof boat at", x, y, z)
         inst:Remove()
     end
 end
@@ -60,7 +62,7 @@ local function fn()
 
     inst:AddComponent("lootdropper")
 
-    inst:DoTaskInTime(0,checkforleakimmune)
+    inst:DoTaskInTime(0, checkforleakimmune) -- NOTES(JBK): This is now just a last resort safeguard checker.
 
     return inst
 end

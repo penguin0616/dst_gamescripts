@@ -209,7 +209,7 @@ ACTIONS =
     READ = Action({ mount_valid=true }),
     DROP = Action({ priority=-1, mount_valid=true, encumbered_valid=true, is_relative_to_platform=true, extra_arrive_dist=ExtraDropDist }),
     TRAVEL = Action(),
-    CHOP = Action(),
+    CHOP = Action({ distance=1.75 }),
     ATTACK = Action({priority=2, canforce=true, mount_valid=true }), -- No custom range check, attack already handles that
     EAT = Action({ mount_valid=true }),
     PICK = Action({ canforce=true, rangecheckfn=DefaultRangeCheck, extra_arrive_dist=ExtraPickupRange, mount_valid = true }),
@@ -2436,6 +2436,7 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
         return nil
     end
     local aimassisted = false
+    local distoverride = nil
     if not TheWorld.Map:IsVisualGroundAtPoint(targetpos.x, targetpos.y, targetpos.z) then
         -- NOTES(JBK): No map tile at the cursor but the area might contain a boat that has a maprevealer component around it.
         -- First find a globalmapicon near here and look for if it is from a fogrevealer and assume it is on landable terrain.
@@ -2451,10 +2452,22 @@ ACTIONS_MAP_REMAP[ACTIONS.BLINK.code] = function(act, targetpos)
         if revealer == nil then
             return nil
         end
+        -- NOTES(JBK): Ocuvigils are normally placed at the edge of the boat and can result in the teleportee being pushed out of the boat boundary.
+        -- The server will make the adjustments to the target position without the client being able to know so we force the original distance to be an override.
         targetpos.x, targetpos.y, targetpos.z = revealer.Transform:GetWorldPosition()
+        distoverride = act.pos:GetPosition():Dist(targetpos)
+        if revealer._target ~= nil then
+            -- Server only code.
+            local boat = revealer._target:GetCurrentPlatform()
+            if boat == nil then
+                -- This should not happen but in case it does fail the act to not teleport onto water.
+                return nil
+            end
+            targetpos.x, targetpos.y, targetpos.z = boat.Transform:GetWorldPosition()
+        end
         aimassisted = true
     end
-    local dist = act.pos:GetPosition():Dist(targetpos)
+    local dist = distoverride or act.pos:GetPosition():Dist(targetpos)
     local act_remap = BufferedAction(doer, nil, ACTIONS.BLINK_MAP, act.invobject, targetpos)
     local dist_mod = ((doer._freesoulhop_counter or 0) * (TUNING.WORTOX_FREEHOP_HOPSPERSOUL - 1)) * act.distance
     local dist_perhop = (act.distance * TUNING.WORTOX_FREEHOP_HOPSPERSOUL * TUNING.WORTOX_MAPHOP_DISTANCE_SCALER)

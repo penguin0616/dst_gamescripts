@@ -28,7 +28,7 @@ local function RemoveHudIndicator(inst)  -- client code
 end
 
 local function SetupHudIndicator(inst) -- client code
-	ThePlayer.HUD:AddTargetIndicator(inst, {image = "miniflare.tex"})
+	ThePlayer.HUD:AddTargetIndicator(inst, {image = "avatar_megaflare.tex"})
 	inst:DoTaskInTime(TUNING.MINIFLARE.HUD_INDICATOR_TIME, RemoveHudIndicator)
 	inst:ListenForEvent("onremove", RemoveHudIndicator)
 end

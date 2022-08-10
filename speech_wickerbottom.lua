@@ -926,7 +926,11 @@ return{
         BERNIE_ACTIVE = "That teddy bear seems to be animated somehow.",
         BERNIE_BIG = "As whimsical as it is befuddling.",
 
-        BOOKSTATION = "Eager minds should always have access to a library.",
+		BOOKSTATION =
+		{
+			GENERIC = "Eager minds should always have access to a library.",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "The expurgated version, but it has my favorite: Megascops kennicottii.",
         BOOK_TENTACLES = "Hard to put this one down. It's gripping, frankly.",
         BOOK_GARDENING = "Dead plants tied together to help me aid living plants.",

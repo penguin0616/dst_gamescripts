@@ -930,7 +930,11 @@ return{
         BERNIE_ACTIVE = "Good sir, are you aware you've no soul?",
         BERNIE_BIG = "It's grown to new heights to win all our fights!",
 
-        BOOKSTATION = "Her entire collection for our inspection.",
+		BOOKSTATION =
+		{
+			GENERIC = "Her entire collection for our inspection.",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "Humans share their knowledge so freely.",
         BOOK_TENTACLES = "Imps don't disseminate precious knowledge so carelessly.",
         BOOK_GARDENING = "Secret knowledge of vegetables.",

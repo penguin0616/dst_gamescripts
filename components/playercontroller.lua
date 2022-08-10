@@ -2759,6 +2759,22 @@ local function UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
     end
 end
 
+local function UpdateControllerConflictingTargets(self)
+    local target, attacktarget = self.controller_target, self.controller_attack_target
+    if target == nil or attacktarget == nil then
+        return
+    end
+    -- NOTES(JBK): This is for handling when there are two targets on a controller but one should take super priority over the other.
+    -- Most of this will be workarounds in appearance as there are no sure fire ways to guarantee what two entities should be prioritized by actions alone as they need additional context.
+    if target:HasTag("mermthrone") and attacktarget:HasTag("merm") then
+        -- Inspecting a throne but could interact with a Merm, Merm takes priority.
+        target = attacktarget
+        self.controller_target_age = 0
+    end
+
+    self.controller_target, self.controller_attack_target = target, attacktarget
+end
+
 function PlayerController:UpdateControllerTargets(dt)
     if self:IsAOETargeting() or (self.inst:HasTag("weregoose") and not self.inst:HasTag("playerghost") or (self.classified and self.classified.inmightygym:value() > 0)) then
         self.controller_target = nil
@@ -2774,6 +2790,7 @@ function PlayerController:UpdateControllerTargets(dt)
     local dirz = math.sin(heading_angle * DEGREES)
     UpdateControllerInteractionTarget(self, dt, x, y, z, dirx, dirz)
     UpdateControllerAttackTarget(self, dt, x, y, z, dirx, dirz)
+    UpdateControllerConflictingTargets(self)
 end
 
 function PlayerController:GetControllerTarget()

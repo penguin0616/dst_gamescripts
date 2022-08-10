@@ -929,7 +929,11 @@ return{
         BERNIE_ACTIVE = "Yay! Squishy Friend can play!",
         BERNIE_BIG = "Big Squishy Friend!",
 
-        BOOKSTATION = "Book house",
+		BOOKSTATION =
+		{
+			GENERIC = "Book house",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "Pretty pictures",
         BOOK_TENTACLES = "About Scary Arms",
         BOOK_GARDENING = "This one's nice",

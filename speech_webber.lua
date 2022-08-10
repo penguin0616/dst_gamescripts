@@ -925,7 +925,11 @@ return{
         BERNIE_ACTIVE = "That teddy bear is moving!",
         BERNIE_BIG = "It's creepy and cute at the same time!!",
 
-        BOOKSTATION = "We helped make the doily!",
+		BOOKSTATION =
+		{
+			GENERIC = "We helped make the doily!",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "This one has pictures!",
         BOOK_TENTACLES = "Why are the pages all slimy?",
         BOOK_GARDENING = "Why should we read about flowers when we can pick them?",

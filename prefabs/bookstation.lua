@@ -92,6 +92,7 @@ local function onactivate(inst)
         inst.AnimState:PushAnimation("idle", true)
         if not inst.SoundEmitter:PlayingSound("sound") then
             inst.SoundEmitter:PlaySound("wickerbottom_rework/bookstation/craft", "sound")
+            inst.SoundEmitter:SetVolume("sound", 0.5) -- TODO(JBK): Remove this line after audio engineer lowers this in the source sound file.
         end
         inst._activecount = inst._activecount + 1
         inst:DoTaskInTime(1.5, doonact)--, soundprefix)
@@ -147,12 +148,43 @@ local function RestoreBooks(inst)
     end
 end
 
+local function CountBooks(inst)
+    local cmp = inst.components.container
+    return cmp and (cmp:NumItems() / cmp:GetNumSlots()) or 0
+end
+
+local BOOKS_SOME = "empty"
+local BOOKS_MORE = "mid"
+local BOOKS_FULL = "full"
+
+local function UpdateBookAesthetics(inst, countoverride)
+    local count = countoverride or CountBooks(inst)
+    if count == 0 then
+        inst.AnimState:Hide(BOOKS_SOME)
+        inst.AnimState:Hide(BOOKS_MORE)
+        inst.AnimState:Hide(BOOKS_FULL)
+    elseif count < 0.5 then
+        inst.AnimState:Show(BOOKS_SOME)
+        inst.AnimState:Hide(BOOKS_MORE)
+        inst.AnimState:Hide(BOOKS_FULL)
+    elseif count < 1 then
+        inst.AnimState:Show(BOOKS_SOME)
+        inst.AnimState:Show(BOOKS_MORE)
+        inst.AnimState:Hide(BOOKS_FULL)
+    else
+        inst.AnimState:Show(BOOKS_SOME)
+        inst.AnimState:Show(BOOKS_MORE)
+        inst.AnimState:Show(BOOKS_FULL)
+    end
+end
+
 local function ItemGet(inst)
     if inst.RestoreTask == nil then
         if inst.components.container:HasItemWithTag("book", 1) then
             inst.RestoreTask = inst:DoPeriodicTask(TUNING.BOOKSTATION_RESTORE_TIME, RestoreBooks)
         end
     end
+    UpdateBookAesthetics(inst)
 end
 
 local function ItemLose(inst)
@@ -162,6 +194,7 @@ local function ItemLose(inst)
             inst.RestoreTask = nil
         end
     end
+    UpdateBookAesthetics(inst)
 end
 
 local function fn()
@@ -176,10 +209,12 @@ local function fn()
     MakeObstaclePhysics(inst, .4)
 
     inst.MiniMapEntity:SetPriority(5)
+    inst.MiniMapEntity:SetIcon("bookstation.png")
 
     inst.AnimState:SetBank ("bookstation")
     inst.AnimState:SetBuild("bookstation")
     inst.AnimState:PlayAnimation("idle")
+    UpdateBookAesthetics(inst, 0)
 
     inst:AddTag("structure")
 

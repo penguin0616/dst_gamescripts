@@ -2707,7 +2707,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "ICE", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper_skin", "skirt", "torso", },
+		symbol_overrides = { "arm_lower", "arm_upper_skin", "skirt", "torso", "torso_pelvis", },
 		symbol_hides = { "arm_upper", },
 		torso_tuck = "skirt",
 		rarity = "Distinguished",

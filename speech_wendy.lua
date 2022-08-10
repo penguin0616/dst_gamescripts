@@ -929,7 +929,11 @@ return{
         BERNIE_ACTIVE = "It dances to forget the pain.",
         BERNIE_BIG = "Wow... What a big stuffy.",
 
-        BOOKSTATION = "How I miss my poetry books.",
+		BOOKSTATION =
+		{
+			GENERIC = "How I miss my poetry books.",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "Will it teach me to fly away from here?",
         BOOK_TENTACLES = "Does this world need more beasts?",
         BOOK_GARDENING = "Imagine, a rolling field of red flowers...",

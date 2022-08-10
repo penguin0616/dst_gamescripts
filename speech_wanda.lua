@@ -925,7 +925,11 @@ return{
         BERNIE_ACTIVE = "How incredible that this isn't even the strangest thing I've seen.",
         BERNIE_BIG = "I could've sworn you were smaller...",
 
-        BOOKSTATION = "As if I have time to sit and read!",
+		BOOKSTATION =
+		{
+			GENERIC = "As if I have time to sit and read!",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "Time and birds sure do fly.",
         BOOK_TENTACLES = "It's enough having to deal with them in person, why read about them too?",
         BOOK_GARDENING = "Do I even want to know how long the unabridged version was?",

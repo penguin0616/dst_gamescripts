@@ -4,6 +4,8 @@ local Container = Class(function(self, inst)
     self.inst = inst
 
     self._cannotbeopened = net_bool(inst.GUID, "container._cannotbeopened")
+    self._skipopensnd = net_bool(inst.GUID, "container._skipopensnd")
+    self._skipclosesnd = net_bool(inst.GUID, "container._skipclosesnd")
     self._isopen = false
     self._numslots = 0
     self.acceptsstacks = true
@@ -265,6 +267,22 @@ function Container:CanBeOpened()
     return not self._cannotbeopened:value()
 end
 
+function Container:SetSkipOpenSnd(skipopensnd)
+    self._skipopensnd:set(skipopensnd)
+end
+
+function Container:ShouldSkipOpenSnd()
+    return self._skipopensnd:value()
+end
+
+function Container:SetSkipCloseSnd(skipclosesnd)
+    self._skipclosesnd:set(skipclosesnd)
+end
+
+function Container:ShouldSkipCloseSnd()
+    return self._skipclosesnd:value()
+end
+
 function Container:CanTakeItemInSlot(item, slot)
     return item ~= nil
         and item.replica.inventoryitem ~= nil
@@ -391,6 +409,10 @@ function Container:Open(doer)
             doer.HUD:OpenContainer(self.inst, self:IsSideWidget())
             if self:IsSideWidget() then
                 TheFocalPoint.SoundEmitter:PlaySound(SKIN_SOUND_FX[self.inst.AnimState:GetSkinBuild()] or "dontstarve/wilson/backpack_open")
+            else
+                if not self:ShouldSkipOpenSnd() then
+                    TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/Together_HUD/container_open")
+                end
             end
             self._isopen = true
         end
@@ -409,6 +431,10 @@ function Container:Close()
             ThePlayer.HUD:CloseContainer(self.inst, self:IsSideWidget())
             if self:IsSideWidget() then
                 TheFocalPoint.SoundEmitter:PlaySound("dontstarve/wilson/backpack_close")
+            else
+                if not self:ShouldSkipCloseSnd() then
+                    TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/Together_HUD/container_close")
+                end
             end
         end
         self._isopen = false

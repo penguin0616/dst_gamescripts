@@ -925,7 +925,11 @@ return{
         BERNIE_ACTIVE = "What a silly fellow.",
         BERNIE_BIG = "Tres géant!",
 
-        BOOKSTATION = "Mme. Wickerbottom looks so happy organizing her books.",
+		BOOKSTATION =
+		{
+			GENERIC = "Mme. Wickerbottom looks so happy organizing her books.",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "I had hoped it was a poultry cookbook.",
         BOOK_TENTACLES = "I don't see any recipes in this at all.",
         BOOK_GARDENING = "Maybe Mme. Wickerbottom would be interested in starting a herb garden.",

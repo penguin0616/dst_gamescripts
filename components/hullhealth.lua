@@ -96,8 +96,9 @@ end
 
 function HullHealth:GetLeakPosition(idx)
 	local angle = GetRandomWithVariance(self:GetLeakAngle(idx), self.leak_angle_variance)
-	local boat_x, boat_y, boat_z = self.inst.Transform:GetWorldPosition()
-	local pos_x, pos_z = math.cos(angle) * self.leak_radius, math.sin(angle) * GetRandomWithVariance(self.leak_radius, self.leak_radius_variance)
+	local boat_x, _, boat_z = self.inst.Transform:GetWorldPosition()
+	local leakradius = GetRandomWithVariance(self.leak_radius, self.leak_radius_variance)
+	local pos_x, pos_z = math.cos(angle) * leakradius, math.sin(angle) * leakradius
 	return pos_x + boat_x, pos_z + boat_z
 end
 
@@ -106,6 +107,9 @@ function HullHealth:GetLeakAngle(idx)
 end
 
 function HullHealth:RefreshLeakIndicator(leak_idx)
+	if self.leakproof then
+		return false
+	end
 	local leak_damage = self.leak_damage[leak_idx]
 	if leak_damage >= self.small_leak_dmg then
 		local leak_indicator = self.leak_indicators[leak_idx]

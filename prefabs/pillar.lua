@@ -27,6 +27,8 @@ local function makefn(name, collide)
 
         if collide then
             MakeObstaclePhysics(inst, 2.35)
+        else
+            inst:AddTag("NOBLOCK")
         end
 
         inst.AnimState:SetBank(name)

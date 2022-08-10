@@ -936,7 +936,11 @@ return {
         BERNIE_ACTIVE = "That teddy bear is moving around. Interesting.",
         BERNIE_BIG = "Remind me not to get on Willow's bad side.",
 
-        BOOKSTATION = "Why study when I can experiment?",
+		BOOKSTATION =
+		{
+			GENERIC = "Why study when I can experiment?",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "No point studying when I can just wing it.",
         BOOK_TENTACLES = "Someone'll get suckered into reading this.",
         BOOK_GARDENING = "I see no farm in reading that.",

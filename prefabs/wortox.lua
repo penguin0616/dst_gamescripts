@@ -287,8 +287,8 @@ end
 
 --------------------------------------------------------------------------
 
-local function NoHoles(pt)
-    return not TheWorld.Map:IsGroundTargetBlocked(pt)
+local function CanBlinkTo(pt)
+    return (TheWorld.Map:IsAboveGroundAtPoint(pt.x, pt.y, pt.z) or TheWorld.Map:GetPlatformAtPoint(pt.x, pt.z) ~= nil) and not TheWorld.Map:IsGroundTargetBlocked(pt)
 end
 
 local BLINKFOCUS_MUST_TAGS = { "blinkfocus" }
@@ -312,7 +312,7 @@ local function ReticuleTargetFn(inst)
 
     pos.y = 0
     for r = 13, 4, -.5 do
-        local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, NoHoles)
+        local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, CanBlinkTo)
         if offset ~= nil then
             pos.x = pos.x + offset.x
             pos.z = pos.z + offset.z
@@ -320,7 +320,7 @@ local function ReticuleTargetFn(inst)
         end
     end
     for r = 13.5, 16, .5 do
-        local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, NoHoles)
+        local offset = FindWalkableOffset(pos, rotation, r, 1, false, true, CanBlinkTo)
         if offset ~= nil then
             pos.x = pos.x + offset.x
             pos.z = pos.z + offset.z
@@ -343,7 +343,7 @@ local function CanSoulhop(inst, souls)
 end
 
 local function GetPointSpecialActions(inst, pos, useitem, right)
-    if right and useitem == nil and NoHoles(pos) and inst.CanSoulhop and inst:CanSoulhop() then
+    if right and useitem == nil and CanBlinkTo(pos) and inst.CanSoulhop and inst:CanSoulhop() then
         return { ACTIONS.BLINK }
     end
     return {}

@@ -9801,6 +9801,7 @@ table.insert(prefs, CreatePrefabSkin("wonkey_none",
 	rarity = "Character",
 	skin_tags = { "BASE", },
 	skins = { ghost_skin = "ghost_wonkey_build", normal_skin = "wonkey", },
+	torso_tuck_builds = { "wonkey", },
 	release_group = 133,
 }))
 

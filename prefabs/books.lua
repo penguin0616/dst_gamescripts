@@ -108,7 +108,7 @@ local function trygrowth(inst, maximize)
 	return false
 end
 
-local function GrowNext(spell, reader, max_targets, maximize)
+local function GrowNext(spell, max_targets, maximize)
 	while spell._next <= #spell._targets do
 		local target = spell._targets[spell._next]
 		spell._next = spell._next + 1
@@ -116,9 +116,7 @@ local function GrowNext(spell, reader, max_targets, maximize)
 		if target:IsValid() and trygrowth(target, maximize) then
 			spell._count = spell._count + 1
 			if spell._count < max_targets then
-				spell:DoTaskInTime(0.1 + 0.3 * math.random(), function() 
-                    GrowNext (spell, reader, max_targets, maximize)
-                end)
+				spell:DoTaskInTime(0.1 + 0.3 * math.random(), GrowNext, max_targets, maximize)
 				return
 			else
 				break
@@ -129,28 +127,41 @@ local function GrowNext(spell, reader, max_targets, maximize)
 	spell:Remove()
 end
 
-local function do_book_horticulture_spell(spell, reader, max_targets, maximize)
-    local x, y, z = reader.Transform:GetWorldPosition()
-    local range = 30
-    
-    local ents = TheSim:FindEntities(x, y, z, range, nil, HORTICULTURE_CANT_TAGS, HORTICULTURE_ONEOF_TAGS)
-    spell._targets = {}
+local function CreateHorticultureSpell(targets, max_targets, maximize)
+	local inst = CreateEntity()
 
-    for k,v in pairs(ents) do
-        if v.components.pickable ~= nil or v.components.crop ~= nil or v.components.growable ~= nil or v.components.harvestable ~= nil then
-            table.insert (spell._targets, v)
-        end
-    end
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.entity:Hide()
 
-	if #spell._targets == 0 then
-		spell:Remove()
+	inst:AddTag("CLASSIFIED")
+
+	inst.persists = false
+
+	inst._targets = targets
+	inst._next = 1
+	inst._count = 0
+
+	GrowNext(inst, max_targets, maximize)
+
+	return inst
+end
+
+local function do_book_horticulture_spell(x, z, max_targets, maximize)
+	local ents = TheSim:FindEntities(x, 0, z, 30, nil, HORTICULTURE_CANT_TAGS, HORTICULTURE_ONEOF_TAGS)
+	local targets = {}
+	for i, v in ipairs(ents) do
+		if v.components.pickable ~= nil or v.components.crop ~= nil or v.components.growable ~= nil or v.components.harvestable ~= nil then
+			table.insert(targets, v)
+		end
+	end
+
+	if #targets == 0 then
 		return false, "NOHORTICULTURE"
 	end
 
-	spell._next = 1
-	spell._count = 0
-	GrowNext(spell, reader, max_targets, maximize)
-    return true
+	CreateHorticultureSpell(targets, max_targets, maximize)
+	return true
 end
 
 local book_defs =
@@ -391,12 +402,9 @@ local book_defs =
         read_sanity = -TUNING.SANITY_LARGE,
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx_under = "plants_small",
-        deps = { "book_horticulture_spell" },
         fn = function(inst, reader)
-
-            local spell = SpawnPrefab("book_horticulture_spell")
-            spell.Transform:SetPosition(reader.Transform:GetWorldPosition())
-			return do_book_horticulture_spell(spell, reader, TUNING.BOOK_GARDENING_MAX_TARGETS)
+			local x, y, z = reader.Transform:GetWorldPosition()
+			return do_book_horticulture_spell(x, z, TUNING.BOOK_GARDENING_MAX_TARGETS)
 		end,
         
         perusefn = function(inst,reader)
@@ -415,12 +423,9 @@ local book_defs =
         peruse_sanity = -TUNING.SANITY_HUGE,
         fx_under = "plants_big",
         layer_sound = { frame = 30, sound = "wickerbottom_rework/book_spells/upgraded_horticulture" },
-        deps = { "book_horticulture_spell" },
         fn = function(inst, reader)
-            
-            local spell = SpawnPrefab("book_horticulture_spell")
-            spell.Transform:SetPosition(reader.Transform:GetWorldPosition())
-			return do_book_horticulture_spell(spell, reader, TUNING.BOOK_GARDENING_UPGRADED_MAX_TARGETS, true)
+			local x, y, z = reader.Transform:GetWorldPosition()
+			return do_book_horticulture_spell(x, z, TUNING.BOOK_GARDENING_UPGRADED_MAX_TARGETS, true)
         end,
 
         perusefn = function(inst,reader)
@@ -992,30 +997,7 @@ local function MakeFX(name, anim)
     return Prefab(name, fn, assets_fx)
 end
 
-local function book_horticulture_spell_fn()
-	local inst = CreateEntity()
-
-    if not TheWorld.ismastersim then
-        --Not meant for client!
-        inst:DoTaskInTime(0, inst.Remove)
-
-        return inst
-    end
-
-    inst.entity:AddTransform()
-
-    --[[Non-networked entity]]
-    inst.entity:SetCanSleep(false)
-    inst.entity:Hide()
-
-    inst:AddTag("CLASSIFIED")
-
-	inst.persists = false
-
-	return inst
-end
-
-local ret = { Prefab("book_horticulture_spell", book_horticulture_spell_fn) }
+local ret = {}
 for i, v in ipairs(book_defs) do
     table.insert(ret, MakeBook(v))
     if v.fx_over ~= nil then

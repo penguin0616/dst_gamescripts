@@ -278,7 +278,7 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, monkey_c
 			anim_state:ShowSymbol(sym)
 			anim_state:OverrideSymbol( sym, "wonkey", sym )
 			if sym == "foot" then
-				feet_cuff_size = 1
+				feet_cuff_size = 3
 			end
 		end
 

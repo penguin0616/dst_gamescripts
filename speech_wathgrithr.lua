@@ -925,7 +925,11 @@ return{
         BERNIE_ACTIVE = "What a brave beast!",
         BERNIE_BIG = "The beast hath been imbued with a fighting spirit!",
 
-        BOOKSTATION = "A trove of wisdom.",
+		BOOKSTATION =
+		{
+			GENERIC = "A trove of wisdom.",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "To rule the skies!",
         BOOK_TENTACLES = "Knowledge grants great power!",
         BOOK_GARDENING = "But can it tend the garden of mine soul?",

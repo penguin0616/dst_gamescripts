@@ -4,6 +4,14 @@ local function oncanbeopened(self, canbeopened)
     self.inst.replica.container:SetCanBeOpened(canbeopened)
 end
 
+local function onskipopensnd(self, skipopensnd)
+    self.inst.replica.container:SetSkipOpenSnd(skipopensnd)
+end
+
+local function onskipclosesnd(self, skipclosesnd)
+    self.inst.replica.container:SetSkipCloseSnd(skipclosesnd)
+end
+
 local function OnOwnerDespawned(inst)
     local container = inst.components.container
     if container ~= nil then
@@ -21,6 +29,8 @@ local Container = Class(function(self, inst)
     self.slots = {}
     self.numslots = 0
     self.canbeopened = true
+    self.skipopensnd = false
+    self.skipclosesnd = false
     self.acceptsstacks = true
     self.usespecificslotsforitems = false
     self.issidewidget = false
@@ -46,6 +56,8 @@ end,
 nil,
 {
     canbeopened = oncanbeopened,
+    skipopensnd = onskipopensnd,
+    skipclosesnd = onskipclosesnd,
 })
 
 local widgetprops =
@@ -379,7 +391,7 @@ function Container:Open(doer)
             if self:IsSideWidget() then
                 TheFocalPoint.SoundEmitter:PlaySound(SKIN_SOUND_FX[self.inst.AnimState:GetSkinBuild()] or "dontstarve/wilson/backpack_open")
             else
-                if not self.skipopensnd then
+                if not self.inst.replica.container:ShouldSkipOpenSnd() then
                     TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/Together_HUD/container_open")
                 end
             end
@@ -423,7 +435,7 @@ function Container:Close(doer)
             if self:IsSideWidget() then
                 TheFocalPoint.SoundEmitter:PlaySound("dontstarve/wilson/backpack_close")
             else
-                if not self.skipclosesnd then
+                if not self.inst.replica.container:ShouldSkipCloseSnd() then
                     TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/Together_HUD/container_close")
                 end
             end

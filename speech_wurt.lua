@@ -927,7 +927,11 @@ return{
         BERNIE_ACTIVE = "Wanna play with it!",
         BERNIE_BIG = "Fun toy, flurp!",
 
-        BOOKSTATION = "Glurgh. Why put books up so high?!",
+		BOOKSTATION =
+		{
+			GENERIC = "Glurgh. Why put books up so high?!",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "Read this one, Wicker-lady!",
         BOOK_TENTACLES = "Remind me of home, florp.",
         BOOK_GARDENING = "A... appled...? (Sigh)",

@@ -931,7 +931,11 @@ return{
         BERNIE_ACTIVE = "Is he clockwork? Can I peek inside?",
         BERNIE_BIG = "That girl knows how to put on a show.",
 
-        BOOKSTATION = "I've gotta say, that's some pretty solid construction.",
+		BOOKSTATION =
+		{
+			GENERIC = "I've gotta say, that's some pretty solid construction.",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "I was never much of a book learner.",
         BOOK_TENTACLES = "I'm not really a \"book smarts\" kind of gal.",
         BOOK_GARDENING = "I prefer to learn from experience.",

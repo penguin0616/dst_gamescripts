@@ -725,9 +725,12 @@ function LocoMotor:GoToEntity(target, bufferedaction, run)
     self:SetBufferedAction(bufferedaction)
     self.wantstomoveforward = true
 
-    local arrive_dist = nil
+    local arrive_dist
     if bufferedaction ~= nil and bufferedaction.distance ~= nil then
-        arrive_dist = bufferedaction.distance
+        --NOTE: use actual physics (ignoring physicsradiusoverride)
+        --      as fallback if bufferedaction.distance is too small
+        arrive_dist = ARRIVE_STEP + (target.Physics ~= nil and target.Physics:GetRadius() or 0) + (self.inst.Physics ~= nil and self.inst.Physics:GetRadius() or 0)
+        arrive_dist = math.max(arrive_dist, bufferedaction.distance)
     else
         arrive_dist = ARRIVE_STEP + target:GetPhysicsRadius(0) + self.inst:GetPhysicsRadius(0)
 

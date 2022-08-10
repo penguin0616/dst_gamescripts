@@ -926,7 +926,11 @@ return{
         BERNIE_ACTIVE = "Is so brave!",
         BERNIE_BIG = "Oh no! Wolfgang has shrunken!",
 
-        BOOKSTATION = "Makes brainlady happy, Wolfgang will protect it!",
+		BOOKSTATION =
+		{
+			GENERIC = "Makes brainlady happy, Wolfgang will protect it!",
+			BURNT = nil,
+		},
         BOOK_BIRDS = "Book is for the birds!",
         BOOK_TENTACLES = "Wolfgang wants many foes to fight!",
         BOOK_GARDENING = "Wolfgang rather grow muscle than flowers.",
