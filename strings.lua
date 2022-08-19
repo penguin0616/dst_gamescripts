@@ -9254,6 +9254,7 @@ STRINGS.UI =
 
         UNOWNED_CHARACTER_TITLE = "Character Not Owned",
         UNOWNED_CHARACTER_BODY = "You have not yet unlocked {character}.\nTo play this character, you must either weave them using Spools, or purchase them from the Shop.",
+        UNOWNED_CHARACTER_BODY_OFFLINE = "You have not yet unlocked {character}.\nYou must be online to unlock this character.",
         VISIT_SHOP = "Visit Shop",
 
         SERVER_SHUTDOWN_TITLE = "Server is Shutting Down",
@@ -12760,6 +12761,8 @@ STRINGS.KITCOON_NAMING =
 		"Cherry",
 		"Siumai",
 		"Kira",
+        "Finch",
+        "Mango",
     },
 }
 

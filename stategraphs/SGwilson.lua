@@ -2573,7 +2573,9 @@ local states =
                     table.insert(anims, "idle_hot_loop")
                     dofunny = false
                 elseif inst:HasTag("groggy") then
-                    table.insert(anims, "idle_groggy_pre")
+                    if not inst.AnimState:IsCurrentAnimation("yawn") then
+                        table.insert(anims, "idle_groggy_pre")
+                    end
                     table.insert(anims, "idle_groggy")
                 else
                     table.insert(anims, "idle_loop")
@@ -7087,13 +7089,14 @@ local states =
                         inst.sg:GoToState("idle")
                     else
                         inst.AnimState:PlayAnimation("book")
+                        local suffix = inst.components.rider:IsRiding() and "_mount" or ""
                         if inst.sg.statemem.fx_over_prefab ~= nil then
-                            inst.sg.statemem.fx_over = SpawnPrefab(inst.sg.statemem.fx_over_prefab)
+                            inst.sg.statemem.fx_over = SpawnPrefab(inst.sg.statemem.fx_over_prefab..suffix)
                             inst.sg.statemem.fx_over.entity:SetParent(inst.entity)
                             inst.sg.statemem.fx_over.Follower:FollowSymbol(inst.GUID, "swap_book_fx_over", 0, 0, 0, true)
                         end
                         if inst.sg.statemem.fx_under_prefab ~= nil then
-                            inst.sg.statemem.fx_under = SpawnPrefab(inst.sg.statemem.fx_under_prefab)
+                            inst.sg.statemem.fx_under = SpawnPrefab(inst.sg.statemem.fx_under_prefab..suffix)
                             inst.sg.statemem.fx_under.entity:SetParent(inst.entity)
                             inst.sg.statemem.fx_under.Follower:FollowSymbol(inst.GUID, "swap_book_fx_under", 0, 0, 0, true)
                         end

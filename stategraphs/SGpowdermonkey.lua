@@ -108,9 +108,7 @@ local states =
                 local cannon = inst:GetBufferedAction().target
                 cannon.components.timer:StartTimer("monkey_biz", 4)
                 if not cannon.components.boatcannon:IsAmmoLoaded() then
-                local ammo = SpawnPrefab("cannonball_rock_item")
-                    ammo:RemoveFromScene()
-                    cannon.components.boatcannon:LoadAmmo(ammo)
+                    cannon.components.boatcannon:LoadAmmo("cannonball_rock")
                 end
             end
             inst.Physics:Stop()

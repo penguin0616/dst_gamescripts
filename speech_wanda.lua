@@ -928,7 +928,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "As if I have time to sit and read!",
-			BURNT = nil,
+			BURNT = "Oh botheration, now that it's gone I actually want to read something.",
 		},
         BOOK_BIRDS = "Time and birds sure do fly.",
         BOOK_TENTACLES = "It's enough having to deal with them in person, why read about them too?",

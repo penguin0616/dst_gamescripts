@@ -1193,7 +1193,7 @@ function Inventory:GetItemsWithTag(tag)
     end
 
     if self.activeitem and self.activeitem:HasTag(tag) then
-        table.inset(items, self.active_item)
+        table.insert(items, self.active_item)
     end
 
     local overflow = self:GetOverflowContainer()

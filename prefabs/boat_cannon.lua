@@ -54,21 +54,9 @@ local function getstatus(inst, viewer)
     end
 end
 
-local function OnEntitySleep(inst)
-
-end
-
-local function OnRemoveEntity(inst)
-
-end
-
 local function onsave(inst, data)
     if inst:HasTag("burnt") or (inst.components.burnable ~= nil and inst.components.burnable:IsBurning()) then
         data.burnt = true
-    end
-
-    if inst.components.boatcannon then
-        data.loadedammo = inst.components.boatcannon.loadedammo
     end
 end
 
@@ -84,7 +72,6 @@ end
 
 local function onload(inst, data)
     if data == nil then
-        inst.AnimState:HideSymbol("cannon_flap_down")
         return
     end
 
@@ -93,13 +80,12 @@ local function onload(inst, data)
     end
 
     if inst.components.boatcannon then
-        inst.components.boatcannon.loadedammo = data.loadedammo
-
         -- Show/hide anim flap depending on if ammo is loaded or not
-        if data.loadedammo ~= nil then
+		if inst.components.boatcannon:IsAmmoLoaded() then
             inst.AnimState:HideSymbol("cannon_flap_up")
-            inst:AddTag("ammoloaded")
+			inst.AnimState:ShowSymbol("cannon_flap_down")
         else
+			inst.AnimState:ShowSymbol("cannon_flap_up")
             inst.AnimState:HideSymbol("cannon_flap_down")
         end
     end
@@ -145,7 +131,9 @@ local function ongivenitem(inst, giver, item)
         return
     end
 
-    inst.components.boatcannon:LoadAmmo(item, giver)
+	if item ~= nil and item.projectileprefab ~= nil and item:HasTag("boatcannon_ammo") then
+		inst.components.boatcannon:LoadAmmo(item.projectileprefab)
+	end
 end
 
 local function CancelOperator(inst)
@@ -261,10 +249,16 @@ local function reticule_update_position_function(inst, pos, reticule, ease, smoo
 end
 
 local function onlit(inst)
-    if inst:HasTag("ammoloaded") then
+    if inst.components.boatcannon:IsAmmoLoaded() then
         inst.sg:GoToState("shoot")
         CancelOperator(inst)
     end
+end
+
+local function OnAmmoLoaded(inst)
+	if not POPULATING then
+		inst.sg:GoToState("load")
+	end
 end
 
 local function fn()
@@ -282,6 +276,7 @@ local function fn()
     inst.AnimState:SetBank("boat_cannon")
     inst.AnimState:SetBuild("boat_cannon")
     inst.AnimState:PlayAnimation("idle")
+	inst.AnimState:HideSymbol("cannon_flap_down")
 
     inst:AddTag("boatcannon")
     inst.Transform:SetEightFaced()
@@ -325,20 +320,20 @@ local function fn()
         inst.components.trader.onaccept = ongivenitem
     end
 
-    inst:SetStateGraph("SGboatcannon")
-
     inst:AddComponent("timer")
 
     inst.OnSave = onsave
     inst.OnLoad = onload
     inst.OnLoadPostPass = onloadpostpass
-    inst.OnEntitySleep = OnEntitySleep
-    inst.OnRemoveEntity = OnRemoveEntity
 
     inst:AddComponent("boatcannon")
-    inst:ListenForEvent("onignite", onlit)
 
     MakeHauntableWork(inst)
+
+    inst:SetStateGraph("SGboatcannon")
+
+    inst:ListenForEvent("onignite", onlit)
+    inst:ListenForEvent("ammoloaded", OnAmmoLoaded)
 
     return inst
 end

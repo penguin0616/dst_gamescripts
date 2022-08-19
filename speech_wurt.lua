@@ -930,7 +930,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Glurgh. Why put books up so high?!",
-			BURNT = nil,
+			BURNT = "D-didn't do it, promise!! Please don't be sad, Wicker-lady...",
 		},
         BOOK_BIRDS = "Read this one, Wicker-lady!",
         BOOK_TENTACLES = "Remind me of home, florp.",

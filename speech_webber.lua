@@ -928,7 +928,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "We helped make the doily!",
-			BURNT = nil,
+			BURNT = "Oh no! We worked so hard on that doily!",
 		},
         BOOK_BIRDS = "This one has pictures!",
         BOOK_TENTACLES = "Why are the pages all slimy?",

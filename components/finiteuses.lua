@@ -18,8 +18,12 @@ function FiniteUses:GetDebugString()
     return string.format("%.2f/%d", self.current, self.total)
 end
 
+function FiniteUses:SetDoesNotStartFull(enabled) -- NOTES(JBK): Removes the assumption that the item starts at 100% uses by default for saving.
+    self.doesnotstartfull = enabled
+end
+
 function FiniteUses:OnSave()
-    if self.current ~= self.total then
+    if self.current ~= self.total or self.doesnotstartfull then
         return { uses = self.current }
     end
 end

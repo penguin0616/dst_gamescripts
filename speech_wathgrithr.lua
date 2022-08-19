@@ -928,7 +928,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "A trove of wisdom.",
-			BURNT = nil,
+			BURNT = "Villainy! Do not let the elder see!",
 		},
         BOOK_BIRDS = "To rule the skies!",
         BOOK_TENTACLES = "Knowledge grants great power!",

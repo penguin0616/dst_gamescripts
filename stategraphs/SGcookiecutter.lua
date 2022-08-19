@@ -208,7 +208,9 @@ local states =
 			end),
 			TimeEvent(16*FRAMES, function(inst)
 				local boat = inst:GetCurrentPlatform()
-				inst.SoundEmitter:PlaySound(boat.sounds.thunk)
+				if boat then
+					inst.SoundEmitter:PlaySound(boat.sounds.thunk)
+				end
 			end),
 		},
     },

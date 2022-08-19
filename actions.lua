@@ -2198,6 +2198,11 @@ ACTIONS.MURDER.fn = function(act)
         end
 
         local stacksize = murdered.components.stackable ~= nil and murdered.components.stackable:StackSize() or 1
+
+        -- NOTES(JBK): Push the events before spawning any giving any loot.
+        act.doer:PushEvent("murdered", { victim = murdered, stackmult = stacksize })
+        act.doer:PushEvent("killed", { victim = murdered, stackmult = stacksize })
+
         if murdered.components.lootdropper ~= nil then
             murdered.causeofdeath = act.doer
             local pos = Vector3(x, y, z)
@@ -2216,10 +2221,7 @@ ACTIONS.MURDER.fn = function(act)
             murdered.components.inventory:TransferInventory(act.doer)
         end
 
-        act.doer:PushEvent("murdered", { victim = murdered, stackmult = stacksize })
-        act.doer:PushEvent("killed", { victim = murdered, stackmult = stacksize })
         murdered:Remove()
-
         return true
     end
 end
@@ -3603,20 +3605,23 @@ ACTIONS.BOAT_MAGNET_BEACON_TURN_OFF.fn = function(act)
     return true
 end
 
+local function IsBoatCannonAmmo(item)
+	return item.projectileprefab ~= nil and item:HasTag("boatcannon_ammo")
+end
+
 ACTIONS.BOAT_CANNON_LOAD_AMMO.fn = function(act)
     if act.target.components.boatcannon ~= nil and not act.target.components.boatcannon:IsAmmoLoaded() and act.doer.components.inventory ~= nil then
-
         local activeitem = act.doer.components.inventory:GetActiveItem()
-        local ammo = activeitem
+		local ammo
+		if activeitem == nil then
+			-- Not holding an item, so we must be right-clicking to reload.
+			ammo = act.doer.components.inventory:FindItem(IsBoatCannonAmmo)
+		elseif IsBoatCannonAmmo(activeitem) then
+			ammo = activeitem
+		end
 
-        -- Not holding an item, so we must be right-clicking to reload.
-        if activeitem == nil then
-            ammo = act.doer.components.inventory:FindItem(function(item)
-                return item:HasTag("boatcannon_ammo")
-            end)
-        end
-
-        if ammo ~= nil and act.target.components.boatcannon:LoadAmmo(ammo, act.doer) then
+		if ammo ~= nil then
+			act.target.components.boatcannon:LoadAmmo(ammo.projectileprefab)
             local removeditem = act.doer.components.inventory:RemoveItem(ammo, false, true)
             removeditem:Remove()
             act.doer.components.talker:Say(GetDescription(act.doer, act.target, "AMMOLOADED"))

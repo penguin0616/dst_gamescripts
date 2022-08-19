@@ -26,6 +26,14 @@ local function PickUpAction(inst)
     end
 
     local leader = inst.components.follower and inst.components.follower.leader or nil
+    if leader == nil or leader.components.trader == nil then -- Trader component is needed for ACTIONS.GIVEALLTOPLAYER
+        return nil
+    end
+
+    if not leader:HasTag("player") then -- Stop Polly Rogers from trying to help non-players due to trader mechanics.
+        return nil
+    end
+
     local item = FindPickupableItem(leader, TUNING.POLLY_ROGERS_RANGE, true)
     if item == nil then
         return nil
@@ -70,6 +78,15 @@ end
 local ShouldRunAway = {
     tags = { "hostile" },
     notags = { "NOCLICK", "invisible" }, -- NOTES(JBK): You can not fear what you can not see right Polly?
+    fn = function(thing, polly)
+        if thing.components.follower ~= nil then
+            local leader = thing.components.follower:GetLeader()
+            if leader and leader:HasTag("player") then -- TODO(JBK): PVP check.
+                return false
+            end
+        end
+        return true
+    end,
 }
 
 local PollyRogerBrain = Class(Brain, function(self, inst)

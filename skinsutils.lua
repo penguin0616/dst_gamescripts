@@ -1688,22 +1688,32 @@ end
 
 function DisplayCharacterUnownedPopup(character, skins_subscreener)
 	local PopupDialogScreen = require "screens/redux/popupdialog"
-	local body_str = subfmt(STRINGS.UI.LOBBYSCREEN.UNOWNED_CHARACTER_BODY, {character = STRINGS.CHARACTER_NAMES[character] })
-    local unowned_popup = PopupDialogScreen(STRINGS.UI.LOBBYSCREEN.UNOWNED_CHARACTER_TITLE, body_str,
-    {
-        --Note(Peter): this is atrocious, but I don't see a better way to talk to the screen panel way down. Maybe implement a UI event system?
-        {text=STRINGS.UI.BARTERSCREEN.COMMERCE_BUY, cb = function()
-            TheFrontEnd:PopScreen()
-            skins_subscreener.sub_screens["base"].picker:DoCommerceForDefaultItem(character.."_none")
-        end},
-        {text=STRINGS.UI.LOBBYSCREEN.VISIT_SHOP, cb = function()
-            TheFrontEnd:PopScreen()
-            skins_subscreener.sub_screens["base"].picker:DoShopForDefaultItem(character.."_none")
-        end},
-        {text=STRINGS.UI.POPUPDIALOG.OK, cb = function()
-            TheFrontEnd:PopScreen()
-        end},
-    })
+	
+	local can_buy_character = TheItems:GetBarterBuyPrice(character.."_none") ~= 0 --Note(Peter): yuck, assume we can't buy a character if we don't know their weave price
+
+	local body_str_fmt = STRINGS.UI.LOBBYSCREEN.UNOWNED_CHARACTER_BODY
+	if not can_buy_character then
+		body_str_fmt = STRINGS.UI.LOBBYSCREEN.UNOWNED_CHARACTER_BODY_OFFLINE
+	end
+	local body_str = subfmt(body_str_fmt, {character = STRINGS.CHARACTER_NAMES[character] })
+
+	local buttons = {}
+	if can_buy_character then
+		table.insert( buttons, {text=STRINGS.UI.BARTERSCREEN.COMMERCE_BUY, cb = function()
+			TheFrontEnd:PopScreen()
+			skins_subscreener.sub_screens["base"].picker:DoCommerceForDefaultItem(character.."_none") --Note(Peter): this is atrocious, but I don't see a better way to talk to the screen panel way down. Maybe implement a UI event system?
+		end})
+
+		table.insert( buttons, {text=STRINGS.UI.LOBBYSCREEN.VISIT_SHOP, cb = function()
+			TheFrontEnd:PopScreen()
+			skins_subscreener.sub_screens["base"].picker:DoShopForDefaultItem(character.."_none")
+		end})
+	end
+	table.insert( buttons, {text=STRINGS.UI.POPUPDIALOG.OK, cb = function()
+		TheFrontEnd:PopScreen()
+	end})
+
+    local unowned_popup = PopupDialogScreen(STRINGS.UI.LOBBYSCREEN.UNOWNED_CHARACTER_TITLE, body_str, buttons)
     TheFrontEnd:PushScreen(unowned_popup)
 end
 

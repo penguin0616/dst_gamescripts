@@ -1,4 +1,10 @@
-local easing = require("easing")
+local function onloadedammo(self, loadedammo)
+	if loadedammo ~= nil then
+		self.inst:AddTag("ammoloaded")
+	else
+		self.inst:RemoveTag("ammoloaded")
+	end
+end
 
 local BoatCannon = Class(function(self, inst)
     self.inst = inst
@@ -10,13 +16,19 @@ local BoatCannon = Class(function(self, inst)
 	--self.onstopfn = nil
 
 	self.onoperatorremoved = function(operator) if operator == self.operator then self:StopAiming() end end
-end)
+end,
+nil,
+{
+	loadedammo = onloadedammo,
+})
 
---[[function BoatCannon:OnSave()
-end]]
+function BoatCannon:OnSave()
+	return self.loadedammo ~= nil and { loadedammo = self.loadedammo } or nil
+end
 
---[[function BoatCannon:OnLoad(data)
-end]]
+function BoatCannon:OnLoad(data)
+	self:LoadAmmo(data.loadedammo)
+end
 
 function BoatCannon:SetOnStartAimingFn(fn)
 	self.onstartfn = fn
@@ -60,38 +72,23 @@ function BoatCannon:OnRemoveFromEntity()
 end
 
 function BoatCannon:IsAmmoLoaded()
-	--return self.loadedammo ~= nil
-	return self.inst:HasTag("ammoloaded")
+	return self.loadedammo ~= nil
 end
 
-function BoatCannon:LoadAmmo(ammo, giver)
-
-	if ammo == nil or not ammo:HasTag("boatcannon_ammo") or not ammo.projectileprefab then
-		return false
-	end
-
-	self.loadedammo = ammo.projectileprefab
-	self.inst:AddTag("ammoloaded")
-	self.inst.sg:GoToState("load")
-
-	-- Return the item the giver is holding back into their inventory
-	--[[if giver ~= nil and giver.components.inventory ~= nil then
-		local item = giver.components.inventory:GetActiveItem()
-		giver.components.inventory:ReturnActiveActionItem(item)
-	end]]
-
-	return true
+function BoatCannon:LoadAmmo(projectileprefab)
+	self.loadedammo = projectileprefab
+	self.inst:PushEvent(projectileprefab ~= nil and "ammoloaded" or "ammounloaded")
 end
 
 function BoatCannon:Shoot()
-	if self.loadedammo == nil or self.loadedammo == nil then
+	if self.loadedammo == nil then
 		return
 	end
 
 	local x, y, z = self.inst.Transform:GetWorldPosition()
     local projectile = SpawnPrefab(self.loadedammo)
 	if projectile == nil then
-		self.loadedammo = nil
+		self:LoadAmmo(nil)
 		return
 	end
 
@@ -111,8 +108,7 @@ function BoatCannon:Shoot()
     projectile.components.complexprojectile:Launch(targetpos, self.inst, self.inst)
 
 	-- Remove cannon ammo reference
-	self.loadedammo = nil
-	self.inst:RemoveTag("ammoloaded")
+	self:LoadAmmo(nil)
 
 	-- Add a shot recoil to the boat
 	local force_direction = -Vector3(math.cos(angle), 0, math.sin(angle))

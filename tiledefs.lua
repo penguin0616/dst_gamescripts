@@ -837,8 +837,8 @@ TileManager.AddTile(
     {
         name="cave",
         noise_texture="noise_ruinsbrickglow",
-        runsound="dontstarve/movement/run_moss",
-        walksound="dontstarve/movement/walk_moss",
+        runsound="dontstarve/movement/run_dirt",
+        walksound="dontstarve/movement/walk_dirt",
         snowsound="dontstarve/movement/run_ice",
         mudsound="dontstarve/movement/run_mud",
     },

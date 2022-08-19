@@ -18,8 +18,9 @@ function Book:SetPeruseSanity(sanity)
 	self.peruse_sanity = sanity
 end
 
-function Book:SetFx(fx)
+function Book:SetFx(fx, fxmount)
 	self.fx = fx
+	self.fxmount = fxmount or fx
 end
 
 function Book:ConsumeUse()
@@ -53,9 +54,16 @@ end
 function Book:OnRead(reader)
 	local success, reason = self:Interact(self.onread, reader)
 	if success and reader.components.sanity then
-		if self.fx then
-			local fx = SpawnPrefab(self.fx)
+		local ismount = reader.components.rider ~= nil and reader.components.rider:IsRiding()
+		local fx = ismount and self.fxmount or self.fx
+		if fx ~= nil then
+			fx = SpawnPrefab(fx)
+			if ismount then
+				--In case we did not specify fxmount, convert fx to SixFaced
+				fx.Transform:SetSixFaced()
+			end
 			fx.Transform:SetPosition(reader.Transform:GetWorldPosition())
+			fx.Transform:SetRotation(reader.Transform:GetRotation())
 		end
 
 		reader.components.sanity:DoDelta( (self.read_sanity or 0) * reader.components.reader:GetSanityPenaltyMultiplier() )

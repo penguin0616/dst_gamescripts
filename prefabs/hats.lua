@@ -16,7 +16,7 @@ local function MakeHat(name)
     local swap_data = { bank = symname, anim = "anim" }
 
 	-- do not pass this function to equippable:SetOnEquip as it has different a parameter listing
-    local function _onequip(inst, owner, symbol_override)
+    local function _onequip(inst, owner, symbol_override, headbase_hat_override)
 
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil then
@@ -25,6 +25,18 @@ local function MakeHat(name)
         else
             owner.AnimState:OverrideSymbol("swap_hat", fname, symbol_override or "swap_hat")
         end
+        
+        owner.AnimState:ClearOverrideSymbol("headbase_hat") --clear out previous overrides
+        if headbase_hat_override ~= nil then
+            local skin_build = owner.AnimState:GetSkinBuild()
+            if skin_build ~= "" then
+                owner.AnimState:OverrideSkinSymbol("headbase_hat", skin_build, headbase_hat_override )
+            else 
+                local build = owner.AnimState:GetBuild()
+                owner.AnimState:OverrideSymbol("headbase_hat", build, headbase_hat_override)
+            end
+        end
+
         owner.AnimState:Show("HAT")
         owner.AnimState:Show("HAIR_HAT")
         owner.AnimState:Hide("HAIR_NOHAT")
@@ -44,6 +56,11 @@ local function MakeHat(name)
         local skin_build = inst:GetSkinBuild()
         if skin_build ~= nil then
             owner:PushEvent("unequipskinneditem", inst:GetSkinName())
+        end
+
+        owner.AnimState:ClearOverrideSymbol("headbase_hat") --it might have been overriden by _onequip
+        if owner.components.skinner ~= nil then
+            owner.components.skinner.base_change_cb = owner.old_base_change_cb
         end
 
         owner.AnimState:ClearOverrideSymbol("swap_hat")
@@ -1150,11 +1167,37 @@ local function MakeHat(name)
     end
 
     local function walter_onequip(inst, owner)
-        if owner.prefab == "walter" then
-            _onequip(inst, owner )
-        else
-            _onequip(inst, owner, "swap_hat_large")
+        local do_walter_onequip = function()
+            if owner.prefab == "walter" then
+            	--Note(Peter): please forgive my sins..... walterhats are a mess, and walterhat_nature complicates it
+                --When walter wears a walter hat, we use headbase_walter_hat, except for walterhat_nature unless it's one of these listed skins
+                if (inst.skinname ~= "walterhat_nature" or (owner.components.skinner ~= nil and
+                      (owner.components.skinner.skin_name == "walter_none"
+                    or owner.components.skinner.skin_name == "walter_bee"
+                    or owner.components.skinner.skin_name == "walter_bee_d"
+                    or owner.components.skinner.skin_name == "walter_nature"
+                    or owner.components.skinner.skin_name == "walter_ventriloquist")
+                )) then
+                    --print("headbase_walter_hat", owner.components.skinner.skin_name)
+                    _onequip(inst, owner, nil, "headbase_walter_hat" )
+                else
+                    --print("headbase_hat", owner.components.skinner.skin_name)
+                    _onequip(inst, owner )
+                end
+            else
+                _onequip(inst, owner, "swap_hat_large")
+            end
         end
+        if owner.components.skinner ~= nil then
+            owner.old_base_change_cb = owner.components.skinner.base_change_cb
+            owner.components.skinner.base_change_cb = function()
+                if owner.old_base_change_cb ~= nil then
+                    owner.old_base_change_cb()
+                end
+                do_walter_onequip()
+            end
+        end
+        do_walter_onequip()
 
 		if owner._sanity_damage_protection ~= nil then
 			owner._sanity_damage_protection:SetModifier(inst, TUNING.WALTERHAT_SANITY_DAMAGE_PROTECTION)
@@ -1823,6 +1866,23 @@ local function MakeHat(name)
         end
     end
 
+    local function polly_rogers_go_away(inst)
+        if inst.pollytask then
+            inst.pollytask:Cancel()
+            inst.pollytask = nil
+        end
+
+        if inst.polly then
+            inst.polly.flyaway = true
+            inst.polly:PushEvent("flyaway")
+        end
+    end
+
+    local function polly_rogers_ondeplete(inst, data)
+        polly_rogers_go_away(inst)
+        inst:Remove()
+    end
+
     local function polly_rogers_equip(inst,owner)
         _onequip(inst, owner)
         inst:DoTaskInTime(0,function()
@@ -1841,15 +1901,8 @@ local function MakeHat(name)
     local function polly_rogers_unequip(inst,owner)
         _onunequip(inst, owner)
         inst.worn = nil
-        if inst.pollytask then
-            inst.pollytask:Cancel()
-            inst.pollytask = nil
-        end
 
-        if inst.polly then
-            inst.polly.flyaway = true
-            inst.polly:PushEvent("flyaway")
-        end
+        polly_rogers_go_away(inst)
         --update_polly_hat_art(inst)
     end 
 
@@ -1910,7 +1963,7 @@ local function MakeHat(name)
         inst:AddComponent("fueled")
         inst.components.fueled.fueltype = FUELTYPE.USAGE
         inst.components.fueled:InitializeFuelLevel(TUNING.POLLY_ROGERS_HAT_PERISHTIME)
-        inst.components.fueled:SetDepletedFn(--[[generic_perish]]inst.Remove)
+        inst.components.fueled:SetDepletedFn(polly_rogers_ondeplete)
 
         inst.components.equippable:SetOnEquip(polly_rogers_equip)
         inst.components.equippable:SetOnUnequip(polly_rogers_unequip)

@@ -571,7 +571,8 @@ AddGameDebugKey(KEY_F6, function()
 end)
 
 AddGameDebugKey(KEY_F12, function()
-    local positions = {}
+    --Removing this by Phil's request
+    --[[local positions = {}
     for i = 1, 100 do
         local s = i/32.0--(num/2) -- 32.0
         local a = math.sqrt(s*512.0)
@@ -590,7 +591,7 @@ AddGameDebugKey(KEY_F12, function()
             end)
             --delay = delay + 0.03
         end
-    end
+    end]]
 end)
 
 AddGameDebugKey(KEY_F7, function()

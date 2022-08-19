@@ -934,7 +934,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "I've gotta say, that's some pretty solid construction.",
-			BURNT = nil,
+			BURNT = "Shoot. Grams is gonna have a fit.",
 		},
         BOOK_BIRDS = "I was never much of a book learner.",
         BOOK_TENTACLES = "I'm not really a \"book smarts\" kind of gal.",

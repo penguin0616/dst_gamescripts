@@ -932,7 +932,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "How I miss my poetry books.",
-			BURNT = nil,
+			BURNT = "It's all burned away.",
 		},
         BOOK_BIRDS = "Will it teach me to fly away from here?",
         BOOK_TENTACLES = "Does this world need more beasts?",

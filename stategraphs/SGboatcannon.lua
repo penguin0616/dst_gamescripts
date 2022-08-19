@@ -1,8 +1,30 @@
+local function OnAmmoLoaded(inst)
+	inst.AnimState:HideSymbol("cannon_flap_up")
+	inst.AnimState:ShowSymbol("cannon_flap_down")
+end
+
+local function OnAmmoUnloaded(inst)
+	inst.AnimState:ShowSymbol("cannon_flap_up")
+	inst.AnimState:HideSymbol("cannon_flap_down")
+end
+
 local events =
 {
-    --[[EventHandler("loadammo", function(inst, data)
-    end),]]
+	EventHandler("ammoloaded", OnAmmoLoaded),
+	EventHandler("ammounloaded", OnAmmoUnloaded),
 }
+
+local dummyfn = function() end
+local OverrideLoadedAmmoEvent = EventHandler("loadedammo", dummyfn)
+local OverrideUnloadedAmmoEvent = EventHandler("unloadedammo", dummyfn)
+
+local function RefreshAmmoState(inst)
+	if inst.components.boatcannon:IsAmmoLoaded() then
+		OnAmmoLoaded(inst)
+	else
+		OnAmmoUnloaded(inst)
+	end
+end
 
 local states =
 {
@@ -27,17 +49,20 @@ local states =
         {
             TimeEvent(1 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("monkeyisland/cannon/load")
-                inst.AnimState:HideSymbol("cannon_flap_up")
-                inst.AnimState:ShowSymbol("cannon_flap_down")
+				OnAmmoLoaded(inst)
             end),
         },
 
         events =
         {
+			OverrideLoadedAmmoEvent,
+			OverrideUnloadedAmmoEvent,
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
             end),
         },
+
+		onexit = RefreshAmmoState,
     },
 
     State{
@@ -54,18 +79,19 @@ local states =
             TimeEvent(7 * FRAMES, function(inst)
                 inst.components.boatcannon:Shoot()
             end),
-            TimeEvent(10 * FRAMES, function(inst)
-                inst.AnimState:HideSymbol("cannon_flap_down")
-                inst.AnimState:ShowSymbol("cannon_flap_up")
-            end),
+			TimeEvent(10 * FRAMES, OnAmmoUnloaded),
         },
 
         events =
         {
+			OverrideLoadedAmmoEvent,
+			OverrideUnloadedAmmoEvent,
             EventHandler("animover", function(inst)
                 inst.sg:GoToState("idle")
             end),
         },
+
+		onexit = RefreshAmmoState,
     },
 
     State{
@@ -75,7 +101,6 @@ local states =
         onenter = function(inst)
             inst.SoundEmitter:PlaySound("monkeyisland/cannon/place")
             inst.AnimState:PlayAnimation("place")
-            inst.AnimState:HideSymbol("cannon_flap_down")
         end,
 
         events =

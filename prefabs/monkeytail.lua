@@ -79,7 +79,7 @@ local function fn()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
-    inst.MiniMapEntity:SetIcon("monkeytails.png")
+    inst.MiniMapEntity:SetIcon("monkeytail.png")
     
     inst:AddTag("plant")
     inst:AddTag("silviculture") -- for silviculture book

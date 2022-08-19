@@ -929,7 +929,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Eager minds should always have access to a library.",
-			BURNT = nil,
+			BURNT = "Few things are as saddening as the sight of destroyed books.",
 		},
         BOOK_BIRDS = "The expurgated version, but it has my favorite: Megascops kennicottii.",
         BOOK_TENTACLES = "Hard to put this one down. It's gripping, frankly.",

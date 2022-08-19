@@ -929,7 +929,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Nice bit of woodworking there.",
-			BURNT = nil,
+			BURNT = "What a sorry sight, eh?",
 		},
         BOOK_BIRDS = "I already know more than enough aboot those things.",
         BOOK_TENTACLES = "They don't have tentacles in Canada.",

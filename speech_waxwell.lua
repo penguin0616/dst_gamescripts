@@ -928,8 +928,8 @@ return{
 
 		BOOKSTATION =
 		{
-			GENERIC = "She thinks she can choose what knowledge is shared and what gets hidden away?",
-			BURNT = nil,
+			GENERIC = "Rebuilding her library, is she?",
+			BURNT = "History repeats itself.",
 		},
         BOOK_BIRDS = "What a wasteful misuse of magic.",
         BOOK_TENTACLES = "What horrors shall be summoned from the depths?",

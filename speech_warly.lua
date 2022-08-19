@@ -928,7 +928,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Mme. Wickerbottom looks so happy organizing her books.",
-			BURNT = nil,
+			BURNT = "Quelle horreur!",
 		},
         BOOK_BIRDS = "I had hoped it was a poultry cookbook.",
         BOOK_TENTACLES = "I don't see any recipes in this at all.",

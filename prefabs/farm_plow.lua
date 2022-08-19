@@ -53,6 +53,7 @@ local function Finished(inst, force_fx)
 		SpawnPrefab("collapse_small").Transform:SetPosition(x, y, z)
 	end
 
+	inst:PushEvent("finishplowing")
     inst:Remove()
 end
 
@@ -109,7 +110,11 @@ local function dirt_anim(inst, quad, timer)
 		local _x, _z = x + offset_x, z + offset_z
 		if TheWorld.Map:CanTillSoilAtPoint(_x, 0, _z, true) then
 			TheWorld.Map:CollapseSoilAtPoint(_x, 0, _z)
-			SpawnPrefab("farm_soil").Transform:SetPosition(_x, 0, _z)
+			local soil = SpawnPrefab("farm_soil")
+			soil.Transform:SetPosition(_x, 0, _z)
+			if soil.SetPlowing ~= nil then
+				soil:SetPlowing(inst)
+			end
 		end
 	end
 

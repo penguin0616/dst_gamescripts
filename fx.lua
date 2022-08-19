@@ -2571,6 +2571,15 @@ local fx =
     },
 
     {
+        name =  "fx_book_moon_mount",
+        bank =  "fx_book_moon",
+        build = "fx_book_moon",
+        anim =  "play_fx_mount",
+        sixfaced = true,
+        sound = "wickerbottom_rework/book_spells/moon",
+    },
+
+    {
         name =  "fx_book_research_station",
         bank =  "fx_book_research_station",
         build = "fx_book_research_station",
@@ -2579,10 +2588,28 @@ local fx =
     },
 
     {
+        name =  "fx_book_research_station_mount",
+        bank =  "fx_book_research_station",
+        build = "fx_book_research_station",
+        anim =  "play_fx_mount",
+        sixfaced = true,
+        sound = "wickerbottom_rework/book_spells/researchstation",
+    },
+
+    {
         name =  "fx_book_temperature",
         bank =  "fx_book_temperature",
         build = "fx_book_temperature",
         anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/temp",
+    },
+
+    {
+        name =  "fx_book_temperature_mount",
+        bank =  "fx_book_temperature",
+        build = "fx_book_temperature",
+        anim =  "play_fx_mount",
+        sixfaced = true,
         sound = "wickerbottom_rework/book_spells/temp",
     },
 
@@ -2599,6 +2626,15 @@ local fx =
         bank =  "fx_book_fire",
         build = "fx_book_fire",
         anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/fire",
+    },
+
+    {
+        name =  "fx_book_fire_mount",
+        bank =  "fx_book_fire",
+        build = "fx_book_fire",
+        anim =  "play_fx_mount",
+        sixfaced = true,
         sound = "wickerbottom_rework/book_spells/fire",
     },
 
@@ -2623,7 +2659,16 @@ local fx =
         bank =  "fx_book_birds",
         build = "fx_book_birds",
         anim =  "play_fx",
-        sound = "wickerbottom_rework/book_spells/birds"
+        sound = "wickerbottom_rework/book_spells/birds",
+    },
+
+    {
+        name =  "fx_book_birds_mount",
+        bank =  "fx_book_birds",
+        build = "fx_book_birds",
+        anim =  "play_fx_mount",
+        sixfaced = true,
+        sound = "wickerbottom_rework/book_spells/birds",
     },
 
     {
@@ -2631,7 +2676,16 @@ local fx =
         bank =  "fx_book_sleep",
         build = "fx_book_sleep",
         anim =  "play_fx",
-        sound = "wickerbottom_rework/book_spells/sleep"
+        sound = "wickerbottom_rework/book_spells/sleep",
+    },
+
+    {
+        name =  "fx_book_sleep_mount",
+        bank =  "fx_book_sleep",
+        build = "fx_book_sleep",
+        anim =  "play_fx_mount",
+        sixfaced = true,
+        sound = "wickerbottom_rework/book_spells/sleep",
     },
 
     {
@@ -2639,6 +2693,15 @@ local fx =
         bank =  "fx_book_rain",
         build = "fx_book_rain",
         anim =  "play_fx",
+        sound = "wickerbottom_rework/book_spells/rain",
+    },
+
+    {
+        name =  "fx_book_rain_mount",
+        bank =  "fx_book_rain",
+        build = "fx_book_rain",
+        anim =  "play_fx_mount",
+        sixfaced = true,
         sound = "wickerbottom_rework/book_spells/rain",
     },
 

@@ -928,7 +928,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "If you read the books out loud it's almost like listening to a radio play.",
-			BURNT = nil,
+			BURNT = "Poor Ms. Wickerbottom...",
 		},
         BOOK_BIRDS = "I don't want to brag... but I do have a badge in birdwatching.",
         BOOK_TENTACLES = "Oooh, this reminds me of a radio play where a ship gets eaten by a giant squid!",

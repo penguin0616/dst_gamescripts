@@ -932,7 +932,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Book house",
-			BURNT = nil,
+			BURNT = "Oh. Sad",
 		},
         BOOK_BIRDS = "Pretty pictures",
         BOOK_TENTACLES = "About Scary Arms",

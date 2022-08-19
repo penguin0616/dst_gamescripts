@@ -933,7 +933,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Her entire collection for our inspection.",
-			BURNT = nil,
+			BURNT = "What a shame, it went up in flames.",
 		},
         BOOK_BIRDS = "Humans share their knowledge so freely.",
         BOOK_TENTACLES = "Imps don't disseminate precious knowledge so carelessly.",

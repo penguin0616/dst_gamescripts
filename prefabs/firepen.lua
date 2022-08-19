@@ -95,15 +95,15 @@ local function fn()
     
     inst:AddComponent("finiteuses")
     inst.components.finiteuses:SetOnFinished(inst.Remove)
+    inst.components.finiteuses:SetMaxUses(TUNING.FIREPEN_MAXUSES)
+    inst.components.finiteuses:SetUses(1)
+    inst.components.finiteuses:SetDoesNotStartFull(true)
 
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(0)
     inst.components.weapon:SetRange(8, 10)
     inst.components.weapon:SetOnAttack(OnAttack)
     inst.components.weapon:SetProjectile("fire_projectile")
-
-    inst.components.finiteuses:SetMaxUses(TUNING.FIREPEN_MAXUSES)
-    inst.components.finiteuses:SetUses(1)
 
     inst:AddComponent("inspectable")
 

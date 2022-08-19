@@ -324,10 +324,16 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, monkey_c
 			anim_state:HideSymbol("skirt")
 		end
 
-		--deal with leg boots
+		--deal with leg boots (yes, we're using the leg_build as the skinname. Sometime we override the build, but the base skin "should" have the same definition)
 		local use_leg_boot = leg_build and CLOTHING[leg_build] and CLOTHING[leg_build].has_leg_boot
 		if leg_build == foot_build and use_leg_boot then
-			anim_state:OverrideSkinSymbol("leg", leg_build, "leg_boot" )
+			local boot_symbol = "leg_boot"
+			if CLOTHING[leg_build].symbol_overrides_by_character ~= nil then
+				local alt_symbols = CLOTHING[leg_build].symbol_overrides_by_character[prefab] or CLOTHING[leg_build].symbol_overrides_by_character["default"] 
+				boot_symbol = alt_symbols["leg_boot"] or "leg_boot"
+			end
+
+			anim_state:OverrideSkinSymbol("leg", leg_build, boot_symbol )
 		end
 
 		--deal with foot nubs
@@ -406,6 +412,9 @@ function Skinner:SetSkinMode(skintype, default_build)
 	end
 
 	SetSkinsOnAnim( self.inst.AnimState, self.inst.prefab, base_skin, self.clothing, self.monkey_curse, skintype, default_build )
+	if self.base_change_cb ~= nil then
+		self.base_change_cb()
+	end
 
 	self.inst.Network:SetPlayerSkin( self.skin_name or "", self.clothing["body"] or "", self.clothing["hand"] or "", self.clothing["legs"] or "", self.clothing["feet"] or "" )
 end

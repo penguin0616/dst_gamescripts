@@ -935,7 +935,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Hey, uh... what library did Ms. Wickerbottom work at, anyway?",
-			BURNT = nil,
+			BURNT = "What's burned is burned, no point thinking about it too much, right?",
 		},
         BOOK_BIRDS = "Less reading, more burning!",
         BOOK_TENTACLES = "Looks like kindling to me!",

@@ -929,7 +929,7 @@ return{
 		BOOKSTATION =
 		{
 			GENERIC = "Makes brainlady happy, Wolfgang will protect it!",
-			BURNT = nil,
+			BURNT = "Wolfgang will help brainlady build another!",
 		},
         BOOK_BIRDS = "Book is for the birds!",
         BOOK_TENTACLES = "Wolfgang wants many foes to fight!",
