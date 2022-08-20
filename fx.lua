@@ -2304,39 +2304,6 @@ local fx =
         nofaced = true,
         fn = FinalOffsetNegative1,
     },
-    {
-        name = "mighty_gym_bell_fail_fx",
-        bank = "mighty_gym",
-        build = "mighty_gym",
-        anim = "gym_bell_fx",
-        nofaced = true,
-        fn = function(inst)
-            inst.AnimState:SetMultColour(1,0,0,1)
-            inst.AnimState:SetFinalOffset(1)
-        end,
-    },
-    {
-        name = "mighty_gym_bell_perfect_fx",
-        bank = "mighty_gym",
-        build = "mighty_gym",
-        anim = "gym_bell_fx",
-        nofaced = true,
-        fn = function(inst)
-            inst.AnimState:SetMultColour(1,1,1,1)
-            inst.AnimState:SetFinalOffset(1)
-        end,
-    },
-    {
-        name = "mighty_gym_bell_succeed_fx",
-        bank = "mighty_gym",
-        build = "mighty_gym",
-        anim = "gym_bell_fx",
-        nofaced = true,
-        fn = function(inst)
-            inst.AnimState:SetMultColour(1,1,0,1)
-            inst.AnimState:SetFinalOffset(1)
-        end,
-    },
 
     {
         name = "minotaur_blood1",

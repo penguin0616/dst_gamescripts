@@ -1,7 +1,6 @@
 local assets =
 {
     Asset("ANIM", "anim/books.zip"),
-    Asset("ANIM", "anim/books2.zip"),
     --Asset("SOUND", "sound/common.fsb"),
 }
 
@@ -975,7 +974,7 @@ local function MakeBook(def)
         MakeInventoryPhysics(inst)
 
         inst.AnimState:SetBank("books")
-        inst.AnimState:SetBuild("books2")
+        inst.AnimState:SetBuild("books")
         inst.AnimState:PlayAnimation(def.name)
 
         MakeInventoryFloatable(inst, "med", nil, 0.75)

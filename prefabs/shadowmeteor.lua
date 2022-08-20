@@ -165,6 +165,7 @@ local function onexplode(inst)
                         drop.Transform:SetPosition(x, y, z)
                         if drop.components.inventoryitem ~= nil then
                             drop.components.inventoryitem:OnDropped(true)
+                            launched[drop] = true
                         end
                     end
                 end

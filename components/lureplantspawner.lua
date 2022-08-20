@@ -82,7 +82,7 @@ end
 
 local function IsValidSpawnPoint(pt)
     return VALID_TILES[_map:GetTileAtPoint(pt:Get())]
-        and #TheSim:FindEntities(x1, y, z1, 1) <= 0 --small radius, no tag exclusions
+        and #TheSim:FindEntities(pt.x, pt.y, pt.z, 1) <= 0 --small radius, no tag exclusions
         and _map:IsDeployPointClear(pt, nil, 1)     --generic deploy point test
 end
 

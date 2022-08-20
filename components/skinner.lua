@@ -271,7 +271,16 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, monkey_c
 						end
 					end
 				end
+				if CLOTHING[name].symbol_shows then
+					for _,sym in pairs(CLOTHING[name].symbol_shows) do
+						anim_state:ShowSymbol(sym)
+					end
+				end
 			end
+		end
+		
+		if not allow_arms then
+			anim_state:ShowSymbol("arm_upper_skin") --Sometimes Wolfgang wants to show off his muscles. Make sure we can see them. /flex
 		end
 
 		for _, sym in pairs(monkey_pieces) do
