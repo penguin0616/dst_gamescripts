@@ -663,6 +663,10 @@ function MakeHauntableLaunch(inst, chance, speed, cooldown, haunt_value)
         if math.random() <= chance then
             Launch(inst, haunter, speed or TUNING.LAUNCH_SPEED_SMALL)
             inst.components.hauntable.hauntvalue = haunt_value or TUNING.HAUNT_TINY
+
+			if inst.components.inventoryitem ~= nil and inst.components.inventoryitem.is_landed then
+				inst.components.inventoryitem:SetLanded(false, true)
+			end
             return true
         end
         return false
@@ -677,6 +681,11 @@ function MakeHauntableLaunchAndSmash(inst, launch_chance, smash_chance, speed, c
         if math.random() <= launch_chance then
             Launch(inst, haunter, speed or TUNING.LAUNCH_SPEED_SMALL)
             inst.components.hauntable.hauntvalue = launch_haunt_value or TUNING.HAUNT_TINY
+
+			if inst.components.inventoryitem ~= nil and inst.components.inventoryitem.is_landed then
+				inst.components.inventoryitem:SetLanded(false, true)
+			end
+
             --#HAUNTFIX
             --smash_chance = smash_chance or TUNING.HAUNT_CHANCE_OCCASIONAL
             --if math.random() < smash_chance then
@@ -792,6 +801,11 @@ function MakeHauntableLaunchAndIgnite(inst, launchchance, ignitechance, speed, c
         if math.random() <= launchchance then
             Launch(inst, haunter, speed or TUNING.LAUNCH_SPEED_SMALL)
             inst.components.hauntable.hauntvalue = launch_haunt_value or TUNING.HAUNT_TINY
+
+			if inst.components.inventoryitem ~= nil and inst.components.inventoryitem.is_landed then
+				inst.components.inventoryitem:SetLanded(false, true)
+			end
+
             --#HAUNTFIX
             --ignitechance = ignitechance or TUNING.HAUNT_CHANCE_VERYRARE
             --if math.random() <= ignitechance then
@@ -907,6 +921,11 @@ function MakeHauntableLaunchAndPerish(inst, launchchance, perishchance, speed, p
             Launch(inst, haunter, speed or TUNING.LAUNCH_SPEED_SMALL)
             inst.components.hauntable.hauntvalue = launch_haunt_value or TUNING.HAUNT_TINY
             inst.components.hauntable.cooldown = cooldown or TUNING.HAUNT_COOLDOWN_SMALL
+
+			if inst.components.inventoryitem ~= nil and inst.components.inventoryitem.is_landed then
+				inst.components.inventoryitem:SetLanded(false, true)
+			end
+
             --#HAUNTFIX
             --perishchance = perishchance or TUNING.HAUNT_CHANCE_OCCASIONAL
             --if math.random() <= perishchance then
@@ -1075,6 +1094,11 @@ function MakeHauntableLaunchAndDropFirstItem(inst, launchchance, dropchance, spe
             Launch(inst, haunter, speed or TUNING.LAUNCH_SPEED_SMALL)
             inst.components.hauntable.hauntvalue = launch_haunt_value or TUNING.HAUNT_TINY
             inst.components.hauntable.cooldown = cooldown or TUNING.HAUNT_COOLDOWN_SMALL
+
+			if inst.components.inventoryitem ~= nil and inst.components.inventoryitem.is_landed then
+				inst.components.inventoryitem:SetLanded(false, true)
+			end
+
             --#HAUNTFIX
             --dropchance = dropchance or TUNING.HAUNT_CHANCE_OCCASIONAL
             --if math.random() <= dropchance then

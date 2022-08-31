@@ -801,8 +801,7 @@ function UpdateServerWorldGenDataString()
     end
 
     --V2C: TODO: Likely to exceed data size limit with custom multilevel worlds
-
-    TheNet:SetWorldGenData(DataDumper(clusteroptions, nil, false))
+    TheNet:SetWorldGenData(DataDumper(ZipAndEncodeSaveData(clusteroptions), nil, true))
 end
 
 function GetDefaultServerData()

@@ -3,16 +3,26 @@ require "prefabutil"
 local assets =
 {
     Asset("ANIM", "anim/farm_plow.zip"),
+    Asset("ANIM", "anim/farm_soil.zip"),
+}
+
+local assets_item =
+{
+    Asset("ANIM", "anim/farm_plow.zip"),
 }
 
 local prefabs =
 {
-	"farm_plow_item",
-	"farm_plow_item_placer",
-	"tile_outline",
     "farm_soil_debris",
     "farm_soil",
 	"dirt_puff",
+}
+
+local prefabs_item =
+{
+	"farm_plow",
+	"farm_plow_item_placer",
+	"tile_outline",
 }
 
 local function onhammered(inst)
@@ -192,6 +202,7 @@ local function main_fn()
 
     inst.AnimState:SetBank("farm_plow")
     inst.AnimState:SetBuild("farm_plow")
+    inst.AnimState:OverrideSymbol("soil01", "farm_soil", "soil01")
 
     inst:AddTag("scarytoprey")
 
@@ -342,7 +353,7 @@ local function placer_fn()
     return inst
 end
 
-return  Prefab("farm_plow", main_fn, assets),
-		Prefab("farm_plow_item", item_fn, assets, prefabs),
+return  Prefab("farm_plow", main_fn, assets, prefabs),
+		Prefab("farm_plow_item", item_fn, assets_item, prefabs_item),
 		Prefab("farm_plow_item_placer", placer_fn)
 

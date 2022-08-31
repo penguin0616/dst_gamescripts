@@ -251,6 +251,12 @@ local function SpawnQueen(inst, should_duplicate)
     end
 end
 
+local function RescheduleGrowth(inst, checkstage, time)
+    if inst.components.growable:GetStage() == checkstage then
+        inst.components.growable:StartGrowing(time)
+    end
+end
+
 local DENCHECK_ONEOF_TAGS = { "spiderden", "spiderqueen" }
 local function AttemptMakeQueen(inst)
     if inst.components.growable == nil then
@@ -277,7 +283,8 @@ local function AttemptMakeQueen(inst)
     end
 
     if not inst:IsNearPlayer(30) then
-        inst.components.growable:StartGrowing(60 + math.random(60))
+        inst.components.growable:SetStage(3)
+        inst:DoTaskInTime(0, RescheduleGrowth, 3, 60 + math.random(60))
         return
     end
 
@@ -299,7 +306,10 @@ local function AttemptMakeQueen(inst)
     inst:DoTaskInTime(15 * FRAMES, PlayLegBurstSound)
     inst:DoTaskInTime(35 * FRAMES, SpawnQueen, num_dens < cap)
 
-    inst.components.growable:StartGrowing(60)
+    --V2C: Before this was changed to RescheduleGrowth, the 60 timer never worked
+    --     as it would always be overwritten in growable:DoGrowth back to default
+    --     stage 1 time.  We'll opt to keep that timer even after this fix.
+    --inst:DoTaskInTime(0, RescheduleGrowth, 1, 60)
     return true
 end
 

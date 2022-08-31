@@ -15,7 +15,9 @@ AddRoom("SpillagmiteForest", {
         distributepercent = .35,
         distributeprefabs=
         {
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.1,
             pillar_stalactite = 0.1,
             spiderhole = 0.05,
@@ -35,7 +37,9 @@ AddRoom("DropperCanyon", {
         distributepercent = .35,
         distributeprefabs=
         {
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.2,
             pillar_stalactite = 0.2,
             dropperweb = 0.15,
@@ -58,7 +62,9 @@ AddRoom("StalagmitesAndLights", {
         distributepercent = .15,
         distributeprefabs=
         {
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.1,
             pillar_stalactite = 0.1,
             spiderhole = 0.01,
@@ -81,7 +87,9 @@ AddRoom("SpidersAndBats", {
         distributepercent = .15,
         distributeprefabs=
         {
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.1,
             pillar_stalactite = 0.1,
             spiderhole = 0.05,
@@ -102,7 +110,9 @@ AddRoom("ThuleciteDebris", {
         distributepercent = .15,
         distributeprefabs=
         {
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.1,
             pillar_stalactite = 0.1,
             spiderhole = 0.01,
@@ -124,7 +134,9 @@ local bgspillagmite = {
         distributepercent = .35,
         distributeprefabs=
         {
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.1,
             pillar_stalactite = 0.1,
             spiderhole = 0.05,

@@ -32,6 +32,7 @@ local Builder = Class(function(self, inst)
     self.recipes = {}
     self.station_recipes = {}
     self.accessible_tech_trees = deepcopy(TECH.NONE)
+    self.accessible_tech_trees_no_temp = deepcopy(self.accessible_tech_trees)
     self.inst:StartUpdatingComponent(self)
     self.current_prototyper = nil
     self.buffered_builds = {}
@@ -793,11 +794,6 @@ function Builder:CanLearn(recname)
             self.inst:HasTag(recipe.builder_tag))
 end
 
-function Builder:RequiresTempBonus(recipe)
-	return not self:KnowsRecipe(recipe, true)
-		and not CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp)
-end
-
 function Builder:LongUpdate(dt)
     if self.last_hungry_build ~= nil then
         self.last_hungry_build = self.last_hungry_build - dt
@@ -811,10 +807,13 @@ end
 function Builder:MakeRecipeFromMenu(recipe, skin)
     if self:HasIngredients(recipe) then
 		if recipe.placer == nil then
-			if self:KnowsRecipe(recipe) then
-				--Need to determine this NOW before calling async MakeRecipe
-				local usingtempbonus = self:RequiresTempBonus(recipe)
+			--Need to determine this NOW before calling async MakeRecipe
+			local knows_no_temp = self:KnowsRecipe(recipe, true)
+			local canproto_no_temp = CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp)
+			local canlearn = self:CanLearn(recipe.name)
+			local usingtempbonus = not knows_no_temp and not canproto_no_temp
 
+			if self:KnowsRecipe(recipe) then
                 self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
                     function()
 						if usingtempbonus then
@@ -826,6 +825,12 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
                             if not table.contains(self.recipes, recipe.name) and CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) then
                                 self:ActivateCurrentResearchMachine(recipe)
                             end
+						elseif not knows_no_temp and canproto_no_temp and canlearn then
+							--assert(not usingtempbonus) --sanity check
+							--V2C: for recipes known through temp bonus buff,
+							--     but can be prototyped without consuming it
+							self:ActivateCurrentResearchMachine(recipe)
+							self:UnlockRecipe(recipe.name)
                         elseif not recipe.nounlock then
                             --V2C: for recipes known through tech bonus, still
                             --     want to unlock in case we reroll characters
@@ -836,10 +841,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 
                     end
                 )
-			elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recipe.name) then
-				--Need to determine this NOW before calling async MakeRecipe
-				local usingtempbonus = self:RequiresTempBonus(recipe)
-
+			elseif canlearn and CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) then
 				self:MakeRecipe(recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, recipe.product, skin),
 					function()
 						if usingtempbonus then
@@ -855,10 +857,13 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 		for i, ing in ipairs(recipe.ingredients) do
 			local ing_recipe = GetValidRecipe(ing.type)
 			if ing_recipe ~= nil and not self.inst.components.inventory:Has(ing.type, math.max(1, RoundBiasedUp(ing.amount * self.ingredientmod)), true) and self:HasIngredients(ing_recipe) then
-				if self:KnowsRecipe(ing_recipe) then
-					--Need to determine this NOW before calling async MakeRecipe
-					local usingtempbonus = self:RequiresTempBonus(ing_recipe)
+				--Need to determine this NOW before calling async MakeRecipe
+				local knows_no_temp = self:KnowsRecipe(ing_recipe, true)
+				local canproto_no_temp = CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees_no_temp)
+				local canlearn = self:CanLearn(ing_recipe.name)
+				local usingtempbonus = not knows_no_temp and not canproto_no_temp
 
+				if self:KnowsRecipe(ing_recipe) then
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
 							if usingtempbonus then
@@ -870,6 +875,12 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 								if not table.contains(self.recipes, ing_recipe.name) and CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) then
 									self:ActivateCurrentResearchMachine(ing_recipe)
 								end
+							elseif not knows_no_temp and canproto_no_temp and canlearn then
+								--assert(not usingtempbonus) --sanity check
+								--V2C: for recipes known through temp bonus buff,
+								--     but can be prototyped without consuming it
+								self:ActivateCurrentResearchMachine(ing_recipe)
+								self:UnlockRecipe(ing_recipe.name)
 							elseif not ing_recipe.nounlock then
 								--V2C: for recipes known through tech bonus, still
 								--     want to unlock in case we reroll characters
@@ -879,10 +890,7 @@ function Builder:MakeRecipeFromMenu(recipe, skin)
 							end
 						end
 					)
-				elseif CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) and self:CanLearn(ing_recipe.name) then
-					--Need to determine this NOW before calling async MakeRecipe
-					local usingtempbonus = self:RequiresTempBonus(ing_recipe)
-
+				elseif canlearn and CanPrototypeRecipe(ing_recipe.level, self.accessible_tech_trees) then
 					self:MakeRecipe(ing_recipe, nil, nil, ValidateRecipeSkinRequest(self.inst.userid, ing_recipe.product, nil),
 						function()
 							if usingtempbonus then
@@ -911,8 +919,13 @@ end
 function Builder:BufferBuild(recname)
     local recipe = GetValidRecipe(recname)
     if recipe ~= nil and recipe.placer ~= nil and not self:IsBuildBuffered(recname) and self:HasIngredients(recipe) then
+		local knows_no_temp = self:KnowsRecipe(recipe, true)
+		local canproto_no_temp = CanPrototypeRecipe(recipe.level, self.accessible_tech_trees_no_temp)
+		local canlearn = self:CanLearn(recname)
+		local usingtempbonus = not knows_no_temp and not canproto_no_temp
+
         if self:KnowsRecipe(recipe) then
-			if self:RequiresTempBonus(recipe) then
+			if usingtempbonus then
 				self:ConsumeTempTechBonuses()
 			end
 
@@ -923,13 +936,19 @@ function Builder:BufferBuild(recname)
 					--			built, such as when building a Fire Pit near a Science Machine or Mad Science Lab.
                     self:ActivateCurrentResearchMachine(recipe)
                 end
+			elseif not knows_no_temp and canproto_no_temp and canlearn then
+				--assert(not usingtempbonus) --sanity check
+				--V2C: for recipes known through temp bonus buff,
+				--     but can be prototyped without consuming it
+				self:ActivateCurrentResearchMachine(recipe)
+				self:UnlockRecipe(recname)
             elseif not recipe.nounlock then
                 --V2C: for recipes known through tech bonus, still
                 --     want to unlock in case we reroll characters
                 self:AddRecipe(recname)
             end
-        elseif CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) and self:CanLearn(recname) then
-			if self:RequiresTempBonus(recipe) then
+		elseif canlearn and CanPrototypeRecipe(recipe.level, self.accessible_tech_trees) then
+			if usingtempbonus then
 				self:ConsumeTempTechBonuses()
 			end
 			self:ActivateCurrentResearchMachine(recipe)

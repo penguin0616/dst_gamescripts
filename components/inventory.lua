@@ -874,11 +874,9 @@ function Inventory:GiveItem(inst, slot, src_pos)
         return false
     end
 
-    if not (self.isloading or self.silentfull) and self.maxslots > 0 then
-        self.inst:PushEvent("inventoryfull", { item = inst })
-    end
-
     --can't hold it!
+    local returnvalue = false
+    local shouldwisecrack = true
     if self.activeitem == nil and
         self.maxslots > 0 and
         not inst.components.inventoryitem.canonlygoinpocket and
@@ -887,7 +885,7 @@ function Inventory:GiveItem(inst, slot, src_pos)
 
         inst.components.inventoryitem:OnPutInInventory(self.inst)
         self:SetActiveItem(inst)
-        return true
+        returnvalue = true
     elseif self.HandleLeftoversFn ~= nil then
 		self.HandleLeftoversFn(self.inst, inst)
 	else
@@ -899,10 +897,16 @@ function Inventory:GiveItem(inst, slot, src_pos)
             then
             self.activeitem.components.stackable:Put(inst, Vector3(self.inst.Transform:GetWorldPosition()))
             self.inst:PushEvent("gotnewitem", { item = inst, toactiveitem = true, })
+            returnvalue = true
+            shouldwisecrack = false
         else
             self:DropItem(inst, true, true)
         end
     end
+    if shouldwisecrack and not (self.isloading or self.silentfull) and self.maxslots > 0 then
+        self.inst:PushEvent("inventoryfull", { item = inst })
+    end
+    return returnvalue
 end
 
 function Inventory:Unequip(equipslot, slip)

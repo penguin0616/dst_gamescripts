@@ -160,7 +160,7 @@ local SKIN_GIFT_TYPES =
 	wardrobe_crystal = "TWITCH_DROP",
 	wardrobe_yule = "TWITCH_DROP",
 	winterhat_fancy_puppy = "VARG",
-	winterhat_rooster = "LUNAR",
+	winterhat_rooster = "LUNAR_NY",
 	winterometer_circus = "TWITCH_DROP",
 }
 
@@ -220,7 +220,7 @@ local SKIN_GIFT_POPUPDATA =
 		image = "hotlava.tex",
 		titleoffset = {0, -20, 0},
 	},
-	LUNAR =
+	LUNAR_NY =
 	{
 		atlas = "images/thankyou_lunar.xml",
 		image = "lunar.tex",

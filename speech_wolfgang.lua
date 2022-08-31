@@ -4452,7 +4452,7 @@ return{
 			SHIMMER = "Wolfgang wants to peek inside!",
 		},
 
-		EYEMASKHAT = "Wolgang not fan of squishy hat.",
+		EYEMASKHAT = "Wolfgang not fan of squishy hat.",
 
         EYEOFTERROR = "Wolfgang not like big scary eye!",
         EYEOFTERROR_MINI = "Feeling of being watched is bad, but feeling of being bitten is much worse!",

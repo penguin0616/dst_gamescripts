@@ -1,4 +1,4 @@
-local function _spawn_list(list, spacing, fn)
+function d_spawnlist(list, spacing, fn)
 	spacing = spacing or 2
 	local num_wide = math.ceil(math.sqrt(#list))
 
@@ -19,6 +19,31 @@ local function _spawn_list(list, spacing, fn)
 			end
 		end
 	end
+end
+
+function d_playeritems()
+	local items = {}
+	for prefab, recipe in pairs(AllRecipes) do
+		if recipe.builder_tag and recipe.placer == nil and prefab:find("_builder") == nil then
+			items[recipe.builder_tag] = items[recipe.builder_tag] or {}
+			table.insert(items[recipe.builder_tag], prefab)
+		end
+	end
+	local items_sorted = {}
+	for tag, prefabs in pairs(items) do
+		table.insert(items_sorted, tag)
+	end
+	table.sort(items_sorted)
+	local tospawn = {}
+	for _, tag in ipairs(items_sorted) do
+		table.sort(items[tag])
+		for _, prefab in ipairs(items[tag]) do
+			if Prefabs[prefab] ~= nil then
+				table.insert(tospawn, prefab)
+			end
+		end
+	end
+	d_spawnlist(tospawn, 1.5)
 end
 
 function d_allmutators()
@@ -646,12 +671,12 @@ function d_allkitcoons()
 		"kitcoon_yot",
 	}
 
-	_spawn_list(kitcoons, 3, function(inst) inst._first_nuzzle = false end)
+	d_spawnlist(kitcoons, 3, function(inst) inst._first_nuzzle = false end)
 end
 
 function d_allcustomhidingspots()
 	local items = table.getkeys(TUNING.KITCOON_HIDING_OFFSET)
-	_spawn_list(items, 6, function(hidingspot)
+	d_spawnlist(items, 6, function(hidingspot)
 		local kitcoon = SpawnPrefab("kitcoon_rocky") 
 		if not kitcoon.components.hideandseekhider:GoHide(hidingspot, 0) then
 			kitcoon:Remove() 
@@ -997,7 +1022,7 @@ function d_farmplants(grow_stage, spacing)
 		end
 	end
 
-	_spawn_list(items, 2.5,
+	d_spawnlist(items, 2.5,
 		function(inst)
 			if grow_stage ~= nil then
 				for i = 1, grow_stage do
@@ -1040,11 +1065,11 @@ function d_seeds()
 			table.insert(items, v.seed)
 		end
 	end
-	_spawn_list(items, 2)
+	d_spawnlist(items, 2)
 end
 
 function d_fertilizers()
-	_spawn_list(require("prefabs/fertilizer_nutrient_defs").SORTED_FERTILIZERS, 2)
+	d_spawnlist(require("prefabs/fertilizer_nutrient_defs").SORTED_FERTILIZERS, 2)
 end
 
 function d_oversized()
@@ -1054,7 +1079,7 @@ function d_oversized()
 			table.insert(items, v.product_oversized)
 			end
 		end
-	_spawn_list(items, 3)
+	d_spawnlist(items, 3)
 end
 
 function d_startmoonstorm()
@@ -1148,7 +1173,7 @@ function d_statues(material)
 	for i, v in ipairs(items) do
 		items[i] = "chesspiece_".. v .."_" .. (material or "marble")
 	end
-	_spawn_list(items, 5)
+	d_spawnlist(items, 5)
 end
 
 function d_craftingstations()
@@ -1156,7 +1181,7 @@ function d_craftingstations()
 	for k, _ in pairs(PROTOTYPER_DEFS) do
 		table.insert(prefabs, k)
 	end
-	_spawn_list(prefabs, 6)
+	d_spawnlist(prefabs, 6)
 end
 
 function d_removeentitywithnetworkid(networkid, x, y, z)
@@ -1167,4 +1192,23 @@ function d_removeentitywithnetworkid(networkid, x, y, z)
             return
         end
     end
+end
+
+function d_spawnfilelist(filename, spacing)
+-- the file will need to be located in: \Documents\Klei\DoNotStarveTogether\<steam id>\client_save
+-- the fileformat is one prefab per line
+
+	local prefabs = {}
+
+	TheSim:GetPersistentString(filename, function(success, str)
+        if success and str ~= nil and #str > 0 then
+			for prefab in str:gmatch("[^\r\n]+") do
+				table.insert(prefabs, prefab)
+			end
+		else
+			print("d_spawnfilelist failed:", filename, str, success)
+		end
+	end)
+	
+	d_spawnlist(prefabs, spacing) 
 end

@@ -57,9 +57,13 @@ function HullHealth:GetDamageMult(cat)
 end
 
 function HullHealth:UpdateHealth()
-	if self.inst.components.health:IsDead() then return end
-
 	if TheWorld.Map:IsVisualGroundAtPoint(self.inst.Transform:GetWorldPosition()) then
+		if self.inst.components.boatphysics then
+			self.inst.components.boatphysics:SetHalting(true)
+		end
+		if self.inst.components.health:IsDead() then
+			return
+		end
 		self.inst.components.health:Kill()
 	end
 

@@ -187,7 +187,7 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
         inst.AnimState:PlayAnimation("idle"..suffix)
 
         if doer ~= nil and doer.SoundEmitter ~= nil then
-            doer.SoundEmitter:PlaySound("dontstarve/common/together/packaged")
+            doer.SoundEmitter:PlaySound(inst.skin_wrap_sound or "dontstarve/common/together/packaged")
         end
     end
 
@@ -219,7 +219,7 @@ local function MakeBundle(name, onesize, variations, loot, tossloot, setupdata, 
             SpawnPrefab(name.."_unwrap").Transform:SetPosition(pos:Get())
         end
         if doer ~= nil and doer.SoundEmitter ~= nil then
-            doer.SoundEmitter:PlaySound("dontstarve/common/together/packaged")
+            doer.SoundEmitter:PlaySound(inst.skin_wrap_sound or "dontstarve/common/together/packaged")
         end
         inst:Remove()
     end

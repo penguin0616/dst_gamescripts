@@ -21,7 +21,9 @@ AddRoom("RedMushForest", {
             flower_cave_double = 0.1,
             flower_cave_triple = 0.1,
 
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.1,
             spiderhole = 0.05,
 
@@ -45,7 +47,9 @@ AddRoom("RedSpiderForest", {
             flower_cave_double = 0.1,
             flower_cave_triple = 0.1,
 
-            stalagmite = 1.5,
+            stalagmite = 1.0,
+            stalagmite_med = 0.4,
+            stalagmite_low = 0.1,
             pillar_cave = 0.2,
             spiderhole = 0.4,
 
@@ -69,7 +73,9 @@ AddRoom("RedMushPillars", {
             flower_cave_double = 0.2,
             flower_cave_triple = 0.2,
 
-            stalagmite = 0.5,
+            stalagmite = 0.35,
+            stalagmite_med = 0.1,
+            stalagmite_low = 0.05,
             pillar_cave = 0.5,
             spiderhole = 0.01,
 
@@ -93,7 +99,9 @@ AddRoom("StalagmiteForest", {
             flower_cave_double = 0.1,
             flower_cave_triple = 0.1,
 
-            stalagmite = 3.5,
+            stalagmite = 2.5,
+            stalagmite_med = 0.7,
+            stalagmite_low = 0.3,
             pillar_cave = 1.0,
             spiderhole = 0.15,
 
@@ -117,7 +125,9 @@ AddRoom("SpillagmiteMeadow", {
             flower_cave_double = 0.2,
             flower_cave_triple = 0.2,
 
-            stalagmite = 1.5,
+            stalagmite = 1.0,
+            stalagmite_med = 0.4,
+            stalagmite_low = 0.1,
             pillar_cave = 0.05,
             spiderhole = 0.45,
 
@@ -140,7 +150,9 @@ local bgredmush = {
             flower_cave_double = 0.1,
             flower_cave_triple = 0.1,
 
-            stalagmite = 0.2,
+            stalagmite = 0.1,
+            stalagmite_med = 0.07,
+            stalagmite_low = 0.03,
             pillar_cave = 0.05,
             spiderhole = 0.01,
 

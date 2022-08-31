@@ -258,6 +258,7 @@ function CraftingMenuHUD:RebuildRecipes()
 		local freecrafting = builder:IsFreeBuildMode()
 
 		local tech_trees = builder:GetTechTrees()
+		local tech_trees_no_temp = builder:GetTechTreesNoTemp()
         for k, recipe in pairs(AllRecipes) do
             if IsRecipeValid(recipe.name) then
 				local knows_recipe = builder:KnowsRecipe(recipe)
@@ -287,7 +288,13 @@ function CraftingMenuHUD:RebuildRecipes()
 						meta.build_state = "hide"
 					elseif knows_recipe then
 						meta.can_build = builder:HasIngredients(recipe)
-						meta.build_state = meta.can_build and "has_ingredients" or "no_ingredients"
+						if not recipe.nounlock and not builder:KnowsRecipe(recipe, true) and CanPrototypeRecipe(recipe.level, tech_trees_no_temp) then
+							--V2C: for recipes known through temp bonus buff,
+							--     but can be prototyped without consuming it
+							meta.build_state = "prototype"
+						else
+							meta.build_state = meta.can_build and "has_ingredients" or "no_ingredients"
+						end
 					elseif CanPrototypeRecipe(recipe.level, tech_trees) then
 						meta.can_build = builder:HasIngredients(recipe)
 						meta.build_state = recipe.nounlock and (meta.can_build and "has_ingredients" or "no_ingredients") or "prototype"

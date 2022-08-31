@@ -210,6 +210,7 @@ local function fn()
     inst:AddComponent("inspectable")
 
     MakeLargeBurnable(inst)
+	MakeLargePropagator(inst)
 
     inst:AddComponent("hauntable")
     inst.components.hauntable:SetHauntValue(TUNING.HAUNT_SMALL)

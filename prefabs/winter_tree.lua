@@ -401,6 +401,10 @@ end
 
 -------------------------------------------------------------------------------
 local function SetGrowth(inst)
+    if inst.components.burnable == nil then
+        -- NOTES(JBK): This thing got burnt in the time between the thing growing and now so do nothing.
+        return
+    end
     local new_size = inst.components.growable.stage
     inst.statedata = statedata[new_size]
     PlaySway(inst)

@@ -73,26 +73,28 @@ local function fn()
     inst.AnimState:SetBank("firepen")
     inst.AnimState:SetBuild("firepen")
     inst.AnimState:PlayAnimation("idle")
-    
+
     inst:AddTag("weapon")
     inst:AddTag("rangedweapon")
     inst:AddTag("rangedlighter")
     inst:AddTag("firepen")
-    
+
     MakeInventoryPhysics(inst)
-    MakeInventoryFloatable(inst, "small", 0.05, {1.2, 0.75, 1.2})
+    MakeInventoryFloatable(inst, "med", 0.05, { .9, 0.5, .9 })
 
     inst.entity:SetPristine()
     if not TheWorld.ismastersim then
         return inst
     end
 
+    inst.components.floater:SetBankSwapOnFloat(true, -3, { sym_build = "firepen", sym_name = "swap_firepen" })
+
     inst:AddComponent("inventoryitem")
 
     inst:AddComponent("equippable")
     inst.components.equippable:SetOnEquip(OnEquip)
     inst.components.equippable:SetOnUnequip(OnUnequip)
-    
+
     inst:AddComponent("finiteuses")
     inst.components.finiteuses:SetOnFinished(inst.Remove)
     inst.components.finiteuses:SetMaxUses(TUNING.FIREPEN_MAXUSES)

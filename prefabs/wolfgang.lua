@@ -220,9 +220,8 @@ end
 local function GetCurrentMightinessState(inst)
     if inst.components.mightiness ~= nil then
         return inst.components.mightiness:GetState()
-    else
+    elseif inst.player_classified ~= nil then
         local value = inst.player_classified.currentmightiness:value()
-
         if value >= TUNING.MIGHTY_THRESHOLD then
             return "mighty"
         elseif value >= TUNING.WIMPY_THRESHOLD then
@@ -230,6 +229,8 @@ local function GetCurrentMightinessState(inst)
         else
             return "wimpy"
         end
+    else
+        return "wimpy"
     end
 end
 

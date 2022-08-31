@@ -603,9 +603,16 @@ function BoatPhysics:OnUpdate(dt)
     end
 
     local corrected_vel_x, corrected_vel_z = VecUtil_RotateDir(self.velocity_x, self.velocity_z, self.inst.Transform:GetRotation() * DEGREES)
+    if self.halting then -- NOTES(JBK): Injecting these here because velocity is edited all over this component.
+        corrected_vel_x, corrected_vel_z, cur_velocity = 0, 0, 0
+    end
     self.inst.Physics:SetMotorVel(corrected_vel_x, 0, corrected_vel_z)
 
     self.inst.SoundEmitter:SetParameter("boat_movement", "speed", cur_velocity / TUNING.BOAT.MAX_ALLOWED_VELOCITY)
+end
+
+function BoatPhysics:SetHalting(halt)
+    self.halting = halt
 end
 
 function BoatPhysics:GetDebugString()

@@ -15,7 +15,14 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst) inst.sg:GoToState("idle") end),
+            EventHandler("animover", function(inst)
+                if inst.components.health and inst.components.health:IsDead() then
+                    -- NOTES(JBK): Boats can take damage during the building phase and we want to keep this to not have bullets shatter on an indestructible boat.
+                    inst.sg:GoToState("ready_to_snap")
+                else
+                    inst.sg:GoToState("idle")
+                end
+            end),
         },
     },
 

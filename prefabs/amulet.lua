@@ -186,6 +186,10 @@ local function onequip_yellow(inst, owner)
     else
         owner.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
     end
+    
+    if inst.skin_equip_sound and owner.SoundEmitter then
+        owner.SoundEmitter:PlaySound(inst.skin_equip_sound)
+    end
 end
 
 local function turnoff_yellow(inst)

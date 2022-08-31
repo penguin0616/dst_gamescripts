@@ -149,6 +149,31 @@ local states =
     },
 
     State{
+        name = "delay_glide",
+        tags = { "busy", "notarget" },
+
+        onenter = function(inst, delay)
+            inst:AddTag("NOCLICK")
+            inst:Hide()
+            inst.Physics:SetActive(false)
+            inst.sg:SetTimeout(delay)
+        end,
+
+        ontimeout = function(inst)
+            inst.sg.statemem.gliding = true
+            inst.sg:GoToState("glide")
+        end,
+
+        onexit = function(inst)
+            if not inst.sg.statemem.gliding then
+                inst:RemoveTag("NOCLICK")
+            end
+            inst:Show()
+            inst.Physics:SetActive(true)
+        end,
+    },
+
+    State{
         name = "glide",
         tags = { "idle", "flight", "notarget" },
 

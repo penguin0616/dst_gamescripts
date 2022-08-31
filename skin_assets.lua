@@ -1454,6 +1454,8 @@ local skin_assets =
 	Asset("PKGREF", "anim/dynamic/feet_wilson_gladiator.dyn"),
 	Asset("DYNAMIC_ANIM", "anim/dynamic/feet_wilson_ice.zip"),
 	Asset("PKGREF", "anim/dynamic/feet_wilson_ice.dyn"),
+	Asset("DYNAMIC_ANIM", "anim/dynamic/feet_wilson_madscientist.zip"),
+	Asset("PKGREF", "anim/dynamic/feet_wilson_madscientist.dyn"),
 	Asset("DYNAMIC_ANIM", "anim/dynamic/feet_wilson_victorian.zip"),
 	Asset("PKGREF", "anim/dynamic/feet_wilson_victorian.dyn"),
 	Asset("DYNAMIC_ANIM", "anim/dynamic/feet_wilson_yule.zip"),

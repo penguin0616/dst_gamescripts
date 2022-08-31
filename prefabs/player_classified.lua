@@ -520,7 +520,10 @@ end
 
 local function OnTechTreesDirty(inst)
     for i, v in ipairs(TechTree.AVAILABLE_TECH) do
-        inst.techtrees[v] = inst[string.lower(v).."level"]:value()
+        local level = inst[string.lower(v).."level"]:value()
+        local bonus = inst[string.lower(v).."tempbonus"]
+        inst.techtrees[v] = level
+        inst.techtrees_no_temp[v] = math.max(0, level - (bonus ~= nil and bonus:value() or 0))
     end
     if inst._parent ~= nil then
         inst._parent:PushEvent("techtreechange", { level = inst.techtrees })
@@ -1230,11 +1233,12 @@ local function fn()
     inst.builderdamagedevent = net_event(inst.GUID, "builder.damaged")
     inst.learnrecipeevent = net_event(inst.GUID, "builder.learnrecipe")
     inst.techtrees = deepcopy(TECH.NONE)
+    inst.techtrees_no_temp = deepcopy(inst.techtrees)
     inst.ingredientmod = net_tinybyte(inst.GUID, "builder.ingredientmod", "ingredientmoddirty")
     for i, v in ipairs(TechTree.BONUS_TECH) do
         local bonus = net_tinybyte(inst.GUID, "builder."..string.lower(v).."bonus")
 		inst[string.lower(v).."bonus"] = bonus
-        local tempbonus = net_tinybyte(inst.GUID, "builder."..string.lower(v).."tempbonus")
+		local tempbonus = net_tinybyte(inst.GUID, "builder."..string.lower(v).."tempbonus", "techtreesdirty")
 		inst[string.lower(v).."tempbonus"] = tempbonus
     end
     for i, v in ipairs(TechTree.AVAILABLE_TECH) do

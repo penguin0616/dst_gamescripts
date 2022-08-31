@@ -391,9 +391,7 @@ local function CheckBeeQueen(inst, data)
         commander.components.commander:RemoveSoldier(inst)
         target.components.commander:AddSoldier(inst)
         
-        inst.components.follower:StopFollowing()
-        inst:RemoveComponent("follower")
-        
+       
         if target.components.combat:HasTarget() then
             inst.components.combat:SetTarget(target.components.combat.target)
         else

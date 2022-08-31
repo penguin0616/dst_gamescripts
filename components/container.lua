@@ -366,7 +366,7 @@ function Container:GetAllItems()
     return collected_items
 end
 
-function Container:Open(doer)
+function Container:Open(doer, open_sfx_override)
     if doer ~= nil and self.openlist[doer] == nil then
         self.inst:StartUpdatingComponent(self)
 
@@ -392,7 +392,7 @@ function Container:Open(doer)
                 TheFocalPoint.SoundEmitter:PlaySound(SKIN_SOUND_FX[self.inst.AnimState:GetSkinBuild()] or "dontstarve/wilson/backpack_open")
             else
                 if not self.inst.replica.container:ShouldSkipOpenSnd() then
-                    TheFocalPoint.SoundEmitter:PlaySound("dontstarve/HUD/Together_HUD/container_open")
+                    TheFocalPoint.SoundEmitter:PlaySound(open_sfx_override or "dontstarve/HUD/Together_HUD/container_open")
                 end
             end
         elseif self.widget ~= nil

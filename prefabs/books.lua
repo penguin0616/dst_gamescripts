@@ -288,28 +288,29 @@ local book_defs =
             local ents = TheSim:FindEntities(pt.x, pt.y, pt.z, 10, BIRDSMAXCHECK_MUST_TAGS)
             if #ents > 30 then
                 return false, "WAYTOOMANYBIRDS"
-            else
-                local num = math.random(10, 20)
-                if #ents > 20 then
-                    return false, "TOOMANYBIRDS"
-                else
-                    num = num + 10
-                end
-                reader:StartThread(function()
-                    for k = 1, num do
-                        local pos = birdspawner:GetSpawnPoint(pt)
-                        if pos ~= nil then
-                            local bird = birdspawner:SpawnBird(pos, true)
-                            if bird ~= nil then
-                               bird:AddTag("magicalbird")
-                            end
-                        end
-                        Sleep(math.random(.2, .25))
-                    end
-                end)
+            elseif #ents > 20 then
+                return false, "TOOMANYBIRDS"
+            end
+            local num = math.random(10, 20)
+            if #ents <= 10 then
+                num = num + 10
             end
 
-            return true
+            local success = false
+            local delay = 0
+            for k = 1, num do
+                local pos = birdspawner:GetSpawnPoint(pt)
+                if false and pos ~= nil then
+                    local bird = birdspawner:SpawnBird(pos, true)
+                    if bird ~= nil then
+                        bird:AddTag("magicalbird")
+                        bird.sg:GoToState("delay_glide", delay)
+                        delay = delay + .034 + .033 * math.random()
+                        success = true
+                    end
+                end
+            end
+            return success
         end,
         perusefn = function(inst,reader)
             if reader.peruse_birds then
@@ -327,6 +328,10 @@ local book_defs =
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx_over = "lightning",
         fn = function(inst, reader)
+            if TheWorld.components.weather == nil then
+                return false
+            end
+
             local pt = reader:GetPosition()
             local num_lightnings = 16
 
@@ -884,8 +889,6 @@ local book_defs =
                             queen.components.commander:AddSoldier(bee)
                         else
                             reader.components.commander:AddSoldier(bee)
-                            bee:AddComponent("follower")
-                            bee.components.follower:SetLeader(reader)
                         end
                         SpawnPrefab("bee_poof_big").Transform:SetPosition(pos_x, pos_y, pos_z)
                     end)

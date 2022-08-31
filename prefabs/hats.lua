@@ -50,6 +50,10 @@ local function MakeHat(name)
         if inst.components.fueled ~= nil then
             inst.components.fueled:StartConsuming()
         end
+        
+        if inst.skin_equip_sound and owner.SoundEmitter then
+            owner.SoundEmitter:PlaySound(inst.skin_equip_sound)
+        end
     end
 
     local function _onunequip(inst, owner)
@@ -106,6 +110,10 @@ local function MakeHat(name)
 
         if inst.components.fueled ~= nil then
             inst.components.fueled:StartConsuming()
+        end
+
+        if inst.skin_equip_sound and owner.SoundEmitter then
+            owner.SoundEmitter:PlaySound(inst.skin_equip_sound)
         end
     end
 

@@ -519,6 +519,7 @@ return
 		"feet_formal_lowheel_black_scribble",
 		"feet_wilson_gladiator",
 		"feet_wilson_ice",
+		"feet_wilson_madscientist",
 		"feet_wilson_victorian",
 		"feet_wilson_yule",
 		"hand_wilson_formal",
