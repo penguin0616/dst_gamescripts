@@ -534,10 +534,14 @@ end
 stagehand_init_fn = function(inst, build_name)
     basic_init_fn( inst, build_name, "stagehand" )
     inst.AnimState:OverrideSymbol("stagehand_fingers", "stagehand", "stagehand_fingers")
+    inst.AnimState:OverrideSymbol("fx", "stagehand", "fx")
+    inst.AnimState:OverrideSymbol("dark_spew", "stagehand", "dark_spew")
 end
 stagehand_clear_fn = function(inst)
     basic_clear_fn(inst, "stagehand" )
     inst.AnimState:ClearOverrideSymbol("stagehand_fingers")
+    inst.AnimState:ClearOverrideSymbol("fx")
+    inst.AnimState:ClearOverrideSymbol("dark_spew")
 end
 
 

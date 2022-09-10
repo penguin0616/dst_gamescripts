@@ -1362,8 +1362,11 @@ ACTIONS.COOK.fn = function(act)
             return false
         end
 
-        if ingredient.components.health ~= nil and ingredient.components.combat ~= nil then
-            act.doer:PushEvent("killed", { victim = ingredient })
+        if ingredient.components.health ~= nil then
+            act.doer:PushEvent("murdered", { victim = ingredient, stackmult = 1 }) -- NOTES(JBK): Cooking something alive.
+            if ingredient.components.combat ~= nil then
+                act.doer:PushEvent("killed", { victim = ingredient })
+            end
         end
 
         local product = act.target.components.cooker:CookItem(ingredient, act.doer)

@@ -424,18 +424,22 @@ function Builder:GetIngredients(recname)
     local recipe = AllRecipes[recname]
     if recipe then
         local ingredients = {}
+		local discounted = false
         for k,v in pairs(recipe.ingredients) do
 			if v.amount > 0 then
 				local amt = math.max(1, RoundBiasedUp(v.amount * self.ingredientmod))
 				local items = self.inst.components.inventory:GetCraftingIngredient(v.type, amt)
 				ingredients[v.type] = items
+				if amt < v.amount then
+					discounted = true
+				end
 			end
         end
-        return ingredients
+        return ingredients, discounted
     end
 end
 
-function Builder:RemoveIngredients(ingredients, recname)
+function Builder:RemoveIngredients(ingredients, recname, discounted)
 	if self.freebuildmode then
 		return
 	end
@@ -479,7 +483,7 @@ function Builder:RemoveIngredients(ingredients, recname)
             end
         end
     end
-    self.inst:PushEvent("consumeingredients")
+    self.inst:PushEvent("consumeingredients", { discounted = discounted })
 end
 
 function Builder:HasCharacterIngredient(ingredient)
@@ -600,8 +604,8 @@ function Builder:DoBuild(recname, pt, rotation, skin)
         self.inst:PushEvent("refreshcrafting")
 
 		if recipe.manufactured then
-			local materials = self:GetIngredients(recname)
-			self:RemoveIngredients(materials, recname)
+			local materials, discounted = self:GetIngredients(recname)
+			self:RemoveIngredients(materials, recname, discounted)
 			   -- its up to the prototyper to implement onactivate and handle spawning the prefab
 		   return true
 		end
@@ -612,7 +616,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
 
             if prod.components.inventoryitem ~= nil then
                 if self.inst.components.inventory ~= nil then
-					local materials = self:GetIngredients(recname)
+					local materials, discounted = self:GetIngredients(recname)
 
 					local wetlevel = self:GetIngredientWetness(materials)
 					if wetlevel > 0 and prod.components.inventoryitem ~= nil then
@@ -623,7 +627,7 @@ function Builder:DoBuild(recname, pt, rotation, skin)
 						prod:onPreBuilt(self.inst, materials, recipe)
 					end
 
-					self:RemoveIngredients(materials, recname)
+					self:RemoveIngredients(materials, recname, discounted)
 
                     --self.inst.components.inventory:GiveItem(prod)
                     self.inst:PushEvent("builditem", { item = prod, recipe = recipe, skin = skin, prototyper = self.current_prototyper })
@@ -683,8 +687,8 @@ function Builder:DoBuild(recname, pt, rotation, skin)
                 end
             else
 				if not is_buffered_build then -- items that have intermediate build items (like statues)
-					local materials = self:GetIngredients(recname)
-					self:RemoveIngredients(materials, recname)
+					local materials, discounted = self:GetIngredients(recname)
+					self:RemoveIngredients(materials, recname, discounted)
 				end
 
                 local spawn_pos = pt
@@ -957,8 +961,8 @@ function Builder:BufferBuild(recname)
 			return
 		end
 
-        local materials = self:GetIngredients(recname)
-        self:RemoveIngredients(materials, recname)
+        local materials, discounted = self:GetIngredients(recname)
+        self:RemoveIngredients(materials, recname, discounted)
         self.buffered_builds[recname] = true
         self.inst.replica.builder:SetIsBuildBuffered(recname, true)
     end

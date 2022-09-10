@@ -182,6 +182,20 @@ local states =
             end),
         },
     },
+
+	State {
+		name = "burnt",
+		tags = { "busy", "burnt" },
+		--Dummy state don't do anything
+		--V2C: Please don't copy this...
+		--     The correct thing is to refactor boatmagnet, and remove the stategraph on burnt.
+
+		onexit = function(inst)
+			if BRANCH == "dev" then
+				assert(false)
+			end
+		end,
+	},
 }
 
 return StateGraph("boatmagnet", states, events, "idle")

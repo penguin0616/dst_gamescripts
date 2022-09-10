@@ -341,8 +341,8 @@ local function fn()
     inst:ListenForEvent("summon", OnSummon)
     inst:ListenForEvent("timerdone", OnTimerDone)
 
-    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld)
-    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld)
+    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld.net)
+    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld.net)
 
     inst.OnSave = on_save
     inst.OnLoad = on_load

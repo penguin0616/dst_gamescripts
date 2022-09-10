@@ -79,6 +79,7 @@ function CharacterSelect:_BuildCharacterGrid(characters, character_widget_ctor, 
                 widget.face:Show()
             end
         else
+            widget.data = nil
             widget.face:Hide()
         end
     end

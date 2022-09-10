@@ -579,6 +579,9 @@ local function onperish(inst)
         local container = owner.components.inventory or owner.components.container or nil
         if container ~= nil and inst.components.lootdropper ~= nil then
             local stacksize = inst.components.stackable ~= nil and inst.components.stackable.stacksize or 1
+            if inst.components.health ~= nil then
+                owner:PushEvent("murdered", { victim = inst, stackmult = stacksize, negligent = true }) -- NOTES(JBK): This is a special case event already adding onto it.
+            end
             for i = 1, stacksize do
                 local loots = inst.components.lootdropper:GenerateLoot()
                 for k, v in pairs(loots) do

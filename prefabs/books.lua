@@ -300,7 +300,7 @@ local book_defs =
             local delay = 0
             for k = 1, num do
                 local pos = birdspawner:GetSpawnPoint(pt)
-                if false and pos ~= nil then
+                if pos ~= nil then
                     local bird = birdspawner:SpawnBird(pos, true)
                     if bird ~= nil then
                         bird:AddTag("magicalbird")
@@ -328,7 +328,7 @@ local book_defs =
         peruse_sanity = -TUNING.SANITY_LARGE,
         fx_over = "lightning",
         fn = function(inst, reader)
-            if TheWorld.components.weather == nil then
+            if TheWorld.net == nil or TheWorld.net.components.weather == nil then
                 return false
             end
 
@@ -885,11 +885,7 @@ local book_defs =
 
                         local bee = SpawnPrefab("beeguard")
                         bee.Transform:SetPosition(pos_x, pos_y, pos_z)
-                        if queen then
-                            queen.components.commander:AddSoldier(bee)
-                        else
-                            reader.components.commander:AddSoldier(bee)
-                        end
+                        bee:AddToArmy(queen or reader)
                         SpawnPrefab("bee_poof_big").Transform:SetPosition(pos_x, pos_y, pos_z)
                     end)
                 end)

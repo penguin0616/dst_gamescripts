@@ -14,17 +14,32 @@ local MAX_CHASE_DIST      = 40
 local RUN_AWAY_DIST       = 5
 local STOP_RUN_AWAY_DIST  = 8
 
-local MIN_FOLLOW_DIST     = 1
-local TARGET_FOLLOW_DIST  = 5
-local MAX_FOLLOW_DIST     = 9
+local MIN_FOLLOW_DIST     = 3
+local MAX_FOLLOW_DIST     = 15
 
 local FACETIME_BASE = 2
 local FACETIME_RAND = 2
+
+local TRADE_DIST = 20
 
 local MermBrain = Class(Brain, function(self, inst)
     Brain._ctor(self, inst)
 end)
 
+
+local function GetTraderFn(inst)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    local players = FindPlayersInRange(x, y, z, TRADE_DIST, true)
+    for _, v in ipairs(players) do
+        if inst.components.trader:IsTryingToTradeWithMe(v) then
+            return v
+        end
+    end
+end
+
+local function KeepTraderFn(inst, target)
+    return inst.components.trader:IsTryingToTradeWithMe(target)
+end
 
 local function GetFaceTargetFn(inst)
     if inst.components.timer:TimerExists("dontfacetime") then
@@ -80,6 +95,15 @@ local function GetNoLeaderHomePos(inst)
     return inst.components.knownlocations:GetLocation("home")
 end
 
+local function TargetFollowDistFn(inst)
+    local loyalty = inst.components.follower ~= nil and inst.components.follower:GetLoyaltyPercent() or 0.5
+    local boatmod = inst:GetCurrentPlatform() ~= nil and 0.2 or 1.0
+    -- As loyalty rises the further out the follower will potentially stay back.
+    -- If on a boat lower max range.
+    -- Randomize the range from min to max with the bias modulation.
+    return (MAX_FOLLOW_DIST - MIN_FOLLOW_DIST) * (1.0 - loyalty) * boatmod * math.random() + MIN_FOLLOW_DIST
+end
+
 function MermBrain:OnStart()
     local root = PriorityNode(
     {
@@ -123,11 +147,14 @@ function MermBrain:OnStart()
             chatterstring = "MERM_TALK_HELP_MINE_ROCK",
         }),
 
+        ChattyNode(self.inst, "MERM_TALK_FIND_FOOD", -- TODO(JBK): MERM_TALK_ATTEMPT_TRADE
+            FaceEntity(self.inst, GetTraderFn, KeepTraderFn)),
+
         ChattyNode(self.inst, "MERM_TALK_FIND_FOOD",
             DoAction(self.inst, EatFoodAction, "Eat Food")),
 
         ChattyNode(self.inst, "MERM_TALK_FOLLOWWILSON",
-          Follow(self.inst, function() return self.inst.components.follower.leader end, MIN_FOLLOW_DIST, TARGET_FOLLOW_DIST, MAX_FOLLOW_DIST)),
+            Follow(self.inst, function() return self.inst.components.follower.leader end, MIN_FOLLOW_DIST, TargetFollowDistFn, MAX_FOLLOW_DIST, nil, true)),
 
         IfNode(function() return self.inst.components.follower.leader ~= nil end, "HasLeader",
             ChattyNode(self.inst, "MERM_TALK_FOLLOWWILSON",

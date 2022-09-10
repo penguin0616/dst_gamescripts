@@ -368,8 +368,8 @@ local function fn()
 
     inst:ListenForEvent("death", OnKilled)
     inst:ListenForEvent("activated", spawn_investigators)
-    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld)
-    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld)
+    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld.net)
+    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld.net)
     inst:ListenForEvent("timerdone", on_timer_finished)
 
     return inst

@@ -1811,7 +1811,7 @@ return{
 		{
 			GENERIC = "It hasn't grown back yet.",
 		},
-        GOGGLESHAT = "I feel more  adventurous already!",
+        GOGGLESHAT = "I feel more adventurous already!",
         DESERTHAT = "It's important to dress appropriately for the environment.",
 		DEVTOOL = "Weird! It looks like an axe, but...",
 		DEVTOOL_NODEV = "Guess I haven't earned that badge yet.",

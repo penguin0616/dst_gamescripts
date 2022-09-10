@@ -560,6 +560,7 @@ function c_goto(dest, inst)
             else
                 inst.Transform:SetPosition(dest.Transform:GetWorldPosition())
             end
+            inst:SnapCamera()
             SuUsed("c_goto", true)
             return dest
         end

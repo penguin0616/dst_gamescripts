@@ -1240,7 +1240,7 @@ return{
 --fallback to speech_wilson.lua 			WEREBEAVER = "only_used_by_woodie", --woodie specific
 			GLASSED = "How curious, the water reacts similarly to what I observed in the grotto.",
         },
-		THULECITE = "This seems to be an interesting, ectoplasmic residue-bearing variety of ziosite.",
+		THULECITE = "This seems to be an interesting, ectoplasmic residue-bearing variety of zoisite.",
 		ARMORRUINS = "A hardy Thulecite armor.",
 		ARMORSKELETON = "Now it's an exoskeleton. Ho ho!",
 		SKELETONHAT = "It has a detrimental effect on the mortal mind.",

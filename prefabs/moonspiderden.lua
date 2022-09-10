@@ -339,8 +339,8 @@ local function moonspiderden_fn()
     inst.components.lootdropper:SetChanceLootTable('moon_spider_hole')
 
     inst:ListenForEvent("creepactivate", SpawnInvestigators)
-    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld)
-    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld)
+    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld.net)
+    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld.net)
 
     MakeHauntableWork(inst)
 

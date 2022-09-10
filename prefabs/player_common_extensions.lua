@@ -771,7 +771,7 @@ local function OnLearnCookbookStats(inst, product)
 end
 
 local function OnEat(inst, data)
-	local product = (data ~= nil and data.food ~= nil and data.food:HasTag("preparedfood")) and data.food.prefab or nil
+	local product = (data ~= nil and data.food ~= nil and data.food:HasTag("preparedfood")) and (data.food.food_basename or data.food.prefab) or nil
 	if product ~= nil then
 		OnLearnCookbookStats(inst, product)
 	end

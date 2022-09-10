@@ -35,6 +35,7 @@ local function onburnt(inst)
 		magnet.boat.components.boatphysics:RemoveMagnet(magnet)
     end
 
+	inst.sg:GoToState("burnt")
 	inst:RemoveComponent("boatmagnet")
 end
 

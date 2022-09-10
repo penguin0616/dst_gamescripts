@@ -186,6 +186,8 @@ function BoatPhysics:OnSave()
         target_rudder_direction_x = self.target_rudder_direction_x,
         target_rudder_direction_z = self.target_rudder_direction_z,
         boat_rotation_offset = self.boat_rotation_offset,
+        velocity_x = self.velocity_x,
+        velocity_z = self.velocity_z,
     }
 
     return data
@@ -193,11 +195,13 @@ end
 
 function BoatPhysics:OnLoad(data)
     if data ~= nil then
-        self.target_rudder_direction_x = data.target_rudder_direction_x
-        self.rudder_direction_x = data.target_rudder_direction_x
-        self.target_rudder_direction_z = data.target_rudder_direction_z
-        self.rudder_direction_z = data.target_rudder_direction_z
+        self.target_rudder_direction_x = data.target_rudder_direction_x or self.target_rudder_direction_x
+        self.rudder_direction_x = data.target_rudder_direction_x or self.rudder_direction_x
+        self.target_rudder_direction_z = data.target_rudder_direction_z or self.target_rudder_direction_z
+        self.rudder_direction_z = data.target_rudder_direction_z or self.rudder_direction_z
         self.boat_rotation_offset = data.boat_rotation_offset or self.boat_rotation_offset
+        self.velocity_x = data.velocity_x or self.velocity_x
+        self.velocity_z = data.velocity_z or self.velocity_z
     end
 end
 

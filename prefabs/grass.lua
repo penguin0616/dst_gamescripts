@@ -4,7 +4,7 @@ local assets =
 {
     Asset("ANIM", "anim/grass.zip"),
     Asset("ANIM", "anim/grass1.zip"),
-    Asset("ANIM", "anim/grass_diseased_build.zip"),
+    Asset("PKGREF", "anim/grass_diseased_build.zip"),
     Asset("SOUND", "sound/common.fsb"),
 }
 

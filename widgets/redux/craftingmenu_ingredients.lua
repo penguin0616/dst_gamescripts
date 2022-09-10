@@ -42,13 +42,22 @@ function CraftingMenuIngredients:SetRecipe(recipe)
 	local root = self:AddChild(Widget("root"))
 
 	local equippedBody = inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-    local showamulet = equippedBody and equippedBody.prefab == "greenamulet"
+	local showamulet = false
+	if equippedBody ~= nil and equippedBody.prefab == "greenamulet" then
+		--Check if we're actually discounted by amulet
+		for i, v in ipairs(recipe.ingredients) do
+			local amt = math.max(1, RoundBiasedUp(v.amount * builder:IngredientMod()))
+			if amt < v.amount then
+				showamulet = true
+				break
+			end
+		end
+	end
 
     local num = (recipe.ingredients ~= nil and #recipe.ingredients or 0)
 			    + (recipe.character_ingredients ~= nil and #recipe.character_ingredients or 0)
 				+ (recipe.tech_ingredients ~= nil and #recipe.tech_ingredients or 0)
 				+ (showamulet and 1 or 0)
-
 
     local w = 64
     local div = 10

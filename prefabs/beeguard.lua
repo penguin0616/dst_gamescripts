@@ -245,6 +245,15 @@ end
 local function AddToArmy(inst, queen)
     if queen:HasTag("player") then
         queen:MakeGenericCommander()
+        if inst.components.follower == nil then
+            inst:AddComponent("follower")
+            inst.components.follower:SetLeader(queen)
+        end
+    else
+        if inst.components.follower ~= nil then
+            inst.components.follower:StopFollowing()
+            inst:RemoveComponent("follower")
+        end
     end
     if queen.components.commander ~= nil then
         queen.components.commander:AddSoldier(inst)
@@ -255,8 +264,11 @@ local function TryToFindQueen(inst) -- Only should be called with a player and h
     local queen = LookupPlayerInstByUserID(inst._friendid)
     if queen then
         AddFriendListener(inst, queen)
-        AddToArmy(inst, queen)
-        inst._findqueentask = nil
+        inst:AddToArmy(queen)
+        if inst._findqueentask then
+            inst._findqueentask:Cancel()
+            inst._findqueentask = nil
+        end
         if inst._fleetask then
             inst._fleetask:Cancel()
             inst._fleetask = nil
@@ -292,7 +304,7 @@ end
 local function OnLoadPostPass(inst)
     local queen = inst:GetQueen()
     if queen ~= nil then
-        AddToArmy(inst, queen)
+        inst:AddToArmy(queen)
     else
         inst:StartFindingPlayerQueenTasks()
     end
@@ -348,12 +360,14 @@ local function OnGotCommander(inst, data)
     if queen ~= data.commander then
         inst.components.entitytracker:ForgetEntity("queen")
         RemoveFriendListener(inst)
+        local realqueen = false
         if data.commander:HasTag("player") then
             inst:MakeFriendly(data.commander.userid)
             AddFriendListener(inst, data.commander)
         else
             inst.components.entitytracker:TrackEntity("queen", data.commander)
             inst:MakeHostile()
+            realqueen = true
         end
 
         local allbeeguards = data.commander.components.commander:GetAllSoldiers("beeguard")
@@ -361,11 +375,16 @@ local function OnGotCommander(inst, data)
         if totalbeeguards > 0 then
             table.sort(allbeeguards, BeeSort)
             local radius = TUNING.BEEGUARD_GUARD_RANGE
+            local qx, qy, qz = data.commander.Transform:GetWorldPosition()
             for i, v in ipairs(allbeeguards) do
                 local angle = PI2 * (i - math.random()) / totalbeeguards
                 local radiusoffset = math.random() * 2 - 1 + 2 * (i % 2)
                 local offset = Vector3((radius + radiusoffset) * math.cos(angle), 0, (radius + radiusoffset) * math.sin(angle))
                 v.components.knownlocations:RememberLocation("queenoffset", offset, false)
+
+                if realqueen and not v:IsNear(data.commander, 30.0) then -- NOTES(JBK): This is an edge case hack fixup so these bees do not get lost from being too far from a real Bee Queen.
+                    v.Transform:SetPosition(qx + offset.x, qy + offset.y, qz + offset.z)
+                end
             end
         end
     end
@@ -389,9 +408,8 @@ local function CheckBeeQueen(inst, data)
     if target ~= nil and commander ~= nil and commander:HasTag("player") and target:HasTag("beequeen") then
         inst:MakeHostile()
         commander.components.commander:RemoveSoldier(inst)
-        target.components.commander:AddSoldier(inst)
-        
-       
+        inst:AddToArmy(target)
+
         if target.components.combat:HasTarget() then
             inst.components.combat:SetTarget(target.components.combat.target)
         else
@@ -505,6 +523,7 @@ local function fn()
     inst.StartFindingPlayerQueenTasks = StartFindingPlayerQueenTasks
     inst.GetQueen = GetQueen
     inst.MakeHostile = MakeHostile
+    inst.AddToArmy = AddToArmy
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
     inst.OnSave = OnSave

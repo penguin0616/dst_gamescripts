@@ -24,6 +24,9 @@ local function stash_dug(inst)
         if loot.components.perishable then
             loot.components.perishable:StartPerishing()
         end
+        if loot.components.disappears then
+            loot.components.disappears:PrepareDisappear()
+        end
     end
 
     -- Ensure that the remove happens after all of our loot gets flung.
@@ -38,6 +41,9 @@ local function stashloot(inst, item)
     table.insert(inst.loot,item)
     if item.components.perishable then
         item.components.perishable:StopPerishing()
+    end
+    if item.components.disappears then
+        item.components.disappears:StopDisappear()
     end
     if inst.onstashed then
         inst:onstashed()

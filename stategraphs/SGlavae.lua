@@ -302,6 +302,7 @@ local states =
         	inst.SoundEmitter:PlaySound("dontstarve/creatures/together/lavae/sizzle_snow")
             -- Tell clients to no longer target this entity because it will die when it thaws.
             inst.replica.health:SetIsDead(true)
+            inst:PushEvent("inevitabledeath") -- Death is inescapable.
         end,
 
         events =

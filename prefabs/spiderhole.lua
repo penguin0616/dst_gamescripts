@@ -220,8 +220,8 @@ local function spawnerfn()
     inst.components.childspawner:StartSpawning()
 
     inst:ListenForEvent("creepactivate", SpawnInvestigators)
-    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld)
-    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld)
+    inst:ListenForEvent("startquake", function() OnQuakeBegin(inst) end, TheWorld.net)
+    inst:ListenForEvent("endquake", function() OnQuakeEnd(inst) end, TheWorld.net)
 
     MakeHauntableWork(inst)
     AddHauntableCustomReaction(inst, CustomOnHaunt, false)

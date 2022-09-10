@@ -101,8 +101,12 @@ end
 local function onequip_green(inst, owner)
     owner.AnimState:OverrideSymbol("swap_body", "torso_amulets", "greenamulet")
     owner.components.builder.ingredientmod = TUNING.GREENAMULET_INGREDIENTMOD
-    inst.onitembuild = function()
-        inst.components.finiteuses:Use(1)
+    inst.onitembuild = function(owner, data)
+        --V2C: backward compatibility so that no data or discounted == nil still consumes a charge
+        --     (discounted is newly added; in the past, it would always consume a charge)
+        if not (data ~= nil and data.discounted == false) then
+            inst.components.finiteuses:Use(1)
+        end
     end
     inst:ListenForEvent("consumeingredients", inst.onitembuild, owner)
 

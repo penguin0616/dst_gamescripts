@@ -236,7 +236,8 @@ end
 
 local function OnMurdered(inst, data)
     local victim = data.victim
-    if inst.components.repellent and
+    if not data.negligent and -- Do not punish neglecting fish in the inventory.
+        inst.components.repellent and
         victim ~= nil  and victim:IsValid() and
         victim:HasTag("fish") and
         not inst.components.health:IsDead() then

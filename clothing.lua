@@ -1432,7 +1432,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "VICTORIAN", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper", "torso", },
+		symbol_overrides = { "arm_lower_cuff", "arm_lower", "arm_upper", "torso", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
 		rarity_modifier = "Woven",
@@ -2270,7 +2270,7 @@ CLOTHING =
 	{
 		type = "body",
 		skin_tags = { "FOOLS", "CLOTHING_BODY", "CLOTHING", },
-		symbol_overrides = { "arm_lower", "arm_upper", "arm_upper_skin", "torso", "torso_pelvis", "foot", "leg", },
+		symbol_overrides = { "arm_lower_cuff", "arm_lower", "arm_upper", "arm_upper_skin", "torso", "torso_pelvis", "foot", "leg", },
 		symbol_hides = { "skirt", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",
@@ -2970,7 +2970,7 @@ CLOTHING =
 		type = "body",
 		skin_tags = { "SURVIVOR", "CLOTHING_BODY", "CLOTHING", },
 		symbol_overrides = { "torso", "torso_pelvis", "leg", "arm_upper", "foot", },
-		symbol_overrides_by_character = { default = { foot = "foot", torso = "torso", },walter = { foot = "foot_walter", torso = "torso_walter", },wanda = { foot = "foot_wanda", torso = "torso_wanda", },warly = { foot = "foot_warly", torso = "torso_warly", },waxwell = { foot = "foot_waxwell", torso = "torso_waxwell", },webber = { foot = "foot_wilson", torso = "torso_webber", },wilson = { foot = "foot_wilson", torso = "torso_webber", },wormwood = { foot = "foot_wormwood", torso = "torso_wormwood", },wortox = { foot = "foot_wortox", torso = "torso_wortox", },wurt = { foot = "foot_wurt", torso = "torso_wurt", },wx78 = { foot = "foot_wx78", torso = "torso_wx78", },},
+		symbol_overrides_by_character = { default = { foot = "foot", torso = "torso", },walter = { foot = "foot_walter", torso = "torso_walter", },wanda = { foot = "foot_wanda", torso = "torso_wanda", },warly = { foot = "foot_warly", torso = "torso_warly", },waxwell = { foot = "foot_waxwell", torso = "torso_waxwell", },webber = { foot = "foot_webber", torso = "torso_webber", },wilson = { foot = "foot", torso = "torso_webber", },wormwood = { foot = "foot_wormwood", torso = "torso_wormwood", },wortox = { foot = "foot_wortox", torso = "torso_wortox", },wurt = { foot = "foot_wurt", torso = "torso_wurt", },wx78 = { foot = "foot_wx78", torso = "torso_wx78", },},
 		symbol_hides = { "skirt", },
 		torso_tuck = "untucked",
 		rarity = "Distinguished",

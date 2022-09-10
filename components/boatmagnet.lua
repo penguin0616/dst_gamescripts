@@ -169,7 +169,9 @@ function BoatMagnet:UnpairWithBeacon()
 
     self.inst:StopUpdatingComponent(self)
 
-    self.inst.sg:GoToState("pull_pst")
+    if not self.inst.sg:HasStateTag("burnt") then
+        self.inst.sg:GoToState("pull_pst")
+    end
 
     self.inst:RemoveTag("paired")
 end
