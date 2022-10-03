@@ -104,7 +104,7 @@ local function RemoveDeadPlayer(inst, spawnskeleton)
         SpawnPrefab("die_fx").Transform:SetPosition(x, y, z)
     end
 
-    if not GetGameModeProperty("ghost_enabled") and not GetGameModeProperty("revivable_corpse") then
+    if not GetGhostEnabled() and not GetGameModeProperty("revivable_corpse") then
 		local followers = inst.components.leader.followers
 		for k, v in pairs(followers) do
 			if k.components.inventory ~= nil then
@@ -820,6 +820,25 @@ local function MakeGenericCommander(inst)
     end
 end
 
+local function OnMurderCheckForFishRepel(inst, data)
+    local victim = data.victim
+    if not data.negligent and -- Do not punish neglecting fish in the inventory.
+        inst.components.leader and
+        victim ~= nil and victim:IsValid() and
+        victim:HasTag("fish") and
+        not inst.components.health:IsDead() then
+        -- This act is not looked too highly upon by anyone, not just Wurt!
+        for follower, _ in pairs(inst.components.leader.followers) do
+            if follower:HasTag("merm") and not follower:HasTag("mermking") then
+                follower.components.follower:StopFollowing()
+                if follower.DoDisapproval then
+                    follower:DoDisapproval()
+                end
+            end
+        end
+    end
+end
+
 return
 {
     ShouldKnockout              = ShouldKnockout,
@@ -845,4 +864,5 @@ return
     CanSeeTileOnMiniMap         = CanSeeTileOnMiniMap,
     CanSeePointOnMiniMap        = CanSeePointOnMiniMap,
     MakeGenericCommander        = MakeGenericCommander,
+    OnMurderCheckForFishRepel   = OnMurderCheckForFishRepel,
 }

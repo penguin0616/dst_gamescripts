@@ -96,7 +96,7 @@ end
 
 local function ongohome(inst, child)
     if child.components.inventory ~= nil then
-        child.components.inventory:DropEverything(false, true)
+        child.components.inventory:DropEverything(false, false)
     end
 end
 
@@ -200,7 +200,7 @@ local function fn()
     end
 
     --Monkeys all return on a quake start
-    inst:ListenForEvent("warnquake", ondanger, TheWorld)
+    inst:ListenForEvent("warnquake", ondanger, TheWorld.net)
 
     --Monkeys all return on danger
     inst:ListenForEvent("monkeydanger", ondanger)
@@ -211,6 +211,7 @@ local function fn()
 
     MakeLargeBurnable(inst)
 	MakeLargePropagator(inst)
+    inst:ListenForEvent("onignite", OnIgniteFn)
 
     inst:AddComponent("hauntable")
     inst.components.hauntable:SetHauntValue(TUNING.HAUNT_SMALL)

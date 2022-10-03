@@ -1,7 +1,7 @@
 require "util"
 local TechTree = require("techtree")
 
-local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" or BRANCH == "dev"
 
 PI = 3.14159
 PI2 = PI*2
@@ -401,9 +401,9 @@ CHARACTER_VIDEOS =
 	wanda = {"https://klei.gg/dst-wanda-short"},
 }
 
-PLAYER_SWAP_TRANSITIONS = 
+PLAYER_SWAP_TRANSITIONS =
 {
-	wonkey = 
+	wonkey =
 	{
 		transfrom_state = "changetomonkey_pst",
 		restore_state = "changefrommonkey_pst",
@@ -749,8 +749,8 @@ SPECIAL_EVENTS =
     YOTB = "year_of_the_beefalo",
     YOT_CATCOON = "year_of_the_catcoon",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
---WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.YOT_CATCOON or SPECIAL_EVENTS.NONE
+--WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
+WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.NONE or SPECIAL_EVENTS.HALLOWED_NIGHTS
 WORLD_EXTRA_EVENTS = {}
 
 FESTIVAL_EVENTS =
@@ -1439,7 +1439,7 @@ ROAD_PARAMETERS =
 	WIDTH_JITTER_SCALE=1,
 }
 
-local function RGB(r, g, b)
+function RGB(r, g, b)
     return { r / 255, g / 255, b / 255, 1 }
 end
 
@@ -1732,6 +1732,7 @@ MATERIALS =
     MOON_ALTAR = "moon_altar",
     KELP = "kelp",
     SHELL = "shell",
+    NIGHTMARE = "nightmare",
 }
 
 UPGRADETYPES =
@@ -2158,6 +2159,9 @@ INTENTIONS =
     MADNESS = "madness",
     ANY = "any", -- for player use only, servers must have an intention
 }
+
+PLAYSTYLE_ANY = "ANY"
+PLAYSTYLE_DEFAULT = "survival"
 
 LEVELTYPE = {
     SURVIVAL = "SURVIVAL",

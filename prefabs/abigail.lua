@@ -432,7 +432,8 @@ local function fn()
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.walkspeed = TUNING.ABIGAIL_SPEED*.5
     inst.components.locomotor.runspeed = TUNING.ABIGAIL_SPEED
-    inst.components.locomotor.pathcaps = { allowocean = true }
+    inst.components.locomotor.pathcaps = { allowocean = true, ignorecreep = true }
+    inst.components.locomotor:SetTriggersCreep(false)
 
     inst:SetStateGraph("SGabigail")
 	inst.sg.OnStart = DoAppear

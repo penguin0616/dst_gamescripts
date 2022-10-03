@@ -22,7 +22,7 @@ AddRoom("BGChessRocky", {
 AddRoom("BGRocky", {
 					colour={r=.66,g=.66,b=.66,a=.50},
 					value = WORLD_TILES.ROCKY,
-					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2"},
+					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2", "CharlieStage_Spawner"},
 					contents =  {
 					                distributepercent = .1,
 					                distributeprefabs=

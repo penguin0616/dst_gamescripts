@@ -306,7 +306,7 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx
         end
     end
 
-    print(string.format("Spawning player at: [%s] (%2.2f, %2.2f, %2.2f)", isloading and "Load" or MODES[_mode], x, y, z))
+    print(string.format("Spawning player at: [%s] (%2.2f, %2.2f, %2.2f)", isloading and "Load" or MODES[_mode] or _mode, x, y, z))
     player.Physics:Teleport(x, y, z)
     if player.components.areaaware ~= nil then
         player.components.areaaware:UpdatePosition(x, y, z)
@@ -318,7 +318,7 @@ function self:SpawnAtLocation(inst, player, x, y, z, isloading, platform_uid, rx
     end
 
 	if self:_ShouldEnableSpawnProtection(inst, player, x, y, z, isloading) then
-		print("Enabling Spawn Protection for ", self.inst)
+		print("Enabling Spawn Protection for", player)
         player:AddDebuff("spawnprotectionbuff", "spawnprotectionbuff")
 	end
 

@@ -236,6 +236,9 @@ function MermBrain:OnStart()
 
         in_contest,
 
+        ChattyNode(self.inst, "MERM_TALK_FIND_FOOD",
+            DoAction(self.inst, EatFoodAction, "Eat Food")), -- NOTES(JBK): Leave this above throne task so the Merm eats the food given.
+
         WhileNode(function() return ShouldGoToThrone(self.inst) and self.inst.components.combat.target == nil end, "ShouldGoToThrone",
             PriorityNode({
                 Leash(self.inst, GetThronePosition, 0.2, 0.2, true),
@@ -256,9 +259,6 @@ function MermBrain:OnStart()
 
         ChattyNode(self.inst, "MERM_TALK_FIND_FOOD", -- TODO(JBK): MERM_TALK_ATTEMPT_TRADE
             FaceEntity(self.inst, GetTraderFn, KeepTraderFn)),
-
-        ChattyNode(self.inst, "MERM_TALK_FIND_FOOD",
-            DoAction(self.inst, EatFoodAction, "Eat Food")),
 
         ChattyNode(self.inst, "MERM_TALK_FOLLOWWILSON",
 		    Follow(self.inst, function() return self.inst.components.follower.leader end, MIN_FOLLOW_DIST, TargetFollowDistFn, MAX_FOLLOW_DIST, nil, true)),

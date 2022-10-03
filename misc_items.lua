@@ -162,6 +162,14 @@ MISC_ITEMS =
 		rarity_modifier = "Woven",
 		release_group = 40,
 	},
+	emoji_florid_postern =
+	{
+		type = "emoji",
+		skin_tags = { "EMOJI", },
+		rarity = "Common",
+		rarity_modifier = "Woven",
+		release_group = 135,
+	},
 	emoji_ghost =
 	{
 		type = "emoji",
@@ -273,6 +281,14 @@ MISC_ITEMS =
 		rarity = "Common",
 		rarity_modifier = "Woven",
 		release_group = 43,
+	},
+	emoji_resurrection_stone =
+	{
+		type = "emoji",
+		skin_tags = { "EMOJI", },
+		rarity = "Common",
+		rarity_modifier = "Woven",
+		release_group = 135,
 	},
 	emoji_salt =
 	{

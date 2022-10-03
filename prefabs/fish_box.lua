@@ -4,6 +4,7 @@ local assets =
 {
     Asset("ANIM", "anim/fish_box.zip"),
     Asset("ANIM", "anim/ui_fish_box_3x4.zip"),
+    Asset("ANIM", "anim/ui_fish_box_5x4.zip"),
 }
 
 local prefabs =

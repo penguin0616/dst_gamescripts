@@ -3124,6 +3124,79 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    temperaturedamage = function (difficulty)
+        local tuning_vars =
+        {
+            nonlethal = {
+                NONLETHAL_TEMPERATURE = true,
+            },
+            --[[
+            default = {
+                NONLETHAL_TEMPERATURE = false,
+            },
+            --]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    lessdamagetaken = function (difficulty)
+        local tuning_vars =
+        {
+            always = {
+                PLAYER_DAMAGE_TAKEN_MOD = 0.35,
+            },
+            --[[
+            none = {
+                PLAYER_DAMAGE_TAKEN_MOD = false,
+            },
+            --]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    hunger = function (difficulty)
+        local tuning_vars =
+        {
+            nonlethal = {
+                NONLETHAL_HUNGER = true,
+            },
+            --[[
+            default = {
+                NONLETHAL_HUNGER = false,
+            },
+            --]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    darkness = function (difficulty)
+        local tuning_vars =
+        {
+            nonlethal = {
+                NONLETHAL_DARKNESS = true,
+            },
+            --[[
+            default = {
+                NONLETHAL_DARKNESS = false,
+            },
+            --]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    healthpenalty = function (difficulty)
+        local tuning_vars =
+        {
+            none = {
+                HEALTH_PENALTY_ENABLED = false,
+            },
+            --[[
+            default = {
+                HEALTH_PENALTY_ENABLED = true,
+            },
+            always = {
+                HEALTH_PENALTY_ENABLED = true,
+            },
+            --]]
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 }
 
 local applyoverrides_post = {
@@ -3249,6 +3322,54 @@ local applyoverrides_post = {
             TheWorld:PushEvent("ms_setlightningmode", "always")
             TheWorld:PushEvent("ms_setlightningdelay", { min = 10, max = 30 })
         end
+    end,
+    spawnmode = function(difficulty)
+        if difficulty == "default" then difficulty = "fixed" end
+
+        TheWorld:PushEvent("ms_setworldsetting", {setting = "spawn_mode", value = difficulty})
+        TheWorld:PushEvent("ms_setspawnmode", difficulty)
+    end,
+    basicresource_regrowth = function(difficulty)
+        if difficulty == "default" then difficulty = "none" end
+
+        difficulty = difficulty == "always"
+        TheWorld:PushEvent("ms_setworldsetting", {setting = "resource_renewal", value = difficulty})
+        TheWorld:PushEvent("ms_enableresourcerenewal", difficulty)
+    end,
+    ghostsanitydrain = function(difficulty)
+        if difficulty == "default" then difficulty = "always" end
+
+        difficulty = difficulty == "always"
+        TheWorld:PushEvent("ms_setworldsetting", {setting = "ghost_sanity_drain", value = difficulty})
+    end,
+    ghostenabled = function(difficulty)
+        if difficulty == "default" then difficulty = "always" end
+
+        difficulty = difficulty == "always"
+        TheWorld:PushEvent("ms_setworldsetting", {setting = "ghost_enabled", value = difficulty})
+    end,
+    portalresurection = function(difficulty)
+        if difficulty == "default" then difficulty = "none" end
+
+        difficulty = difficulty == "always"
+        TheWorld:PushEvent("ms_setworldsetting", {setting = "portal_rez", value = difficulty})
+    end,
+    resettime = function(difficulty)
+        local reset_time
+        if difficulty == "none" then
+            reset_time = nil
+        elseif difficulty == "slow" then
+            reset_time = { time = 240, loadingtime = 360 }
+        elseif difficulty == "default" then
+            reset_time = { time = 120, loadingtime = 180 }
+        elseif difficulty == "fast" then
+            reset_time = { time = 60, loadingtime = 90 }
+        elseif difficulty == "always" then
+            reset_time = { time = 0.2, loadingtime = 0.2}
+        end
+
+        TheWorld:PushEvent("ms_setworldsetting", {setting = "reset_time", value = reset_time})
+        TheWorld:PushEvent("ms_setworldresettime", reset_time)
     end,
 }
 

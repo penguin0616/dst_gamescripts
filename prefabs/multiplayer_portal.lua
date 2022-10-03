@@ -49,7 +49,7 @@ local function MakePortal(name, bank, build, assets, prefabs, common_postinit, m
         inst.entity:AddTransform()
 
         local gamemode = TheNet:GetServerGameMode()
-        if not GetIsSpawnModeFixed(gamemode) then
+        if not GetIsSpawnModeFixed() then
             --In this case, don't network this prefab, and always remove it locally.
             inst.entity:Hide()
             inst.persists = false
@@ -90,7 +90,7 @@ local function MakePortal(name, bank, build, assets, prefabs, common_postinit, m
         inst:AddComponent("inspectable")
         inst.components.inspectable:RecordViews()
 
-        if GetPortalRez(gamemode) then
+        if GetPortalRez() then
             inst:AddComponent("hauntable")
             inst.components.hauntable:SetHauntValue(TUNING.HAUNT_INSTANT_REZ)
             inst:AddTag("resurrector")

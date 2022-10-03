@@ -516,14 +516,6 @@ local fx =
             return GetString(viewer, "DESCRIBE", { "MOLE", "UNDERGROUND" })
         end,
     },
-    --[[{
-        name = "sparklefx",
-        bank = "sparklefx",
-        build = "sparklefx",
-        anim = "sparkle",
-        sound = "dontstarve/common/chest_positive",
-        tintalpha = 0.6,
-    },]]
     {
         name = "chester_transform_fx",
         bank = "die_fx",

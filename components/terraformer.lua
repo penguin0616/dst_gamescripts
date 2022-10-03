@@ -52,9 +52,7 @@ function Terraformer:Terraform(pt, doer)
 		end
 	end
 
-	if doer ~= nil then
-		doer:PushEvent("onterraform")
-	end
+	self.inst:PushEvent("onterraform")
 
     return true
 end

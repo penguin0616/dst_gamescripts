@@ -150,6 +150,7 @@ local function fn()
     inst.AnimState:SetBuild("tallbird_egg")
     inst.AnimState:SetBank("egg")
     inst.AnimState:PlayAnimation("eggnest", false)
+	inst.AnimState:SetFinalOffset(-1)
 
     inst:AddTag("antlion_sinkhole_blocker")
 

@@ -97,18 +97,20 @@ local function StartUnequipping(inst, item)
     --character's stategraph, which will handle cleanup there
 
     --If we're in the item_in state, push this fx to statemem
-    if parent.sg.currentstate.name ~= "item_in" then
-        inst._timeout = inst:DoTaskInTime(0, delayedremove)
-        inst:ListenForEvent("newstate", function(parent, data)
-            if data.statename ~= "item_in" then
-                inst:Remove()
-            else
-                inst._timeout:Cancel()
-                transfertostatemem(inst, parent.sg)
-            end
-        end, parent)
-    else
-        transfertostatemem(inst, parent.sg)
+    if parent.sg then
+        if parent.sg.currentstate.name ~= "item_in" then
+            inst._timeout = inst:DoTaskInTime(0, delayedremove)
+            inst:ListenForEvent("newstate", function(parent, data)
+                if data.statename ~= "item_in" then
+                    inst:Remove()
+                else
+                    inst._timeout:Cancel()
+                    transfertostatemem(inst, parent.sg)
+                end
+            end, parent)
+        else
+            transfertostatemem(inst, parent.sg)
+        end
     end
 end
 

@@ -54,6 +54,7 @@ local prefabs =
     "bee",
     "mosquito",
     "boneshard",
+    "cookingrecipecard",
 }
 
 local CHESS_LOOT =
@@ -123,7 +124,10 @@ local function onpickup(inst, picker)
             item.components.inventoryitem.ondropfn(item)
         end
         if inst.lootaggro[i] and item.components.combat ~= nil and picker ~= nil then
-            if not (item:HasTag("spider") and (picker:HasTag("spiderwhisperer") or picker:HasTag("spiderdisguise") or (picker:HasTag("monster") and not picker:HasTag("player")))) then
+            if not (
+                item:HasTag("spider") and (picker:HasTag("spiderwhisperer") or picker:HasTag("spiderdisguise") or (picker:HasTag("monster") and not picker:HasTag("player"))) or
+                item:HasTag("frog") and picker:HasTag("merm")
+            ) then
                 item.components.combat:SuggestTarget(picker)
             end
         end
@@ -175,6 +179,7 @@ local function MakeLoot(inst)
         {chance = 1,    item = "stinger"},
         {chance = 1,    item = "gears"},
         {chance = 0.1,  item = "boneshard"},
+        {chance = 0.25, item = "cookingrecipecard"},
     }
 
     local chessunlocks = TheWorld.components.chessunlocks

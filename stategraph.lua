@@ -318,6 +318,47 @@ StateGraphInstance = Class( function (self, stategraph, inst)
     self.statestarttime = 0
 end)
 
+function StateGraphInstance:RenderDebugUI(ui, panel)
+	-- Don't have a specific stategraph debugger for DebugNodeName, but viewing
+	-- our History is pretty useful.
+	if ui:Button("Open History for: ".. tostring(self.inst)) then
+		local DebugNodes = require "dbui_no_package.debug_nodes"
+		SetDebugEntity(self.inst)
+		panel:PushNode(DebugNodes.DebugHistory())
+	end
+end
+
+function StateGraphInstance:GetDebugTable()
+	TheSim:ProfilerPush("[SGI] GetDebugTable")
+
+	local hitbox
+	local hitboxrects
+	if self.inst.HitBox then
+		hitbox =
+		{
+			w = self.inst.HitBox:GetSize(),
+			h = self.inst.HitBox:GetDepth(),
+			enabled = self.inst.HitBox:IsEnabled(),
+			hitrects = deepcopy(self.inst.HitBox:GetHitRects()),
+			hitcircles = deepcopy(self.inst.HitBox:GetHitCircles())
+		}
+	end
+
+	local ret = {
+		name = self.sg.name,
+		current = self.currentstate and self.currentstate.name or "<None>",
+		--embellish_name = self.sg.embellish_name and self.sg.embellish_name or "",
+		ticks = math.floor(self:GetTimeInState() / FRAMES),
+		tags = shallowcopy(self.tags),
+		statemem = shallowcopy(self.statemem),
+		hitbox = hitbox,
+	}
+
+	TheSim:ProfilerPop()
+
+	return ret
+end
+
 function StateGraphInstance:__tostring()
     local str =  string.format([[sg="%s", state="%s", time=%2.2f]], self.sg.name, self.currentstate.name, GetTime() - self.statestarttime)
     str = str..[[, tags = "]]
@@ -452,7 +493,7 @@ local SGTagsToEntTags =
     ["pausepredict"] = true,
     ["sleeping"] = true,
     ["working"] = true,
-    ["jumping"] = true,
+    ["boathopping"] = true,
 }
 
 function StateGraphInstance:HasState(statename)

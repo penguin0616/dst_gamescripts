@@ -243,6 +243,25 @@ end
 
 -- When calling GetString, must pass actual instance of entity if it might be used when ghost
 -- Otherwise, handing inst.prefab directly to the function call is okay
+function ProcessString(inst)
+
+    local character =
+        type(inst) == "string"
+        and inst
+        or (inst ~= nil and inst.prefab or nil)
+
+    local specialcharacter =
+    type(inst) == "table"
+    and ((inst:HasTag("mime") and "mime") or
+    (inst:HasTag("playerghost") and "ghost"))
+    or character
+
+    return GetSpecialCharacterString(specialcharacter)
+    or nil
+end
+
+-- When calling GetString, must pass actual instance of entity if it might be used when ghost
+-- Otherwise, handing inst.prefab directly to the function call is okay
 function GetString(inst, stringtype, modifier, nil_missing)
     local character =
         type(inst) == "string"
@@ -276,6 +295,37 @@ function GetString(inst, stringtype, modifier, nil_missing)
         or getcharacterstring(STRINGS.CHARACTERS.GENERIC, stringtype, modifier)
 		or (not nil_missing and ("UNKNOWN STRING: "..(character or "").." "..(stringtype or "").." "..(modifier or "")))
 		or nil
+end
+
+function GetLine(inst, line, modifier, nil_missing)
+    local character =
+        type(inst) == "string"
+        and inst
+        or (inst ~= nil and inst.prefab or nil)
+
+
+    if type(inst) ~= "string" and inst.components.talker and inst.components.talker.speechproxy then
+        character = inst.components.talker.speechproxy
+    end
+
+    character = character ~= nil and string.upper(character) or nil
+    line = line ~= nil and string.upper(line) or nil
+    if type(modifier) == "table" then
+        for i,v in ipairs(modifier) do
+            v = string.upper(v)
+        end
+    else
+        modifier = modifier ~= nil and string.upper(modifier) or nil
+    end
+
+    local specialcharacter =
+        type(inst) == "table"
+        and ((inst:HasTag("mime") and "mime") or
+        (inst:HasTag("playerghost") and "ghost"))
+        or character
+
+    return GetSpecialCharacterString(specialcharacter)
+        or line
 end
 
 function GetActionString(action, modifier)
