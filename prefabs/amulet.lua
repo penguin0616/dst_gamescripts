@@ -464,7 +464,7 @@ local function green()
 end
 
 local function orange()
-    local inst = commonfn("orangeamulet")
+    local inst = commonfn("orangeamulet", "repairshortaction")
 
     if not TheWorld.ismastersim then
         return inst

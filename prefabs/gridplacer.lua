@@ -71,8 +71,10 @@ local function SetPlayer(inst, player)
     inst.player = player
     if player then
         inst.components.updatelooper:AddOnWallUpdateFn(turfhat_update)
+        inst:ListenForEvent("onremove", inst._onremoveplayer, player)
     else
         inst.components.updatelooper:RemoveOnWallUpdateFn(turfhat_update)
+        inst:RemoveEventCallback("onremove", inst._onremoveplayer, player)
     end
 end
 
@@ -100,6 +102,9 @@ local function turfhat_fn()
     inst:AddComponent("updatelooper")
 
     inst.SetPlayer = SetPlayer
+    inst._onremoveplayer = function(player)
+        inst:SetPlayer(player)
+    end
 
     return inst
 end

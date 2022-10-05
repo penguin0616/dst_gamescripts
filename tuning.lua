@@ -1151,6 +1151,8 @@ function Tune(overrides)
         TEENBIRD_STARVE_KILL_TIME = 240,
         TEENBIRD_GROW_TIME = total_day_time*18,
         TEENBIRD_TARGET_DIST = 8,
+		TALLBIRD_LAY_EGG_TIME_MIN = 3 * total_day_time,
+		TALLBIRD_LAY_EGG_TIME_VAR = 2 * total_day_time,
 
         SMALLBIRD_HEALTH = 50,
         SMALLBIRD_DAMAGE = 10,
@@ -1824,6 +1826,7 @@ function Tune(overrides)
         HEALING_MEDLARGE = 30,
         HEALING_LARGE = 40,
         HEALING_HUGE = 60,
+        HEALING_MOREHUGE = 75,
         HEALING_SUPERHUGE = 100,
 
         SANITY_SUPERTINY = 1,
@@ -1858,6 +1861,7 @@ function Tune(overrides)
         CALORIES_MED = calories_per_day/3,			-- meat					 25
         CALORIES_LARGE = calories_per_day/2,		-- cooked meat			 37.5
         CALORIES_HUGE = calories_per_day,			-- crockpot foods?		 75
+        CALORIES_MOREHUGE = calories_per_day*4/3,	-- crockpot foods?		100
         CALORIES_SUPERHUGE = calories_per_day*2,	-- crockpot foods?		150
 
 		-- food affinity multipliers to add 15 calories
@@ -5808,7 +5812,7 @@ function Tune(overrides)
         EYEOFTERROR_MINI_EGGTIME = 15,
         EYEOFTERROR_MINI_HEALTH = 200,
         EYEOFTERROR_MINI_DAMAGE = 20,
-        EYEOFTERROR_MINI_ATTACK_RANGE = 4.0,
+        EYEOFTERROR_MINI_ATTACK_RANGE = 3.0,
         EYEOFTERROR_MINI_HIT_RANGE = 2.25,
         EYEOFTERROR_MINI_ATTACK_PERIOD = 3,
 

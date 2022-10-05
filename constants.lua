@@ -674,6 +674,7 @@ GROUND_NAMES = {}
 TERRAFORM_IMMUNE = {}
 GROUND_FLOORING = {} --These tiles are flooring (stuff shouldn't grow on them)
 GROUND_HARD = {} --not plantable
+GROUND_ROADWAYS = {} -- Player speed boosting enabled.
 
 FALLOFF_IDS = {
     FALLOFF = 1,

@@ -137,7 +137,7 @@ local function MakeNewHome(inst)
 		nest.components.pickable:MakeEmpty()
 		nest.components.childspawner:TakeOwnership(inst)
 		nest.components.childspawner:SetMaxChildren(1)
-				
+		nest:StartNesting()
 		return true
 	end
 end

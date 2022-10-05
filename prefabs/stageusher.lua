@@ -164,7 +164,7 @@ local function fn()
     inst.AnimState:OverrideSymbol("fx", "stagehand", "fx")
     inst.AnimState:OverrideSymbol("stagehand_fingers", "stagehand", "stagehand_fingers")
 
-    inst:AddTag("antion_sinkhole_blocker")
+    inst:AddTag("antlion_sinkhole_blocker")
     inst:AddTag("notarget")
     inst:AddTag("notraptrigger")
     inst:AddTag("stageusher")

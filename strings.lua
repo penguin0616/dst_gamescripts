@@ -262,7 +262,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "December 6" },
             { title = "Favorite Food", desc = "Surf 'n' Turf" },
-			{ title = "Her Past...", desc = "Is yet to be revealed." },
+			{ title = "One For the Books", desc = "When people meet Ms. Wickerbottom, most assume that what you see is what you get. She certainly looks every bit the typical librarian that she claims to be, as at home amongst the bookstacks as any creature in their native habitat. Nobody would raise an eyebrow at such a person being well-versed in a wide range of subjects. Who would spare a second thought if, upon further inquiry, her knowledge rivaled that of experts? And obviously, no one would think of questioning what a librarian might be involved in after hours, when the library doors are closed to the public..." },
 		},
         wes =
 		{
@@ -3473,7 +3473,7 @@ STRINGS =
 		JUSTEGGS = "Plain Omelette",
 		VEGGIEOMLET = "Breakfast Skillet",
 		TALLEGGS = "Tall Scotch Eggs",
-		BEEFALOFEED = "Beefalo Feed",
+		BEEFALOFEED = "Steamed Twigs",
 		BEEFALOTREAT = "Beefalo Treats",
 
         -- Pirates
@@ -7211,6 +7211,7 @@ STRINGS.UI =
 
 		PERISH_RATE_TITLE = "Spoils",
 		PERISH_NEVER = "Never",
+        PERISH_VERY_QUICKLY = "Very Quickly",
 		PERISH_QUICKLY = "Quickly",
 		PERISH_AVERAGE = "Average",
 		PERISH_SLOWLY = "Slowly",
@@ -8316,8 +8317,8 @@ STRINGS.UI =
 		REGEN_CONFIRM_BODY = "Are you sure you want to start a new world?",
 
 		REVIVE_0 = "I hope you are playing with friends, or had prepared a way to revive...",
-		REVIVE_1 = "Haunt a {item1} to revive, or find another means.",
-		REVIVE_2 = "Haunt a {item1} or {item2} to revive, or find another means.",
+		REVIVE_1 = "Haunt a {item1} to revive, or find another way.",
+		REVIVE_2 = "Haunt a {item1} or {item2} to revive, or find another way.",
     },
 
     VOTEDIALOG =

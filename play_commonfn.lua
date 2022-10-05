@@ -3,7 +3,7 @@ local fns = {}
 --------------------------------------------------------------------------------
 local function bird_arrive(inst, bird_property, bird_castname)
 	local stageactingprop = inst.components.stageactingprop
-	if stageactingprop then
+	if stageactingprop and stageactingprop.cast then
 		local stageactor = stageactingprop[bird_property]
 		stageactingprop.cast[bird_castname] = {castmember = stageactor}
 		stageactor:PushEvent("arrive")

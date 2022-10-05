@@ -245,9 +245,15 @@ local function fn()
     inst:DoTaskInTime(0, OnInit)
 
     inst.restart_firepit = function( inst )
+        -- HACK(JBK): In order to stop making more charcoals this reset function for the reskin_tool needs to make it not work while it updates animation frames.
+        local queued = inst.queued_charcoal
+        inst.queued_charcoal = nil
+
         local fuel_percent = inst.components.fueled:GetPercent()
         inst.components.fueled:MakeEmpty()
         inst.components.fueled:SetPercent( fuel_percent )
+
+        inst.queued_charcoal = queued
     end
 
     return inst

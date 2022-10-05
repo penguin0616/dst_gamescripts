@@ -91,6 +91,19 @@ local sounds_mutated =
     hurt = "turnoftides/creatures/together/mutated_hound/hurt",
 }
 
+local sounds_hedge =
+{
+    pant = "dontstarve/creatures/hound/pant",
+    attack = "dontstarve/creatures/hound/attack",
+    bite = "dontstarve/creatures/hound/bite",
+    bark = "dontstarve/creatures/hound/bark",
+    death = "stageplay_set/briar_wolf/destroyed",
+    sleep = "dontstarve/creatures/hound/sleep",
+    growl = "dontstarve/creatures/hound/growl",
+    howl = "dontstarve/creatures/together/clayhound/howl",
+    hurt = "dontstarve/creatures/hound/hurt",
+}
+
 SetSharedLootTable('hound',
 {
     {'monstermeat', 1.000},
@@ -439,7 +452,10 @@ local function fncommon(bank, build, morphlist, custombrain, tag, data)
 
 	inst._CanMutateFromCorpse = data.canmutatefn
 
-    inst.sounds = (tag == "clay" and sounds_clay) or (build == "hound_mutated" and sounds_mutated) or sounds
+    inst.sounds = (tag == "clay" and sounds_clay)
+            or (build == "hound_mutated" and sounds_mutated)
+            or (build == "hound_hedge" and sounds_hedge)
+            or sounds
 
     inst:AddComponent("locomotor") -- locomotor must be constructed before the stategraph
     inst.components.locomotor.runspeed = tag == "clay" and TUNING.CLAYHOUND_SPEED or TUNING.HOUND_SPEED
@@ -761,8 +777,6 @@ local function fnhedge()
     if not TheWorld.ismastersim then
         return inst
     end
-
-    inst.sounds.death = "stageplay_set/briar_wolf/destroyed"
 
     MakeMediumFreezableCharacter(inst, "hound_body")
     MakeMediumBurnableCharacter(inst, "hound_body")

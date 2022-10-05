@@ -103,9 +103,10 @@ function StageActingProp:CheckCostume(player)
 end
 
 local ACTOR_MUST = {"stageactor"}
+local ACTOR_CANT = {"fire", "burnt"}
 function StageActingProp:CollectCast(doer)
 	local x,y,z = self.inst.Transform:GetWorldPosition()
-	local actors = TheSim:FindEntities(x,y,z, 5.5, ACTOR_MUST)
+	local actors = TheSim:FindEntities(x,y,z, 5.5, ACTOR_MUST, ACTOR_CANT)
 	self.cast = {}
 
 	local doercostume = self:CheckCostume(doer)

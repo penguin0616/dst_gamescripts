@@ -138,7 +138,7 @@ local foods =
 		temperatureduration = TUNING.FOOD_TEMP_AVERAGE,
 		cooktime = 2,
         floater = {"med", nil, 0.8},
-		card_def = {ingredients = {{"dragonfruit", 2}, {"potato", 2},  {"pepper", 1}} },
+		card_def = {ingredients = {{"dragonfruit", 2}, {"potato", 1},  {"pepper", 1}} },
 	},
 	kabobs =
 	{
@@ -557,7 +557,7 @@ local foods =
         foodtype = FOODTYPE.GOODIES,
         health = TUNING.HEALING_MEDLARGE,
         hunger = TUNING.CALORIES_MEDSMALL,
-        perishtime = TUNING.PERISH_FAST,
+        perishtime = TUNING.PERISH_SLOW,
         sanity = TUNING.SANITY_MED,
         temperature = TUNING.COLD_FOOD_BONUS_TEMP,
         temperatureduration = TUNING.FOOD_TEMP_LONG,
@@ -573,7 +573,7 @@ local foods =
         foodtype = FOODTYPE.VEGGIE,
 		health = TUNING.HEALING_MEDSMALL,
 		hunger = TUNING.CALORIES_MED,
-        perishtime = TUNING.PERISH_FAST, 
+        perishtime = TUNING.PERISH_SLOW, 
 		sanity = TUNING.SANITY_LARGE,
         cooktime = 0.5,
         floater = {"med", 0.05, 0.55},
@@ -1028,14 +1028,14 @@ local foods =
 	beefalofeed = 
 	{
 		-- basic beefalo food
-		test = function(cooker, names, tags) return tags.inedible and not tags.monster and not tags.meat and not tags.fish and not tags.egg and not tags.fat and not tags.dairy end,
+		test = function(cooker, names, tags) return tags.inedible and not tags.monster and not tags.meat and not tags.fish and not tags.egg and not tags.fat and not tags.dairy and not tags.magic end,
 		priority = -5,
 		overridebuild = "cook_pot_food11",
 		foodtype = FOODTYPE.ROUGHAGE,
 		secondaryfoodtype = FOODTYPE.WOOD,
-		health = TUNING.HEALING_MEDLARGE,
-		hunger = TUNING.CALORIES_HUGE,
-		perishtime = TUNING.PERISH_MED,
+		health = TUNING.HEALING_MEDLARGE/2,
+		hunger = TUNING.CALORIES_MOREHUGE,
+		perishtime = TUNING.PERISH_PRESERVED,
 		sanity = 0,
 		cooktime = 0.5,
         oneat_desc = STRINGS.UI.COOKBOOK.FOOD_EFFECTS_BEEFALO,
@@ -1046,14 +1046,14 @@ local foods =
 	beefalotreat = 
 	{
 		-- good beefalo food
-		test = function(cooker, names, tags) return tags.inedible and tags.seed and names.forgetmelots and not tags.monster and not tags.meat and not tags.fish and not tags.egg and not tags.fat and not tags.dairy end,
+		test = function(cooker, names, tags) return tags.inedible and tags.seed and names.forgetmelots and not tags.monster and not tags.meat and not tags.fish and not tags.egg and not tags.fat and not tags.dairy and not tags.magic end,
 		priority = -4,
 		foodtype = FOODTYPE.ROUGHAGE,
 		overridebuild = "cook_pot_food11",
 		foodtype = FOODTYPE.ROUGHAGE,
-		health = TUNING.HEALING_HUGE,
-		hunger = TUNING.CALORIES_SUPERHUGE,
-		perishtime = TUNING.PERISH_MED,
+		health = TUNING.HEALING_MOREHUGE,
+		hunger = TUNING.CALORIES_MED,
+		perishtime = TUNING.PERISH_PRESERVED,
 		sanity = 0,
 		cooktime = 2,
         potlevel = "high",

@@ -97,12 +97,24 @@ local function OnActivate(inst, doer)
 end
 
 --------------------------------------------------------------------------------
+local function mannequin_onburnt(inst)
+    if inst.components.trader ~= nil then
+        inst:RemoveComponent("trader")
+    end
+    if inst.components.activatable ~= nil then
+        inst:RemoveComponent("activatable")
+    end
+    if inst.components.inventory ~= nil then
+        inst.components.inventory:DropEverything()
+    end
+    DefaultBurntStructureFn(inst)
+end
+
+--------------------------------------------------------------------------------
 local function onbuilt(inst)
     inst.AnimState:PlayAnimation("place")
     inst.SoundEmitter:PlaySound("stageplay_set/mannequin/place")
     inst.AnimState:PushAnimation("idle", false)
-
-    --inst.SoundEmitter:PlaySound("dontstarve/common/scarecrow_craft")
 end
 
 --------------------------------------------------------------------------------
@@ -222,6 +234,7 @@ local function fn()
 
     -------------------------------------------------------
     MakeMediumBurnable(inst, nil, nil, true)
+    inst.components.burnable:SetOnBurntFn(mannequin_onburnt)
     MakeMediumPropagator(inst)
 
     -------------------------------------------------------
