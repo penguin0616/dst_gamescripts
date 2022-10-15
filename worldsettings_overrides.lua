@@ -3138,7 +3138,7 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
-    lessdamagetaken = function (difficulty)
+    lessdamagetaken = function (difficulty) -- Note: This should be named "playerdamagetaken" but it's not worth retrofitting
         local tuning_vars =
         {
             always = {
@@ -3149,6 +3149,9 @@ local applyoverrides_pre = {
                 PLAYER_DAMAGE_TAKEN_MOD = false,
             },
             --]]
+			more = {
+                PLAYER_DAMAGE_TAKEN_MOD = -0.35,
+			},
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,

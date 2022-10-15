@@ -8907,7 +8907,7 @@ STRINGS.UI =
         TEMPERATUREDAMAGE = "Temperature Damage",
         DARKNESS = "Darkness Damage",
         HEALTHPENALTY = "Max Health Penalty",
-		LESSDAMAGETAKEN = "Take Less Damage",
+		LESSDAMAGETAKEN = "Damage Taken",
         STAGEPLAYS = "Stage Plays",
 		-- End of world customization strings
     },

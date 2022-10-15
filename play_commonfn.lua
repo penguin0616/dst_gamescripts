@@ -115,11 +115,25 @@ fns.stinger = function(inst, line)
 	inst.sg:GoToState("stinger", line.sound)
 end
 
+fns.findlucy = function(player)
+	local lucys = player.components.inventory:GetItemByName("lucy",1, true)	
+	
+	local lucy = next(lucys)
+
+	local handitem = player.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	
+	if not lucy and handitem and handitem.prefab == "lucy" then
+		lucy = handitem
+	end
+	return lucy
+end
+
 fns.lucytalk = function(inst, line, cast)
 	if line.lucytest ~= nil and cast ~= nil then
-		local lucys = cast[line.lucytest].castmember.components.inventory:GetItemByName("lucy",1, true)
-		if next(lucys) then
-			next(lucys).components.talker:Say(line.line)
+		local castmember = cast[line.lucytest].castmember
+		local lucy = fns.findlucy(castmember)
+		if lucy then
+			lucy.components.talker:Say(line.line)
 		end
 	end
 end

@@ -231,6 +231,12 @@ local darknessdamage_descriptions = {
 	{ text = STRINGS.UI.SANDBOXMENU.SLIDEOFTEN, data = "often" },
 }
 
+local lessdamagetaken_descriptions = {	-- Note: The data values should be named better but it's not worth retrofitting.
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEUNCOMMON, data = "always" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEDEFAULT, data = "none" },
+	{ text = STRINGS.UI.SANDBOXMENU.SLIDEOFTEN, data = "more" },
+}
+
 local descriptions = {
 	frequency_descriptions = frequency_descriptions,
 	worldgen_frequency_descriptions = worldgen_frequency_descriptions,
@@ -562,7 +568,7 @@ local WORLDSETTINGS_GROUP = {
 			["spawnprotection"] = {value = "default", image = "spawnprotection.tex", desc = autodetect, order = 3, masteroption = true, master_controlled = true},
 			["dropeverythingondespawn"] = {value = "default", image = "dropeverythingondespawn.tex", desc = dropeverythingondespawn_descriptions, order = 4, masteroption = true, master_controlled = true},
 			["healthpenalty"] = {value = "always", image = "healthpenalty.tex", desc = enableddisabled_descriptions, order = 5, masteroption = true, master_controlled = true},
-			["lessdamagetaken"] = {value = "none", image = "lessdamagetaken.tex", desc = enableddisabled_descriptions, order = 6, masteroption = true, master_controlled = true},
+			["lessdamagetaken"] = {value = "none", image = "lessdamagetaken.tex", desc = lessdamagetaken_descriptions, order = 6, masteroption = true, master_controlled = true},			-- Note: This should be named "playerdamagetaken" but it's not worth retrofitting
 			["temperaturedamage"] = {value = "default", image = "temperaturedamage.tex", desc = nonlethal_descriptions, order = 7, masteroption = true, master_controlled = true},
 			["hunger"] = {value = "default", image = "hunger.tex", desc = nonlethal_descriptions, order = 8, masteroption = true, master_controlled = true},
 			["darkness"] = {value = "default", image = "darkness.tex", desc = nonlethal_descriptions, order = 9, masteroption = true, master_controlled = true},

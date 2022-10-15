@@ -530,7 +530,7 @@ Recipe2("turf_fungus_red",					{Ingredient("cutlichen", 1), Ingredient("spore_me
 Recipe2("turf_fungus_green",				{Ingredient("cutlichen", 1), Ingredient("spore_small", 1)},												TECH.TURFCRAFTING_TWO,		{numtogive=4})
 Recipe2("turf_marsh",						{Ingredient("cutreeds", 1), Ingredient("spoiled_food", 2)},												TECH.MASHTURFCRAFTING_TWO,	{numtogive=4})
 
-Recipe2("turf_archive",						{Ingredient("marble", 1), Ingredient("thulecite_pieces", 1)},											TECH.LOST,					{numtogive=4})
+Recipe2("turf_archive",						{Ingredient("moonrocknugget", 1), Ingredient("thulecite_pieces", 1)},									TECH.LOST,					{numtogive=4})
 
 Recipe2("turf_ruinsbrick",					{Ingredient("rocks", 2), Ingredient("nightmarefuel", 1)},												TECH.LOST,					{numtogive=4})
 Recipe2("turf_ruinsbrick_glow",				{Ingredient("rocks", 2)},																				TECH.LOST,					{numtogive=4})
@@ -853,9 +853,9 @@ CONSTRUCTION_PLANS =
 {
     ["multiplayer_portal_moonrock_constr"] = { Ingredient("purplemooneye", 1), Ingredient("moonrocknugget", 20) },
 	["mermthrone_construction"]   = { Ingredient("kelp", 20), Ingredient("pigskin", 10), Ingredient("beefalowool", 15) },
-	["hermithouse_construction1"] = { Ingredient("cookiecuttershell", 10), Ingredient("boards", 10) },
-	["hermithouse_construction2"] = { Ingredient("marble", 10), Ingredient("rope", 10) },
-	["hermithouse_construction3"] = { Ingredient("moonrocknugget", 5),   Ingredient("cactus_flower", 10) },
+	["hermithouse_construction1"] = { Ingredient("cookiecuttershell", 10), Ingredient("boards", 10), Ingredient("fireflies", 1) },
+	["hermithouse_construction2"] = { Ingredient("marble", 10), Ingredient("cutstone", 5), Ingredient("lightbulb", 3) },
+	["hermithouse_construction3"] = { Ingredient("moonrocknugget", 10), Ingredient("rope", 5), Ingredient("turf_carpetfloor", 5) },
 
 	["moon_device_construction1"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonstorm_spark", 10), Ingredient("moonglass_charged", 10) },
 	["moon_device_construction2"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonglass_charged", 20), Ingredient("moonrockseed", 1) },

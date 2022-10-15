@@ -1,10 +1,10 @@
-local GroundTiles = require("worldtiledefs")
-
 local AutoTerraformer = Class(function(self, inst)
     assert(inst.components.container ~= nil, "AutoTerraformer requires the Container component")
     self.inst = inst
 
     self.repeat_tile_delay = TUNING.AUTOTERRAFORMER_REPEAT_DELAY
+
+    --self.onfinishterraformingfn = nil
 
     self.container = inst.components.container
 end)
@@ -16,8 +16,9 @@ function AutoTerraformer:FinishTerraforming(x, y, z)
         self.inst.components.finiteuses:Use()
     end
 
-    local turf_smoke = SpawnPrefab("turf_smoke_fx")
-    turf_smoke.Transform:SetPosition(TheWorld.Map:GetTileCenterPoint(x, y, z))
+    if self.onfinishterraformingfn then
+        self.onfinishterraformingfn(self.inst, x, y, z)
+    end
 end
 
 function AutoTerraformer:DoTerraform(px, py, pz, x, y)

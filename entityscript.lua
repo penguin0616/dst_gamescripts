@@ -598,7 +598,7 @@ function EntityScript:AddComponent(name)
 
     local cmp = LoadComponent(name)
 	if not cmp then
-	    assert(cmp, "component ".. name .. " does not exist!")
+	    error("component ".. name .. " does not exist!")
 	end
 
     self:ReplicateComponent(name)

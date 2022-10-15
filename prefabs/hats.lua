@@ -1872,6 +1872,11 @@ local function MakeHat(name)
         end
     end
 
+    local function antlion_onfinishterraforming(inst, x, y, z)
+        local turf_smoke = SpawnPrefab("turf_smoke_fx")
+        turf_smoke.Transform:SetPosition(TheWorld.Map:GetTileCenterPoint(x, y, z))
+    end
+
     local function antlion_onfinished(inst)
         inst.components.container:DropEverything(inst:GetPosition())
         inst:Remove()
@@ -1903,6 +1908,7 @@ local function MakeHat(name)
         inst.components.container:WidgetSetup("antlionhat")
 
         inst:AddComponent("autoterraformer")
+        inst.components.autoterraformer.onfinishterraformingfn = antlion_onfinishterraforming
 
         inst:AddComponent("waterproofer")
         inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)

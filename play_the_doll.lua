@@ -190,7 +190,7 @@ local MARIONETTE_TIME = 1.1
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
-			{actionfn = fn.exitbirds,		duration = 0.3, },
+			{actionfn = fn.exitbirds,		duration = 0.3, }, 
 		}}
 
 	scripts["ACT1_SCENE2"]= {
@@ -253,16 +253,16 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE2.LINE28},
 			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE2.LINE29, sgparam="disappointed"},
 			{roles = {"BIRD1","BIRD2"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE2.LINE30, sgparam="laugh"},
-			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE2.LINE31, sgparam="excited",	treetest=true},
+			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE2.LINE31, sgparam="excited",	treetest=true},			
+			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE2.LINE32, sgparam="excited",	treetest=true},
 
-			{actionfn = fn.stopbgmusic,		duration = 0.2, },
+
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
-			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 		}}
 
 	scripts["ACT1_SCENE3"]= {
@@ -320,10 +320,11 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"KING"},				duration = 3.0,		line = STRINGS.STAGEACTOR.ACT1_SCENE3.LINE30},
 
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE3.LINE31},
-			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE3.LINE32},
+			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE3.LINE32},			
+			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 			{roles = {"BIRD1","BIRD2"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE3.LINE33, sgparam="laugh"},
 
-			{actionfn = fn.stopbgmusic,		duration = 0.2, },
+
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
@@ -389,7 +390,8 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"DOLL_BROKEN"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE29, anim="emoteXL_annoyed"},
 			{roles = {"DOLL_BROKEN"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE30},
 			{roles = {"DOLL_BROKEN"},		duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE31},
-			{actionfn = fn.findpositions,	duration = 1,		positions={["KING"] = 2,["DOLL_BROKEN"] = 7,}},
+			{actionfn = fn.findpositions,	duration = 0.5,		positions={["DOLL_BROKEN"] = 6}},
+			{actionfn = fn.findpositions,	duration = 1,		positions={["KING"] = 2}},
 			
 			{roles = {"KING"},				duration = 3.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE32, anim="emoteXL_angry"},
 			{roles = {"MIRROR"},			duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE33},
@@ -400,7 +402,7 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"KING"},				duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE38},
 			{roles = {"KING"},				duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE39, anim={"channel_loop","channel_loop","channel_loop","channel_loop","channel_loop"}},
 
-			{actionfn = fn.findpositions,	duration = 1,		positions={["DOLL_BROKEN"] = 6}},
+			{actionfn = fn.findpositions,	duration = 1,		positions={["DOLL_BROKEN"] = 7}},
 			{actionfn = fn.stinger,			duration = 0.1,		sound="stageplay_set/statue_lyre/stinger_magicblast"},
 			{actionfn = fn.swapmask,		duration = 0.1,		roles = {"DOLL_BROKEN"}, mask = "mask_dollrepairedhat"},
 			{roles = {"DOLL_BROKEN"},		duration = 2.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE40, anim="death2", animtype="hold"},
@@ -412,11 +414,12 @@ local MARIONETTE_TIME = 1.1
 			{actionfn = fn.crowdcomment,	duration = 3.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE43, prefabs = {"waxwell"},},
 
 			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE44, treetest = true},
+			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE45, sgparam="excited",	treetest= true},
 
 			{roles = {"DOLL_BROKEN"},		duration = 1.5,		anim="corpse_revive"},
 
-			{actionfn = fn.stopbgmusic,		duration = 0.2, },
+
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
@@ -461,9 +464,10 @@ local MARIONETTE_TIME = 1.1
 
 			{roles = {"DOLL_REPAIRED"},		duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE5.LINE16},
 			{roles = {"DOLL_REPAIRED"},		duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE5.LINE17, anim="emote_fistshake" },
+			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{roles = {"DOLL_REPAIRED"},		duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE5.LINE18, anim="emote_fistshake" },
 
-			{actionfn = fn.stopbgmusic,		duration = 0.1, },
+
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
@@ -516,10 +520,11 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"DOLL_REPAIRED"},		duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE6.LINE21, anim="emoteXL_angry"},
 									
 			{roles = {"NARRATOR"},			duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE6.LINE22},
-			{roles = {"NARRATOR"},			duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE6.LINE23},
+			{roles = {"NARRATOR"},			duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE6.LINE23},			
+			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{roles = {"NARRATOR"},			duration = 3.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE6.LINE24, sgparam="mysterious"},
 
-			{actionfn = fn.stopbgmusic,		duration = 0.1, },
+
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
@@ -531,8 +536,8 @@ local MARIONETTE_TIME = 1.1
 		cast = { "FOOL", "DOLL_REPAIRED"},
 		playbill = STRINGS.PLAYS.THE_ENCHANTED_DOLL[7],
 		next = "ACT3_SCENE8",
-		lines = {
-			{actionfn = fn.findpositions,	duration = 0.1,		positions={["FOOL"] = 1,["DOLL_REPAIRED"] = 4}},
+		lines = {			
+			{actionfn = fn.findpositions,	duration = 1,		positions={["FOOL"] = 1,["DOLL_REPAIRED"] = 4}},
 			{actionfn = fn.stageon,			duration = 1.5, },
 			{actionfn = fn.stinger,			duration = 0.01,	sound = "stageplay_set/statue_lyre/stinger_intro_act3" },
 			{actionfn = fn.marionetteon,	duration = 0.2,		time = MARIONETTE_TIME},
@@ -563,9 +568,9 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"DOLL_REPAIRED"},		duration = 3.0,		line = STRINGS.STAGEACTOR.ACT3_SCENE7.LINE18},
 
 			{roles = {"FOOL"},				duration = 3.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE7.LINE19},
+			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{roles = {"FOOL"},				duration = 3.0,		line = STRINGS.STAGEACTOR.ACT3_SCENE7.LINE20, anim="emote_shrug" },
 
-			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
@@ -578,7 +583,7 @@ local MARIONETTE_TIME = 1.1
 		playbill = STRINGS.PLAYS.THE_ENCHANTED_DOLL[8],
 		next = "ACT3_SCENE9",
 		lines = {
-			{actionfn = fn.findpositions,	duration = 0.1,		positions={["KING"] = 2,["FOOL"] = 3,["DOLL_REPAIRED"] = 4}},
+			{actionfn = fn.findpositions,	duration = 1,		positions={["KING"] = 2,["FOOL"] = 3,["DOLL_REPAIRED"] = 4}},
 			{actionfn = fn.stageon,			duration = 1.5, },
 			{actionfn = fn.stinger,			duration = 0.01,	sound = "stageplay_set/statue_lyre/stinger_intro_act3" },
 			{actionfn = fn.marionetteon,	duration = 0.2,		time = MARIONETTE_TIME},
@@ -631,11 +636,10 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"BIRD1","BIRD2"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE8.LINE26, sgparam="laugh"},
 
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE8.LINE27, sgparam="excited",	treetest= true},
+			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE8.LINE28, treetest= true},
-
 			{roles = {"KING"},				duration = 1.5,		anim="corpse_revive"},
 
-			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
@@ -686,9 +690,9 @@ local MARIONETTE_TIME = 1.1
 
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE9.LINE21},
 			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE9.LINE22,sgparam="disappointed"},
+			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{roles = {"BIRD1","BIRD2"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT3_SCENE9.LINE23,sgparam="laugh"},
 							
-			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
 			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},

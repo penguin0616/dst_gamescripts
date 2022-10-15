@@ -302,9 +302,8 @@ local function should_skip_line(self, line)
         if lucy_owner == nil or lucy_owner.components.inventory == nil then
             return true
         end
-
-        local lucys = self.cast[line.lucytest].castmember.components.inventory:GetItemByName("lucy", 1, true)
-        if not next(lucys) then
+		local lucy = play_commonfns.findlucy(lucy_owner)
+        if not lucy then
             return true
         end
     end
@@ -322,7 +321,6 @@ function StageActingProp:DoLines()
 
 		if not skip and self.cast then
 			local duration = line.duration 
-
 			if line.actionfn then
 				line.actionfn(self.inst, line, self.cast)
 			end

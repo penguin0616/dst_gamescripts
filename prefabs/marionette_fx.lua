@@ -34,6 +34,7 @@ local function marionette_appear_fn()
     inst.AnimState:SetBank("marionette_fx")
     inst.AnimState:SetBuild("marionette_fx")
     inst.AnimState:PlayAnimation("appear")
+    inst.SoundEmitter:PlaySound("stageplay_set/marionette/appear")
     inst.AnimState:PushAnimation("loop", true)
     inst.AnimState:SetMultColour(1, 1, 1, DEFAULT_ALPHA)
 

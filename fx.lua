@@ -2698,7 +2698,7 @@ local fx =
         bank = "turf_smoke_fx",
         build = "turf_smoke_fx",
         anim = "fx",
-    }
+    },
 }
 
 for cratersteamindex = 1, 4 do
