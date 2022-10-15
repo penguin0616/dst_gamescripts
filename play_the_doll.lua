@@ -187,7 +187,7 @@ local MARIONETTE_TIME = 1.1
 			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{roles = {"BIRD1","BIRD2"},		duration = 2.5,		line = STRINGS.STAGEACTOR.ACT1_SCENE1.LINE19, sgparam="laugh"},
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -258,7 +258,7 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -325,11 +325,10 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
-			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 		}}
 
 	scripts["ACT2_SCENE4"]= {
@@ -410,7 +409,7 @@ local MARIONETTE_TIME = 1.1
 			{roles = {"KING"},				duration = 3.0,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE42},
 			{actionfn = fn.findpositions,	duration = 1,		positions={["KING"] = 8}},
 
-			{actionfn = fn.crowdcomment,	duration = 3.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE43, prefabs = {"maxwell"},},
+			{actionfn = fn.crowdcomment,	duration = 3.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE43, prefabs = {"waxwell"},},
 
 			{roles = {"BIRD1"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE44, treetest = true},
 			{roles = {"BIRD2"},				duration = 2.5,		line = STRINGS.STAGEACTOR.ACT2_SCENE4.LINE45, sgparam="excited",	treetest= true},
@@ -419,7 +418,7 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.2, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -466,7 +465,7 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -522,7 +521,7 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -568,7 +567,7 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -638,7 +637,7 @@ local MARIONETTE_TIME = 1.1
 
 			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },
@@ -691,7 +690,7 @@ local MARIONETTE_TIME = 1.1
 							
 			{actionfn = fn.stopbgmusic,		duration = 0.1, },
 			{actionfn = fn.actorsbow,		duration = 1, },
-			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_intro_act1" },
+			{actionfn = fn.stinger,			duration = 2.5,		sound = "stageplay_set/statue_lyre/stinger_outro" },
 			{actionfn = fn.marionetteoff,	duration = 1,		time = MARIONETTE_TIME},
 			{actionfn = fn.stageoff,		duration = 0.3, },
 			{actionfn = fn.exitbirds,		duration = 0.3, },

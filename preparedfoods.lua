@@ -1050,7 +1050,6 @@ local foods =
 		priority = -4,
 		foodtype = FOODTYPE.ROUGHAGE,
 		overridebuild = "cook_pot_food11",
-		foodtype = FOODTYPE.ROUGHAGE,
 		health = TUNING.HEALING_MOREHUGE,
 		hunger = TUNING.CALORIES_MED,
 		perishtime = TUNING.PERISH_PRESERVED,

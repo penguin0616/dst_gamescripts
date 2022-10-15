@@ -48,15 +48,6 @@ local function MakePortal(name, bank, build, assets, prefabs, common_postinit, m
 
         inst.entity:AddTransform()
 
-        local gamemode = TheNet:GetServerGameMode()
-        if not GetIsSpawnModeFixed() then
-            --In this case, don't network this prefab, and always remove it locally.
-            inst.entity:Hide()
-            inst.persists = false
-            inst:DoTaskInTime(0, inst.Remove)
-            return inst
-        end
-
         inst.entity:AddAnimState()
         inst.entity:AddSoundEmitter()
         inst.entity:AddMiniMapEntity()

@@ -4656,7 +4656,11 @@ return{
             STANDING = "Definitely not a spider!",
             SITTING = "Is there a spider friend rustling beneath?",
         },
-        SEWING_MANNEQUIN = "Let's play dress up!",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Let's play dress up!",
+            BURNT = "Aww, we wanted to play dress-up...",
+        },
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

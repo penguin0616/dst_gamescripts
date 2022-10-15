@@ -2692,6 +2692,13 @@ local fx =
         sound = "wickerbottom_rework/fence_rotator/use",
         fn = FinalOffset1,
     },
+
+    {
+        name = "turf_smoke_fx",
+        bank = "turf_smoke_fx",
+        build = "turf_smoke_fx",
+        anim = "fx",
+    }
 }
 
 for cratersteamindex = 1, 4 do

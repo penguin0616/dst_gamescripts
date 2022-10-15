@@ -839,6 +839,25 @@ local function OnMurderCheckForFishRepel(inst, data)
     end
 end
 
+local function clear_onstage(inst)
+    if inst._is_onstage_task then
+        inst._is_onstage_task:Cancel()
+    end
+    inst._is_onstage_task = nil
+end
+
+local function OnOnStageEvent(inst, duration)
+    duration = duration or FRAMES
+    if inst._is_onstage_task then
+        inst._is_onstage_task:Cancel()
+    end
+    inst._is_onstage_task = inst:DoTaskInTime(duration, clear_onstage)
+end
+
+local function IsActing(inst)
+    return inst.sg:HasStateTag("acting") or (inst._is_onstage_task ~= nil)
+end
+
 return
 {
     ShouldKnockout              = ShouldKnockout,
@@ -865,4 +884,6 @@ return
     CanSeePointOnMiniMap        = CanSeePointOnMiniMap,
     MakeGenericCommander        = MakeGenericCommander,
     OnMurderCheckForFishRepel   = OnMurderCheckForFishRepel,
+    OnOnStageEvent              = OnOnStageEvent,
+    IsActing                   = IsActing,
 }

@@ -4656,7 +4656,11 @@ return{
             STANDING = "I've got to hand it to you, I was startled!",
             SITTING = "Oh, what a nice table setting.",
         },
-        SEWING_MANNEQUIN = "I feel as though it's staring at me.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "I feel as though it's staring at me.",
+            BURNT = "Ah, I almost feel bad for it now.",
+        },
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

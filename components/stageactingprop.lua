@@ -182,12 +182,14 @@ function abortplay(ent)
     if stage ~= nil and not ent.sg:HasStateTag("acting") then
         local cast = stage.components.stageactingprop.cast
         local pos = nil
-        for costume, data in pairs(cast) do
-            if data.castmember == ent then
-                pos = data.target
-                break
-            end
-        end
+        if cast and next(cast) then
+	        for costume, data in pairs(cast) do
+	            if data.castmember == ent then
+	                pos = data.target
+	                break
+	            end
+	        end
+    	end
 
         local test_destination = (ent.components.locomotor ~= nil
                             and ent.components.locomotor.dest ~= nil
@@ -260,6 +262,11 @@ function StageActingProp:ClearPerformance(doer)
 end
 
 function StageActingProp:DoPerformance(doer)
+    -- In case multiple actions are buffered before a play has started.
+    if self.inst:HasTag("play_in_progress") then
+        return false
+    end
+
     self:CollectCast(doer)
 
     self.script = self:FindScript(doer)
@@ -313,7 +320,7 @@ function StageActingProp:DoLines()
 	for _, line in ipairs(script_data.lines) do
 		local skip = should_skip_line(self, line)
 
-		if not skip then
+		if not skip and self.cast then
 			local duration = line.duration 
 
 			if line.actionfn then

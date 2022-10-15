@@ -332,7 +332,7 @@ ACTIONS =
     CASTUNSUMMON = Action({ mount_valid=true, distance=math.huge }),
 	COMMUNEWITHSUMMONED = Action({ rmb=true, mount_valid=true }),
     TELLSTORY = Action({ rmb=true, distance=3 }),
-    PERFORM = Action({ rmb=true, distance=1.5 }),
+    PERFORM = Action({ rmb=true, distance=1.5, invalid_hold_action=true }),
 
     TOSS = Action({priority=1, rmb=true, distance=8, mount_valid=true }),
     NUZZLE = Action(),
@@ -1035,8 +1035,9 @@ ACTIONS.TELLSTORY.fn = function(act)
 end
 
 ACTIONS.PERFORM.fn = function(act)
-    if act.doer.components.stageactor ~= nil and act.target and act.target.components.stageactingprop then
-        return act.target.components.stageactingprop:DoPerformance(act.doer)        
+    if (act.doer ~= nil and act.doer.components.stageactor ~= nil)
+            and (act.target ~= nil and act.target.components.stageactingprop ~= nil) then
+        return act.target.components.stageactingprop:DoPerformance(act.doer)
     end
 end
 

@@ -68,7 +68,9 @@ local states =
         tags = {"busy"},
 
         onenter= function(inst)
+            local sound_root = "stageplay_set/heckler_"..(inst.sound_set or "a")
             inst.AnimState:PlayAnimation("arrive")
+            inst.SoundEmitter:PlaySound(sound_root.."/arrive")
         end,
 
         events =
@@ -84,7 +86,10 @@ local states =
         tags = {"busy"},
 
         onenter = function(inst)
+            local sound_root = "stageplay_set/heckler_"..(inst.sound_set or "a")   
             inst.AnimState:PlayAnimation("leave")
+            inst.SoundEmitter:PlaySound(sound_root.."/leave")
+
         end,
 
         events =

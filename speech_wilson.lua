@@ -4666,7 +4666,11 @@ return {
             STANDING = "Just keep your hand to yourself, alright?",
             SITTING = "Something's odd here, but I can't put my finger on it.",
         },
-        SEWING_MANNEQUIN = "All dressed up and nowhere to go.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "All dressed up and nowhere to go.",
+            BURNT = "All burnt up and nowhere to go.",
+        },
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

@@ -102,9 +102,7 @@ local function turfhat_fn()
     inst:AddComponent("updatelooper")
 
     inst.SetPlayer = SetPlayer
-    inst._onremoveplayer = function(player)
-        inst:SetPlayer(player)
-    end
+    inst._onremoveplayer = function() inst:SetPlayer() end
 
     return inst
 end

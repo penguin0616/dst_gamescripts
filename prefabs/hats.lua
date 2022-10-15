@@ -2807,8 +2807,9 @@ local function MakeHat(name)
 	elseif name == "eyemask" then
         fn = fns.eyemask
     elseif name == "antlion" then
-        --prefabs = {
-        --}
+        prefabs = {
+            "turf_smoke_fx",
+        }
         table.insert(assets, Asset("ANIM", "anim/ui_antlionhat_1x1.zip"))
         fn = fns.antlion
     elseif name == "mask_doll" then

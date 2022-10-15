@@ -1202,7 +1202,7 @@ local events =
     end),
 
     EventHandler("ontalk", function(inst, data)
-        if inst.sg:HasStateTag("acting") and not inst.sg:HasStateTag("talking") then
+        if inst:IsActing() and not inst.sg:HasStateTag("talking") then
             inst.sg:GoToState("acting_talk")
         elseif inst.sg:HasStateTag("idle") and not inst.sg:HasStateTag("notalking") then
 			if not inst:HasTag("mime") then

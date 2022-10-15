@@ -4658,7 +4658,11 @@ return{
             STANDING = "Leeme alone, flort!!",
             SITTING = "Something... weird...",
         },
-        SEWING_MANNEQUIN = "Quit staring, flort!",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Quit staring, flort!",
+            BURNT = "Good. Won't stare anymore, florp.",
+        },
     },
 
     DESCRIBE_GENERIC = "What that?",

@@ -4657,7 +4657,11 @@ return{
             STANDING = "I really wish I hadn't seen that.",
             SITTING = "Not my style.",
         },
-        SEWING_MANNEQUIN = "Quiet type, eh?",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Quiet type, eh?",
+            BURNT = "I was just startin' to get used to having it around.",
+        },
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

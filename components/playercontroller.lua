@@ -61,6 +61,7 @@ local function OnEquipChanged(inst)
     local self = inst.components.playercontroller
     if self and (self.gridplacer ~= nil) == not inst.replica.inventory:EquipHasTag("turfhat") then
         if self.gridplacer then
+            self.gridplacer:SetPlayer(nil)
             self.gridplacer:Remove()
             self.gridplacer = nil
         else

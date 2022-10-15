@@ -4660,7 +4660,11 @@ return{
             STANDING = "A creature of shadow that seeks the light... how sad...",
             SITTING = "My heart aches with its beauty.",
         },
-        SEWING_MANNEQUIN = "A mockery of life.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "A mockery of life.",
+            BURNT = "This burnt husk is all that remains.",
+        },
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

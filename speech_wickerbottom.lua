@@ -4656,7 +4656,11 @@ return{
             STANDING = "That was an underhanded trick!",
             SITTING = "Something devious is lurking in the shadows.",
         },
-        SEWING_MANNEQUIN = "Excellent! A place to air out musty equipment.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Excellent! A place to air out musty equipment.",
+            BURNT = "What a shame, it might have been useful.",
+        },
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

@@ -613,6 +613,9 @@ local function RegisterMasterEventListeners(inst)
 
     -- Merm murder event
     inst:ListenForEvent("murdered", ex_fns.OnMurderCheckForFishRepel)
+
+    -- Stageplay proximity tracking event
+    inst:ListenForEvent("onstage", ex_fns.OnOnStageEvent)
 end
 
 --------------------------------------------------------------------------
@@ -2418,6 +2421,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         inst.ChangeToMonkey = ChangeToMonkey
         inst.ChangeFromMonkey = ChangeBackFromMonkey
+
+        inst.IsActing = ex_fns.IsActing
 
 		fns.OnAlterNight(inst)
 

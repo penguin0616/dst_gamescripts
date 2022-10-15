@@ -105,7 +105,7 @@ local function ChangeStanding(inst, new_standing)
 
         -- Reset our work and health when we sit down.
         inst.components.workable:SetWorkLeft(TUNING.STAGEHAND_HITS_TO_GIVEUP)
-        inst.components.health:SetPercent(100)
+        inst.components.health:SetPercent(1)
     end
 end
 

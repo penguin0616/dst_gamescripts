@@ -144,6 +144,8 @@ local function fn()
         return inst
     end
 
+    inst:AddComponent("inspectable")
+
     inst:AddComponent("activatable")
     inst.components.activatable.OnActivate = OnActivate
     inst.components.activatable.inactive = true

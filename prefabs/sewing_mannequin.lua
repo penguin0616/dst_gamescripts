@@ -26,7 +26,7 @@ local function on_get_item(inst, giver, item)
 
     local current = inst.components.inventory:GetEquippedItem(equipslot)
     if current ~= nil then
-        inst.components.inventory:DropItem(current)
+        inst.components.inventory:DropItem(current, true, true)
     end
 
     inst.components.inventory:Equip(item)

@@ -1,4 +1,4 @@
-local function OverrideTuningVariables(tuning)
+ function OverrideTuningVariables(tuning)
     if tuning ~= nil then
         for k, v in pairs(tuning) do
             if BRANCH == "dev" then
@@ -3365,7 +3365,7 @@ local applyoverrides_post = {
         elseif difficulty == "fast" then
             reset_time = { time = 60, loadingtime = 90 }
         elseif difficulty == "always" then
-            reset_time = { time = 0.2, loadingtime = 0.2}
+            reset_time = { instant = true }
         end
 
         TheWorld:PushEvent("ms_setworldsetting", {setting = "reset_time", value = reset_time})

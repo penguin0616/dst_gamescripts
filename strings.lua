@@ -3799,7 +3799,7 @@ STRINGS =
         TURF_CARPETFLOOR2 = "Super Super soft.",
         TURF_MOSAIC_GREY = "Elegantly broken rock. In grey.",
         TURF_MOSAIC_BLUE = "Elegantly broken rock. In blue.",
-        TURF_MOSAIC_RED  = "Elegantly broken rock. In redy.",
+        TURF_MOSAIC_RED  = "Elegantly broken rock. In red.",
 
         TURF_ROAD = "Build your own road to nowhere.",
         TURF_DRAGONFLY = "Quell the spread of fire.",

@@ -183,8 +183,10 @@ local function on_stage_performance_begun(inst, script, cast)
         end
     end
 
-    for role, data in pairs(cast) do
-        data.castmember:ListenForEvent("attacked", inst._sic_usher_on_attacker)
+    if cast ~= nil then
+        for role, data in pairs(cast) do
+            data.castmember:ListenForEvent("attacked", inst._sic_usher_on_attacker)
+        end
     end
 
     TheWorld:PushEvent("pausehounded", { source = inst })
@@ -192,8 +194,11 @@ end
 
 local function on_stage_performance_ended(inst, ender, script, cast)
     SetCameraFocus(inst, 0)
-    for role, data in pairs(cast) do
-        data.castmember:RemoveEventCallback("attacked", inst._sic_usher_on_attacker)
+
+    if cast ~= nil then
+        for role, data in pairs(cast) do
+            data.castmember:RemoveEventCallback("attacked", inst._sic_usher_on_attacker)
+        end
     end
 
     TheWorld:PushEvent("unpausehounded", { source = inst })
@@ -307,6 +312,8 @@ local function OnUpdateStageTempTile(inst, x, y, z)
     if #temptile_entities > 0 then
         for _, temptile_entity in ipairs(temptile_entities) do
             temptile_entity.components.locomotor:PushTempGroundSpeedMultiplier(1.0, WORLD_TILES.MOSAIC_GREY)
+
+            temptile_entity:PushEvent("onstage")
         end
     end
 end
@@ -436,7 +443,6 @@ local function postfn()
     inst.components.talker.font = TALKINGFONT
     inst.components.talker.colour = Vector3(181/255, 210/255, 247/255)
     inst.components.talker.offset = Vector3(0, -715, 0)
-    inst.components.talker:MakeChatter()
 
     inst._camerafocus = net_tinybyte(inst.GUID, "charlie_stage._camerafocus", "camerafocusdirty")
     inst._camerafocustask = nil
@@ -486,8 +492,6 @@ local function seatfn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddSoundEmitter()
-    inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
     inst:AddTag("DECOR")
