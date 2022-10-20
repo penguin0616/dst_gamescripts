@@ -1,13 +1,25 @@
-local GroundTiles = require("worldtiledefs")
-
 local AutoTerraformer = Class(function(self, inst)
     assert(inst.components.container ~= nil, "AutoTerraformer requires the Container component")
     self.inst = inst
 
     self.repeat_tile_delay = TUNING.AUTOTERRAFORMER_REPEAT_DELAY
 
+    --self.onfinishterraformingfn = nil
+
     self.container = inst.components.container
 end)
+
+function AutoTerraformer:FinishTerraforming(x, y, z)
+	self.inst:PushEvent("onterraform")
+
+    if self.inst.components.finiteuses then
+        self.inst.components.finiteuses:Use()
+    end
+
+    if self.onfinishterraformingfn then
+        self.onfinishterraformingfn(self.inst, x, y, z)
+    end
+end
 
 function AutoTerraformer:DoTerraform(px, py, pz, x, y)
     local map = TheWorld.Map
@@ -27,7 +39,7 @@ function AutoTerraformer:DoTerraform(px, py, pz, x, y)
     if item_tile ~= nil and map:CanPlaceTurfAtPoint(px, py, pz) then
         self.container:RemoveItem(item, false):Remove()
         map:SetTile(x, y, item_tile)
-	    self.inst:PushEvent("onterraform")
+        self:FinishTerraforming(px, py, pz)
         return
     end
 
@@ -45,21 +57,7 @@ function AutoTerraformer:DoTerraform(px, py, pz, x, y)
         map:SetTile(x, y, item_tile or WORLD_TILES.DIRT)
     end
 
-    local spawnturf = GroundTiles.turf[original_tile_type] or nil
-    if spawnturf ~= nil then
-        local loot = SpawnPrefab("turf_"..spawnturf.name)
-        if loot.components.inventoryitem ~= nil then
-            loot.components.inventoryitem:InheritMoisture(TheWorld.state.wetness, TheWorld.state.iswet)
-        end
-        loot.Transform:SetPosition(px, py, pz)
-        SpawnPrefab("sand_puff").Transform:SetPosition(px, py, pz)
-        if loot.Physics ~= nil then
-            local angle = math.random() * 2 * PI
-            loot.Physics:SetVel(2 * math.cos(angle), 10, 2 * math.sin(angle))
-        end
-    else
-        SpawnPrefab("sinkhole_spawn_fx_"..tostring(math.random(3))).Transform:SetPosition(px, py, pz)
-    end
+    HandleDugGround(original_tile_type, px, py, pz)
 
     for _, ent in ipairs(TheWorld.Map:GetEntitiesOnTileAtPoint(px, py, pz)) do
         if ent:HasTag("soil") then
@@ -67,11 +65,7 @@ function AutoTerraformer:DoTerraform(px, py, pz, x, y)
         end
     end
 
-	self.inst:PushEvent("onterraform")
-
-    if self.inst.components.finiteuses then
-        self.inst.components.finiteuses:Use()
-    end
+    self:FinishTerraforming(px, py, pz)
 
     return underneath_tile ~= nil
 end
@@ -90,7 +84,7 @@ function AutoTerraformer:OnUpdate(dt)
     local x, y = TheWorld.Map:GetTileXYAtPoint(px, py, pz)
 
     if self.repeat_delay ~= nil then
-        self.repeat_delay = self.repeat_delay - dt
+        self.repeat_delay = math.max(self.repeat_delay - dt, 0)
     end
 
     if (self.last_x == nil and self.last_y == nil) or

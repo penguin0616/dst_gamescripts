@@ -68,7 +68,9 @@ local states =
         tags = {"busy"},
 
         onenter= function(inst)
+            local sound_root = "stageplay_set/heckler_"..(inst.sound_set or "a")
             inst.AnimState:PlayAnimation("arrive")
+            inst.SoundEmitter:PlaySound(sound_root.."/arrive")
         end,
 
         events =
@@ -84,16 +86,37 @@ local states =
         tags = {"busy"},
 
         onenter = function(inst)
+            local sound_root = "stageplay_set/heckler_"..(inst.sound_set or "a")   
             inst.AnimState:PlayAnimation("leave")
+            inst.SoundEmitter:PlaySound(sound_root.."/leave")
+
+            inst:AddTag("NOCLICK")
         end,
 
         events =
         {
             EventHandler("animover", function(inst)
                 inst.exit = nil
-                inst.sg:GoToState("idle")
+                inst.sg:GoToState("away")
             end),
         },
+
+        onexit = function(inst)
+            inst:RemoveTag("NOCLICK")
+        end,
+    },
+
+    State{
+        name = "away",
+        tags = {"busy"},
+
+        onenter = function(inst)
+            inst:Hide()
+        end,
+
+        onexit = function(inst)
+            inst:Show()
+        end,
     },
 
     State{

@@ -13,8 +13,10 @@ local prefabs =
 }
 
 local function flippage(inst)
+    inst.entity:AddSoundEmitter()
     local anim = (math.random() < 0.5 and "pageturn_extra") or "pageturn"
     inst.AnimState:PlayAnimation(anim, false)
+    inst.SoundEmitter:PlaySound("stageplay_set/stage/lecturn_pageturn")
     inst.AnimState:PushAnimation("idle", true)
 end
 

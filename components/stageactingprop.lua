@@ -103,9 +103,10 @@ function StageActingProp:CheckCostume(player)
 end
 
 local ACTOR_MUST = {"stageactor"}
+local ACTOR_CANT = {"fire", "burnt"}
 function StageActingProp:CollectCast(doer)
 	local x,y,z = self.inst.Transform:GetWorldPosition()
-	local actors = TheSim:FindEntities(x,y,z, 5.5, ACTOR_MUST)
+	local actors = TheSim:FindEntities(x,y,z, 5.5, ACTOR_MUST, ACTOR_CANT)
 	self.cast = {}
 
 	local doercostume = self:CheckCostume(doer)
@@ -181,12 +182,14 @@ function abortplay(ent)
     if stage ~= nil and not ent.sg:HasStateTag("acting") then
         local cast = stage.components.stageactingprop.cast
         local pos = nil
-        for costume, data in pairs(cast) do
-            if data.castmember == ent then
-                pos = data.target
-                break
-            end
-        end
+        if cast and next(cast) then
+	        for costume, data in pairs(cast) do
+	            if data.castmember == ent then
+	                pos = data.target
+	                break
+	            end
+	        end
+    	end
 
         local test_destination = (ent.components.locomotor ~= nil
                             and ent.components.locomotor.dest ~= nil
@@ -232,6 +235,7 @@ function StageActingProp:EndPerformance(doer)
         if data.castmember.components.stageactor then
             data.castmember.components.stageactor:SetStage(nil)
             self.inst:RemoveEventCallback("newstate", abortplay, data.castmember)
+			data.castmember:PushEvent("stopstageacting")
 
 			if doer ~= nil and data.castmember ~= doer and data.castmember.components.talker ~= nil then
 				data.castmember:DoTaskInTime(math.random() * 0.3, do_endofperformance_talk)
@@ -259,17 +263,22 @@ function StageActingProp:ClearPerformance(doer)
 end
 
 function StageActingProp:DoPerformance(doer)
+    -- In case multiple actions are buffered before a play has started.
+    if self.inst:HasTag("play_in_progress") then
+        return false
+    end
+
     self:CollectCast(doer)
 
     self.script = self:FindScript(doer)
 
     if self.script then
         self.playtask = self.inst:StartThread(self._do_lines)
-        for role,data in pairs(self.cast)do
+        for role, data in pairs(self.cast) do
             data.castmember:AddTag("acting")
             data.castmember.components.stageactor:SetStage(self.inst)
+			data.castmember:PushEvent("startstageacting")
             if data.castmember.sg ~= nil then
-                data.castmember.sg:GoToState("acting_idle")
                 self.inst:ListenForEvent("newstate", abortplay, data.castmember)
             end
         end
@@ -294,9 +303,8 @@ local function should_skip_line(self, line)
         if lucy_owner == nil or lucy_owner.components.inventory == nil then
             return true
         end
-
-        local lucys = self.cast[line.lucytest].castmember.components.inventory:GetItemByName("lucy", 1, true)
-        if not next(lucys) then
+		local lucy = play_commonfns.findlucy(lucy_owner)
+        if not lucy then
             return true
         end
     end
@@ -312,9 +320,8 @@ function StageActingProp:DoLines()
 	for _, line in ipairs(script_data.lines) do
 		local skip = should_skip_line(self, line)
 
-		if not skip then
+		if not skip and self.cast then
 			local duration = line.duration 
-
 			if line.actionfn then
 				line.actionfn(self.inst, line, self.cast)
 			end

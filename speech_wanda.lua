@@ -4656,7 +4656,11 @@ return{
             STANDING = "You'll never catch me! I've outsmarted you and your ilk at every turn!",
             SITTING = "I know you're hiding in there.",
         },
-        SEWING_MANNEQUIN = "I can't imagine being stuck in one place! Wait...",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "I can't imagine being stuck in one place! Wait...",
+            BURNT = "Time waits for no mannequin.",
+        },
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

@@ -313,7 +313,7 @@ function FollowCamera:Update(dt, dontupdatepos)
         else
             if self.time_since_zoom ~= nil and not self.cutscene then
                 self.time_since_zoom = self.time_since_zoom + dt
-                if self.should_push_down and self.time_since_zoom > 1.5 then
+                if self.should_push_down and self.time_since_zoom > 1.0 then
                     self.distancetarget = (self.maxdist - self.mindist) * 0.6 + self.mindist
                 end
             end

@@ -47,6 +47,7 @@ AddRoom("Rocky", {
 										meteorspawner = function() return math.random(1,2) end,
 										rock_moon = function() return math.random(1,2) - 1 end,
 										burntground_faded = function() return math.random(3,5) end,
+										tallbirdnest = 1,
 									},
 					                distributepercent = .1,
 					                distributeprefabs=

@@ -4656,7 +4656,11 @@ return{
             STANDING = "Hmph. Impressive sleight of hand.",
             SITTING = "This must be the work of an unseen hand.",
         },
-        SEWING_MANNEQUIN = "Finally, someone who'll carry my things.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Finally, someone who'll carry my things.",
+            BURNT = "Someone should clean that up.",
+        },
     },
 
     DESCRIBE_GENERIC = "You tell me.",

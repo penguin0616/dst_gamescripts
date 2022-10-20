@@ -12,7 +12,7 @@ local assets =
 
 local prefabs =
 {
-    "splash_ocean",
+    "splash_sink",
     "tumbleweedbreakfx",
     "ash",
     "cutgrass",
@@ -85,7 +85,7 @@ end
 
 local function CheckGround(inst)
     if not inst:IsOnValidGround() then
-        SpawnPrefab("splash_ocean").Transform:SetPosition(inst.Transform:GetWorldPosition())
+        SpawnPrefab("splash_sink").Transform:SetPosition(inst.Transform:GetWorldPosition())
         inst:PushEvent("detachchild")
         inst:Remove()
     end

@@ -4656,7 +4656,11 @@ return{
             STANDING = "Keep thy hand from out mine fires!",
             SITTING = "Merely a table.",
         },
-        SEWING_MANNEQUIN = "It shall make for some fine target practice.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "It shall make for some fine target practice.",
+            BURNT = "The stuffed man hath met a fiery end.",
+        },
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

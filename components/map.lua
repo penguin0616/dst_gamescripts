@@ -313,7 +313,7 @@ local function IsDockNearOtherOnOcean(other, pt, min_spacing_sq)
         or min_spacing_sq
     local ox, oy, oz = other.Transform:GetWorldPosition()
     return distsq(pt.x, pt.z, ox, oz) < min_spacing_sq_resolved
-        and not self:IsVisualGroundAtPoint(ox, oy, oz)  -- Throw out any tests for anything that's not in the ocean.
+        and not TheWorld.Map:IsVisualGroundAtPoint(ox, oy, oz)  -- Throw out any tests for anything that's not in the ocean.
 end
 
 function Map:CanDeployDockAtPoint(pt, inst, mouseover)

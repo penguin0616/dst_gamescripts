@@ -4657,7 +4657,11 @@ return{
             STANDING = "GAH! Table is creepy walking fist!",
             SITTING = "Wolfgang has no use for tiny table.",
         },
-        SEWING_MANNEQUIN = "Cloth man does not have much to say.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Cloth man does not have much to say.",
+            BURNT = "Cloth man has even less to say now.",
+        },
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

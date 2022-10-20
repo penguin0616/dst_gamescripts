@@ -4663,7 +4663,11 @@ return{
             STANDING = "Gross! I told you we shoulda burned it!",
             SITTING = "What's a weird table doing out here? Let's burn it!",
         },
-        SEWING_MANNEQUIN = "Here, hold my stuff, would you?",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Here, hold my stuff, would you?",
+            BURNT = "I think it looks better, personally.",
+        },
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

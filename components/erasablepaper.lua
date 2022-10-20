@@ -6,13 +6,17 @@ local ErasablePaper = Class(function(self, inst)
 end)
 
 function ErasablePaper:DoErase(eraser, doer)
-	self.inst:Remove()
+	local item = self.inst
+	if item.components.stackable ~= nil then
+		item = item.components.stackable:Get(1)
+	end
+	item:Remove()
 
 	local paper = SpawnPrefab(self.erased_prefab or "papyrus")
 	local x, y, z = eraser.Transform:GetWorldPosition()
 	paper.Transform:GetWorldPosition()
 	if self.stacksize and self.stacksize > 1 and paper.components.stackable then
-		paper.components.stackable:SetSize(self.stacksize)
+		paper.components.stackable:SetStackSize(self.stacksize)
 	end
 
 	if doer and doer.components.inventory then

@@ -479,6 +479,8 @@ return {
 		TASTY = "only_used_by_warly",
     },
 
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
+
     ANNOUNCE_ENCUMBERED =
     {
         "Huff... Pant...",
@@ -4645,7 +4647,7 @@ return {
 
         MASK_DOLLHAT = "It's a doll mask.",
         MASK_DOLLBROKENHAT = "It's a cracked doll mask.",
-        MASK_DOLLREPAIREDHAT = "It's was a doll mask at one point.",
+        MASK_DOLLREPAIREDHAT = "It was a doll mask at one point.",
         MASK_BLACKSMITHHAT = "It's a blacksmith mask.",
         MASK_MIRRORHAT = "It's a mask, but it looks like a mirror.",
         MASK_QUEENHAT = "It's a Queen mask.",
@@ -4666,7 +4668,11 @@ return {
             STANDING = "Just keep your hand to yourself, alright?",
             SITTING = "Something's odd here, but I can't put my finger on it.",
         },
-        SEWING_MANNEQUIN = "All dressed up and nowhere to go.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "All dressed up and nowhere to go.",
+            BURNT = "All burnt up and nowhere to go.",
+        },
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

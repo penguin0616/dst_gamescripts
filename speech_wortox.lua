@@ -4662,7 +4662,11 @@ return{
             STANDING = "Well hello there little friend.",
             SITTING = "I see you!",
         },
-        SEWING_MANNEQUIN = "Not one for chatter, I gather?",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Not one for chatter, I gather?",
+            BURNT = "Is it in fashion to look so ashen?",
+        },
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

@@ -1,4 +1,4 @@
-local function OverrideTuningVariables(tuning)
+ function OverrideTuningVariables(tuning)
     if tuning ~= nil then
         for k, v in pairs(tuning) do
             if BRANCH == "dev" then
@@ -2906,7 +2906,7 @@ local applyoverrides_pre = {
                 TERRORBEAK_SPAWN_CHANCE = 0.5,
             },
             --]]
-            many = {
+            often = {
                 SANITYMONSTERS_INDUCED_MAXPOP = 7,
                 SANITYMONSTERS_INDUCED_CHANCES = {
                     inc = 0.8,
@@ -3138,7 +3138,7 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
-    lessdamagetaken = function (difficulty)
+    lessdamagetaken = function (difficulty) -- Note: This should be named "playerdamagetaken" but it's not worth retrofitting
         local tuning_vars =
         {
             always = {
@@ -3149,6 +3149,9 @@ local applyoverrides_pre = {
                 PLAYER_DAMAGE_TAKEN_MOD = false,
             },
             --]]
+			more = {
+                PLAYER_DAMAGE_TAKEN_MOD = -0.35,
+			},
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
@@ -3365,7 +3368,7 @@ local applyoverrides_post = {
         elseif difficulty == "fast" then
             reset_time = { time = 60, loadingtime = 90 }
         elseif difficulty == "always" then
-            reset_time = { time = 0.2, loadingtime = 0.2}
+            reset_time = { instant = true }
         end
 
         TheWorld:PushEvent("ms_setworldsetting", {setting = "reset_time", value = reset_time})

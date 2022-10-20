@@ -981,7 +981,7 @@ function ServerListingScreen:MakeServerListWidgets()
         local playstyle = row:AddChild(Widget("playstyle_image"))
         playstyle:SetPosition(column_offsets.PLAYSTYLE, y_offset)
         playstyle.img = playstyle:AddChild(Image("images/servericons.xml", "playstyle_social.tex"))
-        playstyle.img:ScaleToSize(row_height-5,row_height-5)
+        playstyle.img:ScaleToSize(row_height-10,row_height-10)
         playstyle:SetHoverText(".", {font = NEWFONT_OUTLINE, offset_x = 2, offset_y = -28, colour = {1,1,1,1}})
         row.PLAYSTYLE = playstyle
 

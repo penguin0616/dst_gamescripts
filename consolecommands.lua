@@ -348,13 +348,13 @@ end
 
 
 -- Some helper shortcut functions
-function c_freecrafting()
+function c_freecrafting(player)
     if TheWorld ~= nil and not TheWorld.ismastersim then
         c_remote("c_freecrafting()")
         return
     end
 
-    local player = ConsoleCommandPlayer()
+    player = ListingOrConsolePlayer(player)
 	player.components.builder:GiveAllRecipes()
 	player:PushEvent("techlevelchange")
 end

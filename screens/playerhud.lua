@@ -1143,7 +1143,7 @@ function PlayerHud:UpdateClouds(camera)
     --this is kind of a weird place to do all of this, but the anim *is* a hud asset...
     if camera.distance and not camera.dollyzoom then
         local dist_percent = (camera.distance - camera.mindist) / (camera.maxdist - camera.mindist)
-        local cutoff = .61
+        local cutoff = TUNING.HUD_CLOUD_CUTOFF
         if dist_percent > cutoff then
             if not self.clouds_on then
                 camera.should_push_down = true
@@ -1152,7 +1152,7 @@ function PlayerHud:UpdateClouds(camera)
                 TheFocalPoint.SoundEmitter:PlaySound("dontstarve/common/clouds", "windsound")
                 TheMixer:PushMix("high")
             end
-            local p = easing.outCubic(dist_percent - cutoff, 0, 1, 1 - cutoff)
+            local p = easing.outCubic(dist_percent - cutoff, 0, .5, 1 - cutoff)
             self.clouds:GetAnimState():SetMultColour(self.clouds.cloudcolour[1], self.clouds.cloudcolour[2], self.clouds.cloudcolour[3], p)
             TheFocalPoint.SoundEmitter:SetVolume("windsound", p)
         elseif self.clouds_on then

@@ -1,7 +1,7 @@
 require "util"
 local TechTree = require("techtree")
 
-local IS_BETA = BRANCH == "staging" or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
 
 PI = 3.14159
 PI2 = PI*2
@@ -674,6 +674,7 @@ GROUND_NAMES = {}
 TERRAFORM_IMMUNE = {}
 GROUND_FLOORING = {} --These tiles are flooring (stuff shouldn't grow on them)
 GROUND_HARD = {} --not plantable
+GROUND_ROADWAYS = {} -- Player speed boosting enabled.
 
 FALLOFF_IDS = {
     FALLOFF = 1,
@@ -1035,7 +1036,8 @@ end
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
-    "dontstarve/music/music_FE_wickerbottom"
+    "dontstarve/music/music_FE_charliestage"
+    --"dontstarve/music/music_FE_wickerbottom"
     --"dontstarve/music/music_FE"
     --"dontstarve/music/music_FE_pirates"
     --"dontstarve/music/music_FE_WX"

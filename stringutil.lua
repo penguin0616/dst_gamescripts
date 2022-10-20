@@ -332,6 +332,26 @@ function GetActionString(action, modifier)
     return getcharacterstring(STRINGS.ACTIONS, action, modifier) or "ACTION"
 end
 
+-- NOTES(JBK): Wraps up edge cases that add to the description.
+-- This should not be called directly but is open for mods to hook to add onto.
+-- This function is responsible for initializing the return string if it is nil.
+function GetDescription_AddSpecialCases(ret, charactertable, inst, item, modifier)
+    local post = {}
+
+    if item.components.repairable ~= nil and not item.components.repairable.noannounce and item.components.repairable:NeedsRepairs() then
+        table.insert(post, getcharacterstring(charactertable, "ANNOUNCE_CANFIX", modifier))
+    end
+
+    if type(inst) == "table" and inst.components.foodmemory ~= nil and inst.components.foodmemory:GetMemoryCount(item.prefab) > 0 then
+        table.insert(post, getcharacterstring(charactertable, "ANNOUNCE_FOODMEMORY", modifier))
+    end
+
+    if #post > 0 then
+        ret = (ret or "") .. table.concat(post, "")
+    end
+
+    return ret
+end
 -- When calling GetDescription, must pass actual instance of entity if it might be used when ghost
 -- Otherwise, handing inst.prefab directly to the function call is okay
 function GetDescription(inst, item, modifier)
@@ -368,21 +388,16 @@ function GetDescription(inst, item, modifier)
 
     if character ~= nil and STRINGS.CHARACTERS[character] ~= nil then
         ret = getcharacterstring(STRINGS.CHARACTERS[character].DESCRIBE, itemname, modifier)
+        ret = GetDescription_AddSpecialCases(ret, STRINGS.CHARACTERS[character], inst, item, modifier)
         if ret ~= nil then
-            if item ~= nil and item.components.repairable ~= nil and not item.components.repairable.noannounce and item.components.repairable:NeedsRepairs() then
-                return ret..(getcharacterstring(STRINGS.CHARACTERS[character], "ANNOUNCE_CANFIX", modifier) or "")
-            end
             return ret
         end
     end
 
     ret = getcharacterstring(STRINGS.CHARACTERS.GENERIC.DESCRIBE, itemname, modifier)
 
-    if item ~= nil and item.components.repairable ~= nil and not item.components.repairable.noannounce and item.components.repairable:NeedsRepairs() then
-        if ret ~= nil then
-            return ret..(getcharacterstring(STRINGS.CHARACTERS.GENERIC, "ANNOUNCE_CANFIX", modifier) or "")
-        end
-        ret = getcharacterstring(STRINGS.CHARACTERS.GENERIC, "ANNOUNCE_CANFIX", modifier)
+    if item ~= nil then
+        ret = GetDescription_AddSpecialCases(ret, STRINGS.CHARACTERS.GENERIC, inst, item, modifier)
         if ret ~= nil then
             return ret
         end

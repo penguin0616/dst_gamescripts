@@ -94,7 +94,7 @@ local Any = {
 							"oceanfishingrod",
 							"spoiled_fish_small",
 							GetRandomItem({"oceanfishinglure_spoon_red", "oceanfishinglure_spoon_green", "oceanfishinglure_spoon_blue", "oceanfishinglure_spinner_red", "oceanfishinglure_spinner_green", "oceanfishinglure_spinner_blue"}),
-							GetRandomItem({"twigs", "oceanfishingbobber_plug", "oceanfishingbobber_ball", "oceanfishingbobber_oval", "oceanfishingbobber_crow", "oceanfishingbobber_robin"}),
+							GetRandomItem({"trinket_8", "oceanfishingbobber_ball", "oceanfishingbobber_oval", "oceanfishingbobber_crow", "oceanfishingbobber_robin"}),
 						}
 				end,
 				resource_area = function()

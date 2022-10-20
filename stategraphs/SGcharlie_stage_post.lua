@@ -102,14 +102,11 @@ local states =
         onenter = function(inst, data)
             inst.AnimState:PlayAnimation("narrate", true)
             inst.sg:SetTimeout(1.5 + math.random() * 0.5)
-           
-            if data.sgparam == "upbeat" then
-                inst.SoundEmitter:PlaySound("stageplay_set/statue_mask/speak_upbeat", "talk")
-            elseif data.sgparam == "mysterious" then
-                inst.SoundEmitter:PlaySound("stageplay_set/statue_mask/speak_mysterious", "talk")
-            else 
-                inst.SoundEmitter:PlaySound("stageplay_set/statue_mask/speak_neutral", "talk")
-            end
+
+            local sound_name = (data.sgparam == "upbeat" and "stageplay_set/statue_mask/speak_upbeat")
+                    or (data.sgparam == "mysterious" and "stageplay_set/statue_mask/speak_mysterious")
+                    or "stageplay_set/statue_mask/speak_neutral"
+            inst.SoundEmitter:PlaySound(sound_name)
         end,
 
         ontimeout = function(inst)

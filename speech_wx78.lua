@@ -4656,7 +4656,11 @@ return{
             STANDING = "FIVE DIGITS OF TERROR",
             SITTING = "IT'S HORRIBLE, I HATE IT",
         },
-        SEWING_MANNEQUIN = "IT IS SOFT AND PATHETIC",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "IT IS SOFT AND PATHETIC",
+            BURNT = "IT WILL NOT BE MISSED",
+        },
     },
 
     DESCRIBE_GENERIC = "ERROR: UNKNOWN",

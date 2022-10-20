@@ -378,6 +378,7 @@ TileManager.AddTile(
         snowsound="dontstarve/movement/run_ice",
         mudsound = "dontstarve/movement/run_mud",
         hard = true,
+        roadways = true,
     },
     {
         name = "map_edge",

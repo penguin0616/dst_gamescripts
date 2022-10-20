@@ -195,7 +195,9 @@ local actionhandlers =
     ActionHandler(ACTIONS.YOTB_SEW, "dolongaction"),
     ActionHandler(ACTIONS.ADDFUEL, "doshortaction"),
     ActionHandler(ACTIONS.ADDWETFUEL, "doshortaction"),
-    ActionHandler(ACTIONS.REPAIR, "dolongaction"),
+    ActionHandler(ACTIONS.REPAIR, function(inst, action)
+        return action.target:HasTag("repairshortaction") and "doshortaction" or "dolongaction"
+    end),
     ActionHandler(ACTIONS.READ,
         function(inst, action)
             return	(action.invobject ~= nil and action.invobject:HasTag("simplebook")) and "book_peruse"
@@ -797,8 +799,7 @@ local states =
                 inst.AnimState:PlayAnimation(anim, true)
             end
 
-            --V2C: adding half a frame time so it rounds up
-            inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + .5 * FRAMES)
+            inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
         onupdate = function(inst)
@@ -1129,8 +1130,7 @@ local states =
                 inst.AnimState:PlayAnimation("run_monkey_loop", true)
             end
 
-            --V2C: adding half a frame time so it rounds up
-            inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength() + .5 * FRAMES)
+            inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
         end,
 
         timeline =
@@ -3599,7 +3599,7 @@ local states =
                     return
                 end
                 inst.replica.combat:StartAttack()
-                cooldown = inst.replica.combat:MinAttackPeriod() + .5 * FRAMES
+                cooldown = inst.replica.combat:MinAttackPeriod()
             end
             if inst.sg.laststate == inst.sg.currentstate then
                 inst.sg.statemem.chained = true
@@ -3902,7 +3902,7 @@ local states =
                     return
                 end
                 inst.replica.combat:StartAttack()
-                inst.sg:SetTimeout(math.max(11 * FRAMES, inst.replica.combat:MinAttackPeriod() + .5 * FRAMES))
+                inst.sg:SetTimeout(math.max(11 * FRAMES, inst.replica.combat:MinAttackPeriod()))
             end
             inst.components.locomotor:Stop()
 
@@ -3962,7 +3962,7 @@ local states =
                     return
                 end
                 inst.replica.combat:StartAttack()
-                inst.sg:SetTimeout(math.max((inst.sg.statemem.chained and 14 or 18) * FRAMES, inst.replica.combat:MinAttackPeriod() + .5 * FRAMES))
+                inst.sg:SetTimeout(math.max((inst.sg.statemem.chained and 14 or 18) * FRAMES, inst.replica.combat:MinAttackPeriod()))
             end
 
             local equip = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)

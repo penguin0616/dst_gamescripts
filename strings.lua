@@ -262,7 +262,7 @@ STRINGS =
 		{
             { title = "Birthday", desc = "December 6" },
             { title = "Favorite Food", desc = "Surf 'n' Turf" },
-			{ title = "Her Past...", desc = "Is yet to be revealed." },
+			{ title = "One For the Books", desc = "When people meet Ms. Wickerbottom, most assume that what you see is what you get. She certainly looks every bit the typical librarian that she claims to be, as at home amongst the bookstacks as any creature in their native habitat. Nobody would raise an eyebrow at such a person being well-versed in a wide range of subjects. Who would spare a second thought if, upon further inquiry, her knowledge rivaled that of experts? And obviously, no one would think of questioning what a librarian might be involved in after hours, when the library doors are closed to the public..." },
 		},
         wes =
 		{
@@ -3473,7 +3473,7 @@ STRINGS =
 		JUSTEGGS = "Plain Omelette",
 		VEGGIEOMLET = "Breakfast Skillet",
 		TALLEGGS = "Tall Scotch Eggs",
-		BEEFALOFEED = "Beefalo Feed",
+		BEEFALOFEED = "Steamed Twigs",
 		BEEFALOTREAT = "Beefalo Treats",
 
         -- Pirates
@@ -3789,9 +3789,9 @@ STRINGS =
 		BLUEPRINT_CRAFTINGSET_RUINSGLOW_BUILDER = "As faithful a recreation as could be mustered.",
 		TURF_RUINSBRICK = "Ancient stone flooring, decorated with a magical technique lost to time.",
 		TURF_RUINSBRICK_GLOW = "A reproduction of ancient stone flooring.",
-		TURF_RUINSTILES = "Tile flooring, flooring, decorated with a magical technique lost to time.",
+		TURF_RUINSTILES = "Tile flooring, decorated with a magical technique lost to time.",
 		TURF_RUINSTILES_GLOW = "A reproduction of ancient tile flooring.",
-		TURF_RUINSTRIM = "Brick flooring, flooring, decorated with a magical technique lost to time.",
+		TURF_RUINSTRIM = "Brick flooring, decorated with a magical technique lost to time.",
 		TURF_RUINSTRIM_GLOW = "A reproduction of ancient brick flooring.",
         TURF_SHELLBEACH = "A patch of seashell seashore.",
         TURF_CARPETFLOOR = "Super soft. Smells like Beefalo.",
@@ -3799,7 +3799,7 @@ STRINGS =
         TURF_CARPETFLOOR2 = "Super Super soft.",
         TURF_MOSAIC_GREY = "Elegantly broken rock. In grey.",
         TURF_MOSAIC_BLUE = "Elegantly broken rock. In blue.",
-        TURF_MOSAIC_RED  = "Elegantly broken rock. In redy.",
+        TURF_MOSAIC_RED  = "Elegantly broken rock. In red.",
 
         TURF_ROAD = "Build your own road to nowhere.",
         TURF_DRAGONFLY = "Quell the spread of fire.",
@@ -7211,6 +7211,7 @@ STRINGS.UI =
 
 		PERISH_RATE_TITLE = "Spoils",
 		PERISH_NEVER = "Never",
+        PERISH_VERY_QUICKLY = "Very Quickly",
 		PERISH_QUICKLY = "Quickly",
 		PERISH_AVERAGE = "Average",
 		PERISH_SLOWLY = "Slowly",
@@ -8316,8 +8317,8 @@ STRINGS.UI =
 		REGEN_CONFIRM_BODY = "Are you sure you want to start a new world?",
 
 		REVIVE_0 = "I hope you are playing with friends, or had prepared a way to revive...",
-		REVIVE_1 = "Haunt a {item1} to revive, or find another means.",
-		REVIVE_2 = "Haunt a {item1} or {item2} to revive, or find another means.",
+		REVIVE_1 = "Haunt a {item1} to revive, or find another way.",
+		REVIVE_2 = "Haunt a {item1} or {item2} to revive, or find another way.",
     },
 
     VOTEDIALOG =
@@ -8638,8 +8639,8 @@ STRINGS.UI =
             DST_CAVE_PLUS = "A darker, more arachnid-y cave experience.",
             LAVAARENA = "Dare you prove yourself in The Forge?",
             QUAGMIRE = "Can you stand the heat in The Gorge?",
-            TERRARIA = "Don't Starve Together, with a Terarria-inspired twist.",
-            TERRARIA_CAVE = "Don't Starve Together, with a Terarria-inspired twist... in the caves!",
+            TERRARIA = "Don't Starve Together, with a Terraria-inspired twist.",
+            TERRARIA_CAVE = "Don't Starve Together, with a Terraria-inspired twist... in the caves!",
 
             SURVIVAL_TOGETHER = "The standard Don't Starve experience.",
 			RELAXED = "A more relaxed playstyle with less threats from the world.\nSurvivors will not die from starvation, freezing, overheating, or the darkness.\nDamage to survivors is reduced. Resurrection is always available via the Florid Postern.",
@@ -8906,7 +8907,7 @@ STRINGS.UI =
         TEMPERATUREDAMAGE = "Temperature Damage",
         DARKNESS = "Darkness Damage",
         HEALTHPENALTY = "Max Health Penalty",
-		LESSDAMAGETAKEN = "Take Less Damage",
+		LESSDAMAGETAKEN = "Damage Taken",
         STAGEPLAYS = "Stage Plays",
 		-- End of world customization strings
     },

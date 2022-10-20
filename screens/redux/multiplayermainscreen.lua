@@ -36,7 +36,7 @@ local KitcoonPuppet = require "widgets/kitcoonpuppet"
 local SHOW_DST_DEBUG_HOST_JOIN = BRANCH == "dev"
 local SHOW_QUICKJOIN = false
 
-local IS_BETA = BRANCH == "staging" or BRANCH == "dev"
+local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
 local IS_DEV_BUILD = BRANCH == "dev"
 
 local function PlayBannerSound(inst, self, sound)
@@ -444,7 +444,14 @@ local function MakeBannerFront(self)
     elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
         return nil
     elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
-        return nil
+        local banner_front = Widget("banner_front")
+        banner_front:SetPosition(0, 0)
+        local anim = banner_front:AddChild(UIAnim())
+
+        MakeDramaBannerFront(self, banner_front, anim)
+
+        return banner_front
+
     elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         return nil
     else

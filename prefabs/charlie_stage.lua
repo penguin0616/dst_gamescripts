@@ -135,21 +135,22 @@ local function spawnhound(inst, reward, theta)
     bush:SetReward(reward)
 end
 
+-- NOTES(JBK): 'name' field is useful for mods to interface with the rewards for looking to modify content dynamically but has no instrinsic value.
 local REWARDPOOL = {
-    {"pickaxe","minerhat","lightbulb"}, -- The Miner
-    {"wateringcan","farm_hoe","farm_plow_item"}, -- The farmer
-    {"oceanfishingrod","oceanfishingbobber_ball","oceanfishinglure_spoon_red"}, -- The Fisher
-    {"axe","backpack","shovel"}, -- The hiker
-    {"spear","armorgrass","trap"}, -- The hunter
-    {"earmuffshat","meat_dried","umbrella"}, -- The weatherman
-    {"tophat","sewing_kit","grass_umbrella"}, -- The tailor
+    {name = "miner", "pickaxe", "minerhat", "lightbulb"},
+    {name = "farmer", "wateringcan", "farm_hoe", "farm_plow_item"},
+    {name = "fisher", "oceanfishingrod", "oceanfishingbobber_ball", "oceanfishinglure_spoon_red"},
+    {name = "hiker", "axe", "backpack", "shovel"},
+    {name = "hunter", "spear", "armorgrass", "trap"},
+    {name = "weather", "earmuffshat", "meat_dried", "umbrella"},
+    {name = "tailor", "tophat", "sewing_kit", "grass_umbrella"},
 }
 
 local function OnPlayPerformed(inst, data)
     if not data.next and not data.error then
-        local REWARDS = REWARDPOOL[math.random(1,#REWARDPOOL)]
+        local REWARDS = inst._rewardpool[math.random(1, #inst._rewardpool)]
         local theta = math.random() * 2 * PI
-        for _, reward in ipairs(REWARDS) do
+        for _, reward in ipairs(REWARDS) do -- NOTES(JBK): Keep this ipairs because rewards metadata is being stored in the table.
             inst:DoTaskInTime(1 + (math.random()*2), spawnhound, reward, theta)
             theta = theta + PI/6
         end
@@ -183,8 +184,10 @@ local function on_stage_performance_begun(inst, script, cast)
         end
     end
 
-    for role, data in pairs(cast) do
-        data.castmember:ListenForEvent("attacked", inst._sic_usher_on_attacker)
+    if cast ~= nil then
+        for role, data in pairs(cast) do
+            data.castmember:ListenForEvent("attacked", inst._sic_usher_on_attacker)
+        end
     end
 
     TheWorld:PushEvent("pausehounded", { source = inst })
@@ -192,8 +195,11 @@ end
 
 local function on_stage_performance_ended(inst, ender, script, cast)
     SetCameraFocus(inst, 0)
-    for role, data in pairs(cast) do
-        data.castmember:RemoveEventCallback("attacked", inst._sic_usher_on_attacker)
+
+    if cast ~= nil then
+        for role, data in pairs(cast) do
+            data.castmember:RemoveEventCallback("attacked", inst._sic_usher_on_attacker)
+        end
     end
 
     TheWorld:PushEvent("unpausehounded", { source = inst })
@@ -307,6 +313,8 @@ local function OnUpdateStageTempTile(inst, x, y, z)
     if #temptile_entities > 0 then
         for _, temptile_entity in ipairs(temptile_entities) do
             temptile_entity.components.locomotor:PushTempGroundSpeedMultiplier(1.0, WORLD_TILES.MOSAIC_GREY)
+
+            temptile_entity:PushEvent("onstage")
         end
     end
 end
@@ -436,7 +444,6 @@ local function postfn()
     inst.components.talker.font = TALKINGFONT
     inst.components.talker.colour = Vector3(181/255, 210/255, 247/255)
     inst.components.talker.offset = Vector3(0, -715, 0)
-    inst.components.talker:MakeChatter()
 
     inst._camerafocus = net_tinybyte(inst.GUID, "charlie_stage._camerafocus", "camerafocusdirty")
     inst._camerafocustask = nil
@@ -474,6 +481,7 @@ local function postfn()
     inst.OnEntitySleep = OnStagePostSleep
 
     inst._ushers = {}
+    inst._rewardpool = REWARDPOOL -- NOTES(JBK): Useful for mods.
     inst:ListenForEvent("play_performed", OnPlayPerformed)
 
     inst:DoTaskInTime(0, setup)
@@ -486,8 +494,6 @@ local function seatfn()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
-    inst.entity:AddSoundEmitter()
-    inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
 
     inst:AddTag("DECOR")

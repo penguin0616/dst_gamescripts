@@ -4662,7 +4662,11 @@ return{
             STANDING = "Shoo!",
             SITTING = "Why's this table givin' me the creeps?",
         },
-        SEWING_MANNEQUIN = "Lookin' good!",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Lookin' good!",
+            BURNT = "Yeesh, looks like this one's toast.",
+        },
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

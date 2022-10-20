@@ -46,7 +46,7 @@ local GridScarecrowClothingPopupScreen = Class(Screen, function(self, owner_scar
 		table.insert(buttons, {text = STRINGS.UI.POPUPDIALOG.OK, cb = function() self:Close() end})
 	else
 		table.insert(buttons, {text = STRINGS.UI.WARDROBE_POPUP.CANCEL, cb=function() self:Cancel() end })
-		table.insert(buttons, {text = STRINGS.UI.WARDROBE_POPUP.SET, cb=function() self:Close() end })
+		table.insert(buttons, {text = STRINGS.UI.WARDROBE_POPUP.SET, cb=function() self:Close(true) end })
 	end
 
 	local spacing = 70
@@ -138,6 +138,12 @@ function GridScarecrowClothingPopupScreen:Reset()
 end
 
 function GridScarecrowClothingPopupScreen:Close(apply_skins)
+	if not apply_skins then -- Not applying anything bail!
+		POPUPS.WARDROBE:Close(self.doer)
+		TheFrontEnd:PopScreen(self)
+		return
+	end
+
 	local skins = self.loadout.selected_skins
 
     local data = {}

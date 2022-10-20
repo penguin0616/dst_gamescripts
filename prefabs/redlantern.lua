@@ -208,6 +208,8 @@ local function onequiptomodel(inst, owner, from_ground)
     if inst.components.fueled.consuming then
         starttrackingowner(inst, owner)
     end
+
+    turnoff(inst)
 end
 
 local function nofuel(inst)

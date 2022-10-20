@@ -331,27 +331,12 @@ end
 function StateGraphInstance:GetDebugTable()
 	TheSim:ProfilerPush("[SGI] GetDebugTable")
 
-	local hitbox
-	local hitboxrects
-	if self.inst.HitBox then
-		hitbox =
-		{
-			w = self.inst.HitBox:GetSize(),
-			h = self.inst.HitBox:GetDepth(),
-			enabled = self.inst.HitBox:IsEnabled(),
-			hitrects = deepcopy(self.inst.HitBox:GetHitRects()),
-			hitcircles = deepcopy(self.inst.HitBox:GetHitCircles())
-		}
-	end
-
 	local ret = {
 		name = self.sg.name,
 		current = self.currentstate and self.currentstate.name or "<None>",
-		--embellish_name = self.sg.embellish_name and self.sg.embellish_name or "",
 		ticks = math.floor(self:GetTimeInState() / FRAMES),
 		tags = shallowcopy(self.tags),
 		statemem = shallowcopy(self.statemem),
-		hitbox = hitbox,
 	}
 
 	TheSim:ProfilerPop()
@@ -594,7 +579,7 @@ function StateGraphInstance:UpdateState(dt)
 
     if self.timeout then
         self.timeout = self.timeout - dt
-        if self.timeout <= (1/30) then
+        if self.timeout < 0.0001 then --epsilon for floating point error
             self.timeout = nil
             if self.currentstate.ontimeout then
                 self.currentstate.ontimeout(self.inst)

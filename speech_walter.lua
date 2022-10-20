@@ -4656,7 +4656,11 @@ return{
             STANDING = "Maybe it wants to roast marshmallows too?",
             SITTING = "Woby, what's wrong? It's just a table.",
         },
-        SEWING_MANNEQUIN = "I don't know why some people think mannequins are scary.",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "I don't know why some people think mannequins are scary.",
+            BURNT = "Oh no, I thought I smelled a campfire burning around here!",
+        },
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

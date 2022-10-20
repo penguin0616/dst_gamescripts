@@ -26,7 +26,7 @@ local function on_get_item(inst, giver, item)
 
     local current = inst.components.inventory:GetEquippedItem(equipslot)
     if current ~= nil then
-        inst.components.inventory:DropItem(current)
+        inst.components.inventory:DropItem(current, true, true)
     end
 
     inst.components.inventory:Equip(item)
@@ -97,12 +97,24 @@ local function OnActivate(inst, doer)
 end
 
 --------------------------------------------------------------------------------
+local function mannequin_onburnt(inst)
+    if inst.components.trader ~= nil then
+        inst:RemoveComponent("trader")
+    end
+    if inst.components.activatable ~= nil then
+        inst:RemoveComponent("activatable")
+    end
+    if inst.components.inventory ~= nil then
+        inst.components.inventory:DropEverything()
+    end
+    DefaultBurntStructureFn(inst)
+end
+
+--------------------------------------------------------------------------------
 local function onbuilt(inst)
     inst.AnimState:PlayAnimation("place")
     inst.SoundEmitter:PlaySound("stageplay_set/mannequin/place")
     inst.AnimState:PushAnimation("idle", false)
-
-    --inst.SoundEmitter:PlaySound("dontstarve/common/scarecrow_craft")
 end
 
 --------------------------------------------------------------------------------
@@ -114,6 +126,11 @@ end
 local function onacting(inst, data)
     inst.AnimState:PlayAnimation("swap")
     inst.AnimState:PushAnimation("idle", false)
+end
+
+--------------------------------------------------------------------------------
+local function ontalk(inst, data)
+    inst.SoundEmitter:PlaySound("stageplay_set/mannequin/speaking")
 end
 
 --------------------------------------------------------------------------------
@@ -151,6 +168,7 @@ local function fn()
 
     inst:AddTag("structure")
     inst:AddTag("equipmentmodel")
+	inst:AddTag("rotatableobject")
 
     -- stageactor (from stageactor component) added to pristine state for optimization
     inst:AddTag("stageactor")
@@ -214,7 +232,6 @@ local function fn()
     inst:AddComponent("activatable")
     inst.components.activatable.OnActivate = OnActivate
     inst.components.activatable.quickaction = true
-    inst.components.activatable.forcerightclickaction = true
 
     -------------------------------------------------------
     inst:AddComponent("savedrotation")
@@ -222,6 +239,7 @@ local function fn()
 
     -------------------------------------------------------
     MakeMediumBurnable(inst, nil, nil, true)
+    inst.components.burnable:SetOnBurntFn(mannequin_onburnt)
     MakeMediumPropagator(inst)
 
     -------------------------------------------------------
@@ -231,6 +249,7 @@ local function fn()
     inst:ListenForEvent("onbuilt", onbuilt)
     inst:ListenForEvent("equip", onequipped)
     inst:ListenForEvent("acting", onacting)
+    inst:ListenForEvent("ontalk", ontalk)
 
     -------------------------------------------------------
     inst.OnSave = onsave

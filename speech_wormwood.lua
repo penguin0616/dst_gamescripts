@@ -4660,7 +4660,11 @@ return{
             STANDING = "Ohh! Table friend!",
             SITTING = "Too shy?",
         },
-        SEWING_MANNEQUIN = "Hello!",
+        SEWING_MANNEQUIN =
+        {
+            GENERIC = "Hello!",
+            BURNT = "Goodbye",
+        },
     },
 
     DESCRIBE_GENERIC = "Friend?",
