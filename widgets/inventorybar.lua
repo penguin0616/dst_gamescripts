@@ -463,7 +463,7 @@ function Inv:OnUpdate(dt)
         self:Refresh()
     end
 
-	if self.owner.HUD:IsCraftingOpen() then
+	if self.owner.HUD:IsCraftingOpen() or self.owner.HUD:IsSpellWheelOpen() then
         self.actionstring:Hide()
 		return
 	end

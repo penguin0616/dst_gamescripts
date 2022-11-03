@@ -3,8 +3,9 @@ local TechTree = require("techtree")
 
 local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
 
-PI = 3.14159
+PI = math.pi
 PI2 = PI*2
+TWOPI = PI2
 DEGREES = PI/180
 RADIANS = 180/PI
 FRAMES = 1/30

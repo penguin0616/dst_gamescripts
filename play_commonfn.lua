@@ -61,6 +61,9 @@ end
 --------------------------------------------------------------------------------
 
 local function spawn_timed_fx_onme(inst, fxname, time)
+	if not inst:IsValid() then
+		return
+	end
     local fx = SpawnPrefab(fxname)
     fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
     fx:SetTime(time or FRAMES)
@@ -162,14 +165,13 @@ fns.maskflash = function(inst, line, cast)
 	end
 end
 
-local function cleanup_waxwell_dancer(inst, caster, dancer)
-	if dancer == nil or not dancer:IsValid() then
-		return
-	end
-
-	if caster ~= nil and caster:IsValid() then
-		caster.petspawneffects(dancer)
-		dancer:Remove()
+local function cleanup_waxwell_dancer(inst, dancer)
+	if dancer ~= nil and dancer:IsValid() then
+		if dancer.sg ~= nil then
+			dancer.sg:GoToState("quickdespawn")
+		else
+			dancer:Remove()
+		end
 	end
 end
 
@@ -184,11 +186,13 @@ fns.waxwelldancer = function(inst, line, cast)
 	local offset = Vector3FromTheta(line.theta, line.radius)
 	dancer.Transform:SetPosition(x + offset.x, 0, z + offset.z)
 
-    local caster = caster_data.castmember
-	caster.petspawneffects(dancer)
+	dancer.components.skinner:CopySkinsFromPlayer(caster_data.castmember)
+	if dancer.sg ~= nil then
+		dancer.sg:GoToState("quickspawn")
+	end
 	dancer:PushEvent("dance")
 
-	inst:DoTaskInTime(line.time, cleanup_waxwell_dancer, caster, dancer)
+	inst:DoTaskInTime(line.time, cleanup_waxwell_dancer, dancer)
 end
 
 local COMMENTER_MUST = {"player"}
@@ -309,7 +313,7 @@ fns.findpositions = function(inst, line, cast)
                 castmember._play_findposition_timeouttask = castmember:DoTaskInTime(line.duration or 0, on_findposition_timeout)
             else
                 local line_length = 
-                castmember:DoTaskInTime((line.duration or 2*FRAMES)/2, teleport_to_position, inst_pos+offset)
+                castmember:DoTaskInTime((line.duration or (2*FRAMES))/2, teleport_to_position, inst_pos+offset)
             end
         end
 	end

@@ -255,7 +255,6 @@ end
 function FindValidPositionByFan(start_angle, radius, attempts, test_fn)
     attempts = attempts or 8
 
-    local TWOPI = 2 * PI
     local attempt_angle = TWOPI / attempts
     local tmp_angles = {}
     for i = 0, attempts - 1 do
@@ -331,12 +330,17 @@ local PICKUP_CANT_TAGS = {
     "fire", "spider", "cursed", "paired", "bundle"
 }
 -- This function looks for an item on the ground that could be ACTIONS.PICKUP (or ACTIONS.CHECKTRAP if a trap) by the owner and subsequently put into the owner's inventory.
-function FindPickupableItem(owner, radius, furthestfirst)
+function FindPickupableItem(owner, radius, furthestfirst, positionoverride, ignorethese)
     if owner == nil or owner.components.inventory == nil then
         return nil
     end
     local ba = owner:GetBufferedAction()
-    local x, y, z = owner.Transform:GetWorldPosition()
+    local x, y, z
+    if positionoverride then
+        x, y, z = positionoverride:Get()
+    else
+        x, y, z = owner.Transform:GetWorldPosition()
+    end
     local ents = TheSim:FindEntities(x, y, z, radius, PICKUP_MUST_TAGS, PICKUP_CANT_TAGS)
     local istart, iend, idiff = 1, #ents, 1
     if furthestfirst then
@@ -344,7 +348,8 @@ function FindPickupableItem(owner, radius, furthestfirst)
     end
     for i = istart, iend, idiff do
         local v = ents[i]
-        if v.components.container == nil and -- Containers are most likely sorted and placed by the player do not pick them up.
+        if (ignorethese == nil or ignorethese[v] == nil) and -- Ignore these!
+            v.components.container == nil and -- Containers are most likely sorted and placed by the player do not pick them up.
             v.components.bundlemaker == nil and -- Bundle creators are aesthetically placed do not pick them up.
             v.components.inventoryitem ~= nil and
             v.components.inventoryitem.canbepickedup and

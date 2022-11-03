@@ -14,6 +14,9 @@ local function FinalOffsetNegative1(inst)
     inst.AnimState:SetFinalOffset(-1)
 end
 
+local function UsePointFiltering(inst)
+	inst.AnimState:UsePointFiltering(true)
+end
 
 local function GroundOrientation(inst)
     inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
@@ -454,6 +457,7 @@ local fx =
         build = "statue_ruins_fx",
         anim = "transform_nightmare",
         tintalpha = 0.6,
+		fn = UsePointFiltering,
     },
     {
         name = "statue_transition_2",
@@ -483,14 +487,6 @@ local fx =
         tintalpha = 0.6,
     },
     {
-        name = "shadow_despawn",
-        bank = "statue_ruins_fx",
-        build = "statue_ruins_fx",
-        anim = "transform_nightmare",
-        sound = "dontstarve/maxwell/shadowmax_despawn",
-        tintalpha = 0.6,
-    },
-    {
         name = "cavehole_flick_warn",
         bank = "attune_fx",
         build = "attune_fx",
@@ -505,6 +501,7 @@ local fx =
         anim = "transform_nightmare",
         sound = "dontstarve/maxwell/shadowmax_despawn",
         tintalpha = 0.8,
+		fn = UsePointFiltering,
     },
     {
         name = "mole_move_fx",
@@ -2491,7 +2488,7 @@ local fx =
         bank = "fx_dock_crackleandpop",
         build = "fx_dock_crackleandpop",
         anim = "pop",
-        sound = "monkeyisland/dock/break",
+        sound = "monkeyisland/dock/break2",
     },
 
     {
@@ -2735,15 +2732,16 @@ for j = 0, 3, 3 do
     end
 end
 
-local shot_types = {"rocks", "gold", "marble", "thulecite", "freeze", "slow", "poop", "trinket_1"}
+local shot_types = {"rock", "gold", "marble", "thulecite", "freeze", "slow", "poop", "trinket_1"}
 for _, shot_type in ipairs(shot_types) do
     table.insert(fx, {
         name = "slingshotammo_hitfx_"..shot_type,
         bank = "slingshotammo",
         build = "slingshotammo",
         anim = "used",
+        sound = "dontstarve/characters/walter/slingshot/"..shot_type,
         fn = function(inst)
-			if shot_type ~= "rocks" then
+			if shot_type ~= "rock" then
 		        inst.AnimState:OverrideSymbol("rock", "slingshotammo", shot_type)
 			end
 		    inst.AnimState:SetFinalOffset(3)

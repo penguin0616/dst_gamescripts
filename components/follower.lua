@@ -21,6 +21,7 @@ local Follower = Class(function(self, inst)
     self.canaccepttarget = true
     --self.keepdeadleader = nil
     --self.keepleaderonattacked = nil
+	--self.noleashing = nil
 
     self.inst:ListenForEvent("attacked", onattacked)
     self.OnLeaderRemoved = function()
@@ -130,7 +131,9 @@ local function OnEntitySleep(inst)
 end
 
 function Follower:StartLeashing()
-    if self._onleaderwake == nil and self.leader ~= nil then
+	if self.noleashing then
+		return
+	elseif self._onleaderwake == nil and self.leader ~= nil then
         self._onleaderwake = function() OnEntitySleep(self.inst) end
         self.inst:ListenForEvent("entitywake", self._onleaderwake, self.leader)
         self.inst:ListenForEvent("entitysleep", OnEntitySleep)
@@ -150,7 +153,9 @@ function Follower:StopLeashing()
         end
     end
 
-    self.inst:PushEvent("stopleashing")
+	if not self.noleashing then
+		self.inst:PushEvent("stopleashing")
+	end
 end
 
 OnPlayerJoined = function(self, player)

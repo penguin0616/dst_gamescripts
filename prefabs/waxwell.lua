@@ -5,13 +5,20 @@ local assets =
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("SOUND", "sound/maxwell.fsb"),
     Asset("ANIM", "anim/swap_books.zip"),
+	Asset("ANIM", "anim/waxwell_tophat.zip"),
+	Asset("ANIM", "anim/player_idles_waxwell.zip"),
 }
 
 local prefabs =
 {
-    "statue_transition_2",
     "waxwell_shadowstriker",
     "shadowdancer",
+	"book_fx",
+	"book_fx_mount",
+	"waxwell_book_fx",
+	"waxwell_book_fx_mount",
+	"waxwell_shadow_book_fx",
+	"waxwell_shadow_book_fx_mount",
 }
 
 local start_inv = {}
@@ -21,25 +28,18 @@ end
 
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
-local function DoEffects(pet)
-    local x, y, z = pet.Transform:GetWorldPosition()
-    SpawnPrefab("statue_transition_2").Transform:SetPosition(x, y, z)
-end
-
 local function KillPet(pet)
     pet.components.health:Kill()
 end
 
 local function OnSpawnPet(inst, pet)
     if pet:HasTag("shadowminion") then
-        --Delayed in case we need to relocate for migration spawning
-        pet:DoTaskInTime(0, DoEffects)
-
         if not (inst.components.health:IsDead() or inst:HasTag("playerghost")) then
 			if not inst.components.builder.freebuildmode then
 	            inst.components.sanity:AddSanityPenalty(pet, TUNING.SHADOWWAXWELL_SANITY_PENALTY[string.upper(pet.prefab)])
 			end
             inst:ListenForEvent("onremove", inst._onpetlost, pet)
+            pet.components.skinner:CopySkinsFromPlayer(inst)
         elseif pet._killtask == nil then
             pet._killtask = pet:DoTaskInTime(math.random(), KillPet)
         end
@@ -50,10 +50,41 @@ end
 
 local function OnDespawnPet(inst, pet)
     if pet:HasTag("shadowminion") then
-        DoEffects(pet)
-        pet:Remove()
+		if pet.sg ~= nil then
+			pet.sg:GoToState("quickdespawn")
+		else
+			pet:Remove()
+		end
     elseif inst._OnDespawnPet ~= nil then
         inst:_OnDespawnPet(pet)
+    end
+end
+
+local function ReskinPet(pet, player, nofx)
+    pet._dressuptask = nil
+    if player:IsValid() then
+        if not nofx then
+            local x, y, z = pet.Transform:GetWorldPosition()
+            local fx = SpawnPrefab("slurper_respawn")
+            fx.Transform:SetPosition(x, y, z)
+        end
+        pet.components.skinner:CopySkinsFromPlayer(player)
+    end
+end
+
+local function OnSkinsChanged(inst, data)
+    for k, v in pairs(inst.components.petleash:GetPets()) do
+        if v:HasTag("shadowminion") then
+            if v._dressuptask ~= nil then
+                v._dressuptask:Cancel()
+                v._dressuptask = nil
+            end
+            if data and data.nofx then
+                ReskinPet(v, inst, data.nofx)
+            else
+                v._dressuptask = v:DoTaskInTime(math.random()*0.5 + 0.25, ReskinPet, inst)
+            end
+        end
     end
 end
 
@@ -91,13 +122,24 @@ local function OnReadFn(inst, book)
     end
 end
 
+local function OnLoad(inst)
+	--NOTE: Doing this outside of magician component, because we need to wait for inventory to load as well
+	inst.components.magician:StopUsing()
+    OnSkinsChanged(inst, {nofx = true})
+end
+
 local function common_postinit(inst)
     inst:AddTag("shadowmagic")
     inst:AddTag("dappereffects")
 
+    inst.AnimState:AddOverrideBuild("player_idles_waxwell")
+
     if TheNet:GetServerGameMode() == "quagmire" then
         inst:AddTag("quagmire_shopper")
     end
+
+	--magician (from magician component) added to pristine state for optimization
+	inst:AddTag("magician")
 
     --reader (from reader component) added to pristine state for optimization
     inst:AddTag("reader")
@@ -106,6 +148,10 @@ end
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
+	inst.customidlestate = "waxwell_funnyidle"
+
+	inst:AddComponent("magician")
+
     inst:AddComponent("reader")
     inst.components.reader:SetSanityPenaltyMultiplier(TUNING.MAXWELL_READING_SANITY_MULT)
     inst.components.reader:SetOnReadFn(OnReadFn)
@@ -113,13 +159,14 @@ local function master_postinit(inst)
     if inst.components.petleash ~= nil then
         inst._OnSpawnPet = inst.components.petleash.onspawnfn
         inst._OnDespawnPet = inst.components.petleash.ondespawnfn
-        inst.components.petleash:SetMaxPets(inst.components.petleash:GetMaxPets() + 4)
+        inst.components.petleash:SetMaxPets(math.huge)
     else
         inst:AddComponent("petleash")
-        inst.components.petleash:SetMaxPets(4)
+        inst.components.petleash:SetMaxPets(math.huge)
     end
     inst.components.petleash:SetOnSpawnFn(OnSpawnPet)
     inst.components.petleash:SetOnDespawnFn(OnDespawnPet)
+    inst:ListenForEvent("onskinschanged", OnSkinsChanged) -- Fashion Shadows.
 
     inst.components.hunger:SetMax(TUNING.WAXWELL_HUNGER)
     inst.components.sanity:SetMax(TUNING.WAXWELL_SANITY)
@@ -135,13 +182,13 @@ local function master_postinit(inst)
     inst:ListenForEvent("ms_becameghost", OnDeath)
     inst:ListenForEvent("ms_playerreroll", OnReroll)
 
-    inst.petspawneffects = DoEffects
-
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/waxwell").master_postinit(inst)
     elseif TheNet:GetServerGameMode() == "quagmire" then
         event_server_data("quagmire", "prefabs/waxwell").master_postinit(inst)
     end
+
+	inst.OnLoad = OnLoad
 end
 
 return MakePlayerCharacter("waxwell", prefabs, assets, common_postinit, master_postinit)

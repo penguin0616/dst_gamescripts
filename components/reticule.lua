@@ -88,16 +88,33 @@ end
 
 function Reticule:PingReticuleAt(pos)
     if self.pingprefab ~= nil and pos ~= nil then
-        local ping = SpawnPrefab(self.pingprefab)
-        if ping ~= nil then
-            ping.AnimState:SetMultColour(unpack(self.validcolour))
-            ping.AnimState:SetAddColour(.2, .2, .2, 0)
-            if self.updatepositionfn ~= nil then
-                self.updatepositionfn(self.inst, pos, ping)
-            else
-                ping.Transform:SetPosition(pos.x, 0, pos.z)
-            end
-        end
+		local platform
+		if pos:is_a(DynamicPosition) then
+			platform = pos.walkable_platform
+			pos = pos:GetPosition()
+		end
+		if pos ~= nil then
+			local ping = SpawnPrefab(self.pingprefab)
+			if ping ~= nil then
+				ping.AnimState:SetMultColour(unpack(self.validcolour))
+				ping.AnimState:SetAddColour(.2, .2, .2, 0)
+				if self.updatepositionfn ~= nil then
+					self.updatepositionfn(self.inst, pos, ping)
+				else
+					ping.Transform:SetPosition(pos.x, 0, pos.z)
+				end
+				if platform ~= nil then
+					--Assume valid otherwise pos would've been nil
+					--assert(platform:IsValid())
+					ping.Transform:SetPosition(platform.entity:WorldToLocalSpace(ping.Transform:GetWorldPosition()))
+					ping.entity:SetParent(platform.entity)
+					ping:ListenForEvent("onremove", function()
+						ping.Transform:SetPosition(ping.Transform:GetWorldPosition())
+						ping.entity:SetParent(nil)
+					end, platform)
+				end
+			end
+		end
     end
 end
 
@@ -130,9 +147,15 @@ end
 function Reticule:UpdatePosition(dt)
     if self.targetpos ~= nil then
         local x, y, z = self.targetpos:Get()
-        if  self.ispassableatallpoints or
-            ( self.inst.components.aoetargeting ~= nil and self.inst.components.aoetargeting.alwaysvalid or
-            (TheWorld.Map:IsPassableAtPoint(x, y, z) and not TheWorld.Map:IsGroundTargetBlocked(self.targetpos)) ) then
+		local alwayspassable, allowwater, deployradius
+		local aoetargeting = self.inst.components.aoetargeting
+		if aoetargeting ~= nil then
+			alwayspassable = aoetargeting.alwaysvalid
+			allowwater = aoetargeting.allowwater
+			deployradius = aoetargeting.deployradius
+		end
+		alwayspassable = alwayspassable or self.ispassableatallpoints
+		if TheWorld.Map:CanCastAtPoint(self.targetpos, alwayspassable, allowwater, deployradius) then
             self.currentcolour = self.validcolour
             self.reticule.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
         else

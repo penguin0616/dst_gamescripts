@@ -1972,6 +1972,20 @@ function ParseUserSessionData(data)
     return nil, ""
 end
 
+local function ResolveUserSessionSavedPosition(data)
+	if data.puid ~= nil then
+		local walkableplatformmanager = TheWorld.components.walkableplatformmanager
+		if walkableplatformmanager ~= nil then
+			local platform = walkableplatformmanager:GetPlatformWithUID(data.puid)
+			if platform ~= nil then
+				local x, y, z = platform.entity:LocalToWorldSpace(data.rx or 0, data.ry or 0, data.rz or 0)
+				return x, y, z, platform
+			end
+		end
+	end
+	return data.x or 0, data.y or 0, data.z or 0
+end
+
 --data is lua table
 function ResumeExistingUserSession(data, guid)
     if TheNet:GetIsServer() then
@@ -1981,7 +1995,11 @@ function ResumeExistingUserSession(data, guid)
             player:EnableLoadingProtection()
 
             -- Spawn the player to last known location
-            TheWorld.components.playerspawner:SpawnAtLocation(TheWorld, player, data.x or 0, data.y or 0, data.z or 0, true, data.puid, data.rx or 0, data.ry or 0, data.rz or 0)
+			local x, y, z, platform = ResolveUserSessionSavedPosition(data)
+			TheWorld.components.playerspawner:SpawnAtLocation(TheWorld, player, x, y, z, true)
+			if platform ~= nil then
+				player.components.walkableplatformplayer:TestForPlatform()
+			end
 
             return player.player_classified ~= nil and player.player_classified.entity or nil
         end
@@ -2000,18 +2018,15 @@ function RestoreSnapshotUserSession(sessionid, userid)
                     if player ~= nil then
                         player.userid = userid
                         player:SetPersistData(playerdata.data or {})
-                        player.Physics:Teleport(playerdata.x or 0, playerdata.y or 0, playerdata.z or 0)
-                        if playerdata.puid then
-                            local walkableplatformmanager = TheWorld.components.walkableplatformmanager
-                            if walkableplatformmanager then
-                                local platform = walkableplatformmanager:GetPlatformWithUID(playerdata.puid)
-                                if platform then
-                                    local px, py, pz = platform.Transform:GetWorldPosition()
-                                    local x, y, z = px + (playerdata.rx or 0), py + (playerdata.ry or 0), pz + (playerdata.rz or 0)
-                                    player.Physics:Teleport(x, y, z)
-                                    player.components.walkableplatformplayer:TestForPlatform()
-                                end
-                            end
+						local x, y, z, platform = ResolveUserSessionSavedPosition(playerdata)
+						player.Physics:Teleport(x, y, z)
+						if platform ~= nil then
+							player.components.walkableplatformplayer:TestForPlatform()
+							--V2C: TestForPlatform does NOT do what you think it does in this context...
+							--     player:GetCurrentPlatform() returns unexpected nil
+							--     Might consider refactoring in the future.
+							--     But for now:
+							player._restoresnapshotusersession_platform = platform
                         end
 						--if playerdata.crafting_menu ~= nil then
 						--	TheCraftingMenuProfile:DeserializeLocalClientSessionData(playerdata.crafting_menu)

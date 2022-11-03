@@ -31,6 +31,7 @@ local Container = Class(function(self, inst)
     self.canbeopened = true
     self.skipopensnd = false
     self.skipclosesnd = false
+    --self.skipautoclose = false
     self.acceptsstacks = true
     self.usespecificslotsforitems = false
     self.issidewidget = false
@@ -160,6 +161,7 @@ end
 function Container:DropItem(itemtodrop)
     local item = self:RemoveItem(itemtodrop)
     if item then
+        --@V2C NOTE: not supported when using container_proxy
         local pos = Vector3(self.inst.Transform:GetWorldPosition())
         item.Transform:SetPosition(pos:Get())
         if item.components.inventoryitem then
@@ -302,6 +304,7 @@ function Container:GiveItem(item, slot, src_pos, drop_on_fail)
 
     --default to true if nil
     if drop_on_fail ~= false then
+        --@V2C NOTE: not supported when using container_proxy
         item.Transform:SetPosition(self.inst.Transform:GetWorldPosition())
         if item.components.inventoryitem ~= nil then
             item.components.inventoryitem:OnDropped(true)
@@ -368,7 +371,9 @@ end
 
 function Container:Open(doer, open_sfx_override)
     if doer ~= nil and self.openlist[doer] == nil then
-        self.inst:StartUpdatingComponent(self)
+        if not self.skipautoclose then
+            self.inst:StartUpdatingComponent(self)
+        end
 
         local inventory = doer.components.inventory
         if inventory ~= nil then

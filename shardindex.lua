@@ -536,6 +536,22 @@ function ShardIndex:SetServerShardData(customoptions, serverdata, onsavedcb)
                 end
             end
 
+			if not TheNet:GetServerIsClientHosted() then
+				if self.server.game_mode == "wilderness" then
+					-- crazy retrofitting code for a new server that still happen to be using game_mode set to wilderness or endless in the cluster.ini 
+					require("savefileupgrades").utilities.ApplyPlaystyleOverridesForGameMode(self.world.options, self.server.game_mode)
+					self.world.options = MergeMapsDeep(self.world.options, overridedata) -- still allow the override data to stop the default game_mode values
+	                self.server.game_mode = "survival"
+					TheNet:SetDefaultGameMode("survival")
+				elseif self.server.game_mode == "endless" then
+					-- crazy retrofitting code for a new server that still happen to be using game_mode set to wilderness or endless in the cluster.ini 
+					require("savefileupgrades").utilities.ApplyPlaystyleOverridesForGameMode(self.world.options, self.server.game_mode)
+					self.world.options = MergeMapsDeep(self.world.options, overridedata) -- still allow the override data to stop the default game_mode values
+	                self.server.game_mode = "survival"
+					TheNet:SetDefaultGameMode("survival")
+				end
+			end
+
 			local Levels = require("map/levels")
 			self.server.playstyle = Levels.CalcPlaystyleForSettings(self.world.options.overrides)
 

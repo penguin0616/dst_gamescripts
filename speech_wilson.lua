@@ -394,6 +394,16 @@ return {
         {
             DOER_ISNT_MODULE_OWNER = "It doesn't seem interested in a scientific discussion.",
         },
+
+		CAST_SPELLBOOK =
+		{
+			NO_TOPHAT = "only_used_by_waxwell",
+		},
+
+		CASTAOE =
+		{
+			NO_MAX_SANITY = "only_used_by_waxwell",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -2929,7 +2939,11 @@ return {
 		WATERMELON = "Sticky sweet.",
 		WATERMELON_COOKED = "Juicy and warm.",
 		WATERMELONHAT = "Let the juice run down your face.",
-		WAXWELLJOURNAL = "Spooky.",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "Spooky.",
+			NEEDSFUEL = "only_used_by_waxwell",
+		},
 		WETGOOP = "It tastes like nothing.",
         WHIP = "Nothing like loud noises to help keep the peace.",
 		WINTERHAT = "It'll be good for when winter comes.",
@@ -4673,6 +4687,10 @@ return {
             GENERIC = "All dressed up and nowhere to go.",
             BURNT = "All burnt up and nowhere to go.",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "Why am I starting to feel a bit uneasy...?",
+		TOPHAT_MAGICIAN = "That hat just oozes style.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

@@ -58,6 +58,16 @@ local ItemTile = Class(Widget, function(self, invitem)
         self.rechargeframe:GetAnimState():AnimateWhilePaused(false)
     end
 
+    if self.item:HasTag("magiciantool") then
+        self.magiciantoolframe = self:AddChild(UIAnim())
+        self.magiciantoolframe:GetAnimState():SetBank("inventory_fx_shadow")
+        self.magiciantoolframe:GetAnimState():SetBuild("inventory_fx_shadow")
+        self.magiciantoolframe:SetScale(.25, .25, .25)
+        self.magiciantoolframe:GetAnimState():PlayAnimation("idle", true)
+        self.magiciantoolframe:GetAnimState():AnimateWhilePaused(false)
+        self.magiciantoolframe:SetClickable(false)
+    end
+
     if self.item.inv_image_bg ~= nil then
         self.imagebg = self:AddChild(Image(self.item.inv_image_bg.atlas, self.item.inv_image_bg.image, "default.tex"))
         self.imagebg:SetClickable(false)

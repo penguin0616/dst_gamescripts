@@ -261,7 +261,11 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, monkey_c
 
 				if CLOTHING[name].symbol_hides then
 					for _,sym in pairs(CLOTHING[name].symbol_hides) do
-						anim_state:HideSymbol(sym)
+						if sym == "arm_upper_skin" and not allow_arms then
+							--don't hide arm_upper_skin if we're not allowed to show the arms, otherwise we'll be hiding the
+						else
+							anim_state:HideSymbol(sym)
+						end
 					end
 				end
 				if CLOTHING[name].symbol_in_base_hides then
@@ -282,10 +286,6 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, monkey_c
 			end
 		end
 		
-		if not allow_arms then
-			anim_state:ShowSymbol("arm_upper_skin") --Sometimes Wolfgang wants to show off his muscles. Make sure we can see them. /flex
-		end
-
 		for _, sym in pairs(monkey_pieces) do
 			anim_state:ShowSymbol(sym)
 			anim_state:OverrideSymbol( sym, "wonkey", sym )
@@ -546,6 +546,29 @@ end
 
 function Skinner:ClearClothing(type)
 	_InternalSetClothing(self, type, "", true)
+end
+
+function Skinner:CopySkinsFromPlayer(player)
+	-- NOTES(JBK): This assumes things please be careful.
+	local onto = self.inst
+
+	-- Grab skins and validate with AnimState.
+	local skins = player.components.skinner:GetClothing()
+	onto.AnimState:AssignItemSkins(player.userid, skins.base or "", skins.body or "", skins.hand or "", skins.legs or "", skins.feet or "")
+
+	-- Grab details used to apply.
+	local monkey_curse = player.components.skinner:GetMonkeyCurse()
+	local skin_mode = player.components.skinner:GetSkinMode()
+
+	-- For legacy mod support, this part is like this.
+	local skindata = GetSkinData(skins.base)
+	local base_skin = player.prefab --.. "_none"
+	if skindata.skins ~= nil then
+		base_skin = skindata.skins[skin_mode] or base_skin
+	end
+
+	-- Paste it and hope nothing has went wrong.
+	SetSkinsOnAnim(onto.AnimState, player.prefab, base_skin, skins, monkey_curse, skin_mode, player.prefab)
 end
 
 function Skinner:OnSave()

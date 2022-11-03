@@ -384,6 +384,16 @@ return{
         {
             DOER_ISNT_MODULE_OWNER = "Fine then, keep your secrets to yourself!",
         },
+
+		CAST_SPELLBOOK =
+		{
+--fallback to speech_wilson.lua			NO_TOPHAT = "only_used_by_waxwell",
+		},
+
+		CASTAOE =
+		{
+--fallback to speech_wilson.lua			NO_MAX_SANITY = "only_used_by_waxwell",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -468,6 +478,8 @@ return{
         SAME_OLD_5 = "only_used_by_warly",
 		TASTY = "only_used_by_warly",
     },
+
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
 
     ANNOUNCE_ENCUMBERED =
     {
@@ -2917,7 +2929,11 @@ return{
 		WATERMELON = "Ahh, refreshing!",
 		WATERMELON_COOKED = "Cooking it seems wholly unnecessary.",
 		WATERMELONHAT = "Believe it or not, it's actually quite practical.",
-		WAXWELLJOURNAL = "Hm.",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "Hm.",
+--fallback to speech_wilson.lua			NEEDSFUEL = "only_used_by_waxwell",
+		},
 		WETGOOP = "I never claimed to be good at cooking!",
         WHIP = "This should keep most creatures at bay.",
 		WINTERHAT = "What a funny little fuzzy hat. Mind if I try it on?",
@@ -4661,6 +4677,10 @@ return{
             GENERIC = "I can't imagine being stuck in one place! Wait...",
             BURNT = "Time waits for no mannequin.",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "Oh, what a handy little pocket dimension!",
+		TOPHAT_MAGICIAN = "A bit drab for my tastes.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

@@ -384,6 +384,16 @@ return{
         {
             DOER_ISNT_MODULE_OWNER = "As I thought, I'm unable to glean any information from it.",
         },
+
+		CAST_SPELLBOOK =
+		{
+--fallback to speech_wilson.lua			NO_TOPHAT = "only_used_by_waxwell",
+		},
+
+		CASTAOE =
+		{
+--fallback to speech_wilson.lua			NO_MAX_SANITY = "only_used_by_waxwell",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -468,6 +478,8 @@ return{
 --fallback to speech_wilson.lua         SAME_OLD_5 = "only_used_by_warly",
 --fallback to speech_wilson.lua 		TASTY = "only_used_by_warly",
     },
+
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
 
     ANNOUNCE_ENCUMBERED =
     {
@@ -2917,7 +2929,11 @@ return{
 		WATERMELON = "Citrullus lanatus.",
 		WATERMELON_COOKED = "Beautifully grilled.",
 		WATERMELONHAT = "That's certainly one thing you could do with a watermelon.",
-		WAXWELLJOURNAL = "I'm not letting THAT in MY library!",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "I'm not letting THAT in MY library!",
+--fallback to speech_wilson.lua			NEEDSFUEL = "only_used_by_waxwell",
+		},
 		WETGOOP = "Oh no. No, no, no. This won't do at all.",
         WHIP = "An instrument for developing pain compliance.",
 		WINTERHAT = "I ought to teach the children how to pick up a stitch.",
@@ -4661,6 +4677,10 @@ return{
             GENERIC = "Excellent! A place to air out musty equipment.",
             BURNT = "What a shame, it might have been useful.",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "I must admit, I find his renewed interest in the Codex... unsettling.",
+		TOPHAT_MAGICIAN = "It has been imbued with an ectoplasmic residue.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

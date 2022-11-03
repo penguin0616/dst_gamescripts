@@ -704,7 +704,7 @@ local actionhandlers =
                         (action.invobject:HasTag("aoeweapon_leap") and (action.invobject:HasTag("superjump") and "combat_superjump_start" or "combat_leap_start")) or
                         (action.invobject:HasTag("blowdart") and "blowdart_special") or
                         (action.invobject:HasTag("throw_line") and "throw_line") or
-                        (action.invobject:HasTag("book") and "book") or
+						(action.invobject:HasTag("book") and (inst:HasTag("canrepeatcast") and "book_repeatcast" or "book")) or
                         (action.invobject:HasTag("parryweapon") and "parry_pre")
                     )
                 or "castspell"
@@ -970,12 +970,22 @@ local actionhandlers =
     ActionHandler(ACTIONS.CHARGE_FROM, "doshortaction"),
 
     ActionHandler(ACTIONS.ROTATE_FENCE, "doswipeaction"),
+
+	ActionHandler(ACTIONS.USEMAGICTOOL, "start_using_tophat"),
+	ActionHandler(ACTIONS.STOPUSINGMAGICTOOL, function(inst)
+		inst.sg.statemem.stopusingmagiciantool = true
+		return "stop_using_tophat"
+	end),
+	ActionHandler(ACTIONS.CAST_SPELLBOOK, "book"),
 }
 
 local events =
 {
     EventHandler("locomote", function(inst, data)
-        if inst.sg:HasStateTag("busy") then
+		--V2C: - "overridelocomote" indidcates state has custom handler.
+		--     - This check is not redundant, because events buffered from previous state
+		--       won't use current state's handlers, and can still reach here unwantedly.
+        if inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("overridelocomote") then
             return
         end
 
@@ -1205,7 +1215,7 @@ local events =
     end),
 
     EventHandler("ontalk", function(inst, data)
-        if inst:IsActing() and not inst.sg:HasStateTag("talking") then
+        if inst:IsActing() and not inst.sg:HasStateTag("talking") and (inst.components.rider == nil or not inst.components.rider:IsRiding()) then
             if inst:HasTag("mime") then
                 inst.sg:GoToState("acting_mime")
             else
@@ -2833,6 +2843,24 @@ local states =
             end),
         },
     },
+
+	State{
+		name = "waxwell_funnyidle",
+		tags = { "idle", "canrotate", "nodangle" },
+
+		onenter = function(inst)
+			inst.AnimState:PlayAnimation(math.random() < .7 and "idle_waxwell" or "idle2_waxwell")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
 
     State{
         name = "bow",
@@ -7059,172 +7087,346 @@ local states =
         end,
     },
 
-    State{
-        name = "book",
-        tags = { "doing" },
+	State{
+		name = "book_repeatcast",
+		onenter = function(inst)
+			inst.sg:GoToState("book", true)
+		end,
+	},
 
-        onenter = function(inst)
-            inst.components.locomotor:Stop()
-            inst.AnimState:PlayAnimation("action_uniqueitem_pre")
-            --NOTE: "book" anim played in "animover" handler now
-            --inst.AnimState:PushAnimation("book", false)
+	State{
+		name = "book",
+		tags = { "doing" },
 
-            --V2C: NOTE that these are now used in onexit to clear skinned symbols
-            --Moved to player_common because these symbols are never cleared
-            --inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
-            --inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
+		onenter = function(inst, repeatcast)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("action_uniqueitem_pre")
 
-            local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
-            if book ~= nil then
-                if book.def ~= nil then 
-                    inst.sg.statemem.fx_over_prefab = book.def.fx_over_prefab
-                    inst.sg.statemem.fx_under_prefab = book.def.fx_under_prefab
+			local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
+			if book ~= nil then
+				inst.components.inventory:ReturnActiveActionItem(book)
 
-                    if book.def.layer_sound ~= nil then
-                        --track and manage via soundtask and sound name (even though it is not a loop)
-                        --so we can handle interruptions to this state
-                        local frame = book.def.layer_sound.frame or 0
-                        if frame > 0 then
-                            inst.sg.statemem.soundtask = inst:DoTaskInTime(frame * FRAMES, function(inst)
-                                inst.sg.statemem.soundtask = nil
-                                inst.SoundEmitter:KillSound("book_layer_sound")
-                                inst.SoundEmitter:PlaySound(book.def.layer_sound.sound, "book_layer_sound")
-                            end)
-                        else
-                            inst.SoundEmitter:KillSound("book_layer_sound")
-                            inst.SoundEmitter:PlaySound(book.def.layer_sound.sound, "book_layer_sound")
-                        end
-                    end
-                end
+				if book.components.spellbook ~= nil and book.components.spellbook:HasSpellFn() then
+					inst.sg:AddStateTag("busy")
+				elseif book.components.aoetargeting ~= nil then
+					inst.sg:AddStateTag("busy")
+					inst.sg.statemem.targetfx = book.components.aoetargeting:SpawnTargetFXAt(inst.bufferedaction:GetDynamicActionPoint())
+					if inst.sg.statemem.targetfx ~= nil then
+						inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
+					end
+				end
+			end
 
-                inst.components.inventory:ReturnActiveActionItem(book)
+			local fxname = book ~= nil and book:HasTag("shadowmagic") and "waxwell_book_fx" or "book_fx"
+			if inst.components.rider:IsRiding() then
+				fxname = fxname.."_mount"
+			end
+			inst.sg.statemem.book_fx = SpawnPrefab(fxname)
+			inst.sg.statemem.book_fx.entity:SetParent(inst.entity)
 
-                local swap_build = book.swap_build
-                local swap_prefix = book.swap_prefix or "book"
-                local skin_build = book:GetSkinBuild()
-                if skin_build ~= nil then
-                    inst.AnimState:OverrideItemSkinSymbol("book_open", skin_build, "book_open", book.GUID, swap_build or "player_actions_uniqueitem", swap_prefix.."_open")
-                    inst.AnimState:OverrideItemSkinSymbol("book_closed", skin_build, "book_closed", book.GUID, swap_build or "player_actions_uniqueitem", swap_prefix.."_closed")
-                    inst.sg.statemem.symbolsoverridden = true
-                elseif swap_build ~= nil then
-                    inst.AnimState:OverrideSymbol("book_open", swap_build, swap_prefix.."_open")
-                    inst.AnimState:OverrideSymbol("book_closed", swap_build, swap_prefix.."_closed")
-                    inst.sg.statemem.symbolsoverridden = true
-                end
+			if repeatcast then
+				local t = inst.AnimState:GetCurrentAnimationLength()
+				inst.sg.statemem.book_fx.AnimState:SetTime(t + 6 * FRAMES)
+				inst.sg.statemem.not_interrupted = true
+				inst.sg:GoToState("book2", {
+					book_fx = inst.sg.statemem.book_fx,
+					targetfx = inst.sg.statemem.targetfx,
+					repeatcast = true,
+				})
+			end
+		end,
 
-                --should be same as the buffered action item
-                if book.components.aoetargeting ~= nil and book == inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) then
-                    inst.sg.statemem.isaoe = true
-                    inst.sg:AddStateTag("busy")
-                    if book.components.aoetargeting.targetprefab ~= nil then
-                        local buffaction = inst:GetBufferedAction()
-                        if buffaction ~= nil and buffaction.pos ~= nil then
-                            inst.sg.statemem.targetfx = SpawnPrefab(book.components.aoetargeting.targetprefab)
-                            if inst.sg.statemem.targetfx ~= nil then
-                                inst.sg.statemem.targetfx.Transform:SetPosition(buffaction:GetActionPoint():Get())
-                                inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
-                            end
-                        end
-                    end
-                end
-            end
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.not_interrupted = true
+					inst.sg:GoToState("book2", {
+						book_fx = inst.sg.statemem.book_fx,
+						targetfx = inst.sg.statemem.targetfx,
+					})
+				end
+			end),
+		},
 
-            inst.sg.statemem.castsound = book ~= nil and book.castsound or "dontstarve/common/book_spell"
-        end,
+		onexit = function(inst)
+			if not inst.sg.statemem.not_interrupted then
+				if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
+					inst.sg.statemem.book_fx:Remove()
+				end
+				if inst.sg.statemem.targetfx ~= nil and inst.sg.statemem.targetfx:IsValid() then
+					OnRemoveCleanupTargetFX(inst)
+				end
+			end
+		end,
+	},
 
-        timeline =
-        {
-            TimeEvent(0, function(inst)
-                inst.sg.statemem.book_fx = SpawnPrefab(inst.components.rider:IsRiding() and "book_fx_mount" or "book_fx")
-                inst.sg.statemem.book_fx.entity:SetParent(inst.entity)
-                inst.sg.statemem.book_fx.Transform:SetPosition(0, .2, 0)
-            end),
-            TimeEvent(25 * FRAMES, function(inst)
-                if inst.sg.statemem.isaoe then
-                    inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
-                    inst:PerformBufferedAction()
-                end
-            end),
-            TimeEvent(28 * FRAMES, function(inst)
-                inst.SoundEmitter:PlaySound("dontstarve/common/use_book_light")
-            end),
-            TimeEvent(54 * FRAMES, function(inst)
-                inst.SoundEmitter:PlaySound("dontstarve/common/use_book_close")
-            end),
-            TimeEvent(58 * FRAMES, function(inst)
-                if inst.sg.statemem.targetfx ~= nil then
-                    if inst.sg.statemem.targetfx:IsValid() then
-                        OnRemoveCleanupTargetFX(inst)
-                    end
-                    inst.sg.statemem.targetfx = nil
-                end
-                
-                if not inst.sg.statemem.isaoe then
-                    inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
-                    if not inst:PerformBufferedAction() then
-                        if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
-                            inst.sg.statemem.book_fx:PushEvent("fail_fx")
-                        end
-                    end
-                end
+	State{
+		name = "book2",
+		tags = { "doing" },
 
-                inst.sg.statemem.book_fx = nil --Don't cancel anymore
-            end),
-            TimeEvent(65 * FRAMES, function(inst)
-                if inst.sg.statemem.isaoe then
-                    inst.sg:RemoveStateTag("busy")
-                end
-            end),
-        },
+		onenter = function(inst, data)
+			inst.AnimState:PlayAnimation("book")
 
-        events =
-        {
-            EventHandler("animover", function(inst)
-                if inst.AnimState:AnimDone() then
-                    if inst.AnimState:IsCurrentAnimation("book") then
-                        inst.sg:GoToState("idle")
-                    else
-                        inst.AnimState:PlayAnimation("book")
-                        local suffix = inst.components.rider:IsRiding() and "_mount" or ""
-                        if inst.sg.statemem.fx_over_prefab ~= nil then
-                            inst.sg.statemem.fx_over = SpawnPrefab(inst.sg.statemem.fx_over_prefab..suffix)
-                            inst.sg.statemem.fx_over.entity:SetParent(inst.entity)
-                            inst.sg.statemem.fx_over.Follower:FollowSymbol(inst.GUID, "swap_book_fx_over", 0, 0, 0, true)
-                        end
-                        if inst.sg.statemem.fx_under_prefab ~= nil then
-                            inst.sg.statemem.fx_under = SpawnPrefab(inst.sg.statemem.fx_under_prefab..suffix)
-                            inst.sg.statemem.fx_under.entity:SetParent(inst.entity)
-                            inst.sg.statemem.fx_under.Follower:FollowSymbol(inst.GUID, "swap_book_fx_under", 0, 0, 0, true)
-                        end
-                    end
-                end
-            end),
-        },
+			--V2C: NOTE that these are now used in onexit to clear skinned symbols
+			--Moved to player_common because these symbols are never cleared
+			--inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
+			--inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
 
-        onexit = function(inst)
-            if inst.sg.statemem.symbolsoverridden then
-                inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
-                inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
-            end
-            if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
-                inst.sg.statemem.book_fx:Remove()
-            end
-            if inst.sg.statemem.fx_over ~= nil and inst.sg.statemem.fx_over:IsValid() then
-                inst.sg.statemem.fx_over:Remove()
-            end
-            if inst.sg.statemem.fx_under ~= nil and inst.sg.statemem.fx_under:IsValid() then
-                inst.sg.statemem.fx_under:Remove()
-            end
-            if inst.sg.statemem.targetfx ~= nil and inst.sg.statemem.targetfx:IsValid() then
-                OnRemoveCleanupTargetFX(inst)
-            end
-            if inst.sg.statemem.soundtask ~= nil then
-                inst.sg.statemem.soundtask:Cancel()
-            elseif inst.SoundEmitter:PlayingSound("book_layer_sound") then
-                inst.SoundEmitter:SetVolume("book_layer_sound", .5)
-            end
-        end,
-    },
+			local timeskip = 0
+			if data ~= nil then
+				inst.sg.statemem.book_fx = data.book_fx
+				inst.sg.statemem.targetfx = data.targetfx
+				if data.repeatcast then
+					inst.sg.statemem.repeatcast = true
+					timeskip = 6 * FRAMES
+					inst.AnimState:SetTime(timeskip)
+				end
+			end
+
+			local book = inst.bufferedaction ~= nil and (inst.bufferedaction.target or inst.bufferedaction.invobject) or nil
+			if book ~= nil then
+				local suffix = inst.components.rider:IsRiding() and "_mount" or ""
+
+				if book.def ~= nil then
+					if book.def.fx_over_prefab ~= nil then
+						inst.sg.statemem.fx_over = SpawnPrefab(book.def.fx_over_prefab..suffix)
+						inst.sg.statemem.fx_over.entity:SetParent(inst.entity)
+						inst.sg.statemem.fx_over.Follower:FollowSymbol(inst.GUID, "swap_book_fx_over", 0, 0, 0, true)
+						inst.sg.statemem.fx_over.AnimState:SetTime(timeskip)
+					end
+					if book.def.fx_under_prefab ~= nil then
+						inst.sg.statemem.fx_under = SpawnPrefab(book.def.fx_under_prefab..suffix)
+						inst.sg.statemem.fx_under.entity:SetParent(inst.entity)
+						inst.sg.statemem.fx_under.Follower:FollowSymbol(inst.GUID, "swap_book_fx_under", 0, 0, 0, true)
+						inst.sg.statemem.fx_under.AnimState:SetTime(timeskip)
+					end
+
+					if book.def.layer_sound ~= nil then
+						--track and manage via soundtask and sound name (even though it is not a loop)
+						--so we can handle interruptions to this state
+						local frame = book.def.layer_sound.frame or 0
+						if frame > 0 then
+							inst.sg.statemem.soundtask = inst:DoTaskInTime(frame * FRAMES - timeskip, function(inst)
+								inst.sg.statemem.soundtask = nil
+								inst.SoundEmitter:KillSound("book_layer_sound")
+								inst.SoundEmitter:PlaySound(book.def.layer_sound.sound, "book_layer_sound")
+							end)
+						else
+							inst.SoundEmitter:KillSound("book_layer_sound")
+							inst.SoundEmitter:PlaySound(book.def.layer_sound.sound, "book_layer_sound")
+						end
+					end
+				end
+
+				if book:HasTag("shadowmagic") then
+					inst.sg.statemem.fx_shadow = SpawnPrefab("waxwell_shadow_book_fx"..suffix)
+					inst.sg.statemem.fx_shadow.entity:SetParent(inst.entity)
+					inst.sg.statemem.fx_shadow.AnimState:SetTime(timeskip)
+				end
+
+				local swap_build = book.swap_build
+				local swap_prefix = book.swap_prefix or "book"
+				local skin_build = book:GetSkinBuild()
+				if skin_build ~= nil then
+					inst.AnimState:OverrideItemSkinSymbol("book_open", skin_build, "book_open", book.GUID, swap_build or "player_actions_uniqueitem", swap_prefix.."_open")
+					inst.AnimState:OverrideItemSkinSymbol("book_closed", skin_build, "book_closed", book.GUID, swap_build or "player_actions_uniqueitem", swap_prefix.."_closed")
+					inst.sg.statemem.symbolsoverridden = true
+				elseif swap_build ~= nil then
+					inst.AnimState:OverrideSymbol("book_open", swap_build, swap_prefix.."_open")
+					inst.AnimState:OverrideSymbol("book_closed", swap_build, swap_prefix.."_closed")
+					inst.sg.statemem.symbolsoverridden = true
+				end
+
+				if book.components.spellbook ~= nil and book.components.spellbook:HasSpellFn() then
+					inst.sg:AddStateTag("busy")
+				elseif book.components.aoetargeting ~= nil then
+					inst.sg.statemem.earlycast = true
+					inst.sg.statemem.canrepeatcast = book.components.aoetargeting:CanRepeatCast()
+					inst.sg:AddStateTag("busy")
+				end
+			end
+
+			inst.sg.statemem.castsound = book ~= nil and book.castsound or "dontstarve/common/book_spell"
+		end,
+
+		timeline =
+		{
+			--
+			TimeEvent(13 * FRAMES, function(inst)
+				local function fn19()
+					inst.SoundEmitter:PlaySound("dontstarve/common/use_book_light")
+
+					if inst.sg.statemem.earlycast then
+						if inst.sg.statemem.fx_shadow ~= nil then
+							if inst.sg.statemem.fx_shadow:IsValid() then
+								local x, y, z = inst.sg.statemem.fx_shadow.Transform:GetWorldPosition()
+								inst.sg.statemem.fx_shadow.entity:SetParent(nil)
+								inst.sg.statemem.fx_shadow.Transform:SetPosition(x, y, z)
+								inst.sg.statemem.fx_shadow.Transform:SetRotation(inst.Transform:GetRotation())
+							end
+							inst.sg.statemem.fx_shadow = nil --Don't cancel anymore
+						end
+						inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
+						inst:PerformBufferedAction()
+					end
+				end
+				if inst.sg.statemem.repeatcast then
+					fn19()
+				else
+					inst.sg.statemem.fn19 = fn19
+				end
+			end),
+			TimeEvent(19 * FRAMES, function(inst)
+				if inst.sg.statemem.fn19 ~= nil then
+					inst.sg.statemem.fn19()
+					inst.sg.statemem.fn19 = nil
+				end
+			end),
+			--
+			TimeEvent(18 * FRAMES, function(inst)
+				if inst.sg.statemem.repeatcast and inst.sg.statemem.canrepeatcast then
+					inst:AddTag("canrepeatcast")
+				end
+			end),
+			TimeEvent(24 * FRAMES, function(inst)
+				if not inst.sg.statemem.repeatcast and inst.sg.statemem.canrepeatcast then
+					inst:AddTag("canrepeatcast")
+				end
+			end),
+			--
+			TimeEvent(24 * FRAMES, function(inst)
+				local function fn30()
+					if inst.sg.statemem.fx_shadow ~= nil then
+						if inst.sg.statemem.fx_shadow:IsValid() then
+							local x, y, z = inst.sg.statemem.fx_shadow.Transform:GetWorldPosition()
+							inst.sg.statemem.fx_shadow.entity:SetParent(nil)
+							inst.sg.statemem.fx_shadow.Transform:SetPosition(x, y, z)
+							inst.sg.statemem.fx_shadow.Transform:SetRotation(inst.Transform:GetRotation())
+						end
+						inst.sg.statemem.fx_shadow = nil --Don't cancel anymore
+					end
+				end
+				if inst.sg.statemem.repeatcast then
+					fn30()
+				else
+					inst.sg.statemem.fn30 = fn30
+				end
+			end),
+			TimeEvent(30 * FRAMES, function(inst)
+				if inst.sg.statemem.fn30 ~= nil then
+					inst.sg.statemem.fn30()
+					inst.sg.statemem.fn30 = nil
+				end
+			end),
+			--
+			TimeEvent(44 * FRAMES, function(inst)
+				local function fn50()
+					if inst.sg.statemem.targetfx ~= nil then
+						if inst.sg.statemem.targetfx:IsValid() then
+							OnRemoveCleanupTargetFX(inst)
+						end
+						inst.sg.statemem.targetfx = nil
+					end
+
+					local book_fx = inst.sg.statemem.book_fx
+					if book_fx ~= nil then
+						if book_fx:IsValid() then
+							local x, y, z = book_fx.Transform:GetWorldPosition()
+							book_fx.entity:SetParent(nil)
+							book_fx.Transform:SetPosition(x, y, z)
+							book_fx.Transform:SetRotation(inst.Transform:GetRotation())
+						else
+							book_fx = nil
+						end
+						inst.sg.statemem.book_fx = nil --Don't cancel anymore
+					end
+
+					if not inst.sg.statemem.earlycast then
+						inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
+						if not inst:PerformBufferedAction() then
+							if book_fx ~= nil then
+								book_fx:PushEvent("fail_fx", inst)
+							end
+						end
+					end
+				end
+				if inst.sg.statemem.repeatcast then
+					fn50()
+				else
+					inst.sg.statemem.fn50 = fn50
+				end
+			end),
+			TimeEvent(50 * FRAMES, function(inst)
+				if inst.sg.statemem.fn50 ~= nil then
+					inst.sg.statemem.fn50()
+					inst.sg.statemem.fn50 = nil
+				end
+			end),
+			--
+			TimeEvent(45 * FRAMES, function(inst)
+				if inst.sg.statemem.repeatcast then
+					inst.SoundEmitter:PlaySound("dontstarve/common/use_book_close")
+				end
+			end),
+			TimeEvent(51 * FRAMES, function(inst)
+				if not inst.sg.statemem.repeatcast then
+					inst.SoundEmitter:PlaySound("dontstarve/common/use_book_close")
+				end
+			end),
+			--
+			TimeEvent(67 * FRAMES, function(inst)
+				if inst.sg.statemem.repeatcast then
+					inst.sg:RemoveStateTag("busy")
+					inst:RemoveTag("canrepeatcast")
+				end
+			end),
+			TimeEvent(73 * FRAMES, function(inst)
+				if not inst.sg.statemem.repeatcast then
+					inst.sg:RemoveStateTag("busy")
+					inst:RemoveTag("canrepeatcast")
+				end
+			end),
+			--
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if inst.sg.statemem.symbolsoverridden then
+				inst.AnimState:OverrideSymbol("book_open", "player_actions_uniqueitem", "book_open")
+				inst.AnimState:OverrideSymbol("book_closed", "player_actions_uniqueitem", "book_closed")
+			end
+			if inst.sg.statemem.book_fx ~= nil and inst.sg.statemem.book_fx:IsValid() then
+				inst.sg.statemem.book_fx:Remove()
+			end
+			if inst.sg.statemem.fx_shadow ~= nil and inst.sg.statemem.fx_shadow:IsValid() then
+				inst.sg.statemem.fx_shadow:Remove()
+			end
+			if inst.sg.statemem.fx_over ~= nil and inst.sg.statemem.fx_over:IsValid() then
+				inst.sg.statemem.fx_over:Remove()
+			end
+			if inst.sg.statemem.fx_under ~= nil and inst.sg.statemem.fx_under:IsValid() then
+				inst.sg.statemem.fx_under:Remove()
+			end
+			if inst.sg.statemem.targetfx ~= nil and inst.sg.statemem.targetfx:IsValid() then
+				OnRemoveCleanupTargetFX(inst)
+			end
+			if inst.sg.statemem.soundtask ~= nil then
+				inst.sg.statemem.soundtask:Cancel()
+			elseif inst.SoundEmitter:PlayingSound("book_layer_sound") then
+				inst.SoundEmitter:SetVolume("book_layer_sound", .5)
+			end
+			inst:RemoveTag("canrepeatcast")
+		end,
+	},
 
     State{
         name = "book_peruse",
@@ -11472,12 +11674,11 @@ local states =
             inst.sg.statemem.stafflight.Transform:SetPosition(inst.Transform:GetWorldPosition())
             inst.sg.statemem.stafflight:SetUp(colour, 1.9, .33)
 
-            if staff ~= nil and staff.components.aoetargeting ~= nil and staff.components.aoetargeting.targetprefab ~= nil then
+			if staff ~= nil and staff.components.aoetargeting ~= nil then
                 local buffaction = inst:GetBufferedAction()
-                if buffaction ~= nil and buffaction.pos ~= nil then
-                    inst.sg.statemem.targetfx = SpawnPrefab(staff.components.aoetargeting.targetprefab)
+				if buffaction ~= nil then
+					inst.sg.statemem.targetfx = staff.components.aoetargeting:SpawnTargetFXAt(buffaction:GetDynamicActionPoint())
                     if inst.sg.statemem.targetfx ~= nil then
-                        inst.sg.statemem.targetfx.Transform:SetPosition(buffaction:GetActionPoint():Get())
                         inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
                     end
                 end
@@ -11861,12 +12062,11 @@ local states =
             inst.AnimState:PlayAnimation("atk_leap_pre")
 
             local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-            if weapon ~= nil and weapon.components.aoetargeting ~= nil and weapon.components.aoetargeting.targetprefab ~= nil then
+			if weapon ~= nil and weapon.components.aoetargeting ~= nil then
                 local buffaction = inst:GetBufferedAction()
-                if buffaction ~= nil and buffaction.pos ~= nil then
-                    inst.sg.statemem.targetfx = SpawnPrefab(weapon.components.aoetargeting.targetprefab)
+				if buffaction ~= nil then
+					inst.sg.statemem.targetfx = weapon.components.aoetargeting:SpawnTargetFXAt(buffaction:GetDynamicActionPoint())
                     if inst.sg.statemem.targetfx ~= nil then
-                        inst.sg.statemem.targetfx.Transform:SetPosition(buffaction:GetActionPoint():Get())
                         inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
                     end
                 end
@@ -12018,12 +12218,11 @@ local states =
             inst.AnimState:PlayAnimation("superjump_pre")
 
             local weapon = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-            if weapon ~= nil and weapon.components.aoetargeting ~= nil and weapon.components.aoetargeting.targetprefab ~= nil then
+			if weapon ~= nil and weapon.components.aoetargeting ~= nil then
                 local buffaction = inst:GetBufferedAction()
-                if buffaction ~= nil and buffaction.pos ~= nil then
-                    inst.sg.statemem.targetfx = SpawnPrefab(weapon.components.aoetargeting.targetprefab)
+				if buffaction ~= nil then
+					inst.sg.statemem.targetfx = weapon.components.aoetargeting:SpawnTargetFXAt(buffaction:GetDynamicActionPoint())
                     if inst.sg.statemem.targetfx ~= nil then
-                        inst.sg.statemem.targetfx.Transform:SetPosition(buffaction:GetActionPoint():Get())
                         inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
                     end
                 end
@@ -12730,13 +12929,13 @@ local states =
             inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("atk_pre")
 
-            if buffaction ~= nil and buffaction.pos ~= nil then
-                inst:ForceFacePoint(buffaction:GetActionPoint():Get())
+			local pos = buffaction ~= nil and buffaction:GetActionPoint() or nil
+			if pos ~= nil then
+				inst:ForceFacePoint(pos:Get())
 
-                if equip ~= nil and equip.components.aoetargeting ~= nil and equip.components.aoetargeting.targetprefab ~= nil then
-                    inst.sg.statemem.targetfx = SpawnPrefab(equip.components.aoetargeting.targetprefab)
+				if equip ~= nil and equip.components.aoetargeting ~= nil then
+					inst.sg.statemem.targetfx = equip.components.aoetargeting:SpawnTargetFXAt(buffaction:GetDynamicActionPoint())
                     if inst.sg.statemem.targetfx ~= nil then
-                        inst.sg.statemem.targetfx.Transform:SetPosition(buffaction:GetActionPoint():Get())
                         inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
                     end
                 end
@@ -12859,11 +13058,13 @@ local states =
         onenter = function(inst, data)
             inst.components.locomotor:Stop()
 
+            local dancedata = nil
             if data.tags ~= nil then
                 for i, v in ipairs(data.tags) do
                     inst.sg:AddStateTag(v)
                     if v == "dancing" then
-                        TheWorld:PushEvent("dancingplayer",inst)
+                        dancedata = dancedata or {}
+                        TheWorld:PushEvent("dancingplayer", inst)
                         local hat = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
                         if hat ~= nil and hat.OnStartDancing ~= nil then
                             local newdata = hat:OnStartDancing(inst, data)
@@ -12896,12 +13097,28 @@ local states =
 
             if animtype == "string" then
                 inst.AnimState:PlayAnimation(anim, data.loop)
+                if dancedata ~= nil then
+                    table.insert(dancedata, {play = true, anim = anim, loop = data.loop,})
+                end
             elseif animtype == "table" then
+                local maxanim = #anim
+                -- NOTES(JBK): Keep these in sync with the data replication in `dancedata` below.
                 inst.AnimState:PlayAnimation(anim[1])
-                for i = 2, #anim - 1 do
+                for i = 2, maxanim - 1 do
                     inst.AnimState:PushAnimation(anim[i])
                 end
-                inst.AnimState:PushAnimation(anim[#anim], data.loop == true)
+                inst.AnimState:PushAnimation(anim[maxanim], data.loop == true)
+
+                if dancedata ~= nil then
+                    table.insert(dancedata, {play = true, anim = anim[1]})
+                    for i = 2, maxanim - 1 do
+                        table.insert(dancedata, {anim = anim[i]})
+                    end
+                    table.insert(dancedata, {anim = anim[maxanim], loop = data.loop == true,})
+                end
+            end
+            if dancedata ~= nil then
+                TheWorld:PushEvent("dancingplayerdata", {inst = inst, dancedata = dancedata,})
             end
 
             if data.fx then --fx might be a boolean, so don't do ~= nil
@@ -15793,6 +16010,209 @@ local states =
             inst.components.talker:Say(GetActionFailString(inst, "REMOVEMODULES", "NO_MODULES"))
         end,
     },
+
+	--------------------------------------------------------------------------
+	-- Maxwell rework
+
+	State{
+		name = "start_using_tophat",
+		tags = { "doing", "busy" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+
+			local buffaction = inst:GetBufferedAction()
+			local hat = buffaction ~= nil and buffaction.invobject or nil
+			inst.AnimState:PlayAnimation(
+				hat ~= nil and
+				inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) == hat and
+				"tophat_equipped_pre" or
+				"tophat_empty_pre"
+			)
+			inst.components.inventory:ReturnActiveActionItem(hat)
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("using_tophat")
+				end
+			end),
+		},
+	},
+
+	State{
+		name = "using_tophat",
+		tags = { "doing", "overridelocomote" },
+
+		onenter = function(inst)
+			if inst:PerformBufferedAction() then
+				local hat, equipped, build, skin_build
+				if inst.components.magician ~= nil then
+					hat = inst.components.magician.item
+					equipped = inst.components.magician.equip
+					if hat ~= nil then
+						build = hat.AnimState:GetBuild()
+						skin_build = hat:GetSkinBuild()
+					end
+				end
+
+				inst.AnimState:PlayAnimation(equipped and "tophat_equipped_start" or "tophat_empty_start")
+				inst.AnimState:PushAnimation("tophat_loop")
+				if skin_build ~= nil then
+					inst.AnimState:OverrideItemSkinSymbol("swap_hattop", skin_build, "swap_hat", inst.GUID, build)
+				else
+					inst.AnimState:OverrideSymbol("swap_hattop", build, "swap_hat")
+				end
+
+				--shadow particles
+				inst.AnimState:OverrideSymbol("tophat_fx_float", "tophat_fx", "fx_float")
+				inst.AnimState:SetSymbolMultColour("tophat_fx_float", 1, 1, 1, .5)
+				inst.sg.statemem.fx_float = SpawnPrefab("tophat_using_shadow_fx")
+				inst.sg.statemem.fx_float:AttachToTopHatUser(inst)
+
+				--shadow swirl
+				inst.sg.statemem.fx_front = SpawnPrefab("tophat_swirl_fx")
+				inst.sg.statemem.fx_front:AttachToTopHatUser(inst, true)
+				inst.sg.statemem.fx_back = SpawnPrefab("tophat_swirl_fx")
+				inst.sg.statemem.fx_back:AttachToTopHatUser(inst, false)
+			else
+				inst.AnimState:PlayAnimation(
+					inst.AnimState:IsCurrentAnimation("tophat_equipped_pre") and
+					"tophat_equipped_pst" or
+					"tophat_empty_pst"
+				)
+				inst.AnimState:SetTime(9 * FRAMES)
+				inst.sg:RemoveStateTag("overridelocomote")
+			end
+		end,
+
+		events =
+		{
+			EventHandler("equip", function(inst)
+				if inst.AnimState:IsCurrentAnimation("tophat_loop") then
+					inst.AnimState:PlayAnimation("tophat_item_in")
+					inst.AnimState:PushAnimation("tophat_loop")
+				end
+			end),
+			EventHandler("unequip", function(inst)
+				if inst.AnimState:IsCurrentAnimation("tophat_loop") then
+					inst.AnimState:PlayAnimation("tophat_item_in")
+					inst.AnimState:PushAnimation("tophat_loop")
+				end
+			end),
+			EventHandler("magicianstopped", function(inst)
+				--handle unexpected stops, e.g. the item got deleted
+				inst.sg:GoToState("idle")
+			end),
+			EventHandler("locomote", function(inst)
+				if inst.sg:HasStateTag("overridelocomote") then
+					inst.sg.statemem.stopusingmagiciantool = true
+					inst.sg:GoToState("stop_using_tophat", true)
+					return true
+				end
+			end),
+			EventHandler("animqueueover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end)
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.stopusingmagiciantool then
+				--interrupted
+				inst.AnimState:ClearOverrideSymbol("swap_hattop")
+				inst.AnimState:ClearOverrideSymbol("tophat_fx_float")
+				inst.AnimState:SetSymbolMultColour("tophat_fx_float", 1, 1, 1, 1)
+				if inst.components.magician ~= nil then
+					inst.components.magician:DropToolOnStop()
+					inst.components.magician:StopUsing()
+				end
+			end
+			if inst.sg.statemem.fx_float ~= nil then
+				inst.sg.statemem.fx_float:Remove()
+				inst.sg.statemem.fx_front:Remove()
+				inst.sg.statemem.fx_back:Remove()
+			end
+		end,
+	},
+
+	State{
+		name = "stop_using_tophat",
+		tags = { "idle", "overridelocomote" },
+
+		onenter = function(inst, locomoting)
+			-- 'locomoting' means we got here via locomotion control rather than ACTIONS.STOPUSINGMAGICTOOL:
+			-- - We must manually stop magician
+			-- - Any buffered actions would be our NEXT action after we play some pst anim
+
+			local held, equipped
+			if inst.components.magician ~= nil then
+				inst.sg.statemem.hat = inst.components.magician.item
+				held = inst.components.magician.held
+				equipped = inst.components.magician.equip and inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) == nil
+				if locomoting then
+					inst.components.magician:StopUsing()
+				end
+			end
+
+			if not locomoting then
+				if not inst:PerformBufferedAction() then
+					inst.sg:GoToState("idle")
+					return
+				end
+			end
+
+			if equipped then
+				--NOTE: anim is duplicated for both swap_hat and swap_hattop
+				--      so that it'll be seamless for clients predicting the
+				--      anim before the re-equip happens on the server.
+				inst.AnimState:PlayAnimation("tophat_equipped_pst")
+				inst.AnimState:ClearOverrideSymbol("swap_hattop")
+			elseif held then
+				inst.AnimState:PlayAnimation("tophat_empty_pst")
+			else
+				--dropped on ground
+				inst.sg:GoToState("idle")
+			end
+		end,
+
+		timeline =
+		{
+			TimeEvent(7 * FRAMES, function(inst)
+				inst.sg:AddStateTag("canrotate")
+			end),
+			TimeEvent(8 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("overridelocomote")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("equip", function(inst, data)
+				--suppress equip events for re-equipping our magiciantool hat
+				return data ~= nil and data.item == inst.sg.statemem.hat
+			end),
+			EventHandler("locomote", function(inst)
+				--don't handle locomotion states yet
+				--we still allows buffering them, since we are not "busy"
+				return inst.sg:HasStateTag("overridelocomote")
+			end),
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.AnimState:ClearOverrideSymbol("swap_hattop")
+			inst.AnimState:ClearOverrideSymbol("tophat_fx_float")
+			inst.AnimState:SetSymbolMultColour("tophat_fx_float", 1, 1, 1, 1)
+		end,
+	},
 
     ---------------------------------------------------------------------------
     -- monkey

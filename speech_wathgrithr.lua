@@ -384,6 +384,16 @@ return{
         {
             DOER_ISNT_MODULE_OWNER = "I respect thine loyalty to our metal warrior, scout.",
         },
+
+		CAST_SPELLBOOK =
+		{
+--fallback to speech_wilson.lua			NO_TOPHAT = "only_used_by_waxwell",
+		},
+
+		CASTAOE =
+		{
+--fallback to speech_wilson.lua			NO_MAX_SANITY = "only_used_by_waxwell",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -468,6 +478,8 @@ return{
 --fallback to speech_wilson.lua         SAME_OLD_5 = "only_used_by_warly",
 --fallback to speech_wilson.lua 		TASTY = "only_used_by_warly",
     },
+
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
 
     ANNOUNCE_ENCUMBERED =
     {
@@ -2917,7 +2929,11 @@ return{
 		WATERMELON = "It makes a good sound when you hit it.",
 		WATERMELON_COOKED = "Warm and red, but it doesn't flow.",
 		WATERMELONHAT = "It's almost like wearing a pelt.",
-		WAXWELLJOURNAL = "A tragic tale of woe and misery!",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "A tragic tale of woe and misery!",
+--fallback to speech_wilson.lua			NEEDSFUEL = "only_used_by_waxwell",
+		},
 		WETGOOP = "Slop.",
         WHIP = "Loud and powerful!",
 		WINTERHAT = "Warm, but not suited for combat.",
@@ -4661,6 +4677,10 @@ return{
             GENERIC = "It shall make for some fine target practice.",
             BURNT = "The stuffed man hath met a fiery end.",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "'Tis a wicked looking thing.",
+		TOPHAT_MAGICIAN = "It hath been touched by dark magic.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

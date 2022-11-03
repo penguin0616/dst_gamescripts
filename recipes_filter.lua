@@ -150,6 +150,7 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"book_light_upgraded",
 
 	-- Maxwell
+	"magician_chest",
 	"waxwelljournal",
 
 	-- Winona
@@ -829,6 +830,7 @@ CRAFTING_FILTERS.CONTAINERS.recipes =
 	"candybag",
 	"treasurechest",
 	"dragonflychest",
+	"magician_chest",
 	"icebox",
 	"saltbox",
 	"fish_box",
@@ -879,6 +881,7 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 
 	"treasurechest",
 	"dragonflychest",
+	"magician_chest",
 	"icebox",
 	"saltbox",
 

@@ -39,6 +39,7 @@ local VoteDialog = require "widgets/votedialog"
 local TEMPLATES = require "widgets/templates"
 local easing = require("easing")
 local TeamStatusBars = require("widgets/teamstatusbars")
+local Wheel = require "widgets/wheel"
 
 local Controls = Class(Widget, function(self, owner)
     Widget._ctor(self, "Controls")
@@ -260,6 +261,20 @@ local Controls = Class(Widget, function(self, owner)
 	    self.craftingmenu = self.right_root:AddChild(CraftingMenu(self.owner, false))
 	end
 	self.crafttabs = self.craftingmenu -- self.crafttabs is deprecated
+
+	self.commandwheelroot = self:AddChild(Widget("CommandWheelRoot"))
+    self.commandwheelroot:SetHAnchor(ANCHOR_MIDDLE)
+    self.commandwheelroot:SetVAnchor(ANCHOR_MIDDLE)
+    self.commandwheelroot:SetScaleMode(SCALEMODE_PROPORTIONAL)
+
+	--@CHARLES #TODO CONSOLE MERGE: add these lines
+	--self.commandwheel.OnCancel = function() owner.HUD:CloseControllerCommandWheel() end
+	--self.commandwheel.OnExecute = self.commandwheel.OnCancel
+
+	self.spellwheel = self.commandwheelroot:AddChild(Wheel("SpellWheel", owner, {ignoreleftstick = true,}))
+	self.spellwheel.selected_label:SetSize(26)
+	self.spellwheel.OnCancel = function() owner.HUD:CloseSpellWheel() end
+	self.spellwheel.OnExecute = function() owner.HUD:CloseSpellWheel(true) end
 
     if TheNet:GetIsClient() then
         --Not using topleft_root because we need to be on top of containerroot
@@ -813,6 +828,7 @@ function Controls:HideCraftingAndInventory()
         if self.status.ToggleCrafting ~= nil then
             self.status:ToggleCrafting(true)
         end
+		self.spellwheel:Close()
     end
 end
 

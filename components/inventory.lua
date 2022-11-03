@@ -290,8 +290,8 @@ function Inventory:DropActiveItem()
 	return active_item
 end
 
-function Inventory:ReturnActiveActionItem(item)
-    if item ~= nil and item == self.activeitem and self.inst.bufferedaction ~= nil then
+function Inventory:ReturnActiveActionItem(item, instant)
+    if item ~= nil and item == self.activeitem and (self.inst.bufferedaction ~= nil) == not instant then
         --Hacks for altering normal inventory:GiveItem() behaviour
         self.ignorefull = true
         self.ignoreoverflow = true
@@ -299,13 +299,15 @@ function Inventory:ReturnActiveActionItem(item)
         if self:GiveItem(item) then
             self:SetActiveItem(nil)
 
-            --Super hacks...
-            if item == self.inst.bufferedaction.invobject then
-                self.inst.bufferedaction.doerownsobject = item.components.inventoryitem:IsHeldBy(self.inst)
-            end
-            if item == self.inst.bufferedaction.target then
-                self.inst.bufferedaction.initialtargetowner = item.components.inventoryitem.owner
-            end
+			if not instant then
+				--Super hacks...
+				if item == self.inst.bufferedaction.invobject then
+					self.inst.bufferedaction.doerownsobject = item.components.inventoryitem:IsHeldBy(self.inst)
+				end
+				if item == self.inst.bufferedaction.target then
+					self.inst.bufferedaction.initialtargetowner = item.components.inventoryitem.owner
+				end
+			end
         end
 
         --Hacks for altering normal inventory:GiveItem() behaviour
@@ -1648,6 +1650,14 @@ function Inventory:Close(keepactiveitem)
     self.isvisible = false
 end
 
+function Inventory:CloseAllChestContainers()
+	for k in pairs(self.opencontainers) do
+		if k.components.container.type == "chest" then
+			k.components.container:Close()
+		end
+	end
+end
+
 --------------------------------------------------------------------------
 --InvSlot click action handlers
 --------------------------------------------------------------------------
@@ -1783,10 +1793,11 @@ function Inventory:UseItemFromInvTile(item, actioncode, mod_name)
         end
         ClearClientRequestedAction()
 
-        if #actions <= 0 then
+		local act = actions[1]
+		if act == nil then
             return
-        elseif actioncode == nil or (actions[1].action.code == actioncode and actions[1].action.mod_name == mod_name) then
-            self.inst.components.locomotor:PushAction(actions[1], true)
+        elseif actioncode == nil or (act.action.code == actioncode and act.action.mod_name == mod_name) then
+           	self.inst.components.locomotor:PushAction(act, true)
         --elseif mod_name ~= nil then
             --print("Remote use inventory item failed: "..tostring(ACTION_MOD_IDS[mod_name][actioncode]))
         --else
@@ -1903,6 +1914,19 @@ function Inventory:DropItemFromInvTile(item, single)
         buffaction.options.wholestack = not (single and item.components.stackable ~= nil and item.components.stackable:IsStack())
         self.inst.components.locomotor:PushAction(buffaction, true)
     end
+end
+
+function Inventory:CastSpellBookFromInv(item, spell_id)
+	if not self.inst.sg:HasStateTag("busy") and
+		self:CanAccessItem(item) and
+		item.components.spellbook ~= nil and
+		self.inst.components.playercontroller ~= nil then
+		if spell_id ~= nil then
+			item.components.spellbook:SelectSpell(spell_id)
+		end
+		local buffaction = BufferedAction(self.inst, nil, ACTIONS.CAST_SPELLBOOK, item)
+		self.inst.components.locomotor:PushAction(buffaction, true)
+	end
 end
 
 function Inventory:EquipActiveItem()

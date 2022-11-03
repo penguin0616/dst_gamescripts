@@ -384,6 +384,16 @@ return{
         {
             DOER_ISNT_MODULE_OWNER = "Wolfgang thinks it only speaks robot.",
         },
+
+		CAST_SPELLBOOK =
+		{
+--fallback to speech_wilson.lua			NO_TOPHAT = "only_used_by_waxwell",
+		},
+
+		CASTAOE =
+		{
+--fallback to speech_wilson.lua			NO_MAX_SANITY = "only_used_by_waxwell",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -468,6 +478,8 @@ return{
 --fallback to speech_wilson.lua         SAME_OLD_5 = "only_used_by_warly",
 --fallback to speech_wilson.lua 		TASTY = "only_used_by_warly",
     },
+
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
 
     ANNOUNCE_ENCUMBERED =
     {
@@ -2918,7 +2930,11 @@ return{
 		WATERMELON = "So many seeds.",
 		WATERMELON_COOKED = "Seeds is cooked out of melon now.",
 		WATERMELONHAT = "Why not wear melon on head! Haha!",
-		WAXWELLJOURNAL = "Wolfgang is glad he cannot read!",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "Wolfgang is glad he cannot read!",
+--fallback to speech_wilson.lua			NEEDSFUEL = "only_used_by_waxwell",
+		},
 		WETGOOP = "Is not bad to eat, but is not good.",
         WHIP = "Good to floss teeth with.",
 		WINTERHAT = "It make ears happy in cold!",
@@ -4662,6 +4678,10 @@ return{
             GENERIC = "Cloth man does not have much to say.",
             BURNT = "Cloth man has even less to say now.",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "Is little disappearing box.",
+		TOPHAT_MAGICIAN = "Wolfgang would rather wear something else.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

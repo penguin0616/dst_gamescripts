@@ -253,4 +253,98 @@ end
 BrainCommon.NodeAssistLeaderDoAction = NodeAssistLeaderDoAction
 
 --------------------------------------------------------------------------
+--NOTES(JBK): This helps followers pickup items for a PLAYER leader.
+--            They pickup if they are able to, then give them to their leader, or drop them onto the ground if unable to.
+
+local function Unignore(inst, item, ignorethese)
+    ignorethese[item] = nil
+end
+
+local function PickUpAction(inst, pickup_range, furthestfirst, positionoverride, ignorethese)
+    if inst.components.inventory:IsFull() then
+        return nil
+    end
+
+    local leader = inst.components.follower and inst.components.follower.leader or nil
+    if leader == nil or leader.components.trader == nil then -- Trader component is needed for ACTIONS.GIVEALLTOPLAYER
+        return nil
+    end
+
+    if not leader:HasTag("player") then -- Stop things from trying to help non-players due to trader mechanics.
+        return nil
+    end
+
+    local item = FindPickupableItem(leader, pickup_range, furthestfirst, positionoverride, ignorethese)
+    if item == nil then
+        return nil
+    end
+
+    if ignorethese ~= nil then
+        ignorethese[item] = true
+        inst:DoTaskInTime(5, Unignore, item, ignorethese)
+    end
+
+    return BufferedAction(inst, item, item.components.trap ~= nil and ACTIONS.CHECKTRAP or ACTIONS.PICKUP)
+end
+
+local function GiveAction(inst)
+    local leader = inst.components.follower and inst.components.follower.leader or nil
+    local leaderinv = leader and leader.components.inventory or nil
+    local item = inst.components.inventory:GetFirstItemInAnySlot()
+    if leader == nil or leaderinv == nil or item == nil then
+        return nil
+    end
+
+    return leaderinv:CanAcceptCount(item, 1) > 0 and BufferedAction(inst, leader, ACTIONS.GIVEALLTOPLAYER, item) or nil
+end
+
+local function DropAction(inst)
+    local leader = inst.components.follower and inst.components.follower.leader or nil
+    local item = inst.components.inventory:GetFirstItemInAnySlot()
+    if leader == nil or item == nil then
+        return nil
+    end
+
+    local ba = BufferedAction(inst, leader, ACTIONS.DROP, item)
+    ba.options.wholestack = true
+    return ba
+end
+
+local function AlwaysTrue() return true end
+local function NodeAssistLeaderPickUps(self, parameters)
+    local cond = parameters.cond or AlwaysTrue
+    local pickup_range = parameters.range
+	local give_cond = parameters.give_cond
+	local give_range_sq = parameters.give_range ~= nil and parameters.give_range * parameters.give_range or nil
+    local furthestfirst = parameters.furthestfirst
+	local positionoverridefn = type(parameters.positionoverride) == "function" and parameters.positionoverride or nil
+	local positionoverride = positionoverridefn == nil and parameters.positionoverride or nil
+    local ignorethese = parameters.ignorethese
+
+    local function CustomPickUpAction(inst)
+        return PickUpAction(inst, pickup_range, furthestfirst, positionoverridefn ~= nil and positionoverridefn(inst) or positionoverride, ignorethese)
+    end
+
+	local give_cond_fn = give_range_sq ~= nil and
+		function()
+			return (give_cond == nil or give_cond())
+				and self.inst.components.follower ~= nil
+				and self.inst.components.follower.leader ~= nil
+				and self.inst.components.follower.leader:GetDistanceSqToPoint(positionoverridefn ~= nil and positionoverridefn(self.inst) or positionoverride or self.inst:GetPosition()) < give_range_sq
+		end
+		or give_cond
+		or AlwaysTrue
+
+    return PriorityNode({
+        IfNode(cond, "Should Pickup",
+            DoAction(self.inst, CustomPickUpAction, nil, true)),
+		IfNode(give_cond_fn, "Should Bring To Leader",
+			PriorityNode({
+				DoAction(self.inst, GiveAction, nil, true),
+				DoAction(self.inst, DropAction, nil, true),
+			}, .25)),
+    },.25)
+end
+BrainCommon.NodeAssistLeaderPickUps = NodeAssistLeaderPickUps
+
 return BrainCommon

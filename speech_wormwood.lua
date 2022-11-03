@@ -384,6 +384,16 @@ return{
         {
             DOER_ISNT_MODULE_OWNER = "Shy?",
         },
+
+		CAST_SPELLBOOK =
+		{
+--fallback to speech_wilson.lua			NO_TOPHAT = "only_used_by_waxwell",
+		},
+
+		CASTAOE =
+		{
+--fallback to speech_wilson.lua			NO_MAX_SANITY = "only_used_by_waxwell",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -468,6 +478,8 @@ return{
 --fallback to speech_wilson.lua         SAME_OLD_5 = "only_used_by_warly",
 --fallback to speech_wilson.lua 		TASTY = "only_used_by_warly",
     },
+
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
 
     ANNOUNCE_ENCUMBERED =
     {
@@ -2921,7 +2933,11 @@ return{
 		WATERMELON = "Watery Sweet belly stuff",
 		WATERMELON_COOKED = "Slurpy",
 		WATERMELONHAT = "Watery head thing",
-		WAXWELLJOURNAL = "Nope",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "Nope",
+--fallback to speech_wilson.lua			NEEDSFUEL = "only_used_by_waxwell",
+		},
 		WETGOOP = "Yum",
         WHIP = "Snappy Kitty Tail",
 		WINTERHAT = "Looks good",
@@ -4665,6 +4681,10 @@ return{
             GENERIC = "Hello!",
             BURNT = "Goodbye",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "Magic box",
+		TOPHAT_MAGICIAN = "Soft... and scary",
     },
 
     DESCRIBE_GENERIC = "Friend?",

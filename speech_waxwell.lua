@@ -384,6 +384,16 @@ return{
         {
             DOER_ISNT_MODULE_OWNER = "Hmph. It's not worth my time.",
         },
+
+		CAST_SPELLBOOK =
+		{
+			NO_TOPHAT = "I'll need a top hat for this trick to work.",
+		},
+
+		CASTAOE =
+		{
+			NO_MAX_SANITY = "I fear my mind can't take the strain...",
+		},
     },
 
 	ANNOUNCE_CANNOT_BUILD =
@@ -419,7 +429,7 @@ return{
 
 	ANNOUNCE_BEES = "Killing me won't bring back your honey!",
 	ANNOUNCE_BOOMERANG = "Ow! Blasted... clumsy hands!",
-	ANNOUNCE_CHARLIE = "Charlie? It's me! Maxwell!",
+	ANNOUNCE_CHARLIE = "I suppose it's best to keep up appearances...",
 	ANNOUNCE_CHARLIE_ATTACK = "Ow! Be gentle, Charlie!",
 --fallback to speech_wilson.lua 	ANNOUNCE_CHARLIE_MISSED = "only_used_by_winona", --winona specific
 	ANNOUNCE_COLD = "My heart grows cold.",
@@ -468,6 +478,8 @@ return{
 --fallback to speech_wilson.lua         SAME_OLD_5 = "only_used_by_warly",
 --fallback to speech_wilson.lua 		TASTY = "only_used_by_warly",
     },
+
+	ANNOUNCE_FOODMEMORY = "only_used_by_warly",
 
     ANNOUNCE_ENCUMBERED =
     {
@@ -2917,7 +2929,11 @@ return{
 		WATERMELON = "It's mostly water. Fibrous, sweet water.",
 		WATERMELON_COOKED = "Grillermelon.",
 		WATERMELONHAT = "This is one way to keep cool. And sticky.",
-		WAXWELLJOURNAL = "I'm so sorry, Charlie.",
+		WAXWELLJOURNAL =
+		{
+			GENERIC = "The show must go on.",
+			NEEDSFUEL = "It hungers for the fuel.",
+		},
 		WETGOOP = "How uncultured.",
         WHIP = "Makes me feel like the master again.",
 		WINTERHAT = "How disappointingly rustic.",
@@ -4624,11 +4640,11 @@ return{
         FENCE_ROTATOR = "What insidious magic. It draws power from eye rolls and groans.",
 
         CHARLIE_STAGE_POST = "Just like the old days.",
-        CHARLIE_LECTURN = "She really expects me to... oh why not.",
+        CHARLIE_LECTURN = "Misdirection, the oldest trick in the book. Well played, Charlie.",
 
         CHARLIE_HECKLER = "Tough crowd.",
 
-        PLAYBILL_THE_DOLL = "Are you having fun?",
+        PLAYBILL_THE_DOLL = "I think she's enjoying this a bit too much.",
         STATUEHARP_HEDGESPAWNER = "This place is really going to seed.",
         HEDGEHOUND = "The critics here will really eat you alive.",
         HEDGEHOUND_BUSH = "Nice try.",
@@ -4661,6 +4677,10 @@ return{
             GENERIC = "Finally, someone who'll carry my things.",
             BURNT = "Someone should clean that up.",
         },
+
+		-- Waxwell
+		MAGICIAN_CHEST = "If you're worried about getting stuck inside, don't rummage through my things.",
+		TOPHAT_MAGICIAN = "Tall, dark and dapper.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",
