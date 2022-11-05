@@ -35,9 +35,9 @@ end
 local function OnSpawnPet(inst, pet)
     if pet:HasTag("shadowminion") then
         if not (inst.components.health:IsDead() or inst:HasTag("playerghost")) then
-			if not inst.components.builder.freebuildmode then
+			--if not inst.components.builder.freebuildmode then
 	            inst.components.sanity:AddSanityPenalty(pet, TUNING.SHADOWWAXWELL_SANITY_PENALTY[string.upper(pet.prefab)])
-			end
+			--end
             inst:ListenForEvent("onremove", inst._onpetlost, pet)
             pet.components.skinner:CopySkinsFromPlayer(inst)
         elseif pet._killtask == nil then
@@ -128,6 +128,13 @@ local function OnLoad(inst)
     OnSkinsChanged(inst, {nofx = true})
 end
 
+local function GetEquippableDapperness(owner, equippable)
+	local dapperness = equippable:GetDapperness(owner, owner.components.sanity.no_moisture_penalty)
+	return equippable.inst:HasTag("shadow_item")
+		and dapperness * TUNING.WAXWELL_SHADOW_ITEM_RESISTANCE
+		or dapperness
+end
+
 local function common_postinit(inst)
     inst:AddTag("shadowmagic")
     inst:AddTag("dappereffects")
@@ -171,6 +178,7 @@ local function master_postinit(inst)
     inst.components.hunger:SetMax(TUNING.WAXWELL_HUNGER)
     inst.components.sanity:SetMax(TUNING.WAXWELL_SANITY)
     inst.components.sanity.dapperness = TUNING.DAPPERNESS_LARGE
+	inst.components.sanity.get_equippable_dappernessfn = GetEquippableDapperness
     inst.components.health:SetMaxHealth(TUNING.WAXWELL_HEALTH)
     inst.soundsname = "maxwell"
 

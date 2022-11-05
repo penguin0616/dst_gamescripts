@@ -41,6 +41,7 @@ local wintersounds =
 }
 
 local rabbitloot = { "smallmeat" }
+local forced_beardlingloot = { "nightmarefuel" }
 
 local brain = require("brains/rabbitbrain")
 
@@ -102,11 +103,12 @@ end
 
 local function SetForcedBeardlingLoot(lootdropper)
 	if not lootdropper.inst._fixedloot then
-		lootdropper:SetLoot(nil)
-		lootdropper:AddRandomLoot("beardhair", 1)
-		lootdropper:AddRandomLoot("monstermeat", .5)
-		lootdropper:AddRandomLoot("nightmarefuel", 6)
-		lootdropper.numrandomloot = 1
+		lootdropper:SetLoot(forced_beardlingloot)
+		if math.random() < .5 then
+			lootdropper:AddRandomLoot("beardhair", .5)
+			lootdropper:AddRandomLoot("monstermeat", 1)
+			lootdropper.numrandomloot = 1
+		end
 	end
 end
 

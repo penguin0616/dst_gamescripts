@@ -309,10 +309,12 @@ function Combat:StartTrackingTarget(target)
         end
         self.inst:ListenForEvent("enterlimbo", self.losetargetcallback, target)
         self.inst:ListenForEvent("onremove", self.losetargetcallback, target)
+		self.inst:ListenForEvent("forcelosecombattarget", self.losetargetcallback, target)
     end
 end
 
 function Combat:StopTrackingTarget(target)
+	self.inst:RemoveEventCallback("forcelosecombattarget", self.losetargetcallback, target)
     self.inst:RemoveEventCallback("enterlimbo", self.losetargetcallback, target)
     self.inst:RemoveEventCallback("onremove", self.losetargetcallback, target)
 end

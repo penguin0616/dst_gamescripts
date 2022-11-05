@@ -61,6 +61,10 @@ local function DoSound(inst, sound)
 	inst.SoundEmitter:PlaySound(sound)
 end
 
+local function NotBlocked(pt)
+	return not TheWorld.Map:IsGroundTargetBlocked(pt)
+end
+
 local actionhandlers =
 {
     ActionHandler(ACTIONS.CHOP,
@@ -95,14 +99,29 @@ local actionhandlers =
     ActionHandler(ACTIONS.DROP, "give"),
     ActionHandler(ACTIONS.PICKUP, "take"),
     ActionHandler(ACTIONS.CHECKTRAP, "take"),
+    ActionHandler(ACTIONS.PICK, "dolongaction"),
 }
 
 local events =
 {
     CommonHandlers.OnLocomote(true, false),
-    CommonHandlers.OnAttacked(),
+    --CommonHandlers.OnAttacked(),
     CommonHandlers.OnDeath(),
-    CommonHandlers.OnAttack(),
+    --CommonHandlers.OnAttack(),
+	EventHandler("attacked", function(inst, data)
+		if not (inst.components.health:IsDead() or inst.components.health:IsInvincible()) then
+			inst.sg:GoToState("disappear", data ~= nil and data.attacker or nil)
+		end
+	end),
+	EventHandler("doattack", function(inst, data)
+		if inst.components.health ~= nil and not inst.components.health:IsDead() and not inst.sg:HasStateTag("busy") then
+			if inst.components.combat.attackrange == 5 then
+				inst.sg:GoToState("lunge_pre", data ~= nil and data.target or nil)
+			else
+				inst.sg:GoToState("attack", data ~= nil and data.target or nil)
+			end
+		end
+	end),
     EventHandler("dance", function(inst)
         if not inst.sg:HasStateTag("busy") and (inst._brain_dancedata ~= nil or not inst.sg:HasStateTag("dancing")) then
             inst.sg:GoToState("dance")
@@ -114,14 +133,13 @@ local states =
 {
 	State{
 		name = "spawn",
-		tags = { "busy", "noattack" },
+		tags = { "busy", "noattack", "temp_invincible" },
 
 		onenter = function(inst, mult)
 			inst.Physics:Stop()
 			ToggleOffCharacterCollisions(inst)
 			inst.AnimState:PlayAnimation("minion_spawn")
            -- inst.SoundEmitter:PlaySound("maxwell_rework/shadow_worker/spawn")
-			inst.components.health:SetInvincible(true)
 			mult = mult or .8 + math.random() * .2
 			inst.AnimState:SetDeltaTimeMultiplier(mult)
 
@@ -139,7 +157,6 @@ local states =
 
 		ontimeout = function(inst)
 			inst.sg:AddStateTag("caninterrupt")
-			inst.components.health:SetInvincible(false)
 			ToggleOnCharacterCollisions(inst)
 			inst.AnimState:SetDeltaTimeMultiplier(1)
 		end,
@@ -155,7 +172,6 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.spawn then
-				inst.components.health:SetInvincible(false)
 				ToggleOnCharacterCollisions(inst)
 				inst.AnimState:SetDeltaTimeMultiplier(1)
 			end
@@ -193,6 +209,9 @@ local states =
         onenter = function(inst, pushanim)
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("idle_loop", true)
+			if inst.components.timer ~= nil and not inst.components.timer:TimerExists("shadowstrike_cd") then
+				inst.components.combat:SetRange(5)
+			end
         end,
     },
 
@@ -282,23 +301,29 @@ local states =
 
     State{
         name = "attack",
-        tags = {"attack", "notalking", "abouttoattack", "busy"},
+		tags = {"attack", "abouttoattack", "busy"},
 
-        onenter = function(inst)
-            inst.sg.statemem.target = inst.components.combat.target
-            inst.components.combat:StartAttack()
-            inst.Physics:Stop()
+		onenter = function(inst, target)
+			inst.components.locomotor:Stop()
             inst.AnimState:PlayAnimation("atk")
             inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_nightsword")
 
-            if inst.components.combat.target ~= nil and inst.components.combat.target:IsValid() then
-                inst:FacePoint(inst.components.combat.target.Transform:GetWorldPosition())
-            end
+			inst.components.combat:StartAttack()
+			if target == nil then
+				target = inst.components.combat.target
+			end
+			if target ~= nil and target:IsValid() then
+				inst.sg.statemem.target = target
+				inst:ForceFacePoint(target.Transform:GetWorldPosition())
+			end
         end,
 
         timeline =
         {
-            TimeEvent(8*FRAMES, function(inst) inst.components.combat:DoAttack(inst.sg.statemem.target) inst.sg:RemoveStateTag("abouttoattack") end),
+			TimeEvent(8*FRAMES, function(inst)
+				inst.sg:RemoveStateTag("abouttoattack")
+				inst.components.combat:DoAttack(inst.sg.statemem.target)
+			end),
             TimeEvent(12*FRAMES, function(inst) -- Keep FRAMES time synced up with ShouldKiteProtector.
                 inst.sg:RemoveStateTag("busy")
             end),
@@ -315,6 +340,12 @@ local states =
                 end
             end),
         },
+
+		onexit = function(inst)
+			if inst.sg:HasStateTag("abouttoattack") then
+				inst.components.combat:CancelAttack()
+			end
+		end,
     },
 
     State{
@@ -646,6 +677,54 @@ local states =
     },
 
     State{
+        name = "dolongaction",
+        tags = { "doing", "busy", "nodangle" },
+
+        onenter = function(inst, timeout)
+            if timeout == nil then
+                timeout = 1
+            elseif timeout > 1 then
+                inst.sg:AddStateTag("slowaction")
+            end
+            inst.sg:SetTimeout(timeout)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("build_pre")
+            inst.AnimState:PushAnimation("build_loop", true)
+            if inst.bufferedaction ~= nil then
+                inst.sg.statemem.action = inst.bufferedaction
+                if inst.bufferedaction.target ~= nil and inst.bufferedaction.target:IsValid() then
+                    inst.bufferedaction.target:PushEvent("startlongaction")
+                end
+            end
+        end,
+
+        timeline =
+        {
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+        },
+
+        ontimeout = function(inst)
+            inst.AnimState:PlayAnimation("build_pst")
+            inst:PerformBufferedAction()
+        end,
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            inst:ClearBufferedAction()
+        end,
+    },
+
+    State{
         name = "jumpout",
         tags = { "busy", "canrotate", "jumping" },
 
@@ -698,6 +777,302 @@ local states =
             end
         end,
     },
+
+	State{
+		name = "disappear",
+		tags = { "busy", "noattack", "temp_invincible" },
+
+		onenter = function(inst, attacker)
+			inst.components.locomotor:Stop()
+			ToggleOffCharacterCollisions(inst)
+			inst.AnimState:PlayAnimation("disappear")
+			if attacker ~= nil and attacker:IsValid() then
+				inst.sg.statemem.attackerpos = attacker:GetPosition()
+			end
+			TrySplashFX(inst, "small")
+			inst:PushEvent("forcelosecombattarget")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					local theta =
+						inst.sg.statemem.attackerpos ~= nil and
+						inst:GetAngleToPoint(inst.sg.statemem.attackerpos) or
+						inst.Transform:GetRotation()
+
+					theta = (theta + 165 + math.random() * 30) * DEGREES
+
+					local pos = inst:GetPosition()
+					pos.y = 0
+
+					local offs =
+						FindWalkableOffset(pos, theta, 4 + math.random(), 8, false, true, NotBlocked, true, true) or
+						FindWalkableOffset(pos, theta, 2 + math.random(), 6, false, true, NotBlocked, true, true)
+
+					if offs ~= nil then
+						pos.x = pos.x + offs.x
+						pos.z = pos.z + offs.z
+					end
+					inst.Physics:Teleport(pos:Get())
+					if inst.sg.statemem.attackerpos ~= nil then
+						inst:ForceFacePoint(inst.sg.statemem.attackerpos)
+					end
+
+					inst.sg.statemem.appearing = true
+					inst.sg:GoToState("appear")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.appearing then
+				ToggleOnCharacterCollisions(inst)
+			end
+		end,
+	},
+
+	State{
+		name = "appear",
+		tags = { "busy", "noattack", "temp_invincible" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			ToggleOffCharacterCollisions(inst)
+			inst.AnimState:PlayAnimation("appear")
+		end,
+
+		timeline =
+		{
+			TimeEvent(9 * FRAMES, function(inst)
+				TrySplashFX(inst, "small")
+			end),
+			TimeEvent(11 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("temp_invincible")
+				ToggleOnCharacterCollisions(inst)
+			end),
+			TimeEvent(13 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = ToggleOnCharacterCollisions,
+	},
+
+	State{
+		name = "lunge_pre",
+		tags = { "attack", "busy" },
+
+		onenter = function(inst, target)
+			inst:StopBrain()
+			inst.components.locomotor:Stop()
+			inst.AnimState:SetBankAndPlayAnimation("lavaarena_shadow_lunge", "lunge_pre")
+
+			inst.components.combat:StartAttack()
+			if target == nil then
+				target = inst.components.combat.target
+			end
+			if target ~= nil and target:IsValid() then
+				inst.sg.statemem.target = target
+				inst.sg.statemem.targetpos = target:GetPosition()
+				inst:ForceFacePoint(inst.sg.statemem.targetpos:Get())
+			end
+		end,
+
+		onupdate = function(inst)
+			if inst.sg.statemem.target ~= nil then
+				if inst.sg.statemem.target:IsValid() then
+					inst.sg.statemem.targetpos = inst.sg.statemem.target:GetPosition()
+				else
+					inst.sg.statemem.target = nil
+				end
+			end
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.lunge = true
+					inst.sg:GoToState("lunge_loop", { target = inst.sg.statemem.target, targetpos = inst.sg.statemem.targetpos })
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.lunge then
+				inst.components.combat:CancelAttack()
+				inst:RestartBrain()
+				inst.AnimState:SetBank("wilson")
+			end
+		end,
+	},
+
+	State{
+		name = "lunge_loop",
+		tags = { "attack", "busy", "noattack", "temp_invincible" },
+
+		onenter = function(inst, data)
+			inst.AnimState:PlayAnimation("lunge_loop") --NOTE: this anim NOT a loop yo
+			inst.Physics:ClearCollidesWith(COLLISION.GIANTS)
+			ToggleOffCharacterCollisions(inst)
+			TrySplashFX(inst)
+
+			if inst.components.timer ~= nil then
+				inst.components.timer:StopTimer("shadowstrike_cd")
+				inst.components.timer:StartTimer("shadowstrike_cd", TUNING.SHADOWWAXWELL_SHADOWSTRIKE_COOLDOWN)
+			end
+
+			inst:PushEvent("forcelosecombattarget")
+
+			if data ~= nil then
+				if data.target ~= nil and data.target:IsValid() then
+					inst.sg.statemem.target = data.target
+					inst:ForceFacePoint(data.target.Transform:GetWorldPosition())
+				elseif data.targetpos ~= nil then
+					inst:ForceFacePoint(data.targetpos)
+				end
+			end
+			inst.Physics:SetMotorVelOverride(35, 0, 0)
+
+			inst.sg:SetTimeout(8 * FRAMES)
+		end,
+
+		onupdate = function(inst)
+			if inst.sg.statemem.attackdone then
+				return
+			end
+			local target = inst.sg.statemem.target
+			if target == nil or not target:IsValid() then
+				if inst.sg.statemem.animdone then
+					inst.sg.statemem.lunge = true
+					inst.sg:GoToState("lunge_pst")
+					return
+				end
+				inst.sg.statemem.target = nil
+			elseif inst:IsNear(target, 1) then
+				local fx = SpawnPrefab(math.random() < .5 and "shadowstrike_slash_fx" or "shadowstrike_slash2_fx")
+				local x, y, z = target.Transform:GetWorldPosition()
+				fx.Transform:SetPosition(x, y + 1.5, z)
+				fx.Transform:SetRotation(inst.Transform:GetRotation())
+
+				inst.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.SHADOWWAXWELL_SHADOWSTRIKE_DAMAGE_MULT, "shadowstrike")
+				inst.components.combat:DoAttack(target)
+				if inst.sg.statemem.animdone then
+					inst.sg.statemem.lunge = true
+					inst.sg:GoToState("lunge_pst", target)
+					return
+				end
+				inst.sg.statemem.attackdone = true
+			end
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					if inst.sg.statemem.attackdone or inst.sg.statemem.target == nil then
+						inst.sg.statemem.lunge = true
+						inst.sg:GoToState("lunge_pst", inst.sg.statemem.target)
+						return
+					end
+					inst.sg.statemem.animdone = true
+				end
+			end),
+		},
+
+		ontimeout = function(inst)
+			inst.sg.statemem.lunge = true
+			inst.sg:GoToState("lunge_pst")
+		end,
+
+		onexit = function(inst)
+			inst.components.combat.externaldamagemultipliers:RemoveModifier(inst, "shadowstrike")
+			inst.components.combat:SetRange(2)
+			if not inst.sg.statemem.lunge then
+				inst:RestartBrain()
+				inst.AnimState:SetBank("wilson")
+				inst.Physics:CollidesWith(COLLISION.GIANTS)
+				ToggleOnCharacterCollisions(inst)
+			end
+		end,
+	},
+
+	State{
+		name = "lunge_pst",
+		tags = { "busy", "noattack", "temp_invincible" },
+
+		onenter = function(inst, target)
+			inst.AnimState:PlayAnimation("lunge_pst")
+			inst.Physics:SetMotorVelOverride(12, 0, 0)
+			inst.sg.statemem.target = target
+		end,
+
+		onupdate = function(inst)
+			inst.Physics:SetMotorVelOverride(inst.Physics:GetMotorVel() * .8, 0, 0)
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					local target = inst.sg.statemem.target
+					local pos = inst:GetPosition()
+					pos.y = 0
+					local moved = false
+					if target ~= nil then
+						if target:IsValid() then
+							local targetpos = target:GetPosition()
+							local dx, dz = targetpos.x - pos.x, targetpos.z - pos.z
+							local radius = math.sqrt(dx * dx + dz * dz)
+							local theta = math.atan2(dz, -dx)
+							local offs = FindWalkableOffset(targetpos, theta, radius + 3 + math.random(), 8, false, true, NotBlocked, true, true)
+							if offs ~= nil then
+								pos.x = targetpos.x + offs.x
+								pos.z = targetpos.z + offs.z
+								inst.Physics:Teleport(pos:Get())
+								moved = true
+							end
+						else
+							target = nil
+						end
+					end
+					if not moved and not TheWorld.Map:IsPassableAtPoint(pos.x, 0, pos.z, true) then
+						pos = FindNearbyLand(pos, 1) or FindNearbyLand(pos, 2)
+						if pos ~= nil then
+							inst.Physics:Teleport(pos.x, 0, pos.z)
+						end
+					end
+
+					if target ~= nil then
+						inst:ForceFacePoint(target.Transform:GetWorldPosition())
+					end
+
+					inst.sg.statemem.appearing = true
+					inst.sg:GoToState("appear")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst:RestartBrain()
+			inst.AnimState:SetBank("wilson")
+			inst.Physics:CollidesWith(COLLISION.GIANTS)
+			if not inst.sg.statemem.appearing then
+				ToggleOnCharacterCollisions(inst)
+			end
+		end,
+	}
 }
 
 return StateGraph("shadowmaxwell", states, events, "spawn", actionhandlers)

@@ -3044,14 +3044,7 @@ local function tophatcontainerfn()
 		return inst
 	end
 
-	TheWorld:PushEvent("ms_shadow_container_ping", inst)
-
-	--If shadow_container already exists, it will respond to ping and call SetMaster on us.
-	--Otherwise, we'll create one now.
-
-	if inst.components.container_proxy:GetMaster() == nil then
-		inst.components.container_proxy:SetMaster(SpawnPrefab("shadow_container"))
-	end
+	inst.components.container_proxy:SetMaster(TheWorld:GetPocketDimensionContainer("shadow"))
 
 	inst.persists = false
 
@@ -3120,4 +3113,4 @@ return  MakeHat("straw"),
         Prefab("minerhatlight", minerhatlightfn),
         Prefab("alterguardianhatlight", alterguardianhatlightfn),
 
-		Prefab("tophat_container", tophatcontainerfn, nil, { "shadow_container" })
+		Prefab("tophat_container", tophatcontainerfn)

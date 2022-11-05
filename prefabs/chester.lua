@@ -32,7 +32,6 @@ local prefabs =
     "globalmapiconunderfog",
 	"frostbreath",
 	"shadow_chester_swirl_fx",
-	"shadow_container",
 }
 
 local brain = require "brains/chesterbrain"
@@ -376,14 +375,7 @@ local function ToggleBreath(inst)
 end
 
 local function AttachShadowContainer(inst)
-	TheWorld:PushEvent("ms_shadow_container_ping", inst)
-
-	--If shadow_container already exists, it will respond to ping and call SetMaster on us.
-	--Otherwise, we'll create one now.
-
-	if inst.components.container_proxy:GetMaster() == nil then
-		inst.components.container_proxy:SetMaster(SpawnPrefab("shadow_container"))
-	end
+	inst.components.container_proxy:SetMaster(TheWorld:GetPocketDimensionContainer("shadow"))
 end
 
 local function SwitchToContainer(inst)
@@ -700,6 +692,7 @@ local function create_chester()
     inst.OnSave = OnSave
     inst.OnPreLoad = OnPreLoad
 	inst.OnLoadPostPass = OnLoadPostPass
+    inst.SetBuild = SetBuild -- NOTES(JBK): This is for skins.
 
     return inst
 end

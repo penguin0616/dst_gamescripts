@@ -362,11 +362,16 @@ local function GetStatus(inst, viewer)
 		or nil
 end
 
+local function OnTakeFuel(inst)
+	inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+end
+
 local function fn()
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
 	inst.entity:AddNetwork()
 
 	MakeInventoryPhysics(inst)
@@ -387,9 +392,9 @@ local function fn()
 	inst.components.spellbook:SetItems(SPELLS)
 	inst.components.spellbook:SetOnOpenFn(OnOpenSpellBook)
 	inst.components.spellbook:SetOnCloseFn(OnCloseSpellBook)
-	inst.components.spellbook.opensound = "dontstarve/common/together/book_maxwell/open"
+	inst.components.spellbook.opensound = "dontstarve/common/together/book_maxwell/use"
 	inst.components.spellbook.closesound = "dontstarve/common/together/book_maxwell/close"
-	inst.components.spellbook.executesound = "dontstarve/common/together/book_maxwell/use"
+	--inst.components.spellbook.executesound = "dontstarve/common/together/book_maxwell/close"
 
 	inst:AddComponent("aoetargeting")
 	inst.components.aoetargeting:SetAllowWater(true)
@@ -415,6 +420,7 @@ local function fn()
 	inst:AddComponent("fueled")
 	inst.components.fueled.accepting = true
 	inst.components.fueled.fueltype = FUELTYPE.NIGHTMARE
+	inst.components.fueled:SetTakeFuelFn(OnTakeFuel)
 	inst.components.fueled:InitializeFuelLevel(TUNING.LARGE_FUEL * 4)
 
 	inst:AddComponent("fuel")

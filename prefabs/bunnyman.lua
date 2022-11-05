@@ -25,7 +25,7 @@ local prefabs =
 }
 
 local beardlordloot = { "beardhair", "beardhair", "monstermeat" }
-local forced_beardlordloot = { "nightmarefuel", "beardhair", "monstermeat" }
+local forced_beardlordloot = { "nightmarefuel", "beardhair", "beardhair", "monstermeat" }
 
 local brain = require("brains/bunnymanbrain")
 
@@ -272,7 +272,6 @@ local function LootSetupFunction(lootdropper)
 	if IsForcedNightmare(lootdropper.inst) then
 		-- forced beard lord
 		lootdropper:SetLoot(forced_beardlordloot)
-		lootdropper:AddChanceLoot("beardhair", .5)
 	elseif IsCrazyGuy(guy ~= nil and guy.components.follower ~= nil and guy.components.follower.leader or guy) then
         -- beard lord
         lootdropper:SetLoot(beardlordloot)

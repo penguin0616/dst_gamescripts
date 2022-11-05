@@ -26,7 +26,7 @@ local MAX_TARGET_SHARES = 5
 local SHARE_TARGET_DIST = 40
 
 local LOOT = { "smallmeat", "cave_banana" }
-local FORCED_NIGHTMARE_LOOT = { "smallmeat", "cave_banana", "beardhair", "nightmarefuel" }
+local FORCED_NIGHTMARE_LOOT = { "nightmarefuel" }
 SetSharedLootTable('monkey',
 {
     {'smallmeat',     1.0},
@@ -306,7 +306,7 @@ end
 local function SetNightmareMonkeyLoot(inst, forced)
 	if forced then
 		inst.components.lootdropper:SetLoot(FORCED_NIGHTMARE_LOOT)
-		inst.components.lootdropper:SetChanceLootTable(nil)
+		inst.components.lootdropper:SetChanceLootTable("monkey")
 	else
 		inst.components.lootdropper:SetLoot(nil)
 		inst.components.lootdropper:SetChanceLootTable("monkey")

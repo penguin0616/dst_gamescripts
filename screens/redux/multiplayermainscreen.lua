@@ -371,7 +371,8 @@ function MakeBanner(self)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
         MakeYOTCatcoonBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
-        MakeDramaBanner(self, banner_root, anim)
+		MakeWaxwellBanner(self, banner_root, anim)
+        --MakeDramaBanner(self, banner_root, anim)
         --MakeHallowedNightsBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
         MakeCawnivalBanner(self, banner_root, anim)

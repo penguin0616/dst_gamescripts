@@ -40,6 +40,14 @@ local DIG_TAGS = { "stump", "grave", "farm_debris" }
 
 local WANDER_TIMING = {minwaittime = 6, randwaittime = 6}
 
+local function Unignore(inst, sometarget, ignorethese)
+    ignorethese[sometarget] = nil
+end
+local function IgnoreThis(sometarget, ignorethese)
+    ignorethese[sometarget] = true
+    sometarget:DoTaskInTime(5, Unignore, sometarget, ignorethese)
+end
+
 local function GetLeader(inst)
     return inst.components.follower.leader
 end
@@ -124,12 +132,15 @@ local function PickValidActionFrom(target)
     end
     return nil
 end
-local function FilterAnyWorkableTargets(targets)
+local function FilterAnyWorkableTargets(targets, ignorethese)
     for _, sometarget in ipairs(targets) do
         if sometarget:HasTag("DIG_workable") then
-            for _, tag in ipairs(DIG_TAGS) do
-                if sometarget:HasTag(tag) then
-                    return sometarget
+            if ignorethese[sometarget] == nil then
+                for _, tag in ipairs(DIG_TAGS) do
+                    if sometarget:HasTag(tag) then
+                        IgnoreThis(sometarget, ignorethese)
+                        return sometarget
+                    end
                 end
             end
         else -- CHOP_workable + MINE_workable have no special cases to handle.
@@ -143,7 +154,7 @@ local function GetSpawn(inst)
 	return inst.GetSpawnPoint ~= nil and inst:GetSpawnPoint() or nil
 end
 
-local function FindAnyEntityToWorkActionsOn(inst) -- This is similar to FindEntityToWorkAction, but to be very mod safe FindEntityToWorkAction has been deprecated.
+local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is similar to FindEntityToWorkAction, but to be very mod safe FindEntityToWorkAction has been deprecated.
 	if inst.sg:HasStateTag("busy") then
 		return nil
 	end
@@ -161,7 +172,10 @@ local function FindAnyEntityToWorkActionsOn(inst) -- This is similar to FindEnti
         -- Check if action is the one desired still.
         action = PickValidActionFrom(target)
 
-        if action ~= nil then
+        if action ~= nil and ignorethese[target] == nil then
+            if action == ACTIONS.DIG then
+                IgnoreThis(target, ignorethese)
+            end
             return BufferedAction(inst, target, action)
         end
     end
@@ -172,7 +186,7 @@ local function FindAnyEntityToWorkActionsOn(inst) -- This is similar to FindEnti
         return nil
     end
 
-    local target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS))
+    local target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese)
     action = target ~= nil and PickValidActionFrom(target) or nil
     return action ~= nil and BufferedAction(inst, target, action) or nil
 end
@@ -201,48 +215,6 @@ local function ShouldKite(target, inst)
     return inst.components.combat:TargetIs(target)
         and target.components.health ~= nil
         and not target.components.health:IsDead()
-end
-
-local function ShouldKiteProtector(target, inst)
-    if inst.components.combat:TargetIs(target)
-        and target.components.health ~= nil
-        and not target.components.health:IsDead() then
-        if target.components.combat == nil or not target.components.combat:TargetIs(inst) then
-            -- Free hit!
-            return false
-        end
-
-        if target.sg:HasStateTag("attack") then
-            -- This thing is attacking keep distance it is dangerous.
-            return true
-        end
-
-        local timetonextattack = inst.components.combat:GetCooldown()
-        if timetonextattack > 0 then
-            -- Unable to attack may as well run.
-            return true
-        end
-
-        local hitrangesq = target.components.combat:CalcHitRangeSq(inst)
-        local distsq = inst:GetDistanceSqToInst(target)
-        if distsq > hitrangesq then
-            -- Get closer.
-            return false
-        end
-
-        local dist, hitrange = math.sqrt(distsq), math.sqrt(hitrangesq)
-        local fleedist = hitrange - dist -- How much distance is needed to be right at hit range.
-        local timetoflee = (fleedist / TUNING.SHADOWWAXWELL_PROTECTOR_SPEED) - 0.3 -- Time needed to escape being hit with a small fudge factor for slower brain ticks.
-        local timetogethit = target.components.combat:GetCooldown()
-        if timetoflee < timetogethit then -- This intentionally neglects the time it takes to swing since the target has the same consideration.
-            -- Theoretically able to get a hit in but may get hit back.
-            return false
-        end
-
-        -- Get out of here it is going to hurt!
-        return true
-    end
-    return false
 end
 
 local function ShouldWatchMinigame(inst)
@@ -334,11 +306,14 @@ function ShadowWaxwellBrain:OnStart()
         local pickupparams = {
 			cond = NotBusy,
             range = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS,
+            range_local = TUNING.SHADOWWAXWELL_WORKER_PICKUP_RADIUS_LOCAL,
 			give_cond = NotBusy,
 			give_range = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS,
             furthestfirst = false,
 			positionoverride = GetSpawn, --pass as function
             ignorethese = ignorethese,
+            wholestacks = true,
+            allowpickables = true,
         }
         root = PriorityNode({ -- This worker is set to do work and then vanish.
             -- Fun stuff.
@@ -348,7 +323,7 @@ function ShadowWaxwellBrain:OnStart()
             avoid_explosions,
             avoid_danger,
             -- Do the work needed to be done.
-            DoAction(self.inst, function() return FindAnyEntityToWorkActionsOn(self.inst) end),
+            DoAction(self.inst, function() return FindAnyEntityToWorkActionsOn(self.inst, pickupparams.ignorethese) end),
 			-- This Leash is to stop chasing after leader with loot if they keep moving too far away.
 			Leash(self.inst, GetSpawn, pickupparams.range + 4, math.min(6, pickupparams.range)),
             BrainCommon.NodeAssistLeaderPickUps(self, pickupparams),
@@ -357,8 +332,8 @@ function ShadowWaxwellBrain:OnStart()
             -- Wander around and stare.
 			face_leader,
 			ParallelNode{
-				CreateWanderer(self, pickupparams.range),
-				CreateIdleOblivion(self, 6, pickupparams.range),
+				CreateWanderer(self, math.min(6, pickupparams.range)),
+				CreateIdleOblivion(self, TUNING.SHADOWWAXWELL_MINION_IDLE_DESPAWN_TIME, pickupparams.range),
 			},
         }, 0.25)
     elseif self.inst.prefab == "shadowprotector" then
@@ -368,19 +343,15 @@ function ShadowWaxwellBrain:OnStart()
             watch_game,
             -- Keep watch out for immediate danger.
             avoid_explosions,
-            -- Defend and dodge.
-            WhileNode(function() return ShouldKiteProtector(self.inst.components.combat.target, self.inst) end, "Dodge",
-                RunAway(self.inst, { fn = ShouldKiteProtector, tags = { "_combat", "_health" }, notags = { "INLIMBO" } }, TUNING.SHADOWWAXWELL_PROTECTOR_KITE_DIST, TUNING.SHADOWWAXWELL_PROTECTOR_KITE_DIST)),
+            -- Attack.
             ChaseAndAttack(self.inst),
-            -- Keep watch out for passive danger.
-            avoid_danger,
             -- Leashing is low priority.
-            Leash(self.inst, GetSpawn, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS),
+            Leash(self.inst, GetSpawn, math.min(8, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS), math.min(4, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS)),
             -- Wander around and stare.
 			face_leader,
 			ParallelNode{
-				CreateWanderer(self, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS),
-				CreateIdleOblivion(self, 6, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS),
+				CreateWanderer(self, math.min(6, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS)),
+				CreateIdleOblivion(self, TUNING.SHADOWWAXWELL_MINION_IDLE_DESPAWN_TIME, TUNING.SHADOWWAXWELL_PROTECTOR_DEFEND_RADIUS),
 			},
         }, 0.25)
     else -- Fallback to DEPRECATED thinking.

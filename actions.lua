@@ -354,7 +354,7 @@ ACTIONS =
 	REMOVE_FROM_TROPHYSCALE = Action(),
 	CYCLE = Action({ rmb=true, priority=2 }),
 
-    CASTAOE = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, mount_valid=true, distance=8 }),
+	CASTAOE = Action({ priority=HIGH_ACTION_PRIORITY, rmb=true, mount_valid=true, distance=8, invalid_hold_action=true }),
 
 	HALLOWEENMOONMUTATE = Action({ priority=-1 }),
 

@@ -99,6 +99,17 @@ local function Pillar_OnDispell(inst)
 	end
 end
 
+local function Pillar_OnTargetRemoved(inst)
+	if inst._delayraisetask ~= nil or inst.components.timer:TimerExists("delay") then
+		inst:Remove()
+	elseif inst.components.timer:TimerExists("lifetime") then
+		inst.components.timer:SetTimeLeft("lifetime", math.random())
+	else
+		--fallback? shouldn't reach here
+		DoLower(inst)
+	end
+end
+
 local function PreRaise(inst)
 	inst._delayraisetask = inst:DoTaskInTime(7 * FRAMES, DoRaise)
 	if inst.base == nil then
@@ -147,7 +158,9 @@ end
 
 local function Pillar_OnSetTarget(inst, target)
 	inst._ondispell = function() Pillar_OnDispell(inst) end
+	inst._ontargetremoved = function() Pillar_OnTargetRemoved(inst) end
 	inst:ListenForEvent("dispell_shadow_pillars", inst._ondispell, target)
+	inst:ListenForEvent("onremove", inst._ontargetremoved, target)
 end
 
 local function Pillar_SetTarget(inst, target, hasplatform)
@@ -156,6 +169,10 @@ local function Pillar_SetTarget(inst, target, hasplatform)
 		if inst._ondispell ~= nil then
 			inst:RemoveEventCallback("dispell_shadow_pillars", inst._ondispell, oldtarget)
 			inst._ondispell = nil
+		end
+		if inst._ontargetremoved ~= nil then
+			inst:RemoveEventCallback("onremove", inst._ontargetremoved, oldtarget)
+			inst._ontargetremoved = nil
 		end
 		inst.components.entitytracker:ForgetEntity("target")
 	end
@@ -504,6 +521,8 @@ local function TryFX(inst, offsets, map)
 				--Swap in page 2 offsets
 				offsets[1] = offs2
 				offsets[2] = offs1
+				offs1 = offs2
+				offs2 = offsets[2]
 			else
 				--Tried all offsets, none valid
 				offsets[1] = offs3
@@ -597,8 +616,9 @@ end
 
 local AOE_RADIUS = 4
 local SPELL_MUST_TAGS = { "locomotor" }
-local SPELL_NO_TAGS = { "INLIMBO", "notarget", "flight", "invisible", "player" }
-local SPELL_NO_TAGS_PVP = { "INLIMBO", "notarget", "flight", "invisible" }
+local SPELL_NO_TAGS_PVP = { "INLIMBO", "notarget", "flight", "invisible", "notraptrigger", "projectile" }
+local SPELL_NO_TAGS = deepcopy(SPELL_NO_TAGS_PVP)
+table.insert(SPELL_NO_TAGS, "player")
 local function DoPillars(inst, targets, newpillars)
 	local map = TheWorld.Map
 	local caster = inst.caster ~= nil and inst.caster:IsValid() and inst.caster or nil

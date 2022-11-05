@@ -79,13 +79,18 @@ end
 local function OnSeekOblivion(inst)
 	if inst:IsAsleep() then
 		inst:Remove()
-	elseif inst.components.health ~= nil then
-        inst:StopBrain()
-        inst:SetBrain(nil)
-        inst.components.health:Kill()
-	else
+	end
+	inst.components.timer:StopTimer("obliviate")
+	if inst.components.health == nil then
 		inst.sg:GoToState("quickdespawn")
-    end
+	elseif inst.components.health:IsInvincible() then
+		--reschedule
+		inst.components.timer:StartTimer("obliviate", 1)
+	else
+		inst:StopBrain()
+		inst:SetBrain(nil)
+		inst.components.health:SetPercent(0) --Kill won't work due to capped damage
+	end
 end
 
 local function OnTimerDone(inst, data)
@@ -96,7 +101,7 @@ end
 
 local function OnEntitySleep(inst)
 	if inst._obliviatetask == nil then
-		inst._obliviatetask = inst:DoTaskInTime(3, inst.Remove)
+		inst._obliviatetask = inst:DoTaskInTime(TUNING.SHADOWWAXWELL_MINION_IDLE_DESPAWN_TIME, inst.Remove)
 	end
 end
 
@@ -272,10 +277,11 @@ local function protectorkeeptargetfn(inst, target)
     -- Maintain the target if it is able to.
     return inst.components.combat:CanTarget(target)
 		and target.components.minigame_participator == nil
+        and (not target:HasTag("player") or TheNet:GetPVPEnabled())
 end
 local function protectorfn(inst)
     inst.components.health:SetMaxHealth(TUNING.SHADOWWAXWELL_PROTECTOR_LIFE)
-    inst.components.health:StartRegen(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_REGEN, TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_REGEN_PERIOD)
+    inst.components.health:SetMaxDamageTakenPerHit(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_TAKEN)
 
     inst.components.combat:SetDefaultDamage(TUNING.SHADOWWAXWELL_PROTECTOR_DAMAGE)
     inst.components.combat:SetAttackPeriod(TUNING.SHADOWWAXWELL_PROTECTOR_ATTACK_PERIOD)
@@ -306,7 +312,7 @@ end
 
 local function workerfn(inst)
     inst:AddComponent("inventory")
-    inst.components.inventory.maxslots = 1 -- Pickup logic does not account for more.
+    inst.components.inventory.maxslots = 1
 
     inst.components.combat:SetKeepTargetFunction(nokeeptargetfn)
 
@@ -365,7 +371,11 @@ local function CreateRipple(pool)
 end
 
 local function TryRipple(inst, map)
-	if not inst:HasTag("moving") then
+	if not (inst:HasTag("moving") or
+			inst.AnimState:IsCurrentAnimation("appear") or
+			inst.AnimState:IsCurrentAnimation("disappear") or
+			inst.AnimState:IsCurrentAnimation("lunge_pst")
+		) then
 		local x, y, z = inst.Transform:GetWorldPosition()
 		if map:IsOceanAtPoint(x, 0, z) then
 			CreateRipple(inst.ripple_pool).Transform:SetPosition(x, 0, z)
@@ -389,9 +399,21 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
         Asset("SOUND", "sound/maxwell.fsb"),
 
 		Asset("ANIM", "anim/waxwell_minion_spawn.zip"),
+		Asset("ANIM", "anim/waxwell_minion_appear.zip"),
 		Asset("ANIM", "anim/splash_weregoose_fx.zip"),
 		Asset("ANIM", "anim/splash_water_drop.zip"),
     }
+
+	local prefabs_override
+
+	local canlunge = prefab == "shadowprotector"
+	if canlunge then
+		table.insert(assets, Asset("ANIM", "anim/lavaarena_shadow_lunge.zip"))
+
+		prefabs_override = shallowcopy(prefabs)
+		table.insert(prefabs_override, "shadowstrike_slash_fx")
+		table.insert(prefabs_override, "shadowstrike_slash2_fx")
+	end
 
     local onetool = type(tool) == "string"
     if onetool then
@@ -417,11 +439,16 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
         inst.AnimState:SetBank("wilson")
         inst.AnimState:SetBuild("waxwell") -- "waxwell_shadow_mod" Deprecated.
+        inst.AnimState:OverrideSymbol("fx_wipe", "wilson_fx", "fx_wipe")
 		inst.AnimState:PlayAnimation("minion_spawn")
         inst.AnimState:SetMultColour(0, 0, 0, .5)
         inst.AnimState:UsePointFiltering(true)
 
 		inst.AnimState:AddOverrideBuild("waxwell_minion_spawn")
+		inst.AnimState:AddOverrideBuild("waxwell_minion_appear")
+		if canlunge then
+			inst.AnimState:AddOverrideBuild("lavaarena_shadow_lunge")
+		end
 
         if onetool then
             inst.AnimState:OverrideSymbol("swap_object", tool, tool)
@@ -495,7 +522,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
         return inst
     end
 
-    return Prefab(prefab, fn, assets, prefabs)
+	return Prefab(prefab, fn, assets, prefabs_override or prefabs)
 end
 
 --------------------------------------------------------------------------

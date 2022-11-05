@@ -2849,7 +2849,7 @@ local states =
 		tags = { "idle", "canrotate", "nodangle" },
 
 		onenter = function(inst)
-			inst.AnimState:PlayAnimation(math.random() < .7 and "idle_waxwell" or "idle2_waxwell")
+			inst.AnimState:PlayAnimation(math.random() < .7 and "idle_waxwell" or "idle2_waxwell") -- Keep odds in sync with skinspuppet!
 		end,
 
 		events =
@@ -7268,7 +7268,10 @@ local states =
 							inst.sg.statemem.fx_shadow = nil --Don't cancel anymore
 						end
 						inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
-						inst:PerformBufferedAction()
+						if not inst:PerformBufferedAction() then
+                            inst.sg.statemem.canrepeatcast = false
+                            inst:RemoveTag("canrepeatcast")
+                        end
 					end
 				end
 				if inst.sg.statemem.repeatcast then
@@ -7348,6 +7351,8 @@ local states =
 							if book_fx ~= nil then
 								book_fx:PushEvent("fail_fx", inst)
 							end
+                            inst.sg.statemem.canrepeatcast = false
+                            inst:RemoveTag("canrepeatcast")
 						end
 					end
 				end

@@ -77,7 +77,6 @@ function ContainerProxy:SetMaster(ent)
 		self.inst:RemoveEventCallback("onclose", self._onmasterclose, self.master)
 		self._onmasteropenother = nil
 		self._onmasterclose = nil
-		self.master:PushEvent("ms_detach_container_proxy", self.inst)
 		self.master = nil
 	end
 

@@ -45,6 +45,8 @@ local function TryFX(inst, offsets, map)
 				--Swap in page 2 offsets
 				offsets[1] = offs2
 				offsets[2] = offs1
+				offs1 = offs2
+				offs2 = offsets[2]
 			else
 				--Tried all offsets, none valid
 				offsets[1] = offs3

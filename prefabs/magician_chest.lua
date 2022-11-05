@@ -7,7 +7,6 @@ local assets =
 
 local prefabs =
 {
-	"shadow_container",
 	"collapse_small",
 }
 
@@ -115,14 +114,7 @@ local function OnLoad(inst, data)
 end
 
 local function AttachShadowContainer(inst)
-	TheWorld:PushEvent("ms_shadow_container_ping", inst)
-
-	--If shadow_container already exists, it will respond to ping and call SetMaster on us.
-	--Otherwise, we'll create one now.
-
-	if inst.components.container_proxy:GetMaster() == nil then
-		inst.components.container_proxy:SetMaster(SpawnPrefab("shadow_container"))
-	end
+	inst.components.container_proxy:SetMaster(TheWorld:GetPocketDimensionContainer("shadow"))
 end
 
 local function fn()
