@@ -469,6 +469,8 @@ return{
 		TASTY = "Tres magnifique!",
     },
 
+	ANNOUNCE_FOODMEMORY = "I'd rather not eat the same old thing again.",
+
     ANNOUNCE_ENCUMBERED =
     {
         "I'm not... built for this...",

@@ -135,21 +135,22 @@ local function spawnhound(inst, reward, theta)
     bush:SetReward(reward)
 end
 
+-- NOTES(JBK): 'name' field is useful for mods to interface with the rewards for looking to modify content dynamically but has no instrinsic value.
 local REWARDPOOL = {
-    {"pickaxe","minerhat","lightbulb"}, -- The Miner
-    {"wateringcan","farm_hoe","farm_plow_item"}, -- The farmer
-    {"oceanfishingrod","oceanfishingbobber_ball","oceanfishinglure_spoon_red"}, -- The Fisher
-    {"axe","backpack","shovel"}, -- The hiker
-    {"spear","armorgrass","trap"}, -- The hunter
-    {"earmuffshat","meat_dried","umbrella"}, -- The weatherman
-    {"tophat","sewing_kit","grass_umbrella"}, -- The tailor
+    {name = "miner", "pickaxe", "minerhat", "lightbulb"},
+    {name = "farmer", "wateringcan", "farm_hoe", "farm_plow_item"},
+    {name = "fisher", "oceanfishingrod", "oceanfishingbobber_ball", "oceanfishinglure_spoon_red"},
+    {name = "hiker", "axe", "backpack", "shovel"},
+    {name = "hunter", "spear", "armorgrass", "trap"},
+    {name = "weather", "earmuffshat", "meat_dried", "umbrella"},
+    {name = "tailor", "tophat", "sewing_kit", "grass_umbrella"},
 }
 
 local function OnPlayPerformed(inst, data)
     if not data.next and not data.error then
-        local REWARDS = REWARDPOOL[math.random(1,#REWARDPOOL)]
+        local REWARDS = inst._rewardpool[math.random(1, #inst._rewardpool)]
         local theta = math.random() * 2 * PI
-        for _, reward in ipairs(REWARDS) do
+        for _, reward in ipairs(REWARDS) do -- NOTES(JBK): Keep this ipairs because rewards metadata is being stored in the table.
             inst:DoTaskInTime(1 + (math.random()*2), spawnhound, reward, theta)
             theta = theta + PI/6
         end
@@ -480,6 +481,7 @@ local function postfn()
     inst.OnEntitySleep = OnStagePostSleep
 
     inst._ushers = {}
+    inst._rewardpool = REWARDPOOL -- NOTES(JBK): Useful for mods.
     inst:ListenForEvent("play_performed", OnPlayPerformed)
 
     inst:DoTaskInTime(0, setup)

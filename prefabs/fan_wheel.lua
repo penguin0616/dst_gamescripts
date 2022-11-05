@@ -111,6 +111,10 @@ local function StartUnequipping(inst, item)
         else
             transfertostatemem(inst, parent.sg)
         end
+    else
+        -- If something without a stategraph is holding our owner (i.e. a sewing_mannequin),
+        -- we can just clean ourselves up without waiting.
+        inst._timeout = inst:DoTaskInTime(0, delayedremove)
     end
 end
 

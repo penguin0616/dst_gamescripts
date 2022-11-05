@@ -1876,7 +1876,7 @@ local COMPONENT_ACTIONS =
         end,
 
         fencerotator = function(inst, doer, target, actions, right)
-            if (target:HasTag("fence") or target:HasTag("directionsign")) and not inst:HasTag("fire") and not inst:HasTag("burnt") then
+            if target:HasTag("rotatableobject") and not inst:HasTag("fire") and not inst:HasTag("burnt") then
                 if right then
                     table.insert(actions, ACTIONS.ROTATE_FENCE)
                 end

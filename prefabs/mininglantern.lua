@@ -165,6 +165,8 @@ local function onequiptomodel(inst, owner, from_ground)
     if inst.components.machine.ison then
         starttrackingowner(inst, owner)
     end
+
+    turnoff(inst)
 end
 
 local function nofuel(inst)

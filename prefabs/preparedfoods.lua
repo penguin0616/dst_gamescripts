@@ -4,6 +4,13 @@ local prefabs =
     "spoiled_food",
 }
 
+local function getdesc(inst, viewer)
+	if viewer ~= nil and viewer.components.foodmemory ~= nil and viewer.components.foodmemory:GetMemoryCount(inst.prefab) > 0 then
+		return GetString(viewer, "ANNOUNCE_FOODMEMORY")
+	end
+	return nil
+end
+
 local function MakePreparedFood(data)
 	local foodassets =
 	{
@@ -107,6 +114,7 @@ local function MakePreparedFood(data)
         inst.components.edible:SetOnEatenFn(data.oneatenfn)
 
         inst:AddComponent("inspectable")
+		inst.components.inspectable.getspecialdescription = getdesc
         inst.wet_prefix = data.wet_prefix
 
         inst:AddComponent("inventoryitem")

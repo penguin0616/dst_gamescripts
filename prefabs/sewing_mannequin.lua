@@ -163,6 +163,7 @@ local function fn()
 
     inst:AddTag("structure")
     inst:AddTag("equipmentmodel")
+	inst:AddTag("rotatableobject")
 
     -- stageactor (from stageactor component) added to pristine state for optimization
     inst:AddTag("stageactor")
@@ -226,7 +227,6 @@ local function fn()
     inst:AddComponent("activatable")
     inst.components.activatable.OnActivate = OnActivate
     inst.components.activatable.quickaction = true
-    inst.components.activatable.forcerightclickaction = true
 
     -------------------------------------------------------
     inst:AddComponent("savedrotation")
