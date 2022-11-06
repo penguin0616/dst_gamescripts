@@ -85,11 +85,11 @@ local function OnSeekOblivion(inst)
 		inst.sg:GoToState("quickdespawn")
 	elseif inst.components.health:IsInvincible() then
 		--reschedule
-		inst.components.timer:StartTimer("obliviate", 1)
+		inst.components.timer:StartTimer("obliviate", .5)
 	else
 		inst:StopBrain()
 		inst:SetBrain(nil)
-		inst.components.health:SetPercent(0) --Kill won't work due to capped damage
+		inst.components.health:Kill()
 	end
 end
 
@@ -118,6 +118,21 @@ local function MakeOblivionSeeker(inst, duration)
     inst.components.timer:StartTimer("obliviate", duration)
 	inst.OnEntitySleep = OnEntitySleep
 	inst.OnEntityWake = OnEntityWake
+end
+
+local function DropAggro(inst)
+	local leader = inst.components.follower:GetLeader()
+	if (leader.components.health ~= nil and leader.components.health:IsDead()) or
+		(leader.sg ~= nil and leader.sg:HasStateTag("hiding")) or
+		not inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_TRANSFER_AGGRO_RANGE) or
+		not leader.entity:IsVisible() or
+		leader:HasTag("playerghost")
+		then
+		--dead, hiding, or too far
+		leader = nil
+	end
+	--nil leader will just drop target
+	inst:PushEvent("transfercombattarget", leader)
 end
 
 local function OnDancingPlayerData(inst, data)
@@ -279,6 +294,43 @@ local function protectorkeeptargetfn(inst, target)
 		and target.components.minigame_participator == nil
         and (not target:HasTag("player") or TheNet:GetPVPEnabled())
 end
+local function protector_updatehealthclamp(inst)
+	local cap = math.abs(inst.components.health.maxdamagetakenperhit)
+	cap = cap + math.abs(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_INCREASE)
+	cap = math.min(cap, math.max(1, inst.components.health.maxhealth - 1))
+	inst.components.health:SetMaxDamageTakenPerHit(cap)
+end
+local function protector_onengaged(inst)
+	if inst.disengagetask ~= nil then
+		inst.disengagetask:Cancel()
+		inst.disengagetask = nil
+	end
+	if inst.engagedtask == nil then
+		inst.engagedtask = inst:DoPeriodicTask(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_PERIOD, protector_updatehealthclamp, TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_INITIAL_PERIOD)
+	end
+end
+local function protector_resethealthclamp(inst)
+	inst.disengagetask = nil
+	if inst.engagedtask ~= nil then
+		inst.engagedtask:Cancel()
+		inst.engagedtask = nil
+	end
+	inst.components.health:SetMaxDamageTakenPerHit(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_TAKEN)
+end
+local function protector_ondisengaged(inst)
+	if inst.disengagetask == nil then
+		inst.disengagetask = inst:DoTaskInTime(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_INITIAL_PERIOD, protector_resethealthclamp)
+	end
+end
+local function protector_attacked(inst, data)
+	if data ~= nil and data.damage ~= nil and data.damage > 0 then
+		inst.components.health:SetMaxDamageTakenPerHit(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_TAKEN)
+		if inst.engagedtask ~= nil then
+			inst.engagedtask:Cancel()
+			inst.engagedtask = inst:DoPeriodicTask(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_PERIOD, protector_updatehealthclamp, TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_INITIAL_PERIOD)
+		end
+	end
+end
 local function protectorfn(inst)
     inst.components.health:SetMaxHealth(TUNING.SHADOWWAXWELL_PROTECTOR_LIFE)
     inst.components.health:SetMaxDamageTakenPerHit(TUNING.SHADOWWAXWELL_PROTECTOR_HEALTH_CLAMP_TAKEN)
@@ -294,6 +346,10 @@ local function protectorfn(inst)
 
 	MakeSpawnPointTracker(inst)
 	MakeOblivionSeeker(inst, TUNING.SHADOWWAXWELL_PROTECTOR_DURATION + math.random())
+
+	inst:ListenForEvent("newcombattarget", protector_onengaged)
+	inst:ListenForEvent("droppedtarget", protector_ondisengaged)
+	inst:ListenForEvent("attacked", protector_attacked)
 end
 
 local function nokeeptargetfn(inst)
@@ -513,7 +569,10 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
         inst:ListenForEvent("attacked", OnAttacked)
         inst:ListenForEvent("seekoblivion", OnSeekOblivion)
+		inst:ListenForEvent("death", DropAggro)
         inst:ListenForEvent("dancingplayerdata", function(world, data) OnDancingPlayerData(inst, data) end, TheWorld)
+
+		inst.DropAggro = DropAggro
 
         if master_postinit ~= nil then
             master_postinit(inst)

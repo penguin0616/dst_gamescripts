@@ -323,7 +323,7 @@ function Health:SetMinHealth(amount)
 end
 
 function Health:SetMaxDamageTakenPerHit(maxdamagetakenperhit)
-    if maxdamagetakenperhit > 0 then
+    if maxdamagetakenperhit ~= nil and maxdamagetakenperhit > 0 then
         maxdamagetakenperhit = -maxdamagetakenperhit
     end
     self.maxdamagetakenperhit = maxdamagetakenperhit
@@ -339,7 +339,10 @@ end
 
 function Health:Kill()
     if self.currenthealth > 0 then
+		--V2C: didn't want to change external interface of DoDelta for this one internal use case
+		self._ignore_maxdamagetakenperhit = true
         self:DoDelta(-self.currenthealth, nil, nil, nil, nil, true)
+		self._ignore_maxdamagetakenperhit = nil
     end
 end
 
@@ -410,7 +413,7 @@ function Health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, i
         amount = amount * math.clamp(1 - (self.playerabsorb ~= 0 and afflicter ~= nil and afflicter:HasTag("player") and self.playerabsorb + self.absorb or self.absorb), 0, 1) * math.max(1 - self.externalabsorbmodifiers:Get(), 0)
     end
 
-    if self.maxdamagetakenperhit ~= nil and amount < self.maxdamagetakenperhit then
+    if self.maxdamagetakenperhit ~= nil and amount < self.maxdamagetakenperhit and not self._ignore_maxdamagetakenperhit then
         amount = self.maxdamagetakenperhit
     end
 

@@ -325,9 +325,12 @@ end
 
 local PICKUP_MUST_ONEOF_TAGS = { "_inventoryitem", "pickable" }
 local PICKUP_CANT_TAGS = {
+    -- Items
     "INLIMBO", "NOCLICK", "irreplaceable", "knockbackdelayinteraction",
     "minesprung", "mineactive", "catchable",
-    "fire", "light", "spider", "cursed", "paired", "bundle"
+    "fire", "light", "spider", "cursed", "paired", "bundle",
+    -- Pickables
+    "donotautopick", "flower"
 }
 local function FindPickupableItem_filter(v, ba, owner, radius, furthestfirst, positionoverride, ignorethese, onlytheseprefabs, allowpickables, ispickable)
     if ispickable then

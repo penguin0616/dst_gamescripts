@@ -43,9 +43,9 @@ local WANDER_TIMING = {minwaittime = 6, randwaittime = 6}
 local function Unignore(inst, sometarget, ignorethese)
     ignorethese[sometarget] = nil
 end
-local function IgnoreThis(sometarget, ignorethese)
+local function IgnoreThis(sometarget, ignorethese, leader)
     ignorethese[sometarget] = true
-    sometarget:DoTaskInTime(5, Unignore, sometarget, ignorethese)
+    leader:DoTaskInTime(5, Unignore, sometarget, ignorethese)
 end
 
 local function GetLeader(inst)
@@ -132,18 +132,25 @@ local function PickValidActionFrom(target)
     end
     return nil
 end
-local function FilterAnyWorkableTargets(targets, ignorethese)
+local function FilterAnyWorkableTargets(targets, ignorethese, leader)
     for _, sometarget in ipairs(targets) do
         if sometarget:HasTag("DIG_workable") then
             if ignorethese[sometarget] == nil then
                 for _, tag in ipairs(DIG_TAGS) do
                     if sometarget:HasTag(tag) then
-                        IgnoreThis(sometarget, ignorethese)
+                        IgnoreThis(sometarget, ignorethese, leader)
                         return sometarget
                     end
                 end
             end
-        else -- CHOP_workable + MINE_workable have no special cases to handle.
+        elseif sometarget:HasTag("CHOP_workable") then
+            if ignorethese[sometarget] == nil then
+                if sometarget:HasTag("burnt") then
+                    IgnoreThis(sometarget, ignorethese, leader)
+                end
+                return sometarget
+            end
+        else -- MINE_workable has no special cases to handle.
             return sometarget
         end
     end
@@ -174,7 +181,7 @@ local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is simila
 
         if action ~= nil and ignorethese[target] == nil then
             if action == ACTIONS.DIG then
-                IgnoreThis(target, ignorethese)
+                IgnoreThis(target, ignorethese, leader)
             end
             return BufferedAction(inst, target, action)
         end
@@ -186,7 +193,11 @@ local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is simila
         return nil
     end
 
-    local target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese)
+    local px, py, pz = inst.Transform:GetWorldPosition()
+    local target = FilterAnyWorkableTargets(TheSim:FindEntities(px, py, pz, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader)
+    if target == nil then
+        target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader)
+    end
     action = target ~= nil and PickValidActionFrom(target) or nil
     return action ~= nil and BufferedAction(inst, target, action) or nil
 end
@@ -306,7 +317,7 @@ function ShadowWaxwellBrain:OnStart()
         local pickupparams = {
 			cond = NotBusy,
             range = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS,
-            range_local = TUNING.SHADOWWAXWELL_WORKER_PICKUP_RADIUS_LOCAL,
+            range_local = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL,
 			give_cond = NotBusy,
 			give_range = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS,
             furthestfirst = false,

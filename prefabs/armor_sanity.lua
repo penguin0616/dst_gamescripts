@@ -86,6 +86,9 @@ local function fn()
 
     MakeHauntableLaunch(inst)
 
+	--Used with "shadow_item" tag
+	inst.shadow_item_level = 2
+
     return inst
 end
 

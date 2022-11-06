@@ -299,7 +299,7 @@ local function PickUpAction(inst, pickup_range, pickup_range_local, furthestfirs
 
     if ignorethese ~= nil then
         ignorethese[item] = true
-        item:DoTaskInTime(5, Unignore, item, ignorethese)
+        leader:DoTaskInTime(5, Unignore, item, ignorethese)
     end
 
     return BufferedAction(inst, item, item.components.trap ~= nil and ACTIONS.CHECKTRAP or pickable and ACTIONS.PICK or ACTIONS.PICKUP)

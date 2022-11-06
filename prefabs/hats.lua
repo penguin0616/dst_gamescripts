@@ -865,6 +865,8 @@ local function MakeHat(name)
 			return
 		end
 
+		inst:AddTag("shadow_item")
+
 		inst.components.inspectable.nameoverride = "TOPHAT_MAGICIAN"
 
 		inst:AddComponent("magiciantool")

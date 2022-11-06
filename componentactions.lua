@@ -1664,6 +1664,10 @@ local COMPONENT_ACTIONS =
 
         aoespell = function(inst, doer, pos, actions, right, target)
 			if right then
+				local inventory = doer.replica.inventory
+				if inventory ~= nil and inventory:GetActiveItem() ~= nil then
+					return
+				end
 				local alwayspassable, allowwater, deployradius
 				local aoetargeting = inst.components.aoetargeting
 				if aoetargeting ~= nil then

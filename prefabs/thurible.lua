@@ -38,6 +38,7 @@ local function turnon(inst)
     if not inst.components.fueled:IsEmpty() then
         inst.components.fueled:StartConsuming()
         inst:AddTag("shadowlure")
+		--inst:AddTag("shadow_item")
 
         if inst._body ~= nil or not inst.components.inventoryitem:IsHeld() then
             if inst._smoke == nil then
@@ -64,6 +65,7 @@ end
 local function turnoff(inst)
     inst.components.fueled:StopConsuming()
     inst:RemoveTag("shadowlure")
+	--inst:RemoveTag("shadow_item")
 
     if inst._smoke ~= nil then
         inst._smoke:Remove()
@@ -197,6 +199,7 @@ local function fn()
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:SetFinalOffset(1)
 
+	--inst:AddTag("shadow_item")
     inst:AddTag("shadowlure")
     inst:AddTag("nopunch")
 
@@ -227,6 +230,9 @@ local function fn()
     inst.components.fueled:SetTakeFuelFn(ontakefuel)
     inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
     inst.components.fueled.accepting = true
+
+	--Used with "shadow_item" tag
+	--inst.shadow_item_level = 3
 
     MakeHauntableLaunch(inst)
 

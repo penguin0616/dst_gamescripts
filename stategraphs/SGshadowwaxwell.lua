@@ -65,6 +65,61 @@ local function NotBlocked(pt)
 	return not TheWorld.Map:IsGroundTargetBlocked(pt)
 end
 
+local COMBAT_TIMEOUT = 6
+local function CheckCombatLeader(inst, target)
+	local score = 0
+	local leader = inst.components.follower:GetLeader()
+	if leader ~= nil and inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE) then
+		score = 1.5
+		local leader_combat = leader.components.combat
+		if leader_combat ~= nil then
+			local t = GetTime()
+			if math.max(leader_combat.laststartattacktime or 0, leader_combat.lastdoattacktime or 0) + COMBAT_TIMEOUT > t then
+				--leader is fighting? same target as me?
+				score = leader_combat:IsRecentTarget(target) and 4 or 3
+			elseif leader_combat:GetLastAttackedTime() + COMBAT_TIMEOUT > t then
+				--leader got hit? got hit by my target?
+				score = leader_combat.lastattacker == target and 3 or 2.5
+			end
+		end
+	end
+
+	--0 is most inactive, 4 is most active, convert score to %
+	score = score / 4
+
+	--Scale attack speed
+	inst.components.combat:SetAttackPeriod(Lerp(TUNING.SHADOWWAXWELL_PROTECTOR_ATTACK_PERIOD_INACTIVE_LEADER, TUNING.SHADOWWAXWELL_PROTECTOR_ATTACK_PERIOD, score))
+
+	--Scale shadowstrike cooldown
+	local elapsed = inst.components.timer ~= nil and inst.components.timer:GetTimeElapsed("shadowstrike_cd") or nil
+	if elapsed ~= nil then
+		inst.components.timer:StopTimer("shadowstrike_cd")
+		local cd = Lerp(TUNING.SHADOWWAXWELL_SHADOWSTRIKE_COOLDOWN_INACTIVE_LEADER, TUNING.SHADOWWAXWELL_SHADOWSTRIKE_COOLDOWN, score)
+		if elapsed < cd then
+			inst.components.timer:StartTimer("shadowstrike_cd", cd - elapsed, nil, cd)
+		end
+	end
+end
+
+local function CheckLeaderShadowLevel(inst)
+	local level = 0
+	local leader = inst.components.follower:GetLeader()
+	if leader ~= nil and
+		leader.components.inventory ~= nil and
+		inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE)
+		then
+		for k, v in pairs(EQUIPSLOTS) do
+			local equip = leader.components.inventory:GetEquippedItem(v)
+			if equip ~= nil and equip:HasTag("shadow_item") then
+				level = level + (equip.shadow_item_level or 1)
+			end
+		end
+	end
+
+	--Scale damage
+	inst.components.combat:SetDefaultDamage(TUNING.SHADOWWAXWELL_PROTECTOR_DAMAGE + level * TUNING.SHADOWWAXWELL_PROTECTOR_DAMAGE_BONUS_PER_LEVEL)
+end
+
 local actionhandlers =
 {
     ActionHandler(ACTIONS.CHOP,
@@ -315,13 +370,17 @@ local states =
 			if target ~= nil and target:IsValid() then
 				inst.sg.statemem.target = target
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
+			else
+				target = nil
 			end
+			CheckCombatLeader(inst, target)
         end,
 
         timeline =
         {
 			TimeEvent(8*FRAMES, function(inst)
 				inst.sg:RemoveStateTag("abouttoattack")
+				CheckLeaderShadowLevel(inst)
 				inst.components.combat:DoAttack(inst.sg.statemem.target)
 			end),
             TimeEvent(12*FRAMES, function(inst) -- Keep FRAMES time synced up with ShouldKiteProtector.
@@ -790,7 +849,7 @@ local states =
 				inst.sg.statemem.attackerpos = attacker:GetPosition()
 			end
 			TrySplashFX(inst, "small")
-			inst:PushEvent("forcelosecombattarget")
+			inst:DropAggro()
 		end,
 
 		events =
@@ -886,7 +945,10 @@ local states =
 				inst.sg.statemem.target = target
 				inst.sg.statemem.targetpos = target:GetPosition()
 				inst:ForceFacePoint(inst.sg.statemem.targetpos:Get())
+			else
+				target = nil
 			end
+			CheckCombatLeader(inst, target)
 		end,
 
 		onupdate = function(inst)
@@ -924,16 +986,16 @@ local states =
 
 		onenter = function(inst, data)
 			inst.AnimState:PlayAnimation("lunge_loop") --NOTE: this anim NOT a loop yo
+			inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_nightsword")
 			inst.Physics:ClearCollidesWith(COLLISION.GIANTS)
 			ToggleOffCharacterCollisions(inst)
 			TrySplashFX(inst)
+			inst:DropAggro()
 
 			if inst.components.timer ~= nil then
 				inst.components.timer:StopTimer("shadowstrike_cd")
 				inst.components.timer:StartTimer("shadowstrike_cd", TUNING.SHADOWWAXWELL_SHADOWSTRIKE_COOLDOWN)
 			end
-
-			inst:PushEvent("forcelosecombattarget")
 
 			if data ~= nil then
 				if data.target ~= nil and data.target:IsValid() then
@@ -966,8 +1028,12 @@ local states =
 				fx.Transform:SetPosition(x, y + 1.5, z)
 				fx.Transform:SetRotation(inst.Transform:GetRotation())
 
+				CheckLeaderShadowLevel(inst)
 				inst.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.SHADOWWAXWELL_SHADOWSTRIKE_DAMAGE_MULT, "shadowstrike")
 				inst.components.combat:DoAttack(target)
+				--Drop aggro again here, since we're in i-frames, and we might've
+				--triggered spawners, and they will be initially targeted on me.
+				inst:DropAggro()
 				if inst.sg.statemem.animdone then
 					inst.sg.statemem.lunge = true
 					inst.sg:GoToState("lunge_pst", target)

@@ -72,6 +72,18 @@ local Combat = Class(function(self, inst)
     self.forcefacing = true
     self.bonusdamagefn = nil
     --self.playerstunlock = PLAYERSTUNLOCK.ALWAYS --nil for default
+
+	self.losetargetcallback = function() self:DropTarget() end
+	self.transfertargetcallback = function(target, newtarget)
+		if newtarget ~= nil and self:CanTarget(newtarget) then
+			self:SetTarget(newtarget)
+			if self.target == target and self.target ~= newtarget then
+				self:DropTarget()
+			end
+		else
+			self:DropTarget()
+		end
+	end
 end,
 nil,
 {
@@ -298,23 +310,16 @@ function Combat:IsRecentTarget(target)
     return target ~= nil and (target == self.target or target.GUID == self.lasttargetGUID)
 end
 
-local function TargetDisappeared(self, target)
-    self:DropTarget()
-end
-
 function Combat:StartTrackingTarget(target)
     if target then
-        self.losetargetcallback = function()
-            TargetDisappeared(self, target)
-        end
         self.inst:ListenForEvent("enterlimbo", self.losetargetcallback, target)
         self.inst:ListenForEvent("onremove", self.losetargetcallback, target)
-		self.inst:ListenForEvent("forcelosecombattarget", self.losetargetcallback, target)
+		self.inst:ListenForEvent("transfercombattarget", self.transfertargetcallback, target)
     end
 end
 
 function Combat:StopTrackingTarget(target)
-	self.inst:RemoveEventCallback("forcelosecombattarget", self.losetargetcallback, target)
+	self.inst:RemoveEventCallback("transfercombattarget", self.transfertargetcallback, target)
     self.inst:RemoveEventCallback("enterlimbo", self.losetargetcallback, target)
     self.inst:RemoveEventCallback("onremove", self.losetargetcallback, target)
 end

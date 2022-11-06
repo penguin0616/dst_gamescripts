@@ -29,7 +29,12 @@ end
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
 local function KillPet(pet)
-    pet.components.health:Kill()
+	if pet.components.health:IsInvincible() then
+		--reschedule
+		pet._killtask = pet:DoTaskInTime(.5, KillPet)
+	else
+		pet.components.health:Kill()
+	end
 end
 
 local function OnSpawnPet(inst, pet)

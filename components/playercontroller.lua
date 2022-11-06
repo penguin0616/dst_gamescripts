@@ -261,6 +261,7 @@ end
 local function OnInventoryClosed(inst)
     --Reticule targeting items
     local self = inst.components.playercontroller
+	self:CancelAOETargeting()
     if self.reticule ~= nil then
         self.reticule:DestroyReticule()
         self.reticule = nil
@@ -345,6 +346,7 @@ function PlayerController:Deactivate()
     if self.handler ~= nil then
         self:CancelPlacement()
         self:CancelDeployPlacement()
+		self:CancelAOETargeting()
 
         if self.terraformer ~= nil then
             self.terraformer:Remove()
