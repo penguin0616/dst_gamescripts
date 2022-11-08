@@ -102,6 +102,9 @@ local function fn()
     inst.components.equippable:SetOnUnequip(onunequip)
     inst.components.equippable.walkspeedmult = TUNING.RUINS_BAT_SPEED_MULT
 
+	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetDefaultLevel(TUNING.RUINS_BAT_SHADOW_LEVEL)
+
     MakeHauntableLaunch(inst)
 
     return inst

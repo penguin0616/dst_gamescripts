@@ -195,6 +195,13 @@ local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is simila
 
     local px, py, pz = inst.Transform:GetWorldPosition()
     local target = FilterAnyWorkableTargets(TheSim:FindEntities(px, py, pz, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader)
+    if target ~= nil then
+        local maxdist = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS + TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL
+        local dx, dz = px - spawn.x, pz - spawn.z
+        if dx * dx + dz * dz > maxdist * maxdist then
+            target = nil
+        end
+    end
     if target == nil then
         target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader)
     end

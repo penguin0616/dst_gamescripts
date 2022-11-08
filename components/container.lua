@@ -530,10 +530,10 @@ function Container:ForEachItem(fn, ...)
     end
 end
 
-function Container:Has(item, amount)
+function Container:Has(item, amount, iscrafting)
     local num_found = 0
     for k,v in pairs(self.slots) do
-        if v and v.prefab == item then
+		if v ~= nil and v.prefab == item and not (iscrafting and v:HasTag("nocrafting")) then
             if v.components.stackable ~= nil then
                 num_found = num_found + v.components.stackable:StackSize()
             else
@@ -618,7 +618,7 @@ function Container:GetCraftingIngredient(item, amount, reverse_search_order)
     local items = {}
     for i = 1, self.numslots do
         local v = self.slots[i]
-        if v and v.prefab == item then
+		if v ~= nil and v.prefab == item and not v:HasTag("nocrafting") then
             table.insert(items, {
                 item = v,
                 stacksize = GetStackSize(v),

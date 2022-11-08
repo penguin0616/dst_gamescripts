@@ -38,7 +38,6 @@ local function turnon(inst)
     if not inst.components.fueled:IsEmpty() then
         inst.components.fueled:StartConsuming()
         inst:AddTag("shadowlure")
-		--inst:AddTag("shadow_item")
 
         if inst._body ~= nil or not inst.components.inventoryitem:IsHeld() then
             if inst._smoke == nil then
@@ -65,7 +64,6 @@ end
 local function turnoff(inst)
     inst.components.fueled:StopConsuming()
     inst:RemoveTag("shadowlure")
-	--inst:RemoveTag("shadow_item")
 
     if inst._smoke ~= nil then
         inst._smoke:Remove()
@@ -157,6 +155,7 @@ local function onequiptomodel(inst, owner, from_ground)
 end
 
 local function nofuel(inst)
+	inst:RemoveTag("shadow_item")
     if inst.components.equippable:IsEquipped() and inst.components.inventoryitem.owner ~= nil then
         local data =
         {
@@ -172,6 +171,7 @@ local function nofuel(inst)
 end
 
 local function ontakefuel(inst)
+	inst:AddTag("shadow_item")
     if inst.components.equippable:IsEquipped() or not inst.components.inventoryitem:IsHeld() then
         (inst.components.inventoryitem.owner ~= nil and inst.components.inventoryitem.owner.SoundEmitter or inst.SoundEmitter):PlaySound("dontstarve/common/nightmareAddFuel")
         turnon(inst)
@@ -182,6 +182,10 @@ local function OnLoad(inst, data)
     if inst.components.fueled:IsEmpty() then
         nofuel(inst)
     end
+end
+
+local function GetShadowLevel(inst)
+	return not inst.components.fueled:IsEmpty() and TUNING.THURIBLE_SHADOW_LEVEL or 0
 end
 
 local function fn()
@@ -199,7 +203,7 @@ local function fn()
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:SetFinalOffset(1)
 
-	--inst:AddTag("shadow_item")
+	inst:AddTag("shadow_item")
     inst:AddTag("shadowlure")
     inst:AddTag("nopunch")
 
@@ -231,8 +235,8 @@ local function fn()
     inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
     inst.components.fueled.accepting = true
 
-	--Used with "shadow_item" tag
-	--inst.shadow_item_level = 3
+	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetLevelFn(GetShadowLevel)
 
     MakeHauntableLaunch(inst)
 

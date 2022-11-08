@@ -3927,6 +3927,7 @@ STRINGS =
 		-- Waxwell
         WAXWELLJOURNAL = "It'll blow your mind.",
 		MAGICIAN_CHEST = "Imprison your belongings in a shadowy vortex.",
+		TOPHAT_MAGICIAN = "Black magic goes with everything.",
         SHADOWLUMBER_BUILDER = "Holds a grudge against trees.",
         SHADOWMINER_BUILDER = "Mine that rock!",
         SHADOWDIGGER_BUILDER = "Diggy diggy hole.",
@@ -13782,7 +13783,7 @@ STRINGS.SPELLS = {
 	SHADOW_PROTECTOR = "Shadow Duelist",
 	SHADOW_TRAP = "Shadow Sneak",
 	SHADOW_PILLARS = "Shadow Prison",
-	SHADOW_TOPHAT = "Imbue Tophat",
+	--SHADOW_TOPHAT = "Imbue Top Hat",
 }
 
 --Don't include this in pot generation as this file is already translated.

@@ -20,7 +20,10 @@ local states =
 
 		timeline =
 		{
-			TimeEvent(0, TrySplashFX),
+			TimeEvent(0, function(inst)
+				inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/spawn")
+				TrySplashFX(inst)
+			end),
 		},
 
 		events =
@@ -49,6 +52,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("trigger_start")
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/trigger_start")
 		end,
 
 		events =
@@ -65,6 +69,11 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("trigger_loop", true)
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/trigger_lp", "trigger_lp")
+		end,
+
+		onexit = function(inst)
+			inst.SoundEmitter:KillSound("trigger_lp")
 		end,
 	},
 
@@ -74,6 +83,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("trigger_out")
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/trigger_out")
 		end,
 
 		events =
@@ -90,6 +100,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("tension_pre")
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/tension_pre")
 			inst:EnableTargetFX(true)
 		end,
 
@@ -114,6 +125,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("tension_loop")
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/tension_lp", "tension_lp")
 			inst:EnableGroundFX(true)
 		end,
 
@@ -130,6 +142,7 @@ local states =
 				inst:EnableTargetFX(false)
 				inst:EnableGroundFX(false)
 			end
+			inst.SoundEmitter:KillSound("tension_lp")
 		end,
 	},
 
@@ -139,6 +152,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("explode")
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_trap/explode")
 
 			--shadow_despawn is in the air => detaches from sinking boats
 			--shadow_glob_fx is on ground => dies with sinking boats

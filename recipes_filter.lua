@@ -150,6 +150,7 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"book_light_upgraded",
 
 	-- Maxwell
+	"tophat_magician",
 	"magician_chest",
 	"waxwelljournal",
 
@@ -649,6 +650,7 @@ CRAFTING_FILTERS.CLOTHING.recipes =
 	"kelphat",
 	"strawhat",
 	"tophat",
+	"tophat_magician",
 	"rainhat",
 	"earmuffshat",
 	"catcoonhat",
@@ -932,6 +934,8 @@ CRAFTING_FILTERS.MAGIC.recipes =
 	"wereitem_goose",
 	"wereitem_beaver",
 	"wereitem_moose",
+	"tophat_magician",
+	"magician_chest",
 	"waxwelljournal",
 
 	"researchlab4",
@@ -1044,6 +1048,7 @@ CRAFTING_FILTERS.RAIN.recipes =
 	"strawhat",
 	"beehat",
 	"tophat",
+	"tophat_magician",
 	"minerhat",
 	"cookiecutterhat",
 	"rainhat",

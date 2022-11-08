@@ -75,6 +75,9 @@ local function fn()
     inst.components.equippable.dapperness = TUNING.CRAZINESS_MED
     inst.components.equippable.is_magic_dapperness = true
 
+	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetDefaultLevel(TUNING.NIGHTSWORD_SHADOW_LEVEL)
+
     MakeHauntableLaunch(inst)
 
     return inst

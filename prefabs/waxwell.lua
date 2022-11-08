@@ -101,7 +101,7 @@ local function OnDeath(inst)
     end
 end
 
-local function OnReroll(inst)
+local function ForceDespawnShadowMinions(inst)
     local todespawn = {}
     for k, v in pairs(inst.components.petleash:GetPets()) do
         if v:HasTag("shadowminion") then
@@ -111,6 +111,12 @@ local function OnReroll(inst)
     for i, v in ipairs(todespawn) do
         inst.components.petleash:DespawnPet(v)
     end
+end
+
+local function OnDespawn(inst, migrationdata)
+	if migrationdata ~= nil then
+		ForceDespawnShadowMinions(inst)
+	end
 end
 
 local SHADOWCREATURE_MUST_TAGS = { "shadowcreature", "_combat", "locomotor" }
@@ -171,10 +177,10 @@ local function master_postinit(inst)
     if inst.components.petleash ~= nil then
         inst._OnSpawnPet = inst.components.petleash.onspawnfn
         inst._OnDespawnPet = inst.components.petleash.ondespawnfn
-        inst.components.petleash:SetMaxPets(math.huge)
+		inst.components.petleash:SetMaxPets(inst.components.petleash:GetMaxPets() + 6)
     else
         inst:AddComponent("petleash")
-        inst.components.petleash:SetMaxPets(math.huge)
+		inst.components.petleash:SetMaxPets(6)
     end
     inst.components.petleash:SetOnSpawnFn(OnSpawnPet)
     inst.components.petleash:SetOnDespawnFn(OnDespawnPet)
@@ -193,7 +199,7 @@ local function master_postinit(inst)
 
     inst:ListenForEvent("death", OnDeath)
     inst:ListenForEvent("ms_becameghost", OnDeath)
-    inst:ListenForEvent("ms_playerreroll", OnReroll)
+	inst:ListenForEvent("ms_playerreroll", ForceDespawnShadowMinions)
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/waxwell").master_postinit(inst)
@@ -202,6 +208,7 @@ local function master_postinit(inst)
     end
 
 	inst.OnLoad = OnLoad
+	inst.OnDespawn = OnDespawn
 end
 
 return MakePlayerCharacter("waxwell", prefabs, assets, common_postinit, master_postinit)

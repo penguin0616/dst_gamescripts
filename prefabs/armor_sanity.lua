@@ -84,10 +84,10 @@ local function fn()
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
 
-    MakeHauntableLaunch(inst)
+	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetDefaultLevel(TUNING.ARMOR_SANITY_SHADOW_LEVEL)
 
-	--Used with "shadow_item" tag
-	inst.shadow_item_level = 2
+    MakeHauntableLaunch(inst)
 
     return inst
 end

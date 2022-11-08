@@ -2,7 +2,11 @@ require("stategraphs/commonstates")
 
 local function FixupWorkerCarry(inst, swap)
     if inst.prefab == "shadowworker" then
-        if swap == nil then
+		if inst.sg.mem.swaptool == swap then
+			return false
+		end
+		inst.sg.mem.swaptool = swap
+		if swap == nil then
             inst.AnimState:ClearOverrideSymbol("swap_object")
             inst.AnimState:Hide("ARM_carry")
             inst.AnimState:Show("ARM_normal")
@@ -11,6 +15,7 @@ local function FixupWorkerCarry(inst, swap)
             inst.AnimState:Hide("ARM_normal")
             inst.AnimState:OverrideSymbol("swap_object", swap, swap)
         end
+		return true
     else
         if swap == nil then -- DEPRECATED workers.
             inst.AnimState:Hide("swap_arm_carry")
@@ -65,22 +70,57 @@ local function NotBlocked(pt)
 	return not TheWorld.Map:IsGroundTargetBlocked(pt)
 end
 
+local function IsNearTarget(inst, target, range)
+	return inst:IsNear(target, range + target:GetPhysicsRadius(0))
+end
+
+local function IsLeaderNear(inst, leader, target, range)
+	--leader is in range of us or our target
+	return inst:IsNear(leader, range) or (target ~= nil and IsNearTarget(leader, target, range))
+end
+
 local COMBAT_TIMEOUT = 6
 local function CheckCombatLeader(inst, target)
 	local score = 0
 	local leader = inst.components.follower:GetLeader()
-	if leader ~= nil and inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE) then
-		score = 1.5
+	if leader ~= nil then
+		local isnear = IsLeaderNear(inst, leader, target, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE)
 		local leader_combat = leader.components.combat
 		if leader_combat ~= nil then
 			local t = GetTime()
 			if math.max(leader_combat.laststartattacktime or 0, leader_combat.lastdoattacktime or 0) + COMBAT_TIMEOUT > t then
-				--leader is fighting? same target as me?
-				score = leader_combat:IsRecentTarget(target) and 4 or 3
-			elseif leader_combat:GetLastAttackedTime() + COMBAT_TIMEOUT > t then
-				--leader got hit? got hit by my target?
-				score = leader_combat.lastattacker == target and 3 or 2.5
+				if target ~= nil and leader_combat:IsRecentTarget(target) then
+					--leader attacking same target as me, ignore range
+					score = 4
+				elseif isnear then
+					--leader is near me, but fighting something else
+					score = 3.5
+				else
+					local leader_target = Ents[leader_combat.lasttargetGUID]
+					if leader_target ~= nil and leader_target:IsValid() and inst:IsNear(leader_target, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE) then
+						--i'm near my leader's target, so that counts too
+						score = 3.5
+					end
+				end
 			end
+			if score == 0 and leader_combat:GetLastAttackedTime() + COMBAT_TIMEOUT > t then
+				if target ~= nil and leader_combat.lastattacker == target then
+					--leader got hit by my target, ignore range
+					score = 3
+				elseif isnear then
+					--leader is near me, but got hit by something else
+					score = 2.5
+				else
+					local attacker = leader_combat.lastattacker
+					if attacker ~= nil and attacker:IsValid() and IsNearTarget(inst, attacker, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE) then
+						--i'm near my leader's attacker, so that counts too
+						score = 2.5
+					end
+				end
+			end
+		end
+		if score == 0 and isnear then
+			score = 1.5
 		end
 	end
 
@@ -101,17 +141,17 @@ local function CheckCombatLeader(inst, target)
 	end
 end
 
-local function CheckLeaderShadowLevel(inst)
+local function CheckLeaderShadowLevel(inst, target)
 	local level = 0
 	local leader = inst.components.follower:GetLeader()
 	if leader ~= nil and
 		leader.components.inventory ~= nil and
-		inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_ACTIVE_LEADER_RANGE)
+		IsLeaderNear(inst, leader, target, TUNING.SHADOWWAXWELL_PROTECTOR_SHADOW_LEADER_RADIUS)
 		then
 		for k, v in pairs(EQUIPSLOTS) do
 			local equip = leader.components.inventory:GetEquippedItem(v)
-			if equip ~= nil and equip:HasTag("shadow_item") then
-				level = level + (equip.shadow_item_level or 1)
+			if equip ~= nil and equip.components.shadowlevel ~= nil then
+				level = level + equip.components.shadowlevel:GetCurrentLevel()
 			end
 		end
 	end
@@ -124,8 +164,9 @@ local actionhandlers =
 {
     ActionHandler(ACTIONS.CHOP,
         function(inst)
-            FixupWorkerCarry(inst, "swap_axe")
-            if not inst.sg:HasStateTag("prechop") then
+			if FixupWorkerCarry(inst, "swap_axe") then
+				return "item_out_chop"
+			elseif not inst.sg:HasStateTag("prechop") then
                 return inst.sg:HasStateTag("chopping")
                     and "chop"
                     or "chop_start"
@@ -133,8 +174,9 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.MINE,
         function(inst)
-            FixupWorkerCarry(inst, "swap_pickaxe")
-            if not inst.sg:HasStateTag("premine") then
+			if FixupWorkerCarry(inst, "swap_pickaxe") then
+				return "item_out_mine"
+			elseif not inst.sg:HasStateTag("premine") then
                 return inst.sg:HasStateTag("mining")
                     and "mine"
                     or "mine_start"
@@ -142,8 +184,9 @@ local actionhandlers =
         end),
     ActionHandler(ACTIONS.DIG,
         function(inst)
-            FixupWorkerCarry(inst, "swap_shovel")
-            if not inst.sg:HasStateTag("predig") then
+			if FixupWorkerCarry(inst, "swap_shovel") then
+				return "item_out_dig"
+			elseif not inst.sg:HasStateTag("predig") then
                 return inst.sg:HasStateTag("digging")
                     and "dig"
                     or "dig_start"
@@ -380,8 +423,9 @@ local states =
         {
 			TimeEvent(8*FRAMES, function(inst)
 				inst.sg:RemoveStateTag("abouttoattack")
-				CheckLeaderShadowLevel(inst)
-				inst.components.combat:DoAttack(inst.sg.statemem.target)
+				local target = inst.sg.statemem.target
+				CheckLeaderShadowLevel(inst, target ~= nil and target:IsValid() and target or nil)
+				inst.components.combat:DoAttack(target) --purposely not checking valid for this call
 			end),
             TimeEvent(12*FRAMES, function(inst) -- Keep FRAMES time synced up with ShouldKiteProtector.
                 inst.sg:RemoveStateTag("busy")
@@ -413,7 +457,7 @@ local states =
 
         onenter = function(inst)
             inst.Physics:Stop()
-            FixupWorkerCarry(inst, nil)
+            --FixupWorkerCarry(inst, nil)
             inst.AnimState:PlayAnimation("death")
         end,
 
@@ -1028,7 +1072,7 @@ local states =
 				fx.Transform:SetPosition(x, y + 1.5, z)
 				fx.Transform:SetRotation(inst.Transform:GetRotation())
 
-				CheckLeaderShadowLevel(inst)
+				CheckLeaderShadowLevel(inst, target)
 				inst.components.combat.externaldamagemultipliers:SetModifier(inst, TUNING.SHADOWWAXWELL_SHADOWSTRIKE_DAMAGE_MULT, "shadowstrike")
 				inst.components.combat:DoAttack(target)
 				--Drop aggro again here, since we're in i-frames, and we might've
@@ -1138,7 +1182,53 @@ local states =
 				ToggleOnCharacterCollisions(inst)
 			end
 		end,
-	}
+	},
+
+	State{
+		name = "item_out_chop",
+		onenter = function(inst) inst.sg:GoToState("item_out", "chop") end,
+	},
+
+	State{
+		name = "item_out_mine",
+		onenter = function(inst) inst.sg:GoToState("item_out", "mine") end,
+	},
+
+	State{
+		name = "item_out_dig",
+		onenter = function(inst) inst.sg:GoToState("item_out", "dig") end,
+	},
+
+	State{
+		name = "item_out",
+		tags = { "working" },
+
+		onenter = function(inst, action)
+			inst.components.locomotor:StopMoving()
+			inst.AnimState:PlayAnimation("item_out")
+			if action ~= nil then
+				inst.sg:AddStateTag("pre"..action)
+				inst.sg.statemem.action = action
+				inst.sg:SetTimeout(9 * FRAMES)
+			else
+				inst.sg:RemoveStateTag("working")
+				inst.sg:AddStateTag("idle")
+			end
+		end,
+
+		ontimeout = function(inst)
+			inst.sg:GoToState(inst.sg.statemem.action.."_start")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
 }
 
 return StateGraph("shadowmaxwell", states, events, "spawn", actionhandlers)

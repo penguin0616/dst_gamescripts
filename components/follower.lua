@@ -71,6 +71,13 @@ local function TryPorting(inst, self)
         return
     end
 
+    if self.leader.components.inventoryitem ~= nil then
+        local owner = self.leader.components.inventoryitem:GetGrandOwner()
+        if owner ~= nil and owner:HasTag("pocketdimension_container") then
+            return
+        end
+    end
+
     local init_pos = inst:GetPosition()
     local leader_pos = self.leader:GetPosition()
 

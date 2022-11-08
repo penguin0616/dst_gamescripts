@@ -166,7 +166,7 @@ local function ProtectorSpellFn(inst, doer, pos)
 	return false
 end
 
-local function IsTopHat(item)
+--[[local function IsTopHat(item)
 	return item.prefab == "tophat" and item.components.magiciantool == nil
 end
 
@@ -194,7 +194,7 @@ local function TopHatSpellFn(inst, doer)
 		end
 	end
 	return false
-end
+end]]
 
 --[[local function ReticuleTargetFn()
 	local player = ThePlayer
@@ -319,7 +319,7 @@ local SPELLS =
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,
 	},
-	{
+	--[[{
 		label = STRINGS.SPELLS.SHADOW_TOPHAT,
 		onselect = function(inst)
 			inst.components.spellbook:SetSpellName(STRINGS.SPELLS.SHADOW_TOPHAT)
@@ -338,7 +338,7 @@ local SPELLS =
 		normal = "shadow_tophat.tex",
 		widget_scale = ICON_SCALE,
 		hit_radius = ICON_RADIUS,
-	},
+	},]]
 }
 
 local function OnOpenSpellBook(inst)

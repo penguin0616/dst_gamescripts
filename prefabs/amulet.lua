@@ -26,7 +26,7 @@ local function onequip_red(inst, owner)
         owner.AnimState:OverrideSymbol("swap_body", "torso_amulets", "redamulet")
     end
 
-    inst.task = inst:DoPeriodicTask(30, healowner, nil, owner)
+    inst.task = inst:DoPeriodicTask(TUNING.REDAMULET_CONVERSION_TIME, healowner, nil, owner)
 end
 
 local function onunequip_red(inst, owner)
@@ -344,6 +344,9 @@ local function commonfn(anim, tag, should_sink)
     if should_sink then
         inst.components.inventoryitem:SetSinks(true)
     end
+
+	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetDefaultLevel(TUNING.AMULET_SHADOW_LEVEL)
 
     return inst
 end

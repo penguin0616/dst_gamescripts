@@ -1164,10 +1164,14 @@ function Inventory:GetOverflowContainer()
         or nil
 end
 
-function Inventory:Has(item, amount, checkallcontainers) --Note(Peter): We don't care about v.skinname for inventory Has requests.
+--Note(Peter): We don't care about v.skinname for inventory Has requests.
+function Inventory:Has(item, amount, checkallcontainers)
+	--V2C: this is the current assumption, so make it explicit
+	local iscrafting = checkallcontainers
+
     local num_found = 0
     for k, v in pairs(self.itemslots) do
-        if v and v.prefab == item then
+		if v and v.prefab == item and not (iscrafting and v:HasTag("nocrafting")) then
             if v.components.stackable ~= nil then
                 num_found = num_found + v.components.stackable:StackSize()
             else
@@ -1176,7 +1180,7 @@ function Inventory:Has(item, amount, checkallcontainers) --Note(Peter): We don't
         end
     end
 
-    if self.activeitem and self.activeitem.prefab == item then
+	if self.activeitem ~= nil and self.activeitem.prefab == item and not (iscrafting and self.activeitem:HasTag("nocrafting")) then
         if self.activeitem.components.stackable ~= nil then
             num_found = num_found + self.activeitem.components.stackable:StackSize()
         else
@@ -1186,7 +1190,7 @@ function Inventory:Has(item, amount, checkallcontainers) --Note(Peter): We don't
 
     local overflow = self:GetOverflowContainer()
     if overflow ~= nil then
-        local overflow_enough, overflow_found = overflow:Has(item, amount)
+		local overflow_enough, overflow_found = overflow:Has(item, amount, iscrafting)
         num_found = num_found + overflow_found
     end
 
@@ -1196,7 +1200,7 @@ function Inventory:Has(item, amount, checkallcontainers) --Note(Peter): We don't
         for container_inst in pairs(containers) do
             local container = container_inst.components.container or container_inst.components.inventory
             if container and container ~= overflow and not container.excludefromcrafting then
-                local container_enough, container_found = container:Has(item, amount)
+				local container_enough, container_found = container:Has(item, amount, iscrafting)
                 num_found = num_found + container_found
             end
         end
@@ -1351,7 +1355,7 @@ function Inventory:GetCraftingIngredient(item, amount)
     local items = {}
     for i = 1, self.maxslots do
         local v = self.itemslots[i]
-        if v and v.prefab == item then
+		if v ~= nil and v.prefab == item and not v:HasTag("nocrafting") then
             table.insert(items, {
                 item = v,
                 stacksize = GetStackSize(v),
@@ -1379,7 +1383,7 @@ function Inventory:GetCraftingIngredient(item, amount)
         end
     end
 
-    if self.activeitem and self.activeitem.prefab == item then
+	if self.activeitem ~= nil and self.activeitem.prefab == item and not self.activeitem:HasTag("nocrafting") then
         crafting_items[self.activeitem] = math.min(GetStackSize(self.activeitem), amount - total_num_found)
     end
 
@@ -1611,7 +1615,7 @@ function Inventory:Hide()
 
     for k, v in pairs(self.opencontainers) do
         if k ~= overflow then
-            k.components.container:Close()
+			k.components.container:Close(self.inst)
         end
     end
 
@@ -1635,11 +1639,11 @@ function Inventory:Close(keepactiveitem)
 
     local overflow = self:GetOverflowContainer()
     if overflow ~= nil then
-        overflow:Close()
+		overflow:Close(self.inst)
     end
 
     for k, v in pairs(self.opencontainers) do
-        k.components.container:Close()
+		k.components.container:Close(self.inst)
     end
 
     if self.inst.HUD ~= nil then
@@ -1653,7 +1657,7 @@ end
 function Inventory:CloseAllChestContainers()
 	for k in pairs(self.opencontainers) do
 		if k.components.container.type == "chest" then
-			k.components.container:Close()
+			k.components.container:Close(self.inst)
 		end
 	end
 end

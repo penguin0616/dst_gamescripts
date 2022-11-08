@@ -326,13 +326,22 @@ end
 local PICKUP_MUST_ONEOF_TAGS = { "_inventoryitem", "pickable" }
 local PICKUP_CANT_TAGS = {
     -- Items
-    "INLIMBO", "NOCLICK", "irreplaceable", "knockbackdelayinteraction",
+    "INLIMBO", "NOCLICK", "irreplaceable", "knockbackdelayinteraction", "event_trigger",
     "minesprung", "mineactive", "catchable",
     "fire", "light", "spider", "cursed", "paired", "bundle",
+    "heatrock", "deploykititem", "boatbuilder", "singingshell",
     -- Pickables
-    "donotautopick", "flower"
+    "flower", "gemsocket",
+    -- Either
+    "donotautopick",
 }
 local function FindPickupableItem_filter(v, ba, owner, radius, furthestfirst, positionoverride, ignorethese, onlytheseprefabs, allowpickables, ispickable)
+    if AllBuilderTaggedRecipes[v.prefab] then
+        return false
+    end
+    if v.components.armor or v.components.weapon or v.components.tool or v.components.equippable or v.components.sewing then
+        return false
+    end
     if ispickable then
         if not allowpickables then
             return false
@@ -360,7 +369,7 @@ local function FindPickupableItem_filter(v, ba, owner, radius, furthestfirst, po
     if v.components.bait ~= nil and v.components.bait.trap ~= nil then -- Do not steal baits.
         return false
     end
-    if v.components.trap ~= nil and v.components.trap:IsSprung() and not v.components.trap:HasLoot() then -- Only interact with traps that have something in it to take.
+    if v.components.trap ~= nil and not (v.components.trap:IsSprung() and v.components.trap:HasLoot()) then -- Only interact with traps that have something in it to take.
         return false
     end
     if not ispickable and owner.components.inventory:CanAcceptCount(v, 1) <= 0 then -- TODO(JBK): This is not correct for traps nor pickables but they do not have real prefabs made yet to check against.

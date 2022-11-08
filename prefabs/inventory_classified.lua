@@ -194,22 +194,26 @@ local function Count(item)
 end
 
 local function Has(inst, prefab, amount, checkallcontainers)
+	--V2C: this is the current assumption, so make it explicit
+	local iscrafting = checkallcontainers
+
     local count =
         inst._activeitem ~= nil and
         inst._activeitem.prefab == prefab and
+		not (iscrafting and inst._activeitem:HasTag("nocrafting")) and
         Count(inst._activeitem) or 0
 
     if inst._itemspreview ~= nil then
         for i, v in ipairs(inst._items) do
             local item = inst._itemspreview[i]
-            if item ~= nil and item.prefab == prefab then
+			if item ~= nil and item.prefab == prefab and not (iscrafting and item:HasTag("nocrafting")) then
                 count = count + Count(item)
             end
         end
     else
         for i, v in ipairs(inst._items) do
             local item = v:value()
-            if item ~= nil and item ~= inst._activeitem and item.prefab == prefab then
+			if item ~= nil and item ~= inst._activeitem and item.prefab == prefab and not (iscrafting and item:HasTag("nocrafting")) then
                 count = count + Count(item)
             end
         end
@@ -217,7 +221,7 @@ local function Has(inst, prefab, amount, checkallcontainers)
 
     local overflow = GetOverflowContainer(inst)
     if overflow ~= nil then
-        local overflowhas, overflowcount = overflow:Has(prefab, amount)
+		local overflowhas, overflowcount = overflow:Has(prefab, amount, iscrafting)
         count = count + overflowcount
     end
 
@@ -229,7 +233,7 @@ local function Has(inst, prefab, amount, checkallcontainers)
             for container_inst in pairs(containers) do
                 local container = container_inst.replica.container or container_inst.replica.inventory
                 if container and container ~= overflow and not container.excludefromcrafting then
-                    local containerhas, containercount = container:Has(prefab, amount)
+					local containerhas, containercount = container:Has(prefab, amount, iscrafting)
                     count = count + containercount
                 end
             end

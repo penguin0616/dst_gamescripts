@@ -122,12 +122,13 @@ end
 
 local function DropAggro(inst)
 	local leader = inst.components.follower:GetLeader()
-	if (leader.components.health ~= nil and leader.components.health:IsDead()) or
-		(leader.sg ~= nil and leader.sg:HasStateTag("hiding")) or
-		not inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_TRANSFER_AGGRO_RANGE) or
-		not leader.entity:IsVisible() or
-		leader:HasTag("playerghost")
-		then
+	if leader ~= nil and
+		(	(leader.components.health ~= nil and leader.components.health:IsDead()) or
+			(leader.sg ~= nil and leader.sg:HasStateTag("hiding")) or
+			not inst:IsNear(leader, TUNING.SHADOWWAXWELL_PROTECTOR_TRANSFER_AGGRO_RANGE) or
+			not leader.entity:IsVisible() or
+			leader:HasTag("playerghost")
+		) then
 		--dead, hiding, or too far
 		leader = nil
 	end

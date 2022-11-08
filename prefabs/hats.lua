@@ -398,6 +398,9 @@ local function MakeHat(name)
         inst.components.equippable:SetOnEquip(ruins_onequip)
         inst.components.equippable:SetOnUnequip(ruins_onunequip)
 
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.RUINSHAT_SHADOW_LEVEL)
+
         MakeHauntableLaunch(inst)
 
         inst.OnRemoveEntity = ruins_onremove
@@ -866,8 +869,12 @@ local function MakeHat(name)
 		end
 
 		inst:AddTag("shadow_item")
+		inst:AddTag("nocrafting")
 
 		inst.components.inspectable.nameoverride = "TOPHAT_MAGICIAN"
+
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.MAGICIAN_TOPHAT_SHADOW_LEVEL)
 
 		inst:AddComponent("magiciantool")
 		inst.components.magiciantool:SetOnStartUsingFn(top_onstartusing)
@@ -896,6 +903,12 @@ local function MakeHat(name)
 	local function top_onload(inst, data)
 		if data ~= nil and data.magician then
 			top_convert_to_magician(inst)
+		end
+	end
+
+	local function top_onprebuilt(inst, builder, materials, recipe)
+		if recipe.name == "tophat_magician" then
+			inst:ConvertToMagician()
 		end
 	end
 
@@ -930,6 +943,7 @@ local function MakeHat(name)
 		inst.OnSave = top_onsave
 		inst.OnLoad = top_onload
 		inst.ConvertToMagician = top_convert_to_magician
+		inst.onPreBuilt = top_onprebuilt
 
         return inst
     end
@@ -2346,6 +2360,9 @@ local function MakeHat(name)
         inst.components.equippable.dapperness = TUNING.CRAZINESS_MED
         inst.components.equippable:SetOnEquip(skeleton_onequip)
         inst.components.equippable:SetOnUnequip(skeleton_onunequip)
+
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.SKELETONHAT_SHADOW_LEVEL)
 
         inst:AddComponent("armor")
         inst.components.armor:InitCondition(TUNING.ARMOR_SKELETONHAT, TUNING.ARMOR_SKELETONHAT_ABSORPTION)
