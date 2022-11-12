@@ -1336,6 +1336,8 @@ end
 local function TargetIsHostile(inst, target)
     if inst.HostileTest ~= nil then
         return inst:HostileTest(target)
+	elseif target.HostileToPlayerTest ~= nil then
+		return target:HostileToPlayerTest(inst)
     else
         return target:HasTag("hostile")
     end
@@ -1351,24 +1353,29 @@ local function ValidateAttackTarget(combat, target, force_attack, x, z, has_weap
     if targetcombat ~= nil then
         if combat:IsAlly(target) then
             return false
-        elseif not (force_attack or
-                    combat:IsRecentTarget(target) or
-                    targetcombat:GetTarget() == combat.inst) then
-            --must use force attack non-hostile creatures
-            if not TargetIsHostile(combat.inst, target) then
-                return false
-            end
-            --must use force attack on players' followers
-            local follower = target.replica.follower
-            if follower ~= nil then
-                local leader = follower:GetLeader()
-                if leader ~= nil and
-                    leader:HasTag("player") and
-                    leader.replica.combat:GetTarget() ~= combat.inst then
-                    return false
-                end
-            end
-        end
+		elseif not (force_attack or combat:IsRecentTarget(target)) then
+			local inst = combat.inst
+			if target.HostileToPlayerTest ~= nil and target:HasTag("shadowsubmissive") and not target:HostileToPlayerTest(inst) then
+				--shadowsubmissive needs to ignore GetTarget() test,
+				--since they have you targeted even when not hostile
+				return false
+			elseif targetcombat:GetTarget() ~= inst then
+				--must use force attack non-hostile creatures
+				if not TargetIsHostile(inst, target) then
+					return false
+				end
+				--must use force attack on players' followers
+				local follower = target.replica.follower
+				if follower ~= nil then
+					local leader = follower:GetLeader()
+					if leader ~= nil and
+						leader:HasTag("player") and
+						leader.replica.combat:GetTarget() ~= inst then
+						return false
+					end
+				end
+			end
+		end
     end
 
     --Now we ensure the target is in range
@@ -4140,6 +4147,7 @@ function PlayerController:RemoteDropItemFromInvTile(item, single)
             buffaction.preview_cb = function()
                 SendRPCToServer(RPC.DropItemFromInvTile, item, single or nil)
             end
+			buffaction.options.instant = self.inst.sg:HasStateTag("overridelocomote")
             self.locomotor:PreviewAction(buffaction, true)
         end
     end

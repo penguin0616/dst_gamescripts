@@ -1916,6 +1916,7 @@ function Inventory:DropItemFromInvTile(item, single)
         self.inst.components.playercontroller ~= nil then
         local buffaction = BufferedAction(self.inst, nil, ACTIONS.DROP, item, self.inst.components.playercontroller:GetRemotePredictPosition() or self.inst:GetPosition())
         buffaction.options.wholestack = not (single and item.components.stackable ~= nil and item.components.stackable:IsStack())
+		buffaction.options.instant = self.inst.sg ~= nil and self.inst.sg:HasStateTag("overridelocomote")
         self.inst.components.locomotor:PushAction(buffaction, true)
     end
 end

@@ -2,7 +2,14 @@ local ShadowLevel = Class(function(self, inst)
 	self.inst = inst
 	self.level = 1
 	--self.levelfn = nil
+
+	--V2C: Recommended to explicitly add tag to prefab pristine state
+	inst:AddTag("shadowlevel")
 end)
+
+function ShadowLevel:OnRemoveFromEntity()
+	self.inst:RemoveTag("shadowlevel")
+end
 
 function ShadowLevel:SetDefaultLevel(level)
 	self.level = level

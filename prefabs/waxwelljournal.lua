@@ -432,6 +432,8 @@ local function fn()
 	MakeSmallPropagator(inst)
 	MakeHauntableLaunch(inst)
 
+	inst.castsound = "maxwell_rework/shadow_magic/cast" 
+	
 	return inst
 end
 

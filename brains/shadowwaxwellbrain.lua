@@ -288,6 +288,12 @@ local function CreateIdleOblivion(self, delay, range)
 	}
 end
 
+local COMBAT_TIMEOUT = 6
+local function IsLeaderInCombat(leader)
+	local leader_combat = leader.components.combat
+	return leader_combat ~= nil and math.max(leader_combat:GetLastAttackedTime(), math.max(leader_combat.laststartattacktime or 0, leader_combat.lastdoattacktime or 0)) + COMBAT_TIMEOUT > GetTime()
+end
+
 function ShadowWaxwellBrain:OnStart()
     -- Common AI for most of the shadow minions.
 	local watch_game = WhileNode( function() return ShouldWatchMinigame(self.inst) end, "Watching Game",
@@ -320,12 +326,19 @@ function ShadowWaxwellBrain:OnStart()
             ignorethese = leader._brain_pickup_ignorethese or {}
             leader._brain_pickup_ignorethese = ignorethese
         end
-		local function NotBusy() return not self.inst.sg:HasStateTag("busy") end
+		local function ShouldPickup() return not self.inst.sg:HasStateTag("busy") end
+		local function ShouldDeliver()
+			if self.inst.sg:HasStateTag("busy") then
+				return false
+			end
+			local leader = GetLeader(self.inst)
+			return leader ~= nil and not IsLeaderInCombat(leader)
+		end
         local pickupparams = {
-			cond = NotBusy,
+			cond = ShouldPickup,
             range = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS,
             range_local = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL,
-			give_cond = NotBusy,
+			give_cond = ShouldDeliver,
 			give_range = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS,
             furthestfirst = false,
 			positionoverride = GetSpawn, --pass as function

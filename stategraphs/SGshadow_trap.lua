@@ -158,7 +158,7 @@ local states =
 			--shadow_glob_fx is on ground => dies with sinking boats
 
 			--SpawnPrefab("shadow_despawn").entity:SetParent(inst.entity)
-			inst.SoundEmitter:PlaySound("dontstarve/maxwell/shadowmax_despawn")
+			--inst.SoundEmitter:PlaySound("dontstarve/maxwell/shadowmax_despawn")
 
 			local x, y, z = inst.Transform:GetWorldPosition()
 			local fx = SpawnPrefab("shadow_glob_fx")

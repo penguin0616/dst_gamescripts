@@ -6,6 +6,7 @@ local assets =
     Asset("SOUND", "sound/maxwell.fsb"),
     Asset("ANIM", "anim/swap_books.zip"),
 	Asset("ANIM", "anim/waxwell_tophat.zip"),
+	Asset("ANIM", "anim/waxwell_tophat_mounted.zip"),
 	Asset("ANIM", "anim/player_idles_waxwell.zip"),
 }
 
@@ -101,6 +102,23 @@ local function OnDeath(inst)
     end
 end
 
+local function OnBecameGhost(inst)
+	for k, v in pairs(inst.components.petleash:GetPets()) do
+		if v:HasTag("shadowminion") then
+			inst:RemoveEventCallback("onremove", inst._onpetlost, v)
+			inst.components.sanity:RemoveSanityPenalty(v)
+			if v._killtask == nil then
+				v._killtask = v:DoTaskInTime(math.random(), KillPet)
+			end
+		end
+	end
+	if not GetGameModeProperty("no_sanity") then
+		inst.components.sanity.ignore = false
+		inst.components.sanity:SetPercent(.5, true)
+		inst.components.sanity.ignore = true
+	end
+end
+
 local function ForceDespawnShadowMinions(inst)
     local todespawn = {}
     for k, v in pairs(inst.components.petleash:GetPets()) do
@@ -144,6 +162,78 @@ local function GetEquippableDapperness(owner, equippable)
 	return equippable.inst:HasTag("shadow_item")
 		and dapperness * TUNING.WAXWELL_SHADOW_ITEM_RESISTANCE
 		or dapperness
+end
+
+local function DoAnnounceShadowLevel(inst, params, item, lastitem)
+	params.task = nil
+
+	if inst.components.health:IsDead() or inst:HasTag("playerghost") then
+		return
+	end
+
+	local level = item:IsValid() and item.components.shadowlevel ~= nil and item.components.shadowlevel:GetCurrentLevel() or 0
+	if level <= 0 or
+		not (item.components.equippable ~= nil and item.components.equippable:IsEquipped()) or
+		not (item.components.inventoryitem ~= nil and item.components.inventoryitem:IsHeldBy(inst))
+		then
+		return
+	end
+
+	local t = GetTime()
+	if lastitem.prefab == item.prefab and t < lastitem.time + 30 then
+		--equipped the same item in this slot recently
+		lastitem.time = t
+		return
+	end
+
+	level = math.min(4, level)
+
+	if inst.sg:HasStateTag("talking") or (level <= params.level and t < params.time + 3) then
+		--busy talking, or announced equal or lower level less than 3 seconds ago
+		lastitem.prefab = nil
+		lastitem.time = nil
+		return
+	end
+
+	lastitem.prefab = item.prefab
+	lastitem.time = t
+	params.time = t
+	params.level = level
+
+	--For searching:
+	--ANNOUNCE_EQUIP_SHADOWLEVEL_T1
+	--ANNOUNCE_EQUIP_SHADOWLEVEL_T2
+	--ANNOUNCE_EQUIP_SHADOWLEVEL_T3
+	--ANNOUNCE_EQUIP_SHADOWLEVEL_T4
+	inst.components.talker:Say(GetString(inst, "ANNOUNCE_EQUIP_SHADOWLEVEL_T"..tostring(level)))
+end
+
+local function OnEquip(inst, data)
+	if data ~= nil and data.item ~= nil and data.item.components.shadowlevel ~= nil then
+		local params = inst._announceshadowlevel
+		if params.task ~= nil then
+			params.task:Cancel()
+		end
+		local lastitem = params.slots[data.eslot]
+		local t = GetTime()
+		if t > inst.spawntime then
+			params.task = lastitem ~= nil and inst:DoTaskInTime(.2, DoAnnounceShadowLevel, params, data.item, lastitem) or nil
+		else
+			--Just spawned, suppress announcements
+			params.task = nil
+			lastitem.prefab = data.item.prefab
+			lastitem.time = t
+		end
+	end
+end
+
+local function OnUnequip(inst, data)
+	if data ~= nil and data.item ~= nil then
+		local lastitem = inst._announceshadowlevel.slots[data.eslot]
+		if lastitem ~= nil and lastitem.prefab == data.item.prefab then
+			lastitem.time = GetTime()
+		end
+	end
 end
 
 local function common_postinit(inst)
@@ -198,8 +288,23 @@ local function master_postinit(inst)
     inst._onpetlost = function(pet) inst.components.sanity:RemoveSanityPenalty(pet) end
 
     inst:ListenForEvent("death", OnDeath)
-    inst:ListenForEvent("ms_becameghost", OnDeath)
+	inst:ListenForEvent("ms_becameghost", OnBecameGhost)
 	inst:ListenForEvent("ms_playerreroll", ForceDespawnShadowMinions)
+
+	--Shadow level announcements
+	inst:ListenForEvent("equip", OnEquip)
+	inst:ListenForEvent("unequip", OnUnequip)
+	inst._announceshadowlevel =
+	{
+		task = nil,
+		time = -math.huge,
+		level = 0,
+		slots = {},
+	}
+	for _, v in pairs(EQUIPSLOTS) do
+		inst._announceshadowlevel.slots[v] = {}
+	end
+	--
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/waxwell").master_postinit(inst)

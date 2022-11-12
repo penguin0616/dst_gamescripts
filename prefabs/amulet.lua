@@ -317,6 +317,9 @@ local function commonfn(anim, tag, should_sink)
     inst.AnimState:SetBuild("amulets")
     inst.AnimState:PlayAnimation(anim)
 
+	--shadowlevel (from shadowlevel component) added to pristine state for optimization
+	inst:AddTag("shadowlevel")
+
     if tag ~= nil then
         inst:AddTag(tag)
     end

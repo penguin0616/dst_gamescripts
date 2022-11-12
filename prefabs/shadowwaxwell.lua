@@ -76,9 +76,17 @@ local function OnAttacked(inst, data)
     end
 end
 
+local function DoRemove(inst)
+	if inst.components.inventory ~= nil then
+		inst.components.inventory:DropEverything(true)
+	end
+	inst:Remove()
+end
+
 local function OnSeekOblivion(inst)
 	if inst:IsAsleep() then
-		inst:Remove()
+		DoRemove(inst)
+		return
 	end
 	inst.components.timer:StopTimer("obliviate")
 	if inst.components.health == nil then
@@ -101,7 +109,7 @@ end
 
 local function OnEntitySleep(inst)
 	if inst._obliviatetask == nil then
-		inst._obliviatetask = inst:DoTaskInTime(TUNING.SHADOWWAXWELL_MINION_IDLE_DESPAWN_TIME, inst.Remove)
+		inst._obliviatetask = inst:DoTaskInTime(TUNING.SHADOWWAXWELL_MINION_IDLE_DESPAWN_TIME, DoRemove)
 	end
 end
 
@@ -463,9 +471,10 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
 	local prefabs_override
 
-	local canlunge = prefab == "shadowprotector"
-	if canlunge then
+	local isprotector = prefab == "shadowprotector"
+	if isprotector then
 		table.insert(assets, Asset("ANIM", "anim/lavaarena_shadow_lunge.zip"))
+		table.insert(assets, Asset("ANIM", "anim/waxwell_minion_idle.zip"))
 
 		prefabs_override = shallowcopy(prefabs)
 		table.insert(prefabs_override, "shadowstrike_slash_fx")
@@ -503,7 +512,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
 
 		inst.AnimState:AddOverrideBuild("waxwell_minion_spawn")
 		inst.AnimState:AddOverrideBuild("waxwell_minion_appear")
-		if canlunge then
+		if isprotector then
 			inst.AnimState:AddOverrideBuild("lavaarena_shadow_lunge")
 		end
 
@@ -574,6 +583,7 @@ local function MakeMinion(prefab, tool, hat, master_postinit)
         inst:ListenForEvent("dancingplayerdata", function(world, data) OnDancingPlayerData(inst, data) end, TheWorld)
 
 		inst.DropAggro = DropAggro
+		inst.isprotector = isprotector
 
         if master_postinit ~= nil then
             master_postinit(inst)

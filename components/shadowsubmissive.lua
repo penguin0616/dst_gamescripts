@@ -1,11 +1,14 @@
 local function OnReactivate(attacker)
     attacker._shadowdsubmissive_task = nil
+	attacker:RemoveTag("shadowdominance_null")
 end
 
 local function OnAttacked(inst, data)
     if data ~= nil and data.attacker ~= nil then
         if data.attacker._shadowdsubmissive_task ~= nil then
             data.attacker._shadowdsubmissive_task:Cancel()
+		else
+			data.attacker:AddTag("shadowdominance_null")
         end
         data.attacker._shadowdsubmissive_task = data.attacker:DoTaskInTime(inst.components.shadowsubmissive.forgetattackertime, OnReactivate)
     end
@@ -16,10 +19,14 @@ local ShadowSubmissive = Class(function(self, inst)
 
     self.forgetattackertime = 12
 
+	--V2C: Recommended to explicitly add tag to prefab pristine state
+	inst:AddTag("shadowsubmissive")
+
     inst:ListenForEvent("attacked", OnAttacked)
 end)
 
 function ShadowSubmissive:OnRemoveFromEntity()
+	inst:RemoveTag("shadowsubmissive")
     self.inst:RemoveEventCallback("attacked", OnAttacked)
 end
 

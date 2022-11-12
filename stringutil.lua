@@ -338,6 +338,10 @@ end
 function GetDescription_AddSpecialCases(ret, charactertable, inst, item, modifier)
     local post = {}
 
+	if item.components.shadowlevel ~= nil and inst:HasTag("shadowmagic") then
+		table.insert(post, (getcharacterstring(charactertable, "ANNOUNCE_SHADOWLEVEL_ITEM", modifier))) -- NOTES(JBK): Encapsulate getcharacterstring to only use the first return value!
+	end
+
     if item.components.repairable ~= nil and not item.components.repairable.noannounce and item.components.repairable:NeedsRepairs() then
         table.insert(post, (getcharacterstring(charactertable, "ANNOUNCE_CANFIX", modifier))) -- NOTES(JBK): Encapsulate getcharacterstring to only use the first return value!
     end

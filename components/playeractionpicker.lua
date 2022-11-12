@@ -222,6 +222,8 @@ end
 local function TargetIsHostile(inst, target)
     if inst.HostileTest ~= nil then
         return inst:HostileTest(target)
+	elseif target.HostileToPlayerTest ~= nil then
+		return target:HostileToPlayerTest(inst)
     else
         return target:HasTag("hostile")
     end

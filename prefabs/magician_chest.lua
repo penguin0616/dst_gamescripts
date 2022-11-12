@@ -53,6 +53,7 @@ local function OnOpen(inst)
 		inst.AnimState:PushAnimation("loop")
 		inst.SoundEmitter:PlaySound("maxwell_rework/magician_chest/open")
 		inst.SoundEmitter:PlaySound("maxwell_rework/shadow_magic/storage_void_LP", "loop")
+		inst.SoundEmitter:PlaySound("maxwell_rework/magician_chest/curtain_lp", "curtain_loop")
 		--inst._showopenfx:set(true)
 	end
 end
@@ -66,6 +67,8 @@ local function OnClose(inst)
 		--inst._showopenfx:set(false)
 	end
 	inst.SoundEmitter:KillSound("loop")
+	inst.SoundEmitter:KillSound("curtain_loop")
+
 end
 
 local function OnHammered(inst, worker)

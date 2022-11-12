@@ -339,7 +339,8 @@ local function FindPickupableItem_filter(v, ba, owner, radius, furthestfirst, po
     if AllBuilderTaggedRecipes[v.prefab] then
         return false
     end
-    if v.components.armor or v.components.weapon or v.components.tool or v.components.equippable or v.components.sewing then
+    -- NOTES(JBK): "donotautopick" for general class components here.
+    if v.components.armor or v.components.weapon or v.components.tool or v.components.equippable or v.components.sewing or v.components.erasablepaper then
         return false
     end
     if ispickable then

@@ -271,8 +271,8 @@ function EntityScript:GetSaveRecord()
         if platform then
 			local rx, ry, rz = platform.entity:WorldToLocalSpace(x, y, z)
 
-            --Qnan hunting
-			if rx ~= rx or ry ~= ry or rz ~= rz then
+            -- NaN and +/-inf hunting
+			if isbadnumber(rx) or isbadnumber(ry) or isbadnumber(rz) then
 				print("EntityScript:GetSaveRecord error saving position: ", self.prefab, rx, ry, rz, ":", x, y, z, ":", platform)
 				if CONFIGURATION ~= "PRODUCTION" then
 					error("EntityScript:GetSaveRecord qnan error")
@@ -291,8 +291,8 @@ function EntityScript:GetSaveRecord()
         end
     end
 
-    --Qnan hunting
-	if x ~= x or y ~= y or z ~= z then
+    -- NaN and +/-inf hunting
+	if isbadnumber(x) or isbadnumber(y) or isbadnumber(z) then
 		print("EntityScript:GetSaveRecord error saving position: ", self.prefab, x, y, z)
 		if CONFIGURATION ~= "PRODUCTION" then
 			error("EntityScript:GetSaveRecord qnan error")
@@ -1375,6 +1375,9 @@ function EntityScript:PreviewBufferedAction(bufferedaction)
 
     if bufferedaction.action == ACTIONS.WALKTO then
         self.bufferedaction = nil
+	elseif bufferedaction.options.instant then
+		self.bufferedaction = bufferedaction
+		self:PerformPreviewBufferedAction()
     elseif self.sg ~= nil then
         self.bufferedaction = bufferedaction
         if not self.sg:PreviewAction(bufferedaction) then
@@ -1423,7 +1426,7 @@ function EntityScript:PushBufferedAction(bufferedaction)
         self:PushEvent("performaction", { action = bufferedaction })
         bufferedaction:Succeed()
         self.bufferedaction = nil
-    elseif bufferedaction.action.instant then
+	elseif bufferedaction.action.instant or bufferedaction.options.instant then
         if bufferedaction.target ~= nil and bufferedaction.target.Transform ~= nil and (self.sg == nil or self.sg:HasStateTag("canrotate")) then
             self:FacePoint(bufferedaction.target.Transform:GetWorldPosition())
         end

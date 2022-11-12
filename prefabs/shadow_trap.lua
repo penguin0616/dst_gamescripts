@@ -108,12 +108,12 @@ end
 
 local DETECT_RADIUS = 3
 local DETECT_MUST_TAGS = { "locomotor" }
-local DETECT_NO_TAGS = { "epic", "notraptrigger", "ghost", "player", "INLIMBO", "flight", "bird", "butterfly" }
+local DETECT_NO_TAGS = { "epic", "notraptrigger", "ghost", "player", "INLIMBO", "flight", "invisible", "notarget", "noattack", "bird", "butterfly" }
 local DETECT_ONE_OF_TAGS = { "monster", "character", "animal", "smallcreature" }
 
 local TARGET_RADIUS = 6
 local TARGET_MUST_TAGS = nil
-local TARGET_NO_TAGS = { "epic", "notraptrigger", "ghost", "player", "INLIMBO", "flight" }
+local TARGET_NO_TAGS = { "epic", "notraptrigger", "ghost", "player", "INLIMBO", "flight", "invisible", "notarget" }
 local TARGET_ONE_OF_TAGS = DETECT_ONE_OF_TAGS
 
 local function TryTrapTarget(inst, targets)
@@ -137,7 +137,9 @@ local function TryTrapTarget(inst, targets)
 			if v.has_nightmare_state then
 				v:PushEvent("ms_forcenightmarestate", { duration = TUNING.SHADOW_TRAP_NIGHTMARE_TIME + math.random() })
 			end
-			v:PushEvent("attacked", { attacker = nil, damage = 0 })
+			if not (v.sg ~= nil and v.sg:HasStateTag("noattack")) then
+				v:PushEvent("attacked", { attacker = nil, damage = 0 })
+			end
 			if not v.has_nightmare_state and v.components.hauntable ~= nil and v.components.hauntable.panicable then
 				v.components.hauntable:Panic(TUNING.SHADOW_TRAP_PANIC_TIME)
 			end
@@ -292,7 +294,7 @@ local function fn()
 	inst.base.Transform:SetRotation(math.random() * 360)
 
 	inst:AddComponent("timer")
-	inst.components.timer:StartTimer("lifetime", TUNING.TOTAL_DAY_TIME)
+	inst.components.timer:StartTimer("lifetime", TUNING.SHADOW_TRAP_LIFETIME)
 
 	inst:ListenForEvent("timerdone", OnTimerDone)
 	inst:ListenForEvent("onsink", DispellTrap)

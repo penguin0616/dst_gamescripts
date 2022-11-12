@@ -313,6 +313,61 @@ local states =
         end,
     },
 
+	State{
+		name = "ready_pre",
+		tags = { "idle", "canrotate" },
+
+		onenter = function(inst)
+			inst.Physics:Stop()
+			inst.AnimState:PlayAnimation("ready_stance_pre")
+			if inst.components.timer ~= nil and not inst.components.timer:TimerExists("shadowstrike_cd") then
+				inst.components.combat:SetRange(5)
+			end
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("ready")
+				end
+			end),
+		},
+	},
+
+	State{
+		name = "ready",
+		tags = { "idle", "canrotate" },
+
+		onenter = function(inst)
+			inst.AnimState:PlayAnimation("ready_stance_loop", true)
+		end,
+
+		onupdate = function(inst)
+			if not inst.components.combat:HasTarget() then
+				inst.sg:GoToState("ready_pst")
+			end
+		end,
+	},
+
+	State{
+		name = "ready_pst",
+		tags = { "idle", "canrotate" },
+
+		onenter = function(inst)
+			inst.AnimState:PlayAnimation("ready_stance_pst")
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
+
     State{
         name = "run_start",
         tags = {"moving", "running", "canrotate"},
@@ -403,8 +458,8 @@ local states =
 
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
-            inst.AnimState:PlayAnimation("atk")
-            inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_nightsword")
+			inst.AnimState:PlayAnimation("atk_pre")
+			inst.AnimState:PushAnimation("atk", false)
 
 			inst.components.combat:StartAttack()
 			if target == nil then
@@ -421,6 +476,9 @@ local states =
 
         timeline =
         {
+			TimeEvent(6 * FRAMES, function(inst)
+				inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_nightsword")
+			end),
 			TimeEvent(8*FRAMES, function(inst)
 				inst.sg:RemoveStateTag("abouttoattack")
 				local target = inst.sg.statemem.target
@@ -433,11 +491,16 @@ local states =
             TimeEvent(13*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("attack")
             end),
+			TimeEvent(16 * FRAMES, function(inst)
+				if inst.isprotector and inst.components.combat:HasTarget() then
+					inst.sg:GoToState("ready_pre")
+				end
+			end),
         },
 
         events =
         {
-            EventHandler("animover", function(inst)
+			EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
                 end

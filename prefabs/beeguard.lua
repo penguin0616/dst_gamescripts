@@ -129,10 +129,41 @@ local function CheckFocusTarget(inst)
     return inst._focustarget
 end
 
+local STUCK_DIST_SQ = .05 * .05
+local STUCK_TIME = 2
+local function CheckStuck(inst)
+	local busy = inst.sg:HasStateTag("busy") and not inst.sg:HasStateTag("hit")
+	if busy and inst.lastpos == nil then
+		return false
+	end
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local t = GetTime()
+	if inst.lastpos == nil then
+		inst.lastpos = Vector3(x, 0, z)
+		inst.stucktime = t
+	elseif busy or distsq(inst.lastpos.x, inst.lastpos.z, x, z) > STUCK_DIST_SQ then
+		inst.lastpos.x, inst.lastpos.z = x, z
+		inst.stucktime = t
+	else
+		inst.lastpos.x, inst.lastpos.z = x, z
+		return inst.stucktime + STUCK_TIME < t
+	end
+	return false
+end
+
+local function ResetStuck(inst)
+	if inst.lastpos ~= nil then
+		local y
+		inst.lastpos.x, y, inst.lastpos.z = inst.Transform:GetWorldPosition()
+		inst.stucktime = GetTime()
+	end
+end
+
 local FRIENDLYBEES_MUST = { "_combat", "_health" }
 local FRIENDLYBEES_CANT = { "INLIMBO", "noauradamage", "bee", "companion" }
 local FRIENDLYBEES_MUST_ONE = { "monster", "prey" }
 local FRIENDLYBEES_PVP = nil
+local BEE_STUCK_MUST = { "_combat" }
 local function RetargetFn(inst)
     if inst:IsFriendly() then
         if inst:GetQueen() == nil then -- NOTES(JBK): A friendly bee must wait for its queen to take action.
@@ -163,14 +194,30 @@ local function RetargetFn(inst)
         end
 
         return nil
-    else
-        local focustarget = CheckFocusTarget(inst)
-        if focustarget ~= nil then
-            return focustarget, not inst.components.combat:TargetIs(focustarget)
-        end
-        local player, distsq = inst:GetNearestPlayer()
-        return (distsq ~= nil and distsq < 225) and player or nil
     end
+
+	local focustarget = CheckFocusTarget(inst)
+	if focustarget ~= nil then
+		return focustarget, not inst.components.combat:TargetIs(focustarget)
+	end
+
+	if inst.components.combat:HasTarget() and CheckStuck(inst) then
+		local queen = inst:GetQueen()
+		if queen ~= nil then
+			local commander = queen.components.commander
+			for i, v in ipairs(TheSim:FindEntities(inst.lastpos.x, 0, inst.lastpos.z, TUNING.BEEGUARD_ATTACK_RANGE + 3, BEE_STUCK_MUST)) do
+				if v ~= inst then
+					local target = v.components.combat.target
+					if target == queen or (commander ~= nil and commander:IsSoldier(target)) then
+						return v, true
+					end
+				end
+			end
+		end
+	end
+
+	local player, distsq = inst:GetNearestPlayer()
+	return (distsq ~= nil and distsq < 225) and player or nil
 end
 
 local function KeepTargetFn(inst, target)
@@ -204,6 +251,8 @@ local function OnAttacked(inst, data)
 end
 
 local function OnAttackOther(inst, data)
+	ResetStuck(inst)
+
     if data.target ~= nil and data.target.components.inventory ~= nil then
         for k, eslot in pairs(EQUIPSLOTS) do
             local equip = data.target.components.inventory:GetEquippedItem(eslot)

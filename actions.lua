@@ -482,8 +482,8 @@ ACTIONS =
     ROTATE_FENCE = Action({ rmb=true }),
 
 	-- MAXWELL
-	USEMAGICTOOL = Action({ priority = 1 }),
-	STOPUSINGMAGICTOOL = Action({ distance = math.huge, do_not_locomote = true }),
+	USEMAGICTOOL = Action({ mount_valid = true, priority = 1 }),
+	STOPUSINGMAGICTOOL = Action({ mount_valid = true, priority = 2, distance = math.huge, do_not_locomote = true }),
 	USESPELLBOOK = Action({ instant = true, mount_valid = true }),
 	CLOSESPELLBOOK = Action({ instant = true, mount_valid = true }),
 	CAST_SPELLBOOK = Action({ mount_valid = true }),
@@ -821,8 +821,10 @@ ACTIONS.LOOKAT.fn = function(act)
 		if targ.components.inspectable ~= nil then
 			local desc, text_filter_context, original_author = targ.components.inspectable:GetDescription(act.doer)
 			if desc ~= nil then
-				if act.doer.components.playercontroller == nil or
-					not act.doer.components.playercontroller.directwalking then
+				if not (
+					(act.doer.components.playercontroller ~= nil and act.doer.components.playercontroller.directwalking) or
+					(act.doer.sg ~= nil and act.doer.sg:HasStateTag("overridelocomote"))
+				) then
 					act.doer.components.locomotor:Stop()
 				end
 				if act.doer.components.talker ~= nil then
@@ -2377,7 +2379,13 @@ ACTIONS.USEITEM.fn = function(act)
         act.invobject.components.useableitem:CanInteract() and
         act.doer.components.inventory ~= nil and
         act.doer.components.inventory:IsOpenedBy(act.doer) then
-        return act.invobject.components.useableitem:StartUsingItem()
+		--V2C: kinda hack since USEITEM is instant action, and the useableitem will
+		--     liklely force state change (bad!) instead.
+		act.doer.sg.statemem.is_going_to_action_state = true
+		local ret = act.invobject.components.useableitem:StartUsingItem()
+		--And clear it now in case no state change happened
+		act.doer.sg.statemem.is_going_to_action_state = nil
+		return ret
     end
 end
 
@@ -4472,6 +4480,9 @@ ACTIONS.USESPELLBOOK.pre_action_cb = function(act)
 		end
 		if not act.invobject:HasTag("fueldepleted") and act.doer.components.playercontroller ~= nil and act.doer.components.playercontroller:IsEnabled() then
 			act.invobject.components.spellbook:OpenSpellBook(act.doer)
+			if act.doer.sg ~= nil and act.doer.sg:HasStateTag("overridelocomote") then
+				act.doer.sg.currentstate:HandleEvent(act.doer.sg, "locomote")
+			end
 		end
 	end
 end
@@ -4479,6 +4490,9 @@ end
 ACTIONS.USESPELLBOOK.fn = function(act)
 	if act.doer.components.inventory ~= nil then
 		act.doer.components.inventory:ReturnActiveActionItem(act.invobject, true)
+		if act.doer.sg:HasStateTag("overridelocomote") then
+			act.doer.sg.currentstate:HandleEvent(act.doer.sg, "locomote")
+		end
 		act.doer.components.inventory:CloseAllChestContainers()
 	end
 	if act.doer.components.steeringwheeluser ~= nil then

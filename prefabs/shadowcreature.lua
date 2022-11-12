@@ -117,6 +117,16 @@ local function ExchangeWithOceanTerror(inst)
     end
 end
 
+local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
+	if not player:HasTag("shadowdominance_null") then
+		local inventory = player.replica.inventory
+		if inventory ~= nil and inventory:EquipHasTag("shadowdominance") then
+			return false
+		end
+	end
+	return true
+end
+
 local function MakeShadowCreature(data)
     local assets =
     {
@@ -157,6 +167,9 @@ local function MakeShadowCreature(data)
         inst:AddTag("shadow")
         inst:AddTag("notraptrigger")
 
+		--shadowsubmissive (from shadowsubmissive component) added to pristine state for optimization
+		inst:AddTag("shadowsubmissive")
+
         inst.AnimState:SetBank(data.bank)
         inst.AnimState:SetBuild(data.build)
         inst.AnimState:PlayAnimation("idle_loop", true)
@@ -167,6 +180,8 @@ local function MakeShadowCreature(data)
             inst:AddComponent("transparentonsanity")
             inst.components.transparentonsanity:ForceUpdate()
         end
+
+		inst.HostileToPlayerTest = CLIENT_ShadowSubmissive_HostileToPlayerTest
 
         inst.entity:SetPristine()
 

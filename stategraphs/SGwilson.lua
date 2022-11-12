@@ -104,6 +104,27 @@ local function StopTalkSound(inst, instant)
     inst.SoundEmitter:KillSound("talk")
 end
 
+local function CancelTalk_Override(inst, instant)
+	if inst.sg.statemem.talktask ~= nil then
+		inst.sg.statemem.talktask:Cancel()
+		inst.sg.statemem.talktask = nil
+		StopTalkSound(inst, instant)
+	end
+end
+
+local function OnTalk_Override(inst)
+	CancelTalk_Override(inst, true)
+	if DoTalkSound(inst) then
+		inst.sg.statemem.talktask = inst:DoTaskInTime(1.5 + math.random() * .5, CancelTalk_Override)
+	end
+	return true
+end
+
+local function OnDoneTalking_Override(inst)
+	CancelTalk_Override(inst)
+	return true
+end
+
 local function DoMountSound(inst, mount, sound, ispredicted)
     if mount ~= nil and mount.sounds ~= nil then
         inst.SoundEmitter:PlaySound(mount.sounds[sound], nil, nil, ispredicted)
@@ -2897,28 +2918,8 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
                     if inst.sg.statemem.target == nil or
@@ -2937,10 +2938,8 @@ local states =
         },
 
         onexit = function(inst)
-            if not inst.sg.statemem.bowing and inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
+			if not inst.sg.statemem.bowing then
+				CancelTalk_Override(inst)
             end
         end,
     },
@@ -2969,37 +2968,11 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
         },
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+		onexit = CancelTalk_Override,
     },
 
     State{
@@ -3649,28 +3622,9 @@ local states =
         {
             EventHandler("ontalk", function(inst)
                 inst.AnimState:PushAnimation("hide_idle", false)
-
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
+				return OnTalk_Override(inst)
             end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("donetalking", OnDoneTalking_Override),
             EventHandler("unequip", function(inst, data)
                 -- We need to handle this during the initial "busy" frames
                 if not inst.sg:HasStateTag("idle") then
@@ -3679,13 +3633,7 @@ local states =
             end),
         },
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+		onexit = CancelTalk_Override,
     },
 
     State{
@@ -3708,28 +3656,8 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
             EventHandler("unequip", function(inst, data)
                 -- We need to handle this because the default unequip
                 -- handler is ignored while we are in a "busy" state.
@@ -3744,13 +3672,7 @@ local states =
             inst.sg:GoToState("shell_idle", talktask)
         end,
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+		onexit = CancelTalk_Override,
     },
 
     State{
@@ -3770,37 +3692,12 @@ local states =
             EventHandler("ontalk", function(inst)
                 inst.AnimState:PushAnimation("hitshell")
                 inst.AnimState:PushAnimation("hideshell_idle", false)
-
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
+				return OnTalk_Override(inst)
             end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("donetalking", OnDoneTalking_Override),
         },
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+		onexit = CancelTalk_Override,
     },
 
     State{
@@ -3889,28 +3786,8 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
             EventHandler("unequip", function(inst, data)
                 -- We need to handle this because the default unequip
                 -- handler is ignored while we are in a "busy" state.
@@ -3932,11 +3809,7 @@ local states =
         end,
 
         onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
+			CancelTalk_Override(inst)
             if not inst.sg.statemem.parrying then
                 inst.components.combat.redirectdamagefn = nil
             end
@@ -3992,28 +3865,8 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
             EventHandler("unequip", function(inst, data)
                 if not inst.sg:HasStateTag("idle") then
                     -- We need to handle this because the default unequip
@@ -4028,11 +3881,7 @@ local states =
                 inst.sg.statemem.task:Cancel()
                 inst.sg.statemem.task = nil
             end
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
+			CancelTalk_Override(inst)
             if not inst.sg.statemem.parrying then
                 inst.components.combat.redirectdamagefn = nil
             end
@@ -6128,29 +5977,13 @@ local states =
                 if not (inst.AnimState:IsCurrentAnimation("channel_dial_loop") or inst:HasTag("mime")) then
                     inst.AnimState:PlayAnimation("channel_dial_loop", true)
                 end
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
+				return OnTalk_Override(inst)
             end),
             EventHandler("donetalking", function(inst)
                 if not inst.AnimState:IsCurrentAnimation("channel_loop") then
                     inst.AnimState:PlayAnimation("channel_loop", true)
                 end
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
+				return OnDoneTalking_Override(inst)
             end),
         },
 
@@ -6166,11 +5999,7 @@ local states =
             (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
                 inst:ClearBufferedAction()
             end
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
+			CancelTalk_Override(inst)
         end,
     },
 
@@ -7380,13 +7209,13 @@ local states =
 				end
 			end),
 			--
-			TimeEvent(67 * FRAMES, function(inst)
+			TimeEvent(56 * FRAMES, function(inst)
 				if inst.sg.statemem.repeatcast then
 					inst.sg:RemoveStateTag("busy")
 					inst:RemoveTag("canrepeatcast")
 				end
 			end),
-			TimeEvent(73 * FRAMES, function(inst)
+			TimeEvent(62 * FRAMES, function(inst)
 				if not inst.sg.statemem.repeatcast then
 					inst.sg:RemoveStateTag("busy")
 					inst:RemoveTag("canrepeatcast")
@@ -9078,41 +8907,15 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
         },
 
         ontimeout = function(inst)
             inst.sg:GoToState("idle", true)
         end,
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+		onexit = CancelTalk_Override,
     },
 
     State{
@@ -10791,28 +10594,8 @@ local states =
 
         events =
         {
-            EventHandler("ontalk", function(inst)
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
-            end),
-            EventHandler("donetalking", function(inst)
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
-            end),
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
@@ -10820,13 +10603,7 @@ local states =
             end),
         },
 
-        onexit = function(inst)
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
-        end,
+		onexit = CancelTalk_Override,
     },
 
     State{
@@ -14208,39 +13985,19 @@ local states =
                 if not (inst.AnimState:IsCurrentAnimation("channel_dial_loop") or inst:HasTag("mime")) then
                     inst.AnimState:PlayAnimation("channel_dial_loop", true)
                 end
-                if inst.sg.statemem.talktask ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst, true)
-                end
-                if DoTalkSound(inst) then
-                    inst.sg.statemem.talktask =
-                        inst:DoTaskInTime(1.5 + math.random() * .5,
-                            function()
-                                inst.sg.statemem.talktask = nil
-                                StopTalkSound(inst)
-                            end)
-                end
+				return OnTalk_Override(inst)
             end),
             EventHandler("donetalking", function(inst)
                 if not inst.AnimState:IsCurrentAnimation("channel_loop") then
                     inst.AnimState:PlayAnimation("channel_loop", true)
                 end
-                if inst.sg.statemem.talktalk ~= nil then
-                    inst.sg.statemem.talktask:Cancel()
-                    inst.sg.statemem.talktask = nil
-                    StopTalkSound(inst)
-                end
+				return OnDoneTalking_Override(inst)
             end),
         },
 
         onexit = function(inst)
             inst:RemoveTag("channeling")
-            if inst.sg.statemem.talktask ~= nil then
-                inst.sg.statemem.talktask:Cancel()
-                inst.sg.statemem.talktask = nil
-                StopTalkSound(inst)
-            end
+			CancelTalk_Override(inst)
             if not inst.sg.statemem.stopchanneling and
                 inst.sg.statemem.target ~= nil and
                 inst.sg.statemem.target:IsValid() and
@@ -16095,6 +15852,8 @@ local states =
 
 		events =
 		{
+			EventHandler("ontalk", OnTalk_Override),
+			EventHandler("donetalking", OnDoneTalking_Override),
 			EventHandler("equip", function(inst)
 				if inst.AnimState:IsCurrentAnimation("tophat_loop") then
 					inst.AnimState:PlayAnimation("tophat_item_in")
@@ -16107,14 +15866,24 @@ local states =
 					inst.AnimState:PushAnimation("tophat_loop")
 				end
 			end),
+			EventHandler("performaction", function(inst, data)
+				if data ~= nil and data.action ~= nil and data.action.action == ACTIONS.DROP then
+					if inst.AnimState:IsCurrentAnimation("tophat_loop") then
+						inst.AnimState:PlayAnimation("tophat_item_in")
+						inst.AnimState:PushAnimation("tophat_loop")
+					end
+				end
+			end),
 			EventHandler("magicianstopped", function(inst)
 				--handle unexpected stops, e.g. the item got deleted
 				inst.sg:GoToState("idle")
 			end),
 			EventHandler("locomote", function(inst)
 				if inst.sg:HasStateTag("overridelocomote") then
+					local data = { locomoting = true, talktask = inst.sg.statemem.talktask }
+					inst.sg.statemem.talktask = nil
 					inst.sg.statemem.stopusingmagiciantool = true
-					inst.sg:GoToState("stop_using_tophat", true)
+					inst.sg:GoToState("stop_using_tophat", data)
 					return true
 				end
 			end),
@@ -16122,7 +15891,7 @@ local states =
 				if inst.AnimState:AnimDone() then
 					inst.sg:GoToState("idle")
 				end
-			end)
+			end),
 		},
 
 		onexit = function(inst)
@@ -16132,7 +15901,9 @@ local states =
 				inst.AnimState:ClearOverrideSymbol("tophat_fx_float")
 				inst.AnimState:SetSymbolMultColour("tophat_fx_float", 1, 1, 1, 1)
 				if inst.components.magician ~= nil then
-					inst.components.magician:DropToolOnStop()
+					if not inst.sg.statemem.is_going_to_action_state then
+						inst.components.magician:DropToolOnStop()
+					end
 					inst.components.magician:StopUsing()
 				end
 			end
@@ -16141,6 +15912,7 @@ local states =
 				inst.sg.statemem.fx_front:Remove()
 				inst.sg.statemem.fx_back:Remove()
 			end
+			CancelTalk_Override(inst)
 		end,
 	},
 
@@ -16148,10 +15920,15 @@ local states =
 		name = "stop_using_tophat",
 		tags = { "idle", "overridelocomote" },
 
-		onenter = function(inst, locomoting)
+		onenter = function(inst, data)
 			-- 'locomoting' means we got here via locomotion control rather than ACTIONS.STOPUSINGMAGICTOOL:
 			-- - We must manually stop magician
 			-- - Any buffered actions would be our NEXT action after we play some pst anim
+			local locomoting
+			if data ~= nil then
+				locomoting = data.locomoting
+				inst.sg.statemem.talktask = data.talktask
+			end
 
 			local held, equipped
 			if inst.components.magician ~= nil then
@@ -16196,6 +15973,14 @@ local states =
 
 		events =
 		{
+			EventHandler("ontalk", function(inst)
+				if inst.sg:HasStateTag("overridelocomote") then
+					OnTalk_Override(inst)
+					return true
+				end
+				CancelTalk_Override(inst, true)
+			end),
+			EventHandler("donetalking", OnDoneTalking_Override),
 			EventHandler("equip", function(inst, data)
 				--suppress equip events for re-equipping our magiciantool hat
 				return data ~= nil and data.item == inst.sg.statemem.hat
@@ -16216,6 +16001,7 @@ local states =
 			inst.AnimState:ClearOverrideSymbol("swap_hattop")
 			inst.AnimState:ClearOverrideSymbol("tophat_fx_float")
 			inst.AnimState:SetSymbolMultColour("tophat_fx_float", 1, 1, 1, 1)
+			CancelTalk_Override(inst)
 		end,
 	},
 

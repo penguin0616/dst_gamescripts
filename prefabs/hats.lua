@@ -376,6 +376,9 @@ local function MakeHat(name)
     local function ruins_custom_init(inst)
         inst:AddTag("open_top_hat")
         inst:AddTag("metal")
+
+		--shadowlevel (from shadowlevel component) added to pristine state for optimization
+		inst:AddTag("shadowlevel")
     end
 
     local function ruins_onremove(inst)
@@ -2159,8 +2162,10 @@ local function MakeHat(name)
         end
 
         if offset then
-            return pos.x+offset.x,15,pos.z+offset.z
+            pos.x = pos.x + offset.x
+            pos.z = pos.z + offset.z
         end
+        return pos.x, 15, pos.z
     end
 
 
@@ -2343,6 +2348,9 @@ local function MakeHat(name)
     local function skeleton_custom_init(inst)
         --waterproofer (from waterproofer component) added to pristine state for optimization
         inst:AddTag("waterproofer")
+
+		--shadowlevel (from shadowlevel component) added to pristine state for optimization
+		inst:AddTag("shadowlevel")
 
         inst:AddTag("shadowdominance")
     end

@@ -52,24 +52,34 @@ local function shadow_spawnparticles(base, name, front, x_scale, y_scale)
 	inst:DoTaskInTime(0, shadow_releasesparticle)
 end
 
-local function shadow_fxfrontloop(inst)
-	inst.AnimState:PlayAnimation("hatfx")
-	inst:DoTaskInTime(13 * FRAMES, shadow_spawnparticles, "top", true, 1.34, 1)
-	inst:DoTaskInTime(15 * FRAMES, shadow_spawnparticles, "mid", true, 1.34, 1)
-	inst:DoTaskInTime(17 * FRAMES, shadow_spawnparticles, "btm", true, 1.34, 1)
-	inst:DoTaskInTime(27 * FRAMES, shadow_spawnparticles, "top", true, 1.22, 1.36)
-	inst:DoTaskInTime(29 * FRAMES, shadow_spawnparticles, "mid", true, 1.22, 1.36)
-	inst:DoTaskInTime(31 * FRAMES, shadow_spawnparticles, "btm", true, 1.22, 1.36)
+local function shadow_spawnpartciels_atframe(inst, frame, name, front, x_scale, y_scale)
+	if frame >= 0 then
+		inst:DoTaskInTime(frame * FRAMES, shadow_spawnparticles, name, front, x_scale, y_scale)
+	end
 end
 
-local function shadow_fxbackloop(inst)
+local function shadow_fxfrontloop(inst, frame)
+	frame = frame or 0
 	inst.AnimState:PlayAnimation("hatfx")
-	inst:DoTaskInTime(9 * FRAMES, shadow_spawnparticles, "top", false, -1.09, 1.16)
-	inst:DoTaskInTime(11 * FRAMES, shadow_spawnparticles, "mid", false, -1.09, 1.16)
-	inst:DoTaskInTime(13 * FRAMES, shadow_spawnparticles, "btm", false, -1.09, 1.16)
-	inst:DoTaskInTime(23 * FRAMES, shadow_spawnparticles, "top", false, -1.09, 1.49)
-	inst:DoTaskInTime(25 * FRAMES, shadow_spawnparticles, "mid", false, -1.09, 1.49)
-	inst:DoTaskInTime(27 * FRAMES, shadow_spawnparticles, "btm", false, -1.09, 1.49)
+	inst.AnimState:SetTime(frame * FRAMES)
+	shadow_spawnpartciels_atframe(inst, 13 - frame, "top", true, 1.34, 1)
+	shadow_spawnpartciels_atframe(inst, 15 - frame, "mid", true, 1.34, 1)
+	shadow_spawnpartciels_atframe(inst, 17 - frame, "btm", true, 1.34, 1)
+	shadow_spawnpartciels_atframe(inst, 27 - frame, "top", true, 1.22, 1.36)
+	shadow_spawnpartciels_atframe(inst, 29 - frame, "mid", true, 1.22, 1.36)
+	shadow_spawnpartciels_atframe(inst, 31 - frame, "btm", true, 1.22, 1.36)
+end
+
+local function shadow_fxbackloop(inst, frame)
+	frame = frame or 0
+	inst.AnimState:PlayAnimation("hatfx")
+	inst.AnimState:SetTime(frame * FRAMES)
+	shadow_spawnpartciels_atframe(inst, 9 - frame, "top", false, -1.09, 1.16)
+	shadow_spawnpartciels_atframe(inst, 11 - frame, "mid", false, -1.09, 1.16)
+	shadow_spawnpartciels_atframe(inst, 13 - frame, "btm", false, -1.09, 1.16)
+	shadow_spawnpartciels_atframe(inst, 23 - frame, "top", false, -1.09, 1.49)
+	shadow_spawnpartciels_atframe(inst, 25 - frame, "mid", false, -1.09, 1.49)
+	shadow_spawnpartciels_atframe(inst, 27 - frame, "btm", false, -1.09, 1.49)
 end
 
 local function shadow_onremoveentity(inst)
@@ -79,7 +89,7 @@ local function shadow_onremoveentity(inst)
 	inst.pool.invalid = true
 end
 
-local function shadow_createfx(front)
+local function shadow_createfx(front, frame)
 	local inst = CreateEntity()
 
 	inst:AddTag("NOCLICK")
@@ -94,18 +104,21 @@ local function shadow_createfx(front)
 	inst.AnimState:SetBank("tophat_fx")
 	inst.AnimState:SetBuild("tophat_fx")
 	inst.AnimState:SetMultColour(1, 1, 1, .5)
-	inst.AnimState:PlayAnimation("pre")
+
+	inst.pool = {}
+
 	if front then
 		inst.AnimState:Hide("back")
 		inst.AnimState:SetFinalOffset(1)
 		inst:ListenForEvent("animover", shadow_fxfrontloop)
+		shadow_fxfrontloop(inst, frame)
 	else
 		inst.AnimState:Hide("front")
 		inst.AnimState:SetFinalOffset(-1)
 		inst:ListenForEvent("animover", shadow_fxbackloop)
+		shadow_fxbackloop(inst, frame)
 	end
 
-	inst.pool = {}
 	inst.OnRemoveEntity = shadow_onremoveentity
 
 	return inst
@@ -123,8 +136,9 @@ local function shadow_fn()
 
 	--Dedicated server does not need to spawn the local fx
 	if not TheNet:IsDedicated() then
-		shadow_createfx(true).entity:SetParent(inst.entity)
-		shadow_createfx(false).entity:SetParent(inst.entity)
+		local frame = math.random(32) - 1
+		shadow_createfx(true, frame).entity:SetParent(inst.entity)
+		shadow_createfx(false, frame).entity:SetParent(inst.entity)
 	end
 
 	inst.entity:SetPristine()
@@ -141,6 +155,9 @@ end
 --------------------------------------------------------------------------
 
 local function swirl_attachfn(inst, owner, front)
+	if owner.components.rider ~= nil and owner.components.rider:IsRiding() then
+		inst.Transform:SetSixFaced()
+	end
 	inst.entity:SetParent(owner.entity)
 	if front then
 		inst.Follower:FollowSymbol(owner.GUID, "swap_tophat_swirl_front", 0, 0, 0, true)
@@ -184,6 +201,9 @@ end
 --------------------------------------------------------------------------
 
 local function using_shadow_attachfn(inst, owner, front)
+	if owner.components.rider ~= nil and owner.components.rider:IsRiding() then
+		inst.Transform:SetSixFaced()
+	end
 	inst.entity:SetParent(owner.entity)
 	inst.Follower:FollowSymbol(owner.GUID, "swap_fx_particles_using_tophat", 0, 0, 0, true)
 end

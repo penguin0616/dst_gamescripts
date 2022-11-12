@@ -450,6 +450,7 @@ local states =
         tags = { "attack", "busy", "canrotate" },
 
         onenter = function(inst)
+			inst.components.locomotor:StopMoving()
             inst.components.combat:StartAttack()
             inst.sg.statemem.target = inst.components.combat.target
             inst.AnimState:PlayAnimation("atk")
@@ -556,7 +557,6 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
-            inst.Physics:Stop()
             inst.AnimState:PlayAnimation("taunt_pre")
         end,
 
@@ -583,7 +583,6 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
-            inst.Physics:Stop()
             inst.AnimState:PlayAnimation("taunt")
             local tauntfx = SpawnPrefab("tauntfire_fx")
             tauntfx.Transform:SetPosition(inst.Transform:GetWorldPosition())

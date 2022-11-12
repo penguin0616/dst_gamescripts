@@ -416,6 +416,13 @@ return{
 --fallback to speech_wilson.lua     ANNOUNCE_WAYTOOMANYBIRDS = "only_used_by_waxwell_and_wicker",
 --fallback to speech_wilson.lua     ANNOUNCE_NOWATERNEARBY = "only_used_by_waxwell_and_wicker",
 
+	--waxwell specific
+	ANNOUNCE_SHADOWLEVEL_ITEM = "\nMy shadow puppets should be able to draw from its power...",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T1 = "What's this? My shadow puppets feel just a bit stronger...",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T2 = "I can feel the strength of my shadow puppets growing.",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T3 = "Go, my shadow puppets! With this power, nothing will stand in our way.",
+	ANNOUNCE_EQUIP_SHADOWLEVEL_T4 = "The shadow puppets I summon will be unstoppable!",
+
     --wolfgang specific
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOMIGHTY = "only_used_by_wolfang",
 --fallback to speech_wilson.lua     ANNOUNCE_NORMALTOWIMPY = "only_used_by_wolfang",

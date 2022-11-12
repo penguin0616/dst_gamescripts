@@ -2071,9 +2071,16 @@ local COMPONENT_ACTIONS =
             end
         end,
 
-		magiciantool = function(inst, doer, actions)
-			if doer:HasTag("magician") and not (doer.replica.rider ~= nil and doer.replica.rider:IsRiding()) then
-				table.insert(actions, ACTIONS.USEMAGICTOOL)
+		magiciantool = function(inst, doer, actions, right)
+			if doer:HasTag("magician") then
+				if right or doer.components.playercontroller:IsControlPressed(CONTROL_FORCE_INSPECT) then
+					table.insert(actions, ACTIONS.USEMAGICTOOL)
+				else
+					local equippable = inst.replica.equippable
+					if equippable ~= nil and equippable:IsEquipped() then
+						table.insert(actions, ACTIONS.USEMAGICTOOL)
+					end
+				end
 			end
 		end,
 

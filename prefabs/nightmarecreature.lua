@@ -75,6 +75,16 @@ local function OnNightmareDawn(inst, dawn)
     end
 end
 
+local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
+	if not player:HasTag("shadowdominance_null") then
+		local inventory = player.replica.inventory
+		if inventory ~= nil and inventory:EquipHasTag("shadowdominance") then
+			return false
+		end
+	end
+	return true
+end
+
 local function MakeShadowCreature(data)
     local bank = data.bank
     local build = data.build
@@ -121,6 +131,11 @@ local function MakeShadowCreature(data)
         inst:AddTag("hostile")
         inst:AddTag("shadow")
         inst:AddTag("notraptrigger")
+
+		--shadowsubmissive (from shadowsubmissive component) added to pristine state for optimization
+		inst:AddTag("shadowsubmissive")
+
+		inst.HostileToPlayerTest = CLIENT_ShadowSubmissive_HostileToPlayerTest
 
         inst.entity:SetPristine()
 
