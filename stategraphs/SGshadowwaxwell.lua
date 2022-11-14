@@ -946,10 +946,11 @@ local states =
 
 	State{
 		name = "disappear",
-		tags = { "busy", "noattack", "temp_invincible" },
+		tags = { "busy", "noattack", "temp_invincible", "phasing" },
 
 		onenter = function(inst, attacker)
 			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
 			ToggleOffCharacterCollisions(inst)
 			inst.AnimState:PlayAnimation("disappear")
 			if attacker ~= nil and attacker:IsValid() then
@@ -1001,7 +1002,7 @@ local states =
 
 	State{
 		name = "appear",
-		tags = { "busy", "noattack", "temp_invincible" },
+		tags = { "busy", "noattack", "temp_invincible", "phasing" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -1016,6 +1017,7 @@ local states =
 			end),
 			TimeEvent(11 * FRAMES, function(inst)
 				inst.sg:RemoveStateTag("temp_invincible")
+				inst.sg:RemoveStateTag("phasing")
 				ToggleOnCharacterCollisions(inst)
 			end),
 			TimeEvent(13 * FRAMES, function(inst)
@@ -1094,6 +1096,7 @@ local states =
 		onenter = function(inst, data)
 			inst.AnimState:PlayAnimation("lunge_loop") --NOTE: this anim NOT a loop yo
 			inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_nightsword")
+			inst.SoundEmitter:PlaySound("dontstarve/impacts/impact_shadow_med_sharp")
 			inst.Physics:ClearCollidesWith(COLLISION.GIANTS)
 			ToggleOffCharacterCollisions(inst)
 			TrySplashFX(inst)
@@ -1183,7 +1186,7 @@ local states =
 
 	State{
 		name = "lunge_pst",
-		tags = { "busy", "noattack", "temp_invincible" },
+		tags = { "busy", "noattack", "temp_invincible", "phasing" },
 
 		onenter = function(inst, target)
 			inst.AnimState:PlayAnimation("lunge_pst")

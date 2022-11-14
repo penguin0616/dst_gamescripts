@@ -568,6 +568,7 @@ function Tune(overrides)
         MINOTAUR_WALK_SPEED = 5,
         MINOTAUR_RUN_SPEED = 17,
         MINOTAUR_TARGET_DIST = 25,
+		MINOTAUR_LEAP_CD = 10,
 
         SLURTLE_DAMAGE = 25,
         SLURTLE_HEALTH = 600 * 2, -- harder for multiplayer
@@ -2610,6 +2611,11 @@ function Tune(overrides)
 		SHADOW_PILLAR_DURATION = 24,
 		SHADOW_PILLAR_DURATION_BOSS = 12,
 		SHADOW_PILLAR_DURATION_PLAYER = 6,
+		SHADOW_PILLAR_BREAK_MULT =
+		{
+			MIN = 1.5,	--break 150% faster => lasts 2/3 duration
+			MAX = 2,	--break 200% faster => lasts 1/2 duration
+		},
 
 		WAXWELLJOURNAL_SPELL_COST =
 		{
@@ -5206,8 +5212,9 @@ function Tune(overrides)
             HEALTH = 400 * 3,
             WALK_SPEED = 4,
             ATTACK_PERIOD = 5,
+			ATTACK_RANGE = 3,
             HUSK_HEALTH = 300,
-            AOE_RANGE = 5,
+			AOE_RANGE = 4,
             TARGET_DIST = 12,
         },
 
@@ -5647,7 +5654,8 @@ function Tune(overrides)
         ALTERGUARDIAN_PHASE1_ROLLDAMAGE = 166.67,
         ALTERGUARDIAN_PHASE1_AOEDAMAGE = 66.67,
         ALTERGUARDIAN_PHASE1_ATTACK_PERIOD = 7.5,
-        ALTERGUARDIAN_PHASE1_AOERANGE = 4.25,
+		ALTERGUARDIAN_PHASE1_ROLLRANGE = 2.25,
+		ALTERGUARDIAN_PHASE1_AOERANGE = 4,
         ALTERGUARDIAN_PHASE1_ROLLCOOLDOWN = 8.5,
         ALTERGUARDIAN_PHASE1_MINROLLCOUNT = 3,
         ALTERGUARDIAN_PHASE1_SUMMONCOOLDOWN = 20,
@@ -5880,6 +5888,7 @@ function Tune(overrides)
 
         EYEOFTERROR_CHARGECD = 7,
         EYEOFTERROR_MOUTHCHARGECD = 15,
+		EYEOFTERROR_CHARGE_AOERANGE = 2,
         EYEOFTERROR_SPAWNCD = 18,
         EYEOFTERROR_FOCUSCD = 21,
 

@@ -29,6 +29,10 @@ local function shadow_spawnparticles(base, name, front, x_scale, y_scale)
 		inst:AddTag("NOCLICK")
 		inst:AddTag("FX")
 		--[[Non-networked entity]]
+		--inst.entity:SetCanSleep(false)
+		if TheNet:GetIsClient() then
+			inst.entity:AddClientSleepable()
+		end
 		inst.persists = false
 
 		inst.entity:AddTransform()

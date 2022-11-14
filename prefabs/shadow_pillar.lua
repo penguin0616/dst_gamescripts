@@ -159,8 +159,16 @@ end
 local function Pillar_OnSetTarget(inst, target)
 	inst._ondispell = function() Pillar_OnDispell(inst) end
 	inst._ontargetremoved = function() Pillar_OnTargetRemoved(inst) end
+	inst._reducetime = function(target, dt)
+		local t = inst.components.timer:GetTimeLeft("lifetime")
+		if t ~= nil then
+			inst.components.timer:SetTimeLeft("lifetime", math.max(0, t - dt))
+		end
+	end
 	inst:ListenForEvent("dispell_shadow_pillars", inst._ondispell, target)
 	inst:ListenForEvent("onremove", inst._ontargetremoved, target)
+	inst:ListenForEvent("remove_shadow_pillars", inst._ontargetremoved, target)
+	inst:ListenForEvent("reduce_shadow_pillars_time", inst._reducetime, target)
 end
 
 local function Pillar_SetTarget(inst, target, hasplatform)
@@ -172,7 +180,12 @@ local function Pillar_SetTarget(inst, target, hasplatform)
 		end
 		if inst._ontargetremoved ~= nil then
 			inst:RemoveEventCallback("onremove", inst._ontargetremoved, oldtarget)
+			inst:RemoveEventCallback("remove_shadow_pillars", inst._ontargetremoved, oldtarget)
 			inst._ontargetremoved = nil
+		end
+		if inst._reducetime ~= nil then
+			inst:RemoveEventCallback("reduce_shadow_pillars_time", inst._reducetime, target)
+			inst._reducetime = nil
 		end
 		inst.components.entitytracker:ForgetEntity("target")
 	end
@@ -387,6 +400,47 @@ local function Target_SetDelay(inst, delay)
 	end
 end
 
+local MOVED_DIST_SQ = .5 * .5
+local UPDATE_PERIOD = 1
+local MAX_PLAYERS_CAP = 4 --maximum prison break speed at 4+ players
+local function Target_Update(inst, x, z, target, attackers)
+	--Backup test just in case, for weird boat physics or any forced teleporting
+	if target:GetDistanceSqToPoint(x, 0, z) > MOVED_DIST_SQ then
+		target:PushEvent("remove_shadow_pillars")
+		inst:Remove()
+		return
+	end
+
+	--Reduce timers based on how many unique player attackers
+	local t = inst.components.timer:GetTimeLeft("lifetime")
+	if t == nil then
+		return
+	end
+	local count = 0
+	local countothers = attackers.other and 1 or 0
+	attackers.other = nil
+	for k, v in pairs(attackers) do
+		attackers[k] = nil
+		count = count + 1
+	end
+	count = math.max(count, countothers)
+	if count > 0 then
+		--calculate the prison break speed mult first
+		local dt = Remap(math.min(count, MAX_PLAYERS_CAP), 1, MAX_PLAYERS_CAP, 0, 1)
+		dt = Lerp(TUNING.SHADOW_PILLAR_BREAK_MULT.MIN, TUNING.SHADOW_PILLAR_BREAK_MULT.MAX, dt)
+		if dt > 1 then --greater than normal (1x) speed
+			dt = UPDATE_PERIOD * (dt - 1) --convert to additional dt to advance timers
+			if t < dt then
+				target:PushEvent("remove_shadow_pillars")
+				inst:Remove()
+				return
+			end
+			inst.components.timer:SetTimeLeft("lifetime", t - dt)
+			target:PushEvent("reduce_shadow_pillars_time", dt)
+		end
+	end
+end
+
 local function Target_OnSetTarget(inst, target)
 	if target.Physics ~= nil then
 		target.Physics:Stop()
@@ -410,6 +464,25 @@ local function Target_OnSetTarget(inst, target)
 			end
 		end, target)
 	end
+
+	local attackers = {}
+	local function ontargetattacked(target, data)
+		local attacker = data ~= nil and data.attacker or nil
+		if attacker ~= nil then
+			if attacker.components.follower ~= nil then
+				attacker = attacker.components.follower:GetLeader() or attacker
+			end
+			if not attacker:HasTag("player") then
+				attacker = nil
+			end
+		end
+		attackers[attacker or "other"] = true
+	end
+	inst:ListenForEvent("attacked", ontargetattacked, target)
+	inst:ListenForEvent("blocked", ontargetattacked, target)
+
+	local x, y, z = inst.Transform:GetWorldPosition()
+	inst:DoPeriodicTask(UPDATE_PERIOD, Target_Update, nil, x, z, target, attackers)
 end
 
 local function Target_DoShake(inst, radius)

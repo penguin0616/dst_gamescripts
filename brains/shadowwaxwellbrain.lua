@@ -224,9 +224,20 @@ local function ShouldAvoidExplosive(target)
         or target.components.burnable:IsBurning()
 end
 
-local function ShouldRunAway(target)
-    return not (target.components.health ~= nil and target.components.health:IsDead())
-        and (not target:HasTag("shadowcreature") or (target.components.combat ~= nil and target.components.combat:HasTarget()))
+local function ShouldRunAway(target, inst)
+	if target.components.health ~= nil and target.components.health:IsDead() then
+		return false
+	elseif target:HasTag("shadowcreature") then
+		if target.HostileToPlayerTest ~= nil then
+			local leader = GetLeader(inst)
+			return leader ~= nil and target:HostileToPlayerTest(leader)
+		end
+		return false
+	elseif target:HasTag("stalker") then
+		return target.atriumstalker
+			or (target.canfight and target.components.combat ~= nil and target.components.combat:HasTarget())
+	end
+	return true
 end
 
 local function ShouldKite(target, inst)
@@ -354,7 +365,8 @@ function ShadowWaxwellBrain:OnStart()
             avoid_explosions,
             avoid_danger,
             -- Do the work needed to be done.
-            DoAction(self.inst, function() return FindAnyEntityToWorkActionsOn(self.inst, pickupparams.ignorethese) end),
+			WhileNode(function() return not self.inst.sg:HasStateTag("phasing") end, "Keep Working",
+				DoAction(self.inst, function() return FindAnyEntityToWorkActionsOn(self.inst, pickupparams.ignorethese) end)),
 			-- This Leash is to stop chasing after leader with loot if they keep moving too far away.
 			Leash(self.inst, GetSpawn, pickupparams.range + 4, math.min(6, pickupparams.range)),
             BrainCommon.NodeAssistLeaderPickUps(self, pickupparams),
@@ -405,11 +417,11 @@ function ShadowWaxwellBrain:OnStart()
                     --All shadows will flee from danger at this point
                     avoid_danger,
                     --Workers will try to work if not fleeing
-                    IfNode(function() return self.inst.prefab == "shadowlumber" end, "Keep Chopping",
+					WhileNode(function() return self.inst.prefab == "shadowlumber" and not self.inst.sg:HasStateTag("phasing") end, "Keep Chopping",
                         DoAction(self.inst, function() return FindEntityToWorkAction(self.inst, ACTIONS.CHOP) end)),
-                    IfNode(function() return self.inst.prefab == "shadowminer" end, "Keep Mining",
+					WhileNode(function() return self.inst.prefab == "shadowminer" and not self.inst.sg:HasStateTag("phasing") end, "Keep Mining",
                         DoAction(self.inst, function() return FindEntityToWorkAction(self.inst, ACTIONS.MINE) end)),
-                    IfNode(function() return self.inst.prefab == "shadowdigger" end, "Keep Digging",
+					WhileNode(function() return self.inst.prefab == "shadowdigger" and not self.inst.sg:HasStateTag("phasing") end, "Keep Digging",
                         DoAction(self.inst, function() return FindEntityToWorkAction(self.inst, ACTIONS.DIG, DIG_TAGS) end)),
             }, 0.25)),
     

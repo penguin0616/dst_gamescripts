@@ -59,9 +59,6 @@ function DragonflyBrain:OnSpawnLavae()
     self.inst.components.rampingspawner:SpawnEntity()
 end
 
-local STUCK_DIST_SQ = .05 * .05
-local STUCK_TIME = 2
-
 function DragonflyBrain:OnStart()
     local root =
         PriorityNode(
@@ -79,23 +76,10 @@ function DragonflyBrain:OnStart()
 					}, .25),
 					LoopNode{
 						ActionNode(function()
-							local busy = self.inst.sg:HasStateTag("busy") and not self.inst.sg:HasStateTag("hit")
-							if busy and self.lastpos == nil then
-								return
-							end
-							local x, y, z = self.inst.Transform:GetWorldPosition()
-							local t = GetTime()
-							if self.lastpos == nil then
-								self.lastpos = Vector3(x, 0, z)
-								self.stucktime = t
-							elseif busy or distsq(self.lastpos.x, self.lastpos.z, x, z) > STUCK_DIST_SQ then
-								self.lastpos.x, self.lastpos.z = x, z
-								self.stucktime = t
-							else
-								self.lastpos.x, self.lastpos.z = x, z
-								if self.stucktime + STUCK_TIME < t and not self.inst.components.combat:InCooldown() then
-									self.inst.components.combat:TryAttack()
-								end
+							if self.inst.sg:HasStateTag("busy") and not self.inst.sg:HasStateTag("hit") then
+								self.inst.components.stuckdetection:Reset()
+							elseif self.inst.components.stuckdetection:IsStuck() and not self.inst.components.combat:InCooldown() then
+								self.inst.components.combat:TryAttack()
 							end
 						end),
 					},

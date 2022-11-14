@@ -164,7 +164,7 @@ local function GetEquippableDapperness(owner, equippable)
 		or dapperness
 end
 
-local function DoAnnounceShadowLevel(inst, params, item, lastitem)
+local function DoAnnounceShadowLevel(inst, params, item)
 	params.task = nil
 
 	if inst.components.health:IsDead() or inst:HasTag("playerghost") then
@@ -179,26 +179,24 @@ local function DoAnnounceShadowLevel(inst, params, item, lastitem)
 		return
 	end
 
-	local t = GetTime()
-	if lastitem.prefab == item.prefab and t < lastitem.time + 30 then
-		--equipped the same item in this slot recently
-		lastitem.time = t
-		return
-	end
-
 	level = math.min(4, level)
 
-	if inst.sg:HasStateTag("talking") or (level <= params.level and t < params.time + 3) then
-		--busy talking, or announced equal or lower level less than 3 seconds ago
-		lastitem.prefab = nil
-		lastitem.time = nil
+	local t = GetTime()
+	if t < (params.levels[level] or -math.huge) + 600 then
+		--Suppress announcements until haven't worn anything this level in over 10min.
+		--Note that timer starts from last unequipped.
+		params.levels[level] = t
 		return
 	end
 
-	lastitem.prefab = item.prefab
-	lastitem.time = t
+	if inst.sg:HasStateTag("talking") or (level <= params.level and t < params.time + 3) then
+		--busy talking, or announced equal or higher level less than 3 seconds ago
+		return
+	end
+
 	params.time = t
 	params.level = level
+	params.levels[level] = t
 
 	--For searching:
 	--ANNOUNCE_EQUIP_SHADOWLEVEL_T1
@@ -210,28 +208,31 @@ end
 
 local function OnEquip(inst, data)
 	if data ~= nil and data.item ~= nil and data.item.components.shadowlevel ~= nil then
-		local params = inst._announceshadowlevel
-		if params.task ~= nil then
-			params.task:Cancel()
-		end
-		local lastitem = params.slots[data.eslot]
-		local t = GetTime()
-		if t > inst.spawntime then
-			params.task = lastitem ~= nil and inst:DoTaskInTime(.2, DoAnnounceShadowLevel, params, data.item, lastitem) or nil
-		else
-			--Just spawned, suppress announcements
-			params.task = nil
-			lastitem.prefab = data.item.prefab
-			lastitem.time = t
+		--default level ignoring fuel
+		local level = data.item.components.shadowlevel.level
+		if level > 0 then
+			local params = inst._announceshadowlevel
+			if params.task ~= nil then
+				params.task:Cancel()
+			end
+			local t = GetTime()
+			if t > inst.spawntime then
+				params.task = inst:DoTaskInTime(.2, DoAnnounceShadowLevel, params, data.item)
+			else
+				--Just spawned, suppress announcements
+				params.task = nil
+				params.levels[math.min(4, level)] = GetTime()
+			end
 		end
 	end
 end
 
 local function OnUnequip(inst, data)
-	if data ~= nil and data.item ~= nil then
-		local lastitem = inst._announceshadowlevel.slots[data.eslot]
-		if lastitem ~= nil and lastitem.prefab == data.item.prefab then
-			lastitem.time = GetTime()
+	if data ~= nil and data.item ~= nil and data.item.components.shadowlevel ~= nil then
+		--default level ignoring fuel
+		local level = data.item.components.shadowlevel.level
+		if level > 0 then
+			inst._announceshadowlevel.levels[math.min(4, level)] = GetTime()
 		end
 	end
 end
@@ -299,11 +300,8 @@ local function master_postinit(inst)
 		task = nil,
 		time = -math.huge,
 		level = 0,
-		slots = {},
+		levels = {},
 	}
-	for _, v in pairs(EQUIPSLOTS) do
-		inst._announceshadowlevel.slots[v] = {}
-	end
 	--
 
     if TheNet:GetServerGameMode() == "lavaarena" then

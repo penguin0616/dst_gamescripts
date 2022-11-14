@@ -212,6 +212,7 @@ local function fn()
     inst.components.cooldown.cooldown_duration = TUNING.ARMOR_SKELETON_COOLDOWN
 
 	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetDefaultLevel(TUNING.ARMOR_SKELETON_SHADOW_LEVEL)
 	inst.components.shadowlevel:SetLevelFn(GetShadowLevel)
 
     MakeHauntableLaunch(inst)

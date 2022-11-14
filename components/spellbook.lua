@@ -61,6 +61,9 @@ end
 
 function SpellBook:OpenSpellBook(user)
 	if user.HUD ~= nil then
+		if user.components.playercontroller ~= nil then
+			user.components.playercontroller:CancelAOETargeting()
+		end
 		user.HUD:OpenSpellWheel(self.inst, self.items, self.radius, self.focus_radius)
 	end
 end

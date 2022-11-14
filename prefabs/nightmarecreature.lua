@@ -82,7 +82,15 @@ local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
 			return false
 		end
 	end
-	return true
+	local combat = inst.replica.combat
+	if combat ~= nil and combat:GetTarget() == player then
+		return true
+	end
+	local sanity = player.replica.sanity
+	if sanity ~= nil and sanity:IsCrazy() then
+		return true
+	end
+	return false
 end
 
 local function MakeShadowCreature(data)

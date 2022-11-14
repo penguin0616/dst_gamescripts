@@ -13783,6 +13783,7 @@ STRINGS.SPELLS = {
 	SHADOW_PROTECTOR = "Shadow Duelist",
 	SHADOW_TRAP = "Shadow Sneak",
 	SHADOW_PILLARS = "Shadow Prison",
+	SHADOW_UNSUMMON = "Return Shadows",
 	--SHADOW_TOPHAT = "Imbue Top Hat",
 }
 

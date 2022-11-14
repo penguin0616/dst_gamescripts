@@ -116,10 +116,20 @@ local TARGET_MUST_TAGS = nil
 local TARGET_NO_TAGS = { "epic", "notraptrigger", "ghost", "player", "INLIMBO", "flight", "invisible", "notarget" }
 local TARGET_ONE_OF_TAGS = DETECT_ONE_OF_TAGS
 
+local function CanPanic(target)
+	if target.components.hauntable ~= nil and target.components.hauntable.panicable or target.has_nightmare_state then
+		return true
+	end
+end
+
 local function TryTrapTarget(inst, targets)
 	local x, y, z = inst.Transform:GetWorldPosition()
 	for i, v in ipairs(TheSim:FindEntities(x, 0, z, TARGET_RADIUS, TARGET_MUST_TAGS, TARGET_NO_TAGS, TARGET_ONE_OF_TAGS)) do
-		if not targets[v] and not (v.components.health ~= nil and v.components.health:IsDead()) and v.entity:IsVisible() then
+		if not targets[v] and
+			CanPanic(v) and
+			not (v.components.health ~= nil and v.components.health:IsDead()) and
+			v.entity:IsVisible()
+			then
 			targets[v] = true
 			local x1, y1, z1 = v.Transform:GetWorldPosition()
 			local fx = SpawnPrefab("shadow_despawn")
@@ -191,14 +201,14 @@ local function Detect(inst, map)
 	if inst.sg:HasStateTag("activated") then
 		inst.task:Cancel()
 		inst.task = nil
-	elseif inst.sg:HasStateTag("canactivate") and FindEntity(inst, DETECT_RADIUS, nil, DETECT_MUST_TAGS, DETECT_NO_TAGS, DETECT_ONE_OF_TAGS) ~= nil then
+	elseif inst.sg:HasStateTag("canactivate") and FindEntity(inst, DETECT_RADIUS, CanPanic, DETECT_MUST_TAGS, DETECT_NO_TAGS, DETECT_ONE_OF_TAGS) ~= nil then
 		inst.task:Cancel()
 		inst.task = nil
 		inst.sg:GoToState("activate")
 	elseif inst:HasTag("ignorewalkableplatforms") and map:GetPlatformAtPoint(inst.Transform:GetWorldPosition()) ~= nil then
 		DispellTrap(inst, true)
 	elseif inst.sg:HasStateTag("candetect") then
-		if FindEntity(inst, TARGET_RADIUS, nil, DETECT_MUST_TAGS, DETECT_NO_TAGS, DETECT_ONE_OF_TAGS) ~= nil then
+		if FindEntity(inst, TARGET_RADIUS, CanPanic, DETECT_MUST_TAGS, DETECT_NO_TAGS, DETECT_ONE_OF_TAGS) ~= nil then
 			if not inst.sg:HasStateTag("near") then
 				inst.sg:GoToState("near_idle_pre")
 			end

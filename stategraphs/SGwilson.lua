@@ -7201,22 +7201,13 @@ local states =
 			TimeEvent(45 * FRAMES, function(inst)
 				if inst.sg.statemem.repeatcast then
 					inst.SoundEmitter:PlaySound("dontstarve/common/use_book_close")
+					inst.sg:RemoveStateTag("busy")
+					inst:RemoveTag("canrepeatcast")
 				end
 			end),
 			TimeEvent(51 * FRAMES, function(inst)
 				if not inst.sg.statemem.repeatcast then
 					inst.SoundEmitter:PlaySound("dontstarve/common/use_book_close")
-				end
-			end),
-			--
-			TimeEvent(56 * FRAMES, function(inst)
-				if inst.sg.statemem.repeatcast then
-					inst.sg:RemoveStateTag("busy")
-					inst:RemoveTag("canrepeatcast")
-				end
-			end),
-			TimeEvent(62 * FRAMES, function(inst)
-				if not inst.sg.statemem.repeatcast then
 					inst.sg:RemoveStateTag("busy")
 					inst:RemoveTag("canrepeatcast")
 				end

@@ -127,28 +127,34 @@ local function spawn_ground_fx(inst)
     end
 end
 
-local CHARGE_LOOP_TARGET_CANT_TAGS = {"INLIMBO", "fx", "eyeofterror"}
+local CHARGE_RANGE_OFFSET = 1
 local CHARGE_LOOP_TARGET_ONEOF_TAGS = {"tree", "_health"}
-local FOCUSTARGET_DSQ = TUNING.BEEQUEEN_FOCUSTARGET_RANGE * TUNING.BEEQUEEN_FOCUSTARGET_RANGE
 
+local AOE_RANGE_PADDING = 3
 local AOE_TARGET_MUSTHAVE_TAGS = { "_health", "_combat" }
-local AOE_TARGET_CANT_TAGS = { "fx", "INLIMBO", "eyeofterror" }
-local AOE_TARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion", "smallcreature" }
+local AOE_TARGET_CANT_TAGS = { "INLIMBO", "eyeofterror", "flight", "invisible", "notarget", "noattack" }
+local AOE_TARGET_ONEOF_TAGS = { "animal", "character", "monster", "shadowminion" }
 local function DoAOEAttack(inst, range)
+	--assert(range <= inst.components.combat.hitrange)
     local x,y,z = inst.Transform:GetWorldPosition()
     local targets = TheSim:FindEntities(
-        x, y, z, range,
+		x, y, z, range + AOE_RANGE_PADDING,
         AOE_TARGET_MUSTHAVE_TAGS, AOE_TARGET_CANT_TAGS, AOE_TARGET_ONEOF_TAGS
     )
 
-    local default_damage = inst.components.combat.defaultdamage
-    inst.components.combat:SetDefaultDamage(inst._chompdamage or TUNING.EYEOFTERROR_AOE_DAMAGE)
-    for _, target in ipairs(targets) do
-        if target ~= inst then
-            inst.components.combat:DoAttack(target)
-        end
-    end
-    inst.components.combat:SetDefaultDamage(default_damage)
+	if #targets > 0 then
+		local default_damage = inst.components.combat.defaultdamage
+		inst.components.combat:SetDefaultDamage(inst._chompdamage or TUNING.EYEOFTERROR_AOE_DAMAGE)
+		for _, target in ipairs(targets) do
+			if target:IsValid() and not (target.components.health ~= nil and target.components.health:IsDead()) then
+				local range1 = range + target:GetPhysicsRadius(0)
+				if target:GetDistanceSqToPoint(x, y, z) < range1 * range1 then
+					inst.components.combat:DoAttack(target)
+				end
+			end
+		end
+		inst.components.combat:SetDefaultDamage(default_damage)
+	end
 end
 
 local function DoEpicScare(inst, duration)
@@ -285,10 +291,19 @@ local states =
 
         onupdate = function(inst, dt)
             if inst.sg.statemem.collisiontime <= 0 then
+				--assert(TUNING.EYEOFTERROR_CHARGE_AOERANGE <= inst.components.combat.hitrange)
                 local x,y,z = inst.Transform:GetWorldPosition()
-                local ents = TheSim:FindEntities(x, y, z, 2, nil, CHARGE_LOOP_TARGET_CANT_TAGS, CHARGE_LOOP_TARGET_ONEOF_TAGS)
+				local theta = inst.Transform:GetRotation() * DEGREES
+				x = x + math.cos(theta) * CHARGE_RANGE_OFFSET
+				z = z - math.sin(theta) * CHARGE_RANGE_OFFSET
+				local ents = TheSim:FindEntities(x, y, z, TUNING.EYEOFTERROR_CHARGE_AOERANGE + AOE_RANGE_PADDING, nil, AOE_TARGET_CANT_TAGS, CHARGE_LOOP_TARGET_ONEOF_TAGS)
                 for _, ent in ipairs(ents) do
-                    inst:OnCollide(ent)
+					if ent:IsValid() then
+						local range = TUNING.EYEOFTERROR_CHARGE_AOERANGE + ent:GetPhysicsRadius(0)
+						if ent:GetDistanceSqToPoint(x, y, z) < range * range then
+							inst:OnCollide(ent)
+						end
+					end
                 end
 
                 inst.sg.statemem.collisiontime = COLLIDE_TIME
@@ -388,10 +403,19 @@ local states =
 
         onupdate = function(inst, dt)
             if inst.sg.statemem.collisiontime <= 0 then
+				--assert(TUNING.EYEOFTERROR_CHARGE_AOERANGE <= inst.components.combat.hitrange)
                 local x,y,z = inst.Transform:GetWorldPosition()
-                local ents = TheSim:FindEntities(x, y, z, 2, nil, CHARGE_LOOP_TARGET_CANT_TAGS, CHARGE_LOOP_TARGET_ONEOF_TAGS)
+				local theta = inst.Transform:GetRotation() * DEGREES
+				x = x + math.cos(theta) * CHARGE_RANGE_OFFSET
+				z = z - math.sin(theta) * CHARGE_RANGE_OFFSET
+				local ents = TheSim:FindEntities(x, y, z, TUNING.EYEOFTERROR_CHARGE_AOERANGE + AOE_RANGE_PADDING, nil, AOE_TARGET_CANT_TAGS, CHARGE_LOOP_TARGET_ONEOF_TAGS)
                 for _, ent in ipairs(ents) do
-                    inst:OnCollide(ent)
+					if ent:IsValid() then
+						local range = TUNING.EYEOFTERROR_CHARGE_AOERANGE + ent:GetPhysicsRadius(0)
+						if ent:GetDistanceSqToPoint(x, y, z) < range * range then
+							inst:OnCollide(ent)
+						end
+					end
                 end
 
                 inst.sg.statemem.collisiontime = COLLIDE_TIME

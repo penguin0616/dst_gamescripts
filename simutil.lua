@@ -331,7 +331,7 @@ local PICKUP_CANT_TAGS = {
     "fire", "light", "spider", "cursed", "paired", "bundle",
     "heatrock", "deploykititem", "boatbuilder", "singingshell",
     -- Pickables
-    "flower", "gemsocket",
+    "flower", "gemsocket", "structure",
     -- Either
     "donotautopick",
 }

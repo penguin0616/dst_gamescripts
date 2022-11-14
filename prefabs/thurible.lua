@@ -239,6 +239,7 @@ local function fn()
     inst.components.fueled.accepting = true
 
 	inst:AddComponent("shadowlevel")
+	inst.components.shadowlevel:SetDefaultLevel(TUNING.THURIBLE_SHADOW_LEVEL)
 	inst.components.shadowlevel:SetLevelFn(GetShadowLevel)
 
     MakeHauntableLaunch(inst)
