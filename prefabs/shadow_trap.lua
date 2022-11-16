@@ -4,6 +4,11 @@ local assets =
 	Asset("ANIM", "anim/mushroombomb_base.zip"),
 }
 
+local assets_fx =
+{
+	Asset("ANIM", "anim/shadow_trap_debuff.zip"),
+}
+
 local prefabs =
 {
 	"shadow_despawn",
@@ -12,6 +17,7 @@ local prefabs =
 	"ocean_splash_small1",
 	"ocean_splash_small2",
 	"shadow_pillar_base_fx",
+	"shadow_trap_debuff_fx",
 }
 
 --V2C: decided not to use the "mine" component because we may be different enough
@@ -122,6 +128,15 @@ local function CanPanic(target)
 	end
 end
 
+local function EndSpeedMult(target)
+	target._shadow_trap_task = nil
+	target._shadow_trap_fx:KillFX()
+	target._shadow_trap_fx = nil
+	if target.components.locomotor ~= nil then
+		target.components.locomotor:RemoveExternalSpeedMultiplier(target, "shadow_trap")
+	end
+end
+
 local function TryTrapTarget(inst, targets)
 	local x, y, z = inst.Transform:GetWorldPosition()
 	for i, v in ipairs(TheSim:FindEntities(x, 0, z, TARGET_RADIUS, TARGET_MUST_TAGS, TARGET_NO_TAGS, TARGET_ONE_OF_TAGS)) do
@@ -152,6 +167,17 @@ local function TryTrapTarget(inst, targets)
 			end
 			if not v.has_nightmare_state and v.components.hauntable ~= nil and v.components.hauntable.panicable then
 				v.components.hauntable:Panic(TUNING.SHADOW_TRAP_PANIC_TIME)
+				if v.components.locomotor ~= nil then
+					if v._shadow_trap_task ~= nil then
+						v._shadow_trap_task:Cancel()
+					else
+						v._shadow_trap_fx = SpawnPrefab("shadow_trap_debuff_fx")
+						v._shadow_trap_fx.entity:SetParent(v.entity)
+						v._shadow_trap_fx:OnSetTarget(v)
+					end
+					v._shadow_trap_task = v:DoTaskInTime(TUNING.SHADOW_TRAP_PANIC_TIME, EndSpeedMult)
+					v.components.locomotor:SetExternalSpeedMultiplier(v, "shadow_trap", TUNING.SHADOW_TRAP_SPEED_MULT)
+				end
 			end
 		end
 	end
@@ -322,4 +348,69 @@ local function fn()
 	return inst
 end
 
-return Prefab("shadow_trap", fn, assets, prefabs)
+local function KillFX(inst)
+	if inst:IsAsleep() then
+		inst:Remove()
+	elseif not inst.killed then
+		inst.killed = true
+		inst.AnimState:PlayAnimation("debuff_pst_"..(inst.size or "medium"))
+		inst:ListenForEvent("animover", inst.Remove)
+	end
+end
+
+local function OnSetTarget(inst, target)
+	if target:HasTag("smallcreature") then
+		inst.size = "small"
+	elseif target:HasTag("largecreature") then
+		inst.size = "large"
+	end
+	if inst.size ~= nil then
+		inst.AnimState:PlayAnimation("debuff_pre_"..inst.size)
+		inst.AnimState:PushAnimation("debuff_loop_"..inst.size)
+	end
+
+	inst:ListenForEvent("death", function()
+		inst:KillFX()
+	end, target)
+	inst:ListenForEvent("onremove", function()
+		local x, y, z = inst.Transform:GetWorldPosition()
+		inst.entity:SetParent(nil)
+		inst.Transform:SetPosition(x, y, z)
+		inst:KillFX()
+	end, target)
+end
+
+local function fxfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("NOCLICK")
+	--inst:AddTag("FX")
+	inst:AddTag("CLASSIFIED") --unfortunately, in DST, "FX" still makes it mouseover when parented
+
+	inst.AnimState:SetBank("shadow_trap_debuff")
+	inst.AnimState:SetBuild("shadow_trap_debuff")
+	inst.AnimState:PlayAnimation("debuff_pre_medium")
+	inst.AnimState:SetMultColour(1, 1, 1, .5)
+	inst.AnimState:SetFinalOffset(7)
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.AnimState:PushAnimation("debuff_loop_medium")
+
+	inst.OnSetTarget = OnSetTarget
+	inst.KillFX = KillFX
+	inst.persists = false
+
+	return inst
+end
+
+return Prefab("shadow_trap", fn, assets, prefabs),
+	Prefab("shadow_trap_debuff_fx", fxfn, assets_fx)

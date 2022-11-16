@@ -142,7 +142,7 @@ Recipe = Class(function(self, name, ingredients, tab, level, placer_or_more_data
     num                = num + 1
     AllRecipes[name]   = self
     if self.builder_tag ~= nil and more_data.allowautopick == nil then -- NOTES(JBK): "donotautopick" filtered items should set allowautopick in the recipe if they are to be picked up by things for the player.
-        AllBuilderTaggedRecipes[name] = true
+        AllBuilderTaggedRecipes[name] = self.builder_tag
     end
 
     if ModManager then

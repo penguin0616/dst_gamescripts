@@ -909,19 +909,24 @@ function PlayerController:DoControllerAltActionButton()
             lmb, act = self:GetSceneItemControllerAction(obj)
         end
         if act == nil then
-            local rider = self.inst.replica.rider
-            if rider ~= nil and rider:IsRiding() then
-                obj = self.inst
-                act = BufferedAction(obj, obj, ACTIONS.DISMOUNT)
-            else
-                obj = nil
-                act = self:GetGroundUseSpecialAction(nil, true)
-                if act == nil then
-                    self:TryAOETargeting()
-                    return
-                end
-                isspecial = true
-            end
+			if self.inst:HasTag("usingmagiciantool") then
+				obj = self.inst
+				act = BufferedAction(obj, obj, ACTIONS.STOPUSINGMAGICTOOL)
+			else
+				local rider = self.inst.replica.rider
+				if rider ~= nil and rider:IsRiding() then
+					obj = self.inst
+					act = BufferedAction(obj, obj, ACTIONS.DISMOUNT)
+				else
+					obj = nil
+					act = self:GetGroundUseSpecialAction(nil, true)
+					if act == nil then
+						self:TryAOETargeting()
+						return
+					end
+					isspecial = true
+				end
+			end
         end
     end
 
@@ -4024,6 +4029,10 @@ function PlayerController:GetItemUseAction(active_item, target)
         ValidateItemUseAction(--[[rmb]] self, self.inst.components.playeractionpicker:GetUseItemActions(target, active_item, true)[1], active_item, target) or
         ValidateItemUseAction(--[[lmb]] self, self.inst.components.playeractionpicker:GetUseItemActions(target, active_item, false)[1], active_item, target)
     ) or nil
+
+	if act == nil and active_item:HasTag("magiciantool") and self.inst:HasTag("magician") then
+		act = BufferedAction(self.inst, nil, ACTIONS.USEMAGICTOOL, active_item)
+	end
 
     --V2C: Use self actions blocked by controller R.Dpad "TOGGLE_DEPLOY_MODE"
     --     e.g. Murder/Plant, Eat/Plant

@@ -1,6 +1,10 @@
+--Works with shadowdominance component
+
 local function OnReactivate(attacker)
     attacker._shadowdsubmissive_task = nil
-	attacker:RemoveTag("shadowdominance_null")
+	if attacker.components.inventory ~= nil and attacker.components.inventory:EquipHasTag("shadowdominance") then
+		attacker:AddTag("shadowdominance")
+	end
 end
 
 local function OnAttacked(inst, data)
@@ -8,7 +12,7 @@ local function OnAttacked(inst, data)
         if data.attacker._shadowdsubmissive_task ~= nil then
             data.attacker._shadowdsubmissive_task:Cancel()
 		else
-			data.attacker:AddTag("shadowdominance_null")
+			data.attacker:RemoveTag("shadowdominance")
         end
         data.attacker._shadowdsubmissive_task = data.attacker:DoTaskInTime(inst.components.shadowsubmissive.forgetattackertime, OnReactivate)
     end
@@ -31,9 +35,7 @@ function ShadowSubmissive:OnRemoveFromEntity()
 end
 
 function ShadowSubmissive:ShouldSubmitToTarget(target)
-    return target ~= nil
-        and target._shadowdsubmissive_task == nil
-        and self:TargetHasDominance(target)
+	return target ~= nil and target:IsValid() and target:HasTag("shadowdominance")
 end
 
 function ShadowSubmissive:TargetHasDominance(target)

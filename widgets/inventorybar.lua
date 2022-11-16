@@ -497,6 +497,13 @@ function Inv:OnUpdate(dt)
     self:UpdateCursor()
 
     if self.shown then
+		if self.owner.components.playercontroller ~= nil and
+			self.owner.components.playercontroller.reticule ~= nil and
+			self.owner.components.playercontroller.reticule.twinstickmode ~= nil
+			then
+			return
+		end
+
         --this is intentionally unaware of focus
         if self.repeat_time <= 0 then
             self.reps = self.reps and (self.reps + 1) or 1
@@ -797,7 +804,8 @@ function Inv:OpenControllerInventory()
         --     audio settings, which we don't want to do now
         --SetPause(true, "inv")
 
-        SetAutopaused(true)
+		--V2C: Don't auto-pause...item on item actions won't work
+        --SetAutopaused(true)
 
         self.open = true
         self.force_single_drop = false --reset the flag
@@ -833,7 +841,8 @@ function Inv:CloseControllerInventory()
         --     audio settings, which we don't want to do now
         --SetPause(false)
 
-        SetAutopaused(false)
+		--V2C: Don't auto-pause...item on item actions won't work
+        --SetAutopaused(false)
 
         self.owner.HUD.controls:SetDark(false)
 

@@ -94,6 +94,9 @@ function Wheel:SetItems( dataset, radius, focus_radius, dataset_name )
 		w.ongainfocus = function()
 				w:MoveTo(v.pos, v.focus_pos, 0.1)
 				self.selected_label:SetString(v.label)
+				if v.onfocus ~= nil then
+					v.onfocus()
+				end
 			end
 			
 		w.onlosefocus = function()
@@ -144,32 +147,35 @@ function Wheel:Open(dataset_name)
 	self:Disable()
 	self:SetClickable(false)
 	self.cur_cell_index = 1
-			
+
 	self.selected_label:SetPosition(0, self.activeitems[1].pos.y * -0.5 )
 
+	local selected = self.activeitems[1]
 	for i, v in ipairs(self.activeitems) do
 		if v.checkenabled == nil or v.checkenabled() then
 			v.widget:Enable()
 		else
 			v.widget:Disable()
 		end
-		if i == 1 then
-			local focus = v.widget.enabled and self.iscontroller
-			if focus then
-				v.widget:SetFocus()
-			end
-			v.widget:MoveTo( Vector3(0,0,0), focus and v.focus_pos or v.pos, 0.25,
-				function()
-					self:SetClickable(true)
-					self:Enable()
-					if self.iscontroller then
-						self:StartUpdating()
-					end
-				end)
-		else
-			v.widget:MoveTo( Vector3(0,0,0), v.pos, 0.25 )
+		if v.selected then
+			selected = v
 		end
+		v.widget:MoveTo( Vector3(0,0,0), v.pos, 0.25 )
 		v.widget:Show()
+	end
+	if selected ~= nil then
+		local focus = selected.widget.enabled and self.iscontroller
+		if focus then
+			selected.widget:SetFocus()
+		end
+		selected.widget:MoveTo( Vector3(0,0,0), focus and selected.focus_pos or selected.pos, 0.25,
+			function()
+				self:SetClickable(true)
+				self:Enable()
+				if self.iscontroller then
+					self:StartUpdating()
+				end
+			end)
 	end
 end
 

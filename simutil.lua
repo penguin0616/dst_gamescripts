@@ -330,6 +330,7 @@ local PICKUP_CANT_TAGS = {
     "minesprung", "mineactive", "catchable",
     "fire", "light", "spider", "cursed", "paired", "bundle",
     "heatrock", "deploykititem", "boatbuilder", "singingshell",
+    "archive_lockbox", "simplebook",
     -- Pickables
     "flower", "gemsocket", "structure",
     -- Either

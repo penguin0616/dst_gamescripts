@@ -963,6 +963,11 @@ function PlayerHud:OpenSpellWheel(invobject, items, radius, focus_radius)
 				invobject.components.spellbook:SelectSpell(i)
 				v.execute(invobject)
 			end
+			itemscpy[i].onfocus = function()
+				for j, v in ipairs(items) do
+					v.selected = i == j or nil
+				end
+			end
 		end
 	end
 	self.controls.spellwheel:SetScale(TheFrontEnd:GetHUDScale())

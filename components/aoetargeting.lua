@@ -16,6 +16,8 @@ local AOETargeting = Class(function(self, inst)
         validcolour = { 204 / 255, 131 / 255, 57 / 255, 1 },
         invalidcolour = { 1, 0, 0, 1 },
         mouseenabled = false,
+		twinstickmode = nil,
+		twinstickrange = nil,
         pingprefab = nil,
     }
     self.targetprefab = nil

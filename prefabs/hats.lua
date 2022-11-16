@@ -2352,6 +2352,7 @@ local function MakeHat(name)
 		--shadowlevel (from shadowlevel component) added to pristine state for optimization
 		inst:AddTag("shadowlevel")
 
+		--shadowdominance (from shadowdominance component) added to pristine state for optimization
         inst:AddTag("shadowdominance")
     end
 
@@ -2371,6 +2372,8 @@ local function MakeHat(name)
 
 		inst:AddComponent("shadowlevel")
 		inst.components.shadowlevel:SetDefaultLevel(TUNING.SKELETONHAT_SHADOW_LEVEL)
+
+		inst:AddComponent("shadowdominance")
 
         inst:AddComponent("armor")
         inst.components.armor:InitCondition(TUNING.ARMOR_SKELETONHAT, TUNING.ARMOR_SKELETONHAT_ABSORPTION)

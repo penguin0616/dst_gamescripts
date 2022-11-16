@@ -118,6 +118,8 @@ function Tune(overrides)
 
         -- Controller specific tuning values.
         CONTROLLER_DEADZONE_RADIUS = 0.3, -- TODO(JBK): Hook this up.
+		CONTROLLER_RETICULE_INITIAL_DEADZONE_RADIUS = .5,
+		CONTROLLER_RETICULE_RSTICK_SPEED = 2,
         CONTROLLER_BLINKFOCUS_DISTANCESQ_MIN = 4,
         CONTROLLER_BLINKFOCUS_DISTANCE = 8,
         CONTROLLER_BLINKFOCUS_ANGLE = 30, -- Angle is for both sides of the facing direction so cone total size is double this value.
@@ -2604,7 +2606,8 @@ function Tune(overrides)
 
 		SHADOWWAXWELL_MINION_IDLE_DESPAWN_TIME = 10,
 
-		SHADOW_TRAP_PANIC_TIME = 10,
+		SHADOW_TRAP_PANIC_TIME = 12,
+		SHADOW_TRAP_SPEED_MULT = 2 / 3,
 		SHADOW_TRAP_NIGHTMARE_TIME = total_day_time,
 		SHADOW_TRAP_LIFETIME = total_day_time * 3,
 
@@ -2614,7 +2617,7 @@ function Tune(overrides)
 		SHADOW_PILLAR_BREAK_MULT =
 		{
 			MIN = 1.5,	--break 150% faster => lasts 2/3 duration
-			MAX = 2,	--break 200% faster => lasts 1/2 duration
+			MAX = 1.5,--2,	--break 200% faster => lasts 1/2 duration
 		},
 
 		WAXWELLJOURNAL_SPELL_COST =

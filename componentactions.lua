@@ -2073,7 +2073,10 @@ local COMPONENT_ACTIONS =
 
 		magiciantool = function(inst, doer, actions, right)
 			if doer:HasTag("magician") then
-				if right or doer.components.playercontroller:IsControlPressed(CONTROL_FORCE_INSPECT) then
+				if not doer.components.playercontroller.isclientcontrollerattached and
+					(	right or
+						doer.components.playercontroller:IsControlPressed(CONTROL_FORCE_INSPECT)
+					) then
 					table.insert(actions, ACTIONS.USEMAGICTOOL)
 				else
 					local equippable = inst.replica.equippable

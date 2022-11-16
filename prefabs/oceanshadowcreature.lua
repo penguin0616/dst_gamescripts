@@ -261,11 +261,8 @@ local function ExchangeWithTerrorBeak(inst)
 end
 
 local function CLIENT_ShadowSubmissive_HostileToPlayerTest(inst, player)
-	if not player:HasTag("shadowdominance_null") then
-		local inventory = player.replica.inventory
-		if inventory ~= nil and inventory:EquipHasTag("shadowdominance") then
-			return false
-		end
+	if player:HasTag("shadowdominance") then
+		return false
 	end
 	local combat = inst.replica.combat
 	if combat ~= nil and combat:GetTarget() == player then

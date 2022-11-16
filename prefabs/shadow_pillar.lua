@@ -28,6 +28,8 @@ local prefabs_spell =
 
 --------------------------------------------------------------------------
 
+local WARNING_TIME = 3
+
 local function CalcTargetDuration(target)
 	return target ~= nil and (
 			(target:HasTag("epic") and TUNING.SHADOW_PILLAR_DURATION_BOSS) or
@@ -95,6 +97,7 @@ local function Pillar_OnDispell(inst)
 		inst:Remove()
 	else
 		inst.components.timer:StopTimer("lifetime")
+		inst.components.timer:StopTimer("warningtime")
 		DoLower(inst)
 	end
 end
@@ -102,11 +105,14 @@ end
 local function Pillar_OnTargetRemoved(inst)
 	if inst._delayraisetask ~= nil or inst.components.timer:TimerExists("delay") then
 		inst:Remove()
-	elseif inst.components.timer:TimerExists("lifetime") then
-		inst.components.timer:SetTimeLeft("lifetime", math.random())
 	else
-		--fallback? shouldn't reach here
-		DoLower(inst)
+		inst.components.timer:StopTimer("warningtime")
+		if inst.components.timer:TimerExists("lifetime") then
+			inst.components.timer:SetTimeLeft("lifetime", math.random())
+		else
+			--fallback? shouldn't reach here
+			DoLower(inst)
+		end
 	end
 end
 
@@ -135,7 +141,12 @@ local function Pillar_OnTimerDone(inst, data)
 				end
 			end
 
-			inst.components.timer:StartTimer("lifetime", CalcTargetDuration(inst.components.entitytracker:GetEntity("target")))
+			local t = CalcTargetDuration(inst.components.entitytracker:GetEntity("target"))
+			inst.components.timer:StartTimer("lifetime", t)
+			inst.components.timer:StartTimer("warningtime", math.max(0, t - WARNING_TIME))
+
+		elseif data.name == "warningtime" then
+			inst.AnimState:PlayAnimation("shake"..tostring(inst.variation), true)
 
 		elseif data.name == "lifetime" then
 			if inst._delayraisetask ~= nil then
@@ -158,14 +169,27 @@ end
 
 local function Pillar_OnSetTarget(inst, target)
 	inst._ondispell = function() Pillar_OnDispell(inst) end
+	inst._ontargetdeath = function()
+		inst.components.timer:StopTimer("warningtime")
+	end
 	inst._ontargetremoved = function() Pillar_OnTargetRemoved(inst) end
 	inst._reducetime = function(target, dt)
 		local t = inst.components.timer:GetTimeLeft("lifetime")
 		if t ~= nil then
-			inst.components.timer:SetTimeLeft("lifetime", math.max(0, t - dt))
+			t = math.max(0, t - dt)
+			inst.components.timer:SetTimeLeft("lifetime", t)
+			if t > 0 then
+				t = inst.components.timer:GetTimeLeft("warningtime")
+				if t ~= nil then
+					inst.components.timer:SetTimeLeft("warningtime", math.max(0, t - dt))
+				end
+			else
+				inst.components.timer:StopTimer("warningtime")
+			end
 		end
 	end
 	inst:ListenForEvent("dispell_shadow_pillars", inst._ondispell, target)
+	inst:ListenForEvent("death", inst._ontargetdeath, target)
 	inst:ListenForEvent("onremove", inst._ontargetremoved, target)
 	inst:ListenForEvent("remove_shadow_pillars", inst._ontargetremoved, target)
 	inst:ListenForEvent("reduce_shadow_pillars_time", inst._reducetime, target)
@@ -177,6 +201,10 @@ local function Pillar_SetTarget(inst, target, hasplatform)
 		if inst._ondispell ~= nil then
 			inst:RemoveEventCallback("dispell_shadow_pillars", inst._ondispell, oldtarget)
 			inst._ondispell = nil
+		end
+		if inst._ontargetdeath ~= nil then
+			inst:RemoveEventCallback("death", inst._ontargetdeath, oldtarget)
+			inst._ontargetdeath = nil
 		end
 		if inst._ontargetremoved ~= nil then
 			inst:RemoveEventCallback("onremove", inst._ontargetremoved, oldtarget)
@@ -218,7 +246,8 @@ local function Pillar_OnLoad(inst, data)
 		--pillar pre is 24 * FRAMES
 		--pillar pre is delayed 7 * FRAMES
 		inst.AnimState:PlayAnimation("idle"..tostring(inst.variation), true)
-		local t = inst.AnimState:GetCurrentAnimationLength() * math.random()
+		local rnd = math.random()
+		local t = inst.AnimState:GetCurrentAnimationLength() * rnd
 		inst.AnimState:SetTime(t)
 		if inst.base == nil then
 			inst.base = SpawnPrefab("shadow_pillar_base_fx")
@@ -227,6 +256,12 @@ local function Pillar_OnLoad(inst, data)
 		end
 		inst.base.AnimState:PlayAnimation("idle", true)
 		inst.base.AnimState:SetTime(t + 7 * FRAMES)
+		if not inst.components.timer:TimerExists("warningtime") then
+			local target = inst.components.entitytracker:GetEntity("target")
+			if target ~= nil and not (target.components.health ~= nil and target.components.health:IsDead()) then
+				inst.components.timer:StartTimer("warningtime", 0)
+			end
+		end
 	elseif not inst.components.timer:TimerExists("delay") then
 		--bad save data
 		inst.persists = false
@@ -659,6 +694,7 @@ local function DoPillarsTarget(target, caster, item, newpillars, map, x0, z0)
 	end
 
 	local platform = target:GetCurrentPlatform()
+	local flying = not platform and target:HasTag("flying")
 
 	local ent = SpawnPrefab("shadow_pillar_target")
 	ent.Transform:SetPosition(x0, 0, z0)
@@ -671,7 +707,7 @@ local function DoPillarsTarget(target, caster, item, newpillars, map, x0, z0)
 		local pt = Vector3(x0 + math.cos(theta) * radius, 0, z0 - math.sin(theta) * radius)
 		if not IsNearOther(pt, newpillars) and
 			map:IsPassableAtPoint(pt.x, 0, pt.z, true) and
-			map:GetPlatformAtPoint(pt.x, pt.z) == platform and
+			flying or (map:GetPlatformAtPoint(pt.x, pt.z) == platform) and
 			not map:IsGroundTargetBlocked(pt) then
 			ent = SpawnPrefab("shadow_pillar")
 			ent.Transform:SetPosition(pt:Get())

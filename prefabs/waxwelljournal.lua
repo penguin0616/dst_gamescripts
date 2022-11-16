@@ -403,6 +403,8 @@ local function fn()
 	inst.components.aoetargeting.reticule.invalidcolour = { .5, 0, 0, 1 }
 	inst.components.aoetargeting.reticule.ease = true
 	inst.components.aoetargeting.reticule.mouseenabled = true
+	inst.components.aoetargeting.reticule.twinstickmode = 1
+	inst.components.aoetargeting.reticule.twinstickrange = 8
 
 	inst.entity:SetPristine()
 
