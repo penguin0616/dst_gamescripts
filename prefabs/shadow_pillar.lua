@@ -28,7 +28,7 @@ local prefabs_spell =
 
 --------------------------------------------------------------------------
 
-local WARNING_TIME = 3
+local WARNING_TIME = 2.5
 
 local function CalcTargetDuration(target)
 	return target ~= nil and (
@@ -83,6 +83,7 @@ end
 
 local function DoLower(inst)
 	inst.AnimState:PlayAnimation("pst"..tostring(inst.variation))
+	inst.SoundEmitter:KillSound("rumble")
 	inst:SetTarget(nil)
 	inst.persists = false
 	inst:ListenForEvent("animover", inst.Remove)
@@ -147,6 +148,7 @@ local function Pillar_OnTimerDone(inst, data)
 
 		elseif data.name == "warningtime" then
 			inst.AnimState:PlayAnimation("shake"..tostring(inst.variation), true)
+			inst.SoundEmitter:PlaySound("maxwell_rework/shadow_pillar/rumble", "rumble")
 
 		elseif data.name == "lifetime" then
 			if inst._delayraisetask ~= nil then
@@ -480,6 +482,8 @@ local function Target_OnSetTarget(inst, target)
 	if target.Physics ~= nil then
 		target.Physics:Stop()
 		target.Physics:SetTempMass0(true)
+		target:AddTag("rooted")
+		target:PushEvent("rooted")
 	end
 	if target.components.locomotor ~= nil then
 		target.components.locomotor:SetExternalSpeedMultiplier(inst, "rooted", 0)
@@ -539,6 +543,8 @@ local function Target_OnRemoveEntity(inst)
 	local target = inst.components.entitytracker:GetEntity("target")
 	if target ~= nil and target.Physics ~= nil then
 		target.Physics:SetTempMass0(false)
+		target:RemoveTag("rooted")
+		target:PushEvent("unrooted")
 	end
 end
 

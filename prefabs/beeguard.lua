@@ -402,8 +402,17 @@ local function OnGotCommander(inst, data)
                 local offset = Vector3((radius + radiusoffset) * math.cos(angle), 0, (radius + radiusoffset) * math.sin(angle))
                 v.components.knownlocations:RememberLocation("queenoffset", offset, false)
 
-                if realqueen and not v:IsNear(data.commander, 30.0) then -- NOTES(JBK): This is an edge case hack fixup so these bees do not get lost from being too far from a real Bee Queen.
-                    v.Transform:SetPosition(qx + offset.x, qy + offset.y, qz + offset.z)
+				-- NOTES(JBK): This is an edge case hack fixup so these bees do not get lost from being too far from a real Bee Queen.
+				-- V2C: Updated hack to use sleep status instead of range.
+				if realqueen and v:IsAsleep() then
+					if v.components.health:IsDead() or v.sg:HasStateTag("flight") then
+						v:Remove()
+					elseif not v:HasTag("rooted") then
+						v.Physics:Teleport(qx + offset.x, qy + offset.y, qz + offset.z)
+						if not data.commander:IsAsleep() then
+							v.sg:GoToState("spawnin", data.commander)
+						end
+					end
                 end
             end
         end

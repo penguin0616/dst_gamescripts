@@ -137,6 +137,8 @@ local Inv = Class(Widget, function(self, owner)
     self.controller_build = nil
     self.integrated_backpack = nil
     self.force_single_drop = false
+	self.autopaused = false
+	self.autopause_delay = 0
 end)
 
 function Inv:AddEquipSlot(slot, atlas, image, sortkey)
@@ -441,6 +443,29 @@ function Inv:RefreshRepeatDelay(control)
 end
 
 function Inv:OnUpdate(dt)
+	if self.open and not self.autopaused then
+		local playercontroller = self.owner.components.playercontroller
+		if playercontroller ~= nil then
+			local busy = playercontroller:IsDoingOrWorking() or playercontroller:IsBusy()
+			if self.autopause_delay > 0 then
+				if busy then
+					--started doing the action
+					self.autopause_delay = 0
+				elseif self.autopause_delay > dt then
+					--still waiting for action to start
+					self.autopause_delay = self.autopause_delay - dt
+				else
+					--timed out before the action ever started
+					self.autopause_delay = 0
+					self:SetAutopausedInternal(true)
+				end
+			elseif not busy then
+				--action finished
+				self:SetAutopausedInternal(true)
+			end
+		end
+	end
+
     self:UpdatePosition()
 
     self.hint_update_check = self.hint_update_check - dt
@@ -786,15 +811,26 @@ function Inv:OnControl(control, down)
             if not was_force_single_drop and TheInput:IsControlPressed(CONTROL_PUTSTACK) then
                 self.force_single_drop = true
             end
+			self:SetAutopausedInternal(false)
+			self.autopause_delay = .5
             self.owner.replica.inventory:DropItemFromInvTile(inv_item, self.force_single_drop)
             return true
         end
     elseif control == CONTROL_USE_ITEM_ON_ITEM then
         if inv_item ~= nil and active_item ~= nil then
+			self:SetAutopausedInternal(false)
+			self.autopause_delay = .5
             self.owner.replica.inventory:ControllerUseItemOnItemFromInvTile(inv_item, active_item)
             return true
         end
     end
+end
+
+function Inv:SetAutopausedInternal(pause)
+	if not pause == self.autopaused then
+		self.autopaused = not self.autopaused
+		SetAutopaused(self.autopaused)
+	end
 end
 
 function Inv:OpenControllerInventory()
@@ -804,8 +840,7 @@ function Inv:OpenControllerInventory()
         --     audio settings, which we don't want to do now
         --SetPause(true, "inv")
 
-		--V2C: Don't auto-pause...item on item actions won't work
-        --SetAutopaused(true)
+		self:SetAutopausedInternal(true)
 
         self.open = true
         self.force_single_drop = false --reset the flag
@@ -841,8 +876,7 @@ function Inv:CloseControllerInventory()
         --     audio settings, which we don't want to do now
         --SetPause(false)
 
-		--V2C: Don't auto-pause...item on item actions won't work
-        --SetAutopaused(false)
+		self:SetAutopausedInternal(false)
 
         self.owner.HUD.controls:SetDark(false)
 

@@ -29,6 +29,19 @@ end
 
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
+local BOOK_MUST_TAGS = { "book", "shadowmagic" }
+local BOOK_CANT_TAGS = { "INLIMBO", "fueldepleted" }
+local function customidleanimfn(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	for i, v in ipairs(TheSim:FindEntities(x, y, z, 3, BOOK_MUST_TAGS, BOOK_CANT_TAGS)) do
+		if v.isfloating then
+			--secret idle anim near floating codex umbra
+			--takes priority over inst.customidlestate
+			return "idle3_waxwell"
+		end
+	end
+end
+
 local function KillPet(pet)
 	if pet.components.health:IsInvincible() then
 		--reschedule
@@ -56,7 +69,7 @@ end
 
 local function OnDespawnPet(inst, pet)
     if pet:HasTag("shadowminion") then
-		if pet.sg ~= nil then
+		if not inst.is_snapshot_user_session and pet.sg ~= nil then
 			pet.sg:GoToState("quickdespawn")
 		else
 			pet:Remove()
@@ -217,7 +230,7 @@ local function OnEquip(inst, data)
 			end
 			local t = GetTime()
 			if t > inst.spawntime then
-				params.task = inst:DoTaskInTime(.2, DoAnnounceShadowLevel, params, data.item)
+				params.task = inst:DoTaskInTime(.5, DoAnnounceShadowLevel, params, data.item)
 			else
 				--Just spawned, suppress announcements
 				params.task = nil
@@ -257,6 +270,7 @@ end
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
 
+	inst.customidleanim = customidleanimfn --priority when not returning nil
 	inst.customidlestate = "waxwell_funnyidle"
 
 	inst:AddComponent("magician")

@@ -344,6 +344,9 @@ local function FindPickupableItem_filter(v, ba, owner, radius, furthestfirst, po
     if v.components.armor or v.components.weapon or v.components.tool or v.components.equippable or v.components.sewing or v.components.erasablepaper then
         return false
     end
+    if v.components.burnable ~= nil and (v.components.burnable:IsBurning() or v.components.burnable:IsSmoldering()) then
+        return false
+    end
     if ispickable then
         if not allowpickables then
             return false

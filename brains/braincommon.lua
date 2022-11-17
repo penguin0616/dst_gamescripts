@@ -261,8 +261,15 @@ local function Unignore(inst, item, ignorethese)
 end
 
 local function PickUpAction(inst, pickup_range, pickup_range_local, furthestfirst, positionoverride, ignorethese, wholestacks, allowpickables)
-    if inst.components.inventory:GetActiveItem() ~= nil then
-        return nil
+    local activeitem = inst.components.inventory:GetActiveItem()
+    if activeitem ~= nil then
+        inst.components.inventory:DropItem(activeitem, true, true)
+        if ignorethese ~= nil then
+            if ignorethese[activeitem] then
+                ignorethese[activeitem]:Cancel()
+                ignorethese[activeitem] = nil
+            end
+        end
     end
     local onlytheseprefabs
     if wholestacks then
@@ -298,8 +305,11 @@ local function PickUpAction(inst, pickup_range, pickup_range_local, furthestfirs
     end
 
     if ignorethese ~= nil then
-        ignorethese[item] = true
-        leader:DoTaskInTime(5, Unignore, item, ignorethese)
+        if ignorethese[item] then
+            ignorethese[item]:Cancel()
+            ignorethese[item] = nil
+        end
+        ignorethese[item] = leader:DoTaskInTime(5, Unignore, item, ignorethese)
     end
 
     return BufferedAction(inst, item, item.components.trap ~= nil and ACTIONS.CHECKTRAP or pickable and ACTIONS.PICK or ACTIONS.PICKUP)

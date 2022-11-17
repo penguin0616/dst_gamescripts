@@ -1348,7 +1348,9 @@ local function OnSpawnPet(inst, pet)
 end
 
 local function OnDespawnPet(inst, pet)
-    DoEffects(pet)
+	if not inst.is_snapshot_user_session then
+		DoEffects(pet)
+	end
     pet:Remove()
 end
 

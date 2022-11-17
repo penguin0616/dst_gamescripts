@@ -253,7 +253,7 @@ function EntityScript:GetSaveRecord()
 
 	local x, y, z = self.Transform:GetWorldPosition()
 
-    if self.entity:HasTag("player") then
+	if self.temp_save_platform_pos or self.entity:HasTag("player") then
 		record.age = self.Network:GetPlayerAge()
 
 		--if ThePlayer == self then
@@ -261,12 +261,13 @@ function EntityScript:GetSaveRecord()
 		--end
 
         local platform = self:GetCurrentPlatform()
-		if platform == nil and
-			self._restoresnapshotusersession_platform ~= nil and
-			self._restoresnapshotusersession_platform == TheWorld.Map:GetPlatformAtPoint(x, z) then
-			--V2C: During RestoreSnapshotUserSession, players aren't attached to platforms correctly.
-			--     This is quick hack to fix that for now.
-			platform = self._restoresnapshotusersession_platform
+		if self._snapshot_platform ~= nil then
+			if platform == nil and self._snapshot_platform == TheWorld.Map:GetPlatformAtPoint(x, z) then
+				--V2C: During RestoreSnapshotUserSession, players aren't attached to platforms correctly.
+				--     This is quick hack to fix that for now.
+				platform = self._snapshot_platform
+			end
+			self._snapshot_platform = nil
 		end
         if platform then
 			local rx, ry, rz = platform.entity:WorldToLocalSpace(x, y, z)

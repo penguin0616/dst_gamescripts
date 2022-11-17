@@ -26,6 +26,10 @@ local prefabs =
 	"reticuleaoesummontarget_1d2",
 }
 
+local IDLE_SOUND_VOLUME = .5
+
+--------------------------------------------------------------------------
+
 local function SpellCost(pct)
 	return pct * TUNING.LARGE_FUEL * -4
 end
@@ -362,9 +366,230 @@ local function GetStatus(inst, viewer)
 		or nil
 end
 
+--------------------------------------------------------------------------
+
+local function tryplaysound(inst, id, sound)
+	inst._soundtasks[id] = nil
+	if inst.AnimState:IsCurrentAnimation("proximity_pst") then
+		inst.SoundEmitter:PlaySound(sound)
+	end
+end
+
+local function trykillsound(inst, id, sound)
+	inst._soundtasks[id] = nil
+	if inst.AnimState:IsCurrentAnimation("proximity_pst") then
+		inst.SoundEmitter:KillSound(sound)
+	end
+end
+
+local function queueplaysound(inst, delay, id, sound)
+	if inst._soundtasks[id] ~= nil then
+		inst._soundtasks[id]:Cancel()
+	end
+	inst._soundtasks[id] = inst:DoTaskInTime(delay, tryplaysound, id, sound)
+end
+
+local function queuekillsound(inst, delay, id, sound)
+	if inst._soundtasks[id] ~= nil then
+		inst._soundtasks[id]:Cancel()
+	end
+	inst._soundtasks[id] = inst:DoTaskInTime(delay, trykillsound, id, sound)
+end
+
+local function tryqueueclosingsounds(inst, onanimover)
+	inst._soundtasks.animover = nil
+	if inst.AnimState:IsCurrentAnimation("proximity_pst") then
+		inst:RemoveEventCallback("animover", onanimover)
+		--Delay one less frame, since this task is delayed one frame already
+		queueplaysound(inst, 4 * FRAMES, "close", "dontstarve/common/together/book_maxwell/close")
+		queuekillsound(inst, 5 * FRAMES, "killidle", "idlesound")
+		queueplaysound(inst, 14 * FRAMES, "drop", "dontstarve/common/together/book_maxwell/drop")
+	end
+end
+
+local function onanimover(inst)
+	if inst._soundtasks.animover ~= nil then
+		inst._soundtasks.animover:Cancel()
+	end
+	inst._soundtasks.animover = inst:DoTaskInTime(FRAMES, tryqueueclosingsounds, onanimover)
+end
+
+local function stopclosingsounds(inst)
+	inst:RemoveEventCallback("animover", onanimover)
+	for k, v in pairs(inst._soundtasks) do
+		v:Cancel()
+		inst._soundtasks[k] = nil
+	end
+end
+
+local function startclosingsounds(inst)
+	stopclosingsounds(inst)
+	inst:ListenForEvent("animover", onanimover)
+	onanimover(inst)
+end
+
+local function onturnon(inst)
+	if inst.isfloating then
+		return
+	end
+	inst.isfloating = true
+	if inst._activetask ~= nil then
+		return
+	end
+	stopclosingsounds(inst)
+	if inst.AnimState:IsCurrentAnimation("proximity_loop") then
+		--In case other animations were still in queue
+		local t = inst.AnimState:GetCurrentAnimationTime() % inst.AnimState:GetCurrentAnimationLength()
+		inst.AnimState:PlayAnimation("proximity_loop", true)
+		inst.AnimState:SetTime(t)
+	else
+		inst.AnimState:PlayAnimation("proximity_pre")
+		inst.AnimState:PushAnimation("proximity_loop", true)
+	end
+	if not inst.SoundEmitter:PlayingSound("idlesound") then
+		inst.SoundEmitter:PlaySound("dontstarve/common/together/book_maxwell/active_LP", "idlesound")
+		inst.SoundEmitter:SetVolume("idlesound", IDLE_SOUND_VOLUME)
+	end
+end
+
+local function onturnoff(inst, instant)
+	if instant then
+		inst.AnimState:PlayAnimation("idle")
+		inst.SoundEmitter:KillSound("idlesound")
+		stopclosingsounds(inst)
+		inst.isfloating = nil
+		if inst._activetask ~= nil then
+			inst._activetask:Cancel()
+			inst._activetask = nil
+		end
+		return
+	elseif not inst.isfloating then
+		return
+	end
+	inst.isfloating = nil
+	if inst._activetask ~= nil then
+		return
+	end
+	inst.AnimState:PushAnimation("proximity_pst")
+	inst.AnimState:PushAnimation("idle", false)
+	startclosingsounds(inst)
+end
+
+local function IsPlayerInRange(inst, range)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local closestdsq = math.huge
+	range = range * range
+	for i, v in ipairs(AllPlayers) do
+		if v:HasTag("shadowmagic") and not (v.components.health:IsDead() or v:HasTag("playerghost")) then
+			local dsq = v:GetDistanceSqToPoint(x, y, z)
+			if dsq < range then
+				return true
+			elseif dsq < closestdsq then
+				closestdsq = dsq
+			end
+		end
+	end
+	return false, closestdsq
+end
+
+local function UpdateFloatNear(inst, farfn)
+	local isnear, closestdsq = IsPlayerInRange(inst, inst.isfloating and 3 or 2)
+	if isnear then
+		onturnon(inst)
+	else
+		onturnoff(inst)
+		if closestdsq >= 100 then
+			--switch to slower task period
+			inst._floattask:Cancel()
+			inst._floattask = inst:DoPeriodicTask(1, farfn)
+		end
+	end
+end
+
+local function UpdateFloatFar(inst)
+	if IsPlayerInRange(inst, 8) then
+		--switch to faster task period
+		inst._floattask:Cancel()
+		inst._floattask = inst:DoPeriodicTask(.1, UpdateFloatNear, .5, UpdateFloatFar)
+	end
+end
+
+local function OnEntitySleep(inst)
+	if inst._floattask ~= nil then
+		inst._floattask:Cancel()
+		inst._floattask = nil
+	end
+	onturnoff(inst, true)
+end
+
+local function OnEntityWake(inst)
+	if inst._floattask == nil and not (inst.components.inventoryitem:IsHeld() or inst.components.fueled:IsEmpty() or inst:IsAsleep()) then
+		inst._floattask = inst:DoPeriodicTask(.1, UpdateFloatNear, 0, UpdateFloatFar)
+	end
+end
+
+local function doneact(inst)
+	inst._activetask = nil
+	if inst.isfloating then
+		inst.AnimState:PlayAnimation("proximity_loop", true)
+		if not inst.SoundEmitter:PlayingSound("idlesound") then
+			inst.SoundEmitter:PlaySound("dontstarve/common/together/book_maxwell/active_LP", "idlesound")
+			inst.SoundEmitter:SetVolume("idlesound", IDLE_SOUND_VOLUME)
+		end
+	else
+		inst.AnimState:PushAnimation("proximity_pst")
+		inst.AnimState:PushAnimation("idle", false)
+		startclosingsounds(inst)
+	end
+end
+
+local function onuse(inst, hasfx)
+	stopclosingsounds(inst)
+	inst.AnimState:PlayAnimation("use")
+	if hasfx then
+		inst.AnimState:Show("FX")
+	else
+		inst.AnimState:Hide("FX")
+	end
+	inst.SoundEmitter:PlaySound("dontstarve/common/together/book_maxwell/use")
+	if inst._activetask ~= nil then
+		inst._activetask:Cancel()
+	end
+	inst._activetask = inst:DoTaskInTime(inst.AnimState:GetCurrentAnimationLength(), doneact)
+end
+
 local function OnTakeFuel(inst)
 	inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	if inst.isfloating then
+		onuse(inst, true)
+	end
+	OnEntityWake(inst)
 end
+
+local function OnFuelDepleted(inst)
+	if inst._floattask ~= nil then
+		inst._floattask:Cancel()
+		inst._floattask = nil
+		onturnoff(inst)
+	end
+end
+
+local topocket = OnEntitySleep
+local toground = OnEntityWake
+
+--------------------------------------------------------------------------
+
+local function OnHaunt(inst, haunter)
+	if inst.isfloating then
+		onuse(inst, false)
+	else
+		Launch(inst, haunter, TUNING.LAUNCH_SPEED_SMALL)
+	end
+	inst.components.hauntable.hauntvalue = TUNING.HAUNT_TINY
+	return true
+end
+
+--------------------------------------------------------------------------
 
 local function fn()
 	local inst = CreateEntity()
@@ -423,6 +648,7 @@ local function fn()
 	inst.components.fueled.accepting = true
 	inst.components.fueled.fueltype = FUELTYPE.NIGHTMARE
 	inst.components.fueled:SetTakeFuelFn(OnTakeFuel)
+	inst.components.fueled:SetDepletedFn(OnFuelDepleted)
 	inst.components.fueled:InitializeFuelLevel(TUNING.LARGE_FUEL * 4)
 
 	inst:AddComponent("fuel")
@@ -432,10 +658,20 @@ local function fn()
 
 	MakeSmallBurnable(inst, TUNING.MED_BURNTIME)
 	MakeSmallPropagator(inst)
-	MakeHauntableLaunch(inst)
 
-	inst.castsound = "maxwell_rework/shadow_magic/cast" 
-	
+	inst:AddComponent("hauntable")
+	inst.components.hauntable.cooldown = TUNING.HAUNT_COOLDOWN_SMALL
+	inst.components.hauntable:SetOnHauntFn(OnHaunt)
+
+	inst._activetask = nil
+	inst._soundtasks = {}
+	inst:ListenForEvent("onputininventory", topocket)
+	inst:ListenForEvent("ondropped", toground)
+	inst.OnEntitySleep = OnEntitySleep
+	inst.OnEntityWake = OnEntityWake
+
+	inst.castsound = "maxwell_rework/shadow_magic/cast"
+
 	return inst
 end
 

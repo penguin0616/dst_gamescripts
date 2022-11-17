@@ -401,6 +401,20 @@ function ReplacePrefab(original_inst, name, skin, skin_id, creator)
     return replacement_inst
 end
 
+local function ResolveSaveRecordPosition(data)
+	if data.puid ~= nil then
+		local walkableplatformmanager = TheWorld.components.walkableplatformmanager
+		if walkableplatformmanager ~= nil then
+			local platform = walkableplatformmanager:GetPlatformWithUID(data.puid)
+			if platform ~= nil then
+				local x, y, z = platform.entity:LocalToWorldSpace(data.rx or 0, data.ry or 0, data.rz or 0)
+				return x, y, z, platform
+			end
+		end
+	end
+	return data.x or 0, data.y or 0, data.z or 0
+end
+
 function SpawnSaveRecord(saved, newents)
     --print(string.format("~~~~~~~~~~~~~~~~~~~~~SpawnSaveRecord [%s, %s, %s]", tostring(saved.id), tostring(saved.prefab), tostring(saved.data)))
     local inst = SpawnPrefab(saved.prefab, saved.skinname, saved.skin_id)
@@ -410,21 +424,25 @@ function SpawnSaveRecord(saved, newents)
 			inst.alt_skin_ids = saved.alt_skin_ids
 		end
 
-        inst.Transform:SetPosition(saved.x or 0, saved.y or 0, saved.z or 0)
+		local x, y, z, platform = ResolveSaveRecordPosition(saved)
+		inst.Transform:SetPosition(x, y, z)
         if not inst.entity:IsValid() then
             --print(string.format("SpawnSaveRecord [%s, %s] FAILED - entity invalid", tostring(saved.id), saved.prefab))
             return nil
-        end
+		elseif saved.is_snapshot_save_record then
+			--V2C: We won't properly attach to platforms when restoring snapshot save records.
+			--     ie. inst:GetCurrentPlatform() will likely return nil
+			--     Workaround for passing our platform over to the GetSaveRecord()
+			inst._snapshot_platform = platform
+		end
 
         if newents then
-
             --this is kind of weird, but we can't use non-saved ids because they might collide
             if saved.id  then
                 newents[saved.id] = {entity=inst, data=saved.data}
             else
                 newents[inst] = {entity=inst, data=saved.data}
             end
-
         end
 
         -- Attach scenario. This is a special component that's added based on save data, not prefab setup.
@@ -1972,20 +1990,6 @@ function ParseUserSessionData(data)
     return nil, ""
 end
 
-local function ResolveUserSessionSavedPosition(data)
-	if data.puid ~= nil then
-		local walkableplatformmanager = TheWorld.components.walkableplatformmanager
-		if walkableplatformmanager ~= nil then
-			local platform = walkableplatformmanager:GetPlatformWithUID(data.puid)
-			if platform ~= nil then
-				local x, y, z = platform.entity:LocalToWorldSpace(data.rx or 0, data.ry or 0, data.rz or 0)
-				return x, y, z, platform
-			end
-		end
-	end
-	return data.x or 0, data.y or 0, data.z or 0
-end
-
 --data is lua table
 function ResumeExistingUserSession(data, guid)
     if TheNet:GetIsServer() then
@@ -1995,7 +1999,7 @@ function ResumeExistingUserSession(data, guid)
             player:EnableLoadingProtection()
 
             -- Spawn the player to last known location
-			local x, y, z, platform = ResolveUserSessionSavedPosition(data)
+			local x, y, z, platform = ResolveSaveRecordPosition(data)
 			TheWorld.components.playerspawner:SpawnAtLocation(TheWorld, player, x, y, z, true)
 			if platform ~= nil then
 				player.components.walkableplatformplayer:TestForPlatform()
@@ -2017,8 +2021,9 @@ function RestoreSnapshotUserSession(sessionid, userid)
                     local player = SpawnPrefab(prefab)
                     if player ~= nil then
                         player.userid = userid
+						player.is_snapshot_user_session = true
                         player:SetPersistData(playerdata.data or {})
-						local x, y, z, platform = ResolveUserSessionSavedPosition(playerdata)
+						local x, y, z, platform = ResolveSaveRecordPosition(playerdata)
 						player.Physics:Teleport(x, y, z)
 						if platform ~= nil then
 							player.components.walkableplatformplayer:TestForPlatform()
@@ -2026,7 +2031,7 @@ function RestoreSnapshotUserSession(sessionid, userid)
 							--     player:GetCurrentPlatform() returns unexpected nil
 							--     Might consider refactoring in the future.
 							--     But for now:
-							player._restoresnapshotusersession_platform = platform
+							player._snapshot_platform = platform
                         end
 						--if playerdata.crafting_menu ~= nil then
 						--	TheCraftingMenuProfile:DeserializeLocalClientSessionData(playerdata.crafting_menu)

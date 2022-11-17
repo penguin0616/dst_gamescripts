@@ -2032,6 +2032,12 @@ local function MakeHat(name)
 
     local function antlion_custom_init(inst)
         inst:AddTag("turfhat")
+
+		--waterproofer (from waterproofer component) added to pristine state for optimization
+		inst:AddTag("waterproofer")
+
+		--shadowlevel (from shadowlevel component) added to pristine state for optimization
+		inst:AddTag("shadowlevel")
     end
 
     fns.antlion = function()
@@ -2060,6 +2066,9 @@ local function MakeHat(name)
 
         inst:AddComponent("waterproofer")
         inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
+
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.ANTLIONHAT_SHADOW_LEVEL)
 
         return inst
     end
@@ -2553,6 +2562,9 @@ local function MakeHat(name)
 
     local function plantregistry_custom_init(inst)
         inst:AddTag("plantinspector")
+
+		--shadowlevel (from shadowlevel component) added to pristine state for optimization
+		inst:AddTag("shadowlevel")
     end
 
     fns.plantregistry = function()
@@ -2574,6 +2586,9 @@ local function MakeHat(name)
 
         inst:AddComponent("useableitem")
         inst.components.useableitem:SetOnUseFn(plantregistry_onuse)
+
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.PLANTREGISTRYHAT_SHADOW_LEVEL)
 
         return inst
     end

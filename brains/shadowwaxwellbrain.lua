@@ -43,9 +43,14 @@ local WANDER_TIMING = {minwaittime = 6, randwaittime = 6}
 local function Unignore(inst, sometarget, ignorethese)
     ignorethese[sometarget] = nil
 end
-local function IgnoreThis(sometarget, ignorethese, leader)
-    ignorethese[sometarget] = true
-    leader:DoTaskInTime(5, Unignore, sometarget, ignorethese)
+local function IgnoreThis(sometarget, ignorethese, leader, worker)
+    if type(ignorethese[sometarget]) == "table" and ignorethese[sometarget].task ~= nil then
+        ignorethese[sometarget].task:Cancel()
+        ignorethese[sometarget].task = nil
+    else
+        ignorethese[sometarget] = {worker = worker,}
+    end
+    ignorethese[sometarget].task = leader:DoTaskInTime(5, Unignore, sometarget, ignorethese)
 end
 
 local function GetLeader(inst)
@@ -132,26 +137,26 @@ local function PickValidActionFrom(target)
     end
     return nil
 end
-local function FilterAnyWorkableTargets(targets, ignorethese, leader)
+local function FilterAnyWorkableTargets(targets, ignorethese, leader, worker)
     for _, sometarget in ipairs(targets) do
-        if sometarget:HasTag("DIG_workable") then
-            if ignorethese[sometarget] == nil then
+        if type(ignorethese[sometarget]) == "table" and ignorethese[sometarget].worker ~= worker then
+            -- Ignore me!
+        elseif sometarget.components.burnable == nil or (not sometarget.components.burnable:IsBurning() and not sometarget.components.burnable:IsSmoldering()) then
+            if sometarget:HasTag("DIG_workable") then
                 for _, tag in ipairs(DIG_TAGS) do
                     if sometarget:HasTag(tag) then
-                        IgnoreThis(sometarget, ignorethese, leader)
+                        if sometarget.components.workable:GetWorkLeft() == 1 then
+                            IgnoreThis(sometarget, ignorethese, leader, worker)
+                        end
                         return sometarget
                     end
                 end
-            end
-        elseif sometarget:HasTag("CHOP_workable") then
-            if ignorethese[sometarget] == nil then
-                if sometarget:HasTag("burnt") then
-                    IgnoreThis(sometarget, ignorethese, leader)
+            else -- CHOP_workable and MINE_workable has no special cases to handle.
+                if sometarget.components.workable:GetWorkLeft() == 1 then
+                    IgnoreThis(sometarget, ignorethese, leader, worker)
                 end
                 return sometarget
             end
-        else -- MINE_workable has no special cases to handle.
-            return sometarget
         end
     end
     return nil
@@ -180,8 +185,8 @@ local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is simila
         action = PickValidActionFrom(target)
 
         if action ~= nil and ignorethese[target] == nil then
-            if action == ACTIONS.DIG then
-                IgnoreThis(target, ignorethese, leader)
+            if target.components.workable:GetWorkLeft() == 1 then
+                IgnoreThis(target, ignorethese, leader, inst)
             end
             return BufferedAction(inst, target, action)
         end
@@ -194,7 +199,7 @@ local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is simila
     end
 
     local px, py, pz = inst.Transform:GetWorldPosition()
-    local target = FilterAnyWorkableTargets(TheSim:FindEntities(px, py, pz, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader)
+    local target = FilterAnyWorkableTargets(TheSim:FindEntities(px, py, pz, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader, inst)
     if target ~= nil then
         local maxdist = TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS + TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS_LOCAL
         local dx, dz = px - spawn.x, pz - spawn.z
@@ -203,7 +208,7 @@ local function FindAnyEntityToWorkActionsOn(inst, ignorethese) -- This is simila
         end
     end
     if target == nil then
-        target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader)
+        target = FilterAnyWorkableTargets(TheSim:FindEntities(spawn.x, spawn.y, spawn.z, TUNING.SHADOWWAXWELL_WORKER_WORK_RADIUS, nil, TOWORK_CANT_TAGS, ANY_TOWORK_MUSTONE_TAGS), ignorethese, leader, inst)
     end
     action = target ~= nil and PickValidActionFrom(target) or nil
     return action ~= nil and BufferedAction(inst, target, action) or nil
@@ -301,8 +306,30 @@ end
 
 local COMBAT_TIMEOUT = 6
 local function IsLeaderInCombat(leader)
-	local leader_combat = leader.components.combat
-	return leader_combat ~= nil and math.max(leader_combat:GetLastAttackedTime(), math.max(leader_combat.laststartattacktime or 0, leader_combat.lastdoattacktime or 0)) + COMBAT_TIMEOUT > GetTime()
+    local leader_combat = leader.components.combat
+    if leader_combat == nil then
+        -- Leader can not attack nor be attacked by standard means.
+        return false
+    end
+
+    local timeout_time = GetTime() - COMBAT_TIMEOUT
+    local attack_time = math.max(leader_combat.laststartattacktime or 0, leader_combat.lastdoattacktime or 0)
+    if attack_time > timeout_time then
+        -- Recently attacked something.
+        return true
+    end
+
+    if leader_combat:GetLastAttackedTime() > timeout_time then
+        -- Recent damage.
+        if leader_combat.lastattacker ~= nil and leader_combat.lastattacker.components.combat == nil then
+            -- Done by something that is unable to attack, presume environmental.
+            return false
+        end
+        return true
+    end
+
+    -- No threats known at this time.
+    return false
 end
 
 function ShadowWaxwellBrain:OnStart()

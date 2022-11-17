@@ -390,6 +390,13 @@ function Combat:ShouldAggro(target, ignore_forbidden)
                 end
             end
         end
+		if target.components.health ~= nil and (target.components.health.minhealth or 0) > 0 then
+			target = target.components.follower ~= nil and target.components.follower:GetLeader() or target
+			if not target:HasTag("player") then
+				--npc should not aggro on things that can't be killed
+				return false
+			end
+		end
         return true
     end
     return false

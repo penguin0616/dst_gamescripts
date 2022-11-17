@@ -197,7 +197,15 @@ local actionhandlers =
     ActionHandler(ACTIONS.DROP, "give"),
     ActionHandler(ACTIONS.PICKUP, "take"),
     ActionHandler(ACTIONS.CHECKTRAP, "take"),
-    ActionHandler(ACTIONS.PICK, "dolongaction"),
+    ActionHandler(ACTIONS.PICK, 
+		function(inst, action)
+			return action.target ~= nil
+				and action.target.components.pickable ~= nil
+				and ((action.target.components.pickable.jostlepick and "doshortaction") or -- Short action for jostling.
+						(action.target.components.pickable.quickpick and "doshortaction") or
+						"dolongaction")
+				or nil
+		end),
 }
 
 local events =
@@ -887,6 +895,41 @@ local states =
 
         onexit = function(inst)
             inst:ClearBufferedAction()
+        end,
+    },
+
+    State{
+        name = "doshortaction",
+        tags = { "doing", "busy" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("pickup")
+			inst.AnimState:PushAnimation("pickup_pst", false)
+
+            inst.sg.statemem.action = inst.bufferedaction
+            inst.sg:SetTimeout(10 * FRAMES)
+        end,
+
+        timeline =
+        {
+            TimeEvent(4 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(6 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+        },
+
+        ontimeout = function(inst)
+            --pickup_pst should still be playing
+            inst.sg:GoToState("idle", true)
+        end,
+
+        onexit = function(inst)
+            if inst.bufferedaction == inst.sg.statemem.action then
+                inst:ClearBufferedAction()
+            end
         end,
     },
 
