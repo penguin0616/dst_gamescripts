@@ -115,8 +115,6 @@ local function GetStatus(inst)
 end
 
 --------------------------------------------------------------------------------
-local GIVEUP_TIME = 10
-
 local function on_giveup_timer_done(inst)
 	inst._giveup_timer = nil
 	if inst.components.combat:HasTarget() then
@@ -128,7 +126,7 @@ local function restart_giveup_timer(inst)
 	if inst._giveup_timer ~= nil then
 		inst._giveup_timer:Cancel()
 	end
-	inst._giveup_timer = inst:DoTaskInTime(GIVEUP_TIME, on_giveup_timer_done)
+	inst._giveup_timer = inst:DoTaskInTime(TUNING.STAGEUSHER_GIVEUP_TIME, on_giveup_timer_done)
 end
 
 local function on_new_combat_target(inst)

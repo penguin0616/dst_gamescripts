@@ -2562,9 +2562,6 @@ local function MakeHat(name)
 
     local function plantregistry_custom_init(inst)
         inst:AddTag("plantinspector")
-
-		--shadowlevel (from shadowlevel component) added to pristine state for optimization
-		inst:AddTag("shadowlevel")
     end
 
     fns.plantregistry = function()
@@ -2587,9 +2584,6 @@ local function MakeHat(name)
         inst:AddComponent("useableitem")
         inst.components.useableitem:SetOnUseFn(plantregistry_onuse)
 
-		inst:AddComponent("shadowlevel")
-		inst.components.shadowlevel:SetDefaultLevel(TUNING.PLANTREGISTRYHAT_SHADOW_LEVEL)
-
         return inst
     end
 
@@ -2605,6 +2599,9 @@ local function MakeHat(name)
         plantregistry_custom_init(inst)
         inst:AddTag("detailedplanthappiness")
         inst:AddTag("nutrientsvision")
+
+		--shadowlevel (from shadowlevel component) added to pristine state for optimization
+		inst:AddTag("shadowlevel")
     end
 
     fns.nutrientsgoggles = function()
@@ -2626,6 +2623,9 @@ local function MakeHat(name)
 
         inst:AddComponent("useableitem")
         inst.components.useableitem:SetOnUseFn(plantregistry_onuse)
+
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.NUTRIENTSGOGGLESHAT_SHADOW_LEVEL)
 
         return inst
     end

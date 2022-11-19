@@ -101,7 +101,7 @@ end]]
 local function OnBuilt(inst)
 	inst.AnimState:PlayAnimation("place")
 	inst.AnimState:PushAnimation("closed", false)
-	inst.SoundEmitter:PlaySound("dontstarve/common/chest_craft")
+	inst.SoundEmitter:PlaySound("maxwell_rework/magician_chest/place")
 end
 
 local function OnSave(inst, data)
