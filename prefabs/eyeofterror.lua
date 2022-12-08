@@ -105,11 +105,19 @@ local function update_targets(inst)
 end
 
 local TARGET_DIST = 20
-local function get_target_test_range(use_short_dist, target)
-    return (use_short_dist and 8 + target:GetPhysicsRadius(0)) or TARGET_DIST
+local function get_target_test_range(inst, use_short_dist, target)
+	return inst.sg:HasStateTag("charge")
+		and inst.components.stuckdetection:IsStuck()
+		and TUNING.EYEOFTERROR_CHARGE_AOERANGE + target:GetPhysicsRadius(0)
+		or (use_short_dist and 8 + target:GetPhysicsRadius(0))
+		or TARGET_DIST
 end
 
 local function RetargetFn(inst)
+	if inst:IsInLimbo() then
+		return
+	end
+
     update_targets(inst)
 
     local current_target = inst.components.combat.target
@@ -118,7 +126,7 @@ local function RetargetFn(inst)
     if current_target ~= nil and current_target:HasTag("player") then
         local new_target = inst.components.grouptargeter:TryGetNewTarget()
         return (new_target ~= nil
-            and new_target:IsNear(inst, get_target_test_range(target_in_range, new_target))
+			and new_target:IsNear(inst, get_target_test_range(inst, target_in_range, new_target))
             and new_target)
             or nil,
             true
@@ -126,7 +134,7 @@ local function RetargetFn(inst)
 
     local targets_in_range = {}
     for target, _ in pairs(inst.components.grouptargeter:GetTargets()) do
-        if inst:IsNear(target, get_target_test_range(target_in_range, target)) then
+		if inst:IsNear(target, get_target_test_range(inst, target_in_range, target)) then
             table.insert(targets_in_range, target)
         end
     end
@@ -146,6 +154,13 @@ local function OnAttacked(inst, data)
         if current_target == nil or not current_target:IsNear(inst, TARGET_DIST) then
             inst.components.combat:SetTarget(data.attacker)
             inst.components.commander:ShareTargetToAllSoldiers(data.attacker)
+		elseif inst.sg:HasStateTag("charge")
+			and inst.components.stuckdetection:IsStuck()
+			and not current_target:IsNear(inst, TUNING.EYEOFTERROR_CHARGE_AOERANGE + current_target:GetPhysicsRadius(0))
+			then
+			inst.components.combat:SetTarget(data.attacker)
+			--inst.components.commander:ShareTargetToAllSoldiers(data.attacker)
+			--soldiers stay on original target?
         end
     end
 end
@@ -195,6 +210,19 @@ local function OnFinishedLeaving(inst)
     inst._leftday = TheWorld.state.cycles
 end
 
+local function OnEnterLimbo(inst)
+	if inst.components.sleeper:IsAsleep() then
+		inst.components.sleeper:WakeUp()
+	end
+	if inst.components.burnable:IsBurning() then
+		inst.components.burnable:Extinguish()
+	end
+	if inst.components.freezable:IsFrozen() then
+		inst.components.freezable:Unfreeze()
+	end
+	inst.sg:GoToState("standby")
+end
+
 local function FlybackHealthUpdate(inst)
     if inst._leftday ~= nil then
         local day_difference = math.min(TheWorld.state.cycles - inst._leftday, 1/TUNING.EYEOFTERROR_HEALTHPCT_PERDAY)
@@ -236,14 +264,10 @@ local function OnSave(inst, data)
     if inst._leftday ~= nil then
         data.leftday = inst._leftday
     end
-
-    data.loot_dropped = inst._loot_dropped
 end
 
 local function OnLoad(inst, data)
     if data ~= nil then
-        inst._loot_dropped = data._loot_dropped
-
         if data.leftday then
             inst._leftday = data.leftday
         end
@@ -322,7 +346,7 @@ local function common_fn(data)
     ------------------------------------------
     inst:AddComponent("health")
     inst.components.health:SetMaxHealth(data.health)
-    inst.components.health.destroytime = 5
+	inst.components.health.nofadeout = true
 
     ------------------------------------------
     inst:AddComponent("combat")
@@ -333,6 +357,9 @@ local function common_fn(data)
     inst.components.combat:SetAttackPeriod(TUNING.EYEOFTERROR_ATTACKPERIOD)
     inst.components.combat:SetRetargetFunction(1, RetargetFn)
     inst.components.combat:SetKeepTargetFunction(KeepTargetFn)
+
+	inst:AddComponent("stuckdetection")
+	inst.components.stuckdetection:SetTimeToStuck(1)
 
     ------------------------------------------
     inst:AddComponent("explosiveresist")
@@ -388,6 +415,7 @@ local function common_fn(data)
     -- Events here.
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("finished_leaving", OnFinishedLeaving)
+	inst:ListenForEvent("enterlimbo", OnEnterLimbo)
 
     ------------------------------------------
     -- Instance variables here
@@ -645,6 +673,31 @@ local function hookup_twin_listeners(inst, twin)
         end
     end, twin)
 
+	inst:ListenForEvent("forgetme", function(t)
+		local et = inst.components.entitytracker
+		local t1 = et:GetEntity("twin1")
+		local t2 = et:GetEntity("twin2")
+		if t1 == t then
+			if t2 == nil then
+				inst:Remove()
+			else
+				et:ForgetEntity("twin1")
+				if t2:IsInLimbo() and not t1:IsInLimbo() then
+					inst:PushEvent("finished_leaving")
+				end
+			end
+		elseif t2 == t then
+			if t1 == nil then
+				inst:Remove()
+			else
+				et:ForgetEntity("twin2")
+				if t1:IsInLimbo() and not t2:IsInLimbo() then
+					inst:PushEvent("finished_leaving")
+				end
+			end
+		end
+	end, twin)
+
     inst:ListenForEvent("death", function(t)
         local et = inst.components.entitytracker
         local t1 = et:GetEntity("twin1")
@@ -802,16 +855,9 @@ local function twinsmanager_isdying(inst)
     local et = inst.components.entitytracker
     local t1 = et:GetEntity("twin1")
     local t2 = et:GetEntity("twin2")
-
-    if t1 == nil and t2 == nil then
-        return false
-    elseif t1 == nil then
-        return t2.components.health:IsDead()
-    elseif t2 == nil then
-        return t1.components.health:IsDead()
-    else
-        return false
-    end
+	return (t1 ~= nil or t2 ~= nil)
+		and (t1 == nil or t1.components.health:IsDead())
+		and (t2 == nil or t2.components.health:IsDead())
 end
 
 local function manager_setspawntarget(inst, target)
@@ -870,6 +916,11 @@ local function OnTwinManagerLoadPostPass(inst, newents, data)
             t2:RemoveFromScene()
         end
     end
+
+	if (t1 ~= nil or t2 ~= nil) and (t1 == nil or t1.components.health:IsDead()) and (t2 == nil or t2.components.health:IsDead()) then
+		-- This only really works because SetLoot doesn't clear lootdropper.chanceloottable
+		(t1 or t2).components.lootdropper:SetLoot(EXTRA_LOOT)
+	end
 end
 
 local function twinmanagerfn()

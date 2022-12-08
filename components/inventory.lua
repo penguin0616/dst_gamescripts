@@ -46,6 +46,7 @@ local Inventory = Class(function(self, inst)
     self.acceptsstacks = true
     self.ignorescangoincontainer = false
     self.opencontainers = {}
+	self.opencontainerproxies = {}
 
     self.dropondeath = true
     inst:ListenForEvent("death", OnDeath)
@@ -599,10 +600,6 @@ function Inventory:DropItem(item, wholestack, randomdir, pos)
 
         dropped.prevcontainer = nil
         dropped.prevslot = nil
-
-        if dropped:HasTag("personal_possession") then
-            dropped:RemoveTag("personal_possession")
-        end
 
         self.inst:PushEvent("dropitem", { item = dropped })
     end
@@ -1884,7 +1881,11 @@ function Inventory:ControllerUseItemOnSceneFromInvTile(item, target, actioncode,
         elseif item.components.inventoryitem:GetGrandOwner() ~= self.inst then
             --V2C: This is now invalid as playercontroller will now send this
             --     case to the proper call to move items between controllers.
-        elseif actioncode == nil or target == nil or CanEntitySeeTarget(self.inst, target) then
+		elseif actioncode == nil
+			or target == nil
+			or CanEntitySeeTarget(self.inst, target)
+			or (target:HasTag("pocketdimension_container") and self.inst:HasTag("usingmagiciantool"))
+			then
             act = self.inst.components.playercontroller:GetItemUseAction(item, target)
         end
         ClearClientRequestedAction()
@@ -2108,6 +2109,14 @@ end
 
 function Inventory:TransferComponent(newinst)
     self:TransferInventory(newinst)
+end
+
+function Inventory:GetOpenContainerProxyFor(master)
+	for k in pairs(self.opencontainerproxies) do
+		if k.components.container_proxy:GetMaster() == master then
+			return k
+		end
+	end
 end
 
 return Inventory

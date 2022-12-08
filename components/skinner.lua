@@ -171,7 +171,7 @@ function SetSkinsOnAnim( anim_state, prefab, base_skin, clothing_names, monkey_c
 				elseif skintype == "powerup" and CLOTHING[name].symbol_overrides_powerup then
 					src_symbols = CLOTHING[name].symbol_overrides_powerup
 				
-				--wurt
+				--wanda
 				elseif skintype == "old_skin" and CLOTHING[name].symbol_overrides_old then
 					src_symbols = CLOTHING[name].symbol_overrides_old
 

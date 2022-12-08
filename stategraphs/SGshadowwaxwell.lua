@@ -160,6 +160,28 @@ local function CheckLeaderShadowLevel(inst, target)
 	inst.components.combat:SetDefaultDamage(TUNING.SHADOWWAXWELL_PROTECTOR_DAMAGE + level * TUNING.SHADOWWAXWELL_PROTECTOR_DAMAGE_BONUS_PER_LEVEL)
 end
 
+local function TryRepeatAction(inst, buffaction, right)
+	if buffaction ~= nil and
+		buffaction:IsValid() and
+		buffaction.target ~= nil and
+		buffaction.target.components.workable ~= nil and
+		buffaction.target.components.workable:CanBeWorked() and
+		buffaction.target:IsActionValid(buffaction.action, right)
+		then
+		local otheraction = inst:GetBufferedAction()
+		if otheraction == nil or (
+			otheraction.target == buffaction.target and
+			otheraction.action == buffaction.action
+		) then
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+			inst:PushBufferedAction(buffaction)
+			return true
+		end
+	end
+	return false
+end
+
 local actionhandlers =
 {
     ActionHandler(ACTIONS.CHOP,
@@ -651,9 +673,6 @@ local states =
         tags = {"prechop", "working"},
 
         onenter = function(inst)
-            local buffaction = inst:GetBufferedAction()
-            inst.sg.statemem.target = buffaction ~= nil and buffaction.target or nil
-
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("chop_pre")
         end,
@@ -673,9 +692,7 @@ local states =
         tags = {"prechop", "chopping", "working"},
 
         onenter = function(inst)
-            local buffaction = inst:GetBufferedAction()
-            inst.sg.statemem.target = buffaction ~= nil and buffaction.target or nil
-
+			inst.sg.statemem.action = inst:GetBufferedAction()
             inst.AnimState:PlayAnimation("chop_loop")
         end,
 
@@ -684,13 +701,10 @@ local states =
             TimeEvent(2 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
             end),
-
-            --NOTE: This is one frame off from SGwilson's since it was
-            --      too slow when coupled with our brain update period
-            TimeEvent(13 * FRAMES, function(inst)
+			TimeEvent(14 * FRAMES, function(inst)
                 inst.sg:RemoveStateTag("prechop")
+				TryRepeatAction(inst, inst.sg.statemem.action)
             end),
-
             TimeEvent(16*FRAMES, function(inst)
                 inst.sg:RemoveStateTag("chopping")
             end),
@@ -711,9 +725,6 @@ local states =
         tags = {"premine", "working"},
 
         onenter = function(inst)
-            local buffaction = inst:GetBufferedAction()
-            inst.sg.statemem.target = buffaction ~= nil and buffaction.target or nil
-
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("pickaxe_pre")
         end,
@@ -733,24 +744,21 @@ local states =
         tags = {"premine", "mining", "working"},
 
         onenter = function(inst)
-            local buffaction = inst:GetBufferedAction()
-            inst.sg.statemem.target = buffaction ~= nil and buffaction.target or nil
-
+			inst.sg.statemem.action = inst:GetBufferedAction()
             inst.AnimState:PlayAnimation("pickaxe_loop")
         end,
 
         timeline =
         {
             TimeEvent(7 * FRAMES, function(inst)
-                local buffaction = inst:GetBufferedAction()
-                if buffaction ~= nil then
-                    PlayMiningFX(inst, buffaction.target)
+				if inst.sg.statemem.action ~= nil then
+					PlayMiningFX(inst, inst.sg.statemem.action.target)
                     inst:PerformBufferedAction()
                 end
             end),
-
             TimeEvent(14 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("premine")
+				inst.sg:RemoveStateTag("premine")
+				TryRepeatAction(inst, inst.sg.statemem.action)
             end),
         },
 
@@ -770,9 +778,6 @@ local states =
         tags = {"predig", "working"},
 
         onenter = function(inst)
-            local buffaction = inst:GetBufferedAction()
-            inst.sg.statemem.target = buffaction ~= nil and buffaction.target or nil
-
             inst.Physics:Stop()
             inst.AnimState:PlayAnimation("shovel_pre")
         end,
@@ -792,9 +797,7 @@ local states =
         tags = {"predig", "digging", "working"},
 
         onenter = function(inst)
-            local buffaction = inst:GetBufferedAction()
-            inst.sg.statemem.target = buffaction ~= nil and buffaction.target or nil
-
+			inst.sg.statemem.action = inst:GetBufferedAction()
             inst.AnimState:PlayAnimation("shovel_loop")
         end,
 
@@ -804,9 +807,9 @@ local states =
                 inst:PerformBufferedAction()
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/dig")
             end),
-
             TimeEvent(35 * FRAMES, function(inst)
                 inst.sg:RemoveStateTag("predig")
+				TryRepeatAction(inst, inst.sg.statemem.action, true)
             end),
         },
 
@@ -894,7 +897,9 @@ local states =
         },
 
         onexit = function(inst)
-            inst:ClearBufferedAction()
+            if inst.bufferedaction == inst.sg.statemem.action then
+                inst:ClearBufferedAction()
+            end
         end,
     },
 

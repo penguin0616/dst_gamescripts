@@ -465,9 +465,10 @@ local states =
             TimeEvent(7*FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/swipe") end),
             TimeEvent(15*FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve_DLC001/creatures/dragonfly/punchimpact")
-                inst.components.combat:DoAttack(inst.sg.statemem.target)
-                if inst.enraged and inst.components.combat:HasTarget() and inst.components.combat.target.components.health ~= nil then
-                    inst.components.combat.target.components.health:DoFireDamage(5, inst, true)
+				local target = inst.sg.statemem.target
+				inst.components.combat:DoAttack(target)
+				if inst.enraged and target ~= nil and target.components.health ~= nil and not target.components.health:IsDead() and target:IsValid() then
+					target.components.health:DoFireDamage(5, inst, true)
                 end
             end),
         },

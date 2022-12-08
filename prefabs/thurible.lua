@@ -170,10 +170,33 @@ local function nofuel(inst)
     end
 end
 
+local function CLIENT_PlayFuelSound(inst)
+	local parent = inst.entity:GetParent()
+	local container = parent ~= nil and (parent.replica.inventory or parent.replica.container) or nil
+	if container ~= nil and container:IsOpenedBy(ThePlayer) then
+		TheFocalPoint.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	end
+end
+
+local function SERVER_PlayFuelSound(inst)
+	local owner = inst.components.inventoryitem.owner
+	if owner == nil then
+		inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	elseif inst.components.equippable:IsEquipped() and owner.SoundEmitter ~= nil then
+		owner.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	else
+		inst.playfuelsound:push()
+		--Dedicated server does not need to trigger sfx
+		if not TheNet:IsDedicated() then
+			CLIENT_PlayFuelSound(inst)
+		end
+	end
+end
+
 local function ontakefuel(inst)
 	inst:AddTag("shadow_item")
+	SERVER_PlayFuelSound(inst)
     if inst.components.equippable:IsEquipped() or not inst.components.inventoryitem:IsHeld() then
-        (inst.components.inventoryitem.owner ~= nil and inst.components.inventoryitem.owner.SoundEmitter or inst.SoundEmitter):PlaySound("dontstarve/common/nightmareAddFuel")
         turnon(inst)
     end
 end
@@ -210,9 +233,14 @@ local function fn()
 	--shadowlevel (from shadowlevel component) added to pristine state for optimization
 	inst:AddTag("shadowlevel")
 
+	inst.playfuelsound = net_event(inst.GUID, "thurible.playfuelsound")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+		--delayed because we don't want any old events
+		inst:DoTaskInTime(0, inst.ListenForEvent, "thurible.playfuelsound", CLIENT_PlayFuelSound)
+
         return inst
     end
 

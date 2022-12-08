@@ -5898,7 +5898,7 @@ function Tune(overrides)
 
         EYEOFTERROR_CHARGECD = 7,
         EYEOFTERROR_MOUTHCHARGECD = 15,
-		EYEOFTERROR_CHARGE_AOERANGE = 2,
+		EYEOFTERROR_CHARGE_AOERANGE = 1.75,
         EYEOFTERROR_SPAWNCD = 18,
         EYEOFTERROR_FOCUSCD = 21,
 
@@ -6197,6 +6197,7 @@ function Tune(overrides)
         PIRATE_SPAWN_MAX = 1,
       --  PIRATE_SPAWN_DELAY = {min=day_time/2, max=20*day_time}, --{min=30, max=180},
         PIRATE_SPAWN_DELAY = {min=20, max=30}, --{min=30, max=180},
+		PIRATE_STASH_INV_SIZE = 20,
 
         MONKEY_WALK_SPEED_PENALTY = -0.5,
 

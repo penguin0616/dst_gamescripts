@@ -277,6 +277,10 @@ local function HasFriendlyLeader(inst, target)
     return false
 end
 local function protectorretargetfn(inst)
+	if inst.sg:HasStateTag("dancing") then
+		return nil
+	end
+
 	local spawn = inst:GetSpawnPoint()
     if spawn == nil then
         return nil
@@ -300,6 +304,7 @@ end
 local function protectorkeeptargetfn(inst, target)
     -- Maintain the target if it is able to.
     return inst.components.combat:CanTarget(target)
+		and not inst.sg:HasStateTag("dancing")
 		and target.components.minigame_participator == nil
         and (not target:HasTag("player") or TheNet:GetPVPEnabled())
 end

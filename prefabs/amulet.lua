@@ -282,10 +282,27 @@ local function onequiptomodel_yellow(inst, owner, from_ground)
     turnoff_yellow(inst)
 end
 
-local function onfuelchanged_yellow(inst, data)
-    if data and data.percent and data.oldpercent and data.percent > data.oldpercent then
-        inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
-    end
+local function CLIENT_PlayFuelSound(inst)
+	local parent = inst.entity:GetParent()
+	local container = parent ~= nil and (parent.replica.inventory or parent.replica.container) or nil
+	if container ~= nil and container:IsOpenedBy(ThePlayer) then
+		TheFocalPoint.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	end
+end
+
+local function SERVER_PlayFuelSound(inst)
+	local owner = inst.components.inventoryitem.owner
+	if owner == nil then
+		inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	elseif inst.components.equippable:IsEquipped() and owner.SoundEmitter ~= nil then
+		owner.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	else
+		inst.playfuelsound:push()
+		--Dedicated server does not need to trigger sfx
+		if not TheNet:IsDedicated() then
+			CLIENT_PlayFuelSound(inst)
+		end
+	end
 end
 
 ---COMMON FUNCTIONS
@@ -303,7 +320,7 @@ local function unimplementeditem(inst)
 end
 --]]
 
-local function commonfn(anim, tag, should_sink)
+local function commonfn(anim, tag, should_sink, can_refuel)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -325,6 +342,15 @@ local function commonfn(anim, tag, should_sink)
     end
 
     inst.foleysound = "dontstarve/movement/foley/jewlery"
+
+	if can_refuel then
+		inst.playfuelsound = net_event(inst.GUID, "amulet.playfuelsound")
+
+		if not TheWorld.ismastersim then
+			--delayed because we don't want any old events
+			inst:DoTaskInTime(0, inst.ListenForEvent, "amulet.playfuelsound", CLIENT_PlayFuelSound)
+		end
+	end
 
     if not should_sink then
         MakeInventoryFloatable(inst, "med", nil, 0.6)
@@ -498,7 +524,7 @@ local function orange()
 end
 
 local function yellow()
-    local inst = commonfn("yellowamulet")
+    local inst = commonfn("yellowamulet", nil, nil, true)
 
     if not TheWorld.ismastersim then
         return inst
@@ -516,7 +542,7 @@ local function yellow()
     inst.components.fueled:SetDepletedFn(inst.Remove)
     inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
     inst.components.fueled.accepting = true
-    inst:ListenForEvent("percentusedchange", onfuelchanged_yellow)
+	inst.components.fueled:SetTakeFuelFn(SERVER_PlayFuelSound)
 
     MakeHauntableLaunch(inst)
 

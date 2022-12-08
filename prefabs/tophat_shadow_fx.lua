@@ -19,6 +19,14 @@ local function shadow_releasesparticle(inst)
 end
 
 local function shadow_spawnparticles(base, name, front, x_scale, y_scale)
+	local parent = base
+	repeat
+		if not parent.entity:IsVisible() then
+			return
+		end
+		parent = parent.entity:GetParent()
+	until parent == nil
+
 	local inst
 	if #base.pool > 0 then
 		inst = table.remove(base.pool)

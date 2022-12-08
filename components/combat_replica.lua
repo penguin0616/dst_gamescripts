@@ -439,7 +439,7 @@ function Combat:CanBeAttacked(attacker)
         end
     end
 
-	if self.inst.HostileToPlayerTest ~= nil and self.inst:HasTag("shadowcreature") and
+	if self.inst:HasTag("shadowcreature") and
 		(	self._target:value() == nil
 			--[[or (--See if we're targeting someone else, and attacker isn't insane enough to help
 				attacker ~= nil and
@@ -454,7 +454,7 @@ function Combat:CanBeAttacked(attacker)
 			or (--See if we're targeting someone else, but not actually hostile to them
 				attacker ~= nil and
 				self._target:value() ~= attacker and
-				not self.inst:HostileToPlayerTest(self._target:value())
+				(self.inst.HostileToPlayerTest ~= nil and not self.inst:HostileToPlayerTest(self._target:value()))
 				)
 		) and
         --Allow AOE damage on stationary shadows like Unseen Hands

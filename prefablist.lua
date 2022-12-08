@@ -667,6 +667,7 @@ PREFABFILES = {
   "nightsword_curve_fx",
   "nightsword_lightsbane_fx",
   "nightsword_sharp_fx",
+  "nightsword_wizard_fx",
   "nitre",
   "nutrients_overlay",
   "oar",

@@ -558,8 +558,28 @@ local function onuse(inst, hasfx)
 	inst._activetask = inst:DoTaskInTime(inst.AnimState:GetCurrentAnimationLength(), doneact)
 end
 
+local function CLIENT_PlayFuelSound(inst)
+	local parent = inst.entity:GetParent()
+	local container = parent ~= nil and (parent.replica.inventory or parent.replica.container) or nil
+	if container ~= nil and container:IsOpenedBy(ThePlayer) then
+		TheFocalPoint.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	end
+end
+
+local function SERVER_PlayFuelSound(inst)
+	if not inst.components.inventoryitem:IsHeld() then
+		inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	else
+		inst.playfuelsound:push()
+		--Dedicated server does not need to trigger sfx
+		if not TheNet:IsDedicated() then
+			CLIENT_PlayFuelSound(inst)
+		end
+	end
+end
+
 local function OnTakeFuel(inst)
-	inst.SoundEmitter:PlaySound("dontstarve/common/nightmareAddFuel")
+	SERVER_PlayFuelSound(inst)
 	if inst.isfloating then
 		onuse(inst, true)
 	end
@@ -631,9 +651,14 @@ local function fn()
 	inst.components.aoetargeting.reticule.twinstickmode = 1
 	inst.components.aoetargeting.reticule.twinstickrange = 8
 
+	inst.playfuelsound = net_event(inst.GUID, "waxwelljournal.playfuelsound")
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
+		--delayed because we don't want any old events
+		inst:DoTaskInTime(0, inst.ListenForEvent, "waxwelljournal.playfuelsound", CLIENT_PlayFuelSound)
+
 		return inst
 	end
 
