@@ -290,8 +290,8 @@ local function DoneTeleporting(inst)
     inst.DynamicShadow:Enable(true)
 end
 
-local function UpdateActionMeter(inst, starttime)
-    inst.player_classified.actionmeter:set_local(math.min(255, math.floor((GetTime() - starttime) * 10 + 2.5)))
+local function UpdateActionMeter(inst)
+	inst.player_classified.actionmeter:set_local(math.min(255, math.floor(inst.sg.timeinstate * 10 + 2.5)))
 end
 
 local function StartActionMeter(inst, duration)
@@ -301,7 +301,7 @@ local function StartActionMeter(inst, duration)
     inst.player_classified.actionmetertime:set(math.min(255, math.floor(duration * 10 + .5)))
     inst.player_classified.actionmeter:set(2)
     if inst.sg.mem.actionmetertask == nil then
-        inst.sg.mem.actionmetertask = inst:DoPeriodicTask(.1, UpdateActionMeter, nil, GetTime())
+		inst.sg.mem.actionmetertask = inst:DoPeriodicTask(.1, UpdateActionMeter)
     end
 end
 
@@ -766,7 +766,14 @@ local actionhandlers =
     ActionHandler(ACTIONS.ATTACK,
         function(inst, action)
             inst.sg.mem.localchainattack = not action.forced or nil
-            if not (inst.sg:HasStateTag("attack") and action.target == inst.sg.statemem.attacktarget or inst.components.health:IsDead()) then
+			local playercontroller = inst.components.playercontroller
+			local attack_tag =
+				playercontroller ~= nil and
+				playercontroller.remote_authority and
+				playercontroller.remote_predicting and
+				"abouttoattack" or
+				"attack"
+			if not (inst.sg:HasStateTag(attack_tag) and action.target == inst.sg.statemem.attacktarget or inst.components.health:IsDead()) then
                 local weapon = inst.components.combat ~= nil and inst.components.combat:GetWeapon() or nil
                 return (weapon == nil and "attack")
                     or (weapon:HasTag("blowdart") and "blowdart")
@@ -778,7 +785,10 @@ local actionhandlers =
                     or "attack"
             end
         end),
-    ActionHandler(ACTIONS.TOSS, "throw"),
+	ActionHandler(ACTIONS.TOSS,
+		function(inst, action)
+			return action.invobject ~= nil and action.invobject:HasTag("keep_equip_toss") and "throw_keep_equip" or "throw"
+		end),
     ActionHandler(ACTIONS.UNPIN, "doshortaction"),
     ActionHandler(ACTIONS.CATCH, "catch_pre"),
 
@@ -3250,7 +3260,6 @@ local states =
         },
     },
 
-
     State{
         name = "chop_start",
         tags = { "prechop", "working" },
@@ -3312,6 +3321,8 @@ local states =
                     inst.sg.statemem.action.target.components.workable:CanBeWorked() and
                     inst.sg.statemem.action.target:IsActionValid(inst.sg.statemem.action.action) and
                     CanEntitySeeTarget(inst, inst.sg.statemem.action.target) then
+					--No fast-forward when repeat initiated on server
+					inst.sg.statemem.action.options.no_predict_fastforward = true
                     inst:ClearBufferedAction()
                     inst:PushBufferedAction(inst.sg.statemem.action)
                 end
@@ -3352,6 +3363,8 @@ local states =
                     inst.sg.statemem.action.target.components.workable:CanBeWorked() and
                     inst.sg.statemem.action.target:IsActionValid(inst.sg.statemem.action.action) and
                     CanEntitySeeTarget(inst, inst.sg.statemem.action.target) then
+					--No fast-forward when repeat initiated on server
+					inst.sg.statemem.action.options.no_predict_fastforward = true
                     inst:ClearBufferedAction()
                     inst:PushBufferedAction(inst.sg.statemem.action)
                 end
@@ -3431,6 +3444,8 @@ local states =
                     inst.sg.statemem.action.target.components.workable:CanBeWorked() and
                     inst.sg.statemem.action.target:IsActionValid(inst.sg.statemem.action.action) and
                     CanEntitySeeTarget(inst, inst.sg.statemem.action.target) then
+					--No fast-forward when repeat initiated on server
+					inst.sg.statemem.action.options.no_predict_fastforward = true
                     inst:ClearBufferedAction()
                     inst:PushBufferedAction(inst.sg.statemem.action)
                 end
@@ -3504,6 +3519,8 @@ local states =
                     inst.sg.statemem.action.target.components.workable:CanBeWorked() and
                     inst.sg.statemem.action.target:IsActionValid(inst.sg.statemem.action.action, true) and
                     CanEntitySeeTarget(inst, inst.sg.statemem.action.target) then
+					--No fast-forward when repeat initiated on server
+					inst.sg.statemem.action.options.no_predict_fastforward = true
                     inst:ClearBufferedAction()
                     inst:PushBufferedAction(inst.sg.statemem.action)
                 end
@@ -3582,6 +3599,8 @@ local states =
                     inst.sg.statemem.action.target.components.workable:CanBeWorked() and
                     inst.sg.statemem.action.target.components.workable:GetWorkAction() == inst.sg.statemem.action.action and
                     CanEntitySeeTarget(inst, inst.sg.statemem.action.target) then
+					--No fast-forward when repeat initiated on server
+					inst.sg.statemem.action.options.no_predict_fastforward = true
                     inst:ClearBufferedAction()
                     inst:PushBufferedAction(inst.sg.statemem.action)
                 end
@@ -4091,6 +4110,8 @@ local states =
                     inst.sg.statemem.action.target.components.workable:CanBeWorked() and
                     inst.sg.statemem.action.target:IsActionValid(inst.sg.statemem.action.action, true) and
                     CanEntitySeeTarget(inst, inst.sg.statemem.action.target) then
+					--No fast-forward when repeat initiated on server
+					inst.sg.statemem.action.options.no_predict_fastforward = true
                     inst:ClearBufferedAction()
                     inst:PushBufferedAction(inst.sg.statemem.action)
                 end
@@ -4668,7 +4689,7 @@ local states =
 
     State{
         name = "usewardrobe",
-        tags = { "doing" },
+        tags = { "doing", "busy" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -4679,6 +4700,7 @@ local states =
         timeline =
         {
             TimeEvent(13 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
         },
@@ -4938,7 +4960,7 @@ local states =
 
     State{
         name = "cookbook_open",
-        tags = { "doing" },
+		tags = { "doing", "busy" },
 
         onenter = function(inst)
             inst.components.locomotor:StopMoving()
@@ -4951,6 +4973,7 @@ local states =
         timeline =
         {
             TimeEvent(8 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
         },
@@ -5168,10 +5191,8 @@ local states =
 
         timeline =
         {
-            TimeEvent(13 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
             TimeEvent(15 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
         },
@@ -5323,10 +5344,8 @@ local states =
 
         timeline =
         {
-            TimeEvent(8 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
             TimeEvent(10 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
         },
@@ -5359,10 +5378,8 @@ local states =
 
         timeline =
         {
-            TimeEvent(6 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
             TimeEvent(12 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
         },
@@ -5395,10 +5412,8 @@ local states =
 
         timeline =
         {
-            TimeEvent(6 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
             TimeEvent(12 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
         },
@@ -5437,10 +5452,8 @@ local states =
 
         timeline =
         {
-            TimeEvent(4 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
             TimeEvent(6 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 if inst.sg.statemem.silent then
                     inst.components.talker:IgnoreAll("silentpickup")
                     inst:PerformBufferedAction()
@@ -5762,7 +5775,7 @@ local states =
         timeline =
         {
             TimeEvent(4 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
+				inst.sg:RemoveStateTag("busy")
             end),
         },
 
@@ -5773,6 +5786,7 @@ local states =
                 inst.sg.statemem.actionmeter = nil
                 StopActionMeter(inst, true)
             end
+			inst.sg:RemoveStateTag("busy")
             inst:PerformBufferedAction()
         end,
 
@@ -5871,30 +5885,26 @@ local states =
 
         timeline =
         {
-            --beaver: frame 4 remove busy, frame 6 action
-            --whip: frame 8 remove busy, frame 10 action
-            --other: frame 6 remove busy, frame 8 action
-            TimeEvent(4 * FRAMES, function(inst)
-                if inst.sg.statemem.isbeaver then
-                    inst.sg:RemoveStateTag("busy")
-                end
-            end),
+			--beaver: frame 6 action
+			--whip: frame 10 action
+			--other: frame 8 action
             TimeEvent(6 * FRAMES, function(inst)
                 if inst.sg.statemem.isbeaver then
+					inst.sg:RemoveStateTag("busy")
                     inst:PerformBufferedAction()
-                elseif not (inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch) then
-                    inst.sg:RemoveStateTag("busy")
                 end
             end),
             TimeEvent(8 * FRAMES, function(inst)
-                if inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch then
-                    inst.sg:RemoveStateTag("busy")
-                elseif not inst.sg.statemem.isbeaver then
+				if not (inst.sg.statemem.iswhip or
+						inst.sg.statemem.ispocketwatch or
+						inst.sg.statemem.isbeaver) then
+					inst.sg:RemoveStateTag("busy")
                     inst:PerformBufferedAction()
                 end
             end),
             TimeEvent(10 * FRAMES, function(inst)
                 if inst.sg.statemem.iswhip or inst.sg.statemem.ispocketwatch then
+					inst.sg:RemoveStateTag("busy")
                     inst:PerformBufferedAction()
                 end
             end),
@@ -5943,13 +5953,11 @@ local states =
 
         timeline =
         {
-            TimeEvent(5 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
             TimeEvent(6 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve/wilson/attack_whoosh")
             end),
             TimeEvent(7 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
                 inst:PerformBufferedAction()
             end),
             TimeEvent(19 * FRAMES, function(inst)
@@ -6089,6 +6097,7 @@ local states =
         ontimeout = function(inst)
             inst.SoundEmitter:KillSound("make")
             inst.AnimState:PlayAnimation("build_pst")
+			inst.sg:RemoveStateTag("busy")
             inst:PerformBufferedAction()
         end,
 
@@ -6216,7 +6225,7 @@ local states =
 
     State{
         name = "shave",
-        tags = { "doing", "shaving", "nodangle" },
+		tags = { "doing", "busy", "shaving", "nodangle" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -6252,10 +6261,17 @@ local states =
             inst.sg:SetTimeout(1)
         end,
 
+		timeline =
+		{
+			TimeEvent(4 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
+		},
+
         ontimeout = function(inst)
             inst:PerformBufferedAction()
             inst.AnimState:PlayAnimation("build_pst")
-            inst.sg:GoToState("idle", false)
+			inst.sg:GoToState("idle", true)
         end,
 
         onexit = function(inst)
@@ -6361,7 +6377,7 @@ local states =
 
     State{
         name = "play_flute",
-        tags = { "doing", "playing" },
+		tags = { "doing", "busy", "playing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -6384,11 +6400,24 @@ local states =
                 if inst:PerformBufferedAction() then
                     inst.SoundEmitter:PlaySound("dontstarve/wilson/flute_LP", "flute")
                 else
+					inst.sg.statemem.action_failed = true
                     inst.AnimState:SetTime(94 * FRAMES)
                 end
             end),
+			TimeEvent(36 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
+			TimeEvent(52 * FRAMES, function(inst)
+				if not inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
             TimeEvent(85 * FRAMES, function(inst)
-                inst.SoundEmitter:KillSound("flute")
+				if not inst.sg.statemem.action_failed then
+					inst.SoundEmitter:KillSound("flute")
+				end
             end),
         },
 
@@ -6403,12 +6432,13 @@ local states =
 
         onexit = function(inst)
             inst.SoundEmitter:KillSound("flute")
+			inst.AnimState:ClearOverrideSymbol("pan_flute01")
         end,
     },
 
     State{
         name = "play_horn",
-        tags = { "doing", "playing" },
+		tags = { "doing", "busy", "playing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -6424,9 +6454,24 @@ local states =
                 if inst:PerformBufferedAction() then
                     inst.SoundEmitter:PlaySound("dontstarve/common/horn_beefalo")
                 else
-                    inst.AnimState:SetTime(48 * FRAMES)
+					inst.sg.statemem.action_failed = true
                 end
             end),
+			TimeEvent(29 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.AnimState:SetTime(50 * FRAMES)
+				end
+			end),
+			TimeEvent(34 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
+			TimeEvent(43 * FRAMES, function(inst)
+				if not inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
         },
 
         events =
@@ -6437,11 +6482,15 @@ local states =
                 end
             end),
         },
+
+		onexit = function(inst)
+			inst.AnimState:ClearOverrideSymbol("horn01")
+		end,
     },
 
     State{
         name = "play_bell",
-        tags = { "doing", "playing" },
+		tags = { "doing", "busy", "playing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -6456,10 +6505,12 @@ local states =
             TimeEvent(15 * FRAMES, function(inst)
                 inst.SoundEmitter:PlaySound("dontstarve_DLC001/common/glommer_bell")
             end),
-
             TimeEvent(60 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
             end),
+			TimeEvent(62 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
         },
 
         events =
@@ -6470,11 +6521,15 @@ local states =
                 end
             end),
         },
+
+		onexit = function(inst)
+			inst.AnimState:ClearOverrideSymbol("bell01")
+		end,
     },
 
     State{
         name = "play_whistle",
-        tags = { "doing", "playing" },
+		tags = { "doing", "busy", "playing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -6490,9 +6545,18 @@ local states =
                 if inst:PerformBufferedAction() then
                     inst.SoundEmitter:PlaySound("dontstarve/common/together/houndwhistle")
                 else
-                    inst.AnimState:SetTime(34 * FRAMES)
+					inst.sg.statemem.action_failed = true
+					inst.AnimState:SetTime(35 * FRAMES)
                 end
             end),
+			TimeEvent(27 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
+			TimeEvent(30 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
         },
 
         events =
@@ -6503,6 +6567,10 @@ local states =
                 end
             end),
         },
+
+		onexit = function(inst)
+			inst.AnimState:ClearOverrideSymbol("hound_whistle01")
+		end,
     },
 
     State{
@@ -6522,20 +6590,22 @@ local states =
 				if horn ~= nil and horn.playsound ~= nil then
 					inst.SoundEmitter:PlaySound(horn.playsound)
 				end
-				inst.sg.statemem.success = inst:PerformBufferedAction()
+				if not inst:PerformBufferedAction() then
+					inst.sg.statemem.action_failed = true
+				end
             end),
 			TimeEvent(22 * FRAMES, function(inst)
-				if not inst.sg.statemem.success then
+				if inst.sg.statemem.action_failed then
 					inst.AnimState:SetTime(39 * FRAMES)
 				end
 			end),
 			TimeEvent(27 * FRAMES, function(inst)
-				if not inst.sg.statemem.success then
+				if inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
 			TimeEvent(30 * FRAMES, function(inst)
-				if inst.sg.statemem.success then
+				if not inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
@@ -6555,7 +6625,7 @@ local states =
 
     State{
         name = "use_beef_bell",
-        tags = { "doing", "playing" },
+		tags = { "doing", "busy", "playing" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -6571,10 +6641,12 @@ local states =
         {
             TimeEvent(1*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
             TimeEvent(10*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
-
             TimeEvent(15 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
             end),
+			TimeEvent(30 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
 
             TimeEvent(15*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
             TimeEvent(25*FRAMES, function(inst) inst.SoundEmitter:PlaySound("yotb_2021/common/cow_bell") end),
@@ -6652,11 +6724,11 @@ local states =
                 if inst:PerformBufferedAction() then
                     inst.sg.statemem.fx = nil
 				else
-					inst.sg.statemem.failed = true
+					inst.sg.statemem.action_failed = true
                 end
             end),
 			TimeEvent(69 * FRAMES, function(inst)
-				if inst.sg.statemem.failed then
+				if inst.sg.statemem.action_failed then
 					inst.AnimState:SetTime(45 * FRAMES)
 					if inst.sg.statemem.fx ~= nil then
 						inst.sg.statemem.fx:Remove()
@@ -6665,12 +6737,12 @@ local states =
 				end
 			end),
 			TimeEvent(73 * FRAMES, function(inst)
-				if inst.sg.statemem.failed then
+				if inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
 			TimeEvent(74 * FRAMES, function(inst)
-				if not inst.sg.statemem.failed then
+				if not inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
@@ -6746,22 +6818,22 @@ local states =
                 if inst:PerformBufferedAction() then
 					inst.sg.statemem.fx = nil
                 else
-					inst.sg.statemem.failed = true
+					inst.sg.statemem.action_failed = true
                 end
             end),
 			TimeEvent(28 * FRAMES, function(inst)
-				if inst.sg.statemem.failed then
+				if inst.sg.statemem.action_failed then
 					inst.AnimState:SetTime(17 * FRAMES)
 				end
 			end),
 			TimeEvent(30 * FRAMES, function(inst)
-				if not inst.sg.statemem.failed then
+				if not inst.sg.statemem.action_failed then
 					inst.SoundEmitter:PlaySound("dontstarve/characters/wendy/recall")
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
 			TimeEvent(32 * FRAMES, function(inst)
-				if inst.sg.statemem.failed then
+				if inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 					if inst.sg.statemem.fx ~= nil then
 						inst.sg.statemem.fx:Remove()
@@ -6819,20 +6891,22 @@ local states =
         timeline =
         {
             TimeEvent(14 * FRAMES, function(inst)
-				inst.sg.statemem.success = inst:PerformBufferedAction()
+				if not inst:PerformBufferedAction() then
+					inst.sg.statemem.action_failed = true
+				end
             end),
 			TimeEvent(18 * FRAMES, function(inst)
-				if not inst.sg.statemem.success then
+				if inst.sg.statemem.action_failed then
 					inst.AnimState:SetTime(24 * FRAMES)
 				end
 			end),
 			TimeEvent(29 * FRAMES, function(inst)
-				if not inst.sg.statemem.success then
+				if inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
             TimeEvent(35 * FRAMES, function(inst)
-				if inst.sg.statemem.success then
+				if not inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
             end),
@@ -6876,20 +6950,22 @@ local states =
 				if instrument ~= nil and instrument.playsound ~= nil then
 					inst.SoundEmitter:PlaySound(instrument.playsound)
 				end
-				inst.sg.statemem.success = inst:PerformBufferedAction()
+				if not inst:PerformBufferedAction() then
+					inst.sg.statemem.action_failed = true
+				end
             end),
 			TimeEvent(30 * FRAMES, function(inst)
-				if not inst.sg.statemem.success then
+				if inst.sg.statemem.action_failed then
 					inst.AnimState:SetTime(41 * FRAMES)
 				end
 			end),
 			TimeEvent(32 * FRAMES, function(inst)
-				if not inst.sg.statemem.success then
+				if inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
 			TimeEvent(41 * FRAMES, function(inst)
-				if inst.sg.statemem.success then
+				if not inst.sg.statemem.action_failed then
 					inst.sg:RemoveStateTag("busy")
 				end
 			end),
@@ -6990,11 +7066,11 @@ local states =
                     inst.AnimState:ClearOverrideBuild(inst.sg.statemem.target_build)
                     inst:ClearBufferedAction()
 					inst.AnimState:SetTime(53 * FRAMES)
-					inst.sg.statemem.failed = true
+					inst.sg.statemem.action_failed = true
                 end
             end),
 			TimeEvent(48 * FRAMES, function(inst)
-				if not inst.sg.statemem.failed then
+				if not inst.sg.statemem.action_failed then
 					inst.SoundEmitter:PlaySound("hookline/common/trophyscale_fish/pocket_pop")
 				end
 			end),
@@ -7024,7 +7100,7 @@ local states =
 
 	State{
 		name = "book",
-		tags = { "doing" },
+		tags = { "doing", "busy" },
 
 		onenter = function(inst, repeatcast)
 			inst.components.locomotor:Stop()
@@ -7035,9 +7111,9 @@ local states =
 				inst.components.inventory:ReturnActiveActionItem(book)
 
 				if book.components.spellbook ~= nil and book.components.spellbook:HasSpellFn() then
-					inst.sg:AddStateTag("busy")
+					--inst.sg:AddStateTag("busy")
 				elseif book.components.aoetargeting ~= nil then
-					inst.sg:AddStateTag("busy")
+					--inst.sg:AddStateTag("busy")
 					inst.sg.statemem.targetfx = book.components.aoetargeting:SpawnTargetFXAt(inst.bufferedaction:GetDynamicActionPoint())
 					if inst.sg.statemem.targetfx ~= nil then
 						inst.sg.statemem.targetfx:ListenForEvent("onremove", OnRemoveCleanupTargetFX, inst)
@@ -7091,7 +7167,7 @@ local states =
 
 	State{
 		name = "book2",
-		tags = { "doing" },
+		tags = { "doing", "busy" },
 
 		onenter = function(inst, data)
 			inst.AnimState:PlayAnimation("book")
@@ -7167,11 +7243,11 @@ local states =
 				end
 
 				if book.components.spellbook ~= nil and book.components.spellbook:HasSpellFn() then
-					inst.sg:AddStateTag("busy")
+					--inst.sg:AddStateTag("busy")
 				elseif book.components.aoetargeting ~= nil then
 					inst.sg.statemem.earlycast = true
 					inst.sg.statemem.canrepeatcast = book.components.aoetargeting:CanRepeatCast()
-					inst.sg:AddStateTag("busy")
+					--inst.sg:AddStateTag("busy")
 				end
 			end
 
@@ -7275,6 +7351,7 @@ local states =
 
 					if not inst.sg.statemem.earlycast then
 						inst.SoundEmitter:PlaySound(inst.sg.statemem.castsound)
+						inst.sg:RemoveStateTag("busy")
 						if not inst:PerformBufferedAction() then
 							if book_fx ~= nil then
 								book_fx:PushEvent("fail_fx", inst)
@@ -7521,6 +7598,83 @@ local states =
         end,
     },
 
+	State{
+		name = "throw_keep_equip",
+		tags = { "busy" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst.AnimState:PlayAnimation("throw_pre")
+			inst.AnimState:PushAnimation("throw", false)
+
+			local buffaction = inst:GetBufferedAction()
+			if buffaction ~= nil then
+				if buffaction.pos ~= nil then
+					inst:ForceFacePoint(buffaction:GetActionPoint():Get())
+				end
+
+				if buffaction.invobject ~= nil then
+					local equipped = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+					if buffaction.invobject ~= equipped and
+						buffaction.invobject.components.equippable ~= nil and
+						buffaction.invobject.components.equippable.equipslot == EQUIPSLOTS.HANDS and
+						not buffaction.invobject.components.equippable:IsRestricted(inst)
+						then
+						inst.sg.statemem.actionunequip = equipped
+						inst.sg.statemem.actionequip = buffaction.invobject
+						inst.components.inventory:Equip(buffaction.invobject)
+					end
+				end
+			end
+		end,
+
+		timeline =
+		{
+			TimeEvent(7 * FRAMES, function(inst)
+				if inst:PerformBufferedAction() then
+					inst.sg.statemem.thrown = true
+				end
+				local prevequip = inst.sg.statemem.prevequip
+				if prevequip ~= nil and
+					prevequip:IsValid() and
+					prevequip.components.inventoryitem ~= nil and
+					prevequip.components.inventoryitem:GetGrandOwner() == inst
+					then
+					local equipped = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+					if equipped == nil or not inst.sg.statemem.thrown then
+						inst.sg.statemem.actionunequip = equipped
+						inst.sg.statemem.actionequip = prevequip
+						inst.components.inventory:Equip(prevequip)
+					end
+				end
+			end),
+			TimeEvent(14 * FRAMES, function(inst)
+				inst.sg:GoToState("idle", true)
+			end),
+		},
+
+		events =
+		{
+			EventHandler("equip", function(inst, data)
+				if data.item == inst.sg.statemem.actionequip then
+					inst.sg.statemem.actionequip = nil
+				else
+					inst.sg:GoToState("idle")
+				end
+			end),
+			EventHandler("unequip", function(inst, data)
+				if data.item == inst.sg.statemem.actionunequip then
+					inst.sg.statemem.prevequip = inst.sg.statemem.actionunequip
+					inst.sg.statemem.actionunequip = nil
+				elseif inst.sg.statemem.thrown and data.eslot == EQUIPSLOTS.HANDS then
+					inst.sg.statemem.thrown = nil
+				else
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+	},
+
     State{
         name = "throw",
         tags = { "attack", "notalking", "abouttoattack", "autopredict" },
@@ -7539,7 +7693,8 @@ local states =
             inst.components.locomotor:Stop()
             local cooldown = math.max(inst.components.combat.min_attack_period, 11 * FRAMES)
 
-            inst.AnimState:PlayAnimation("throw")
+			inst.AnimState:PlayAnimation("throw_pre")
+			inst.AnimState:PushAnimation("throw", false)
 
             inst.sg:SetTimeout(cooldown)
 
@@ -7553,8 +7708,9 @@ local states =
         timeline =
         {
             TimeEvent(7 * FRAMES, function(inst)
-                inst.sg.statemem.thrown = true
-                inst:PerformBufferedAction()
+				if inst:PerformBufferedAction() then
+					inst.sg.statemem.thrown = true
+				end
                 inst.sg:RemoveStateTag("abouttoattack")
             end),
         },
@@ -7568,11 +7724,13 @@ local states =
         {
             EventHandler("equip", function(inst) inst.sg:GoToState("idle") end),
             EventHandler("unequip", function(inst, data)
-                if data.eslot ~= EQUIPSLOTS.HANDS or not inst.sg.statemem.thrown then
+				if inst.sg.statemem.thrown and data.eslot == EQUIPSLOTS.HANDS then
+					inst.sg.statemem.thrown = nil
+				else
                     inst.sg:GoToState("idle")
                 end
             end),
-            EventHandler("animover", function(inst)
+			EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
                     inst.sg:GoToState("idle")
                 end
@@ -7589,13 +7747,11 @@ local states =
 
     State{
         name = "catch_pre",
-        tags = { "notalking", "readytocatch" },
+		tags = { "doing", "notalking", "readytocatch" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            if not inst.AnimState:IsCurrentAnimation("catch_pre") then
-                inst.AnimState:PlayAnimation("catch_pre")
-            end
+			inst.AnimState:PlayAnimation("catch_pre")
 
             inst.sg:SetTimeout(3)
         end,
@@ -11596,6 +11752,12 @@ local states =
                 --V2C: NOTE! if we're teleporting ourself, we may be forced to exit state here!
                 inst:PerformBufferedAction()
             end),
+			TimeEvent(69 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+				if inst.components.playercontroller ~= nil then
+					inst.components.playercontroller:Enable(true)
+				end
+			end),
         },
 
         events =
@@ -11644,6 +11806,9 @@ local states =
             TimeEvent(5 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
             end),
+			TimeEvent(16 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
         },
 
         events =
@@ -11658,7 +11823,7 @@ local states =
 
     State{
         name = "veryquickcastspell",
-        tags = { "doing", "canrotate", "busy" },
+		tags = { "doing", "busy", "canrotate" },
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
@@ -11689,7 +11854,6 @@ local states =
             end),
         },
     },
-
 
     State{
         name = "cointosscastspell",
@@ -11731,7 +11895,10 @@ local states =
                 inst:PerformBufferedAction()
             end),
 			TimeEvent(70 * FRAMES, function(inst)
-				inst.sg:GoToState("idle", true)
+				inst.sg:RemoveStateTag("busy")
+				if inst.components.playercontroller ~= nil then
+					inst.components.playercontroller:Enable(true)
+				end
 			end),
         },
 
@@ -11781,6 +11948,9 @@ local states =
             end
             inst.sg.statemem.onstopblinking = function()
                 inst.sg:RemoveStateTag("noattack")
+				if inst.sg.statemem.endbusy then
+					inst.sg:RemoveStateTag("busy")
+				end
                 inst.components.health:SetInvincible(false)
                 inst.DynamicShadow:Enable(true)
                 inst:Show()
@@ -11792,6 +11962,13 @@ local states =
             TimeEvent(8 * FRAMES, function(inst)
                 inst:PerformBufferedAction()
             end),
+			TimeEvent(18 * FRAMES, function(inst)
+				if inst.sg:HasStateTag("noattack") then
+					inst.sg.statemem.endbusy = true
+				else
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
         },
 
         events =
@@ -12682,7 +12859,11 @@ local states =
             end
             local buffaction = inst:GetBufferedAction()
             local target = buffaction ~= nil and buffaction.target or nil
-            if target ~= nil and target:IsValid() then
+			if target == nil then
+				if buffaction ~= nil and inst.components.playercontroller ~= nil and inst.components.playercontroller.isclientcontrollerattached then
+					inst.sg.statemem.air_attack = true
+				end
+			elseif target:IsValid() then
 	            inst:ForceFacePoint(target.Transform:GetWorldPosition())
 	            inst.sg.statemem.attacktarget = target
                 inst.sg.statemem.retarget = target
@@ -12700,13 +12881,18 @@ local states =
             inst.components.combat:SetTarget(target)
             inst.components.locomotor:Stop()
 
-			inst.sg:SetTimeout((inst.sg.statemem.chained and 25 or 28) * FRAMES)
+			local timeout = inst.sg.statemem.chained and 25 or 28
+			local playercontroller = inst.components.playercontroller
+			if playercontroller ~= nil and playercontroller.remote_authority and playercontroller.remote_predicting then
+				timeout = timeout - 1
+			end
+			inst.sg:SetTimeout(timeout * FRAMES)
         end,
 
         timeline =
         {
             TimeEvent(15 * FRAMES, function(inst)
-				if inst.sg.statemem.chained then
+				if inst.sg.statemem.chained and not inst.sg.statemem.air_attack then
 					local buffaction = inst:GetBufferedAction()
 					local target = buffaction ~= nil and buffaction.target or nil
 					if not (target ~= nil and target:IsValid() and inst.components.combat:CanTarget(target)) then
@@ -12715,37 +12901,42 @@ local states =
 					end
 				end
             end),
-
             TimeEvent(16 * FRAMES, function(inst) -- start of slingshot
 				if inst.sg.statemem.chained then
 	                inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
 				end
             end),
-
             TimeEvent(22 * FRAMES, function(inst)
 				if inst.sg.statemem.chained then
-					local buffaction = inst:GetBufferedAction()
-					local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-					if equip ~= nil and equip.components.weapon ~= nil and equip.components.weapon.projectile ~= nil then
-						local target = buffaction ~= nil and buffaction.target or nil
-						if target ~= nil and target:IsValid() and inst.components.combat:CanTarget(target) then
-							inst:PerformBufferedAction()
-							inst.sg:RemoveStateTag("abouttoattack")
-							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
-						else
+					if inst.sg.statemem.air_attack then
+						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
+						inst:ClearBufferedAction()
+						inst.sg:GoToState("idle")
+					else
+						local buffaction = inst:GetBufferedAction()
+						local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+						if equip ~= nil and equip.components.weapon ~= nil and equip.components.weapon.projectile ~= nil then
+							local target = buffaction ~= nil and buffaction.target or nil
+							if target ~= nil and target:IsValid() and inst.components.combat:CanTarget(target) then
+								inst:PerformBufferedAction()
+								inst.sg:RemoveStateTag("abouttoattack")
+								inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
+							else
+								inst:ClearBufferedAction()
+								inst.sg:GoToState("idle")
+							end
+						else -- out of ammo
 							inst:ClearBufferedAction()
+							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
+							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
 							inst.sg:GoToState("idle")
 						end
-					else -- out of ammo
-						inst:ClearBufferedAction()
-						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
-						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
 					end
 				end
             end),
 
             TimeEvent(18 * FRAMES, function(inst)
-				if not inst.sg.statemem.chained then
+				if not inst.sg.statemem.chained and not inst.sg.statemem.air_attack then
 					local buffaction = inst:GetBufferedAction()
 					local target = buffaction ~= nil and buffaction.target or nil
 					if not (target ~= nil and target:IsValid() and inst.components.combat:CanTarget(target)) then
@@ -12754,31 +12945,36 @@ local states =
 					end
 				end
             end),
-
             TimeEvent(19 * FRAMES, function(inst) -- start of slingshot
 				if not inst.sg.statemem.chained then
 	                inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/stretch")
 				end
             end),
-
             TimeEvent(25 * FRAMES, function(inst)
 				if not inst.sg.statemem.chained then
-					local buffaction = inst:GetBufferedAction()
-					local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
-					if equip ~= nil and equip.components.weapon ~= nil and equip.components.weapon.projectile ~= nil then
-						local target = buffaction ~= nil and buffaction.target or nil
-						if target ~= nil and target:IsValid() and inst.components.combat:CanTarget(target) then
-							inst:PerformBufferedAction()
-							inst.sg:RemoveStateTag("abouttoattack")
-							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
-						else
+					if inst.sg.statemem.air_attack then
+						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
+						inst:ClearBufferedAction()
+						inst.sg:GoToState("idle")
+					else
+						local buffaction = inst:GetBufferedAction()
+						local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+						if equip ~= nil and equip.components.weapon ~= nil and equip.components.weapon.projectile ~= nil then
+							local target = buffaction ~= nil and buffaction.target or nil
+							if target ~= nil and target:IsValid() and inst.components.combat:CanTarget(target) then
+								inst:PerformBufferedAction()
+								inst.sg:RemoveStateTag("abouttoattack")
+								inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/shoot")
+							else
+								inst:ClearBufferedAction()
+								inst.sg:GoToState("idle")
+							end
+						else -- out of ammo
 							inst:ClearBufferedAction()
+							inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
+							inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
 							inst.sg:GoToState("idle")
 						end
-					else -- out of ammo
-						inst:ClearBufferedAction()
-						inst.components.talker:Say(GetString(inst, "ANNOUNCE_SLINGHSOT_OUT_OF_AMMO"))
-						inst.SoundEmitter:PlaySound("dontstarve/characters/walter/slingshot/no_ammo")
 					end
 				end
             end),
@@ -12816,7 +13012,8 @@ local states =
             local buffaction = inst:GetBufferedAction()
             local equip = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
             inst.components.locomotor:Stop()
-            inst.AnimState:PlayAnimation("atk_pre")
+			inst.AnimState:PlayAnimation("throw_pre")
+			inst.AnimState:PushAnimation("throw", false)
 
 			local pos = buffaction ~= nil and buffaction:GetActionPoint() or nil
 			if pos ~= nil then
@@ -12873,26 +13070,8 @@ local states =
                     end
                 end
             end),
-            TimeEvent(18 * FRAMES, function(inst)
-                if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil then
-                    inst.sg:GoToState("item_out")
-                else
-                    inst.sg:GoToState("idle", true)
-                end
-            end),
-        },
-
-        events =
-        {
-            EventHandler("animover", function(inst)
-                if inst.AnimState:AnimDone() then
-                    if inst.AnimState:IsCurrentAnimation("atk_pre") then
-                        inst.AnimState:PlayAnimation("throw")
-                        inst.AnimState:SetTime(6 * FRAMES)
-                    else
-                        inst.sg:GoToState(inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS) ~= nil and "item_out" or "idle")
-                    end
-                end
+            TimeEvent(14 * FRAMES, function(inst)
+				inst.sg:GoToState("idle", true)
             end),
         },
 
@@ -14286,12 +14465,36 @@ local states =
             end),
             TimeEvent(25 * FRAMES, function(inst)
 				if not inst:PerformBufferedAction() then
-					inst.sg:GoToState("idle")
+					inst.sg.statemem.action_failed = true
 				end
             end),
+
+			--success timeline
             TimeEvent(40 * FRAMES, function(inst)
-				inst.sg:RemoveStateTag("busy")
+				if not inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
             end),
+
+			--failed timeline
+			TimeEvent(28 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.AnimState:SetTime(34 * FRAMES)
+					if inst.sg.statemem.stafffx ~= nil then
+						inst.sg.statemem.stafffx:Remove()
+						inst.sg.statemem.stafffx = nil
+					end
+					if inst.sg.statemem.stafflight ~= nil then
+						inst.sg.statemem.stafflight:Remove()
+						inst.sg.statemem.stafflight = nil
+					end
+				end
+			end),
+			TimeEvent(41 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.sg:RemoveStateTag("busy")
+				end
+			end),
 		},
 
         events =
@@ -14526,6 +14729,7 @@ local states =
         onenter = function(inst)
             inst.AnimState:PlayAnimation("useitem_pre")
             inst.AnimState:PushAnimation("pocketwatch_portal", false)
+			inst.AnimState:PushAnimation("useitem_pst", false)
 
             inst.components.locomotor:Stop()
 
@@ -14535,7 +14739,6 @@ local states =
 	            inst.sg.statemem.castsound = watch.castsound
 				inst.sg.statemem.same_shard = watch.components.recallmark ~= nil and watch.components.recallmark:IsMarkedForSameShard()
 			end
-
         end,
 
         timeline =
@@ -14549,18 +14752,24 @@ local states =
 	                inst.SoundEmitter:PlaySound("turnoftides/common/together/moon_glass/mine")
                 end
             end),
+			TimeEvent(32 * FRAMES, function(inst)
+				if inst.sg.statemem.action_failed then
+					inst.AnimState:Show("gemshard")
+				else
+					local line = inst.sg.statemem.same_shard and "ANNOUNCE_POCKETWATCH_OPEN_PORTAL" or "ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD"
+					inst:DoTaskInTime(6 * FRAMES, function() inst.components.talker:Say(GetString(inst, line)) end)
+				end
+			end),
+			TimeEvent(37 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
         },
 
         events =
         {
             EventHandler("animqueueover", function(inst)
                 if inst.AnimState:AnimDone() then
-		            inst.AnimState:PlayAnimation("useitem_pst", false)
-					if not inst.sg.statemem.action_failed then
-						local line = inst.sg.statemem.same_shard and "ANNOUNCE_POCKETWATCH_OPEN_PORTAL" or "ANNOUNCE_POCKETWATCH_OPEN_PORTAL_DIFFERENTSHARD"
-						inst:DoTaskInTime(6 * FRAMES, function() inst.components.talker:Say(GetString(inst, line)) end)
-					end
-					inst.sg:GoToState("idle", true)
+					inst.sg:GoToState("idle")
                 end
             end),
         },
@@ -15105,7 +15314,6 @@ local states =
     -- sail anims
 
     State{
-
         name = "furl_boost",
         tags = { "doing" },
 
@@ -15114,8 +15322,6 @@ local states =
 
             inst.AnimState:PlayAnimation("pull_big_pre")
             inst.AnimState:PushAnimation("pull_big_loop", false)
-
-
 
             if inst:HasTag("is_heaving") then
                 inst:RemoveTag("is_heaving")
@@ -15140,7 +15346,7 @@ local states =
         timeline =
         {
             TimeEvent(17 * FRAMES, function(inst)
-                inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_down", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_down")
                 inst:PerformBufferedAction()
             end),
         },
@@ -15148,12 +15354,14 @@ local states =
         events =
         {
             EventHandler("animqueueover", function(inst)
-                if inst.sg.statemem.stopfurling then
-                    inst.sg:GoToState("idle")
-                else
-                    inst.sg.statemem.not_interrupted = true
-                    inst.sg:GoToState("furl", inst.sg.mem.furl_target)          -- _repeat_delay
-                end
+				if inst.AnimState:AnimDone() then
+					if inst.sg.statemem.stopfurling then
+						inst.sg:GoToState("idle")
+					else
+						inst.sg.statemem.not_interrupted = true
+						inst.sg:GoToState("furl", inst.sg.mem.furl_target) -- _repeat_delay
+					end
+				end
             end),
 
             EventHandler("stopfurling", function(inst)
@@ -15174,7 +15382,6 @@ local states =
     },
 
     State{
-
         name = "furl",
         tags = { "doing" },
 
@@ -15199,22 +15406,22 @@ local states =
         timeline =
         {
             TimeEvent(15 * FRAMES, function(inst)
-                 inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up")
             end),
             TimeEvent((15+17) * FRAMES, function(inst)
-                 inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up")
             end),
             TimeEvent((15+(2*17)) * FRAMES, function(inst)
-                 inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up")
             end),
             TimeEvent((15+(3*17)) * FRAMES, function(inst)
-                 inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up")
             end),
             TimeEvent((15+(4*17)) * FRAMES, function(inst)
-                 inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up")
             end),
             TimeEvent((15+(5*17)) * FRAMES, function(inst)
-                 inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up", nil, nil, true)
+				inst.SoundEmitter:PlaySound("turnoftides/common/together/boat/mast/sail_up")
             end),
         },
 
@@ -15247,7 +15454,6 @@ local states =
     },
 
     State{
-
         name = "furl_fail",
         tags = { "busy", "furl_fail" },
 
@@ -15278,11 +15484,12 @@ local states =
 
         events =
         {
-            EventHandler("animqueueover", function(inst)
-                inst.sg.statemem.not_interrupted = true
-                inst.sg:GoToState("furl", inst.sg.mem.furl_target)
+			EventHandler("animover", function(inst)
+				if not inst.AnimState:AnimDone() then
+					inst.sg.statemem.not_interrupted = true
+					inst.sg:GoToState("furl", inst.sg.mem.furl_target)
+				end
             end),
-
             EventHandler("stopfurling", function(inst)
                 inst.sg:GoToState("idle")
             end),
@@ -15705,6 +15912,9 @@ local states =
             TimeEvent(26 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/woodie/goose/death_voice") end),
             TimeEvent(26 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber1/spiderwhistle/blow",nil,.8) end),
             TimeEvent(35 * FRAMES, function(inst) inst:PerformBufferedAction() end),
+			TimeEvent(58 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
         },
 
         events =
@@ -15732,6 +15942,9 @@ local states =
         {
             TimeEvent(15 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("webber2/common/spider_repellent") end),
             TimeEvent(17 * FRAMES, function(inst) inst:PerformBufferedAction() end),
+			TimeEvent(43 * FRAMES, function(inst)
+				inst.sg:RemoveStateTag("busy")
+			end),
         },
 
         events =

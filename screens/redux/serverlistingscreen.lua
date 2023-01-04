@@ -908,7 +908,7 @@ function ServerListingScreen:RefreshView(skipPoll, keepScrollFocusPos)
     -- If we're fading, don't mess with stuff
     if TheFrontEnd:GetFadeLevel() > 0 then return end
 
-    if TheNet:IsSearchingServers( PLATFORM ~= "WIN32_RAIL" ) then
+    if TheNet:IsSearchingServers() then
         self.refresh_button:Disable()
         self.refresh_button:SetText(STRINGS.UI.SERVERLISTINGSCREEN.REFRESHING)
         --if self.lan_spinner then self.lan_spinner.spinner:Disable() end
@@ -2254,7 +2254,7 @@ function ServerListingScreen:OnControl(control, down)
         elseif control == CONTROL_OPEN_CRAFTING or control == CONTROL_OPEN_INVENTORY then
             self:ToggleShowFilters()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-        elseif control == CONTROL_MENU_MISC_2 and not TheNet:IsSearchingServers(PLATFORM ~= "WIN32_RAIL") then
+        elseif control == CONTROL_MENU_MISC_2 and not TheNet:IsSearchingServers() then
             self:SearchForServers()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
         elseif control == CONTROL_MENU_MISC_1 then
@@ -2298,7 +2298,7 @@ function ServerListingScreen:GetHelpText()
 
     table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SERVERLISTINGSCREEN.CHANGE_SORT)
 
-    if not TheNet:IsSearchingServers(PLATFORM ~= "WIN32_RAIL") then
+    if not TheNet:IsSearchingServers() then
         table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. STRINGS.UI.SERVERLISTINGSCREEN.REFRESH)
     end
 
