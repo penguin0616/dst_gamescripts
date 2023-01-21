@@ -19,11 +19,12 @@ function SpawnSecondInstance()
     end
 end
 
+
 --V2C: This is for server side processing of remote slash command requests
 function Networking_SlashCmd(guid, userid, cmd)
-    local entity = Ents[guid] or TheNet:GetClientTableForUser(userid)
-    if entity ~= nil then
-        UserCommands.RunTextUserCommand(cmd, entity, true)
+    local caller = Ents[guid] or TheNet:GetClientTableForUser(userid) -- NOTES(JBK): Either an actual entity or a table with some data.
+    if caller ~= nil then
+        UserCommands.RunTextUserCommand(cmd, caller, true)
     end
 end
 
