@@ -564,6 +564,7 @@ EQUIPSLOTS =
     HANDS = "hands",
     HEAD = "head",
     BODY = "body",
+    BEARD = "beard",
 }
 
 ITEMTAG =
@@ -752,7 +753,7 @@ SPECIAL_EVENTS =
     YOT_CATCOON = "year_of_the_catcoon",
     YOTR = "year_of_the_bunnyman",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.YOTR
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
 --WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.NONE or SPECIAL_EVENTS.YOTR
 WORLD_EXTRA_EVENTS = {}
 
@@ -2437,6 +2438,13 @@ SKIN_TYPES_THAT_RECEIVE_CLOTHING =
 	"old_skin",
 	"powerup",
 	"NO_BASE",
+}
+
+POSTACTIVATEHANDSHAKE = { -- NOTES(JBK): These are expected to never go backwards and only increment.
+    NONE = 0, -- Initialization purposes.
+    CTS_LOADED = 1, -- Client is ready to receive server state.
+    STC_SENDINGSTATE = 2, -- Server is sending what it knows.
+    READY = 3, -- Client is in a good sync state. Must be the end.
 }
 
 STORM_TYPES =

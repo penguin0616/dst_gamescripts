@@ -1236,6 +1236,13 @@ t = {
                 FlagForRetrofitting_Forest(savedata, "retrofit_alittledrama_content")
             end,
         },
+
+        {
+            version = 5.14, -- Daywalker - new content
+            fn = function(savedata)
+                FlagForRetrofitting_Forest(savedata, "retrofit_daywalker_content")
+            end,
+        },
     },
 }
 

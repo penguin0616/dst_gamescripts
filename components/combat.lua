@@ -551,7 +551,7 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli)
             damageresolved = damageresolved ~= nil and -damageresolved or damage
             if self.inst.components.health:IsDead() then
                 if attacker ~= nil then
-                    attacker:PushEvent("killed", { victim = self.inst })
+                    attacker:PushEvent("killed", { victim = self.inst, attacker = attacker })
                 end
                 if self.onkilledbyother ~= nil then
                     self.onkilledbyother(self.inst, attacker)
@@ -623,6 +623,7 @@ function Combat:GetImpactSound(target, weapon)
                 (tgtinv:ArmorHasTag("grass") and "straw_armour_") or
                 (tgtinv:ArmorHasTag("forcefield") and "forcefield_armour_") or
                 (tgtinv:ArmorHasTag("sanity") and "sanity_armour_") or
+                (tgtinv:ArmorHasTag("dreadstone") and "marble_armour_") or --#TODO DREADSTONE SOUND
                 (tgtinv:ArmorHasTag("marble") and "marble_armour_") or
                 (tgtinv:ArmorHasTag("shell") and "shell_armour_") or
                 (tgtinv:ArmorHasTag("fur") and "fur_armour_") or

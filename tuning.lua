@@ -1739,6 +1739,11 @@ function Tune(overrides)
         ARMOR_SKELETON_COOLDOWN = 5,
         ARMOR_SKELETON_FIRST_COOLDOWN = 1,
 
+		ARMOR_DREADSTONEHAT = wilson_health * 8 * multiplayer_armor_durability_modifier,
+		ARMOR_DREADSTONEHAT_ABSORPTION = 0.9 * multiplayer_armor_absorption_modifier,
+		ARMORDREADSTONE = wilson_health * 12 * multiplayer_armor_durability_modifier,
+		ARMORDREADSTONE_ABSORPTION = 0.95 * multiplayer_armor_absorption_modifier,
+
         PANFLUTE_SLEEPTIME = 20,
         PANFLUTE_SLEEPRANGE = 15,
         PANFLUTE_USES = 10,
@@ -2654,6 +2659,8 @@ function Tune(overrides)
 		RUINS_BAT_SHADOW_LEVEL = 2,
 		RUINSHAT_SHADOW_LEVEL = 2,
 		ARMORRUINS_SHADOW_LEVEL = 2,
+		DREADSTONEHAT_SHADOW_LEVEL = 2,
+		ARMORDREADSTONE_SHADOW_LEVEL = 2,
 		--T3
 		SKELETONHAT_SHADOW_LEVEL = 3,
 		ARMOR_SKELETON_SHADOW_LEVEL = 3,
@@ -6364,6 +6371,95 @@ function Tune(overrides)
 
         PILLOW_DAMAGE = 0,
         PILLOW_HIT_RANGE = 2.5,
+
+		--
+		DAYWALKER_PILLAR_MINE = 10,
+        DAYWALKER_RESPAWN_DAYS_COUNT = 20, -- Days after the last defeat.
+
+		DAYWALKER_HEALTH = 10000,
+		DAYWALKER_HEALTH_REGEN = 25, --per second (only when not in combat)
+		DAYWALKER_COMBAT_STALKING_HEALTH_REGEN = 10,
+		DAYWALKER_COMBAT_TIRED_HEALTH_REGEN = 20,
+		DAYWALKER_COMBAT_HEALTH_REGEN_PERIOD = 0.4,
+		DAYWALKER_WALKSPEED = 2.7,
+		DAYWALKER_RUNSPEED = 9,
+		DAYWALKER_HIT_RECOVERY = 1,
+		DAYWALKER_ATTACK_PERIOD = { min = 4, max = 6 },
+		DAYWALKER_ATTACK_RANGE = 6,
+		DAYWALKER_DAMAGE = 75,
+		DAYWALKER_STRUGGLE_DAMAGE = 25,
+		DAYWALKER_POUNCE_DAMAGE = 50,
+		DAYWALKER_XCLAW_DAMAGE = 2 * 75,
+		DAYWALKER_SLAM_DAMAGE = 3 * 75,
+		DAYWALKER_SLAM_SINKHOLERADIUS = 3,
+
+		DAYWALKER_ROAR_CD = 30,
+		DAYWALKER_STALK_CD = 20,
+
+		DAYWALKER_FATIGUE =
+		{
+			POUNCE_HIT = -1.5,
+			POUNCE_MISS = 1,
+		},
+		DAYWALKER_FATIGUE_TIRED = 3,
+		DAYWALKER_FATIGUE_TIRED_MIN_TIME = 5,
+		DAYWALKER_FATIGUE_TIRED_MAX_TIME = 10,
+		DAYWALKER_FATIGUE_REGEN = 1,
+		DAYWALKER_FATIGUE_REGEN_START_PERIOD = 20,
+		DAYWALKER_FATIGUE_REGEN_PERIOD = 10,
+
+		DAYWALKER_AGGRO_DIST = 15,
+		DAYWALKER_KEEP_AGGRO_DIST = 12,
+		DAYWALKER_DEAGGRO_DIST = 30,
+		DAYWALKER_EPICSCARE_RANGE = 10,
+
+		SHADOW_LEECH_RUNSPEED = 6,
+		SHADOW_LEECH_HEALTH = 100,
+
+        -- WILSON
+        SKILLTREE_SKILLXP_PER_POINT = 10,
+
+        SKILL_THRESHOLDS = {
+            5, --1
+            8, --2
+            8, --3
+            8, --4
+            10, --5
+            10, --6
+            10, --7
+            10, --8
+            10, --9
+            12, --10
+            12, --11
+            12, --12
+            15, --13
+            15, --14
+            15, --15
+        },
+
+        SKILLS ={
+            WILSON_TORCH_1 = 0.95,
+            WILSON_TORCH_2 = 0.9,
+            WILSON_TORCH_3 = 0.8,
+
+            WILSON_TORCH_4 = 1.56,
+            WILSON_TORCH_5 = 2.25,
+            WILSON_TORCH_6 = 2.625,
+
+            WILSON_BEARD_1 = 1.2,
+            WILSON_BEARD_2 = 1.4,
+            WILSON_BEARD_3 = 1.7,
+
+            WILSON_BEARD_4 = 0.95,
+            WILSON_BEARD_5 = 0.9,
+            WILSON_BEARD_6 = 0.8,
+        },
+
+        WILSON_BEARD_BITS ={
+            LEVEL1 = 1,
+            LEVEL2 = 3,
+            LEVEL3 = 9,
+        }
     }
 
     TUNING_MODIFIERS = {}

@@ -4743,6 +4743,22 @@ return{
         HAREBALL = "Glurgh, Bunnyman spit-up!",
         YOTR_DECOR_1_ITEM = "Mermfolk light would be better.",
         YOTR_DECOR_2_ITEM = "Mermfolk light would be better.",             
+
+		--
+		DREADSTONE = "Pretty rocks!",
+		HORRORFUEL = "I-is just goop! Not scared!",
+		DAYWALKER =
+		{
+			GENERIC = "Grrr! You just big stinky pig!",
+			IMPRISONED = "Nyeeeeehhh!!",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "Heehee, stinky pig all locked up!",
+			EXPOSED = "Rock too hard for breaking, florp.",
+		},
+		ARMORDREADSTONE = "So pretty... it mine!",
+		DREADSTONEHAT = "It real good for headbutting, flort!",
     },
 
     DESCRIBE_GENERIC = "What that?",

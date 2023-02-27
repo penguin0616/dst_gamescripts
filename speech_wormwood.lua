@@ -4747,6 +4747,22 @@ return{
         HAREBALL = "From Hoppers. Thanks!",
         YOTR_DECOR_1_ITEM = "Hmmm, where put Hopper?",
         YOTR_DECOR_2_ITEM = "Hmmm, where put Hopper?",             
+
+		--
+		DREADSTONE = "Pretty",
+		HORRORFUEL = "Scary...",
+		DAYWALKER =
+		{
+			GENERIC = "Why so mad?",
+			IMPRISONED = "Stuck. Poor Twirly Tail",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "Where you grow from?",
+			EXPOSED = "Where you grow from?",
+		},
+		ARMORDREADSTONE = "Pretty rock clothes",
+		DREADSTONEHAT = "Rock for head",
     },
 
     DESCRIBE_GENERIC = "Friend?",

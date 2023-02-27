@@ -141,6 +141,9 @@ local assets =
     -- Wardrobe
     Asset("ANIM", "anim/player_emotesxl.zip"), -- idle emote animations
 
+    -- Skill tree
+    Asset("ANIM", "anim/skills_activate.zip"),
+
     -- Unused and deprecated. Keeping for mods.
     Asset("DYNAMIC_ATLAS", "images/skinsscreen.xml"),
     Asset("PKGREF", "images/skinsscreen.tex"),

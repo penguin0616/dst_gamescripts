@@ -4,6 +4,9 @@ AddRoom("BGSavanna", {
 					value = WORLD_TILES.SAVANNA,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2", "CharlieStage_Spawner",},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 					                distributepercent = .1,
 					                distributeprefabs=
 					                {
@@ -20,6 +23,9 @@ AddRoom("Plain", {
 					value = WORLD_TILES.SAVANNA,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_1"},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 					                distributepercent = .2,
 					                distributeprefabs=
 					                {
@@ -35,6 +41,9 @@ AddRoom("BarePlain", {					colour={r=.5,g=.5,b=.45,a=.50},
 					value = WORLD_TILES.SAVANNA,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2"},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 					                distributepercent = 0.1,
 					                distributeprefabs=
 					                {

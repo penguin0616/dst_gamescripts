@@ -292,6 +292,9 @@ armor_sanity_clear_fn = function(inst) basic_clear_fn(inst, "armor_sanity" ) end
 armorskeleton_init_fn =  function(inst, build_name) basic_init_fn( inst, build_name, "armor_skeleton" ) end
 armorskeleton_clear_fn = function(inst) basic_clear_fn(inst, "armor_skeleton" ) end
 
+armordreadstone_init_fn =  function(inst, build_name) basic_init_fn( inst, build_name, "armor_dreadstone" ) end
+armordreadstone_clear_fn = function(inst) basic_clear_fn(inst, "armor_dreadstone" ) end
+
 beargervest_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "torso_bearger" ) end
 beargervest_clear_fn = function(inst) basic_clear_fn(inst, "torso_bearger" ) end
 
@@ -374,6 +377,9 @@ alterguardianhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_alterguardi
 
 skeletonhat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_skeleton" ) end
 skeletonhat_clear_fn = function(inst) basic_clear_fn(inst, "hat_skeleton" ) end
+
+dreadstonehat_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "hat_dreadstone" ) end
+dreadstonehat_clear_fn = function(inst) basic_clear_fn(inst, "hat_dreadstone" ) end
 
 researchlab3_init_fn = function(inst, build_name) basic_init_fn( inst, build_name, "researchlab3" ) end
 researchlab3_clear_fn = function(inst) basic_clear_fn(inst, "researchlab3" ) end
@@ -2365,9 +2371,6 @@ end
 function gemsocket_clear_fn(inst)
     inst.AnimState:SetBuild("staff_purple_base")
 end
-
-
---------------------------------------------------------------------------
 
 function CreatePrefabSkin(name, info)
     local prefab_skin = Prefab(name, nil, info.assets, info.prefabs)

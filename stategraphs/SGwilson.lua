@@ -788,7 +788,15 @@ local actionhandlers =
         end),
 	ActionHandler(ACTIONS.TOSS,
 		function(inst, action)
-			return action.invobject ~= nil and action.invobject:HasTag("keep_equip_toss") and "throw_keep_equip" or "throw"
+			local projectile = action.invobject
+			if projectile == nil then
+				--for Special action TOSS, we can also use equipped item.
+				projectile = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+				if projectile ~= nil and not projectile:HasTag("special_action_toss") then
+					projectile = nil
+				end
+			end
+			return projectile ~= nil and projectile:HasTag("keep_equip_toss") and "throw_keep_equip" or "throw"
 		end),
     ActionHandler(ACTIONS.UNPIN, "doshortaction"),
     ActionHandler(ACTIONS.CATCH, "catch_pre"),
@@ -1190,7 +1198,9 @@ local events =
         if inst.sg:HasStateTag("acting") then
             return
         end
-        if data.eslot == EQUIPSLOTS.BODY and data.item ~= nil and data.item:HasTag("heavy") then
+        if data.eslot == EQUIPSLOTS.BEARD then
+            return nil
+        elseif data.eslot == EQUIPSLOTS.BODY and data.item ~= nil and data.item:HasTag("heavy") then
 			if inst.components.rider:IsRiding() then
 				--V2C: See "dodismountaction"
 				inst.sg.statemem.keepmount = true
@@ -3467,6 +3477,7 @@ local states =
                 if inst.sg.statemem.action ~= nil then
                     PlayMiningFX(inst, inst.sg.statemem.action.target)
                 end
+				inst.sg.statemem.recoilstate = "mine_recoil"
                 inst:PerformBufferedAction()
             end),
 
@@ -3511,6 +3522,62 @@ local states =
 			inst:RemoveTag("premine")
 		end,
     },
+
+	State{
+		name = "mine_recoil",
+		tags = { "busy", "nopredict", "nomorph" },
+
+		onenter = function(inst, data)
+			inst.components.locomotor:Stop()
+			inst:ClearBufferedAction()
+
+			inst.AnimState:PlayAnimation("pickaxe_recoil")
+			if data ~= nil and data.target ~= nil and data.target:IsValid() then
+				SpawnPrefab("impact").Transform:SetPosition(data.target.Transform:GetWorldPosition())
+			end
+
+			inst.Physics:SetMotorVel(-6, 0, 0)
+		end,
+
+		onupdate = function(inst)
+			if inst.sg.statemem.speed ~= nil then
+				inst.Physics:SetMotorVel(inst.sg.statemem.speed, 0, 0)
+				inst.sg.statemem.speed = inst.sg.statemem.speed * 0.75
+			end
+		end,
+
+		timeline =
+		{
+			FrameEvent(4, function(inst)
+				inst.sg.statemem.speed = -3
+			end),
+			FrameEvent(17, function(inst)
+				inst.sg.statemem.speed = nil
+				inst.Physics:Stop()
+			end),
+			FrameEvent(23, function(inst)
+				inst.sg:RemoveStateTag("busy")
+				inst.sg:RemoveStateTag("nopredict")
+				inst.sg:RemoveStateTag("nomorph")
+			end),
+			FrameEvent(30, function(inst)
+				inst.sg:GoToState("idle", true)
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			inst.Physics:Stop()
+		end,
+	},
 
     State{
         name = "hammer_start",
