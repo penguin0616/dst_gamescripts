@@ -4743,6 +4743,22 @@ return{
         HAREBALL = "The thought of anyone eating this wounds me deeply.",
         YOTR_DECOR_1_ITEM = "Now, to find the perfect placement for it.",
         YOTR_DECOR_2_ITEM = "Now, to find the perfect placement for it.",             
+
+		--
+		DREADSTONE = "Terrible and beautiful all at once.",
+		HORRORFUEL = "It makes my teeth chatter.",
+		DAYWALKER =
+		{
+			GENERIC = "I have decided on fear!",
+			IMPRISONED = "I don't know whether to feel fear or pity.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "Perhaps I could free the poor creature?",
+			EXPOSED = "Ah zut, that stone is far too tough for me to break.",
+		},
+		ARMORDREADSTONE = "A fine peice of armor.",
+		DREADSTONEHAT = "My head feels safer already.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

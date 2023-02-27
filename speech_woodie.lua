@@ -4744,6 +4744,22 @@ return{
         HAREBALL = "It's for a dare, eh? Alright, I'll bite.",
         YOTR_DECOR_1_ITEM = "Alright Luce, where should we put it?",
         YOTR_DECOR_2_ITEM = "Alright Luce, where should we put it?",             
+
+		--
+		DREADSTONE = "There's something off aboot it.",
+		HORRORFUEL = "That stuff can't be good for ya.",
+		DAYWALKER =
+		{
+			GENERIC = "Not even so much as a \"thank you\", eh?",
+			IMPRISONED = "Whatever he's got better not be contagious.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "Looks sturdy... ish.",
+			EXPOSED = "That's some firmly planted stone.",
+		},
+		ARMORDREADSTONE = "Luce says black ain't my colour.",
+		DREADSTONEHAT = "Gotta protect the old noggin', eh?",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

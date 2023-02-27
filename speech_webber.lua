@@ -4743,6 +4743,22 @@ return{
         HAREBALL = "Yuck! What a mean dare!",
         YOTR_DECOR_1_ITEM = "It'd be a good night light.",
         YOTR_DECOR_2_ITEM = "It'd be a good night light.",             
+
+		--
+		DREADSTONE = "We're not sure if we like that rock.",
+		HORRORFUEL = "It makes our spider skin crawl.",
+		DAYWALKER =
+		{
+			GENERIC = "Hey! We were just trying to help!!",
+			IMPRISONED = "He doesn't look like a normal pig. Or even a normal werepig.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "We feel bad just leaving him like that...",
+			EXPOSED = "We can't break through it!",
+		},
+		ARMORDREADSTONE = "It's kinda scary, but it keeps us safe!",
+		DREADSTONEHAT = "A pointy helmet to match our pointy teeth!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

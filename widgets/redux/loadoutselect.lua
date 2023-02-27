@@ -6,6 +6,8 @@ local ClothingExplorerPanel = require "widgets/redux/clothingexplorerpanel"
 local Subscreener = require "screens/redux/subscreener"
 local SkinPresetsPopup = require "screens/redux/skinpresetspopup"
 local DefaultSkinSelectionPopup = require "screens/redux/defaultskinselection"
+local skilltreedefs = require "prefabs/skilltree_defs"
+local SkillTreeWidget = require "widgets/redux/skilltreewidget"
 
 local TEMPLATES = require "widgets/redux/templates"
 
@@ -31,6 +33,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
 
 
     self.loadout_root = self:AddChild(Widget("LoadoutRoot"))
+    self.loadout_root.wardrobe_root = self.loadout_root:AddChild(Widget("LoadoutRoot"))
 
     self.heroname = self.loadout_root:AddChild(Image())
     self.heroname:SetScale(.3)
@@ -118,7 +121,6 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
 		end
 	end
 
-
     if not AllowSkins() then
 		self.bg_group = self.loadout_root:AddChild(Widget("bg_group"))
         self.bg_group:SetPosition(370, 10)
@@ -143,7 +145,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
 		text2:SetHAlign(ANCHOR_MIDDLE)
 		text2:SetColour(UICOLOURS.GOLD_UNIMPORTANT)
     else
-        self.doodad_count = self:AddChild(TEMPLATES.DoodadCounter(TheInventory:GetCurrencyAmount()))
+        self.doodad_count = self.loadout_root.wardrobe_root:AddChild(TEMPLATES.DoodadCounter(TheInventory:GetCurrencyAmount()))
 	    self.doodad_count:SetPosition(580, 320)
 	    self.doodad_count:SetScale(0.35)
 
@@ -159,14 +161,16 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
         local filter_options = {}
         filter_options.ignore_hero = not self.have_base_option
         local explorer_panels = {
-            body = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "body", reader, writer_builder("body"), filter_options)),
-            hand = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "hand", reader, writer_builder("hand"), filter_options)),
-            legs = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "legs", reader, writer_builder("legs"), filter_options)),
-            feet = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "feet", reader, writer_builder("feet"), filter_options)),
+            body = self.loadout_root.wardrobe_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "body", reader, writer_builder("body"), filter_options)),
+            hand = self.loadout_root.wardrobe_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "hand", reader, writer_builder("hand"), filter_options)),
+            legs = self.loadout_root.wardrobe_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "legs", reader, writer_builder("legs"), filter_options)),
+            feet = self.loadout_root.wardrobe_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "feet", reader, writer_builder("feet"), filter_options)),
         }
         if self.have_base_option then
-            explorer_panels.base = self.loadout_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "base", reader, writer_builder("base")))
+            explorer_panels.base = self.loadout_root.wardrobe_root:AddChild(ClothingExplorerPanel(self, self.user_profile, "base", reader, writer_builder("base")))
         end
+
+        self.explorer_panels = explorer_panels
 
         self.subscreener = Subscreener(self, self._MakeMenu, explorer_panels)
         if self.have_base_option then
@@ -186,7 +190,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
             end
         end )
 
-        self.divider_top = self.loadout_root:AddChild(Image("images/global_redux.xml", "item_divider.tex"))
+        self.divider_top = self.loadout_root.wardrobe_root:AddChild(Image("images/global_redux.xml", "item_divider.tex"))
         self.divider_top:SetScale(0.53, 0.5)
         self.divider_top:SetPosition(405, 282)
 
@@ -204,7 +208,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
             self.portraitbutton:SetScale(0.77)
 
             if AllowSkins() then
-                self.presetsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "save.tex", STRINGS.UI.SKIN_PRESETS.TITLE, false, false, function()
+                self.presetsbutton = self.loadout_root.wardrobe_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "save.tex", STRINGS.UI.SKIN_PRESETS.TITLE, false, false, function()
 			            self:_LoadSkinPresetsScreen()
 		            end
 	            ))
@@ -216,7 +220,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
                 self.presetsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
 
                 if self:_ShouldShowStartingItemSkinsButton() then
-                    self.itemskinsbutton = self.loadout_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "sweep.tex", STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE, false, false, function()
+                    self.itemskinsbutton = self.loadout_root.wardrobe_root:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "sweep.tex", STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE, false, false, function()
                             self:_LoadItemSkinsScreen()
                         end
                     ))
@@ -230,7 +234,43 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
             end
         end
 	end
+
+    self.currentContext = "wardorbe"
+    self.switch_context_button = self:AddChild(TEMPLATES.StandardButton(function() self:SwitchContext() end, STRINGS.SKILLTREE.SKILLTREE, {200, 50}))
+    self.switch_context_button:SetPosition(300,-315)
+
+    if self.currentcharacter and skilltreedefs.SKILLTREE_DEFS[self.currentcharacter] then
+        self.switch_context_button:Show()
+    else
+        self.switch_context_button:Hide()
+    end
+
 end)
+
+function LoadoutSelect:SwitchContext()
+    if self.currentContext == "wardorbe" then
+
+        self.loadout_root.wardrobe_root:Hide()
+
+        self.skilltree = self.loadout_root:AddChild(SkillTreeWidget(self.currentcharacter,{skillseletion=TheSkillTree.activatedskills[self.currentcharacter]},true))
+        self.skilltree:SetPosition(380,120)       
+        self.switch_context_button:SetText(STRINGS.UI.WARDROBESCREEN.TITLE)
+        self.currentContext = "skills"
+
+        if self.parent.ChangeTitle then
+            self.parent:ChangeTitle(STRINGS.SKILLTREE.SKILLTREE)
+        end
+    else
+        self.skilltree:Kill()
+        self.loadout_root.wardrobe_root:Show()
+        self.switch_context_button:SetText(STRINGS.SKILLTREE.SKILLTREE)
+        self.currentContext = "wardorbe"
+
+        if self.parent.ChangeTitle then
+            self.parent:ChangeTitle(STRINGS.UI.WARDROBESCREEN.TITLE)
+        end        
+    end
+end
 
 function LoadoutSelect:_ShouldShowStartingItemSkinsButton()
     local inv_item_list = (TUNING.GAMEMODE_STARTING_ITEMS[TheNet:GetServerGameMode()] or TUNING.GAMEMODE_STARTING_ITEMS.DEFAULT)[string.upper(self.currentcharacter)]
@@ -342,7 +382,7 @@ function LoadoutSelect:_MakeMenu(subscreener)
     end
 
     self:_UpdateMenu(self.selected_skins)
-    self.menu = self.loadout_root:AddChild(TEMPLATES.StandardMenu(menu_items, 65, true))
+    self.menu = self.loadout_root.wardrobe_root:AddChild(TEMPLATES.StandardMenu(menu_items, 65, true))
     return self.menu
 end
 

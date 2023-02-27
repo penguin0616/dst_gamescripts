@@ -957,6 +957,9 @@ function Inventory:Unequip(equipslot, slip)
     --print("Inventory:Unequip", item)
     if item ~= nil then
         if item.components.equippable ~= nil then
+            if item.components.equippable:ShouldPreventUnequipping(self.inst) then
+                return nil
+            end
             item.components.equippable:Unequip(self.inst)
             local overflow = self:GetOverflowContainer()
             if overflow ~= nil and overflow.inst == item then
@@ -987,6 +990,13 @@ end
 
 function Inventory:Equip(item, old_to_active, no_animation)
     if item == nil or item.components.equippable == nil or not item:IsValid() or item.components.equippable:IsRestricted(self.inst) or (self.noheavylifting and item:HasTag("heavy")) then
+        return
+    end
+    -----
+    
+    local eslot = item.components.equippable.equipslot
+    local olditem = self.equipslots[eslot]
+    if olditem ~= nil and olditem.components.equippable:ShouldPreventUnequipping(item.components.inventoryitem.owner) then
         return
     end
 
@@ -1038,9 +1048,7 @@ function Inventory:Equip(item, old_to_active, no_animation)
         self:SetActiveItem(nil)
     end
 
-    local eslot = item.components.equippable.equipslot
-    if self.equipslots[eslot] ~= item then
-        local olditem = self.equipslots[eslot]
+    if olditem ~= item then
         if leftovers ~= nil then
             if old_to_active then
                 self:GiveActiveItem(leftovers)
@@ -1485,6 +1493,10 @@ function Inventory:DropEverything(ondeath, keepequip)
     end
 
     if not keepequip then
+        if self.inst.EmptyBeard ~= nil then
+            self.inst:EmptyBeard()
+        end    
+
         for k, v in pairs(self.equipslots) do
             if not (ondeath and v.components.inventoryitem.keepondeath) then
                 self:DropItem(v, true, true)
@@ -2108,6 +2120,9 @@ function Inventory:IsWaterproof()
 end
 
 function Inventory:TransferComponent(newinst)
+    if self.inst.EmptyBeard ~= nil then
+        self.inst:EmptyBeard()
+    end  
     self:TransferInventory(newinst)
 end
 

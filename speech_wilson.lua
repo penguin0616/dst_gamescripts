@@ -892,6 +892,9 @@ return {
 
     ANNOUNCE_COZY_SLEEP = "I feel so refreshed!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "I need a stronger tool!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Go for the eyes!",
@@ -4752,7 +4755,23 @@ return {
 
         HAREBALL = "At this point... I've eaten worse things.",
         YOTR_DECOR_1_ITEM = "I know just the place for it.",
-        YOTR_DECOR_2_ITEM = "I know just the place for it.",             
+        YOTR_DECOR_2_ITEM = "I know just the place for it.",
+
+		--
+		DREADSTONE = "It seems to reflect shadows instead of light.",
+		HORRORFUEL = "It sends a terrible shiver down my spine.",
+		DAYWALKER =
+		{
+			GENERIC = "Freeing him might not have been my best idea.",
+			IMPRISONED = "I feel almost sorry for him.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "There's something glinting inside the marble.",
+			EXPOSED = "A pillar of impossibly hard stone.",
+		},
+		ARMORDREADSTONE = "Lightweight, sturdy, and snazzy!",
+		DREADSTONEHAT = "To keep my brilliant brain safe and sound.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

@@ -42,7 +42,6 @@ function ContainerWidget:Open(container, doer)
     if widget.pos ~= nil then
         self:SetPosition(widget.pos)
     end
-
     if widget.buttoninfo ~= nil then
         if doer ~= nil and doer.components.playeractionpicker ~= nil then
             doer.components.playeractionpicker:RegisterContainer(container)

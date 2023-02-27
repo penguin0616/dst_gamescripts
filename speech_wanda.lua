@@ -4743,6 +4743,22 @@ return{
         HAREBALL = "Disgusting!",
         YOTR_DECOR_1_ITEM = "I suppose I can spare a moment to set it up.",
         YOTR_DECOR_2_ITEM = "I suppose I can spare a moment to set it up.",             
+
+		--
+		DREADSTONE = "As off-putting as it is, it could be useful.",
+		HORRORFUEL = "It gives me a terrible feeling...",
+		DAYWALKER =
+		{
+			GENERIC = "I knew I shouldn't have involved myself!",
+			IMPRISONED = "I shouldn't involve myself in these things.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "They seem breakable... but I don't think that'd be wise.",
+			EXPOSED = "Oh botheration. I think I just remembered something...",
+		},
+		ARMORDREADSTONE = "It should keep me well protected, at least.",
+		DREADSTONEHAT = "That stone turned out to be rather useful.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

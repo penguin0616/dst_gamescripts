@@ -4749,6 +4749,22 @@ return{
         HAREBALL = "Yuck!",
         YOTR_DECOR_1_ITEM = "Gotta find a good place for it.",
         YOTR_DECOR_2_ITEM = "Gotta find a good place for it.",             
+
+		--
+		DREADSTONE = "It's evil-lookin', but tough as nails.",
+		HORRORFUEL = "Makes the usual nightmare goop look almost pleasant by comparison.",
+		DAYWALKER =
+		{
+			GENERIC = "Yeesh big guy, I was just tryin' to help you out!",
+			IMPRISONED = "That pig's seen better days.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "That marble doesn't look structurally sound to me.",
+			EXPOSED = "I stand corrected. That rock ain't goin' nowhere.",
+		},
+		ARMORDREADSTONE = "That's some real high-grade protective equipment.",
+		DREADSTONEHAT = "Lookin' sharp! Literally.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

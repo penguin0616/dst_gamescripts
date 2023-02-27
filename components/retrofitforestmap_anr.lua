@@ -1322,6 +1322,37 @@ function self:OnPostInit()
 		ALittleDrama_NewContent_Retrofitting()
 	end
 
+	if self.retrofit_daywalker_content then
+		self.retrofit_daywalker_content = nil
+
+		local requires_retrofitting_spawningground = true
+	    for k,v in pairs(Ents) do
+			if v ~= inst and v.prefab == "daywalkerspawningground" then
+				print("Retrofitting for Daywalker spawningground is not required.")
+				requires_retrofitting_spawningground = false
+				break
+			end
+		end
+
+        if requires_retrofitting_spawningground then
+            local canplace = function(x, y, z, prefab)
+                local tile = TheWorld.Map:GetTileAtPoint(x, y, z)
+                return tile == WORLD_TILES.DECIDUOUS or tile == WORLD_TILES.ROCKY
+            end
+
+            print("Retrofitting for Daywalker spawningground.")
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
+        end
+
+	end
+
 	---------------------------------------------------------------------------
 	if self.requiresreset then
 		print ("Retrofitting: Worldgen retrofitting requires the server to save and restart to fully take effect.")
@@ -1372,6 +1403,7 @@ function self:OnLoad(data)
         self.retrofit_removeextraaltarpieces = data.retrofit_removeextraaltarpieces or false
         self.retrofit_terraria_terrarium = data.retrofit_terraria_terrarium or false
 		self.retrofit_alittledrama_content = data.retrofit_alittledrama_content or false
+        self.retrofit_daywalker_content = data.retrofit_daywalker_content or false
     end
 end
 

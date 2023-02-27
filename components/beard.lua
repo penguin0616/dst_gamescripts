@@ -5,6 +5,7 @@ local function OnDayComplete(self)
         if cb ~= nil then
             cb(self.inst, self.skinname)
         end
+        self:UpdateBeardInventory()
     end
 end
 
@@ -51,7 +52,17 @@ function Beard:EnableGrowth(enable)
 end
 
 function Beard:GetInsulation()
-    return self.bits * TUNING.INSULATION_PER_BEARD_BIT * self.insulation_factor
+    local skill_mod = 1
+
+    if self.inst.components.skilltreeupdater:IsActivated("wilson_beard_3") then
+        skill_mod = TUNING.SKILLS.WILSON_BEARD_3
+    elseif self.inst.components.skilltreeupdater:IsActivated("wilson_beard_2") then
+        skill_mod = TUNING.SKILLS.WILSON_BEARD_2
+    elseif self.inst.components.skilltreeupdater:IsActivated("wilson_beard_1") then
+        skill_mod = TUNING.SKILLS.WILSON_BEARD_1
+    end
+
+    return self.bits * TUNING.INSULATION_PER_BEARD_BIT * self.insulation_factor * skill_mod
 end
 
 function Beard:ShouldTryToShave(who, whithwhat)
@@ -92,6 +103,8 @@ function Beard:Shave(who, withwhat)
         who.components.sanity:DoDelta(TUNING.SANITY_SMALL)
     end
 
+    self:UpdateBeardInventory()
+
     self.inst:PushEvent("shaved")
 
     return true
@@ -101,12 +114,32 @@ function Beard:AddCallback(day, cb)
     self.callbacks[day] = cb
 end
 
+-- THIS DATA NEEDS TO BE IN ASCENDING ORDER
+function Beard:UpdateCallbackTimes(data)
+
+    local ranks = {}
+    for day,cb in pairs(self.callbacks) do
+        table.insert(ranks, {day, cb})
+    end
+    
+    table.sort(ranks, function (a, b) return a[1] < b[1] end)
+    
+    for i=1,#ranks do
+        if ranks[i][1] >  self.daysgrowth and data[i] <= self.daysgrowth then  
+            self.callbacks[ranks[i][1]](self.inst, self.skinname)
+        end
+        self.callbacks[data[i]] = ranks[i][2]
+        self.callbacks[ranks[i][1]] = nil
+    end
+end
+
 function Beard:Reset()
     self.daysgrowth = 0
     self.bits = 0
     if self.onreset ~= nil then
         self.onreset(self.inst)
     end
+    self:UpdateBeardInventory()
 end
 
 function Beard:OnSave()
@@ -136,7 +169,7 @@ function Beard:OnLoad(data)
         if cb ~= nil then
             cb(self.inst, self.skinname)
         end
-    end
+    end        
 end
 
 function Beard:SetSkin(skinname)
@@ -170,6 +203,40 @@ function Beard:GetBeardSkinAndLength()
     end
     if length == 0 then return end --don't bother networking data that wont do anything
     return self.skinname, length
+end
+
+function Beard:UpdateBeardInventory()
+
+    if self.inst.components.skilltreeupdater and self.inst.components.skilltreeupdater:IsActivated("wilson_beard_7") then
+        local level = nil
+        if self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL3 then
+            level = "beard_sack_3"
+        elseif self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL2 then
+            level = "beard_sack_2"
+        elseif self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL1 then
+            level = "beard_sack_1"
+        end
+
+        local beardsack = self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BEARD)
+        if not level and beardsack then
+            beardsack.components.container:DropEverything()
+            beardsack.components.equippable:SetPreventUnequipping(false)
+            beardsack:Remove()
+        end
+        if level and not beardsack then
+            local newsack = SpawnPrefab(level)
+            self.inst.components.inventory:Equip(newsack)
+        elseif level and not beardsack:HasTag(level) then
+            local newsack = SpawnPrefab(level)
+            for k,v in pairs(beardsack.components.container.slots) do
+               beardsack.components.container:RemoveItem(v,true)
+               newsack.components.container:GiveItem(v)
+            end
+            beardsack.components.equippable:SetPreventUnequipping(false)
+            beardsack:Remove()
+            self.inst.components.inventory:Equip(newsack)
+        end
+    end
 end
 
 return Beard

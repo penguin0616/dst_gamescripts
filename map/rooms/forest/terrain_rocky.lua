@@ -3,6 +3,9 @@ AddRoom("BGChessRocky", {
 					value = WORLD_TILES.ROCKY,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_1"},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 									countstaticlayouts = {
 										["ChessSpot1"] = function() return math.random(0,3) end,
 										["ChessSpot2"] = function() return math.random(0,3) end,
@@ -24,6 +27,9 @@ AddRoom("BGRocky", {
 					value = WORLD_TILES.ROCKY,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2", "CharlieStage_Spawner"},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 					                distributepercent = .1,
 					                distributeprefabs=
 					                {
@@ -48,6 +54,7 @@ AddRoom("Rocky", {
 										rock_moon = function() return math.random(1,2) - 1 end,
 										burntground_faded = function() return math.random(3,5) end,
 										tallbirdnest = 1,
+                                        daywalkerspawningground = 1,
 									},
 					                distributepercent = .1,
 					                distributeprefabs=
@@ -67,6 +74,9 @@ AddRoom("RockyBuzzards", {
 					value = WORLD_TILES.ROCKY,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_2"},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 					                distributepercent = .1,
 					                distributeprefabs=
 					                {
@@ -83,6 +93,9 @@ AddRoom("GenericRockyNoThreat", {
 					value = WORLD_TILES.ROCKY,
 					tags = {"ExitPiece", "Chester_Eyebone", "Astral_1"},
 					contents =  {
+                                    countprefabs= {
+                                        daywalkerspawningground = 1,
+                                    },
 					                distributepercent = .1,
 					                distributeprefabs=
 					                {

@@ -2899,6 +2899,37 @@ local function MakeHat(name)
         return inst
     end
 
+	local function dreadstone_custom_init(inst)
+		inst:AddTag("dreadstone")
+
+		--waterproofer (from waterproofer component) added to pristine state for optimization
+		inst:AddTag("waterproofer")
+
+		--shadowlevel (from shadowlevel component) added to pristine state for optimization
+		inst:AddTag("shadowlevel")
+	end
+
+	fns.dreadstone = function()
+		local inst = simple(dreadstone_custom_init)
+
+		if not TheWorld.ismastersim then
+			return inst
+		end
+
+		inst:AddComponent("armor")
+		inst.components.armor:InitCondition(TUNING.ARMOR_DREADSTONEHAT, TUNING.ARMOR_DREADSTONEHAT_ABSORPTION)
+
+		inst:AddComponent("waterproofer")
+		inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
+
+		inst:AddComponent("shadowlevel")
+		inst.components.shadowlevel:SetDefaultLevel(TUNING.DREADSTONEHAT_SHADOW_LEVEL)
+
+		MakeHauntableLaunch(inst)
+
+		return inst
+	end
+
     local fn = nil
     local assets = { Asset("ANIM", "anim/"..fname..".zip") }
     local prefabs = nil
@@ -3042,6 +3073,8 @@ local function MakeHat(name)
         fn = fns.mask        
     elseif name == "nightcap" then
         fn = fns.nightcap
+    elseif name == "dreadstone" then
+    	fn = fns.dreadstone
     end
 
     table.insert(ALL_HAT_PREFAB_NAMES, prefabname)
@@ -3181,6 +3214,8 @@ return  MakeHat("straw"),
         MakeHat("polly_rogers"),
 
         MakeHat("nightcap"),
+
+		MakeHat("dreadstone"),
 
         Prefab("minerhatlight", minerhatlightfn),
         Prefab("alterguardianhatlight", alterguardianhatlightfn),

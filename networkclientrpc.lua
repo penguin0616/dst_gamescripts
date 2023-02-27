@@ -786,21 +786,15 @@ local RPC_HANDLERS =
         end
     end,
 
-    MovementPredictionEnabled = function(player)
-		player.components.playercontroller:OnRemoteToggleMovementPrediction(true)
-    end,
-
-    MovementPredictionDisabled = function(player)
-		player.components.playercontroller:OnRemoteToggleMovementPrediction(false)
-    end,
-
-    Hop = function(player, hopper, hop_x, hop_z, other_platform)
-        --print("HOP: ", hop_x, hop_z, other_platform ~= nil and other_platform.name)
-    end,
-
-    StopHopping = function(player, hopper)
-        --local playercontroller = hopper.components.playercontroller
-        --playercontroller:OnRemoteStopHopping()
+    SetMovementPredictionEnabled = function(player, enabled)
+        if not (checkbool(enabled)) then
+            printinvalid("SetMovementPredictionEnabled", player)
+            return
+        end
+        local pc = player.components.playercontroller
+        if pc ~= nil then
+            player.components.playercontroller:OnRemoteToggleMovementPrediction(enabled)
+        end
     end,
 
     MakeRecipeAtPoint = function(player, recipe, x, z, rot, skin_index, platform, platform_relative)
@@ -967,6 +961,53 @@ local RPC_HANDLERS =
             pc:OnMapAction(action, Vector3(x, 0, z))
         end
     end,
+
+    SetSkillActivatedState = function(player, skill_rpc_id, isunlocked)
+        if not (checknumber(skill_rpc_id) and
+                checkbool(isunlocked)) then
+            printinvalid("SetSkillActivatedState arguments", player)
+            return
+        end
+
+        local skill = TheSkillTree:GetSkillNameFromID(player.prefab, skill_rpc_id)
+        if skill == nil then
+            printinvalid("SetSkillActivatedState no skill with id", player, skill_rpc_id)
+            return
+        end
+
+        local skilltreeupdater = player.components.skilltreeupdater
+        if skilltreeupdater then
+            if isunlocked then
+                skilltreeupdater:ActivateSkill(skill, nil, true)
+            else
+                skilltreeupdater:DeactivateSkill(skill, nil, true)
+            end
+        end
+    end,
+
+    AddSkillXP = function(player, amount)
+        if not (checknumber(amount)) then
+            printinvalid("AddSkillXP", player)
+            return
+        end
+        local skilltreeupdater = player.components.skilltreeupdater
+        if skilltreeupdater then
+            skilltreeupdater:AddSkillXP(amount, nil, true)
+            ThePlayer.new_skill_available_popup = true
+            ThePlayer:PushEvent("newskillpointupdated")
+        end
+    end,
+
+    PostActivateHandshake = function(player, state)
+        if not (checkuint(state)) then
+            printinvalid("PostActivateHandshake", player)
+            return
+        end
+
+        player:OnPostActivateHandshake_Server(state)
+    end,
+
+    -- NOTES(JBK): 3 more RPCs will flood over the RPC limit of 64. Be careful.
 }
 
 RPC = {}
@@ -1042,11 +1083,44 @@ local CLIENT_RPC_HANDLERS =
         ThePlayer:PushEvent("LearnBuilderRecipe",{recipe=product})
     end,
 
-    ResetMinimapOffset = function()
-        local topscreen = TheFrontEnd and TheFrontEnd:GetActiveScreen() or nil
-        if topscreen and topscreen.minimap then
-            topscreen.minimap.minimap:ResetOffset()
+    UpdateAccomplishment = function(name)
+        local kv = TheInventory:GetLocalGenericKV()
+        if kv[name] ~= "1" then
+            TheInventory:SetGenericKVValue(name, "1")
         end
+    end,
+
+    SetSkillActivatedState = function(skill_rpc_id, isunlocked)
+        local characterprefab = ThePlayer.prefab or nil
+        if characterprefab == nil then
+            return
+        end
+
+        local skill = TheSkillTree:GetSkillNameFromID(characterprefab, skill_rpc_id)
+
+        if skill == nil then
+            return
+        end
+
+        local skilltreeupdater = ThePlayer.components.skilltreeupdater
+        if skilltreeupdater then
+            if isunlocked then
+                skilltreeupdater:ActivateSkill(skill, nil, true)
+            else
+                skilltreeupdater:DeactivateSkill(skill, nil, true)
+            end
+        end
+    end,
+
+    AddSkillXP = function(amount)
+        local skilltreeupdater = ThePlayer.components.skilltreeupdater
+        if skilltreeupdater and amount then
+            skilltreeupdater:AddSkillXP(amount, nil, true)
+        end
+    end,
+
+    PostActivateHandshake = function(state)
+        ThePlayer:OnPostActivateHandshake_Client(state)
     end,
 }
 

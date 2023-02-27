@@ -301,6 +301,7 @@ end
 
 function Fueled:DoUpdate(dt)
     if self.consuming then
+        if self.inst.prefab == "torch" then print("consuming modifiers",self.rate_modifiers:Get()) end
         self:DoDelta(-dt * self.rate * self.rate_modifiers:Get())
     end
 

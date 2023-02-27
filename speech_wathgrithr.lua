@@ -4743,6 +4743,22 @@ return{
         HAREBALL = "Ha! I am no coward, pass it this way!",
         YOTR_DECOR_1_ITEM = "Let us set the rabbit torch alight!",
         YOTR_DECOR_2_ITEM = "Let us set the rabbit torch alight!",             
+
+		--
+		DREADSTONE = "A stone of ill omen.",
+		HORRORFUEL = "The sight of it chills even my courageous Viking heart.",
+		DAYWALKER =
+		{
+			GENERIC = "You leave me no choice, beast! To arms!",
+			IMPRISONED = "The beast hath been consumed by foul magic.",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "The pillar is weakened... mayhaps it could be broken.",
+			EXPOSED = "Only something of great might could crack that foul stone.",
+		},
+		ARMORDREADSTONE = "It will serve me well, despite its origins.",
+		DREADSTONEHAT = "Ready to bear the brunt of battle!",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

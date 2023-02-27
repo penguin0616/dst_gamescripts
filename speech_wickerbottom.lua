@@ -4743,6 +4743,22 @@ return{
         HAREBALL = "A dare? What childish nonsense.",
         YOTR_DECOR_1_ITEM = "It would look quite nice right over there.",
         YOTR_DECOR_2_ITEM = "It would look quite nice right over there.",             
+
+		--
+		DREADSTONE = "Metamorphic, if I'm not mistaken.",
+		HORRORFUEL = "Highly concentrated ectoplasmic residue.",
+		DAYWALKER =
+		{
+			GENERIC = "This creature has terrible manners.",
+			IMPRISONED = "My, how did it end up in this state?",
+		},
+		DAYWALKER_PILLAR =
+		{
+			GENERIC = "How odd... the marble appears to be encasing something.",
+			EXPOSED = "It will require much greater force than I can muster to break it.",
+		},
+		ARMORDREADSTONE = "Extremely durable, and surprisingly lightweight.",
+		DREADSTONEHAT = "Thankfully, the material has no adverse effects on the mind.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

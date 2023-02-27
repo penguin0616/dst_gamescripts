@@ -35,6 +35,7 @@ local WorldResetTimer = require "widgets/worldresettimer"
 local PlayerDeathNotification = require "widgets/playerdeathnotification"
 local GiftItemToast = require "widgets/giftitemtoast"
 local YotbToast = require "widgets/yotbtoast"
+local SkillTreeToast = require "widgets/skilltreetoast"
 local VoteDialog = require "widgets/votedialog"
 local TEMPLATES = require "widgets/templates"
 local easing = require("easing")
@@ -86,11 +87,20 @@ local Controls = Class(Widget, function(self, owner)
     self.saving = self.topright_over_root:AddChild(SavingIndicator(self.owner))
     self.saving:SetPosition(-440, 0, 0)
 
-    self.item_notification = self.topleft_root:AddChild(GiftItemToast(self.owner))
+    self.toastlocations = {
+        {pos=Vector3(115, 150, 0)},
+        {pos=Vector3(215, 150, 0)},
+        {pos=Vector3(315, 150, 0)},
+    }
+
+    self.item_notification = self.topleft_root:AddChild(GiftItemToast(self.owner, self))
     self.item_notification:SetPosition(115, 150, 0)
 
-    self.yotb_notification = self.topleft_root:AddChild(YotbToast(self.owner))
+    self.yotb_notification = self.topleft_root:AddChild(YotbToast(self.owner, self))
     self.yotb_notification:SetPosition(215, 150, 0)
+
+    self.skilltree_notification = self.topleft_root:AddChild(SkillTreeToast(self.owner, self))
+    self.skilltree_notification:SetPosition(315, 150, 0)
 
     --self.worldresettimer = self.bottom_root:AddChild(WorldResetTimer(self.owner))
     self.worldresettimer = self.bottom_root:AddChild(PlayerDeathNotification(self.owner))
@@ -317,6 +327,32 @@ function Controls:ShowStatusNumbers()
     end
     if self.secondary_status ~= nil then
         self.secondary_status:ShowStatusNumbers()
+    end
+end
+
+function Controls:ManageToast(toast, remove)
+    local collapse = false
+    for i,spot in ipairs(self.toastlocations) do
+        if remove then
+            if spot.toast == toast then
+                spot.toast = nil
+            end
+            collapse = true
+        else
+            if not spot.toast then                
+               spot.toast = toast 
+               spot.toast:SetPosition(spot.pos.x,spot.pos.y,spot.pos.z)
+               break
+            end
+        end
+
+        if collapse then
+            if self.toastlocations[i+1] and self.toastlocations[i+1].toast then
+                spot.toast = self.toastlocations[i+1].toast
+                self.toastlocations[i+1].toast = nil
+                spot.toast:SetPosition(spot.pos.x,spot.pos.y,spot.pos.z)
+            end
+        end
     end
 end
 
@@ -814,6 +850,7 @@ function Controls:ShowCraftingAndInventory()
         self.containerroot_side:Show()
         self.item_notification:ToggleCrafting(false)
         self.yotb_notification:ToggleCrafting(false)
+        self.skilltree_notification:ToggleCrafting(false)
         if self.status.ToggleCrafting ~= nil then
             self.status:ToggleCrafting(false)
         end
@@ -829,6 +866,7 @@ function Controls:HideCraftingAndInventory()
         self.containerroot_side:Hide()
         self.item_notification:ToggleCrafting(true)
         self.yotb_notification:ToggleCrafting(true)
+        self.skilltree_notification:ToggleCrafting(true)
         if self.status.ToggleCrafting ~= nil then
             self.status:ToggleCrafting(true)
         end
