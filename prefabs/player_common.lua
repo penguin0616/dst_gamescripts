@@ -1801,6 +1801,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         Asset("INV_IMAGE", "skull_"..name),
 
         Asset("SCRIPT", "scripts/prefabs/player_common_extensions.lua"),
+        Asset("SCRIPT", "scripts/prefabs/skilltree_defs.lua"),
     }
 
     local prefabs =

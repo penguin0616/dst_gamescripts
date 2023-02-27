@@ -7203,7 +7203,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "A Little Drama\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Wilson Refresh\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 

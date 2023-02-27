@@ -29,13 +29,35 @@ local function ToggleBrain(inst, enable)
 	end
 end
 
-local function OnSpawnFor(inst, daywalker, delay)
+local function StartTrackingDaywalker(inst, daywalker)
 	inst.components.entitytracker:TrackEntity("daywalker", daywalker)
 	if daywalker.StartTrackingLeech ~= nil then
 		daywalker:StartTrackingLeech(inst)
 	end
+end
+
+local function OnSpawnFor(inst, daywalker, delay)
+	StartTrackingDaywalker(inst, daywalker)
 	inst:ForceFacePoint(daywalker.Transform:GetWorldPosition())
 	inst.sg:GoToState("spawn_delay", delay)
+end
+
+local function OnFlungFrom(inst, daywalker, speedmult, randomdir)
+	--V2C: network timing issues with a follower that just got released
+	--     so safest bet is to replace the entity
+	--inst.Follower:StopFollowing()
+	local replace = SpawnPrefab(inst.prefab)
+	replace.components.health:SetCurrentHealth(inst.components.health.currenthealth)
+	StartTrackingDaywalker(replace, daywalker)
+	inst:Remove()
+
+	local x, y, z = daywalker.Transform:GetWorldPosition()
+	local rot = randomdir and math.random() * 360 or daywalker.Transform:GetRotation() + math.random() * 10 - 5
+	replace.Transform:SetRotation(rot + 180) --flung backwards
+	rot = rot * DEGREES
+	speedmult = speedmult or 1
+	replace.Physics:Teleport(x + math.cos(rot) * speedmult, y, z - math.sin(rot) * speedmult)
+	replace.sg:GoToState("flung", speedmult)
 end
 
 local function OnLoadPostPass(inst)--, ents, data)
@@ -111,6 +133,7 @@ local function fn()
 
 	inst.ToggleBrain = ToggleBrain
 	inst.OnSpawnFor = OnSpawnFor
+	inst.OnFlungFrom = OnFlungFrom
 	inst.OnLoadPostPass = OnLoadPostPass
 
 	return inst

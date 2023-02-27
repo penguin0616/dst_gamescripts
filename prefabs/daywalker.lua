@@ -170,24 +170,17 @@ local function DetachLeech(inst, attachpos, speedmult, randomdir)
 
 	inst.components.entitytracker:ForgetEntity(attachpos)
 
-	todetach.Follower:StopFollowing()
+	--[[todetach.Follower:StopFollowing()
 	local x, y, z = inst.Transform:GetWorldPosition()
 	local rot = randomdir and math.random() * 360 or inst.Transform:GetRotation() + math.random() * 10 - 5
 	todetach.Transform:SetRotation(rot + 180) --flung backwards
 	rot = rot * DEGREES
 	speedmult = speedmult or 1
-	todetach.Transform:SetPosition(x + math.cos(rot) * speedmult, y, z - math.sin(rot) * speedmult)
-	todetach.sg:GoToState("flung", speedmult)
-
-	--#V2C #HACK temp fix for beta
-	local replace = SpawnPrefab("shadow_leech")
-	replace:OnSpawnFor(inst, 1)
-	replace.components.health:SetCurrentHealth(todetach.components.health.currenthealth)
-	replace.Transform:SetRotation(todetach.Transform:GetRotation())
-	replace.Transform:SetPosition(todetach.Transform:GetWorldPosition())
-	todetach:Remove()
-	replace.sg:GoToState("flung", speedmult)
-	--
+	todetach.Physics:Teleport(x + math.cos(rot) * speedmult, y, z - math.sin(rot) * speedmult)
+	todetach.sg:GoToState("flung", speedmult)]]
+	--V2C: moved to shadow_leech.OnFlungFrom
+	--NOTE: the leech gets replaced with a new spawn
+	todetach:OnFlungFrom(inst, speedmult, randomdir)
 	return true
 end
 
