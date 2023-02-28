@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Aww, was having such good dream...",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Grrr... need something stronger, florp!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Not scared of you, florp!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "Glurgh, Bunnyman spit-up!",
         YOTR_DECOR_1_ITEM = "Mermfolk light would be better.",
-        YOTR_DECOR_2_ITEM = "Mermfolk light would be better.",             
+        YOTR_DECOR_2_ITEM = "Mermfolk light would be better.",
 
 		--
 		DREADSTONE = "Pretty rocks!",

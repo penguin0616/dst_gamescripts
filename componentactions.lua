@@ -1607,7 +1607,7 @@ local COMPONENT_ACTIONS =
 
         inventoryitem = function(inst, doer, pos, actions, right, target)
             if not right and inst.replica.inventoryitem:IsHeldBy(doer) then
-                if inst.replica.equippable == nil or inst.replica.equippable:IsEquipped() and not inst.replica.equippable:ShouldPreventUnequipping(doer) then
+                if inst.replica.equippable == nil or not inst.replica.equippable:IsEquipped() or inst.replica.equippable:IsEquipped() and not inst.replica.equippable:ShouldPreventUnequipping(doer) then
                     table.insert(actions, ACTIONS.DROP)
                 end
             end

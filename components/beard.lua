@@ -220,7 +220,6 @@ function Beard:UpdateBeardInventory()
         local beardsack = self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BEARD)
         if not level and beardsack then
             beardsack.components.container:DropEverything()
-            beardsack.components.equippable:SetPreventUnequipping(false)
             beardsack:Remove()
         end
         if level and not beardsack then
@@ -232,7 +231,6 @@ function Beard:UpdateBeardInventory()
                beardsack.components.container:RemoveItem(v,true)
                newsack.components.container:GiveItem(v)
             end
-            beardsack.components.equippable:SetPreventUnequipping(false)
             beardsack:Remove()
             self.inst.components.inventory:Equip(newsack)
         end

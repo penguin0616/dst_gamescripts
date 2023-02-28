@@ -1004,7 +1004,7 @@ end
 
 local function AtriumOnKilled(inst,data)
     trackattackers(inst,data)
-    for ID, data in ipairs(inst.attackerUSERIDs) do
+    for ID, data in pairs(inst.attackerUSERIDs) do
         for i, player in ipairs(AllPlayers) do
             if player.userid == ID then 
                 SendRPCToClient(CLIENT_RPC.UpdateAccomplishment, player.userid, "fuelweaver_killed")

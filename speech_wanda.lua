@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Ah, I feel fit as a fiddle!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Oh botheration! I'll need something stronger than this...",
+
 	BATTLECRY =
 	{
 		GENERIC = "You ruffian! I'll clean your clock!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "Disgusting!",
         YOTR_DECOR_1_ITEM = "I suppose I can spare a moment to set it up.",
-        YOTR_DECOR_2_ITEM = "I suppose I can spare a moment to set it up.",             
+        YOTR_DECOR_2_ITEM = "I suppose I can spare a moment to set it up.",
 
 		--
 		DREADSTONE = "As off-putting as it is, it could be useful.",

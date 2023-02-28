@@ -132,7 +132,21 @@ function Equippable:ShouldPreventUnequipping(target)
     return self.preventunequipping
 end
 
+local function OnRemove(inst, data)
+    inst.components.equippable:SetPreventUnequipping(false)
+end
+
 function Equippable:SetPreventUnequipping(shouldprevent)
+    if shouldprevent then
+        if self._onremovelistener == nil then
+            self._onremovelistener = self.inst:ListenForEvent("onremove", OnRemove)
+        end
+    else
+        if self._onremovelistener ~= nil then
+            self.inst:RemoveEventCallback("onremove", OnRemove)
+            self._onremovelistener = nil
+        end
+    end
     self.preventunequipping = shouldprevent
 end
 

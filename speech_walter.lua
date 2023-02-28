@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Wow, that was a good night's sleep!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "It's okay Woby, we just need to find a stronger tool!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Sorry!!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "That looks like something Woby spit up.",
         YOTR_DECOR_1_ITEM = "I'll have it set up in a jiffy!",
-        YOTR_DECOR_2_ITEM = "I'll have it set up in a jiffy!",             
+        YOTR_DECOR_2_ITEM = "I'll have it set up in a jiffy!",
 
 		--
 		DREADSTONE = "It's just a rock, what's so scary about a rock?",

@@ -14022,8 +14022,8 @@ STRINGS.SKILLTREE = {
     ONLINE_DATA_USER_OFFLINE = "Login to use online skilltree data.",
     ONLINE_DATA_DOWNLOAD_FAILED = "Online skilltree data failed to sync. Using offline data.",
 
-    LOCKED = "LOCKED",
-    UNLOCKED = "UNLOCKED",
+    LOCKED = "PATH LOCKED",
+    UNLOCKED = "PATH UNLOCKED",
     WILSON = {
 
         WILSON_ALCHEMY_1_TITLE = "Transmutation",
@@ -14105,8 +14105,8 @@ STRINGS.SKILLTREE = {
         WILSON_ALLEGIANCE_LOCK_1_DESC = "Learn 12 Skills to unlock.",
         WILSON_ALLEGIANCE_LOCK_2_DESC = "Find and defeat the Ancient Fuelweaver.",
 
-        WILSON_ALLEGIANCE_SHADOW_TITLE = "Shadow Affinity",
-        WILSON_ALLEGIANCE_SHADOW_DESC = "Transmute Shadow goodies.",
+        WILSON_ALLEGIANCE_SHADOW_TITLE = "Shadow Courtier",
+        WILSON_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the secrets of Shadow Transmutation.",
     },
 }
 --Don't include this in pot generation as this file is already translated.

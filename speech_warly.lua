@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Ah, what lovely dreams I had!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "No, this won't do...",
+
 	BATTLECRY =
 	{
 		GENERIC = "I'm also an accomplished butcher!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "The thought of anyone eating this wounds me deeply.",
         YOTR_DECOR_1_ITEM = "Now, to find the perfect placement for it.",
-        YOTR_DECOR_2_ITEM = "Now, to find the perfect placement for it.",             
+        YOTR_DECOR_2_ITEM = "Now, to find the perfect placement for it.",
 
 		--
 		DREADSTONE = "Terrible and beautiful all at once.",

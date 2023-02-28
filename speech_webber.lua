@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "We had such a good sleep!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "We don't think this tool's strong enough!",
+
 	BATTLECRY =
 	{
 		GENERIC = "En garde!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "Yuck! What a mean dare!",
         YOTR_DECOR_1_ITEM = "It'd be a good night light.",
-        YOTR_DECOR_2_ITEM = "It'd be a good night light.",             
+        YOTR_DECOR_2_ITEM = "It'd be a good night light.",
 
 		--
 		DREADSTONE = "We're not sure if we like that rock.",

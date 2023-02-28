@@ -886,6 +886,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Ahhh. Good morning!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Oh. Something else?",
+
 	BATTLECRY =
 	{
 		GENERIC = "Attack!",
@@ -4746,7 +4749,7 @@ return{
 
         HAREBALL = "From Hoppers. Thanks!",
         YOTR_DECOR_1_ITEM = "Hmmm, where put Hopper?",
-        YOTR_DECOR_2_ITEM = "Hmmm, where put Hopper?",             
+        YOTR_DECOR_2_ITEM = "Hmmm, where put Hopper?",
 
 		--
 		DREADSTONE = "Pretty",

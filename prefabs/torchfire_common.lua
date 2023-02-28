@@ -11,10 +11,10 @@ local function CreateLight()
     inst.entity:AddTransform()
     inst.entity:AddLight()
 
-    inst.Light:SetIntensity(.75)
-    inst.Light:SetColour(197 / 255, 197 / 255, 50 / 255)
-    inst.Light:SetFalloff(.5)
-    inst.Light:SetRadius(2)
+    inst.Light:SetIntensity(0.75)
+    inst.Light:SetColour(180 / 255, 195 / 255, 150 / 255)
+    inst.Light:SetFalloff(TUNING.TORCH_FALLOFF[1])
+    inst.Light:SetRadius(TUNING.TORCH_RADIUS[1])
 
     return inst
 end

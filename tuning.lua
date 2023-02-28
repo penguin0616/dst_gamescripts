@@ -6417,8 +6417,6 @@ function Tune(overrides)
 		SHADOW_LEECH_HEALTH = 100,
 
         -- WILSON
-        SKILLTREE_SKILLXP_PER_POINT = 10,
-
         SKILL_THRESHOLDS = {
             5, --1
             8, --2
@@ -6437,14 +6435,28 @@ function Tune(overrides)
             15, --15
         },
 
+        TORCH_RADIUS = {
+            2,
+            3,
+            4,
+            5,
+        },
+
+        TORCH_FALLOFF = {
+            0.5,
+            0.6,
+            0.75,
+            0.9,
+        },
+
         SKILLS ={
             WILSON_TORCH_1 = 0.95,
             WILSON_TORCH_2 = 0.9,
             WILSON_TORCH_3 = 0.8,
 
-            WILSON_TORCH_4 = 1.56,
-            WILSON_TORCH_5 = 2.25,
-            WILSON_TORCH_6 = 2.625,
+            WILSON_TORCH_4 = 2,
+            WILSON_TORCH_5 = 3,
+            WILSON_TORCH_6 = 4,
 
             WILSON_BEARD_1 = 1.2,
             WILSON_BEARD_2 = 1.4,

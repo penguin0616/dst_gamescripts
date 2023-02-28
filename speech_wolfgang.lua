@@ -883,6 +883,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Wolfgang had nice dreams of fluffy bunnies.",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Tool is weak! Wolfgang needs something mightier!",
+
 	BATTLECRY =
 	{
 		GENERIC = "I will punch you!",
@@ -4743,7 +4746,7 @@ return{
 
         HAREBALL = "Wolfgang is not afraid to eat! Gulp...",
         YOTR_DECOR_1_ITEM = "Wolfgang will find good place for rabbit light.",
-        YOTR_DECOR_2_ITEM = "Wolfgang will find good place for rabbit light.",             
+        YOTR_DECOR_2_ITEM = "Wolfgang will find good place for rabbit light.",
 
 		--
 		DREADSTONE = "Is just rock, not scary! ...Right?",

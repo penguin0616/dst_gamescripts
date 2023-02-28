@@ -71,21 +71,17 @@ end
 local function applyskillbrightness(inst, value)
     if inst.fires then
         for i,fx in ipairs(inst.fires) do
-            if fx._light then
-                fx._light.Light:SetRadius(fx._light.Light:GetRadius()*value)
-            end
+            fx:SetLightRange(value)
         end
-    end
+    end     
 end
 
 local function removeskillbrightness(inst, value)
     if inst.fires then
         for i,fx in ipairs(inst.fires) do
-            if fx._light then
-                fx._light.Light:SetRadius(fx._light.Light:GetRadius()*(1/value))
-            end
+            fx:SetLightRange(value)
         end
-    end
+    end 
 end
 
 local function applyskillfueleffect(inst,value)
@@ -127,7 +123,7 @@ end
 
 local function removetorchskilleffects(inst,brightnessvalue)
     --SKILLTREE CODE
-    removeskillbrightness(inst, brightnessvalue)
+    removeskillbrightness(inst, 1)
     removeskillfueleffect(inst)
 end
 
@@ -450,6 +446,7 @@ local function fn()
 	inst.components.complexprojectile:SetLaunchOffset(Vector3(.25, 1, 0))
 	inst.components.complexprojectile:SetOnLaunch(OnThrown)
 	inst.components.complexprojectile:SetOnHit(OnHit)
+	inst.components.complexprojectile.ismeleeweapon = true
 
     -----------------------------------
 

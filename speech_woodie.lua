@@ -883,6 +883,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Sorry Luce, was I snorin'?",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Guess this tool just ain't gonna cut it.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Get over here, eh!",
@@ -4743,7 +4746,7 @@ return{
 
         HAREBALL = "It's for a dare, eh? Alright, I'll bite.",
         YOTR_DECOR_1_ITEM = "Alright Luce, where should we put it?",
-        YOTR_DECOR_2_ITEM = "Alright Luce, where should we put it?",             
+        YOTR_DECOR_2_ITEM = "Alright Luce, where should we put it?",
 
 		--
 		DREADSTONE = "There's something off aboot it.",

@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "I suppose it was worth a try.",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "This will require a more robust tool than I currently possess.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Combat!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "A dare? What childish nonsense.",
         YOTR_DECOR_1_ITEM = "It would look quite nice right over there.",
-        YOTR_DECOR_2_ITEM = "It would look quite nice right over there.",             
+        YOTR_DECOR_2_ITEM = "It would look quite nice right over there.",
 
 		--
 		DREADSTONE = "Metamorphic, if I'm not mistaken.",

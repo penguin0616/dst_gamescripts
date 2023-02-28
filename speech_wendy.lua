@@ -886,6 +886,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Such a peaceful slumber... but now I must wake.",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "It's not strong enough... like me...",
+
 	BATTLECRY =
 	{
 		GENERIC = "Death will find you!",
@@ -4746,7 +4749,7 @@ return{
 
         HAREBALL = "What a horrid thing!",
         YOTR_DECOR_1_ITEM = "I should find a place for it to belong.",
-        YOTR_DECOR_2_ITEM = "I should find a place for it to belong.",             
+        YOTR_DECOR_2_ITEM = "I should find a place for it to belong.",
 
 		--
 		DREADSTONE = "It is cold... and beautiful.",

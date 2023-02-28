@@ -832,20 +832,20 @@ params.beard_sack_1 =
     },
     type = "side_inv",    
     acceptsstacks = true,
-    usespecificslotsforitems = true,    
+    usespecificslotsforitems = true,
    -- excludefromcrafting = false,
 }
 
 function params.beard_sack_1.itemtestfn(container, item, slot)
     if slot and slot ~= 1 then return end
 
-    if item.components.edible then
-        for i,foodtype in ipairs(FOODGROUP.OMNI.types) do
-            if foodtype == item.components.edible.foodtype then
-                return true
-            end
+    --Edible
+    for k, v in pairs(FOODGROUP.OMNI.types) do
+        if item:HasTag("edible_"..v) then
+            return true
         end
-    end    
+    end
+      
 end
 
 params.beard_sack_2 =
@@ -869,18 +869,17 @@ params.beard_sack_2 =
     },
     type = "side_inv",    
     acceptsstacks = true,
-    usespecificslotsforitems = true,    
+    usespecificslotsforitems = true,
    -- excludefromcrafting = false,
 }
 
 function params.beard_sack_2.itemtestfn(container, item, slot)
     if slot and (slot ~= 1 and slot ~= 2) then return end
 
-    if item.components.edible then
-        for i,foodtype in ipairs(FOODGROUP.OMNI.types) do
-            if foodtype == item.components.edible.foodtype then
-                return true
-            end
+    --Edible
+    for k, v in pairs(FOODGROUP.OMNI.types) do
+        if item:HasTag("edible_"..v) then
+            return true
         end
     end
 end
@@ -908,18 +907,17 @@ params.beard_sack_3 =
     },
     type = "side_inv",    
     acceptsstacks = true,
-    usespecificslotsforitems = true,    
+    usespecificslotsforitems = true,
    -- excludefromcrafting = false,
 }
 
 function params.beard_sack_3.itemtestfn(container, item, slot)
     if slot and (slot ~= 1 and slot ~= 2 and slot ~= 3) then return end
 
-    if item.components.edible then
-        for i,foodtype in ipairs(FOODGROUP.OMNI.types) do
-            if foodtype == item.components.edible.foodtype then
-                return true
-            end
+    --Edible
+    for k, v in pairs(FOODGROUP.OMNI.types) do
+        if item:HasTag("edible_"..v) then
+            return true
         end
     end
 end

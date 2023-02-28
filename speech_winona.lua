@@ -888,6 +888,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "I feel all bright-eyed and bushy-tailed!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Maybe this ain't the right tool for the job...",
+
 	BATTLECRY =
 	{
 		GENERIC = "I'll demolish you!",
@@ -4748,7 +4751,7 @@ return{
 
         HAREBALL = "Yuck!",
         YOTR_DECOR_1_ITEM = "Gotta find a good place for it.",
-        YOTR_DECOR_2_ITEM = "Gotta find a good place for it.",             
+        YOTR_DECOR_2_ITEM = "Gotta find a good place for it.",
 
 		--
 		DREADSTONE = "It's evil-lookin', but tough as nails.",

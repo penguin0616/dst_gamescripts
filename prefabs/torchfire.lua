@@ -106,9 +106,31 @@ end
 
 --------------------------------------------------------------------------
 
+local function OnLightRangeDirty(inst)
+    inst._light.Light:SetRadius(TUNING.TORCH_RADIUS[inst._lightrange:value()])
+    inst._light.Light:SetFalloff(TUNING.TORCH_FALLOFF[inst._lightrange:value()])
+end
+
+local function SetLightRange(inst,value)
+    if value ~= inst._lightrange:value() then
+        inst._lightrange:set(value)
+        OnLightRangeDirty(inst)
+    end
+end
+
 local function common_postinit(inst)
     --Dedicated server does not need to spawn local particle fx
-    if TheNet:IsDedicated() then
+
+    inst._lightrange = net_tinybyte(inst.GUID, "torch._lightrange", "lightrangedirty")
+    if not TheWorld.ismastersim then
+        inst:ListenForEvent("lightrangedirty", OnLightRangeDirty)
+    else
+        inst.SetLightRange = SetLightRange
+    end
+    inst._lightrange:set(1)
+
+
+    if TheNet:IsDedicated() then        
         return
     elseif InitEnvelope ~= nil then
         InitEnvelope()

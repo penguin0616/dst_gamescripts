@@ -302,6 +302,7 @@ local states =
 			if not inst.sg.statemem.tired then
 				inst.sg.mem.last_tired_hit = nil
 				inst.sg.mem.tired_start = nil
+				inst.sg.mem.tired_hit_alt_count = nil
 				if inst.sg.statemem.struggling then
 					inst.Transform:SetSixFaced()
 				else
@@ -375,6 +376,7 @@ local states =
 			if not inst.sg.statemem.tired then
 				inst.sg.mem.last_tired_hit = nil
 				inst.sg.mem.tired_start = nil
+				inst.sg.mem.tired_hit_alt_count = nil
 				if not inst.hostile then
 					inst.components.health:SetAbsorptionAmount(0)
 					inst.components.health:StopRegen()
@@ -396,9 +398,21 @@ local states =
 		tags = { "tired", "busy", "nointerrupt", "canattach", "notalksound", "notiredhit" },
 
 		onenter = function(inst, loops)
+			inst.sg.statemem.isincombat = inst.hostile and not inst.defeated
 			inst.components.locomotor:Stop()
 			inst.Transform:SetNoFaced()
-			inst.AnimState:PlayAnimation("chained_hit")
+			if inst.hostile and not inst.defeated then
+				inst.sg.mem.tired_hit_alt_count = (inst.sg.mem.tired_hit_alt_count or 0) + 1
+				if inst.sg.mem.tired_hit_alt_count <= math.random(3) then
+					inst.sg.statemem.alt = true
+					inst.AnimState:PlayAnimation("tired_hit")
+				else
+					inst.sg.mem.tired_hit_alt_count = 0
+					inst.AnimState:PlayAnimation("chained_hit")
+				end
+			else
+				inst.AnimState:PlayAnimation("chained_hit")
+			end
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
 			inst.sg.statemem.loops = loops
 			inst.sg.mem.last_tired_hit = GetTime()
@@ -412,7 +426,12 @@ local states =
 				else
 					TryChatter(inst, "DAYWALKER_TIRED", 1)
 				end
-				if not (inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime()) then
+				if not inst.sg.statemem.alt and not (inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime()) then
+					inst.sg:RemoveStateTag("notiredhit")
+				end
+			end),
+			FrameEvent(12, function(inst)
+				if inst.sg.statemem.alt and not (inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime()) then
 					inst.sg:RemoveStateTag("notiredhit")
 				end
 			end),
@@ -438,6 +457,7 @@ local states =
 			if not inst.sg.statemem.tired then
 				inst.sg.mem.last_tired_hit = nil
 				inst.sg.mem.tired_start = nil
+				inst.sg.mem.tired_hit_alt_count = nil
 				if not inst.hostile then
 					inst.components.health:SetAbsorptionAmount(0)
 					inst.components.health:StopRegen()
@@ -475,6 +495,7 @@ local states =
 			end
 			inst.sg.mem.last_tired_hit = nil
 			inst.sg.mem.tired_start = nil
+			inst.sg.mem.tired_hit_alt_count = nil
 			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
 		end,
 

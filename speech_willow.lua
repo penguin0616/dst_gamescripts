@@ -889,6 +889,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "Wow, I think I needed that!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "Ugh. I'm gonna need something way stronger than this...",
+
 	BATTLECRY =
 	{
 		GENERIC = "It's you or me!",
@@ -4749,7 +4752,7 @@ return{
 
         HAREBALL = "Haha, nasty! Wait, I'm not the one who has to eat it, am I?",
         YOTR_DECOR_1_ITEM = "The more firelight around here, the better!",
-        YOTR_DECOR_2_ITEM = "The more firelight around here, the better!",             
+        YOTR_DECOR_2_ITEM = "The more firelight around here, the better!",
 
 		--
 		DREADSTONE = "Eww, why does this rock feel so cold and clammy?",

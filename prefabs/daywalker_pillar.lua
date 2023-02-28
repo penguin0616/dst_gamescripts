@@ -319,37 +319,44 @@ end
 
 --------------------------------------------------------------------------
 
+local function SpawnDebris(inst, anim, layer)
+	local fx = CreateEntity()
+
+	fx:AddTag("FX")
+	fx:AddTag("NOCLICK")
+	--[[Non-networked entity]]
+	fx.entity:SetCanSleep(false)
+	fx.persists = false
+
+	fx.entity:AddTransform()
+	fx.entity:AddAnimState()
+	fx.entity:AddSoundEmitter()
+
+	fx.AnimState:SetBank("daywalker_pillar")
+	fx.AnimState:SetBuild("daywalker_pillar")
+	fx.AnimState:PlayAnimation(anim)
+	fx.AnimState:SetFinalOffset(layer)
+
+	fx:ListenForEvent("animover", fx.Remove)
+
+	fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+
+	return fx
+end
+
 local function OnDebrisDirty(inst)
-	local anim =
-		(inst.debris:value() == 0 and "debris_small") or
-		(inst.debris:value() == 1 and "debris_low") or
-		(inst.debris:value() == 2 and "debris_med") or
-		nil
+	if inst.debris:value() == 0 then
+		local rnd = math.random(2)
+		SpawnDebris(inst, "debris_small_"..(rnd == 1 and "a" or "b"), -1)
+		inst:DoTaskInTime((2 + math.random(3)) * FRAMES, SpawnDebris, "debris_small_"..(rnd == 2 and "a" or "b"), -1)
+	else
+		local anim =
+			(inst.debris:value() == 1 and "debris_low") or
+			(inst.debris:value() == 2 and "debris_med") or
+			nil
 
-	if anim ~= nil then
-		local fx = CreateEntity()
-
-		fx:AddTag("FX")
-		fx:AddTag("NOCLICK")
-		--[[Non-networked entity]]
-		fx.entity:SetCanSleep(false)
-		fx.persists = false
-
-		fx.entity:AddTransform()
-		fx.entity:AddAnimState()
-		fx.entity:AddSoundEmitter()
-
-		fx.AnimState:SetBank("daywalker_pillar")
-		fx.AnimState:SetBuild("daywalker_pillar")
-		fx.AnimState:PlayAnimation(anim)
-		fx.AnimState:SetFinalOffset(1)
-
-		fx:ListenForEvent("animover", fx.Remove)
-
-		fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
-
-		if inst.debris:value() > 0 then
-			fx.SoundEmitter:PlaySound("daywalker/pillar/hit")
+		if anim ~= nil then
+			SpawnDebris(inst, anim, 1).SoundEmitter:PlaySound("daywalker/pillar/hit")
 		end
 	end
 end
@@ -424,7 +431,11 @@ local function OnWorked(inst, worker, workleft, numworks)
 	inst.SoundEmitter:KillSound("vibrate_loop")
 	inst.SoundEmitter:KillSound("chain_vibrate_loop")
 	if workleft <= 1 and not changed and worker ~= nil and worker:HasTag("player") then
-		if numworks > 1 and not worker:HasTag("weremoose") then
+		local mult =
+			worker.components.workmultiplier ~= nil and
+			worker.components.workmultiplier:GetMultiplier(ACTIONS.MINE) or
+			1
+		if numworks > mult and not worker:HasTag("weremoose") then
 			local prisoner = inst.prisoner:value()
 			if prisoner ~= nil then
 				inst.AnimState:PlayAnimation("pillar_shake", true)

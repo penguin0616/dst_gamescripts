@@ -887,6 +887,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "This imp feels best after a cozy rest.",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "This tool is too weak for what I seek.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Let's have some fun.",
@@ -4748,7 +4751,7 @@ return{
 
         HAREBALL = "Hyuyu! I see they're seasoned pranksters.",
         YOTR_DECOR_1_ITEM = "I should place this rabbit now that I've nabbed it.",
-        YOTR_DECOR_2_ITEM = "I should place this rabbit now that I've nabbed it.",             
+        YOTR_DECOR_2_ITEM = "I should place this rabbit now that I've nabbed it.",
 
 		--
 		DREADSTONE = "A stone as black as night.",

@@ -882,6 +882,9 @@ return{
 
     ANNOUNCE_COZY_SLEEP = "A well-rested warrior am I!",
 
+	--
+	ANNOUNCE_TOOL_TOOWEAK = "This meager tool hath not the strength to break it.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Valhalla awaits!",
@@ -4742,7 +4745,7 @@ return{
 
         HAREBALL = "Ha! I am no coward, pass it this way!",
         YOTR_DECOR_1_ITEM = "Let us set the rabbit torch alight!",
-        YOTR_DECOR_2_ITEM = "Let us set the rabbit torch alight!",             
+        YOTR_DECOR_2_ITEM = "Let us set the rabbit torch alight!",
 
 		--
 		DREADSTONE = "A stone of ill omen.",
