@@ -1001,8 +1001,8 @@ local function trackattackers(inst,data)
     end
 end
 
+local function AtriumOnDeath(inst,data)
 
-local function AtriumOnKilled(inst,data)
     trackattackers(inst,data)
     for ID, data in pairs(inst.attackerUSERIDs) do
         for i, player in ipairs(AllPlayers) do
@@ -1011,12 +1011,7 @@ local function AtriumOnKilled(inst,data)
                 break
             end
         end
-    end 
-end
-
-local function AtriumOnDeath(inst,data)
-
-    AtriumOnKilled(inst,{attacker = data.afflicter})
+    end
 
     if not CheckAtriumDecay(inst) then
         SetMusicLevel(inst, 3)
@@ -1487,7 +1482,6 @@ local function atrium_fn()
     inst:ListenForEvent("soldierschanged", OnSoldiersChanged)
     inst:ListenForEvent("miniondeath", OnMinionDeath)
     inst:ListenForEvent("death", AtriumOnDeath)
-    inst:ListenForEvent("killed", AtriumOnKilled)
     inst:ListenForEvent("attacked", trackattackers)
 
     return inst

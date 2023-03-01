@@ -1493,6 +1493,8 @@ return{
         TURF_MOSAIC_RED = "Not dirt",
         TURF_MOSAIC_BLUE = "Not dirt",
 
+        TURF_BEARD_RUG = "Not dirt",
+
 		POWCAKE = "Ka-pow!",
         CAVE_ENTRANCE = "Goes somewhere",
         CAVE_ENTRANCE_RUINS = "Goes somewhere",

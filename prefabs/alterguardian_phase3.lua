@@ -331,8 +331,7 @@ local function trackattackers(inst,data)
     end
 end
 
-
-local function OnKilled(inst,data)
+local function OnDead(inst,data)
     trackattackers(inst,data)
     for ID, data in pairs(inst.attackerUSERIDs) do
         for i, player in ipairs(AllPlayers) do
@@ -341,11 +340,7 @@ local function OnKilled(inst,data)
                 break
             end
         end
-    end 
-end
-
-local function OnDead(inst,data)
-    OnKilled(inst,{attacker = data.afflicter})
+    end
 end
 
 local function OnAttacked(inst, data)
@@ -465,7 +460,6 @@ local function fn()
     inst.attackerUSERIDs = {}
 
     inst:ListenForEvent("attacked", OnAttacked)
-    inst:ListenForEvent("killed", OnKilled)
     inst:ListenForEvent("death", OnDead)
 
     inst.OnSave = OnSave

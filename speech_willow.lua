@@ -1496,6 +1496,8 @@ return{
         TURF_MOSAIC_RED = "The ground is boring.",
         TURF_MOSAIC_BLUE = "The ground is boring.",
 
+        TURF_BEARD_RUG = "Does it burn?",
+
 		POWCAKE = "I wonder if it is flammable.",
         CAVE_ENTRANCE = "Who plugged that hole?",
         CAVE_ENTRANCE_RUINS = "Who plugged that hole?",

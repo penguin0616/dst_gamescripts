@@ -241,10 +241,10 @@ local CHATTER_DELAYS =
 	["DAYWALKER_ATTACK"] =			{ delay = 4, len = 1.5 },
 }
 
-local function TryChatter(inst, strtblname, index)
+local function TryChatter(inst, strtblname, index, force)
 	local t = GetTime()
 	local delays = CHATTER_DELAYS[strtblname]
-	if (inst.sg.mem.lastchatter or 0) + (delays ~= nil and delays.delay or 0) < t then
+	if force or (inst.sg.mem.lastchatter or 0) + (delays ~= nil and delays.delay or 0) < t then
 		inst.sg.mem.lastchatter = t
 		inst.components.talker:Chatter(strtblname, index or math.random(#STRINGS[strtblname]), delays ~= nil and delays.len or nil)
 	end
@@ -403,12 +403,14 @@ local states =
 			inst.Transform:SetNoFaced()
 			if inst.hostile and not inst.defeated then
 				inst.sg.mem.tired_hit_alt_count = (inst.sg.mem.tired_hit_alt_count or 0) + 1
-				if inst.sg.mem.tired_hit_alt_count <= math.random(3) then
+				if inst.sg.mem.tired_hit_alt_count <= 0 then
+					inst.AnimState:PlayAnimation("chained_hit")
+				elseif inst.sg.mem.tired_hit_alt_count > math.random(3) then
+					inst.sg.mem.tired_hit_alt_count = math.random(2) - 2
+					inst.AnimState:PlayAnimation("chained_hit")
+				else
 					inst.sg.statemem.alt = true
 					inst.AnimState:PlayAnimation("tired_hit")
-				else
-					inst.sg.mem.tired_hit_alt_count = 0
-					inst.AnimState:PlayAnimation("chained_hit")
 				end
 			else
 				inst.AnimState:PlayAnimation("chained_hit")
@@ -426,13 +428,23 @@ local states =
 				else
 					TryChatter(inst, "DAYWALKER_TIRED", 1)
 				end
-				if not inst.sg.statemem.alt and not (inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime()) then
-					inst.sg:RemoveStateTag("notiredhit")
+				if not inst.sg.statemem.alt then
+					if inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime() then
+						inst.sg.statemem.tired = true
+						inst.sg:GoToState("tired_stand")
+					else
+						inst.sg:RemoveStateTag("notiredhit")
+					end
 				end
 			end),
 			FrameEvent(12, function(inst)
-				if inst.sg.statemem.alt and not (inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime()) then
-					inst.sg:RemoveStateTag("notiredhit")
+				if inst.sg.statemem.alt then
+					if inst.hostile and inst.sg.mem.tired_start + TUNING.DAYWALKER_FATIGUE_TIRED_MIN_TIME < GetTime() then
+						inst.sg.statemem.tired = true
+						inst.sg:GoToState("tired_stand")
+					else
+						inst.sg:RemoveStateTag("notiredhit")
+					end
 				end
 			end),
 		},
@@ -931,19 +943,23 @@ local states =
 				inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.4)
 			end),
 			FrameEvent(11, function(inst)
-				if not (inst.sg.statemem.trytired and inst:IsFatigued() or inst.defeated) then
-					inst.sg:AddStateTag("caninterrupt")
+				if inst.sg.statemem.trytired and inst:IsFatigued() or inst.defeated then
+					inst.sg:GoToState("tired_pre")
 				end
 			end),
-			--[[FrameEvent(13, function(inst)
-				if not (inst.sg.statemem.trytired and inst:IsFatigued() or inst.defeated) then
+			FrameEvent(13, function(inst)
+				if not inst.defeated and not (inst.sg.statemem.doattack and ChooseAttack(inst)) then
 					inst.sg:RemoveStateTag("busy")
 				end
-			end),]]
+			end),
 		},
 
 		events =
 		{
+			EventHandler("doattack", function(inst)
+				inst.sg.statemem.doattack = true
+				return inst.sg:HasStateTag("busy")
+			end),
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					if inst.sg.statemem.trytired and inst:IsFatigued() or inst.defeated then
@@ -1042,14 +1058,17 @@ local states =
 				DoAOEAttack(inst, 0.4, 1.6, 1, 1, false, targets)
 				--local targets table; this code is valid even if we left state
 				for k in pairs(targets) do
-					if not (k:IsValid() and k:HasTag("smallcreature")) then
-						--reinvigorated when successfully hitting something not small
-						inst:DeltaFatigue(TUNING.DAYWALKER_FATIGUE.POUNCE_HIT)
-						return
+					if k:IsValid() and k:HasTag("smallcreature") then
+						targets[k] = nil
 					end
 				end
-				--getting tired from whiffing all these dashing attacks
-				inst:DeltaFatigue(TUNING.DAYWALKER_FATIGUE.POUNCE_MISS)
+				if next(targets) ~= nil then
+					--reinvigorated when successfully hitting something not small
+					inst:DeltaFatigue(TUNING.DAYWALKER_FATIGUE.POUNCE_HIT)
+				else
+					--getting tired from whiffing all these dashing attacks
+					inst:DeltaFatigue(TUNING.DAYWALKER_FATIGUE.POUNCE_MISS)
+				end
 			end),
 			FrameEvent(14, function(inst)
 				inst.sg:RemoveStateTag("nointerrupt")
@@ -1071,7 +1090,7 @@ local states =
 
 						local function IsSlamTarget(guy)
 							if guy:IsValid() and
-								guy:HasTag("player") and
+								--guy:HasTag("player") and
 								not (guy.components.health ~= nil and
 									guy.components.health:IsDead() or
 									guy:HasTag("playerghost")) and
@@ -1113,7 +1132,7 @@ local states =
 							inst.sg:GoToState("attack_pounce_pst", targethit)
 						end
 					elseif inst.sg.statemem.speedmult >= 1 and inst:IsFatigued() then
-						inst.sg:GoToState("tired_pre")
+						inst.sg:GoToState("attack_pounce_pst_tired")
 					else
 						inst.sg:GoToState("attack_pounce_pst")
 					end
@@ -1159,6 +1178,25 @@ local states =
 					else
 						inst.sg:GoToState("idle")
 					end
+				end
+			end),
+		},
+	},
+
+	State{
+		name = "attack_pounce_pst_tired",
+		tags = { "busy", "caninterrupt", "pounce_recovery" },
+
+		onenter = function(inst)
+			inst.AnimState:PlayAnimation("atk3_pst_tired")
+			TryChatter(inst, "DAYWALKER_TIRED", 1, true)
+		end,
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg:GoToState("tired_pre")
 				end
 			end),
 		},
@@ -1340,6 +1378,7 @@ local states =
 			end),
 			FrameEvent(61, function(inst)
 				inst.sg:RemoveStateTag("nointerrupt")
+				inst.sg:AddStateTag("caninterrupt")
 			end),
 		},
 

@@ -1277,6 +1277,8 @@ STRINGS =
         TURF_MOSAIC_BLUE = "Blue Mosaic Flooring",
         TURF_MOSAIC_RED = "Red Mosaic Flooring",
 
+        TURF_BEARD_RUG = "Beard Hair Rug",
+
         COOKPOT = "Crock Pot",
         DUG_GRASS = "Grass Tuft",
         DUG_SAPLING = "Sapling",

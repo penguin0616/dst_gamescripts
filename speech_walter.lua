@@ -1489,6 +1489,8 @@ return{
         TURF_MOSAIC_RED = "A patch of ground.",
         TURF_MOSAIC_BLUE = "A patch of ground.",
 
+        TURF_BEARD_RUG = "A patch of ground.",
+
 		POWCAKE = "This could go badly.",
         CAVE_ENTRANCE = "That rock's blocking the entrance!",
         CAVE_ENTRANCE_RUINS = "There's probably tons of good stuff in there.",

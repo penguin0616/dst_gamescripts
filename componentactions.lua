@@ -1572,7 +1572,7 @@ local COMPONENT_ACTIONS =
 
         complexprojectile = function(inst, doer, pos, actions, right, target)
             if right and not TheWorld.Map:IsGroundTargetBlocked(pos)
-				and not (inst.replica.equippable ~= nil and (inst.replica.equippable:IsRestricted(doer) or inst.replica.equippable:ShouldPreventUnequipping(doer)))
+				and not (inst.replica.equippable ~= nil and (inst.replica.equippable:IsRestricted(doer) or inst.replica.equippable:ShouldPreventUnequipping()))
 				and not inst:HasTag("special_action_toss") then
 				table.insert(actions, ACTIONS.TOSS)
             end
@@ -1607,7 +1607,7 @@ local COMPONENT_ACTIONS =
 
         inventoryitem = function(inst, doer, pos, actions, right, target)
             if not right and inst.replica.inventoryitem:IsHeldBy(doer) then
-                if inst.replica.equippable == nil or not inst.replica.equippable:IsEquipped() or inst.replica.equippable:IsEquipped() and not inst.replica.equippable:ShouldPreventUnequipping(doer) then
+                if inst.replica.equippable == nil or not inst.replica.equippable:IsEquipped() or inst.replica.equippable:IsEquipped() and not inst.replica.equippable:ShouldPreventUnequipping() then
                     table.insert(actions, ACTIONS.DROP)
                 end
             end
@@ -1739,7 +1739,7 @@ local COMPONENT_ACTIONS =
             if right and
                 not (doer.components.playercontroller ~= nil and doer.components.playercontroller.isclientcontrollerattached) and
                 not TheWorld.Map:IsGroundTargetBlocked(target:GetPosition()) and
-				(inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer) and not inst.replica.equippable:ShouldPreventUnequipping(doer)) and
+				(inst.replica.equippable == nil or not inst.replica.equippable:IsRestricted(doer) and not inst.replica.equippable:ShouldPreventUnequipping()) and
 				not inst:HasTag("special_action_toss") then
 
                 table.insert(actions, ACTIONS.TOSS)
@@ -1994,7 +1994,7 @@ local COMPONENT_ACTIONS =
 
         equippable = function(inst, doer, actions)
             if inst.replica.equippable:IsEquipped() then
-                if not inst.replica.equippable:ShouldPreventUnequipping(doer) then
+                if not inst.replica.equippable:ShouldPreventUnequipping() then
                     table.insert(actions, ACTIONS.UNEQUIP)
                 end
             elseif not inst.replica.equippable:IsRestricted(doer) then

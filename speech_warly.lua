@@ -1489,6 +1489,8 @@ return{
         TURF_MOSAIC_RED = "It's like an ingredient for the ground.",
         TURF_MOSAIC_BLUE = "It's like an ingredient for the ground.",
 
+        TURF_BEARD_RUG = "It's like an ingredient for the ground.",
+
 		POWCAKE = "I would not feed this to my worst enemies. Or would I...",
         CAVE_ENTRANCE = "I wonder what is underneath that?",
         CAVE_ENTRANCE_RUINS = "What is within?",

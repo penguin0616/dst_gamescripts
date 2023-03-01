@@ -1494,6 +1494,8 @@ return{
         TURF_MOSAIC_RED = "Floor or ceiling, depending on your perspective.",
         TURF_MOSAIC_BLUE = "Floor or ceiling, depending on your perspective.",
 
+        TURF_BEARD_RUG = "Floor or ceiling, depending on your perspective.",
+
 		POWCAKE = "Hyuyu! This cake packs a wallop!",
         CAVE_ENTRANCE = "Clear the way I say!",
         CAVE_ENTRANCE_RUINS = "Let me have a peek inside!",

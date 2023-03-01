@@ -1493,6 +1493,8 @@ return{
         TURF_MOSAIC_RED = "Some ground.",
         TURF_MOSAIC_BLUE = "Some ground.",
 
+        TURF_BEARD_RUG = "Some ground.",
+
 		POWCAKE = "I would have to be desperate.",
         CAVE_ENTRANCE = "Someone is trying to keep the underground at bay.",
         CAVE_ENTRANCE_RUINS = "Someone is trying to keep the underground at bay.",

@@ -466,7 +466,7 @@ local PHASES =
 		end,
 	},
 	[2] = {
-		hp = 0.7,
+		hp = 0.8,
 		fn = function(inst)
 			if inst.hostile then
 				inst.nostalkcd = false
@@ -476,7 +476,7 @@ local PHASES =
 		end,
 	},
 	[3] = {
-		hp = 0.4,
+		hp = 0.5,
 		fn = function(inst)
 			if inst.hostile then
 				inst.nostalkcd = true
@@ -503,13 +503,7 @@ local PHASES =
 local function UpdatePlayerTargets(inst)
 	local toadd = {}
 	local toremove = {}
-	local x, y, z
-	x = inst.components.knownlocations:GetLocation("prison")
-	if x ~= nil then
-		x, y, z = x:Get()
-	else
-		x, y, z = inst.Transform:GetWorldPosition()
-	end
+	local x, y, z = inst.Transform:GetWorldPosition()
 
 	for k in pairs(inst.components.grouptargeter:GetTargets()) do
 		toremove[k] = true
@@ -809,12 +803,14 @@ local function OnLoadPostPass(inst, ents, data)
 			harassed = true
 		end
 	end
-	if harassed then
-		inst:MakeHarassed()
-		inst.sg:GoToState("struggle_idle")
-	elseif not (data ~= nil and data.hostile or inst.defeated) then
-		inst:MakeHarassed()
-		inst.sg:GoToState("tired")
+	if not inst.chained then
+		if harassed then
+			inst:MakeHarassed()
+			inst.sg:GoToState("struggle_idle")
+		elseif not (data ~= nil and data.hostile or inst.defeated) then
+			inst:MakeHarassed()
+			inst.sg:GoToState("tired")
+		end
 	end
 end
 
@@ -827,6 +823,19 @@ end
 local function OnTalk(inst)
 	if not inst.sg:HasStateTag("notalksound") then
 		inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
+	end
+end
+
+--------------------------------------------------------------------------
+
+local function PushMusic(inst)
+	if ThePlayer == nil or not inst:HasTag("hostile") then
+		inst._playingmusic = false
+	elseif ThePlayer:IsNear(inst, inst._playingmusic and 40 or 20) then
+		inst._playingmusic = true
+		ThePlayer:PushEvent("triggeredevent", { name = "daywalker" })
+	elseif inst._playingmusic and not ThePlayer:IsNear(inst, 50) then
+		inst._playingmusic = false
 	end
 end
 
@@ -846,6 +855,7 @@ local function fn()
 	MakeGiantCharacterPhysics(inst, MASS, 1.3)
 
 	inst:AddTag("epic")
+	inst:AddTag("noepicmusic")
 	inst:AddTag("monster")
 	inst:AddTag("hostile")
 	inst:AddTag("scarytoprey")
@@ -869,6 +879,12 @@ local function fn()
 	inst._stalking = net_entity(inst.GUID, "daywalker._stalking", "stalkingdirty")
 
 	inst.entity:SetPristine()
+
+	--Dedicated server does not need to trigger music
+	if not TheNet:IsDedicated() then
+		inst._playingmusic = false
+		inst:DoPeriodicTask(1, PushMusic, 0)
+	end
 
 	if not TheWorld.ismastersim then
 		inst:ListenForEvent("headtrackingdirty", OnHeadTrackingDirty)

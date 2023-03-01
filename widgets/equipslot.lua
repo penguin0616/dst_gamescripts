@@ -42,7 +42,7 @@ function EquipSlot:OnControl(control, down)
                     self.equipslot == active_item.replica.equippable:EquipSlot() and
                     not active_item.replica.equippable:IsRestricted(self.owner) then
                     if self.tile ~= nil and self.tile.item ~= nil then
-                        if self.tile.item.replica.equippable == nil or not self.tile.item.replica.equippable:ShouldPreventUnequipping(self.owner) then
+                        if self.tile.item.replica.equippable == nil or not self.tile.item.replica.equippable:ShouldPreventUnequipping() then
                             inventory:SwapEquipWithActiveItem()
                         end
                     else
@@ -50,7 +50,7 @@ function EquipSlot:OnControl(control, down)
                     end
                 end
             elseif self.tile ~= nil and self.tile.item ~= nil and self.owner.replica.inventory:GetNumSlots() > 0 then
-                if self.tile.item.replica.equippable == nil or not self.tile.item.replica.equippable:ShouldPreventUnequipping(self.owner) then
+                if self.tile.item.replica.equippable == nil or not self.tile.item.replica.equippable:ShouldPreventUnequipping() then
                     inventory:TakeActiveItemFromEquipSlot(self.equipslot)
                 end
             end
@@ -59,7 +59,7 @@ function EquipSlot:OnControl(control, down)
             self.tile ~= nil and
             self.tile.item ~= nil then
                 if TheInput:IsControlPressed(CONTROL_FORCE_TRADE) then
-                    if self.tile.item.replica.equippable == nil or not self.tile.item.replica.equippable:ShouldPreventUnequipping(self.owner) then
+                    if self.tile.item.replica.equippable == nil or not self.tile.item.replica.equippable:ShouldPreventUnequipping() then
                         inventory:DropItemFromInvTile(self.tile.item, TheInput:IsControlPressed(CONTROL_FORCE_STACK))
                     end
                 else

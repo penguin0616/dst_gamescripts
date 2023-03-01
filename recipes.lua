@@ -511,6 +511,7 @@ Recipe2("turf_woodfloor",					{Ingredient("boards", 1)},																				TECH
 Recipe2("turf_checkerfloor",				{Ingredient("marble", 1)},																				TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("turf_carpetfloor",					{Ingredient("boards", 1), Ingredient("beefalowool", 1)},												TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("turf_dragonfly",					{Ingredient("dragon_scales", 1), Ingredient("cutstone", 1)},											TECH.SCIENCE_TWO,			{numtogive=4})
+Recipe2("turf_beard_rug",					{Ingredient("beardhair", 4), Ingredient("cutgrass", 4)},												TECH.SCIENCE_TWO,			{numtogive=4})
 
 Recipe2("turf_carpetfloor2",				{Ingredient("boards", 1), Ingredient("beefalowool", 1)},												TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("turf_mosaic_grey",					{Ingredient("marble", 1)},																				TECH.SCIENCE_TWO,			{numtogive=4})

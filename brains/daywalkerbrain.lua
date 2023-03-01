@@ -141,7 +141,10 @@ function DaywalkerBrain:OnStart()
 						WaitNode(RESET_COMBAT_DELAY),
 						ActionNode(function() self.inst:SetEngaged(false) end),
 					},
-					Wander(self.inst, GetHomePos, 5, nil, nil, nil, nil, { should_run = true }),
+					PriorityNode({
+						FailIfSuccessDecorator(Leash(self.inst, GetHomePos, 16, 2, true)),
+						Wander(self.inst, nil, nil, nil, nil, nil, nil, { should_run = true }),
+					}, 0.5),
 				},
 			}, 0.5)),
 	}, 0.5)

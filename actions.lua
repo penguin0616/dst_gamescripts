@@ -585,7 +585,7 @@ end
 
 ACTIONS.UNEQUIP.fn = function(act)
     if act.invobject ~= nil and act.doer.components.inventory ~= nil then
-        if act.invobject.components.equippable ~= nil and act.invobject.components.equippable:ShouldPreventUnequipping(act.doer) then
+        if act.invobject.components.equippable ~= nil and act.invobject.components.equippable:ShouldPreventUnequipping() then
             return nil
         end
         if act.invobject.components.inventoryitem.cangoincontainer and not GetGameModeProperty("non_item_equips") then
@@ -800,7 +800,7 @@ end
 ACTIONS.DROP.fn = function(act)
     if act.invobject ~= nil and act.invobject.components.equippable ~= nil and
         act.invobject.components.equippable:IsEquipped() and
-        act.invobject.components.equippable:ShouldPreventUnequipping(act.doer) then
+        act.invobject.components.equippable:ShouldPreventUnequipping() then
         return nil
     end
 
@@ -2829,7 +2829,7 @@ ACTIONS.TOSS.fn = function(act)
 				projectile = nil
 			end
 		end
-		if projectile ~= nil and projectile.components.complexprojectile ~= nil and not (projectile.components.equippable ~= nil and (projectile.components.equippable:IsRestricted(act.doer) or projectile.components.equippable:ShouldPreventUnequipping(act.doer))) then
+		if projectile ~= nil and projectile.components.complexprojectile ~= nil and not (projectile.components.equippable ~= nil and (projectile.components.equippable:IsRestricted(act.doer) or projectile.components.equippable:ShouldPreventUnequipping())) then
 			projectile = act.doer.components.inventory:DropItem(projectile, false)
 			if projectile ~= nil then
                 local pos = nil

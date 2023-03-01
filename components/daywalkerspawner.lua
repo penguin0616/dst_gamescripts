@@ -9,6 +9,7 @@ local DayWalkerSpawner = Class(function(self, inst)
     self.inst = inst
 
     self.days_to_spawn = 0
+    self.power_level = 1
     --self.daywalker = nil
     self.spawnpoints = {}
 
@@ -43,6 +44,13 @@ local NO_PLAYER_RADIUS = 35
 local ARENA_RADIUS = IS_CLEAR_AREA_RADIUS -- Must be <= IS_CLEAR_AREA_RADIUS!
 local ARENA_PILLARS = 3
 
+function DayWalkerSpawner:IncrementPowerLevel()
+    self.power_level = math.min(self.power_level + 1, 2) -- TODO(JBK): V2C
+end
+
+function DayWalkerSpawner:GetPowerLevel()
+    return self.power_level
+end
 
 function DayWalkerSpawner:IsValidSpawningPoint(x, y, z)
     for dx = -1, 1 do
@@ -167,7 +175,12 @@ end
 
 function DayWalkerSpawner:WatchDaywalker(daywalker)
     self.daywalker = daywalker
-    self.inst:ListenForEvent("onremove", function() self.daywalker = nil end, self.daywalker)
+    self.inst:ListenForEvent("onremove", function()
+		if self.daywalker.defeated then
+			self:IncrementPowerLevel()
+		end
+        self.daywalker = nil
+    end, self.daywalker)
 end
 
 function DayWalkerSpawner:OnPostInit()
@@ -177,6 +190,7 @@ end
 function DayWalkerSpawner:OnSave()
     local data = {
         days_to_spawn = self.days_to_spawn,
+        power_level = self.power_level,
     }
     local refs = nil
 
@@ -195,6 +209,7 @@ function DayWalkerSpawner:OnLoad(data)
     end
 
     self.days_to_spawn = data.days_to_spawn or self.days_to_spawn
+    self.power_level = data.power_level or self.power_level
 end
 
 function DayWalkerSpawner:LoadPostPass(ents, data)

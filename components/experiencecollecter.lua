@@ -1,3 +1,5 @@
+local skilltreedefs = require "prefabs/skilltree_defs"
+
 local ExperienceCollecter = Class(function(self, inst)
     self.inst = inst
 
@@ -9,11 +11,13 @@ function ExperienceCollecter:SetTask()
 end
 
 function ExperienceCollecter:UpdateXp()
+    if not skilltreedefs.SKILLTREE_DEFS[self.inst.prefab] then
+        return nil
+    end    
     self.inst.components.skilltreeupdater:AddSkillXP(1)
 end
 
 function ExperienceCollecter:LongUpdate(dt)
-    print("LONG UPDATE",dt,TUNING.SEG_TIME)
     local timeremaining = 0
 
     if self.inst.xpgeneration_task then
@@ -22,7 +26,6 @@ function ExperienceCollecter:LongUpdate(dt)
 
     if dt < timeremaining then        
         timeremaining = timeremaining - dt
-        print("timeremaining",timeremaining)
     else
         local cycles,remaining = math.modf(dt/TUNING.SEG_TIME)
         
@@ -37,7 +40,6 @@ function ExperienceCollecter:LongUpdate(dt)
         end
 
         timeremaining = remaining * TUNING.SEG_TIME
-        print("timeremaining",timeremaining)
     end
 
     if not self.inst.xpgeneration_task then

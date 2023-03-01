@@ -38,7 +38,7 @@ function Equippable:IsRestricted(target)
     return restrictedtag ~= nil and not target:HasTag(restrictedtag)
 end
 
-function Equippable:ShouldPreventUnequipping(target)
+function Equippable:ShouldPreventUnequipping()
     return self._preventunequipping:value()
 end
 

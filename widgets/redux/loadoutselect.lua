@@ -239,7 +239,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
     self.switch_context_button = self:AddChild(TEMPLATES.StandardButton(function() self:SwitchContext() end, STRINGS.SKILLTREE.SKILLTREE, {200, 50}))
     self.switch_context_button:SetPosition(300,-315)
 
-    if self.currentcharacter and skilltreedefs.SKILLTREE_DEFS[self.currentcharacter] then
+    if self.currentcharacter and skilltreedefs.SKILLTREE_DEFS[self.currentcharacter] and not TheInput:ControllerAttached() and not ThePlayer then
         self.switch_context_button:Show()
     else
         self.switch_context_button:Hide()
@@ -247,19 +247,34 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
 
 end)
 
+function LoadoutSelect:SetDirectionsOfFocus()
+    if self.skilltree then
+        self.menu:SetFocusChangeDir(MOVE_LEFT, self.skilltree)
+        self.skilltree:SetFocusChangeDir(MOVE_RIGHT, self.menu)
+       -- self.presetsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
+    else
+        self.menu:SetFocusChangeDir(MOVE_LEFT, self.presetsbutton)
+        self.presetsbutton:SetFocusChangeDir(MOVE_RIGHT, self.menu)
+        self.presetsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
+    end
+end
+
 function LoadoutSelect:SwitchContext()
     if self.currentContext == "wardorbe" then
 
         self.loadout_root.wardrobe_root:Hide()
 
         self.skilltree = self.loadout_root:AddChild(SkillTreeWidget(self.currentcharacter,{skillseletion=TheSkillTree.activatedskills[self.currentcharacter]},true))
-        self.skilltree:SetPosition(380,120)       
+        self.skilltree:SetPosition(380,120)
         self.switch_context_button:SetText(STRINGS.UI.WARDROBESCREEN.TITLE)
         self.currentContext = "skills"
 
         if self.parent.ChangeTitle then
             self.parent:ChangeTitle(STRINGS.SKILLTREE.SKILLTREE)
         end
+
+        self.skilltree.default_focus:SetFocus()
+        self:SetDirectionsOfFocus()
     else
         self.skilltree:Kill()
         self.loadout_root.wardrobe_root:Show()
@@ -269,6 +284,8 @@ function LoadoutSelect:SwitchContext()
         if self.parent.ChangeTitle then
             self.parent:ChangeTitle(STRINGS.UI.WARDROBESCREEN.TITLE)
         end        
+        self.presetsbutton:SetFocus()
+        self:SetDirectionsOfFocus()
     end
 end
 
@@ -579,6 +596,10 @@ function LoadoutSelect:OnControl(control, down)
             self:_LoadItemSkinsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
+        elseif control == CONTROL_MENU_MISC_2 and self.currentcharacter and skilltreedefs.SKILLTREE_DEFS[self.currentcharacter] then
+            self:SwitchContext()
+            TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+            return true            
         end
 	end
 
@@ -600,6 +621,11 @@ function LoadoutSelect:GetHelpText()
         table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SKIN_PRESETS.TITLE)
         if self:_ShouldShowStartingItemSkinsButton() then
 		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_4) .. " " .. STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE)
+        end
+
+        if self.currentcharacter and skilltreedefs.SKILLTREE_DEFS[self.currentcharacter] then
+            local text = self.switch_context_button:GetText()
+            table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. text)
         end
 
 		return table.concat(t, "  ")

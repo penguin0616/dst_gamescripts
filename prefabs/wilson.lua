@@ -82,10 +82,7 @@ local function OnResetBeard(inst)
 end
 
 --tune the beard economy...
-local BEARD_DAYS =           { 4, 8, 16 }
-local BEARD_DAYS_SKILL_I =   { 3, 7, 15 }
-local BEARD_DAYS_SKILL_II =  { 3, 6, 13 }
-local BEARD_DAYS_SKILL_III = { 2, 5, 11 }
+local BEARD_DAYS = { 4, 8, 16 }
 
 local BEARD_BITS = { 
                     TUNING.WILSON_BEARD_BITS.LEVEL1, 
@@ -120,31 +117,12 @@ local function OnGrowLongBeard(inst, skinname)
     inst.components.beard.bits = BEARD_BITS[3]
 end
 
-local function skills_upgradebeardspeed(inst)
-    if inst.components.skilltreeupdater:IsActivated("wilson_beard_6") then
-        local data = BEARD_DAYS_SKILL_III
-        inst.components.beard:UpdateCallbackTimes(data)
-    elseif inst.components.skilltreeupdater:IsActivated("wilson_beard_5") then
-        local data = BEARD_DAYS_SKILL_II
-        inst.components.beard:UpdateCallbackTimes(data)
-    elseif inst.components.skilltreeupdater:IsActivated("wilson_beard_4") then
-        local data = BEARD_DAYS_SKILL_I
-        inst.components.beard:UpdateCallbackTimes(data)
-    end
-end
-
 local function EmptyBeard(inst)
     local beard_sack = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BEARD)
     if beard_sack then
         beard_sack.components.container:DropEverything()
         beard_sack:Remove()
     end
-end
-
-local function openbeardsack(inst)
-    local beard_sack = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BEARD)
-    print(beard_sack.prefab)
-    beard_sack.components.container:Open(inst)
 end
 
 local function master_postinit(inst)
@@ -160,13 +138,8 @@ local function master_postinit(inst)
     inst.components.beard:AddCallback(BEARD_DAYS[2], OnGrowMediumBeard)
     inst.components.beard:AddCallback(BEARD_DAYS[3], OnGrowLongBeard)
 
-    inst.skills_upgradebeardspeed = skills_upgradebeardspeed
-
-
     inst.EmptyBeard = EmptyBeard
     inst:ListenForEvent("death", EmptyBeard)
-    inst:ListenForEvent("onremove", EmptyBeard)
-    --inst:DoTaskInTime(0,openbeardsack)
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/wilson").master_postinit(inst)

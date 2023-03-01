@@ -1489,6 +1489,8 @@ return{
         TURF_MOSAIC_RED = "Some ground that we dug up.",
         TURF_MOSAIC_BLUE = "Some ground that we dug up.",
 
+        TURF_BEARD_RUG = "Some ground that we dug up.",        
+
 		POWCAKE = "Mum never let me have these.",
         CAVE_ENTRANCE = "It's plugged up.",
         CAVE_ENTRANCE_RUINS = "It's plugged up.",

@@ -1489,6 +1489,8 @@ return{
         TURF_MOSAIC_RED = "The ground. You step on it.",
         TURF_MOSAIC_BLUE = "The ground. You step on it.",
 
+        TURF_BEARD_RUG = "The ground. You step on it.",
+
 		POWCAKE = "The crowning achievement of the agricultural-industrial complex.",
         CAVE_ENTRANCE = "The placement of that rock looks intentional.",
         CAVE_ENTRANCE_RUINS = "The passage has been obstructed.",

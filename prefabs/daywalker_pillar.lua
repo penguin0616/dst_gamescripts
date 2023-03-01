@@ -518,6 +518,7 @@ local function fn()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddSoundEmitter()
+	inst.entity:AddMiniMapEntity()
 	inst.entity:AddNetwork()
 
 	inst:AddTag("daywalker_pillar")
@@ -529,6 +530,9 @@ local function fn()
 	inst.AnimState:SetBank("daywalker_pillar")
 	inst.AnimState:SetBuild("daywalker_pillar")
 	inst.AnimState:PlayAnimation("idle", true)
+
+	inst.MiniMapEntity:SetIcon("daywalker_pillar.png")
+	inst.MiniMapEntity:SetPriority(4)
 
 	inst.enablechains = net_bool(inst.GUID, "daywalker_pillar.enablechains", "chainsdirty")
 	inst.prisoner = net_entity(inst.GUID, "daywalker_pillar.prisoner")

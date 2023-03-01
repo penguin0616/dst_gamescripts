@@ -1495,6 +1495,8 @@ return{
         TURF_MOSAIC_RED = "That's a chunk of ground.",
         TURF_MOSAIC_BLUE = "That's a chunk of ground.",
 
+        TURF_BEARD_RUG = "That's a chunk of ground.",
+
 		POWCAKE = "Gotta eat what you can around here.",
         CAVE_ENTRANCE = "Into the depths!",
         CAVE_ENTRANCE_RUINS = "Is it wise to go deeper?",

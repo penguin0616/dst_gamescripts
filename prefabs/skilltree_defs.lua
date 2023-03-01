@@ -503,11 +503,6 @@ CreateSkillTreeFor("wilson", {
         --pos = {1,0},
         group = "beard",
         tags = {"beard"},
-        onactivate = function(inst, fromload)
-                if not inst.components.skilltreeupdater:IsActivated("wilson_beard_5") and not inst.components.skilltreeupdater:IsActivated("wilson_beard_6") then
-                    inst:skills_upgradebeardspeed()
-                end
-            end,
         root = true,
         connects = {
             "wilson_beard_5",
@@ -521,11 +516,6 @@ CreateSkillTreeFor("wilson", {
         --pos = {1,-1},
         group = "beard",
         tags = {"beard"},
-        onactivate = function(inst, fromload)
-                if not inst.components.skilltreeupdater:IsActivated("wilson_beard_6") then
-                    inst:skills_upgradebeardspeed()
-                end
-            end,
         connects = {
             "wilson_beard_6",
         },
@@ -538,9 +528,6 @@ CreateSkillTreeFor("wilson", {
         --pos = {1,-2},
         group = "beard",
         tags = {"beard"},
-        onactivate = function(inst, fromload)
-                inst:skills_upgradebeardspeed()
-            end,
         connects = {
         },
     },

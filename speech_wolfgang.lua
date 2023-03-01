@@ -1490,6 +1490,8 @@ return{
         TURF_MOSAIC_RED = "Step stones.",
         TURF_MOSAIC_BLUE = "Step stones.",
 
+        TURF_BEARD_RUG = "Is beard for the ground.",        
+
 		POWCAKE = "Is made of nothings!",
         CAVE_ENTRANCE = "Even I am not that mighty.",
         CAVE_ENTRANCE_RUINS = "Even I am not that mighty.",

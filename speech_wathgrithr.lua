@@ -1488,6 +1488,8 @@ return{
         TURF_MOSAIC_GREY = "A piece of the battlefield.",
         TURF_MOSAIC_RED = "A piece of the battlefield.",
         TURF_MOSAIC_BLUE = "A piece of the battlefield.",
+        
+        TURF_BEARD_RUG = "A piece of the battlefield.",
 
 		POWCAKE = "What in the name of the unicorn is this?",
         CAVE_ENTRANCE = "What treasures lie beneath?",

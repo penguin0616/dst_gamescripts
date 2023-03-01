@@ -1,11 +1,37 @@
+local function DoCallbacksForDay(self)
+    local cb = self.callbacks[self.daysgrowth]
+    if cb ~= nil then
+        cb(self.inst, self.skinname)
+    end
+end
 local function OnDayComplete(self)
     if not self.pause then
         self.daysgrowth = self.daysgrowth + 1
-        local cb = self.callbacks[self.daysgrowth]
-        if cb ~= nil then
-            cb(self.inst, self.skinname)
+        DoCallbacksForDay(self)
+
+        local bonusdays = 0
+        local skilltreeupdater = self.inst.components.skilltreeupdater
+        if skilltreeupdater then
+            local accumulation = 0
+            if skilltreeupdater:IsActivated("wilson_beard_6") then
+                accumulation = 0.55 -- 4, 8, 16 -> 2, 5, 10 -> -11
+            elseif skilltreeupdater:IsActivated("wilson_beard_5") then
+                accumulation = 0.30 -- 4, 8, 16 -> 3, 6, 12 -> -7
+            elseif skilltreeupdater:IsActivated("wilson_beard_4") then
+                accumulation = 0.05 -- 4, 8, 16 -> 3, 7, 15 -> -3
+            end
+            self.daysgrowthaccumulator = self.daysgrowthaccumulator + accumulation
+            bonusdays = math.ceil(self.daysgrowthaccumulator)
+            if bonusdays > 0 then
+                self.daysgrowthaccumulator = self.daysgrowthaccumulator - bonusdays
+                for i = 1, bonusdays do
+                    self.daysgrowth = self.daysgrowth + 1
+                    DoCallbacksForDay(self)
+                end
+            end
         end
-        self:UpdateBeardInventory()
+
+        self:UpdateBeardInventory() -- Update inventory last to lower networking.
     end
 end
 
@@ -20,6 +46,7 @@ local Beard = Class(function(self, inst)
     inst:AddTag("bearded")
 
     self.daysgrowth = 0
+    self.daysgrowthaccumulator = 0
     self.callbacks = {}
     self.prize = nil
     self.bits = 0
@@ -114,27 +141,9 @@ function Beard:AddCallback(day, cb)
     self.callbacks[day] = cb
 end
 
--- THIS DATA NEEDS TO BE IN ASCENDING ORDER
-function Beard:UpdateCallbackTimes(data)
-
-    local ranks = {}
-    for day,cb in pairs(self.callbacks) do
-        table.insert(ranks, {day, cb})
-    end
-    
-    table.sort(ranks, function (a, b) return a[1] < b[1] end)
-    
-    for i=1,#ranks do
-        if ranks[i][1] >  self.daysgrowth and data[i] <= self.daysgrowth then  
-            self.callbacks[ranks[i][1]](self.inst, self.skinname)
-        end
-        self.callbacks[data[i]] = ranks[i][2]
-        self.callbacks[ranks[i][1]] = nil
-    end
-end
-
 function Beard:Reset()
     self.daysgrowth = 0
+    self.daysgrowthaccumulator = 0
     self.bits = 0
     if self.onreset ~= nil then
         self.onreset(self.inst)
@@ -146,6 +155,7 @@ function Beard:OnSave()
     return
     {
         growth = self.daysgrowth,
+        growthaccumulator = self.daysgrowthaccumulator,
         bits = self.bits,
         skinname = self.skinname
     }
@@ -160,6 +170,9 @@ function Beard:OnLoad(data)
     end
     if data.growth ~= nil then
         self.daysgrowth = data.growth
+    end
+    if data.growthaccumulator ~= nil then
+        self.daysgrowthaccumulator = data.growthaccumulator
     end
     if data.skinname ~= nil then
         self.skinname = data.skinname
@@ -206,7 +219,6 @@ function Beard:GetBeardSkinAndLength()
 end
 
 function Beard:UpdateBeardInventory()
-
     if self.inst.components.skilltreeupdater and self.inst.components.skilltreeupdater:IsActivated("wilson_beard_7") then
         local level = nil
         if self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL3 then
@@ -226,13 +238,13 @@ function Beard:UpdateBeardInventory()
             local newsack = SpawnPrefab(level)
             self.inst.components.inventory:Equip(newsack)
         elseif level and not beardsack:HasTag(level) then
-            local newsack = SpawnPrefab(level)
-            for k,v in pairs(beardsack.components.container.slots) do
-               beardsack.components.container:RemoveItem(v,true)
-               newsack.components.container:GiveItem(v)
-            end
+            local bearditems = beardsack.components.container:RemoveAllItems()
             beardsack:Remove()
+            local newsack = SpawnPrefab(level)
             self.inst.components.inventory:Equip(newsack)
+            for slot, item in ipairs(bearditems) do
+                newsack.components.container:GiveItem(item, slot, nil, true)
+            end
         end
     end
 end

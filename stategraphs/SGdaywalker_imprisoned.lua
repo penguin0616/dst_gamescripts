@@ -32,7 +32,13 @@ local states =
 			end
 			local isnear = inst:IsNearPlayer(12, true)
 			if chatter then
-				local strtbl = isnear and "DAYWALKER_IMPRISONED_NEAR" or "DAYWALKER_IMPRISONED_FAR"
+				local strtbl =
+					(not isnear and "DAYWALKER_IMPRISONED_FAR") or
+					(	TheWorld.components.daywalkerspawner ~= nil and
+						TheWorld.components.daywalkerspawner:GetPowerLevel() > 1 and
+						"DAYWALKER_RE_IMPRISONED_NEAR"
+					) or
+					"DAYWALKER_IMPRISONED_NEAR"
 				inst.components.talker:Chatter(strtbl, math.random(#STRINGS[strtbl]))
 			end
 			if isnear then
@@ -142,13 +148,10 @@ local states =
 
 	State{
 		name = "struggle3",
-		tags = { "notalksound" },
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("chained_3_pre")
 			inst.SoundEmitter:PlaySound("daywalker/voice/struggle3")
-			local strtbl = "DAYWALKER_IMPRISONED_STRUGGLE"
-			inst.components.talker:Chatter(strtbl, math.random(#STRINGS[strtbl]))
 		end,
 
 		timeline =
@@ -195,10 +198,18 @@ local states =
 
 	State{
 		name = "struggle3_loop_b",
+		tags = { "notalksound" },
 
 		onenter = function(inst, skipsound)
 			inst.AnimState:PlayAnimation("chained_3_loop_b")
-			inst.sg.statemem.skipsound = skipsound
+			if skipsound then
+				inst.sg.statemem.skipsound = true
+				local any, all = CheckPillars(inst)
+				if not all then
+					local strtbl = any and "DAYWALKER_IMPRISONED_PILLAR_BREAKING" or "DAYWALKER_IMPRISONED_STRUGGLE"
+					inst.components.talker:Chatter(strtbl, math.random(#STRINGS[strtbl]))
+				end
+			end
 		end,
 
 		timeline =

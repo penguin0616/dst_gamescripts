@@ -957,7 +957,7 @@ function Inventory:Unequip(equipslot, slip)
     --print("Inventory:Unequip", item)
     if item ~= nil then
         if item.components.equippable ~= nil then
-            if item.components.equippable:ShouldPreventUnequipping(self.inst) then
+            if item.components.equippable:ShouldPreventUnequipping() then
                 return nil
             end
             item.components.equippable:Unequip(self.inst)
@@ -996,7 +996,7 @@ function Inventory:Equip(item, old_to_active, no_animation)
     
     local eslot = item.components.equippable.equipslot
     local olditem = self.equipslots[eslot]
-    if olditem ~= nil and olditem.components.equippable:ShouldPreventUnequipping(item.components.inventoryitem.owner) then
+    if olditem ~= nil and olditem.components.equippable:ShouldPreventUnequipping() then
         return
     end
 

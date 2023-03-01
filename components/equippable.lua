@@ -128,7 +128,7 @@ function Equippable:IsRestricted(target)
         and target:HasTag("player") --restricted tags only apply to players
 end
 
-function Equippable:ShouldPreventUnequipping(target)
+function Equippable:ShouldPreventUnequipping()
     return self.preventunequipping
 end
 
