@@ -1284,6 +1284,7 @@ local function common_fn(bank, build, shadowsize, canfight, atriumstalker)
     inst:AddTag("largecreature")
     inst:AddTag("stalker")
     inst:AddTag("fossil")
+    inst:AddTag("shadow_aligned")
 
     if atriumstalker then
         inst:AddTag("noepicmusic")

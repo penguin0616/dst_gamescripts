@@ -69,8 +69,10 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"transmute_log",
 	"transmute_twigs",
 	"transmute_flint",
+	"transmute_rocks",
 
 	"transmute_bluegem",
+	"transmute_redgem",
 	"transmute_purplegem",
 	"transmute_orangegem",
 	"transmute_yellowgem",
@@ -80,13 +82,16 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"transmute_meat",
 	"transmute_smallmeat",
 	"transmute_goldnugget",
+	"transmute_nitre",
 	"transmute_marble",
+	"transmute_cutstone",
 	"transmute_moonrocknugget",
 
 	"transmute_beardhair",
-	"transmute_poop",
 	"transmute_beefalowool",
 	"transmute_boneshard",
+	"transmute_houndstooth",
+	"transmute_poop",
 
 	"transmute_horrorfuel",
 	"transmute_dreadstone",

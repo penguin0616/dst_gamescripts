@@ -92,6 +92,9 @@ local function removeskillfueleffect(inst)
 end
 
 local function getskillfueleffectmodifier(inst, owner)
+    if not owner.components.skilltreeupdater then
+        return nil
+    end
     if owner.components.skilltreeupdater:IsActivated("wilson_torch_3") then
         return TUNING.SKILLS.WILSON_TORCH_3
     elseif owner.components.skilltreeupdater:IsActivated("wilson_torch_2") then
@@ -102,6 +105,9 @@ local function getskillfueleffectmodifier(inst, owner)
 end
 
 local function getskillbrightnesseffectmodifier(inst, owner)
+    if not owner.components.skilltreeupdater then
+        return nil
+    end    
     if owner.components.skilltreeupdater:IsActivated("wilson_torch_6") then
         return TUNING.SKILLS.WILSON_TORCH_6
     elseif   owner.components.skilltreeupdater:IsActivated("wilson_torch_5") then

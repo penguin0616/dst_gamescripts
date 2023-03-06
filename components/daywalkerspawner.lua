@@ -26,6 +26,7 @@ function DayWalkerSpawner:RegisterDayWalkerSpawningPoint(spawnpoint)
     table.insert(self.spawnpoints, spawnpoint)
     self.inst:ListenForEvent("onremove", function() self:UnregisterDayWalkerSpawningPoint(spawnpoint) end, spawnpoint)
 end
+
 function DayWalkerSpawner:TryToRegisterSpawningPoint(spawnpoint)
     if table.contains(self.spawnpoints, spawnpoint) then
         return false
@@ -35,13 +36,24 @@ function DayWalkerSpawner:TryToRegisterSpawningPoint(spawnpoint)
     return true
 end
 
-
+local COLLAPSIBLE_WORK_ACTIONS =
+{
+	CHOP = true,
+	DIG = true,
+	HAMMER = true,
+	MINE = true,
+}
+local COLLAPSIBLE_TAGS = { "NPC_workable", "structure", "plant", "tree" }
+for k, v in pairs(COLLAPSIBLE_WORK_ACTIONS) do
+	table.insert(COLLAPSIBLE_TAGS, k.."_workable")
+end
+local NON_COLLAPSIBLE_TAGS = { "locomotor", "FX", --[["NOCLICK",]] "DECOR", "INLIMBO" }
 local STRUCTURES_TAGS = {"structure"}
-local IS_CLEAR_AREA_RADIUS = TILE_SCALE * 1.5
-local DESTROY_AREA_RADIUS = TILE_SCALE * 1.5
+local IS_CLEAR_AREA_RADIUS = TILE_SCALE * 2.5
+local DESTROY_AREA_RADIUS = TILE_SCALE * 2.5
 local NO_PLAYER_RADIUS = 35
 
-local ARENA_RADIUS = IS_CLEAR_AREA_RADIUS -- Must be <= IS_CLEAR_AREA_RADIUS!
+local ARENA_RADIUS = TILE_SCALE * 1.5 -- Must be <= IS_CLEAR_AREA_RADIUS!
 local ARENA_PILLARS = 3
 
 function DayWalkerSpawner:IncrementPowerLevel()
@@ -64,20 +76,43 @@ function DayWalkerSpawner:IsValidSpawningPoint(x, y, z)
 end
 
 function DayWalkerSpawner:SpawnDayWalkerArena(x, y, z) -- NOTES(JBK): This should not be called directly it exists for mods to get access to it.
-    local daywalker = SpawnPrefab("daywalker")
-    local structs = TheSim:FindEntities(x, y, z, DESTROY_AREA_RADIUS, STRUCTURES_TAGS)
-    for i, v in ipairs(structs) do
-        if v.components.workable ~= nil then
-            v.components.workable:Destroy(daywalker)
-        else
-            v:Remove()
-        end
+	local daywalker = SpawnPrefab("daywalker")
+	daywalker.Transform:SetPosition(x, y, z)
+
+	local todestroy = TheSim:FindEntities(x, y, z, DESTROY_AREA_RADIUS, nil, NON_COLLAPSIBLE_TAGS, COLLAPSIBLE_TAGS)
+	for i, v in ipairs(todestroy) do
+		if v:IsValid() then
+			local isworkable = false
+			if v:HasTag("structure") then
+				if v.components.workable ~= nil then
+					isworkable = true
+				else
+					v:Remove()
+				end
+			elseif v:HasTag("plant") or v:HasTag("tree") then
+				v:Remove()
+			elseif v.components.workable ~= nil then
+				local work_action = v.components.workable:GetWorkAction()
+				--V2C: nil action for NPC_workable (e.g. campfires)
+				--     allow digging spawners (e.g. rabbithole)
+				isworkable = (
+					(work_action == nil and v:HasTag("NPC_workable")) or
+					(v.components.workable:CanBeWorked() and work_action ~= nil and COLLAPSIBLE_WORK_ACTIONS[work_action.id])
+				)
+			end
+
+			if isworkable then
+				v.components.workable:Destroy(daywalker)
+				if v:IsValid() and v:HasTag("stump") then
+					v:Remove()
+				end
+			end
+		end
     end
-    daywalker.Transform:SetPosition(x, y, z)
 
     for i = 1, ARENA_PILLARS do
-        local theta = (i - 1) * (TWOPI / ARENA_PILLARS)
-        local px, pz = x + math.cos(theta) * ARENA_RADIUS,  z + math.sin(theta) * ARENA_RADIUS
+		local theta = i * TWOPI / ARENA_PILLARS + PI * 3 / 4
+		local px, pz = x + math.cos(theta) * ARENA_RADIUS,  z - math.sin(theta) * ARENA_RADIUS
         local pillar = SpawnPrefab("daywalker_pillar")
         pillar.Transform:SetPosition(px, 0, pz)
 		pillar:SetPrisoner(daywalker)

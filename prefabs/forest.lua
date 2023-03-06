@@ -447,9 +447,6 @@ local prefabs =
     "charlie_stage_post",
     "stageusher",
     "statueharp_hedgespawner",
-
-	--
-	"daywalkerspawningground",
 }
 
 local FISH_DATA = require("prefabs/oceanfishdef")
@@ -554,7 +551,6 @@ local function master_postinit(inst)
     inst:AddComponent("mermkingmanager")
     inst:AddComponent("malbatrossspawner")
     inst:AddComponent("crabkingspawner")
-    inst:AddComponent("daywalkerspawner")
 
 	inst:AddComponent("flotsamgenerator")
 	inst:AddComponent("messagebottlemanager")

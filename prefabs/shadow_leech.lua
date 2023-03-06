@@ -89,6 +89,7 @@ local function fn()
 	inst:AddTag("hostile")
 	inst:AddTag("shadow")
 	inst:AddTag("notraptrigger")
+	inst:AddTag("shadow_aligned")
 
 	inst.AnimState:SetBank("shadow_leech")
 	inst.AnimState:SetBuild("shadow_leech")

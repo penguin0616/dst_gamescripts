@@ -1623,7 +1623,7 @@ function Inventory:Hide()
     overflow = overflow ~= nil and overflow.inst or nil
 
     for k, v in pairs(self.opencontainers) do
-        if k ~= overflow then
+        if k ~= overflow and not k.components.container.stay_open_on_hide then
 			k.components.container:Close(self.inst)
         end
     end

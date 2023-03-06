@@ -104,7 +104,6 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
         end
     end
 
-
 	self.view_index = 1
 	self.selected_skinmode = self.skinmodes[self.view_index]
 
@@ -235,7 +234,7 @@ local LoadoutSelect = Class(Widget, function(self, user_profile, character, init
         end
 	end
 
-    self.currentContext = "wardorbe"
+    self.currentContext = "wardrobe"
     self.switch_context_button = self:AddChild(TEMPLATES.StandardButton(function() self:SwitchContext() end, STRINGS.SKILLTREE.SKILLTREE, {200, 50}))
     self.switch_context_button:SetPosition(300,-315)
 
@@ -249,7 +248,7 @@ end)
 
 function LoadoutSelect:SetDirectionsOfFocus()
     if self.skilltree then
-        self.menu:SetFocusChangeDir(MOVE_LEFT, self.skilltree)
+        self.menu:SetFocusChangeDir(MOVE_LEFT, self.skilltree.default_focus)
         self.skilltree:SetFocusChangeDir(MOVE_RIGHT, self.menu)
        -- self.presetsbutton:SetFocusChangeDir(MOVE_DOWN, self.subscreener:GetActiveSubscreenFn())
     else
@@ -260,32 +259,34 @@ function LoadoutSelect:SetDirectionsOfFocus()
 end
 
 function LoadoutSelect:SwitchContext()
-    if self.currentContext == "wardorbe" then
+    if self.currentContext == "wardrobe" then
 
         self.loadout_root.wardrobe_root:Hide()
-
         self.skilltree = self.loadout_root:AddChild(SkillTreeWidget(self.currentcharacter,{skillseletion=TheSkillTree.activatedskills[self.currentcharacter]},true))
         self.skilltree:SetPosition(380,120)
         self.switch_context_button:SetText(STRINGS.UI.WARDROBESCREEN.TITLE)
         self.currentContext = "skills"
-
+        self.focus_old = self.focus_forward
+        self.focus_forward = self.skilltree.default_focus
         if self.parent.ChangeTitle then
             self.parent:ChangeTitle(STRINGS.SKILLTREE.SKILLTREE)
         end
-
-        self.skilltree.default_focus:SetFocus()
         self:SetDirectionsOfFocus()
+        self:SetFocus()
     else
         self.skilltree:Kill()
         self.loadout_root.wardrobe_root:Show()
         self.switch_context_button:SetText(STRINGS.SKILLTREE.SKILLTREE)
-        self.currentContext = "wardorbe"
+        self.currentContext = "wardrobe"
 
         if self.parent.ChangeTitle then
             self.parent:ChangeTitle(STRINGS.UI.WARDROBESCREEN.TITLE)
-        end        
-        self.presetsbutton:SetFocus()
+        end
+
+        local active_sub = self.subscreener:GetActiveSubscreenFn()
+        self.focus_forward = self.focus_old
         self:SetDirectionsOfFocus()
+        self:SetFocus()
     end
 end
 
@@ -588,7 +589,7 @@ function LoadoutSelect:OnControl(control, down)
                 TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
                 return true
             end
-        elseif control == CONTROL_MENU_MISC_1 and AllowSkins() then
+        elseif control == CONTROL_MENU_MISC_1 and AllowSkins() and not self.skilltree then
             self:_LoadSkinPresetsScreen()
             TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
             return true
@@ -618,11 +619,12 @@ function LoadoutSelect:GetHelpText()
         if self.show_puppet and #self.skinmodes > 1 then
             table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_3) .. " " .. STRINGS.UI.WARDROBESCREEN.CYCLE_VIEW)
         end
-        table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SKIN_PRESETS.TITLE)
+        if not self.skilltree then
+            table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_1) .. " " .. STRINGS.UI.SKIN_PRESETS.TITLE)
+        end
         if self:_ShouldShowStartingItemSkinsButton() then
 		    table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_4) .. " " .. STRINGS.UI.ITEM_SKIN_DEFAULTS.TITLE)
         end
-
         if self.currentcharacter and skilltreedefs.SKILLTREE_DEFS[self.currentcharacter] then
             local text = self.switch_context_button:GetText()
             table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_MENU_MISC_2) .. " " .. text)

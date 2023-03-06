@@ -19,6 +19,10 @@ local IMAGE_LOCKED = "locked.tex"
 local IMAGE_LOCKED_OVER = "locked_over.tex"
 local IMAGE_UNLOCKED = "unlocked.tex"
 local IMAGE_UNLOCKED_OVER = "unlocked_over.tex"
+
+local IMAGE_QUESTION = "question.tex"
+local IMAGE_QUESTION_OVER = "question_over.tex"
+
 local IMAGE_SELECTED = "selected.tex"
 local IMAGE_SELECTED_OVER = "selected_over.tex"
 local IMAGE_UNSELECTED = "unselected.tex"
@@ -27,6 +31,7 @@ local IMAGE_SELECTABLE = "selectable.tex"
 local IMAGE_SELECTABLE_OVER = "selectable_over.tex"
 local IMAGE_X = "locked.tex"
 local IMAGE_FRAME = "frame.tex"
+local IMAGE_FRAME_LOCK = "frame_octagon.tex"
 local TEMPLATES = require "widgets/redux/templates"
 
 local function getSizeOfList(list)
@@ -56,7 +61,7 @@ local SkillTreeBuilder = Class(Widget, function(self, infopanel, fromfrontend, s
     self.root.panels = {}
 
 	self.root.xp = self.root:AddChild(Widget("xp"))
-	self.root.xp:SetPosition(0,217) 
+	self.root.xp:SetPosition(3,215) 
 
 	local COLOR = UICOLOURS.BLACK
 	if self.fromfrontend then
@@ -76,19 +81,6 @@ local SkillTreeBuilder = Class(Widget, function(self, infopanel, fromfrontend, s
     self.root.xp_tospend:SetString(STRINGS.SKILLTREE.SKILLPOINTS_TO_SPEND)
     local w, h = self.root.xp_tospend:GetRegionSize()
     self.root.xp_tospend:SetPosition(30+(w/2),-3)
-      
-
-    self.infopanel.respec_button = self.infopanel:AddChild(TEMPLATES.StandardButton(
-    	function()
-	        for skill,data in pairs(skilltreedefs.SKILLTREE_DEFS[self.target]) do
-	            if TheSkillTree:IsActivated(skill, self.target) then
-	                TheSkillTree:DeactivateSkill(skill, self.target)
-	            end
-	        end
-	        TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/respec")
-	        self:RefreshTree()
-    	end, STRINGS.SKILLTREE.RESPEC, {200, 50}))
-    self.infopanel.respec_button:SetPosition(0,-120)
 
     if not TheSkillTree.synced then
         local msg = not TheInventory:HasSupportForOfflineSkins() and (TheFrontEnd ~= nil and TheFrontEnd:GetIsOfflineMode() or not TheNet:IsOnlineMode()) and STRINGS.SKILLTREE.ONLINE_DATA_USER_OFFLINE or STRINGS.SKILLTREE.ONLINE_DATA_DOWNLOAD_FAILED
@@ -202,10 +194,31 @@ function SkillTreeBuilder:buildbuttons(panel,pos,data, offset)
 		skillbutton = self:AddChild(ImageButton(ATLAS,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED,IMAGE_SELECTED))
 		skillbutton:ForceImageSize(TILESIZE, TILESIZE)
 		skillbutton:Hide()
-
+		skillbutton:SetOnGainFocus(function()
+			if TheInput:ControllerAttached() then
+				self.selectedskill = skill
+				self:RefreshTree()
+			end
+		end)
+	
 		skillbutton:SetOnClick(function()
-			self.selectedskill = skill
-			self:RefreshTree()
+			if TheInput:ControllerAttached() then
+				if not self.selectedskill or not self.skillgraphics[self.selectedskill].status.activatable or not self.infopanel.activatebutton:IsVisible() then
+					return
+				end
+
+				local skilltreeupdater = nil
+				if self.fromfrontend then
+		        	skilltreeupdater = TheSkillTree
+		    	else
+		    		skilltreeupdater = ThePlayer and ThePlayer.components.skilltreeupdater or nil
+		    	end
+		    	
+				self:LearnSkill(skilltreeupdater, self.target)
+			else
+				self.selectedskill = skill
+				self:RefreshTree()
+			end
 		end)
 
 		if subdata.icon then
@@ -214,7 +227,11 @@ function SkillTreeBuilder:buildbuttons(panel,pos,data, offset)
 			skillicon:MoveToFront()
 		end
 
-		skillimage = self:AddChild(Image(ATLAS,IMAGE_FRAME))
+		local frame = IMAGE_FRAME
+		if subdata.lock_open then
+			frame = IMAGE_FRAME_LOCK
+		end
+		skillimage = self:AddChild(Image(ATLAS,frame)) 
 		skillimage:ScaleToSize(TILESIZE_FRAME, TILESIZE_FRAME)
 		skillimage:Hide()
 
@@ -225,7 +242,6 @@ function SkillTreeBuilder:buildbuttons(panel,pos,data, offset)
 		self.skillgraphics[skill] = {}
 		self.skillgraphics[skill].button = skillbutton
 		self.skillgraphics[skill].frame = skillimage
-		self.skillgraphics[skill].status = {}
 		table.insert(self.buttongrid,{button=skillbutton,x=newpos.x,y=newpos.y})
 	end	
 end
@@ -283,11 +299,16 @@ end
 
 ---------------------------------------------------------------
 
-function gettitle(skill, prefabname)
+function gettitle(skill, prefabname, skillgraphics)
 	local skilldata = skilltreedefs.SKILLTREE_DEFS[prefabname][skill]
 	if skilldata.lock_open then
-		if skilldata.lock_open(prefabname) then
-			return STRINGS.SKILLTREE.UNLOCKED
+		local lockstatus = skillgraphics[skill].status.lock_open
+		if lockstatus then
+			if lockstatus == "question"  then
+				return STRINGS.SKILLTREE.UNKNOWN
+			else
+				return STRINGS.SKILLTREE.UNLOCKED
+			end
 		else
 			return STRINGS.SKILLTREE.LOCKED
 		end
@@ -305,6 +326,7 @@ function SkillTreeBuilder:RefreshTree()
     local characterprefab, availableskillpoints, skillselection, skilltreeupdater
     local frontend = self.fromfrontend
     local readonly = self.readonly
+
     if readonly then
         -- Read only content uses self.target and self.targetdata to infer what it knows.
         self.root.xp:Hide()
@@ -339,6 +361,9 @@ function SkillTreeBuilder:RefreshTree()
 	end
 
 	for skill,graphics in pairs(self.skillgraphics) do
+		if graphics.status then
+			graphics.oldstatus = graphics.status
+		end
 		graphics.status = {}
 	end
 
@@ -353,8 +378,14 @@ function SkillTreeBuilder:RefreshTree()
         if readonly then
             if skillselection[skill] then
                 graphics.status.activated = true
-                make_connected_clickable(skill)
+                --make_connected_clickable(skill)
             end
+            if self.skilltreedef[skill].lock_open then
+            	graphics.status.lock = true
+            	local lockstatus = self.skilltreedef[skill].lock_open(self.target, skillselection)
+				graphics.status.lock_open = lockstatus
+				
+			end
         else
         	if self.skilltreedef[skill].lock_open then
         		-- MARK LOCKS and ACTIVATE CONNECTED ITEMS WHEN NOT LOCKED
@@ -390,15 +421,40 @@ function SkillTreeBuilder:RefreshTree()
 		graphics.button:Hide()
 		graphics.frame:Hide()
 
-		if self.selectedskill and self.selectedskill == skill then
+		if self.selectedskill and self.selectedskill == skill and not TheInput:ControllerAttached() then
 			graphics.frame:Show()
 		end
 
 		if graphics.status.lock then
-			graphics.button:SetScale(0.8,0.8,1)			
+			graphics.button:SetScale(0.8,0.8,1)
 			graphics.button:Show()
 			if graphics.status.lock_open then
-				graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER,IMAGE_UNLOCKED,IMAGE_UNLOCKED,IMAGE_UNLOCKED)
+				if graphics.status.lock_open == "question" then
+					graphics.button:SetTextures(ATLAS, IMAGE_QUESTION, IMAGE_QUESTION_OVER,IMAGE_QUESTION,IMAGE_QUESTION,IMAGE_QUESTION)
+				else
+					graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER,IMAGE_UNLOCKED,IMAGE_UNLOCKED,IMAGE_UNLOCKED)
+				end
+
+				
+				if graphics.oldstatus and graphics.oldstatus.lock_open == nil then
+
+					graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER,IMAGE_LOCKED,IMAGE_LOCKED,IMAGE_LOCKED)
+					self.inst:DoTaskInTime(0.5, function()
+						TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/unlock_gatedskill")
+						local pos = graphics.button:GetPosition()
+					    local unlockfx = self:AddChild(UIAnim())
+					    unlockfx:GetAnimState():SetBuild("skill_unlock")
+					    unlockfx:GetAnimState():SetBank("skill_unlock")
+					    unlockfx:GetAnimState():PushAnimation("idle")
+					    unlockfx:SetPosition(pos.x,pos.y)
+					    unlockfx.inst:ListenForEvent("animover", function()
+					    	unlockfx:Kill()
+					    end)
+					end)
+					self.inst:DoTaskInTime(13/30, function()
+						graphics.button:SetTextures(ATLAS, IMAGE_UNLOCKED, IMAGE_UNLOCKED_OVER,IMAGE_UNLOCKED,IMAGE_UNLOCKED,IMAGE_UNLOCKED)
+					end)
+				end
 			else
 				graphics.button:SetTextures(ATLAS, IMAGE_LOCKED, IMAGE_LOCKED_OVER,IMAGE_LOCKED,IMAGE_LOCKED,IMAGE_LOCKED)
 			end
@@ -416,11 +472,17 @@ function SkillTreeBuilder:RefreshTree()
 
 	self.root.xptotal:SetString(availableskillpoints)
 
+	if self.selectedskill  then
+		if TheInput:ControllerAttached() then
+			self.skillgraphics[self.selectedskill].button:SetHelpTextMessage("")
+		end
+	end
+
 	if self.infopanel then
 		self.infopanel.title:Hide()
 		self.infopanel.activatebutton:Hide()
 		self.infopanel.activatedtext:Hide()
-		self.infopanel.respec_button:Hide()	
+		self.infopanel.respec_button:Hide()
 
 		if self.fromfrontend then
             if skilltreedefs.FN.CountSkills(self.target) > 0 then
@@ -437,7 +499,7 @@ function SkillTreeBuilder:RefreshTree()
 
 		if self.selectedskill  then
 			self.infopanel.title:Show()
-			self.infopanel.title:SetString(gettitle(self.selectedskill, self.target) )
+			self.infopanel.title:SetString(gettitle(self.selectedskill, self.target, self.skillgraphics) )
 			self.infopanel.desc:Show()
 			self.infopanel.desc:SetMultilineTruncatedString(getdesc(self.selectedskill, self.target), 3, 400, nil, nil, true, 6)
 			self.infopanel.intro:Hide()
@@ -447,22 +509,12 @@ function SkillTreeBuilder:RefreshTree()
 
                     self.infopanel.activatebutton:Show()
                     self.infopanel.activatebutton:SetOnClick(function()
-                    	skilltreeupdater:ActivateSkill(self.selectedskill, characterprefab)
-                        self:RefreshTree()
-
-                        TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/skill_mastered") -- wilson_rework/ui/skill_mastered
-
-                        local pos = self.skillgraphics[self.selectedskill].button:GetPosition()
-                        local clickfx = self:AddChild(UIAnim())
-                        clickfx:GetAnimState():SetBuild("skills_activate")
-                        clickfx:GetAnimState():SetBank("skills_activate")
-                        clickfx:GetAnimState():PushAnimation("idle")
-                        clickfx.inst:ListenForEvent("animover", function() clickfx:Kill() end)
-                        clickfx:SetPosition(pos.x,pos.y + 15)
-
-                        self.skilltreewidget:SpawnFavorOverlay(true)
-
+                    	self:LearnSkill(skilltreeupdater,characterprefab)
                     end)
+					if TheInput:ControllerAttached() then
+						self.skillgraphics[self.selectedskill].button:SetHelpTextMessage(STRINGS.SKILLTREE.ACTIVATE)
+						self.infopanel.activatebutton:SetText(TheInput:GetLocalizedControl(TheInput:GetControllerID(), self.infopanel.activatebutton.control, false, false ).." "..STRINGS.SKILLTREE.ACTIVATE)
+					end
                 end
             end
 
@@ -472,6 +524,30 @@ function SkillTreeBuilder:RefreshTree()
 		else
 			self.infopanel.desc:SetMultilineTruncatedString(STRINGS.SKILLTREE.INFOPANEL_DESC, 3, 240, nil,nil,true,6)
 		end
+	end
+end
+
+function SkillTreeBuilder:LearnSkill(skilltreeupdater, characterprefab)
+	if self.selectedskill then
+		if TheInput:ControllerAttached() and self.skillgraphics[self.selectedskill].status.lock then
+			return
+		end
+	    skilltreeupdater:ActivateSkill(self.selectedskill, characterprefab)
+	    
+	    TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/skill_mastered") -- wilson_rework/ui/skill_mastered
+
+	    local pos = self.skillgraphics[self.selectedskill].button:GetPosition()
+	    local clickfx = self:AddChild(UIAnim())
+	    clickfx:GetAnimState():SetBuild("skills_activate")
+	    clickfx:GetAnimState():SetBank("skills_activate")
+	    clickfx:GetAnimState():PushAnimation("idle")
+	    clickfx.inst:ListenForEvent("animover", function() clickfx:Kill() end)
+	    clickfx:SetPosition(pos.x,pos.y + 15)
+
+	    if  skilltreedefs.FN.SkillHasTags( self.selectedskill, "shadow", self.target) then
+	    	self.skilltreewidget:SpawnFavorOverlay(true)
+		end
+	    self:RefreshTree()
 	end
 end
 
@@ -500,6 +576,10 @@ function SkillTreeBuilder:CreateTree(prefabname, targetdata, readonly)
 	end
 
 	self:RefreshTree()
+end
+
+function SkillTreeBuilder:GetSelectedSkill()
+
 end
 
 return SkillTreeBuilder

@@ -12,7 +12,9 @@ local prefabs =
 {
 	"marble",
 	"dreadstone",
+	"daywalker_pillar_base_fx",
 	"daywalker_pillar_hole",
+	"shadow_despawn",
 }
 
 SetSharedLootTable("daywalker_pillar",
@@ -23,6 +25,18 @@ SetSharedLootTable("daywalker_pillar",
 	{ "dreadstone", 1 },
 	{ "dreadstone", 0.5 },
 })
+
+--------------------------------------------------------------------------
+
+local function Pillar_PlayAnimation(inst, anim, loop)
+	inst.AnimState:PlayAnimation(anim, loop)
+	inst.base.AnimState:PlayAnimation(anim, loop)
+end
+
+local function Pillar_PushAnimation(inst, anim, loop)
+	inst.AnimState:PushAnimation(anim, loop)
+	inst.base.AnimState:PushAnimation(anim, loop)
+end
 
 --------------------------------------------------------------------------
 
@@ -159,7 +173,8 @@ end
 local function CreateChainBracket()
 	local inst = CreateEntity()
 
-	inst:AddTag("FX")
+	--inst:AddTag("FX")
+	inst:AddTag("decor")
 	inst:AddTag("NOCLICK")
 	--[[Non-networked entity]]
 	inst.entity:SetCanSleep(false)
@@ -361,12 +376,20 @@ local function OnDebrisDirty(inst)
 	end
 end
 
+local LIGHT_INTENSITY_MIN = 0.25
+local LIGHT_INTENSITY_PER_LEVEL = 0.03
+local LIGHT_FALLOFF_MIN = 0.7
+local LIGHT_FALLOFF_PER_LEVEL = 0.02
+
 local function UpdateBuild(inst, workleft)
 	if math.floor(workleft) <= 1 then
 		if inst.level ~= "lowest" then
 			local dlevel = (inst.level == "full" and 3) or (inst.level == "med" and 2) or (inst.level == "low" and 1) or 0
 			inst.level = "lowest"
 			inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_lowest")
+			inst.base.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_lowest_base")
+			inst.Light:SetIntensity(LIGHT_INTENSITY_MIN + LIGHT_INTENSITY_PER_LEVEL * 3)
+			inst.Light:SetFalloff(LIGHT_FALLOFF_MIN + LIGHT_FALLOFF_PER_LEVEL * 3)
 			inst:AddTag("worker_recoil")
 			return true, dlevel
 		end
@@ -375,6 +398,9 @@ local function UpdateBuild(inst, workleft)
 			local dlevel = (inst.level == "full" and 2) or (inst.level == "med" and 1) or 0
 			inst.level = "low"
 			inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_low")
+			inst.base.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_low_base")
+			inst.Light:SetIntensity(LIGHT_INTENSITY_MIN + LIGHT_INTENSITY_PER_LEVEL * 2)
+			inst.Light:SetFalloff(LIGHT_FALLOFF_MIN + LIGHT_FALLOFF_PER_LEVEL * 2)
 			inst:RemoveTag("worker_recoil")
 			return true, dlevel
 		end
@@ -383,6 +409,9 @@ local function UpdateBuild(inst, workleft)
 			local dlevel = inst.level == "full" and 1 or 0
 			inst.level = "med"
 			inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_med")
+			inst.base.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_med_base")
+			inst.Light:SetIntensity(LIGHT_INTENSITY_MIN + LIGHT_INTENSITY_PER_LEVEL)
+			inst.Light:SetFalloff(LIGHT_FALLOFF_MIN + LIGHT_FALLOFF_PER_LEVEL)
 			inst:RemoveTag("worker_recoil")
 			return true, dlevel
 		end
@@ -400,7 +429,7 @@ local function OnEndVibrate(inst)
 			return
 		end
 	end
-	inst.AnimState:PlayAnimation("idle")
+	Pillar_PlayAnimation(inst, "idle")
 	inst.SoundEmitter:KillSound("vibrate_loop")
 	inst.SoundEmitter:KillSound("chain_vibrate_loop")
 end
@@ -409,8 +438,8 @@ local function OnWorked(inst, worker, workleft, numworks)
 	if workleft <= 0 and worker ~= nil and worker.prefab == "daywalker_sinkhole" then
 		return
 	end
-	inst.AnimState:PlayAnimation("hit")
-	inst.AnimState:PushAnimation("idle")
+	Pillar_PlayAnimation(inst, "hit")
+	Pillar_PushAnimation(inst, "idle")
 	if workleft < 1 then
 		workleft = 1
 		inst.components.workable:SetWorkLeft(1)
@@ -438,7 +467,7 @@ local function OnWorked(inst, worker, workleft, numworks)
 		if numworks > mult and not worker:HasTag("weremoose") then
 			local prisoner = inst.prisoner:value()
 			if prisoner ~= nil then
-				inst.AnimState:PlayAnimation("pillar_shake", true)
+				Pillar_PlayAnimation(inst, "pillar_shake", true)
 				local num = 1
 				if prisoner.CountPillars ~= nil then
 					num = prisoner:CountPillars()
@@ -459,20 +488,47 @@ local function OnWorked(inst, worker, workleft, numworks)
 	end
 end
 
-local function OnDestroyed(inst)
+local function FadeOutHole(inst)
 	inst.hole.Transform:SetPosition(inst.hole.Transform:GetWorldPosition())
 	inst.hole.entity:SetParent(nil)
-	inst.hole.persists = false
-	ErodeAway(inst.hole)
+	inst.hole.AnimState:PlayAnimation("fadeout")
+	inst.hole:ListenForEvent("animover", inst.hole.Remove)
+end
+
+local function UpdateFadeLight(inst)
+	inst.fadelight = inst.fadelight - 0.01
+	if inst.fadelight > 0 then
+		inst.Light:SetIntensity(inst.fadelight)
+	else
+		inst.Light:Enable(false)
+		inst.fadelighttask:Cancel()
+		inst.fadelighttask = nil
+	end
+end
+
+local function OnDestroyed(inst)
+	FadeOutHole(inst)
 	ErodeAway(inst)
+	inst.fadelighttask = inst:DoPeriodicTask(0, UpdateFadeLight)
+end
+
+local function ShakePillarFall(inst)
+	ShakeAllCameras(CAMERASHAKE.VERTICAL, .5, .025, .15, inst, 16)
 end
 
 local function OnWorkFinished(inst, worker)
 	if inst.persists then
 		inst.persists = false
 		inst.components.lootdropper:DropLoot(inst:GetPosition())
+
+		inst.base:Remove()
 		inst.AnimState:PlayAnimation("pillar_fall")
 		inst.SoundEmitter:PlaySound("daywalker/pillar/destroy")
+		inst.Light:SetIntensity(0.22)
+		inst.Light:SetFalloff(0.8)
+		inst.fadelight = 0.12
+		inst:DoTaskInTime(21 * FRAMES, UpdateFadeLight)
+		inst:DoTaskInTime(22 * FRAMES, ShakePillarFall)
 		inst:ListenForEvent("animover", OnDestroyed)
 		inst:AddTag("NOCLICK")
 	end
@@ -512,17 +568,24 @@ end
 
 --------------------------------------------------------------------------
 
+local function Darken(inst)
+	inst.brightness = (inst.brightness or 1) * 0.6
+	inst.AnimState:SetBrightness(inst.brightness)
+end
+
 local function fn()
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddSoundEmitter()
+	inst.entity:AddLight()
 	inst.entity:AddMiniMapEntity()
 	inst.entity:AddNetwork()
 
 	inst:AddTag("daywalker_pillar")
 	inst:AddTag("event_trigger")
+    inst:AddTag("regrowth_blocker")
 
 	MakeObstaclePhysics(inst, .95)
 	inst.Physics:CollidesWith(COLLISION.OBSTACLES) --for ocean to block boats
@@ -530,6 +593,12 @@ local function fn()
 	inst.AnimState:SetBank("daywalker_pillar")
 	inst.AnimState:SetBuild("daywalker_pillar")
 	inst.AnimState:PlayAnimation("idle", true)
+
+	inst.Light:SetIntensity(LIGHT_INTENSITY_MIN)
+	inst.Light:SetRadius(6)
+	inst.Light:SetFalloff(LIGHT_FALLOFF_MIN)
+	inst.Light:Enable(true)
+	inst.Light:SetColour(1, .5, .5)
 
 	inst.MiniMapEntity:SetIcon("daywalker_pillar.png")
 	inst.MiniMapEntity:SetPriority(4)
@@ -552,7 +621,9 @@ local function fn()
 
 	inst.hole = SpawnPrefab("daywalker_pillar_hole")
 	inst.hole.entity:SetParent(inst.entity)
-	inst.hole.persists = false
+
+	inst.base = SpawnPrefab("daywalker_pillar_base_fx")
+	inst.base.entity:SetParent(inst.entity)
 
 	inst.level = "full"
 
@@ -573,18 +644,30 @@ local function fn()
 	inst:AddComponent("entitytracker")
 
 	inst._onremoveprisoner = function(daywalker)
-		if not inst:IsAsleep() then
-			SpawnPrefab("shadow_despawn").Transform:SetPosition(inst.Transform:GetWorldPosition())
+		if inst.persists then
+			if inst:IsAsleep() then
+				inst:Remove()
+			else
+				inst.persists = false
+				inst.components.workable:SetWorkable(false)
+				inst:AddTag("NOCLICK")
+				inst.Light:Enable(false)
+				FadeOutHole(inst)
+				ErodeAway(inst.base)
+				inst:DoPeriodicTask(0, Darken)
+				Darken(inst)
+				ErodeAway(inst)
+				SpawnPrefab("shadow_despawn").Transform:SetPosition(inst.Transform:GetWorldPosition())
+			end
 		end
-		inst:Remove()
 	end
 
 	inst._onchainbreak = function(daywalker)
 		inst:SetPrisoner(nil)
 		inst.SoundEmitter:KillSound("vibrate_loop")
 		inst.SoundEmitter:KillSound("chain_vibrate_loop")
-		inst.AnimState:PlayAnimation("hit")
-		inst.AnimState:PushAnimation("idle")
+		Pillar_PlayAnimation(inst, "hit")
+		Pillar_PushAnimation(inst, "idle")
 		if inst.vibrate_task ~= nil then
 			inst.vibrate_task:Cancel()
 			inst.vibrate_task = nil
@@ -599,6 +682,35 @@ local function fn()
 	inst.IsResonating = IsResonating
 	inst.OnCollided = OnCollided
 	inst.OnLoadPostPass = OnLoadPostPass
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
+local function fn_base()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+
+	inst.AnimState:SetBank("daywalker_pillar")
+	inst.AnimState:SetBuild("daywalker_pillar")
+	inst.AnimState:PlayAnimation("idle", true)
+	inst.AnimState:SetFinalOffset(1)
+	inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_full_base")
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.persists = false
 
 	return inst
 end
@@ -629,10 +741,13 @@ local function fn_hole()
 		return inst
 	end
 
+	inst.persists = false
+
 	return inst
 end
 
 --------------------------------------------------------------------------
 
 return Prefab("daywalker_pillar", fn, assets, prefabs),
+	Prefab("daywalker_pillar_base_fx", fn_base, assets),
 	Prefab("daywalker_pillar_hole", fn_hole, assets_hole)

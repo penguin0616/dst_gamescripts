@@ -1372,7 +1372,7 @@ end
 
 local REGISTERED_FIND_ATTACK_TARGET_TAGS = TheSim:RegisterFindTags({ "_combat" }, { "INLIMBO" })
 
-function PlayerController:GetAttackTarget(force_attack, force_target, isretarget)
+function PlayerController:GetAttackTarget(force_attack, force_target, isretarget, use_remote_predict)
     if self.inst:HasTag("playerghost") or
         self.inst:HasTag("weregoose") or
 		(self.classified and self.classified.inmightygym:value() > 0) or
@@ -1395,7 +1395,7 @@ function PlayerController:GetAttackTarget(force_attack, force_target, isretarget
     end
 
     if self.inst.sg ~= nil then
-        if self.inst.sg:HasStateTag("attack") then
+		if self.inst.sg:HasStateTag(use_remote_predict and self.remote_authority and self.remote_predicting and "abouttoattack" or "attack") then
             return
         end
     elseif self.inst:HasTag("attack") then
@@ -1503,7 +1503,7 @@ function PlayerController:OnRemoteAttackButton(target, force_attack, noforce)
                     self:OnRemoteAttackButton(target, force_attack)
                 end
             else
-                target = self:GetAttackTarget(force_attack, target, target ~= self:GetCombatTarget())
+				target = self:GetAttackTarget(force_attack, target, target ~= self:GetCombatTarget(), true)
                 self.attack_buffer = BufferedAction(self.inst, target, ACTIONS.ATTACK, nil, nil, nil, nil, true)
                 self.attack_buffer._predictpos = true
             end

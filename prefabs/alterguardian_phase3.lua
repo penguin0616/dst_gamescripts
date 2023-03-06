@@ -383,6 +383,7 @@ local function fn()
     inst:AddTag("noepicmusic")
     inst:AddTag("scarytoprey")
     inst:AddTag("soulless")
+    inst:AddTag("lunar_aligned")
 
     inst._musicdirty = net_event(inst.GUID, "alterguardian_phase3._musicdirty", "musicdirty")
     inst._playingmusic = false

@@ -8,6 +8,10 @@ local function DoIdleChain(inst)
 	inst.sg.mem.idletask = inst:DoTaskInTime(1 + math.random() * 2, DoIdleChain)
 end
 
+local function DoChainBreakShake(inst)
+	ShakeAllCameras(CAMERASHAKE.FULL, 1.4, .02, .2, inst, 30)
+end
+
 local states =
 {
 	State{
@@ -363,6 +367,7 @@ local states =
 			FrameEvent(23, function(inst)
 				inst.SoundEmitter:PlaySound("daywalker/pillar/chain_shake_oneshot")
 				inst.SoundEmitter:PlaySound("daywalker/pillar/chain_break")
+				DoChainBreakShake(inst)
 				inst:PushEvent("daywalkerchainbreak")
 				inst:SpawnLeeches()
 			end),

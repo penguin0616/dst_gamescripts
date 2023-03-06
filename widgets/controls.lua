@@ -840,6 +840,7 @@ function Controls:ToggleMap()
     end
 end
 
+-- NOTES(JBK): .stay_open_on_hide containers must be hidden and shown in ShowCraftingAndInventory and HideCraftingAndInventory!
 function Controls:ShowCraftingAndInventory()
     if not self.craftingandinventoryshown then
         self.craftingandinventoryshown = true
@@ -848,6 +849,9 @@ function Controls:ShowCraftingAndInventory()
         end
         self.inv:Show()
         self.containerroot_side:Show()
+        if self.secondary_status and self.secondary_status.side_inv then
+            self.secondary_status.side_inv:Show()
+        end
         self.item_notification:ToggleCrafting(false)
         self.yotb_notification:ToggleCrafting(false)
         self.skilltree_notification:ToggleCrafting(false)
@@ -864,6 +868,9 @@ function Controls:HideCraftingAndInventory()
         self.craftingmenu:Hide()
         self.inv:Hide()
         self.containerroot_side:Hide()
+        if self.secondary_status and self.secondary_status.side_inv then
+            self.secondary_status.side_inv:Hide()
+        end
         self.item_notification:ToggleCrafting(true)
         self.yotb_notification:ToggleCrafting(true)
         self.skilltree_notification:ToggleCrafting(true)

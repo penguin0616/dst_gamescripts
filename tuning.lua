@@ -6400,6 +6400,7 @@ function Tune(overrides)
 		{
 			POUNCE_HIT = -1.5,
 			POUNCE_MISS = 1,
+			SLAM_HIT = -1.5,
 		},
 		DAYWALKER_FATIGUE_TIRED = 3,
 		DAYWALKER_FATIGUE_TIRED_MIN_TIME = 5,
@@ -6450,21 +6451,25 @@ function Tune(overrides)
         },
 
         SKILLS ={
-            WILSON_TORCH_1 = 0.95,
-            WILSON_TORCH_2 = 0.9,
-            WILSON_TORCH_3 = 0.8,
+            -- Torch fuel consumption multiplier.
+            WILSON_TORCH_1 = 0.84,
+            WILSON_TORCH_2 = 0.68,
+            WILSON_TORCH_3 = 0.5,
 
+            -- Torch light radius.
             WILSON_TORCH_4 = 2,
             WILSON_TORCH_5 = 3,
             WILSON_TORCH_6 = 4,
 
+            -- Beard insulation multiplier.
             WILSON_BEARD_1 = 1.2,
             WILSON_BEARD_2 = 1.4,
             WILSON_BEARD_3 = 1.7,
 
-            WILSON_BEARD_4 = 0.95,
-            WILSON_BEARD_5 = 0.9,
-            WILSON_BEARD_6 = 0.8,
+            -- Beard growth modifiers as a stepped rate increase.
+            WILSON_BEARD_4 = 0.05, -- 4, 8, 16 -> 3, 7, 15 -> 3 days savings
+            WILSON_BEARD_5 = 0.30, -- 4, 8, 16 -> 3, 6, 12 -> 7 days savings
+            WILSON_BEARD_6 = 0.55, -- 4, 8, 16 -> 2, 5, 10 -> 11 days savings
         },
 
         WILSON_BEARD_BITS ={

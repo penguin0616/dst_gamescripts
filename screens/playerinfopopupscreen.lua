@@ -10,7 +10,6 @@ local skilltreedefs = require "prefabs/skilltree_defs"
 local SCREEN_OFFSET = 0.15 * RESOLUTION_X
 
 local PlayerInfoPopup = Class(Screen, function(self, owner, player_name, data, show_net_profile, force)
-
     self.owner = owner
     self.data = data or self.owner.components.playeravatardata:GetData()
     self.player_name = player_name or self.data.name
@@ -164,7 +163,7 @@ function PlayerInfoPopup:MakeSkillTree()
         self.playeravatar = nil
     end
 
-    self.skilltree = self.root:AddChild(SkillTreeWidget(self.owner.prefab, self.data))
+    self.skilltree = self.root:AddChild(SkillTreeWidget(self.data.prefab, self.data))
     if self.root.tabs then
         self.root.tabs.skillTreePopup:Disable()
         self.root.tabs.playerAvatarPopup:Enable()

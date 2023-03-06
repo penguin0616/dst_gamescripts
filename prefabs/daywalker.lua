@@ -448,10 +448,13 @@ local PHASES =
 	[0] = {
 		hp = 1,
 		fn = function(inst)
+			inst.canfatigue = false
 			inst.nostalkcd = true
 			inst.canstalk = true
 			inst.canslam = false
+			inst.canwakeuphit = false
 			inst.components.timer:StopTimer("stalk_cd")
+			inst:ResetFatigue()
 		end,
 	},
 	--
@@ -459,9 +462,11 @@ local PHASES =
 		hp = 0.999,
 		fn = function(inst)
 			if inst.hostile then
+				inst.canfatigue = true
 				inst.nostalkcd = true
 				inst.canstalk = false
 				inst.canslam = false
+				inst.canwakeuphit = false
 			end
 		end,
 	},
@@ -469,9 +474,11 @@ local PHASES =
 		hp = 0.8,
 		fn = function(inst)
 			if inst.hostile then
+				inst.canfatigue = true
 				inst.nostalkcd = false
 				inst.canstalk = true
 				inst.canslam = false
+				inst.canwakeuphit = false
 			end
 		end,
 	},
@@ -479,9 +486,11 @@ local PHASES =
 		hp = 0.5,
 		fn = function(inst)
 			if inst.hostile then
+				inst.canfatigue = true
 				inst.nostalkcd = true
 				inst.canstalk = true
 				inst.canslam = true
+				inst.canwakeuphit = false
 				inst.components.timer:StopTimer("stalk_cd")
 			end
 		end,
@@ -490,9 +499,11 @@ local PHASES =
 		hp = 0.3,
 		fn = function(inst)
 			if inst.hostile then
+				inst.canfatigue = true
 				inst.nostalkcd = false
 				inst.canstalk = true
 				inst.canslam = true
+				inst.canwakeuphit = true
 			end
 		end,
 	},
@@ -631,11 +642,13 @@ local function RegenFatigue(inst)
 end
 
 local function DeltaFatigue(inst, fatigue)
-	inst.fatigue = math.max(0, inst.fatigue + fatigue)
-	if inst._fatiguetask ~= nil then
-		inst._fatiguetask:Cancel()
+	if inst.canfatigue then
+		inst.fatigue = math.max(0, inst.fatigue + fatigue)
+		if inst._fatiguetask ~= nil then
+			inst._fatiguetask:Cancel()
+		end
+		inst._fatiguetask = inst.fatigue > 0 and inst:DoPeriodicTask(TUNING.DAYWALKER_FATIGUE_REGEN_PERIOD, RegenFatigue, fatigue >= 0 and TUNING.DAYWALKER_FATIGUE_REGEN_START_PERIOD or nil) or nil
 	end
-	inst._fatiguetask = inst.fatigue > 0 and inst:DoPeriodicTask(TUNING.DAYWALKER_FATIGUE_REGEN_PERIOD, RegenFatigue, fatigue >= 0 and TUNING.DAYWALKER_FATIGUE_REGEN_START_PERIOD or nil) or nil
 end
 
 local function ResetFatigue(inst)
@@ -963,9 +976,11 @@ local function fn()
 	inst._fatiguetask = nil
 
 	--ability unlocks
+	inst.canfatigue = false
 	inst.nostalkcd = true
 	inst.canstalk = true
 	inst.canslam = false
+	inst.canwakeuphit = false
 
 	inst._onremovestalking = function(stalking) inst._stalking:set(nil) end
 

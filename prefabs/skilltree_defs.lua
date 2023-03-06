@@ -128,10 +128,14 @@ local function CreateSkillTreeFor(characterprefab, skills)
     }
 end
 
-local function CountTags(prefab, targettag)
+local function CountTags(prefab, targettag, skillselection)
     local tags = {}
-    if TheSkillTree.activatedskills[prefab] then
-        for skill, flag in pairs(TheSkillTree.activatedskills[prefab]) do
+    local dataset = TheSkillTree.activatedskills[prefab]
+    if skillselection then
+        dataset = skillselection
+    end
+    if dataset then
+        for skill, flag in pairs(dataset) do
             local data =  SKILLTREE_DEFS[prefab][skill]
             for i,tag in ipairs(data.tags) do
                 if not tags[tag] then
@@ -144,20 +148,21 @@ local function CountTags(prefab, targettag)
     return tags[targettag] or 0
 end
 
-local function CountSkills(prefab)
+local function CountSkills(prefab, skillselection )
     local count = 0
-    if TheSkillTree.activatedskills[prefab] then
-        for skill, flag in pairs(TheSkillTree.activatedskills[prefab]) do
+    local dataset = TheSkillTree.activatedskills[prefab]
+    if skillselection then
+        dataset = skillselection
+    end    
+    if dataset then
+        for skill, flag in pairs(dataset) do
             count = count + 1
         end
     end
     return count or 0
 end
 
-local FN = {
-    CountSkills = CountSkills,
-    CountTags = CountTags,
-}
+
 
 CreateSkillTreeFor("wilson", {
     wilson_alchemy_1 = {
@@ -441,7 +446,7 @@ CreateSkillTreeFor("wilson", {
         group = "torch",
         tags = {"torch","lock"},
         root = true,
-        lock_open = function(prefabname) return CountTags(prefabname,"torch") > 2 end,
+        lock_open = function(prefabname, skillselection) return CountTags(prefabname,"torch", skillselection) > 2 end,
         connects = {
             "wilson_torch_7",
         },
@@ -539,7 +544,7 @@ CreateSkillTreeFor("wilson", {
         group = "beard",
         tags = {"beard","lock"},
         root = true,
-        lock_open = function(prefabname) return CountTags(prefabname,"beard") > 2 end,
+        lock_open = function(prefabname,skillselection) return CountTags(prefabname,"beard", skillselection) > 2 end,
         connects = {
             "wilson_beard_7",
         },
@@ -568,7 +573,7 @@ CreateSkillTreeFor("wilson", {
         group = "allegiance",
         tags = {"allegiance","lock"},
         root = true,
-        lock_open = function(prefabname) return CountSkills(prefabname) >= 12 end,
+        lock_open = function(prefabname, skillselection) return CountSkills(prefabname, skillselection) >= 12 end,
         connects = {
             "wilson_allegiance_shadow",
         },
@@ -581,7 +586,10 @@ CreateSkillTreeFor("wilson", {
         group = "allegiance",
         tags = {"allegiance","lock"},
         root = true,
-        lock_open = function(inst) 
+        lock_open = function(prefabname, skillselection) 
+                if skillselection then
+                    return "question"
+                end
                 local kv = TheInventory:GetLocalGenericKV()
                 return kv.fuelweaver_killed == "1" 
             end,
@@ -597,7 +605,7 @@ CreateSkillTreeFor("wilson", {
         pos = {204 ,176-60-38},  --  -22
         --pos = {0,-2},
         group = "allegiance",
-        tags = {"allegiance","shadow"},
+        tags = {"allegiance","shadow","shadow_favor"},
         locks = {"wilson_allegiance_lock_1", "wilson_allegiance_lock_2"},
         onactivate = function(inst, fromload)
                 inst:AddTag("skill_wilson_allegiance_shadow")
@@ -608,13 +616,32 @@ CreateSkillTreeFor("wilson", {
 
 })
 
-
 setmetatable(SKILLTREE_DEFS, {
     __newindex = function(t, k, v)
         v.modded = true
         rawset(t, k, v)
     end,
 })
+
+local function SkillHasTags(skill, tag, prefabname)
+    if not SKILLTREE_DEFS[prefabname] or not SKILLTREE_DEFS[prefabname][skill] then
+        return nil
+    end
+   
+    for i, stag in pairs(SKILLTREE_DEFS[prefabname][skill].tags) do
+        if tag == stag then
+            return true
+        end
+    end
+end
+
+local FN = {
+    CountSkills = CountSkills,
+    CountTags = CountTags,
+    SkillHasTags = SkillHasTags,
+}
+
+
 
 local SKILLTREE_ORDERS = {
     wilson = {

@@ -219,6 +219,11 @@ function SkillTreeUpdater:SendFromSkillTreeBlob(inst)
     end
 end
 
+function SkillTreeUpdater:HasSkillTag(tag)
+    local characterprefab = self.inst.prefab
+    return skilltreedefs.FN.CountTags(characterprefab,tag) > 0
+end
+
 function SkillTreeUpdater:OnLoad(data)
     self.skilltreeblob = data.skilltreeblob
     --print("[STUpdater] OnLoad", self.skilltreeblob)

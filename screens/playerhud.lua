@@ -32,7 +32,6 @@ local PlayerStatusScreen = require "screens/playerstatusscreen"
 local InputDialogScreen = require "screens/inputdialog"
 local CookbookPopupScreen = require "screens/cookbookpopupscreen"
 local PlantRegistryPopupScreen = require "screens/plantregistrypopupscreen"
-local SkillTreePopupScreen = require "screens/skilltreepopupscreen"
 local PlayerInfoPopupScreen = require "screens/playerinfopopupscreen"
 
 local TargetIndicator = require "widgets/targetindicator"

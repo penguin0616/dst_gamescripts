@@ -523,6 +523,10 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli)
     end
     self.lastwasattackedtime = GetTime()
 
+    if self.inst.components.skilltreeupdater and self.inst.components.skilltreeupdater:HasSkillTag("shadow_favor") and attacker and attacker:HasTag("shadow_aligned") then
+        damage = damage * 0.9
+    end
+
     --print ("ATTACKED", self.inst, attacker, damage)
     --V2C: redirectdamagefn is currently only used by either mounting or parrying,
     --     but not both at the same time.  If we use it more, then it really needs
@@ -837,6 +841,10 @@ function Combat:CalcDamage(target, weapon, multiplier)
                 basedamage = basedamage + saddle.components.saddler:GetBonusDamage()
             end
         end
+    end
+
+    if self.inst.components.skilltreeupdater and self.inst.components.skilltreeupdater:HasSkillTag("shadow_favor") and target:HasTag("lunar_aligned") then
+        basedamage = basedamage * 1.1
     end
 
     return basedamage

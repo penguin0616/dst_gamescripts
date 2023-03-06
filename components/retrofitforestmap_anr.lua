@@ -1322,37 +1322,25 @@ function self:OnPostInit()
 		ALittleDrama_NewContent_Retrofitting()
 	end
 
-	if self.retrofit_daywalker_content then
+	---------------------------------------------------------------------------
+
+    if self.retrofit_daywalker_content then
 		self.retrofit_daywalker_content = nil
 
-		local requires_retrofitting_spawningground = true
-	    for k,v in pairs(Ents) do
-			if v ~= inst and v.prefab == "daywalkerspawningground" then
-				print("Retrofitting for Daywalker spawningground is not required.")
-				requires_retrofitting_spawningground = false
-				break
-			end
-		end
-
-        if requires_retrofitting_spawningground then
-            local canplace = function(x, y, z, prefab)
-                local tile = TheWorld.Map:GetTileAtPoint(x, y, z)
-                return tile == WORLD_TILES.DECIDUOUS or tile == WORLD_TILES.ROCKY
+        -- NOTES(JBK): This is here to clean up old daywalker content from forest after it moved to caves.
+        local should_delete = {
+            daywalker = true,
+            daywalker_pillar = true,
+            daywalkerspawningground = true,
+            shadow_leech = true,
+        }
+        for k,v in pairs(Ents) do
+            if v ~= inst and should_delete[v.prefab] then
+                print("Retrofitting BETA Daywalker entity, removing from forest:", v)
+                v:Remove()
             end
-
-            print("Retrofitting for Daywalker spawningground.")
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
-            RetrofitNewContentPrefab(inst, "daywalkerspawningground", 1, 10, canplace)
         end
-
 	end
-
 	---------------------------------------------------------------------------
 	if self.requiresreset then
 		print ("Retrofitting: Worldgen retrofitting requires the server to save and restart to fully take effect.")

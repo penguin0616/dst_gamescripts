@@ -3535,7 +3535,7 @@ local states =
 			if data ~= nil and data.target ~= nil and data.target:IsValid() then
 				SpawnPrefab("impact").Transform:SetPosition(data.target.Transform:GetWorldPosition())
 			end
-
+			inst:ShakeCamera(CAMERASHAKE.FULL, .4, .02, .15)
 			inst.Physics:SetMotorVel(-6, 0, 0)
 		end,
 

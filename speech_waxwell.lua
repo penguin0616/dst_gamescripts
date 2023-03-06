@@ -1489,7 +1489,7 @@ return{
         TURF_MOSAIC_RED = "A stone floor.",
         TURF_MOSAIC_BLUE = "A stone floor.",
 
-        TURF_BEARD_RUG = "A bit gauche for my tastes.",        
+        TURF_BEARD_RUG = "A bit gauche for my tastes.",
 
 		POWCAKE = "What foul manifestation of evil is this?",
         CAVE_ENTRANCE = "I plugged it a long time ago.",

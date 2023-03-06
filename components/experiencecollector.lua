@@ -1,3 +1,5 @@
+local skilltreedefs = require "prefabs/skilltree_defs"
+
 local ExperienceCollector = Class(function(self, inst)
     self.inst = inst
     self.xp_period = TUNING.TOTAL_DAY_TIME
@@ -9,6 +11,9 @@ function ExperienceCollector:SetTask()
 end
 
 function ExperienceCollector:UpdateXp()
+    if not skilltreedefs.SKILLTREE_DEFS[self.inst.prefab] then
+        return nil
+    end 
     self.inst.components.skilltreeupdater:AddSkillXP(1)
 end
 

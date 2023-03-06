@@ -32,7 +32,7 @@ local function fn_common()
     inst.AnimState:SetBuild("swap_krampus_sack")
     inst.AnimState:PlayAnimation("anim")
 
-    inst.foleysound = "dontstarve/movement/foley/krampuspack"
+    --inst.foleysound = "dontstarve/movement/foley/krampuspack"
 
     return inst
 end
@@ -51,6 +51,7 @@ local function fn_mastersim(inst, widgetsetupname)
     inst.components.container:WidgetSetup(widgetsetupname) 
     inst.components.container.skipopensnd = true
     inst.components.container.skipclosesnd = true
+    inst.components.container.stay_open_on_hide = true
 
     MakeHauntableLaunchAndDropFirstItem(inst)
 end

@@ -1501,9 +1501,8 @@ function d_daywalker(chain)
 	local x, y, z = daywalker.Transform:GetWorldPosition()
 	local radius = 6
 	local num = 3
-	local theta = 0
-	local delta = TWOPI / num
 	for i = 1, num do
+		local theta = i * TWOPI / num + PI * 3 / 4
 		local pillar = c_spawn("daywalker_pillar")
 		pillar.Transform:SetPosition(
 			x + math.cos(theta) * radius,
@@ -1513,7 +1512,6 @@ function d_daywalker(chain)
 		if chain then
 			pillar:SetPrisoner(daywalker)
 		end
-		theta = theta + delta
 	end
 
 	c_select(daywalker)

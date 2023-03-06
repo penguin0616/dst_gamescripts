@@ -72,6 +72,16 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
     self.root.infopanel.intro:SetHAlign(ANCHOR_LEFT)
     self.root.infopanel.intro:SetString(STRINGS.SKILLTREE.INFOPANEL_DESC)
 
+    self.root.infopanel.respec_button = self.root.infopanel:AddChild(TEMPLATES.StandardButton(
+        function()
+            self:RespecSkills()
+        end, STRINGS.SKILLTREE.RESPEC, {200, 50}))
+    if TheInput:ControllerAttached() then
+        self.root.infopanel.respec_button:SetText(TheInput:GetLocalizedControl(TheInput:GetControllerID(),  CONTROL_MENU_MISC_1).." "..STRINGS.SKILLTREE.RESPEC)
+    end
+
+    self.root.infopanel.respec_button:SetPosition(0,-120)
+
 
     self.root.tree = self.root:AddChild(skilltreebuilder(self.root.infopanel, self.fromfrontend, self))
     self.root.tree:SetPosition(0,-50)
@@ -85,7 +95,7 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
         self.root.scroll_right:SetPosition(278,-20)
     end
 
-    self.readonly = self.target ~= prefabname
+    self.readonly = ThePlayer and self.targetdata.userid ~= ThePlayer.userid
     if not self.readonly then
         if ThePlayer then
             ThePlayer.new_skill_available_popup = nil
@@ -100,7 +110,27 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
         self.default_focus = self.root.tree:GetDefaultFocus()
     end
     self:SpawnFavorOverlay()
+
+    if ThePlayer then
+        self.inst:ListenForEvent("onaddskillxp_client", function() self.root.tree:RefreshTree() end, ThePlayer)
+    end
 end)
+
+function SkillTreeWidget:RespecSkills()
+    for skill,data in pairs(skilltreedefs.SKILLTREE_DEFS[self.target]) do
+                if TheSkillTree:IsActivated(skill, self.target) then
+                    TheSkillTree:DeactivateSkill(skill, self.target)
+                end
+    end
+    TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/respec")
+
+    for skill,graphics in pairs(self.root.tree.skillgraphics) do
+        graphics.oldstatus ={}
+        graphics.status = {}
+    end
+
+    self.root.tree:RefreshTree()
+end
 
 function SkillTreeWidget:SpawnFavorOverlay(pre)
     if not self.fromfrontend then
@@ -120,13 +150,22 @@ function SkillTreeWidget:SpawnFavorOverlay(pre)
             self.midlay.splash:GetAnimState():SetBank("skills_shadow")
             if pre then  
                 TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/shadow_skill")
-                
+
                 self.midlay.splash:GetAnimState():PlayAnimation("pre",false)
-                self.midlay.splash:GetAnimState():PushAnimation("idle",true)
-            else            
-                self.midlay.splash:GetAnimState():PlayAnimation("idle",true)
-            end
+                self.midlay.splash:GetAnimState():PushAnimation("idle",false)
+            else
+                self.midlay.splash:GetAnimState():PlayAnimation("idle",false)
+            end            
             self.midlay.splash:SetPosition(0,-10)
+            self.midlay.splash.inst:ListenForEvent("animover", function()
+                if math.random() < 0.3 then
+                    self.midlay.splash:GetAnimState():PlayAnimation("twitch ",false)
+                    self.midlay.splash:GetAnimState():PushAnimation("idle",false)
+                else
+                    self.midlay.splash:GetAnimState():PlayAnimation("idle",false)
+                end
+
+            end)
         end
     end
 end
@@ -139,27 +178,25 @@ end
 function SkillTreeWidget:OnControl(control, down)
     if SkillTreeWidget._base.OnControl(self, control, down) then return true end
 
-    if self.readonly then return true end
-
-    if not down and control == CONTROL_PAUSE then
-        local skilltreeupdater = ThePlayer.components.skilltreeupdater
-        if skilltreeupdater == nil then
-            return false
-        end
-        skilltreeupdater:ActivateSkill(self.root.tree.selectedskill)
-        self.root.tree:RefreshTree()
+    if not down and control ==  CONTROL_MENU_MISC_1 and self.root.infopanel.respec_button:IsVisible() then
+        self:RespecSkills()
         return true
     end
 
     return false
+    
+end
+
+function SkillTreeWidget:GetSelectedSkill()
+    return self.root.tree:GetSelectedSkill()
 end
 
 function SkillTreeWidget:GetHelpText()
     local controller_id = TheInput:GetControllerID()
     local t = {}
 
-	if self.root.infopanel.activatebutton:IsVisible() then
-		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_PAUSE).. " " .. STRINGS.SKILLTREE.ACTIVATE)
+	if self.root.infopanel.respec_button:IsVisible() then
+		table.insert(t, TheInput:GetLocalizedControl(controller_id,  CONTROL_MENU_MISC_1).. " " .. STRINGS.SKILLTREE.RESPEC)
     end
 
     return table.concat(t, "  ")

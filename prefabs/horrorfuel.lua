@@ -3,6 +3,27 @@ local assets =
 	Asset("ANIM", "anim/horrorfuel.zip"),
 }
 
+local function CreateCore()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	--inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+
+	inst.AnimState:SetBank("horrorfuel")
+	inst.AnimState:SetBuild("horrorfuel")
+	inst.AnimState:PlayAnimation("middle_loop", true)
+	inst.AnimState:SetLightOverride(0.3)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
+	inst.AnimState:SetFinalOffset(1)
+
+	return inst
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -23,11 +44,19 @@ local function fn()
 
 	MakeInventoryFloatable(inst)
 
+	--Dedicated server does not need to spawn the local fx
+	if not TheNet:IsDedicated() then
+		inst.core = CreateCore()
+		inst.core.entity:SetParent(inst.entity)
+	end
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
 
 	inst:AddComponent("stackable")
 	inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM

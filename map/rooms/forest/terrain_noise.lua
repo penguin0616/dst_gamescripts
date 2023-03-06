@@ -6,7 +6,6 @@ AddRoom("BGNoise", {
 					contents =  {
 					                countprefabs= {
 					                    deerspawningground = 1,
-                                        daywalkerspawningground = 1,
 					                },
 					                distributepercent = .15,
 									-- A bit of everything, and let terrain filters handle the rest.

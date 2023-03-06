@@ -4470,9 +4470,11 @@ STRINGS =
         TRANSMUTE_LOG = "Transmute Sticks into a Log.",
         TRANSMUTE_TWIGS = "Transmute a Log into Sticks.",
         TRANSMUTE_FLINT = "Transmute Rocks into Flint.",
+        TRANSMUTE_ROCKS = "Transmute Flint into Rocks.",
 
         TRANSMUTE_BLUEGEM = "Transmute Red Gems into Blue Gems.",
-        TRANSMUTE_PURPLEGEM = "Transmute Blue Gems into Purple Gems.",
+        TRANSMUTE_REDGEM = "Transmute Blue Gems into Red Gems.",
+        TRANSMUTE_PURPLEGEM = "Transmute Blue and Red Gems into Purple Gems.",
         TRANSMUTE_ORANGEGEM = "Transmute Purple Gems into Orange Gems.",
         TRANSMUTE_YELLOWGEM = "Transmute Orange Gems into Yellow Gems.",
         TRANSMUTE_GREENGEM = "Transmute Yellow Gems into Green Gems.",
@@ -4480,14 +4482,17 @@ STRINGS =
 
         TRANSMUTE_MEAT = "Transmute Morsels into Meat.",
         TRANSMUTE_SMALLMEAT = "Transmute Meat into Morsels.",
-        TRANSMUTE_GOLDNUGGET = "Transmute Nitre into a Gold Nugget.",
+        TRANSMUTE_GOLDNUGGET = "Transmute Nitre into Gold Nuggets.",
+        TRANSMUTE_NITRE = "Transmute Gold Nugget into a Nitre.",
         TRANSMUTE_MARBLE = "Transmute Cut Stone into Marble.",
+        TRANSMUTE_CUTSTONE = "Transmute Marble into Cut Stone.",        
         TRANSMUTE_MOONROCKNUGGET = "Transmute Marble into Moonrock.",
 
         TRANSMUTE_POOP = "Transmute Rot into Poop.",
         TRANSMUTE_BEARDHAIR = "Transmute Beefalo Hair into Beard Hair.",
         TRANSMUTE_BEEFALODHAIR = "Transmute Beard Hair into Beefalo Hair.",
         TRANSMUTE_BONESHARD = "Transmute a Hound's Tooth into Bone Shards.",
+        TRANSMUTE_HOUNDSTOOTH = "Transmute Bone Shards into a Hounds Tooth.",
 
         TRANSMUTE_HORRORFUEL = "Transmute Dreadstone into Pure Horror",
         TRANSMUTE_DREADSTONE = "Transmute Pure Horror into Dreadstone",
@@ -14008,12 +14013,12 @@ STRINGS.SKILLTREE = {
     INFOPANEL = "Outfit",
     INFOPANEL_DESC = "Become a seasoned survivor!",
     SKILLTREE = "Skillset",
-    SKILLPOINTS = "Inspiration",
-    SKILLPOINTS_TO_SPEND = "Inspiration remaining",
-    NEW_SKILL_POINT = "Inspiration Strikes!",
+    SKILLPOINTS = "Insight",
+    SKILLPOINTS_TO_SPEND = "Insight Remaining",
+    NEW_SKILL_POINT = "Insight Gained!",
     ACTIVATE = "Learn",
     ACTIVATED = "SKILL MASTERED",
-    RESPEC = "Reset Points",
+    RESPEC = "Reset Insight",
     PANELS = {
         ALCHEMY = "ALCHEMY",
         TORCH = "TORCH",
@@ -14026,13 +14031,14 @@ STRINGS.SKILLTREE = {
 
     LOCKED = "PATH LOCKED",
     UNLOCKED = "PATH UNLOCKED",
+    UNKNOWN = "PATH UNKNOWN",
     WILSON = {
 
         WILSON_ALCHEMY_1_TITLE = "Transmutation",
         WILSON_ALCHEMY_1_DESC = "Transform 3 Twigs into a Log.\nTransform a Log into 2 Twigs.",
 
         WILSON_ALCHEMY_2_TITLE = "Transmute Gems I",
-        WILSON_ALCHEMY_2_DESC = "Transform 3 Red Gems into a Blue Gem.\nTransform 3 Blue Gems into a Purple Gem.",
+        WILSON_ALCHEMY_2_DESC = "Transform 3 Red Gems into a Blue Gem.\nTransform 3 Blue Gems into a Red Gem.\nTransform a Blue and Red Gem into a Purple Gem.",
 
         WILSON_ALCHEMY_5_TITLE = "Transmute Gems II",
         WILSON_ALCHEMY_5_DESC = "Transform 3 Purple Gems into an Orange Gem.\nTransform 3 Orange Gems into a Yellow Gem.",
@@ -14041,22 +14047,22 @@ STRINGS.SKILLTREE = {
         WILSON_ALCHEMY_6_DESC = "Transform 3 Yellow Gems into a Green Gem.\nTransform 6 Gems of different colors into an Iridescent Gem.",
 
         WILSON_ALCHEMY_3_TITLE = "Transmute Ore I",
-        WILSON_ALCHEMY_3_DESC = "Transform 3 Rocks into a Flint.",
+        WILSON_ALCHEMY_3_DESC = "Transform 3 Rocks into a Flint.\nTransform 2 Flint into Rocks.",
 
         WILSON_ALCHEMY_7_TITLE = "Transmute Ore II",
-        WILSON_ALCHEMY_7_DESC = "Transform 3 Nitre into a Gold Nugget.",
+        WILSON_ALCHEMY_7_DESC = "Transform 3 Nitre into a Gold Nugget.\nTransform 2 Gold Nuggets into Nitre.",
 
         WILSON_ALCHEMY_8_TITLE = "Transmute Ore III",
-        WILSON_ALCHEMY_8_DESC = "Transform 2 Cut Stone into Marble.\nTransform 3 Marble into Moon Rock.",
+        WILSON_ALCHEMY_8_DESC = "Transform 2 Cut Stone into Marble.\nTransform Marble into Cut Stone.\nTransform 2 Marble into Moon Rock.",
 
         WILSON_ALCHEMY_4_TITLE = "Transmute Icky I",
         WILSON_ALCHEMY_4_DESC = "Transform 3 Morsels into a Meat.\nTransform a Meat into 2 Morsels.",
 
         WILSON_ALCHEMY_9_TITLE = "Transmute Icky II",
-        WILSON_ALCHEMY_9_DESC = "Transform Beard Hair into 2 Beefalo Hair.\n Transform 3 Beefalo Hair into Beard Hair.",
+        WILSON_ALCHEMY_9_DESC = "Transform Beard Hair into 2 Beefalo Hair.\n Transform 2 Beefalo Hair into Beard Hair.",
 
         WILSON_ALCHEMY_10_TITLE = "Transmute Icky III",
-        WILSON_ALCHEMY_10_DESC = "Transform 6 Rot into Manure.\nTransform a Hound's Tooth into 2 Bone Shards.",
+        WILSON_ALCHEMY_10_DESC = "Transform 6 Rot into Manure.\nTransform 2 Hound's Teeth into a Bone Shards.\nTransform 2 Bone Shards into a Hound's Tooth.",
 
         WILSON_TORCH_1_TITLE = "Torch Longevity I",
         WILSON_TORCH_1_DESC = "Torches last a little longer.",

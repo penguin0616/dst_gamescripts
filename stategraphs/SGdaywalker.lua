@@ -1,5 +1,17 @@
 require("stategraphs/commonstates")
 
+--------------------------------------------------------------------------
+
+local function DoRoarShake(inst)
+	ShakeAllCameras(CAMERASHAKE.FULL, 1.4, .02, .2, inst, 30)
+end
+
+local function DoPounceShake(inst)
+	ShakeAllCameras(CAMERASHAKE.FULL, .4, .02, .15, inst, 20)
+end
+
+--------------------------------------------------------------------------
+
 local function ChooseAttack(inst)
 	local running = inst.sg:HasStateTag("running")
 	if inst.canslam and not running and (inst.nostalkcd or math.random() < 0.3) then
@@ -102,20 +114,20 @@ local function RandomPillarFacing(inst)
 	inst.Transform:SetRotation(math.random() * 360)
 end
 
-local AOE_RANGE = 1.5
-local AOE_RANGE_OFFSET = .5
+local STRUGGLE_AOE_RANGE = 1.5
+local STRUGGLE_AOE_RANGE_OFFSET = .5
 local PILLAR_RANGE = 1
 
 local function TryCollidePillar(inst, forward)
 	local x, y, z = inst.Transform:GetWorldPosition()
 	local x1, z1 = x, z
-	local range = AOE_RANGE + PILLAR_RANGE
+	local range = STRUGGLE_AOE_RANGE + PILLAR_RANGE
 	if forward then
 		local theta = inst.Transform:GetRotation() * DEGREES
-		x1 = x1 + math.cos(theta) * AOE_RANGE_OFFSET
-		z1 = z1 - math.sin(theta) * AOE_RANGE_OFFSET
+		x1 = x1 + math.cos(theta) * STRUGGLE_AOE_RANGE_OFFSET
+		z1 = z1 - math.sin(theta) * STRUGGLE_AOE_RANGE_OFFSET
 	else
-		range = range + AOE_RANGE_OFFSET
+		range = range + STRUGGLE_AOE_RANGE_OFFSET
 	end
 	local collided
 	for i, v in ipairs(TheSim:FindEntities(x1, 0, z1, range, PILLAR_TAGS)) do
@@ -226,6 +238,54 @@ local function DoAOEWork(inst, dist, radius, targets)
 			end
 		end
 	end
+end
+
+--------------------------------------------------------------------------
+
+local SLAM_DETECT_MAX_ROT = 60
+local SLAM_DETECT_RANGE_SQ = 9 * 9
+local WAKEUP_SLAM_DETECT_RANGE_SQ = 6 * 6
+
+local function IsSlamTarget(x, z, guy, rangesq, checkrot)
+	if guy:IsValid() and
+		--guy:HasTag("player") and
+		not (guy.components.health ~= nil and
+			guy.components.health:IsDead() or
+			guy:HasTag("playerghost")) and
+		guy.entity:IsVisible()
+		then
+		local x1, y1, z1 = guy.Transform:GetWorldPosition()
+		local dx = x1 - x
+		local dz = z1 - z
+		return dx * dx + dz * dz < SLAM_DETECT_RANGE_SQ
+			and (checkrot == nil or DiffAngle(checkrot, math.atan2(-dz, dx) * RADIANS) < SLAM_DETECT_MAX_ROT)
+			and TheWorld.Map:IsAboveGroundAtPoint(x1, y1, z1)
+	end
+	return false
+end
+
+local function FindSlamTarget(inst, rangesq)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local target = inst.components.combat.target
+	if target ~= nil and IsSlamTarget(x, z, target, rangesq, nil) then
+		return target
+	end
+	local targets = {}
+	for k in pairs(inst.components.grouptargeter:GetTargets()) do
+		if k ~= target then
+			table.insert(targets, k)
+		end
+	end
+	for i = 1, #targets do
+		local rnd = math.random(#targets)
+		target = targets[rnd]
+		if IsSlamTarget(x, z, target, rangesq, nil) then
+			return target
+		end
+		targets[rnd] = targets[#targets]
+		targets[#targets] = nil
+	end
+	return nil
 end
 
 --------------------------------------------------------------------------
@@ -493,12 +553,15 @@ local states =
 			if not inst:IsStalking() then
 				if not inst.components.timer:TimerExists("roar_cd") and math.random() < 0.5 then
 					inst.sg.statemem.roar = true
+				elseif inst.canwakeuphit and FindSlamTarget(inst, WAKEUP_SLAM_DETECT_RANGE_SQ) ~= nil then
+					--don't stalk
 				elseif inst.canstalk and not inst.components.timer:TimerExists("stalk_cd") then
 					inst:SetStalking(inst.components.combat.target)
 				end
 			end
 			if inst:IsStalking() then
 				inst:StartAttackCooldown()
+				inst.sg.statemem.stalkingstand = true
 				inst.AnimState:PlayAnimation("tired_standwalk")
 				inst.AnimState:PushAnimation("tired_idlewalk")
 			else
@@ -513,6 +576,15 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(11, function(inst)
+				if inst.canwakeuphit and not (inst.sg.statemem.stalkingstand or inst.sg.statemem.roar) then
+					local slamtarget = FindSlamTarget(inst, SLAM_DETECT_RANGE_SQ)
+					if slamtarget ~= nil then
+						inst:ForceFacePoint(slamtarget.Transform:GetWorldPosition())
+						inst.sg:GoToState("attack_slam", slamtarget)
+					end
+				end
+			end),
 			FrameEvent(16, function(inst) inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.5) end),
 		},
 
@@ -929,7 +1001,12 @@ local states =
 		tags = { "hit", "busy" },
 
 		onenter = function(inst, trytired)
-			inst:SetStalking(nil)
+			if inst:IsStalking() then
+				inst:SetStalking(nil)
+				if inst.nostalkcd then
+					inst.components.combat:ResetCooldown()
+				end
+			end
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("hit")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
@@ -1047,6 +1124,7 @@ local states =
 				inst.sg.statemem.collides = nil
 			end),
 			FrameEvent(10, function(inst) inst.SoundEmitter:PlaySound("daywalker/action/step") end),
+			FrameEvent(11, DoPounceShake),
 			FrameEvent(12, function(inst)
 				inst.sg:AddStateTag("pounce_recovery")
 				inst.components.combat:SetDefaultDamage(TUNING.DAYWALKER_XCLAW_DAMAGE)
@@ -1083,39 +1161,18 @@ local states =
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
 					if inst.sg.statemem.targets ~= nil and next(inst.sg.statemem.targets) ~= nil then
-						local maxdiff = PI / 4
-						local maxdistsq = 9 * 9
-						local rot = inst.Transform:GetRotation() * DEGREES
-						local x, y, z = inst.Transform:GetWorldPosition()
-
-						local function IsSlamTarget(guy)
-							if guy:IsValid() and
-								--guy:HasTag("player") and
-								not (guy.components.health ~= nil and
-									guy.components.health:IsDead() or
-									guy:HasTag("playerghost")) and
-								guy.entity:IsVisible()
-								then
-								local x1, y1, z1 = guy.Transform:GetWorldPosition()
-								local dx = x1 - x
-								local dz = z1 - z
-								return dx * dx + dz * dz < maxdistsq
-									and DiffAngleRad(rot, math.atan2(-dz, dx)) < maxdiff
-									and TheWorld.Map:IsAboveGroundAtPoint(x1, y1, z1)
-							end
-							return false
-						end
-
 						local target = inst.components.combat.target
 						local targethit = target ~= nil and inst.sg.statemem.targets[target]
 						local slamtarget
 						if inst.canslam then
-							if targethit and IsSlamTarget(target) then
+							local x, y, z = inst.Transform:GetWorldPosition()
+							local rot = inst.Transform:GetRotation()
+							if targethit and IsSlamTarget(x, z, target, SLAM_DETECT_RANGE_SQ, rot) then
 								slamtarget = target
 							else
 								local targets = {}
 								for k in pairs(inst.sg.statemem.targets) do
-									if k ~= target and IsSlamTarget(k) then
+									if k ~= target and IsSlamTarget(x, z, k, SLAM_DETECT_RANGE_SQ, rot) then
 										table.insert(targets, k)
 									end
 								end
@@ -1369,12 +1426,25 @@ local states =
 			FrameEvent(26, function(inst)
 				inst.sg.statemem.speed = 4
 				inst.sg.statemem.decel = -1
+
 				local sinkhole = SpawnPrefab("daywalker_sinkhole")
 				sinkhole.Transform:SetPosition(inst.Transform:GetWorldPosition())
 				sinkhole:PushEvent("docollapse")
+
 				inst.components.combat:SetDefaultDamage(TUNING.DAYWALKER_SLAM_DAMAGE)
-				inst.sg.statemem.targets = {}
-				DoAOEAttack(inst, 0, TUNING.DAYWALKER_SLAM_SINKHOLERADIUS, 0.7, 0.7, false, inst.sg.statemem.targets)
+				local targets = {}
+				inst.sg.statemem.targets = targets
+				DoAOEAttack(inst, 0, TUNING.DAYWALKER_SLAM_SINKHOLERADIUS, 0.7, 0.7, false, targets)
+				--local targets table; this code is valid even if we left state
+				for k in pairs(targets) do
+					if k:IsValid() and k:HasTag("smallcreature") then
+						targets[k] = nil
+					end
+				end
+				if next(targets) ~= nil then
+					--reinvigorated when successfully hitting something not small
+					inst:DeltaFatigue(TUNING.DAYWALKER_FATIGUE.SLAM_HIT)
+				end
 			end),
 			FrameEvent(61, function(inst)
 				inst.sg:RemoveStateTag("nointerrupt")
@@ -1416,7 +1486,6 @@ local states =
 		onenter = function(inst, target)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("taunt")
-			inst.SoundEmitter:PlaySound("daywalker/voice/chainbreak_break_2")
 			if target ~= nil and target:IsValid() then
 				inst:ForceFacePoint(target.Transform:GetWorldPosition())
 			end
@@ -1436,10 +1505,14 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(4, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/chainbreak_break_2") end),
 			FrameEvent(18, function(inst)
 				inst.components.epicscare:Scare(5)
 			end),
-			FrameEvent(19, function(inst) inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.3) end),
+			FrameEvent(19, function(inst)
+				inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.3)
+				DoRoarShake(inst)
+			end),
 			FrameEvent(38, function(inst)
 				inst.sg:AddStateTag("caninterrupt")
 			end),

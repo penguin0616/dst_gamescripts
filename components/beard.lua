@@ -14,11 +14,11 @@ local function OnDayComplete(self)
         if skilltreeupdater then
             local accumulation = 0
             if skilltreeupdater:IsActivated("wilson_beard_6") then
-                accumulation = 0.55 -- 4, 8, 16 -> 2, 5, 10 -> -11
+                accumulation = TUNING.SKILLS.WILSON_BEARD_6
             elseif skilltreeupdater:IsActivated("wilson_beard_5") then
-                accumulation = 0.30 -- 4, 8, 16 -> 3, 6, 12 -> -7
+                accumulation = TUNING.SKILLS.WILSON_BEARD_5
             elseif skilltreeupdater:IsActivated("wilson_beard_4") then
-                accumulation = 0.05 -- 4, 8, 16 -> 3, 7, 15 -> -3
+                accumulation = TUNING.SKILLS.WILSON_BEARD_4
             end
             self.daysgrowthaccumulator = self.daysgrowthaccumulator + accumulation
             bonusdays = math.ceil(self.daysgrowthaccumulator)
@@ -185,6 +185,10 @@ function Beard:OnLoad(data)
     end        
 end
 
+function Beard:LoadPostPass(newents, data)
+    self:UpdateBeardInventory()
+end
+
 function Beard:SetSkin(skinname)
     self.skinname = skinname
     for k = 0, self.daysgrowth do
@@ -219,8 +223,9 @@ function Beard:GetBeardSkinAndLength()
 end
 
 function Beard:UpdateBeardInventory()
+    local level = nil
+    
     if self.inst.components.skilltreeupdater and self.inst.components.skilltreeupdater:IsActivated("wilson_beard_7") then
-        local level = nil
         if self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL3 then
             level = "beard_sack_3"
         elseif self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL2 then
@@ -228,17 +233,18 @@ function Beard:UpdateBeardInventory()
         elseif self.bits >= TUNING.WILSON_BEARD_BITS.LEVEL1 then
             level = "beard_sack_1"
         end
+    end
 
-        local beardsack = self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BEARD)
-        if not level and beardsack then
-            beardsack.components.container:DropEverything()
-            beardsack:Remove()
-        end
-        if level and not beardsack then
+    local beardsack = self.inst.components.inventory and self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BEARD)
+    if level then
+        if not beardsack then
+            -- Has level no beard sack. Give beard sack.
             local newsack = SpawnPrefab(level)
             self.inst.components.inventory:Equip(newsack)
-        elseif level and not beardsack:HasTag(level) then
+        elseif not beardsack:HasTag(level) then
+            -- Has level and beard sack, and beard sack level is wrong. Give appropriate beard sack level and transfer items.
             local bearditems = beardsack.components.container:RemoveAllItems()
+            beardsack.components.container:Close(self.inst)
             beardsack:Remove()
             local newsack = SpawnPrefab(level)
             self.inst.components.inventory:Equip(newsack)
@@ -246,6 +252,12 @@ function Beard:UpdateBeardInventory()
                 newsack.components.container:GiveItem(item, slot, nil, true)
             end
         end
+    else
+        if beardsack then
+            -- No level has beard sack. Remove beard sack.
+            beardsack.components.container:DropEverything()
+            beardsack:Remove()
+    end
     end
 end
 

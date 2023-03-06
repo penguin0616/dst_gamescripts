@@ -833,6 +833,7 @@ params.beard_sack_1 =
     type = "side_inv",    
     acceptsstacks = true,
     usespecificslotsforitems = true,
+    lowpriorityselection = true,
    -- excludefromcrafting = false,
 }
 
@@ -870,6 +871,7 @@ params.beard_sack_2 =
     type = "side_inv",    
     acceptsstacks = true,
     usespecificslotsforitems = true,
+    lowpriorityselection = true,
    -- excludefromcrafting = false,
 }
 
@@ -908,6 +910,7 @@ params.beard_sack_3 =
     type = "side_inv",    
     acceptsstacks = true,
     usespecificslotsforitems = true,
+    lowpriorityselection = true,
    -- excludefromcrafting = false,
 }
 
