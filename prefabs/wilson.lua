@@ -7,6 +7,7 @@ local assets =
     Asset("ANIM", "anim/ui_beard_3x1.zip"),
     Asset("ANIM", "anim/ui_beard_2x1.zip"),
     Asset("ANIM", "anim/ui_beard_1x1.zip"),
+    Asset("ANIM", "anim/player_idles_wilson.zip"),
 }
 
 local prefabs =
@@ -95,8 +96,9 @@ local function OnGrowShortBeard(inst, skinname)
         inst.AnimState:OverrideSymbol("beard", "beard", "beard_short")
     else
         inst.AnimState:OverrideSkinSymbol("beard", skinname, "beard_short" )
-    end
+    end    
     inst.components.beard.bits = BEARD_BITS[1]
+    inst.customidleanim = "idle_wilson"
 end
 
 local function OnGrowMediumBeard(inst, skinname)
@@ -104,8 +106,9 @@ local function OnGrowMediumBeard(inst, skinname)
         inst.AnimState:OverrideSymbol("beard", "beard", "beard_medium")
     else
         inst.AnimState:OverrideSkinSymbol("beard", skinname, "beard_medium" )
-    end
+    end    
     inst.components.beard.bits = BEARD_BITS[2]
+    inst.customidleanim = "idle_wilson_beard"
 end
 
 local function OnGrowLongBeard(inst, skinname)
@@ -115,6 +118,7 @@ local function OnGrowLongBeard(inst, skinname)
         inst.AnimState:OverrideSkinSymbol("beard", skinname, "beard_long" )
     end
     inst.components.beard.bits = BEARD_BITS[3]
+    inst.customidleanim = "idle_wilson_beard"
 end
 
 local function EmptyBeard(inst)
@@ -125,8 +129,14 @@ local function EmptyBeard(inst)
     end
 end
 
+local function OnShaved(inst)
+    inst.customidleanim = "idle_wilson"
+end
+
 local function master_postinit(inst)
     inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
+
+    inst.customidleanim = "idle_wilson"
 
     inst.components.foodaffinity:AddPrefabAffinity("baconeggs", TUNING.AFFINITY_15_CALORIES_HUGE)
 
@@ -140,6 +150,8 @@ local function master_postinit(inst)
 
     inst.EmptyBeard = EmptyBeard
     inst:ListenForEvent("death", EmptyBeard)
+
+    inst:ListenForEvent("shaved", OnShaved)
 
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/wilson").master_postinit(inst)

@@ -18,6 +18,8 @@ local SkillTreeToast = Class(Widget, function(self, owner, controls)
     self.tab_gift = self.root:AddChild(UIAnimButton("tab_skills", "tab_skills", nil, nil, "off", nil, nil))
     self.tab_gift:Disable()
 
+    self.tab_gift:SetLoop("active_loop", true)
+
     self.tab_gift:SetTooltip(STRINGS.SKILLTREE.NEW_SKILL_POINT)
     self.tab_gift:SetTooltipPos(0, -40, 0)
 
@@ -58,10 +60,9 @@ end
 
 -- Handles animation stuff and such
 function SkillTreeToast:OnClickEnabled()
-   
-    if not self.tab_gift.animstate:IsCurrentAnimation("active_pre") then
-        self.tab_gift:SetLoop("active_loop", true)
+    if not self.tab_gift.animstate:IsCurrentAnimation("active_pre") then        
         self.tab_gift.animstate:PlayAnimation("active_loop", true)
+        self.tab_gift:SetLoop("active_loop", true)
     end
     --self.tab_gift:SetTooltip(STRINGS.UI.ITEM_SCREEN.ENABLED_TOAST_TOOLTIP)
     --[[
@@ -159,10 +160,25 @@ function SkillTreeToast:OnUpdate()
     local playercontroller = ThePlayer.components.playercontroller
     local buffaction = TheInput:ControllerAttached() and playercontroller:GetInspectButtonAction(playercontroller:GetControllerTarget()) or nil
     if buffaction == nil then
+
+        if TheInput:ControllerAttached() then
+            if not self.tab_gift.animstate:IsCurrentAnimation("active_loop") then
+                self.tab_gift:SetIdleAnim("active_loop",true)
+                self.tab_gift:SetFocusAnim("active_loop",true)
+                self.tab_gift.animstate:PlayAnimation("active_loop",true)
+            end
+        end
         self.controller_help:Show()
         return
     end
 
+    if TheInput:ControllerAttached() then        
+        if not self.tab_gift.animstate:IsCurrentAnimation("off") then
+            self.tab_gift:SetIdleAnim("off",true)
+            self.tab_gift:SetFocusAnim("off",true)
+            self.tab_gift.animstate:PlayAnimation("off",true)
+        end
+    end
     self.controller_help:Hide()
 end
 

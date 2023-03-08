@@ -376,10 +376,10 @@ local function OnDebrisDirty(inst)
 	end
 end
 
-local LIGHT_INTENSITY_MIN = 0.25
-local LIGHT_INTENSITY_PER_LEVEL = 0.03
-local LIGHT_FALLOFF_MIN = 0.7
-local LIGHT_FALLOFF_PER_LEVEL = 0.02
+local LIGHT_COLOUR = RGB(54, 18, 18)
+local function SetLightColour(inst, intensity)
+	inst.Light:SetColour(LIGHT_COLOUR[1] * intensity, LIGHT_COLOUR[2] * intensity, LIGHT_COLOUR[3] * intensity)
+end
 
 local function UpdateBuild(inst, workleft)
 	if math.floor(workleft) <= 1 then
@@ -388,8 +388,9 @@ local function UpdateBuild(inst, workleft)
 			inst.level = "lowest"
 			inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_lowest")
 			inst.base.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_lowest_base")
-			inst.Light:SetIntensity(LIGHT_INTENSITY_MIN + LIGHT_INTENSITY_PER_LEVEL * 3)
-			inst.Light:SetFalloff(LIGHT_FALLOFF_MIN + LIGHT_FALLOFF_PER_LEVEL * 3)
+			if inst.Light ~= nil then
+				SetLightColour(inst, 1.3)
+			end
 			inst:AddTag("worker_recoil")
 			return true, dlevel
 		end
@@ -399,8 +400,9 @@ local function UpdateBuild(inst, workleft)
 			inst.level = "low"
 			inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_low")
 			inst.base.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_low_base")
-			inst.Light:SetIntensity(LIGHT_INTENSITY_MIN + LIGHT_INTENSITY_PER_LEVEL * 2)
-			inst.Light:SetFalloff(LIGHT_FALLOFF_MIN + LIGHT_FALLOFF_PER_LEVEL * 2)
+			if inst.Light ~= nil then
+				SetLightColour(inst, 1.2)
+			end
 			inst:RemoveTag("worker_recoil")
 			return true, dlevel
 		end
@@ -410,8 +412,9 @@ local function UpdateBuild(inst, workleft)
 			inst.level = "med"
 			inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_med")
 			inst.base.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_med_base")
-			inst.Light:SetIntensity(LIGHT_INTENSITY_MIN + LIGHT_INTENSITY_PER_LEVEL)
-			inst.Light:SetFalloff(LIGHT_FALLOFF_MIN + LIGHT_FALLOFF_PER_LEVEL)
+			if inst.Light ~= nil then
+				SetLightColour(inst, 1.1)
+			end
 			inst:RemoveTag("worker_recoil")
 			return true, dlevel
 		end
@@ -496,9 +499,9 @@ local function FadeOutHole(inst)
 end
 
 local function UpdateFadeLight(inst)
-	inst.fadelight = inst.fadelight - 0.01
+	inst.fadelight = inst.fadelight - 0.05
 	if inst.fadelight > 0 then
-		inst.Light:SetIntensity(inst.fadelight)
+		SetLightColour(inst, inst.fadelight)
 	else
 		inst.Light:Enable(false)
 		inst.fadelighttask:Cancel()
@@ -509,7 +512,10 @@ end
 local function OnDestroyed(inst)
 	FadeOutHole(inst)
 	ErodeAway(inst)
-	inst.fadelighttask = inst:DoPeriodicTask(0, UpdateFadeLight)
+	if inst.Light ~= nil then
+		inst.fadelight = .8
+		inst.fadelighttask = inst:DoPeriodicTask(0, UpdateFadeLight)
+	end
 end
 
 local function ShakePillarFall(inst)
@@ -524,10 +530,10 @@ local function OnWorkFinished(inst, worker)
 		inst.base:Remove()
 		inst.AnimState:PlayAnimation("pillar_fall")
 		inst.SoundEmitter:PlaySound("daywalker/pillar/destroy")
-		inst.Light:SetIntensity(0.22)
-		inst.Light:SetFalloff(0.8)
-		inst.fadelight = 0.12
-		inst:DoTaskInTime(21 * FRAMES, UpdateFadeLight)
+		if inst.Light ~= nil then
+			SetLightColour(inst, .9)
+			inst:DoTaskInTime(21 * FRAMES, SetLightColour, .8)
+		end
 		inst:DoTaskInTime(22 * FRAMES, ShakePillarFall)
 		inst:ListenForEvent("animover", OnDestroyed)
 		inst:AddTag("NOCLICK")
@@ -579,7 +585,7 @@ local function fn()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddSoundEmitter()
-	inst.entity:AddLight()
+	--inst.entity:AddLight()
 	inst.entity:AddMiniMapEntity()
 	inst.entity:AddNetwork()
 
@@ -593,12 +599,17 @@ local function fn()
 	inst.AnimState:SetBank("daywalker_pillar")
 	inst.AnimState:SetBuild("daywalker_pillar")
 	inst.AnimState:PlayAnimation("idle", true)
+	inst.AnimState:SetSymbolLightOverride("pillar_parts_red", 1)
+	inst.AnimState:SetSymbolLightOverride("fx_vib_pink", 1)
+	inst.AnimState:SetSymbolLightOverride("zap", 1)
 
-	inst.Light:SetIntensity(LIGHT_INTENSITY_MIN)
-	inst.Light:SetRadius(6)
-	inst.Light:SetFalloff(LIGHT_FALLOFF_MIN)
-	inst.Light:Enable(true)
-	inst.Light:SetColour(1, .5, .5)
+	if inst.Light ~= nil then
+		inst.Light:SetIntensity(.85)
+		inst.Light:SetRadius(6)
+		inst.Light:SetFalloff(.7)
+		inst.Light:Enable(true)
+		inst.Light:SetColour(unpack(LIGHT_COLOUR))
+	end
 
 	inst.MiniMapEntity:SetIcon("daywalker_pillar.png")
 	inst.MiniMapEntity:SetPriority(4)
@@ -651,7 +662,9 @@ local function fn()
 				inst.persists = false
 				inst.components.workable:SetWorkable(false)
 				inst:AddTag("NOCLICK")
-				inst.Light:Enable(false)
+				if inst.Light ~= nil then
+					inst.Light:Enable(false)
+				end
 				FadeOutHole(inst)
 				ErodeAway(inst.base)
 				inst:DoPeriodicTask(0, Darken)
@@ -703,6 +716,8 @@ local function fn_base()
 	inst.AnimState:PlayAnimation("idle", true)
 	inst.AnimState:SetFinalOffset(1)
 	inst.AnimState:OverrideSymbol("pillar_full", "daywalker_pillar", "pillar_full_base")
+	inst.AnimState:HideSymbol("fx_vibration")
+	inst.AnimState:SetLightOverride(1)
 
 	inst.entity:SetPristine()
 
@@ -734,6 +749,7 @@ local function fn_hole()
 	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
 	inst.AnimState:SetLayer(LAYER_BACKGROUND)
 	inst.AnimState:SetSortOrder(3)
+	inst.AnimState:SetSymbolLightOverride("pillar_crack_red", 1)
 
 	inst.entity:SetPristine()
 

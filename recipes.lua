@@ -511,7 +511,7 @@ Recipe2("turf_woodfloor",					{Ingredient("boards", 1)},																				TECH
 Recipe2("turf_checkerfloor",				{Ingredient("marble", 1)},																				TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("turf_carpetfloor",					{Ingredient("boards", 1), Ingredient("beefalowool", 1)},												TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("turf_dragonfly",					{Ingredient("dragon_scales", 1), Ingredient("cutstone", 1)},											TECH.SCIENCE_TWO,			{numtogive=4})
-Recipe2("turf_beard_rug",					{Ingredient("beardhair", 4), Ingredient("cutgrass", 4)},												TECH.SCIENCE_TWO,			{numtogive=4})
+Recipe2("turf_beard_rug",					{Ingredient("beardhair", 2), Ingredient("cutgrass", 2)},												TECH.SCIENCE_TWO,			{numtogive=4})
 
 Recipe2("turf_carpetfloor2",				{Ingredient("boards", 1), Ingredient("beefalowool", 1)},												TECH.SCIENCE_TWO,			{numtogive=4})
 Recipe2("turf_mosaic_grey",					{Ingredient("marble", 1)},																				TECH.SCIENCE_TWO,			{numtogive=4})
@@ -884,8 +884,8 @@ Recipe("potatosack",                    {Ingredient("cutgrass", 2), Ingredient("
 Recipe2("transmute_log",                {Ingredient("twigs", 3)}, 	TECH.NONE, 				{product="log", image="log.tex",     builder_tag="alchemist", description="transmute_log"})
 Recipe2("transmute_twigs",              {Ingredient("log", 1)}, 	TECH.NONE, 				{product="twigs", image="twigs.tex", builder_tag="alchemist", description="transmute_twigs", numtogive = 2})
 --
-Recipe2("transmute_bluegem",            {Ingredient("redgem", 3)}, 	TECH.NONE, 				{product="bluegem", image="bluegem.tex", builder_tag="gem_alchemistI", description="transmute_bluegem"})
-Recipe2("transmute_redgem",             {Ingredient("bluegem",3)}, 	TECH.NONE, 				{product="redgem", image="redgem.tex", builder_tag="gem_alchemistI", description="transmute_redgem"})
+Recipe2("transmute_bluegem",            {Ingredient("redgem", 2)}, 	TECH.NONE, 				{product="bluegem", image="bluegem.tex", builder_tag="gem_alchemistI", description="transmute_bluegem"})
+Recipe2("transmute_redgem",             {Ingredient("bluegem", 2)}, TECH.NONE, 				{product="redgem", image="redgem.tex", builder_tag="gem_alchemistI", description="transmute_redgem"})
 Recipe2("transmute_purplegem",          {Ingredient("bluegem", 1),Ingredient("redgem", 1)}, TECH.NONE, {product="purplegem", image="purplegem.tex", builder_tag="gem_alchemistI", description="transmute_purplegem"})
 
 Recipe2("transmute_orangegem",          {Ingredient("purplegem", 3)}, TECH.NONE, 			{product="orangegem", image="orangegem.tex", builder_tag="gem_alchemistII", description="transmute_orangegem"})
@@ -908,7 +908,7 @@ Recipe2("transmute_meat",               {Ingredient("smallmeat", 3)}, 	TECH.NONE
 Recipe2("transmute_smallmeat",          {Ingredient("meat", 1)}, 	TECH.NONE, 				{product="smallmeat", image="smallmeat.tex",     builder_tag="ick_alchemistI", description="transmute_smallmeat", numtogive = 2})
 
 Recipe2("transmute_beardhair",          {Ingredient("beefalowool", 2)}, 	TECH.NONE, 		{product="beardhair", image="beardhair.tex",     builder_tag="ick_alchemistII", description="transmute_beardhair"})
-Recipe2("transmute_beefalowool",        {Ingredient("beardhair", 2)}, 	TECH.NONE, 			{product="beefalowool", image="beefalowool.tex",     builder_tag="ick_alchemistII", description="transmute_beefalowool", numtogive = 3})
+Recipe2("transmute_beefalowool",        {Ingredient("beardhair", 2)}, 	TECH.NONE, 			{product="beefalowool", image="beefalowool.tex",     builder_tag="ick_alchemistII", description="transmute_beefalowool"})
 
 Recipe2("transmute_boneshard",          {Ingredient("houndstooth", 2)}, 	TECH.NONE, 		{product="boneshard", image="boneshard.tex",     builder_tag="ick_alchemistIII", description="transmute_boneshard"})
 Recipe2("transmute_houndstooth",        {Ingredient("boneshard", 2)}, 	    TECH.NONE, 		{product="houndstooth", image="houndstooth.tex",     builder_tag="ick_alchemistIII", description="transmute_houndstooth"})

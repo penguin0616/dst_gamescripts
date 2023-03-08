@@ -14038,7 +14038,7 @@ STRINGS.SKILLTREE = {
         WILSON_ALCHEMY_1_DESC = "Transform 3 Twigs into a Log.\nTransform a Log into 2 Twigs.",
 
         WILSON_ALCHEMY_2_TITLE = "Transmute Gems I",
-        WILSON_ALCHEMY_2_DESC = "Transform 3 Red Gems into a Blue Gem.\nTransform 3 Blue Gems into a Red Gem.\nTransform a Blue and Red Gem into a Purple Gem.",
+        WILSON_ALCHEMY_2_DESC = "Transform 2 Red Gems into a Blue Gem.\nTransform 2 Blue Gems into a Red Gem.\nTransform a Blue and Red Gem into a Purple Gem.",
 
         WILSON_ALCHEMY_5_TITLE = "Transmute Gems II",
         WILSON_ALCHEMY_5_DESC = "Transform 3 Purple Gems into an Orange Gem.\nTransform 3 Orange Gems into a Yellow Gem.",
@@ -14059,7 +14059,7 @@ STRINGS.SKILLTREE = {
         WILSON_ALCHEMY_4_DESC = "Transform 3 Morsels into a Meat.\nTransform a Meat into 2 Morsels.",
 
         WILSON_ALCHEMY_9_TITLE = "Transmute Icky II",
-        WILSON_ALCHEMY_9_DESC = "Transform Beard Hair into 2 Beefalo Hair.\n Transform 2 Beefalo Hair into Beard Hair.",
+        WILSON_ALCHEMY_9_DESC = "Transform 2 Beard Hair into Beefalo Hair.\n Transform 2 Beefalo Hair into Beard Hair.",
 
         WILSON_ALCHEMY_10_TITLE = "Transmute Icky III",
         WILSON_ALCHEMY_10_DESC = "Transform 6 Rot into Manure.\nTransform 2 Hound's Teeth into a Bone Shards.\nTransform 2 Bone Shards into a Hound's Tooth.",

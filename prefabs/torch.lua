@@ -335,6 +335,7 @@ end
 
 local function OnHit(inst)
 	inst.AnimState:PlayAnimation("land")
+	inst.SoundEmitter:PlaySound("wilson_rework/torch/stick_ground")
 	inst.components.inventoryitem.canbepickedup = true
 end
 

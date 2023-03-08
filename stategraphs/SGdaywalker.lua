@@ -328,7 +328,7 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetNoFaced()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
 			inst.AnimState:PlayAnimation("tired_pre")
 			inst:ResetFatigue()
 			inst.sg.mem.tired_start = GetTime()
@@ -364,9 +364,9 @@ local states =
 				inst.sg.mem.tired_start = nil
 				inst.sg.mem.tired_hit_alt_count = nil
 				if inst.sg.statemem.struggling then
-					inst.Transform:SetSixFaced()
+					inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 				else
-					inst.Transform:SetFourFaced()
+					inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 				end
 			end
 		end,
@@ -378,7 +378,7 @@ local states =
 
 		onenter = function(inst, loops)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetNoFaced()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
 			if not inst.AnimState:IsCurrentAnimation("chained_idle") then
 				inst.AnimState:PlayAnimation("chained_idle", true)
 			end
@@ -442,9 +442,9 @@ local states =
 					inst.components.health:StopRegen()
 				end
 				if inst.sg.statemem.struggling then
-					inst.Transform:SetSixFaced()
+					inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 				else
-					inst.Transform:SetFourFaced()
+					inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 				end
 			end
 			if inst.hostile and inst.engaged and not inst.sg.statemem.hostileloop then
@@ -460,7 +460,7 @@ local states =
 		onenter = function(inst, loops)
 			inst.sg.statemem.isincombat = inst.hostile and not inst.defeated
 			inst.components.locomotor:Stop()
-			inst.Transform:SetNoFaced()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
 			if inst.hostile and not inst.defeated then
 				inst.sg.mem.tired_hit_alt_count = (inst.sg.mem.tired_hit_alt_count or 0) + 1
 				if inst.sg.mem.tired_hit_alt_count <= 0 then
@@ -535,9 +535,9 @@ local states =
 					inst.components.health:StopRegen()
 				end
 				if inst.sg.statemem.struggling then
-					inst.Transform:SetSixFaced()
+					inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 				else
-					inst.Transform:SetFourFaced()
+					inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 				end
 			end
 		end,
@@ -549,7 +549,7 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetNoFaced()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
 			if not inst:IsStalking() then
 				if not inst.components.timer:TimerExists("roar_cd") and math.random() < 0.5 then
 					inst.sg.statemem.roar = true
@@ -602,9 +602,9 @@ local states =
 
 		onexit = function(inst)
 			if inst.sg.statemem.struggling then
-				inst.Transform:SetSixFaced()
+				inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			else
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 		end,
 	},
@@ -632,7 +632,7 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("struggle1")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
 			inst.sg.mem.struggle_count = (inst.sg.mem.struggle_count or 0) + 1
@@ -684,7 +684,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 		end,
 	},
@@ -694,7 +694,7 @@ local states =
 		tags = { "busy", "nointerrupt", "canattach" },
 
 		onenter = function(inst)
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("struggle1_pst")
 			inst.sg:SetTimeout(GetRandomMinMax(4 * FRAMES, inst.AnimState:GetCurrentAnimationLength()))
 		end,
@@ -706,7 +706,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 		end,
 	},
@@ -716,7 +716,7 @@ local states =
 		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst, targets)
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("struggle2")
 			inst.sg:SetTimeout(GetRandomMinMax(13 * FRAMES, inst.AnimState:GetCurrentAnimationLength()))
 			inst.sg.statemem.targets = targets
@@ -743,7 +743,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 		end,
 	},
@@ -754,7 +754,7 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("shrug1")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
 			RandomPillarFacing(inst)
@@ -811,7 +811,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 			if not inst.sg.statemem.shrugging then
 				inst.Physics:ClearMotorVelOverride()
@@ -825,7 +825,7 @@ local states =
 		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst)
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("shrug2")
 			inst.Physics:SetMotorVelOverride(1, 0, 0)
 		end,
@@ -875,7 +875,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
@@ -887,7 +887,7 @@ local states =
 		tags = { "busy", "nointerrupt", "canattach" },
 
 		onenter = function(inst)
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("shrug_pst")
 			inst.sg:SetTimeout(math.random() * inst.AnimState:GetCurrentAnimationLength())
 		end,
@@ -899,7 +899,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 		end,
 	},
@@ -910,7 +910,7 @@ local states =
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("collide")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
 
@@ -938,7 +938,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 			inst.Physics:ClearMotorVelOverride()
 			inst.Physics:Stop()
@@ -951,7 +951,7 @@ local states =
 
 		onenter = function(inst, attachpos)
 			inst.components.locomotor:Stop()
-			inst.Transform:SetSixFaced()
+			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("attach_"..(attachpos or "top").."_leech")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
 			inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.2)
@@ -967,7 +967,7 @@ local states =
 
 		onexit = function(inst)
 			if not inst.sg.statemem.struggling then
-				inst.Transform:SetFourFaced()
+				inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 			end
 		end,
 	},

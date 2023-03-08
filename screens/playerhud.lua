@@ -360,50 +360,21 @@ function PlayerHud:OpenContainer(container, side)
     end
 end
 
+function PlayerHud:RemoveDressupWidget()
+    if self.dressupAvatarPopUpcreen then
+        self.dressupAvatarPopUpcreen:Kill()
+        self.dressupAvatarPopUpcreen = nil
+    end 
+end
+
 function PlayerHud:TogglePlayerInfoPopup(player_name, data, show_net_profile, force)
-    if self.PlayerInfoPopupScreen ~= nil then
+    if self.dressupAvatarPopUpcreen ~= nil then
+        self.dressupAvatarPopUpcreen:Close()
+        self.dressupAvatarPopUpcreen = nil
+    elseif self.OpenPlayerInfoScreen ~= nil then
         POPUPS.PLAYERINFO:Close(self.owner)
+        self:OpenPlayerInfoScreen(player_name, data, show_net_profile, force)
     end
-    self:OpenPlayerInfoScreen(player_name, data, show_net_profile, force)
-end
-
-
-function PlayerHud:OpenPlayerAvatarPopup(player_name, data, show_net_profile, force)
-    if not self.playeravatarpopup then
-        self.playeravatarpopup = self.controls.right_root:AddChild(
-            data.inst ~= nil and
-            data.inst:HasTag("dressable") and
-            DressupAvatarPopup(self.owner, player_name, data) or
-            PlayerAvatarPopup(self.owner, player_name, data, show_net_profile and data.userid ~= nil and data.userid ~= self.owner.userid)
-        )
-    end
-end
-
-function PlayerHud:TogglePlayerAvatarPopup(player_name, data, show_net_profile, force)
-    if self.playeravatarpopup ~= nil and
-        self.playeravatarpopup.started and
-        self.playeravatarpopup.inst:IsValid() then
-        self.playeravatarpopup:Close()
-        if player_name == nil or
-            data == nil or
-            (data.userid ~= nil and self.playeravatarpopup.userid == data.userid) or --if we have a userid, test for that
-            (data.userid == nil and self.playeravatarpopup.target == data.inst) then --if no userid, then compare inst
-            self.playeravatarpopup = nil
-            return
-        end
-    end
-
-    if not force and GetGameModeProperty("no_avatar_popup") then
-        return
-    end
-
-    -- Don't show steam button for yourself or targets without a userid(skeletons)
-    self.playeravatarpopup = self.controls.right_root:AddChild(
-        data.inst ~= nil and
-        data.inst:HasTag("dressable") and
-        DressupAvatarPopup(self.owner, player_name, data) or
-        PlayerAvatarPopup(self.owner, player_name, data, show_net_profile and data.userid ~= nil and data.userid ~= self.owner.userid)
-    )
 end
 
 --ThePlayer.HUD:ShowEndOfMatchPopup({victory=true})
@@ -616,9 +587,15 @@ end
 
 function PlayerHud:OpenPlayerInfoScreen(player_name, data, show_net_profile, force)
     self:ClosePlayerInfoScreen()
-    self.playerinfoscreen = PlayerInfoPopupScreen(self.owner, player_name, data, show_net_profile, force)
-    self:OpenScreenUnderPause(self.playerinfoscreen)
-    return true
+    if data and data.inst ~= nil and data.inst:HasTag("dressable") then
+        self.dressupAvatarPopUpcreen = self.controls.right_root:AddChild( DressupAvatarPopup(self.owner, player_name, data) )
+        self.dressupAvatarPopUpcreen.started = false
+        self.dressupAvatarPopUpcreen:Start()
+    else
+        self.playerinfoscreen = PlayerInfoPopupScreen(self.owner, player_name, data, show_net_profile, force)
+        self:OpenScreenUnderPause(self.playerinfoscreen)
+        return true
+    end
 end
 
 function PlayerHud:ClosePlayerInfoScreen()
@@ -1073,7 +1050,6 @@ function PlayerHud:InspectSelf()
         if client_obj ~= nil then
             --client_obj.inst = self.owner --don't track yourself
             self:TogglePlayerInfoPopup(client_obj.name, client_obj)
-            --self:TogglePlayerAvatarPopup(client_obj.name, client_obj) -- don't show steam button for yourself
             return true
         end
     end
@@ -1089,11 +1065,9 @@ function PlayerHud:OnControl(control, down)
     if down then
         if control == CONTROL_INSPECT then
             if self:IsVisible() and
-                --self:IsPlayerAvatarPopUpOpen() and
                 self:IsPlayerInfoPopUpOpen() and
                 self.owner.components.playercontroller:IsEnabled() then
                 self:TogglePlayerInfoPopup()
-                --self:TogglePlayerAvatarPopup()
                 return true
             elseif self.controls.votedialog:CheckControl(control, down) then
                 return true
@@ -1128,9 +1102,7 @@ function PlayerHud:OnControl(control, down)
 				closed = true
 			end
 			if self:IsPlayerInfoPopUpOpen() and
-                --self:IsPlayerAvatarPopUpOpen() then
                 self:TogglePlayerInfoPopup() then
-                --self:TogglePlayerAvatarPopup()
                 closed = true
 			end
 			if not closed then

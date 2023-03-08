@@ -993,8 +993,6 @@ local RPC_HANDLERS =
         local skilltreeupdater = player.components.skilltreeupdater
         if skilltreeupdater then
             skilltreeupdater:AddSkillXP(amount, nil, true)
-            ThePlayer.new_skill_available_popup = true
-            ThePlayer:PushEvent("newskillpointupdated")
         end
     end,
 
@@ -1007,7 +1005,7 @@ local RPC_HANDLERS =
         player:OnPostActivateHandshake_Server(state)
     end,
 
-    -- NOTES(JBK): 3 more RPCs will flood over the RPC limit of 64. Be careful.
+    -- NOTES(JBK): RPC limit is at 128, with 1-127 usable.
 }
 
 RPC = {}

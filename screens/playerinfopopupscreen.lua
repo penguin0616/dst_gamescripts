@@ -9,14 +9,13 @@ local skilltreedefs = require "prefabs/skilltree_defs"
 
 local SCREEN_OFFSET = 0.15 * RESOLUTION_X
 
-local PlayerInfoPopup = Class(Screen, function(self, owner, player_name, data, show_net_profile, force)
+local PlayerInfoPopup = Class(Screen, function(self, owner, player_name, data, show_net_profile, force)    
     self.owner = owner
     self.data = data or self.owner.components.playeravatardata:GetData()
     self.player_name = player_name or self.data.name
     self.show_net_profile = show_net_profile
     self.force = force
     self.currentcharacter = self:ResolveCharacter(self.data)
-
     Screen._ctor(self, "PlayerInfoPopup")
 
     local black = self:AddChild(ImageButton("images/global.xml", "square.tex"))
@@ -31,17 +30,43 @@ local PlayerInfoPopup = Class(Screen, function(self, owner, player_name, data, s
         black:SetOnClick(function()  TheFrontEnd:PopScreen() end)
     end)
 
-	self.root = self:AddChild(Widget("root"))
-	self.root:SetScaleMode(SCALEMODE_PROPORTIONAL)
-    self.root:SetHAnchor(ANCHOR_MIDDLE)
-    self.root:SetVAnchor(ANCHOR_MIDDLE)
-    -- TODO: Is this how it should be put in place? or should it be by some percentage?
-	self.root:SetPosition(440,-30)
+    self.anchor = self:AddChild(Widget("anchor"))
+    self.anchor:SetScaleMode(SCALEMODE_PROPORTIONAL)
+    self.anchor:SetHAnchor(ANCHOR_RIGHT)
+    self.anchor:SetVAnchor(ANCHOR_MIDDLE)
 
+	self.root = self.anchor:AddChild(Widget("root"))
+	self.root:SetPosition(-420,-30)
+
+    local prefab = nil
+    if self.data and self.data.inst then
+        prefab = self.data.inst.prefab
+    else
+        prefab = self.owner.prefab
+    end
+
+    if self.currentcharacter == "notselected" then
+        self:MakePlayerAvatarPopup()
+    elseif skilltreedefs.SKILLTREE_DEFS[prefab] then
+        self:MakeTopPanel()
+        self:MakeTabs()
+        self:MakeBG()
+        self:MakeSkillTree()
+    else
+        self:MakeTopPanel()
+        self:MakeBG()
+        self:MakePlayerAvatarPopup()
+    end
+
+    TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
+
+    SetAutopaused(true)
+end)
+
+function PlayerInfoPopup:MakeTopPanel()
     self.root.bg = self.root:AddChild(Image("images/skilltree.xml", "playerinfo_bg.tex"))
     self.root.bg:SetPosition(-5,240)
     self.root.bg:ScaleToSize(406,164)
-    
 
     self.title = self.root:AddChild(Text(self.data.colour ~= nil and TALKINGFONT or BUTTONFONT, 32))
     self.title:SetPosition(0,225)
@@ -52,31 +77,8 @@ local PlayerInfoPopup = Class(Screen, function(self, owner, player_name, data, s
     else
         self.title:SetColour(0, 0, 0, 1)
     end
-
     self:UpdateDisplayName()
-
-    local prefab = nil
-    if self.data and self.data.inst then
-        prefab = self.data.inst.prefab
-    else
-        prefab = self.owner.prefab
-    end
-    
-    
-    
-    if skilltreedefs.SKILLTREE_DEFS[prefab] then
-        self:MakeTabs()
-        self:MakeBG()
-        self:MakeSkillTree()
-    else
-        self:MakeBG()
-        self:MakePlayerAvatarPopup()
-    end
-
-    TheCamera:PushScreenHOffset(self, SCREEN_OFFSET)
-
-    SetAutopaused(true)
-end)
+end
 
 function PlayerInfoPopup:MakeBG()
     self.root.playerbg = self.root:AddChild(Image("images/skilltree2.xml", "background.tex"))
@@ -86,15 +88,6 @@ function PlayerInfoPopup:MakeBG()
     self.bg_scratches = self.root:AddChild(Image("images/skilltree.xml", "background_scratches.tex"))
     self.bg_scratches:SetPosition(0,-20)
     self.bg_scratches:ScaleToSize(580, 460)
---[[
-    self.bg_scratches = self.root:AddChild(Image("images/skilltree.xml", "background_scratches.tex"))
-    self.bg_scratches:SetPosition(0,-20)
-    self.bg_scratches:ScaleToSize(580, 460)
-
-    self.root.bg_scratches = self.root:AddChild(Image("images/skilltree2.xml", "background_scratches.tex"))
-    self.root.bg_scratches:SetPosition(0,-20)
-    self.root.bg_scratches:ScaleToSize(600, 460)
-    ]]
 end
 
 function maketabbutton(widget,pos,text,clickfn, imagename, textoffset, flip)
@@ -180,7 +173,11 @@ function PlayerInfoPopup:MakePlayerAvatarPopup()
         self.skilltree = nil
     end
     self.playeravatar = self.root:AddChild(PlayerAvatarPopup(self.owner, self.player_name, self.data, self.show_net_profile, self.force))
-    self.playeravatar:SetPosition(0,-50)
+    if self.currentcharacter == "notselected" then
+        self.playeravatar:SetPosition(0,60)
+    else
+        self.playeravatar:SetPosition(0,-50)
+    end
     self.playeravatar:SetScale(0.7)
     if self.root.tabs then
         self.root.tabs.skillTreePopup:Enable()

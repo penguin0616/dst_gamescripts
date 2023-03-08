@@ -27,15 +27,14 @@ local PlayerAvatarPopup = Class(Widget, function(self, owner, player_name, data,
     self.anchortime = 0
     self.resetanchortime = -.3
     self.targetmovetime = TheInput:ControllerAttached() and .5 or .75
-    self.started = false
-    self.settled = false
+    self.started = true
+    self.settled = true
     self.time_to_refresh = REFRESH_INTERVAL
 
     self.proot = self:AddChild(Widget("PROOT"))
     self.proot.sroot = self.proot:AddChild(Widget("SROOT"))
 
     self:SetPlayer(player_name, data, show_net_profile)
-    self:Start()
 end)
 
 --For ease of overriding in mods
@@ -67,12 +66,16 @@ function PlayerAvatarPopup:SetPlayer(player_name, data, show_net_profile)
     self:UpdateData(data)
 end
 
+
+
 function PlayerAvatarPopup:Layout(data, show_net_profile)
+    local color = data.colour or DEFAULT_PLAYER_COLOUR
     -- net profile button is unreachable with controllers
     show_net_profile = show_net_profile and not TheInput:ControllerAttached()
 
     if self.currentcharacter ~= "notselected" then
         local left_side = -220
+        
         local portrait_height = 150
 
         if data.playerage ~= nil then
@@ -170,9 +173,11 @@ function PlayerAvatarPopup:Layout(data, show_net_profile)
         self:UpdateEquipWidgetForSlot(self.body_equip_image, EQUIPSLOTS.BODY, data.equip)
 
         if show_net_profile and TheNet:IsNetIDPlatformValid(data.netid) then
+
             self.netprofilebutton = self.proot:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "steam.tex", "", false, false, function() if data.netid ~= nil then TheNet:ViewNetProfile(data.netid) end end ))
             self.netprofilebutton:SetScale(.5)
-            self.netprofilebutton:SetPosition(left_column - 60, 62, 0)
+            --self.netprofilebutton:SetPosition(left_column - 60, 62, 0)
+            self.netprofilebutton:SetPosition(100, portrait_height + 130, 0) 
         end
     else
         self.proot:SetPosition(10, 0)
@@ -184,7 +189,7 @@ function PlayerAvatarPopup:Layout(data, show_net_profile)
         self:UpdateDisplayName()
 
         self.text = self.proot:AddChild(Text(UIFONT, 25, STRINGS.UI.PLAYER_AVATAR.CHOOSING))
-        self.text:SetColour(unpack(data.colour))
+        self.text:SetColour(color)
 
         if show_net_profile and TheNet:IsNetIDPlatformValid(data.netid) then
             self.netprofilebutton = self.proot:AddChild(TEMPLATES.IconButton("images/button_icons.xml", "steam.tex", "", false, false, function() if data.netid ~= nil then TheNet:ViewNetProfile(data.netid) end end ))
@@ -192,26 +197,6 @@ function PlayerAvatarPopup:Layout(data, show_net_profile)
             self.netprofilebutton:SetPosition(0, -75, 0)
         end
     end
---[[
-    if not TheInput:ControllerAttached() then
-        self.close_button = self.proot:AddChild(TEMPLATES.SmallButton("SKILLS", 26, .5, function() self:SwitchToSkills() end))
-        self.close_button:SetPosition(0, -269)
-    else
-        -- WARNING!!!!!! TODO TODO TODO
-        self.temp_text = self.proot:AddChild(Text(UIFONT, 25, "NO CONTROLLER STUFF SET YET"))
-        self.temp_text:SetPosition(0, -319)        
-        --self.skills_text = self.proot:AddChild(Text(UIFONT, 25, TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_USE_ITEM_ON_ITEM) .. "  " .. "SKILLS"))
-        --self.skills_text:SetPosition(0, -325)
-    end
-
-    if not TheInput:ControllerAttached() then
-        self.close_button = self.proot:AddChild(TEMPLATES.SmallButton(STRINGS.UI.PLAYER_AVATAR.CLOSE, 26, .5, function() self:Close() end))
-        self.close_button:SetPosition(0, -269)
-	else
-		self.close_text = self.proot:AddChild(Text(UIFONT, 25, TheInput:GetLocalizedControl(TheInput:GetControllerID(), CONTROL_USE_ITEM_ON_ITEM) .. "  " .. STRINGS.UI.PLAYER_AVATAR.CLOSE))
-        self.close_text:SetPosition(0, -275)
-    end
-    ]]
 end
 
 function PlayerAvatarPopup:UpdateData(data)
@@ -224,12 +209,10 @@ function PlayerAvatarPopup:UpdateData(data)
     end
 
     if self.age ~= nil and data.playerage ~= nil then
-        self.age:SetString(STRINGS.UI.PLAYER_AVATAR.AGE_SURVIVED.." "..data.playerage.." "..(data.playerage == 1 and STRINGS.UI.PLAYER_AVATAR.AGE_DAY or STRINGS.UI.PLAYER_AVATAR.AGE_DAYS))
-        if self.netprofilebutton ~= nil then
-            --left align to steam button if there is one
-            --otherwise it is centered by default
-            local w = self.age:GetRegionSize()
-            self.age:SetPosition(w * .5 - 130, 60, 0)
+        self.age:SetString(STRINGS.UI.PLAYER_AVATAR.AGE_SURVIVED.." "..data.playerage.." "..(data.playerage == 1 and STRINGS.UI.PLAYER_AVATAR.AGE_DAY or STRINGS.UI.PLAYER_AVATAR.AGE_DAYS))        local w = self.age:GetRegionSize()
+        if self.netprofilebutton then
+            local pos = self.netprofilebutton:GetPosition()
+            self.netprofilebutton:SetPosition(pos.x - (w/2) -25, pos.y, 0)
         end
     end
 
@@ -283,34 +266,6 @@ end
 
 function PlayerAvatarPopup:OnControl(control, down)
     if PlayerAvatarPopup._base.OnControl(self,control, down) then return true end
-end
-
-function PlayerAvatarPopup:Start()
-    if not self.started then
-        self.started = true
-        self:StartUpdating()
-
---[[
-        local w, h = self.frame_bg:GetSize()
-
-        self.out_pos = Vector3(.5 * w, 0, 0)
-        self.in_pos = Vector3(-.95 * w, 0, 0)
-
-        self:MoveTo(self.out_pos, self.in_pos, .33, function() self.settled = true end)
-        ]]
-    end
-end
-
-function PlayerAvatarPopup:Close()
-    if self.started then
-        self.started = false
-        self.current_speed = 0
-
-        self:StopUpdating()
-        --[[
-        self:MoveTo(self.in_pos, self.out_pos, .33, function() self:Kill() end)
-        ]]
-    end
 end
 
 function PlayerAvatarPopup:OnUpdate(dt)

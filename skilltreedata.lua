@@ -118,6 +118,14 @@ function SkillTreeData:ActivateSkill(skill, characterprefab)
     self.activatedskills[characterprefab] = skills
     if not skills[skill] then
         skills[skill] = true
+        if not self.skip_validation and not self:ValidateCharacterData(characterprefab, self.activatedskills[characterprefab], self.skillxp[characterprefab]) then
+            -- Something bad is with this selection state do not activate.
+            skills[skill] = nil
+            if next(skills) == nil then
+                self.activatedskills[characterprefab] = nil
+            end
+            return false, nil
+        end
         self:UpdateSaveState(characterprefab)
         return true, SKILLTREE_DEFS[characterprefab][skill].unlocks
     end
@@ -132,6 +140,11 @@ function SkillTreeData:DeactivateSkill(skill, characterprefab)
     local skills = self.activatedskills[characterprefab]
     if skills ~= nil and skills[skill] then
         skills[skill] = nil
+        if not self.skip_validation and not self:ValidateCharacterData(characterprefab, self.activatedskills[characterprefab], self.skillxp[characterprefab]) then
+            -- Something bad is with this selection state do not activate.
+            skills[skill] = true
+            return false
+        end
         if next(skills) == nil then
             self.activatedskills[characterprefab] = nil
         end
@@ -144,7 +157,7 @@ end
 function SkillTreeData:AddSkillXP(amount, characterprefab)
     local oldskillxp = self:GetSkillXP(characterprefab)
     if self.ignorexp then
-        return false, oldskillxp
+        return true, oldskillxp
     end
     local newskillxp = math.clamp(oldskillxp + amount, 0, self:GetMaximumExperiencePoints())
 
@@ -303,60 +316,38 @@ end
 function SkillTreeData:ValidateCharacterData(characterprefab, activatedskills, skillxp)
     local def = SKILLTREE_DEFS[characterprefab]
     if def == nil then
-        print("Invalid skilltree characterprefab to ValidateCharacterData:", characterprefab)
+        print("Invalid skilltree characterprefab to ValidateCharacterData:", self.owner, characterprefab)
         return false
     end
 
     if activatedskills == nil or skillxp == nil then
-        print("Invalid skilltree activatedskills or skillxp data to ValidateCharacterData:", activatedskills, skillxp)
+        print("Invalid skilltree activatedskills or skillxp data to ValidateCharacterData:", self.owner, activatedskills, skillxp)
         return false
     end
 
     local newskillxp = math.clamp(skillxp, 0, self:GetMaximumExperiencePoints())
     if skillxp ~= newskillxp then
-        print("Invalid skilltree skillxp to ValidateCharacterData:", characterprefab, skillxp, newskillxp)
+        print("Invalid skilltree skillxp to ValidateCharacterData:", self.owner, characterprefab, skillxp, newskillxp)
         return false
     end
 
     local maxpointsallocatable = self:GetPointsForSkillXP(skillxp)
-    local allocatedskills = #activatedskills
+    local allocatedskills = table.count(activatedskills)
     if allocatedskills > maxpointsallocatable then
-        print("Invalid skilltree skills to ValidateCharacterData:", characterprefab, allocatedskills, maxpointsallocatable)
+        print("Invalid skilltree skill points to ValidateCharacterData:", self.owner, characterprefab, allocatedskills, maxpointsallocatable)
         return false
     end
 
-    -- Quick lookup creation to speed up future checks.
-    local skillslookup = {}
-    for _, skillname in ipairs(activatedskills) do
-        skillslookup[skillname] = true
-    end
-    for _, skillname in ipairs(activatedskills) do
+    for skillname, _ in pairs(activatedskills) do
         local skilldef = def[skillname]
         if skilldef == nil then
-            print("Invalid skilltree skillname to ValidateCharacterData:", characterprefab, skillname)
+            print("Invalid skilltree skillname to ValidateCharacterData:", self.owner, characterprefab, skillname)
             return false
         end
-
-        local required = skilldef.required
-        if required ~= nil then
-            for _, musthave in ipairs(required) do
-                if not skillslookup[musthave] then
-                    print("Invalid skilltree required musthave to ValidateCharacterData:", characterprefab, skillname, musthave)
-                    return false
-                end
-            end
-        end
-
-        local exclude = skilldef.exclude
-        if exclude ~= nil then
-            for _, mustnothave in ipairs(exclude) do
-                if skillslookup[mustnothave] then
-                    print("Invalid skilltree exclude mustnothave to ValidateCharacterData:", characterprefab, skillname, mustnothave)
-                    return false
-                end
-            end
-        end
     end
+
+    -- FIXME(JBK): Skill locks validation.
+    -- Issue is that the skill activations can arrive out of order with respect to skill unlock order.
 
     return true
 end

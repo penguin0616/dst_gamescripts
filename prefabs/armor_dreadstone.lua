@@ -48,7 +48,7 @@ local function fn()
 	--shadowlevel (from shadowlevel component) added to pristine state for optimization
 	inst:AddTag("shadowlevel")
 
-	inst.foleysound = "dontstarve/movement/foley/marblearmour" --#TODO DREADSTONE SOUND
+	inst.foleysound = "dontstarve/movement/foley/dreadstonearmour"
 
 	local swap_data = { bank = "armor_dreadstone", anim = "anim" }
 	MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)

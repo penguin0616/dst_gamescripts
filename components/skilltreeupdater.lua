@@ -5,6 +5,7 @@ local function onplayeractivated(inst)
 
     if self and not TheNet:IsDedicated() and inst == ThePlayer then
         self.skilltree = TheSkillTree -- skilltreedata type
+        self.skilltree.owner = ThePlayer
         self.skilltree.save_enabled = nil -- Disable saving until the activation handshake is complete to preserve client save state.
     end
 end
@@ -13,6 +14,7 @@ local SkillTreeUpdater = Class(function(self, inst)
     self.inst = inst
 
     self.skilltree = require("skilltreedata")()
+    self.skilltree.owner = inst
     inst:ListenForEvent("playeractivated", onplayeractivated)
 end)
 
@@ -183,6 +185,12 @@ end
 
 -- NOTES(JBK): Data layer. Engage at your own risk.
 
+function SkillTreeUpdater:SetSilent(silent) -- Do not network nor activate callbacks and skip skill validation checks.
+    silent = silent or nil
+    self.silent = silent
+    self.skilltree.skip_validation = silent
+end
+
 function SkillTreeUpdater:OnSave()
     local skilltreeblob = self.skilltreeblob or self.skilltree:EncodeSkillTreeData(self.inst.prefab)
     --print("[STUpdater] OnSave", skilltreeblob)
@@ -193,26 +201,30 @@ end
 
 function SkillTreeUpdater:SetPlayerSkillSelection(skillselection) -- NOTES(JBK): Applies an array table of bitfield entries of all activated skills and does not network anything.
     local activatedskills = self:GetNamesFromSkillSelection(skillselection)
-    self.silent = true
+    self:SetSilent(true)
     for skill, _ in pairs(activatedskills) do
-        self:ActivateSkill(skill) -- Hiding this to stop networking and activation callbacks.
+        self:ActivateSkill(skill)
     end
-    self.silent = nil
+    self:SetSilent(false)
     self.skilltreeblob = self.skilltree:EncodeSkillTreeData(self.inst.prefab)
 end
 
 function SkillTreeUpdater:SendFromSkillTreeBlob(inst)
     if self.skilltreeblob ~= nil then
-        local activatedskills, skillxp = self.skilltree:DecodeSkillTreeData(self.skilltreeblob)
+        local activatedskills, _badskillxp_donotuse = self.skilltree:DecodeSkillTreeData(self.skilltreeblob)
         self.skilltreeblob = nil
         if activatedskills ~= nil then
-            self.silent = true
+            self:SetSilent(true)
             for skill, _ in pairs(activatedskills) do
                 self:DeactivateSkill(skill)
             end
-            self.silent = nil
-            for skill, _ in pairs(activatedskills) do
-                self:ActivateSkill(skill) -- Two loops just in case of activation states.
+            self:SetSilent(false)
+            -- At this point the client will have sent their current XP to measure from so use that value and not the local stored invalid XP.
+            if self.skilltree:ValidateCharacterData(self.inst.prefab, activatedskills, self:GetSkillXP()) then
+                -- The skills are validated so apply them and network them if need be.
+                for skill, _ in pairs(activatedskills) do -- Two loops just in case of activation states.
+                    self:ActivateSkill(skill)
+                end
             end
         end
         -- Do not use nor send skillxp here.

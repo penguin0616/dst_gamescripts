@@ -277,10 +277,6 @@ local Controls = Class(Widget, function(self, owner)
     self.commandwheelroot:SetVAnchor(ANCHOR_MIDDLE)
     self.commandwheelroot:SetScaleMode(SCALEMODE_PROPORTIONAL)
 
-	--@CHARLES #TODO CONSOLE MERGE: add these lines
-	--self.commandwheel.OnCancel = function() owner.HUD:CloseControllerCommandWheel() end
-	--self.commandwheel.OnExecute = self.commandwheel.OnCancel
-
 	self.spellwheel = self.commandwheelroot:AddChild(Wheel("SpellWheel", owner, {ignoreleftstick = true,}))
 	self.spellwheel.selected_label:SetSize(26)
 	self.spellwheel.OnCancel = function() owner.HUD:CloseSpellWheel() end

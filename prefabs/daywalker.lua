@@ -53,6 +53,41 @@ local function ChangeToGiantPhysics(inst)
 	inst.Physics:SetMass(MASS)
 end
 
+--For clients
+local function OnFacingModelDirty(inst)
+	local numfacings = inst._facingmodel:value()
+	if numfacings == 4 then
+		inst.eye.Transform:SetFourFaced()
+	elseif numfacings == 6 then
+		inst.eye.Transform:SetSixFaced()
+	elseif numfacings == 0 then
+		inst.eye.Transform:SetNoFaced()
+	end
+end
+
+local function SwitchToFacingModel(inst, numfacings)
+	if numfacings == 0 then
+		inst.Transform:SetNoFaced()
+		if inst.eye ~= nil then
+			inst.eye.Transform:SetNoFaced()
+		end
+	elseif numfacings == 4 then
+		inst.Transform:SetFourFaced()
+		if inst.eye ~= nil then
+			inst.eye.Transform:SetFourFaced()
+		end
+	elseif numfacings == 6 then
+		inst.Transform:SetSixFaced()
+		if inst.eye ~= nil then
+			inst.eye.Transform:SetSixFaced()
+		end
+	else--unsupported
+		--assert(false)
+		return
+	end
+	inst._facingmodel:set(numfacings)
+end
+
 --------------------------------------------------------------------------
 
 local ATTACH_POS =
@@ -223,6 +258,32 @@ end
 
 --------------------------------------------------------------------------
 
+local function CreateEyeFlame()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	if not TheWorld.ismastersim then
+		inst.entity:SetCanSleep(false)
+	end
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.Transform:SetFourFaced()
+
+	inst.AnimState:SetBank("daywalker")
+	inst.AnimState:SetBuild("daywalker_build")
+	inst.AnimState:PlayAnimation("flame_loop", true)
+	inst.AnimState:SetLightOverride(1)
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
 local BLINDSPOT = 15
 
 local function UpdateHead(inst)
@@ -234,6 +295,7 @@ local function UpdateHead(inst)
 		inst.lastdir1 = nil
 		inst.Transform:SetRotation(0)
 		inst.Transform:SetFourFaced()
+		inst.eye.Transform:SetFourFaced()
 		return
 	end
 
@@ -327,6 +389,10 @@ local function CreateHead()
 	inst.lastfacing = nil
 	inst.lastdir1 = nil
 
+	inst.eye = CreateEyeFlame()
+	inst.eye.entity:SetParent(inst.entity)
+	inst.eye.Follower:FollowSymbol(inst.GUID, "follow_eye", nil, nil, nil, true)
+
 	return inst
 end
 
@@ -338,6 +404,7 @@ local function OnStalkingDirty(inst)
 			inst.head.components.updatelooper:AddPostUpdateFn(UpdateHead)
 		end
 		inst.head.Transform:SetEightFaced()
+		inst.head.eye.Transform:SetEightFaced()
 	elseif inst.head.isupdating then
 		inst.head.isupdating = false
 		inst.head.lastfacing = nil
@@ -345,6 +412,7 @@ local function OnStalkingDirty(inst)
 		inst.head.components.updatelooper:RemovePostUpdateFn(UpdateHead)
 		inst.head.Transform:SetRotation(0)
 		inst.head.Transform:SetFourFaced()
+		inst.head.eye.Transform:SetFourFaced()
 	end
 end
 
@@ -686,7 +754,7 @@ local function MakeChained(inst)
 		inst:AddTag("notarget")
 		inst.AnimState:OverrideSymbol("chain_set", "daywalker_pillar", "chain_set")
 		inst.AnimState:OverrideSymbol("chain_set_break", "daywalker_pillar", "chain_set_break")
-		inst.Transform:SetNoFaced()
+		inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
 		inst.SoundEmitter:PlaySound("daywalker/pillar/chain_idle", "chainloop")
 		ChangeToObstaclePhysics(inst)
 		PHASES[0].fn(inst)
@@ -713,7 +781,7 @@ local function MakeUnchained(inst)
 		inst:RemoveTag("notarget")
 		--inst:AddTag("hostile")
 		inst.AnimState:ClearAllOverrideSymbols()
-		inst.Transform:SetFourFaced()
+		inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 		inst.SoundEmitter:KillSound("chainloop")
 		ChangeToGiantPhysics(inst)
 		inst:SetStateGraph("SGdaywalker")
@@ -877,6 +945,7 @@ local function fn()
 	inst.AnimState:SetBank("daywalker")
 	inst.AnimState:SetBuild("daywalker_build")
 	inst.AnimState:PlayAnimation("idle", true)
+	inst.AnimState:SetSymbolLightOverride("ww_armlower_red", .6)
 
 	inst.DynamicShadow:SetSize(3.5, 1.5)
 
@@ -888,18 +957,25 @@ local function fn()
 	inst.components.talker.symbol = "ww_hunch"
 	inst.components.talker:MakeChatter()
 
+	inst._facingmodel = net_tinybyte(inst.GUID, "daywalker._facingmodel", "facingmodeldirty")
 	inst._headtracking = net_bool(inst.GUID, "daywalker._headtracking", "headtrackingdirty")
 	inst._stalking = net_entity(inst.GUID, "daywalker._stalking", "stalkingdirty")
 
 	inst.entity:SetPristine()
 
 	--Dedicated server does not need to trigger music
+	--Dedicated server does not need to spawn the local fx
 	if not TheNet:IsDedicated() then
 		inst._playingmusic = false
 		inst:DoPeriodicTask(1, PushMusic, 0)
+
+		inst.eye = CreateEyeFlame()
+		inst.eye.entity:SetParent(inst.entity)
+		inst.eye.Follower:FollowSymbol(inst.GUID, "follow_eye", nil, nil, nil, true)
 	end
 
 	if not TheWorld.ismastersim then
+		inst:ListenForEvent("facingmodeldirty", OnFacingModelDirty)
 		inst:ListenForEvent("headtrackingdirty", OnHeadTrackingDirty)
 
 		return inst
@@ -984,6 +1060,7 @@ local function fn()
 
 	inst._onremovestalking = function(stalking) inst._stalking:set(nil) end
 
+	inst.SwitchToFacingModel = SwitchToFacingModel
 	inst.MakeChained = MakeChained
 	inst.MakeUnchained = MakeUnchained
 	inst.MakeHarassed = MakeHarassed
