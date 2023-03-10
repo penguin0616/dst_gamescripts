@@ -1741,8 +1741,14 @@ function Tune(overrides)
 
 		ARMOR_DREADSTONEHAT = wilson_health * 8 * multiplayer_armor_durability_modifier,
 		ARMOR_DREADSTONEHAT_ABSORPTION = 0.9 * multiplayer_armor_absorption_modifier,
-		ARMORDREADSTONE = wilson_health * 12 * multiplayer_armor_durability_modifier,
-		ARMORDREADSTONE_ABSORPTION = 0.95 * multiplayer_armor_absorption_modifier,
+		ARMOR_DREADSTONEHAT_SHADOW_RESIST = 0.9,
+		ARMORDREADSTONE = wilson_health * 8 * multiplayer_armor_durability_modifier,
+		ARMORDREADSTONE_ABSORPTION = 0.9 * multiplayer_armor_absorption_modifier,
+		ARMORDREADSTONE_SHADOW_RESIST = 0.9,
+		ARMOR_DREADSTONE_REGEN_PERIOD = 1,
+		ARMOR_DREADSTONE_REGEN_MINRATE = (0.01 / 10) / 1.5,
+		ARMOR_DREADSTONE_REGEN_MAXRATE = (0.01 / 6) / 1.5,
+		ARMOR_DREADSTONE_REGEN_SETBONUS = 1.5,
 
         PANFLUTE_SLEEPTIME = 20,
         PANFLUTE_SLEEPRANGE = 15,
@@ -6418,7 +6424,7 @@ function Tune(overrides)
 		SHADOW_LEECH_RUNSPEED = 6,
 		SHADOW_LEECH_HEALTH = 100,
 
-        -- WILSON
+        -- WILSON REFRESH wilson_refresh
         SKILL_THRESHOLDS = {
             5, --1
             8, --2
@@ -6471,6 +6477,9 @@ function Tune(overrides)
             WILSON_BEARD_4 = 0.05, -- 4, 8, 16 -> 3, 7, 15 -> 3 days savings
             WILSON_BEARD_5 = 0.30, -- 4, 8, 16 -> 3, 6, 12 -> 7 days savings
             WILSON_BEARD_6 = 0.55, -- 4, 8, 16 -> 2, 5, 10 -> 11 days savings
+
+            -- Shadow allegiance.
+            WILSON_ALLEGIANCE_SHADOW_RESIST = 0.9,
         },
 
         WILSON_BEARD_BITS ={

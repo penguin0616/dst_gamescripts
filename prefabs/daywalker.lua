@@ -5,6 +5,7 @@ local assets =
 	Asset("ANIM", "anim/daywalker_imprisoned.zip"),
 	Asset("ANIM", "anim/daywalker_phase1.zip"),
 	Asset("ANIM", "anim/daywalker_phase2.zip"),
+	Asset("ANIM", "anim/daywalker_defeat.zip"),
 }
 
 local assets_head =
@@ -38,6 +39,45 @@ SetSharedLootTable("daywalker",
 	{ "armordreadstone_blueprint",	1 },
 	{ "dreadstonehat_blueprint",	1 },
 })
+
+--------------------------------------------------------------------------
+
+local PILLAR_TAGS = { "daywalker_pillar" }
+local PILLAR_NO_TAGS = { "NOCLICK" }
+
+local function CountPillars(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local pillars = TheSim:FindEntities(x, y, z, 6.1, PILLAR_TAGS--[[, PILLAR_NO_TAGS]])
+	local resonating, idle = 0, 0
+	for i, v in ipairs(pillars) do
+		if v:GetPrisoner() == inst then
+			if v:IsResonating() then
+				resonating = resonating + 1
+			else
+				idle = idle + 1
+			end
+		end
+	end
+	return resonating, idle
+end
+
+local function OnPillarRemoved(inst, pillar)
+	local pos = inst.components.knownlocations:GetLocation("prison")
+	if pos ~= nil then
+		local pillars = TheSim:FindEntities(pos.x, pos.y, pos.z, 6.1, PILLAR_TAGS, PILLAR_NO_TAGS)
+		for i, v in ipairs(pillars) do
+			if v.components.entitytracker ~= nil and
+				(	v.components.entitytracker:GetEntity("freed") == inst or
+					v.components.entitytracker:GetEntity("prisoner") == inst
+				) then
+				--Still has a pillar
+				return
+			end
+		end
+		--Our pillars got destroyed
+		inst.components.knownlocations:ForgetLocation("prison")
+	end
+end
 
 --------------------------------------------------------------------------
 
@@ -86,6 +126,110 @@ local function SwitchToFacingModel(inst, numfacings)
 		return
 	end
 	inst._facingmodel:set(numfacings)
+end
+
+--------------------------------------------------------------------------
+
+local function CreateShackleNeckBand()
+	local inst = CreateEntity()
+
+	--inst:AddTag("FX")
+	inst:AddTag("decor")
+	inst:AddTag("NOCLICK")
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("daywalker")
+	inst.AnimState:SetBuild("daywalker_pillar")
+	inst.AnimState:PlayAnimation("shackle_neck_band_loop", true)
+
+	return inst
+end
+
+local function CreateChainBodyLink()
+	local inst = CreateEntity()
+
+	--inst:AddTag("FX")
+	inst:AddTag("decor")
+	inst:AddTag("NOCLICK")
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("daywalker")
+	inst.AnimState:SetBuild("daywalker_pillar")
+	inst.AnimState:PlayAnimation("chain_body_link_loop", true)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
+
+	return inst
+end
+
+local function SpawnChains(inst)
+	if inst.chains == nil then
+		inst.neckchain = CreateShackleNeckBand()
+		inst.neckchain.entity:SetParent(inst.entity)
+		inst.neckchain.Follower:FollowSymbol(inst.GUID, "shackle_neck_band_follow", nil, nil, nil, true)
+		inst.chains = {}
+		for i = 1, 12 do
+			local link = CreateChainBodyLink()
+			link.entity:SetParent(inst.entity)
+			link.Follower:FollowSymbol(inst.GUID, "chain_body_link_follow_"..tostring(i), nil, nil, nil, true)
+			table.insert(inst.chains, link)
+		end
+	end
+end
+
+local function RemoveChains(inst)
+	if inst.neckchain ~= nil then
+		inst.neckchain:Remove()
+		inst.neckchain = nil
+	end
+	if inst.chains ~= nil then
+		for i, v in ipairs(inst.chains) do
+			v:Remove()
+		end
+		inst.chains = nil
+	end
+end
+
+local function OnChainSleepTask(inst)
+	inst._chainsleeptask = nil
+	RemoveChains(inst)
+end
+
+local function OnChainsDirty(inst)
+	if inst._enablechains:value() then
+		if not (TheWorld.ismastersim and inst:IsAsleep()) then
+			SpawnChains(inst)
+		end
+	else
+		RemoveChains(inst)
+		if inst._chainsleeptask ~= nil then
+			inst._chainsleeptask:Cancel()
+			inst._chainsleeptask = nil
+		end
+	end
+end
+
+local function EnableChains(inst, enable)
+	enable = enable ~= false
+	if enable ~= inst._enablechains:value() then
+		inst._enablechains:set(enable)
+
+		--Dedicated server does not need to spawn the local fx
+		if not TheNet:IsDedicated() then
+			OnChainsDirty(inst)
+		end
+	end
 end
 
 --------------------------------------------------------------------------
@@ -489,25 +633,7 @@ end
 
 --------------------------------------------------------------------------
 
-local PILLAR_TAGS = { "daywalker_pillar" }
-
-local function CountPillars(inst)
-	local x, y, z = inst.Transform:GetWorldPosition()
-	local pillars = TheSim:FindEntities(x, y, z, 6.1, PILLAR_TAGS)
-	local resonating, idle = 0, 0
-	for i, v in ipairs(pillars) do
-		if v:GetPrisoner() == inst then
-			if v:IsResonating() then
-				resonating = resonating + 1
-			else
-				idle = idle + 1
-			end
-		end
-	end
-	return resonating, idle
-end
-
---------------------------------------------------------------------------
+local DESPAWN_TIME = 60 * 4
 
 --#V2C: kinda silly, but this was just to have it so PHASES[0] exists, but
 --      will also be excluded from ipairs and #PHASES...
@@ -683,18 +809,18 @@ end
 local function OnMinHealth(inst)
 	if not POPULATING then
 		inst:MakeDefeated()
-		if inst.defeated then
-			inst.components.lootdropper:DropLoot(inst:GetPosition())
-		end
 	end
 end
 
 local function OnDespawnTimer(inst, data)
 	if data ~= nil and data.name == "despawn" then
-		if not inst:IsAsleep() then
-			SpawnPrefab("small_puff").Transform:SetPosition(inst.Transform:GetWorldPosition())
+		if inst:IsAsleep() then
+			inst:Remove()
+		else
+			inst:AddTag("NOCLICK")
+			inst.persists = false
+			ErodeAway(inst)
 		end
-		inst:Remove()
 	end
 end
 
@@ -752,11 +878,13 @@ local function MakeChained(inst)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_LARGE
 		inst:RemoveTag("hostile")
 		inst:AddTag("notarget")
+		inst:AddTag("noteleport")
 		inst.AnimState:OverrideSymbol("chain_set", "daywalker_pillar", "chain_set")
 		inst.AnimState:OverrideSymbol("chain_set_break", "daywalker_pillar", "chain_set_break")
 		inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
 		inst.SoundEmitter:PlaySound("daywalker/pillar/chain_idle", "chainloop")
 		ChangeToObstaclePhysics(inst)
+		EnableChains(inst, true)
 		PHASES[0].fn(inst)
 		inst:SetBrain(nil)
 		inst:SetHeadTracking(false)
@@ -779,11 +907,13 @@ local function MakeUnchained(inst)
 		inst.components.health:SetInvincible(false)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_SUPERHUGE
 		inst:RemoveTag("notarget")
+		inst:RemoveTag("noteleport")
 		--inst:AddTag("hostile")
 		inst.AnimState:ClearAllOverrideSymbols()
 		inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
 		inst.SoundEmitter:KillSound("chainloop")
 		ChangeToGiantPhysics(inst)
+		EnableChains(inst, false)
 		inst:SetStateGraph("SGdaywalker")
 		inst.sg:GoToState("tired")
 	end
@@ -837,13 +967,14 @@ local function MakeDefeated(inst)
 		inst:RemoveEventCallback("minhealth", OnMinHealth)
 		inst:ListenForEvent("timerdone", OnDespawnTimer)
 		if not inst.components.timer:TimerExists("despawn") then
-			inst.components.timer:StartTimer("despawn", TUNING.SEG_TIME)
+			inst.components.timer:StartTimer("despawn", DESPAWN_TIME, not inst.looted)
 		end
 		inst.components.combat:DropTarget()
 		inst.components.combat:SetRetargetFunction(nil)
 		inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
 		inst:RemoveTag("hostile")
 		inst:SetBrain(nil)
+		inst:SetHeadTracking(false)
 		inst:SetStalking(nil)
 		inst:SetEngaged(nil)
 	end
@@ -857,6 +988,7 @@ end
 
 local function OnSave(inst, data)
 	data.hostile = inst.hostile or nil
+	data.looted = inst.looted or nil
 end
 
 local function OnLoad(inst, data)
@@ -871,7 +1003,14 @@ local function OnLoad(inst, data)
 
 	if inst.components.timer:TimerExists("despawn") then
 		inst:MakeDefeated()
-		inst.sg:GoToState("tired")
+		if data ~= nil and data.looted then
+			inst.looted = true
+			inst.sg:GoToState("defeat_idle_pre")
+		else
+			inst.components.timer:PauseTimer("despawn")
+			inst.components.timer:SetTimeLeft("despawn", DESPAWN_TIME)
+			inst.sg:GoToState("defeat")
+		end
 	end
 end
 
@@ -896,14 +1035,50 @@ local function OnLoadPostPass(inst, ents, data)
 end
 
 local function OnEntitySleep(inst)
-	if inst.hostile then
+	if inst.chains ~= nil and inst._chainsleeptask == nil then
+		inst._chainsleeptask = inst:DoTaskInTime(1, OnChainSleepTask)
+	end
+	if inst.looted then
+		if inst._despawntask == nil then
+			inst._despawntask = inst:DoTaskInTime(1, inst.Remove)
+		end
+	elseif inst.hostile then
 		inst:SetEngaged(false)
+	end
+end
+
+local function OnEntityWake(inst)
+	if inst._chainsleeptask ~= nil then
+		inst._chainsleeptask:Cancel()
+		inst._chainsleeptask = nil
+	elseif inst._enablechains:value() and not TheNet:IsDedicated() then
+		SpawnChains(inst)
+	end
+	if inst._despawntask ~= nil then
+		inst._despawntask:Cancel()
+		inst._despawntask = nil
 	end
 end
 
 local function OnTalk(inst)
 	if not inst.sg:HasStateTag("notalksound") then
 		inst.SoundEmitter:PlaySound("daywalker/voice/speak_short")
+	end
+end
+
+local function teleport_override_fn(inst)
+	if not inst.hostile then
+		--Stay within prison; or, backup is just don't go too far
+		local pos = inst.components.knownlocations:GetLocation("prison") or inst:GetPosition()
+		local offset = FindWalkableOffset(pos, TWOPI * math.random(), 4, 8, true, false)
+		return offset ~= nil and pos + offset or pos
+	end
+
+	--Go back to prison if it is still there, otherwise anywhere (return nil for default behvaiour)
+	local pos = inst.components.knownlocations:GetLocation("prison")
+	if pos ~= nil then
+		local offset = FindWalkableOffset(pos, TWOPI * math.random(), 4, 8, true, false)
+		return offset ~= nil and pos + offset or pos
 	end
 end
 
@@ -957,6 +1132,7 @@ local function fn()
 	inst.components.talker.symbol = "ww_hunch"
 	inst.components.talker:MakeChatter()
 
+	inst._enablechains = net_bool(inst.GUID, "daywalker._enablechains", "chainsdirty")
 	inst._facingmodel = net_tinybyte(inst.GUID, "daywalker._facingmodel", "facingmodeldirty")
 	inst._headtracking = net_bool(inst.GUID, "daywalker._headtracking", "headtrackingdirty")
 	inst._stalking = net_entity(inst.GUID, "daywalker._stalking", "stalkingdirty")
@@ -975,6 +1151,7 @@ local function fn()
 	end
 
 	if not TheWorld.ismastersim then
+		inst:ListenForEvent("chainsdirty", OnChainsDirty)
 		inst:ListenForEvent("facingmodeldirty", OnFacingModelDirty)
 		inst:ListenForEvent("headtrackingdirty", OnHeadTrackingDirty)
 
@@ -995,7 +1172,7 @@ local function fn()
 	inst:AddComponent("health")
 	inst.components.health:SetMinHealth(1)
 	inst.components.health:SetMaxHealth(TUNING.DAYWALKER_HEALTH)
-	--inst.components.health.nofadeout = true --#TODO
+	--inst.components.health.nofadeout = true
 
 	inst:AddComponent("combat")
 	inst.components.combat:SetDefaultDamage(TUNING.DAYWALKER_DAMAGE)
@@ -1032,6 +1209,9 @@ local function fn()
 	inst.components.lootdropper.y_speed_variance = 4
 	inst.components.lootdropper.spawn_loot_inside_prefab = true
 
+	inst:AddComponent("teleportedoverride")
+	inst.components.teleportedoverride:SetDestPositionFn(teleport_override_fn)
+
 	inst.hit_recovery = TUNING.DAYWALKER_HIT_RECOVERY
 
 	inst._busy_attach_pos = {}
@@ -1043,11 +1223,13 @@ local function fn()
 	inst:ListenForEvent("attacked", OnAttacked)
 	inst:ListenForEvent("newcombattarget", OnNewTarget)
 	inst:ListenForEvent("minhealth", OnMinHealth)
+	inst:ListenForEvent("pillarremoved", OnPillarRemoved)
 
 	inst.chained = false
 	inst.hostile = true
 	inst.engaged = nil
 	inst.defeated = false
+	inst.looted = false
 	inst.fatigue = 0
 	inst._fatiguetask = nil
 
@@ -1087,6 +1269,7 @@ local function fn()
 	inst.OnLoad = OnLoad
 	inst.OnLoadPostPass = OnLoadPostPass
 	inst.OnEntitySleep = OnEntitySleep
+	inst.OnEntityWake = OnEntityWake
 
 	inst:SetStateGraph("SGdaywalker")
 	inst:SetBrain(brain)

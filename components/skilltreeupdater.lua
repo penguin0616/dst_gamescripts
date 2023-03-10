@@ -107,6 +107,10 @@ end
 function SkillTreeUpdater:DeactivateSkill_Server(skill) -- NOTES(JBK): Use DeactivateSkill instead.
     local characterprefab = self.inst.prefab
     --print("[STUpdater] DeactivateSkill SERVER", characterprefab, skill)
+    local ondeactivate = skilltreedefs.SKILLTREE_DEFS[characterprefab][skill].ondeactivate
+    if ondeactivate then
+        ondeactivate(self.inst)
+    end
     self.inst:PushEvent("ondeactivateskill_server", {skill = skill,})
 end
 function SkillTreeUpdater:DeactivateSkill(skill, prefab,  fromrpc)

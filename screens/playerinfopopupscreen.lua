@@ -219,7 +219,7 @@ function PlayerInfoPopup:OnControl(control, down)
     end
 
     if control == CONTROL_OPEN_CRAFTING or control == CONTROL_OPEN_INVENTORY then
-        if not down then
+        if not down and self.root.tabs then
             self.root.tabs.controller(self)
             return true
         end

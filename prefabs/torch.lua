@@ -328,6 +328,7 @@ end
 local function OnThrown(inst, thrower)
     inst.thrower = thrower and {fuelmod = getskillfueleffectmodifier(inst, thrower), brightnessmod = getskillbrightnesseffectmodifier(inst, thrower) } or nil
 	inst.AnimState:PlayAnimation("spin_loop", true)
+	inst.SoundEmitter:PlaySound("wilson_rework/torch/torch_spin", "spin_loop")
 	PlayIgniteSound(inst, nil, true, true)
 	IgniteTossed(inst)
 	inst.components.inventoryitem.canbepickedup = false
@@ -335,6 +336,7 @@ end
 
 local function OnHit(inst)
 	inst.AnimState:PlayAnimation("land")
+	inst.SoundEmitter:KillSound("spin_loop")
 	inst.SoundEmitter:PlaySound("wilson_rework/torch/stick_ground")
 	inst.components.inventoryitem.canbepickedup = true
 end

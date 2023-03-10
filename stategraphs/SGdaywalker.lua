@@ -10,6 +10,10 @@ local function DoPounceShake(inst)
 	ShakeAllCameras(CAMERASHAKE.FULL, .4, .02, .15, inst, 20)
 end
 
+local function DoDefeatShake(inst)
+	ShakeAllCameras(CAMERASHAKE.VERTICAL, .6, .025, .2, inst, 20)
+end
+
 --------------------------------------------------------------------------
 
 local function ChooseAttack(inst)
@@ -82,8 +86,25 @@ local events =
 		end
 	end),
 	EventHandler("minhealth", function(inst, data)
-		if inst.defeated and not inst.sg:HasStateTag("busy") then
-			inst.sg:GoToState("tired_pre")
+		if inst.defeated and not inst.sg:HasStateTag("defeated") then
+			inst.sg:GoToState("defeat")
+		end
+	end),
+	EventHandler("teleported", function(inst)
+		if inst.sg:HasStateTag("tired") then
+			if not inst.sg:HasStateTag("notiredhit") then
+				inst.sg.statemem.tired = true
+				inst.sg:GoToState("tired_hit", inst.sg.statemem.loops)
+			end
+		elseif inst.sg:HasStateTag("struggle") then
+			if inst.sg:HasStateTag("canattach") or not inst.sg:HasStateTag("nointerrupt") then
+				inst.sg.statemem.struggling = true
+				inst.sg:GoToState("collide", 0)
+			end
+		elseif not inst.defeated then
+			if not inst.sg:HasStateTag("busy") or inst.sg:HasStateTag("caninterrupt") then
+				inst.sg:GoToState("hit", inst.sg.statemem.trytired)
+			end
 		end
 	end),
 }
@@ -628,7 +649,7 @@ local states =
 
 	State{
 		name = "struggle1",
-		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -691,7 +712,7 @@ local states =
 
 	State{
 		name = "struggle1_pst",
-		tags = { "busy", "nointerrupt", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "canattach" },
 
 		onenter = function(inst)
 			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
@@ -713,7 +734,7 @@ local states =
 
 	State{
 		name = "struggle2",
-		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst, targets)
 			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
@@ -750,7 +771,7 @@ local states =
 
 	State{
 		name = "shrug1",
-		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
@@ -822,7 +843,7 @@ local states =
 
 	State{
 		name = "shrug2",
-		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst)
 			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
@@ -884,7 +905,7 @@ local states =
 
 	State{
 		name = "shrug_pst",
-		tags = { "busy", "nointerrupt", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "canattach" },
 
 		onenter = function(inst)
 			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
@@ -906,13 +927,15 @@ local states =
 
 	State{
 		name = "collide",
-		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "notalksound", "canattach" },
 
-		onenter = function(inst)
+		onenter = function(inst, speedmult)
 			inst.components.locomotor:Stop()
 			inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
 			inst.AnimState:PlayAnimation("collide")
 			inst.SoundEmitter:PlaySound("daywalker/voice/hurt")
+
+			inst.sg.statemem.speedmult = speedmult or 1
 
 			TryChatter(inst, "DAYWALKER_COLLIDE")
 
@@ -921,9 +944,9 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(1, function(inst) inst.Physics:SetMotorVelOverride(-3, 0, 0) end),
-			FrameEvent(3, function(inst) inst.Physics:SetMotorVelOverride(-1, 0, 0) end),
-			FrameEvent(5, function(inst) inst.Physics:SetMotorVelOverride(-.5, 0, 0) end),
+			FrameEvent(1, function(inst) inst.Physics:SetMotorVelOverride(-3 * inst.sg.statemem.speedmult, 0, 0) end),
+			FrameEvent(3, function(inst) inst.Physics:SetMotorVelOverride(-1 * inst.sg.statemem.speedmult, 0, 0) end),
+			FrameEvent(5, function(inst) inst.Physics:SetMotorVelOverride(-.5 * inst.sg.statemem.speedmult, 0, 0) end),
 			FrameEvent(7, function(inst)
 				inst.Physics:ClearMotorVelOverride()
 				inst.Physics:Stop()
@@ -947,7 +970,7 @@ local states =
 
 	State{
 		name = "attach",
-		tags = { "busy", "nointerrupt", "notalksound", "canattach" },
+		tags = { "struggle", "busy", "nointerrupt", "notalksound", "canattach" },
 
 		onenter = function(inst, attachpos)
 			inst.components.locomotor:Stop()
@@ -1016,9 +1039,7 @@ local states =
 
 		timeline =
 		{
-			FrameEvent(9, function(inst)
-				inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.4)
-			end),
+			FrameEvent(9, function(inst) inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.4) end),
 			FrameEvent(11, function(inst)
 				if inst.sg.statemem.trytired and inst:IsFatigued() or inst.defeated then
 					inst.sg:GoToState("tired_pre")
@@ -1530,6 +1551,136 @@ local states =
 				end
 			end),
 		},
+	},
+
+	--------------------------------------------------------------------------
+	--DEFEATED
+	--------------------------------------------------------------------------
+
+	State{
+		name = "defeat",
+		tags = { "defeated", "busy", "nointerrupt" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
+			inst.AnimState:PlayAnimation("defeat")
+		end,
+
+		timeline =
+		{
+			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/hurt") end),
+			FrameEvent(7, function(inst) inst.SoundEmitter:PlaySound("daywalker/action/step", nil, 0.4) end),
+			FrameEvent(23, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/speak_short") end),
+			FrameEvent(33, function(inst) inst.SoundEmitter:PlaySound("dontstarve/movement/bodyfall_dirt") end),
+			FrameEvent(34, DoDefeatShake),
+			FrameEvent(36, function(inst)
+				inst.sg:AddStateTag("noattack")
+				if inst.defeated and not inst.looted then
+					inst.looted = true
+					inst.components.timer:ResumeTimer("despawn")
+					inst.components.lootdropper:DropLoot(inst:GetPosition())
+				end
+			end),
+			FrameEvent(76, function(inst) inst.SoundEmitter:PlaySound("daywalker/voice/speak_short") end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.defeat = true
+					inst.sg:GoToState("defeat_idle_pre")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.defeat then
+				--Should not reach here
+				if inst.sg.statemem.struggling then
+					inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
+				else
+					inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
+				end
+			end
+		end,
+	},
+
+	State{
+		name = "defeat_idle_pre",
+		tags = { "defeated", "busy", "nointerrupt", "noattack" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
+			inst.AnimState:PlayAnimation("defeat_idle_pre")
+		end,
+
+		timeline =
+		{
+			FrameEvent(12, function(inst)
+				TryChatter(inst, "DAYWALKER_POWERDOWN")
+			end),
+		},
+
+		events =
+		{
+			EventHandler("animover", function(inst)
+				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.defeat = true
+					inst.sg:GoToState("defeat_idle")
+				end
+			end),
+		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.defeat then
+				--Should not reach here
+				if inst.sg.statemem.struggling then
+					inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
+				else
+					inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
+				end
+			end
+		end,
+	},
+
+	State{
+		name = "defeat_idle",
+		tags = { "defeated", "busy", "nointerrupt", "noattack" },
+
+		onenter = function(inst)
+			inst.components.locomotor:Stop()
+			inst:SwitchToFacingModel(0) --inst.Transform:SetNoFaced()
+			if not inst.AnimState:IsCurrentAnimation("defeat_idle_loop") then
+				inst.AnimState:PlayAnimation("defeat_idle_loop", true)
+			end
+			inst.sg:SetTimeout(inst.AnimState:GetCurrentAnimationLength())
+		end,
+
+		timeline =
+		{
+			FrameEvent(13, function(inst)
+				TryChatter(inst, "DAYWALKER_POWERDOWN")
+			end),
+		},
+
+		ontimeout = function(inst)
+			inst.sg.statemem.defeat = true
+			inst.sg:GoToState("defeat_idle")
+		end,
+
+		onexit = function(inst)
+			if not inst.sg.statemem.defeat then
+				--Should not reach here
+				if inst.sg.statemem.struggling then
+					inst:SwitchToFacingModel(6) --inst.Transform:SetSixFaced()
+				else
+					inst:SwitchToFacingModel(4) --inst.Transform:SetFourFaced()
+				end
+			end
+		end,
 	},
 }
 

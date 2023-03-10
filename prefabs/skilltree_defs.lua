@@ -498,8 +498,19 @@ CreateSkillTreeFor("wilson", {
         tags = {"allegiance","shadow","shadow_favor"},
         locks = {"wilson_allegiance_lock_1", "wilson_allegiance_lock_2"},
         onactivate = function(inst, fromload)
-                inst:AddTag("skill_wilson_allegiance_shadow")
-            end,        
+            inst:AddTag("skill_wilson_allegiance_shadow")
+            local damagetyperesist = inst.components.damagetyperesist
+            if damagetyperesist then
+                damagetyperesist:AddResist("shadow_aligned", inst, TUNING.SKILLS.WILSON_ALLEGIANCE_SHADOW_RESIST, "wilson_allegiance_shadow")
+            end
+        end,
+        ondeactivate = function(inst, fromload)
+            inst:RemoveTag("skill_wilson_allegiance_shadow")
+            local damagetyperesist = inst.components.damagetyperesist
+            if damagetyperesist then
+                damagetyperesist:RemoveResist("shadow_aligned", inst, "wilson_allegiance_shadow")
+            end
+        end,
         connects = {
         },
     },  

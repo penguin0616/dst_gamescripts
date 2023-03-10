@@ -114,8 +114,37 @@ function Beard:Shave(who, withwhat)
         end
     end
 
+    
+    local oldbits = self.bits
+    local currentflag = true
+    local daysback = 0
+
+    print("Shave from",self.daysgrowth)
+    for k = self.daysgrowth, 0, -1 do
+
+        local cb = self.callbacks[k]
+        if cb ~= nil then
+            --skip past current level
+            if currentflag == true then
+                currentflag = false
+            else
+                cb(self.inst, self.skinname)
+                break
+            end
+        end
+        daysback = daysback +1
+    end     
+
+    self.daysgrowth = self.daysgrowth - daysback
+    
+    if self.daysgrowth <= 0 then
+        self:Reset()
+    end
+
+    local dropbits = oldbits - self.bits
+
     if self.prize ~= nil then
-        for k = 1 , self.bits do
+        for k = 1 , dropbits do
             local bit = SpawnPrefab(self.prize)
             local x, y, z = self.inst.Transform:GetWorldPosition()
             bit.Transform:SetPosition(x, y + 2, z)
@@ -123,7 +152,6 @@ function Beard:Shave(who, withwhat)
             local angle = math.random() * 2 * PI
             bit.Physics:SetVel(speed * math.cos(angle), 2 + math.random() * 3, speed * math.sin(angle))
         end
-        self:Reset()
     end
 
     if who == self.inst and who.components.sanity ~= nil then
@@ -182,7 +210,7 @@ function Beard:OnLoad(data)
         if cb ~= nil then
             cb(self.inst, self.skinname)
         end
-    end        
+    end
 end
 
 function Beard:LoadPostPass(newents, data)

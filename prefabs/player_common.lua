@@ -2240,6 +2240,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst.components.combat:SetAttackPeriod(TUNING.WILSON_ATTACK_PERIOD)
         inst.components.combat:SetRange(TUNING.DEFAULT_ATTACK_RANGE)
 
+		inst:AddComponent("damagetyperesist")
+
         local gamemode = TheNet:GetServerGameMode()
         if gamemode == "lavaarena" then
             event_server_data("lavaarena", "prefabs/player_common").master_postinit(inst)

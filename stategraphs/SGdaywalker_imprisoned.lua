@@ -326,6 +326,7 @@ local states =
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("chain_break_pre")
 			inst.SoundEmitter:PlaySound("daywalker/voice/chainbreak_break_1")
+			inst:AddTag("NOCLICK")
 		end,
 
 		timeline =
@@ -338,10 +339,17 @@ local states =
 		{
 			EventHandler("animover", function(inst)
 				if inst.AnimState:AnimDone() then
+					inst.sg.statemem.breaking = true
 					inst.sg:GoToState("chain_break")
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			if not inst.sg.statemem.breaking then
+				inst:RemoveTag("NOCLICK")
+			end
+		end,
 	},
 
 	State{
@@ -349,6 +357,7 @@ local states =
 
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("chain_break")
+			inst:AddTag("NOCLICK")
 		end,
 
 		timeline =
@@ -371,6 +380,9 @@ local states =
 				inst:PushEvent("daywalkerchainbreak")
 				inst:SpawnLeeches()
 			end),
+			FrameEvent(71, function(inst)
+				inst:RemoveTag("NOCLICK")
+			end),
 		},
 
 		events =
@@ -381,6 +393,10 @@ local states =
 				end
 			end),
 		},
+
+		onexit = function(inst)
+			inst:RemoveTag("NOCLICK")
+		end,
 	},
 }
 

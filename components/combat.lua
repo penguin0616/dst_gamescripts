@@ -542,6 +542,9 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli)
         if self.inst.components.inventory ~= nil then
             damage = self.inst.components.inventory:ApplyDamage(damage, attacker, weapon)
         end
+		if self.inst.components.damagetyperesist ~= nil then
+			damage = damage * self.inst.components.damagetyperesist:GetResist(attacker, weapon)
+		end
         damage = damage * self.externaldamagetakenmultipliers:Get()
         if damage > 0 and not self.inst.components.health:IsInvincible() then
             --Bonus damage only applies after unabsorbed damage gets through your armor

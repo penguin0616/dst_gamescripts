@@ -4,7 +4,37 @@ local assets =
 }
 
 local function OnBlocked(owner)
-	owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_marble") --#TODO DREADSTONE SOUND
+	owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_dreadstone")
+end
+
+local function HasSetBonus(inst, owner)
+	local hat = owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+	return hat ~= nil and hat:HasTag("dreadstone")
+end
+
+local function DoRegen(inst, owner)
+	if owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode() then
+		local setbonus = HasSetBonus(inst, owner) and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
+		local rate = 1 / Lerp(1 / TUNING.ARMOR_DREADSTONE_REGEN_MAXRATE, 1 / TUNING.ARMOR_DREADSTONE_REGEN_MINRATE, owner.components.sanity:GetPercent())
+		inst.components.armor:Repair(inst.components.armor.maxcondition * rate * setbonus)
+	end
+	if not inst.components.armor:IsDamaged() then
+		inst.regentask:Cancel()
+		inst.regentask = nil
+	end
+end
+
+local function StartRegen(inst, owner)
+	if inst.regentask == nil then
+		inst.regentask = inst:DoPeriodicTask(TUNING.ARMOR_DREADSTONE_REGEN_PERIOD, DoRegen, nil, owner)
+	end
+end
+
+local function StopRegen(inst)
+	if inst.regentask ~= nil then
+		inst.regentask:Cancel()
+		inst.regentask = nil
+	end
 end
 
 local function onequip(inst, owner)
@@ -17,6 +47,12 @@ local function onequip(inst, owner)
 	end
 
 	inst:ListenForEvent("blocked", OnBlocked, owner)
+
+	if owner.components.sanity ~= nil and inst.components.armor:IsDamaged() then
+		StartRegen(inst, owner)
+	else
+		StopRegen(inst)
+	end
 end
 
 local function onunequip(inst, owner)
@@ -27,6 +63,22 @@ local function onunequip(inst, owner)
 	if skin_build ~= nil then
 		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
 	end
+
+	StopRegen(inst)
+end
+
+local function OnTakeDamage(inst, amount)
+	if inst.regentask == nil and inst.components.equippable:IsEquipped() then
+		local owner = inst.components.inventoryitem.owner
+		if owner ~= nil and owner.components.sanity ~= nil then
+			StartRegen(inst, owner)
+		end
+	end
+end
+
+local function CalcDapperness(inst, owner)
+	local setbonus = HasSetBonus(inst, owner) and 0.5 or 1
+	return (inst.regentask ~= nil and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL) * setbonus
 end
 
 local function fn()
@@ -65,14 +117,17 @@ local function fn()
 
 	inst:AddComponent("armor")
 	inst.components.armor:InitCondition(TUNING.ARMORDREADSTONE, TUNING.ARMORDREADSTONE_ABSORPTION)
+	inst.components.armor.ontakedamage = OnTakeDamage
 
 	inst:AddComponent("equippable")
 	inst.components.equippable.equipslot = EQUIPSLOTS.BODY
-	inst.components.equippable.dapperness = TUNING.CRAZINESS_SMALL
+	inst.components.equippable.dapperfn = CalcDapperness
 	inst.components.equippable.is_magic_dapperness = true
-
 	inst.components.equippable:SetOnEquip(onequip)
 	inst.components.equippable:SetOnUnequip(onunequip)
+
+	inst:AddComponent("damagetyperesist")
+	inst.components.damagetyperesist:AddResist("shadow_aligned", inst, TUNING.ARMORDREADSTONE_SHADOW_RESIST)
 
 	inst:AddComponent("shadowlevel")
 	inst.components.shadowlevel:SetDefaultLevel(TUNING.ARMORDREADSTONE_SHADOW_LEVEL)

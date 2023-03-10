@@ -332,6 +332,21 @@ local function GetPrisoner(inst)
 	return inst.prisoner:value()
 end
 
+local function NotifyPrisonerOnPillarRemoved(inst)
+	local prisoner = inst.components.entitytracker:GetEntity("freed") or inst.components.entitytracker:GetEntity("prisoner")
+	if prisoner ~= nil then
+		prisoner:PushEvent("pillarremoved", inst)
+	end
+end
+
+local function OnRemoveEntity(inst)
+	RemoveChains(inst)
+	if TheWorld.ismastersim then
+		inst:AddTag("NOCLICK") --#V2C #HACK During removal, we will mess up the FindEntities return table
+		NotifyPrisonerOnPillarRemoved(inst)
+	end
+end
+
 --------------------------------------------------------------------------
 
 local function SpawnDebris(inst, anim, layer)
@@ -537,6 +552,7 @@ local function OnWorkFinished(inst, worker)
 		inst:DoTaskInTime(22 * FRAMES, ShakePillarFall)
 		inst:ListenForEvent("animover", OnDestroyed)
 		inst:AddTag("NOCLICK")
+		NotifyPrisonerOnPillarRemoved(inst)
 	end
 end
 
@@ -619,8 +635,6 @@ local function fn()
 	inst.debris = net_tinybyte(inst.GUID, "daywalker_pillar.debris", "debrisdirty")
 	inst.restartvibrate = net_event(inst.GUID, "daywalker_pillar.restartvibrate")
 
-	inst.OnRemoveEntity = RemoveChains
-
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
@@ -695,6 +709,7 @@ local function fn()
 	inst.IsResonating = IsResonating
 	inst.OnCollided = OnCollided
 	inst.OnLoadPostPass = OnLoadPostPass
+	inst.OnRemoveEntity = OnRemoveEntity
 
 	return inst
 end

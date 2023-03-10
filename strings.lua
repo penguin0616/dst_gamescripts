@@ -4467,8 +4467,8 @@ STRINGS =
         ARMORDREADSTONE = "Have no fear, the darkness will protect you.",
         DREADSTONEHAT = "A sturdy helmet of blackest stone.",
 
-        TRANSMUTE_LOG = "Transmute Sticks into a Log.",
-        TRANSMUTE_TWIGS = "Transmute a Log into Sticks.",
+        TRANSMUTE_LOG = "Transmute Twigs into a Log.",
+        TRANSMUTE_TWIGS = "Transmute a Log into Twigs.",
         TRANSMUTE_FLINT = "Transmute Rocks into Flint.",
         TRANSMUTE_ROCKS = "Transmute Flint into Rocks.",
 
@@ -4485,18 +4485,18 @@ STRINGS =
         TRANSMUTE_GOLDNUGGET = "Transmute Nitre into Gold Nuggets.",
         TRANSMUTE_NITRE = "Transmute Gold Nugget into a Nitre.",
         TRANSMUTE_MARBLE = "Transmute Cut Stone into Marble.",
-        TRANSMUTE_CUTSTONE = "Transmute Marble into Cut Stone.",        
-        TRANSMUTE_MOONROCKNUGGET = "Transmute Marble into Moonrock.",
+        TRANSMUTE_CUTSTONE = "Transmute Marble into Cut Stone.",
+        TRANSMUTE_MOONROCKNUGGET = "Transmute Marble into Moon Rock.",
 
-        TRANSMUTE_POOP = "Transmute Rot into Poop.",
+        TRANSMUTE_POOP = "Transmute Rot into Manure.",
         TRANSMUTE_BEARDHAIR = "Transmute Beefalo Hair into Beard Hair.",
         TRANSMUTE_BEEFALODHAIR = "Transmute Beard Hair into Beefalo Hair.",
         TRANSMUTE_BONESHARD = "Transmute a Hound's Tooth into Bone Shards.",
         TRANSMUTE_HOUNDSTOOTH = "Transmute Bone Shards into a Hounds Tooth.",
 
-        TRANSMUTE_HORRORFUEL = "Transmute Dreadstone into Pure Horror",
-        TRANSMUTE_DREADSTONE = "Transmute Pure Horror into Dreadstone",
-        TRANSMUTE_NIGHTMAREFUEL = "Transmute Pure Horror into Nightmarefuel",
+        TRANSMUTE_HORRORFUEL = "Transmute Dreadstone into Pure Horror.",
+        TRANSMUTE_DREADSTONE = "Transmute Pure Horror into Dreadstone.",
+        TRANSMUTE_NIGHTMAREFUEL = "Transmute Pure Horror into Nightmarefuel.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},

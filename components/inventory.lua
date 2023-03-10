@@ -362,7 +362,11 @@ function Inventory:ApplyDamage(damage, attacker, weapon)
             v.components.resistance:ShouldResistDamage() then
             v.components.resistance:ResistDamage(damage)
             return 0
-        elseif v.components.armor ~= nil then
+		end
+		if v.components.damagetyperesist ~= nil then
+			damage = damage * v.components.damagetyperesist:GetResist(attacker, weapon)
+		end
+		if v.components.armor ~= nil then
             absorbers[v.components.armor] = v.components.armor:GetAbsorption(attacker, weapon)
         end
     end
