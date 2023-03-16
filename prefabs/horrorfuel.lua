@@ -159,7 +159,7 @@ local function fn()
 	inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL * 2
 	inst:AddComponent("repairer")
 	inst.components.repairer.repairmaterial = MATERIALS.NIGHTMARE
-	inst.components.repairer.finiteusesrepairvalue = TUNING.NIGHTMAREFUEL_FINITEUSESREPAIRVALUE
+	inst.components.repairer.finiteusesrepairvalue = TUNING.NIGHTMAREFUEL_FINITEUSESREPAIRVALUE * 2
 
 	inst:AddComponent("waterproofer")
 	inst.components.waterproofer:SetEffectiveness(0)

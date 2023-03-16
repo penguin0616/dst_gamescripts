@@ -136,6 +136,9 @@ function ContainerWidget:Open(container, doer)
         if not container.replica.container:IsSideWidget() then
             if widget.top_align_tip ~= nil then
                 slot.top_align_tip = widget.top_align_tip
+
+            elseif widget.bottom_align_tip ~= nil then
+                slot.bottom_align_tip = widget.bottom_align_tip
             else
                 slot.side_align_tip = (widget.side_align_tip or 0) - v.x
             end

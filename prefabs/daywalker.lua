@@ -8,11 +8,6 @@ local assets =
 	Asset("ANIM", "anim/daywalker_defeat.zip"),
 }
 
-local assets_head =
-{
-	Asset("ANIM", "anim/daywalker_phase2.zip"),
-}
-
 local prefabs =
 {
 	"shadow_leech",
@@ -817,9 +812,9 @@ local function OnDespawnTimer(inst, data)
 		if inst:IsAsleep() then
 			inst:Remove()
 		else
-			inst:AddTag("NOCLICK")
-			inst.persists = false
-			ErodeAway(inst)
+			inst.components.talker:IgnoreAll("despawn")
+			inst.components.despawnfader:FadeOut()
+			inst.DynamicShadow:Enable(false)
 		end
 	end
 end
@@ -1121,6 +1116,7 @@ local function fn()
 	inst.AnimState:SetBuild("daywalker_build")
 	inst.AnimState:PlayAnimation("idle", true)
 	inst.AnimState:SetSymbolLightOverride("ww_armlower_red", .6)
+	inst.AnimState:SetSymbolLightOverride("flake", .6)
 
 	inst.DynamicShadow:SetSize(3.5, 1.5)
 
@@ -1136,6 +1132,8 @@ local function fn()
 	inst._facingmodel = net_tinybyte(inst.GUID, "daywalker._facingmodel", "facingmodeldirty")
 	inst._headtracking = net_bool(inst.GUID, "daywalker._headtracking", "headtrackingdirty")
 	inst._stalking = net_entity(inst.GUID, "daywalker._stalking", "stalkingdirty")
+
+	inst:AddComponent("despawnfader")
 
 	inst.entity:SetPristine()
 

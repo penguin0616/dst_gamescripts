@@ -333,6 +333,7 @@ local function OpenContainerWidget(self, container, side)
 	local parent = side and self.controls.containerroot_side
 					or (container.replica.container ~= nil and container.replica.container.type == "hand_inv") and self.controls.inv.hand_inv
                     or (container.replica.container ~= nil and container.replica.container.type == "side_inv") and self.controls.secondary_status.side_inv
+                    or (container.replica.container ~= nil and container.replica.container.type == "side_inv_behind") and self.controls.containerroot_side_behind
 					or self.controls.containerroot
 
 	parent:AddChild(containerwidget)

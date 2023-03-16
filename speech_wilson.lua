@@ -1499,7 +1499,7 @@ return {
         TURF_MOSAIC_RED = "Yet another ground type.",
         TURF_MOSAIC_BLUE = "Yet another ground type.",
 
-        TURF_BEARD_RUG = "It's a chunk of ground.", --[[TODO]]
+        TURF_BEARD_RUG = "I made it from my beard!",
 
 		POWCAKE = "Science help us.",
         CAVE_ENTRANCE = "I wonder if that rock could be moved.",

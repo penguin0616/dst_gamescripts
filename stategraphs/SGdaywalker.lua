@@ -34,10 +34,10 @@ local function IsPlayerMelee(data) --"attacked" event data
 		and data.attacker ~= nil
 		and data.attacker:HasTag("player")
 		and (data.damage or 0) > 0
-		and data.weapon ~= nil
-		and data.weapon.components.weapon ~= nil
-		and data.weapon.components.weapon.projectile == nil
-		and data.weapon.components.projectile == nil
+		and (data.weapon == nil or (
+				(data.weapon.components.weapon == nil or data.weapon.components.weapon.projectile == nil) and
+				data.weapon.components.projectile == nil
+			))
 end
 
 local events =
@@ -1268,6 +1268,7 @@ local states =
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("atk3_pst_tired")
 			TryChatter(inst, "DAYWALKER_TIRED", 1, true)
+			inst.sg.statemem.trytired = true --for going to "hit" state
 		end,
 
 		events =

@@ -2899,14 +2899,14 @@ local function MakeHat(name)
         return inst
     end
 
-	local function dreadstone_hassetbonus(inst, owner)
+	local function dreadstone_getsetbonusequip(inst, owner)
 		local body = owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) or nil
-		return body ~= nil and body:HasTag("dreadstone")
+		return body ~= nil and body.prefab == "armordreadstone" and body or nil
 	end
 
 	local function dreadstone_doregen(inst, owner)
 		if owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode() then
-			local setbonus = dreadstone_hassetbonus(inst, owner) and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
+			local setbonus = dreadstone_getsetbonusequip(inst, owner) ~= nil and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
 			local rate = 1 / Lerp(1 / TUNING.ARMOR_DREADSTONE_REGEN_MAXRATE, 1 / TUNING.ARMOR_DREADSTONE_REGEN_MINRATE, owner.components.sanity:GetPercent())
 			inst.components.armor:Repair(inst.components.armor.maxcondition * rate * setbonus)
 		end
@@ -2954,12 +2954,17 @@ local function MakeHat(name)
 	end
 
 	local function dreadstone_calcdapperness(inst, owner)
-		local setbonus = dreadstone_hassetbonus(inst, owner) and 0.5 or 1
-		return (inst.regentask ~= nil and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL) * setbonus
+		local insanity = owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode()
+		local other = dreadstone_getsetbonusequip(inst, owner)
+		if other ~= nil then
+			return (insanity and (inst.regentask ~= nil or other.regentask ~= nil) and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL) * 0.5
+		end
+		return insanity and inst.regentask ~= nil and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL
 	end
 
 	local function dreadstone_custom_init(inst)
 		inst:AddTag("dreadstone")
+		inst:AddTag("shadow_item")
 
 		--waterproofer (from waterproofer component) added to pristine state for optimization
 		inst:AddTag("waterproofer")

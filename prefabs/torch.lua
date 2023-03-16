@@ -273,9 +273,11 @@ local function onfuelchange(newsection, oldsection, inst)
                     announce = "ANNOUNCE_TORCH_OUT",
                 }
 				PlayExtinguishSound(inst, owner, true, false)
+				inst:Remove() --need to remove before "itemranout" for auto-reequip to work
                 owner:PushEvent("itemranout", data)
+			else
+				inst:Remove()
             end
-			inst:Remove()
 		elseif inst.fires ~= nil then
 			for i, fx in ipairs(inst.fires) do
 				fx:Remove()

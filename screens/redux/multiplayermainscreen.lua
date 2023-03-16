@@ -510,6 +510,8 @@ local MultiplayerMainScreen = Class(Screen, function(self, prev_screen, profile,
     self.prev_screen = prev_screen
 	self:DoInit()
 	self.default_focus = self.menu
+
+    TheGenericKV:ApplyOnlineProfileData() -- Applies the data after synchronization in login flow if applicable.
 end)
 
 function MultiplayerMainScreen:GotoShop( filter_info )

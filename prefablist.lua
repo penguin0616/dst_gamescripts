@@ -1029,6 +1029,7 @@ PREFABFILES = {
   "tophat_shadow_fx",
   "torch",
   "torchfire",
+  "torchfire_barber",
   "torchfire_carrat",
   "torchfire_nautical",
   "torchfire_pillar",

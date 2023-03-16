@@ -82,6 +82,7 @@ local Controls = Class(Widget, function(self, owner)
     self.blackoverlay:Hide()
 
     self.containerroot = self:AddChild(Widget(""))
+    self.containerroot_side_behind = self:AddChild(Widget(""))
     self:MakeScalingNodes()
 
     self.saving = self.topright_over_root:AddChild(SavingIndicator(self.owner))
@@ -242,6 +243,12 @@ local Controls = Class(Widget, function(self, owner)
     self.containerroot:SetMaxPropUpscale(MAX_HUD_SCALE)
     self.containerroot = self.containerroot:AddChild(Widget(""))
 
+    self.containerroot_side_behind:SetHAnchor(ANCHOR_RIGHT)
+    self.containerroot_side_behind:SetVAnchor(ANCHOR_MIDDLE)
+    self.containerroot_side_behind:SetScaleMode(SCALEMODE_PROPORTIONAL)
+    self.containerroot_side_behind:SetMaxPropUpscale(MAX_HUD_SCALE)
+    self.containerroot_side_behind = self.containerroot_side_behind:AddChild(Widget("containerroot_side_behind"))
+
     self.containerroot_side = self:AddChild(Widget(""))
     self.containerroot_side:SetHAnchor(ANCHOR_RIGHT)
     self.containerroot_side:SetVAnchor(ANCHOR_MIDDLE)
@@ -249,6 +256,8 @@ local Controls = Class(Widget, function(self, owner)
     self.containerroot_side:SetMaxPropUpscale(MAX_HUD_SCALE)
     self.containerroot_side = self.containerroot_side:AddChild(Widget("contaierroot_side"))
     self.containerroot_side:Hide()
+
+
 
     if not is_splitscreen then
         -- This assumes that splitscreen means console; consoles are forced to use
@@ -449,6 +458,7 @@ function Controls:SetHUDSize()
     self.bottomright_root:SetScale(scale)
     self.containerroot:SetScale(scale)
     self.containerroot_side:SetScale(scale)
+    self.containerroot_side_behind:SetScale(scale)
     self.hover:SetScale(scale)
     self.topright_over_root:SetScale(scale)
 

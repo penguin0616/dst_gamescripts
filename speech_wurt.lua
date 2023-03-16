@@ -1489,7 +1489,7 @@ return{
         TURF_MOSAIC_RED = "Ground bit.",
         TURF_MOSAIC_BLUE = "Ground bit.",
 
-        TURF_BEARD_RUG = "Ground bit.",
+        TURF_BEARD_RUG = "Soft!",
 
 		POWCAKE = "Gives tummy-ache, but... smell so good...",
         CAVE_ENTRANCE = "There rocks in the way.",

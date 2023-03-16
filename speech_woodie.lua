@@ -1490,7 +1490,7 @@ return{
         TURF_MOSAIC_RED = "Just some ground, eh?",
         TURF_MOSAIC_BLUE = "Just some ground, eh?",
 
-        TURF_BEARD_RUG = "Just some ground, eh?",       
+        TURF_BEARD_RUG = "He sacrificed a lot of beard for this rug.",       
 
 		POWCAKE = "I like the ones made with real sugar better.",
         CAVE_ENTRANCE = "It's all bunged up.",

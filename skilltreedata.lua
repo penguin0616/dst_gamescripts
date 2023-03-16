@@ -11,6 +11,11 @@ local SkillTreeData = Class(function(self)
     --self.dirty = nil
 end)
 
+function SkillTreeData:RespecSkills(characterprefab) -- More efficient handling of this action.
+    self.activatedskills[characterprefab] = nil
+    self:UpdateSaveState(characterprefab)
+end
+
 -- NOTES(JBK): Chances are you want to use the wrapper functions in skilltreeupdater for these.
 
 function SkillTreeData:IsActivated(skill, characterprefab)

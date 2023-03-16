@@ -7,14 +7,14 @@ local function OnBlocked(owner)
 	owner.SoundEmitter:PlaySound("dontstarve/wilson/hit_dreadstone")
 end
 
-local function HasSetBonus(inst, owner)
+local function GetSetBonusEquip(inst, owner)
 	local hat = owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
-	return hat ~= nil and hat:HasTag("dreadstone")
+	return hat ~= nil and hat.prefab == "dreadstonehat" and hat or nil
 end
 
 local function DoRegen(inst, owner)
 	if owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode() then
-		local setbonus = HasSetBonus(inst, owner) and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
+		local setbonus = GetSetBonusEquip(inst, owner) ~= nil and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
 		local rate = 1 / Lerp(1 / TUNING.ARMOR_DREADSTONE_REGEN_MAXRATE, 1 / TUNING.ARMOR_DREADSTONE_REGEN_MINRATE, owner.components.sanity:GetPercent())
 		inst.components.armor:Repair(inst.components.armor.maxcondition * rate * setbonus)
 	end
@@ -77,8 +77,12 @@ local function OnTakeDamage(inst, amount)
 end
 
 local function CalcDapperness(inst, owner)
-	local setbonus = HasSetBonus(inst, owner) and 0.5 or 1
-	return (inst.regentask ~= nil and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL) * setbonus
+	local insanity = owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode()
+	local other = GetSetBonusEquip(inst, owner)
+	if other ~= nil then
+		return (insanity and (inst.regentask ~= nil or other.regentask ~= nil) and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL) * 0.5
+	end
+	return insanity and inst.regentask ~= nil and TUNING.CRAZINESS_MED or TUNING.CRAZINESS_SMALL
 end
 
 local function fn()

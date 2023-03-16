@@ -1489,7 +1489,7 @@ return{
         TURF_MOSAIC_RED = "Why am I wasting time staring at the ground?",
         TURF_MOSAIC_BLUE = "Why am I wasting time staring at the ground?",
 
-        TURF_BEARD_RUG = "Why am I wasting time staring at the ground?",
+        TURF_BEARD_RUG = "Why am I wasting time staring at... I'm sorry, is that rug made of whiskers?!",
 
 		POWCAKE = "This never ends well.",
         CAVE_ENTRANCE = "I never was good at leaving well enough alone.",

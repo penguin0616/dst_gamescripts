@@ -1489,7 +1489,7 @@ return{
         TURF_MOSAIC_RED = "The ground. You step on it.",
         TURF_MOSAIC_BLUE = "The ground. You step on it.",
 
-        TURF_BEARD_RUG = "The ground. You step on it.",
+        TURF_BEARD_RUG = "Oh my...",
 
 		POWCAKE = "The crowning achievement of the agricultural-industrial complex.",
         CAVE_ENTRANCE = "The placement of that rock looks intentional.",
@@ -4763,7 +4763,7 @@ return{
 			EXPOSED = "It will require much greater force than I can muster to break it.",
 		},
 		ARMORDREADSTONE = "Extremely durable, and surprisingly lightweight.",
-		DREADSTONEHAT = "Thankfully, the material has no adverse effects on the mind.",
+		DREADSTONEHAT = "Unfortunately, the material seems to have adverse affects on the mind.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

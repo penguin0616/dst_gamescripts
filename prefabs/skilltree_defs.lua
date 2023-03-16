@@ -480,8 +480,7 @@ CreateSkillTreeFor("wilson", {
                 if skillselection then
                     return "question"
                 end
-                local kv = TheInventory:GetLocalGenericKV()
-                return kv.fuelweaver_killed == "1" 
+                return TheGenericKV:GetKV("fuelweaver_killed") == "1"
             end,
         connects = {
             "wilson_allegiance_shadow",

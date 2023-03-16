@@ -1082,10 +1082,7 @@ local CLIENT_RPC_HANDLERS =
     end,
 
     UpdateAccomplishment = function(name)
-        local kv = TheInventory:GetLocalGenericKV()
-        if kv[name] ~= "1" then
-            TheInventory:SetGenericKVValue(name, "1")
-        end
+        TheGenericKV:SetKV(name, "1")
     end,
 
     SetSkillActivatedState = function(skill_rpc_id, isunlocked)

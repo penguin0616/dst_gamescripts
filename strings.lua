@@ -4496,7 +4496,7 @@ STRINGS =
 
         TRANSMUTE_HORRORFUEL = "Transmute Dreadstone into Pure Horror.",
         TRANSMUTE_DREADSTONE = "Transmute Pure Horror into Dreadstone.",
-        TRANSMUTE_NIGHTMAREFUEL = "Transmute Pure Horror into Nightmarefuel.",
+        TRANSMUTE_NIGHTMAREFUEL = "Transmute Pure Horror into Nightmare Fuel.",
     },
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},

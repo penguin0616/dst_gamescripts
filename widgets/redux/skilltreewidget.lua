@@ -117,11 +117,7 @@ local SkillTreeWidget = Class(Widget, function(self, prefabname, targetdata, fro
 end)
 
 function SkillTreeWidget:RespecSkills()
-    for skill,data in pairs(skilltreedefs.SKILLTREE_DEFS[self.target]) do
-                if TheSkillTree:IsActivated(skill, self.target) then
-                    TheSkillTree:DeactivateSkill(skill, self.target)
-                end
-    end
+    TheSkillTree:RespecSkills(self.target)
     TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/respec")
 
     for skill,graphics in pairs(self.root.tree.skillgraphics) do
