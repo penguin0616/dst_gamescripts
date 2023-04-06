@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "It looks like an evil knight's armor. Neat!",
 		DREADSTONEHAT = "Never forget to wear your dark helmet.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "It looks like a rip in the sky. Neat!",
+        LUNARRIFT_CRYSTAL = "I need to start a new rock collection!",
+
+        LUNARTHRALL_PLANT = "Woby, I think that plant's haunted!",
+        LUNARTHRALL_PLANT_VINE_END = "Revenge of the plants!",
+
+        PUREBRILLIANCE = "That's gotta be the shiniest rock I've ever seen.",
+        LUNARPLANT_HUSK = "If you kill a ghost plant, do you get... a double ghost?",
+
+		LUNAR_FORGE = "Let's make something, Woby!",
+
+		ARMOR_LUNARPLANT = "It makes me feel so safe, it's scary!",
+		LUNARPLANTHAT = "That's definitely the helmet of some kind of ghost knight!",
+		BOMB_LUNARPLANT = "If only I could use it in my slingshot.",
+		STAFF_LUNARPLANT = "Yup, that's definitely magical.",
+		SWORD_LUNARPLANT = "A space sword! Neat!",
+		PICKAXE_LUNARPLANT = "Those are some really tough leaves!",
+		SHOVEL_LUNARPLANT = "What a fancy shovel!",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

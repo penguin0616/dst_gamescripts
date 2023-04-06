@@ -4770,6 +4770,26 @@ return{
 		},
 		ARMORDREADSTONE = "That's some real high-grade protective equipment.",
 		DREADSTONEHAT = "Lookin' sharp! Literally.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "That tear's a bit beyond what my trusty tape can fix.",
+        LUNARRIFT_CRYSTAL = "It's about the prettiest tripping hazard you'll ever see.",
+
+        LUNARTHRALL_PLANT = "It thinks this is its turf!",
+        LUNARTHRALL_PLANT_VINE_END = "You think you wanna tangle with me?",
+
+        PUREBRILLIANCE = "I ain't dazzled by much, but that'll do it.",
+        LUNARPLANT_HUSK = "That's tough stuff!",
+
+		LUNAR_FORGE = "It's givin' me some bright ideas.",
+
+		ARMOR_LUNARPLANT = "Built to last!",
+		LUNARPLANTHAT = "It should keep my noggin' nice and safe.",
+		BOMB_LUNARPLANT = "Anyone call for a demolition crew?",
+		STAFF_LUNARPLANT = "Another magical doodad?",
+		SWORD_LUNARPLANT = "It's a cut above most other swords I've seen. Ha!",
+		PICKAXE_LUNARPLANT = "Sure makes mining a breeze.",
+		SHOVEL_LUNARPLANT = "It makes digging almost too easy.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

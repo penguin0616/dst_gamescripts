@@ -1516,3 +1516,121 @@ function d_daywalker(chain)
 
 	c_select(daywalker)
 end
+
+
+function d_moonplant()
+    if c_sel() then
+        TheWorld.components.lunarthrall_plantspawner:SpawnPlant(c_sel())
+    end
+end
+
+local skiplist = {}
+skiplist["blossom_hit_fx"] = true
+skiplist["quagmire_parkspike"] = true
+skiplist["quagmire_spotspice_shrub"] = true
+skiplist["lavaarena_elemental"] = true
+skiplist["lavaarena"] = true
+skiplist["fireball_hit_fx"] = true
+skiplist["quagmire_coin_fx"] = true
+skiplist["lavaarena_spectator"] = true
+skiplist["global"] = true
+skiplist["audio_test_prefab"] = true
+skiplist["peghook_hitfx"] = true
+skiplist["quagmire_coin4"] = true
+skiplist["quagmire_food"] = true
+skiplist["lavaarena_boarlord"] = true
+skiplist["quagmire"] = true
+skiplist["world"] = true
+skiplist["shard_network"] = true
+skiplist["cave_network"] = true
+skiplist["cave"] = true
+skiplist["gooball_hit_fx"] = true
+skiplist["forest_network"] = true
+skiplist["peghook_splashfx"] = true
+skiplist["quagmire_network"] = true
+skiplist["lavaarena_network"] = true
+skiplist["quagmire_mushroomstump"] = true
+skiplist["forest"] = true
+skiplist["quagmire_parkspike_short"] = true
+skiplist["reticulearc"] = true
+skiplist["reticuleline"] = true
+skiplist["reticulelong"] = true
+skiplist["reticuleaoe"] = true
+skiplist["reticule"] = true
+
+function d_dumpCreatureTXT()
+
+    local f = io.open("creatures.txt", "w")
+    local total = 0
+    local str = ""
+    if f then
+       --"PREFAB","NAME", "HEALTH", "DAMAGE"
+       str = str .. string.format("%s;%s;%s;%s\n", "PREFAB","NAME", "HEALTH", "DAMAGE")
+        for i,data in pairs(Prefabs)do
+            print("=====>",i)
+           -- dumptable(data,1,1)
+            if not data.base_prefab and not skiplist[i] then -- not a skin
+                local t = SpawnPrefab(i)
+                if t and t.components.health then
+                --if t and (t:HasTag("smallcreature") or t:HasTag("monster") or t:HasTag("animal")) then
+
+                    local name = t.name or "---"
+                    local health = t.components.health and t.components.health.maxhealth or 0
+                    local damage = t.components.combat and t.components.combat.defaultdamage or 0
+
+                    str = str .. string.format("%s;%s;%s;%s\n", i,name, tostring(health), tostring(damage))
+                end
+                t:Remove()
+                total = total + 1
+            else
+                print("Skipping")
+            end
+        end
+
+        f:write(str)
+    end
+end
+function d_dumpItemsTXT()
+
+    local f = io.open("items.txt", "w")
+    local total = 0
+    local str = ""
+    if f then
+        str = str .. string.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n","PREFAB","NAME","STACKSIZE","DURABILITY","SPOILTIME","FOOD-HEALTH","FOOD-HUNGER","FOOD-SANITY","DAMAGE","PLANAR DAMAGE","ARMOR-%","ARMOR-HEALTH")
+        for i,data in pairs(Prefabs)do
+            print("=====>",i)
+           -- dumptable(data,1,1)
+            if not data.base_prefab and not skiplist[i] then -- not a skin
+                local t = SpawnPrefab(i)
+                if t and t.components.inventoryitem then
+                --if t and (t:HasTag("smallcreature") or t:HasTag("monster") or t:HasTag("animal")) then
+
+                    local name = t.name or "---"
+                    local stack = t.components.stackable and t.components.stackable.maxsize or 1
+                    local durability = t.components.finiteuses and t.components.finiteuses.total or 0
+                    local spoiltime = t.components.perishable and t.components.perishable.perishtime or 0
+
+                    local food_health = t.components.edible and t.components.edible.healthvalue or "-"
+                    local food_hunger = t.components.edible and t.components.edible.hungervalue or "-"
+                    local food_sanity = t.components.edible and t.components.edible.sanityvalue or "-"
+
+                    local weapondamage = t.components.weapon and t.components.weapon.damage or "-"
+                    local planardamage = t.components.planardamage and t.components.planardamage.basedamage or "-"
+                    local absorb_percent = t.components.armor and t.components.armor.absorb_percent or "-"
+                    local condition =    t.components.armor and t.components.armor.condition or "-"
+
+                    str = str .. string.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s\n", i,name, tostring(stack), tostring(durability), tostring(spoiltime), 
+                        tostring(food_health), tostring(food_hunger), tostring(food_sanity),
+                        tostring(weapondamage), tostring(planardamage), tostring(absorb_percent), tostring(condition)
+                        )
+                end
+                t:Remove()
+                total = total + 1
+            else
+                print("Skipping")
+            end
+        end
+
+        f:write(str)
+    end
+end

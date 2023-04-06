@@ -4771,6 +4771,26 @@ return{
 		},
 		ARMORDREADSTONE = "It's fine I guess.",
 		DREADSTONEHAT = "Do I have to wear it? On my head??",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Uh... is that supposed to be here?",
+        LUNARRIFT_CRYSTAL = "I like the way it glitters.",
+
+        LUNARTHRALL_PLANT = "Ew, that thing's creepy!",
+        LUNARTHRALL_PLANT_VINE_END = "It's asking for a taste of my lighter.",
+
+        PUREBRILLIANCE = "It's pretty, but it'll never beat fire.",
+        LUNARPLANT_HUSK = "Can I burn it now?",
+
+		LUNAR_FORGE = "What gives? That little fire doesn't even feel warm!",
+
+		ARMOR_LUNARPLANT = "I make it look good.",
+		LUNARPLANTHAT = "How am I supposed to see in that thing?",
+		BOMB_LUNARPLANT = "Heh. Think fast!",
+		STAFF_LUNARPLANT = "This magic stuff is easy!",
+		SWORD_LUNARPLANT = "It's okay, but now I really want a fire sword.",
+		PICKAXE_LUNARPLANT = "That dumb plant sure makes a good pickaxe.",
+		SHOVEL_LUNARPLANT = "As far as shovels go, it's not bad.",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

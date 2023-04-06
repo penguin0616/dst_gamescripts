@@ -2710,6 +2710,23 @@ local fx =
         fn = FinalOffsetNegative1,
         sound = "summerevent/cannon/fire1",
     },
+
+    {
+        name = "mining_crystal_fx",
+        bank = "mining_crystal_fx",
+        build = "mining_crystal_fx",
+        anim = "anim",
+    },
+	{
+		name = "planar_resist_fx",
+		bank = "planar_resist_fx",
+		build = "planar_resist_fx",
+		anim = "deflect",
+		fn = function(inst)
+			local scale = .8 + math.random() * .4
+			inst.AnimState:SetScale(math.random() < .5 and scale or -scale, scale)
+		end,
+	},
 }
 
 for cratersteamindex = 1, 4 do

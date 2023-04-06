@@ -256,7 +256,7 @@ function Freezable:Freeze(freezetime)
         end
 
         if self.state ~= prevState then
-            self.inst:PushEvent("freeze")
+            self.inst:PushEvent("freeze", freezetime)
             if self.diminishingreturns then
                 self:SetExtraResist((self.extraresist or 0) + self.resistance * .25)
             end

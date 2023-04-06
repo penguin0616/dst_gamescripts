@@ -2804,6 +2804,42 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    rifts_enabled = function(difficulty)
+        local tuning_vars = {
+            never = {
+                SPAWN_RIFTS = 0
+            },
+            --[[
+            default = {
+                SPAWN_RIFTS = 1,
+            },
+            ]]
+            always = {
+                SPAWN_RIFTS = 2,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
+    rifts_frequency = function(difficulty)
+        local tuning_vars =
+        {
+            never = {
+                RIFTS_SPAWNDELAY = NEVER_TIME,
+            },
+            rare = {
+                RIFTS_SPAWNDELAY = 12 * TUNING.TOTAL_DAY_TIME,
+            },
+            --[[default = {
+                RIFTS_SPAWNDELAY = 3 * TUNING.TOTAL_DAY_TIME,
+            },]]
+            often = {
+                RIFTS_SPAWNDELAY = TUNING.TOTAL_DAY_TIME,
+            },
+            always = {
+                RIFTS_SPAWNDELAY = TUNING.SEG_TIME,
+            },
+        }
+    end,
 
     --survivors
 	extrastartingitems = function(difficulty)
@@ -3372,6 +3408,14 @@ local applyoverrides_post = {
 
         TheWorld:PushEvent("ms_setworldsetting", {setting = "reset_time", value = reset_time})
         TheWorld:PushEvent("ms_setworldresettime", reset_time)
+    end,
+    rifts_enabled = function(difficulty)
+        if difficulty == "always" then
+            TheWorld:PushEvent("rifts_settingsenabled")
+        end
+    end,
+    rifts_frequency = function(difficulty)
+        TheWorld:PushEvent("rifts_setdifficulty", difficulty)
     end,
 }
 

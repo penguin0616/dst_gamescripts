@@ -1490,7 +1490,7 @@ return{
         TURF_MOSAIC_RED = "Step stones.",
         TURF_MOSAIC_BLUE = "Step stones.",
 
-        TURF_BEARD_RUG = "Is beard for the ground.",        
+        TURF_BEARD_RUG = "Is beard for the ground.",
 
 		POWCAKE = "Is made of nothings!",
         CAVE_ENTRANCE = "Even I am not that mighty.",
@@ -4765,6 +4765,26 @@ return{
 		},
 		ARMORDREADSTONE = "Wolfgang doesn't need scary rock armor!",
 		DREADSTONEHAT = "Ha! Wolfgang's head is already hard like a rock!",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Let Wolfgang in!",
+        LUNARRIFT_CRYSTAL = "Twinkly rocks.",
+
+        LUNARTHRALL_PLANT = "Eep! Is haunted plant!",
+        LUNARTHRALL_PLANT_VINE_END = "Ground is haunted too!",
+
+        PUREBRILLIANCE = "Little rocks are too bright!",
+        LUNARPLANT_HUSK = "Ah. Is not haunted anymore.",
+
+		LUNAR_FORGE = "Is there a mighty hammer for Wolfgang to swing?",
+
+		ARMOR_LUNARPLANT = "Tough, like Wolfgang!",
+		LUNARPLANTHAT = "Wolfgang feels very safe inside.",
+		BOMB_LUNARPLANT = "Boom!",
+		STAFF_LUNARPLANT = "Is planty magic stick.",
+		SWORD_LUNARPLANT = "Is sword of star-stuff.",
+		PICKAXE_LUNARPLANT = "Rocks will tremble before Wolfgang!",
+		SHOVEL_LUNARPLANT = "Plant made very good dirt spoon.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

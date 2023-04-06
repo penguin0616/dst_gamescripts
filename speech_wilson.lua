@@ -895,6 +895,8 @@ return {
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "I need a stronger tool!",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "That light means trouble.", --[[TODO]]
+
 	BATTLECRY =
 	{
 		GENERIC = "Go for the eyes!",
@@ -4774,6 +4776,26 @@ return {
 		},
 		ARMORDREADSTONE = "Lightweight, sturdy, and snazzy!",
 		DREADSTONEHAT = "To keep my brilliant brain safe and sound.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "All that science hiding inside... and I can't get to it!",
+        LUNARRIFT_CRYSTAL = "Crystallized illuminosity.",
+
+        LUNARTHRALL_PLANT = "It doesn't seem to care about personal space.",
+        LUNARTHRALL_PLANT_VINE_END = "It has a prickly disposition.",
+
+        PUREBRILLIANCE = "It's blinding me with science!",
+        LUNARPLANT_HUSK = "It's incredibly tough. I could use this!",
+
+		LUNAR_FORGE = "Just the place to make something very clever and scientific.",
+
+		ARMOR_LUNARPLANT = "This armor doesn't leaf any room for improvement.",
+		LUNARPLANTHAT = "It makes me look even brighter than usual.",
+		BOMB_LUNARPLANT = "Botany and chemistry, working together.",
+		STAFF_LUNARPLANT = "Plant power!",
+		SWORD_LUNARPLANT = "It's hard not to make sound effects when I wave it around.",
+		PICKAXE_LUNARPLANT = "Don't axe me how it works.",
+		SHOVEL_LUNARPLANT = "Plants and shovels both do well with dirt.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

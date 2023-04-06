@@ -598,7 +598,8 @@ STRINGS =
 			CRITTERS = "Look in",
 			SCULPTING = "Sculpt at",
 			CARTOGRAPHY = "Draw at",
-            STUDY = "Study at"
+			STUDY = "Study at",
+			FORGE = "Forge at",
 		},
 
         JUMPIN =
@@ -3598,13 +3599,14 @@ STRINGS =
 
         PLAYBILL_THE_DOLL = "The Enchanted Doll\nA Stage Play",
         STATUEHARP_HEDGESPAWNER = "Overgrown Statue",
+
         -- Year of the Rabbit
         YOTR_FIGHTRING = "Pillow Fight Pit",
         YOTR_FIGHTRING_KIT = "Pillow Fight Pit Kit",
         YOTR_FIGHTRING_TORCH = "Bunnyman Torch",
         YOTR_FIGHTRING_BELL = "Pillow Fight Bell",
         NIGHTCAPHAT = "Nightcap",
-        
+
         YOTR_DECOR_1 = "Short Rabbit Lamp",
         YOTR_DECOR_2 = "Tall Rabbit Lamp",
 
@@ -3620,6 +3622,31 @@ STRINGS =
 		SHADOW_LEECH = "Parasitic Shadeling",
 		ARMORDREADSTONE = "Dreadstone Armor",
 		DREADSTONEHAT = "Dreadstone Helm",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Rift",
+        LUNARRIFT_CRYSTAL_BIG = "Ryftstal",
+        LUNARRIFT_CRYSTAL_SMALL = "Ryftstal",
+        LUNARRIFT_TERRAFORMER_EXPLOSION = "Lunaform Burst", -- For player death messages.
+
+		LUNAR_GRAZER = "Grazer",
+        LUNARTHRALL_PLANT = "Deadly Brightshade",
+        LUNARTHRALL_PLANT_GESTALT = "Brightshade Gestalt",
+        LUNARTHRALL_PLANT_VINE_END = "Tunneling Vine",
+
+        PUREBRILLIANCE = "Pure Brilliance",
+        LUNARPLANT_HUSK = "Brightshade Husk",
+
+		LUNAR_FORGE = "Brightsmithy",
+
+		ARMOR_LUNARPLANT = "Brightshade Armor",
+		LUNARPLANTHAT = "Brightshade Helm",
+		BOMB_LUNARPLANT = "Brightshade Bomb",
+		STAFF_LUNARPLANT = "Brightshade Staff",
+		SWORD_LUNARPLANT = "Brightshade Sword",
+		PICKAXE_LUNARPLANT = "Brightshade Pickaxe",
+		SHOVEL_LUNARPLANT = "Brightshade Shovel",
+
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4461,8 +4488,8 @@ STRINGS =
         BODYPILLOW_STEELWOOL = "A wearable pillow that is as effective as it is unpleasant.",
 
         YOTR_DECOR_1_ITEM = "This lovable light makes any cave cozier.",
-        YOTR_DECOR_2_ITEM = "A rabbit statue with a real fire in its belly!",    
-        
+        YOTR_DECOR_2_ITEM = "A rabbit statue with a real fire in its belly!",
+
         --
         ARMORDREADSTONE = "Have no fear, the darkness will protect you.",
         DREADSTONEHAT = "A sturdy helmet of blackest stone.",
@@ -4497,7 +4524,21 @@ STRINGS =
         TRANSMUTE_HORRORFUEL = "Transmute Dreadstone into Pure Horror.",
         TRANSMUTE_DREADSTONE = "Transmute Pure Horror into Dreadstone.",
         TRANSMUTE_NIGHTMAREFUEL = "Transmute Pure Horror into Nightmare Fuel.",
-    },
+
+        TRANSMUTE_PUREBRILLIANCE = "Transmute Infused Moon Shards into Pure Brilliance.",
+        TRANSMUTE_MOONGLASS_CHARGED = "Transmute Pure Brilliance into Infused Moon Shards.",        
+
+        -- Rifts 1
+		LUNAR_FORGE = "Forge otherworldly items.",
+
+		ARMOR_LUNARPLANT = "Surround yourself in formidable lunar leaves.",
+		LUNARPLANTHAT = "Luminescent protection for your precious cranium.",
+		BOMB_LUNARPLANT = "Use unstable lunar energy for explosive results.",
+		STAFF_LUNARPLANT = "Stay rooted to the spot and attack from afar.",
+		SWORD_LUNARPLANT = "A sword of lunar light.",
+		PICKAXE_LUNARPLANT = "Lunar plant beats rock.",
+		SHOVEL_LUNARPLANT = "Just plant it in the ground and dig.",
+    },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -5700,6 +5741,7 @@ STRINGS =
         ANCIENT = "Ancient",
         CELESTIAL = "Celestial",
 		MOON_ALTAR = "Celestial",
+		LUNARFORGING = "Brightsmithy",
         SHADOW = "Shadow",
         ENGINEERING = "Engineering",
 		ELIXIRBREWING = "Ectoherbology",
@@ -7210,7 +7252,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Wilson Refresh\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Content Update\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7742,6 +7784,7 @@ STRINGS.UI =
         CARTOGRAPHY = "Cartography",
         SCULPTING = "Sculptures",
 		CELESTIAL = "Celestial",
+		LUNARFORGING = "Brightsmithy",
         HERMITCRABSHOP = "Bottle Exchange",
 
         SHADOW = "Codex Umbra",
@@ -9009,6 +9052,8 @@ STRINGS.UI =
         HOUNDS = "Hound Attacks",
         WINTERHOUNDS = "Ice Hound Waves",
         SUMMERHOUNDS = "Fire Hound Waves",
+        RIFTS_FREQUENCY = "Wild Rift Frequency",
+        RIFTS_ENABLED = "Wild Rifts Enabled",
         HOUNDMOUND = "Hound Mounds",
         MERMS = "Merms",
         TENTACLES = "Tentacles",
@@ -9589,7 +9634,7 @@ STRINGS.UI =
     LOBBYSCREEN =
     {
         SELECT = "Select",
-        START = "Go!",        
+        START = "Go!",
 		NEXT = "Next",
         APPLY = "Apply",
         CANCEL = "Cancel",
@@ -12401,8 +12446,8 @@ STRINGS.UI =
             YOTP = "Year of the Pig King",
             YOTC = "Year of the Carrat",
             YOTB = "Year of the Beefalo",
-			YOT_CATCOON = "Year of the Catcoon",
-            YOTR = "Year of the Bunnyman",            
+            YOT_CATCOON = "Year of the Catcoon",
+            YOTR = "Year of the Bunnyman",
         },
     },
 
@@ -14113,9 +14158,16 @@ STRINGS.SKILLTREE = {
 
         WILSON_ALLEGIANCE_LOCK_1_DESC = "Learn 12 Skills to unlock.",
         WILSON_ALLEGIANCE_LOCK_2_DESC = "Find and defeat the Ancient Fuelweaver.",
+        WILSON_ALLEGIANCE_LOCK_3_DESC = "Find and defeat the Celestial Champion.",
+
+        WILSON_ALLEGIANCE_LOCK_4_DESC = "Have no lunar affinity.",
+        WILSON_ALLEGIANCE_LOCK_5_DESC = "Have no shadow affinity.",
 
         WILSON_ALLEGIANCE_SHADOW_TITLE = "Shadow Courtier",
         WILSON_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the secrets of Shadow Transmutation.",
+        
+        WILSON_ALLEGIANCE_LUNAR_TITLE = "Lunar Innovator",
+        WILSON_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the secrets of Lunar Transmutation.",        
     },
 }
 --Don't include this in pot generation as this file is already translated.

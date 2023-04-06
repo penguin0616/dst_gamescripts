@@ -12,6 +12,51 @@ local function OnHealthDelta(inst, data)
     end
 end
 
+local function MakeLunar(inst, planar)
+	if planar then
+		inst:AddComponent("planardefense")
+	else
+		inst:RemoveComponent("planardefense")
+	end
+	inst:RemoveTag("shadow_aligned")
+	inst:AddTag("lunar_aligned")
+	inst.AnimState:SetBrightness(3)
+end
+
+local function MakeShadow(inst, planar)
+	if planar then
+		inst:AddComponent("planardefense")
+	else
+		inst:RemoveComponent("planardefense")
+	end
+	inst:RemoveTag("lunar_aligned")
+	inst:AddTag("shadow_aligned")
+	inst.AnimState:SetBrightness(.3)
+end
+
+local function MakeNormal(inst)
+	inst:RemoveComponent("planardefense")
+	inst:RemoveTag("lunar_aligned")
+	inst:RemoveTag("shadow_aligned")
+	inst.AnimState:SetBrightness(1)
+end
+
+local function OnSave(inst, data)
+	data.planar = inst.components.planardefense ~= nil or nil
+	data.lunar = inst:HasTag("lunar_aligned") or nil
+	data.shadow = inst:HasTag("shadow_aligned") or nil
+end
+
+local function OnLoad(inst, data)
+	if data ~= nil then
+		if data.lunar then
+			inst:MakeLunar(data.planar)
+		elseif data.shadow then
+			inst:MakeShadow(data.planar)
+		end
+	end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -61,6 +106,12 @@ local function fn()
 	if TheNet:GetServerGameMode() == "lavaarena" then
 		TheWorld:PushEvent("ms_register_for_damage_tracking", { inst = inst })
 	end
+
+	inst.MakeLunar = MakeLunar
+	inst.MakeShadow = MakeShadow
+	inst.MakeNormal = MakeNormal
+	inst.OnSave = OnSave
+	inst.OnLoad = OnLoad
 
     return inst
 end

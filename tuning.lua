@@ -163,12 +163,17 @@ function Tune(overrides)
         HAMBAT_USES = 100,
         BATBAT_USES = 75,
         MULTITOOL_AXE_PICKAXE_USES = 800,
+		PICKAXE_LUNARPLANT_USES = 800,
+		SHOVEL_LUNARPLANT_USES = 100,
+		STAFF_LUNARPLANT_USES = 50,
+		SWORD_LUNARPLANT_USES = 200,
         RUINS_BAT_USES = 200,
         SADDLEHORN_USES = 10,
         BRUSH_USES = 75,
         FENCE_ROTATOR_USES = 200,
 
         MULTITOOL_AXE_PICKAXE_EFFICIENCY = 4/3,
+		PICKAXE_LUNARPLANT_EFFICIENCY = 4/3,
 
         JELLYBEAN_DURATION = total_day_time * .25,
         JELLYBEAN_TICK_RATE = 2,
@@ -355,6 +360,20 @@ function Tune(overrides)
         BRUSH_DAMAGE = wilson_attack*.8,
         OAR_DAMAGE = wilson_attack*.5,
         FENCE_ROTATOR_DAMAGE = wilson_attack,
+        -------
+		PICKAXE_LUNARPLANT_DAMAGE = wilson_attack * 1.25 - 10,
+		PICKAXE_LUNARPLANT_PLANAR_DAMAGE = 10,
+		SHOVEL_LUNARPLANT_DAMAGE = wilson_attack * .8 - 10,
+		SHOVEL_LUNARPLANT_PLANAR_DAMAGE = 10,
+		SWORD_LUNARPLANT_DAMAGE = wilson_attack * 2 - 30,
+		SWORD_LUNARPLANT_PLANAR_DAMAGE = 30,
+		STAFF_LUNARPLANT_PLANAR_DAMAGE = 10,
+		STAFF_LUNARPLANT_VS_SHADOW_BONUS = 2,
+		WEAPONS_LUNARPLANT_VS_SHADOW_BONUS = 1.1,
+		-------
+		BOMB_LUNARPLANT_RANGE = 3,
+		BOMB_LUNARPLANT_PLANAR_DAMAGE = 200,
+		-------
 
         SADDLE_BASIC_BONUS_DAMAGE = 0,
         SADDLE_WAR_BONUS_DAMAGE = 16,
@@ -1343,6 +1362,10 @@ function Tune(overrides)
                 SCIENCE = 2,
                 MAGIC = 1,
             }),
+
+			LUNAR_FORGE = TechTree.Create({
+				LUNARFORGING = 1,
+			}),
 		},
 
         RABBIT_HEALTH = 25 * multiplayer_attack_modifier,
@@ -1749,6 +1772,17 @@ function Tune(overrides)
 		ARMOR_DREADSTONE_REGEN_MINRATE = (0.01 / 10) / 1.5,
 		ARMOR_DREADSTONE_REGEN_MAXRATE = (0.01 / 6) / 1.5,
 		ARMOR_DREADSTONE_REGEN_SETBONUS = 1.5,
+
+		--NOTE: + 20 * 10 <= 20 hits of defending 10 planar damage
+		ARMOR_LUNARPLANT = wilson_health * 6 * multiplayer_armor_durability_modifier + 20 * 10,
+		ARMOR_LUNARPLANT_ABSORPTION = 0.8 * multiplayer_armor_absorption_modifier,
+		ARMOR_LUNARPLANT_PLANAR_DEF = 10,
+		ARMOR_LUNARPLANT_HAT = wilson_health * 6 * multiplayer_armor_durability_modifier + 20 * 10,
+		ARMOR_LUNARPLANT_HAT_ABSORPTION = 0.8 * multiplayer_armor_absorption_modifier,
+		ARMOR_LUNARPLANT_HAT_PLANAR_DEF = 10,
+		ARMOR_LUNARPLANT_LUNAR_RESIST = 0.9,
+		ARMOR_LUNARPLANT_SETBONUS_LUNAR_RESIST = math.sqrt(0.75) / 0.9, --sqrt because two pieces combine to achieve this
+		ARMOR_LUNARPLANT_SETBONUS_VS_SHADOW_BONUS = 1.1,
 
         PANFLUTE_SLEEPTIME = 20,
         PANFLUTE_SLEEPRANGE = 15,
@@ -6481,13 +6515,66 @@ function Tune(overrides)
             -- Shadow allegiance.
             WILSON_ALLEGIANCE_SHADOW_RESIST = 0.9,
             WILSON_ALLEGIANCE_VS_LUNAR_BONUS = 1.1,
+            WILSON_ALLEGIANCE_LUNAR_RESIST = 0.9,
+            WILSON_ALLEGIANCE_VS_SHADOW_BONUS = 1.1,
         },
 
         WILSON_BEARD_BITS ={
             LEVEL1 = 1,
             LEVEL2 = 3,
             LEVEL3 = 9,
-        }
+        },
+
+        -- Rifts 1
+        SPAWN_RIFTS = 1, -- 0 = disabled, 1 = enabled via gameplay, 2 = enabled at start
+        MAXIMUM_RIFTS_COUNT = 1,
+        RIFTS_SPAWNDELAY = 5 * total_day_time,
+
+        RIFT_LUNAR1_MAXSTAGE = 3,
+        RIFT_LUNAR1_STAGEUP_BASE_TIME = 4.0 * total_day_time,
+        RIFT_LUNAR1_STAGEUP_RANDOM_TIME = total_day_time,
+        RIFT_LUNAR1_GROUNDPOUND_DAMAGE = 60,
+        RIFT_LUNAR1_TRY_CRYSTALS_BASE_TIME = 0.75 * total_day_time,
+        RIFT_LUNAR1_TRY_CRYSTALS_RANDOM_TIME = 0.5 * total_day_time,
+        RIFT_LUNAR1_TERRAFORM_EXPLOSION_DAMAGE = 30,
+
+        LUNARRIFT_CRYSTAL_MINES = 20,
+
+		LUNAR_GRAZER_HEALTH = 80 * 30, --30 seconds for full regen
+		LUNAR_GRAZER_HEALTH_REGEN = 80, --per second (only when dissipated)
+		LUNAR_GRAZER_MELT_HEALTH_THRESHOLD = 80 * 30 - 200,
+		LUNAR_GRAZER_WALKSPEED = 1.4,
+		LUNAR_GRAZER_DAMAGE = 50,
+		LUNAR_GRAZER_PLANAR_DAMAGE = 10,
+		LUNAR_GRAZER_ATTACK_RANGE = 1.5,
+		LUNAR_GRAZER_HIT_RANGE = 1.7,
+		LUNAR_GRAZER_ATTACK_PERIOD = 4,
+		LUNAR_GRAZER_WAKE_RANGE = 8,
+		LUNAR_GRAZER_AGGRO_RANGE = 10,
+		LUNAR_GRAZER_DEAGGRO_RANGE = 14,
+		LUNAR_GRAZER_GROGGINESS = 1,
+		LUNAR_GRAZER_KNOCKOUTTIME = 6,
+
+        DOMESTICPLANTHERD_RANGE = 40,
+        LUNARTHRALL_PLANT_GESTALT_WALK_SPEED = 15,
+        LUNARTHRALL_PLANT_GESTALT_RUN_SPEED = 20,
+        LUNARTHRALL_PLANT_HEALTH = 1000,
+        LUNARTHRALL_PLANT_VINE_HEALTH = 200,
+        LUNARTHRALL_PLANT_ATTACK_PERIOD = 2,
+        LUNARTHRALL_PLANT_RANGE = 12,
+        LUNARTHRALL_PLANT_GIVEUPRANGE = 22,
+        LUNARTHRALL_PLANT_DAMAGE = 100,
+		LUNARTHRALL_PLANT_PLANAR_DAMAGE = 30,
+        LUNARTHRALL_PLANT_END_DAMAGE = 65,
+		LUNARTHRALL_PLANT_END_PLANAR_DAMAGE = 10,
+        LUNARTHRALL_PLANT_ATTACK_RANGE = 4,
+        LUNARTHRALL_PLANT_VINE_ATTACK_RANGE = 4,
+        LUNARTHRALL_PLANT_VINE_INITIATE_ATTACK = 3,
+        LUNARTHRALL_PLANT_CLOSEDIST = 2.5,
+        LUNARTHRALL_PLANT_MOVEDIST = 2,
+        LUNARTHRALL_PLANT_VINE_LIMIT = 1,
+        LUNARTHRALL_PLANT_REST_TIME = 5,
+        LUNARTHRALL_PLANT_WAKE_TIME = 4,
     }
 
     TUNING_MODIFIERS = {}

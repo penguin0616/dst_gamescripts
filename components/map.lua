@@ -511,6 +511,19 @@ function Map:FindRandomPointInOcean(max_tries)
 	end
 end
 
+function Map:FindRandomPointOnLand(max_tries)
+    local w, h = self:GetSize()
+    w = (w - w/2) * TILE_SCALE
+    h = (h - h/2) * TILE_SCALE
+    while (max_tries > 0) do
+        max_tries = max_tries - 1
+        local x, z = math.random() * w, math.random() * h
+        if not self:IsOceanAtPoint(x, 0, z) then
+            return Vector3(x, 0, z)
+        end
+    end
+end
+
 function Map:FindNodeAtPoint(x, y, z)
 	-- Note: If you care about the tile overlap then use FindVisualNodeAtPoint
 	local node_index = self:GetNodeIdAtPoint(x, y, z)

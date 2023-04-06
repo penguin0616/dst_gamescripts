@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "So pretty... it mine!",
 		DREADSTONEHAT = "It real good for headbutting, flort!",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Who broke sky?!",
+        LUNARRIFT_CRYSTAL = "Blegh, it not ice!",
+
+        LUNARTHRALL_PLANT = "Hey, it not sharing! Wicker-lady say we have to share!",
+        LUNARTHRALL_PLANT_VINE_END = "Glurgh, quit hitting!!",
+
+        PUREBRILLIANCE = "Glurgh, too bright!",
+        LUNARPLANT_HUSK = "Hee-hee, it dead!",
+
+		LUNAR_FORGE = "Make shiny things.",
+
+		ARMOR_LUNARPLANT = "Tough and glowy!",
+		LUNARPLANTHAT = "Cage for head, florp?",
+		BOMB_LUNARPLANT = "Hee-hee-hee... boom!!",
+		STAFF_LUNARPLANT = "Magic hitting stick.",
+		SWORD_LUNARPLANT = "It mine!! Me want glowy sword!",
+		PICKAXE_LUNARPLANT = "It real good at breaking rocks.",
+		SHOVEL_LUNARPLANT = "Good scooper.",
     },
 
     DESCRIBE_GENERIC = "What that?",

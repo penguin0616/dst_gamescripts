@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "Extremely durable, and surprisingly lightweight.",
 		DREADSTONEHAT = "Unfortunately, the material seems to have adverse affects on the mind.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "It seems to be contaminating the surrounding area.",
+        LUNARRIFT_CRYSTAL = "These crystalline structures have grown at a rapid rate.",
+
+        LUNARTHRALL_PLANT = "It exhibits parasitic behavior.",
+        LUNARTHRALL_PLANT_VINE_END = "A rather effective defense mechanism.",
+
+        PUREBRILLIANCE = "Pure energy, in a crystalline form.",
+        LUNARPLANT_HUSK = "An extremely resilient material. I should make use of it.",
+
+		LUNAR_FORGE = "It utilizes crystallized energy to reshape and reinforce organic material.",
+
+		ARMOR_LUNARPLANT = "Surprisingly effective plant-based armor.",
+		LUNARPLANTHAT = "It does not fit well over my glasses, but I suppose I must make do.",
+		BOMB_LUNARPLANT = "Unstable energy, barely held together by a hardy plant epidermis.",
+		STAFF_LUNARPLANT = "It allows the user to attack from afar.",
+		SWORD_LUNARPLANT = "The energy has been stabilized enough to form a functional blade.",
+		PICKAXE_LUNARPLANT = "A surprisingly effective mining implement.",
+		SHOVEL_LUNARPLANT = "A surprisingly effective digging implement.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

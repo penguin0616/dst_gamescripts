@@ -4768,6 +4768,26 @@ return{
 		},
 		ARMORDREADSTONE = "Pretty rock clothes",
 		DREADSTONEHAT = "Rock for head",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Hello?",
+        LUNARRIFT_CRYSTAL = "Shiny",
+
+        LUNARTHRALL_PLANT = "Why friend hurt other friends?",
+        LUNARTHRALL_PLANT_VINE_END = "Not nice!",
+
+        PUREBRILLIANCE = "Ahhh. Pretty",
+        LUNARPLANT_HUSK = "Sorry",
+
+		LUNAR_FORGE = "Make shiny things!",
+
+		ARMOR_LUNARPLANT = "Mean friend made nice clothes",
+		LUNARPLANTHAT = "Mean friend made nice hat",
+		BOMB_LUNARPLANT = "Boom ball",
+		STAFF_LUNARPLANT = "Mean stick",
+		SWORD_LUNARPLANT = "Bright Swoosh Stick",
+		PICKAXE_LUNARPLANT = "Mean friend help break rocks now",
+		SHOVEL_LUNARPLANT = "Mean friend help dig",
     },
 
     DESCRIBE_GENERIC = "Friend?",

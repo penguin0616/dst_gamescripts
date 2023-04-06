@@ -97,6 +97,9 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"transmute_dreadstone",
 	"transmute_nightmarefuel",
 
+	"transmute_purebrilliance",
+	"transmute_moonglass_charged",
+
 	-- Willow
 	"lighter",
 	"bernie_inactive",
@@ -299,6 +302,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	----CELESTIAL----
 	"moonrockidol",
 	"multiplayer_portal_moonrock_constr_plans",
+	"lunar_forge",
 
 	----MOON_ALTAR-----
 	"moonglassaxe",
@@ -308,6 +312,15 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"bathbomb",
 	"chesspiece_butterfly_sketch",
 	"chesspiece_moon_sketch",
+
+	----LUNAR_FORGE----
+	"armor_lunarplant",
+	"lunarplanthat",
+	"bomb_lunarplant",
+	"staff_lunarplant",
+	"sword_lunarplant",
+	"pickaxe_lunarplant",
+	"shovel_lunarplant",
 
 	-- Hermit Crab
 	"hermitshop_hermit_bundle_shells",

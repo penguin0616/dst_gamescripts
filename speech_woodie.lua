@@ -1490,7 +1490,7 @@ return{
         TURF_MOSAIC_RED = "Just some ground, eh?",
         TURF_MOSAIC_BLUE = "Just some ground, eh?",
 
-        TURF_BEARD_RUG = "He sacrificed a lot of beard for this rug.",       
+        TURF_BEARD_RUG = "He sacrificed a lot of beard for this rug.",
 
 		POWCAKE = "I like the ones made with real sugar better.",
         CAVE_ENTRANCE = "It's all bunged up.",
@@ -1885,7 +1885,7 @@ return{
 		},
 		DIVININGRODSTART = "That's a weird looking rod.", --singleplayer
 		DRAGONFLY = "She'll burn all the trees before I can chop them!",
-		ARMORDRAGONFLY = "Plaid is all the armour I need.",
+		ARMORDRAGONFLY = "Plaid is all the armor I need.",
 		DRAGON_SCALES = "I still don't believe in dragons.",
 		DRAGONFLYCHEST = "Gaudy if you ask me.",
 		DRAGONFLYFURNACE =
@@ -4763,8 +4763,28 @@ return{
 			GENERIC = "Looks sturdy... ish.",
 			EXPOSED = "That's some firmly planted stone.",
 		},
-		ARMORDREADSTONE = "Luce says black ain't my colour.",
+		ARMORDREADSTONE = "Lucy says black ain't my colour.",
 		DREADSTONEHAT = "Gotta protect the old noggin', eh?",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "It's givin' me goosebumps... I hate goosebumps.",
+        LUNARRIFT_CRYSTAL = "Glitterin' like icicles on a winter morning.",
+
+        LUNARTHRALL_PLANT = "Looks like an invasive species to me.",
+        LUNARTHRALL_PLANT_VINE_END = "I think it's time you and Lucy got acquainted.",
+
+        PUREBRILLIANCE = "Makes me feel a bit twitchy.",
+        LUNARPLANT_HUSK = "That could be good for somethin'.",
+
+		LUNAR_FORGE = "How aboot we get this furnace going, eh Luce?",
+
+		ARMOR_LUNARPLANT = "Sturdy organic armor.",
+		LUNARPLANTHAT = "It's got me feelin' a bit light-headed.",
+		BOMB_LUNARPLANT = "Let's kick things off with a bang, eh?",
+		STAFF_LUNARPLANT = "Some kinda plant magic.",
+		SWORD_LUNARPLANT = "I still prefer my axe.",
+		PICKAXE_LUNARPLANT = "Using a plant to break stone just feels backwards somehow.",
+		SHOVEL_LUNARPLANT = "Let's get digging.",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

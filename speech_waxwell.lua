@@ -3976,7 +3976,7 @@ return{
         -- GROTTO
 
 		MOLEBAT = "Indecent.",
-        MOLEBATHILL = "Do I even want anything I find in there, knowing its spent time in a rodent's nostrils?",
+        MOLEBATHILL = "Do I even want anything I find in there, knowing it spent time in a rodent's nostrils?",
 
         BATNOSE = "It smells.",
         BATNOSE_COOKED = "The things I must do to survive...",
@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "Black never goes out of style.",
 		DREADSTONEHAT = "Darkness is never far from my mind.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "I don't like the look of this.",
+        LUNARRIFT_CRYSTAL = "Crystals? How very Bohemian.",
+
+        LUNARTHRALL_PLANT = "I don't think it's from around here.",
+        LUNARTHRALL_PLANT_VINE_END = "Some aggressive pruning might be in order.",
+
+        PUREBRILLIANCE = "I wonder if she knows about this...",
+        LUNARPLANT_HUSK = "The blasted thing is finally dead.",
+
+		LUNAR_FORGE = "To work, then.",
+
+		ARMOR_LUNARPLANT = "Does no one else find this armor oddly itchy?",
+		LUNARPLANTHAT = "It looks wonderfully ominous.",
+		BOMB_LUNARPLANT = "Someone's about to have a very bad day.",
+		STAFF_LUNARPLANT = "More magic to add to the arsenal.",
+		SWORD_LUNARPLANT = "Such power!",
+		PICKAXE_LUNARPLANT = "It works surprisingly well.",
+		SHOVEL_LUNARPLANT = "I'd rather let someone else do my dirty work.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

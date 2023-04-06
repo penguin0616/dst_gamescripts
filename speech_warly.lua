@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "A fine peice of armor.",
 		DREADSTONEHAT = "My head feels safer already.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Ah, zut! It will not let me through.",
+        LUNARRIFT_CRYSTAL = "Tres beau!",
+
+        LUNARTHRALL_PLANT = "Go away, you plant thief!",
+        LUNARTHRALL_PLANT_VINE_END = "I'm afraid it won't give up without a fight.",
+
+        PUREBRILLIANCE = "My, I've never seen anything shine so brightly.",
+        LUNARPLANT_HUSK = "Ah, raw ingredients!",
+
+		LUNAR_FORGE = "What shall I cook up with this?",
+
+		ARMOR_LUNARPLANT = "A hard outer crust.",
+		LUNARPLANTHAT = "An extra layer for my head.",
+		BOMB_LUNARPLANT = "Explosions really add some zest to a fight.",
+		STAFF_LUNARPLANT = "I could stir up some real trouble with this.",
+		SWORD_LUNARPLANT = "Beautiful and dangerous.",
+		PICKAXE_LUNARPLANT = "It's far less delicate than it looks.",
+		SHOVEL_LUNARPLANT = "I almost hate to get it dirty.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

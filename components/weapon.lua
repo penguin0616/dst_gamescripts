@@ -1,4 +1,5 @@
 local SourceModifierList = require("util/sourcemodifierlist")
+local SpDamageUtil = require("components/spdamageutil")
 
 --Update inventoryitem_replica constructor if any more properties are added
 local function onattackrange(self, attackrange)
@@ -85,11 +86,14 @@ function Weapon:SetAttackCallback(fn)
 end
 
 function Weapon:GetDamage(attacker, target)
-	local dmg = self.damage
+	local dmg = FunctionOrValue(self.damage, self.inst, attacker, target)
+	local spdmg = SpDamageUtil.CollectSpDamage(self.inst)
 	if self.inst.components.damagetypebonus ~= nil then
-		dmg = dmg * self.inst.components.damagetypebonus:GetBonus(target)
+		local damagetypemult = self.inst.components.damagetypebonus:GetBonus(target)
+		dmg = dmg * damagetypemult
+		spdmg = SpDamageUtil.ApplyMult(spdmg, damagetypemult)
 	end
-	return FunctionOrValue(dmg, self.inst, attacker, target)
+	return dmg, spdmg
 end
 
 function Weapon:OnAttack(attacker, target, projectile)

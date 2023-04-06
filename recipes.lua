@@ -24,6 +24,7 @@ PROTOTYPER_DEFS =
 	moon_altar					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_celestial.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CELESTIAL},
 	moon_altar_cosmic			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_celestial.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CELESTIAL},
 	moon_altar_astral			= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_celestial.tex",			is_crafting_station = true,									filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.CELESTIAL},
+	lunar_forge					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_lunar_forge.tex",		is_crafting_station = true,		action_str = "FORGE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.LUNARFORGING},
 	hermitcrab					= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_hermitcrab_shop.tex",	is_crafting_station = true,		action_str = "TRADE",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.HERMITCRABSHOP},
 
 	waxwelljournal				= {icon_atlas = CRAFTING_ICONS_ATLAS, icon_image = "station_shadow.tex",			is_crafting_station = true,		action_str = "READ",		filter_text = STRINGS.UI.CRAFTING_STATION_FILTERS.SHADOW},
@@ -610,6 +611,7 @@ Recipe2("critter_eyeofterror_builder",		{Ingredient("milkywhites", 1), Ingredien
 ----CELESTIAL----
 Recipe2("moonrockidol",								{Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},									TECH.CELESTIAL_ONE,			{nounlock=true})
 Recipe2("multiplayer_portal_moonrock_constr_plans", {Ingredient("boards", 1), Ingredient("rope", 1)},												TECH.CELESTIAL_ONE,			{nounlock=true})
+Recipe2("lunar_forge",						{Ingredient("moonrocknugget", 5),Ingredient("moonglass", 5),Ingredient("purebrilliance", 1)},																TECH.CELESTIAL_ONE,			{--[[nounlock=true,]] placer="lunar_forge_placer"})
 
 ----MOON_ALTAR-----
 Recipe2("moonglassaxe",						{Ingredient("twigs", 2), Ingredient("moonglass", 3)},													TECH.CELESTIAL_THREE,		{nounlock=true})
@@ -619,6 +621,15 @@ Recipe2("turf_fungus_moon",					{Ingredient("moonrocknugget", 1), Ingredient("mo
 Recipe2("bathbomb", 						{Ingredient("moon_tree_blossom", 6), Ingredient("nitre", 1)}, 											TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("chesspiece_butterfly_sketch",		{Ingredient("papyrus", 1)},																				TECH.CELESTIAL_THREE,		{nounlock=true})
 Recipe2("chesspiece_moon_sketch", 			{Ingredient("papyrus", 1)},																				TECH.CELESTIAL_THREE,		{nounlock=true})
+
+----LUNAR_FORGE----
+Recipe2("armor_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 4)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
+Recipe2("lunarplanthat",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
+Recipe2("bomb_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 4)},									TECH.LUNARFORGING_ONE,		{nounlock=true, numtogive=6})
+Recipe2("staff_lunarplant",					{Ingredient("purebrilliance", 3), Ingredient("lunarplant_husk", 6)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
+Recipe2("sword_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 3)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
+Recipe2("pickaxe_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
+Recipe2("shovel_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
 
 ----SCULPTING----
 Recipe2("chesspiece_hornucopia_builder",	{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.SCULPTING_ONE,			{nounlock = true, actionstr="SCULPTING", image="chesspiece_hornucopia.tex"})
@@ -918,6 +929,8 @@ Recipe2("transmute_horrorfuel",     	{Ingredient("dreadstone", 1)}, 	TECH.NONE, 
 Recipe2("transmute_dreadstone",      	{Ingredient("horrorfuel", 3)}, 	TECH.NONE, 			{product="dreadstone", image="dreadstone.tex",     builder_tag="skill_wilson_allegiance_shadow", description="transmute_dreadstone"})
 Recipe2("transmute_nightmarefuel",      {Ingredient("horrorfuel", 1)}, 	TECH.NONE, 			{product="nightmarefuel", image="nightmarefuel.tex",     builder_tag="skill_wilson_allegiance_shadow", description="transmute_nightmarefuel", numtogive=2})
 
+Recipe2("transmute_purebrilliance",    	{Ingredient("moonglass_charged", 3)}, TECH.NONE, 		{product="purebrilliance", image="purebrilliance.tex",     builder_tag="skill_wilson_allegiance_lunar", description="transmute_purebrilliance"})
+Recipe2("transmute_moonglass_charged",  {Ingredient("purebrilliance", 1)}, 	TECH.NONE, 		{product="moonglass_charged", image="moonglass_charged.tex",     builder_tag="skill_wilson_allegiance_lunar", description="transmute_moonglass_charged", numtogive=2})
 
 ----CONSTRUCTION PLANS----
 CONSTRUCTION_PLANS =

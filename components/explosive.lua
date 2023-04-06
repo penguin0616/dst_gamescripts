@@ -1,3 +1,5 @@
+local SpDamageUtil = require("components/spdamageutil")
+
 local Explosive = Class(function(self,inst)
     self.inst = inst
     self.explosiverange = 3
@@ -43,9 +45,11 @@ function Explosive:OnBurnt()
     local ents = TheSim:FindEntities(x, y, z, self.explosiverange, nil, BURNT_CANT_TAGS)
     for i, v in ipairs(ents) do
         if v ~= self.inst and v:IsValid() and not v:IsInLimbo() then
+			local damagetypemult = self.inst.components.damagetypebonus ~= nil and self.inst.components.damagetypebonus:GetBonus(v) or 1
+
             if v.components.workable ~= nil and v.components.workable:CanBeWorked() then
                 -- NOTES(JBK): Stackable inventory items can be placed down 1 by 1 making this a convenience to players to not have to drop them down 1 by 1 first for maximum potential output.
-                local workdamage = self.buildingdamage * stacksize
+				local workdamage = self.buildingdamage * stacksize * damagetypemult
                 local dowork = true
                 if v.components.inventoryitem ~= nil then
                     if workablecount > 0 then
@@ -71,12 +75,17 @@ function Explosive:OnBurnt()
                 end
 
                 if v.components.combat ~= nil and not (v.components.health ~= nil and v.components.health:IsDead()) then
-                    local dmg = totaldamage
+					local dmg = totaldamage * damagetypemult
                     if v.components.explosiveresist ~= nil then
                         dmg = dmg * (1 - v.components.explosiveresist:GetResistance())
                         v.components.explosiveresist:OnExplosiveDamage(dmg, self.inst)
                     end
-                    v.components.combat:GetAttacked(self.inst, dmg, nil)
+
+					local spdmg = SpDamageUtil.CollectSpDamage(self.inst)
+					if spdmg ~= nil and damagetypemult ~= 1 then
+						spdmg = SpDamageUtil.ApplyMult(spdmg, damagetypemult)
+					end
+					v.components.combat:GetAttacked(self.inst, dmg, nil, nil, spdmg)
                 end
 
                 v:PushEvent("explosion", { explosive = self.inst })

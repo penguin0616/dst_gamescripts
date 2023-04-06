@@ -1619,6 +1619,14 @@ local function OnWintersFeastMusic(inst)
     end
 end
 
+local function OnLunarPortalMax(inst)
+    if ThePlayer ~= nil and  ThePlayer == inst then
+        ThePlayer:PushEvent("startflareoverlay")
+        inst:DoTaskInTime(2, function() inst.components.talker:Say(GetString(inst, "ANNOUNCE_LUNAR_RIFT_MAX")) end)
+    end
+end
+
+
 local function OnHermitMusic(inst)
     if ThePlayer ~= nil and  ThePlayer == inst then
         ThePlayer:PushEvent("playhermitmusic")
@@ -2144,6 +2152,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         inst._winters_feast_music = net_event(inst.GUID, "localplayer._winters_feast_music")
         inst._hermit_music = net_event(inst.GUID, "localplayer._hermit_music")
         inst._underleafcanopy = net_bool(inst.GUID, "localplayer._underleafcanopy","underleafcanopydirty")
+        inst._lunarportalmax = net_event(inst.GUID, "localplayer._lunarportalmax")
 
         if IsSpecialEventActive(SPECIAL_EVENTS.YOTB) then
             inst.yotb_skins_sets = net_shortint(inst.GUID, "player.yotb_skins_sets")
@@ -2152,6 +2161,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 
         if not TheNet:IsDedicated() then
             inst:ListenForEvent("localplayer._winters_feast_music", OnWintersFeastMusic)
+            inst:ListenForEvent("localplayer._lunarportalmax", OnLunarPortalMax)
             inst:ListenForEvent("localplayer._hermit_music", OnHermitMusic)
 
             inst:AddComponent("hudindicatable")

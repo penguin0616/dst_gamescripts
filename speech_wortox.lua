@@ -4770,6 +4770,26 @@ return{
 		},
 		ARMORDREADSTONE = "All blows will be blocked by this armor of rock.",
 		DREADSTONEHAT = "A stone fortress for my brain.",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "It's all falling apart at the seams!",
+        LUNARRIFT_CRYSTAL = "Glint and glitter.",
+
+        LUNARTHRALL_PLANT = "A long way from home, aren't we?",
+        LUNARTHRALL_PLANT_VINE_END = "The weeds are whacking.",
+
+        PUREBRILLIANCE = "Hyuyu, it tickles my impish brain!",
+        LUNARPLANT_HUSK = "Unoccupied.",
+
+		LUNAR_FORGE = "There isn't any iron in that forge, is there?",
+
+		ARMOR_LUNARPLANT = "Strong and light, quite good in a fight.",
+		LUNARPLANTHAT = "It has me looking on the bright side, hyuyu!",
+		BOMB_LUNARPLANT = "This will be the start of some wonderful pranks.",
+		STAFF_LUNARPLANT = "With a flick of the wrist, someone's getting hit.",
+		SWORD_LUNARPLANT = "A swish to and fro will cut down my foe.",
+		PICKAXE_LUNARPLANT = "To bash and break.",
+		SHOVEL_LUNARPLANT = "Dig a hole to who knows where!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

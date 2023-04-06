@@ -4768,6 +4768,26 @@ return{
 		},
 		ARMORDREADSTONE = "Let the darkness surround me.",
 		DREADSTONEHAT = "What's the point?",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "A gaping wound in the sky.",
+        LUNARRIFT_CRYSTAL = "Beautiful and fragile.",
+
+        LUNARTHRALL_PLANT = "Others must suffer for it to survive.",
+        LUNARTHRALL_PLANT_VINE_END = "It's lashing out.",
+
+        PUREBRILLIANCE = "It hurts my eyes.",
+        LUNARPLANT_HUSK = "It can't hurt anyone anymore.",
+
+		LUNAR_FORGE = "Will I be able to create anything of use?",
+
+		ARMOR_LUNARPLANT = "Shining armor, but no knight to save us.",
+		LUNARPLANTHAT = "It lets me hide my face from the world.",
+		BOMB_LUNARPLANT = "An instrument of destruction.",
+		STAFF_LUNARPLANT = "It will help me make sure no one gets too close.",
+		SWORD_LUNARPLANT = "A shining beacon of pain.",
+		PICKAXE_LUNARPLANT = "It makes the endless toil a bit easier.",
+		SHOVEL_LUNARPLANT = "Some things should stay buried... but not today.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

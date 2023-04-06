@@ -1489,7 +1489,7 @@ return{
         TURF_MOSAIC_RED = "Some ground that we dug up.",
         TURF_MOSAIC_BLUE = "Some ground that we dug up.",
 
-        TURF_BEARD_RUG = "It tickles!",        
+        TURF_BEARD_RUG = "It tickles!",
 
 		POWCAKE = "Mum never let me have these.",
         CAVE_ENTRANCE = "It's plugged up.",
@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "It's kinda scary, but it keeps us safe!",
 		DREADSTONEHAT = "A pointy helmet to match our pointy teeth!",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "Aww, it won't let us in.",
+        LUNARRIFT_CRYSTAL = "They look like candy, but they're just rocks.",
+
+        LUNARTHRALL_PLANT = "That plant's kinda spooky...",
+        LUNARTHRALL_PLANT_VINE_END = "Hey, leave us alone!",
+
+        PUREBRILLIANCE = "It's blinding our poor spider eyes!",
+        LUNARPLANT_HUSK = "That was one mean plant. We're glad it's gone!",
+
+		LUNAR_FORGE = "Can we use it to make crafts?",
+
+		ARMOR_LUNARPLANT = "We're gonna look so tough!",
+		LUNARPLANTHAT = "We're gonna be a spider knight!",
+		BOMB_LUNARPLANT = "Catch!",
+		STAFF_LUNARPLANT = "We can hit things far away.",
+		SWORD_LUNARPLANT = "It's a magic sword!",
+		PICKAXE_LUNARPLANT = "We're coming to get you, rocks!",
+		SHOVEL_LUNARPLANT = "We love digging holes!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

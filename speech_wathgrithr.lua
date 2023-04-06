@@ -1488,7 +1488,7 @@ return{
         TURF_MOSAIC_GREY = "A piece of the battlefield.",
         TURF_MOSAIC_RED = "A piece of the battlefield.",
         TURF_MOSAIC_BLUE = "A piece of the battlefield.",
-        
+
         TURF_BEARD_RUG = "I shan't ask any questions.",
 
 		POWCAKE = "What in the name of the unicorn is this?",
@@ -4764,6 +4764,26 @@ return{
 		},
 		ARMORDREADSTONE = "It will serve me well, despite its origins.",
 		DREADSTONEHAT = "Ready to bear the brunt of battle!",
+
+        -- Rifts 1
+        LUNARRIFT_PORTAL = "An opening, yet I cannot pass through.",
+        LUNARRIFT_CRYSTAL = "How strange... and beautiful.",
+
+        LUNARTHRALL_PLANT = "Vicious plant, I shall honor thee with a swift death!",
+        LUNARTHRALL_PLANT_VINE_END = "Ha! You shall have to do better than that!",
+
+        PUREBRILLIANCE = "Like staring up into the spotlights...",
+        LUNARPLANT_HUSK = "It hath a formidible hide, for a non-meat.",
+
+		LUNAR_FORGE = "I shall forge weapons to rival the gods themselves!",
+
+		ARMOR_LUNARPLANT = "Armor crafted from a fallen foe.",
+		LUNARPLANTHAT = "A formidable helm, burning with an unearthly flame!",
+		BOMB_LUNARPLANT = "I have made the plant's power my own.",
+		STAFF_LUNARPLANT = "To attack from afar is not my preferred way of combat.",
+		SWORD_LUNARPLANT = "Am I worthy of wielding a weapon of such brilliance?",
+		PICKAXE_LUNARPLANT = "May all stone quake in fear before me!",
+		SHOVEL_LUNARPLANT = "The ground stands no chance against us.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",
