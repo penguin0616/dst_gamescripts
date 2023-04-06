@@ -81,9 +81,17 @@ function LunarGrazerBrain:OnStart()
 					end,
 					"EngageTarget",
 					PriorityNode({
-						IfNode(function() return not IsSleeper(self.inst.components.combat.target) end, "AttackNonSleeper",
+						IfNode(function()
+								local target = self.inst.components.combat.target
+								return target ~= nil and not IsSleeper(target)
+							end,
+							"AttackNonSleeper",
 							ChaseAndAttack(self.inst)),
-						WhileNode(function() return SleepCheck(self.inst.components.combat.target) end, "AttackSleeper",
+						WhileNode(function()
+								local target = self.inst.components.combat.target
+								return target ~= nil and SleepCheck(target)
+							end,
+							"AttackSleeper",
 							SequenceNode{
 								ParallelNodeAny{
 									WaitNode(2),

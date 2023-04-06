@@ -45,7 +45,7 @@ local _map = TheWorld.Map
 --  3: default
 --  4: often
 --  5: always
-local _spawnmode = 1
+local _spawnmode = 3
 local _lunar_rifts_enabled = false
 
 local _rifts = {}
@@ -218,35 +218,54 @@ end
 local function SetDifficulty(src, difficulty)
 	if difficulty == "never" then
 		_spawnmode = 1
-	elseif difficulty == "rare" then
-		_spawnmode = 2
-	elseif difficulty == "default" then
-		_spawnmode = 3
-	elseif difficulty == "often" then
-		_spawnmode = 4
-	elseif difficulty == "always" then
-		_spawnmode = 5
+        _worldsettingstimer:StopTimer(RIFTSPAWN_TIMERNAME)
+	else
+        if difficulty == "rare" then
+		    _spawnmode = 2
+        elseif difficulty == "default" then
+            _spawnmode = 3
+        elseif difficulty == "often" then
+            _spawnmode = 4
+        elseif difficulty == "always" then
+            _spawnmode = 5
+        end
+
+        if _worldsettingstimer:ActiveTimerExists(RIFTSPAWN_TIMERNAME) then
+            local new_time = math.min(
+                _worldsettingstimer:GetTimeLeft(RIFTSPAWN_TIMERNAME),
+                TUNING.RIFTS_SPAWNDELAY
+            )
+            _worldsettingstimer:SetTimeLeft(RIFTSPAWN_TIMERNAME, new_time)
+        end
 	end
 end
 
 local function EnableLunarRifts(src)
     _lunar_rifts_enabled = true
 
-    if _spawnmode ~= 1 then
+    if _spawnmode ~= 1 and not _worldsettingstimer:ActiveTimerExists(RIFTSPAWN_TIMERNAME) then
         _worldsettingstimer:StartTimer(RIFTSPAWN_TIMERNAME, TUNING.RIFTS_SPAWNDELAY)
     end
 end
 
-
 local function OnLunarriftMaxsize(src, rift)
-    for i, v in ipairs(AllPlayers) do
-        local fx, fy, fz = rift.Transform:GetWorldPosition()
-        local px, py, pz = v.Transform:GetWorldPosition()
+    local fx, fy, fz = rift.Transform:GetWorldPosition()
+    for _, player in ipairs(AllPlayers) do
+        local px, py, pz = player.Transform:GetWorldPosition()
         local sq_dist = distsq(fx, fz, px, pz)
 
-        if sq_dist > 30*30 then
-            v._lunarportalmax:push()
+        if sq_dist > 900 then --30*30
+            player._lunarportalmax:push()
         end
+    end
+end
+
+local function SetEnabledSetting(src, enabled_difficulty)
+    if enabled_difficulty == "never" then
+        _lunar_rifts_enabled = false
+        _worldsettingstimer:StopTimer(RIFTSPAWN_TIMERNAME)
+    elseif enabled_difficulty == "always" then
+        EnableLunarRifts(src)
     end
 end
 --------------------------------------------------------------------------
@@ -296,7 +315,6 @@ end
 function self:OnLoad(data)
     if data.timerfinished then
         _worldsettingstimer:StopTimer(RIFTSPAWN_TIMERNAME)
-        OnRiftTimerDone()
     end
 
     _lunar_rifts_enabled = data._lunar_enabled or _lunar_rifts_enabled
@@ -322,10 +340,13 @@ end
 function self:GetDebugString()
     local s
     if _lunar_rifts_enabled then
-        s = "Lunar Rifts Enabled - Number of rifts: " .. GetTableSize(_rifts)
+        s = "Lunar Rifts ON - Number of rifts: " .. GetTableSize(_rifts)
     else
-        s = "Lunar Rifts Disabled"
+        -- Rifts might still exist if a server setting was changed.
+        s = "Lunar Rifts OFF - Number of rifts: " .. GetTableSize(_rifts)
     end
+
+    s = s .. string.format(" | Rift spawn time: %s", _worldsettingstimer:GetTimeLeft(RIFTSPAWN_TIMERNAME) or "-")
 
     return s
 end
@@ -344,7 +365,7 @@ end
 --------------------------------------------------------------------------
 
 inst:ListenForEvent("rifts_setdifficulty", SetDifficulty)
-inst:ListenForEvent("rifts_settingsenabled", EnableLunarRifts)
+inst:ListenForEvent("rifts_settingsenabled", SetEnabledSetting)
 inst:ListenForEvent("moonboss_defeated", EnableLunarRifts)
 inst:ListenForEvent("ms_lunarrift_maxsize", OnLunarriftMaxsize)
 

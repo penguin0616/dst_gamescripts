@@ -396,7 +396,7 @@ local function SetLightColour(inst, intensity)
 	inst.Light:SetColour(LIGHT_COLOUR[1] * intensity, LIGHT_COLOUR[2] * intensity, LIGHT_COLOUR[3] * intensity)
 end
 
-local function AlwaysRecoil(inst, worker, numworks, tool)
+local function AlwaysRecoil(inst, worker, tool, numworks)
 	return true, numworks
 end
 

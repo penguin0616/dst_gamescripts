@@ -61,6 +61,8 @@ local function backfn()
     inst.AnimState:SetBuild("lunarthrall_plant_back")
     inst.AnimState:PlayAnimation("idle_med", true)
 
+    inst:AddTag("fx")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -74,7 +76,7 @@ end
 
 local function spawnback(inst)
     local back = SpawnPrefab("lunarthrall_plant_back")
-    back.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    --back.Transform:SetPosition(inst.Transform:GetWorldPosition())
     back.AnimState:SetFinalOffset(-1)
     inst.back = back
     back:ListenForEvent("onremove", function() back:Remove() end, inst)
@@ -94,6 +96,7 @@ local function spawnback(inst)
     inst.tintcolor = color
     inst.AnimState:SetMultColour(color, color, color, 1)
     back.AnimState:SetMultColour(color, color, color, 1)
+    inst:AddChild(back)
 
     inst.components.colouradder:AttachChild(back)
 end
@@ -110,6 +113,8 @@ local function infest(inst,target)
             target.components.growable:Pause("lunarthrall_plant")
         end
         
+        target:AddTag("NOCLICK")
+
         inst.components.entitytracker:TrackEntity("targetplant", target)
         target.lunarthrall_plant = inst
         inst.Transform:SetPosition(target.Transform:GetWorldPosition())
@@ -135,6 +140,7 @@ local function deinfest(inst)
         if target.components.growable then
             target.components.growable:Resume("lunarthrall_plant")
         end            
+        target:RemoveTag("NOCLICK")
     end
     
 end

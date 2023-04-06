@@ -1,4 +1,5 @@
 function d_spawnlist(list, spacing, fn)
+    local created = {}
 	spacing = spacing or 2
 	local num_wide = math.ceil(math.sqrt(#list))
 
@@ -19,6 +20,7 @@ function d_spawnlist(list, spacing, fn)
 				end
 				local inst = SpawnPrefab(prefab)
 				if inst ~= nil then
+                    table.insert(created, inst)
 					inst.Transform:SetPosition((pt + Vector3(x*spacing, 0, y*spacing)):Get())
 					if count > 1 then
 						if inst.components.stackable then
@@ -35,6 +37,7 @@ function d_spawnlist(list, spacing, fn)
 			end
 		end
 	end
+    return created
 end
 
 function d_playeritems()
@@ -135,6 +138,67 @@ function d_spiders()
         spider.components.follower:SetLeader(ThePlayer)
     end
     c_give("spider_water")
+end
+
+function d_particles()
+    local emittingfx = {
+        "cane_candy_fx",
+        "cane_harlequin_fx",
+        "cane_victorian_fx",
+        "eyeflame",
+        "lighterfire_haunteddoll",
+        "lighterfire",
+        "lunar_goop_cloud_fx",
+        "thurible_smoke",
+        "torchfire",
+        "torchfire_barber",
+        "torchfire_carrat",
+        "torchfire_nautical",
+        "torchfire_pillar",
+        "torchfire_pronged",
+        "torchfire_rag",
+        "torchfire_shadow",
+        "torchfire_spooky",
+        "torchfire_yotrpillowfight",
+        -- Particles below need special handling to function.
+        --"frostbreath",
+        --"lunarrift_crystal_spawn_fx",
+        --"nightsword_curve_fx",
+        --"nightsword_lightsbane_fx",
+        --"nightsword_sharp_fx",
+        --"nightsword_wizard_fx",
+        --"reviver_cupid_beat_fx",
+        --"reviver_cupid_glow_fx",
+    }
+    local overridespeed = { -- Some particles want speed to emit.
+        cane_harlequin_fx = PI2 * FRAMES,
+        cane_victorian_fx = PI2 * FRAMES,
+    }
+    local created = d_spawnlist(emittingfx, 6)
+    local r = 1.5
+    for _, v in ipairs(created) do
+        v._d_pos = v:GetPosition()
+        v._d_theta = 0
+        v.persists = false
+
+        local labeler = c_spawn("razor")
+        labeler.Transform:SetPosition(v._d_pos:Get())
+        labeler.persists = false
+        labeler.AnimState:SetScale(0, 0)
+
+        local label = labeler.entity:AddLabel()
+        label:SetFontSize(12)
+        label:SetFont(BODYTEXTFONT)
+        label:SetWorldOffset(0, 0, 0)
+        label:SetText(v.prefab)
+        label:SetColour(1, 1, 1)
+        label:Enable(true)
+
+        v:DoPeriodicTask(FRAMES, function()
+            v._d_theta = v._d_theta + (overridespeed[v.prefab] or PI * 0.5 * FRAMES)
+            v.Transform:SetPosition(v._d_pos.x + r * math.cos(v._d_theta), 0, v._d_pos.z + r * math.sin(v._d_theta))
+        end)
+    end
 end
 
 function d_decodedata(path)

@@ -1193,7 +1193,7 @@ function Combat:OnRemoveFromEntity()
         self.retargettask:Cancel()
         self.retargettask = nil
     end
-	inst:RemoveEventCallback("knockback", CommonHandlers.ResetHitRecoveryDelay)
+	self.inst:RemoveEventCallback("knockback", CommonHandlers.ResetHitRecoveryDelay)
 end
 
 return Combat
