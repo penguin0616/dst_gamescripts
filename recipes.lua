@@ -611,7 +611,7 @@ Recipe2("critter_eyeofterror_builder",		{Ingredient("milkywhites", 1), Ingredien
 ----CELESTIAL----
 Recipe2("moonrockidol",								{Ingredient("moonrocknugget", 1), Ingredient("purplegem", 1)},									TECH.CELESTIAL_ONE,			{nounlock=true})
 Recipe2("multiplayer_portal_moonrock_constr_plans", {Ingredient("boards", 1), Ingredient("rope", 1)},												TECH.CELESTIAL_ONE,			{nounlock=true})
-Recipe2("lunar_forge",						{Ingredient("moonrocknugget", 5),Ingredient("moonglass", 5),Ingredient("purebrilliance", 1)},																TECH.CELESTIAL_ONE,			{--[[nounlock=true,]] placer="lunar_forge_placer"})
+Recipe2("lunar_forge_kit",							{Ingredient("moonrocknugget", 5),Ingredient("moonglass", 5),Ingredient("purebrilliance", 1)},	TECH.CELESTIAL_ONE,			{nounlock=true})
 
 ----MOON_ALTAR-----
 Recipe2("moonglassaxe",						{Ingredient("twigs", 2), Ingredient("moonglass", 3)},													TECH.CELESTIAL_THREE,		{nounlock=true})
@@ -623,13 +623,13 @@ Recipe2("chesspiece_butterfly_sketch",		{Ingredient("papyrus", 1)},													
 Recipe2("chesspiece_moon_sketch", 			{Ingredient("papyrus", 1)},																				TECH.CELESTIAL_THREE,		{nounlock=true})
 
 ----LUNAR_FORGE----
-Recipe2("armor_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 4)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
-Recipe2("lunarplanthat",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
-Recipe2("bomb_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 4)},									TECH.LUNARFORGING_ONE,		{nounlock=true, numtogive=6})
-Recipe2("staff_lunarplant",					{Ingredient("purebrilliance", 3), Ingredient("lunarplant_husk", 6)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
-Recipe2("sword_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 3)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
-Recipe2("pickaxe_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
-Recipe2("shovel_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_ONE,		{nounlock=true})
+Recipe2("armor_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 4)},									TECH.LUNARFORGING_TWO)
+Recipe2("lunarplanthat",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_TWO)
+Recipe2("bomb_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 4), Ingredient("moonglass_charged", 1)},TECH.LUNARFORGING_TWO,		{numtogive=6})
+Recipe2("staff_lunarplant",					{Ingredient("purebrilliance", 3), Ingredient("lunarplant_husk", 6)},									TECH.LUNARFORGING_TWO)
+Recipe2("sword_lunarplant",					{Ingredient("purebrilliance", 4), Ingredient("lunarplant_husk", 3)},									TECH.LUNARFORGING_TWO)
+Recipe2("pickaxe_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_TWO)
+Recipe2("shovel_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lunarplant_husk", 2)},									TECH.LUNARFORGING_TWO)
 
 ----SCULPTING----
 Recipe2("chesspiece_hornucopia_builder",	{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.SCULPTING_ONE,			{nounlock = true, actionstr="SCULPTING", image="chesspiece_hornucopia.tex"})

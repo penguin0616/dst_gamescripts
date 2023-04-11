@@ -886,6 +886,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Guess this tool just ain't gonna cut it.",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "That light's givin' me goosebumps.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Get over here, eh!",
@@ -4777,6 +4779,7 @@ return{
         LUNARPLANT_HUSK = "That could be good for somethin'.",
 
 		LUNAR_FORGE = "How aboot we get this furnace going, eh Luce?",
+		LUNAR_FORGE_KIT = "How aboot we get this furnace going, eh Luce?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Sturdy organic armor.",
 		LUNARPLANTHAT = "It's got me feelin' a bit light-headed.",

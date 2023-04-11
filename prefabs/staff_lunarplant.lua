@@ -6,7 +6,28 @@ local assets =
 local prefabs =
 {
 	"brilliance_projectile_fx",
+	"staff_lunarplant_fx",
 }
+
+local function SetFxOwner(inst, owner)
+	if owner ~= nil then
+		inst.fx.entity:SetParent(owner.entity)
+		inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true)
+	else
+		inst.fx.entity:SetParent(inst.entity)
+		--For floating
+		inst.fx.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true)
+	end
+end
+
+local function PushIdleLoop(inst)
+	inst.AnimState:PushAnimation("idle")
+end
+
+local function OnStopFloating(inst)
+	inst.fx.AnimState:SetFrame(0)
+	inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
+end
 
 local function onequip(inst, owner)
 	local skin_build = inst:GetSkinBuild()
@@ -18,6 +39,7 @@ local function onequip(inst, owner)
 	end
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
+	SetFxOwner(inst, owner)
 end
 
 local function onunequip(inst, owner)
@@ -27,6 +49,7 @@ local function onunequip(inst, owner)
 	if skin_build ~= nil then
 		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
 	end
+	SetFxOwner(inst, nil)
 end
 
 local function OnAttack(inst, attacker, target, skipsanity)
@@ -60,7 +83,14 @@ local function fn()
 
 	inst.AnimState:SetBank("staff_lunarplant")
 	inst.AnimState:SetBuild("staff_lunarplant")
-	inst.AnimState:PlayAnimation("idle")
+	inst.AnimState:PlayAnimation("idle", true)
+	inst.AnimState:SetSymbolBloom("pb_energy_loop")
+	inst.AnimState:SetSymbolBloom("stone")
+	inst.AnimState:SetSymbolLightOverride("pb_energy_loop01", .5)
+	inst.AnimState:SetSymbolLightOverride("pb_ray", .5)
+	inst.AnimState:SetSymbolLightOverride("stone", .5)
+	inst.AnimState:SetSymbolLightOverride("glow", .25)
+	inst.AnimState:SetLightOverride(.1)
 
 	inst:AddTag("rangedweapon")
 
@@ -70,13 +100,20 @@ local function fn()
 	inst.projectiledelay = FRAMES
 
 	local swap_data = { sym_build = "staff_lunarplant", sym_name = "swap_staff_lunarplant" }
-	MakeInventoryFloatable(inst, "med", 0.1, { 0.9, 0.4, 0.9 }, true, -13, swap_data)
+	MakeInventoryFloatable(inst, "med", 0.1, { 0.9, 0.6, 0.9 }, true, -13, swap_data)
 
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	local frame = math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1
+	inst.AnimState:SetFrame(frame)
+	inst.fx = SpawnPrefab("staff_lunarplant_fx")
+	inst.fx.AnimState:SetFrame(frame)
+	SetFxOwner(inst, nil)
+	inst:ListenForEvent("floater_stopfloating", OnStopFloating)
 
 	-------
 	inst:AddComponent("finiteuses")
@@ -108,4 +145,37 @@ local function fn()
 	return inst
 end
 
-return Prefab("staff_lunarplant", fn, assets, prefabs)
+local function fxfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+
+	inst.AnimState:SetBank("staff_lunarplant")
+	inst.AnimState:SetBuild("staff_lunarplant")
+	inst.AnimState:PlayAnimation("swap_loop", true)
+	inst.AnimState:SetSymbolBloom("pb_energy_loop")
+	inst.AnimState:SetSymbolBloom("stone")
+	inst.AnimState:SetSymbolLightOverride("pb_energy_loop01", .5)
+	inst.AnimState:SetSymbolLightOverride("pb_ray", .5)
+	inst.AnimState:SetSymbolLightOverride("stone", .5)
+	inst.AnimState:SetSymbolLightOverride("glow", .25)
+	inst.AnimState:SetLightOverride(.1)
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.persists = false
+
+	return inst
+end
+
+return Prefab("staff_lunarplant", fn, assets, prefabs),
+	Prefab("staff_lunarplant_fx", fxfn, assets)

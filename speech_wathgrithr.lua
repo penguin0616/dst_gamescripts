@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "This meager tool hath not the strength to break it.",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Something doth shine like a beacon in the distance.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Valhalla awaits!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "It hath a formidible hide, for a non-meat.",
 
 		LUNAR_FORGE = "I shall forge weapons to rival the gods themselves!",
+		LUNAR_FORGE_KIT = "I shall forge weapons to rival the gods themselves!", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Armor crafted from a fallen foe.",
 		LUNARPLANTHAT = "A formidable helm, burning with an unearthly flame!",

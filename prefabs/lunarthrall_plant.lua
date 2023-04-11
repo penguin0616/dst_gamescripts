@@ -48,6 +48,20 @@ local function customSetRandomFrame(inst)
     end
 end
 
+local function back_onentityreplicated(inst)
+	local parent = inst.entity:GetParent()
+	if parent ~= nil and parent.prefab == "lunarthrall_plant" then
+		table.insert(parent.highlightchildren, inst)
+	end
+end
+
+local function back_onremoveentity(inst)
+	local parent = inst.entity:GetParent()
+	if parent ~= nil and parent.highlightchildren ~= nil then
+		table.removearrayvalue(parent.highlightchildren, inst)
+	end
+end
+
 local function backfn()
     local inst = CreateEntity()
 
@@ -63,9 +77,13 @@ local function backfn()
 
     inst:AddTag("fx")
 
+	inst.OnRemovedEntity = back_onremoveentity
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+		inst.OnEntityReplicated = back_onentityreplicated
+
         return inst
     end
 
@@ -79,6 +97,7 @@ local function spawnback(inst)
     --back.Transform:SetPosition(inst.Transform:GetWorldPosition())
     back.AnimState:SetFinalOffset(-1)
     inst.back = back
+	table.insert(inst.highlightchildren, back)
     back:ListenForEvent("onremove", function() back:Remove() end, inst)
 
     back:ListenForEvent("death", function()
@@ -328,12 +347,10 @@ local function Retarget(inst)
                 vine.Transform:SetPosition(pos.x,pos.y,pos.z)
                 vine.Transform:SetRotation(inst:GetAngleToPoint(pos.x, pos.y, pos.z))
 
-                vine:ListenForEvent("freeze", function(source,data) 
-                    print("freezetime!",data)                                        
-                        vine.components.freezable:Freeze(data)
-                    end, inst)
-                
-                
+                vine:ListenForEvent("freeze", function(inst)
+					vine.components.freezable:AddColdness(vine.components.freezable:ResolveResistance(), inst.components.freezable:GetTimeToWearOff())
+				end, inst)
+
                 if inst.tintcolor then
                     vine.AnimState:SetMultColour(inst.tintcolor, inst.tintcolor, inst.tintcolor, 1)
                     vine.tintcolor = inst.tintcolor
@@ -410,6 +427,8 @@ local function fn()
     inst:AddTag("lunar_aligned")
     inst:AddTag("hostile")
     inst:AddTag("lunarthrall_plant")
+
+	inst.highlightchildren = {}
 
     inst.entity:SetPristine()
 

@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "I'll need a more powerful tool.",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Something has changed...",
+
 	BATTLECRY =
 	{
 		GENERIC = "To arms!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "The blasted thing is finally dead.",
 
 		LUNAR_FORGE = "To work, then.",
+		LUNAR_FORGE_KIT = "To work, then.", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Does no one else find this armor oddly itchy?",
 		LUNARPLANTHAT = "It looks wonderfully ominous.",

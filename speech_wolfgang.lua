@@ -886,6 +886,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Tool is weak! Wolfgang needs something mightier!",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Oh! Wolfgang can see pretty light up ahead!",
+
 	BATTLECRY =
 	{
 		GENERIC = "I will punch you!",
@@ -4777,6 +4779,7 @@ return{
         LUNARPLANT_HUSK = "Ah. Is not haunted anymore.",
 
 		LUNAR_FORGE = "Is there a mighty hammer for Wolfgang to swing?",
+		LUNAR_FORGE_KIT = "Is there a mighty hammer for Wolfgang to swing?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Tough, like Wolfgang!",
 		LUNARPLANTHAT = "Wolfgang feels very safe inside.",

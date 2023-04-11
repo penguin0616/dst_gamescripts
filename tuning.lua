@@ -1364,7 +1364,7 @@ function Tune(overrides)
             }),
 
 			LUNAR_FORGE = TechTree.Create({
-				LUNARFORGING = 1,
+				LUNARFORGING = 2,
 			}),
 		},
 

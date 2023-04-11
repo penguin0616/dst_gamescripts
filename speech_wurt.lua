@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Grrr... need something stronger, florp!",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Grrr! Who make that light?",
+
 	BATTLECRY =
 	{
 		GENERIC = "Not scared of you, florp!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "Hee-hee, it dead!",
 
 		LUNAR_FORGE = "Make shiny things.",
+		LUNAR_FORGE_KIT = "Make shiny things.", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Tough and glowy!",
 		LUNARPLANTHAT = "Cage for head, florp?",

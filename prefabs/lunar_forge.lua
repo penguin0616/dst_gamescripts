@@ -10,6 +10,12 @@ local prefabs =
 	"collapse_small",
 }
 
+local kit_assets =
+{
+	Asset("ANIM", "anim/lunar_forge.zip"),
+	Asset("INV_IMAGE", "lunar_forge_kit"),
+}
+
 local function onhammered(inst, worker)
 	inst.components.lootdropper:DropLoot()
 	local fx = SpawnPrefab("collapse_small")
@@ -155,4 +161,5 @@ local function fn()
 end
 
 return Prefab("lunar_forge", fn, assets, prefabs),
-	MakePlacer("lunar_forge_placer", "lunar_forge", "lunar_forge", "idle")
+	MakeDeployableKitItem("lunar_forge_kit", "lunar_forge", "lunar_forge", "lunar_forge", "kit", assets),
+	MakePlacer("lunar_forge_kit_placer", "lunar_forge", "lunar_forge", "idle")

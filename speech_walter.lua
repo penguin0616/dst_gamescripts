@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "It's okay Woby, we just need to find a stronger tool!",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Look, Woby! Something's glowing over there!",
+
 	BATTLECRY =
 	{
 		GENERIC = "Sorry!!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "If you kill a ghost plant, do you get... a double ghost?",
 
 		LUNAR_FORGE = "Let's make something, Woby!",
+		LUNAR_FORGE_KIT = "Let's make something, Woby!", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "It makes me feel so safe, it's scary!",
 		LUNARPLANTHAT = "That's definitely the helmet of some kind of ghost knight!",

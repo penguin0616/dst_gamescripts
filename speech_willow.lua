@@ -892,6 +892,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Ugh. I'm gonna need something way stronger than this...",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Hey, what was that weird light?",
+
 	BATTLECRY =
 	{
 		GENERIC = "It's you or me!",
@@ -4783,6 +4785,7 @@ return{
         LUNARPLANT_HUSK = "Can I burn it now?",
 
 		LUNAR_FORGE = "What gives? That little fire doesn't even feel warm!",
+		LUNAR_FORGE_KIT = "What gives? That little fire doesn't even feel warm!", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "I make it look good.",
 		LUNARPLANTHAT = "How am I supposed to see in that thing?",

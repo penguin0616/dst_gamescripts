@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Oh botheration! I'll need something stronger than this...",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Did anyone else feel that temporal burst?",
+
 	BATTLECRY =
 	{
 		GENERIC = "You ruffian! I'll clean your clock!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "What an interesting material, I should make use of it.",
 
 		LUNAR_FORGE = "Why waste time staring at it when I could be making something?",
+		LUNAR_FORGE_KIT = "Why waste time staring at it when I could be making something?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Some extra protection is always welcome.",
 		LUNARPLANTHAT = "It's incredible that I can see anything while wearing it.",

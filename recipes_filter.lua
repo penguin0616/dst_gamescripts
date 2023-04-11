@@ -302,7 +302,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	----CELESTIAL----
 	"moonrockidol",
 	"multiplayer_portal_moonrock_constr_plans",
-	"lunar_forge",
+	"lunar_forge_kit",
 
 	----MOON_ALTAR-----
 	"moonglassaxe",
@@ -553,6 +553,8 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"goldenshovel",
 	"golden_farm_hoe",
 	"goldenpitchfork",
+	"pickaxe_lunarplant",
+	"shovel_lunarplant",
 	"trap",
 	"birdtrap",
 	"bugnet",
@@ -666,7 +668,9 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"whip",
 	"nightstick",
 	"nightsword",
+	"sword_lunarplant",
 	"sleepbomb",
+	"bomb_lunarplant",
 	"blowdart_pipe",
 	"blowdart_fire",
 	"blowdart_yellow",
@@ -675,6 +679,7 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"trident",
 	"firestaff",
 	"icestaff",
+	"staff_lunarplant",
 	"gunpowder",
 	"panflute",
 	"trap_teeth",
@@ -694,12 +699,14 @@ CRAFTING_FILTERS.ARMOUR.recipes =
 	"armordragonfly",
 	"armor_sanity",
 	"armormarble",
-	"armordreadstone",
-	"dreadstonehat",
 	"footballhat",
 	"wathgrithrhat",
 	"cookiecutterhat",
 	"beehat",
+	"armordreadstone",
+	"dreadstonehat",
+	"armor_lunarplant",
+	"lunarplanthat",
 }
 
 CRAFTING_FILTERS.CLOTHING.recipes =

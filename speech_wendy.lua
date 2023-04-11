@@ -889,6 +889,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "It's not strong enough... like me...",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "I can see a light...",
+
 	BATTLECRY =
 	{
 		GENERIC = "Death will find you!",
@@ -4780,6 +4782,7 @@ return{
         LUNARPLANT_HUSK = "It can't hurt anyone anymore.",
 
 		LUNAR_FORGE = "Will I be able to create anything of use?",
+		LUNAR_FORGE_KIT = "Will I be able to create anything of use?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Shining armor, but no knight to save us.",
 		LUNARPLANTHAT = "It lets me hide my face from the world.",

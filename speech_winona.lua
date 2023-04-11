@@ -891,6 +891,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Maybe this ain't the right tool for the job...",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "I should check out that weird glow.",
+
 	BATTLECRY =
 	{
 		GENERIC = "I'll demolish you!",
@@ -4782,6 +4784,7 @@ return{
         LUNARPLANT_HUSK = "That's tough stuff!",
 
 		LUNAR_FORGE = "It's givin' me some bright ideas.",
+		LUNAR_FORGE_KIT = "It's givin' me some bright ideas.", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Built to last!",
 		LUNARPLANTHAT = "It should keep my noggin' nice and safe.",

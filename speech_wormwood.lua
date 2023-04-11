@@ -889,6 +889,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "Oh. Something else?",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "Hmm? Light?",
+
 	BATTLECRY =
 	{
 		GENERIC = "Attack!",
@@ -4780,6 +4782,7 @@ return{
         LUNARPLANT_HUSK = "Sorry",
 
 		LUNAR_FORGE = "Make shiny things!",
+		LUNAR_FORGE_KIT = "Make shiny things!", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Mean friend made nice clothes",
 		LUNARPLANTHAT = "Mean friend made nice hat",

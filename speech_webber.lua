@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "We don't think this tool's strong enough!",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "We can see something glowing waaay over there!",
+
 	BATTLECRY =
 	{
 		GENERIC = "En garde!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "That was one mean plant. We're glad it's gone!",
 
 		LUNAR_FORGE = "Can we use it to make crafts?",
+		LUNAR_FORGE_KIT = "Can we use it to make crafts?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "We're gonna look so tough!",
 		LUNARPLANTHAT = "We're gonna be a spider knight!",

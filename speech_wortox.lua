@@ -890,6 +890,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "This tool is too weak for what I seek.",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "That odd moonlight has caught my sight.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Let's have some fun.",
@@ -4782,6 +4784,7 @@ return{
         LUNARPLANT_HUSK = "Unoccupied.",
 
 		LUNAR_FORGE = "There isn't any iron in that forge, is there?",
+		LUNAR_FORGE_KIT = "There isn't any iron in that forge, is there?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Strong and light, quite good in a fight.",
 		LUNARPLANTHAT = "It has me looking on the bright side, hyuyu!",

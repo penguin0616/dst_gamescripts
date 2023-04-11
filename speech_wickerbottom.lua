@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "This will require a more robust tool than I currently possess.",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "I suspect a powerful influx of energy is the source of that strange glow.",
+
 	BATTLECRY =
 	{
 		GENERIC = "Combat!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "An extremely resilient material. I should make use of it.",
 
 		LUNAR_FORGE = "It utilizes crystallized energy to reshape and reinforce organic material.",
+		LUNAR_FORGE_KIT = "It utilizes crystallized energy to reshape and reinforce organic material.", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "Surprisingly effective plant-based armor.",
 		LUNARPLANTHAT = "It does not fit well over my glasses, but I suppose I must make do.",

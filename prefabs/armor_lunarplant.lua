@@ -3,6 +3,11 @@ local assets =
 	Asset("ANIM", "anim/armor_lunarplant.zip"),
 }
 
+local prefabs =
+{
+	"armor_lunarplant_glow_fx",
+}
+
 local function OnBlocked(owner)
 	owner.SoundEmitter:PlaySound("dontstarve/common/together/armor/cactus")
 end
@@ -31,6 +36,24 @@ local function onequip(inst, owner)
 			owner.components.damagetypebonus:AddBonus("shadow_aligned", owner, TUNING.ARMOR_LUNARPLANT_SETBONUS_VS_SHADOW_BONUS, "lunarplant_setbonus")
 		end
 	end
+
+	if inst.fx == nil then
+		inst.fx = {}
+		for i = 1, 6 do
+			local fx = SpawnPrefab("armor_lunarplant_glow_fx")
+			if i > 1 then
+				fx.AnimState:PlayAnimation("idle"..tostring(i), true)
+			end
+			table.insert(inst.fx, fx)
+		end
+	end
+	local frame = math.random(inst.fx[1].AnimState:GetCurrentAnimationNumFrames()) - 1
+	for i, v in ipairs(inst.fx) do
+		v.entity:SetParent(owner.entity)
+		v.Follower:FollowSymbol(owner.GUID, "swap_body", nil, nil, nil, true, nil, i - 1)
+		v.AnimState:SetFrame(frame)
+	end
+	owner.AnimState:SetSymbolLightOverride("swap_body", .1)
 end
 
 local function onunequip(inst, owner)
@@ -50,6 +73,14 @@ local function onunequip(inst, owner)
 	if owner.components.damagetypebonus ~= nil then
 		owner.components.damagetypebonus:RemoveBonus("shadow_aligned", owner, "lunarplant_setbonus")
 	end
+
+	if inst.fx ~= nil then
+		for i, v in ipairs(inst.fx) do
+			v:Remove()
+		end
+		inst.fx = nil
+	end
+	owner.AnimState:SetSymbolLightOverride("swap_body", 0)
 end
 
 local function fn()
@@ -61,11 +92,13 @@ local function fn()
 
 	MakeInventoryPhysics(inst)
 
+	inst:AddTag("lunarplant")
+
 	inst.AnimState:SetBank("armor_lunarplant")
 	inst.AnimState:SetBuild("armor_lunarplant")
 	inst.AnimState:PlayAnimation("anim")
 
-	inst.foleysound = "dontstarve/movement/foley/cactus_armor"
+	inst.foleysound = "dontstarve/movement/foley/lunarplantarmour_foley"
 
 	local swap_data = { bank = "armor_lunarplant", anim = "anim" }
 	MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)
@@ -98,4 +131,33 @@ local function fn()
 	return inst
 end
 
-return Prefab("armor_lunarplant", fn, assets)
+local function glowfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+
+	inst.AnimState:SetBank("armor_lunarplant")
+	inst.AnimState:SetBuild("armor_lunarplant")
+	inst.AnimState:PlayAnimation("idle1", true)
+	inst.AnimState:SetSymbolBloom("glowcentre")
+	inst.AnimState:SetSymbolLightOverride("glowcentre", .5)
+	inst.AnimState:SetLightOverride(.1)
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.persists = false
+
+	return inst
+end
+
+return Prefab("armor_lunarplant", fn, assets, prefabs),
+	Prefab("armor_lunarplant_glow_fx", glowfn, assets)

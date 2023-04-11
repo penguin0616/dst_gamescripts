@@ -885,6 +885,8 @@ return{
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "No, this won't do...",
 
+    ANNOUNCE_LUNAR_RIFT_MAX = "What could that glow be?",
+
 	BATTLECRY =
 	{
 		GENERIC = "I'm also an accomplished butcher!",
@@ -4776,6 +4778,7 @@ return{
         LUNARPLANT_HUSK = "Ah, raw ingredients!",
 
 		LUNAR_FORGE = "What shall I cook up with this?",
+		LUNAR_FORGE_KIT = "What shall I cook up with this?", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "A hard outer crust.",
 		LUNARPLANTHAT = "An extra layer for my head.",

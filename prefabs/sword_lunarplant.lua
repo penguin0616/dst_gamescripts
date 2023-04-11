@@ -3,6 +3,36 @@ local assets =
 	Asset("ANIM", "anim/sword_lunarplant.zip"),
 }
 
+local prefabs =
+{
+	"sword_lunarplant_blade_fx",
+}
+
+local function SetFxOwner(inst, owner)
+	if owner ~= nil then
+		inst.blade1.entity:SetParent(owner.entity)
+		inst.blade2.entity:SetParent(owner.entity)
+		inst.blade1.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 0, 3)
+		inst.blade2.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 5, 8)
+	else
+		inst.blade1.entity:SetParent(inst.entity)
+		inst.blade2.entity:SetParent(inst.entity)
+		--For floating
+		inst.blade1.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true, nil, 0, 3)
+		inst.blade2.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true, nil, 5, 8)
+	end
+end
+
+local function PushIdleLoop(inst)
+	inst.AnimState:PushAnimation("idle")
+end
+
+local function OnStopFloating(inst)
+	inst.blade1.AnimState:SetFrame(0)
+	inst.blade2.AnimState:SetFrame(0)
+	inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
+end
+
 local function onequip(inst, owner)
 	local skin_build = inst:GetSkinBuild()
 	if skin_build ~= nil then
@@ -13,6 +43,7 @@ local function onequip(inst, owner)
 	end
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
+	SetFxOwner(inst, owner)
 end
 
 local function onunequip(inst, owner)
@@ -22,6 +53,7 @@ local function onunequip(inst, owner)
 	if skin_build ~= nil then
 		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
 	end
+	SetFxOwner(inst, nil)
 end
 
 local function fn()
@@ -54,7 +86,15 @@ local function fn()
 		return inst
 	end
 
-	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
+	local frame = math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1
+	inst.AnimState:SetFrame(frame)
+	inst.blade1 = SpawnPrefab("sword_lunarplant_blade_fx")
+	inst.blade2 = SpawnPrefab("sword_lunarplant_blade_fx")
+	inst.blade2.AnimState:PlayAnimation("swap_loop2", true)
+	inst.blade1.AnimState:SetFrame(frame)
+	inst.blade2.AnimState:SetFrame(frame)
+	SetFxOwner(inst, nil)
+	inst:ListenForEvent("floater_stopfloating", OnStopFloating)
 
 	-------
 	inst:AddComponent("finiteuses")
@@ -84,4 +124,33 @@ local function fn()
 	return inst
 end
 
-return Prefab("sword_lunarplant", fn, assets)
+local function fxfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+
+	inst.AnimState:SetBank("sword_lunarplant")
+	inst.AnimState:SetBuild("sword_lunarplant")
+	inst.AnimState:PlayAnimation("swap_loop1", true)
+	inst.AnimState:SetSymbolBloom("pb_energy_loop01")
+	inst.AnimState:SetSymbolLightOverride("pb_energy_loop01", .5)
+	inst.AnimState:SetLightOverride(.1)
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst.persists = false
+
+	return inst
+end
+
+return Prefab("sword_lunarplant", fn, assets),
+	Prefab("sword_lunarplant_blade_fx", fxfn, assets)

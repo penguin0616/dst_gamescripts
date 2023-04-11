@@ -895,7 +895,7 @@ return {
 	--
 	ANNOUNCE_TOOL_TOOWEAK = "I need a stronger tool!",
 
-    ANNOUNCE_LUNAR_RIFT_MAX = "That light means trouble.", --[[TODO]]
+    ANNOUNCE_LUNAR_RIFT_MAX = "That flash! Was that moonlight?",
 
 	BATTLECRY =
 	{
@@ -4788,6 +4788,7 @@ return {
         LUNARPLANT_HUSK = "It's incredibly tough. I could use this!",
 
 		LUNAR_FORGE = "Just the place to make something very clever and scientific.",
+		LUNAR_FORGE_KIT = "Just the place to make something very clever and scientific.", --[[TODO]]
 
 		ARMOR_LUNARPLANT = "This armor doesn't leaf any room for improvement.",
 		LUNARPLANTHAT = "It makes me look even brighter than usual.",

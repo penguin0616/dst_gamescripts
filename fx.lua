@@ -2722,6 +2722,7 @@ local fx =
 		bank = "planar_resist_fx",
 		build = "planar_resist_fx",
 		anim = "deflect",
+        sound = "rifts/fx/planar_resist_fx",
 		fn = function(inst)
 			local scale = .8 + math.random() * .4
 			inst.AnimState:SetScale(math.random() < .5 and scale or -scale, scale)

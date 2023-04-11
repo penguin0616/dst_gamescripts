@@ -651,6 +651,7 @@ function Combat:GetImpactSound(target, weapon)
                 (tgtinv:ArmorHasTag("forcefield") and "forcefield_armour_") or
                 (tgtinv:ArmorHasTag("sanity") and "sanity_armour_") or
                 (tgtinv:ArmorHasTag("dreadstone") and "dreadstone_armour_") or
+                (tgtinv:ArmorHasTag("lunarplant") and "lunarplant_armour_") or
                 (tgtinv:ArmorHasTag("marble") and "marble_armour_") or
                 (tgtinv:ArmorHasTag("shell") and "shell_armour_") or
                 (tgtinv:ArmorHasTag("fur") and "fur_armour_") or
@@ -926,7 +927,7 @@ local function _CalcReflectedDamage(inst, attacker, dmg, weapon, stimuli, reflec
         if dmg1 > 0 or spdmg1 ~= nil then
 			reflected_dmg = reflected_dmg + dmg1
 			reflected_spdmg = SpDamageUtil.MergeSpDamage(reflected_spdmg, spdmg1)
-			table.insert(reflect_list, { inst = inst, attacker = attacker, reflected_dmg = dmg1, reflected_spdmg = spdgm1 })
+			table.insert(reflect_list, { inst = inst, attacker = attacker, reflected_dmg = dmg1, reflected_spdmg = spdmg1 })
         end
     end
 

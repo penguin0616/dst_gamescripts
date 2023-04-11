@@ -209,6 +209,8 @@ local prefabs =
     "constructionsite_classified",
 
     "dummytarget",
+    "dummytarget_lunar",
+    "dummytarget_shadow",
     "float_fx_front",
     "float_fx_back",
 

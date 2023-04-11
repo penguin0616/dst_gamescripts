@@ -156,6 +156,10 @@ function Freezable:StartWearingOff(wearofftime)
     self.wearofftask = self.inst:DoTaskInTime(self:ResolveWearOffTime(wearofftime or self.wearofftime), WearOff, self)
 end
 
+function Freezable:GetTimeToWearOff()
+	return self.wearofftask ~= nil and GetTaskRemaining(self.wearofftask) or nil
+end
+
 local function PushColour(inst, r, g, b, a)
     if inst.components.colouradder ~= nil then
         inst.components.colouradder:PushColour("freezable", r, g, b, a)
@@ -256,7 +260,7 @@ function Freezable:Freeze(freezetime)
         end
 
         if self.state ~= prevState then
-            self.inst:PushEvent("freeze", freezetime)
+			self.inst:PushEvent("freeze")
             if self.diminishingreturns then
                 self:SetExtraResist((self.extraresist or 0) + self.resistance * .25)
             end

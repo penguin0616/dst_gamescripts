@@ -3638,6 +3638,7 @@ STRINGS =
         LUNARPLANT_HUSK = "Brightshade Husk",
 
 		LUNAR_FORGE = "Brightsmithy",
+		LUNAR_FORGE_KIT = "Brightsmithy Kit",
 
 		ARMOR_LUNARPLANT = "Brightshade Armor",
 		LUNARPLANTHAT = "Brightshade Helm",
@@ -4529,7 +4530,7 @@ STRINGS =
         TRANSMUTE_MOONGLASS_CHARGED = "Transmute Pure Brilliance into Infused Moon Shards.",        
 
         -- Rifts 1
-		LUNAR_FORGE = "Forge otherworldly items.",
+		LUNAR_FORGE_KIT = "Forge otherworldly items.",
 
 		ARMOR_LUNARPLANT = "Surround yourself in formidable lunar leaves.",
 		LUNARPLANTHAT = "Luminescent protection for your precious cranium.",

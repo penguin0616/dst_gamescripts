@@ -377,6 +377,7 @@ local function fn()
 
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
 	inst.entity:AddNetwork()
 
 	inst:AddTag("monster")
@@ -530,6 +531,9 @@ local function debrisfn()
 	inst.entity:AddTransform()
 	inst.entity:AddAnimState()
 	inst.entity:AddNetwork()
+
+	inst:AddTag("NOCLICK")
+	inst:AddTag("DECOR")
 
 	MakeInventoryPhysics(inst)
 

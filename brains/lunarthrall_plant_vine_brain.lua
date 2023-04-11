@@ -3,10 +3,10 @@ require "behaviours/wander"
 require "behaviours/standstill"
 require "behaviours/faceentity"
 
-ATTACH_DIST = 1
-CLOSE_DIST = 8
+local ATTACH_DIST = 1
+local CLOSE_DIST = 8
 
-SCREEN_DIST = 30
+local SCREEN_DIST = 30
 
 local function MoveToPointAction(inst)
 	local pos = nil
@@ -95,7 +95,7 @@ local function MoveToPointAction(inst)
 		end
 		-- go out of sight and then find a plan to teleport to
 	end
-	if pos then		
+	if pos and inst:IsValid() then
 		return BufferedAction(inst, nil, ACTIONS.WALKTO, nil, pos, nil, .2)
 	end
 end

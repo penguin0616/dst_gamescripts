@@ -47,6 +47,14 @@ local events =
 	end),
 }
 
+local function PlayFootstepDown(inst)
+	inst.SoundEmitter:PlaySound("rifts/grazer/step1")
+end
+
+local function PlayFootstepUp(inst)
+	inst.SoundEmitter:PlaySound("rifts/grazer/step2_pull")
+end
+
 local states =
 {
 	State{
@@ -209,6 +217,7 @@ local states =
 				v.AnimState:PushAnimation("rock_float_0"..tostring(v.variation))
 				v.AnimState:SetDeltaTimeMultiplier(0.8 + math.random() * 1.1)
 			end
+			inst.SoundEmitter:PlaySound("rifts/grazer/rock_float")
 			inst.sg.statemem.delay = 1
 			inst.sg:SetTimeout(inst.sg.statemem.delay)
 		end,
@@ -252,6 +261,8 @@ local states =
 			inst.AnimState:PlayAnimation("spawn")
 			inst.core.AnimState:PlayAnimation("rock_gather")
 			inst.core.AnimState:PushAnimation("rock_cycle")
+			inst.SoundEmitter:PlaySound("rifts/grazer/spawn")
+			inst.SoundEmitter:PlaySound("rifts/grazer/rock_gather")
 			if inst.debrisshown then
 				for i, v in ipairs(inst.debris) do
 					v.AnimState:PlayAnimation("rock_off")
@@ -320,6 +331,7 @@ local states =
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("despawn_splat")
 			inst.core.AnimState:PlayAnimation("despawn_splat_rocks")
+			inst.SoundEmitter:PlaySound("rifts/grazer/despawn_splat")
 			if inst.last_trail ~= nil and inst.last_trail:IsValid() then
 				inst.last_trail:Dissipate()
 			end
@@ -425,6 +437,7 @@ local states =
 					v.AnimState:PlayAnimation("rock_off_0"..tostring(v.variation))
 					v.AnimState:PushAnimation("rock_0"..tostring(v.variation), false)
 				end
+				inst.SoundEmitter:PlaySound("rifts/grazer/rock_off")
 			end),
 		},
 
@@ -528,6 +541,7 @@ local states =
 					v.AnimState:PlayAnimation("rock_off_0"..tostring(v.variation))
 					v.AnimState:PushAnimation("rock_0"..tostring(v.variation), false)
 				end
+				inst.SoundEmitter:PlaySound("rifts/grazer/rock_off")
 			end),
 		},
 
@@ -554,6 +568,7 @@ local states =
 		onenter = function(inst)
 			inst.components.locomotor:Stop()
 			inst.AnimState:PlayAnimation("hit")
+			inst.SoundEmitter:PlaySound("rifts/grazer/hit")
 		end,
 
 		timeline =
@@ -589,6 +604,9 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(25, PlayFootstepUp),
+			FrameEvent(39, PlayFootstepDown),
+
 			FrameEvent(17, function(inst)
 				inst.sg:AddStateTag("queueattack")
 				inst.components.locomotor:WalkForward()
@@ -637,6 +655,11 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(32, PlayFootstepUp),
+			FrameEvent(46, PlayFootstepDown),
+			FrameEvent(80, PlayFootstepUp),
+			FrameEvent(94, PlayFootstepDown),
+
 			FrameEvent(24, function(inst)
 				inst.sg:AddStateTag("queueattack")
 				inst.components.locomotor:WalkForward()
@@ -727,9 +750,11 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(0, function(inst) inst.SoundEmitter:PlaySound("rifts/grazer/devour_scream") end),
 			FrameEvent(12, function(inst)
 				inst.components.combat:StartAttack()
 			end),
+			FrameEvent(14, function(inst) inst.SoundEmitter:PlaySound("rifts/grazer/devour_chomp") end),
 			FrameEvent(32, function(inst)
 				local target = inst.sg.statemem.target or inst.components.combat.target
 				if inst.components.combat:CanHitTarget(target) then
