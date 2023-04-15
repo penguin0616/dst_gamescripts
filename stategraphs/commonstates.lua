@@ -994,6 +994,7 @@ local function onunfreeze(inst)
 end
 
 local function onthaw(inst)
+	inst.sg.statemem.thawing = true
     inst.sg:GoToState("thaw")
 end
 
@@ -1026,7 +1027,9 @@ local function onenterfrozen(inst)
 end
 
 local function onexitfrozen(inst)
-    inst.AnimState:ClearOverrideSymbol("swap_frozen")
+	if not inst.sg.statemem.thawing then
+		inst.AnimState:ClearOverrideSymbol("swap_frozen")
+	end
 end
 
 local function onenterthawpre(inst)

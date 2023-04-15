@@ -4784,7 +4784,7 @@ return{
         LUNARPLANT_HUSK = "That's tough stuff!",
 
 		LUNAR_FORGE = "It's givin' me some bright ideas.",
-		LUNAR_FORGE_KIT = "It's givin' me some bright ideas.", --[[TODO]]
+		LUNAR_FORGE_KIT = "Let's get this thing up and running!",
 
 		ARMOR_LUNARPLANT = "Built to last!",
 		LUNARPLANTHAT = "It should keep my noggin' nice and safe.",

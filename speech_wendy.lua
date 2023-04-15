@@ -4782,7 +4782,7 @@ return{
         LUNARPLANT_HUSK = "It can't hurt anyone anymore.",
 
 		LUNAR_FORGE = "Will I be able to create anything of use?",
-		LUNAR_FORGE_KIT = "Will I be able to create anything of use?", --[[TODO]]
+		LUNAR_FORGE_KIT = "I should try to put these scattered pieces together...",
 
 		ARMOR_LUNARPLANT = "Shining armor, but no knight to save us.",
 		LUNARPLANTHAT = "It lets me hide my face from the world.",

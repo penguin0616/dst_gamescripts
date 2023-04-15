@@ -175,19 +175,31 @@ local function on_rift_removed(rift)
     end
 end
 
-local function SpawnRift()
+
+local function AddRiftToPool(rift, rift_prefab)
+    _rifts[rift] = rift_prefab
+    self.inst:ListenForEvent("onremove", on_rift_removed, rift)
+end
+
+
+local function SpawnRift(pos)
     local spawn_x, spawn_z = get_next_rift_location()
+
+    if pos then 
+        spawn_x = pos.x
+        spawn_z = pos.z
+    end
     if not spawn_x then
         return
     end
+
 
     track_spawn_location(spawn_x, spawn_z)
 
     local rift_type = get_next_rift_type()
     local rift = SpawnPrefab(rift_type)
     rift.Transform:SetPosition(spawn_x, 0, spawn_z)
-    _rifts[rift] = rift_type
-    self.inst:ListenForEvent("onremove", on_rift_removed, rift)
+    AddRiftToPool(rift, rift_type)
 
     return rift
 end
@@ -326,7 +338,7 @@ function self:LoadPostPass(newents, data)
             for _, rift_guid in ipairs(data.rift_guids) do
                 local new_ent = newents[rift_guid]
                 if new_ent and new_ent.entity then
-                    _rifts[new_ent.entity] = new_ent.entity.prefab
+                    AddRiftToPool(new_ent.entity, new_ent.entity.prefab)
                 end
             end
         end
@@ -360,6 +372,10 @@ function self:Debug_SpawnRift(respect_spawn_limit)
     return spawned_rift
 end
 
+
+function self:SpawnRift(pos)
+    SpawnRift(pos)
+end
 --------------------------------------------------------------------------
 --[[ Initialization ]]
 --------------------------------------------------------------------------

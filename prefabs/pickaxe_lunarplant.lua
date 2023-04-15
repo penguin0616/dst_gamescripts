@@ -37,7 +37,8 @@ local function fn()
 	inst.AnimState:SetBuild("pickaxe_lunarplant")
 	inst.AnimState:PlayAnimation("idle")
 
-	inst:AddTag("sharp")
+	--inst:AddTag("sharp")
+	inst:AddTag("hammer")
 
 	--tool (from tool component) added to pristine state for optimization
 	inst:AddTag("tool")
@@ -56,7 +57,7 @@ local function fn()
 
 	-------
 	inst:AddComponent("tool")
-	inst.components.tool:SetAction(ACTIONS.CHOP, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
+	inst.components.tool:SetAction(ACTIONS.HAMMER, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
 	inst.components.tool:SetAction(ACTIONS.MINE, TUNING.PICKAXE_LUNARPLANT_EFFICIENCY)
 
 	-------
@@ -64,8 +65,8 @@ local function fn()
 	inst.components.finiteuses:SetMaxUses(TUNING.PICKAXE_LUNARPLANT_USES)
 	inst.components.finiteuses:SetUses(TUNING.PICKAXE_LUNARPLANT_USES)
 	inst.components.finiteuses:SetOnFinished(inst.Remove)
-	inst.components.finiteuses:SetConsumption(ACTIONS.CHOP, 1)
-	inst.components.finiteuses:SetConsumption(ACTIONS.MINE, 3)
+	inst.components.finiteuses:SetConsumption(ACTIONS.HAMMER, 1)
+	inst.components.finiteuses:SetConsumption(ACTIONS.MINE, TUNING.HAMMER_USES / TUNING.PICKAXE_USES)
 
 	-------
 	inst:AddComponent("weapon")

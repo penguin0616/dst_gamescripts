@@ -469,6 +469,28 @@ local applyoverrides_pre = {
         }
         OverrideTuningVariables(tuning_vars[difficulty])
     end,
+    daywalker = function(difficulty)
+        local tuning_vars = {
+            never = {
+                SPAWN_DAYWALKER = false,
+            },
+            rare = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 40,
+            },
+            --[[
+            default = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 20,
+            },
+            --]]
+            often = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 7,
+            },
+            always = {
+                DAYWALKER_RESPAWN_DAYS_COUNT = 1,
+            },
+        }
+        OverrideTuningVariables(tuning_vars[difficulty])
+    end,
 
 
     --monsters

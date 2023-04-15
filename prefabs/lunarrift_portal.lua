@@ -30,6 +30,10 @@ local LIGHT_SCALE_BY_STAGE_CONSTANT = 0.7
 
 local GRAZER_SPAWNS_BY_STAGE = {1, 2, 3}
 
+local AMBIENT_SOUND_LOOP_NAME = "lunarrift_portal_ambience"
+local AMBIENT_SOUND_PARAM_NAME = "param00"
+local AMBIENT_SOUND_STAGE_TO_INTENSITY = {0.2, 0.5, 0.8}
+
 --------------------------------------------------------------------------------
 local function make_terraformer_proxy(inst, ix, iy, iz)
     local terraformer = SpawnPrefab("rift_terraformer")
@@ -277,6 +281,9 @@ local function do_stage_up(inst)
         inst.AnimState:PlayAnimation("stage_"..next_stage.."_appear")
         inst.AnimState:PushAnimation("stage_"..next_stage.."_loop", true)
 
+        inst.SoundEmitter:SetParameter(AMBIENT_SOUND_LOOP_NAME, AMBIENT_SOUND_PARAM_NAME, AMBIENT_SOUND_STAGE_TO_INTENSITY[next_stage])
+        inst.SoundEmitter:PlaySound("rifts/portal/rift_explode")
+
         if inst.shadow then
             local new_scale = SHADOW_SCALE_BY_STAGE[next_stage]
             inst.shadow.AnimState:SetScale(new_scale, new_scale)
@@ -312,7 +319,9 @@ end
 
 local function try_stage_up(inst, force_finish_terraforming)
     if inst._stage < TUNING.RIFT_LUNAR1_MAXSTAGE then
-        inst.SoundEmitter:PlaySound("monkeyisland/portal/buildup_burst")
+        inst.SoundEmitter:SetParameter(AMBIENT_SOUND_LOOP_NAME, AMBIENT_SOUND_PARAM_NAME, 0.0)
+        inst.SoundEmitter:PlaySound("rifts/portal/rift_explode_buildup")
+
         inst.AnimState:PlayAnimation("stage_"..inst._stage.."_disappear")
         if inst.shadow then
             inst.shadow.AnimState:PlayAnimation("shadow_disappear")
@@ -327,8 +336,6 @@ local function try_stage_up(inst, force_finish_terraforming)
         end
     end
 end
-
-
 
 --------------------------------------------------------------------------------
 local function OnPortalGroundPound(inst)
@@ -433,11 +440,12 @@ end
 
 --------------------------------------------------------------------------------
 local function on_portal_sleep(inst)
-    inst.SoundEmitter:KillSound("loop")
+    inst.SoundEmitter:KillSound(AMBIENT_SOUND_LOOP_NAME)
 end
 
 local function on_portal_wake(inst)
-    inst.SoundEmitter:PlaySound("monkeyisland/portal/idle_lp", "loop")
+    inst.SoundEmitter:PlaySound("rifts/portal/rift_portal_allstage", AMBIENT_SOUND_LOOP_NAME)
+    inst.SoundEmitter:SetParameter(AMBIENT_SOUND_LOOP_NAME, AMBIENT_SOUND_PARAM_NAME, AMBIENT_SOUND_STAGE_TO_INTENSITY[inst._stage])
 end
 
 --------------------------------------------------------------------------------
@@ -516,6 +524,11 @@ local function on_portal_load_postpass(inst, newents, data)
 
     -- If we're loading anything, stop our timer
     inst.components.timer:StopTimer("initialize")
+    inst.SoundEmitter:KillSound(AMBIENT_SOUND_LOOP_NAME)
+    if not inst:IsAsleep() then
+        inst.SoundEmitter:PlaySound("rifts/portal/rift_portal_allstage", AMBIENT_SOUND_LOOP_NAME)
+        inst.SoundEmitter:SetParameter(AMBIENT_SOUND_LOOP_NAME, AMBIENT_SOUND_PARAM_NAME, AMBIENT_SOUND_STAGE_TO_INTENSITY[inst._stage])
+    end
 
     if inst._stage == TUNING.RIFT_LUNAR1_MAXSTAGE then
         setmaxminimapstatus(inst)

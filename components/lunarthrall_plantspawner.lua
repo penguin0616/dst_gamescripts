@@ -1,24 +1,12 @@
 
-local SCREEN_RANGE = 30
+local SCREEN_DIST_SQ = PLAYER_CAMERA_SEE_DISTANCE_SQ
 
 local TIME_UNIT = TUNING.SEG_TIME*8
 
 local PERIODIC_TIME = TUNING.TOTAL_DAY_TIME *2
 
 local function getrifts()
-    local rifts = TheWorld.components.riftspawner and TheWorld.components.riftspawner:GetRiftsOfType("lunarrift_portal")
-    if rifts then
-        for i=#rifts,1,-1 do
-            local rift = rifts[i]
-            if not rift:IsValid() then
-                rifts[i] = nil
-            end
-        end
-    end
-    if rifts and #rifts <= 0 then
-        rifts = nil
-    end
-    return rifts
+    return TheWorld.components.riftspawner and TheWorld.components.riftspawner:GetRiftsOfType("lunarrift_portal") or nil
 end
 
 local function releasethrall(world, target)
@@ -28,7 +16,7 @@ local function releasethrall(world, target)
     if rift then
         local spawnfromrift = false
         for i, player in ipairs(AllPlayers)do
-            if rift:GetDistanceSqToInst(player) < SCREEN_RANGE * SCREEN_RANGE then
+            if rift:GetDistanceSqToInst(player) < SCREEN_DIST_SQ then
                 --SPAWN THRALL FROM RIFT
                 self:SpawnGestalt(target, rift)
                 spawnfromrift = true
@@ -45,7 +33,7 @@ local PLANT_MUST = {"lunarthrall_plant"}
 local function SpawnThralls()
     local self = TheWorld.components.lunarthrall_plantspawner
     if self.waves_to_release and self.waves_to_release > 0 then
-        print("self.waves_to_release",self.waves_to_release)
+        --print("self.waves_to_release",self.waves_to_release)
         self.currentrift.SoundEmitter:PlaySound("monkeyisland/portal/buildup_burst")
         self.inst:DoTaskInTime(4,function()
             
@@ -80,7 +68,7 @@ local function SpawnThralls()
                 if not herd then
                     -- MAYBE FIND SOME WILD PLANTS?
                     local patch = self:FindWildPatch()
-                    if #patch > 0 then
+                    if patch and #patch > 0 then
                         for i,member in ipairs(patch)do
                             table.insert(plants,member)
                         end
@@ -96,24 +84,43 @@ local function SpawnThralls()
                 end
 
                 local targets = {}
-                local SPACE = 3
-                while #plants > 0 do
+                local EXISTING_PLANT_SPACE = 15
+                local SPACE = 2.5
+                local MAX_SPACE = 8
+                local number_spawned = 0
+                while #plants > 0 and number_spawned < 3 do
                     local random = math.random(1,#plants)
                     local plant = plants[random]
                     if plant then
                         local eligable = true
 
                         if eligable then
+                            if self.targetedplants[plant.GUID] then
+                                eligable = false
+                            end
+                        end
+
+                        if eligable then
+                            -- NO EXISTING PLANTS TOO CLOSE.
                             local x,y,z = plant.Transform:GetWorldPosition()
-                            local ents = TheSim:FindEntities(x,y,z, SPACE, PLANT_MUST)
+                            local ents = TheSim:FindEntities(x,y,z, EXISTING_PLANT_SPACE, PLANT_MUST)
                             if #ents > 0 then
                                 eligable = false
                             end
                         end
 
                         if eligable and #targets > 0 then
+                            -- NO TARGETED PLANTS ARE TOO CLOSE.
                             for t,target in ipairs(targets)do
                                 if target:GetDistanceSqToInst(plant) < SPACE*SPACE then
+                                    eligable = false
+                                    break
+                                end
+                            end
+
+                            -- FIND PLACE CLOSEISH TO TARGETED PLANTS.
+                            for t,target in ipairs(targets)do
+                                if target:GetDistanceSqToInst(plant) > MAX_SPACE*MAX_SPACE then
                                     eligable = false
                                     break
                                 end
@@ -121,7 +128,9 @@ local function SpawnThralls()
                         end
 
                         if eligable then
+                            number_spawned = number_spawned + 1
                             table.insert(targets,plant)
+                            self.targetedplants[plant.GUID] = true
                         end
                     end
                     table.remove(plants,random)
@@ -140,7 +149,7 @@ local function setTimeForPoralRelease()
     --print("SET NEXT SPAWN")
     local self = TheWorld.components.lunarthrall_plantspawner
     local rifts = getrifts()
-    if rifts and #rifts > 0 then
+    if rifts then
         self._nextspawn = self.inst:DoTaskInTime(TIME_UNIT + (math.random()*TIME_UNIT) - (TIME_UNIT/2),  SpawnThralls )
 
     
@@ -204,45 +213,44 @@ local function OnLunarPortalRemoved(source,portal)
         self.currentrift = nil
     end
 end
+
+local function OnPlantInfested(source,plant)
+    local self = TheWorld.components.lunarthrall_plantspawner
+    if self.targetedplants[plant.GUID] then
+        self.targetedplants[plant.GUID] = nil
+    end
+end
+
 local Lunarthrall_plantspawner = Class(function(self, inst)
     self.inst = inst
     self.waves_to_release = nil
     self.plantherds = {}
     self.spawntasks = {}
+    self.targetedplants = {}
     self.currentrift = nil
     self.inst:ListenForEvent("ms_lunarrift_maxsize", OnLunarRiftReachedMaxSize)
     self.inst:ListenForEvent("plantherdspawned", OnPlantHerdSpawned)
     self.inst:ListenForEvent("ms_lunarportal_removed", OnLunarPortalRemoved)
+    self.inst:ListenForEvent("lunarthrallplant_infested", OnPlantInfested)
 end)
 
 function Lunarthrall_plantspawner:MoveGestaltToPlant(thrall)
     local target = thrall.plant_target
 
-    local pos = target and Vector3(target.Transform:GetWorldPosition()) or nil
+    local pos = target and target:GetPosition() or nil
 
     if not pos then
         thrall:Remove()
         return
     end
 
-    local SCREEN_DIST = 30
-    local function POSisVisible(pos)
-        local inview = false
-        for i,player in ipairs(AllPlayers)do
-            if player:GetDistanceSqToPoint(pos) < SCREEN_DIST*SCREEN_DIST then
-                inview = true
-                break
-            end
-        end
-        return inview
-    end
-
-    local theta = math.random()*2*PI
-    local radius = SCREEN_DIST
+    local theta = math.random() * PI2
+    local radius = PLAYER_CAMERA_SEE_DISTANCE
     local loop = 0
-    while POSisVisible(pos) do
+    local startpos = target:GetPosition()
+    while IsAnyPlayerInRangeSq(pos.x, pos.y, pos.z, PLAYER_CAMERA_SEE_DISTANCE_SQ) do
         local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
-        pos = Vector3(target.Transform:GetWorldPosition()) + offset
+        pos = startpos + offset
         theta = theta + (PI/8)
         loop = loop + 1
         if loop > 16 then
@@ -251,15 +259,10 @@ function Lunarthrall_plantspawner:MoveGestaltToPlant(thrall)
         end
     end
     
-    if not POSisVisible(pos) then
-        --spawn offscreen of players and head to target
+    --move offscreen of players and head to target
 
-        if not thrall then
-            thrall = SpawnPrefab("lunarthrall_plant_gestalt")
-        end
-        thrall.plant_target = target
-        thrall.Transform:SetPosition(pos.x,pos.y,pos.z)
-    end
+    thrall.plant_target = target
+    thrall.Transform:SetPosition(pos.x,pos.y,pos.z)
 end
 
 function Lunarthrall_plantspawner:SpawnGestalt(target, rift)
@@ -272,26 +275,15 @@ function Lunarthrall_plantspawner:SpawnGestalt(target, rift)
         thrall:Spawn()
     else
 
-        local pos = Vector3(target.Transform:GetWorldPosition())
-        local SCREEN_DIST = 30
+        local pos = target:GetPosition()
 
-        local function POSisVisible(pos)
-            local inview = false
-            for i,player in ipairs(AllPlayers)do
-                if player:GetDistanceSqToPoint(pos) < SCREEN_DIST*SCREEN_DIST then
-                    inview = true
-                    break
-                end
-            end
-            return inview
-        end
-
-        local theta = math.random()*2*PI
-        local radius = SCREEN_DIST
+        local theta = math.random() * PI2
+        local radius = PLAYER_CAMERA_SEE_DISTANCE
         local loop = 0
-        while POSisVisible(pos) do
+        local startpos = target:GetPosition()
+        while IsAnyPlayerInRangeSq(pos.x, pos.y, pos.z, PLAYER_CAMERA_SEE_DISTANCE_SQ) do
             local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
-            pos = Vector3(target.Transform:GetWorldPosition()) + offset
+            pos = startpos + offset
             theta = theta + (PI/8)
             loop = loop + 1
             if loop > 16 then
@@ -300,13 +292,11 @@ function Lunarthrall_plantspawner:SpawnGestalt(target, rift)
             end
         end
         
-        if not POSisVisible(pos) then
-            --spawn offscreen of players and head to target
+        --spawn offscreen of players and head to target
 
-            local thrall = SpawnPrefab("lunarthrall_plant_gestalt")
-            thrall.plant_target = target
-            thrall.Transform:SetPosition(pos.x,pos.y,pos.z)
-        end
+        local thrall = SpawnPrefab("lunarthrall_plant_gestalt")
+        thrall.plant_target = target
+        thrall.Transform:SetPosition(pos.x,pos.y,pos.z)
     end
 end
 
@@ -324,7 +314,8 @@ local function caninfest(target)
     return caninfest
 end
 
-local PLANTS_MUST = {"plant"}
+local PLANTS_MUST = {"plant", "lunarplant_target"}
+local HUSK_MUST = {"lunarthrall_plant"}
 function Lunarthrall_plantspawner:FindWildPatch()
     local tries = {}
     
@@ -334,14 +325,9 @@ function Lunarthrall_plantspawner:FindWildPatch()
         if pt then
             -- LOOK FOR PLANTS 
             local ents = TheSim:FindEntities(pt.x,pt.y,pt.z, 20, PLANTS_MUST)
-            for i, ent in ipairs(ents)do
-                if not ent.lunarthrall_plant and 
-                    (ent.prefab == "berrybush" or
-                     ent.prefab == "berrybush2" or
-                     ent.prefab == "berrybush_juicy" or
-                     ent.prefab == "sapling" or
-                     ent.prefab == "grass") then
-                        table.insert(plants,ent)
+            for i, ent in ipairs(ents) do
+                if not ent.lunarthrall_plant then
+                    table.insert(plants,ent)
                 end
             end
         end
@@ -372,9 +358,13 @@ function Lunarthrall_plantspawner:FindHerd()
     for i, herd in ipairs(choices)do
         local count = 0
         for member, i in pairs(herd.components.herd.members) do
-            if not member.lunarthrall_plant and 
-                (not member.components.witherable or not member.components.witherable:IsWithered()) then
-                count = count +1
+            local pt = Vector3(member.Transform:GetWorldPosition())
+            local ents = TheSim:FindEntities(pt.x,pt.y,pt.z, 15, HUSK_MUST)
+            if #ents <= 0 then
+                if not member.lunarthrall_plant and
+                    (not member.components.witherable or not member.components.witherable:IsWithered()) then
+                    count = count +1
+                end
             end
         end
         if count > num then
@@ -412,12 +402,8 @@ end
 function Lunarthrall_plantspawner:InvadeTarget(target)
 
     if target and target:IsValid() then
-        local visible = nil
-        for i, player in ipairs(AllPlayers)do
-            if target:GetDistanceSqToInst(player) < SCREEN_RANGE * SCREEN_RANGE then
-                visible = true
-            end
-        end
+        local x, y, z = target.Transform:GetWorldPosition()
+        local visible = IsAnyPlayerInRangeSq(x, y, z, SCREEN_DIST_SQ)
        
         if visible then
             self:SpawnGestalt(target) -- spawn gestalt to invate on screen

@@ -3,6 +3,7 @@ require("prefabutil")
 local assets =
 {
 	Asset("ANIM", "anim/lunar_forge.zip"),
+	Asset("ANIM", "anim/lunarthrall_plant_front.zip"),
 }
 
 local prefabs =
@@ -115,12 +116,16 @@ local function fn()
 	inst.AnimState:SetBank("lunar_forge")
 	inst.AnimState:SetBuild("lunar_forge")
 	inst.AnimState:PlayAnimation("idle")
+	inst.AnimState:OverrideSymbol("fx_puff2", "lunarthrall_plant_front", "fx_puff2")
+	inst.AnimState:SetSymbolBloom("fx_puff2")
 	inst.AnimState:SetSymbolBloom("head_fx_big")
 	inst.AnimState:SetSymbolBloom("glows")
+	inst.AnimState:SetSymbolLightOverride("fx_puff2", .1)
 	inst.AnimState:SetSymbolLightOverride("head_fx_big", .1)
 	inst.AnimState:SetSymbolLightOverride("glows", .2)
 
 	inst:AddTag("structure")
+    inst:AddTag("lunar_forge")
 
 	--prototyper (from prototyper component) added to pristine state for optimization
 	inst:AddTag("prototyper")

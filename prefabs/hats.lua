@@ -2990,6 +2990,9 @@ local function MakeHat(name)
 		inst.components.equippable:SetOnEquip(dreadstone_onequip)
 		inst.components.equippable:SetOnUnequip(dreadstone_onunequip)
 
+		inst:AddComponent("planardefense")
+		inst.components.planardefense:SetBaseDefense(TUNING.ARMOR_DREADSTONEHAT_PLANAR_DEF)
+
 		inst:AddComponent("waterproofer")
 		inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_SMALL)
 
@@ -3061,6 +3064,7 @@ local function MakeHat(name)
 
 	local function lunarplant_custom_init(inst)
 		inst:AddTag("lunarplant")
+		inst:AddTag("gestaltprotection")
 
 		--waterproofer (from waterproofer component) added to pristine state for optimization
 		inst:AddTag("waterproofer")

@@ -27,6 +27,7 @@ local function fn()
     inst.components.herd:SetGatherRange(TUNING.DOMESTICPLANTHERD_RANGE)
     inst.components.herd:SetUpdateRange(20)
     inst.components.herd:SetOnEmptyFn(inst.Remove)
+    inst.components.herd:SetMemberTag("lunarplant_target")
 
     inst:DoTaskInTime(0,RegisterWithWorld)
 

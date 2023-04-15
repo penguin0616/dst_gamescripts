@@ -51,6 +51,8 @@ local Freezable = Class(function(self, inst)
     --self.extraresist = 0
     --self.diminishingtask = nil
 
+	--self.redirectfn = nil
+
     self.inst:ListenForEvent("attacked", OnAttacked)
     self.inst:AddTag("freezable")
 end)
@@ -126,7 +128,14 @@ function Freezable:GetDebugString()
         self.diminishingtask ~= nil and GetTaskRemaining(self.diminishingtask) or 0)
 end
 
+function Freezable:SetRedirectFn(fn)
+	self.redirectfn = fn
+end
+
 function Freezable:AddColdness(coldness, freezetime, nofreeze)
+	if self.redirectfn ~= nil and self.redirectfn(self.inst, coldness, freezetime, nofreeze) then
+		return
+	end
     self.coldness = math.max(0, self.coldness + coldness)
     --V2C: when removing coldness, don't update freeze states here
     if coldness > 0 then

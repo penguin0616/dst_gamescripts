@@ -4784,7 +4784,7 @@ return{
         LUNARPLANT_HUSK = "Unoccupied.",
 
 		LUNAR_FORGE = "There isn't any iron in that forge, is there?",
-		LUNAR_FORGE_KIT = "There isn't any iron in that forge, is there?", --[[TODO]]
+		LUNAR_FORGE_KIT = "Shall we forge ahead?",
 
 		ARMOR_LUNARPLANT = "Strong and light, quite good in a fight.",
 		LUNARPLANTHAT = "It has me looking on the bright side, hyuyu!",

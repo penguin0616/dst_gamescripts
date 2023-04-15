@@ -217,7 +217,7 @@ local states =
 				v.AnimState:PushAnimation("rock_float_0"..tostring(v.variation))
 				v.AnimState:SetDeltaTimeMultiplier(0.8 + math.random() * 1.1)
 			end
-			inst.SoundEmitter:PlaySound("rifts/grazer/rock_float")
+			inst.SoundEmitter:PlaySound("rifts/grazer/rock_gather")
 			inst.sg.statemem.delay = 1
 			inst.sg:SetTimeout(inst.sg.statemem.delay)
 		end,
@@ -262,7 +262,6 @@ local states =
 			inst.core.AnimState:PlayAnimation("rock_gather")
 			inst.core.AnimState:PushAnimation("rock_cycle")
 			inst.SoundEmitter:PlaySound("rifts/grazer/spawn")
-			inst.SoundEmitter:PlaySound("rifts/grazer/rock_gather")
 			if inst.debrisshown then
 				for i, v in ipairs(inst.debris) do
 					v.AnimState:PlayAnimation("rock_off")
@@ -464,6 +463,7 @@ local states =
 		onenter = function(inst)
 			inst.AnimState:PlayAnimation("despawn_fall")
 			inst.core.AnimState:PlayAnimation("despawn_fall_rocks")
+			inst.SoundEmitter:PlaySound("rifts/grazer/despawn_fall")
 			inst.Physics:SetActive(false)
 			inst:EnableCloud(false)
 			if inst.last_trail ~= nil and inst.last_trail:IsValid() then

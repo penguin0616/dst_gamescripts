@@ -4778,7 +4778,7 @@ return{
         LUNARPLANT_HUSK = "What an interesting material, I should make use of it.",
 
 		LUNAR_FORGE = "Why waste time staring at it when I could be making something?",
-		LUNAR_FORGE_KIT = "Why waste time staring at it when I could be making something?", --[[TODO]]
+		LUNAR_FORGE_KIT = "Well, it's not going to build itself.",
 
 		ARMOR_LUNARPLANT = "Some extra protection is always welcome.",
 		LUNARPLANTHAT = "It's incredible that I can see anything while wearing it.",

@@ -4785,14 +4785,14 @@ return{
         LUNARPLANT_HUSK = "Can I burn it now?",
 
 		LUNAR_FORGE = "What gives? That little fire doesn't even feel warm!",
-		LUNAR_FORGE_KIT = "What gives? That little fire doesn't even feel warm!", --[[TODO]]
+		LUNAR_FORGE_KIT = "Right. Now I guess I have to build it.",
 
 		ARMOR_LUNARPLANT = "I make it look good.",
 		LUNARPLANTHAT = "How am I supposed to see in that thing?",
 		BOMB_LUNARPLANT = "Heh. Think fast!",
 		STAFF_LUNARPLANT = "This magic stuff is easy!",
 		SWORD_LUNARPLANT = "It's okay, but now I really want a fire sword.",
-		PICKAXE_LUNARPLANT = "That dumb plant sure makes a good pickaxe.",
+		PICKAXE_LUNARPLANT = "The dumb plant still gets to hit stuff. It's what it would've wanted.",
 		SHOVEL_LUNARPLANT = "As far as shovels go, it's not bad.",
     },
 

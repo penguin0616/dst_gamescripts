@@ -93,6 +93,7 @@ local function fn()
 	MakeInventoryPhysics(inst)
 
 	inst:AddTag("lunarplant")
+	inst:AddTag("gestaltprotection")
 
 	inst.AnimState:SetBank("armor_lunarplant")
 	inst.AnimState:SetBuild("armor_lunarplant")

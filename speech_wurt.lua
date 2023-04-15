@@ -4778,14 +4778,14 @@ return{
         LUNARPLANT_HUSK = "Hee-hee, it dead!",
 
 		LUNAR_FORGE = "Make shiny things.",
-		LUNAR_FORGE_KIT = "Make shiny things.", --[[TODO]]
+		LUNAR_FORGE_KIT = "Look easy to build, florp.",
 
 		ARMOR_LUNARPLANT = "Tough and glowy!",
 		LUNARPLANTHAT = "Cage for head, florp?",
 		BOMB_LUNARPLANT = "Hee-hee-hee... boom!!",
 		STAFF_LUNARPLANT = "Magic hitting stick.",
 		SWORD_LUNARPLANT = "It mine!! Me want glowy sword!",
-		PICKAXE_LUNARPLANT = "It real good at breaking rocks.",
+		PICKAXE_LUNARPLANT = "It real good at breaking stuff.",
 		SHOVEL_LUNARPLANT = "Good scooper.",
     },
 

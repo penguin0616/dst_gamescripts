@@ -4778,7 +4778,7 @@ return{
         LUNARPLANT_HUSK = "The blasted thing is finally dead.",
 
 		LUNAR_FORGE = "To work, then.",
-		LUNAR_FORGE_KIT = "To work, then.", --[[TODO]]
+		LUNAR_FORGE_KIT = "There's more to be done.",
 
 		ARMOR_LUNARPLANT = "Does no one else find this armor oddly itchy?",
 		LUNARPLANTHAT = "It looks wonderfully ominous.",

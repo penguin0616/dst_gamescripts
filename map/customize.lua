@@ -430,6 +430,8 @@ local WORLDSETTINGS_GROUP = {
 			["klaus"] = {value = "default", image = "klaus.tex", world={"forest"}},
 			["spiderqueen"] = {value = "default", image = "spiderqueen.tex", world={"forest", "cave"}},
 			["eyeofterror"] = {value = "default", image = "eyeofterror.tex", world={"forest"}},
+
+			["daywalker"] = {value = "default", image = "daywalker.tex", world={"cave"}},
 			--NO_BOSS_TIME?
 		}
 	},

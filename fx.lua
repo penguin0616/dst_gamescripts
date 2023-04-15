@@ -2728,6 +2728,17 @@ local fx =
 			inst.AnimState:SetScale(math.random() < .5 and scale or -scale, scale)
 		end,
 	},
+	{
+		name = "fire_fail_fx",
+		bank = "fire_fail_fx",
+		build = "fire_fail_fx",
+		anim = "fx",
+		sound = "dontstarve/common/fireOut",
+		fn = function(inst)
+			inst.AnimState:SetSymbolBloom("flame01")
+			inst.AnimState:SetSymbolLightOverride("flame01", 1)
+		end,
+	},
 }
 
 for cratersteamindex = 1, 4 do

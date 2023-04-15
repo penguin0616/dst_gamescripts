@@ -4782,14 +4782,14 @@ return{
         LUNARPLANT_HUSK = "Sorry",
 
 		LUNAR_FORGE = "Make shiny things!",
-		LUNAR_FORGE_KIT = "Make shiny things!", --[[TODO]]
+		LUNAR_FORGE_KIT = "Where to plant it?",
 
 		ARMOR_LUNARPLANT = "Mean friend made nice clothes",
 		LUNARPLANTHAT = "Mean friend made nice hat",
 		BOMB_LUNARPLANT = "Boom ball",
 		STAFF_LUNARPLANT = "Mean stick",
 		SWORD_LUNARPLANT = "Bright Swoosh Stick",
-		PICKAXE_LUNARPLANT = "Mean friend help break rocks now",
+		PICKAXE_LUNARPLANT = "Mean friend good at breaking things",
 		SHOVEL_LUNARPLANT = "Mean friend help dig",
     },
 

@@ -21,6 +21,7 @@ local function OnHit(inst, attacker, target)
 	inst.components.explosive.explosiverange = TUNING.BOMB_LUNARPLANT_RANGE
 	inst.components.explosive.explosivedamage = 0
 	inst.components.explosive.lightonexplode = false
+	inst.components.explosive:SetPvpFlag(inst.ispvp)
 	inst.components.explosive:OnBurnt()
 	--exploding should have removed me
 
@@ -113,9 +114,11 @@ local function OnSpinTicksDirty(inst)
 	UpdateSpin(inst, 0)
 end
 
-local function onthrown(inst)
+local function onthrown(inst, attacker)
 	inst:AddTag("NOCLICK")
 	inst.persists = false
+
+	inst.ispvp = attacker ~= nil and attacker:IsValid() and attacker:HasTag("player")
 
 	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 	inst.AnimState:PlayAnimation("spin_loop", true)

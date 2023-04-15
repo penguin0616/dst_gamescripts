@@ -3645,7 +3645,7 @@ STRINGS =
 		BOMB_LUNARPLANT = "Brightshade Bomb",
 		STAFF_LUNARPLANT = "Brightshade Staff",
 		SWORD_LUNARPLANT = "Brightshade Sword",
-		PICKAXE_LUNARPLANT = "Brightshade Pickaxe",
+		PICKAXE_LUNARPLANT = "Brightshade Smasher",
 		SHOVEL_LUNARPLANT = "Brightshade Shovel",
 
 	},
@@ -4537,7 +4537,7 @@ STRINGS =
 		BOMB_LUNARPLANT = "Use unstable lunar energy for explosive results.",
 		STAFF_LUNARPLANT = "Stay rooted to the spot and attack from afar.",
 		SWORD_LUNARPLANT = "A sword of lunar light.",
-		PICKAXE_LUNARPLANT = "Lunar plant beats rock.",
+		PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
 		SHOVEL_LUNARPLANT = "Just plant it in the ground and dig.",
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -7253,7 +7253,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Content Update\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Taking Root\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7287,6 +7287,11 @@ STRINGS.UI =
         VERSION_OUT_OF_DATE_PLAY = "Play Anyway",
         VERSION_OUT_OF_DATE_INSTRUCTIONS = "Instructions",
         VERSION_OUT_OF_DATE_CANCEL = "Cancel",
+
+        BAD_HASHES_TITLE = "Game Files Hash Mismatch",
+        BAD_HASHES_BODY = "Your game data files look corrupted. We recommend that you run your platform's file validation routines.",
+        BAD_HASHES_PLAY = "Play Anyway",
+        BAD_HASHES_INSTRUCTIONS = "Instructions",
 
         CONTROLLER_DETECTED_HEADER = "Controller Detected",
         CONTROLLER_DETECTED_BODY = "Do you want to play Don't Starve Together with a controller?\nYou won't be asked again, but you can revert your settings in the Controls screen of the Option menu if you change your mind.",
@@ -9194,6 +9199,8 @@ STRINGS.UI =
         HEALTHPENALTY = "Max Health Penalty",
 		LESSDAMAGETAKEN = "Damage Taken",
         STAGEPLAYS = "Stage Plays",
+
+        DAYWALKER = "Nightmare Werepig",
 		-- End of world customization strings
     },
 

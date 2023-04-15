@@ -102,22 +102,15 @@ local states=
         tags = {"busy","nointerrupt"},
 
         onenter = function(inst)
+			inst.SoundEmitter:PlaySound("rifts/lunarthrall/hit")
             if inst.tired then
+                inst.SoundEmitter:PlaySound("rifts/lunarthrall/rustle_wakeup_LP","wakeLP")
                 inst:customPlayAnimation("tired_hit_"..inst.targetsize)
             else
-                inst:customPlayAnimation("hit_"..inst.targetsize)
+				--inst:customPlayAnimation("hit_"..inst.targetsize)
+				inst.sg:GoToState("attack")
             end
-            inst.SoundEmitter:PlaySound("rifts/lunarthrall/hit")
         end,
-
-        timeline=
-        {
-            TimeEvent(8*FRAMES, function(inst)
-                if not inst.tired then 
-                    inst.sg:GoToState("attack")
-                end
-            end ),
-        },
 
         events =
         {
@@ -133,22 +126,33 @@ local states=
                 end
             end),
         },
-    },       
 
-    State{
-        name = "attack",
+        onexit = function(inst)
+            inst.SoundEmitter:KillSound("wakeLP")
+        end,
+    },
+
+	State{
+		name = "attack",
         tags = {"busy"},
 
         onenter = function(inst)
             inst:customPlayAnimation("atk_"..inst.targetsize)
-            inst.SoundEmitter:PlaySound("rifts/lunarthrall/attack")
+			inst.SoundEmitter:PlaySound("rifts/lunarthrall/attack")
         end,
 
         timeline=
         {
-            TimeEvent(8*FRAMES, function(inst)
-                DoAOEAttack(inst, 0, TUNING.LUNARTHRALL_PLANT_ATTACK_RANGE, 1, 1, false)
-            end ),
+			FrameEvent(4, function(inst)
+				inst.sg.statemem.targets = {}
+				DoAOEAttack(inst, 0, 4, 1, 1, false, inst.sg.statemem.targets)
+			end),
+			FrameEvent(5, function(inst)
+				DoAOEAttack(inst, 0, 4, 1, 1, false, inst.sg.statemem.targets)
+			end),
+			FrameEvent(6, function(inst)
+				DoAOEAttack(inst, 0, 4, 1, 1, false, inst.sg.statemem.targets)
+			end),
         },
 
         events =
@@ -173,7 +177,7 @@ local states=
 
         onenter = function(inst)
             inst.tired = true
-            inst.components.combat.target = nil
+            inst.components.combat:DropTarget()
             inst:customPlayAnimation("tired_pre_"..inst.targetsize)
             inst.SoundEmitter:PlaySound("rifts/lunarthrall/tired_pre")
         end,
@@ -181,7 +185,7 @@ local states=
         events =
         {
             EventHandler("animover", function(inst) if inst.AnimState:AnimDone() then inst.sg:GoToState("tired") end end),
-        },        
+        },
     },
 
     State{
@@ -196,7 +200,7 @@ local states=
         events =
         {
             EventHandler("animover", function(inst) if inst.AnimState:AnimDone() then inst.sg:GoToState("tired") end end),
-        },        
+        },
     },
 
     State{
@@ -204,14 +208,26 @@ local states=
         tags = {"idle","tried","wake"},
 
         onenter = function(inst)
+            inst.SoundEmitter:PlaySound("rifts/lunarthrall/rustle_wakeup_LP","wakeLP")
             inst.wake = true
             inst:customPlayAnimation("tired_wakeup_loop_"..inst.targetsize)
         end,
 
         events =
         {
-            EventHandler("animover", function(inst) if inst.AnimState:AnimDone() then inst.sg:GoToState("tired_wake") end end),
-        },          
+            EventHandler("animover", function(inst) 
+                if inst.AnimState:AnimDone() then 
+                    inst.sg.statemem.tired_wake = true
+                    inst.sg:GoToState("tired_wake") 
+                end 
+            end),
+        },
+
+        onexit = function(inst)
+            if not inst.sg.statemem.tired_wake then
+                inst.SoundEmitter:KillSound("wakeLP")
+            end
+        end,
     },
 
     State{
@@ -223,6 +239,7 @@ local states=
         end,
 
         onexit = function(inst)
+            inst.SoundEmitter:KillSound("wakeLP")
             inst.wake = nil
             inst.tired = nil
             inst.vinelimit = TUNING.LUNARTHRALL_PLANT_VINE_LIMIT
@@ -240,30 +257,47 @@ local states=
         tags = { "busy", "frozen" },
 
         onenter = function(inst)
-            if inst.components.locomotor ~= nil then
-                inst.components.locomotor:StopMoving()
-            end
             inst:customPlayAnimation("frozen_"..inst.targetsize, true)
             inst.SoundEmitter:PlaySound("dontstarve/common/freezecreature")
             inst.AnimState:OverrideSymbol("swap_frozen", "frozen", "frozen")
+			inst.back.AnimState:OverrideSymbol("swap_frozen", "frozen", "frozen")
 
             if inst.components.freezable == nil then
-                inst.sg:GoToState(inst.sg.sg.states.hit ~= nil and "hit" or "idle")
+				inst.sg:GoToState("hit")
             elseif inst.components.freezable:IsThawing() then
-                inst.sg:GoToState("thaw")
+				inst.sg.statemem.thawing = true
+				inst.sg:GoToState("thaw")
             elseif not inst.components.freezable:IsFrozen() then
-                inst.sg:GoToState(inst.sg.sg.states.hit ~= nil and "hit" or "idle")
+				inst.sg:GoToState("hit")
+			else
+				for i, v in ipairs(inst.vines) do
+					if not v.components.health:IsDead() then
+						v.sg:GoToState("sync_frozen")
+					end
+				end
             end
         end,
 
         events =
         {
             EventHandler("unfreeze", function(inst) inst.sg:GoToState(inst.sg.sg.states.hit ~= nil and "hit" or "idle") end),
-            EventHandler("onthaw", function(inst) inst.sg:GoToState("thaw") end),
+			EventHandler("onthaw", function(inst)
+				inst.sg.statemem.thawing = true
+				inst.sg:GoToState("thaw")
+			end),
         },
 
         onexit = function(inst)
-            inst.AnimState:ClearOverrideSymbol("swap_frozen")
+			if not inst.sg.statemem.thawing then
+				inst.AnimState:ClearOverrideSymbol("swap_frozen")
+				inst.back.AnimState:ClearOverrideSymbol("swap_frozen")
+				for i, v in ipairs(inst.vines) do
+					if not v.components.health:IsDead() then
+						v.sg:GoToState("hit")
+					end
+				end
+				inst.components.freezable:Unfreeze()
+			end
         end,
     },
 
@@ -272,15 +306,20 @@ local states=
         tags = { "busy", "thawing" },
 
         onenter = function(inst)
-            if inst.components.locomotor ~= nil then
-                inst.components.locomotor:StopMoving()
-            end
             inst:customPlayAnimation("frozen_loop_pst_"..inst.targetsize, true)
             inst.SoundEmitter:PlaySound("dontstarve/common/freezethaw", "thawing")
             inst.AnimState:OverrideSymbol("swap_frozen", "frozen", "frozen")
+			inst.back.AnimState:OverrideSymbol("swap_frozen", "frozen", "frozen")
 
             if inst.components.freezable == nil or not inst.components.freezable:IsFrozen() then
-                inst.sg:GoToState(inst.sg.sg.states.hit ~= nil and "hit" or "idle")
+				inst.sg:GoToState("hit")
+			else
+				for i, v in ipairs(inst.vines) do
+					if not v.components.health:IsDead() then
+						v.sg.statemem.thawing = true
+						v.sg:GoToState("sync_thaw")
+					end
+				end
             end
         end,
 
@@ -292,6 +331,13 @@ local states=
         onexit = function(inst)
             inst.SoundEmitter:KillSound("thawing")
             inst.AnimState:ClearOverrideSymbol("swap_frozen")
+			inst.back.AnimState:ClearOverrideSymbol("swap_frozen")
+			for i, v in ipairs(inst.vines) do
+				if not v.components.health:IsDead() then
+					v.sg:GoToState("hit")
+				end
+			end
+			inst.components.freezable:Unfreeze()
         end,
     },
 }

@@ -10,6 +10,7 @@ local assets =
 local vineassets =
 {
     Asset("ANIM", "anim/lunarthrall_plant_vine.zip"),
+    Asset("ANIM", "anim/lunarthrall_plant_vine_big.zip"),
 }
 
 local prefabs =
@@ -23,6 +24,9 @@ local prefabs =
 
 local loot = {
     "lunarplant_husk",
+    "lunarplant_husk",
+    "plantmeat",
+    "plantmeat",
 }
 
 local function customPlayAnimation(inst,anim,loop)
@@ -138,15 +142,18 @@ local function infest(inst,target)
         target.lunarthrall_plant = inst
         inst.Transform:SetPosition(target.Transform:GetWorldPosition())
         spawnback(inst)
-        if target:HasTag("tendable_farmplant") and target.components.growable and target.components.growable.stage <= 3 then
+        local bbx1, bby1, bbx2, bby2 = target.AnimState:GetVisualBB()
+        local bby = bby2 - bby1
+        if bby < 2 then
             inst.targetsize = "short"
-        elseif target.prefab == "berrybush_juicy" then
-            inst.targetsize = "tall"
-        else
+        elseif bby < 4 then
             inst.targetsize = "med"
+        else
+            inst.targetsize = "tall"
         end
         inst:customPlayAnimation("idle_"..inst.targetsize )
         inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1)
+        TheWorld:PushEvent("lunarthrallplant_infested",target)
     end
 end
 
@@ -161,7 +168,6 @@ local function deinfest(inst)
         end            
         target:RemoveTag("NOCLICK")
     end
-    
 end
 
 local function playSpawnAnimation(inst)
@@ -174,6 +180,22 @@ local function OnLoadPostPass(inst)
     if inst.components.entitytracker:GetEntity("targetplant") then
         inst:infest(inst.components.entitytracker:GetEntity("targetplant"),true)
     end
+end
+
+local function OnFreeze(inst)
+	if inst.waketask ~= nil then
+		inst.waketask:Cancel()
+		inst.waketask = nil
+	end
+	if inst.resttask ~= nil then
+		inst.resttask:Cancel()
+		inst.resttask = nil
+	end
+	if inst.tired or inst.wake then
+		inst.wake = nil
+		inst.tired = nil
+		inst.vinelimit = TUNING.LUNARTHRALL_PLANT_VINE_LIMIT
+	end
 end
 
 local function OnDeath(inst)
@@ -204,44 +226,6 @@ local function OnRemove(inst)
     inst:killvines()
 end
 
-local function findvinelocation(inst,pos)
-    local dist = inst:GetDistanceSqToPoint(pos)
-    local newpos = nil
-    if dist < 3*3 then
-        newpos = pos 
-    else
-        local percent = 0.45
-        if not inst:HasTag("plant") then
-            percent = 0.25
-        end
-
-        local anglediff = math.random() * (PI* percent)
-        if math.random() < 0.5 then
-            anglediff = -anglediff
-        end
-    local angle = inst:GetAngleToPoint(pos.x, pos.y, pos.z)*DEGREES
-        local theta = angle + anglediff
-        local radius = math.min((math.random()*0.5) + 1.5, math.sqrt(dist))
-        local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
-
-        newpos = Vector3(inst.Transform:GetWorldPosition()) + offset
-    end
-
-    local vine = SpawnPrefab("lunarthrall_plant_vine")
-    vine.Transform:SetPosition(newpos.x,newpos.y,newpos.z)
-    vine.Transform:SetRotation(inst:GetAngleToPoint(pos.x, pos.y, pos.z))
-    vine:DoSpawn(pos)    
-    if not inst:HasTag("plant") then
-        inst.childvine = vine
-        vine.parentvine = inst
-    end
-    if inst:HasTag("plant") then
-        vine.plant = inst
-    else
-        vine.plant = inst.plant
-    end
-end
-
 local function vineremoved(inst,vine,killed)
     for i,localvine in ipairs(inst.vines)do
         if localvine == vine then
@@ -253,6 +237,27 @@ local function vineremoved(inst,vine,killed)
     end
 end
 
+local function OnWakeTask(inst)
+	inst.waketask = nil
+	inst.wake = nil
+	inst.tired = nil
+	inst.vinelimit = TUNING.LUNARTHRALL_PLANT_VINE_LIMIT
+	inst.sg:GoToState("attack")
+end
+
+local function OnRestTask(inst)
+	inst.resttask = nil
+
+	if not inst.components.health:IsDead() then
+		inst.sg:GoToState("tired_wake")
+
+		if inst.waketask ~= nil then
+			inst.waketask:Cancel()
+		end
+		inst.waketask = inst:DoTaskInTime(TUNING.LUNARTHRALL_PLANT_WAKE_TIME, OnWakeTask)
+	end
+end
+
 local function vinekilled(inst,vine)
     for i,localvine in ipairs(inst.vines)do
         if localvine == vine then
@@ -261,18 +266,14 @@ local function vinekilled(inst,vine)
                 if not inst.components.health:IsDead() then
                     inst.sg:GoToState("tired_pre")
                 end
-                inst.resttast = inst:DoTaskInTime(TUNING.LUNARTHRALL_PLANT_REST_TIME + (math.random()*1) , function()
-                    if not inst.components.health:IsDead() then
-                        inst.sg:GoToState("tired_wake")
-
-                        inst.waketask = inst:DoTaskInTime(TUNING.LUNARTHRALL_PLANT_WAKE_TIME, function()
-                            inst.wake = nil
-                            inst.tired = nil
-                            inst.vinelimit = TUNING.LUNARTHRALL_PLANT_VINE_LIMIT
-                            inst.sg:GoToState("attack")
-                        end)
-                    end
-                end)
+				if inst.waketask ~= nil then
+					inst.waketask:Cancel()
+					inst.waketask = nil
+				end
+				if inst.resttask ~= nil then
+					inst.resttask:Cancel()
+				end
+				inst.resttask = inst:DoTaskInTime(TUNING.LUNARTHRALL_PLANT_REST_TIME + (math.random()*1), OnRestTask)
             end
         end
     end  
@@ -296,9 +297,18 @@ local function OnAttacked(inst,data)
             and not data.attacker.components.projectile then
 
             inst.components.timer:StartTimer("targetswitched",20)
-            inst.components.combat.target = data.attacker
+            inst.components.combat:SetTarget(data.attacker)
         end
     end
+end
+
+local function vine_addcoldness(vine, ...)
+	local inst = vine.parentplant
+	if inst ~= nil and inst:IsValid() then
+		inst.components.freezable:AddColdness(...)
+		return true
+	end
+	return false
 end
 
 local PLANT_MUST = {"lunarthrall_plant"}
@@ -335,7 +345,8 @@ local function Retarget(inst)
         )
 
         if inst.vinelimit > 0 then
-            if target then
+            if target and ( not inst.components.freezable or not inst.components.freezable:IsFrozen()) then
+
                 local pos = Vector3(inst.Transform:GetWorldPosition())
 
                 local theta = math.random()*2*PI
@@ -343,27 +354,29 @@ local function Retarget(inst)
                 local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
                 pos = pos + offset
 
-                local vine = SpawnPrefab("lunarthrall_plant_vine_end")
-                vine.Transform:SetPosition(pos.x,pos.y,pos.z)
-                vine.Transform:SetRotation(inst:GetAngleToPoint(pos.x, pos.y, pos.z))
+                if TheWorld.Map:IsVisualGroundAtPoint(pos.x,pos.y,pos.z) then
 
-                vine:ListenForEvent("freeze", function(inst)
-					vine.components.freezable:AddColdness(vine.components.freezable:ResolveResistance(), inst.components.freezable:GetTimeToWearOff())
-				end, inst)
+                    local vine = SpawnPrefab("lunarthrall_plant_vine_end")
+                    vine.Transform:SetPosition(pos.x,pos.y,pos.z)
+                    vine.Transform:SetRotation(inst:GetAngleToPoint(pos.x, pos.y, pos.z))
+    				vine.components.freezable:SetRedirectFn(vine_addcoldness)
+                    vine.sg:RemoveStateTag("nub")
+                    if inst.tintcolor then
+                        vine.AnimState:SetMultColour(inst.tintcolor, inst.tintcolor, inst.tintcolor, 1)
+                        vine.tintcolor = inst.tintcolor
+                    end
 
-                if inst.tintcolor then
-                    vine.AnimState:SetMultColour(inst.tintcolor, inst.tintcolor, inst.tintcolor, 1)
-                    vine.tintcolor = inst.tintcolor
+    				inst.components.colouradder:AttachChild(vine)
+
+                    vine.parentplant = inst
+                    table.insert(inst.vines,vine)
+                    inst.vinelimit = inst.vinelimit -1
+                    inst:DoTaskInTime(0,function() vine:ChooseAction() end)
+
+                    return target
                 end
-                
-                vine.parentplant = inst
-                table.insert(inst.vines,vine)
-                inst.vinelimit = inst.vinelimit -1
-                inst:DoTaskInTime(0,function() vine:ChooseAction() end)
             end
         end
-
-        return target
     end
 end
 
@@ -402,6 +415,7 @@ local function CreateFlame()
     return inst
 end
 
+
 local function fn()
     local inst = CreateEntity()
 
@@ -410,6 +424,9 @@ local function fn()
     inst.entity:AddSoundEmitter()
     inst.entity:AddMiniMapEntity()
     inst.entity:AddNetwork()
+
+	MakeObstaclePhysics(inst, .8)
+	inst:SetPhysicsRadiusOverride(.4) --V2C: WARNING intentionally reducing range for incoming attacks; make sure everyone can still reach!
 
     inst.MiniMapEntity:SetIcon("lunarthrall_plant.png")
     inst.MiniMapEntity:SetPriority(5)
@@ -468,9 +485,10 @@ local function fn()
     inst:AddComponent("timer")
 
     inst:ListenForEvent("death", OnDeath)
+	inst:ListenForEvent("freeze", OnFreeze)
     inst:ListenForEvent("onremove",OnRemove)
     inst:ListenForEvent("attacked",OnAttacked)
-        
+
     inst.vines = {}
     inst.vinekilled = vinekilled
     inst.vineremoved = vineremoved
@@ -491,6 +509,39 @@ local function fn()
     return inst
 end
 
+local function OnWeakVineAttacked(inst)
+	if inst.headplant ~= nil and inst.headplant:IsValid() then
+		local parent = inst.headplant.parentplant
+		if parent ~= nil and parent:IsValid() and parent.components.freezable:IsFrozen() then
+			parent.components.freezable:Unfreeze()
+		end
+	end
+end
+
+local function makeweak(inst)
+    inst:AddComponent("health")
+    inst.components.health:SetMaxHealth(TUNING.LUNARTHRALL_PLANT_VINE_HEALTH)
+    inst.components.health.redirect = function(target, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+        if inst.headplant then
+            return inst.headplant.components.health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+        end
+    end
+    inst:AddComponent("combat")
+    inst:AddComponent("planardefense")
+
+	inst:ListenForEvent("attacked", OnWeakVineAttacked)
+
+    inst:AddTag("weakvine")
+    inst.AnimState:SetBank("lunarthrall_plant_vine_big")
+    inst.AnimState:SetBuild("lunarthrall_plant_vine_big")
+
+    inst:RemoveTag("fx")
+    inst:RemoveTag("NOCLICK")
+    inst:AddTag("hostile")
+    inst:AddTag("lunarthrall_plant_segment")
+    inst:AddTag("lunar_aligned")      
+end
+
 local function vinefn()
     local inst = CreateEntity()
 
@@ -503,23 +554,30 @@ local function vinefn()
     inst.AnimState:SetBuild("lunarthrall_plant_vine")
     inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetFinalOffset(1)
-    inst.Transform:SetFourFaced()
+    inst.Transform:SetSixFaced()
 
     inst.AnimState:SetScale(1.2,1.2,1.2)
 
-    inst.customPlayAnimation = customPlayAnimation
-    inst.customPushAnimation = customPushAnimation
-
     inst:AddTag("fx")
     inst:AddTag("NOCLICK")
+    inst:AddTag("soulless")
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
-    
+
+	inst:AddComponent("colouradder")
+
+    MakeMediumFreezableCharacter(inst)
+    inst.components.freezable:SetResistance(6)
+    MakeMediumBurnableCharacter(inst)
+
+    inst:SetPrefabNameOverride("lunarthrall_plant_vine_end")
+
     inst.persists = false
+    inst.makeweak = makeweak
 
     inst:SetStateGraph("SGlunarthrall_plant_vine")
 
@@ -530,15 +588,17 @@ local function ChooseAction(inst)
     --print("===== CHOSE ACTION")
     inst.target = inst.parentplant and inst.parentplant.components.combat.target
     if inst.target then
-        inst.components.combat.target = inst.target
+        inst.components.combat:SetTarget(inst.target)
     end
     
-    if not inst.target or not inst.target:IsValid() or not inst.target.components.health or inst.target.components.health:IsDead() then
+    if inst.mode == "retreat" then
+        -- just keep going
+    elseif not inst.target or not inst.target:IsValid() or not inst.target.components.health or inst.target.components.health:IsDead() then
         inst.target = nil
         inst.mode = "return"
         --print("vine: NO TARGET, GO HOME")
     elseif inst.mode ~= "avoid" then
-        inst.mode = "attack"        
+        inst.mode = "attack"
     end
 
     if inst.target and inst.mode == "attack" then
@@ -547,7 +607,7 @@ local function ChooseAction(inst)
         if dist < TUNING.LUNARTHRALL_PLANT_VINE_INITIATE_ATTACK * TUNING.LUNARTHRALL_PLANT_VINE_INITIATE_ATTACK then
             --print("vine: ATTACK")
             if not inst.components.timer:TimerExists("attack_cooldown") then
-                inst:PushEvent("doattack") 
+                inst:PushEvent("doattack")
             end
         else
             local pos = Vector3(inst.target.Transform:GetWorldPosition())
@@ -556,6 +616,11 @@ local function ChooseAction(inst)
             local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 
             local newpos = Vector3(inst.Transform:GetWorldPosition()) + offset
+
+            local onwater = false
+            if not TheWorld.Map:IsVisualGroundAtPoint(newpos.x,newpos.y,newpos.z) then
+                onwater = true
+            end
 
             dist = inst:GetDistanceSqToPoint(newpos)
             local moveback = nil
@@ -567,27 +632,16 @@ local function ChooseAction(inst)
                     break
                 end
             end
-            if moveback then
+            if moveback and not onwater then
                 --print("vine: MOVEBACK")
-                if inst.sg:HasStateTag("emerged") then
-                    inst.sg:GoToState("retract")
-                else
-                    inst.sg:GoToState("nub_retract")
-                end
+                inst:PushEvent("moveback")
             else
-
-                if #inst.tails < 7 then
-                    --print("vine: MOVEFORWARD")
-                    if inst.sg:HasStateTag("emerged") then
-                        inst.sg:GoToState("retract", newpos)
-                    else
-                        inst.sg:GoToState("nub_spawn", newpos)
-                    end
+                if #inst.tails < 7 and not onwater then
+                    --print("vine: MOVE FORWARD")
+                    inst:PushEvent("moveforward", {newpos=newpos})
                 else
-                    --print("vine: NO MORE SEGMENTS")
-                    if not inst.sg:HasStateTag("emerged") then
-                        inst.sg:GoToState("emerge")
-                    end
+                    --print("EMERGE")
+                    inst:PushEvent("emerge")
                 end
             end
         end
@@ -611,32 +665,46 @@ local function ChooseAction(inst)
                 end
             end
             if moveback then
-                if inst.sg:HasStateTag("emerged") then
-                    inst.sg:GoToState("retract")
-                else
-                    inst.sg:GoToState("nub_retract")
-                end
+                --print("MOVE BACKWARD")
+                inst:PushEvent("moveback")
             else
                 if #inst.tails < 7 then
-                    if inst.sg:HasStateTag("emerged") then
-                        inst.sg:GoToState("retract", newpos)
-                    else
-                        inst.sg:GoToState("nub_spawn", newpos)
-                    end
+                    --print("MOVE FOREWARD")
+                    inst:PushEvent("moveforward", {newpos=newpos})
                 else
-                    if not inst.sg:HasStateTag("emerged") then
-                        inst.sg:GoToState("emerge")
-                    end
+                    --print("EMERGE")
+                    inst:PushEvent("emerge")
                 end
             end
-        -- move away from target and wait. 
-    elseif inst.mode == "return" then
-        --print("vine: in RETURN mode")
-        if inst.sg:HasStateTag("emerged") then
-            inst.sg:GoToState("retract")
-        else
-            inst.sg:GoToState("nub_retract")
+        -- move away from target and wait.
+    elseif inst.mode == "return" or inst.mode == "retreat" then
+       -- print("vine: in RETURN mode")
+        inst:PushEvent("moveback")
+    end
+end
+
+local function removetail(inst)
+    if #inst.tails > 0 then
+        local time = 0
+        for i=#inst.tails,1,-1 do
+            time = time + 0.1
+            local tail = inst.tails[i]
+            if not tail.errodetask then
+                tail.errodetask = tail:DoTaskInTime(time,ErodeAway)
+            end
         end
+    end
+end
+
+local function setweakstate(inst, weak )
+    if weak then
+        inst:AddTag("weakvine")
+        inst.AnimState:SetBank("lunarthrall_plant_vine_big")
+        inst.AnimState:SetBuild("lunarthrall_plant_vine_big")
+    else
+        inst:RemoveTag("weakvine")
+        inst.AnimState:SetBank("lunarthrall_plant_vine")
+        inst.AnimState:SetBuild("lunarthrall_plant_vine")
     end
 end
 
@@ -652,12 +720,13 @@ local function vineendfn()
     inst:AddTag("lunar_aligned")
     inst:AddTag("lunarthrall_plant_end")
     inst:AddTag("hostile")
+    inst:AddTag("soulless")
 
     inst.AnimState:SetBank("lunarthrall_plant_vine")
     inst.AnimState:SetBuild("lunarthrall_plant_vine")
     inst.AnimState:PlayAnimation("idle", true)
     inst.AnimState:SetFinalOffset(1)
-    inst.Transform:SetFourFaced()
+    inst.Transform:SetSixFaced()
 
     inst.AnimState:SetScale(1.2,1.2,1.2)
 
@@ -680,6 +749,7 @@ local function vineendfn()
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.LUNARTHRALL_PLANT_END_PLANAR_DAMAGE)
 
+	inst:AddComponent("colouradder")
     inst:AddComponent("timer")
 
     inst:AddComponent("inspectable")
@@ -687,7 +757,7 @@ local function vineendfn()
     inst.mode = "attack"
     inst.ChooseAction = ChooseAction
     inst.persists = false
-
+    inst.setweakstate = setweakstate
     inst:ListenForEvent("attacked", function()
         if inst.mode == "attack" then
             inst.mode = "avoid"
@@ -695,26 +765,27 @@ local function vineendfn()
                 inst.mode = "attack"
             end)
         end
+		if inst.parentplant ~= nil and inst.parentplant:IsValid() and inst.parentplant.components.freezable:IsFrozen() then
+			inst.parentplant.components.freezable:Unfreeze()
+		end
     end)
-
+    inst:ListenForEvent("timerdone", function(inst,data)
+        if data.name == "idletimer" then
+            inst.mode = "retreat"
+        end
+    end)
     inst:ListenForEvent("death", function() 
+        removetail(inst)
         if inst.parentplant and inst.parentplant:IsValid() then
             inst.parentplant:vinekilled(inst)
         end
     end)
     inst:ListenForEvent("onremove", function() 
+        removetail(inst)
         --vine.parentplant do something
         if inst.parentplant and inst.parentplant:IsValid() then
             inst.parentplant:vineremoved(inst)
         end
-        if #inst.tails > 0 then
-            local time = 0
-            for i=#inst.tails,1,-1 do
-                time = time + 0.1
-                local tail = inst.tails[i]
-                tail:DoTaskInTime(time,ErodeAway)
-            end    
-        end    
     end)
 
     MakeMediumFreezableCharacter(inst)

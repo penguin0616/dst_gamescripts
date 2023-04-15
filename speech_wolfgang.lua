@@ -4779,7 +4779,7 @@ return{
         LUNARPLANT_HUSK = "Ah. Is not haunted anymore.",
 
 		LUNAR_FORGE = "Is there a mighty hammer for Wolfgang to swing?",
-		LUNAR_FORGE_KIT = "Is there a mighty hammer for Wolfgang to swing?", --[[TODO]]
+		LUNAR_FORGE_KIT = "Wolfgang will find good spot for it!",
 
 		ARMOR_LUNARPLANT = "Tough, like Wolfgang!",
 		LUNARPLANTHAT = "Wolfgang feels very safe inside.",

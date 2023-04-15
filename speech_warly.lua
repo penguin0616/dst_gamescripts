@@ -4778,7 +4778,7 @@ return{
         LUNARPLANT_HUSK = "Ah, raw ingredients!",
 
 		LUNAR_FORGE = "What shall I cook up with this?",
-		LUNAR_FORGE_KIT = "What shall I cook up with this?", --[[TODO]]
+		LUNAR_FORGE_KIT = "I'll whip it up tout de suite!",
 
 		ARMOR_LUNARPLANT = "A hard outer crust.",
 		LUNARPLANTHAT = "An extra layer for my head.",

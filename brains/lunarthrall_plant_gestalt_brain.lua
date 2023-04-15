@@ -6,7 +6,7 @@ require "behaviours/faceentity"
 local ATTACH_DIST = 1
 local CLOSE_DIST = 8
 
-local SCREEN_DIST = 30
+local SCREEN_DIST_SQ = PLAYER_CAMERA_SEE_DISTANCE_SQ
 
 local function MoveToPointAction(inst)
 	local pos = nil
@@ -19,7 +19,7 @@ local function MoveToPointAction(inst)
 		local plant = TheWorld.components.lunarthrall_plantspawner:FindPlant()
 		if plant then
 			local dist = plant:GetDistanceSqToInst(inst)
-			if dist < SCREEN_DIST * SCREEN_DIST then
+			if dist < SCREEN_DIST_SQ then
 				inst.plant_target = plant
 			else
 				inst.plant_target = nil
@@ -39,7 +39,7 @@ local function MoveToPointAction(inst)
 
 			pos = Vector3(inst.plant_target.Transform:GetWorldPosition())
 
-		elseif dist > SCREEN_DIST * SCREEN_DIST then
+		elseif dist > SCREEN_DIST_SQ then
 
 			movetoplant = false
 		else
@@ -59,13 +59,8 @@ local function MoveToPointAction(inst)
 	end
 
 	if not movetoplant then
-		local inview = false
-		for i,player in ipairs(AllPlayers)do
-			if player:GetDistanceSqToInst(inst) < SCREEN_DIST*SCREEN_DIST then
-				inview = true
-				break
-			end
-		end
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local inview = IsAnyPlayerInRangeSq(x, y, z, SCREEN_DIST_SQ)
 
 		if not inview then
 			if TheWorld.components.lunarthrall_plantspawner then
@@ -90,7 +85,7 @@ local function MoveToPointAction(inst)
 			local radius = (math.random()*8) + 4
 			local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 			
-			pos = Vector3(inst.Transform:GetWorldPosition()) + offset
+			pos = Vector3(x, y, z) + offset
 
 		end
 		-- go out of sight and then find a plan to teleport to

@@ -4778,7 +4778,7 @@ return{
         LUNARPLANT_HUSK = "If you kill a ghost plant, do you get... a double ghost?",
 
 		LUNAR_FORGE = "Let's make something, Woby!",
-		LUNAR_FORGE_KIT = "Let's make something, Woby!", --[[TODO]]
+		LUNAR_FORGE_KIT = "Woby and I can have that set up in a jiffy!",
 
 		ARMOR_LUNARPLANT = "It makes me feel so safe, it's scary!",
 		LUNARPLANTHAT = "That's definitely the helmet of some kind of ghost knight!",

@@ -4624,7 +4624,7 @@ return {
         BOAT_ROTATOR_KIT = "I think I'll take it out for a spin.",
         BOAT_BUMPER_KELP = "It won't save the boat from everything, but it sure kelps.",
         BOAT_BUMPER_KELP_KIT = "A soon-to-be boat bumper.",
-        BOAT_BUMPER_SHELL = "It gives the boat a little shellf defence.",
+		BOAT_BUMPER_SHELL = "It gives the boat a little shellf defense.",
         BOAT_BUMPER_SHELL_KIT = "A soon-to-be boat bumper.",
         BOAT_CANNON = {
             GENERIC = "I should load it with something.",
@@ -4788,14 +4788,14 @@ return {
         LUNARPLANT_HUSK = "It's incredibly tough. I could use this!",
 
 		LUNAR_FORGE = "Just the place to make something very clever and scientific.",
-		LUNAR_FORGE_KIT = "Just the place to make something very clever and scientific.", --[[TODO]]
+		LUNAR_FORGE_KIT = "A simple combination of elements!",
 
 		ARMOR_LUNARPLANT = "This armor doesn't leaf any room for improvement.",
 		LUNARPLANTHAT = "It makes me look even brighter than usual.",
 		BOMB_LUNARPLANT = "Botany and chemistry, working together.",
 		STAFF_LUNARPLANT = "Plant power!",
 		SWORD_LUNARPLANT = "It's hard not to make sound effects when I wave it around.",
-		PICKAXE_LUNARPLANT = "Don't axe me how it works.",
+		PICKAXE_LUNARPLANT = "Smashing!",
 		SHOVEL_LUNARPLANT = "Plants and shovels both do well with dirt.",
     },
 

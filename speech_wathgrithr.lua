@@ -4778,14 +4778,14 @@ return{
         LUNARPLANT_HUSK = "It hath a formidible hide, for a non-meat.",
 
 		LUNAR_FORGE = "I shall forge weapons to rival the gods themselves!",
-		LUNAR_FORGE_KIT = "I shall forge weapons to rival the gods themselves!", --[[TODO]]
+		LUNAR_FORGE_KIT = "The forge must be built, forthwith!",
 
 		ARMOR_LUNARPLANT = "Armor crafted from a fallen foe.",
 		LUNARPLANTHAT = "A formidable helm, burning with an unearthly flame!",
 		BOMB_LUNARPLANT = "I have made the plant's power my own.",
 		STAFF_LUNARPLANT = "To attack from afar is not my preferred way of combat.",
 		SWORD_LUNARPLANT = "Am I worthy of wielding a weapon of such brilliance?",
-		PICKAXE_LUNARPLANT = "May all stone quake in fear before me!",
+		PICKAXE_LUNARPLANT = "Neither stone nor structure shall stand in my way!",
 		SHOVEL_LUNARPLANT = "The ground stands no chance against us.",
     },
 

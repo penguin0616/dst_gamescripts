@@ -1476,7 +1476,9 @@ local function ScreenFlash(inst, intensity)
             --Forces a netvar to be dirty regardless of value
             inst.player_classified.screenflash:set_local(intensity)
             inst.player_classified.screenflash:set(intensity)
-            TheWorld:PushEvent("screenflash", (intensity + 1) / 8)
+			if inst.HUD ~= nil then
+				TheWorld:PushEvent("screenflash", (intensity + 1) / 8)
+			end
         end
     end
 end

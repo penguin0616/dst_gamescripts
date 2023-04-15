@@ -4778,14 +4778,14 @@ return{
         LUNARPLANT_HUSK = "An extremely resilient material. I should make use of it.",
 
 		LUNAR_FORGE = "It utilizes crystallized energy to reshape and reinforce organic material.",
-		LUNAR_FORGE_KIT = "It utilizes crystallized energy to reshape and reinforce organic material.", --[[TODO]]
+		LUNAR_FORGE_KIT = "It should be a simple matter to construct it.",
 
 		ARMOR_LUNARPLANT = "Surprisingly effective plant-based armor.",
 		LUNARPLANTHAT = "It does not fit well over my glasses, but I suppose I must make do.",
 		BOMB_LUNARPLANT = "Unstable energy, barely held together by a hardy plant epidermis.",
 		STAFF_LUNARPLANT = "It allows the user to attack from afar.",
 		SWORD_LUNARPLANT = "The energy has been stabilized enough to form a functional blade.",
-		PICKAXE_LUNARPLANT = "A surprisingly effective mining implement.",
+		PICKAXE_LUNARPLANT = "A surprisingly effective mining and crushing implement.",
 		SHOVEL_LUNARPLANT = "A surprisingly effective digging implement.",
     },
 

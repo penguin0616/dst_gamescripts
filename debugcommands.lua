@@ -215,6 +215,12 @@ function d_decodedata(path)
     end)
 end
 
+function d_spawnrift(...)
+    if TheWorld and TheWorld.components.riftspawner then
+        TheWorld.components.riftspawner:Debug_SpawnRift(...)
+    end
+end
+
 function d_allsongs()
     c_give("battlesong_durability")
     c_give("battlesong_healthgain")
@@ -1687,6 +1693,37 @@ function d_dumpItemsTXT()
                         tostring(food_health), tostring(food_hunger), tostring(food_sanity),
                         tostring(weapondamage), tostring(planardamage), tostring(absorb_percent), tostring(condition)
                         )
+                end
+                t:Remove()
+                total = total + 1
+            else
+                print("Skipping")
+            end
+        end
+
+        f:write(str)
+    end
+end
+
+function d_structuresTXT()
+
+    local f = io.open("structures.txt", "w")
+    local total = 0
+    local str = ""
+    if f then
+        str = str .. string.format("%s;%s\n","PREFAB","NAME")
+        for i,data in pairs(Prefabs)do
+            print("=====>",i)
+           -- dumptable(data,1,1)
+            if not data.base_prefab and not skiplist[i] then -- not a skin
+                local t = SpawnPrefab(i)
+                if t and not t.components.inventoryitem and not t.components.locomotor and not t:HasTag("fx") then
+
+                --if t and (t:HasTag("smallcreature") or t:HasTag("monster") or t:HasTag("animal")) then
+
+                    local name = t.name or "---"
+
+                    str = str .. string.format("%s;%s\n", i,name)
                 end
                 t:Remove()
                 total = total + 1
