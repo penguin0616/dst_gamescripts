@@ -29,7 +29,7 @@ local function fn()
 	inst:AddComponent("inventoryitem")
 
 	inst:AddComponent("stackable")
-	inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM
+	inst.components.stackable.maxsize = TUNING.STACK_SIZE_MEDITEM
 
 	MakeHauntableLaunch(inst)
 

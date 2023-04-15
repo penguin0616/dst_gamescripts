@@ -413,13 +413,20 @@ function MainScreen:OnBecomeActive()
         if Profile:GetAutoLoginEnabled() then
             local function TryAutoLogin()
                 if TheFrontEnd:GetActiveScreen() == self and self.play_button:IsEnabled() and not global_error_widget and not IsIntegrityChecking then
-                    self.inst._AutoLoginTask:Cancel()
-                    self.inst._AutoLoginTask = nil
+                    if self.inst._AutoLoginTask ~= nil then -- Just in case.
+                        self.inst._AutoLoginTask:Cancel()
+                        self.inst._AutoLoginTask = nil
+                    end
                     self.auto_login_started = true
                     print("Do AutoLogin")
                     self.play_button:Disable()
                     self:OnLoginButton(true)
                 end
+            end
+            if self.inst._AutoLoginTask ~= nil then
+                -- NOTES(JBK): This is to stop a duplicate entry for OnBecomeActive when other popups arrive.
+                self.inst._AutoLoginTask:Cancel()
+                self.inst._AutoLoginTask = nil
             end
             self.inst._AutoLoginTask = self.inst:DoPeriodicTask(0, TryAutoLogin)
         end

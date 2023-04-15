@@ -429,7 +429,7 @@ function Inventory:ApplyDamage(damage, attacker, weapon, spdamage)
 					end
 					dmg = dmg - defended
 					local armor = k.components.armor
-					if armor ~= nil then
+					if armor ~= nil and armor_damage[armor] ~= nil then
 						armor_damage[armor] = armor_damage[armor] + defended
 					end
 				end

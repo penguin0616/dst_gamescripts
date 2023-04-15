@@ -523,7 +523,12 @@ local function makeweak(inst)
     inst.components.health:SetMaxHealth(TUNING.LUNARTHRALL_PLANT_VINE_HEALTH)
     inst.components.health.redirect = function(target, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
         if inst.headplant then
-            return inst.headplant.components.health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+            inst.headplant.indirectdamage = inst.GUID
+            local result = inst.headplant.components.health:DoDelta(amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+            if not inst.headplant.components.health:IsDead() then
+                inst.headplant.indirectdamage = nil
+            end
+            return result
         end
     end
     inst:AddComponent("combat")
@@ -562,6 +567,8 @@ local function vinefn()
     inst:AddTag("NOCLICK")
     inst:AddTag("soulless")
 
+    inst:SetPrefabNameOverride("lunarthrall_plant_vine_end")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
@@ -574,7 +581,7 @@ local function vinefn()
     inst.components.freezable:SetResistance(6)
     MakeMediumBurnableCharacter(inst)
 
-    inst:SetPrefabNameOverride("lunarthrall_plant_vine_end")
+    
 
     inst.persists = false
     inst.makeweak = makeweak
@@ -690,6 +697,9 @@ local function removetail(inst)
             time = time + 0.1
             local tail = inst.tails[i]
             if not tail.errodetask then
+                if tail:HasTag("weakvine") and inst.indirectdamage == tail.GUID then
+                    tail.sg:GoToState("death")
+                end
                 tail.errodetask = tail:DoTaskInTime(time,ErodeAway)
             end
         end

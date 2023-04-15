@@ -356,7 +356,9 @@ local states=
 			cancelmovetail(inst)
 
             if inst:HasTag("weakvine") then
-                inst:setweakstate(false)
+                if inst.setweakstate then
+                    inst:setweakstate(false)
+                end
             else
                 inst.sg:AddStateTag("emerged")
             end
@@ -364,7 +366,11 @@ local states=
             if inst.parentplant and inst.parentplant:IsValid() then
                 inst.parentplant:vinekilled(inst)
             end
-            inst.AnimState:PlayAnimation("death")
+            if inst.indirectdamage then 
+                inst.AnimState:PlayAnimation("death2")
+            else
+                inst.AnimState:PlayAnimation("death")
+            end
             inst.SoundEmitter:PlaySound("rifts/lunarthrall/vine_death")
         end,
     },

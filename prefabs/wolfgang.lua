@@ -177,7 +177,7 @@ end
 
 local function OnHitOther(inst, data)
 	local target = data.target
-	if target ~= nil and data.weapon == nil or data.weapon.components.inventoryitem:IsHeldBy(inst) then
+	if target ~= nil and (data.weapon == nil or data.weapon.components.inventoryitem == nil or data.weapon.components.inventoryitem:IsHeldBy(inst)) then
 		local delta = target:HasTag("epic") and TUNING.WOLFGANG_MIGHTINESS_ATTACK_GAIN_GIANT
 					or target:HasTag("smallcreature") and TUNING.WOLFGANG_MIGHTINESS_ATTACK_GAIN_SMALLCREATURE
 					or TUNING.WOLFGANG_MIGHTINESS_ATTACK_GAIN_DEFAULT

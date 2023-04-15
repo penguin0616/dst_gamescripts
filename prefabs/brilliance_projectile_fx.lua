@@ -3,6 +3,11 @@ local assets =
 	Asset("ANIM", "anim/brilliance_projectile_fx.zip"),
 }
 
+local prefabs =
+{
+	"brilliance_projectile_blast_fx",
+}
+
 local SPEED = 15
 local BOUNCE_RANGE = 12
 local BOUNCE_SPEED = 10
@@ -13,27 +18,6 @@ local function PlayAnimAndRemove(inst, anim)
 	if not inst.removing then
 		inst.removing = true
 		inst:ListenForEvent("animover", inst.Remove)
-	end
-end
-
-local function PushColour(inst, r, g, b)
-	if inst.target:IsValid() then
-		if inst.target.components.colouradder ~= nil then
-			inst.target.components.colouradder:PushColour(inst, r, g, b, 0)
-		else
-			inst.target.AnimState:SetAddColour(r, g, b, 0)
-		end
-	end
-end
-
-local function PopColour(inst)
-	inst.OnRemoveEntity = nil
-	if inst.target:IsValid() then
-		if inst.target.components.colouradder ~= nil then
-			inst.target.components.colouradder:PopColour(inst)
-		else
-			inst.target.AnimState:SetAddColour(0, 0, 0, 0)
-		end
 	end
 end
 
@@ -48,12 +32,16 @@ local function OnPreHit(inst, attacker, target)
 	end
 end
 
+local BOUNCE_MUST_TAGS = { "_combat" }
+local BOUNCE_NO_TAGS = { "INLIMBO", "wall", "notarget", "player", "companion", "flight", "invisible", "noattack", "hiding" }
+
 local function TryBounce(inst, x, z, attacker, target)
-	if not (attacker ~= nil and attacker.components.combat ~= nil and attacker:IsValid()) then
+	if attacker.components.combat == nil or not attacker:IsValid() then
+		inst:Remove()
 		return
 	end
 	local newtarget, newrecentindex, newhostile
-	for i, v in ipairs(TheSim:FindEntities(x, 0, z, BOUNCE_RANGE, { "_combat" }, { "INLIMBO", "wall", "notarget", "player", "companion", "flight" })) do
+	for i, v in ipairs(TheSim:FindEntities(x, 0, z, BOUNCE_RANGE, BOUNCE_MUST_TAGS, BOUNCE_NO_TAGS)) do
 		if v ~= target and v.entity:IsVisible() and
 			not (v.components.health ~= nil and v.components.health:IsDead()) and
 			attacker.components.combat:CanTarget(v) and not attacker.components.combat:IsAlly(v)
@@ -93,21 +81,19 @@ local function TryBounce(inst, x, z, attacker, target)
 	end
 
 	if newtarget ~= nil then
-		local newinst = SpawnPrefab("brilliance_projectile_fx")
-		newinst.Transform:SetPosition(x, 0, z)
-		newinst.components.projectile:SetSpeed(BOUNCE_SPEED)
+		inst.Physics:Teleport(x, 0, z)
+		inst:Show()
+		inst.components.projectile:SetSpeed(BOUNCE_SPEED)
 		if inst.recenttargets ~= nil then
 			if newrecentindex ~= nil then
 				table.remove(inst.recenttargets, newrecentindex)
 			end
 			table.insert(inst.recenttargets, target)
-			newinst.recenttargets = inst.recenttargets
 		else
-			newinst.recenttargets = { target }
+			inst.recenttargets = { target }
 		end
-		newinst.bounce = inst.bounce
-		newinst.components.projectile.overridestartpos = Vector3(x, 0, z)
-		newinst.components.projectile:Throw(inst.owner, newtarget, attacker)
+		inst.components.projectile.overridestartpos = Vector3(x, 0, z)
+		inst.components.projectile:Throw(inst.owner, newtarget, attacker)
 	end
 end
 
@@ -117,7 +103,7 @@ local function OnHit(inst, attacker, target)
 		inst.owner.components.finiteuses:SetIgnoreCombatDurabilityLoss(false)
 	end
 
-	inst:RemoveComponent("projectile")
+	local blast = SpawnPrefab("brilliance_projectile_blast_fx")
 	local x, y, z = inst.Transform:GetWorldPosition()
 	if target:IsValid() then
 		local radius = target:GetPhysicsRadius(0) + .2
@@ -132,21 +118,17 @@ local function OnHit(inst, attacker, target)
 		x = x1 + GetRandomMinMax(-.2, .2)
 		y = GetRandomMinMax(.1, .3)
 		z = z1 + GetRandomMinMax(-.2, .2)
-		inst.Physics:Teleport(x, y, z)
-		inst.target = target
-		PushColour(inst, .1, .1, .1)
-		inst:DoTaskInTime(4 * FRAMES, PushColour, .075, .075, .075)
-		inst:DoTaskInTime(7 * FRAMES, PushColour, .05, .05, .05)
-		inst:DoTaskInTime(9 * FRAMES, PushColour, .025, .025, .025)
-		inst:DoTaskInTime(10 * FRAMES, PopColour)
-		inst.OnRemoveEntity = PopColour
+		blast:PushFlash(target)
 	end
-	inst.Physics:SetActive(false)
-	PlayAnimAndRemove(inst, "blast"..tostring(math.random(2)))
+	blast.Transform:SetPosition(x, y, z)
 
 	inst.bounce = (inst.bounce or 0) + 1
-	if inst.bounce < MAX_BOUNCES then
+	if inst.bounce < MAX_BOUNCES and attacker ~= nil and attacker.components.combat ~= nil and attacker:IsValid() then
+		inst.Physics:Stop()
+		inst:Hide()
 		inst:DoTaskInTime(.1, TryBounce, x, z, attacker, target)
+	else
+		inst:Remove()
 	end
 end
 
@@ -175,10 +157,9 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle_loop", true)
 	inst.AnimState:SetSymbolMultColour("light_bar", 1, 1, 1, .5)
 	inst.AnimState:SetSymbolBloom("light_bar")
-	inst.AnimState:SetSymbolBloom("lightbeam2")
-	inst.AnimState:SetSymbolBloom("moon_glow")
-	inst.AnimState:SetSymbolBloom("lunar_ring")
-	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+	--inst.AnimState:SetSymbolBloom("pb_energy_loop")
+	inst.AnimState:SetSymbolBloom("glow")
+	--inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 	inst.AnimState:SetLightOverride(.5)
 
 	--projectile (from projectile component) added to pristine state for optimization
@@ -203,4 +184,73 @@ local function fn()
 	return inst
 end
 
-return Prefab("brilliance_projectile_fx", fn, assets)
+--------------------------------------------------------------------------
+
+local function PushColour(inst, r, g, b)
+	if inst.target:IsValid() then
+		if inst.target.components.colouradder ~= nil then
+			inst.target.components.colouradder:PushColour(inst, r, g, b, 0)
+		else
+			inst.target.AnimState:SetAddColour(r, g, b, 0)
+		end
+	end
+end
+
+local function PopColour(inst)
+	inst.OnRemoveEntity = nil
+	if inst.target:IsValid() then
+		if inst.target.components.colouradder ~= nil then
+			inst.target.components.colouradder:PopColour(inst)
+		else
+			inst.target.AnimState:SetAddColour(0, 0, 0, 0)
+		end
+	end
+end
+
+local function PushFlash(inst, target)
+	inst.target = target
+	PushColour(inst, .1, .1, .1)
+	inst:DoTaskInTime(4 * FRAMES, PushColour, .075, .075, .075)
+	inst:DoTaskInTime(7 * FRAMES, PushColour, .05, .05, .05)
+	inst:DoTaskInTime(9 * FRAMES, PushColour, .025, .025, .025)
+	inst:DoTaskInTime(10 * FRAMES, PopColour)
+	inst.OnRemoveEntity = PopColour
+end
+
+local function blastfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	inst:AddTag("FX")
+	inst:AddTag("NOCLICK")
+
+	inst.AnimState:SetBank("brilliance_projectile_fx")
+	inst.AnimState:SetBuild("brilliance_projectile_fx")
+	inst.AnimState:PlayAnimation("blast1")
+	inst.AnimState:SetSymbolMultColour("light_bar", 1, 1, 1, .5)
+	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
+	inst.AnimState:SetLightOverride(.5)
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	if math.random() < 0.5 then
+		inst.AnimState:PlayAnimation("blast2")
+	end
+
+	inst:ListenForEvent("animover", inst.Remove)
+	inst.persists = false
+
+	inst.PushFlash = PushFlash
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
+return Prefab("brilliance_projectile_fx", fn, assets, prefabs),
+	Prefab("brilliance_projectile_blast_fx", blastfn, assets)
