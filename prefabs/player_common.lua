@@ -525,6 +525,10 @@ fns.OnStormLevelChanged = function(inst, data)
 	inst.components.sanity:EnableLunacy(in_moonstorm, "moon_storm")
 end
 
+fns.OnRiftMoonTile = function(inst, on_rift_moon)
+	inst.components.sanity:EnableLunacy(on_rift_moon, "rift_moon")
+end
+
 --------------------------------------------------------------------------
 --Equipment Breaking Events
 --------------------------------------------------------------------------
@@ -615,6 +619,7 @@ local function RegisterMasterEventListeners(inst)
 	-- Enlightenment events
 	inst:ListenForEvent("changearea", fns.OnChangeArea)
 	inst:ListenForEvent("stormlevel", fns.OnStormLevelChanged)
+	inst:ListenForEvent("on_RIFT_MOON_tile", fns.OnRiftMoonTile)
 	inst:WatchWorldState("isnight", fns.OnAlterNight)
 	inst:WatchWorldState("isalterawake", fns.OnAlterNight)
 
@@ -2233,6 +2238,8 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
         else
             inst:ListenForEvent("playerdied", ex_fns.OnPlayerDied)
         end
+
+		inst.components.areaaware:StartWatchingTile(WORLD_TILES.RIFT_MOON)
 
         inst:AddComponent("bloomer")
         inst:AddComponent("colouradder")

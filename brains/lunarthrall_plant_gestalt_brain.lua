@@ -39,7 +39,7 @@ local function MoveToPointAction(inst)
 
 			pos = Vector3(inst.plant_target.Transform:GetWorldPosition())
 
-		elseif dist > SCREEN_DIST_SQ then
+		elseif dist > SCREEN_DIST_SQ and inst.components.timer:TimerExists("justspawned") then
 
 			movetoplant = false
 		else

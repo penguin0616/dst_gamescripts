@@ -560,7 +560,7 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli, spdamage)
 				end
 				--Planar defense dampens regular damage
 				if self.inst.components.planardefense ~= nil then
-					damage = (math.sqrt(damage + 64) - 8) * 8
+					damage = (math.sqrt(damage * 4 + 64) - 8) * 4
 					if spdamage == nil or spdamage.planar == nil then
 						self.inst.components.planardefense:OnResistNonPlanarAttack(attacker)
 					end

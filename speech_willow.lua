@@ -4793,7 +4793,7 @@ return{
 		STAFF_LUNARPLANT = "This magic stuff is easy!",
 		SWORD_LUNARPLANT = "It's okay, but now I really want a fire sword.",
 		PICKAXE_LUNARPLANT = "The dumb plant still gets to hit stuff. It's what it would've wanted.",
-		SHOVEL_LUNARPLANT = "As far as shovels go, it's not bad.",
+		SHOVEL_LUNARPLANT = "Alright, time to find some stuff to dig up!",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

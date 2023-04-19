@@ -1,11 +1,11 @@
 require("stategraphs/commonstates")
 
-local MUST_TAGS =  {"_combat"}
-local CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "invisible", "notarget", "noattack", "lunarthrall_plant", "lunarthrall_plant_end" }
+--local MUST_TAGS =  {"_combat"}
+--local CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "invisible", "notarget", "noattack", "lunarthrall_plant", "lunarthrall_plant_end" }
 
 local AOE_RANGE_PADDING = 3
 local AOE_TARGET_MUSTHAVE_TAGS = { "_combat" }
-local AOE_TARGET_CANT_TAGS = { "INLIMBO", "invisible", "notarget", "noattack", "lunarthrall_plant", "lunarthrall_plant_end" }
+local AOE_TARGET_CANT_TAGS = { "INLIMBO", "invisible", "notarget", "wall", "noattack", "lunarthrall_plant", "lunarthrall_plant_end" }
 local MAX_SIDE_TOSS_STR = 0.8
 
 local function DoAOEAttack(inst, dist, radius, heavymult, mult, forcelanded, targets)
@@ -104,8 +104,10 @@ local states=
         onenter = function(inst)
 			inst.SoundEmitter:PlaySound("rifts/lunarthrall/hit")
             if inst.tired then
-                inst.SoundEmitter:PlaySound("rifts/lunarthrall/rustle_wakeup_LP","wakeLP")
-                inst:customPlayAnimation("tired_hit_"..inst.targetsize)
+				if not inst.SoundEmitter:PlayingSound("wakeLP") then
+					inst.SoundEmitter:PlaySound("rifts/lunarthrall/rustle_wakeup_LP", "wakeLP")
+					inst:customPlayAnimation("tired_hit_"..inst.targetsize)
+				end
             else
 				--inst:customPlayAnimation("hit_"..inst.targetsize)
 				inst.sg:GoToState("attack")
@@ -117,6 +119,7 @@ local states=
             EventHandler("animover", function(inst) 
                 if inst.tired then
                     if inst.wake then
+						inst.sg.statemem.tired_wake = true
                         inst.sg:GoToState("tired_wake")
                     else
                         inst.sg:GoToState("tired")
@@ -128,7 +131,9 @@ local states=
         },
 
         onexit = function(inst)
-            inst.SoundEmitter:KillSound("wakeLP")
+			if not inst.sg.statemem.tired_wake then
+				inst.SoundEmitter:KillSound("wakeLP")
+			end
         end,
     },
 
@@ -208,7 +213,9 @@ local states=
         tags = {"idle","tried","wake"},
 
         onenter = function(inst)
-            inst.SoundEmitter:PlaySound("rifts/lunarthrall/rustle_wakeup_LP","wakeLP")
+			if not inst.SoundEmitter:PlayingSound("wakeLP") then
+				inst.SoundEmitter:PlaySound("rifts/lunarthrall/rustle_wakeup_LP", "wakeLP")
+			end
             inst.wake = true
             inst:customPlayAnimation("tired_wakeup_loop_"..inst.targetsize)
         end,

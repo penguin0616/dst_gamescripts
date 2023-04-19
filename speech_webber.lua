@@ -4786,7 +4786,7 @@ return{
 		STAFF_LUNARPLANT = "We can hit things far away.",
 		SWORD_LUNARPLANT = "It's a magic sword!",
 		PICKAXE_LUNARPLANT = "We're coming to get you, rocks!",
-		SHOVEL_LUNARPLANT = "We love digging holes!",
+		SHOVEL_LUNARPLANT = "Two things in one, just like us!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

@@ -4787,7 +4787,7 @@ return{
 		STAFF_LUNARPLANT = "Some kinda plant magic.",
 		SWORD_LUNARPLANT = "I still prefer my axe.",
 		PICKAXE_LUNARPLANT = "Using a plant to break stone just feels backwards somehow.",
-		SHOVEL_LUNARPLANT = "Let's get digging.",
+		SHOVEL_LUNARPLANT = "Let's get digging, eh?",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

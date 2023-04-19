@@ -771,6 +771,7 @@ local function MakePlant(plant_def)
 
         inst:AddTag("plantedsoil")
         inst:AddTag("farm_plant")
+        inst:AddTag("lunarplant_target")
 		inst:AddTag("plant")
 		if plant_def.plant_type_tag then
 			inst:AddTag(plant_def.plant_type_tag)

@@ -16,7 +16,7 @@ function PlanarDefense:GetBaseDefense()
 end
 
 function PlanarDefense:GetDefense()
-	return self.basedefense * self.externalmultipliers:Get()
+	return self.basedefense * self.externalmultipliers:Get() + self.externalbonuses:Get()
 end
 
 --------------------------------------------------------------------------

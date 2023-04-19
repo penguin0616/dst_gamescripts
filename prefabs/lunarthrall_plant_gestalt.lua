@@ -11,6 +11,7 @@ local prefabs =
 }
 
 local function Spawn(inst)
+    inst.components.timer:StartTimer("justspawned",15)
     inst.Transform:SetRotation(math.random()*360)
 	inst.sg:GoToState("spawn")
 end
@@ -56,6 +57,8 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+
+    inst:AddComponent("timer")
 
     inst:AddComponent("sanityaura")
 	inst.components.sanityaura.aura = TUNING.SANITYAURA_MED

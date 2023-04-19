@@ -4796,7 +4796,7 @@ return {
 		STAFF_LUNARPLANT = "Plant power!",
 		SWORD_LUNARPLANT = "It's hard not to make sound effects when I wave it around.",
 		PICKAXE_LUNARPLANT = "Smashing!",
-		SHOVEL_LUNARPLANT = "Plants and shovels both do well with dirt.",
+		SHOVEL_LUNARPLANT = "Has science gone too far?",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

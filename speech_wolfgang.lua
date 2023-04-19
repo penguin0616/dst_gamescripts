@@ -4787,7 +4787,7 @@ return{
 		STAFF_LUNARPLANT = "Is planty magic stick.",
 		SWORD_LUNARPLANT = "Is sword of star-stuff.",
 		PICKAXE_LUNARPLANT = "Rocks will tremble before Wolfgang!",
-		SHOVEL_LUNARPLANT = "Plant made very good dirt spoon.",
+		SHOVEL_LUNARPLANT = "But is not shoe? Wolfgang is confused...",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

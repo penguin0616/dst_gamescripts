@@ -3,6 +3,15 @@ local assets =
 	Asset("ANIM", "anim/pickaxe_lunarplant.zip"),
 }
 
+local function GetSetBonusEquip(inst, owner)
+	if owner.components.inventory ~= nil then
+		local hat = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+		local body = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+		return hat ~= nil and hat.prefab == "lunarplanthat" and hat or nil,
+			body ~= nil and body.prefab == "armor_lunarplant" and body or nil
+	end
+end
+
 local function onequip(inst, owner)
 	local skin_build = inst:GetSkinBuild()
 	if skin_build ~= nil then
@@ -13,6 +22,12 @@ local function onequip(inst, owner)
 	end
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
+
+	local hat, body = GetSetBonusEquip(inst, owner)
+	if hat ~= nil and body ~= nil then
+		inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+		inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_LUNARPLANT_SETBONUS_PLANAR_DAMAGE, "setbonus")
+	end
 end
 
 local function onunequip(inst, owner)
@@ -22,6 +37,9 @@ local function onunequip(inst, owner)
 	if skin_build ~= nil then
 		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
 	end
+
+	inst.components.weapon:SetDamage(inst.base_damage)
+	inst.components.planardamage:RemoveBonus(inst, "setbonus")
 end
 
 local function fn()
@@ -69,8 +87,10 @@ local function fn()
 	inst.components.finiteuses:SetConsumption(ACTIONS.MINE, TUNING.HAMMER_USES / TUNING.PICKAXE_USES)
 
 	-------
+	inst.lunarplantweapon = true
+	inst.base_damage = TUNING.PICKAXE_LUNARPLANT_DAMAGE
 	inst:AddComponent("weapon")
-	inst.components.weapon:SetDamage(TUNING.PICKAXE_LUNARPLANT_DAMAGE)
+	inst.components.weapon:SetDamage(inst.base_damage)
 
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.PICKAXE_LUNARPLANT_PLANAR_DAMAGE)

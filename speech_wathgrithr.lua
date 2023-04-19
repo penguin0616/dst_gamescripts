@@ -4786,7 +4786,7 @@ return{
 		STAFF_LUNARPLANT = "To attack from afar is not my preferred way of combat.",
 		SWORD_LUNARPLANT = "Am I worthy of wielding a weapon of such brilliance?",
 		PICKAXE_LUNARPLANT = "Neither stone nor structure shall stand in my way!",
-		SHOVEL_LUNARPLANT = "The ground stands no chance against us.",
+		SHOVEL_LUNARPLANT = "The ground stands no chance against me.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",

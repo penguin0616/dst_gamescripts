@@ -16,7 +16,7 @@ function PlanarDamage:GetBaseDamage()
 end
 
 function PlanarDamage:GetDamage()
-	return self.basedamage * self.externalmultipliers:Get()
+	return self.basedamage * self.externalmultipliers:Get() + self.externalbonuses:Get()
 end
 
 --------------------------------------------------------------------------

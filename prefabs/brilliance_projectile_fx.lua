@@ -11,7 +11,6 @@ local prefabs =
 local SPEED = 15
 local BOUNCE_RANGE = 12
 local BOUNCE_SPEED = 10
-local MAX_BOUNCES = 7
 
 local function PlayAnimAndRemove(inst, anim)
 	inst.AnimState:PlayAnimation(anim)
@@ -23,12 +22,9 @@ end
 
 local function OnThrown(inst, owner, target, attacker)
 	inst.owner = owner
-end
-
-local function OnPreHit(inst, attacker, target)
-	--recenttargets means is bounced; inst.owner is the weapon
-	if inst.recenttargets ~= nil and inst.owner ~= nil and inst.owner.components.finiteuses ~= nil then
-		inst.owner.components.finiteuses:SetIgnoreCombatDurabilityLoss(true)
+	if inst.bounces == nil then
+		inst.bounces = owner ~= nil and owner.max_bounces or TUNING.STAFF_LUNARPLANT_BOUNCES
+		inst.initial_hostile = target ~= nil and target:IsValid() and target:HasTag("hostile")
 	end
 end
 
@@ -56,7 +52,10 @@ local function TryBounce(inst, x, z, attacker, target)
 					end
 				end
 			end
-			if newtarget == nil then
+			if inst.initial_hostile and not vhostile and vrecentindex == nil and v.components.locomotor == nil then
+				--attack was initiated against a hostile target
+				--skip if non-hostile, can't move, and has never been targeted
+			elseif newtarget == nil then
 				newtarget = v
 				newrecentindex = vrecentindex
 				newhostile = vhostile
@@ -92,17 +91,15 @@ local function TryBounce(inst, x, z, attacker, target)
 		else
 			inst.recenttargets = { target }
 		end
+		inst.components.projectile:SetBounced(true)
 		inst.components.projectile.overridestartpos = Vector3(x, 0, z)
 		inst.components.projectile:Throw(inst.owner, newtarget, attacker)
+	else
+		inst:Remove()
 	end
 end
 
 local function OnHit(inst, attacker, target)
-	--Restore flag from PreHit
-	if inst.recenttargets ~= nil and inst.owner ~= nil and inst.owner.components.finiteuses ~= nil then
-		inst.owner.components.finiteuses:SetIgnoreCombatDurabilityLoss(false)
-	end
-
 	local blast = SpawnPrefab("brilliance_projectile_blast_fx")
 	local x, y, z = inst.Transform:GetWorldPosition()
 	if target:IsValid() then
@@ -122,8 +119,8 @@ local function OnHit(inst, attacker, target)
 	end
 	blast.Transform:SetPosition(x, y, z)
 
-	inst.bounce = (inst.bounce or 0) + 1
-	if inst.bounce < MAX_BOUNCES and attacker ~= nil and attacker.components.combat ~= nil and attacker:IsValid() then
+	if inst.bounces ~= nil and inst.bounces > 1 and attacker ~= nil and attacker.components.combat ~= nil and attacker:IsValid() then
+		inst.bounces = inst.bounces - 1
 		inst.Physics:Stop()
 		inst:Hide()
 		inst:DoTaskInTime(.1, TryBounce, x, z, attacker, target)
@@ -175,7 +172,6 @@ local function fn()
 	inst.components.projectile:SetSpeed(SPEED)
 	inst.components.projectile:SetRange(25)
 	inst.components.projectile:SetOnThrownFn(OnThrown)
-	inst.components.projectile:SetOnPreHitFn(OnPreHit)
 	inst.components.projectile:SetOnHitFn(OnHit)
 	inst.components.projectile:SetOnMissFn(OnMiss)
 

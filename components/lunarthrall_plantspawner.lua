@@ -54,10 +54,7 @@ local function SpawnThralls()
 
                     -- MAKE PORTAL GO AWAY
                     if self.currentrift then
-                        self.inst:DoTaskInTime(10,function()
-                            self.currentrift:PushEvent("finish_rift")
-                            self.currentrift = nil
-                        end)
+                        self.inst.components.timer:StartTimer("endrift", 10)
                     end
                 end
 
@@ -221,6 +218,17 @@ local function OnPlantInfested(source,plant)
     end
 end
 
+local function OnTimerDone(source,data)
+    local self = TheWorld.components.lunarthrall_plantspawner
+    if data and data.name then
+        if data.name == "endrift" then
+            print("FINISH RIFT")
+            self.currentrift:PushEvent("finish_rift")
+            self.currentrift = nil
+        end
+    end
+end
+
 local Lunarthrall_plantspawner = Class(function(self, inst)
     self.inst = inst
     self.waves_to_release = nil
@@ -232,6 +240,7 @@ local Lunarthrall_plantspawner = Class(function(self, inst)
     self.inst:ListenForEvent("plantherdspawned", OnPlantHerdSpawned)
     self.inst:ListenForEvent("ms_lunarportal_removed", OnLunarPortalRemoved)
     self.inst:ListenForEvent("lunarthrallplant_infested", OnPlantInfested)
+    self.inst:ListenForEvent("timerdone", OnTimerDone)
 end)
 
 function Lunarthrall_plantspawner:MoveGestaltToPlant(thrall)

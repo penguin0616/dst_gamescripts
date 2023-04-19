@@ -408,11 +408,16 @@ local function on_portal_removed(inst)
 end
 
 local function on_rift_finished(inst)
-    inst.AnimState:PlayAnimation("stage_3_disappear")
-    if inst.shadow then
-        inst.shadow.AnimState:PlayAnimation("shadow_disappear")
+    if inst:IsAsleep() then
+        inst:Remove() -- Remove immediately if there is no one around to see it.
+    else
+        inst.AnimState:PlayAnimation("stage_3_disappear")
+        if inst.shadow then
+            inst.shadow.AnimState:PlayAnimation("shadow_disappear")
+        end
+        inst:ListenForEvent("animover", inst.Remove)
+        inst:DoTaskInTime(10, inst.Remove) -- Fallback in case the animation does not finish for any reason make the portal go away.
     end
-    inst:ListenForEvent("animover", inst.Remove)
 
     inst._finished = true
 end
@@ -494,7 +499,7 @@ local function on_portal_load(inst, data)
         inst.Light:SetRadius(LIGHT_SCALE_BY_STAGE_CONSTANT * inst._stage)
 
         if data.finished then
-            on_rift_finished(inst)
+            inst:DoTaskInTime(0, on_rift_finished) -- NOTES(JBK): Delay a frame so the rift can be added into the pool in time for riftspawner component.
         else
             inst.AnimState:PlayAnimation("stage_"..inst._stage.."_loop", true)
         end

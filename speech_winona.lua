@@ -4792,7 +4792,7 @@ return{
 		STAFF_LUNARPLANT = "Another magical doodad?",
 		SWORD_LUNARPLANT = "It's a cut above most other swords I've seen. Ha!",
 		PICKAXE_LUNARPLANT = "Sure makes mining a breeze.",
-		SHOVEL_LUNARPLANT = "It makes digging almost too easy.",
+		SHOVEL_LUNARPLANT = "It makes digging things up almost too easy.",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

@@ -358,47 +358,42 @@ function Inventory:ApplyDamage(damage, attacker, weapon, spdamage)
     local absorbers = {}
 	local damagetypemult = 1
     for k, v in pairs(self.equipslots) do
-		if damage ~= nil then
-			--check resistance
-			if v.components.resistance ~= nil and
-				v.components.resistance:HasResistance(attacker, weapon) and
-				v.components.resistance:ShouldResistDamage() then
-				v.components.resistance:ResistDamage(damage)
-				damage = nil
-			elseif v.components.armor ~= nil then
-				absorbers[v.components.armor] = v.components.armor:GetAbsorption(attacker, weapon)
-			end
+		--check resistance
+		if v.components.resistance ~= nil and
+			v.components.resistance:HasResistance(attacker, weapon) and
+			v.components.resistance:ShouldResistDamage() then
+			v.components.resistance:ResistDamage(damage)
+			return 0, nil
+		elseif v.components.armor ~= nil then
+			absorbers[v.components.armor] = v.components.armor:GetAbsorption(attacker, weapon)
 		end
 		if v.components.damagetyperesist ~= nil then
 			damagetypemult = damagetypemult * v.components.damagetyperesist:GetResist(attacker, weapon)
 		end
     end
 
+	damage = damage * damagetypemult
+	-- print("Incoming damage", damage)
+
+	local absorbed_percent = 0
+	local total_absorption = 0
+	for armor, amt in pairs(absorbers) do
+		-- print("\t", armor.inst, "absorbs", amt)
+		absorbed_percent = math.max(amt, absorbed_percent)
+		total_absorption = total_absorption + amt
+	end
+
+	local absorbed_damage = damage * absorbed_percent
+	local leftover_damage = damage - absorbed_damage
+
+	-- print("\tabsorbed%", absorbed_percent, "total_absorption", total_absorption, "absorbed_damage", absorbed_damage, "leftover_damage", leftover_damage)
+
 	local armor_damage = {}
-	local leftover_damage = 0
-	if damage ~= nil then
-		damage = damage * damagetypemult
-		-- print("Incoming damage", damage)
+	if total_absorption > 0 then
+		ProfileStatsAdd("armor_absorb", absorbed_damage)
 
-		local absorbed_percent = 0
-		local total_absorption = 0
 		for armor, amt in pairs(absorbers) do
-			-- print("\t", armor.inst, "absorbs", amt)
-			absorbed_percent = math.max(amt, absorbed_percent)
-			total_absorption = total_absorption + amt
-		end
-
-		local absorbed_damage = damage * absorbed_percent
-		leftover_damage = damage - absorbed_damage
-
-		-- print("\tabsorbed%", absorbed_percent, "total_absorption", total_absorption, "absorbed_damage", absorbed_damage, "leftover_damage", leftover_damage)
-
-		if total_absorption > 0 then
-			ProfileStatsAdd("armor_absorb", absorbed_damage)
-
-			for armor, amt in pairs(absorbers) do
-				armor_damage[armor] = absorbed_damage * amt / total_absorption + armor:GetBonusDamage(attacker, weapon)
-			end
+			armor_damage[armor] = absorbed_damage * amt / total_absorption + armor:GetBonusDamage(attacker, weapon)
 		end
 	end
 
@@ -429,8 +424,8 @@ function Inventory:ApplyDamage(damage, attacker, weapon, spdamage)
 					end
 					dmg = dmg - defended
 					local armor = k.components.armor
-					if armor ~= nil and armor_damage[armor] ~= nil then
-						armor_damage[armor] = armor_damage[armor] + defended
+					if armor ~= nil then
+						armor_damage[armor] = (armor_damage[armor] or 0) + defended
 					end
 				end
 			end

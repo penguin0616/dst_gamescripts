@@ -4786,7 +4786,7 @@ return{
 		STAFF_LUNARPLANT = "Yup, that's definitely magical.",
 		SWORD_LUNARPLANT = "A space sword! Neat!",
 		PICKAXE_LUNARPLANT = "Those are some really tough leaves!",
-		SHOVEL_LUNARPLANT = "What a fancy shovel!",
+		SHOVEL_LUNARPLANT = "I came up with the name! ",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

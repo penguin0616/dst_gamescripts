@@ -195,7 +195,8 @@ local function DoCloudTask(inst)
 	for i, v in ipairs(TheSim:FindEntities(x, y, z, CLOUD_RADIUS + PHYSICS_PADDING, nil, SLEEPER_NO_TAGS, SLEEPER_TAGS)) do
 		if v._lunargrazercloudprot == nil and
 			v:IsValid() and v.entity:IsVisible() and
-			not (v.components.health ~= nil and v.components.health:IsDead())
+			not (v.components.health ~= nil and v.components.health:IsDead()) and
+			not (v.sg ~= nil and v.sg:HasStateTag("waking"))
 			then
 			local range = v:GetPhysicsRadius(0) + CLOUD_RADIUS
 			if v:GetDistanceSqToPoint(x, y, z) < range * range then
@@ -260,6 +261,7 @@ local function RetargetFn(inst)
 		return
 	end
 
+	local x, y, z = inst.Transform:GetWorldPosition()
 	local target = inst.components.combat.target
 	if inst.debrisshown then
 		if target ~= nil then
@@ -267,16 +269,26 @@ local function RetargetFn(inst)
 			return
 		end
 		--Only players can wake them up
-		local player, distsq = inst:GetNearestPlayer(true)
-		return distsq ~= nil
-			and distsq < TUNING.LUNAR_GRAZER_WAKE_RANGE * TUNING.LUNAR_GRAZER_WAKE_RANGE
-			and player
-			or nil
+		local mindistsq = TUNING.LUNAR_GRAZER_WAKE_RANGE * TUNING.LUNAR_GRAZER_WAKE_RANGE
+		local player
+		for i, v in ipairs(AllPlayers) do
+			if not (v.components.health:IsDead() or v:HasTag("playerghost")) and
+				v.entity:IsVisible() and v:IsOnValidGround()
+				then
+				local distsq = v:GetDistanceSqToPoint(x, y, z)
+				if distsq < mindistsq and not (v.components.inventory ~= nil and v.components.inventory:EquipHasTag("gestaltprotection")) then
+					mindistsq = distsq
+					player = v
+				end
+			end
+		end
+		return player
 	end
 
-	local inrange, isplayer, asleep
+	local inrange, isplayer, asleep, protected
 	if target ~= nil then
-		inrange = inst:IsNear(target, TUNING.LUNAR_GRAZER_ATTACK_RANGE + target:GetPhysicsRadius(0))
+		local range = TUNING.LUNAR_GRAZER_ATTACK_RANGE + target:GetPhysicsRadius(0)
+		inrange = target:GetDistanceSqToPoint(x, y, z) < range * range
 		isplayer = target:HasTag("player")
 		asleep = inst:IsTargetSleeping(target)
 		if inrange and isplayer and asleep then
@@ -285,10 +297,10 @@ local function RetargetFn(inst)
 		end
 	end
 
-	local x, y, z = inst.Transform:GetWorldPosition()
 	for i, v in ipairs(TheSim:FindEntities(x, y, z, TUNING.LUNAR_GRAZER_AGGRO_RANGE, nil, SLEEPER_NO_TAGS, SLEEPER_TAGS)) do
 		if v.entity:IsVisible() and
 			not (v.components.health ~= nil and v.components.health:IsDead()) and
+			not (v.components.inventory ~= nil and v.components.inventory:EquipHasTag("gestaltprotection")) and
 			(not asleep or inst:IsTargetSleeping(v)) and
 			(	not (isplayer or inrange) and
 				v.components.combat ~= nil and
@@ -308,7 +320,7 @@ local function KeepTargetFn(inst, target)
 	end
 	local spawnpoint = inst.components.knownlocations:GetLocation("spawnpoint")
 	if spawnpoint ~= nil then
-		return inst:GetDistanceSqToPoint(spawnpoint) < TUNING.LUNAR_GRAZER_DEAGGRO_RANGE * TUNING.LUNAR_GRAZER_DEAGGRO_RANGE
+		return target:GetDistanceSqToPoint(spawnpoint) < TUNING.LUNAR_GRAZER_DEAGGRO_RANGE * TUNING.LUNAR_GRAZER_DEAGGRO_RANGE
 	end
 	return inst:IsNear(target, TUNING.LUNAR_GRAZER_DEAGGRO_RANGE)
 end
@@ -384,6 +396,7 @@ local function fn()
 	inst:AddTag("hostile")
 	inst:AddTag("notraptrigger")
 	inst:AddTag("lunar_aligned")
+	inst:AddTag("brightmare")
 
 	MakeCharacterPhysics(inst, 10, .5)
 

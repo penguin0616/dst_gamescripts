@@ -296,6 +296,7 @@ local function OnAttacked(inst,data)
             and not data.attacker.components.complexprojectile
             and not data.attacker.components.projectile then
 
+			inst.components.timer:StopTimer("targetswitched")
             inst.components.timer:StartTimer("targetswitched",20)
             inst.components.combat:SetTarget(data.attacker)
         end
@@ -620,14 +621,21 @@ local function ChooseAction(inst)
             local pos = Vector3(inst.target.Transform:GetWorldPosition())
             local theta = inst:GetAngleToPoint(pos)*DEGREES
             local radius = math.sqrt(dist) - TUNING.LUNARTHRALL_PLANT_CLOSEDIST
+            local ITERATIONS = 5
             local offset = Vector3(radius * math.cos( theta ), 0, -radius * math.sin( theta ))
 
-            local newpos = Vector3(inst.Transform:GetWorldPosition()) + offset
+            local newpos = Vector3(inst.Transform:GetWorldPosition())
 
             local onwater = false
-            if not TheWorld.Map:IsVisualGroundAtPoint(newpos.x,newpos.y,newpos.z) then
-                onwater = true
+            for i = 1, ITERATIONS do
+                local testpos = newpos + offset * (i / ITERATIONS)
+                if not TheWorld.Map:IsVisualGroundAtPoint(testpos.x, testpos.y, testpos.z) then
+                    onwater = true
+                    break
+                end
             end
+
+            newpos = newpos + offset
 
             dist = inst:GetDistanceSqToPoint(newpos)
             local moveback = nil

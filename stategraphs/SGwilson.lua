@@ -14690,7 +14690,13 @@ local states =
 
         onenter = function(inst)
             inst.components.locomotor:Stop()
-            inst.AnimState:PlayAnimation("till_pre")
+			local equippedTool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			if equippedTool ~= nil and equippedTool.components.tool ~= nil and equippedTool.components.tool:CanDoAction(ACTIONS.DIG) then
+				--upside down tool build
+				inst.AnimState:PlayAnimation("till2_pre")
+			else
+				inst.AnimState:PlayAnimation("till_pre")
+			end
         end,
 
         events =
@@ -14709,7 +14715,14 @@ local states =
         tags = { "doing", "busy" },
 
         onenter = function(inst)
-            inst.AnimState:PlayAnimation("till_loop")
+			local equippedTool = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			if equippedTool ~= nil and equippedTool.components.tool ~= nil and equippedTool.components.tool:CanDoAction(ACTIONS.DIG) then
+				--upside down tool build
+				inst.sg.statemem.fliptool = true
+				inst.AnimState:PlayAnimation("till2_loop")
+			else
+				inst.AnimState:PlayAnimation("till_loop")
+			end
         end,
 
         timeline =
@@ -14729,7 +14742,7 @@ local states =
             EventHandler("unequip", function(inst) inst.sg:GoToState("idle") end),
             EventHandler("animover", function(inst)
                 if inst.AnimState:AnimDone() then
-                    inst.AnimState:PlayAnimation("till_pst")
+					inst.AnimState:PlayAnimation(inst.sg.statemem.fliptool and "till2_pst" or "till_pst")
                     inst.sg:GoToState("idle", true)
                 end
             end),

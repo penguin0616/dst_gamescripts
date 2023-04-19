@@ -383,6 +383,7 @@ end
 inst:ListenForEvent("rifts_setdifficulty", SetDifficulty)
 inst:ListenForEvent("rifts_settingsenabled", SetEnabledSetting)
 inst:ListenForEvent("moonboss_defeated", EnableLunarRifts)
+inst:ListenForEvent("ms_moonboss_was_defeated", EnableLunarRifts)
 inst:ListenForEvent("ms_lunarrift_maxsize", OnLunarriftMaxsize)
 
 _worldsettingstimer:AddTimer(

@@ -104,7 +104,7 @@ end
 local WEAKVINE_CAN = {"weakvine","lunarthrall_plant"}
 
 local MUST_TAGS =  {"_combat"}
-local CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "invisible", "notarget", "noattack", "lunarthrall_plant", "lunarthrall_plant_end","lunarthrall_plant_segment" }
+local CANT_TAGS = { "FX", "NOCLICK", "DECOR", "INLIMBO", "invisible", "wall", "notarget", "noattack", "lunarthrall_plant", "lunarthrall_plant_end","lunarthrall_plant_segment" }
 
 local TOSSITEM_MUST_TAGS = { "_inventoryitem" }
 local TOSSITEM_CANT_TAGS = { "locomotor", "INLIMBO" }
@@ -218,7 +218,7 @@ local states=
             if inst:HasTag("weakvine") then
                 inst:setweakstate(false)
             end
-            inst.SoundEmitter:PlaySound("rifts/lunarthrall/vine_spawn")
+            inst.SoundEmitter:PlaySound("rifts/lunarthrall/vine_breach")
             inst.AnimState:PlayAnimation("breach_pre")
 			DoToss(inst)
         end,
@@ -392,6 +392,8 @@ local states=
 
             inst.sg.statemem.pos = pos
             inst.AnimState:PlayAnimation("spawn")
+            inst.SoundEmitter:PlaySound("rifts/lunarthrall/vine_spawn")
+
             movetail(inst,"nub_forward")
 			DoToss(inst)
         end,

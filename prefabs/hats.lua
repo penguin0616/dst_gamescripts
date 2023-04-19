@@ -3008,18 +3008,28 @@ local function MakeHat(name)
 	end
 
 	local function lunarplant_getsetbonusequip(inst, owner)
-		local body = owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) or nil
-		return body ~= nil and body.prefab == "armor_lunarplant" and body or nil
+		if owner.components.inventory ~= nil then
+			local body = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+			local weapon = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			return body ~= nil and body.prefab == "armor_lunarplant" and body or nil,
+				weapon ~= nil and weapon.lunarplantweapon and weapon or nil
+		end
 	end
 
 	local function lunarplant_onequip(inst, owner)
 		_onequip(inst, owner)
-		local body = lunarplant_getsetbonusequip(inst, owner)
+		local body, weapon = lunarplant_getsetbonusequip(inst, owner)
 		if body ~= nil then
 			inst.components.damagetyperesist:AddResist("lunar_aligned", inst, TUNING.ARMOR_LUNARPLANT_SETBONUS_LUNAR_RESIST, "setbonus")
 			body.components.damagetyperesist:AddResist("lunar_aligned", body, TUNING.ARMOR_LUNARPLANT_SETBONUS_LUNAR_RESIST, "setbonus")
-			if owner.components.damagetypebonus ~= nil then
-				owner.components.damagetypebonus:AddBonus("shadow_aligned", owner, TUNING.ARMOR_LUNARPLANT_SETBONUS_VS_SHADOW_BONUS, "lunarplant_setbonus")
+			if weapon ~= nil then
+				if weapon.base_damage ~= nil then
+					weapon.components.weapon:SetDamage(weapon.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+					weapon.components.planardamage:AddBonus(weapon, TUNING.WEAPONS_LUNARPLANT_SETBONUS_PLANAR_DAMAGE, "setbonus")
+				end
+				if weapon.max_bounces ~= nil then
+					weapon.max_bounces = TUNING.STAFF_LUNARPLANT_SETBONUS_BOUNCES
+				end
 			end
 		end
 
@@ -3044,13 +3054,19 @@ local function MakeHat(name)
 
 	local function lunarplant_onunequip(inst, owner)
 		_onunequip(inst, owner)
-		local body = lunarplant_getsetbonusequip(inst, owner)
+		local body, weapon = lunarplant_getsetbonusequip(inst, owner)
 		if body ~= nil then
 			body.components.damagetyperesist:RemoveResist("lunar_aligned", body, "setbonus")
 		end
 		inst.components.damagetyperesist:RemoveResist("lunar_aligned", inst, "setbonus")
-		if owner.components.damagetypebonus ~= nil then
-			owner.components.damagetypebonus:RemoveBonus("shadow_aligned", owner, "lunarplant_setbonus")
+		if weapon ~= nil then
+			if weapon.base_damage ~= nil then
+				weapon.components.weapon:SetDamage(weapon.base_damage)
+				weapon.components.planardamage:RemoveBonus(weapon, "setbonus")
+			end
+			if weapon.max_bounces ~= nil then
+				weapon.max_bounces = TUNING.STAFF_LUNARPLANT_BOUNCES
+			end
 		end
 
 		if inst.fx ~= nil then

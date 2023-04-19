@@ -3646,7 +3646,7 @@ STRINGS =
 		STAFF_LUNARPLANT = "Brightshade Staff",
 		SWORD_LUNARPLANT = "Brightshade Sword",
 		PICKAXE_LUNARPLANT = "Brightshade Smasher",
-		SHOVEL_LUNARPLANT = "Brightshade Shovel",
+		SHOVEL_LUNARPLANT = "Brightshade Shoevel",
 
 	},
 
@@ -4373,6 +4373,7 @@ STRINGS =
         TURF_MUD = "A patch of muddy ground.",
 
         TURF_MONKEY_GROUND = "A patch of sand, with a faint scent of bananas.",
+        TURF_BEARD_RUG = "Some people just like to do art.",
 
 		-- FARMING
 		FARM_PLOW_ITEM = "Plow a plot for your plants.",
@@ -4538,7 +4539,7 @@ STRINGS =
 		STAFF_LUNARPLANT = "Stay rooted to the spot and attack from afar.",
 		SWORD_LUNARPLANT = "A sword of lunar light.",
 		PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
-		SHOVEL_LUNARPLANT = "Just plant it in the ground and dig.",
+		SHOVEL_LUNARPLANT = "The groundbreaking results of cross-pollination between a shovel and a garden hoe.",
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},

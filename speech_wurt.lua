@@ -4786,7 +4786,7 @@ return{
 		STAFF_LUNARPLANT = "Magic hitting stick.",
 		SWORD_LUNARPLANT = "It mine!! Me want glowy sword!",
 		PICKAXE_LUNARPLANT = "It real good at breaking stuff.",
-		SHOVEL_LUNARPLANT = "Good scooper.",
+		SHOVEL_LUNARPLANT = "Good scooper-upper, florp.",
     },
 
     DESCRIBE_GENERIC = "What that?",

@@ -101,7 +101,9 @@ function Weapon:OnAttack(attacker, target, projectile)
         self.onattack(self.inst, attacker, target)
     end
 
-    if self.inst.components.finiteuses ~= nil and not self.inst.components.finiteuses:IgnoresCombatDurabilityLoss() then
+	if self.inst.components.finiteuses ~= nil and not self.inst.components.finiteuses:IgnoresCombatDurabilityLoss()
+		and not (projectile ~= nil and projectile.components.projectile ~= nil and projectile.components.projectile:IsBounced())
+		then
 		local uses = (self.attackwear or 1) * self.attackwearmultipliers:Get()
 		if attacker ~= nil and attacker:IsValid() and attacker.components.efficientuser ~= nil then
 			uses = uses * (attacker.components.efficientuser:GetMultiplier(ACTIONS.ATTACK) or 1)

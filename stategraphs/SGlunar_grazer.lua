@@ -758,7 +758,7 @@ local states =
 			FrameEvent(32, function(inst)
 				local target = inst.sg.statemem.target or inst.components.combat.target
 				if inst.components.combat:CanHitTarget(target) then
-					local sleeping = inst:IsTargetSleeping(target)
+					local sleeping = inst:IsTargetSleeping(target) or (target.sg ~= nil and target.sg:HasStateTag("waking"))
 					inst.components.combat:DoAttack(target)
 					if sleeping then
 						target:PushEvent("knockback", { knocker = inst, radius = 1, forcelanded = true, strengthmult = .7 })
