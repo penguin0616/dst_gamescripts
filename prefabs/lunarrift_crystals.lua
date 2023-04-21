@@ -191,7 +191,10 @@ local function on_big_crystal_worked(inst, worker, work_left)
 
         inst:Remove()
     else
-        inst.AnimState:PlayAnimation((work_left < HALF_WORK and "half") or "full")
+		local anim = work_left < HALF_WORK and "half" or "full"
+		if not inst.AnimState:IsCurrentAnimation(anim) then
+			inst.AnimState:PlayAnimation(anim, true)
+		end
     end
 end
 

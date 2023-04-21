@@ -3048,6 +3048,7 @@ local function MakeHat(name)
 			v.entity:SetParent(owner.entity)
 			v.Follower:FollowSymbol(owner.GUID, "swap_hat", nil, nil, nil, true, nil, i - 1)
 			v.AnimState:SetFrame(frame)
+			v.components.highlightchild:SetOwner(owner)
 		end
 		owner.AnimState:SetSymbolLightOverride("swap_hat", .1)
 	end
@@ -3340,6 +3341,8 @@ local function lunarplanthatfxfn()
 	inst.AnimState:SetSymbolLightOverride("float_top", .5)
 	inst.AnimState:SetSymbolMultColour("float_top", 1, 1, 1, .6)
 	inst.AnimState:SetLightOverride(.1)
+
+	inst:AddComponent("highlightchild")
 
 	inst.entity:SetPristine()
 

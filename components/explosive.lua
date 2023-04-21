@@ -7,19 +7,18 @@ local Explosive = Class(function(self,inst)
     self.buildingdamage = 10
     self.lightonexplode = true
     self.onexplodefn = nil
-	--self.ispvp = nil
+	--self.pvpattacker = nil
 end)
 
 function Explosive:SetOnExplodeFn(fn)
     self.onexplodefn = fn
 end
 
-function Explosive:SetPvpFlag(flag)
-	self.ispvp = flag ~= false
+function Explosive:SetPvpAttacker(attacker)
+	self.pvpattacker = attacker
 end
 
 local CANT_TAGS = { "INLIMBO" }
-local NOPVP_CANT_TAGS = { "INLIMBO", "player" }
 function Explosive:OnBurnt()
 	if not self.skip_camera_flash then
 		for i, v in ipairs(AllPlayers) do
@@ -48,9 +47,11 @@ function Explosive:OnBurnt()
     end
 
     local workablecount = TUNING.EXPLOSIVE_MAX_WORKABLE_INVENTORYITEMS
-	local ents = TheSim:FindEntities(x, y, z, self.explosiverange, nil, self.ispvp and not TheNet:GetPVPEnabled() and NOPVP_CANT_TAGS or CANT_TAGS)
+	local ents = TheSim:FindEntities(x, y, z, self.explosiverange, nil, CANT_TAGS)
     for i, v in ipairs(ents) do
-        if v ~= self.inst and v:IsValid() and not v:IsInLimbo() then
+		if v ~= self.inst and not v:IsInLimbo() and v:IsValid() and
+			(self.pvpattacker == nil or v == self.pvpattacker or not v:HasTag("player"))
+			then
 			local damagetypemult = self.inst.components.damagetypebonus ~= nil and self.inst.components.damagetypebonus:GetBonus(v) or 1
 
             if v.components.workable ~= nil and v.components.workable:CanBeWorked() then
@@ -71,7 +72,7 @@ function Explosive:OnBurnt()
             end
 
             --Recheck valid after work
-            if v:IsValid() and not v:IsInLimbo() then
+			if not v:IsInLimbo() and v:IsValid() then
                 if self.lightonexplode and
                     v.components.fueled == nil and
                     v.components.burnable ~= nil and

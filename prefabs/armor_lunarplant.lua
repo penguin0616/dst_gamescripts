@@ -62,6 +62,7 @@ local function onequip(inst, owner)
 		v.entity:SetParent(owner.entity)
 		v.Follower:FollowSymbol(owner.GUID, "swap_body", nil, nil, nil, true, nil, i - 1)
 		v.AnimState:SetFrame(frame)
+		v.components.highlightchild:SetOwner(owner)
 	end
 	owner.AnimState:SetSymbolLightOverride("swap_body", .1)
 end
@@ -164,6 +165,8 @@ local function glowfn()
 	inst.AnimState:SetSymbolBloom("glowcentre")
 	inst.AnimState:SetSymbolLightOverride("glowcentre", .5)
 	inst.AnimState:SetLightOverride(.1)
+
+	inst:AddComponent("highlightchild")
 
 	inst.entity:SetPristine()
 

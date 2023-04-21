@@ -3,11 +3,6 @@ local assets =
     Asset("ANIM", "anim/wilsonstatue.zip"),
 }
 
-local prefabs_planar =
-{
-	"planar_resist_fx",
-}
-
 local function OnHealthDelta(inst, data)
     if data.amount <= 0 then
         inst.Label:SetText(data.amount)
@@ -17,7 +12,7 @@ local function OnHealthDelta(inst, data)
     end
 end
 
-local function MakeDummy(name, common_postinit, master_postinit, prefabs)
+local function MakeDummy(name, common_postinit, master_postinit)
 	local function fn()
 		local inst = CreateEntity()
 
@@ -78,7 +73,7 @@ local function MakeDummy(name, common_postinit, master_postinit, prefabs)
 
 		return inst
 	end
-	return Prefab(name, fn, assets, prefabs)
+	return Prefab(name, fn, assets)
 end
 
 local function lunar_common_postinit(inst)
@@ -92,9 +87,9 @@ local function shadow_common_postinit(inst)
 end
 
 local function make_planar(inst)
-	inst:AddComponent("planardefense")
+	inst:AddComponent("planarentity")
 end
 
 return MakeDummy("dummytarget"),
-	MakeDummy("dummytarget_lunar", lunar_common_postinit, make_planar, prefabs_planar),
-	MakeDummy("dummytarget_shadow", shadow_common_postinit, make_planar, prefabs_planar)
+	MakeDummy("dummytarget_lunar", lunar_common_postinit, make_planar),
+	MakeDummy("dummytarget_shadow", shadow_common_postinit, make_planar)

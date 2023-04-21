@@ -2729,6 +2729,17 @@ local fx =
 		end,
 	},
 	{
+		name = "planar_hit_fx",
+		bank = "planar_damage_fx",
+		build = "planar_damage_fx",
+		anim = "damage2",
+		fn = function(inst)
+			local scale = 1.2 + math.random() * .2
+			inst.AnimState:SetScale(math.random() < .5 and scale or -scale, scale)
+			inst.AnimState:SetFinalOffset(7)
+		end,
+	},
+	{
 		name = "fire_fail_fx",
 		bank = "fire_fail_fx",
 		build = "fire_fail_fx",

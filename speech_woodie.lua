@@ -4615,7 +4615,7 @@ return{
         BOAT_ROTATOR_KIT = "Better get it set up on the boat, eh?",
         BOAT_BUMPER_KELP = "There ya go, nice and safe.",
         BOAT_BUMPER_KELP_KIT = "A bit of padding might be a good idea.",
-        BOAT_BUMPER_SHELL = "There ya go, nice and safe.",
+		BOAT_BUMPER_SHELL = "There ya go, nice and safe.",
         BOAT_BUMPER_SHELL_KIT = "A bit of padding might be a good idea.",
         BOAT_CANNON = {
             GENERIC = "Looks like it could do some damage... if it was actually loaded.",
@@ -4775,6 +4775,8 @@ return{
         LUNARTHRALL_PLANT = "Looks like an invasive species to me.",
         LUNARTHRALL_PLANT_VINE_END = "I think it's time you and Lucy got acquainted.",
 
+		LUNAR_GRAZER = "It's a sneaky one... better keep my distance.",
+
         PUREBRILLIANCE = "Makes me feel a bit twitchy.",
         LUNARPLANT_HUSK = "That could be good for somethin'.",
 
@@ -4788,6 +4790,8 @@ return{
 		SWORD_LUNARPLANT = "I still prefer my axe.",
 		PICKAXE_LUNARPLANT = "Using a plant to break stone just feels backwards somehow.",
 		SHOVEL_LUNARPLANT = "Let's get digging, eh?",
+
+        PUNCHINGBAG = "I should see how much of a punch I'm packing, eh?",
     },
 
     DESCRIBE_GENERIC = "What's that, eh?",

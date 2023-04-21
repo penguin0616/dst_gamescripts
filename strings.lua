@@ -3648,6 +3648,9 @@ STRINGS =
 		PICKAXE_LUNARPLANT = "Brightshade Smasher",
 		SHOVEL_LUNARPLANT = "Brightshade Shoevel",
 
+        PUNCHINGBAG = "Punching Bag",
+        PUNCHINGBAG_LUNAR = "Bright Boxer",
+        PUNCHINGBAG_SHADOW = "Shadow Boxer",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4540,6 +4543,10 @@ STRINGS =
 		SWORD_LUNARPLANT = "A sword of lunar light.",
 		PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
 		SHOVEL_LUNARPLANT = "The groundbreaking results of cross-pollination between a shovel and a garden hoe.",
+
+        PUNCHINGBAG = "Test the strength of your weapons. And have fun!",
+        PUNCHINGBAG_LUNAR = "Test how well your weapons fare against lunar foes.",
+        PUNCHINGBAG_SHADOW = "Test how well your weapons fare against shadowy foes.",
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -6728,6 +6735,7 @@ STRINGS.UI =
         NEEDSCREATURESCANNING = "Scan living creatures to collect data!",
         NEEDSSKILL = "Learn new skills.",
         NEEDSBOOKSTATION = "Build a bookcase to craft your books.",
+		NEEDSLUNARFORGING_TWO = "Use a Brightsmithy to forge a prototype!",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",

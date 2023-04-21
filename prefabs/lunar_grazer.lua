@@ -9,7 +9,6 @@ local prefabs =
 	"lunar_goop_trail_fx",
 	"lunar_grazer_core_fx",
 	"lunar_grazer_debris",
-	"planar_resist_fx",
 }
 
 local brain = require("brains/lunar_grazer_brain")
@@ -261,7 +260,6 @@ local function RetargetFn(inst)
 		return
 	end
 
-	local x, y, z = inst.Transform:GetWorldPosition()
 	local target = inst.components.combat.target
 	if inst.debrisshown then
 		if target ~= nil then
@@ -269,23 +267,15 @@ local function RetargetFn(inst)
 			return
 		end
 		--Only players can wake them up
-		local mindistsq = TUNING.LUNAR_GRAZER_WAKE_RANGE * TUNING.LUNAR_GRAZER_WAKE_RANGE
-		local player
-		for i, v in ipairs(AllPlayers) do
-			if not (v.components.health:IsDead() or v:HasTag("playerghost")) and
-				v.entity:IsVisible() and v:IsOnValidGround()
-				then
-				local distsq = v:GetDistanceSqToPoint(x, y, z)
-				if distsq < mindistsq and not (v.components.inventory ~= nil and v.components.inventory:EquipHasTag("gestaltprotection")) then
-					mindistsq = distsq
-					player = v
-				end
-			end
-		end
-		return player
+		local player, distsq = inst:GetNearestPlayer(true)
+		return distsq ~= nil
+			and distsq < TUNING.LUNAR_GRAZER_WAKE_RANGE * TUNING.LUNAR_GRAZER_WAKE_RANGE
+			and player
+			or nil
 	end
 
-	local inrange, isplayer, asleep, protected
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local inrange, isplayer, asleep
 	if target ~= nil then
 		local range = TUNING.LUNAR_GRAZER_ATTACK_RANGE + target:GetPhysicsRadius(0)
 		inrange = target:GetDistanceSqToPoint(x, y, z) < range * range
@@ -300,7 +290,6 @@ local function RetargetFn(inst)
 	for i, v in ipairs(TheSim:FindEntities(x, y, z, TUNING.LUNAR_GRAZER_AGGRO_RANGE, nil, SLEEPER_NO_TAGS, SLEEPER_TAGS)) do
 		if v.entity:IsVisible() and
 			not (v.components.health ~= nil and v.components.health:IsDead()) and
-			not (v.components.inventory ~= nil and v.components.inventory:EquipHasTag("gestaltprotection")) and
 			(not asleep or inst:IsTargetSleeping(v)) and
 			(	not (isplayer or inrange) and
 				v.components.combat ~= nil and
@@ -396,7 +385,6 @@ local function fn()
 	inst:AddTag("hostile")
 	inst:AddTag("notraptrigger")
 	inst:AddTag("lunar_aligned")
-	inst:AddTag("brightmare")
 
 	MakeCharacterPhysics(inst, 10, .5)
 
@@ -428,6 +416,8 @@ local function fn()
 	inst.core.entity:SetParent(inst.entity)
 	inst.core.Follower:FollowSymbol(inst.GUID, "rock_cycle_follow", nil, nil, nil, true)
 
+	inst:AddComponent("inspectable")
+
 	inst:AddComponent("health")
 	inst.components.health:SetMaxHealth(TUNING.LUNAR_GRAZER_HEALTH)
 	inst.components.health:SetMinHealth(1)
@@ -442,7 +432,7 @@ local function fn()
 	inst.components.combat.hiteffectsymbol = "blob_body"
 	inst:ListenForEvent("attacked", OnAttacked)
 
-	inst:AddComponent("planardefense")
+	inst:AddComponent("planarentity")
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.LUNAR_GRAZER_PLANAR_DAMAGE)
 

@@ -4618,7 +4618,7 @@ return{
         BOAT_ROTATOR_KIT = "Can make the Floaty spin with this",
         BOAT_BUMPER_KELP = "Keeps Floaty safe",
         BOAT_BUMPER_KELP_KIT = "Will help protect Floaty",
-        BOAT_BUMPER_SHELL = "Keeps Floaty safe",
+		BOAT_BUMPER_SHELL = "Keeps Floaty safe",
         BOAT_BUMPER_SHELL_KIT = "Will help protect Floaty",
         BOAT_CANNON = {
             GENERIC = "Empty",
@@ -4778,6 +4778,8 @@ return{
         LUNARTHRALL_PLANT = "Why friend hurt other friends?",
         LUNARTHRALL_PLANT_VINE_END = "Not nice!",
 
+		LUNAR_GRAZER = "Bloop, bloop, bloop",
+
         PUREBRILLIANCE = "Ahhh. Pretty",
         LUNARPLANT_HUSK = "Sorry",
 
@@ -4791,6 +4793,8 @@ return{
 		SWORD_LUNARPLANT = "Bright Swoosh Stick",
 		PICKAXE_LUNARPLANT = "Mean friend good at breaking things",
 		SHOVEL_LUNARPLANT = "Mean friend help dig",
+
+        PUNCHINGBAG = "It okay. Not real",
     },
 
     DESCRIBE_GENERIC = "Friend?",

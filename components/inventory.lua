@@ -350,6 +350,14 @@ function Inventory:EquipHasTag(tag)
     end
 end
 
+function Inventory:EquipHasSpDefenseForType(sptype)
+	for k, v in pairs(self.equipslots) do
+		if SpDamageUtil.GetSpDefenseForType(v, sptype) > 0 then
+			return true
+		end
+	end
+end
+
 function Inventory:IsHeavyLifting()
     return self.heavylifting
 end

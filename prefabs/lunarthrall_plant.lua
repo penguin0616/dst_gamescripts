@@ -472,7 +472,7 @@ local function fn()
     inst.components.combat:SetKeepTargetFunction(keeptargetfn)
     inst.components.combat:SetDefaultDamage(TUNING.LUNARTHRALL_PLANT_DAMAGE)
 
-	inst:AddComponent("planardefense")
+	inst:AddComponent("planarentity")
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.LUNARTHRALL_PLANT_PLANAR_DAMAGE)
 
@@ -533,7 +533,7 @@ local function makeweak(inst)
         end
     end
     inst:AddComponent("combat")
-    inst:AddComponent("planardefense")
+    inst:AddComponent("planarentity")
 
 	inst:ListenForEvent("attacked", OnWeakVineAttacked)
 
@@ -763,7 +763,7 @@ local function vineendfn()
     inst:AddComponent("combat")
     inst.components.combat:SetDefaultDamage(TUNING.LUNARTHRALL_PLANT_END_DAMAGE)
 
-	inst:AddComponent("planardefense")
+	inst:AddComponent("planarentity")
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.LUNARTHRALL_PLANT_END_PLANAR_DAMAGE)
 

@@ -4620,7 +4620,7 @@ return{
         BOAT_ROTATOR_KIT = "Time to put this doo-hickey to the test.",
         BOAT_BUMPER_KELP = "Slimy, but it'll do for securin' the boat some more.",
         BOAT_BUMPER_KELP_KIT = "Extra protection's always good, 'specially on water.",
-        BOAT_BUMPER_SHELL = "Turns out seashells are good for givin' shellter from the sea. Ha!",
+		BOAT_BUMPER_SHELL = "Turns out seashells are good for givin' shellter from the sea. Ha!",
         BOAT_BUMPER_SHELL_KIT = "Extra protection's always good, 'specially on water.",
         BOAT_CANNON = {
             GENERIC = "It won't do much good if it's not loaded.",
@@ -4780,6 +4780,8 @@ return{
         LUNARTHRALL_PLANT = "It thinks this is its turf!",
         LUNARTHRALL_PLANT_VINE_END = "You think you wanna tangle with me?",
 
+		LUNAR_GRAZER = "I'm not about to let it catch me sleepin'!",
+
         PUREBRILLIANCE = "I ain't dazzled by much, but that'll do it.",
         LUNARPLANT_HUSK = "That's tough stuff!",
 
@@ -4793,6 +4795,8 @@ return{
 		SWORD_LUNARPLANT = "It's a cut above most other swords I've seen. Ha!",
 		PICKAXE_LUNARPLANT = "Sure makes mining a breeze.",
 		SHOVEL_LUNARPLANT = "It makes digging things up almost too easy.",
+
+        PUNCHINGBAG = "Whatcha say? Wanna go a few rounds?",
     },
 
     DESCRIBE_GENERIC = "Incredible! I have no idea what that is.",

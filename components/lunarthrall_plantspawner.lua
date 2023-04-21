@@ -62,6 +62,7 @@ local function SpawnThralls()
                 local plants = {}
 
                 local herd = self:FindHerd()
+
                 if not herd then
                     -- MAYBE FIND SOME WILD PLANTS?
                     local patch = self:FindWildPatch()
@@ -85,10 +86,12 @@ local function SpawnThralls()
                 local SPACE = 2.5
                 local MAX_SPACE = 8
                 local number_spawned = 0
+               
                 while #plants > 0 and number_spawned < 3 do
                     local random = math.random(1,#plants)
                     local plant = plants[random]
                     if plant then
+
                         local eligable = true
 
                         if eligable then
@@ -111,7 +114,6 @@ local function SpawnThralls()
                             for t,target in ipairs(targets)do
                                 if target:GetDistanceSqToInst(plant) < SPACE*SPACE then
                                     eligable = false
-                                    break
                                 end
                             end
 
@@ -119,7 +121,6 @@ local function SpawnThralls()
                             for t,target in ipairs(targets)do
                                 if target:GetDistanceSqToInst(plant) > MAX_SPACE*MAX_SPACE then
                                     eligable = false
-                                    break
                                 end
                             end
                         end
@@ -363,7 +364,7 @@ function Lunarthrall_plantspawner:FindHerd()
     end
 
     local num = 0
-    local choice = nil
+    local choice = {}
     for i, herd in ipairs(choices)do
         local count = 0
         for member, i in pairs(herd.components.herd.members) do
@@ -376,14 +377,16 @@ function Lunarthrall_plantspawner:FindHerd()
                 end
             end
         end
-        if count > num then
-            choice = herd
-            num = count
+
+        if count > 0 then
+            table.insert(choice,{herd=herd, count=count}) 
         end
     end
 
-    if choice then
-        return choice
+    table.sort(choice, function(a,b) return a.count > b.count end)
+
+    if #choice > 0 then
+        return choice[math.random(1,math.min(5, #choice))].herd
     end
 end
 

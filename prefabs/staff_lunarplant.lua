@@ -22,10 +22,12 @@ local function SetFxOwner(inst, owner)
 	if owner ~= nil then
 		inst.fx.entity:SetParent(owner.entity)
 		inst.fx.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true)
+		inst.fx.components.highlightchild:SetOwner(owner)
 	else
 		inst.fx.entity:SetParent(inst.entity)
 		--For floating
 		inst.fx.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true)
+		inst.fx.components.highlightchild:SetOwner(inst)
 	end
 end
 
@@ -161,6 +163,8 @@ local function fn()
 
 	MakeHauntableLaunch(inst)
 
+	inst.noplanarhitfx = true
+
 	return inst
 end
 
@@ -184,6 +188,8 @@ local function fxfn()
 	inst.AnimState:SetSymbolLightOverride("stone", .5)
 	inst.AnimState:SetSymbolLightOverride("glow", .25)
 	inst.AnimState:SetLightOverride(.1)
+
+	inst:AddComponent("highlightchild")
 
 	inst.entity:SetPristine()
 

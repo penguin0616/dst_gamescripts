@@ -101,21 +101,17 @@ end
 
 local function OnHit(inst, attacker, target)
 	local blast = SpawnPrefab("brilliance_projectile_blast_fx")
-	local x, y, z = inst.Transform:GetWorldPosition()
+	local x, y, z
 	if target:IsValid() then
 		local radius = target:GetPhysicsRadius(0) + .2
-		local x1, y1, z1 = target.Transform:GetWorldPosition()
-		if x ~= x1 or z ~= z1 then
-			local dx = x - x1
-			local dz = z - z1
-			local k = radius / math.sqrt(dx * dx + dz * dz)
-			x1 = x1 + dx * k
-			z1 = z1 + dz * k
-		end
-		x = x1 + GetRandomMinMax(-.2, .2)
+		local angle = (inst.Transform:GetRotation() + 180) * DEGREES
+		x, y, z = target.Transform:GetWorldPosition()
+		x = x + math.cos(angle) * radius + GetRandomMinMax(-.2, .2)
 		y = GetRandomMinMax(.1, .3)
-		z = z1 + GetRandomMinMax(-.2, .2)
+		z = z - math.sin(angle) * radius + GetRandomMinMax(-.2, .2)
 		blast:PushFlash(target)
+	else
+		x, y, z = inst.Transform:GetWorldPosition()
 	end
 	blast.Transform:SetPosition(x, y, z)
 
@@ -184,22 +180,17 @@ end
 
 local function PushColour(inst, r, g, b)
 	if inst.target:IsValid() then
-		if inst.target.components.colouradder ~= nil then
-			inst.target.components.colouradder:PushColour(inst, r, g, b, 0)
-		else
-			inst.target.AnimState:SetAddColour(r, g, b, 0)
+		if inst.target.components.colouradder == nil then
+			inst.target:AddComponent("colouradder")
 		end
+		inst.target.components.colouradder:PushColour(inst, r, g, b, 0)
 	end
 end
 
 local function PopColour(inst)
 	inst.OnRemoveEntity = nil
-	if inst.target:IsValid() then
-		if inst.target.components.colouradder ~= nil then
-			inst.target.components.colouradder:PopColour(inst)
-		else
-			inst.target.AnimState:SetAddColour(0, 0, 0, 0)
-		end
+	if inst.target.components.colouradder ~= nil and inst.target:IsValid() then
+		inst.target.components.colouradder:PopColour(inst)
 	end
 end
 

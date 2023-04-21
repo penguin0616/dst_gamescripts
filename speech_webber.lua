@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "We're good at spinning things!",
         BOAT_BUMPER_KELP = "It keeps the boat from getting hurt.",
         BOAT_BUMPER_KELP_KIT = "Now we can play bumper boats!",
-        BOAT_BUMPER_SHELL = "It keeps the boat from getting hurt.",
+		BOAT_BUMPER_SHELL = "It keeps the boat from getting hurt.",
         BOAT_BUMPER_SHELL_KIT = "Now we can play bumper boats!",
         BOAT_CANNON = {
             GENERIC = "Ms. Wickerbottom said we could play with it as long as there's no cannonballs inside.",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "That plant's kinda spooky...",
         LUNARTHRALL_PLANT_VINE_END = "Hey, leave us alone!",
 
+		LUNAR_GRAZER = "It's trying to make us take a nap!",
+
         PUREBRILLIANCE = "It's blinding our poor spider eyes!",
         LUNARPLANT_HUSK = "That was one mean plant. We're glad it's gone!",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "It's a magic sword!",
 		PICKAXE_LUNARPLANT = "We're coming to get you, rocks!",
 		SHOVEL_LUNARPLANT = "Two things in one, just like us!",
+
+        PUNCHINGBAG = "Wigfrid's teaching us how to spar with it!",
     },
 
     DESCRIBE_GENERIC = "Can we play with it?",

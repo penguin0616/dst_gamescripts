@@ -28,6 +28,7 @@ local function fn()
     inst.components.herd:SetUpdateRange(20)
     inst.components.herd:SetOnEmptyFn(inst.Remove)
     inst.components.herd:SetMemberTag("lunarplant_target")
+    inst.components.herd:SetMaxSize(36)
 
     inst:DoTaskInTime(0,RegisterWithWorld)
 

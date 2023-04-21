@@ -4618,7 +4618,7 @@ return{
         BOAT_ROTATOR_KIT = "I could build a rudder, I suppose...",
         BOAT_BUMPER_KELP = "It will only prolong the inevitable.",
         BOAT_BUMPER_KELP_KIT = "I suppose I should make myself useful.",
-        BOAT_BUMPER_SHELL = "It will only prolong the inevitable.",
+		BOAT_BUMPER_SHELL = "It will only prolong the inevitable.",
         BOAT_BUMPER_SHELL_KIT = "I suppose I should make myself useful.",
         BOAT_CANNON = {
             GENERIC = "It's empty inside...",
@@ -4778,6 +4778,8 @@ return{
         LUNARTHRALL_PLANT = "Others must suffer for it to survive.",
         LUNARTHRALL_PLANT_VINE_END = "It's lashing out.",
 
+		LUNAR_GRAZER = "Will you grant me the eternal slumber I seek?",
+
         PUREBRILLIANCE = "It hurts my eyes.",
         LUNARPLANT_HUSK = "It can't hurt anyone anymore.",
 
@@ -4791,6 +4793,8 @@ return{
 		SWORD_LUNARPLANT = "A shining beacon of pain.",
 		PICKAXE_LUNARPLANT = "It makes the endless toil a bit easier.",
 		SHOVEL_LUNARPLANT = "Some things should stay buried... but not today.",
+
+        PUNCHINGBAG = "Some are simply made to suffer.",
     },
 
     DESCRIBE_GENERIC = "Sigh... I don't know.",

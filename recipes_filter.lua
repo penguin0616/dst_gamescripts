@@ -978,6 +978,9 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"firesuppressor",
 	"moondial",
 	"archive_resonator_item",
+	"punchingbag",
+	"punchingbag_lunar",
+	"punchingbag_shadow",
 
 	"tent",
 	"portabletent_item",
@@ -1048,6 +1051,8 @@ CRAFTING_FILTERS.MAGIC.recipes =
 	"moondial",
 	"townportal",
 	"nightmarefuel",
+	"punchingbag_lunar",
+	"punchingbag_shadow",
 }
 
 CRAFTING_FILTERS.RIDING.recipes =

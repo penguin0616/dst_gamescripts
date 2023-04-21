@@ -4620,7 +4620,7 @@ return{
         BOAT_ROTATOR_KIT = "It's something or rudder!",
         BOAT_BUMPER_KELP = "Some friendly help from fronds of kelp.",
         BOAT_BUMPER_KELP_KIT = "But idle hands are such good playthings!",
-        BOAT_BUMPER_SHELL = "We shell be well protected, hyuyu!",
+		BOAT_BUMPER_SHELL = "We shell be well protected, hyuyu!",
         BOAT_BUMPER_SHELL_KIT = "But idle hands are such good playthings!",
         BOAT_CANNON = {
             GENERIC = "Rounded stones are required for this cannon to fire.",
@@ -4780,6 +4780,8 @@ return{
         LUNARTHRALL_PLANT = "A long way from home, aren't we?",
         LUNARTHRALL_PLANT_VINE_END = "The weeds are whacking.",
 
+		LUNAR_GRAZER = "My my, are those teeth I spy?",
+
         PUREBRILLIANCE = "Hyuyu, it tickles my impish brain!",
         LUNARPLANT_HUSK = "Unoccupied.",
 
@@ -4793,6 +4795,8 @@ return{
 		SWORD_LUNARPLANT = "A swish to and fro will cut down my foe.",
 		PICKAXE_LUNARPLANT = "To bash and break.",
 		SHOVEL_LUNARPLANT = "Dig a hole to who knows where!",
+
+        PUNCHINGBAG = "It does not complain, for it feels no pain!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",

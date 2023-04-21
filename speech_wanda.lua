@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "I can't believe I didn't think of it sooner.",
         BOAT_BUMPER_KELP = "Anything to prolong the life of my boat.",
         BOAT_BUMPER_KELP_KIT = "It'll make me feel slightly safer at sea. Slightly.",
-        BOAT_BUMPER_SHELL = "Anything to prolong the life of my boat.",
+		BOAT_BUMPER_SHELL = "Anything to prolong the life of my boat.",
         BOAT_BUMPER_SHELL_KIT = "It'll make me feel slightly safer at sea. Slightly.",
         BOAT_CANNON = {
             GENERIC = "I could have sworn I loaded that cannon... maybe it hasn't happened yet.",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "This is going to be bothersome...",
         LUNARTHRALL_PLANT_VINE_END = "Keep your vines to yourself!",
 
+		LUNAR_GRAZER = "Oh botheration, it pops back up as quickly as I can knock it down!",
+
         PUREBRILLIANCE = "If only I could use it to power one of my watches... oh well.",
         LUNARPLANT_HUSK = "What an interesting material, I should make use of it.",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "Oh, I quite like that one.",
 		PICKAXE_LUNARPLANT = "Unbelievably, it works rather well.",
 		SHOVEL_LUNARPLANT = "An odd, yet extremely efficient design.",
+
+        PUNCHINGBAG = "I could spare a moment to test my weapons... and let off some steam.",
     },
 
     DESCRIBE_GENERIC = "A very particular something or other.",

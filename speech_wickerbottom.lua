@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "It should improve the boat's maneuverability.",
         BOAT_BUMPER_KELP = "A thick barrier of Nereocystis luetkeana.",
         BOAT_BUMPER_KELP_KIT = "It would be wise to equip the boat with a protective barrier.",
-        BOAT_BUMPER_SHELL = "A thick barrier of mollusks.",
+		BOAT_BUMPER_SHELL = "A thick barrier of mollusks.",
         BOAT_BUMPER_SHELL_KIT = "It would be wise to equip the boat with a protective barrier.",
         BOAT_CANNON = {
             GENERIC = "A highly effective weapon in nautical combat, when properly loaded.",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "It exhibits parasitic behavior.",
         LUNARTHRALL_PLANT_VINE_END = "A rather effective defense mechanism.",
 
+		LUNAR_GRAZER = "Its unique physiology seems to allow it to re-form itself.",
+
         PUREBRILLIANCE = "Pure energy, in a crystalline form.",
         LUNARPLANT_HUSK = "An extremely resilient material. I should make use of it.",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "The energy has been stabilized enough to form a functional blade.",
 		PICKAXE_LUNARPLANT = "A surprisingly effective mining and crushing implement.",
 		SHOVEL_LUNARPLANT = "A surprisingly effective digging implement.",
+
+        PUNCHINGBAG = "A useful tool for testing a weapon's efficacy.",
     },
 
     DESCRIBE_GENERIC = "A rare occurrence. I don't know what that is.",

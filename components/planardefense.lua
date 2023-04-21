@@ -49,29 +49,6 @@ end
 
 --------------------------------------------------------------------------
 
-function PlanarDefense:OnResistNonPlanarAttack(attacker)
-	local fx = SpawnPrefab("planar_resist_fx")
-	local radius = self.inst:GetPhysicsRadius(0) + .2 + math.random() * .5
-	local x, y, z = self.inst.Transform:GetWorldPosition()
-	local theta
-	if attacker ~= nil then
-		local x1, y1, z1 = attacker.Transform:GetWorldPosition()
-		if x ~= x1 or z ~= z1 then
-			theta = math.atan2(z - z1, x1 - x) + math.random() * 2 - 1
-		end
-	end
-	if theta == nil then
-		theta = math.random() * TWOPI
-	end
-	fx.Transform:SetPosition(
-		x + radius * math.cos(theta),
-		math.random(),
-		z - radius * math.sin(theta)
-	)
-end
-
---------------------------------------------------------------------------
-
 function PlanarDefense:GetDebugString()
 	return string.format("Defense=%.2f [%.2fx%.2f+%.2f]", self:GetDefense(), self:GetBaseDefense(), self:GetMultiplier(), self:GetBonus())
 end

@@ -4784,6 +4784,8 @@ return {
         LUNARTHRALL_PLANT = "It doesn't seem to care about personal space.",
         LUNARTHRALL_PLANT_VINE_END = "It has a prickly disposition.",
 
+		LUNAR_GRAZER = "It must have come through that strange rift!",
+
         PUREBRILLIANCE = "It's blinding me with science!",
         LUNARPLANT_HUSK = "It's incredibly tough. I could use this!",
 
@@ -4797,6 +4799,8 @@ return {
 		SWORD_LUNARPLANT = "It's hard not to make sound effects when I wave it around.",
 		PICKAXE_LUNARPLANT = "Smashing!",
 		SHOVEL_LUNARPLANT = "Has science gone too far?",
+
+        PUNCHINGBAG = "It comes with a finely calibrated ouch-o-meter.",
     },
 
     DESCRIBE_GENERIC = "It's a... thing.",

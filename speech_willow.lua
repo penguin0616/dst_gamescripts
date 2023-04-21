@@ -4621,7 +4621,7 @@ return{
         BOAT_ROTATOR_KIT = "Fiiiine, I'll put the stupid rudder on the stupid boat.",
         BOAT_BUMPER_KELP = "Ewww, it's slimy!",
         BOAT_BUMPER_KELP_KIT = "I guess building some bumpers is better than sinking.",
-        BOAT_BUMPER_SHELL = "Uh-huh, nothing sturdier than seashells.",
+		BOAT_BUMPER_SHELL = "Uh-huh, nothing sturdier than seashells.",
         BOAT_BUMPER_SHELL_KIT = "I guess building some bumpers is better than sinking.",
         BOAT_CANNON = {
             GENERIC = "It isn't loaded? Booooring.",
@@ -4781,6 +4781,8 @@ return{
         LUNARTHRALL_PLANT = "Ew, that thing's creepy!",
         LUNARTHRALL_PLANT_VINE_END = "It's asking for a taste of my lighter.",
 
+		LUNAR_GRAZER = "Ew, it's dripping its weird sleep gunk everywhere!",
+
         PUREBRILLIANCE = "It's pretty, but it'll never beat fire.",
         LUNARPLANT_HUSK = "Can I burn it now?",
 
@@ -4794,6 +4796,8 @@ return{
 		SWORD_LUNARPLANT = "It's okay, but now I really want a fire sword.",
 		PICKAXE_LUNARPLANT = "The dumb plant still gets to hit stuff. It's what it would've wanted.",
 		SHOVEL_LUNARPLANT = "Alright, time to find some stuff to dig up!",
+
+        PUNCHINGBAG = "Think fast, dummy!",
     },
 
     DESCRIBE_GENERIC = "I have no idea what that is!",

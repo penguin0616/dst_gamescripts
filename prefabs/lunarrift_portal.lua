@@ -412,6 +412,7 @@ local function on_rift_finished(inst)
         inst:Remove() -- Remove immediately if there is no one around to see it.
     else
         inst.AnimState:PlayAnimation("stage_3_disappear")
+        inst.SoundEmitter:PlaySound("rifts/portal/portal_disappear")
         if inst.shadow then
             inst.shadow.AnimState:PlayAnimation("shadow_disappear")
         end

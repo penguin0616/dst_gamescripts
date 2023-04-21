@@ -17,11 +17,15 @@ local function OnHit(inst, attacker, target)
 
 	inst.components.planardamage:SetBaseDamage(TUNING.BOMB_LUNARPLANT_PLANAR_DAMAGE)
 
+	inst.SoundEmitter:KillSound("toss")
+
 	inst:AddComponent("explosive")
 	inst.components.explosive.explosiverange = TUNING.BOMB_LUNARPLANT_RANGE
 	inst.components.explosive.explosivedamage = 0
 	inst.components.explosive.lightonexplode = false
-	inst.components.explosive:SetPvpFlag(inst.ispvp)
+	if inst.ispvp then
+		inst.components.explosive:SetPvpAttacker(attacker)
+	end
 	inst.components.explosive:OnBurnt()
 	--exploding should have removed me
 
@@ -123,6 +127,8 @@ local function onthrown(inst, attacker)
 	inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 	inst.AnimState:PlayAnimation("spin_loop", true)
 	inst.AnimState:SetLightOverride(1)
+
+	inst.SoundEmitter:PlaySound("rifts/lunarthrall_bomb/throw", "toss")
 
 	inst.Physics:SetMass(1)
 	inst.Physics:SetFriction(0)
@@ -248,6 +254,8 @@ local function fxfn()
 	if not TheWorld.ismastersim then
 		return inst
 	end
+
+	inst.SoundEmitter:PlaySound("rifts/lunarthrall_bomb/explode")
 
 	inst:ListenForEvent("animover", inst.Remove)
 	inst.persists = false

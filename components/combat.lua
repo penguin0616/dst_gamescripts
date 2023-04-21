@@ -539,6 +539,9 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli, spdamage)
 
     if self.inst.components.health ~= nil and damage ~= nil and damageredirecttarget == nil then
         if self.inst.components.inventory ~= nil then
+			if attacker ~= nil and attacker.components.planarentity ~= nil and not self.inst.components.inventory:EquipHasSpDefenseForType("planar") then
+				attacker.components.planarentity:OnPlanarAttackUndefended(self.inst)
+			end
 			damage, spdamage = self.inst.components.inventory:ApplyDamage(damage, attacker, weapon, spdamage)
         end
 		local damagetypemult = 1
@@ -558,12 +561,9 @@ function Combat:GetAttacked(attacker, damage, weapon, stimuli, spdamage)
 				if attacker ~= nil and attacker.components.combat ~= nil and attacker.components.combat.bonusdamagefn ~= nil then
 					damage = damage + damagetypemult * (attacker.components.combat.bonusdamagefn(attacker, self.inst, damage, weapon) or 0)
 				end
-				--Planar defense dampens regular damage
-				if self.inst.components.planardefense ~= nil then
-					damage = (math.sqrt(damage * 4 + 64) - 8) * 4
-					if spdamage == nil or spdamage.planar == nil then
-						self.inst.components.planardefense:OnResistNonPlanarAttack(attacker)
-					end
+				--Planar entities dampen regular damage
+				if self.inst.components.planarentity ~= nil then
+					damage, spdamage = self.inst.components.planarentity:AbsorbDamage(damage, attacker, weapon, spdamage)
 				end
             end
 			--Special damage after bonus damage
@@ -684,7 +684,7 @@ function Combat:GetImpactSound(target, weapon)
             ((target:HasTag("chess") or target:HasTag("mech")) and "mech_") or
             (target:HasTag("mound") and "mound_") or
             ((target:HasTag("shadow") or target:HasTag("shadowminion") or target:HasTag("shadowchesspiece")) and "shadow_") or
-            (target:HasTag("tree") and "tree_") or
+            ((target:HasTag("tree") or target:HasTag("wooden")) and "tree_") or
             (target:HasTag("veggie") and "vegetable_") or
             (target:HasTag("shell") and "shell_") or
             ((target:HasTag("rocky") or target:HasTag("fossil")) and "stone_") or

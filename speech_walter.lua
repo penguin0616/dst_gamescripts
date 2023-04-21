@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "A rudder might come in handy.",
         BOAT_BUMPER_KELP = "Don't worry Woby, I'm really good at sailing. That's just a precaution!",
         BOAT_BUMPER_KELP_KIT = "It's always best to be prepared!",
-        BOAT_BUMPER_SHELL = "Don't worry Woby, I'm really good at sailing. That's just a precaution!",
+		BOAT_BUMPER_SHELL = "Don't worry Woby, I'm really good at sailing. That's just a precaution!",
         BOAT_BUMPER_SHELL_KIT = "It's always best to be prepared!",
         BOAT_CANNON = {
             GENERIC = "I'll load the cannonball!",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "Woby, I think that plant's haunted!",
         LUNARTHRALL_PLANT_VINE_END = "Revenge of the plants!",
 
+		LUNAR_GRAZER = "It puts its victims to sleep before it eats them. Neat!",
+
         PUREBRILLIANCE = "That's gotta be the shiniest rock I've ever seen.",
         LUNARPLANT_HUSK = "If you kill a ghost plant, do you get... a double ghost?",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "A space sword! Neat!",
 		PICKAXE_LUNARPLANT = "Those are some really tough leaves!",
 		SHOVEL_LUNARPLANT = "I came up with the name! ",
+
+        PUNCHINGBAG = "Don't worry Woby, it's just for practice!",
     },
 
     DESCRIBE_GENERIC = "That sure is a mystery!",

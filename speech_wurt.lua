@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "It boat stuff.",
         BOAT_BUMPER_KELP = "Pretty decorations!",
         BOAT_BUMPER_KELP_KIT = "Gonna decorate boat, florp.",
-        BOAT_BUMPER_SHELL = "Pretty decorations!",
+		BOAT_BUMPER_SHELL = "Pretty decorations!",
         BOAT_BUMPER_SHELL_KIT = "Gonna decorate boat, florp.",
         BOAT_CANNON = {
             GENERIC = "It not ready yet!",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "Hey, it not sharing! Wicker-lady say we have to share!",
         LUNARTHRALL_PLANT_VINE_END = "Glurgh, quit hitting!!",
 
+		LUNAR_GRAZER = "Hee-hee, it funny!",
+
         PUREBRILLIANCE = "Glurgh, too bright!",
         LUNARPLANT_HUSK = "Hee-hee, it dead!",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "It mine!! Me want glowy sword!",
 		PICKAXE_LUNARPLANT = "It real good at breaking stuff.",
 		SHOVEL_LUNARPLANT = "Good scooper-upper, florp.",
+
+        PUNCHINGBAG = "Allowed to hit it? Yay!!",
     },
 
     DESCRIBE_GENERIC = "What that?",

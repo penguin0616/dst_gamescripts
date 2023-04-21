@@ -4615,7 +4615,7 @@ return{
         BOAT_ROTATOR_KIT = "Will make boat extra turny, yes?",
         BOAT_BUMPER_KELP = "Wolfgang feels better now.",
         BOAT_BUMPER_KELP_KIT = "Will keep boat safe.",
-        BOAT_BUMPER_SHELL = "Wolfgang feels better now.",
+		BOAT_BUMPER_SHELL = "Wolfgang feels better now.",
         BOAT_BUMPER_SHELL_KIT = "Will keep boat safe.",
         BOAT_CANNON = {
             GENERIC = "Cannon is empty, but still very scary looking!",
@@ -4775,6 +4775,8 @@ return{
         LUNARTHRALL_PLANT = "Eep! Is haunted plant!",
         LUNARTHRALL_PLANT_VINE_END = "Ground is haunted too!",
 
+		LUNAR_GRAZER = "Funny blob makes Wolfgang's head feel tickly.",
+
         PUREBRILLIANCE = "Little rocks are too bright!",
         LUNARPLANT_HUSK = "Ah. Is not haunted anymore.",
 
@@ -4788,6 +4790,8 @@ return{
 		SWORD_LUNARPLANT = "Is sword of star-stuff.",
 		PICKAXE_LUNARPLANT = "Rocks will tremble before Wolfgang!",
 		SHOVEL_LUNARPLANT = "But is not shoe? Wolfgang is confused...",
+
+        PUNCHINGBAG = "Wolfgang will try to go easy on tiny punch man.",
     },
 
     DESCRIBE_GENERIC = "What is this thing?",

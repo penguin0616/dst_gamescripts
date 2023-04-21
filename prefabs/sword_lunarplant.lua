@@ -6,6 +6,7 @@ local assets =
 local prefabs =
 {
 	"sword_lunarplant_blade_fx",
+	"hitsparks_fx",
 }
 
 local function GetSetBonusEquip(inst, owner)
@@ -23,12 +24,16 @@ local function SetFxOwner(inst, owner)
 		inst.blade2.entity:SetParent(owner.entity)
 		inst.blade1.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 0, 3)
 		inst.blade2.Follower:FollowSymbol(owner.GUID, "swap_object", nil, nil, nil, true, nil, 5, 8)
+		inst.blade1.components.highlightchild:SetOwner(owner)
+		inst.blade2.components.highlightchild:SetOwner(owner)
 	else
 		inst.blade1.entity:SetParent(inst.entity)
 		inst.blade2.entity:SetParent(inst.entity)
 		--For floating
 		inst.blade1.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true, nil, 0, 3)
 		inst.blade2.Follower:FollowSymbol(inst.GUID, "swap_spear", nil, nil, nil, true, nil, 5, 8)
+		inst.blade1.components.highlightchild:SetOwner(inst)
+		inst.blade2.components.highlightchild:SetOwner(inst)
 	end
 end
 
@@ -72,6 +77,12 @@ local function onunequip(inst, owner)
 
 	inst.components.weapon:SetDamage(inst.base_damage)
 	inst.components.planardamage:RemoveBonus(inst, "setbonus")
+end
+
+local function OnAttack(inst, attacker, target)
+	if target ~= nil and target:IsValid() then
+		SpawnPrefab("hitsparks_fx"):Setup(attacker, target)
+	end
 end
 
 local function fn()
@@ -125,6 +136,7 @@ local function fn()
 	inst.base_damage = TUNING.SWORD_LUNARPLANT_DAMAGE
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(inst.base_damage)
+	inst.components.weapon:SetOnAttack(OnAttack)
 
 	inst:AddComponent("planardamage")
 	inst.components.planardamage:SetBaseDamage(TUNING.SWORD_LUNARPLANT_PLANAR_DAMAGE)
@@ -161,6 +173,8 @@ local function fxfn()
 	inst.AnimState:SetSymbolLightOverride("pb_energy_loop01", .5)
 	inst.AnimState:SetLightOverride(.1)
 
+	inst:AddComponent("highlightchild")
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
@@ -172,5 +186,5 @@ local function fxfn()
 	return inst
 end
 
-return Prefab("sword_lunarplant", fn, assets),
+return Prefab("sword_lunarplant", fn, assets, prefabs),
 	Prefab("sword_lunarplant_blade_fx", fxfn, assets)

@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "Do I look like a common shipwright? Oh, very well...",
         BOAT_BUMPER_KELP = "I don't know if the smell is worth the protection it offers.",
         BOAT_BUMPER_KELP_KIT = "Ugh. These menial tasks do not suit me.",
-        BOAT_BUMPER_SHELL = "Seashells. The sturdiest building material known to man.",
+		BOAT_BUMPER_SHELL = "Seashells. The sturdiest building material known to man.",
         BOAT_BUMPER_SHELL_KIT = "Ugh. These menial tasks do not suit me.",
         BOAT_CANNON = {
             GENERIC = "It's useless if it isn't loaded.",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "I don't think it's from around here.",
         LUNARTHRALL_PLANT_VINE_END = "Some aggressive pruning might be in order.",
 
+		LUNAR_GRAZER = "I have a feeling this pest won't be dispatched so easily.",
+
         PUREBRILLIANCE = "I wonder if she knows about this...",
         LUNARPLANT_HUSK = "The blasted thing is finally dead.",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "Such power!",
 		PICKAXE_LUNARPLANT = "It works surprisingly well.",
 		SHOVEL_LUNARPLANT = "I'd rather let someone else do my dirty work.",
+
+        PUNCHINGBAG = "A crude test of my weapons' power.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

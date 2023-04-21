@@ -1587,11 +1587,15 @@ function d_daywalker(chain)
 	c_select(daywalker)
 end
 
-
 function d_moonplant()
     if c_sel() then
         TheWorld.components.lunarthrall_plantspawner:SpawnPlant(c_sel())
     end
+end
+
+function d_punchingbags()
+    local punchingbag_list = {"punchingbag", "punchingbag_lunar", "punchingbag_shadow"}
+    d_spawnlist(punchingbag_list, 3.0)
 end
 
 local skiplist = {}

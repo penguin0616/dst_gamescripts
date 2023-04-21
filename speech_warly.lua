@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "Aha! I thought my boat was missing something!",
         BOAT_BUMPER_KELP = "A helpful bit of garnish for the boat, non?",
         BOAT_BUMPER_KELP_KIT = "I will feel a bit safer with an extra layer wrapped around my boat.",
-        BOAT_BUMPER_SHELL = "I've given my boat a crunchy outer shell.",
+		BOAT_BUMPER_SHELL = "I've given my boat a crunchy outer shell.",
         BOAT_BUMPER_SHELL_KIT = "I will feel a bit safer with an extra layer wrapped around my boat.",
         BOAT_CANNON = {
             GENERIC = "Its belly is empty.",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "Go away, you plant thief!",
         LUNARTHRALL_PLANT_VINE_END = "I'm afraid it won't give up without a fight.",
 
+		LUNAR_GRAZER = "It's like a living gelatin... but it lacks the sweetness.",
+
         PUREBRILLIANCE = "My, I've never seen anything shine so brightly.",
         LUNARPLANT_HUSK = "Ah, raw ingredients!",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "Beautiful and dangerous.",
 		PICKAXE_LUNARPLANT = "It's far less delicate than it looks.",
 		SHOVEL_LUNARPLANT = "I almost hate to get it dirty.",
+
+        PUNCHINGBAG = "It's a relief to practice on something that won't hit me back.",
     },
 
     DESCRIBE_GENERIC = "It is what it is...",

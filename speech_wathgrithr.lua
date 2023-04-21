@@ -4614,7 +4614,7 @@ return{
         BOAT_ROTATOR_KIT = "It shall be done, with haste!",
         BOAT_BUMPER_KELP = "My vessel is well defended.",
         BOAT_BUMPER_KELP_KIT = "It shall shield my vessel from harm.",
-        BOAT_BUMPER_SHELL = "My vessel is well defended.",
+		BOAT_BUMPER_SHELL = "My vessel is well defended.",
         BOAT_BUMPER_SHELL_KIT = "It shall shield my vessel from harm.",
         BOAT_CANNON = {
             GENERIC = "Load the cannons!",
@@ -4774,6 +4774,8 @@ return{
         LUNARTHRALL_PLANT = "Vicious plant, I shall honor thee with a swift death!",
         LUNARTHRALL_PLANT_VINE_END = "Ha! You shall have to do better than that!",
 
+		LUNAR_GRAZER = "I will not fall prey to your tricks, spirit!",
+
         PUREBRILLIANCE = "Like staring up into the spotlights...",
         LUNARPLANT_HUSK = "It hath a formidible hide, for a non-meat.",
 
@@ -4787,6 +4789,8 @@ return{
 		SWORD_LUNARPLANT = "Am I worthy of wielding a weapon of such brilliance?",
 		PICKAXE_LUNARPLANT = "Neither stone nor structure shall stand in my way!",
 		SHOVEL_LUNARPLANT = "The ground stands no chance against me.",
+
+        PUNCHINGBAG = "Alas, 'tis not a very lively sparring partner.",
     },
 
     DESCRIBE_GENERIC = "It is an artifact of this realm.",
