@@ -708,6 +708,10 @@ local function removetail(inst)
                 if tail:HasTag("weakvine") and inst.indirectdamage == tail.GUID then
                     tail.sg:GoToState("death")
                 end
+				if tail.components.combat ~= nil then
+					tail:AddTag("NOCLICK")
+					tail:AddTag("notarget")
+				end
                 tail.errodetask = tail:DoTaskInTime(time,ErodeAway)
             end
         end

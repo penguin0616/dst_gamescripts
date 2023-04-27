@@ -1601,6 +1601,7 @@ ACTIONS.ADDWETFUEL.fn = ACTIONS.ADDFUEL.fn
 ACTIONS.GIVE.strfn = function(act)
     return act.target ~= nil
         and ((act.target:HasTag("gemsocket") and "SOCKET") or
+            (act.target:HasTag("trader_just_show") and "SHOW")or
             (act.target:HasTag("moontrader") and "CELESTIAL"))
         or nil
 end

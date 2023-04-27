@@ -5,6 +5,8 @@ local TIME_UNIT = TUNING.SEG_TIME*8
 
 local PERIODIC_TIME = TUNING.TOTAL_DAY_TIME *2
 
+local EXISTING_PLANT_SPACE = 30
+
 local function getrifts()
     return TheWorld.components.riftspawner and TheWorld.components.riftspawner:GetRiftsOfType("lunarrift_portal") or nil
 end
@@ -82,7 +84,6 @@ local function SpawnThralls()
                 end
 
                 local targets = {}
-                local EXISTING_PLANT_SPACE = 15
                 local SPACE = 2.5
                 local MAX_SPACE = 8
                 local number_spawned = 0
@@ -369,7 +370,7 @@ function Lunarthrall_plantspawner:FindHerd()
         local count = 0
         for member, i in pairs(herd.components.herd.members) do
             local pt = Vector3(member.Transform:GetWorldPosition())
-            local ents = TheSim:FindEntities(pt.x,pt.y,pt.z, 15, HUSK_MUST)
+            local ents = TheSim:FindEntities(pt.x,pt.y,pt.z, EXISTING_PLANT_SPACE, HUSK_MUST)
             if #ents <= 0 then
                 if not member.lunarthrall_plant and
                     (not member.components.witherable or not member.components.witherable:IsWithered()) then

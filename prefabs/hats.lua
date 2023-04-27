@@ -3082,6 +3082,7 @@ local function MakeHat(name)
 	local function lunarplant_custom_init(inst)
 		inst:AddTag("lunarplant")
 		inst:AddTag("gestaltprotection")
+		inst:AddTag("goggles")
 
 		--waterproofer (from waterproofer component) added to pristine state for optimization
 		inst:AddTag("waterproofer")

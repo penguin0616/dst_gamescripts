@@ -403,6 +403,7 @@ STRINGS =
             READY    = "Sacrifice",
             SOCKET   = "Socket",
             CELESTIAL = "Offer",
+            SHOW = "Show",
 			APPLY    = "Apply {item}",
             QUAGMIRE_POT_HANGER = "Hang {item}",
             QUAGMIRE_OVEN       = "Place {item}",
@@ -3399,7 +3400,7 @@ STRINGS =
         MOONSTORM_STATIC_ITEM = "Restrained Static",
 
         ALTERGUARDIANHAT = "Enlightened Crown",
-        ALTERGUARDIANHATSHARD = "Enlightened Crown Shard",
+        ALTERGUARDIANHATSHARD = "Enlightened Shard",
 
         MOONSTORM_GOGGLESHAT = "Astroggles",
 
@@ -6133,7 +6134,26 @@ STRINGS =
 
     WAGSTAFF_NPC_CAPTURESTART = "Excellent! My little experiment was a resounding success!",
     WAGSTAFF_NPC_CAPTURESTOP = "Thank you for all your hard work.",
+    WAGSTAFF_NPC_CAPTURESTOP1 = "This will increase the power output exponentially!",
     WAGSTAFF_NPC_CAPTURESTOP2 = "Now if you'll excuse me, I have much to do.",
+    WAGSTAFF_NPC_CAPTURESTOP3 = "you and I are about to change the world",
+
+    WAGSTAFF_NPC_REQUEST = {"Incredible! It's just as I surmised!",
+                            "If I could just push its output a bit further...",
+                            "Oh yes, this could really be something, with one small addition...",
+                            "A small crystalline structure might just do the trick.",
+                            "Yes, I'm positive a shard of crystal would work...",
+                            "If it had the right translucency...",
+                            "And the correct shape...",
+                            "And lunar origin...",
+                            -- These next ones will be randomly chosen from here on.
+                            "Hmmm...",
+                            "If I could just locate one...",
+                            "A crystalline shard, with the correct properties..."},
+
+    WAGSTAFF_NPC_NOTTHAT = "Don't waste my time.",
+    WAGSTAFF_NPC_YES_THAT1 = "This is... yes, this will propel my experiments to the next level!",
+    WAGSTAFF_NPC_YES_THAT2 = "Quickly, hand it over.",
 
     WAGSTAFF_GOTTAGO1 = "Aha! This selenological anomaly can only mean one thing!",
     WAGSTAFF_GOTTAGO2 = "Now is my chance!",
@@ -7777,7 +7797,7 @@ STRINGS.UI =
 		ARMOUR = "Armour",
 		CLOTHING = "Clothing",
 		RESTORATION = "Healing",
-		MAGIC = "Shadow Magic",
+		MAGIC = "Magic",
 		DECOR = "Decorations",
 		STRUCTURES = "Structures",
 		CONTAINERS = "Storage Solutions",

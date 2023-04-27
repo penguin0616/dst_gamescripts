@@ -53,9 +53,11 @@ end
 
 local function do_hit_presentation(inst)
     if not inst:HasTag("burnt") then
-        inst.AnimState:PlayAnimation("hit")
+		if not (inst.AnimState:IsCurrentAnimation("hit") and inst.AnimState:GetCurrentAnimationFrame() < 4) then
+			inst.AnimState:PlayAnimation("hit")
+			inst.AnimState:PushAnimation("idle", false)
+		end
         inst.SoundEmitter:PlaySound("stageplay_set/mannequin/hit")
-        inst.AnimState:PushAnimation("idle", false)
     end
 end
 
@@ -110,6 +112,45 @@ local function onequipped(inst, data)
 end
 
 --------------------------------------------------------------------------------
+local function on_burnt(inst)
+    if inst.components.trader then
+        inst:RemoveComponent("trader")
+    end
+    if inst.components.activatable then
+        inst:RemoveComponent("activatable")
+    end
+    if inst.components.inventory then
+        inst.components.inventory:DropEverything()
+    end
+	if inst.components.combat ~= nil then
+		inst:RemoveComponent("combat")
+	end
+	if inst.components.health ~= nil then
+		inst:RemoveComponent("health")
+	end
+	inst:RemoveEventCallback("attacked", onhit)
+	inst:RemoveEventCallback("onbuilt", onbuilt)
+	inst:RemoveEventCallback("healthdelta", on_health_delta)
+	inst:RemoveEventCallback("equip", onequipped)
+    DefaultBurntStructureFn(inst)
+end
+
+local function on_save(inst, data)
+    if (inst.components.burnable and inst.components.burnable:IsBurning())
+            or inst:HasTag("burnt") then
+        data.burnt = true
+    end
+end
+
+local function on_load(inst, data)
+    if data then
+        if data.burnt then
+            inst.components.burnable.onburnt(inst)
+        end
+    end
+end
+
+--------------------------------------------------------------------------------
 local function basefn(build, tags)
     build = build or "punchingbag"
 
@@ -126,7 +167,6 @@ local function basefn(build, tags)
 
     inst:AddTag("structure")
     inst:AddTag("equipmentmodel")
-	inst:AddTag("rotatableobject")
     inst:AddTag("wooden")
 
     inst.DynamicShadow:SetSize(1.3, 0.6)
@@ -161,7 +201,6 @@ local function basefn(build, tags)
     health_cmp:SetMaxHealth(MAX_NUM + 10)
     health_cmp:SetMinHealth(1)
     health_cmp:StartRegen(MAX_NUM + 10, 0.1)
-    inst:ListenForEvent("healthdelta", on_health_delta)
 
     --
     inst:AddComponent("inspectable")
@@ -188,16 +227,20 @@ local function basefn(build, tags)
     workable_cmp:SetOnWorkCallback(on_hammered)
 
     --
-    inst:AddComponent("savedrotation").dodelayedpostpassapply = true
-
-    --
     MakeHauntable(inst)
+	MakeMediumBurnable(inst, nil, nil, true)
+	inst.components.burnable:SetOnBurntFn(on_burnt)
+	MakeMediumPropagator(inst)
 
     --
     inst:ListenForEvent("attacked", onhit)
     inst:ListenForEvent("onbuilt", onbuilt)
     inst:ListenForEvent("healthdelta", on_health_delta)
     inst:ListenForEvent("equip", onequipped)
+
+    --
+    inst.OnSave = on_save
+    inst.OnLoad = on_load
 
     --
     if TheNet:GetServerGameMode() == "lavaarena" then
@@ -208,50 +251,8 @@ local function basefn(build, tags)
 end
 
 ----------------------------------------------
-local function on_default_burnt(inst)
-    if inst.components.trader then
-        inst:RemoveComponent("trader")
-    end
-    if inst.components.activatable then
-        inst:RemoveComponent("activatable")
-    end
-    if inst.components.inventory then
-        inst.components.inventory:DropEverything()
-    end
-    DefaultBurntStructureFn(inst)
-end
-
-local function on_default_save(inst, data)
-    if (inst.components.burnable and inst.components.burnable:IsBurning())
-            or inst:HasTag("burnt") then
-        data.burnt = true
-    end
-end
-
-local function on_default_load(inst, data)
-    if data then
-        if data.burnt then
-            inst.components.burnable.onburnt(inst)
-        end
-    end
-end
-
 local function defaultfn()
-    local inst = basefn()
-
-    if not TheWorld.ismastersim then
-        return inst
-    end
-
-    MakeMediumBurnable(inst, nil, nil, true)
-    inst.components.burnable:SetOnBurntFn(on_default_burnt)
-    MakeMediumPropagator(inst)
-
-    --
-    inst.OnSave = on_default_save
-    inst.OnLoad = on_default_load
-
-    return inst
+	return basefn()
 end
 
 ----------------------------------------------

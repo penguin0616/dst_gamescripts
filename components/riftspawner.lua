@@ -80,7 +80,7 @@ local function get_next_rift_location()
 
     local previous_rifts_count = #_previous_spawn_xs
     if previous_rifts_count == 0 then
-        local map_width, map_height = TheWorld.Map:GetSize()
+        local map_width, map_height = _map:GetSize()
         map_width = (map_width/2) * TILE_SCALE
         map_height = (map_height/2) * TILE_SCALE
 
@@ -284,6 +284,10 @@ end
 --[[ Public getters and setters ]]
 --------------------------------------------------------------------------
 
+function self:GetEnabled()
+    return _lunar_rifts_enabled
+end
+
 function self:GetRifts()
     return _rifts
 end
@@ -343,6 +347,10 @@ function self:LoadPostPass(newents, data)
             end
         end
     end
+
+    if _lunar_rifts_enabled then
+        EnableLunarRifts()
+    end
 end
 
 --------------------------------------------------------------------------
@@ -372,7 +380,6 @@ function self:Debug_SpawnRift(respect_spawn_limit)
     return spawned_rift
 end
 
-
 function self:SpawnRift(pos)
     SpawnRift(pos)
 end
@@ -382,8 +389,7 @@ end
 
 inst:ListenForEvent("rifts_setdifficulty", SetDifficulty)
 inst:ListenForEvent("rifts_settingsenabled", SetEnabledSetting)
-inst:ListenForEvent("moonboss_defeated", EnableLunarRifts)
-inst:ListenForEvent("ms_moonboss_was_defeated", EnableLunarRifts)
+inst:ListenForEvent("lunarrift_opened", EnableLunarRifts)
 inst:ListenForEvent("ms_lunarrift_maxsize", OnLunarriftMaxsize)
 
 _worldsettingstimer:AddTimer(

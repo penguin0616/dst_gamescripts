@@ -229,6 +229,10 @@ end
 
 --------------------------------------------------------------------------
 
+local function PlayExplodeSound(inst)
+	inst.SoundEmitter:PlaySound("rifts/lunarthrall_bomb/explode")
+end
+
 local function fxfn()
 	local inst = CreateEntity()
 
@@ -255,7 +259,7 @@ local function fxfn()
 		return inst
 	end
 
-	inst.SoundEmitter:PlaySound("rifts/lunarthrall_bomb/explode")
+	inst:DoTaskInTime(0, PlayExplodeSound)
 
 	inst:ListenForEvent("animover", inst.Remove)
 	inst.persists = false

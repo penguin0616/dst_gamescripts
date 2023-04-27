@@ -578,6 +578,8 @@ local function master_postinit(inst)
 
     inst:AddComponent("sharklistener")
 
+    inst:AddComponent("entitytracker")
+
     inst:AddComponent("riftspawner")
     inst:AddComponent("lunarthrall_plantspawner")
 

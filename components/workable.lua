@@ -124,6 +124,9 @@ function Workable:WorkedBy(worker, numworks)
 		self.workleft = 0
 	else
 	    self.workleft = self.workleft - numworks
+        if self.workleft < 0.01 then -- NOTES(JBK): Floating points are possible with work efficiency modifiers so cut out the epsilon.
+            self.workleft = 0
+        end
 	end
     self.lastworktime = GetTime()
 
