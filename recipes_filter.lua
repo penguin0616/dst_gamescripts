@@ -293,6 +293,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"armorruins",
 	"ruins_bat",
 	"eyeturret_item",
+    "shadow_forge_kit",
 	"blueprint_craftingset_ruins_builder",
 	"blueprint_craftingset_ruinsglow_builder",
 
@@ -321,6 +322,12 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"sword_lunarplant",
 	"pickaxe_lunarplant",
 	"shovel_lunarplant",
+
+	----SHADOW_FORGE----
+	"armor_voidcloth",
+	"voidclothhat",
+	"voidcloth_umbrella",
+	"voidcloth_scythe",
 
 	-- Hermit Crab
 	"hermitshop_hermit_bundle_shells",
@@ -555,6 +562,7 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"goldenpitchfork",
 	"pickaxe_lunarplant",
 	"shovel_lunarplant",
+	"voidcloth_scythe",
 	"trap",
 	"birdtrap",
 	"bugnet",
@@ -669,6 +677,7 @@ CRAFTING_FILTERS.WEAPONS.recipes =
 	"nightstick",
 	"nightsword",
 	"sword_lunarplant",
+	"voidcloth_scythe",
 	"sleepbomb",
 	"bomb_lunarplant",
 	"blowdart_pipe",
@@ -707,6 +716,8 @@ CRAFTING_FILTERS.ARMOUR.recipes =
 	"dreadstonehat",
 	"armor_lunarplant",
 	"lunarplanthat",
+	"armor_voidcloth",
+	"voidclothhat",
 }
 
 CRAFTING_FILTERS.CLOTHING.recipes =
@@ -726,6 +737,7 @@ CRAFTING_FILTERS.CLOTHING.recipes =
 	"minifan",
 	"grass_umbrella",
 	"umbrella",
+	"voidcloth_umbrella",
 	"featherfan",
 	"flowerhat",
 	"goggleshat",
@@ -1008,6 +1020,7 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"wall_wood_item",
 	"wall_stone_item",
 	"wall_moonrock_item",
+	"wall_dreadstone_item",
 
 	"homesign",
 	"arrowsign_post",
@@ -1103,6 +1116,7 @@ CRAFTING_FILTERS.SUMMER.recipes =
 	"minifan",
 	"grass_umbrella",
 	"umbrella",
+	"voidcloth_umbrella",
 	"featherfan",
 
 	"reflectivevest",
@@ -1135,6 +1149,7 @@ CRAFTING_FILTERS.RAIN.recipes =
 {
 	"grass_umbrella",
 	"umbrella",
+	"voidcloth_umbrella",
 	"raincoat",
 	"balloonhat",
 	"strawhat",
@@ -1175,6 +1190,7 @@ CRAFTING_FILTERS.DECOR.recipes =
 	"wall_wood_item",
 	"wall_stone_item",
 	"wall_moonrock_item",
+	"wall_dreadstone_item",
 
 	"pirate_flag_pole",
     "dock_kit",

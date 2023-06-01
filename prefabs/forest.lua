@@ -454,6 +454,10 @@ local prefabs =
     "lunarthrall_plant",
     "domesticplantherd",
 
+    -- Shadow Rifts
+    "charlie_npc",
+    "scrapbook_page",
+
     --
 }
 

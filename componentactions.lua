@@ -822,6 +822,12 @@ local COMPONENT_ACTIONS =
                 end
             end
         end,
+
+		sittable = function(inst, doer, actions, right)
+			if inst:HasTag("cansit") then
+				table.insert(actions, ACTIONS.SITON)
+			end
+		end,
     },
 
     USEITEM = --args: inst, doer, target, actions, right
@@ -2337,6 +2343,9 @@ local COMPONENT_ACTIONS =
         workable = function(inst, action, right)
             return (right or action ~= ACTIONS.HAMMER) and
                 inst:HasTag(action.id.."_workable")
+        end,
+        pickable = function(inst, action, right)
+            return action == ACTIONS.SCYTHE and inst:HasTag("pickable")
         end,
     },
 }

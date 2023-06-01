@@ -5,7 +5,7 @@
 
 We have provided a standard PO file to translation in /scripts/languages/strings.pot
 To add a new language:
-- Use a PO editor such as POEdit (http://www.poedit.net/) to translate strings.pot
+- Use a PO editor such as POEdit (http://www.poedit.net/) to tranmslate strings.pot
 - Load your own PO file under /scripts/languages/language.lua
 
 ***************************************************************
@@ -585,6 +585,7 @@ STRINGS =
             PICK_FLOWER = "Pick Flower From",
             EQUIPMENTSWAP = "Swap Clothes",
             SPIN = "Spin",
+            SCRAPBOOK = "Add to Scrapbook",
         },
 
 		OPEN_CRAFTING =
@@ -717,15 +718,22 @@ STRINGS =
         CONSTRUCT =
         {
             GENERIC = "Build",
+            OFFER_TO = "Offer to",
             GENERIC_FMT = "Build {name}",
+            OFFER = "Offer Material",
             STORE = "Add Material",
         },
         STOPCONSTRUCTION =
         {
             GENERIC = "Stop Building",
             GENERIC_FMT = "Stop Building {name}",
+            OFFER = "Stop Offering",
         },
-        APPLYCONSTRUCTION = "Build",
+        APPLYCONSTRUCTION =
+        {
+            GENERIC = "Build",
+            OFFER = "Offer",
+        },
         STARTCHANNELING = {
             GENERIC = "Touch",
             PUMP = "Pump",
@@ -959,6 +967,9 @@ STRINGS =
         ROTATE_FENCE = "Rotate",
 
         PERFORM = "Perform",
+
+        SCYTHE = "Reap",
+		SITON = "Sit On",
 	},
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
@@ -1733,12 +1744,14 @@ STRINGS =
         WALL_RUINS_ITEM = "Thulecite Wall",
         WALL_HAY_ITEM = "Hay Wall",
         WALL_MOONROCK_ITEM = "Moon Rock Wall",
+		WALL_DREADSTONE_ITEM = "Dreadstone Wall",
 
         WALL_WOOD = "Wood Wall",
         WALL_STONE = "Stone Wall",
         WALL_RUINS = "Thulecite Wall",
         WALL_HAY = "Hay Wall",
         WALL_MOONROCK = "Moon Rock Wall",
+		WALL_DREADSTONE = "Dreadstone Wall",
 
         FENCE = "Wood Fence",
         FENCE_ITEM = "Wood Fence",
@@ -3577,7 +3590,7 @@ STRINGS =
 
         CHARLIE_HECKLER = "Mockingbird",
 
-        STAGEUSHER = "Stagehand",
+        STAGEUSHER = "Prickly Stagehand",
         SEWING_MANNEQUIN = "Mannequin",
 
         MASK_DOLLHAT = "Doll Mask",
@@ -3652,6 +3665,42 @@ STRINGS =
         PUNCHINGBAG = "Punching Bag",
         PUNCHINGBAG_LUNAR = "Bright Boxer",
         PUNCHINGBAG_SHADOW = "Shadow Boxer",
+
+        -- Rifts 2
+        SHADOWRIFT_PORTAL = "Rift",
+
+		SHADOW_FORGE = "Shadowcraft Plinth",
+		SHADOW_FORGE_KIT = "Shadowcraft Plinth Kit",
+
+        FUSED_SHADELING = "Fused Shadeling",
+        FUSED_SHADELING_BOMB = "Dread Mite",
+
+		RUINS_SHADELING = "Resting Horror",
+
+		VOIDCLOTH = "Dark Tatters",
+		VOIDCLOTHHAT = "Void Cowl",
+		ARMOR_VOIDCLOTH = "Void Robe",
+
+        VOIDCLOTH_UMBRELLA = "Umbralla",
+        VOIDCLOTH_SCYTHE = "Shadow Reaper",
+
+		SHADOWTHRALL_HANDS = "Ink Blight",
+		SHADOWTHRALL_HANDS_ALLEGIANCE = "Jitters",
+
+		SHADOWTHRALL_HORNS = "Ink Blight",
+		SHADOWTHRALL_HORNS_ALLEGIANCE = "Rasp",
+
+		SHADOWTHRALL_WINGS = "Ink Blight",
+		SHADOWTHRALL_WINGS_ALLEGIANCE = "Shriek",
+
+        CHARLIE_NPC = "Charlie", --Maxwell and Winona only
+        CHARLIE_NPC_ALT = "Shadow Queen",
+        CHARLIE_HAND = "Beckoning Hand",
+
+        NITRE_FORMATION = "Nitre Formation",
+        DREADSTONE_STACK = "Dreadstone Outcrop",
+
+        SCRAPBOOK_PAGE = "Lost Scrapbook Page",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -3864,6 +3913,7 @@ STRINGS =
         WALL_STONE_ITEM = "Stone wall segments.",
         WALL_HAY_ITEM = "Hay wall segments. Not very sturdy.",
         WALL_MOONROCK_ITEM = "Walls for the lunar loony.",
+		WALL_DREADSTONE_ITEM = "Surround yourself in the most dreadful decor.",
         MOONROCKCRATER = "A rock for marking your territory.",
         FENCE_ITEM = "Wood fence segments.",
         FENCE_GATE_ITEM = "A gate for wood fencing.",
@@ -4543,11 +4593,20 @@ STRINGS =
 		STAFF_LUNARPLANT = "Stay rooted to the spot and attack from afar.",
 		SWORD_LUNARPLANT = "A sword of lunar light.",
 		PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
-		SHOVEL_LUNARPLANT = "The groundbreaking results of cross-pollination between a shovel and a garden hoe.",
+
 
         PUNCHINGBAG = "Test the strength of your weapons. And have fun!",
         PUNCHINGBAG_LUNAR = "Test how well your weapons fare against lunar foes.",
         PUNCHINGBAG_SHADOW = "Test how well your weapons fare against shadowy foes.",
+
+        -- Rifts 2
+        SHADOW_FORGE_KIT = "Create horrors for your convenience.",
+
+        ARMOR_VOIDCLOTH = "A nightmarish cloak to keep the light at bay.",
+        VOIDCLOTHHAT = "No light can pierce the darkness within this hood.",
+        VOIDCLOTH_UMBRELLA = "Shadowy protection from even the harshest rainfall.",
+        VOIDCLOTH_SCYTHE = "Cull the plant population with ease.",
+
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
     -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
@@ -5752,6 +5811,7 @@ STRINGS =
         CELESTIAL = "Celestial",
 		MOON_ALTAR = "Celestial",
 		LUNARFORGING = "Brightsmithy",
+		SHADOWFORGING = "Shadowcraft",
         SHADOW = "Shadow",
         ENGINEERING = "Engineering",
 		ELIXIRBREWING = "Ectoherbology",
@@ -6756,6 +6816,7 @@ STRINGS.UI =
         NEEDSSKILL = "Learn new skills.",
         NEEDSBOOKSTATION = "Build a bookcase to craft your books.",
 		NEEDSLUNARFORGING_TWO = "Use a Brightsmithy to forge a prototype!",
+		NEEDSSHADOWFORGING_TWO = "Use a Shadowcraft Plinth to create a prototype!",
 
 		NEEDSYOTG = "Available during Year of the Gobbler!",
 		NEEDSYOTV = "Available during Year of the Varg!",
@@ -7282,7 +7343,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Taking Root\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Terrors Below\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -7820,6 +7881,7 @@ STRINGS.UI =
         SCULPTING = "Sculptures",
 		CELESTIAL = "Celestial",
 		LUNARFORGING = "Brightsmithy",
+		SHADOWFORGING = "Shadowcraft",
         HERMITCRABSHOP = "Bottle Exchange",
 
         SHADOW = "Codex Umbra",
@@ -8122,6 +8184,12 @@ STRINGS.UI =
 
     },
 
+    SCRAPBOOK = 
+    {
+        TITLE = "Scrapbook",
+        ONLINE_DATA_USER_OFFLINE = "Login to retrieve online scrapbook data.",
+        ONLINE_DATA_DOWNLOAD_FAILED = "Failed to sync online scrapbook data.",
+    },
 	COMPENDIUM =
 	{
 		HISTORYOFTRAVELS = "History of Travels",
@@ -8530,6 +8598,7 @@ STRINGS.UI =
         PLAYERPAUSED_TEXT = "{player} paused the game.",
         HOSTPAUSED_TEXT = "The server host has paused the game.",
         SELFPAUSED_TEXT = "You have paused the game.",
+        SCRAPBOOK = "Scrapbook",
     },
 
 	WORDPREDICTIONWIDGET =
@@ -14207,6 +14276,80 @@ STRINGS.SKILLTREE = {
         WILSON_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the secrets of Lunar Transmutation.",        
     },
 }
+
+STRINGS.SCRAPBOOK = {
+    SUBCATS = {
+        SPIDER = "Spider",
+        HALLOWEENORNAMENT = "Halloween Ornament",
+        STATUE = "Statue",
+        UPGRADEMODULE = "Upgrade Module",
+        TRINKET = "Trinket",
+        ORNAMENT = "Ornament",
+        BOOK = "Book",
+        SHADOW = "Shadow",
+        TACKLE = "Tackle",
+        TOOL = "Tool",
+        FOOD = "Food",
+        ELEMENT = "Element",
+        WEAPON = "Weapon",
+        ARMOR = "Armor",
+        ELIXER = "Elixer",
+        CLOTHING = "Clothing",
+        HAT = "Hat",
+        BATTLESONG = "Battlesong",
+        MUTATOR = "Mutator",
+        CONTAINER = "Container",
+        FARMPLANT = "Farm Plant",
+        WALL = "Wall",
+        TURF = "Turf",
+        POCKETWATCH = "Pocket Watch",
+        WAGSTAFFTOOL = "Wagstaff Tool",
+        OCEANFISH = "Ocean Fish",
+        CLOCKWORK = "Clockwork",
+        HOUND = "Hound",
+        MERM = "Merm",
+        PIG = "Pig",
+        BIRD = "Bird",
+        INSECT = "Insect",
+        SHELL = "shell",
+    },
+
+    SANITYDESC ={
+        NEGHIGH = "VERY SCARY",
+        NEGMED = "QUITE SCARY",
+        NEGLOW = "A LITTLE SCARY",
+        POSLOW = "A LITTLE CALMING",
+        POSMED = "QUITE CALMING",
+        POSHIGH = "VERY CALMING",
+    },
+
+    DATA_NEEDS_INVESTIGATION = "This needs more investigation.",
+    DATA_STACK = " ITEMS",
+
+    DATA_PLANAR_DAMAGE = " PLANAR DAMAGE",
+    DATA_RANGE = " RANGE",
+    DATA_USES = " USES",
+    DATA_ARMOR_ABSORB = "ABSORBS ",
+    DATA_WETNESS = "STOPS ",
+    DATA_PERSEC = "/SEC",
+
+    NEW_SCRAPBOOK_ENTRY = "Scrapbook\nUpdated",
+
+    DATA_DAYS =" DAYS",
+    DATA_CRAFTING = "CRAFTABLE",
+    DATA_LIGHTBATTERY = "Emits Light",
+
+    NOTE_SHADOW_ALIGNED = "SHADOW ALIGNED",
+    NOTE_LUNAR_ALIGNED = "LUNAR ALIGNED",
+
+    CYCLE_VIEW = "Cycle Layout",
+    CYCLE_CAT = "Cycle Category",
+    CYCLE_QUOTES = "Cycle Quotes",    
+    SEARCH = "Search",
+   -- CANCEL_SEARCH = "Cancel Search",
+
+}
+
 --Don't include this in pot generation as this file is already translated.
 if POT_GENERATION == false then
     require "strings_pretranslated"

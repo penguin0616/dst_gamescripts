@@ -372,10 +372,17 @@ end or nil
 
 local DoDropForPlayer = _ismastersim and function(player, reschedulefn)
     local char_pos = Vector3(player.Transform:GetWorldPosition())
-    local spawn_point = GetSpawnPoint(char_pos)
+    local override_prefab, rad, override_density
+    local riftspawner = _world.components.riftspawner
+    if riftspawner and riftspawner:IsShadowPortalActive() and math.random() < TUNING.RIFT_SHADOW1_QUAKER_ODDS then
+        override_prefab = "cavein_boulder"
+        rad = TUNING.RIFT_SHADOW1_QUAKER_RADIUS
+        override_density = 0
+    end
+    local spawn_point = GetSpawnPoint(char_pos, rad)
     if spawn_point ~= nil then
         player:ShakeCamera(CAMERASHAKE.FULL, 0.7, 0.02, .75)
-        SpawnDebris(spawn_point)
+        SpawnDebris(spawn_point, override_prefab, override_density)
     end
     reschedulefn(player)
 end or nil

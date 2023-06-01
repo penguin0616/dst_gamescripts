@@ -363,10 +363,14 @@ local RPC_HANDLERS =
         end
     end,
 
-	PredictOverrideLocomote = function(player)
+	PredictOverrideLocomote = function(player, dir)
+		if not checknumber(dir) then
+			printinvalid("PredictOverrideLocomote", player)
+			return
+		end
 		local playercontroller = player.components.playercontroller
 		if playercontroller ~= nil then
-			playercontroller:OnRemotePredictOverrideLocomote()
+			playercontroller:OnRemotePredictOverrideLocomote(dir)
 		end
 	end,
 
@@ -1342,6 +1346,9 @@ function HandleRPCQueue()
             -- Invoke.
             if TheNet:CallShardRPC(fn, sender, data) then
                 RPC_Shard_Timeline[sender] = tick
+            end
+            if RPC_Shard_Queue[RPC_Shard_Queue_len + 1] then
+                print("Shard RPC invoked another RPC in the same frame and will be dropped! Delay shard RPCs sending more shard RPCs to itself by a frame minimally or try handling RPCs in a different way.")
             end
         else
             -- Pending.

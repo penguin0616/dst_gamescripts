@@ -37,6 +37,7 @@ return{
             NOTALLOWED = "That's the wrong part.",
             EMPTY = "Well I need something to build with.",
             MISMATCH = "It needs completely different plans.",
+            NOTREADY = "I'll give an offering once the imminent danger has passed.",
         },
 		RUMMAGE =
 		{
@@ -886,6 +887,9 @@ return{
 	ANNOUNCE_TOOL_TOOWEAK = "I'll need a more powerful tool.",
 
     ANNOUNCE_LUNAR_RIFT_MAX = "Something has changed...",
+    ANNOUNCE_SHADOW_RIFT_MAX = "Something's stirring...",
+
+    ANNOUNCE_SCRAPBOOK_FULL = "I know all I need to already.",
 
 	BATTLECRY =
 	{
@@ -2951,6 +2955,8 @@ return{
 		WALL_WOOD_ITEM = "Pocket-sized wall pieces. Yup.",
 		WALL_MOONROCK = "I like to build walls between myself and the world.",
 		WALL_MOONROCK_ITEM = "Where should I put this?",
+		WALL_DREADSTONE = "Ah. Homey.",
+		WALL_DREADSTONE_ITEM = "I appreciate the finer things.",
 		FENCE = "My life is one obstacle after another.",
         FENCE_ITEM = "A fence for your pocket.",
         FENCE_GATE = "When one gate closes...",
@@ -4791,6 +4797,34 @@ return{
 		SHOVEL_LUNARPLANT = "I'd rather let someone else do my dirty work.",
 
         PUNCHINGBAG = "A crude test of my weapons' power.",
+
+        -- Rifts 2
+        SHADOWRIFT_PORTAL = "Mind the gap.",
+
+		SHADOW_FORGE = "What shall I fashion from the shadows?",
+		SHADOW_FORGE_KIT = "There is work to be done.",
+
+        FUSED_SHADELING = "They grow up so fast.",
+        FUSED_SHADELING_BOMB = "That is one persistent tail.",
+
+		VOIDCLOTH = "It would be a shame to let this material go to waste.",
+		VOIDCLOTHHAT = "Darkness is an often underrated accessory.",
+		ARMOR_VOIDCLOTH = "The fabric really breathes.",
+
+        VOIDCLOTH_UMBRELLA = "It's just my style.",
+        VOIDCLOTH_SCYTHE = "If menial tasks must be done, they should be done in style.",
+
+		SHADOWTHRALL_HANDS = "You think you're the master of sleight of hand?",
+		SHADOWTHRALL_HORNS = "I'll leave a bitter taste in your mouth, pal.",
+		SHADOWTHRALL_WINGS = "You think you can look down on me?",
+
+        CHARLIE_NPC = "Charlie...",
+        CHARLIE_HAND = "I'll... see to it.",
+
+        NITRE_FORMATION = "A large growth of nitre.",
+        DREADSTONE_STACK = "It comes from the depths below.",
+        
+        SCRAPBOOK_PAGE = "Curious. It may yield some useful information.",
     },
 
     DESCRIBE_GENERIC = "You tell me.",

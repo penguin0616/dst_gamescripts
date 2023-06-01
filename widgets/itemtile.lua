@@ -26,6 +26,8 @@ local ItemTile = Class(Widget, function(self, invitem)
         return
     end
 
+    TheScrapbookPartitions:SetSeenInGame(invitem.prefab)
+
     if self.item:HasTag("show_spoiled") or self:HasSpoilage() then
             self.bg = self:AddChild(Image(HUD_ATLAS, "inv_slot_spoiled.tex"))
         self.bg:SetClickable(false)

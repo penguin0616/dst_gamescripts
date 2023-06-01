@@ -261,6 +261,8 @@ local function create_arm()
         return inst
     end
 
+    inst:AddComponent("highlightchild")
+
     inst:AddComponent("stretcher")
     inst.components.stretcher:SetRestingLength(4.75)
     inst.components.stretcher:SetWidthRatio(.35)

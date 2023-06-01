@@ -6,6 +6,7 @@ local IS_BETA = BRANCH == "staging" --or BRANCH == "dev"
 PI = math.pi
 PI2 = PI*2
 TWOPI = PI2
+SQRT2 = math.sqrt(2)
 DEGREES = PI/180
 RADIANS = 180/PI
 FRAMES = 1/30
@@ -353,6 +354,7 @@ ROG_CHARACTERLIST =
 }
 
 --When adding new characters with alternate states, be sure to update skinsutils.lua function GetSkinModes.
+-- NOTES(JBK): Keep this up to date with LOOKUP_LIST in scrapbookpartitions.lua
 DST_CHARACTERLIST =
 {
     "wilson",
@@ -1149,6 +1151,9 @@ TECH =
 
 	LUNARFORGING_ONE = { LUNARFORGING = 1 },
 	LUNARFORGING_TWO = { LUNARFORGING = 2 },
+
+	SHADOWFORGING_ONE = { SHADOWFORGING = 1 },
+	SHADOWFORGING_TWO = { SHADOWFORGING = 2 },
 }
 
 -- See cell_data.h
@@ -1755,6 +1760,7 @@ MATERIALS =
     KELP = "kelp",
     SHELL = "shell",
     NIGHTMARE = "nightmare",
+	DREADSTONE = "dreadstone",
 }
 
 UPGRADETYPES =
@@ -1926,6 +1932,14 @@ TOOLACTIONS =
     PLAY = true,
     UNSADDLE = true,
 	REACH_HIGH = true,
+	SCYTHE = true,
+}
+
+EQUIPMENTSETNAMES =
+{
+    DREADSTONE = "dreadstone",
+    LUNARPLANT = "lunarplant",
+    VOIDCLOTH = "voidcloth",
 }
 
 -- this is a net_tinybyte on inventoryitem_classified.deploymode
@@ -2521,6 +2535,12 @@ LOADING_SCREEN_CONTROL_TIP_KEYS =
     TIP_CHAT = { chat = CONTROL_TOGGLE_SAY, whisper = CONTROL_TOGGLE_WHISPER },
     TIP_PLAYER_STATUS = { playerstatus = CONTROL_SHOW_PLAYER_STATUS },
     TIP_INVENTORY_SLOTS = { inv_0 = CONTROL_INV_10, inv_9 = CONTROL_INV_9 },
+}
+
+SCRAPBOOK_CATS = {
+    "creature",
+    "item",
+    "giant",
 }
 
 -- When using a controller or on console, some control IDs are different than on non-console, but use the same tips.

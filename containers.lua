@@ -370,7 +370,7 @@ params.construction_container =
         top_align_tip = 50,
         buttoninfo =
         {
-            text = STRINGS.ACTIONS.APPLYCONSTRUCTION,
+            text = STRINGS.ACTIONS.APPLYCONSTRUCTION.GENERIC,
             position = Vector3(0, -94, 0),
         }
     },
@@ -401,6 +401,18 @@ end
 function params.construction_container.widget.buttoninfo.validfn(inst)
     return inst.replica.container ~= nil and not inst.replica.container:IsEmpty()
 end
+
+--------------------------------------------------------------------------
+--[[ charlie_hand_construction_container ]]
+--------------------------------------------------------------------------
+
+params.charlie_hand_construction_container = deepcopy(params.construction_container)
+
+params.charlie_hand_construction_container.widget.slotpos = {Vector3(0, 8, 0)}
+params.charlie_hand_construction_container.widget.side_align_tip = 120
+params.charlie_hand_construction_container.widget.animbank = "ui_bundle_2x2"
+params.charlie_hand_construction_container.widget.animbuild = "ui_bundle_2x2"
+params.charlie_hand_construction_container.widget.buttoninfo.text = STRINGS.ACTIONS.APPLYCONSTRUCTION.OFFER
 
 --------------------------------------------------------------------------
 --[[ mushroom_light ]]

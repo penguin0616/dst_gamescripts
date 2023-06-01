@@ -487,6 +487,9 @@ ACTIONS =
 	USESPELLBOOK = Action({ instant = true, mount_valid = true }),
 	CLOSESPELLBOOK = Action({ instant = true, mount_valid = true }),
 	CAST_SPELLBOOK = Action({ mount_valid = true }),
+
+    SCYTHE = Action({ rmb=true, distance=1.8, rangecheckfn=DefaultRangeCheck, invalid_hold_action=true }),
+	SITON = Action(),
 }
 
 ACTIONS_BY_ACTION_CODE = {}
@@ -842,6 +845,12 @@ ACTIONS.LOOKAT.fn = function(act)
 				) then
 					act.doer.components.locomotor:Stop()
 				end
+                if ThePlayer == act.doer then
+                    if TheScrapbookPartitions:WasViewedInScrapbook(targ.prefab) and not TheScrapbookPartitions:WasInspectedByCharacter(targ.prefab, ThePlayer.prefab) then
+                        TheScrapbookPartitions:SetViewedInScrapbook(targ.prefab,false)
+                    end
+                    TheScrapbookPartitions:SetInspectedByCharacter(targ.prefab, ThePlayer.prefab)
+                end
 				if act.doer.components.talker ~= nil then
 					act.doer.components.talker:Say(desc, nil, targ.components.inspectable.noanim, nil, nil, nil, text_filter_context, original_author)
 				end
@@ -3150,7 +3159,15 @@ ACTIONS.CONSTRUCT.stroverridefn = function(act)
 end
 
 ACTIONS.CONSTRUCT.strfn = function(act)
-    return act.invobject ~= nil and act.target:HasTag("constructionsite") and "STORE" or nil
+    return act.invobject ~= nil
+        and (
+                (act.target:HasTag("offerconstructionsite") and "OFFER") or
+                (act.target:HasTag("constructionsite")      and "STORE")
+            )
+        or  (
+                (act.target:HasTag("offerconstructionsite") and "OFFER_TO")
+            )
+        or nil
 end
 
 ACTIONS.CONSTRUCT.fn = function(act)
@@ -3225,6 +3242,14 @@ ACTIONS.STOPCONSTRUCTION.stroverridefn = function(act)
     end
 end
 
+ACTIONS.STOPCONSTRUCTION.strfn = function(act)
+    return
+        (
+            (act.target:HasTag("offerconstructionsite") and "OFFER")
+        )
+    or nil
+end
+
 ACTIONS.STOPCONSTRUCTION.fn = function(act)
     if act.doer ~= nil and act.doer.components.constructionbuilder ~= nil then
         act.doer.components.constructionbuilder:StopConstruction()
@@ -3264,6 +3289,15 @@ ACTIONS.CASTAOE.fn = function(act)
     if act.invobject ~= nil and act.invobject.components.aoespell ~= nil and act.invobject.components.aoespell:CanCast(act.doer, act_pos) then
 		return act.invobject.components.aoespell:CastSpell(act.doer, act_pos)
     end
+end
+
+ACTIONS.SCYTHE.fn = function(act)
+    if act.invobject ~= nil and act.invobject.DoScythe then
+        act.invobject:DoScythe(act.target, act.doer)
+        return true
+    end
+
+    return false
 end
 
 ACTIONS.DISMANTLE.fn = function(act)
@@ -4562,5 +4596,18 @@ ACTIONS.CAST_SPELLBOOK.fn = function(act)
 		act.invobject.components.spellbook ~= nil
 		then
 		return act.invobject.components.spellbook:CastSpell(act.doer)
+	end
+end
+
+ACTIONS.SITON.fn = function(act)
+	if act.doer ~= nil and
+		act.doer.sg ~= nil and
+		act.doer.sg.currentstate.name == "start_sitting" then
+		if act.target ~= nil and
+			act.target.components.sittable ~= nil and
+			not act.target.components.sittable:IsOccupied() then
+			act.target.components.sittable:SetOccupier(act.doer)
+			return true
+		end
 	end
 end

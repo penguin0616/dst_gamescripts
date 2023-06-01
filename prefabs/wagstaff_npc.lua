@@ -25,7 +25,6 @@ local prefabs =
     "winter_ornament_boss_wagstaff",
 }
 
-
 --------------------------------------------------------------------------
 
 local function PushMusic(inst)

@@ -1277,6 +1277,7 @@ local function common_fn(bank, build, shadowsize, canfight, atriumstalker)
     inst.AnimState:SetBuild("stalker_shadow_build")
     inst.AnimState:AddOverrideBuild(build)
     inst.AnimState:PlayAnimation("idle", true)
+    inst.scrapbook_overridebuild = build
 
     inst:AddTag("epic")
     inst:AddTag("monster")
