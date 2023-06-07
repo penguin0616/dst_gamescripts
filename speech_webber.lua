@@ -1804,6 +1804,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "It can't still see us... right?",
         CHESSPIECE_EYEOFTERROR = "We think we could've been friends.",
         CHESSPIECE_TWINSOFTERROR = "Now they'll always be together.",
+        CHESSPIECE_DAYWALKER = "He wasn't very nice to us...",
 
         CHESSJUNK1 = "A mess of chess.",
         CHESSJUNK2 = "A mess of chess.",

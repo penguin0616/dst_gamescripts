@@ -147,7 +147,7 @@ end
 local function StartRepairingGate(inst)
     inst.AnimState:PlayAnimation("fixing")
 
-    inst.SoundEmitter:PlaySound("rifts2/charliecutscene/????") -- On fixing atrium gate sound (loop maybe?) @amanda ("fixing" anim).
+    inst.SoundEmitter:PlaySound("rifts2/atrium/fixing", "fixing")
 
     inst:DoTaskInTime(START_TWEENING_DELAY, TweenToBlack)
 end
@@ -281,8 +281,9 @@ function CharlieCutscene:RepairGate()
     self._gatefixed = true
     self.inst.AnimState:SetBuild("atrium_gate_build")
     self.inst.AnimState:PlayAnimation("fixed")
+    self.inst.SoundEmitter:KillSound("fixing")
 
-    self.inst.SoundEmitter:PlaySound("rifts2/charliecutscene/????") -- On fixed sound @amanda ("fixed" anim)
+    self.inst.SoundEmitter:PlaySound("rifts2/atrium/fixed")
 
     local active = self.inst.components.pickable.caninteractwith or self.inst.components.worldsettingstimer:ActiveTimerExists("destabilizedelay")
     self.inst.MiniMapEntity:SetIcon(active and "atrium_gate_fixed_active.png" or "atrium_gate_fixed.png")

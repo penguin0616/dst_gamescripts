@@ -83,13 +83,14 @@ local bnot = bit.bnot
 local hash = hash
 local sformat = string.format
 local next = next
+local type = type
 
 local function GetBucketForHash(hashed)
     return band(BUCKETS_MASK, hashed)
 end
 
 local function WriteTriStateString(data)
-    return (data == nil or data == 0) and "" or sformat("%X", data)
+    return (data == nil or data == -1) and "" or sformat("%X", data)
 end
 
 local function ReadTriStateString(str)
@@ -169,6 +170,10 @@ end
 function ScrapbookPartitions:WasViewedInScrapbook(thing)
     -- If a thing has been clicked on inside the Scrapbook.
 
+    if type(thing) ~= "string" then
+        return false
+    end
+
     local hashed = hash(thing)
     local data = self.storage[hashed]
     if not data then
@@ -179,6 +184,10 @@ function ScrapbookPartitions:WasViewedInScrapbook(thing)
 end
 function ScrapbookPartitions:SetViewedInScrapbook(thing, value)
     -- When a thing has been clicked on inside the Scrapbook.
+
+    if type(thing) ~= "string" then
+        return -- Strings only.
+    end
 
     if not SCRAPBOOK_DATA_SET[thing] then
         return -- No information on what the thing is.
@@ -206,9 +215,17 @@ end
 function ScrapbookPartitions:WasInspectedByCharacter(thing, character)
     -- If a specific character has personally inspected a thing.
 
+    if type(thing) ~= "string" then
+        return false -- Strings only.
+    end
+
+    if table.contains(MODCHARACTERLIST, character) then
+        character = "wilson" -- Modded characters do not save instead use Wilson as a fallback.
+    end
+
     local charactermask = LOOKUP_LIST[character]
     if not charactermask then
-        return false -- No mods and nothing unexpected allowed.
+        return false -- Nothing unexpected allowed.
     end
 
     local hashed = hash(thing)
@@ -222,13 +239,21 @@ end
 function ScrapbookPartitions:SetInspectedByCharacter(thing, character)
     -- If a specific character has personally inspected a thing.
 
+    if type(thing) ~= "string" then
+        return -- Strings only.
+    end
+
+    if table.contains(MODCHARACTERLIST, character) then
+        character = "wilson" -- Modded characters do not save instead use Wilson as a fallback.
+    end
+
     if not SCRAPBOOK_DATA_SET[thing] then
         return -- No information on what the thing is.
     end
 
     local charactermask = LOOKUP_LIST[character]
     if not charactermask then
-        return -- No mods and nothing unexpected allowed.
+        return -- Nothing unexpected allowed.
     end
 
     local hashed = hash(thing)
@@ -274,11 +299,13 @@ function ScrapbookPartitions:_GetBucketForHash(hashed) -- Exporter use.
 end
 
 function ScrapbookPartitions:DebugDeleteAllData()
-    local newdata = 0x00000000
+    local newdata = -1
     for prefab, data in pairs(SCRAPBOOK_DATA_SET) do
         local hashed = hash(prefab)
         self:UpdateStorageData(hashed, newdata)
     end
+    self.storage = {}
+    self.dirty_buckets = {}
 end
 
 function ScrapbookPartitions:DebugSeenEverything()

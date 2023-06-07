@@ -43,7 +43,7 @@ end
 --------------------------------------------------------------------------
 
 local function StartCasting(inst, cast_time)
-    inst.SoundEmitter:PlaySound("rifts2/charlie/casting_lp", CAST_SOUND_NAME) -- Cast sound loop @amanda ("cast_pre" + "cast_idle" anims)
+    inst.SoundEmitter:PlaySound("rifts2/charlie/casting_lp", CAST_SOUND_NAME)
 
     inst.AnimState:PlayAnimation("cast_pre")
     inst.AnimState:PushAnimation("cast_idle")
@@ -127,7 +127,7 @@ local function fn()
 
     inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_haunt") -- Spawn sound @amanda. Plays when spawned ("spawn" anim).
     inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_amb", AMB_SOUND_NAME)
-    inst.SoundEmitter:SetVolume(AMB_SOUND_NAME, 0.2)
+    inst.SoundEmitter:SetVolume(AMB_SOUND_NAME, 1)
 
     return inst
 end

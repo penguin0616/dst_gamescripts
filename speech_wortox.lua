@@ -1810,6 +1810,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "In all its selenic splendour!",
         CHESSPIECE_EYEOFTERROR = "He's gone, no matter how you look at it, hyuyu!",
         CHESSPIECE_TWINSOFTERROR = "What an eye-catching statue, hyuyu!",
+        CHESSPIECE_DAYWALKER = "A boorish boar's bust!",
 
         CHESSJUNK1 = "It looks quite broke, and that's no joke!",
         CHESSJUNK2 = "It looks quite broke, and that's no joke!",

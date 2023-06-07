@@ -1804,6 +1804,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "A three course fight I won't soon forget.",
         CHESSPIECE_EYEOFTERROR = "Did it just blink?",
         CHESSPIECE_TWINSOFTERROR = "They weren't the most polite guests, non?",
+        CHESSPIECE_DAYWALKER = "I have to admit, I think I prefer him this way.",
 
         CHESSJUNK1 = "Broken chess pieces?",
         CHESSJUNK2 = "More broken chess pieces?",

@@ -1804,6 +1804,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "I must commend the artist for their attention to detail.",
         CHESSPIECE_EYEOFTERROR = "A trophy that doubles as a useful anatomical model.",
         CHESSPIECE_TWINSOFTERROR = "A stone rendition of a pair of mechanical marvels.",
+        CHESSPIECE_DAYWALKER = "An accurate stone model of that ill-behaved creature.",
 
         CHESSJUNK1 = "The magician's unfinished projects?",
         CHESSJUNK2 = "The magician's unfinished projects?",

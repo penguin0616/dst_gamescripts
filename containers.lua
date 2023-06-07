@@ -1,4 +1,5 @@
 local cooking = require("cooking")
+local PopupDialogScreen = require "screens/redux/popupdialog"
 
 local params = {}
 local containers = { MAXITEMSLOTS = 0 }
@@ -403,16 +404,50 @@ function params.construction_container.widget.buttoninfo.validfn(inst)
 end
 
 --------------------------------------------------------------------------
---[[ charlie_hand_construction_container ]]
+--[[ enable_rift_construction_container ]]
 --------------------------------------------------------------------------
 
-params.charlie_hand_construction_container = deepcopy(params.construction_container)
 
-params.charlie_hand_construction_container.widget.slotpos = {Vector3(0, 8, 0)}
-params.charlie_hand_construction_container.widget.side_align_tip = 120
-params.charlie_hand_construction_container.widget.animbank = "ui_bundle_2x2"
-params.charlie_hand_construction_container.widget.animbuild = "ui_bundle_2x2"
-params.charlie_hand_construction_container.widget.buttoninfo.text = STRINGS.ACTIONS.APPLYCONSTRUCTION.OFFER
+params.enable_rift_construction_container = deepcopy(params.construction_container)
+
+params.enable_rift_construction_container.widget.slotpos = {Vector3(0, 8, 0)}
+params.enable_rift_construction_container.widget.side_align_tip = 120
+params.enable_rift_construction_container.widget.animbank = "ui_bundle_2x2"
+params.enable_rift_construction_container.widget.animbuild = "ui_bundle_2x2"
+params.enable_rift_construction_container.widget.buttoninfo.text = STRINGS.ACTIONS.APPLYCONSTRUCTION.OFFER
+
+local function EnableRiftsPopUpGoBack()
+    TheFrontEnd:PopScreen()
+end
+
+function params.enable_rift_construction_container.widget.buttoninfo.fn(inst, doer)
+    local function DoAct()
+        if inst.components.container ~= nil then
+            BufferedAction(doer, inst, ACTIONS.APPLYCONSTRUCTION):Do()
+        elseif inst.replica.container ~= nil and not inst.replica.container:IsBusy() then
+            SendRPCToServer(RPC.DoWidgetButtonAction, ACTIONS.APPLYCONSTRUCTION.code, inst, ACTIONS.APPLYCONSTRUCTION.mod_name)
+        end
+    end
+
+    if TheFrontEnd ~= nil and doer and doer == ThePlayer then
+        -- We have UI do dialogue.
+        local function EnableRiftsPopUpConfirm()
+            DoAct()
+            TheFrontEnd:PopScreen()
+        end
+
+        local confirmation = PopupDialogScreen(STRINGS.UI.STARTRIFTS.TITLE, STRINGS.UI.STARTRIFTS.BODY,
+        {
+            { text = STRINGS.UI.STARTRIFTS.OK,     cb = EnableRiftsPopUpConfirm },
+            { text = STRINGS.UI.STARTRIFTS.CANCEL, cb = EnableRiftsPopUpGoBack  },
+        })
+
+        TheFrontEnd:PushScreen(confirmation)
+    else
+        -- No UI no dialogue.
+        DoAct()
+    end
+end
 
 --------------------------------------------------------------------------
 --[[ mushroom_light ]]

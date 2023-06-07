@@ -311,6 +311,7 @@ local function common_fn(data)
     inst.AnimState:Hide("ball_mouth")
     inst.AnimState:Hide("mouth")
     inst.AnimState:PlayAnimation("eye_idle", true)
+    inst.scrapbook_hide = {"mouth","ball_mouth"}
 
     MakeInventoryFloatable(inst, "large")
 

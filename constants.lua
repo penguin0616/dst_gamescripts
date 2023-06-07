@@ -2540,6 +2540,7 @@ LOADING_SCREEN_CONTROL_TIP_KEYS =
 SCRAPBOOK_CATS = {
     "creature",
     "item",
+    "food",
     "giant",
 }
 

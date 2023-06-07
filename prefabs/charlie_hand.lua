@@ -5,9 +5,8 @@ local assets =
 
 local prefabs =
 {
-    "charlie_hand_construction_container"
+    "enable_rift_construction_container",
 }
-
 
 ----------------------------------------------------------------------------
 
@@ -19,6 +18,8 @@ local function ShowUp(inst, walkspeed)
     inst.components.locomotor:Clear()
     inst.components.locomotor.walkspeed = walkspeed or 2
 
+    inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_hand_arrive")
+
     inst:RemoveTag("NOCLICK")
 
     local showup_pos = inst.components.knownlocations:GetLocation("showup")
@@ -29,6 +30,10 @@ local function RunAway(inst, walkspeed)
     if not inst.arm then return end
 
     inst:AddTag("NOCLICK")
+
+    if not walkspeed then
+        inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_hand_decline")
+    end
 
     inst.components.locomotor:Stop()
     inst.components.locomotor:Clear()
@@ -59,14 +64,6 @@ local function OnAtriumPowered(inst, ispowered)
     end
 end
 
-local function OnLockNightmarePhase(inst, locked)
-    local atrium = inst.components.entitytracker:GetEntity("atrium")
-
-    if atrium ~= nil then
-        inst.components.constructionsite:SetCanConstruct(not locked)
-    end
-end
-
 ----------------------------------------------------------------------------
 
 -- Construction site functions
@@ -77,7 +74,13 @@ local function OnGetMaterials(inst)
     
     inst.persists = false
 
+    inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_hand_accept")
+
     inst:RunAway(-3)
+end
+
+local function StartCutScene(atrium)
+    atrium.components.charliecutscene:Start()
 end
 
 local function ConstructionSite_OnConstructed(inst, doer)
@@ -85,9 +88,12 @@ local function ConstructionSite_OnConstructed(inst, doer)
         local atrium = inst.components.entitytracker:GetEntity("atrium")
 
         if atrium ~= nil and atrium.components.charliecutscene ~= nil then
-            atrium.components.charliecutscene:Start()
+            local was_destabilizing = atrium:ForceDestabilizeExplode()
 
             atrium.components.entitytracker:ForgetEntity("charlie_hand")
+
+            atrium:DoTaskInTime(was_destabilizing and 2 or 0, inst.StartCutScene)
+            atrium.components.charliecutscene._running = true
         end
 
         inst:OnGetMaterials()
@@ -121,8 +127,6 @@ local function Initialize(inst, pos)
 
         inst.components.knownlocations:RememberLocation("origin", pos)
         inst.components.knownlocations:RememberLocation("showup", showup_pos)
-
-        inst.components.constructionsite:SetCanConstruct(false)
     end
 end
 
@@ -138,9 +142,8 @@ local function OnLoadPostPass(inst, data)
         inst:FacePoint(atrium_pos.x, 0, atrium_pos.z)
 
         inst:DoTaskInTime(0, function ()
-            -- Stay out when the atrium is destabilizing, but do not accept offerings.
+            -- Stay out when the atrium is destabilizing.
             inst:OnAtriumPowered(atrium.components.pickable ~= nil and atrium.components.pickable.caninteractwith)
-            inst:OnLockNightmarePhase(atrium:IsDestabilizing())
         end)
     end
 end
@@ -192,15 +195,15 @@ local function CharlieHandFn()
     inst.OnGetMaterials = OnGetMaterials
     inst.SpawnShadowArm = SpawnShadowArm
     inst.OnAtriumPowered = OnAtriumPowered
-    inst.OnLockNightmarePhase = OnLockNightmarePhase
     inst.HandleAction = HandleAction
+    inst.StartCutScene = StartCutScene
 
     inst:AddComponent("entitytracker")
     inst:AddComponent("knownlocations")
     inst:AddComponent("inspectable")
 
     local constructionsite = inst:AddComponent("constructionsite")
-    constructionsite:SetConstructionPrefab("charlie_hand_construction_container")
+    constructionsite:SetConstructionPrefab("enable_rift_construction_container")
     constructionsite:SetOnConstructedFn(ConstructionSite_OnConstructed)
 
     local locomotor = inst:AddComponent("locomotor")
@@ -217,9 +220,8 @@ local function CharlieHandFn()
     inst.OnLoadPostPass = OnLoadPostPass
     inst.OnRemoveEntity = OnRemove
 
-    inst:ListenForEvent("atriumpowered",         function(_, ispowered) inst:OnAtriumPowered(ispowered)    end, TheWorld)
-    inst:ListenForEvent("ms_locknightmarephase", function(_, phase)     inst:OnLockNightmarePhase(phase ~= nil) end, TheWorld)
-    inst:ListenForEvent("startaction", inst.HandleAction)
+    inst:ListenForEvent("atriumpowered", function(_, ispowered) inst:OnAtriumPowered(ispowered) end, TheWorld)
+    inst:ListenForEvent("startaction",   inst.HandleAction)
 
     return inst
 end
@@ -227,7 +229,7 @@ end
 ----------------------------------------------------------------------------
 
 
-local function CharlieHandContainerFn()
+local function EnableRiftContainerFn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -243,7 +245,7 @@ local function CharlieHandContainerFn()
     end
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("charlie_hand_construction_container")
+    inst.components.container:WidgetSetup("enable_rift_construction_container")
 
     inst.persists = false
 
@@ -254,5 +256,5 @@ end
 
 
 return
-        Prefab("charlie_hand",                          CharlieHandFn,          assets, prefabs),
-        Prefab("charlie_hand_construction_container",   CharlieHandContainerFn, assets         )
+        Prefab("charlie_hand",                          CharlieHandFn,          assets, prefabs ),
+        Prefab("enable_rift_construction_container",    EnableRiftContainerFn                   )

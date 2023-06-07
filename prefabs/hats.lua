@@ -121,6 +121,19 @@ local function MakeHat(name)
 		if owner:HasTag("player") then
 			owner.AnimState:Hide("HEAD")
 			owner.AnimState:Hide("HEAD_HAT")
+			owner.AnimState:HideSymbol("face")
+			owner.AnimState:HideSymbol("swap_face")
+			owner.AnimState:HideSymbol("beard")
+		end
+	end
+
+	fns.fullhelm_onunequip = function(inst, owner)
+		_onunequip(inst, owner)
+
+		if owner:HasTag("player") then
+			owner.AnimState:ShowSymbol("face")
+			owner.AnimState:ShowSymbol("swap_face")
+			owner.AnimState:ShowSymbol("beard")
 		end
 	end
 
@@ -135,6 +148,7 @@ local function MakeHat(name)
         simple_onunequip = fns.simple_onunequip,
         opentop_onequip = fns.opentop_onequip,
 		fullhelm_onequip = fns.fullhelm_onequip,
+		fullhelm_onunequip = fns.fullhelm_onunequip,
         simple_onequiptomodel = fns.simple_onequiptomodel,
     }
 
@@ -3026,7 +3040,7 @@ local function MakeHat(name)
 	end
 
 	local function lunarplant_onunequip(inst, owner)
-		_onunequip(inst, owner)
+		fns.fullhelm_onunequip(inst, owner)
 
 		if inst.fx ~= nil then
 			inst.fx:Remove()
@@ -3114,6 +3128,10 @@ local function MakeHat(name)
             item:RemoveEventCallback("attacked", item.onownerattacked_voidcloth, owner)
             item.onownerattacked_voidcloth = nil
         end
+        if item.oninstunequipped_voidcloth ~= nil then
+            item:RemoveEventCallback("unequipped", item.oninstunequipped_voidcloth, inst)
+            item.oninstunequipped_voidcloth = nil
+        end
 
 		if inst.fx ~= nil then
 			inst.fx.buffed:set(false)
@@ -3153,28 +3171,16 @@ local function MakeHat(name)
         item.components.planardamage:AddBonus(inst, new_bonus, "setbonus")
     
         if item.onownerattacked_voidcloth == nil then
-            item.onownerattacked_voidcloth = function() voidcloth_removedamagebuff(item, owner, inst) end
+            local voidcloth_removedamagebuff_bridge = function() voidcloth_removedamagebuff(item, owner, inst) end
+            item.onownerattacked_voidcloth = voidcloth_removedamagebuff_bridge
+            item.oninstunequipped_voidcloth = voidcloth_removedamagebuff_bridge
             item:ListenForEvent("attacked", item.onownerattacked_voidcloth, owner)
+            item:ListenForEvent("unequipped", item.oninstunequipped_voidcloth, inst)
         end
     end
 
 	fns.voidcloth_onequip = function(inst, owner)
-		--fns.fullhelm_onequip(inst, owner)
-		_base_onequip(inst, owner)
-
-		owner.AnimState:Show("HAT")
-		owner.AnimState:Hide("HAIR_HAT")
-		owner.AnimState:Hide("HAIR_NOHAT")
-		owner.AnimState:Hide("HAIR")
-
-		if owner:HasTag("player") then
-			owner.AnimState:Hide("HEAD")
-			owner.AnimState:Show("HEAD_HAT")
-			owner.AnimState:OverrideSkinSymbol("swap_face", owner.prefab, "swap_face_eye_glow_glasses")
-			owner.AnimState:OverrideSkinSymbol("face", owner.prefab, "swap_face_eye_glow")
-		end
-
-		owner.AnimState:OverrideSymbol("headbase_hat", "hat_voidcloth", "headbase_hat")
+		fns.fullhelm_onequip(inst, owner)
 
 		if inst.fx ~= nil then
 			inst.fx:Remove()
@@ -3185,10 +3191,7 @@ local function MakeHat(name)
 	end
 
 	fns.voidcloth_onunequip = function(inst, owner)
-		_onunequip(inst, owner)
-
-		owner.AnimState:ClearOverrideSymbol("swap_face")
-		owner.AnimState:ClearOverrideSymbol("face")
+		fns.fullhelm_onunequip(inst, owner)
 
 		if inst.fx ~= nil then
 			inst.fx:Remove()
@@ -3230,6 +3233,7 @@ local function MakeHat(name)
 		inst.components.floater:SetScale(.75)
 
         inst:AddTag("miasmaimmune")
+        inst:AddTag("acidrainimmune")
 
 		if not TheWorld.ismastersim then
 			return inst

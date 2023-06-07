@@ -17,7 +17,8 @@ SetSharedLootTable("shadowthrall_wings",
 {
 	{ "voidcloth",		1.00 },
 	{ "voidcloth",		1.00 },
-	{ "voidcloth",		0.33 },
+	{ "voidcloth",		0.67 },
+	{ "horrorfuel",		1.00 },
 	{ "horrorfuel",		1.00 },
 	{ "horrorfuel",		0.33 },
 	{ "nightmarefuel",	1.00 },
@@ -52,6 +53,9 @@ local function RetargetFn(inst)
 end
 
 local function KeepTargetFn(inst, target)
+	if not inst.components.combat:CanTarget(target) then
+		return false
+	end
 	local x, y, z = inst.Transform:GetWorldPosition()
 	local rangesq = TUNING.SHADOWTHRALL_DEAGGRO_RANGE * TUNING.SHADOWTHRALL_DEAGGRO_RANGE
 	if target:GetDistanceSqToPoint(x, y, z) < rangesq then
@@ -116,6 +120,78 @@ local function DisplayNameFn(inst)
 	return ThePlayer ~= nil and ThePlayer:HasTag("player_shadow_aligned") and STRINGS.NAMES.SHADOWTHRALL_WINGS_ALLEGIANCE or nil
 end
 
+--------------------------------------------------------------------------
+
+local function CreateFlameFx()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	if not TheWorld.ismastersim then
+		inst.entity:SetCanSleep(false)
+	end
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("shadow_thrall_wings")
+	inst.AnimState:SetBuild("shadow_thrall_wings")
+	inst.AnimState:PlayAnimation("fx_flame", true)
+	inst.AnimState:SetSymbolLightOverride("fx_flame_red", 1)
+	inst.AnimState:SetSymbolLightOverride("fx_red", 1)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()))
+
+	return inst
+end
+
+local function CreateFabricFx()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	if not TheWorld.ismastersim then
+		inst.entity:SetCanSleep(false)
+	end
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("shadow_thrall_wings")
+	inst.AnimState:SetBuild("shadow_thrall_wings")
+	inst.AnimState:PlayAnimation("fx_fabric", true)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()))
+
+	return inst
+end
+
+local function CreateCapeFx()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	if not TheWorld.ismastersim then
+		inst.entity:SetCanSleep(false)
+	end
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("shadow_thrall_wings")
+	inst.AnimState:SetBuild("shadow_thrall_wings")
+	inst.AnimState:PlayAnimation("fx_cape_front", true)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()))
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -140,6 +216,30 @@ local function fn()
 	inst.AnimState:SetBank("shadow_thrall_wings")
 	inst.AnimState:SetBuild("shadow_thrall_wings")
 	inst.AnimState:PlayAnimation("idle", true)
+	inst.AnimState:SetSymbolLightOverride("fx_red", 1)
+	inst.AnimState:SetSymbolLightOverride("fx_red_particle", 1)
+	inst.AnimState:SetSymbolLightOverride("wingend_red", 1)
+
+	inst.scrapbook_anim ="scrapbook"
+	inst.scrapbook_overridedata ={{"fx_fabric", "shadow_thrall_wings", "fx_fabric"},{"fx_fabric_particle", "shadow_thrall_wings", "fx_fabric_particle"},{"fx_flame_black", "shadow_thrall_wings", "fx_flame_black"},{"fx_flame_red", "shadow_thrall_wings", "fx_flame_red"}}
+
+
+	--Dedicated server does not need to spawn the local fx
+	if not TheNet:IsDedicated() then
+		local flames = CreateFlameFx()
+		flames.entity:SetParent(inst.entity)
+		flames.Follower:FollowSymbol(inst.GUID, "fx_flame_swap", nil, nil, nil, true)
+
+		local fabric = CreateFabricFx()
+		fabric.entity:SetParent(inst.entity)
+		fabric.Follower:FollowSymbol(inst.GUID, "fx_fabric_swap", nil, nil, nil, true)
+
+		local cape = CreateCapeFx()
+		cape.entity:SetParent(inst.entity)
+		cape.Follower:FollowSymbol(inst.GUID, "cape_front_swap", nil, nil, nil, true)
+
+		inst.highlightchildren = { flames, fabric, cape }
+	end
 
 	inst.displaynamefn = DisplayNameFn
 
@@ -164,7 +264,7 @@ local function fn()
 	inst.components.health.nofadeout = true
 
 	inst:AddComponent("combat")
-	inst.components.combat:SetDefaultDamage(TUNING.SHADOWTHALL_WINGS_DAMAGE)
+	inst.components.combat:SetDefaultDamage(TUNING.SHADOWTHRALL_WINGS_DAMAGE)
 	inst.components.combat:SetAttackPeriod(TUNING.SHADOWTHRALL_WINGS_ATTACK_PERIOD)
 	inst.components.combat:SetRange(TUNING.SHADOWTHRALL_WINGS_ATTACK_RANGE)
 	inst.components.combat:SetRetargetFunction(3, RetargetFn)

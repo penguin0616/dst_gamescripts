@@ -24,6 +24,7 @@ SetSharedLootTable("bat_acidinfused",
     {"batwing",    0.5},
     {"guano",      0.3},
     {"monstermeat",0.2},
+    {"nitre",      0.2},
 })
 
 local SLEEP_DIST_FROMHOME = 1

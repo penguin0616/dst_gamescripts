@@ -597,7 +597,7 @@ Recipe2("ruinshat",							{Ingredient("thulecite", 4), Ingredient("nightmarefuel
 Recipe2("armorruins",						{Ingredient("thulecite", 6), Ingredient("nightmarefuel", 4)},											TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("ruins_bat",						{Ingredient("livinglog", 3), Ingredient("thulecite", 4), Ingredient("nightmarefuel", 4)},				TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("eyeturret_item",					{Ingredient("deerclops_eyeball", 1), Ingredient("minotaurhorn", 1), Ingredient("thulecite", 5)}, 		TECH.ANCIENT_FOUR,			{nounlock=true})
-Recipe2("shadow_forge_kit",					{Ingredient("nightmarefuel", 5), Ingredient("dreadstone", 2), Ingredient("horrorfuel", 1)},             TECH.ANCIENT_FOUR)
+Recipe2("shadow_forge_kit",					{Ingredient("nightmarefuel", 5), Ingredient("dreadstone", 2), Ingredient("horrorfuel", 1)},             TECH.ANCIENT_FOUR,			{nounlock=true})
 Recipe2("blueprint_craftingset_ruins_builder",		{Ingredient("papyrus", 3)},																		TECH.ANCIENT_TWO,			{nounlock=true})
 Recipe2("blueprint_craftingset_ruinsglow_builder",	{Ingredient("papyrus", 3)},																		TECH.ANCIENT_TWO,			{nounlock=true})
 
@@ -641,7 +641,7 @@ Recipe2("shovel_lunarplant",				{Ingredient("purebrilliance", 1), Ingredient("lu
 ----SHADOW_FORGE----
 Recipe2("armor_voidcloth",					{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 4)},												TECH.SHADOWFORGING_TWO, {station_tag = "shadow_forge"})
 Recipe2("voidclothhat",						{Ingredient("horrorfuel", 4), Ingredient("voidcloth", 2)},												TECH.SHADOWFORGING_TWO, {station_tag = "shadow_forge"})
-Recipe2("voidcloth_umbrella",				{Ingredient("horrorfuel", 5), Ingredient("voidcloth", 2)},												TECH.SHADOWFORGING_TWO, {station_tag = "shadow_forge"})
+Recipe2("voidcloth_umbrella",				{Ingredient("horrorfuel", 5), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {station_tag = "shadow_forge"})
 Recipe2("voidcloth_scythe",					{Ingredient("horrorfuel", 3), Ingredient("voidcloth", 1)},												TECH.SHADOWFORGING_TWO, {station_tag = "shadow_forge"})
 
 ----SCULPTING----
@@ -678,6 +678,7 @@ Recipe2("chesspiece_beefalo_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2)
 Recipe2("chesspiece_kitcoon_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.LOST,					{nounlock = true, actionstr="SCULPTING", image="chesspiece_kitcoon.tex"})
 Recipe2("chesspiece_catcoon_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.LOST,					{nounlock = true, actionstr="SCULPTING", image="chesspiece_catcoon.tex"})
 Recipe2("chesspiece_manrabbit_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.LOST,					{nounlock = true, actionstr="SCULPTING", image="chesspiece_manrabbit.tex"})
+Recipe2("chesspiece_daywalker_builder",		{Ingredient(TECH_INGREDIENT.SCULPTING, 2), Ingredient("rocks", 2)},										TECH.LOST,					{nounlock = true, actionstr="SCULPTING", image="chesspiece_daywalker.tex"})
 
 -- Hermitcrab
 Recipe2("hermitshop_hermit_bundle_shells",				{Ingredient("messagebottleempty", 1)},														TECH.HERMITCRABSHOP_ONE,	{nounlock = true, sg_state="give", product="hermit_bundle_shells",		image="hermit_bundle.tex"})

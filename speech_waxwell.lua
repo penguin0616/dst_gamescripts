@@ -1804,6 +1804,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "How could I not have seen...",
         CHESSPIECE_EYEOFTERROR = "An eye could never best a master of illusion such as I.",
         CHESSPIECE_TWINSOFTERROR = "The most troublesome pair I've ever seen.",
+        CHESSPIECE_DAYWALKER = "Seems like anyone can get a statue these days.",
 
         CHESSJUNK1 = "There's a reason I never finished that.",
         CHESSJUNK2 = "That one was a jerk.",

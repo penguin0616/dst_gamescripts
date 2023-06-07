@@ -113,6 +113,8 @@ local function Initialize(inst)
     inst.components.groundpounder:GroundPound()
     inst.components.groundpounder:GroundPound() -- For pushing items and digging stumps, it's probably not the best thing to do.
 
+    inst.SoundEmitter:PlaySound("rifts2/shadow_rift/groundcrack_expand")
+
     local duration, speed, scale, max_dist = unpack(SHAKE_PARAMS_BY_STAGE[inst._stage])
     ShakeAllCameras(CAMERASHAKE.FULL, duration, speed, scale, inst, max_dist)
 end
@@ -144,7 +146,7 @@ local function TryStageUp(inst)
         inst.AnimState:PushAnimation("stage_"..next_stage.."_loop", true)
 
         inst.SoundEmitter:SetParameter(AMBIENT_SOUND_LOOP_NAME, AMBIENT_SOUND_PARAM_NAME, AMBIENT_SOUND_STAGE_TO_INTENSITY[next_stage])
-        inst.SoundEmitter:PlaySound("rifts/portal/rift_explode")
+        inst.SoundEmitter:PlaySound("rifts2/shadow_rift/groundcrack_expand")
 
         if next_stage < TUNING.RIFT_SHADOW1_MAXSTAGE then
             if not inst.components.timer:TimerExists("trynextstage") then
@@ -231,6 +233,7 @@ local function OnPortalSleep(inst)
     if inst._fx then
         inst._fx:Remove()
         inst._fx = nil
+        inst.highlightchildren = nil
     end
 end
 
@@ -243,6 +246,7 @@ local function OnPortalWake(inst)
     if not inst._fx then
         inst._fx = CreateParticleFx(inst)
         inst._fx:PlayStage(inst._stage, true)
+        inst.highlightchildren = {inst._fx}
     end
 end
 
@@ -359,13 +363,14 @@ local function portalfn()
     inst:AddTag("birdblocker")
     inst:AddTag("ignorewalkableplatforms")
     inst:AddTag("notarget")
-    inst:AddTag("NOCLICK")
     inst:AddTag("scarytoprey")
     inst:AddTag("shadowrift_portal")
 
     inst.entity:SetPristine()
 
     inst._fx = CreateParticleFx(inst)
+    inst.highlightchildren = {inst._fx}
+    inst.highlightoverride = {0.15, 0, 0}
 
     if not TheWorld.ismastersim then
         return inst
@@ -373,7 +378,7 @@ local function portalfn()
 
     inst._stage = 1
 
-    --inst:AddComponent("inspectable")
+    inst:AddComponent("inspectable")
 
     local combat = inst:AddComponent("combat")
     combat:SetDefaultDamage(TUNING.RIFT_SHADOW1_GROUNDPOUND_DAMAGE)

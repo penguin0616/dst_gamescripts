@@ -18,6 +18,7 @@ local prefabs =
 	"armordreadstone_blueprint",
 	"dreadstonehat_blueprint",
 	"wall_dreadstone_item_blueprint",
+	"chesspiece_daywalker_sketch",
 }
 
 local brain = require("brains/daywalkerbrain")
@@ -34,7 +35,8 @@ SetSharedLootTable("daywalker",
 
 	{ "armordreadstone_blueprint",	1 },
 	{ "dreadstonehat_blueprint",	1 },
-	{ "wall_dreadstone_item_blueprint", 0.5 },
+	{ "wall_dreadstone_item_blueprint", 1 },
+	{'chesspiece_daywalker_sketch', 1.00},
 })
 
 --------------------------------------------------------------------------

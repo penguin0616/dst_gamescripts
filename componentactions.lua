@@ -131,6 +131,18 @@ local function TargetForceAttackOnly(inst, target)
 	return target.HostileToPlayerTest ~= nil and target:HasTag("shadowcreature") and not target:HostileToPlayerTest(inst)
 end
 
+local SCYTHE_ONEOFTAGS = {"plant", "lichen", "oceanvine", "kelp"}
+
+local function IsValidScytheTarget(target)
+    for _, tag in pairs(SCYTHE_ONEOFTAGS) do
+        if target:HasTag(tag) then
+            return true
+        end
+    end
+    
+    return false
+end
+
 -- SCENE		using an object in the world
 -- USEITEM		using an inventory item on an object in the world
 -- POINT		using an inventory item on a point in the world
@@ -2344,8 +2356,13 @@ local COMPONENT_ACTIONS =
             return (right or action ~= ACTIONS.HAMMER) and
                 inst:HasTag(action.id.."_workable")
         end,
+
         pickable = function(inst, action, right)
-            return action == ACTIONS.SCYTHE and inst:HasTag("pickable")
+            local valid = right and action == ACTIONS.SCYTHE and inst:HasTag("pickable")
+
+            if not valid then return false end
+
+            return IsValidScytheTarget(inst)
         end,
     },
 }

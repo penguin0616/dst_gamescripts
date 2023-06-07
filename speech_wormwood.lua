@@ -1808,6 +1808,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "Big",
         CHESSPIECE_EYEOFTERROR = "Not watching?",
         CHESSPIECE_TWINSOFTERROR = "Can't see now",
+        CHESSPIECE_DAYWALKER = "Hello? Can't talk?",
 
         CHESSJUNK1 = "Machine stuff",
         CHESSJUNK2 = "Lots of machine stuff",

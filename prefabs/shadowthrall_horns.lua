@@ -1,7 +1,7 @@
 local assets =
 {
 	Asset("ANIM", "anim/shadow_thrall_horns.zip"),
-	Asset("ANIM", "anim/shadow_thrall_hands.zip"),
+	Asset("ANIM", "anim/shadow_thrall_wings.zip"),
 }
 
 local prefabs =
@@ -15,6 +15,7 @@ local brain = require("brains/shadowthrall_horns_brain")
 
 SetSharedLootTable("shadowthrall_horns",
 {
+	{ "voidcloth",		1.00 },
 	{ "voidcloth",		1.00 },
 	{ "voidcloth",		1.00 },
 	{ "voidcloth",		0.33 },
@@ -47,6 +48,9 @@ local function RetargetFn(inst)
 end
 
 local function KeepTargetFn(inst, target)
+	if not inst.components.combat:CanTarget(target) then
+		return false
+	end
 	local x, y, z = inst.Transform:GetWorldPosition()
 	local rangesq = TUNING.SHADOWTHRALL_DEAGGRO_RANGE * TUNING.SHADOWTHRALL_DEAGGRO_RANGE
 	if target:GetDistanceSqToPoint(x, y, z) < rangesq then
@@ -111,6 +115,56 @@ local function DisplayNameFn(inst)
 	return ThePlayer ~= nil and ThePlayer:HasTag("player_shadow_aligned") and STRINGS.NAMES.SHADOWTHRALL_HORNS_ALLEGIANCE or nil
 end
 
+--------------------------------------------------------------------------
+
+local function CreateFlameFx()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	if not TheWorld.ismastersim then
+		inst.entity:SetCanSleep(false)
+	end
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("shadow_thrall_wings")
+	inst.AnimState:SetBuild("shadow_thrall_wings")
+	inst.AnimState:PlayAnimation("fx_flame", true)
+	inst.AnimState:SetSymbolLightOverride("fx_flame_red", 1)
+	inst.AnimState:SetSymbolLightOverride("fx_red", 1)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()))
+
+	return inst
+end
+
+local function CreateFabricFx()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	if not TheWorld.ismastersim then
+		inst.entity:SetCanSleep(false)
+	end
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddFollower()
+
+	inst.AnimState:SetBank("shadow_thrall_wings")
+	inst.AnimState:SetBuild("shadow_thrall_wings")
+	inst.AnimState:PlayAnimation("fx_fabric", true)
+	inst.AnimState:SetFrame(math.random(inst.AnimState:GetCurrentAnimationNumFrames()))
+
+	return inst
+end
+
+--------------------------------------------------------------------------
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -134,9 +188,39 @@ local function fn()
 	inst.AnimState:SetBank("shadow_thrall_horns")
 	inst.AnimState:SetBuild("shadow_thrall_horns")
 	inst.AnimState:PlayAnimation("idle", true)
-	inst.AnimState:OverrideSymbol("fx_flame_black", "shadow_thrall_hands", "fx_flame_black")
-	inst.AnimState:OverrideSymbol("fx_flame_red", "shadow_thrall_hands", "fx_flame_red")
-	inst.AnimState:OverrideSymbol("fx_red", "shadow_thrall_hands", "fx_red")
+	inst.AnimState:SetSymbolLightOverride("fx_red", 1)
+	inst.AnimState:SetSymbolLightOverride("fx_red_particle", 1)
+	inst.AnimState:SetSymbolLightOverride("tip01", 1)
+	inst.AnimState:SetSymbolLightOverride("red_parts", 1)
+
+	inst.scrapbook_anim ="scrapbook"
+	inst.scrapbook_overridedata ={{"fx_fabric", "shadow_thrall_wings", "fx_fabric"},{"fx_fabric_particle", "shadow_thrall_wings", "fx_fabric_particle"},{"fx_flame_black", "shadow_thrall_wings", "fx_flame_black"},{"fx_flame_red", "shadow_thrall_wings", "fx_flame_red"}}
+
+
+	--Dedicated server does not need to spawn the local fx
+	if not TheNet:IsDedicated() then
+		local flames = CreateFlameFx()
+		flames.entity:SetParent(inst.entity)
+		flames.Follower:FollowSymbol(inst.GUID, "fx_flame_swap", nil, nil, nil, true)
+
+		local fabric_rf = CreateFabricFx()
+		fabric_rf.entity:SetParent(inst.entity)
+		fabric_rf.Follower:FollowSymbol(inst.GUID, "fx_fabric_swapRF", nil, nil, nil, true)
+
+		local fabric_rb = CreateFabricFx()
+		fabric_rb.entity:SetParent(inst.entity)
+		fabric_rb.Follower:FollowSymbol(inst.GUID, "fx_fabric_swapRB", nil, nil, nil, true)
+
+		local fabric_lf = CreateFabricFx()
+		fabric_lf.entity:SetParent(inst.entity)
+		fabric_lf.Follower:FollowSymbol(inst.GUID, "fx_fabric_swapLF", nil, nil, nil, true)
+
+		local fabric_lb = CreateFabricFx()
+		fabric_lb.entity:SetParent(inst.entity)
+		fabric_lb.Follower:FollowSymbol(inst.GUID, "fx_fabric_swapLB", nil, nil, nil, true)
+
+		inst.highlightchildren = { flames, fabric_rf, fabric_rb, fabric_lf, fabric_lb }
+	end
 
 	inst.displaynamefn = DisplayNameFn
 

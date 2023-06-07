@@ -7,8 +7,12 @@ local function Chair_TrySpawnShadeling(inst)
 	TheWorld.components.ruinsshadelingspawner:TrySpawnShadeling(inst)
 end
 
+local function Chair_ClearNoShadeling(inst)
+	inst.noshadelingtask = nil
+end
+
 local function Chair_OnEntityWake(inst)
-	if inst.chairtask == nil then
+	if inst.chairtask == nil and inst.noshadelingtask == nil then
 		inst.chairtask = inst:DoTaskInTime(0, Chair_TrySpawnShadeling)
 	end
 end
@@ -41,6 +45,9 @@ local function item(name, animated, sound, radius)
             inst.AnimState:PushAnimation("idle", false)
         end
         inst.SoundEmitter:PlaySound(sound == "rock" and "dontstarve/common/fixed_stonefurniture" or "dontstarve/common/repair_stonefurniture")
+		if inst.OnEntityWake == Chair_OnEntityWake then
+			inst.noshadelingtask = inst:DoTaskInTime(0, Chair_ClearNoShadeling)
+		end
     end
 
     local function fn()

@@ -319,6 +319,21 @@ local function OnDestabilizeExplode(inst)
     end
 end
 
+local function ForceDestabilizeExplode(inst)
+    -- returns true if a destabilization was actually forced
+    if inst:IsDestabilizing() then
+        -- Force the atrium gate to finish its destabilization process.
+        OnDestabilizeExplode(inst)
+        if inst.components.worldsettingstimer:ActiveTimerExists("destabilizing") then
+            inst.components.worldsettingstimer:StopTimer("destabilizing")
+        end
+
+        return true
+    end
+
+    return false
+end
+
 local function OnCooldown(inst)
     if inst.components.worldsettingstimer:ActiveTimerExists("cooldown") then
         inst.AnimState:PlayAnimation("cooldown", true)
@@ -553,7 +568,7 @@ local function fn()
     inst.AnimState:SetBank("atrium_gate")
     inst.AnimState:SetBuild("atrium_gate")
     inst.AnimState:PlayAnimation("idle")
-    inst.AnimState:SetSymbolLightOverride("dreadstone", .6)
+    inst.AnimState:SetSymbolLightOverride("dreadstone_patch_red", 1)
 
     inst.MiniMapEntity:SetIcon("atrium_gate.png")
 
@@ -622,6 +637,7 @@ local function fn()
     inst.IsDestabilizing = IsDestabilizing
     inst.Destabilize = Destabilize
     inst.StartCooldown = StartCooldown
+    inst.ForceDestabilizeExplode = ForceDestabilizeExplode
 
     inst.IsObjectInAtriumArena = IsObjectInAtriumArena
 
@@ -640,14 +656,17 @@ local function fn()
             inst.components.entitytracker:ForgetEntity("stalker")
             --IsAtriumDecay means "killed" to reset the fight (off-screen, or moved too far away from gate)
             Destabilize(inst, stalker:IsAtriumDecay())
-        end
-        
-        if not inst.components.entitytracker:GetEntity("charlie_hand") and not TheWorld.components.riftspawner:GetShadowRiftsEnabled() then
-            inst.components.charliecutscene:SpawnCharlieHand()
+
+            if not stalker:IsAtriumDecay() and
+                TUNING.SPAWN_RIFTS == 1 and 
+                not inst.components.entitytracker:GetEntity("charlie_hand") and
+                TheWorld.components.riftspawner ~= nil and
+                not TheWorld.components.riftspawner:GetShadowRiftsEnabled()
+            then
+                inst.components.charliecutscene:SpawnCharlieHand()
+            end
         end
     end
-
-    inst.StartCooldown = StartCooldown
 
     return inst
 end

@@ -72,6 +72,7 @@ local function fn()
     inst.AnimState:PlayAnimation("anim")
 
     inst:AddTag("cloth")
+    inst:AddTag("acidrainimmune")
 
 	--shadowlevel (from shadowlevel component) added to pristine state for optimization
 	inst:AddTag("shadowlevel")

@@ -1810,6 +1810,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "A little too lifelike for my comfort.",
         CHESSPIECE_EYEOFTERROR = "An eye (statue) for an eye (monster)!",
         CHESSPIECE_TWINSOFTERROR = "A fresh pair of eyes is just what we needed around here!",
+        CHESSPIECE_DAYWALKER = "It's so lifelike, I can almost smell the bad breath.",
 
         CHESSJUNK1 = "A heap of spare parts.",
         CHESSJUNK2 = "A heap of spare parts.",

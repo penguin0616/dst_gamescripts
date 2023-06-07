@@ -43,18 +43,19 @@ local ScrapbookToast = Class(Widget, function(self, owner, controls)
     end, ThePlayer)
 
 
-
     self.controller_hide = false
     self.craft_hide = false
     self.opened = false
 
     self.hud_focus = owner.HUD.focus
+    self.shownotification = Profile:GetScrapbookHudDisplay()
+    self.inst:StartUpdatingComponent(self)
 end)
 
 
 function ScrapbookToast:UpdateElements()
 
-    if not self.opened then        
+    if not self.opened and self.shownotification then        
         self.controls:ManageToast(self)
         --TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/skillpoint_dropdown")
         self.tab_gift:Show()
@@ -88,7 +89,16 @@ end
 
 
 function ScrapbookToast:OnUpdate()
-
+    if self.shownotification ~= Profile:GetScrapbookHudDisplay() then
+        self.shownotification = Profile:GetScrapbookHudDisplay()
+        print("==============================")
+        print(self.shownotification)
+        if self.shownotification == false then
+            self.tab_gift:Hide()
+            self.controls:ManageToast(self,true)
+            self.opened = false
+        end
+    end
 end
 
 return ScrapbookToast

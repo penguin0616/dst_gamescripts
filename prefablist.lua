@@ -1104,6 +1104,7 @@ PREFABFILES = {
   "veggies",
   "voidcloth",
   "voidcloth_scythe",
+  "voidcloth_scythe_classified",
   "voidcloth_umbrella",
   "wagstaff_npc",
   "wagstaff_tools",

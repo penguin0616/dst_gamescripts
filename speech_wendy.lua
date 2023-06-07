@@ -1808,6 +1808,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "It won't be looking down on us anymore.",
         CHESSPIECE_EYEOFTERROR = "Its stony gaze will glare for eternity.",
         CHESSPIECE_TWINSOFTERROR = "I still remember watching the light leave their eyes.",
+        CHESSPIECE_DAYWALKER = "A reminder that kindness only leads to pain.",
 
         CHESSJUNK1 = "Cold, dead artificial life.",
         CHESSJUNK2 = "Cold, dead artificial life.",

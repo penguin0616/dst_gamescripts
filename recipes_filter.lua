@@ -405,6 +405,7 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"chesspiece_kitcoon_builder",
 	"chesspiece_catcoon_builder",
 	"chesspiece_manrabbit_builder",
+	"chesspiece_daywalker_builder",
 
 	-- wintersfeastoven
 	"wintercooking_berrysauce",
@@ -822,6 +823,7 @@ CRAFTING_FILTERS.GARDENING.recipes =
 	"farm_plow_item",
 	"farm_hoe",
 	"golden_farm_hoe",
+	"shovel_lunarplant",
 	"wateringcan",
 	"premiumwateringcan",
 	"fertilizer",

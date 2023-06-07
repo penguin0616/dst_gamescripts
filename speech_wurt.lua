@@ -1804,6 +1804,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "Glorp! Oh, it not real.",
         CHESSPIECE_EYEOFTERROR = "Oh no... got dried out, glorp...",
         CHESSPIECE_TWINSOFTERROR = "Ha ha, they just rocks now!",
+        CHESSPIECE_DAYWALKER = "Grrr... why we have nasty Pig statue?!",
 
         CHESSJUNK1 = "It all broken.",
         CHESSJUNK2 = "Didn't do it!!",
@@ -2331,7 +2332,7 @@ return{
             FULL = "That house full of nasty Pigfolk!",
             GENERIC = "Sniff... smell like... Pigfolk!",
             LIGHTSOUT = "Coast clear, florp.",
-            BURNT = "Hee-hee, pig house all burnt up!",
+            BURNT = "Hee-hee, Pig house all burnt up!",
         },
         PIGKING = "He no King, flort!!",
         PIGMAN =
@@ -2799,7 +2800,7 @@ return{
             BURNT = "Good, it gone now.",
 		},
 		PIG_TOKEN = "Stole Pigman's belt!",
-		PIG_COIN = "Shiny pig nose, florp!",
+		PIG_COIN = "Shiny Pig nose, florp!",
 		YOTP_FOOD1 = "Blegh! Has nasty Pig face!",
 		YOTP_FOOD2 = "Usually like mud, but that just bad.",
 		YOTP_FOOD3 = "This insulting to fish.",
@@ -4762,12 +4763,12 @@ return{
 		HORRORFUEL = "I-is just goop! Not scared!",
 		DAYWALKER =
 		{
-			GENERIC = "Grrr! You just big stinky pig!",
+			GENERIC = "Grrr! You just big stinky Pig!",
 			IMPRISONED = "Nyeeeeehhh!!",
 		},
 		DAYWALKER_PILLAR =
 		{
-			GENERIC = "Heehee, stinky pig all locked up!",
+			GENERIC = "Heehee, stinky Pig all locked up!",
 			EXPOSED = "Rock too hard for breaking, florp.",
 		},
 		ARMORDREADSTONE = "So pretty... it mine!",

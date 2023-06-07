@@ -1805,6 +1805,7 @@ return{
         CHESSPIECE_GUARDIANPHASE3 = "Wolfgang glad is just statue.",
         CHESSPIECE_EYEOFTERROR = "No like the way it look at Wolfgang.",
         CHESSPIECE_TWINSOFTERROR = "Brrr, still sends chill down Wolfgang's spine.",
+        CHESSPIECE_DAYWALKER = "Wolfgang has bigger muscles, see?",
 
         CHESSJUNK1 = "Metal junk.",
         CHESSJUNK2 = "Metal junk.",

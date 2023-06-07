@@ -87,7 +87,7 @@ local function MakeRelic(inst)
         inst.AnimState:PlayAnimation("idle")
     end
 
-	if inst.chair ~= nil and inst.components.sittable == nil then
+	if inst.chair and inst.components.sittable == nil then
 		inst:AddComponent("sittable")
 	end
 	if inst.chair_shadeling_spawner then

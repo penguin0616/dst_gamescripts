@@ -1814,6 +1814,7 @@ return {
         CHESSPIECE_GUARDIANPHASE3 = "I much prefer it this way.",
         CHESSPIECE_EYEOFTERROR = "It's giving me a stony stare.",
         CHESSPIECE_TWINSOFTERROR = "That was a terrible night of very uncomfortable eye contact.",
+        CHESSPIECE_DAYWALKER = "Now he's off who-knows-were.",
 
         CHESSJUNK1 = "A pile of broken chess pieces.",
         CHESSJUNK2 = "Another pile of broken chess pieces.",

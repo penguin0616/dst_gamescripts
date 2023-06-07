@@ -727,7 +727,7 @@ STRINGS =
         {
             GENERIC = "Stop Building",
             GENERIC_FMT = "Stop Building {name}",
-            OFFER = "Stop Offering",
+            OFFER = "Stop Offering to",
         },
         APPLYCONSTRUCTION =
         {
@@ -1980,6 +1980,8 @@ STRINGS =
         HUNGER = "Starvation",
         COLD = "Freezing",
         HOT = "Overheating",
+        ACIDRAIN = "Acid Rain",
+        MIASMA = "Miasma",
         SHENANIGANS = "Shenanigans",
         RESURRECTION_PENALTY = "Resurrection Sickness",
 
@@ -2219,6 +2221,7 @@ STRINGS =
         CHESSPIECE_GUARDIANPHASE3 = "Celestial Champion Figure",
 		CHESSPIECE_EYEOFTERROR = "Eye Of Terror Figure",
         CHESSPIECE_TWINSOFTERROR = "Twins of Terror Figure",
+        CHESSPIECE_DAYWALKER = "Nightmare Werepig Figure",
 
         CHESSPIECE_PAWN_BUILDER = "Pawn Figure",
         CHESSPIECE_ROOK_BUILDER = "Rook Figure",
@@ -2253,6 +2256,7 @@ STRINGS =
         CHESSPIECE_GUARDIANPHASE3_BUILDER = "Celestial Champion Figure",
 		CHESSPIECE_EYEOFTERROR_BUILDER = "Eye Of Terror Figure",
         CHESSPIECE_TWINSOFTERROR_BUILDER = "Twins of Terror Figure",
+        CHESSPIECE_DAYWALKER_BUILDER = "Nightmare Werepig Figure",
 
 
         CHESSPIECE_BUTTERFLY_SKETCH = "Moon Moth Figure Sketch",
@@ -2266,6 +2270,7 @@ STRINGS =
         CHESSPIECE_CRABKING_SKETCH = "Crab King Figure Sketch",
         CHESSPIECE_GUARDIANPHASE3_SKETCH = "Celestial Champion Figure Sketch",
         CHESSPIECE_MANRABBIT_SKETCH = "Bunnyman Figure Sketch",
+        CHESSPIECE_DAYWALKER_SKETCH = "Nightmare Werepig Sketch",
 
         SHADOW_ROOK = "Shadow Rook",
         SHADOW_KNIGHT = "Shadow Knight",
@@ -4126,6 +4131,7 @@ STRINGS =
         CHESSPIECE_GUARDIANPHASE3_BUILDER = "Its design radiates an otherworldly strangeness.",
 		CHESSPIECE_EYEOFTERROR_BUILDER = "Its stony gaze reminds you of an evil presence.",
         CHESSPIECE_TWINSOFTERROR_BUILDER = "Double the eyes, double the terror.",
+        CHESSPIECE_DAYWALKER_BUILDER = "A stone likeness of a pig-headed prisoner.",
 
         CHESSPIECE_BUTTERFLY_SKETCH = "A sculpture sketch of a Moon Moth.",
         CHESSPIECE_ANCHOR_SKETCH = "A sculpture sketch of an anchor.",
@@ -4585,15 +4591,15 @@ STRINGS =
         TRANSMUTE_MOONGLASS_CHARGED = "Transmute Pure Brilliance into Infused Moon Shards.",        
 
         -- Rifts 1
-		LUNAR_FORGE_KIT = "Forge otherworldly items.",
+        LUNAR_FORGE_KIT = "Forge otherworldly items.",
 
-		ARMOR_LUNARPLANT = "Surround yourself in formidable lunar leaves.",
-		LUNARPLANTHAT = "Luminescent protection for your precious cranium.",
-		BOMB_LUNARPLANT = "Use unstable lunar energy for explosive results.",
-		STAFF_LUNARPLANT = "Stay rooted to the spot and attack from afar.",
-		SWORD_LUNARPLANT = "A sword of lunar light.",
-		PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
-
+        ARMOR_LUNARPLANT = "Surround yourself in formidable lunar leaves.",
+        LUNARPLANTHAT = "Luminescent protection for your precious cranium.",
+        BOMB_LUNARPLANT = "Use unstable lunar energy for explosive results.",
+        STAFF_LUNARPLANT = "Stay rooted to the spot and attack from afar.",
+        SWORD_LUNARPLANT = "A sword of lunar light.",
+        PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
+        SHOVEL_LUNARPLANT = "The groundbreaking results of cross-pollination between a shovel and a garden hoe.",
 
         PUNCHINGBAG = "Test the strength of your weapons. And have fun!",
         PUNCHINGBAG_LUNAR = "Test how well your weapons fare against lunar foes.",
@@ -5234,6 +5240,12 @@ STRINGS =
         "This will be quick.",
         "How we've fallen."
     },
+    STALKER_ATRIUM_BATTLECRY_ATRIUM_REPAIRED =
+    {
+        "You fools! What have you done?",
+        "You've doomed yourselves.",
+        "I tried to stop it... it seems I learned nothing...",
+    },    
     STALKER_ATRIUM_PLAYER_BATTLECRY =
     {
         "You will fall as we did.",
@@ -5244,6 +5256,13 @@ STRINGS =
         "They are unfathomable.",
         "I will save you."
     },
+    STALKER_ATRIUM_PLAYER_BATTLECRY_ATRIUM_REPAIRED =
+    {
+        "This world is unraveling.",
+        "You have brought about your own end.",
+        "Please. Let me save you from what is coming.",
+        "I recognize your arrogance. I possessed it myself...",
+    },    
     STALKER_ATRIUM_SUMMON_MINIONS =
     {
         "Be woven.",
@@ -5274,6 +5293,11 @@ STRINGS =
         "Why?",
         "Metheus...",
     },
+    STALKER_ATRIUM_USEGATE_ATRIUM_REPAIRED =
+    {
+        "Not again... not again...",
+        "They are coming.",
+    },
     STALKER_ATRIUM_DECAYCRY =
     {
         "Please...",
@@ -5287,6 +5311,14 @@ STRINGS =
         "Are you so easily deceived? Ha...",
         "You deserve this.",
         "You've made your choice.",
+    },
+    STALKER_ATRIUM_DEATHCRY_ATRIUM_REPAIRED =
+    {
+        "What have you done?",
+        "You've doomed us all!",
+        "I couldn't stop it...",
+        "History will repeat itself...",     
+        "It will all come to pass again...",
     },
 
     --Arena Event
@@ -8049,6 +8081,7 @@ STRINGS.UI =
 		CRAFTINGMENUSIZE = "Crafting Menu Size:",
 		CRAFTINGMENUNUMPINPAGES = "Crafting Pin Pages:",
 		CRAFTINGMENUSENSITIVITY = "Crafting Sensitivity:",
+        SCAPBOOKHUDDISPLAY = "Scrapbook Alerts:",
 		INVENTORYSENSITIVITY = "Inventory Sensitivity:",
         MINIMAPZOOMSENSITIVITY = "Zoom Sensitivity:",
         MINIMAPZOOMCURSOR = "Zoom Cursor Focus:",
@@ -8136,6 +8169,7 @@ STRINGS.UI =
 			CRAFTINGMENUSIZE = "Customize the size of the crafting menu.",
 			CRAFTINGMENUNUMPINPAGES = "Set how many pages of pinned recipes you would like to cycle through.",
 			CRAFTINGMENUSENSITIVITY = "Adjust the input sensitivity while navigating through the crafting menu.",
+            SCAPBOOKHUDDISPLAY = "Toggle HUD notifications from the Scrapbook on and off.",
 			INVENTORYSENSITIVITY = "Adjust the input sensitivity while navigating through the inventory.",
             MINIMAPZOOMSENSITIVITY = "Adjust the input sensitivity while zooming in and out on the minimap.",
             MINIMAPZOOMCURSOR = "Zooming on the minimap will focus where the cursor is located.",
@@ -12664,6 +12698,14 @@ STRINGS.UI =
         PLAY_TOGETHER_TITLE = "Play Together",
         PLAY_TOGETHER_BODY = "You can join a server or host your own. Invitations will be sent to the rest of your party once you are in the game.",
     },
+    
+    STARTRIFTS =
+    {
+        TITLE  = "Are you sure?", -- TODO
+        BODY   = "This is an irreversible action!", -- TODO
+        OK     = "Go ahead", -- TODO
+        CANCEL = "Cancel", -- TODO
+    },
 }
 
 --these are broken out into their own files for ease of editing
@@ -12686,6 +12728,51 @@ STRINGS.CHARACTERS =
     WURT = require "speech_wurt",
     WALTER = require "speech_walter",
     WANDA = require "speech_wanda",
+}
+
+STRINGS.VOIDCLOTH_SCYTHE_TALK =
+{
+    overtime = 
+    {
+        "You want to cut and ssssslice, yes you do!",
+        "The ssssseeds were planted long ago, now reap the rewards.",
+        "Your palms are sssssweating, mortal, you're losing your grip.",
+        "You need a sssssharp wit for this job.",
+        "What'sssss wrong, mortal? Not cut out for this?",
+        "You and I are going to do sssssuch great things together.",
+        "I think I was a farmer once, before I ssssshed my skin.",
+        "You can hear me, can't you, mortal? You're ssssstarting to understand.",
+        "I can sssssee all the dark corners of your mind, mortal.",
+        "I've been accused of having a rather sssssharp tongue.",
+        "We make a good team, no matter how you ssssslice it.",
+        "I hunger for the sssssilent screams of vegetation...",
+        "With my razor-sharp wit and your... mobility, we're unssssstoppable!",
+        "We're all jussssst tools for a greater purpose, aren't we?",
+        "Lay wassssste to the grass, then the bushes... after that, who knows?",
+    },
+
+    onharvest =
+    {
+        "Devassssstation to vegetation!",
+        "Cut them down, cut them all down!",
+        "There is no essssscaping my blade!",
+        "Cut... slash... consume... yesssss...",
+        "The world is oursssss for the reaping.",
+        "Don't hold back...",
+        "Let's cut right to it, ssssshall we?",
+        "It's time for the harvessssst.",
+        "Everything will fall before usssss!",
+        "Let nothing be ssssspared!",
+        "Enjoying yourssssself, mortal?",
+    },
+
+    lucy =
+    {
+        "You don't need that sssssecond-rate axe...",
+        "We could do ssssso much more without that old axe weighing you down...",
+        "Best to sssssever your connection with that old blade of yours.",
+        "Who needsssss that old axe when you have me?",
+    },
 }
 
 STRINGS.LUCY =
@@ -14278,6 +14365,17 @@ STRINGS.SKILLTREE = {
 }
 
 STRINGS.SCRAPBOOK = {
+    CATS = {
+        FOOD = "Food",
+        CREATURES = "Creature",
+        ITEMS = "Items",
+        GIANTS = "Giants",
+        THINGS = "Things",
+        POI = "POI",
+        BIOMES = "Biomes",
+        SEASONS = "Seasons",
+    },
+
     SUBCATS = {
         SPIDER = "Spider",
         HALLOWEENORNAMENT = "Halloween Ornament",
@@ -14289,7 +14387,6 @@ STRINGS.SCRAPBOOK = {
         SHADOW = "Shadow",
         TACKLE = "Tackle",
         TOOL = "Tool",
-        FOOD = "Food",
         ELEMENT = "Element",
         WEAPON = "Weapon",
         ARMOR = "Armor",
@@ -14323,10 +14420,29 @@ STRINGS.SCRAPBOOK = {
         POSHIGH = "VERY CALMING",
     },
 
+    FOODTYPE = {
+        GENERIC = "GENERIC",
+        MEAT = "MEAT",
+        VEGGIE = "VEGGIE",
+        ELEMENTAL = "ELEMENTAL",
+        GEARS = "GEARS",
+        HORRIBLE = "HORRIBLE",
+        INSECT = "INSECT",
+        SEEDS = "SEEDS",
+        BERRY = "BERRY", 
+        RAW = "RAW", 
+        BURNT = "BURNT",
+        ROUGHAGE = "ROUGHAGE",
+        WOOD = "WOOD",
+        GOODIES = "GOODIES",
+        MONSTER = "MONSTER",
+    },
+
     DATA_NEEDS_INVESTIGATION = "This needs more investigation.",
     DATA_STACK = " ITEMS",
 
     DATA_PLANAR_DAMAGE = " PLANAR DAMAGE",
+    DATA_PLANAR_DEFENSE = " PLANAR DEFENSE",
     DATA_RANGE = " RANGE",
     DATA_USES = " USES",
     DATA_ARMOR_ABSORB = "ABSORBS ",
@@ -14334,7 +14450,7 @@ STRINGS.SCRAPBOOK = {
     DATA_PERSEC = "/SEC",
 
     NEW_SCRAPBOOK_ENTRY = "Scrapbook\nUpdated",
-
+    CLEARFLASH = "Clear all \"NEW\"",
     DATA_DAYS =" DAYS",
     DATA_CRAFTING = "CRAFTABLE",
     DATA_LIGHTBATTERY = "Emits Light",
