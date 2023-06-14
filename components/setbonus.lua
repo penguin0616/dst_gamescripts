@@ -1,8 +1,8 @@
-local function EnableBonusForEquip(equip)
+local function EnableBonusForEquip(equip, setname)
     local setbonus = equip.components.setbonus
 
-    if setbonus ~= nil and setbonus.enabled == false then
-        --print(string.format('>> Enabling set bonus ["%s"] for equipment ["%s"]...', setbonus.setname, equip.prefab))
+    if setbonus ~= nil and setbonus.enabled == false and setbonus.setname == setname then
+        --print(string.format('>> Enabling set bonus [ %s ] for equipment [ %s ] ...', setbonus.setname, equip.prefab))
         setbonus.enabled = true
         if setbonus.onenabledfn ~= nil then
             setbonus.onenabledfn(equip)
@@ -14,7 +14,7 @@ local function DisableBonusForEquip(equip)
     local setbonus = equip.components.setbonus
 
     if setbonus ~= nil and setbonus.enabled == true then
-        --print(string.format('<< Disabling set bonus ["%s"] for equipment ["%s"]...', setbonus.setname, equip.prefab))
+        --print(string.format('<< Disabling set bonus [ %s ] for equipment [ %s ] ...', setbonus.setname, equip.prefab))
         setbonus.enabled = false
         if setbonus.ondisabledfn ~= nil then
             setbonus.ondisabledfn(equip)
@@ -60,24 +60,28 @@ function SetBonus:_HasSetBonus(inventory)
         return false
     end
 
-    return head.components.setbonus.setname == body.components.setbonus.setname
+    return head.components.setbonus.setname == body.components.setbonus.setname, head.components.setbonus.setname
 end
 
 -- Called by inventory:Equip() and inventory:Unequip()
-function SetBonus:UpdateSetBonus(inventory)
+function SetBonus:UpdateSetBonus(inventory, isequipping)
     if inventory ~= nil then
-        local has_setbonus = self:_HasSetBonus(inventory)
-        inventory:ForEachEquipment(has_setbonus and self.EnableBonusForEquip or self.DisableBonusForEquip)
+        local has_setbonus, setname = self:_HasSetBonus(inventory)
+        inventory:ForEachEquipment(has_setbonus and self.EnableBonusForEquip or self.DisableBonusForEquip, setname)
 
         -- self.inst isn't in inventory.equipslots anymore.
-        if not has_setbonus then
+        if not isequipping then
             self.DisableBonusForEquip(self.inst)
         end
     end
 end
 
-function SetBonus:IsEnabled()
-    return self.enabled == true
+function SetBonus:IsEnabled(setname)
+    if setname ~= nil then
+        assert(EQUIPMENTSETNAMES[string.upper(setname)] ~= nil, string.format('The set bonus name "%s" isn\'t defined in EQUIPMENTSETNAMES in constants.lua', setname))
+    end
+
+    return self.enabled == true and (not setname or self.setname == setname)
 end
 
 function SetBonus:OnRemoveFromEntity()
@@ -95,9 +99,9 @@ end
 
 function SetBonus:GetDebugString()
     return string.format(
-        "Set Name: %s  -  Bonus: %s",
+        'Set Name: "%s"  -  Bonus: %s',
         self.setname,
-        self.enabled and "Enabled" or "Disabled"
+        self.enabled and "ON" or "OFF"
     )
 end
 

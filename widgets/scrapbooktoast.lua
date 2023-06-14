@@ -18,7 +18,7 @@ local ScrapbookToast = Class(Widget, function(self, owner, controls)
 
     self.tab_gift = self.root:AddChild(UIAnimButton("tab_scrapbook", "scrapbook_updated", "pre"))
 
-    self.tab_gift.animstate:SetScale(0.5,0.5,0.5)
+    self.tab_gift.animstate:SetScale(0.35,0.35,0.35)
 
     self.tab_gift.inst:ListenForEvent("animover", function()
         if self.tab_gift.inst:GetAnimState():IsCurrentAnimation("pre") then
@@ -57,7 +57,7 @@ function ScrapbookToast:UpdateElements()
 
     if not self.opened and self.shownotification then        
         self.controls:ManageToast(self)
-        --TheFrontEnd:GetSound():PlaySound("wilson_rework/ui/skillpoint_dropdown")
+        TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/scrapbook_dropdown")
         self.tab_gift:Show()
         self.opened = true
         self.tab_gift.animstate:PlayAnimation("pre")

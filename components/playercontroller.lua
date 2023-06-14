@@ -3562,9 +3562,6 @@ function PlayerController:DoAction(buffaction, spellbook)
     end
 
     if ThePlayer and buffaction.action == ACTIONS.LOOKAT and buffaction.target then
-        if TheScrapbookPartitions:WasViewedInScrapbook(buffaction.target.prefab) and not TheScrapbookPartitions:WasInspectedByCharacter(buffaction.target.prefab, ThePlayer.prefab) then
-            TheScrapbookPartitions:SetViewedInScrapbook(buffaction.target.prefab, false)
-        end
         TheScrapbookPartitions:SetInspectedByCharacter(buffaction.target.prefab, ThePlayer.prefab)
     end
 end
@@ -4230,9 +4227,6 @@ function PlayerController:RemoteInspectItemFromInvTile(item)
         end
     end
     if ThePlayer and item then
-        if TheScrapbookPartitions:WasViewedInScrapbook(item.prefab) and not TheScrapbookPartitions:WasInspectedByCharacter(item.prefab, ThePlayer.prefab) then
-            TheScrapbookPartitions:SetViewedInScrapbook(item.prefab, false)
-        end
         TheScrapbookPartitions:SetInspectedByCharacter(item.prefab, ThePlayer.prefab)
     end
 end

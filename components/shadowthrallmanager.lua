@@ -14,6 +14,7 @@ local MIASMA_RADIUS = 4.0
 local MIASMAS = 8
 local CLOSEST_FISSURE_MAXDIST_SQ = 40 * 40
 local SPAWN_THRALL_DIST = 14
+local LOADING_GRACE_TIME = 5
 
 
 self.inst = inst
@@ -36,6 +37,7 @@ local _find_fissure_task = nil
 local _internal_cooldown = 0 -- Future timestamp for when things can spawn again.
 local _dreadstone_regen_task = nil
 local _spawn_thralls_task = nil
+local _loading = nil
 
 
 function self:TickFindingGoodFissures()
@@ -166,6 +168,10 @@ function self:IsThrallInCombat(thrall)
 end
 
 function self:SafeToReleaseFissure()
+    if _loading then -- Give players some time to load in.
+        return false
+    end
+
     if _thrall_hands ~= nil then
         if self:IsThrallInCombat(_thrall_hands) then
             return false
@@ -199,13 +205,11 @@ function self:UnregisterFissure(inst)
     if _fissure == inst then
         -- All players ran away from the target fissure, try releasing it if possible.
         if self:SafeToReleaseFissure() then
-            if _spawn_thralls_task == nil then
-                if _thrall_hands == nil or _thrall_horns == nil or _thrall_wings == nil then
-                    -- One of the trio is dead combat must have happened.
-                    self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_DEFEATED_ANY_THRALLS)
-                else
-                    self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_WALKED_AWAY)
-                end
+            if _spawn_thralls_task == nil and (_thrall_hands == nil or _thrall_horns == nil or _thrall_wings == nil) then
+                -- One of the trio is dead combat must have happened.
+                self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_DEFEATED_ANY_THRALLS)
+            else
+                self:ReleaseFissure(TUNING.FISSURE_COOLDOWN_WALKED_AWAY)
             end
         else
             _thrall_combatcheck_task = self.inst:DoPeriodicTask(CHECK_FISSURE_INTERVAL, CheckIfSafeToReleaseFissure)
@@ -475,6 +479,10 @@ function self:OnSave()
     return data, ents
 end
 
+local function OnLoadingGraceTime()
+    _loading = nil
+end
+
 function self:OnLoad(data)
     if data then
         _internal_cooldown = GetTime() + (data.cooldown or _internal_cooldown)
@@ -484,6 +492,8 @@ function self:OnLoad(data)
         if data.spawnthrallstime then
             _spawn_thralls_task = self.inst:DoPeriodicTask(CHECK_FISSURE_INTERVAL, OnSpawnThralls_Bridge, data.spawnthrallstime)
         end
+        _loading = true
+        self.inst:DoTaskInTime(LOADING_GRACE_TIME, OnLoadingGraceTime)
     end
 end
 
@@ -529,14 +539,16 @@ end
 
 function self:GetDebugString()
     local t = GetTime()
-    return string.format("Has Fissure: %s, Hands: %s, Horns: %s, Wings: %s, Spawn CD: %.1f, Dread CD: %.1f, SpawnThralls: %.1f",
+    return string.format("Has Fissure: %s, Hands: %s, Horns: %s, Wings: %s, Spawn CD: %.1f, Dread CD: %.1f, SpawnThralls: %.1f, CombatTask: %.1f, Loading: %s",
         tostring(self:GetControlledFissure() ~= nil),
         tostring(_thrall_hands ~= nil),
         tostring(_thrall_horns ~= nil),
         tostring(_thrall_wings ~= nil),
         math.max(_internal_cooldown - t, 0),
         _dreadstone_regen_task == nil and 0 or GetTaskRemaining(_dreadstone_regen_task),
-        _spawn_thralls_task == nil and 0 or GetTaskRemaining(_spawn_thralls_task))
+        _spawn_thralls_task == nil and 0 or GetTaskRemaining(_spawn_thralls_task),
+        _thrall_combatcheck_task == nil and 0 or GetTaskRemaining(_thrall_combatcheck_task),
+        tostring(_loading ~= nil))
 end
 
 --------------------------------------------------------------------------

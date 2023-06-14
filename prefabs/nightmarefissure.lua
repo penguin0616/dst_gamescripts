@@ -380,7 +380,7 @@ local function OnReleasedFromControl_Animation(inst)
 	inst.AnimState:SetSymbolLightOverride("fx_spiral", 0)
 	inst.AnimState:SetSymbolLightOverride("stack_red", 0)
 
-    inst:OnNightmarePhaseChanged(TheWorld.state.nightmarephase, false, "controlled")
+    inst:OnNightmarePhaseChanged(TheWorld.state.nightmarephase, false)
 end
 
 local function OnReleasedFromControl(inst)
@@ -388,7 +388,7 @@ local function OnReleasedFromControl(inst)
     local played_animation = false
     local workable = inst.components.workable
     if workable then
-        if workable:CanBeWorked() then
+        if workable:CanBeWorked() and not inst:IsAsleep() then
             inst.SoundEmitter:PlaySound("dontstarve/sanity/shadowrock_down")
             local fx = SpawnPrefab("dreadstone_spawn_fx")
             fx.entity:SetParent(inst.entity)
@@ -467,6 +467,8 @@ local function Make(name, build, lightcolour, fxname, masterinit)
         if AllowShadowThralls[name] then
             inst.displaynamefn = displaynamefn
         end
+
+        inst:AddTag("okayforarena")
 
         inst.entity:SetPristine()
 

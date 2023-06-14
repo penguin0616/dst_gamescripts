@@ -648,7 +648,14 @@ function Map:StartFindingGoodArenaPoints()
             if not self:CheckForBadThingsInArena(check_pt) then
                 GoodArenaPoints_Count = GoodArenaPoints_Count + 1
                 GoodArenaPoints[GoodArenaPoints_Count] = Vector3(check_pt:Get()) -- Copy.
-                --local a = SpawnPrefab("bluemooneye"):SetPosition(check_pt:Get())
+                --local id, index = self:GetTopologyIDAtPoint(check_pt:Get())
+                --local r = (
+                --    id:find("BigBatCave") or id:find("RockyLand") or id:find("SpillagmiteCaverns") or id:find("LichenLand") or
+                --    id:find("BlueForest") or id:find("RedForest") or id:find("GreenForest")
+                --) and true or false
+                --if r then
+                --    SpawnPrefab("bluemooneye").Transform:SetPosition(check_pt:Get())
+                --end
                 if GoodArenaPoints_Count >= GOODARENAPOINTS_CACHE_SIZE_MAX then
                     self:StopFindingGoodArenaPoints()
                 end
@@ -689,7 +696,7 @@ function Map:GetGoodArenaPoints()
 end
 
 
-local BADARENA_CANT_TAGS = {"tree", "boulder"}
+local BADARENA_CANT_TAGS = {"tree", "boulder", "spiderden", "okayforarena"}
 local BADARENA_ONEOF_TAGS = {"structure", "blocker", "plant", "antlion_sinkhole_blocker"}
 local IS_CLEAR_AREA_RADIUS = TILE_SCALE * GOOD_ARENA_SQUARE_SIZE
 local NO_PLAYER_RADIUS = 35

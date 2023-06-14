@@ -283,6 +283,8 @@ function CharlieCutscene:RepairGate()
     self.inst.AnimState:PlayAnimation("fixed")
     self.inst.SoundEmitter:KillSound("fixing")
 
+    ShakeAllCameras(CAMERASHAKE.SIDE, 1, .07, .4, self.inst, 30)
+
     self.inst.SoundEmitter:PlaySound("rifts2/atrium/fixed")
 
     local active = self.inst.components.pickable.caninteractwith or self.inst.components.worldsettingstimer:ActiveTimerExists("destabilizedelay")

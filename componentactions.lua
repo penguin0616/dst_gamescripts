@@ -1342,7 +1342,7 @@ local COMPONENT_ACTIONS =
             if doer == target and target.replica.builder ~= nil then
                 table.insert(actions, ACTIONS.TEACH)
             end
-        end,
+        end,        
 
         tool = function(inst, doer, target, actions, right)
             if not target:HasTag("INLIMBO") then
@@ -2257,6 +2257,10 @@ local COMPONENT_ACTIONS =
             end
         end,
 
+        scrapbookable = function(inst, doer, actions)
+            table.insert(actions, ACTIONS.TEACH)
+        end,
+
         teleporter = function(inst, doer, actions)
             if inst:HasTag("teleporter") and not doer:HasTag("channeling") then
                 table.insert(actions, ACTIONS.TELEPORT)
@@ -2295,7 +2299,7 @@ local COMPONENT_ACTIONS =
 
         useableitem = function(inst, doer, actions)
             if not inst:HasTag("inuse") and
-                inst.replica.equippable ~= nil and
+                inst.replica.equippable ~= nil and 
                 inst.replica.equippable:IsEquipped() and
                 doer.replica.inventory ~= nil and
                 doer.replica.inventory:IsOpenedBy(doer) then

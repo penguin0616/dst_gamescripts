@@ -1831,7 +1831,8 @@ function Tune(overrides)
         SLEEPBOMB_DURATION = 20,
 
         -- Scrapbook
-        SCRAPBOOK_UPDATERATE = 5,
+        SCRAPBOOK_BACKEND_SYNC = 3,
+        SCRAPBOOK_UPDATERATE = 1, -- Must be smaller than SCRAPBOOK_BACKEND_SYNC
         SCRAPBOOK_UPDATERADIUS = 15,
 
         GOLD_VALUES =

@@ -260,8 +260,10 @@ local states =
 			FrameEvent(18, function(inst) inst.DynamicShadow:SetSize(1.7, 1) end),
 			FrameEvent(19, RemovePhysicsColliders),
 			FrameEvent(20, function(inst) SetSpawnShadowScale(inst, 1) end),
-			FrameEvent(46, function(inst) SetSpawnShadowScale(inst, .75) end),
-			FrameEvent(47, function(inst) inst.SoundEmitter:PlaySound("rifts2/thrall_generic/death_pop") end),
+			FrameEvent(46, function(inst)
+				SetSpawnShadowScale(inst, .75)
+				inst.SoundEmitter:PlaySound("rifts2/thrall_generic/death_pop")
+			end),
 			FrameEvent(48, function(inst) SetSpawnShadowScale(inst, .5) end),
 			FrameEvent(50, function(inst) SetSpawnShadowScale(inst, .25) end),
 			FrameEvent(51, function(inst) inst.DynamicShadow:Enable(false) end),
@@ -385,8 +387,11 @@ local states =
 			inst.components.locomotor:RunForward()
 			inst.AnimState:PlayAnimation("run_loop")
 			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_big")
+			if not inst.SoundEmitter:PlayingSound("running") then
+				inst.SoundEmitter:PlaySound("rifts2/thrall_hands/running_wind_lp", "running")
+			end
 			if type(data) == "table" then
-				inst.SoundEmitter:PlaySound("rifts2/thrall_hands/footstep", nil, .6)
+				inst.SoundEmitter:PlaySound("rifts2/thrall_hands/footstep_run", nil, .6)
 				if data.stop then
 					inst.sg.statemem.stop = data.stop
 					inst.sg:RemoveStateTag("canrotate")
@@ -405,8 +410,8 @@ local states =
 
 		timeline =
 		{
+			FrameEvent(8, function(inst) inst.SoundEmitter:PlaySound("rifts2/thrall_hands/footstep_run") end),
 			FrameEvent(11, function(inst)
-				inst.SoundEmitter:PlaySound("rifts2/thrall_hands/footstep")
 				inst.sg.statemem.targets = {}
 				if DoAOEAttack(inst, 1.5, 1.2, nil, nil, nil, inst.sg.statemem.targets) then
 					inst.sg.statemem.targethit = true
@@ -470,6 +475,7 @@ local states =
 		onexit = function(inst)
 			inst.AnimState:Show("fx")
 			if not inst.sg.statemem.running then
+				inst.SoundEmitter:KillSound("running")
 				inst.components.combat:SetRange(TUNING.SHADOWTHRALL_HANDS_ATTACK_RANGE)
 				inst.Physics:CollidesWith(COLLISION.OBSTACLES)
 				inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
@@ -516,9 +522,13 @@ CommonStates.AddWalkStates(states,
 	walktimeline =
 	{
 		FrameEvent(0, function(inst)
-			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_big")
+			local t = GetTime()
+			if t > (inst.sg.mem.nextwalkvocal or 0) then
+				inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_small")
+				inst.sg.mem.nextwalkvocal = t + .5 + math.random()
+			end
 		end),
-		FrameEvent(8, function(inst)
+		FrameEvent(6, function(inst)
 			inst.sg.mem.lastfootstep = GetTime()
 			inst.SoundEmitter:PlaySound("rifts2/thrall_hands/footstep")
 		end),

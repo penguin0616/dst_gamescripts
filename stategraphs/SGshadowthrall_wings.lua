@@ -201,7 +201,7 @@ local states =
 				RemovePhysicsColliders(inst)
 				SetSpawnShadowScale(inst, 1)
 			end),
-			FrameEvent(26, function(inst) inst.SoundEmitter:PlaySound("rifts2/thrall_generic/death_pop") end),
+			FrameEvent(25, function(inst) inst.SoundEmitter:PlaySound("rifts2/thrall_generic/death_pop") end),
 			FrameEvent(30, function(inst) SetSpawnShadowScale(inst, .5) end),
 			FrameEvent(31, function(inst) inst.DynamicShadow:Enable(false) end),
 			FrameEvent(32, function(inst)
@@ -358,9 +358,13 @@ nil, --timeline
 nil, nil, nil,
 {
 	walkonenter = function(inst)
-		inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_small")
+		local t = GetTime()
+		if t > (inst.sg.mem.nextwalkvocal or 0) then
+			inst.SoundEmitter:PlaySound("rifts2/thrall_generic/vocalization_small")
+			inst.sg.mem.nextwalkvocal = t + .5 + math.random()
+		end
 		inst.SoundEmitter:PlaySound("rifts2/thrall_wings/flap_walk")
-		inst.sg.mem.lastflap = GetTime()
+		inst.sg.mem.lastflap = t
 	end,
 	endonenter = function(inst)
 		if (inst.sg.mem.lastflap or 0) + 0.5 < GetTime() then

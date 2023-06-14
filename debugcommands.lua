@@ -2044,7 +2044,7 @@ function d_createscrapbookdata()
                 thingtype = "item"
             end
 
-            if t:HasTag("epic") or t:HasTag("crabking") then
+            if t:HasTag("epic") or t:HasTag("crabking") or t.prefab == "shadow_rook" or t.prefab == "shadow_bishop" or t.prefab == "shadow_knight" then
                 thingtype = "giant"
             end            
 
@@ -2454,10 +2454,20 @@ function d_createscrapbookdata()
             if t.prefab == "dug_trap_starfish" then
                 f:write(' animoffsetx=' .. 160 ..', ')
                 f:write(' animoffsety=' .. 10 ..', ')
-            end         
-            if t.prefab == "bananajuice" then                
+            end        
+            if t.prefab == "bananajuice" then
                 f:write(' animoffsety=' .. -20 ..', ')
             end             
+            if t.prefab == "bananajuice" then
+                f:write(' animoffsety=' .. -20 ..', ')
+            end 
+
+            if t.scrapbook_animoffsetx then
+                 f:write(' animoffsetx=' .. t.scrapbook_animoffsetx ..', ')
+            end
+            if t.scrapbook_animoffsety then
+                 f:write(' animoffsety=' .. t.scrapbook_animoffsety ..', ')
+            end            
 
             -----------------------------------------
             ------------------------------------ WATERPROOFER

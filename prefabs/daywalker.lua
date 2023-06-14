@@ -1122,6 +1122,7 @@ local function fn()
 	inst.AnimState:PlayAnimation("idle", true)
 	inst.AnimState:SetSymbolLightOverride("ww_armlower_red", .6)
 	inst.AnimState:SetSymbolLightOverride("flake", .6)
+	inst.scrapbook_anim = "scrapbook"
 
 	inst.DynamicShadow:SetSize(3.5, 1.5)
 

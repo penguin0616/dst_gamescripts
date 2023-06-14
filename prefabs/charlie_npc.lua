@@ -13,8 +13,8 @@ local KNOWS_CHARLIE_LOOKUP = {
     waxwell = true,
 }
 
-local CAST_SOUND_NAME = "castloop"
-local AMB_SOUND_NAME  = "amb"
+local CAST_SOUND_NAME = "castloopsound"
+local AMB_SOUND_NAME  = "ambsound"
 
 --------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ local function DisableDynamicShadow(inst)
 end
 
 local function PlayDespawnSound(inst)
-    inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_haunt") -- Despawn sound @amanda ("spawn_out" anim)
+    inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_leave")
 end
 
 local function OnRemove(inst)
@@ -73,7 +73,7 @@ end
 --------------------------------------------------------------------------
 
 local function DisplayNameFn(inst)
-    if ThePlayer and KNOWS_CHARLIE_LOOKUP[ThePlayer.prefab] then
+    if ThePlayer ~= nil and KNOWS_CHARLIE_LOOKUP[ThePlayer.prefab] then
         return STRINGS.NAMES[string.upper(inst.prefab)]
     else
         return STRINGS.NAMES[string.upper(inst.prefab.."_ALT")]
@@ -125,9 +125,8 @@ local function fn()
 
     inst:DoTaskInTime(22*FRAMES, EnableDynamicShadow)
 
-    inst.SoundEmitter:PlaySound("dontstarve/ghost/ghost_haunt") -- Spawn sound @amanda. Plays when spawned ("spawn" anim).
+    inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_arrive")
     inst.SoundEmitter:PlaySound("rifts2/charlie/charlie_amb", AMB_SOUND_NAME)
-    inst.SoundEmitter:SetVolume(AMB_SOUND_NAME, 1)
 
     return inst
 end

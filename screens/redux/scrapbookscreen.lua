@@ -287,6 +287,12 @@ function ScrapbookScreen:updatemenubuttonflashes()
 			end
 		end
  	end
+
+ 	self.flashestoclear = true
+ 	if noflash then
+ 		self.flashestoclear = nil
+ 	end
+
  	if self.clearflash then
 		self.clearflash:Show()
 	 	if noflash then
@@ -325,6 +331,8 @@ function ScrapbookScreen:SetGrid()
 	self:updatemenubuttonflashes()
 	self:DoFocusHookups()
 	self.focus_forward = self.item_grid
+
+	TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/scrapbook_pageflip")
 
 	if TheInput:ControllerAttached() then
 		if setfocus and not self.searchbox.focus then
@@ -536,23 +544,28 @@ function ScrapbookScreen:updatemenubuttonnewitem(data, setting)
 	end
 end
 
-function ScrapbookScreen:MakeBottomBar()
+function ScrapbookScreen:ClearFlashes()
+	for prefab,data in pairs(dataset)do
+        if TheScrapbookPartitions:GetLevelFor(prefab) > 0 then
+		    TheScrapbookPartitions:SetViewedInScrapbook(prefab)
+        end
+	end
+	self:SetGrid()
+end
 
-	self.clearflash = self.root:AddChild(ImageButton("images/global_redux.xml", "button_carny_long_normal.tex", "button_carny_long_hover.tex", "button_carny_long_disabled.tex", "button_carny_long_down.tex"))
-	self.clearflash.image:SetScale(.6)
-	self.clearflash:SetFont(HEADERFONT)
-	self.clearflash:SetText(STRINGS.SCRAPBOOK.CLEARFLASH)
-	self.clearflash.text:SetColour(0,0,0,1)
-	self.clearflash:SetPosition(220+(SEARCH_BOX_WIDTH/2)+28+28, -PANEL_HEIGHT/2 -38)
-	self.clearflash:SetTextSize(16)
-	self.clearflash:SetOnClick(function()
-			for prefab,data in pairs(dataset)do
-                if TheScrapbookPartitions:GetLevelFor(prefab) > 0 then
-				    TheScrapbookPartitions:SetViewedInScrapbook(prefab)
-                end
-			end
-			self:SetGrid()
-		end)
+function ScrapbookScreen:MakeBottomBar()
+	if not TheInput:ControllerAttached() then
+		self.clearflash = self.root:AddChild(ImageButton("images/global_redux.xml", "button_carny_long_normal.tex", "button_carny_long_hover.tex", "button_carny_long_disabled.tex", "button_carny_long_down.tex"))
+		self.clearflash.image:SetScale(.6)
+		self.clearflash:SetFont(HEADERFONT)
+		self.clearflash:SetText(STRINGS.SCRAPBOOK.CLEARFLASH)
+		self.clearflash.text:SetColour(0,0,0,1)
+		self.clearflash:SetPosition(220+(SEARCH_BOX_WIDTH/2)+28+28, -PANEL_HEIGHT/2 -38)
+		self.clearflash:SetTextSize(16)
+		self.clearflash:SetOnClick(function()
+				self:ClearFlashes()
+			end)
+	end
 end
 
 function ScrapbookScreen:MakeTopBar()
@@ -740,6 +753,7 @@ function ScrapbookScreen:BuildItemGrid()
     local function ScrollWidgetSetData(context, widget, data, index)
     	
 		widget.item_root.image:SetTint(1,1,1,1)
+		widget.item_root.inv_image:SetTint(1,1,1,1)
 		widget.item_root.flash:Hide()
 
 		widget.data = data
@@ -798,6 +812,7 @@ function ScrapbookScreen:BuildItemGrid()
 				self.details = nil
 				self.details = self.detailsroot:AddChild(self:PopulateInfoPanel(widget.data))
 				self:DoFocusHookups()
+				TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/scrapbook_pageflip")
 			end)
 
 		else
@@ -1815,7 +1830,10 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 					end
 
 					if type(objstr) == "table" then
-						if data.prefab == "blueprint" then
+
+						if #objstr > 0 then
+							objstr = objstr[math.floor(rand()*#objstr)+1]
+						elseif data.prefab == "blueprint" then
 							objstr = objstr["COMMON"]
 						elseif string.upper(data.speechname or data.prefab) == "WORM" then
 							objstr = objstr["WORM"]
@@ -1838,8 +1856,8 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 						height, body = setcustomblock(height,{str=descstr, minwidth=width-100, leftoffset=40,ignoreheightchange=true, shortblock=true})
 					end
 					character_panels[char] = body
-					character_panels[char].id = i
 					if body then
+                        body.id = i
 						body:Hide()
 
 						local button = sub_root:AddChild(ImageButton("images/crafting_menu_avatars.xml", "avatar_".. char ..".tex"))
@@ -1960,7 +1978,7 @@ function ScrapbookScreen:OnControl(control, down)
 		end
 
 	    if control == CONTROL_MENU_MISC_2 then
-			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+			TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")			
 			self:SelectMenuItem("down")
 			return true
 		end	
@@ -1970,6 +1988,14 @@ function ScrapbookScreen:OnControl(control, down)
 			self:CycleChraterQuotes("right")
 			return true
 		end	
+
+		if self.flashestoclear then
+  			if control == CONTROL_CONTROLLER_ATTACK then
+  				self.flashestoclear = nil
+  				self:ClearFlashes()
+				return true
+			end	
+		end
 
 	end
 end
@@ -1990,6 +2016,10 @@ function ScrapbookScreen:GetHelpText()
 
 	if self.searchbox.focus then
 		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ACTION) .. " " .. STRINGS.SCRAPBOOK.SEARCH)
+	end
+
+	if self.flashestoclear then
+		table.insert(t, TheInput:GetLocalizedControl(controller_id, CONTROL_CONTROLLER_ATTACK) .. " " .. STRINGS.SCRAPBOOK.CLEARFLASH)
 	end
 
 	return table.concat(t, "  ")

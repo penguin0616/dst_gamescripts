@@ -124,6 +124,7 @@ local function MakeHat(name)
 			owner.AnimState:HideSymbol("face")
 			owner.AnimState:HideSymbol("swap_face")
 			owner.AnimState:HideSymbol("beard")
+			owner.AnimState:HideSymbol("cheeks")
 		end
 	end
 
@@ -134,6 +135,7 @@ local function MakeHat(name)
 			owner.AnimState:ShowSymbol("face")
 			owner.AnimState:ShowSymbol("swap_face")
 			owner.AnimState:ShowSymbol("beard")
+			owner.AnimState:ShowSymbol("cheeks")
 		end
 	end
 
@@ -2925,7 +2927,7 @@ local function MakeHat(name)
 
 	local function dreadstone_doregen(inst, owner)
 		if owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode() then
-			local setbonus = inst.components.setbonus ~= nil and inst.components.setbonus:IsEnabled() and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
+			local setbonus = inst.components.setbonus ~= nil and inst.components.setbonus:IsEnabled(EQUIPMENTSETNAMES.DREADSTONE) and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
 			local rate = 1 / Lerp(1 / TUNING.ARMOR_DREADSTONE_REGEN_MAXRATE, 1 / TUNING.ARMOR_DREADSTONE_REGEN_MINRATE, owner.components.sanity:GetPercent())
 			inst.components.armor:Repair(inst.components.armor.maxcondition * rate * setbonus)
 		end
@@ -3202,6 +3204,7 @@ local function MakeHat(name)
 
 	fns.voidcloth_custom_init = function(inst)
 		inst:AddTag("cloth")
+		inst:AddTag("shadow_item")
 
 		--shadowlevel (from shadowlevel component) added to pristine state for optimization
 		inst:AddTag("shadowlevel")

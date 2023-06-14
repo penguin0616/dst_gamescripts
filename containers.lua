@@ -404,23 +404,51 @@ function params.construction_container.widget.buttoninfo.validfn(inst)
 end
 
 --------------------------------------------------------------------------
---[[ enable_rift_construction_container ]]
+--[[ enable_shadow_rift_construction_container ]]
 --------------------------------------------------------------------------
 
 
-params.enable_rift_construction_container = deepcopy(params.construction_container)
+params.enable_shadow_rift_construction_container = deepcopy(params.construction_container)
 
-params.enable_rift_construction_container.widget.slotpos = {Vector3(0, 8, 0)}
-params.enable_rift_construction_container.widget.side_align_tip = 120
-params.enable_rift_construction_container.widget.animbank = "ui_bundle_2x2"
-params.enable_rift_construction_container.widget.animbuild = "ui_bundle_2x2"
-params.enable_rift_construction_container.widget.buttoninfo.text = STRINGS.ACTIONS.APPLYCONSTRUCTION.OFFER
+params.enable_shadow_rift_construction_container.widget.slotpos = {Vector3(0, 8, 0)}
+params.enable_shadow_rift_construction_container.widget.side_align_tip = 120
+params.enable_shadow_rift_construction_container.widget.animbank = "ui_bundle_2x2"
+params.enable_shadow_rift_construction_container.widget.animbuild = "ui_bundle_2x2"
+params.enable_shadow_rift_construction_container.widget.buttoninfo.text = STRINGS.ACTIONS.APPLYCONSTRUCTION.OFFER
+
+local function IsConstructionSiteComplete(inst, doer)
+    local container = inst.replica.container
+
+    if container ~= nil and not container:IsEmpty() then
+        local constructionsite = doer.components.constructionbuilderuidata ~= nil and doer.components.constructionbuilderuidata:GetConstructionSite()
+        
+        if constructionsite ~= nil then
+            local ingredients = constructionsite:GetIngredients()
+
+            if ingredients ~= nil then
+                for i, v in ipairs(ingredients) do
+                    local complete, new_count = container:Has(v.type, v.amount)
+                    local old_count = constructionsite:GetSlotCount(i)
+                    if not (new_count +  old_count >= v.amount) then
+                        return false
+                    end
+                end
+            else
+                return false
+            end
+
+            return true
+        end
+    end
+
+    return false
+end
 
 local function EnableRiftsPopUpGoBack()
     TheFrontEnd:PopScreen()
 end
 
-function params.enable_rift_construction_container.widget.buttoninfo.fn(inst, doer)
+function params.enable_shadow_rift_construction_container.widget.buttoninfo.fn(inst, doer)
     local function DoAct()
         if inst.components.container ~= nil then
             BufferedAction(doer, inst, ACTIONS.APPLYCONSTRUCTION):Do()
@@ -429,18 +457,18 @@ function params.enable_rift_construction_container.widget.buttoninfo.fn(inst, do
         end
     end
 
-    if TheFrontEnd ~= nil and doer and doer == ThePlayer then
+    if TheFrontEnd ~= nil and doer and doer == ThePlayer and IsConstructionSiteComplete(inst, doer) then
         -- We have UI do dialogue.
         local function EnableRiftsPopUpConfirm()
             DoAct()
             TheFrontEnd:PopScreen()
         end
 
-        local confirmation = PopupDialogScreen(STRINGS.UI.STARTRIFTS.TITLE, STRINGS.UI.STARTRIFTS.BODY,
+        local confirmation = PopupDialogScreen(STRINGS.UI.START_SHADOW_RIFTS.TITLE, STRINGS.UI.START_SHADOW_RIFTS.BODY,
         {
-            { text = STRINGS.UI.STARTRIFTS.OK,     cb = EnableRiftsPopUpConfirm },
-            { text = STRINGS.UI.STARTRIFTS.CANCEL, cb = EnableRiftsPopUpGoBack  },
-        })
+            { text = STRINGS.UI.START_SHADOW_RIFTS.OK,     cb = EnableRiftsPopUpConfirm },
+            { text = STRINGS.UI.START_SHADOW_RIFTS.CANCEL, cb = EnableRiftsPopUpGoBack  },
+        },nil,"big","dark_wide")
 
         TheFrontEnd:PushScreen(confirmation)
     else

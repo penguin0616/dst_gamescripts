@@ -5076,7 +5076,6 @@ local states =
 
 		onenter = function(inst)
 			inst.entity:SetIsPredictingMovement(false)
-			ClearCachedServerState(inst)
 			inst.sg:SetTimeout(TIMEOUT)
 		end,
 

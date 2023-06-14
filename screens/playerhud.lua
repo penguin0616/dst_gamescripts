@@ -192,6 +192,7 @@ function PlayerHud:CreateOverlays(owner)
     self.serverpause_underlay:SetScaleMode(SCALEMODE_FILLSCREEN)
     self.serverpause_underlay:SetTint(0,0,0,0.5)
 	self.serverpause_underlay:Hide()
+	self.serverpaused = false
     self:SetServerPaused(TheNet:IsServerPaused(true))
 
     self.eventannouncer = self.under_root:AddChild(Widget("eventannouncer_root"))
@@ -1084,6 +1085,10 @@ function PlayerHud:OnControl(control, down)
     if PlayerHud._base.OnControl(self, control, down) then
         return true
     elseif not self.shown then
+		if self.serverpaused and down and control == CONTROL_SERVER_PAUSE then
+			SetServerPaused(false)
+			return true
+		end
         return
     end
 
@@ -1389,6 +1394,7 @@ function PlayerHud:SetServerPaused(paused)
     else
         self.serverpause_underlay:Hide()
     end
+	self.serverpaused = paused
 end
 
 function PlayerHud:OffsetServerPausedWidget(serverpausewidget)

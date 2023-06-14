@@ -1040,7 +1040,7 @@ function Inventory:Unequip(equipslot, slip)
     self.inst:PushEvent("unequip", {item=item, eslot=equipslot, slip=slip})
 
     if self.inst:HasTag("player") and item ~= nil and item.components.setbonus ~= nil then
-        item.components.setbonus:UpdateSetBonus(self)
+        item.components.setbonus:UpdateSetBonus(self, false)
     end
 
     return item
@@ -1161,7 +1161,7 @@ function Inventory:Equip(item, old_to_active, no_animation)
         end
 
         if self.inst:HasTag("player") and item.components.setbonus ~= nil then
-            item.components.setbonus:UpdateSetBonus(self)
+            item.components.setbonus:UpdateSetBonus(self, true)
         end
 
         return true

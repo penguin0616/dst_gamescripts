@@ -1,3 +1,5 @@
+local PopupDialogScreen = require "screens/redux/popupdialog"
+
 local assets =
 {
     Asset("ANIM", "anim/player_actions.zip"),
@@ -625,6 +627,7 @@ end
 local function pstbossOnGetItemFromPlayer(inst, giver, item)
     if item.prefab == "alterguardianhatshard" and (inst.AnimState:IsCurrentAnimation("build_loop") or inst.AnimState:IsCurrentAnimation("build_pre")) then
 
+
         if inst:HasTag("trader_just_show") then
             inst:RemoveTag("trader_just_show")
             if inst.request_task then
@@ -637,10 +640,29 @@ local function pstbossOnGetItemFromPlayer(inst, giver, item)
                 inst.components.talker:Say(getline(STRINGS.WAGSTAFF_NPC_YES_THAT2))
             end)
         else
-            inst.rifts_are_open = true
-            inst.sg:SetTimeout(0)
-            inst:AddTag("shard_recieved")
-            TheWorld:PushEvent("lunarrift_opened")
+            if TheFrontEnd ~= nil and giver and giver == ThePlayer then
+                -- We have UI do dialogue.
+
+                local function EnableRiftsPopUpGoBack()
+                    TheFrontEnd:PopScreen()
+                end
+                local function EnableRiftsPopUpConfirm()
+                    inst.rifts_are_open = true
+                    inst.sg:SetTimeout(0)
+                    inst:AddTag("shard_recieved")
+                    TheWorld:PushEvent("lunarrift_opened")
+                    
+                    TheFrontEnd:PopScreen()
+                end
+
+                local confirmation = PopupDialogScreen(STRINGS.UI.START_LUNAR_RIFTS.TITLE, STRINGS.UI.START_LUNAR_RIFTS.BODY,
+                {
+                    { text = STRINGS.UI.START_LUNAR_RIFTS.OK,     cb = EnableRiftsPopUpConfirm },
+                    { text = STRINGS.UI.START_LUNAR_RIFTS.CANCEL, cb = EnableRiftsPopUpGoBack  },
+                },nil,"big","dark_wide")
+
+                TheFrontEnd:PushScreen(confirmation)
+            end
         end
     end
 end
@@ -700,7 +722,6 @@ local function relocate_wagstaff(inst)
         wagstaff:PushEvent("continuework")
         wagstaff.continuework = true
         wagstaff.persists = true
-        TheWorld.components.entitytracker:TrackEntity("WagstaffNPC_continueWorking",wagstaff)
     end
 end
 
@@ -811,6 +832,16 @@ local function pstbossfn()
 
     inst:AddComponent("timer")
     inst:ListenForEvent("timerdone", pstbossontimerdone)
+
+	inst:ListenForEvent("ms_despawn_wagstaff_npc_pstboss", function()
+		if inst:IsAsleep() then
+			inst:Remove()
+		else
+			inst.persists = false
+			inst.sg:GoToState("capture_emote")
+			inst:DoTaskInTime(20, inst.Remove)
+		end
+	end, TheWorld)
 
     inst.OnSave = PstBossOnSave
     inst.OnLoad = PstBossOnLoad

@@ -5,7 +5,7 @@ local assets =
 
 local prefabs =
 {
-    "enable_rift_construction_container",
+    "enable_shadow_rift_construction_container",
 }
 
 ----------------------------------------------------------------------------
@@ -203,7 +203,7 @@ local function CharlieHandFn()
     inst:AddComponent("inspectable")
 
     local constructionsite = inst:AddComponent("constructionsite")
-    constructionsite:SetConstructionPrefab("enable_rift_construction_container")
+    constructionsite:SetConstructionPrefab("enable_shadow_rift_construction_container")
     constructionsite:SetOnConstructedFn(ConstructionSite_OnConstructed)
 
     local locomotor = inst:AddComponent("locomotor")
@@ -245,7 +245,7 @@ local function EnableRiftContainerFn()
     end
 
     inst:AddComponent("container")
-    inst.components.container:WidgetSetup("enable_rift_construction_container")
+    inst.components.container:WidgetSetup("enable_shadow_rift_construction_container")
 
     inst.persists = false
 
@@ -256,5 +256,5 @@ end
 
 
 return
-        Prefab("charlie_hand",                          CharlieHandFn,          assets, prefabs ),
-        Prefab("enable_rift_construction_container",    EnableRiftContainerFn                   )
+        Prefab("charlie_hand",                               CharlieHandFn,          assets, prefabs ),
+        Prefab("enable_shadow_rift_construction_container",  EnableRiftContainerFn                   )

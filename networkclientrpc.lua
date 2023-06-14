@@ -1009,6 +1009,17 @@ local RPC_HANDLERS =
         player:OnPostActivateHandshake_Server(state)
     end,
 
+    OnScrapbookDataTaught = function(player, inst, response)
+        if not checkentity(inst) then
+            printinvalid("OnScrapbookDataTaught", player)
+            return
+        end
+
+        if inst.OnScrapbookDataTaught then
+            inst:OnScrapbookDataTaught(player, response)
+        end
+    end,
+
     -- NOTES(JBK): RPC limit is at 128, with 1-127 usable.
 }
 
@@ -1120,6 +1131,10 @@ local CLIENT_RPC_HANDLERS =
 
     PostActivateHandshake = function(state)
         ThePlayer:OnPostActivateHandshake_Client(state)
+    end,
+
+    TryToTeachScrapbookData = function(inst)
+        TheScrapbookPartitions:TryToTeachScrapbookData(false, inst)
     end,
 }
 

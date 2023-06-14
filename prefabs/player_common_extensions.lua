@@ -929,12 +929,16 @@ local function OnClosePopups(inst)
     inst:ShowPopUp(POPUPS.PLAYERINFO, false)
 end
 
-local SCRAPBOOK_CANT_TAGS = {"FX", "NOCLICK", "DECOR", "INLIMBO"}
+local SCRAPBOOK_CANT_TAGS = {"FX", "DECOR", "INLIMBO"}
 local function UpdateScrapbook(inst)
     local x, y, z = inst.Transform:GetWorldPosition()
     local ents = TheSim:FindEntities(x, y, z, TUNING.SCRAPBOOK_UPDATERADIUS, nil, SCRAPBOOK_CANT_TAGS) 
     for _, ent in ipairs(ents) do
-        TheScrapbookPartitions:SetSeenInGame(ent.prefab)
+        if IsEntityDead(ent) then
+            TheScrapbookPartitions:SetInspectedByCharacter(ent.prefab, ThePlayer.prefab)
+        else
+            TheScrapbookPartitions:SetSeenInGame(ent.prefab)
+        end
     end
 end
 

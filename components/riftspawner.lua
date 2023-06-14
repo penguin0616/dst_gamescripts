@@ -32,6 +32,7 @@ local RiftSpawner = Class(function(self, inst)
 
     self.inst:ListenForEvent("rifts_setdifficulty", function(...) self:SetDifficulty(...) end)
     self.inst:ListenForEvent("rifts_settingsenabled", function(...) self:SetEnabledSetting(...) end)
+    self.inst:ListenForEvent("rifts_settingsenabled_cave", function(...) self:SetEnabledSettingCave(...) end)
     self.inst:ListenForEvent("lunarrift_opened", function(...) self:EnableLunarRifts(...) end)
     self.inst:ListenForEvent("shadowrift_opened", function(...) self:EnableShadowRifts(...) end)
     self.inst:ListenForEvent("ms_lunarrift_maxsize", function(...) self:OnLunarRiftMaxSize(...) end)
@@ -217,11 +218,17 @@ function RiftSpawner:SetEnabledSetting(src, enabled_difficulty)
         self._worldsettingstimer:StopTimer(RIFTSPAWN_TIMERNAME)
     elseif enabled_difficulty == "always" then
         self:EnableLunarRifts(src)
-        self:EnableShadowRifts(src)
-        --self:EnableXRifts(src)
     end
 end
 
+function RiftSpawner:SetEnabledSettingCave(src, enabled_difficulty)
+    if enabled_difficulty == "never" then
+        self.shadow_rifts_enabled = false
+        self._worldsettingstimer:StopTimer(RIFTSPAWN_TIMERNAME)
+    elseif enabled_difficulty == "always" then
+        self:EnableShadowRifts(src)
+    end
+end
 
 --------------------------------------------------------------------------------
 -- Getters

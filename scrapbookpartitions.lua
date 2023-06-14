@@ -266,6 +266,8 @@ function ScrapbookPartitions:SetInspectedByCharacter(thing, character)
     self:UpdateStorageData(hashed, newdata)
 
     UpdatePlayerScreens(thing)
+
+    self:SetViewedInScrapbook(thing, false) -- Mark as new.
 end
 
 
@@ -287,6 +289,43 @@ function ScrapbookPartitions:GetLevelFor(thing)
     end
 
     return 2 -- If a thing has been seen and inspected once it is level 2.
+end
+
+function ScrapbookPartitions:TryToTeachScrapbookData(is_server, inst)
+    local unknown = {}
+    for prefab, data in pairs(scrapbook_dataset) do
+        if self:GetLevelFor(prefab) < 1 then
+            table.insert(unknown, prefab)
+        end
+    end
+
+    local learned_something = false
+    if #unknown then 
+        local numofentries = math.random(3, 4)
+        while #unknown > 0 and numofentries > 0 do
+            local choice = math.random(1, #unknown)
+
+            local ok = false
+            for i, cat in ipairs(SCRAPBOOK_CATS) do
+                if scrapbook_dataset[unknown[choice]].type == cat then
+                    ok = true
+                    break
+                end
+            end
+            if ok then
+                learned_something = true
+                self:SetSeenInGame(unknown[choice])
+                numofentries = numofentries - 1
+            end
+            table.remove(unknown, choice)
+        end
+    end
+
+    if not is_server then
+        SendRPCToServer(RPC.OnScrapbookDataTaught, inst, learned_something)
+    end
+
+    return learned_something
 end
 
 
@@ -381,14 +420,14 @@ function ScrapbookPartitions:UpdateStorageData(hashed, newdata)
             TheGlobalInstance._scrapbook_update_task:Cancel()
             TheGlobalInstance._scrapbook_update_task = nil
         end
-        TheGlobalInstance._scrapbook_update_task = TheGlobalInstance:DoTaskInTime(3, DoOfflineSync)
+        TheGlobalInstance._scrapbook_update_task = TheGlobalInstance:DoTaskInTime(TUNING.SCRAPBOOK_BACKEND_SYNC, DoOfflineSync)
     elseif TheInventory:HasDownloadedInventory() then
         -- Online mode and we have downloaded the inventory.
         if TheGlobalInstance._scrapbook_update_task ~= nil then
             TheGlobalInstance._scrapbook_update_task:Cancel()
             TheGlobalInstance._scrapbook_update_task = nil
         end
-        TheGlobalInstance._scrapbook_update_task = TheGlobalInstance:DoTaskInTime(3, DoBackendSync)
+        TheGlobalInstance._scrapbook_update_task = TheGlobalInstance:DoTaskInTime(TUNING.SCRAPBOOK_BACKEND_SYNC, DoBackendSync)
     end
 end
 
