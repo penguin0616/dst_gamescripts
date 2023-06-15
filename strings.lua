@@ -6230,7 +6230,7 @@ STRINGS =
     WAGSTAFF_NPC_CAPTURESTOP = "Thank you for all your hard work.",
     WAGSTAFF_NPC_CAPTURESTOP1 = "This will increase the power output exponentially!",
     WAGSTAFF_NPC_CAPTURESTOP2 = "Now if you'll excuse me, I have much to do.",
-    WAGSTAFF_NPC_CAPTURESTOP3 = "you and I are about to change the world",
+    WAGSTAFF_NPC_CAPTURESTOP3 = "You and I are about to change the world!",
 
     WAGSTAFF_NPC_REQUEST = {"Incredible! It's just as I surmised!",
                             "If I could just push its output a bit further...",

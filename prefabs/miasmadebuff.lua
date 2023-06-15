@@ -41,7 +41,6 @@ local function fn()
     inst:AddComponent("debuff")
     inst.components.debuff:SetAttachedFn(OnAttached)
     inst.components.debuff:SetDetachedFn(inst.Remove)
-    inst.components.debuff.keepondespawn = true
 
     return inst
 end

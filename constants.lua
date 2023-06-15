@@ -757,7 +757,7 @@ SPECIAL_EVENTS =
     YOT_CATCOON = "year_of_the_catcoon",
     YOTR = "year_of_the_bunnyman",
 }
-WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.NONE
+WORLD_SPECIAL_EVENT = SPECIAL_EVENTS.CARNIVAL
 --WORLD_SPECIAL_EVENT = IS_BETA and SPECIAL_EVENTS.NONE or SPECIAL_EVENTS.YOTR
 WORLD_EXTRA_EVENTS = {}
 
@@ -790,9 +790,15 @@ IS_YEAR_OF_THE_SPECIAL_EVENTS =
 
 ---------------------------------------------------------
 -- Reminder: update event_deps.lua
-SPECIAL_EVENT_GLOBAL_PREFABS = { WORLD_SPECIAL_EVENT.."_event_global" }
-SPECIAL_EVENT_BACKEND_PREFABS = { WORLD_SPECIAL_EVENT.."_event_backend" }
-SPECIAL_EVENT_FRONTEND_PREFABS = { WORLD_SPECIAL_EVENT.."_event_frontend" }
+if WORLD_SPECIAL_EVENT == SPECIAL_EVENTS.CARNIVAL then -- FIXME(JBK): Remove this block when the shadow rift update is done.
+    SPECIAL_EVENT_GLOBAL_PREFABS = { SPECIAL_EVENTS.NONE.."_event_global" }
+    SPECIAL_EVENT_BACKEND_PREFABS = { SPECIAL_EVENTS.NONE.."_event_backend" }
+    SPECIAL_EVENT_FRONTEND_PREFABS = { SPECIAL_EVENTS.NONE.."_event_frontend" }
+else
+    SPECIAL_EVENT_GLOBAL_PREFABS = { WORLD_SPECIAL_EVENT.."_event_global" }
+    SPECIAL_EVENT_BACKEND_PREFABS = { WORLD_SPECIAL_EVENT.."_event_backend" }
+    SPECIAL_EVENT_FRONTEND_PREFABS = { WORLD_SPECIAL_EVENT.."_event_frontend" }
+end
 
 FESTIVAL_EVENT_GLOBAL_PREFABS = { WORLD_FESTIVAL_EVENT.."_fest_global" }
 FESTIVAL_EVENT_BACKEND_PREFABS = { WORLD_FESTIVAL_EVENT.."_fest_backend" }
@@ -1048,10 +1054,11 @@ end
 --  sound = "dontstarve/music/music_FE"
 FE_MUSIC =
     (FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT] ~= nil and FESTIVAL_EVENT_MUSIC[WORLD_FESTIVAL_EVENT].sound) or
+    WORLD_SPECIAL_EVENT ~= SPECIAL_EVENTS.CARNIVAL and -- FIXME(JBK): Remove this line when the shadow rift update is done.
     (SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT] ~= nil and SPECIAL_EVENT_MUSIC[WORLD_SPECIAL_EVENT].sound) or
     "dontstarve/music/music_FE_shadowrift"
     --"dontstarve/music/music_FE_lunarrift"
-    --dontstarve/music/music_FE_daywalker"
+    --"dontstarve/music/music_FE_daywalker"
     --"dontstarve/music/music_FE_maxwell"
     --"dontstarve/music/music_FE_charliestage"
     --"dontstarve/music/music_FE_wickerbottom"

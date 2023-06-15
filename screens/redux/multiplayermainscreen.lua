@@ -403,10 +403,11 @@ function MakeBanner(self)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.YOT_CATCOON) then
         MakeYOTCatcoonBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.HALLOWED_NIGHTS) then
-		MakeDramaBanner(self, banner_root, anim)
-        --MakeHallowedNightsBanner(self, banner_root, anim)
+		--MakeDramaBanner(self, banner_root, anim)
+        MakeHallowedNightsBanner(self, banner_root, anim)
 	elseif IsSpecialEventActive(SPECIAL_EVENTS.CARNIVAL) then
-        MakeCawnivalBanner(self, banner_root, anim)
+        MakeShadowRiftBanner(self, banner_root, anim) -- FIXME(JBK): Comment this when the shadow rift update is done.
+        --MakeCawnivalBanner(self, banner_root, anim) -- FIXME(JBK): Uncomment this when the shadow rift update is done.
 	else
 		MakeShadowRiftBanner(self, banner_root, anim)
         --MakeDramaBanner(self, banner_root, anim)
