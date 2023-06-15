@@ -146,6 +146,13 @@ local function OnLoadPostPass(inst, data)
             inst:OnAtriumPowered(atrium.components.pickable ~= nil and atrium.components.pickable.caninteractwith)
         end)
     end
+
+    -- Remove us if shadow rifts are already active or should not be possible to activate.
+    if TUNING.SPAWN_RIFTS ~= 1 then
+    	inst.persists = false
+        inst:Hide()
+        inst:DoTaskInTime(0, inst.Remove)
+    end
 end
 
 local function OnRemove(inst)
@@ -237,6 +244,7 @@ local function EnableRiftContainerFn()
 
     -- Blank string for controller action prompt.
     inst.name = " "
+	inst.POPUP_STRINGS = STRINGS.UI.START_SHADOW_RIFTS
 
     inst.entity:SetPristine()
 

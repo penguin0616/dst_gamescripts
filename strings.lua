@@ -12705,17 +12705,17 @@ STRINGS.UI =
     
     START_SHADOW_RIFTS =
     {
-        TITLE  = "ASSIST CHARLIE?", -- TODO
-        BODY   = "Be warned, making this deal with the Shadow Queen will forever change this world. Dark, terrible and beautiful things will emerge.\n\nOnce this energy is released, there's no putting the cork back in the bottle...", -- TODO
-        OK     = "I'm ready!", -- TODO
-        CANCEL = "Let me think about it.", -- TODO
+        TITLE  = "The Price of Ambition",
+        BODY   = "Be warned, assisting the Shadow Queen will alter your world and cannot be undone. Beautiful, terrible things will rise to the surface.\n\nAre you sure you'd like to continue?",
+        OK     = "I'm ready!",
+        CANCEL = "Let me think about it.",
     },
     START_LUNAR_RIFTS =
     {
-        TITLE  = "ASSIST WAGSTAFF?", -- TODO
-        BODY   = "Be warned, making this deal with the Cryptic Founder will forever change this world. Much will be lost and gained in the name of Progress.\n\nOnce this power is harnessed, these worms won't fit back in the can...", -- TODO
-        OK     = "I'm ready!", -- TODO
-        CANCEL = "Let me think about it.", -- TODO
+        TITLE  = "The Price of Ambition",
+        BODY   = "Be warned, assisting the Cryptic Founder will alter your world and cannot be undone. Much will be lost and gained in the name of Progress.\n\nAre you sure you'd like to continue?",
+        OK     = "I'm ready!",
+        CANCEL = "Let me think about it.",
     },    
 }
 
@@ -14401,7 +14401,7 @@ STRINGS.SCRAPBOOK = {
         ELEMENT = "Element",
         WEAPON = "Weapon",
         ARMOR = "Armor",
-        ELIXER = "Elixer",
+        ELIXER = "Elixir",
         CLOTHING = "Clothing",
         HAT = "Hat",
         BATTLESONG = "Battlesong",

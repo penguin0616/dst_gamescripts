@@ -960,7 +960,8 @@ CONSTRUCTION_PLANS =
 	["moon_device_construction1"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonstorm_spark", 10), Ingredient("moonglass_charged", 10) },
 	["moon_device_construction2"] = { Ingredient("moonstorm_static_item", 1), Ingredient("moonglass_charged", 20), Ingredient("moonrockseed", 1) },
 
-	["charlie_hand"] = { Ingredient("dreadstone", 5)},
+	["charlie_hand"] =				{ Ingredient("dreadstone", 5) },
+	["wagstaff_npc_pstboss"] =		{ Ingredient("alterguardianhatshard", 1) },
 }
 
 ---- Deconstruction Recipes----

@@ -571,13 +571,26 @@ local states =
 				inst.sg.statemem.tracking = false
 			end),
 			FrameEvent(9, function(inst)
-				if inst.sg.statemem.targetpos ~= nil then
-					local dist = math.sqrt(inst:GetDistanceSqToPoint(inst.sg.statemem.targetpos))
-					--max dist 9; 30 fps; 20 frames at full speed
-					inst.sg.statemem.speed = math.min(9, dist) * 30 / 20
-				else
-					inst.sg.statemem.speed = 7.5 * 30 / 20
+				local x, y, z = inst.Transform:GetWorldPosition()
+				local targetdist =
+					inst.sg.statemem.targetpos ~= nil and
+					math.min(9, math.sqrt(distsq(x, z, inst.sg.statemem.targetpos.x, inst.sg.statemem.targetpos.z))) or
+					7.5
+				local theta = inst.Transform:GetRotation() * DEGREES
+				local costheta = math.cos(theta)
+				local sintheta = math.sin(theta)
+				local physrad = inst:GetPhysicsRadius(0)
+				targetdist = targetdist + physrad
+				local dist = math.min(1, targetdist)
+				while dist < targetdist do
+					if not TheWorld.Map:IsPassableAtPoint(x + costheta * dist, 0, z - sintheta * dist) then
+						break
+					end
+					dist = math.min(targetdist, dist + 0.5)
 				end
+				dist = math.max(1, dist - physrad)
+				-- 30 fps; 20 frames at full speed
+				inst.sg.statemem.speed = dist * 30 / 20
 				inst.Physics:SetMotorVelOverride(inst.sg.statemem.speed, 0, 0)
 			end),
 			FrameEvent(10, function(inst)

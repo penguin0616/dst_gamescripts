@@ -267,6 +267,17 @@ local MiasmaManager = Class(function(self, inst)
     function self:RollForMiasmaActionAt(mtx, mty, allowspread)
         local miasmadata = self:GetMiasmaAtTile(mtx, mty)
 
+        local riftspawner = _world.components.riftspawner
+        if riftspawner and not riftspawner:IsShadowPortalActive() then
+            -- No shadow affinity rifts deteriorate old miasma clouds over time.
+            if miasmadata then
+                self:MiasmaAction_Diminish(mtx, mty, miasmadata)
+                return "Diminish"
+            else
+                return
+            end
+        end
+
         if miasmadata == nil then
             if math.random() > TUNING.MIASMA_ODDS_CREATE then
                 return

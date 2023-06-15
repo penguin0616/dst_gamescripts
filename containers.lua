@@ -420,7 +420,7 @@ local function IsConstructionSiteComplete(inst, doer)
     local container = inst.replica.container
 
     if container ~= nil and not container:IsEmpty() then
-        local constructionsite = doer.components.constructionbuilderuidata ~= nil and doer.components.constructionbuilderuidata:GetConstructionSite()
+        local constructionsite = doer.components.constructionbuilderuidata ~= nil and doer.components.constructionbuilderuidata:GetConstructionSite() or nil
         
         if constructionsite ~= nil then
             local ingredients = constructionsite:GetIngredients()
@@ -464,10 +464,12 @@ function params.enable_shadow_rift_construction_container.widget.buttoninfo.fn(i
             TheFrontEnd:PopScreen()
         end
 
-        local confirmation = PopupDialogScreen(STRINGS.UI.START_SHADOW_RIFTS.TITLE, STRINGS.UI.START_SHADOW_RIFTS.BODY,
+        local str = inst.POPUP_STRINGS
+
+        local confirmation = PopupDialogScreen(str.TITLE, str.BODY,
         {
-            { text = STRINGS.UI.START_SHADOW_RIFTS.OK,     cb = EnableRiftsPopUpConfirm },
-            { text = STRINGS.UI.START_SHADOW_RIFTS.CANCEL, cb = EnableRiftsPopUpGoBack  },
+            { text = str.OK,     cb = EnableRiftsPopUpConfirm },
+            { text = str.CANCEL, cb = EnableRiftsPopUpGoBack  },
         },nil,"big","dark_wide")
 
         TheFrontEnd:PushScreen(confirmation)
@@ -476,6 +478,9 @@ function params.enable_shadow_rift_construction_container.widget.buttoninfo.fn(i
         DoAct()
     end
 end
+
+--lunar is same as shadow, just different strings specified in prefab
+params.enable_lunar_rift_construction_container = params.enable_shadow_rift_construction_container
 
 --------------------------------------------------------------------------
 --[[ mushroom_light ]]
