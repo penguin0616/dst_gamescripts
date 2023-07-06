@@ -122,6 +122,8 @@ local function rock_avocado_fruit_full()
     inst.AnimState:SetBuild("rock_avocado_fruit_build")
     inst.AnimState:PlayAnimation("idle")
 
+    inst.pickupsound = "rock"
+
     inst:AddTag("molebait")
 
     MakeInventoryPhysics(inst)

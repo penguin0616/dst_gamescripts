@@ -491,6 +491,8 @@ local function fn()
 
     inst.entity:SetPristine()
 
+    inst.scrapbook_removedeps = {"stinger"}
+
     if not TheWorld.ismastersim then
         return inst
     end

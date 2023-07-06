@@ -212,6 +212,56 @@ function LootDropper:GenerateLoot()
     return loots
 end
 
+function LootDropper:GetAllPossibleLoot()
+    local loots = {}
+
+    if self.lootsetupfn then
+        self.lootsetupfn(self)
+    end
+
+    if self.randomhauntedloot then
+        for k,v in pairs(self.randomhauntedloot) do
+            loots[v.prefab] = true
+        end
+    end
+
+    if self.randomloot then
+        for k,v in pairs(self.randomloot) do
+            loots[v.prefab] = true
+        end
+    end
+
+    if self.chanceloot then
+        for k,v in pairs(self.chanceloot) do
+            loots[v.prefab] = true
+        end
+    end
+
+    if self.chanceloottable then
+        local loot_table = LootTables[self.chanceloottable]
+        if loot_table then
+            for i, entry in ipairs(loot_table) do
+                local prefab = entry[1]
+                loots[prefab] = true
+            end
+        end
+    end
+
+    if not self.droppingchanceloot and self.ifnotchanceloot then
+        for k,v in pairs(self.ifnotchanceloot) do
+            loots[v.prefab] = true
+        end
+    end
+
+    if self.loot then
+        for k, prefab in ipairs(self.loot) do
+            loots[prefab] = true
+        end
+    end
+
+    return loots
+end
+
 function LootDropper:SetFlingTarget(pos, variance)
     self.flingtargetpos = pos
     self.flingtargetvariance = variance

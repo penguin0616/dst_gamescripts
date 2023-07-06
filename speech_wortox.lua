@@ -207,7 +207,7 @@ return{
 			--MapSpotRevealer/messagebottle
 			MESSAGEBOTTLEMANAGER_NOT_FOUND = "Not here, my dear.",--Likely trying to read messagebottle treasure map in caves
 
-            STASH_MAP_NOT_FOUND = "There's no rhyme or riddle to it.",-- Likely trying to read stash map  in world without stash
+            STASH_MAP_NOT_FOUND = "There's no rhyme or riddle to it.",-- Likely trying to read stash map  in world without stash                  
         },
         WRAPBUNDLE =
         {
@@ -895,6 +895,23 @@ return{
     ANNOUNCE_SHADOW_RIFT_MAX = "Calling that \"light\" wouldn't be quite right.",
 
     ANNOUNCE_SCRAPBOOK_FULL = "I already know everything there is to know, hyuyu!",
+
+    ANNOUNCE_COACH = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
+    ANNOUNCE_WOLFGANG_WIMPY_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfang",
+    ANNOUNCE_WOLFGANG_BEGING_COACHING = "only_used_by_wolfang",
+    ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfang",
 
 	BATTLECRY =
 	{
@@ -4542,6 +4559,9 @@ return{
         DUMBBELL_GEM = "He's turned those gemstones into gymstones, hyuyu!",
         POTATOSACK = "Hyuyuyu, wouldn't it be fun to hide inside and give him a scare?",
 
+        DUMBBELL_HEAT = "A warm stone for muscle tone.",
+        DUMBBELL_REDGEM = "Fire and gym stone!",
+        DUMBBELL_BLUEGEM = "It'll knock you out cold, hyuyuyu!",
 
         TERRARIUMCHEST =
 		{
@@ -4795,6 +4815,7 @@ return{
 		LUNAR_FORGE = "There isn't any iron in that forge, is there?",
 		LUNAR_FORGE_KIT = "Shall we forge ahead?",
 
+		--LUNARPLANT_KIT = "TODO",
 		ARMOR_LUNARPLANT = "Strong and light, quite good in a fight.",
 		LUNARPLANTHAT = "It has me looking on the bright side, hyuyu!",
 		BOMB_LUNARPLANT = "This will be the start of some wonderful pranks.",
@@ -4815,6 +4836,7 @@ return{
         FUSED_SHADELING_BOMB = "Keep away, I don't want to play!",
 
 		VOIDCLOTH = "Bits of tattered reality. And it comes in my color!",
+		--VOIDCLOTH_KIT = "TODO",
 		VOIDCLOTHHAT = "A hood of night, that blocks out all light.",
 		ARMOR_VOIDCLOTH = "It broke the chains of its previous plane.",
 
@@ -4832,6 +4854,34 @@ return{
         DREADSTONE_STACK = "Who knows where it grows from?",
         
         SCRAPBOOK_PAGE = "Where is it from? Not knowing is half the fun!",
+
+        LEIF_IDOL = "A nice carving, but the pose is a little wooden, hyuyu!",
+        WOODCARVEDHAT = "Perhaps I can borrow it, if I axe nicely.",
+        WALKING_STICK = "A walking stick for walking quick.",
+
+        IPECACSYRUP = "Hyuyu! Who knew the plant was such a prankster?",
+        BOMB_LUNARPLANT_WORMWOOD = "That plant has a mischievous streak after all, hyuyu!", -- Unused
+        WORMWOOD_MUTANTPROXY_CARRAT =
+        {
+        	DEAD = "Ding-dong, the carrot's dead.",
+        	GENERIC = "Does it have a soul, one wonders?",
+        	HELD = "Hello hello, strange orange soul.",
+        	SLEEPING = "Good night, sleep tight, don't let the humans bite.",
+        },
+        WORMWOOD_MUTANTPROXY_LIGHTFLIER = "Bloom and glow!",
+		WORMWOOD_MUTANTPROXY_FRUITDRAGON =
+		{
+			GENERIC = "Little lizard, sharp and pointy!",
+			RIPE = "That color looks great on you, hyuyu!",
+			SLEEPING = "Hyuyu, catching some shuteye are we?",
+		},
+
+        SUPPORT_PILLAR_SCAFFOLD = "A pile of pillar-in-progress.",
+        SUPPORT_PILLAR = "Alas and alack, the stone has a crack!",
+        SUPPORT_PILLAR_COMPLETE = "Thank you for your support, hyuyu!",
+        SUPPORT_PILLAR_BROKEN = "All that trouble for a pile of rubble.",
+
+        WOLFGANG_WHISTLE = "Who knew a whistle held such sway, it makes folks listen to what you say!",
     },
 
     DESCRIBE_GENERIC = "Ooo, a mystery!",
@@ -4848,6 +4898,7 @@ return{
     DESCRIBE_PLANTSTRESSORMOISTURE = "It needs a drink, I think.",
     DESCRIBE_PLANTSTRESSORNUTRIENTS = "It needs better soil or our hard work will be spoiled!",
     DESCRIBE_PLANTSTRESSORHAPPINESS = "What's that? You'd like to chat?",
+    DESCRIBE_PLANT_IDENTIFIED = "only_used_by_wormwood",
 
     EAT_FOOD =
     {

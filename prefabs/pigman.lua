@@ -721,6 +721,10 @@ end
 local function normal()
     local inst = common(false)
 
+    inst:AddTag("ipecacsusceptible")
+
+    inst.scrapbook_removedeps = {"strawhat","tophat"}
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -741,6 +745,8 @@ end
 
 local function guard()
     local inst = common(false)
+
+    inst:AddTag("ipecacsusceptible")
 
     if not TheWorld.ismastersim then
         return inst

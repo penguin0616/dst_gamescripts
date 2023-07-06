@@ -488,6 +488,13 @@ ACTIONS =
 	CLOSESPELLBOOK = Action({ instant = true, mount_valid = true }),
 	CAST_SPELLBOOK = Action({ mount_valid = true }),
 
+    -- WOODIE
+    USE_WEREFORM_SKILL = Action({ rmb=true, distance=math.huge }),
+
+    -- WORMWOOD
+    IDENTIFY_PLANT = Action({priority=-1, rmb=true, mount_valid=true}),
+
+    -- Rifts
     SCYTHE = Action({ rmb=true, distance=1.8, rangecheckfn=DefaultRangeCheck, invalid_hold_action=true }),
 	SITON = Action(),
 }
@@ -690,20 +697,27 @@ ACTIONS.REPAIR.strfn = function(act)
 end
 
 ACTIONS.REPAIR.fn = function(act)
-    if act.target ~= nil and act.target.components.repairable ~= nil then
-        local material
-        if act.doer ~= nil and
-            act.doer.components.inventory ~= nil and
-            act.doer.components.inventory:IsHeavyLifting() and
-            not (act.doer.components.rider ~= nil and
-                act.doer.components.rider:IsRiding()) then
-            material = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
-        else
-            material = act.invobject
-        end
-        if material ~= nil and material.components.repairer ~= nil then
-            return act.target.components.repairable:Repair(act.doer, material)
-        end
+	if act.target ~= nil then
+		if act.target.components.repairable ~= nil then
+			local material
+			if act.doer ~= nil and
+				act.doer.components.inventory ~= nil and
+				act.doer.components.inventory:IsHeavyLifting() and
+				not (act.doer.components.rider ~= nil and
+				act.doer.components.rider:IsRiding()) then
+				material = act.doer.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+			else
+				material = act.invobject
+			end
+			if material ~= nil and material.components.repairer ~= nil then
+				return act.target.components.repairable:Repair(act.doer, material)
+			end
+		elseif act.target.components.forgerepairable ~= nil then
+			local material = act.invobject
+			if material ~= nil and material.components.forgerepair ~= nil then
+				return act.target.components.forgerepairable:Repair(act.doer, material)
+			end
+		end
     end
 end
 
@@ -2412,6 +2426,7 @@ ACTIONS.TURNOFF.fn = function(act)
 end
 
 ACTIONS.USEITEM.fn = function(act)
+
     if act.invobject ~= nil and
         act.invobject.components.useableitem ~= nil and
         act.invobject.components.useableitem:CanInteract() and
@@ -2427,7 +2442,15 @@ ACTIONS.USEITEM.fn = function(act)
     end
 end
 
+ACTIONS.USEITEM.strfn = function(act)
+    if act.invobject.getuseitemverb then
+        return act.invobject.getuseitemverb(act.invobject,act.doer)
+    end
+    return "GENERIC"
+end
+
 ACTIONS.USEITEMON.strfn = function(act)
+
     return (act.invobject ~= nil and string.upper(act.invobject.prefab))
             or "GENERIC"
 end
@@ -4618,4 +4641,26 @@ ACTIONS.SITON.fn = function(act)
 			return true
 		end
 	end
+end
+
+ACTIONS.USE_WEREFORM_SKILL.fn = function(act)
+    return act.doer ~= nil and act.doer:UseWereFormSkill(act)
+end
+
+ACTIONS.IDENTIFY_PLANT.fn = function(act)
+    local target = act.target
+    if target then
+        local target_prefab = (target.BeIdentified and target:BeIdentified(act.doer))
+            or target.prefab
+
+        if target_prefab and act.doer then
+            local description = GetString(act.doer, "DESCRIBE_PLANT_IDENTIFIED")
+            if description and act.doer.components.talker then
+                description = subfmt(description, {plantname = STRINGS.NAMES[string.upper(target_prefab)]})
+                act.doer.components.talker:Say(description)
+            end
+        end
+        return true
+    end
+    return false
 end

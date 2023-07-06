@@ -7,16 +7,57 @@ local prefabs =
 {
 	"sword_lunarplant_blade_fx",
 	"hitsparks_fx",
+	"lunarplanttentacle",
 }
 
-local function OnEnabledSetBonus(inst)
-	inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
-	inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_LUNARPLANT_SETBONUS_PLANAR_DAMAGE, "setbonus")
+local function SetBuffEnabled(inst, enabled)
+	if enabled then
+		if not inst._bonusenabled then
+			inst._bonusenabled = true
+			inst.components.weapon:SetDamage(inst.base_damage * TUNING.WEAPONS_LUNARPLANT_SETBONUS_DAMAGE_MULT)
+			inst.components.planardamage:AddBonus(inst, TUNING.WEAPONS_LUNARPLANT_SETBONUS_PLANAR_DAMAGE, "setbonus")
+		end
+	elseif inst._bonusenabled then
+		inst._bonusenabled = nil
+		inst.components.weapon:SetDamage(inst.base_damage)
+		inst.components.planardamage:RemoveBonus(inst, "setbonus")
+	end
 end
 
-local function OnDisabledSetBonus(inst)
-	inst.components.weapon:SetDamage(inst.base_damage)
-	inst.components.planardamage:RemoveBonus(inst, "setbonus")
+local function SetBuffOwner(inst, owner)
+	if inst._owner ~= owner then
+		if inst._owner ~= nil then
+			inst:RemoveEventCallback("equip", inst._onownerequip, inst._owner)
+			inst:RemoveEventCallback("unequip", inst._onownerunequip, inst._owner)
+			inst._onownerequip = nil
+			inst._onownerunequip = nil
+			SetBuffEnabled(inst, false)
+		end
+		inst._owner = owner
+		if owner ~= nil then
+			inst._onownerequip = function(owner, data)
+				if data ~= nil then
+					if data.item ~= nil and data.item.prefab == "lunarplanthat" then
+						SetBuffEnabled(inst, true)
+					elseif data.eslot == EQUIPSLOTS.HEAD then
+						SetBuffEnabled(inst, false)
+					end
+				end
+			end
+			inst._onownerunequip  = function(owner, data)
+				if data ~= nil and data.eslot == EQUIPSLOTS.HEAD then
+					SetBuffEnabled(inst, false)
+				end
+			end
+			inst:ListenForEvent("equip", inst._onownerequip, owner)
+			inst:ListenForEvent("unequip", inst._onownerunequip, owner)
+
+			local hat = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+			if hat ~= nil and hat.prefab == "lunarplanthat" then
+				SetBuffEnabled(inst, true)
+			end
+		end
+	end
 end
 
 local function SetFxOwner(inst, owner)
@@ -39,7 +80,11 @@ local function SetFxOwner(inst, owner)
 end
 
 local function PushIdleLoop(inst)
-	inst.AnimState:PushAnimation("idle")
+	if inst.components.finiteuses:GetUses() > 0 then
+		inst.AnimState:PushAnimation("idle")
+	else
+		inst.AnimState:PlayAnimation("broken")
+	end
 end
 
 local function OnStopFloating(inst)
@@ -59,6 +104,7 @@ local function onequip(inst, owner)
 	owner.AnimState:Show("ARM_carry")
 	owner.AnimState:Hide("ARM_normal")
 	SetFxOwner(inst, owner)
+	SetBuffOwner(inst, owner)
 end
 
 local function onunequip(inst, owner)
@@ -69,11 +115,33 @@ local function onunequip(inst, owner)
 		owner:PushEvent("unequipskinneditem", inst:GetSkinName())
 	end
 	SetFxOwner(inst, nil)
+	SetBuffOwner(inst, nil)
 end
 
+----
 local function OnAttack(inst, attacker, target)
 	if target ~= nil and target:IsValid() then
 		SpawnPrefab("hitsparks_fx"):Setup(attacker, target)
+	end
+end
+
+local function SetupEquippable(inst)
+	inst:AddComponent("equippable")
+	inst.components.equippable:SetOnEquip(onequip)
+	inst.components.equippable:SetOnUnequip(onunequip)
+end
+
+local function OnBroken(inst)
+	if inst.components.equippable ~= nil then
+		inst:RemoveComponent("equippable")
+		inst.AnimState:PlayAnimation("broken")
+	end
+end
+
+local function OnRepaired(inst)
+	if inst.components.equippable == nil then
+		SetupEquippable(inst)
+		inst.AnimState:PlayAnimation("idle", true)
 	end
 end
 
@@ -118,36 +186,30 @@ local function fn()
 	inst:ListenForEvent("floater_stopfloating", OnStopFloating)
 
 	-------
-	inst:AddComponent("finiteuses")
-	inst.components.finiteuses:SetMaxUses(TUNING.SWORD_LUNARPLANT_USES)
-	inst.components.finiteuses:SetUses(TUNING.SWORD_LUNARPLANT_USES)
-	inst.components.finiteuses:SetOnFinished(inst.Remove)
+	local finiteuses = inst:AddComponent("finiteuses")
+	finiteuses:SetMaxUses(TUNING.SWORD_LUNARPLANT_USES)
+	finiteuses:SetUses(TUNING.SWORD_LUNARPLANT_USES)
 
 	-------
-	inst.lunarplantweapon = true -- Deprecated
 	inst.base_damage = TUNING.SWORD_LUNARPLANT_DAMAGE
-	inst:AddComponent("weapon")
-	inst.components.weapon:SetDamage(inst.base_damage)
-	inst.components.weapon:SetOnAttack(OnAttack)
+	local weapon = inst:AddComponent("weapon")
+	weapon:SetDamage(inst.base_damage)
+	weapon:SetOnAttack(OnAttack)
 
-	inst:AddComponent("planardamage")
-	inst.components.planardamage:SetBaseDamage(TUNING.SWORD_LUNARPLANT_PLANAR_DAMAGE)
+	local planardamage = inst:AddComponent("planardamage")
+	planardamage:SetBaseDamage(TUNING.SWORD_LUNARPLANT_PLANAR_DAMAGE)
 
-	inst:AddComponent("damagetypebonus")
-	inst.components.damagetypebonus:AddBonus("shadow_aligned", inst, TUNING.WEAPONS_LUNARPLANT_VS_SHADOW_BONUS)
+	local damagetypebonus = inst:AddComponent("damagetypebonus")
+	damagetypebonus:AddBonus("shadow_aligned", inst, TUNING.WEAPONS_LUNARPLANT_VS_SHADOW_BONUS)
 
 	inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
 
-	inst:AddComponent("equippable")
-	inst.components.equippable:SetOnEquip(onequip)
-	inst.components.equippable:SetOnUnequip(onunequip)
+	SetupEquippable(inst)
 
-	local setbonus = inst:AddComponent("setbonus")
-	setbonus:SetSetName(EQUIPMENTSETNAMES.LUNARPLANT)
-	setbonus:SetOnEnabledFn(OnEnabledSetBonus)
-	setbonus:SetOnDisabledFn(OnDisabledSetBonus)
+	inst:AddComponent("lunarplant_tentacle_weapon")
 
+	MakeForgeRepairable(inst, FORGEMATERIALS.LUNARPLANT, OnBroken, OnRepaired)
 	MakeHauntableLaunch(inst)
 
 	return inst

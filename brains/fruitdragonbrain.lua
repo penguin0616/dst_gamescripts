@@ -15,21 +15,23 @@ local TARGET_FOLLOW_DIST = 4
 local MAX_FOLLOW_DIST = 4.5
 
 local function GetHome(inst)
-	return inst.components.entitytracker:GetEntity("home")
+	return (inst.components.follower and inst.components.follower.leader)
+        or inst.components.entitytracker:GetEntity("home")
 end
 
 local function IsHomeMoveable(inst)
-	local home = inst.components.entitytracker:GetEntity("home")
-	home = (home ~= nil and home.components.inventoryitem ~= nil) and home.components.inventoryitem:GetGrandOwner() or home
+	local home = GetHome(inst)
+	home = (home and home.components.inventoryitem and home.components.inventoryitem:GetGrandOwner()) or home
 	return home ~= nil and home.components.locomotor ~= nil
 end
 
 local function KeepFaceTargetFn(inst, target)
-    return inst.components.entitytracker:GetEntity("home") == target
+    return GetHome(inst) == target
 end
 
 local function GetHomePos(inst)
-	return inst.components.entitytracker:GetEntity("home") and inst.components.entitytracker:GetEntity("home"):GetPosition() or nil
+    local home = GetHome(inst)
+	return (home and home:GetPosition()) or nil
 end
 
 local FruitDragonBrain = Class(Brain, function(self, inst)

@@ -473,6 +473,7 @@ local foods =
 			eater:AddDebuff("healthregenbuff", "healthregenbuff")
         end,
         floater = {"small", nil, 0.85},
+		scrapbook_healthvalue = 122, -- First tick + total ticks
 	},
 
     --new!
@@ -893,6 +894,7 @@ local foods =
 			eater:AddDebuff("sweettea_buff", "sweettea_buff")
         end,
 		card_def = {ingredients = {{"forgetmelots", 1}, {"honey", 1}, {"ice", 2}} },
+		scrapbook_sanityvalue = 45 -- first tick + total ticks
 	},
 
 	koalefig_trunk =

@@ -354,6 +354,8 @@ local GetTimeForNextDebris = _ismastersim and function()
     return 1 / _debrispersecond
 end or nil
 
+local QUAKE_BLOCKER_MUST_TAGS = {"quake_blocker"}
+
 local GetSpawnPoint = _ismastersim and function(pt, rad, minrad)
     local theta = math.random() * 2 * PI
     local radius = math.random() * (rad or TUNING.FROG_RAIN_SPAWN_RADIUS)
@@ -367,6 +369,13 @@ local GetSpawnPoint = _ismastersim and function(pt, rad, minrad)
             and (minrad == nil or offset.x * offset.x + offset.z * offset.z >= minrad)
             and not _world.Map:IsPointNearHole(Vector3(x, 0, z))
     end)
+
+    -- DONT DROP NEAR QUAKE BLOCKERS.
+    local newpt = pt + result_offset
+    local ents = TheSim:FindEntities(newpt.x, newpt.y, newpt.z, TUNING.QUAKE_BLOCKER_RANGE, QUAKE_BLOCKER_MUST_TAGS)
+    if #ents > 0 then
+        return nil
+    end
 
     return result_offset ~= nil and pt + result_offset or nil
 end or nil

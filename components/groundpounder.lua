@@ -11,6 +11,7 @@ local GroundPounder = Class(function(self, inst)
     self.platformPushingRings = 2
     self.inventoryPushingRings = 0
     self.noTags = { "FX", "NOCLICK", "DECOR", "INLIMBO" }
+    self.workefficiency = nil
     self.destroyer = false
     self.burner = false
     self.groundpoundfx = "groundpound_fx"
@@ -65,11 +66,16 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
                     for i, v2 in ipairs(ents) do
                         if v2 ~= self.inst and v2:IsValid() then
                             -- Don't net any insects when we do work
-                            if self.destroyer and
+                            if (self.destroyer or self.workefficiency ~= nil) and
                                 v2.components.workable ~= nil and
                                 v2.components.workable:CanBeWorked() and
-                                v2.components.workable.action ~= ACTIONS.NET then
-                                v2.components.workable:Destroy(self.inst)
+                                v2.components.workable.action ~= ACTIONS.NET
+                            then
+                                if self.workefficiency ~= nil then
+                                    v2.components.workable:WorkedBy(self.inst, self.workefficiency)
+                                else
+                                    v2.components.workable:Destroy(self.inst)
+                                end
                             end
                             if v2:IsValid() and --might've changed after work?
                                 not v2:IsInLimbo() and --might've changed after work?
@@ -127,7 +133,7 @@ function GroundPounder:DestroyPoints(points, breakobjects, dodamage, pushplatfor
             end
         end
 
-        if map:IsPassableAtPoint(v:Get()) then
+        if map:IsLandTileAtPoint(v:Get()) and not map:IsDockAtPoint(v:Get()) then
             SpawnPrefab(self.groundpoundfx).Transform:SetPosition(v.x, 0, v.z)
         end
     end
@@ -173,11 +179,16 @@ function GroundPounder:GroundPound_Offscreen(position)
     for i, v in ipairs(ents) do
         if v ~= self.inst and v:IsValid() and not v:IsInLimbo() then
             if v:GetDistanceSqToPoint(position:Get()) < breakobjectsRadiusSQ then
-                if self.destroyer and
-                        v.components.workable and
-                        v.components.workable:CanBeWorked() and
-                        v.components.workable.action ~= ACTIONS.NET then
-                    v.components.workable:Destroy(self.inst)
+                if (self.destroyer or self.workefficiency ~= nil) and
+                    v.components.workable and
+                    v.components.workable:CanBeWorked() and
+                    v.components.workable.action ~= ACTIONS.NET
+                then
+                    if self.workefficiency ~= nil then
+                        v.components.workable:WorkedBy(self.inst, self.workefficiency)
+                    else
+                        v.components.workable:Destroy(self.inst)
+                    end
                 end
                 if v:IsValid() and
                         not v:IsInLimbo() and

@@ -43,6 +43,8 @@ local function fn()
     inst.AnimState:SetBuild("gunpowder")
     inst.AnimState:PlayAnimation("idle")
 
+    --inst.pickupsound = "grainy"
+
     inst:AddTag("molebait")
     inst:AddTag("explosive")
 

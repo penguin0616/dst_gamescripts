@@ -29,6 +29,10 @@ local function onequip(inst, owner)
     end
     inst.fx = SpawnPrefab("armor_voidcloth_fx")
     inst.fx:AttachToOwner(owner)
+
+	if owner.components.sanity ~= nil then
+		owner.components.sanity.neg_aura_modifiers:SetModifier(inst, 0)
+	end
 end
 
 local function onunequip(inst, owner)
@@ -43,6 +47,10 @@ local function onunequip(inst, owner)
         inst.fx:Remove()
         inst.fx = nil
     end
+
+	if owner.components.sanity ~= nil then
+		owner.components.sanity.neg_aura_modifiers:RemoveModifier(inst)
+	end
 end
 
 local function GetSetBonusEquip(inst, owner)
@@ -50,12 +58,25 @@ local function GetSetBonusEquip(inst, owner)
 	return hat ~= nil and hat.prefab == "voidclothhat" and hat or nil
 end
 
-local function CalcDapperness(inst, owner)
-	local other = GetSetBonusEquip(inst, owner)
-	if other ~= nil then
-		return TUNING.CRAZINESS_SMALL * 0.5
+local function SetupEquippable(inst)
+	inst:AddComponent("equippable")
+	inst.components.equippable.equipslot = EQUIPSLOTS.BODY
+	inst.components.equippable:SetOnEquip(onequip)
+	inst.components.equippable:SetOnUnequip(onunequip)
+end
+
+local function OnBroken(inst)
+	if inst.components.equippable ~= nil then
+		inst:RemoveComponent("equippable")
+		inst.AnimState:PlayAnimation("broken")
 	end
-	return TUNING.CRAZINESS_SMALL
+end
+
+local function OnRepaired(inst)
+	if inst.components.equippable == nil then
+		SetupEquippable(inst)
+		inst.AnimState:PlayAnimation("anim")
+	end
 end
 
 local function fn()
@@ -73,7 +94,6 @@ local function fn()
 
     inst:AddTag("cloth")
 	inst:AddTag("shadow_item")
-    inst:AddTag("acidrainimmune")
 
 	--shadowlevel (from shadowlevel component) added to pristine state for optimization
 	inst:AddTag("shadowlevel")
@@ -82,6 +102,8 @@ local function fn()
 
     local swap_data = { bank = "armor_voidcloth", anim = "anim" }
     MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)
+
+    inst.scrapbook_specialinfo = "VOIDCLOTHARMOR"
 
     inst.entity:SetPristine()
 
@@ -98,12 +120,7 @@ local function fn()
     local planardefense = inst:AddComponent("planardefense")
     planardefense:SetBaseDefense(TUNING.ARMOR_VOIDCLOTH_PLANAR_DEF)
 
-    local equippable = inst:AddComponent("equippable")
-    equippable.equipslot = EQUIPSLOTS.BODY
-	equippable.dapperfn = CalcDapperness
-	equippable.is_magic_dapperness = true
-    equippable:SetOnEquip(onequip)
-    equippable:SetOnUnequip(onunequip)
+	SetupEquippable(inst)
 
     local damagetyperesist = inst:AddComponent("damagetyperesist")
     damagetyperesist:AddResist("shadow_aligned", inst, TUNING.ARMOR_VOIDCLOTH_SHADOW_RESIST)
@@ -116,6 +133,7 @@ local function fn()
     setbonus:SetOnEnabledFn(OnEnabledSetBonus)
     setbonus:SetOnDisabledFn(OnDisabledSetBonus)
 
+	MakeForgeRepairable(inst, FORGEMATERIALS.VOIDCLOTH, OnBroken, OnRepaired)
     MakeHauntableLaunch(inst)
 
     return inst

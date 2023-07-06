@@ -23,7 +23,11 @@ local function SetFxOwner(inst, owner)
 end
 
 local function PushIdleLoop(inst)
-	inst.AnimState:PushAnimation("idle")
+	if inst.components.finiteuses:GetUses() > 0 then
+		inst.AnimState:PushAnimation("idle")
+	else
+		inst.AnimState:PlayAnimation("broken")
+	end
 end
 
 local function OnStopFloating(inst)
@@ -73,6 +77,26 @@ local function OnAttack(inst, attacker, target, skipsanity)
 	target:PushEvent("attacked", { attacker = attacker, damage = 0, weapon = inst })
 end
 
+local function SetupEquippable(inst)
+	inst:AddComponent("equippable")
+	inst.components.equippable:SetOnEquip(onequip)
+	inst.components.equippable:SetOnUnequip(onunequip)
+end
+
+local function OnBroken(inst)
+	if inst.components.equippable ~= nil then
+		inst:RemoveComponent("equippable")
+		inst.AnimState:PlayAnimation("broken")
+	end
+end
+
+local function OnRepaired(inst)
+	if inst.components.equippable == nil then
+		SetupEquippable(inst)
+		inst.AnimState:PlayAnimation("idle", true)
+	end
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -110,9 +134,6 @@ local function fn()
 		return inst
 	end
 
-	inst.lunarplantweapon = true -- Deprecated
-	inst.max_bounces = TUNING.STAFF_LUNARPLANT_BOUNCES -- Deprecated
-
 	local frame = math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1
 	inst.AnimState:SetFrame(frame)
 	inst.fx = SpawnPrefab("staff_lunarplant_fx")
@@ -124,7 +145,6 @@ local function fn()
 	inst:AddComponent("finiteuses")
 	inst.components.finiteuses:SetMaxUses(TUNING.STAFF_LUNARPLANT_USES)
 	inst.components.finiteuses:SetUses(TUNING.STAFF_LUNARPLANT_USES)
-	inst.components.finiteuses:SetOnFinished(inst.Remove)
 
 	inst:AddComponent("weapon")
 	inst.components.weapon:SetDamage(0)
@@ -141,13 +161,12 @@ local function fn()
 	inst:AddComponent("inspectable")
 	inst:AddComponent("inventoryitem")
 
-	inst:AddComponent("equippable")
-	inst.components.equippable:SetOnEquip(onequip)
-	inst.components.equippable:SetOnUnequip(onunequip)
+	SetupEquippable(inst)
 
 	local setbonus = inst:AddComponent("setbonus")
 	setbonus:SetSetName(EQUIPMENTSETNAMES.LUNARPLANT)
 
+	MakeForgeRepairable(inst, FORGEMATERIALS.LUNARPLANT, OnBroken, OnRepaired)
 	MakeHauntableLaunch(inst)
 
 	inst.noplanarhitfx = true

@@ -45,7 +45,16 @@ local events =
             inst.sg:GoToState("win_yotb")
         end
     end),
+    EventHandler("ipecacpoop", function(inst)
+        if not (inst.sg:HasStateTag("busy") or inst.components.health:IsDead()) then
+            inst.sg:GoToState("ipecacpoop")
+        end
+    end),
 }
+
+local function go_to_idle(inst)
+    inst.sg:GoToState("idle")
+end
 
 local states =
 {
@@ -75,9 +84,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -108,9 +115,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -172,9 +177,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -196,9 +199,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -223,9 +224,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -242,9 +241,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -266,9 +263,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -283,9 +278,7 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
         },
     },
 
@@ -300,9 +293,23 @@ local states =
 
         events =
         {
-            EventHandler("animover", function(inst)
-                inst.sg:GoToState("idle")
-            end),
+            EventHandler("animover", go_to_idle),
+        },
+    },
+
+    State{
+        name = "ipecacpoop",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.SoundEmitter:PlaySound("dontstarve/pig/oink")
+            inst.AnimState:PlayAnimation("hit")
+            inst.Physics:Stop()
+        end,
+
+        events =
+        {
+            EventHandler("animover", go_to_idle),
         },
     },
 }

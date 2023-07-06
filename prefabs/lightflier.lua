@@ -39,6 +39,13 @@ local FORMATION_TAGS = { "formationleader_lightflier" }
 
 local MakeFormation
 
+----
+local function set_crafter(inst, crafter)
+    inst._crafter = crafter
+    inst:ListenForEvent("onremove", function(_) inst._crafter = nil end, crafter)
+end
+----
+
 local function is_lightflier(item)
     return item.prefab == "lightflier"
 end
@@ -71,12 +78,19 @@ end
 local function findtargettest(target)
     return target.components.inventory ~= nil
         and target.components.inventory:FindItem(is_lightflier) ~= nil
-        and target._lightflier_formation == nil
+        and not target._lightflier_formation
 end
 
 local function LeaderValidateFormation(inst)
     local target = inst.components.formationleader.target
-    if not (target ~= nil and target:IsValid() and target.components.inventory ~= nil and target.components.inventory:FindItem(is_lightflier)) then
+    if not target or not target:IsValid() then
+        inst.components.formationleader:DisbandFormation()
+        return
+    end
+
+    local target_is_not_creator = (inst._crafter ~= target) -- Target already isn't nil, so if crafter isn't set, we're covered.
+    local has_no_lightflier = not (target.components.inventory and target.components.inventory:FindItem(is_lightflier))
+    if target_is_not_creator and has_no_lightflier then
         inst.components.formationleader:DisbandFormation()
         return
     end
@@ -214,6 +228,10 @@ MakeFormation = function(inst, target)
 
     leader.components.formationleader.onupdatefn = LeaderOnUpdate
 
+    if inst._crafter then
+        set_crafter(leader, inst._crafter)
+    end
+
     leader:DoPeriodicTask(VALIDATE_FORMATION_FREQ, LeaderValidateFormation)
 end
 
@@ -227,8 +245,12 @@ local function FindTarget(inst)
     local formationfollower = inst.components.formationfollower
     local x, y, z = inst.Transform:GetWorldPosition()
     local leaders = TheSim:FindEntities(x, y, z, formationfollower.searchradius, formationfollower.formationsearchtags)
-
     if formationfollower:SearchForFormation(leaders) then
+        return
+    end
+
+    if inst._crafter then
+        MakeFormation(inst, inst._crafter)
         return
     end
 
@@ -315,6 +337,30 @@ local function OnTeleported(inst)
     end
 end
 
+----
+local function finish_transformed_life(inst)
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+
+    local bulb = SpawnPrefab("lightbulb")
+    bulb.Transform:SetPosition(ix, iy, iz)
+    inst.components.lootdropper:FlingItem(bulb)
+
+    local fx = SpawnPrefab("wormwood_lunar_transformation_finish")
+    fx.Transform:SetPosition(ix, iy, iz)
+
+    inst:Remove()
+end
+
+local function OnSpawnedByWormwood(inst, crafter)
+    set_crafter(inst, crafter)
+
+    inst.components.timer:StartTimer("finish_transformed_life", TUNING.WORMWOOD_LIGHTFLIER_FORMATION_DURATION)
+	inst:SetPrefabNameOverride("wormwood_mutantproxy_lightflier")
+
+    FindTarget(inst)
+end
+
+----
 local function OnSleepGoHome(inst)
     inst._hometask = nil
     local home = inst.components.homeseeker ~= nil and inst.components.homeseeker.home or nil
@@ -360,6 +406,12 @@ local function OnWakeUp(inst)
     inst:EnableBuzz(true)
 end
 
+local function OnTimerDone(inst, data)
+    if data.name == "finish_transformed_life" then
+        finish_transformed_life(inst)
+    end
+end
+
 -- hauntable doesn't push any event on haunt so this is mostly copy pasted from MakeHauntablePanic's OnHaunt fn
 local function OnHaunt(inst, haunter)
     AlertFormation(inst)
@@ -374,6 +426,8 @@ local function OnHaunt(inst, haunter)
     end
     return false
 end
+
+----
 
 local function OnEntitySleep(inst)
     inst:ListenForEvent("enterlimbo", StopWatchingDay)
@@ -397,6 +451,13 @@ local function OnEntityWake(inst)
     end
 end
 
+local function OnLoad(inst, data)
+    if inst.components.timer:TimerExists("finish_transformed_life") then
+	    inst:SetPrefabNameOverride("wormwood_mutantproxy_lightflier")
+    end
+end
+
+----
 local function fn()
     local inst = CreateEntity()
 
@@ -503,11 +564,14 @@ local function fn()
     inst.components.formationfollower.onleaveformationfn = OnLeaveFormation
     inst.components.formationfollower.onenterformationfn = OnEnterFormation
 
+    inst:AddComponent("timer")
+
     inst:ListenForEvent("attacked", OnAttacked)
     inst:ListenForEvent("teleported", OnTeleported)
-
+    inst:ListenForEvent("spawnedbywormwoodproxy", OnSpawnedByWormwood)
     inst:ListenForEvent("gotosleep", GoToSleep)
     inst:ListenForEvent("onwakeup", OnWakeUp)
+    inst:ListenForEvent("timerdone", OnTimerDone)
 
     MakeHauntablePanic(inst)
     MakeFeedableSmallLivestock(inst, TUNING.LIGHTFLIER.STARVE_TIME, OnPutInInventory, OnDropped)
@@ -518,6 +582,7 @@ local function fn()
 
     inst.OnEntitySleep = OnEntitySleep
     inst.OnEntityWake = OnEntityWake
+    inst.OnLoad = OnLoad
 
     return inst
 end

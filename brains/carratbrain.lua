@@ -87,8 +87,8 @@ local function edible(inst, item)
             item:GetCurrentPlatform() == inst:GetCurrentPlatform()
 end
 
-local function eat_food_action(inst)
-    if inst == nil or not inst:IsValid() then
+local function gather_food_action(inst)
+    if not inst or not inst:IsValid() then
         return nil
     end
 
@@ -100,7 +100,7 @@ local function eat_food_action(inst)
     local scaries = {}
     for _, ent in ipairs(ents_nearby) do
         if ent ~= inst and ent.entity:IsVisible() then
-            if ent:HasTag("scarytoprey") then
+            if ent:HasTag("scarytoprey") and not ent:HasTag("carratcrafter") and ent ~= inst._creator then
                 table.insert(scaries, ent)
             elseif edible(inst, ent) then
                 table.insert(foods, ent)
@@ -141,9 +141,31 @@ local function eat_food_action(inst)
     end
 
     if target then
-        local act = BufferedAction(inst, target, ACTIONS.EAT)
-        act.validfn = function() return not (target.components.inventoryitem and target.components.inventoryitem:IsHeld()) end
-        return act
+        local act
+        if inst._creator then -- If we were spawned, don't eat things! It's not nice.
+            if not inst.components.timer:TimerExists("mutantproxy_food_gathering") and not inst.components.inventory:IsFull() then
+                act = BufferedAction(inst, target, ACTIONS.PICKUP)
+            end
+        else
+            act = BufferedAction(inst, target, ACTIONS.EAT)
+        end
+
+        if act then
+            act.validfn = function() return not (target.components.inventoryitem and target.components.inventoryitem:IsHeld()) end
+            return act
+        end
+    end
+end
+
+local function drop_item_action(inst)
+    local creator = inst._creator
+    local item = inst.components.inventory:GetFirstItemInAnySlot() 
+    if item then
+        inst.components.timer:StartTimer("mutantproxy_food_gathering", TUNING.WORMWOOD_CARRAT_GATHER_COOLDOWN)
+
+        local ba = BufferedAction(inst, creator, ACTIONS.DROP, item)
+        ba.options.wholestack = true
+        return ba
     end
 end
 
@@ -165,10 +187,24 @@ local function returntobeefalo(inst)
     end
 end
 
+local function GetCreatorLocation(inst)
+    if inst._creator and inst:IsNear(inst._creator, 35) then
+        return inst._creator:GetPosition()
+    else
+        return nil
+    end
+end
+
+local function not_my_creator(other, inst)
+    return (other ~= nil) and (other ~= inst._creator)
+end
+
+local RACE_RUNAWAY_DATA = {tags = {"scarytoprey"}, notags = {"character", "carratcrafter"}, fn = not_my_creator}
+local NORMAL_RUNAWAY_DATA = {tags = {"scarytoprey"}, notags = {"carratcrafter"}, fn = not_my_creator}
 function CarratBrain:OnStart()
     local race_brain = WhileNode( function() return is_racecompetitor(self.inst) end, "Is Racing",
         PriorityNode({
-			RunAway(self.inst, {tags = {"scarytoprey"}, notags = {"character"}}, AVOID_PLAYER_DIST, AVOID_PLAYER_STOP, nil, nil, true),
+			RunAway(self.inst, RACE_RUNAWAY_DATA, AVOID_PLAYER_DIST, AVOID_PLAYER_STOP, nil, nil, true),
 
 			WhileNode( function() return is_waiting_for_race_to_start(self.inst) end, "Pre-Race",
                 PriorityNode({
@@ -215,10 +251,18 @@ function CarratBrain:OnStart()
         WhileNode( function() return self.inst.components.hauntable and self.inst.components.hauntable.panic end, "PanicHaunted",
 			Panic(self.inst)),
 
-        RunAway(self.inst, "scarytoprey", AVOID_PLAYER_DIST, AVOID_PLAYER_STOP),
-        DoAction(self.inst, eat_food_action, "eat food"),
+        RunAway(self.inst, NORMAL_RUNAWAY_DATA, AVOID_PLAYER_DIST, AVOID_PLAYER_STOP),
+        DoAction(self.inst, gather_food_action, "gather food"),
+        WhileNode(function() return self.inst._creator ~= nil end, "Has Creator",
+            PriorityNode({
+                WhileNode(function() return self.inst.components.inventory:GetFirstItemInAnySlot() ~= nil end, "Has Any Item",
+                    DoAction(self.inst, drop_item_action, "Drop Item For Creator", true, 0.5*TUNING.WORMWOOD_CARRAT_GATHER_COOLDOWN)
+                ),
+                Leash(self.inst, GetCreatorLocation, 40, 8, true),
+            }, .25)
+        ),
         DoAction(self.inst, returntobeefalo, "go home"),
-        Wander(self.inst, nil, MAX_WANDER_DIST),
+        Wander(self.inst, GetCreatorLocation, MAX_WANDER_DIST),
     }, .25)
     self.bt = BT(self.inst, root)
 end

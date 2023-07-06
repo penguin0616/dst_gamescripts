@@ -1404,6 +1404,10 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 			end
 		end		
 
+		if data.sewable then
+			makeentry("icon_sewingkit.tex",STRINGS.SCRAPBOOK.DATA_SEWABLE )
+		end
+
 		-- PERISHABLE
 		if data.perishable then
 			makeentry("icon_spoil.tex",data.perishable/60/8 ..STRINGS.SCRAPBOOK.DATA_DAYS)
@@ -1562,6 +1566,15 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 	if not data then
 		local inspectbody 
 		height, inspectbody = setcustomblock(height,{str=" \n \n \n \n \n ", minwidth=width-100, leftoffset=40,})
+	end
+
+
+------------------------ SPECIAL INFO -------------------------------
+
+	if data and data.specialinfo and STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo] then
+		local body
+		local shortblock = string.len(STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo]) < 110
+		height, body = setcustomblock(height,{str=STRINGS.SCRAPBOOK.SPECIALINFO[data.specialinfo], minwidth=width-100, leftoffset=40, shortblock=shortblock})
 	end
 
 ----------------------- DEPS -----------------------------------------
@@ -1735,6 +1748,8 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 				tex = tex(data.craftingprefab and {prefab=data.craftingprefab} or nil)
 			end
 
+			print("TEX", tex)
+
 			local makerecipeentry = function(tex,text)
 				local icon = recipewidget:AddChild(Image(atlas, tex))
 				icon:ScaleToSize(STAT_ICONSIZE,STAT_ICONSIZE)
@@ -1805,9 +1820,10 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 
 		if data.knownlevel > 1 and STRINGS.CHARACTERS.GENERIC.DESCRIBE[string.upper(data.speechname or data.prefab)] and #viewed_characters > 0 then
 			local row= 1
+            local valid_index = 1
 			for i, char in ipairs(viewed_characters)do
 
-				local xidx = i%9
+				local xidx = valid_index%9
 			    if xidx == 0 then
 			    	xidx = 9
 			    end
@@ -1845,10 +1861,16 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 							objstr = objstr["HIDING"]
 						elseif string.upper(data.speechname or data.prefab) == "STAGEUSHER" then
 							objstr = objstr["SITTING"]							
+						elseif data.prefab == "abigail" then
+							objstr = objstr["LEVEL1"][1]
 						else
 							objstr = objstr["GENERIC"]
 						end
 					end
+
+                    if objstr and objstr:find("only_used_by_") then
+                        objstr = nil
+                    end
 
 					if objstr then
 						descstr = descstr.. objstr
@@ -1873,16 +1895,18 @@ function ScrapbookScreen:PopulateInfoPanel(data)
 							character_panels[char]:Show()
 						end)
 						button:SetPosition(((width/(#DST_CHARACTERLIST/2)) *xidx) ,height-40 -((row)*50))
+                        valid_index = valid_index + 1
 					end
 				end
 				
-				if xidx == 9 and i< #DST_CHARACTERLIST then
+				if xidx == 9 and valid_index< #DST_CHARACTERLIST then
 					row = row +1
 				end
 			end
-			if character_panels[ThePlayer and TheScrapbookPartitions:WasInspectedByCharacter(data.prefab, ThePlayer.prefab) and ThePlayer.prefab or viewed_characters[1]] then
-				character_panels[ThePlayer and TheScrapbookPartitions:WasInspectedByCharacter(data.prefab, ThePlayer.prefab) and ThePlayer.prefab or viewed_characters[1]]:Show()
-				self.current_panel = character_panels[ThePlayer and TheScrapbookPartitions:WasInspectedByCharacter(data.prefab, ThePlayer.prefab) and ThePlayer.prefab or viewed_characters[1]].id
+            local this_character_panel = character_panels[ThePlayer and TheScrapbookPartitions:WasInspectedByCharacter(data.prefab, ThePlayer.prefab) and ThePlayer.prefab or viewed_characters[1]]
+			if this_character_panel then
+				this_character_panel:Show()
+				self.current_panel = this_character_panel.id
 			end
 		end
 		self.character_panels = character_panels

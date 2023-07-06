@@ -41,6 +41,8 @@ local function fn()
     inst:AddTag("fertilizerresearchable")
     inst.GetFertilizerKey = GetFertilizerKey
 
+    inst.scrapbook_anim = "item"
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then

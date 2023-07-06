@@ -413,8 +413,9 @@ local PICKUPSOUNDS = {
     ["metal"] = "aqol/new_test/metal",
     ["rock"] = "aqol/new_test/rock",
     ["vegetation_firm"] = "aqol/new_test/vegetation_firm",
-    ["vegetation_grassy"] = "aqol/new_test/vegetation_grassy",
-
+    ["vegetation_grassy"] = "aqol/new_test/vegetation_grassy",    
+    ["squidgy"] = "aqol/new_test/squidgy",
+    ["grainy"] = "aqol/new_test/grainy",
     ["DEFAULT_FALLBACK"] = "dontstarve/HUD/collect_resource",
 }
 
@@ -568,10 +569,11 @@ end
 function fns.ArmorBroke(inst, data)
     if data.armor ~= nil then
         local sameArmor = inst.components.inventory:FindItem(function(item)
-            return item.prefab == data.armor.prefab
+			return item.prefab == data.armor.prefab and item.components.equippable ~= nil
         end)
         if sameArmor ~= nil then
-            inst.components.inventory:Equip(sameArmor)
+			local force_ui_anim = data.armor.components.armor.keeponfinished
+			inst.components.inventory:Equip(sameArmor, nil, nil, force_ui_anim)
         end
     end
 end
@@ -649,11 +651,13 @@ end
 local function AddActivePlayerComponents(inst)
     inst:AddComponent("hudindicatorwatcher")
     inst:AddComponent("playerhearing")
+	inst:AddComponent("raindomewatcher")
 end
 
 local function RemoveActivePlayerComponents(inst)
     inst:RemoveComponent("hudindicatorwatcher")
     inst:RemoveComponent("playerhearing")
+	inst:RemoveComponent("raindomewatcher")
 end
 
 local function ActivateHUD(inst)
@@ -2288,7 +2292,7 @@ local function MakePlayerCharacter(name, customprefabs, customassets, common_pos
 		inst:AddComponent("damagetypebonus")
 
         inst:AddComponent("planardamage")
-        inst.components.planardamage:SetBaseDamage(0)
+        inst:AddComponent("planardefense")
 
         local gamemode = TheNet:GetServerGameMode()
         if gamemode == "lavaarena" then

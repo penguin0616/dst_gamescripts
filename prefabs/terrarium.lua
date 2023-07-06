@@ -562,6 +562,9 @@ local function fn()
     inst._islighton:set(false)
 
     inst.entity:SetPristine()
+
+    inst.scrapbook_hide = {"terrarium_tree_crimson"}
+
     if not TheWorld.ismastersim then
         inst:ListenForEvent("lightdirty", OnLightDirty)
 

@@ -67,6 +67,7 @@ local function MakePreparedFood(data)
         inst.scrapbook_overridedata = {"swap_food", data.overridebuild or "cook_pot_food", data.basename or data.name}
 
         inst:AddTag("preparedfood")
+
         if data.tags ~= nil then
             for i,v in pairs(data.tags) do
                 inst:AddTag(v)
@@ -84,6 +85,14 @@ local function MakePreparedFood(data)
             MakeInventoryFloatable(inst, data.floater[1], data.floater[2], data.floater[3])
         else
             MakeInventoryFloatable(inst)
+        end
+
+        if data.scrapbook_sanityvalue ~= nil then
+            inst.scrapbook_sanityvalue = data.scrapbook_sanityvalue
+        end
+
+        if data.scrapbook_healthvalue ~= nil then
+            inst.scrapbook_healthvalue = data.scrapbook_healthvalue
         end
 
         inst.entity:SetPristine()

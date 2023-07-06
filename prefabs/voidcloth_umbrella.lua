@@ -57,6 +57,7 @@ local function OnUnequip(inst, owner)
 
     inst.components.fueled:StopConsuming()
     inst:StopWatchingWorldState("isacidraining", inst.OnIsAcidRaining)
+	inst:OnIsAcidRaining(false)
 end
 
 local function OnEquipToModel(inst, owner, from_ground)
@@ -64,35 +65,244 @@ local function OnEquipToModel(inst, owner, from_ground)
         inst.components.fueled:StopConsuming()
     end
     inst:StopWatchingWorldState("isacidraining", inst.OnIsAcidRaining)
+	inst:OnIsAcidRaining(false)
+end
+
+local function SetupEquippable(inst)
+	inst:AddComponent("equippable")
+	inst.components.equippable.dapperness = -TUNING.DAPPERNESS_MED
+	inst.components.equippable.is_magic_dapperness = true
+	inst.components.equippable:SetOnEquip(OnEquip)
+	inst.components.equippable:SetOnUnequip(OnUnequip)
+	inst.components.equippable:SetOnEquipToModel(OnEquipToModel)
 end
 
 local function OnPerish(inst)
+	if inst.components.machine:IsOn() then
+		inst.components.machine:TurnOff()
+	end
+
     local equippable = inst.components.equippable
-    if equippable ~= nil and equippable:IsEquipped() then
-        local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
-        if owner ~= nil then
-            local data =
-            {
-                prefab = inst.prefab,
-                equipslot = equippable.equipslot,
-            }
-            inst:Remove()
-            owner:PushEvent("umbrellaranout", data)
-            return
-        end
+	if equippable ~= nil then
+		inst.AnimState:PlayAnimation("broken")
+
+		if equippable:IsEquipped() then
+			local owner = inst.components.inventoryitem ~= nil and inst.components.inventoryitem.owner or nil
+			if owner ~= nil then
+				local data =
+				{
+					prefab = inst.prefab,
+					equipslot = equippable.equipslot,
+				}
+				if owner.components.inventory ~= nil then
+					local item = owner.components.inventory:Unequip(equippable.equipslot)
+					if item ~= nil then
+						owner.components.inventory:GiveItem(item, nil, owner:GetPosition())
+					end
+				end
+				inst:RemoveComponent("equippable")
+				owner:PushEvent("umbrellaranout", data)
+				return
+			end
+		end
+		inst:RemoveComponent("equippable")
     end
-    inst:Remove()
 end
 
+local function OnRepaired(inst)
+	if inst.components.equippable == nil then
+		SetupEquippable(inst)
+		inst.AnimState:PlayAnimation("idle")
+	end
+end
+
+local WAVE_FX_LEN = 0.5
+local function WaveFxOnUpdate(inst, dt)
+	inst.t = inst.t + dt
+
+	if inst.t < WAVE_FX_LEN then
+		local k = 1 - inst.t / WAVE_FX_LEN
+		k = k * k
+		inst.AnimState:SetMultColour(1, 1, 1, k)
+		k = (2 - 1.7 * k) * (inst.scalemult or 1)
+		inst.AnimState:SetScale(k, k)
+	else
+		inst:Remove()
+	end
+end
+
+local function CreateWaveFX()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+
+	inst.AnimState:SetBank("umbrella_voidcloth")
+	inst.AnimState:SetBuild("umbrella_voidcloth")
+	inst.AnimState:PlayAnimation("barrier_rim")
+	inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+	inst.AnimState:SetLayer(LAYER_BACKGROUND)
+	inst.AnimState:SetSortOrder(3)
+
+	inst:AddComponent("updatelooper")
+	inst.components.updatelooper:AddOnUpdateFn(WaveFxOnUpdate)
+	inst.t = 0
+	inst.scalemult = .75
+	WaveFxOnUpdate(inst, 0)
+
+	return inst
+end
+
+local function CreateDomeFX()
+	local inst = CreateEntity()
+
+	inst:AddTag("FX")
+	--[[Non-networked entity]]
+	inst.entity:SetCanSleep(false)
+	inst.persists = false
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+
+	inst.AnimState:SetBank("umbrella_voidcloth")
+	inst.AnimState:SetBuild("umbrella_voidcloth")
+	inst.AnimState:PlayAnimation("barrier_dome")
+	inst.AnimState:SetFinalOffset(7)
+
+	inst:AddComponent("updatelooper")
+	inst.components.updatelooper:AddOnUpdateFn(WaveFxOnUpdate)
+	inst.t = 0
+	WaveFxOnUpdate(inst, 0)
+
+	return inst
+end
+
+local function CLIENT_TriggerFX(inst)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	CreateWaveFX().Transform:SetPosition(x, 0, z)
+	CreateDomeFX().Transform:SetPosition(x, 0, z)
+end
+
+local function SERVER_TriggerFX(inst)
+	inst.triggerfx:push()
+	if not TheNet:IsDedicated() then
+		CLIENT_TriggerFX(inst)
+	end
+end
+
+local function SetShadow(inst, enable)
+	inst.DynamicShadow:Enable(enable)
+end
+
+local function turnon(inst)
+	if not inst.components.fueled:IsEmpty() then
+		inst.components.inventoryitem.canbepickedup = false
+		inst.components.fueled.rate = TUNING.VOIDCLOTH_UMBRELLA_DOME_RATE
+		inst.components.fueled:StartConsuming()
+		inst.components.raindome:Enable()
+
+		if inst.components.sanityaura == nil then
+			inst:AddComponent("sanityaura")
+			inst.components.sanityaura.aura = -TUNING.SANITYAURA_SMALL
+			inst.components.sanityaura.max_distsq = TUNING.VOIDCLOTH_UMBRELLA_DOME_RADIUS * TUNING.VOIDCLOTH_UMBRELLA_DOME_RADIUS
+		end
+
+		if inst.shadowtask ~= nil then
+			inst.shadowtask:Cancel()
+			inst.shadowtask = nil
+		end
+
+		if inst:IsAsleep() or POPULATING then
+			inst.DynamicShadow:Enable(true)
+			inst.AnimState:PlayAnimation("barrier_loop", true)
+		else
+			inst.DynamicShadow:Enable(false)
+			inst.shadowtask = inst:DoTaskInTime(7 * FRAMES, SetShadow, true)
+			inst.AnimState:PlayAnimation("barrier_pre")
+			inst.AnimState:PushAnimation("barrier_loop")
+			SERVER_TriggerFX(inst)
+		end
+
+		inst.SoundEmitter:PlaySound("meta2/voidcloth_umbrella/barrier_lp", "loop", .5)
+	end
+end
+
+local function turnoff(inst)
+	inst.components.inventoryitem.canbepickedup = true
+	inst.components.fueled:StopConsuming()
+	inst.components.fueled.rate = 1
+	inst.components.raindome:Disable()
+
+	if inst.components.sanityaura ~= nil then
+		inst:RemoveComponent("sanityaura")
+	end
+
+	if inst.shadowtask ~= nil then
+		inst.shadowtask:Cancel()
+		inst.shadowtask = nil
+	end
+
+	if inst.components.fueled:IsEmpty() then
+		inst.DynamicShadow:Enable(false)
+		inst.AnimState:PlayAnimation("broken")
+	elseif inst.components.inventoryitem:IsHeld() or inst:IsAsleep() then
+		inst.DynamicShadow:Enable(false)
+		inst.AnimState:PlayAnimation("idle")
+	else
+		inst.DynamicShadow:Enable(true)
+		inst.shadowtask = inst:DoTaskInTime(9 * FRAMES, SetShadow, false)
+		inst.AnimState:PlayAnimation("barrier_pst")
+		inst.AnimState:PushAnimation("idle", false)
+	end
+
+	inst.SoundEmitter:KillSound("loop")
+end
+
+local function topocket(inst)--, owner)
+	if inst.components.machine:IsOn() then
+		inst.components.machine:TurnOff()
+	end
+	local anim = inst.components.fueled:IsEmpty() and "broken" or "idle"
+	if not inst.AnimState:IsCurrentAnimation(anim) then
+		inst.AnimState:PlayAnimation(anim)
+	end
+end
+
+local function PushIdleLoop(inst)
+	if inst.components.fueled:IsEmpty() then
+		inst.AnimState:PlayAnimation("broken")
+	end
+end
+
+local function OnStopFloating(inst)
+	inst:DoTaskInTime(0, PushIdleLoop) --#V2C: #HACK restore the looping anim, timing issues
+end
+
+local function OnExitLimbo(inst)
+	--unfortunately returning to scene always re-enables shadow
+	if not inst.components.machine:IsOn() then
+		inst.DynamicShadow:Enable(false)
+	end
+end
 
 local function UmbrellaFn()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
     inst.entity:AddAnimState()
+	inst.entity:AddSoundEmitter()
+	inst.entity:AddDynamicShadow()
     inst.entity:AddNetwork()
 
     MakeInventoryPhysics(inst)
+
+	inst.DynamicShadow:SetSize(1.1, .7)
+	inst.DynamicShadow:Enable(false)
 
 	inst.AnimState:SetBank("umbrella_voidcloth")
     inst.AnimState:SetBuild("umbrella_voidcloth")
@@ -110,20 +320,27 @@ local function UmbrellaFn()
 
 	inst:AddTag("shadow_item")
 
-	MakeInventoryFloatable(inst, "large", nil, {.75, 0.35, 1})
+	inst.triggerfx = net_event(inst.GUID, "voidcloth_umbrella.triggerfx")
 
-    inst.Transform:SetScale(1.3, 1.3, 1.3)
+	MakeInventoryFloatable(inst, "large", nil, { .975, 0.455, 1 })
+
+	--Must be added client-side, but configured server-side
+	inst:AddComponent("raindome")
 
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
+		--delayed because we don't want any old events
+		inst:DoTaskInTime(0, inst.ListenForEvent, "voidcloth_umbrella.triggerfx", CLIENT_TriggerFX)
+
         return inst
     end
+
+	inst.components.raindome:SetRadius(TUNING.VOIDCLOTH_UMBRELLA_DOME_RADIUS)
 
     inst:AddComponent("tradable")
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
-    inst:AddComponent("equippable")
 
     inst:AddComponent("waterproofer")
     inst.components.waterproofer:SetEffectiveness(TUNING.WATERPROOFNESS_ABSOLUTE)
@@ -133,24 +350,35 @@ local function UmbrellaFn()
     inst.components.insulator:SetInsulation(TUNING.INSULATION_LARGE)
 
     inst:AddComponent("fueled")
-    inst.components.fueled.fueltype = FUELTYPE.USAGE
-    inst.components.fueled:SetDepletedFn(OnPerish)
+    inst.components.fueled.fueltype = FUELTYPE.MAGIC
     inst.components.fueled:InitializeFuelLevel(TUNING.VOIDCLOTH_UMBRELLA_PERISHTIME)
 
-    inst.components.equippable.dapperness = -TUNING.DAPPERNESS_MED
-	inst.components.equippable.is_magic_dapperness = true
-    inst.components.equippable:SetOnEquip(OnEquip)
-    inst.components.equippable:SetOnUnequip(OnUnequip)
-    inst.components.equippable:SetOnEquipToModel(OnEquipToModel)
+	SetupEquippable(inst)
 
-	inst.components.floater:SetBankSwapOnFloat(true, -36, {sym_name = "swap_umbrella_float", sym_build = "umbrella_voidcloth", bank = "umbrella_voidcloth"})
+	inst:AddComponent("machine")
+	inst.components.machine:SetGroundOnlyMachine(true)
+	inst.components.machine.turnonfn = turnon
+	inst.components.machine.turnofffn = turnoff
+	inst.components.machine.cooldowntime = 0.5
+
+	inst.components.floater:SetBankSwapOnFloat(true, -47, {sym_name = "swap_umbrella_float", sym_build = "umbrella_voidcloth", bank = "umbrella_voidcloth"})
 
 	inst:AddComponent("shadowlevel")
 	inst.components.shadowlevel:SetDefaultLevel(TUNING.VOIDCLOTH_UMBRELLA_SHADOW_LEVEL)
 
+	MakeForgeRepairable(inst, FORGEMATERIALS.VOIDCLOTH, nil, OnRepaired)
+
+	--V2C: handle this ourselves rather than passing it to MakeForgeRepairable
+	inst.components.fueled:SetDepletedFn(OnPerish)
+
     MakeHauntableLaunch(inst)
 
     inst.OnIsAcidRaining = OnIsAcidRaining -- Mods.
+
+	inst:ListenForEvent("onputininventory", topocket)
+	inst:ListenForEvent("floater_startfloating", topocket)
+	inst:ListenForEvent("floater_stopfloating", OnStopFloating)
+	inst:ListenForEvent("exitlimbo", OnExitLimbo)
 
     return inst
 end

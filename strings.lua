@@ -584,7 +584,7 @@ STRINGS =
 			WHEELSPIN_STOP = "Press",
             PICK_FLOWER = "Pick Flower From",
             EQUIPMENTSWAP = "Swap Clothes",
-            SPIN = "Spin",            
+            SPIN = "Spin",    
         },
 
 		OPEN_CRAFTING =
@@ -637,7 +637,12 @@ STRINGS =
             GENERIC = "Turn Off",
             EMERGENCY = "Emergency Mode",
         },
-        USEITEM = "Use",
+        USEITEM = {
+            GENERIC = "Use",
+            COACH_ON = "Begin Coaching",
+            COACH_OFF = "End Coaching",
+            TWEET = "Tweet",
+        },
         USEITEMON =
         {
             GENERIC = "Use On",
@@ -969,8 +974,16 @@ STRINGS =
         PERFORM = "Perform",
 
         SCYTHE = "Reap",
-		SITON = "Sit On",
-	},
+        SITON = "Sit On",
+
+        USE_WEREFORM_SKILL =
+        {
+            BEAVER = "Tail Slap",
+            GOOSE = "Takeoff",
+        }, 
+
+        IDENTIFY_PLANT = "Identify",
+    },
 
     -- PC controls get hex ranges EE90xx to EE9Fxx
     LMB = "\238\132\128",
@@ -3495,6 +3508,11 @@ STRINGS =
         DUMBBELL_GOLDEN = "Golden Dumbbell",
 		DUMBBELL_MARBLE = "Marbell",
         DUMBBELL_GEM = "Gembell",
+
+        DUMBBELL_HEAT = "Thermbell",
+        DUMBBELL_BLUEGEM = "Icebell",
+        DUMBBELL_REDGEM = "Firebell",
+
         POTATOSACK = "Potato Sack",
 
         RUINS_CAVEIN_OBSTACLE = "Blocky Ruins",
@@ -3666,6 +3684,7 @@ STRINGS =
 		SWORD_LUNARPLANT = "Brightshade Sword",
 		PICKAXE_LUNARPLANT = "Brightshade Smasher",
 		SHOVEL_LUNARPLANT = "Brightshade Shoevel",
+		LUNARPLANT_KIT = "Brightshade Repair Kit",
 
         PUNCHINGBAG = "Punching Bag",
         PUNCHINGBAG_LUNAR = "Bright Boxer",
@@ -3685,6 +3704,7 @@ STRINGS =
 		VOIDCLOTH = "Dark Tatters",
 		VOIDCLOTHHAT = "Void Cowl",
 		ARMOR_VOIDCLOTH = "Void Robe",
+		VOIDCLOTH_KIT = "Void Kit",
 
         VOIDCLOTH_UMBRELLA = "Umbralla",
         VOIDCLOTH_SCYTHE = "Shadow Reaper",
@@ -3706,6 +3726,21 @@ STRINGS =
         DREADSTONE_STACK = "Dreadstone Outcrop",
 
         SCRAPBOOK_PAGE = "Lost Scrapbook Page",
+
+        -- Wolfgang, Woodie, Wormwood Skill Trees
+        LEIF_IDOL = "Treeguard Idol",
+        WOODCARVEDHAT = "Hardwood Hat",
+        WALKING_STICK = "Wooden Walking Stick",
+
+        IPECACSYRUP = "Syrup of Ipecaca",
+        IPECACSYRUP_BUFF = "Ipecaca Poisoning", -- In case a player character is set up to die from the syrup.
+
+        SUPPORT_PILLAR_SCAFFOLD = "Pillar Scaffold",
+        SUPPORT_PILLAR = "Support Pillar",
+        SUPPORT_PILLAR_COMPLETE = "Reinforced Support Pillar",
+        SUPPORT_PILLAR_BROKEN = "Support Pillar Wreckage",
+
+        WOLFGANG_WHISTLE = "Coaching Whistle",
 	},
 
     NAME_DETAIL_EXTENTION =
@@ -4276,6 +4311,15 @@ STRINGS =
         ARMOR_BRAMBLE = "Nature's way of saying \"keep away\".",
         COMPOSTWRAP = "\"Herbal\" therapy.",
         TRAP_BRAMBLE = "An equal opportunity annoyer.",
+        WORMWOOD_SAPLING        = "Grow out on a limb.",
+        WORMWOOD_BERRYBUSH      = "It's hand-made!",
+        WORMWOOD_JUICYBERRYBUSH = "Arm-fresh produce.",
+        WORMWOOD_REEDS          = "Knowing how to reed comes in handy.",
+        WORMWOOD_LUREPLANTBULB  = "Costs an arm, but not a leg.",
+        IPECACSYRUP             = "Keeps you regular.",
+        WORMWOOD_CARRAT         = "Transform a plain old carrot into a Carrat!",
+        WORMWOOD_LIGHTFLIER     = "Transform an ordinary Light Bulb into a Bulbous Lightbug!",
+        WORMWOOD_FRUITDRAGON    = "Transform a dreary Dragon Fruit into a Saladmander!",
 
         --v2 Warly
         PORTABLECOOKPOT_ITEM = "For the gourmet on the go.",
@@ -4490,6 +4534,11 @@ STRINGS =
         DUMBBELL_GOLDEN = "The gold standard of weightlifting.",
         DUMBBELL_MARBLE = "A quick way to a chiseled physique.",
         DUMBBELL_GEM = "Polish every facet of your workout.",
+
+        DUMBELL_HEAT = "Get the ultimate warm-up.",
+        DUMBBELL_REDGEM = "Feel the burn!",
+        DUMBBELL_BLUEGEM = "Ice out would-be workout disturbers.",
+
         POTATOSACK = "A potato's natural habitat.",
 
         -- WX-78
@@ -4600,6 +4649,7 @@ STRINGS =
         SWORD_LUNARPLANT = "A sword of lunar light.",
         PICKAXE_LUNARPLANT = "Mine and demolish to your heart's content.",
         SHOVEL_LUNARPLANT = "The groundbreaking results of cross-pollination between a shovel and a garden hoe.",
+		LUNARPLANT_KIT = "Fix up damaged equipment.",
 
         PUNCHINGBAG = "Test the strength of your weapons. And have fun!",
         PUNCHINGBAG_LUNAR = "Test how well your weapons fare against lunar foes.",
@@ -4612,6 +4662,15 @@ STRINGS =
         VOIDCLOTHHAT = "No light can pierce the darkness within this hood.",
         VOIDCLOTH_UMBRELLA = "Shadowy protection from even the harshest rainfall.",
         VOIDCLOTH_SCYTHE = "Cull the plant population with ease.",
+		VOIDCLOTH_KIT = "Fix up damaged equipment.",
+
+        -- Wolfgang, Woodie, Wormwood Skill Trees
+
+        LEIF_IDOL = "Call upon the power of the trees.",
+        WOODCARVEDHAT = "Your head will stay nice and safe (knock on wood).",
+        WALKING_STICK = "Traverse your favorite nature trail with ease.",
+
+        SUPPORT_PILLAR = "We all need some support.",
 
     },    -- MAXWELL_TEST = {"Say pal, you don't look so good.", "You better find something to eat before night comes!"},
 
@@ -7377,7 +7436,7 @@ STRINGS.UI =
         CANT_LOAD_ROG = "Reign of Giants is not installed. Unable to load.",
 
 		MAINBANNER_ROT_BETA_TITLE = "Beta Build", --unused now.
-		MAINBANNER_BETA_TITLE = "Terrors Below\nBeta Build",
+		MAINBANNER_BETA_TITLE = "Skilltree Spotlight:\nWormwood, Wolfgang, Woodie\nBeta Build",
 
         CONSOLE_EDITION_TEXT = "Console Edition",
 
@@ -11403,7 +11462,7 @@ STRINGS.UI =
             {
                 "Yeehaw! Get on out of here!",
                 "Hah! Those are my wrappers!",
-                "Seein' those crows scatter is sweeter than my favourite candy!",
+                "Seein' those crows scatter is sweeter than my favorite candy!",
             },
 
             GAME_OVER =
@@ -14273,15 +14332,30 @@ STRINGS.SKILLTREE = {
         ALCHEMY = "ALCHEMY",
         TORCH = "TORCH",
         BEARD = "BEARD",
+        SURVIVAL = "SURVIVAL",
+        CURSE = "CURSE",
+        HUMAN = "LUMBERJACK",
+
         ALLEGIANCE = "AFFINITY",
+
+        MIGHT = "CHORES",
+        TRAINING = "TRAINING",
+        PLANARDAMAGE = "MIGHT",
     },
 
-    ONLINE_DATA_USER_OFFLINE = "Login to use online skilltree data.",
-    ONLINE_DATA_DOWNLOAD_FAILED = "Online skilltree data failed to sync. Using offline data.",
+    ONLINE_DATA_USER_OFFLINE = "Login to use online skillset data.",
+    ONLINE_DATA_DOWNLOAD_FAILED = "Online skillset data failed to sync. Using offline data.",
 
     LOCKED = "PATH LOCKED",
     UNLOCKED = "PATH UNLOCKED",
     UNKNOWN = "PATH UNKNOWN",
+
+    ALLEGIANCE_LOCK_2_DESC = "Find and defeat the Ancient Fuelweaver.",
+    ALLEGIANCE_LOCK_3_DESC = "Find and defeat the Celestial Champion.",
+
+    ALLEGIANCE_LOCK_4_DESC = "Have no lunar affinity.",
+    ALLEGIANCE_LOCK_5_DESC = "Have no shadow affinity.",
+
     WILSON = {
 
         WILSON_ALCHEMY_1_TITLE = "Transmutation",
@@ -14332,7 +14406,7 @@ STRINGS.SKILLTREE = {
         WILSON_TORCH_6_TITLE = "Torch Range III",
         WILSON_TORCH_6_DESC = "Torches are a lot brighter.",
 
-        WILSON_TORCH_1_LOCK_DESC = "Learn 3 Torch Skills to unlock.",
+        WILSON_TORCH_1_LOCK_DESC = "Learn 3 Torch skills to unlock.",
 
         WILSON_TORCH_7_TITLE = "Torch Toss",
         WILSON_TORCH_7_DESC = "Uses a scientifically formulated trajectory to always land right side up.",
@@ -14355,23 +14429,280 @@ STRINGS.SKILLTREE = {
         WILSON_BEARD_6_TITLE = "Beard Growth III",
         WILSON_BEARD_6_DESC = "Your magnificent beard grows much faster.",
 
-        WILSON_BEARD_1_LOCK_DESC = "Learn 3 Beard Skills to unlock.",
+        WILSON_BEARD_1_LOCK_DESC = "Learn 3 Beard skills to unlock.",
 
         WILSON_BEARD_7_TITLE = "Beard Hair Storage",
         WILSON_BEARD_7_DESC = "Stash food in your beard.",
 
-        WILSON_ALLEGIANCE_LOCK_1_DESC = "Learn 12 Skills to unlock.",
-        WILSON_ALLEGIANCE_LOCK_2_DESC = "Find and defeat the Ancient Fuelweaver.",
-        WILSON_ALLEGIANCE_LOCK_3_DESC = "Find and defeat the Celestial Champion.",
-
-        WILSON_ALLEGIANCE_LOCK_4_DESC = "Have no lunar affinity.",
-        WILSON_ALLEGIANCE_LOCK_5_DESC = "Have no shadow affinity.",
+        WILSON_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.",
 
         WILSON_ALLEGIANCE_SHADOW_TITLE = "Shadow Courtier",
         WILSON_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty with the secrets of Shadow Transmutation.",
         
         WILSON_ALLEGIANCE_LUNAR_TITLE = "Lunar Innovator",
         WILSON_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity with the secrets of Lunar Transmutation.",        
+    },
+
+    WOODIE = {
+
+        WOODIE_CURSE_WEREMETER_1_TITLE = "Transformation Timer I",
+        WOODIE_CURSE_WEREMETER_2_TITLE = "Transformation Timer II",
+        WOODIE_CURSE_WEREMETER_3_TITLE = "Transformation Timer III",
+        
+        WOODIE_CURSE_WEREMETER_1_DESC = "Were-forms last a little longer.",
+        WOODIE_CURSE_WEREMETER_2_DESC = "Were-forms last a fair amount longer.",
+        WOODIE_CURSE_WEREMETER_3_DESC = "Were-forms last much longer.",
+
+        ----------------------
+
+        WOODIE_CURSE_MASTER_LOCK_DESC = "Learn 6 Curse skills to unlock.",
+
+        WOODIE_CURSE_MASTER_TITLE = "Curse Embracer",
+        WOODIE_CURSE_MASTER_DESC  = "Suffer no health or sanity penalties for eating Kitschy Idols.\nReturn to human form without having an empty stomach.",
+
+        ----------------------
+
+        WOODIE_CURSE_BEAVER_1_TITLE = "The Werebeaver I",
+        WOODIE_CURSE_BEAVER_2_TITLE = "The Werebeaver II",
+        WOODIE_CURSE_BEAVER_3_TITLE = "The Werebeaver III",
+
+        WOODIE_CURSE_BEAVER_1_DESC = "Mine faster in your Werebeaver form.",
+        WOODIE_CURSE_BEAVER_2_DESC = "Chop faster in your Werebeaver form.",
+        WOODIE_CURSE_BEAVER_3_DESC = "Chop, mine and break hard materials in your Werebeaver form.",
+
+        WOODIE_CURSE_MOOSE_1_TITLE = "The Weremoose I",
+        WOODIE_CURSE_MOOSE_2_TITLE = "The Weremoose II",
+        WOODIE_CURSE_MOOSE_3_TITLE = "The Weremoose III",
+
+        WOODIE_CURSE_MOOSE_1_DESC = "Your Weremoose form is more resistant to hitting obstacles and walks a little faster.",
+        WOODIE_CURSE_MOOSE_2_DESC = "Gain slow health regeneration in your Weremoose form.",
+        WOODIE_CURSE_MOOSE_3_DESC = "You can stop mid-charge in your Weremoose form.",
+
+        WOODIE_CURSE_GOOSE_1_TITLE = "The Weregoose I",
+        WOODIE_CURSE_GOOSE_2_TITLE = "The Weregoose II",
+        WOODIE_CURSE_GOOSE_3_TITLE = "The Weregoose III",
+
+        WOODIE_CURSE_GOOSE_1_DESC = "Run faster in your Weregoose form.",
+        WOODIE_CURSE_GOOSE_2_DESC = "Become completely waterproof in Weregoose form.",
+        WOODIE_CURSE_GOOSE_3_DESC = "Occasionally dodge an incoming attack in Weregoose form.",
+
+        ----------------------
+
+        WOODIE_CURSE_BEAVER_LOCK_DESC = "Only one were-form can be fully mastered. Choose wisely.",
+        WOODIE_CURSE_MOOSE_LOCK_DESC  = "Only one were-form can be fully mastered. Choose wisely.",
+        WOODIE_CURSE_GOOSE_LOCK_DESC  = "Only one were-form can be fully mastered. Choose wisely.",
+
+        WOODIE_CURSE_EPIC_BEAVER_TITLE = "Werebeaver Mastery",
+        WOODIE_CURSE_EPIC_MOOSE_TITLE = "Weremoose Mastery",
+        WOODIE_CURSE_EPIC_GOOSE_TITLE = "Weregoose Mastery",
+
+        WOODIE_CURSE_EPIC_BEAVER_DESC = "The Werebeaver learns to smack the ground with his tail, destroying everything around him.",
+        WOODIE_CURSE_EPIC_MOOSE_DESC = "The Weremoose learns to throw stronger punches and has a tougher hide.",
+        WOODIE_CURSE_EPIC_GOOSE_DESC = "The Weregoose learns to fly around to explore the world, but it's a little out of control.",
+
+        ----------------------
+
+        WOODIE_HUMAN_QUICKPICKER_1_TITLE = "Quick Picker I",
+        WOODIE_HUMAN_QUICKPICKER_2_TITLE = "Quick Picker II",
+        WOODIE_HUMAN_QUICKPICKER_3_TITLE = "Quick Picker III",
+
+        WOODIE_HUMAN_QUICKPICKER_1_DESC = "Collect stuff a little faster.",
+        WOODIE_HUMAN_QUICKPICKER_2_DESC = "Collect stuff a fair amount faster.",
+        WOODIE_HUMAN_QUICKPICKER_3_DESC = "Collect stuff much faster.",
+
+        ----------------------
+
+        WOODIE_HUMAN_TREEGUARD_1_TITLE = "Treeguard Feller I",
+        WOODIE_HUMAN_TREEGUARD_2_TITLE = "Treeguard Feller II",
+        WOODIE_HUMAN_TREEGUARD_MAX_TITLE = "Treeguard Feller III",
+        
+        WOODIE_HUMAN_TREEGUARD_1_DESC = "Deal a fair amount more damage to Treeguards.",
+        WOODIE_HUMAN_TREEGUARD_2_DESC = "Deal much more damage to Treeguards.",
+        WOODIE_HUMAN_TREEGUARD_MAX_DESC = "Learn to craft the Treeguard Idol, an extremely burnable effigy.",
+
+        ----------------------
+
+        WOODIE_HUMAN_LUCY_1_TITLE = "Woodworker",
+        WOODIE_HUMAN_LUCY_2_TITLE = "Hat Carving",
+        WOODIE_HUMAN_LUCY_3_TITLE = "Cane Carving",
+        
+        WOODIE_HUMAN_LUCY_1_DESC = "Use Lucy to carve boards more efficiently.",
+        WOODIE_HUMAN_LUCY_2_DESC = "Use Lucy to carve a nice Hardwood Hat for protection.",
+        WOODIE_HUMAN_LUCY_3_DESC = "Use Lucy to carve a Wooden Walking Stick for easy mobility.",
+
+        ----------------------
+
+        WOODIE_ALLEGIANCE_LOCK_1_DESC = "Learn 12 skills to unlock.",
+
+        WOODIE_ALLEGIANCE_SHADOW_TITLE = "Shadow Wrangler",
+        WOODIE_ALLEGIANCE_SHADOW_DESC = "The Queen will reward your loyalty by calling off her shadow creatures.\n(But only when you're in a were-form.)",
+        
+        WOODIE_ALLEGIANCE_LUNAR_TITLE = "Lunar Renegade",
+        WOODIE_ALLEGIANCE_LUNAR_DESC = "The Cryptic Founder will reward your curiosity by blocking the moon's ability to trigger your curse.",
+    },
+
+    WOLFGANG = {
+
+        WOLFGANG_CRITWORK_1_TITLE = "Chore Workout I",
+        WOLFGANG_CRITWORK_1_DESC = "Chance to one-shot while working improved to 5%.",
+
+        WOLFGANG_CRITWORK_2_TITLE = "Chore Workout II",
+        WOLFGANG_CRITWORK_2_DESC = "Chance to one-shot while working improved to 10%.",
+
+        WOLFGANG_CRITWORK_3_TITLE = "Chore Workout III",
+        WOLFGANG_CRITWORK_3_DESC = "Chance to one-shot while working improved to 15%.",
+        ---
+        WOLFGANG_DUMBBELL_CRAFTING_TITLE = "Dumbbell Developer",
+        WOLFGANG_DUMBBELL_CRAFTING_DESC = "Learn to craft several new dumbbells.",
+        ---
+        WOLFGANG_DUMBBELL_THROWING_1_TITLE = "Heavy Hitter I",
+        WOLFGANG_DUMBBELL_THROWING_1_DESC = "Increase the damage of thrown dumbbells by 50%.",
+
+        WOLFGANG_DUMBBELL_THROWING_2_TITLE = "Heavy Hitter II",
+        WOLFGANG_DUMBBELL_THROWING_2_DESC = "Increase the damage of thrown dumbbells by 100%.",
+        ---
+        WOLFGANG_COACH_TITLE = "Coach Wolfgang",
+        WOLFGANG_COACH_DESC = "Learn to craft a Coaching Whistle.\nWhile coaching, Normal Wolfgang will raise friends' sanity and boost followers' damage.",
+
+        WOLFGANG_NORMAL_SPEED_TITLE = "Leg Day",
+        WOLFGANG_NORMAL_SPEED_DESC = "+10% speed boost when Normal.",
+        ---
+        WOLFGANG_GYM_OVERBUFF_1_TITLE = "Push the Limits I",
+        WOLFGANG_GYM_OVERBUFF_1_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 110.",
+
+        WOLFGANG_GYM_OVERBUFF_2_TITLE = "Push the Limits II",
+        WOLFGANG_GYM_OVERBUFF_2_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 120.",
+
+        WOLFGANG_GYM_OVERBUFF_3_TITLE = "Push the Limits III",
+        WOLFGANG_GYM_OVERBUFF_3_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 130.",
+
+        WOLFGANG_GYM_OVERBUFF_4_TITLE = "Push the Limits IV",
+        WOLFGANG_GYM_OVERBUFF_4_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 140.",
+
+        WOLFGANG_GYM_OVERBUFF_5_TITLE = "Push the Limits V",
+        WOLFGANG_GYM_OVERBUFF_5_DESC = "Use the gym to push your Mighty Meter past its limit.\n Mighty Meter can go up to 150.",
+
+        WOLFGANG_AUTO_GYM_TITLE = "Gym Mastery",
+        WOLFGANG_AUTO_GYM_DESC = "Perfect your gym workout.\nMini game will complete automatically.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_1_TITLE = "Mighty Weapons I",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_1_DESC = "Bring out the full strength of planar weapons.\nAdd +5 Planar Damage to planar weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_2_TITLE = "Mighty Weapons II",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_2_DESC = "Bring out the full strength of planar weapons.\nAdd +10 Planar Damage to planar weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_3_TITLE = "Mighty Weapons III",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_3_DESC = "Bring out the full strength of planar weapons.\nAdd +15 Planar Damage to planar weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_4_TITLE = "Mighty Weapons IV",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_4_DESC = "Bring out the full strength of planar weapons.\nAdd +20 Planar Damage to planar weapons when Mighty.",
+
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_5_TITLE = "Mighty Weapons V",
+        WOLFGANG_MIGHTY_PLANAR_DAMAGE_5_DESC = "Bring out the full strength of planar weapons.\nAdd +25 Planar Damage to planar weapons when Mighty.",
+        ---
+        WOLFGANG_ALLEGIANCE_SHADOW_1_TITLE = "Shadow Guard I",
+        WOLFGANG_ALLEGIANCE_SHADOW_1_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +10% of total damage fighting Lunar-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_SHADOW_2_TITLE = "Shadow Guard II",
+        WOLFGANG_ALLEGIANCE_SHADOW_2_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +20% of total damage fighting Lunar-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_SHADOW_3_TITLE = "Shadow Guard III",
+        WOLFGANG_ALLEGIANCE_SHADOW_3_DESC = "The Queen will reward your loyalty with devastating strength.\nAdd +30% of total damage fighting Lunar-aligned creatures when Mighty.",        
+        
+        WOLFGANG_ALLEGIANCE_LUNAR_1_TITLE = "Lunar Strategist I",
+        WOLFGANG_ALLEGIANCE_LUNAR_1_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +10% of total damage fighting Shadow-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_LUNAR_2_TITLE = "Lunar Strategist II",
+        WOLFGANG_ALLEGIANCE_LUNAR_2_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +20% of total damage fighting Shadow-aligned creatures when Mighty.",
+
+        WOLFGANG_ALLEGIANCE_LUNAR_3_TITLE = "Lunar Strategist III",
+        WOLFGANG_ALLEGIANCE_LUNAR_3_DESC = "The Cryptic Founder will reward your curiosity by revealing the enemy's weaknesses.\nAdd +30% of total damage fighting Shadow-aligned creatures when Mighty.",  
+
+    },
+
+    WORMWOOD = {
+        BUTTERFLY_FRIEND_TITLE = "Butterfly Friend",
+        BUTTERFLY_FRIEND_DESC = "Butterflies will no longer fly away from you.",
+
+        SAPLINGCRAFTING_TITLE = "Sapling Crafting",
+        SAPLINGCRAFTING_DESC = "Sacrifice health to craft Lunar Saplings.",
+
+        BERRYBUSHCRAFTING_TITLE = "Berry Bush Crafting",
+        BERRYBUSHCRAFTING_DESC = "Sacrifice health to craft Berry Bushes.",
+
+        REEDSCRAFTING_TITLE = "Monkeytail Crafting",
+        REEDSCRAFTING_DESC = "Sacrifice health to craft Monkeytails.",
+
+        SYRUPCRAFTING_TITLE = "Poor Sap",
+        SYRUPCRAFTING_DESC = "Learn to craft Ipecaca Syrup to induce pooping in other creatures.",
+
+        MOON_CAP_EATING_TITLE = "Moon Shroom Cloud",
+        MOON_CAP_EATING_DESC = "Release sleep-inducing spores when eating a Moon Shroom.",
+
+        MUSHROOMPLANTER_RATEBONUS_1_TITLE = "Mushroom Mastery",
+        MUSHROOMPLANTER_RATEBONUS_1_DESC = "Mushrooms planted in a Mushroom Planter grow a little faster.",
+
+        MUSHROOMPLANTER_RATEBONUS_2_TITLE = "Mushroom Mastery II",
+        MUSHROOMPLANTER_RATEBONUS_2_DESC = "Mushrooms planted in a Mushroom Planter grow much faster.",
+
+        MUSHROOMPLANTER_UPGRADE_TITLE = "Mushroom Multiplier",
+        MUSHROOMPLANTER_UPGRADE_DESC = "Mushrooms planted in a Mushroom Planter produce a higher yield.",
+
+        COUNT_LOCK_1_DESC = "Learn enough left-branch skills to unlock.",
+
+        LUNAR_GEAR_1_TITLE = "Lunar Guardian I",
+        LUNAR_GEAR_1_DESC = "Seize foes and keep them rooted in place while wearing Brightshade Armor.",
+
+        LUNAR_GEAR_2_TITLE = "Lunar Guardian II",
+        LUNAR_GEAR_2_DESC = "Summon vines to join the fray while attacking with Brightshade weapons.",
+
+        --LUNAR_GEAR_3_TITLE = "Lunar III",
+        --LUNAR_GEAR_3_DESC = "Seize foes and keep them rooted in place with your Brightshade Armor.", - removed
+
+        --
+        IDENTIFY_PLANTS_TITLE = "Seed Sleuth",
+        IDENTIFY_PLANTS_DESC = "Learn to identify seeds that have just been planted, to determine what they will grow into.",
+
+        BLOOMING_SPEED1_TITLE = "Growth Spurt I",
+        BLOOMING_SPEED1_DESC = "Reach full bloom a bit quicker.",
+
+        BLOOMING_SPEED2_TITLE = "Growth Spurt II",
+        BLOOMING_SPEED2_DESC = "Reach full bloom much quicker.",
+
+        BLOOMING_MAX_UPGRADE_TITLE = "Flower Power",
+        BLOOMING_MAX_UPGRADE_DESC = "Stay in full bloom longer.",
+
+        BLOOMING_PETALS_TITLE = "Petal Production",
+        BLOOMING_PETALS_DESC = "Produce flower petals while in full bloom.",
+
+        BLOOMING_OVERHEATPROTECTION_TITLE = "Shade Plant",
+        BLOOMING_OVERHEATPROTECTION_DESC = "Gain increased protection from overheating when in full bloom.",
+
+        BLOOMING_FARMRANGE1_TITLE = "Farmhand I",
+        BLOOMING_FARMRANGE1_DESC = "Tend farm plants within a larger range while full bloom.",
+
+        BLOOMING_FARMRANGE2_TITLE = "Farmhand II",
+        BLOOMING_FARMRANGE2_DESC = "Tend farm plants within an even larger range while full bloom.",
+
+        BLOOMING_FARMRANGE3_TITLE = "Farmhand III",
+        BLOOMING_FARMRANGE3_DESC = "Tend farm plants within a vast range while full bloom.",
+
+        FRUITFLIES_TITLE = "Fly Trap",
+        FRUITFLIES_DESC = "Fruit flies will be drawn to you instead of farm plants.\nThe Lord of the Fruit Flies is more likely to appear.",
+
+        BEES_TITLE = "Bee Kind",
+        BEES_DESC = "Killer bees won't leave their hives or attack unless provoked.",
+
+        COUNT_LOCK_2_DESC = "Learn enough right-branch skills to unlock.",
+
+        LUNAR_MUTATIONS_1_TITLE = "Lunar Cultivator I",
+        LUNAR_MUTATIONS_1_DESC = "Tap into your lunar roots to transform Carrots into Carrats.",
+
+        LUNAR_MUTATIONS_2_TITLE = "Lunar Cultivator II",
+        LUNAR_MUTATIONS_2_DESC = "Tap into your lunar roots to transform Lightbulbs into Bulbous Lightbugs.",
+
+        LUNAR_MUTATIONS_3_TITLE = "Lunar Cultivator III",
+        LUNAR_MUTATIONS_3_DESC = "Tap into your lunar roots to transform Dragon Fruit into Saladmanders.",
     },
 }
 
@@ -14459,6 +14790,7 @@ STRINGS.SCRAPBOOK = {
     DATA_ARMOR_ABSORB = "ABSORBS ",
     DATA_WETNESS = "STOPS ",
     DATA_PERSEC = "/SEC",
+    DATA_SEWABLE = "REPAIRED\nBY SEWING",
 
     NEW_SCRAPBOOK_ENTRY = "Scrapbook\nUpdated",
     CLEARFLASH = "Clear all \"NEW\"",
@@ -14475,6 +14807,85 @@ STRINGS.SCRAPBOOK = {
     SEARCH = "Search",
    -- CANCEL_SEARCH = "Cancel Search",
 
+    SPECIALINFO ={
+        -- creatures
+        CHESTER ="Things can be stored in Chester much like a treasure chest.",
+        HUTCH = "Things can be stored in Hutch much like a treasure chest.",
+        BEEFALO = "Watch out for an aggrssive mating season.\n\nFeed and care for one of these beasts and maybe you can saddle them.",
+        BERNIE_ACTIVE = "A powerful friend when Willow's mind approaches insaity.",
+        CANARY = "Sensitive to vapours, they tend to die when great poisons are detected nearby.",
+        POLLYROGERS = "Gathers loot nearby.",
+        MOLE = "Ever played the game \"Whack-A-Mole\"? What a great game.",
+        POWDERMONKEY = "Best keep a bribe handy for these freebooters.",
+        SPIDER_HEALER = "Emits powerful spider-healing flatulence when threatened.",
+
+        -- items
+        ABIGAIL_FLOWER = "Used by Wendy to call her Ghostly sister Abigail.",
+        CURSEDMONKEYTOKEN = "Seems like it takes some special magic to get rid of these wonky things.",
+        BEEHAT = "The protection this hat offers only really works on Bees and Bee like creatures.",
+        HIVEHAT = "Makes scary things around you relaxing instead.",
+        ARMORBONE = "Every 5 seconds, one incoming hit will be completely ignored.",
+        BONEHAT = "Wearing this will drive you instantly insane, even the shadows will tolerate you.",
+        ARMORBRAMBLE = "This thorny husk deals its damage when attacked.",
+        ARMORDREADSTONE = "This armor slowly repairs itself.",
+        DREADSTONEHAT = "This helm slowly repairs itself.",
+        EYEMASKHAT = "Feed this beast to restore it.",
+        ARMORMARBLE = "This durable armor is also a little heavy and slows its wearer.",
+        ARMORSANITY = "As this armor blocks damage, it tends to drive its wearer insane.",
+        ARMORDRAGONFLY = "Wrapped in the scales of the Dragonfly makes you immune to fire.",
+        ARMORSNURTLESHELL = "One can tuck inside this hard shell to survive any assault.",
+        RUINSHAT = "Frequently, hits on this crown will cause it to create an impentrable barrier for a short time.",
+        VOIDCLOTHHAT = "Damage from Planar damage weapons will ramp up with consecutive hits if you can keep attacking.\nGetting hit will break this damage chain.",
+        VOIDCLOTHARMOR = "Wearing this scary robe makes you not care about how scary everything around you is.",
+        BATHBOMB = "Makes a hotspring all warm, steamy, and glassy when dropped in.",
+        BATTLESONG_SANITYAURA = "Scary creatures seem about half as scary listening to this beautiful song.",
+        BATTLESONG_DURABILITY = "Reduce wear on your weapons by 25% while listening.",
+        BATTLESONG_HEALTHGAIN = "Nearby friends will heal when fighting. Wigfrid will heal a little more too.",
+        BATTLESONG_SANITYGAIN = "Nearby friends will gain sanity when fighting. Wigfrid will gain a little more too.",
+        BATTLESONG_FIRERESISTANCE = "Reduce fire damage by 34%.",
+        BATTLESONG_TAUNT = "Draw the attention of nearby enemies.",
+        BATTLESONG_PANIC = "Panic nearby enemies.",
+        BEEFBELL = "Name and bond with one Beefalo at a time. Bonded Beefalo will follow the holder, even into caves and offline.",
+        PLANTABLE_FERTILIZE = "This needs some fertilizing after planting.",
+        SCANDATA = "Data is used to craft Circuits for WK78.",
+        WX78SCANNER = "Chirps when interesting bio targets are nearby. Will chase and scan intersting bio targets while WX78 is close. Drops Bio Data when finished.",
+        MOONEYE = "Allways appears on the minimap, even in unexplored areas.",
+        BOATPATCH = "Plugs leaks on boats.",
+        LIFEINJECTOR = "Restores lost \"maximum health\" noted in black on the Health HUD indicator.",
+        ALTARPLUG = "It looks like it plugs into something",
+        WX78MODULEREMOVER = "Removes installed Circuits from WX78.",
+        RESKINTOOL = "Cycles through the skins on in-world items.",
+        POCKETWATCHDISMANTLER = "Break pocket watches down into their originial ingredients other than Nightmare Fuel.",
+        ARMORSLURPER = "Restores sanity over time and slowes hunger drain by 40%",
+        COSTUME = "Costume piece used in stage plays",
+        CANDYBAG = "A 14 slot container for holding Candies Trinkets and Decorations.",
+        SPICEPACK = "A 6 slot container that slows the spoiling of items inside.",
+        BLUEAMULET = "Raises sanity while cooling the wearer.",
+        PURPLEAMULET = "Wearer will becomes insane.",
+        REDAMULET = "A Ghost that haunts this amulet will be revived.",
+        GREENAMULET = "Halves the cost of crafted items and raises sanity when worn.",
+        ORANGEAMULET = "Automatically picks up items nearby and puts them in your inventory. Also raises sanity when worn.",
+        YELLOWAMULET = "Emits light like a torch and gives a 20% speed boost while worn.",
+        BEARGERVEST = "Hunger rate is slowed by 25% when worn.",
+        BALLOONVEST = "Wearer will not suffere any drowning damage when they wash up on shore.",
+        ICEPACK = "An 8 slot container that halves the speed of food spoiling inside.",
+        PIGGYBACK = "A large 12 slot container that also slows the wearer by 20% when worn.",
+        ONEMANBAND = "Wearing the one man band is a sanity lowering experience but converts nearby pigmen and bunnymen will become followers.",
+        SEEDPOUCH = "A 14 slot container that will only hold seeds, nuts, and beans. Spoilage is slowed by 50%",
+        PIGCOIN = "Summons an Elite Pig.",
+        COOKBOOK = "A record of all the foods cooked and or eaten as well as the ingredients used to cook them.",
+        CRATEREDMOONROCK = "Contains a gem shaped socket.",
+        ORANGESTAFF = "When held it increases speed by 25% and can teleport the user to visible locations at the cost of some sanity.",
+        GREENSTAFF = "Truns crafted items and structures into their ingredient parts based on their remaining durability. Gem ingredients are not returned.",
+        YELLOWSTAFF = "Spanws a Dwarf Star.",
+        PURPLESTAFF = "Teleports targets to a random location, or to a fueled Telelocator Foucus.",
+        BLUESTAFF = "Shoots freezing projectiles.",
+        REDSTAFF = "Shoots projectiles that ignite targets on fire.",
+        ARMORLUNARPLANT = "Reflects damage back at Shadow Aligned enemy.",
+        LUNARPLANTHAT = "Glows in the dark and augments the Brightshade Staff with more projectile bounces.\nGives lunar weapons with Planar Damage a boost.",
+        DENBEDAZZLER = "Bedazzle a Spider Den to pacify the spiders nearby. Bedazzled dens do not grow.",
+        TOWNPORTALTALISMAN = "When another survivor is channeling a Lazy Deserter, use this to teleport to them.",
+    },
 }
 
 --Don't include this in pot generation as this file is already translated.

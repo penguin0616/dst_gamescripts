@@ -278,13 +278,84 @@ local function Sleeper_OnWakeUp(inst)
 	inst._sleep_interrupted = true -- reseting it
 end
 
+----
+local function OnSpawnedByWormwood(inst, wormwood)
+	inst.components.timer:StartTimer("finish_transformed_life", TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
+	inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
+	MakeRipe(inst, true)
+
+	local wormwood_leader = wormwood.components.leader
+    if not wormwood_leader then
+        return
+    end
+
+    local follower = inst:AddComponent("follower")
+    follower.maxfollowtime = TUNING.FRUITDRAGON_LOYALTY_MAXTIME + 1
+
+    wormwood:PushEvent("makefriend")
+
+	local existing_fruitdragon_follower_count = wormwood_leader:CountFollowers("fruitdragon")
+	if existing_fruitdragon_follower_count == TUNING.FRUITDRAGON_FOLLOWER_LIMIT then
+		local oldest_follower_percent, oldest_follower = math.huge, nil
+		for follower in pairs(wormwood_leader.followers) do
+			if follower.components.follower then
+				local loyalty_percent = follower.components.follower:GetLoyaltyPercent()
+				if loyalty_percent < oldest_follower_percent then
+					oldest_follower_percent = loyalty_percent
+					oldest_follower = follower
+				end
+			end
+		end
+
+		if oldest_follower then
+			wormwood_leader:RemoveFollower(oldest_follower)
+			oldest_follower.components.timer:SetTimeLeft("finish_transformed_life", 2)
+		end
+	end
+
+    wormwood_leader:AddFollower(inst)
+    follower:AddLoyaltyTime(TUNING.FRUITDRAGON_LOYALTY_MAXTIME)
+end
+
+local function finish_transformed_life(inst)
+    local ix, iy, iz = inst.Transform:GetWorldPosition()
+
+    local fruit = SpawnPrefab("dragonfruit")
+    fruit.Transform:SetPosition(ix, iy, iz)
+    inst.components.lootdropper:FlingItem(fruit)
+
+    local fx = SpawnPrefab("wormwood_lunar_transformation_finish")
+    fx.Transform:SetPosition(ix, iy, iz)
+    inst:Remove()
+end
+
+----
+local function OnTimerDone(inst, data)
+	if data.name == "finish_transformed_life" then
+		finish_transformed_life(inst)
+	end
+end
+
+----
 local function OnSave(inst, data)
 	data._is_ripe = inst._is_ripe
+    data._is_follower = (inst.components.follower ~= nil)
 end
 
 local function OnLoad(inst, data)
-	if data ~= nil and data._is_ripe then
-		inst:MakeRipe(true)
+	if data then
+        if data._is_ripe then
+		    inst:MakeRipe(true)
+        end
+
+        if data._is_follower then
+            local follower = inst:AddComponent("follower")
+            follower.maxfollowtime = TUNING.FRUITDRAGON_LOYALTY_MAXTIME
+        end
+
+		if inst.components.timer:TimerExists("finish_transformed_life") then
+			inst:SetPrefabNameOverride("wormwood_mutantproxy_fruitdragon")
+		end
 	end
 end
 
@@ -462,6 +533,8 @@ local function fn()
 	--    inst:ListenForEvent("moisturedelta", OnMoistureDelta)
 
 	inst:ListenForEvent("lostfruitdragonchallenge", OnLostChallenge)
+    inst:ListenForEvent("spawnedbywormwoodproxy", OnSpawnedByWormwood)
+	inst:ListenForEvent("timerdone", OnTimerDone)
 
 	inst._GetDebugString = inst.GetDebugString
 	inst.GetDebugString = GetDebugString

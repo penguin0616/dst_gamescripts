@@ -6,10 +6,28 @@ local assets =
 local prefabs =
 {
 	"armor_lunarplant_glow_fx",
+    "wormwood_vined_debuff",
 }
 
-local function OnBlocked(owner)
+local function OnHit(owner, data)
+    if not owner then return end
+
+    local attacker = data.attacker
+    if not attacker or not attacker.components.locomotor
+            or (attacker.components.health and attacker.components.health:IsDead()) then
+        return
+    end
+
+    local owner_skilltreeupdater = owner.components.skilltreeupdater
+    if owner_skilltreeupdater and owner_skilltreeupdater:IsActivated("wormwood_allegiance_lunar_plant_gear_1") then
+        attacker:AddDebuff("wormwood_vined_debuff", "wormwood_vined_debuff")
+    end
+end
+
+local function OnBlocked(owner, data)
 	owner.SoundEmitter:PlaySound("dontstarve/common/together/armor/cactus")
+
+    OnHit(owner, data)
 end
 
 local function OnEnabledSetBonus(inst)
@@ -30,6 +48,7 @@ local function onequip(inst, owner)
 	end
 
 	inst:ListenForEvent("blocked", OnBlocked, owner)
+    inst:ListenForEvent("attacked", OnHit, owner)
 
 	if inst.fx ~= nil then
 		inst.fx:Remove()
@@ -42,6 +61,7 @@ end
 local function onunequip(inst, owner)
 	owner.AnimState:ClearOverrideSymbol("swap_body")
 	inst:RemoveEventCallback("blocked", OnBlocked, owner)
+    inst:RemoveEventCallback("attacked", OnHit, owner)
 
 	local skin_build = inst:GetSkinBuild()
 	if skin_build ~= nil then
@@ -53,6 +73,36 @@ local function onunequip(inst, owner)
 		inst.fx = nil
 	end
 	owner.AnimState:SetSymbolLightOverride("swap_body", 0)
+end
+
+local function SetupEquippable(inst)
+	inst:AddComponent("equippable")
+	inst.components.equippable.equipslot = EQUIPSLOTS.BODY
+	inst.components.equippable:SetOnEquip(onequip)
+	inst.components.equippable:SetOnUnequip(onunequip)
+end
+
+local function OnBroken(inst)
+	if inst.components.equippable ~= nil then
+		inst:RemoveComponent("equippable")
+		inst.AnimState:PlayAnimation("broken")
+	end
+end
+
+local function OnRepaired(inst)
+	if inst.components.equippable == nil then
+		SetupEquippable(inst)
+		inst.AnimState:PlayAnimation("anim")
+	end
+end
+
+local function ReflectDamageFn(inst, attacker, damage, weapon, stimuli, spdamage)
+	return 0,
+	{
+		planar = attacker ~= nil and attacker:HasTag("shadow_aligned")
+			and TUNING.ARMOR_LUNARPLANT_REFLECT_PLANAR_DMG_VS_SHADOW
+			or TUNING.ARMOR_LUNARPLANT_REFLECT_PLANAR_DMG,
+	}
 end
 
 local function fn()
@@ -76,6 +126,8 @@ local function fn()
 	local swap_data = { bank = "armor_lunarplant", anim = "anim" }
 	MakeInventoryFloatable(inst, "small", 0.2, 0.80, nil, nil, swap_data)
 
+	inst.scrapbook_specialinfo = "ARMORLUNARPLANT"
+
 	inst.entity:SetPristine()
 
 	if not TheWorld.ismastersim then
@@ -91,10 +143,10 @@ local function fn()
 	inst:AddComponent("planardefense")
 	inst.components.planardefense:SetBaseDefense(TUNING.ARMOR_LUNARPLANT_PLANAR_DEF)
 
-	inst:AddComponent("equippable")
-	inst.components.equippable.equipslot = EQUIPSLOTS.BODY
-	inst.components.equippable:SetOnEquip(onequip)
-	inst.components.equippable:SetOnUnequip(onunequip)
+	inst:AddComponent("damagereflect")
+	inst.components.damagereflect:SetReflectDamageFn(ReflectDamageFn)
+
+	SetupEquippable(inst)
 
 	inst:AddComponent("damagetyperesist")
 	inst.components.damagetyperesist:AddResist("lunar_aligned", inst, TUNING.ARMOR_LUNARPLANT_LUNAR_RESIST)
@@ -103,6 +155,8 @@ local function fn()
 	setbonus:SetSetName(EQUIPMENTSETNAMES.LUNARPLANT)
 	setbonus:SetOnEnabledFn(OnEnabledSetBonus)
 	setbonus:SetOnDisabledFn(OnDisabledSetBonus)
+
+	MakeForgeRepairable(inst, FORGEMATERIALS.LUNARPLANT, OnBroken, OnRepaired)
 
 	MakeHauntableLaunch(inst)
 

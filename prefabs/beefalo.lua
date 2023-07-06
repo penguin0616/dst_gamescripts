@@ -902,12 +902,15 @@ local function beefalo()
     inst.AnimState:PlayAnimation("idle_loop", true)
     inst.AnimState:Hide("HEAT")
 
+    inst.scrapbook_specialinfo = "BEEFALO"
+
     inst.MiniMapEntity:SetIcon("beefalo_domesticated.png")
     inst.MiniMapEntity:SetEnabled(false)
 
     inst:AddTag("beefalo")
     inst:AddTag("animal")
     inst:AddTag("largecreature")
+    inst:AddTag("ipecacsusceptible")
 
     --bearded (from beard component) added to pristine state for optimization
     inst:AddTag("bearded")

@@ -53,6 +53,8 @@ local function fn()
         return inst
     end
 
+    inst.scrapbook_animoffsetx = 30
+
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(TUNING.CANE_DAMAGE)
 

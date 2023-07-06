@@ -13,6 +13,7 @@ local assets =
     Asset("ANIM", "anim/player_idles_wolfgang_mighty.zip"),
 
     Asset("SOUND", "sound/wolfgang.fsb"),
+    Asset("SCRIPT", "scripts/prefabs/skilltree_wolfgang.lua"),    
 }
 
 local start_inv = {}
@@ -23,6 +24,7 @@ end
 local prefabs =
 {
     "wolfgang_mighty_fx",
+    "wolfgang_coach_buff",
 }
 prefabs = FlattenTree({ prefabs, start_inv }, true)
 
@@ -129,6 +131,7 @@ local function OnEquip(inst, data)
     if item and item:HasTag("heavy") then
         inst.components.mightiness:Pause()
     end
+    inst:RecalculatePlanarDamage()
 end
 
 local function OnUnequip(inst, data)
@@ -136,6 +139,11 @@ local function OnUnequip(inst, data)
     if item and item:HasTag("heavy") then
         inst.components.mightiness:Resume()
     end
+    inst:RecalculatePlanarDamage()
+end
+
+local function mightychange(inst, data)
+    inst:RecalculatePlanarDamage()
 end
 
 local function OnDoingWork(inst, data)
@@ -143,7 +151,19 @@ local function OnDoingWork(inst, data)
 		local workable = data.target.components.workable
 		if workable ~= nil then
 			if inst.components.mightiness:IsMighty() then
-				if workable.workleft > 0 and math.random() >= TUNING.MIGHTY_WORK_CHANCE then
+
+                local chance = TUNING.MIGHTY_WORK_CHANCE
+
+                if inst.components.skilltreeupdater:IsActivated("wolfgang_critwork_3") then
+                    chance = TUNING.SKILLS.WOLFGANG_MIGHTY_WORK_CHANCE_3
+                elseif inst.components.skilltreeupdater:IsActivated("wolfgang_critwork_2") then
+                   chance = TUNING.SKILLS.WOLFGANG_MIGHTY_WORK_CHANCE_2
+                elseif inst.components.skilltreeupdater:IsActivated("wolfgang_critwork_1") then
+                    chance =TUNING.SKILLS.WOLFGANG_MIGHTY_WORK_CHANCE_1
+                end
+
+				if workable.workleft > 0 and math.random() >= chance then
+                    inst.SoundEmitter:PlaySound("meta2/wolfgang/critical_work")
 					workable.workleft = 0
 				end
 			end
@@ -274,6 +294,33 @@ local function updatebell(inst, dt)
         end
     end
 
+    local WINDOW_TOP = 0.53
+    local WINDO_BOTTOM = 0.47
+    if inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
+        local busy = inst:HasTag("busy")
+
+        local percent = inst.bell_percent
+        local level  = inst.player_classified.inmightygym:value() + 1
+
+        local success_min = TUNING["BELL_SUCCESS_MIN_"..level]
+        local success_max = TUNING["BELL_SUCCESS_MAX_"..level]
+
+        local success_mid_min = TUNING["BELL_MID_SUCCESS_MIN_"..level]
+        local success_mid_max = TUNING["BELL_MID_SUCCESS_MAX_"..level]
+
+        if (oldpercent >WINDOW_TOP or oldpercent < WINDO_BOTTOM) and inst.bell_percent <= WINDOW_TOP and inst.bell_percent >= WINDO_BOTTOM then        
+            if not busy and success_min and percent >= success_min and percent <= success_max then
+              SendRPCToServer(RPC.autogym, true)
+              inst:PushEvent("auto_success", {perfect=true})
+              inst.bell:ding("perfect")
+            elseif not busy and percent >= success_mid_min and percent <= success_mid_max then
+               SendRPCToServer(RPC.autogym)
+               inst:PushEvent("auto_success")
+               inst.bell:ding()
+            end            
+        end
+    end
+
     if playsound then
         inst.SoundEmitter:PlaySound("wolfgang2/common/gym/rhythm")
     end
@@ -333,7 +380,7 @@ local function CalcLiftAction(inst)
 end
 
 local function LeftClickPicker(inst, target, position)
-    if inst:HasTag("ingym") then
+    if inst:HasTag("ingym") and not inst.components.skilltreeupdater:IsActivated("wolfgang_autogym") then
         if inst ~= ThePlayer then
             if CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED_PERFECT or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_SUCCEED or CLIENT_REQUESTED_ACTION == ACTIONS.LIFT_GYM_FAIL then
                 return inst.components.playeractionpicker:SortActionList({ CLIENT_REQUESTED_ACTION })
@@ -346,7 +393,7 @@ local function LeftClickPicker(inst, target, position)
 end
 
 local function RightClickPicker(inst, target, position)
-    if inst:HasTag("ingym") then
+    if inst:HasTag("ingym") and not inst:HasTag("busy") then
         return inst.components.playeractionpicker:SortActionList({ ACTIONS.LEAVE_GYM }, inst:GetPosition())
     end
     return {}
@@ -393,6 +440,10 @@ local function CreateDing()
 
 	inst.AnimState:SetBank("mighty_gym")
 	inst.AnimState:SetBuild("mighty_gym")
+    local player = ThePlayer
+    if player and player.gym_skin and player.gym_skin ~= "" then
+        inst.AnimState:SetSkin(player.gym_skin, "mighty_gym")
+    end
 	inst.AnimState:PlayAnimation("gym_bell_fx")
 	inst.AnimState:SetFinalOffset(1)
 
@@ -413,7 +464,7 @@ local function ding(inst, success)
 	--"perfect" leave as (1, 1, 1, 1)
 end
 
-local function CreateMightyGymBell()
+local function CreateMightyGymBell(player)
 	local inst = CreateEntity()
 
 	inst.entity:AddTransform()
@@ -426,6 +477,9 @@ local function CreateMightyGymBell()
 
 	inst.AnimState:SetBank("mighty_gym")
 	inst.AnimState:SetBuild("mighty_gym")
+    if player.gym_skin and player.gym_skin ~= "" then
+        inst.AnimState:SetSkin(player.gym_skin, "mighty_gym")
+    end
 	inst.AnimState:PlayAnimation("meter_move")
 	inst.AnimState:SetPercent("meter_move", 0)
 	inst.AnimState:SetFinalOffset(2)
@@ -440,7 +494,7 @@ end
 local function OnGymCheck(inst, data)
     if data.ingym > 1 then
 		if inst == ThePlayer and inst.bell == nil then
-			inst.bell = CreateMightyGymBell()
+			inst.bell = CreateMightyGymBell(inst)
 			inst.bell.entity:SetParent(inst.entity)
         end
 
@@ -459,6 +513,33 @@ local function OnGymCheck(inst, data)
         inst.components.playeractionpicker.rightclickoverride = nil
         inst.components.playeractionpicker.pointspecialactionsfn = nil
 		inst.components.playercontroller.actionbuttonoverride = nil
+    end
+end
+
+local function RecalculatePlanarDamage(inst)
+    local item = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+    if item and item.components.planardamage and item.components.planardamage:GetDamage() > 0 and inst.components.mightiness:IsMighty() then
+        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_1") then
+            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_1, "wolfgang_planardamage_1")
+        end
+        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_2") then
+            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_2, "wolfgang_planardamage_2")
+        end
+        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_3") then
+            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_3, "wolfgang_planardamage_3")
+        end
+        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_4") then
+            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_4, "wolfgang_planardamage_4")
+        end
+        if inst.components.skilltreeupdater:IsActivated("wolfgang_planardamage_5") then
+            inst.components.planardamage:AddBonus(inst, TUNING.SKILLS.WOLFGANG_PLANARDAMAGE_5, "wolfgang_planardamage_5")
+        end
+    else
+        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_1")
+        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_2")
+        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_3")
+        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_4")
+        inst.components.planardamage:RemoveBonus(inst, "wolfgang_planardamage_5")
     end
 end
 
@@ -535,6 +616,7 @@ local function master_postinit(inst)
         inst:AddComponent("dumbbelllifter")
         inst:AddComponent("strongman")
         inst:AddComponent("expertsailor")
+        inst:AddComponent("coach")
 
         if inst.components.efficientuser == nil then
             inst:AddComponent("efficientuser")
@@ -549,12 +631,75 @@ local function master_postinit(inst)
 		inst:ListenForEvent("on_lower_sail_boost", OnSailBoost)
 		inst:ListenForEvent("onterraform", OnTerraform)
 	    inst:ListenForEvent("onhitother", OnHitOther)
-
+        inst:ListenForEvent("mightiness_statechange", mightychange)
 
         inst.OnLoad = onload
         inst.OnNewSpawn = onload
-        
+        inst.RecalculatePlanarDamage = RecalculatePlanarDamage
     end
 end
 
-return MakePlayerCharacter("wolfgang", prefabs, assets, common_postinit, master_postinit)
+local BUFF_DURATION = 10
+
+local function OnKillBuff(inst)
+    inst.components.debuff:Stop()
+end
+
+local function OnAttached(inst, target)
+    inst.entity:SetParent(target.entity)
+    inst.Transform:SetPosition(0, 0, 0) --in case of loading
+    inst:ListenForEvent("death", function()
+        inst.components.debuff:Stop()
+    end, target)
+
+    inst.bufftask = inst:DoTaskInTime(BUFF_DURATION, OnKillBuff)
+
+    if target ~= nil and target:IsValid() and target.components.combat ~= nil then
+        local mult = 1.5
+        target.components.combat.externaldamagemultipliers:SetModifier(inst, mult)
+    end
+end
+
+local function OnDetached(inst, target)    
+    if target ~= nil and target:IsValid() and target.components.combat ~= nil then
+        target.components.combat.externaldamagemultipliers:RemoveModifier(inst)
+    end
+    inst:Remove()
+end
+
+local function OnExtendedBuff(inst)
+    if inst.bufftask ~= nil then
+        inst.bufftask:Cancel()
+        inst.bufftask = inst:DoTaskInTime(BUFF_DURATION, OnKillBuff)
+    end
+end
+
+local function bufffn()
+    local inst = CreateEntity()
+
+    if not TheWorld.ismastersim then
+        --Not meant for client!
+        inst:DoTaskInTime(0, inst.Remove)
+        return inst
+    end
+
+    inst.entity:AddTransform()
+
+    --[[Non-networked entity]]
+    --inst.entity:SetCanSleep(false)
+    inst.entity:Hide()
+    inst.persists = false
+
+    inst:AddTag("CLASSIFIED")
+
+    inst:AddComponent("debuff")
+    inst.components.debuff:SetAttachedFn(OnAttached)
+    inst.components.debuff:SetDetachedFn(OnDetached)
+    inst.components.debuff:SetExtendedFn(OnExtendedBuff)
+    inst.components.debuff.keepondespawn = true
+
+    return inst
+end
+
+return MakePlayerCharacter("wolfgang", prefabs, assets, common_postinit, master_postinit),
+        Prefab("wolfgang_coach_buff", bufffn, nil, prefabs)

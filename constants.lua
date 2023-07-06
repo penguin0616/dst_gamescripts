@@ -1771,6 +1771,12 @@ MATERIALS =
 	DREADSTONE = "dreadstone",
 }
 
+FORGEMATERIALS =
+{
+	LUNARPLANT = "lunarplant",
+	VOIDCLOTH = "voidcloth",
+}
+
 UPGRADETYPES =
 {
     DEFAULT = "default",

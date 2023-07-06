@@ -25,6 +25,8 @@ local function MakeSpice(name)
 
         inst.entity:SetPristine()
 
+        inst.scrapbook_adddeps = {"portableblender_item"}
+
         if not TheWorld.ismastersim then
             return inst
         end

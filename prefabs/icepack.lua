@@ -6,7 +6,7 @@ local assets =
 
 local prefabs =
 {
-    "ash",
+
 }
 
 local function onequip(inst, owner)
@@ -49,6 +49,8 @@ local function fn()
     inst.foleysound = "dontstarve/movement/foley/backpack"
 
     MakeInventoryFloatable(inst, "small", 0.15)
+
+    inst.scrapbook_specialinfo = "ICEPACK"
 
     inst.entity:SetPristine()
 

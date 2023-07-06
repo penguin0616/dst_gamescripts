@@ -615,3 +615,12 @@ function GetScrapbookIconAtlas(imagename)
             or TheSim:AtlasContains(images2, imagename) and images2
             or nil
 end
+
+
+function GetSkilltreeBG(imagename)
+    local images1 = "images/skilltree2.xml"
+    local images2 = "images/skilltree3.xml"
+    return TheSim:AtlasContains(images1, imagename) and images1
+            or TheSim:AtlasContains(images2, imagename) and images2
+            or nil
+end

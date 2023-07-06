@@ -46,6 +46,7 @@ local assets =
     Asset("MINIMAP_IMAGE", "woodie_1"), --beaver
     Asset("MINIMAP_IMAGE", "woodie_2"), --moose
     Asset("MINIMAP_IMAGE", "woodie_3"), --goose
+    Asset("SCRIPT", "scripts/prefabs/skilltree_woodie.lua"),    
 }
 
 local prefabs =
@@ -63,6 +64,7 @@ local prefabs =
     "weremoose_transform2_fx",
     "weremoose_revert_fx",
     "weremoose_shock_fx",
+	"weremoose_smash_fx",
     --
     "weregoose_transform_fx",
     "weregoose_shock_fx",
@@ -143,8 +145,12 @@ end
 local function BeaverActionString(inst, action)
     return (action.action == ACTIONS.MOUNT_PLANK and STRINGS.ACTIONS.MOUNT_PLANK)
         or (action.action == ACTIONS.ABANDON_SHIP and STRINGS.ACTIONS.ABANDON_SHIP)
+        or (action.action == ACTIONS.USE_WEREFORM_SKILL and STRINGS.ACTIONS.USE_WEREFORM_SKILL.BEAVER)
         or STRINGS.ACTIONS.GNAW
-        , (action.action == ACTIONS.ABANDON_SHIP) or nil
+        ,
+        (action.action == ACTIONS.ABANDON_SHIP)
+        or (action.action == ACTIONS.USE_WEREFORM_SKILL)
+        or nil
 end
 
 local function GetBeaverAction(inst, target)
@@ -204,7 +210,7 @@ local function BeaverLeftClickPicker(inst, target)
     end
 end
 
-local function BeaverRightClickPicker(inst, target)
+local function BeaverRightClickPicker(inst, target, pos)
     return target ~= nil
         and target ~= inst
         and (   (   inst:HasTag("on_walkable_plank") and
@@ -219,7 +225,23 @@ local function BeaverRightClickPicker(inst, target)
                     inst.components.playeractionpicker:SortActionList({ ACTIONS.DIG }, target, nil)
                 )
             )
-        or nil
+        or
+        (   not inst.components.playercontroller.isclientcontrollerattached and
+            inst.components.skilltreeupdater:HasSkillTag("beaver_epic") and
+            inst.components.playeractionpicker:SortActionList({ ACTIONS.USE_WEREFORM_SKILL },target or pos, nil)
+        )
+end
+
+local function BeaverAndGoosePointSpecialActions(inst, pos, useitem, right)
+    return
+        right and
+        inst.components.playercontroller:IsEnabled() and
+        (
+            (inst:HasTag("beaver") and inst.components.skilltreeupdater:HasSkillTag("beaver_epic"))
+            or
+            (inst:HasTag("weregoose") and inst.components.skilltreeupdater:HasSkillTag("goose_epic"))
+        )
+        and { ACTIONS.USE_WEREFORM_SKILL } or {}
 end
 
 local function MooseLeftClickPicker(inst, target)
@@ -247,7 +269,7 @@ local function MooseRightClickPicker(inst, target, pos)
 					inst.components.playeractionpicker:SortActionList({ ACTIONS.ABANDON_SHIP }, target, nil)
 				)
 				or
-				(	not inst.components.playercontroller.isclientcontrollerattached and
+				(	(not inst.components.playercontroller.isclientcontrollerattached and not inst:HasTag("tackling")) and
 					inst.components.playeractionpicker:SortActionList({ ACTIONS.TACKLE }, target or pos, nil)
 				)
 			)
@@ -255,7 +277,18 @@ local function MooseRightClickPicker(inst, target, pos)
 end
 
 local function MoosePointSpecialActions(inst, pos, useitem, right)
-    return right and inst.components.playercontroller:IsEnabled() and { ACTIONS.TACKLE } or {}
+    return right and inst.components.playercontroller:IsEnabled() and not inst:HasTag("tackling") and { ACTIONS.TACKLE } or {}
+end
+
+local function GooseActionString(inst, action)
+    return STRINGS.ACTIONS.USE_WEREFORM_SKILL.GOOSE, true
+end
+
+local function GooseRightClickPicker(inst, target, pos)
+    return
+        not inst.components.playercontroller.isclientcontrollerattached and
+        inst.components.skilltreeupdater:HasSkillTag("goose_epic") and
+        inst.components.playeractionpicker:SortActionList({ ACTIONS.USE_WEREFORM_SKILL }, target or pos, nil)
 end
 
 local function Empty()
@@ -317,7 +350,7 @@ local function SetWereActions(inst, mode)
         if inst.components.playeractionpicker ~= nil then
             inst.components.playeractionpicker.leftclickoverride = BeaverLeftClickPicker
             inst.components.playeractionpicker.rightclickoverride = BeaverRightClickPicker
-            inst.components.playeractionpicker.pointspecialactionsfn = nil
+            inst.components.playeractionpicker.pointspecialactionsfn = BeaverAndGoosePointSpecialActions
         end
         EnableReticule(inst, false)
     elseif mode == WEREMODES.MOOSE then
@@ -332,14 +365,14 @@ local function SetWereActions(inst, mode)
         end
         EnableReticule(inst, true)
     else--if mode == WEREMODES.GOOSE then
-        inst.ActionStringOverride = nil
+        inst.ActionStringOverride = GooseActionString
         if inst.components.playercontroller ~= nil then
             inst.components.playercontroller.actionbuttonoverride = Empty
         end
         if inst.components.playeractionpicker ~= nil then
             inst.components.playeractionpicker.leftclickoverride = Empty
-            inst.components.playeractionpicker.rightclickoverride = Empty
-            inst.components.playeractionpicker.pointspecialactionsfn = nil
+            inst.components.playeractionpicker.rightclickoverride = GooseRightClickPicker
+            inst.components.playeractionpicker.pointspecialactionsfn = BeaverAndGoosePointSpecialActions
         end
         EnableReticule(inst, false)
     end
@@ -379,8 +412,8 @@ local function SetWereMode(inst, mode, skiphudfx)
             if inst.components.locomotor ~= nil then
                 inst.components.locomotor.runspeed =
                     (mode == WEREMODES.BEAVER and TUNING.BEAVER_RUN_SPEED) or
-                    (mode == WEREMODES.MOOSE and TUNING.WEREMOOSE_RUN_SPEED) or
-                    (--[[mode == WEREMODES.GOOSE and]] TUNING.WEREGOOSE_RUN_SPEED)
+                    (mode == WEREMODES.MOOSE and (inst:HasTag("fastermoose") and TUNING.SKILLS.WOODIE.MOOSE_IMPROVED_RUN_SPEED or TUNING.WEREMOOSE_RUN_SPEED)) or
+                    (--[[mode == WEREMODES.GOOSE and]] inst:HasTag("fastergoose") and TUNING.SKILLS.WOODIE.GOOSE_IMPROVED_RUN_SPEED or TUNING.WEREGOOSE_RUN_SPEED)
             end
         end
     else
@@ -419,10 +452,42 @@ local function OnWereModeDirty(inst)
     end
 end
 
+local function UpdateClientCameraOffset(inst)
+    local x, y, z = inst.AnimState:GetSymbolPosition("torso")
+
+    TheCamera:SetOffset(Vector3(0, y + 1.5, 0))
+end
+
+local function OnGooseFlyingDirty(inst)
+    if not (ThePlayer ~= nil and inst == ThePlayer) then
+        return
+    end
+
+    if inst._weregooseflying:value() and inst:HasTag("weregoose") then
+        TheMixer:PushMix("flying")
+        inst.updatecameraoffsettask = inst:DoPeriodicTask(FRAMES, UpdateClientCameraOffset)
+    else
+        TheMixer:PopMix("flying")
+
+        if inst.updatecameraoffsettask ~= nil then
+            inst.updatecameraoffsettask:Cancel()
+            inst.updatecameraoffsettask = nil
+        end
+
+        TheCamera:SetDefaultOffset()
+    end
+end
+
+local function SetGooseFlying(inst, bool)
+    inst._weregooseflying:set(bool)
+    OnGooseFlyingDirty(inst)
+end
+
 local function OnPlayerDeactivated(inst)
     inst:RemoveEventCallback("onremove", OnPlayerDeactivated)
     if not TheWorld.ismastersim then
         inst:RemoveEventCallback("weremodedirty", OnWereModeDirty)
+        inst:RemoveEventCallback("weregooseflyingdirty", OnGooseFlyingDirty)
     end
     TheFocalPoint.SoundEmitter:KillSound("beavermusic")
 end
@@ -440,7 +505,9 @@ local function OnPlayerActivated(inst)
     inst:ListenForEvent("onremove", OnPlayerDeactivated)
     if not TheWorld.ismastersim then
         inst:ListenForEvent("weremodedirty", OnWereModeDirty)
+        inst:ListenForEvent("weregooseflyingdirty", OnGooseFlyingDirty)
     end
+    OnGooseFlyingDirty(inst)
     OnWereModeDirty(inst)
 end
 
@@ -479,7 +546,7 @@ local function OnResetBeard(inst)
     inst.components.beard.bits = IsWereMode(inst.weremode:value()) and 0 or 3
 end
 
-local function WereSanityFn()--inst, dt)
+local function WereSanityFn()
     return TUNING.WERE_SANITY_PENALTY
 end
 
@@ -499,20 +566,28 @@ local function OnGooseRunningOver(inst, CalculateWerenessDrainRate)
 end
 
 local function CalculateWerenessDrainRate(inst, mode, isfullmoon)
+    local skill_level = inst.components.skilltreeupdater:CountSkillTag("weremeter")
+    local skill_mod = skill_level > 0 and TUNING.SKILLS.WOODIE.WEREMETER[skill_level] or nil
+
+    local isfastdecaying = nil
+
     local t = isfullmoon and TUNING.WERE_FULLMOON_DRAIN_TIME_MULTIPLIER or 1
+
     if mode == WEREMODES.BEAVER then
         t = t * TUNING.BEAVER_DRAIN_TIME
         if inst._beaverworkinglevel ~= nil then
             t = t * (inst._beaverworkinglevel > 1 and TUNING.BEAVER_WORKING_DRAIN_TIME_MULTIPLIER2 or TUNING.BEAVER_WORKING_DRAIN_TIME_MULTIPLIER1)
+            isfastdecaying = inst._beaverworkinglevel <= 1
         end
     elseif mode == WEREMODES.MOOSE then
         t = t * TUNING.WEREMOOSE_DRAIN_TIME
         if inst._moosefightinglevel ~= nil then
             t = t * (inst._moosefightinglevel > 1 and TUNING.WEREMOOSE_FIGHTING_DRAIN_TIME_MULTIPLIER2 or TUNING.WEREMOOSE_FIGHTING_DRAIN_TIME_MULTIPLIER1)
+            isfastdecaying = inst._moosefightinglevel <= 1
         end
     else--if mode == WEREMODES.GOOSE then
         t = t * TUNING.WEREGOOSE_DRAIN_TIME
-        if inst.sg:HasStateTag("moving") then
+        if inst.sg:HasStateTag("moving") or inst.sg:HasStateTag("flying") then
             if inst._gooserunning ~= nil then
                 inst._gooserunning:Cancel()
             end
@@ -521,8 +596,14 @@ local function CalculateWerenessDrainRate(inst, mode, isfullmoon)
         end
         if inst._gooserunninglevel ~= nil then
             t = t * (inst._gooserunninglevel > 1 and TUNING.WEREGOOSE_RUN_DRAIN_TIME_MULTIPLIER2 or TUNING.WEREGOOSE_RUN_DRAIN_TIME_MULTIPLIER1)
+            isfastdecaying = inst._gooserunninglevel <= 1
         end
     end
+
+    if skill_mod ~= nil and (inst.sg:HasStateTag("moving") or isfastdecaying == false) then
+        t = t * skill_mod
+    end
+
     return -100 / t
 end
 
@@ -572,7 +653,8 @@ local function OnIsFullmoon(inst, isfullmoon)
         local pct = inst.components.wereness:GetPercent()
         if pct > 0 then
             inst.components.wereness:SetPercent(1)
-        else
+
+        elseif not inst:HasTag("player_lunar_aligned") then
             inst.components.wereness:SetWereMode("fullmoon")
             inst.components.wereness:SetPercent(1, true)
             inst.components.wereness:StartDraining()
@@ -658,20 +740,43 @@ local function OnBeaverFighting(inst, data)
     end
 end
 
+local function SetUpGroundPounder(inst)
+    local num_rings = 3
+    inst.components.groundpounder.numRings = num_rings
+    inst.components.groundpounder.radiusStepDistance = 3
+    inst.components.groundpounder.damageRings = num_rings
+    inst.components.groundpounder.destructionRings = num_rings
+    inst.components.groundpounder.platformPushingRings = num_rings - 1
+    inst.components.groundpounder.inventoryPushingRings = num_rings - 2
+    inst.components.groundpounder.workefficiency = 5
+end
+
 local function SetWereWorker(inst, mode)
     inst:RemoveEventCallback("working", onworked)
 
     if mode == WEREMODES.BEAVER then
+        if inst.components.skilltreeupdater:HasSkillTag("recoilimmune") then
+            inst:AddTag("toughworker")
+        end
+
         if inst.components.worker == nil then
+            local modifiers = TUNING.SKILLS.WOODIE.BEAVER_WORK_MULTIPLIER
+
+            local mine_buff = inst.components.skilltreeupdater:IsActivated("woodie_curse_beaver_1")
+            local chop_buff = inst.components.skilltreeupdater:IsActivated("woodie_curse_beaver_2")
+
             inst:AddComponent("worker")
-            inst.components.worker:SetAction(ACTIONS.CHOP, 4)
-            inst.components.worker:SetAction(ACTIONS.MINE, .5)
-            inst.components.worker:SetAction(ACTIONS.DIG, .5)
+            inst.components.worker:SetAction(ACTIONS.CHOP,  4    * (chop_buff and modifiers.CHOP or 1))
+            inst.components.worker:SetAction(ACTIONS.MINE,   .5  * (mine_buff and modifiers.MINE or 1))
+            inst.components.worker:SetAction(ACTIONS.DIG,    .5)
             inst.components.worker:SetAction(ACTIONS.HAMMER, .25)
             inst:ListenForEvent("working", OnBeaverWorking)
             inst:ListenForEvent("onattackother", OnBeaverFighting)
             inst:ListenForEvent("onmissother", OnBeaverFighting)
             OnBeaverWorking(inst)
+
+            inst:AddComponent("groundpounder")
+            SetUpGroundPounder(inst)
         end
     else
         if inst.components.worker ~= nil then
@@ -685,6 +790,9 @@ local function SetWereWorker(inst, mode)
                 inst._beaverworkinglevel = nil
             end
         end
+
+        inst:RemoveComponent("groundpounder")
+        inst:RemoveTag("toughworker")
 
         if mode == WEREMODES.NONE and not inst:HasTag("playghost") then
             inst:ListenForEvent("working", onworked)
@@ -720,21 +828,57 @@ local function OnMooseFighting(inst, data)
     end
 end
 
+local function OnDodgeAttack(inst)
+    local fx = SpawnPrefab("weregoose_transform_fx")
+    
+    fx.Transform:SetPosition(inst.Transform:GetWorldPosition())
+    fx.Transform:SetScale(1.3, 1.3, 1.3)
+end
+
 local function SetWereFighter(inst, mode)
     inst:RemoveEventCallback("onattackother", OnMooseFighting)
     inst:RemoveEventCallback("onmissother", OnMooseFighting)
     inst:RemoveEventCallback("attacked", OnMooseFighting)
     inst:RemoveEventCallback("blocked", OnMooseFighting)
+
+    inst:RemoveComponent("attackdodger")
+
     if mode == WEREMODES.MOOSE then
         inst:ListenForEvent("onattackother", OnMooseFighting)
         inst:ListenForEvent("onmissother", OnMooseFighting)
         inst:ListenForEvent("attacked", OnMooseFighting)
         inst:ListenForEvent("blocked", OnMooseFighting)
         ResetMooseFightingLevel(inst)
-    elseif inst._moosefighting ~= nil then
-        inst._moosefighting:Cancel()
-        inst._moosefighting = nil
-        inst._moosefightinglevel = nil
+
+        local skilltreeupdater = inst.components.skilltreeupdater
+
+        local healthregen_skill = skilltreeupdater:IsActivated("woodie_curse_moose_2")
+        local planardefense_skill = skilltreeupdater:IsActivated("woodie_curse_epic_moose")
+
+        if healthregen_skill then
+            local regendata = TUNING.SKILLS.WOODIE.MOOSE_HEALTH_REGEN
+            inst.components.health:StartRegen(regendata.amount, regendata.period)
+        end
+
+        if planardefense_skill then
+            inst.components.planardefense:AddBonus(inst, TUNING.SKILLS.WOODIE.MOOSE_PLANAR_DEF, "weremoose_skill") 
+        end
+
+    elseif mode == WEREMODES.GOOSE then
+        inst:AddComponent("attackdodger")
+        inst.components.attackdodger:SetCooldownTime(TUNING.SKILLS.WOODIE.GOOSE_DODGE_COOLDOWN_TIME)
+        inst.components.attackdodger:SetOnDodgeFn(OnDodgeAttack)
+    end
+
+    if mode ~= WEREMODES.MOOSE then
+        if inst._moosefighting ~= nil then
+            inst._moosefighting:Cancel()
+            inst._moosefighting = nil
+            inst._moosefightinglevel = nil
+        end
+
+        inst.components.planardefense:RemoveBonus(inst, "weremoose_skill")
+        inst.components.health:StopRegen()
     end
 end
 
@@ -745,6 +889,7 @@ local GOOSE_FLAP_STATES =
     ["idle"] = true,
     ["run_start"] = true,
     ["run"] = true,
+    ["weregoose_takeoff"] = true,
     --["run_stop"] = true,
 }
 local GOOSE_HONK_STATES =
@@ -753,6 +898,7 @@ local GOOSE_HONK_STATES =
     ["run_start"] = true,
     ["run"] = true,
     ["run_stop"] = true,
+    ["weregoose_takeoff"] = true,
 }
 
 local function DoRipple(inst)
@@ -782,6 +928,12 @@ local function OnNewGooseState(inst, data)
     elseif not inst.SoundEmitter:PlayingSound("honk") then
         inst.SoundEmitter:PlaySound("dontstarve/characters/woodie/goose/honk_LP", "honk")
     end
+end
+
+local function GetGooseWaterproofness(inst)
+    local waterproof_skill = inst.components.skilltreeupdater:IsActivated("woodie_curse_goose_2")
+
+    return waterproof_skill and TUNING.WATERPROOFNESS_ABSOLUTE or TUNING.WATERPROOFNESS_LARGE
 end
 
 local function SetWereSounds(inst, mode)
@@ -906,6 +1058,20 @@ local function CustomSetSkinMode(inst, skinmode)
     end
 end
 
+local function UpdateShadowDominanceState(inst)
+    local wereform = inst:HasTag("wereplayer")
+
+    if wereform and inst:HasTag("player_shadow_aligned") then
+        inst:AddTag("inherentshadowdominance")
+        inst:AddTag("shadowdominance")
+    else
+        inst:RemoveTag("inherentshadowdominance")
+
+        -- This's only safe to do because wereforms and ghosts can't equip items!
+        inst:RemoveTag("shadowdominance")
+    end
+end
+
 local function onbecamehuman(inst)
     if inst.prefab == nil then
         --when entity is being spawned
@@ -926,7 +1092,8 @@ local function onbecamehuman(inst)
     if not GetGameModeProperty("no_hunger") then
         inst.components.hunger:Resume()
         if IsWereMode(inst.weremode:value()) then
-            inst.components.hunger:SetPercent(0, true)
+            local hungerpercent = inst:HasTag("cursemaster") and TUNING.SKILLS.WOODIE.CURSE_MASTER_MIN_HUNGER or 0
+            inst.components.hunger:SetPercent(hungerpercent, true)
         end
     end
     inst.components.temperature.inherentinsulation = 0
@@ -951,6 +1118,8 @@ local function onbecamehuman(inst)
     --[[if inst.components.playercontroller ~= nil then
         inst.components.playercontroller:SetCanUseMap(true)
     end]]
+
+    UpdateShadowDominanceState(inst)
 
     SetWereDrowning(inst, WEREMODES.NONE)
     SetWereRunner(inst, WEREMODES.NONE)
@@ -1007,6 +1176,8 @@ local function onbecamebeaver(inst)
         inst.components.playercontroller:SetCanUseMap(false)
     end]]
 
+    UpdateShadowDominanceState(inst)
+
     SetWereDrowning(inst, WEREMODES.BEAVER)
     SetWereRunner(inst, WEREMODES.BEAVER)
     SetWereWorker(inst, WEREMODES.BEAVER)
@@ -1025,7 +1196,7 @@ local function onbecamemoose(inst)
 
     inst.MiniMapEntity:SetIcon("woodie_2.png")
 
-    inst.components.locomotor.runspeed = TUNING.WEREMOOSE_RUN_SPEED
+    inst.components.locomotor.runspeed = inst:HasTag("fastermoose") and TUNING.SKILLS.WOODIE.MOOSE_IMPROVED_RUN_SPEED or TUNING.WEREMOOSE_RUN_SPEED
     inst.components.combat:SetDefaultDamage(TUNING.WEREMOOSE_DAMAGE)
     inst.components.combat.bonusdamagefn = nil
     inst.components.health:SetAbsorptionAmount(TUNING.WEREMOOSE_ABSORPTION)
@@ -1062,6 +1233,8 @@ local function onbecamemoose(inst)
         inst.components.playercontroller:SetCanUseMap(false)
     end]]
 
+    UpdateShadowDominanceState(inst)
+
     SetWereDrowning(inst, WEREMODES.MOOSE)
     SetWereRunner(inst, WEREMODES.MOOSE)
     SetWereWorker(inst, WEREMODES.MOOSE)
@@ -1080,7 +1253,7 @@ local function onbecamegoose(inst)
 
     inst.MiniMapEntity:SetIcon("woodie_3.png")
 
-    inst.components.locomotor.runspeed = TUNING.WEREGOOSE_RUN_SPEED
+    inst.components.locomotor.runspeed = inst:HasTag("fastergoose") and TUNING.SKILLS.WOODIE.GOOSE_IMPROVED_RUN_SPEED or TUNING.WEREGOOSE_RUN_SPEED
     inst.components.combat:SetDefaultDamage(0)
     inst.components.combat.bonusdamagefn = nil
     inst.components.health:SetAbsorptionAmount(0)
@@ -1094,7 +1267,7 @@ local function onbecamegoose(inst)
     end
     inst.components.temperature.inherentinsulation = TUNING.INSULATION_LARGE
     inst.components.temperature.inherentsummerinsulation = TUNING.INSULATION_LARGE
-    inst.components.moisture:SetInherentWaterproofness(TUNING.WATERPROOFNESS_LARGE)
+    inst.components.moisture:SetInherentWaterproofness(GetGooseWaterproofness(inst))
     inst.components.talker:IgnoreAll("becamewere")
     inst.components.catcher:SetEnabled(false)
     inst.components.sandstormwatcher:SetSandstormSpeedMultiplier(1)
@@ -1116,6 +1289,8 @@ local function onbecamegoose(inst)
     --[[if inst.components.playercontroller ~= nil then
         inst.components.playercontroller:SetCanUseMap(false)
     end]]
+
+    UpdateShadowDominanceState(inst)
 
     SetWereDrowning(inst, WEREMODES.GOOSE)
     SetWereRunner(inst, WEREMODES.GOOSE)
@@ -1172,6 +1347,7 @@ local function onnewstate(inst)
             onwerenesschange(inst)
         end
     end
+
     if IsWereMode(inst.weremode:value()) then
         inst.components.wereness:SetDrainRate(CalculateWerenessDrainRate(inst, inst.weremode:value(), TheWorld.state.isfullmoon))
     end
@@ -1258,8 +1434,11 @@ local function OnTackleCollide(inst, other)
     SpawnPrefab("round_puff_fx_hi").Transform:SetPosition(x1 + (x - x1) * r, 0, z1 + (z - z1) * r)
     inst.SoundEmitter:PlaySound("dontstarve/characters/woodie/moose/bounce")
     ShakeAllCameras(CAMERASHAKE.FULL, .6, .025, .4, other, 20)
+
     if inst.components.grogginess ~= nil then
-        inst.components.grogginess:MaximizeGrogginess()
+        local grogginess_skill = inst.components.skilltreeupdater:IsActivated("woodie_curse_moose_1")
+
+        inst.components.grogginess:SetPercent(grogginess_skill and TUNING.SKILLS.WOODIE.MOOSE_REDUCED_GROGGINESS or 0.99)
     end
 end
 
@@ -1352,6 +1531,41 @@ end
 
 --------------------------------------------------------------------------
 
+local function IsNotArchives(map, x, y, z)
+    -- Don't land inside the archives, but you can fly from inside the archives.
+    return map:IsLandTileAtPoint(x, y, z) and not map:NodeAtPointHasTag(x, y, z, "nocavein")
+end
+
+local function UseWereFormSkill(inst, act)
+    local weremode = WEREMODE_NAMES[inst.weremode:value()]
+    local delta = weremode ~= nil and TUNING.SKILLS.WOODIE.WERESKILL_WERENESS_CONSUMPTION[string.upper(weremode)] or nil
+
+    if delta ~= nil and inst.components.wereness ~= nil then
+        inst.components.wereness:DoDelta(delta)
+    end
+
+    if inst:HasTag("beaver") then
+        if inst.components.groundpounder ~= nil then
+            inst.components.groundpounder:GroundPound()
+        end
+
+    elseif inst:HasTag("weregoose") and TheWorld ~= nil then
+        local pos = TheWorld.Map:FindRandomPointWithFilter(50, IsNotArchives)
+
+        if pos ~= nil then
+            inst.Physics:Teleport(pos.x, 0, pos.z)
+            inst:ResetMinimapOffset()
+            inst:SnapCamera()
+
+            if TheWorld and TheWorld.components.walkableplatformmanager then -- NOTES(JBK): Workaround for teleporting too far causing the client to lose sync.
+                TheWorld.components.walkableplatformmanager:PostUpdate(0)
+            end
+        end
+    end
+end
+
+--------------------------------------------------------------------------
+
 local function common_postinit(inst)
     inst:AddTag("woodcutter")
     inst:AddTag("polite")
@@ -1378,6 +1592,7 @@ local function common_postinit(inst)
         inst.GetWerenessDrainRate = GetWerenessDrainRate
 
         inst.weremode = net_tinybyte(inst.GUID, "woodie.weremode", "weremodedirty")
+        inst._weregooseflying = net_bool(inst.GUID, "woodie._weregooseflying", "weregooseflyingdirty")
 
         inst:ListenForEvent("playeractivated", OnPlayerActivated)
         inst:ListenForEvent("playerdeactivated", OnPlayerDeactivated)
@@ -1443,6 +1658,9 @@ local function master_postinit(inst)
         inst.CustomSetSkinMode = CustomSetSkinMode
         inst.CustomSetShadowForSkinMode = CustomSetShadowForSkinMode
         inst.CustomSetDebuffSymbolForSkinMode = CustomSetDebuffSymbolForSkinMode
+
+        inst.UseWereFormSkill = UseWereFormSkill
+        inst.SetGooseFlying = SetGooseFlying
 
         if inst.components.drownable ~= nil then
             inst.components.drownable:SetOnTakeDrowningDamageFn(OnTakeDrowningDamage)

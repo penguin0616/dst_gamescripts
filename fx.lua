@@ -2767,6 +2767,15 @@ local fx =
             inst.AnimState:SetFinalOffset(1)
         end,
     },
+    {
+        name = "wormwood_lunar_transformation_finish",
+        bank = "fx_moon_tea",
+        build = "moon_tea_fx",
+        anim = "puff",
+        bloom = true,
+		sound = "dontstarve/common/fireOut",
+        fn = FinalOffset1,
+    },
 }
 
 for cratersteamindex = 1, 4 do

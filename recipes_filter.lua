@@ -131,6 +131,12 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"wereitem_goose",
 	"wereitem_beaver",
 	"wereitem_moose",
+	"leif_idol",
+	"woodie_boards",
+	"woodie_rope",
+	"woodie_papyrus",
+	"woodcarvedhat",
+	"walking_stick",
 
 	-- Wathgrithr / Wigfrid
 	"spear_wathgrithr",
@@ -161,6 +167,11 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"dumbbell_golden",
 	"dumbbell_marble",
 	"dumbbell_gem",
+
+	"dumbbell_heat",
+	"dumbbell_redgem",
+	"dumbbell_bluegem",
+	"wolfgang_whistle",
 
 	-- Wickerbottom
 	"bookstation",
@@ -215,6 +226,17 @@ CRAFTING_FILTERS.CHARACTER.recipes =
 	"livinglog",
 	"armor_bramble",
 	"trap_bramble",
+    "lunarplant_wormwoodhat",
+    "armor_lunarplant_wormwood",
+    "wormwood_sapling",
+    "wormwood_berrybush",
+    "wormwood_juicyberrybush",
+    "wormwood_reeds",
+	"wormwood_lureplant",
+	"ipecacsyrup",
+	"wormwood_carrat",
+	"wormwood_lightflier",
+	"wormwood_fruitdragon",
 
 	-- Wanda
 	"pocketwatch_dismantler",
@@ -322,12 +344,14 @@ CRAFTING_FILTERS.CRAFTING_STATION.recipes =
 	"sword_lunarplant",
 	"pickaxe_lunarplant",
 	"shovel_lunarplant",
+	"lunarplant_kit",
 
 	----SHADOW_FORGE----
 	"armor_voidcloth",
 	"voidclothhat",
 	"voidcloth_umbrella",
 	"voidcloth_scythe",
+	"voidcloth_kit",
 
 	-- Hermit Crab
 	"hermitshop_hermit_bundle_shells",
@@ -569,6 +593,7 @@ CRAFTING_FILTERS.TOOLS.recipes =
 	"bugnet",
 	"razor",
 	"compass",
+	"walking_stick",
 	"cane",
 	"sewing_kit",
 	"sewing_tape",
@@ -709,6 +734,7 @@ CRAFTING_FILTERS.ARMOUR.recipes =
 	"armordragonfly",
 	"armor_sanity",
 	"armormarble",
+	"woodcarvedhat",
 	"footballhat",
 	"wathgrithrhat",
 	"cookiecutterhat",
@@ -765,6 +791,7 @@ CRAFTING_FILTERS.CLOTHING.recipes =
 	"trunkvest_winter",
 	"reflectivevest",
 	"hawaiianshirt",
+	"walking_stick",
 	"cane",
 	"beargervest",
 	"eyebrellahat",
@@ -1028,6 +1055,8 @@ CRAFTING_FILTERS.STRUCTURES.recipes =
 	"arrowsign_post",
 	"minisign_item",
 
+	"support_pillar_scaffold",
+
 }
 
 CRAFTING_FILTERS.MAGIC.recipes =
@@ -1037,6 +1066,7 @@ CRAFTING_FILTERS.MAGIC.recipes =
 	"wereitem_goose",
 	"wereitem_beaver",
 	"wereitem_moose",
+	"leif_idol",
 	"tophat_magician",
 	"magician_chest",
 	"waxwelljournal",

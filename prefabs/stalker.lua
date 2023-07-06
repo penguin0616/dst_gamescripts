@@ -43,6 +43,7 @@ local prefabs_forest =
 
 local prefabs_atrium =
 {
+    "shadowheart",
     "fossil_piece",
     "fossilspike",
     "fossilspike2",

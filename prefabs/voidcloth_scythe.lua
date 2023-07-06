@@ -77,7 +77,11 @@ local function SetFxOwner(inst, owner)
 end
 
 local function PushIdleLoop(inst)
-    inst.AnimState:PushAnimation("idle")
+	if inst.components.finiteuses:GetUses() > 0 then
+		inst.AnimState:PushAnimation("idle")
+	else
+		inst.AnimState:PlayAnimation("broken")
+	end
 end
 
 local function OnStopFloating(inst)
@@ -193,6 +197,28 @@ local function OnAttack(inst, attacker, target)
     end
 end
 
+local function SetupEquippable(inst)
+	inst:AddComponent("equippable")
+	inst.components.equippable.dapperness = -TUNING.DAPPERNESS_MED
+	inst.components.equippable.is_magic_dapperness = true
+	inst.components.equippable:SetOnEquip(OnEquip)
+	inst.components.equippable:SetOnUnequip(OnUnequip)
+end
+
+local function OnBroken(inst)
+	if inst.components.equippable ~= nil then
+		inst:RemoveComponent("equippable")
+		inst.AnimState:PlayAnimation("broken")
+	end
+end
+
+local function OnRepaired(inst)
+	if inst.components.equippable == nil then
+		SetupEquippable(inst)
+		inst.AnimState:PlayAnimation("idle", true)
+	end
+end
+
 local function ScytheFn()
     local inst = CreateEntity()
 
@@ -255,7 +281,6 @@ local function ScytheFn()
     inst._classified._parent = inst
     inst._classified:SetTarget(nil)
 
-
     local frame = math.random(inst.AnimState:GetCurrentAnimationNumFrames()) - 1
     inst.AnimState:SetFrame(frame)
     --V2C: one networked fx for frame 3 (needed for floating)
@@ -274,7 +299,6 @@ local function ScytheFn()
     local finiteuses = inst:AddComponent("finiteuses")
     finiteuses:SetMaxUses(TUNING.VOIDCLOTH_SCYTHE_USES)
     finiteuses:SetUses(TUNING.VOIDCLOTH_SCYTHE_USES)
-    finiteuses:SetOnFinished(inst.Remove)
     finiteuses:SetConsumption(ACTIONS.SCYTHE, 1)
 
     local weapon = inst:AddComponent("weapon")
@@ -287,11 +311,7 @@ local function ScytheFn()
     local damagetypebonus = inst:AddComponent("damagetypebonus")
     damagetypebonus:AddBonus("lunar_aligned", inst, TUNING.WEAPONS_VOIDCLOTH_VS_LUNAR_BONUS)
 
-    local equippable = inst:AddComponent("equippable")
-    equippable.dapperness = -TUNING.DAPPERNESS_MED
-    equippable.is_magic_dapperness = true
-    equippable:SetOnEquip(OnEquip)
-    equippable:SetOnUnequip(OnUnequip)
+	SetupEquippable(inst)
 
     inst:AddComponent("shadowlevel")
     inst.components.shadowlevel:SetDefaultLevel(TUNING.VOIDCLOTH_SCYTHE_SHADOW_LEVEL)
@@ -301,6 +321,7 @@ local function ScytheFn()
     setbonus:SetOnEnabledFn(OnEnabledSetBonus)
     setbonus:SetOnDisabledFn(OnDisabledSetBonus)
 
+	MakeForgeRepairable(inst, FORGEMATERIALS.VOIDCLOTH, OnBroken, OnRepaired)
     MakeHauntableLaunch(inst)
 
     inst.components.floater:SetBankSwapOnFloat(true, -11, {sym_name = "swap_scythe", sym_build = "scythe_voidcloth", bank = "scythe_voidcloth"})

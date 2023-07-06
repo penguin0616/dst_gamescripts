@@ -1,3 +1,5 @@
+require("components/raindome") --load some global functions defined for this component
+
 local GroundTiles = require("worldtiledefs")
 
 --require_health being true means an entity is considered "dead" if it lacks the health replica.

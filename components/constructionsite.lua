@@ -1,9 +1,11 @@
 local Stats = require("stats")
 
 local function onbuilder(self, builder)
-    if self.inst.replica.constructionsite then
-        self.inst.replica.constructionsite:SetBuilder(builder)
-    end
+	self.inst.replica.constructionsite:SetBuilder(builder)
+end
+
+local function onenabled(self, enabled)
+	self.inst.replica.constructionsite:SetEnabled(enabled)
 end
 
 local EMPTY_TABLE = {}
@@ -17,7 +19,7 @@ local ConstructionSite = Class(function(self, inst)
     self.onstopconstructionfn = nil
     self.onconstructedfn = nil
 
-    self.canconstruct = true
+	self.enabled = true
 
     --V2C: Recommended to explicitly add tag to prefab pristine state
     inst:AddTag("constructionsite")
@@ -25,12 +27,31 @@ end,
 nil,
 {
     builder = onbuilder,
+	enabled = onenabled,
 })
 
-function ConstructionSite:SetCanConstruct(bool)
-    if bool == nil then bool = true end
+function ConstructionSite:ForceStopConstruction()
+	if self.builder ~= nil and
+		self.builder.components.constructionbuilder ~= nil and
+		self.builder.components.constructionbuilder.constructionsite == self.inst then
+		--
+		self.builder.components.constructionbuilder:StopConstruction()
+	end
+end
 
-    self.canconstruct = bool
+ConstructionSite.OnRemoveFromEntity = ConstructionSite.ForceStopConstruction
+
+function ConstructionSite:Enable()
+	self.enabled = true
+end
+
+function ConstructionSite:Disable()
+	self:ForceStopConstruction()
+	self.enabled = false
+end
+
+function ConstructionSite:IsEnabled()
+	return self.enabled
 end
 
 function ConstructionSite:SetConstructionPrefab(prefab)
@@ -105,10 +126,6 @@ end
 
 function ConstructionSite:IsBuilder(guy)
     return guy ~= nil and self.builder == guy
-end
-
-function ConstructionSite:CanBeConstructed()
-    return self.canconstruct
 end
 
 function ConstructionSite:AddMaterial(prefab, num)

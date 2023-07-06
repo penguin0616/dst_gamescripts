@@ -207,7 +207,7 @@ return{
 			--MapSpotRevealer/messagebottle
 			MESSAGEBOTTLEMANAGER_NOT_FOUND = "Not here",--Likely trying to read messagebottle treasure map in caves
 
-            STASH_MAP_NOT_FOUND = "Hmmm... nothing?",-- Likely trying to read stash map  in world without stash
+            STASH_MAP_NOT_FOUND = "Hmmm... nothing?",-- Likely trying to read stash map  in world without stash                  
         },
         WRAPBUNDLE =
         {
@@ -894,6 +894,23 @@ return{
     ANNOUNCE_SHADOW_RIFT_MAX = "Glowy!",
 
     ANNOUNCE_SCRAPBOOK_FULL = "Book filled up!",
+
+    ANNOUNCE_COACH = 
+    {
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+        "only_used_by_wolfgang",
+    },
+    ANNOUNCE_WOLFGANG_WIMPY_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_MIGHTY_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_BEGING_COACHING = "only_used_by_wolfgang",
+    ANNOUNCE_WOLFGANG_END_COACHING = "only_used_by_wolfgang",
 
 	BATTLECRY =
 	{
@@ -4540,6 +4557,9 @@ return{
         DUMBBELL_GEM = "Sparkly rocks",
         POTATOSACK = "Carry friends",
 
+        DUMBBELL_HEAT = "Heavy hot cold rocks",
+        DUMBBELL_REDGEM = "Hot!",
+        DUMBBELL_BLUEGEM = "Brrr!",
 
         TERRARIUMCHEST =
 		{
@@ -4793,6 +4813,7 @@ return{
 		LUNAR_FORGE = "Make shiny things!",
 		LUNAR_FORGE_KIT = "Where to plant it?",
 
+		--LUNARPLANT_KIT = "TODO",
 		ARMOR_LUNARPLANT = "Mean friend made nice clothes",
 		LUNARPLANTHAT = "Mean friend made nice hat",
 		BOMB_LUNARPLANT = "Boom ball",
@@ -4813,6 +4834,7 @@ return{
         FUSED_SHADELING_BOMB = "Look out!",
 
 		VOIDCLOTH = "Leaves? No...",
+		--VOIDCLOTH_KIT = "TODO",
 		VOIDCLOTHHAT = "Dark inside",
 		ARMOR_VOIDCLOTH = "Smiling?",
 
@@ -4830,6 +4852,34 @@ return{
         DREADSTONE_STACK = "Growing up, up, up!",
         
         SCRAPBOOK_PAGE = "Book leaf?",
+
+        LEIF_IDOL = "Friend...?",
+        WOODCARVEDHAT = "Strong friend hat",
+        WALKING_STICK = "Friend looks a bit skinny",
+
+        IPECACSYRUP = "Mmmm! Make food for friends!",
+        BOMB_LUNARPLANT_WORMWOOD = "Made extra boom!", -- Unused
+        WORMWOOD_MUTANTPROXY_CARRAT =
+        {
+        	DEAD = "Oh. Dead",
+        	GENERIC = "Belly stuff running away!",
+        	HELD = "He he. Funny little tail",
+        	SLEEPING = "Sleepytime",
+        },
+        WORMWOOD_MUTANTPROXY_LIGHTFLIER = "Buzzy",
+		WORMWOOD_MUTANTPROXY_FRUITDRAGON =
+		{
+			GENERIC = "Growing belly stuff",
+			RIPE = "Feeling warm...",
+			SLEEPING = "Naptime",
+		},
+
+        SUPPORT_PILLAR_SCAFFOLD = "Not done",
+        SUPPORT_PILLAR = "Cracking? Uh oh...",
+        SUPPORT_PILLAR_COMPLETE = "Ahhh. Safer now",
+        SUPPORT_PILLAR_BROKEN = "Fell down",
+
+        WOLFGANG_WHISTLE = "Muscle man's tweet-maker",
     },
 
     DESCRIBE_GENERIC = "Friend?",
@@ -4846,6 +4896,7 @@ return{
     DESCRIBE_PLANTSTRESSORMOISTURE = "Thirsty",
     DESCRIBE_PLANTSTRESSORNUTRIENTS = "Needs food!",
     DESCRIBE_PLANTSTRESSORHAPPINESS = "Wants to talk",
+    DESCRIBE_PLANT_IDENTIFIED = "Is {plantname} friend!",
 
     EAT_FOOD =
     {

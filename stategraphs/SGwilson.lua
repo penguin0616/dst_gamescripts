@@ -3,6 +3,9 @@ require("stategraphs/commonstates")
 local ATTACK_PROP_MUST_TAGS = { "_combat" }
 local ATTACK_PROP_CANT_TAGS = { "flying", "shadow", "ghost", "FX", "NOCLICK", "DECOR", "INLIMBO", "playerghost" }
 
+local MOOSE_AOE_MUST_TAGS = { "_combat" }
+local MOOSE_AOE_CANT_TAGS = { "INLIMBO", "flight", "invisible", "notarget", "noattack" }
+
 local function DoEquipmentFoleySounds(inst)
     for k, v in pairs(inst.components.inventory.equipslots) do
         if v.foleysound ~= nil then
@@ -579,6 +582,7 @@ local actionhandlers =
                 and (   (action.target.components.pickable.jostlepick and "dojostleaction") or
                         (action.target.components.pickable.quickpick and "doshortaction") or
                         (inst:HasTag("fastpicker") and "doshortaction") or
+                        (inst:HasTag("woodiequickpicker") and "dowoodiefastpick") or
                         (inst:HasTag("quagmire_fasthands") and "domediumaction") or
                         "dolongaction"  ))
                 or nil
@@ -1013,6 +1017,18 @@ local actionhandlers =
 	ActionHandler(ACTIONS.CAST_SPELLBOOK, "book"),
 	ActionHandler(ACTIONS.SCYTHE, "scythe"),
 	ActionHandler(ACTIONS.SITON, "start_sitting"),
+
+    ActionHandler(ACTIONS.USE_WEREFORM_SKILL, function(inst, action)
+        if action.doer ~= nil then
+            if action.doer:HasTag("beaver") then
+                return "beaver_tailslap_pre"
+            elseif action.doer:HasTag("weregoose") then
+                return "weregoose_takeoff_pre"
+            end
+        end
+    end),
+
+    ActionHandler(ACTIONS.IDENTIFY_PLANT, "domediumaction"),
 }
 
 local events =
@@ -1055,6 +1071,12 @@ local events =
     EventHandler("blocked", function(inst, data)
         if not inst.components.health:IsDead() and inst.sg:HasStateTag("shell") then
             inst.sg:GoToState("shell_hit")
+        end
+    end),
+
+    EventHandler("coach_whistle", function(inst, data)
+        if not inst.components.health:IsDead() then
+            inst.sg:GoToState("play_coach_whistle")
         end
     end),
 
@@ -1592,6 +1614,15 @@ local events =
         end
     end),
 
+    EventHandler("mooncap_cloud",
+        function(inst)
+            if not (inst.components.health:IsDead() or inst.sg:HasStateTag("sleeping") or
+                    (inst.components.freezable and inst.components.freezable:IsFrozen()) or
+                    (inst.components.pinnable and inst.components.pinnable:IsStuck())) then
+                inst.sg:GoToState("mooncap_cloud")
+            end
+        end),
+
     CommonHandlers.OnHop(),
 }
 
@@ -1624,6 +1655,64 @@ local weremoose_symbols =
     "weremoose_torso",
     "weremoose_torso_pelvis",
 }
+
+local function MakeWormwoodFormState(product_name)
+    local form_string = "form_"..product_name
+    local islog = product_name == "log"
+
+    return State{
+        name = form_string,
+        tags = { "doing", "busy", "nocraftinginterrupt", "nomorph" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation(form_string.."_pre")
+            inst.AnimState:PushAnimation(form_string, false)
+            inst.sg.statemem.action = inst.bufferedaction
+        end,
+
+        timeline =  {
+            FrameEvent(0, function(inst)
+                if not islog then
+                    inst.SoundEmitter:PlaySound("meta2/wormwood/armchop_f0")
+                end
+            end),
+            FrameEvent(2, function(inst)
+                if islog then
+                    inst.SoundEmitter:PlaySound("dontstarve/characters/wormwood/living_log_craft")
+                end
+            end),
+            FrameEvent(40, function(inst)
+                if not islog then
+                    inst.SoundEmitter:PlaySound("meta2/wormwood/armchop_f40")
+                end
+            end),
+            FrameEvent(50, function(inst)
+                inst:PerformBufferedAction()
+            end),
+            FrameEvent(58, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.bufferedaction == inst.sg.statemem.action and
+                    (not inst.components.playercontroller or
+                    inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
+                inst:ClearBufferedAction()
+            end
+        end,
+    }
+end
 
 local states =
 {
@@ -5768,6 +5857,17 @@ local states =
     },
 
     State{
+        name = "dowoodiefastpick",
+
+        onenter = function(inst)
+            local skill_level = inst.components.skilltreeupdater:CountSkillTag("quickpicker")
+            local timeout = skill_level > 0 and TUNING.SKILLS.WOODIE.QUICKPICK_TIMEOUT[skill_level] or 1
+
+            inst.sg:GoToState("dolongaction", timeout)
+        end,
+    },
+
+    State{
         name = "revivecorpse",
 
         onenter = function(inst)
@@ -6813,6 +6913,56 @@ local states =
 		onexit = function(inst)
 			inst.AnimState:ClearOverrideSymbol("hound_whistle01")
 		end,
+    },
+
+    State{
+        name = "play_coach_whistle",
+        tags = { "doing", "busy", "playing" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("action_uniqueitem_pre")
+            inst.AnimState:PushAnimation("whistle", false)
+            inst.AnimState:OverrideSymbol("hound_whistle01", "wolfgang_whistle", "wolfgang_whistle01")
+            inst.components.inventory:ReturnActiveActionItem(inst.bufferedaction ~= nil and inst.bufferedaction.invobject or nil)
+        end,
+
+        timeline =
+        {
+            TimeEvent(20 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("meta2/wolfgang/whistle")
+            end),
+
+            TimeEvent(30 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                    if inst:HasTag("wolfgang_coach") then
+                        if inst.components.mightiness:GetState() == "wimpy"  then
+                            inst.components.talker:Say(GetString(inst, "ANNOUNCE_WOLFGANG_WIMPY_COACHING"))
+                        elseif inst.components.mightiness:GetState() == "mighty"  then
+                            inst.components.talker:Say(GetString(inst, "ANNOUNCE_WOLFGANG_MIGHTY_COACHING"))
+                        elseif inst.components.mightiness:GetState() == "normal"  then
+                            if inst:HasTag("coaching") then
+                                inst.components.talker:Say(GetString(inst, "ANNOUNCE_WOLFGANG_BEGING_COACHING"))
+                            else
+                                inst.components.talker:Say(GetString(inst, "ANNOUNCE_WOLFGANG_END_COACHING"))
+                            end
+                        end
+                    end
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            inst.AnimState:ClearOverrideSymbol("hound_whistle01")
+        end,
     },
 
     State{
@@ -8185,11 +8335,18 @@ local states =
                 cooldown = math.max(cooldown, 13 * FRAMES)
             elseif inst:HasTag("weremoose") then
                 inst.sg.statemem.ismoose = true
-                inst.AnimState:PlayAnimation(
-                    ((inst.AnimState:IsCurrentAnimation("punch_a") or inst.AnimState:IsCurrentAnimation("punch_c")) and "punch_b") or
-                    (inst.AnimState:IsCurrentAnimation("punch_b") and "punch_c") or
-                    "punch_a"
-                )
+				if inst.AnimState:IsCurrentAnimation("punch_a") or inst.AnimState:IsCurrentAnimation("punch_c") then
+					inst.AnimState:PlayAnimation("punch_b")
+				elseif inst.AnimState:IsCurrentAnimation("punch_b") then
+					if inst:HasTag("weremoosecombo") then
+						inst.sg.statemem.ismoosesmash = true
+						inst.AnimState:PlayAnimation("moose_slam")
+					else
+						inst.AnimState:PlayAnimation("punch_c")
+					end
+				else
+					inst.AnimState:PlayAnimation("punch_a")
+				end
                 cooldown = math.max(cooldown, 15 * FRAMES)
             else
                 inst.AnimState:PlayAnimation("punch")
@@ -8242,7 +8399,42 @@ local states =
             end),
             TimeEvent(7 * FRAMES, function(inst)
                 if inst.sg.statemem.ismoose then
-                    inst:PerformBufferedAction()
+					if inst.sg.statemem.ismoosesmash then
+						local x, y, z = inst.Transform:GetWorldPosition()
+						local rot = inst.Transform:GetRotation()
+
+						--V2C: first frame is blank, so no need to worry about forcing instant facing update
+						local fx = SpawnPrefab("weremoose_smash_fx")
+						fx.Transform:SetPosition(x, 0, z)
+						fx.Transform:SetRotation(rot)
+						fx._owner:set(inst)
+
+						inst:ClearBufferedAction()
+						inst.components.combat.ignorehitrange = true
+						inst.components.combat:SetDefaultDamage(TUNING.SKILLS.WOODIE.MOOSE_SMASH_DAMAGE)
+						local dist = 1
+						local radius = 2
+						rot = rot * DEGREES
+						x = x + dist * math.cos(rot)
+						z = z - dist * math.sin(rot)
+						for i, v in ipairs(TheSim:FindEntities(x, y, z, radius + 3, MOOSE_AOE_MUST_TAGS, MOOSE_AOE_CANT_TAGS)) do
+							if v ~= inst and v:IsValid() and not v:IsInLimbo() and not (v.components.health ~= nil and v.components.health:IsDead()) then
+								local range = radius + v:GetPhysicsRadius(0)
+								local dsq = v:GetDistanceSqToPoint(x, y, z)
+								if dsq < range * range and inst.components.combat:CanTarget(v) then
+									if v.components.planarentity ~= nil then
+										inst.components.planardamage:SetBaseDamage(TUNING.SKILLS.WOODIE.MOOSE_SMASH_PLANAR_DAMAGE)
+									end
+									inst.components.combat:DoAttack(v)
+									inst.components.planardamage:SetBaseDamage(0)
+								end
+							end
+						end
+						inst.components.combat:SetDefaultDamage(TUNING.WEREMOOSE_DAMAGE)
+						inst.components.combat.ignorehitrange = false
+					else
+						inst:PerformBufferedAction()
+					end
                     inst.sg:RemoveStateTag("abouttoattack")
                 end
             end),
@@ -11311,7 +11503,7 @@ local states =
         onexit = function(inst)
             if inst.sg.statemem.toolname ~= nil then
                 local sameTool = inst.components.inventory:FindItem(function(item)
-                    return item.prefab == inst.sg.statemem.toolname
+					return item.prefab == inst.sg.statemem.toolname and item.components.equippable ~= nil
                 end)
                 if sameTool ~= nil then
                     inst.components.inventory:Equip(sameTool)
@@ -15652,44 +15844,12 @@ local states =
     --------------------------------------------------------------------------
     -- Wormwood
 
-    State{
-        name = "form_log",
-        tags = { "doing", "busy", "nocraftinginterrupt", "nomorph" },
-
-        onenter = function(inst)
-            inst.components.locomotor:Stop()
-            inst.AnimState:PlayAnimation("form_log_pre")
-            inst.AnimState:PushAnimation("form_log", false)
-            inst.sg.statemem.action = inst.bufferedaction
-        end,
-
-        timeline =
-        {
-            TimeEvent(2 * FRAMES, function(inst) inst.SoundEmitter:PlaySound("dontstarve/characters/wormwood/living_log_craft") end),
-            TimeEvent(50 * FRAMES, function(inst)
-                inst:PerformBufferedAction()
-            end),
-            TimeEvent(58 * FRAMES, function(inst)
-                inst.sg:RemoveStateTag("busy")
-            end),
-        },
-
-        events =
-        {
-            EventHandler("animqueueover", function(inst)
-                if inst.AnimState:AnimDone() then
-                    inst.sg:GoToState("idle")
-                end
-            end),
-        },
-
-        onexit = function(inst)
-            if inst.bufferedaction == inst.sg.statemem.action and
-            (inst.components.playercontroller == nil or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
-                inst:ClearBufferedAction()
-            end
-        end,
-    },
+    MakeWormwoodFormState("log"),
+    MakeWormwoodFormState("bush"),
+    MakeWormwoodFormState("juicy"),
+    MakeWormwoodFormState("bulb"),
+    MakeWormwoodFormState("moon"),
+    MakeWormwoodFormState("monkey"),
 
     State{
         name = "fertilize",
@@ -15771,6 +15931,87 @@ local states =
         onexit = function(inst)
             inst.SoundEmitter:KillSound("rub")
         end,
+    },
+
+    State{
+        name = "spawn_mutated_creature",
+        tags = { "doing", "busy", "nocraftinginterrupt", "nomorph" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.AnimState:PlayAnimation("lunar_transform")
+            inst.sg.statemem.action = inst.bufferedaction
+        end,
+
+        timeline =
+        {
+            TimeEvent(2 * FRAMES, function(inst)
+                inst.SoundEmitter:PlaySound("dontstarve/common/fireAddFuel")
+            end),
+            TimeEvent(34 * FRAMES, function(inst)
+                inst:PerformBufferedAction()
+            end),
+            TimeEvent(37 * FRAMES, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animqueueover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.bufferedaction == inst.sg.statemem.action and
+                    (not inst.components.playercontroller or inst.components.playercontroller.lastheldaction ~= inst.bufferedaction) then
+                inst:ClearBufferedAction()
+            end
+        end,
+    },
+
+    State{
+        name = "mooncap_cloud",
+        tags = { "busy", "yawn", "pausepredict", "nointerrupt" },
+
+        onenter = function(inst, data)
+            ForceStopHeavyLifting(inst)
+            inst.components.locomotor:Stop()
+            inst:ClearBufferedAction()
+
+            if inst.components.playercontroller then
+                inst.components.playercontroller:RemotePausePrediction()
+            end
+
+            inst.AnimState:PlayAnimation("yawn")
+        end,
+
+        timeline =
+        {
+            TimeEvent(0.1, function(inst)
+                local mount = inst.components.rider:GetMount()
+                if mount and mount.sounds and mount.sounds.yell then
+                    inst.SoundEmitter:PlaySound(mount.sounds.yell)
+                end
+            end),
+            TimeEvent(15 * FRAMES, function(inst)
+                DoYawnSound(inst)
+                SpawnPrefab("sleepcloud_lunar").Transform:SetPosition(inst.Transform:GetWorldPosition())
+            end),
+        },
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:RemoveStateTag("yawn")
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
     },
 
     --------------------------------------------------------------------------
@@ -16202,9 +16443,11 @@ local states =
 
     State{
         name = "tackle",
-        tags = { "busy", "nopredict", "nomorph", "nointerrupt" },
+        tags = { "overridelocomote", "nopredict", "nomorph", "nointerrupt"},
 
         onenter = function(inst, data)
+            inst:AddTag("tackling")
+
             inst.sg.statemem.targets = data ~= nil and data.targets or nil
             inst.sg.statemem.edgecount = data ~= nil and data.edgecount or 0
             inst.sg.statemem.trailtask = data ~= nil and data.trail or nil
@@ -16219,11 +16462,27 @@ local states =
             )
         end,
 
+        events =
+        {
+            EventHandler("locomote", function(inst, data)
+                inst.sg.statemem.stopping = true
+                inst.sg:GoToState("tackle_stop")
+                return true
+            end),
+        },
+
         timeline =
         {
             TimeEvent(1 * FRAMES, PlayMooseFootstep),
             TimeEvent(4 * FRAMES, PlayMooseFootstep),
             TimeEvent(10 * FRAMES, PlayMooseFootstep),
+            TimeEvent(TUNING.SKILLS.WOODIE.MOOSE_CANCEL_CHARGE_TIME, function(inst)
+                if inst.components.skilltreeupdater:IsActivated("woodie_curse_moose_3") then
+                    if inst.components.playercontroller ~= nil then
+                        inst.components.playercontroller:Enable(true)
+                    end
+                end
+            end),
         },
 
         onupdate = function(inst)
@@ -16258,6 +16517,8 @@ local states =
         end,
 
         onexit = function(inst)
+            inst:RemoveTag("tackling")
+
             if not inst.sg.statemem.tackling then
                 if inst.sg.statemem.trailtask ~= nil then
                     inst.sg.statemem.trailtask:Cancel()
@@ -16353,6 +16614,206 @@ local states =
 
         onexit = function(inst)
             inst.Physics:Stop()
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(true)
+            end
+        end,
+    },
+
+    State{
+        name = "beaver_tailslap_pre",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("tail_slap_pre")
+            inst.AnimState:PushAnimation("tail_slap_lag", true)
+
+            inst.components.locomotor:Stop()
+        end,
+
+        timeline =
+        {
+            FrameEvent(10, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(0.5, function(inst)
+                if inst.sg.currentstate.name == "beaver_tailslap_pre" then
+                    inst.sg:GoToState("beaver_tailslap")
+                else
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "beaver_tailslap",
+        tags = { "busy", "nopredict", "nomorph", "nointerrupt" },
+
+        onenter = function(inst, data)
+            inst.AnimState:PlayAnimation("tail_slap")
+
+            inst.components.locomotor:Stop()
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+            end
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        timeline =
+        {
+            FrameEvent(5, function(inst)
+                inst:PerformBufferedAction()
+                inst.SoundEmitter:PlaySound("meta2/woodie/werebeaver_groundpound")
+            end),
+        },
+
+        onexit = function(inst)
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(true)
+            end
+        end,
+    },
+
+    State{
+        name = "weregoose_takeoff_pre",
+        tags = { "busy" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("takeoff_pre")
+            inst.AnimState:PushAnimation("takeoff_lag", false)
+
+            inst.components.locomotor:Stop()
+        end,
+
+        timeline =
+        {
+            FrameEvent(10, function(inst)
+                inst.sg:RemoveStateTag("busy")
+            end),
+            TimeEvent(0.5, function(inst)
+                if inst.sg.currentstate.name == "weregoose_takeoff_pre" then
+                    inst.sg:GoToState("weregoose_takeoff")
+                else
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "weregoose_takeoff",
+        tags = { "busy", "flying", "nopredict", "nomorph", "noattack", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.components.health:SetInvincible(true)
+
+            if inst.components.playercontroller ~= nil then
+                inst.components.playercontroller:Enable(false)
+            end
+
+            inst:SetCameraDistance(14)
+
+            inst.AnimState:PushAnimation("takeoff")
+
+            inst.sg.statemem.feather_fx = 7*FRAMES
+
+            inst.sg.statemem.y = 0
+            inst.sg.statemem.pos = inst:GetPosition()
+
+            inst.SoundEmitter:PlaySound("meta2/woodie/weregoose_takeoff")
+
+            inst:SetGooseFlying(true)
+        end,
+
+        onupdate = function(inst, dt)
+            inst.sg.statemem.feather_fx = inst.sg.statemem.feather_fx - dt
+            if inst.sg.statemem.feather_fx <= 0 then
+                inst.sg.statemem.feather_fx = 7*FRAMES
+                SpawnPrefab("weregoose_feathers"..tostring(math.random(3))).Transform:SetPosition(inst.sg.statemem.pos.x, inst.sg.statemem.y, inst.sg.statemem.pos.z)
+            end
+
+            inst.sg.statemem.y = inst.sg.statemem.y + (dt * 7)
+        end,
+
+        timeline =
+        {
+            FrameEvent(10, function(inst)
+                inst.DynamicShadow:Enable(false)
+            end),
+            FrameEvent(40, function(inst)
+                inst:ScreenFade(false, 1)
+            end),
+            FrameEvent(60, function(inst)
+                inst:Hide()
+                inst:PerformBufferedAction()
+            end),
+            FrameEvent(100, function(inst)
+                inst:Show()
+                inst.sg:GoToState("weregoose_land", false)
+            end),
+        },
+    },
+
+    State{
+        name = "weregoose_land",
+        tags = { "busy", "flying", "nopredict", "nomorph", "noattack", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.AnimState:PlayAnimation("land")
+
+            inst:ScreenFade(true, 1)
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("weregoose_land_pst")
+                end
+            end),
+        },
+    },
+
+    State{
+        name = "weregoose_land_pst",
+        tags = { "busy", "flying", "nopredict", "nomorph", "nointerrupt" },
+
+        onenter = function(inst)
+            inst.components.locomotor:Stop()
+            inst.DynamicShadow:Enable(true)
+
+            inst:SetCameraDistance()
+
+            inst:SetGooseFlying(false)
+
+            inst.AnimState:PlayAnimation("land_pst")
+
+            inst.SoundEmitter:PlaySound("meta2/woodie/weregoose_land")
+        end,
+
+        events =
+        {
+            EventHandler("animover", function(inst)
+                if inst.AnimState:AnimDone() then
+                    inst.sg:GoToState("idle")
+                end
+            end),
+        },
+
+        onexit = function(inst)
+            inst.components.health:SetInvincible(false)
+
             if inst.components.playercontroller ~= nil then
                 inst.components.playercontroller:Enable(true)
             end

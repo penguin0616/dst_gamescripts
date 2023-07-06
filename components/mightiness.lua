@@ -140,7 +140,7 @@ function Mightiness:GetScale()
 end
 
 function Mightiness:IsMighty()
-	return self.state == "mighty"
+	return self.state == "mighty" or self.state == "over"
 end
 
 function Mightiness:IsNormal()
@@ -181,7 +181,23 @@ function Mightiness:SetMax(amount)
     self.current = amount
 end
 
-function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound)
+function Mightiness:GetMax()
+    return self.max    
+end
+
+function Mightiness:GetCurrent()
+    return self.current   
+end
+
+function Mightiness:SetOverMax(amount)
+    self.overmaxmax = amount    
+end
+
+function Mightiness:GetOverMax()
+    return self.overmaxmax or 0
+end
+
+function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound, fromgym)
 	--print("Mightiness:DoDelta", delta)
 
 	if delta >= 0 then
@@ -189,7 +205,21 @@ function Mightiness:DoDelta(delta, force_update, delay_skin, forcesound)
 	end
 
     local old = self.current
-    self.current = math.clamp(self.current + delta, 0, self.max)
+
+    if delta > 0 then
+        -- CANT RAISE the number above max without the gym
+        if self.current <= self.max and not fromgym then
+            self.current = math.min(self.current + delta, self.max)
+        elseif fromgym then
+            self.current = math.min(self.current + delta, self.max+self.overmaxmax)
+        end
+    else
+        self.current = self.current + delta
+    end    
+
+    if self.current < 0 then 
+        self.current = 0
+    end
 
     self.inst:PushEvent("mightinessdelta", { oldpercent = old / self.max, newpercent = self.current / self.max, delta = self.current-old })
 
@@ -282,6 +312,10 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
         end
     end
 
+    if self.inst.components.coach then
+        self.inst.components.coach:Disable()
+    end
+
     if not silent or forcesound then
         if state == "normal" then
             self.inst.SoundEmitter:PlaySound(state_data.sound[self.state])
@@ -306,14 +340,14 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
     self.inst.components.expertsailor:SetAnchorRaisingSpeed(state_data.anchor_raise_speed)
     self.inst.components.expertsailor:SetLowerSailStrength(state_data.lower_sail_strength)
 
-    if state_data.work_effectiveness then
-        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,   state_data.work_effectiveness, self.inst)
-        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,   state_data.work_effectiveness, self.inst)
-        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER, state_data.work_effectiveness, self.inst)
+    if  state_data.work_effectiveness then    
+        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.CHOP,    state_data.work_effectiveness, self.inst)
+        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.MINE,    state_data.work_effectiveness, self.inst)
+        self.inst.components.workmultiplier:AddMultiplier(ACTIONS.HAMMER,  state_data.work_effectiveness, self.inst)
         
-        self.inst.components.efficientuser:AddMultiplier(ACTIONS.CHOP,    state_data.work_effectiveness, self.inst)
-        self.inst.components.efficientuser:AddMultiplier(ACTIONS.MINE,    state_data.work_effectiveness, self.inst)
-        self.inst.components.efficientuser:AddMultiplier(ACTIONS.HAMMER,  state_data.work_effectiveness, self.inst)
+        self.inst.components.efficientuser:AddMultiplier(ACTIONS.CHOP,     state_data.work_effectiveness, self.inst)
+        self.inst.components.efficientuser:AddMultiplier(ACTIONS.MINE,     state_data.work_effectiveness, self.inst)
+        self.inst.components.efficientuser:AddMultiplier(ACTIONS.HAMMER,   state_data.work_effectiveness, self.inst)
     else
         self.inst.components.workmultiplier:RemoveMultiplier(ACTIONS.CHOP,   self.inst)
         self.inst.components.workmultiplier:RemoveMultiplier(ACTIONS.MINE,   self.inst)
@@ -323,7 +357,6 @@ function Mightiness:BecomeState(state, silent, delay_skin, forcesound)
         self.inst.components.efficientuser:RemoveMultiplier(ACTIONS.MINE,    self.inst)
         self.inst.components.efficientuser:RemoveMultiplier(ACTIONS.HAMMER,  self.inst)
     end
-
 
     if not self.inst:HasTag("ingym") and not self.inst.components.rider:IsRiding() then
         self.inst:ApplyAnimScale("mightiness", state_data.scale)

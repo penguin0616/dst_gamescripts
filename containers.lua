@@ -1460,6 +1460,37 @@ for x = 0, 7 do
 end
 
 --------------------------------------------------------------------------
+--[[ pillar ]]
+--------------------------------------------------------------------------
+
+params.support_pillar_complete =
+{
+    widget =
+    {
+        slotpos =
+        {
+            Vector3(0, 0, 0),
+        },
+        slotbg =
+        {
+            { image = "inv_slot_morsel.tex" },
+        },
+        animbank = "ui_beard_1x1",
+        animbuild = "ui_beard_1x1",
+        pos = Vector3(-82, 89, 0),
+        side_align_tip = 160,
+    },
+    acceptsstacks = true,
+    lowpriorityselection = true,
+   -- excludefromcrafting = false,
+}
+
+function params.support_pillar_complete.itemtestfn(container, item, slot)
+    return item.prefab == "rocks"
+end
+
+
+--------------------------------------------------------------------------
 
 for k, v in pairs(params) do
     containers.MAXITEMSLOTS = math.max(containers.MAXITEMSLOTS, v.widget.slotpos ~= nil and #v.widget.slotpos or 0)

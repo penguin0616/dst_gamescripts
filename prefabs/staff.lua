@@ -801,6 +801,8 @@ local function red()
 
     inst.projectiledelay = FRAMES
 
+    inst.scrapbook_specialinfo = "REDSTAFF"
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -836,6 +838,8 @@ local function blue()
 
     inst.projectiledelay = FRAMES
 
+    inst.scrapbook_specialinfo = "BLUESTAFF"
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -859,6 +863,8 @@ end
 
 local function purple()
 	local inst = commonfn("purple", { "nopunch" }, true, true)
+
+    inst.scrapbook_specialinfo = "PURPLESTAFF"
 
     if not TheWorld.ismastersim then
         return inst
@@ -888,6 +894,8 @@ local function yellow()
     inst.components.reticule.targetfn = light_reticuletargetfn
     inst.components.reticule.ease = true
     inst.components.reticule.ispassableatallpoints = true
+
+    inst.scrapbook_specialinfo = "YELLOWSTAFF"
 
     if not TheWorld.ismastersim then
         return inst
@@ -922,6 +930,8 @@ end
 local function green()
 	local inst = commonfn("green", { "nopunch" }, true, true)
 
+    inst.scrapbook_specialinfo = "GREENSTAFF"
+
     if not TheWorld.ismastersim then
         return inst
     end
@@ -948,6 +958,8 @@ local function orange()
     inst:AddComponent("reticule")
     inst.components.reticule.targetfn = blinkstaff_reticuletargetfn
     inst.components.reticule.ease = true
+
+    inst.scrapbook_specialinfo = "ORANGESTAFF"
 
     if not TheWorld.ismastersim then
         return inst

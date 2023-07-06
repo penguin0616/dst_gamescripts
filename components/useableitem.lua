@@ -31,13 +31,15 @@ function UseableItem:SetOnStopUseFn(fn)
 end
 
 function UseableItem:CanInteract()
-    return not self.inuse and self.inst.replica.equippable ~= nil and self.inst.replica.equippable:IsEquipped()
+    return (not self.inuse or self.inst:HasTag("useitem_toggle")) and (self.inst.replica.equippable == nil or self.inst.replica.equippable:IsEquipped())
 end
 
-function UseableItem:StartUsingItem()
-	self.inuse = true
+function UseableItem:StartUsingItem(doer)
+	
 	if self.onusefn then
-		self.inuse = self.onusefn(self.inst) ~= false
+		self.inuse = self.onusefn(self.inst, doer) ~= false
+	else 
+		self.inuse = true	
 	end
 
 	if self.stopuseevents then
